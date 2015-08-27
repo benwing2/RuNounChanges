@@ -85,57 +85,53 @@ end
 -- Old-style declensions.
 local declensions_old = {}
 -- Categories corresponding to old-style declensions. These may contain
--- the following fields: 'singular', 'plural', 'full', 'declinfo',
--- 'allowcons'.
+-- the following fields: 'singular', 'plural', 'decl', 'hard', 'g',
+-- 'suffix', 'gensg', 'irregpl', 'cant_reduce'.
 --
 -- 'singular' is used to construct a category of the form
 -- "Russian nominals SINGULAR". If omitted, a category is constructed of the
 -- form "Russian nominals ending in -ENDING", where ENDING is the actual
--- nom sg ending shorn of its acute accents. The value of SINGULAR can be
+-- nom sg ending shorn of its acute accents; or "Russian nominals ending
+-- in suffix -ENDING", if 'suffix' is true. The value of SINGULAR can be
 -- one of the following: a single string, a list of strings, or a function,
 -- which is passed one argument (the value of ENDING that would be used to
 -- auto-initialize the category), and should return a single string or list
--- of strings.
+-- of strings. Such a category is only constructed if 'gensg' is true.
 --
 -- 'plural' is analogous but used to construct a category of the form
 -- "Russian nominals with PLURAL", and if omitted, a category is constructed
 -- of the form "Russian nominals with plural -ENDING", based on the actual
--- nom pl ending shortn of its acute accents.
+-- nom pl ending shorn of its acute accents. Currently no plural category
+-- is actually constructed.
 --
--- In addition, a category is normally constructed from the combination of
+-- In addition, a category may normally constructed from the combination of
 -- 'singular' and 'plural', appropriately defaulted; e.g. if both are present,
 -- the combined category will be "Russian nominals SINGULAR with PLURAL" and
 -- if both are missing, the combined category will be
--- "Russian nominals ending in -SGENDING with plural -PLENDING".
--- (Note that if either singular or plural or both specifies a list, looping
--- will occur over all combinations.) The value of this combined category
--- can be overridden, however, using 'full', which takes the same sorts of
--- values as 'singular' and 'plural'.
+-- "Russian nominals ending in -SGENDING with plural -PLENDING" (or
+-- "Russian nominals ending in suffix -SGENDING with plural -PLENDING" if
+-- 'suffix' is true). Note that if either singular or plural or both
+-- specifies a list, looping will occur over all combinations. Such a
+-- category is constructed only if 'irregpl' or 'suffix' is true.
 --
--- 'declinfo' should be a table of info about the traditional declensional
--- category of the declension type, with fields 'decl' ("1st", "2nd", "3rd" or
--- "invariable"), 'hard' ("hard", "soft" or "none"), 'g' ("m", "f", "n" or
--- "none"), suffix' (if true, the declension type includes a long suffix
+-- 'decl' is "1st", "2nd", "3rd" or "invariable"; 'hard' is "hard", "soft"
+-- or "none"; 'g' is "m", "f", "n" or "none"; these are all traditional
+-- declension categories.
+--
+-- If 'suffix' is true, the declension type includes a long suffix
 -- added to the string that itself undergoes reducibility and such, and so
--- reducibility cannot occur in the stem minus the suffix).
+-- reducibility cannot occur in the stem minus the suffix. Categoriess will
+-- be created for the suffix.
 --
 -- In addition to the above categories, additional more specific categories
 -- are constructed based on the final letter of the stem, e.g.
 -- "Russian velar-stem nominals with ending -ENDING". See
--- get_stem_trailing_letter_type(). One of the possible such categories is
--- "Russian consonant-stem nominals ...", but this will be suppressed unless
--- 'allowcons' is set, to avoid redundant classes like
--- "Russian consonant-stem nominals ending in a consonant" and classes like
--- "Russian consonant-stem nominals ending in -а", which consists of all
--- nominals in -а.
+-- get_stem_trailing_letter_type().
 --
 -- 'enable_categories' is a special hack for testing, which disables all
 -- category insertion if false. Delete this as soon as we've verified the
 -- working of the category code and created all the necessary categories.
--- 'enable_ending_categories' similarly disables all of the "-ENDING"
--- categories if false.
 local enable_categories = true
-local enable_ending_categories = true
 local declensions_old_cat = {}
 -- New-style declensions; computed automatically from the old-style ones,
 -- for the most part.
@@ -256,18 +252,11 @@ local function categorize(stress, decl_class, args)
 	end
 
 	-- Insert category CAT, as with insert_cat(); but also insert categories
-	-- prepending each of the stem types in STEM_TYPES. As an exception,
-	-- ignore stem type "consonant" unless ALLOWCONS is true; this is set
-	-- only for declension types where we expect they can be preceded by
-	-- something other than a consonant (e.g. a vowel or the soft sign).
-	local function insert_cat_with_stem_type(cat, stem_types, allowcons)
+	-- prepending each of the stem types in STEM_TYPES.
+	local function insert_cat_with_stem_type(cat, stem_types)
 		for _, c in ipairs(cat_to_list(cat)) do
 			for _, stem_type in ipairs(stem_types) do
-				if stem_type ~= "consonant" or allowcons then
-					if enable_ending_categories then
-						insert_cat(stem_type .. "-stem " .. c)
-					end
-				end
+				insert_cat(stem_type .. "-stem " .. c)
 			end
 		end
 		insert_cat(cat)
@@ -317,20 +306,28 @@ local function categorize(stress, decl_class, args)
 	else
 		sgdecl, pldecl = decl_class, decl_class
 	end
-	local sgdeclcat = decl_cats[sgdecl]
-	local pldeclcat = decl_cats[pldecl]
+	local sgdc = decl_cats[sgdecl]
+	local pldc = decl_cats[pldecl]
 	-- error(sgdecl)
-	assert(sgdeclcat)
-	assert(pldeclcat)
-	-- insert human version of declinfo
-	local di = sgdeclcat.declinfo
-	if di.decl == "invariable" then
-		insert_cat("invariable ~")
-	elseif di.decl == "3rd" then
-		insert_cat("3rd-declension ~")
+	assert(sgdc)
+	assert(pldc)
+	-- insert human version of traditional declension
+	local decl_cat
+	if sgdc.decl == "invariable" then
+		decl_cat = "invariable ~"
+	elseif sgdc.decl == "3rd" then
+		decl_cat = "3rd-declension ~"
+	elseif sgdc.decl == "1st" then
+		decl_cat = sgdc.decl .. "-declension " .. sgdc.hard .. " ~"
+	elseif sgdc.decl == "2nd" then
+		local gender_to_full = {m="masculine", f="feminine", n="neuter"}
+		decl_cat = (sgdc.decl .. "-declension " .. sgdc.hard .. " normally " ..
+			gender_to_full[sgdc.g] .. " ~")
 	else
-		insert_cat(di.decl .. "-declension " .. di.hard .. " ~")
+		assert(false, "Unrecognized declension type")
 	end
+	insert_cat_with_stem_type(decl_cat,
+		sgdc.decl == "invariable" and {} or sgstem_types)
 	local sgsuffix = args.suffixes["nom_sg"]
 	if sgsuffix then
 		assert(#sgsuffix == 1) -- If this ever fails, then implement a loop
@@ -351,30 +348,17 @@ local function categorize(stress, decl_class, args)
 			plsuffix = nil
 		end
 	end
-	local sgcat = sgsuffix and (resolve_cat(sgdeclcat.singular, sgsuffix) or "ending in -" .. sgsuffix)
-	local plcat = plsuffix and (resolve_cat(pldeclcat.plural, suffix) or "plural -" .. plsuffix)
-	if sgcat then
+	local sgcat = sgsuffix and (resolve_cat(sgdc.singular, sgsuffix) or "ending in " .. (sgdc.suffix and "suffix " or "") .. "-" .. sgsuffix)
+	local plcat = plsuffix and (resolve_cat(pldc.plural, suffix) or "plural -" .. plsuffix)
+	if sgcat and sgdc.gensg then
 		for _, cat in ipairs(cat_to_list(sgcat)) do
-			insert_cat_with_stem_type("~ " .. cat,
-				sgdeclcat.declinfo.decl == "invariable" and {} or sgstem_types,
-				sgdeclcat.allowcons)
+			insert_cat("~ " .. cat)
 		end
 	end
-	if plcat then
-		for _, cat in ipairs(cat_to_list(plcat)) do
-			insert_cat("~ with " .. plcat)
-		end
-	end
-	if sgcat and plcat then
-		if sgdeclcat == pldeclcat and sgdeclcat.full then
-			insert_cat_with_stem_type(resolve_cat(sgdeclcat.full))
-		else
-			for _, scat in ipairs(cat_to_list(sgcat)) do
-				for _, pcat in ipairs(cat_to_list(plcat)) do
-					insert_cat_with_stem_type("~ " .. scat .. " with " .. pcat,
-						sgdeclcat.declinfo.decl == "invariable" and {} or sgstem_types,
-						sgdeclcat.allowcons)
-				end
+	if sgcat and plcat and (sgdc.suffix or sgdc.irregpl) then
+		for _, scat in ipairs(cat_to_list(sgcat)) do
+			for _, pcat in ipairs(cat_to_list(plcat)) do
+				insert_cat("~ " .. scat .. " with " .. pcat)
 			end
 		end
 	end
@@ -798,9 +782,9 @@ end
 
 function is_reducible(stem, decl, old)
 	local decl_cats = old and declensions_old_cat or declensions_cat
-	local di = decl_cats[decl].declinfo
-	if di.suffix or di.cant_reduce then return false end
-	if di.decl == "3rd" or di.g == "m" then return true end
+	local dc = decl_cats[decl]
+	if dc.suffix or dc.cant_reduce then return false end
+	if dc.decl == "3rd" or dc.g == "m" then return true end
 	return false
 end
 
@@ -845,9 +829,9 @@ end
 
 function is_unreducible(stem, decl, old)
 	local decl_cats = old and declensions_old_cat or declensions_cat
-	local di = decl_cats[decl].declinfo
-	if di.suffix or di.cant_reduce then return false end
-	if di.decl == "1st" or di.decl == "2nd" and di.g == "n" then return true end
+	local dc = decl_cats[decl]
+	if dc.suffix or dc.cant_reduce then return false end
+	if dc.decl == "1st" or dc.decl == "2nd" and dc.g == "n" then return true end
 	return false
 end
 	
@@ -911,7 +895,7 @@ function export.unreduce_nom_sg_stem(stem, decl, stress, old, can_err)
 	if not ret then
 		return nil
 	end
-	if old and declensions_old_cat[decl].declinfo.hard == "hard" then
+	if old and declensions_old_cat[decl].hard == "hard" then
 		return ret .. "ъ"
 	elseif decl == "я" then
 		-- This next clause corresponds to a special case in Vitalik's module.
@@ -969,19 +953,14 @@ detect_decl_old["ъ"] = function(stem, stress)
 		return "ъ-normal"
 	end
 end
-declensions_old_cat["ъ"] = {
-	declinfo = {decl="2nd", hard="hard", g="m"},
-}
+declensions_old_cat["ъ"] = { decl="2nd", hard="hard", g="m" }
 
 -- Normal mapping of old ъ would be "" (blank), but we call it "-" so we
 -- have a way of referring to it without defaulting if need be (e.g. in the
 -- second stem of a word where the first stem has a different decl class),
 -- and eventually want to make "" (blank) auto-detect the class.
 detect_decl["-"] = old_detect_decl_to_new(detect_decl_old["ъ"])
-declensions_cat["-"] = {
-	singular = "ending in a consonant",
-	declinfo = {decl="2nd", hard="hard", g="m"},
-}
+declensions_cat["-"] = declensions_old_cat["ъ"]
 
 ----------------- Masculine hard, irregular plural -------------------
 
@@ -1004,12 +983,11 @@ detect_decl_old["ъ-а"] = function(stem, stress)
 		return "ъ-а-normal"
 	end
 end
-declensions_old_cat["ъ-а"] = {
-	declinfo = {decl="2nd", hard="hard", g="m"},
+declensions_old_cat["ъ-а"] = { decl="2nd", hard="hard", g="m", irregpl=true }
 }
 declensions_cat["-а"] = {
 	singular = "ending in a consonant",
-	declinfo = {decl="2nd", hard="hard", g="m"},
+	decl="2nd", hard="hard", g="m", irregpl=true,
 }
 
 -- Normal hard-masculine declension, ending in a hard consonant
@@ -1044,12 +1022,11 @@ detect_decl_old["ъ-ья"] = function(stem, stress)
 		return "ъ-ья-normal"
 	end
 end
-declensions_old_cat["ъ-ья"] = {
-	declinfo = {decl="2nd", hard="hard", g="m"},
+declensions_old_cat["ъ-ья"] = { decl="2nd", hard="hard", g="m", irregpl=true }
 }
 declensions_cat["-ья"] = {
 	singular = "ending in a consonant",
-	declinfo = {decl="2nd", hard="hard", g="m"},
+	decl="2nd", hard="hard", g="m", irregpl=true,
 }
 
 ----------------- Masculine hard, suffixed, irregular plural -------------------
@@ -1069,16 +1046,7 @@ declensions_old["инъ"] = {
 	["pre_pl"] = "а́хъ",
 }
 
-declensions_old_cat["инъ"] = {
-	singular = {"ending in suffixed -инъ", "ending in -ъ"},
-	declinfo = {decl="2nd", hard="hard", g="m", suffix=true},
-	allowcons = true,
-}
-declensions_cat["ин"] = {
-	singular = {"ending in suffixed -ин", "ending in a consonant"},
-	declinfo = {decl="2nd", hard="hard", g="m", suffix=true},
-	allowcons = true,
-}
+declensions_old_cat["инъ"] = { decl="2nd", hard="hard", g="m", suffix=true }
 
 declensions_old["ёнокъ"] = {
 	["nom_sg"] = "ёнокъ",
@@ -1098,26 +1066,10 @@ declensions_old["ёнокъ"] = {
 declensions_old["онокъ"] = declensions_old["ёнокъ"]
 declensions_old["енокъ"] = declensions_old["ёнокъ"]
 
-declensions_old_cat["ёнокъ"] = {
-	singular = function(suffix)
-		assert(#suffix == 1)
-		return {"ending in suffixed -" .. suffix[1], "ending in -ъ"}
-	end,
-	declinfo = {decl="2nd", hard="hard", g="m", suffix=true},
-	allowcons = true,
+declensions_old_cat["ёнокъ"] = { decl="2nd", hard="hard", g="m", suffix=true }
 }
 declensions_old_cat["-онокъ"] = declensions_old_cat["ёнокъ"]
 declensions_old_cat["-енокъ"] = declensions_old_cat["ёнокъ"]
-declensions_cat["ёнок"] = {
-	singular = function(suffix)
-		assert(#suffix == 1)
-		return {"ending in suffixed -" .. suffix[1], "ending in a consonant"}
-	end,
-	declinfo = {decl="2nd", hard="hard", g="m", suffix=true},
-	allowcons = true,
-}
-declensions_cat["-онок"] = declensions_cat["ёнок"]
-declensions_cat["-енок"] = declensions_cat["ёнок"]
 
 ----------------- Masculine soft -------------------
 
@@ -1137,21 +1089,13 @@ declensions_old["ь-m"] = {
 	["pre_pl"] = "я́хъ",
 }
 
-declensions_old_cat["ь-m"] = {
-	-- singular = {"ending in normally masculine -ь", "ending in -ь"},
-	singular = "ending in normally masculine -ь",
-	declinfo = {decl="2nd", hard="soft", g="m"},
-}
+declensions_old_cat["ь-m"] = { decl="2nd", hard="soft", g="m" }
 
 -- Soft-masculine declension in -ь with irreg nom pl -я
 declensions_old["ь-я"] = mw.clone(declensions_old["ь-m"])
 declensions_old["ь-я"]["nom_pl"] = "я́"
 
-declensions_old_cat["ь-я"] = {
-	-- singular = {"ending in normally masculine -ь", "ending in -ь"},
-	singular = "ending in normally masculine -ь",
-	declinfo = {decl="2nd", hard="soft", g="m"},
-}
+declensions_old_cat["ь-я"] = { decl="2nd", hard="soft", g="m", irregpl=true }
 
 ----------------- Masculine palatal -------------------
 
@@ -1185,12 +1129,7 @@ detect_decl_old["й"] = function(stem, stress)
 	end
 end
 
-declensions_old_cat["й"] = {
-	-- singular = {"ending in -й", "ending in a consonant"},
-	singular = "ending in -й",
-	declinfo = {decl="2nd", hard="soft", g="m"},
-	allowcons = true,
-}
+declensions_old_cat["й"] = { decl="2nd", hard="soft", g="m", gensg = true }
 
 --------------------------------------------------------------------------
 --                       First-declension feminine                      --
@@ -1228,9 +1167,7 @@ detect_decl_old["а"] = function(stem, stress)
 	end
 end
 
-declensions_old_cat["а"] = {
-	declinfo = {decl="1st", hard="hard", g="f"},
-}
+declensions_old_cat["а"] = { decl="1st", hard="hard", g="f" }
 
 ----------------- Feminine soft -------------------
 
@@ -1265,10 +1202,7 @@ detect_decl_old["я"] = function(stem, stress)
 	end
 end
 
-declensions_old_cat["я"] = {
-	declinfo = {decl="1st", hard="soft", g="f"},
-	allowcons = true,
-}
+declensions_old_cat["я"] = { decl="1st", hard="soft", g="f" }
 
 -- Soft-feminine declension in -ья, with unstressed genitive plural -ий.
 -- Almost like ь + -я endings except for genitive plural.
@@ -1303,15 +1237,8 @@ detect_decl_old["ья"] = function(stem, stress)
 end
 
 declensions_old_cat["ья"] = {
-	singular = {"ending in -ья", "ending in -я"},
-	plural = {"plural -ьи", "plural -и"},
-	full = {"ending in -ья with plural -ьи", "ending in -я with plural -и"},
-	-- singular = {"ending in -ья", "ending in -я"},
-	-- plural = {"plural -ьи", "plural -и"},
-	-- full = {"ending in -ья with plural -ьи", "ending in -я with plural -и"},
-	declinfo = {decl="1st", hard="soft", g="f",
-		cant_reduce=true -- already has unreduced gen pl
-	},
+	decl="1st", hard="soft", g="f", gensg=true,
+	cant_reduce=true -- already has unreduced gen pl
 }
 
 --------------------------------------------------------------------------
@@ -1335,16 +1262,12 @@ declensions_old["о"] = {
 	["ins_pl"] = "а́ми",
 	["pre_pl"] = "а́хъ",
 }
-declensions_old_cat["о"] = {
-	declinfo = {decl="2nd", hard="hard", g="n"},
-}
+declensions_old_cat["о"] = { decl="2nd", hard="hard", g="n" }
 
 -- Hard-neuter declension in -о with irreg nom pl -и
 declensions_old["о-и"] = mw.clone(declensions_old["о"])
 declensions_old["о-и"]["nom_pl"] = "ы́"
-declensions_old_cat["о-и"] = {
-	declinfo = {decl="2nd", hard="hard", g="n"},
-}
+declensions_old_cat["о-и"] = { decl="2nd", hard="hard", g="n", irregpl=true }
 
 declensions_old["о-ы"] = declensions_old["о-и"]
 declensions_old_cat["о-ы"] = declensions_old_cat["о-и"]
@@ -1379,9 +1302,7 @@ detect_decl_old["о-ья"] = function(stem, stress)
 		return "о-ья-normal"
 	end
 end
-declensions_old_cat["о-ья"] = {
-	declinfo = {decl="2nd", hard="hard", g="n"},
-}
+declensions_old_cat["о-ья"] = { decl="2nd", hard="hard", g="n", irregpl=true }
 
 ----------------- Neuter soft -------------------
 
@@ -1425,8 +1346,14 @@ detect_decl_old["е"] = function(stem, stress)
 	end
 end
 declensions_old_cat["е"] = {
-	declinfo = {decl="2nd", hard="soft", g="n"},
-	allowcons = true,
+	singular = function(stem)
+		if stem == "ё" then
+			return "ending in -ё"
+		else
+			return {}
+		end
+	end,
+	decl="2nd", hard="soft", g="n", gensg=true
 }
 
 -- User-facing declension type "ё" = "е"
@@ -1464,9 +1391,8 @@ detect_decl_old["е́"] = function(stem, stress)
 	end
 end
 declensions_old_cat["е́"] = {
-	singular = {"ending in stressed -е", "ending in -е"},
-	declinfo = {decl="2nd", hard="soft", g="n"},
-	allowcons = true,
+	singular = "ending in stressed -е",
+	decl="2nd", hard="soft", g="n", gensg=true
 }
 
 -- Soft-neuter declension in unstressed -ье (stressed -ьё),
@@ -1504,19 +1430,8 @@ end
 detect_decl_old["ьё"] = detect_decl_old["ье"]
 
 declensions_old_cat["ье"] = {
-	--singular = function(suffix)
-	--	assert(#suffix == 1)
-	--	return {"ending in -" .. suffix[1], "ending in -" .. usub(suffix[1], -1)}
-	--end,
-	--plural = {"plural -ья", "plural -я"},
-	--full = function(suffix)
-	--	assert(#suffix == 1)
-	--	return {"ending in -" .. suffix[1] .. " with plural -ья",
-	--		"ending in -" .. usub(suffix[1], -1) .. " with plural -я"}
-	--end,
-	declinfo = {decl="2nd", hard="soft", g="n",
-		cant_reduce=true -- already has unreduced gen pl
-	},
+	decl="2nd", hard="soft", g="n", gensg=true,
+	cant_reduce=true -- already has unreduced gen pl
 }
 declensions_old_cat["ьё"] = declensions_old_cat["ье"]
 
@@ -1539,11 +1454,7 @@ declensions_old["ь-f"] = {
 	["pre_pl"] = "я́хъ",
 }
 
-declensions_old_cat["ь-f"] = {
-	-- singular = {"ending in normally feminine -ь", "ending in -ь"},
-	singular = "ending in normally feminine -ь",
-	declinfo = {decl="3rd", hard="soft", g="f"},
-}
+declensions_old_cat["ь-f"] = { decl="3rd", hard="soft", g="f" }
 
 declensions_old["мя"] = {
 	["nom_sg"] = "мя",
@@ -1560,10 +1471,7 @@ declensions_old["мя"] = {
 	["pre_pl"] = "мена́хъ",
 }
 
-declensions_old_cat["мя"] = {
-	declinfo = {decl="3rd", hard="soft", g="n", suffix=true},
-	allowcons = true,
-}
+declensions_old_cat["мя"] = { decl="3rd", hard="soft", g="n", suffix=true }
 
 declensions_old["мя-1"] = {
 	["nom_sg"] = "мя",
@@ -1580,10 +1488,7 @@ declensions_old["мя-1"] = {
 	["pre_pl"] = "мёнахъ",
 }
 
-declensions_old_cat["мя-1"] = {
-	declinfo = {decl="3rd", hard="soft", g="n", suffix=true},
-	allowcons = true,
-}
+declensions_old_cat["мя-1"] = { decl="3rd", hard="soft", g="n", suffix=true }
 
 --------------------------------------------------------------------------
 --                              Invariable                              --
@@ -1604,12 +1509,7 @@ declensions_old["*"] = {
 	["ins_pl"] = "",
 	["pre_pl"] = "",
 }
-declensions_old_cat["*"] = {
-	singular = "with invariable singular",
-	plural = "invariable plural",
-	full = "with invariable endings",
-	declinfo = {decl="invariable", hard="none", g="none"},
-}
+declensions_old_cat["*"] = { decl="invariable", hard="none", g="none" }
 
 --------------------------------------------------------------------------
 --                         Inflection functions                         --
