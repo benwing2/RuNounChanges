@@ -19,7 +19,6 @@ decls = [
       [u"-ц (-цъ old-style)", u"-ы", [u"ц"]],
       [u"a velar (plus -ъ old-style)", u"-и", ["velar"]],
       [u"a sibilant (plus -ъ old-style)", u"-и", ["sibilant"]],
-      [u"-й", u"-и", [u"й"]],
     ]],
     ["2nd", "soft", "masculine", [
       [u"-ь", u"-и", [None]]

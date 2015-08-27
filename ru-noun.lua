@@ -673,6 +673,15 @@ function export.show_old(frame)
 	return do_show(frame, true)
 end
 
+local stem_expl = {
+	["velar"] = "a velar (-к, -г or –x)",
+	["sibilant"] = "a sibilant (-ш, -ж, -ч or -щ)",
+	["ц"] = "-ц",
+	["i"] = "-и (old-style -і)",
+	["й"] = "-й",
+	["ь"] = "-ь (indicating a soft consonant, in this case followed by /j/)",
+}
+
 function export.catboiler(frame)
 	local args = clone_args(frame)
 
@@ -684,7 +693,7 @@ function export.catboiler(frame)
 		if args[2] == "invariable" then
 			maintext = "invariable (indeclinable) ~, which normally have the same form for all cases and numbers."
 		else
-			maintext = (args[7] and args[7] .. "-stem " or "") .. args[2] .. "-declension " .. (args[3] and args[3] .. " " or "") .. "normally-" .. args[4] .. " ~, normally ending in nominative singular " .. args[5] .. " and nominative plural " .. args[6] .. "."
+			maintext = (args[7] and args[7] .. "-stem " or "") .. args[2] .. "-declension " .. (args[3] and args[3] .. " " or "") .. "normally-" .. args[4] .. " ~, normally ending in nominative singular " .. args[5] .. " and nominative plural " .. args[6] .. ". The stem ends in " .. (args[8] or stem_expl[args[7]]) .. "."
 		end
 		insert_category(cats, "~ by declension type")
 		if args[7] then
