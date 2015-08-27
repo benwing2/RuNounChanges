@@ -1723,17 +1723,9 @@ local unstressed_rules = {
 	["х"] = velar_rules,
 }
 
-local old_consonantal_suffixes = {
-	["ъ"] = true,
-	["ь"] = true,
-	["й"] = true,
-}
+local old_consonantal_suffixes = ut.list_to_set({"ъ", "ь", "й"})
 
-local consonantal_suffixes = {
-	[""] = true,
-	["ь"] = true,
-	["й"] = true,
-}
+local consonantal_suffixes = ut.list_to_set({"", "ь", "й"})
 
 trailing_letter_type = {
 	["ш"] = {"sibilant", "cons"},
@@ -1790,12 +1782,7 @@ function get_stem_trailing_letter_type(stem)
 	return hint_types, stem_types
 end
 
-sibilant_suffixes = {
-	["ш"] = true,
-	["щ"] = true,
-	["ч"] = true,
-	["ж"] = true,
-}
+sibilant_suffixes = ut.list_to_set({"ш", "щ", "ч", "ж"})
 
 local function combine_stem_and_suffix(stem, suf, rules, old)
 	local first = usub(suf, 1, 1)
@@ -1965,21 +1952,9 @@ stress_patterns["6*"] = {
 	nom_pl="-", gen_pl="+", dat_pl="+", acc_pl="+", ins_pl="+", pre_pl="+",
 }
 
-stressed_gen_pl_patterns = {
-	["2"] = true,
-	["3"] = true,
-	["5"] = true,
-	["6"] = true,
-	["6*"] = true,
-}
+stressed_gen_pl_patterns = ut.list_to_set({"2", "3", "5", "6", "6*"})
 
-stressed_pre_sg_patterns = {
-	["2"] = true,
-	["4"] = true,
-	["4*"] = true,
-	["6"] = true,
-	["6*"] = true,
-}
+stressed_pre_sg_patterns = ut.list_to_set({"2", "4", "4*", "6", "6*"})
 
 local after_titles = {
 	["a"] = " (animate)",
@@ -2003,39 +1978,17 @@ local notes_template = nil
 local templates = {}
 
 -- cases that are declined normally instead of handled through overrides
-decl_cases = {
-	["nom_sg"] = true,
-	["gen_sg"] = true,
-	["dat_sg"] = true,
-	["acc_sg"] = true,
-	["ins_sg"] = true,
-	["pre_sg"] = true,
-	["nom_pl"] = true,
-	["gen_pl"] = true,
-	["dat_pl"] = true,
-	["acc_pl"] = true,
-	["ins_pl"] = true,
-	["pre_pl"] = true,
-}
+decl_cases = ut.list_to_set({
+	"nom_sg", "gen_sg", "dat_sg", "acc_sg", "ins_sg", "pre_sg",
+	"nom_pl", "gen_pl", "dat_pl", "acc_pl", "ins_pl", "pre_pl",
+})
 
 -- all cases displayable or handleable through overrides
-cases = {
-	["nom_sg"] = true,
-	["gen_sg"] = true,
-	["dat_sg"] = true,
-	["acc_sg"] = true,
-	["ins_sg"] = true,
-	["pre_sg"] = true,
-	["nom_pl"] = true,
-	["gen_pl"] = true,
-	["dat_pl"] = true,
-	["acc_pl"] = true,
-	["ins_pl"] = true,
-	["pre_pl"] = true,
-	["par"] = true,
-	["loc"] = true,
-	["voc"] = true,
-}
+cases = ut.list_to_set({
+	"nom_sg", "gen_sg", "dat_sg", "acc_sg", "ins_sg", "pre_sg",
+	"nom_pl", "gen_pl", "dat_pl", "acc_pl", "ins_pl", "pre_pl",
+	"par", "loc", "voc",
+})
 
 -- Convert a raw override into a canonicalized list of individual overrides.
 -- If input is nil, so is output. Certain junk (e.g. <br/>) is removed,
