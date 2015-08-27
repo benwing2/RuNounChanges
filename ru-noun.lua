@@ -84,9 +84,9 @@ end
 
 -- Old-style declensions.
 local declensions_old = {}
--- Categories corresponding to old-style declensions. These may contain
--- the following fields: 'singular', 'plural', 'decl', 'hard', 'g',
--- 'suffix', 'gensg', 'irregpl', 'cant_reduce'.
+-- Category and type information corresponding to declensions: These may
+-- contain the following fields: 'singular', 'plural', 'decl', 'hard', 'g',
+-- 'suffix', 'gensg', 'irregpl', 'cant_reduce', 'stem_suffix'.
 --
 -- 'singular' is used to construct a category of the form
 -- "Russian nominals SINGULAR". If omitted, a category is constructed of the
@@ -112,7 +112,8 @@ local declensions_old = {}
 -- "Russian nominals ending in suffix -SGENDING with plural -PLENDING" if
 -- 'suffix' is true). Note that if either singular or plural or both
 -- specifies a list, looping will occur over all combinations. Such a
--- category is constructed only if 'irregpl' or 'suffix' is true.
+-- category is constructed only if 'irregpl' or 'suffix' is true or if the
+-- declension class is a slash class.
 --
 -- 'decl' is "1st", "2nd", "3rd" or "invariable"; 'hard' is "hard", "soft"
 -- or "none"; 'g' is "m", "f", "n" or "none"; these are all traditional
@@ -125,20 +126,25 @@ local declensions_old = {}
 --
 -- In addition to the above categories, additional more specific categories
 -- are constructed based on the final letter of the stem, e.g.
--- "Russian velar-stem nominals with ending -ENDING". See
--- get_stem_trailing_letter_type().
+-- "Russian velar-stem 1st-declension hard nominals". See
+-- get_stem_trailing_letter_type(). 'stem_suffix', if present, is added to
+-- the end of the stem when get_stem_trailing_letter_type() is called.
+-- This is the only place that 'stem_suffix' is used. This is for use with
+-- the '-ья' and '-ье' declension types, so that the trailing letter is
+-- 'ь' and not whatever precedes it.
 --
 -- 'enable_categories' is a special hack for testing, which disables all
 -- category insertion if false. Delete this as soon as we've verified the
 -- working of the category code and created all the necessary categories.
 local enable_categories = true
+-- Category/type info corresponding to old-style declensions; see above.
 local declensions_old_cat = {}
 -- New-style declensions; computed automatically from the old-style ones,
 -- for the most part.
 local declensions = {}
--- Categories corresponding to new-style declensions. Computed automatically
--- from the old-style ones, for the most part. Same format as the old-style
--- ones.
+-- Category/type info corresponding to new-style declensions. Computed
+-- automatically from the old-style ones, for the most part. Same format
+-- as the old-style ones.
 local declensions_cat = {}
 -- Auto-detection functions, old-style, for a given input declension.
 -- It is passed two params, (stressed) STEM and STRESS_PATTERN, and should
@@ -215,6 +221,8 @@ local function tracking_code(stress, decl_class, real_decl_class, args)
 		end
 	end
 end
+
+local gender_to_full = {m="masculine", f="feminine", n="neuter"}
 
 -- Insert the category CAT (a string) into list CATEGORIES. String will
 -- have "Russian " prepended and ~ substituted for the part of speech --
@@ -294,9 +302,6 @@ local function categorize(stress, decl_class, args)
 	end
 
 	assert(decl_class)
-	local _, sgstem_types = get_stem_trailing_letter_type(args.stem)
-	local _, plstem_types = get_stem_trailing_letter_type(args.pl)
-
 	local decl_cats = old and declensions_old_cat or declensions_cat
 
 	local sgdecl, pldecl
@@ -308,9 +313,12 @@ local function categorize(stress, decl_class, args)
 	end
 	local sgdc = decl_cats[sgdecl]
 	local pldc = decl_cats[pldecl]
-	-- error(sgdecl)
 	assert(sgdc)
 	assert(pldc)
+
+	local _, sgstem_types = get_stem_trailing_letter_type(
+		args.stem .. (sgdc.stem_suffix or ""))
+
 	-- insert human version of traditional declension
 	local decl_cat
 	if sgdc.decl == "invariable" then
@@ -318,10 +326,9 @@ local function categorize(stress, decl_class, args)
 	elseif sgdc.decl == "3rd" then
 		decl_cat = "3rd-declension ~"
 	elseif sgdc.decl == "1st" then
-		decl_cat = sgdc.decl .. "-declension " .. sgdc.hard .. " ~"
+		decl_cat = "1st-declension " .. sgdc.hard .. " ~"
 	elseif sgdc.decl == "2nd" then
-		local gender_to_full = {m="masculine", f="feminine", n="neuter"}
-		decl_cat = (sgdc.decl .. "-declension " .. sgdc.hard .. " normally " ..
+		decl_cat = ("2nd-declension " .. sgdc.hard .. " normally " ..
 			gender_to_full[sgdc.g] .. " ~")
 	else
 		assert(false, "Unrecognized declension type")
@@ -355,7 +362,8 @@ local function categorize(stress, decl_class, args)
 			insert_cat("~ " .. cat)
 		end
 	end
-	if sgcat and plcat and (sgdc.suffix or sgdc.irregpl) then
+	if sgcat and plcat and (sgdc.suffix or sgdc.irregpl or
+			rfind(decl_class, "/")) then
 		for _, scat in ipairs(cat_to_list(sgcat)) do
 			for _, pcat in ipairs(cat_to_list(plcat)) do
 				insert_cat("~ " .. scat .. " with " .. pcat)
@@ -676,27 +684,21 @@ function export.catboiler(frame)
 		if args[2] == "invariable" then
 			maintext = "invariable (indeclinable) ~, which normally have the same form for all cases and numbers."
 		else
-			maintext = args[2] .. "-declension " .. (args[3] and args[3] .. " " or "") .. "~, normally ending in nominative singular " .. args[4] .. " and nominative plural " .. args[5] .. "."
+			maintext = (args[7] and args[7] .. "-stem " or "") .. args[2] .. "-declension " .. (args[3] and args[3] .. " " or "") .. "normally " .. args[4] .. " ~, normally ending in nominative singular " .. args[5] .. " and nominative plural " .. args[6] .. "."
 		end
 		insert_category(cats, "~ by declension type")
+		if args[7] then
+			insert_category(cats, "~ by declension type and stem type")
+		end
 	elseif args[1] == "sg" then
-		maintext = (args[3] and args[3] .. "-stem " or "") .. "~ ending in nominative singular " .. args[2] .. "."
+		maintext = "~ ending in nominative singular " .. args[2] .. "."
 		insert_category(cats, "~ by singular ending")
-		if args[3] then
-			insert_category(cats, "~ by singular ending and stem type")
-		end
 	elseif args[1] == "pl" then
-		maintext = (args[3] and args[3] .. "-stem " or "") .. "~ ending in nominative plural " .. args[2] .. "."
+		maintext = "~ ending in nominative plural " .. args[2] .. "."
 		insert_category(cats, "~ by plural ending")
-		if args[3] then
-			insert_category(cats, "~ by plural ending and stem type")
-		end
 	elseif args[1] == "sgpl" then
-		maintext = (args[4] and args[4] .. "-stem " or "") .. "~ ending in nominative singular " .. args[2] .. " and nominative plural " .. args[3] .. "."
+		maintext = "~ ending in nominative singular " .. args[2] .. " and nominative plural " .. args[3] .. "."
 		insert_category(cats, "~ by singular and plural ending")
-		if args[4] then
-			insert_category(cats, "~ by singular and plural ending and stem type")
-		end
 	elseif args[1] == "stress" then
 		maintext = "~ with stress pattern " .. args[2] .. "."
 		insert_category(cats, "~ by stress pattern")
@@ -1129,7 +1131,7 @@ detect_decl_old["й"] = function(stem, stress)
 	end
 end
 
-declensions_old_cat["й"] = { decl="2nd", hard="soft", g="m", gensg = true }
+declensions_old_cat["й"] = { decl="2nd", hard="palatal", g="m" }
 
 --------------------------------------------------------------------------
 --                       First-declension feminine                      --
@@ -1237,7 +1239,8 @@ detect_decl_old["ья"] = function(stem, stress)
 end
 
 declensions_old_cat["ья"] = {
-	decl="1st", hard="soft", g="f", gensg=true,
+	decl="1st", hard="soft", g="f",
+	stem_suffix="ь",
 	cant_reduce=true -- already has unreduced gen pl
 }
 
@@ -1346,8 +1349,8 @@ detect_decl_old["е"] = function(stem, stress)
 	end
 end
 declensions_old_cat["е"] = {
-	singular = function(stem)
-		if stem == "ё" then
+	singular = function(suffix)
+		if suffix == "ё" then
 			return "ending in -ё"
 		else
 			return {}
@@ -1430,7 +1433,15 @@ end
 detect_decl_old["ьё"] = detect_decl_old["ье"]
 
 declensions_old_cat["ье"] = {
+	singular = function(suffix)
+		if suffix == "ьё" then
+			return "ending in -ьё"
+		else
+			return {}
+		end
+	end,
 	decl="2nd", hard="soft", g="n", gensg=true,
+	stem_suffix="ь",
 	cant_reduce=true -- already has unreduced gen pl
 }
 declensions_old_cat["ьё"] = declensions_old_cat["ье"]
@@ -1673,11 +1684,11 @@ tltype_to_stem_type = {
 	["c"] = "ц",
 	["palatal"] = "й",
 	["i"] = "i",
+	["soft-cons"] = "ь",
 	-- These are probably not useful as they don't reflect what people
 	-- would think, e.g. nouns in -ь would still be counted as hard-stem
 	-- because the -ь is considered an ending.
 	-- ["hard-cons"] = "hard-consonant",
-	-- ["soft-cons"] = "soft-consonant",
 	-- ["hard-vowel"] = "hard-vowel",
 	-- ["soft-vowel"] = "soft-vowel",
 	-- Eliminate these to reduce number of categories
