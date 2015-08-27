@@ -54,11 +54,11 @@ end
 
 -- FIXME! Move to utils
 local function list_to_set(list)
-    local set = {}
-    for _, item in ipairs(list) do
-        set[item] = true
-    end
-    return set
+	local set = {}
+	for _, item in ipairs(list) do
+		set[item] = true
+	end
+	return set
 end
 
 function track(page)
