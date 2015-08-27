@@ -713,12 +713,22 @@ function export.catboiler(frame)
 		if args[4] then
 			insert_category(cats, "~ by singular and plural ending and stem type")
 		end
+	elseif args[1] == "stress" then
+		maintext = "~ with stress pattern " .. args[2] .. "."
+		insert_category(cats, "~ by stress pattern")
+	elseif args[1] == "extracase" then
+		maintext = "~ with a separate " .. args[2] .. " singular case."
+		insert_category(cats, "~ by case form")
+	elseif args[1] == "irregcase" then
+		maintext = "~ with an irregular " .. args[2] .. " case."
+		insert_category(cats, "~ by case form")
 	else
 		maintext = "~ " .. args[1]
 	end
 
-	return "This category contains " .. maintext ..
-		"[[Template:ru-categoryTOC]]" .. m_utilities.format(categories(cats, lang))
+	return "This category contains Russian " .. rsub(maintext, "~", "nominals")
+		.. "\n[[Template:ru-categoryTOC]]"
+		.. m_utilities.format_categories(cats, lang)
 end
 
 ----------------- Declension helper functions -----------------
