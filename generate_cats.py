@@ -1,7 +1,10 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 import re
+import pywikibot
+
+dosave = False
 
 stress_patterns = ["1", "2", "3", "4", "4*", "5", "6", "6*"]
 decls = [
@@ -57,9 +60,20 @@ cases = ["nominative", "genitive", "dative", "accusative", "instrumental",
 numbers = ["singular", "plural"]
 extra_cases = ["locative", "partitive", "vocative"]
 
+site = pywikibot.Site()
+
+def msg(text):
+  print text.encode('utf-8')
+
 def create_cat(cat, args):
-  print ("Russian %s: {{runouncatboiler|%s}}" % (re.sub("~", "nominals", cat),
-      "|".join(args))).encode("utf-8")
+  cat = "Category:Russian " + cat.replace("~", "nominals")
+  text = "{{runouncatboiler|%s}}" % "|".join(args)
+  page = pywikibot.Page(site, cat)
+  page.text = unicode(text)
+  changelog = "Creating '%s' with text '%s'" % (cat, text)
+  msg("Changelog = %s" % changelog)
+  if dosave:
+    page.save(comment = changelog)
 
 for s in stress_patterns:
   create_cat("~ with stress pattern %s" % s, ["stress", s])
