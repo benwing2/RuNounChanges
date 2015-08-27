@@ -52,15 +52,6 @@ local function rsub(term, foo, bar)
 	return retval
 end
 
--- FIXME! Move to utils
-local function list_to_set(list)
-	local set = {}
-	for _, item in ipairs(list) do
-		set[item] = true
-	end
-	return set
-end
-
 function track(page)
 	m_debug.track("ru-noun/" .. page)
 	return true
@@ -1023,9 +1014,9 @@ local unstressed_rules = {
 	["х"] = velar_rules,
 }
 
-local old_consonantal_suffixes = list_to_set({"ъ", "ь", "й"})
+local old_consonantal_suffixes = ut.list_to_set({"ъ", "ь", "й"})
 
-local consonantal_suffixes = list_to_set(("", "ь", "й"})
+local consonantal_suffixes = ut.list_to_set({"", "ь", "й"})
 
 trailing_letter_type = {
 	["ш"] = {"sibilant", "cons"},
@@ -1054,7 +1045,7 @@ trailing_letter_type = {
 	["ю"] = {"vowel", "soft-vowel"},
 }
 
-sibilant_suffixes = list_to_set(("ш", "щ", "ч", "ж"})
+sibilant_suffixes = ut.list_to_set({"ш", "щ", "ч", "ж"})
 
 local function combine_stem_and_suffix(args, rules, stem, suf)
 	local first = usub(suf, 1, 1)
@@ -1193,9 +1184,9 @@ stress_patterns["6*"] = {
 	nom_pl="-", gen_pl="+", dat_pl="+", acc_pl="+", ins_pl="+", pre_pl="+",
 }
 
-stressed_gen_pl_patterns = list_to_set({"2", "3", "5", "6", "6*"})
+stressed_gen_pl_patterns = ut.list_to_set({"2", "3", "5", "6", "6*"})
 
-stressed_pre_sg_patterns = list_to_set({"2", "4", "4*", "6", "6*"})
+stressed_pre_sg_patterns = ut.list_to_set({"2", "4", "4*", "6", "6*"})
 
 local after_titles = {
 	["a"] = " (animate)",
@@ -1219,13 +1210,13 @@ local notes_template = nil
 local templates = {}
 
 -- cases that are declined normally instead of handled through overrides
-decl_cases = list_to_set({
+decl_cases = ut.list_to_set({
 	"nom_sg", "gen_sg", "dat_sg", "acc_sg", "ins_sg", "pre_sg",
 	"nom_pl", "gen_pl", "dat_pl", "acc_pl", "ins_pl", "pre_pl",
 })
 
 -- all cases displayable or handleable through overrides
-cases = list_to_set({
+cases = ut.list_to_set({
 	"nom_sg", "gen_sg", "dat_sg", "acc_sg", "ins_sg", "pre_sg",
 	"nom_pl", "gen_pl", "dat_pl", "acc_pl", "ins_pl", "pre_pl",
 	"par", "loc", "voc",
