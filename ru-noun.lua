@@ -55,12 +55,15 @@ local rsplit = mw.text.split
 local ulower = mw.ustring.lower
 local usub = mw.ustring.sub
 
-local AC = u(0x0301) -- acute =  ́
-
 -- version of rsubn() that discards all but the first return value
 local function rsub(term, foo, bar)
 	local retval = rsubn(term, foo, bar)
 	return retval
+end
+
+-- version of rfind() that lowercases its string first, for case-insensitive matching
+local function rlfind(term, foo)
+	return rfind(ulower(term), foo)
 end
 
 local function track(page)
@@ -197,10 +200,10 @@ local function tracking_code(stress, decl_class, real_decl_class, args)
 		track("reducible-stem")
 		dotrack("reducible-stem/")
 	end
-	if rfind(args.stem, "и́?н$") and (decl_class == "" or decl_class == "-") then
+	if rlfind(args.stem, "и́?н$") and (decl_class == "" or decl_class == "-") then
 		track("irregular-in")
 	end
-	if rfind(args.stem, "[еёо]́?нок$") and (decl_class == "" or decl_class == "-") then
+	if rlfind(args.stem, "[еёо]́?нок$") and (decl_class == "" or decl_class == "-") then
 		track("irregular-onok")
 	end
 	if args.pltail then
@@ -294,7 +297,7 @@ local function categorize(stress, decl_class, args)
 		for _, x in ipairs(override) do
 			local entry, notes = m_table_tools.get_notes(x)
 			entry = com.remove_accents(m_links.remove_links(entry))
-			if rfind(entry, suffix .. "$") then
+			if rlfind(entry, suffix .. "$") then
 				return true
 			end
 		end
@@ -1165,7 +1168,7 @@ declensions_old["(і)й"]["pre_sg"] = "и́"
 
 -- User-facing declension type "й"; mapped to "й-normal" or "(і)й"
 detect_decl_old["й"] = function(stem, stress)
-	if rfind(stem, "[іи]" .. AC .. "?$") then
+	if rlfind(stem, "[іи]́?$") then
 		return "(і)й"
 	else
 		return "й-normal"
@@ -1245,7 +1248,7 @@ declensions_old["(і)я"]["pre_sg"] = "и́"
 
 -- User-facing declension type "я"; mapped to "я-normal" or "(і)я"
 detect_decl_old["я"] = function(stem, stress)
-	if rfind(stem, "[іи]" .. AC .. "?$") then
+	if rlfind(stem, "[іи]́?$") then
 		return "(і)я"
 	else
 		return "я-normal"
@@ -1401,7 +1404,7 @@ declensions_old["(і)е-2"]["gen_pl"] = "й"
 
 -- User-facing declension type "е"; mapped to "е-normal", "(і)е-1" or "(і)е-2"
 detect_decl_old["е"] = function(stem, stress)
-	if rfind(stem, "[іи]" .. AC .. "?$") then
+	if rlfind(stem, "[іи]́?$") then
 		if stressed_pre_sg_patterns[stress] then
 			return "(і)е-2"
 		else
@@ -1444,7 +1447,7 @@ declensions_old["(і)е́"]["gen_pl"] = "й"
 
 -- User-facing declension type "е́"
 detect_decl_old["е́"] = function(stem, stress)
-	if rfind(stem, "[іи]" .. AC .. "?$") then
+	if rlfind(stem, "[іи]́?$") then
 		return "(і)е́"
 	else
 		return "е́-normal"
@@ -1815,11 +1818,11 @@ local function attach_unstressed(args, case, suf)
 	local stem = is_pl and args.pl or args.stem
 	local barestem = is_pl and args.barepl or args.bare
 	if old and old_consonantal_suffixes[suf] or not old and consonantal_suffixes[suf] then
-		if rfind(barestem, old and "[йьъ]$" or "[йь]$") then
+		if rlfind(barestem, old and "[йьъ]$" or "[йь]$") then
 			return barestem, ""
 		else
 			if suf == "й" or suf == "ь" then
-				if rfind(barestem, "[аеёиіоуэюяѣ́]$") then
+				if rfind(barestem, "[" .. com.vowel .. "]́?$") then
 					suf = "й"
 				else
 					suf = "ь"
