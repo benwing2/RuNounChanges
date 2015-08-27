@@ -591,7 +591,7 @@ local function do_show(frame, old)
 					stem = reduce_nom_sg_stem(stem, sgclass, "error")
 				elseif is_unreducible(stem, sgclass, old) then
 					resolved_bare = unreduce_nom_sg_stem(stem, sgclass,
-						stress, "error")
+						stress, old, "error")
 				else
 					error("Declension class " .. sgclass .. " not (un)reducible")
 				end
@@ -608,7 +608,8 @@ local function do_show(frame, old)
 						track("unpredictable-reducible")
 					end
 				elseif is_unreducible(stem, sgclass, old) then
-					local autobare = unreduce_nom_sg_stem(stem, sgclass, stress)
+					local autobare = unreduce_nom_sg_stem(stem, sgclass,
+						stress, old)
 					if not autobare then
 						track("error-unreducible")
 					elseif autobare == bare then
@@ -792,11 +793,10 @@ function is_unreducible(stem, decl, old)
 	return false
 end
 	
--- Unreduce stem to the form found in the gen pl by inserting an epenthetic
--- vowel. Applies to 1st declension. STEM and DECL are after
--- detect_stem_type(), before converting outward-facing declensions to
--- inward ones. STRESS is the stess pattern.
-function unreduce_nom_sg_stem(stem, decl, stress, can_err)
+-- Generate the unreduced gen pl stem given STEM, DECL and STRESS; this is
+-- without any terminating non-syllabic ending, which is added if needed by
+-- the calling function.
+local function basic_unreduce_nom_sg_stem(stem, decl, stress, can_err)
 	local pre, letter, post
 	-- FIXME!!! Deal with this special case
 	--if not (z.stem_type == 'soft' and _.equals(z.stress_type, {'b', 'f'}) -- we should ignore asterix for 2*b and 2*f (so to process it just like 2b or 2f)
@@ -813,10 +813,6 @@ function unreduce_nom_sg_stem(stem, decl, stress, can_err)
 	--	end
 	--end
 
-	-- FIXME!!! Deal with this special case
-	--if z.stem_type == 'soft' and _.endswith(z.word, 'ня') and z.stress_type == 'a' then
-	--	z.endings['gen_pl'] = ''
-	--end
 	pre, letter, post = rmatch(stem, "^(.*)([" .. com.cons .. "])([" .. com.cons .. "])$")
 	if pre then
 		local is_upper = rfind(post, "[" .. uppercase .. "]")
@@ -845,6 +841,36 @@ function unreduce_nom_sg_stem(stem, decl, stress, can_err)
 		error("Unable to unreduce stem " .. stem)
 	else
 		return nil
+	end
+end
+
+-- Unreduce stem to the form found in the gen pl by inserting an epenthetic
+-- vowel. Applies to 1st declension and 2nd declension neuter. STEM and DECL
+-- are after detect_stem_type(), before converting outward-facing declensions
+-- to inward ones. STRESS is the stess pattern.
+function unreduce_nom_sg_stem(stem, decl, stress, old, can_err)
+	local ret = basic_unreduce_nom_sg_stem(stem, decl, stress, can_err)
+	if not ret then
+		return nil
+	end
+	if old and declensions_old_cat[decl].declinfo.hard == "hard" then
+		return stem .. "ъ"
+	elseif decl == "я" then
+		-- This next clause corresponds to a special case in Vitalik's module.
+		-- It says that nouns in -ня (accent class 1) have gen pl without
+		-- trailing -ь. It appears to apply to most nouns in -ня (possibly
+		-- all in -льня), but ку́хня (gen pl ку́хонь) is an exception.
+		-- дере́вня is an apparent exception but not really because it is
+		-- accent class 5.
+		if rfind(stem, "[нН]$") and stress == "1" then
+			return stem
+		elseif rfind(stem, com.vowel .. "́?$") then
+			return stem .. "й"
+		else
+			return stem .. "ь"
+		end
+	else
+		return stem
 	end
 end
 
