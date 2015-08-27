@@ -63,9 +63,20 @@ local function rsub(term, foo, bar)
 	return retval
 end
 
-function track(page)
+local function track(page)
 	m_debug.track("ru-noun/" .. page)
 	return true
+end
+
+-- Clone parent's args while also assigning nil to empty strings.
+local function clone_args(frame)
+	local args = {}
+	for pname, param in pairs(frame:getParent().args) do
+		if param == "" then args[pname] = nil
+		else args[pname] = param
+		end
+	end
+	return args
 end
 
 -- Old-style declensions.
@@ -412,13 +423,7 @@ local function do_show(frame, old)
 	SUBPAGENAME = mw.title.getCurrentTitle().subpageText
 	NAMESPACE = mw.title.getCurrentTitle().nsText
 
-	local args = {}
-	--Clone parent's args while also assigning nil to empty strings.
-	for pname, param in pairs(frame:getParent().args) do
-		if param == "" then args[pname] = nil
-		else args[pname] = param
-		end
-	end
+	local args = clone_args(frame)
 
 	local manual = false
 
@@ -588,9 +593,9 @@ local function do_show(frame, old)
 				local sgclass = sub_decl_classes[1][1]
 				if is_reducible(stem, sgclass, old) then
 					resolved_bare = stem
-					stem = reduce_nom_sg_stem(stem, sgclass, "error")
+					stem = export.reduce_nom_sg_stem(stem, sgclass, "error")
 				elseif is_unreducible(stem, sgclass, old) then
-					resolved_bare = unreduce_nom_sg_stem(stem, sgclass,
+					resolved_bare = export.unreduce_nom_sg_stem(stem, sgclass,
 						stress, old, "error")
 				else
 					error("Declension class " .. sgclass .. " not (un)reducible")
@@ -599,7 +604,7 @@ local function do_show(frame, old)
 				-- FIXME: Tracking code eventually to remove
 				local sgclass = sub_decl_classes[1][1]
 				if is_reducible(stem, sgclass, old) then
-					local autostem = reduce_nom_sg_stem(bare, sgclass)
+					local autostem = export.reduce_nom_sg_stem(bare, sgclass)
 					if not autostem then
 						track("error-reducible")
 					elseif autostem == stem then
@@ -608,7 +613,7 @@ local function do_show(frame, old)
 						track("unpredictable-reducible")
 					end
 				elseif is_unreducible(stem, sgclass, old) then
-					local autobare = unreduce_nom_sg_stem(stem, sgclass,
+					local autobare = export.unreduce_nom_sg_stem(stem, sgclass,
 						stress, old)
 					if not autobare then
 						track("error-unreducible")
@@ -671,6 +676,46 @@ end
 -- The main entry point for old declension tables.
 function export.show_old(frame)
 	return do_show(frame, true)
+end
+
+function export.catboiler(frame)
+	local args = clone_args(frame)
+
+	cats = {}
+	insert_category(cats, "~")
+
+	local maintext
+	if args[1] == "decl" then
+		if args[2] == "invariable" then
+			maintext = "invariable (indeclinable) ~, which normally have the same form for all cases and numbers."
+		else
+			maintext = args[2] .. "-declension " .. (args[3] and args[3] .. " " or "") .. "~, normally ending in nominative singular " .. args[4] .. " and nominative plural " .. args[5] .. "."
+		end
+		insert_category(cats, "~ by declension type")
+	elseif args[1] == "sg" then
+		maintext = (args[3] and args[3] .. "-stem " or "") .. "~ ending in nominative singular " .. args[2] .. "."
+		insert_category(cats, "~ by singular ending")
+		if args[3] then
+			insert_category(cats, "~ by singular ending and stem type")
+		end
+	elseif args[1] == "pl" then
+		maintext = (args[3] and args[3] .. "-stem " or "") .. "~ ending in nominative plural " .. args[2] .. "."
+		insert_category(cats, "~ by plural ending")
+		if args[3] then
+			insert_category(cats, "~ by plural ending and stem type")
+		end
+	elseif args[1] == "sgpl" then
+		maintext = (args[4] and args[4] .. "-stem " or "") .. "~ ending in nominative singular " .. args[2] .. " and nominative plural " .. args[3] .. "."
+		insert_category(cats, "~ by singular and plural ending")
+		if args[4] then
+			insert_category(cats, "~ by singular and plural ending and stem type")
+		end
+	else
+		maintext = "~ " .. args[1]
+	end
+
+	return "This category contains " .. maintext ..
+		"[[Template:ru-categoryTOC]]" .. m_utilities.format(categories(cats, lang))
 end
 
 ----------------- Declension helper functions -----------------
@@ -750,7 +795,7 @@ end
 -- masculine 2nd-declension hard and soft, and 3rd-declension feminine in
 -- -ь. STEM and DECL are after detect_stem_type(), before converting
 -- outward-facing declensions to inward ones.
-function reduce_nom_sg_stem(stem, decl, can_err)
+function export.reduce_nom_sg_stem(stem, decl, can_err)
 	local pre, letter, post
 	pre, post = rmatch(stem, "^(.*)[Оо]́?(.)$")
 	if pre then
@@ -815,7 +860,7 @@ local function basic_unreduce_nom_sg_stem(stem, decl, stress, can_err)
 
 	pre, letter, post = rmatch(stem, "^(.*)([" .. com.cons .. "])([" .. com.cons .. "])$")
 	if pre then
-		local is_upper = rfind(post, "[" .. uppercase .. "]")
+		local is_upper = rfind(post, "[" .. com.uppercase .. "]")
 		if rfind(letter, "[ьйЬЙ]") then
 			if rfind(post, "[цЦ]$") or not stressed_gen_pl_patterns[stress] then
 				return pre .. (is_upper and "Е" or "е") .. post
@@ -848,13 +893,13 @@ end
 -- vowel. Applies to 1st declension and 2nd declension neuter. STEM and DECL
 -- are after detect_stem_type(), before converting outward-facing declensions
 -- to inward ones. STRESS is the stess pattern.
-function unreduce_nom_sg_stem(stem, decl, stress, old, can_err)
+function export.unreduce_nom_sg_stem(stem, decl, stress, old, can_err)
 	local ret = basic_unreduce_nom_sg_stem(stem, decl, stress, can_err)
 	if not ret then
 		return nil
 	end
 	if old and declensions_old_cat[decl].declinfo.hard == "hard" then
-		return stem .. "ъ"
+		return ret .. "ъ"
 	elseif decl == "я" then
 		-- This next clause corresponds to a special case in Vitalik's module.
 		-- It says that nouns in -ня (accent class 1) have gen pl without
@@ -862,15 +907,15 @@ function unreduce_nom_sg_stem(stem, decl, stress, old, can_err)
 		-- all in -льня), but ку́хня (gen pl ку́хонь) is an exception.
 		-- дере́вня is an apparent exception but not really because it is
 		-- accent class 5.
-		if rfind(stem, "[нН]$") and stress == "1" then
-			return stem
-		elseif rfind(stem, com.vowel .. "́?$") then
-			return stem .. "й"
+		if rfind(ret, "[нН]$") and stress == "1" then
+			return ret
+		elseif rfind(ret, com.vowel .. "́?$") then
+			return ret .. "й"
 		else
-			return stem .. "ь"
+			return ret .. "ь"
 		end
 	else
-		return stem
+		return ret
 	end
 end
 
