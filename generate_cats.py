@@ -52,15 +52,15 @@ endings = [
     (u"suffix -ин", u"-e"), (u"suffix -инъ", u"-е"),
     (u"suffix -мя", u"-мена"), (u"suffix -мя", u"-мёна"),
 ]
-sgendings = ["-ё", "stressed -е", "-ьё"]
+sgendings = [u"-ё", u"stressed -е", u"-ьё"]
 cases = ["nominative", "genitive", "dative", "accusative", "instrumental",
     "prepositional"]
 numbers = ["singular", "plural"]
 extra_cases = ["locative", "partitive", "vocative"]
 
 def create_cat(cat, args):
-  print "Russian %s: {{runouncatboiler|%s}}" % (re.sub("~", "nominals", cat),
-      "|".join(args))
+  print ("Russian %s: {{runouncatboiler|%s}}" % (re.sub("~", "nominals", cat),
+      "|".join(args))).encode("utf-8")
 
 for s in stress_patterns:
   create_cat("~ with stress pattern %s" % s, ["stress", s])
