@@ -1,65 +1,4 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr" class="client-nojs">
-<head>
-<meta charset="UTF-8" />
-<title>Editing Module:ru-noun - Wiktionary</title>
-<script>document.documentElement.className = document.documentElement.className.replace( /(^|\s)client-nojs(\s|$)/, "$1client-js$2" );</script>
-<script>window.RLQ = window.RLQ || []; window.RLQ.push( function () {
-mw.config.set({"wgCanonicalNamespace":"Module","wgCanonicalSpecialPageName":!1,"wgNamespaceNumber":828,"wgPageName":"Module:ru-noun","wgTitle":"ru-noun","wgCurRevisionId":34263593,"wgRevisionId":0,"wgArticleId":4210008,"wgIsArticle":!1,"wgIsRedirect":!1,"wgAction":"edit","wgUserName":null,"wgUserGroups":["*"],"wgCategories":[],"wgBreakFrames":!0,"wgPageContentLanguage":"en","wgPageContentModel":"Scribunto","wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgMonthNamesShort":["","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"wgRelevantPageName":"Module:ru-noun","wgRelevantArticleId":4210008,"wgIsProbablyEditable":!0,"wgRestrictionEdit":[],"wgRestrictionMove":[],"wgMediaViewerOnClick":!0,"wgMediaViewerEnabledByDefault":!0,"wgWikiEditorEnabledModules":{"toolbar":!0,
-"dialogs":!0,"preview":!1,"publish":!1},"wgBetaFeaturesFeatures":[],"wgCodeEditorCurrentLanguage":"lua","wgULSAcceptLanguageList":[],"wgULSCurrentAutonym":"English","wgCategoryTreePageCategoryOptions":"{\"mode\":0,\"hideprefix\":20,\"showcount\":true,\"namespaces\":false}","wgNoticeProject":"wiktionary","wgEditMessage":"editing"});mw.loader.implement("user.options",function($,jQuery){mw.user.options.set({"variant":"en"});});mw.loader.implement("user.tokens",function($,jQuery){mw.user.tokens.set({"editToken":"+\\","patrolToken":"+\\","watchToken":"+\\"});});mw.loader.load(["mediawiki.action.edit","mediawiki.toolbar","mediawiki.page.startup","mediawiki.legacy.wikibits","ext.centralauth.centralautologin","ext.uls.init","ext.uls.interface","ext.centralNotice.bannerController","skins.vector.js"]);
-} );</script>
-<link rel="stylesheet" href="https://en.wiktionary.org/w/load.php?debug=false&amp;lang=en&amp;modules=ext.uls.nojs%7Cmediawiki.action.edit.styles%7Cmediawiki.legacy.shared%7Cmediawiki.sectionAnchor%7Cmediawiki.skinning.interface%7Cmediawiki.ui.button%7Cskins.vector.styles&amp;only=styles&amp;skin=vector&amp;*" />
-<link rel="stylesheet" href="https://en.wiktionary.org/w/load.php?debug=false&amp;lang=en&amp;modules=ext.wikiEditor.toolbar.styles&amp;only=styles&amp;skin=vector&amp;*" />
-<link rel="stylesheet" href="https://en.wiktionary.org/w/load.php?debug=false&amp;lang=en&amp;modules=mediawiki.legacy.commonPrint&amp;only=styles&amp;skin=vector&amp;*" media="print" />
-<meta name="ResourceLoaderDynamicStyles" content="" />
-<link rel="stylesheet" href="https://en.wiktionary.org/w/load.php?debug=false&amp;lang=en&amp;modules=site&amp;only=styles&amp;skin=vector&amp;*" />
-<style>a:lang(ar),a:lang(kk-arab),a:lang(mzn),a:lang(ps),a:lang(ur){text-decoration:none}</style>
-<script async="" src="https://en.wiktionary.org/w/load.php?debug=false&amp;lang=en&amp;modules=startup&amp;only=scripts&amp;skin=vector&amp;*"></script>
-<meta name="generator" content="MediaWiki 1.26wmf19" />
-<meta name="robots" content="noindex,nofollow" />
-<link rel="alternate" type="application/x-wiki" title="Edit" href="/w/index.php?title=Module:ru-noun&amp;action=edit" />
-<link rel="edit" title="Edit" href="/w/index.php?title=Module:ru-noun&amp;action=edit" />
-<link rel="apple-touch-icon" href="/static/apple-touch/wiktionary/en.png" />
-<link rel="shortcut icon" href="/static/favicon/wiktionary/en.ico" />
-<link rel="search" type="application/opensearchdescription+xml" href="/w/opensearch_desc.php" title="Wiktionary (en)" />
-<link rel="EditURI" type="application/rsd+xml" href="//en.wiktionary.org/w/api.php?action=rsd" />
-<link rel="copyright" href="//creativecommons.org/licenses/by-sa/3.0/" />
-<link rel="alternate" type="application/atom+xml" title="Wiktionary Atom feed" href="/w/index.php?title=Special:RecentChanges&amp;feed=atom" />
-<link rel="canonical" href="https://en.wiktionary.org/wiki/Module:ru-noun" />
-<link rel="dns-prefetch" href="//meta.wikimedia.org" />
-<!--[if lt IE 7]><style type="text/css">body{behavior:url("/w/static/1.26wmf19/skins/Vector/csshover.min.htc")}</style><![endif]-->
-</head>
-<body class="mediawiki ltr sitedir-ltr ns-828 ns-subject page-Module_ru-noun skin-vector action-edit">
-		<div id="mw-page-base" class="noprint"></div>
-		<div id="mw-head-base" class="noprint"></div>
-		<div id="content" class="mw-body" role="main">
-			<a id="top"></a>
-
-							<div id="siteNotice"><!-- CentralNotice --></div>
-						<div class="mw-indicators">
-</div>
-			<h1 id="firstHeading" class="firstHeading" lang="en">Editing Module:ru-noun</h1>
-									<div id="bodyContent" class="mw-body-content">
-								<div id="contentSub"></div>
-												<div id="jump-to-nav" class="mw-jump">
-					Jump to:					<a href="#mw-head">navigation</a>, 					<a href="#p-search">search</a>
-				</div>
-				<div id="mw-content-text"><div class="mw-editnotice mw-editnotice-namespace mw-editnotice-828"><div style="border: 2px solid green; padding: 0.25em 0.75em; margin: 1em 0;" class="">
-<p>When editing modules, please take note of our <a href="/wiki/Wiktionary:Coding_conventions" title="Wiktionary:Coding conventions">module coding conventions</a>.
-</p>
-<hr /><p class="plainlinks" style="font-size: smaller;">Documentation: <a href="//www.mediawiki.org/wiki/Extension:Scribunto/Lua_reference_manual" class="extiw" title="mw:Extension:Scribunto/Lua reference manual">Scribunto</a> &#8226; <a rel="nofollow" class="external text" href="http://lua.org/manual/5.1">Lua 5.1</a><br/>Source code: <a class="external text" href="//git.wikimedia.org/tree/mediawiki%2Fextensions%2FScribunto/HEAD/">Scribunto</a>
-</div>
-</div><div id="mw-anon-edit-warning">
-<p><span class="plainlinks">You are not logged in. If you save your edits to this page, your IP address will be recorded in <a class="external text" href="//en.wiktionary.org/w/index.php?title=Module:ru-noun&amp;action=history">the page's history</a>. For that and <a href="/wiki/Wiktionary:Why_create_an_account%3F" title="Wiktionary:Why create an account?">other reasons</a>, you should <a class="external text" href="//en.wiktionary.org/w/index.php?title=Special:Userlogin&amp;type=signup">create an account</a>.</span>
-</p><p><b>Please do not save test edits. If you want to experiment, please use the <a href="/wiki/Wiktionary:Sandbox" title="Wiktionary:Sandbox">sandbox</a>.</b> Inserting nonsense, knowingly adding false information and gratuitously removing content are considered <a href="/wiki/Wiktionary:Vandalism" title="Wiktionary:Vandalism">vandalism</a>, and editors who engage in such behavior may be <a href="/wiki/Wiktionary:Blocking_policy" title="Wiktionary:Blocking policy">blocked</a> without a warning.
-</p>
-</div>
-<div id="wikiPreview" class="ontop" style="display: none;"><div lang="en" dir="ltr" class="mw-content-ltr"></div></div><form id="editform" name="editform" method="post" action="/w/index.php?title=Module:ru-noun&amp;action=submit" enctype="multipart/form-data"><div id="antispam-container" style="display: none;"><label for="wpAntiSpam">Anti-spam check.
-Do <strong>not</strong> fill this in!</label><input type="text" name="wpAntispam" id="wpAntispam" value="" /></div><input type='hidden' value="" name="wpSection"/>
-<input type='hidden' value="20150826113355" name="wpStarttime" />
-<input type='hidden' value="20150826080543" name="wpEdittime" />
-<input type='hidden' value="" name="wpScrolltop" id="wpScrolltop" />
-<input type="hidden" value="d41d8cd98f00b204e9800998ecf8427e" name="wpAutoSummary" /><input type="hidden" value="0" name="oldid" /><input type="hidden" value="34263593" name="parentRevId" /><input type="hidden" value="text/plain" name="format" /><input type="hidden" value="Scribunto" name="model" /><div class="wikiEditor-oldToolbar"><div id="toolbar"></div></div><textarea tabindex="1" accesskey="," id="wpTextbox1" cols="80" rows="25" style="" lang="en" dir="ltr" name="wpTextbox1">--[=[
+--[=[
 	This module contains functions for creating inflection tables for Russian
 	nouns.
 
@@ -268,7 +207,7 @@ local function do_show(frame, old)
 	-- as a list entry. Many existing templates use * for footnotes.
 	-- FIXME: We should maybe do this in {{ru-decl-noun}} instead.
 	if args.notes then
-		args.notes = rsub(args.notes, "^%*", "&amp;#42;")
+		args.notes = rsub(args.notes, "^%*", "&#42;")
 	end
 
 	local decls = old and declensions_old or declensions
@@ -1285,9 +1224,9 @@ local numbers = {
 	["p"] = "plural",
 }
 
-local form_temp = [=[{term}&lt;br/>&lt;span style="color: #888">{tr}&lt;/span>]=]
-local old_title_temp = [=[Pre-reform declension of &lt;b lang="ru" class="Cyrl">{lemma}&lt;/b>]=]
-local title_temp = [=[Declension of &lt;b lang="ru" class="Cyrl">{lemma}&lt;/b>]=]
+local form_temp = [=[{term}<br/><span style="color: #888">{tr}</span>]=]
+local old_title_temp = [=[Pre-reform declension of <b lang="ru" class="Cyrl">{lemma}</b>]=]
+local title_temp = [=[Declension of <b lang="ru" class="Cyrl">{lemma}</b>]=]
 
 local partitive = nil
 local locative = nil
@@ -1419,15 +1358,15 @@ function make_table(args)
 	for case in pairs(cases) do
 		if args[case] then
 			if #args[case] == 1 and args[case][1] == "-" then
-				args[case] = "&amp;mdash;"
+				args[case] = "&mdash;"
 			else
 				local ru_vals = {}
 				local tr_vals = {}
 				for i, x in ipairs(args[case]) do
 					local entry, notes = m_table_tools.get_notes(x)
-					-- clean &lt;br /> that's in many multi-form entries and
+					-- clean <br /> that's in many multi-form entries and
 					-- messes up linking
-					entry = rsub(entry, "^%s*&lt;br%s*/>%s*", "")
+					entry = rsub(entry, "^%s*<br%s*/>%s*", "")
 					if old then
 						ut.insert_if_not(ru_vals, m_links.full_link(com.make_unstressed(entry), entry, lang, nil, nil, nil, {tr = "-"}, false) .. notes)
 					else
@@ -1527,17 +1466,17 @@ vocative = [===[
 |-]===]
 
 notes_template = [===[
-&lt;div style="width:100%;text-align:left;background:#d9ebff">
-&lt;div style="display:inline-block;text-align:left;padding-left:1em;padding-right:1em">
+<div style="width:100%;text-align:left;background:#d9ebff">
+<div style="display:inline-block;text-align:left;padding-left:1em;padding-right:1em">
 {notes}
-&lt;/div>&lt;/div>
+</div></div>
 ]===]
 
 templates["full"] = [===[
-&lt;div>
-&lt;div class="NavFrame" style="display: inline-block; min-width: 45em">
-&lt;div class="NavHead" style="background:#eff7ff">{title}{after_title}&lt;/div>
-&lt;div class="NavContent">
+<div>
+<div class="NavFrame" style="display: inline-block; min-width: 45em">
+<div class="NavHead" style="background:#eff7ff">{title}{after_title}</div>
+<div class="NavContent">
 {\op}| style="background:#F9F9F9;text-align:center; min-width:45em" class="inflection-table"
 |-
 ! style="width:10em;background:#d9ebff" | 
@@ -1568,13 +1507,13 @@ templates["full"] = [===[
 | {pre_sg}
 | {pre_pl}
 |-{par_clause}{loc_clause}{voc_clause}
-|{\cl}{notes_clause}&lt;/div>&lt;/div>&lt;/div>]===]
+|{\cl}{notes_clause}</div></div></div>]===]
 
 templates["full_a"] = [===[
-&lt;div>
-&lt;div class="NavFrame" style="display: inline-block; min-width: 50em">
-&lt;div class="NavHead" style="background:#eff7ff">{title}{after_title}&lt;/div>
-&lt;div class="NavContent">
+<div>
+<div class="NavFrame" style="display: inline-block; min-width: 50em">
+<div class="NavHead" style="background:#eff7ff">{title}{after_title}</div>
+<div class="NavContent">
 {\op}| style="background:#F9F9F9;text-align:center; min-width:50em" class="inflection-table"
 |-
 ! style="width:15em;background:#d9ebff" | 
@@ -1593,7 +1532,7 @@ templates["full_a"] = [===[
 | {dat_sg}
 | {dat_pl}
 |-
-! style="background:#eff7ff" rowspan="2" | accusative &lt;span style="padding-left:1em;display:inline-block;vertical-align:middle">animate&lt;br/>inanimate&lt;/span>
+! style="background:#eff7ff" rowspan="2" | accusative <span style="padding-left:1em;display:inline-block;vertical-align:middle">animate<br/>inanimate</span>
 | {gen_sg}
 | {gen_pl}
 |-
@@ -1608,13 +1547,13 @@ templates["full_a"] = [===[
 | {pre_sg}
 | {pre_pl}
 |-{par_clause}{loc_clause}{voc_clause}
-|{\cl}{notes_clause}&lt;/div>&lt;/div>&lt;/div>]===]
+|{\cl}{notes_clause}</div></div></div>]===]
 
 templates["full_af"] = [===[
-&lt;div>
-&lt;div class="NavFrame" style="display: inline-block; min-width: 50em">
-&lt;div class="NavHead" style="background:#eff7ff">{title}{after_title}&lt;/div>
-&lt;div class="NavContent">
+<div>
+<div class="NavFrame" style="display: inline-block; min-width: 50em">
+<div class="NavHead" style="background:#eff7ff">{title}{after_title}</div>
+<div class="NavContent">
 {\op}| style="background:#F9F9F9;text-align:center; min-width:50em" class="inflection-table"
 |-
 ! style="width:15em;background:#d9ebff" | 
@@ -1633,7 +1572,7 @@ templates["full_af"] = [===[
 | {dat_sg}
 | {dat_pl}
 |-
-! style="background:#eff7ff" rowspan="2" | accusative &lt;span style="padding-left:1em;display:inline-block;vertical-align:middle">animate&lt;br/>inanimate&lt;/span>
+! style="background:#eff7ff" rowspan="2" | accusative <span style="padding-left:1em;display:inline-block;vertical-align:middle">animate<br/>inanimate</span>
 | rowspan="2" | {acc_sg}
 | {gen_pl}
 |-
@@ -1647,13 +1586,13 @@ templates["full_af"] = [===[
 | {pre_sg}
 | {pre_pl}
 |-{par_clause}{loc_clause}{voc_clause}
-|{\cl}{notes_clause}&lt;/div>&lt;/div>&lt;/div>]===]
+|{\cl}{notes_clause}</div></div></div>]===]
 
 templates["half"] = [===[
-&lt;div>
-&lt;div class="NavFrame" style="display: inline-block; min-width: 30em">
-&lt;div class="NavHead" style="background:#eff7ff">{title}{after_title}&lt;/div>
-&lt;div class="NavContent">
+<div>
+<div class="NavFrame" style="display: inline-block; min-width: 30em">
+<div class="NavHead" style="background:#eff7ff">{title}{after_title}</div>
+<div class="NavContent">
 {\op}| style="background:#F9F9F9;text-align:center; min-width:30em" class="inflection-table"
 |-
 ! style="width:10em;background:#d9ebff" | 
@@ -1677,13 +1616,13 @@ templates["half"] = [===[
 ! style="background:#eff7ff" | prepositional
 | {pre_x}
 |-{par_clause}{loc_clause}{voc_clause}
-|{\cl}{notes_clause}&lt;/div>&lt;/div>&lt;/div>]===]
+|{\cl}{notes_clause}</div></div></div>]===]
 
 templates["half_a"] = [===[
-&lt;div>
-&lt;div class="NavFrame" style="display: inline-block; min-width: 35em">
-&lt;div class="NavHead" style="background:#eff7ff">{title}{after_title}&lt;/div>
-&lt;div class="NavContent">
+<div>
+<div class="NavFrame" style="display: inline-block; min-width: 35em">
+<div class="NavHead" style="background:#eff7ff">{title}{after_title}</div>
+<div class="NavContent">
 {\op}| style="background:#F9F9F9;text-align:center; min-width:35em" class="inflection-table"
 |-
 ! style="width:15em;background:#d9ebff" | 
@@ -1698,7 +1637,7 @@ templates["half_a"] = [===[
 ! style="background:#eff7ff" | dative
 | {dat_x}
 |-
-! style="background:#eff7ff" rowspan="2" | accusative &lt;span style="padding-left:1em;display:inline-block;vertical-align:middle">animate&lt;br/>inanimate&lt;/span>
+! style="background:#eff7ff" rowspan="2" | accusative <span style="padding-left:1em;display:inline-block;vertical-align:middle">animate<br/>inanimate</span>
 | {gen_x}
 |-
 | {nom_x}
@@ -1709,325 +1648,9 @@ templates["half_a"] = [===[
 ! style="background:#eff7ff" | prepositional
 | {pre_x}
 |-{par_clause}{loc_clause}{voc_clause}
-|{\cl}{notes_clause}&lt;/div>&lt;/div>&lt;/div>]===]
+|{\cl}{notes_clause}</div></div></div>]===]
 
 return export
 
 -- For Vim, so we get 4-space tabs
 -- vim: set ts=4 sw=4 noet:
-</textarea><div class='editOptions'>
-<span class="mw-summary" id="wpSummaryLabel"><label for="wpSummary"><a href="/wiki/Help:Edit_summary" title="Help:Edit summary">Edit summary</a>:</label></span> <input class="mw-summary" id="wpSummary" maxlength="200" tabindex="1" size="60" spellcheck="true" title="Enter a short summary [b]" accesskey="b" name="wpSummary" /><div class='editCheckboxes'>
-</div>
-<div id="editpage-copywarn">
-<p>By clicking the “Save Page” button, you are agreeing to the <a href="//wikimediafoundation.org/wiki/Terms_of_Use" class="extiw" title="wmf:Terms of Use">Terms of Use</a> and the <a href="//wikimediafoundation.org/wiki/Privacy_policy" class="extiw" title="wmf:Privacy policy">Privacy Policy</a>, and you irrevocably agree to release your contribution under the <a rel="nofollow" class="external text" href="http://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA 3.0 License</a> and the <a rel="nofollow" class="external text" href="http://www.gnu.org/copyleft/fdl.html">GFDL</a>. You agree that a hyperlink or URL is sufficient attribution under the Creative Commons license.
-</p>
-</div>
-<div class='editButtons'>
-<input id="wpSave" name="wpSave" tabindex="3" title="Save your changes [s]" accesskey="s" type="submit" value="Save page" />
-
-<input id="wpDiff" name="wpDiff" tabindex="5" title="Show which changes you made to the text [v]" accesskey="v" type="submit" value="Show changes" />
-	<span class='cancelLink'><a href="/wiki/Module:ru-noun" title="Module:ru-noun" id="mw-editform-cancel">Cancel</a><span class="mw-editButtons-pipe-separator"> | </span></span>
-	<span class='editHelp'><a target="helpwindow" href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Editing_pages">Editing help</a> (opens in new window)</span>
-</div><!-- editButtons -->
-<fieldset id="templatesandbox-editform"><legend>Preview page with this template</legend><input id="wpTemplateSandboxTemplate" type="hidden" value="Module:ru-noun" name="wpTemplateSandboxTemplate" /><span class="mw-templatesandbox-page" id="wpTemplateSandboxPageLabel"><label for="wpTemplateSandboxPage">Page title:</label></span> <input id="wpTemplateSandboxPage" tabindex="6" size="60" spellcheck="true" name="wpTemplateSandboxPage" /><input id="wpTemplateSandboxPreview" name="wpTemplateSandboxPreview" type="submit" tabindex="7" value="Show preview" /></fieldset>
-</div><!-- editOptions -->
-
-<input type="hidden" value="+\" name="wpEditToken" />
-<div class="mw-editTools"><div id="editpage-specialchars" class="plainlinks" style="margin-top:1px;border-width:1px;border-style:solid;border-color:#aaaaaa;padding:2px;">
-<p class="specialbasic" id="edittools-Latin.2FRoman">
-<span title="letters with acute accents"><b>Acute</b>: <span class="charinsert">Á á Ć ć É é ǵ ḱ Í í Ĺ ĺ Ń ń Ó ó Ŕ ŕ Ś ś Ú ú Ẃ ẃ Ý ý Ź ź Ǽ ǽ</span></span> ···
-<span title="grave accents"><b>Grave</b>: <span class="charinsert">À à È è Ì ì Ò ò Ù ù Ẁ ẁ Ỳ ỳ</span></span> ···
-<span title="circumflexes"><b>Circumflex</b>: <span class="charinsert">Â â Ĉ ĉ Ê ê Ĝ ĝ Ĥ ĥ Î î Ĵ ĵ Ô ô Ŝ ŝ Û û Ŵ ŵ Ŷ ŷ</span></span> ···
-<span title="umlauts and diaereses"><b>Umlauts and diaereses</b>: <span class="charinsert">Ä ä Ë ë Ï ï Ö ö Ü ü Ẅ ẅ Ÿ ÿ</span></span> ···
-<span title="tildes"><b>Tilde</b>: <span class="charinsert">Ã ã Ẽ ẽ Ĩ ĩ l̃ m̃ Ñ ñ r̃ Õ õ Ũ ũ Ỹ ỹ</span></span> ···
-<span title="rings above/kroužek diacritics"><b>Ring</b>: <span class="charinsert">Å å Ů ů</span></span> ···
-<span title="cedillas"><b>Cedilla</b>: <span class="charinsert">Ç ç Ģ ģ Ķ ķ Ļ ļ Ņ ņ Ŗ ŗ Ş ş</span></span> ···
-<span title="commas below"><b>Comma below</b>: <span class="charinsert">D̦ d̦ Ș ș Ț ț</span></span> ···
-<span title="ogoneks"><b>Ogonek</b>: <span class="charinsert">Ą ą Ę ę Į į Ǫ ǫ Ų ų</span></span> ··· <span title="hooks"><b>Hook</b>: <span class="charinsert">Ả ả Ẻ ẻ Ỉ ỉ Ỏ ỏ Ủ ủ Ỷ ỷ</span></span> ··· <span title="horns"><b>Horn</b>: <span class="charinsert">Ơ ơ Ư ư</span></span> ··· <span title="letters with carons/háčeks"><b>Caron</b>: <span class="charinsert">Ǎ ǎ Č č Ď ď Ě ě Ǐ ǐ J̌ ǰ Ľ ľ Ň ň Ǒ ǒ Ř ř Š š Ť ť Ǔ ǔ Ž ž Ǯ ǯ</span></span> ···
-<span title="breves"><b>Breve</b>: <span class="charinsert">Ă ă Ĕ ĕ Ğ ğ Ĭ ĭ Ŏ ŏ Ŭ ŭ</span></span> ···
-<span title="strokes"><b>Stroke</b>: <span class="charinsert">Ƀ ƀ Đ đ Ǥ ǥ Ħ ħ Ł ł Ø ø Ŧ ŧ Ʉ ʉ</span></span> ···
-<span title="double acute accents"><b>Double acute</b>: <span class="charinsert">Ő ő Ű ű</span></span> ···
-<span title="macrons"><b>Macron</b>: <span class="charinsert">Ā ā Ē ē Ī ī Ō ō Ū ū Ȳ ȳ Ǣ ǣ</span></span> ···
-<span title="dots above"><b>Dot above</b>: <span class="charinsert">Ḃ ḃ Ċ ċ Ḋ ḋ Ė ė Ḟ ḟ Ġ ġ İ i Ṁ ṁ Ṅ ṅ Ṗ ṗ Ṙ ṙ Ṡ ṡ Ṫ ṫ Ż ż</span></span> ···
-<span title="dots below"><b>Dot below</b>: <span class="charinsert">Ạ ạ Ḍ ḍ Ẹ ẹ Ḥ ḥ Ị ị Ọ ọ Ṛ ṛ Ṣ ṣ Ṭ ṭ Ụ ụ Ỵ ỵ Ẓ ẓ</span></span> ···
-<span title="AE ligatures"><b>Ligatures</b>: <span class="charinsert">Æ æ</span></span> <span title="OE ligatures"><span class="charinsert">Œ œ</span></span> <span title="Eszett (ss/sz ligature)"><span class="charinsert">ß</span></span> ··· <b>Others</b>: 
-<span title="eth (distinct from D with stroke)"><span class="charinsert">Ð ð</span> </span>·<span title="thorn"> <span class="charinsert">Þ þ</span> </span>·<span class="charinsert">Ȝ ȝ Ƿ ƿ Ᵹ ᵹ</span></span>·<span title="hwair"><span class="charinsert">Ƕ ƕ</span></span>·<span title="eng"><span class="charinsert">Ŋ ŋ</span></span>·<span title="dotless i"><span class="charinsert">ı</span></span>·<span title="long s"> <span class="charinsert">ſ</span></span> ·<span title="Hawaiian ʻokina"><b><span class="charinsert">ʻ</span></b> ··· </span> <b>Double diacritics</b>: <span class="charinsert">Ằ ằ Ẳ ẳ Ẵ ẵ Ắ ắ Ặ ặ Ầ ầ Ẩ ẩ Ẫ ẫ Ấ ấ Ậ ậ ą́ ą̃  č̣ Č̣ Ề ề Ể ể Ễ ễ Ế ế Ệ ệ ḗ Ė̄ ė̄ ę́ ę̃ ė́ ė̃  Ḯ ḯ į́ į̃ Ồ ồ Ổ ổ Ỗ ỗ Ố ố Ǭ ǭ Ộ ộ ṓ Ờ ờ Ở ở Ỡ ỡ Ớ ớ Ợ ợ Ṏ ṏ Ǘ ǘ Ǜ ǜ Ǚ ǚ Ǖ ǖ Ừ ừ Ử ử Ữ ữ Ứ ứ Ự ự ų́ ų̃ ū́ ū̃  ÿ́ </span>
-</p>
-<p class="specialbasic" id="edittools-IPA_and_enPR">
-<b><a href="/wiki/Wiktionary:IPA" title="Wiktionary:IPA" class="mw-redirect">IPA</a></b>: <span class="charinsert">{{IPA|/+/|lang=}}</span>
-<b><a href="/wiki/Wiktionary:IPA#Vowels" title="Wiktionary:IPA" class="mw-redirect">Vowels</a></b>: <span class="charinsert" title="IPA vowels">ɨ ʉ ɯ ɪ ᵻ ʏ ʊ ᵿ ø ɘ ɵ ɤ ə ɛ œ ɜ ɞ ʌ ɔ æ ɐ ɶ ɑ ɒ ɚ ɝ ã ɑ̃ ə̃ ɛ̃ ɔ̃ œ̃ æ̃ ẽ ĩ õ ũ i̯ y̯ u̯ ɪ̯ ʏ̯ ʊ̯ ɐ̯ e̞ o̞ ø̞ a̯ i̥ u̥ ɯ̥ ᵊ</span> ··· 
-<b><a href="/wiki/Wiktionary:IPA#Suprasegmentals" title="Wiktionary:IPA" class="mw-redirect">Suprasegmentals</a></b>: <span class="charinsert" title="IPA Suprasegmentals">ˈ ˌ ː ˑ ˥ ˦ ˧ ˨ ˩ ‿ ꜛ ꜜ </span> ···
-<b><a href="/wiki/Wiktionary:IPA#Consonants_.28Pulmonic.29" title="Wiktionary:IPA" class="mw-redirect">Pulmonic consonants</a></b>: <span class="charinsert" title="IPA pulmonic consonants">b̥ d̥ ɡ̊ l̥ m̥ n̥ r̥ t̪ d̪ n̪ ʈ ɖ ɟ ɢ ʔ ɱ n ɳ ɲ ŋ ɴ ʙ ʀ ɾ ɽ ɸ β ṽ θ ð ʃ ʒ ʂ ʐ ç ʝ ɣ χ ʁ ħ ʕ ɦ ɬ ɮ ʋ ɹ ɻ ɰ ɭ ʎ ʟ ʍ ɥ ʜ ʢ ʡ ɕ ʑ ɺ ɧ ɡ ɫ l̩ m̩ n̩ r̩ ɹ̩ r̥ t͡ʃ d͡ʒ t͡ɕ d͡ʑ t͡s d͡z</span> ···
-<b><a href="/wiki/Wiktionary:IPA#Consonants_.28non-pulmonic.29" title="Wiktionary:IPA" class="mw-redirect">Non-pulmonic consonants</a></b>: <a href="//en.wikipedia.org/wiki/Click_consonant" class="extiw" title="w:Click consonant">Clicks</a>: <span class="charinsert" title="IPA non-pulmonic consonants - clicks">ʘ ǀ ǃ ǂ ǁ</span> · <a href="//en.wikipedia.org/wiki/Implosive_consonant" class="extiw" title="w:Implosive consonant">Implosives</a>: <span class="charinsert" title="IPA non-pulmonic consonants - implosives">ɓ ɗ ʄ ɠ ʛ</span> · <a href="//en.wikipedia.org/wiki/Ejective_consonant" class="extiw" title="w:Ejective consonant">Ejectives</a>: <span class="charinsert" title="IPA non-pulmonic consonants - ejectives">ʼ</span> ··· <b><a href="/wiki/Wiktionary:IPA#Diacritics" title="Wiktionary:IPA" class="mw-redirect">Diacritics</a></b>: <span title="IPA diacritics" class="charinsert">ʰ ʱ ʲ ʷ ˠ ˁ ˞ ᵝ  ̰   ̤ </span><br/>
-<b><a href="/wiki/Appendix:English_pronunciation" title="Appendix:English pronunciation">enPR</a></b>: <span class="charinsert">{{enPR|+}}</span>
-<b><a href="/wiki/Appendix:English_pronunciation#Vowels" title="Appendix:English pronunciation">Vowels</a></b>: <span class="charinsert">ā ă ä â ē ĕ ī ĭ î ō ŏ ô ŭ o͞o</span> (“food”) <span class="charinsert">o͝o</span> (“foot”) <span class="charinsert">û ə</span> ···
-<b>Partially anglicised foreign phonemes</b>: <span class="charinsert">ɴ ʀ ᴋʜ ö ü</span> ···
-<b><a href="/wiki/Appendix:English_pronunciation#Other_symbols" title="Appendix:English pronunciation">Stress markers</a></b>: <span class="charinsert">ʹ '</span>
-</p>
-<p class="specialbasic" id="edittools-Miscellaneous">
-<b>Wiki markup</b>: <span class="charinsert">{{+}} # &lt;+&gt; ~ |</span> ···
-<b>Quotation marks</b>: <b><span class="charinsert">“+” ‘+’ ‘ ’ ‛ „+“ ‚+‘ «+» ‹+› ⟨+⟩</span></b> ···
-<b>Other punctuation</b>: <span class="charinsert">
-<span title="ellipsis">…</span> <span title="middle dot">·</span>
-<span title="non-breaking hyphen">‑</span> <span title="en dash">–</span> <span title="em dash">—</span> <span title="quotation dash">―</span> <span title="double oblique hyphen">⸗</span>
-<span title="inverted question mark">¿</span>
-<span title="inverted exclamation mark">¡</span>
-<span title="interrobang">‽</span></span>
-<b>Mathematical symbols</b>:
-<span class="charinsert"><span title="plus-minus sign">±</span>
-<span title="minus sign">−</span>
-<span title="multiplication sign">×</span>
-<span title="division sign">÷</span>
-<span title="degree sign">°</span>
-<span title="approximately equals">≈</span>
-<span title="not equal to">≠</span>
-<span title="empty set, nothing">∅</span></span>
-<b>Other symbols</b>:
-<span class="charinsert"><span title="ordinal indicators" class="charinsert">ª º</span>
-<span title="pilcrow/paragraph sign">¶</span>
-<span title="section sign">§</span>
-<span title="single and double daggers">† ‡</span>
-<span title="numero sign">№</span>
-<span title="subscripts">₁ ₂ ₃</span>
-<span title="Tironian et">⁊</span>
-<span title="checkmark">✔</span>
-<span title="right arrows">→ ⇒</span>
-<span title="therefore">∴</span>
-<span title="because">∵</span>
-<span title="ditto mark">〃</span>
-<span title="female sign">♀</span>
-<span title="male sign">♂</span></span>
-</p>
-<p class="speciallang" id="edittools-Templates_and_Headers" style="display:none">
-<span class="charinsert">{{en-noun}} {{en-adj}} {{en-verb}} {{en-adv}} {{en-proper noun}} {{plural of|+}} {{present participle of|+}} {{past of|+}} {{comparative of|+}} {{superlative of|+}} {{misspelling of|+}} {{inflected form of|+}} {{alternative spelling of|+}} {{trans-top|+}} {{trans-mid}} {{trans-bottom}} {{der-top|+}} {{der-mid}} {{der-bottom}} {{rel-top|+}} {{rel-mid}} {{rel-bottom}}</span><br/>
-<span class="charinsert">===Alternative forms=== ===Etymology=== ===Pronunciation=== ===Noun=== ===Adjective=== ===Verb=== ===Adverb=== ===Pronoun=== ===Preposition=== ====Usage notes==== ====Synonyms==== ====Antonyms==== ====Derived terms==== ====Related terms==== ====Translations==== ===See also=== ===References===</span>
-</p>
-<p class="speciallang" id="edittools-African" style="display:none">
-<span class="charinsert">Ɑ ɑ Ɓ ɓ Ƈ ƈ Ɖ ɖ Ɗ ɗ Ǝ ǝ Ɛ ɛ Ƒ ƒ Ɠ ɠ Ɣ ɣ Ɩ ɩ Ɨ ɨ Ƙ ƙ Ŋ ŋ Ɲ ɲ Ɔ ɔ Ƥ ƥ Ʃ ʃ Ƭ ƭ Ʈ ʈ Ʊ ʊ Ʋ ʋ Ⱳ ⱳ Ƴ ƴ Ʒ ʒ</span>
-</p>
-<p class="speciallang" id="edittools-Arabic" style="display:none">
-<b>Letters</b>: <span class="charinsert Arab">ا أ إ آ ٱ ب ت ث ج ح خ د ذ ر ز س ش ص ض ط ظ ع غ ف ق ك ل م ن ه و ي ة ى ء ؤ ئ ﻻ ﷲ ـ ݣ</span> ··· <b>Persian</b>: <span class="charinsert fa-Arab">پ چ ژ ک گ ی </span> ··· <b>Urdu</b>: <span class="charinsert ur-Arab">ٹ ڈ ڑ ں ے ۓ ہ ھ</span> ··· <b>Kurdish</b>: <span class="charinsert ku-Arab">ە ڕ ڒ ڤ ڵ ۆ ۊ ێ</span>  ··· <b>Vowels</b>: <small>fatha:</small> <span class="charinsert Arab"> َ</span> <small>damma:</small> <span class="charinsert Arab"> ُ</span> <small>kasra:</small> <span class="charinsert Arab"> ِ</span> <small>fathatan:</small> <span class="charinsert Arab"> ً</span> <small>dammatan:</small> <span class="charinsert Arab"> ٌ</span> <small>kasratan:</small> <span class="charinsert Arab"> ٍ</span> ••• <b>Other</b>: <small>shadda:</small> <span class="charinsert Arab"> ّ</span> <small>sukun:</small> <span class="charinsert Arab"> ْ</span> <small>maddah above:</small> <span class="charinsert Arab"> ٓ</span> <small>hamza above:</small> <span class="charinsert"> ٔ</span> <small>hamza below:</small> <span class="charinsert Arab"> ٕ</span> <small>dagger alif:</small> <span class="charinsert Arab"> ٰ</span>
-<b>Arabic translit.</b>: <span class="charinsert">ʾ ṯ ḥ ḵ ḏ š ṣ ḍ ṭ ẓ ʿ ḡ ā ī ū ē ō á í ú é ó</span>
-<b>Persian translit</b>: <span class="charinsert">’ â š ž č ğ</span>
-</p>
-<p class="speciallang" id="edittools-Armenian" style="display:none">
-<span class="charinsert Armn">Ա ա Բ բ Գ գ Դ դ Ե ե Զ զ Է է Ը ը Թ թ Ժ ժ Ի ի Լ լ Խ խ Ծ ծ Կ կ Հ հ Ձ ձ Ղ ղ Ճ ճ Մ մ Յ յ Ն ն Շ շ Ո ո Չ չ Պ պ Ջ ջ Ռ ռ Ս ս Վ վ Տ տ Ր ր Ց ց Ւ ւ Փ փ Ք ք Օ օ Ֆ ֆ և ﬔ   ﬕ   ﬓ   ﬗ   ﬖ</span> ··· <b>Dialectal</b>: <span class="charinsert Armn">ՙ  ա̈  օ̈  ո̈ւ յ̵  ʔ</span> ··· <b>Punctuation</b>: <span class="charinsert Armn">  ՚   ՛   ՜   ՝   ՞   ՟   ․   ։   ֊ </span> ··· <b>Symbols</b>: <span class="charinsert Armn">֏ ֎ ֍</span>
-</p>
-<p class="speciallang" id="edittools-Burmese" style="display:none">
-<span class="charinsert Mymr">က ခ ဂ ဃ င စ ဆ ဇ ဈ ည ဉ ဋ ဌ ဍ ဎ ဏ တ ထ ဒ ဓ န ပ ဖ ဗ ဘ မ ယ ရ လ ဝ သ ဿ ဟ အ ဣ ဤ ဥ ဦ ဧ ဩ ဪ  င်္  ်  ္  ျ  ြ  ွ  ှ  ာ  ါ  ိ  ီ  ု  ူ  ေ  ဲ  ော  ေါ  ို  ံ  ့  း ၌ ၍ ၎ ၏ ၊ ။ ၀ ၁ ၂ ၃ ၄ ၅ ၆ ၇ ၈ ၉</span>
-<br/><b><a href="/wiki/Appendix:Burmese_transliteration" title="Appendix:Burmese transliteration">Transliteration</a></b>: <span class="charinsert">ā à á ă ḍ è é ī ì í ḷ ṃ ñ ṅ ṇ ò ó ṭ ū ù ú ʔ ’ ‘ ′ ″</span>
-</p>
-<p class="speciallang" id="edittools-Cherokee" style="display:none">
-<span class="charinsert Cher">Ꭰ Ꭱ Ꭲ Ꭳ Ꭴ Ꭵ Ꭶ Ꭷ Ꭸ Ꭹ Ꭺ Ꭻ Ꭼ Ꭽ Ꭾ Ꭿ Ꮀ Ꮁ Ꮂ Ꮃ Ꮄ Ꮅ Ꮆ Ꮇ Ꮈ Ꮉ Ꮊ Ꮋ Ꮌ Ꮍ Ꮎ Ꮏ Ꮐ Ꮑ Ꮒ Ꮓ Ꮔ Ꮕ Ꮖ Ꮗ Ꮘ Ꮙ Ꮚ Ꮛ Ꮜ Ꮝ Ꮞ Ꮟ Ꮠ Ꮡ Ꮢ Ꮣ Ꮤ Ꮥ Ꮦ Ꮧ Ꮨ Ꮩ Ꮪ Ꮫ Ꮬ Ꮭ Ꮮ Ꮯ Ꮰ Ꮱ Ꮲ Ꮳ Ꮴ Ꮵ Ꮶ Ꮷ Ꮸ Ꮹ Ꮺ Ꮻ Ꮼ Ꮽ Ꮾ Ꮿ Ᏸ Ᏹ Ᏺ Ᏻ Ᏼ</span>
-</p>
-<p class="specialbasic" id="edittools-Cyrillic">
-<span class="charinsert Cyrl">А а Б б В в Г г Ѓ ѓ Ґ ґ Д д Ђ ђ Е е Ё ё Є є Ж ж З з Ѕ ѕ З́ з́ И и І і Ї ї Й й Ј ј К к Ќ ќ Л л Љ љ М м Н н Њ њ О о П п Р р С с Ć ć Т т Ћ ћ У у Ў ў Ф ф Х х Ц ц Ч ч Џ џ Ш ш Щ щ Ъ ъ Ы ы Ь ь Э э Ю ю Я я ’</span> <small>m-dash:</small><span class="charinsert Cyrl">—</span> <small>acute:</small><span class="charinsert Cyrl" style="font-size:16pt;vertical-align:sub"> ́</span> <small>grave:</small><span class="charinsert Cyrl" style="font-size:16pt;vertical-align:sub"> ̀</span> <small>macron:</small><span class="charinsert Cyrl" style="font-size:16pt;vertical-align:sub"> ̄</span> <small>double grave:</small><span class="charinsert Cyrl" style="font-size:16pt;vertical-align:sub"> ̏</span> <small>inverted breve:</small><span class="charinsert Cyrl" style="font-size:16pt;vertical-align:sub"> ̑</span> <span class="charinsert Cyrl">А́ а́ Е́ е́ Є́ є́ И́ и́ І́ і́ Ї́ ї́ О́ о́ Р́ р́ У́ у́ Ъ́ ъ́ Ы́ ы́ Э́ э́ Ю́ ю́ Я́ я́</span> <span class="charinsert Cyrl">А̀ а̀ Ѐ ѐ Є̀ є̀ Ѝ ѝ І̀ і̀ Ї̀ ї̀ О̀ о̀ Р̀ р̀ У̀ у̀ Ъ̀ ъ̀ Ы̀ ы̀ Э̀ э̀ Ю̀ ю̀ Я̀ я̀</span>
-<br/><b>Non-Slavic</b>: <span class="charinsert Cyrl">Ӓ ӓ Ӑ ӑ Ӕ ӕ Ӡ ӡ Ӷ ӷ Ӣ ӣ Ҋ ҋ Ԥ ԥ Ӯ ӯ Ҕ ҕ Ғ ғ Е̃ е̃ Ҽ ҽ Ҿ ҿ Ә ә Ӛ ӛ Җ җ Ӝ ӝ Ӂ ӂ Ҙ ҙ Ӟ ӟ Ҋ ҋ И̃ и̃ Ӏ ӏ Ҟ ҟ Ҡ ҡ Қ қ Ӄ ӄ Ӆ ӆ Ԓ ԓ Ң ң Ҥ ҥ Ӈ ӈ Һ һ Ҩ ҩ Ө ө Ӫ ӫ Ӧ ӧ О̃ о̃ Р̌ р̌ Ҏ ҏ Ҫ ҫ Ҭ ҭ Ӱ ӱ Ү ү Ұ ұ Ҳ ҳ Ӽ ӽ Ӿ ӿ Ҍ ҍ Ӹ ӹ Ҵ ҵ Ҷ ҷ Ӵ ӵ Ӌ ӌ Ӭ ӭ Є̈ є̈ Ю̆ ю̆ Я̆ я̆ ˮ </span>
-<br/><b>Archaic</b>: <span class="charinsert Cyrl">Ҁ ҁ Ѻ ѻ Ѡ ѡ Ѿ ѿ Ꙑ ꙑ Ѣ ѣ Ꙓ ꙓ Ꙗ ꙗ Ѥ ѥ Ѧ ѧ Ѩ ѩ Ѫ ѫ Ѭ ѭ Ѯ ѯ Ѱ ѱ Ѳ ѳ Ѵ ѵ Ѷ ѷ Ꙟ ꙟ</span>
-<br/><b>Transliteration</b>: <span class="charinsert Cyrl">Ž ž Č č Š š ʹ ʺ Á á Ǎ ǎ Ǎ̀ ǎ̀ É é Í í Ó ó Ú ú Ý ý ɛ ɛ́ Ǵ ǵ Ḱ ḱ Ŭ ŭ</span>
-</p>
-<p class="speciallang" id="edittools-Devan.C4.81gar.C4.AB" style="display:none">
-<span class="charinsert Deva"> ँ  ं  ः अ आ इ ई उ ऊ ऋ ऌ ऍ ऎ ए ऐ ऑ ऒ ओ औ क क़ ख ख़ ग ग़ घ ङ च छ ज ज़ झ	झ़ ञ ट ठ ड ड़ ढ ढ़ ण त थ द ध न ऩ प फ फ़ ब भ म य य़ र ऱ ल ळ ऴ व श ष स ह  ़ ऽ  ा  ि  ॊ  ो  ौ  ्  ी  ु  ू  ृ  ॄ  ॅ  ॆ  े  ै  ॉ ॐ  ॑  ॒  ॓  ॔ ॠ ॡ  ॢ  ॣ । ॥ ॰</span> ...
-
-<br/><b><a href="/wiki/Wiktionary:Hindi_transliteration" title="Wiktionary:Hindi transliteration">Transliteration</a></b>: <span class="charinsert">ā ḍ ġ ḥ ī ḷ ḹ ṃ ñ ṅ ṇ ŕ ṛ ṝ ś ṣ ṭ ū</span> . <span class="charinsert">Ā Ḍ Ġ Ḥ Ī Ḷ Ḹ Ṃ Ñ Ṅ Ṇ Ŕ Ṛ Ṝ Ś Ṣ Ṭ Ū </span> .
-<br/><span class="charinsert"> ã ā̃ ẽ ĩ ī̃ õ ũ ū̃</span> . <span class="charinsert"> Ã Ā̃ Ẽ Ĩ Ī̃ õ Ũ Ū̃</span>
-</p>
-<p class="speciallang" id="edittools-Ethiopic" style="display:none">
-<span class="charinsert Ethi">ሀ ሁ ሂ ሃ ሄ ህ ሆ ሇ ለ ሉ ሊ ላ ሌ ል ሎ ሏ ሐ ሑ ሒ ሓ ሔ ሕ ሖ ሗ መ ሙ ሚ ማ ሜ ም ሞ ሟ ሠ ሡ ሢ ሣ ሤ ሥ ሦ ሧ ረ ሩ ሪ ራ ሬ ር ሮ ሯ ሰ ሱ ሲ ሳ ሴ ስ ሶ ሷ ሸ ሹ ሺ ሻ ሼ ሽ ሾ ሿ ቀ ቁ ቂ ቃ ቄ ቅ ቆ ቇ ቈ ቊ ቋ ቌ ቍ ቐ ቑ ቒ ቓ ቔ ቕ ቖ ቘ ቚ ቛ ቜ ቝ በ ቡ ቢ ባ ቤ ብ ቦ ቧ ቨ ቩ ቪ ቫ ቬ ቭ ቮ ቯ ተ ቱ ቲ ታ ቴ ት ቶ ቷ ቸ ቹ ቺ ቻ ቼ ች ቾ ቿ ኀ ኁ ኂ ኃ ኄ ኅ ኆ ኇ ኈ ኊ ኋ ኌ ኍ ነ ኑ ኒ ና ኔ ን ኖ ኗ ኘ ኙ ኚ ኛ ኜ ኝ ኞ ኟ አ ኡ ኢ ኣ ኤ እ ኦ ኧ ከ ኩ ኪ ካ ኬ ክ ኮ ኯ ኰ ኲ ኳ ኴ ኵ ኸ ኹ ኺ ኻ ኼ ኽ ኾ ዀ ዂ ዃ ዄ ዅ ወ ዉ ዊ ዋ ዌ ው ዎ ዏ ዐ ዑ ዒ ዓ ዔ ዕ ዖ ዘ ዙ ዚ ዛ ዜ ዝ ዞ ዟ ዠ ዡ ዢ ዣ ዤ ዥ ዦ ዧ የ ዩ ዪ ያ ዬ ይ ዮ ዯ ደ ዱ ዲ ዳ ዴ ድ ዶ ዷ ዸ ዹ ዺ ዻ ዼ ዽ ዾ ዿ ጀ ጁ ጂ ጃ ጄ ጅ ጆ ጇ ገ ጉ ጊ ጋ ጌ ግ ጎ ጏ ጐ ጒ ጓ ጔ ጕ ጘ ጙ ጚ ጛ ጜ ጝ ጞ ጟ ጠ ጡ ጢ ጣ ጤ ጥ ጦ ጧ ጨ ጩ ጪ ጫ ጬ ጭ ጮ ጯ ጰ ጱ ጲ ጳ ጴ ጵ ጶ ጷ ጸ ጹ ጺ ጻ ጼ ጽ ጾ ጿ ፀ ፁ ፂ ፃ ፄ ፅ ፆ ፇ ፈ ፉ ፊ ፋ ፌ ፍ ፎ ፏ ፐ ፑ ፒ ፓ ፔ ፕ ፖ ፗ ፘ ፙ ፚ ፠ ፡ ። ፣ ፤ ፥ ፦ ፧ ፨ ፩ ፪ ፫ ፬ ፭ ፮ ፯ ፰ ፱ ፲ ፳ ፴ ፵ ፶ ፷ ፸ ፹ ፺ ፻ ፼ ᎐ ᎑ ᎒ ᎓ ᎔ ᎕ ᎖ ᎗ ᎘ ᎙ </span>
-</p>
-<p class="speciallang" id="edittools-Georgian" style="display:none">
-<span class="charinsert Geor">ა ბ გ დ ე ვ ზ თ ი კ ლ მ ნ ო პ ჟ რ ს ტ უ ფ ქ ღ ყ შ ჩ ც ძ წ ჭ ხ ჯ ჰ</span>
-</p>
-<p class="speciallang" id="edittools-Gothic" style="display:none">
-<span class="charinsert Goth">𐌰 𐌱 𐌲 𐌳 𐌴 𐌵 𐌶 𐌷 𐌸 𐌹 𐌺 𐌻 𐌼 𐌽 𐌾 𐌿 𐍀 𐍁 𐍂 𐍃 𐍄 𐍅 𐍆 𐍇 𐍈 𐍉 𐍊</span> ··· <span class="charinsert">Þ þ Ƕ ƕ</span>
-</p>
-<p class="specialbasic" id="edittools-Greek">
-<b>Plain</b>: <span class="charinsert Grek">Α α Β β Γ γ Δ δ Ε ε Ζ ζ Η η Θ θ Ι ι Κ κ Λ λ Μ μ Ν ν Ξ ξ Ο ο Π π Ρ ρ Σ σ ς Τ τ Υ υ Φ φ Χ χ Ψ ψ Ω ω</span> · <span class="charinsert polytonic">ᾼ ᾳ ῌ ῃ ῼ ῳ</span> · Acute: <span class="charinsert Grek">Ά ά Έ έ Ή ή Ί ί Ό ό Ύ ύ Ώ ώ</span> · <span class="charinsert polytonic">ᾴ ῄ ῴ</span> · Grave: <span class="charinsert polytonic">Ὰ ὰ Ὲ ὲ Ὴ ὴ Ὶ ὶ Ὸ ὸ Ὺ ὺ Ὼ ὼ</span> · <span class="charinsert polytonic">ᾲ ῂ ῲ</span> · Circumflex: <span class="charinsert polytonic">ᾶ ῆ ῖ ῦ ῶ</span> · <span class="charinsert polytonic">ᾷ ῇ ῷ</span> ··· 
-<b>With smooth breathing</b>: Plain: <span class="charinsert polytonic">Ἀ ἀ Ἐ ἐ Ἠ ἠ Ἰ ἰ Ὀ ὀ ὐ Ὠ ὠ</span> · <span class="charinsert polytonic">ᾈ ᾀ ᾘ ᾐ ᾨ ᾠ</span> · Acute: <span class="charinsert polytonic">Ἄ ἄ Ἔ ἔ Ἤ ἤ Ἴ ἴ Ὄ ὄ ὔ Ὤ ὤ</span> · <span class="charinsert polytonic">ᾌ ᾄ ᾜ ᾔ ᾬ ᾤ</span> · Grave: <span class="charinsert polytonic">Ἂ ἂ Ἒ ἒ Ἢ ἢ Ἲ ἲ Ὂ ὂ ὒ Ὢ ὢ</span> · <span class="charinsert polytonic">ᾊ ᾂ ᾚ ᾒ ᾪ ᾢ</span> · Circumflex: <span class="charinsert polytonic">Ἆ ἆ Ἦ ἦ Ἶ ἶ ὖ Ὦ ὦ</span> · <span class="charinsert polytonic">ᾎ ᾆ ᾞ ᾖ ᾮ ᾦ</span> ··· 
-<b>With rough breathing</b>: Plain: <span class="charinsert polytonic">Ἁ ἁ Ἑ ἑ Ἡ ἡ Ἱ ἱ Ὁ ὁ Ὑ ὑ Ὡ ὡ</span> · <span class="charinsert polytonic">ᾉ ᾁ ᾙ ᾑ ᾩ ᾡ</span> · <span class="charinsert polytonic">Ῥ ῥ</span> · Acute: <span class="charinsert polytonic">Ἅ ἅ Ἕ ἕ Ἥ ἥ Ἵ ἵ Ὅ ὅ Ὕ ὕ Ὥ ὥ</span> · <span class="charinsert polytonic">ᾍ ᾅ ᾝ ᾕ ᾭ ᾥ</span> · Grave: <span class="charinsert polytonic">Ἃ ἃ Ἓ ἓ Ἣ ἣ Ἳ ἳ Ὃ ὃ Ὓ ὓ Ὣ ὣ</span> · <span class="charinsert polytonic">ᾋ ᾃ ᾛ ᾓ ᾫ ᾣ</span> · Circumflex: <span class="charinsert polytonic">Ἇ ἇ Ἧ ἧ Ἷ ἷ Ὗ ὗ Ὧ ὧ</span> · <span class="charinsert polytonic">ᾏ ᾇ ᾟ ᾗ ᾯ ᾧ</span> ··· 
-<b>Diaeresis</b>: <span class="charinsert polytonic">ϊ ΐ ῒ ῗ ϋ ΰ ῢ ῧ</span> · <b>Long/short</b>: <span class="charinsert polytonic">ᾰ ᾱ ῐ ῑ ῠ ῡ Ᾰ Ᾱ Ῐ Ῑ Ῠ Ῡ</span> ··· 
-<b>Archaic letters</b>: <span class="charinsert polytonic">Ϝ ϝ Ϙ ϙ Ϟ ϟ Ϡ ϡ Ϛ ϛ ϗ</span> ··· 
-<b>Variant forms</b>: <span title="curled beta" class="charinsert polytonic">ϐ</span> <span title="mathematical delta" class="charinsert polytonic">∂</span> <span title="lunate epsilon" class="charinsert polytonic">ϵ</span> <span title="script theta" class="charinsert polytonic">ϑ</span> <span title="cursive kappa" class="charinsert polytonic">ϰ</span> <span title="variant pi" class="charinsert polytonic">ϖ</span> <span title="curled rho" class="charinsert polytonic">ϱ</span> <span title="lunate sigma" class="charinsert polytonic">ϲ</span> <span title="curled capital upsilon" class="charinsert polytonic">ϒ</span> <span title="mathematical phi" class="charinsert polytonic">ϕ</span> <span title="ου ligatures" class="charinsert polytonic">Ȣ ȣ</span>
-</p>
-<p class="speciallang" id="edittools-Hebrew" style="display:none">
-<b>Letters</b>: <span class="charinsert Hebr">א ב ג ד ה ו ז ח ט י כ ך ל מ ם נ ן ס ע פ ף צ ץ ק ר ש שׁ שׂ ת</span> ··· <b>Marks</b>: <small>dagésh:</small> <span class="charinsert Hebr"> ּ</span> <small>géresh:</small> <span class="charinsert">׳</span> <small>gersháyim:</small> <span class="charinsert">״</span> <small>makáf:</small> <span class="charinsert">־</span> <small>sof pasúk:</small> <span class="charinsert">׃</span> ··· <b>Vowels</b>: <small>kamáts:</small> <span class="charinsert Hebr"> ָ</span> <small>patákh:</small> <span class="charinsert Hebr"> ַ</span> <small>tseiréi:</small> <span class="charinsert Hebr"> ֵ</span> <small>segól:</small> <span class="charinsert Hebr"> ֶ</span> <small>khirík:</small> <span class="charinsert Hebr"> ִ</span> <small>kholám:</small> <span class="charinsert Hebr"> ֹ</span> <small>kubúts:</small> <span class="charinsert Hebr"> ֻ</span> <small>sh'vá:</small> <span class="charinsert Hebr"> ְ</span> <small>khatáf-kamáts:</small> <span class="charinsert Hebr"> ֳ</span> <small>khatáf-patákh:</small> <span class="charinsert Hebr"> ֲ</span> <small>khatáf-segól:</small> <span class="charinsert Hebr"> ֱ</span> ··· <b>Accents</b>: <small>ráfe:</small> <span class="charinsert Hebr"> ֿ</span> <small>dot above:</small> <span class="charinsert Hebr"> ׄ</span> <small>méteg:</small> <span class="charinsert Hebr"> ֽ</span> ··· <b>Ligatures</b>: <span class="charinsert">ײַ</span> ··· <b>Translit.</b>: <span class="charinsert">á é í ó ú</span> ··· <b>Scholarly</b>: <span class="charinsert">ʾ ḇ ḡ ḏ ḥ ṭ ḵ ʿ p̄ ṣ ḳ š ś ṯ ə ᵊ ă ĕ ŏ ā ē ī ō ū â ê î ô û ā́ ḗ ī́ ṓ ū́</span> ··· <b>Misc. tr.</b>: <span class="charinsert">ḍ ẓ č ž</span>
-</p>
-<p class="speciallang" id="edittools-Italic" style="display:none">
-<b>Letters</b>: <span class="charinsert Ital">𐌀 𐌁 𐌂 𐌃 𐌄 𐌅 𐌆 𐌇 𐌈 𐌉 𐌊 𐌋 𐌌 𐌍 𐌎 𐌏 𐌐 𐌑 𐌒 𐌓 𐌔 𐌕 𐌖 𐌗 𐌘 𐌙 𐌚 𐌛 𐌜 𐌝 𐌞 𐌟</span> ··· <b>Numerals</b>: <span class="charinsert Ital">𐌠 𐌡 𐌢 𐌣</span>
-</p>
-<p class="speciallang" id="edittools-Japanese_Kana" style="display:none">
-<b>Hiragana</b>: <span class="charinsert Jpan">ぁ あ ぃ い ぅ う ぇ え ぉ お か が き ぎ く ぐ け げ こ ご さ ざ し じ す ず せ ぜ そ ぞ た だ ち ぢ っ つ づ て で と ど な に ぬ ね の は ば ぱ ひ び ぴ ふ ぶ ぷ へ べ ぺ ほ ぼ ぽ ま み む め も ゃ や ゅ ゆ ょ よ ら り る れ ろ ゎ わ ゐ ゑ を ん ゛ ゜ ゝ ゞ ゟ</span> ···
-<b>Katakana</b>: <span class="charinsert Jpan">ァ ア ィ イ ゥ ウ ェ エ ォ オ カ ガ キ ギ ク グ ケ ゲ コ ゴ サ ザ シ ジ ス ズ セ ゼ ソ ゾ タ ダ チ ヂ ッ ツ ヅ テ デ ト ド ナ ニ ヌ ネ ノ ハ バ パ ヒ ビ ピ フ ブ プ ヘ ベ ペ ホ ボ ポ マ ミ ム メ モ ャ ヤ ュ ユ ョ ヨ ラ リ ル レ ロ ヮ ワ ヰ ヱ ヲ ン ヴ ヵ ヶ ・ ー ヽ ヾ ヿ</span>
-</p>
-<p class="speciallang" id="edittools-Khmer" style="display:none">
-<span class="charinsert Khmr">ក ខ គ ឃ ង ច ឆ ជ ឈ ញ ដ ឋ ឌ ឍ ណ ត ថ ទ ធ ន ប ផ ព ភ ម យ រ ល វ ឝ ឞ ស ហ ឡ អ ឣ ឤ ឥ ឦ ឧ ឨ ឩ ឪ ឫ ឬ ឭ ឮ ឯ ឰ ឱ ឲ ឳ ។ ៕ ៖ ៗ ៘ ៙ ៚ ៛ ៜ  ៝ ០ ១ ២ ៣ ៤ ៥ ៦ ៧ ៨ ៩ ៰ ៱ ៲ ៳ ៴ ៵ ៶ ៷ ៸ ៹
-  ឴ ឵ ា ិ ី ឹ ឺ ុ ូ ួ ើ ឿ ៀ េ ែ ៃ ោ ៅ ំ ះ ៈ ៉ ៊ ់ ៌ ៍ ៎ ៏ ័ ៑ ្ ៓ </span>
-</p>
-<p class="speciallang" id="edittools-Korean_Jamo" style="display:none">
-<b>Korean Jamo</b>: <span class="charinsert Kore">ㄱ ㄲ ㄳ ㄴ ㄵ ㄶ ㄷ ㄸ ㄹ ㄺ ㄻ ㄼ ㄽ ㄾ ㄿ ㅀ ㅁ ㅂ ㅃ ㅄ ㅅ ㅆ ㅇ ㅈ ㅉ ㅊ ㅋ ㅌ ㅍ ㅎ ㅏ ㅑ ㅒ ㅓ ㅔ ㅕ ㅖ ㅗ ㅘ ㅙ ㅚ ㅛ ㅜ ㅝ ㅞ ㅟ ㅠ ㅡ ㅢ ㅣ ㅤ ㅥ ㅦ ㅧ ㅨ ㅩ ㅪ ㅫ ㅬ ㅭ ㅮ ㅯ ㅰ ㅱ ㅲ ㅳ ㅴ ㅵ ㅶ ㅷ ㅸ ㅹ ㅺ ㅻ ㅼ ㅽ ㅾ ㅿ ㆀ ㆁ ㆂ ㆃ ㆄ ㆅ ㆆ ㆇ ㆈ ㆉ ㆊ ㆋ ㆌ ㆍ ㆎ</span>
-</p>
-<p class="speciallang" id="edittools-Lao" style="display:none">
-<span class="charinsert Laoo">ກ ຂ ຄ ງ ຈ ສ ຊ ຍ ດ ຕ ຖ ທ ນ ບ ປ ຜ ຝ ພ ຟ ມ ຢ ລ ວ ຫ ອ ຮ</span> ··· <b>Ligatures</b>: <span class="charinsert Laoo">ຫຼ ໜ ໝ</span> ··· <b>Vowel nuclei</b>: <span class="charinsert Laoo"> ະ   ັ າ   ິ   ີ   ຶ   ື   ຸ   ູ  ເ ແ ໂ   ົ   ໍ  ໄ ໃ ຽ   ຳ</span> ··· <b>Tone marks</b>: <span class="charinsert Laoo">  ່   ້   ໋   ໊</span>
-</p>
-<p class="speciallang" id="edittools-Proto_languages" style="display:none">
-<b>Common</b>: <span class="charinsert">á é í ó ú ā ē ī ō ū ā́ ḗ ī́ ṓ ū́ ə č š ž</span>
-<b>Balto-Slavic</b>: <span class="charinsert">ś ź ˀ</span>
-<b>Celtic</b>: <span class="charinsert">ɸ ʷ</span>
-<b>Germanic</b>: <span class="charinsert">þ ê ô ą į ų į̄ ǭ ǫ̂</span>
-<b>Indo-European</b>: <span class="charinsert">ḱ ǵ ʰ ʷ ₁ ₂ ₃ l̥ r̥ m̥ n̥ ŕ̥ ĺ̥ ḿ̥ ń̥</span>
-<b>Italic</b>: <span class="charinsert">β ð ɣ ʷ</span>
-<b>Semitic</b>: <span class="charinsert">ʾ ð ḥ ḫ θ̣ ʿ ģ ṣ ṣ́ š ś θ</span>
-<b>Slavic</b>: <span class="charinsert">ť ď ě ę ǫ ь ъ</span>
-<b>Other</b>: <span class="charinsert">·</span>
-</p>
-<p class="speciallang" id="edittools-Sign_languages" style="display:none">
-<b>Postures</b>: <small>shape</small> <span title="Common named handshapes"><span class="charinsert">1 3 Bent3 4 5 Claw5 6 7 8 Open8 9 Flat9 A OpenA B BentB FlatB OpenB C FlatC SmallC D E G H I K L M OpenM N O FlatO SmallO R S T V BentV X OpenX Y ILY Corna</span></span> <b><big><span class="charinsert">@</span></big></b> <small>location <span style="background-color:#e2e4c0" title="location on or near the other hand or the body">on (or <span title="Proximity from opposite hand, used only if not in contact"><span class="charinsert">Near From Distal</span></span>) the (<span title="Zone of the opposite hand"><span class="charinsert">In Back Radial Ulnar Tip Base</span></span> zone of) opposite hand's <span title="Hand part, for locations on the opposite hand or to specify a part of the hand facing some direction below"><span class="charinsert">Forearm Wrist Hand Finger Thumb Palm</span></span> or body <span class="charinsert">Backhead Top Forehead Sfhead Nose Cheek Ear Mouth Lip Jaw Chin Neck Shoulder Sternum Chest Trunk Abdomen Upperarm Forearm Leg</span></span>, or <span style="background-color:#c0cfe4">in space (<span title="Proximity in space, only used if hand is not about an elbow&#39;s distance from the body"><span class="charinsert">Near Distal Extend</span></span>) <span title="Side-to-side specification, combined with height"><span class="charinsert">Center Inside Side Left1 Left2 Left3 Right1 Right2 Right3</span></span> at <span title="Height, combined with preceding side-to-side specification"><span class="charinsert">Tophigh Foreheadhigh Nosehigh Mouthhigh Chinhigh Neckhigh Sternumhigh Chesthigh Trunkhigh Abdomenhigh</span></span></span></small> <span style="background-color:#c0e4c0"><b><big><span class="charinsert">-</span></big></b> <small>orientation <span class="charinsert">Finger Thumb Palm</span> facing <span title="Specify a hand part from above, then one of these facing directions"><span class="charinsert">Forward Back Up Down Across Aside</span></span></small></span> <b>Moves</b>: <small><span title="Contour, used if the the hand does not move in a straight, direct path, followed by plane" style="background-color:#e4d4c0"><span class="charinsert">Round Seven Circles</span> along <span title="After contour, specify a plane"><span class="charinsert">Horiz Vert Midline Surface Oblique</span></span></span> ... <span title="Quality of movement, if unusual"><span class="charinsert">Slow Fast Accel Tense Small Large Contact</span></span> ... <span title="Local movement of fingers or wrist"><span class="charinsert">Wiggle Hook Flatten Twist Nod Release Rub Squeeze</span></span> ... <span title="Repeated movements as shortcuts to specifying two postures repeatedly"><span class="charinsert">Sidetoside Frontandback Upanddown</span></span></small></p>
-<p class="speciallang" id="edittools-Sinhala" style="display:none">
-<span class="charinsert Sinh">අ ආ ඇ ඈ ඉ ඊ උ ඌ ඍ ඎ ඏ ඐ එ ඒ ඓ ඔ ඕ ඖ ක ඛ ග ඝ ඞ ඟ ච ඡ ජ ඣ ඤ ඥ ඦ ට ඨ ඩ ඪ ණ ඬ ත ථ ද ධ න ඳ ප ඵ බ භ ම ඹ ය ර ල ව ශ ෂ ස හ ළ ෆ ෴
- ං  ඃ  ්  ා  ැ  ෑ  ි  ී  ු  ූ  ෘ  ෙ  ේ  ෛ  ො  ෝ  ෞ  ෟ  ෲ  ෳ </span>
-</p>
-<p class="speciallang" id="edittools-Syriac" style="display:none">
-<span class="charinsert Syrc">ܐ ܒ ܓ ܕ ܗ ܘ ܙ ܚ ܛ ܝ ܟ ܠ ܡ ܢ ܣ ܥ ܦ ܨ ܩ ܪ ܫ ܬ</span> ··· <span class="charinsert Syrc">܀</span> ··· <b>Vowels</b>: <span class="charinsert Syrc"> ܰ</span> <span class="charinsert Syrc"> ܳ</span> <span class="charinsert Syrc"> ܶ</span> <span class="charinsert Syrc"> ܺ</span> <span class="charinsert Syrc"> ܽ</span>
-</p>
-<p class="speciallang" id="edittools-Thai" style="display:none">
-<span class="charinsert Thai">ก ข ฃ ค ฅ ฆ ง จ ฉ ช ซ ฌ ญ ฎ ฏ ฐ ฑ ฒ ณ ด ต ถ ท ธ น บ ป ผ ฝ พ ฟ ภ ม ย ร ฤ ล ฦ ว ศ ษ ส ห ฬ อ ฮ ฯ</span> ···
-<span class="charinsert Thai">ะ   ั า   ำ   ิ   ี   ึ   ื     ุ     ู     ฺ เ แ โ ใ ไ ๅ ๆ</span> •••
-<span class="charinsert Thai">  ่     ้     ๊     ๋</span> •••
-<span class="charinsert Thai">๐ ๑ ๒ ๓ ๔ ๕ ๖ ๗ ๘ ๙</span> ···
-</p>
-<p class="speciallang" id="edittools-Tifinagh" style="display:none">
-<span class="charinsert Tfng">ⴰ ⴱ ⴲ ⴳ ⴴ ⴵ ⴶ ⴷ ⴸ ⴹ ⴺ ⴻ ⴼ ⴽ ⴿ ⵀ ⵁ ⵃ ⵄ ⵅ ⵇ ⵉ ⵊ ⵋ ⵍ ⵎ ⵏ ⵒ ⵓ ⵔ ⵕ ⵖ ⵘ ⵙ ⵚ ⵛ ⵜ ⵝ ⵞ ⵟ ⵠ ⵡ ⵢ ⵣ ⵤ ⵥ ⵯ</span> ··· <b>Tuareg</b>:<span class="charinsert Tfng"> ⴾ ⵀ ⵂ ⵆ ⵈ ⵌ ⵐ ⵑ ⵓ ⵗ</span>
-</p>
-<p class="specialbasic" id="edittools-Vietnamese"><span class="charinsert">À à Ả ả Ã ã Á á Ạ ạ Ă ă Ằ ằ Ẳ ẳ Ẵ ẵ Ắ ắ Ặ ặ Â â Ầ ầ Ẩ ẩ Ẫ ẫ Ấ ấ Ậ ậ Đ đ È è Ẻ ẻ Ẽ ẽ É é Ẹ ẹ Ê ê Ề ề Ể ể Ễ ễ Ế ế Ệ ệ Ì ì Ỉ ỉ Ĩ ĩ Í í Ị ị Ò ò Ỏ ỏ Õ õ Ó ó Ọ ọ Ô ô Ồ ồ Ổ ổ Ỗ ỗ Ố ố Ộ ộ Ơ ơ Ờ ờ Ở ở Ỡ ỡ Ớ ớ Ợ ợ Ù ù Ủ ủ Ũ ũ Ú ú Ụ ụ Ư ư Ừ ừ Ử ử Ữ ữ Ứ ứ Ự ự Ỳ ỳ Ỷ ỷ Ỹ ỹ Ý ý Ỵ ỵ</span>
-</span>
-</p>
-<p class="speciallang" id="edittools-Zhuyin_Fuhao" style="display:none">
-<b>Zhuyin</b>: <span class="charinsert Hani">ㄅ ㄆ ㄇ ㄈ ㄉ ㄊ ㄋ ㄌ ㄍ ㄎ ㄏ ㄐ ㄑ ㄒ ㄓ ㄔ ㄕ ㄖ ㄗ ㄘ ㄙ ㄚ ㄛ ㄜ ㄝ ㄞ ㄟ ㄠ ㄡ ㄢ ㄣ ㄤ ㄥ ㄦ ㄧ ㄨ ㄩ ㄪ ㄫ ㄬ</span>
-</p>
-</div>
-</div><div id="mw-scribunto-console"></div>
-<div class="templatesUsed"><div class="mw-templatesUsedExplanation"><p>Templates used on this page:
-</p></div><ul>
-<li><a href="/wiki/Template:documentation" title="Template:documentation">Template:documentation</a> (<a href="/w/index.php?title=Template:documentation&amp;action=edit" title="Template:documentation">view source</a>) (protected)</li><li><a href="/wiki/Template:documentation_needed" title="Template:documentation needed">Template:documentation needed</a> (<a href="/w/index.php?title=Template:documentation_needed&amp;action=edit" title="Template:documentation needed">edit</a>) </li><li><a href="/wiki/Template:maintenance_box" title="Template:maintenance box">Template:maintenance box</a> (<a href="/w/index.php?title=Template:maintenance_box&amp;action=edit" title="Template:maintenance box">view source</a>) (protected)</li><li><a href="/wiki/Module:documentation" title="Module:documentation">Module:documentation</a> (<a href="/w/index.php?title=Module:documentation&amp;action=edit" title="Module:documentation">view source</a>) (semi-protected)</li><li><a href="/wiki/Module:ru-noun/documentation" title="Module:ru-noun/documentation">Module:ru-noun/documentation</a> (<a href="/w/index.php?title=Module:ru-noun/documentation&amp;action=edit" title="Module:ru-noun/documentation">edit</a>) </li></ul></div><div class="hiddencats"></div><div class="limitreport"></div><input type="hidden" value="1" name="wpUltimateParam" />
-</form>
-<noscript><img src="//en.wiktionary.org/wiki/Special:CentralAutoLogin/start?type=1x1" alt="" title="" width="1" height="1" style="border: none; position: absolute;" /></noscript></div>					<div class="printfooter">
-						Retrieved from "<a dir="ltr" href="https://en.wiktionary.org/wiki/Module:ru-noun">https://en.wiktionary.org/wiki/Module:ru-noun</a>"					</div>
-				<div id='catlinks' class='catlinks catlinks-allhidden'></div>				<div class="visualClear"></div>
-							</div>
-		</div>
-		<div id="mw-navigation">
-			<h2>Navigation menu</h2>
-
-			<div id="mw-head">
-									<div id="p-personal" role="navigation" class="" aria-labelledby="p-personal-label">
-						<h3 id="p-personal-label">Personal tools</h3>
-						<ul>
-							<li id="pt-createaccount"><a href="/w/index.php?title=Special:UserLogin&amp;returnto=Module%3Aru-noun&amp;returntoquery=action%3Dedit&amp;type=signup" title="You are encouraged to create an account and log in; however, it is not mandatory">Create account</a></li><li id="pt-login"><a href="/w/index.php?title=Special:UserLogin&amp;returnto=Module%3Aru-noun&amp;returntoquery=action%3Dedit" title="You are encouraged to log in; however, it is not mandatory [o]" accesskey="o">Log in</a></li>						</ul>
-					</div>
-									<div id="left-navigation">
-										<div id="p-namespaces" role="navigation" class="vectorTabs" aria-labelledby="p-namespaces-label">
-						<h3 id="p-namespaces-label">Namespaces</h3>
-						<ul>
-															<li  id="ca-nstab-module" class="selected"><span><a href="/wiki/Module:ru-noun"  title="[c]" accesskey="c">Module</a></span></li>
-															<li  id="ca-talk"><span><a href="/wiki/Module_talk:ru-noun"  title="Discussion about the content page [t]" accesskey="t" rel="discussion">Discussion</a></span></li>
-													</ul>
-					</div>
-										<div id="p-variants" role="navigation" class="vectorMenu emptyPortlet" aria-labelledby="p-variants-label">
-												<h3 id="p-variants-label">
-							<span>Variants</span><a href="#"></a>
-						</h3>
-
-						<div class="menu">
-							<ul>
-															</ul>
-						</div>
-					</div>
-									</div>
-				<div id="right-navigation">
-										<div id="p-views" role="navigation" class="vectorTabs" aria-labelledby="p-views-label">
-						<h3 id="p-views-label">Views</h3>
-						<ul>
-															<li id="ca-view"><span><a href="/wiki/Module:ru-noun" >Read</a></span></li>
-															<li id="ca-edit" class="selected"><span><a href="/w/index.php?title=Module:ru-noun&amp;action=edit"  title="Edit this page">Edit</a></span></li>
-															<li id="ca-history" class="collapsible"><span><a href="/w/index.php?title=Module:ru-noun&amp;action=history"  title="Past revisions of this page [h]" accesskey="h">History</a></span></li>
-													</ul>
-					</div>
-										<div id="p-cactions" role="navigation" class="vectorMenu emptyPortlet" aria-labelledby="p-cactions-label">
-						<h3 id="p-cactions-label"><span>More</span><a href="#"></a></h3>
-
-						<div class="menu">
-							<ul>
-															</ul>
-						</div>
-					</div>
-										<div id="p-search" role="search">
-						<h3>
-							<label for="searchInput">Search</label>
-						</h3>
-
-						<form action="/w/index.php" id="searchform">
-							<div id="simpleSearch">
-							<input type="search" name="search" placeholder="Search" title="Search Wiktionary [f]" accesskey="f" id="searchInput" /><input type="hidden" value="Special:Search" name="title" /><input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton" /><input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton" />							</div>
-						</form>
-					</div>
-									</div>
-			</div>
-			<div id="mw-panel">
-				<div id="p-logo" role="banner"><a class="mw-wiki-logo" href="/wiki/Wiktionary:Main_Page"  title="Visit the main page"></a></div>
-						<div class="portal" role="navigation" id='p-navigation' aria-labelledby='p-navigation-label'>
-			<h3 id='p-navigation-label'>Navigation</h3>
-
-			<div class="body">
-									<ul>
-						<li id="n-mainpage-text"><a href="/wiki/Wiktionary:Main_Page">Main Page</a></li><li id="n-portal"><a href="/wiki/Wiktionary:Community_portal" title="About the project, what you can do, where to find things">Community portal</a></li><li id="n-wiktprefs"><a href="/wiki/Wiktionary:Per-browser_preferences">Preferences</a></li><li id="n-requestedarticles"><a href="/wiki/Wiktionary:Requested_entries">Requested entries</a></li><li id="n-recentchanges"><a href="/wiki/Special:RecentChanges" title="A list of recent changes in the wiki [r]" accesskey="r">Recent changes</a></li><li id="n-randompage"><a href="/wiki/Special:Random" title="Load a random page [x]" accesskey="x">Random entry</a></li><li id="n-help"><a href="https://en.wiktionary.org/wiki/Help:Contents" title="The place to find out">Help</a></li><li id="n-sitesupport"><a href="//donate.wikimedia.org/wiki/Special:FundraiserRedirector?utm_source=donate&amp;utm_medium=sidebar&amp;utm_campaign=C13_en.wiktionary.org&amp;uselang=en" title="Support us">Donations</a></li><li id="n-contact"><a href="/wiki/Wiktionary:Contact_us">Contact us</a></li>					</ul>
-							</div>
-		</div>
-			<div class="portal" role="navigation" id='p-tb' aria-labelledby='p-tb-label'>
-			<h3 id='p-tb-label'>Tools</h3>
-
-			<div class="body">
-									<ul>
-						<li id="t-whatlinkshere"><a href="/wiki/Special:WhatLinksHere/Module:ru-noun" title="A list of all wiki pages that link here [j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="/wiki/Special:RecentChangesLinked/Module:ru-noun" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li><li id="t-upload"><a href="//commons.wikimedia.org/wiki/Special:UploadWizard" title="Upload files [u]" accesskey="u">Upload file</a></li><li id="t-specialpages"><a href="/wiki/Special:SpecialPages" title="A list of all special pages [q]" accesskey="q">Special pages</a></li><li id="t-info"><a href="/w/index.php?title=Module:ru-noun&amp;action=info" title="More information about this page">Page information</a></li>					</ul>
-							</div>
-		</div>
-			<div class="portal" role="navigation" id='p-lang' aria-labelledby='p-lang-label'>
-			<h3 id='p-lang-label'>In other languages</h3>
-
-			<div class="body">
-									<ul>
-						<li class="uls-p-lang-dummy"><a href="#"></a></li>					</ul>
-							</div>
-		</div>
-				</div>
-		</div>
-		<div id="footer" role="contentinfo">
-							<ul id="footer-places">
-											<li id="footer-places-privacy"><a href="//wikimediafoundation.org/wiki/Privacy_policy" title="wikimedia:Privacy policy">Privacy policy</a></li>
-											<li id="footer-places-about"><a href="/wiki/Wiktionary:About" title="Wiktionary:About">About Wiktionary</a></li>
-											<li id="footer-places-disclaimer"><a href="/wiki/Wiktionary:General_disclaimer" title="Wiktionary:General disclaimer">Disclaimers</a></li>
-											<li id="footer-places-developers"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/How_to_contribute">Developers</a></li>
-											<li id="footer-places-mobileview"><a href="//en.m.wiktionary.org/w/index.php?title=Module:ru-noun&amp;action=edit&amp;mobileaction=toggle_view_mobile" class="noprint stopMobileRedirectToggle">Mobile view</a></li>
-									</ul>
-										<ul id="footer-icons" class="noprint">
-											<li id="footer-copyrightico">
-							<a href="//wikimediafoundation.org/"><img src="/static/images/wikimedia-button.png" srcset="/static/images/wikimedia-button-1.5x.png 1.5x, /static/images/wikimedia-button-2x.png 2x" width="88" height="31" alt="Wikimedia Foundation"/></a>						</li>
-											<li id="footer-poweredbyico">
-							<a href="//www.mediawiki.org/"><img src="https://en.wiktionary.org/static/1.26wmf19/resources/assets/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="https://en.wiktionary.org/static/1.26wmf19/resources/assets/poweredby_mediawiki_132x47.png 1.5x, https://en.wiktionary.org/static/1.26wmf19/resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31" /></a>						</li>
-									</ul>
-						<div style="clear:both"></div>
-		</div>
-		<script>window.RLQ = window.RLQ || []; window.RLQ.push( function () {
-mw.loader.state({"ext.globalCssJs.site":"ready","ext.globalCssJs.user":"ready","user":"ready","user.groups":"ready"});
-} );</script>
-<link rel="stylesheet" href="https://en.wiktionary.org/w/load.php?debug=false&amp;lang=en&amp;modules=ext.gadget.BlockInfo%2CCodeLinks%2CDocTabs%2CJavascriptHeadings%2CLegacyScripts%2CRevdelInfo&amp;only=styles&amp;skin=vector&amp;*" />
-<script>window.RLQ = window.RLQ || []; window.RLQ.push( function () {
-mw.loader.load(["ext.codeEditor","mediawiki.action.edit.editWarning","mediawiki.action.edit.stash","ext.math.editbutton.enabler","ext.scribunto.edit","ext.TemplateSandbox","mediawiki.action.edit.collapsibleFooter","site","mediawiki.user","mediawiki.hidpi","mediawiki.page.ready","mediawiki.searchSuggest","ext.cirrusSearch.loggingSchema","ext.eventLogging.subscriber","ext.wikimediaEvents","ext.wikimediaEvents.statsd","ext.wikimediaEvents.geoFeatures","ext.navigationTiming","ext.gadget.LegacyScripts","ext.gadget.JavascriptHeadings","ext.gadget.DocTabs","ext.gadget.BlockInfo","ext.gadget.RevdelInfo","ext.gadget.CodeLinks","schema.UniversalLanguageSelector","ext.uls.eventlogger","ext.uls.interlanguage"]);
-} );</script>
-<script>window.RLQ = window.RLQ || []; window.RLQ.push( function () {
-mw.loader.using("mediawiki.toolbar", function () {mw.toolbar.addButton(false,"Bold text","'''","'''","{{subst:ru-noun}}","mw-editbutton-bold");mw.toolbar.addButton(false,"Italic text","''","''","[[]]","mw-editbutton-italic");mw.toolbar.addButton(false,"Internal link","[[","]]","#English|{{subst:PAGENAME}}","mw-editbutton-link");mw.toolbar.addButton(false,"External link (remember http:// prefix)","[","]","http://","mw-editbutton-extlink");mw.toolbar.addButton(false,"Level 2 headline","\n== "," ==\n","English","mw-editbutton-headline");mw.toolbar.addButton(false,"Embedded file","[[File:","]]","Example.jpg|thumb|A ''''''","mw-editbutton-image");mw.toolbar.addButton(false,"File link","[[Media:","]]","Example.ogg","mw-editbutton-media");mw.toolbar.addButton(false,"Ignore wiki formatting","\u003Cnowiki\u003E","\u003C/nowiki\u003E","{{}}","mw-editbutton-nowiki");mw.toolbar.addButton(false,"Horizontal line (use sparingly)","\n----\n","","","mw-editbutton-hr");});
-} );</script>
-<script>window.RLQ = window.RLQ || []; window.RLQ.push( function () {
-mw.config.set({"wgBackendResponseTime":180,"wgHostname":"mw1066"});
-} );</script>
-	</body>
-</html>
