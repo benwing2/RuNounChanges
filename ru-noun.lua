@@ -1995,8 +1995,8 @@ cases = ut.list_to_set({
 
 -- Convert a raw override into a canonicalized list of individual overrides.
 -- If input is nil, so is output. Certain junk (e.g. <br/>) is removed,
--- and ~ is substituted appropriately; ARGS and ISPL are required for this
--- purpose. if will still be necessary to call m_table_tools.get_notes()
+-- and ~ and ~~ are substituted appropriately; ARGS and ISPL are required for
+-- this purpose. if will still be necessary to call m_table_tools.get_notes()
 -- to separate off any trailing "notes" (asterisks, superscript numbers, etc.),
 -- and m_links.remove_links() to remove any links to get the raw override
 -- form.
@@ -2004,7 +2004,9 @@ function canonicalize_override(val, args, ispl)
 	if val then
 		-- clean <br /> that's in many multi-form entries and messes up linking
 		val = rsub(val, "<br%s*/>", "")
-		val = rsub(val, "~", ispl and args.pl or args.stem)
+		local stem = ispl and args.pl or args.stem
+		val = rsub(val, "~~", com.make_unstressed_once(stem))
+		val = rsub(val, "~", stem)
 		val = rsplit(val, "%s*,%s*")
 	end
 	return val
