@@ -328,7 +328,7 @@ local function categorize(stress, decl_class, args)
 	elseif sgdc.decl == "1st" then
 		decl_cat = "1st-declension " .. sgdc.hard .. " ~"
 	elseif sgdc.decl == "2nd" then
-		decl_cat = ("2nd-declension " .. sgdc.hard .. " normally " ..
+		decl_cat = ("2nd-declension " .. sgdc.hard .. " normally-" ..
 			gender_to_full[sgdc.g] .. " ~")
 	else
 		assert(false, "Unrecognized declension type")
@@ -684,7 +684,7 @@ function export.catboiler(frame)
 		if args[2] == "invariable" then
 			maintext = "invariable (indeclinable) ~, which normally have the same form for all cases and numbers."
 		else
-			maintext = (args[7] and args[7] .. "-stem " or "") .. args[2] .. "-declension " .. (args[3] and args[3] .. " " or "") .. "normally " .. args[4] .. " ~, normally ending in nominative singular " .. args[5] .. " and nominative plural " .. args[6] .. "."
+			maintext = (args[7] and args[7] .. "-stem " or "") .. args[2] .. "-declension " .. (args[3] and args[3] .. " " or "") .. "normally-" .. args[4] .. " ~, normally ending in nominative singular " .. args[5] .. " and nominative plural " .. args[6] .. "."
 		end
 		insert_category(cats, "~ by declension type")
 		if args[7] then
