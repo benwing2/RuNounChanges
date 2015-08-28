@@ -995,7 +995,6 @@ detect_decl_old["ъ-а"] = function(stem, stress)
 	end
 end
 declensions_old_cat["ъ-а"] = { decl="2nd", hard="hard", g="m", irregpl=true }
-}
 declensions_cat["-а"] = {
 	singular = "ending in a consonant",
 	decl="2nd", hard="hard", g="m", irregpl=true,
@@ -1034,7 +1033,6 @@ detect_decl_old["ъ-ья"] = function(stem, stress)
 	end
 end
 declensions_old_cat["ъ-ья"] = { decl="2nd", hard="hard", g="m", irregpl=true }
-}
 declensions_cat["-ья"] = {
 	singular = "ending in a consonant",
 	decl="2nd", hard="hard", g="m", irregpl=true,
@@ -1078,7 +1076,6 @@ declensions_old["онокъ"] = declensions_old["ёнокъ"]
 declensions_old["енокъ"] = declensions_old["ёнокъ"]
 
 declensions_old_cat["ёнокъ"] = { decl="2nd", hard="hard", g="m", suffix=true }
-}
 declensions_old_cat["-онокъ"] = declensions_old_cat["ёнокъ"]
 declensions_old_cat["-енокъ"] = declensions_old_cat["ёнокъ"]
 
