@@ -10,9 +10,9 @@
 		   (m/f/n) to infer it from the full stem
 		4: suffixless form (optional, default = stem); or * to infer it,
 		   in which case the stem should reflect the nom sg form
+		5: special plural stem (optional, default = stem)
 		a: animacy (a = animate, i = inanimate, b = both, otherwise inanimate)
 		n: number restriction (p = plural only, s = singular only, otherwise both)
-		pl: special plural stem (optional, default = stem)
 		CASE_NUM or par/loc/voc: override (or multiple values separated by
 		    commas) for particular form; forms auto-linked; can have raw links
 			in it, can have an ending "note" (*, +, 1, 2, 3, etc.)
@@ -494,16 +494,16 @@ local function do_show(frame, old)
 	old = old or args.old
 	local manual = false
 
+	-- FIXME! Delete this when we've converted all uses of pl= args
 	if args["pl"] or args["pl2"] or args["pl3"] or args["pl4"] or args["pl5"] then
 		track("pl")
 	end
 	
 	-- Gather arguments into an array of STEM_SET objects, containing
-	-- (potentially) elements 1, 2, 3, 4, 'pl' where 1, 2, 3, 4
-	-- correspond to accent pattern, stem, declension type and bare stem
-	-- and come from consecutive numbered parameters, and 'pl' comes
-	-- from parameters named 'pl', 'pl2', 'pl3', .... Sets of stem
-	-- parameters are separated by the word "or".
+	-- (potentially) elements 1, 2, 3, 4, 5, corresponding to accent pattern,
+	-- stem, declension type, bare stem, pl stem and coming from consecutive
+	-- numbered parameters. Sets of stem parameters are separated by the
+	-- word "or".
 	local stem_sets = {}
 	-- Find maximum-numbered arg, allowing for holes
 	local max_arg = 0
@@ -521,31 +521,22 @@ local function do_show(frame, old)
 			if stem_set[3] == "manual" then
 				manual = true
 			end
-			stem_set.pl = args["pl" .. (setnum == 1 and "" or setnum)]
 			table.insert(stem_sets, stem_set)
 			stem_set = {}
 			offset = i
 		else
+			if i - offset > 5 then
+				error("Can't specify 6th or greater argument of stem set: arg " .. i .. " = " .. (args[i] or "(blank)"))
+			end
 			stem_set[i - offset] = args[i]
 		end
-	end
-	-- Gather any remaining stem specs composed only of plN.
-	i = #stem_sets + 1
-	assert(i > 1)
-	while true do
-		local pl = args["pl" .. i]
-		if not pl then
-			break
-		end
-		table.insert(stem_sets, {pl=pl})
-		i = i + 1
 	end
 
 	if manual then
 		if #stem_sets > 1 then
 			error("Can't specify multiple stem sets when manual")
 		end
-		if stem_sets[1][4] or stem_sets[1].pl then
+		if stem_sets[1][4] or stem_sets[1][5] then
 			error("Can't specify optional stem parameters when manual")
 		end
 	end
@@ -571,39 +562,26 @@ local function do_show(frame, old)
 	local detectfuns = old and detect_decl_old or detect_decl
 	local decl_cats = old and declensions_old_cat or declensions_cat
 
-	-- Default arguments. After the first stem set is processed, we set the
-	-- defaults based on that set.
-	local default_stress = "1"
-	local default_decl = ""
-	local default_stem = SUBPAGENAME
-	local default_pl
-	local first = true
-
 	if #stem_sets > 1 then
 		track("multiple-stems")
 		insert_cat("~ with multiple stems")
 	end
 
+	local default_stem = nil
+
 	for _, stem_set in ipairs(stem_sets) do
-		local stress_arg = stem_set[1] or default_stress
-		local decl_class = stem_set[3] or default_decl
-		local stem_specified = stem_set[2] or first
+		local stress_arg = stem_set[1] or "1"
+		local decl_class = stem_set[3] or ""
 		local stem = stem_set[2] or default_stem
+		if not stem then
+			error("Stem in first stem set must be specified")
+		end
+		default_stem = stem
 		if ut.contains({"", "m", "f", "n"}, decl_class) then
 			stem, decl_class = detect_stem_type(stem, decl_class)
 		end
 		local bare = stem_set[4]
-		-- For pl, we default to other specified arguments, falling back
-		-- to the stem if specified or we're handling the first stem set;
-		-- as a last resort, use the defaults taken from the first stem set.
-		args.pl = stem_set.pl or stem_specified and stem or default_pl
-
-		if first then
-			default_stress = stress_arg
-			default_decl = decl_class
-			default_stem = stem
-			default_pl = args.pl
-		end
+		args.pl = stem_set[5] or stem
 
 		-- validate stress arg and decl type and convert to list
 		stress_arg = rsplit(stress_arg, ",")
