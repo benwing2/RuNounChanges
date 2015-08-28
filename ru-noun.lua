@@ -4,13 +4,21 @@
 
 	Arguments:
 		1: stress pattern number, or multiple numbers separated by commas
-		2: stem
-		3: declension type (usually just the ending)
-		4: suffixless form (optional, default = stem)
+		2: stem, with ending; or leave out the ending and put it in the
+		   declension type field
+		3: declension type (usually just the ending); or blank or a gender
+		   (m/f/n) to infer it from the full stem
+		4: suffixless form (optional, default = stem); or * to infer it,
+		   in which case the stem should reflect the nom sg form
 		a: animacy (a = animate, i = inanimate, b = both, otherwise inanimate)
 		n: number restriction (p = plural only, s = singular only, otherwise both)
 		pl: special plural stem (optional, default = stem)
 		barepl: suffixless plural stem (optional, default = argument 4 if explicitly given, else plural stem)
+		CASE_NUM or par/loc/voc: override (or multiple values separated by
+		    commas) for particular form; forms auto-linked; can have raw links
+			in it, can have an ending "note" (*, +, 1, 2, 3, etc.)
+		arg with value "or": specify multiple stem sets; further stem sets
+		    follow the "or"
 
 	Case abbreviations:
 		nom: nominative
@@ -22,6 +30,10 @@
 		par: partitive
 		loc: locative
 		voc: vocative
+
+	Number abbreviations:
+		sg: singular
+		pl: plural
 
 TODO:
 
