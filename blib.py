@@ -8,6 +8,19 @@ site = pywikibot.Site()
 def msg(text):
   print text.encode('utf-8')
 
+def parse(text):
+  return mwparserfromhell.parser.Parser().parse(text, skip_style_tags=True))
+
+def getparam(t, param):
+  if t.has(param):
+    return unicode(t.get(param))
+  else:
+    return ""
+
+def rmparam(t, param):
+  if t.has(param):
+    t.remove(param)
+
 def display(page):
   pywikibot.output(u'# [[{0}]]'.format(page.title()))
 
@@ -19,7 +32,7 @@ def do_edit(page, func=None, null=False, save=False):
   while True:
     try:
       if func:
-        new, comment = func(page, mwparserfromhell.parser.Parser().parse(page.text, skip_style_tags=True))
+        new, comment = func(page, parse(page.text))
         
         if new:
           new = unicode(new)
