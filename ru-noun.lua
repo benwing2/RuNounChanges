@@ -25,13 +25,56 @@
 
 TODO:
 
-1. Bug in -я nouns with bare specified; should not have -ь ending. Old templates did not add this ending when bare occurred.
-2. Remove barepl, make pl= be 5th argument.
-3. Add stress pattern for ь-stem numbers.
-4. Eliminate complicated defaulting code for second and further stem sets.
-5. Add ability to specify manual translation.
-6. Support adjective declensions.
-7. Support multiple words.
+1. Change {{temp|ru-decl-noun-pl}} and {{temp|ru-decl-noun-unc}} to use
+   'manual' instead of '*' as the decl class.
+2. Bug in -я nouns with bare specified; should not have -ь ending. Old templates did not add this ending when bare occurred. (PROBABLY SHOULD ALWAYS HAVE BARE
+BE BARE, NEVER ADD A NON-SYLLABIC ENDING. HAVE TRACKING CODE FOR THIS.)
+3. Genitive plural of -ёнокъ should be -атъ?
+4. Remove barepl, make pl= be 5th argument. [IMPLEMENTED REMOVAL OF BAREPL]
+5. (Add stress pattern for ь-stem numbers. Wikitiki handled that through
+   overriding the ins_sg. I thought there would be complications with the
+   nom_sg in multi-syllabic words but no.)
+6. Eliminate complicated defaulting code for second and further stem sets.
+   Should simply default to same values as the first stem set does, without
+   the first stem set serving as defaults for the remainder.
+7. Fixes for stem-multi-syllabic words with ending stress in gen pl but
+   non-syllabic gen pl, with stress transferring onto final syllable even if
+   stem is otherwise stressed on an earlier syllable (e.g. голова́ in
+   accent pattern 6, nom pl го́ловы, gen pl голо́в). Currently these are handled
+   by overriding "bare" but I want to make bare predictable mostly, just
+   specifying that the noun is reducible should be enough. (IMPLEMENTED AS
+   TRACKING CODE, NOT YET TURNED ON FOR REAL)
+8. If decl omitted, it should default to 1 or 2 depending on whether accent
+   is on stem or ending, not always 1. It should also recognize plural in
+   the auto-detection code when the gender is set. This can be used e.g. in
+   class 4 or 6 to avoid having to distort the accent in the singular.
+9. Possibly, issue an error unless allow_no_accent is given (perhaps it
+   should be "given" using a * at the beginning of the stem).
+10. [Make it so that the plural-specifying decl classes -а, -ья, and new -ы, -и
+   still auto-detect the class and convert the resulting auto-detected class
+   to one with the plural variant. It's useful then to have explicit names for
+   the plural-variant classes -а, -ья. I propose c-а, c-ья, which are aliases;
+   the canonical name is still -a, -ья so that you can still say something like
+   ин/-ья. We should similarly have 'c' has the alias for -.  The classes
+   would look like (where * means to construct a slash class)
+
+   Orig        -а          -ья          -ы         -и
+   -           -а          -ья          -          -
+   ъ           ъ-а         ъ-ья         ъ          ъ
+   ь-m         *           *            *          ь-m
+   а           *           *            а          а
+   я           *           *            *          я
+   о           о           о-ья         о-ы        о-и
+   е           е           *            *          *
+   ь-f         *           *            *          ь-f
+] - IMPLEMENTED, NEED TO TEST
+11. Add ability to specify manual translation. (IMPLEMENTED IN GITHUB but
+   based off of significantly older version of module)
+12. Support adjective declensions. Autodetection should happen by putting +
+   in decl field to indicate it's an adjective. Adjective decl types should
+   begin with a +. (Formerly a * but currently that stands for "invariable".)
+   (PARTLY IMPLEMENTED IN GITHUB)
+13. Support multiple words. (PARTLY IMPLEMENTED IN GITHUB)
 
 ]=]--
 
@@ -404,12 +447,12 @@ local function categorize(stress, decl_class, args)
 	-- 2, 3, 5, 6, 6*; see stressed_gen_pl_patterns[]). But any attempt to
 	-- create such combinations will lead to a large number of categories.
 	-- Most viable would be stress pattern + traditional decl; that gives
-	-- 8 stress patterns times 5 traditional decls (1-hard, 1-soft, 2-hard,
-	-- 2-soft, 3) = 40; would be 8*7 = 56 if we split the 2nd declension
-	-- into masculine and neuter. However, this isn't fine enough to
-	-- create a category for the the -а genitive plural in -ей in that it
-	-- doesn't also include the stem type (sibilant, velar, etc.); but
-	-- simultaneously it's too fine in that it doesn't group the stress
+	-- 8 stress patterns times 8 traditional decls (1-hard, 1-soft, 2-hard-m,
+	-- 2-soft-m, 2-palatal-m, 2-hard-n, 2-soft-n, 3) = 64. Note that not all
+	-- of these actually have any members in them. However, this isn't fine
+	-- enough to create a category for the the -а genitive plural in -ей in
+	-- that it doesn't also include the stem type (sibilant, velar, etc.);
+	-- but simultaneously it's too fine in that it doesn't group the stress
 	-- patterns with stressed genitive plural.
 end
 
