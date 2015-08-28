@@ -7,6 +7,8 @@ import mwparserfromhell
 import blib
 from blib import msg, rmparam, getparam
 
+save = False
+
 ru_decl_noun_cases = [
   "nom_sg", "gen_sg", "dat_sg", "acc_sg", "ins_sg", "pre_sg",
   "nom_pl", "gen_pl", "dat_pl", "acc_pl", "ins_pl", "pre_pl",
@@ -81,6 +83,8 @@ def infer_decl(t):
   for case in ru_decl_noun_cases:
     if case:
       form = getparam(t, i)
+      if case == "pre_sg" or case == "pre_pl":
+        form = re.sub(u"^о(б|бо)? ", "", form) # eliminate leading preposition
       forms[case] = form
     i += 1
   
@@ -173,7 +177,7 @@ def infer_decl(t):
           nomsg = stem + ending
 
   stress_patterns = (stress == "end" and nom_sg_ending_stress_patterns or
-      stress = "stem" and nom_sg_stem_stress_patterns or
+      stress == "stem" and nom_sg_stem_stress_patterns or
       all_stress_patterns)
 
   for stress in stress_patterns:
@@ -209,4 +213,4 @@ def infer_one_page_decls(page, text):
   return text, "Infer declension for manual decls (ru-decl-noun)"
 
 for page in blib.references("Template:ru-decl-noun"):
-  blib.do_edit(page, infer_one_page_decls)
+  blib.do_edit(page, infer_one_page_decls, save=save)
