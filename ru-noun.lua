@@ -682,6 +682,7 @@ local stem_expl = {
 	["ь"] = "-ь (indicating a soft consonant, in this case followed by /j/)",
 }
 
+-- Implementation of template 'runouncatboiler'.
 function export.catboiler(frame)
 	local args = clone_args(frame)
 
@@ -722,7 +723,8 @@ function export.catboiler(frame)
 	end
 
 	return "This category contains Russian " .. rsub(maintext, "~", "nominals")
-		.. "\n[[Template:ru-categoryTOC]]"
+		.. "\n" ..
+		mw.getCurrentFrame():expandTemplate{title="ru-categoryTOC", args={}}
 		.. m_utilities.format_categories(cats, lang)
 end
 
