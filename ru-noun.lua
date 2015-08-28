@@ -795,7 +795,7 @@ end
 -- value passed in and might be "", "m" or "f"; the latter are necessary
 -- when dealing with -ь stems.
 function detect_stem_type(stem, decl)
-	base, ending = rmatch(stem, "^(.*)([еЕ]́)$")
+	base, ending = rmatch(stem, "^(.*)([еЕ]́)$") -- accented
 	if base then
 		return base, ulower(ending)
 	end
