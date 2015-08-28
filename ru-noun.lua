@@ -44,10 +44,12 @@ BE BARE, NEVER ADD A NON-SYLLABIC ENDING. HAVE TRACKING CODE FOR THIS.)
    by overriding "bare" but I want to make bare predictable mostly, just
    specifying that the noun is reducible should be enough. (IMPLEMENTED AS
    TRACKING CODE, NOT YET TURNED ON FOR REAL)
-8. If decl omitted, it should default to 1 or 2 depending on whether accent
+8. [If decl omitted, it should default to 1 or 2 depending on whether accent
    is on stem or ending, not always 1. It should also recognize plural in
    the auto-detection code when the gender is set. This can be used e.g. in
-   class 4 or 6 to avoid having to distort the accent in the singular.
+   class 4 or 6 to avoid having to distort the accent in the singular.]
+   -- AUTO-DETECTING ACCENT CLASS 1 OR 2 IMPLEMENTED IN GITHUB; RECOGNIZING
+   -- PLURAL IMPLEMENTED BUT COMMENTED OUT, NOT SURE IT'S A GOOD IDEA.
 9. Possibly, issue an error unless allow_no_accent is given (perhaps it
    should be "given" using a * at the beginning of the stem).
 10. [Make it so that the plural-specifying decl classes -а, -ья, and new -ы, -и
