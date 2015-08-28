@@ -576,11 +576,9 @@ local function do_show(frame, old)
 			error("Stem in first stem set must be specified")
 		end
 		default_stem = stem
-		if ut.contains({"", "m", "f", "n"}, decl_class) then
-			stem, decl_class = detect_stem_type(stem, decl_class)
-		end
-		local stress_arg = stem_set[1] or detect_stress_pattern(decl_class)
-		decl_class = remove_accents_from_decl(decl_class)
+		local was_accented
+		stem, decl_class, was_accented = detect_stem_type(stem, decl_class)
+		local stress_arg = stem_set[1] or detect_stress_pattern(decl_class, was_accented)
 		local bare = stem_set[4]
 		args.pl = stem_set[5] or stem
 
@@ -904,10 +902,9 @@ end
 --------------------------------------------------------------------------
 
 -- Attempt to detect the type of the stem (= including ending) based
--- on its ending, separating off the base and the ending. DECL is the
--- value passed in and might be "", "m" or "f"; the latter are necessary
--- when dealing with -ь stems.
-function detect_stem_type(stem, decl)
+-- on its ending, separating off the base and the ending. GENDER
+-- may be omitted except for -ь stems, where it must be "m" or "f".
+local function detect_basic_stem_type(stem, gender)
 	local base, ending = rmatch(stem, "^(.*)([еЕ]́)$") -- accented
 	if base then
 		return base, ulower(ending)
@@ -940,10 +937,10 @@ function detect_stem_type(stem, decl)
 	end
 	base = rmatch(stem, "^(.*)[ьЬ]$")
 	if base then
-		if decl == "m" or decl == "f" then
-			return base, "ь-" .. decl
+		if gender == "m" or gender == "f" then
+			return base, "ь-" .. gender
 		else
-			error("Need to specify decl m or f with stem in -ь: ".. stem)
+			error("Need to specify gender m or f with stem in -ь: ".. stem)
 		end
 	end
 	if rfind(stem, "[уыэюиіѣѵУЫЭЮИІѢѴ]́?$") then
@@ -953,14 +950,58 @@ function detect_stem_type(stem, decl)
 	return stem, "-"
 end
 
--- Detect stress pattern (1 or 2) based on whether ending is stressed.
-function detect_stress_pattern(decl)
+local plural_variation_detection_map = {
+	["-"] = {["-а"]="-а", ["-ья"]="-ья", ["-ы"]="-", ["-и"]="-"},
+	["ъ"] = {["-а"]="ъ-а", ["-ья"]="ъ-ья", ["-ы"]="ъ", ["-и"]="ъ"},
+	["ъ-m"] = {["-и"]="ъ-m"},
+	["а"] = {["-ы"]="а", ["-и"]="а"},
+	["я"] = {["-и"]="я"},
+	["о"] = {["-а"]="о", ["-ья"]="о-ья", ["-ы"]="о-ы", ["-о"]="о-и"},
+	["е"] = {},
+	["ъ-f"] = {["-и"]="ъ-f"},
+}
+
+-- Attempt to detect the declension type (including plural variants)
+-- based on the ending of the stem (or nom sg), separating off the base
+-- and the ending. DECL is the value passed in and might be "", "m",
+-- "f", "n", "-а", "-ья", "-ы", "-и", or "GENDER-PLURAL" using one of
+-- the above genders and plurals. Gender is ignored except for -ь stems,
+-- where "m" or "f" is required.
+function detect_stem_type(stem, decl)
+	local gender = rmatch(decl, "^([mfn]?)$")
+	local plural = ""
+	local was_accented = rfind(decl, "[ё́]")
+	if not gender then
+		gender, plural = rmatch(decl, "^([mfn]?)(%-.*)$")
+	end
+	if not gender then
+		return stem, remove_accents_from_decl(decl), was_accented
+	end
+	stem, decl = detect_basic_stem_type(stem, gender)
+	decl = remove_accents_from_decl(decl)
+	if plural == "" then
+		return stem, decl, was_accented
+	end
+	local plural_variant
+	if plural_variation_detection_map[decl] then
+		plural_variant = plural_variation_detection_map[decl][plural]
+	end
+	if plural_variant then
+		return stem, plural_variant, was_accented
+	else
+		return stem, decl .. "/" .. plural, was_accented
+	end
+end
+
+-- Detect stress pattern (1 or 2) based on whether ending is stressed or
+-- decl class is inherently ending-stressed.
+function detect_stress_pattern(decl, was_accented)
 	-- ёнок/онок always bears stress
 	-- not anchored to ^ or $ in case of a slash declension
 	if rfind(decl, "[ёо]́?нок") then
 		return "2"
 	end
-	if rfind(decl, "[ё́]") then -- has the stress?
+	if was_accented then
 		return "2"
 	end
 	return "1"
@@ -1111,6 +1152,8 @@ declensions_old_cat["ъ"] = { decl="2nd", hard="hard", g="m" }
 -- and eventually want to make "" (blank) auto-detect the class.
 detect_decl["-"] = old_detect_decl_to_new(detect_decl_old["ъ"])
 declensions_cat["-"] = declensions_old_cat["ъ"]
+detect_decl["c"] = detect_decl["-"]
+declensions_cat["c"] = declensions_cat["-"]
 
 ----------------- Masculine hard, irregular plural -------------------
 
@@ -1138,6 +1181,8 @@ declensions_cat["-а"] = {
 	singular = "ending in a consonant",
 	decl="2nd", hard="hard", g="m", irregpl=true,
 }
+detect_decl["c-а"] = old_detect_decl_to_new(detect_decl_old["ъ-а"])
+declensions_cat["c-а"] = declensions_cat["-а"]
 
 -- Normal hard-masculine declension, ending in a hard consonant
 -- (ending in -ъ, old-style), with irreg soft pl -ья.
@@ -1176,6 +1221,8 @@ declensions_cat["-ья"] = {
 	singular = "ending in a consonant",
 	decl="2nd", hard="hard", g="m", irregpl=true,
 }
+detect_decl["c-ья"] = old_detect_decl_to_new(detect_decl_old["ъ-ья"])
+declensions_cat["c-ья"] = declensions_cat["-ья"]
 
 ----------------- Masculine hard, suffixed, irregular plural -------------------
 
