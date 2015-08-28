@@ -4,6 +4,8 @@
 import re
 import pywikibot
 import mwparserfromhell
+import blib
+from blib import msg
 
 ru_decl_noun_cases = [
   "nom_sg", "gen_sg", "dat_sg", "acc_sg", "ins_sg", "pre_sg",
@@ -17,19 +19,20 @@ nom_sg_stem_stress_patterns = ["1", "3", "5"]
 
 site = pywikibot.Site()
 
-def msg(text):
-  print text.encode('utf-8')
-
 def parse(text):
-  return mwparserfromhell.parser.Parser().parse(page.text, skip_style_tags=True))
+  return mwparserfromhell.parser.Parser().parse(text, skip_style_tags=True))
 
 def getparam(t, param):
-  if t.has_param(param):
+  if t.has(param):
     return unicode(t.get(param))
   else:
     return ""
 
-def try(forms, args):
+def rmparam(t, param):
+  if t.has(param):
+    t.remove(param)
+
+def trymatch(forms, args):
   tempcall = "{{ru-noun-forms|" + "|".join(args) + "}}"
   result = site.expand_text(tempcall)
   pred_forms = {}
@@ -47,14 +50,19 @@ def try(forms, args):
       msg("Actual has extra form %s=%s not in predicted" % (case, real_form))
       ok = False
     elif pred_form != real_form:
-      msg("For case %s, actual %s differs from predicted %s" % (case,
-        real_form, pred_form))
+      if (case == "ins_sg" and "," in real_form and
+          re.sub(",.*$", "", real_form) == pred_form):
+        msg("For case ins_sg, predicted form %s has an alternate form not in actual form %s; allowed" % (pred_form, real_form))
+      else:
+        msg("For case %s, actual %s differs from predicted %s" % (case,
+          real_form, pred_form))
+        ok = False
   return ok
 
 AC = u"\u0301"
 GR = u"\u0300"
 vowels_no_jo = "аеиоуяэыюіѣѵАЕИОУЯЭЫЮІѢѴ"
-vowels = "аеиоуяэыюіѣѵАЕИОУЯЭЫЮІѢѴ" + "ёЁ"
+vowels = vowels_no_jo + "ёЁ"
 
 def is_unstressed(word):
   return not re.search(ur"[ё" + AC + GR + "]", word)
@@ -67,6 +75,12 @@ def make_ending_stressed(word):
   word = re.sub("([" + vowels_no_jo + "])([^" + vowels_no_jo + "])*$",
       r"\1" + AC + r"\2", word)
   return word
+
+def try_to_stress(word):
+  if is_unstressed(word) and is_one_syllable(word):
+    return make_ending_stressed(word)
+  else:
+    return word
 
 def make_unstressed(word):
   word = word.replace(u"ё", u"е")
@@ -81,18 +95,19 @@ def infer_decl(t):
     if case:
       form = getparam(t, i)
       forms[case] = form
+    i += 1
   
-  nomsg = forms["nom_sg"]
+  nomsg = try_to_stress(forms["nom_sg"])
   nompl = forms["nom_pl"]
   gensg = forms["gen_sg"]
-  genpl = forms["gen_pl"]
+  genpl = try_to_stress(forms["gen_pl"])
   stress = "any"
   genders = [""]
   bare = ""
   m = re.match(ur"(.*)([аяеоё])(́?)$", nomsg)
   if m:
     msg("Nom sg %s refers to feminine 1st decl or neuter 2nd decl" % nomsg)
-    stem = m.group(1)
+    stem = try_to_stress(m.group(1))
     ending = m.group(2)
     if m.group(3) or ending == u"ё":
       stress = "end"
@@ -101,24 +116,19 @@ def infer_decl(t):
 
     # Try to find a stressed version of the stem
     if is_unstressed(stem):
-      if is_one_syllable(stem):
-        stem = make_ending_stressed(stem)
+      mm = re.match(ur"(.*)[аяыи]́?$", nompl)
+      if not mm:
+        msg("Don't recognize fem 1st-decl or neut 2nd-decl nom pl ending in form %s" % nompl)
       else:
-        mm = re.match(ur"(.*)[аяыи]́?$", nompl)
-        if not mm:
-          msg("Don't recognize fem 1st-decl or neut 2nd-decl nom pl ending in form %s" % nompl)
-        else:
-          nomplstem = mm.group(1)
-          if make_unstressed(nomplstem) != stem:
-            msg("Nom pl stem %s not accent-equiv to nom sg stem %s" % (
-              nomplstem, stem))
-          elif nomplstem != stem:
-            msg("Replacing unstressed stem %s with stressed nom pl stem %s" %
-                (stem, nomplstem))
-            stem = nomplstem
+        nomplstem = try_to_stress(mm.group(1))
+        if make_unstressed(nomplstem) != stem:
+          msg("Nom pl stem %s not accent-equiv to nom sg stem %s" % (
+            nomplstem, stem))
+        elif nomplstem != stem:
+          msg("Replacing unstressed stem %s with stressed nom pl stem %s" %
+              (stem, nomplstem))
+          stem = nomplstem
 
-    if is_unstressed(genpl) and is_one_syllable(genpl):
-      genpl = make_ending_stressed(genpl)
     if stem == genpl:
       msg("Gen pl %s same as stem" % genpl)
     elif make_unstressed(stem) != make_unstressed(genpl):
@@ -134,8 +144,6 @@ def infer_decl(t):
       bare = genpl
     nomsg = stem + ending
   else:
-    if is_unstressed(nomsg) and is_one_syllable(nomsg):
-        nomsg = make_ending_stressed(nomsg)
     m = re.match(ur"(.*?)([йь]?)$", nomsg)
     if m:
       nomsgstem = m.group(1)
@@ -146,7 +154,7 @@ def infer_decl(t):
         if ending == u"ь":
           genders = ["m", "f"]
       else:
-        stem = m.group(1)
+        stem = try_to_stress(m.group(1))
         if ending == u"ь":
           if m.group(2) == u"я":
             msg("Found masculine soft-stem nom sg %s" % nomsg)
@@ -162,8 +170,6 @@ def infer_decl(t):
           stress = "end"
         else:
           stress = "stem"
-        if is_unstressed(stem) and is_one_syllable(stem):
-            stem = make_ending_stressed(stem)
         if stem == nomsgstem:
           msg("Nom sg stem %s same as stem" % nomsgstem)
         elif make_unstressed(stem) != make_unstressed(nomsgstem):
@@ -185,8 +191,35 @@ def infer_decl(t):
 
   for stress in stress_patterns:
     for gender in genders:
-      args = [stress, nomsg, gender]
-      if try(forms, args):
-        msg("Found a match: {{ru-noun-table|%s}}" % "|".join(args))
-        return args
+      for anim in ["in", "an"]:
+        args = [stress, nomsg, gender, bare, "a=%s" % anim]
+        if not args[-1]:
+          del args[-1]
+        if not args[-1]:
+          del args[-1]
+        if trymatch(forms, args):
+          msg("Found a match: {{ru-noun-table|%s}}" % "|".join(args))
+          return args
+  msg("Unable to match: %s" % unicode(t))
   return None
+
+def infer_one_page_decls(page, text):
+  for t in text.filter_templates():
+    if unicode(t.name) == "ru-decl-noun":
+      args = infer_decl(t)
+      if args:
+        for i in xrange(15, 0, -1):
+          rmparam(t, i)
+        t.name = "ru-noun-table"
+        i = 1
+        for arg in args:
+          if "=" in arg:
+            name, value = re.split("=", arg)
+            t.add(name, value)
+          else:
+            t.add(i, arg)
+            i += 1
+  return text, "Infer declension for manual decls (ru-decl-noun)"
+
+for page in blib.references("Template:ru-decl-noun"):
+  blib.do_edit(page, infer_one_page_decls)
