@@ -9,7 +9,7 @@ def msg(text):
   print text.encode('utf-8')
 
 def parse(text):
-  return mwparserfromhell.parser.Parser().parse(text, skip_style_tags=True))
+  return mwparserfromhell.parser.Parser().parse(text, skip_style_tags=True)
 
 def getparam(t, param):
   if t.has(param):
