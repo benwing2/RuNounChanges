@@ -210,6 +210,8 @@ local declensions_old = {}
 -- category insertion if false. Delete this as soon as we've verified the
 -- working of the category code and created all the necessary categories.
 local enable_categories = true
+-- Whether to recognize plural stem forms given the gender.
+local recognize_plurals = true
 -- Category/type info corresponding to old-style declensions; see above.
 local declensions_old_cat = {}
 -- New-style declensions; computed automatically from the old-style ones,
@@ -914,6 +916,53 @@ local function detect_basic_stem_type(stem, gender)
 		-- FIXME: What about мя-1? Maybe it's rare enough that we
 		-- don't have to worry about it?
 		return base, ending
+	end
+	--recognize plural endings
+	--NOT CLEAR IF THIS IS A GOOD IDEA.
+	if recognize_plurals then
+		if gender == "n" then
+			base, ending = rmatch(stem, "^(.*)([ьЬ][яЯ]́?)$")
+			if base then
+				error("Ambiguous plural stem " .. stem .. " in -ья, singular could be -о or -ье/-ьё; specify the singular")
+			end
+			base, ending = rmatch(stem, "^(.*)([аяАЯ]́?)$")
+			if base then
+				return base, rfind(ending, "[аА]") and "о" or "е"
+			end
+		end
+		if gender == "f" then
+			base, ending = rmatch(stem, "^(.*)(ь[иИ]́?)$")
+			if base then
+				return base, "ья"
+			end
+		end
+		if gender == "m" then
+			base, ending = rmatch(stem, "^(.*)(ь[яЯ]́?)$")
+			if base then
+				return base, "-ья"
+			end
+			base, ending = rmatch(stem, "^(.*)([аА]́?)$")
+			if base then
+				return base, "-а"
+			end
+		end
+		if gender == "m" or gender == "f" then
+			base, ending = rmatch(stem, "^(.*[" .. com.sib .. com.velar .. "])([иИ]́?)$")
+			if not base then
+				base, ending = rmatch(stem, "^(.*)([ыЫ]́?)$")
+			end
+			if base then
+				return base, gender == "m" and "-" or "а"
+			end
+			base, ending = rmatch(stem, "^(.*)([иИ]́?)$")
+			if base then
+				if gender == "m" then
+					return base, "ь-m"
+				else
+					error("Ambiguous plural stem " .. stem .. " in -и, singular could be -я or -ь; specify the singular")
+				end
+			end
+		end
 	end
 	base, ending = rmatch(stem, "^(.*)([ьЬ][яеёЯЕЁ]́?)$")
 	if base then
