@@ -987,6 +987,25 @@ end
 --                      Second-declension masculine                     --
 --------------------------------------------------------------------------
 
+-- This needs to be up here because it is called just below.
+local function old_to_new(v)
+	v = rsub(v, "ъ$", "")
+	v = rsub(v, "^ъ", "")
+	v = rsub(v, "(%A)ъ", "%1")
+	v = rsub(v, "ъ(%A)", "%1")
+	v = rsub(v, "і", "и")
+	v = rsub(v, "ѣ", "е")
+	return v
+end
+
+-- Function to convert old detect_decl function to new one. This needs to be
+-- up here because it is called just below.
+local function old_detect_decl_to_new(ofunc)
+	return function(stem, stress)
+		return old_to_new(ofunc(stem, stress))
+	end
+end
+
 ----------------- Masculine hard -------------------
 
 -- Normal hard-masculine declension, ending in a hard consonant
@@ -1587,23 +1606,6 @@ declensions_old_cat["*"] = { decl="invariable", hard="none", g="none" }
 --------------------------------------------------------------------------
 --                      Populate new from old                           --
 --------------------------------------------------------------------------
-
-local function old_to_new(v)
-	v = rsub(v, "ъ$", "")
-	v = rsub(v, "^ъ", "")
-	v = rsub(v, "(%A)ъ", "%1")
-	v = rsub(v, "ъ(%A)", "%1")
-	v = rsub(v, "і", "и")
-	v = rsub(v, "ѣ", "е")
-	return v
-end
-
--- Function to convert old detect_decl function to new one
-function old_detect_decl_to_new(ofunc)
-	return function(stem, stress)
-		return old_to_new(ofunc(stem, stress))
-	end
-end
 
 local function old_decl_to_new(odecl)
 	local ndecl = {}
