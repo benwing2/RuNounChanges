@@ -209,6 +209,12 @@ local cases
 -- Type of trailing letter, for tracking purposes
 local trailing_letter_type
 
+--------------------------------------------------------------------------
+--                     Tracking and categorization                      --
+--------------------------------------------------------------------------
+
+-- FIXME! Move below the main code
+
 -- FIXME!! Delete most of this tracking code once we've enabled all the
 -- categories. Note that some of the tracking categories aren't redundant;
 -- in particular, we have more specific categories that combine
@@ -455,6 +461,10 @@ local function categorize(stress, decl_class, args)
 	-- but simultaneously it's too fine in that it doesn't group the stress
 	-- patterns with stressed genitive plural.
 end
+
+--------------------------------------------------------------------------
+--                              Main code                               --
+--------------------------------------------------------------------------
 
 local function do_show(frame, old)
 	PAGENAME = mw.title.getCurrentTitle().text
@@ -771,24 +781,9 @@ function export.catboiler(frame)
 		.. m_utilities.format_categories(cats, lang)
 end
 
------------------ Declension helper functions -----------------
-
-local function old_to_new(v)
-	v = rsub(v, "ъ$", "")
-	v = rsub(v, "^ъ", "")
-	v = rsub(v, "(%A)ъ", "%1")
-	v = rsub(v, "ъ(%A)", "%1")
-	v = rsub(v, "і", "и")
-	v = rsub(v, "ѣ", "е")
-	return v
-end
-
--- Function to convert old detect_decl function to new one
-local function old_detect_decl_to_new(ofunc)
-	return function(stem, stress)
-		return old_to_new(ofunc(stem, stress))
-	end
-end
+--------------------------------------------------------------------------
+--                   Autodetection and stem munging                     --
+--------------------------------------------------------------------------
 
 -- Attempt to detect the type of the stem (= including ending) based
 -- on its ending, separating off the base and the ending. DECL is the
@@ -1574,8 +1569,25 @@ declensions_old["*"] = {
 declensions_old_cat["*"] = { decl="invariable", hard="none", g="none" }
 
 --------------------------------------------------------------------------
---                         Inflection functions                         --
+--                      Populate new from old                           --
 --------------------------------------------------------------------------
+
+local function old_to_new(v)
+	v = rsub(v, "ъ$", "")
+	v = rsub(v, "^ъ", "")
+	v = rsub(v, "(%A)ъ", "%1")
+	v = rsub(v, "ъ(%A)", "%1")
+	v = rsub(v, "і", "и")
+	v = rsub(v, "ѣ", "е")
+	return v
+end
+
+-- Function to convert old detect_decl function to new one
+function old_detect_decl_to_new(ofunc)
+	return function(stem, stress)
+		return old_to_new(ofunc(stem, stress))
+	end
+end
 
 local function old_decl_to_new(odecl)
 	local ndecl = {}
@@ -1646,6 +1658,10 @@ for odeclfrom, ofunc in pairs(detect_decl_old) do
 	end
 end
 
+--------------------------------------------------------------------------
+--                        Inflection functions                          --
+--------------------------------------------------------------------------
+
 local stressed_sibilant_rules = {
 	["я"] = "а",
 	["ы"] = "и",
@@ -1702,6 +1718,7 @@ local old_consonantal_suffixes = ut.list_to_set({"ъ", "ь", "й"})
 
 local consonantal_suffixes = ut.list_to_set({"", "ь", "й"})
 
+-- used for tracking and categorization
 trailing_letter_type = {
 	["ш"] = {"sibilant", "cons"},
 	["щ"] = {"sibilant", "cons"},
@@ -1729,6 +1746,7 @@ trailing_letter_type = {
 	["ю"] = {"vowel", "soft-vowel"},
 }
 
+-- used for categorization
 tltype_to_stem_type = {
 	["sibilant"] = "sibilant",
 	["velar"] = "velar",
