@@ -5,7 +5,7 @@ import re
 import pywikibot
 import mwparserfromhell
 import blib
-from blib import msg
+from blib import msg, rmparam, getparam
 
 ru_decl_noun_cases = [
   "nom_sg", "gen_sg", "dat_sg", "acc_sg", "ins_sg", "pre_sg",
@@ -18,19 +18,6 @@ nom_sg_ending_stress_patterns = ["2", "4", "6", "4*", "6*"]
 nom_sg_stem_stress_patterns = ["1", "3", "5"]
 
 site = pywikibot.Site()
-
-def parse(text):
-  return mwparserfromhell.parser.Parser().parse(text, skip_style_tags=True))
-
-def getparam(t, param):
-  if t.has(param):
-    return unicode(t.get(param))
-  else:
-    return ""
-
-def rmparam(t, param):
-  if t.has(param):
-    t.remove(param)
 
 def trymatch(forms, args):
   tempcall = "{{ru-noun-forms|" + "|".join(args) + "}}"
