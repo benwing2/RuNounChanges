@@ -606,7 +606,7 @@ local function extract_word_joiner(spec)
 	return word_joiner
 end
 
-local function do_show(frame, old)
+local function generate_forms(args, old)
 	local args = clone_args(frame)
 
 	old = old or args.old
@@ -1063,8 +1063,82 @@ function do_show_1(args, per_word_info)
 	end
 
 	handle_overall_forms_and_overrides(args)
+	return args
+end
+
+local function do_show(frame, old)
+	local args = clone_args(frame)
+	local args = generate_forms(args, old)
 
 	return make_table(args) .. m_utilities.format_categories(args["categories"], lang)
+end
+
+function get_realcase(case, anim)
+	if anim == "a" then
+		if case == "acc_sg" then
+			return "acc_sg_an"
+		elseif case == "acc_pl" then
+			return "acc_pl_an"
+		end
+	elseif anim == "i" then
+		if case == "acc_sg" then
+			return "acc_sg_in"
+		elseif case == "acc_pl" then
+			return "acc_pl_in"
+		end
+	end
+	return case
+end
+
+-- The entry point for 'ru-noun-forms' to generate all noun forms.
+function export.generate_forms(frame)
+	local args = clone_args(frame)
+	args = generate_forms(args, false)
+	local ins_text = {}
+	for _, case in ipairs(cases) do
+		local ispl = rfind(case, "_pl")
+		local caseok = true
+		if args.n == "p" then
+			caseok = ispl
+		elseif args.n == "s" then
+			casepl = not ispl
+		end
+		if case == "loc" and not args.any_overridden.loc or
+			case == "par" and not args.any_overridden.par or
+			case == "voc" and not args.any_overridden.voc then
+			caseok = false
+		end
+		if args.a == "a" or args.a == "i" then
+			if rfind(case, "_[ai]n") then
+				caseok = false
+			end
+		else -- args.a == "b"
+			if case == "acc_sg" or case == "acc_pl" then
+				caseok = false
+			end
+		end
+		local realcase = get_realcase(case, args.a)
+
+		if caseok and args.forms[case] then
+			table.insert(ins_text, case .. "=" .. m_links.remove_links(table.concat(show_form(args.per_word_info, realcase, args.old, "russian-separate"), ",")))
+		end
+	end
+	return table.concat(ins_text, "|")
+end
+
+-- The entry point for 'ru-noun-form' to generate a particular noun form.
+function export.generate_form(frame)
+	local args = clone_args(frame)
+	if not args.form then
+		error("Must specify desired form using form=")
+	end
+	local form = args.form
+	if not ut.contains(cases, form) then
+		error("Unrecognized form " .. form)
+	end
+	local args = generate_forms(args, false)
+	local realcase = get_realcase(form, args.a)
+	return m_links.remove_links(table.concat(show_form(args.per_word_info, realcase, args.old, "russian-separate"), ","))
 end
 
 -- The main entry point for modern declension tables.
@@ -2808,8 +2882,10 @@ function show_form_1(word_forms, trailing_forms, old, prefix, suffix, lemma)
 			end
 		end
 
-		if lemma then
+		if lemma == "lemma" then
 			return table.concat(lemmavals, ", ")
+		elseif lemma == "russian-separate" then
+			return russianvals
 		else
 			local russian_span = table.concat(russianvals, outersep)
 			local latin_span = table.concat(latinvals, outersep)
@@ -2858,23 +2934,21 @@ end
 -- Make the table
 function make_table(args)
 	local data = {}
-	local numb = args.n
-	local old = args.old
 	data.after_title = after_titles[anim]
-	data.number = numbers[numb]
+	data.number = numbers[data.n]
 
 	local prefix = args.prefix or ""
 	local suffix = args.suffix or ""
-	data.lemma = show_form(args.per_word_info, numb == "p" and "nom_pl" or "nom_sg", old, prefix, suffix, true)
-	data.title = args.title or strutils.format(old and old_title_temp or title_temp, data)
+	data.lemma = m_links.remove_links(show_form(args.per_word_info, data.n == "p" and "nom_pl" or "nom_sg", ars.old, prefix, suffix, true))
+	data.title = args.title or strutils.format(args.old and old_title_temp or title_temp, data)
 
 	for _, case in ipairs(cases) do
-		data[case] = show_form(args.per_word_info, case, old, prefix, suffix, false)
+		data[case] = show_form(args.per_word_info, case, args.old, prefix, suffix, false)
 	end
 
 	local temp = nil
 
-	if numb == "s" then
+	if args.n == "s" then
 		data.nom_x = data.nom_sg
 		data.gen_x = data.gen_sg
 		data.dat_x = data.dat_sg
@@ -2887,7 +2961,7 @@ function make_table(args)
 		else
 			temp = "half_a"
 		end
-	elseif numb == "p" then
+	elseif args.n == "p" then
 		data.nom_x = data.nom_pl
 		data.gen_x = data.gen_pl
 		data.dat_x = data.dat_pl
