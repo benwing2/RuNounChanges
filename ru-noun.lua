@@ -13,7 +13,6 @@
 		a: animacy (a = animate, i = inanimate, b = both, otherwise inanimate)
 		n: number restriction (p = plural only, s = singular only, otherwise both)
 		pl: special plural stem (optional, default = stem)
-		barepl: suffixless plural stem (optional, default = argument 4 if explicitly given, else plural stem)
 		CASE_NUM or par/loc/voc: override (or multiple values separated by
 		    commas) for particular form; forms auto-linked; can have raw links
 			in it, can have an ending "note" (*, +, 1, 2, 3, etc.)
@@ -278,7 +277,7 @@ local function tracking_code(stress, decl_class, real_decl_class, args)
 		end
 	end
 	dotrack("")
-	if args.bare ~= args.stem then
+	if args.bare and args.bare ~= args.stem then
 		track("reducible-stem")
 		dotrack("reducible-stem/")
 	end
@@ -459,7 +458,7 @@ local function categorize(stress, decl_class, args)
 	if args.pl ~= args.stem then
 		insert_cat("~ with irregular plural")
 	end
-	if args.bare ~= args.stem then
+	if args.bare and args.bare ~= args.stem then
 		insert_cat("~ with reducible stem")
 	end
 	for case in pairs(cases) do
@@ -495,20 +494,16 @@ local function do_show(frame, old)
 	old = old or args.old
 	local manual = false
 
-	-- FIXME: Eliminate barepl, convert pl to 5th numbered arg
-	if args["barepl"] or args["barepl2"] or args["barepl3"] or args["barepl4"] or args["barepl5"] then
-		track("barepl")
-	end
 	if args["pl"] or args["pl2"] or args["pl3"] or args["pl4"] or args["pl5"] then
 		track("pl")
 	end
 	
 	-- Gather arguments into an array of STEM_SET objects, containing
-	-- (potentially) elements 1, 2, 3, 4, 'pl', 'barepl' where 1, 2, 3, 4
-	-- correspond to accent pattern, stem, declension type and bare stem and
-	-- come from consecutive numbered parameters, and 'pl' and 'barepl' come
-	-- from parameters named 'pl', 'pl2', 'pl3', ... and similarly for
-	-- 'barepl'. Sets of stem parameters are separated by the word "or".
+	-- (potentially) elements 1, 2, 3, 4, 'pl' where 1, 2, 3, 4
+	-- correspond to accent pattern, stem, declension type and bare stem
+	-- and come from consecutive numbered parameters, and 'pl' comes
+	-- from parameters named 'pl', 'pl2', 'pl3', .... Sets of stem
+	-- parameters are separated by the word "or".
 	local stem_sets = {}
 	-- Find maximum-numbered arg, allowing for holes
 	local max_arg = 0
@@ -527,7 +522,6 @@ local function do_show(frame, old)
 				manual = true
 			end
 			stem_set.pl = args["pl" .. (setnum == 1 and "" or setnum)]
-			stem_set.barepl = args["barepl" .. (setnum == 1 and "" or setnum)]
 			table.insert(stem_sets, stem_set)
 			stem_set = {}
 			offset = i
@@ -535,16 +529,15 @@ local function do_show(frame, old)
 			stem_set[i - offset] = args[i]
 		end
 	end
-	-- Gather any remaining stem specs composed only of plN and/or bareplN.
+	-- Gather any remaining stem specs composed only of plN.
 	i = #stem_sets + 1
 	assert(i > 1)
 	while true do
 		local pl = args["pl" .. i]
-		local barepl = args["barepl" .. i]
-		if not pl and not barepl then
+		if not pl then
 			break
 		end
-		table.insert(stem_sets, {pl=pl, barepl=barepl})
+		table.insert(stem_sets, {pl=pl})
 		i = i + 1
 	end
 
@@ -552,7 +545,7 @@ local function do_show(frame, old)
 		if #stem_sets > 1 then
 			error("Can't specify multiple stem sets when manual")
 		end
-		if stem_sets[1][4] or stem_sets[1].pl or stem_sets[1].barepl then
+		if stem_sets[1][4] or stem_sets[1].pl then
 			error("Can't specify optional stem parameters when manual")
 		end
 	end
@@ -583,7 +576,7 @@ local function do_show(frame, old)
 	local default_stress = "1"
 	local default_decl = ""
 	local default_stem = SUBPAGENAME
-	local default_bare, default_pl, default_barepl
+	local default_pl
 	local first = true
 
 	if #stem_sets > 1 then
@@ -599,22 +592,17 @@ local function do_show(frame, old)
 		if ut.contains({"", "m", "f", "n"}, decl_class) then
 			stem, decl_class = detect_stem_type(stem, decl_class)
 		end
-		-- For bare, pl and barepl, we default to other specified arguments,
-		-- falling back to the stem if specified or we're handling the
-		-- first stem set; as a last resort, use the defaults taken from the
-		-- first stem set.
-		local bare = stem_set[4] or stem_specified and stem or default_bare
+		local bare = stem_set[4]
+		-- For pl, we default to other specified arguments, falling back
+		-- to the stem if specified or we're handling the first stem set;
+		-- as a last resort, use the defaults taken from the first stem set.
 		args.pl = stem_set.pl or stem_specified and stem or default_pl
-		args.barepl = stem_set.barepl or stem_set[4] or stem_set.pl or
-			stem_specified and stem or default_barepl
 
 		if first then
 			default_stress = stress_arg
 			default_decl = decl_class
 			default_stem = stem
-			default_bare = bare
 			default_pl = args.pl
-			default_barepl = args.barepl
 		end
 
 		-- validate stress arg and decl type and convert to list
@@ -672,33 +660,46 @@ local function do_show(frame, old)
 				else
 					error("Declension class " .. sgclass .. " not (un)reducible")
 				end
-			elseif stem ~= bare then
-				-- FIXME: Tracking code eventually to remove
-				if is_reducible(sgclass, old) then
-					local autostem = export.reduce_nom_sg_stem(bare, sgclass)
-					if not autostem then
-						track("error-reducible")
-					elseif autostem == stem then
-						track("predictable-reducible")
-					elseif com.make_unstressed(autostem) == com.make_unstressed(stem) then
-						track("predictable-reducible-but-for-stress")
-					else
-						track("unpredictable-reducible")
-					end
-				elseif is_unreducible(sgclass, old) then
-					local autobare = export.unreduce_nom_sg_stem(stem, sgclass,
-						stress, old)
-					if not autobare then
-						track("error-unreducible")
-					elseif autobare == bare then
-						track("predictable-unreducible")
-					elseif com.make_unstressed(autobare) == com.make_unstressed(bare) then
-						track("predictable-unreducible-but-for-stress")
-					else
-						track("unpredictable-unreducible")
-					end
+			elseif bare
+				-- FIXME: Tracking code eventually to remove; track cases
+				-- where bare is explicitly specified to see how many could
+				-- be predicted
+				if stem == bare then
+					track("explicit-bare-same-as-stem")
+				elseif com.make_unstressed(stem) == com.make_unstressed(bare) then
+					track("explicit-bare-different-stress")
+					track("explicit-bare-different-stress-from-stem")
+				elseif rfind(decl_class, "^ь-") and (stem .. "ь") == bare then
+					track("explicit-bare-same-as-nom-sg")
+				elseif rfind(decl_class, "^ь-") and com.make_unstressed(stem .. "ь") == com.make_unstressed(bare) then
+					track("explicit-bare-different-stress")
+					track("explicit-bare-different-stress-from-nom-sg")
 				else
-					track("bare-without-reducibility")
+					if is_reducible(sgclass, old) then
+						local autostem = export.reduce_nom_sg_stem(bare, sgclass)
+						if not autostem then
+							track("error-reducible")
+						elseif autostem == stem then
+							track("explicit-bare/predictable-reducible")
+						elseif com.make_unstressed(autostem) == com.make_unstressed(stem) then
+							track("predictable-reducible-but-for-stress")
+						else
+							track("unpredictable-reducible")
+						end
+					elseif is_unreducible(sgclass, old) then
+						local autobare = export.unreduce_nom_sg_stem(stem, sgclass, stress)
+						if not autobare then
+							track("error-unreducible")
+						elseif autobare == bare then
+							track("predictable-unreducible")
+						elseif com.make_unstressed(autobare) == com.make_unstressed(bare) then
+							track("predictable-unreducible-but-for-stress")
+						else
+							track("unpredictable-unreducible")
+						end
+					else
+						track("bare-without-reducibility")
+					end
 				end
 			end
 
@@ -736,6 +737,7 @@ local function do_show(frame, old)
 				do_stress_pattern(stress_patterns[stress], args,
 					decls[real_decl_class], number)
 			end
+
 			categorize(stress, decl_class, args)
 		end
 	end
@@ -1805,7 +1807,7 @@ end
 -- last letter of the stem (e.g. if it is velar, sibilant or ц). CASE is
 -- the case form being created and is used to select the plural stem if
 -- needed. Returns two values, the combined form and the modified suffix.
-local function attach_unstressed(args, case, suf)
+local function attach_unstressed(args, case, suf, was_stressed)
 	if suf == nil then
 		return nil, nil
 	elseif rfind(suf, "̂") then -- if suf has circumflex accent, it forces stressed
@@ -1814,11 +1816,38 @@ local function attach_unstressed(args, case, suf)
 	local is_pl = rfind(case, "_pl$")
 	local old = args.old
 	local stem = is_pl and args.pl or args.stem
-	local barestem = is_pl and args.barepl or args.bare
+	local barestem = args.bare or stem
 	if old and old_consonantal_suffixes[suf] or not old and consonantal_suffixes[suf] then
+		-- FIXME: temporary tracking code, prelude to change in the
+		-- algorithm for words like голова́ (nom pl. го́ловы but gen pl. голо́в),
+		-- which currently require a bare but will eventually be by algorithm.
+		-- Modeled on code in Vitalik's module. At least one known exception:
+		-- де́ньги (pl. tantum; accent pattern 5, nom pl. де́ньги, gen pl. де́нег).
+		if was_stressed and case == "gen_pl" then
+			local will_be_gen_pl_stem = com.make_ending_stressed(stem)
+			if args.bare then
+				if will_be_gen_pl_stem == args.bare then
+					track("bare-gen-pl/bare-agrees")
+				elseif will_be_gen_pl_stem == com.make_unstressed(args.bare) then
+					track("bare-gen-pl/bare-different-stress")
+				else
+					track("bare-gen-pl/bare-different-cons")
+				end
+			else
+				track("bare-gen-pl/no-bare")
+			end
+		end
+
 		if rlfind(barestem, old and "[йьъ]$" or "[йь]$") then
-			return barestem, ""
+			suf = ""
 		else
+			-- FIXME: temporary tracking code
+			if args.bare then
+				track("explicit-bare-no-suffix")
+				if old then
+					track("explicit-bare-old-no-suffix")
+				end
+			end
 			if suf == "й" or suf == "ь" then
 				if rfind(barestem, "[" .. com.vowel .. "]́?$") then
 					suf = "й"
@@ -1826,8 +1855,8 @@ local function attach_unstressed(args, case, suf)
 					suf = "ь"
 				end
 			end
-			return barestem .. suf, suf
 		end
+		return barestem .. suf, suf
 	end
 	suf = com.make_unstressed(suf)
 	local rules = unstressed_rules[ulower(usub(stem, -1))]
@@ -1843,7 +1872,7 @@ function attach_stressed(args, case, suf)
  	-- circumflex forces stress even when the accent pattern calls for no stress
 	suf = rsub(suf, "̂", "́")
 	if not rfind(suf, "[ё́]") then -- if suf has no "ё" or accent marks
-		return attach_unstressed(args, case, suf)
+		return attach_unstressed(args, case, suf, "was stressed")
 	end
 	local is_pl = rfind(case, "_pl$")
 	local old = args.old
