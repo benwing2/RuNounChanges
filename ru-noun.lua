@@ -30,13 +30,15 @@ TODO:
 2. Bug in -я nouns with bare specified; should not have -ь ending. Old templates did not add this ending when bare occurred. (PROBABLY SHOULD ALWAYS HAVE BARE
 BE BARE, NEVER ADD A NON-SYLLABIC ENDING. HAVE TRACKING CODE FOR THIS.)
 3. Genitive plural of -ёнокъ should be -атъ?
-4. Remove barepl, make pl= be 5th argument. [IMPLEMENTED REMOVAL OF BAREPL]
+4. Remove barepl, make pl= be 5th argument. [IMPLEMENTED IN GITHUB IN TWO
+   DIFFERENT BRANCHES]
 5. (Add stress pattern for ь-stem numbers. Wikitiki handled that through
    overriding the ins_sg. I thought there would be complications with the
    nom_sg in multi-syllabic words but no.)
 6. Eliminate complicated defaulting code for second and further stem sets.
    Should simply default to same values as the first stem set does, without
    the first stem set serving as defaults for the remainder.
+   [IMPLEMENTED IN GITHUB]
 7. Fixes for stem-multi-syllabic words with ending stress in gen pl but
    non-syllabic gen pl, with stress transferring onto final syllable even if
    stem is otherwise stressed on an earlier syllable (e.g. голова́ in
