@@ -7,7 +7,9 @@
 		2: stem, with ending; or leave out the ending and put it in the
 		   declension type field
 		3: declension type (usually just the ending); or blank or a gender
-		   (m/f/n) to infer it from the full stem
+		   (m/f/n) to infer it from the full stem; append ^ to get the
+		   alternate genitive plural ending (-ъ/none for masculine, -ей for
+		   feminine, -ов(ъ) or variants for neuter)
 		4: suffixless form (optional, default = stem); or * to infer it,
 		   in which case the stem should reflect the nom sg form
 		5: special plural stem (optional, default = stem)
@@ -295,6 +297,9 @@ local function tracking_code(stress, decl_class, real_decl_class, args)
 	if args.sgtail then
 		track("sgtail")
 	end
+	if args.alt_gen_pl then
+		track("alt-gen-pl")
+	end
 	for case in pairs(cases) do
 		if args[case] then
 			track("irreg/" .. case)
@@ -463,6 +468,9 @@ local function categorize(stress, decl_class, args)
 	if args.bare and args.bare ~= args.stem then
 		insert_cat("~ with reducible stem")
 	end
+	if args.alt_gen_pl then
+		insert_cat("~ with alternate genitive plural")
+	end
 	for case in pairs(cases) do
 		if args[case] then
 			local engcase = rsub(case, "^([a-z]*)", {
@@ -573,6 +581,8 @@ local function do_show(frame, old)
 
 	for _, stem_set in ipairs(stem_sets) do
 		local decl_class = stem_set[3] or ""
+		args.alt_gen_pl = rfind(decl_class, "%(2%)")
+		decl_class = rsub(decl_class, "%(2%)", "")
 		local stem = stem_set[2] or default_stem
 		if not stem then
 			error("Stem in first stem set must be specified")
@@ -1182,6 +1192,7 @@ declensions_old["ъ-normal"] = {
 	["pre_sg"] = "ѣ́",
 	["nom_pl"] = "ы́",
 	["gen_pl"] = "о́въ",
+	["alt_gen_pl"] = "ъ",
 	["dat_pl"] = "а́мъ",
 	["acc_pl"] = nil,
 	["ins_pl"] = "а́ми",
@@ -1252,6 +1263,7 @@ declensions_old["ъ-ья-normal"] = {
 	["pre_sg"] = "ѣ́",
 	["nom_pl"] = "ья́",
 	["gen_pl"] = "ьёвъ",
+	["alt_gen_pl"] = "ь",
 	["dat_pl"] = "ья́мъ",
 	["acc_pl"] = nil,
 	["ins_pl"] = "ья́ми",
@@ -1355,6 +1367,7 @@ declensions_old["ь-m"] = {
 	["pre_sg"] = "ѣ́",
 	["nom_pl"] = "и́",
 	["gen_pl"] = "е́й",
+	["alt_gen_pl"] = "ь",
 	["dat_pl"] = "я́мъ",
 	["acc_pl"] = nil,
 	["ins_pl"] = "я́ми",
@@ -1381,6 +1394,7 @@ declensions_old["й-normal"] = {
 	["pre_sg"] = "ѣ́",
 	["nom_pl"] = "и́",
 	["gen_pl"] = "ёвъ",
+	["alt_gen_pl"] = "й",
 	["dat_pl"] = "я́мъ",
 	["acc_pl"] = nil,
 	["ins_pl"] = "я́ми",
@@ -1436,6 +1450,7 @@ declensions_old["а-normal"] = {
 	["pre_sg"] = "ѣ́",
 	["nom_pl"] = "ы́",
 	["gen_pl"] = "ъ",
+	["alt_gen_pl"] = "е́й",
 	["dat_pl"] = "а́мъ",
 	["acc_pl"] = nil,
 	["ins_pl"] = "а́ми",
@@ -1470,6 +1485,7 @@ declensions_old["я-normal"] = {
 	["pre_sg"] = "ѣ́",
 	["nom_pl"] = "и́",
 	["gen_pl"] = "й",
+	["alt_gen_pl"] = "е́й",
 	["dat_pl"] = "я́мъ",
 	["acc_pl"] = nil,
 	["ins_pl"] = "я́ми",
@@ -1547,6 +1563,7 @@ declensions_old["о"] = {
 	["pre_sg"] = "ѣ́",
 	["nom_pl"] = "а́",
 	["gen_pl"] = "ъ",
+	["alt_gen_pl"] = "о́въ",
 	["dat_pl"] = "а́мъ",
 	["acc_pl"] = nil,
 	["ins_pl"] = "а́ми",
@@ -1573,6 +1590,7 @@ declensions_old["о-ья-normal"] = {
 	["pre_sg"] = "ѣ́",
 	["nom_pl"] = "ья́",
 	["gen_pl"] = "ьёвъ",
+	["alt_gen_pl"] = "ь",
 	["dat_pl"] = "ья́мъ",
 	["acc_pl"] = nil,
 	["ins_pl"] = "ья́ми",
@@ -1606,6 +1624,7 @@ declensions_old["е-normal"] = {
 	["pre_sg"] = "ѣ́",
 	["nom_pl"] = "я́",
 	["gen_pl"] = "е́й",
+	["alt_gen_pl"] = "е́въ",
 	["dat_pl"] = "я́мъ",
 	["acc_pl"] = nil,
 	["ins_pl"] = "я́ми",
@@ -1661,6 +1680,7 @@ declensions_old["е́-normal"] = {
 	["pre_sg"] = "ѣ́",
 	["nom_pl"] = "я́",
 	["gen_pl"] = "е́й",
+	["alt_gen_pl"] = "ёвъ",
 	["dat_pl"] = "я́мъ",
 	["acc_pl"] = nil,
 	["ins_pl"] = "я́ми",
@@ -1696,6 +1716,7 @@ declensions_old["ье-1"] = {
 	["pre_sg"] = "ьѣ́",
 	["nom_pl"] = "ья́",
 	["gen_pl"] = "ий",
+	["alt_gen_pl"] = "ьёвъ",
 	["dat_pl"] = "ья́мъ",
 	["acc_pl"] = nil,
 	["ins_pl"] = "ья́ми",
@@ -2069,7 +2090,14 @@ local function gen_form(args, decl, case, fun)
 	if not args.suffixes[case] then
 		args.suffixes[case] = {}
 	end
-	local combineds, realsufs = attach_with(args, case, decl[case], fun)
+	local suf = decl[case]
+	if case == "gen_pl" and args.alt_gen_pl then
+		suf = decl.alt_gen_pl
+		if not suf then
+			error("No alternate genitive plural available for this declension class")
+		end
+	end
+	local combineds, realsufs = attach_with(args, case, suf, fun)
 	for _, form in ipairs(combineds) do
 		ut.insert_if_not(args.forms[case], form)
 	end
