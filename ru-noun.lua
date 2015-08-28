@@ -739,7 +739,7 @@ local stem_expl = {
 function export.catboiler(frame)
 	local args = clone_args(frame)
 
-	cats = {}
+	local cats = {}
 	insert_category(cats, "~")
 
 	local maintext
