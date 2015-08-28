@@ -129,6 +129,44 @@ function export.show_manual_old(frame)
 	return do_show(frame, true, "manual")
 end
 
+-- Entry point for use in Module:ru-noun.
+function export.get_nominal_decl(decl, gender, old)
+	d = old and declensions_old[decl] or declensions[decl]
+	n = {}
+	if gender == "m" then
+		n.nom_sg = d.nom_m
+		n.gen_sg = d.gen_m
+		n.dat_sg = d.dat_m
+		n.ins_sg = d.ins_m
+		n.pre_sg = d.pre_m
+	elseif gender == "f" then
+		n.nom_sg = d.nom_f
+		n.gen_sg = d.gen_f
+		n.dat_sg = d.dat_f
+		n.acc_sg = d.acc_f
+		n.ins_sg = d.ins_f
+		n.pre_sg = d.pre_f
+	elseif gender == "n" then
+		n.nom_sg = d.nom_n
+		n.gen_sg = d.gen_m
+		n.dat_sg = d.dat_m
+		n.acc_sg = d.acc_n
+		n.ins_sg = d.ins_m
+		n.pre_sg = d.pre_m
+	else
+		assert(false, "Unrecognized gender: " .. gender)
+	end
+	n.nom_pl = d.nom_p
+	n.gen_pl = d.gen_p
+	n.dat_pl = d.dat_p
+	n.ins_pl = d.ins_p
+	n.pre_pl = d.pre_p
+	if gender == "m" and d.nom_mp then
+		n.nom_pl = d.nom_mp
+	end
+	return n
+end
+
 declensions["ый"] = {
 	["nom_m"] = "ый",
 	["nom_n"] = "ое",

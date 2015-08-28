@@ -114,6 +114,7 @@ local m_utilities = require("Module:utilities")
 local ut = require("Module:utils")
 local m_links = require("Module:links")
 local com = require("Module:ru-common")
+local m_adj = require("Module:ru-adjective")
 local strutils = require("Module:string utilities")
 local m_table_tools = require("Module:table tools")
 local m_debug = require("Module:debug")
@@ -411,21 +412,31 @@ local function categorize(stress, decl_class, args)
 			ut.contains(sghint_types, "palatal") and "vowel-stem" or
 			sgdc.hard == "soft" and "soft-stem" or
 			"hard-stem"
-		-- NOTE: There are 8 Zaliznyak-style stem types and 3 genders, but
-		-- we don't create a category for masculine-type 3rd-declension
-		-- nominals (there is such a noun, путь, but it mostly behaves like a
-		-- feminine noun), so there are 23.
-		insert_cat(stem_type .. " " .. gender_to_full[sgdc.g] .. "-type ~")
-		-- NOTE: Here we are creating categories for the combination of
-		-- stem, gender and accent. There are 8 accent patterns and 23
-		-- combinations of stem and gender, which potentially makes for
-		-- 8*23 = 184 such categories, which is a lot. Not all such categories
-		-- should actually exist; there were maybe 75 former declension
-		-- templates, each of which was essentially categorized by the same
-		-- three variables, but some of which dealt with ancillary issues
-		-- like irregular plurals; this amounts to 67 actual stem/gender/accent
-		-- categories.
-		insert_cat(stem_type .. " " .. gender_to_full[sgdc.g] .. "-type accent-" .. stress .. " ~")
+		if sgdc.adj then
+			if sgdc.possadj then
+				insert_cat(sgdc.decl .. " possessive " .. gender_to_full[sgdc.g] .. " adjectival ~")
+			elseif stem_type == "soft-stem" or stem_type == "vowel-stem" then
+				insert_cat(stem_type .. " " .. gender_to_full[sgdc.g] .. " adjectival ~")
+			else
+				insert_cat(stem_type .. " " .. gender_to_full[sgdc.g] .. " accent-" .. stress .. " adjectival ~")
+			end
+		else
+			-- NOTE: There are 8 Zaliznyak-style stem types and 3 genders, but
+			-- we don't create a category for masculine-type 3rd-declension
+			-- nominals (there is such a noun, путь, but it mostly behaves
+			-- like a feminine noun), so there are 23.
+			insert_cat(stem_type .. " " .. gender_to_full[sgdc.g] .. "-type ~")
+			-- NOTE: Here we are creating categories for the combination of
+			-- stem, gender and accent. There are 8 accent patterns and 23
+			-- combinations of stem and gender, which potentially makes for
+			-- 8*23 = 184 such categories, which is a lot. Not all such
+			-- categories should actually exist; there were maybe 75 former
+			-- declension templates, each of which was essentially categorized
+			-- by the same three variables, but some of which dealt with
+			-- ancillary issues like irregular plurals; this amounts to 67
+			-- actual stem/gender/accent categories.
+			insert_cat(stem_type .. " " .. gender_to_full[sgdc.g] .. "-type accent-" .. stress .. " ~")
+		end
 		insert_cat("~ with accent pattern " .. stress)
 	end
 	local sgsuffix = args.suffixes["nom_sg"]
@@ -472,6 +483,9 @@ local function categorize(stress, decl_class, args)
 	end
 	if args.alt_gen_pl then
 		insert_cat("~ with alternate genitive plural")
+	end
+	if sgdc.adj then
+		insert_cat("adjectival ~")
 	end
 	for case in pairs(cases) do
 		if args[case] then
@@ -591,7 +605,11 @@ local function do_show(frame, old)
 		end
 		default_stem = stem
 		local was_accented
-		stem, decl_class, was_accented = detect_stem_type(stem, decl_class)
+		if rfind(decl_class, "^%+") then
+			stem, decl_class, was_accented = detect_adj_type(stem, decl_class)
+		else
+			stem, decl_class, was_accented = detect_stem_type(stem, decl_class)
+		end
 		local stress_arg = stem_set[1] or detect_stress_pattern(decl_class, was_accented)
 		local bare = stem_set[4]
 		args.pl = stem_set[5] or stem
@@ -870,6 +888,34 @@ function export.catboiler(frame)
 			maintext = get_stem_gender_text(stem, gender)
 		end
 		insert_category(cats, "~ by stem type and gender")
+	elseif args[1] == "adj" then
+		local stem, gender, stress = rmatch(SUBPAGENAME, "^Russian (.*) (.-) accent-(.-) adjectival")
+		if not stem then
+			stem, gender = rmatch(SUBPAGENAME, "^Russian (.*) (.-) adjectival")
+		end
+		if not stem then
+			error("Invalid category name, should be e.g. 'Russian velar-stem masculine accent-1 adjectival nominals'")
+		end
+		local stemtext
+		if rfind(stem, "possessive") then
+			possessive = "possessive "
+			stem = rsub(stem, " possessive", "")
+			stemtext = ""
+		else
+			if not stem_expl[stem] then
+				error("Invalid stem type " .. stem)
+			end
+			possessive = ""
+			stemtext = " The stem ends in " .. stem_expl[stem] .. " and is Zaliznyak's type " .. zaliznyak_stem_type[stem] .. "."
+		end
+		local stresstext = stress == "1" and
+			"This nominal is stressed according to accent pattern 1 (stress on the stem), corresponding to Zaliznyak's type a." or
+			stress == "2" and
+			"This nominal is stressed according to accent pattern 2 (stress on the ending), corresponding to Zaliznyak's type b." or
+			"All nominals of this class are stressed according to accent pattern 1 (stress on the stem), corresponding to Zaliznyak's type a."
+		local decl = stress == "1"
+		maintext = stem .. " " .. gender .. " ~, with " .. possessive .. "adjectival endings, ending in nominative singular " .. args[2] .. " and nominative plural " .. args[3] .. "." .. stemtext .. " " .. stresstext
+		insert_category(cats, "~ by stem type, gender and accent pattern")
 	elseif args[1] == "sg" then
 		maintext = "~ ending in nominative singular " .. args[2] .. "."
 		insert_category(cats, "~ by singular ending")
@@ -1062,6 +1108,36 @@ function detect_stem_type(stem, decl)
 	end
 end
 
+function detect_adj_type(stem, decl)
+	if decl == "+" then
+		local base, ending = rmatch(stem, "^(.*)([ыиіьаяoe]́?[йея])$")
+		local was_accented = rfind(decl, "́")
+		ending = com.remove_accents(ending)
+		if base then
+			if rfind(ending "^[іи]й$") and rfind(base, "[" .. com.velar .. com.sib .. "]$") then
+				return base, "+ый", was_accented
+			-- The following is necessary for -ц, unclear if makes sense for
+			-- sibilants. (Would be necessary -- I think -- if we were
+			-- inferring short adjective forms, but we're not.)
+			elseif ending == "ее" and rfind(base, "[" .. com.sib_c .. "]$") then
+				return base, "+ое", was_accented
+			end
+			return base, "+" .. ending, was_accented
+		else
+			error("Cannot determine stem type of adjective: " .. stem)
+		end
+	elseif decl == "+short" or decl == "+mixed" then
+		local base, ending = rmatch(stem, "^(.-)([оеаъ]?)$")
+		assert(base)
+		if ending == "е" then
+			ending = "о"
+		end
+		return base, "+" .. ending .. "-" .. usub(decl, 2), was_accented
+	else
+		return stem, decl, was_accented
+	end
+end
+
 -- Detect stress pattern (1 or 2) based on whether ending is stressed or
 -- decl class is inherently ending-stressed.
 function detect_stress_pattern(decl, was_accented)
@@ -1070,6 +1146,11 @@ function detect_stress_pattern(decl, was_accented)
 	if rfind(decl, "[ёо]́?нок") then
 		return "2"
 	end
+	-- Adjectival -ой always bears the stress
+	if rfind(decl, "%+ой") then
+		return "2"
+	end
+	-- Finally, class 2 if ending was accented by user
 	if was_accented then
 		return "2"
 	end
@@ -1085,6 +1166,8 @@ function remove_accents_from_decl(decl)
 			remove_accents_from_decl(split_decl[2])
 	end
 	if decl == "е́" then
+		return decl
+	elseif rfind(decl, "^%+") then -- don't remove accent from adj decls
 		return decl
 	else
 		return com.remove_accents(decl)
@@ -1119,7 +1202,7 @@ function is_unreducible(decl, old)
 	if dc.decl == "1st" or dc.decl == "2nd" and dc.g == "n" then return true end
 	return false
 end
-	
+
 -- Unreduce stem to the form found in the gen pl by inserting an epenthetic
 -- vowel. Applies to 1st declension and 2nd declension neuter. STEM and DECL
 -- are after detect_stem_type(), before converting outward-facing declensions
@@ -1678,7 +1761,99 @@ declensions_old["*"] = {
 declensions_old_cat["*"] = { decl="invariable", hard="none", g="none" }
 
 --------------------------------------------------------------------------
---                      Populate new from old                           --
+--                              Adjectival                              --
+--------------------------------------------------------------------------
+
+local adj_decl_map = {
+	{"ый", "ый", "ое", "ая", "hard", "long", false},
+	{"ій", "ій", "ее", "яя", "soft", "long", false},
+	{"о́й", "о́й", "о́е", "а́я", "hard", "long", false},
+	{"ьій", "ьій", "ье", "ья", "palatal", "long", true},
+	{"short", "ъ-short", "о-short", "а-short", "hard", "short", true},
+	{"mixed", "ъ-mixed", "о-mixed", "а-mixed", "hard", "mixed", true},
+}
+
+for _, declspec in ipairs(adj_decl_map) do
+	local oadjdecl = declspec[1]
+	local nadjdecl = old_to_new(oadjdecl)
+	local odecl = {m="+" .. declspec[2], n="+" .. declspec[3], f="+" .. declspec[4]}
+	local hard = declspec[5]
+	local decltype = declspec[6]
+	local possadj = declspec[7]
+	for _, g in ipairs({"m", "n", "f"}) do
+		declensions_old[odecl[g]] =
+			m_adj.get_nominal_decl(oadjdecl, g, true)
+		declensions[old_to_new(odecl[g])] =
+			m_adj.get_nominal_decl(nadjdecl, g, false)
+		declensions_old_cat[odecl[g]] = {
+			decl=decltype, hard=hard, g=g, adj=true, possadj=possadj }
+		declensions_cat[old_to_new(odecl[g])] = {
+			decl=decltype, hard=hard, g=g, adj=true, possadj=possadj }
+	end
+end
+
+-- Set up some aliases. е-short and е-mixed exist because е instead of о
+-- appears after sibilants and ц.
+local adj_decl_aliases = {
+	{"ой", "о́й"}, {"е-short", "о-short"}, {"е-mixed", "о-mixed"}
+}
+
+for _, alias_pair in ipairs(adj_decl_aliases) do
+	local to, from = alias_pair[1], alias_pair[2]
+	declensions_old[to] = declensions_old[from]
+	declensions_old_cat[to] = declensions_old_cat[from]
+	to = old_to_new[to]
+	from = old_to_new[from]
+	declensions[to] = declensions[from]
+	declensions_cat[to] = declensions_cat[from]
+end
+
+-- Convert ій/ий to ый after velar or sibilant. This is important for
+-- velars; doesn't really matter one way or the other for sibilants as
+-- the sibilant rules will convert both sets of endings to the same thing
+-- (whereas there will be a difference with о vs. е for velars).
+detect_decl_old["ій"] = function(stem, stress)
+	if rfind(stem, "[" .. com.velar .. com.sib .. "]$") then
+		return "ый"
+	else
+		return "ій"
+	end
+end
+
+-- Convert ее to ое after sibilant or ц. This is important for ц;
+-- doesn't really matter one way or the other for sibilants as
+-- the sibilant rules will convert both sets of endings to the same thing
+-- (whereas there will be a difference with ы vs. и for ц).
+detect_decl_old["ее"] = function(stem, stress)
+	if rfind(stem, "[" .. com.sib_c .. "]$") then
+		return "ое"
+	else
+		return "ее"
+	end
+end
+
+-- For stressed and unstressed ое and ая, convert to the right stress
+-- variant according to the stress pattern (1 or 2).
+detect_decl_old["ое"] = function(stem, stress)
+	if stress == "2" then
+		return "о́е"
+	else
+		return "ое"
+	end
+end
+detect_decl_old["о́е"] = detect_decl_old["ое"]
+
+detect_decl_old["ая"] = function(stem, stress)
+	if stress == "2" then
+		return "а́я"
+	else
+		return "ая"
+	end
+end
+detect_decl_old["а́я"] = detect_decl_old["ая"]
+
+--------------------------------------------------------------------------
+--                         Populate new from old                        --
 --------------------------------------------------------------------------
 
 local function old_decl_entry_to_new(v)
