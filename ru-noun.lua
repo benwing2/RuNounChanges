@@ -570,7 +570,6 @@ local function do_show(frame, old)
 	local default_stem = nil
 
 	for _, stem_set in ipairs(stem_sets) do
-		local stress_arg = stem_set[1] or "1"
 		local decl_class = stem_set[3] or ""
 		local stem = stem_set[2] or default_stem
 		if not stem then
@@ -580,6 +579,8 @@ local function do_show(frame, old)
 		if ut.contains({"", "m", "f", "n"}, decl_class) then
 			stem, decl_class = detect_stem_type(stem, decl_class)
 		end
+		local stress_arg = stem_set[1] or detect_stress_pattern(decl_class)
+		decl_class = remove_accents_from_decl(decl_class)
 		local bare = stem_set[4]
 		args.pl = stem_set[5] or stem
 
@@ -917,23 +918,23 @@ function detect_stem_type(stem, decl)
 	end
 	base, ending = rmatch(stem, "^(.*)([ёоЁО]́?[нН][оО][кК][ъЪ]?)$")
 	if base then
-		return base, com.remove_accents(ulower(ending))
+		return base, ulower(ending)
 	end
 	base, ending = rmatch(stem, "^(.*)([ёоЁО]́?[нН][оО][чЧ][еЕ][кК][ъЪ]?)$")
 	if base then
-		return base, com.remove_accents(ulower(ending))
+		return base, ulower(ending)
 	end
-	base, ending = rmatch(stem, "^(.*)([мМ][яЯ])́?$")
+	base, ending = rmatch(stem, "^(.*)([мМ][яЯ]́?)$")
 	if base then
 		-- FIXME: What about мя-1? Maybe it's rare enough that we
 		-- don't have to worry about it?
 		return base, ending
 	end
-	base, ending = rmatch(stem, "^(.*)([ьЬ][яеёЯЕЁ])́?$")
+	base, ending = rmatch(stem, "^(.*)([ьЬ][яеёЯЕЁ]́?)$")
 	if base then
 		return base, ulower(ending)
 	end
-	base, ending = rmatch(stem, "^(.*)([йаяеоёъЙАЯЕОЁЪ])́?$")
+	base, ending = rmatch(stem, "^(.*)([йаяеоёъЙАЯЕОЁЪ]́?)$")
 	if base then
 		return base, ulower(ending)
 	end
@@ -950,6 +951,34 @@ function detect_stem_type(stem, decl)
 	end
 	-- FIXME: What about -ин?
 	return stem, "-"
+end
+
+-- Detect stress pattern (1 or 2) based on whether ending is stressed.
+function detect_stress_pattern(decl)
+	-- ёнок/онок always bears stress
+	-- not anchored to ^ or $ in case of a slash declension
+	if rfind(decl, "[ёо]́?нок") then
+		return "2"
+	end
+	if rfind(decl, "[ё́]") then -- has the stress?
+		return "2"
+	end
+	return "1"
+end
+
+-- Canonicalize decl class into non-accented form; but е́ is special, not the
+-- same as е (whose accented version is ё)
+function remove_accents_from_decl(decl)
+	if rfind(decl, "/") then
+		local split_decl = rsplit(decl, "/")
+		return remove_accents_from_decl(split_decl[1]) .. "/" ..
+			remove_accents_from_decl(split_decl[2])
+	end
+	if decl == "е́" then
+		return decl
+	else
+		return com.remove_accents(decl)
+	end
 end
 
 function is_reducible(decl, old)
