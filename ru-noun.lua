@@ -1924,8 +1924,29 @@ end
 local function concat_case_args(args)
 	local ins_text = {}
 	for _, case in ipairs(overridable_cases) do
-		if args.forms[case] then
-			table.insert(ins_text, case .. "=" .. get_form(args.forms[case]))
+		local ispl = rfind(case, "_pl")
+		local caseok = true
+		if args.n == "p" then
+			caseok = ispl
+		elseif args.n == "s" then
+			casepl = not ispl
+		end
+		if case == "loc" and not args.any_overridden.loc or
+			case == "par" and not args.any_overridden.par or
+			case == "voc" and not args.any_overridden.voc then
+			caseok = false
+		end
+		if args.a == "a" or args.a == "i" then
+			if rfind(case, "_[ai]n") then
+				caseok = false
+			end
+		--else -- args.a == "b"
+		--	if case == "acc_sg" or case == "acc_pl" then
+		--		caseok = false
+		--	end
+		end
+		if caseok and args[case] then
+			table.insert(ins_text, case .. "=" .. get_form(args[case]))
 		end
 	end
 	return table.concat(ins_text, "|")
@@ -1983,10 +2004,10 @@ function export.generate_form(frame)
 		error("Unrecognized form " .. form)
 	end
 	local args = export.do_generate_forms(args, false)
-	if not args.forms[form] then
+	if not args[form] then
 		return ""
 	else
-		return get_form(args.forms[form])
+		return get_form(args[form])
 	end
 end
 
@@ -4237,11 +4258,10 @@ end
 -- Make the table
 make_table = function(args)
 	local data = {}
-	local numb = args.n
 	data.after_title = " " .. args.heading
-	data.number = numbers[numb]
+	data.number = numbers[args.n]
 
-	data.lemma = show_form(args[numb == "p" and "nom_pl" or "nom_sg"], args.old, true)
+	data.lemma = m_links.remove_links(show_form(args[args.n == "p" and "nom_pl" or "nom_sg"], args.old, true))
 	data.title = args.title or strutils.format(args.old and old_title_temp or title_temp, data)
 
 	for _, case in ipairs(displayable_cases) do
@@ -4250,7 +4270,7 @@ make_table = function(args)
 
 	local temp = nil
 
-	if numb == "s" then
+	if args.n == "s" then
 		data.nom_x = data.nom_sg
 		data.gen_x = data.gen_sg
 		data.dat_x = data.dat_sg
@@ -4263,7 +4283,7 @@ make_table = function(args)
 		else
 			temp = "half_a"
 		end
-	elseif numb == "p" then
+	elseif args.n == "p" then
 		data.nom_x = data.nom_pl
 		data.gen_x = data.gen_pl
 		data.dat_x = data.dat_pl
