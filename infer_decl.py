@@ -193,7 +193,8 @@ def infer_decl(t, noungender):
             (forms["nom_pl"], forms["acc_pl"], forms["gen_pl"]))
         return None
 
-    if (re.match(make_unstressed(nomsg), u"^.*([ыиіо]й|[яа]я|[oe]e)$") or
+    # FIXME: Adjectives in -ий of the +ьий type
+    if (re.match(make_unstressed(nomsg), u"^.*([ыиіо]й|[яаь]я|[oeь]e)$") or
         numonly == "pl" and re.match(make_unstressed(nompl), u"^.*[ыи]e$")):
       args = ["", nomsg, "+"] + anim + number
       if trymatch(forms, args):
@@ -317,8 +318,9 @@ def infer_decl(t, noungender):
           msg("Found a match: {{ru-noun-table|%s}}" % "|".join(args))
           return args
 
-    # FIXME: Are these always in -ов(ъ) or -ин(ъ)?
-    if re.match(nomsg, u"^.*([шщжчц]е|[оа])$"):
+    # I think these are always in -ов/-ев/-ин/-ын.
+    #if re.match(nomsg, u"^.*([шщжчц]е|[ъоа]|)$"):
+    if re.match(nomsg, u"^.*([ое]в|[ыи]н)([оаъ]?)$"):
       for adjpat in ["+short", "+mixed"]:
         args = ["", nomsg, adjpat] + anim + number
         if trymatch(forms, args):
