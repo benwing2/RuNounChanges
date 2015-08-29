@@ -10,9 +10,12 @@ from blib import msg, rmparam, getparam
 save = False
 
 ru_decl_noun_cases = [
-  "nom_sg", "gen_sg", "dat_sg", "acc_sg", "ins_sg", "pre_sg",
-  "nom_pl", "gen_pl", "dat_pl", "acc_pl", "ins_pl", "pre_pl",
+  "nom_sg", "nom_pl", "gen_sg", "gen_pl", "dat_sg", "dat_pl",
+  "acc_sg", "acc_pl", "ins_sg", "ins_pl", "pre_sg", "pre_pl",
   "loc", None, "voc"]
+ru_decl_noun_unc_cases = [
+  "nom_sg", "gen_sg", "dat_sg", "acc_sg", "ins_sg", "pre_sg",
+  "loc", "voc"]
 all_cases = [x for x in ru_decl_noun_cases] + ["par"]
 
 all_stress_patterns = ["1", "2", "3", "4", "5", "6", "4*", "6*"]
@@ -50,8 +53,8 @@ def trymatch(forms, args):
 
 AC = u"\u0301"
 GR = u"\u0300"
-vowels_no_jo = "аеиоуяэыюіѣѵАЕИОУЯЭЫЮІѢѴ"
-vowels = vowels_no_jo + "ёЁ"
+vowels_no_jo = u"аеиоуяэыюіѣѵАЕИОУЯЭЫЮІѢѴ"
+vowels = vowels_no_jo + u"ёЁ"
 
 def is_unstressed(word):
   return not re.search(ur"[ё" + AC + GR + "]", word)
@@ -87,11 +90,31 @@ def infer_decl(t):
         form = re.sub(u"^о(б|бо)? ", "", form) # eliminate leading preposition
       forms[case] = form
     i += 1
-  
+
   nomsg = try_to_stress(forms["nom_sg"])
   nompl = forms["nom_pl"]
   gensg = forms["gen_sg"]
   genpl = try_to_stress(forms["gen_pl"])
+
+  if " " in nomsg:
+    msg("Unable to handle multi-word lemma: %s" % nomsg)
+  return None
+
+  if forms["acc_pl"] == forms["nom_pl"]:
+    anim = []
+  elif forms["acc_pl"] == forms["gen_pl"]:
+    anim = ["a=an"]
+  else:
+    msg("Unable to determine animacy: nom_pl=%s, acc_pl=%s, gen_pl=%s" %
+        (forms["nom_pl"], forms["acc_pl"], forms["gen_pl"]))
+    return None
+
+  if re.match(make_unstressed(nomsg), u"^.*([ыиіо]й|[яа]я|[oe]e)$"):
+    args = ["", nomsg, "+"] + anim
+    if trymatch(forms, args):
+      msg("Found a match: {{ru-noun-table|%s}}" % "|".join(args))
+      return args
+
   stress = "any"
   genders = [""]
   bare = ""
@@ -182,15 +205,23 @@ def infer_decl(t):
 
   for stress in stress_patterns:
     for gender in genders:
-      for anim in ["in", "an"]:
-        args = [stress, nomsg, gender, bare, "a=%s" % anim]
-        if not args[-1]:
-          del args[-1]
-        if not args[-1]:
-          del args[-1]
-        if trymatch(forms, args):
-          msg("Found a match: {{ru-noun-table|%s}}" % "|".join(args))
-          return args
+      args = [stress, nomsg, gender, bare]
+      if not args[-1]:
+        del args[-1]
+      if not args[-1]:
+        del args[-1]
+      args += anim
+      if trymatch(forms, args):
+        msg("Found a match: {{ru-noun-table|%s}}" % "|".join(args))
+        return args
+
+  if re.match(nomsg, u"^.*([шщжчц]е|[оа])$"):
+    for adjpat in ["+short", "+mixed"]:
+      args = ["", nomsg, adjpat] + anim
+      if trymatch(forms, args):
+        msg("Found a match: {{ru-noun-table|%s}}" % "|".join(args))
+        return args
+
   msg("Unable to match: %s" % unicode(t))
   return None
 
