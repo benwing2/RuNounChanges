@@ -37,8 +37,11 @@ decls = [
     ["2nd", "soft", "neuter", [
       [u"-е (stressed usually -ё)", u"-я", [None, "i", u"ь"]]
     ]],
-    ["3rd", "", "feminine (some neuter)", [
-      [u"-ь (neuter in -мя)", u"-и (neuter in -мена or -мёна)", [None]]
+    ["3rd", "", "feminine", [
+      [u"-ь", u"-и", [None]]
+    ]],
+    ["3rd", "", "neuter", [
+      [u"-мя", u"-мена or -мёна", [None]]
     ]],
     ["invariable", None, None, [
       [None, None, [None]]
@@ -93,7 +96,7 @@ for decl, hard, gender, sgplstems in decls:
     cat = "2nd-declension %s normally-%s ~" % (hard, gender)
   else:
     assert(decl == "3rd")
-    cat = "3rd-declension ~"
+    cat = "3rd-declension normally-%s ~" % gender
   for sg, pl, stems in sgplstems:
     for stem in stems:
       if not stem:

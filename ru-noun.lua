@@ -389,7 +389,7 @@ local function categorize(stress, decl_class, args)
 	if sgdc.decl == "invariable" then
 		decl_cat = "invariable ~"
 	elseif sgdc.decl == "3rd" then
-		decl_cat = "3rd-declension ~"
+		decl_cat = "3rd-declension normally-" .. gender_to_full[sgdc.g] .. " ~"
 	elseif sgdc.decl == "1st" then
 		decl_cat = "1st-declension " .. sgdc.hard .. " ~"
 	elseif sgdc.decl == "2nd" then
@@ -469,13 +469,14 @@ local function categorize(stress, decl_class, args)
 	-- 2, 3, 5, 6, 6*; see stressed_gen_pl_patterns[]). But any attempt to
 	-- create such combinations will lead to a large number of categories.
 	-- Most viable would be stress pattern + traditional decl; that gives
-	-- 8 stress patterns times 8 traditional decls (1-hard, 1-soft, 2-hard-m,
-	-- 2-soft-m, 2-palatal-m, 2-hard-n, 2-soft-n, 3) = 64. Note that not all
-	-- of these actually have any members in them. However, this isn't fine
-	-- enough to create a category for the the -а genitive plural in -ей in
-	-- that it doesn't also include the stem type (sibilant, velar, etc.);
-	-- but simultaneously it's too fine in that it doesn't group the stress
-	-- patterns with stressed genitive plural.
+	-- a maximum of 8 stress patterns times 9 traditional decls (1-hard,
+	-- 1-soft, 2-hard-m, 2-soft-m, 2-palatal-m, 2-hard-n, 2-soft-n, 3-f,
+	-- 3-n) = 72. Note that not all of these actually have any members in
+	-- them. However, this isn't fine enough to create a category for the
+	-- -а genitive plural in -ей in that it doesn't also include the stem
+	-- type (sibilant, velar, etc.); but simultaneously it's too fine in
+	-- that it doesn't group the stress patterns with stressed genitive
+	-- plural.
 end
 
 --------------------------------------------------------------------------
@@ -851,7 +852,7 @@ function is_reducible(stem, decl, old)
 	local decl_cats = old and declensions_old_cat or declensions_cat
 	local dc = decl_cats[decl]
 	if dc.suffix or dc.cant_reduce then return false end
-	if dc.decl == "3rd" or dc.g == "m" then return true end
+	if dc.decl == "3rd" and dc.g == "f" or dc.g == "m" then return true end
 	return false
 end
 
@@ -1563,7 +1564,7 @@ declensions_old["мя"] = {
 	["pre_pl"] = "мена́хъ",
 }
 
-declensions_old_cat["мя"] = { decl="3rd", hard="soft", g="n", suffix=true }
+declensions_old_cat["мя"] = { decl="3rd", hard="soft", g="n" }
 
 declensions_old["мя-1"] = {
 	["nom_sg"] = "мя",
@@ -1580,7 +1581,7 @@ declensions_old["мя-1"] = {
 	["pre_pl"] = "мёнахъ",
 }
 
-declensions_old_cat["мя-1"] = { decl="3rd", hard="soft", g="n", suffix=true }
+declensions_old_cat["мя-1"] = { decl="3rd", hard="soft", g="n" }
 
 --------------------------------------------------------------------------
 --                              Invariable                              --
