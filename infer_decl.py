@@ -189,7 +189,7 @@ def infer_decl(t, noungender):
       elif forms["acc_pl"] == forms["gen_pl"]:
         anim = ["a=an"]
       else:
-        msg("Unable to determine animacy: nom_pl=%s, acc_pl=%s, gen_pl=%s" %
+        msg("WARNING: Unable to determine animacy: nom_pl=%s, acc_pl=%s, gen_pl=%s" %
             (forms["nom_pl"], forms["acc_pl"], forms["gen_pl"]))
         return None
 
@@ -220,7 +220,7 @@ def infer_decl(t, noungender):
         if is_unstressed(stem):
           mm = re.match(ur"(.*)[аяыи]́?$", nompl)
           if not mm:
-            msg("Don't recognize fem 1st-decl or neut 2nd-decl nom pl ending in form %s" % nompl)
+            msg("WARNING: Don't recognize fem 1st-decl or neut 2nd-decl nom pl ending in form %s" % nompl)
           else:
             nomplstem = try_to_stress(mm.group(1))
             if make_unstressed(nomplstem) != stem:
@@ -256,7 +256,7 @@ def infer_decl(t, noungender):
         else:
           m = re.match(ur"(.*)([аяи])(́?)$", gensg)
           if not m:
-            msg("Don't recognize gen sg ending in form %s" % gensg)
+            msg("WARNING: Don't recognize gen sg ending in form %s" % gensg)
             if ending == u"ь":
               genders = ["m", "f"]
           else:
