@@ -204,7 +204,7 @@ def infer_decl(t, noungender):
     stress = "any"
     plstress = "any"
     genders = [""]
-    bare = ""
+    bare = [""]
     m = re.match(ur"(.*)([аяеоё])(́?)$", nomsg)
     if m:
       msg("Nom sg %s refers to feminine 1st decl or neuter 2nd decl" % nomsg)
@@ -235,7 +235,7 @@ def infer_decl(t, noungender):
           msg("Gen pl %s same as stem" % genpl)
         elif make_unstressed(stem) != make_unstressed(genpl):
           msg("Stem %s not accent-equiv to gen pl %s" % (stem, genpl))
-          bare = genpl
+          bare = ["*", genpl]
         elif is_unstressed(stem):
           msg("Replacing unstressed stem %s with accent-equiv gen pl %s" %
               (stem, genpl))
@@ -243,7 +243,7 @@ def infer_decl(t, noungender):
         else:
           msg("Stem %s stressed one way, gen pl %s stressed differently" %
               (stem, genpl))
-          bare = genpl
+          bare = ["*", genpl]
       nomsg = stem + ending
     else:
       m = re.match(ur"(.*?)([йь]?)$", nomsg)
@@ -280,16 +280,20 @@ def infer_decl(t, noungender):
               msg("Nom sg stem %s same as stem" % nomsgstem)
             elif make_unstressed(stem) != make_unstressed(nomsgstem):
               msg("Stem %s not accent-equiv to nom sg stem %s" % (stem, nomsgstem))
-              bare = nomsg
-              nomsg = stem + ending
+              # If an element of BARE is a two-element list, the first is
+              # the value of bare and the second is the value to use for the
+              # first arg in place of nom sg.
+              bare = ["*", [nomsg, stem + ending]]
             elif is_unstressed(stem):
               msg("Replacing unstressed stem %s with accent-equiv nom sg stem %s" %
                   (stem, nomsgstem))
             else:
               msg("Stem %s stressed one way, nom sg stem %s stressed differently" %
                   (stem, nomsgstem))
-              bare = nomsg
-              nomsg = stem + ending
+              # If an element of BARE is a two-element list, the first is
+              # the value of bare and the second is the value to use for the
+              # first arg in place of nom sg.
+              bare = ["*", [nomsg, stem + ending]]
 
     # Find stress pattern possibilities
     if numonly != "sg":
@@ -308,15 +312,21 @@ def infer_decl(t, noungender):
 
     for stress in stress_patterns:
       for gender in genders:
-        args = [stress, nomsg, gender, bare]
-        if not args[-1]:
-          del args[-1]
-        if not args[-1]:
-          del args[-1]
-        args += anim + number
-        if trymatch(forms, args):
-          msg("Found a match: {{ru-noun-table|%s}}" % "|".join(args))
-          return args
+        for bareval in bare:
+          # If bareval is a two-element list, the second is a value to
+          # use for arg 1 in place of nomsg. See above.
+          if type(bareval) is list:
+            args = [stress, bareval[2], gender, bareval[1]]
+          else:
+            args = [stress, nomsg, gender, bareval]
+          if not args[-1]:
+            del args[-1]
+          if not args[-1]:
+            del args[-1]
+          args += anim + number
+          if trymatch(forms, args):
+            msg("Found a match: {{ru-noun-table|%s}}" % "|".join(args))
+            return args
 
     # I think these are always in -ов/-ев/-ин/-ын.
     #if re.match(nomsg, u"^.*([шщжчц]е|[ъоа]|)$"):
