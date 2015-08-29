@@ -125,4 +125,38 @@ function export.make_ending_stressed(word)
 		"%1́%2")
 end
 		
+-- used for tracking and categorization
+trailing_letter_type = {
+	["ш"] = {"sibilant", "cons"},
+	["щ"] = {"sibilant", "cons"},
+	["ч"] = {"sibilant", "cons"},
+	["ж"] = {"sibilant", "cons"},
+	["ц"] = {"c", "cons"},
+	["к"] = {"velar", "cons"},
+	["г"] = {"velar", "cons"},
+	["х"] = {"velar", "cons"},
+	["ь"] = {"soft-cons", "cons"},
+	["ъ"] = {"hard-cons", "cons"},
+	["й"] = {"palatal", "cons"},
+	["а"] = {"vowel", "hard-vowel"},
+	["я"] = {"vowel", "soft-vowel"},
+	["э"] = {"vowel", "hard-vowel"},
+	["е"] = {"vowel", "soft-vowel"},
+	["ѣ"] = {"vowel", "soft-vowel"},
+	["и"] = {"i", "vowel", "soft-vowel"},
+	["і"] = {"i", "vowel", "soft-vowel"},
+	["ѵ"] = {"i", "vowel", "soft-vowel"},
+	["ы"] = {"vowel", "hard-vowel"},
+	["о"] = {"vowel", "hard-vowel"},
+	["ё"] = {"vowel", "soft-vowel"},
+	["у"] = {"vowel", "hard-vowel"},
+	["ю"] = {"vowel", "soft-vowel"},
+}
+
+function export.get_stem_trailing_letter_type(stem)
+	local hint = ulower(usub(export.remove_accents(stem), -1))
+	local hint_types = trailing_letter_type[hint] or {"hard-cons", "cons"}
+	return hint_types
+end
+
 return export

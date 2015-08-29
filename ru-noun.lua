@@ -195,8 +195,8 @@ local declensions_old = {}
 --
 -- In addition to the above categories, additional more specific categories
 -- are constructed based on the final letter of the stem, e.g.
--- "Russian velar-stem 1st-declension hard nominals". See
--- get_stem_trailing_letter_type(). 'stem_suffix', if present, is added to
+-- "Russian velar-stem 1st-declension hard nominals". See calls to
+-- com.get_stem_trailing_letter_type(). 'stem_suffix', if present, is added to
 -- the end of the stem when get_stem_trailing_letter_type() is called.
 -- This is the only place that 'stem_suffix' is used. This is for use with
 -- the '-ья' and '-ье' declension types, so that the trailing letter is
@@ -249,7 +249,7 @@ local trailing_letter_type
 local function tracking_code(stress, decl_class, real_decl_class, args)
 	assert(decl_class)
 	assert(real_decl_class)
-	local hint_types = get_stem_trailing_letter_type(args.stem)
+	local hint_types = com.get_stem_trailing_letter_type(args.stem)
 	if real_decl_class == decl_class then
 		real_decl_class = nil
 	end
@@ -380,7 +380,7 @@ local function categorize(stress, decl_class, args)
 	assert(sgdc)
 	assert(pldc)
 
-	local sghint_types = get_stem_trailing_letter_type(
+	local sghint_types = com.get_stem_trailing_letter_type(
 		args.stem .. (sgdc.stem_suffix or ""))
 
 	-- insert English version of Zaliznyak stem type
@@ -1813,39 +1813,6 @@ local unstressed_rules = {
 local old_consonantal_suffixes = ut.list_to_set({"ъ", "ь", "й"})
 
 local consonantal_suffixes = ut.list_to_set({"", "ь", "й"})
-
--- used for tracking and categorization
-trailing_letter_type = {
-	["ш"] = {"sibilant", "cons"},
-	["щ"] = {"sibilant", "cons"},
-	["ч"] = {"sibilant", "cons"},
-	["ж"] = {"sibilant", "cons"},
-	["ц"] = {"c", "cons"},
-	["к"] = {"velar", "cons"},
-	["г"] = {"velar", "cons"},
-	["х"] = {"velar", "cons"},
-	["ь"] = {"soft-cons", "cons"},
-	["ъ"] = {"hard-cons", "cons"},
-	["й"] = {"palatal", "cons"},
-	["а"] = {"vowel", "hard-vowel"},
-	["я"] = {"vowel", "soft-vowel"},
-	["э"] = {"vowel", "hard-vowel"},
-	["е"] = {"vowel", "soft-vowel"},
-	["ѣ"] = {"vowel", "soft-vowel"},
-	["и"] = {"i", "vowel", "soft-vowel"},
-	["і"] = {"i", "vowel", "soft-vowel"},
-	["ѵ"] = {"i", "vowel", "soft-vowel"},
-	["ы"] = {"vowel", "hard-vowel"},
-	["о"] = {"vowel", "hard-vowel"},
-	["ё"] = {"vowel", "soft-vowel"},
-	["у"] = {"vowel", "hard-vowel"},
-	["ю"] = {"vowel", "soft-vowel"},
-}
-
-function get_stem_trailing_letter_type(stem)
-	local hint = ulower(usub(com.remove_accents(stem), -1))
-	return trailing_letter_type[hint] or {"hard-cons", "cons"}
-end
 
 sibilant_suffixes = ut.list_to_set({"ш", "щ", "ч", "ж"})
 
