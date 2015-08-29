@@ -38,6 +38,7 @@ local m_utils = require("Module:utils")
 local m_links = require("Module:links")
 local com = require("Module:ru-common")
 local strutils = require("Module:string utilities")
+local m_debug = require("Module:debug")
 
 local export = {}
 
@@ -46,12 +47,41 @@ local lang = require("Module:languages").getByCode("ru")
 local declensions = {}
 local declensions_old = {}
 local decline = nil
+local cases = nil
+local old_cases = nil
 
 local velar = {
 	["г"] = true,
 	["к"] = true,
 	["х"] = true,
 }
+
+local function track(page)
+	m_debug.track("ru-adjective/" .. page)
+	return true
+end
+
+local function tracking_code(decl_class, args)
+	local hint_types = com.get_stem_trailing_letter_type(args[1])
+	local function dotrack(prefix)
+		track(decl_class)
+		for _, hint_type in ipairs(hint_types) do
+			track(hint_type)
+			track(decl_class .. "/" .. hint_type)
+		end
+	end
+	dotrack("")
+	if args[3] and args[3] ~= args[1] then
+		track("short")
+		dotrack("short/")
+	end
+	for _, case in ipairs(old_cases) do
+		if args[case] then
+			track("irreg/" .. case)
+			-- questionable use: dotrack("irreg/" .. case .. "/")
+		end
+	end
+end
 
 local function do_show(frame, old, manual)
 	PAGENAME = mw.title.getCurrentTitle().text
@@ -103,6 +133,8 @@ local function do_show(frame, old, manual)
 	if not decls[declension_type] then
 		error("Unrecognized declension type " .. declension_type)
 	end
+
+	tracking_code(declension_type, args)
 
 	decline(args, decls[declension_type], declension_type == "ой", short_forms_allowed)
 
@@ -649,37 +681,18 @@ local template_mp = nil
 local short_clause = nil
 local notes_template = nil
 
-local cases = {
-	["nom_m"] = true,
-	["nom_n"] = true,
-	["nom_f"] = true,
-	["nom_p"] = true,
-	["gen_m"] = true,
-	["gen_f"] = true,
-	["gen_p"] = true,
-	["dat_m"] = true,
-	["dat_f"] = true,
-	["dat_p"] = true,
-	["acc_f"] = true,
-	["acc_n"] = true,
-	["ins_m"] = true,
-	["ins_f"] = true,
-	["ins_p"] = true,
-	["pre_m"] = true,
-	["pre_f"] = true,
-	["pre_p"] = true,
-	["short_m"] = true,
-	["short_n"] = true,
-	["short_f"] = true,
-	["short_p"] = true,
+cases = { "nom_m", "nom_n", "nom_f", "nom_p",
+	"gen_m", "gen_f", "gen_p",
+	"dat_m", "dat_f", "dat_p",
+	"acc_f", "acc_n", "ins_m",
+	"ins_f", "ins_p", "pre_m",
+	"pre_f", "pre_p",
+	"short_m", "short_n", "short_f", "short_p",
 }
 
 -- Populate old_cases from cases
-local old_cases = {}
-for k, v in pairs(cases) do
-	old_cases[k] = v
-end
-old_cases["nom_mp"] = true
+old_cases = mw.clone(cases)
+table.insert(old_cases, "nom_mp")
 
 -- Make the table
 function make_table(args)
@@ -687,7 +700,7 @@ function make_table(args)
 	args["lemma"] = args["nom_m"]
 	args["title"] = args["title"] or strutils.format(old and old_title_temp or title_temp, args)
 
-	for case in pairs(old and old_cases or cases) do
+	for _, case in ipairs(old and old_cases or cases) do
 		if args[case] == "-" then
 			args[case] = "&mdash;"
 		elseif args[case] then
