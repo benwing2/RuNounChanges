@@ -16,11 +16,24 @@ ru_decl_noun_cases = [
 ru_decl_noun_unc_cases = [
   "nom_sg", "gen_sg", "dat_sg", "acc_sg", "ins_sg", "pre_sg",
   "loc", "voc"]
+ru_decl_noun_pl_cases = [
+  "nom_pl", "gen_pl", "dat_pl", "acc_pl", "ins_pl", "pre_pl",
+  ]
 all_cases = [x for x in ru_decl_noun_cases] + ["par"]
 
 all_stress_patterns = ["1", "2", "3", "4", "5", "6", "4*", "6*"]
-nom_sg_ending_stress_patterns = ["2", "4", "6", "4*", "6*"]
-nom_sg_stem_stress_patterns = ["1", "3", "5"]
+matching_stress_patterns = {}
+matching_stress_patterns["stem"] = {}
+matching_stress_patterns["ending"] = {}
+matching_stress_patterns["none"] = {}
+matching_stress_patterns["stem"]["stem"] = ["1", "5"]
+matching_stress_patterns["stem"]["ending"] = ["3"]
+matching_stress_patterns["ending"]["stem"] = ["4", "4*", "6", "6*"]
+matching_stress_patterns["ending"]["ending"] = ["2"]
+matching_stress_patterns["stem"]["none"] = ["1"]
+matching_stress_patterns["ending"]["none"] = ["2", "6*"]
+matching_stress_patterns["none"]["stem"] = ["1", "6"]
+matching_stress_patterns["none"]["ending"] = ["2"]
 
 site = pywikibot.Site()
 
@@ -55,6 +68,7 @@ AC = u"\u0301"
 GR = u"\u0300"
 vowels_no_jo = u"аеиоуяэыюіѣѵАЕИОУЯЭЫЮІѢѴ"
 vowels = vowels_no_jo + u"ёЁ"
+sib_c = u"шщчжцШЩЧЖЦ"
 
 def is_unstressed(word):
   return not re.search(ur"[ё" + AC + GR + "]", word)
@@ -80,10 +94,67 @@ def make_unstressed(word):
   word = word.replace(GR, "")
   return word
 
-def infer_decl(t):
+def add_soft_sign(stem):
+  if re.match(".*[" + vowels + "]$", stem):
+    return stem + u"й"
+  else:
+    return stem + u"ь"
+
+def add_hard_neuter(stem):
+  if re.match(".*[" + sib_c + "]$", stem):
+    return stem + u"е"
+  else:
+    return stem + u"о"
+
+def do_assert(cond, msg=None):
+  if msg:
+    assert cond, msg
+  else:
+    assert cond
+  return True
+
+def synthesize_singular(nompl, prepl, gender):
+  soft = re.match(ur"^.*яхъ?$", prepl)
+  m = re.match(ur"(.*)[аяыи]́?$", nompl)
+  if not m:
+    msg("WARNING: Strange nom plural %s" % nompl)
+    return []
+  stem = try_to_stress(m.group(1))
+  if soft and gender == "f":
+    return [add_soft_sign(stem), stem + u"я"]
+  return [stem + u"а" if gender == "f" else
+          add_soft_sign(stem) if soft and gender == "m" else
+          stem if gender == "m" else
+          stem + u"е" if soft and gender == "n" else
+          add_hard_neuter(stem) if gender == "n" else
+          do_assert(False, "Unrecognized gender: %s" % gender)]
+
+def infer_decl(t, noungender):
+  tname = unicode(t.name)
   forms = {}
   i = 1
+
+  # Initialize all cases to blank in case we don't set them again later
   for case in ru_decl_noun_cases:
+    if case:
+      forms[case] = ""
+
+  if tname == "ru-decl-noun":
+    number = []
+    numonly = ""
+    getcases = ru_decl_noun_cases
+  elif tname == "ru-decl-noun-unc":
+    number = ["n=sg"]
+    numonly = "sg"
+    getcases = ru_decl_noun_unc_cases
+  elif tname == "ru-decl-noun-pl":
+    number = ["n=pl"]
+    numonly = "pl"
+    getcases = ru_decl_noun_pl_cases
+  else:
+    assert False, "Unrecognized template name: %s" % tname
+
+  for case in getcases:
     if case:
       form = getparam(t, i)
       if case == "pre_sg" or case == "pre_pl":
@@ -91,144 +162,197 @@ def infer_decl(t):
       forms[case] = form
     i += 1
 
-  nomsg = try_to_stress(forms["nom_sg"])
+  if " " in forms["nom_sg"]:
+    msg("Unable to handle multi-word lemma: %s" % forms["nom_sg"])
+  return None
+
   nompl = forms["nom_pl"]
   gensg = forms["gen_sg"]
   genpl = try_to_stress(forms["gen_pl"])
-
-  if " " in nomsg:
-    msg("Unable to handle multi-word lemma: %s" % nomsg)
-  return None
-
-  if forms["acc_pl"] == forms["nom_pl"]:
-    anim = []
-  elif forms["acc_pl"] == forms["gen_pl"]:
-    anim = ["a=an"]
+  prepl = forms["pre_pl"]
+  if numonly == "pl":
+    nomsgs = synthesize_singular(nompl, prepl, noungender)
   else:
-    msg("Unable to determine animacy: nom_pl=%s, acc_pl=%s, gen_pl=%s" %
-        (forms["nom_pl"], forms["acc_pl"], forms["gen_pl"]))
-    return None
+    nomsgs = [try_to_stress(forms["nom_sg"])]
 
-  if re.match(make_unstressed(nomsg), u"^.*([ыиіо]й|[яа]я|[oe]e)$"):
-    args = ["", nomsg, "+"] + anim
-    if trymatch(forms, args):
-      msg("Found a match: {{ru-noun-table|%s}}" % "|".join(args))
-      return args
-
-  stress = "any"
-  genders = [""]
-  bare = ""
-  m = re.match(ur"(.*)([аяеоё])(́?)$", nomsg)
-  if m:
-    msg("Nom sg %s refers to feminine 1st decl or neuter 2nd decl" % nomsg)
-    stem = try_to_stress(m.group(1))
-    ending = m.group(2)
-    if m.group(3) or ending == u"ё":
-      stress = "end"
-    else:
-      stress = "stem"
-
-    # Try to find a stressed version of the stem
-    if is_unstressed(stem):
-      mm = re.match(ur"(.*)[аяыи]́?$", nompl)
-      if not mm:
-        msg("Don't recognize fem 1st-decl or neut 2nd-decl nom pl ending in form %s" % nompl)
+  for nomsg in nomsgs:
+    if numonly == "sg":
+      if forms["acc_sg"] == forms["gen_sg"]:
+        anim = ["a=an"]
       else:
-        nomplstem = try_to_stress(mm.group(1))
-        if make_unstressed(nomplstem) != stem:
-          msg("Nom pl stem %s not accent-equiv to nom sg stem %s" % (
-            nomplstem, stem))
-        elif nomplstem != stem:
-          msg("Replacing unstressed stem %s with stressed nom pl stem %s" %
-              (stem, nomplstem))
-          stem = nomplstem
-
-    if stem == genpl:
-      msg("Gen pl %s same as stem" % genpl)
-    elif make_unstressed(stem) != make_unstressed(genpl):
-      msg("Stem %s not accent-equiv to gen pl %s" % (stem, genpl))
-      bare = genpl
-    elif is_unstressed(stem):
-      msg("Replacing unstressed stem %s with accent-equiv gen pl %s" %
-          (stem, genpl))
-      stem = genpl
+        # Can't check for nom/acc sg equal because feminine nouns have all
+        # three different
+        anim = []
     else:
-      msg("Stem %s stressed one way, gen pl %s stressed differently" %
-          (stem, genpl))
-      bare = genpl
-    nomsg = stem + ending
-  else:
-    m = re.match(ur"(.*?)([йь]?)$", nomsg)
+      if forms["acc_pl"] == forms["nom_pl"]:
+        anim = []
+      elif forms["acc_pl"] == forms["gen_pl"]:
+        anim = ["a=an"]
+      else:
+        msg("Unable to determine animacy: nom_pl=%s, acc_pl=%s, gen_pl=%s" %
+            (forms["nom_pl"], forms["acc_pl"], forms["gen_pl"]))
+        return None
+
+    if (re.match(make_unstressed(nomsg), u"^.*([ыиіо]й|[яа]я|[oe]e)$") or
+        numonly == "pl" and re.match(make_unstressed(nompl), u"^.*[ыи]e$")):
+      args = ["", nomsg, "+"] + anim + number
+      if trymatch(forms, args):
+        msg("Found a match: {{ru-noun-table|%s}}" % "|".join(args))
+        return args
+
+    stress = "any"
+    plstress = "any"
+    genders = [""]
+    bare = ""
+    m = re.match(ur"(.*)([аяеоё])(́?)$", nomsg)
     if m:
-      nomsgstem = m.group(1)
+      msg("Nom sg %s refers to feminine 1st decl or neuter 2nd decl" % nomsg)
+      stem = try_to_stress(m.group(1))
       ending = m.group(2)
-      m = re.match(ur"(.*)([аяи])(́?)$", gensg)
-      if not m:
-        msg("Don't recognize gen sg ending in form %s" % gensg)
-        if ending == u"ь":
-          genders = ["m", "f"]
+      if m.group(3) or ending == u"ё":
+        stress = "end"
       else:
-        stem = try_to_stress(m.group(1))
-        if ending == u"ь":
-          if m.group(2) == u"я":
-            msg("Found masculine soft-stem nom sg %s" % nomsg)
-            genders = ["m"]
+        stress = "stem"
+
+      if numonly != "sg":
+        # Try to find a stressed version of the stem
+        if is_unstressed(stem):
+          mm = re.match(ur"(.*)[аяыи]́?$", nompl)
+          if not mm:
+            msg("Don't recognize fem 1st-decl or neut 2nd-decl nom pl ending in form %s" % nompl)
           else:
-            msg("Found feminine soft-stem nom sg %s" % nomsg)
-            genders = ["f"]
-        elif ending == u"й":
-          msg("Found masculine palatal-stem nom sg %s" % nomsg)
-        else:
-          msg("Found masculine consonant-stem nom sg %s" % nomsg)
-        if m.group(3):
-          stress = "end"
-        else:
-          stress = "stem"
-        if stem == nomsgstem:
-          msg("Nom sg stem %s same as stem" % nomsgstem)
-        elif make_unstressed(stem) != make_unstressed(nomsgstem):
-          msg("Stem %s not accent-equiv to nom sg stem %s" % (stem, nomsgstem))
-          bare = nomsg
-          nomsg = stem + ending
+            nomplstem = try_to_stress(mm.group(1))
+            if make_unstressed(nomplstem) != stem:
+              msg("Nom pl stem %s not accent-equiv to nom sg stem %s" % (
+                nomplstem, stem))
+            elif nomplstem != stem:
+              msg("Replacing unstressed stem %s with stressed nom pl stem %s" %
+                  (stem, nomplstem))
+              stem = nomplstem
+
+        if stem == genpl:
+          msg("Gen pl %s same as stem" % genpl)
+        elif make_unstressed(stem) != make_unstressed(genpl):
+          msg("Stem %s not accent-equiv to gen pl %s" % (stem, genpl))
+          bare = genpl
         elif is_unstressed(stem):
-          msg("Replacing unstressed stem %s with accent-equiv nom sg stem %s" %
-              (stem, nomsgstem))
+          msg("Replacing unstressed stem %s with accent-equiv gen pl %s" %
+              (stem, genpl))
+          stem = genpl
         else:
-          msg("Stem %s stressed one way, nom sg stem %s stressed differently" %
-              (stem, nomsgstem))
-          bare = nomsg
-          nomsg = stem + ending
+          msg("Stem %s stressed one way, gen pl %s stressed differently" %
+              (stem, genpl))
+          bare = genpl
+      nomsg = stem + ending
+    else:
+      m = re.match(ur"(.*?)([йь]?)$", nomsg)
+      if m:
+        nomsgstem = m.group(1)
+        ending = m.group(2)
+        if numonly == "pl":
+          if ending == u"ь":
+            genders = [noungender]
+        else:
+          m = re.match(ur"(.*)([аяи])(́?)$", gensg)
+          if not m:
+            msg("Don't recognize gen sg ending in form %s" % gensg)
+            if ending == u"ь":
+              genders = ["m", "f"]
+          else:
+            stem = try_to_stress(m.group(1))
+            if ending == u"ь":
+              if m.group(2) == u"я":
+                msg("Found masculine soft-stem nom sg %s" % nomsg)
+                genders = ["m"]
+              else:
+                msg("Found feminine soft-stem nom sg %s" % nomsg)
+                genders = ["f"]
+            elif ending == u"й":
+              msg("Found masculine palatal-stem nom sg %s" % nomsg)
+            else:
+              msg("Found masculine consonant-stem nom sg %s" % nomsg)
+            if m.group(3):
+              stress = "end"
+            else:
+              stress = "stem"
+            if stem == nomsgstem:
+              msg("Nom sg stem %s same as stem" % nomsgstem)
+            elif make_unstressed(stem) != make_unstressed(nomsgstem):
+              msg("Stem %s not accent-equiv to nom sg stem %s" % (stem, nomsgstem))
+              bare = nomsg
+              nomsg = stem + ending
+            elif is_unstressed(stem):
+              msg("Replacing unstressed stem %s with accent-equiv nom sg stem %s" %
+                  (stem, nomsgstem))
+            else:
+              msg("Stem %s stressed one way, nom sg stem %s stressed differently" %
+                  (stem, nomsgstem))
+              bare = nomsg
+              nomsg = stem + ending
 
-  stress_patterns = (stress == "end" and nom_sg_ending_stress_patterns or
-      stress == "stem" and nom_sg_stem_stress_patterns or
-      all_stress_patterns)
+    # Find stress pattern possibilities
+    if numonly != "sg":
+      m = re.match(ur".*[аяыи](́?)$", nompl)
+      if m:
+        plstress = m.group(1) and "ending" or "stem"
+    if numonly == "sg":
+      plstress = "none"
+    if numony == "pl":
+      stress = "none"
+    if stress == "any" or plstress == "any":
+      msg("WARNING: Using all stress patterns")
+      stress_patterns = all_stress_patterns
+    else:
+      stress_patterns = matching_stress_patterns[stress][plstress]
 
-  for stress in stress_patterns:
-    for gender in genders:
-      args = [stress, nomsg, gender, bare]
-      if not args[-1]:
-        del args[-1]
-      if not args[-1]:
-        del args[-1]
-      args += anim
-      if trymatch(forms, args):
-        msg("Found a match: {{ru-noun-table|%s}}" % "|".join(args))
-        return args
+    for stress in stress_patterns:
+      for gender in genders:
+        args = [stress, nomsg, gender, bare]
+        if not args[-1]:
+          del args[-1]
+        if not args[-1]:
+          del args[-1]
+        args += anim + number
+        if trymatch(forms, args):
+          msg("Found a match: {{ru-noun-table|%s}}" % "|".join(args))
+          return args
 
-  if re.match(nomsg, u"^.*([шщжчц]е|[оа])$"):
-    for adjpat in ["+short", "+mixed"]:
-      args = ["", nomsg, adjpat] + anim
-      if trymatch(forms, args):
-        msg("Found a match: {{ru-noun-table|%s}}" % "|".join(args))
-        return args
+    # FIXME: Are these always in -ов(ъ) or -ин(ъ)?
+    if re.match(nomsg, u"^.*([шщжчц]е|[оа])$"):
+      for adjpat in ["+short", "+mixed"]:
+        args = ["", nomsg, adjpat] + anim + number
+        if trymatch(forms, args):
+          msg("Found a match: {{ru-noun-table|%s}}" % "|".join(args))
+          return args
 
   msg("Unable to match: %s" % unicode(t))
   return None
 
 def infer_one_page_decls(page, text):
+  genders = set()
+  for t in text.filter_tempates():
+    if unicode(t.name) == "ru-noun":
+      m = re.match("^([mfn])", getparam(t, "2"))
+      if not m:
+        msg("WARNING: Strange ru-noun template: %s" % unicode(t))
+      else:
+        genders.add(m.group(1))
+
   for t in text.filter_templates():
-    if unicode(t.name) == "ru-decl-noun":
-      args = infer_decl(t)
+    if unicode(t.name) in ["ru-decl-noun", "ru-decl-noun-unc", "ru-decl-noun-pl"]:
+      if unicode(t.name) == "ru-decl-noun-pl":
+        genders = list(genders)
+        if len(genders) == 0:
+          msg("WARNING: Can't find gender for pl-only nominal %s" % unicode(page.title()))
+          continue
+        elif len(genders) > 1:
+          msg("WARNING: Multiple genders found for pl-only nominal %s: %s" % (unicode(page.title()), genders))
+          continue
+        else:
+          gender = genders[0]
+      else:
+        gender = ""
+      args = infer_decl(t, gender)
       if args:
         for i in xrange(15, 0, -1):
           rmparam(t, i)
