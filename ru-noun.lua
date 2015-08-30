@@ -114,7 +114,8 @@ local m_utilities = require("Module:utilities")
 local ut = require("Module:utils")
 local m_links = require("Module:links")
 local com = require("Module:ru-common")
-local m_adj = require("Module:ru-adjective")
+local m_ru_adj = require("Module:ru-adjective")
+local m_ru_translit = require("Module:ru-translit")
 local strutils = require("Module:string utilities")
 local m_table_tools = require("Module:table tools")
 local m_debug = require("Module:debug")
@@ -1773,6 +1774,14 @@ local adj_decl_map = {
 	{"mixed", "ъ-mixed", "о-mixed", "а-mixed", "hard", "mixed", true},
 }
 
+local function get_adjectival_decl(adjtype, gender, old)
+	local decl = m_ru_adj.get_nominal_decl(adjtype, gender, old)
+	-- signal to make_table() to use the special tr_adj() function so that
+	-- -го gets transliterated to -vo
+	decl["gen_sg"] = rsub(decl["gen_sg"], "го$", "го<adj>$")
+	return decl
+end
+
 for _, declspec in ipairs(adj_decl_map) do
 	local oadjdecl = declspec[1]
 	local nadjdecl = old_to_new(oadjdecl)
@@ -1782,9 +1791,9 @@ for _, declspec in ipairs(adj_decl_map) do
 	local possadj = declspec[7]
 	for _, g in ipairs({"m", "n", "f"}) do
 		declensions_old[odecl[g]] =
-			m_adj.get_nominal_decl(oadjdecl, g, true)
+			get_adjectival_decl(oadjdecl, g, true)
 		declensions[old_to_new(odecl[g])] =
-			m_adj.get_nominal_decl(nadjdecl, g, false)
+			get_adjectival_decl(nadjdecl, g, false)
 		declensions_old_cat[odecl[g]] = {
 			decl=decltype, hard=hard, g=g, adj=true, possadj=possadj }
 		declensions_cat[old_to_new(odecl[g])] = {
@@ -2352,13 +2361,17 @@ function make_table(args)
 				local ru_vals = {}
 				local tr_vals = {}
 				for i, x in ipairs(args[case]) do
+					local is_adj = rfind(x, "<adj>")
+					x = rsub(x, "<adj>", "")
 					local entry, notes = m_table_tools.get_notes(x)
 					if old then
 						ut.insert_if_not(ru_vals, m_links.full_link(com.make_unstressed(entry), entry, lang, nil, nil, nil, {tr = "-"}, false) .. notes)
 					else
 						ut.insert_if_not(ru_vals, m_links.full_link(entry, nil, lang, nil, nil, nil, {tr = "-"}, false) .. notes)
 					end
-					ut.insert_if_not(tr_vals, lang:transliterate(m_links.remove_links(entry)) .. notes)
+					local nolinks = m_links.remove_links(entry)
+					local entrytr = is_adj and m_ru_translit.tr_adj(nolinks) or lang:transliterate(nolinks)
+					ut.insert_if_not(tr_vals, entrytr .. notes)
 				end
 				local term = table.concat(ru_vals, ", ")
 				local tr = table.concat(tr_vals, ", ")
