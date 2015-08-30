@@ -89,7 +89,7 @@ BE BARE, NEVER ADD A NON-SYLLABIC ENDING. HAVE TRACKING CODE FOR THIS.)
 12. Support adjective declensions. Autodetection should happen by putting +
    in decl field to indicate it's an adjective. Adjective decl types should
    begin with a +. (Formerly a * but currently that stands for "invariable".)
-   (PARTLY IMPLEMENTED IN GITHUB)
+   (IMPLEMENTED BUT NEED TO IMPLEMENT TRANSLITERATING GEN SG AS -vo.)
 13. Support multiple words. (PARTLY IMPLEMENTED IN GITHUB)
 
 ]=]--
