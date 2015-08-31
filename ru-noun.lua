@@ -39,9 +39,10 @@ TODO:
 
 1. Change {{temp|ru-decl-noun-pl}} and {{temp|ru-decl-noun-unc}} to use
    'manual' instead of '*' as the decl class.
-1a. Require stem to be specified instead of defaulting to page.
+1a. Require stem to be specified instead of defaulting to page. [IMPLEMENTED
+    IN GITHUB]
 1b. Nouns in -мя: Accent pattern 1 should actually be мя-1; accent pattern 3
-    should be -мя.
+    should be -мя. [NEED TO CHECK ALL SUCH NOUNS AND FIX THEM UP]
 2. Bug in -я nouns with bare specified; should not have -ь ending. Old templates did not add this ending when bare occurred. (PROBABLY SHOULD ALWAYS HAVE BARE
 BE BARE, NEVER ADD A NON-SYLLABIC ENDING. HAVE TRACKING CODE FOR THIS.)
 3. Genitive plural of -ёнокъ should be -атъ?
@@ -53,7 +54,8 @@ BE BARE, NEVER ADD A NON-SYLLABIC ENDING. HAVE TRACKING CODE FOR THIS.)
 6. Eliminate complicated defaulting code for second and further stem sets.
    Should simply default to same values as the first stem set does, without
    the first stem set serving as defaults for the remainder.
-   [IMPLEMENTED IN GITHUB]
+   [IMPLEMENTED IN GITHUB, EXCEPT CHANGED SO LATER STEM SET STEMS DEFAULT TO
+   PREVIOUS ONES]
 7. Fixes for stem-multi-syllabic words with ending stress in gen pl but
    non-syllabic gen pl, with stress transferring onto final syllable even if
    stem is otherwise stressed on an earlier syllable (e.g. голова́ in
@@ -92,8 +94,8 @@ BE BARE, NEVER ADD A NON-SYLLABIC ENDING. HAVE TRACKING CODE FOR THIS.)
 12. Support adjective declensions. Autodetection should happen by putting +
    in decl field to indicate it's an adjective. Adjective decl types should
    begin with a +. (Formerly a * but currently that stands for "invariable".)
-   (IMPLEMENTED BUT NEED TO IMPLEMENT TRANSLITERATING GEN SG AS -vo.)
-13. Support multiple words. (PARTLY IMPLEMENTED IN GITHUB)
+   [IMPLEMENTED IN GITHUB, NOT TESTED]
+13. Support multiple words. [IMPLEMENTED IN GITHUB, NOT TESTED]
 14. Eventually: Even with decl type explicitly given, the full stem with
     ending should be included.
 
