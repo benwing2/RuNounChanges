@@ -37,7 +37,7 @@ matching_stress_patterns["none"]["ending"] = ["2"]
 
 site = pywikibot.Site()
 
-def trymatch(forms, args):
+def trymatch(forms, args, pagemsg):
   tempcall = "{{ru-noun-forms|" + "|".join(args) + "}}"
   result = site.expand_text(tempcall)
   pred_forms = {}
@@ -49,17 +49,17 @@ def trymatch(forms, args):
     pred_form = pred_forms.get(case, "")
     real_form = forms.get(case, "")
     if pred_form and not real_form:
-      msg("Missing actual form for case %s (predicted %s)" % (case, pred_form))
+      pagemsg("Missing actual form for case %s (predicted %s)" % (case, pred_form))
       ok = False
     elif real_form and not pred_form:
-      msg("Actual has extra form %s=%s not in predicted" % (case, real_form))
+      pagemsg("Actual has extra form %s=%s not in predicted" % (case, real_form))
       ok = False
     elif pred_form != real_form:
       if (case == "ins_sg" and "," in real_form and
           re.sub(",.*$", "", real_form) == pred_form):
-        msg("For case ins_sg, predicted form %s has an alternate form not in actual form %s; allowed" % (pred_form, real_form))
+        pagemsg("For case ins_sg, predicted form %s has an alternate form not in actual form %s; allowed" % (pred_form, real_form))
       else:
-        msg("For case %s, actual %s differs from predicted %s" % (case,
+        pagemsg("For case %s, actual %s differs from predicted %s" % (case,
           real_form, pred_form))
         ok = False
   return ok
@@ -113,11 +113,11 @@ def do_assert(cond, msg=None):
     assert cond
   return True
 
-def synthesize_singular(nompl, prepl, gender):
+def synthesize_singular(nompl, prepl, gender, pagemsg):
   soft = re.match(ur"^.*яхъ?$", prepl)
   m = re.match(ur"(.*)[аяыи]́?$", nompl)
   if not m:
-    msg("WARNING: Strange nom plural %s" % nompl)
+    pagemsg("WARNING: Strange nom plural %s" % nompl)
     return []
   stem = try_to_stress(m.group(1))
   if soft and gender == "f":
@@ -146,7 +146,7 @@ def separate_multiwords(forms):
         i += 1
   return words
 
-def infer_decl(t, noungender):
+def infer_decl(t, noungender, pagemsg):
   tname = unicode(t.name)
   forms = {}
 
@@ -186,15 +186,15 @@ def infer_decl(t, noungender):
     wordno = 0
     for wordforms in words:
       wordno += 1
-      msg("Inferring word #1: %s" % (wordforms["nom_pl"] if numonly == "pl" else wordforms["nom_sg"]))
-      args = infer_word(wordforms, number, numonly)
+      pagemsg("Inferring word #1: %s" % (wordforms["nom_pl"] if numonly == "pl" else wordforms["nom_sg"]))
+      args = infer_word(wordforms, number, numonly, pagemsg)
       if not args:
-        msg("Unable to infer word #%s: %s" % (wordno, unicode(t)))
+        pagemsg("Unable to infer word #%s: %s" % (wordno, unicode(t)))
         return None
       argses.append(args)
     animacies = [x for args in argses for x in args if x in ["a=in", "a=an"]]
     if "a=in" in animacies and "a=an" in animacies:
-      msg("WARNING: Conflicting animacies in multi-word expression: %s" %
+      pagemsg("WARNING: Conflicting animacies in multi-word expression: %s" %
           unicode(t))
       # FIXME, handle this better
       return None
@@ -212,13 +212,13 @@ def infer_decl(t, noungender):
         allargs.append("_")
       allargs.extend(filterargs)
     allargs += animacy + number
-    msg("Found a multi-word match: {{ru-noun-table|%s}}" % "|".join(allargs))
+    pagemsg("Found a multi-word match: {{ru-noun-table|%s}}" % "|".join(allargs))
     return allargs
   else:
-    args = infer_word(forms, number, numonly)
+    args = infer_word(forms, number, numonly, pagemsg)
     return [x for x in args if x != "a=in"]
 
-def infer_word(forms, number, numonly):
+def infer_word(forms, number, numonly, pagemsg):
   # Check for invariable word
   caseforms = forms.values()
   allsame = True
@@ -227,7 +227,7 @@ def infer_word(forms, number, numonly):
       allsame = False
       break
   if allsame:
-    msg("Found invariable word %s" % caseforms[0])
+    pagemsg("Found invariable word %s" % caseforms[0])
     return [caseforms[0], "*"]
 
   nompl = forms["nom_pl"]
@@ -235,7 +235,7 @@ def infer_word(forms, number, numonly):
   genpl = try_to_stress(forms["gen_pl"])
   prepl = forms["pre_pl"]
   if numonly == "pl":
-    nomsgs = synthesize_singular(nompl, prepl, noungender)
+    nomsgs = synthesize_singular(nompl, prepl, noungender, pagemsg)
   else:
     nomsgs = [try_to_stress(forms["nom_sg"])]
 
@@ -254,7 +254,7 @@ def infer_word(forms, number, numonly):
       elif forms["acc_pl"] == forms["gen_pl"]:
         anim = ["a=an"]
       else:
-        msg("WARNING: Unable to determine animacy: nom_pl=%s, acc_pl=%s, gen_pl=%s" %
+        pagemsg("WARNING: Unable to determine animacy: nom_pl=%s, acc_pl=%s, gen_pl=%s" %
             (forms["nom_pl"], forms["acc_pl"], forms["gen_pl"]))
         return None
 
@@ -262,8 +262,8 @@ def infer_word(forms, number, numonly):
     if (re.match(make_unstressed(nomsg), u"^.*([ыиіо]й|[яаь]я|[oeь]e)$") or
         numonly == "pl" and re.match(make_unstressed(nompl), u"^.*[ыи]e$")):
       args = ["", nomsg, "+"] + anim + number
-      if trymatch(forms, args):
-        msg("Found a match: {{ru-noun-table|%s}}" % "|".join(args))
+      if trymatch(forms, args, pagemsg):
+        pagemsg("Found a match: {{ru-noun-table|%s}}" % "|".join(args))
         return args
 
     stress = "any"
@@ -272,7 +272,7 @@ def infer_word(forms, number, numonly):
     bare = [""]
     m = re.match(ur"(.*)([аяеоё])(́?)$", nomsg)
     if m:
-      msg("Nom sg %s refers to feminine 1st decl or neuter 2nd decl" % nomsg)
+      pagemsg("Nom sg %s refers to feminine 1st decl or neuter 2nd decl" % nomsg)
       stem = try_to_stress(m.group(1))
       ending = m.group(2)
       if m.group(3) or ending == u"ё":
@@ -285,28 +285,28 @@ def infer_word(forms, number, numonly):
         if is_unstressed(stem):
           mm = re.match(ur"(.*)[аяыи]́?$", nompl)
           if not mm:
-            msg("WARNING: Don't recognize fem 1st-decl or neut 2nd-decl nom pl ending in form %s" % nompl)
+            pagemsg("WARNING: Don't recognize fem 1st-decl or neut 2nd-decl nom pl ending in form %s" % nompl)
           else:
             nomplstem = try_to_stress(mm.group(1))
             if make_unstressed(nomplstem) != stem:
-              msg("Nom pl stem %s not accent-equiv to nom sg stem %s" % (
+              pagemsg("Nom pl stem %s not accent-equiv to nom sg stem %s" % (
                 nomplstem, stem))
             elif nomplstem != stem:
-              msg("Replacing unstressed stem %s with stressed nom pl stem %s" %
+              pagemsg("Replacing unstressed stem %s with stressed nom pl stem %s" %
                   (stem, nomplstem))
               stem = nomplstem
 
         if stem == genpl:
-          msg("Gen pl %s same as stem" % genpl)
+          pagemsg("Gen pl %s same as stem" % genpl)
         elif make_unstressed(stem) != make_unstressed(genpl):
-          msg("Stem %s not accent-equiv to gen pl %s" % (stem, genpl))
+          pagemsg("Stem %s not accent-equiv to gen pl %s" % (stem, genpl))
           bare = ["*", genpl]
         elif is_unstressed(stem):
-          msg("Replacing unstressed stem %s with accent-equiv gen pl %s" %
+          pagemsg("Replacing unstressed stem %s with accent-equiv gen pl %s" %
               (stem, genpl))
           stem = genpl
         else:
-          msg("Stem %s stressed one way, gen pl %s stressed differently" %
+          pagemsg("Stem %s stressed one way, gen pl %s stressed differently" %
               (stem, genpl))
           bare = ["*", genpl]
       nomsg = stem + ending
@@ -321,39 +321,39 @@ def infer_word(forms, number, numonly):
         else:
           m = re.match(ur"(.*)([аяи])(́?)$", gensg)
           if not m:
-            msg("WARNING: Don't recognize gen sg ending in form %s" % gensg)
+            pagemsg("WARNING: Don't recognize gen sg ending in form %s" % gensg)
             if ending == u"ь":
               genders = ["m", "f"]
           else:
             stem = try_to_stress(m.group(1))
             if ending == u"ь":
               if m.group(2) == u"я":
-                msg("Found masculine soft-stem nom sg %s" % nomsg)
+                pagemsg("Found masculine soft-stem nom sg %s" % nomsg)
                 genders = ["m"]
               else:
-                msg("Found feminine soft-stem nom sg %s" % nomsg)
+                pagemsg("Found feminine soft-stem nom sg %s" % nomsg)
                 genders = ["f"]
             elif ending == u"й":
-              msg("Found masculine palatal-stem nom sg %s" % nomsg)
+              pagemsg("Found masculine palatal-stem nom sg %s" % nomsg)
             else:
-              msg("Found masculine consonant-stem nom sg %s" % nomsg)
+              pagemsg("Found masculine consonant-stem nom sg %s" % nomsg)
             if m.group(3):
               stress = "end"
             else:
               stress = "stem"
             if stem == nomsgstem:
-              msg("Nom sg stem %s same as stem" % nomsgstem)
+              pagemsg("Nom sg stem %s same as stem" % nomsgstem)
             elif make_unstressed(stem) != make_unstressed(nomsgstem):
-              msg("Stem %s not accent-equiv to nom sg stem %s" % (stem, nomsgstem))
+              pagemsg("Stem %s not accent-equiv to nom sg stem %s" % (stem, nomsgstem))
               # If an element of BARE is a two-element list, the first is
               # the value of bare and the second is the value to use for the
               # first arg in place of nom sg.
               bare = ["*", [nomsg, stem + ending]]
             elif is_unstressed(stem):
-              msg("Replacing unstressed stem %s with accent-equiv nom sg stem %s" %
+              pagemsg("Replacing unstressed stem %s with accent-equiv nom sg stem %s" %
                   (stem, nomsgstem))
             else:
-              msg("Stem %s stressed one way, nom sg stem %s stressed differently" %
+              pagemsg("Stem %s stressed one way, nom sg stem %s stressed differently" %
                   (stem, nomsgstem))
               # If an element of BARE is a two-element list, the first is
               # the value of bare and the second is the value to use for the
@@ -370,7 +370,7 @@ def infer_word(forms, number, numonly):
     if numony == "pl":
       stress = "none"
     if stress == "any" or plstress == "any":
-      msg("WARNING: Using all stress patterns")
+      pagemsg("WARNING: Using all stress patterns")
       stress_patterns = all_stress_patterns
     else:
       stress_patterns = matching_stress_patterns[stress][plstress]
@@ -389,8 +389,8 @@ def infer_word(forms, number, numonly):
           if not args[-1]:
             del args[-1]
           args += anim + number
-          if trymatch(forms, args):
-            msg("Found a match: {{ru-noun-table|%s}}" % "|".join(args))
+          if trymatch(forms, args, pagemsg):
+            pagemsg("Found a match: {{ru-noun-table|%s}}" % "|".join(args))
             return args
 
     # I think these are always in -ов/-ев/-ин/-ын.
@@ -398,19 +398,21 @@ def infer_word(forms, number, numonly):
     if re.match(nomsg, u"^.*([ое]в|[ыи]н)([оаъ]?)$"):
       for adjpat in ["+short", "+mixed"]:
         args = ["", nomsg, adjpat] + anim + number
-        if trymatch(forms, args):
-          msg("Found a match: {{ru-noun-table|%s}}" % "|".join(args))
+        if trymatch(forms, args, pagemsg):
+          pagemsg("Found a match: {{ru-noun-table|%s}}" % "|".join(args))
           return args
 
   return None
 
-def infer_one_page_decls(page, text):
+def infer_one_page_decls(page, index, text):
+  def pagemsg(txt):
+    msg("Page %s %s: %s" % (index, unicode(page.title()), text))
   genders = set()
   for t in text.filter_tempates():
     if unicode(t.name) == "ru-noun":
       m = re.match("^([mfn])", getparam(t, "2"))
       if not m:
-        msg("WARNING: Strange ru-noun template: %s" % unicode(t))
+        pagemsg("WARNING: Strange ru-noun template: %s" % unicode(t))
       else:
         genders.add(m.group(1))
 
@@ -419,16 +421,17 @@ def infer_one_page_decls(page, text):
       if unicode(t.name) == "ru-decl-noun-pl":
         genders = list(genders)
         if len(genders) == 0:
-          msg("WARNING: Can't find gender for pl-only nominal %s" % unicode(page.title()))
+          pagemsg("WARNING: Can't find gender for pl-only nominal")
           continue
         elif len(genders) > 1:
-          msg("WARNING: Multiple genders found for pl-only nominal %s: %s" % (unicode(page.title()), genders))
+          pagemsg("WARNING: Multiple genders found for pl-only nominal: %s" %
+              genders)
           continue
         else:
           gender = genders[0]
       else:
         gender = ""
-      args = infer_decl(t, gender)
+      args = infer_decl(t, gender, pagemsg)
       if args:
         for i in xrange(15, 0, -1):
           rmparam(t, i)
@@ -443,5 +446,11 @@ def infer_one_page_decls(page, text):
             i += 1
   return text, "Infer declension for manual decls (ru-decl-noun)"
 
-for page in blib.references("Template:ru-decl-noun"):
-  blib.do_edit(page, infer_one_page_decls, save=save)
+def iter_pages(iterator):
+  i = 0
+  for page in iterator:
+    i += 1
+    yield page, i
+
+for page, index in iter_pages(blib.references("Template:ru-decl-noun")):
+  blib.do_edit(page, index, infer_one_page_decls, save=save)

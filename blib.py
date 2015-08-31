@@ -28,11 +28,11 @@ def dump(page):
   old = page.get(get_redirect=True)
   pywikibot.output(u'Contents of [[{0}]]:\n{1}\n----------'.format(page.title(), old), toStdout = True)
 
-def do_edit(page, func=None, null=False, save=False):
+def do_edit(page, index, func=None, null=False, save=False):
   while True:
     try:
       if func:
-        new, comment = func(page, parse(page.text))
+        new, comment = func(page, index, parse(page.text))
         
         if new:
           new = unicode(new)
@@ -40,10 +40,10 @@ def do_edit(page, func=None, null=False, save=False):
           if page.text != new:
             page.text = new
             if save:
-              msg("%s: Saving with comment = %s" % (unicode(page.title), comment))
+              msg("%s %s: Saving with comment = %s" % (index, unicode(page.title), comment))
               page.save(comment = comment)
             else:
-              msg("%s: Would save with comment = %s" % (unicode(page.title), comment))
+              msg("%s %s: Would save with comment = %s" % (index, unicode(page.title), comment))
           elif null:
             pywikibot.output(u'Purged page cache for [[{0}]]'.format(page.title()), toStdout = True)
             page.purge(forcelinkupdate = True)
