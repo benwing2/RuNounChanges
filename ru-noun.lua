@@ -15,9 +15,10 @@
 		5: special plural stem (optional, default = stem)
 		a: animacy (a = animate, i = inanimate, b = both, otherwise inanimate)
 		n: number restriction (p = plural only, s = singular only, otherwise both)
-		CASE_NUM or par/loc/voc: override (or multiple values separated by
-		    commas) for particular form; forms auto-linked; can have raw links
-			in it, can have an ending "note" (*, +, 1, 2, 3, etc.)
+		CASE_NUM or acc_NUM_ANIM or par/loc/voc: override (or multiple
+		    values separated by commas) for particular form; forms auto-linked;
+			can have raw links in it, can have an ending "note" (*, +, 1, 2, 3,
+			etc.)
 		arg with value "or": specify multiple stem sets; further stem sets
 		    follow the "or"
 
@@ -35,6 +36,10 @@
 	Number abbreviations:
 		sg: singular
 		pl: plural
+
+	Animacy abbreviations:
+		an: animate
+		in: inanimate
 
 TODO:
 
@@ -276,9 +281,10 @@ local ending_stressed_dat_sg_patterns = {}
 local ending_stressed_sg_patterns = {}
 -- Set of patterns with all plural forms ending-stressed.
 local ending_stressed_pl_patterns = {}
--- List of all cases, excluding loc/par/voc.
+-- List of all cases that are declined normally.
 local decl_cases
--- List of all cases, including loc/par/voc.
+-- List of all cases, including those that can be overridden (loc/par/voc,
+-- animate/inanimate variants).
 local cases
 -- Type of trailing letter, for tracking purposes
 local trailing_letter_type
@@ -340,7 +346,7 @@ local function tracking_code(stress, decl_class, real_decl_class, args)
 	if args.alt_gen_pl then
 		track("alt-gen-pl")
 	end
-	for case in pairs(cases) do
+	for _, case in ipairs(cases) do
 		if args[case] then
 			track("irreg/" .. case)
 			-- questionable use: dotrack("irreg/" .. case .. "/")
@@ -524,15 +530,16 @@ local function categorize(stress, decl_class, args)
 	if sgdc.adj then
 		insert_cat("adjectival ~")
 	end
-	for case in pairs(cases) do
+	for _, case in ipairs(cases) do
 		if args[case] then
 			local engcase = rsub(case, "^([a-z]*)", {
 				nom="nominative", gen="genitive", dat="dative",
 				acc="accusative", ins="instrumental", pre="prepositional",
 				par="partitive", loc="locative", voc="vocative"
 			})
-			engcase = rsub(engcase, "(_[a-z]*)$", {
-				_sg=" singular", _pl=" plural"
+			engcase = rsub(engcase, "(_[a-z]*)", {
+				_sg=" singular", _pl=" plural",
+				_an=" animate", _in=" inanimate"
 			})
 			if case == "loc" or case == "voc" or case == "par" then
 				insert_cat("~ with " .. engcase)
@@ -2283,7 +2290,7 @@ local attachers = {
 }
 
 function do_stress_pattern(stress, args, decl, number)
-	for case in pairs(decl_cases) do
+	for _, case in ipairs(decl_cases) do
 		if not number or (number == "sg" and rfind(case, "_sg$")) or
 			(number == "pl" and rfind(case, "_pl$")) then
 			gen_form(args, decl, case, stress,
@@ -2360,17 +2367,18 @@ local notes_template = nil
 local templates = {}
 
 -- cases that are declined normally instead of handled through overrides
-decl_cases = ut.list_to_set({
+decl_cases = {
 	"nom_sg", "gen_sg", "dat_sg", "acc_sg", "ins_sg", "pre_sg",
 	"nom_pl", "gen_pl", "dat_pl", "acc_pl", "ins_pl", "pre_pl",
-})
+}
 
 -- all cases displayable or handleable through overrides
-cases = ut.list_to_set({
+cases = {
 	"nom_sg", "gen_sg", "dat_sg", "acc_sg", "ins_sg", "pre_sg",
 	"nom_pl", "gen_pl", "dat_pl", "acc_pl", "ins_pl", "pre_pl",
+	"acc_sg_an", "acc_sg_in", "acc_pl_an", "acc_pl_in",
 	"par", "loc", "voc",
-})
+}
 
 -- Convert a raw override into a canonicalized list of individual overrides.
 -- If input is nil, so is output. Certain junk (e.g. <br/>) is removed,
@@ -2392,8 +2400,8 @@ function canonicalize_override(val, args, ispl)
 end
 
 function handle_forms_and_overrides(args)
-	for case in pairs(cases) do
-		local ispl = rfind(case, "_pl$")
+	for _, case in ipairs(cases) do
+		local ispl = rfind(case, "_pl")
 		if args.sgtail and not ispl and args.forms[case] then
 			local lastarg = #(args.forms[case])
 			if lastarg > 0 then
@@ -2451,7 +2459,7 @@ function make_table(args)
 	args.title = args.title or
 		strutils.format(old and old_title_temp or title_temp, args)
 
-	for case in pairs(cases) do
+	for _, case in ipairs(cases) do
 		if args[case] then
 			if type(args[case]) ~= "table" then
 				error("Logic error, args[case] should be nil or table")
@@ -2462,23 +2470,12 @@ function make_table(args)
 		end
 	end
 
-	if anim == "a" then
-		if not args.acc_sg then
-			args.acc_sg = args.gen_sg
-		end
-		if not args.acc_pl then
-			args.acc_pl = args.gen_pl
-		end
-	elseif anim == "i" then
-		if not args.acc_sg then
-			args.acc_sg = args.nom_sg
-		end
-		if not args.acc_pl then
-			args.acc_pl = args.nom_pl
-		end
-	end
+	args.acc_sg_an = args.acc_sg_an or args.acc_sg or anim == "i" and args.nom_sg or args.gen_sg
+	args.acc_sg_in = args.acc_sg_in or args.acc_sg or anim == "a" and args.gen_sg or args.nom_sg
+	args.acc_pl_an = args.acc_pl_an or args.acc_pl or anim == "i" and args.nom_pl or args.gen_pl
+	args.acc_pl_in = args.acc_pl_in or args.acc_pl or anim == "a" and args.gen_pl or args.nom_pl
 
-	for case in pairs(cases) do
+	for _, case in ipairs(cases) do
 		if args[case] then
 			if #args[case] == 1 and args[case][1] == "-" then
 				args[case] = "&mdash;"
@@ -2511,10 +2508,11 @@ function make_table(args)
 		args.nom_x = args.nom_sg
 		args.gen_x = args.gen_sg
 		args.dat_x = args.dat_sg
-		args.acc_x = args.acc_sg
+		args.acc_x_an = args.acc_sg_an
+		args.acc_x_in = args.acc_sg_in
 		args.ins_x = args.ins_sg
 		args.pre_x = args.pre_sg
-		if args.acc_sg then
+		if args.acc_sg_an == args.acc_sg_in then
 			temp = "half"
 		else
 			temp = "half_a"
@@ -2523,21 +2521,22 @@ function make_table(args)
 		args.nom_x = args.nom_pl
 		args.gen_x = args.gen_pl
 		args.dat_x = args.dat_pl
-		args.acc_x = args.acc_pl
+		args.acc_x_an = args.acc_pl_an
+		args.acc_x_in = args.acc_pl_in
 		args.ins_x = args.ins_pl
 		args.pre_x = args.pre_pl
 		args.par = nil
 		args.loc = nil
 		args.voc = nil
-		if args.acc_pl then
+		if args.acc_pl_an == args.acc_pl_in then
 			temp = "half"
 		else
 			temp = "half_a"
 		end
 	else
-		if args.acc_pl then
+		if args.acc_pl_an == args.acc_pl_in then
 			temp = "full"
-		elseif args.acc_sg then
+		elseif args.acc_sg_an == args.acc_sg_in then
 			temp = "full_af"
 		else
 			temp = "full_a"
@@ -2620,8 +2619,8 @@ templates["full"] = [===[
 | {dat_pl}
 |-
 ! style="background:#eff7ff" | accusative
-| {acc_sg}
-| {acc_pl}
+| {acc_sg_an}
+| {acc_pl_an}
 |-
 ! style="background:#eff7ff" | instrumental
 | {ins_sg}
@@ -2657,11 +2656,11 @@ templates["full_a"] = [===[
 | {dat_pl}
 |-
 ! style="background:#eff7ff" rowspan="2" | accusative <span style="padding-left:1em;display:inline-block;vertical-align:middle">animate<br/>inanimate</span>
-| {gen_sg}
-| {gen_pl}
+| {acc_sg_an}
+| {acc_pl_an}
 |-
-| {nom_sg}
-| {nom_pl}
+| {acc_sg_in}
+| {acc_pl_an}
 |-
 ! style="background:#eff7ff" | instrumental
 | {ins_sg}
@@ -2697,10 +2696,10 @@ templates["full_af"] = [===[
 | {dat_pl}
 |-
 ! style="background:#eff7ff" rowspan="2" | accusative <span style="padding-left:1em;display:inline-block;vertical-align:middle">animate<br/>inanimate</span>
-| rowspan="2" | {acc_sg}
-| {gen_pl}
+| rowspan="2" | {acc_sg_an}
+| {acc_pl_an}
 |-
-| {nom_pl}
+| {acc_pl_in}
 |-
 ! style="background:#eff7ff" | instrumental
 | {ins_sg}
@@ -2732,7 +2731,7 @@ templates["half"] = [===[
 | {dat_x}
 |-
 ! style="background:#eff7ff" | accusative
-| {acc_x}
+| {acc_x_an}
 |-
 ! style="background:#eff7ff" | instrumental
 | {ins_x}
@@ -2762,9 +2761,9 @@ templates["half_a"] = [===[
 | {dat_x}
 |-
 ! style="background:#eff7ff" rowspan="2" | accusative <span style="padding-left:1em;display:inline-block;vertical-align:middle">animate<br/>inanimate</span>
-| {gen_x}
+| {acc_x_an}
 |-
-| {nom_x}
+| {acc_x_in}
 |-
 ! style="background:#eff7ff" | instrumental
 | {ins_x}
