@@ -129,10 +129,26 @@ def synthesize_singular(nompl, prepl, gender):
           add_hard_neuter(stem) if gender == "n" else
           do_assert(False, "Unrecognized gender: %s" % gender)]
 
+def separate_multiwords(forms):
+  words = []
+  for case in forms:
+    for multiform in re.split(r"\s+,\s+", forms[case]):
+      formwords = re.split(r"\s+", multiform)
+      for i in xrange(len(formwords)):
+        if len(words) < i:
+          words.append({})
+      i = 0
+      for word in formwords:
+        if case in words[i]:
+          words[i][case] += "," + word
+        else:
+          words[i][case] = word
+        i += 1
+  return words
+
 def infer_decl(t, noungender):
   tname = unicode(t.name)
   forms = {}
-  i = 1
 
   # Initialize all cases to blank in case we don't set them again later
   for case in ru_decl_noun_cases:
@@ -154,6 +170,7 @@ def infer_decl(t, noungender):
   else:
     assert False, "Unrecognized template name: %s" % tname
 
+  i = 1
   for case in getcases:
     if case:
       form = getparam(t, i)
@@ -164,8 +181,10 @@ def infer_decl(t, noungender):
 
   if " " in forms["nom_sg"]:
     msg("Unable to handle multi-word lemma: %s" % forms["nom_sg"])
-  return None
+    return None
+  return infer_word(forms, number, numonly)
 
+def infer_word(forms, number, numonly):
   nompl = forms["nom_pl"]
   gensg = forms["gen_sg"]
   genpl = try_to_stress(forms["gen_pl"])
