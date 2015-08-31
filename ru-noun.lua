@@ -42,9 +42,10 @@
 		n: number restriction (p = plural only, s = singular only, b = both;
 		   defaults to both unless the lemma is plural, in which case it
 		   defaults to plural only)
-		CASE_NUM or par/loc/voc: override (or multiple values separated by
-		   commas) for case/number combination; forms auto-linked; can have
-		   raw links
+		CASE_NUM or acc_NUM_ANIM or par/loc/voc: override (or multiple
+		    values separated by commas) for case/number combination;
+			forms auto-linked; can have raw links in it, can have an
+			ending "note" (*, +, 1, 2, 3, etc.)
 		pltail: Specify something (usually a * or similar) to attach to
 		   the end of the last plural form when there's more than one. Used in
 		   conjunction with notes= to indicate that alternative plural forms
@@ -78,6 +79,10 @@
 	Number abbreviations:
 		sg: singular
 		pl: plural
+
+	Animacy abbreviations:
+		an: animate
+		in: inanimate
 
 	Declension field:
 		One of the following for regular nouns:
@@ -516,9 +521,10 @@ local ending_stressed_dat_sg_patterns = {}
 local ending_stressed_sg_patterns = {}
 -- Set of patterns with all plural forms ending-stressed.
 local ending_stressed_pl_patterns = {}
--- List of all cases, excluding loc/par/voc.
+-- List of all cases that are declined normally.
 local decl_cases
--- List of all cases, including loc/par/voc.
+-- List of all cases, including those that can be overridden (loc/par/voc,
+-- animate/inanimate variants).
 local cases
 -- Type of trailing letter, for tracking purposes
 local trailing_letter_type
@@ -1015,8 +1021,9 @@ local function categorize_and_init_heading(stress, decl, args)
 				acc="accusative", ins="instrumental", pre="prepositional",
 				par="partitive", loc="locative", voc="vocative"
 			})
-			engcase = rsub(engcase, "(_[a-z]*)$", {
-				_sg=" singular", _pl=" plural"
+			engcase = rsub(engcase, "(_[a-z]*)", {
+				_sg=" singular", _pl=" plural",
+				_an=" animate", _in=" inanimate"
 			})
 			if case == "loc" or case == "voc" or case == "par" then
 				insert_cat("~ with " .. engcase)
@@ -3531,6 +3538,7 @@ decl_cases = {
 cases = {
 	"nom_sg", "gen_sg", "dat_sg", "acc_sg", "ins_sg", "pre_sg",
 	"nom_pl", "gen_pl", "dat_pl", "acc_pl", "ins_pl", "pre_pl",
+	"acc_sg_an", "acc_sg_in", "acc_pl_an", "acc_pl_in",
 	"par", "loc", "voc",
 }
 
@@ -3673,21 +3681,10 @@ make_table = function(args)
 		end
 	end
 
-	if anim == "a" then
-		if not args.acc_sg then
-			args.acc_sg = args.gen_sg
-		end
-		if not args.acc_pl then
-			args.acc_pl = args.gen_pl
-		end
-	elseif anim == "i" then
-		if not args.acc_sg then
-			args.acc_sg = args.nom_sg
-		end
-		if not args.acc_pl then
-			args.acc_pl = args.nom_pl
-		end
-	end
+	args.acc_sg_an = args.acc_sg_an or args.acc_sg or anim == "i" and args.nom_sg or args.gen_sg
+	args.acc_sg_in = args.acc_sg_in or args.acc_sg or anim == "a" and args.gen_sg or args.nom_sg
+	args.acc_pl_an = args.acc_pl_an or args.acc_pl or anim == "i" and args.nom_pl or args.gen_pl
+	args.acc_pl_in = args.acc_pl_in or args.acc_pl or anim == "a" and args.gen_pl or args.nom_pl
 
 	for _, case in ipairs(cases) do
 		if args[case] then
@@ -3722,10 +3719,11 @@ make_table = function(args)
 		args.nom_x = args.nom_sg
 		args.gen_x = args.gen_sg
 		args.dat_x = args.dat_sg
-		args.acc_x = args.acc_sg
+		args.acc_x_an = args.acc_sg_an
+		args.acc_x_in = args.acc_sg_in
 		args.ins_x = args.ins_sg
 		args.pre_x = args.pre_sg
-		if args.acc_sg then
+		if args.acc_sg_an == args.acc_sg_in then
 			temp = "half"
 		else
 			temp = "half_a"
@@ -3734,21 +3732,22 @@ make_table = function(args)
 		args.nom_x = args.nom_pl
 		args.gen_x = args.gen_pl
 		args.dat_x = args.dat_pl
-		args.acc_x = args.acc_pl
+		args.acc_x_an = args.acc_pl_an
+		args.acc_x_in = args.acc_pl_in
 		args.ins_x = args.ins_pl
 		args.pre_x = args.pre_pl
 		args.par = nil
 		args.loc = nil
 		args.voc = nil
-		if args.acc_pl then
+		if args.acc_pl_an == args.acc_pl_in then
 			temp = "half"
 		else
 			temp = "half_a"
 		end
 	else
-		if args.acc_pl then
+		if args.acc_pl_an == args.acc_pl_in then
 			temp = "full"
-		elseif args.acc_sg then
+		elseif args.acc_sg_an == args.acc_sg_in then
 			temp = "full_af"
 		else
 			temp = "full_a"
@@ -3828,8 +3827,8 @@ templates["full"] = template_prelude("45") .. [===[
 | {dat_pl}
 |-
 ! style="background:#eff7ff" | accusative
-| {acc_sg}
-| {acc_pl}
+| {acc_sg_an}
+| {acc_pl_an}
 |-
 ! style="background:#eff7ff" | instrumental
 | {ins_sg}
@@ -3858,11 +3857,11 @@ templates["full_a"] = template_prelude("50") .. [===[
 | {dat_pl}
 |-
 ! style="background:#eff7ff" rowspan="2" | accusative <span style="padding-left:1em;display:inline-block;vertical-align:middle">animate<br/><br/>inanimate</span>
-| {gen_sg}
-| {gen_pl}
+| {acc_sg_an}
+| {acc_pl_an}
 |-
-| {nom_sg}
-| {nom_pl}
+| {acc_sg_in}
+| {acc_pl_an}
 |-
 ! style="background:#eff7ff" | instrumental
 | {ins_sg}
@@ -3891,10 +3890,10 @@ templates["full_af"] = template_prelude("50") .. [===[
 | {dat_pl}
 |-
 ! style="background:#eff7ff" rowspan="2" | accusative <span style="padding-left:1em;display:inline-block;vertical-align:middle">animate<br/><br/>inanimate</span>
-| rowspan="2" | {acc_sg}
-| {gen_pl}
+| rowspan="2" | {acc_sg_an}
+| {acc_pl_an}
 |-
-| {nom_pl}
+| {acc_pl_in}
 |-
 ! style="background:#eff7ff" | instrumental
 | {ins_sg}
@@ -3919,7 +3918,7 @@ templates["half"] = template_prelude("30") .. [===[
 | {dat_x}
 |-
 ! style="background:#eff7ff" | accusative
-| {acc_x}
+| {acc_x_an}
 |-
 ! style="background:#eff7ff" | instrumental
 | {ins_x}
@@ -3942,9 +3941,9 @@ templates["half_a"] = template_prelude("35") .. [===[
 | {dat_x}
 |-
 ! style="background:#eff7ff" rowspan="2" | accusative <span style="padding-left:1em;display:inline-block;vertical-align:middle">animate<br/><br/>inanimate</span>
-| {gen_x}
+| {acc_x_an}
 |-
-| {nom_x}
+| {acc_x_in}
 |-
 ! style="background:#eff7ff" | instrumental
 | {ins_x}
