@@ -556,7 +556,7 @@ local function do_show(frame, old)
 	local function insert_cat(cat)
 		insert_category(args.categories, cat)
 	end
-	args.old = old
+	args.old = args.old or old
 	args.manual = manual
 	-- HACK: Escape * at beginning of line so it doesn't show up
 	-- as a list entry. Many existing templates use * for footnotes.
