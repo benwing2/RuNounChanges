@@ -3,7 +3,7 @@
 	nouns.
 
 	Arguments:
-		1: stress pattern number, or multiple numbers separated by commas
+		1: accent pattern number, or multiple numbers separated by commas
 		2: stem, with ending; or leave out the ending and put it in the
 		   declension type field
 		3: declension type (usually just the ending); or blank or a gender
@@ -39,12 +39,15 @@ TODO:
 
 1. Change {{temp|ru-decl-noun-pl}} and {{temp|ru-decl-noun-unc}} to use
    'manual' instead of '*' as the decl class.
+1a. Require stem to be specified instead of defaulting to page.
+1b. Nouns in -мя: Accent pattern 1 should actually be мя-1; accent pattern 3
+    should be -мя.
 2. Bug in -я nouns with bare specified; should not have -ь ending. Old templates did not add this ending when bare occurred. (PROBABLY SHOULD ALWAYS HAVE BARE
 BE BARE, NEVER ADD A NON-SYLLABIC ENDING. HAVE TRACKING CODE FOR THIS.)
 3. Genitive plural of -ёнокъ should be -атъ?
 4. Remove barepl, make pl= be 5th argument. [IMPLEMENTED IN GITHUB IN TWO
    DIFFERENT BRANCHES]
-5. (Add stress pattern for ь-stem numbers. Wikitiki handled that through
+5. (Add accent pattern for ь-stem numbers. Wikitiki handled that through
    overriding the ins_sg. I thought there would be complications with the
    nom_sg in multi-syllabic words but no.)
 6. Eliminate complicated defaulting code for second and further stem sets.
@@ -239,7 +242,7 @@ local trailing_letter_type
 local function tracking_code(stress, decl_class, real_decl_class, args)
 	assert(decl_class)
 	assert(real_decl_class)
-	local hint_types, _ = get_stem_trailing_letter_type(args.stem)
+	local hint_types = get_stem_trailing_letter_type(args.stem)
 	if real_decl_class == decl_class then
 		real_decl_class = nil
 	end
@@ -324,17 +327,6 @@ local function categorize(stress, decl_class, args)
 		end
 	end
 
-	-- Insert category CAT, as with insert_cat(); but also insert categories
-	-- prepending each of the stem types in STEM_TYPES.
-	local function insert_cat_with_stem_type(cat, stem_types)
-		for _, c in ipairs(cat_to_list(cat)) do
-			for _, stem_type in ipairs(stem_types) do
-				insert_cat(stem_type .. "-stem " .. c)
-			end
-		end
-		insert_cat(cat)
-	end
-
 	-- "Resolve" the category spec CATSPEC into the sort of category spec
 	-- accepted by insert_cat(), i.e. nil, a single string or a list of
 	-- strings. CATSPEC may be any of these or a function, which takes one
@@ -381,25 +373,41 @@ local function categorize(stress, decl_class, args)
 	assert(sgdc)
 	assert(pldc)
 
-	local _, sgstem_types = get_stem_trailing_letter_type(
+	local sghint_types = get_stem_trailing_letter_type(
 		args.stem .. (sgdc.stem_suffix or ""))
 
-	-- insert human version of traditional declension
-	local decl_cat
+	-- insert English version of Zaliznyak stem type
 	if sgdc.decl == "invariable" then
-		decl_cat = "invariable ~"
-	elseif sgdc.decl == "3rd" then
-		decl_cat = "3rd-declension normally-" .. gender_to_full[sgdc.g] .. " ~"
-	elseif sgdc.decl == "1st" then
-		decl_cat = "1st-declension " .. sgdc.hard .. " ~"
-	elseif sgdc.decl == "2nd" then
-		decl_cat = ("2nd-declension " .. sgdc.hard .. " normally-" ..
-			gender_to_full[sgdc.g] .. " ~")
+		insert_cat("invariable ~")
 	else
-		assert(false, "Unrecognized declension type")
+		local stem_type =
+			sgdc.decl == "3rd" and "3rd-declension" or
+			ut.contains(sghint_types, "velar") and "velar-stem" or
+			ut.contains(sghint_types, "sibilant") and "sibilant-stem" or
+			ut.contains(sghint_types, "c") and "ц-stem" or
+			ut.contains(sghint_types, "i") and "i-stem" or
+			ut.contains(sghint_types, "vowel") and "vowel-stem" or
+			ut.contains(sghint_types, "soft-cons") and "vowel-stem" or
+			ut.contains(sghint_types, "palatal") and "vowel-stem" or
+			sgdc.hard == "soft" and "soft-stem" or
+			"hard-stem"
+		-- NOTE: There are 8 Zaliznyak-style stem types and 3 genders, but
+		-- we don't create a category for masculine-type 3rd-declension
+		-- nominals (there is such a noun, путь, but it behaves like a
+		-- feminine noun), so there are 23.
+		insert_cat(stem_type .. " " .. gender_to_full[sgdc.g] .. "-type ~")
+		-- NOTE: Here we are creating categories for the combination of
+		-- stem, gender and accent. There are 8 accent patterns and 23
+		-- combinations of stem and gender, which potentially makes for
+		-- 8*23 = 184 such categories, which is a lot. Not all such categories
+		-- should actually exist; there were maybe 75 former declension
+		-- templates, each of which was essentially categorized by the same
+		-- three variables, but some of which dealt with ancillary issues
+		-- like irregular plurals; this amounts to 67 actual stem/gender/accent
+		-- categories.
+		insert_cat(stem_type .. " " .. gender_to_full[sgdc.g] .. "-type accent-" .. stress .. " ~")
+		insert_cat("~ with accent pattern " .. stress)
 	end
-	insert_cat_with_stem_type(decl_cat,
-		sgdc.decl == "invariable" and {} or sgstem_types)
 	local sgsuffix = args.suffixes["nom_sg"]
 	if sgsuffix then
 		assert(#sgsuffix == 1) -- If this ever fails, then implement a loop
@@ -459,24 +467,6 @@ local function categorize(stress, decl_class, args)
 			end
 		end
 	end
-
-	insert_cat("~ with stress pattern " .. stress)
-	-- FIXME! Should we create categories for combinations of stress pattern
-	-- and declension? Certain aspects of the declension depend on such
-	-- combinations; e.g. the genitive plural of nouns in -а is normally
-	-- null, but the special form ей exists with the combination of
-	-- sibilant stems and accented genitive plural (stress patterns
-	-- 2, 3, 5, 6, 6*; see stressed_gen_pl_patterns[]). But any attempt to
-	-- create such combinations will lead to a large number of categories.
-	-- Most viable would be stress pattern + traditional decl; that gives
-	-- a maximum of 8 stress patterns times 9 traditional decls (1-hard,
-	-- 1-soft, 2-hard-m, 2-soft-m, 2-palatal-m, 2-hard-n, 2-soft-n, 3-f,
-	-- 3-n) = 72. Note that not all of these actually have any members in
-	-- them. However, this isn't fine enough to create a category for the
-	-- -а genitive plural in -ей in that it doesn't also include the stem
-	-- type (sibilant, velar, etc.); but simultaneously it's too fine in
-	-- that it doesn't group the stress patterns with stressed genitive
-	-- plural.
 end
 
 --------------------------------------------------------------------------
@@ -502,7 +492,7 @@ local function do_show(frame, old)
 	
 	-- Gather arguments into an array of STEM_SET objects, containing
 	-- (potentially) elements 1, 2, 3, 4, 'pl', 'barepl' where 1, 2, 3, 4
-	-- correspond to stress pattern, stem, declension type and bare stem and
+	-- correspond to accent pattern, stem, declension type and bare stem and
 	-- come from consecutive numbered parameters, and 'pl' and 'barepl' come
 	-- from parameters named 'pl', 'pl2', 'pl3', ... and similarly for
 	-- 'barepl'. Sets of stem parameters are separated by the word "or".
@@ -617,7 +607,7 @@ local function do_show(frame, old)
 		stress_arg = rsplit(stress_arg, ",")
 		for _, stress in ipairs(stress_arg) do
 			if not stress_patterns[stress] then
-				error("Unrecognized stress pattern " .. stress)
+				error("Unrecognized accent pattern " .. stress)
 			end
 		end
 		local sub_decl_classes
@@ -641,11 +631,11 @@ local function do_show(frame, old)
 		end
 
 		if #stress_arg > 1 then
-			track("multiple-stress-patterns")
-			insert_cat("~ with multiple stress patterns")
+			track("multiple-accent-patterns")
+			insert_cat("~ with multiple accent patterns")
 		end
 
-		-- Loop over stress patterns in case more than one given.
+		-- Loop over accent patterns in case more than one given.
 		for _, stress in ipairs(stress_arg) do
 			-- Loop over declension classes (we may have two of them, one for
 			-- singular and one for plural, in the case of a mixed declension
@@ -701,7 +691,7 @@ local function do_show(frame, old)
 			for _,decl_class_spec in ipairs(sub_decl_classes) do
 				-- We may resolve the user-specified declension class into a
 				-- more specific variant depending on the properties of the stem
-				-- and/or stress pattern. We use detection functions to do this.
+				-- and/or accent pattern. We use detection functions to do this.
 				local orig_decl_class = decl_class_spec[1]
 				local number = decl_class_spec[2]
 				local real_decl_class = orig_decl_class
@@ -744,12 +734,68 @@ function export.show_old(frame)
 end
 
 local stem_expl = {
-	["velar"] = "a velar (-к, -г or –x)",
-	["sibilant"] = "a sibilant (-ш, -ж, -ч or -щ)",
-	["ц"] = "-ц",
-	["i"] = "-и (old-style -і)",
-	["й"] = "-й",
-	["ь"] = "-ь (indicating a soft consonant, in this case followed by /j/)",
+	["velar-stem"] = "a velar (-к, -г or –x)",
+	["sibilant-stem"] = "a sibilant (-ш, -ж, -ч or -щ)",
+	["ц-stem"] = "-ц",
+	["i-stem"] = "-и (old-style -і)",
+	["vowel-stem"] = "a vowel other than -и or -і, or -й or -ь",
+	["soft-stem"] = "a soft consonant",
+	["hard-stem"] = "a hard consonant",
+}
+
+local zaliznyak_stem_type = {
+	["velar-stem"] = "3",
+	["sibilant-stem"] = "4",
+	["ц-stem"] = "5",
+	["i-stem"] = "7",
+	["vowel-stem"] = "6",
+	["soft-stem"] = "2",
+	["hard-stem"] = "1",
+	["3rd-declension"] = "8",
+}
+
+local zaliznyak_stress_pattern = {
+	["1"] = "a",
+	["2"] = "b (b' for 3rd-declension feminine nouns)",
+	["3"] = "c",
+	["4"] = "d",
+	["4*"] = "d'",
+	["5"] = "e",
+	["6"] = "f",
+	["6*"] = "f' (f'' for 3rd-declension feminine nouns)",
+}
+
+local stem_gender_endings = {
+    masculine = {
+		["hard-stem"]      = {"a hard consonant (-ъ old-style)", "-ы"},
+		["ц-stem"]         = {"-ц (-цъ old-style)", "-ы"},
+		["velar-stem"]     = {"a velar (plus -ъ old-style)", "-и"},
+		["sibilant-stem"]  = {"a sibilant (plus -ъ old-style)", "-и"},
+		["soft-stem"]      = {"-ь", "-и"},
+		["i-stem"]         = {"-й", "-и"},
+		["vowel-stem"]     = {"-й", "-и"},
+		["3rd-declension"] = {"-ь", "-и"},
+	},
+    feminine = {
+		["hard-stem"]      = {"-а", "-ы"},
+		["ц-stem"]         = {"-а", "-ы"},
+		["velar-stem"]     = {"-а", "-и"},
+		["sibilant-stem"]  = {"-а", "-и"},
+		["soft-stem"]      = {"-я", "-и"},
+		["i-stem"]         = {"-я", "-и"},
+		["vowel-stem"]     = {"-я", "-и"},
+		["3rd-declension"] = {"-ь", "-и"},
+	},
+    neuter = {
+		["hard-stem"]      = {"-о", "-а"},
+		["ц-stem"]         = {"-е", "-а"},
+		["velar-stem"]     = {"-о", "-а"},
+		["sibilant-stem"]  = {"-е", "-а"},
+		["soft-stem"]      = {"-е", "-я"},
+		["i-stem"]         = {"-е", "-я"},
+		["vowel-stem"]     = {"-е", "-я"},
+		["3rd-declension"] = {"-мя", "-мена or -мёна"},
+	},
 }
 
 -- Implementation of template 'runouncatboiler'.
@@ -759,17 +805,46 @@ function export.catboiler(frame)
 	local cats = {}
 	insert_category(cats, "~")
 
+	local function get_stem_gender_text(stem, gender)
+		if not stem_gender_endings[gender] then
+			error("Invalid gender " .. gender)
+		end
+		local endings = stem_gender_endings[gender][stem]
+		if not endings then
+			error("Invalid stem type " .. stem)
+		end
+		local sgending, plending = endings[1], endings[2]
+		local stemtext =
+			stem == "3rd-declension" and "" or
+			" The stem ends in " .. stem_expl[stem] .. " and is Zaliznyak's type " .. zaliznyak_stem_type[stem] .. "."
+		local decltext =
+			stem == "3rd-declension" and "" or
+			" This is traditionally considered to belong to the " .. (gender == "feminine" and "1st" or "2nd") .. " declension."
+		return stem .. ", usually " .. gender .. " ~, normally ending in nominative singular " .. sgending .. " and nominative plural " .. plending .. "." .. stemtext .. decltext
+	end
+
 	local maintext
-	if args[1] == "decl" then
-		if args[2] == "invariable" then
+	if args[1] == "stemgenderstress" then
+		local stem, gender, stress = rmatch(SUBPAGENAME, "^Russian (.-) (.-)%-type accent-(.-) ")
+		if not stem then
+			error("Invalid category name, should be e.g. 'Russian velar-stem masculine-type accent-1 nominals'")
+		end
+		local stem_gender_text = get_stem_gender_text(stem, gender)
+		local accent_text = " This nominal is stressed according to accent pattern " .. stress .. ", corresponding to Zaliznyak's type " .. zaliznyak_stress_pattern[stress] .. "."
+		maintext = stem_gender_text .. accent_text
+		insert_category(cats, "~ by stem type, gender and accent pattern")
+	elseif args[1] == "stemgender" then
+		local SUBPAGENAME = mw.title.getCurrentTitle().subpageText
+		if rfind(SUBPAGENAME, "invariable") then
 			maintext = "invariable (indeclinable) ~, which normally have the same form for all cases and numbers."
 		else
-			maintext = (args[7] and args[7] .. "-stem " or "") .. args[2] .. "-declension " .. (args[3] and args[3] .. " " or "") .. "normally-" .. args[4] .. " ~, normally ending in nominative singular " .. args[5] .. " and nominative plural " .. args[6] .. ". The stem ends in " .. (args[8] or stem_expl[args[7]]) .. "."
+			local stem, gender = rmatch(SUBPAGENAME, "^Russian (.-) (.-)%-type")
+			if not stem then
+				error("Invalid category name, should be e.g. 'Russian velar-stem masculine-type nominals'")
+			end
+			maintext = get_stem_gender_text(stem, gender)
 		end
-		insert_category(cats, "~ by declension type")
-		if args[7] then
-			insert_category(cats, "~ by declension type and stem type")
-		end
+		insert_category(cats, "~ by stem type and gender")
 	elseif args[1] == "sg" then
 		maintext = "~ ending in nominative singular " .. args[2] .. "."
 		insert_category(cats, "~ by singular ending")
@@ -780,8 +855,8 @@ function export.catboiler(frame)
 		maintext = "~ ending in nominative singular " .. args[2] .. " and nominative plural " .. args[3] .. "."
 		insert_category(cats, "~ by singular and plural ending")
 	elseif args[1] == "stress" then
-		maintext = "~ with stress pattern " .. args[2] .. "."
-		insert_category(cats, "~ by stress pattern")
+		maintext = "~ with accent pattern " .. args[2] .. ", corresponding to Zaliznyak's type " .. zaliznyak_stress_pattern[args[2]] .. "."
+		insert_category(cats, "~ by accent pattern")
 	elseif args[1] == "extracase" then
 		maintext = "~ with a separate " .. args[2] .. " singular case."
 		insert_category(cats, "~ by case form")
@@ -1322,7 +1397,7 @@ end
 
 declensions_old_cat["ья"] = {
 	decl="1st", hard="soft", g="f",
-	stem_suffix="ь",
+	stem_suffix="ь", gensg=true,
 	cant_reduce=true -- already has unreduced gen pl
 }
 
@@ -1515,15 +1590,8 @@ end
 detect_decl_old["ьё"] = detect_decl_old["ье"]
 
 declensions_old_cat["ье"] = {
-	singular = function(suffix)
-		if suffix == "ьё" then
-			return "ending in -ьё"
-		else
-			return {}
-		end
-	end,
-	decl="2nd", hard="soft", g="n", gensg=true,
-	stem_suffix="ь",
+	decl="2nd", hard="soft", g="n",
+	stem_suffix="ь", gensg=true,
 	cant_reduce=true -- already has unreduced gen pl
 }
 declensions_old_cat["ьё"] = declensions_old_cat["ье"]
@@ -1765,33 +1833,9 @@ trailing_letter_type = {
 	["ю"] = {"vowel", "soft-vowel"},
 }
 
--- used for categorization
-tltype_to_stem_type = {
-	["sibilant"] = "sibilant",
-	["velar"] = "velar",
-	["c"] = "ц",
-	["palatal"] = "й",
-	["i"] = "i",
-	["soft-cons"] = "ь",
-	-- These are probably not useful as they don't reflect what people
-	-- would think, e.g. nouns in -ь would still be counted as hard-stem
-	-- because the -ь is considered an ending.
-	-- ["hard-cons"] = "hard-consonant",
-	-- ["hard-vowel"] = "hard-vowel",
-	-- ["soft-vowel"] = "soft-vowel",
-	-- Eliminate these to reduce number of categories
-	-- ["cons"] = "consonant",
-	-- ["vowel"] = "vowel",
-}
-
 function get_stem_trailing_letter_type(stem)
 	local hint = ulower(usub(com.remove_accents(stem), -1))
-	local hint_types = trailing_letter_type[hint] or {"hard-cons", "cons"}
-	local stem_types = {}
-	for _, hint_type in ipairs(hint_types) do
-		table.insert(stem_types, tltype_to_stem_type[hint_type])
-	end
-	return hint_types, stem_types
+	return trailing_letter_type[hint] or {"hard-cons", "cons"}
 end
 
 sibilant_suffixes = ut.list_to_set({"ш", "щ", "ч", "ж"})

@@ -7,46 +7,40 @@ import pywikibot
 dosave = False
 
 stress_patterns = ["1", "2", "3", "4", "4*", "5", "6", "6*"]
-decls = [
-    ["1st", "hard", "feminine", [
-      [u"-а", u"-ы (-и after velars and sibilants)", [None]],
-      [u"-а", u"-ы", [u"ц"]],
-      [u"-а", u"-и", ["velar", "sibilant"]],
-    ]],
-    ["1st", "soft", "feminine", [
-      [u"-я", u"-и", [None, "i", u"ь"]]
-    ]],
-    ["2nd", "hard", "masculine", [
-      [u"a consonant (-ъ old-style)", u"-ы (-и after velars and sibilants)",
-        [None]],
-      [u"-ц (-цъ old-style)", u"-ы", [u"ц"]],
-      [u"a velar (plus -ъ old-style)", u"-и", ["velar"]],
-      [u"a sibilant (plus -ъ old-style)", u"-и", ["sibilant"]],
-    ]],
-    ["2nd", "soft", "masculine", [
-      [u"-ь", u"-и", [None]]
-    ]],
-    ["2nd", "palatal", "masculine", [
-      [u"й", u"-и", [None, "i"]]
-    ]],
-    ["2nd", "hard", "neuter", [
-      [u"-о (-e after sibilants and ц)", u"-а", [None]],
-      [u"-о", u"-а", ["velar"]],
-      [u"-е", u"-а", ["sibilant", u"ц"]],
-    ]],
-    ["2nd", "soft", "neuter", [
-      [u"-е (stressed usually -ё)", u"-я", [None, "i", u"ь"]]
-    ]],
-    ["3rd", "", "feminine", [
-      [u"-ь", u"-и", [None]]
-    ]],
-    ["3rd", "", "neuter", [
-      [u"-мя", u"-мена or -мёна", [None]]
-    ]],
-    ["invariable", None, None, [
-      [None, None, [None]]
-    ]],
+genders = ["masculine", "feminine", "neuter"]
+stem_types = ["hard-stem", "soft-stem", "velar-stem", "sibilant-stem",
+  u"ц-stem", "vowel-stem", "i-stem", "3rd-declension"]
+genders_stems_stress = [["masculine", [
+    ["hard-stem", ["1", "2", "3", "5"]],
+    ["soft-stem", ["1", "2", "3", "5", "6"]],
+    ["velar-stem", ["1", "2", "3", "4", "5"]],
+    ["sibilant-stem", ["1", "2", "3", "5"]],
+    [u"ц-stem", ["1", "2"]],
+    ["vowel-stem", ["1", "2", "3"]],
+    ["i-stem", ["1"]],
+  ]],
+  ["feminine", [
+    ["hard-stem", ["1", "2", "4", "6"]], # FIXME: Check for 4*, 6*
+    ["soft-stem", ["1", "2", "4", "5", "6"]],
+    ["velar-stem", ["1", "2", "4", "6"]],
+    ["sibilant-stem", ["1", "2", "4", "6"]],
+    [u"ц-stem", ["1"]],
+    ["vowel-stem", ["1", "2", "4", "5", "6"]], # FIXME: Check this
+    ["i-stem", ["1"]],
+    ["3rd-declension", ["1", "5"]],
+  ]],
+  ["neuter", [
+    ["hard-stem", ["1", "2", "3", "4"]],
+    ["soft-stem", ["1", "3"]],
+    ["velar-stem", ["1", "2"]],
+    ["sibilant-stem", ["1"]],
+    [u"ц-stem", ["1", "3"]],
+    ["vowel-stem", ["1", "2", "4"]],
+    ["i-stem", ["1", "2"]],
+    ["3rd-declension", ["3"]],
+  ]],
 ]
+
 endings = [
     ("a consonant", u"-а"), ("a consonant", u"-ья"),
     (u"-ъ", u"-а"), (u"-ъ", u"-ья"),
@@ -55,7 +49,6 @@ endings = [
     (u"suffix -ёнок", u"-ята"), (u"suffix -онок", u"-ата"),
     (u"suffix -ёнокъ", u"-ята"), (u"suffix -онокъ", u"-ата"),
     (u"suffix -ин", u"-e"), (u"suffix -инъ", u"-е"),
-    (u"suffix -мя", u"-мена"), (u"suffix -мя", u"-мёна"),
 ]
 sgendings = [u"-ё", u"stressed -е", u"-ьё"]
 cases = ["nominative", "genitive", "dative", "accusative", "instrumental",
@@ -86,24 +79,16 @@ for c in cases:
   for n in numbers:
     create_cat("~ with irregular %s %s" % (c, n),
         ["irregcase", "%s %s" % (c, n)])
-for decl, hard, gender, sgplstems in decls:
-  if decl == "invariable":
-    create_cat("invariable ~", ["decl", "invariable"])
-    continue
-  elif decl == "1st":
-    cat = "1st-declension %s ~" % hard
-  elif decl == "2nd":
-    cat = "2nd-declension %s normally-%s ~" % (hard, gender)
-  else:
-    assert(decl == "3rd")
-    cat = "3rd-declension normally-%s ~" % gender
-  for sg, pl, stems in sgplstems:
-    for stem in stems:
-      if not stem:
-        create_cat(cat, ["decl", decl, hard, gender, sg, pl])
-      else:
-        create_cat("%s-stem %s" % (stem, cat),
-            ["decl", decl, hard, gender, sg, pl, stem])
+create_cat("invariable ~", ["stemgender"])
+for gender in genders:
+  for stem_type in stem_types:
+    if gender == "masculine" and stem_type == "3rd-declension":
+      continue
+    create_cat("%s %s-type ~" % (stem_type, gender), ["stemgender"])
+for gender, stem_stresses in genders_stems_stress:
+  for stem, stresses in stem_stresses:
+    for stress in stresses:
+      create_cat("%s %s-type accent-%s ~" % (stem, gender, stress), ["stemgenderstress"])
 
 for sg, pl in endings:
   cat = "~ ending in %s with plural %s" % (sg, pl)
