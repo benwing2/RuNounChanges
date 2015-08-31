@@ -410,7 +410,7 @@ local function categorize(stress, decl_class, args)
 		if not override then
 			return true
 		end
-		assert(suffix == com.remove_accents(suffix))		
+		assert(suffix == com.remove_accents(suffix))
 		override = canonicalize_override(override, args, ispl)
 		for _, x in ipairs(override) do
 			local entry, notes = m_table_tools.get_notes(x)
@@ -591,7 +591,7 @@ local function do_show(frame, old)
 	if args["pl"] or args["pl2"] or args["pl3"] or args["pl4"] or args["pl5"] then
 		track("pl")
 	end
-	
+
 	-- Gather arguments into an array of STEM_SET objects, containing
 	-- (potentially) elements 1, 2, 3, 4, 5, corresponding to accent pattern,
 	-- stem, declension type, bare stem, pl stem and coming from consecutive
@@ -2356,7 +2356,6 @@ local numbers = {
 	["p"] = "plural",
 }
 
-local form_temp = [=[{term}<br/><span style="color: #888">{tr}</span>]=]
 local old_title_temp = [=[Pre-reform declension of <b lang="ru" class="Cyrl">{lemma}</b>]=]
 local title_temp = [=[Declension of <b lang="ru" class="Cyrl">{lemma}</b>]=]
 
@@ -2447,6 +2446,89 @@ function handle_forms_and_overrides(args)
 	end
 end
 
+-- Subfunction of show_form(), used to implement recursively generating
+-- all combinations of elements from WORD_FORMS (a list, one element per
+-- word, of a list of the forms for a word) and TRAILING_FORMS (a list of
+-- forms, the accumulated suffixes for trailing words so far in the
+-- recursion process). Each time we recur we take the last FORMS item
+-- off of WORD_FORMS and to each form in FORMS we add al elements in
+-- TRAILING_FORMS, passing the newly generated list of items down the
+-- next recursion level with the shorter WORD_FORMS. We end up
+-- returning a string to insert into the Wiki-markup table.
+function show_form_1(word_forms, trailing_forms, lemma)
+	if #word_forms == 0 then
+		local russianvals = {}
+		local latinvals = {}
+		local lemmavals = {}
+
+		-- Accumulate separately the Russian and transliteration into
+		-- RUSSIANVALS and LATINVALS, then concatenate each down below.
+		-- However, if LEMMA, we put each transliteration directly
+		-- after the corresponding Russian, in parens, and put the results
+		-- in LEMMAVALS, which get concatenated below. (This is used in the
+		-- title of the declension table.) (Actually, currently we don't
+		-- include the translit in the declension table title.)
+
+		if #trailing_forms == 1 and trailing_forms[1] == "-" then
+			return "&mdash;"
+		end
+
+		for _, form in ipairs(trailing_forms) do
+			local is_adj = rfind(form, "<adj>")
+			form = rsub(form, "<adj>", "")
+			local entry, notes = m_table_tools.get_notes(form)
+			local ruspan, trspan
+			if old then
+				ruspan = m_links.full_link(com.make_unstressed(entry), entry, lang, nil, nil, nil, {tr = "-"}, false) .. notes
+			else
+				ruspan = m_links.full_link(entry, nil, lang, nil, nil, nil, {tr = "-"}, false) .. notes
+			end
+			local nolinks = m_links.remove_links(entry)
+			trspan = (is_adj and m_ru_translit.tr_adj(nolinks) or lang:transliterate(nolinks)) .. notes
+			trspan = "<span style=\"color: #888\">" .. trspan .. "</span>"
+
+			if lemma then
+				-- ut.insert_if_not(lemmavals, ruspan .. " (" .. trspan .. ")")
+				ut.insert_if_not(lemmavals, ruspan)
+			else
+				ut.insert_if_not(russianvals, ruspan)
+				ut.insert_if_not(latinvals, trspan)
+			end
+		end
+
+		if lemma then
+			return table.concat(lemmavals, ", ")
+		else
+			local russian_span = table.concat(russianvals, outersep)
+			local latin_span = table.concat(latinvals, outersep)
+			return russian_span .. "<br />" .. latin_span
+		end
+	else
+		local last_forms = table.remove(word_forms)
+		local new_trailing_forms = {}
+		for _, form in ipairs(last_forms) do
+			if #word_forms > 0 then form = ' ' .. form end
+			for _, trailing_form in ipairs(trailing_forms) do
+				table.insert(new_trailing_forms, form .. trailing_form)
+			end
+		end
+		return show_form_1(word_forms, new_trailing_forms, lemma)
+	end
+end
+
+-- Generate a string to substitute into a particular form in a Wiki-markup
+-- table. WORD_FORMS is a list, one for each word, of the possible forms for
+-- that word. Each element of the list is a list of possible forms.
+-- We loop over all possible combinations of elements from each array; this
+-- requires recursion.
+function show_form(word_forms, old, lemma)
+	-- We need to start the recursion with the second parameter containing
+	-- one blank element rather than no elements, otherwise no elements
+	-- will be propagated to the next recursion level.
+	return show_form_1(word_forms, {""}, old, lemma)
+end
+
+
 -- Make the table
 function make_table(args)
 	local anim = args.a
@@ -2455,7 +2537,7 @@ function make_table(args)
 	args.after_title = after_titles[anim]
 	args.number = numbers[numb]
 
-	args.lemma = m_links.remove_links((numb == "p") and table.concat(args.nom_pl, ", ") or table.concat(args.nom_sg, ", "))
+	args.lemma = numb == "p" and show_form(args.nom_pl, old, true) or show_form(args.nom_sg, old, true)
 	args.title = args.title or
 		strutils.format(old and old_title_temp or title_temp, args)
 
@@ -2477,28 +2559,7 @@ function make_table(args)
 
 	for _, case in ipairs(cases) do
 		if args[case] then
-			if #args[case] == 1 and args[case][1] == "-" then
-				args[case] = "&mdash;"
-			else
-				local ru_vals = {}
-				local tr_vals = {}
-				for i, x in ipairs(args[case]) do
-					local is_adj = rfind(x, "<adj>")
-					x = rsub(x, "<adj>", "")
-					local entry, notes = m_table_tools.get_notes(x)
-					if old then
-						ut.insert_if_not(ru_vals, m_links.full_link(com.make_unstressed(entry), entry, lang, nil, nil, nil, {tr = "-"}, false) .. notes)
-					else
-						ut.insert_if_not(ru_vals, m_links.full_link(entry, nil, lang, nil, nil, nil, {tr = "-"}, false) .. notes)
-					end
-					local nolinks = m_links.remove_links(entry)
-					local entrytr = is_adj and m_ru_translit.tr_adj(nolinks) or lang:transliterate(nolinks)
-					ut.insert_if_not(tr_vals, entrytr .. notes)
-				end
-				local term = table.concat(ru_vals, ", ")
-				local tr = table.concat(tr_vals, ", ")
-				args[case] = strutils.format(form_temp, {["term"] = term, ["tr"] = tr})
-			end
+			args[case] = show_form({args[case]}, old, false)
 		end
 	end
 
