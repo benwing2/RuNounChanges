@@ -8,6 +8,7 @@ import blib
 from blib import msg, rmparam, getparam
 
 save = False
+mockup = False
 
 ru_decl_noun_cases = [
   "nom_sg", "nom_pl", "gen_sg", "gen_pl", "dat_sg", "dat_pl",
@@ -38,6 +39,8 @@ matching_stress_patterns["none"]["ending"] = ["2"]
 site = pywikibot.Site()
 
 def trymatch(forms, args, pagemsg):
+  if mockup:
+    return True
   tempcall = "{{ru-noun-forms|" + "|".join(args) + "}}"
   result = site.expand_text(tempcall)
   pred_forms = {}
@@ -74,11 +77,11 @@ def is_unstressed(word):
   return not re.search(ur"[ё" + AC + GR + "]", word)
 
 def is_one_syllable(word):
-  return len(re.sub("[^" + vowels + "]", "", word) == 1)
+  return len(re.sub("[^" + vowels + "]", "", word)) == 1
 
 # assumes word is unstressed
 def make_ending_stressed(word):
-  word = re.sub("([" + vowels_no_jo + "])([^" + vowels_no_jo + "])*$",
+  word = re.sub("([" + vowels_no_jo + "])([^" + vowels_no_jo + "]*)$",
       r"\1" + AC + r"\2", word)
   return word
 
@@ -134,9 +137,8 @@ def separate_multiwords(forms):
   for case in forms:
     for multiform in re.split(r"\s+,\s+", forms[case]):
       formwords = re.split(r"\s+", multiform)
-      for i in xrange(len(formwords)):
-        if len(words) < i:
-          words.append({})
+      while len(words) < len(formwords):
+        words.append({})
       i = 0
       for word in formwords:
         if case in words[i]:
@@ -147,7 +149,7 @@ def separate_multiwords(forms):
   return words
 
 def infer_decl(t, noungender, pagemsg):
-  tname = unicode(t.name)
+  tname = unicode(t.name).strip()
   forms = {}
 
   # Initialize all cases to blank in case we don't set them again later
@@ -173,7 +175,7 @@ def infer_decl(t, noungender, pagemsg):
   i = 1
   for case in getcases:
     if case:
-      form = getparam(t, i)
+      form = getparam(t, i).strip()
       if case == "pre_sg" or case == "pre_pl":
         form = re.sub(u"^о(б|бо)? ", "", form) # eliminate leading preposition
       forms[case] = form
@@ -198,7 +200,7 @@ def infer_decl(t, noungender, pagemsg):
           unicode(t))
       # FIXME, handle this better
       return None
-    animacy = animacies[0] if animacies else []
+    animacy = [animacies[0]] if animacies else []
     if animacy == ["a=in"]:
       animacy = []
     # FIXME, eventually we want to do something similar for number in case
@@ -228,7 +230,7 @@ def infer_word(forms, number, numonly, pagemsg):
       break
   if allsame:
     pagemsg("Found invariable word %s" % caseforms[0])
-    return [caseforms[0], "*"]
+    return ["", caseforms[0], "*"]
 
   nompl = forms["nom_pl"]
   gensg = forms["gen_sg"]
@@ -259,8 +261,8 @@ def infer_word(forms, number, numonly, pagemsg):
         return None
 
     # FIXME: Adjectives in -ий of the +ьий type
-    if (re.match(make_unstressed(nomsg), u"^.*([ыиіо]й|[яаь]я|[oeь]e)$") or
-        numonly == "pl" and re.match(make_unstressed(nompl), u"^.*[ыи]e$")):
+    if (re.match(u"^.*([ыиіо]й|[яаь]я|[oeь]e)$", make_unstressed(nomsg)) or
+        numonly == "pl" and re.match(u"^.*[ыи]e$", make_unstressed(nompl))):
       args = ["", nomsg, "+"] + anim + number
       if trymatch(forms, args, pagemsg):
         pagemsg("Found a match: {{ru-noun-table|%s}}" % "|".join(args))
@@ -276,7 +278,7 @@ def infer_word(forms, number, numonly, pagemsg):
       stem = try_to_stress(m.group(1))
       ending = m.group(2)
       if m.group(3) or ending == u"ё":
-        stress = "end"
+        stress = "ending"
       else:
         stress = "stem"
 
@@ -338,7 +340,7 @@ def infer_word(forms, number, numonly, pagemsg):
             else:
               pagemsg("Found masculine consonant-stem nom sg %s" % nomsg)
             if m.group(3):
-              stress = "end"
+              stress = "ending"
             else:
               stress = "stem"
             if stem == nomsgstem:
@@ -367,7 +369,7 @@ def infer_word(forms, number, numonly, pagemsg):
         plstress = m.group(1) and "ending" or "stem"
     if numonly == "sg":
       plstress = "none"
-    if numony == "pl":
+    if numonly == "pl":
       stress = "none"
     if stress == "any" or plstress == "any":
       pagemsg("WARNING: Using all stress patterns")
@@ -406,9 +408,9 @@ def infer_word(forms, number, numonly, pagemsg):
 
 def infer_one_page_decls(page, index, text):
   def pagemsg(txt):
-    msg("Page %s %s: %s" % (index, unicode(page.title()), text))
+    msg("Page %s %s: %s" % (index, unicode(page.title()), txt))
   genders = set()
-  for t in text.filter_tempates():
+  for t in text.filter_templates():
     if unicode(t.name) == "ru-noun":
       m = re.match("^([mfn])", getparam(t, "2"))
       if not m:
@@ -417,7 +419,7 @@ def infer_one_page_decls(page, index, text):
         genders.add(m.group(1))
 
   for t in text.filter_templates():
-    if unicode(t.name) in ["ru-decl-noun", "ru-decl-noun-unc", "ru-decl-noun-pl"]:
+    if unicode(t.name).strip() in ["ru-decl-noun", "ru-decl-noun-unc", "ru-decl-noun-pl"]:
       if unicode(t.name) == "ru-decl-noun-pl":
         genders = list(genders)
         if len(genders) == 0:
@@ -452,5 +454,36 @@ def iter_pages(iterator):
     i += 1
     yield page, i
 
-for page, index in iter_pages(blib.references("Template:ru-decl-noun")):
-  blib.do_edit(page, index, infer_one_page_decls, save=save)
+test_templates = [
+  u"""{{ru-decl-noun
+    |сре́дний па́лец|сре́дние па́льцы
+    |сре́днего па́льца|сре́дних па́льцев
+    |сре́днему па́льцу|сре́дним па́льцам
+    |сре́дний па́лец|сре́дние па́льцы
+    |сре́дним па́льцем|сре́дними па́льцами
+    |о сре́днем па́льце|о сре́дних па́льцах}}""",
+  u"""{{ru-decl-noun
+    |лист Мёбиуса|листы́ Мёбиуса
+    |листа́ Мёбиуса|листо́в Мёбиуса
+    |листу́ Мёбиуса|листа́м Мёбиуса
+    |лист Мёбиуса|листы́ Мёбиуса
+    |листо́м Мёбиуса|листа́ми Мёбиуса
+    |о листе́ Мёбиуса|о листа́х Мёбиуса}}""",
+  u"""{{ru-decl-noun|ма́льчик для битья́|ма́льчики для битья́|ма́льчика для битья́|ма́льчиков для битья́|ма́льчику для битья́|ма́льчикам для битья́|ма́льчика для битья́|ма́льчиков для битья́|ма́льчиком для битья́|ма́льчиками для битья́|о ма́льчике для битья́|о ма́льчиках для битья́}}"""]
+def test_infer():
+  class Page:
+    def title(self):
+      return "test_infer"
+  for pagetext in test_templates:
+    text = blib.parse(pagetext)
+    page = Page()
+    newtext, comment = infer_one_page_decls(page, 1, text)
+    msg("newtext = %s" % unicode(newtext))
+    msg("comment = %s" % comment)
+
+if mockup:
+  test_infer()
+else:
+  for page, index in iter_pages(blib.references("Template:ru-decl-noun")):
+    blib.do_edit(page, index, infer_one_page_decls, save=save)
+
