@@ -558,6 +558,7 @@ local test_new_ru_noun_module = false
 
 -- Forward functions
 
+local do_show_1
 local determine_decl
 local handle_forms_and_overrides
 local handle_overall_forms_and_overrides
@@ -1167,6 +1168,7 @@ local numbered_to_zaliznyak_stress_pattern = {
 	["6*"] = "f'",
 }
 
+-- Used by do_generate_forms().
 local function arg1_is_stress(arg1)
 	if not arg1 then return false end
 	for _, arg in ipairs(rsplit(arg1, ",")) do
@@ -1175,6 +1177,14 @@ local function arg1_is_stress(arg1)
 		end
 	end
 	return true
+end
+
+-- Used by do_generate_forms(), handling a word joiner argument
+-- of the form 'join:JOINER'.
+local function extract_word_joiner(spec)
+	word_joiner = rmatch(args[i], "^join:(.*)$")
+	assert(word_joiner)
+	return word_joiner
 end
 
 local function determine_headword_gender(args, sgdc, gender)
@@ -1225,7 +1235,7 @@ function export.do_generate_forms(args, old)
 	-- is a string indicating how to join the word to the next one.
 	local per_word_info = {}
 
-	-- Gather arguments into an array of ARG_SET objects, containing
+	-- Gather arguments into a list of ARG_SET objects, containing
 	-- (potentially) elements 1, 2, 3, 4, 5, corresponding to accent pattern,
 	-- stem, declension type, bare stem, pl stem and coming from consecutive
 	-- numbered parameters. Sets of declension parameters are separated by the
@@ -1243,7 +1253,7 @@ function export.do_generate_forms(args, old)
 	local arg_set = {}
 	for i=1,(max_arg + 1) do
 		local end_arg_set = false
-		local end_word = true
+		local end_word = false -- FIXME, is this correct?
 		local word_joiner
 		if i == max_arg + 1 then
 			end_arg_set = true
@@ -1256,14 +1266,12 @@ function export.do_generate_forms(args, old)
 		elseif rfind(args[i], "^join:") then
 			end_arg_set = true
 			end_word = true
-			word_joiner = rmatch(args[i], "^join:(.*)$")
-			assert(word_joiner)
+			word_joiner = extract_word_joiner(args[i])
 		elseif args[i] == "or" then
 			end_arg_set = true
 		end
 
 		if end_arg_set then
-			local setnum = #arg_sets + 1
 			table.insert(arg_sets, arg_set)
 			arg_set = {}
 			offset = i
@@ -1286,6 +1294,107 @@ function export.do_generate_forms(args, old)
 		end
 	end
 
+	args.old = args.old or old
+	return do_show_1(args, per_word_info)
+end
+
+local function do_show_multi(frame)
+	local args = clone_args(frame)
+
+	-- This is a list with each element corresponding to a word and
+	-- consisting of a two-element list, STEM_SET and JOINER, where STEM_SET
+	-- is a list of STEM_SET objects, one per alternative stem, and JOINER
+	-- is a string indicating how to join the word to the next one.
+	local per_word_info = {}
+
+	-- Find maximum-numbered arg, allowing for holes (FIXME: Is this needed
+	-- here? Will there be holes?)
+	local max_arg = 0
+	for k, v in pairs(args) do
+		if type(k) == "number" and k > max_arg then
+			max_arg = k
+		end
+	end
+
+	-- Gather arguments into a list of STEM_SET objects, containing
+	-- (potentially) elements 1, 2, 3, 4, 5, corresponding to accent pattern,
+	-- stem, declension type, bare stem, pl stem. They come from a single
+	-- argument of the form STEM:ACCENTPATTERN:BARE:PL where all but STEM may
+	-- (and probably will be) omitted and STEM may be of the following forms:
+	--   STEM (for a noun with auto-detected decl class),
+	--   STEM*DECL (for a noun with explicit decl class),
+	--   STEM* (for an invariable word)
+	--   STEM+ (for an adjective with auto-detected decl class)
+	--   STEM+DECL (for an adjective with explicit decl class)
+	-- Sets of stem parameters are separated by the word "or".
+	local stem_sets = {}
+
+	local continue_stem_sets = true
+	for i=1,(max_arg + 1) do
+		local end_word = false
+		local word_joiner
+		local process_arg = false
+		if i == max_arg + 1 then
+			end_word = true
+			word_joiner = ""
+		elseif args[i] == "-" then
+			end_word = true
+			word_joiner = "-"
+		elseif rfind(args[i], "^join:") then
+			end_word = true
+			word_joiner = extract_word_joiner(args[i])
+		elseif args[i] == "or" then
+			continue_stem_sets = true
+		else
+			if continue_stem_sets then
+				continue_stem_sets = false
+			else
+				end_word = true
+				word_joiner = " "
+			end
+			process_arg = true
+		end
+
+		if end_word then
+			table.insert(per_word_info, {stem_sets, word_joiner})
+			stem_sets = {}
+		end
+		if process_arg then
+			local vals = rsplit(args[i], ":")
+			if #vals > 4 then
+				error("Can't specify more than 4 colon-separated arguments of stem set: " .. args[i])
+			end
+			local stem_set = {}
+			stem_set[1] = vals[2]
+			stem_set[2] = vals[1]
+			stem_set[3] = ""
+			stem_set[4] = vals[3]
+			stem_set[5] = vals[4]
+			local adj_stem, adj_type = rmatch(stem_set[1], "^(.*)(%+.*)$")
+			if adj_stem then
+				stem_set[1] = adj_stem
+				stem_set[3] = adj_type
+			else
+				local noun_stem, noun_type = rmatch(stem_set[1], "^(.*)%*(.*)$")
+				if noun_stem then
+					stem_set[1] = noun_stem
+					if noun_type == "" then -- invariable
+						stem_set[3] == "-"
+					else
+						stem_set[3] = noun_type
+					end
+				end
+			end
+			table.insert(stem_sets, stem_set)
+		end
+	end
+
+	return do_show_1(args, per_word_info)
+end
+
+-- Implementation of do_show() and do_show_multi(), which have equivalent
+-- functionality but different calling sequence.
+do_show_1 = function(args, per_word_info)
 	local function verify_animacy_value(val)
 		if not val then return nil end
 		local short = usub(val, 1, 1)
@@ -1332,6 +1441,7 @@ function export.do_generate_forms(args, old)
 	args.internal_notes = {}
 	-- Superscript footnote marker at beginning of note, similarly to what's
 	-- done at end of forms.
+	local old = args.old
 	if args.notes then
 		local notes, entry = m_table_tools.get_initial_notes(args.notes)
 		args.notes = notes .. entry
@@ -1756,6 +1866,12 @@ end
 -- The main entry point for old declension tables.
 function export.show_old(frame)
 	return do_show(frame, true)
+end
+
+-- The new entry point, esp. for multiple words (but works fine for
+-- single words).
+function export.show_multi(frame)
+	return do_show_multi(frame)
 end
 
 local function get_form(forms)
