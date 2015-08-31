@@ -179,12 +179,57 @@ def infer_decl(t, noungender):
       forms[case] = form
     i += 1
 
-  if " " in forms["nom_sg"]:
-    msg("Unable to handle multi-word lemma: %s" % forms["nom_sg"])
-    return None
-  return infer_word(forms, number, numonly)
+  lemma = forms["nom_pl"] if numonly == "pl" else forms["nom_sg"]
+  if " " in lemma:
+    words = separate_multiwords(forms)
+    argses = []
+    wordno = 0
+    for wordforms in words:
+      wordno += 1
+      msg("Inferring word #1: %s" % (wordforms["nom_pl"] if numonly == "pl" else wordforms["nom_sg"]))
+      args = infer_word(wordforms, number, numonly)
+      if not args:
+        msg("Unable to infer word #%s: %s" % (wordno, unicode(t)))
+        return None
+      argses.append(args)
+    animacies = [x for args in argses for x in args if x in ["a=in", "a=an"]]
+    if "a=in" in animacies and "a=an" in animacies:
+      msg("WARNING: Conflicting animacies in multi-word expression: %s" %
+          unicode(t))
+      # FIXME, handle this better
+      return None
+    animacy = animacies[0] if animacies else []
+    if animacy == ["a=in"]:
+      animacy = []
+    # FIXME, eventually we want to do something similar for number in case
+    # there are mismatched numbers. For now we always assume the same
+    # number restriction for all words (same as passed in, based on the
+    # manual template name).
+    allargs = []
+    for args in argses:
+      filterargs = [x for x in args if not re.match("[an]=", x)]
+      if allargs:
+        allargs.append("_")
+      allargs.extend(filterargs)
+    allargs += animacy + number
+    msg("Found a multi-word match: {{ru-noun-table|%s}}" % "|".join(allargs))
+    return allargs
+  else:
+    args = infer_word(forms, number, numonly)
+    return [x for x in args if x != "a=in"]
 
 def infer_word(forms, number, numonly):
+  # Check for invariable word
+  caseforms = forms.values()
+  allsame = True
+  for caseform in caseforms[1:]:
+    if caseform != caseforms[0]:
+      allsame = False
+      break
+  if allsame:
+    msg("Found invariable word %s" % caseforms[0])
+    return [caseforms[0], "*"]
+
   nompl = forms["nom_pl"]
   gensg = forms["gen_sg"]
   genpl = try_to_stress(forms["gen_pl"])
@@ -198,13 +243,14 @@ def infer_word(forms, number, numonly):
     if numonly == "sg":
       if forms["acc_sg"] == forms["gen_sg"]:
         anim = ["a=an"]
-      else:
+      elif forms["acc_sg"] == forms["nom_sg"]:
+        anim = ["a=in"]
         # Can't check for nom/acc sg equal because feminine nouns have all
         # three different
         anim = []
     else:
       if forms["acc_pl"] == forms["nom_pl"]:
-        anim = []
+        anim = ["a=in"]
       elif forms["acc_pl"] == forms["gen_pl"]:
         anim = ["a=an"]
       else:
@@ -356,7 +402,6 @@ def infer_word(forms, number, numonly):
           msg("Found a match: {{ru-noun-table|%s}}" % "|".join(args))
           return args
 
-  msg("Unable to match: %s" % unicode(t))
   return None
 
 def infer_one_page_decls(page, text):
