@@ -160,15 +160,30 @@
 
 TODO:
 
-1. FIXME: Test that omitting a manual form leaves the form as a big dash.
-2. FIXME: Test that omitting a manual form in ru-adjective leaves the form as
+1. FIXME: Multi-word issues:
+   -- Setting n=pl when auto-detecting a plural lemma. How does that interact
+      with multi-word stuff? (DONE)
+   -- compute_heading() -- what to do with multiple words? I assume we should
+      display info on the first noun (non-invariable, non-adjectival), and
+	  on the first adjectival otherwise, and finally on an invariable (DONE)
+   -- args.genders -- it should presumably come from the same word as is used
+      in compute_heading(); but we should allow the overall gender to be
+	  overridden, at least in ru-noun+ (DONE)
+   -- Make sure internal_notes handled correctly; we may run into issues with
+      multiple internal notes from different words, if we're not careful to
+	  use different footnote symbols for each type of footnote (which we don't
+	  do currently).
+   -- Handling default lemma: With multiple words, we should probably split
+      the page name on spaces and default each word in turn
+2. FIXME: Test that omitting a manual form leaves the form as a big dash.
+2a. FIXME: Test that omitting a manual form in ru-adjective leaves the form as
    a big dash.
-2a. If -е is used after a sibilant or ц as an explicit decl, it should
+2b. If -е is used after a sibilant or ц as an explicit decl, it should
    be converted to -о. Consider doing the same thing for explicit adj decl
    +ий after velar/sibilant/ц. [IMPLEMENTED. NEED TO TEST.]
-2b. Changed pltailall= to add to all forms, not just last one; added
+2c. Changed pltailall= to add to all forms, not just last one; added
    CASE_NUM_tailall. [NEED TO TEST.]
-2c. FIXME: For -ишко and -ище diminutives, should add an appropriate
+2d. FIXME: For -ишко and -ище diminutives, should add an appropriate
    category of some sort (currently marked by colloqfem= in category).
 3. FIXME: Consider putting a triangle △ (U+25B3) or the smaller variant
    ▵ (U+25B5) next to each irregular form. (We have the following cases:
@@ -416,12 +431,19 @@ local function track(page)
 	return true
 end
 
-local function ine(val)
-	if val == "" then
-		return nil
-	else
-		return val
+-- Fancy version of ine() (if-not-empty). Converts empty string to nil,
+-- but also strips single or double quotes, to allow for embedded spaces.
+local function ine(arg)
+	if arg == "" then return nil end
+	local inside_quotes = rmatch(arg, '^"(.*)"$')
+	if inside_quotes then
+		return inside_quotes
 	end
+	inside_quotes = rmatch(arg, "^'(.*)'$")
+	if inside_quotes then
+		return inside_quotes
+	end
+	return arg
 end
 
 -- Clone parent's args while also assigning nil to empty strings.
@@ -538,6 +560,7 @@ local test_new_ru_noun_module = false
 
 local determine_decl
 local handle_forms_and_overrides
+local handle_overall_forms_and_overrides
 local make_table
 local detect_adj_type
 local detect_stress_pattern
@@ -579,7 +602,7 @@ end
 -- stress classes, such as "а/a" or "о-и/d'", which are more or less
 -- equivalent to stem/gender/stress categories, but we also have the same
 -- prefixed by "reducible-stem/" for reducible stems.
-local function tracking_code(stress, orig_decl, decl, args)
+local function tracking_code(stress, orig_decl, decl, args, n, islast)
 	assert(orig_decl)
 	assert(decl)
 	local hint_types = com.get_stem_trailing_letter_type(args.stem)
@@ -674,12 +697,19 @@ local function tracking_code(stress, orig_decl, decl, args)
 		track("explicit-gender/" .. args.explicit_gender)
 	end
 	for _, case in ipairs(cases) do
-		if args[case] and not args.manual then
+		if args[case .. n] and not args.manual then
+			track("override")
+			track("override/" .. case .. n)
+			track("irreg")
+			track("irreg/" .. case .. n)
+			-- questionable use: track_prefix("irreg/" .. case .. "/")
+			-- questionable use: track_prefix("irreg/" .. case .. n .. "/")
+		end
+		if islast and args[case] and not args.manual then
 			track("override")
 			track("override/" .. case)
 			track("irreg")
 			track("irreg/" .. case)
-			-- questionable use: track_prefix("irreg/" .. case .. "/")
 		end
 		if args[case .. "_tail"] then
 			track("casenum-tail")
@@ -810,8 +840,9 @@ end
 -- Insert categories into ARGS.CATEGORIES corresponding to the specified
 -- stress and declension classes and to the form of the stem (e.g. velar,
 -- sibilant, etc.). Also initialize values used to compute the declension
--- heading that describes similar information.
-local function categorize_and_init_heading(stress, decl, args)
+-- heading that describes similar information. N is the number of the
+-- word being processed; ISLAST is true if this is the last word.
+local function categorize_and_init_heading(stress, decl, args, n, islast)
 	local function cat_to_list(cat)
 		if not cat then
 			return {}
@@ -848,9 +879,16 @@ local function categorize_and_init_heading(stress, decl, args)
 	-- Check whether an override for nom_sg or nom_pl still contains the
 	-- normal suffix (which should already have accents removed) in at least
 	-- one of its entries. If no override then of course we return true.
-	local function override_matches_suffix(args, case, suffix)
+	local function override_matches_suffix(args, case, n, suffix)
 		assert(suffix == com.remove_accents(suffix))
-		local override = canonicalize_override(args, case)
+		-- NOTE: It might not be completely correct to pass in args.forms
+		-- here when n == ""; this is different behavior from
+		-- handle_overall_forms_and_overrides(). But args.forms is only used
+		-- to retrieve the dat_sg for handling loc/par, and we're never
+		-- called with loc or par as the value of CASE, so it doesn't matter.
+		-- We add an assert to make sure of this.
+		assert(case ~= "loc" and case ~= "par")
+		local override = canonicalize_override(args, case, args.forms, n)
 		if not override then
 			return true
 		end
@@ -864,7 +902,7 @@ local function categorize_and_init_heading(stress, decl, args)
 		return false
 	end
 
-	local h = args.headings
+	local h = args.heading_info
 
 	assert(decl)
 	local decl_cats = args.old and declensions_old_cat or declensions_cat
@@ -909,9 +947,9 @@ local function categorize_and_init_heading(stress, decl, args)
 			-- determinate in certain old-style adjectives that distinguish
 			-- masculine from feminine/neuter, but this is too rare a case
 			-- to worry about)
-			local gendertext = args.n == "p" and "plural-only" or gender_to_full[sgdc.g]
+			local gendertext = args.thisn == "p" and "plural-only" or gender_to_full[sgdc.g]
 			ut.insert_if_not(h.adjectival, "yes")
-			if args.n ~= "p" then
+			if args.thisn ~= "p" then
 				ut.insert_if_not(h.gender, gender_to_short[sgdc.g])
 			end
 			if sgdc.possadj then
@@ -956,7 +994,7 @@ local function categorize_and_init_heading(stress, decl, args)
 		sgsuffix = com.remove_accents(sgsuffix[1])
 		-- If we are a plurale tantum or if nom_sg is overridden and has
 		-- an unusual suffix, then don't create category for sg suffix
-		if args.n == "p" or not override_matches_suffix(args, "nom_sg", sgsuffix) then
+		if args.thisn == "p" or not override_matches_suffix(args, "nom_sg", n, sgsuffix) or islast and not override_matches_suffix(args, "nom_sg", "", sgsuffix) then
 			sgsuffix = nil
 		end
 	end
@@ -966,7 +1004,7 @@ local function categorize_and_init_heading(stress, decl, args)
 		plsuffix = com.remove_accents(plsuffix[1])
 		-- If we are a singulare tantum or if nom_pl is overridden and has
 		-- an unusual suffix, then don't create category for pl suffix
-		if args.n == "s" or not override_matches_suffix(args, "nom_pl", plsuffix) then
+		if args.thisn == "s" or not override_matches_suffix(args, "nom_pl", n, plsuffix) or islast and not override_matches_suffix(args, "nom_pl", "", plsuffix) then
 			plsuffix = nil
 		end
 	end
@@ -1015,7 +1053,7 @@ local function categorize_and_init_heading(stress, decl, args)
 		insert_cat("adjectival ~")
 	end
 	for _, case in ipairs(cases) do
-		if args[case] then
+		if args[case .. n] or islast and args[case] then
 			local engcase = rsub(case, "^([a-z]*)", {
 				nom="nominative", gen="genitive", dat="dative",
 				acc="accusative", ins="instrumental", pre="prepositional",
@@ -1039,15 +1077,14 @@ end
 
 local function compute_heading(args)
 	if args.manual then
-		args.heading = ""
-		return
+		return ""
 	end
 	local headings = {}
 	local irreg_headings = {}
-	local h = args.headings
-	table.insert(headings, args.a == "a" and "anim" or args.a == "i" and
+	local h = args.heading_info
+	table.insert(headings, args.thisa == "a" and "anim" or args.thisa == "i" and
 		"inan" or "bian")
-	table.insert(headings, args.n == "s" and "sg-only" or args.n == "p" and
+	table.insert(headings, args.thisn == "s" and "sg-only" or args.thisn == "p" and
 		"pl-only" or nil)
 	if #h.gender > 0 then
 		table.insert(headings, table.concat(h.gender, "/") .. "-form")
@@ -1084,11 +1121,35 @@ local function compute_heading(args)
 	if #irreg_headings > 0 then
 		table.insert(headings, "irreg")
 	end
-	args.heading = "(<span style=\"font-size: smaller;\">[[Appendix:Russian nouns#Declension tables|" .. table.concat(headings, " ") .. "]]</span>)"
+	local heading = "(<span style=\"font-size: smaller;\">[[Appendix:Russian nouns#Declension tables|" .. table.concat(headings, " ") .. "]]</span>)"
 	--if #irreg_headings > 0 then
-	--	args.heading = args.heading .. "<br /><span style=\"text-align: center;\">Irregularities: " ..
+	--	heading = heading .. "<br /><span style=\"text-align: center;\">Irregularities: " ..
 	--		table.concat(irreg_headings, " ") .. "</span>"
 	--end
+	return heading
+end
+
+local function compute_overall_heading_and_genders(args)
+	local hinfo = args.per_word_heading_info
+	-- First try for non-adjectival, non-invariable
+	for i=1,#hinfo do
+		if not ut.contains(hinfo[i].stemetc, "invar") and not ut.contains(hinfo[i].adjectival, "yes") then
+			args.heading = args.per_word_heading[i]
+			args.genders = args.per_word_genders[i]
+			return
+		end
+	end
+	-- Then just non-invariable
+	for i=1,#hinfo do
+		if not ut.contains(hinfo[i].stemetc, "invar") then
+			args.heading = args.per_word_heading[i]
+			args.genders = args.per_word_genders[i]
+			return
+		end
+	end
+	-- Finally, do anything
+	args.heading = args.per_word_heading[1]
+	args.genders = args.per_word_genders[1]
 end
 
 --------------------------------------------------------------------------
@@ -1122,7 +1183,7 @@ local function determine_headword_gender(args, sgdc, gender)
 	-- mostly indeterminate (FIXME, not completely with old-style declensions
 	-- but we don't handle that currently).
 	if not gender then
-		if sgdc.adj and args.n == "p" then
+		if sgdc.adj and args.thisn == "p" then
 			gender = nil
 		else
 			gender = sgdc.g
@@ -1131,11 +1192,11 @@ local function determine_headword_gender(args, sgdc, gender)
 
 	-- Determine headword genders
 	gender = gender and gender ~= "none" and gender .. "-" or ""
-	local plsuffix = args.n == "p" and "-p" or ""
+	local plsuffix = args.thisn == "p" and "-p" or ""
 	local hgens
-	if args.a == "a" then
+	if args.thisa == "a" then
 		hgens = {gender .. "an" .. plsuffix}
-	elseif args.a == "i" then
+	elseif args.thisa == "i" then
 		hgens = {gender .. "in" .. plsuffix}
 	else
 		hgens = {gender .. "an" .. plsuffix, gender .. "in" .. plsuffix}
@@ -1158,6 +1219,12 @@ function export.do_generate_forms(args, old)
 	args.suffix = args.suffix or ""
 	args.pos = args.pos or "noun"
 
+	-- This is a list with each element corresponding to a word and
+	-- consisting of a two-element list, ARG_SETS and JOINER, where ARG_SETS
+	-- is a list of ARG_SET objects, one per alternative stem, and JOINER
+	-- is a string indicating how to join the word to the next one.
+	local per_word_info = {}
+
 	-- Gather arguments into an array of ARG_SET objects, containing
 	-- (potentially) elements 1, 2, 3, 4, 5, corresponding to accent pattern,
 	-- stem, declension type, bare stem, pl stem and coming from consecutive
@@ -1175,11 +1242,35 @@ function export.do_generate_forms(args, old)
 	local offset = 0
 	local arg_set = {}
 	for i=1,(max_arg + 1) do
-		if args[i] == "or" or i == max_arg + 1 then
+		local end_arg_set = false
+		local end_word = true
+		local word_joiner
+		if i == max_arg + 1 then
+			end_arg_set = true
+			end_word = true
+			word_joiner = ""
+		elseif args[i] == "_" then
+			end_arg_set = true
+			end_word = true
+			word_joiner = " "
+		elseif rfind(args[i], "^join:") then
+			end_arg_set = true
+			end_word = true
+			word_joiner = rmatch(args[i], "^join:(.*)$")
+			assert(word_joiner)
+		elseif args[i] == "or" then
+			end_arg_set = true
+		end
+
+		if end_arg_set then
 			local setnum = #arg_sets + 1
 			table.insert(arg_sets, arg_set)
 			arg_set = {}
 			offset = i
+			if end_word then
+				table.insert(per_word_info, {arg_sets, word_joiner})
+				arg_sets = {}
+			end
 		else
 			-- If the first argument isn't stress, that means all arguments
 			-- have been shifted to the left one. We want to shift them
@@ -1195,15 +1286,46 @@ function export.do_generate_forms(args, old)
 		end
 	end
 
-	-- Initialize non-stem-specific arguments.
-	args.a = args.a and string.sub(args.a, 1, 1) or "i"
-	args.n = args.n and string.sub(args.n, 1, 1)
-	args.forms = {}
+	local function verify_animacy_value(val)
+		if not val then return nil end
+		local short = usub(val, 1, 1)
+		if short == "a" or short == "i" or short == "b" then
+			return short
+		end
+		error("Animacy value " .. val .. " should be empty or start with 'a' (animate), 'i' (inanimate), or 'b' (both)")
+		return nil
+	end
+
+	local function verify_number_value(val)
+		if not val then return nil end
+		local short = usub(val, 1, 1)
+		if short == "s" or short == "p" then
+			return short
+		end
+		error("Number value " .. val .. " should be empty or start with 's' (singular), 'p' (plural), or 'b' (both)")
+		return nil
+	end
+
+	-- Verify and canonicalize animacy and number
+	for i=1,#per_word_info do
+		args["a" .. i] = verify_animacy_value(args["a" .. i])
+		args["n" .. i] = verify_number_value(args["n" .. i])
+	end
+	args.a = verify_animacy_value(args.a) or "i"
+	args.n = verify_number_value(args.n)
+
+	-- Initialize non-word-specific arguments.
+	--
+	-- The following is a list of WORD_INFO items, one per word, each of
+	-- which a two element list of WORD_FORMS (a table listing the forms for
+	-- each case) and JOINER (a string, indicating how to join the word with
+	-- the next one).
+	args.per_word_info = {}
+	args.per_word_heading_info = {}
+	args.per_word_heading = {}
+	args.per_word_gender = {}
+	args.any_overridden = {}
 	args.categories = {}
-	args.headings = {animacy={}, number={}, gender={}, stress={}, stemetc={},
-		adjectival={}, reducible={}, irreg_nom_pl={}, irreg_gen_pl={},
-		irreg_pl_stem={}, irreg_misc={}}
-	args.genders = {}
 	local function insert_cat(cat)
 		insert_category(args.categories, cat, args.pos)
 	end
@@ -1214,25 +1336,20 @@ function export.do_generate_forms(args, old)
 		local notes, entry = m_table_tools.get_initial_notes(args.notes)
 		args.notes = notes .. entry
 	end
-
 	local decl_sufs = old and declensions_old or declensions
 	local decl_cats = old and declensions_old_cat or declensions_cat
 	local intable = old and internal_notes_table_old or internal_notes_table
 
-	if #arg_sets > 1 then
-		track("multiple-arg-sets")
-		insert_cat("~ with multiple argument sets")
-		track("multiple-declensions")
-		insert_cat("~ with multiple declensions")
-	end
-
 	-- Default lemma defaults to previous lemma, first one to page name.
-	local default_lemma = SUBPAGENAME
+	-- FIXME: With multiple words, we should probably split the page name
+	-- on spaces and default each word in turn
+	local default_lemma
+	local all_stresses_seen
 
-	local all_stresses_seen = {}
-
-	-- Loop over all arg sets.
-	for _, arg_set in ipairs(arg_sets) do
+	-- Made into a function to avoid having to indent a lot of code.
+	-- Process a single arg set of a single word. This inserts the forms
+	-- for the word into args.forms and sets categories and tracking pages.
+	local function do_arg_set(arg_set, n, islast)
 		local stress_arg = arg_set[1]
 		local decl = arg_set[3] or ""
 		local bare = arg_set[4]
@@ -1242,8 +1359,8 @@ function export.do_generate_forms(args, old)
 		if decl == "manual" then
 			decl = "$"
 			args.manual = true
-			if #arg_sets > 1 then
-				error("Can't specify multiple argument sets when manual")
+			if #per_word_info > 1 or #arg_sets > 1 then
+				error("Can't specify multiple words or argument sets when manual")
 			end
 			if bare or pl then
 				error("Can't specify optional stem parameters when manual")
@@ -1265,6 +1382,9 @@ function export.do_generate_forms(args, old)
 		end
 		default_lemma = lemma
 
+		args.thisa = args["a" .. n] or args.a
+		args.thisn = args["n" .. n] or args.n
+
 		-- Convert lemma and decl arg into stem and canonicalized decl.
 		-- This will autodetect the declension from the lemma if an explicit
 		-- decl isn't given.
@@ -1277,8 +1397,12 @@ function export.do_generate_forms(args, old)
 				determine_decl(lemma, decl, args)
 		end
 		if was_plural then
+			args.thisn = args.thisn or "p"
 			args.n = args.n or "p"
+		elseif decl != "$" then
+			args.thisn = args.thisn or "b"
 		end
+
 		args.explicit_gender = gender
 
 		-- Check for explicit allow-unaccented indication; if not given,
@@ -1401,7 +1525,7 @@ function export.do_generate_forms(args, old)
 					if rfind(stress, "^f") then
 						stem = com.make_beginning_stressed(stem)
 					elseif (rfind(stress, "^[bd]") or
-						args.n == "p" and ending_stressed_pl_patterns[stress]) then
+						args.thisn == "p" and ending_stressed_pl_patterns[stress]) then
 						stem = com.make_ending_stressed(stem)
 					elseif com.needs_accents(stem) then
 						error("Stem " .. stem .. " requires an accent")
@@ -1512,7 +1636,7 @@ function export.do_generate_forms(args, old)
 				-- canonicalize_decl()
 				assert(decl_cats[real_decl])
 				assert(decl_sufs[real_decl])
-				tracking_code(stress, orig_decl, real_decl, args)
+				tracking_code(stress, orig_decl, real_decl, args, n, islast)
 				do_stress_pattern(stress, args, decl_sufs[real_decl], number)
 
 				-- handle internal notes
@@ -1534,20 +1658,53 @@ function export.do_generate_forms(args, old)
 				track("pointless-bare/" .. decl)
 			end
 
-			categorize_and_init_heading(stress, decl, args)
+			categorize_and_init_heading(stress, decl, args, n, islast)
 		end
 	end
 
-	if #all_stresses_seen > 1 then
-		track("multiple-accent-patterns")
-		insert_cat("~ with multiple accent patterns")
-		track("multiple-declensions")
-		insert_cat("~ with multiple declensions")
+	local n = 0
+	for _, word_info in ipairs(per_word_info) do
+		n = n + 1
+		local islast = n == #per_word_info
+		local arg_sets, joiner = word_info[1], word_info[2]
+		args.forms = {}
+		args.heading_info = {animacy={}, number={}, gender={}, stress={},
+			stemetc={}, adjectival={}, reducible={},
+			irreg_nom_pl={}, irreg_gen_pl={}, irreg_pl_stem={}, irreg_misc={}}
+		args.genders = {}
+
+		if #arg_sets > 1 then
+			track("multiple-arg-sets")
+			insert_cat("~ with multiple argument sets")
+			track("multiple-declensions")
+			insert_cat("~ with multiple declensions")
+		end
+
+		default_lemma = SUBPAGENAME
+		all_stresses_seen = {}
+
+		-- Loop over all arg sets.
+		for _, arg_set in ipairs(arg_sets) do
+			do_arg_set(arg_set, n, islast)
+		end
+
+		if #all_stresses_seen > 1 then
+			track("multiple-accent-patterns")
+			insert_cat("~ with multiple accent patterns")
+			track("multiple-declensions")
+			insert_cat("~ with multiple declensions")
+		end
+
+		table.insert(args.per_word_heading_info, args.heading_info)
+		table.insert(args.per_word_heading, compute_heading(args))
+		table.insert(args.per_word_genders, args.genders)
+
+		handle_forms_and_overrides(args, n, islast)
+		table.insert(args.per_word_info, {args.forms, joiner})
 	end
 
-	compute_heading(args)
-
-	handle_forms_and_overrides(args)
+	compute_overall_heading_and_genders(args)
+	handle_overall_forms_and_overrides(args)
 
 	-- Test code to compare existing module to new one.
 	if test_new_ru_noun_module then
@@ -1555,7 +1712,7 @@ function export.do_generate_forms(args, old)
 		local newargs = m_new_ru_noun.do_generate_forms(orig_args, old)
 		for _, case in ipairs(cases) do
 			local is_pl = rfind(case, "_pl")
-			if args.n == "s" and is_pl or args.n == "p" and not is_pl then
+			if args.thisn == "s" and is_pl or args.thisn == "p" and not is_pl then
 				-- Don't need to check cases that won't be displayed.
 			elseif not ut.equals(args[case], newargs[case]) then
 				local monosyl_accent_diff = false
@@ -1889,7 +2046,7 @@ local function detect_lemma_type(lemma, gender, args, variant)
 	base, ending = rmatch(lemma, "^(.*[аяАЯ]́?[нН])([иИ]́?[нН][ъЪ]?)$")
 	-- Need to check the animacy to avoid nouns like маиганин, цианин,
 	-- меланин, соланин, etc.
-	if base and args.a == "a" then
+	if base and args.thisa == "a" then
 		return base, ulower(ending)
 	end
 	base, ending = rmatch(lemma, "^(.*)([мМ][яЯ]́?)$")
@@ -1931,13 +2088,13 @@ local function detect_lemma_type(lemma, gender, args, variant)
 		-- because some masculine nouns have feminine endings, which look
 		-- like irregular plurals.
 		if gender == "m" then
-			if args.n == "p" or variant == "-ья" then
+			if args.thisn == "p" or variant == "-ья" then
 				base, ending = rmatch(lemma, "^(.*)([ьЬ][яЯ]́?)$")
 				if base then
 					return base, (args.old and "ъ-ья" or "-ья"), ending
 				end
 			end
-			if args.n == "p" or args.want_sc1 then
+			if args.thisn == "p" or args.want_sc1 then
 				base, ending = rmatch(lemma, "^(.*)([аА]́?)$")
 				if base then
 					return base, (args.old and "ъ-а" or "-а"), ending
@@ -2125,7 +2282,7 @@ determine_decl = function(lemma, decl, args)
 				error("Declension variant " .. variant .. " should be used with the masculine gender")
 			end
 			if variant == "-ишко" then
-				if args.a == "a" then
+				if args.thisa == "a" then
 					error("Declension variant -ишко should not specified as animate")
 				end
 				if not rfind(lemma, "[Шш][Кк][Оо]$") then
@@ -2133,7 +2290,7 @@ determine_decl = function(lemma, decl, args)
 				end
 			end
 			if variant == "-ище" then
-				if args.a ~= "a" then
+				if args.thisa ~= "a" then
 					error("Declension variant -ище must be specified as animate")
 				end
 				if not rfind(lemma, "[Щщ][Ее]$") then
@@ -2764,7 +2921,7 @@ declensions_old["а"] = {
 	["gen_sg"] = "ы́",
 	["dat_sg"] = "ѣ́",
 	["acc_sg"] = "у́",
-	["ins_sg"] = {"о́й", "о́ю"},
+	["ins_sg"] = {"о́й<insa>", "о́ю<insb>"}, -- see show_form_1()
 	["pre_sg"] = "ѣ́",
 	["nom_pl"] = "ы́",
 	["gen_pl"] = function(stem, stress)
@@ -2789,7 +2946,7 @@ declensions_old["я"] = {
 		return rlfind(stem, "[іи]́?$") and not ending_stressed_dat_sg_patterns[stress] and "и" or "ѣ́"
 	end,
 	["acc_sg"] = "ю́",
-	["ins_sg"] = {"ёй", "ёю"},
+	["ins_sg"] = {"ёй<insa>", "ёю<insb>"}, -- see show_form_1()
 	["pre_sg"] = function(stem, stress)
 		return rlfind(stem, "[іи]́?$") and not ending_stressed_pre_sg_patterns[stress] and "и" or "ѣ́"
 	end,
@@ -2813,7 +2970,7 @@ declensions_old["ья"] = {
 	["gen_sg"] = "ьи́",
 	["dat_sg"] = "ьѣ́",
 	["acc_sg"] = "ью́",
-	["ins_sg"] = {"ьёй", "ьёю"},
+	["ins_sg"] = {"ьёй<insa>", "ьёю<insb>"}, -- see show_form_1()
 	["pre_sg"] = "ьѣ́",
 	["nom_pl"] = "ьи́",
 	["gen_pl"] = function(stem, stress)
@@ -2845,7 +3002,7 @@ declensions_old["о"] = {
 	["gen_sg"] = "а́",
 	["dat_sg"] = "у́",
 	["acc_sg"] = function(stem, stress, args)
-		return args.explicit_gender == "m" and args.a == "a" and "а́" or "о́"
+		return args.explicit_gender == "m" and args.thisa == "a" and "а́" or "о́"
 	end,
 	["ins_sg"] = "о́мъ",
 	["pre_sg"] = "ѣ́",
@@ -2897,7 +3054,7 @@ declensions_old["е"] = {
 	["gen_sg"] = "я́",
 	["dat_sg"] = "ю́",
 	["acc_sg"] = function(stem, stress, args)
-		return args.explicit_gender == "m" and args.a == "a" and "я́" or "ё"
+		return args.explicit_gender == "m" and args.thisa == "a" and "я́" or "ё"
 	end,
 	["ins_sg"] = "ёмъ",
 	["pre_sg"] = function(stem, stress)
@@ -2934,7 +3091,7 @@ declensions_old["е́"] = {
 	["gen_sg"] = "я́",
 	["dat_sg"] = "ю́",
 	["acc_sg"] = function(stem, stress, args)
-		return args.explicit_gender == "m" and args.a == "a" and "я́" or "е́"
+		return args.explicit_gender == "m" and args.thisa == "a" and "я́" or "е́"
 	end,
 	["ins_sg"] = "е́мъ",
 	["pre_sg"] = function(stem, stress)
@@ -2965,7 +3122,7 @@ declensions_old["ье"] = {
 	["gen_sg"] = "ья́",
 	["dat_sg"] = "ью́",
 	["acc_sg"] = function(stem, stress, args)
-		return args.explicit_gender == "m" and args.a == "a" and "ья́" or "ьё"
+		return args.explicit_gender == "m" and args.thisa == "a" and "ья́" or "ьё"
 	end,
 	["ins_sg"] = "ьёмъ",
 	["pre_sg"] = "ьѣ́",
@@ -3095,6 +3252,11 @@ local function get_adjectival_decl(adjtype, gender, old)
 		decl["gen_sg"] = entries
 	else
 		decl["gen_sg"] = rsub(decl["gen_sg"], "го$", "го<adj>")
+	end
+	-- hack fem ins_sg to insert <insa>, <insb>; see show_form_1()
+	if gender == "f" and type(decl["ins_sg"]) == "table" and #decl["ins_sg"] == 2 then
+		decl["ins_sg"][1] = decl["ins_sg"][1] .. "<insa>"
+		decl["ins_sg"][2] = decl["ins_sg"][2] .. "<insb>"
 	end
 	return decl, intnotes
 end
@@ -3543,13 +3705,19 @@ cases = {
 
 -- Convert a raw override into a canonicalized list of individual overrides.
 -- If input is nil, so is output. Certain junk (e.g. <br/>) is removed,
--- and ~ and ~~ are substituted appropriately; ARGS and ISPL are required for
--- this purpose. if will still be necessary to call m_table_tools.get_notes()
--- to separate off any trailing "notes" (asterisks, superscript numbers, etc.),
--- and m_links.remove_links() to remove any links to get the raw override
--- form.
-canonicalize_override = function(args, case)
-	local val = args[case]
+-- and ~ and ~~ are substituted appropriately; ARGS and CASE are required for
+-- this purpose. FORMS is the list of existing case forms and is currently
+-- used only to retrieve the dat_sg for handling + in loc/par (this means
+-- that any overrides of the dat_sg have to be handled before handling
+-- overrides of loc/par). N is the suffix used to retrieve the override --
+-- either a number for word-specific overrides, or an empty string for
+-- overall overrides.
+--
+-- It will still be necessary to call m_table_tools.get_notes() to separate
+-- off any trailing "notes" (asterisks, superscript numbers, etc.), and
+-- m_links.remove_links() to remove any links to get the raw override form.
+canonicalize_override = function(args, case, forms, n)
+	local val = args[case .. n]
 	if not val then
 		return nil
 	end
@@ -3570,7 +3738,7 @@ canonicalize_override = function(args, case)
 			-- don't just handle + by itself in case the arg has в or на
 			-- or whatever attached to it
 			if rfind(arg, "^%+") or rfind(arg, "[%s%[|]%+") then
-				for _, dat in ipairs(args["dat_sg"]) do
+				for _, dat in ipairs(forms["dat_sg"]) do
 					local subval = case == "par" and dat or com.make_ending_stressed(dat)
 					-- wrap the word in brackets so it's linked; but not if it
 					-- appears to already be linked
@@ -3594,7 +3762,7 @@ canonicalize_override = function(args, case)
 			if com.is_monosyllabic(v) then
 				v = com.make_ending_stressed(v)
 			elseif com.needs_accents(v) then
-				error("Override " .. v .. " for case " .. case .. " requires an accent")
+				error("Override " .. v .. " for case " .. case .. n .. " requires an accent")
 			end
 		end
 		table.insert(newvals, v)
@@ -3604,45 +3772,150 @@ canonicalize_override = function(args, case)
 	return val
 end
 
-handle_forms_and_overrides = function(args)
-	for _, case in ipairs(cases) do
-		if args.forms[case] then
-			local lastarg = #(args.forms[case])
-			if lastarg > 0 and args[case .. "_tail"] then
-				args.forms[case][lastarg] = args.forms[case][lastarg] .. args[case .. "_tail"]
-			end
-			if args[case .. "_tailall"] then
-				for i=1,lastarg do
-					args.forms[case][i] = args.forms[case][i] .. args[case .. "_tailall"]
+handle_forms_and_overrides = function(args, n, islast)
+	local f = args.forms
+	if islast then
+		for _, case in ipairs(cases) do
+			if f[case] then
+				local lastarg = #(f[case])
+				if lastarg > 0 and args[case .. "_tail"] then
+					f[case][lastarg] = f[case][lastarg] .. args[case .. "_tail"]
 				end
-			end
-			if not rfind(case, "_pl") then
-				if args.sgtailall then
+				if args[case .. "_tailall"] then
 					for i=1,lastarg do
-						args.forms[case][i] = args.forms[case][i] .. args.sgtailall
+						f[case][i] = f[case][i] .. args[case .. "_tailall"]
 					end
 				end
-				if lastarg > 1 and args.sgtail then
-					args.forms[case][lastarg] = args.forms[case][lastarg] .. args.sgtail
-				end
-			else
-				if args.pltailall then
-					for i=1,lastarg do
-						args.forms[case][i] = args.forms[case][i] .. args.pltailall
+				if not rfind(case, "_pl") then
+					if args.sgtailall then
+						for i=1,lastarg do
+							f[case][i] = f[case][i] .. args.sgtailall
+						end
 					end
-				end
-				if lastarg > 1 and args.pltail then
-					args.forms[case][lastarg] = args.forms[case][lastarg] .. args.pltail
+					if lastarg > 1 and args.sgtail then
+						f[case][lastarg] = f[case][lastarg] .. args.sgtail
+					end
+				else
+					if args.pltailall then
+						for i=1,lastarg do
+							f[case][i] = f[case][i] .. args.pltailall
+						end
+					end
+					if lastarg > 1 and args.pltail then
+						f[case][lastarg] = f[case][lastarg] .. args.pltail
+					end
 				end
 			end
 		end
 	end
 
 	local function process_override(case)
+		if args[case .. n] then
+			f[case] = canonicalize_override(args, case, f, n)
+			args.any_overridden[case] = true
+		end
+	end
+
+	-- do dative singular first because it will be used by loc/par
+	process_override("dat_sg")
+
+	-- now do the rest
+	for _, case in ipairs(cases) do
+		if case ~= "dat_sg" then
+			process_override(case)
+		end
+	end
+
+	for _, case in ipairs(cases) do
+		if f[case] then
+			if type(f[case]) ~= "table" then
+				error("Logic error, args[case] should be nil or table")
+			end
+			if #f[case] == 0 then
+				f[case] = nil
+			end
+		end
+	end
+
+	local an = args.thisa
+	f.acc_sg_an = f.acc_sg_an or f.acc_sg or an == "i" and f.nom_sg or f.gen_sg
+	f.acc_sg_in = f.acc_sg_in or f.acc_sg or an == "a" and f.gen_sg or f.nom_sg
+	f.acc_pl_an = f.acc_pl_an or f.acc_pl or an == "i" and f.nom_pl or f.gen_pl
+	f.acc_pl_in = f.acc_pl_in or f.acc_pl or an == "a" and f.gen_pl or f.nom_pl
+
+	f.loc = f.loc or f.pre_sg
+	f.par = f.par or f.gen_sg
+	f.voc = f.voc or f.nom_sg
+	-- Set these in case we have a plurale tantum, in which case the
+	-- singular will also get set to these same values in case we are
+	-- a plural-only word in a singular-only expression. NOTE: It's actually
+	-- unnecessary to do "f.loc_pl = f.loc_pl or f.pre_pl" as f.loc_pl should
+	-- never previously be set.
+	f.loc_pl = f.loc_pl or f.pre_pl
+	f.par_pl = f.par_pl or f.gen_pl
+	f.voc_pl = f.voc_pl or f.nom_pl
+
+	local nu = args.thisn
+	-- If we have a singular-only, set the plural forms to the singular forms,
+	-- and vice-versa. This is important so that things work in multi-word
+	-- expressions that combine different number restrictions (e.g.
+	-- singular-only with singular/plural or singular-only with plural-only,
+	-- cf. "St. Vincent and the Grenadines" [Санкт-Винцент и Гренадины]).
+	if nu == "s" then
+		f.nom_pl = f.nom_sg
+		f.gen_pl = f.gen_sg
+		f.dat_pl = f.dat_sg
+		f.acc_pl = f.acc_sg
+		f.acc_pl_an = f.acc_sg_an
+		f.acc_pl_in = f.acc_sg_in
+		f.ins_pl = f.ins_sg
+		f.pre_pl = f.pre_sg
+		f.nom_pl = f.nom_sg
+		-- Unnecessary because only used below to initialize singular
+		-- loc/par/voc with pluralia tantum.
+		-- f.loc_pl = f.loc
+		-- f.par_pl = f.par
+		-- f.voc_pl = f.voc
+	elseif nu == "p" then
+		f.nom_sg = f.nom_pl
+		f.gen_sg = f.gen_pl
+		f.dat_sg = f.dat_pl
+		f.acc_sg = f.acc_pl
+		f.acc_sg_an = f.acc_pl_an
+		f.acc_sg_in = f.acc_pl_in
+		f.ins_sg = f.ins_pl
+		f.pre_sg = f.pre_pl
+		f.nom_sg = f.nom_pl
+		f.loc = f.loc_pl
+		f.par = f.par_pl
+		f.voc = f.voc_pl
+	end
+end
+
+handle_overall_forms_and_overrides = function(args)
+	local function process_override(case)
 		if args[case] then
-			args[case] = canonicalize_override(args, case)
-		else
-			args[case] = args.forms[case]
+			local nwords = #args.per_word_info
+			-- Canonicalize the override into a set of forms. HACK: Pass in
+			-- the forms from the last word, for use with + in loc/par
+			-- meaning "the expected form". This will work in the
+			-- majority of cases where there's only one word, and it's too
+			-- complicated to get working more generally (and not necessarily
+			-- even well-defined; the user should use word-specific overrides).
+			-- Note that if we simply passed in args.forms, we would get the
+			-- same thing, except in the case where there's an overall
+			-- override of the dat_sg.
+			local override = canonicalize_override(args, case,
+				args.per_word_info[nwords][1], "")
+			-- Another hack of sorts -- stuff the whole override into the
+			-- last word, and leave the remaining words blank. We do this
+			-- because there's no guarantee the override will have the same
+			-- number of words as elsewhere or the same joiners.
+			for i=1,(nwords-1) do
+				args.per_word_info[i][1][case] = {""}
+			end
+			args.per_word_info[nwords][i][case] = override
+			args.any_overridden[case] = true
 		end
 	end
 
@@ -3666,7 +3939,7 @@ end
 -- TRAILING_FORMS, passing the newly generated list of items down the
 -- next recursion level with the shorter WORD_FORMS. We end up
 -- returning a string to insert into the Wiki-markup table.
-function show_form_1(word_forms, trailing_forms, lemma)
+function show_form_1(word_forms, trailing_forms, old, prefix, suffix, lemma)
 	if #word_forms == 0 then
 		local russianvals = {}
 		local latinvals = {}
@@ -3687,7 +3960,10 @@ function show_form_1(word_forms, trailing_forms, lemma)
 		for _, form in ipairs(trailing_forms) do
 			local is_adj = rfind(form, "<adj>")
 			form = rsub(form, "<adj>", "")
+			-- Remove <insa> and <insb> markers; they've served their purpose.
+			form = rsub(form, "<ins[ab]>", "")
 			local entry, notes = m_table_tools.get_notes(form)
+			entry = prefix .. entry .. suffix
 			local ruspan, trspan
 			if old then
 				ruspan = m_links.full_link(com.remove_jo(entry), entry, lang, nil, nil, nil, {tr = "-"}, false) .. notes
@@ -3715,115 +3991,118 @@ function show_form_1(word_forms, trailing_forms, lemma)
 			return russian_span .. "<br />" .. latin_span
 		end
 	else
-		local last_forms = table.remove(word_forms)
+		local last_form_info = table.remove(word_forms)
+		local last_forms, joiner = last_form_info[1], last_form_info[2]
 		local new_trailing_forms = {}
 		for _, form in ipairs(last_forms) do
-			if #word_forms > 0 then form = ' ' .. form end
 			for _, trailing_form in ipairs(trailing_forms) do
-				table.insert(new_trailing_forms, form .. trailing_form)
+				-- If form to prepend is empty, don't add the joiner; this
+				-- is principally used in overall overrides, where we stuff
+				-- the entire override into the last word
+				local full_form = form == "" and trailing_form or
+					form .. joiner .. trailing_form
+				if rfind(full_form, "<insa>") and rfind(full_form, "<insb>") then
+					-- REJECT! So we don't get mixtures of the two feminine
+					-- instrumental singular endings.
+				else
+					table.insert(new_trailing_forms, full_form)
+				end
 			end
 		end
-		return show_form_1(word_forms, new_trailing_forms, lemma)
+		return show_form_1(word_forms, new_trailing_forms, old, prefix, suffix,
+			lemma)
 	end
 end
 
 -- Generate a string to substitute into a particular form in a Wiki-markup
--- table. WORD_FORMS is a list, one for each word, of the possible forms for
--- that word. Each element of the list is a list of possible forms.
--- We loop over all possible combinations of elements from each array; this
--- requires recursion.
-function show_form(word_forms, old, lemma)
+-- table. PER_WORD_INFO comes from args.per_word_info and is a list of
+-- WORD_INFO items, one per word, each of which a two element list of
+-- WORD_FORMS (a table listing the forms for each case) and JOINER (a string).
+-- We loop over all possible combinations of elements from each word's list
+-- of forms for the given case; this requires recursion.
+function show_form(per_word_info, case, old, prefix, suffix, lemma)
+	local word_forms = {}
+	-- Gather the appropriate word forms. We have to recreate this anew
+	-- because it will be destructively modified by show_form_1().
+	for _, word_info in ipairs(per_word_info) do
+		table.insert(word_forms, {word_info[1][case], word_info[2]})
+	end
 	-- We need to start the recursion with the second parameter containing
 	-- one blank element rather than no elements, otherwise no elements
 	-- will be propagated to the next recursion level.
-	return show_form_1(word_forms, {""}, old, lemma)
+	return show_form_1(word_forms, {""}, old, prefix, suffix, lemma)
 end
 
 
 -- Make the table
 make_table = function(args)
-	local anim = args.a
+	local data = {}
 	local numb = args.n
 	local old = args.old
-	args.after_title = " " .. args.heading
-	args.number = numbers[numb]
+	data.after_title = " " .. args.heading
+	data.number = numbers[numb]
 
-	args.lemma = numb == "p" and show_form(args.nom_pl, old, true) or show_form(args.nom_sg, old, true)
-	args.title = args.title or
-		strutils.format(old and old_title_temp or title_temp, args)
-
-	for _, case in ipairs(cases) do
-		if args[case] then
-			if type(args[case]) ~= "table" then
-				error("Logic error, args[case] should be nil or table")
-			end
-			if #args[case] == 0 then
-				args[case] = nil
-			end
-		end
-	end
-
-	args.acc_sg_an = args.acc_sg_an or args.acc_sg or anim == "i" and args.nom_sg or args.gen_sg
-	args.acc_sg_in = args.acc_sg_in or args.acc_sg or anim == "a" and args.gen_sg or args.nom_sg
-	args.acc_pl_an = args.acc_pl_an or args.acc_pl or anim == "i" and args.nom_pl or args.gen_pl
-	args.acc_pl_in = args.acc_pl_in or args.acc_pl or anim == "a" and args.gen_pl or args.nom_pl
+	local prefix = args.prefix or ""
+	local suffix = args.suffix or ""
+	data.lemma = show_form(args.per_word_info, numb == "p" and "nom_pl" or "nom_sg", old, prefix, suffix, true)
+	data.title = args.title or strutils.format(old and old_title_temp or title_temp, data)
 
 	for _, case in ipairs(cases) do
-		if args[case] then
-			args[case] = show_form({args[case]}, old, false)
-		end
+		data[case] = show_form(args.per_word_info, case, old, prefix, suffix, false)
 	end
 
 	local temp = nil
 
 	if numb == "s" then
-		args.nom_x = args.nom_sg
-		args.gen_x = args.gen_sg
-		args.dat_x = args.dat_sg
-		args.acc_x_an = args.acc_sg_an
-		args.acc_x_in = args.acc_sg_in
-		args.ins_x = args.ins_sg
-		args.pre_x = args.pre_sg
-		if args.acc_sg_an == args.acc_sg_in then
+		data.nom_x = data.nom_sg
+		data.gen_x = data.gen_sg
+		data.dat_x = data.dat_sg
+		data.acc_x_an = data.acc_sg_an
+		data.acc_x_in = data.acc_sg_in
+		data.ins_x = data.ins_sg
+		data.pre_x = data.pre_sg
+		if data.acc_sg_an == data.acc_sg_in then
 			temp = "half"
 		else
 			temp = "half_a"
 		end
 	elseif numb == "p" then
-		args.nom_x = args.nom_pl
-		args.gen_x = args.gen_pl
-		args.dat_x = args.dat_pl
-		args.acc_x_an = args.acc_pl_an
-		args.acc_x_in = args.acc_pl_in
-		args.ins_x = args.ins_pl
-		args.pre_x = args.pre_pl
-		args.par = nil
-		args.loc = nil
-		args.voc = nil
-		if args.acc_pl_an == args.acc_pl_in then
+		data.nom_x = data.nom_pl
+		data.gen_x = data.gen_pl
+		data.dat_x = data.dat_pl
+		data.acc_x_an = data.acc_pl_an
+		data.acc_x_in = data.acc_pl_in
+		data.ins_x = data.ins_pl
+		data.pre_x = data.pre_pl
+		data.par = nil
+		data.loc = nil
+		data.voc = nil
+		if data.acc_pl_an == data.acc_pl_in then
 			temp = "half"
 		else
 			temp = "half_a"
 		end
 	else
-		if args.acc_pl_an == args.acc_pl_in then
+		if data.acc_pl_an == data.acc_pl_in then
 			temp = "full"
-		elseif args.acc_sg_an == args.acc_sg_in then
+		elseif data.acc_sg_an == data.acc_sg_in then
 			temp = "full_af"
 		else
 			temp = "full_a"
 		end
 	end
 
-	args.par_clause = args.par and strutils.format(partitive, args) or ""
-	args.loc_clause = args.loc and strutils.format(locative, args) or ""
-	args.voc_clause = args.voc and strutils.format(vocative, args) or ""
-	args.notes_clause = args.notes and strutils.format(notes_template, args) or ""
+	data.par_clause = args.any_overridden.par and strutils.format(partitive, data) or ""
+	data.loc_clause = args.any_overridden.loc and strutils.format(locative, data) or ""
+	data.voc_clause = args.any_overridden.voc and strutils.format(vocative, data) or ""
 
-	args.internal_notes = table.concat(args.internal_notes, "<br />")
-	args.internal_notes_clause = #args.internal_notes > 0 and strutils.format(internal_notes_template, args) or ""
+	data.notes = args.notes
+	data.notes_clause = data.notes and strutils.format(notes_template, data) or ""
 
-	return strutils.format(templates[temp], args)
+	data.internal_notes = table.concat(args.internal_notes, "<br />")
+	data.internal_notes_clause = #data.internal_notes > 0 and strutils.format(internal_notes_template, data) or ""
+
+	return strutils.format(templates[temp], data)
 end
 
 partitive = [===[
