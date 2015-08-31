@@ -466,7 +466,7 @@ local function categorize(stress, decl_class, args)
 			})
 			if case == "loc" or case == "voc" or case == "par" then
 				insert_cat("~ with " .. engcase)
-			else
+			elseif not args.manual then
 				insert_cat("~ with irregular " .. engcase)
 			end
 		end
@@ -557,6 +557,7 @@ local function do_show(frame, old)
 		insert_category(args.categories, cat)
 	end
 	args.old = old
+	args.manual = manual
 	-- HACK: Escape * at beginning of line so it doesn't show up
 	-- as a list entry. Many existing templates use * for footnotes.
 	-- FIXME: We should maybe do this in {{ru-decl-noun}} instead.
