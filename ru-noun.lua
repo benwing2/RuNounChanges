@@ -94,6 +94,8 @@ BE BARE, NEVER ADD A NON-SYLLABIC ENDING. HAVE TRACKING CODE FOR THIS.)
    begin with a +. (Formerly a * but currently that stands for "invariable".)
    (IMPLEMENTED BUT NEED TO IMPLEMENT TRANSLITERATING GEN SG AS -vo.)
 13. Support multiple words. (PARTLY IMPLEMENTED IN GITHUB)
+14. Eventually: Even with decl type explicitly given, the full stem with
+    ending should be included.
 
 ]=]--
 
