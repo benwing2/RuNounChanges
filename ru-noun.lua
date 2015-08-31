@@ -804,6 +804,7 @@ local stem_gender_endings = {
 
 -- Implementation of template 'runouncatboiler'.
 function export.catboiler(frame)
+	local SUBPAGENAME = mw.title.getCurrentTitle().subpageText
 	local args = clone_args(frame)
 
 	local cats = {}
@@ -838,7 +839,6 @@ function export.catboiler(frame)
 		maintext = stem_gender_text .. accent_text
 		insert_category(cats, "~ by stem type, gender and accent pattern")
 	elseif args[1] == "stemgender" then
-		local SUBPAGENAME = mw.title.getCurrentTitle().subpageText
 		if rfind(SUBPAGENAME, "invariable") then
 			maintext = "invariable (indeclinable) ~, which normally have the same form for all cases and numbers."
 		else
