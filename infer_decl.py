@@ -39,46 +39,61 @@ matching_stress_patterns["stem"] = {}
 matching_stress_patterns["ending"] = {}
 matching_stress_patterns["none"] = {}
 matching_stress_patterns["stem"]["stem"] = ["1", "5"]
+# FIXME! Further categorize by pre_pl. See below.
+#matching_stress_patterns["stem"]["stem"] = {"stem":"1", "ending":"5"}
 matching_stress_patterns["stem"]["ending"] = ["3"]
 matching_stress_patterns["ending"]["stem"] = ["4", "4*", "6", "6*"]
+# FIXME! Further categorize to get exact stem type, e.g. in this case
+# by pre_pl and then acc_sg.
+#matching_stress_patterns["ending"]["stem"] = {
+#  "ending":{"ending":"4", "stem":"4*"},
+#  "stem":{"ending":"6", "stem":"6*"},
+#}
 matching_stress_patterns["ending"]["ending"] = ["2"]
 matching_stress_patterns["stem"]["none"] = ["1"]
 matching_stress_patterns["ending"]["none"] = ["2", "6*"]
+# FIXME! Further categorize by acc_sg. See above.
+#matching_stress_patterns["ending"]["none"] = {"ending":"2", "stem":"6*"}
 matching_stress_patterns["none"]["stem"] = ["1", "6"]
+# FIXME! Further categorize by pre_pl. See above.
+#matching_stress_patterns["none"]["stem"] = {"stem":"1", "ending":"6"}
 matching_stress_patterns["none"]["ending"] = ["2"]
 
 site = pywikibot.Site()
 
-def trymatch(forms, args, pagemsg):
+def trymatch(forms, args, pagemsg, output_msg=True):
   if mockup:
-    return True
-  tempcall = "{{ru-noun-forms|" + "|".join(args) + "}}"
-  result = site.expand_text(tempcall)
-  pred_forms = {}
-  for formspec in re.split(r"\|", result):
-    case, value = re.split(r"=", formspec, 1)
-    pred_forms[case] = value
-  ok = True
-  for case in all_cases:
-    pred_form = pred_forms.get(case, "")
-    real_form = forms.get(case, "")
-    if pred_form and not real_form:
-      pagemsg("Missing actual form for case %s (predicted %s)" % (case, pred_form))
-      ok = False
-    elif real_form and not pred_form:
-      pagemsg("Actual has extra form %s=%s not in predicted" % (case, real_form))
-      ok = False
-    elif pred_form != real_form:
-      if is_unstressed(real_form) and make_unstressed(pred_form) == real_form:
-        # Happens especially in monosyllabic forms
-        pagemsg("For case %s, actual form %s missing an accent that's present in predicted %s; allowed" % (real_form, pred_form))
-      elif (case == "ins_sg" and "," in real_form and
-          re.sub(",.*$", "", real_form) == pred_form):
-        pagemsg("For case ins_sg, predicted form %s has an alternate form not in actual form %s; allowed" % (pred_form, real_form))
-      else:
-        pagemsg("For case %s, actual %s differs from predicted %s" % (case,
-          real_form, pred_form))
+    ok = True
+  else:
+    tempcall = "{{ru-noun-forms|" + "|".join(args) + "}}"
+    result = site.expand_text(tempcall)
+    pred_forms = {}
+    for formspec in re.split(r"\|", result):
+      case, value = re.split(r"=", formspec, 1)
+      pred_forms[case] = value
+    ok = True
+    for case in all_cases:
+      pred_form = pred_forms.get(case, "")
+      real_form = forms.get(case, "")
+      if pred_form and not real_form:
+        pagemsg("Missing actual form for case %s (predicted %s)" % (case, pred_form))
         ok = False
+      elif real_form and not pred_form:
+        pagemsg("Actual has extra form %s=%s not in predicted" % (case, real_form))
+        ok = False
+      elif pred_form != real_form:
+        if is_unstressed(real_form) and make_unstressed(pred_form) == real_form:
+          # Happens especially in monosyllabic forms
+          pagemsg("For case %s, actual form %s missing an accent that's present in predicted %s; allowed" % (real_form, pred_form))
+        elif (case == "ins_sg" and "," in real_form and
+            re.sub(",.*$", "", real_form) == pred_form):
+          pagemsg("For case ins_sg, predicted form %s has an alternate form not in actual form %s; allowed" % (pred_form, real_form))
+        else:
+          pagemsg("For case %s, actual %s differs from predicted %s" % (case,
+            real_form, pred_form))
+          ok = False
+  if ok:
+    pagemsg("Found a match: {{%s|%s}}" % (decl_template, "|".join(args)))
   return ok
 
 AC = u"\u0301"
@@ -175,7 +190,7 @@ def synthesize_singular(nompl, prepl, gender, pagemsg):
 def separate_multiwords(forms, splitre):
   words = []
   for case in forms:
-    for multiform in re.split(r"\s+,\s+", forms[case]):
+    for multiform in re.split(r"\s*,\s*", forms[case]):
       formwords = re.split(splitre, multiform)
       while len(words) < len(formwords):
         words.append({})
@@ -217,7 +232,11 @@ def infer_decl(t, noungender, pagemsg):
     if case:
       form = getparam(t, i).strip()
       if case == "pre_sg" or case == "pre_pl":
-        form = re.sub(u"^о(б|бо)? ", "", form) # eliminate leading preposition
+        # eliminate [[FOO| in [[FOO|BAR]], and then remaining [[ and ]]
+        form = re.sub(r"\[\[[^|\[\]]*\|", "", form)
+        form = re.sub(r"\[\[|\]\]", "", form)
+        # eliminate leading preposition
+        form = re.sub(ur"^о(б|бо)?\s+", "", form)
       forms[case] = form
     i += 1
 
@@ -231,7 +250,7 @@ def infer_decl(t, noungender, pagemsg):
         wordno = 0
         for wordforms in words:
           wordno += 1
-          pagemsg("Inferring word #%s: %s" % (wordno, wordforms["nom_pl"] if numonly == "pl" else wordforms["nom_sg"]))
+          pagemsg("Inferring word #%s: %s" % (wordno, wordforms.get("nom_pl", "(blank)") if numonly == "pl" else wordforms.get("nom_sg", "(blank)")))
           args = infer_word(wordforms, noungender, number, numonly, pagemsg)
           if not args:
             pagemsg("Unable to infer word #%s: %s" % (wordno, unicode(t)))
@@ -270,6 +289,54 @@ def infer_decl(t, noungender, pagemsg):
     if args:
       return args
 
+def generate_template_args(stress, nomsg, gender, bareval, pagemsg):
+  if old_template:
+    # If bareval is a two-element list, the second is a value to
+    # use for arg 1 in place of nomsg. See above.
+    if type(bareval) is list:
+      args = [stress, bareval[2], gender, bareval[1]]
+    else:
+      args = [stress, nomsg, gender, bareval]
+    if not args[-1]:
+      del args[-1]
+    if not args[-1]:
+      del args[-1]
+  else:
+    gender = gender and "*" + gender or ""
+    if type(bareval) is list:
+      arg1 = bareval[2]
+      bareval = bareval[1]
+    else:
+      # At this point if stress pattern is 2, move the
+      # stress onto the ending if nomsg is fem. or neut. and
+      # the stress can be recovered in the gen pl.
+      if stress == "2":
+        m = re.search("^(.*[" + vowels_no_jo + "]" + AC + "?[^" + vowels + u"]*)([аяео])$", nomsg)
+        if m and u"ё" not in m.group(1):
+          newnomsg = make_unstressed(m.group(1)) + m.group(2) + AC
+          pagemsg("Accent-class 2 fem 1st or neut, moving stress onto ending from %s to %s" % (nomsg, newnomsg))
+          nomsg = newnomsg
+      if is_unstressed(nomsg):
+        pagemsg("WARNING: Arg 1 (stem/nom-sg) %s is totally unstressed" % (nomsg))
+        # FIXME: If it's one syllable, should we stress it?
+        # Does this ever happen? We try hard to stress monosyllabic
+        # stems up above.
+      arg1 = nomsg
+
+    if re.search(u"[ё́]$", arg1):
+      defstress = "2"
+    else:
+      defstress = "1"
+    if defstress == stress:
+      stress = ""
+    args = [arg1 + gender, stress, bareval]
+    if not args[-1]:
+      del args[-1]
+    if not args[-1]:
+      del args[-1]
+    args = [":".join(args)]
+  return args
+
 def infer_word(forms, noungender, number, numonly, pagemsg):
   # Check for invariable word
   caseforms = forms.values()
@@ -286,9 +353,17 @@ def infer_word(forms, noungender, number, numonly, pagemsg):
       return [caseforms[0] + "*"]
 
   nompl = forms.get("nom_pl", "")
+  accsg = forms.get("acc_sg", "")
   gensg = forms.get("gen_sg", "")
   genpl = try_to_stress(forms.get("gen_pl", ""))
+  presg = forms.get("pre_sg", "")
   prepl = forms.get("pre_pl", "")
+  # Special case:
+  if numonly == "pl" and nompl == u"острова́":
+    args = generate_template_args("3", u"о́стров", "", "", pagemsg) + number
+    if trymatch(forms, args, pagemsg):
+      return args
+
   if numonly == "pl":
     nomsgs = synthesize_singular(nompl, prepl, noungender, pagemsg)
   else:
@@ -300,6 +375,7 @@ def infer_word(forms, noungender, number, numonly, pagemsg):
         anim = ["a=an"]
       elif forms["acc_sg"] == forms["nom_sg"]:
         anim = ["a=in"]
+      else:
         # Can't check for nom/acc sg equal because feminine nouns have all
         # three different
         anim = []
@@ -314,15 +390,27 @@ def infer_word(forms, noungender, number, numonly, pagemsg):
         return None
 
     # FIXME: Adjectives in -ий of the +ьий type
-    if (re.search(u"([ыиіо]й|[яаь]я|[оеь]е)$", make_unstressed(nomsg)) or
-        numonly == "pl" and re.search(u"[ыи]е$", make_unstressed(nompl))):
+    if (re.search(u"([ыиіо]й|[яаь]я|[оеь]е)$", make_unstressed(nomsg)) and
+        (numonly == "sg" or re.search(u"[ыи]е$", make_unstressed(nompl)))):
       if old_template:
         args = ["", nomsg, "+"] + anim + number
       else:
         args = [nomsg + "+"] + anim + number
       if trymatch(forms, args, pagemsg):
-        pagemsg("Found a match: {{%s|%s}}" % (decl_template, "|".join(args)))
         return args
+
+    # I think these are always in -ов/-ев/-ин/-ын.
+    #if re.search(u"([шщжчц]е|[ъоа]|)$", nomsg):
+    if (re.search(u"([ое]в|[ыи]н)([оаъ]?)$", nomsg) and
+        (numonly == "sg" and re.search(u"[ое][мй]$", make_unstressed(presg)) or
+        numonly != "sg" and re.search(u"[ыи]х$", make_unstressed(prepl)))):
+      for adjpat in ["+short", "+mixed"]:
+        if old_template:
+          args = ["", nomsg, adjpat] + anim + number
+        else:
+          args = [nomsg + adjpat] + anim + number
+        if trymatch(forms, args, pagemsg):
+          return args
 
     stress = "any"
     plstress = "any"
@@ -340,22 +428,32 @@ def infer_word(forms, noungender, number, numonly, pagemsg):
       else:
         stress = "stem"
 
-      if numonly != "sg":
-        # Try to find a stressed version of the stem
-        if is_unstressed(stem):
-          mm = re.search(ur"^(.*)[аяыи]́?$", nompl)
-          if not mm:
-            pagemsg("WARNING: Don't recognize fem 1st-decl or neut 2nd-decl nom pl ending in form %s" % nompl)
-          else:
-            nomplstem = mm.group(1)
-            if make_unstressed(nomplstem) != stem:
-              pagemsg("Nom pl stem %s not accent-equiv to nom sg stem %s" % (
-                nomplstem, stem))
-            elif nomplstem != stem:
-              pagemsg("Replacing unstressed stem %s with stressed nom pl stem %s" %
-                  (stem, nomplstem))
-              stem = nomplstem
+      for numrestrict, regex, formcase in [
+          ("sg", ur"^(.*)[аяыи]́?$", "nom_pl"), # accent patterns 4, 6
+          ("pl", ur"^(.*)[уюоеё]́?$", "acc_sg"), # accent patterns 4*, 6* 
+          ("sg", ur"^(.*)([ая]́?х)$", "pre_pl"), # necessary???
+        ]:
+        if numonly != numrestrict:
+          # Try to find a stressed version of the stem using the form case
+          if is_unstressed(stem):
+            form = forms.get(formcase, "")
+            if not form:
+              pagemsg("WARNING: Empty or missing %s" % formcase)
+              continue
+            mm = re.search(regex, form)
+            if not mm:
+              pagemsg("WARNING: Don't recognize fem 1st-decl or neut 2nd-decl %s ending in form %s" % (formcase, form))
+            else:
+              formstem = mm.group(1)
+              if make_unstressed(formstem) != stem:
+                pagemsg("%s stem %s not accent-equiv to nom sg stem %s" % (
+                  formcase, formstem, stem))
+              elif formstem != stem:
+                pagemsg("Replacing unstressed stem %s with stressed %s stem %s" %
+                    (stem, formcase, formstem))
+                stem = formstem
 
+      if numonly != "sg":
         possible_genpls = []
         possible_unstressed_genpls = []
         for genpl_ending in ["", u"ь", u"й"]:
@@ -464,68 +562,10 @@ def infer_word(forms, noungender, number, numonly, pagemsg):
     for stress in stress_patterns:
       for gender in genders:
         for bareval in bare:
-          if old_template:
-            # If bareval is a two-element list, the second is a value to
-            # use for arg 1 in place of nomsg. See above.
-            if type(bareval) is list:
-              args = [stress, bareval[2], gender, bareval[1]]
-            else:
-              args = [stress, nomsg, gender, bareval]
-            if not args[-1]:
-              del args[-1]
-            if not args[-1]:
-              del args[-1]
-          else:
-            gender = gender and "*" + gender or ""
-            if type(bareval) is list:
-              arg1 = bareval[2]
-              bareval = bareval[1]
-            else:
-              # At this point if stress pattern is 2, move the
-              # stress onto the ending if nomsg is fem. or neut. and
-              # the stress can be recovered in the gen pl.
-              if stress == "2":
-                m = re.search("^(.*[" + vowels_no_jo + "]" + AC + "?[^" + vowels + u"]*)([аяео])$", nomsg)
-                if m and u"ё" not in m.group(1):
-                  newnomsg = make_unstressed(m.group(1)) + m.group(2) + AC
-                  pagemsg("Accent-class 2 fem 1st or neut, moving stress onto ending from %s to %s" % (nomsg, newnomsg))
-                  nomsg = newnomsg
-              if is_unstressed(nomsg):
-                pagemsg("WARNING: Arg 1 (stem/nom-sg) %s is totally unstressed" % (nomsg))
-                # FIXME: If it's one syllable, should we stress it?
-                # Does this ever happen? We try hard to stress monosyllabic
-                # stems up above.
-              arg1 = nomsg
-
-
-            if re.search(u"[ё́]$", arg1):
-              defstress = "2"
-            else:
-              defstress = "1"
-            if defstress == stress:
-              stress = ""
-            args = [arg1 + gender, stress, bareval]
-            if not args[-1]:
-              del args[-1]
-            if not args[-1]:
-              del args[-1]
-            args = [":".join(args)]
+          args = generate_template_args(stress, nomsg, gender, bareval, pagemsg)
           args += anim + number
           if trymatch(forms, args, pagemsg):
-            pagemsg("Found a match: {{%s|%s}}" % (decl_template, "|".join(args)))
             return args
-
-    # I think these are always in -ов/-ев/-ин/-ын.
-    #if re.search(nomsg, u"([шщжчц]е|[ъоа]|)$"):
-    if re.search(nomsg, u"([ое]в|[ыи]н)([оаъ]?)$"):
-      for adjpat in ["+short", "+mixed"]:
-        if old_template:
-          args = ["", nomsg, adjpat] + anim + number
-        else:
-          args = [nomsg + adjpat] + anim + number
-        if trymatch(forms, args, pagemsg):
-          pagemsg("Found a match: {{%s|%s}}" % (decl_template, "|".join(args)))
-          return args
 
   return None
 
@@ -838,8 +878,13 @@ test_templates = [
   |о монго́льском языке́|о монго́льских языка́х}}""",
   u"""{{ru-decl-noun
   |головна́я боль|головны́е бо́ли|головно́й бо́ли|головны́х бо́лей|головно́й бо́ли|головны́м
-   бо́лям|головну́ю боль|головны́е бо́ли|головно́й бо́лью|головны́ми бо́лями|о головно́й бо́
-   ли|о головны́х бо́лях}}""",
+   бо́лям|головну́ю боль|головны́е бо́ли|головно́й бо́лью|головны́ми бо́лями|о головно́й бо́ли|о головны́х бо́лях}}""",
+  u"""{{ru-decl-noun-unc|Столи́чная
+  |Столи́чной
+  |Столи́чной
+  |Столи́чную
+  |[[Столи́чной]], [[Столи́чною]]
+  |о Столи́чной}}""",
   u"""{{ru-decl-noun-unc
   |несоверше́нный вид
   |несоверше́нного ви́да
@@ -847,6 +892,34 @@ test_templates = [
   |несоверше́нный вид
   |несоверше́нным ви́дом
   |о несоверше́нном ви́де|}}""",
+  u"""{{ru-decl-noun-unc
+  |Бо́сния и Герцегови́на
+  |Бо́снии и Герцегови́ны
+  |Бо́снии и Герцегови́не
+  |Бо́снию и Герцегови́ну
+  |Бо́снией и Герцегови́ной
+  |о Бо́снии и Герцегови́не}}""",
+  u"""{{ru-decl-noun-unc
+  |Росси́йская Сове́тская Федерати́вная Социалисти́ческая Респу́блика
+  |Росси́йской Сове́тской Федерати́вной Социалисти́ческой Респу́блики
+  |Росси́йской Сове́тской Федерати́вной Социалисти́ческой Респу́блике
+  |Росси́йскую Сове́тскую Федерати́вную Социалисти́ческую Респу́блику
+  |Росси́йской Сове́тской Федерати́вной Социалисти́ческой Респу́бликой
+  |о Росси́йской Сове́тской Федерати́вной Социалисти́ческой Респу́блике|}}""",
+  u"""{{ru-decl-noun-unc
+  |Ма́лая Азия
+  |Ма́лой Азии
+  |Ма́лой Азии
+  |Ма́лую Азию
+  |Ма́лой Азией, Ма́лою Азиею
+  |о Ма́лой Азии}}""",
+  u"""{{ru-decl-noun-unc
+  |Жёлтая река́
+  |Жёлтой реки́
+  |Жёлтой реке́
+  |Жёлтую ре́ку
+  |Жёлтой реко́й
+  |о Жёлтой реке́}}""",
   u"""{{ru-proper noun|[[британский|Брита́нские]] [[остров|острова́]]|m-in-p}}
   
   # [[British Isles]]
@@ -858,7 +931,88 @@ test_templates = [
   |Брита́нским острова́м
   |Брита́нские острова́
   |Брита́нскими острова́ми
-  |о Брита́нских острова́х}}"""]
+  |о Брита́нских острова́х}}""",
+  u"""{{ru-proper noun|[[остров|острова́]] Уо́ллис и Футу́на|m-in-p}}
+  
+  # [[Wallis and Futuna]]
+  
+  ====Declension====
+  {{ru-decl-noun-pl
+  |острова́ Уо́ллис и Футу́на
+  |острово́в Уо́ллис и Футу́на
+  |острова́м Уо́ллис и Футу́на
+  |острова́ Уо́ллис и Футу́на
+  |острова́ми Уо́ллис и Футу́на
+  |об острова́х Уо́ллис и Футу́на}}""",
+  u"""{{ru-proper noun|[[Соломон|Соломо́новы]] [[остров|острова́]]|m-in-p}}
+  
+  # [[Solomon Islands]]
+  
+  ====Declension====
+  {{ru-decl-noun-pl
+  |Соломо́новы острова́
+  |Соломо́новых острово́в
+  |Соломо́новым острова́м
+  |Соломо́новы острова́
+  |Соломо́новыми острова́ми
+  |о Соломо́новых острова́х}}""",
+  u"""{{ru-noun|[[карманный|карма́нные]] [[часы́]]|m-in-p}}
+  
+  # [[pocket watch]] {{gloss|watch}}
+  
+  ====Declension====
+  {{ru-decl-noun-pl
+  |карма́нные часы́
+  |карма́нных часо́в
+  |карма́нным часа́м
+  |карма́нные часы́
+  |карма́нными часа́ми
+  |о карма́нных часа́х}}""",
+  u"""{{ru-noun|[[сухопутный|сухопу́тные]] [[сила|си́лы]]|f-in-p}}
+  
+  # {{context|military|lang=ru}} [[land]] [[forces]], [[army]]
+  
+  ====Declension====
+  {{ru-decl-noun-pl
+  |сухопу́тные си́лы
+  |сухопу́тных сил
+  |сухопу́тным си́лам
+  |сухопу́тные си́лы
+  |сухопу́тными си́лами
+  |о сухопу́тных си́лах}}""",
+  u"""{{ru-noun|[[танковый|та́нковые]] [[войско|войска́]]|n-p}}
+  
+  # {{context|military|lang=ru}} [[armored]] [[troops]], [[armoured]] [[troops]]
+  
+  ====Declension====
+  {{ru-decl-noun-pl
+  |та́нковые войска́
+  |та́нковых во́йск
+  |та́нковым войска́м
+  |та́нковые войска́
+  |та́нковыми войска́ми
+  |о та́нковых войска́х}}""",
+  u"""{{ru-noun|[[брю́ки]]-[[галифе́]]|tr=brjúki-galifɛ́|f-in-p}}
+  
+  # {{context|military|lang=ru}} [[flared]] [[breeches]]
+  
+  ====Declension====
+  {{ru-decl-noun-pl
+  |брю́ки-галифе́
+  |брюк-галифе́
+  |брю́кам-галифе́
+  |брю́ки-галифе́
+  |брю́ками-галифе́
+  |о брю́ках-галифе́}}""",
+  u"""{{ru-proper noun|[[объединённый|Объединённые]] [[нация|На́ции]]|f-in-p}}
+  
+  # [[United Nations]]
+  
+  ====Synonyms====
+  * [[Организация Объединённых Наций]]
+  
+  ====Declension====
+  {{ru-decl-noun-pl|Объединённые На́ции|Объединённых На́ций|Объединённым На́циям|Объединённые На́ции|Объединёнными На́циями|Объединённых На́циях}}""",]
 def test_infer():
   class Page:
     def title(self):
