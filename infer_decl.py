@@ -38,25 +38,17 @@ matching_stress_patterns = {}
 matching_stress_patterns["stem"] = {}
 matching_stress_patterns["ending"] = {}
 matching_stress_patterns["none"] = {}
-matching_stress_patterns["stem"]["stem"] = ["1", "5"]
-# FIXME! Further categorize by pre_pl. See below.
-#matching_stress_patterns["stem"]["stem"] = {"stem":"1", "ending":"5"}
+matching_stress_patterns["stem"]["stem"] = {"by":"pre_pl", "stem":"1", "ending":"5"}
 matching_stress_patterns["stem"]["ending"] = ["3"]
-matching_stress_patterns["ending"]["stem"] = ["4", "4*", "6", "6*"]
-# FIXME! Further categorize to get exact stem type, e.g. in this case
-# by pre_pl and then acc_sg.
-#matching_stress_patterns["ending"]["stem"] = {
-#  "ending":{"ending":"4", "stem":"4*"},
-#  "stem":{"ending":"6", "stem":"6*"},
-#}
+matching_stress_patterns["ending"]["stem"] = {
+  "by":"pre_pl",
+  "ending":{"by":"acc_sg", "ending":"4", "stem":"4*"},
+  "stem":{"by":"acc_sg", "ending":"6", "stem":"6*"},
+}
 matching_stress_patterns["ending"]["ending"] = ["2"]
 matching_stress_patterns["stem"]["none"] = ["1"]
-matching_stress_patterns["ending"]["none"] = ["2", "6*"]
-# FIXME! Further categorize by acc_sg. See above.
-#matching_stress_patterns["ending"]["none"] = {"ending":"2", "stem":"6*"}
-matching_stress_patterns["none"]["stem"] = ["1", "6"]
-# FIXME! Further categorize by pre_pl. See above.
-#matching_stress_patterns["none"]["stem"] = {"stem":"1", "ending":"6"}
+matching_stress_patterns["ending"]["none"] = {"by":"acc_sg", "ending":"2", "stem":"6*"}
+matching_stress_patterns["none"]["stem"] = {"by":"pre_pl", "stem":"1", "ending":"6"}
 matching_stress_patterns["none"]["ending"] = ["2"]
 
 site = pywikibot.Site()
@@ -354,10 +346,12 @@ def infer_word(forms, noungender, number, numonly, pagemsg):
 
   nompl = forms.get("nom_pl", "")
   accsg = forms.get("acc_sg", "")
+  accsg_stress = re.search(u"[ё́]$", accsg) and "ending" or "stem"
   gensg = forms.get("gen_sg", "")
   genpl = try_to_stress(forms.get("gen_pl", ""))
   presg = forms.get("pre_sg", "")
   prepl = forms.get("pre_pl", "")
+  prepl_stress = re.search(AC + u"хъ?$", prepl) and "ending" or "stem"
   # Special case:
   if numonly == "pl" and nompl == u"острова́":
     args = generate_template_args("3", u"о́стров", "", "", pagemsg) + number
@@ -558,6 +552,10 @@ def infer_word(forms, noungender, number, numonly, pagemsg):
       stress_patterns = all_stress_patterns
     else:
       stress_patterns = matching_stress_patterns[stress][plstress]
+      while type(stress_patterns) is dict:
+        stress_patterns = stress_patterns[stress_patterns["by"] == "pre_pl" and prepl_stress or accsg_stress]
+      if type(stress_patterns) is not list:
+        stress_patterns = [stress_patterns]
 
     for stress in stress_patterns:
       for gender in genders:
