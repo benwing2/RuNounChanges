@@ -383,9 +383,19 @@ def infer_word(forms, noungender, number, numonly, pagemsg):
             (forms["nom_pl"], forms["acc_pl"], forms["gen_pl"]))
         return None
 
-    # FIXME: Adjectives in -ий of the +ьий type
+    # FIXME: Adjectives in -ий of the +ьий type, special because they
+    # can't be auto-detected
+    if re.search(u"ий$", nomsg) and re.search(u"ьего$", gensg):
+      stem = re.sub(u"ий$", "", nomsg)
+      if old_template:
+        args = ["", stem, "+ьий"] + anim + number
+      else:
+        args = [stem + "+ьий"] + anim + number
+      if trymatch(forms, args, pagemsg):
+        return args
+
     if (re.search(u"([ыиіо]й|[яаь]я|[оеь]е)$", make_unstressed(nomsg)) and
-        (numonly == "sg" or re.search(u"[ыи]е$", make_unstressed(nompl)))):
+        (numonly == "sg" or re.search(u"([ыи]е|ьи)$", make_unstressed(nompl)))):
       if old_template:
         args = ["", nomsg, "+"] + anim + number
       else:
@@ -403,6 +413,25 @@ def infer_word(forms, noungender, number, numonly, pagemsg):
           args = ["", nomsg, adjpat] + anim + number
         else:
           args = [nomsg + adjpat] + anim + number
+        if trymatch(forms, args, pagemsg):
+          return args
+
+    # Ending in -мя, nom pl in either -мена́ or -мёна.
+    if re.search(u"мя$", nomsg):
+      args = None
+      if numonly == "sg" or re.search(u"мена́$", nompl):
+        if old_template:
+          args = ["3", nomsg]
+        else:
+          args = [nomsg + ":3"]
+      elif rsearch(u"мёна$", nompl):
+        stem = re.sub(u"мя$", "", nomsg)
+        if old_template:
+          args = ["3", stem, u"мя-1"]
+        else:
+          args = [stem + "*мя-1:3"]
+      if args:
+        args += anim + number
         if trymatch(forms, args, pagemsg):
           return args
 
