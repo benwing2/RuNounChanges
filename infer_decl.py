@@ -10,7 +10,15 @@ from blib import msg, rmparam, getparam
 save = False
 mockup = False
 # Uncomment the following line to enable test mode
-# mockup = True
+mockup = True
+# If true, use the old ru-noun-table template, instead of new
+# ru-decl-noun-new
+old_template = False
+
+if old_template:
+  decl_template = "ru-noun-table"
+else:
+  decl_template = "ru-decl-noun-new"
 
 ru_decl_noun_cases = [
   "nom_sg", "nom_pl", "gen_sg", "gen_pl", "dat_sg", "dat_pl",
@@ -212,11 +220,11 @@ def infer_decl(t, noungender, pagemsg):
     allargs = []
     for args in argses:
       filterargs = [x for x in args if not re.match("[an]=", x)]
-      if allargs:
+      if allargs and old_template:
         allargs.append("_")
       allargs.extend(filterargs)
     allargs += animacy + number
-    pagemsg("Found a multi-word match: {{ru-noun-table|%s}}" % "|".join(allargs))
+    pagemsg("Found a multi-word match: {{%s|%s}}" % (decl_template, "|".join(allargs)))
     return allargs
   else:
     args = infer_word(forms, number, numonly, pagemsg)
@@ -232,7 +240,10 @@ def infer_word(forms, number, numonly, pagemsg):
       break
   if allsame:
     pagemsg("Found invariable word %s" % caseforms[0])
-    return ["", caseforms[0], "*"]
+    if old_template:
+      return ["", caseforms[0], "*"]
+    else:
+      return [caseforms[0] + "*"]
 
   nompl = forms["nom_pl"]
   gensg = forms["gen_sg"]
@@ -265,9 +276,12 @@ def infer_word(forms, number, numonly, pagemsg):
     # FIXME: Adjectives in -ий of the +ьий type
     if (re.match(u"^.*([ыиіо]й|[яаь]я|[оеь]е)$", make_unstressed(nomsg)) or
         numonly == "pl" and re.match(u"^.*[ыи]e$", make_unstressed(nompl))):
-      args = ["", nomsg, "+"] + anim + number
+      if old_template:
+        args = ["", nomsg, "+"] + anim + number
+      else:
+        args = [nomsg + "+"] + anim + number
       if trymatch(forms, args, pagemsg):
-        pagemsg("Found a match: {{ru-noun-table|%s}}" % "|".join(args))
+        pagemsg("Found a match: {{%s|%s}}" % (decl_template, "|".join(args)))
         return args
 
     stress = "any"
@@ -413,28 +427,51 @@ def infer_word(forms, number, numonly, pagemsg):
     for stress in stress_patterns:
       for gender in genders:
         for bareval in bare:
-          # If bareval is a two-element list, the second is a value to
-          # use for arg 1 in place of nomsg. See above.
-          if type(bareval) is list:
-            args = [stress, bareval[2], gender, bareval[1]]
+          if old_template:
+            # If bareval is a two-element list, the second is a value to
+            # use for arg 1 in place of nomsg. See above.
+            if type(bareval) is list:
+              args = [stress, bareval[2], gender, bareval[1]]
+            else:
+              args = [stress, nomsg, gender, bareval]
+            if not args[-1]:
+              del args[-1]
+            if not args[-1]:
+              del args[-1]
           else:
-            args = [stress, nomsg, gender, bareval]
-          if not args[-1]:
-            del args[-1]
-          if not args[-1]:
-            del args[-1]
+            gender = gender and "*" + gender or ""
+            if type(bareval) is list:
+              arg1 = bareval[2]
+              bareval = bareval[1]
+            else:
+              arg1 = nomsg
+            if re.match(u"[ё́]$", arg1):
+              defstress = "2"
+            else:
+              defstress = "1"
+            if defstress == stress:
+              stress = ""
+            args = [arg1 + gender, stress, bareval]
+            if not args[-1]:
+              del args[-1]
+            if not args[-1]:
+              del args[-1]
+            args = [":".join(args)]
           args += anim + number
           if trymatch(forms, args, pagemsg):
-            pagemsg("Found a match: {{ru-noun-table|%s}}" % "|".join(args))
+            pagemsg("Found a match: {{%s|%s}}" % (decl_template, "|".join(args)))
             return args
 
     # I think these are always in -ов/-ев/-ин/-ын.
     #if re.match(nomsg, u"^.*([шщжчц]е|[ъоа]|)$"):
     if re.match(nomsg, u"^.*([ое]в|[ыи]н)([оаъ]?)$"):
       for adjpat in ["+short", "+mixed"]:
-        args = ["", nomsg, adjpat] + anim + number
+        if old_template:
+          args = ["", nomsg, adjpat] + anim + number
+        else:
+          args = [nomsg + adjpat] + anim + number
         if trymatch(forms, args, pagemsg):
-          pagemsg("Found a match: {{ru-noun-table|%s}}" % "|".join(args))
+          pagemsg("Found a match: {{%s|%s}}" % (decl_template, "|".join(args)))
           return args
 
   return None
@@ -470,7 +507,7 @@ def infer_one_page_decls(page, index, text):
       if args:
         for i in xrange(15, 0, -1):
           rmparam(t, i)
-        t.name = "ru-noun-table"
+        t.name = decl_template
         i = 1
         for arg in args:
           if "=" in arg:
