@@ -9,6 +9,8 @@ from blib import msg, rmparam, getparam
 
 save = False
 mockup = False
+# Uncomment the following line to enable test mode
+# mockup = True
 
 ru_decl_noun_cases = [
   "nom_sg", "nom_pl", "gen_sg", "gen_pl", "dat_sg", "dat_pl",
@@ -261,7 +263,7 @@ def infer_word(forms, number, numonly, pagemsg):
         return None
 
     # FIXME: Adjectives in -ий of the +ьий type
-    if (re.match(u"^.*([ыиіо]й|[яаь]я|[oeь]e)$", make_unstressed(nomsg)) or
+    if (re.match(u"^.*([ыиіо]й|[яаь]я|[оеь]е)$", make_unstressed(nomsg)) or
         numonly == "pl" and re.match(u"^.*[ыи]e$", make_unstressed(nompl))):
       args = ["", nomsg, "+"] + anim + number
       if trymatch(forms, args, pagemsg):
@@ -275,7 +277,9 @@ def infer_word(forms, number, numonly, pagemsg):
     m = re.match(ur"(.*)([аяеоё])(́?)$", nomsg)
     if m:
       pagemsg("Nom sg %s refers to feminine 1st decl or neuter 2nd decl" % nomsg)
-      stem = try_to_stress(m.group(1))
+      # We use to call try_to_stress() here on the stem but that fails if
+      # the stem has е and we stress it as е́ when it should be ё
+      stem = m.group(1)
       ending = m.group(2)
       if m.group(3) or ending == u"ё":
         stress = "ending"
@@ -311,6 +315,11 @@ def infer_word(forms, number, numonly, pagemsg):
           pagemsg("Stem %s stressed one way, gen pl %s stressed differently" %
               (stem, genpl))
           bare = ["*", genpl]
+        if is_unstressed(stem):
+          trystress = try_to_stress(stem)
+          if trystress != stem:
+            pagemsg("Replacing monosyllabic unstressed stem %s with stressed equiv %s" % (stem, trystress))
+            stem = trystress
       nomsg = stem + ending
     else:
       m = re.match(ur"(.*?)([йь]?)$", nomsg)
@@ -327,7 +336,31 @@ def infer_word(forms, number, numonly, pagemsg):
             if ending == u"ь":
               genders = ["m", "f"]
           else:
-            stem = try_to_stress(m.group(1))
+            # We use to call try_to_stress() here on the stem but that fails if
+            # the stem has е and we stress it as е́ when it should be ё
+            stem = m.group(1)
+            # Try to find a stressed version of the stem
+            if is_unstressed(stem):
+              mm = re.match(ur"(.*)[аяыи]́?$", nompl)
+              if not mm:
+                pagemsg("WARNING: Don't recognize nom pl ending in form %s" % nompl)
+              else:
+                nomplstem = try_to_stress(mm.group(1))
+                if make_unstressed(nomplstem) != stem:
+                  pagemsg("Nom pl stem %s not accent-equiv to gen sg stem %s" % (
+                    nomplstem, stem))
+                elif nomplstem != stem:
+                  pagemsg("Replacing unstressed stem %s with stressed nom pl stem %s" %
+                      (stem, nomplstem))
+                  stem = nomplstem
+            # Finally, try stressing a monosyllabic stem (might be wrong
+            # if we end up with -е́ when it should be -ё, but we tried to
+            # account for this by checking nom pl)
+            if is_unstressed(stem):
+              trystress = try_to_stress(stem)
+              if trystress != stem:
+                pagemsg("Replacing monosyllabic unstressed stem %s with stressed equiv %s" % (stem, trystress))
+                stem = trystress
             if ending == u"ь":
               if m.group(2) == u"я":
                 pagemsg("Found masculine soft-stem nom sg %s" % nomsg)
@@ -469,7 +502,29 @@ test_templates = [
     |лист Мёбиуса|листы́ Мёбиуса
     |листо́м Мёбиуса|листа́ми Мёбиуса
     |о листе́ Мёбиуса|о листа́х Мёбиуса}}""",
-  u"""{{ru-decl-noun|ма́льчик для битья́|ма́льчики для битья́|ма́льчика для битья́|ма́льчиков для битья́|ма́льчику для битья́|ма́льчикам для битья́|ма́льчика для битья́|ма́льчиков для битья́|ма́льчиком для битья́|ма́льчиками для битья́|о ма́льчике для битья́|о ма́льчиках для битья́}}"""]
+  u"""{{ru-decl-noun|ма́льчик для битья́|ма́льчики для битья́|ма́льчика для битья́|ма́льчиков для битья́|ма́льчику для битья́|ма́льчикам для битья́|ма́льчика для битья́|ма́льчиков для битья́|ма́льчиком для битья́|ма́льчиками для битья́|о ма́льчике для битья́|о ма́льчиках для битья́}}""",
+  u"""{{ru-decl-noun
+  |ба́бье ле́то|ба́бьи лета́
+  |ба́бьего ле́та|ба́бьих лет
+  |ба́бьему ле́ту|ба́бьим лета́м
+  |ба́бье ле́то|ба́бьи лета́
+  |ба́бьим ле́том|ба́бьими лета́ми
+  |о ба́бьем ле́те|о ба́бьих лета́х}}""",
+  u"""{{ru-decl-noun
+  |часть ре́чи|ча́сти ре́чи
+  |ча́сти ре́чи|часте́й ре́чи
+  |ча́сти ре́чи|частя́м ре́чи
+  |часть ре́чи|ча́сти ре́чи
+  |ча́стью ре́чи|частя́ми ре́чи
+  |о ча́сти ре́чи|о частя́х ре́чи}}""",
+  u"""{{ru-decl-noun
+  |де́тская|де́тские
+  |де́тской|де́тских
+  |де́тской|де́тским
+  |де́тскую|де́тские
+  |де́тской|де́тскими
+  |о де́тской|о де́тских}}""",
+  u"""{{ru-decl-noun|медоно́сная пчела́|медоно́сные пчёлы|медоно́сной пчелы́|медоно́сных пчёл|медоно́сной пчеле́|медоно́сным пчёлам|медоно́сную пчелу́|медоно́сных пчёл|медоно́сной пчело́й|медоно́сными пчёлами|о медоно́сном пчеле́|о медоно́сных пчёлах}}"""]
 def test_infer():
   class Page:
     def title(self):
