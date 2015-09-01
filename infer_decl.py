@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import re
+import traceback, sys
 import pywikibot
 import mwparserfromhell
 import blib
@@ -68,7 +69,10 @@ def trymatch(forms, args, pagemsg):
       pagemsg("Actual has extra form %s=%s not in predicted" % (case, real_form))
       ok = False
     elif pred_form != real_form:
-      if (case == "ins_sg" and "," in real_form and
+      if is_unstressed(real_form) and make_unstressed(pred_form) == real_form:
+        # Happens especially in monosyllabic forms
+        pagemsg("For case %s, actual form %s missing an accent that's present in predicted %s; allowed" % (real_form, pred_form))
+      elif (case == "ins_sg" and "," in real_form and
           re.sub(",.*$", "", real_form) == pred_form):
         pagemsg("For case ins_sg, predicted form %s has an alternate form not in actual form %s; allowed" % (pred_form, real_form))
       else:
@@ -108,13 +112,13 @@ def make_unstressed(word):
   return word
 
 def add_soft_sign(stem):
-  if re.match(".*[" + vowels + "]$", stem):
+  if re.search("[" + vowels + "]$", stem):
     return stem + u"й"
   else:
     return stem + u"ь"
 
 def add_hard_neuter(stem):
-  if re.match(".*[" + sib_c + "]$", stem):
+  if re.search("[" + sib_c + "]$", stem):
     return stem + u"е"
   else:
     return stem + u"о"
@@ -127,12 +131,38 @@ def do_assert(cond, msg=None):
   return True
 
 def synthesize_singular(nompl, prepl, gender, pagemsg):
-  soft = re.match(ur"^.*яхъ?$", prepl)
-  m = re.match(ur"(.*)[аяыи]́?$", nompl)
+  m = re.search(ur"^(.*)([ыи])(́?)е$", nompl)
+  if m:
+    stem = m.group(1)
+    ty = (re.search(u"[кгx]$", stem) and "velar" or
+          re.search(u"[шщжч]$", stem) and "sibilant" or
+          re.search(u"ц$", stem) and "c" or
+          m.group(2) == u"и" and "soft" or
+          "hard")
+    ac = m.group(3)
+    if ac:
+      sg = (stem + u"о́й" if gender == "m" else
+          stem + u"а́я" if gender == "f" else stem + u"о́е")
+    elif ty == "soft":
+      sg = (stem + u"ий" if gender == "m" else
+          stem + u"яя" if gender == "f" else stem + u"ее")
+    elif ty == "velar" or ty == "sibilant":
+      sg = (stem + u"ий" if gender == "m" else
+          stem + u"ая" if gender == "f" else stem + u"ое")
+    elif ty == "c":
+      sg = (stem + u"ый" if gender == "m" else
+          stem + u"ая" if gender == "f" else stem + u"ее")
+    else:
+      sg = (stem + u"ый" if gender == "m" else
+          stem + u"ая" if gender == "f" else stem + u"ое")
+    return [sg]
+
+  m = re.search(ur"^(.*)[аяыи]́?$", nompl)
   if not m:
     pagemsg("WARNING: Strange nom plural %s" % nompl)
     return []
   stem = try_to_stress(m.group(1))
+  soft = re.search(ur"яхъ?$", prepl)
   if soft and gender == "f":
     return [add_soft_sign(stem), stem + u"я"]
   return [stem + u"а" if gender == "f" else
@@ -142,11 +172,11 @@ def synthesize_singular(nompl, prepl, gender, pagemsg):
           add_hard_neuter(stem) if gender == "n" else
           do_assert(False, "Unrecognized gender: %s" % gender)]
 
-def separate_multiwords(forms):
+def separate_multiwords(forms, splitre):
   words = []
   for case in forms:
     for multiform in re.split(r"\s+,\s+", forms[case]):
-      formwords = re.split(r"\s+", multiform)
+      formwords = re.split(splitre, multiform)
       while len(words) < len(formwords):
         words.append({})
       i = 0
@@ -192,45 +222,55 @@ def infer_decl(t, noungender, pagemsg):
     i += 1
 
   lemma = forms["nom_pl"] if numonly == "pl" else forms["nom_sg"]
-  if " " in lemma:
-    words = separate_multiwords(forms)
-    argses = []
-    wordno = 0
-    for wordforms in words:
-      wordno += 1
-      pagemsg("Inferring word #1: %s" % (wordforms["nom_pl"] if numonly == "pl" else wordforms["nom_sg"]))
-      args = infer_word(wordforms, number, numonly, pagemsg)
-      if not args:
-        pagemsg("Unable to infer word #%s: %s" % (wordno, unicode(t)))
-        return None
-      argses.append(args)
-    animacies = [x for args in argses for x in args if x in ["a=in", "a=an"]]
-    if "a=in" in animacies and "a=an" in animacies:
-      pagemsg("WARNING: Conflicting animacies in multi-word expression: %s" %
-          unicode(t))
-      # FIXME, handle this better
-      return None
-    animacy = [animacies[0]] if animacies else []
-    if animacy == ["a=in"]:
-      animacy = []
-    # FIXME, eventually we want to do something similar for number in case
-    # there are mismatched numbers. For now we always assume the same
-    # number restriction for all words (same as passed in, based on the
-    # manual template name).
-    allargs = []
-    for args in argses:
-      filterargs = [x for x in args if not re.match("[an]=", x)]
-      if allargs and old_template:
-        allargs.append("_")
-      allargs.extend(filterargs)
-    allargs += animacy + number
-    pagemsg("Found a multi-word match: {{%s|%s}}" % (decl_template, "|".join(allargs)))
-    return allargs
-  else:
-    args = infer_word(forms, number, numonly, pagemsg)
-    return [x for x in args if x != "a=in"]
 
-def infer_word(forms, number, numonly, pagemsg):
+  def try_multiword(ty):
+    if ty in ["space", "dash"]:
+      if (ty == "space" and " " or "-") in lemma:
+        words = separate_multiwords(forms, (ty == "space" and r"\s+" or "-"))
+        argses = []
+        wordno = 0
+        for wordforms in words:
+          wordno += 1
+          pagemsg("Inferring word #%s: %s" % (wordno, wordforms["nom_pl"] if numonly == "pl" else wordforms["nom_sg"]))
+          args = infer_word(wordforms, noungender, number, numonly, pagemsg)
+          if not args:
+            pagemsg("Unable to infer word #%s: %s" % (wordno, unicode(t)))
+            return None
+          argses.append(args)
+        animacies = [x for args in argses for x in args if x in ["a=in", "a=an"]]
+        if "a=in" in animacies and "a=an" in animacies:
+          pagemsg("WARNING: Conflicting animacies in multi-word expression: %s" %
+              unicode(t))
+          # FIXME, handle this better
+          return None
+        animacy = [animacies[0]] if animacies else []
+        if animacy == ["a=in"]:
+          animacy = []
+        # FIXME, eventually we want to do something similar for number in case
+        # there are mismatched numbers. For now we always assume the same
+        # number restriction for all words (same as passed in, based on the
+        # manual template name).
+        allargs = []
+        for args in argses:
+          filterargs = [x for x in args if not re.search("^[an]=", x)]
+          if allargs:
+            if ty == "dash":
+              allargs.append(old_template and "join:-" or "-")
+            elif old_template:
+              allargs.append("_")
+          allargs.extend(filterargs)
+        allargs += animacy + number
+        pagemsg("Found a multi-word match: {{%s|%s}}" % (decl_template, "|".join(allargs)))
+        return allargs
+    else:
+      args = infer_word(forms, noungender, number, numonly, pagemsg)
+      return [x for x in args if x != "a=in"]
+  for ty in ["space", "dash", "single"]:
+    args = try_multiword(ty)
+    if args:
+      return args
+
+def infer_word(forms, noungender, number, numonly, pagemsg):
   # Check for invariable word
   caseforms = forms.values()
   allsame = True
@@ -245,10 +285,10 @@ def infer_word(forms, number, numonly, pagemsg):
     else:
       return [caseforms[0] + "*"]
 
-  nompl = forms["nom_pl"]
-  gensg = forms["gen_sg"]
-  genpl = try_to_stress(forms["gen_pl"])
-  prepl = forms["pre_pl"]
+  nompl = forms.get("nom_pl", "")
+  gensg = forms.get("gen_sg", "")
+  genpl = try_to_stress(forms.get("gen_pl", ""))
+  prepl = forms.get("pre_pl", "")
   if numonly == "pl":
     nomsgs = synthesize_singular(nompl, prepl, noungender, pagemsg)
   else:
@@ -274,8 +314,8 @@ def infer_word(forms, number, numonly, pagemsg):
         return None
 
     # FIXME: Adjectives in -ий of the +ьий type
-    if (re.match(u"^.*([ыиіо]й|[яаь]я|[оеь]е)$", make_unstressed(nomsg)) or
-        numonly == "pl" and re.match(u"^.*[ыи]e$", make_unstressed(nompl))):
+    if (re.search(u"([ыиіо]й|[яаь]я|[оеь]е)$", make_unstressed(nomsg)) or
+        numonly == "pl" and re.search(u"[ыи]е$", make_unstressed(nompl))):
       if old_template:
         args = ["", nomsg, "+"] + anim + number
       else:
@@ -288,7 +328,7 @@ def infer_word(forms, number, numonly, pagemsg):
     plstress = "any"
     genders = [""]
     bare = [""]
-    m = re.match(ur"(.*)([аяеоё])(́?)$", nomsg)
+    m = re.search(ur"^(.*)([аяеоё])(́?)$", nomsg)
     if m:
       pagemsg("Nom sg %s refers to feminine 1st decl or neuter 2nd decl" % nomsg)
       # We use to call try_to_stress() here on the stem but that fails if
@@ -303,11 +343,11 @@ def infer_word(forms, number, numonly, pagemsg):
       if numonly != "sg":
         # Try to find a stressed version of the stem
         if is_unstressed(stem):
-          mm = re.match(ur"(.*)[аяыи]́?$", nompl)
+          mm = re.search(ur"^(.*)[аяыи]́?$", nompl)
           if not mm:
             pagemsg("WARNING: Don't recognize fem 1st-decl or neut 2nd-decl nom pl ending in form %s" % nompl)
           else:
-            nomplstem = try_to_stress(mm.group(1))
+            nomplstem = mm.group(1)
             if make_unstressed(nomplstem) != stem:
               pagemsg("Nom pl stem %s not accent-equiv to nom sg stem %s" % (
                 nomplstem, stem))
@@ -316,27 +356,32 @@ def infer_word(forms, number, numonly, pagemsg):
                   (stem, nomplstem))
               stem = nomplstem
 
-        if stem == genpl:
-          pagemsg("Gen pl %s same as stem" % genpl)
-        elif make_unstressed(stem) != make_unstressed(genpl):
-          pagemsg("Stem %s not accent-equiv to gen pl %s" % (stem, genpl))
+        possible_genpls = []
+        possible_unstressed_genpls = []
+        for genpl_ending in ["", u"ь", u"й"]:
+          possible_genpls.append(stem + genpl_ending)
+          possible_unstressed_genpls.append(make_unstressed(stem + genpl_ending))
+        if genpl in possible_genpls:
+          pagemsg("Gen pl %s same as stem %s (modulo expected endings)" % (genpl, stem))
+        elif make_unstressed(genpl) not in possible_unstressed_genpls:
+          pagemsg("Stem %s not accent-equiv to gen pl %s (modulo expected endings)" % (stem, genpl))
           bare = ["*", genpl]
         elif is_unstressed(stem):
           pagemsg("Replacing unstressed stem %s with accent-equiv gen pl %s" %
               (stem, genpl))
-          stem = genpl
+          stem = re.sub(u"[ьй]$", "", genpl)
         else:
           pagemsg("Stem %s stressed one way, gen pl %s stressed differently" %
               (stem, genpl))
           bare = ["*", genpl]
-        if is_unstressed(stem):
+        if is_unstressed(stem) and is_unstressed(ending):
           trystress = try_to_stress(stem)
           if trystress != stem:
             pagemsg("Replacing monosyllabic unstressed stem %s with stressed equiv %s" % (stem, trystress))
             stem = trystress
       nomsg = stem + ending
     else:
-      m = re.match(ur"(.*?)([йь]?)$", nomsg)
+      m = re.search(ur"^(.*?)([йь]?)$", nomsg)
       if m:
         nomsgstem = m.group(1)
         ending = m.group(2)
@@ -344,7 +389,7 @@ def infer_word(forms, number, numonly, pagemsg):
           if ending == u"ь":
             genders = [noungender]
         else:
-          m = re.match(ur"(.*)([аяи])(́?)$", gensg)
+          m = re.search(ur"^(.*)([аяи])(́?)$", gensg)
           if not m:
             pagemsg("WARNING: Don't recognize gen sg ending in form %s" % gensg)
             if ending == u"ь":
@@ -355,11 +400,11 @@ def infer_word(forms, number, numonly, pagemsg):
             stem = m.group(1)
             # Try to find a stressed version of the stem
             if is_unstressed(stem):
-              mm = re.match(ur"(.*)[аяыи]́?$", nompl)
+              mm = re.search(ur"^(.*)[аяыи]́?$", nompl)
               if not mm:
                 pagemsg("WARNING: Don't recognize nom pl ending in form %s" % nompl)
               else:
-                nomplstem = try_to_stress(mm.group(1))
+                nomplstem = mm.group(1)
                 if make_unstressed(nomplstem) != stem:
                   pagemsg("Nom pl stem %s not accent-equiv to gen sg stem %s" % (
                     nomplstem, stem))
@@ -367,14 +412,6 @@ def infer_word(forms, number, numonly, pagemsg):
                   pagemsg("Replacing unstressed stem %s with stressed nom pl stem %s" %
                       (stem, nomplstem))
                   stem = nomplstem
-            # Finally, try stressing a monosyllabic stem (might be wrong
-            # if we end up with -е́ when it should be -ё, but we tried to
-            # account for this by checking nom pl)
-            if is_unstressed(stem):
-              trystress = try_to_stress(stem)
-              if trystress != stem:
-                pagemsg("Replacing monosyllabic unstressed stem %s with stressed equiv %s" % (stem, trystress))
-                stem = trystress
             if ending == u"ь":
               if m.group(2) == u"я":
                 pagemsg("Found masculine soft-stem nom sg %s" % nomsg)
@@ -397,7 +434,7 @@ def infer_word(forms, number, numonly, pagemsg):
               # If an element of BARE is a two-element list, the first is
               # the value of bare and the second is the value to use for the
               # first arg in place of nom sg.
-              bare = ["*", [nomsg, stem + ending]]
+              bare = ["*", [nomsg, try_to_stress(stem + ending)]]
             elif is_unstressed(stem):
               pagemsg("Replacing unstressed stem %s with accent-equiv nom sg stem %s" %
                   (stem, nomsgstem))
@@ -407,11 +444,11 @@ def infer_word(forms, number, numonly, pagemsg):
               # If an element of BARE is a two-element list, the first is
               # the value of bare and the second is the value to use for the
               # first arg in place of nom sg.
-              bare = ["*", [nomsg, stem + ending]]
+              bare = ["*", [nomsg, try_to_stress(stem + ending)]]
 
     # Find stress pattern possibilities
     if numonly != "sg":
-      m = re.match(ur".*[аяыи](́?)$", nompl)
+      m = re.search(ur"[аяыи](́?)$", nompl)
       if m:
         plstress = m.group(1) and "ending" or "stem"
     if numonly == "sg":
@@ -444,8 +481,24 @@ def infer_word(forms, number, numonly, pagemsg):
               arg1 = bareval[2]
               bareval = bareval[1]
             else:
+              # At this point if stress pattern is 2, move the
+              # stress onto the ending if nomsg is fem. or neut. and
+              # the stress can be recovered in the gen pl.
+              if stress == "2":
+                m = re.search("^(.*[" + vowels_no_jo + "]" + AC + "?[^" + vowels + u"]*)([аяео])$", nomsg)
+                if m and u"ё" not in m.group(1):
+                  newnomsg = make_unstressed(m.group(1)) + m.group(2) + AC
+                  pagemsg("Accent-class 2 fem 1st or neut, moving stress onto ending from %s to %s" % (nomsg, newnomsg))
+                  nomsg = newnomsg
+              if is_unstressed(nomsg):
+                pagemsg("WARNING: Arg 1 (stem/nom-sg) %s is totally unstressed" % (nomsg))
+                # FIXME: If it's one syllable, should we stress it?
+                # Does this ever happen? We try hard to stress monosyllabic
+                # stems up above.
               arg1 = nomsg
-            if re.match(u"[ё́]$", arg1):
+
+
+            if re.search(u"[ё́]$", arg1):
               defstress = "2"
             else:
               defstress = "1"
@@ -463,8 +516,8 @@ def infer_word(forms, number, numonly, pagemsg):
             return args
 
     # I think these are always in -ов/-ев/-ин/-ын.
-    #if re.match(nomsg, u"^.*([шщжчц]е|[ъоа]|)$"):
-    if re.match(nomsg, u"^.*([ое]в|[ыи]н)([оаъ]?)$"):
+    #if re.search(nomsg, u"([шщжчц]е|[ъоа]|)$"):
+    if re.search(nomsg, u"([ое]в|[ыи]н)([оаъ]?)$"):
       for adjpat in ["+short", "+mixed"]:
         if old_template:
           args = ["", nomsg, adjpat] + anim + number
@@ -476,13 +529,13 @@ def infer_word(forms, number, numonly, pagemsg):
 
   return None
 
-def infer_one_page_decls(page, index, text):
+def infer_one_page_decls_1(page, index, text):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, unicode(page.title()), txt))
   genders = set()
   for t in text.filter_templates():
-    if unicode(t.name) == "ru-noun":
-      m = re.match("^([mfn])", getparam(t, "2"))
+    if unicode(t.name).strip() in ["ru-noun", "ru-proper noun"]:
+      m = re.search("^([mfn])", getparam(t, "2"))
       if not m:
         pagemsg("WARNING: Strange ru-noun template: %s" % unicode(t))
       else:
@@ -490,7 +543,7 @@ def infer_one_page_decls(page, index, text):
 
   for t in text.filter_templates():
     if unicode(t.name).strip() in ["ru-decl-noun", "ru-decl-noun-unc", "ru-decl-noun-pl"]:
-      if unicode(t.name) == "ru-decl-noun-pl":
+      if unicode(t.name).strip() == "ru-decl-noun-pl":
         genders = list(genders)
         if len(genders) == 0:
           pagemsg("WARNING: Can't find gender for pl-only nominal")
@@ -517,6 +570,14 @@ def infer_one_page_decls(page, index, text):
             t.add(i, arg)
             i += 1
   return text, "Infer declension for manual decls (ru-decl-noun)"
+
+def infer_one_page_decls(page, index, text):
+  try:
+    return infer_one_page_decls_1(page, index, text)
+  except StandardError as e:
+    msg("%s %s: WARNING: Got an error: %s" % (index, unicode(page.title()), repr(e)))
+    traceback.print_exc(file=sys.stdout)
+    return text, "no change"
 
 def iter_pages(iterator):
   i = 0
@@ -561,7 +622,243 @@ test_templates = [
   |де́тскую|де́тские
   |де́тской|де́тскими
   |о де́тской|о де́тских}}""",
-  u"""{{ru-decl-noun|медоно́сная пчела́|медоно́сные пчёлы|медоно́сной пчелы́|медоно́сных пчёл|медоно́сной пчеле́|медоно́сным пчёлам|медоно́сную пчелу́|медоно́сных пчёл|медоно́сной пчело́й|медоно́сными пчёлами|о медоно́сном пчеле́|о медоно́сных пчёлах}}"""]
+  u"""{{ru-decl-noun|медоно́сная пчела́|медоно́сные пчёлы|медоно́сной пчелы́|медоно́сных пчёл|медоно́сной пчеле́|медоно́сным пчёлам|медоно́сную пчелу́|медоно́сных пчёл|медоно́сной пчело́й|медоно́сными пчёлами|о медоно́сном пчеле́|о медоно́сных пчёлах}}""",
+  u"""{{ru-decl-noun
+  |истреби́тель-бомбардиро́вщик|истреби́тели-бомбардиро́вщики
+  |истреби́теля-бомбардиро́вщика|истреби́телей-бомбардиро́вщиков
+  |истреби́телю-бомбардиро́вщику|истреби́телям-бомбардиро́вщикам
+  |истреби́тель-бомбардиро́вщик|истреби́тели-бомбардиро́вщики
+  |истреби́телем-бомбардиро́вщиком|истреби́телями-бомбардиро́вщиками
+  |об истреби́теле-бомбардиро́вщике|об истреби́телях-бомбардиро́вщиках}}""",
+  u"""{{ru-decl-noun
+  |ко́свенный паде́ж|ко́свенные падежи́
+  |ко́свенного падежа́|ко́свенных падеже́й
+  |ко́свенному падежу́|ко́свенным падежа́м
+  |ко́свенный паде́ж|ко́свенные падежи́
+  |ко́свенным падежо́м|ко́свенными падежа́ми
+  |о ко́свенном падеже́|о ко́свенных падежа́х}}""",
+  u"""{{ru-decl-noun
+  |кусо́к дерьма́|куски́ дерьма́
+  |куска́ дерьма́|куско́в дерьма́
+  |куску́ дерьма́|куска́м дерьма́
+  |кусо́к дерьма́|куски́ дерьма́
+  |куско́м дерьма́|куска́ми дерьма́
+  |о куске́ дерьма́|о куска́х дерьма́}}""",
+  u"""{{ru-decl-noun
+  |противота́нковый ёж|противота́нковые ежи́
+  |противота́нкового ежа́|противота́нковых еже́й
+  |противота́нковому ежу́|противота́нковым ежа́м
+  |противота́нковый ёж|противота́нковые ежи́
+  |противота́нковым ежо́м|противота́нковыми ежа́ми
+  |о противота́нковом еже́|о против.ота́нковых ежа́х}}""",
+  u"""{{ru-decl-noun
+  |а́рмия Соединённых Шта́тов Аме́рики|а́рмии Соединённых Шта́тов Аме́рики
+  |а́рмии Соединённых Шта́тов Аме́рики|а́рмий Соединённых Шта́тов Аме́рики
+  |а́рмии Соединённых Шта́тов Аме́рики|а́рмиям Соединённых Шта́тов Аме́рики
+  |а́рмию Соединённых Шта́тов Аме́рики|а́рмии Соединённых Шта́тов Аме́рики
+  |а́рмией Соединённых Шта́тов Аме́рики|а́рмиями Соединённых Шта́тов Аме́рики
+  |об а́рмии Соединённых Шта́тов Аме́рики|об а́рмиях Соединённых Шта́тов Аме́рики}}""",
+  u"""{{ru-decl-noun
+  |дезоксирибонуклеи́новая кислота́|дезоксирибонуклеи́новые кисло́ты
+  |дезоксирибонуклеи́новой кислоты́|дезоксирибонуклеи́новых кисло́т
+  |дезоксирибонуклеи́новой кислоте́|дезоксирибонуклеи́новым кисло́там
+  |дезоксирибонуклеи́новую кислоту́|дезоксирибонуклеи́новые кисло́ты
+  |дезоксирибонуклеи́новой кислото́й|дезоксирибонуклеи́новыми кисло́тами
+  |о дезоксирибонуклеи́новой кислоте́|о дезоксирибонуклеи́новых кисло́тах}}""",
+  u"""{{ru-decl-noun
+  |Ба́ба-Яга́|Ба́бы-Яги́
+  |Ба́бы-Яги́|Баб-Яг
+  |Ба́бе-Яге́|Ба́бам-Яга́м
+  |Ба́бу-Ягу́|Баб-Яг
+  |Ба́бой-Яго́й|Ба́бами-Яга́ми
+  |о Ба́бе-Яге́|о Ба́бах-Яга́х}}""",
+  u"""{{ru-decl-noun
+  |кори́чное де́рево|кори́чные дере́вья
+  |кори́чного де́рева|кори́чных дере́вьев
+  |кори́чному де́реву|кори́чным дере́вьям
+  |кори́чное де́рево|кори́чные дере́вья
+  |кори́чным де́ревом|кори́чными дере́вьями
+  |о кори́чном де́реве|о кори́чных дере́вьях}}""",
+  u"""{{ru-decl-noun
+  |щётка для ресни́ц|щётки для ресни́ц
+  |щётки для ресни́ц|щёток для ресни́ц
+  |щётке для ресни́ц|щёткам для ресни́ц
+  |щётку для ресни́ц|щётки для ресни́ц
+  |щёткой для ресни́ц|щётками для ресни́ц
+  |о щётке для ресни́ц|о щётках для ресни́ц}}""",
+  u"""{{ru-decl-noun
+  |учи́тель|учителя́, учители́
+  |учи́теля|учителе́й
+  |учи́телю|учителя́м
+  |учи́теля|учителе́й
+  |учи́телем|учителя́ми
+  |учи́теле|учителя́х
+  }}""",
+  u"""{{ru-decl-noun
+  |пе́рвое лицо́|пе́рвые ли́ца
+  |пе́рвого лица́|пе́рвых лиц
+  |пе́рвому лицу́|пе́рвым ли́цам
+  |пе́рвое лицо́|пе́рвые ли́ца
+  |пе́рвым лицо́м|пе́рвыми ли́цами
+  |о пе́рвом лице́|о пе́рвых ли́цах}}""",
+  u"""{{ru-decl-noun
+  |тре́тье лицо́|тре́тьи ли́ца
+  |тре́тьего лица́|тре́тьих лиц
+  |тре́тьему лицу́|тре́тьим ли́цам
+  |тре́тье лицо́|тре́тьи ли́ца
+  |тре́тьим лицо́м|тре́тьими ли́цами
+  |о тре́тьем лице́|о тре́тьих ли́цах}}""",
+  u"""====Declension====
+  {{ru-decl-noun
+  |отглаго́льное существи́тельное|отглаго́льные существи́тельные
+  |отглаго́льного существи́тельного|отглаго́льных существи́тельных
+  |отглаго́льному существи́тельному|отглаго́льным существи́тельным
+  |отглаго́льное существи́тельное|отглаго́льные существи́тельные
+  |отглаго́льным существи́тельным|отглаго́льными существи́тельными
+  |об отглаго́льном существи́тельном|об отглаго́льных существи́тельных}}""",
+  u"""{{ru-decl-noun
+  |кра́сное смеще́ние|кра́сные смеще́ния
+  |кра́сного смеще́ния|кра́сных смеще́ний
+  |кра́сному смеще́нию|кра́сным смеще́ниям
+  |кра́сное смеще́ние|кра́сные смеще́ния
+  |кра́сным смеще́нием|кра́сными смеще́ниями
+  |о кра́сном смеще́нии|о кра́сных смеще́ниях}}""",
+  u"""{{ru-decl-noun
+  |кардина́льное число́|кардина́льные чи́сла
+  |кардина́льного числа́|кардина́льных чи́сел
+  |кардина́льному числу́|кардина́льным чи́слам
+  |кардина́льное число́|кардина́льные чи́сла
+  |кардина́льным число́м|кардина́льными чи́слами
+  |о кардина́льном числе́|о кардина́льных чи́слах}}""",
+  u"""{{ru-decl-noun
+  |страна́ све́та|стра́ны све́та
+  |страны́ све́та|стран све́та
+  |стране́ све́та|стра́нам све́та
+  |страну́ све́та|стра́ны све́та
+  |страно́й све́та|стра́нами све́та
+  |о стране́ све́та|о стра́нах све́та}}""",
+  u"""{{ru-decl-noun
+  |и́мя числи́тельное|имена́ числи́тельные
+  |и́мени числи́тельного|имён числи́тельных
+  |и́мени числи́тельному|имена́м числи́тельным
+  |и́мя числи́тельное|имена́ числи́тельные
+  |и́менем числи́тельным|имена́ми числи́тельными
+  |об и́мени числи́тельном|об имена́х числи́тельных}}""",
+  u"""{{ru-decl-noun
+  |мужско́й полово́й член|мужски́е половы́е чле́ны
+  |мужско́го полово́го чле́на|мужски́х половы́х чле́нов
+  |мужско́му полово́му чле́ну|мужски́м половы́м чле́нам
+  |мужско́й полово́й член|мужски́е половы́е чле́ны
+  |мужски́м половы́м ч.ле́ном|мужски́ми половы́ми чле́нами
+  |мужско́м полово́м чле́не|мужски́х половы́х чле́нах}}""",
+  u"""{{ru-decl-noun
+  |варёное яйцо́|варёные я́йца
+  |варёного яйца́|варёных яи́ц
+  |варёному яйцу́|варёным я́йцам
+  |варёное яйцо́|варёные я́йца
+  |варёным яйцо́м|варёными я́йцами
+  |о варёном яйце́|о варёных я́йцах}}""",
+  u"""{{ru-decl-noun
+  |коренно́й зуб|коренны́е зу́бы
+  |коренно́го зу́ба|коренны́х зубо́в
+  |коренно́му зу́бу|коренны́м зуба́м
+  |коренно́й зуб|коренны́е зу́бы
+  |коренны́м зу́бом|коренны́ми зуба́ми
+  |о коренно́м зу́бе|о коренны́х зуба́х}}""",
+  u"""{{ru-decl-noun
+  |зени́тный пулемёт|зени́тные пулемёты
+  |зени́тного пулемёта|зени́тных пулемётов
+  |зени́тному пулемёту|зени́тным пулемётам
+  |зени́тный пулемёт|зени́тные пулемёты
+  |зени́тным пулемётом|зени́тными пулемётами
+  |о зени́тном пулемёте|о зени́тных пулемётах}}""",
+  u"""{{ru-decl-noun
+  |вре́мя го́да|времена́ го́да
+  |вре́мени го́да|времён го́да
+  |вре́мени го́да|времена́м го́да
+  |вре́мя го́да|времена́ го́да
+  |вре́менем го́да|времена́ми го́да
+  |о вре́мени го́да|о времена́х го́да}}""",
+  u"""{{ru-decl-noun
+  |трёхэта́жное сло́во|трёхэта́жные слова́
+  |трёхэта́жного сло́ва|трёхэта́жных слов
+  |трёхэта́жному сло́ву|трёхэта́жным слова́м
+  |трёхэта́жное сло́во|трёхэта́жные слова́
+  |трёхэта́жным сло́вом|трёхэта́жными слова́ми
+  |трёхэта́жном сло́ве|трёхэта́жных слова́х}}""",
+  u"""{{ru-decl-noun
+  |шишкови́дная железа́|шишкови́дные же́лезы
+  |шишкови́дной железы́|шишкови́дных желёз
+  |шишкови́дной железе́|шишкови́дным железа́м
+  |шишкови́дную железу́|шишкови́дные же́лезы
+  |шишкови́дной железо́й|шишкови́дными железа́ми
+  |о шишкови́дной железе́|о шишкови́дных железа́х}}""",
+  u"""{{ru-decl-noun
+  |кастрю́лька молока́|кастрю́льки молока́
+  |кастрю́льки молока́|кастрю́лек молока́
+  |кастрю́льке молока́|кастрю́лькам молока́
+  |кастрю́льку молока́|кастрю́льки молока́
+  |кастрю́лькой молока́|кастрю́льками молока́
+  |о кастрю́льке молока́|о кастрю́льках молока́}}""",
+  u"""{{ru-decl-noun
+  |пау́к-во́лк|пауки́-во́лки
+  |паука́-во́лка|пауко́в-волко́в
+  |пауку́-во́лку|паука́м-волка́м
+  |паука́-во́лка|пауко́в-волко́в
+  |пауко́м-во́лком|паука́ми-волка́ми
+  |о пауке́-во́лке|о паука́х-волка́х}}""",
+  u"""{{ru-decl-noun
+  |ка́рточная игра́|ка́рточные и́гры
+  |ка́рточной игры́|ка́рточных игр
+  |ка́рточной игре́|ка́рточным и́грам
+  |ка́рточную игру́|ка́рточные и́гры
+  |ка́рточной игро́й|ка́рточными и́грами
+  |о ка́рточной игре́|о ка́рточных и́грах}}""",
+  u"""{{ru-decl-noun
+  |ско́рая по́мощь|ско́рые по́мощи
+  |ско́рой по́мощи|ско́рых по́мощей
+  |ско́рой по́мощи|ско́рым по́мощам
+  |ско́рую по́мощь|ско́рые по́мощи
+  |ско́рой по́мощью|ско́рыми по́мощами
+  |о ско́рой по́мощи|о ско́рых по́мощах}}""",
+  u"""{{ru-decl-noun
+  |со́лнечный ве́тер|со́лнечные ве́тры
+  |со́лнечного ве́тра|со́лнечных ветро́в
+  |со́лнечному ве́тру|со́лнечным ветра́м
+  |со́лнечный ве́тер|со́лнечные ве́тры
+  |со́лнечным ве́тром|со́лнечными ветра́ми
+  |со́лнечном ве́тре|со́лнечных ветра́х
+  }}""",
+  u"""{{ru-decl-noun
+  |монго́льский язы́к|монго́льские языки́
+  |монго́льского языка́|монго́льских языко́в
+  |монго́льскому языку́|монго́льским языка́м
+  |монго́льский язы́к|монго́льские языки́
+  |монго́льским языко́м|монго́льскими языка́ми
+  |о монго́льском языке́|о монго́льских языка́х}}""",
+  u"""{{ru-decl-noun
+  |головна́я боль|головны́е бо́ли|головно́й бо́ли|головны́х бо́лей|головно́й бо́ли|головны́м
+   бо́лям|головну́ю боль|головны́е бо́ли|головно́й бо́лью|головны́ми бо́лями|о головно́й бо́
+   ли|о головны́х бо́лях}}""",
+  u"""{{ru-decl-noun-unc
+  |несоверше́нный вид
+  |несоверше́нного ви́да
+  |несоверше́нному ви́ду
+  |несоверше́нный вид
+  |несоверше́нным ви́дом
+  |о несоверше́нном ви́де|}}""",
+  u"""{{ru-proper noun|[[британский|Брита́нские]] [[остров|острова́]]|m-in-p}}
+  
+  # [[British Isles]]
+  
+  ====Declension====
+  {{ru-decl-noun-pl
+  |Брита́нские острова́
+  |Брита́нских острово́в
+  |Брита́нским острова́м
+  |Брита́нские острова́
+  |Брита́нскими острова́ми
+  |о Брита́нских острова́х}}"""]
 def test_infer():
   class Page:
     def title(self):
