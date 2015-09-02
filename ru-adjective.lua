@@ -31,9 +31,30 @@
 		f: feminine
 		p: plural
 		mp: masculine plural (old-style tables only)
+
+TODO:
+
+1. Implement special-case (1) and (2) on p. 60 of Zaliznyak. Special-case
+   (1) is for adjectives ending in -нный and -нний that aren't unreducible
+   and causes the bare form to end in single -н instead of double -нн.
+   Possibly this should apply to all such adjectives in the absence of either
+   this special case of (2). Special case (2) is for adjectives in -нный
+   and has the short stem in single -н, i.e. *all* short forms have single
+   -н.
+2. Some adjectives can construct their short forms in multiple ways; allow
+   for this using an 'or' parameter, similarly to what's done in nouns; or
+   allow a comma in the decl parameter.
+3. Look into the triangle special case (we would indicate this with some
+   character, e.g. ^ or @). This appears to refer to irregularities either in
+   the comparative (which we don't care about here) or in the accentation of
+   the reducible short masculine singular. This might not be doable as it
+   might refer simply to any misc. irregularity; and even if it is, it might
+   not be worth it, and better simply to have this done using the various
+   override mechanisms.
 ]=]--
 
 local m_utilities = require("Module:utilities")
+local ut = require("Module:utils")
 local m_utils = require("Module:utils")
 local m_links = require("Module:links")
 local com = require("Module:ru-common")
@@ -44,11 +65,39 @@ local export = {}
 
 local lang = require("Module:languages").getByCode("ru")
 
+local u = mw.ustring.char
+local rfind = mw.ustring.find
+local rsubn = mw.ustring.gsub
+local rmatch = mw.ustring.match
+local rsplit = mw.text.split
+local ulower = mw.ustring.lower
+local usub = mw.ustring.sub
+
+-- version of rsubn() that discards all but the first return value
+local function rsub(term, foo, bar)
+	local retval = rsubn(term, foo, bar)
+	return retval
+end
+
 local declensions = {}
 local declensions_old = {}
+local short_declensions = {}
+local short_declensions_old = {}
+local short_stress_patterns = {}
 local decline = nil
-local cases = nil
-local old_cases = nil
+
+cases = { "nom_m", "nom_n", "nom_f", "nom_p",
+	"gen_m", "gen_f", "gen_p",
+	"dat_m", "dat_f", "dat_p",
+	"acc_f", "acc_n", "ins_m",
+	"ins_f", "ins_p", "pre_m",
+	"pre_f", "pre_p",
+	"short_m", "short_n", "short_f", "short_p",
+}
+
+-- Populate old_cases from cases
+old_cases = mw.clone(cases)
+table.insert(old_cases, "nom_mp")
 
 local velar = {
 	["г"] = true,
@@ -61,8 +110,8 @@ local function track(page)
 	return true
 end
 
-local function tracking_code(decl_class, args)
-	local hint_types = com.get_stem_trailing_letter_type(args[1])
+local function tracking_code(decl_class, args, short_accent)
+	local hint_types = com.get_stem_trailing_letter_type(args.stem)
 	local function dotrack(prefix)
 		track(decl_class)
 		for _, hint_type in ipairs(hint_types) do
@@ -71,9 +120,16 @@ local function tracking_code(decl_class, args)
 		end
 	end
 	dotrack("")
-	if args[3] and args[3] ~= args[1] then
+	if args[3] or short_accent then
 		track("short")
 		dotrack("short/")
+	end
+	if short_accent then
+		track("short-accent/" .. short_accent)
+	end
+	if args.explicit_short_stem then
+		track("explicit-short-stem")
+		track("explicit-short-stem/" .. short_accent)
 	end
 	for _, case in ipairs(old_cases) do
 		if args[case] then
@@ -96,49 +152,120 @@ local function do_show(frame, old, manual)
         end
 	end
 
+	local stem
 	if manual then
-		args[1] = ""
+		stem = ""
 	elseif not args[1] then
 		error("Stem (first argument) must be specified")
+	else
+		stem = args[1]
 	end
-	local declension_type = manual and "-" or args[2]
+	local decl_type = manual and "-" or args[2]
+
+	-- Auto-detect actual decl type, and get short accent and overriding
+	-- short stem, if specified.
+	local short_accent, short_stem
+	stem, decl_type, short_accent, short_stem =
+		detect_stem_and_accent_type(stem, decl_type)
+	args.hint = manual and "" or usub(stem, -1)
+	if velar[args.hint] and decl_type == (old and "ій" or "ий") then
+		decl_type = "ый"
+	end
+
+	-- Set stem and unstressed version. Also construct end-accented version
+	-- of stem if unstressed; needed for short forms of adjectives of type -о́й.
+	args.stem = stem
+	args.ustem = com.make_unstressed_once(stem)
+	local accented_stem = stem
+	if com.is_unstressed(accented_stem) then
+		accented_stem = com.make_ending_stressed(accented_stem)
+	end
+
+	-- Check if short forms allowed; if not, no short-form params can be given.
 	local short_forms_allowed = manual and true or
-		declension_type == "ый" or declension_type == "ой" or declension_type == (old and "ій" or "ий")
-	args[3] = args[3] or (not short_forms_allowed and args[1]) or nil
-	args[0] = com.make_unstressed_once(args[1])
-	args[2] = args[3] and com.make_unstressed_once(args[3])
-
-	args["hint"] = manual and "" or mw.ustring.sub(args[1], -1)
-	if velar[args["hint"]] and declension_type == (old and "ій" or "ий") then
-		declension_type = "ый"
+		decl_type == "ый" or decl_type == "ой" or decl_type == (old and "ій" or "ий")
+	if not short_forms_allowed then
+		if short_accent or short_stem then
+			error("Cannot specify short accent or short stem with declension type " .. decl_type .. ", as short forms aren't allowed")
+		if args[4] or args[5] or args[6] or args.short_m or
+			args.short_f or args.short_n or args.short_p then
+			error("Cannot specify explicit short forms with declension type " .. decl_type .. ", as shrot forms aren't allowed")
+		end
 	end
 
-	args["suffix"] = args["suffix"] or ""
-	args["old"] = old
+	-- Construct bare version of stem; used for cases where the ending
+	-- is non-syllabic (i.e. short masculine singular of long adjectives,
+	-- and masculine singular of short or mixed adjectives). Comes from
+	-- short masculine or 3rd argument if explicitly given, else from the
+	-- accented stem, possibly with the unreduction transformation applied
+	-- (if * occurs in the short accent spec).
+	local reducible = short_accent and rfind(short_accent, "%*")
+	if short_accent then
+		short_accent = rsub(short_accent, "%*", "")
+	end
+	args.bare = args.short_m or args[3]
+	if not args.bare and reducible then
+		args.bare = unreduce_stem(accented_stem, short_accent)
+		if not args.bare then
+			error("Unable to unreduce stem: " .. stem)
+		end
+	end
+	args.bare = args.bare or not short_forms_allowed and accented_stem
+	-- unused: args.ubare = args.bare and com.make_unstressed_once(args.bare)
+
+	-- Construct short stem used for short forms other than masculine sing.
+	-- May be explicitly given, else comes from end-accented stem.
+	if short_stem then
+		args.explicit_short_stem = true
+	else
+		short_stem = accented_stem
+	end
+	args.short_stem = short_stem
+	arts.short_ustem = com.make_unstressed_once(short_stem)
+
+	args.suffix = args.suffix or ""
+	args.old = old
 	-- HACK: Escape * at beginning of line so it doesn't show up
 	-- as a list entry. Many existing templates use * for footnotes.
 	-- FIXME: We should maybe do this in {{ru-adj-table}} instead.
-	if args["notes"] then
-		args["notes"] = mw.ustring.gsub(args["notes"], "^%*", "&#42;")
+	if args.notes then
+		args.notes = rsub(args.notes, "^%*", "&#42;")
 	end
 
-	args["categories"] = {}
+	args.categories = {}
 	-- FIXME: For compatibility with old {{temp|ru-adj7}}, {{temp|ru-adj8}},
 	-- {{temp|ru-adj9}}; maybe there's a better way.
-	if m_utils.contains({"ьій", "ьий", "short", "mixed", "ъ-short", "ъ-mixed"}, declension_type) then
-		table.insert(args["categories"], "Russian possessive adjectives")
+	if m_utils.contains({"ьій", "ьий", "short", "mixed", "ъ-short", "ъ-mixed"}, decl_type) then
+		table.insert(args.categories, "Russian possessive adjectives")
 	end
 
 	local decls = old and declensions_old or declensions
-	if not decls[declension_type] then
-		error("Unrecognized declension type " .. declension_type)
+	local short_decls = old and short_declensions_old or short_declensions
+	if not decls[decl_type] then
+		error("Unrecognized declension type " .. decl_type)
 	end
 
-	tracking_code(declension_type, args)
+	if short_accent == "" then
+		error("Short accent type cannot be blank, should be omitted or given")
+	end
+	if short_accent and not short_stress_patterns[short_accent] then
+		error("Unrecognized short accent type " .. short_accent)
+	end
 
-	decline(args, decls[declension_type], declension_type == "ой", short_forms_allowed)
+	tracking_code(decl_type, args, short_accent)
 
-	return make_table(args) .. m_utilities.format_categories(args["categories"], lang)
+	decline(args, decls[decl_type], decl_type == "ой")
+	if short_forms_allowed then
+		decline_short(args, decls_short[decl_type],
+			short_accent and short_stress_patterns[short_accent])
+	else
+		args.short_m = nil
+		args.short_n = nil
+		args.short_f = nil
+		args.short_p = nil
+	end
+
+	return make_table(args) .. m_utilities.format_categories(args.categories, lang)
 end
 
 -- The main entry point for modern declension tables.
@@ -198,6 +325,74 @@ function export.get_nominal_decl(decl, gender, old)
 	end
 	return n
 end
+
+--------------------------------------------------------------------------
+--                   Autodetection and stem munging                     --
+--------------------------------------------------------------------------
+
+-- Attempt to detect the type of the stem (= including ending) based
+-- on its ending, separating off the base and the ending; also extract
+-- the accent type for short adjectives and optional short stem. DECL
+-- is the value passed in, and might already specify the ending. Return
+-- four values: BASE, DECL, SHORT_ACCENT (accent class of short adjective,
+-- or nil for no short adjectives other than specified through overrides),
+-- SHORT_STEM (special stem of short adjective, nil if same as long stem).
+function detect_stem_and_accent_type(stem, decl)
+	if rfind(decl, "^[abc*]") then
+		decl = ":" .. decl
+	end
+	splitvals = rsplit(decl, ":")
+	if #splitvals > 3 then
+		error("Should be at most three colon-separated parts of a declension spec: " .. decl)
+	end
+	decl, short_accent, short_stem = splitvals[1], splitvals[2], splitvals[3]
+	if decl == "" then
+		local base, ending = rmatch(stem, "^(.*)([ыиіo]́?й)$")
+		if base then
+			if rfind(ending "^[іи]й$") and rfind(base, "[" .. com.velar .. com.sib .. "]$") then
+				return base, "ый", short_accent, short_stem
+			end
+			return base, com.make_unstressed(ending), short_accent, short_stem
+		else
+			error("Cannot determine stem type of adjective: " .. stem)
+		end
+	elseif decl == "short" or decl == "mixed" then
+		local base, ending = rmatch(stem, "^(.-)ъ?$")
+		assert(base)
+		return base, decl, short_accent, short_stem
+	else
+		return stem, decl, short_accent, short_stem
+	end
+end
+
+-- Construct bare form. Return nil if unable.
+function unreduce_stem(accented_stem, short_accent, old, decl)
+	local ret = com.unreduce_stem(accented_stem, rfind(short_accent, "^b"))
+	if not ret then
+		return nil
+	end
+	if old and decl ~= "ій" then
+		return ret .. "ъ"
+	elseif decl == "ий" or decl == "ій" then
+		-- This next special case is mentioned in Zaliznyak's 1980 grammatical
+		-- dictionary for adjectives (footnote, p. 60).
+		if rfind(ret, "[нН]$") then
+			-- FIXME: What happens in this case old-style? I assume that
+			-- -ъ is added, but this is a guess.
+			return ret .. (old and "ъ" or "")
+		elseif rfind(ret, com.vowel .. "́?$") then
+			return ret .. "й"
+		else
+			return ret .. "ь"
+		end
+	else
+		return ret
+	end
+end
+
+--------------------------------------------------------------------------
+--                                Declensions                           --
+--------------------------------------------------------------------------
 
 declensions["ый"] = {
 	["nom_m"] = "ый",
@@ -482,6 +677,10 @@ declensions_old["ъ-mixed"] = declensions_old["mixed"]
 
 declensions_old["-"] = declensions["-"]
 
+--------------------------------------------------------------------------
+--                          Sibilant/Velar/ц rules                      --
+--------------------------------------------------------------------------
+
 local stressed_sibilant_rules = {
 	["я"] = "а",
 	["ы"] = "и",
@@ -546,81 +745,87 @@ local old_consonantal_suffixes = {
 	["й"] = true,
 }
 
-local function attach_unstressed(args, suf)
-	local old = args["old"]
+--------------------------------------------------------------------------
+--                           Declension functions                       --
+--------------------------------------------------------------------------
+
+local function attach_unstressed(args, suf, stem)
+	local old = args.old
 	if suf == nil then
 		return nil
 	elseif old and old_consonantal_suffixes[suf] or not old and consonantal_suffixes[suf] then
-		if mw.ustring.find(args[3], old and "[йьъ]$" or "[йь]$") then
-			return args[3]
+		if rfind(args.bare, old and "[йьъ]$" or "[йь]$") then
+			return args.bare
+		elseif suf == "ъ" then
+			return args.bare .. suf
 		else
-			if suf == "й" or suf == "ь" then
-				if mw.ustring.find(args[3], "[аеёиіоуэюяѣ́]$") then
-					suf = "й"
-				else
-					suf = "ь"
-				end
-			end
-			return args[3] .. suf
+			return args.bare
 		end
 	end
 	suf = com.make_unstressed(suf)
-	local first = mw.ustring.sub(suf, 1, 1)
-	local rules = unstressed_rules[args["hint"]]
+	local first = usub(suf, 1, 1)
+	local rules = unstressed_rules[args.hint]
 	if rules then
 		local conv = rules[first]
 		if conv then
 			if old then
-				local ending = mw.ustring.sub(suf, 2)
-				if conv == "и" and mw.ustring.find(ending, "^́?[аеёиійоуэюяѣ]") then
+				local ending = usub(suf, 2)
+				if conv == "и" and rfind(ending, "^́?[аеёиійоуэюяѣ]") then
 					conv = "і"
 				end
 				suf = conv .. ending
 			else
-				suf = conv .. mw.ustring.sub(suf, 2)
+				suf = conv .. usub(suf, 2)
 			end
 		end
 	end
-	return args[1] .. suf
+	return stem .. suf
 end
 
-local function attach_stressed(args, suf)
-	local old = args["old"]
+local function attach_stressed(args, suf, stem, ustem)
+	local old = args.old
 	if suf == nil then
 		return nil
-	elseif not mw.ustring.find(suf, "[ё́]") then -- if suf has no "ё" or accent marks
-		return attach_unstressed(args, suf)
+	elseif not rfind(suf, "[ё́]") then -- if suf has no "ё" or accent marks
+		return attach_unstressed(args, suf, stem)
 	end
-	local first = mw.ustring.sub(suf, 1, 1)
-	local rules = stressed_rules[args["hint"]]
+	local first = usub(suf, 1, 1)
+	local rules = stressed_rules[args.hint]
 	if rules then
 		local conv = rules[first]
 		if conv then
 			if old then
-				local ending = mw.ustring.sub(suf, 2)
-				if conv == "и" and mw.ustring.find(ending, "^́?[аеёиійоуэюяѣ]") then
+				local ending = usub(suf, 2)
+				if conv == "и" and rfind(ending, "^́?[аеёиійоуэюяѣ]") then
 					conv = "і"
 				end
 				suf = conv .. ending
 			else
-				suf = conv .. mw.ustring.sub(suf, 2)
+				suf = conv .. usub(suf, 2)
 			end
 		end
 	end
-	return args[0] .. suf
+	return ustem .. suf
 end
 
-local function attach_with(args, suf, fun)
+local function attach_both(args, suf, stem, ustem)
+	local results = {}
+	ut.insert_if_not(results, attach_unstressed(args, suf, stem))
+	ut.insert_if_not(results, attach_stressed(args, suf, stem, ustem))
+	return results
+end
+
+local function attach_with(args, suf, fun, stem, ustem)
 	if type(suf) == "table" then
 		local tbl = {}
 		for _, x in ipairs(suf) do
-			table.insert(tbl, attach_with(args, x, fun))
+			table.insert(tbl, attach_with(args, x, fun, stem, ustem))
 		end
 		return tbl
 	else
 		local funval = fun(args, suf)
 		if funval then
-			return funval .. args["suffix"]
+			return funval .. args.suffix
 		else
 			return nil
 		end
@@ -628,15 +833,16 @@ local function attach_with(args, suf, fun)
 end
 
 local function gen_form(args, decl, case, fun)
-	args[case] = args[case] or attach_with(args, decl[case], fun)
+	args[case] = args[case] or attach_with(args, decl[case], fun, args.stem,
+		args.ustem)
 end
 
-decline = function(args, decl, stressed, short_forms_allowed)
+decline = function(args, decl, stressed)
 	local attacher = stressed and attach_stressed or attach_unstressed
 	gen_form(args, decl, "nom_m", attacher)
 	gen_form(args, decl, "nom_n", attacher)
 	gen_form(args, decl, "nom_f", attacher)
-	if args["old"] then
+	if args.old then
 		gen_form(args, decl, "nom_mp", attacher)
 	end
 	gen_form(args, decl, "nom_p", attacher)
@@ -654,23 +860,60 @@ decline = function(args, decl, stressed, short_forms_allowed)
 	gen_form(args, decl, "pre_m", attacher)
 	gen_form(args, decl, "pre_f", attacher)
 	gen_form(args, decl, "pre_p", attacher)
-	if short_forms_allowed then
-		args["short_m"] = args["short_m"] or args[3] or nil
-		args["short_n"] = args["short_n"] or args[4] or nil
-		args["short_f"] = args["short_f"] or args[5] or nil
-		args["short_p"] = args["short_p"] or args[6] or nil
-	else
-		args["short_m"] = nil
-		args["short_n"] = nil
-		args["short_f"] = nil
-		args["short_p"] = nil
-	end
 	-- default acc_n to nom_n; applies chiefly in manual declension tables
-	if not args["acc_n"] then
-		args["acc_n"] = args["nom_n"]
+	if not args.acc_n then
+		args.acc_n = args.nom_n
 	end
 
 end
+
+--------------------------------------------------------------------------
+--                        Short adjective declension                    --
+--------------------------------------------------------------------------
+
+short_declensions["ый"] = { m="", f="а", n="о", p="ы" }
+short_declensions["ой"] = short_declensions["ыи"]
+short_declensions["ий"] = { m="ь", f="я", n="е", p="и" }
+short_declensions_old["ый"] = { m="ъ", f="а", n="о", p="ы" }
+short_declensions_old["ой"] = short_declensions_old["ыи"]
+short_declensions_old["ій"] = short_declensions["ий"]
+
+-- Short adjective stress patterns:
+--   "-" = stem-stressed
+--   "+" = ending-stressed (drawn onto the last syllable of stem in masculine)
+--   "-+" = both possibilities
+short_stress_patterns["a"] = { m="-", f="-", n="-", p="-" }
+short_stress_patterns["a'"] = { m="-", f="-+", n="-", p="-" }
+short_stress_patterns["b"] = { m="+", f="-+", n="+", p="+" }
+short_stress_patterns["b'"] = { m="+", f="+", n="+", p="-+" }
+short_stress_patterns["c"] = { m="-", f="+", n="-", p="-" }
+short_stress_patterns["c'"] = { m="-", f="+", n="-", p="-+" }
+short_stress_patterns["c''"] = { m="-", f="+", n="-+", p="-+" }
+
+local function gen_short_form(args, decl, case, casenum, fun)
+	args[case] = args[case] or args[casenum] or fun and
+		attach_with(args, decl[case], fun, args.short_stem, args.short_ustem)
+end
+
+local attachers = {
+	["+"] = attach_stressed,
+	["-"] = attach_unstressed,
+	["-+"] = attach_both,
+}
+
+local short_cases = { {"m", 3}, {"f", 5}, {"n", 4}, {"p", 6} }
+
+function decline_short(args, decl, stress_pattern)
+	for _, case_casenum in ipairs(short_cases) do
+		local case, casenum = case_casenum[1], case_casenum[2]
+		gen_short_form(args, decl, case, casenum,
+			stress_pattern and attachers[stress_pattern[case]])
+	end
+end
+
+--------------------------------------------------------------------------
+--                             Create the table                         --
+--------------------------------------------------------------------------
 
 local form_temp = [=[{term}<br/><span style="color: #888">{tr}</span>]=]
 local title_temp = [=[Declension of <b lang="ru" class="Cyrl">{lemma}</b>]=]
@@ -681,31 +924,18 @@ local template_mp = nil
 local short_clause = nil
 local notes_template = nil
 
-cases = { "nom_m", "nom_n", "nom_f", "nom_p",
-	"gen_m", "gen_f", "gen_p",
-	"dat_m", "dat_f", "dat_p",
-	"acc_f", "acc_n", "ins_m",
-	"ins_f", "ins_p", "pre_m",
-	"pre_f", "pre_p",
-	"short_m", "short_n", "short_f", "short_p",
-}
-
--- Populate old_cases from cases
-old_cases = mw.clone(cases)
-table.insert(old_cases, "nom_mp")
-
 -- Make the table
 function make_table(args)
-	local old = args["old"]
-	args["lemma"] = args["nom_m"]
-	args["title"] = args["title"] or strutils.format(old and old_title_temp or title_temp, args)
+	local old = args.old
+	args.lemma = args.nom_m
+	args.title = args.title or strutils.format(old and old_title_temp or title_temp, args)
 
 	for _, case in ipairs(old and old_cases or cases) do
 		if args[case] == "-" then
 			args[case] = "&mdash;"
 		elseif args[case] then
 			if type(args[case]) ~= "table" then
-				args[case] = mw.text.split(args[case], "%s*,%s*")
+				args[case] = rsplit(args[case], "%s*,%s*")
 			end
 			local ru_vals = {}
 			local tr_vals = {}
@@ -717,7 +947,7 @@ function make_table(args)
 				end
 				local trx = lang:transliterate(m_links.remove_links(x))
 				if case == "gen_m" then
-					trx = mw.ustring.gsub(trx, "([aoeáóé]́?)go$", "%1vo")
+					trx = rsub(trx, "([aoeáóé]́?)go$", "%1vo")
 				end
 				table.insert(tr_vals, trx)
 			end
@@ -732,36 +962,36 @@ function make_table(args)
 	local temp = template
 
 	if old then
-		if args["nom_mp"] then
+		if args.nom_mp then
 			temp = template_mp
-			if args["short_m"] or args["short_n"] or args["short_f"] or args["short_p"] then
-				args["short_m"] = args["short_m"] or "&mdash;"
-				args["short_n"] = args["short_n"] or "&mdash;"
-				args["short_f"] = args["short_f"] or "&mdash;"
-				args["short_p"] = args["short_p"] or "&mdash;"
-				args["short_clause"] = strutils.format(short_clause_mp, args)
+			if args.short_m or args.short_n or args.short_f or args.short_p then
+				args.short_m = args.short_m or "&mdash;"
+				args.short_n = args.short_n or "&mdash;"
+				args.short_f = args.short_f or "&mdash;"
+				args.short_p = args.short_p or "&mdash;"
+				args.short_clause = strutils.format(short_clause_mp, args)
 			else
-				args["short_clause"] = ""
+				args.short_clause = ""
 			end
 		else
-			args["short_clause"] = ""
+			args.short_clause = ""
 		end
 	else
-		if args["short_m"] or args["short_n"] or args["short_f"] or args["short_p"] then
-			args["short_m"] = args["short_m"] or "&mdash;"
-			args["short_n"] = args["short_n"] or "&mdash;"
-			args["short_f"] = args["short_f"] or "&mdash;"
-			args["short_p"] = args["short_p"] or "&mdash;"
-			args["short_clause"] = strutils.format(short_clause, args)
+		if args.short_m or args.short_n or args.short_f or args.short_p then
+			args.short_m = args.short_m or "&mdash;"
+			args.short_n = args.short_n or "&mdash;"
+			args.short_f = args.short_f or "&mdash;"
+			args.short_p = args.short_p or "&mdash;"
+			args.short_clause = strutils.format(short_clause, args)
 		else
-			args["short_clause"] = ""
+			args.short_clause = ""
 		end
 	end
 
-	if args["notes"] then
-		args["notes_clause"] = strutils.format(notes_template, args)
+	if args.notes then
+		args.notes_clause = strutils.format(notes_template, args)
 	else
-		args["notes_clause"] = ""
+		args.notes_clause = ""
 	end
 
 	return strutils.format(temp, args)
