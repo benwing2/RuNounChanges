@@ -174,6 +174,21 @@ local function do_show(frame, old, manual)
 
 	-- Set stem and unstressed version. Also construct end-accented version
 	-- of stem if unstressed; needed for short forms of adjectives of type -о́й.
+	-- We do this here before doing the unreduction transformation so that
+	-- we don't end up stressing an unstressed epenthetic vowel, and so that
+	-- the previous syllable instead ends up stressed (in type -о́й adjectives
+	-- the stem won't have any stress). Note that the closest equivalent in
+	-- nouns is handled in attach_unstressed(), which puts the stress onto the
+	-- final syllable if the stress pattern calls for ending stress in the
+	-- genitive plural. This works there because
+	-- (1) It won't stress an unstressed epenthetic vowel because the
+	--     cases where the epenthetic vowel is unstressed are precisely those
+	--     with stem stress in the gen pl, not ending stress;
+	-- (2) There isn't a need to stress the syllable preceding an unstressed
+	--     epenthetic vowel because that syllable should already have
+	--     stress, since we require that the base stem form (parameter 2)
+	--     have stress in it whenever any case form has stem stress.
+	--     This isn't the case here in type -о́й adjectives.
 	args.stem = stem
 	args.ustem = com.make_unstressed_once(stem)
 	local accented_stem = stem
