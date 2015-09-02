@@ -34,21 +34,15 @@
 
 TODO:
 
-1. Implement special-case (1) and (2) on p. 60 of Zaliznyak. Special-case
-   (1) is for adjectives ending in -нный and -нний that aren't unreducible
-   and causes the bare form to end in single -н instead of double -нн.
-   Possibly this should apply to all such adjectives in the absence of either
-   this special case of (2). Special case (2) is for adjectives in -нный
-   and has the short stem in single -н, i.e. *all* short forms have single
-   -н.
-2. Look into the triangle special case (we would indicate this with some
+1. Look into the triangle special case (we would indicate this with some
    character, e.g. ^ or @). This appears to refer to irregularities either in
    the comparative (which we don't care about here) or in the accentation of
    the reducible short masculine singular. This might not be doable as it
    might refer simply to any misc. irregularity; and even if it is, it might
    not be worth it, and better simply to have this done using the various
    override mechanisms.
-3. Implement handling of * etc. notes at the end of overrides.
+2. Implement handling of * etc. notes at the end of overrides.
+3. Implement categorization similar to the way it's done in nouns.
 ]=]--
 
 local m_utilities = require("Module:utilities")
@@ -135,26 +129,43 @@ local function track(page)
 	return true
 end
 
-local function tracking_code(decl_class, args, short_accent)
+local function tracking_code(decl_class, args, orig_short_accent,
+		short_accent, short_stem)
 	local hint_types = com.get_stem_trailing_letter_type(args.stem)
 	local function dotrack(prefix)
-		track(decl_class)
+		if prefix ~= "" then
+			track(prefix)
+			prefix = prefix .. "/"
+		end
+		track(prefix .. decl_class)
 		for _, hint_type in ipairs(hint_types) do
-			track(hint_type)
-			track(decl_class .. "/" .. hint_type)
+			track(prefix .. hint_type)
+			track(prefix .. decl_class .. "/" .. hint_type)
 		end
 	end
 	dotrack("")
 	if args[3] or short_accent then
-		track("short")
-		dotrack("short/")
+		dotrack("short")
 	end
+	if orig_short_accent then
+		if rfind(orig_short_accent, "%*") then
+			dotrack("reducible")
+			dotrack("reducible/" .. short_accent)
+		end
+		if rfind(orig_short_accent, "%(1%)") then
+			dotrack("special-case-1")
+			dotrack("special-case-1/" .. short_accent)
+		end
+		if rfind(orig_short_accent, "%(2%)") then
+			dotrack("special-case-2")
+			dotrack("special-case-2/" .. short_accent)
+		end
 	if short_accent then
-		track("short-accent/" .. short_accent)
+		dotrack("short-accent/" .. short_accent)
 	end
-	if args.explicit_short_stem then
-		track("explicit-short-stem")
-		track("explicit-short-stem/" .. short_accent)
+	if short_stem then
+		dotrack("explicit-short-stem")
+		dotrack("explicit-short-stem/" .. short_accent)
 	end
 	for _, case in ipairs(old_cases) do
 		if args[case] then
@@ -224,7 +235,6 @@ local function do_show(frame, old, manual)
 			accented_stem = com.make_ending_stressed(accented_stem)
 		end
 
-		-- Check if short forms allowed; if not, no short-form params can be given.
 		local short_forms_allowed = manual and true or
 			decl_type == "ый" or decl_type == "ой" or decl_type == (old and "ій" or "ий")
 		if not short_forms_allowed then
@@ -236,35 +246,9 @@ local function do_show(frame, old, manual)
 			end
 		end
 
-		-- Construct bare version of stem; used for cases where the ending
-		-- is non-syllabic (i.e. short masculine singular of long adjectives,
-		-- and masculine singular of short or mixed adjectives). Comes from
-		-- short masculine or 3rd argument if explicitly given, else from the
-		-- accented stem, possibly with the unreduction transformation applied
-		-- (if * occurs in the short accent spec).
-		local reducible = short_accent and rfind(short_accent, "%*")
-		if short_accent then
-			short_accent = rsub(short_accent, "%*", "")
-		end
-		args.bare = args.short_m or args[3]
-		if not args.bare and reducible then
-			args.bare = unreduce_stem(accented_stem, short_accent)
-			if not args.bare then
-				error("Unable to unreduce stem: " .. stem)
-			end
-		end
-		args.bare = args.bare or not short_forms_allowed and accented_stem
-		-- unused: args.ubare = args.bare and com.make_unstressed_once(args.bare)
-
-		-- Construct short stem used for short forms other than masculine sing.
-		-- May be explicitly given, else comes from end-accented stem.
-		if short_stem then
-			args.explicit_short_stem = true
-		else
-			short_stem = accented_stem
-		end
-		args.short_stem = short_stem
-		arts.short_ustem = com.make_unstressed_once(short_stem)
+		local orig_short_accent = short_accent
+		short_accent = construct_bare_and_short_stem(args, short_accent,
+			short_stem, accented_stem)
 
 		args.suffix = args.suffix or ""
 		args.old = old
@@ -295,7 +279,8 @@ local function do_show(frame, old, manual)
 			error("Unrecognized short accent type " .. short_accent)
 		end
 
-		tracking_code(decl_type, args, short_accent)
+		tracking_code(decl_type, args, orig_short_accent, short_accent,
+			short_stem)
 
 		decline(args, decls[decl_type], decl_type == "ой")
 		if short_forms_allowed and short_accent then
@@ -379,7 +364,7 @@ end
 -- or nil for no short adjectives other than specified through overrides),
 -- SHORT_STEM (special stem of short adjective, nil if same as long stem).
 function detect_stem_and_accent_type(stem, decl)
-	if rfind(decl, "^[abc*]") then
+	if rfind(decl, "^[abc*(]") then
 		decl = ":" .. decl
 	end
 	splitvals = rsplit(decl, ":")
@@ -407,7 +392,7 @@ function detect_stem_and_accent_type(stem, decl)
 end
 
 -- Construct bare form. Return nil if unable.
-function unreduce_stem(accented_stem, short_accent, old, decl)
+local function unreduce_stem(accented_stem, short_accent, old, decl)
 	local ret = com.unreduce_stem(accented_stem, rfind(short_accent, "^b"))
 	if not ret then
 		return nil
@@ -429,6 +414,63 @@ function unreduce_stem(accented_stem, short_accent, old, decl)
 	else
 		return ret
 	end
+end
+
+-- Construct and set bare and short form in args, and canonicalize
+-- short accent spec, handling cases *, (1) and (2). Return canonicalized
+-- short accent.
+function construct_bare_and_short_stem(args, short_accent, short_stem, accented_stem)
+	-- Check if short forms allowed; if not, no short-form params can be given.
+	-- Construct bare version of stem; used for cases where the ending
+	-- is non-syllabic (i.e. short masculine singular of long adjectives,
+	-- and masculine singular of short or mixed adjectives). Comes from
+	-- short masculine or 3rd argument if explicitly given, else from the
+	-- accented stem, possibly with the unreduction transformation applied
+	-- (if * occurs in the short accent spec).
+	local reducible = short_accent and rfind(short_accent, "%*")
+	local sc1 = short_accent and rfind(short_accent, "%(1%)")
+	local sc2 = short_accent and rfind(short_accent, "%(2%)")
+	if reducible and sc1 then
+		error("Reducible and special case 1, i.e. * and (1), not compatible")
+	end
+	if sc1 and sc2 then
+		error("Special cases 1 and 2, i.e. (1) and (2), not compatible")
+	end
+	if short_accent then
+		short_accent = rsub(short_accent, "%*", "")
+		short_accent = rsub(short_accent, "%([12]%)", "")
+	end
+	args.bare = args.short_m or args[3]
+	if not args.bare and reducible then
+		args.bare = unreduce_stem(accented_stem, short_accent)
+		if not args.bare then
+			error("Unable to unreduce stem: " .. stem)
+		end
+	end
+	args.bare = args.bare or not short_forms_allowed and accented_stem
+	if sc1 or sc2 then
+		if not rfind(accented_stem, "нн$") then
+			error("With special cases 1 and 2, stem needs to end in -нн: " .. args.stem)
+		end
+		args.bare = rsub(args.bare, "нн$", "н")
+	end
+
+	-- unused: args.ubare = args.bare and com.make_unstressed_once(args.bare)
+
+	-- Construct short stem used for short forms other than masculine sing.
+	-- May be explicitly given, else comes from end-accented stem.
+	if short_stem then
+		args.explicit_short_stem = true
+	else
+		short_stem = accented_stem
+	end
+	args.short_stem = short_stem
+	if sc2 then
+		args.short_stem = rsub(args.short_stem, "нн$", "н")
+	end
+	args.short_ustem = com.make_unstressed_once(short_stem)
+
+	return short_accent
 end
 
 --------------------------------------------------------------------------
