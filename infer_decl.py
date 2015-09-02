@@ -352,6 +352,7 @@ def infer_word(forms, noungender, number, numonly, pagemsg):
   presg = forms.get("pre_sg", "")
   prepl = forms.get("pre_pl", "")
   prepl_stress = re.search(AC + u"хъ?$", prepl) and "ending" or "stem"
+
   # Special case:
   if numonly == "pl" and nompl == u"острова́":
     args = generate_template_args("3", u"о́стров", "", "", pagemsg) + number
@@ -442,6 +443,9 @@ def infer_word(forms, noungender, number, numonly, pagemsg):
     plstress = "any"
     genders = [""]
     bare = [""]
+    strange_plural = ""
+
+    ########## Check for feminine or neuter
     m = re.search(ur"^(.*)([аяеоё])(́?)$", nomsg)
     if m:
       pagemsg("Nom sg %s refers to feminine 1st decl or neuter 2nd decl" % nomsg)
@@ -479,36 +483,58 @@ def infer_word(forms, noungender, number, numonly, pagemsg):
                     (stem, formcase, formstem))
                 stem = formstem
 
+      # Look at gen pl to check for reducible and try to get a stressed stem;
+      # also check for strange plurals
       if numonly != "sg":
-        possible_genpls = []
-        possible_unstressed_genpls = []
-        for genpl_ending in ["", u"ь", u"й"]:
-          possible_genpls.append(stem + genpl_ending)
-          possible_unstressed_genpls.append(make_unstressed(stem + genpl_ending))
-        if genpl in possible_genpls:
-          pagemsg("Gen pl %s same as stem %s (modulo expected endings)" % (genpl, stem))
-        elif make_unstressed(genpl) not in possible_unstressed_genpls:
-          pagemsg("Stem %s not accent-equiv to gen pl %s (modulo expected endings)" % (stem, genpl))
-          bare = ["*", genpl]
-        elif is_unstressed(stem):
-          pagemsg("Replacing unstressed stem %s with accent-equiv gen pl %s" %
-              (stem, genpl))
-          stem = re.sub(u"[ьй]$", "", genpl)
-        else:
-          pagemsg("Stem %s stressed one way, gen pl %s stressed differently" %
-              (stem, genpl))
-          bare = ["*", genpl]
-        if is_unstressed(stem) and is_unstressed(ending):
-          trystress = try_to_stress(stem)
-          if trystress != stem:
-            pagemsg("Replacing monosyllabic unstressed stem %s with stressed equiv %s" % (stem, trystress))
-            stem = trystress
+        ustem = make_unstressed(stem)
+        unompl = make_unstressed(nompl)
+        mm = re.search("^" + ustem + u"(ья|[иы])$", unompl)
+        if mm:
+          strange_plural = "-" + mm.group(1)
+          # Not a strange plural if feminine with expected plural
+          if ending in [u"а", u"я"] and strange_plural in [u"-ы", u"-и"]:
+            strange_plural = ""
+        if strange_plural:
+          pagemsg("Found unusual plural %s" % strange_plural)
+
+        # Don't check gen pl if we found strange plural, because it won't
+        # be a bare stem.
+        if not strange_plural:
+          possible_genpls = []
+          possible_unstressed_genpls = []
+          for genpl_ending in ["", u"ь", u"й"]:
+            possible_genpls.append(stem + genpl_ending)
+            possible_unstressed_genpls.append(make_unstressed(stem + genpl_ending))
+          if genpl in possible_genpls:
+            pagemsg("Gen pl %s same as stem %s (modulo expected endings)" % (genpl, stem))
+          elif make_unstressed(genpl) not in possible_unstressed_genpls:
+            pagemsg("Stem %s not accent-equiv to gen pl %s (modulo expected endings)" % (stem, genpl))
+            bare = ["*", genpl]
+          elif is_unstressed(stem):
+            pagemsg("Replacing unstressed stem %s with accent-equiv gen pl %s" %
+                (stem, genpl))
+            stem = re.sub(u"[ьй]$", "", genpl)
+          else:
+            pagemsg("Stem %s stressed one way, gen pl %s stressed differently" %
+                (stem, genpl))
+            bare = ["*", genpl]
+
+      # Auto-stress monosyllabic stem if necessary
+      if is_unstressed(stem) and is_unstressed(ending):
+        trystress = try_to_stress(stem)
+        if trystress != stem:
+          pagemsg("Replacing monosyllabic unstressed stem %s with stressed equiv %s" % (stem, trystress))
+          stem = trystress
+
       nomsg = stem + ending
+
+    ########## Check for masculine
     else:
       m = re.search(ur"^(.*?)([йь]?)$", nomsg)
       if m:
         nomsgstem = m.group(1)
         ending = m.group(2)
+        stem = nomsgstem
         if numonly == "pl":
           if ending == u"ь":
             genders = [noungender]
@@ -570,6 +596,15 @@ def infer_word(forms, noungender, number, numonly, pagemsg):
               # first arg in place of nom sg.
               bare = ["*", [nomsg, try_to_stress(stem + ending)]]
 
+        # Check for strange plural
+        if numonly != "sg":
+          ustem = make_unstressed(stem)
+          unompl = make_unstressed(nompl)
+          mm = re.search("^" + ustem + u"(ья|а)$", unompl)
+          if mm:
+            strange_plural = "-" + mm.group(1)
+            pagemsg("Found unusual plural %s" % strange_plural)
+
     # Find stress pattern possibilities
     if numonly != "sg":
       m = re.search(ur"[аяыи](́?)$", nompl)
@@ -592,7 +627,8 @@ def infer_word(forms, noungender, number, numonly, pagemsg):
     for stress in stress_patterns:
       for gender in genders:
         for bareval in bare:
-          args = generate_template_args(stress, nomsg, gender, bareval, pagemsg)
+          args = generate_template_args(stress, nomsg, gender + strange_plural,
+              bareval, pagemsg)
           args += anim + number
           if trymatch(forms, args, pagemsg):
             return args
