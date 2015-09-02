@@ -41,16 +41,14 @@ TODO:
    this special case of (2). Special case (2) is for adjectives in -нный
    and has the short stem in single -н, i.e. *all* short forms have single
    -н.
-2. Some adjectives can construct their short forms in multiple ways; allow
-   for this using an 'or' parameter, similarly to what's done in nouns; or
-   allow a comma in the decl parameter.
-3. Look into the triangle special case (we would indicate this with some
+2. Look into the triangle special case (we would indicate this with some
    character, e.g. ^ or @). This appears to refer to irregularities either in
    the comparative (which we don't care about here) or in the accentation of
    the reducible short masculine singular. This might not be doable as it
    might refer simply to any misc. irregularity; and even if it is, it might
    not be worth it, and better simply to have this done using the various
    override mechanisms.
+3. Implement handling of * etc. notes at the end of overrides.
 ]=]--
 
 local m_utilities = require("Module:utilities")
@@ -79,6 +77,16 @@ local function rsub(term, foo, bar)
 	return retval
 end
 
+-- utility function
+local function insert_list_into_table(tab, list)
+	if type(list) ~= "table" then
+		list = {list}
+	end
+	for _, item in ipairs(list) do
+		ut.insert_if_not(tab, list)
+	end
+end
+
 local declensions = {}
 local declensions_old = {}
 local short_declensions = {}
@@ -86,18 +94,35 @@ local short_declensions_old = {}
 local short_stress_patterns = {}
 local decline = nil
 
-cases = { "nom_m", "nom_n", "nom_f", "nom_p",
+local long_cases = {
+	"nom_m", "nom_n", "nom_f", "nom_p",
 	"gen_m", "gen_f", "gen_p",
 	"dat_m", "dat_f", "dat_p",
-	"acc_f", "acc_n", "ins_m",
-	"ins_f", "ins_p", "pre_m",
-	"pre_f", "pre_p",
-	"short_m", "short_n", "short_f", "short_p",
+	"acc_f", "acc_n",
+	"ins_m", "ins_f", "ins_p",
+	"pre_m", "pre_f", "pre_p",
 }
 
 -- Populate old_cases from cases
-old_cases = mw.clone(cases)
-table.insert(old_cases, "nom_mp")
+local old_long_cases = mw.clone(long_cases)
+table.insert(old_long_cases, "nom_mp")
+
+-- Short cases and corresponding numbered arguments
+local short_cases = {
+	["short_m"] = 3,
+	["short_n"] = 4,
+	["short_f"] = 5,
+	["short_p"] = 6,
+}
+
+-- Combine long and short cases
+local cases = mw.clone(long_cases)
+local old_cases = mw.clone(old_long_cases)
+
+for case, _ in pairs(short_cases) do
+	table.insert(cases, case)
+	table.insert(old_cases, case)
+end
 
 local velar = {
 	["г"] = true,
@@ -152,133 +177,134 @@ local function do_show(frame, old, manual)
         end
 	end
 
-	local stem
-	if manual then
-		stem = ""
-	elseif not args[1] then
-		error("Stem (first argument) must be specified")
-	else
-		stem = args[1]
-	end
-	local decl_type = manual and "-" or args[2]
+	args.forms = {}
 
-	-- Auto-detect actual decl type, and get short accent and overriding
-	-- short stem, if specified.
-	local short_accent, short_stem
-	stem, decl_type, short_accent, short_stem =
-		detect_stem_and_accent_type(stem, decl_type)
-	args.hint = manual and "" or usub(stem, -1)
-	if velar[args.hint] and decl_type == (old and "ій" or "ий") then
-		decl_type = "ый"
-	end
+	local decl_types = manual and "-" or args[2]
+	for _, decl_type in ipairs(rsplit(decl_types, ",")) do
+		local stem
+		if manual then
+			stem = ""
+		elseif not args[1] then
+			error("Stem (first argument) must be specified")
+		else
+			stem = args[1]
+		end
 
-	-- Set stem and unstressed version. Also construct end-accented version
-	-- of stem if unstressed; needed for short forms of adjectives of type -о́й.
-	-- We do this here before doing the unreduction transformation so that
-	-- we don't end up stressing an unstressed epenthetic vowel, and so that
-	-- the previous syllable instead ends up stressed (in type -о́й adjectives
-	-- the stem won't have any stress). Note that the closest equivalent in
-	-- nouns is handled in attach_unstressed(), which puts the stress onto the
-	-- final syllable if the stress pattern calls for ending stress in the
-	-- genitive plural. This works there because
-	-- (1) It won't stress an unstressed epenthetic vowel because the
-	--     cases where the epenthetic vowel is unstressed are precisely those
-	--     with stem stress in the gen pl, not ending stress;
-	-- (2) There isn't a need to stress the syllable preceding an unstressed
-	--     epenthetic vowel because that syllable should already have
-	--     stress, since we require that the base stem form (parameter 2)
-	--     have stress in it whenever any case form has stem stress.
-	--     This isn't the case here in type -о́й adjectives.
-	args.stem = stem
-	args.ustem = com.make_unstressed_once(stem)
-	local accented_stem = stem
-	if com.is_unstressed(accented_stem) then
-		accented_stem = com.make_ending_stressed(accented_stem)
-	end
+		-- Auto-detect actual decl type, and get short accent and overriding
+		-- short stem, if specified.
+		local short_accent, short_stem
+		stem, decl_type, short_accent, short_stem =
+			detect_stem_and_accent_type(stem, decl_type)
+		args.hint = manual and "" or usub(stem, -1)
+		if velar[args.hint] and decl_type == (old and "ій" or "ий") then
+			decl_type = "ый"
+		end
 
-	-- Check if short forms allowed; if not, no short-form params can be given.
-	local short_forms_allowed = manual and true or
-		decl_type == "ый" or decl_type == "ой" or decl_type == (old and "ій" or "ий")
-	if not short_forms_allowed then
-		if short_accent or short_stem then
-			error("Cannot specify short accent or short stem with declension type " .. decl_type .. ", as short forms aren't allowed")
-		if args[4] or args[5] or args[6] or args.short_m or
-			args.short_f or args.short_n or args.short_p then
-			error("Cannot specify explicit short forms with declension type " .. decl_type .. ", as shrot forms aren't allowed")
+		-- Set stem and unstressed version. Also construct end-accented version
+		-- of stem if unstressed; needed for short forms of adjectives of type -о́й.
+		-- We do this here before doing the unreduction transformation so that
+		-- we don't end up stressing an unstressed epenthetic vowel, and so that
+		-- the previous syllable instead ends up stressed (in type -о́й adjectives
+		-- the stem won't have any stress). Note that the closest equivalent in
+		-- nouns is handled in attach_unstressed(), which puts the stress onto the
+		-- final syllable if the stress pattern calls for ending stress in the
+		-- genitive plural. This works there because
+		-- (1) It won't stress an unstressed epenthetic vowel because the
+		--     cases where the epenthetic vowel is unstressed are precisely those
+		--     with stem stress in the gen pl, not ending stress;
+		-- (2) There isn't a need to stress the syllable preceding an unstressed
+		--     epenthetic vowel because that syllable should already have
+		--     stress, since we require that the base stem form (parameter 2)
+		--     have stress in it whenever any case form has stem stress.
+		--     This isn't the case here in type -о́й adjectives.
+		args.stem = stem
+		args.ustem = com.make_unstressed_once(stem)
+		local accented_stem = stem
+		if com.is_unstressed(accented_stem) then
+			accented_stem = com.make_ending_stressed(accented_stem)
+		end
+
+		-- Check if short forms allowed; if not, no short-form params can be given.
+		local short_forms_allowed = manual and true or
+			decl_type == "ый" or decl_type == "ой" or decl_type == (old and "ій" or "ий")
+		if not short_forms_allowed then
+			if short_accent or short_stem then
+				error("Cannot specify short accent or short stem with declension type " .. decl_type .. ", as short forms aren't allowed")
+			if args[4] or args[5] or args[6] or args.short_m or
+				args.short_f or args.short_n or args.short_p then
+				error("Cannot specify explicit short forms with declension type " .. decl_type .. ", as shrot forms aren't allowed")
+			end
+		end
+
+		-- Construct bare version of stem; used for cases where the ending
+		-- is non-syllabic (i.e. short masculine singular of long adjectives,
+		-- and masculine singular of short or mixed adjectives). Comes from
+		-- short masculine or 3rd argument if explicitly given, else from the
+		-- accented stem, possibly with the unreduction transformation applied
+		-- (if * occurs in the short accent spec).
+		local reducible = short_accent and rfind(short_accent, "%*")
+		if short_accent then
+			short_accent = rsub(short_accent, "%*", "")
+		end
+		args.bare = args.short_m or args[3]
+		if not args.bare and reducible then
+			args.bare = unreduce_stem(accented_stem, short_accent)
+			if not args.bare then
+				error("Unable to unreduce stem: " .. stem)
+			end
+		end
+		args.bare = args.bare or not short_forms_allowed and accented_stem
+		-- unused: args.ubare = args.bare and com.make_unstressed_once(args.bare)
+
+		-- Construct short stem used for short forms other than masculine sing.
+		-- May be explicitly given, else comes from end-accented stem.
+		if short_stem then
+			args.explicit_short_stem = true
+		else
+			short_stem = accented_stem
+		end
+		args.short_stem = short_stem
+		arts.short_ustem = com.make_unstressed_once(short_stem)
+
+		args.suffix = args.suffix or ""
+		args.old = old
+		-- HACK: Escape * at beginning of line so it doesn't show up
+		-- as a list entry. Many existing templates use * for footnotes.
+		-- FIXME: We should maybe do this in {{ru-adj-table}} instead.
+		if args.notes then
+			args.notes = rsub(args.notes, "^%*", "&#42;")
+		end
+
+		args.categories = {}
+		-- FIXME: For compatibility with old {{temp|ru-adj7}}, {{temp|ru-adj8}},
+		-- {{temp|ru-adj9}}; maybe there's a better way.
+		if m_utils.contains({"ьій", "ьий", "short", "mixed", "ъ-short", "ъ-mixed"}, decl_type) then
+			table.insert(args.categories, "Russian possessive adjectives")
+		end
+
+		local decls = old and declensions_old or declensions
+		local short_decls = old and short_declensions_old or short_declensions
+		if not decls[decl_type] then
+			error("Unrecognized declension type " .. decl_type)
+		end
+
+		if short_accent == "" then
+			error("Short accent type cannot be blank, should be omitted or given")
+		end
+		if short_accent and not short_stress_patterns[short_accent] then
+			error("Unrecognized short accent type " .. short_accent)
+		end
+
+		tracking_code(decl_type, args, short_accent)
+
+		decline(args, decls[decl_type], decl_type == "ой")
+		if short_forms_allowed and short_accent then
+			decline_short(args, decls_short[decl_type],
+				short_stress_patterns[short_accent])
 		end
 	end
 
-	-- Construct bare version of stem; used for cases where the ending
-	-- is non-syllabic (i.e. short masculine singular of long adjectives,
-	-- and masculine singular of short or mixed adjectives). Comes from
-	-- short masculine or 3rd argument if explicitly given, else from the
-	-- accented stem, possibly with the unreduction transformation applied
-	-- (if * occurs in the short accent spec).
-	local reducible = short_accent and rfind(short_accent, "%*")
-	if short_accent then
-		short_accent = rsub(short_accent, "%*", "")
-	end
-	args.bare = args.short_m or args[3]
-	if not args.bare and reducible then
-		args.bare = unreduce_stem(accented_stem, short_accent)
-		if not args.bare then
-			error("Unable to unreduce stem: " .. stem)
-		end
-	end
-	args.bare = args.bare or not short_forms_allowed and accented_stem
-	-- unused: args.ubare = args.bare and com.make_unstressed_once(args.bare)
-
-	-- Construct short stem used for short forms other than masculine sing.
-	-- May be explicitly given, else comes from end-accented stem.
-	if short_stem then
-		args.explicit_short_stem = true
-	else
-		short_stem = accented_stem
-	end
-	args.short_stem = short_stem
-	arts.short_ustem = com.make_unstressed_once(short_stem)
-
-	args.suffix = args.suffix or ""
-	args.old = old
-	-- HACK: Escape * at beginning of line so it doesn't show up
-	-- as a list entry. Many existing templates use * for footnotes.
-	-- FIXME: We should maybe do this in {{ru-adj-table}} instead.
-	if args.notes then
-		args.notes = rsub(args.notes, "^%*", "&#42;")
-	end
-
-	args.categories = {}
-	-- FIXME: For compatibility with old {{temp|ru-adj7}}, {{temp|ru-adj8}},
-	-- {{temp|ru-adj9}}; maybe there's a better way.
-	if m_utils.contains({"ьій", "ьий", "short", "mixed", "ъ-short", "ъ-mixed"}, decl_type) then
-		table.insert(args.categories, "Russian possessive adjectives")
-	end
-
-	local decls = old and declensions_old or declensions
-	local short_decls = old and short_declensions_old or short_declensions
-	if not decls[decl_type] then
-		error("Unrecognized declension type " .. decl_type)
-	end
-
-	if short_accent == "" then
-		error("Short accent type cannot be blank, should be omitted or given")
-	end
-	if short_accent and not short_stress_patterns[short_accent] then
-		error("Unrecognized short accent type " .. short_accent)
-	end
-
-	tracking_code(decl_type, args, short_accent)
-
-	decline(args, decls[decl_type], decl_type == "ой")
-	if short_forms_allowed then
-		decline_short(args, decls_short[decl_type],
-			short_accent and short_stress_patterns[short_accent])
-	else
-		args.short_m = nil
-		args.short_n = nil
-		args.short_f = nil
-		args.short_p = nil
-	end
+	handle_forms_and_overrides(args, short_forms_allowed)
 
 	return make_table(args) .. m_utilities.format_categories(args.categories, lang)
 end
@@ -764,7 +790,7 @@ local old_consonantal_suffixes = {
 --                           Declension functions                       --
 --------------------------------------------------------------------------
 
-local function attach_unstressed(args, suf, stem)
+local function attach_unstressed(args, suf, stem, ustem)
 	local old = args.old
 	if suf == nil then
 		return nil
@@ -802,7 +828,7 @@ local function attach_stressed(args, suf, stem, ustem)
 	if suf == nil then
 		return nil
 	elseif not rfind(suf, "[ё́]") then -- if suf has no "ё" or accent marks
-		return attach_unstressed(args, suf, stem)
+		return attach_unstressed(args, suf, stem, ustem)
 	end
 	local first = usub(suf, 1, 1)
 	local rules = stressed_rules[args.hint]
@@ -825,7 +851,7 @@ end
 
 local function attach_both(args, suf, stem, ustem)
 	local results = {}
-	ut.insert_if_not(results, attach_unstressed(args, suf, stem))
+	ut.insert_if_not(results, attach_unstressed(args, suf, stem, ustem))
 	ut.insert_if_not(results, attach_stressed(args, suf, stem, ustem))
 	return results
 end
@@ -848,8 +874,11 @@ local function attach_with(args, suf, fun, stem, ustem)
 end
 
 local function gen_form(args, decl, case, fun)
-	args[case] = args[case] or attach_with(args, decl[case], fun, args.stem,
-		args.ustem)
+	if not args.forms[case] then
+		args.forms[case] = {}
+	end
+	insert_list_into_table(args.forms[case],
+		attach_with(args, decl[case], fun, args.stem, args.ustem))
 end
 
 decline = function(args, decl, stressed)
@@ -882,6 +911,20 @@ decline = function(args, decl, stressed)
 
 end
 
+function handle_forms_and_overrides(args, short_forms_allowed)
+	local old = args.old
+	for _, case in ipairs(old and old_long_cases or long_cases) do
+		args[case] = args[case] or args.forms[case]
+	end
+	for case, argnum in pairs(short_cases) do
+		if short_forms_allowed then
+			args[case] = args[case] or args[argnum] or args.forms[case]
+		else
+			args[case] = nil
+		end
+	end
+end
+
 --------------------------------------------------------------------------
 --                        Short adjective declension                    --
 --------------------------------------------------------------------------
@@ -905,9 +948,12 @@ short_stress_patterns["c"] = { m="-", f="+", n="-", p="-" }
 short_stress_patterns["c'"] = { m="-", f="+", n="-", p="-+" }
 short_stress_patterns["c''"] = { m="-", f="+", n="-+", p="-+" }
 
-local function gen_short_form(args, decl, case, casenum, fun)
-	args[case] = args[case] or args[casenum] or fun and
-		attach_with(args, decl[case], fun, args.short_stem, args.short_ustem)
+local function gen_short_form(args, decl, case, fun)
+	if not args.forms[case] then
+		args.forms[case] = {}
+	end
+	insert_list_into_table(args.forms["short_" .. case],
+		attach_with(args, decl[case], fun, args.short_stem, args.short_ustem))
 end
 
 local attachers = {
@@ -916,13 +962,11 @@ local attachers = {
 	["-+"] = attach_both,
 }
 
-local short_cases = { {"m", 3}, {"f", 5}, {"n", 4}, {"p", 6} }
-
 function decline_short(args, decl, stress_pattern)
-	for _, case_casenum in ipairs(short_cases) do
-		local case, casenum = case_casenum[1], case_casenum[2]
-		gen_short_form(args, decl, case, casenum,
-			stress_pattern and attachers[stress_pattern[case]])
+	if stress_pattern then
+		for case, _ in ipairs({"m", "f", "n", "p"}) do
+			gen_short_form(args, decl, case, attachers[stress_pattern[case]])
+		end
 	end
 end
 
@@ -956,15 +1000,15 @@ function make_table(args)
 			local tr_vals = {}
 			for _, x in ipairs(args[case]) do
 				if old then
-					table.insert(ru_vals, m_links.full_link(com.make_unstressed(x), x, lang, nil, nil, nil, {tr = "-"}, false))
+					ut.insert_if_not(ru_vals, m_links.full_link(com.make_unstressed(x), x, lang, nil, nil, nil, {tr = "-"}, false))
 				else
-					table.insert(ru_vals, m_links.full_link(x, nil, lang, nil, nil, nil, {tr = "-"}, false))
+					ut.insert_if_not(ru_vals, m_links.full_link(x, nil, lang, nil, nil, nil, {tr = "-"}, false))
 				end
 				local trx = lang:transliterate(m_links.remove_links(x))
 				if case == "gen_m" then
 					trx = rsub(trx, "([aoeáóé]́?)go$", "%1vo")
 				end
-				table.insert(tr_vals, trx)
+				ut.insert_if_not(tr_vals, trx)
 			end
 			local term = table.concat(ru_vals, ", ")
 			local tr = table.concat(tr_vals, ", ")
