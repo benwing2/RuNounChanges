@@ -43,6 +43,9 @@ TODO:
     IN GITHUB]
 1b. Nouns in -мя: Accent pattern 1 should actually be мя-1; accent pattern 3
     should be -мя. [NEED TO CHECK ALL SUCH NOUNS AND FIX THEM UP]
+1c. Think about whether we need to unstress the "pre" part of nouns when we
+    unreduce them with a stressed epenthetic vowel (we implement this in
+	the branch adj-autodetect).
 2. Bug in -я nouns with bare specified; should not have -ь ending. Old templates did not add this ending when bare occurred. (PROBABLY SHOULD ALWAYS HAVE BARE
 BE BARE, NEVER ADD A NON-SYLLABIC ENDING. HAVE TRACKING CODE FOR THIS.)
 3. Genitive plural of -ёнокъ should be -атъ?
@@ -1054,7 +1057,7 @@ function export.unreduce_nom_sg_stem(stem, decl, stress, old, can_err)
 		-- дере́вня is an apparent exception but not really because it is
 		-- accent class 5.
 		if rfind(ret, "[нН]$") and stress == "1" then
-			return ret
+			return ret .. (old and "ъ" or "")
 		elseif rfind(ret, com.vowel .. "́?$") then
 			return ret .. "й"
 		else
