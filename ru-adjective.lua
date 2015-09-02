@@ -3,9 +3,14 @@
 	adjectives.
 
 	Arguments:
-		1: stem
-		2: declension type (usually just the ending)
-		3 or short_m: masculine singular short form (if exists)
+		1: stem; include full nom sg, or leave off the ending and include it
+		   in arg 2
+		2: declension type (usually just the ending); can be omitted to
+		   autodetect; also can specify short accent type and irregular
+		   short stem; see below.
+		3 or short_m: masculine singular short form (if exists); also used
+		  for irregular (often just reducible) nominative masculine singular
+		  forms in declension-type 'short' or 'mixed'
 		4 or short_n: neuter singular short form (if exists)
 		5 or short_f: feminine singular short form (if exists)
 		6 or short_p: plural short form (if exists)
@@ -24,6 +29,7 @@
 		par: partitive
 		loc: locative
 		voc: vocative
+		short: short form
 		
 	Number/gender abbreviations:
 		m: masculine
@@ -31,6 +37,33 @@
 		f: feminine
 		p: plural
 		mp: masculine plural (old-style tables only)
+
+	Declension-type argument (arg 2):
+		Form is DECLSPEC or DECLSPEC,DECLSPEC,... where DECLSPEC is
+		one of the following:
+			DECLTYPE:SHORTACCENT:SHORTSTEM
+			DECLTYPE:SHORTACCENT
+			DECLTYPE
+			SHORTACCENT:SHORTSTEM
+			(blank)
+		DECLTYPE is the declension one, usually omitted; or one of
+			ый ий ой ьий short mixed (new-style)
+			ый ій ьій short mixed ъ-short ъ-mixed (old-style, where
+			    ъ-short and ъ-mixed are synonyms for short and mixed)
+		SHORTACCENT is one of a a' b b' c c' c'' to auto-generate the
+		    short forms with the specified accent pattern (following
+			Zaliznyak); if omitted, no short forms will be auto-generated.
+			SHORTACCENT can contain a * in it for "reducible" adjectives,
+			where the short masculine singular has an epenthetic vowel
+			in the final syllable. It can also contain (1) or (2) to
+			indicate special cases. Both are used in conjunction with
+			adjectives in -нный/-нний. Special case (1) causes the
+			short masculine singular to end in -н instead of -нн; special
+			case (2) causes all short forms to end this way.
+		SHORTSTEM, if present, is used as the short stem to base the
+			short forms off of, instead of the normal adjective long stem
+			(possibly with a final-syllable accent added in the case of
+			declension type -о́й).
 
 TODO:
 
@@ -49,6 +82,8 @@ TODO:
    we need to implement that, too). Also figure out what the other signs
    on pages 68-76 etc. mean: -, X, ~, П₂, Р₂, diamond (♢), triangle (△; might
    simply mean a misc. irregularity; explained on p. 61).
+4. Should non-reducible adjectives in -нный and -нний default to special case
+   (1)?
 ]=]--
 
 local m_utilities = require("Module:utilities")
@@ -459,35 +494,37 @@ function construct_bare_and_short_stem(args, short_accent, short_stem, accented_
 		short_accent = rsub(short_accent, "%*", "")
 		short_accent = rsub(short_accent, "%([12]%)", "")
 	end
-	args.bare = args.short_m or args[3]
-	if not args.bare and reducible then
-		args.bare = unreduce_stem(accented_stem, short_accent)
-		if not args.bare then
+
+	-- Construct short stem. May be explicitly given, else comes from
+	-- end-accented stem.
+	short_stem = short_stem or accented_stem
+	if sc2 then
+		if not rfind(short_stem, "нн$") then
+			error("With special case 2, stem needs to end in -нн: " .. short_stem)
+		end
+		short_stem = rsub(short_stem, "нн$", "н")
+	end
+
+	-- Construct bare form, used for short masculine; but use explicitly
+	-- given form if present.
+	local bare = args.short_m or args[3]
+	if not bare and reducible then
+		bare = unreduce_stem(short_stem, short_accent)
+		if not bare then
 			error("Unable to unreduce stem: " .. stem)
 		end
 	end
-	args.bare = args.bare or not short_forms_allowed and accented_stem
-	if sc1 or sc2 then
-		if not rfind(accented_stem, "нн$") then
-			error("With special cases 1 and 2, stem needs to end in -нн: " .. args.stem)
+	bare = bare or short_stem
+	if sc1 then
+		if not rfind(bare, "нн$") then
+			error("With special case 1, stem needs to end in -нн: " .. bare)
 		end
-		args.bare = rsub(args.bare, "нн$", "н")
+		bare = rsub(bare, "нн$", "н")
 	end
 
-	-- unused: args.ubare = args.bare and com.make_unstressed_once(args.bare)
-
-	-- Construct short stem used for short forms other than masculine sing.
-	-- May be explicitly given, else comes from end-accented stem.
-	if short_stem then
-		args.explicit_short_stem = true
-	else
-		short_stem = accented_stem
-	end
 	args.short_stem = short_stem
-	if sc2 then
-		args.short_stem = rsub(args.short_stem, "нн$", "н")
-	end
 	args.short_ustem = com.make_unstressed_once(short_stem)
+	args.bare = bare
 
 	return short_accent
 end
