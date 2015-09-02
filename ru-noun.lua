@@ -987,65 +987,19 @@ function is_unreducible(stem, decl, old)
 	return false
 end
 	
--- Generate the unreduced gen pl stem given STEM, DECL and STRESS; this is
--- without any terminating non-syllabic ending, which is added if needed by
--- the calling function.
-local function basic_unreduce_nom_sg_stem(stem, decl, stress, can_err)
-	local pre, letter, post
-	-- FIXME!!! Deal with this special case
-	--if not (z.stem_type == 'soft' and _.equals(z.stress_type, {'b', 'f'}) -- we should ignore asterix for 2*b and 2*f (so to process it just like 2b or 2f)
-	--		 or _.contains(z.specific, '(2)') and _.equals(z.stem_type, {'velar', 'letter-ц', 'vowel'}))  -- and also the same for (2)-specific and 3,5,6 stem-types
-	--then 
-
-	-- I think this corresponds to our -ья and -ье types, which we
-	-- handle separately
-	--if z.stem_type == 'vowel' then  -- 1).
-	--	if _.equals(z.stress_type, {'b', 'c', 'e', 'f', "f'", "b'" }) then  -- gen_pl ending stressed  -- TODO: special vars for that
-	--		z.stems['gen_pl'] = _.replace(z.stems['gen_pl'], 'ь$', 'е́')
-	--	else
-	--		z.stems['gen_pl'] = _.replace(z.stems['gen_pl'], 'ь$', 'и')
-	--	end
-	--end
-
-	pre, letter, post = rmatch(stem, "^(.*)([" .. com.cons .. "])([" .. com.cons .. "])$")
-	if pre then
-		local is_upper = rfind(post, "[" .. com.uppercase .. "]")
-		if rfind(letter, "[ьйЬЙ]") then
-			if rfind(post, "[цЦ]$") or not stressed_gen_pl_patterns[stress] then
-				return pre .. (is_upper and "Е" or "е") .. post
-			else
-				return pre .. (is_upper and "Ё" or "ё") .. post
-			end
-		elseif rfind(letter, "[" .. com.cons_except_sib_c .. "]") and rfind(post, "[" .. com.velar .. "]") or
-				rfind(letter, "[" .. com.velar .. "]") then
-			return pre .. letter .. (is_upper and "О" or "о") .. post
-		elseif post == "ц" or post == "Ц" then
-			return pre .. letter .. (is_upper and "Е" or "е") .. post
-		elseif stressed_gen_pl_patterns[stress] then
-			if rfind(letter, "[" .. com.sib .. "]") then
-				return pre .. letter .. (is_upper and "О́" or "о́") .. post
-			else
-				return pre .. letter .. (is_upper and "Ё" or "ё") .. post
-			end
-		else
-			return pre .. letter.. (is_upper and "Е" or "е") .. post
-		end
-	end
-	if can_err then
-		error("Unable to unreduce stem " .. stem)
-	else
-		return nil
-	end
-end
-
 -- Unreduce stem to the form found in the gen pl by inserting an epenthetic
 -- vowel. Applies to 1st declension and 2nd declension neuter. STEM and DECL
 -- are after detect_stem_type(), before converting outward-facing declensions
 -- to inward ones. STRESS is the stess pattern.
 function export.unreduce_nom_sg_stem(stem, decl, stress, old, can_err)
-	local ret = basic_unreduce_nom_sg_stem(stem, decl, stress, can_err)
+	local epenthetic_stress = stressed_gen_pl_patterns[stress]
+	local ret = com.unreduce_stem(stem, epenthetic_stress)
 	if not ret then
-		return nil
+		if can_err then
+			error("Unable to unreduce stem " .. stem)
+		else
+			return nil
+		end
 	end
 	if old and declensions_old_cat[decl].hard == "hard" then
 		return ret .. "ъ"
@@ -1057,6 +1011,8 @@ function export.unreduce_nom_sg_stem(stem, decl, stress, old, can_err)
 		-- дере́вня is an apparent exception but not really because it is
 		-- accent class 5.
 		if rfind(ret, "[нН]$") and stress == "1" then
+			-- FIXME: What happens in this case old-style? I assume that
+			-- -ъ is added, but this is a guess.
 			return ret .. (old and "ъ" or "")
 		elseif rfind(ret, com.vowel .. "́?$") then
 			return ret .. "й"
