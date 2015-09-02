@@ -42,11 +42,17 @@ TODO:
    not be worth it, and better simply to have this done using the various
    override mechanisms.
 2. Implement categorization similar to the way it's done in nouns.
+3. Figure out what the symbol X-inside-square (⊠) means, which seems to go with
+   all adjectives in -о́й with multi-syllabic stems. It may mean that the
+   masculine singular short form is missing. If this indeed a regular thing,
+   we need to implement it (and if it's regular but means something else,
+   we need to implement that, too). Also figure out what the other signs
+   on pages 68-76 etc. mean: -, X, ~, П₂, Р₂, diamond (♢), triangle (△; might
+   simply mean a misc. irregularity; explained on p. 61).
 ]=]--
 
 local m_utilities = require("Module:utilities")
 local ut = require("Module:utils")
-local m_utils = require("Module:utils")
 local m_links = require("Module:links")
 local com = require("Module:ru-common")
 local strutils = require("Module:string utilities")
@@ -86,7 +92,6 @@ local declensions_old = {}
 local short_declensions = {}
 local short_declensions_old = {}
 local short_stress_patterns = {}
-local decline = nil
 
 local long_cases = {
 	"nom_m", "nom_n", "nom_f", "nom_p",
@@ -118,11 +123,8 @@ for case, _ in pairs(short_cases) do
 	table.insert(old_cases, case)
 end
 
-local velar = {
-	["г"] = true,
-	["к"] = true,
-	["х"] = true,
-}
+local velar = ut.list_to_set({"г", "к", "х"})
+local sibilant = ut.list_to_set("ш", "щ", "ч", "ж"})
 
 local function track(page)
 	m_debug.track("ru-adjective/" .. page)
@@ -207,27 +209,42 @@ local function do_show(frame, old, manual)
 		stem, decl_type, short_accent, short_stem =
 			detect_stem_and_accent_type(stem, decl_type)
 		args.hint = manual and "" or usub(stem, -1)
-		if velar[args.hint] and decl_type == (old and "ій" or "ий") then
+		if (velar[args.hint] or sibilant[args.hint]) and decl_type == (old and "ій" or "ий") then
 			decl_type = "ый"
 		end
 
 		-- Set stem and unstressed version. Also construct end-accented version
-		-- of stem if unstressed; needed for short forms of adjectives of type -о́й.
-		-- We do this here before doing the unreduction transformation so that
-		-- we don't end up stressing an unstressed epenthetic vowel, and so that
-		-- the previous syllable instead ends up stressed (in type -о́й adjectives
-		-- the stem won't have any stress). Note that the closest equivalent in
-		-- nouns is handled in attach_unstressed(), which puts the stress onto the
-		-- final syllable if the stress pattern calls for ending stress in the
-		-- genitive plural. This works there because
+		-- of stem if unstressed; needed for short forms of adjectives of
+		-- type -о́й. We do this here before doing the unreduction
+		-- transformation so that we don't end up stressing an unstressed
+		-- epenthetic vowel, and so that the previous syllable instead ends
+		-- up stressed (in type -о́й adjectives the stem won't have any stress).
+		-- Note that the closest equivalent in nouns is handled in
+		-- attach_unstressed(), which puts the stress onto the final syllable
+		-- if the stress pattern calls for ending stress in the genitive
+		-- plural. This works there because
 		-- (1) It won't stress an unstressed epenthetic vowel because the
-		--     cases where the epenthetic vowel is unstressed are precisely those
-		--     with stem stress in the gen pl, not ending stress;
-		-- (2) There isn't a need to stress the syllable preceding an unstressed
-		--     epenthetic vowel because that syllable should already have
-		--     stress, since we require that the base stem form (parameter 2)
-		--     have stress in it whenever any case form has stem stress.
-		--     This isn't the case here in type -о́й adjectives.
+		--     cases where the epenthetic vowel is unstressed are precisely
+		--     those with stem stress in the gen pl, not ending stress;
+		-- (2) There isn't a need to stress the syllable preceding an
+		--     unstressed epenthetic vowel because that syllable should
+		--     already have stress, since we require that the base stem form
+		--     (parameter 2) have stress in it whenever any case form has
+		--     stem stress. This isn't the case here in type -о́й adjectives.
+		-- NOTE: FIXME: I can't actually quote any forms from Zaliznyak
+		-- (at least not from pages 58-60, where this is discussed) that
+		-- seem to require last-stem-syllable-stress, i.e. where the stem is
+		-- multisyllabic. The two examples given are both unusual: дорого́й
+		-- has stress on the initial syllable до́рог etc. and these forms are
+		-- marked with a triangle (indicating an apparent irregularity); and
+		-- голубо́й seems not to have a masculine singular short form, and it's
+		-- accent pattern b, so the remaining forms are all ending-stressed.
+		-- In fact it's possible that these examples don't exist: It appears
+		-- that all the multisyllabic adjectives in -о́й listed in the
+		-- dictionary have a marking next to them consisting of an X inside of
+		-- a square, which is glossed p. 69 to something I don't understand,
+		-- but may be saying that the masculine singular short form is
+		-- missing. If this is regular, we need to implement it.
 		args.stem = stem
 		args.ustem = com.make_unstressed_once(stem)
 		local accented_stem = stem
@@ -262,7 +279,7 @@ local function do_show(frame, old, manual)
 		args.categories = {}
 		-- FIXME: For compatibility with old {{temp|ru-adj7}}, {{temp|ru-adj8}},
 		-- {{temp|ru-adj9}}; maybe there's a better way.
-		if m_utils.contains({"ьій", "ьий", "short", "mixed", "ъ-short", "ъ-mixed"}, decl_type) then
+		if ut.contains({"ьій", "ьий", "short", "mixed", "ъ-short", "ъ-mixed"}, decl_type) then
 			table.insert(args.categories, "Russian possessive adjectives")
 		end
 
@@ -407,6 +424,8 @@ local function unreduce_stem(accented_stem, short_accent, old, decl)
 			-- -ъ is added, but this is a guess.
 			return ret .. (old and "ъ" or "")
 		elseif rfind(ret, com.vowel .. "́?$") then
+			-- This happens with adjectives like длинноше́ий, short masculine
+			-- singular длинноше́й.
 			return ret .. "й"
 		else
 			return ret .. "ь"
@@ -816,38 +835,16 @@ local unstressed_rules = {
 	["х"] = velar_rules,
 }
 
-local consonantal_suffixes = {
-	[""] = true,
-	["ь"] = true,
-	["й"] = true,
-}
+local consonantal_suffixes = ut.list_to_set({"", "ь", "й"})
 
-local old_consonantal_suffixes = {
-	["ъ"] = true,
-	["ь"] = true,
-	["й"] = true,
-}
+local old_consonantal_suffixes = ut.list_to_set({"ъ", "ь", "й"})
 
 --------------------------------------------------------------------------
 --                           Declension functions                       --
 --------------------------------------------------------------------------
 
-local function attach_unstressed(args, suf, stem, ustem)
-	local old = args.old
-	if suf == nil then
-		return nil
-	elseif old and old_consonantal_suffixes[suf] or not old and consonantal_suffixes[suf] then
-		if rfind(args.bare, old and "[йьъ]$" or "[йь]$") then
-			return args.bare
-		elseif suf == "ъ" then
-			return args.bare .. suf
-		else
-			return args.bare
-		end
-	end
-	suf = com.make_unstressed(suf)
+local function combine_stem_and_suffix(stem, suf, rules, old)
 	local first = usub(suf, 1, 1)
-	local rules = unstressed_rules[args.hint]
 	if rules then
 		local conv = rules[first]
 		if conv then
@@ -865,6 +862,24 @@ local function attach_unstressed(args, suf, stem, ustem)
 	return stem .. suf
 end
 
+local function attach_unstressed(args, suf, stem, ustem)
+	local old = args.old
+	if suf == nil then
+		return nil
+	elseif old and old_consonantal_suffixes[suf] or not old and consonantal_suffixes[suf] then
+		if rfind(args.bare, old and "[йьъ]$" or "[йь]$") then
+			return args.bare
+		elseif suf == "ъ" then
+			return args.bare .. suf
+		else
+			return args.bare
+		end
+	end
+	suf = com.make_unstressed(suf)
+	local rules = unstressed_rules[args.hint]
+	return combine_stem_and_suffix(stem, suf, rules, old)
+end
+
 local function attach_stressed(args, suf, stem, ustem)
 	local old = args.old
 	if suf == nil then
@@ -872,29 +887,16 @@ local function attach_stressed(args, suf, stem, ustem)
 	elseif not rfind(suf, "[ё́]") then -- if suf has no "ё" or accent marks
 		return attach_unstressed(args, suf, stem, ustem)
 	end
-	local first = usub(suf, 1, 1)
 	local rules = stressed_rules[args.hint]
-	if rules then
-		local conv = rules[first]
-		if conv then
-			if old then
-				local ending = usub(suf, 2)
-				if conv == "и" and rfind(ending, "^́?[аеёиійоуэюяѣ]") then
-					conv = "і"
-				end
-				suf = conv .. ending
-			else
-				suf = conv .. usub(suf, 2)
-			end
-		end
-	end
-	return ustem .. suf
+	return combine_stem_and_suffix(ustem, suf, rules, old)
 end
 
 local function attach_both(args, suf, stem, ustem)
 	local results = {}
-	ut.insert_if_not(results, attach_unstressed(args, suf, stem, ustem))
+	-- Examples with stems with ё on Zaliznyak p. 61 list the
+	-- ending-stressed forms first, so go with that.
 	ut.insert_if_not(results, attach_stressed(args, suf, stem, ustem))
+	ut.insert_if_not(results, attach_unstressed(args, suf, stem, ustem))
 	return results
 end
 
@@ -923,29 +925,11 @@ local function gen_form(args, decl, case, fun)
 		attach_with(args, decl[case], fun, args.stem, args.ustem))
 end
 
-decline = function(args, decl, stressed)
+function decline(args, decl, stressed)
 	local attacher = stressed and attach_stressed or attach_unstressed
-	gen_form(args, decl, "nom_m", attacher)
-	gen_form(args, decl, "nom_n", attacher)
-	gen_form(args, decl, "nom_f", attacher)
-	if args.old then
-		gen_form(args, decl, "nom_mp", attacher)
+	for _, case in ipairs(args.old and old_long_cases or long_cases) do
+		gen_form(args, decl, case, attacher)
 	end
-	gen_form(args, decl, "nom_p", attacher)
-	gen_form(args, decl, "gen_m", attacher)
-	gen_form(args, decl, "gen_f", attacher)
-	gen_form(args, decl, "gen_p", attacher)
-	gen_form(args, decl, "dat_m", attacher)
-	gen_form(args, decl, "dat_f", attacher)
-	gen_form(args, decl, "dat_p", attacher)
-	gen_form(args, decl, "acc_f", attacher)
-	gen_form(args, decl, "acc_n", attacher)
-	gen_form(args, decl, "ins_m", attacher)
-	gen_form(args, decl, "ins_f", attacher)
-	gen_form(args, decl, "ins_p", attacher)
-	gen_form(args, decl, "pre_m", attacher)
-	gen_form(args, decl, "pre_f", attacher)
-	gen_form(args, decl, "pre_p", attacher)
 	-- default acc_n to nom_n; applies chiefly in manual declension tables
 	if not args.acc_n then
 		args.acc_n = args.nom_n
