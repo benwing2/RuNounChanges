@@ -41,8 +41,7 @@ TODO:
    might refer simply to any misc. irregularity; and even if it is, it might
    not be worth it, and better simply to have this done using the various
    override mechanisms.
-2. Implement handling of * etc. notes at the end of overrides.
-3. Implement categorization similar to the way it's done in nouns.
+2. Implement categorization similar to the way it's done in nouns.
 ]=]--
 
 local m_utilities = require("Module:utilities")
@@ -51,6 +50,7 @@ local m_utils = require("Module:utils")
 local m_links = require("Module:links")
 local com = require("Module:ru-common")
 local strutils = require("Module:string utilities")
+local m_table_tools = require("Module:table tools")
 local m_debug = require("Module:debug")
 
 local export = {}
@@ -1041,16 +1041,17 @@ function make_table(args)
 			local ru_vals = {}
 			local tr_vals = {}
 			for _, x in ipairs(args[case]) do
+				local entry, notes = m_table_tools.get_notes(x)
 				if old then
-					ut.insert_if_not(ru_vals, m_links.full_link(com.make_unstressed(x), x, lang, nil, nil, nil, {tr = "-"}, false))
+					ut.insert_if_not(ru_vals, m_links.full_link(com.make_unstressed(entry), entry, lang, nil, nil, nil, {tr = "-"}, false) .. notes)
 				else
-					ut.insert_if_not(ru_vals, m_links.full_link(x, nil, lang, nil, nil, nil, {tr = "-"}, false))
+					ut.insert_if_not(ru_vals, m_links.full_link(entry, nil, lang, nil, nil, nil, {tr = "-"}, false) .. notes)
 				end
-				local trx = lang:transliterate(m_links.remove_links(x))
+				local trx = lang:transliterate(m_links.remove_links(entry))
 				if case == "gen_m" then
 					trx = rsub(trx, "([aoeáóé]́?)go$", "%1vo")
 				end
-				ut.insert_if_not(tr_vals, trx)
+				ut.insert_if_not(tr_vals, trx .. notes)
 			end
 			local term = table.concat(ru_vals, ", ")
 			local tr = table.concat(tr_vals, ", ")
