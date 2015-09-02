@@ -895,7 +895,7 @@ function export.catboiler(frame)
 			stem, gender = rmatch(SUBPAGENAME, "^Russian (.*) (.-) adjectival")
 		end
 		if not stem then
-			error("Invalid category name, should be e.g. 'Russian velar-stem masculine accent-1 adjectival nominals'")
+			error("Invalid category name, should be e.g. \"Russian velar-stem masculine accent-1 adjectival nominals\"")
 		end
 		local stemtext
 		if rfind(stem, "possessive") then

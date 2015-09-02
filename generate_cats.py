@@ -113,15 +113,22 @@ site = pywikibot.Site()
 def msg(text):
   print text.encode('utf-8')
 
-def create_cat(cat, args):
-  cat = "Category:Russian " + cat.replace("~", "nominals")
-  text = "{{runouncatboiler|%s}}" % "|".join(args)
+def create_cat(cat, args, adj=False):
+  if adj:
+    cat = "Category:Russian " + cat.replace("~", "adjectives")
+    text = "{{ruadjcatboiler|%s}}" % "|".join(args)
+  else:
+    cat = "Category:Russian " + cat.replace("~", "nominals")
+    text = "{{runouncatboiler|%s}}" % "|".join(args)
   page = pywikibot.Page(site, cat)
   page.text = unicode(text)
   changelog = "Creating '%s' with text '%s'" % (cat, text)
   msg("Changelog = %s" % changelog)
   if dosave:
     page.save(comment = changelog)
+
+def create_adj_cat(cat, args):
+  create_cat(cat, args, adj=True)
 
 for s in stress_patterns:
   create_cat("~ with stress pattern %s" % s, ["stress", s])
@@ -159,3 +166,34 @@ for sg, pl in endings:
 for sg in sgendings:
   cat = "~ ending in %s" % sg
   create_cat(cat, ["sg", sg])
+
+short_adj_stress_patterns = [
+    ("a", "stem stress on all short forms"),
+    ("b", "ending stress on all short forms (except the masculine singular)"),
+    ("c", "ending stress on the feminine singular, stem stress on the other forms"),
+    ("a'", "stem or ending stress on the feminine singular, stem stress on the other forms"),
+    ("b'", "stem or ending stress on the plural, ending stress on the other forms (except the masculine singular)"),
+    ("c'", "stem or ending stress on the plural, ending stress on the feminine singular and stem stress on the neuter singular"),
+    ("c''", "stem or ending stress on the neuter singular and plural, ending stress on the feminine singular")]
+
+adj_patterns = [
+    ("hard-stem", "stem-stressed", u"-ый", u"-ая", u"-ое", u"-ые"),
+    ("soft-stem", "stem-stressed", u"-ий", u"-яя", u"-ее", u"-ие"),
+    ("velar-stem", "stem-stressed", u"-ий", u"-ая", u"-ое", u"-ие"),
+    ("sibilant-stem", "stem-stressed", u"-ий", u"-ая", u"-ее", u"-ие"),
+    (u"ц-stem", "stem-stressed", u"-ый", u"-ая", u"-ее", u"-ые"),
+    ("vowel-stem", "stem-stressed", u"-ий", u"-яя", u"-ее", u"-ие"),
+    ("hard-stem", "ending-stressed", u"-о́й", u"-а́я", u"-о́е", u"-ы́е"),
+    ("velar-stem", "ending-stressed", u"-о́й", u"-а́я", u"-о́е", u"-и́е"),
+    ("sibilant-stem", "ending-stressed", u"-о́й", u"-а́я", u"-о́е", u"-и́е"),
+    (u"ц-stem", "ending-stressed", u"-о́й", u"-а́я", u"-о́е", u"-ы́е"),
+    ("long", "possessive", u"-ий", u"-ья", u"-ье", u"-ьи"),
+    ("mixed", "possessive", u"a consonant (-ъ old style)", u"-а", u"-о", u"-ы"),
+    ("short", "possessive", u"a consonant (-ъ old style)", u"-а", u"-о", u"-ы"),
+]
+
+for stress, expl in short_adj_stress_patterns:
+  create_adj_cat("~ with short accent pattern " + stress, ["shortaccent", expl])
+
+for stem, stress, m, f, n, p in adj_patterns:
+  create_adj_cat("%s %s ~" % (stem, stress), ["adj", m, f, n, p])

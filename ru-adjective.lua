@@ -141,6 +141,10 @@ end
 
 -------------------- Global declension/case/etc. variables -------------------
 
+-- 'enable_categories' is a special hack for testing, which disables all
+-- category insertion if false. Delete this as soon as we've verified the
+-- working of the category code and created all the necessary categories.
+local enable_categories = true
 local declensions = {}
 local declensions_old = {}
 local short_declensions = {}
@@ -277,11 +281,6 @@ local function generate_forms(args, old, manual)
 			short_stem, accented_stem)
 
 		args.categories = {}
-		-- FIXME: For compatibility with old {{temp|ru-adj7}}, {{temp|ru-adj8}},
-		-- {{temp|ru-adj9}}; maybe there's a better way.
-		if ut.contains({"ьій", "ьий", "short", "mixed", "ъ-short", "ъ-mixed"}, decl_type) then
-			table.insert(args.categories, "Russian possessive adjectives")
-		end
 
 		local decls = old and declensions_old or declensions
 		local short_decls = old and short_declensions_old or short_declensions
@@ -298,6 +297,10 @@ local function generate_forms(args, old, manual)
 
 		tracking_code(decl_type, args, orig_short_accent, short_accent,
 			short_stem)
+		if not manual and enable_categories then
+			categorize(decl_type, args, orig_short_accent, short_stem,
+				short_stem)
+		end
 
 		decline(args, decls[decl_type], decl_type == "ой")
 		if short_forms_allowed and short_accent then
@@ -397,7 +400,7 @@ function export.generate_forms(frame)
 	return table.concat(ins_text, "|")
 end
 
--- The entry point for 'ru-adj-form' to generate a particular noun form.
+-- The entry point for 'ru-adj-form' to generate a particular adjective form.
 function export.generate_form(frame)
 	local args = clone_args(frame)
 	if not args.form then
@@ -465,9 +468,186 @@ function tracking_code(decl_class, args, orig_short_accent, short_accent,
 	end
 end
 
-function categorize(decl_class, args, orig_short_accent, short_accent,
+-- Insert the category CAT (a string) into list CATEGORIES. String will
+-- have "Russian " prepended and ~ substituted for the part of speech --
+-- currently always "adjectives".
+local function insert_category(categories, cat)
+	table.insert(categories, "Russian " .. rsub(cat, "~", "adjectives"))
+end
+
+function categorize(decl_type, args, orig_short_accent, short_accent,
 	short_stem)
-	-- IMPLEMENT ME!!!!!!!!!
+	-- Insert category CAT into the list of categories in ARGS.
+	local function insert_cat(cat)
+		insert_category(args.categories, cat)
+	end
+
+	-- FIXME: For compatibility with old {{temp|ru-adj7}}, {{temp|ru-adj8}},
+	-- {{temp|ru-adj9}}; maybe there's a better way.
+	if ut.contains({"ьій", "ьий", "short", "mixed", "ъ-short", "ъ-mixed"}, decl_type) then
+		insert_cat("possessive ~")
+	end
+
+	if ut.contains({"ьій", "ьий"}, decl_type) then
+		insert_cat("long possessive ~")
+	elseif ut.contains({"short", "ъ-short"}) then
+		insert_cat("short possessive ~")
+	elseif ut.contains({"mixed", "ъ-mixed"}) then
+		insert_cat("mixed possessive ~")
+	elseif decl_type == "-" then
+		insert_cat("invariable ~")
+	else
+		local hint_types = com.get_stem_trailing_letter_type(args.stem)
+	-- insert English version of Zaliznyak stem type
+		local stem_type =
+			ut.contains(sghint_types, "velar") and "velar-stem" or
+			ut.contains(sghint_types, "sibilant") and "sibilant-stem" or
+			ut.contains(sghint_types, "c") and "ц-stem" or
+			ut.contains(sghint_types, "i") and "i-stem" or
+			ut.contains(sghint_types, "vowel") and "vowel-stem" or
+			ut.contains(sghint_types, "soft-cons") and "vowel-stem" or
+			ut.contains(sghint_types, "palatal") and "vowel-stem" or
+			decl_class == "ий" and "soft-stem" or
+			"hard-stem"
+		if stem_type == "soft-stem" or stem_type == "vowel-stem" then
+			insert_cat(stem_type .. " ~")
+		else
+			insert_cat(stem_type .. " " .. (decl_class == "ой" and "ending-stressed" or "stem-stressed") .. " ~")
+		end
+	end
+	if decl_type == "ой" then
+		insert_cat("ending-stressed ~")
+	end
+
+	local short_forms_allowed = ut.contains({"ый", "ой", "ій", "ий"})
+	if short_forms_allowed then
+		local override_m = args.short_m or args[3]
+		local override_f = args.short_f or args[5]
+		local override_n = args.short_n or args[4]
+		local override_p = args.short_p or args[6]
+		local has_short = short_accent or override_m or override_f or
+			override_n or override_p
+		local missing_short = override_m == "-" or
+			override_f == "-" or override_n == "-" or override_p == "-" or
+			not short_accent and (not override_m or not override_f or
+			not override_n or not override_p)
+		if has_short then
+			insert_cat("~ with short forms")
+			if missing_short then
+				insert_cat("~ with missing short forms")
+			end
+		end
+		if short_accent then
+			insert_cat("~ with short accent pattern " .. short_accent)
+		end
+		if orig_short_accent then
+			if rfind(orig_short_accent, "%*") then
+				insert_cat("~ with reducible short stem")
+			end
+			if rfind(orig_short_accent, "%(1%)") then
+				insert_cat("~ with Zaliznyak short form special case 1")
+			end
+			if rfind(orig_short_accent, "%(2%)") then
+				insert_cat("~ with Zaliznyak short form special case 2")
+			end
+		end
+		if short_stem and short_stem ~= args.stem then
+			insert_cat("~ with irregular short stem")
+		end
+		insert_cat("~ with reducible stem")
+	end
+	for _, case in ipairs(old_cases) do
+		if args[case] then
+			local engcase = rsub(case, "^([a-z]*)", {
+				nom="nominative", gen="genitive", dat="dative",
+				acc="accusative", ins="instrumental", pre="prepositional",
+				short="short",
+			})
+			engcase = rsub(engcase, "(_[a-z]*)$", {
+				_m=" masculine singular", _f=" feminine singular",
+				_n=" neuter singular", _p=" plural",
+				_mp=" masculine plural"
+			})
+			insert_cat("~ with irregular " .. engcase)
+		end
+	end
+end
+
+local stem_expl = {
+	["velar-stem"] = "a velar (-к, -г or –x)",
+	["sibilant-stem"] = "a sibilant (-ш, -ж, -ч or -щ)",
+	["ц-stem"] = "-ц",
+	["i-stem"] = "-и (old-style -і)",
+	["vowel-stem"] = "a vowel other than -и or -і, or -й or -ь",
+	["soft-stem"] = "a soft consonant",
+	["hard-stem"] = "a hard consonant",
+}
+
+local zaliznyak_stem_type = {
+	["velar-stem"] = "3",
+	["sibilant-stem"] = "4",
+	["ц-stem"] = "5",
+	["i-stem"] = "7",
+	["vowel-stem"] = "6",
+	["soft-stem"] = "2",
+	["hard-stem"] = "1",
+}
+
+-- Implementation of template 'ruadjcatboiler'.
+function export.catboiler(frame)
+	local SUBPAGENAME = mw.title.getCurrentTitle().subpageText
+	local args = clone_args(frame)
+
+	local cats = {}
+
+	local maintext
+	if args[1] == "adj" then
+		local stem, stress = rmatch(SUBPAGENAME, "^Russian ([^ ]*) ([^ *]*)-stressed adjectives")
+		if not stem then
+			stem, stress = rmatch(SUBPAGENAME, "^Russian ([^ ]*) (possessive) adjectives")
+		end
+		if not stem then
+			error("Invalid category name, should be e.g. \"Russian velar-stem ending-stressed adjectives\"")
+		end
+		local stresstext = stress == "stem" and
+			"This adjective has stress on the stem, corresponding to Zaliznyak's type a." or
+			stress == "ending" and
+			"This adjective has stress on the endings, corresponding to Zaliznyak's type b." or
+			"All adjectives of this type have stress on the stem."
+		local endingtext = "ending in the nominative in masculine singular " .. args[2] .. ", feminine singular " .. args[3] .. ", neuter singular " .. args[4] .. " and plural " .. args[5] .. "."
+		local stemtext, posstext
+		if stress == "possessive" then
+			posstext = " possessive"
+			if stem == "long" then
+				stemtext = " The stem ends in a yod, which disappears in the nominative singular but appears in all other forms as a soft sign ь followed by a vowel."
+			else
+				stemtext = ""
+			end
+		else
+			posstext = ""
+			if not stem_expl[stem] then
+				error("Invalid stem type " .. stem)
+			end
+			stemtext = " The stem ends in " .. stem_expl[stem] .. " and is Zaliznyak's type " .. zaliznyak_stem_type[stem] .. "."
+		end
+
+		maintext = stem .. posstext .. " ~, " .. endingtext .. stemtext .. " " .. stresstext
+		insert_category(cats, "~ by stem type and stress")
+	elseif args[1] == "shortaccent" then
+		local shortaccent = rmatch(SUBPAGENAME, "^Russian adjectives with short accent pattern ([^ ]*)")
+		if not shortaccent then
+			error("Invalid category name, should be e.g. \"Russian adjectives with short accent pattern c\"")
+		end
+		maintext = "~ with short accent pattern " .. shortaccent .. ", with " .. args[2] .. "."
+		insert_category(cats, "~ by short accent pattern")
+	else
+		error("Unknown ruadjcatboiler type " .. (args[1] or "(empty)"))
+	end
+
+	return "This category contains Russian " .. rsub(maintext, "~", "adjectives")
+		.. "\n" ..
+		mw.getCurrentFrame():expandTemplate{title="ru-categoryTOC", args={}}
+		.. m_utilities.format_categories(cats, lang)
 end
 
 --------------------------------------------------------------------------
