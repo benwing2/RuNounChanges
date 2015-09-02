@@ -1090,6 +1090,15 @@ function get_realcase(case, anim)
 	return case
 end
 
+local function get_forms(args, realcase)
+	local canon_forms = {}
+	local forms = show_form(args.per_word_info, realcase, args.old, "russian-separate", "omit notes")
+	for _, form in ipairs(forms) do
+		ut.insert_if_not(canon_forms, m_links.remove_links(form))
+	end
+	return table.concat(canon_forms, ",")
+end
+
 -- The entry point for 'ru-noun-forms' to generate all noun forms.
 function export.generate_forms(frame)
 	local args = clone_args(frame)
@@ -1120,7 +1129,7 @@ function export.generate_forms(frame)
 		local realcase = get_realcase(case, args.a)
 
 		if caseok and args.forms[case] then
-			table.insert(ins_text, case .. "=" .. m_links.remove_links(table.concat(show_form(args.per_word_info, realcase, args.old, "russian-separate"), ",")))
+			table.insert(ins_text, case .. "=" .. get_forms(args, realcase))
 		end
 	end
 	return table.concat(ins_text, "|")
@@ -1138,7 +1147,7 @@ function export.generate_form(frame)
 	end
 	local args = generate_forms(args, false)
 	local realcase = get_realcase(form, args.a)
-	return m_links.remove_links(table.concat(show_form(args.per_word_info, realcase, args.old, "russian-separate"), ","))
+	return get_forms(args, realcase)
 end
 
 -- The main entry point for modern declension tables.
@@ -2838,7 +2847,8 @@ end
 -- TRAILING_FORMS, passing the newly generated list of items down the
 -- next recursion level with the shorter WORD_FORMS. We end up
 -- returning a string to insert into the Wiki-markup table.
-function show_form_1(word_forms, trailing_forms, old, prefix, suffix, lemma)
+function show_form_1(word_forms, trailing_forms, old, prefix, suffix, lemma,
+	omit_notes)
 	if #word_forms == 0 then
 		local russianvals = {}
 		local latinvals = {}
@@ -2863,6 +2873,9 @@ function show_form_1(word_forms, trailing_forms, old, prefix, suffix, lemma)
 			form = rsub(form, "<ins[ab]>", "")
 			local entry, notes = m_table_tools.get_notes(form)
 			entry = prefix .. entry .. suffix
+			if omit_notes then
+				notes = ""
+			end
 			local ruspan, trspan
 			if old then
 				ruspan = m_links.full_link(com.make_unstressed(entry), entry, lang, nil, nil, nil, {tr = "-"}, false) .. notes
@@ -2907,7 +2920,7 @@ function show_form_1(word_forms, trailing_forms, old, prefix, suffix, lemma)
 			end
 		end
 		return show_form_1(word_forms, new_trailing_forms, old, prefix, suffix,
-			lemma)
+			lemma, omit_notes)
 	end
 end
 
@@ -2917,7 +2930,7 @@ end
 -- WORD_FORMS (a table listing the forms for each case) and JOINER (a string).
 -- We loop over all possible combinations of elements from each word's list
 -- of forms for the given case; this requires recursion.
-function show_form(per_word_info, case, old, prefix, suffix, lemma)
+function show_form(per_word_info, case, old, prefix, suffix, lemma, omit_notes)
 	local word_forms = {}
 	-- Gather the appropriate word forms. We have to recreate this anew
 	-- because it will be destructively modified by show_form_1().
@@ -2927,7 +2940,7 @@ function show_form(per_word_info, case, old, prefix, suffix, lemma)
 	-- We need to start the recursion with the second parameter containing
 	-- one blank element rather than no elements, otherwise no elements
 	-- will be propagated to the next recursion level.
-	return show_form_1(word_forms, {""}, old, prefix, suffix, lemma)
+	return show_form_1(word_forms, {""}, old, prefix, suffix, lemma, omit_notes)
 end
 
 
