@@ -98,6 +98,8 @@ local export = {}
 
 local lang = require("Module:languages").getByCode("ru")
 
+----------------------------- Utility functions ------------------------
+
 local u = mw.ustring.char
 local rfind = mw.ustring.find
 local rsubn = mw.ustring.gsub
@@ -112,7 +114,6 @@ local function rsub(term, foo, bar)
 	return retval
 end
 
--- utility function
 local function insert_list_into_table(tab, list)
 	if type(list) ~= "table" then
 		list = {list}
@@ -121,6 +122,24 @@ local function insert_list_into_table(tab, list)
 		ut.insert_if_not(tab, list)
 	end
 end
+
+local function track(page)
+	m_debug.track("ru-adjective/" .. page)
+	return true
+end
+
+-- Clone parent's args while also assigning nil to empty strings.
+local function clone_args(frame)
+	local args = {}
+	for pname, param in pairs(frame:getParent().args) do
+		if param == "" then args[pname] = nil
+		else args[pname] = param
+		end
+	end
+	return args
+end
+
+-------------------- Global declension/case/etc. variables -------------------
 
 local declensions = {}
 local declensions_old = {}
@@ -161,71 +180,26 @@ end
 local velar = ut.list_to_set({"г", "к", "х"})
 local sibilant = ut.list_to_set("ш", "щ", "ч", "ж"})
 
-local function track(page)
-	m_debug.track("ru-adjective/" .. page)
-	return true
-end
+--------------------------------------------------------------------------
+--                               Main code                              --
+--------------------------------------------------------------------------
 
-local function tracking_code(decl_class, args, orig_short_accent,
-		short_accent, short_stem)
-	local hint_types = com.get_stem_trailing_letter_type(args.stem)
-	local function dotrack(prefix)
-		if prefix ~= "" then
-			track(prefix)
-			prefix = prefix .. "/"
-		end
-		track(prefix .. decl_class)
-		for _, hint_type in ipairs(hint_types) do
-			track(prefix .. hint_type)
-			track(prefix .. decl_class .. "/" .. hint_type)
-		end
-	end
-	dotrack("")
-	if args[3] or short_accent then
-		dotrack("short")
-	end
-	if orig_short_accent then
-		if rfind(orig_short_accent, "%*") then
-			dotrack("reducible")
-			dotrack("reducible/" .. short_accent)
-		end
-		if rfind(orig_short_accent, "%(1%)") then
-			dotrack("special-case-1")
-			dotrack("special-case-1/" .. short_accent)
-		end
-		if rfind(orig_short_accent, "%(2%)") then
-			dotrack("special-case-2")
-			dotrack("special-case-2/" .. short_accent)
-		end
-	if short_accent then
-		dotrack("short-accent/" .. short_accent)
-	end
-	if short_stem then
-		dotrack("explicit-short-stem")
-		dotrack("explicit-short-stem/" .. short_accent)
-	end
-	for _, case in ipairs(old_cases) do
-		if args[case] then
-			track("irreg/" .. case)
-			-- questionable use: dotrack("irreg/" .. case .. "/")
-		end
-	end
-end
-
-local function do_show(frame, old, manual)
+-- Implementation of main entry point
+local function generate_forms(args, old, manual)
 	PAGENAME = mw.title.getCurrentTitle().text
 	SUBPAGENAME = mw.title.getCurrentTitle().subpageText
 	NAMESPACE = mw.title.getCurrentTitle().nsText
 
-	local args = {}
-	--cloning parent's args while also assigning nil to empty strings
-	for pname, param in pairs(frame:getParent().args) do
-		if param == "" then args[pname] = nil
-        else args[pname] = param
-        end
-	end
-
 	args.forms = {}
+	old = old or args.old
+	args.old = old
+	args.suffix = args.suffix or ""
+	-- HACK: Escape * at beginning of line so it doesn't show up
+	-- as a list entry. Many existing templates use * for footnotes.
+	-- FIXME: We should maybe do this in {{ru-adj-table}} instead.
+	if args.notes then
+		args.notes = rsub(args.notes, "^%*", "&#42;")
+	end
 
 	local decl_types = manual and "-" or args[2]
 	for _, decl_type in ipairs(rsplit(decl_types, ",")) do
@@ -302,15 +276,6 @@ local function do_show(frame, old, manual)
 		short_accent = construct_bare_and_short_stem(args, short_accent,
 			short_stem, accented_stem)
 
-		args.suffix = args.suffix or ""
-		args.old = old
-		-- HACK: Escape * at beginning of line so it doesn't show up
-		-- as a list entry. Many existing templates use * for footnotes.
-		-- FIXME: We should maybe do this in {{ru-adj-table}} instead.
-		if args.notes then
-			args.notes = rsub(args.notes, "^%*", "&#42;")
-		end
-
 		args.categories = {}
 		-- FIXME: For compatibility with old {{temp|ru-adj7}}, {{temp|ru-adj8}},
 		-- {{temp|ru-adj9}}; maybe there's a better way.
@@ -343,6 +308,12 @@ local function do_show(frame, old, manual)
 
 	handle_forms_and_overrides(args, short_forms_allowed)
 
+	return args()
+
+-- Implementation of main entry point
+local function do_show(frame, old, manual)
+	local args = clone_args(frame)
+	local args = generate_forms(args, old, manual)
 	return make_table(args) .. m_utilities.format_categories(args.categories, lang)
 end
 
@@ -402,6 +373,101 @@ function export.get_nominal_decl(decl, gender, old)
 		n.nom_pl = d.nom_mp
 	end
 	return n
+end
+
+local function get_form(forms)
+	local canon_forms = {}
+	for _, form in forms do
+		local entry, notes = m_table_tools.get_notes(form)
+		ut.insert_if_not(canon_forms, m_links.remove_links(entry))
+	end
+	return table.concat(canon_forms, ",")
+end
+
+-- The entry point for 'ru-adj-forms' to generate all adjective forms.
+function export.generate_forms(frame)
+	local args = clone_args(frame)
+	local args = generate_forms(args, false)
+	local ins_text = {}
+	for _, case in ipairs(old_cases) do
+		if args.forms[case] then
+			table.insert(ins_text, case .. "=" .. get_form(args.forms[case]))
+		end
+	end
+	return table.concat(ins_text, "|")
+end
+
+-- The entry point for 'ru-adj-form' to generate a particular noun form.
+function export.generate_form(frame)
+	local args = clone_args(frame)
+	if not args.form then
+		error("Must specify desired form using form=")
+	end
+	local form = args.form
+	if not ut.contains(old_cases, form) then
+		error("Unrecognized form " .. form)
+	end
+	local args = generate_forms(args, false)
+	if not args.forms[form] then
+		return ""
+	else
+		return get_form(args.forms[form])
+	end
+end
+
+--------------------------------------------------------------------------
+--                      Tracking and categorization                     --
+--------------------------------------------------------------------------
+
+function tracking_code(decl_class, args, orig_short_accent, short_accent,
+	short_stem)
+	local hint_types = com.get_stem_trailing_letter_type(args.stem)
+	local function dotrack(prefix)
+		if prefix ~= "" then
+			track(prefix)
+			prefix = prefix .. "/"
+		end
+		track(prefix .. decl_class)
+		for _, hint_type in ipairs(hint_types) do
+			track(prefix .. hint_type)
+			track(prefix .. decl_class .. "/" .. hint_type)
+		end
+	end
+	dotrack("")
+	if args[3] or short_accent then
+		dotrack("short")
+	end
+	if orig_short_accent then
+		if rfind(orig_short_accent, "%*") then
+			dotrack("reducible")
+			dotrack("reducible/" .. short_accent)
+		end
+		if rfind(orig_short_accent, "%(1%)") then
+			dotrack("special-case-1")
+			dotrack("special-case-1/" .. short_accent)
+		end
+		if rfind(orig_short_accent, "%(2%)") then
+			dotrack("special-case-2")
+			dotrack("special-case-2/" .. short_accent)
+		end
+	if short_accent then
+		dotrack("short-accent/" .. short_accent)
+	end
+	if short_stem then
+		dotrack("explicit-short-stem")
+		dotrack("explicit-short-stem/" .. short_accent)
+	end
+	for _, case in ipairs(old_cases) do
+		if args[case] then
+			track("irreg/" .. case)
+			-- questionable use: dotrack("irreg/" .. case .. "/")
+		end
+	end
+end
+
+function categorize(decl_class, args, orig_short_accent, short_accent,
+	short_stem)
+	-- IMPLEMENT ME!!!!!!!!!
 end
 
 --------------------------------------------------------------------------
@@ -975,13 +1041,20 @@ function decline(args, decl, stressed)
 end
 
 function handle_forms_and_overrides(args, short_forms_allowed)
-	local old = args.old
-	for _, case in ipairs(old and old_long_cases or long_cases) do
-		args[case] = args[case] or args.forms[case]
+	local function dosplit(val)
+		if not val then return nil end
+		return rsplit(val, "%s*,%s*")
+	end
+
+	for _, case in ipairs(args.old and old_long_cases or long_cases) do
+		args[case] = dosplit(args[case]) or args.forms[case]
+			if type(args[case]) ~= "table" then
+				args[case] = rsplit(args[case], "%s*,%s*")
+			end
 	end
 	for case, argnum in pairs(short_cases) do
 		if short_forms_allowed then
-			args[case] = args[case] or args[argnum] or args.forms[case]
+			args[case] = dosplit(args[case] or args[argnum]) or args.forms[case]
 		else
 			args[case] = nil
 		end
@@ -1053,12 +1126,9 @@ function make_table(args)
 	args.title = args.title or strutils.format(old and old_title_temp or title_temp, args)
 
 	for _, case in ipairs(old and old_cases or cases) do
-		if args[case] == "-" then
+		if args[case] and #args[case] == 1 args[case][1] == "-" then
 			args[case] = "&mdash;"
 		elseif args[case] then
-			if type(args[case]) ~= "table" then
-				args[case] = rsplit(args[case], "%s*,%s*")
-			end
 			local ru_vals = {}
 			local tr_vals = {}
 			for _, x in ipairs(args[case]) do
