@@ -8,6 +8,8 @@ import mwparserfromhell
 import blib
 from blib import msg, rmparam, getparam
 
+from rulib import *
+
 save = False
 mockup = False
 # Uncomment the following line to enable test mode
@@ -87,55 +89,6 @@ def trymatch(forms, args, pagemsg, output_msg=True):
   if ok:
     pagemsg("Found a match: {{%s|%s}}" % (decl_template, "|".join(args)))
   return ok
-
-AC = u"\u0301"
-GR = u"\u0300"
-vowels_no_jo = u"аеиоуяэыюіѣѵАЕИОУЯЭЫЮІѢѴ"
-vowels = vowels_no_jo + u"ёЁ"
-sib_c = u"шщчжцШЩЧЖЦ"
-
-def is_unstressed(word):
-  return not re.search(ur"[ё" + AC + GR + "]", word)
-
-def is_one_syllable(word):
-  return len(re.sub("[^" + vowels + "]", "", word)) == 1
-
-# assumes word is unstressed
-def make_ending_stressed(word):
-  word = re.sub("([" + vowels_no_jo + "])([^" + vowels_no_jo + "]*)$",
-      r"\1" + AC + r"\2", word)
-  return word
-
-def try_to_stress(word):
-  if is_unstressed(word) and is_one_syllable(word):
-    return make_ending_stressed(word)
-  else:
-    return word
-
-def make_unstressed(word):
-  word = word.replace(u"ё", u"е")
-  word = word.replace(AC, "")
-  word = word.replace(GR, "")
-  return word
-
-def add_soft_sign(stem):
-  if re.search("[" + vowels + "]$", stem):
-    return stem + u"й"
-  else:
-    return stem + u"ь"
-
-def add_hard_neuter(stem):
-  if re.search("[" + sib_c + "]$", stem):
-    return stem + u"е"
-  else:
-    return stem + u"о"
-
-def do_assert(cond, msg=None):
-  if msg:
-    assert cond, msg
-  else:
-    assert cond
-  return True
 
 def synthesize_singular(nompl, prepl, gender, pagemsg):
   m = re.search(ur"^(.*)([ыи])(́?)е$", nompl)
@@ -223,10 +176,8 @@ def infer_decl(t, noungender, pagemsg):
   for case in getcases:
     if case:
       form = getparam(t, i).strip()
+      form = remove_links(form)
       if case == "pre_sg" or case == "pre_pl":
-        # eliminate [[FOO| in [[FOO|BAR]], and then remaining [[ and ]]
-        form = re.sub(r"\[\[[^|\[\]]*\|", "", form)
-        form = re.sub(r"\[\[|\]\]", "", form)
         # eliminate leading preposition
         form = re.sub(ur"^о(б|бо)?\s+", "", form)
       forms[case] = form
