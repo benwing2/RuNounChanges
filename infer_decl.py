@@ -394,8 +394,13 @@ def infer_word(forms, noungender, number, numonly, pagemsg):
       if trymatch(forms, args, pagemsg):
         return args
 
+    def adj_by_prep():
+      return (
+        numonly == "sg" and re.search(u"[ое][мй]$", make_unstressed(presg)) or
+        numonly != "sg" and re.search(u"[ыи]х$", make_unstressed(prepl)))
+
     if (re.search(u"([ыиіо]й|[яаь]я|[оеь]е)$", make_unstressed(nomsg)) and
-        (numonly == "sg" or re.search(u"([ыи]е|ьи)$", make_unstressed(nompl)))):
+        adj_by_prep()):
       if old_template:
         args = ["", nomsg, "+"] + anim + number
       else:
@@ -405,9 +410,7 @@ def infer_word(forms, noungender, number, numonly, pagemsg):
 
     # I think these are always in -ов/-ев/-ин/-ын.
     #if re.search(u"([шщжчц]е|[ъоа]|)$", nomsg):
-    if (re.search(u"([ое]в|[ыи]н)([оаъ]?)$", nomsg) and
-        (numonly == "sg" and re.search(u"[ое][мй]$", make_unstressed(presg)) or
-        numonly != "sg" and re.search(u"[ыи]х$", make_unstressed(prepl)))):
+    if (re.search(u"([ое]в|[ыи]н)([оаъ]?)$", nomsg) and adj_by_prep()):
       for adjpat in ["+short", "+mixed"]:
         if old_template:
           args = ["", nomsg, adjpat] + anim + number
@@ -947,6 +950,62 @@ test_templates = [
   |Жёлтую ре́ку
   |Жёлтой реко́й
   |о Жёлтой реке́}}""",
+  u"""{{ru-decl-noun-unc|
+  Дже́к-Потроши́тель|
+  Дже́ка-Потроши́теля|
+  Дже́ку-Потроши́телю|
+  Дже́ка-Потроши́теля|
+  Дже́ком-Потроши́телем|
+  Дже́ке-Потроши́теле|}}""",
+  u"""{{ru-decl-noun-unc
+  |ни́жнее бельё
+  |ни́жнего белья́
+  |ни́жнему белью́
+  |ни́жнее бельё
+  |ни́жним бельём
+  |ни́жнем белье́}}""",
+  u"""{{ru-decl-noun-unc
+  |Алта́йский край
+  |Алта́йского кра́я
+  |Алта́йскому кра́ю
+  |Алта́йский край
+  |Алта́йским кра́ем
+  |об Алта́йском кра́е}}""",
+  u"""{{ru-decl-noun-unc|мавзоле́й в Галикарна́се
+  |мавзоле́я в Галикарна́се
+  |мавзоле́ю в Галикарна́се
+  |мавзоле́й в Галикарна́се
+  |мавзоле́ем в Галикарна́се
+  |о мавзоле́е в Галикарна́се}}""",
+  u"""{{ru-decl-noun-unc
+  |коро́вье бе́шенство
+  |коро́вьего бе́шенства
+  |коро́вьему бе́шенству
+  |коро́вье бе́шенство
+  |коро́вьим бе́шенством
+  |о коро́вьем бе́шенстве}}""",
+  u"""{{ru-decl-noun-unc
+  |го́ре лу́ковое
+  |го́ря лу́кового
+  |го́рю лу́ковому
+  |го́ре лу́ковое
+  |го́рем лу́ковым
+  |о го́ре лу́ковом}}""",
+  u"""{{ru-decl-noun-unc
+  |Шалта́й-Болта́й
+  |Шалта́я-Болта́я
+  |Шалта́ю-Болта́ю
+  |Шалта́я-Болта́я
+  |Шалта́ем-Болта́ем
+  |о Шалта́е-Болта́е}}""",
+  u"""{{ru-decl-noun-unc
+  |разо́к
+  |-
+  |-
+  |разо́к
+  |-
+  |-
+  }}""",
   u"""{{ru-proper noun|[[британский|Брита́нские]] [[остров|острова́]]|m-in-p}}
   
   # [[British Isles]]
