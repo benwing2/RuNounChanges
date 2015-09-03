@@ -840,7 +840,7 @@ function export.catboiler(frame)
 	if args[1] == "stemgenderstress" then
 		local stem, gender, stress = rmatch(SUBPAGENAME, "^Russian (.-) (.-)%-type accent-(.-) ")
 		if not stem then
-			error("Invalid category name, should be e.g. 'Russian velar-stem masculine-type accent-1 nominals'")
+			error("Invalid category name, should be e.g. \"Russian velar-stem masculine-type accent-1 nominals\"")
 		end
 		local stem_gender_text = get_stem_gender_text(stem, gender)
 		local accent_text = " This nominal is stressed according to accent pattern " .. stress .. ", corresponding to Zaliznyak's type " .. zaliznyak_stress_pattern[stress] .. "."
@@ -852,7 +852,7 @@ function export.catboiler(frame)
 		else
 			local stem, gender = rmatch(SUBPAGENAME, "^Russian (.-) (.-)%-type")
 			if not stem then
-				error("Invalid category name, should be e.g. 'Russian velar-stem masculine-type nominals'")
+				error("Invalid category name, should be e.g. \"Russian velar-stem masculine-type nominals\"")
 			end
 			maintext = get_stem_gender_text(stem, gender)
 		end
