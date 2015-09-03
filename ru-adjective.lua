@@ -145,7 +145,7 @@ end
 -- 'enable_categories' is a special hack for testing, which disables all
 -- category insertion if false. Delete this as soon as we've verified the
 -- working of the category code and created all the necessary categories.
-local enable_categories = true
+local enable_categories = false
 local declensions = {}
 local declensions_old = {}
 local short_declensions = {}
@@ -181,9 +181,6 @@ for case, _ in pairs(short_cases) do
 	table.insert(cases, case)
 	table.insert(old_cases, case)
 end
-
-local velar = ut.list_to_set({"г", "к", "х"})
-local sibilant = ut.list_to_set({"ш", "щ", "ч", "ж"})
 
 --------------------------------------------------------------------------
 --                               Main code                              --
@@ -223,8 +220,7 @@ local function generate_forms(args, old, manual)
 		local short_accent, short_stem
 		stem, decl_type, short_accent, short_stem =
 			detect_stem_and_accent_type(stem, decl_type)
-		args.hint = manual and "" or usub(stem, -1)
-		if (velar[args.hint] or sibilant[args.hint]) and decl_type == (old and "ій" or "ий") then
+		if rfind(decl_type, "^[іи]й$") and rfind(stem, "[" .. com.velar .. com.sib .. "]$") then
 			decl_type = "ый"
 		end
 
@@ -285,7 +281,7 @@ local function generate_forms(args, old, manual)
 
 		local orig_short_accent = short_accent
 		short_accent = construct_bare_and_short_stem(args, short_accent,
-			short_stem, accented_stem)
+			short_stem, accented_stem, old, decl_type)
 
 		args.categories = {}
 
@@ -691,9 +687,7 @@ function detect_stem_and_accent_type(stem, decl)
 	if not decl then
 		local base, ending = rmatch(stem, "^(.*)([ыиіо]́?й)$")
 		if base then
-			if rfind(ending, "^[іи]й$") and rfind(base, "[" .. com.velar .. com.sib .. "]$") then
-				return base, "ый", short_accent, short_stem
-			end
+			-- -ий/-ій will be converted to -ый after velars and sibilants by the caller
 			return base, com.make_unstressed(ending), short_accent, short_stem
 		else
 			-- It appears that short and mixed adjectives are always either
@@ -719,37 +713,47 @@ function detect_stem_and_accent_type(stem, decl)
 	end
 end
 
+-- Add a possible suffix to the bare stem, according to the declension and
+-- value of OLD. This may be -ь, -ъ, -й or nothing. We need to do this here
+-- because we don't actually attach such a suffix in attach_unstressed() due
+-- to situations where we don't want the suffix added, e.g. бескра́йний with
+-- unreduced nom sg бескра́ен without expected -ь.
+local function add_bare_suffix(bare, old, decl, unreduced)
+	if old and decl ~= "ій" then
+		return bare .. "ъ"
+	elseif decl == "ий" or decl == "ій" then
+		-- This next special case is mentioned in Zaliznyak's 1980 grammatical
+		-- dictionary for adjectives (footnote, p. 60).
+		if unreduced and rfind(bare, "[нН]$") then
+			-- FIXME: What happens in this case old-style? I assume that
+			-- -ъ is added, but this is a guess.
+			return bare .. (old and "ъ" or "")
+		elseif rfind(bare, "[" .. com.vowel .. "]́?$") then
+			-- This happens with adjectives like длинноше́ий, short masculine
+			-- singular длинноше́й.
+			return bare .. "й"
+		else
+			return bare .. "ь"
+		end
+	else
+		return bare
+	end
+end
+
 -- Construct bare form. Return nil if unable.
 local function unreduce_stem(accented_stem, short_accent, old, decl)
 	local ret = com.unreduce_stem(accented_stem, rfind(short_accent, "^b"))
 	if not ret then
 		return nil
 	end
-	if old and decl ~= "ій" then
-		return ret .. "ъ"
-	elseif decl == "ий" or decl == "ій" then
-		-- This next special case is mentioned in Zaliznyak's 1980 grammatical
-		-- dictionary for adjectives (footnote, p. 60).
-		if rfind(ret, "[нН]$") then
-			-- FIXME: What happens in this case old-style? I assume that
-			-- -ъ is added, but this is a guess.
-			return ret .. (old and "ъ" or "")
-		elseif rfind(ret, com.vowel .. "́?$") then
-			-- This happens with adjectives like длинноше́ий, short masculine
-			-- singular длинноше́й.
-			return ret .. "й"
-		else
-			return ret .. "ь"
-		end
-	else
-		return ret
-	end
+	return add_bare_suffix(ret, old, decl, true)
 end
 
 -- Construct and set bare and short form in args, and canonicalize
 -- short accent spec, handling cases *, (1) and (2). Return canonicalized
 -- short accent.
-function construct_bare_and_short_stem(args, short_accent, short_stem, accented_stem)
+function construct_bare_and_short_stem(args, short_accent, short_stem, accented_stem,
+	old, decl)
 	-- Check if short forms allowed; if not, no short-form params can be given.
 	-- Construct bare version of stem; used for cases where the ending
 	-- is non-syllabic (i.e. short masculine singular of long adjectives,
@@ -760,8 +764,11 @@ function construct_bare_and_short_stem(args, short_accent, short_stem, accented_
 	local reducible = short_accent and rfind(short_accent, "%*")
 	local sc1 = short_accent and rfind(short_accent, "%(1%)")
 	local sc2 = short_accent and rfind(short_accent, "%(2%)")
-	if reducible and sc1 then
-		error("Reducible and special case 1, i.e. * and (1), not compatible")
+	if sc1 or sc2 then
+		-- Reducible isn't compatible with sc1 or sc2, but Zaliznyak's
+		-- dictionary always seems to notate sc1 and sc2 with reducible *,
+		-- so ignore it.
+		reducible = false
 	end
 	if sc1 and sc2 then
 		error("Special cases 1 and 2, i.e. (1) and (2), not compatible")
@@ -784,18 +791,25 @@ function construct_bare_and_short_stem(args, short_accent, short_stem, accented_
 	-- Construct bare form, used for short masculine; but use explicitly
 	-- given form if present.
 	local bare = args.short_m or args[3]
-	if not bare and reducible then
-		bare = unreduce_stem(short_stem, short_accent)
-		if not bare then
-			error("Unable to unreduce stem: " .. stem)
+	if not bare then
+		if reducible then
+			bare = unreduce_stem(short_stem, short_accent, old, decl)
+			if not bare then
+				error("Unable to unreduce stem: " .. short_stem)
+			end
+		else
+			bare = short_stem
+			if sc1 then
+				if not rfind(bare, "нн$") then
+					error("With special case 1, stem needs to end in -нн: " .. bare)
+				end
+				bare = rsub(bare, "нн$", "н")
+			end
+			-- With special case 1 or 2, we don't ever want -ь added, so treat
+			-- it like a reducible (that may be why these are marked as
+			-- reducible in Zaliznyak).
+			bare = add_bare_suffix(bare, old, decl, sc1 or sc2)
 		end
-	end
-	bare = bare or short_stem
-	if sc1 then
-		if not rfind(bare, "нн$") then
-			error("With special case 1, stem needs to end in -нн: " .. bare)
-		end
-		bare = rsub(bare, "нн$", "н")
 	end
 
 	args.short_stem = short_stem
@@ -1189,7 +1203,7 @@ local function attach_unstressed(args, suf, stem, ustem)
 		end
 	end
 	suf = com.make_unstressed(suf)
-	local rules = unstressed_rules[args.hint]
+	local rules = unstressed_rules[ulower(usub(stem, -1))]
 	return combine_stem_and_suffix(stem, suf, rules, old)
 end
 
@@ -1200,7 +1214,7 @@ local function attach_stressed(args, suf, stem, ustem)
 	elseif not rfind(suf, "[ё́]") then -- if suf has no "ё" or accent marks
 		return attach_unstressed(args, suf, stem, ustem)
 	end
-	local rules = stressed_rules[args.hint]
+	local rules = stressed_rules[ulower(usub(ustem, -1))]
 	return combine_stem_and_suffix(ustem, suf, rules, old)
 end
 
