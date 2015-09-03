@@ -224,9 +224,9 @@ function export.unreduce_stem(stem, epenthetic_stress)
 	--	end
 	--end
 
-	pre, letter, post = rmatch(stem, "^(.*)([" .. com.cons .. "])([" .. com.cons .. "])$")
+	pre, letter, post = rmatch(stem, "^(.*)([" .. export.cons .. "])([" .. export.cons .. "])$")
 	if pre then
-		local is_upper = rfind(post, "[" .. com.uppercase .. "]")
+		local is_upper = rfind(post, "[" .. export.uppercase .. "]")
 		local ret = nil
 		if rfind(letter, "[ьйЬЙ]") then
 			if rfind(post, "[цЦ]$") or not epenthetic_stress then
@@ -234,13 +234,13 @@ function export.unreduce_stem(stem, epenthetic_stress)
 			else
 				ret = pre .. (is_upper and "Ё" or "ё") .. post
 			end
-		elseif rfind(letter, "[" .. com.cons_except_sib_c .. "]") and rfind(post, "[" .. com.velar .. "]") or
-				rfind(letter, "[" .. com.velar .. "]") then
+		elseif rfind(letter, "[" .. export.cons_except_sib_c .. "]") and rfind(post, "[" .. export.velar .. "]") or
+				rfind(letter, "[" .. export.velar .. "]") then
 			ret = pre .. letter .. (is_upper and "О" or "о") .. post
 		elseif post == "ц" or post == "Ц" then
 			ret = pre .. letter .. (is_upper and "Е" or "е") .. post
 		elseif epenthetic_stress then
-			if rfind(letter, "[" .. com.sib .. "]") then
+			if rfind(letter, "[" .. export.sib .. "]") then
 				ret = pre .. letter .. (is_upper and "О́" or "о́") .. post
 			else
 				ret = pre .. letter .. (is_upper and "Ё" or "ё") .. post
