@@ -168,6 +168,10 @@ end
 -- without any terminating non-syllabic ending, which is added if needed by
 -- the calling function. Returns nil if unable to unreduce.
 function export.unreduce_stem(stem, epenthetic_stress)
+	if epenthetic_stress then
+		stem = export.make_unstressed_once(stem)
+	end
+
 	local pre, letter, post
 	-- FIXME!!! Deal with this special case
 	--if not (z.stem_type == 'soft' and _.equals(z.stress_type, {'b', 'f'}) -- we should ignore asterix for 2*b and 2*f (so to process it just like 2b or 2f)
@@ -187,33 +191,34 @@ function export.unreduce_stem(stem, epenthetic_stress)
 	pre, letter, post = rmatch(stem, "^(.*)([" .. com.cons .. "])([" .. com.cons .. "])$")
 	if pre then
 		local is_upper = rfind(post, "[" .. com.uppercase .. "]")
-                local upre = export.make_unstressed_once(pre)
+		local ret = nil
 		if rfind(letter, "[ьйЬЙ]") then
 			if rfind(post, "[цЦ]$") or not epenthetic_stress then
-				return pre .. (is_upper and "Е" or "е") .. post
+				ret = pre .. (is_upper and "Е" or "е") .. post
 			else
-				return upre .. (is_upper and "Ё" or "ё") .. post
+				ret = pre .. (is_upper and "Ё" or "ё") .. post
 			end
 		elseif rfind(letter, "[" .. com.cons_except_sib_c .. "]") and rfind(post, "[" .. com.velar .. "]") or
 				rfind(letter, "[" .. com.velar .. "]") then
-			return pre .. letter .. (is_upper and "О" or "о") .. post
+			ret = pre .. letter .. (is_upper and "О" or "о") .. post
 		elseif post == "ц" or post == "Ц" then
-			return pre .. letter .. (is_upper and "Е" or "е") .. post
+			ret = pre .. letter .. (is_upper and "Е" or "е") .. post
 		elseif epenthetic_stress then
 			if rfind(letter, "[" .. com.sib .. "]") then
-				return upre .. letter .. (is_upper and "О́" or "о́") .. post
+				ret = pre .. letter .. (is_upper and "О́" or "о́") .. post
 			else
-				return upre .. letter .. (is_upper and "Ё" or "ё") .. post
+				ret = pre .. letter .. (is_upper and "Ё" or "ё") .. post
 			end
 		else
-			return pre .. letter.. (is_upper and "Е" or "е") .. post
+			ret = pre .. letter .. (is_upper and "Е" or "е") .. post
 		end
+		assert ret
+		if epenthetic_stress then
+			ret = export.make_ending_stressed(ret)
+		end
+		return ret
 	end
-	if can_err then
-		error("Unable to unreduce stem " .. stem)
-	else
-		return nil
-	end
+	return nil
 end
 
 return export
