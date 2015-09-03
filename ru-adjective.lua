@@ -1299,33 +1299,38 @@ local template_mp = nil
 local short_clause = nil
 local notes_template = nil
 
+local function show_form(args, case)
+	local ru_vals = {}
+	local tr_vals = {}
+	for _, x in ipairs(args[case]) do
+		local entry, notes = m_table_tools.get_notes(x)
+		if old then
+			ut.insert_if_not(ru_vals, m_links.full_link(com.make_unstressed(entry), entry, lang, nil, nil, nil, {tr = "-"}, false) .. notes)
+		else
+			ut.insert_if_not(ru_vals, m_links.full_link(entry, nil, lang, nil, nil, nil, {tr = "-"}, false) .. notes)
+		end
+		local trx = lang:transliterate(m_links.remove_links(entry))
+		if case == "gen_m" then
+			trx = rsub(trx, "([aoeáóé]́?)go$", "%1vo")
+		end
+		ut.insert_if_not(tr_vals, trx .. notes)
+	end
+	local term = table.concat(ru_vals, ", ")
+	local tr = table.concat(tr_vals, ", ")
+	return term, tr
+end
+
 -- Make the table
 function make_table(args)
 	local old = args.old
-	args.lemma = args.nom_m
+	args.lemma, _ = show_form(args, "nom_m")
 	args.title = args.title or strutils.format(old and old_title_temp or title_temp, args)
 
 	for _, case in ipairs(old and old_cases or cases) do
 		if args[case] and #args[case] == 1 args[case][1] == "-" then
 			args[case] = "&mdash;"
 		elseif args[case] then
-			local ru_vals = {}
-			local tr_vals = {}
-			for _, x in ipairs(args[case]) do
-				local entry, notes = m_table_tools.get_notes(x)
-				if old then
-					ut.insert_if_not(ru_vals, m_links.full_link(com.make_unstressed(entry), entry, lang, nil, nil, nil, {tr = "-"}, false) .. notes)
-				else
-					ut.insert_if_not(ru_vals, m_links.full_link(entry, nil, lang, nil, nil, nil, {tr = "-"}, false) .. notes)
-				end
-				local trx = lang:transliterate(m_links.remove_links(entry))
-				if case == "gen_m" then
-					trx = rsub(trx, "([aoeáóé]́?)go$", "%1vo")
-				end
-				ut.insert_if_not(tr_vals, trx .. notes)
-			end
-			local term = table.concat(ru_vals, ", ")
-			local tr = table.concat(tr_vals, ", ")
+			local term, tr = show_form(args, case)
 			args[case] = strutils.format(form_temp, {["term"] = term, ["tr"] = tr})
 		else
 			args[case] = nil
