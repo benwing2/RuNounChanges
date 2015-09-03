@@ -949,38 +949,12 @@ end
 -- -ь. STEM and DECL are after detect_stem_type(), before converting
 -- outward-facing declensions to inward ones.
 function export.reduce_nom_sg_stem(stem, decl, can_err)
-	local pre, letter, post
-	pre, post = rmatch(stem, "^(.*)[Оо]́?(.)$")
-	if pre then
-		-- FIXME, what about when the accent is on the removed letter?
-		return pre .. post
-	end
-	if decl == "й" then
-		pre, letter = rmatch(stem, "^(.*)([еёЕЁ])́?$")
-		if pre then
-			return pre .. (rfind(letter, "[ЕЁ]") and "Й" or "й")
-		end
-	end
-	pre, letter, post = rmatch(stem, "^(.*[" .. com.vowel .. "])([еёЕЁ])́?([" .. com.cons .. "]+)$")
-	if pre then
-		return pre .. (rfind(letter, "[ЕЁ]") and "Й" or "й") .. post
-	end
-	pre, letter, post = rmatch(stem, "^(.*[" .. com.cons_except_sib_c .. "])([еёЕЁ])́?([" .. com.velar .. "])$")
-	if not pre then
-		pre, letter, post = rmatch(stem, "^(.*[лЛ])([еёЕЁ])́?([" .. com.cons .. "]+)$")
-	end
-	if pre then
-		return pre .. (rfind(letter, "[ЕЁ]") and "Ь" or "ь") .. post
-	end
-	pre, letter, post = rmatch(stem, "^(.*)([еёЕЁ])́?([" .. com.cons .. "]+)$")
-	if pre then
-		return pre .. post
-	end
-	if can_err then
+	local full_stem = stem .. (decl == "й" and decl or "")
+	local ret = com.reduce_stem(full_stem)
+	if not ret and can_err then
 		error("Unable to reduce stem " .. stem)
-	else
-		return nil
 	end
+	return ret
 end
 
 function is_unreducible(stem, decl, old)

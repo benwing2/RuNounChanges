@@ -163,6 +163,42 @@ function export.get_stem_trailing_letter_type(stem)
 	return hint_types
 end
 
+-- Reduce stem by eliminating the "epenthetic" vowel. Applies to
+-- nominative singular masculine 2nd-declension hard and soft, and
+-- 3rd-declension feminine in -ь (e.g. любовь). STEM should be the
+-- result after calling detect_stem_type(), but with final -й if
+-- present.
+function export.reduce_stem(stem)
+	local pre, letter, post
+
+	pre, letter, post = rmatch(stem, "^(.*)([оОеЕёЁ])́?([" .. export.cons .. "]+)$")
+	if not pre then
+		return nil
+	end
+	if letter == "О" or letter == "о" then
+		-- FIXME, what about when the accent is on the removed letter?
+		if post == "й" or post == "Й" then
+			-- FIXME, is this correct?
+			return nil
+		end
+		return pre .. post
+	end
+	local is_upper = rfind(post, "[" .. export.uppercase .. "]")
+	if rfind(pre, "[" .. export.vowel .. "]́?$") then
+		return pre .. (is_upper and "Й" or "й") .. post
+	end
+	if post == "й" or post == "Й" then
+		return pre .. (is_upper and "Ь" or "ь")
+	end
+	if	(rfind(post, "[" .. export.velar .. "]$") and
+		 rfind(pre, "[" .. export.cons_except_sib_c .. "]$")) or
+		(rfind(post, "[^йЙ" .. export.velar .. "]$") and
+		 rfind(pre, "[лЛ]$")) then
+		return pre .. (is_upper and "Ь" or "ь") .. post
+	end
+	return pre .. post
+end
+
 -- Generate the unreduced stem given STEM and EPENTHETIC_STRESS (which
 -- indicates whether the epenthetic vowel should be stressed); this is
 -- without any terminating non-syllabic ending, which is added if needed by
