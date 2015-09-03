@@ -272,9 +272,9 @@ local function generate_forms(args, old, manual)
 			if short_accent or short_stem then
 				error("Cannot specify short accent or short stem with declension type " .. decl_type .. ", as short forms aren't allowed")
 			end
-			if args[4] or args[5] or args[6] or args.short_m or
+			if args[3] or args[4] or args[5] or args[6] or args.short_m or
 				args.short_f or args.short_n or args.short_p then
-				error("Cannot specify explicit short forms with declension type " .. decl_type .. ", as shrot forms aren't allowed")
+				error("Cannot specify explicit short forms with declension type " .. decl_type .. ", as short forms aren't allowed")
 			end
 		end
 
@@ -440,7 +440,7 @@ function tracking_code(decl_class, args, orig_short_accent, short_accent,
 		end
 	end
 	dotrack("")
-	if args[3] or short_accent then
+	if args[3] or args[4] or args[5] or args[6] or short_accent then
 		dotrack("short")
 	end
 	if orig_short_accent then
@@ -575,6 +575,9 @@ function categorize(decl_type, args, orig_short_accent, short_accent,
 			insert_cat("~ with irregular " .. engcase)
 		end
 	end
+	-- FIXME: Eventually we want to treat the presence of args 3/4/5/6
+	-- as irregular, but not till we've converted everything we can to
+	-- use the normal short-accent patterns.
 end
 
 local stem_expl = {
