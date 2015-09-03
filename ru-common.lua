@@ -76,19 +76,21 @@ function export.iotation(stem, shch)
 end
 
 function export.needs_accents(word)
-	-- A word that has ё in it doesn't need an accent, as this vowel is inherently accented.
-	if rfind(word, "\204\129") or rfind(word, "[ёЁ]") then
-		return false
-	-- A word needs accents if it contains more than one vowel
-	elseif rfind(word, "[" .. export.vowel .. "].*[" .. export.vowel .. "]") then
-		return true
-	else
-		return false
-	end
+	-- A word needs accents if it is unstressed and contains more than one vowel
+	return export.is_unstressed(word) and not export.is_monosyllabic(word)
+end
+
+function export.is_stressed(word)
+	-- A word that has ё in it is inherently stressed.
+	return rfind(word, "[ёЁ́]")
 end
 
 function export.is_unstressed(word)
-	return not rfind(word, "[ёЁ́]")
+	return not export.is_stressed(word)
+end
+
+function export.is_monosyllabic(word)
+	return not rfind(word, "[" .. export.vowel .. "].*[" .. export.vowel .. "]")
 end
 
 local deaccenter = {
@@ -104,6 +106,17 @@ local deaccenter = {
 function export.remove_accents(word)
 	-- remove acute, grave and diaeresis (but not affecting composed ёЁ)
     return rsub(word, "[̀́̈ѐЀѝЍ]", deaccenter)
+end
+
+function export.remove_monosyllabic_accents(word)
+	-- note: This doesn't affect ё or Ё, provided that the word is
+	-- precomposed (which it normally is, as this is done automatically by
+	-- MediaWiki upon saving)
+	if export.is_monosyllabic(word) then
+		return export.remove_accents(word)
+	else
+		return word
+	end
 end
 
 local destresser = mw.clone(deaccenter)
@@ -248,7 +261,7 @@ function export.unreduce_stem(stem, epenthetic_stress)
 		else
 			ret = pre .. letter .. (is_upper and "Е" or "е") .. post
 		end
-		assert ret
+		assert(ret)
 		if epenthetic_stress then
 			ret = export.make_ending_stressed(ret)
 		end
