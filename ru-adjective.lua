@@ -26,15 +26,12 @@
 		acc: accusative
 		ins: instrumental
 		pre: prepositional
-		par: partitive
-		loc: locative
-		voc: vocative
 		short: short form
 		
 	Number/gender abbreviations:
-		m: masculine
-		n: neuter
-		f: feminine
+		m: masculine singular
+		n: neuter singular
+		f: feminine singular
 		p: plural
 		mp: masculine plural (old-style tables only)
 
@@ -46,7 +43,7 @@
 			DECLTYPE
 			SHORTACCENT:SHORTSTEM
 			(blank)
-		DECLTYPE is the declension one, usually omitted; or one of
+		DECLTYPE is the declension type, usually omitted; or one of
 			ый ий ой ьий short mixed (new-style)
 			ый ій ьій short mixed ъ-short ъ-mixed (old-style, where
 			    ъ-short and ъ-mixed are synonyms for short and mixed)
@@ -74,15 +71,14 @@ TODO:
    might refer simply to any misc. irregularity; and even if it is, it might
    not be worth it, and better simply to have this done using the various
    override mechanisms.
-2. Implement categorization similar to the way it's done in nouns.
-3. Figure out what the symbol X-inside-square (⊠) means, which seems to go with
+2. Figure out what the symbol X-inside-square (⊠) means, which seems to go with
    all adjectives in -о́й with multi-syllabic stems. It may mean that the
    masculine singular short form is missing. If this indeed a regular thing,
    we need to implement it (and if it's regular but means something else,
    we need to implement that, too). Also figure out what the other signs
    on pages 68-76 etc. mean: -, X, ~, П₂, Р₂, diamond (♢), triangle (△; might
    simply mean a misc. irregularity; explained on p. 61).
-4. Should non-reducible adjectives in -нный and -нний default to special case
+3. Should non-reducible adjectives in -нный and -нний default to special case
    (1)?
 ]=]--
 
@@ -128,13 +124,15 @@ local function track(page)
 	return true
 end
 
+local function ine(arg)
+	return arg ~= "" and arg or nil
+end
+
 -- Clone parent's args while also assigning nil to empty strings.
 local function clone_args(frame)
 	local args = {}
 	for pname, param in pairs(frame:getParent().args) do
-		if param == "" then args[pname] = nil
-		else args[pname] = param
-		end
+		args[pname] = ine(param)
 	end
 	return args
 end
@@ -268,8 +266,12 @@ local function generate_forms(args, old, manual)
 		local short_forms_allowed = manual and true or
 			decl_type == "ый" or decl_type == "ой" or decl_type == (old and "ій" or "ий")
 		if not short_forms_allowed then
+			-- FIXME: We might want to allow this in case we have a reducible
+			-- short or mixed possessive adjective. But in that case we need
+			-- to reduce rather than unreduce to get the stem.
 			if short_accent or short_stem then
 				error("Cannot specify short accent or short stem with declension type " .. decl_type .. ", as short forms aren't allowed")
+			end
 			if args[4] or args[5] or args[6] or args.short_m or
 				args.short_f or args.short_n or args.short_p then
 				error("Cannot specify explicit short forms with declension type " .. decl_type .. ", as shrot forms aren't allowed")
@@ -312,6 +314,7 @@ local function generate_forms(args, old, manual)
 	handle_forms_and_overrides(args, short_forms_allowed)
 
 	return args()
+end
 
 -- Implementation of main entry point
 local function do_show(frame, old, manual)
@@ -453,6 +456,7 @@ function tracking_code(decl_class, args, orig_short_accent, short_accent,
 			dotrack("special-case-2")
 			dotrack("special-case-2/" .. short_accent)
 		end
+	end
 	if short_accent then
 		dotrack("short-accent/" .. short_accent)
 	end
@@ -670,7 +674,13 @@ function detect_stem_and_accent_type(stem, decl)
 		error("Should be at most three colon-separated parts of a declension spec: " .. decl)
 	end
 	decl, short_accent, short_stem = splitvals[1], splitvals[2], splitvals[3]
-	if decl == "" then
+	decl = ine(decl)
+	short_accent = ine(short_accent)
+	short_stem = ine(short_stem)
+	if short_stem and not short_accent then
+		error("With explicit short stem " .. short_stem .. ", must specify short accent")
+	end
+	if not decl then
 		local base, ending = rmatch(stem, "^(.*)([ыиіo]́?й)$")
 		if base then
 			if rfind(ending "^[іи]й$") and rfind(base, "[" .. com.velar .. com.sib .. "]$") then
@@ -678,6 +688,18 @@ function detect_stem_and_accent_type(stem, decl)
 			end
 			return base, com.make_unstressed(ending), short_accent, short_stem
 		else
+			-- It appears that short and mixed adjectives are always either
+			-- of the -ов/ев/ёв or -ин/ын types. The former type is always
+			-- (or almost always?) short, while the latter can be either;
+			-- apparently mixed is the more "modern" type of declension,
+			-- and short is "older".
+			base, ending = rmatch(stem, "^(.*[еёо]в)ъ?$")
+			if base then
+				return base, "short", short_accent, short_stem
+			end
+			if rmatch(stem, "[иы]нъ?$") then
+				error("With -ин/ын adjectives, must specify 'short' or 'mixed':" .. stem)
+			end
 			error("Cannot determine stem type of adjective: " .. stem)
 		end
 	elseif decl == "short" or decl == "mixed" then
@@ -1217,7 +1239,6 @@ function decline(args, decl, stressed)
 	if not args.acc_n then
 		args.acc_n = args.nom_n
 	end
-
 end
 
 function handle_forms_and_overrides(args, short_forms_allowed)
