@@ -199,13 +199,10 @@ def infer_decl(t, pagemsg):
     pagemsg("WARNING: Found short stem %s different from long stem %s" %
         (short_stem, stem))
   real_short_stem = short_stem or stem
-  if mstem != real_short_stem:
+  if special != "(2)" and mstem != real_short_stem:
     if mstem + u"н" == real_short_stem and re.search(u"нн$", real_short_stem):
       pagemsg("Found special (1): short stem %s, masculine stem %s" % (
         real_short_stem, mstem))
-      if special:
-        pagemsg("WARNING: Can't have special (1) and (2) together")
-        return None
       special = "(1)"
     elif make_unstressed(stem) == mstem:
       # Can happen with monosyllabic masculines
@@ -300,6 +297,14 @@ test_templates = [
   u"""{{ru-decl-adj|промы́шленн|ый|промы́шленен|промы́шленно|промы́шленна|промы́шленны}}""",
   u"""{{ru-decl-adj|си́н|ий|синь|си́не|синя́|си́ни}}""",
   u"""{{ru-decl-adj|дорог|ой|до́рог|до́рого|дорога́|до́роги}}""",
+  u"""{{ru-decl-adj|вы́спренний||вы́спрен|вы́спренне|вы́спрення|вы́спренни}}""",
+  u"""{{ru-decl-adj|чёткий||чёток|чётко|четка́,чётка|чётки}}""",
+  u"""{{ru-decl-adj|искушённый||искушён|искушено́|искушена́|искушени́}}""",
+  u"""{{ru-decl-adj|дешёвый||дёшев|дёшево|дешева́|дёшевы}}""",
+  # Note: The following will be inferred as b* but will fail because the
+  # expected masc sing would be темён. Zaliznyak has a triangle marked by
+  # the masc sing.
+  u"""{{ru-decl-adj|тёмный||тёмен|темно́|темна́|темны́}}""",
   ]
 def test_infer():
   class Page:
