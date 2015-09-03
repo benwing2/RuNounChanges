@@ -778,9 +778,19 @@ function construct_bare_and_short_stem(args, short_accent, short_stem, accented_
 		short_accent = rsub(short_accent, "%([12]%)", "")
 	end
 
+	local explicit_short_stem = short_stem
+
 	-- Construct short stem. May be explicitly given, else comes from
 	-- end-accented stem.
 	short_stem = short_stem or accented_stem
+	-- Try to accent unaccented short stem (happens only when explicitly given),
+	-- but be conservative -- only if monosyllabic, since otherwise we have
+	-- no idea where stress should end up; after all, the explicit short stem
+	-- is for exceptional cases.
+	if com.is_unstressed(short_stem) and com.is_monosyllabic(short_stem) then
+		short_stem = com.make_ending_stressed(short_stem)
+	end
+
 	if sc2 then
 		if not rfind(short_stem, "нн$") then
 			error("With special case 2, stem needs to end in -нн: " .. short_stem)
@@ -797,6 +807,9 @@ function construct_bare_and_short_stem(args, short_accent, short_stem, accented_
 			if not bare then
 				error("Unable to unreduce stem: " .. short_stem)
 			end
+		-- Special case when there isn't a short masculine singular
+		elseif short_accent == "b" and decl == "ой" and not explicit_short_stem then
+			bare = nil
 		else
 			bare = short_stem
 			if sc1 then
@@ -1194,7 +1207,9 @@ local function attach_unstressed(args, suf, stem, ustem)
 	if suf == nil then
 		return nil
 	elseif old and old_consonantal_suffixes[suf] or not old and consonantal_suffixes[suf] then
-		if rfind(args.bare, old and "[йьъ]$" or "[йь]$") then
+		if not args.bare then
+			return nil
+		elseif rfind(args.bare, old and "[йьъ]$" or "[йь]$") then
 			return args.bare
 		elseif suf == "ъ" then
 			return args.bare .. suf
@@ -1286,6 +1301,14 @@ function handle_forms_and_overrides(args, short_forms_allowed)
 			args[case] = nil
 		end
 	end
+
+	-- Convert an empty list to nil, so that an mdash is inserted. This happens,
+	-- for example, with words like голубой where args.bare is set to nil.
+	for _, case in ipairs(args.old and old_cases or cases) do
+		if args[case] and #args[case] == 0 then
+			args[case] = nil
+		end
+	end
 end
 
 --------------------------------------------------------------------------
@@ -1354,6 +1377,7 @@ local function show_form(args, case)
 			error(case)
 		end
 		local entry, notes = m_table_tools.get_notes(x)
+		entry = com.remove_monosyllabic_accents(entry)
 		if old then
 			ut.insert_if_not(ru_vals, m_links.full_link(com.make_unstressed(entry), entry, lang, nil, nil, nil, {tr = "-"}, false) .. notes)
 		else
