@@ -226,6 +226,11 @@ def infer_decl(t, pagemsg):
             match("end", "stem", "both") and "c'" or
             match("end", "both", "both") and "c''" or
             None)
+  explicit_msg = None
+  if special == "*" and not is_one_syllable(m) and (
+      (stress in ["b", "b'"]) != last_syllable_stressed(m)):
+    pagemsg("WARNING: (Un)reducible short masc sg %s has wrong stress for accent pattern %s, setting manual masc sg" % (m, stress))
+    explicit_msg = m
   if not stress:
     pagemsg("WARNING: Unrecognized stress: m=%s f=%s n=%s p=%s" % (
       m, f, n, p))
@@ -236,7 +241,10 @@ def infer_decl(t, pagemsg):
   declspec = special + (short_stem and (":" + short_stem) or "")
   if decl:
     declspec = decl + ":" + declspec
-  return [stem, declspec]
+  args = [stem, declspec]
+  if explicit_msg:
+    args.append(explicit_msg)
+  return args
 
 
 def infer_one_page_decls_1(page, index, text):
