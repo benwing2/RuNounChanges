@@ -463,7 +463,7 @@ function tracking_code(decl_class, args, orig_short_accent, short_accent,
 	for _, case in ipairs(old_cases) do
 		if args[case] then
 			track("irreg/" .. case)
-			-- questionable use: dotrack("irreg/" .. case .. "/")
+			-- questionable use: dotrack("irreg/" .. case)
 		end
 	end
 end
