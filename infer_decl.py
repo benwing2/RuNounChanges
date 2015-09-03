@@ -335,7 +335,7 @@ def infer_word(forms, noungender, number, numonly, pagemsg):
             (forms["nom_pl"], forms["acc_pl"], forms["gen_pl"]))
         return None
 
-    # FIXME: Adjectives in -ий of the +ьий type, special because they
+    # Adjectives in -ий of the +ьий type, special because they
     # can't be auto-detected
     if re.search(u"ий$", nomsg) and re.search(u"ьего$", gensg):
       stem = re.sub(u"ий$", "", nomsg)
@@ -360,9 +360,10 @@ def infer_word(forms, noungender, number, numonly, pagemsg):
       if trymatch(forms, args, pagemsg):
         return args
 
-    # I think these are always in -ов/-ев/-ин/-ын.
+    # I think these are always in -ов/-ев/-ёв/-ин/-ын.
     #if re.search(u"([шщжчц]е|[ъоа]|)$", nomsg):
-    if (re.search(u"([ое]в|[ыи]н)([оаъ]?)$", nomsg) and adj_by_prep()):
+    if (re.search(u"([ое]в|[ыи]н)([оаъ]?)$", make_unstressed(nomsg)) and
+        adj_by_prep()):
       for adjpat in ["+short", "+mixed"]:
         if old_template:
           args = ["", nomsg, adjpat] + anim + number
