@@ -80,12 +80,15 @@ TODO:
    simply mean a misc. irregularity; explained on p. 61).
 3. Should non-reducible adjectives in -нный and -нний default to special case
    (1)?
+4. In the case of a non-unreducible short masc sing of stress type b, we don't
+   currently move the stress to the last syllable. Should we?
 ]=]--
 
 local m_utilities = require("Module:utilities")
 local ut = require("Module:utils")
 local m_links = require("Module:links")
 local com = require("Module:ru-common")
+com = require("Module:User:Benwing2/ru-common")
 local strutils = require("Module:string utilities")
 local m_table_tools = require("Module:table tools")
 local m_debug = require("Module:debug")
@@ -115,7 +118,7 @@ local function insert_list_into_table(tab, list)
 		list = {list}
 	end
 	for _, item in ipairs(list) do
-		ut.insert_if_not(tab, list)
+		ut.insert_if_not(tab, item)
 	end
 end
 
@@ -180,7 +183,7 @@ for case, _ in pairs(short_cases) do
 end
 
 local velar = ut.list_to_set({"г", "к", "х"})
-local sibilant = ut.list_to_set("ш", "щ", "ч", "ж"})
+local sibilant = ut.list_to_set({"ш", "щ", "ч", "ж"})
 
 --------------------------------------------------------------------------
 --                               Main code                              --
@@ -203,7 +206,8 @@ local function generate_forms(args, old, manual)
 		args.notes = rsub(args.notes, "^%*", "&#42;")
 	end
 
-	local decl_types = manual and "-" or args[2]
+	local overall_short_forms_allowed
+	local decl_types = manual and "-" or args[2] or ""
 	for _, decl_type in ipairs(rsplit(decl_types, ",")) do
 		local stem
 		if manual then
@@ -265,6 +269,7 @@ local function generate_forms(args, old, manual)
 
 		local short_forms_allowed = manual and true or
 			decl_type == "ый" or decl_type == "ой" or decl_type == (old and "ій" or "ий")
+		overall_short_forms_allowed = overall_short_forms_allowed or short_forms_allowed
 		if not short_forms_allowed then
 			-- FIXME: We might want to allow this in case we have a reducible
 			-- short or mixed possessive adjective. But in that case we need
@@ -306,14 +311,14 @@ local function generate_forms(args, old, manual)
 
 		decline(args, decls[decl_type], decl_type == "ой")
 		if short_forms_allowed and short_accent then
-			decline_short(args, decls_short[decl_type],
+			decline_short(args, short_decls[decl_type],
 				short_stress_patterns[short_accent])
 		end
 	end
 
-	handle_forms_and_overrides(args, short_forms_allowed)
+	handle_forms_and_overrides(args, overall_short_forms_allowed)
 
-	return args()
+	return args
 end
 
 -- Implementation of main entry point
@@ -504,13 +509,13 @@ function categorize(decl_type, args, orig_short_accent, short_accent,
 		local hint_types = com.get_stem_trailing_letter_type(args.stem)
 	-- insert English version of Zaliznyak stem type
 		local stem_type =
-			ut.contains(sghint_types, "velar") and "velar-stem" or
-			ut.contains(sghint_types, "sibilant") and "sibilant-stem" or
-			ut.contains(sghint_types, "c") and "ц-stem" or
-			ut.contains(sghint_types, "i") and "i-stem" or
-			ut.contains(sghint_types, "vowel") and "vowel-stem" or
-			ut.contains(sghint_types, "soft-cons") and "vowel-stem" or
-			ut.contains(sghint_types, "palatal") and "vowel-stem" or
+			ut.contains(hint_types, "velar") and "velar-stem" or
+			ut.contains(hint_types, "sibilant") and "sibilant-stem" or
+			ut.contains(hint_types, "c") and "ц-stem" or
+			ut.contains(hint_types, "i") and "i-stem" or
+			ut.contains(hint_types, "vowel") and "vowel-stem" or
+			ut.contains(hint_types, "soft-cons") and "vowel-stem" or
+			ut.contains(hint_types, "palatal") and "vowel-stem" or
 			decl_class == "ий" and "soft-stem" or
 			"hard-stem"
 		if stem_type == "soft-stem" or stem_type == "vowel-stem" then
@@ -684,9 +689,9 @@ function detect_stem_and_accent_type(stem, decl)
 		error("With explicit short stem " .. short_stem .. ", must specify short accent")
 	end
 	if not decl then
-		local base, ending = rmatch(stem, "^(.*)([ыиіo]́?й)$")
+		local base, ending = rmatch(stem, "^(.*)([ыиіо]́?й)$")
 		if base then
-			if rfind(ending "^[іи]й$") and rfind(base, "[" .. com.velar .. com.sib .. "]$") then
+			if rfind(ending, "^[іи]й$") and rfind(base, "[" .. com.velar .. com.sib .. "]$") then
 				return base, "ый", short_accent, short_stem
 			end
 			return base, com.make_unstressed(ending), short_accent, short_stem
@@ -1212,13 +1217,20 @@ local function attach_with(args, suf, fun, stem, ustem)
 	if type(suf) == "table" then
 		local tbl = {}
 		for _, x in ipairs(suf) do
-			table.insert(tbl, attach_with(args, x, fun, stem, ustem))
+			insert_list_into_table(tbl, attach_with(args, x, fun, stem, ustem))
 		end
 		return tbl
 	else
-		local funval = fun(args, suf)
+		local funval = fun(args, suf, stem, ustem)
 		if funval then
-			return funval .. args.suffix
+			local tbl = {}
+			if type(funval) ~= "table" then
+				funval = {funval}
+			end
+			for _, x in ipairs(funval) do
+				table.insert(tbl, x .. args.suffix)
+			end
+			return tbl
 		else
 			return nil
 		end
@@ -1252,9 +1264,6 @@ function handle_forms_and_overrides(args, short_forms_allowed)
 
 	for _, case in ipairs(args.old and old_long_cases or long_cases) do
 		args[case] = dosplit(args[case]) or args.forms[case]
-			if type(args[case]) ~= "table" then
-				args[case] = rsplit(args[case], "%s*,%s*")
-			end
 	end
 	for case, argnum in pairs(short_cases) do
 		if short_forms_allowed then
@@ -1269,11 +1278,11 @@ end
 --                        Short adjective declension                    --
 --------------------------------------------------------------------------
 
-short_declensions["ый"] = { m="", f="а", n="о", p="ы" }
-short_declensions["ой"] = short_declensions["ыи"]
-short_declensions["ий"] = { m="ь", f="я", n="е", p="и" }
-short_declensions_old["ый"] = { m="ъ", f="а", n="о", p="ы" }
-short_declensions_old["ой"] = short_declensions_old["ыи"]
+short_declensions["ый"] = { m="", f="а́", n="о́", p="ы́" }
+short_declensions["ой"] = short_declensions["ый"]
+short_declensions["ий"] = { m="ь", f="я́", n="е́", p="и́" }
+short_declensions_old["ый"] = { m="ъ", f="а́", n="о́", p="ы́" }
+short_declensions_old["ой"] = short_declensions_old["ый"]
 short_declensions_old["ій"] = short_declensions["ий"]
 
 -- Short adjective stress patterns:
@@ -1282,15 +1291,15 @@ short_declensions_old["ій"] = short_declensions["ий"]
 --   "-+" = both possibilities
 short_stress_patterns["a"] = { m="-", f="-", n="-", p="-" }
 short_stress_patterns["a'"] = { m="-", f="-+", n="-", p="-" }
-short_stress_patterns["b"] = { m="+", f="-+", n="+", p="+" }
+short_stress_patterns["b"] = { m="+", f="+", n="+", p="+" }
 short_stress_patterns["b'"] = { m="+", f="+", n="+", p="-+" }
 short_stress_patterns["c"] = { m="-", f="+", n="-", p="-" }
 short_stress_patterns["c'"] = { m="-", f="+", n="-", p="-+" }
 short_stress_patterns["c''"] = { m="-", f="+", n="-+", p="-+" }
 
 local function gen_short_form(args, decl, case, fun)
-	if not args.forms[case] then
-		args.forms[case] = {}
+	if not args.forms["short_" .. case] then
+		args.forms["short_" .. case] = {}
 	end
 	insert_list_into_table(args.forms["short_" .. case],
 		attach_with(args, decl[case], fun, args.short_stem, args.short_ustem))
@@ -1304,7 +1313,7 @@ local attachers = {
 
 function decline_short(args, decl, stress_pattern)
 	if stress_pattern then
-		for case, _ in ipairs({"m", "f", "n", "p"}) do
+		for _, case in ipairs({"m", "f", "n", "p"}) do
 			gen_short_form(args, decl, case, attachers[stress_pattern[case]])
 		end
 	end
@@ -1327,6 +1336,9 @@ local function show_form(args, case)
 	local ru_vals = {}
 	local tr_vals = {}
 	for _, x in ipairs(args[case]) do
+		if type(x) == "table" then
+			error(case)
+		end
 		local entry, notes = m_table_tools.get_notes(x)
 		if old then
 			ut.insert_if_not(ru_vals, m_links.full_link(com.make_unstressed(entry), entry, lang, nil, nil, nil, {tr = "-"}, false) .. notes)
@@ -1347,11 +1359,11 @@ end
 -- Make the table
 function make_table(args)
 	local old = args.old
-	args.lemma, _ = show_form(args, "nom_m")
+	args.lemma, _ = m_links.remove_links(show_form(args, "nom_m"))
 	args.title = args.title or strutils.format(old and old_title_temp or title_temp, args)
 
 	for _, case in ipairs(old and old_cases or cases) do
-		if args[case] and #args[case] == 1 args[case][1] == "-" then
+		if args[case] and #args[case] == 1 and args[case][1] == "-" then
 			args[case] = "&mdash;"
 		elseif args[case] then
 			local term, tr = show_form(args, case)
