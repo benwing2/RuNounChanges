@@ -15,7 +15,7 @@ mockup = False
 # Uncomment the following line to enable test mode
 mockup = True
 
-decl_template = "ru-adj-table"
+decl_template = "ru-decl-adj"
 
 short_adj_cases = ["short_m", "short_f", "short_n", "short_p"]
 short_adj_cases_params = [("short_m", "3"),
