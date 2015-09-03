@@ -673,6 +673,8 @@ local function do_show(frame, old)
 						track("error-reducible")
 					elseif autostem == stem then
 						track("predictable-reducible")
+					elseif com.make_unstressed(autostem) == com.make_unstressed(stem) then
+						track("predictable-reducible-but-for-stress")
 					else
 						track("unpredictable-reducible")
 					end
@@ -683,6 +685,8 @@ local function do_show(frame, old)
 						track("error-unreducible")
 					elseif autobare == bare then
 						track("predictable-unreducible")
+					elseif com.make_unstressed(autobare) == com.make_unstressed(bare) then
+						track("predictable-unreducible-but-for-stress")
 					else
 						track("unpredictable-unreducible")
 					end
