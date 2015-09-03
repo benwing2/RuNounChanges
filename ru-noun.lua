@@ -699,7 +699,6 @@ local function do_show(frame, old)
 			args.bare = resolved_bare
 			args.ustem = com.make_unstressed_once(stem)
 			args.upl = com.make_unstressed_once(args.pl)
-			args.hint = ulower(usub(stem, -1))
 
 			for _,decl_class_spec in ipairs(sub_decl_classes) do
 				-- We may resolve the user-specified declension class into a
@@ -1795,7 +1794,7 @@ local function attach_unstressed(args, case, suf)
 		end
 	end
 	suf = com.make_unstressed(suf)
-	local rules = unstressed_rules[args.hint]
+	local rules = unstressed_rules[ulower(usub(stem, -1))]
 	return combine_stem_and_suffix(stem, suf, rules, old)
 end
 
@@ -1813,7 +1812,7 @@ function attach_stressed(args, case, suf)
 	local is_pl = rfind(case, "_pl$")
 	local old = args.old
 	local stem = is_pl and args.upl or args.ustem
-	local rules = stressed_rules[args.hint]
+	local rules = stressed_rules[ulower(usub(stem, -1))]
 	return combine_stem_and_suffix(stem, suf, rules, old)
 end
 
