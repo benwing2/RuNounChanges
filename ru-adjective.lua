@@ -836,7 +836,7 @@ end
 
 -- Construct bare form. Return nil if unable.
 local function dereduce_stem(accented_stem, short_accent, old, decl)
-	local ret = com.dereduce_stem(accented_stem, rfind(short_accent, "^b"))
+	local ret = com.dereduce_stem(accented_stem, nil, rfind(short_accent, "^b"))
 	if not ret then
 		return nil
 	end

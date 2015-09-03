@@ -3030,7 +3030,7 @@ end
 -- to inward ones. STRESS is the stess pattern.
 function export.dereduce_nom_sg_stem(stem, sgdc, stress, old, can_err)
 	local epenthetic_stress = ending_stressed_gen_pl_patterns[stress]
-	local ret = com.dereduce_stem(stem, epenthetic_stress)
+	local ret = com.dereduce_stem(stem, nil, epenthetic_stress)
 	if not ret then
 		if can_err then
 			error("Unable to dereduce stem " .. stem)
