@@ -35,6 +35,7 @@ def try_to_stress(word):
 
 # Just remove the rightmost stress, in case we have ё plus a later stress
 def make_unstressed(word):
+  word = word.replace(u"ё́", u"ё") # in case of accent on top of ё
   return re.sub(u"([ё́])([^ё́]*)$", lambda m: (m.group(1) == u"ё" and u"е" or "") + m.group(2), word)
 
 def make_unstressed_all(word):
