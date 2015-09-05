@@ -211,7 +211,8 @@ local declensions_old = {}
 local declensions = {}
 -- Category and type information corresponding to declensions: These may
 -- contain the following fields: 'singular', 'plural', 'decl', 'hard', 'g',
--- 'suffix', 'gensg', 'irregpl', 'cant_reduce', 'ignore_reduce', 'stem_suffix'.
+-- 'suffix', 'gensg', 'irregpl', 'sc1', 'cant_reduce', 'ignore_reduce',
+-- 'stem_suffix'.
 --
 -- 'singular' is used to construct a category of the form
 -- "Russian nominals SINGULAR". If omitted, a category is constructed of the
@@ -237,8 +238,8 @@ local declensions = {}
 -- "Russian nominals ending in suffix -SGENDING with plural -PLENDING" if
 -- 'suffix' is true). Note that if either singular or plural or both
 -- specifies a list, looping will occur over all combinations. Such a
--- category is constructed only if 'irregpl' or 'suffix' is true or if the
--- declension class is a slash class.
+-- category is constructed only if 'sc1' or 'irregpl' or 'suffix' is true
+-- or if the declension class is a slash class.
 --
 -- 'decl' is "1st", "2nd", "3rd" or "invariable"; 'hard' is "hard", "soft"
 -- or "none"; 'g' is "m", "f", "n" or "none"; these are all traditional
@@ -297,7 +298,7 @@ local ending_stressed_pl_patterns = {}
 -- List of all cases that are declined normally.
 local decl_cases
 -- List of all cases, including those that can be overridden (loc/par/voc,
--- animate/inanimate variants).
+-- animate/inanimate variants) as well as the pseudo-case zindex.
 local cases
 -- Type of trailing letter, for tracking purposes
 local trailing_letter_type
@@ -373,6 +374,84 @@ local function tracking_code(stress, decl_class, real_decl_class, args, n, islas
 end
 
 local gender_to_full = {m="masculine", f="feminine", n="neuter"}
+
+local function get_zaliznyak_index(stress, decl, sghint_types, sgdc, args)
+	if sgdc.decl == "invariable" then
+		return "inv"
+	end
+	local znum =
+		sgdc.decl == "3rd" and "8" or
+		ut.contains(sghint_types, "velar") and "3" or
+		ut.contains(sghint_types, "sibilant") and "4" or
+		ut.contains(sghint_types, "c") and "5" or
+		ut.contains(sghint_types, "i") and "7" or
+		ut.contains(sghint_types, "vowel") and "6" or
+		ut.contains(sghint_types, "soft-cons") and "6" or
+		ut.contains(sghint_types, "palatal") and "6" or
+		sgdc.hard == "soft" and "2" or
+		"1"
+	local stress_to_zstress = {
+		["1"]="a", ["2"]="b", ["3"]="c", ["4"]="d", ["5"]="e", ["6"]="f",
+		["4*"]="d'", ["6*"]="f'"
+	}
+	local zstress_correction = {["b"]="b'", ["f'"]="f''"}
+	local zstress = stress_to_zstress[stress]
+	assert(zstress)
+	-- HACK! FIXME! Eliminate this by adopting the standard accent patterns
+	-- instead of special-casing the instrumental singular accent for
+	-- 3rd-feminine nouns and having it fail for numbers.
+	if sgdc.decl == "3rd" and sgdc.g == "f" then
+		-- We used to only do this if no ins_sg override but many nouns with
+		-- f'' in 3rd-fem have ins_sg override because they are reducible
+		-- and use the full stem in ins sg as well as nom sg.
+		zstress = zstress_correction[zstress] or zstress
+	end
+	local zanim = args.a == "a" and "an" or args.a == "i" and "in" or "both"
+	local zindex = sgdc.g .. "-" .. zanim .. " " .. znum
+	if args.bare then
+		local ubare = com.make_unstressed(args.bare)
+		if ubare ~= args.ustem and ubare ~= args.ustem .. "ь" and ubare ~= args.ustem .. "й" and ubare ~= args.ustem .. "ъ" then
+			zindex = zindex .. "*"
+		end
+	elseif ut.contains({"ья", "ье", "ьё"}, decl) then
+		-- All such nouns are considered reducible by Zaliznyak
+		zindex = zindex .. "*"
+	end
+	if ut.contains({"ин", "ёнок", "онок", "енок", "ёночек", "оночек", "еночек", "мя", "мя-1"}, decl) then
+		zindex = zindex .. "°"
+	end
+	-- We consider nouns in ёнок etc. to be pattern b because the suffix
+	-- is stressed, but Zaliznyak considers them a. Similarly we consider
+	-- армянин pattern d because the singular suffix is stressed, but again
+	-- Zaliznyak considers it a.
+	if ut.contains({"ин", "ёнок", "онок", "енок", "ёночек", "оночек", "еночек"}, decl) then
+		zindex = zindex .. "a"
+	else
+		zindex = zindex .. zstress
+	end
+	if sgdc.sc1 then
+		zindex = zindex .. "①"
+	end
+	-- FIXME: we should check for overrides that match the alternative
+	-- genitive plural
+	if args.alt_gen_pl then
+		zindex = zindex .. "②"
+	end
+	-- Check for ё special; this means there is an alternation between ё and е.
+	-- FIXME: The condition 'zstress != "a"' tries to exclude nouns where
+	-- ё is in all forms; it may be incorrect.
+	--
+	-- Note that nouns in -мя are considered ё special except for
+	-- семя and стремя, with irregular genitive plurals without ё.
+	if rfind(args.stem, "ё") and zstress != "a" or ut.contains({"мя", "мя-1"}, decl) and not args.gen_pl then
+		zindex = zindex .. ",ё"
+	end
+	if sgdc.adj then
+		zindex = "adj " .. zindex
+	end
+
+	return zindex
+end
 
 -- Insert the category CAT (a string) into list CATEGORIES. String will
 -- have "Russian " prepended and ~ substituted for the part of speech --
@@ -528,7 +607,7 @@ local function categorize(stress, decl_class, args, n, islast)
 			insert_cat("~ " .. cat)
 		end
 	end
-	if sgcat and plcat and (sgdc.suffix or sgdc.irregpl or
+	if sgcat and plcat and (sgdc.suffix or sgdc.sc1 or sgdc.irregpl or
 			rfind(decl_class, "/")) then
 		for _, scat in ipairs(cat_to_list(sgcat)) do
 			for _, pcat in ipairs(cat_to_list(plcat)) do
@@ -567,6 +646,8 @@ local function categorize(stress, decl_class, args, n, islast)
 			end
 		end
 	end
+
+	return get_zaliznyak_index(stress, decl_class, sghint_types, sgdc, args)
 end
 
 --------------------------------------------------------------------------
@@ -1135,7 +1216,11 @@ function do_show_1(args, per_word_info)
 				do_stress_pattern(stress, args, decls[real_decl_class], number)
 			end
 
-			categorize(stress, decl_class, args, n, islast)
+			local zindex = categorize(stress, decl_class, args, n, islast)
+			if not args.forms.zindex then
+				args.forms.zindex = {}
+			end
+			table.insert(args.forms.zindex, zindex)
 		end
 	end
 
@@ -1827,10 +1912,10 @@ declensions_aliases["#"] = ""
 declensions_old["ъ-а"] = mw.clone(declensions_old["ъ"])
 declensions_old["ъ-а"]["nom_pl"] = "а́"
 
-declensions_old_cat["ъ-а"] = { decl="2nd", hard="hard", g="m", irregpl=true }
+declensions_old_cat["ъ-а"] = { decl="2nd", hard="hard", g="m", sc1=true }
 declensions_cat["-а"] = {
 	singular = "ending in a consonant",
-	decl="2nd", hard="hard", g="m", irregpl=true
+	decl="2nd", hard="hard", g="m", sc1=true
 }
 declensions_aliases["#-a"] = "-a"
 
@@ -1944,7 +2029,7 @@ declensions_old_cat["ь-m"] = { decl="2nd", hard="soft", g="m" }
 declensions_old["ь-я"] = mw.clone(declensions_old["ь-m"])
 declensions_old["ь-я"]["nom_pl"] = "я́"
 
-declensions_old_cat["ь-я"] = { decl="2nd", hard="soft", g="m", irregpl=true }
+declensions_old_cat["ь-я"] = { decl="2nd", hard="soft", g="m", sc1=true }
 
 ----------------- Masculine palatal -------------------
 
@@ -1972,7 +2057,7 @@ declensions_old_cat["й"] = { decl="2nd", hard="palatal", g="m" }
 declensions_old["й-я"] = mw.clone(declensions_old["й"])
 declensions_old["й-я"]["nom_pl"] = "я́"
 
-declensions_old_cat["й-я"] = { decl="2nd", hard="palatal", g="m", irregpl=true }
+declensions_old_cat["й-я"] = { decl="2nd", hard="palatal", g="m", sc1=true }
 
 --------------------------------------------------------------------------
 --                       First-declension feminine                      --
@@ -2080,7 +2165,7 @@ declensions_old_cat["о"] = { decl="2nd", hard="hard", g="n" }
 -- Hard-neuter declension in -о with irreg nom pl -и
 declensions_old["о-и"] = mw.clone(declensions_old["о"])
 declensions_old["о-и"]["nom_pl"] = "ы́"
-declensions_old_cat["о-и"] = { decl="2nd", hard="hard", g="n", irregpl=true }
+declensions_old_cat["о-и"] = { decl="2nd", hard="hard", g="n", sc1=true }
 
 declensions_old_aliases["о-ы"] = "о-и"
 
@@ -2755,7 +2840,9 @@ local numbers = {
 }
 
 local old_title_temp = [=[Pre-reform declension of <b lang="ru" class="Cyrl">{lemma}</b>]=]
+local old_title_zindex_temp = [=[Pre-reform declension of <b lang="ru" class="Cyrl">{lemma}</b>, Zaliznyak index {zindex}]=]
 local title_temp = [=[Declension of <b lang="ru" class="Cyrl">{lemma}</b>]=]
+local title_zindex_temp = [=[Declension of <b lang="ru" class="Cyrl">{lemma}</b>, Zaliznyak index {zindex}]=]
 
 local partitive = nil
 local locative = nil
@@ -2774,7 +2861,7 @@ cases = {
 	"nom_sg", "gen_sg", "dat_sg", "acc_sg", "ins_sg", "pre_sg",
 	"nom_pl", "gen_pl", "dat_pl", "acc_pl", "ins_pl", "pre_pl",
 	"acc_sg_an", "acc_sg_in", "acc_pl_an", "acc_pl_in",
-	"par", "loc", "voc",
+	"par", "loc", "voc", "zindex",
 }
 
 -- Convert a raw override into a canonicalized list of individual overrides.
@@ -2971,6 +3058,10 @@ function show_form_1(word_forms, trailing_forms, old, prefix, suffix, lemma,
 		end
 
 		for _, form in ipairs(trailing_forms) do
+			if lemma == "lemma-raw" then
+				ut.insert_if_not(lemmavals, form)
+				continue
+			end
 			local is_adj = rfind(form, "<adj>")
 			form = rsub(form, "<adj>", "")
 			-- Remove <insa> and <insb> markers; they've served their purpose.
@@ -3001,6 +3092,8 @@ function show_form_1(word_forms, trailing_forms, old, prefix, suffix, lemma,
 
 		if lemma == "lemma" then
 			return table.concat(lemmavals, ", ")
+		elseif lemma == "lemma-raw" then
+			return lemmavals
 		elseif lemma == "russian-separate" then
 			return russianvals
 		else
@@ -3057,7 +3150,11 @@ function make_table(args)
 	local prefix = args.prefix or ""
 	local suffix = args.suffix or ""
 	data.lemma = m_links.remove_links(show_form(args.per_word_info, data.n == "p" and "nom_pl" or "nom_sg", ars.old, prefix, suffix, true))
-	data.title = args.title or strutils.format(args.old and old_title_temp or title_temp, data)
+	data.zindex = table.concat(show_form(args.per_word_info, "zindex", args.old, "", "", "lemma-raw"), " / ")
+	args.title = args.title or
+		strutils.format(args.want_zindex and
+			(args.old and old_title_zindex_temp or title_zindex_temp) or
+			(args.old and old_title_temp or title_temp), data)
 
 	for _, case in ipairs(cases) do
 		data[case] = show_form(args.per_word_info, case, args.old, prefix, suffix, false)
