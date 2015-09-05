@@ -637,9 +637,32 @@ local function do_show(frame, old)
 			insert_cat("~ with multiple accent patterns")
 		end
 
+		local allow_unaccented = rfind(stem, "^%*")
+		stem = rsub(stem, "^%*", "")
+		-- it's safe to accent a monosyllabic stem
+		if com.is_monosyllabic(stem) then
+			stem = com.make_ending_stressed(stem)
+		end
+
+		local original_stem = stem
+
 		-- Loop over accent patterns in case more than one given.
 		for _, stress in ipairs(stress_arg) do
 			args.suffixes = {}
+
+			stem = original_stem
+			-- stress pattern 2 always has ending stress; in a multisyllabic
+			-- word without an accent, it's safe to make it ending-stressed,
+			-- else give an error unless the user has indicated they
+			-- purposely are leaving the word unstressed (e.g. due to not
+			-- knowing the stress) by putting a * at the beginning
+			if com.is_unstressed(stem) then
+				if stress == "2" then
+					stem = com.make_ending_stressed(stem)
+				elseif not allow_unaccented then
+					error("Stem " .. stem .. " requires an accent")
+				end
+			end
 
 			local sgclass = sub_decl_classes[1][1]
 			local resolved_bare = bare
