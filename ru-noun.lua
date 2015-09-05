@@ -75,13 +75,13 @@ TODO:
 11. Make it so that the plural-specifying decl classes -а, -ья, and new -ы, -и
    still auto-detect the class and convert the resulting auto-detected class
    to one with the plural variant. It's useful then to have explicit names for
-   the plural-variant classes -а, -ья. I propose c-а, c-ья, which are aliases;
+   the plural-variant classes -а, -ья. I propose #-а, #-ья, which are aliases;
    the canonical name is still -a, -ья so that you can still say something like
-   ин/-ья. We should similarly have 'c' has the alias for -.  The classes
+   ин/-ья. We should similarly have # has the alias for -.  The classes
    would look like (where * means to construct a slash class)
 
    Orig        -а          -ья          -ы         -и
-   -           -а          -ья          -          -
+   #           -а          -ья          #          #
    ъ           ъ-а         ъ-ья         ъ          ъ
    ь-m         *           *            *          ь-m
    а           *           *            а          а
@@ -281,10 +281,10 @@ local function tracking_code(stress, decl_class, real_decl_class, args)
 		track("reducible-stem")
 		dotrack("reducible-stem/")
 	end
-	if rlfind(args.stem, "и́?н$") and (decl_class == "" or decl_class == "-") then
+	if rlfind(args.stem, "и́?н$") and (decl_class == "" or decl_class == "#") then
 		track("irregular-in")
 	end
-	if rlfind(args.stem, "[еёо]́?нок$") and (decl_class == "" or decl_class == "-") then
+	if rlfind(args.stem, "[еёо]́?нок$") and (decl_class == "" or decl_class == "#") then
 		track("irregular-onok")
 	end
 	if args.pltail then
@@ -718,20 +718,8 @@ local function do_show(frame, old)
 				local orig_decl_class = decl_class_spec[1]
 				local number = decl_class_spec[2]
 				local real_decl_class = orig_decl_class
-				-- Repeatedly resolve a decl class into a more specific one
-				-- until nothing changes. We do this so that, e.g., the blank
-				-- class can resolve to class "-" (for masculine stems ending
-				-- in a consonant), which can resolve in turn to class "-sib"
-				-- (for masculine stems ending in a sibilant) or "-normal"
-				-- (for non-sibilant stems).
-				while true do
-					local resolved_decl_class = detectfuns[real_decl_class] and
-						detectfuns[real_decl_class](stem, stress) or real_decl_class
-					if real_decl_class == resolved_decl_class then
-						break
-					end
-					real_decl_class = resolved_decl_class
-				end
+				real_decl_class = detectfuns[real_decl_class] and
+					detectfuns[real_decl_class](stem, stress) or real_decl_class
 				assert(decls[real_decl_class])
 				tracking_code(stress, orig_decl_class, real_decl_class, args)
 				do_stress_pattern(stress_patterns[stress], args,
@@ -947,13 +935,15 @@ local function detect_basic_stem_type(stem, gender)
 		error("Don't know how to decline stem ending in this type of vowel: " .. stem)
 	end
 	-- FIXME: What about -ин?
-	return stem, "-"
+	return stem, ""
 end
 
 local plural_variation_detection_map = {
-	["-"] = {["-а"]="-а", ["-ья"]="-ья", ["-ы"]="-", ["-и"]="-"},
+	[""] = {["-а"]="-а", ["-ья"]="-ья", ["-ы"]="", ["-и"]=""},
+	["#"] = {["-а"]="-а", ["-ья"]="-ья", ["-ы"]="", ["-и"]=""},
 	["ъ"] = {["-а"]="ъ-а", ["-ья"]="ъ-ья", ["-ы"]="ъ", ["-и"]="ъ"},
-	["ъ-m"] = {["-и"]="ъ-m"},
+	["й"] = {["-и"]="й", ["-я"]="й-я"},
+	["ь-m"] = {["-и"]="ь-m", ["-я"]="ь-я"},
 	["а"] = {["-ы"]="а", ["-и"]="а"},
 	["я"] = {["-и"]="я"},
 	["о"] = {["-а"]="о", ["-ья"]="о-ья", ["-ы"]="о-ы", ["-о"]="о-и"},
@@ -961,26 +951,45 @@ local plural_variation_detection_map = {
 	["ъ-f"] = {["-и"]="ъ-f"},
 }
 
+local special_case_1_to_plural_variation = {
+	[""] = "-а",
+	["#"] = "-а",
+	["ъ"] = "ъ-а",
+	["й"] = "й-я",
+	["ь-m"] = "ь-я",
+	["о"] = "о-ы",
+}
+
 -- Attempt to detect the declension type (including plural variants)
 -- based on the ending of the stem (or nom sg), separating off the base
 -- and the ending. DECL is the value passed in and might be "", "m",
--- "f", "n", "-а", "-ья", "-ы", "-и", or "GENDER-PLURAL" using one of
+-- "f", "n", "-а", "-я", "-ья", "-ы", "-и", or "GENDER-PLURAL" using one of
 -- the above genders and plurals. Gender is ignored except for -ь stems,
--- where "m" or "f" is required.
+-- where "m" or "f" is required. The special case (1) of Zaliznyak can
+-- also be given as an alternative to specifying the plural variant,
+-- for certain types of plural variants.
 function detect_stem_type(stem, decl)
+	local want_sc1 = rmatch(decl, "%(1%)")
+	decl = rsub(decl, "%(1%)", "")
 	local gender = rmatch(decl, "^([mfn]?)$")
-	local plural = ""
+	local plural
 	local was_accented = rfind(decl, "[ё́]")
 	if not gender then
-		gender, plural = rmatch(decl, "^([mfn]?)(%-.*)$")
+		gender, plural = rmatch(decl, "^([mfn]?)(%-.+)$")
 	end
-	if not gender then
-		return stem, remove_accents_from_decl(decl), was_accented
+	if gender then
+		stem, decl = detect_basic_stem_type(stem, gender)
 	end
-	stem, decl = detect_basic_stem_type(stem, gender)
 	decl = remove_accents_from_decl(decl)
-	if plural == "" then
+	if not plural then
+		if want_sc1 then
+			decl = special_case_1_to_plural_variation[decl] or
+				error("Special case (1) not compatible with declension " .. decl)
+		end
 		return stem, decl, was_accented
+	end
+	if want_sc1 then
+		error("Special case (1) not compatible with explicit plural")
 	end
 	local plural_variant
 	if plural_variation_detection_map[decl] then
@@ -1135,7 +1144,7 @@ declensions_old["ъ-normal"] = {
 declensions_old["ъ-sib"] = mw.clone(declensions_old["ъ-normal"])
 declensions_old["ъ-sib"]["gen_pl"] = "е́й"
 
--- User-facing declension type "-" (old-style "ъ");
+-- User-facing declension type "" (old-style "ъ");
 -- mapped to "-normal" (old-style "ъ-normal") or "-sib" (old-style "ъ-sib")
 detect_decl_old["ъ"] = function(stem, stress)
 	if sibilant_suffixes[ulower(usub(stem, -1))] then
@@ -1146,14 +1155,12 @@ detect_decl_old["ъ"] = function(stem, stress)
 end
 declensions_old_cat["ъ"] = { decl="2nd", hard="hard", g="m" }
 
--- Normal mapping of old ъ would be "" (blank), but we call it "-" so we
--- have a way of referring to it without defaulting if need be (e.g. in the
--- second stem of a word where the first stem has a different decl class),
--- and eventually want to make "" (blank) auto-detect the class.
-detect_decl["-"] = old_detect_decl_to_new(detect_decl_old["ъ"])
-declensions_cat["-"] = declensions_old_cat["ъ"]
-detect_decl["c"] = detect_decl["-"]
-declensions_cat["c"] = declensions_cat["-"]
+-- Normal mapping of old ъ would be "" (blank), but we set up "#" as an alias
+-- so we have a way of referring to it without defaulting if need be (e.g. in
+-- the second stem of a word), and distinct from auto-detection, which happens
+-- if the first stem is blank.
+detect_decl["#"] = old_detect_decl_to_new(detect_decl_old["ъ"])
+declensions_cat["#"] = declensions_old_cat["ъ"]
 
 ----------------- Masculine hard, irregular plural -------------------
 
@@ -1181,8 +1188,8 @@ declensions_cat["-а"] = {
 	singular = "ending in a consonant",
 	decl="2nd", hard="hard", g="m", irregpl=true,
 }
-detect_decl["c-а"] = old_detect_decl_to_new(detect_decl_old["ъ-а"])
-declensions_cat["c-а"] = declensions_cat["-а"]
+detect_decl["#-а"] = old_detect_decl_to_new(detect_decl_old["ъ-а"])
+declensions_cat["#-а"] = declensions_cat["-а"]
 
 -- Normal hard-masculine declension, ending in a hard consonant
 -- (ending in -ъ, old-style), with irreg soft pl -ья.
@@ -1221,8 +1228,8 @@ declensions_cat["-ья"] = {
 	singular = "ending in a consonant",
 	decl="2nd", hard="hard", g="m", irregpl=true,
 }
-detect_decl["c-ья"] = old_detect_decl_to_new(detect_decl_old["ъ-ья"])
-declensions_cat["c-ья"] = declensions_cat["-ья"]
+detect_decl["#-ья"] = old_detect_decl_to_new(detect_decl_old["ъ-ья"])
+declensions_cat["#-ья"] = declensions_cat["-ья"]
 
 ----------------- Masculine hard, suffixed, irregular plural -------------------
 
@@ -1344,8 +1351,25 @@ detect_decl_old["й"] = function(stem, stress)
 		return "й-normal"
 	end
 end
-
 declensions_old_cat["й"] = { decl="2nd", hard="palatal", g="m" }
+
+-- Normal masculine declension in -й with irreg nom pl -я
+declensions_old["й-я-normal"] = mw.clone(declensions_old["й-normal"])
+declensions_old["й-я-normal"]["nom_pl"] = "я́"
+
+-- Masculine declension in -ий (old -ій) with irreg nom pl -я
+declensions_old["(і)й-я"] = mw.clone(declensions_old["й-я-normal"])
+declensions_old["(і)й-я"]["nom_pl"] = "я́"
+
+-- User-facing declension type "й-я"; mapped to "й-я-normal" or "(і)й-я"
+detect_decl_old["й-я"] = function(stem, stress)
+	if rlfind(stem, "[іи]́?$") then
+		return "(і)й-я"
+	else
+		return "й-я-normal"
+	end
+end
+declensions_old_cat["й-я"] = { decl="2nd", hard="palatal", g="m", irregpl=true }
 
 --------------------------------------------------------------------------
 --                       First-declension feminine                      --
