@@ -486,6 +486,24 @@ local function ine(arg)
 	return arg
 end
 
+local function split_russian_tr(term, dopair)
+	local ru, tr
+	if not rfind(term, "/") then
+		ru = term
+	else
+		splitvals = rsplit(term, "/")
+		if #splitvals ~= 2 then
+			error("Must have at most one slash in a Russian Arabic/translit expr: '" .. term .. "'")
+		end
+		ru, tr = splitvals[1], com.decompose(splitvals[2])
+	end
+	if dopair then
+		return {ru, tr}
+	else
+		return ru, tr
+	end
+end
+
 -- Clone parent's args while also assigning nil to empty strings.
 local function clone_args(frame)
 	local args = {}
@@ -784,7 +802,7 @@ end
 -- "**" means substitute the bare param for the lemma and add * to the decl
 -- field, anything else means keep the decl field and is a message indicating
 -- why (these should be manually rewritten).
-local function bare_tracking(stem, bare, decl, sgdc, stress, old)
+local function bare_tracking(stem, tr, bare, baretr, decl, sgdc, stress, old)
 	local nomsg
 	if rfind(decl, "^ь%-") then
 		nomsg = stem .. "ь"
@@ -813,7 +831,13 @@ local function bare_tracking(stem, bare, decl, sgdc, stress, old)
 	elseif is_reducible(sgdc) then
 		local barestem, baredecl = rmatch(bare, "^(.-)([ьйъ]?)$")
 		assert(barestem)
-		local autostem = export.reduce_nom_sg_stem(barestem, baredecl)
+		local barestemtr, baredecltr
+		if baretr then
+			barestemtr, baredecltr = rmatch(baretr, "^(.-)([ʹjʺ]?)$")
+			assert(barestemtr)
+		end
+		local autostem, autostemtr =
+			export.reduce_nom_sg_stem(barestem, barestemtr, baredecl)
 		if not autostem then
 			return rettrack("error-reducible")
 		elseif autostem == stem then
@@ -835,7 +859,8 @@ local function bare_tracking(stem, bare, decl, sgdc, stress, old)
 			return rettrack("unpredictable-reducible")
 		end
 	elseif is_dereducible(sgdc) then
-		local autobare = export.dereduce_nom_sg_stem(stem, sgdc, stress, old)
+		local autobare, autobaretr =
+			export.dereduce_nom_sg_stem(stem, tr, sgdc, stress, old)
 		if not autobare then
 			return rettrack("error-dereducible")
 		elseif autobare == bare then
@@ -869,11 +894,15 @@ function export.bare_tracking(frame)
 	local a = frame.args
 	local stem, bare, decl, stress, old = ine(a[1]), ine(a[2]), ine(a[3]),
 		ine(a[4]), ine(a[5])
+	local tr, baretr
+	stem, tr = split_russian_tr(stem)
+	bare, baretr = split_russian_tr(bare)
 	local decl_cats = old and declensions_old_cat or declensions_cat
 	if not decl_cats[decl] then
 		error("Unrecognized declension: " .. decl)
 	end
-	return bare_tracking(stem, bare, decl, decl_cats[decl], stress, old)
+	return bare_tracking(stem, tr, bare, baretr, decl, decl_cats[decl],
+		stress, old)
 end
 
 local gender_to_full = {m="masculine", f="feminine", n="neuter"}
@@ -948,7 +977,8 @@ local function categorize_and_init_heading(stress, decl, args, n, islast)
 			return true
 		end
 		for _, x in ipairs(override) do
-			local entry, notes = m_table_tools.get_notes(x)
+			local ru, tr = x[1], x[2]
+			local entry, notes = m_table_tools.get_notes(ru)
 			entry = com.remove_accents(m_links.remove_links(entry))
 			if rlfind(entry, suffix .. "$") then
 				return true
@@ -1238,7 +1268,31 @@ end
 local function extract_word_joiner(spec)
 	word_joiner = rmatch(spec, "^join:(.*)$")
 	assert(word_joiner)
-	return word_joiner
+	return split_russian_tr(word_joiner, "dopair")
+end
+
+local function concat_russian_tr(ru1, tr1, ru2, tr2, dopair)
+	if not tr1 and not tr2 then
+		return ru1 .. ru2
+	end
+	if not tr1 then
+		tr1 = com.translit(ru1)
+	end
+	if not tr2 then
+		tr2 = com.translit(ru2)
+	end
+	local ru, tr = ru1 .. ru2, com.j_correction(tr1 .. tr2)
+	if dopair then
+		return {ru, tr}
+	else
+		return ru, tr
+	end
+end
+
+local function concat_paired_russian_tr(term1, term2)
+	local ru1, tr1 = term1[1], term1[2]
+	local ru2, tr2 = term2[1], term2[2]
+	concat_russian_tr(ru1, tr1, ru2, tr2, "dopair")
 end
 
 local function determine_headword_gender(args, sgdc, gender)
@@ -1306,15 +1360,15 @@ function export.do_generate_forms(args, old)
 		if i == max_arg + 1 then
 			end_arg_set = true
 			end_word = true
-			word_joiner = ""
+			word_joiner = {""}
 		elseif args[i] == "_" then
 			end_arg_set = true
 			end_word = true
-			word_joiner = " "
+			word_joiner = {" "}
 		elseif args[i] == "-" then
 			end_arg_set = true
 			end_word = true
-			word_joiner = "-"
+			word_joiner = {"-"}
 		elseif args[i] and rfind(args[i], "^join:") then
 			end_arg_set = true
 			end_word = true
@@ -1392,10 +1446,10 @@ function export.do_generate_forms_multi(args, old)
 		local process_arg = false
 		if i == max_arg + 1 then
 			end_word = true
-			word_joiner = ""
+			word_joiner = {""}
 		elseif args[i] == "-" then
 			end_word = true
-			word_joiner = "-"
+			word_joiner = {"-"}
 			continue_arg_sets = true
 		elseif rfind(args[i], "^join:") then
 			end_word = true
@@ -1502,13 +1556,22 @@ generate_forms_1 = function(args, per_word_info)
 		return nil
 	end
 
-	-- Verify and canonicalize animacy and number
+	-- Verify and canonicalize animacy, number, prefix, suffix
+	assert(#per_word_info >= 1)
 	for i=1,#per_word_info do
 		args["a" .. i] = verify_animacy_value(args["a" .. i])
 		args["n" .. i] = verify_number_value(args["n" .. i])
+		args["prefix" .. i] = split_russian_tr(args["prefix" .. i], "dopair")
+		args["suffix" .. i] = split_russian_tr(args["suffix" .. i], "dopair")
 	end
 	args.a = verify_animacy_value(args.a) or "i"
 	args.n = verify_number_value(args.n)
+	args.prefix = split_russian_tr(args.prefix or "", "dopair")
+	args.suffix = split_russian_tr(args.suffix or "", "dopair")
+	-- Attach overall prefix to first per-word prefix, similarly for suffix
+	args.prefix1 = concat_paired_russian_tr(args.prefix, args.prefix1)
+	args["suffix" .. #per_word_info] = concat_paired_russian_tr(
+		args["suffix" .. #per_word_info], args.suffix)
 
 	-- Initialize non-word-specific arguments.
 	--
@@ -1549,8 +1612,14 @@ generate_forms_1 = function(args, per_word_info)
 	local function do_arg_set(arg_set, n, islast)
 		local stress_arg = arg_set[1]
 		local decl = arg_set[3] or ""
-		local bare = arg_set[4]
-		local pl = arg_set[5]
+		local bare, baretr
+		if arg_set[4] then
+			bare, baretr = split_russian_tr(arg_set[4])
+		end
+		local pl, pltr
+		if arg_set[5] then
+			pl, pltr = split_russian_tr(arg_set[5])
+		end
 
 		-- Extract special markers from declension class.
 		if decl == "manual" then
@@ -1578,6 +1647,8 @@ generate_forms_1 = function(args, per_word_info)
 			error("Lemma in first argument set must be specified")
 		end
 		default_lemma = lemma
+		local lemmatr
+		lemma, lemmatr = split_russian_tr(lemma)
 
 		args.thisa = args["a" .. n] or args.a
 		args.thisn = args["n" .. n] or args.n
@@ -1592,13 +1663,13 @@ generate_forms_1 = function(args, per_word_info)
 		-- Convert lemma and decl arg into stem and canonicalized decl.
 		-- This will autodetect the declension from the lemma if an explicit
 		-- decl isn't given.
-		local stem, gender, was_accented, was_plural, was_autodetected
+		local stem, tr, gender, was_accented, was_plural, was_autodetected
 		if rfind(decl, "^%+") then
-			stem, decl, gender, was_accented, was_plural, was_autodetected =
-				detect_adj_type(lemma, decl, old)
+			stem, tr, decl, gender, was_accented, was_plural, was_autodetected =
+				detect_adj_type(lemma, lemmatr, decl, old)
 		else
-			stem, decl, gender, was_accented, was_plural, was_autodetected =
-				determine_decl(lemma, decl, args)
+			stem, tr, decl, gender, was_accented, was_plural, was_autodetected =
+				determine_decl(lemma, lemmatr, decl, args)
 		end
 		if was_plural then
 			args.thisn = args.thisn or "p"
@@ -1660,18 +1731,18 @@ generate_forms_1 = function(args, per_word_info)
 		-- if we have a slash declension -- it's the best we can do.
 		determine_headword_gender(args, sgdc, gender)
 
-		local original_stem = stem
-		local original_bare = bare
-		local original_pl = pl
+		local original_stem, original_tr = stem, tr
+		local original_bare, original_baretr = bare, baretr
+		local original_pl, original_pltr = pl, pltr
 
 		-- Loop over accent patterns in case more than one given.
 		for _, stress in ipairs(stress_arg) do
 			args.suffixes = {}
 
-			stem = original_stem
-			bare = original_bare
-			local stem_for_bare
-			pl = original_pl
+			stem, tr = original_stem, original_tr
+			bare, baretr = original_bare, original_baretr
+			local stem_for_bare, tr_for_bare
+			pl, pltr = original_pl, original_pltr
 
 			insert_if_not(all_stresses_seen, stress)
 
@@ -1682,12 +1753,21 @@ generate_forms_1 = function(args, per_word_info)
 			-- restressing, to handle cases like железа́ with gen pl желёз
 			-- but nom pl же́лезы.
 			if stem_was_unstressed and args.jo_special then
+				-- Beware, Cyrillic еЕ in first rsub, Latin eE in second
 				stem = rsub(stem, "([еЕ])([^еЕ]*)$",
 					function(e, rest)
 						return (e == "Е" and "Ё" or "ё") .. rest
 					end
 				)
-				stem_for_bare = stem
+				if tr then
+					tr = rsub(tr, "([eE])([^eE]*)$",
+						function(e, rest)
+							return (e == "E" and "Jo" or "jo") .. rest
+						end
+					)
+					tr = com.j_correction(tr)
+				end
+				stem_for_bare, tr_for_bare = stem, tr
 			end
 
 			-- Maybe add stress to the stem, depending on whether the
@@ -1706,18 +1786,21 @@ generate_forms_1 = function(args, per_word_info)
 			-- free to leave a masc or 3rd-decl fem lemma completely
 			-- unstressed with pattern b, and then the stem-final stress
 			-- *will* make a difference).
-			local function restress_stem(stem, stress, stem_unstressed)
+			local function restress_stem(stem, tr, stress, stem_unstressed)
 				-- If the user has indicated they purposely are leaving the
 				-- word unstressed by putting a * at the beginning of the main
 				-- stem, leave it unstressed. This might indicate lack of
 				-- knowledge of the stress or a truly unaccented word
 				-- (e.g. an unaccented suffix).
 				if args.allow_unaccented then
-					return stem
+					return stem, tr
+				end
+				if tr and com.is_unstressed(stem) ~= com.is_unstressed(tr) then
+					error("Stem " .. stem .. " and translit " .. tr .. " must have same accent pattern")
 				end
 				-- it's safe to accent monosyllabic stems
 				if com.is_monosyllabic(stem) then
-					stem = com.make_ending_stressed(stem)
+					stem, tr = com.make_ending_stressed(stem, tr)
 				-- For those patterns that are ending-stressed in the singular
 				-- nominative (and hence are likely to be expressed without an
 				-- accent on the stem) it's safe to put a particular accent on
@@ -1725,35 +1808,38 @@ generate_forms_1 = function(args, per_word_info)
 				-- error if no accent.
 				elseif stem_unstressed then
 					if rfind(stress, "^f") then
-						stem = com.make_beginning_stressed(stem)
+						stem, tr = com.make_beginning_stressed(stem, tr)
 					elseif (rfind(stress, "^[bd]") or
 						args.thisn == "p" and ending_stressed_pl_patterns[stress]) then
-						stem = com.make_ending_stressed(stem)
+						stem, tr = com.make_ending_stressed(stem, tr)
 					elseif com.needs_accents(stem) then
 						error("Stem " .. stem .. " requires an accent")
 					end
 				end
-				return stem
+				return stem, tr
 			end
 
-			stem = restress_stem(stem, stress, stem_was_unstressed)
+			stem, tr = restress_stem(stem, tr, stress, stem_was_unstressed)
 
 			-- Leave pl unaccented if user wants this; see restress_stem().
 			if pl and not args.allow_unaccented then
+				if pltr and com.is_unstressed(pl) ~= com.is_unstressed(pltr) then
+					error("Plural stem " .. pl .. " and translit " .. pltr .. " must have same accent pattern")
+				end
 				if com.is_monosyllabic(pl) then
-					pl = com.make_ending_stressed(pl)
+					pl, pltr = com.make_ending_stressed(pl, pltr)
 				end
 				-- I think this is safe.
 				if com.needs_accents(pl) then
 					if ending_stressed_pl_patterns[stress] then
-						pl = com.make_ending_stressed(pl)
+						pl, pltr = com.make_ending_stressed(pl, pltr)
 					elseif not args.allow_unaccented then
 						error("Plural stem " .. pl .. " requires an accent")
 					end
 				end
 			end
 
-			local resolved_bare = bare
+			local resolved_bare, resolved_baretr = bare, baretr
 			-- Handle (de)reducibles
 			-- FIXME! We are dereducing based on the singular declension.
 			-- In a slash declension things can get weird and we don't
@@ -1764,7 +1850,7 @@ generate_forms_1 = function(args, per_word_info)
 			-- with ё special case); the remaining times we generate the bare
 			-- value directly from the plural stem.
 			if bare then
-				bare_tracking(stem, bare, decl, sgdc, stress, old)
+				bare_tracking(stem, tr, bare, baretr, decl, sgdc, stress, old)
 			elseif args.reducible and not sgdc.ignore_reduce then
 				-- Zaliznyak treats all nouns in -ье and -ья as being
 				-- reducible. We handle this automatically and don't require
@@ -1776,53 +1862,70 @@ generate_forms_1 = function(args, per_word_info)
 					-- get a bare form; otherwise the stem comes from the
 					-- nom sg and we need to reduce it to get the real stem.
 					if was_plural then
-						resolved_bare = export.dereduce_nom_sg_stem(stem, sgdc,
-							stress, old, "error")
+						resolved_bare, resolved_baretr =
+							export.dereduce_nom_sg_stem(stem, tr, sgdc,
+								stress, old, "error")
 					else
-						resolved_bare = stem
-						stem = export.reduce_nom_sg_stem(stem, sgdecl, "error")
+						resolved_bare, resolved_baretr = stem, tr
+						stem, tr = export.reduce_nom_sg_stem(stem, tr,
+							sgdecl, "error")
 						-- Stem will be unstressed if stress was on elided
 						-- vowel; restress stem the way we did above. (This is
 						-- needed in at least one word, сапожо́к 3*d(2), with
 						-- plural stem probably сапо́жк- and gen pl probably
 						-- сапо́жек.)
-						stem = restress_stem(stem, stress, com.is_unstressed(stem))
+						stem, tr = restress_stem(stem, tr, stress,
+							com.is_unstressed(stem))
 						if stress ~= "a" and stress ~= "b" and args.alt_gen_pl and not pl then
 							-- Nouns like рожо́к, глазо́к of type 3*d(2) have
 							-- gen pl's ро́жек, гла́зок; to handle this,
 							-- dereduce the reduced stem and store in a
 							-- special place.
-							args.gen_pl_bare = export.dereduce_nom_sg_stem(stem,
-								sgdc, stress, old, "error")
+							args.gen_pl_bare, args.gen_pl_baretr =
+								export.dereduce_nom_sg_stem(stem, tr,
+									sgdc, stress, old, "error")
 						end
 					end
 				elseif is_dereducible(sgdc) then
-					resolved_bare = export.dereduce_nom_sg_stem(stem, sgdc,
-						stress, old, "error")
+					resolved_bare, resolved_baretr =
+						export.dereduce_nom_sg_stem(stem, tr, sgdc,
+							stress, old, "error")
 				else
 					error("Declension class " .. sgdecl .. " not (de)reducible")
 				end
 			elseif stem_for_bare and stem ~= stem_for_bare then
-				resolved_bare = add_bare_suffix(stem_for_bare, old, sgdc, false)
+				resolved_bare, resolved_baretr =
+					add_bare_suffix(stem_for_bare, tr_for_bare, old, sgdc, false)
 			end
 
 			-- Leave unaccented if user wants this; see restress_stem().
 			if resolved_bare and not args.allow_unaccented then
+				if resolved_baretr and com.is_unstressed(resolved_bare) ~= com.is_unstressed(resolved_baretr) then
+					error("Resolved bare stem " .. resolved_bare .. " and translit " .. resolved_baretr .. " must have same accent pattern")
+				end
 				if com.is_monosyllabic(resolved_bare) then
-					resolved_bare = com.make_ending_stressed(resolved_bare)
-				elseif com.needs_accents(resolved_bare) then
-					error("Resolved bare stem " .. resolved_bare .. " requires an accent")
+					resolved_bare, resolved_baretr =
+						com.make_ending_stressed(resolved_bare, resolved_baretr)
+				else
+					if com.needs_accents(resolved_bare) then
+						error("Resolved bare stem " .. resolved_bare .. " requires an accent")
+					end
 				end
 			end
 
-			args.stem = stem
-			args.bare = resolved_bare
-			args.ustem = com.make_unstressed_once(stem)
-			args.pl = pl or stem
-			args.upl = com.make_unstressed_once(args.pl)
+			args.stem, args.stemtr = stem, tr
+			args.bare, args.baretr = resolved_bare, resolved_baretr
+			args.ustem, args.ustemtr = com.make_unstressed_once(stem, tr)
+			if pl then
+				args.pl, args.pltr = pl, pltr
+			else
+				args.pl, args.pltr = stem, tr
+			end
+			args.upl, args.upltr = com.make_unstressed_once(args.pl, args.pltr)
 			-- Special hack for любо́вь and other reducible 3rd-fem nouns,
 			-- which have the full stem in the ins sg
 			args.ins_sg_stem = sgdecl == "ь-f" and args.reducible and resolved_bare
+			args.ins_sg_tr = sgdecl == "ь-f" and args.reducible and resolved_baretr
 
 			-- Loop over declension classes (we may have two of them, one for
 			-- singular and one for plural, in the case of a mixed declension
@@ -2309,6 +2412,16 @@ end
 --                   Autodetection and lemma munging                    --
 --------------------------------------------------------------------------
 
+local function strip_tr_ending(tr, ending)
+	if not tr then return nil end
+	local endingtr = rsub(com.translit(ending), "([Jj])", "%1?")
+	local strippedtr = rsub(tr, endingtr, "")
+	if strippedtr == tr then
+		error("Translit " .. tr .. " doesn't end with expected ending " .. endingtr)
+	end
+	return strippedtr
+end
+
 -- Attempt to detect the type of the lemma based on its ending, separating
 -- off the stem and the ending. GENDER must be present with -ь and plural
 -- stems, and is otherwise ignored. Return up to three values: The stem
@@ -2318,50 +2431,49 @@ end
 -- lemma was plural, the plural ending will contain such accents.
 -- VARIANT comes from the declension spec and controls certain declension
 -- variants.
-local function detect_lemma_type(lemma, gender, args, variant)
+local function detect_lemma_type(lemma, tr, gender, args, variant)
 	local base, ending = rmatch(lemma, "^(.*)([еЕ]́)$") -- accented
 	if base then
-		return base, ulower(ending)
+		return base, strip_tr_ending(tr, ending), ulower(ending)
 	end
-	base = rmatch(lemma, "^(.*[" .. com.sib_c .. "])[еЕ]$") -- unaccented
+	base, ending = rmatch(lemma, "^(.*[" .. com.sib_c .. "])([еЕ])$") -- unaccented
 	if base then
 		if variant == "-ище" and not rfind(lemma, "[щЩ][еЕ]$") then
 			error("With declension variant -ище, lemma should end in -ще: " .. lemma)
 		end
-		return base, variant == "-ище" and "(ищ)е-и" or "о"
+		return base, strip_tr_ending(tr, ending), variant == "-ище" and "(ищ)е-и" or "о"
 	end
 	if variant == "-ишко" then
 		base, ending = rmatch(lemma, "^(.*[шШ][кК])([оО])$") -- unaccented
 		if not base then
 			error("With declension variant -ишко, lemma should end in -шко: " .. lemma)
 		end
-		return base, "(ишк)о-и"
+		return base, strip_tr_ending(tr, ending), "(ишк)о-и"
 	end
 	if variant == "-ин" then
 		base, ending = rmatch(lemma, "^(.*)([иИ]́?[нН][ъЪ]?)$") -- maybe accented
 		if not base then
 			error("With declension variant -ин, lemma should end in -ин(ъ): " .. lemma)
 		end
-		return base, ulower(ending)
+		return base, strip_tr_ending(tr, ending), ulower(ending)
 	end
 	-- Now autodetect -ин; only animate and in -анин/-янин
 	base, ending = rmatch(lemma, "^(.*[аяАЯ]́?[нН])([иИ]́?[нН][ъЪ]?)$")
 	-- Need to check the animacy to avoid nouns like маиганин, цианин,
 	-- меланин, соланин, etc.
 	if base and args.thisa == "a" then
-		return base, ulower(ending)
+		return base, strip_tr_ending(tr, ending), ulower(ending)
 	end
 	base, ending = rmatch(lemma, "^(.*)([ёоЁО]́?[нН][оО][кК][ъЪ]?)$")
 	if base then
-		return base, ulower(ending)
+		return base, strip_tr_ending(tr, ending), ulower(ending)
 	end
 	base, ending = rmatch(lemma, "^(.*)([ёоЁО]́?[нН][оО][чЧ][еЕ][кК][ъЪ]?)$")
 	if base then
-		return base, ulower(ending)
-	end
+		return base, strip_tr_ending(tr, ending), ulower(ending)
 	base, ending = rmatch(lemma, "^(.*)([мМ][яЯ]́?)$")
 	if base then
-		return base, ending
+		return base, strip_tr_ending(tr, ending), ending
 	end
 	--recognize plural endings
 	if recognize_plurals then
@@ -2370,16 +2482,16 @@ local function detect_lemma_type(lemma, gender, args, variant)
 			if base then
 				-- Don't do this; о/-ья is too rare
 				-- error("Ambiguous plural lemma " .. lemma .. " in -ья, singular could be -о or -ье/-ьё; specify the singular")
-				return base, "ье", ending
+				return base, strip_tr_ending(tr, ending), "ье", ending
 			end
 			base, ending = rmatch(lemma, "^(.*)([аяАЯ]́?)$")
 			if base then
-				return base, rfind(ending, "[аА]") and "о" or "е", ending
+				return base, strip_tr_ending(tr, ending), rfind(ending, "[аА]") and "о" or "е", ending
 			end
 			base, ending = rmatch(lemma, "^(.*)([ыиЫИ]́?)$")
 			if base then
 				if rfind(ending, "[ыЫ]") or rfind(base, "[" .. com.sib .. com.velar .. "]$") then
-					return base, "о-и", ending
+					return base, strip_tr_ending(tr, ending), "о-и", ending
 				else
 					-- FIXME, should we return a slash declension?
 					error("No neuter declension е-и available; use a slash declension")
@@ -2389,7 +2501,7 @@ local function detect_lemma_type(lemma, gender, args, variant)
 		if gender == "f" then
 			base, ending = rmatch(lemma, "^(.*)([ьЬ][иИ]́?)$")
 			if base then
-				return base, "ья", ending
+				return base, strip_tr_ending(tr, ending), "ья", ending
 			end
 		end
 		-- Recognize masculines with irregular plurals, but only if the user
@@ -2401,20 +2513,20 @@ local function detect_lemma_type(lemma, gender, args, variant)
 			if args.thisn == "p" or variant == "-ья" then
 				base, ending = rmatch(lemma, "^(.*)([ьЬ][яЯ]́?)$")
 				if base then
-					return base, (args.old and "ъ-ья" or "-ья"), ending
+					return base, strip_tr_ending(tr, ending), (args.old and "ъ-ья" or "-ья"), ending
 				end
 			end
 			if args.thisn == "p" or args.want_sc1 then
 				base, ending = rmatch(lemma, "^(.*)([аА]́?)$")
 				if base then
-					return base, (args.old and "ъ-а" or "-а"), ending
+					return base, strip_tr_ending(tr, ending), (args.old and "ъ-а" or "-а"), ending
 				end
 				base, ending = rmatch(lemma, "^(.*)([яЯ]́?)$")
 				if base then
 					if rfind(base, "[" .. com.vowel .. "]́?$") then
-						return base, "й-я", ending
+						return base, strip_tr_ending(tr, ending), "й-я", ending
 					else
-						return base, "ь-я", ending
+						return base, strip_tr_ending(tr, ending), "ь-я", ending
 					end
 				end
 			end
@@ -2425,38 +2537,38 @@ local function detect_lemma_type(lemma, gender, args, variant)
 				base, ending = rmatch(lemma, "^(.*)([ыЫ]́?)$")
 			end
 			if base then
-				return base, gender == "m" and (args.old and "ъ" or "") or "а", ending
+				return base, strip_tr_ending(tr, ending), gender == "m" and (args.old and "ъ" or "") or "а", ending
 			end
 			base, ending = rmatch(lemma, "^(.*[" .. com.vowel .. "]́?)([иИ]́?)$")
 			if base then
-				return base, gender == "m" and "й" or "я", ending
+				return base, strip_tr_ending(tr, ending), gender == "m" and "й" or "я", ending
 			end
 			base, ending = rmatch(lemma, "^(.*)([иИ]́?)$")
 			if base then
-				return base, gender == "m" and "ь-m" or "я", ending
+				return base, strip_tr_ending(tr, ending), gender == "m" and "ь-m" or "я", ending
 			end
 		end
 		if gender == "3f" then
 			base, ending = rmatch(lemma, "^(.*)([иИ]́?)$")
 			if base then
-				return base, "ь-f", ending
+				return base, strip_tr_ending(tr, ending), "ь-f", ending
 			end
 		end
 	end
 	base, ending = rmatch(lemma, "^(.*)([ьЬ][яеёЯЕЁ]́?)$")
 	if base then
-		return base, ulower(ending)
+		return base, strip_tr_ending(tr, ending), ulower(ending)
 	end
 	base, ending = rmatch(lemma, "^(.*)([йаяеоёъЙАЯЕОЁЪ]́?)$")
 	if base then
-		return base, ulower(ending)
+		return base, strip_tr_ending(tr, ending), ulower(ending)
 	end
-	base = rmatch(lemma, "^(.*)[ьЬ]$")
+	base, ending = rmatch(lemma, "^(.*)([ьЬ])$")
 	if base then
 		if gender == "m" or gender == "f" then
-			return base, "ь-" .. gender
+			return base, strip_tr_ending(tr, ending), "ь-" .. gender
 		elseif gender == "3f" then
-			return base, "ь-f"
+			return base, strip_tr_ending(tr, ending), "ь-f"
 		else
 			error("Need to specify gender m or f with lemma in -ь: ".. lemma)
 		end
@@ -2466,7 +2578,7 @@ local function detect_lemma_type(lemma, gender, args, variant)
 	elseif rfind(lemma, "[уыэюиіѣѵУЫЭЮИІѢѴ]́?$") then
 		error("Don't know how to decline lemma ending in this type of vowel: " .. lemma)
 	end
-	return lemma, ""
+	return lemma, tr, ""
 end
 
 local plural_variant_detection_map = {
@@ -2547,9 +2659,9 @@ end
 -- 5. An actual declension, possibly including a plural variant (e.g. о-и) or
 --    a slash declension (e.g. я/-ья, used for the noun дядя).
 --
--- Return six args: stem (lemma minus ending), canonicalized declension,
--- explicitly specified gender if any (m, f, n or nil), whether the
--- specified declension or detected ending was accented, whether the
+-- Return seven args: stem (lemma minus ending), translit, canonicalized
+-- declension, explicitly specified gender if any (m, f, n or nil), whether
+-- the specified declension or detected ending was accented, whether the
 -- detected ending was pl, and whether the declension was autodetected
 -- (corresponds to cases where a full word with ending attached is required
 -- in the lemma field). "Canonicalized" means after autodetection, with
@@ -2562,7 +2674,7 @@ end
 -- Note that gender is never required when an explicit declension is given,
 -- and in connection with stem autodetection is required only when the lemma
 -- either ends in -ь or is plural.
-determine_decl = function(lemma, decl, args)
+determine_decl = function(lemma, tr, decl, args)
 	-- Assume we're passed a value for DECL of types 1-4 above, and
 	-- fetch gender and requested declension variant.
 	local stem
@@ -2619,11 +2731,11 @@ determine_decl = function(lemma, decl, args)
 				end
 			end
 		end
-		stem, decl, orig_pl_ending = detect_lemma_type(lemma, gender, args,
-			variant)
+		stem, tr, decl, orig_pl_ending = detect_lemma_type(lemma, tr, gender,
+			args, variant)
 		was_autodetected = true
 	else
-		stem = lemma
+		stem, tr = lemma, tr
 	end
 	-- Now canonicalize gender
 	if gender == "3f" then
@@ -2678,7 +2790,7 @@ determine_decl = function(lemma, decl, args)
 		if args.want_sc1 then
 			error("Special case (1) not compatible with slash declension" .. decl)
 		end
-		return stem, decl, gender, was_accented, was_plural, was_autodetected
+		return stem, tr, decl, gender, was_accented, was_plural, was_autodetected
 	end
 
 	-- 2: Retrieve explicitly specified or autodetected decl and pl. variant
@@ -2705,7 +2817,7 @@ determine_decl = function(lemma, decl, args)
 		if other_plural and sc1_plural ~= other_plural then
 			error("Plural variant " .. other_plural .. " specified or detected, but special case (1) calls for plural variant " .. sc1_plural)
 		end
-		return stem, sc1_decl, gender, was_accented, was_plural, was_autodetected
+		return stem, tr, sc1_decl, gender, was_accented, was_plural, was_autodetected
 	end
 
 	-- 5: Handle user-requested plural variant without explicit or detected
@@ -2718,15 +2830,15 @@ determine_decl = function(lemma, decl, args)
 			variant_decl = plural_variant_detection_map[decl][want_ya_plural]
 		end
 		if variant_decl then
-			return stem, variant_decl, gender, was_accented, was_plural, was_autodetected
+			return stem, tr, variant_decl, gender, was_accented, was_plural, was_autodetected
 		else
-			return stem, decl .. "/" .. want_ya_plural, gender, was_accented, was_plural, was_autodetected
+			return stem, tr, decl .. "/" .. want_ya_plural, gender, was_accented, was_plural, was_autodetected
 		end
 	end
 
 	-- 6: Just return the full declension, which will include any available
 	--    plural variant in it.
-	return stem, decl, gender, was_accented, was_plural, was_autodetected
+	return stem, tr, decl, gender, was_accented, was_plural, was_autodetected
 end
 
 -- Convert soft adjectival declensions into hard ones following certain
@@ -2773,9 +2885,9 @@ end
 --    (WARNING: Unclear if slash declensions will work, especially those
 --    that are adjective/noun combinations)
 --
--- Returns the same six args as for determine_decl(). The returned
+-- Returns the same seven args as for determine_decl(). The returned
 -- declension will always begin with +.
-detect_adj_type = function(lemma, decl, old)
+detect_adj_type = function(lemma, tr, decl, old)
 	local was_autodetected
 	local base, ending
 	local basedecl, g = rmatch(decl, "^(%+)([mfn])$")
@@ -2822,6 +2934,9 @@ detect_adj_type = function(lemma, decl, old)
 	else
 		base = lemma
 	end
+	if ending then
+		tr = strip_tr_ending(tr, ending)
+	end
 
 	-- Remove any accents from the declension, but not their presence.
 	-- We will convert was_accented into stress pattern b, and convert that
@@ -2856,7 +2971,7 @@ detect_adj_type = function(lemma, decl, old)
 		was_plural = true
 		decl = singdecl
 	end
-	return base, canonicalize_decl(decl, old), g, was_accented, was_plural, was_autodetected
+	return base, tr, canonicalize_decl(decl, old), g, was_accented, was_plural, was_autodetected
 end
 
 -- If stress pattern omitted, detect it based on whether ending is stressed
@@ -2971,13 +3086,14 @@ end
 -- masculine 2nd-declension hard and soft, and 3rd-declension feminine in
 -- -ь. STEM and DECL are after determine_decl(), before converting
 -- outward-facing declensions to inward ones.
-function export.reduce_nom_sg_stem(stem, decl, can_err)
+function export.reduce_nom_sg_stem(stem, tr, decl, can_err)
 	local full_stem = stem .. (decl == "й" and decl or "")
-	local ret = com.reduce_stem(full_stem)
+	local full_tr = tr and tr .. (decl == "й" and "j" or "")
+	local ret, rettr = com.reduce_stem(full_stem, full_tr)
 	if not ret and can_err then
 		error("Unable to reduce stem " .. stem)
 	end
-	return ret
+	return ret, rettr
 end
 
 is_dereducible = function(decl_cat)
@@ -2995,9 +3111,10 @@ end
 -- because we don't actually attach such a suffix in attach_unstressed() due
 -- to situations where we don't want the suffix added, e.g. dereducible nouns
 -- in -ня.
-add_bare_suffix = function(bare, old, sgdc, dereduced)
+add_bare_suffix = function(bare, baretr, old, sgdc, dereduced)
 	if old and sgdc.hard == "hard" then
-		return bare .. "ъ"
+		-- Final -ъ isn't transliterated
+		return bare .. "ъ", baretr
 	elseif sgdc.hard == "soft" or sgdc.hard == "palatal" then
 		-- This next clause corresponds to a special case in Vitalik's module.
 		-- It says that nouns in -ня (accent class a) have gen pl without
@@ -3010,14 +3127,15 @@ add_bare_suffix = function(bare, old, sgdc, dereduced)
 		if dereduced and rfind(bare, "[нН]$") and sgdc.decl == "1st" then
 			-- FIXME: What happens in this case old-style? I assume that
 			-- -ъ is added, but this is a guess.
-			return bare .. (old and "ъ" or "")
+			-- Final -ъ isn't transliterated
+			return bare .. (old and "ъ" or ""), baretr
 		elseif rfind(bare, "[" .. com.vowel .. "]́?$") then
-			return bare .. "й"
+			return bare .. "й", baretr and (baretr .. "j")
 		else
-			return bare .. "ь"
+			return bare .. "ь", baretr and (baretr .. "ʹ")
 		end
 	else
-		return bare
+		return bare, baretr
 	end
 end
 
@@ -3028,17 +3146,17 @@ end
 -- and also the gen pl in the alt-gen-pl scenario). STEM and DECL are
 -- after determine_decl(), before converting outward-facing declensions
 -- to inward ones. STRESS is the stess pattern.
-function export.dereduce_nom_sg_stem(stem, sgdc, stress, old, can_err)
+function export.dereduce_nom_sg_stem(stem, tr, sgdc, stress, old, can_err)
 	local epenthetic_stress = ending_stressed_gen_pl_patterns[stress]
-	local ret = com.dereduce_stem(stem, nil, epenthetic_stress)
+	local ret, rettr = com.dereduce_stem(stem, tr, epenthetic_stress)
 	if not ret then
 		if can_err then
 			error("Unable to dereduce stem " .. stem)
 		else
-			return nil
+			return nil, nil
 		end
 	end
-	return add_bare_suffix(ret, old, sgdc, true)
+	return add_bare_suffix(ret, rettr, old, sgdc, true)
 end
 
 --------------------------------------------------------------------------
@@ -3769,7 +3887,7 @@ nonsyllabic_suffixes = ut.list_to_set({"", "ъ", "ь", "й"})
 
 sibilant_suffixes = ut.list_to_set({"ш", "щ", "ч", "ж"})
 
-local function combine_stem_and_suffix(stem, suf, rules, old)
+local function combine_stem_and_suffix(stem, tr, suf, rules, old)
 	local first = usub(suf, 1, 1)
 	if rules then
 		local conv = rules[first]
@@ -3781,7 +3899,12 @@ local function combine_stem_and_suffix(stem, suf, rules, old)
 			suf = conv .. ending
 		end
 	end
-	return stem .. suf, suf
+	-- If <adj> is present in the suffix, it means we need to translate it
+	-- specially; do that now.
+	local is_adj = rfind(suf, "<adj>")
+	suf = rsub(suf, "<adj>", "")
+	local suftr = is_adj and m_ru_translit.tr_adj(suf)
+	return concat_russian_tr(stem, tr, suf, suftr, "dopair"), suf
 end
 
 -- Attach the stressed stem (or plural stem, or barestem) out of ARGS
@@ -3795,21 +3918,39 @@ local function attach_unstressed(args, case, suf, was_stressed)
 	elseif rfind(suf, CFLEX) then -- if suf has circumflex accent, it forces stressed
 		return attach_stressed(args, case, suf)
 	end
-	local stem = rfind(case, "_pl") and args.pl or case == "ins_sg" and args.ins_sg_stem or args.stem
+	local stem, tr
+	if rfind(case, "_pl") then
+		stem, tr = args.pl, args.pltr
+	end
+	if not stem and case == "ins_sg" then
+		stem, tr = args.ins_sg_stem, args.ins_sg_tr
+	end
+	if not stem then
+		stem, tr = args.stem, args.stemtr
+	end
 	if nonsyllabic_suffixes[suf] then
 		-- If gen_pl, use special args.gen_pl_bare if given, else regular
 		-- args.bare if there isn't a plural stem. If nom_sg, always use
 		-- regular args.bare.
-		local barearg
+		local barearg, bareargtr
 		if case == "gen_pl" then
-			barearg = args.gen_pl_bare or (args.pl == args.stem) and args.bare
+			barearg, bareargtr = args.gen_pl_bare, args.gen_pl_baretr
+			if not barearg and args.pl == args.stem then
+				barearg, bareargtr = args.bare, args.baretr
+			end
 		else
-			barearg = args.bare
+			barearg, bareargtr = args.bare, args.baretr
 		end
 		local barestem = barearg or stem
+		local barestem, baretr
+		if barearg then
+			barestem, baretr = barearg, bareargtr
+		else
+			barestem, baretr = stem, tr
+		end
 		if was_stressed and case == "gen_pl" then
 			if not barearg then
-				local gen_pl_stem = com.make_ending_stressed(stem)
+				local gen_pl_stem, gen_pl_tr = com.make_ending_stressed(stem, tr)
 				-- FIXME: temporary tracking code to identify places where
 				-- the change to the algorithm here that end-stresses the
 				-- genitive plural in stress patterns with gen pl end stress
@@ -3818,7 +3959,7 @@ local function attach_unstressed(args, case, suf, was_stressed)
 				if com.is_stressed(stem) and stem ~= gen_pl_stem then
 					track("gen-pl-moved-stress")
 				end
-				barestem = gen_pl_stem
+				barestem, baretr = gen_pl_stem, gen_pl_tr
 			end
 		end
 
@@ -3844,11 +3985,11 @@ local function attach_unstressed(args, case, suf, was_stressed)
 				end
 			end
 		end
-		return barestem .. suf, suf
+		return concat_russian_tr(barestem, baretr, suf, nil, "dopair"), suf
 	end
 	suf = com.make_unstressed(suf)
 	local rules = unstressed_rules[ulower(usub(stem, -1))]
-	return combine_stem_and_suffix(stem, suf, rules, args.old)
+	return combine_stem_and_suffix(stem, tr, suf, rules, args.old)
 end
 
 -- Analogous to attach_unstressed() but for the unstressed stem and a
@@ -3862,20 +4003,27 @@ attach_stressed = function(args, case, suf)
 	if not rfind(suf, "[ё́]") then -- if suf has no "ё" or accent marks
 		return attach_unstressed(args, case, suf, "was stressed")
 	end
-	local stem = rfind(case, "_pl") and args.upl or args.ustem
+	local stem, tr
+	if rfind(case, "_pl") then
+		stem, tr = args.upl, args.upltr
+	end
+	if not stem then
+		stem, tr = args.ustem, args.ustemtr
+	end
 	local rules = stressed_rules[ulower(usub(stem, -1))]
-	return combine_stem_and_suffix(stem, suf, rules, args.old)
+	return combine_stem_and_suffix(stem, tr, suf, rules, args.old)
 end
 
 -- Attach the appropriate stressed or unstressed stem (or plural stem as
 -- determined by CASE, or barestem) out of ARGS to the suffix SUF, which may
 -- be a list of alternative suffixes (e.g. in the inst sg of feminine nouns).
--- Calls FUN (either attach_stressed() or attach_unstressed() to do the work
+-- Calls FUN (either attach_stressed() or attach_unstressed()) to do the work
 -- for an individual suffix. Returns two values, a list of combined forms
 -- and a list of the real suffixes used (which may be modified from the
 -- passed-in suffixes, e.g. by removing stress marks or modifying vowels in
--- various ways after a stem-final velar, sibilant or ц). We are handling the
--- Nth word; ISLAST is true if this is the last one.
+-- various ways after a stem-final velar, sibilant or ц).  Each combined form
+-- is a two-element list {stem, tr} (or a one-element list if tr is nil).
+-- We are handling the Nth word; ISLAST is true if this is the last one.
 local function attach_with(args, case, suf, fun, n, islast)
 	if type(suf) == "table" then
 		local all_combineds = {}
@@ -3893,9 +4041,7 @@ local function attach_with(args, case, suf, fun, n, islast)
 		return all_combineds, all_realsufs
 	else
 		local combined, realsuf = fun(args, case, suf)
-		local prefix = (n == 1 and args.prefix or "") .. (args["prefix" .. n] or "")
-		local suffix = (args["suffix" .. n] or "") .. (islast and args.suffix or "")
-		return {combined and prefix .. combined .. suffix}, {realsuf}
+		return {combined and concat_paired_russian_tr(args["prefix" .. n], concat_paired_russian_tr(combined, args["suffix" .. n]))}, {realsuf}
 	end
 end
 
@@ -4116,51 +4262,87 @@ canonicalize_override = function(args, case, forms, n)
 	-- clean <br /> that's in many multi-form entries and messes up linking
 	val = rsub(val, "<br%s*/>", "")
 	-- substitute ~ and ~~ and split by commas
-	local stem = rfind(case, "_pl") and args.pl or args.stem
-	val = rsub(val, "~~", com.make_unstressed_once(stem))
-	val = rsub(val, "~", stem)
-	val = rsplit(val, "%s*,%s*")
+	local stem, tr
+	if rfind(case, "_pl") then
+		stem, tr = args.pl, args.pltr
+	end
+	if not stem then
+		stem, tr = args.stem, args.stemtr
+	end
+	local ustem, utr = com.make_unstressed_once(stem, tr)
+	local vals = rsplit(val, "%s*,%s*")
+	local retvals = {}
+	for _, val in ipairs(vals) do
+		local valru, valtr = split_russian_tr(val)
+		valru = rsub(valru, "~~", ustem)
+		valru = rsub(valru, "~", stem)
+		if valtr then
+			tr = tr or com.translit(stem)
+			utr = utr or com.translit(ustem)
+			valtr = rsub(valtr, "~~", utr)
+			valtr = rsub(valtr, "~", tr)
+		end
+		table.insert(retvals, {valru, valtr})
+	end
+	vals = retvals
 
 	-- handle + in loc/par meaning "the expected form"; NOTE: This requires
 	-- that dat_sg has already been processed!
 	if case == "loc" or case == "par" then
 		local new_vals = {}
-		for _, arg in ipairs(val) do
+		for _, rutr in ipairs(vals) do
+			local ru, tr = rutr[1], rutr[2]
 			-- don't just handle + by itself in case the arg has в or на
 			-- or whatever attached to it
-			if rfind(arg, "^%+") or rfind(arg, "[%s%[|]%+") then
+			if rfind(ru, "^%+") or rfind(ru, "[%s%[|]%+") then
 				for _, dat in ipairs(forms["dat_sg"]) do
-					local subval = case == "par" and dat or com.make_ending_stressed(dat)
+					local datru, dattr = dat[1], dat[2]
+					local valru, valtr
+					if case == "par" then
+						valru, valtr = datru, dattr
+					else
+						valru, valtr = com.make_ending_stressed(datru, dattr)
+					end
 					-- wrap the word in brackets so it's linked; but not if it
 					-- appears to already be linked
-					local newarg = rsub(arg, "^%+", "[[" .. subval .. "]]")
-					newarg = rsub(newarg, "([%[|])%+", "%1" .. subval)
-					newarg = rsub(newarg, "(%s)%+", "%1[[" .. subval .. "]]")
-					table.insert(new_vals, newarg)
+					ru = rsub(ru, "^%+", "[[" .. valru .. "]]")
+					ru = rsub(ru, "([%[|])%+", "%1" .. valru)
+					ru = rsub(ru, "(%s)%+", "%1[[" .. valru .. "]]")
+					-- do the translit; but it shouldn't have brackets in it
+					if tr then
+						valtr = valtr or com.translit(valru)
+						tr = rsub(tr, "^%+", valtr)
+						tr = rsub(tr, "(%s)%+", "%1" .. valtr)
+					end
+					table.insert(new_vals, {ru, tr})
 				end
 			else
-				table.insert(new_vals, arg)
+				table.insert(new_vals, rutr)
 			end
 		end
-		val = new_vals
+		vals = new_vals
 	end
 
 	-- auto-accent/check for necessary accents
 	local newvals = {}
-	for _, v in ipairs(val) do
+	for _, v in ipairs(vals) do
+		local ru, tr = v[1], v[2]
 		if not args.allow_unaccented then
+			if tr and com.is_unstressed(ru) ~= com.is_unstressed(tr) then
+				error("Override " .. ru .. " and translit " .. tr .. " must have same accent pattern")
+			end
 			-- it's safe to accent monosyllabic stems
-			if com.is_monosyllabic(v) then
-				v = com.make_ending_stressed(v)
-			elseif com.needs_accents(v) then
-				error("Override " .. v .. " for case " .. case .. n .. " requires an accent")
+			if com.is_monosyllabic(ru) then
+				ru, tr = com.make_ending_stressed(ru, tr)
+			elseif com.needs_accents(ru) then
+				error("Override " .. ru .. " for case " .. case .. n .. " requires an accent")
 			end
 		end
-		table.insert(newvals, v)
+		table.insert(newvals, {ru, tr})
 	end
-	val = newvals
+	vals = newvals
 
-	return val
+	return vals
 end
 
 handle_forms_and_overrides = function(args, n, islast)
@@ -4170,7 +4352,7 @@ handle_forms_and_overrides = function(args, n, islast)
 		local function append1(case)
 			if f[case] then
 				for i=1,#f[case] do
-					f[case][i] = f[case][i] .. value
+					f[case][i] = concat_paired_russian_tr(f[case][i], value)
 				end
 			end
 		end
@@ -4189,7 +4371,7 @@ handle_forms_and_overrides = function(args, n, islast)
 			if f[case] then
 				local lastarg = #f[case]
 				if lastarg > (gt_one and 1 or 0) then
-					f[case][lastarg] = f[case][lastarg] .. value
+					f[case][lastarg] = concat_paired_russian_tr(f[case][lastarg], value)
 				end
 			end
 		end
@@ -4414,22 +4596,29 @@ local function show_form(forms, old, lemma)
 	-- title of the declension table.) (Actually, currently we don't
 	-- include the translit in the declension table title.)
 
-	if #forms == 1 and forms[1] == "-" then
+	if #forms == 1 and forms[1][1] == "-" then
 		return "&mdash;"
 	end
 
 	for _, form in ipairs(forms) do
-		local is_adj = rfind(form, "<adj>")
-		form = rsub(form, "<adj>", "")
-		local entry, notes = m_table_tools.get_notes(form)
+		local ruentry, runotes = m_table_tools.get_notes(ru)
+		local trentry, trnotes
+		if tr then
+			trentry, trnotes = m_table_tools.get_notes(tr)
+		end
 		local ruspan, trspan
 		if old then
-			ruspan = m_links.full_link(com.remove_jo(entry), entry, lang, nil, nil, nil, {tr = "-"}, false) .. notes
+			ruspan = m_links.full_link(com.remove_jo(ruentry), ruentry, lang, nil, nil, nil, {tr = "-"}, false) .. runotes
 		else
-			ruspan = m_links.full_link(entry, nil, lang, nil, nil, nil, {tr = "-"}, false) .. notes
+			ruspan = m_links.full_link(ruentry, nil, lang, nil, nil, nil, {tr = "-"}, false) .. runotes
 		end
-		local nolinks = m_links.remove_links(entry)
-		trspan = (is_adj and m_ru_translit.tr_adj(nolinks) or lang:transliterate(nolinks)) .. notes
+		if not trentry then
+			trentry = com.translit(ruentry)
+		end
+		if not trnotes then
+			trnotes = com.translit(runotes)
+		end
+		trspan = m_links.remove_links(trentry) .. trnotes
 		trspan = "<span style=\"color: #888\">" .. trspan .. "</span>"
 
 		if lemma then
@@ -4452,22 +4641,24 @@ end
 
 -- Subfunction of concat_word_forms(), used to implement recursively
 -- generating all combinations of elements from WORD_FORMS (a list, one
--- element per word, of a list of the forms for a word) and TRAILING_FORMS
--- (a list of forms, the accumulated suffixes for trailing words so far in
--- the recursion process). Each time we recur we take the last FORMS item
--- off of WORD_FORMS and to each form in FORMS we add all elements in
--- TRAILING_FORMS, passing the newly generated list of items down the
--- next recursion level with the shorter WORD_FORMS. We end up returning
--- a list of concatenated forms.
+-- element per word, of a list of the forms for a word, each of which is a
+-- two-element list of {RUSSIAN, TR}) and TRAILING_FORMS (a list of forms, the
+-- accumulated suffixes for trailing words so far in the recursion process,
+-- again where each form is a two-element list {RUSSIAN, TR}). Each time we
+-- recur we take the last FORMS item off of WORD_FORMS and to each form in
+-- FORMS we add all elements in TRAILING_FORMS, passing the newly generated
+-- list of items down the next recursion level with the shorter WORD_FORMS.
+-- We end up returning a list of concatenated forms, where each list item
+-- is a two-element list {RUSSIAN, TR}.
 local function concat_word_forms_1(word_forms, trailing_forms)
 	if #word_forms == 0 then
 		local retforms = {}
 		for _, form in ipairs(trailing_forms) do
+			local ru, tr = form[1], form[2]
 			-- Remove <insa> and <insb> markers; they've served their purpose.
-			-- NOTE: <adj> will still be present and needs to be removed
-			-- by the caller.
-			form = rsub(form, "<ins[ab]>", "")
-			table.insert(retforms, form)
+			ru = rsub(ru, "<ins[ab]>", "")
+			tr = tr and rsub(tr, "<ins[ab]>", "")
+			table.insert(retforms, {ru, tr})
 		end
 		return retforms
 	else
@@ -4479,9 +4670,10 @@ local function concat_word_forms_1(word_forms, trailing_forms)
 				-- If form to prepend is empty, don't add the joiner; this
 				-- is principally used in overall overrides, where we stuff
 				-- the entire override into the last word
-				local full_form = form == "" and trailing_form or
-					form .. joiner .. trailing_form
-				if rfind(full_form, "<insa>") and rfind(full_form, "<insb>") then
+				local full_form = form[1] == "" and trailing_form or
+					concat_paired_russian_tr(
+						concat_paired_russian_tr(form, joiner), trailing_form)
+				if rfind(full_form[1], "<insa>") and rfind(full_form[1], "<insb>") then
 					-- REJECT! So we don't get mixtures of the two feminine
 					-- instrumental singular endings.
 				else
@@ -4509,7 +4701,7 @@ concat_word_forms = function(per_word_info, case)
 	-- We need to start the recursion with the second parameter containing
 	-- one blank element rather than no elements, otherwise no elements
 	-- will be propagated to the next recursion level.
-	return concat_word_forms_1(word_forms, {""})
+	return concat_word_forms_1(word_forms, {{""}})
 end
 
 -- Make the table
