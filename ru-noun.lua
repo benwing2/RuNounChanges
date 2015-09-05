@@ -915,6 +915,10 @@ function detect_stem_type(stem, decl)
 	if base then
 		return base, com.remove_accents(ulower(ending))
 	end
+	base, ending = rmatch(stem, "^(.*)([ёоЁО]́?[нН][оО][чЧ][еЕ][кК][ъЪ]?)$")
+	if base then
+		return base, com.remove_accents(ulower(ending))
+	end
 	base, ending = rmatch(stem, "^(.*)([мМ][яЯ])́?$")
 	if base then
 		-- FIXME: What about мя-1? Maybe it's rare enough that we
@@ -1178,8 +1182,30 @@ declensions_old["онокъ"] = declensions_old["ёнокъ"]
 declensions_old["енокъ"] = declensions_old["ёнокъ"]
 
 declensions_old_cat["ёнокъ"] = { decl="2nd", hard="hard", g="m", suffix=true }
-declensions_old_cat["-онокъ"] = declensions_old_cat["ёнокъ"]
-declensions_old_cat["-енокъ"] = declensions_old_cat["ёнокъ"]
+declensions_old_cat["онокъ"] = declensions_old_cat["ёнокъ"]
+declensions_old_cat["енокъ"] = declensions_old_cat["ёнокъ"]
+
+declensions_old["ёночекъ"] = {
+	["nom_sg"] = "ёночекъ",
+	["gen_sg"] = "ёночка",
+	["dat_sg"] = "ёночку",
+	["acc_sg"] = nil,
+	["ins_sg"] = "ёночкомъ",
+	["pre_sg"] = "ёночкѣ",
+	["nom_pl"] = "я́тки",
+	["gen_pl"] = "я́токъ",
+	["dat_pl"] = "я́ткамъ",
+	["acc_pl"] = nil,
+	["ins_pl"] = "я́тками",
+	["pre_pl"] = "я́ткахъ",
+}
+
+declensions_old["оночекъ"] = declensions_old["ёночекъ"]
+declensions_old["еночекъ"] = declensions_old["ёночекъ"]
+
+declensions_old_cat["ёночекъ"] = { decl="2nd", hard="hard", g="m", suffix=true }
+declensions_old_cat["оночекъ"] = declensions_old_cat["ёночекъ"]
+declensions_old_cat["еночекъ"] = declensions_old_cat["ёночекъ"]
 
 ----------------- Masculine soft -------------------
 
