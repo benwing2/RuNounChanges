@@ -39,16 +39,10 @@ TODO:
 
 1. Change {{temp|ru-decl-noun-pl}} and {{temp|ru-decl-noun-unc}} to use
    'manual' instead of '*' as the decl class.
-1a. Require stem to be specified instead of defaulting to page. [IMPLEMENTED
+2. Require stem to be specified instead of defaulting to page. [IMPLEMENTED
     IN GITHUB]
-1b. Nouns in -мя: Accent pattern 1 should actually be мя-1; accent pattern 3
-    should be -мя. [NEED TO CHECK ALL SUCH NOUNS AND FIX THEM UP]
-1c. Think about whether we need to unstress the "pre" part of nouns when we
-    unreduce them with a stressed epenthetic vowel (we implement this in
-	the branch adj-autodetect).
-2. Bug in -я nouns with bare specified; should not have -ь ending. Old templates did not add this ending when bare occurred. (PROBABLY SHOULD ALWAYS HAVE BARE
+3. Bug in -я nouns with bare specified; should not have -ь ending. Old templates did not add this ending when bare occurred. (PROBABLY SHOULD ALWAYS HAVE BARE
 BE BARE, NEVER ADD A NON-SYLLABIC ENDING. HAVE TRACKING CODE FOR THIS.)
-3. Genitive plural of -ёнокъ should be -атъ?
 4. Remove barepl, make pl= be 5th argument. [IMPLEMENTED IN GITHUB IN TWO
    DIFFERENT BRANCHES]
 5. (Add accent pattern for ь-stem numbers. Wikitiki handled that through
@@ -155,7 +149,7 @@ end
 local declensions_old = {}
 -- Category and type information corresponding to declensions: These may
 -- contain the following fields: 'singular', 'plural', 'decl', 'hard', 'g',
--- 'suffix', 'gensg', 'irregpl', 'cant_reduce', 'stem_suffix'.
+-- 'suffix', 'gensg', 'irregpl', 'cant_reduce', 'ignore_reduce', 'stem_suffix'.
 --
 -- 'singular' is used to construct a category of the form
 -- "Russian nominals SINGULAR". If omitted, a category is constructed of the
@@ -646,15 +640,18 @@ local function do_show(frame, old)
 
 		-- Loop over accent patterns in case more than one given.
 		for _, stress in ipairs(stress_arg) do
-			-- Loop over declension classes (we may have two of them, one for
-			-- singular and one for plural, in the case of a mixed declension
-			-- class of the form SGDECL/PLDECL).
 			args.suffixes = {}
 
+			local sgclass = sub_decl_classes[1][1]
 			local resolved_bare = bare
 			-- Handle (un)reducibles
-			if bare == "*" then
-				local sgclass = sub_decl_classes[1][1]
+			if bare == "*" and sgclass.ignore_reduce then
+				-- Zaliznyak treats all nouns in -ье and -ья as being
+				-- reducible. We handle this automatically and don't require
+				-- the user to specify this, but ignore it if so for
+				-- compatibility.
+				resolved_bare = nil
+			elseif bare == "*" then
 				if is_reducible(sgclass, old) then
 					resolved_bare = stem
 					stem = export.reduce_nom_sg_stem(stem, sgclass, "error")
@@ -666,7 +663,6 @@ local function do_show(frame, old)
 				end
 			elseif stem ~= bare then
 				-- FIXME: Tracking code eventually to remove
-				local sgclass = sub_decl_classes[1][1]
 				if is_reducible(sgclass, old) then
 					local autostem = export.reduce_nom_sg_stem(bare, sgclass)
 					if not autostem then
@@ -700,6 +696,9 @@ local function do_show(frame, old)
 			args.ustem = com.make_unstressed_once(stem)
 			args.upl = com.make_unstressed_once(args.pl)
 
+			-- Loop over declension classes (we may have two of them, one for
+			-- singular and one for plural, in the case of a mixed declension
+			-- class of the form SGDECL/PLDECL).
 			for _,decl_class_spec in ipairs(sub_decl_classes) do
 				-- We may resolve the user-specified declension class into a
 				-- more specific variant depending on the properties of the stem
@@ -1340,7 +1339,7 @@ end
 declensions_old_cat["ья"] = {
 	decl="1st", hard="soft", g="f",
 	stem_suffix="ь", gensg=true,
-	cant_reduce=true -- already has unreduced gen pl
+	ignore_reduce=true -- already has unreduced gen pl
 }
 
 --------------------------------------------------------------------------
@@ -1534,7 +1533,7 @@ detect_decl_old["ьё"] = detect_decl_old["ье"]
 declensions_old_cat["ье"] = {
 	decl="2nd", hard="soft", g="n",
 	stem_suffix="ь", gensg=true,
-	cant_reduce=true -- already has unreduced gen pl
+	ignore_reduce=true -- already has unreduced gen pl
 }
 declensions_old_cat["ьё"] = declensions_old_cat["ье"]
 
@@ -1574,7 +1573,7 @@ declensions_old["мя"] = {
 	["pre_pl"] = "мена́хъ",
 }
 
-declensions_old_cat["мя"] = { decl="3rd", hard="soft", g="n" }
+declensions_old_cat["мя"] = { decl="3rd", hard="soft", g="n", cant_reduce=true }
 
 declensions_old["мя-1"] = {
 	["nom_sg"] = "мя",
@@ -1591,7 +1590,7 @@ declensions_old["мя-1"] = {
 	["pre_pl"] = "мёнахъ",
 }
 
-declensions_old_cat["мя-1"] = { decl="3rd", hard="soft", g="n" }
+declensions_old_cat["мя-1"] = { decl="3rd", hard="soft", g="n", cant_reduce=true }
 
 --------------------------------------------------------------------------
 --                              Invariable                              --
