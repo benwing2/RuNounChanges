@@ -236,6 +236,8 @@ local stress_patterns = {}
 local stressed_gen_pl_patterns = {}
 -- Set of patterns with stressed prepositional singular.
 local stressed_pre_sg_patterns = {}
+-- Set of patterns with stressed dative singular.
+local stressed_dat_sg_patterns = {}
 -- List of all cases, excluding loc/par/voc.
 local decl_cases
 -- List of all cases, including loc/par/voc.
@@ -734,8 +736,7 @@ local function do_show(frame, old)
 					detectfuns[real_decl_class](stem, stress) or real_decl_class
 				assert(decls[real_decl_class])
 				tracking_code(stress, orig_decl_class, real_decl_class, args)
-				do_stress_pattern(stress_patterns[stress], args,
-					decls[real_decl_class], number)
+				do_stress_pattern(stress, args, decls[real_decl_class], number)
 			end
 
 			categorize(stress, decl_class, args)
@@ -1181,9 +1182,9 @@ end
 
 ----------------- Masculine hard -------------------
 
--- Normal hard-masculine declension, ending in a hard consonant
+-- Hard-masculine declension, ending in a hard consonant
 -- (ending in -ъ, old-style).
-declensions_old["ъ-normal"] = {
+declensions_old["ъ"] = {
 	["nom_sg"] = "ъ",
 	["gen_sg"] = "а́",
 	["dat_sg"] = "у́",
@@ -1191,7 +1192,9 @@ declensions_old["ъ-normal"] = {
 	["ins_sg"] = "о́мъ",
 	["pre_sg"] = "ѣ́",
 	["nom_pl"] = "ы́",
-	["gen_pl"] = "о́въ",
+	["gen_pl"] = function(stem, stress)
+		return sibilant_suffixes[ulower(usub(stem, -1))] and "е́й" or "о́въ"
+	end,
 	["alt_gen_pl"] = "ъ",
 	["dat_pl"] = "а́мъ",
 	["acc_pl"] = nil,
@@ -1199,20 +1202,6 @@ declensions_old["ъ-normal"] = {
 	["pre_pl"] = "а́хъ",
 }
 
--- Hard-masculine declension ending in a sibilant (plus -ъ, old-style).
--- Has genitive plural in -е́й.
-declensions_old["ъ-sib"] = mw.clone(declensions_old["ъ-normal"])
-declensions_old["ъ-sib"]["gen_pl"] = "е́й"
-
--- User-facing declension type "" (old-style "ъ");
--- mapped to "-normal" (old-style "ъ-normal") or "-sib" (old-style "ъ-sib")
-detect_decl_old["ъ"] = function(stem, stress)
-	if sibilant_suffixes[ulower(usub(stem, -1))] then
-		return "ъ-sib"
-	else
-		return "ъ-normal"
-	end
-end
 declensions_old_cat["ъ"] = { decl="2nd", hard="hard", g="m" }
 
 -- Normal mapping of old ъ would be "" (blank), but we set up "#" as an alias
@@ -1224,37 +1213,23 @@ declensions_cat["#"] = declensions_old_cat["ъ"]
 
 ----------------- Masculine hard, irregular plural -------------------
 
--- Normal hard-masculine declension, ending in a hard consonant
+-- Hard-masculine declension, ending in a hard consonant
 -- (ending in -ъ, old-style), with irreg nom pl -а.
-declensions_old["ъ-а-normal"] = mw.clone(declensions_old["ъ-normal"])
-declensions_old["ъ-а-normal"]["nom_pl"] = "а́"
+declensions_old["ъ-а"] = mw.clone(declensions_old["ъ"])
+declensions_old["ъ-а"]["nom_pl"] = "а́"
 
--- Hard-masculine declension ending in a sibilant (plus -ъ, old-style),
--- with irreg nom pl -а. Has genitive plural in -е́й.
-declensions_old["ъ-а-sib"] = mw.clone(declensions_old["ъ-а-normal"])
-declensions_old["ъ-а-sib"]["gen_pl"] = "е́й"
-
--- User-facing declension type "-а" (old-style "ъ-а");
--- mapped to "ъ-а-normal" or "ъ-а-sib"
-detect_decl_old["ъ-а"] = function(stem, stress)
-	if sibilant_suffixes[ulower(usub(stem, -1))] then
-		return "ъ-а-sib"
-	else
-		return "ъ-а-normal"
-	end
-end
 declensions_old_cat["ъ-а"] = { decl="2nd", hard="hard", g="m", irregpl=true }
 declensions_cat["-а"] = {
 	singular = "ending in a consonant",
-	decl="2nd", hard="hard", g="m", irregpl=true,
+	decl="2nd", hard="hard", g="m", irregpl=true
 }
 detect_decl["#-а"] = old_detect_decl_to_new(detect_decl_old["ъ-а"])
 declensions_cat["#-а"] = declensions_cat["-а"]
 
--- Normal hard-masculine declension, ending in a hard consonant
+-- Hard-masculine declension, ending in a hard consonant
 -- (ending in -ъ, old-style), with irreg soft pl -ья.
 -- Differs from the normal declension throughout the plural.
-declensions_old["ъ-ья-normal"] = {
+declensions_old["ъ-ья"] = {
 	["nom_sg"] = "ъ",
 	["gen_sg"] = "а́",
 	["dat_sg"] = "у́",
@@ -1262,7 +1237,9 @@ declensions_old["ъ-ья-normal"] = {
 	["ins_sg"] = "о́мъ",
 	["pre_sg"] = "ѣ́",
 	["nom_pl"] = "ья́",
-	["gen_pl"] = "ьёвъ",
+	["gen_pl"] = function(stem, stress)
+		return sibilant_suffixes[ulower(usub(stem, -1))] and "е́й" or "ьёвъ"
+	end,
 	["alt_gen_pl"] = "ь",
 	["dat_pl"] = "ья́мъ",
 	["acc_pl"] = nil,
@@ -1270,20 +1247,6 @@ declensions_old["ъ-ья-normal"] = {
 	["pre_pl"] = "ья́хъ",
 }
 
--- Same as previous, ending in a sibilant (plus -ъ, old-style).
--- Has genitive plural in -е́й.
-declensions_old["ъ-ья-sib"] = mw.clone(declensions_old["ъ-ья-normal"])
-declensions_old["ъ-ья-sib"]["gen_pl"] = "е́й"
-
--- User-facing declension type "-ья" (old-style "ъ-ья");
--- mapped to "ъ-ья-normal" or "ъ-ья-sib"
-detect_decl_old["ъ-ья"] = function(stem, stress)
-	if sibilant_suffixes[ulower(usub(stem, -1))] then
-		return "ъ-ья-sib"
-	else
-		return "ъ-ья-normal"
-	end
-end
 declensions_old_cat["ъ-ья"] = { decl="2nd", hard="hard", g="m", irregpl=true }
 declensions_cat["-ья"] = {
 	singular = "ending in a consonant",
@@ -1384,14 +1347,16 @@ declensions_old_cat["ь-я"] = { decl="2nd", hard="soft", g="m", irregpl=true }
 
 ----------------- Masculine palatal -------------------
 
--- Normal masculine declension in palatal -й
-declensions_old["й-normal"] = {
+-- Masculine declension in palatal -й
+declensions_old["й"] = {
 	["nom_sg"] = "й",
 	["gen_sg"] = "я́",
 	["dat_sg"] = "ю́",
 	["acc_sg"] = nil,
 	["ins_sg"] = "ёмъ",
-	["pre_sg"] = "ѣ́",
+	["pre_sg"] = function(stem, stress)
+		return rlfind(stem, "[іи]́?$") and "и́" or "ѣ́"
+	end,
 	["nom_pl"] = "и́",
 	["gen_pl"] = "ёвъ",
 	["alt_gen_pl"] = "й",
@@ -1401,37 +1366,11 @@ declensions_old["й-normal"] = {
 	["pre_pl"] = "я́хъ",
 }
 
--- Masculine declension in -ий (old -ій):
--- differs from normal in prep sg
-declensions_old["(і)й"] = mw.clone(declensions_old["й-normal"])
-declensions_old["(і)й"]["pre_sg"] = "и́"
-
--- User-facing declension type "й"; mapped to "й-normal" or "(і)й"
-detect_decl_old["й"] = function(stem, stress)
-	if rlfind(stem, "[іи]́?$") then
-		return "(і)й"
-	else
-		return "й-normal"
-	end
-end
 declensions_old_cat["й"] = { decl="2nd", hard="palatal", g="m" }
 
--- Normal masculine declension in -й with irreg nom pl -я
-declensions_old["й-я-normal"] = mw.clone(declensions_old["й-normal"])
-declensions_old["й-я-normal"]["nom_pl"] = "я́"
+declensions_old["й-я"] = mw.clone(declensions_old["й"])
+declensions_old["й-я"]["nom_pl"] = "я́"
 
--- Masculine declension in -ий (old -ій) with irreg nom pl -я
-declensions_old["(і)й-я"] = mw.clone(declensions_old["й-я-normal"])
-declensions_old["(і)й-я"]["nom_pl"] = "я́"
-
--- User-facing declension type "й-я"; mapped to "й-я-normal" or "(і)й-я"
-detect_decl_old["й-я"] = function(stem, stress)
-	if rlfind(stem, "[іи]́?$") then
-		return "(і)й-я"
-	else
-		return "й-я-normal"
-	end
-end
 declensions_old_cat["й-я"] = { decl="2nd", hard="palatal", g="m", irregpl=true }
 
 --------------------------------------------------------------------------
@@ -1440,8 +1379,8 @@ declensions_old_cat["й-я"] = { decl="2nd", hard="palatal", g="m", irregpl=true
 
 ----------------- Feminine hard -------------------
 
--- Normal hard-feminine declension in -а
-declensions_old["а-normal"] = {
+-- Hard-feminine declension in -а
+declensions_old["а"] = {
 	["nom_sg"] = "а́",
 	["gen_sg"] = "ы́",
 	["dat_sg"] = "ѣ́",
@@ -1449,7 +1388,9 @@ declensions_old["а-normal"] = {
 	["ins_sg"] = {"о́й", "о́ю"},
 	["pre_sg"] = "ѣ́",
 	["nom_pl"] = "ы́",
-	["gen_pl"] = "ъ",
+	["gen_pl"] = function(stem, stress)
+		return sibilant_suffixes[ulower(usub(stem, -1))] and stressed_gen_pl_patterns[stress] and "е́й" or "ъ"
+	end,
 	["alt_gen_pl"] = "е́й",
 	["dat_pl"] = "а́мъ",
 	["acc_pl"] = nil,
@@ -1457,32 +1398,22 @@ declensions_old["а-normal"] = {
 	["pre_pl"] = "а́хъ",
 }
 
--- Special case: Hard-feminine declension in sibilant ending with 
--- stressed genitive plural. Has special gen pl -е́й.
-declensions_old["а-sib-2"] = mw.clone(declensions_old["а-normal"])
-declensions_old["а-sib-2"]["gen_pl"] = "е́й"
-
--- User-facing declension type "а"; mapped to "а-normal" or "а-sib-2"
-detect_decl_old["а"] = function(stem, stress)
-	if sibilant_suffixes[ulower(usub(stem, -1))] and stressed_gen_pl_patterns[stress] then
-		return "а-sib-2"
-	else
-		return "а-normal"
-	end
-end
-
 declensions_old_cat["а"] = { decl="1st", hard="hard", g="f" }
 
 ----------------- Feminine soft -------------------
 
--- Normal soft-feminine declension in -я
-declensions_old["я-normal"] = {
+-- Soft-feminine declension in -я
+declensions_old["я"] = {
 	["nom_sg"] = "я́",
 	["gen_sg"] = "и́",
-	["dat_sg"] = "ѣ́",
+	["dat_sg"] = function(stem, stress)
+		return rlfind(stem, "[іи]́?$") and not stressed_dat_sg_patterns[stress] and "и" or "ѣ́"
+	end,
 	["acc_sg"] = "ю́",
 	["ins_sg"] = {"ёй", "ёю"},
-	["pre_sg"] = "ѣ́",
+	["pre_sg"] = function(stem, stress)
+		return rlfind(stem, "[іи]́?$") and not stressed_pre_sg_patterns[stress] and "и" or "ѣ́"
+	end,
 	["nom_pl"] = "и́",
 	["gen_pl"] = "й",
 	["alt_gen_pl"] = "е́й",
@@ -1492,26 +1423,11 @@ declensions_old["я-normal"] = {
 	["pre_pl"] = "я́хъ",
 }
 
--- Soft-feminine declension in -ия (old -ія):
--- differs from normal in dat sg and prep sg
-declensions_old["(і)я"] = mw.clone(declensions_old["я-normal"])
-declensions_old["(і)я"]["dat_sg"] = "и́"
-declensions_old["(і)я"]["pre_sg"] = "и́"
-
--- User-facing declension type "я"; mapped to "я-normal" or "(і)я"
-detect_decl_old["я"] = function(stem, stress)
-	if rlfind(stem, "[іи]́?$") then
-		return "(і)я"
-	else
-		return "я-normal"
-	end
-end
-
 declensions_old_cat["я"] = { decl="1st", hard="soft", g="f" }
 
--- Soft-feminine declension in -ья, with unstressed genitive plural -ий.
+-- Soft-feminine declension in -ья.
 -- Almost like ь + -я endings except for genitive plural.
-declensions_old["ья-1"] = {
+declensions_old["ья"] = {
 	["nom_sg"] = "ья́",
 	["gen_sg"] = "ьи́",
 	["dat_sg"] = "ьѣ́",
@@ -1519,27 +1435,16 @@ declensions_old["ья-1"] = {
 	["ins_sg"] = {"ьёй", "ьёю"},
 	["pre_sg"] = "ьѣ́",
 	["nom_pl"] = "ьи́",
-	["gen_pl"] = "ий",
+	["gen_pl"] = function(stem, stress)
+		-- circumflex accent is a signal that forces stress, particularly
+		-- in accent pattern 4.
+		return (stressed_gen_pl_patterns[stress] or stress == "4" or stress == "4*") and "е̂й" or "ий"
+	end,
 	["dat_pl"] = "ья́мъ",
 	["acc_pl"] = nil,
 	["ins_pl"] = "ья́ми",
 	["pre_pl"] = "ья́хъ",
 }
-
--- Soft-feminine declension in -ья, with stressed genitive plural -е́й.
-declensions_old["ья-2"] = mw.clone(declensions_old["ья-1"])
--- circumflex accent is a signal that forces stress, particularly
--- in accent pattern 4.
-declensions_old["ья-2"]["gen_pl"] = "е̂й"
-
--- User-facing declension type "ья"
-detect_decl_old["ья"] = function(stem, stress)
-	if stressed_gen_pl_patterns[stress] or stress == "4" or stress == "4*" then
-		return "ья-2"
-	else
-		return "ья-1"
-	end
-end
 
 declensions_old_cat["ья"] = {
 	decl="1st", hard="soft", g="f",
@@ -1579,7 +1484,7 @@ declensions_old_cat["о-и"] = { decl="2nd", hard="hard", g="n", irregpl=true }
 declensions_old["о-ы"] = declensions_old["о-и"]
 declensions_old_cat["о-ы"] = declensions_old_cat["о-и"]
 
--- Normal hard-neuter declension in -о with irreg soft pl -ья;
+-- Hard-neuter declension in -о with irreg soft pl -ья;
 -- differs throughout the plural from normal -о.
 declensions_old["о-ья-normal"] = {
 	["nom_sg"] = "о́",
@@ -1589,7 +1494,9 @@ declensions_old["о-ья-normal"] = {
 	["ins_sg"] = "о́мъ",
 	["pre_sg"] = "ѣ́",
 	["nom_pl"] = "ья́",
-	["gen_pl"] = "ьёвъ",
+	["gen_pl"] = function(stem, stress)
+		return sibilant_suffixes[ulower(usub(stem, -1))] and "е́й" or "ьёвъ"
+	end,
 	["alt_gen_pl"] = "ь",
 	["dat_pl"] = "ья́мъ",
 	["acc_pl"] = nil,
@@ -1597,33 +1504,24 @@ declensions_old["о-ья-normal"] = {
 	["pre_pl"] = "ья́хъ",
 }
 
--- Same as previous, stem ending in a sibilant.
--- Has genitive plural in -е́й. (FIXME, do any such words occur?)
-declensions_old["о-ья-sib"] = mw.clone(declensions_old["о-ья-normal"])
-declensions_old["о-ья-sib"]["gen_pl"] = "е́й"
-
--- User-facing declension type "о-ья"; mapped to "о-ья-normal" or "о-ья-sib"
-detect_decl_old["о-ья"] = function(stem, stress)
-	if sibilant_suffixes[ulower(usub(stem, -1))] then
-		return "о-ья-sib"
-	else
-		return "о-ья-normal"
-	end
-end
 declensions_old_cat["о-ья"] = { decl="2nd", hard="hard", g="n", irregpl=true }
 
 ----------------- Neuter soft -------------------
 
--- Normal soft-neuter declension in -е (stressed -ё)
-declensions_old["е-normal"] = {
+-- Soft-neuter declension in -е (stressed -ё)
+declensions_old["е"] = {
 	["nom_sg"] = "ё",
 	["gen_sg"] = "я́",
 	["dat_sg"] = "ю́",
 	["acc_sg"] = "ё",
 	["ins_sg"] = "ёмъ",
-	["pre_sg"] = "ѣ́",
+	["pre_sg"] = function(stem, stress)
+		return rlfind(stem, "[іи]́?$") and not stressed_pre_sg_patterns[stress] and "и" or "ѣ́"
+	end,
 	["nom_pl"] = "я́",
-	["gen_pl"] = "е́й",
+	["gen_pl"] = function(stem, stress)
+		return rlfind(stem, "[іи]́?$") and "й" or "е́й"
+	end,
 	["alt_gen_pl"] = "е́въ",
 	["dat_pl"] = "я́мъ",
 	["acc_pl"] = nil,
@@ -1631,29 +1529,6 @@ declensions_old["е-normal"] = {
 	["pre_pl"] = "я́хъ",
 }
 
--- Soft-neuter declension in unstressed -ие (old -іе):
--- differs from normal in prep sg and gen pl
-declensions_old["(і)е-1"] = mw.clone(declensions_old["е-normal"])
-declensions_old["(і)е-1"]["pre_sg"] = "и́"
-declensions_old["(і)е-1"]["gen_pl"] = "й"
-
--- Soft-neuter declension in stressed -иё (old -іё)
--- differs from normal in gen pl only
-declensions_old["(і)е-2"] = mw.clone(declensions_old["е-normal"])
-declensions_old["(і)е-2"]["gen_pl"] = "й"
-
--- User-facing declension type "е"; mapped to "е-normal", "(і)е-1" or "(і)е-2"
-detect_decl_old["е"] = function(stem, stress)
-	if rlfind(stem, "[іи]́?$") then
-		if stressed_pre_sg_patterns[stress] then
-			return "(і)е-2"
-		else
-			return "(і)е-1"
-		end
-	else
-		return "е-normal"
-	end
-end
 declensions_old_cat["е"] = {
 	singular = function(suffix)
 		if suffix == "ё" then
@@ -1669,17 +1544,23 @@ declensions_old_cat["е"] = {
 detect_decl_old["ё"] = detect_decl_old["е"]
 declensions_old_cat["ё"] = declensions_old_cat["е"]
 
--- Rare soft-neuter declension in stressed -е́, normal variation
--- (e.g. муде́).
-declensions_old["е́-normal"] = {
+-- Rare soft-neuter declension in stressed -е́ (e.g. муде́, бытие́)
+declensions_old["е́"] = {
 	["nom_sg"] = "е́",
 	["gen_sg"] = "я́",
 	["dat_sg"] = "ю́",
 	["acc_sg"] = "е́",
 	["ins_sg"] = "е́мъ",
-	["pre_sg"] = "ѣ́",
+	["pre_sg"] = function(stem, stress)
+		-- FIXME!!! Are we sure about this condition? This is what was
+		-- found in the old template, but the related -е declension has
+		-- -ие prep sg ending -(и)и only when *not* stressed.
+		return rlfind(stem, "[іи]́?$") and "и́" or "ѣ́"
+	end,
 	["nom_pl"] = "я́",
-	["gen_pl"] = "е́й",
+	["gen_pl"] = function(stem, stress)
+		return rlfind(stem, "[іи]́?$") and "й" or "е́й"
+	end,
 	["alt_gen_pl"] = "ёвъ",
 	["dat_pl"] = "я́мъ",
 	["acc_pl"] = nil,
@@ -1687,27 +1568,13 @@ declensions_old["е́-normal"] = {
 	["pre_pl"] = "я́хъ",
 }
 
--- Rare soft-neuter declension in -ие́ (old -іе́), cf. бытие́
-declensions_old["(і)е́"] = mw.clone(declensions_old["е́-normal"])
-declensions_old["(і)е́"]["pre_sg"] = "и́"
-declensions_old["(і)е́"]["gen_pl"] = "й"
-
--- User-facing declension type "е́"
-detect_decl_old["е́"] = function(stem, stress)
-	if rlfind(stem, "[іи]́?$") then
-		return "(і)е́"
-	else
-		return "е́-normal"
-	end
-end
 declensions_old_cat["е́"] = {
 	singular = "ending in stressed -е",
 	decl="2nd", hard="soft", g="n", gensg=true
 }
 
--- Soft-neuter declension in unstressed -ье (stressed -ьё),
--- with unstressed genitive plural -ий.
-declensions_old["ье-1"] = {
+-- Soft-neuter declension in unstressed -ье (stressed -ьё).
+declensions_old["ье"] = {
 	["nom_sg"] = "ьё",
 	["gen_sg"] = "ья́",
 	["dat_sg"] = "ью́",
@@ -1715,7 +1582,9 @@ declensions_old["ье-1"] = {
 	["ins_sg"] = "ьёмъ",
 	["pre_sg"] = "ьѣ́",
 	["nom_pl"] = "ья́",
-	["gen_pl"] = "ий",
+	["gen_pl"] = function(stem, stress)
+		return stressed_gen_pl_patterns[stress] and "е́й" or "ий"
+	end,
 	["alt_gen_pl"] = "ьёвъ",
 	["dat_pl"] = "ья́мъ",
 	["acc_pl"] = nil,
@@ -1723,21 +1592,6 @@ declensions_old["ье-1"] = {
 	["pre_pl"] = "ья́хъ",
 }
 
--- Soft-neuter declension in unstressed -ье (stressed -ьё),
--- with stressed genitive plural -е́й.
-declensions_old["ье-2"] = mw.clone(declensions_old["ье-1"])
-declensions_old["ье-2"]["gen_pl"] = "е́й"
-
--- User-facing declension type "ье"
-detect_decl_old["ье"] = function(stem, stress)
-	if stressed_gen_pl_patterns[stress] then
-		return "ье-2"
-	else
-		return "ье-1"
-	end
-end
-
--- User-facing declension type "ьё" = "ье"
 detect_decl_old["ьё"] = detect_decl_old["ье"]
 
 declensions_old_cat["ье"] = {
@@ -1827,18 +1681,25 @@ declensions_old_cat["*"] = { decl="invariable", hard="none", g="none" }
 --                      Populate new from old                           --
 --------------------------------------------------------------------------
 
+local function old_decl_entry_to_new(v)
+	if type(v) == "table" then
+		local new_entry = {}
+		for _, i in ipairs(v) do
+			table.insert(new_entry, old_decl_entry_to_new(i))
+		end
+		return new_entry
+	elseif type(v) == "function" then
+		return function(stem, suffix)
+			return old_decl_entry_to_new(v(stem, suffix))
+		end
+	else
+		return old_to_new(v)
+	end
+
 local function old_decl_to_new(odecl)
 	local ndecl = {}
 	for k, v in pairs(odecl) do
-		if type(v) == "table" then
-			local new_entry = {}
-			for _, i in ipairs(v) do
-				table.insert(new_entry, old_to_new(i))
-			end
-			ndecl[k] = new_entry
-		else
-			ndecl[k] = old_to_new(v)
-		end
+		ndecl[k] = old_decl_entry_to_new(v)
 	end
 	return ndecl
 end
@@ -2083,7 +1944,7 @@ end
 -- Generate the form(s) and suffix(es) for CASE according to the declension
 -- table DECL, using the attachment function FUN (one of attach_stressed()
 -- or attach_unstressed()).
-local function gen_form(args, decl, case, fun)
+local function gen_form(args, decl, case, stress, fun)
 	if not args.forms[case] then
 		args.forms[case] = {}
 	end
@@ -2091,6 +1952,9 @@ local function gen_form(args, decl, case, fun)
 		args.suffixes[case] = {}
 	end
 	local suf = decl[case]
+	if type(suf) == "function" then
+		suf = suf(args.stem, stress)
+	end
 	if case == "gen_pl" and args.alt_gen_pl then
 		suf = decl.alt_gen_pl
 		if not suf then
@@ -2111,11 +1975,12 @@ local attachers = {
 	["-"] = attach_unstressed,
 }
 
-function do_stress_pattern(stress_pattern, args, decl, number)
+function do_stress_pattern(stress, args, decl, number)
 	for case in pairs(decl_cases) do
 		if not number or (number == "sg" and rfind(case, "_sg$")) or
 			(number == "pl" and rfind(case, "_pl$")) then
-			gen_form(args, decl, case, attachers[stress_pattern[case]])
+			gen_form(args, decl, case, stress,
+				attachers[stress_patterns[stress][case]])
 		end
 	end
 end
@@ -2161,8 +2026,8 @@ stress_patterns["6*"] = {
 }
 
 stressed_gen_pl_patterns = ut.list_to_set({"2", "3", "5", "6", "6*"})
-
 stressed_pre_sg_patterns = ut.list_to_set({"2", "4", "4*", "6", "6*"})
+stressed_dat_sg_patterns = stressed_pre_sg_patterns
 
 local after_titles = {
 	["a"] = " (animate)",
