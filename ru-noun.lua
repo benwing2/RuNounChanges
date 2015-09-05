@@ -400,7 +400,7 @@ local function categorize(stress, decl_class, args)
 			"hard-stem"
 		-- NOTE: There are 8 Zaliznyak-style stem types and 3 genders, but
 		-- we don't create a category for masculine-type 3rd-declension
-		-- nominals (there is such a noun, путь, but it behaves like a
+		-- nominals (there is such a noun, путь, but it mostly behaves like a
 		-- feminine noun), so there are 23.
 		insert_cat(stem_type .. " " .. gender_to_full[sgdc.g] .. "-type ~")
 		-- NOTE: Here we are creating categories for the combination of
@@ -1755,7 +1755,7 @@ local function combine_stem_and_suffix(stem, suf, rules, old)
 		local conv = rules[first]
 		if conv then
 			local ending = usub(suf, 2)
-			if old and conv == "и" and mw.ustring.find(ending, "^́?[аеёиійоуэюяѣ]") then
+			if old and conv == "и" and mw.ustring.find(ending, "^́?[" .. com.vowel .. "]") then
 				conv = "і"
 			end
 			suf = conv .. ending
