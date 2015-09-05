@@ -40,9 +40,11 @@ TODO:
 1. Change {{temp|ru-decl-noun-pl}} and {{temp|ru-decl-noun-unc}} to use
    'manual' instead of '*' as the decl class.
 2. Require stem to be specified instead of defaulting to page. [IMPLEMENTED
-    IN GITHUB]
-3. Bug in -я nouns with bare specified; should not have -ь ending. Old templates did not add this ending when bare occurred. (PROBABLY SHOULD ALWAYS HAVE BARE
-BE BARE, NEVER ADD A NON-SYLLABIC ENDING. HAVE TRACKING CODE FOR THIS.)
+   IN GITHUB]
+3. Bug in -я nouns with bare specified; should not have -ь ending. Old
+   templates did not add this ending when bare occurred. [SHOULD ALWAYS
+   HAVE BARE BE BARE, NEVER ADD A NON-SYLLABIC ENDING. IMPLEMENTED IN GITHUB
+   AS TRACKING CODE, NOT YET TURNED ON FOR REAL.]
 4. Remove barepl, make pl= be 5th argument. [IMPLEMENTED IN GITHUB IN TWO
    DIFFERENT BRANCHES]
 5. (Add accent pattern for ь-stem numbers. Wikitiki handled that through
@@ -50,25 +52,27 @@ BE BARE, NEVER ADD A NON-SYLLABIC ENDING. HAVE TRACKING CODE FOR THIS.)
    nom_sg in multi-syllabic words but no.)
 6. Eliminate complicated defaulting code for second and further stem sets.
    Should simply default to same values as the first stem set does, without
-   the first stem set serving as defaults for the remainder.
-   [IMPLEMENTED IN GITHUB, EXCEPT CHANGED SO LATER STEM SET STEMS DEFAULT TO
-   PREVIOUS ONES]
+   the first stem set serving as defaults for the remainder, except that
+   the stem itself can default to the previous stem set. [IMPLEMENTED IN
+   GITHUB. PREVIOUSLY DIDN'T ALLOW STEM TO BE DEFAULTED AND CHANGED SOME
+   NOUNS TO THAT EFFECT; UNDO THEM.]
 7. Fixes for stem-multi-syllabic words with ending stress in gen pl but
    non-syllabic gen pl, with stress transferring onto final syllable even if
    stem is otherwise stressed on an earlier syllable (e.g. голова́ in
    accent pattern 6, nom pl го́ловы, gen pl голо́в). Currently these are handled
    by overriding "bare" but I want to make bare predictable mostly, just
-   specifying that the noun is reducible should be enough. (IMPLEMENTED AS
-   TRACKING CODE, NOT YET TURNED ON FOR REAL)
-8. [If decl omitted, it should default to 1 or 2 depending on whether accent
-   is on stem or ending, not always 1. It should also recognize plural in
-   the auto-detection code when the gender is set. This can be used e.g. in
-   class 4 or 6 to avoid having to distort the accent in the singular.]
-   -- AUTO-DETECTING ACCENT CLASS 1 OR 2 IMPLEMENTED IN GITHUB; RECOGNIZING
-   -- PLURAL IMPLEMENTED BUT COMMENTED OUT, NOT SURE IT'S A GOOD IDEA.
-9. Possibly, issue an error unless allow_no_accent is given (perhaps it
-   should be "given" using a * at the beginning of the stem).
-10. [Make it so that the plural-specifying decl classes -а, -ья, and new -ы, -и
+   specifying that the noun is reducible should be enough. [IMPLEMENTED AS
+   TRACKING CODE, NOT YET TURNED ON FOR REAL]
+8. If decl omitted, it should default to 1 or 2 depending on whether accent
+   is on stem or ending, not always 1. [IMPLEMENTED IN GITHUB]
+9. [Should recognize plural in the auto-detection code when the gender is set.
+   This can be used e.g. in class 4 or 6 to avoid having to distort the accent
+   in the singular.] [RECOGNIZING PLURAL IMPLEMENTED BUT COMMENTED OUT, NOT
+   SURE IT'S A GOOD IDEA.]
+10. Issue an error unless allow_no_accent is given (using a * at the beginning
+   of the stem). [IMPLEMENTED IN GITHUB; AT LEAST ONE WIKTIONARY ENTRY WILL
+   NEED TO HAVE THE * ADDED]
+11. Make it so that the plural-specifying decl classes -а, -ья, and new -ы, -и
    still auto-detect the class and convert the resulting auto-detected class
    to one with the plural variant. It's useful then to have explicit names for
    the plural-variant classes -а, -ья. I propose c-а, c-ья, which are aliases;
@@ -85,15 +89,21 @@ BE BARE, NEVER ADD A NON-SYLLABIC ENDING. HAVE TRACKING CODE FOR THIS.)
    о           о           о-ья         о-ы        о-и
    е           е           *            *          *
    ь-f         *           *            *          ь-f
-] - IMPLEMENTED, NEED TO TEST
-11. Add ability to specify manual translation. (IMPLEMENTED IN GITHUB but
-   based off of significantly older version of module)
-12. Support adjective declensions. Autodetection should happen by putting +
+  [IMPLEMENTED, NEED TO TEST]
+12. Add ability to specify manual translation. [IMPLEMENTED IN GITHUB FOR
+   NOUNS, NOT YET FOR ADJECTIVES, NOT TESTED, ALMOST CERTAINLY HAS ERRORS]
+13. Support adjective declensions. Autodetection should happen by putting +
    in decl field to indicate it's an adjective. Adjective decl types should
    begin with a +. (Formerly a * but currently that stands for "invariable".)
    [IMPLEMENTED IN GITHUB, NOT TESTED]
-13. Support multiple words. [IMPLEMENTED IN GITHUB, NOT TESTED]
-14. Eventually: Even with decl type explicitly given, the full stem with
+14. Support multiple words. [IMPLEMENTED IN GITHUB, NOT TESTED]
+15. [Eliminate - as an alias for blank signifying the consonant declension;
+    can use c if necessary.] -- Rethink using c for the consonant declension,
+	in case we want to allow c for accent class c/3 and have the code
+	auto-recognize stress pattern used in the declension field.
+16. Implement (1) as an alias for certain irregular plurals, for
+    compatibility with Zaliznyak.
+17. Eventually: Even with decl type explicitly given, the full stem with
     ending should be included.
 
 ]=]--
