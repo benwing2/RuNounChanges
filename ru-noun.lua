@@ -68,7 +68,8 @@ TODO:
 9. [Should recognize plural in the auto-detection code when the gender is set.
    This can be used e.g. in class 4 or 6 to avoid having to distort the accent
    in the singular.] [RECOGNIZING PLURAL IMPLEMENTED BUT COMMENTED OUT, NOT
-   SURE IT'S A GOOD IDEA.]
+   SURE IT'S A GOOD IDEA.] [NOTE: This is necessary for full compatibility
+   with ru-decl-noun-z; we should look how Vitalik's module does things]
 10. Issue an error unless allow_no_accent is given (using a * at the beginning
    of the stem). [IMPLEMENTED IN GITHUB; AT LEAST ONE WIKTIONARY ENTRY WILL
    NEED TO HAVE THE * ADDED]
