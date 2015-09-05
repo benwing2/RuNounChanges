@@ -655,10 +655,10 @@ local function do_show(frame, old)
 			-- Handle (un)reducibles
 			if bare == "*" then
 				local sgclass = sub_decl_classes[1][1]
-				if is_reducible(stem, sgclass, old) then
+				if is_reducible(sgclass, old) then
 					resolved_bare = stem
 					stem = export.reduce_nom_sg_stem(stem, sgclass, "error")
-				elseif is_unreducible(stem, sgclass, old) then
+				elseif is_unreducible(sgclass, old) then
 					resolved_bare = export.unreduce_nom_sg_stem(stem, sgclass,
 						stress, old, "error")
 				else
@@ -667,7 +667,7 @@ local function do_show(frame, old)
 			elseif stem ~= bare then
 				-- FIXME: Tracking code eventually to remove
 				local sgclass = sub_decl_classes[1][1]
-				if is_reducible(stem, sgclass, old) then
+				if is_reducible(sgclass, old) then
 					local autostem = export.reduce_nom_sg_stem(bare, sgclass)
 					if not autostem then
 						track("error-reducible")
@@ -678,7 +678,7 @@ local function do_show(frame, old)
 					else
 						track("unpredictable-reducible")
 					end
-				elseif is_unreducible(stem, sgclass, old) then
+				elseif is_unreducible(sgclass, old) then
 					local autobare = export.unreduce_nom_sg_stem(stem, sgclass,
 						stress, old)
 					if not autobare then
@@ -935,7 +935,7 @@ function detect_stem_type(stem, decl)
 	return stem, "-"
 end
 
-function is_reducible(stem, decl, old)
+function is_reducible(decl, old)
 	local decl_cats = old and declensions_old_cat or declensions_cat
 	local dc = decl_cats[decl]
 	if dc.suffix or dc.cant_reduce then return false end
@@ -956,7 +956,7 @@ function export.reduce_nom_sg_stem(stem, decl, can_err)
 	return ret
 end
 
-function is_unreducible(stem, decl, old)
+function is_unreducible(decl, old)
 	local decl_cats = old and declensions_old_cat or declensions_cat
 	local dc = decl_cats[decl]
 	if dc.suffix or dc.cant_reduce then return false end
