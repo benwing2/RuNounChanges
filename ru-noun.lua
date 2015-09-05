@@ -779,8 +779,107 @@ local function do_show_multi(frame)
 	return do_show_1(args, per_word_info)
 end
 
+local function zaliznyak_to_our_stress_pattern = {
+	["a"] = "1",
+	["b"] = "2",
+	["c"] = "3",
+	["d"] = "4",
+	["d'"] = "4*",
+	["e"] = "5",
+	["f"] = "6",
+	["f'"] = "6*",
+}
+
+local function do_show_z(frame)
+	local args = clone_args(frame)
+
+	local stem = args[1]
+	local stress = args[2]
+	local specific = args[4] or ""
+	local decl = ""
+	local bare
+
+	-- Parse gender/animacy spec
+	local gender, anim = rmatch(args[3], "^([mfn])-([a-z]+)")
+	if not gender then
+		error("Unrecognized gender/anim spec " .. args[3])
+	end
+	if anim ~= "an" and anim ~= "in" then anim = "both" end
+	args.a = anim
+
+	-- Convert stress pattern spec
+	if stress == "b'" or stress == "f''" then
+		if rmatch(stem, "ь$") and gender == "f" then
+			if stress == "f''" then
+				stress = "f'"
+				if not args.ins_sg then
+					args.ins_sg = stem .. "ю"
+				end
+			else
+				stress = "b"
+			end
+		else
+			error("Stress patterns b' and f'' can only be used with feminine nouns ending in -ь")
+		end
+	end
+	stress = zaliznyak_to_our_stress_pattern[stress] or
+		error("Unrecognized stress pattern " .. stress)
+
+	-- Parse specific
+	if rfind(specific, "%*") then
+		bare = "*"
+	end
+	if rfind(specific, "%(1%)") then
+		decl = decl .. "(1)"
+	end
+	if rfind(specific, "%(2%)") then
+		decl = decl .. "(2)"
+	end
+	if rfind(specific, "ё") then
+		-- This comes directly from Vitalik's module, line 650
+		-- WARNING: There may be edge cases where things aren't quite the
+		-- same although I can't think of any.
+		stem = rsub(stem, "е́?([^е]*)$", "ё%1")
+	end
+
+	-- Detect -ин, per Vitalik's module
+	if rfind(stem, "[ая]нин$") and anim == "an" and com.make_unstressed_once(stem) ~= "семьянин" then
+		stem = rsub(stem, "ин$", "")
+		decl = "ин" .. decl
+	end
+
+	-- Handle overrides
+	args.pre_sg = args.prp_sg
+	args.pre_pl = args.prp_pl
+	args.notes = args.note
+	if args.par then
+		args.par = "+"
+	end
+	if args.loc then
+		if args.loc == "в" then
+			args.loc = "в +"
+		elseif args.loc == "на" then
+			args.loc = "на +"
+		else
+			args.loc = "в +,на +"
+		end
+	end
+
+	local stem_set = {}
+	table.insert(stem_set, stress)
+	table.insert(stem_set, stem)
+	table.insert(stem_set, decl)
+	table.insert(stem_set, bare)
+
+	local per_word_info = {{{stem_set}, ""}}
+
+	return do_show_1(args, per_word_info)
+end
+
 -- Implementation of do_show() and do_show_multi(), which have equivalent
--- functionality but different calling sequence.
+-- functionality but different calling sequence, as well as do_show_z()
+-- for template {{ru-decl-noun-z}}, which has a subset of the functionality
+-- of the other two.
 function do_show_1(args, per_word_info)
 	local function verify_animacy_value(val)
 		if not val then return nil end
@@ -1164,6 +1263,11 @@ end
 -- single words).
 function export.show_multi(frame)
 	return do_show_multi(frame)
+end
+
+-- The entry point for compatibility with {{ru-decl-noun-z}}.
+function export.show_z(frame)
+	return do_show_z(frame)
 end
 
 local stem_expl = {
