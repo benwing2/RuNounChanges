@@ -1372,9 +1372,6 @@ local function show_form(args, case)
 	local ru_vals = {}
 	local tr_vals = {}
 	for _, x in ipairs(args[case]) do
-		if type(x) == "table" then
-			error(case)
-		end
 		local entry, notes = m_table_tools.get_notes(x)
 		entry = com.remove_monosyllabic_accents(entry)
 		if old then
