@@ -614,7 +614,7 @@ local function do_show(frame, old)
 		if rfind(decl_class, "^%+") then
 			stem, decl_class, was_accented = detect_adj_type(stem, decl_class)
 		else
-			stem, decl_class, was_accented = detect_stem_type(stem, decl_class)
+			stem, decl_class, was_accented = detect_stem_type(stem, decl_class, args.a)
 		end
 		local stress_arg = stem_set[1] or detect_stress_pattern(decl_class, was_accented)
 		local bare = stem_set[4]
@@ -986,7 +986,7 @@ end
 -- Attempt to detect the type of the stem (= including ending) based
 -- on its ending, separating off the base and the ending. GENDER
 -- may be omitted except for -ь stems, where it must be "m" or "f".
-local function detect_basic_stem_type(stem, gender)
+local function detect_basic_stem_type(stem, gender, anim)
 	local base, ending = rmatch(stem, "^(.*)([еЕ]́)$") -- accented
 	if base then
 		return base, ulower(ending)
@@ -1001,6 +1001,12 @@ local function detect_basic_stem_type(stem, gender)
 	end
 	base, ending = rmatch(stem, "^(.*)([ёоЁО]́?[нН][оО][чЧ][еЕ][кК][ъЪ]?)$")
 	if base then
+		return base, ulower(ending)
+	end
+	base, ending = rmatch(stem, "^(.*[аяАЯ]́?[нН])([иИ]́?[нН][ъЪ]?)$")
+	-- Need to check the animacy to avoid nouns like маиганин, цианин,
+	-- меланин, соланин, etc.
+	if base and anim == "a" then
 		return base, ulower(ending)
 	end
 	base, ending = rmatch(stem, "^(.*)([мМ][яЯ]́?)$")
@@ -1109,7 +1115,7 @@ local special_case_1_to_plural_variation = {
 -- where "m" or "f" is required. The special case (1) of Zaliznyak can
 -- also be given as an alternative to specifying the plural variant,
 -- for certain types of plural variants.
-function detect_stem_type(stem, decl)
+function detect_stem_type(stem, decl, anim)
 	local want_sc1 = rmatch(decl, "%(1%)")
 	decl = rsub(decl, "%(1%)", "")
 	local gender = rmatch(decl, "^([mfn]?)$")
@@ -1118,7 +1124,7 @@ function detect_stem_type(stem, decl)
 		gender, plural = rmatch(decl, "^([mfn]?)(%-.+)$")
 	end
 	if gender then
-		stem, decl, orig_ending = detect_basic_stem_type(stem, gender)
+		stem, decl, orig_ending = detect_basic_stem_type(stem, gender, anim)
 	end
 	local was_accented = com.is_stressed(decl) or orig_ending and com.is_stressed(orig_ending)
 	decl = remove_accents_from_decl(decl)
@@ -1176,20 +1182,24 @@ end
 -- Detect stress pattern (1 or 2) based on whether ending is stressed or
 -- decl class is inherently ending-stressed.
 function detect_stress_pattern(decl, was_accented)
-	-- ёнок/онок always bears stress
-	-- not anchored to ^ or $ in case of a slash declension
-	if rfind(decl, "[ёо]́?нок") then
+	assert(not rfind(decl, "́"))
+	-- ёнок/онок and ёночек/оночек always bear stress
+	-- not anchored to ^ or $ in case of a slash declension and old-style decls
+	if rfind(decl, "[ёое]нок") or rfind(decl, "[ёое]ночек") then
 		return "2"
-	end
+	-- stressed suffix и́н; missing in plural and true endings don't bear stress
+	-- (except for exceptional господи́н)
+	elseif rfind(decl, "ин") and was_accented then
+		return "4"
 	-- Adjectival -ой always bears the stress
-	if rfind(decl, "%+ой") then
+	elseif rfind(decl, "%+ой") then
 		return "2"
-	end
 	-- Finally, class 2 if ending was accented by user
-	if was_accented then
+	elseif was_accented then
 		return "2"
+	else
+		return "1"
 	end
-	return "1"
 end
 
 -- Canonicalize decl class into non-accented form; but е́ is special, not the
