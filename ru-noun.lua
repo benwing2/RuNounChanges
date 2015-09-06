@@ -40,10 +40,6 @@ TODO:
 
 1. Change {{temp|ru-decl-noun-pl}} and {{temp|ru-decl-noun-unc}} to use
    'manual' instead of '*' as the decl class.
-1a. FIXME: Accented status of plural stem not transmitted to was_accented.
-1b. FIXME: Check for requiring accent in stem/pl needs to be more
-   sophisticated, e.g. pl doesn't require accent in stem class 3 as well
-   as 2.
 2. Require stem to be specified instead of defaulting to page. [IMPLEMENTED
    IN GITHUB]
 3. Bug in -я nouns with bare specified; gen pl should not have -ь ending. Old
@@ -239,12 +235,16 @@ local detect_decl_old = {}
 local detect_decl = {}
 local sibilant_suffixes = {}
 local stress_patterns = {}
--- Set of patterns with stressed genitive plural.
-local stressed_gen_pl_patterns = {}
--- Set of patterns with stressed prepositional singular.
-local stressed_pre_sg_patterns = {}
--- Set of patterns with stressed dative singular.
-local stressed_dat_sg_patterns = {}
+-- Set of patterns with ending-stressed genitive plural.
+local ending_stressed_gen_pl_patterns = {}
+-- Set of patterns with ending-stressed prepositional singular.
+local ending_stressed_pre_sg_patterns = {}
+-- Set of patterns with ending-stressed dative singular.
+local ending_stressed_dat_sg_patterns = {}
+-- Set of patterns with all singular forms ending-stressed.
+local ending_stressed_sg_patterns = {}
+-- Set of patterns with all plural forms ending-stressed.
+local ending_stressed_pl_patterns = {}
 -- List of all cases, excluding loc/par/voc.
 local decl_cases
 -- List of all cases, including loc/par/voc.
@@ -740,31 +740,33 @@ local function do_show(frame, old)
 				resolved_bare = com.make_ending_stressed(resolved_bare)
 			end
 
-			-- stress pattern 2 always has ending stress; in a multisyllabic
-			-- word without an accent, it's safe to make it ending-stressed,
-			-- else give an error unless the user has indicated they
-			-- purposely are leaving the word unstressed (e.g. due to not
-			-- knowing the stress) by putting a * at the beginning
+			-- If all forms that use a given stem are ending-stressed, it's
+			-- safe to stress the last syllable of the stem in case it's
+			-- multisyllabic and unstressed; else give an error unless the
+			-- user has indicated they purposely are leaving the word
+			-- unstressed (e.g. due to not knowing the stress) by putting
+			-- a * at the beginning of the main stem
 			if com.is_unstressed(stem) then
-				if stress == "2" then
+				local all_ending_stressed = (args.n == "s" or pl) and
+					ending_stressed_sg_patterns[stress] or
+					args.n == "p" and ending_stressed_pl_patterns[stress] or
+					stress == "2"
+				if all_ending_stressed then
 					stem = com.make_ending_stressed(stem)
 				elseif not allow_unaccented then
 					error("Stem " .. stem .. " requires an accent")
 				end
 			end
 			if pl and com.is_unstressed(pl) then
-				if stress == "2" then
+				if ending_stressed_pl_patterns[stress] then
 					pl = com.make_ending_stressed(pl)
 				elseif not allow_unaccented then
 					error("Plural stem " .. pl .. " requires an accent")
 				end
 			end
-			if resolved_bare and com.is_unstressed(resolved_bare) then
-				if stress == "2" then
-					resolved_bare = com.make_ending_stressed(resolved_bare)
-				elseif not allow_unaccented then
-					error("Resolved bare stem " .. resolved_bare .. " requires an accent")
-				end
+			-- Bare should always be stressed
+			if resolved_bare and com.is_unstressed(resolved_bare) and not allow_unaccented then
+				error("Resolved bare stem " .. resolved_bare .. " requires an accent")
 			end
 
 			args.stem = stem
@@ -1017,23 +1019,23 @@ local function detect_basic_stem_type(stem, gender)
 			end
 			base, ending = rmatch(stem, "^(.*)([аяАЯ]́?)$")
 			if base then
-				return base, rfind(ending, "[аА]") and "о" or "е"
+				return base, rfind(ending, "[аА]") and "о" or "е", ending
 			end
 		end
 		if gender == "f" then
 			base, ending = rmatch(stem, "^(.*)(ь[иИ]́?)$")
 			if base then
-				return base, "ья"
+				return base, "ья", ending
 			end
 		end
 		if gender == "m" then
 			base, ending = rmatch(stem, "^(.*)(ь[яЯ]́?)$")
 			if base then
-				return base, "-ья"
+				return base, "-ья", ending
 			end
 			base, ending = rmatch(stem, "^(.*)([аА]́?)$")
 			if base then
-				return base, "-а"
+				return base, "-а", ending
 			end
 		end
 		if gender == "m" or gender == "f" then
@@ -1042,12 +1044,12 @@ local function detect_basic_stem_type(stem, gender)
 				base, ending = rmatch(stem, "^(.*)([ыЫ]́?)$")
 			end
 			if base then
-				return base, gender == "m" and "" or "а"
+				return base, gender == "m" and "" or "а", ending
 			end
 			base, ending = rmatch(stem, "^(.*)([иИ]́?)$")
 			if base then
 				if gender == "m" then
-					return base, "ь-m"
+					return base, "ь-m", ending
 				else
 					error("Ambiguous plural stem " .. stem .. " in -и, singular could be -я or -ь; specify the singular")
 				end
@@ -1116,9 +1118,9 @@ function detect_stem_type(stem, decl)
 		gender, plural = rmatch(decl, "^([mfn]?)(%-.+)$")
 	end
 	if gender then
-		stem, decl = detect_basic_stem_type(stem, gender)
+		stem, decl, orig_ending = detect_basic_stem_type(stem, gender)
 	end
-	local was_accented = rfind(decl, "[ё́]")
+	local was_accented = com.is_stressed(decl) or orig_ending and com.is_stressed(orig_ending)
 	decl = remove_accents_from_decl(decl)
 	if not plural then
 		if want_sc1 then
@@ -1241,7 +1243,7 @@ end
 -- are after detect_stem_type(), before converting outward-facing declensions
 -- to inward ones. STRESS is the stess pattern.
 function export.unreduce_nom_sg_stem(stem, decl, stress, old, can_err)
-	local epenthetic_stress = stressed_gen_pl_patterns[stress]
+	local epenthetic_stress = ending_stressed_gen_pl_patterns[stress]
 	local ret = com.unreduce_stem(stem, epenthetic_stress)
 	if not ret then
 		if can_err then
@@ -1505,7 +1507,7 @@ declensions_old["а"] = {
 	["pre_sg"] = "ѣ́",
 	["nom_pl"] = "ы́",
 	["gen_pl"] = function(stem, stress)
-		return sibilant_suffixes[ulower(usub(stem, -1))] and stressed_gen_pl_patterns[stress] and "е́й" or "ъ"
+		return sibilant_suffixes[ulower(usub(stem, -1))] and ending_stressed_gen_pl_patterns[stress] and "е́й" or "ъ"
 	end,
 	["alt_gen_pl"] = "е́й",
 	["dat_pl"] = "а́мъ",
@@ -1523,12 +1525,12 @@ declensions_old["я"] = {
 	["nom_sg"] = "я́",
 	["gen_sg"] = "и́",
 	["dat_sg"] = function(stem, stress)
-		return rlfind(stem, "[іи]́?$") and not stressed_dat_sg_patterns[stress] and "и" or "ѣ́"
+		return rlfind(stem, "[іи]́?$") and not ending_stressed_dat_sg_patterns[stress] and "и" or "ѣ́"
 	end,
 	["acc_sg"] = "ю́",
 	["ins_sg"] = {"ёй", "ёю"},
 	["pre_sg"] = function(stem, stress)
-		return rlfind(stem, "[іи]́?$") and not stressed_pre_sg_patterns[stress] and "и" or "ѣ́"
+		return rlfind(stem, "[іи]́?$") and not ending_stressed_pre_sg_patterns[stress] and "и" or "ѣ́"
 	end,
 	["nom_pl"] = "и́",
 	["gen_pl"] = "й",
@@ -1554,7 +1556,7 @@ declensions_old["ья"] = {
 	["gen_pl"] = function(stem, stress)
 		-- circumflex accent is a signal that forces stress, particularly
 		-- in accent pattern 4.
-		return (stressed_gen_pl_patterns[stress] or stress == "4" or stress == "4*") and "е̂й" or "ий"
+		return (ending_stressed_gen_pl_patterns[stress] or stress == "4" or stress == "4*") and "е̂й" or "ий"
 	end,
 	["dat_pl"] = "ья́мъ",
 	["acc_pl"] = nil,
@@ -1632,7 +1634,7 @@ declensions_old["е"] = {
 	["acc_sg"] = "ё",
 	["ins_sg"] = "ёмъ",
 	["pre_sg"] = function(stem, stress)
-		return rlfind(stem, "[іи]́?$") and not stressed_pre_sg_patterns[stress] and "и" or "ѣ́"
+		return rlfind(stem, "[іи]́?$") and not ending_stressed_pre_sg_patterns[stress] and "и" or "ѣ́"
 	end,
 	["nom_pl"] = "я́",
 	["gen_pl"] = function(stem, stress)
@@ -1699,7 +1701,7 @@ declensions_old["ье"] = {
 	["pre_sg"] = "ьѣ́",
 	["nom_pl"] = "ья́",
 	["gen_pl"] = function(stem, stress)
-		return stressed_gen_pl_patterns[stress] and "е́й" or "ий"
+		return ending_stressed_gen_pl_patterns[stress] and "е́й" or "ий"
 	end,
 	["alt_gen_pl"] = "ьёвъ",
 	["dat_pl"] = "ья́мъ",
@@ -2241,9 +2243,11 @@ stress_patterns["6*"] = {
 	nom_pl="-", gen_pl="+", dat_pl="+", acc_pl="+", ins_pl="+", pre_pl="+",
 }
 
-stressed_gen_pl_patterns = ut.list_to_set({"2", "3", "5", "6", "6*"})
-stressed_pre_sg_patterns = ut.list_to_set({"2", "4", "4*", "6", "6*"})
-stressed_dat_sg_patterns = stressed_pre_sg_patterns
+ending_stressed_gen_pl_patterns = ut.list_to_set({"2", "3", "5", "6", "6*"})
+ending_stressed_pre_sg_patterns = ut.list_to_set({"2", "4", "4*", "6", "6*"})
+ending_stressed_dat_sg_patterns = ending_stressed_pre_sg_patterns
+ending_stressed_sg_patterns = ending_stressed_pre_sg_patterns
+ending_stressed_pl_patterns = ut.list_to_set({"2", "3"})
 
 local after_titles = {
 	["a"] = " (animate)",
