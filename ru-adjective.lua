@@ -694,11 +694,11 @@ function detect_stem_and_accent_type(stem, decl)
 			-- (or almost always?) short, while the latter can be either;
 			-- apparently mixed is the more "modern" type of declension,
 			-- and short is "older".
-			base, ending = rmatch(stem, "^(.*[еёо]в)ъ?$")
+			base, ending = rmatch(stem, "^(.*[еёо]́?в)ъ?$")
 			if base then
 				return base, "short", short_accent, short_stem
 			end
-			if rmatch(stem, "[иы]нъ?$") then
+			if rmatch(stem, "[иы]́?нъ?$") then
 				error("With -ин/ын adjectives, must specify 'short' or 'mixed':" .. stem)
 			end
 			error("Cannot determine stem type of adjective: " .. stem)
