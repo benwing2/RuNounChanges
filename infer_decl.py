@@ -50,7 +50,7 @@ matching_stress_patterns["ending"]["stem"] = {
 matching_stress_patterns["ending"]["ending"] = ["2"]
 matching_stress_patterns["stem"]["none"] = ["1"]
 matching_stress_patterns["ending"]["none"] = {"by":"acc_sg", "ending":"2", "stem":"6*"}
-matching_stress_patterns["none"]["stem"] = {"by":"pre_pl", "stem":"1", "ending":"6"}
+matching_stress_patterns["none"]["stem"] = {"by":"pre_pl", "stem":"1", "ending":"5"}
 matching_stress_patterns["none"]["ending"] = ["2"]
 
 site = pywikibot.Site()
