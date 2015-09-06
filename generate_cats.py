@@ -11,30 +11,30 @@ genders = ["masculine", "feminine", "neuter"]
 stem_types = ["hard-stem", "soft-stem", "velar-stem", "sibilant-stem",
   u"ц-stem", "vowel-stem", "i-stem", "3rd-declension"]
 genders_stems_stress = [["masculine", [
-    ["hard-stem", ["1", "2", "3", "5"]],
+    ["hard-stem", ["1", "2", "3", "4", "5"]], # 4 maybe only кол
     ["soft-stem", ["1", "2", "3", "5", "6"]],
     ["velar-stem", ["1", "2", "3", "4", "5"]],
     ["sibilant-stem", ["1", "2", "3", "5"]],
     [u"ц-stem", ["1", "2"]],
     ["vowel-stem", ["1", "2", "3"]],
-    ["i-stem", ["1"]],
+    ["i-stem", ["1", "2", "3"]], # 2/3 only the word кий
   ]],
   ["feminine", [
-    ["hard-stem", ["1", "2", "4", "6"]], # FIXME: Check for 4*, 6*
-    ["soft-stem", ["1", "2", "4", "5", "6"]],
-    ["velar-stem", ["1", "2", "4", "6"]],
-    ["sibilant-stem", ["1", "2", "4", "6"]],
-    [u"ц-stem", ["1"]],
-    ["vowel-stem", ["1", "2", "4", "5", "6"]], # FIXME: Check this
-    ["i-stem", ["1"]],
-    ["3rd-declension", ["1", "5"]],
+    ["hard-stem", ["1", "2", "4", "4*", "5", "6", "6*"]], # 5 maybe only бу́бна
+    ["soft-stem", ["1", "2", "4", "4*", "5", "6"]], # 4* maybe only земля́
+    ["velar-stem", ["1", "2", "4", "4*", "6", "6*"]],
+    ["sibilant-stem", ["1", "2", "4", "4*", "6"]],
+    [u"ц-stem", ["1", "2", "4"]], # 2 maybe only маца́; 4 maybe only овца́
+    ["vowel-stem", ["1", "2", "4"]],
+    ["i-stem", ["1", "2"]], # 2 maybe only лития́, судия́
+    ["3rd-declension", ["1", "2", "5", "6*"]],
   ]],
   ["neuter", [
-    ["hard-stem", ["1", "2", "3", "4"]],
+    ["hard-stem", ["1", "2", "3", "4", "6"]], # 6 maybe only тавро́
     ["soft-stem", ["1", "3"]],
-    ["velar-stem", ["1", "2"]],
-    ["sibilant-stem", ["1"]],
-    [u"ц-stem", ["1", "3"]],
+    ["velar-stem", ["1", "2", "3", "4", "5"]], # 4 maybe only молоко́; 5 maybe only у́хо
+    ["sibilant-stem", ["1", "6"]], # 6 maybe only плечо́
+    [u"ц-stem", ["1", "2", "3", "4", "6"]], # 2 maybe only ружьецо́, деревцо́; 3 maybe only се́рдце, де́ревце; 4 maybe only лицо́; 6 maybe only крыльцо́
     ["vowel-stem", ["1", "2", "4"]],
     ["i-stem", ["1", "2"]],
     ["3rd-declension", ["3"]],
