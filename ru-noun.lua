@@ -46,10 +46,10 @@ TODO:
    as 2.
 2. Require stem to be specified instead of defaulting to page. [IMPLEMENTED
    IN GITHUB]
-3. Bug in -я nouns with bare specified; should not have -ь ending. Old
+3. Bug in -я nouns with bare specified; gen pl should not have -ь ending. Old
    templates did not add this ending when bare occurred. [SHOULD ALWAYS
-   HAVE BARE BE BARE, NEVER ADD A NON-SYLLABIC ENDING. IMPLEMENTED IN GITHUB
-   AS TRACKING CODE, NOT YET TURNED ON FOR REAL.]
+   HAVE BARE BE BARE, NEVER ADD A NON-SYLLABIC ENDING. IMPLEMENTED IN GITHUB.
+   TRACKING CODE PRESENT TO CHECK FOR CASES WHERE IT MIGHT BE WRONG.]
 4. Remove barepl, make pl= be 5th argument. [IMPLEMENTED IN GITHUB IN TWO
    DIFFERENT BRANCHES]
 5. (Add accent pattern for ь-stem numbers. Wikitiki handled that through
@@ -66,8 +66,9 @@ TODO:
    stem is otherwise stressed on an earlier syllable (e.g. голова́ in
    accent pattern 6, nom pl го́ловы, gen pl голо́в). Currently these are handled
    by overriding "bare" but I want to make bare predictable mostly, just
-   specifying that the noun is reducible should be enough. [IMPLEMENTED AS
-   TRACKING CODE, NOT YET TURNED ON FOR REAL]
+   specifying that the noun is reducible should be enough. [IMPLEMENTED
+   IN GITHUB. TRACKING CODE PRESENT TO CHECK FOR CASES WHERE IT MIGHT BE
+   WRONG.]
 8. If decl omitted, it should default to 1 or 2 depending on whether accent
    is on stem or ending, not always 1. [IMPLEMENTED IN GITHUB]
 9. [Should recognize plural in the auto-detection code when the gender is set.
@@ -2064,40 +2065,39 @@ local function attach_unstressed(args, case, suf, was_stressed)
 	local is_pl = rfind(case, "_pl$")
 	local old = args.old
 	local stem = is_pl and args.pl or args.stem
-	local barestem = args.bare or stem
 	if old and old_consonantal_suffixes[suf] or not old and consonantal_suffixes[suf] then
-		-- FIXME: temporary tracking code, prelude to change in the
-		-- algorithm for words like голова́ (nom pl. го́ловы but gen pl. голо́в),
-		-- which currently require a bare but will eventually be by algorithm.
-		-- Modeled on code in Vitalik's module. At least one known exception:
-		-- де́ньги (pl. tantum; accent pattern 5, nom pl. де́ньги, gen pl. де́нег).
+		local barestem = args.bare or stem
 		if was_stressed and case == "gen_pl" then
-			local will_be_gen_pl_stem = com.make_ending_stressed(stem)
-			if args.bare then
-				if will_be_gen_pl_stem == args.bare then
-					track("bare-gen-pl/bare-agrees")
-				elseif will_be_gen_pl_stem == com.make_unstressed(args.bare) then
-					track("bare-gen-pl/bare-different-stress")
-				else
-					track("bare-gen-pl/bare-different-cons")
+			if not args.bare then
+				local gen_pl_stem = com.make_ending_stressed(stem)
+				-- FIXME: temporary tracking code to identify places where
+				-- the change to the algorithm here that end-stresses the
+				-- genitive plural in stress patterns with gen pl end stress
+				-- (cf. words like голова́, with nom pl. го́ловы but gen pl.
+				-- голо́в) would cause changes.
+				if com.is_stressed(stem) and stem ~= gen_pl_stem then
+					track("gen-pl-moved-stress")
 				end
-			else
-				track("bare-gen-pl/no-bare")
+				barestem = gen_pl_stem
 			end
 		end
 
 		if rlfind(barestem, old and "[йьъ]$" or "[йь]$") then
 			suf = ""
 		else
-			-- FIXME: temporary tracking code
-			if args.bare then
-				track("explicit-bare-no-suffix")
-				if old then
-					track("explicit-bare-old-no-suffix")
-				end
-			end
-			if suf == "й" or suf == "ь" then
-				if rfind(barestem, "[" .. com.vowel .. "]́?$") then
+			if suf == "ъ" then
+				-- OK
+			elseif suf == "й" or suf == "ь" then
+				if args.bare and case == "gen_pl" then
+					-- FIXME: temporary tracking code
+					track("explicit-bare-no-suffix")
+					if old then
+						track("explicit-bare-old-no-suffix")
+					end
+					-- explicit bare or reducible, don't add -ь
+					suf = ""
+				elseif rfind(barestem, "[" .. com.vowel .. "]́?$") then
+					-- not reducible, do add -ь and correct to -й if necessary
 					suf = "й"
 				else
 					suf = "ь"
