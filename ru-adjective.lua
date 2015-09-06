@@ -345,8 +345,8 @@ end
 
 -- Entry point for use in Module:ru-noun.
 function export.get_nominal_decl(decl, gender, old)
-	d = old and declensions_old[decl] or declensions[decl]
-	n = {}
+	local d = old and declensions_old[decl] or declensions[decl]
+	local n = {}
 	if gender == "m" then
 		n.nom_sg = d.nom_m
 		n.gen_sg = d.gen_m

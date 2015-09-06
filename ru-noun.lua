@@ -40,6 +40,10 @@ TODO:
 
 1. Change {{temp|ru-decl-noun-pl}} and {{temp|ru-decl-noun-unc}} to use
    'manual' instead of '*' as the decl class.
+1a. FIXME: Accented status of plural stem not transmitted to was_accented.
+1b. FIXME: Check for requiring accent in stem/pl needs to be more
+   sophisticated, e.g. pl doesn't require accent in stem class 3 as well
+   as 2.
 2. Require stem to be specified instead of defaulting to page. [IMPLEMENTED
    IN GITHUB]
 3. Bug in -я nouns with bare specified; should not have -ь ending. Old
@@ -114,7 +118,7 @@ local m_utilities = require("Module:utilities")
 local ut = require("Module:utils")
 local m_links = require("Module:links")
 local com = require("Module:ru-common")
-local m_ru_adj = require("Module:ru-adjective")
+local m_ru_adj = require("Module:User:Benwing2/ru-adjective")
 local m_ru_translit = require("Module:ru-translit")
 local strutils = require("Module:string utilities")
 local m_table_tools = require("Module:table tools")
@@ -613,7 +617,7 @@ local function do_show(frame, old)
 		end
 		local stress_arg = stem_set[1] or detect_stress_pattern(decl_class, was_accented)
 		local bare = stem_set[4]
-		args.pl = stem_set[5] or stem
+		local pl = stem_set[5]
 
 		-- validate stress arg and decl type and convert to list
 		stress_arg = rsplit(stress_arg, ",")
@@ -649,30 +653,18 @@ local function do_show(frame, old)
 
 		local allow_unaccented = rfind(stem, "^%*")
 		stem = rsub(stem, "^%*", "")
-		-- it's safe to accent a monosyllabic stem
-		if com.is_monosyllabic(stem) then
-			stem = com.make_ending_stressed(stem)
-		end
 
 		local original_stem = stem
+		local original_bare = bare
+		local original_pl = pl
 
 		-- Loop over accent patterns in case more than one given.
 		for _, stress in ipairs(stress_arg) do
 			args.suffixes = {}
 
 			stem = original_stem
-			-- stress pattern 2 always has ending stress; in a multisyllabic
-			-- word without an accent, it's safe to make it ending-stressed,
-			-- else give an error unless the user has indicated they
-			-- purposely are leaving the word unstressed (e.g. due to not
-			-- knowing the stress) by putting a * at the beginning
-			if com.is_unstressed(stem) then
-				if stress == "2" then
-					stem = com.make_ending_stressed(stem)
-				elseif not allow_unaccented then
-					error("Stem " .. stem .. " requires an accent")
-				end
-			end
+			bare = original_bare
+			pl = original_pl
 
 			local sgclass = sub_decl_classes[1][1]
 			local resolved_bare = bare
@@ -693,7 +685,7 @@ local function do_show(frame, old)
 				else
 					error("Declension class " .. sgclass .. " not (un)reducible")
 				end
-			elseif bare
+			elseif bare then
 				-- FIXME: Tracking code eventually to remove; track cases
 				-- where bare is explicitly specified to see how many could
 				-- be predicted
@@ -736,9 +728,48 @@ local function do_show(frame, old)
 				end
 			end
 
+			-- it's safe to accent monosyllabic stems
+			if com.is_monosyllabic(stem) then
+				stem = com.make_ending_stressed(stem)
+			end
+			if pl and com.is_monosyllabic(pl) then
+				pl = com.make_ending_stressed(pl)
+			end
+			if resolved_bare and com.is_monosyllabic(resolved_bare) then
+				resolved_bare = com.make_ending_stressed(resolved_bare)
+			end
+
+			-- stress pattern 2 always has ending stress; in a multisyllabic
+			-- word without an accent, it's safe to make it ending-stressed,
+			-- else give an error unless the user has indicated they
+			-- purposely are leaving the word unstressed (e.g. due to not
+			-- knowing the stress) by putting a * at the beginning
+			if com.is_unstressed(stem) then
+				if stress == "2" then
+					stem = com.make_ending_stressed(stem)
+				elseif not allow_unaccented then
+					error("Stem " .. stem .. " requires an accent")
+				end
+			end
+			if pl and com.is_unstressed(pl) then
+				if stress == "2" then
+					pl = com.make_ending_stressed(pl)
+				elseif not allow_unaccented then
+					error("Plural stem " .. pl .. " requires an accent")
+				end
+			end
+			if resolved_bare and com.is_unstressed(resolved_bare) then
+				if stress == "2" then
+					resolved_bare = com.make_ending_stressed(resolved_bare)
+				elseif not allow_unaccented then
+					error("Resolved bare stem " .. resolved_bare .. " requires an accent")
+				end
+			end
+
 			args.stem = stem
 			args.bare = resolved_bare
 			args.ustem = com.make_unstressed_once(stem)
+			args.pl = pl or stem
 			args.upl = com.make_unstressed_once(args.pl)
 
 			-- Loop over declension classes (we may have two of them, one for
@@ -1010,7 +1041,7 @@ local function detect_basic_stem_type(stem, gender)
 				base, ending = rmatch(stem, "^(.*)([ыЫ]́?)$")
 			end
 			if base then
-				return base, gender == "m" and "-" or "а"
+				return base, gender == "m" and "" or "а"
 			end
 			base, ending = rmatch(stem, "^(.*)([иИ]́?)$")
 			if base then
@@ -1080,13 +1111,13 @@ function detect_stem_type(stem, decl)
 	decl = rsub(decl, "%(1%)", "")
 	local gender = rmatch(decl, "^([mfn]?)$")
 	local plural
-	local was_accented = rfind(decl, "[ё́]")
 	if not gender then
 		gender, plural = rmatch(decl, "^([mfn]?)(%-.+)$")
 	end
 	if gender then
 		stem, decl = detect_basic_stem_type(stem, gender)
 	end
+	local was_accented = rfind(decl, "[ё́]")
 	decl = remove_accents_from_decl(decl)
 	if not plural then
 		if want_sc1 then
@@ -1111,11 +1142,11 @@ end
 
 function detect_adj_type(stem, decl)
 	if decl == "+" then
-		local base, ending = rmatch(stem, "^(.*)([ыиіьаяoe]́?[йея])$")
-		local was_accented = rfind(decl, "́")
-		ending = com.remove_accents(ending)
+		local base, ending = rmatch(stem, "^(.*)([ыиіьаяое]́?[йея])$")
 		if base then
-			if rfind(ending "^[іи]й$") and rfind(base, "[" .. com.velar .. com.sib .. "]$") then
+			local was_accented = rfind(ending, "́")
+			ending = com.remove_accents(ending)
+			if rfind(ending, "^[іи]й$") and rfind(base, "[" .. com.velar .. com.sib .. "]$") then
 				return base, "+ый", was_accented
 			-- The following is necessary for -ц, unclear if makes sense for
 			-- sibilants. (Would be necessary -- I think -- if we were
@@ -1133,9 +1164,9 @@ function detect_adj_type(stem, decl)
 		if ending == "е" then
 			ending = "о"
 		end
-		return base, "+" .. ending .. "-" .. usub(decl, 2), was_accented
+		return base, "+" .. ending .. "-" .. usub(decl, 2), false
 	else
-		return stem, decl, was_accented
+		return stem, decl, false
 	end
 end
 
@@ -1570,7 +1601,7 @@ declensions_old_cat["о-ы"] = declensions_old_cat["о-и"]
 
 -- Hard-neuter declension in -о with irreg soft pl -ья;
 -- differs throughout the plural from normal -о.
-declensions_old["о-ья-normal"] = {
+declensions_old["о-ья"] = {
 	["nom_sg"] = "о́",
 	["gen_sg"] = "а́",
 	["dat_sg"] = "у́",
@@ -1676,7 +1707,7 @@ declensions_old["ье"] = {
 	["pre_pl"] = "ья́хъ",
 }
 
-detect_decl_old["ьё"] = detect_decl_old["ье"]
+declensions_old["ьё"] = declensions_old["ье"]
 
 declensions_old_cat["ье"] = {
 	decl="2nd", hard="soft", g="n",
@@ -1768,7 +1799,7 @@ declensions_old_cat["*"] = { decl="invariable", hard="none", g="none" }
 local adj_decl_map = {
 	{"ый", "ый", "ое", "ая", "hard", "long", false},
 	{"ій", "ій", "ее", "яя", "soft", "long", false},
-	{"о́й", "о́й", "о́е", "а́я", "hard", "long", false},
+	{"ой", "о́й", "о́е", "а́я", "hard", "long", false},
 	{"ьій", "ьій", "ье", "ья", "palatal", "long", true},
 	{"short", "ъ-short", "о-short", "а-short", "hard", "short", true},
 	{"mixed", "ъ-mixed", "о-mixed", "а-mixed", "hard", "mixed", true},
@@ -1778,7 +1809,7 @@ local function get_adjectival_decl(adjtype, gender, old)
 	local decl = m_ru_adj.get_nominal_decl(adjtype, gender, old)
 	-- signal to make_table() to use the special tr_adj() function so that
 	-- -го gets transliterated to -vo
-	decl["gen_sg"] = rsub(decl["gen_sg"], "го$", "го<adj>$")
+	decl["gen_sg"] = rsub(decl["gen_sg"], "го$", "го<adj>")
 	return decl
 end
 
@@ -1804,15 +1835,15 @@ end
 -- Set up some aliases. е-short and е-mixed exist because е instead of о
 -- appears after sibilants and ц.
 local adj_decl_aliases = {
-	{"ой", "о́й"}, {"е-short", "о-short"}, {"е-mixed", "о-mixed"}
+	{"+ой", "+о́й"}, {"+е-short", "+о-short"}, {"+е-mixed", "+о-mixed"}
 }
 
 for _, alias_pair in ipairs(adj_decl_aliases) do
 	local to, from = alias_pair[1], alias_pair[2]
 	declensions_old[to] = declensions_old[from]
 	declensions_old_cat[to] = declensions_old_cat[from]
-	to = old_to_new[to]
-	from = old_to_new[from]
+	to = old_to_new(to)
+	from = old_to_new(from)
 	declensions[to] = declensions[from]
 	declensions_cat[to] = declensions_cat[from]
 end
@@ -1821,11 +1852,11 @@ end
 -- velars; doesn't really matter one way or the other for sibilants as
 -- the sibilant rules will convert both sets of endings to the same thing
 -- (whereas there will be a difference with о vs. е for velars).
-detect_decl_old["ій"] = function(stem, stress)
+detect_decl_old["+ій"] = function(stem, stress)
 	if rfind(stem, "[" .. com.velar .. com.sib .. "]$") then
-		return "ый"
+		return "+ый"
 	else
-		return "ій"
+		return "+ій"
 	end
 end
 
@@ -1833,33 +1864,33 @@ end
 -- doesn't really matter one way or the other for sibilants as
 -- the sibilant rules will convert both sets of endings to the same thing
 -- (whereas there will be a difference with ы vs. и for ц).
-detect_decl_old["ее"] = function(stem, stress)
+detect_decl_old["+ее"] = function(stem, stress)
 	if rfind(stem, "[" .. com.sib_c .. "]$") then
-		return "ое"
+		return "+ое"
 	else
-		return "ее"
+		return "+ее"
 	end
 end
 
 -- For stressed and unstressed ое and ая, convert to the right stress
 -- variant according to the stress pattern (1 or 2).
-detect_decl_old["ое"] = function(stem, stress)
+detect_decl_old["+ое"] = function(stem, stress)
 	if stress == "2" then
-		return "о́е"
+		return "+о́е"
 	else
-		return "ое"
+		return "+ое"
 	end
 end
-detect_decl_old["о́е"] = detect_decl_old["ое"]
+detect_decl_old["+о́е"] = detect_decl_old["+ое"]
 
-detect_decl_old["ая"] = function(stem, stress)
+detect_decl_old["+ая"] = function(stem, stress)
 	if stress == "2" then
-		return "а́я"
+		return "+а́я"
 	else
-		return "ая"
+		return "+ая"
 	end
 end
-detect_decl_old["а́я"] = detect_decl_old["ая"]
+detect_decl_old["+а́я"] = detect_decl_old["+ая"]
 
 --------------------------------------------------------------------------
 --                         Populate new from old                        --
@@ -1879,6 +1910,7 @@ local function old_decl_entry_to_new(v)
 	else
 		return old_to_new(v)
 	end
+end
 
 local function old_decl_to_new(odecl)
 	local ndecl = {}
