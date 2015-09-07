@@ -40,6 +40,12 @@ TODO:
 
 1. Change {{temp|ru-decl-noun-pl}} and {{temp|ru-decl-noun-unc}} to use
    'manual' instead of '*' as the decl class.
+1a. Find places with '-' as the decl class and remove or change to #.
+   All should occur where there are multiple stems, maybe only in one place
+   (мальчонок?). USE TRACKING.
+1b. Find places with '*' as the decl class and change to -. There is at
+   least one. USE TRACKING.
+1c. FIXME: Add proper support for Zaliznyak b', f''.
 2. Require stem to be specified instead of defaulting to page. [IMPLEMENTED
    IN GITHUB]
 3. Bug in -я nouns with bare specified; gen pl should not have -ь ending. Old
@@ -529,7 +535,6 @@ local function do_show(frame, old)
 	local args = clone_args(frame)
 
 	old = old or args.old
-	local manual = false
 
 	-- FIXME! Delete this when we've converted all uses of pl= args
 	if args["pl"] or args["pl2"] or args["pl3"] or args["pl4"] or args["pl5"] then
@@ -555,9 +560,6 @@ local function do_show(frame, old)
 	for i=1,(max_arg + 1) do
 		if args[i] == "or" or i == max_arg + 1 then
 			local setnum = #stem_sets + 1
-			if stem_set[3] == "manual" then
-				manual = true
-			end
 			table.insert(stem_sets, stem_set)
 			stem_set = {}
 			offset = i
@@ -566,15 +568,6 @@ local function do_show(frame, old)
 				error("Can't specify 6th or greater argument of stem set: arg " .. i .. " = " .. (args[i] or "(blank)"))
 			end
 			stem_set[i - offset] = args[i]
-		end
-	end
-
-	if manual then
-		if #stem_sets > 1 then
-			error("Can't specify multiple stem sets when manual")
-		end
-		if stem_sets[1][4] or stem_sets[1][5] then
-			error("Can't specify optional stem parameters when manual")
 		end
 	end
 
@@ -587,7 +580,6 @@ local function do_show(frame, old)
 		insert_category(args.categories, cat)
 	end
 	args.old = old
-	args.manual = manual
 	-- HACK: Escape * at beginning of line so it doesn't show up
 	-- as a list entry. Many existing templates use * for footnotes.
 	-- FIXME: We should maybe do this in {{ru-decl-noun}} instead.
@@ -606,13 +598,41 @@ local function do_show(frame, old)
 
 	local default_stem = nil
 
+	local function arg1_is_stress(arg1)
+		if not arg1 then return false end
+		for _, arg in rsplit(arg1, ",") do
+			if not (rfind(arg, "^[1-6]\*?$") or rfind(arg, "^[a-f]'?'?$")) then
+				return false
+			end
+		end
+		return true
+	end
+
 	for _, stem_set in ipairs(stem_sets) do
-		local decl_class = stem_set[3] or ""
+		local offset = 0
+		local arg1_stress = arg1_is_stress(stem_set[1])
+		local stress_arg = arg1_stress and stem_set[1]
+		if not arg1_stress then
+			offset = -1
+		end
+		local decl_class = stem_set[3 + offset] or ""
+		local bare = stem_set[4 + offset]
+		local pl = stem_set[5 + offset]
+		if decl_class == "manual" then
+			decl_class = "-"
+			args.manual = true
+			if #stem_sets > 1 then
+				error("Can't specify multiple stem sets when manual")
+			end
+			if bare or pl then
+				error("Can't specify optional stem parameters when manual")
+			end
+		end
 		args.alt_gen_pl = rfind(decl_class, "%(2%)")
 		decl_class = rsub(decl_class, "%(2%)", "")
 		args.reducible = rfind(decl_class, "%*")
 		decl_class = rsub(decl_class, "%*", "")
-		local stem = stem_set[2] or default_stem
+		local stem = stem_set[2 + offset] or default_stem
 		if not stem then
 			error("Stem in first stem set must be specified")
 		end
@@ -623,17 +643,20 @@ local function do_show(frame, old)
 		else
 			stem, decl_class, was_accented = detect_stem_type(stem, decl_class, args.a, old)
 		end
-		local stress_arg = stem_set[1] or detect_stress_pattern(decl_class, was_accented)
-		local bare = stem_set[4]
-		local pl = stem_set[5]
+		stress_arg = stress_arg or detect_stress_pattern(decl_class, was_accented)
 
-		-- validate stress arg and decl type and convert to list
+		-- validate/canonicalize stress arg and convert to list
 		stress_arg = rsplit(stress_arg, ",")
+		for i=1,#stress_arg do
+			stress_arg[i] = zaliznyak_to_our_stress_pattern[stress_arg[i]] or
+				stress_arg[i]
+		end
 		for _, stress in ipairs(stress_arg) do
 			if not stress_patterns[stress] then
 				error("Unrecognized accent pattern " .. stress)
 			end
 		end
+		-- convert decl type to list
 		local sub_decl_classes
 		if rfind(decl_class, "/") then
 			track("mixed-decl")
@@ -839,6 +862,20 @@ local zaliznyak_stress_pattern = {
 	["5"] = "e",
 	["6"] = "f",
 	["6*"] = "f' (f'' for 3rd-declension feminine nouns)",
+}
+
+-- FIXME! Properly support b', f''
+local zaliznyak_to_our_stress_pattern = {
+	["a"] = "1",
+	["b"] = "2",
+	["b'"] = "2",
+	["c"] = "3",
+	["d"] = "4",
+	["d'"] = "4*",
+	["e"] = "5",
+	["f"] = "6",
+	["f'"] = "6*",
+	["f''"] = "6*",
 }
 
 local stem_gender_endings = {
@@ -1796,7 +1833,7 @@ declensions_old_cat["мя-1"] = { decl="3rd", hard="soft", g="n", cant_reduce=tr
 --------------------------------------------------------------------------
 
 -- Invariable declension; no endings.
-declensions_old["*"] = {
+declensions_old["-"] = {
 	["nom_sg"] = "",
 	["gen_sg"] = "",
 	["dat_sg"] = "",
@@ -1810,7 +1847,7 @@ declensions_old["*"] = {
 	["ins_pl"] = "",
 	["pre_pl"] = "",
 }
-declensions_old_cat["*"] = { decl="invariable", hard="none", g="none" }
+declensions_old_cat["-"] = { decl="invariable", hard="none", g="none" }
 
 --------------------------------------------------------------------------
 --                              Adjectival                              --
