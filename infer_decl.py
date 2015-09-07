@@ -232,46 +232,70 @@ def infer_decl(t, noungender, pagemsg):
     if args:
       return args
 
+def transfer_and_default_stress(nomsg, stress, pagemsg, no_transfer_stress=False):
+  if not no_transfer_stress:
+    # At this point if stress pattern is 2, move the
+    # stress onto the ending if nomsg is fem. or neut. and
+    # the stress can be recovered in the gen pl.
+    if stress == "2":
+      m = re.search("^(.*[" + vowels_no_jo + "]" + AC + "?[^" + vowels + u"]*)([аяео])$", nomsg)
+      if m and u"ё" not in m.group(1):
+        newnomsg = make_unstressed(m.group(1)) + m.group(2) + AC
+        pagemsg("Accent-class 2 fem 1st or neut, moving stress onto ending from %s to %s" % (nomsg, newnomsg))
+        nomsg = newnomsg
+    if is_unstressed(nomsg):
+      pagemsg("WARNING: Arg 1 (stem/nom-sg) %s is totally unstressed" % (nomsg))
+      # FIXME: If it's one syllable, should we stress it?
+      # Does this ever happen? We try hard to stress monosyllabic
+      # stems up above.
+
+  if re.search(u"[ё́]$", nomsg):
+    defstress = "2"
+  else:
+    defstress = "1"
+  if defstress == stress:
+    stress = ""
+
+  return nomsg, stress
+
 def generate_template_args(stress, nomsg, gender, bareval, pagemsg):
   if old_template:
     # If bareval is a two-element list, the second is a value to
     # use for arg 1 in place of nomsg. See above.
     if type(bareval) is list:
-      args = [stress, bareval[2], gender, bareval[1]]
+      arg2 = bareval[2]
+      bareval = bareval[1]
+      no_transfer_stress = True
     else:
-      args = [stress, nomsg, gender, bareval]
+      arg2 = nomsg
+      no_transfer_stress = False
+    arg2, stress = transfer_and_default_stress(arg2, stress, pagemsg,
+        no_transfer_stress)
+    if bareval == "*":
+      gender = gender + "*"
+      bareval = ""
+    args = [stress, arg2, gender, bareval]
+    if not args[0]:
+      del args[0]
     if not args[-1]:
       del args[-1]
     if not args[-1]:
       del args[-1]
   else:
-    gender = gender and "*" + gender or ""
+    gender = gender and "^" + gender or ""
     if type(bareval) is list:
       arg1 = bareval[2]
       bareval = bareval[1]
+      no_transfer_stress = True
     else:
-      # At this point if stress pattern is 2, move the
-      # stress onto the ending if nomsg is fem. or neut. and
-      # the stress can be recovered in the gen pl.
-      if stress == "2":
-        m = re.search("^(.*[" + vowels_no_jo + "]" + AC + "?[^" + vowels + u"]*)([аяео])$", nomsg)
-        if m and u"ё" not in m.group(1):
-          newnomsg = make_unstressed(m.group(1)) + m.group(2) + AC
-          pagemsg("Accent-class 2 fem 1st or neut, moving stress onto ending from %s to %s" % (nomsg, newnomsg))
-          nomsg = newnomsg
-      if is_unstressed(nomsg):
-        pagemsg("WARNING: Arg 1 (stem/nom-sg) %s is totally unstressed" % (nomsg))
-        # FIXME: If it's one syllable, should we stress it?
-        # Does this ever happen? We try hard to stress monosyllabic
-        # stems up above.
       arg1 = nomsg
+      no_transfer_stress = False
+    arg1, stress = transfer_and_default_stress(arg1, stress, pagemsg,
+        no_transfer_stress)
 
-    if re.search(u"[ё́]$", arg1):
-      defstress = "2"
-    else:
-      defstress = "1"
-    if defstress == stress:
-      stress = ""
+    if bareval == "*":
+      gender = gender and gender + "*" or "^*"
+      bareval = ""
     args = [arg1 + gender, stress, bareval]
     if not args[-1]:
       del args[-1]
@@ -291,9 +315,9 @@ def infer_word(forms, noungender, number, numonly, pagemsg):
   if allsame:
     pagemsg("Found invariable word %s" % caseforms[0])
     if old_template:
-      return ["", caseforms[0], "*"]
+      return [caseforms[0], "-"]
     else:
-      return [caseforms[0] + "*"]
+      return [caseforms[0] + "^"]
 
   nompl = forms.get("nom_pl", "")
   accsg = forms.get("acc_sg", "")
@@ -340,7 +364,7 @@ def infer_word(forms, noungender, number, numonly, pagemsg):
     if re.search(u"ий$", nomsg) and re.search(u"ьего$", gensg):
       stem = re.sub(u"ий$", "", nomsg)
       if old_template:
-        args = ["", stem, "+ьий"] + anim + number
+        args = [stem, "+ьий"] + anim + number
       else:
         args = [stem + "+ьий"] + anim + number
       if trymatch(forms, args, pagemsg):
@@ -354,7 +378,7 @@ def infer_word(forms, noungender, number, numonly, pagemsg):
     if (re.search(u"([ыиіо]й|[яаь]я|[оеь]е)$", make_unstressed(nomsg)) and
         adj_by_prep()):
       if old_template:
-        args = ["", nomsg, "+"] + anim + number
+        args = [nomsg, "+"] + anim + number
       else:
         args = [nomsg + "+"] + anim + number
       if trymatch(forms, args, pagemsg):
@@ -366,7 +390,7 @@ def infer_word(forms, noungender, number, numonly, pagemsg):
         adj_by_prep()):
       for adjpat in ["+short", "+mixed"]:
         if old_template:
-          args = ["", nomsg, adjpat] + anim + number
+          args = [nomsg, adjpat] + anim + number
         else:
           args = [nomsg + adjpat] + anim + number
         if trymatch(forms, args, pagemsg):
