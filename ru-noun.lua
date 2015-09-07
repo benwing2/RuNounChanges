@@ -84,13 +84,13 @@ TODO:
    would look like (where * means to construct a slash class)
 
    Orig        -а          -ья          -ы         -и
-   #           -а          -ья          #          #
+   (blank)     -а          -ья          (blank)    (blank)
    ъ           ъ-а         ъ-ья         ъ          ъ
    ь-m         *           *            *          ь-m
    а           *           *            а          а
    я           *           *            *          я
-   о           о           о-ья         о-ы        о-и
-   е           е           *            *          *
+   о           о           о-ья         о-и        о-и
+   е           *           *            *          *
    ь-f         *           *            *          ь-f
   [IMPLEMENTED, NEED TO TEST]
 12. Add ability to specify manual translation. [IMPLEMENTED IN GITHUB FOR
@@ -162,6 +162,9 @@ end
 
 -- Old-style declensions.
 local declensions_old = {}
+-- New-style declensions; computed automatically from the old-style ones,
+-- for the most part.
+local declensions = {}
 -- Category and type information corresponding to declensions: These may
 -- contain the following fields: 'singular', 'plural', 'decl', 'hard', 'g',
 -- 'suffix', 'gensg', 'irregpl', 'cant_reduce', 'ignore_reduce', 'stem_suffix'.
@@ -219,13 +222,15 @@ local enable_categories = true
 local recognize_plurals = true
 -- Category/type info corresponding to old-style declensions; see above.
 local declensions_old_cat = {}
--- New-style declensions; computed automatically from the old-style ones,
--- for the most part.
-local declensions = {}
 -- Category/type info corresponding to new-style declensions. Computed
 -- automatically from the old-style ones, for the most part. Same format
 -- as the old-style ones.
 local declensions_cat = {}
+-- Table listing aliases of old-style declension classes.
+local declensions_old_aliases = {}
+-- Table listing aliases of new-style declension classes; computed
+-- automatically from the old-style ones.
+local declensions_aliases = {}
 -- Auto-detection functions, old-style, for a given input declension.
 -- It is passed two params, (stressed) STEM and STRESS_PATTERN, and should
 -- return the ouput declension.
@@ -591,8 +596,8 @@ local function do_show(frame, old)
 	end
 
 	local decls = old and declensions_old or declensions
-	local detectfuns = old and detect_decl_old or detect_decl
 	local decl_cats = old and declensions_old_cat or declensions_cat
+	local detectfuns = old and detect_decl_old or detect_decl
 
 	if #stem_sets > 1 then
 		track("multiple-stems")
@@ -605,6 +610,8 @@ local function do_show(frame, old)
 		local decl_class = stem_set[3] or ""
 		args.alt_gen_pl = rfind(decl_class, "%(2%)")
 		decl_class = rsub(decl_class, "%(2%)", "")
+		args.reducible = rfind(decl_class, "%*")
+		decl_class = rsub(decl_class, "%*", "")
 		local stem = stem_set[2] or default_stem
 		if not stem then
 			error("Stem in first stem set must be specified")
@@ -612,9 +619,9 @@ local function do_show(frame, old)
 		default_stem = stem
 		local was_accented
 		if rfind(decl_class, "^%+") then
-			stem, decl_class, was_accented = detect_adj_type(stem, decl_class)
+			stem, decl_class, was_accented = detect_adj_type(stem, decl_class, old)
 		else
-			stem, decl_class, was_accented = detect_stem_type(stem, decl_class, args.a)
+			stem, decl_class, was_accented = detect_stem_type(stem, decl_class, args.a, old)
 		end
 		local stress_arg = stem_set[1] or detect_stress_pattern(decl_class, was_accented)
 		local bare = stem_set[4]
@@ -632,19 +639,11 @@ local function do_show(frame, old)
 			track("mixed-decl")
 			insert_cat("~ with mixed declension")
 			local indiv_decl_classes = rsplit(decl_class, "/")
-			if #indiv_decl_classes ~= 2 then
-				error("Mixed declensional class " .. decl_class
-					.. "needs exactly two classes, singular and plural")
-			end
+			-- Should have been caught in canonicalize_decl()
+			assert #indiv_decl_classes == 2
 			sub_decl_classes = {{indiv_decl_classes[1], "sg"}, {indiv_decl_classes[2], "pl"}}
 		else
 			sub_decl_classes = {{decl_class}}
-		end
-		for _,decl_class_spec in ipairs(sub_decl_classes) do
-			local dclass = decl_class_spec[1]
-			if not decl_cats[dclass] then
-				error("Unrecognized declension class " .. dclass)
-			end
 		end
 
 		if #stress_arg > 1 then
@@ -667,26 +666,11 @@ local function do_show(frame, old)
 			bare = original_bare
 			pl = original_pl
 
-			local sgclass = sub_decl_classes[1][1]
+			local sgdecl = sub_decl_classes[1][1]
+			local sgdc = decl_cats[sgdecl]
 			local resolved_bare = bare
 			-- Handle (un)reducibles
-			if bare == "*" and sgclass.ignore_reduce then
-				-- Zaliznyak treats all nouns in -ье and -ья as being
-				-- reducible. We handle this automatically and don't require
-				-- the user to specify this, but ignore it if so for
-				-- compatibility.
-				resolved_bare = nil
-			elseif bare == "*" then
-				if is_reducible(sgclass, old) then
-					resolved_bare = stem
-					stem = export.reduce_nom_sg_stem(stem, sgclass, "error")
-				elseif is_unreducible(sgclass, old) then
-					resolved_bare = export.unreduce_nom_sg_stem(stem, sgclass,
-						stress, old, "error")
-				else
-					error("Declension class " .. sgclass .. " not (un)reducible")
-				end
-			elseif bare then
+			if bare then
 				-- FIXME: Tracking code eventually to remove; track cases
 				-- where bare is explicitly specified to see how many could
 				-- be predicted
@@ -701,8 +685,8 @@ local function do_show(frame, old)
 					track("explicit-bare-different-stress")
 					track("explicit-bare-different-stress-from-nom-sg")
 				else
-					if is_reducible(sgclass, old) then
-						local autostem = export.reduce_nom_sg_stem(bare, sgclass)
+					if is_reducible(sgdc) then
+						local autostem = export.reduce_nom_sg_stem(bare, sgdecl)
 						if not autostem then
 							track("error-reducible")
 						elseif autostem == stem then
@@ -712,8 +696,8 @@ local function do_show(frame, old)
 						else
 							track("unpredictable-reducible")
 						end
-					elseif is_unreducible(sgclass, old) then
-						local autobare = export.unreduce_nom_sg_stem(stem, sgclass, stress)
+					elseif is_unreducible(sgdc) then
+						local autobare = export.unreduce_nom_sg_stem(stem, sgdecl, stress)
 						if not autobare then
 							track("error-unreducible")
 						elseif autobare == bare then
@@ -726,6 +710,20 @@ local function do_show(frame, old)
 					else
 						track("bare-without-reducibility")
 					end
+				end
+			elseif args.reducible and not sgdc.ignore_reduce then
+				-- Zaliznyak treats all nouns in -ье and -ья as being
+				-- reducible. We handle this automatically and don't require
+				-- the user to specify this, but ignore it if so for
+				-- compatibility.
+				if is_reducible(sgdc) then
+					resolved_bare = stem
+					stem = export.reduce_nom_sg_stem(stem, sgdecl, "error")
+				elseif is_unreducible(sgdc) then
+					resolved_bare = export.unreduce_nom_sg_stem(stem, sgdecl,
+						stress, old, "error")
+				else
+					error("Declension class " .. sgdecl .. " not (un)reducible")
 				end
 			end
 
@@ -1011,8 +1009,8 @@ local function detect_basic_stem_type(stem, gender, anim)
 	end
 	base, ending = rmatch(stem, "^(.*)([мМ][яЯ]́?)$")
 	if base then
-		-- FIXME: What about мя-1? Maybe it's rare enough that we
-		-- don't have to worry about it?
+		-- We don't worry about мя-1, as it's extremely rare -- there's only
+		-- one word with the declension.
 		return base, ending
 	end
 	--recognize plural endings
@@ -1081,30 +1079,27 @@ local function detect_basic_stem_type(stem, gender, anim)
 	if rfind(stem, "[уыэюиіѣѵУЫЭЮИІѢѴ]́?$") then
 		error("Don't know how to decline stem ending in this type of vowel: " .. stem)
 	end
-	-- FIXME: What about -ин?
 	return stem, ""
 end
 
 local plural_variation_detection_map = {
 	[""] = {["-а"]="-а", ["-ья"]="-ья", ["-ы"]="", ["-и"]=""},
-	["#"] = {["-а"]="-а", ["-ья"]="-ья", ["-ы"]="", ["-и"]=""},
 	["ъ"] = {["-а"]="ъ-а", ["-ья"]="ъ-ья", ["-ы"]="ъ", ["-и"]="ъ"},
 	["й"] = {["-и"]="й", ["-я"]="й-я"},
 	["ь-m"] = {["-и"]="ь-m", ["-я"]="ь-я"},
 	["а"] = {["-ы"]="а", ["-и"]="а"},
 	["я"] = {["-и"]="я"},
-	["о"] = {["-а"]="о", ["-ья"]="о-ья", ["-ы"]="о-ы", ["-о"]="о-и"},
+	["о"] = {["-а"]="о", ["-ья"]="о-ья", ["-ы"]="о-и", ["-о"]="о-и"},
 	["е"] = {},
 	["ъ-f"] = {["-и"]="ъ-f"},
 }
 
 local special_case_1_to_plural_variation = {
 	[""] = "-а",
-	["#"] = "-а",
 	["ъ"] = "ъ-а",
 	["й"] = "й-я",
 	["ь-m"] = "ь-я",
-	["о"] = "о-ы",
+	["о"] = "о-и",
 }
 
 -- Attempt to detect the declension type (including plural variants)
@@ -1115,7 +1110,7 @@ local special_case_1_to_plural_variation = {
 -- where "m" or "f" is required. The special case (1) of Zaliznyak can
 -- also be given as an alternative to specifying the plural variant,
 -- for certain types of plural variants.
-function detect_stem_type(stem, decl, anim)
+function detect_stem_type(stem, decl, anim, old)
 	local want_sc1 = rmatch(decl, "%(1%)")
 	decl = rsub(decl, "%(1%)", "")
 	local gender = rmatch(decl, "^([mfn]?)$")
@@ -1127,7 +1122,7 @@ function detect_stem_type(stem, decl, anim)
 		stem, decl, orig_ending = detect_basic_stem_type(stem, gender, anim)
 	end
 	local was_accented = com.is_stressed(decl) or orig_ending and com.is_stressed(orig_ending)
-	decl = remove_accents_from_decl(decl)
+	decl = canonicalize_decl(decl, old)
 	if not plural then
 		if want_sc1 then
 			decl = special_case_1_to_plural_variation[decl] or
@@ -1149,43 +1144,50 @@ function detect_stem_type(stem, decl, anim)
 	end
 end
 
-function detect_adj_type(stem, decl)
+function detect_adj_type(stem, decl, old)
+	local was_accented = com.is_stressed(decl)
+	local base, ending
 	if decl == "+" then
-		local base, ending = rmatch(stem, "^(.*)([ыиіьаяое]́?[йея])$")
+		base, ending = rmatch(stem, "^(.*)([ыиіьаяое]́?[йея])$")
 		if base then
-			local was_accented = rfind(ending, "́")
+			was_accented = com.is_stressed(ending)
 			ending = com.remove_accents(ending)
 			if rfind(ending, "^[іи]й$") and rfind(base, "[" .. com.velar .. com.sib .. "]$") then
-				return base, "+ый", was_accented
+				ending = "+ый"
 			-- The following is necessary for -ц, unclear if makes sense for
 			-- sibilants. (Would be necessary -- I think -- if we were
 			-- inferring short adjective forms, but we're not.)
 			elseif ending == "ее" and rfind(base, "[" .. com.sib_c .. "]$") then
-				return base, "+ое", was_accented
+				ending = "+ое"
+			else
+				ending = "+" .. ending
 			end
-			return base, "+" .. ending, was_accented
 		else
 			error("Cannot determine stem type of adjective: " .. stem)
 		end
 	elseif decl == "+short" or decl == "+mixed" then
-		local base, ending = rmatch(stem, "^(.-)([оеаъ]?)$")
+		-- FIXME! Not clear if this works with accented endings, check it
+		base, ending = rmatch(stem, "^(.-)([оеаъ]?́?)$")
 		assert(base)
+		was_accented = com.is_stressed(ending)
+		ending = com.remove_accents(ending)
 		if ending == "е" then
 			ending = "о"
 		end
-		return base, "+" .. ending .. "-" .. usub(decl, 2), false
+		ending = "+" .. ending .. "-" .. usub(decl, 2)
 	else
-		return stem, decl, false
+		base, ending = stem, decl
 	end
+	return base, canonicalize_decl(ending, old), was_accented
 end
 
 -- Detect stress pattern (1 or 2) based on whether ending is stressed or
--- decl class is inherently ending-stressed.
+-- decl class is inherently ending-stressed. NOTE: This function is run
+-- after alias resolution and accent removal.
 function detect_stress_pattern(decl, was_accented)
-	assert(not rfind(decl, "́"))
-	-- ёнок/онок and ёночек/оночек always bear stress
+	-- ёнок and ёночек always bear stress
 	-- not anchored to ^ or $ in case of a slash declension and old-style decls
-	if rfind(decl, "[ёое]нок") or rfind(decl, "[ёое]ночек") then
+	if rfind(decl, "ёнок") or rfind(decl, "ёночек") then
 		return "2"
 	-- stressed suffix и́н; missing in plural and true endings don't bear stress
 	-- (except for exceptional господи́н)
@@ -1202,29 +1204,51 @@ function detect_stress_pattern(decl, was_accented)
 	end
 end
 
--- Canonicalize decl class into non-accented form; but е́ is special, not the
--- same as е (whose accented version is ё)
-function remove_accents_from_decl(decl)
+-- Canonicalize decl class into non-accented and alias-resolved form;
+-- but note that some canonical decl class names with an accent in them
+-- (e.g. е́, not the same as е, whose accented version is ё; and various
+-- adjective declensions).
+function canonicalize_decl(decl, old)
 	if rfind(decl, "/") then
 		local split_decl = rsplit(decl, "/")
-		return remove_accents_from_decl(split_decl[1]) .. "/" ..
-			remove_accents_from_decl(split_decl[2])
+		if #split_decl ~= 2 then
+			error("Mixed declensional class " .. decl
+				.. "needs exactly two classes, singular and plural")
+		end
+		return canonicalize_decl(split_decl[1], old) .. "/" ..
+			canonicalize_decl(split_decl[2], old)
 	end
-	if decl == "е́" then
-		return decl
-	elseif rfind(decl, "^%+") then -- don't remove accent from adj decls
-		return decl
-	else
-		return com.remove_accents(decl)
+	-- remove accents, but not from е́ or from adj decls
+	if decl ~= "е́" and not rfind(decl, "^%+") then
+		decl = com.remove_accents(decl)
 	end
+
+	local decl_aliases = old and declensions_old_aliases or declensions_aliases
+	local decl_cats = old and declensions_old_cat or declensions_cat
+	if decl_aliases[decl] then
+		-- If we find an alias, map it, and sanity-check that there's
+		-- a category entry for the result.
+		decl = decl_aliases[decl]
+		assert(decl_cats[decl])
+	elseif not decl_cats[decl] then
+		error("Unrecognized declension class " .. decl)
+	end
+	-- We can't yet sanity-check that there is an actual declension,
+	-- because there's still the detect_decl step, which conceivably
+	-- could convert the user-visible declension class (which always
+	-- has a category object) to an internal declension variant.
+	-- We don't much do this any more, but it's still possible.
+	return decl
 end
 
-function is_reducible(decl, old)
-	local decl_cats = old and declensions_old_cat or declensions_cat
-	local dc = decl_cats[decl]
-	if dc.suffix or dc.cant_reduce then return false end
-	if dc.decl == "3rd" and dc.g == "f" or dc.g == "m" then return true end
-	return false
+function is_reducible(decl_cat)
+	if decl_cat.suffix or decl_cat.cant_reduce then
+		return false
+	elseif decl_cat.decl == "3rd" and decl_cat.g == "f" or decl_cat.g == "m" then
+		return true
+	else
+		return false
+	end
 end
 
 -- Reduce nom sg to stem by eliminating the "epenthetic" vowel. Applies to
@@ -1240,12 +1264,14 @@ function export.reduce_nom_sg_stem(stem, decl, can_err)
 	return ret
 end
 
-function is_unreducible(decl, old)
-	local decl_cats = old and declensions_old_cat or declensions_cat
-	local dc = decl_cats[decl]
-	if dc.suffix or dc.cant_reduce then return false end
-	if dc.decl == "1st" or dc.decl == "2nd" and dc.g == "n" then return true end
-	return false
+function is_unreducible(decl_cat)
+	if decl_cat.suffix or decl_cat.cant_reduce then
+		return false
+	elseif decl_cat.decl == "1st" or decl_cat.decl == "2nd" and decl_cat.g == "n" then
+		return true
+	else
+		return false
+	end
 end
 
 -- Unreduce stem to the form found in the gen pl by inserting an epenthetic
@@ -1300,14 +1326,6 @@ local function old_to_new(v)
 	return v
 end
 
--- Function to convert old detect_decl function to new one. This needs to be
--- up here because it is called just below.
-local function old_detect_decl_to_new(ofunc)
-	return function(stem, stress)
-		return old_to_new(ofunc(stem, stress))
-	end
-end
-
 ----------------- Masculine hard -------------------
 
 -- Hard-masculine declension, ending in a hard consonant
@@ -1333,11 +1351,11 @@ declensions_old["ъ"] = {
 declensions_old_cat["ъ"] = { decl="2nd", hard="hard", g="m" }
 
 -- Normal mapping of old ъ would be "" (blank), but we set up "#" as an alias
--- so we have a way of referring to it without defaulting if need be (e.g. in
--- the second stem of a word), and distinct from auto-detection, which happens
--- if the first stem is blank.
-detect_decl["#"] = old_detect_decl_to_new(detect_decl_old["ъ"])
-declensions_cat["#"] = declensions_old_cat["ъ"]
+-- so we have a way of referring to it without defaulting if need be and
+-- distinct from auto-detection (e.g. in the second stem of a word, or to
+-- override autodetection of -ёнок or -ин -- the latter is necessary in the
+-- case of семьянин).
+declensions_aliases["#"] = ""
 
 ----------------- Masculine hard, irregular plural -------------------
 
@@ -1351,8 +1369,7 @@ declensions_cat["-а"] = {
 	singular = "ending in a consonant",
 	decl="2nd", hard="hard", g="m", irregpl=true
 }
-detect_decl["#-а"] = old_detect_decl_to_new(detect_decl_old["ъ-а"])
-declensions_cat["#-а"] = declensions_cat["-а"]
+declensions_aliases["#-a"] = "-a"
 
 -- Hard-masculine declension, ending in a hard consonant
 -- (ending in -ъ, old-style), with irreg soft pl -ья.
@@ -1380,8 +1397,7 @@ declensions_cat["-ья"] = {
 	singular = "ending in a consonant",
 	decl="2nd", hard="hard", g="m", irregpl=true,
 }
-detect_decl["#-ья"] = old_detect_decl_to_new(detect_decl_old["ъ-ья"])
-declensions_cat["#-ья"] = declensions_cat["-ья"]
+declensions_aliases["#-ья"] = "-ья"
 
 ----------------- Masculine hard, suffixed, irregular plural -------------------
 
@@ -1416,13 +1432,10 @@ declensions_old["ёнокъ"] = {
 	["ins_pl"] = "я́тами",
 	["pre_pl"] = "я́тахъ",
 }
-
-declensions_old["онокъ"] = declensions_old["ёнокъ"]
-declensions_old["енокъ"] = declensions_old["ёнокъ"]
-
 declensions_old_cat["ёнокъ"] = { decl="2nd", hard="hard", g="m", suffix=true }
-declensions_old_cat["онокъ"] = declensions_old_cat["ёнокъ"]
-declensions_old_cat["енокъ"] = declensions_old_cat["ёнокъ"]
+
+declensions_old_aliases["онокъ"] = "ёнокъ"
+declensions_old_aliases["енокъ"] = "ёнокъ"
 
 declensions_old["ёночекъ"] = {
 	["nom_sg"] = "ёночекъ",
@@ -1438,13 +1451,10 @@ declensions_old["ёночекъ"] = {
 	["ins_pl"] = "я́тками",
 	["pre_pl"] = "я́ткахъ",
 }
-
-declensions_old["оночекъ"] = declensions_old["ёночекъ"]
-declensions_old["еночекъ"] = declensions_old["ёночекъ"]
-
 declensions_old_cat["ёночекъ"] = { decl="2nd", hard="hard", g="m", suffix=true }
-declensions_old_cat["оночекъ"] = declensions_old_cat["ёночекъ"]
-declensions_old_cat["еночекъ"] = declensions_old_cat["ёночекъ"]
+
+declensions_old_aliases["оночекъ"] = "ёночекъ"
+declensions_old_aliases["еночекъ"] = "ёночекъ"
 
 ----------------- Masculine soft -------------------
 
@@ -1609,8 +1619,7 @@ declensions_old["о-и"] = mw.clone(declensions_old["о"])
 declensions_old["о-и"]["nom_pl"] = "ы́"
 declensions_old_cat["о-и"] = { decl="2nd", hard="hard", g="n", irregpl=true }
 
-declensions_old["о-ы"] = declensions_old["о-и"]
-declensions_old_cat["о-ы"] = declensions_old_cat["о-и"]
+declensions_old_aliases["о-ы"] = "о-и"
 
 -- Hard-neuter declension in -о with irreg soft pl -ья;
 -- differs throughout the plural from normal -о.
@@ -1669,8 +1678,7 @@ declensions_old_cat["е"] = {
 }
 
 -- User-facing declension type "ё" = "е"
-detect_decl_old["ё"] = detect_decl_old["е"]
-declensions_old_cat["ё"] = declensions_old_cat["е"]
+declensions_old_aliases["ё"] = "е"
 
 -- Rare soft-neuter declension in stressed -е́ (e.g. муде́, бытие́)
 declensions_old["е́"] = {
@@ -1720,14 +1728,13 @@ declensions_old["ье"] = {
 	["pre_pl"] = "ья́хъ",
 }
 
-declensions_old["ьё"] = declensions_old["ье"]
-
 declensions_old_cat["ье"] = {
 	decl="2nd", hard="soft", g="n",
 	stem_suffix="ь", gensg=true,
 	ignore_reduce=true -- already has unreduced gen pl
 }
-declensions_old_cat["ьё"] = declensions_old_cat["ье"]
+
+declensions_old_aliases["ьё"] = "ье"
 
 --------------------------------------------------------------------------
 --                           Third declension                           --
@@ -1847,19 +1854,9 @@ end
 
 -- Set up some aliases. е-short and е-mixed exist because е instead of о
 -- appears after sibilants and ц.
-local adj_decl_aliases = {
-	{"+ой", "+о́й"}, {"+е-short", "+о-short"}, {"+е-mixed", "+о-mixed"}
-}
-
-for _, alias_pair in ipairs(adj_decl_aliases) do
-	local to, from = alias_pair[1], alias_pair[2]
-	declensions_old[to] = declensions_old[from]
-	declensions_old_cat[to] = declensions_old_cat[from]
-	to = old_to_new(to)
-	from = old_to_new(from)
-	declensions[to] = declensions[from]
-	declensions_cat[to] = declensions_cat[from]
-end
+declensions_old_aliases["+ой"] = "+о́й"
+declensions_old_aliases["+е-short"] = "+о-short"
+declensions_old_aliases["+е-mixed"] = "+о-mixed"
 
 -- Convert ій/ий to ый after velar or sibilant. This is important for
 -- velars; doesn't really matter one way or the other for sibilants as
@@ -1909,6 +1906,7 @@ detect_decl_old["+а́я"] = detect_decl_old["+ая"]
 --                         Populate new from old                        --
 --------------------------------------------------------------------------
 
+-- Function to convert an entry in an old declensions table to new.
 local function old_decl_entry_to_new(v)
 	if type(v) == "table" then
 		local new_entry = {}
@@ -1925,6 +1923,7 @@ local function old_decl_entry_to_new(v)
 	end
 end
 
+-- Function to convert an old declensions table to new.
 local function old_decl_to_new(odecl)
 	local ndecl = {}
 	for k, v in pairs(odecl) do
@@ -1933,6 +1932,7 @@ local function old_decl_to_new(odecl)
 	return ndecl
 end
 
+-- Function to convert an entry in an old declensions_cat table to new.
 local function old_decl_cat_entry_to_new(odecl_cat_entry)
 	if not odecl_cat_entry then
 		return nil
@@ -1954,12 +1954,20 @@ local function old_decl_cat_entry_to_new(odecl_cat_entry)
 	end
 end
 
+-- Function to convert an old declensions_cat table to new.
 local function old_decl_cat_to_new(odeclcat)
 	local ndeclcat = {}
 	for k, v in pairs(odeclcat) do
 		ndeclcat[k] = old_decl_cat_entry_to_new(v)
 	end
 	return ndeclcat
+end
+
+-- Function to convert an old detect_decl function to new one.
+local function old_detect_decl_to_new(ofunc)
+	return function(stem, stress)
+		return old_to_new(ofunc(stem, stress))
+	end
 end
 
 -- populate declensions[] from declensions_old[]
@@ -1975,6 +1983,14 @@ for odecltype, odeclcat in pairs(declensions_old_cat) do
 	local ndecltype = old_to_new(odecltype)
 	if not declensions_cat[ndecltype] then
 		declensions_cat[ndecltype] = old_decl_cat_to_new(odeclcat)
+	end
+end
+
+-- populate declensions_aliases[] from declensions_old_aliases[]
+for ofrom, oto in pairs(declensions_old_aliases) do
+	local from = old_to_new(ofrom)
+	if not declensions_aliases[from] then
+		declensions_aliases[from] = old_to_new(oto)
 	end
 end
 
