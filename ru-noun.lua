@@ -762,7 +762,7 @@ local function do_show_multi(frame)
 				stem_set[1] = adj_stem
 				stem_set[3] = adj_type
 			else
-				local noun_stem, noun_type = rmatch(stem_set[1], "^(.*)%*(.*)$")
+				local noun_stem, noun_type = rmatch(stem_set[1], "^(.*)%^(.*)$")
 				if noun_stem then
 					stem_set[1] = noun_stem
 					if noun_type == "" then -- invariable
