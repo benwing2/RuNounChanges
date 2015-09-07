@@ -45,7 +45,8 @@ TODO:
    (мальчонок?). USE TRACKING.
 1b. Find places with '*' as the decl class and change to -. There is at
    least one. USE TRACKING.
-1c. FIXME: Add proper support for Zaliznyak b', f''.
+1c. FIXME: Consider changing '-' to mean invariable to '^' or similar.
+1d. FIXME: Add proper support for Zaliznyak b', f''.
 2. Require stem to be specified instead of defaulting to page. [IMPLEMENTED
    IN GITHUB]
 3. Bug in -я nouns with bare specified; gen pl should not have -ь ending. Old
