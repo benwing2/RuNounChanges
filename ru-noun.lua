@@ -725,6 +725,39 @@ local function do_show(frame, old)
 			bare = original_bare
 			pl = original_pl
 
+			-- it's safe to accent monosyllabic stems
+			if com.is_monosyllabic(stem) then
+				stem = com.make_ending_stressed(stem)
+			end
+			-- If all forms that use a given stem are ending-stressed, it's
+			-- safe to stress the last syllable of the stem in case it's
+			-- multisyllabic and unstressed; else give an error unless the
+			-- user has indicated they purposely are leaving the word
+			-- unstressed (e.g. due to not knowing the stress) by putting
+			-- a * at the beginning of the main stem
+			if com.is_unstressed(stem) then
+				local all_ending_stressed = (args.n == "s" or pl) and
+					ending_stressed_sg_patterns[stress] or
+					args.n == "p" and ending_stressed_pl_patterns[stress] or
+					stress == "2"
+				if all_ending_stressed then
+					stem = com.make_ending_stressed(stem)
+				elseif not allow_unaccented then
+					error("Stem " .. stem .. " requires an accent")
+				end
+			end
+			if pl
+				if com.is_monosyllabic(pl) then
+					pl = com.make_ending_stressed(pl)
+				end
+			    if com.is_unstressed(pl) then
+					if ending_stressed_pl_patterns[stress] then
+						pl = com.make_ending_stressed(pl)
+					elseif not allow_unaccented then
+						error("Plural stem " .. pl .. " requires an accent")
+					end
+				end
+			end
 			local sgdecl = sub_decl_classes[1][1]
 			local sgdc = decl_cats[sgdecl]
 			local resolved_bare = bare
@@ -786,41 +819,10 @@ local function do_show(frame, old)
 				end
 			end
 
-			-- it's safe to accent monosyllabic stems
-			if com.is_monosyllabic(stem) then
-				stem = com.make_ending_stressed(stem)
-			end
-			if pl and com.is_monosyllabic(pl) then
-				pl = com.make_ending_stressed(pl)
-			end
 			if resolved_bare and com.is_monosyllabic(resolved_bare) then
 				resolved_bare = com.make_ending_stressed(resolved_bare)
 			end
 
-			-- If all forms that use a given stem are ending-stressed, it's
-			-- safe to stress the last syllable of the stem in case it's
-			-- multisyllabic and unstressed; else give an error unless the
-			-- user has indicated they purposely are leaving the word
-			-- unstressed (e.g. due to not knowing the stress) by putting
-			-- a * at the beginning of the main stem
-			if com.is_unstressed(stem) then
-				local all_ending_stressed = (args.n == "s" or pl) and
-					ending_stressed_sg_patterns[stress] or
-					args.n == "p" and ending_stressed_pl_patterns[stress] or
-					stress == "2"
-				if all_ending_stressed then
-					stem = com.make_ending_stressed(stem)
-				elseif not allow_unaccented then
-					error("Stem " .. stem .. " requires an accent")
-				end
-			end
-			if pl and com.is_unstressed(pl) then
-				if ending_stressed_pl_patterns[stress] then
-					pl = com.make_ending_stressed(pl)
-				elseif not allow_unaccented then
-					error("Plural stem " .. pl .. " requires an accent")
-				end
-			end
 			-- Bare should always be stressed
 			if resolved_bare and com.is_unstressed(resolved_bare) and not allow_unaccented then
 				error("Resolved bare stem " .. resolved_bare .. " requires an accent")
