@@ -1,0 +1,121 @@
+;Neuter non-reducible
+{{User:Benwing2/ru-noun-table|боло́то}}
+{{User:Benwing2/ru-noun-table|го́ре|n=sg}}
+{{User:Benwing2/ru-noun-table|бла́го}}
+{{User:Benwing2/ru-noun-table|жили́ще}}
+{{User:Benwing2/ru-noun-table|со́лнце}}
+;Check the following one in particular
+{{User:Benwing2/ru-noun-table|зда́ние}}
+{{User:Benwing2/ru-noun-table|вещество́}}
+{{User:Benwing2/ru-noun-table|ружьецо́}}
+;Check the following one in particular
+{{User:Benwing2/ru-noun-table|остриё}}
+;Check the following one in particular
+{{User:Benwing2/ru-noun-table|житие́}}
+;Check the following one in particular
+{{User:Benwing2/ru-noun-table|бытие́|n=sg}}
+{{User:Benwing2/ru-noun-table|c|ме́сто}}
+{{User:Benwing2/ru-noun-table|c|по́ле}}
+{{User:Benwing2/ru-noun-table|c|во́йско}}
+{{User:Benwing2/ru-noun-table|d|вино́}}
+{{User:Benwing2/ru-noun-table|d|лицо́}}
+{{User:Benwing2/ru-noun-table|e|у́хо|||уш}}
+{{User:Benwing2/ru-noun-table|f|тавро́}}
+{{User:Benwing2/ru-noun-table|ча́ло|a=an}}
+{{User:Benwing2/ru-noun-table|чудо́вище|a=an}}
+
+;Neuter reducible
+{{User:Benwing2/ru-noun-table|кре́сло|*}}
+{{User:Benwing2/ru-noun-table|бра́шно|*}}
+;Check the following one in particular, esp. in the gen pl
+{{User:Benwing2/ru-noun-table|тя́гло|*|or}}
+;Check the following one in particular, esp. in the gen pl
+{{User:Benwing2/ru-noun-table|тя́гло|*|or|a}}
+;Check the following one in particular, esp. in the gen pl
+{{User:Benwing2/ru-noun-table|зло́||зол}}
+;Check the following one in particular, esp. in the gen pl
+{{User:Benwing2/ru-noun-table|ма́сло||ма́сел}}
+;Check the following one in particular, should give an error
+{{User:Benwing2/ru-noun-table|d|полотно́|*}}
+;Check the following one in particular
+{{User:Benwing2/ru-noun-table|d|поло́тно|*}}
+{{User:Benwing2/ru-noun-table|d|окно́|*}}
+{{User:Benwing2/ru-noun-table|d|письмо́|*}}
+{{User:Benwing2/ru-noun-table|блю́дце|*}}
+{{User:Benwing2/ru-noun-table|зе́ркальце|*}}
+{{User:Benwing2/ru-noun-table|словцо́|*}}
+{{User:Benwing2/ru-noun-table|сельцо́|*}}
+{{User:Benwing2/ru-noun-table|c|се́рдце|*}}
+;Check the following one in particular, should give an error
+{{User:Benwing2/ru-noun-table|долотцо́|*}}
+;Check the following one in particular
+{{User:Benwing2/ru-noun-table|d|доло́тцо|*}}
+;Check the following one in particular, esp. in the gen pl
+{{User:Benwing2/ru-noun-table|d|кольцо́||коле́ц}}
+;Check the following one in particular, esp. in the gen pl
+{{User:Benwing2/ru-noun-table|d|яйцо́||яи́ц}}
+{{User:Benwing2/ru-noun-table|f|крыльцо́|*}}
+;Check the following one in particular
+{{User:Benwing2/ru-noun-table|уще́лье|*}}
+;Check the following one in particular
+{{User:Benwing2/ru-noun-table|питьё|*}}
+;Check the following one in particular
+{{User:Benwing2/ru-noun-table|копьё|*}}
+
+;Neuter special case (1)
+{{User:Benwing2/ru-noun-table|я́блоко|(1)}}
+;Check the following one, should give an error (maybe?)
+{{User:Benwing2/ru-noun-table|d|молоко́|(1)|n=sg}}
+;Check the following one, should have no plural
+{{User:Benwing2/ru-noun-table|d|моло́ко|(1)|n=sg}}
+;Check the following one in particular, esp. in the gen pl.
+{{User:Benwing2/ru-noun-table|f|плечо́|(1)|плеч}}
+{{User:Benwing2/ru-noun-table|ведёрко|*(1)}}
+{{User:Benwing2/ru-noun-table|око́шко|*(1)}}
+;Check the following one in particular
+{{User:Benwing2/ru-noun-table|a,d|у́шко|*(1)}}
+
+;Neuter special case (2)
+{{User:Benwing2/ru-noun-table|c|о́блако|(2)}}
+;Check the following one in particular
+{{User:Benwing2/ru-noun-table|остриё|(2)}}
+{{User:Benwing2/ru-noun-table|c|о́блачко|*(2)}}
+{{User:Benwing2/ru-noun-table|боло́тце|*(2)}}
+;Check the following one in particular
+{{User:Benwing2/ru-noun-table|пла́тье|*(2)}}
+;Check the following one in particular
+{{User:Benwing2/ru-noun-table|d|жнивьё|*(2)}}
+;Check the following one in particular
+{{User:Benwing2/ru-noun-table|волоко́нце|*|or||*(2)}}
+;Check the following one in particular
+{{User:Benwing2/ru-noun-table|c,b|де́ревце|*|or|c,b||*(2)}}
+;Check the following one in particular
+{{User:Benwing2/ru-noun-table|верхо́вье|*|or||(2)}}
+
+;Neuter special case (1) and (2)
+;Check the following one in particular
+{{User:Benwing2/ru-noun-table|мазло́|(1)(2)|a=an}}
+{{User:Benwing2/ru-noun-table|ли́чико|(1)(2)}}
+;Check the following one in particular
+{{User:Benwing2/ru-noun-table|a,b|дре́вко|*(1)(2)}}
+{{User:Benwing2/ru-noun-table|очко́|*(1)(2)}}
+
+;Neuter with ё
+{{User:Benwing2/ru-noun-table|d|веретёно}}
+{{User:Benwing2/ru-noun-table|d|вёсло|*}}
+{{User:Benwing2/ru-noun-table|d|стёкло|*}}
+{{User:Benwing2/ru-noun-table|d|озёрцо|*}}
+
+;Neuter plural
+{{User:Benwing2/ru-noun-table|воро́та|n}}
+{{User:Benwing2/ru-noun-table|уста́|n}}
+{{User:Benwing2/ru-noun-table|войска́|n}}
+;Check the following one in particular
+{{User:Benwing2/ru-noun-table|пре́ния|n}}
+{{User:Benwing2/ru-noun-table|кро́сна|n*}}
+{{User:Benwing2/ru-noun-table|воро́тца|n*}}
+{{User:Benwing2/ru-noun-table|пери́льца|n*}}
+;Check the following one in particular
+{{User:Benwing2/ru-noun-table|хло́пья|n*(2)}}
+;Check the following one in particular
+{{User:Benwing2/ru-noun-table|b|письмёна|n}}
