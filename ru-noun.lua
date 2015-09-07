@@ -527,6 +527,16 @@ end
 --                              Main code                               --
 --------------------------------------------------------------------------
 
+local function arg1_is_stress(arg1)
+	if not arg1 then return false end
+	for _, arg in rsplit(arg1, ",") do
+		if not (rfind(arg, "^[1-6]%*?$") or rfind(arg, "^[a-f]'?'?$")) then
+			return false
+		end
+	end
+	return true
+end
+
 local function do_show(frame, old)
 	PAGENAME = mw.title.getCurrentTitle().text
 	SUBPAGENAME = mw.title.getCurrentTitle().subpageText
@@ -564,8 +574,15 @@ local function do_show(frame, old)
 			stem_set = {}
 			offset = i
 		else
+			-- If the first argument isn't stress, that means all arguments
+			-- have been shifted to the left one. We want to shift them
+			-- back to the right one, so we change the offset so that we
+			-- get the same effect of skipping a slot in the stem set.
+			if i - offset == 1 and not arg1_is_stress(args[i]) then
+				offset = offset - 1
+			end
 			if i - offset > 5 then
-				error("Can't specify 6th or greater argument of stem set: arg " .. i .. " = " .. (args[i] or "(blank)"))
+				error("Too many arguments for stem set: arg " .. i .. " = " .. (args[i] or "(blank)"))
 			end
 			stem_set[i - offset] = args[i]
 		end
@@ -598,26 +615,11 @@ local function do_show(frame, old)
 
 	local default_stem = nil
 
-	local function arg1_is_stress(arg1)
-		if not arg1 then return false end
-		for _, arg in rsplit(arg1, ",") do
-			if not (rfind(arg, "^[1-6]\*?$") or rfind(arg, "^[a-f]'?'?$")) then
-				return false
-			end
-		end
-		return true
-	end
-
 	for _, stem_set in ipairs(stem_sets) do
-		local offset = 0
-		local arg1_stress = arg1_is_stress(stem_set[1])
-		local stress_arg = arg1_stress and stem_set[1]
-		if not arg1_stress then
-			offset = -1
-		end
-		local decl_class = stem_set[3 + offset] or ""
-		local bare = stem_set[4 + offset]
-		local pl = stem_set[5 + offset]
+		local stress_arg = stem_set[1]
+		local decl_class = stem_set[3] or ""
+		local bare = stem_set[4]
+		local pl = stem_set[5]
 		if decl_class == "manual" then
 			decl_class = "-"
 			args.manual = true
@@ -632,7 +634,7 @@ local function do_show(frame, old)
 		decl_class = rsub(decl_class, "%(2%)", "")
 		args.reducible = rfind(decl_class, "%*")
 		decl_class = rsub(decl_class, "%*", "")
-		local stem = stem_set[2 + offset] or default_stem
+		local stem = stem_set[2] or default_stem
 		if not stem then
 			error("Stem in first stem set must be specified")
 		end
