@@ -547,9 +547,23 @@ end
 --                              Main code                               --
 --------------------------------------------------------------------------
 
+-- FIXME! Properly support b', f''
+local zaliznyak_to_our_stress_pattern = {
+	["a"] = "1",
+	["b"] = "2",
+	["b'"] = "2",
+	["c"] = "3",
+	["d"] = "4",
+	["d'"] = "4*",
+	["e"] = "5",
+	["f"] = "6",
+	["f'"] = "6*",
+	["f''"] = "6*",
+}
+
 local function arg1_is_stress(arg1)
 	if not arg1 then return false end
-	for _, arg in rsplit(arg1, ",") do
+	for _, arg in ipairs(rsplit(arg1, ",")) do
 		if not (rfind(arg, "^[1-6]%*?$") or rfind(arg, "^[a-f]'?'?$")) then
 			return false
 		end
@@ -685,7 +699,7 @@ local function do_show(frame, old)
 			insert_cat("~ with mixed declension")
 			local indiv_decl_classes = rsplit(decl_class, "/")
 			-- Should have been caught in canonicalize_decl()
-			assert #indiv_decl_classes == 2
+			assert(#indiv_decl_classes == 2)
 			sub_decl_classes = {{indiv_decl_classes[1], "sg"}, {indiv_decl_classes[2], "pl"}}
 		else
 			sub_decl_classes = {{decl_class}}
@@ -884,20 +898,6 @@ local zaliznyak_stress_pattern = {
 	["5"] = "e",
 	["6"] = "f",
 	["6*"] = "f' (f'' for 3rd-declension feminine nouns)",
-}
-
--- FIXME! Properly support b', f''
-local zaliznyak_to_our_stress_pattern = {
-	["a"] = "1",
-	["b"] = "2",
-	["b'"] = "2",
-	["c"] = "3",
-	["d"] = "4",
-	["d'"] = "4*",
-	["e"] = "5",
-	["f"] = "6",
-	["f'"] = "6*",
-	["f''"] = "6*",
 }
 
 local stem_gender_endings = {
