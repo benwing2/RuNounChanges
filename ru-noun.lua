@@ -47,6 +47,25 @@ TODO:
    least one. USE TRACKING.
 1c. FIXME: Consider changing '-' to mean invariable to '^' or similar.
 1d. FIXME: Add proper support for Zaliznyak b', f''.
+1e. FIXME: Add ё as a "specific", using Vitalik's algorithm (rightmost е
+   becomes ё).
+1f. FIXME: Implement auto-stressing multisyllabic stems in accent patterns
+   d and f. It appears that the plural-stem-stressed forms have the stress
+   on the last stem syllable in d and on the first stem syllable in f;
+   but in f it moves to the last stem syllable in the gen pl (which is
+   ending-stressed). Additional trickiness ensues with words like середа́
+   (1f',ё) and железа́ (1f,ё), which have nom pl се́реда and же́леза but
+   gen pl серёд, желёз, so the normal way of specifying things would have
+   to specify stressed се́реда,же́леза and use an explicit bare to specify
+   серёд and желёз. It would be nice if they could be specified the
+   Zaliznyak way and have everything work. Maybe the implementation would
+   be to internally generate a stressed stem се́реда,же́леза and explicit
+   bare серёд,желёз, and keep track of the fact that these aren't reducibles.
+   See what Vitalik's module does. (I think Vitalik's module has at least four
+   separate stems, nom sg, ins sg, nom pl, gen pl and does some magic with
+   them. The ins sg stem is necessary for 8* feminine words like люво́вь, with
+   reducible stem любв- in gen/dat/pre sg and throughout the plural (I think),
+   but ins sg любо́вью.)
 2. Require stem to be specified instead of defaulting to page. [IMPLEMENTED
    IN GITHUB]
 3. Bug in -я nouns with bare specified; gen pl should not have -ь ending. Old
