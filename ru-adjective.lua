@@ -71,17 +71,8 @@ TODO:
    might refer simply to any misc. irregularity; and even if it is, it might
    not be worth it, and better simply to have this done using the various
    override mechanisms.
-2. Figure out what the symbol X-inside-square (⊠) means, which seems to go with
-   all adjectives in -о́й with multi-syllabic stems. It may mean that the
-   masculine singular short form is missing. If this indeed a regular thing,
-   we need to implement it (and if it's regular but means something else,
-   we need to implement that, too). Also figure out what the other signs
-   on pages 68-76 etc. mean: -, X, ~, П₂, Р₂, diamond (♢), triangle (△; might
-   simply mean a misc. irregularity; explained on p. 61).
-3. Should non-reducible adjectives in -нный and -нний default to special case
+2. Should non-reducible adjectives in -нный and -нний default to special case
    (1)?
-4. In the case of a non-unreducible short masc sing of stress type b, we don't
-   currently move the stress to the last syllable. Should we?
 ]=]--
 
 local m_utilities = require("Module:utilities")
