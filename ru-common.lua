@@ -80,6 +80,10 @@ function export.needs_accents(word)
 	return export.is_unstressed(word) and not export.is_monosyllabic(word)
 end
 
+function export.is_vowelless(word)
+	return not rfind(word, export.vowel)
+end
+
 function export.is_stressed(word)
 	-- A word that has ё in it is inherently stressed.
 	return rfind(word, "[ёЁ́]")
@@ -89,6 +93,7 @@ function export.is_unstressed(word)
 	return not export.is_stressed(word)
 end
 
+-- This also includes non-syllabic stems like льд-.
 function export.is_monosyllabic(word)
 	return not rfind(word, "[" .. export.vowel .. "].*[" .. export.vowel .. "]")
 end

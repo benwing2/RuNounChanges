@@ -1182,7 +1182,9 @@ function detect_stem_type(stem, decl, anim, old)
 	if gender then
 		stem, decl, orig_ending = detect_basic_stem_type(stem, gender, anim)
 	end
-	local was_accented = com.is_stressed(decl) or orig_ending and com.is_stressed(orig_ending)
+	-- A word like щи (pluralia tantum, stem щ-) should always be considered
+	-- end-stressed.
+	local was_accented = com.is_stressed(decl) or orig_ending and com.is_stressed(orig_ending) or com.is_vowelless(stem)
 	decl = canonicalize_decl(decl, old)
 	if not plural then
 		if want_sc1 then
