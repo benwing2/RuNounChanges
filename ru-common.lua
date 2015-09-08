@@ -60,18 +60,18 @@ function export.iotation(stem, shch)
     stem = rsub(stem, "ск$", "щ")
     stem = rsub(stem, "ст$", "щ")
     stem = rsub(stem, "[кц]$", "ч")
-    
+
     -- normally "т" is iotated as "ч" but there are many verbs that are iotated with "щ"
     if shch == "щ" then
         stem = rsub(stem, "т$", "щ")
     else
         stem = rsub(stem, "т$", "ч")
     end
- 
+
     stem = rsub(stem, "[гдз]$", "ж")
-    
+
     stem = rsub(stem, "([бвмпф])$", "%1л")
-    
+
     return stem
 end
 
@@ -141,7 +141,7 @@ function export.make_unstressed_once_at_beginning(word)
 end
 
 function export.make_ending_stressed(word)
-	-- If already ending stressed, just return word so we don't mess up ё 
+	-- If already ending stressed, just return word so we don't mess up ё
 	if rfind(word, "[ёЁ][^" .. export.vowel .. "]*$") or
 		rfind(word, "[" .. export.vowel .. "]́[^" .. export.vowel .. "]*$") then
 		return word
@@ -151,8 +151,8 @@ function export.make_ending_stressed(word)
 		"%1́%2")
 end
 		
-function export.make_initial_stressed(word)
-	-- If already initial stressed, just return word so we don't mess up ё 
+function export.make_beginning_stressed(word)
+	-- If already beginning stressed, just return word so we don't mess up ё
 	if rfind(word, "^[^" .. export.vowel .. "]*[ёЁ]") or
 		rfind(word, "^[^" .. export.vowel .. "]*[" .. export.vowel .. "]́") then
 		return word

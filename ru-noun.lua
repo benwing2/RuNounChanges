@@ -48,7 +48,7 @@ TODO:
 1c. FIXME: Consider changing '-' to mean invariable to '^' or similar.
 1d. FIXME: Add proper support for Zaliznyak b', f''.
 1e. FIXME: Add ё as a "specific", using Vitalik's algorithm (rightmost е
-   becomes ё).
+   becomes ё). [DONE, NEEDS TESTING]
 1f. FIXME: Implement auto-stressing multisyllabic stems in accent patterns
    d and f. It appears that the plural-stem-stressed forms have the stress
    on the last stem syllable in d and on the first stem syllable in f;
@@ -65,7 +65,11 @@ TODO:
    separate stems, nom sg, ins sg, nom pl, gen pl and does some magic with
    them. The ins sg stem is necessary for 8* feminine words like люво́вь, with
    reducible stem любв- in gen/dat/pre sg and throughout the plural (I think),
-   but ins sg любо́вью.)
+   but ins sg любо́вью.) [DONE? NEEDS TESTING]
+1g. FIXME! What about -ья and variants with alt gen pl? They have -ь but our
+   bare computation doesn't add -ь/-й here are required. Perhaps we should
+   just remove the alt gen pl from these variants, must be extraordinarily
+   rare and don't exist in Zaliznyak.
 2. Require stem to be specified instead of defaulting to page. [IMPLEMENTED
    IN GITHUB]
 3. Bug in -я nouns with bare specified; gen pl should not have -ь ending. Old
@@ -163,6 +167,14 @@ local usub = mw.ustring.sub
 local function rsub(term, foo, bar)
 	local retval = rsubn(term, foo, bar)
 	return retval
+end
+
+-- version of rsubn() that converts the second value (number of subs) into
+-- a boolean indicating whether a substitution was made
+local function rsubb(term, foo, bar)
+	local retval, subbed = rsubn(term, foo, bar)
+	subbed = subbed > 0
+	return retval, subbed
 end
 
 -- version of rfind() that lowercases its string first, for case-insensitive matching
@@ -664,10 +676,13 @@ local function do_show(frame, old)
 				error("Can't specify optional stem parameters when manual")
 			end
 		end
-		args.alt_gen_pl = rfind(decl_class, "%(2%)")
-		decl_class = rsub(decl_class, "%(2%)", "")
-		args.reducible = rfind(decl_class, "%*")
-		decl_class = rsub(decl_class, "%*", "")
+		decl_class, args.alt_gen_pl = rsubb(decl_class, "%(2%)", "")
+		decl_class, args.reducible = rsubb(decl_class, "%*", "")
+		decl_class, want_jo = rsubb(decl_class, "^ё", "")
+		if not want_jo then
+			decl_class, want_jo = rsubb(decl_class, ":ё", "")
+		end
+
 		local stem = stem_set[2] or default_stem
 		if not stem then
 			error("Stem in first stem set must be specified")
@@ -722,31 +737,39 @@ local function do_show(frame, old)
 			args.suffixes = {}
 
 			stem = original_stem
+			local stem_for_bare
 			bare = original_bare
 			pl = original_pl
+
+			local stem_was_unstressed = com.is_unstressed(stem)
+			if want_jo then
+				if not stem_was_unstressed then
+					error("With special-case ё, stem " .. stem .. " must be unstressed")
+				end
+				stem = rsub(stem, "([еЕ])([^еЕ]*)$",
+					function(e, rest)
+						return ("Е" and "Ё" or "ё") .. rest
+					end)
+				stem_for_bare = stem
+			end
 
 			-- it's safe to accent monosyllabic stems
 			if com.is_monosyllabic(stem) then
 				stem = com.make_ending_stressed(stem)
-			end
-			-- If all forms that use a given stem are ending-stressed, it's
-			-- safe to stress the last syllable of the stem in case it's
-			-- multisyllabic and unstressed; else give an error unless the
-			-- user has indicated they purposely are leaving the word
-			-- unstressed (e.g. due to not knowing the stress) by putting
-			-- a * at the beginning of the main stem
-			if com.is_unstressed(stem) then
-				local all_ending_stressed = (args.n == "s" or pl) and
-					ending_stressed_sg_patterns[stress] or
-					args.n == "p" and ending_stressed_pl_patterns[stress] or
-					stress == "2"
-				if all_ending_stressed then
+			-- for those cases with ending stress in the singular, we can
+			-- safely accent the stem
+			else if stem_was_unstressed then
+				if rfind(stress, "^6") then
+					stem = com.make_beginning_stressed(stem)
+				elseif rfind(stress, "^[24]") then
 					stem = com.make_ending_stressed(stem)
-				elseif not allow_unaccented then
+				elseif not allow_unaccented and not
+					(args.n == "p" and ending_stressed_pl_patterns[stress]) then
 					error("Stem " .. stem .. " requires an accent")
 				end
 			end
-			if pl
+
+			if pl then
 				if com.is_monosyllabic(pl) then
 					pl = com.make_ending_stressed(pl)
 				end
@@ -816,6 +839,13 @@ local function do_show(frame, old)
 						stress, old, "error")
 				else
 					error("Declension class " .. sgdecl .. " not (un)reducible")
+				end
+			elseif stem_for_bare and stem_for_bare ~= stem then
+				resolved_bare = stem_for_bare
+				-- FIXME! What about -ья and variants with alt gen pl?
+				if sgdecl.soft then
+					resolved_bare = resolved_bare .. (
+					rfind(resolved_bare, com.vowel .. "́?$") and "й" or "ь")
 				end
 			end
 
@@ -1172,8 +1202,8 @@ local special_case_1_to_plural_variation = {
 -- also be given as an alternative to specifying the plural variant,
 -- for certain types of plural variants.
 function detect_stem_type(stem, decl, anim, old)
-	local want_sc1 = rmatch(decl, "%(1%)")
-	decl = rsub(decl, "%(1%)", "")
+	local want_sc1
+	decl, want_sc1 = rsubb(decl, "%(1%)", "")
 	local gender = rmatch(decl, "^([mfn]?)$")
 	local plural
 	if not gender then
@@ -1351,9 +1381,11 @@ function export.unreduce_nom_sg_stem(stem, decl, stress, old, can_err)
 			return nil
 		end
 	end
-	if old and declensions_old_cat[decl].hard == "hard" then
+	local declcat = old and declensions_old_cat[decl] or declensions_cat[decl]
+	if old and declcat.hard == "hard" then
 		return ret .. "ъ"
-	elseif decl == "я" then
+	elseif declcat.soft then
+		-- FIXME! What about -ья and variants with alt gen pl?
 		-- This next clause corresponds to a special case in Vitalik's module.
 		-- It says that nouns in -ня (accent class 1) have gen pl without
 		-- trailing -ь. It appears to apply to most nouns in -ня (possibly
