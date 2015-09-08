@@ -136,6 +136,10 @@ function export.make_unstressed_once(word)
     return rsub(word, "([̀́̈ёЁѐЀѝЍ])([^́̀̈ёЁѐЀѝЍ]*)$", function(x, rest) return destresser[x] .. rest; end, 1)
 end
 
+function export.make_unstressed_once_at_beginning(word)
+    return rsub(word, "^([^́̀ёЁѐЀѝЍ]*)([̀́̈ёЁѐЀѝЍ])", function(rest, x) return rest .. destresser[x]; end, 1)
+end
+
 function export.make_ending_stressed(word)
 	-- If already ending stressed, just return word so we don't mess up ё 
 	if rfind(word, "[ёЁ][^" .. export.vowel .. "]*$") or
@@ -145,6 +149,17 @@ function export.make_ending_stressed(word)
 	word = export.make_unstressed_once(word)
 	return rsub(word, "([" .. export.vowel_no_jo .. "])([^" .. export.vowel .. "]*)$",
 		"%1́%2")
+end
+		
+function export.make_initial_stressed(word)
+	-- If already initial stressed, just return word so we don't mess up ё 
+	if rfind(word, "^[^" .. export.vowel .. "]*[ёЁ]") or
+		rfind(word, "^[^" .. export.vowel .. "]*[" .. export.vowel .. "]́") then
+		return word
+	end
+	word = export.make_unstressed_once_at_beginning(word)
+	return rsub(word, "^([^" .. export.vowel .. "]*)([" .. export.vowel_no_jo .. "])",
+		"%1%2́")
 end
 		
 -- used for tracking and categorization
