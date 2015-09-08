@@ -49,7 +49,10 @@ TODO:
 1d. FIXME: Add proper support for Zaliznyak b', f''.
 1e. FIXME: Add ё as a "specific", using Vitalik's algorithm (rightmost е
    becomes ё). [DONE, NEEDS TESTING]
-1f. FIXME: Implement auto-stressing multisyllabic stems in accent patterns
+1f. FIXME: Fix get_zalinyak_index(), it should determine ё specific by looking
+    either at stem or at non-(un)reduced gen pl (as in the case of середа́,
+	stem becomes се́ред, gen pl. is серёд so there is an ё/е alternation)
+1g. FIXME: Implement auto-stressing multisyllabic stems in accent patterns
    d and f. It appears that the plural-stem-stressed forms have the stress
    on the last stem syllable in d and on the first stem syllable in f;
    but in f it moves to the last stem syllable in the gen pl (which is
@@ -66,7 +69,7 @@ TODO:
    them. The ins sg stem is necessary for 8* feminine words like люво́вь, with
    reducible stem любв- in gen/dat/pre sg and throughout the plural (I think),
    but ins sg любо́вью.) [DONE? NEEDS TESTING]
-1g. FIXME! What about -ья and variants with alt gen pl? They have -ь but our
+1h. FIXME! What about -ья and variants with alt gen pl? They have -ь but our
    bare computation doesn't add -ь/-й here are required. Perhaps we should
    just remove the alt gen pl from these variants, must be extraordinarily
    rare and don't exist in Zaliznyak.
