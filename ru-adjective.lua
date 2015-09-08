@@ -195,6 +195,7 @@ local function generate_forms(args, old, manual)
 	old = old or args.old
 	args.old = old
 	args.suffix = args.suffix or ""
+	args.internal_notes = nil
 	-- HACK: Escape * at beginning of line so it doesn't show up
 	-- as a list entry. Many existing templates use * for footnotes.
 	-- FIXME: We should maybe do this in {{ru-adj-table}} instead.
@@ -279,8 +280,9 @@ local function generate_forms(args, old, manual)
 		end
 
 		local orig_short_accent = short_accent
-		short_accent = construct_bare_and_short_stem(args, short_accent,
-			short_stem, accented_stem, old, decl_type)
+		local short_decl_type
+		short_accent, short_decl_type = construct_bare_and_short_stem(args,
+			short_accent, short_stem, accented_stem, old, decl_type)
 
 		args.categories = {}
 
@@ -306,8 +308,16 @@ local function generate_forms(args, old, manual)
 
 		decline(args, decls[decl_type], decl_type == "ой")
 		if short_forms_allowed and short_accent then
-			decline_short(args, short_decls[decl_type],
+			decline_short(args, short_decls[short_decl_type],
 				short_stress_patterns[short_accent])
+		end
+		-- FIXME, what if both occur at once? Seems unlikely, because
+		-- mixed can't co-occur with short adjectives; the user would
+		-- have to use both declension types at once, which seems bizarre.
+		if decl_type == "mixed" then
+			args.internal_notes = "<sup>1</sup> Dated."
+		elseif short_decl_type == "ой-rare" then
+			args.internal_notes = "<sup>1</sup> Rare."
 		end
 	end
 
@@ -750,7 +760,7 @@ end
 
 -- Construct and set bare and short form in args, and canonicalize
 -- short accent spec, handling cases *, (1) and (2). Return canonicalized
--- short accent.
+-- short accent and short decl type (usually the same as the long decl type).
 function construct_bare_and_short_stem(args, short_accent, short_stem, accented_stem,
 	old, decl)
 	-- Check if short forms allowed; if not, no short-form params can be given.
@@ -778,6 +788,7 @@ function construct_bare_and_short_stem(args, short_accent, short_stem, accented_
 	end
 
 	local explicit_short_stem = short_stem
+	local short_decl_type = decl_type
 
 	-- Construct short stem. May be explicitly given, else comes from
 	-- end-accented stem.
@@ -809,6 +820,7 @@ function construct_bare_and_short_stem(args, short_accent, short_stem, accented_
 		-- Special case when there isn't a short masculine singular
 		elseif short_accent == "b" and decl == "ой" and not explicit_short_stem then
 			bare = nil
+			short_decl_type = "ой-rare"
 		else
 			bare = short_stem
 			if sc1 then
@@ -828,7 +840,7 @@ function construct_bare_and_short_stem(args, short_accent, short_stem, accented_
 	args.short_ustem = com.make_unstressed_once(short_stem)
 	args.bare = bare
 
-	return short_accent
+	return short_accent, short_decl_type
 end
 
 --------------------------------------------------------------------------
@@ -945,10 +957,10 @@ declensions["mixed"] = {
 	["nom_n"] = "о",
 	["nom_f"] = "а",
 	["nom_p"] = "ы",
-	["gen_m"] = "ого",
+	["gen_m"] = {"ого", "а1"},
 	["gen_f"] = "ой",
 	["gen_p"] = "ых",
-	["dat_m"] = "ому",
+	["dat_m"] = {"ому", "у1"},
 	["dat_f"] = "ой",
 	["dat_p"] = "ым",
 	["acc_f"] = "у",
@@ -1316,6 +1328,7 @@ end
 
 short_declensions["ый"] = { m="", f="а́", n="о́", p="ы́" }
 short_declensions["ой"] = short_declensions["ый"]
+short_declensions["ой-rare"] = { m="", f="а́1", n="о́1", p="ы́1" }
 short_declensions["ий"] = { m="ь", f="я́", n="е́", p="и́" }
 short_declensions_old["ый"] = { m="ъ", f="а́", n="о́", p="ы́" }
 short_declensions_old["ой"] = short_declensions_old["ый"]
@@ -1366,6 +1379,7 @@ local old_title_temp = [=[Pre-reform declension of <b lang="ru" class="Cyrl">{le
 local template = nil
 local template_mp = nil
 local short_clause = nil
+local internal_notes_template = nil
 local notes_template = nil
 
 local function show_form(args, case)
@@ -1436,11 +1450,8 @@ function make_table(args)
 		end
 	end
 
-	if args.notes then
-		args.notes_clause = strutils.format(notes_template, args)
-	else
-		args.notes_clause = ""
-	end
+	args.internal_notes_clause = args.internal_notes and strutils.format(internal_notes_template, args) or ""
+	args.notes_clause = args.notes and strutils.format(notes_template, args) or ""
 
 	return strutils.format(temp, args)
 end
@@ -1466,6 +1477,14 @@ short_clause_mp = [===[
 | {short_n}
 | {short_f}
 | colspan="2" | {short_p}]===]
+
+-- Used for both new-style and old-style templates
+internal_notes_template = [===[
+<div style="width:100%;text-align:left">
+<div style="display:inline-block;text-align:left;padding-left:1em;padding-right:1em">
+{dated_notes}
+</div></div>
+]===]
 
 -- Used for both new-style and old-style templates
 notes_template = [===[
@@ -1526,7 +1545,7 @@ template = [===[
 | {pre_f}
 | {pre_p}
 |-{short_clause}
-|{\cl}{notes_clause}</div></div></div>]===]
+|{\cl}{internal_notes_clause}{notes_clause}</div></div></div>]===]
 
 -- Used for old-style templates
 template_mp = [===[
@@ -1582,7 +1601,7 @@ template_mp = [===[
 | {pre_f}
 | colspan="2" | {pre_p}
 |-{short_clause}
-|{\cl}{notes_clause}</div></div></div>]===]
+|{\cl}{internal_notes_clause}{notes_clause}</div></div></div>]===]
 
 return export
 
