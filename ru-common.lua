@@ -14,9 +14,11 @@ local uupper = mw.ustring.upper
 local usub = mw.ustring.sub
 
 local AC = u(0x0301) -- acute =  ́
+local GR = u(0x0300) -- grave =  ̀
 
-export.vowel = "аеиоуяэыёюіѣѵАЕИОУЯЭЫЁЮІѢѴ"
-export.vowel_no_jo = "аеиоуяэыюіѣѵАЕИОУЯЭЫЮІѢѴ" -- omit ёЁ
+export.composed_grave_vowel = "ѐЀѝЍ"
+export.vowel_no_jo = "аеиоуяэыюіѣѵАЕИОУЯЭЫЮІѢѴ" .. export.composed_grave_vowel -- omit ёЁ
+export.vowel = export.vowel_no_jo .. "ёЁ"
 export.cons_except_sib_c = "бдфгйклмнпрствхзьъБДФГЙКЛМНПРСТВХЗЬЪ"
 export.sib = "шщчжШЩЧЖ"
 export.sib_c = export.sib .. "цЦ"
@@ -60,53 +62,84 @@ function export.iotation(stem, shch)
     stem = rsub(stem, "ск$", "щ")
     stem = rsub(stem, "ст$", "щ")
     stem = rsub(stem, "[кц]$", "ч")
-
+    
     -- normally "т" is iotated as "ч" but there are many verbs that are iotated with "щ"
     if shch == "щ" then
         stem = rsub(stem, "т$", "щ")
     else
         stem = rsub(stem, "т$", "ч")
     end
-
+ 
     stem = rsub(stem, "[гдз]$", "ж")
-
+    
     stem = rsub(stem, "([бвмпф])$", "%1л")
-
+    
     return stem
 end
 
-function export.needs_accents(word)
-	-- A word needs accents if it is unstressed and contains more than one vowel
-	return export.is_unstressed(word) and not export.is_monosyllabic(word)
-end
-
-function export.is_vowelless(word)
-	return not rfind(word, export.vowel)
+-- Does a word of set of connected text need accents? We need to split by word
+-- and check each one.
+function export.needs_accents(text)
+	local function word_needs_accents(word)
+		-- A word needs accents if it is unstressed and contains more than one vowel
+		return export.is_unstressed(word) and not export.is_monosyllabic(word)
+	end
+	local words = rsplit(text, "%s")
+	for _, word in ipairs(words) do
+		if word_needs_accents(word) then
+			return true
+		end
+	end
+	return false
 end
 
 function export.is_stressed(word)
 	-- A word that has ё in it is inherently stressed.
-	return rfind(word, "[ёЁ́]")
+	-- diaeresis occurs in сѣ̈дла plural of сѣдло́
+	return rfind(word, "[́̈ёЁ]")
 end
 
 function export.is_unstressed(word)
 	return not export.is_stressed(word)
 end
 
--- This also includes non-syllabic stems like льд-.
+function export.is_ending_stressed(word)
+	return rfind(word, "[ёЁ][^" .. export.vowel .. "]*$") or
+		rfind(word, "[" .. export.vowel .. "][́̈][^" .. export.vowel .. "]*$")
+end
+
+-- True if a word has two or more stresses
+function export.is_multi_stressed(word)
+	word = rsub(word, "[ёЁ]", "е́")
+	return rfind(word, "[" .. export.vowel .. "][́̈].*[" .. export.vowel .. "][́̈]")
+end
+
+function export.is_beginning_stressed(word)
+	return rfind(word, "^[^" .. export.vowel .. "]*[ёЁ]") or
+		rfind(word, "^[^" .. export.vowel .. "]*[" .. export.vowel .. "]́")
+end
+
+function export.is_nonsyllabic(word)
+	return not rfind(word, "[" .. export.vowel .. "]")
+end
+
+-- Includes non-syllabic stems such as льд-
 function export.is_monosyllabic(word)
 	return not rfind(word, "[" .. export.vowel .. "].*[" .. export.vowel .. "]")
 end
 
-local deaccenter = {
-    ["́"] = "", -- acute accent
+
+local grave_deaccenter = {
     ["̀"] = "", -- grave accent
-    ["̈"] = "", -- diaeresis
     ["ѐ"] = "е", -- composed Cyrillic chars w/grave accent
     ["Ѐ"] = "Е",
     ["ѝ"] = "и",
     ["Ѝ"] = "И",
 }
+
+local deaccenter = mw.clone(grave_deaccenter)
+deaccenter[AC] = "" -- acute accent
+deaccenter["̈"] = "" -- diaeresis
 
 function export.remove_accents(word)
 	-- remove acute, grave and diaeresis (but not affecting composed ёЁ)
@@ -132,36 +165,47 @@ function export.make_unstressed(word)
     return rsub(word, "[̀́̈ёЁѐЀѝЍ]", destresser)
 end
 
+function export.remove_jo(word)
+    return rsub(word, "[ёЁ]", destresser)
+end
+
 function export.make_unstressed_once(word)
-    return rsub(word, "([̀́̈ёЁѐЀѝЍ])([^́̀̈ёЁѐЀѝЍ]*)$", function(x, rest) return destresser[x] .. rest; end, 1)
+	-- leave graves alone
+    return rsub(word, "([́̈ёЁ])([^́̈ёЁ]*)$", function(x, rest) return destresser[x] .. rest; end, 1)
 end
 
 function export.make_unstressed_once_at_beginning(word)
-    return rsub(word, "^([^́̀ёЁѐЀѝЍ]*)([̀́̈ёЁѐЀѝЍ])", function(rest, x) return rest .. destresser[x]; end, 1)
+	-- leave graves alone
+    return rsub(word, "^([^́̈ёЁ]*)([́̈ёЁ])", function(rest, x) return rest .. destresser[x]; end, 1)
+end
+
+function export.correct_grave_acute_clash(word)
+	word = rsub(word, "([̀ѐЀѝЍ])́", function(x) return grave_deaccenter[x] .. AC; end)
+	return rsub(word, AC .. GR, AC)
 end
 
 function export.make_ending_stressed(word)
-	-- If already ending stressed, just return word so we don't mess up ё
-	if rfind(word, "[ёЁ][^" .. export.vowel .. "]*$") or
-		rfind(word, "[" .. export.vowel .. "]́[^" .. export.vowel .. "]*$") then
+	-- If already ending stressed, just return word so we don't mess up ё 
+	if export.is_ending_stressed(word) then
 		return word
 	end
 	word = export.make_unstressed_once(word)
-	return rsub(word, "([" .. export.vowel_no_jo .. "])([^" .. export.vowel .. "]*)$",
+	word = rsub(word, "([" .. export.vowel_no_jo .. "])([^" .. export.vowel .. "]*)$",
 		"%1́%2")
+	return export.correct_grave_acute_clash(word)
 end
-		
+
 function export.make_beginning_stressed(word)
-	-- If already beginning stressed, just return word so we don't mess up ё
-	if rfind(word, "^[^" .. export.vowel .. "]*[ёЁ]") or
-		rfind(word, "^[^" .. export.vowel .. "]*[" .. export.vowel .. "]́") then
+	-- If already beginning stressed, just return word so we don't mess up ё 
+	if export.is_beginning_stressed(word) then
 		return word
 	end
 	word = export.make_unstressed_once_at_beginning(word)
-	return rsub(word, "^([^" .. export.vowel .. "]*)([" .. export.vowel_no_jo .. "])",
+	word = rsub(word, "^([^" .. export.vowel .. "]*)([" .. export.vowel_no_jo .. "])",
 		"%1%2́")
+	return export.correct_grave_acute_clash(word)
 end
-		
+
 -- used for tracking and categorization
 trailing_letter_type = {
 	["ш"] = {"sibilant", "cons"},
@@ -232,11 +276,11 @@ function export.reduce_stem(stem)
 	return pre .. post
 end
 
--- Generate the unreduced stem given STEM and EPENTHETIC_STRESS (which
+-- Generate the dereduced stem given STEM and EPENTHETIC_STRESS (which
 -- indicates whether the epenthetic vowel should be stressed); this is
 -- without any terminating non-syllabic ending, which is added if needed by
--- the calling function. Returns nil if unable to unreduce.
-function export.unreduce_stem(stem, epenthetic_stress)
+-- the calling function. Returns nil if unable to dereduce.
+function export.dereduce_stem(stem, epenthetic_stress)
 	if epenthetic_stress then
 		stem = export.make_unstressed_once(stem)
 	end
