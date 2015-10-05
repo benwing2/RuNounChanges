@@ -64,6 +64,13 @@
 		   specified for the particular case/number combination. Similar to
 		   pltailall= or sgtailall=.
 		suffix: Add a suffix such as ся to all forms.
+		prefix: Add a prefix to all forms.
+
+	Per word named arguments:
+		All of the above named arguments have per-word variants, e.g.
+		a1, a2, ...; n1, n2, ...; CASE_NUM1, CASE_NUM2, ...;
+		pltail1, pltail2, ...; etc. These apply to the individual words of a
+		form.
 
 	Case abbreviations:
 		nom: nominative
@@ -169,6 +176,11 @@ TODO:
    -- args.genders -- it should presumably come from the same word as is used
       in compute_heading(); but we should allow the overall gender to be
 	  overridden, at least in ru-noun+ (DONE)
+   -- Bug in args.suffix: Gets added to every word in attach_with() and then
+      again at the end, after pltail and such. Needs to be added to the
+	  last word only, before pltail. Need also suffixN for individual words.
+	  (DONE, NEEDS TESTING)
+   -- Should have ..N versions of pltail and variants. (DONE, NEEDS TESTING)
    -- Need to handle overrides of acc_sg, acc_pl (MIGHT WORK ALREADY)
    -- In generate_forms, should probably check if a=="i" and only return
       acc_sg_in as acc_sg=; or if a=="a" and only return acc_sg_an as acc_sg=;
@@ -176,6 +188,9 @@ TODO:
       check if acc_sg_in==acc_sg_an and make it acc_sg; when a=="b" and the
       _in and _an variants are different, might need to ignore them or check
       that acc_sg_in==nom_sg and acc_sg_an==gen_sg; similarly for _pl
+   -- do_generate_forms(_multi) need to run part of make_table(), enough to
+      combine all per_word_info into single lists of forms and store back
+	  into args[case].
    -- Need to test with multiple words!
    -- Make sure internal_notes handled correctly; we may run into issues with
       multiple internal notes from different words, if we're not careful to
@@ -569,7 +584,7 @@ local test_new_ru_noun_module = false
 
 -- Forward functions
 
-local do_show_1
+local generate_forms_1
 local determine_decl
 local handle_forms_and_overrides
 local handle_overall_forms_and_overrides
@@ -1235,10 +1250,8 @@ function export.do_generate_forms(args, old)
 	if test_new_ru_noun_module then
 		orig_args = mw.clone(args)
 	end
-	local SUBPAGENAME = mw.title.getCurrentTitle().subpageText
 	old = old or args.old
 	args.old = old
-	args.suffix = args.suffix or ""
 	args.pos = args.pos or "noun"
 
 	-- This is a list with each element corresponding to a word and
@@ -1306,12 +1319,10 @@ function export.do_generate_forms(args, old)
 		end
 	end
 
-	args.old = args.old or old
-	return do_show_1(args, per_word_info)
+	return generate_forms_1(args, per_word_info)
 end
 
-local function do_show_multi(frame)
-	local args = clone_args(frame)
+function export.do_generate_forms_multi(args)
 
 	-- This is a list with each element corresponding to a word and
 	-- consisting of a two-element list, STEM_SET and JOINER, where STEM_SET
@@ -1401,12 +1412,15 @@ local function do_show_multi(frame)
 		end
 	end
 
-	return do_show_1(args, per_word_info)
+	return generate_forms_1(args, per_word_info)
 end
 
--- Implementation of do_show() and do_show_multi(), which have equivalent
--- functionality but different calling sequence.
-do_show_1 = function(args, per_word_info)
+-- Implementation of do_generate_forms() and do_generate_forms_multi(),
+-- which have equivalent functionality but different calling sequence.
+generate_forms_1 = function(args, per_word_info)
+	local SUBPAGENAME = mw.title.getCurrentTitle().subpageText
+	local old = args.old
+
 	local function verify_animacy_value(val)
 		if not val then return nil end
 		local short = usub(val, 1, 1)
@@ -1453,7 +1467,6 @@ do_show_1 = function(args, per_word_info)
 	args.internal_notes = {}
 	-- Superscript footnote marker at beginning of note, similarly to what's
 	-- done at end of forms.
-	local old = args.old
 	if args.notes then
 		local notes, entry = m_table_tools.get_initial_notes(args.notes)
 		args.notes = notes .. entry
@@ -1759,7 +1772,8 @@ do_show_1 = function(args, per_word_info)
 				assert(decl_cats[real_decl])
 				assert(decl_sufs[real_decl])
 				tracking_code(stress, orig_decl, real_decl, args, n, islast)
-				do_stress_pattern(stress, args, decl_sufs[real_decl], number)
+				do_stress_pattern(stress, args, decl_sufs[real_decl], number,
+					n, islast)
 
 				-- handle internal notes
 				local internal_note = intable[real_decl]
@@ -1878,6 +1892,13 @@ end
 -- The main entry point for old declension tables.
 function export.show_old(frame)
 	return do_show(frame, true)
+end
+
+-- Implementation of new entry point, esp. for multiple words
+local function do_show_multi(frame)
+	local args = clone_args(frame)
+	local args = export.do_generate_forms_multi(args)
+	return make_table(args) .. m_utilities.format_categories(args.categories, lang)
 end
 
 -- The new entry point, esp. for multiple words (but works fine for
@@ -3681,13 +3702,15 @@ end
 -- for an individual suffix. Returns two values, a list of combined forms
 -- and a list of the real suffixes used (which may be modified from the
 -- passed-in suffixes, e.g. by removing stress marks or modifying vowels in
--- various ways after a stem-final velar, sibilant or ц).
-local function attach_with(args, case, suf, fun)
+-- various ways after a stem-final velar, sibilant or ц). We are handling the
+-- Nth word; ISLAST is true if this is the last one.
+local function attach_with(args, case, suf, fun, n, islast)
 	if type(suf) == "table" then
 		local all_combineds = {}
 		local all_realsufs = {}
 		for _, x in ipairs(suf) do
-			local combineds, realsufs = attach_with(args, case, x, fun)
+			local combineds, realsufs =
+				attach_with(args, case, x, fun, n, islast)
 			for _, combined in ipairs(combineds) do
 				table.insert(all_combineds, combined)
 			end
@@ -3698,14 +3721,17 @@ local function attach_with(args, case, suf, fun)
 		return all_combineds, all_realsufs
 	else
 		local combined, realsuf = fun(args, case, suf)
-		return {combined and combined .. args.suffix}, {realsuf}
+		local prefix = (n == 1 and args.prefix or "") .. (args["prefix" .. n] or "")
+		local suffix = (args["suffix" .. n] or "") .. (islast and args.suffix or "")
+		return {combined and prefix .. combined .. suffix}, {realsuf}
 	end
 end
 
 -- Generate the form(s) and suffix(es) for CASE according to the declension
 -- table DECL, using the attachment function FUN (one of attach_stressed()
--- or attach_unstressed()).
-local function gen_form(args, decl, case, stress, fun)
+-- or attach_unstressed()). We are handling the Nth word; ISLAST is true if
+-- this is the last one.
+local function gen_form(args, decl, case, stress, fun, n, islast)
 	if not args.forms[case] then
 		args.forms[case] = {}
 	end
@@ -3722,7 +3748,7 @@ local function gen_form(args, decl, case, stress, fun)
 			error("No alternate genitive plural available for this declension class")
 		end
 	end
-	local combineds, realsufs = attach_with(args, case, suf, fun)
+	local combineds, realsufs = attach_with(args, case, suf, fun, n, islast)
 	for _, form in ipairs(combineds) do
 		ut.insert_if_not(args.forms[case], form)
 	end
@@ -3736,12 +3762,12 @@ local attachers = {
 	["-"] = attach_unstressed,
 }
 
-do_stress_pattern = function(stress, args, decl, number)
+do_stress_pattern = function(stress, args, decl, number, n, islast)
 	for _, case in ipairs(decl_cases) do
 		if not number or (number == "sg" and rfind(case, "_sg")) or
 			(number == "pl" and rfind(case, "_pl")) then
 			gen_form(args, decl, case, stress,
-				attachers[stress_patterns[stress][case]])
+				attachers[stress_patterns[stress][case]], n, islast)
 		end
 	end
 end
@@ -3910,39 +3936,45 @@ end
 
 handle_forms_and_overrides = function(args, n, islast)
 	local f = args.forms
-	if islast then
+
+	local function process_tail_args(n)
 		for _, case in ipairs(overridable_cases) do
 			if f[case] then
 				local lastarg = #(f[case])
-				if lastarg > 0 and args[case .. "_tail"] then
-					f[case][lastarg] = f[case][lastarg] .. args[case .. "_tail"]
+				if lastarg > 0 and args[case .. "_tail" .. n] then
+					f[case][lastarg] = f[case][lastarg] .. args[case .. "_tail" .. n]
 				end
-				if args[case .. "_tailall"] then
+				if args[case .. "_tailall" .. n] then
 					for i=1,lastarg do
-						f[case][i] = f[case][i] .. args[case .. "_tailall"]
+						f[case][i] = f[case][i] .. args[case .. "_tailall" .. n]
 					end
 				end
 				if not rfind(case, "_pl") then
-					if args.sgtailall then
+					if args[sgtailall .. n] then
 						for i=1,lastarg do
-							f[case][i] = f[case][i] .. args.sgtailall
+							f[case][i] = f[case][i] .. args[sgtailall .. n]
 						end
 					end
-					if lastarg > 1 and args.sgtail then
-						f[case][lastarg] = f[case][lastarg] .. args.sgtail
+					if lastarg > 1 and args[sgtail .. n] then
+						f[case][lastarg] = f[case][lastarg] .. args[sgtail .. n]
 					end
 				else
-					if args.pltailall then
+					if args[pltailall .. n] then
 						for i=1,lastarg do
-							f[case][i] = f[case][i] .. args.pltailall
+							f[case][i] = f[case][i] .. args[pltailall .. n]
 						end
 					end
-					if lastarg > 1 and args.pltail then
-						f[case][lastarg] = f[case][lastarg] .. args.pltail
+					if lastarg > 1 and args[pltail .. n] then
+						f[case][lastarg] = f[case][lastarg] .. args[pltail .. n]
 					end
 				end
 			end
 		end
+	end
+
+	process_tail_args(n)
+	if islast then
+		process_tail_args("")
 	end
 
 	local function process_override(case)
@@ -4075,7 +4107,7 @@ end
 -- TRAILING_FORMS, passing the newly generated list of items down the
 -- next recursion level with the shorter WORD_FORMS. We end up
 -- returning a string to insert into the Wiki-markup table.
-function show_form_1(word_forms, trailing_forms, old, prefix, suffix, lemma)
+function show_form_1(word_forms, trailing_forms, old, lemma)
 	if #word_forms == 0 then
 		local russianvals = {}
 		local latinvals = {}
@@ -4099,7 +4131,6 @@ function show_form_1(word_forms, trailing_forms, old, prefix, suffix, lemma)
 			-- Remove <insa> and <insb> markers; they've served their purpose.
 			form = rsub(form, "<ins[ab]>", "")
 			local entry, notes = m_table_tools.get_notes(form)
-			entry = prefix .. entry .. suffix
 			local ruspan, trspan
 			if old then
 				ruspan = m_links.full_link(com.remove_jo(entry), entry, lang, nil, nil, nil, {tr = "-"}, false) .. notes
@@ -4145,8 +4176,7 @@ function show_form_1(word_forms, trailing_forms, old, prefix, suffix, lemma)
 				end
 			end
 		end
-		return show_form_1(word_forms, new_trailing_forms, old, prefix, suffix,
-			lemma)
+		return show_form_1(word_forms, new_trailing_forms, old, lemma)
 	end
 end
 
@@ -4156,7 +4186,7 @@ end
 -- WORD_FORMS (a table listing the forms for each case) and JOINER (a string).
 -- We loop over all possible combinations of elements from each word's list
 -- of forms for the given case; this requires recursion.
-function show_form(per_word_info, case, old, prefix, suffix, lemma)
+function show_form(per_word_info, case, old, lemma)
 	local word_forms = {}
 	-- Gather the appropriate word forms. We have to recreate this anew
 	-- because it will be destructively modified by show_form_1().
@@ -4169,7 +4199,7 @@ function show_form(per_word_info, case, old, prefix, suffix, lemma)
 	-- We need to start the recursion with the second parameter containing
 	-- one blank element rather than no elements, otherwise no elements
 	-- will be propagated to the next recursion level.
-	return show_form_1(word_forms, {""}, old, prefix, suffix, lemma)
+	return show_form_1(word_forms, {""}, old, lemma)
 end
 
 
@@ -4181,13 +4211,11 @@ make_table = function(args)
 	data.after_title = " " .. args.heading
 	data.number = numbers[numb]
 
-	local prefix = args.prefix or ""
-	local suffix = args.suffix or ""
-	data.lemma = show_form(args.per_word_info, numb == "p" and "nom_pl" or "nom_sg", old, prefix, suffix, true)
+	data.lemma = show_form(args.per_word_info, numb == "p" and "nom_pl" or "nom_sg", old, true)
 	data.title = args.title or strutils.format(old and old_title_temp or title_temp, data)
 
 	for _, case in ipairs(displayable_cases) do
-		data[case] = show_form(args.per_word_info, case, old, prefix, suffix, false)
+		data[case] = show_form(args.per_word_info, case, old, false)
 	end
 
 	local temp = nil
