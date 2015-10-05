@@ -169,6 +169,14 @@ TODO:
    -- args.genders -- it should presumably come from the same word as is used
       in compute_heading(); but we should allow the overall gender to be
 	  overridden, at least in ru-noun+ (DONE)
+   -- Need to handle overrides of acc_sg, acc_pl (MIGHT WORK ALREADY)
+   -- In generate_forms, should probably check if a=="i" and only return
+      acc_sg_in as acc_sg=; or if a=="a" and only return acc_sg_an as acc_sg=;
+      in old/new comparison code, do something similar, also when a=="b"
+      check if acc_sg_in==acc_sg_an and make it acc_sg; when a=="b" and the
+      _in and _an variants are different, might need to ignore them or check
+      that acc_sg_in==nom_sg and acc_sg_an==gen_sg; similarly for _pl
+   -- Need to test with multiple words!
    -- Make sure internal_notes handled correctly; we may run into issues with
       multiple internal notes from different words, if we're not careful to
 	  use different footnote symbols for each type of footnote (which we don't
@@ -545,9 +553,12 @@ local ending_stressed_sg_patterns = {}
 local ending_stressed_pl_patterns = {}
 -- List of all cases that are declined normally.
 local decl_cases
--- List of all cases, including those that can be overridden (loc/par/voc,
--- animate/inanimate variants).
-local cases
+-- List of all cases that can be displayed (includes loc/par/voc,
+-- animate/inanimate accusative variants, but not plain accusatives).
+local displayable_cases
+-- List of all cases, including those that can be overridden (includes
+-- loc/par/voc, animate/inanimate accusative variants).
+local overridable_cases
 -- Type of trailing letter, for tracking purposes
 local trailing_letter_type
 
@@ -613,7 +624,7 @@ local function tracking_code(stress, orig_decl, decl, args, n, islast)
 
 	local function all_pl_irreg()
 		track("irreg")
-		for _, case in ipairs(cases) do
+		for _, case in ipairs(overridable_cases) do
 			if rfind(case, "_pl") then
 				track("irreg/" .. case)
 			end
@@ -697,7 +708,7 @@ local function tracking_code(stress, orig_decl, decl, args, n, islast)
 		track("explicit-gender")
 		track("explicit-gender/" .. args.explicit_gender)
 	end
-	for _, case in ipairs(cases) do
+	for _, case in ipairs(overridable_cases) do
 		if args[case .. n] and not args.manual then
 			track("override")
 			track("override/" .. case .. n)
@@ -711,6 +722,7 @@ local function tracking_code(stress, orig_decl, decl, args, n, islast)
 			track("override/" .. case)
 			track("irreg")
 			track("irreg/" .. case)
+			-- questionable use: track_prefix("irreg/" .. case .. "/")
 		end
 		if args[case .. "_tail"] then
 			track("casenum-tail")
@@ -1053,7 +1065,7 @@ local function categorize_and_init_heading(stress, decl, args, n, islast)
 	if sgdc.adj then
 		insert_cat("adjectival ~")
 	end
-	for _, case in ipairs(cases) do
+	for _, case in ipairs(overridable_cases) do
 		if args[case .. n] or islast and args[case] then
 			local engcase = rsub(case, "^([a-z]*)", {
 				nom="nominative", gen="genitive", dat="dative",
@@ -1263,7 +1275,7 @@ function export.do_generate_forms(args, old)
 			end_arg_set = true
 			end_word = true
 			word_joiner = " "
-		elseif rfind(args[i], "^join:") then
+		elseif args[i] and rfind(args[i], "^join:") then
 			end_arg_set = true
 			end_word = true
 			word_joiner = extract_word_joiner(args[i])
@@ -1379,7 +1391,7 @@ local function do_show_multi(frame)
 				if noun_stem then
 					stem_set[1] = noun_stem
 					if noun_type == "" then -- invariable
-						stem_set[3] == "-"
+						stem_set[3] = "-"
 					else
 						stem_set[3] = noun_type
 					end
@@ -1432,7 +1444,7 @@ do_show_1 = function(args, per_word_info)
 	args.per_word_info = {}
 	args.per_word_heading_info = {}
 	args.per_word_heading = {}
-	args.per_word_gender = {}
+	args.per_word_genders = {}
 	args.any_overridden = {}
 	args.categories = {}
 	local function insert_cat(cat)
@@ -1509,7 +1521,7 @@ do_show_1 = function(args, per_word_info)
 		if was_plural then
 			args.thisn = args.thisn or "p"
 			args.n = args.n or "p"
-		elseif decl != "$" then
+		elseif decl ~= "$" then
 			args.thisn = args.thisn or "b"
 		end
 
@@ -1820,7 +1832,7 @@ do_show_1 = function(args, per_word_info)
 	if test_new_ru_noun_module then
 		local m_new_ru_noun = require("Module:User:Benwing2/ru-noun")
 		local newargs = m_new_ru_noun.do_generate_forms(orig_args, old)
-		for _, case in ipairs(cases) do
+		for _, case in ipairs(overridable_cases) do
 			local is_pl = rfind(case, "_pl")
 			if args.thisn == "s" and is_pl or args.thisn == "p" and not is_pl then
 				-- Don't need to check cases that won't be displayed.
@@ -1885,7 +1897,7 @@ end
 
 local function concat_case_args(args)
 	local ins_text = {}
-	for _, case in ipairs(cases) do
+	for _, case in ipairs(overridable_cases) do
 		if args.forms[case] then
 			table.insert(ins_text, case .. "=" .. get_form(args.forms[case]))
 		end
@@ -3811,8 +3823,16 @@ decl_cases = {
 	"nom_pl", "gen_pl", "dat_pl", "acc_pl", "ins_pl", "pre_pl",
 }
 
--- all cases displayable or handleable through overrides
-cases = {
+-- all cases displayable
+displayable_cases = {
+	"nom_sg", "gen_sg", "dat_sg", "ins_sg", "pre_sg",
+	"nom_pl", "gen_pl", "dat_pl", "ins_pl", "pre_pl",
+	"acc_sg_an", "acc_sg_in", "acc_pl_an", "acc_pl_in",
+	"par", "loc", "voc",
+}
+
+-- all cases handleable through overrides
+overridable_cases = {
 	"nom_sg", "gen_sg", "dat_sg", "acc_sg", "ins_sg", "pre_sg",
 	"nom_pl", "gen_pl", "dat_pl", "acc_pl", "ins_pl", "pre_pl",
 	"acc_sg_an", "acc_sg_in", "acc_pl_an", "acc_pl_in",
@@ -3891,7 +3911,7 @@ end
 handle_forms_and_overrides = function(args, n, islast)
 	local f = args.forms
 	if islast then
-		for _, case in ipairs(cases) do
+		for _, case in ipairs(overridable_cases) do
 			if f[case] then
 				local lastarg = #(f[case])
 				if lastarg > 0 and args[case .. "_tail"] then
@@ -3936,13 +3956,13 @@ handle_forms_and_overrides = function(args, n, islast)
 	process_override("dat_sg")
 
 	-- now do the rest
-	for _, case in ipairs(cases) do
+	for _, case in ipairs(overridable_cases) do
 		if case ~= "dat_sg" then
 			process_override(case)
 		end
 	end
 
-	for _, case in ipairs(cases) do
+	for _, case in ipairs(overridable_cases) do
 		if f[case] then
 			if type(f[case]) ~= "table" then
 				error("Logic error, args[case] should be nil or table")
@@ -4030,7 +4050,7 @@ handle_overall_forms_and_overrides = function(args)
 			for i=1,(nwords-1) do
 				args.per_word_info[i][1][case] = {""}
 			end
-			args.per_word_info[nwords][i][case] = override
+			args.per_word_info[nwords][1][case] = override
 			args.any_overridden[case] = true
 		end
 	end
@@ -4039,7 +4059,7 @@ handle_overall_forms_and_overrides = function(args)
 	process_override("dat_sg")
 
 	-- now do the rest
-	for _, case in ipairs(cases) do
+	for _, case in ipairs(overridable_cases) do
 		if case ~= "dat_sg" then
 			process_override(case)
 		end
@@ -4102,8 +4122,8 @@ function show_form_1(word_forms, trailing_forms, old, prefix, suffix, lemma)
 		if lemma then
 			return table.concat(lemmavals, ", ")
 		else
-			local russian_span = table.concat(russianvals, outersep)
-			local latin_span = table.concat(latinvals, outersep)
+			local russian_span = table.concat(russianvals, ", ")
+			local latin_span = table.concat(latinvals, ", ")
 			return russian_span .. "<br />" .. latin_span
 		end
 	else
@@ -4141,6 +4161,9 @@ function show_form(per_word_info, case, old, prefix, suffix, lemma)
 	-- Gather the appropriate word forms. We have to recreate this anew
 	-- because it will be destructively modified by show_form_1().
 	for _, word_info in ipairs(per_word_info) do
+		if not word_info[1][case] then
+			error("case=" .. case)
+		end
 		table.insert(word_forms, {word_info[1][case], word_info[2]})
 	end
 	-- We need to start the recursion with the second parameter containing
@@ -4163,7 +4186,7 @@ make_table = function(args)
 	data.lemma = show_form(args.per_word_info, numb == "p" and "nom_pl" or "nom_sg", old, prefix, suffix, true)
 	data.title = args.title or strutils.format(old and old_title_temp or title_temp, data)
 
-	for _, case in ipairs(cases) do
+	for _, case in ipairs(displayable_cases) do
 		data[case] = show_form(args.per_word_info, case, old, prefix, suffix, false)
 	end
 
