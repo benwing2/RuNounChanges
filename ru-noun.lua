@@ -43,15 +43,25 @@
 		   defaults to both unless the lemma is plural, in which case it
 		   defaults to plural only)
 		CASE_NUM or par/loc/voc: override (or multiple values separated by
-		   commas) for particular form; forms auto-linked; can have raw links
+		   commas) for case/number combination; forms auto-linked; can have
+		   raw links
 		pltail: Specify something (usually a * or similar) to attach to
-		   the end of plural forms when there's more than one. Used in
+		   the end of the last plural form when there's more than one. Used in
 		   conjunction with notes= to indicate that alternative plural forms
 		   are obsolete, poetic, etc.
-		pltailall: Same as pltail= but added to added to all forms even if
-		   there's only one.
+		pltailall: Similar pltail= but attaches to all plural forms.
+		   Typically used in conjunction with notes= to make a comment about
+		   the plural as a whole (e.g. it's mostly hypothetical, rare and
+		   awkward, etc.).
 		sgtail, sgtailall: Same as pltail=, pltailall= but for the singular.
-		CASE_NUM_tail: Similar to pltailall but restricted to a single form.
+		CASE_NUM_tail: Attach the argument to the end of the last form
+		   (whether there's one or more than one) for the particular
+		   case/number combination. Note that this doesn't work quite like
+		   pltail= or sgtail= in that it doesn't skip adding the argument
+		   when there's only one form.
+		CASE_NUM_tailall: Attach the argument to the end of all forms
+		   specified for the particular case/number combination. Similar to
+		   pltailall= or sgtailall=.
 		suffix: Add a suffix such as ся to all forms.
 
 	Case abbreviations:
@@ -151,7 +161,9 @@ TODO:
 2a. If -е is used after a sibilant or ц as an explicit decl, it should
    be converted to -о. Consider doing the same thing for explicit adj decl
    +ий after velar/sibilant/ц. [IMPLEMENTED. NEED TO TEST.]
-2b. FIXME: For -ишко and -ище diminutives, should add an appropriate
+2b. Changed pltailall= to add to all forms, not just last one; added
+   CASE_NUM_tailall. [NEED TO TEST.]
+2c. FIXME: For -ишко and -ище diminutives, should add an appropriate
    category of some sort (currently marked by colloqfem= in category).
 3. FIXME: Consider putting a triangle △ (U+25B3) or the smaller variant
    ▵ (U+25B5) next to each irregular form. (We have the following cases:
@@ -561,42 +573,49 @@ end
 -- stress classes, such as "а/a" or "о-и/d'", which are more or less
 -- equivalent to stem/gender/stress categories, but we also have the same
 -- prefixed by "reducible-stem/" for reducible stems.
-local function tracking_code(stress, decl, real_decl, args)
+local function tracking_code(stress, orig_decl, decl, args)
+	assert(orig_decl)
 	assert(decl)
-	assert(real_decl)
 	local hint_types = com.get_stem_trailing_letter_type(args.stem)
-	if real_decl == decl then
-		real_decl = nil
+	if orig_decl == decl then
+		orig_decl = nil
 	end
-	local function dotrack(prefix)
-		track(stress)
-		track(decl)
-		track(decl .. "/" .. stress)
-		if real_decl then
-			track(real_decl)
-			track(real_decl .. "/" .. stress)
-		end
-		for _, hint_type in ipairs(hint_types) do
-			track(hint_type)
-			track(decl .. "/" .. hint_type)
-			if real_decl then
-				track(real_decl .. "/" .. hint_type)
+
+	local function all_pl_irreg()
+		track("irreg")
+		for _, case in ipairs(cases) do
+			if rfind(case, "_pl") then
+				track("irreg/" .. case)
 			end
 		end
-		if args.pl ~= args.stem then
-			track("irreg-pl-stem")
+	end
+
+	local function track_prefix(prefix)
+		local function dotrack(suf)
+			track(prefix .. suf)
+		end
+		dotrack(stress)
+		dotrack(decl)
+		dotrack(decl .. "/" .. stress)
+		if orig_decl then
+			dotrack(orig_decl)
+			dotrack(orig_decl .. "/" .. stress)
+		end
+		for _, hint_type in ipairs(hint_types) do
+			dotrack(hint_type)
+			dotrack(decl .. "/" .. hint_type)
+			if orig_decl then
+				dotrack(orig_decl .. "/" .. hint_type)
+			end
 		end
 	end
-	dotrack("")
+	track_prefix("")
 	if bare_is_reducible(args.stem, args.bare) then
 		track("reducible-stem")
-		dotrack("reducible-stem/")
+		track_prefix("reducible-stem/")
 	end
 	if rlfind(args.stem, "и́?н$") and (decl == "" or decl == "#") then
 		track("irregular-in")
-	end
-	if rlfind(args.stem, "[еёо]́?нок$") and (decl == "" or decl == "#") then
-		track("irregular-onok")
 	end
 	if args.pltail then
 		track("pltail")
@@ -610,16 +629,59 @@ local function tracking_code(stress, decl, real_decl, args)
 	if args.sgtailall then
 		track("sgtailall")
 	end
+	if args.pl ~= args.stem then
+		track("irreg-pl-stem")
+		track("irreg")
+	end
 	if args.alt_gen_pl then
 		track("alt-gen-pl")
+		track("irreg")
+		track("irreg/gen_pl")
+	end
+	if args.want_sc1 then
+		track("want-sc1")
+		track("irreg")
+		track("irreg/nom_pl")
+	end
+	if rfind(decl, "-и$") or rfind(decl, "-а$") or rfind(decl, "-я$") then
+		track("irreg")
+		track("irreg/nom_pl")
+	end
+	if rfind(decl, "-ья$") then
+		track("variant-ья")
+		all_pl_irreg()
+	end
+	if rfind(decl, "%(ишк%)$") then
+		track("variant-ишко")
+	end
+	if rfind(decl, "%(ищ%)$") then
+		track("variant-ище")
+	end
+	if args.jo_special then
+		track("jo-special")
 	end
 	if args.manual then
 		track("manual")
 	end
+	if args.explicit_gender then
+		track("explicit-gender")
+		track("explicit-gender/" .. args.explicit_gender)
+	end
 	for _, case in ipairs(cases) do
 		if args[case] and not args.manual then
+			track("override")
+			track("override/" .. case)
+			track("irreg")
 			track("irreg/" .. case)
-			-- questionable use: dotrack("irreg/" .. case .. "/")
+			-- questionable use: track_prefix("irreg/" .. case .. "/")
+		end
+		if args[case .. "_tail"] then
+			track("casenum-tail")
+			track("casenum-tail/" .. case)
+		end
+		if args[case .. "_tailall"] then
+			track("casenum-tailall")
+			track("casenum-tailall/" .. case)
 		end
 	end
 end
@@ -644,6 +706,7 @@ local function bare_tracking(stem, bare, decl, sgdc, stress, old)
 		track(val)
 		return val
 	end
+	track("explicit-bare")
 	if stem == bare then
 		track("explicit-bare-same-as-stem")
 		return ""
@@ -801,7 +864,8 @@ local function categorize_and_init_heading(stress, decl, args)
 	local decl_cats = args.old and declensions_old_cat or declensions_cat
 
 	local sgdecl, pldecl
-	if rfind(decl, "/") then
+	local is_slash_decl = rfind(decl, "/")
+	if is_slash_decl then
 		local indiv_decls = rsplit(decl, "/")
 		sgdecl, pldecl = indiv_decls[1], indiv_decls[2]
 	else
@@ -908,7 +972,7 @@ local function categorize_and_init_heading(stress, decl, args)
 		end
 	end
 	if sgcat and plcat and (sgdc.suffix or sgdc.irregpl or
-			rfind(decl, "/")) then
+			is_slash_decl) then
 		for _, scat in ipairs(cat_to_list(sgcat)) do
 			for _, pcat in ipairs(cat_to_list(plcat)) do
 				insert_cat("~ " .. scat .. " with " .. pcat)
@@ -928,7 +992,7 @@ local function categorize_and_init_heading(stress, decl, args)
 	else
 		ut.insert_if_not(h.reducible, "no")
 	end
-	if args.gen_pl then
+	if args.gen_pl or is_slash_decl then
 		ut.insert_if_not(h.irreg_gen_pl, "yes")
 	elseif args.alt_gen_pl then
 		insert_cat("~ with alternate genitive plural")
@@ -936,7 +1000,7 @@ local function categorize_and_init_heading(stress, decl, args)
 	else
 		ut.insert_if_not(h.irreg_gen_pl, "no")
 	end
-	if sgdc.irregpl or args.nom_pl then
+	if sgdc.irregpl or args.nom_pl or is_slash_decl then
 		ut.insert_if_not(h.irreg_nom_pl, "yes")
 	else
 		ut.insert_if_not(h.irreg_nom_pl, "no")
@@ -1597,7 +1661,7 @@ function export.generate_form(frame)
 		error("Must specify desired form using form=")
 	end
 	local form = args.form
-	if not ut.contains(old_cases, form) then
+	if not ut.contains(cases, form) then
 		error("Unrecognized form " .. form)
 	end
 	local args = export.do_generate_forms(args, false)
@@ -3540,16 +3604,25 @@ handle_forms_and_overrides = function(args)
 			if lastarg > 0 and args[case .. "_tail"] then
 				args.forms[case][lastarg] = args.forms[case][lastarg] .. args[case .. "_tail"]
 			end
+			if args[case .. "_tailall"] then
+				for i=1,lastarg do
+					args.forms[case][i] = args.forms[case][i] .. args.pltailall
+				end
+			end
 			if not rfind(case, "_pl") then
-				if lastarg > 0 and args.sgtailall then
-					args.forms[case][lastarg] = args.forms[case][lastarg] .. args.sgtailall
+				if args.sgtailall then
+					for i=1,lastarg do
+						args.forms[case][i] = args.forms[case][i] .. args.sgtailall
+					end
 				end
 				if lastarg > 1 and args.sgtail then
 					args.forms[case][lastarg] = args.forms[case][lastarg] .. args.sgtail
 				end
 			else
-				if lastarg > 0 and args.pltailall then
-					args.forms[case][lastarg] = args.forms[case][lastarg] .. args.pltailall
+				if args.pltailall then
+					for i=1,lastarg do
+						args.forms[case][i] = args.forms[case][i] .. args.pltailall
+					end
 				end
 				if lastarg > 1 and args.pltail then
 					args.forms[case][lastarg] = args.forms[case][lastarg] .. args.pltail
