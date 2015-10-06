@@ -6,69 +6,69 @@ import pywikibot
 
 dosave = False
 
-stress_patterns = ["1", "2", "3", "4", "4*", "5", "6", "6*"]
+stress_patterns = ["a", "b", "b'", "c", "d", "d'", "e", "f", "f'", "f''"]
 genders = ["masculine", "feminine", "neuter"]
 stem_types = ["hard-stem", "soft-stem", "velar-stem", "sibilant-stem",
   u"ц-stem", "vowel-stem", "i-stem", "3rd-declension"]
 genders_stems_stress = [["masculine", [
-    ["hard-stem", ["1", "2", "3", "4", "5"]], # 4 maybe only кол
-    ["soft-stem", ["1", "2", "3", "5", "6"]],
-    ["velar-stem", ["1", "2", "3", "4", "5"]],
-    ["sibilant-stem", ["1", "2", "3", "5"]],
-    [u"ц-stem", ["1", "2"]],
-    ["vowel-stem", ["1", "2", "3"]],
-    ["i-stem", ["1", "2", "3"]], # 2/3 only the word кий
+    ["hard-stem", ["a", "b", "c", "d", "e"]], # d maybe only кол
+    ["soft-stem", ["a", "b", "c", "e", "f"]],
+    ["velar-stem", ["a", "b", "c", "d", "e"]],
+    ["sibilant-stem", ["a", "b", "c", "e"]],
+    [u"ц-stem", ["a", "b"]],
+    ["vowel-stem", ["a", "b", "c"]],
+    ["i-stem", ["a", "b", "c"]], # b/c only the word кий
   ]],
   ["feminine", [
-    ["hard-stem", ["1", "2", "4", "4*", "5", "6", "6*"]], # 5 maybe only бу́бна
-    ["soft-stem", ["1", "2", "4", "4*", "5", "6"]], # 4* maybe only земля́
-    ["velar-stem", ["1", "2", "4", "4*", "6", "6*"]],
-    ["sibilant-stem", ["1", "2", "4", "4*", "6"]],
-    [u"ц-stem", ["1", "2", "4"]], # 2 maybe only маца́; 4 maybe only овца́
-    ["vowel-stem", ["1", "2", "4"]],
-    ["i-stem", ["1", "2"]], # 2 maybe only лития́, судия́
-    ["3rd-declension", ["1", "2", "5", "6*"]],
+    ["hard-stem", ["a", "b", "d", "d'", "e", "f", "f'"]], # e maybe only бу́бна
+    ["soft-stem", ["a", "b", "d", "d'", "e", "f"]], # d' maybe only земля́
+    ["velar-stem", ["a", "b", "d", "d'", "f", "f'"]],
+    ["sibilant-stem", ["a", "b", "d", "d'", "f"]],
+    [u"ц-stem", ["a", "b", "d"]], # b maybe only маца́; d maybe only овца́
+    ["vowel-stem", ["a", "b", "d"]],
+    ["i-stem", ["a", "b"]], # b maybe only лития́, судия́, паремия́, алия́
+    ["3rd-declension", ["a", "b'", "e", "f''"]],
   ]],
   ["neuter", [
-    ["hard-stem", ["1", "2", "3", "4", "6"]], # 6 maybe only тавро́
-    ["soft-stem", ["1", "3"]],
-    ["velar-stem", ["1", "2", "3", "4", "5"]], # 4 maybe only молоко́; 5 maybe only у́хо
-    ["sibilant-stem", ["1", "6"]], # 6 maybe only плечо́
-    [u"ц-stem", ["1", "2", "3", "4", "6"]], # 2 maybe only ружьецо́, деревцо́; 3 maybe only се́рдце, де́ревце; 4 maybe only лицо́; 6 maybe only крыльцо́
-    ["vowel-stem", ["1", "2", "4"]],
-    ["i-stem", ["1", "2"]],
-    ["3rd-declension", ["3"]],
+    ["hard-stem", ["a", "b", "c", "d", "f"]], # f maybe only тавро́
+    ["soft-stem", ["a", "c"]],
+    ["velar-stem", ["a", "b", "c", "d", "e"]], # d maybe only молоко́; e maybe only у́хо
+    ["sibilant-stem", ["a", "f"]], # f maybe only плечо́
+    [u"ц-stem", ["a", "b", "c", "d", "f"]], # b maybe only ружьецо́, деревцо́; c maybe only се́рдце, де́ревце; d maybe only лицо́; f maybe only крыльцо́
+    ["vowel-stem", ["a", "b", "d"]],
+    ["i-stem", ["a", "b"]],
+    ["3rd-declension", ["c"]],
   ]],
 ]
 
 adj_decls = [
-    ["1", "masculine", [
+    ["a", "masculine", [
       [u"-ый", u"-ые", ["hard-stem"]],
       [u"-ый", u"-ые", [u"ц-stem"]],
       [u"-ий", u"-ие", ["velar-stem", "sibilant-stem"]],
     ]],
-    ["1", "feminine", [
+    ["a", "feminine", [
       [u"-ая", u"-ые", ["hard-stem"]],
       [u"-aя", u"-ые", [u"ц-stem"]],
       [u"-ая", u"-ие", ["velar-stem", "sibilant-stem"]],
     ]],
-    ["1", "neuter", [
+    ["a", "neuter", [
       [u"-ое", u"-ые", ["hard-stem"]],
       [u"-ее", u"-ые", [u"ц-stem"]],
       [u"-ое", u"-ие", ["velar-stem"]],
       [u"-ее", u"-ие", ["sibilant-stem"]],
     ]],
-    ["2", "masculine", [
+    ["b", "masculine", [
       [u"-о́й", u"-ы́е", ["hard-stem"]],
       [u"-о́й", u"-ы́е", [u"ц-stem"]],
       [u"-о́й", u"-и́е", ["velar-stem", "sibilant-stem"]],
     ]],
-    ["2", "feminine", [
+    ["b", "feminine", [
       [u"-а́я", u"-ы́е", ["hard-stem"]],
       [u"-áя", u"-ы́е", [u"ц-stem"]],
       [u"-а́я", u"-и́е", ["velar-stem", "sibilant-stem"]],
     ]],
-    ["2", "neuter", [
+    ["b", "neuter", [
       [u"-о́е", u"-ы́е", ["hard-stem"]],
       [u"-о́е", u"-ы́е", [u"ц-stem"]],
       [u"-о́е", u"-и́е", ["velar-stem", "sibilant-stem"]],
@@ -118,7 +118,7 @@ def create_cat(cat, args, adj=False):
     cat = "Category:Russian " + cat.replace("~", "adjectives")
     text = "{{ruadjcatboiler|%s}}" % "|".join(args)
   else:
-    cat = "Category:Russian " + cat.replace("~", "nominals")
+    cat = "Category:Russian " + cat.replace("~", "nouns")
     text = "{{runouncatboiler|%s}}" % "|".join(args)
   page = pywikibot.Page(site, cat)
   page.text = unicode(text)
@@ -131,7 +131,7 @@ def create_adj_cat(cat, args):
   create_cat(cat, args, adj=True)
 
 for s in stress_patterns:
-  create_cat("~ with stress pattern %s" % s, ["stress", s])
+  create_cat("~ with accent pattern %s" % s, ["stress", s])
 for c in extra_cases:
   create_cat("~ with %s" % c, ["extracase", c])
 for c in cases:
@@ -144,11 +144,11 @@ for gender in genders:
   for stem_type in stem_types:
     if gender == "masculine" and stem_type == "3rd-declension":
       continue
-    create_cat("%s %s-type ~" % (stem_type, gender), ["stemgender"])
+    create_cat("%s %s-form ~" % (stem_type, gender), ["stemgender"])
 for gender, stem_stresses in genders_stems_stress:
   for stem, stresses in stem_stresses:
     for stress in stresses:
-      create_cat("%s %s-type accent-%s ~" % (stem, gender, stress), ["stemgenderstress"])
+      create_cat("%s %s-form accent-%s ~" % (stem, gender, stress), ["stemgenderstress"])
 
 for stress, gender, sgplstems in adj_decls:
   for sg, pl, stems in sgplstems:
