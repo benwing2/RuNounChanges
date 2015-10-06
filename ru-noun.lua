@@ -4220,6 +4220,18 @@ compute_final_forms = function(args)
 	for _, case in ipairs(displayable_cases) do
 		args[case] = concat_word_forms(args.per_word_info, case)
 	end
+	-- Try to set the values of acc_sg and acc_pl. The only time we can't is
+	-- when the noun is bianimate and the anim/inan values are different.
+	if args.a == "a" then
+		args.acc_sg = args.acc_sg_an
+		args.acc_pl = args.acc_pl_an
+	elseif args.a == "i" then
+		args.acc_sg = args.acc_sg_in
+		args.acc_pl = args.acc_pl_in
+	else
+		args.acc_sg = ut.equals(args.acc_sg_in, args.acc_sg_an) and args.acc_sg_in or nil
+		args.acc_pl = ut.equals(args.acc_pl_in, args.acc_pl_an) and args.acc_pl_in or nil
+	end
 end
 
 -- Make the table
