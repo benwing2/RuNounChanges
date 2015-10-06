@@ -3955,22 +3955,22 @@ handle_forms_and_overrides = function(args, n, islast)
 					end
 				end
 				if not rfind(case, "_pl") then
-					if args[sgtailall .. n] then
+					if args["sgtailall" .. n] then
 						for i=1,lastarg do
-							f[case][i] = f[case][i] .. args[sgtailall .. n]
+							f[case][i] = f[case][i] .. args["sgtailall" .. n]
 						end
 					end
-					if lastarg > 1 and args[sgtail .. n] then
-						f[case][lastarg] = f[case][lastarg] .. args[sgtail .. n]
+					if lastarg > 1 and args["sgtail" .. n] then
+						f[case][lastarg] = f[case][lastarg] .. args["sgtail" .. n]
 					end
 				else
-					if args[pltailall .. n] then
+					if args["pltailall" .. n] then
 						for i=1,lastarg do
-							f[case][i] = f[case][i] .. args[pltailall .. n]
+							f[case][i] = f[case][i] .. args["pltailall" .. n]
 						end
 					end
-					if lastarg > 1 and args[pltail .. n] then
-						f[case][lastarg] = f[case][lastarg] .. args[pltail .. n]
+					if lastarg > 1 and args["pltail" .. n] then
+						f[case][lastarg] = f[case][lastarg] .. args["pltail" .. n]
 					end
 				end
 			end
