@@ -62,26 +62,27 @@ function export.iotation(stem, shch)
     stem = rsub(stem, "ск$", "щ")
     stem = rsub(stem, "ст$", "щ")
     stem = rsub(stem, "[кц]$", "ч")
-    
+
     -- normally "т" is iotated as "ч" but there are many verbs that are iotated with "щ"
     if shch == "щ" then
         stem = rsub(stem, "т$", "щ")
     else
         stem = rsub(stem, "т$", "ч")
     end
- 
+
     stem = rsub(stem, "[гдз]$", "ж")
-    
+
     stem = rsub(stem, "([бвмпф])$", "%1л")
-    
+
     return stem
 end
 
--- Does a word of set of connected text need accents? We need to split by word
+-- Does a set of words in connected text need accents? We need to split by word
 -- and check each one.
 function export.needs_accents(text)
 	local function word_needs_accents(word)
-		-- A word needs accents if it is unstressed and contains more than one vowel
+		-- A word needs accents if it is unstressed and contains more than
+		-- one vowel
 		return export.is_unstressed(word) and not export.is_monosyllabic(word)
 	end
 	local words = rsplit(text, "%s")
@@ -93,41 +94,60 @@ function export.needs_accents(text)
 	return false
 end
 
+-- True if word is stressed (acute or diaeresis)
 function export.is_stressed(word)
 	-- A word that has ё in it is inherently stressed.
 	-- diaeresis occurs in сѣ̈дла plural of сѣдло́
 	return rfind(word, "[́̈ёЁ]")
 end
 
+-- True if word has no stress mark (acute or diaeresis)
 function export.is_unstressed(word)
 	return not export.is_stressed(word)
 end
 
+-- True if word is stressed on the last syllable
 function export.is_ending_stressed(word)
 	return rfind(word, "[ёЁ][^" .. export.vowel .. "]*$") or
 		rfind(word, "[" .. export.vowel .. "][́̈][^" .. export.vowel .. "]*$")
 end
 
--- True if a word has two or more stresses
+-- True if a word has two or more stresses (acute or diaeresis)
 function export.is_multi_stressed(word)
 	word = rsub(word, "[ёЁ]", "е́")
 	return rfind(word, "[" .. export.vowel .. "][́̈].*[" .. export.vowel .. "][́̈]")
 end
 
+-- True if word is stressed on the first syllable
 function export.is_beginning_stressed(word)
 	return rfind(word, "^[^" .. export.vowel .. "]*[ёЁ]") or
 		rfind(word, "^[^" .. export.vowel .. "]*[" .. export.vowel .. "]́")
 end
 
+-- True if word has no vowel
 function export.is_nonsyllabic(word)
 	return not rfind(word, "[" .. export.vowel .. "]")
 end
 
--- Includes non-syllabic stems such as льд-
+-- True if word has no more than one vowel; includes non-syllabic stems such
+-- as льд-
 function export.is_monosyllabic(word)
 	return not rfind(word, "[" .. export.vowel .. "].*[" .. export.vowel .. "]")
 end
 
+local grave_decomposer = {
+    ["ѐ"] = "е" .. GR,
+    ["Ѐ"] = "Е" .. GR,
+    ["ѝ"] = "и" .. GR,
+    ["Ѝ"] = "И" .. GR,
+}
+
+-- decompose precomposed Cyrillic chars w/grave accent; not necessary for
+-- acute accent as there aren't precomposed Cyrillic chars w/acute accent,
+-- and undesirable for precomposed ё and Ё
+function export.decompose_grave(word)
+    return rsub(word, "[ѐЀѝЍ]", grave_decomposer)
+end
 
 local grave_deaccenter = {
     ["̀"] = "", -- grave accent
@@ -139,17 +159,17 @@ local grave_deaccenter = {
 
 local deaccenter = mw.clone(grave_deaccenter)
 deaccenter[AC] = "" -- acute accent
-deaccenter["̈"] = "" -- diaeresis
 
+-- remove acute and grave accents; don't affect composed diaeresis in ёЁ or
+-- uncomposed diaeresis in -ѣ̈- (as in plural сѣ̈дла of сѣдло́)
 function export.remove_accents(word)
-	-- remove acute, grave and diaeresis (but not affecting composed ёЁ)
-    return rsub(word, "[̀́̈ѐЀѝЍ]", deaccenter)
+    return rsub(word, "[́̀ѐЀѝЍ]", deaccenter)
 end
 
+-- remove acute and grave accents in monosyllabic words; don't affect
+-- diaeresis (composed or uncomposed) because it indicates a change in vowel
+-- quality, which still applies to monosyllabic words
 function export.remove_monosyllabic_accents(word)
-	-- note: This doesn't affect ё or Ё, provided that the word is
-	-- precomposed (which it normally is, as this is done automatically by
-	-- MediaWiki upon saving)
 	if export.is_monosyllabic(word) then
 		return export.remove_accents(word)
 	else
@@ -160,32 +180,38 @@ end
 local destresser = mw.clone(deaccenter)
 destresser["ё"] = "е"
 destresser["Ё"] = "Е"
+destresser["̈"] = "" -- diaeresis
 
+-- remove all stress marks (acute, grave, diaeresis)
 function export.make_unstressed(word)
     return rsub(word, "[̀́̈ёЁѐЀѝЍ]", destresser)
 end
 
+-- remove diaeresis stress marks only
 function export.remove_jo(word)
-    return rsub(word, "[ёЁ]", destresser)
+    return rsub(word, "[̈ёЁ]", destresser)
 end
 
+-- make last stressed syllable (acute or diaeresis) unstressed
 function export.make_unstressed_once(word)
 	-- leave graves alone
     return rsub(word, "([́̈ёЁ])([^́̈ёЁ]*)$", function(x, rest) return destresser[x] .. rest; end, 1)
 end
 
+-- make first stressed syllable (acute or diaeresis) unstressed
 function export.make_unstressed_once_at_beginning(word)
 	-- leave graves alone
     return rsub(word, "^([^́̈ёЁ]*)([́̈ёЁ])", function(rest, x) return rest .. destresser[x]; end, 1)
 end
 
+-- subfunction of make_ending_stressed(), make_beginning_stressed()
 function export.correct_grave_acute_clash(word)
 	word = rsub(word, "([̀ѐЀѝЍ])́", function(x) return grave_deaccenter[x] .. AC; end)
 	return rsub(word, AC .. GR, AC)
 end
 
 function export.make_ending_stressed(word)
-	-- If already ending stressed, just return word so we don't mess up ё 
+	-- If already ending stressed, just return word so we don't mess up ё
 	if export.is_ending_stressed(word) then
 		return word
 	end
@@ -196,7 +222,7 @@ function export.make_ending_stressed(word)
 end
 
 function export.make_beginning_stressed(word)
-	-- If already beginning stressed, just return word so we don't mess up ё 
+	-- If already beginning stressed, just return word so we don't mess up ё
 	if export.is_beginning_stressed(word) then
 		return word
 	end
