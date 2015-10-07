@@ -191,10 +191,11 @@ TODO:
       check if acc_sg_in==acc_sg_an and make it acc_sg; when a=="b" and the
       _in and _an variants are different, might need to ignore them or check
       that acc_sg_in==nom_sg and acc_sg_an==gen_sg; similarly for _pl
+	  (DONE, NEEDS TESTING)
    -- Need to test with multiple words!
    -- Current handling of <adj> won't work properly with multiple words;
       will need to translate word-by-word in that case (should be solved by
-	  manual-translit branch)
+	  manual-translit branch) (DONE IN MANUAL-TRANSLIT BRANCH)
    -- Make sure internal_notes handled correctly; we may run into issues with
       multiple internal notes from different words, if we're not careful to
 	  use different footnote symbols for each type of footnote (which we don't
