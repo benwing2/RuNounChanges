@@ -1421,6 +1421,10 @@ end
 
 -- Implementation of do_generate_forms() and do_generate_forms_multi(),
 -- which have equivalent functionality but different calling sequence.
+-- Implementation of do_generate_forms() and do_generate_forms_multi(),
+-- which have equivalent functionality but different calling sequence,
+-- as well as show_z() for template {{ru-decl-noun-z}}, which has a
+-- subset of the functionality of the other two.
 generate_forms_1 = function(args, per_word_info)
 	local SUBPAGENAME = mw.title.getCurrentTitle().subpageText
 	local old = args.old
@@ -2009,6 +2013,55 @@ function export.generate_form(frame)
 	else
 		return get_form(args[form])
 	end
+end
+
+-- The entry point for compatibility with {{ru-decl-noun-z}}.
+function export.show_z(frame)
+	local args = clone_args(frame)
+
+	local stem = args[1]
+	local stress = args[2]
+	local specific = args[4] or ""
+
+	-- Parse gender/animacy spec
+	local gender, anim = rmatch(args[3], "^([mfn])-([a-z]+)")
+	if not gender then
+		error("Unrecognized gender/anim spec " .. args[3])
+	end
+	if anim ~= "an" and anim ~= "in" then anim = "both" end
+	args.a = anim
+
+	-- Handle specific
+	specific = rsub(specific, "ё", ";ё")
+
+	-- Compute decl; special case for семьянин (perhaps not necessary)
+	local decl = com.make_unstressed_once(stem) == "семьянин" and "#" .. specific or gender .. specific
+
+	-- Handle overrides
+	args.pre_sg = args.prp_sg
+	args.pre_pl = args.prp_pl
+	args.notes = args.note
+	if args.par then
+		args.par = "+"
+	end
+	if args.loc then
+		if args.loc == "в" then
+			args.loc = "в +"
+		elseif args.loc == "на" then
+			args.loc = "на +"
+		else
+			args.loc = "в +,на +"
+		end
+	end
+
+	local stem_set = {}
+	table.insert(stem_set, stress)
+	table.insert(stem_set, stem)
+	table.insert(stem_set, decl)
+
+	local per_word_info = {{{stem_set}, ""}}
+
+	return generate_forms_1(args, per_word_info)
 end
 
 local stem_expl = {
