@@ -3606,7 +3606,7 @@ handle_forms_and_overrides = function(args)
 			end
 			if args[case .. "_tailall"] then
 				for i=1,lastarg do
-					args.forms[case][i] = args.forms[case][i] .. args.pltailall
+					args.forms[case][i] = args.forms[case][i] .. args[case .. "_tailall"]
 				end
 			end
 			if not rfind(case, "_pl") then
