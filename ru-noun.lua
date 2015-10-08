@@ -186,6 +186,10 @@ TODO:
 	  (DONE, NEEDS TESTING)
    -- Should have ..N versions of pltail and variants. (DONE, NEEDS TESTING)
    -- Need to handle overrides of acc_sg, acc_pl (MIGHT WORK ALREADY)
+   -- Overrides of nom_sg/nom_pl should also override acc_sg/acc_pl if it
+      was originally empty and the animacy is inanimate; similarly for
+	  gen_sg/gen_pl and animates; this needs to work both for per-word and
+	  overall overrides.
    -- do_generate_forms(_multi) need to run part of make_table(), enough to
       combine all per_word_info into single lists of forms and store back
 	  into args[case]. (DONE, NEEDS TESTING)
@@ -206,6 +210,14 @@ TODO:
 	  do currently).
    -- Handling default lemma: With multiple words, we should probably split
       the page name on spaces and default each word in turn
+1a. FIXME: add_irreg_marker:
+   -- handle_forms_and_overrides(): Needs to add irreg marker to overrides that
+      are not in the list of cases already seen. Needs to make sure to ignore
+	  footnote markers when comparing, and not add irreg marker if already
+	  present.
+   -- handle_overall_forms_and_overrides(): Similar to
+      handle_forms_and_overrides(). This whole function needs to happen AFTER
+	  we generate the combined multi-word forms, not before.
 2. FIXME: Test that omitting a manual form leaves the form as a big dash.
 2a. FIXME: Test that omitting a manual form in ru-adjective leaves the form as
    a big dash.
@@ -443,6 +455,7 @@ local ulen = mw.ustring.len
 
 local AC = u(0x0301) -- acute =  ́
 local CFLEX = u(0x0302) -- circumflex =  ̂
+local IRREGMARKER = "△"
 
 -- version of rsubn() that discards all but the first return value
 local function rsub(term, foo, bar)
@@ -539,7 +552,8 @@ local internal_notes_table_old = {}
 local internal_notes_table = {}
 -- Category and type information corresponding to declensions: These may
 -- contain the following fields: 'singular', 'plural', 'decl', 'hard', 'g',
--- 'suffix', 'gensg', 'irregpl', 'cant_reduce', 'ignore_reduce', 'stem_suffix'.
+-- 'suffix', 'gensg', 'irregpl', 'alt_nom_pl', 'cant_reduce', 'ignore_reduce',
+-- 'stem_suffix'.
 --
 -- 'singular' is used to construct a category of the form
 -- "Russian nouns SINGULAR". If omitted, a category is constructed of the
@@ -565,8 +579,8 @@ local internal_notes_table = {}
 -- "Russian nouns ending in suffix -SGENDING with plural -PLENDING" if
 -- 'suffix' is true). Note that if either singular or plural or both
 -- specifies a list, looping will occur over all combinations. Such a
--- category is constructed only if 'irregpl' or 'suffix' is true or if the
--- declension class is a slash class.
+-- category is constructed only if 'irregpl' or 'alt_nom_pl' or 'suffix'
+-- is true or if the declension class is a slash class.
 --
 -- 'decl' is "1st", "2nd", "3rd" or "invariable"; 'hard' is "hard", "soft"
 -- or "none"; 'g' is "m", "f", "n" or "none"; these are all traditional
@@ -574,8 +588,13 @@ local internal_notes_table = {}
 --
 -- If 'suffix' is true, the declension type includes a long suffix
 -- added to the string that itself undergoes reducibility and such, and so
--- reducibility cannot occur in the stem minus the suffix. Categoriess will
+-- reducibility cannot occur in the stem minus the suffix. Categories will
 -- be created for the suffix.
+--
+-- 'alt_nom_pl' indicates that the declension has an alternative nominative
+-- plural (corresponding to Zaliznyak's special case 1; cf. special case 2
+-- for alternative genitive plural). 'irregpl' indicates that the entire
+-- plural is irregular.
 --
 -- In addition to the above categories, additional more specific categories
 -- are constructed based on the final letter of the stem, e.g.
@@ -1115,7 +1134,7 @@ local function categorize_and_init_heading(stress, decl, args, n, islast)
 			insert_cat("~ " .. cat)
 		end
 	end
-	if sgcat and plcat and (sgdc.suffix or sgdc.irregpl or
+	if sgcat and plcat and (sgdc.suffix or sgdc.alt_nom_pl or sgdc.irregpl or
 			is_slash_decl) then
 		for _, scat in ipairs(cat_to_list(sgcat)) do
 			for _, pcat in ipairs(cat_to_list(plcat)) do
@@ -1144,7 +1163,7 @@ local function categorize_and_init_heading(stress, decl, args, n, islast)
 	else
 		insert_if_not(h.irreg_gen_pl, "no")
 	end
-	if sgdc.irregpl or args.nom_pl or is_slash_decl then
+	if stdc.alt_nom_pl or sgdc.irregpl or args.nom_pl or is_slash_decl then
 		insert_if_not(h.irreg_nom_pl, "yes")
 	else
 		insert_if_not(h.irreg_nom_pl, "no")
@@ -3223,10 +3242,10 @@ declensions_aliases["#"] = ""
 declensions_old["ъ-а"] = mw.clone(declensions_old["ъ"])
 declensions_old["ъ-а"]["nom_pl"] = "а́"
 
-declensions_old_cat["ъ-а"] = { decl="2nd", hard="hard", g="m", irregpl=true }
+declensions_old_cat["ъ-а"] = { decl="2nd", hard="hard", g="m", alt_nom_pl=true }
 declensions_cat["-а"] = {
 	singular = "ending in a consonant",
-	decl="2nd", hard="hard", g="m", irregpl=true
+	decl="2nd", hard="hard", g="m", alt_nom_pl=true
 }
 declensions_aliases["#-a"] = "-a"
 
@@ -3338,7 +3357,7 @@ declensions_old_cat["ь-m"] = { decl="2nd", hard="soft", g="m" }
 declensions_old["ь-я"] = mw.clone(declensions_old["ь-m"])
 declensions_old["ь-я"]["nom_pl"] = "я́"
 
-declensions_old_cat["ь-я"] = { decl="2nd", hard="soft", g="m", irregpl=true }
+declensions_old_cat["ь-я"] = { decl="2nd", hard="soft", g="m", alt_nom_pl=true }
 
 ----------------- Masculine palatal -------------------
 
@@ -3366,7 +3385,7 @@ declensions_old_cat["й"] = { decl="2nd", hard="palatal", g="m" }
 declensions_old["й-я"] = mw.clone(declensions_old["й"])
 declensions_old["й-я"]["nom_pl"] = "я́"
 
-declensions_old_cat["й-я"] = { decl="2nd", hard="palatal", g="m", irregpl=true }
+declensions_old_cat["й-я"] = { decl="2nd", hard="palatal", g="m", alt_nom_pl=true }
 
 --------------------------------------------------------------------------
 --                       First-declension feminine                      --
@@ -3480,7 +3499,7 @@ declensions_old_cat["о"] = { decl="2nd", hard="hard", g="n" }
 -- Hard-neuter declension in -о with irreg nom pl -и
 declensions_old["о-и"] = mw.clone(declensions_old["о"])
 declensions_old["о-и"]["nom_pl"] = "ы́"
-declensions_old_cat["о-и"] = { decl="2nd", hard="hard", g="n", irregpl=true }
+declensions_old_cat["о-и"] = { decl="2nd", hard="hard", g="n", alt_nom_pl=true }
 
 declensions_old_aliases["о-ы"] = "о-и"
 
@@ -3491,7 +3510,7 @@ declensions_old["(ишк)о-и"] = mw.clone(declensions_old["о-и"])
 declensions_old["(ишк)о-и"]["gen_sg"] = {"а́", "ы́1"}
 declensions_old["(ишк)о-и"]["dat_sg"] = {"у́", "ѣ́1"}
 declensions_old["(ишк)о-и"]["ins_sg"] = {"о́мъ", "о́й1"}
-declensions_old_cat["(ишк)о-и"] = { decl="2nd", hard="hard", g="n", colloqfem=true, irregpl=true }
+declensions_old_cat["(ишк)о-и"] = { decl="2nd", hard="hard", g="n", colloqfem=true, alt_nom_pl=true }
 internal_notes_table_old["(ишк)о-и"] = "<sup>1</sup> Colloquial."
 
 -- Masculine-gender animate neuter-form declension in -(ищ)е with irreg
@@ -3502,7 +3521,7 @@ declensions_old["(ищ)е-и"]["acc_sg"] = {"а́", "у́1"}
 declensions_old["(ищ)е-и"]["gen_sg"] = {"а́", "ы́2"}
 declensions_old["(ищ)е-и"]["dat_sg"] = {"у́", "ѣ́2"}
 declensions_old["(ищ)е-и"]["ins_sg"] = {"о́мъ", "о́й2"}
-declensions_old_cat["(ищ)е-и"] = { decl="2nd", hard="hard", g="n", colloqfem=true, irregpl=true }
+declensions_old_cat["(ищ)е-и"] = { decl="2nd", hard="hard", g="n", colloqfem=true, alt_nom_pl=true }
 internal_notes_table_old["(ищ)е-и"] = "<sup>1</sup> Colloquial.<br /><sup>2</sup> Less common, more colloquial."
 
 ----------------- Neuter soft -------------------
@@ -4045,14 +4064,15 @@ end
 -- passed-in suffixes, e.g. by removing stress marks or modifying vowels in
 -- various ways after a stem-final velar, sibilant or ц).  Each combined form
 -- is a two-element list {stem, tr} (or a one-element list if tr is nil).
--- We are handling the Nth word; ISLAST is true if this is the last one.
-local function attach_with(args, case, suf, fun, n, islast)
+-- IRREG is true if this is an irregular form. We are handling the Nth word;
+-- ISLAST is true if this is the last one.
+local function attach_with(args, case, suf, fun, irreg, n, islast)
 	if type(suf) == "table" then
 		local all_combineds = {}
 		local all_realsufs = {}
 		for _, x in ipairs(suf) do
 			local combineds, realsufs =
-				attach_with(args, case, x, fun, n, islast)
+				attach_with(args, case, x, fun, irreg, n, islast)
 			for _, combined in ipairs(combineds) do
 				table.insert(all_combineds, combined)
 			end
@@ -4063,29 +4083,47 @@ local function attach_with(args, case, suf, fun, n, islast)
 		return all_combineds, all_realsufs
 	else
 		local combined, realsuf = fun(args, case, suf)
-		return {combined and concat_paired_russian_tr(args["prefix" .. n], concat_paired_russian_tr(combined, args["suffix" .. n]))}, {realsuf}
+		local irregsuf = irreg and {IRREGMARKER} or {""}
+		if irreg and combined then
+			ut.insert_if_not(args.internal_notes, IRREGMARKER .. " Irregular.")
+		end
+		return {combined and concat_paired_russian_tr(
+			concat_paired_russian_tr(args["prefix" .. n], combined),
+			concat_paired_russian_tr(args["suffix" .. n], irregsuf)) or nil},
+			{realsuf and concat_paired_russian_tr({realsuf, args["suffix" .. n][1]}) or nil}
 	end
 end
 
 -- Generate the form(s) and suffix(es) for CASE according to the declension
 -- table DECL, using the attachment function FUN (one of attach_stressed()
--- or attach_unstressed()). We are handling the Nth word; ISLAST is true if
--- this is the last one.
-local function gen_form(args, decl, case, stress, fun, n, islast)
+-- or attach_unstressed()). IS_SLASH is true if this is a slash declension
+-- (different declensions for singular and plural). We are handling the Nth
+-- word; ISLAST is true if this is the last one.
+local function gen_form(args, decl, case, stress, fun, is_slash, n, islast)
+	local irreg = false
 	if not args.suffixes[case] then
 		args.suffixes[case] = {}
 	end
 	local suf = decl[case]
+	local decl_cats = args.old and declensions_old_cat or declensions_cat
+	local ispl = rfind(case, "_pl")
+	if ispl and (decl_cats[decl].irregpl or args.pl and args.pl ~= args.stem or is_slash) then
+		irreg = true
+	end
+	if case == "nom_pl" and decl_cats[decl].alt_nom_pl then
+		irreg = true
+	end
 	if type(suf) == "function" then
-		suf = suf(rfind(case, "_pl") and args.pl or args.stem, stress, args)
+		suf = suf(ispl and args.pl or args.stem, stress, args)
 	end
 	if case == "gen_pl" and args.alt_gen_pl then
 		suf = decl.alt_gen_pl
+		irreg = true
 		if not suf then
 			error("No alternate genitive plural available for this declension class")
 		end
 	end
-	local combineds, realsufs = attach_with(args, case, suf, fun, n, islast)
+	local combineds, realsufs = attach_with(args, case, suf, fun, irreg, n, islast)
 	for _, realsuf in ipairs(realsufs) do
 		args.any_non_nil[case] = true
 		args.this_any_non_nil[case] = true
@@ -4113,7 +4151,8 @@ do_stress_pattern = function(stress, args, decl, number, n, islast)
 		if not number or (number == "sg" and rfind(case, "_sg")) or
 			(number == "pl" and rfind(case, "_pl")) then
 			f[case] = gen_form(args, decl, case, stress,
-				attachers[stress_patterns[stress][case]], n, islast)
+				attachers[stress_patterns[stress][case]], not not number,
+				n, islast)
 			-- Turn empty form lists into nil to facilitate computation of
 			-- animate/inanimate accusatives below
 			if f[case] and #f[case] == 0 then
