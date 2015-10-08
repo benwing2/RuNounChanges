@@ -592,7 +592,7 @@ local generate_forms_1
 local determine_decl
 local handle_forms_and_overrides
 local handle_overall_forms_and_overrides
-local compute_final_forms
+local concat_word_forms
 local make_table
 local detect_adj_type
 local detect_stress_pattern
@@ -1850,7 +1850,6 @@ generate_forms_1 = function(args, per_word_info)
 
 	compute_overall_heading_and_genders(args)
 	handle_overall_forms_and_overrides(args)
-	compute_final_forms(args)
 
 	-- Test code to compare existing module to new one.
 	if test_new_ru_noun_module then
@@ -4141,28 +4140,14 @@ handle_forms_and_overrides = function(args, n, islast)
 end
 
 handle_overall_forms_and_overrides = function(args)
+	local overall_forms = {}
+	for _, case in ipairs(displayable_cases) do
+		overall_forms[case] = concat_word_forms(args.per_word_info, case)
+	end
+
 	local function process_override(case)
 		if args[case] then
-			local nwords = #args.per_word_info
-			-- Canonicalize the override into a set of forms. HACK: Pass in
-			-- the forms from the last word, for use with + in loc/par
-			-- meaning "the expected form". This will work in the
-			-- majority of cases where there's only one word, and it's too
-			-- complicated to get working more generally (and not necessarily
-			-- even well-defined; the user should use word-specific overrides).
-			-- Note that if we simply passed in args.forms, we would get the
-			-- same thing, except in the case where there's an overall
-			-- override of the dat_sg.
-			local override = canonicalize_override(args, case,
-				args.per_word_info[nwords][1], "")
-			-- Another hack of sorts -- stuff the whole override into the
-			-- last word, and leave the remaining words blank. We do this
-			-- because there's no guarantee the override will have the same
-			-- number of words as elsewhere or the same joiners.
-			for i=1,(nwords-1) do
-				args.per_word_info[i][1][case] = {""}
-			end
-			args.per_word_info[nwords][1][case] = override
+			overall_forms[case] = canonicalize_override(args, case, overall_forms, n)
 			args.any_overridden[case] = true
 		end
 	end
@@ -4175,6 +4160,28 @@ handle_overall_forms_and_overrides = function(args)
 		if case ~= "dat_sg" then
 			process_override(case)
 		end
+	end
+
+	for _, case in ipairs(overridable_cases) do
+		args[case] = overall_forms[case]
+	end
+
+	-- FIXME! An override of nom_sg, acc_sg or gen_sg may cause us to
+	-- set acc_sg_in and/or acc_sg_an depending on gender and animacy;
+	-- similar for the plural. We need to duplicate whatever would happen
+	-- in the per-word overrides.
+
+	-- Try to set the values of acc_sg and acc_pl. The only time we can't is
+	-- when the noun is bianimate and the anim/inan values are different.
+	if args.a == "a" then
+		args.acc_sg = args.acc_sg or args.acc_sg_an
+		args.acc_pl = args.acc_pl or args.acc_pl_an
+	elseif args.a == "i" then
+		args.acc_sg = args.acc_sg or args.acc_sg_in
+		args.acc_pl = args.acc_pl or args.acc_pl_in
+	else
+		args.acc_sg = args.acc_sg or ut.equals(args.acc_sg_in, args.acc_sg_an) and args.acc_sg_in or nil
+		args.acc_pl = args.acc_pl or ut.equals(args.acc_pl_in, args.acc_pl_an) and args.acc_pl_in or nil
 	end
 end
 
@@ -4278,7 +4285,7 @@ end
 -- WORD_FORMS (a table listing the forms for each case) and JOINER (a string).
 -- We loop over all possible combinations of elements from each word's list
 -- of forms for the given case; this requires recursion.
-local function concat_word_forms(per_word_info, case)
+concat_word_forms = function(per_word_info, case)
 	local word_forms = {}
 	-- Gather the appropriate word forms. We have to recreate this anew
 	-- because it will be destructively modified by concat_word_forms_1().
@@ -4289,24 +4296,6 @@ local function concat_word_forms(per_word_info, case)
 	-- one blank element rather than no elements, otherwise no elements
 	-- will be propagated to the next recursion level.
 	return concat_word_forms_1(word_forms, {""})
-end
-
-compute_final_forms = function(args)
-	for _, case in ipairs(displayable_cases) do
-		args[case] = concat_word_forms(args.per_word_info, case)
-	end
-	-- Try to set the values of acc_sg and acc_pl. The only time we can't is
-	-- when the noun is bianimate and the anim/inan values are different.
-	if args.a == "a" then
-		args.acc_sg = args.acc_sg_an
-		args.acc_pl = args.acc_pl_an
-	elseif args.a == "i" then
-		args.acc_sg = args.acc_sg_in
-		args.acc_pl = args.acc_pl_in
-	else
-		args.acc_sg = ut.equals(args.acc_sg_in, args.acc_sg_an) and args.acc_sg_in or nil
-		args.acc_pl = ut.equals(args.acc_pl_in, args.acc_pl_an) and args.acc_pl_in or nil
-	end
 end
 
 -- Make the table
