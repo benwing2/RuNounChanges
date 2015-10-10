@@ -1469,6 +1469,7 @@ generate_forms_1 = function(args, per_word_info)
 	args.per_word_heading = {}
 	args.per_word_genders = {}
 	args.any_overridden = {}
+	args.any_non_nil = {}
 	args.categories = {}
 	local function insert_cat(cat)
 		insert_category(args.categories, cat, args.pos)
@@ -3230,7 +3231,7 @@ declensions_old["о"] = {
 	["gen_sg"] = "а́",
 	["dat_sg"] = "у́",
 	["acc_sg"] = function(stem, stress, args)
-		return args.explicit_gender == "m" and args.thisa == "a" and "а́" or "о́"
+		return not (args.explicit_gender == "m" and args.thisa == "a") and "о́" or nil
 	end,
 	["ins_sg"] = "о́мъ",
 	["pre_sg"] = "ѣ́",
@@ -3282,7 +3283,7 @@ declensions_old["е"] = {
 	["gen_sg"] = "я́",
 	["dat_sg"] = "ю́",
 	["acc_sg"] = function(stem, stress, args)
-		return args.explicit_gender == "m" and args.thisa == "a" and "я́" or "ё"
+		return not (args.explicit_gender == "m" and args.thisa == "a") and "ё" or nil
 	end,
 	["ins_sg"] = "ёмъ",
 	["pre_sg"] = function(stem, stress)
@@ -3319,7 +3320,7 @@ declensions_old["е́"] = {
 	["gen_sg"] = "я́",
 	["dat_sg"] = "ю́",
 	["acc_sg"] = function(stem, stress, args)
-		return args.explicit_gender == "m" and args.thisa == "a" and "я́" or "е́"
+		return not (args.explicit_gender == "m" and args.thisa == "a") and "е́" or nil
 	end,
 	["ins_sg"] = "е́мъ",
 	["pre_sg"] = function(stem, stress)
@@ -3350,7 +3351,7 @@ declensions_old["ье"] = {
 	["gen_sg"] = "ья́",
 	["dat_sg"] = "ью́",
 	["acc_sg"] = function(stem, stress, args)
-		return args.explicit_gender == "m" and args.thisa == "a" and "ья́" or "ьё"
+		return not (args.explicit_gender == "m" and args.thisa == "a") and "ьё" or nil
 	end,
 	["ins_sg"] = "ьёмъ",
 	["pre_sg"] = "ьѣ́",
@@ -3420,13 +3421,13 @@ declensions_old["$"] = {
 	["nom_sg"] = "",
 	["gen_sg"] = "",
 	["dat_sg"] = "",
-	["acc_sg"] = "",
+	["acc_sg"] = nil,
 	["ins_sg"] = "",
 	["pre_sg"] = "",
 	["nom_pl"] = "",
 	["gen_pl"] = "",
 	["dat_pl"] = "",
-	["acc_pl"] = "",
+	["acc_pl"] = nil,
 	["ins_pl"] = "",
 	["pre_pl"] = "",
 }
@@ -3832,7 +3833,10 @@ local function gen_form(args, decl, case, stress, fun, n, islast)
 		ut.insert_if_not(args.forms[case], form)
 	end
 	for _, realsuf in ipairs(realsufs) do
-		ut.insert_if_not(args.suffixes[case], realsuf)
+		if realsuf then
+			args.any_non_nil[case] = true
+			ut.insert_if_not(args.suffixes[case], realsuf)
+		end
 	end
 end
 
@@ -4147,7 +4151,7 @@ handle_overall_forms_and_overrides = function(args)
 
 	local function process_override(case)
 		if args[case] then
-			overall_forms[case] = canonicalize_override(args, case, overall_forms, n)
+			overall_forms[case] = canonicalize_override(args, case, overall_forms, "")
 			args.any_overridden[case] = true
 		end
 	end
@@ -4166,10 +4170,22 @@ handle_overall_forms_and_overrides = function(args)
 		args[case] = overall_forms[case]
 	end
 
-	-- FIXME! An override of nom_sg, acc_sg or gen_sg may cause us to
-	-- set acc_sg_in and/or acc_sg_an depending on gender and animacy;
-	-- similar for the plural. We need to duplicate whatever would happen
-	-- in the per-word overrides.
+	-- Maybe set the value of the animate/inanimate accusative variants based
+	-- on nom/acc/gen overrides. Do this if there wasn't a specific override
+	-- of this form and there wasn't a specific accusative suffix anywhere
+	-- (occurs in the fem sg and sometimes the neut sg).
+	if not args.any_non_nil.acc_sg and not args.any_overridden.acc_sg_an then
+		args.acc_sg_an = args.acc_sg or args.a == "i" and args.nom_sg or args.gen_sg or args.acc_sg_an
+	end
+	if not args.any_non_nil.acc_sg and not args.any_overridden.acc_sg_in then
+		args.acc_sg_in = args.acc_sg or args.a == "a" and args.gen_sg or args.nom_sg or args.acc_sg_in
+	end
+	if not args.any_non_nil.acc_pl and not args.any_overridden.acc_pl_an then
+		args.acc_pl_an = args.acc_pl or args.a == "i" and args.nom_pl or args.gen_pl or args.acc_pl_an
+	end
+	if not args.any_non_nil.acc_pl and not args.any_overridden.acc_pl_in then
+		args.acc_pl_in = args.acc_pl or args.a == "a" and args.gen_pl or args.nom_pl or args.acc_pl_in
+	end
 
 	-- Try to set the values of acc_sg and acc_pl. The only time we can't is
 	-- when the noun is bianimate and the anim/inan values are different.
