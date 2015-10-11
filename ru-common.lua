@@ -11,6 +11,8 @@ transliteration and any transliteration we compute that we expect to work with.
 
 local export = {}
 
+local lang = require("Module:languages").getByCode("ru")
+
 local strutils = require("Module:string utilities")
 
 local u = mw.ustring.char
@@ -24,9 +26,9 @@ local usub = mw.ustring.sub
 
 local AC = u(0x0301) -- acute =  ́
 local GR = u(0x0300) -- grave =  ̀
-local BREVE = u(0x0306) == breve  ̆
+local BREVE = u(0x0306) -- breve  ̆
 local DIA = u(0x0308) -- diaeresis =  ̈
-local CARON = u(0x030C) == caron  ̌
+local CARON = u(0x030C) -- caron  ̌
 
 -- any accent
 export.accent = AC .. GR .. DIA .. BREVE .. CARON
@@ -322,7 +324,7 @@ function export.make_unstressed(ru, tr)
 	rusyl, trsyl = split_syllables(ru, tr)
 	for i=1,#rusyl do
 		if rfind(rusyl[i], "[ёЁ]") then
-			trsyl[i] = rsub(trsyl[i], "[Oo]", {"O" = "E", "o" = "e"})
+			trsyl[i] = rsub(trsyl[i], "[Oo]", {["O"] = "E", ["o"] = "e"})
 		end
 		rusyl[i] = make_unstressed_ru(rusyl[i])
 		-- the following should still work as it will affect accents only
@@ -347,7 +349,7 @@ function export.remove_jo(ru, tr)
 	rusyl, trsyl = split_syllables(ru, tr)
 	for i=1,#rusyl do
 		if rfind(rusyl[i], "[ёЁ]") then
-			trsyl[i] = rsub(trsyl[i], "[Oo]", {"O" = "E", "o" = "e"})
+			trsyl[i] = rsub(trsyl[i], "[Oo]", {["O"] = "E", ["o"] = "e"})
 		end
 		rusyl[i] = remove_jo_ru(rusyl[i])
 		-- the following should still work as it will affect accents only
@@ -376,7 +378,7 @@ function export.make_unstressed_once(ru, tr, noconcat)
 		local stressed = export.is_stressed(rusyl[i])
 		if stressed then
 			if rfind(rusyl[i], "[ёЁ]") then
-				trsyl[i] = rsub(trsyl[i], "[Oo]", {"O" = "E", "o" = "e"})
+				trsyl[i] = rsub(trsyl[i], "[Oo]", {["O"] = "E", ["o"] = "e"})
 			end
 			rusyl[i] = make_unstressed_once_ru(rusyl[i])
 			-- the following should still work as it will affect accents only
@@ -410,7 +412,7 @@ function export.make_unstressed_once_at_beginning(ru, tr, noconcat)
 		local stressed = export.is_stressed(rusyl[i])
 		if stressed then
 			if rfind(rusyl[i], "[ёЁ]") then
-				trsyl[i] = rsub(trsyl[i], "[Oo]", {"O" = "E", "o" = "e"})
+				trsyl[i] = rsub(trsyl[i], "[Oo]", {["O"] = "E", ["o"] = "e"})
 			end
 			rusyl[i] = make_unstressed_once_at_beginning_ru(rusyl[i])
 			-- the following should still work as it will affect accents only
@@ -435,8 +437,8 @@ function export.correct_grave_acute_clash(word, tr)
 	if not tr then
 		return word, nil
 	end
-	tr = rsub(word, GR .. AC, AC)
-	tr = rsub(word, AC .. GR, AC)
+	tr = rsub(tr, GR .. AC, AC)
+	tr = rsub(tr, AC .. GR, AC)
 	return word, tr
 end
 
@@ -572,7 +574,7 @@ function export.reduce_stem(stem, tr)
 		return nil, nil
 	end
 	if tr then
-		pretr, lettertr, posttr = rmatch(tr, "^(.*)([oOeE])́?([" .. export.tr_cons .. "][" .. export.tr_cons .. export.accent .. "]*)$"
+		pretr, lettertr, posttr = rmatch(tr, "^(.*)([oOeE])́?([" .. export.tr_cons .. "][" .. export.tr_cons .. export.accent .. "]*)$")
 		if not pretr then
 			return nil, nil -- should not happen unless tr is really messed up
 		end
@@ -638,7 +640,7 @@ function export.dereduce_stem(stem, tr, epenthetic_stress)
 
 	pre, letter, post = rmatch(stem, "^(.*)([" .. export.cons .. "])([" .. export.cons .. "])$")
 	if tr then
-		pretr, lettertr, posttr = rmatch(tr, "^(.*)(" .. export.tr_cons_acc_re .. ")(" .. export.tr_cons_acc_re .. ")$"
+		pretr, lettertr, posttr = rmatch(tr, "^(.*)(" .. export.tr_cons_acc_re .. ")(" .. export.tr_cons_acc_re .. ")$")
 		if pre and not pretr then
 			return nil, nil -- should not happen unless tr is really messed up
 		end
