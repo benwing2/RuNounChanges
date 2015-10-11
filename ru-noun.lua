@@ -458,6 +458,12 @@ local function track(page)
 	return true
 end
 
+-- version of ut.insert_if_not() that makes sure 'false' doesn't get inserted by mistake
+local function insert_if_not(foo, bar)
+	assert(bar ~= false)
+	ut.insert_if_not(foo, bar)
+end
+
 -- Fancy version of ine() (if-not-empty). Converts empty string to nil,
 -- but also strips single or double quotes, to allow for embedded spaces.
 local function ine(arg)
@@ -959,7 +965,7 @@ local function categorize_and_init_heading(stress, decl, args, n, islast)
 	-- insert English version of Zaliznyak stem type
 	if sgdc.decl == "invariable" then
 		insert_cat("invariable ~")
-		ut.insert_if_not(h.stemetc, "invar")
+		insert_if_not(h.stemetc, "invar")
 	else
 		local stem_type =
 			sgdc.decl == "3rd" and "3rd-declension" or
@@ -981,21 +987,21 @@ local function categorize_and_init_heading(stress, decl, args, n, islast)
 			-- masculine from feminine/neuter, but this is too rare a case
 			-- to worry about)
 			local gendertext = args.thisn == "p" and "plural-only" or gender_to_full[sgdc.g]
-			ut.insert_if_not(h.adjectival, "yes")
+			insert_if_not(h.adjectival, "yes")
 			if args.thisn ~= "p" then
-				ut.insert_if_not(h.gender, gender_to_short[sgdc.g])
+				insert_if_not(h.gender, gender_to_short[sgdc.g])
 			end
 			if sgdc.possadj then
 				insert_cat(sgdc.decl .. " possessive " .. gendertext .. " accent-" .. stress .. " adjectival ~")
-				ut.insert_if_not(h.stemetc, sgdc.decl .. " poss")
-				ut.insert_if_not(h.stress, stress)
+				insert_if_not(h.stemetc, sgdc.decl .. " poss")
+				insert_if_not(h.stress, stress)
 			elseif stem_type == "soft-stem" or stem_type == "vowel-stem" then
 				insert_cat(stem_type .. " " .. gendertext .. " adjectival ~")
-				ut.insert_if_not(h.stemetc, short_stem_type)
+				insert_if_not(h.stemetc, short_stem_type)
 			else
 				insert_cat(stem_type .. " " .. gendertext .. " accent-" .. stress .. " adjectival ~")
-				ut.insert_if_not(h.stemetc, short_stem_type)
-				ut.insert_if_not(h.stress, stress)
+				insert_if_not(h.stemetc, short_stem_type)
+				insert_if_not(h.stress, stress)
 			end
 		else
 			-- NOTE: There are 8 Zaliznyak-style stem types and 3 genders, but
@@ -1014,10 +1020,10 @@ local function categorize_and_init_heading(stress, decl, args, n, islast)
 			-- actual stem/gender/accent categories, although there are more
 			-- of them in Zaliznyak (FIXME, how many? See generate_cats.py).
 			insert_cat(stem_type .. " " .. gender_to_full[sgdc.g] .. "-form accent-" .. stress .. " ~")
-			ut.insert_if_not(h.adjectival, "no")
-			ut.insert_if_not(h.gender, gender_to_short[sgdc.g])
-			ut.insert_if_not(h.stemetc, short_stem_type)
-			ut.insert_if_not(h.stress, stress)
+			insert_if_not(h.adjectival, "no")
+			insert_if_not(h.gender, gender_to_short[sgdc.g])
+			insert_if_not(h.stemetc, short_stem_type)
+			insert_if_not(h.stress, stress)
 		end
 		insert_cat("~ with accent pattern " .. stress)
 	end
@@ -1059,28 +1065,28 @@ local function categorize_and_init_heading(stress, decl, args, n, islast)
 
 	if args.pl ~= args.stem then
 		insert_cat("~ with irregular plural stem")
-		ut.insert_if_not(h.irreg_pl_stem, "yes")
+		insert_if_not(h.irreg_pl_stem, "yes")
 	else
-		ut.insert_if_not(h.irreg_pl_stem, "no")
+		insert_if_not(h.irreg_pl_stem, "no")
 	end
 	if bare_is_reducible(args.stem, args.bare) then
 		insert_cat("~ with reducible stem")
-		ut.insert_if_not(h.reducible, "yes")
+		insert_if_not(h.reducible, "yes")
 	else
-		ut.insert_if_not(h.reducible, "no")
+		insert_if_not(h.reducible, "no")
 	end
 	if args.gen_pl or is_slash_decl then
-		ut.insert_if_not(h.irreg_gen_pl, "yes")
+		insert_if_not(h.irreg_gen_pl, "yes")
 	elseif args.alt_gen_pl then
 		insert_cat("~ with alternate genitive plural")
-		ut.insert_if_not(h.irreg_gen_pl, "yes")
+		insert_if_not(h.irreg_gen_pl, "yes")
 	else
-		ut.insert_if_not(h.irreg_gen_pl, "no")
+		insert_if_not(h.irreg_gen_pl, "no")
 	end
 	if sgdc.irregpl or args.nom_pl or is_slash_decl then
-		ut.insert_if_not(h.irreg_nom_pl, "yes")
+		insert_if_not(h.irreg_nom_pl, "yes")
 	else
-		ut.insert_if_not(h.irreg_nom_pl, "no")
+		insert_if_not(h.irreg_nom_pl, "no")
 	end
 	if sgdc.adj then
 		insert_cat("adjectival ~")
@@ -1100,7 +1106,7 @@ local function categorize_and_init_heading(stress, decl, args, n, islast)
 				insert_cat("~ with " .. engcase)
 			elseif not args.manual then
 				if case ~= "nom_pl" and case ~= "gen_pl" then
-					ut.insert_if_not(h.irreg_misc, "yes")
+					insert_if_not(h.irreg_misc, "yes")
 				end
 				insert_cat("~ with irregular " .. engcase)
 			end
@@ -1246,7 +1252,7 @@ local function determine_headword_gender(args, sgdc, gender)
 
 	-- Insert into list of genders
 	for _, hgen in ipairs(hgens) do
-		ut.insert_if_not(args.genders, hgen)
+		insert_if_not(args.genders, hgen)
 	end
 end
 
@@ -1293,6 +1299,11 @@ function export.do_generate_forms(args, old)
 			end_arg_set = true
 			end_word = true
 			word_joiner = " "
+		-- not yet; sometimes - occurs as the actual lemma (e.g. in -онок)
+		--elseif args[i] == "-" then
+		--	end_arg_set = true
+		--	end_word = true
+		--	word_joiner = "-"
 		elseif args[i] and rfind(args[i], "^join:") then
 			end_arg_set = true
 			end_word = true
@@ -1504,7 +1515,7 @@ generate_forms_1 = function(args, per_word_info)
 		if decl == "manual" then
 			decl = "$"
 			args.manual = true
-			if #per_word_info > 1 or #arg_sets > 1 then
+			if #per_word_info > 1 or #per_word_info[1][1] > 1 then
 				error("Can't specify multiple words or argument sets when manual")
 			end
 			if bare or pl then
@@ -1616,7 +1627,7 @@ generate_forms_1 = function(args, per_word_info)
 			local stem_for_bare
 			pl = original_pl
 
-			ut.insert_if_not(all_stresses_seen, stress)
+			insert_if_not(all_stresses_seen, stress)
 
 			local stem_was_unstressed = com.is_unstressed(stem)
 
@@ -1788,7 +1799,7 @@ generate_forms_1 = function(args, per_word_info)
 				-- handle internal notes
 				local internal_note = intable[real_decl]
 				if internal_note then
-					ut.insert_if_not(args.internal_notes, internal_note)
+					insert_if_not(args.internal_notes, internal_note)
 				end
 			end
 
@@ -1818,6 +1829,7 @@ generate_forms_1 = function(args, per_word_info)
 			stemetc={}, adjectival={}, reducible={},
 			irreg_nom_pl={}, irreg_gen_pl={}, irreg_pl_stem={}, irreg_misc={}}
 		args.genders = {}
+		args.this_any_non_nil = {}
 
 		if #arg_sets > 1 then
 			track("multiple-arg-sets")
@@ -1921,7 +1933,7 @@ local function get_form(forms)
 	local canon_forms = {}
 	for _, form in forms do
 		local entry, notes = m_table_tools.get_notes(form)
-		ut.insert_if_not(canon_forms, m_links.remove_links(entry))
+		insert_if_not(canon_forms, m_links.remove_links(entry))
 	end
 	return table.concat(canon_forms, ",")
 end
@@ -3529,7 +3541,9 @@ declensions_aliases["+#-stressed-proper"] = "+-stressed-proper"
 
 -- Function to convert an entry in an old declensions table to new.
 local function old_decl_entry_to_new(v)
-	if type(v) == "table" then
+	if not v then
+		return nil
+	elseif type(v) == "table" then
 		local new_entry = {}
 		for _, i in ipairs(v) do
 			table.insert(new_entry, old_decl_entry_to_new(i))
@@ -3812,9 +3826,6 @@ end
 -- or attach_unstressed()). We are handling the Nth word; ISLAST is true if
 -- this is the last one.
 local function gen_form(args, decl, case, stress, fun, n, islast)
-	if not args.forms[case] then
-		args.forms[case] = {}
-	end
 	if not args.suffixes[case] then
 		args.suffixes[case] = {}
 	end
@@ -3829,15 +3840,12 @@ local function gen_form(args, decl, case, stress, fun, n, islast)
 		end
 	end
 	local combineds, realsufs = attach_with(args, case, suf, fun, n, islast)
-	for _, form in ipairs(combineds) do
-		ut.insert_if_not(args.forms[case], form)
-	end
 	for _, realsuf in ipairs(realsufs) do
-		if realsuf then
-			args.any_non_nil[case] = true
-			ut.insert_if_not(args.suffixes[case], realsuf)
-		end
+		args.any_non_nil[case] = true
+		args.this_any_non_nil[case] = true
+		insert_if_not(args.suffixes[case], realsuf)
 	end
+	return combineds
 end
 
 local attachers = {
@@ -3846,11 +3854,36 @@ local attachers = {
 }
 
 do_stress_pattern = function(stress, args, decl, number, n, islast)
+	local f = {}
 	for _, case in ipairs(decl_cases) do
 		if not number or (number == "sg" and rfind(case, "_sg")) or
 			(number == "pl" and rfind(case, "_pl")) then
-			gen_form(args, decl, case, stress,
+			f[case] = gen_form(args, decl, case, stress,
 				attachers[stress_patterns[stress][case]], n, islast)
+			if f[case] and #f[case] == 0 then
+				f[case] = nil
+			end
+		end
+	end
+	-- Set acc an/in variants now as appropriate. We used to do this in
+	-- handle_forms_and_overrides(), which simplified the handling of
+	-- nom/gen/acc overrides but caused problems for words like мазло and
+	-- трепло that had a mixture of nil and non-nil accusative forms.
+	local an = args.thisa
+	if not number or number == "sg" then
+		f.acc_sg_an = f.acc_sg_an or f.acc_sg or an == "i" and f.nom_sg or f.gen_sg
+		f.acc_sg_in = f.acc_sg_in or f.acc_sg or an == "a" and f.gen_sg or f.nom_sg
+	end
+	if not number or number == "pl" then
+		f.acc_pl_an = f.acc_pl_an or f.acc_pl or an == "i" and f.nom_pl or f.gen_pl
+		f.acc_pl_in = f.acc_pl_in or f.acc_pl or an == "a" and f.gen_pl or f.nom_pl
+	end
+	for case, forms in pairs(f) do
+		if not args.forms[case] then
+			args.forms[case] = {}
+		end
+		for _, form in ipairs(forms) do
+			insert_if_not(args.forms[case], form)
 		end
 	end
 end
@@ -4020,36 +4053,64 @@ end
 handle_forms_and_overrides = function(args, n, islast)
 	local f = args.forms
 
+	local function append_note_all(case, value)
+		local function append1(case)
+			if f[case] then
+				for i=1,#f[case] do
+					f[case][i] = f[case][i] .. value
+				end
+			end
+		end
+		append1(case)
+		if case == "acc_sg" then
+			append1("acc_sg_in")
+			append1("acc_sg_an")
+		elseif case == "acc_pl" then
+			append1("acc_pl_in")
+			append1("acc_pl_an")
+		end
+	end
+
+	local function append_note_last(case, value, gt_one)
+		local function append1(case)
+			if f[case] then
+				local lastarg = #f[case]
+				if lastarg > (gt_one and 1 or 0) then
+					f[case][lastarg] = f[case][lastarg] .. value
+				end
+			end
+		end
+		append1(case)
+		if case == "acc_sg" then
+			append1("acc_sg_in")
+			append1("acc_sg_an")
+		elseif case == "acc_pl" then
+			append1("acc_pl_in")
+			append1("acc_pl_an")
+		end
+	end
+
 	local function process_tail_args(n)
 		for _, case in ipairs(overridable_cases) do
-			if f[case] then
-				local lastarg = #(f[case])
-				if lastarg > 0 and args[case .. "_tail" .. n] then
-					f[case][lastarg] = f[case][lastarg] .. args[case .. "_tail" .. n]
+			if args[case .. "_tail" .. n] then
+				append_note_last(case, args[case .. "_tail" .. n])
+			end
+			if args[case .. "_tailall" .. n] then
+				append_note_all(case, args[case .. "_tail" .. n])
+			end
+			if not rfind(case, "_pl") then
+				if args["sgtailall" .. n] then
+					append_note_all(case, args["sgtailall" .. n])
 				end
-				if args[case .. "_tailall" .. n] then
-					for i=1,lastarg do
-						f[case][i] = f[case][i] .. args[case .. "_tailall" .. n]
-					end
+				if args["sgtail" .. n] then
+					append_note_last(case, args["sgtail" .. n], ">1")
 				end
-				if not rfind(case, "_pl") then
-					if args["sgtailall" .. n] then
-						for i=1,lastarg do
-							f[case][i] = f[case][i] .. args["sgtailall" .. n]
-						end
-					end
-					if lastarg > 1 and args["sgtail" .. n] then
-						f[case][lastarg] = f[case][lastarg] .. args["sgtail" .. n]
-					end
-				else
-					if args["pltailall" .. n] then
-						for i=1,lastarg do
-							f[case][i] = f[case][i] .. args["pltailall" .. n]
-						end
-					end
-					if lastarg > 1 and args["pltail" .. n] then
-						f[case][lastarg] = f[case][lastarg] .. args["pltail" .. n]
-					end
+			else
+				if args["pltailall" .. n] then
+					append_note_all(case, args["pltailall" .. n])
+				end
+				if args["pltail" .. n] then
+					append_note_last(case, args["pltail" .. n], ">1")
 				end
 			end
 		end
@@ -4089,10 +4150,22 @@ handle_forms_and_overrides = function(args, n, islast)
 	end
 
 	local an = args.thisa
-	f.acc_sg_an = f.acc_sg_an or f.acc_sg or an == "i" and f.nom_sg or f.gen_sg
-	f.acc_sg_in = f.acc_sg_in or f.acc_sg or an == "a" and f.gen_sg or f.nom_sg
-	f.acc_pl_an = f.acc_pl_an or f.acc_pl or an == "i" and f.nom_pl or f.gen_pl
-	f.acc_pl_in = f.acc_pl_in or f.acc_pl or an == "a" and f.gen_pl or f.nom_pl
+	-- Maybe set the value of the animate/inanimate accusative variants based
+	-- on nom/acc/gen overrides. Do this if there wasn't a specific override
+	-- of this form and there wasn't a specific accusative suffix anywhere
+	-- (occurs in the fem sg and sometimes the neut sg).
+	if not args.this_any_non_nil.acc_sg and not args["acc_sg_an" .. n] then
+		f.acc_sg_an = f.acc_sg or an == "i" and f.nom_sg or f.gen_sg or f.acc_sg_an
+	end
+	if not args.this_any_non_nil.acc_sg and not args["acc_sg_in" .. n] then
+		f.acc_sg_in = f.acc_sg or an == "a" and f.gen_sg or f.nom_sg or f.acc_sg_in
+	end
+	if not args.this_any_non_nil.acc_pl and not args["acc_pl_an" .. n] then
+		f.acc_pl_an = f.acc_pl or an== "i" and f.nom_pl or f.gen_pl or f.acc_pl_an
+	end
+	if not args.this_any_non_nil.acc_pl and not args["acc_pl_in" .. n] then
+		f.acc_pl_in = f.acc_pl or an == "a" and f.gen_pl or f.nom_pl or f.acc_pl_in
+	end
 
 	f.loc = f.loc or f.pre_sg
 	f.par = f.par or f.gen_sg
@@ -4168,6 +4241,9 @@ handle_overall_forms_and_overrides = function(args)
 
 	for _, case in ipairs(overridable_cases) do
 		args[case] = overall_forms[case]
+		if args[case] and #args[case] == 0 then
+			args[case] = nil
+		end
 	end
 
 	-- Maybe set the value of the animate/inanimate accusative variants based
@@ -4235,11 +4311,11 @@ local function show_form(forms, old, lemma)
 		trspan = "<span style=\"color: #888\">" .. trspan .. "</span>"
 
 		if lemma then
-			-- ut.insert_if_not(lemmavals, ruspan .. " (" .. trspan .. ")")
-			ut.insert_if_not(lemmavals, ruspan)
+			-- insert_if_not(lemmavals, ruspan .. " (" .. trspan .. ")")
+			insert_if_not(lemmavals, ruspan)
 		else
-			ut.insert_if_not(russianvals, ruspan)
-			ut.insert_if_not(latinvals, trspan)
+			insert_if_not(russianvals, ruspan)
+			insert_if_not(latinvals, trspan)
 		end
 	end
 
