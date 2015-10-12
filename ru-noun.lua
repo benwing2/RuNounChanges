@@ -1883,16 +1883,27 @@ generate_forms_1 = function(args, per_word_info)
 		local m_new_ru_noun = require("Module:User:Benwing2/ru-noun")
 		local newargs = m_new_ru_noun.do_generate_forms(orig_args, old)
 		for _, case in ipairs(all_cases) do
+			local arg = args[case]
+			local newarg = newargs[case]
+			-- If newargs is from the manual translit branch, remove the
+			-- translit
+			if newarg and type(newarg[1]) == "table" then
+				local newnewarg = {}
+				for _, form in newarg do
+					table.insert(newnewarg, form[1])
+				end
+				newarg = newnewarg
+			end
 			local is_pl = rfind(case, "_pl")
 			if args.thisn == "s" and is_pl or args.thisn == "p" and not is_pl then
 				-- Don't need to check cases that won't be displayed.
-			elseif not ut.equals(args[case], newargs[case]) then
+			elseif not ut.equals(arg, newarg) then
 				local monosyl_accent_diff = false
 				-- Differences only in monosyllabic accents. Enable if we
 				-- change the algorithm for these.
-				--if args[case] and newargs[case] and #args[case] == 1 and #newargs[case] == 1 then
-				--	local val1 = args[case][1]
-				--	local val2 = newargs[case][1]
+				--if arg and newarg and #arg == 1 and #newarg == 1 then
+				--	local val1 = arg[1]
+				--	local val2 = newarg[1]
 				--	if com.is_monosyllabic(val1) and com.is_monosyllabic(val2) and com.remove_accents(val1) == com.remove_accents(val2) then
 				--		monosyl_accent_diff = true
 				--	end
@@ -1902,7 +1913,7 @@ generate_forms_1 = function(args, per_word_info)
 				else
 					-- Uncomment this to display the particular case and
 					-- differing forms.
-					--error(case .. " " .. (args[case] and table.concat(args[case], ",") or "nil") .. " " .. (newargs[case] and table.concat(newargs[case], ",") or "nil"))
+					--error(case .. " " .. (arg and table.concat(arg, ",") or "nil") .. " || " .. (newarg and table.concat(newarg, ",") or "nil"))
 					track("different-decl")
 				end
 				break
