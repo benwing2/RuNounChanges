@@ -161,22 +161,25 @@ local function noun_plus_or_multi(frame, multi)
 
 	local function remove_notes(list)
 		if not list then
-			return {"-"}
+			return {{"-"}}
 		end
 		local newlist = {}
 		for _, x in ipairs(list) do
-			-- Temporary: if new manual-translit code, list entries are
-			-- lists of {RU, TR} instead of just strings.
-			if type(list) == "table" then
-				x = x[1]
+			local ru, tr = x[1], x[2]
+			local ruentry, runotes = m_table_tools.get_notes(ru)
+			local trentry, trnotes
+			if tr then
+				trentry, trnotes = m_table_tools.get_notes(tr)
 			end
-			-- NOTE: <adj> is a sign to transliterate a word adjectivally
-			-- (-ovo/-evo instead of -ogo/-ego). But it only occurs in
-			-- gen and acc sgs, and the transliteration below is of nom sgs,
-			-- so it won't apply; just remove it.
-			x = rsub(x, "<adj>", "")
-			local entry, notes = m_table_tools.get_notes(x)
-			table.insert(newlist, entry)
+			table.insert(newlist, {ruentry, trentry})
+		end
+		return newlist
+	end
+
+	local function remove_tr(list)
+		local newlist = {}
+		for _, x in ipairs(list) do
+			table.insert(newlist, x[1])
 		end
 		return newlist
 	end
@@ -185,22 +188,27 @@ local function noun_plus_or_multi(frame, multi)
 	if args.n == "p" then
 		heads = remove_notes(args.nom_pl_linked)
 		genitives = remove_notes(args.gen_pl)
-		plurals = {"-"}
+		plurals = {{"-"}}
 	else
 		heads = remove_notes(args.nom_sg_linked)
 		genitives = remove_notes(args.gen_sg)
-		plurals = args.n == "s" and {"-"} or remove_notes(args.nom_pl)
+		plurals = args.n == "s" and {{"-"}} or remove_notes(args.nom_pl)
 	end
 
 	local feminines = process_arg_chain(args, "f", "f") -- do feminines
 	local masculines = process_arg_chain(args, "m", "m") -- do masculines
 
-	-- FIXME, handle manual transliteration; has to wait until Module:ru-noun
-	-- supports manual translit
 	local trs = {}
 	for _, head in ipairs(heads) do
-		table.insert(trs, lang:transliterate(m_links.remove_links(head)))
+		local ru, tr = head[1], head[2]
+		if not tr then
+			tr = lang:transliterate(m_links.remove_links(ru))
+		end
+		table.insert(trs, tr)
 	end
+	heads = remove_tr(heads)
+	genitives = remove_tr(genitives)
+	plurals = remove_tr(plurals)
 
 	do_noun(genders, inflections, categories, args.n == "s",
 		genitives, plurals, feminines, masculines)
