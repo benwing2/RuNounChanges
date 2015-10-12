@@ -353,7 +353,7 @@ function export.remove_jo(ru, tr)
 		end
 		rusyl[i] = remove_jo_ru(rusyl[i])
 		-- the following should still work as it will affect accents only
-		trsyl[i] = remove_jo_ru(trsyl[i])
+		trsyl[i] = make_unstressed_once_ru(trsyl[i])
 	end
 	-- Also need to apply j correction as otherwise we'll have je after cons, etc.
 	return table.concat(rusyl, ""),
