@@ -144,7 +144,13 @@ function export.noun_plus(frame)
 	local old = ine(frame.args.old)
 
 	local args = require("Module:ru-noun").do_generate_forms(args, old)
-	local genders = mw.clone(args.genders)
+	-- do explicit genders using g=, g2=, etc.
+	local genders = process_arg_chain(args, "g", "g", genders)
+	-- if none, do inferred or explicit genders taken from declension;
+	-- clone because will get destructively modified by do_noun()
+	if #genders == 0 then
+		genders = mw.clone(args.genders)
+	end
 	local inflections = {}
 	local categories = {"Russian " .. poscat}
 
@@ -194,6 +200,10 @@ end
 
 pos_functions["proper nouns"] = function(args, heads, genders, inflections, categories)
 	pos_functions["nouns"](args, heads, genders, inflections, categories, true)
+end
+
+pos_functions["pronouns"] = function(args, heads, genders, inflections, categories)
+	pos_functions["nouns"](args, heads, genders, inflections, categories, false)
 end
 
 -- Display additional inflection information for a noun
