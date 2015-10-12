@@ -1663,6 +1663,7 @@ generate_forms_1 = function(args, per_word_info)
 		args.orig_lemma = lemma
 		lemma = m_links.remove_links(lemma)
 		args.lemma_no_links = lemma
+		args.lemmatr = lemmatr
 
 		-- Convert lemma and decl arg into stem and canonicalized decl.
 		-- This will autodetect the declension from the lemma if an explicit
@@ -4108,8 +4109,8 @@ do_stress_pattern = function(stress, args, decl, number, n, islast)
 			if f[case] and (case == "nom_sg" or case == "nom_pl") then
 				local linked_forms = {}
 				for _, form in ipairs(f[case]) do
-					if close_enough_to_lemma(form, args.lemma_no_links) then
-						table.insert(linked_forms, args.orig_lemma)
+					if close_enough_to_lemma(form[1], args.lemma_no_links) then
+						table.insert(linked_forms, {args.orig_lemma, args.lemmatr})
 					else
 						table.insert(linked_forms, form)
 					end
