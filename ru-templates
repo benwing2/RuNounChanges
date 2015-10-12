@@ -1,0 +1,18 @@
+ru-pron
+
+{{#invoke:ru-headword|show|pronouns}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+
+ru-pron+
+
+{{#invoke:ru-headword|noun_plus|pronouns}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+
+ru-proper noun+
+
+{{#invoke:ru-headword|noun_plus|proper nouns}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+
