@@ -419,7 +419,7 @@ TODO:
 local m_utilities = require("Module:utilities")
 local ut = require("Module:utils")
 local m_links = require("Module:links")
-local com = require("Module:ru-common")
+local com = require("Module:User:Benwing2/ru-common")
 local m_ru_adj = require("Module:ru-adjective")
 local m_ru_translit = require("Module:ru-translit")
 local strutils = require("Module:string utilities")
@@ -1272,16 +1272,18 @@ local function extract_word_joiner(spec)
 end
 
 local function concat_russian_tr(ru1, tr1, ru2, tr2, dopair)
+	local ru, tr
 	if not tr1 and not tr2 then
-		return ru1 .. ru2
+		ru = ru1 .. ru2
+	else
+		if not tr1 then
+			tr1 = com.translit(ru1)
+		end
+		if not tr2 then
+			tr2 = com.translit(ru2)
+		end
+		ru, tr = ru1 .. ru2, com.j_correction(tr1 .. tr2)
 	end
-	if not tr1 then
-		tr1 = com.translit(ru1)
-	end
-	if not tr2 then
-		tr2 = com.translit(ru2)
-	end
-	local ru, tr = ru1 .. ru2, com.j_correction(tr1 .. tr2)
 	if dopair then
 		return {ru, tr}
 	else
@@ -1290,9 +1292,11 @@ local function concat_russian_tr(ru1, tr1, ru2, tr2, dopair)
 end
 
 local function concat_paired_russian_tr(term1, term2)
+	assert(type(term1) == "table")
+	assert(type(term2) == "table")
 	local ru1, tr1 = term1[1], term1[2]
 	local ru2, tr2 = term2[1], term2[2]
-	concat_russian_tr(ru1, tr1, ru2, tr2, "dopair")
+	return concat_russian_tr(ru1, tr1, ru2, tr2, "dopair")
 end
 
 local function determine_headword_gender(args, sgdc, gender)
@@ -1561,8 +1565,8 @@ generate_forms_1 = function(args, per_word_info)
 	for i=1,#per_word_info do
 		args["a" .. i] = verify_animacy_value(args["a" .. i])
 		args["n" .. i] = verify_number_value(args["n" .. i])
-		args["prefix" .. i] = split_russian_tr(args["prefix" .. i], "dopair")
-		args["suffix" .. i] = split_russian_tr(args["suffix" .. i], "dopair")
+		args["prefix" .. i] = split_russian_tr(args["prefix" .. i] or "", "dopair")
+		args["suffix" .. i] = split_russian_tr(args["suffix" .. i] or "", "dopair")
 	end
 	args.a = verify_animacy_value(args.a) or "i"
 	args.n = verify_number_value(args.n)
@@ -4349,6 +4353,7 @@ handle_forms_and_overrides = function(args, n, islast)
 	local f = args.forms
 
 	local function append_note_all(case, value)
+		value = split_russian_tr(value, "dopair")
 		local function append1(case)
 			if f[case] then
 				for i=1,#f[case] do
@@ -4367,6 +4372,7 @@ handle_forms_and_overrides = function(args, n, islast)
 	end
 
 	local function append_note_last(case, value, gt_one)
+		value = split_russian_tr(value, "dopair")
 		local function append1(case)
 			if f[case] then
 				local lastarg = #f[case]
@@ -4601,6 +4607,7 @@ local function show_form(forms, old, lemma)
 	end
 
 	for _, form in ipairs(forms) do
+		local ru, tr = form[1], form[2]
 		local ruentry, runotes = m_table_tools.get_notes(ru)
 		local trentry, trnotes
 		if tr then
