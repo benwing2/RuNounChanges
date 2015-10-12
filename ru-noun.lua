@@ -504,6 +504,19 @@ local function split_russian_tr(term, dopair)
 	end
 end
 
+local function concat_forms(forms)
+	local joined_rutr = {}
+	for _, form in ipairs(forms) do
+		local ru, tr = form[1], form[2]
+		if tr then
+			table.insert(joined_rutr, ru .. "/" .. tr)
+		else
+			table.insert(joined_rutr, ru)
+		end
+	end
+	return table.concat(joined_rutr, ",")
+end
+
 -- Clone parent's args while also assigning nil to empty strings.
 local function clone_args(frame)
 	local args = {}
@@ -2025,15 +2038,6 @@ generate_forms_1 = function(args, per_word_info)
 		for _, case in ipairs(all_cases) do
 			local arg = args[case]
 			local newarg = newargs[case]
-			-- If newargs is from the manual translit branch, remove the
-			-- translit
-			if newarg and type(newarg[1]) == "table" then
-				local newnewarg = {}
-				for _, form in newarg do
-					table.insert(newnewarg, form[1])
-				end
-				newarg = newnewarg
-			end
 			local is_pl = rfind(case, "_pl")
 			if args.thisn == "s" and is_pl or args.thisn == "p" and not is_pl then
 				-- Don't need to check cases that won't be displayed.
@@ -2042,10 +2046,14 @@ generate_forms_1 = function(args, per_word_info)
 				-- Differences only in monosyllabic accents. Enable if we
 				-- change the algorithm for these.
 				--if arg and newarg and #arg == 1 and #newarg == 1 then
-				--	local val1 = arg[1]
-				--	local val2 = newarg[1]
-				--	if com.is_monosyllabic(val1) and com.is_monosyllabic(val2) and com.remove_accents(val1) == com.remove_accents(val2) then
-				--		monosyl_accent_diff = true
+				--	local ru1, tr1 = arg[1][1], arg[1][2]
+				--	local ru2, tr2 = newarg[1][1], newarg[1][2]
+				--	if com.is_monosyllabic(ru1) and com.is_monosyllabic(ru2) then
+				--		ru1, tr1 = com.remove_accents(ru1, tr1)
+				--		ru2, tr2 = com.remove_accents(ru2, tr2)
+				--		if ru1 == ru2 and tr1 == tr2 then
+				--			monosyl_accent_diff = true
+				--		end
 				--	end
 				--end
 				if monosyl_accent_diff then
@@ -2053,7 +2061,7 @@ generate_forms_1 = function(args, per_word_info)
 				else
 					-- Uncomment this to display the particular case and
 					-- differing forms.
-					--error(case .. " " .. (arg and table.concat(arg, ",") or "nil") .. " || " .. (newarg and table.concat(newarg, ",") or "nil"))
+					--error(case .. " " .. (arg and concat_forms(arg) or "nil") .. " || " .. (newarg and concat_forms(newarg) or "nil"))
 					track("different-decl")
 				end
 				break
@@ -2097,10 +2105,16 @@ end
 local function get_form(forms)
 	local canon_forms = {}
 	for _, form in forms do
-		local entry, notes = m_table_tools.get_notes(form)
-		insert_if_not(canon_forms, m_links.remove_links(entry))
+		local ru, tr = form[1], form[2]
+		local ruentry, runotes = m_table_tools.get_notes(ru)
+		local trentry, trnotes
+		if tr then
+			trentry, trnotes = m_table_tools.get_notes(tr)
+		end
+		ruentry = m_links.remove_links(ruentry)
+		insert_if_not(canon_forms, {ruetry, trentry})
 	end
-	return table.concat(canon_forms, ",")
+	return concat_forms(canon_forms)
 end
 
 local function concat_case_args(args)
