@@ -2,6 +2,15 @@
 This module implements the template {{ru-IPA}} (FIXME, is it called elsewhere?)
 
 Author: Primarily Wyang, with help from Atitarev and a bit from others
+
+FIXME:
+
+1. Ask Atitarev/Cinemantique about -ьо, is it same as (possibly unstressed)
+   -ьё?
+2. Ask A/C -- should стск be treated like сск or ск? (the latter is what's
+   currently done)
+3. Ask A/C -- should we ever reduce double vowels to long vowels? (commented
+   out)
 ]]
 
 local ut = require("Module:utils")
@@ -206,6 +215,8 @@ function export.ipa(text, adj, gem, pal)
 	-- FIXME: If we accept transliterated text from the outside, we will
 	-- need to decompose all acute and grave Latin vowels
 	text = rsub(text, 'ó', 'o' .. AC)
+	-- ьо is pronounced as (possibly unstressed) ьё, I think
+	text = rsub(text, 'ʹo', 'ʹjo')
 
 	--rewrite iotated vowels
 	text = rsub(text, 'j[aeou]', {
@@ -407,12 +418,15 @@ function export.ipa(text, adj, gem, pal)
 
 	text = table.concat(word, " ")
 
-	-- long vowels; FIXME, might apply across hyphens but not spaces;
-	-- but we don't currently preserve hyphens this far
-	text = rsub(text, '[ɐə]([%-]?)ɐ(%l?)ˈ', '%1ɐː%2ˈ')
-	text = rsub(text, 'ə([%-]?)[ɐə]', '%1əː')
+	-- long vowels; FIXME, may not apply at all; might apply across hyphens
+	-- but not spaces; but we don't currently preserve hyphens this far
+	-- text = rsub(text, '[ɐə]([%-]?)ɐ(%l?)ˈ', '%1ɐː%2ˈ')
+	-- text = rsub(text, 'ə([%-]?)[ɐə]', '%1əː')
 
-	-- double consonants, in words like секвойя and майя
+	-- double consonants, in words like секвойя and майя; FIXME, this won't
+	-- be correct if the preceding vowel is unstressed; we need to do this
+	-- check before the code that handles geminates, and then make sure that
+	-- any further code involving /j/ checks for the geminate marker ː
 	text = rsub(text, 'jʲ', 'jː')
 
 	return text
