@@ -290,15 +290,15 @@ TODO:
    assume reducible.
 12. FIXME: Change 8* fem nouns to use the features of the new template; no more
    ins_sg override. любо́вь, нелюбо́вь, вошь, це́рковь, ложь, рожь.]
-14. FIXME: In multiple-words branch, fix ru-decl-noun-multi so it recognizes
+14. In multiple-words branch, fix ru-decl-noun-multi so it recognizes
    things like *, (1), (2) and ; without the need for a separator. Consider
    using semicolon as a separator, since we already use it to separate ё
    from a previous declension. Maybe use $ or ~ for an invariable word; don't
-   use semicolon.
+   use semicolon. [IMPLEMENTED. NEED TO TEST.]
 15. FIXME: In multiple-words branch, with normal ru-noun-table, allow -
     as a joiner, now that $ is used for invariable.
-16. [FIXME: Consider having ru-noun+ treat par= as a second genitive in
-   the headword, as is done with край]
+16. [Consider having ru-noun+ treat par= as a second genitive in
+   the headword, as is done with край] [WON'T DO]
 17. [FIXME: Consider removing slash patterns and instead handling them by
    allowing additional declension flags 'sg' and 'pl'. This simplifies the
    various special cases caused by slash declensions. It would also be
@@ -1357,8 +1357,8 @@ end
 function export.do_generate_forms_multi(args)
 
 	-- This is a list with each element corresponding to a word and
-	-- consisting of a two-element list, STEM_SET and JOINER, where STEM_SET
-	-- is a list of STEM_SET objects, one per alternative stem, and JOINER
+	-- consisting of a two-element list, ARG_SET and JOINER, where ARG_SET
+	-- is a list of ARG_SET objects, one per alternative stem, and JOINER
 	-- is a string indicating how to join the word to the next one.
 	local per_word_info = {}
 
@@ -1371,20 +1371,23 @@ function export.do_generate_forms_multi(args)
 		end
 	end
 
-	-- Gather arguments into a list of STEM_SET objects, containing
-	-- (potentially) elements 1, 2, 3, 4, 5, corresponding to accent pattern,
-	-- stem, declension type, bare stem, pl stem. They come from a single
-	-- argument of the form STEM:ACCENTPATTERN:BARE:PL where all but STEM may
-	-- (and probably will be) omitted and STEM may be of the following forms:
-	--   STEM (for a noun with auto-detected decl class),
-	--   STEM*DECL (for a noun with explicit decl class),
-	--   STEM* (for an invariable word)
-	--   STEM+ (for an adjective with auto-detected decl class)
-	--   STEM+DECL (for an adjective with explicit decl class)
-	-- Sets of stem parameters are separated by the word "or".
-	local stem_sets = {}
+	-- Gather arguments into a list of ARG_SET objects, containing
+	-- (potentially) elements 1, 2, 3, corresponding to accent pattern,
+	-- lemma, declension spec, pl stem, exactly as with do_generate_forms()
+	-- and {{ru-noun-table}} except that the values come from a single argument
+	-- of the form ACCENTPATTERN:LEMMADECL:PL where all but LEMMADECL may (and
+	-- probably will be) omitted and LEMMADECL may be of the following forms:
+	--   LEMMA (for a noun with empty decl spec),
+	--   LEMMADECL (for a noun with non-empty decl spec beginning with a
+	--      *, left paren or semicolon),
+	--   LEMMA^DECL (for a noun with non-empty decl spec),
+	--   LEMMA$ (for an invariable word)
+	--   LEMMA+ (for an adjective with auto-detected decl class)
+	--   LEMMA+DECL (for an adjective with explicit decl class)
+	-- Sets of parameters for the same word are separated by the word "or".
+	local arg_sets = {}
 
-	local continue_stem_sets = true
+	local continue_arg_sets = true
 	for i=1,(max_arg + 1) do
 		local end_word = false
 		local word_joiner
@@ -1399,10 +1402,10 @@ function export.do_generate_forms_multi(args)
 			end_word = true
 			word_joiner = extract_word_joiner(args[i])
 		elseif args[i] == "or" then
-			continue_stem_sets = true
+			continue_arg_sets = true
 		else
-			if continue_stem_sets then
-				continue_stem_sets = false
+			if continue_arg_sets then
+				continue_arg_sets = false
 			else
 				end_word = true
 				word_joiner = " "
@@ -1411,36 +1414,53 @@ function export.do_generate_forms_multi(args)
 		end
 
 		if end_word then
-			table.insert(per_word_info, {stem_sets, word_joiner})
-			stem_sets = {}
+			table.insert(per_word_info, {arg_sets, word_joiner})
+			arg_sets = {}
 		end
 		if process_arg then
 			local vals = rsplit(args[i], ":")
-			if #vals > 4 then
-				error("Can't specify more than 4 colon-separated arguments of stem set: " .. args[i])
+			if #vals > 3 then
+				error("Can't specify more than 3 colon-separated params of param set: " .. args[i])
 			end
-			local stem_set = {}
-			stem_set[1] = vals[2]
-			stem_set[2] = vals[1]
-			stem_set[3] = ""
-			stem_set[4] = vals[3]
-			stem_set[5] = vals[4]
-			local adj_stem, adj_type = rmatch(stem_set[1], "^(.*)(%+.*)$")
-			if adj_stem then
-				stem_set[1] = adj_stem
-				stem_set[3] = adj_type
+			local arg_set = {}
+			if arg1_is_stress(vals[1]) then
+				arg_set[1] = vals[1]
+				arg_set[2] = vals[2]
+				arg_set[5] = vals[3]
 			else
-				local noun_stem, noun_type = rmatch(stem_set[1], "^(.*)%^(.*)$")
-				if noun_stem then
-					stem_set[1] = noun_stem
-					if noun_type == "" then -- invariable
-						stem_set[3] = "-"
+				arg_set[2] = vals[1]
+				arg_set[5] = vals[2]
+			end
+			-- recognize adjective
+			local adj_stem, adj_type = rmatch(arg_set[2], "^(.*)(%+.*)$")
+			if adj_stem then
+				arg_set[2] = adj_stem
+				arg_set[3] = adj_type
+			else
+				-- recognize invariable
+				local inv_stem = rmatch(arg_set[2], "^(.*)%$$")
+				if inv_stem then
+					arg_set[2] = inv_stem
+					arg_set[3] = "$"
+				else
+					-- recognize noun with ^
+					local noun_stem, noun_type = rmatch(arg_set[2], "^(.*)%^(.*)$")
+					if noun_stem then
+						arg_set[2] = noun_stem
+						arg_set[3] = noun_type
 					else
-						stem_set[3] = noun_type
+						-- recognize noun without ^ but with decl spec
+						noun_stem, noun_type = rmatch(arg_set[2], "^(..-)([;*(].*)$")
+						if noun_stem then
+							arg_set[2] = noun_stem
+							arg_set[3] = noun_type
+						else
+							-- noun without ^ or decl spec; nothing to do
+						end
 					end
 				end
 			end
-			table.insert(stem_sets, stem_set)
+			table.insert(arg_sets, arg_set)
 		end
 	end
 
@@ -2099,12 +2119,12 @@ function export.show_z(frame)
 		end
 	end
 
-	local stem_set = {}
-	table.insert(stem_set, stress)
-	table.insert(stem_set, stem)
-	table.insert(stem_set, decl)
+	local arg_set = {}
+	table.insert(arg_set, stress)
+	table.insert(arg_set, stem)
+	table.insert(arg_set, decl)
 
-	local per_word_info = {{{stem_set}, ""}}
+	local per_word_info = {{{arg_set}, ""}}
 
 	return generate_forms_1(args, per_word_info)
 end
