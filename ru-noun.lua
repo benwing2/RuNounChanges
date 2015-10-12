@@ -576,13 +576,22 @@ local ending_stressed_dat_sg_patterns = {}
 local ending_stressed_sg_patterns = {}
 -- Set of patterns with all plural forms ending-stressed.
 local ending_stressed_pl_patterns = {}
+-- List of all cases, including those that are declined normally
+-- (nom/gen/dat/acc/ins/pre sg and pl), plus animate/inanimate accusative
+-- variants (computed automatically as appropriate from the previous cases),
+-- plus additional overridable cases (loc/par/voc), plus the "linked" lemma
+-- case variants used in ru-noun+ headwords (nom_sg_linked, nom_pl_linked,
+-- whose values come from nom_sg and nom_pl but may have additional embedded
+-- links if they were given in the lemma).
+local all_cases
 -- List of all cases that are declined normally.
 local decl_cases
--- List of all cases that can be displayed (includes loc/par/voc,
--- animate/inanimate accusative variants, but not plain accusatives).
+-- List of all cases that can be displayed (includes all cases except
+-- plain accusatives).
 local displayable_cases
--- List of all cases, including those that can be overridden (includes
--- loc/par/voc, animate/inanimate accusative variants).
+-- List of all cases that can be overridden (includes all cases except the
+-- "linked" lemma case variants). Also currently the same as the cases
+-- returned by export.generate_forms().
 local overridable_cases
 -- Type of trailing letter, for tracking purposes
 local trailing_letter_type
@@ -1541,6 +1550,13 @@ generate_forms_1 = function(args, per_word_info)
 		args.thisa = args["a" .. n] or args.a
 		args.thisn = args["n" .. n] or args.n
 
+		-- Check for explicit allow-unaccented indication.
+		lemma, args.allow_unaccented = rsubb(lemma, "^%*", "")
+
+		args.orig_lemma = lemma
+		lemma = m_links.remove_links(lemma)
+		args.lemma_no_links = lemma
+
 		-- Convert lemma and decl arg into stem and canonicalized decl.
 		-- This will autodetect the declension from the lemma if an explicit
 		-- decl isn't given.
@@ -1561,9 +1577,7 @@ generate_forms_1 = function(args, per_word_info)
 
 		args.explicit_gender = gender
 
-		-- Check for explicit allow-unaccented indication; if not given,
-		-- maybe check for missing accents.
-		stem, args.allow_unaccented = rsubb(stem, "^%*", "")
+		-- If allow-unaccented not given, maybe check for missing accents.
 		if not args.allow_unaccented and not stress_arg and was_autodetected and com.needs_accents(lemma) then
 			-- If user gave the full word and expects us to determine the
 			-- declension and stress, the word should have an accent on the
@@ -1868,7 +1882,7 @@ generate_forms_1 = function(args, per_word_info)
 	if test_new_ru_noun_module then
 		local m_new_ru_noun = require("Module:User:Benwing2/ru-noun")
 		local newargs = m_new_ru_noun.do_generate_forms(orig_args, old)
-		for _, case in ipairs(overridable_cases) do
+		for _, case in ipairs(all_cases) do
 			local is_pl = rfind(case, "_pl")
 			if args.thisn == "s" and is_pl or args.thisn == "p" and not is_pl then
 				-- Don't need to check cases that won't be displayed.
@@ -3853,6 +3867,14 @@ local attachers = {
 	["-"] = attach_unstressed,
 }
 
+-- Return true if FORM is "close enough" to LEMMA that we can substitute the
+-- linked form of the lemma. Currently this means exactly the same except that
+-- we ignore acute and grave accent differences in monosyllables.
+local function close_enough_to_lemma(form, lemma)
+	return form == lemma or com.is_monosyllabic(form) and com.is_monosyllabic(lemma) and
+		com.remove_accents(form) == com.remove_accents(lemma)
+end
+
 do_stress_pattern = function(stress, args, decl, number, n, islast)
 	local f = {}
 	for _, case in ipairs(decl_cases) do
@@ -3860,8 +3882,24 @@ do_stress_pattern = function(stress, args, decl, number, n, islast)
 			(number == "pl" and rfind(case, "_pl")) then
 			f[case] = gen_form(args, decl, case, stress,
 				attachers[stress_patterns[stress][case]], n, islast)
+			-- Turn empty form lists into nil to facilitate computation of
+			-- animate/inanimate accusatives below
 			if f[case] and #f[case] == 0 then
 				f[case] = nil
+			end
+			-- Compute linked versions of potential lemma cases, for use
+			-- in the ru-noun+ headword. We substitute the original lemma
+			-- (before removing links) for forms that are the same as the
+			-- lemma.
+			if f[case] and (case == "nom_sg" or case == "nom_pl") then
+				local linked_forms = {}
+				for _, form in ipairs(f[case]) do
+					if close_enough_to_lemma(form, args.lemma_no_links) then
+						table.insert(linked_forms, args.orig_lemma)
+					else
+						table.insert(linked_forms, form)
+					end
+				f[case .. "_linked"] = linked_forms
 			end
 		end
 	end
@@ -3959,7 +3997,16 @@ local internal_notes_template = nil
 local notes_template = nil
 local templates = {}
 
--- cases that are declined normally instead of handled through overrides
+-- all cases, period
+all_cases = {
+	"nom_sg", "gen_sg", "dat_sg", "acc_sg", "ins_sg", "pre_sg",
+	"nom_pl", "gen_pl", "dat_pl", "acc_pl", "ins_pl", "pre_pl",
+	"nom_sg_linked", "nom_pl_linked",
+	"acc_sg_an", "acc_sg_in", "acc_pl_an", "acc_pl_in",
+	"par", "loc", "voc",
+}
+
+-- cases that can be declined normally
 decl_cases = {
 	"nom_sg", "gen_sg", "dat_sg", "acc_sg", "ins_sg", "pre_sg",
 	"nom_pl", "gen_pl", "dat_pl", "acc_pl", "ins_pl", "pre_pl",
@@ -3969,11 +4016,12 @@ decl_cases = {
 displayable_cases = {
 	"nom_sg", "gen_sg", "dat_sg", "ins_sg", "pre_sg",
 	"nom_pl", "gen_pl", "dat_pl", "ins_pl", "pre_pl",
+	"nom_sg_linked", "nom_pl_linked",
 	"acc_sg_an", "acc_sg_in", "acc_pl_an", "acc_pl_in",
 	"par", "loc", "voc",
 }
 
--- all cases handleable through overrides
+-- all cases that can be overridden
 overridable_cases = {
 	"nom_sg", "gen_sg", "dat_sg", "acc_sg", "ins_sg", "pre_sg",
 	"nom_pl", "gen_pl", "dat_pl", "acc_pl", "ins_pl", "pre_pl",
@@ -4091,7 +4139,7 @@ handle_forms_and_overrides = function(args, n, islast)
 	end
 
 	local function process_tail_args(n)
-		for _, case in ipairs(overridable_cases) do
+		for _, case in ipairs(displayable_cases) do
 			if args[case .. "_tail" .. n] then
 				append_note_last(case, args[case .. "_tail" .. n])
 			end
@@ -4138,7 +4186,9 @@ handle_forms_and_overrides = function(args, n, islast)
 		end
 	end
 
-	for _, case in ipairs(overridable_cases) do
+	-- convert empty lists to nil to facilitate computation of accusative
+	-- case variants below.
+	for _, case in ipairs(all_cases) do
 		if f[case] then
 			if type(f[case]) ~= "table" then
 				error("Logic error, args[case] should be nil or table")
@@ -4239,10 +4289,17 @@ handle_overall_forms_and_overrides = function(args)
 		end
 	end
 
-	for _, case in ipairs(overridable_cases) do
+	-- convert empty lists to nil to facilitate computation of accusative
+	-- case variants below.
+	for _, case in ipairs(all_cases) do
 		args[case] = overall_forms[case]
-		if args[case] and #args[case] == 0 then
-			args[case] = nil
+		if args[case] then
+			if type(args[case]) ~= "table" then
+				error("Logic error, args[case] should be nil or table")
+			end
+			if #args[case] == 0 then
+				args[case] = nil
+			end
 		end
 	end
 
