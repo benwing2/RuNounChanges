@@ -1,6 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+# FIXME:
+#
+# 1. With plural-only lemmas, leave as plural instead of converting to
+#    singular.
+# 2. With manual bareval, set gen_pl or nom_sg override (might not be
+#    necessary).
+# 3. Use Z-style stress patterns.
+# 4. Don't need to specify +short with -ов.
+
 import re
 import traceback, sys
 import pywikibot
@@ -274,6 +283,8 @@ def generate_template_args(stress, nomsg, gender, bareval, pagemsg):
     if bareval == "*":
       gender = gender + "*"
       bareval = ""
+    if bareval:
+      pagemsg("WARNING: Putting manual bareval in old-style args but shouldn't; instead, use nom_sg or gen_pl override: %s" % bareval)
     args = [stress, arg2, gender, bareval]
     if not args[0]:
       del args[0]
@@ -294,13 +305,13 @@ def generate_template_args(stress, nomsg, gender, bareval, pagemsg):
         no_transfer_stress)
 
     if bareval == "*":
-      gender = gender and gender + "*" or "^*"
+      gender = gender and gender + "*" or "*"
       bareval = ""
-    args = [arg1 + gender, stress, bareval]
-    if not args[-1]:
-      del args[-1]
-    if not args[-1]:
-      del args[-1]
+    if bareval:
+      pagemsg("WARNING: Can't put manual bareval in multi-style args; use nom_sg or gen_pl override: %s" % bareval)
+    args = [stress, arg1 + gender]
+    if not args[0]:
+      del args[0]
     args = [":".join(args)]
   return args
 
@@ -315,9 +326,9 @@ def infer_word(forms, noungender, number, numonly, pagemsg):
   if allsame:
     pagemsg("Found invariable word %s" % caseforms[0])
     if old_template:
-      return [caseforms[0], "-"]
+      return [caseforms[0], "$"]
     else:
-      return [caseforms[0] + "^"]
+      return [caseforms[0] + "$"]
 
   nompl = forms.get("nom_pl", "")
   accsg = forms.get("acc_sg", "")
