@@ -114,11 +114,15 @@
 		    case (1) for variant nom pls, and special case (2) for variant
 			gen pls). The currently allowed values are -ья (will select a
 			mixed declension that has some normal declension in its singular
-			and the -ья plural declension); -ишко (used for neuter-form
-			masculine nouns in -ишко with nom pl -и and colloquial
-			feminine-ending alternants in some singular cases); -ище
-			(similar to -ишко but used for *animate* masculine neuter-form
-			nouns in -ище).
+			and the -ья plural declension); -ин (for animate masculine nouns
+			in -ин with plural in -е -- note that this is autodetected in the
+			majority of cases where the ending in -янин or -анин); -ишко
+			(used for inanimate neuter-form diminutive masculine nouns in
+			-ишко [also сараю́шко] with nom pl -и and colloquial feminine-ending
+			alternants in some singular cases); -ище (similar to -ишко but
+			used for *animate* augmentative masculine neuter-form nouns in
+			-ище). Variants -ишко and -ище must be given with with special
+			case (1).
 		DECLTYPE is an explicit declension type. Normally you shouldn't use
 			this, and should instead let the declension type be autodetected
 			based on the ending, supplying the appropriate hint if needed
@@ -192,7 +196,7 @@ TODO:
       _in and _an variants are different, might need to ignore them or check
       that acc_sg_in==nom_sg and acc_sg_an==gen_sg; similarly for _pl
 	  (DONE, NEEDS TESTING)
-   -- Need to test with multiple words!
+   -- Need to test with multiple words! (APPEARS TO WORK)
    -- Current handling of <adj> won't work properly with multiple words;
       will need to translate word-by-word in that case (should be solved by
 	  manual-translit branch) (DONE IN MANUAL-TRANSLIT BRANCH)
@@ -210,8 +214,11 @@ TODO:
    +ий after velar/sibilant/ц. [IMPLEMENTED. NEED TO TEST.]
 2c. Changed pltailall= to add to all forms, not just last one; added
    CASE_NUM_tailall. [NEED TO TEST.]
-2d. FIXME: For -ишко and -ище diminutives, should add an appropriate
-   category of some sort (currently marked by colloqfem= in category).
+2d. FIXME: For -ишко diminutives and -ище augmentatives, should add an
+   appropriate category of some sort (currently marked by colloqfem= in
+   category).
+2e. Add -ин variant that always triggers -ин declension so we don't
+   have to use old-style declensions. [IMPLEMENTED. NEED TO TEST.]
 3. FIXME: Consider putting a triangle △ (U+25B3) or the smaller variant
    ▵ (U+25B5) next to each irregular form. (We have the following cases:
    special case (1) makes nom pl irreg, special case (2) makes gen pl irreg,
@@ -315,7 +322,7 @@ TODO:
    -и isn't parallel because -и is always plural). [IMPLEMENTED. NEED TO TEST.]
 19a. Internal notes weren't propagated properly from adjectives.
    [IMPLEMENTED. NEED TO TEST.]
-19b. Add support for -ишко and -ище diminutives (p. 74 of Z),
+19b. Add support for -ишко and -ище variants (p. 74 of Z),
    which conversationally and/or colloquially have feminine endings in
    certain cases. [IMPLEMENTED. NEED TO TEST. MAKE SURE THE INTERNAL NOTES
    APPEAR.]
@@ -2293,13 +2300,31 @@ local function detect_lemma_type(lemma, gender, args, variant)
 	end
 	base = rmatch(lemma, "^(.*[" .. com.sib_c .. "])[еЕ]$") -- unaccented
 	if base then
+		if variant == "-ище" and not rfind(lemma, "[щЩ][еЕ]$") then
+			error("With declension variant -ище, lemma should end in -ще: " .. lemma)
+		end
 		return base, variant == "-ище" and "(ищ)е-и" or "о"
 	end
 	if variant == "-ишко" then
-		base, ending = rmatch(lemma, "^(.*[Шш][Кк])([Оо])$") --unaccented
-		-- should have already checked this
-		assert(base)
+		base, ending = rmatch(lemma, "^(.*[шШ][кК])([оО])$") -- unaccented
+		if not base then
+			error("With declension variant -ишко, lemma should end in -шко: " .. lemma)
+		end
 		return base, "(ишк)о-и"
+	end
+	if variant == "-ин" then
+		base, ending = rmatch(lemma, "^(.*)([иИ]́?[нН][ъЪ]?)$") -- maybe accented
+		if not base then
+			error("With declension variant -ин, lemma should end in -ин(ъ): " .. lemma)
+		end
+		return base, ulower(ending)
+	end
+	-- Now autodetect -ин; only animate and in -анин/-янин
+	base, ending = rmatch(lemma, "^(.*[аяАЯ]́?[нН])([иИ]́?[нН][ъЪ]?)$")
+	-- Need to check the animacy to avoid nouns like маиганин, цианин,
+	-- меланин, соланин, etc.
+	if base and args.thisa == "a" then
+		return base, ulower(ending)
 	end
 	base, ending = rmatch(lemma, "^(.*)([ёоЁО]́?[нН][оО][кК][ъЪ]?)$")
 	if base then
@@ -2307,12 +2332,6 @@ local function detect_lemma_type(lemma, gender, args, variant)
 	end
 	base, ending = rmatch(lemma, "^(.*)([ёоЁО]́?[нН][оО][чЧ][еЕ][кК][ъЪ]?)$")
 	if base then
-		return base, ulower(ending)
-	end
-	base, ending = rmatch(lemma, "^(.*[аяАЯ]́?[нН])([иИ]́?[нН][ъЪ]?)$")
-	-- Need to check the animacy to avoid nouns like маиганин, цианин,
-	-- меланин, соланин, etc.
-	if base and args.thisa == "a" then
 		return base, ulower(ending)
 	end
 	base, ending = rmatch(lemma, "^(.*)([мМ][яЯ]́?)$")
@@ -2496,8 +2515,8 @@ end
 -- What's left is one of the following:
 --
 -- 1. Blank, meaning to autodetect the declension from the lemma
--- 2. A hyphen followed by a declension variant (-ья, -ишко, -ище; see long
---    comment at top of file)
+-- 2. A hyphen followed by a declension variant (-ья, -ин, -ишко, -ище; see
+--    long comment at top of file)
 -- 3. A gender (m, f, n, 3f)
 -- 4. A gender plus declension variant (e.g. f-ья)
 -- 5. An actual declension, possibly including a plural variant (e.g. о-и) or
@@ -2528,43 +2547,52 @@ determine_decl = function(lemma, decl, args)
 	if not gender then
 		gender, variant = rmatch(decl, "^(3?[mfn]?)(%-[^%-]+)$")
 		-- But be careful with explicit declensions like -а that look like
-		-- variants without gender (FIXME, eventually we should maybe do something
-		-- about the potential ambiguity).
-		if gender == "" and not ut.contains({"-ья", "-ишко", "-ище"}, variant) then
+		-- variants without gender (FIXME, eventually we should maybe do
+		-- something about the potential ambiguity).
+		if gender == "" and not ut.contains({"-ья", "-ин", "-ишко", "-ище"}, variant) then
 			gender, variant = nil, nil
 		end
 	end
 	-- If DECL is of type 1-4, handle declension variants and detect
 	-- the actual declension from the lemma.
 	if gender then
-		if variant == "-ья" then
-			want_ya_plural = "-ья"
-		elseif variant == "-ишко" or variant == "-ище" then
-			-- Sanity checking
-			if not args.want_sc1 then
-				error("Declension variant " .. variant .. " must be used with special case (1)")
-			end
-			if gender ~= "" and gender ~= "m" then
-				error("Declension variant " .. variant .. " should be used with the masculine gender")
-			end
-			if variant == "-ишко" then
-				if args.thisa == "a" then
-					error("Declension variant -ишко should not specified as animate")
+		-- Check for declension variants
+		if variant then
+			if variant == "-ья" then
+				want_ya_plural = "-ья"
+			else
+				-- Sanity-check remaining declension variants, which need
+				-- specific values of animacy, gender and special-case (1)
+				local sc1_needed
+				local animate_needed
+				if variant == "-ишко" then
+					animate_needed = false
+					sc1_needed = true
+				elseif variant == "-ище" then
+					animate_needed = true
+					sc1_needed = true
+				elseif variant == "-ин" then
+					animate_needed = true
+					sc1_needed = false
+				else
+					-- WARNING: If adding another variant, you need to also
+					-- add to the list farther above.
+					error("Unrecognized declension variant " .. variant .. ", should be -ья, -ин, -ишко or -ище")
 				end
-				if not rfind(lemma, "[Шш][Кк][Оо]$") then
-					error("With declension variant -ишко, lemma should end in -шко: " .. lemma)
+				if sc1_needed and not args.want_sc1 then
+					error("Declension variant " .. variant .. " must be used with special case (1)")
+				elseif sc1_needed == false and args.want_sc1 then
+					error("Declension variant " .. variant .. " must not be used with special case (1)")
+				end
+				if animate_needed and args.thisa ~= "a" then
+					error("Declension variant " .. variant .. " must be specified as animate")
+				elseif animate_needed == false and args.thisa == "a" then
+					error("Declension variant " .. variant .. " must not be specified as animate")
+				end
+				if gender ~= "" and gender ~= "m" then
+					error("Declension variant " .. variant .. " should be used with the masculine gender")
 				end
 			end
-			if variant == "-ище" then
-				if args.thisa ~= "a" then
-					error("Declension variant -ище must be specified as animate")
-				end
-				if not rfind(lemma, "[Щщ][Ее]$") then
-					error("With declension variant -ище, lemma should end in -ще: " .. lemma)
-				end
-			end
-		elseif variant then
-			error("Unrecognized declension variant " .. variant .. ", should be -ья, -ишко or -ище")
 		end
 		stem, decl, orig_pl_ending = detect_lemma_type(lemma, gender, args,
 			variant)
