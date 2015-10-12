@@ -173,11 +173,11 @@ function export.noun_plus(frame)
 
 	local heads, genitives, plurals
 	if args.n == "p" then
-		heads = remove_notes(args.nom_pl)
+		heads = remove_notes(args.nom_pl_linked)
 		genitives = remove_notes(args.gen_pl)
 		plurals = {"-"}
 	else
-		heads = remove_notes(args.nom_sg)
+		heads = remove_notes(args.nom_sg_linked)
 		genitives = remove_notes(args.gen_sg)
 		plurals = args.n == "s" and {"-"} or remove_notes(args.nom_pl)
 	end
