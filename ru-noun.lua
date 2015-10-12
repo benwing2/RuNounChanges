@@ -1220,7 +1220,7 @@ end
 -- Used by do_generate_forms(), handling a word joiner argument
 -- of the form 'join:JOINER'.
 local function extract_word_joiner(spec)
-	word_joiner = rmatch(args[i], "^join:(.*)$")
+	word_joiner = rmatch(spec, "^join:(.*)$")
 	assert(word_joiner)
 	return word_joiner
 end
