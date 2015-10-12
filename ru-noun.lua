@@ -233,7 +233,7 @@ TODO:
    have to use old-style declensions. [IMPLEMENTED. NEED TO TEST.]
 2f. FIXME: Adding a note to dat_sg also adds it to loc_sg when it exists;
    seems wrong. See луг.
-3. FIXME: Consider putting a triangle △ (U+25B3) or the smaller variant
+3. Consider putting a triangle △ (U+25B3) or the smaller variant
    ▵ (U+25B5) next to each irregular form. (We have the following cases:
    special case (1) makes nom pl irreg, special case (2) makes gen pl irreg,
    variant -ья makes the whole pl irreg as does an explicit plural stem,
@@ -248,7 +248,7 @@ TODO:
    currently our header-line code for this isn't so sophisticated. We should
    make sure when checking overrides that we don't get tripped up by
    footnote markers, and probably put the △ mark before any user-specified
-   footnote markers.)
+   footnote markers.) [IMPLEMENTED. NEED TO TEST.]
 3a. FIXME: Create category for irregular lemmas.
 3b. [FIXME: Consider adding an indicator in the header line when the ё/e
    alternation occurs. This is a bit tricky to calculate: If special case
@@ -530,6 +530,42 @@ local function concat_forms(forms)
 		end
 	end
 	return table.concat(joined_rutr, ",")
+end
+
+local function rutr_pairs_equal(term1, term2)
+	local ru1, tr1 = term1[1], term1[2]
+	local ru2, tr2 = term2[1], term2[2]
+	local ru1entry, ru1notes = m_table_tools.get_notes(m_links.remove_links(ru1))
+	local ru2entry, ru2notes = m_table_tools.get_notes(m_links.remove_links(ru2))
+	if ru1entry ~= ru2entry then
+		return false
+	end
+	local tr1entry, tr1notes
+	local tr2entry, tr2notes
+	if tr1 then
+		tr1entry, tr1notes = m_table_tools.get_notes(tr1)
+	end
+	if tr2 then
+		tr2entry, tr2notes = m_table_tools.get_notes(tr2)
+	end
+	if tr1entry == tr2entry then
+		return true
+	elseif type(tr1entry) == type(tr2entry) then
+		return false
+	else
+		tr1entry = tr1entry or com.translit(ru1entry)
+		tr2entry = tr2entry or com.translit(ru2entry)
+		return tr1entry == tr2entry
+	end
+end
+
+local function contains_rutr_pair(list, pair)
+	for _, item in ipairs(list) do
+		if rutr_pairs_equal(item, pair) then
+			return true
+		end
+	end
+	return false
 end
 
 -- Clone parent's args while also assigning nil to empty strings.
@@ -1237,7 +1273,41 @@ local function compute_heading(args)
 	handle_irreg_bool(h.irreg_nom_pl, "nom-pl")
 	handle_irreg_bool(h.irreg_gen_pl, "gen-pl")
 	handle_irreg_bool(h.irreg_misc, "misc")
-	if #irreg_headings > 0 then
+	return headings, irreg_headings
+end
+
+local function compute_overall_heading_and_genders(args)
+	local hinfo = args.per_word_heading_info
+	local index = 0
+
+	-- First try for non-adjectival, non-invariable
+	for i=1,#hinfo do
+		if not ut.contains(hinfo[i].stemetc, "invar") and not ut.contains(hinfo[i].adjectival, "yes") then
+			index = i
+			break
+		end
+	end
+	if index == 0 then
+		-- Then just non-invariable
+		for i=1,#hinfo do
+			if not ut.contains(hinfo[i].stemetc, "invar") then
+				index = i
+				break
+			end
+		end
+	end
+	-- Finally, do anything
+	if index == 0 then
+		index = 1
+	end
+
+	-- Compute final heading
+	local headings = args.per_word_headings[index]
+	--local irreg_headings = args.per_word_irreg_headings[index]
+	--if #irreg_headings > 0 then
+	--	table.insert(headings, "irreg")
+	--end
+	if args.any_irreg then
 		table.insert(headings, "irreg")
 	end
 	local heading = "(<span style=\"font-size: smaller;\">[[Appendix:Russian nouns#Declension tables|" .. table.concat(headings, " ") .. "]]</span>)"
@@ -1245,30 +1315,9 @@ local function compute_heading(args)
 	--	heading = heading .. "<br /><span style=\"text-align: center;\">Irregularities: " ..
 	--		table.concat(irreg_headings, " ") .. "</span>"
 	--end
-	return heading
-end
+	args.heading = heading
 
-local function compute_overall_heading_and_genders(args)
-	local hinfo = args.per_word_heading_info
-	-- First try for non-adjectival, non-invariable
-	for i=1,#hinfo do
-		if not ut.contains(hinfo[i].stemetc, "invar") and not ut.contains(hinfo[i].adjectival, "yes") then
-			args.heading = args.per_word_heading[i]
-			args.genders = args.per_word_genders[i]
-			return
-		end
-	end
-	-- Then just non-invariable
-	for i=1,#hinfo do
-		if not ut.contains(hinfo[i].stemetc, "invar") then
-			args.heading = args.per_word_heading[i]
-			args.genders = args.per_word_genders[i]
-			return
-		end
-	end
-	-- Finally, do anything
-	args.heading = args.per_word_heading[1]
-	args.genders = args.per_word_genders[1]
+	args.genders = args.per_word_genders[index]
 end
 
 --------------------------------------------------------------------------
@@ -1614,16 +1663,36 @@ generate_forms_1 = function(args, per_word_info)
 	-- Initialize non-word-specific arguments.
 	--
 	-- The following is a list of WORD_INFO items, one per word, each of
-	-- which a two element list of WORD_FORMS (a table listing the forms for
+	-- which is a two element list of WORD_FORMS (a table listing the forms for
 	-- each case) and JOINER (a string, indicating how to join the word with
 	-- the next one).
 	args.per_word_info = {}
+	-- List of HEADING_INFO items, one per word, containing the raw material
+	-- used to generate the header. Initialized from 'args.heading_info',
+	-- which is initialized in categorize_and_init_heading().
 	args.per_word_heading_info = {}
-	args.per_word_heading = {}
+	-- List of HEADINGS items, one per word, containing the actual words that
+	-- go into the header if we were to use that word to construct the header.
+	-- Comes from compute_heading(). We use this to generate the actual header
+	-- string, which goes into 'args.heading' at the end (done in
+	-- compute_overall_heading_and_genders()).
+	args.per_word_headings = {}
+	-- Similar to the previous but for the header words indicating
+	-- irregularities (not currently used; instead we just put 'irreg' for
+	-- any irregularities, which is present whenever any form has an
+	-- IRREGMARKER next to it).
+	args.per_word_irreg_headings = {}
+	-- List of GENDERS items, one per word, containing the headword genders
+	-- for each word (where "headword gender" is in the format used in
+	-- headwords and actually includes animacy and number as well, e.g.
+	-- 'm-in' or 'f-an-p'). We end up selecting one such item and putting
+	-- it into 'args.genders' at the end
+	-- (in compute_overall_heading_and_genders()).
 	args.per_word_genders = {}
 	args.any_overridden = {}
 	args.any_non_nil = {}
 	args.categories = {}
+	args.any_irreg = false
 	local function insert_cat(cat)
 		insert_category(args.categories, cat, args.pos)
 	end
@@ -2042,15 +2111,17 @@ generate_forms_1 = function(args, per_word_info)
 		end
 
 		table.insert(args.per_word_heading_info, args.heading_info)
-		table.insert(args.per_word_heading, compute_heading(args))
+		local headings, irreg_headings = compute_heading(args)
+		table.insert(args.per_word_headings, headings)
+		table.insert(args.per_word_irreg_headings, irreg_headings)
 		table.insert(args.per_word_genders, args.genders)
 
 		handle_forms_and_overrides(args, n, islast)
 		table.insert(args.per_word_info, {args.forms, joiner})
 	end
 
-	compute_overall_heading_and_genders(args)
 	handle_overall_forms_and_overrides(args)
+	compute_overall_heading_and_genders(args)
 
 	-- Test code to compare existing module to new one.
 	if test_new_ru_noun_module then
@@ -4085,7 +4156,7 @@ local function attach_with(args, case, suf, fun, irreg, n, islast)
 		local combined, realsuf = fun(args, case, suf)
 		local irregsuf = irreg and {IRREGMARKER} or {""}
 		if irreg and combined then
-			ut.insert_if_not(args.internal_notes, IRREGMARKER .. " Irregular.")
+			insert_if_not(args.internal_notes, IRREGMARKER .. " Irregular.")
 		end
 		return {combined and concat_paired_russian_tr(
 			concat_paired_russian_tr(args["prefix" .. n], combined),
@@ -4406,6 +4477,50 @@ canonicalize_override = function(args, case, forms, n)
 	return vals
 end
 
+local function process_overrides(args, f, n)
+	local function process_override(case)
+		if args[case .. n] then
+			local overrides = canonicalize_override(args, case, f, n)
+			if not f[case] then
+				f[case] = {}
+			end
+			local new_overrides = {}
+			for _, form in ipairs(overrides) do
+				if not contains_rutr_pair(f[case], form) then
+					form = concat_paired_russian_tr(form, {IRREGMARKER})
+				end
+				table.insert(new_overrides, form)
+			end
+			f[case] = new_overrides
+			args.any_overridden[case] = true
+		end
+	end
+
+	-- do dative singular first because it will be used by loc/par
+	process_override("dat_sg")
+
+	-- now do the rest
+	for _, case in ipairs(overridable_cases) do
+		if case ~= "dat_sg" then
+			process_override(case)
+		end
+	end
+	--
+	-- convert empty lists to nil to facilitate computation of accusative
+	-- case variants below.
+	for _, case in ipairs(all_cases) do
+		if f[case] then
+			if type(f[case]) ~= "table" then
+				error("Logic error, args[case] should be nil or table")
+			end
+			if #f[case] == 0 then
+				f[case] = nil
+			end
+		end
+	end
+
+end
+
 handle_forms_and_overrides = function(args, n, islast)
 	local f = args.forms
 
@@ -4479,35 +4594,7 @@ handle_forms_and_overrides = function(args, n, islast)
 		process_tail_args("")
 	end
 
-	local function process_override(case)
-		if args[case .. n] then
-			f[case] = canonicalize_override(args, case, f, n)
-			args.any_overridden[case] = true
-		end
-	end
-
-	-- do dative singular first because it will be used by loc/par
-	process_override("dat_sg")
-
-	-- now do the rest
-	for _, case in ipairs(overridable_cases) do
-		if case ~= "dat_sg" then
-			process_override(case)
-		end
-	end
-
-	-- convert empty lists to nil to facilitate computation of accusative
-	-- case variants below.
-	for _, case in ipairs(all_cases) do
-		if f[case] then
-			if type(f[case]) ~= "table" then
-				error("Logic error, args[case] should be nil or table")
-			end
-			if #f[case] == 0 then
-				f[case] = nil
-			end
-		end
-	end
+	process_overrides(args, f, n)
 
 	local an = args.thisa
 	-- Maybe set the value of the animate/inanimate accusative variants based
@@ -4582,34 +4669,36 @@ handle_overall_forms_and_overrides = function(args)
 		overall_forms[case] = concat_word_forms(args.per_word_info, case)
 	end
 
-	local function process_override(case)
-		if args[case] then
-			overall_forms[case] = canonicalize_override(args, case, overall_forms, "")
-			args.any_overridden[case] = true
+	process_overrides(args, overall_forms, "")
+
+	-- if IRREGMARKER is anywhere in text, remove all instances and put
+	-- at the end before any notes.
+	local function clean_irreg_marker(text)
+		if rfind(text, IRREGMARKER) then
+			text = rsub(text, IRREGMARKER, "")
+			local entry, notes = m_table_tools.get_notes(text)
+			insert_if_not(args.internal_notes, IRREGMARKER .. " Irregular.")
+			args.any_irreg = true
+			return entry .. IRREGMARKER .. notes
+		else
+			return text
 		end
 	end
 
-	-- do dative singular first because it will be used by loc/par
-	process_override("dat_sg")
-
-	-- now do the rest
-	for _, case in ipairs(overridable_cases) do
-		if case ~= "dat_sg" then
-			process_override(case)
-		end
-	end
-
-	-- convert empty lists to nil to facilitate computation of accusative
-	-- case variants below.
+	-- set final args[case] and clean up IRREGMARKER.
 	for _, case in ipairs(all_cases) do
 		args[case] = overall_forms[case]
 		if args[case] then
-			if type(args[case]) ~= "table" then
-				error("Logic error, args[case] should be nil or table")
+			local cleaned_forms = {}
+			for _, form in ipairs(args[case]) do
+				local ru, tr = form[1], form[2]
+				ru = clean_irreg_marker(ru)
+				if tr then
+					tr = clean_irreg_marker(tr)
+				end
+				table.insert(cleaned_forms, {ru, tr})
 			end
-			if #args[case] == 0 then
-				args[case] = nil
-			end
+			args[case] = cleaned_forms
 		end
 	end
 
