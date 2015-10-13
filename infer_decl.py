@@ -4,7 +4,7 @@
 # FIXME:
 #
 # 1. With plural-only lemmas, leave as plural instead of converting to
-#    singular.
+#    singular. (DONE)
 # 2. With manual bareval, set gen_pl or nom_sg override (might not be
 #    necessary).
 # 3. Use Z-style stress patterns. (DONE)
@@ -175,7 +175,7 @@ def infer_decl(t, noungender, pagemsg):
     numonly = "sg"
     getcases = ru_decl_noun_unc_cases
   elif tname == "ru-decl-noun-pl":
-    number = ["n=pl"]
+    number = []
     numonly = "pl"
     getcases = ru_decl_noun_pl_cases
   else:
@@ -341,7 +341,7 @@ def infer_word(forms, noungender, number, numonly, pagemsg):
 
   # Special case:
   if numonly == "pl" and nompl == u"острова́":
-    args = generate_template_args("c", u"о́стров", "", "", pagemsg) + number
+    args = generate_template_args("c", u"острова́", "m", "", pagemsg) + number
     if trymatch(forms, args, pagemsg):
       return args
 
@@ -351,6 +351,7 @@ def infer_word(forms, noungender, number, numonly, pagemsg):
     nomsgs = [try_to_stress(forms["nom_sg"])]
 
   for nomsg in nomsgs:
+    lemma = nompl if numonly == "pl" else nomsg
     if numonly == "sg":
       if forms["acc_sg"] == forms["gen_sg"]:
         anim = ["a=an"]
@@ -375,9 +376,9 @@ def infer_word(forms, noungender, number, numonly, pagemsg):
     if re.search(u"ий$", nomsg) and re.search(u"ьего$", gensg):
       stem = re.sub(u"ий$", "", nomsg)
       if old_template:
-        args = [stem, "+ьий"] + anim + number
+        args = [lemma, "+ь"] + anim + number
       else:
-        args = [stem + "+ьий"] + anim + number
+        args = [lemma + "+ь"] + anim + number
       if trymatch(forms, args, pagemsg):
         return args
 
@@ -389,9 +390,9 @@ def infer_word(forms, noungender, number, numonly, pagemsg):
     if (re.search(u"([ыиіо]й|[яаь]я|[оеь]е)$", make_unstressed(nomsg)) and
         adj_by_prep()):
       if old_template:
-        args = [nomsg, "+"] + anim + number
+        args = [lemma, "+"] + anim + number
       else:
-        args = [nomsg + "+"] + anim + number
+        args = [lemma + "+"] + anim + number
       if trymatch(forms, args, pagemsg):
         return args
 
@@ -401,9 +402,9 @@ def infer_word(forms, noungender, number, numonly, pagemsg):
         adj_by_prep()):
       for adjpat in ["+short", "+mixed"]:
         if old_template:
-          args = [nomsg, adjpat] + anim + number
+          args = [lemma, adjpat] + anim + number
         else:
-          args = [nomsg + adjpat] + anim + number
+          args = [lemma + adjpat] + anim + number
         if trymatch(forms, args, pagemsg):
           return args
 
@@ -412,9 +413,9 @@ def infer_word(forms, noungender, number, numonly, pagemsg):
       args = None
       if numonly == "sg" or re.search(u"мена́$", nompl):
         if old_template:
-          args = ["c", nomsg]
+          args = ["c", lemma]
         else:
-          args = ["c:" + nomsg]
+          args = ["c:" + lemma]
       if args:
         args += anim + number
         if trymatch(forms, args, pagemsg):
@@ -422,7 +423,10 @@ def infer_word(forms, noungender, number, numonly, pagemsg):
 
     stress = "any"
     plstress = "any"
-    genders = [""]
+    if numonly == "pl":
+      genders = [noungender]
+    else:
+      genders = [""]
     bare = [""]
     strange_plural = ""
 
@@ -608,7 +612,7 @@ def infer_word(forms, noungender, number, numonly, pagemsg):
     for stress in stress_patterns:
       for gender in genders:
         for bareval in bare:
-          args = generate_template_args(stress, nomsg, gender + strange_plural,
+          args = generate_template_args(stress, lemma, gender + strange_plural,
               bareval, pagemsg)
           args += anim + number
           if trymatch(forms, args, pagemsg):
