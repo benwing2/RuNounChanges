@@ -410,6 +410,64 @@ produces
 
 {{ru-noun-table|f|реб|ёнок/ь-m||дет|or|ребёнок|dat_pl=де́тям,ребя́там*|ins_pl=детьми́,ребя́тами*|pre_pl=де́тях,ребя́тах*|a=an|pltail=*|notes=* Use the second plural with the meaning "boys!", "fellows!", "guys!", "comrades!".}}
 
+==Multi-word nouns==
+Multi-word nouns are specified by putting an underscore (<code>_</code>) between words separated by spaces, or a hyphen (<code>-</code>) between words separated by hyphens, or a joiner expression (<code>join:</code>TEXT) between words separated by arbitrary text.
+
+===Example 1: An adjective-noun combination===
+For the noun {{m|ru|мя́кий знак||soft sign}}:
+
+<code><nowiki>{{ru-noun-table|мя́гкий|+|_|знак}}</nowiki></code>
+
+produces
+
+{{ru-noun-table|мя́гкий|+|_|знак}}
+
+Note how both parts are declined appropriately.
+
+===Example 2: A noun-noun combination separated by a hyphen===
+For the noun {{m|ru|пау́к-во́лк||wolf spider}}:
+
+<code><nowiki>{{ru-noun-table|b|пау́к|-|волк|a=an}}</nowiki></code>
+
+produces
+
+{{ru-noun-table|b|пау́к|-|волк}}
+
+Note that the animacy applies to the entire expression.
+
+===Example 3: A noun with a genitive modifier===
+For the noun {{m|ru|ору́жие ма́ссового уничтоже́ния|weapon of mass destruction}}:
+
+<code><nowiki>{{ru-noun-table|ору́жие|_|ма́ссового|$|_|уничтоже́ния|$}}</nowiki></code>
+
+produces
+
+{{ru-noun-table|ору́жие|_|ма́ссового|$|_|уничтоже́ния|$}}
+
+Note the use of <code>$</code> to indicate invariable words.
+
+===Example 4: A noun with a prepositional phrase modifier===
+For the noun {{m|ru|кре́м для ру́к|hand cream}}:
+
+<code><nowiki>{{ru-noun-table|крем|_|*для|$|_|ру́к|$}}</nowiki></code>
+
+produces
+
+{{ru-noun-table|крем|_|*для|$|_|ру́к|$}}
+
+Note the use of <code>*</code> at the beginning of для to suppress the stress mark that otherwise would automatically be added.
+
+===Example 5: A noun that combines singular and plural components===
+For the noun {{m|ru|Сент-Ви́нсент и Гренади́ны|Saint Vincent and the Grenadines}}:
+
+<code><nowiki>{{ru-noun-table|Сент-Ви́нсент|_|*и|$|_|Гренади́ны|m(2)|n1=s|n=p}}</nowiki></code>
+
+produces
+
+{{ru-noun-table|Сент-Ви́нсент|_|*и|$|_|Гренади́ны|m(2)|n1=s|n=p}}
+
+The whole expression is plural, as is the word Гренади́ны, but Сент-Ви́нсент is declined in the singular. This is specified using the per-word parameter {{para|n1|s}}, specifying that the first word should be declined as singular. As in the previous example, <code>*</code> is prepended to и to suppress the automatic addition of a stress mark. Гренади́ны is masculine but uses the alternative no-ending genitive plural; hence the use of special case <code>(2)</code>.
+
 <includeonly>
 [[Category:Russian noun inflection-table templates]]
 </includeonly>
