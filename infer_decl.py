@@ -267,49 +267,18 @@ def transfer_and_default_stress(nomsg, stress, pagemsg, no_transfer_stress=False
 
   return nomsg, stress
 
-def generate_template_args(stress, nomsg, gender, bareval, pagemsg):
+def generate_template_args(stress, lemma, declspec, pagemsg):
+  arg2 = lemma
+  arg2, stress = transfer_and_default_stress(arg2, stress, pagemsg, False)
   if old_template:
-    # If bareval is a two-element list, the second is a value to
-    # use for arg 1 in place of nomsg. See above.
-    if type(bareval) is list:
-      arg2 = bareval[2]
-      bareval = bareval[1]
-      no_transfer_stress = True
-    else:
-      arg2 = nomsg
-      no_transfer_stress = False
-    arg2, stress = transfer_and_default_stress(arg2, stress, pagemsg,
-        no_transfer_stress)
-    if bareval == "*":
-      gender += gender + "*"
-      bareval = ""
-    if bareval:
-      pagemsg("WARNING: Putting manual bareval in old-style args but shouldn't; instead, use nom_sg or gen_pl override: %s" % bareval)
-    args = [stress, arg2, gender, bareval]
+    args = [stress, arg2, declspec]
     if not args[0]:
       del args[0]
     if not args[-1]:
       del args[-1]
-    if not args[-1]:
-      del args[-1]
   else:
-    gender = gender and "^" + gender or ""
-    if type(bareval) is list:
-      arg1 = bareval[2]
-      bareval = bareval[1]
-      no_transfer_stress = True
-    else:
-      arg1 = nomsg
-      no_transfer_stress = False
-    arg1, stress = transfer_and_default_stress(arg1, stress, pagemsg,
-        no_transfer_stress)
-
-    if bareval == "*":
-      gender += gender + "*"
-      bareval = ""
-    if bareval:
-      pagemsg("WARNING: Can't put manual bareval in multi-style args; use nom_sg or gen_pl override: %s" % bareval)
-    lemmaarg = arg1 + gender
+    declspec = declspec and "^" + declspec or ""
+    lemmaarg = arg2 + declspec
     lemmaarg = re.sub(r"\^([;*(])", r"\1", lemmaarg)
     args = [stress, lemmaarg]
     if not args[0]:
@@ -347,7 +316,7 @@ def infer_word(forms, noungender, number, numonly, pagemsg):
 
   # Special case:
   if numonly == "pl" and nompl == u"острова́":
-    args = generate_template_args("c", u"острова́", "m", "", pagemsg) + number
+    args = generate_template_args("c", u"острова́", "m", pagemsg) + number
     if trymatch(forms, args, pagemsg):
       return args
 
@@ -433,7 +402,7 @@ def infer_word(forms, noungender, number, numonly, pagemsg):
       genders = [noungender]
     else:
       genders = [""]
-    bare = [""]
+    bare = ""
     strange_plural = ""
 
     ########## Check for feminine or neuter
@@ -500,7 +469,7 @@ def infer_word(forms, noungender, number, numonly, pagemsg):
             pagemsg("Gen pl %s same as stem %s (modulo expected endings)" % (genpl, stem))
           elif make_unstressed(genpl) not in possible_unstressed_genpls:
             pagemsg("Stem %s not accent-equiv to gen pl %s (modulo expected endings)" % (stem, genpl))
-            bare = ["*", genpl]
+            bare = "*"
           elif is_unstressed(stem):
             pagemsg("Replacing unstressed stem %s with accent-equiv gen pl %s" %
                 (stem, genpl))
@@ -571,20 +540,13 @@ def infer_word(forms, noungender, number, numonly, pagemsg):
               pagemsg("Nom sg stem %s same as stem" % nomsgstem)
             elif make_unstressed(stem) != make_unstressed(nomsgstem):
               pagemsg("Stem %s not accent-equiv to nom sg stem %s" % (stem, nomsgstem))
-              # If an element of BARE is a two-element list, the first is
-              # the value of bare and the second is the value to use for the
-              # first arg in place of nom sg.
-              bare = ["*", [nomsg, try_to_stress(stem + ending)]]
+              bare = "*"
             elif is_unstressed(stem):
               pagemsg("Replacing unstressed stem %s with accent-equiv nom sg stem %s" %
                   (stem, nomsgstem))
             else:
               pagemsg("Stem %s stressed one way, nom sg stem %s stressed differently" %
                   (stem, nomsgstem))
-              # If an element of BARE is a two-element list, the first is
-              # the value of bare and the second is the value to use for the
-              # first arg in place of nom sg.
-              bare = ["*", [nomsg, try_to_stress(stem + ending)]]
 
         # Check for strange plural
         if numonly != "sg":
@@ -621,12 +583,11 @@ def infer_word(forms, noungender, number, numonly, pagemsg):
       strange_plural += u";ё"
     for stress in stress_patterns:
       for gender in genders:
-        for bareval in bare:
-          args = generate_template_args(stress, lemma, gender + strange_plural,
-              bareval, pagemsg)
-          args += anim + number
-          if trymatch(forms, args, pagemsg):
-            return args
+        args = generate_template_args(stress, lemma,
+            gender + strange_plural + bare, pagemsg)
+        args += anim + number
+        if trymatch(forms, args, pagemsg):
+          return args
 
   return None
 
