@@ -21,7 +21,7 @@ def is_unstressed(word):
 def is_one_syllable(word):
   return len(re.sub("[^" + vowels + "]", "", word)) == 1
 
-def last_syllable_stressed(word):
+def is_ending_stressed(word):
   vowelword = re.sub("[^" + vowels + AC + "]", "", word)
   return vowelword.endswith(AC)
 

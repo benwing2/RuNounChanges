@@ -228,7 +228,7 @@ def infer_decl(t, pagemsg):
             None)
   explicit_msg = None
   if special == "*" and not is_one_syllable(m) and (
-      (stress in ["b", "b'"]) != last_syllable_stressed(m)):
+      (stress in ["b", "b'"]) != is_ending_stressed(m)):
     pagemsg("WARNING: (Un)reducible short masc sg %s has wrong stress for accent pattern %s, setting manual masc sg" % (m, stress))
     explicit_msg = m
   if not stress:
