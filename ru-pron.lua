@@ -3,14 +3,23 @@ This module implements the template {{ru-IPA}} (FIXME, is it called elsewhere?)
 
 Author: Primarily Wyang, with help from Atitarev and a bit from others
 
-FIXME:
+QUESTIONS TO ASK OF ATITAREV/CINEMANTIQUE:
 
 1. Ask Atitarev/Cinemantique about -ьо, is it same as (possibly unstressed)
-   -ьё?
+   -ьё? (DONE. YES.)
 2. Ask A/C -- should стск be treated like сск or ск? (the latter is what's
-   currently done)
+   currently done) (DONE. CONVERTED TO ССК. A SAYS SOMETIMES PRONOUNCED AS СТСК
+   WHEN FORMAL, NEED TO DECIDE WHAT TO DO.)
 3. Ask A/C -- should we ever reduce double vowels to long vowels? (commented
-   out)
+   out) (DONE. NO.)
+4. Ask A/C -- should сск be converted to ск (this is what's done currently)?
+5, Ask A/C -- 'н[ндт]ск'] = 'нск', is this correct?
+
+FIXME:
+
+1. Figure out issue with фильм, сельдь.
+2. Figure out issue with Амударья́ and скамья́ (pre-tonal syllables).
+3. Figure out issue with та́ять.
 ]]
 
 local ut = require("Module:utils")
@@ -137,7 +146,7 @@ local phon_respellings = {
 	['[зс]ш'] = 'шш', ['[зс]ж'] = 'жж',
 	['н[ндт]ск'] = 'нск',
 	['[сз]ск'] = 'ск',
-	['с[дт]ск'] = 'ск',
+	['с[дт]ск'] = 'сск',
 	['гк'] = 'хк',
 	['н[дт]г'] = 'нг',
 	['э'] = 'ɛ',
