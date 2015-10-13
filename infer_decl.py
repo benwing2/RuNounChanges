@@ -241,46 +241,30 @@ def infer_decl(t, noungender, pagemsg):
     if args:
       return args
 
-def transfer_and_default_stress(nomsg, stress, pagemsg, no_transfer_stress=False):
-  if not no_transfer_stress:
-    # At this point if stress pattern is 2, move the
-    # stress onto the ending if nomsg is fem. or neut. and
-    # the stress can be recovered in the gen pl.
-    if stress == "b":
-      m = re.search("^(.*[" + vowels_no_jo + "]" + AC + "?[^" + vowels + u"]*)([аяео])$", nomsg)
-      if m and u"ё" not in m.group(1):
-        newnomsg = make_unstressed(m.group(1)) + m.group(2) + AC
-        pagemsg("Accent-class b fem 1st or neut, moving stress onto ending from %s to %s" % (nomsg, newnomsg))
-        nomsg = newnomsg
-    if is_unstressed(nomsg):
-      pagemsg("WARNING: Arg 1 (stem/nom-sg) %s is totally unstressed" % (nomsg))
-      # FIXME: If it's one syllable, should we stress it?
-      # Does this ever happen? We try hard to stress monosyllabic
-      # stems up above.
-
-  if re.search(u"[ё́]$", nomsg):
+def default_stress(lemma, stress, pagemsg):
+  if re.search(u"[ё́]$", lemma):
     defstress = "b"
   else:
     defstress = "a"
   if defstress == stress:
     stress = ""
 
-  return nomsg, stress
+  return lemma, stress
 
 def generate_template_args(stress, lemma, declspec, pagemsg):
-  arg2 = lemma
-  arg2, stress = transfer_and_default_stress(arg2, stress, pagemsg, False)
+  lemma = lemma
+  lemma, stress = default_stress(lemma, stress, pagemsg)
   if old_template:
-    args = [stress, arg2, declspec]
+    args = [stress, lemma, declspec]
     if not args[0]:
       del args[0]
     if not args[-1]:
       del args[-1]
   else:
     declspec = declspec and "^" + declspec or ""
-    lemmaarg = arg2 + declspec
-    lemmaarg = re.sub(r"\^([;*(])", r"\1", lemmaarg)
-    args = [stress, lemmaarg]
+    lemma = lemma + declspec
+    lemma = re.sub(r"\^([;*(])", r"\1", lemma)
+    args = [stress, lemma]
     if not args[0]:
       del args[0]
     args = [":".join(args)]
