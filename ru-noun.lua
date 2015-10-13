@@ -1315,11 +1315,10 @@ function export.do_generate_forms(args, old)
 			end_arg_set = true
 			end_word = true
 			word_joiner = " "
-		-- not yet; sometimes - occurs as the actual lemma (e.g. in -онок)
-		--elseif args[i] == "-" then
-		--	end_arg_set = true
-		--	end_word = true
-		--	word_joiner = "-"
+		elseif args[i] == "-" then
+			end_arg_set = true
+			end_word = true
+			word_joiner = "-"
 		elseif args[i] and rfind(args[i], "^join:") then
 			end_arg_set = true
 			end_word = true
