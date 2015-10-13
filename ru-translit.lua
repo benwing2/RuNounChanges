@@ -38,7 +38,7 @@ end
 function export.tr(text, lang, sc)
 	-- Remove word-final hard sign
 	text = mw.ustring.gsub(text, "[Ъъ]$", "")
-	text = mw.ustring.gsub(text, "[Ъъ]([- ])", "%1")
+	text = mw.ustring.gsub(text, "[Ъъ]([%A])", "%1")
 
 	-- Ё needs converting if is decomposed
 	-- won't have any effect
