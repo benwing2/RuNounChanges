@@ -3958,6 +3958,7 @@ do_stress_pattern = function(stress, args, decl, number, n, islast)
 					else
 						table.insert(linked_forms, form)
 					end
+				end
 				f[case .. "_linked"] = linked_forms
 			end
 		end
