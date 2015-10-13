@@ -7,7 +7,7 @@
 #    singular.
 # 2. With manual bareval, set gen_pl or nom_sg override (might not be
 #    necessary).
-# 3. Use Z-style stress patterns.
+# 3. Use Z-style stress patterns. (DONE)
 # 4. Don't need to specify +short with -ов.
 
 import re
@@ -30,7 +30,7 @@ old_template = False
 if old_template:
   decl_template = "ru-noun-table"
 else:
-  decl_template = "ru-decl-noun-new"
+  decl_template = "ru-decl-noun-m"
 
 ru_decl_noun_cases = [
   "nom_sg", "nom_pl", "gen_sg", "gen_pl", "dat_sg", "dat_pl",
@@ -44,23 +44,23 @@ ru_decl_noun_pl_cases = [
   ]
 all_cases = [x for x in ru_decl_noun_cases] + ["par"]
 
-all_stress_patterns = ["1", "2", "3", "4", "5", "6", "4*", "6*"]
+all_stress_patterns = ["a", "b", "c", "d", "e", "f", "d'", "f'"]
 matching_stress_patterns = {}
 matching_stress_patterns["stem"] = {}
 matching_stress_patterns["ending"] = {}
 matching_stress_patterns["none"] = {}
-matching_stress_patterns["stem"]["stem"] = {"by":"pre_pl", "stem":"1", "ending":"5"}
-matching_stress_patterns["stem"]["ending"] = ["3"]
+matching_stress_patterns["stem"]["stem"] = {"by":"pre_pl", "stem":"a", "ending":"e"}
+matching_stress_patterns["stem"]["ending"] = ["c"]
 matching_stress_patterns["ending"]["stem"] = {
   "by":"pre_pl",
-  "ending":{"by":"acc_sg", "ending":"4", "stem":"4*"},
-  "stem":{"by":"acc_sg", "ending":"6", "stem":"6*"},
+  "ending":{"by":"acc_sg", "ending":"d", "stem":"d'"},
+  "stem":{"by":"acc_sg", "ending":"f", "stem":"f'"},
 }
-matching_stress_patterns["ending"]["ending"] = ["2"]
-matching_stress_patterns["stem"]["none"] = ["1"]
-matching_stress_patterns["ending"]["none"] = {"by":"acc_sg", "ending":"2", "stem":"6*"}
-matching_stress_patterns["none"]["stem"] = {"by":"pre_pl", "stem":"1", "ending":"5"}
-matching_stress_patterns["none"]["ending"] = ["2"]
+matching_stress_patterns["ending"]["ending"] = ["b"]
+matching_stress_patterns["stem"]["none"] = ["a"]
+matching_stress_patterns["ending"]["none"] = {"by":"acc_sg", "ending":"b", "stem":"f'"}
+matching_stress_patterns["none"]["stem"] = {"by":"pre_pl", "stem":"a", "ending":"e"}
+matching_stress_patterns["none"]["ending"] = ["b"]
 
 site = pywikibot.Site()
 
@@ -246,11 +246,11 @@ def transfer_and_default_stress(nomsg, stress, pagemsg, no_transfer_stress=False
     # At this point if stress pattern is 2, move the
     # stress onto the ending if nomsg is fem. or neut. and
     # the stress can be recovered in the gen pl.
-    if stress == "2":
+    if stress == "b":
       m = re.search("^(.*[" + vowels_no_jo + "]" + AC + "?[^" + vowels + u"]*)([аяео])$", nomsg)
       if m and u"ё" not in m.group(1):
         newnomsg = make_unstressed(m.group(1)) + m.group(2) + AC
-        pagemsg("Accent-class 2 fem 1st or neut, moving stress onto ending from %s to %s" % (nomsg, newnomsg))
+        pagemsg("Accent-class b fem 1st or neut, moving stress onto ending from %s to %s" % (nomsg, newnomsg))
         nomsg = newnomsg
     if is_unstressed(nomsg):
       pagemsg("WARNING: Arg 1 (stem/nom-sg) %s is totally unstressed" % (nomsg))
@@ -259,9 +259,9 @@ def transfer_and_default_stress(nomsg, stress, pagemsg, no_transfer_stress=False
       # stems up above.
 
   if re.search(u"[ё́]$", nomsg):
-    defstress = "2"
+    defstress = "b"
   else:
-    defstress = "1"
+    defstress = "a"
   if defstress == stress:
     stress = ""
 
@@ -341,7 +341,7 @@ def infer_word(forms, noungender, number, numonly, pagemsg):
 
   # Special case:
   if numonly == "pl" and nompl == u"острова́":
-    args = generate_template_args("3", u"о́стров", "", "", pagemsg) + number
+    args = generate_template_args("c", u"о́стров", "", "", pagemsg) + number
     if trymatch(forms, args, pagemsg):
       return args
 
@@ -407,20 +407,14 @@ def infer_word(forms, noungender, number, numonly, pagemsg):
         if trymatch(forms, args, pagemsg):
           return args
 
-    # Ending in -мя, nom pl in either -мена́ or -мёна.
+    # Ending in -мя, nom pl in either -мена́.
     if re.search(u"мя$", nomsg):
       args = None
       if numonly == "sg" or re.search(u"мена́$", nompl):
         if old_template:
-          args = ["3", nomsg]
+          args = ["c", nomsg]
         else:
-          args = [nomsg + ":3"]
-      elif rsearch(u"мёна$", nompl):
-        stem = re.sub(u"мя$", "", nomsg)
-        if old_template:
-          args = ["3", stem, u"мя-1"]
-        else:
-          args = [stem + "*мя-1:3"]
+          args = ["c:" + nomsg]
       if args:
         args += anim + number
         if trymatch(forms, args, pagemsg):
@@ -446,8 +440,8 @@ def infer_word(forms, noungender, number, numonly, pagemsg):
         stress = "stem"
 
       for numrestrict, regex, formcase in [
-          ("sg", ur"^(.*)[аяыи]́?$", "nom_pl"), # accent patterns 4, 6
-          ("pl", ur"^(.*)[уюоеё]́?$", "acc_sg"), # accent patterns 4*, 6* 
+          ("sg", ur"^(.*)[аяыи]́?$", "nom_pl"), # accent patterns d, f
+          ("pl", ur"^(.*)[уюоеё]́?$", "acc_sg"), # accent patterns d', f'
           ("sg", ur"^(.*)([ая]́?х)$", "pre_pl"), # necessary???
         ]:
         if numonly != numrestrict:
