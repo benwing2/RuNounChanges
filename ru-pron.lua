@@ -234,11 +234,12 @@ function export.ipa(text, adj, gem, pal)
 	--re-notate orthographic geminate consonants
 	text = rsub(text, (non_vowels_c) .. '%1', '%1ː')
 
+	--split by word and process each word
 	word = rsplit(text, " ", true)
 	for i = 1, #word do
-		local syllable, syl_conv, pos, stress = {}, {}, {}, {}
-		local count = 0
-		pron = word[i]
+		local syllable = {} -- list of syllables
+		local stress = {} -- set of 1-based indices of stressed syllables
+		local pron = word[i]
 
 		--optional iotation of 'e' in a two-vowel sequence and reduction of word-final 'e'
 		pron = rsub(pron, '([aäeëɛiyoöuü]́?)ë([^́])', '%1(j)ë%2')
@@ -247,7 +248,7 @@ function export.ipa(text, adj, gem, pal)
 		pron = rsub(pron, non_vowels_c .. 'ä$', '%1ʲə')
 		pron = rsub(pron, '%(j%)jə', 'jə')
 
-		--syllabify
+		--syllabify, inserting / at syllable boundaries
 		pron = rsub(pron, 'ʹ([äëöü])', 'ʹ/%1')
 		pron = rsub(pron, 'ʹi', 'ʹji')
 		pron = rsub(pron, '([aäeëɛəiyoöuü][́̀]?)', '%1/')
@@ -267,16 +268,19 @@ function export.ipa(text, adj, gem, pal)
 			pron = rsub(pron, AC, '')
 		end
 
-		--write syllable indexes of stressed syllables to a table
-		trimmed_pron = pron
-		while rfind(trimmed_pron, '[́̀]') do -- U+0301 COMBINING ACUTE ACCENT
-			accent_pos = rfind(trimmed_pron, '[́̀]')
-			count = count + ulen(rsub(usub(trimmed_pron, 1, accent_pos - 1), '[^%/]', ''))
+		--write 1-based syllable indexes of stressed syllables (acute or grave) to
+		--the list POS
+		local pos = {}
+
+		local trimmed_pron = pron
+		while rfind(trimmed_pron, '[́̀]') do
+			local accent_pos = rfind(trimmed_pron, '[́̀]')
+			local count = count + ulen(rsub(usub(trimmed_pron, 1, accent_pos - 1), '[^%/]', ''))
 			table.insert(pos, count + 1)
 			trimmed_pron = usub(trimmed_pron, accent_pos + 1, -1)
 		end
 
-		--treated monosyllabic non-prepositions as if accented
+		--treat monosyllabic non-prepositions as if accented
 		pron = rsub(pron, '(.*)' .. vowels_c .. '(.*)', function(a, b, c)
 			if not rfind(a .. c, vowels) then
 				table.insert(pos, 1)
@@ -288,21 +292,22 @@ function export.ipa(text, adj, gem, pal)
 			table.insert(pos, 1)
 		end
 
-		--transform the table of stress positions
+		--convert list of stress positions to set; equivalent to ut.list_to_set()
 		for _, pos in ipairs(pos) do
 			stress[pos] = true
 		end
 
+		local syl_conv = {}
 		for j = 1, #syllable do
 			local syl = syllable[j]
 
 			--remove consonant geminacy if non-initial and non-post-tonic
 			if rfind(syl, 'ː') and gem ~= 'y' then
-				no_replace = false
+				local no_replace = false
 				if (j == 1 and not rfind(syl, 'ː$')) or stress[j-1] then
 					no_replace = true
 				else
-					de_accent = rsub(word[i], '[̀́]', '')
+					local de_accent = rsub(word[i], '[̀́]', '')
 					for i = 1, #geminate_pref do
 						if not no_replace and rfind(de_accent, geminate_pref[i]) then
 							no_replace = true
@@ -328,7 +333,7 @@ function export.ipa(text, adj, gem, pal)
 				syl = rsub(syl, '^([ʺʹ]?)([äëöü])', '%1j%2')
 				if not rfind(syl, 'ʺ') and not rfind(syl, 'ʹ' .. non_vowels) then
 					syl = rsub(syl, non_vowels_c .. '([ʹːj]?[aäeëɛəiyoöuüʹ])', function(a, b)
-						set = '[mnpbtdkgcfvszxrl]'
+						local set = '[mnpbtdkgcfvszxrl]'
 						if pal == 'y' then
 							set = '[mnpbtdkgcfvszxrlǯӂšž]'
 						end
