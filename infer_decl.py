@@ -9,6 +9,7 @@
 #    necessary).
 # 3. Use Z-style stress patterns. (DONE)
 # 4. Don't need to specify +short with -ов.
+# 5. Recognize unusual genitive plural and add (2).
 
 import re
 import traceback, sys
@@ -189,6 +190,9 @@ def infer_decl(t, noungender, pagemsg):
       if case == "pre_sg" or case == "pre_pl":
         # eliminate leading preposition
         form = re.sub(ur"^о(б|бо)?\s+", "", form)
+      if "," in form:
+        pagemsg("WARNING: Comma in form, may not handle correctly: %s=%s" %
+            (case, form))
       forms[case] = form
     i += 1
 
@@ -300,7 +304,7 @@ def infer_word(forms, noungender, number, numonly, pagemsg):
 
   # Special case:
   if numonly == "pl" and nompl == u"острова́":
-    args = generate_template_args("c", u"острова́", "m", pagemsg) + number
+    args = generate_template_args("c", u"острова́", "m(1)", pagemsg) + number
     if trymatch(forms, args, pagemsg):
       return args
 
@@ -478,10 +482,7 @@ def infer_word(forms, noungender, number, numonly, pagemsg):
         nomsgstem = m.group(1)
         ending = m.group(2)
         stem = nomsgstem
-        if numonly == "pl":
-          if ending == u"ь":
-            genders = [noungender]
-        else:
+        if numonly != "pl":
           m = re.search(ur"^(.*)([аяи])(́?)$", gensg)
           if not m:
             pagemsg("WARNING: Don't recognize gen sg ending in form %s" % gensg)
@@ -536,7 +537,7 @@ def infer_word(forms, noungender, number, numonly, pagemsg):
         if numonly != "sg":
           ustem = make_unstressed(stem)
           unompl = make_unstressed(nompl)
-          mm = re.search("^" + ustem + u"(ья|а)$", unompl)
+          mm = re.search("^" + ustem + u"(ья|а|я)$", unompl)
           if mm:
             strange_plural = "-" + mm.group(1)
             pagemsg("Found unusual plural %s" % strange_plural)
@@ -732,6 +733,14 @@ test_templates = [
   |щётку для ресни́ц|щётки для ресни́ц
   |щёткой для ресни́ц|щётками для ресни́ц
   |о щётке для ресни́ц|о щётках для ресни́ц}}""",
+  u"""{{ru-decl-noun
+  |учи́тель|учителя́
+  |учи́теля|учителе́й
+  |учи́телю|учителя́м
+  |учи́теля|учителе́й
+  |учи́телем|учителя́ми
+  |учи́теле|учителя́х
+  }}""",
   u"""{{ru-decl-noun
   |учи́тель|учителя́, учители́
   |учи́теля|учителе́й
