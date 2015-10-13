@@ -46,11 +46,11 @@ A system is in place for inserting usage notes into declension tables, in the fo
 One of the following for regular nouns:
 # (blank)
 # GENDER
-# <code>-ья</code>
-# GENDER<code>-ья</code>
+# <code>-</code>VARIANT
+# GENDER<code>-</code>VARIANT
 # DECLTYPE
 # DECLTYPE/DECLTYPE
-You can also append various special-case markers to any of the above.
+# You can also append various special-case markers to any of the above.
 
 For adjectival nouns, one of the following:
 # <code>+</code>
@@ -60,7 +60,11 @@ For adjectival nouns, one of the following:
 
 GENDER if present is <code>m</code>, <code>f</code>, <code>n</code> or <code>3f</code>; for regular nouns, required if the lemma ends in -ь or is plural, ignored otherwise. <code>3f</code> is the same as <code>f</code> but in the case of a plural lemma in -и, detects a third-declension feminine with singular in -ь rather than a first-declension feminine with singular in -а or -я.
 
-The <code>-ья</code> annotation overrides the normal declension with the special plural declension with nominative plural -ья. See also special cases <code>(1)</code> and <code>(2)</code> for specifying other types of plural variants.
+VARIANT specifies declension variants that override the normal declension in various ways: See also special cases <code>(1)</code> and <code>(2)</code> for specifying other types of plural variants.
+# The <code>-ья</code> variant overrides the normal declension with the special plural declension with nominative plural -ья.
+# The <code>-ин</code> variant is for animate masculines ending in -ин with nominative plural in -е. Most such nouns end in -анин or -янин, and these are autodetected, but other nouns in this declension such as {{m|ru|боя́рин|[[boyar]]}} need an explicit variant annotation.
+# The <code>-ишко</code> variant is for inanimate diminutive masculines (not neuters) ending in -шко (usually -ишко), with colloquial feminine forms in some of the singular cases, e.g. {{m|ru|доми́шко||small house}}.
+# The <code>-ище</code> variant is for animate augmentative masculines (not neuters) ending in -ище, with colloquial feminine forms in some of the singular cases, e.g. {{m|ru|волчи́ще||large, mature wolf}}.
 
 DECLTYPE is an explicit declension type. Normally you shouldn't use this, and should instead let the declension type be autodetected based on the ending. See the table below for the list of declension types (which normally have the form of the nominative singular ending). When an explicit declension type is provided, the lemma field should be just the stem, without the ending.
 
@@ -163,14 +167,14 @@ produces
 
 {{ru-noun-table|f|голова́}}
 
-===Example 4: An animate noun needing an explicit declension class===
-The noun {{m|ru|боя́рин||boyar}} belongs to the declension class <code>ин</code>, with a singular suffix -ин that is missing in the plural and with nominative plural -е. These nouns are only autodetected if they end in -анин or -янин and are animate, to avoid many false positives. Other -ин nouns that follow this declension need an explicit declension class.  The noun is also animate, which needs to be noted.
+===Example 4: An animate noun needing a declensional variant===
+The noun {{m|ru|боя́рин||boyar}} belongs to the declension class <code>ин</code>, with a singular suffix -ин that is missing in the plural and with nominative plural -е. These nouns are only autodetected if they end in -анин or -янин and are animate, to avoid many false positives. Other -ин nouns that follow this declension need an explicit declensional variant -ин.  The noun is also animate, which needs to be noted.
 
-<code><nowiki>{{ru-noun-table|боя́р|ин|a=an}}</nowiki></code>
+<code><nowiki>{{ru-noun-table|боя́рин|-ин|a=an}}</nowiki></code>
 
 produces
 
-{{ru-noun-table|боя́р|ин|a=an}}
+{{ru-noun-table|боя́рин|-ин|a=an}}
 
 ===Example 5: A noun needing a gender hint===
 
