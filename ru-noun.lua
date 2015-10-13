@@ -1398,9 +1398,11 @@ function export.do_generate_forms_multi(args)
 		elseif args[i] == "-" then
 			end_word = true
 			word_joiner = "-"
+			continue_arg_sets = true
 		elseif rfind(args[i], "^join:") then
 			end_word = true
 			word_joiner = extract_word_joiner(args[i])
+			continue_arg_sets = true
 		elseif args[i] == "or" then
 			continue_arg_sets = true
 		else
