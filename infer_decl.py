@@ -5,11 +5,13 @@
 #
 # 1. With plural-only lemmas, leave as plural instead of converting to
 #    singular. (DONE)
-# 2. With manual bareval, set gen_pl or nom_sg override (might not be
-#    necessary).
+# 2. With manual bareval, set gen_pl or nom_sg override (e.g. in
+#    варёное яйцо́).
 # 3. Use Z-style stress patterns. (DONE)
-# 4. Don't need to specify +short with -ов.
-# 5. Recognize unusual genitive plural and add (2).
+# 4. Don't need to specify +short with -ов, same for +mixed.
+# 5. Check that recognize-plural code deals correctly with short plural
+#    adjectives like in Соломо́новы острова́. (IT APPEARS TO.)
+# 6. Recognize unusual genitive plural and add (2).
 
 import re
 import traceback, sys
