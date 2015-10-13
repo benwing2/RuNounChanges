@@ -53,8 +53,8 @@ matching_stress_patterns["stem"]["stem"] = {"by":"pre_pl", "stem":"a", "ending":
 matching_stress_patterns["stem"]["ending"] = ["c"]
 matching_stress_patterns["ending"]["stem"] = {
   "by":"pre_pl",
-  "ending":{"by":"acc_sg", "ending":"d", "stem":"d'"},
-  "stem":{"by":"acc_sg", "ending":"f", "stem":"f'"},
+  "stem":{"by":"acc_sg", "ending":"d", "stem":"d'"},
+  "ending":{"by":"acc_sg", "ending":"f", "stem":"f'"},
 }
 matching_stress_patterns["ending"]["ending"] = ["b"]
 matching_stress_patterns["stem"]["none"] = ["a"]
@@ -281,7 +281,7 @@ def generate_template_args(stress, nomsg, gender, bareval, pagemsg):
     arg2, stress = transfer_and_default_stress(arg2, stress, pagemsg,
         no_transfer_stress)
     if bareval == "*":
-      gender = gender + "*"
+      gender += gender + "*"
       bareval = ""
     if bareval:
       pagemsg("WARNING: Putting manual bareval in old-style args but shouldn't; instead, use nom_sg or gen_pl override: %s" % bareval)
@@ -305,11 +305,13 @@ def generate_template_args(stress, nomsg, gender, bareval, pagemsg):
         no_transfer_stress)
 
     if bareval == "*":
-      gender = gender and gender + "*" or "*"
+      gender += gender + "*"
       bareval = ""
     if bareval:
       pagemsg("WARNING: Can't put manual bareval in multi-style args; use nom_sg or gen_pl override: %s" % bareval)
-    args = [stress, arg1 + gender]
+    lemmaarg = arg1 + gender
+    lemmaarg = re.sub(r"\^([;*(])", r"\1", lemmaarg)
+    args = [stress, lemmaarg]
     if not args[0]:
       del args[0]
     args = [":".join(args)]
@@ -324,11 +326,15 @@ def infer_word(forms, noungender, number, numonly, pagemsg):
       allsame = False
       break
   if allsame:
-    pagemsg("Found invariable word %s" % caseforms[0])
+    lemma = caseforms[0]
+    pagemsg("Found invariable word %s" % lemma)
+    if is_one_syllable(lemma) and not is_stressed(lemma):
+      pagemsg("Marking invariable word %s as unaccented" % lemma)
+      lemma = "*" + lemma
     if old_template:
-      return [caseforms[0], "$"]
+      return [lemma, "$"]
     else:
-      return [caseforms[0] + "$"]
+      return [lemma + "$"]
 
   nompl = forms.get("nom_pl", "")
   accsg = forms.get("acc_sg", "")
@@ -502,7 +508,6 @@ def infer_word(forms, noungender, number, numonly, pagemsg):
           else:
             pagemsg("Stem %s stressed one way, gen pl %s stressed differently" %
                 (stem, genpl))
-            bare = ["*", genpl]
 
       # Auto-stress monosyllabic stem if necessary
       if is_unstressed(stem) and is_unstressed(ending):
@@ -609,6 +614,11 @@ def infer_word(forms, noungender, number, numonly, pagemsg):
       if type(stress_patterns) is not list:
         stress_patterns = [stress_patterns]
 
+    if strange_plural and strange_plural != u"-ья":
+      pagemsg("Replacing unusual plural marker %s with (1)" % (strange_plural))
+      strange_plural = "(1)"
+    if (u"ё" in nomsg or u"ё" in nompl or u"ё" in genpl) and u"ё" not in lemma:
+      strange_plural += u";ё"
     for stress in stress_patterns:
       for gender in genders:
         for bareval in bare:
@@ -1127,6 +1137,7 @@ def test_infer():
   for pagetext in test_templates:
     text = blib.parse(pagetext)
     page = Page()
+    msg("original text = [[%s]]" % pagetext)
     newtext, comment = infer_one_page_decls(page, 1, text)
     msg("newtext = %s" % unicode(newtext))
     msg("comment = %s" % comment)
