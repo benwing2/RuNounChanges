@@ -1137,9 +1137,9 @@ local function compute_heading(args)
 	local headings = {}
 	local irreg_headings = {}
 	local h = args.heading_info
-	table.insert(headings, args.thisa == "a" and "anim" or args.thisa == "i" and
+	table.insert(headings, args.a == "a" and "anim" or args.a == "i" and
 		"inan" or "bian")
-	table.insert(headings, args.thisn == "s" and "sg-only" or args.thisn == "p" and
+	table.insert(headings, args.n == "s" and "sg-only" or args.n == "p" and
 		"pl-only" or nil)
 	if #h.gender > 0 then
 		table.insert(headings, table.concat(h.gender, "/") .. "-form")
