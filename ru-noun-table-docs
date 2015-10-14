@@ -7,9 +7,9 @@ This is the new template for creating a Russian noun declension table, using [[M
 ; {{para|2}}
 : Lemma with appropriately placed accent(s); i.e. the nominative singular, or the nominative plural if the noun is a plurale tantum. However, if an explicit declension is specified, this should be just the stem (in this case, the declension usually looks like an ending, and the stem is the portion of the lemma minus the ending). In the first argument set (i.e. first set of arguments separated by "or"), defaults to page name; in later sets, defaults to lemma of previous set. A plural form can be given, and causes argument n= to default to n=p (plurale tantum). Normally, an accent is required if multisyllabic, and unaccented monosyllables with automatically be stressed; prefix with <code>*</code> to override both behaviors. See section below on auto-accenting.
 ; {{para|3}}
-: Declension field; see below. Normally omitted to autodetect based on the lemma form.
+: Declension spec; see below. Normally omitted to autodetect based on the lemma form.
 ; {{para|4}}
-: Present for compatibility; don't use this in new template calls. This is used to specify an irregular ''bare form'', i.e. the nom sg or gen pl form used when the suffix is nulll or nonsyllabic (-ь/-й/-ъ). If present, the lemma for reducible masculine nouns should omit the extra vowel normally present in the nom sg. In new template calls, it is preferred to use the <code>*</code> or <code>(2)</code> codes in the declension field (see below), or failing that, use an explicit override {{para|nom_sg}} or {{para|gen_pl}}. The form given here normally needs a stress mark if multisyllabic, as with the lemma.
+: Present for compatibility; don't use this in new template calls. This is used to specify an irregular ''bare form'', i.e. the nom sg or gen pl form used when the suffix is null or nonsyllabic (-ь/-й/-ъ). If present, the lemma for reducible masculine nouns should omit the extra vowel normally present in the nom sg. In new template calls, it is preferred to use the <code>*</code> or <code>(2)</code> codes in the declension spec (see below), or failing that, use an explicit override such as {{para|nom_sg}} or {{para|gen_pl}}. The form given here normally needs a stress mark if multisyllabic, as with the lemma.
 ; {{para|5}}
 : Specify a special plural stem; defaults to the stem of the lemma. Normally, needs a stress mark if multisyllabic, as with the lemma.
 ; {{para|n}}
@@ -41,7 +41,7 @@ A system is in place for inserting usage notes into declension tables, in the fo
 ; {{para|CASE_NUM_tail}}
 : Similar to {{para|pltailall}} but restricted to a single form.
 
-===Declension field===
+===Declension spec===
 
 One of the following for regular nouns:
 # (blank)
