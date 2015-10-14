@@ -1,0 +1,76 @@
+{{documentation subpage}}
+This is a template for creating a Russian noun declension table using [[Module:ru-noun]]. It contains essentially equivalent functionality to {{temp|ru-noun-table}} but with a different argument calling convention that is more compact and is especially convenient for multi-word expressions.
+
+==Parameters==
+You should familiarize yourself with the calling convention of {{temp|ru-noun-table}}, because this template uses the same underlying mechanism and shares most of the syntax.
+
+Generally, there is one argument per word. Each argument consists of up to three parts, separated by colons, i.e. one of the following:
+# ACCENT:LEMMADECL:PLSTEM
+# ACCENT:LEMMADECL
+# LEMMADECL:PLSTEM
+# LEMMADECL
+The full specification is ACCENT:LEMMADECL:PLSTEM where ACCENT specifies the accent pattern of the word, LEMMADECL specifies the lemma of the word and its declension, and PLSTEM specifies an alternative plural stem to use in place of the stem derived from the lemma. Both PLSTEM and ACCENT can be omitted; there is no ambiguity between the two different two-part forms because the possible values for ACCENT are limited, and generally cannot occur as values for LEMMADECL.
+
+LEMMADECL combines the lemma and declension spec of {{temp|ru-noun-table}}, and may be any of the following forms:
+# LEMMA (for a regular noun with empty decl spec)
+# LEMMA^DECL (for a regular noun with non-empty decl spec)
+# LEMMADECL (for a regular noun with non-empty decl spec beginning with a *, left paren or semicolon)
+# LEMMA$ (for an invariable word)
+# LEMMA+ (for an adjective or adjectival noun with empty decl spec)
+# LEMMA+DECL (for an adjective or adjectival noun with non-empty decl spec)
+
+The values for LEMMA and DECL are identical to those used in {{temp|ru-noun-table}}.
+
+The main functionality difference between this template and {{temp|ru-noun-table}} is that this template lacks an equivalent of the 4th argument of {{temp|ru-noun-table}} (the bare stem). This should not cause problems; in any case, the bare stem argument in {{temp|ru-noun-table}} is present for compatibility purposes only and should not be used in new template calls. It should be replaced with the <code>*</code> declension spec code or in some cases (for feminines and neuters) the <code>(2)</code> code, or failing that, an explicit override of the nominative singular and/or genitive plural.
+
+The arguments for multiple words are generally placed one after the other, with no intervening argument. Alternative lemmas or declension specs for a given word are placed in separate arguments separated by an argument containing only the word <code>or</code>, as with {{temp|ru-noun-table}}. To specify a word joiner other than a space, use an argument with the value <code>-</code> if the joiner is a hyphen, else use <code>join:TEXT</code> to specify an arbitrary joiner.
+
+==Examples==
+
+{|class=wikitable style="text-align: center;"
+! Noun !! Using {{temp|ru-decl-noun-m}} !! Equivalent using {{temp|ru-noun-table}}
+|-
+| {{m|ru|мя́гкий знак}}
+| <code><nowiki>{{ru-decl-noun-m|мя́гкий+|знак}}</nowiki></code>
+| <code><nowiki>{{ru-noun-table|мя́гкий|+|_|знак}}</nowiki></code>
+|-
+| {{m|ru|пау́к-во́лк}}
+| <code><nowiki>{{ru-decl-noun-m|b:пау́к|-|волк|a=an}}</nowiki></code>
+| <code><nowiki>{{ru-noun-table|b|пау́к|-|волк|a=an}}</nowiki></code>
+|-
+| {{m|ru|ору́жие ма́ссового уничтоже́ния}}
+| <code><nowiki>{{ru-decl-noun-m|ору́жие|ма́ссового$|уничтоже́ния$}}</nowiki></code>
+| <code><nowiki>{{ru-noun-table|ору́жие|_|ма́ссового|$|_|уничтоже́ния|$}}</nowiki></code>
+|-
+| {{m|ru|кре́м для ру́к}}
+| <code><nowiki>{{ru-decl-noun-m|крем|*для$|ру́к$}}</nowiki></code>
+| <code><nowiki>{{ru-noun-table|крем|_|*для|$|_|ру́к|$}}</nowiki></code>
+|-
+| {{m|ru|Сент-Ви́нсент и Гренади́ны}}
+| <code><nowiki>{{ru-decl-noun-m|Сент-Ви́нсент|*и$|Гренади́ны^m(2)|n1=s|n=p}}</nowiki></code>
+| <code><nowiki>{{ru-noun-table|Сент-Ви́нсент|_|*и|$|_|Гренади́ны|m(2)|n1=s|n=p}}</nowiki></code>
+|-
+| {{m|ru|со́лнечный ве́тер}}
+| <code><nowiki>{{ru-decl-noun-m|со́лнечный+|e:ве́тер*}}</nowiki></code>
+| <code><nowiki>{{ru-noun-table||со́лнечный|+|_|e|ве́тер|*}}</nowiki></code>
+|-
+| {{m|ru|Росси́йская Сове́тская Федерати́вная Социалисти́ческая Респу́блика}}
+| <code><nowiki>{{ru-decl-noun-m|Росси́йская+|Сове́тская+|Федерати́вная+|Социалисти́ческая+|Респу́блика|n=s}}</nowiki></code>
+| <code><nowiki>{{ru-noun-table|Росси́йская|+|_|Сове́тская|+|_|Федерати́вная|+|_|Социалисти́ческая|+|_|Респу́блика|n=s}}</nowiki></code>
+|-
+| {{m|ru|варёное яйцо́}}
+| <code><nowiki>{{ru-decl-noun-m|варёное+|яйцо́|gen_pl2=яи́ц}}</nowiki></code>
+| <code><nowiki>{{ru-noun-table|варёное|+|_|яйцо́|gen_pl2=яи́ц}}</nowiki></code>
+|-
+| {{m|ru|кори́чное де́рево}}
+| <code><nowiki>{{ru-decl-noun-m|кори́чное+|де́рево^-ья:дере́в}}</nowiki></code>
+| <code><nowiki>{{ru-noun-table|кори́чное|+|_|де́рево|-ья||дере́в}}</nowiki></code>
+|-
+| {{m|ru|шишкови́дная железа́}}
+| <code><nowiki>{{ru-decl-noun-m|шишкови́дная+|f:железа́;ё}}</nowiki></code>
+| <code><nowiki>{{ru-noun-table|шишкови́дная|+|_|f|железа́|;ё}}</nowiki></code>
+|}
+
+<includeonly>
+[[Category:Russian noun inflection-table templates]]
+</includeonly>

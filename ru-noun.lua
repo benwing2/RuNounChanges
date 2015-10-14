@@ -1349,7 +1349,10 @@ function export.do_generate_forms(args, old)
 	return generate_forms_1(args, per_word_info)
 end
 
-function export.do_generate_forms_multi(args)
+function export.do_generate_forms_multi(args, old)
+	old = old or args.old
+	args.old = old
+	args.pos = args.pos or "noun"
 
 	-- This is a list with each element corresponding to a word and
 	-- consisting of a two-element list, ARG_SET and JOINER, where ARG_SET

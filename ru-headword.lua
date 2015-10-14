@@ -135,15 +135,20 @@ function export.show(frame)
 		m_utilities.format_categories(tracking_categories, lang, nil)
 end
 
--- External entry point; implementation of {{ru-noun+}}.
-function export.noun_plus(frame)
+local function noun_plus_or_multi(frame, multi)
 	local args = clone_args(frame)
 	PAGENAME = mw.title.getCurrentTitle().text
 
 	local poscat = ine(frame.args[1]) or error("Part of speech has not been specified. Please pass parameter 1 to the module invocation.")
 	local old = ine(frame.args.old)
 
-	local args = require("Module:ru-noun").do_generate_forms(args, old)
+	local m_noun = require("Module:ru-noun")
+	local args
+	if multi then
+		args = m_noun.do_generate_forms_multi(args, old)
+	else
+		args = m_noun.do_generate_forms(args, old)
+	end
 	-- do explicit genders using g=, g2=, etc.
 	local genders = process_arg_chain(args, "g", "g", genders)
 	-- if none, do inferred or explicit genders taken from declension;
@@ -201,6 +206,16 @@ function export.noun_plus(frame)
 		genitives, plurals, feminines, masculines)
 
 	return m_headword.full_headword(lang, nil, heads, trs, genders, inflections, categories, nil)
+end
+
+-- External entry point; implementation of {{ru-noun+}}.
+function export.noun_plus(frame)
+	return noun_plus_or_multi(frame, false)
+end
+
+-- External entry point; implementation of {{ru-noun-m}}.
+function export.noun_multi(frame)
+	return noun_plus_or_multi(frame, true)
 end
 
 pos_functions["proper nouns"] = function(args, heads, genders, inflections, categories)

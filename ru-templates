@@ -10,9 +10,20 @@ ru-pron+
 
 --><noinclude>{{documentation}}</noinclude>
 
-ru-proper noun+
+ru-decl-noun-m
 
-{{#invoke:ru-headword|noun_plus|proper nouns}}<!--
+{{#invoke:ru-noun|show_multi}}<!--
 
 --><noinclude>{{documentation}}</noinclude>
 
+ru-noun-m
+
+{{#invoke:ru-headword|noun_multi|nouns}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+
+ru-proper noun-m
+
+{{#invoke:ru-headword|noun_multi|proper nouns}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
