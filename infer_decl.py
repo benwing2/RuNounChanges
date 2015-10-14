@@ -192,6 +192,8 @@ def infer_decl(t, noungender, pagemsg):
       if case == "pre_sg" or case == "pre_pl":
         # eliminate leading preposition
         form = re.sub(ur"^о(б|бо)?\s+", "", form)
+      # eliminate <br />, typically separating alternants
+      form = re.sub(r"\s*<br\s*/>\s*", "", form)
       if "," in form:
         pagemsg("WARNING: Comma in form, may not handle correctly: %s=%s" %
             (case, form))
@@ -241,6 +243,9 @@ def infer_decl(t, noungender, pagemsg):
         return allargs
     else:
       args = infer_word(forms, noungender, number, numonly, pagemsg)
+      if not args:
+        pagemsg("Unable to infer word: %s" % unicode(t))
+        return None
       return [x for x in args if x != "a=in"]
   for ty in ["space", "dash", "single"]:
     args = try_multiword(ty)
