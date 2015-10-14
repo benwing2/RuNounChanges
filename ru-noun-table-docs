@@ -1,11 +1,11 @@
 {{documentation subpage}}
 This is the new template for creating a Russian noun declension table, using [[Module:ru-noun]].
 
-Parameters:
+==Parameters==
 ; {{para|1}}
 : Stress pattern, one of <code>a b c d e f b' d' f' f'&#39;</code>. See [[Appendix:Russian stress patterns]]. For compatibility, can also use <code>1</code> through <code>6</code> (equivalent to <code>a</code> through </code>f</code>) or <code>4*</code> or <code>6*</code> (equivalent to <code>d'</code> and </code>f'</code> respectively). As a special case, with third-declension feminine nouns (declension code<code>ь-f</code>) <code>2</code> maps to <code>b</code> and <code>6*</code> maps to <code>f'&#39;</code>. It can be omitted; to do so, leave out the argument entirely (i.e. shift all the remaining arguments down one). If omitted, defaults to <code>a</code> if the lemma stress is on the stem, <code>b</code> if the lemma stress is on the ending or if an explicitly-specified declension is accented. (Also defaults to <code>b</code> in <code>-ёнок</code> and <code>-ёночек</code> nouns and <code>+ой</code> adjectival nouns, and defaults to <code>d</code> in stressed <code>-и́н</code> nouns.)
 ; {{para|2}}
-: Lemma with appropriately placed accent(s); i.e. the nominative singular, or the nominative plural if the noun is a plurale tantum. However, if an explicit declension is specified, this should be just the stem (in this case, the declension usually looks like an ending, and the stem is the portion of the lemma minus the ending).  In the  first argument set (i.e. first set of arguments separated by "or"), defaults to page name; in later sets, defaults to lemma of previous set. A plural form can be given, and causes argument n= to default to n=p (plurale tantum). Normally, an accent is required if multisyllabic, and unaccented monosyllables with automatically be stressed; prefix with <code>*</code> to override both behaviors. See section below on auto-accenting.
+: Lemma with appropriately placed accent(s); i.e. the nominative singular, or the nominative plural if the noun is a plurale tantum. However, if an explicit declension is specified, this should be just the stem (in this case, the declension usually looks like an ending, and the stem is the portion of the lemma minus the ending). In the first argument set (i.e. first set of arguments separated by "or"), defaults to page name; in later sets, defaults to lemma of previous set. A plural form can be given, and causes argument n= to default to n=p (plurale tantum). Normally, an accent is required if multisyllabic, and unaccented monosyllables with automatically be stressed; prefix with <code>*</code> to override both behaviors. See section below on auto-accenting.
 ; {{para|3}}
 : Declension field; see below. Normally omitted to autodetect based on the lemma form.
 ; {{para|4}}
@@ -21,11 +21,11 @@ Parameters:
 ; {{para|nom_sg}}, {{para|gen_sg}}, {{para|dat_sg}}, {{para|acc_sg}}, {{para|ins_sg}}, {{para|pre_sg}}, {{para|nom_pl}}, {{para|gen_pl}}, {{para|dat_pl}}, {{para|acc_pl}}, {{para|ins_pl}}, {{para|pre_pl}}, {{para|par}}, {{para|loc}}, {{para|voc}}
 : Override one or more declensional forms (nominative, genitive, dative, accusative, instrumental, prepositional, partitive, locative, vocative; singular, plural). Alternatives may be separated by commas. You can include one or more <code>~</code> characters anywhere in the override, which will replaced by the singular or plural stem, appropriately; or you can use <code>~~</code>, which will be replaced by the unstressed version of the appropriate stem. You can also include <code>+</code> in {{para|par}} or {{para|loc}}, and if it is at the beginning of a word it will be replaced by the "expected" form for these cases (same as dative singular for the partitive, stress-shifted dative singular for the locative). Overridden forms, including comma-separated alternatives, will automatically be linked. Certain trailing symbols are recognized automatically; they will be superscripted and do not interfere with linking. See section below on usage notes. In more complex cases (e.g. with parens around a word), you should manually put brackets around a word to link it (stress marks in such words are handled correctly). Normally, multisyllabic words in overrides need a stress mark, as with the lemma.
 ; {{para|suffix}}
-: Add a suffix such as ся to all forms.
+: Add a suffix such as ся to all forms. This is useful in cases like {{m|ru|уча́щийся||student}}, where the part before -ся needs to be declined.
+; {{para|prefix}}
+: Add a prefix to all forms. Present for completeness but less useful than {{para|suffix}} because the prefix can simply be included in the lemma.
 
-Multiple sets of arguments can be specified by separating them with an argument consisting solely of the word <code>or</code>. See the examples below.
-
-==Footnote symbols==
+===Footnote symbols===
 A system is in place for inserting usage notes into declension tables, in the form of footnotes. Footnote symbols attached to the end of a manual override are recognized automatically; they are automatically superscripted and do not interfere with linking. Examples of such symbols are <code>*</code>, <code>@</code>, <code>~</code> and various other ASCII symbols; numbers; <code>_</code>, which is automatically converted to a space; and most Unicode symbols (<code>§</code>, <code>¤</code>, <code>†</code>, <code>‡</code>, <code>⁕</code>, etc.). You can also insert these symbols using parameters such as {{para|pltail}}. The usage note itself is inserted using {{para|notes}}.
 
 ; {{para|notes}}
@@ -41,7 +41,7 @@ A system is in place for inserting usage notes into declension tables, in the fo
 ; {{para|CASE_NUM_tail}}
 : Similar to {{para|pltailall}} but restricted to a single form.
 
-==Declension field==
+===Declension field===
 
 One of the following for regular nouns:
 # (blank)
@@ -73,7 +73,7 @@ VARIANT specifies declension variants that override the normal declension in var
 
 DECLTYPE is an explicit declension type. Normally you shouldn't use this, and should instead let the declension type be autodetected based on the ending. See the table below for the list of declension types (which normally have the form of the nominative singular ending). When an explicit declension type is provided, the lemma field should be just the stem, without the ending.
 
-For adjectival nouns, you should normally supply just <code>+</code> and let the ending determine the declension; supply <code>+ь</code> in the case of a possessive adjectival noun in -ий, which has an extra -ь- in most endings compared with normal adjectival nouns in -ий, but which can't be distinguished based on the nominative singular.  You can also supply <code>+short</code>, <code>+mixed</code> or <code>+proper</code>, which constrains the declension appropriately but still autodetects the gender-specific and stress-specific variant. If you do supply a specific declension type, as with regular nouns you need to omit the ending from the lemma field and supply just the stem.  Possibilities are <code>+ый</code>, <code>+ое</code>, <code>+ая</code>, <code>+ій</code>, <code>+ее</code>, <code>+яя</code>, <code>+ой</code>, <code>+о́е</code>, <code>+а́я</code>, <code>+ьій</code>, <code>+ье</code>, <code>+ья</code>, <code>+-short</code> or <code>+#-short</code> (masc), <code>+о-short</code>, <code>+о-stressed-short</code> or <code>+о́-short</code>, <code>+а-short</code>, <code>+а-stressed-short</code> or <code>+а́-short</code>, and similar for <code>-mixed</code> and <code>-proper</code> (except there aren't any stressed mixed declensions).
+For adjectival nouns, you should normally supply just <code>+</code> and let the ending determine the declension; supply <code>+ь</code> in the case of a possessive adjectival noun in -ий, which has an extra -ь- in most endings compared with normal adjectival nouns in -ий, but which can't be distinguished based on the nominative singular. You can also supply <code>+short</code>, <code>+mixed</code> or <code>+proper</code>, which constrains the declension appropriately but still autodetects the gender-specific and stress-specific variant. If you do supply a specific declension type, as with regular nouns you need to omit the ending from the lemma field and supply just the stem. Possibilities are <code>+ый</code>, <code>+ое</code>, <code>+ая</code>, <code>+ій</code>, <code>+ее</code>, <code>+яя</code>, <code>+ой</code>, <code>+о́е</code>, <code>+а́я</code>, <code>+ьій</code>, <code>+ье</code>, <code>+ья</code>, <code>+-short</code> or <code>+#-short</code> (masc), <code>+о-short</code>, <code>+о-stressed-short</code> or <code>+о́-short</code>, <code>+а-short</code>, <code>+а-stressed-short</code> or <code>+а́-short</code>, and similar for <code>-mixed</code> and <code>-proper</code> (except there aren't any stressed mixed declensions).
 
 The DECLTYPE/DECLTYPE form is used for nouns with one declension in the singular and a different one in the plural (termed ''mixed declensions'' or ''slash declensions''). This is intended for siations that <code>-ья</code> and special cases <code>(1)</code> and <code>(2)</code> below don't cover, e.g. <code>о/ь-m</code> to decline the singular with class <code>о</code> and the plural with class <code>ь-m</code> (as for {{m|ru|коле́но||knee}}). There is no autodetection of mixed declensions, and thus the lemma field needs to contain the bare stem. See examples below.
 
@@ -83,7 +83,7 @@ Special-case markers:
 * <code>*</code> for reducibles (nom sg or gen pl has an extra vowel before the final consonant as compared with the stem found in other cases)
 * <code>;ё</code> for Zaliznyak-style alternation between last е in stem and ё
 
-==Declension classes==
+===Declension classes===
 
 "Class" is the form used with the modern-style tables ({{temp|ru-noun-table}}), while "old class" is used with old-style/pre-reform tables ((temp|ru-noun-old}}). Note that explicit declension classes aren't normally required, as the declension can usually be autodetected.
 
@@ -135,7 +135,7 @@ Special-case markers:
 | colspan=2|<code>$</code> || none || none || none || Invariable || &mdash; || &mdash; || полпути́ ||
 |}
 
-==Auto-accenting and required accents==
+===Auto-accenting and required accents===
 Multisyllabic words in arguments (lemma, plural stem, bare form, overrides) normally need a stress mark in them (as in а́, ы́, ё or ѣ̈) to indicate the position of the stress; an error will occur otherwise. In multiword overrides, each multisyllabic word needs an accent. Accents are required on monosyllabic words, which will automatically be stressed on their only vowel. You can override both accent errors and auto-accenting by prefixing the lemma with <code>*</code>. (Don't use this prefix on other arguments. If present on the lemma, it applies to all arguments.) This is useful when a word has no stress (e.g. unstressed suffixes) or when the stress is unknown.
 
 As an exception, accents are not required when the accent pattern calls for ending stress (patterns <code>b</code>, <code>d</code>, <code>f</code> and variants in the singular, and patterns <code>b</code>, <code>c</code> and variants in the plural).
@@ -143,6 +143,28 @@ As an exception, accents are not required when the accent pattern calls for endi
 Multisyllabic stems automatically receive stress in certain circumstances:
 # Patterns <code>d</code> and <code>f</code> and variants have ending stress in the singular (and thus normally in the lemma), but call for stem stress in the plural. Unless the lemma specifically includes a stress on the stem, it is placed according to rule: stem-final stress in pattern <code>d</code> and variants, stem-initial stress in pattern <code>f</code> and variants. Hence, {{m|ru|сапожо́к||boot}} (pattern <code>d</code>) gets plural сапо́жки, while {{m|ru|голова́||head}} (pattern <code>f</code>) gets plural го́ловы.
 # If the accent pattern calls for ending stress in the genitive plural but the genitive plural has a null or non-syllabic ending, the last syllable of the stem is stressed -- regardless of the stem stress in other forms. Hence {{m|ru|голова́||head}} (pattern <code>f</code>) has nominative plural го́ловы but genitive plural голо́в. To override this, use an explicit {{para|gen_pl}} (or {{para|4}}) parameter, e.g. in {{m|ru|кирка́||pickaxe}} (pattern <code>b</code>) with genitive plural ки́рок or {{m|ru|де́ньги||money}} (pattern <code>e</code>) with genitive plural де́нег.
+
+===Multiple sets of arguments, multiple words===
+Multiple sets of arguments can be specified by separating them with an argument consisting solely of the word <code>or</code>. See the examples below.
+
+You can also specify the declension of multi-word expressions such as {{m|ru|мя́гкий зна́к||soft sign}}, {{m|ru|ба́бье ле́то||Indian summer}}, {{m|ru|пау́к-во́лк||wolf spider}}, {{m|ru|Сент-Ви́нсент и Гренади́ны|tr=Sɛnt-Vínsɛnt i Grenadíny||Saint Vincent and the Grenadines}}, etc.
+
+Multi-word nouns are specified by putting an underscore (<code>_</code>) between words separated by spaces, or a hyphen (<code>-</code>) between words separated by hyphens, or a joiner expression (<code>join:TEXT</code>) between words separated by arbitrary text.
+
+The named parameters above generally have per-word equivalents that let you control the value for individual words independently of the others. They are named the same as the overall parameters but have a number suffixed to them: <code>1</code> for the first word, <code>2</code> for the second word, etc.
+
+; {{para|a1}}, {{para|a2}}, etc.
+: Specify the animacy of an individual word. Default value for each word is the overall animacy specified by {{para|a}}. Primarily useful in case of expressions that mix animate and inanimate words.
+; {{para|n1}}, {{para|n2}}, etc.
+: Specify the number of an individual word. Default value for each word is the overall number specified by {{para|n}}. Primarily useful in case of expressions that mix singular and plural words, such as {{m|ru|Сент-Ви́нсент и Гренади́ны|tr=Sɛnt-Vínsɛnt i Grenadíny||Saint Vincent and the Grenadines}}. Note that if any word is specified using a plural lemma, the overall number defaults to plural.
+; {{para|nom_sg1}}, {{para_nom_sg2}}, ...; {{para|gen_sg1}}, {{para|gen_sg2}}, ...; etc.
+: Specify an override for a particular word rather than for the entire expression.
+; {{para|pltail1}}, {{para|pltail2}}, ...; {{para|pltailall1}}, {{para|pltailall2}}, ...; etc.
+: Specify a footnote symbol to attach to the end of a particular word rather than the entire expression. Generally this is not a good idea, and these parameters may be removed in the future.
+; {{para|suffix1}}, {{para|suffix2}}, etc.
+: Specify a suffix such as ся to attach to the end of all forms of a particular word.
+; {{para|prefix1}}, {{para|prefix2}}, etc.
+: Specify a prefix to attach to the beginning of all forms of a particular word. Present for completeness, but not especially useful; see discussion under {{para|prefix}} above.
 
 ==Basic examples==
 ===Example 1: A basic noun===
@@ -155,7 +177,7 @@ produces
 {{ru-noun-table|орео́л}}
 
 ===Example 2: An ending-stressed noun===
-The noun {{m|ru|житие́||life}} belongs to accent pattern <code>b</code> (ending-stressed).  This is automatically recognized because of the ending stress in the lemma.  The accent shift onto the stem in the genitive plural жити́й is automatically handled.
+The noun {{m|ru|житие́||life}} belongs to accent pattern <code>b</code> (ending-stressed). This is automatically recognized because of the ending stress in the lemma. The accent shift onto the stem in the genitive plural жити́й is automatically handled.
 
 <code><nowiki>{{ru-noun-table|житие́}}</nowiki></code>
 
@@ -164,7 +186,7 @@ produces
 {{ru-noun-table|житие́}}
 
 ===Example 3: A noun with complex accent shifts===
-The noun {{m|ru|голова́||head}} belongs to accent pattern <code>f</code> and has a complex pattern of accent shifts, with stress on the ending in singular голова́, on the first stem syllable in nominative plural го́ловы and on the second stem syllable in genitive plural голо́в. The accent pattern needs to be given explicitly but the accent shifts are automatically handled.  In general the code is quite good about knowing how to automatically handle such cases.
+The noun {{m|ru|голова́||head}} belongs to accent pattern <code>f</code> and has a complex pattern of accent shifts, with stress on the ending in singular голова́, on the first stem syllable in nominative plural го́ловы and on the second stem syllable in genitive plural голо́в. The accent pattern needs to be given explicitly but the accent shifts are automatically handled. In general the code is quite good about knowing how to automatically handle such cases.
 
 <code><nowiki>{{ru-noun-table|f|голова́}}</nowiki></code>
 
@@ -173,7 +195,7 @@ produces
 {{ru-noun-table|f|голова́}}
 
 ===Example 4: An animate noun needing a declensional variant===
-The noun {{m|ru|боя́рин||boyar}} belongs to the declension class <code>ин</code>, with a singular suffix -ин that is missing in the plural and with nominative plural -е. These nouns are only autodetected if they end in -анин or -янин and are animate, to avoid many false positives. Other -ин nouns that follow this declension need an explicit declensional variant -ин.  The noun is also animate, which needs to be noted.
+The noun {{m|ru|боя́рин||boyar}} belongs to the declension class <code>ин</code>, with a singular suffix -ин that is missing in the plural and with nominative plural -е. These nouns are only autodetected if they end in -анин or -янин and are animate, to avoid many false positives. Other -ин nouns that follow this declension need an explicit declensional variant -ин. The noun is also animate, which needs to be noted.
 
 <code><nowiki>{{ru-noun-table|боя́рин|-ин|a=an}}</nowiki></code>
 
@@ -183,7 +205,7 @@ produces
 
 ===Example 5: A noun needing a gender hint===
 
-Nouns in -ь, e.g. {{m|ru|пло́щадь||square (open area in a city)}}, need a gender hint <code>m</code> or <code>f</code>, because the two genders correspond to different declensions and this can't be autodetected. 
+Nouns in -ь, e.g. {{m|ru|пло́щадь||square (open area in a city)}}, need a gender hint <code>m</code> or <code>f</code>, because the two genders correspond to different declensions and this can't be autodetected.
 
 <code><nowiki>{{ru-noun-table|e|пло́щадь|f}}</nowiki></code>
 
@@ -247,7 +269,7 @@ produces
 
 ===Example 3: An adjectival noun===
 
-The noun {{m|ru|уча́щийся||student}} is an ''adjectival noun'', i.e. a noun declined like an adjective, indicated with the code <code>+</code> (it is based on the present active participle of the verb {{m|ru|учи́ть||to learn, to teach}}).  It has a reflexive suffix -ся added onto all forms, which is indicated with {{para|suffix|ся}}.
+The noun {{m|ru|уча́щийся||student}} is an ''adjectival noun'', i.e. a noun declined like an adjective, indicated with the code <code>+</code> (it is based on the present active participle of the verb {{m|ru|учи́ть||to learn, to teach}}). It has a reflexive suffix -ся added onto all forms, which is indicated with {{para|suffix|ся}}.
 
 <code><nowiki>{{ru-noun-table|уча́щий|+|suffix=ся}}</nowiki></code>
 
@@ -425,7 +447,6 @@ produces
 {{ru-noun-table|f|реб|ёнок/ь-m||дет|or|ребёнок|dat_pl=де́тям,ребя́там*|ins_pl=детьми́,ребя́тами*|pre_pl=де́тях,ребя́тах*|a=an|pltail=*|notes=* Use the second plural with the meaning "boys!", "fellows!", "guys!", "comrades!".}}
 
 ==Multi-word nouns==
-Multi-word nouns are specified by putting an underscore (<code>_</code>) between words separated by spaces, or a hyphen (<code>-</code>) between words separated by hyphens, or a joiner expression (<code>join:TEXT</code>) between words separated by arbitrary text.
 
 ===Example 1: An adjective-noun combination===
 For the noun {{m|ru|мя́гкий знак||soft sign}}:
