@@ -1273,10 +1273,6 @@ local function determine_headword_gender(args, sgdc, gender)
 end
 
 function export.do_generate_forms(args, old)
-	local orig_args
-	if test_new_ru_noun_module then
-		orig_args = mw.clone(args)
-	end
 	old = old or args.old
 	args.old = old
 	args.pos = args.pos or "noun"
@@ -1475,6 +1471,11 @@ end
 -- as well as show_z() for template {{ru-decl-noun-z}}, which has a
 -- subset of the functionality of the other two.
 generate_forms_1 = function(args, per_word_info)
+	local orig_args
+	if test_new_ru_noun_module then
+		orig_args = mw.clone(args)
+	end
+
 	local SUBPAGENAME = mw.title.getCurrentTitle().subpageText
 	local old = args.old
 
@@ -4200,7 +4201,7 @@ handle_forms_and_overrides = function(args, n, islast)
 	end
 
 	local function process_tail_args(n)
-		for _, case in ipairs(displayable_cases) do
+		for _, case in ipairs(overridable_cases) do
 			if args[case .. "_tail" .. n] then
 				append_note_last(case, args[case .. "_tail" .. n])
 			end
