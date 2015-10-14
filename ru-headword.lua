@@ -160,6 +160,11 @@ function export.noun_plus(frame)
 		end
 		local newlist = {}
 		for _, x in ipairs(list) do
+			-- Temporary: if new manual-translit code, list entries are
+			-- lists of {RU, TR} instead of just strings.
+			if type(list) == "table" then
+				x = x[1]
+			end
 			-- NOTE: <adj> is a sign to transliterate a word adjectivally
 			-- (-ovo/-evo instead of -ogo/-ego). But it only occurs in
 			-- gen and acc sgs, and the transliteration below is of nom sgs,
