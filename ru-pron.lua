@@ -8,8 +8,7 @@ QUESTIONS TO ASK OF ATITAREV/CINEMANTIQUE:
 1. Ask Atitarev/Cinemantique about -ьо, is it same as (possibly unstressed)
    -ьё? (DONE. YES.)
 2. Ask A/C -- should стск be treated like сск or ск? (the latter is what's
-   currently done) (DONE. CONVERTED TO ССК. A SAYS SOMETIMES PRONOUNCED AS СТСК
-   WHEN FORMAL, NEED TO DECIDE WHAT TO DO.)
+   currently done) (DONE. NEITHER, TREAT AS СЦК.)
 3. Ask A/C -- should we ever reduce double vowels to long vowels? (commented
    out) (DONE. NO.)
 4. Ask A/C -- should сск be converted to ск (this is what's done currently)?
@@ -17,7 +16,7 @@ QUESTIONS TO ASK OF ATITAREV/CINEMANTIQUE:
 
 FIXME:
 
-1. Figure out issue with фильм, сельдь.
+1. Figure out issue with фильм, сельдь. (DONE)
 2. Figure out issue with Амударья́ and скамья́ (pre-tonal syllables).
 3. Figure out issue with та́ять.
 ]]
@@ -146,7 +145,7 @@ local phon_respellings = {
 	['[зс]ш'] = 'шш', ['[зс]ж'] = 'жж',
 	['н[ндт]ск'] = 'нск',
 	['[сз]ск'] = 'ск',
-	['с[дт]ск'] = 'сск',
+	['с[дт]ск'] = 'сцк',
 	['гк'] = 'хк',
 	['н[дт]г'] = 'нг',
 	['э'] = 'ɛ',
@@ -258,6 +257,10 @@ function export.ipa(text, adj, gem, pal)
 		pron = rsub(pron, '%(j%)jə', 'jə')
 
 		--syllabify, inserting / at syllable boundaries
+		-- FIXME: The following line is wrong, but I'm not sure quite how to fix
+		-- it. It causes too many slashes to be inserted. Just changing the /
+		-- to j seems to fix things but I'm not sure how that interacts with
+		-- the code below handling the pal=y case.
 		pron = rsub(pron, 'ʹ([äëöü])', 'ʹ/%1')
 		pron = rsub(pron, 'ʹi', 'ʹji')
 		pron = rsub(pron, '([aäeëɛəiyoöuü][́̀]?)', '%1/')
@@ -282,9 +285,10 @@ function export.ipa(text, adj, gem, pal)
 		local pos = {}
 
 		local trimmed_pron = pron
+		local count = 0
 		while rfind(trimmed_pron, '[́̀]') do
 			local accent_pos = rfind(trimmed_pron, '[́̀]')
-			local count = count + ulen(rsub(usub(trimmed_pron, 1, accent_pos - 1), '[^%/]', ''))
+			count = count + ulen(rsub(usub(trimmed_pron, 1, accent_pos - 1), '[^%/]', ''))
 			table.insert(pos, count + 1)
 			trimmed_pron = usub(trimmed_pron, accent_pos + 1, -1)
 		end
@@ -338,9 +342,10 @@ function export.ipa(text, adj, gem, pal)
 			end
 
 			--assimilative palatalisation of consonants when followed by front vowels
+			-- FIXME: I don't understand this code very well (Benwing)
 			if pal == 'y' or rfind(syl, '^[^cĵšžaäeëɛiyoöuü]*[eiəäëöüʹ]') or rfind(syl, '^[cĵšž][^cĵšžaäeëɛiyoöuüː]+[eiəäëöüʹ]') or rfind(syl, '^[cĵ][äëü]') then
 				syl = rsub(syl, '^([ʺʹ]?)([äëöü])', '%1j%2')
-				if not rfind(syl, 'ʺ') and not rfind(syl, 'ʹ' .. non_vowels) then
+				if not rfind(syl, 'ʺ') and not rfind(syl, 'ʹ' .. non_vowels .. '.*' .. vowels) then
 					syl = rsub(syl, non_vowels_c .. '([ʹːj]?[aäeëɛəiyoöuüʹ])', function(a, b)
 						local set = '[mnpbtdkgcfvszxrl]'
 						if pal == 'y' then
@@ -433,9 +438,10 @@ function export.ipa(text, adj, gem, pal)
 	text = table.concat(word, " ")
 
 	-- long vowels; FIXME, may not apply at all; might apply across hyphens
-	-- but not spaces; but we don't currently preserve hyphens this far
-	-- text = rsub(text, '[ɐə]([%-]?)ɐ(%l?)ˈ', '%1ɐː%2ˈ')
-	-- text = rsub(text, 'ə([%-]?)[ɐə]', '%1əː')
+	-- but not spaces; but we don't currently preserve hyphens this far;
+	-- FIXME: Test cases are inconsistent about whether to apply this
+	--text = rsub(text, '[ɐə]([%-]?)ɐ(%l?)ˈ', '%1ɐː%2ˈ')
+	--text = rsub(text, 'ə([%-]?)[ɐə]', '%1əː')
 
 	-- double consonants, in words like секвойя and майя; FIXME, this won't
 	-- be correct if the preceding vowel is unstressed; we need to do this
