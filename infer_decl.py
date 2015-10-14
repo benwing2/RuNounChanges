@@ -318,18 +318,18 @@ def infer_word(forms, noungender, number, numonly, pagemsg):
   for nomsg in nomsgs:
     lemma = nompl if numonly == "pl" else nomsg
     if numonly == "sg":
-      if forms["acc_sg"] == forms["gen_sg"]:
+      if try_to_stress(forms["acc_sg"]) == try_to_stress(forms["gen_sg"]):
         anim = ["a=an"]
-      elif forms["acc_sg"] == forms["nom_sg"]:
+      elif try_to_stress(forms["acc_sg"]) == try_to_stress(forms["nom_sg"]):
         anim = ["a=in"]
       else:
         # Can't check for nom/acc sg equal because feminine nouns have all
         # three different
         anim = []
     else:
-      if forms["acc_pl"] == forms["nom_pl"]:
+      if try_to_stress(forms["acc_pl"]) == try_to_stress(forms["nom_pl"]):
         anim = ["a=in"]
-      elif forms["acc_pl"] == forms["gen_pl"]:
+      elif try_to_stress(forms["acc_pl"]) == try_to_stress(forms["gen_pl"]):
         anim = ["a=an"]
       else:
         pagemsg("WARNING: Unable to determine animacy: nom_pl=%s, acc_pl=%s, gen_pl=%s" %
