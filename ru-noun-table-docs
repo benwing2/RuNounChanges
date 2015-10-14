@@ -50,7 +50,7 @@ One of the following for regular nouns:
 # GENDER<code>-</code>VARIANT
 # DECLTYPE
 # DECLTYPE/DECLTYPE
-# You can also append various special-case markers to any of the above.
+# You can also append one or more of the special-case markers <code>(1)</code>, <code>(2)</code>, <code>*</code> or <code>;ё</code> to any of the above.
 
 For adjectival nouns, one of the following:
 # <code>+</code>
@@ -58,23 +58,28 @@ For adjectival nouns, one of the following:
 # <code>+short</code>, <code>+mixed</code> or <code>+proper</code>
 # <code>+</code>DECLTYPE
 
-GENDER if present is <code>m</code>, <code>f</code>, <code>n</code> or <code>3f</code>; for regular nouns, required if the lemma ends in -ь or is plural, ignored otherwise. <code>3f</code> is the same as <code>f</code> but in the case of a plural lemma in -и, detects a third-declension feminine with singular in -ь rather than a first-declension feminine with singular in -а or -я.
+GENDER if present is <code>m</code>, <code>f</code>, <code>n</code> or <code>3f</code>. The gender is required in the following cases:
+# if the lemma ends in -ь;
+# in regular (not adjectival) nouns, if the lemma is plural;
+# for masculine animate nouns with the neuter ending -о in the nominative singular (e.g. {{m|ru|солове́йко||nightingale}}, {{m|ru|мазло́||sloppy person}});
+# in {{temp|ru-noun+}} whenever the actual gender disagrees with the normal gender of the nominative singular ending (e.g. {{m|ru|дя́дя||uncle}}).
+In other cases, the gender is ignored. <code>3f</code> is the same as <code>f</code> but in the case of a plural lemma in -и, it causes a third-declension feminine with singular in -ь to be detected rather than a first-declension feminine with singular in -а or -я.
 
 VARIANT specifies declension variants that override the normal declension in various ways: See also special cases <code>(1)</code> and <code>(2)</code> for specifying other types of plural variants.
 # The <code>-ья</code> variant overrides the normal declension with the special plural declension with nominative plural -ья.
-# The <code>-ин</code> variant is for animate masculines ending in -ин with nominative plural in -е. Most such nouns end in -анин or -янин, and these are autodetected, but other nouns in this declension such as {{m|ru|боя́рин|[[boyar]]}} need an explicit variant annotation.
-# The <code>-ишко</code> variant is for inanimate diminutive masculines (not neuters) ending in -шко (usually -ишко), with colloquial feminine forms in some of the singular cases, e.g. {{m|ru|доми́шко||small house}}.
-# The <code>-ище</code> variant is for animate augmentative masculines (not neuters) ending in -ище, with colloquial feminine forms in some of the singular cases, e.g. {{m|ru|волчи́ще||large, mature wolf}}.
+# The <code>-ин</code> variant is for animate masculines ending in -ин with nominative plural in -е. Most such nouns end in -анин or -янин, and these are autodetected, but other nouns in this declension such as {{m|ru|боя́рин||[[boyar]]}} need an explicit variant annotation.
+# The <code>-ишко</code> variant is for inanimate diminutive masculines (not neuters) ending in -шко (usually -ишко), with colloquial feminine forms in some of the singular cases, e.g. {{m|ru|доми́шко||small house}}. Special case <code>(1)</code> must be specified along with this variant.
+# The <code>-ище</code> variant is for animate augmentative masculines (not neuters) ending in -ище, with colloquial feminine forms in some of the singular cases, e.g. {{m|ru|волчи́ще||large, mature wolf}}. Special case <code>(1)</code> must be specified along with this variant.
 
 DECLTYPE is an explicit declension type. Normally you shouldn't use this, and should instead let the declension type be autodetected based on the ending. See the table below for the list of declension types (which normally have the form of the nominative singular ending). When an explicit declension type is provided, the lemma field should be just the stem, without the ending.
 
 For adjectival nouns, you should normally supply just <code>+</code> and let the ending determine the declension; supply <code>+ь</code> in the case of a possessive adjectival noun in -ий, which has an extra -ь- in most endings compared with normal adjectival nouns in -ий, but which can't be distinguished based on the nominative singular.  You can also supply <code>+short</code>, <code>+mixed</code> or <code>+proper</code>, which constrains the declension appropriately but still autodetects the gender-specific and stress-specific variant. If you do supply a specific declension type, as with regular nouns you need to omit the ending from the lemma field and supply just the stem.  Possibilities are <code>+ый</code>, <code>+ое</code>, <code>+ая</code>, <code>+ій</code>, <code>+ее</code>, <code>+яя</code>, <code>+ой</code>, <code>+о́е</code>, <code>+а́я</code>, <code>+ьій</code>, <code>+ье</code>, <code>+ья</code>, <code>+-short</code> or <code>+#-short</code> (masc), <code>+о-short</code>, <code>+о-stressed-short</code> or <code>+о́-short</code>, <code>+а-short</code>, <code>+а-stressed-short</code> or <code>+а́-short</code>, and similar for <code>-mixed</code> and <code>-proper</code> (except there aren't any stressed mixed declensions).
 
-DECLTYPE/DECLTYPE is used for nouns with one declension in the singular and a different one in the plural (termed ''mixed declensions'' or ''slash declensions''). This is intended for siations that <code>-ья</code> and special cases <code>(1)</code> and <code>(2)</code> below don't cover, e.g. <code>о/ь-m</code> to decline the singular with class <code>о</code> and the plural with class <code>ь-m</code> (as for {{m|ru|коле́но||knee}}). There is no autodetection of mixed declensions, and thus the lemma field needs to contain the bare stem. See examples below.
+The DECLTYPE/DECLTYPE form is used for nouns with one declension in the singular and a different one in the plural (termed ''mixed declensions'' or ''slash declensions''). This is intended for siations that <code>-ья</code> and special cases <code>(1)</code> and <code>(2)</code> below don't cover, e.g. <code>о/ь-m</code> to decline the singular with class <code>о</code> and the plural with class <code>ь-m</code> (as for {{m|ru|коле́но||knee}}). There is no autodetection of mixed declensions, and thus the lemma field needs to contain the bare stem. See examples below.
 
 Special-case markers:
 * <code>(1)</code> for Zaliznyak-style alternate nominative plural ending: -а or -я for masculine, -и or -ы for neuter
-* <code>(2)</code> for Zaliznyak-style alternate genitive plural ending: none/-ь/-й for masculine, -ей for feminine, -ов/-ёв/-ев for neuter, -ей for plural variant -ья
+* <code>(2)</code> for Zaliznyak-style alternate genitive plural ending: none/-ь/-й for masculine, -ей for feminine, -ов/-ёв/-ев for neuter, -ей for declensional variant <code>-ья</code>
 * <code>*</code> for reducibles (nom sg or gen pl has an extra vowel before the final consonant as compared with the stem found in other cases)
 * <code>;ё</code> for Zaliznyak-style alternation between last е in stem and ё
 
@@ -314,7 +319,7 @@ produces
 
 {{ru-noun-table|хвала́|gen_pl=-}}
 
-===Example 4: A noun with irregular plural stem===
+===Example 4: A noun with irregular plural stem and declensional variant -ья===
 A noun {{m|ru|по́вод||rein}} with irregularly-stressed plural stem пово́д-, irregular plural ending in -ья, and a locative case form.
 
 <code><nowiki>{{ru-noun-table|по́вод|-ья||пово́д|loc=+}}</nowiki></code>
@@ -322,6 +327,15 @@ A noun {{m|ru|по́вод||rein}} with irregularly-stressed plural stem пов�
 produces
 
 {{ru-noun-table|по́вод|-ья||пово́д|loc=+}}
+
+===Example 5: An animate noun needing declensional variant -ище===
+The noun {{m|ru|волчи́ще||large or mature wolf}} (an [[augmentative]]) needs the declensional variant <code>-ище</code> due to its declension, which includes alternative colloquial singular case forms with feminine endings. Nouns in this class are masculine, animate and special case <code>(1)</code> (i.e. they have the nominative plural in -и instead of -а), and at least the latter two properties must also be specified or an error occurs.
+
+<code><nowiki>{{ru-noun-table|волчи́ще|m-ище(1)|a=an}}</nowiki></code>
+
+produces
+
+{{ru-noun-table|волчи́ще|m-ище(1)|a=an}}
 
 ==Nouns with multiple and/or mixed declensions==
 
@@ -411,10 +425,10 @@ produces
 {{ru-noun-table|f|реб|ёнок/ь-m||дет|or|ребёнок|dat_pl=де́тям,ребя́там*|ins_pl=детьми́,ребя́тами*|pre_pl=де́тях,ребя́тах*|a=an|pltail=*|notes=* Use the second plural with the meaning "boys!", "fellows!", "guys!", "comrades!".}}
 
 ==Multi-word nouns==
-Multi-word nouns are specified by putting an underscore (<code>_</code>) between words separated by spaces, or a hyphen (<code>-</code>) between words separated by hyphens, or a joiner expression (<code>join:</code>TEXT) between words separated by arbitrary text.
+Multi-word nouns are specified by putting an underscore (<code>_</code>) between words separated by spaces, or a hyphen (<code>-</code>) between words separated by hyphens, or a joiner expression (<code>join:TEXT</code>) between words separated by arbitrary text.
 
 ===Example 1: An adjective-noun combination===
-For the noun {{m|ru|мя́кий знак||soft sign}}:
+For the noun {{m|ru|мя́гкий знак||soft sign}}:
 
 <code><nowiki>{{ru-noun-table|мя́гкий|+|_|знак}}</nowiki></code>
 
@@ -436,7 +450,7 @@ produces
 Note that the animacy applies to the entire expression.
 
 ===Example 3: A noun with a genitive modifier===
-For the noun {{m|ru|ору́жие ма́ссового уничтоже́ния|weapon of mass destruction}}:
+For the noun {{m|ru|ору́жие ма́ссового уничтоже́ния||weapon of mass destruction}}:
 
 <code><nowiki>{{ru-noun-table|ору́жие|_|ма́ссового|$|_|уничтоже́ния|$}}</nowiki></code>
 
@@ -447,7 +461,7 @@ produces
 Note the use of <code>$</code> to indicate invariable words.
 
 ===Example 4: A noun with a prepositional phrase modifier===
-For the noun {{m|ru|кре́м для ру́к|hand cream}}:
+For the noun {{m|ru|кре́м для ру́к||hand cream}}:
 
 <code><nowiki>{{ru-noun-table|крем|_|*для|$|_|ру́к|$}}</nowiki></code>
 
@@ -458,7 +472,7 @@ produces
 Note the use of <code>*</code> at the beginning of для to suppress the stress mark that otherwise would automatically be added.
 
 ===Example 5: A noun that combines singular and plural components===
-For the noun {{m|ru|Сент-Ви́нсент и Гренади́ны|Saint Vincent and the Grenadines}}:
+For the noun {{m|ru|Сент-Ви́нсент и Гренади́ны||Saint Vincent and the Grenadines}}:
 
 <code><nowiki>{{ru-noun-table|Сент-Ви́нсент|_|*и|$|_|Гренади́ны|m(2)|n1=s|n=p}}</nowiki></code>
 
