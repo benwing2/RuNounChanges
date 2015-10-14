@@ -42,6 +42,11 @@ local function rsub(term, foo, bar)
 	return retval
 end
 
+-- If enabled, compare this module with new version of module to make
+-- sure all pronunciations are the same. Eventually consider removing this;
+-- but useful as new code is created.
+local test_new_ru_pron_module = false
+
 local AC = u(0x0301) -- acute =  ́
 local GR = u(0x0300) -- grave =  ̀
 
@@ -169,11 +174,24 @@ local accentless = {
 		'ка', 'тка', 'ли'})
 }
 
-function ine(x)
+local function ine(x)
 	return x ~= "" and x or nil
 end
 
+local function track(page)
+	local m_debug = require("Module:debug")
+	m_debug.track("ru-pron/" .. page)
+	return true
+end
+
 function export.ipa(text, adj, gem, pal)
+	local new_module_result
+	-- Test code to compare existing module to new one.
+	if test_new_ru_pron_module then
+		local m_new_ru_pron = require("Module:User:Benwing2/ru-pron")
+		new_module_result = m_new_ru_pron.ipa(text, adj, gem, pal)
+	end
+
 	if type(text) == 'table' then
 		text, adj, gem, pal = (ine(text.args.phon) or ine(text.args[1])), ine(text.args.adj), ine(text.args.gem), ine(text.args.pal)
 		if not text then
@@ -448,6 +466,12 @@ function export.ipa(text, adj, gem, pal)
 	-- check before the code that handles geminates, and then make sure that
 	-- any further code involving /j/ checks for the geminate marker ː
 	text = rsub(text, 'jʲ', 'jː')
+
+	if test_new_ru_pron_module then
+		if new_module_result ~= text then
+			track("different-pron")
+		end
+	end
 
 	return text
 end
