@@ -568,7 +568,6 @@ function export.reduce_stem(stem, tr)
 	local pre, letter, post
 	local pretr, lettertr, posttr
 
-	error("Implement version with manual translit")
 	pre, letter, post = rmatch(stem, "^(.*)([оОеЕёЁ])́?([" .. export.cons .. "]+)$")
 	if not pre then
 		return nil, nil
@@ -604,7 +603,7 @@ function export.reduce_stem(stem, tr)
 	end
 	stem = pre .. letter .. post
 	if tr then
-		tr = pretr .. export.translit(letter) .. post
+		tr = pretr .. export.translit(letter) .. posttr
 		-- the following is necessary to deal with cases where ё gets
 		-- replaced with ь
 		tr = rsub(tr, "[jJ]ʹ", "ʹ")
