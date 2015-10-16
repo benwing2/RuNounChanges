@@ -143,7 +143,6 @@ local function noun_plus_or_multi(frame, multi)
 	local old = ine(frame.args.old)
 
 	local m_noun = require("Module:ru-noun")
-	local args
 	if multi then
 		args = m_noun.do_generate_forms_multi(args, old)
 	else
