@@ -219,6 +219,8 @@ TODO:
    category).
 2e. Add -ин variant that always triggers -ин declension so we don't
    have to use old-style declensions. [IMPLEMENTED. NEED TO TEST.]
+2f. FIXME: Adding a note to dat_sg also adds it to loc_sg when it exists;
+   seems wrong. See луг.
 3. FIXME: Consider putting a triangle △ (U+25B3) or the smaller variant
    ▵ (U+25B5) next to each irregular form. (We have the following cases:
    special case (1) makes nom pl irreg, special case (2) makes gen pl irreg,
@@ -419,7 +421,7 @@ TODO:
 local m_utilities = require("Module:utilities")
 local ut = require("Module:utils")
 local m_links = require("Module:links")
-local com = require("Module:User:Benwing2/ru-common")
+local com = require("Module:ru-common")
 local m_ru_adj = require("Module:ru-adjective")
 local m_ru_translit = require("Module:ru-translit")
 local strutils = require("Module:string utilities")
@@ -488,12 +490,12 @@ end
 
 local function split_russian_tr(term, dopair)
 	local ru, tr
-	if not rfind(term, "/") then
+	if not rfind(term, "//") then
 		ru = term
 	else
-		splitvals = rsplit(term, "/")
+		splitvals = rsplit(term, "//")
 		if #splitvals ~= 2 then
-			error("Must have at most one slash in a Russian Arabic/translit expr: '" .. term .. "'")
+			error("Must have at most one // in a Russian//translit expr: '" .. term .. "'")
 		end
 		ru, tr = splitvals[1], com.decompose(splitvals[2])
 	end
@@ -509,7 +511,7 @@ local function concat_forms(forms)
 	for _, form in ipairs(forms) do
 		local ru, tr = form[1], form[2]
 		if tr then
-			table.insert(joined_rutr, ru .. "/" .. tr)
+			table.insert(joined_rutr, ru .. "//" .. tr)
 		else
 			table.insert(joined_rutr, ru)
 		end
@@ -1479,7 +1481,7 @@ function export.do_generate_forms_multi(args, old)
 				continue_arg_sets = false
 			else
 				end_word = true
-				word_joiner = " "
+				word_joiner = {" "}
 			end
 			process_arg = true
 		end
@@ -2490,9 +2492,10 @@ local function detect_lemma_type(lemma, tr, gender, args, variant)
 	base, ending = rmatch(lemma, "^(.*)([ёоЁО]́?[нН][оО][чЧ][еЕ][кК][ъЪ]?)$")
 	if base then
 		return base, strip_tr_ending(tr, ending), ulower(ending)
+	end
 	base, ending = rmatch(lemma, "^(.*)([мМ][яЯ]́?)$")
 	if base then
-		return base, strip_tr_ending(tr, ending), ending
+		return base, strip_tr_ending(tr, ending), ulower(ending)
 	end
 	--recognize plural endings
 	if recognize_plurals then
@@ -2639,7 +2642,7 @@ local function canonicalize_decl(decl, old)
 	-- FIXME: For compatibility; remove it after changing uses of о-ья
 	if com.remove_accents(decl) == "о-ья" then
 		track("о-ья")
-		decl = "о/-ья"
+		decl = old and "о/ъ-ья" or "о/-ья"
 	end
 	local function do_canon(decl)
 		-- remove accents, but not from е́ (for adj decls, accent matters
@@ -2851,7 +2854,7 @@ determine_decl = function(lemma, tr, decl, args)
 		if variant_decl then
 			return stem, tr, variant_decl, gender, was_accented, was_plural, was_autodetected
 		else
-			return stem, tr, decl .. "/" .. want_ya_plural, gender, was_accented, was_plural, was_autodetected
+			return stem, tr, decl .. (args.old and "/ъ-ья" or "/-ья"), gender, was_accented, was_plural, was_autodetected
 		end
 	end
 
