@@ -1231,9 +1231,6 @@ local function categorize_and_init_heading(stress, decl, args, n, islast)
 end
 
 local function compute_heading(args)
-	if args.manual then
-		return ""
-	end
 	local headings = {}
 	local irreg_headings = {}
 	local h = args.heading_info
@@ -1310,7 +1307,7 @@ local function compute_overall_heading_and_genders(args)
 	if args.any_irreg then
 		table.insert(headings, "irreg")
 	end
-	local heading = "(<span style=\"font-size: smaller;\">[[Appendix:Russian nouns#Declension tables|" .. table.concat(headings, " ") .. "]]</span>)"
+	local heading = args.manual and "" or "(<span style=\"font-size: smaller;\">[[Appendix:Russian nouns#Declension tables|" .. table.concat(headings, " ") .. "]]</span>)"
 	--if #irreg_headings > 0 then
 	--	heading = heading .. "<br /><span style=\"text-align: center;\">Irregularities: " ..
 	--		table.concat(irreg_headings, " ") .. "</span>"
@@ -4174,7 +4171,7 @@ local function gen_form(args, decl, case, stress, fun, is_slash, n, islast)
 	if not args.suffixes[case] then
 		args.suffixes[case] = {}
 	end
-	local decl_sufs = old and declensions_old or declensions
+	local decl_sufs = args.old and declensions_old or declensions
 	decl_sufs = decl_sufs[decl]
 	local suf = decl_sufs[case]
 	local decl_cats = args.old and declensions_old_cat or declensions_cat
@@ -4487,7 +4484,13 @@ local function process_overrides(args, f, n)
 			end
 			local new_overrides = {}
 			for _, form in ipairs(overrides) do
-				if not contains_rutr_pair(f[case], form) then
+				-- Don't consider overrides of loc/par/voc irregular since
+				-- they're only specified through overrides; FIXME: Theoretically
+				-- we could consider loc/par irregular if they don't follow the
+				-- expected forms; but we'd have to figure out how to eliminate
+				-- the preposition that may be specified
+				if case ~= "loc" and case ~= "par" and case ~= "voc" and
+						not contains_rutr_pair(f[case], form) then
 					form = concat_paired_russian_tr(form, {IRREGMARKER})
 				end
 				table.insert(new_overrides, form)
@@ -4677,7 +4680,7 @@ handle_overall_forms_and_overrides = function(args)
 	local function clean_irreg_marker(text)
 		if rfind(text, IRREGMARKER) then
 			text = rsub(text, IRREGMARKER, "")
-			local entry, notes = m_table_tools.get_notes(text)
+			local entry, notes = m_table_tools.separate_notes(text)
 			insert_if_not(args.internal_notes, IRREGMARKER .. " Irregular.")
 			args.any_irreg = true
 			return entry .. IRREGMARKER .. notes
