@@ -394,7 +394,7 @@ TODO:
    е           *           *            *          *
    ь-f         *           *            *          ь-f
   [IMPLEMENTED. THEN REMOVED MOST PLURAL VARIANTS, LEAVING ONLY -ья AND
-  (1) AND (2). NEED TO TEST -ья, ALTHOUGH PRESUMABLY THEY GOT TESTEED
+  (1) AND (2). NEED TO TEST -ья, ALTHOUGH PRESUMABLY THEY GOT TESTED
   THROUGH THE TEST PAGES AND THROUGH BEING RUN ON ALL THE EXISTING DECLED
   RUSSIAN NOUNS IN WIKTIONARY.]
 32. Implement check for bare argument specified when neither nominative
@@ -1199,7 +1199,7 @@ local function categorize_and_init_heading(stress, decl, args, n, islast)
 	else
 		insert_if_not(h.irreg_gen_pl, "no")
 	end
-	if stdc.alt_nom_pl or sgdc.irregpl or args.nom_pl or is_slash_decl then
+	if sgdc.alt_nom_pl or sgdc.irregpl or args.nom_pl or is_slash_decl then
 		insert_if_not(h.irreg_nom_pl, "yes")
 	else
 		insert_if_not(h.irreg_nom_pl, "no")
@@ -2050,8 +2050,7 @@ generate_forms_1 = function(args, per_word_info)
 				assert(decl_cats[real_decl])
 				assert(decl_sufs[real_decl])
 				tracking_code(stress, orig_decl, real_decl, args, n, islast)
-				do_stress_pattern(stress, args, decl_sufs[real_decl], number,
-					n, islast)
+				do_stress_pattern(stress, args, real_decl, number, n, islast)
 
 				-- handle internal notes
 				local internal_note = intable[real_decl]
@@ -4161,7 +4160,7 @@ local function attach_with(args, case, suf, fun, irreg, n, islast)
 		return {combined and concat_paired_russian_tr(
 			concat_paired_russian_tr(args["prefix" .. n], combined),
 			concat_paired_russian_tr(args["suffix" .. n], irregsuf)) or nil},
-			{realsuf and concat_paired_russian_tr({realsuf, args["suffix" .. n][1]}) or nil}
+			{realsuf and realsuf .. args["suffix" .. n][1] or nil}
 	end
 end
 
@@ -4175,7 +4174,9 @@ local function gen_form(args, decl, case, stress, fun, is_slash, n, islast)
 	if not args.suffixes[case] then
 		args.suffixes[case] = {}
 	end
-	local suf = decl[case]
+	local decl_sufs = old and declensions_old or declensions
+	decl_sufs = decl_sufs[decl]
+	local suf = decl_sufs[case]
 	local decl_cats = args.old and declensions_old_cat or declensions_cat
 	local ispl = rfind(case, "_pl")
 	if ispl and (decl_cats[decl].irregpl or args.pl and args.pl ~= args.stem or is_slash) then
@@ -4188,7 +4189,7 @@ local function gen_form(args, decl, case, stress, fun, is_slash, n, islast)
 		suf = suf(ispl and args.pl or args.stem, stress, args)
 	end
 	if case == "gen_pl" and args.alt_gen_pl then
-		suf = decl.alt_gen_pl
+		suf = decl_sufs.alt_gen_pl
 		irreg = true
 		if not suf then
 			error("No alternate genitive plural available for this declension class")
