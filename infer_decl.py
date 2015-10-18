@@ -25,10 +25,10 @@ from rulib import *
 save = False
 mockup = False
 # Uncomment the following line to enable test mode
-mockup = True
+#mockup = True
 # If true, use the old ru-noun-table template, instead of new
 # ru-decl-noun-new
-old_template = False
+old_template = True
 
 if old_template:
   decl_template = "ru-noun-table"
