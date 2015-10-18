@@ -4860,7 +4860,7 @@ make_table = function(args)
 	data.after_title = " " .. args.heading
 	data.number = numbers[args.n]
 
-	data.lemma = m_links.remove_links(show_form(args[args.n == "p" and "nom_pl" or "nom_sg"], args.old, true))
+	data.lemma = show_form(args[args.n == "p" and "nom_pl_linked" or "nom_sg_linked"], args.old, true)
 	data.title = args.title or strutils.format(args.old and old_title_temp or title_temp, data)
 
 	for _, case in ipairs(displayable_cases) do
