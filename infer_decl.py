@@ -23,6 +23,7 @@ from blib import msg, rmparam, getparam
 from rulib import *
 
 save = False
+verbose = True
 mockup = False
 # Uncomment the following line to enable test mode
 #mockup = True
@@ -71,8 +72,14 @@ def trymatch(forms, args, pagemsg, output_msg=True):
   if mockup:
     ok = True
   else:
-    tempcall = "{{ru-noun-forms|" + "|".join(args) + "}}"
+    tempcall = "{{ru-generate-noun-forms|" + "|".join(args) + "}}"
     result = site.expand_text(tempcall)
+    if verbose:
+      pagemsg("%s = %s" % (tempcall, result))
+    if result.startswith('<strong class="error">'):
+      result = re.sub("<.*?>", "", result)
+      pagemsg("ERROR: %s" % result)
+      return False
     pred_forms = {}
     for formspec in re.split(r"\|", result):
       case, value = re.split(r"=", formspec, 1)
@@ -90,9 +97,12 @@ def trymatch(forms, args, pagemsg, output_msg=True):
       elif pred_form != real_form:
         if is_unstressed(real_form) and make_unstressed(pred_form) == real_form:
           # Happens especially in monosyllabic forms
-          pagemsg("For case %s, actual form %s missing an accent that's present in predicted %s; allowed" % (real_form, pred_form))
-        elif (case == "ins_sg" and "," in real_form and
-            re.sub(",.*$", "", real_form) == pred_form):
+          pagemsg("For case %s, actual form %s missing an accent that's present in predicted %s; allowed" % (case, real_form, pred_form))
+        elif re.sub("//.*$", "", pred_form) == real_form:
+          # Happens esp. in the gen sg of adjectival nominals
+          pagemsg("For case %s, predicted %s has manual translit and actual %s doesn't; allowed" % (case, pred_form, real_form))
+        elif (case == "ins_sg" and "," in pred_form and
+            re.sub(",.*$", "", pred_form) == real_form):
           pagemsg("For case ins_sg, predicted form %s has an alternate form not in actual form %s; allowed" % (pred_form, real_form))
         else:
           pagemsg("For case %s, actual %s differs from predicted %s" % (case,
@@ -161,6 +171,9 @@ def separate_multiwords(forms, splitre):
   return words
 
 def infer_decl(t, noungender, pagemsg):
+  if verbose:
+    pagemsg("Processing %s" % unicode(t))
+
   tname = unicode(t.name).strip()
   forms = {}
 
@@ -194,6 +207,8 @@ def infer_decl(t, noungender, pagemsg):
         form = re.sub(ur"^о(б|бо)?\s+", "", form)
       # eliminate <br />, typically separating alternants
       form = re.sub(r"\s*<br\s*/>\s*", "", form)
+      # eliminate spaces around commas
+      form = re.sub(r"\s*,\s*", ",", form)
       if "," in form:
         pagemsg("WARNING: Comma in form, may not handle correctly: %s=%s" %
             (case, form))
@@ -215,7 +230,9 @@ def infer_decl(t, noungender, pagemsg):
           if not args:
             pagemsg("Unable to infer word #%s: %s" % (wordno, unicode(t)))
             return None
-          argses.append(args)
+          # If we have a gen_pl override, it needs to be for a specific word
+          numbered_args = [re.sub("^gen_pl=", "gen_pl%s=" % wordno, arg) for arg in args]
+          argses.append(numbered_args)
         animacies = [x for args in argses for x in args if x in ["a=in", "a=an"]]
         if "a=in" in animacies and "a=an" in animacies:
           pagemsg("WARNING: Conflicting animacies in multi-word expression: %s" %
@@ -262,22 +279,28 @@ def default_stress(lemma, stress, pagemsg):
 
   return lemma, stress
 
-def generate_template_args(stress, lemma, declspec, pagemsg):
+def generate_template_args(stress, lemma, declspec, plstem, pagemsg):
   lemma = lemma
   lemma, stress = default_stress(lemma, stress, pagemsg)
   if old_template:
-    args = [stress, lemma, declspec]
+    args = [stress, lemma, declspec, "", plstem]
     if not args[0]:
       del args[0]
+    if not args[-1]:
+      del args[-1]
+    if not args[-1]:
+      del args[-1]
     if not args[-1]:
       del args[-1]
   else:
     declspec = declspec and "^" + declspec or ""
     lemma = lemma + declspec
     lemma = re.sub(r"\^([;*(])", r"\1", lemma)
-    args = [stress, lemma]
+    args = [stress, lemma, plstem]
     if not args[0]:
       del args[0]
+    if not args[-1]:
+      del args[-1]
     args = [":".join(args)]
   return args
 
@@ -308,10 +331,12 @@ def infer_word(forms, noungender, number, numonly, pagemsg):
   presg = forms.get("pre_sg", "")
   prepl = forms.get("pre_pl", "")
   prepl_stress = re.search(AC + u"хъ?$", prepl) and "ending" or "stem"
+  bare = ""
+  genpls = []
 
   # Special case:
   if numonly == "pl" and nompl == u"острова́":
-    args = generate_template_args("c", u"острова́", "m(1)", pagemsg) + number
+    args = generate_template_args("c", u"острова́", "m(1)", None, pagemsg) + number
     if trymatch(forms, args, pagemsg):
       return args
 
@@ -397,8 +422,9 @@ def infer_word(forms, noungender, number, numonly, pagemsg):
       genders = [noungender]
     else:
       genders = [""]
-    bare = ""
+    strange_genpl = ""
     strange_plural = ""
+    plstem = None
 
     ########## Check for feminine or neuter
     m = re.search(ur"^(.*)([аяеоё])(́?)$", nomsg)
@@ -438,40 +464,64 @@ def infer_word(forms, noungender, number, numonly, pagemsg):
                     (stem, formcase, formstem))
                 stem = formstem
 
-      # Look at gen pl to check for reducible and try to get a stressed stem;
-      # also check for strange plurals
       if numonly != "sg":
-        ustem = make_unstressed(stem)
-        unompl = make_unstressed(nompl)
-        mm = re.search("^" + ustem + u"(ья|[иы])$", unompl)
-        if mm:
-          strange_plural = "-" + mm.group(1)
-          # Not a strange plural if feminine with expected plural
-          if ending in [u"а", u"я"] and strange_plural in [u"-ы", u"-и"]:
-            strange_plural = ""
-        if strange_plural:
-          pagemsg("Found unusual plural %s" % strange_plural)
-
-        # Don't check gen pl if we found strange plural, because it won't
-        # be a bare stem.
-        if not strange_plural:
-          possible_genpls = []
-          possible_unstressed_genpls = []
-          for genpl_ending in ["", u"ь", u"й"]:
-            possible_genpls.append(stem + genpl_ending)
-            possible_unstressed_genpls.append(make_unstressed(stem + genpl_ending))
-          if genpl in possible_genpls:
-            pagemsg("Gen pl %s same as stem %s (modulo expected endings)" % (genpl, stem))
-          elif make_unstressed(genpl) not in possible_unstressed_genpls:
-            pagemsg("Stem %s not accent-equiv to gen pl %s (modulo expected endings)" % (stem, genpl))
-            bare = "*"
-          elif is_unstressed(stem):
-            pagemsg("Replacing unstressed stem %s with accent-equiv gen pl %s" %
-                (stem, genpl))
-            stem = re.sub(u"[ьй]$", "", genpl)
+        # Check nom pl for strange plural ending or stem
+        if "," not in nompl:
+          if stem.endswith(u"ь"):
+            # Don't check for -ья ending if stem ends with -ь, because it
+            # won't be a strange -ья ending but a normal -я ending with
+            # stem in -ь
+            mm = re.search(u"^(.*?)(([иы]|[яа])́?)$", nompl)
           else:
-            pagemsg("Stem %s stressed one way, gen pl %s stressed differently" %
-                (stem, genpl))
+            mm = re.search(u"^(.*?)((ья|[иы]|[яа])́?)$", nompl)
+          if not mm:
+            pagemsg("WARNING: Strange nominative plural ending: %s" % nompl)
+            return None
+          plstem = mm.group(1)
+          nomplending = mm.group(2)
+          if plstem == stem or plstem == make_unstressed(stem) or make_unstressed(plstem) == stem:
+            plstem = None
+          else:
+            pagemsg("Found unusual plural stem: %s" % plstem)
+          unomplending = make_unstressed(nomplending)
+          if (ending in [u"а", u"я"] and unomplending in [u"ы", u"и"] or
+              ending not in [u"а", u"я"] and unomplending in [u"а", u"я"]):
+            # Not a strange plural
+            strange_plural = ""
+            pass
+          else:
+            strange_plural = "-" + unomplending
+          if strange_plural:
+            pagemsg("Found unusual plural %s" % strange_plural)
+
+        # Look at gen pl to check for reducible and try to get a stressed stem;
+        possible_genpls = []
+        possible_unstressed_genpls = []
+        expected_gen_pls = strange_plural == u"-ья" and [u"ьев", u"ьёв"] or ["", u"ь", u"й"]
+        genplstem = plstem or stem
+        for genpl_ending in expected_gen_pls:
+          possible_genpls.append(genplstem + genpl_ending)
+          possible_unstressed_genpls.append(make_unstressed(genplstem + genpl_ending))
+        if genpl in possible_genpls:
+          pagemsg("Gen pl %s same as stem %s (modulo expected endings)" % (genpl, genplstem))
+          genpls = ["", genpl]
+        elif make_unstressed(genpl) not in possible_unstressed_genpls:
+          pagemsg("Stem %s not accent-equiv to gen pl %s (modulo expected endings)" % (genplstem, genpl))
+          genpls = ["*", "(2)", genpl]
+        elif is_unstressed(genplstem):
+          pagemsg("Replacing unstressed stem %s with accent-equiv gen pl %s" %
+              (stem, genpl))
+          # Don't do this; we automatically stress the gen pl stem if required.
+          # And in any case this is broken when expected gen pls includes "ьев".
+          #if plstem:
+          #  plstem = re.sub(u"[ьй]$", "", genpl)
+          #else:
+          #  stem = re.sub(u"[ьй]$", "", genpl)
+          genpls = ["", genpl]
+        else:
+          pagemsg("WARNING: Stem %s stressed one way, gen pl %s stressed differently" %
+              (genplstem, genpl))
+          genpls = ["", genpl]
 
       # Auto-stress monosyllabic stem if necessary
       if is_unstressed(stem) and is_unstressed(ending):
@@ -542,12 +592,30 @@ def infer_word(forms, noungender, number, numonly, pagemsg):
 
         # Check for strange plural
         if numonly != "sg":
-          ustem = make_unstressed(stem)
-          unompl = make_unstressed(nompl)
-          mm = re.search("^" + ustem + u"(ья|а|я)$", unompl)
-          if mm:
-            strange_plural = "-" + mm.group(1)
-            pagemsg("Found unusual plural %s" % strange_plural)
+          # Check nom pl for strange plural ending or stem
+          if "," not in nompl:
+            mm = re.search(u"^(.*?)((ья|[иы]|[яа])́?)$", nompl)
+            if not mm:
+              pagemsg("WARNING: Strange nominative plural ending: %s" % nompl)
+              return None
+            plstem = mm.group(1)
+            nomplending = mm.group(2)
+            if plstem == stem or plstem == make_unstressed(stem) or make_unstressed(plstem) == stem:
+              plstem = None
+            else:
+              pagemsg("Found unusual plural stem: %s" % plstem)
+            unomplending = make_unstressed(nomplending)
+            if unomplending in [u"ы", u"и"]:
+              # Not a strange plural
+              strange_plural = ""
+              pass
+            else:
+              strange_plural = "-" + unomplending
+            if strange_plural:
+              pagemsg("Found unusual plural %s" % strange_plural)
+
+          # Check for unexpected genitive plural
+          genpls = ["", "(2)", genpl]
 
     # Find stress pattern possibilities
     if numonly != "sg":
@@ -575,11 +643,18 @@ def infer_word(forms, noungender, number, numonly, pagemsg):
       strange_plural += u";ё"
     for stress in stress_patterns:
       for gender in genders:
-        args = generate_template_args(stress, lemma,
-            gender + strange_plural + bare, pagemsg)
-        args += anim + number
-        if trymatch(forms, args, pagemsg):
-          return args
+        for genplval in genpls:
+          declspec = gender + strange_plural + bare
+          genplargs = []
+          if genplval in ["*", "(2)"]:
+            declspec += genplval
+          elif genplval:
+            genplargs.append("gen_pl=%s" % genplval)
+          args = generate_template_args(stress, lemma, declspec, plstem, pagemsg)
+          args += genplargs
+          args += anim + number
+          if trymatch(forms, args, pagemsg):
+            return args
 
   return None
 
@@ -595,6 +670,7 @@ def infer_one_page_decls_1(page, index, text):
       else:
         genders.add(m.group(1))
 
+  inferred_decls = []
   for t in text.filter_templates():
     if unicode(t.name).strip() in ["ru-decl-noun", "ru-decl-noun-unc", "ru-decl-noun-pl"]:
       if unicode(t.name).strip() == "ru-decl-noun-pl":
@@ -612,6 +688,7 @@ def infer_one_page_decls_1(page, index, text):
         gender = ""
       args = infer_decl(t, gender, pagemsg)
       if args:
+        inferred_decls.append("{{%s|%s}}" % (decl_template, "|".join(args)))
         for i in xrange(15, 0, -1):
           rmparam(t, i)
         t.name = decl_template
@@ -623,7 +700,7 @@ def infer_one_page_decls_1(page, index, text):
           else:
             t.add(i, arg)
             i += 1
-  return text, "Infer declension for manual decls (ru-decl-noun)"
+  return text, "Infer declension for manual decl(s): %s" % ", ".join(inferred_decls)
 
 def infer_one_page_decls(page, index, text):
   try:
@@ -1224,9 +1301,19 @@ def test_infer():
     msg("newtext = %s" % unicode(newtext))
     msg("comment = %s" % comment)
 
+def ignore_page(page):
+  if not isinstance(page, basestring):
+    page = unicode(page.title())
+  if re.search(r"^(Appendix|Appendix talk|User|User talk|Talk):", page):
+    return True
+  return False
+
 if mockup:
   test_infer()
 else:
   for page, index in iter_pages(blib.references("Template:ru-decl-noun")):
-    blib.do_edit(page, index, infer_one_page_decls, save=save)
+    if ignore_page(page):
+      msg("Page %s %s: Skipping due to namespace" % (index, unicode(page.title())))
+    else:
+      blib.do_edit(page, index, infer_one_page_decls, save=save)
 
