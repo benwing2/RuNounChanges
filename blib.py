@@ -40,10 +40,10 @@ def do_edit(page, index, func=None, null=False, save=False):
           if page.text != new:
             page.text = new
             if save:
-              msg("%s %s: Saving with comment = %s" % (index, unicode(page.title), comment))
+              msg("%s %s: Saving with comment = %s" % (index, unicode(page.title()), comment))
               page.save(comment = comment)
             else:
-              msg("%s %s: Would save with comment = %s" % (index, unicode(page.title), comment))
+              msg("%s %s: Would save with comment = %s" % (index, unicode(page.title()), comment))
           elif null:
             pywikibot.output(u'Purged page cache for [[{0}]]'.format(page.title()), toStdout = True)
             page.purge(forcelinkupdate = True)
