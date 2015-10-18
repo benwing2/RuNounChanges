@@ -189,7 +189,7 @@ TODO:
    -- Overrides of nom_sg/nom_pl should also override acc_sg/acc_pl if it
       was originally empty and the animacy is inanimate; similarly for
 	  gen_sg/gen_pl and animates; this needs to work both for per-word and
-	  overall overrides.
+	  overall overrides. (DONE ALREADY?? NEEDS TESTING)
    -- do_generate_forms(_multi) need to run part of make_table(), enough to
       combine all per_word_info into single lists of forms and store back
 	  into args[case]. (DONE, NEEDS TESTING)
@@ -210,14 +210,6 @@ TODO:
 	  do currently).
    -- Handling default lemma: With multiple words, we should probably split
       the page name on spaces and default each word in turn
-1a. FIXME: add_irreg_marker:
-   -- handle_forms_and_overrides(): Needs to add irreg marker to overrides that
-      are not in the list of cases already seen. Needs to make sure to ignore
-	  footnote markers when comparing, and not add irreg marker if already
-	  present.
-   -- handle_overall_forms_and_overrides(): Similar to
-      handle_forms_and_overrides(). This whole function needs to happen AFTER
-	  we generate the combined multi-word forms, not before.
 2. FIXME: Test that omitting a manual form leaves the form as a big dash.
 2a. FIXME: Test that omitting a manual form in ru-adjective leaves the form as
    a big dash.
