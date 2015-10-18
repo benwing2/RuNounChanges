@@ -2184,7 +2184,7 @@ end
 
 local function get_form(forms)
 	local canon_forms = {}
-	for _, form in forms do
+	for _, form in ipairs(forms) do
 		local ru, tr = form[1], form[2]
 		local ruentry, runotes = m_table_tools.get_notes(ru)
 		local trentry, trnotes
@@ -2192,7 +2192,7 @@ local function get_form(forms)
 			trentry, trnotes = m_table_tools.get_notes(tr)
 		end
 		ruentry = m_links.remove_links(ruentry)
-		insert_if_not(canon_forms, {ruetry, trentry})
+		insert_if_not(canon_forms, {ruentry, trentry})
 	end
 	return concat_forms(canon_forms)
 end
@@ -2248,8 +2248,9 @@ end
 -- happen to occur in values (which is unlikely, esp. as we don't even use
 -- the characters <, ! or > for anything) and aren't HTML-escaped.
 function export.generate_multi_forms(frame)
+	local args = clone_args(frame)
 	local retvals = {}
-	for _, argset in ipairs(frame.args) do
+	for _, argset in ipairs(args) do
 		local args = {}
 		local i = 0
 		local argvals = rsplit(argset, "<!>")
@@ -2257,7 +2258,7 @@ function export.generate_multi_forms(frame)
 			local split_arg = rsplit(argval, "<%->")
 			if #split_arg == 1 then
 				i = i + 1
-				args[i] = ine(split_arg)
+				args[i] = ine(split_arg[1])
 			else
 				assert(#split_arg == 2)
 				args[split_arg[1]] = ine(split_arg[2])
@@ -2276,7 +2277,7 @@ function export.generate_form(frame)
 		error("Must specify desired form using form=")
 	end
 	local form = args.form
-	if not ut.contains(cases, form) then
+	if not ut.contains(all_cases, form) then
 		error("Unrecognized form " .. form)
 	end
 	local args = export.do_generate_forms(args, false)
