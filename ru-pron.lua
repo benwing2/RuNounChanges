@@ -12,13 +12,23 @@ QUESTIONS TO ASK OF ATITAREV/CINEMANTIQUE:
 3. Ask A/C -- should we ever reduce double vowels to long vowels? (commented
    out) (DONE. NO.)
 4. Ask A/C -- should сск be converted to ск (this is what's done currently)?
+   (DONE. YES.)
 5, Ask A/C -- 'н[ндт]ск'] = 'нск', is this correct?
 
 FIXME:
 
 1. Figure out issue with фильм, сельдь. (DONE)
-2. Figure out issue with Амударья́ and скамья́ (pre-tonal syllables).
+2. Figure out issue with Амударья́ and скамья́ (pre-tonal syllables). (DONE, MAY NOT BE RIGHT)
 3. Figure out issue with та́ять.
+4. Figure out what to do with monosyllabic unstressed words that are pronounced stressed.
+5. Geminated /j/ from -йя-: treat as any other gemination, meaning it may not always be
+   pronounced geminated. Currently we geminate it very late, after all the code that
+   reduces geminates. Should be done earlier and places that include regexps with /j/ should
+   be modified to also include the gemination marker ː.
+6. Handle secondarily-stressed ё.
+7. In асунсьо́н and Вьентья́н, put a syllable break after the н and before consonant + /j/.
+   Use the perm_sym_onset mechanism or at least the code that accesses that mechanism.
+
 ]]
 
 local ut = require("Module:utils")
@@ -220,13 +230,19 @@ function export.ipa(text, adj, gem, pal)
 	-- FIXME: should happen after transliteration
 	local word = rsplit(text, " ", true)
 	for i = 1, #word do
-		if accentless['prep'][word[i]] and i ~= #word then
+		local noacpre = accentless['prep'][word[i]]
+		local noacpost = accentless['post'][word[i]]
+		if noacpre and i ~= #word then
 			word[i+1] = word[i] .. '‿' .. word[i+1]
 			word[i+1] = rsub(word[i+1], '([бдкствхзж])‿и', '%1‿ы')
 			word[i] = ''
-		elseif accentless['post'][word[i]] and i ~= 1 then
+		elseif noacpost and i ~= 1 then
 			word[i-1] = word[i-1] .. word[i]
 			word[i] = ''
+		-- not enabled. This makes all monosyllables that aren't unstressed
+		-- primary-stressed. We need to be more sophisticated.
+		--elseif not noacpre and not acpost and com.is_monosyllabic(word[i]) then
+		--	word[i] = com.make_ending_stressed(word[i])
 		end
 	end
 
@@ -275,11 +291,11 @@ function export.ipa(text, adj, gem, pal)
 		pron = rsub(pron, '%(j%)jə', 'jə')
 
 		--syllabify, inserting / at syllable boundaries
-		-- FIXME: The following line is wrong, but I'm not sure quite how to fix
-		-- it. It causes too many slashes to be inserted. Just changing the /
-		-- to j seems to fix things but I'm not sure how that interacts with
-		-- the code below handling the pal=y case.
-		pron = rsub(pron, 'ʹ([äëöü])', 'ʹ/%1')
+		-- FIXME: The following used to have a / instead of a j. Changing this
+		-- fixed a lot of syllabification problems but I'm not sure if it's
+		-- totally correct or how it interacts with the code below handling
+		-- the pal=y case, which used to handle adding the j.
+		pron = rsub(pron, 'ʹ([äëöü])', 'ʹj%1')
 		pron = rsub(pron, 'ʹi', 'ʹji')
 		pron = rsub(pron, '([aäeëɛəiyoöuü][́̀]?)', '%1/')
 		pron = rsub(pron, '/+$', '')
@@ -294,9 +310,11 @@ function export.ipa(text, adj, gem, pal)
 		pron = rsub(pron, '/‿', '‿/')
 
 		--remove accent marks from monosyllables
-		if ulen(rsub(pron, non_vowels_c, '')) == 1 and rfind(pron, 'o' .. AC) then
-			pron = rsub(pron, AC, '')
-		end
+		--FIXME: Disabled by Benwing2. This applies only to /o/ and messes up
+		--что́-лѝбо.
+		--if ulen(rsub(pron, non_vowels_c, '')) == 1 and rfind(pron, 'o' .. AC) then
+		--	pron = rsub(pron, AC, '')
+		--end
 
 		--write 1-based syllable indexes of stressed syllables (acute or grave) to
 		--the list POS
