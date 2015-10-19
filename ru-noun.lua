@@ -873,9 +873,9 @@ local function bare_tracking(stem, tr, bare, baretr, decl, sgdc, stress, old)
 	elseif rfind(decl, "^ъ") then
 		nomsg = stem .. "ъ"
 	end
-	local function rettrack(val)
+	local function rettrack(val, explanation)
 		track(val)
-		return val
+		return val .. ": " .. explanation
 	end
 	track("explicit-bare")
 	if stem == bare then
@@ -883,13 +883,15 @@ local function bare_tracking(stem, tr, bare, baretr, decl, sgdc, stress, old)
 		return "remove"
 	elseif com.make_unstressed(stem) == com.make_unstressed(bare) then
 		track("explicit-bare-different-stress")
-		return rettrack("explicit-bare-different-stress-from-stem")
+		return rettrack("explicit-bare-different-stress-from-stem",
+			"stem=" .. stem .. ", bare=" .. bare)
 	elseif nomsg and nomsg == bare then
 		track("explicit-bare-same-as-nom-sg")
 		return "remove"
 	elseif nomsg and com.make_unstressed(nomsg) == com.make_unstressed(bare) then
 		track("explicit-bare-different-stress")
-		return rettrack("explicit-bare-different-stress-from-nom-sg")
+		return rettrack("explicit-bare-different-stress-from-nom-sg",
+			"nomsg=" .. nomsg .. ", bare=" .. bare)
 	elseif is_reducible(sgdc) then
 		local barestem, baredecl = rmatch(bare, "^(.-)([ьйъ]?)$")
 		assert(barestem)
@@ -901,50 +903,58 @@ local function bare_tracking(stem, tr, bare, baretr, decl, sgdc, stress, old)
 		local autostem, autostemtr =
 			export.reduce_nom_sg_stem(barestem, barestemtr, baredecl)
 		if not autostem then
-			return rettrack("error-reducible")
+			return rettrack("error-reducible",
+				"barestem=" .. barestem .. ", baredecl=" .. baredecl)
 		elseif autostem == stem then
 			track("predictable-reducible")
 			return "sub-star"
 		elseif com.make_unstressed(autostem) == com.make_unstressed(stem) then
 			if com.remove_accents(autostem) ~= com.remove_accents(stem) then
 				--error("autostem=" .. autostem .. ", stem=" .. stem)
-				return rettrack("predictable-reducible-but-jo-differences")
+				return rettrack("predictable-reducible-but-jo-differences",
+					"autostem=" .. autostem .. ", stem=" .. stem)
 			elseif com.is_unstressed(autostem) and com.is_ending_stressed(stem) then
 				track("predictable-reducible-but-extra-ending-stress")
 				return "sub-star"
 			else
 				--error("autostem=" .. autostem .. ", stem=" .. stem)
-				return rettrack("predictable-reducible-but-different-stress")
+				return rettrack("predictable-reducible-but-different-stress",
+					"autostem=" .. autostem .. ", stem=" .. stem)
 			end
 		else
 			--error("autostem=" .. autostem .. ", stem=" .. stem)
-			return rettrack("unpredictable-reducible")
+			return rettrack("unpredictable-reducible",
+				"autostem=" .. autostem .. ", stem=" .. stem)
 		end
 	elseif is_dereducible(sgdc) then
 		local autobare, autobaretr =
 			export.dereduce_nom_sg_stem(stem, tr, sgdc, stress, old)
 		if not autobare then
-			return rettrack("error-dereducible")
+			return rettrack("error-dereducible", "stem=" .. stem)
 		elseif autobare == bare then
 			track("predictable-dereducible")
 			return "remove-star"
 		elseif com.make_unstressed(autobare) == com.make_unstressed(bare) then
 			if com.remove_accents(autobare) ~= com.remove_accents(bare) then
 				--error("autobare=" .. autobare .. ", bare=" .. bare)
-				return rettrack("predictable-dereducible-but-jo-differences")
+				return rettrack("predictable-dereducible-but-jo-differences",
+					"autobare=" .. autobare .. ", bare=" .. bare)
 			elseif com.is_unstressed(autobare) and com.is_ending_stressed(bare) then
 				track("predictable-dereducible-but-extra-ending-stress")
 				return "remove-star"
 			else
 				--error("autobare=" .. autobare .. ", bare=" .. bare)
-				return rettrack("predictable-dereducible-but-different-stress")
+				return rettrack("predictable-dereducible-but-different-stress",
+					"autobare=" .. autobare .. ", bare=" .. bare)
 			end
 		else
 			--error("autobare=" .. autobare .. ", bare=" .. bare)
-			return rettrack("unpredictable-dereducible")
+			return rettrack("unpredictable-dereducible",
+				"autobare=" .. autobare .. ", bare=" .. bare)
 		end
 	else
-		return rettrack("bare-without-reducibility")
+		return rettrack("bare-without-reducibility",
+			"stem=" .. stem .. ", bare=" .. bare)
 	end
 
 	assert(false)
@@ -1626,7 +1636,7 @@ generate_forms_1 = function(args, per_word_info)
 	local function verify_number_value(val)
 		if not val then return nil end
 		local short = usub(val, 1, 1)
-		if short == "s" or short == "p" then
+		if short == "s" or short == "p" or short == "b" then
 			return short
 		end
 		error("Number value " .. val .. " should be empty or start with 's' (singular), 'p' (plural), or 'b' (both)")
