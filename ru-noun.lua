@@ -481,7 +481,7 @@ end
 -- Fancy version of ine() (if-not-empty). Converts empty string to nil,
 -- but also strips single or double quotes, to allow for embedded spaces.
 local function ine(arg)
-	if arg == "" then return nil end
+	if not arg or arg == "" then return nil end
 	local inside_quotes = rmatch(arg, '^"(.*)"$')
 	if inside_quotes then
 		return inside_quotes
@@ -859,11 +859,11 @@ end
 
 -- FIXME: Tracking code eventually to remove; track cases where bare is
 -- explicitly specified to see how many could be predicted. Return a value
--- to use in place of explicit bare: empty string means remove the
--- bare param, "*" means remove the bare param and add * to the decl field,
--- "**" means substitute the bare param for the lemma and add * to the decl
--- field, anything else means keep the decl field and is a message indicating
--- why (these should be manually rewritten).
+-- to use in place of explicit bare: "remove" means remove the bare param,
+-- "remove-star" means remove the bare param and add * to the decl field,
+-- "sub-star" means substitute the bare param for the lemma and add * to the
+-- decl field, anything else means keep the decl field and is a message
+-- indicating why (these should be manually rewritten).
 local function bare_tracking(stem, tr, bare, baretr, decl, sgdc, stress, old)
 	local nomsg
 	if rfind(decl, "^ь%-") then
@@ -880,13 +880,13 @@ local function bare_tracking(stem, tr, bare, baretr, decl, sgdc, stress, old)
 	track("explicit-bare")
 	if stem == bare then
 		track("explicit-bare-same-as-stem")
-		return ""
+		return "remove"
 	elseif com.make_unstressed(stem) == com.make_unstressed(bare) then
 		track("explicit-bare-different-stress")
 		return rettrack("explicit-bare-different-stress-from-stem")
 	elseif nomsg and nomsg == bare then
 		track("explicit-bare-same-as-nom-sg")
-		return ""
+		return "remove"
 	elseif nomsg and com.make_unstressed(nomsg) == com.make_unstressed(bare) then
 		track("explicit-bare-different-stress")
 		return rettrack("explicit-bare-different-stress-from-nom-sg")
@@ -904,14 +904,14 @@ local function bare_tracking(stem, tr, bare, baretr, decl, sgdc, stress, old)
 			return rettrack("error-reducible")
 		elseif autostem == stem then
 			track("predictable-reducible")
-			return "**"
+			return "sub-star"
 		elseif com.make_unstressed(autostem) == com.make_unstressed(stem) then
 			if com.remove_accents(autostem) ~= com.remove_accents(stem) then
 				--error("autostem=" .. autostem .. ", stem=" .. stem)
 				return rettrack("predictable-reducible-but-jo-differences")
 			elseif com.is_unstressed(autostem) and com.is_ending_stressed(stem) then
 				track("predictable-reducible-but-extra-ending-stress")
-				return "**"
+				return "sub-star"
 			else
 				--error("autostem=" .. autostem .. ", stem=" .. stem)
 				return rettrack("predictable-reducible-but-different-stress")
@@ -927,14 +927,14 @@ local function bare_tracking(stem, tr, bare, baretr, decl, sgdc, stress, old)
 			return rettrack("error-dereducible")
 		elseif autobare == bare then
 			track("predictable-dereducible")
-			return "*"
+			return "remove-star"
 		elseif com.make_unstressed(autobare) == com.make_unstressed(bare) then
 			if com.remove_accents(autobare) ~= com.remove_accents(bare) then
 				--error("autobare=" .. autobare .. ", bare=" .. bare)
 				return rettrack("predictable-dereducible-but-jo-differences")
 			elseif com.is_unstressed(autobare) and com.is_ending_stressed(bare) then
 				track("predictable-dereducible-but-extra-ending-stress")
-				return "*"
+				return "remove-star"
 			else
 				--error("autobare=" .. autobare .. ", bare=" .. bare)
 				return rettrack("predictable-dereducible-but-different-stress")
@@ -959,6 +959,7 @@ function export.bare_tracking(frame)
 	local tr, baretr
 	stem, tr = split_russian_tr(stem)
 	bare, baretr = split_russian_tr(bare)
+	decl = decl or ""
 	local decl_cats = old and declensions_old_cat or declensions_cat
 	if not decl_cats[decl] then
 		error("Unrecognized declension: " .. decl)
@@ -2237,20 +2238,19 @@ function export.generate_forms(frame)
 	return concat_case_args(args)
 end
 
--- The entry point for 'ru-noun-multi-forms' to generate multiple sets of
--- noun forms. This is a hack to speed up calling from a bot, where we
--- often want to compare old and new argument results to make sure they're
--- the same. Each set of arguments is jammed together into a single argument
--- with individual values separated by <!>; named arguments are of the form
--- NAME<->VALUE. The return value for each set of arguments is as in
--- export.generate_forms(), and the return values are concatenated with <!>
--- separating them. NOTE: This will fail if the exact sequences <!> or <->
--- happen to occur in values (which is unlikely, esp. as we don't even use
--- the characters <, ! or > for anything) and aren't HTML-escaped.
+-- The entry point to generate multiple sets of noun forms. This is a hack
+-- to speed up calling from a bot, where we often want to compare old and new
+-- argument results to make sure they're the same. Each set of arguments is
+-- jammed together into a single argument with individual values separated by
+-- <!>; named arguments are of the form NAME<->VALUE. The return value for
+-- each set of arguments is as in export.generate_forms(), and the return
+-- values are concatenated with <!> separating them. NOTE: This will fail if
+-- the exact sequences <!> or <-> happen to occur in values (which is unlikely,
+-- esp. as we don't even use the characters <, ! or > for anything) and aren't
+-- HTML-escaped.
 function export.generate_multi_forms(frame)
-	local args = clone_args(frame)
 	local retvals = {}
-	for _, argset in ipairs(args) do
+	for _, argset in ipairs(frame.args) do
 		local args = {}
 		local i = 0
 		local argvals = rsplit(argset, "<!>")
