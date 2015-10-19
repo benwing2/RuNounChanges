@@ -277,8 +277,8 @@ TODO:
    be masculine or feminine, -а/я should be neuter except that -ія can be
    feminine or neuter due to old-style adjectival pluralia tantum nouns,
    anything else can be any gender.)
-7. FIXME: Remove boolean recognize_plurals; this should always be true.
-   Do in conjunction with merging multiple-words/manual-translit branches.
+7. Remove boolean recognize_plurals; this should always be true. Do in
+   conjunction with merging multiple-words/manual-translit branches. [DONE]
 8. FIXME: Eliminate uses of о-ья, converting them to use -ья special case.
 9. FIXME: Change stress-pattern detection and overriding to happen inside of
    looping over the two parts of a slash decl. Requires that the loop over
@@ -637,8 +637,6 @@ local internal_notes_table = {}
 -- category insertion if false. Delete this as soon as we've verified the
 -- working of the category code and created all the necessary categories.
 local enable_categories = false
--- Whether to recognize plural stem forms given the gender.
-local recognize_plurals = true
 -- Category/type info corresponding to old-style declensions; see above.
 local declensions_old_cat = {}
 -- Category/type info corresponding to new-style declensions. Computed
@@ -2586,86 +2584,87 @@ local function detect_lemma_type(lemma, tr, gender, args, variant)
 	if base then
 		return base, strip_tr_ending(tr, ending), ulower(ending)
 	end
+
 	--recognize plural endings
-	if recognize_plurals then
-		if gender == "n" then
-			base, ending = rmatch(lemma, "^(.*)([ьЬ][яЯ]́?)$")
-			if base then
-				-- Don't do this; о/-ья is too rare
-				-- error("Ambiguous plural lemma " .. lemma .. " in -ья, singular could be -о or -ье/-ьё; specify the singular")
-				return base, strip_tr_ending(tr, ending), "ье", ending
-			end
-			base, ending = rmatch(lemma, "^(.*)([аяАЯ]́?)$")
-			if base then
-				return base, strip_tr_ending(tr, ending), rfind(ending, "[аА]") and "о" or "е", ending
-			end
-			base, ending = rmatch(lemma, "^(.*)([ыиЫИ]́?)$")
-			if base then
-				if rfind(ending, "[ыЫ]") or rfind(base, "[" .. com.sib .. com.velar .. "]$") then
-					return base, strip_tr_ending(tr, ending), "о-и", ending
-				else
-					-- FIXME, should we return a slash declension?
-					error("No neuter declension е-и available; use a slash declension")
-				end
-			end
+	if gender == "n" then
+		base, ending = rmatch(lemma, "^(.*)([ьЬ][яЯ]́?)$")
+		if base then
+			-- Don't do this; о/-ья is too rare
+			-- error("Ambiguous plural lemma " .. lemma .. " in -ья, singular could be -о or -ье/-ьё; specify the singular")
+			return base, strip_tr_ending(tr, ending), "ье", ending
 		end
-		if gender == "f" then
-			base, ending = rmatch(lemma, "^(.*)([ьЬ][иИ]́?)$")
-			if base then
-				return base, strip_tr_ending(tr, ending), "ья", ending
-			end
+		base, ending = rmatch(lemma, "^(.*)([аяАЯ]́?)$")
+		if base then
+			return base, strip_tr_ending(tr, ending), rfind(ending, "[аА]") and "о" or "е", ending
 		end
-		-- Recognize masculines with irregular plurals, but only if the user
-		-- either explicitly specified that this noun is plural (n=p) or
-		-- specifically requested the irregular plural. This is necessary
-		-- because some masculine nouns have feminine endings, which look
-		-- like irregular plurals.
-		if gender == "m" then
-			if args.thisn == "p" or variant == "-ья" then
-				base, ending = rmatch(lemma, "^(.*)([ьЬ][яЯ]́?)$")
-				if base then
-					return base, strip_tr_ending(tr, ending), (args.old and "ъ-ья" or "-ья"), ending
-				end
-			end
-			if args.thisn == "p" or args.want_sc1 then
-				base, ending = rmatch(lemma, "^(.*)([аА]́?)$")
-				if base then
-					return base, strip_tr_ending(tr, ending), (args.old and "ъ-а" or "-а"), ending
-				end
-				base, ending = rmatch(lemma, "^(.*)([яЯ]́?)$")
-				if base then
-					if rfind(base, "[" .. com.vowel .. "]́?$") then
-						return base, strip_tr_ending(tr, ending), "й-я", ending
-					else
-						return base, strip_tr_ending(tr, ending), "ь-я", ending
-					end
-				end
-			end
-		end
-		if gender == "m" or gender == "f" then
-			base, ending = rmatch(lemma, "^(.*[" .. com.sib .. com.velar .. "])([иИ]́?)$")
-			if not base then
-				base, ending = rmatch(lemma, "^(.*)([ыЫ]́?)$")
-			end
-			if base then
-				return base, strip_tr_ending(tr, ending), gender == "m" and (args.old and "ъ" or "") or "а", ending
-			end
-			base, ending = rmatch(lemma, "^(.*[" .. com.vowel .. "]́?)([иИ]́?)$")
-			if base then
-				return base, strip_tr_ending(tr, ending), gender == "m" and "й" or "я", ending
-			end
-			base, ending = rmatch(lemma, "^(.*)([иИ]́?)$")
-			if base then
-				return base, strip_tr_ending(tr, ending), gender == "m" and "ь-m" or "я", ending
-			end
-		end
-		if gender == "3f" then
-			base, ending = rmatch(lemma, "^(.*)([иИ]́?)$")
-			if base then
-				return base, strip_tr_ending(tr, ending), "ь-f", ending
+		base, ending = rmatch(lemma, "^(.*)([ыиЫИ]́?)$")
+		if base then
+			if rfind(ending, "[ыЫ]") or rfind(base, "[" .. com.sib .. com.velar .. "]$") then
+				return base, strip_tr_ending(tr, ending), "о-и", ending
+			else
+				-- FIXME, should we return a slash declension?
+				error("No neuter declension е-и available; use a slash declension")
 			end
 		end
 	end
+	if gender == "f" then
+		base, ending = rmatch(lemma, "^(.*)([ьЬ][иИ]́?)$")
+		if base then
+			return base, strip_tr_ending(tr, ending), "ья", ending
+		end
+	end
+	-- Recognize masculines with irregular plurals, but only if the user
+	-- either explicitly specified that this noun is plural (n=p) or
+	-- specifically requested the irregular plural. This is necessary
+	-- because some masculine nouns have feminine endings, which look
+	-- like irregular plurals.
+	if gender == "m" then
+		if args.thisn == "p" or variant == "-ья" then
+			base, ending = rmatch(lemma, "^(.*)([ьЬ][яЯ]́?)$")
+			if base then
+				return base, strip_tr_ending(tr, ending), (args.old and "ъ-ья" or "-ья"), ending
+			end
+		end
+		if args.thisn == "p" or args.want_sc1 then
+			base, ending = rmatch(lemma, "^(.*)([аА]́?)$")
+			if base then
+				return base, strip_tr_ending(tr, ending), (args.old and "ъ-а" or "-а"), ending
+			end
+			base, ending = rmatch(lemma, "^(.*)([яЯ]́?)$")
+			if base then
+				if rfind(base, "[" .. com.vowel .. "]́?$") then
+					return base, strip_tr_ending(tr, ending), "й-я", ending
+				else
+					return base, strip_tr_ending(tr, ending), "ь-я", ending
+				end
+			end
+		end
+	end
+	if gender == "m" or gender == "f" then
+		base, ending = rmatch(lemma, "^(.*[" .. com.sib .. com.velar .. "])([иИ]́?)$")
+		if not base then
+			base, ending = rmatch(lemma, "^(.*)([ыЫ]́?)$")
+		end
+		if base then
+			return base, strip_tr_ending(tr, ending), gender == "m" and (args.old and "ъ" or "") or "а", ending
+		end
+		base, ending = rmatch(lemma, "^(.*[" .. com.vowel .. "]́?)([иИ]́?)$")
+		if base then
+			return base, strip_tr_ending(tr, ending), gender == "m" and "й" or "я", ending
+		end
+		base, ending = rmatch(lemma, "^(.*)([иИ]́?)$")
+		if base then
+			return base, strip_tr_ending(tr, ending), gender == "m" and "ь-m" or "я", ending
+		end
+	end
+	if gender == "3f" then
+		base, ending = rmatch(lemma, "^(.*)([иИ]́?)$")
+		if base then
+			return base, strip_tr_ending(tr, ending), "ь-f", ending
+		end
+	end
+	-- end of recognize-plurals code
+
 	base, ending = rmatch(lemma, "^(.*)([ьЬ][яеёЯЕЁ]́?)$")
 	if base then
 		return base, strip_tr_ending(tr, ending), ulower(ending)
