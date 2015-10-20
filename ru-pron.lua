@@ -208,22 +208,18 @@ function export.ipa(text, adj, gem, pal)
 	--handle these as separate words, see 'accentless')
 	text = rsub(text, '-', ' ')
 
-	text = com.decompose_grave(text)
+	-- translit will not respect э vs. е difference so we have to
+	-- do it ourselves before translit
 	text = rsub(text, 'э', 'ɛ')
-	-- transliterate
-	text = m_ru_translit.tr(text)
-	-- FIXME: If we accept transliterated text from the outside, we will
-	-- need to decompose all acute and grave Latin vowels
-	text = rsub(text, 'ó', 'o' .. AC)
+	-- transliterate and decompose acute and grave Latin vowels
+	text = com.translit(text)
 
 	--phonetic respellings
 	for a, b in pairs(phon_respellings) do
 		text = rsub(text, a, b)
 	end
 
-	-- FIXME, should include а as well as о and е to handle old-style
-	-- adjectival genitives
-	text = adj and rsub(text, '(.[oe]́?)go(' .. AC .. '?)$', '%1vo%2') or text
+	text = adj and rsub(text, '(.[aoe]́?)go(' .. AC .. '?)$', '%1vo%2') or text
 
 	-- make prepositions and particles liaise with the following or
 	-- preceding word
