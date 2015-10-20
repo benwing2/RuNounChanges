@@ -59,10 +59,11 @@ local test_new_ru_pron_module = false
 
 local AC = u(0x0301) -- acute =  ́
 local GR = u(0x0300) -- grave =  ̀
+local CFLEX = u(0x0302) -- circumflex =  ̂
 
--- FIXME, should include outdated vowels in cyr_vowels_c or should
--- canonicalize them early on
-local vowels, vowels_c, non_vowels, non_vowels_c, cyr_vowels_c = '[aäeëɛəiyoöuü]', '([aäeëɛəiyoöuü])', '[^aäeëɛəiyoöuü]', '([^aäeëɛəiyoöuü])', '([аяеёэиыоую])'
+local vowels, vowels_c, non_vowels, non_vowels_c = '[aäeëɛəiyoöuü]', '([aäeëɛəiyoöuü])', '[^aäeëɛəiyoöuü]', '([^aäeëɛəiyoöuü])'
+local accents = '[' .. AC .. GR .. CFLEX .. ']'
+local non_accents = '[^' .. AC .. GR .. CFLEX .. ']'
 
 local perm_syl_onset = ut.list_to_set({
 	'str', 'sp', 'st', 'sk', 'sf', 'sx', 'sc',
@@ -221,26 +222,38 @@ function export.ipa(text, adj, gem, pal)
 
 	text = adj and rsub(text, '(.[aoe]́?)go(' .. AC .. '?)$', '%1vo%2') or text
 
-	-- make prepositions and particles liaise with the following or
-	-- preceding word
+	-- add primary stress to single-syllable words preceded or followed by
+	-- unstressed particle or preposition; make remaining single-syllable
+	-- words have "unmarked" stress (treated as stressed but without a
+	-- primary or secondary stress marker; we repurpose a circumflex for
+	-- this purpose)
 	local word = rsplit(text, " ", true)
 	for i = 1, #word do
-		local noacpre = accentless['prep'][word[i]]
-		local noacpost = accentless['post'][word[i]]
-		if noacpre and i ~= #word then
-			word[i+1] = word[i] .. '‿' .. word[i+1]
-			word[i+1] = rsub(word[i+1], '([bdkstvxzž])‿i', '%1‿y')
-			word[i] = ''
-		elseif noacpost and i ~= 1 then
-			word[i-1] = word[i-1] .. word[i]
-			word[i] = ''
-		-- not enabled. This makes all monosyllables that aren't unstressed
-		-- primary-stressed. We need to be more sophisticated.
-		--elseif not noacpre and not acpost and com.is_monosyllabic(word[i]) then
-		--	word[i] = com.make_ending_stressed(word[i])
+		if not accentless['prep'][word[i]] and not accentless['post'][word[i]] and
+			ulen(rsub(word[i], non_vowels, '')) == 1 and
+			rsub(word[i], non_accents, '') == '' then
+			if (i > 1 and accentless['prep'][word[i-1]] or i < #word and accentless['post'][word[i+1]]) then
+				word[i] = rsub(word[i], vowels_c, '%1' .. AC)
+			else
+				word[i] = rsub(word[i], vowels_c, '%1' .. CFLEX)
+			end
 		end
 	end
 
+	-- make prepositions and particles liaise with the following or
+	-- preceding word
+	for i = 1, #word do
+		if i < #word and accentless['prep'][word[i]] then
+			word[i+1] = word[i] .. '‿' .. word[i+1]
+			word[i+1] = rsub(word[i+1], '([bdkstvxzž])‿i', '%1‿y')
+			word[i] = ''
+		elseif i > 1 and accentless['post'][word[i]] then
+			word[i-1] = word[i-1] .. word[i]
+			word[i] = ''
+		end
+	end
+
+	-- rejoin words and eliminate stray spaces from blanking out words
 	text = table.concat(word, " ")
 	text = rsub(text, '^ ', '')
 	text = rsub(text, ' $', '')
@@ -274,10 +287,11 @@ function export.ipa(text, adj, gem, pal)
 		local stress = {} -- set of 1-based indices of stressed syllables
 		local pron = word[i]
 
-		--optional iotation of 'e' in a two-vowel sequence and reduction of word-final 'e'
-		pron = rsub(pron, '([aäeëɛiyoöuü]́?)ë([^́])', '%1(j)ë%2')
+		--optional iotation of 'e' in a two-vowel sequence and reduction of
+		--word-final 'e'; FIXME: Should this also include grave accent?
+		pron = rsub(pron, '([aäeëɛiyoöuü][́̂]?)ë([^́̂])', '%1(j)ë%2')
 		pron = rsub(pron, 'e$', 'ə')
-		pron = rsub(pron, '([aäeëɛəiyoöuüʹ])(́?)[äë]$', '%1%2jə')
+		pron = rsub(pron, '([aäeëɛəiyoöuüʹ])([́̂]?)[äë]$', '%1%2jə')
 		pron = rsub(pron, non_vowels_c .. 'ä$', '%1ʲə')
 		pron = rsub(pron, '%(j%)jə', 'jə')
 
@@ -288,7 +302,7 @@ function export.ipa(text, adj, gem, pal)
 		-- the pal=y case, which used to handle adding the j.
 		pron = rsub(pron, 'ʹ([äëöü])', 'ʹj%1')
 		pron = rsub(pron, 'ʹi', 'ʹji')
-		pron = rsub(pron, '([aäeëɛəiyoöuü][́̀]?)', '%1/')
+		pron = rsub(pron, '([aäeëɛəiyoöuü]' .. accents .. '?)', '%1/')
 		pron = rsub(pron, '/+$', '')
 		pron = rsub(pron, '/([^‿/aäeëɛəiyoöuü]*)([^‿/aäeëɛəiyoöuüʹːʲ])(ʹ?ʲ?ː?[aäeëɛəiyoöuü])', '%1/%2%3')
 		pron = rsub(pron, '([^‿/aäeëɛəiyoöuü]?)([^‿/aäeëɛəiyoöuü])/([^‿/aäeëɛəiyoöuüʹːʲ])(ʹ?ʲ?ː?[aäeëɛəiyoöuü])', function(a, b, c, d)
@@ -300,21 +314,14 @@ function export.ipa(text, adj, gem, pal)
 		pron = rsub(pron, '/([^‿/aäeëɛəiyoöuü]+)$', '%1')
 		pron = rsub(pron, '/‿', '‿/')
 
-		--remove accent marks from monosyllables
-		--FIXME: Disabled by Benwing2. This applies only to /o/ and messes up
-		--что́-лѝбо.
-		--if ulen(rsub(pron, non_vowels_c, '')) == 1 and rfind(pron, 'o' .. AC) then
-		--	pron = rsub(pron, AC, '')
-		--end
-
 		--write 1-based syllable indexes of stressed syllables (acute or grave) to
 		--the list POS
 		local pos = {}
 
 		local trimmed_pron = pron
 		local count = 0
-		while rfind(trimmed_pron, '[́̀]') do
-			local accent_pos = rfind(trimmed_pron, '[́̀]')
+		while rfind(trimmed_pron, accents) do
+			local accent_pos = rfind(trimmed_pron, accents)
 			count = count + ulen(rsub(usub(trimmed_pron, 1, accent_pos - 1), '[^%/]', ''))
 			table.insert(pos, count + 1)
 			trimmed_pron = usub(trimmed_pron, accent_pos + 1, -1)
@@ -347,7 +354,7 @@ function export.ipa(text, adj, gem, pal)
 				if (j == 1 and not rfind(syl, 'ː$')) or stress[j-1] then
 					no_replace = true
 				else
-					local de_accent = rsub(word[i], '[̀́]', '')
+					local de_accent = rsub(word[i], accents, '')
 					for i = 1, #geminate_pref do
 						if not no_replace and rfind(de_accent, geminate_pref[i]) then
 							no_replace = true
@@ -363,7 +370,7 @@ function export.ipa(text, adj, gem, pal)
 						syl = rsub(syl, 'nː', 'n')
 					end
 				end
-				if rfind(word[i], '[^̀́]nːyj$') then
+				if rfind(word[i], non_accents .. 'nːyj$') then
 					syl = rsub(syl, 'nːyj', 'n(ː)yj')
 				end
 			end
@@ -401,8 +408,11 @@ function export.ipa(text, adj, gem, pal)
 
 			--vowel allophony
 			if stress[j] or (j == #syllable and rfind(syllable[j-1] .. syllable[j], '[aieäëü]́?o')) or rfind(syllable[j], GR) then
+				-- convert acute/grave/circumflex accent to appropriate
+				-- IPA marker of primary/secondary/unmarked stress
 				syl = rsub(syl, '(.*)́', 'ˈ%1')
 				syl = rsub(syl, '(.*)̀', 'ˌ%1')
+				syl = rsub(syl, '(.*)̂', '%1')
 				syl = rsub(syl, '([ʲčǰǯ]ː?)o', '%1ö')
 				syl = rsub(syl, vowels_c, function(a)
 					if a ~= '' then
