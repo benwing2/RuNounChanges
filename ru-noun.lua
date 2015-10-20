@@ -492,6 +492,10 @@ local function ine(arg)
 	return arg
 end
 
+local function translit_no_links(ru)
+	return com.translit(m_links.remove_links(ru))
+end
+
 local function split_russian_tr(term, dopair)
 	local ru, tr
 	if not rfind(term, "//") then
@@ -544,8 +548,8 @@ local function rutr_pairs_equal(term1, term2)
 	elseif type(tr1entry) == type(tr2entry) then
 		return false
 	else
-		tr1entry = tr1entry or com.translit(ru1entry)
-		tr2entry = tr2entry or com.translit(ru2entry)
+		tr1entry = tr1entry or translit_no_links(ru1entry)
+		tr2entry = tr2entry or translit_no_links(ru2entry)
 		return tr1entry == tr2entry
 	end
 end
@@ -1357,10 +1361,10 @@ local function concat_russian_tr(ru1, tr1, ru2, tr2, dopair)
 		ru = ru1 .. ru2
 	else
 		if not tr1 then
-			tr1 = com.translit(ru1)
+			tr1 = translit_no_links(ru1)
 		end
 		if not tr2 then
-			tr2 = com.translit(ru2)
+			tr2 = translit_no_links(ru2)
 		end
 		ru, tr = ru1 .. ru2, com.j_correction(tr1 .. tr2)
 	end
@@ -1394,11 +1398,11 @@ local function determine_headword_gender(args, sgdc, gender)
 
 	-- Determine headword genders
 	gender = gender and gender ~= "none" and gender .. "-" or ""
-	local plsuffix = args.thisn == "p" and "-p" or ""
+	local plsuffix = args.n == "p" and "-p" or ""
 	local hgens
-	if args.thisa == "a" then
+	if args.a == "a" then
 		hgens = {gender .. "an" .. plsuffix}
-	elseif args.thisa == "i" then
+	elseif args.a == "i" then
 		hgens = {gender .. "in" .. plsuffix}
 	else
 		hgens = {gender .. "an" .. plsuffix, gender .. "in" .. plsuffix}
@@ -2521,7 +2525,7 @@ end
 
 local function strip_tr_ending(tr, ending)
 	if not tr then return nil end
-	local endingtr = rsub(com.translit(ending), "([Jj])", "%1?")
+	local endingtr = rsub(translit_no_links(ending), "([Jj])", "%1?")
 	local strippedtr = rsub(tr, endingtr, "")
 	if strippedtr == tr then
 		error("Translit " .. tr .. " doesn't end with expected ending " .. endingtr)
@@ -4403,8 +4407,8 @@ canonicalize_override = function(args, case, forms, n)
 		valru = rsub(valru, "~~", ustem)
 		valru = rsub(valru, "~", stem)
 		if valtr then
-			tr = tr or com.translit(stem)
-			utr = utr or com.translit(ustem)
+			tr = tr or translit_no_links(stem)
+			utr = utr or translit_no_links(ustem)
 			valtr = rsub(valtr, "~~", utr)
 			valtr = rsub(valtr, "~", tr)
 		end
@@ -4436,7 +4440,7 @@ canonicalize_override = function(args, case, forms, n)
 					ru = rsub(ru, "(%s)%+", "%1[[" .. valru .. "]]")
 					-- do the translit; but it shouldn't have brackets in it
 					if tr then
-						valtr = valtr or com.translit(valru)
+						valtr = valtr or translit_no_links(valru)
 						tr = rsub(tr, "^%+", valtr)
 						tr = rsub(tr, "(%s)%+", "%1" .. valtr)
 					end
@@ -4639,8 +4643,9 @@ handle_forms_and_overrides = function(args, n, islast)
 	-- and vice-versa. This is important so that things work in multi-word
 	-- expressions that combine different number restrictions (e.g.
 	-- singular-only with singular/plural or singular-only with plural-only,
-	-- cf. "St. Vincent and the Grenadines" [Санкт-Винцент и Гренадины]).
+	-- cf. "St. Vincent and the Grenadines" [Сент-Винсент и Гренадины]).
 	if nu == "s" then
+		f.nom_pl_linked = f.nom_sg_linked
 		f.nom_pl = f.nom_sg
 		f.gen_pl = f.gen_sg
 		f.dat_pl = f.dat_sg
@@ -4656,6 +4661,7 @@ handle_forms_and_overrides = function(args, n, islast)
 		-- f.par_pl = f.par
 		-- f.voc_pl = f.voc
 	elseif nu == "p" then
+		f.nom_sg_linked = f.nom_pl_linked
 		f.nom_sg = f.nom_pl
 		f.gen_sg = f.gen_pl
 		f.dat_sg = f.dat_pl
@@ -4774,10 +4780,10 @@ local function show_form(forms, old, lemma)
 			ruspan = m_links.full_link(ruentry, nil, lang, nil, nil, nil, {tr = "-"}, false) .. runotes
 		end
 		if not trentry then
-			trentry = com.translit(ruentry)
+			trentry = translit_no_links(ruentry)
 		end
 		if not trnotes then
-			trnotes = com.translit(runotes)
+			trnotes = translit_no_links(runotes)
 		end
 		trspan = m_links.remove_links(trentry) .. trnotes
 		trspan = "<span style=\"color: #888\">" .. trspan .. "</span>"
