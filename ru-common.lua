@@ -178,6 +178,8 @@ end
 local recomposer = {
 	["и" .. BREVE] = "й",
 	["И" .. BREVE] = "Й",
+	["ж" .. BREVE] = "ӂ", -- used in ru-pron
+	["Ж" .. BREVE] = "Ӂ",
 	["е" .. DIA] = "ё", -- WARNING: Cyrillic е and Е
 	["Е" .. DIA] = "Ё",
 	["e" .. CARON] = "ě", -- WARNING: Latin e and E
