@@ -279,7 +279,7 @@ TODO:
    anything else can be any gender.)
 7. Remove boolean recognize_plurals; this should always be true. Do in
    conjunction with merging multiple-words/manual-translit branches. [DONE]
-8. FIXME: Eliminate uses of о-ья, converting them to use -ья special case.
+8. Eliminate uses of о-ья, converting them to use -ья special case. [DONE]
 9. FIXME: Change stress-pattern detection and overriding to happen inside of
    looping over the two parts of a slash decl. Requires that the loop over
    the two parts happen outside of the loop over stress patterns. Requires
@@ -358,8 +358,7 @@ TODO:
    beginning of a note. Also do this in adjective module. [IMPLEMENTED.
    NEED TO TEST.]
 27. Consider eliminating о-ья and replacing it with slash declension
-   о/-ья like we do for feminine, masculine soft, etc. nouns. [IMPLEMENTED.
-   NEED TO TEST.]
+   о/-ья like we do for feminine, masculine soft, etc. nouns. [DONE.]
 28. Make the check for multiple stress patterns (categorizing/tracking)
    smarter, to keep a list of them and check at the end, so we handle
    multiple stress patterns specified through different arg sets.
@@ -2727,11 +2726,6 @@ end
 -- (e.g. е́, not the same as е, whose accented version is ё; and various
 -- adjective declensions).
 local function canonicalize_decl(decl, old)
-	-- FIXME: For compatibility; remove it after changing uses of о-ья
-	if com.remove_accents(decl) == "о-ья" then
-		track("о-ья")
-		decl = old and "о/ъ-ья" or "о/-ья"
-	end
 	local function do_canon(decl)
 		-- remove accents, but not from е́ (for adj decls, accent matters
 		-- as well but we handle that by mapping the accent to a stress pattern
@@ -4511,7 +4505,16 @@ local function process_overrides(args, f, n)
 			process_override(case)
 		end
 	end
-	--
+
+	-- if the nominative is overridden, use it to set the linked version unless
+	-- that is also specifically overridden
+	if args["nom_sg" .. n] and not args["nom_sg_linked" .. n] then
+		f["nom_sg_linked" .. n] = f["nom_sg" .. n]
+	end
+	if args["nom_pl" .. n] and not args["nom_pl_linked" .. n] then
+		f["nom_pl_linked" .. n] = f["nom_pl" .. n]
+	end
+
 	-- convert empty lists to nil to facilitate computation of accusative
 	-- case variants below.
 	for _, case in ipairs(all_cases) do
@@ -4524,7 +4527,6 @@ local function process_overrides(args, f, n)
 			end
 		end
 	end
-
 end
 
 handle_forms_and_overrides = function(args, n, islast)
