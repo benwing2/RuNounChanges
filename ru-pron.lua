@@ -488,6 +488,7 @@ function export.ipa(text, adj, gem, pal)
 
 	if test_new_ru_pron_module then
 		if new_module_result ~= text then
+			--error(text .. " || " .. new_module_result)
 			track("different-pron")
 		end
 	end
