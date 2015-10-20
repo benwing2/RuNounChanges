@@ -119,54 +119,47 @@ local geminate_pref = {
 	'^o[cdmtč]ː', '^podː', '^predː', '^paszː', '^pozː', '^sː', '^sverxː', '^subː', '^tröxː', '^čeresː', '^četyröxː', '^črezː',
 }
 
--- FIXME! These should happen *AFTER* translit so that we can specify
--- transliteration as an option and use it -- to facilitate automatically
--- generating pronunciations from headwords
 local phon_respellings = {
-	--['вств'] = 'ств',
-	-- FIXME!!! These won't work because they have vowels_c instead of
-	-- cyr_vowels_c; they also don't correctly handle accent marks
-	[cyr_vowels_c .. '([шж])ю'] = '%1%2у', [cyr_vowels_c .. '([шжц])е'] = '%1%2э', [cyr_vowels_c .. '([шжц])и'] = '%1%2ы', [cyr_vowels_c .. '([шж])ё'] = '%1%2о́',
-	-- FIXME!!! Shouldn't these also pay attention to ё and diaeresis instead
+	--['vstv'] = 'stv',
+	[vowels_c .. '([šž])j([ou])'] = '%1%2%3', [vowels_c .. '([šžc])e'] = '%1%2ɛ', [vowels_c .. '([šžc])i'] = '%1%2y',
+	-- FIXME!!! Shouldn't these also pay attention to diaeresis instead
 	-- of just acute accent?
-	['́ть?ся'] = '́цца', ['([^́])ть?ся'] = '%1ца',
-	['[дт](ь?)с(.?)'] = function(a, b)
-		if b ~= 'я' then
-			if rsub(b, cyr_vowels_c, '') == '' then
-				return 'ц' .. a .. 'с' .. b
+	['́tʹ?sja'] = '́cca', ['([^́])tʹ?sja'] = '%1ca',
+	['[dt](ʹ?)s(.?)(.?)'] = function(a, b, c)
+		if not (b == 'j' and c == 'a') then
+			if rsub(b, vowels_c, '') ~= '' or b == 'j' and rsub(c, vowels_c, '') ~= '' then
+				-- s was followed by a vowel
+				return 'c' .. a .. b .. c
 			else
-				return 'ц' .. a .. b
+				return 'c' .. a .. 's' .. b .. c
 			end
 		end end,
 
-	['[дт]з' .. cyr_vowels_c] = 'ĵз%1', ['^о[дт]с'] = 'оцс',
-	['([щч])о'] = '%1ё', ['([щч])а'] = '%1я', ['([щч])у'] = '%1ю',
+	['[dt]z(j?)' .. vowels_c] = 'ĵz%1%2', ['^o[dt]s'] = 'ocs',
+	['čo'] = 'čjo', ['ča'] = 'čja', ['ču'] = 'čju',
 
-	['([^рн])[дт]ц'] = '%1цц', ['[тд]ч'] = 'чч',
-	['йо́'] = 'ё',
-	['стг'] = 'сг',
+	['([^rn])[dt]c'] = '%1cc', ['[td]č'] = 'čč',
+	['stg'] = 'sg',
 
-	['([шжщч])ь$'] = '%1',
+	['([šžč])ʹ$'] = '%1',
 
-	['сверхи'] = 'сверхы',
-	['стьд'] = 'зд',
-	['тьд'] = 'дд',
+	['sverxi'] = 'sverxy',
+	['stʹd'] = 'zd',
+	['tʹd'] = 'dd',
 
-	['р[дт]ц'] = 'рц', ['р[дт]ч'] = 'рч',
-	['здн'] = 'зн', ['[сз][дт]ц'] = 'сц',
-	['лнц'] = 'нц',	['н[дт]ц'] = 'нц',
-	['[сз]тл'] = 'сл', ['[сз]тн'] = 'сн',
-	['[сзшж]ч'] = 'щ', ['[сзшж]щ'] = 'щ',
-	['[зс]ш'] = 'шш', ['[зс]ж'] = 'жж',
-	['н[ндт]ск'] = 'нск',
-	['[сз]ск'] = 'ск',
-	['с[дт]ск'] = 'сцк',
-	['гк'] = 'хк',
-	['н[дт]г'] = 'нг',
-	['э'] = 'ɛ',
+	['r[dt]c'] = 'rc', ['r[dt]č'] = 'rč',
+	['zdn'] = 'zn', ['[sz][dt]c'] = 'sc',
+	['lnc'] = 'nc',	['n[dt]c'] = 'nc',
+	['[sz]tl'] = 'sl', ['[sz]tn'] = 'sn',
+	['[szšž]č'] = 'šč', ['[szšž]šč'] = 'šč',
+	['[zs]š'] = 'šš', ['[zs]ž'] = 'žž',
+	['n[ndt]sk'] = 'nsk',
+	['[sz]sk'] = 'sk',
+	['s[dt]sk'] = 'sck',
+	['gk'] = 'xk',
+	['n[dt]g'] = 'ng',
 }
 
--- FIXME: Use ut.list_to_set() here
 local cons_assim_palatal = {
 	compulsory = ut.list_to_set({'stʲ', 'zdʲ', 'nč', 'nǯ'}),
 	optional = ut.list_to_set({'slʲ', 'zlʲ', 'snʲ', 'znʲ', 'tnʲ', 'dnʲ',
@@ -175,13 +168,13 @@ local cons_assim_palatal = {
 
 --@Wyang - they may carry the stress too, as alternatives - по́ небу/по не́бу, etc.
 local accentless = {
-	prep = ut.list_to_set({'без', 'близ', 'в', 'во', 'до',
-		'из-под', 'из-за', 'за', 'из', 'изо',
-		'к', 'ко', 'меж', 'на', 'над', 'надо', 'о', 'об', 'обо', 'от',
-		'по', 'под', 'подо', 'пред', 'предо', 'при', 'про', 'перед', 'передо',
-		'через', 'с', 'со', 'у', 'не'}),
-	post = ut.list_to_set({'то', 'либо', 'нибудь', 'бы', 'б', 'же', 'ж',
-		'ка', 'тка', 'ли'})
+	prep = ut.list_to_set({'bez', 'bliz', 'v', 'vo', 'do',
+       'iz-pod', 'iz-za', 'za', 'iz', 'izo',
+       'k', 'ko', 'mež', 'na', 'nad', 'nado', 'o', 'ob', 'obo', 'ot',
+       'po', 'pod', 'podo', 'pred', 'predo', 'pri', 'pro', 'pered', 'peredo',
+       'čerez', 's', 'so', 'u', 'ne'}),
+	post = ut.list_to_set({'to', 'libo', 'nibudʹ', 'by', 'b', 'že', 'ž',
+       'ka', 'tka', 'li'})
 }
 
 local function ine(x)
@@ -216,25 +209,31 @@ function export.ipa(text, adj, gem, pal)
 	text = rsub(text, '-', ' ')
 
 	text = com.decompose_grave(text)
+	text = rsub(text, 'э', 'ɛ')
+	-- transliterate
+	text = m_ru_translit.tr(text)
+	-- FIXME: If we accept transliterated text from the outside, we will
+	-- need to decompose all acute and grave Latin vowels
+	text = rsub(text, 'ó', 'o' .. AC)
 
-	--phonetic respellings; FIXME: should happen after transliteration
+	--phonetic respellings
 	for a, b in pairs(phon_respellings) do
 		text = rsub(text, a, b)
 	end
+
 	-- FIXME, should include а as well as о and е to handle old-style
 	-- adjectival genitives
-	-- FIXME: should happen after transliteration
-	text = adj and rsub(text, '(.[ое]́?)го(' .. AC .. '?)$', '%1во%2') or text
+	text = adj and rsub(text, '(.[oe]́?)go(' .. AC .. '?)$', '%1vo%2') or text
 
-	--make monosyllabic prepositions liaise with the following word
-	-- FIXME: should happen after transliteration
+	-- make prepositions and particles liaise with the following or
+	-- preceding word
 	local word = rsplit(text, " ", true)
 	for i = 1, #word do
 		local noacpre = accentless['prep'][word[i]]
 		local noacpost = accentless['post'][word[i]]
 		if noacpre and i ~= #word then
 			word[i+1] = word[i] .. '‿' .. word[i+1]
-			word[i+1] = rsub(word[i+1], '([бдкствхзж])‿и', '%1‿ы')
+			word[i+1] = rsub(word[i+1], '([bdkstvxzž])‿i', '%1‿y')
 			word[i] = ''
 		elseif noacpost and i ~= 1 then
 			word[i-1] = word[i-1] .. word[i]
@@ -251,12 +250,8 @@ function export.ipa(text, adj, gem, pal)
 	text = rsub(text, ' $', '')
 	text = rsub(text, ' +', ' ')
 
-	--transliterate and tidy up
-	text = m_ru_translit.tr(text)
+	-- some tidying up after transliteration
 	text = rsub(text, 'šč', 'ǯː')
-	-- FIXME: If we accept transliterated text from the outside, we will
-	-- need to decompose all acute and grave Latin vowels
-	text = rsub(text, 'ó', 'o' .. AC)
 	-- ьо is pronounced as (possibly unstressed) ьё, I think
 	text = rsub(text, 'ʹo', 'ʹjo')
 
