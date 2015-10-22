@@ -319,7 +319,7 @@ def test_infer():
     def title(self):
       return "test_infer"
   for pagetext in test_templates:
-    text = blib.parse(pagetext)
+    text = blib.parse_text(pagetext)
     page = Page()
     newtext, comment = infer_one_page_decls(page, 1, text)
     msg("newtext = %s" % unicode(newtext))
