@@ -290,10 +290,6 @@ TODO:
    in it, which should have triggered an error whenever there was a nom_sg or
    nom_pl override but didn't. Is there an error causing this never to be
    called? Check.
-11. FIXME: Implement smart code to check properly whether an explicit bare is
-   a reducible by looking to see if it's one more syllable than the stem.
-   We should probably do this test only when args.reducible not set, otherwise
-   assume reducible.
 12. FIXME: Change 8* fem nouns to use the features of the new template; no more
    ins_sg override. любо́вь, нелюбо́вь, вошь, це́рковь, ложь, рожь.]
 14. In multiple-words branch, fix ru-decl-noun-multi so it recognizes
@@ -388,23 +384,9 @@ TODO:
   (1) AND (2). NEED TO TEST -ья, ALTHOUGH PRESUMABLY THEY GOT TESTED
   THROUGH THE TEST PAGES AND THROUGH BEING RUN ON ALL THE EXISTING DECLED
   RUSSIAN NOUNS IN WIKTIONARY.]
-32. Implement check for bare argument specified when neither nominative
-   singular nor genitive plural makes use of bare. [IMPLEMENTED. TRACKING
-   UNDER "pointless-bare". CONSIDER REMOVING AFTER WE ELIMINATE ALL ENTRIES
-   FROM THE CATEGORY.]
 33. With pluralia tantum adjectival nouns, we don't know the gender.
    By default we assume masculine (or feminine for old-style -ія nouns) and
    currently this goes into the category, but shouldn't. [IMPLEMENTED.]
-34. Bug in -я nouns with bare specified; gen pl should not have -ь ending. Old
-   templates did not add this ending when bare occurred. [IMPLEMENTED IN
-   WIKTIONARY. SHOULD REMOVE THE TRACKING CODE.]
-35. Fixes for stem-multi-syllabic words with ending stress in gen pl but
-   non-syllabic gen pl, with stress transferring onto final syllable even if
-   stem is otherwise stressed on an earlier syllable (e.g. голова́ in
-   accent pattern f, nom pl го́ловы, gen pl голо́в). Currently these are handled
-   by overriding "bare" but I want to make bare predictable mostly, just
-   specifying that the noun is reducible should be enough. [IMPLEMENTED
-   IN WIKTIONARY. SHOULD REMOVE THE TRACKING CODE.]
 36. Add ability to specify manual translation. [IMPLEMENTED IN GITHUB
    MANUAL-TRANSLIT BRANCH FOR NOUNS, NOT YET FOR ADJECTIVES, NOT TESTED,
    ALMOST CERTAINLY HAS ERRORS]
@@ -713,22 +695,6 @@ local canonicalize_override
 --                     Tracking and categorization                      --
 --------------------------------------------------------------------------
 
--- Best guess as to whether a bare value is actually a reducible/dereducible
--- or just a reaccented stem or whatever. FIXME: Maybe we should actually
--- check the number of vowels and see if it is one more or one less.
-local function bare_is_reducible(stem, bare)
-	if not bare or bare == stem then
-		return false
-	else
-		local ustem = com.make_unstressed(stem)
-		local ubare = com.make_unstressed(bare)
-		if ustem == ubare or ustem .. "ь" == ubare or ustem .. "ъ" == ubare or ustem .. "й" == ubare then
-			return false
-		end
-	end
-	return true
-end
-
 -- FIXME! Move below the main code
 
 -- FIXME!! Consider deleting most of this tracking code once we've enabled
@@ -774,7 +740,7 @@ local function tracking_code(stress, orig_decl, decl, args, n, islast)
 		end
 	end
 	track_prefix("")
-	if bare_is_reducible(args.stem, args.bare) then
+	if args.reducible then
 		track("reducible-stem")
 		track_prefix("reducible-stem/")
 	end
@@ -856,127 +822,6 @@ local function tracking_code(stress, orig_decl, decl, args, n, islast)
 			track("casenum-tailall/" .. case)
 		end
 	end
-end
-
--- FIXME: Tracking code eventually to remove; track cases where bare is
--- explicitly specified to see how many could be predicted. Return a value
--- to use in place of explicit bare: "remove" means remove the bare param,
--- "remove-star" means remove the bare param and add * to the decl field,
--- "sub-star" means substitute the bare param for the lemma and add * to the
--- decl field, anything else means keep the decl field and is a message
--- indicating why (these should be manually rewritten).
-local function bare_tracking(stem, tr, bare, baretr, decl, sgdc, stress, old)
-	local nomsg
-	if rfind(decl, "^ь%-") then
-		nomsg = stem .. "ь"
-	elseif rfind(decl, "^й") then
-		nomsg = stem .. "й"
-	elseif rfind(decl, "^ъ") then
-		nomsg = stem .. "ъ"
-	end
-	local function rettrack(val, explanation)
-		track(val)
-		return val .. ": " .. explanation
-	end
-	track("explicit-bare")
-	if stem == bare then
-		track("explicit-bare-same-as-stem")
-		return "remove"
-	elseif com.make_unstressed(stem) == com.make_unstressed(bare) then
-		track("explicit-bare-different-stress")
-		return rettrack("explicit-bare-different-stress-from-stem",
-			"stem=" .. stem .. ", bare=" .. bare)
-	elseif nomsg and nomsg == bare then
-		track("explicit-bare-same-as-nom-sg")
-		return "remove"
-	elseif nomsg and com.make_unstressed(nomsg) == com.make_unstressed(bare) then
-		track("explicit-bare-different-stress")
-		return rettrack("explicit-bare-different-stress-from-nom-sg",
-			"nomsg=" .. nomsg .. ", bare=" .. bare)
-	elseif is_reducible(sgdc) then
-		local barestem, baredecl = rmatch(bare, "^(.-)([ьйъ]?)$")
-		assert(barestem)
-		local barestemtr, baredecltr
-		if baretr then
-			barestemtr, baredecltr = rmatch(baretr, "^(.-)([ʹjʺ]?)$")
-			assert(barestemtr)
-		end
-		local autostem, autostemtr =
-			export.reduce_nom_sg_stem(barestem, barestemtr, baredecl)
-		if not autostem then
-			return rettrack("error-reducible",
-				"barestem=" .. barestem .. ", baredecl=" .. baredecl)
-		elseif autostem == stem then
-			track("predictable-reducible")
-			return "sub-star"
-		elseif com.make_unstressed(autostem) == com.make_unstressed(stem) then
-			if com.remove_accents(autostem) ~= com.remove_accents(stem) then
-				--error("autostem=" .. autostem .. ", stem=" .. stem)
-				return rettrack("predictable-reducible-but-jo-differences",
-					"autostem=" .. autostem .. ", stem=" .. stem)
-			elseif com.is_unstressed(autostem) and com.is_ending_stressed(stem) then
-				track("predictable-reducible-but-extra-ending-stress")
-				return "sub-star"
-			else
-				--error("autostem=" .. autostem .. ", stem=" .. stem)
-				return rettrack("predictable-reducible-but-different-stress",
-					"autostem=" .. autostem .. ", stem=" .. stem)
-			end
-		else
-			--error("autostem=" .. autostem .. ", stem=" .. stem)
-			return rettrack("unpredictable-reducible",
-				"autostem=" .. autostem .. ", stem=" .. stem)
-		end
-	elseif is_dereducible(sgdc) then
-		local autobare, autobaretr =
-			export.dereduce_nom_sg_stem(stem, tr, sgdc, stress, old)
-		if not autobare then
-			return rettrack("error-dereducible", "stem=" .. stem)
-		elseif autobare == bare then
-			track("predictable-dereducible")
-			return "remove-star"
-		elseif com.make_unstressed(autobare) == com.make_unstressed(bare) then
-			if com.remove_accents(autobare) ~= com.remove_accents(bare) then
-				--error("autobare=" .. autobare .. ", bare=" .. bare)
-				return rettrack("predictable-dereducible-but-jo-differences",
-					"autobare=" .. autobare .. ", bare=" .. bare)
-			elseif com.is_unstressed(autobare) and com.is_ending_stressed(bare) then
-				track("predictable-dereducible-but-extra-ending-stress")
-				return "remove-star"
-			else
-				--error("autobare=" .. autobare .. ", bare=" .. bare)
-				return rettrack("predictable-dereducible-but-different-stress",
-					"autobare=" .. autobare .. ", bare=" .. bare)
-			end
-		else
-			--error("autobare=" .. autobare .. ", bare=" .. bare)
-			return rettrack("unpredictable-dereducible",
-				"autobare=" .. autobare .. ", bare=" .. bare)
-		end
-	else
-		return rettrack("bare-without-reducibility",
-			"stem=" .. stem .. ", bare=" .. bare)
-	end
-
-	assert(false)
-end
-
--- FIXME: Temporary code to assist in converting bare arguments. Remove
--- after all arguments converted.
-function export.bare_tracking(frame)
-	local a = frame.args
-	local stem, bare, decl, stress, old = ine(a[1]), ine(a[2]), ine(a[3]),
-		ine(a[4]), ine(a[5])
-	local tr, baretr
-	stem, tr = split_russian_tr(stem)
-	bare, baretr = split_russian_tr(bare)
-	decl = decl or ""
-	local decl_cats = old and declensions_old_cat or declensions_cat
-	if not decl_cats[decl] then
-		error("Unrecognized declension: " .. decl)
-	end
-	return bare_tracking(stem, tr, bare, baretr, decl, decl_cats[decl],
-		stress, old)
 end
 
 local gender_to_full = {m="masculine", f="feminine", n="neuter"}
@@ -1189,7 +1034,7 @@ local function categorize_and_init_heading(stress, decl, args, n, islast)
 	else
 		insert_if_not(h.irreg_pl_stem, "no")
 	end
-	if bare_is_reducible(args.stem, args.bare) then
+	if args.reducible and not sgdc.ignore_reduce then
 		insert_cat("~ with reducible stem")
 		insert_if_not(h.reducible, "yes")
 	else
@@ -1729,10 +1574,8 @@ generate_forms_1 = function(args, per_word_info)
 	local function do_arg_set(arg_set, n, islast)
 		local stress_arg = arg_set[1]
 		local decl = arg_set[3] or ""
-		local bare, baretr
 		if arg_set[4] then
 			error("Explicit bare no longer supported")
-			bare, baretr = split_russian_tr(arg_set[4])
 		end
 		local pl, pltr
 		if arg_set[5] then
@@ -1851,7 +1694,6 @@ generate_forms_1 = function(args, per_word_info)
 		determine_headword_gender(args, sgdc, gender)
 
 		local original_stem, original_tr = stem, tr
-		local original_bare, original_baretr = bare, baretr
 		local original_pl, original_pltr = pl, pltr
 
 		-- Loop over accent patterns in case more than one given.
@@ -1859,7 +1701,7 @@ generate_forms_1 = function(args, per_word_info)
 			args.suffixes = {}
 
 			stem, tr = original_stem, original_tr
-			bare, baretr = original_bare, original_baretr
+			local bare, baretr
 			local stem_for_bare, tr_for_bare
 			pl, pltr = original_pl, original_pltr
 
@@ -1958,7 +1800,7 @@ generate_forms_1 = function(args, per_word_info)
 				end
 			end
 
-			local resolved_bare, resolved_baretr = bare, baretr
+			local resolved_bare, resolved_baretr
 			-- Handle (de)reducibles
 			-- FIXME! We are dereducing based on the singular declension.
 			-- In a slash declension things can get weird and we don't
@@ -1968,9 +1810,7 @@ generate_forms_1 = function(args, per_word_info)
 			-- to (either (de)reducible or stress pattern f/f'/f'' combined
 			-- with ё special case); the remaining times we generate the bare
 			-- value directly from the plural stem.
-			if bare then
-				bare_tracking(stem, tr, bare, baretr, decl, sgdc, stress, old)
-			elseif args.reducible and not sgdc.ignore_reduce then
+			if args.reducible and not sgdc.ignore_reduce then
 				-- Zaliznyak treats all nouns in -ье and -ья as being
 				-- reducible. We handle this automatically and don't require
 				-- the user to specify this, but ignore it if so for
@@ -2018,6 +1858,8 @@ generate_forms_1 = function(args, per_word_info)
 			end
 
 			-- Leave unaccented if user wants this; see restress_stem().
+			-- FIXME, we no longer allow the user to specify the bare value
+			-- so it's unclear if this is needed any more.
 			if resolved_bare and not args.allow_unaccented then
 				if resolved_baretr and com.is_unstressed(resolved_bare) ~= com.is_unstressed(resolved_baretr) then
 					error("Resolved bare stem " .. resolved_bare .. " and translit " .. resolved_baretr .. " must have same accent pattern")
@@ -2068,18 +1910,6 @@ generate_forms_1 = function(args, per_word_info)
 				if internal_note then
 					insert_if_not(args.internal_notes, internal_note)
 				end
-			end
-
-			-- Check for pointless bare (4th argument), i.e. not usable
-			-- anywhere in the declension. Often indicates a bug in the
-			-- decl, and bare should be handled otherwise (e.g. through a
-			-- gen_pl override).
-			local function is_nonsyllabic(suff)
-				return suff and #suff == 1 and nonsyllabic_suffixes[suff[1]]
-			end
-			if bare and not is_nonsyllabic(args.suffixes.nom_sg) and not is_nonsyllabic(args.suffixes.gen_pl) then
-				track("pointless-bare")
-				track("pointless-bare/" .. decl)
 			end
 
 			categorize_and_init_heading(stress, decl, args, n, islast)
@@ -4080,14 +3910,6 @@ local function attach_unstressed(args, case, suf, was_stressed)
 		if was_stressed and case == "gen_pl" then
 			if not barearg then
 				local gen_pl_stem, gen_pl_tr = com.make_ending_stressed(stem, tr)
-				-- FIXME: temporary tracking code to identify places where
-				-- the change to the algorithm here that end-stresses the
-				-- genitive plural in stress patterns with gen pl end stress
-				-- (cf. words like голова́, with nom pl. го́ловы but gen pl.
-				-- голо́в) would cause changes.
-				if com.is_stressed(stem) and stem ~= gen_pl_stem then
-					track("gen-pl-moved-stress")
-				end
 				barestem, baretr = gen_pl_stem, gen_pl_tr
 			end
 		end
@@ -4099,11 +3921,6 @@ local function attach_unstressed(args, case, suf, was_stressed)
 				-- OK
 			elseif suf == "й" or suf == "ь" then
 				if barearg and case == "gen_pl" then
-					-- FIXME: temporary tracking code
-					track("explicit-bare-no-suffix")
-					if args.old then
-						track("explicit-bare-old-no-suffix")
-					end
 					-- explicit bare or reducible, don't add -ь
 					suf = ""
 				elseif rfind(barestem, "[" .. com.vowel .. "]́?$") then
