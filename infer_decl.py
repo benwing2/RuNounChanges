@@ -13,7 +13,7 @@
 #    adjectives like in Соломо́новы острова́. (IT APPEARS TO.)
 # 6. Recognize unusual genitive plural and add (2).
 
-import re
+import re, argparse
 import traceback, sys
 import pywikibot
 import mwparserfromhell
@@ -22,7 +22,6 @@ from blib import msg, rmparam, getparam
 
 from rulib import *
 
-save = False
 verbose = True
 mockup = False
 # Uncomment the following line to enable test mode
@@ -85,6 +84,14 @@ def compare_terms(case, real, pred, pagemsg):
       return False
   return True
 
+def remove_duplicates(form):
+  forms = re.split(r"\s*,\s*", form)
+  new_forms = []
+  for f in forms:
+    if f not in new_forms:
+      new_forms.append(f)
+  return ",".join(new_forms)
+
 def trymatch(forms, args, pagemsg, multiword=False):
   if mockup:
     ok = True
@@ -118,6 +125,8 @@ def trymatch(forms, args, pagemsg, multiword=False):
         elif (case == "ins_sg" and "," in pred_form and
             compare_terms(case, real_form, re.sub(",.*$", "", pred_form), pagemsg)):
           pagemsg("For case ins_sg, predicted form %s has an alternate form not in actual form %s; allowed" % (pred_form, real_form))
+        elif "," in real_form and compare_terms(case, remove_duplicates(real_form), pred_form, pagemsg):
+          pagemsg("For case %s, actual %s same as predicted %s but for duplicate words; allowed" % (case, real_form, pred_form))
         else:
           pagemsg("For case %s, actual %s differs from predicted %s" % (case,
             real_form, pred_form))
@@ -232,6 +241,8 @@ def infer_decl(t, noungender, linked_headwords, pagemsg):
       form = re.sub(r"\s*<br\s*/>\s*", "", form)
       # eliminate spaces around commas
       form = re.sub(r"\s*,\s*", ",", form)
+      # eliminate stress mark on ё
+      form = re.sub(ur"ё́", u"ё", form)
       if "," in form:
         pagemsg("WARNING: Comma in form, may not handle correctly: %s=%s" %
             (case, form))
@@ -249,7 +260,7 @@ def infer_decl(t, noungender, linked_headwords, pagemsg):
         for wordforms in words:
           wordno += 1
           pagemsg("Inferring word #%s: %s" % (wordno, wordforms.get("nom_pl", "(blank)") if numonly == "pl" else wordforms.get("nom_sg", "(blank)")))
-          args = infer_word(wordforms, noungender, linked_headwords, number, numonly, pagemsg)
+          args = infer_word(wordforms, noungender, linked_headwords, number, numonly, True, pagemsg)
           if not args:
             pagemsg("Unable to infer word #%s: %s" % (wordno, unicode(t)))
             return None
@@ -274,7 +285,7 @@ def infer_decl(t, noungender, linked_headwords, pagemsg):
           filterargs = [x for x in args if not re.search("^[an]=", x)]
           if allargs:
             if ty == "dash":
-              allargs.append(old_template and "join:-" or "-")
+              allargs.append("-")
             elif old_template:
               allargs.append("_")
           allargs.extend(filterargs)
@@ -284,7 +295,7 @@ def infer_decl(t, noungender, linked_headwords, pagemsg):
         else:
           return None
     else:
-      args = infer_word(forms, noungender, {}, number, numonly, pagemsg)
+      args = infer_word(forms, noungender, {}, number, numonly, False, pagemsg)
       if not args:
         pagemsg("Unable to infer word: %s" % unicode(t))
         return None
@@ -328,7 +339,7 @@ def generate_template_args(stress, lemma, linked_lemma, declspec, plstem, pagems
     args = [":".join(args)]
   return args
 
-def get_lemma(linked_headwords, lemma):
+def get_lemma(linked_headwords, lemma, multiword, pagemsg):
   if lemma in linked_headwords:
     linked_lemma = linked_headwords[lemma]
   else:
@@ -338,25 +349,31 @@ def get_lemma(linked_headwords, lemma):
     if "|" in linked_lemma:
       linked_lemma = linked_lemma.replace("|" + make_unstressed(lemma) + "]]",
           "|" + lemma + "]]")
-    else:
+    elif "[" in linked_lemma:
       linked_lemma = "[[" + lemma + "]]"
+  if lemma != linked_lemma:
+    pagemsg("Using linked version %s of lemma %s" % (linked_lemma, lemma))
+  elif multiword:
+    pagemsg("WARNING: Can't find linked version of lemma %s" % lemma)
   return linked_lemma
 
 
-def infer_word(forms, noungender, linked_headwords, number, numonly, pagemsg):
+def infer_word(forms, noungender, linked_headwords, number, numonly, multiword, pagemsg):
   # Check for invariable word
-  caseforms = forms.values()
+  caseforms = [x for x in forms.values() if x]
   allsame = True
+  numsame = 0
   for caseform in caseforms[1:]:
     if caseform != caseforms[0]:
       allsame = False
-      break
+    else:
+      numsame += 1
+  if numsame > 6 and not allsame:
+    pagemsg("Found almost-invariable word %s: %s same" % (caseforms[0], numsame))
   if allsame:
     lemma = caseforms[0]
     pagemsg("Found invariable word %s" % lemma)
-    linked_lemma = get_lemma(linked_headwords, lemma)
-    if lemma != linked_lemma:
-      pagemsg("Using linked version %s of lemma %s" % (linked_lemma, lemma))
+    linked_lemma = get_lemma(linked_headwords, lemma, multiword, pagemsg)
     if is_one_syllable(lemma) and not is_stressed(lemma):
       pagemsg("Marking invariable word %s as unaccented" % lemma)
       linked_lemma = "*" + linked_lemma
@@ -389,9 +406,7 @@ def infer_word(forms, noungender, linked_headwords, number, numonly, pagemsg):
 
   for nomsg in nomsgs:
     lemma = nompl if numonly == "pl" else nomsg
-    linked_lemma = get_lemma(linked_headwords, lemma)
-    if lemma != linked_lemma:
-      pagemsg("Using linked version %s of lemma %s" % (linked_lemma, lemma))
+    linked_lemma = get_lemma(linked_headwords, lemma, multiword, pagemsg)
     if numonly == "sg":
       if try_to_stress(forms["acc_sg"]) == try_to_stress(forms["gen_sg"]):
         anim = ["a=an"]
@@ -552,7 +567,7 @@ def infer_word(forms, noungender, linked_headwords, number, numonly, pagemsg):
           genpls = ["", genpl]
         elif make_unstressed(genpl) not in possible_unstressed_genpls:
           pagemsg("Stem %s not accent-equiv to gen pl %s (modulo expected endings)" % (genplstem, genpl))
-          genpls = ["*", "(2)", genpl]
+          genpls = ["*", "(2)", "", genpl]
         elif is_unstressed(genplstem):
           pagemsg("Replacing unstressed stem %s with accent-equiv gen pl %s" %
               (stem, genpl))
@@ -777,12 +792,6 @@ def infer_one_page_decls(page, index, text):
     msg("%s %s: WARNING: Got an error: %s" % (index, unicode(page.title()), repr(e)))
     traceback.print_exc(file=sys.stdout)
     return text, "no change"
-
-def iter_pages(iterator):
-  i = 0
-  for page in iterator:
-    i += 1
-    yield page, i
 
 test_templates = [
   u"""{{ru-decl-noun
@@ -1362,12 +1371,20 @@ def test_infer():
     def title(self):
       return "test_infer"
   for pagetext in test_templates:
-    text = blib.parse(pagetext)
+    text = blib.parse_text(pagetext)
     page = Page()
     msg("original text = [[%s]]" % pagetext)
     newtext, comment = infer_one_page_decls(page, 1, text)
     msg("newtext = %s" % unicode(newtext))
     msg("comment = %s" % comment)
+
+parser = argparse.ArgumentParser(description="Add pronunciation sections to Russian Wiktionary entries")
+parser.add_argument('start', help="Starting page index", nargs="?")
+parser.add_argument('end', help="Ending page index", nargs="?")
+parser.add_argument('--save', action="store_true", help="Save results")
+parser.add_argument('--verbose', action="store_true", help="More verbose output")
+args = parser.parse_args()
+start, end = blib.get_args(args.start, args.end)
 
 def ignore_page(page):
   if not isinstance(page, basestring):
@@ -1379,9 +1396,9 @@ def ignore_page(page):
 if mockup:
   test_infer()
 else:
-  for page, index in iter_pages(blib.references("Template:ru-decl-noun")):
+  for index, page in blib.references("Template:ru-decl-noun", start, end):
     if ignore_page(page):
       msg("Page %s %s: Skipping due to namespace" % (index, unicode(page.title())))
     else:
-      blib.do_edit(page, index, infer_one_page_decls, save=save)
+      blib.do_edit(page, index, infer_one_page_decls, save=args.save)
 
