@@ -308,7 +308,7 @@ local function generate_forms(args, old, manual)
 			-- in that case we need to reduce rather than dereduce to get
 			-- the stem.
 			if short_accent or short_stem then
-				error("Cannot specify short accent or short stem with declension type " .. decl_type ..  ", as short forms aren't allowed")
+				error("Cannot specify short accent or short stem with declension type " .. decl_type .. ", as short forms aren't allowed")
 			end
 			if args[3] or args[4] or args[5] or args[6] or args.short_m or
 				args.short_f or args.short_n or args.short_p then
@@ -1057,25 +1057,26 @@ declensions["ой"] = {
 	["pre_p"] = "ы́х",
 }
 
+-- These can be stressed in ничья́ "draw, tie (in sports)".
 declensions["ьий"] = {
-	["nom_m"] = "ий",
-	["nom_n"] = "ье",
-	["nom_f"] = "ья",
-	["nom_p"] = "ьи",
-	["gen_m"] = "ьего",
-	["gen_f"] = "ьей",
-	["gen_p"] = "ьих",
-	["dat_m"] = "ьему",
-	["dat_f"] = "ьей",
-	["dat_p"] = "ьим",
-	["acc_f"] = "ью",
-	["acc_n"] = "ье",
-	["ins_m"] = "ьим",
-	["ins_f"] = {"ьей", "ьею"},
-	["ins_p"] = "ьими",
-	["pre_m"] = "ьем",
-	["pre_f"] = "ьей",
-	["pre_p"] = "ьих",
+	["nom_m"] = "и́й",
+	["nom_n"] = "ье́",
+	["nom_f"] = "ья́",
+	["nom_p"] = "ьи́",
+	["gen_m"] = "ье́го",
+	["gen_f"] = "ье́й",
+	["gen_p"] = "ьи́х",
+	["dat_m"] = "ье́му",
+	["dat_f"] = "ье́й",
+	["dat_p"] = "ьи́м",
+	["acc_f"] = "ью́",
+	["acc_n"] = "ье́",
+	["ins_m"] = "ьи́м",
+	["ins_f"] = {"ье́й", "ье́ю"},
+	["ins_p"] = "ьи́ми",
+	["pre_m"] = "ье́м",
+	["pre_f"] = "ье́й",
+	["pre_p"] = "ьи́х",
 }
 
 declensions["short"] = {
