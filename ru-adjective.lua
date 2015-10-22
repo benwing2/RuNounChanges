@@ -198,6 +198,10 @@ for case, _ in pairs(short_cases) do
 	table.insert(old_cases, case)
 end
 
+-- If enabled, compare this module with new version of module to make
+-- sure all declensions are the same.
+local test_new_ru_adjective_module = false
+
 -- Forward references to functions
 local tracking_code
 local categorize
@@ -214,10 +218,11 @@ local decline_short
 --------------------------------------------------------------------------
 
 -- Implementation of main entry point
-local function generate_forms(args, old, manual)
-	PAGENAME = mw.title.getCurrentTitle().text
-	SUBPAGENAME = mw.title.getCurrentTitle().subpageText
-	NAMESPACE = mw.title.getCurrentTitle().nsText
+function export.do_generate_forms(args, old, manual)
+	local orig_args
+	if test_new_ru_adjective_module then
+		orig_args = mw.clone(args)
+	end
 
 	args.forms = {}
 	old = old or args.old
@@ -360,13 +365,30 @@ local function generate_forms(args, old, manual)
 
 	handle_forms_and_overrides(args, overall_short_forms_allowed)
 
+	-- Test code to compare existing module to new one.
+	if test_new_ru_adjective_module then
+		local m_new_ru_adjective = require("Module:User:Benwing2/ru-adjective")
+		local newargs = m_new_ru_adjective.do_generate_forms(orig_args, old, manual)
+		for _, case in ipairs(old_cases) do
+			local arg = args[case]
+			local newarg = newargs[case]
+			if not ut.equals(arg, newarg) then
+				-- Uncomment this to display the particular case and
+				-- differing forms.
+				--error(case .. " " .. (arg and table.concat(arg, ",") or "nil") .. " || " .. (newarg and table.concat(newarg, ",") or "nil"))
+				track("different-decl")
+			end
+			break
+		end
+	end
+
 	return args
 end
 
 -- Implementation of main entry point
 local function do_show(frame, old, manual)
 	local args = clone_args(frame)
-	local args = generate_forms(args, old, manual)
+	local args = export.do_generate_forms(args, old, manual)
 	return make_table(args) .. m_utilities.format_categories(args.categories, lang)
 end
 
@@ -428,7 +450,7 @@ function export.get_nominal_decl(decl, gender, old)
 	local intable = old and internal_notes_table_old or internal_notes_table
 	local ingenders = old and internal_notes_genders_old or internal_notes_genders
 	-- FIXME, what if there are multiple internal notes? See comment in
-	-- generate_forms().
+	-- do_generate_forms().
 	local internal_notes = ingenders[decl] and ut.contains(ingenders[decl], gender) and intable[decl]
 	return n, internal_notes
 end
@@ -445,7 +467,7 @@ end
 -- The entry point for 'ru-adj-forms' to generate all adjective forms.
 function export.generate_forms(frame)
 	local args = clone_args(frame)
-	local args = generate_forms(args, false)
+	local args = export.do_generate_forms(args, false)
 	local ins_text = {}
 	for _, case in ipairs(old_cases) do
 		if args.forms[case] then
@@ -465,7 +487,7 @@ function export.generate_form(frame)
 	if not ut.contains(old_cases, form) then
 		error("Unrecognized form " .. form)
 	end
-	local args = generate_forms(args, false)
+	local args = export.do_generate_forms(args, false)
 	if not args.forms[form] then
 		return ""
 	else
