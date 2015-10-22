@@ -68,7 +68,24 @@ matching_stress_patterns["none"]["ending"] = ["b"]
 
 site = pywikibot.Site()
 
-def trymatch(forms, args, pagemsg, output_msg=True):
+def compare_terms(case, real, pred, pagemsg):
+  if real == pred:
+    return True
+  realwords = re.split("([ -]+)", real)
+  predwords = re.split("([ -]+)", pred)
+  if len(realwords) != len(predwords):
+    return False
+  for realword, predword in zip(realwords, predwords):
+    if realword == predword:
+      pass
+    elif is_unstressed(realword) and make_unstressed(predword) == realword:
+      pagemsg("For case %s, real word %s in %s missing an accent that's present in predicted word %s in %s; allowed" %
+          (case, realword, real, predword, pred))
+    else:
+      return False
+  return True
+
+def trymatch(forms, args, pagemsg, multiword=False):
   if mockup:
     ok = True
   else:
@@ -94,22 +111,20 @@ def trymatch(forms, args, pagemsg, output_msg=True):
       elif real_form and not pred_form:
         pagemsg("Actual has extra form %s=%s not in predicted" % (case, real_form))
         ok = False
-      elif pred_form != real_form:
-        if is_unstressed(real_form) and make_unstressed(pred_form) == real_form:
-          # Happens especially in monosyllabic forms
-          pagemsg("For case %s, actual form %s missing an accent that's present in predicted %s; allowed" % (case, real_form, pred_form))
-        elif re.sub("//.*$", "", pred_form) == real_form:
+      elif not compare_terms(case, real_form, pred_form, pagemsg):
+        if compare_terms(case, real_form, re.sub("//.*$", "", pred_form), pagemsg):
           # Happens esp. in the gen sg of adjectival nominals
           pagemsg("For case %s, predicted %s has manual translit and actual %s doesn't; allowed" % (case, pred_form, real_form))
         elif (case == "ins_sg" and "," in pred_form and
-            re.sub(",.*$", "", pred_form) == real_form):
+            compare_terms(case, real_form, re.sub(",.*$", "", pred_form), pagemsg)):
           pagemsg("For case ins_sg, predicted form %s has an alternate form not in actual form %s; allowed" % (pred_form, real_form))
         else:
           pagemsg("For case %s, actual %s differs from predicted %s" % (case,
             real_form, pred_form))
           ok = False
   if ok:
-    pagemsg("Found a match: {{%s|%s}}" % (decl_template, "|".join(args)))
+    pagemsg("Found a %smatch: {{%s|%s}}" % (multiword and "multiword " or "",
+      decl_template, "|".join(args)))
   return ok
 
 def synthesize_singular(nompl, prepl, gender, pagemsg):
@@ -170,7 +185,15 @@ def separate_multiwords(forms, splitre):
         i += 1
   return words
 
-def infer_decl(t, noungender, pagemsg):
+def arg1_is_stress(arg1):
+  if not arg1:
+    return False
+  for arg in re.split(",", arg1):
+    if not (re.search("^[a-f]'?'?$", arg) or re.search(r"^[1-6]\*?$", arg)):
+      return False
+  return True
+
+def infer_decl(t, noungender, linked_headwords, pagemsg):
   if verbose:
     pagemsg("Processing %s" % unicode(t))
 
@@ -226,7 +249,7 @@ def infer_decl(t, noungender, pagemsg):
         for wordforms in words:
           wordno += 1
           pagemsg("Inferring word #%s: %s" % (wordno, wordforms.get("nom_pl", "(blank)") if numonly == "pl" else wordforms.get("nom_sg", "(blank)")))
-          args = infer_word(wordforms, noungender, number, numonly, pagemsg)
+          args = infer_word(wordforms, noungender, linked_headwords, number, numonly, pagemsg)
           if not args:
             pagemsg("Unable to infer word #%s: %s" % (wordno, unicode(t)))
             return None
@@ -256,10 +279,12 @@ def infer_decl(t, noungender, pagemsg):
               allargs.append("_")
           allargs.extend(filterargs)
         allargs += animacy + number
-        pagemsg("Found a multi-word match: {{%s|%s}}" % (decl_template, "|".join(allargs)))
-        return allargs
+        if trymatch(forms, allargs, pagemsg, multiword=True):
+          return allargs
+        else:
+          return None
     else:
-      args = infer_word(forms, noungender, number, numonly, pagemsg)
+      args = infer_word(forms, noungender, {}, number, numonly, pagemsg)
       if not args:
         pagemsg("Unable to infer word: %s" % unicode(t))
         return None
@@ -277,13 +302,12 @@ def default_stress(lemma, stress, pagemsg):
   if defstress == stress:
     stress = ""
 
-  return lemma, stress
+  return stress
 
-def generate_template_args(stress, lemma, declspec, plstem, pagemsg):
-  lemma = lemma
-  lemma, stress = default_stress(lemma, stress, pagemsg)
+def generate_template_args(stress, lemma, linked_lemma, declspec, plstem, pagemsg):
+  stress = default_stress(lemma, stress, pagemsg)
   if old_template:
-    args = [stress, lemma, declspec, "", plstem]
+    args = [stress, linked_lemma, declspec, "", plstem]
     if not args[0]:
       del args[0]
     if not args[-1]:
@@ -294,9 +318,9 @@ def generate_template_args(stress, lemma, declspec, plstem, pagemsg):
       del args[-1]
   else:
     declspec = declspec and "^" + declspec or ""
-    lemma = lemma + declspec
-    lemma = re.sub(r"\^([;*(])", r"\1", lemma)
-    args = [stress, lemma, plstem]
+    linked_lemma = linked_lemma + declspec
+    linked_lemma = re.sub(r"\^([;*(])", r"\1", linked_lemma)
+    args = [stress, linked_lemma, plstem]
     if not args[0]:
       del args[0]
     if not args[-1]:
@@ -304,7 +328,22 @@ def generate_template_args(stress, lemma, declspec, plstem, pagemsg):
     args = [":".join(args)]
   return args
 
-def infer_word(forms, noungender, number, numonly, pagemsg):
+def get_lemma(linked_headwords, lemma):
+  if lemma in linked_headwords:
+    linked_lemma = linked_headwords[lemma]
+  else:
+    # Check if we have a linked version of the unstressed version of lemma; happens
+    # esp. with monosyllabic words. If so, substituted stressed version into link.
+    linked_lemma = linked_headwords.get(make_unstressed(lemma), lemma)
+    if "|" in linked_lemma:
+      linked_lemma = linked_lemma.replace("|" + make_unstressed(lemma) + "]]",
+          "|" + lemma + "]]")
+    else:
+      linked_lemma = "[[" + lemma + "]]"
+  return linked_lemma
+
+
+def infer_word(forms, noungender, linked_headwords, number, numonly, pagemsg):
   # Check for invariable word
   caseforms = forms.values()
   allsame = True
@@ -315,13 +354,16 @@ def infer_word(forms, noungender, number, numonly, pagemsg):
   if allsame:
     lemma = caseforms[0]
     pagemsg("Found invariable word %s" % lemma)
+    linked_lemma = get_lemma(linked_headwords, lemma)
+    if lemma != linked_lemma:
+      pagemsg("Using linked version %s of lemma %s" % (linked_lemma, lemma))
     if is_one_syllable(lemma) and not is_stressed(lemma):
       pagemsg("Marking invariable word %s as unaccented" % lemma)
-      lemma = "*" + lemma
+      linked_lemma = "*" + linked_lemma
     if old_template:
-      return [lemma, "$"]
+      return [linked_lemma, "$"]
     else:
-      return [lemma + "$"]
+      return [linked_lemma + "$"]
 
   nompl = forms.get("nom_pl", "")
   accsg = forms.get("acc_sg", "")
@@ -335,8 +377,8 @@ def infer_word(forms, noungender, number, numonly, pagemsg):
   genpls = []
 
   # Special case:
-  if numonly == "pl" and nompl == u"острова́":
-    args = generate_template_args("c", u"острова́", "m(1)", None, pagemsg) + number
+  if numonly == "pl" and nompl in [u"острова́", u"Острова́"]:
+    args = generate_template_args("c", nompl, u"[[о́стров|%s]]" % nompl, "m(1)", None, pagemsg) + number
     if trymatch(forms, args, pagemsg):
       return args
 
@@ -347,6 +389,9 @@ def infer_word(forms, noungender, number, numonly, pagemsg):
 
   for nomsg in nomsgs:
     lemma = nompl if numonly == "pl" else nomsg
+    linked_lemma = get_lemma(linked_headwords, lemma)
+    if lemma != linked_lemma:
+      pagemsg("Using linked version %s of lemma %s" % (linked_lemma, lemma))
     if numonly == "sg":
       if try_to_stress(forms["acc_sg"]) == try_to_stress(forms["gen_sg"]):
         anim = ["a=an"]
@@ -371,9 +416,9 @@ def infer_word(forms, noungender, number, numonly, pagemsg):
     if re.search(u"ий$", nomsg) and re.search(u"ьего$", gensg):
       stem = re.sub(u"ий$", "", nomsg)
       if old_template:
-        args = [lemma, "+ь"] + anim + number
+        args = [linked_lemma, "+ь"] + anim + number
       else:
-        args = [lemma + "+ь"] + anim + number
+        args = [linked_lemma + "+ь"] + anim + number
       if trymatch(forms, args, pagemsg):
         return args
 
@@ -385,9 +430,9 @@ def infer_word(forms, noungender, number, numonly, pagemsg):
     if (re.search(u"([ыиіо]й|[яаь]я|[оеь]е)$", make_unstressed(nomsg)) and
         adj_by_prep()):
       if old_template:
-        args = [lemma, "+"] + anim + number
+        args = [linked_lemma, "+"] + anim + number
       else:
-        args = [lemma + "+"] + anim + number
+        args = [linked_lemma + "+"] + anim + number
       if trymatch(forms, args, pagemsg):
         return args
 
@@ -395,11 +440,11 @@ def infer_word(forms, noungender, number, numonly, pagemsg):
     #if re.search(u"([шщжчц]е|[ъоа]|)$", nomsg):
     if (re.search(u"([ое]в|[ыи]н)([оаъ]?)$", make_unstressed(nomsg)) and
         adj_by_prep()):
-      for adjpat in ["+short", "+mixed"]:
+      for adjpat in ["+", "+short", "+mixed", "+proper"]:
         if old_template:
-          args = [lemma, adjpat] + anim + number
+          args = [linked_lemma, adjpat] + anim + number
         else:
-          args = [lemma + adjpat] + anim + number
+          args = [linked_lemma + adjpat] + anim + number
         if trymatch(forms, args, pagemsg):
           return args
 
@@ -408,9 +453,9 @@ def infer_word(forms, noungender, number, numonly, pagemsg):
       args = None
       if numonly == "sg" or re.search(u"мена́$", nompl):
         if old_template:
-          args = ["c", lemma]
+          args = ["c", linked_lemma]
         else:
-          args = ["c:" + lemma]
+          args = ["c:" + linked_lemma]
       if args:
         args += anim + number
         if trymatch(forms, args, pagemsg):
@@ -650,7 +695,7 @@ def infer_word(forms, noungender, number, numonly, pagemsg):
             declspec += genplval
           elif genplval:
             genplargs.append("gen_pl=%s" % genplval)
-          args = generate_template_args(stress, lemma, declspec, plstem, pagemsg)
+          args = generate_template_args(stress, lemma, linked_lemma, declspec, plstem, pagemsg)
           args += genplargs
           args += anim + number
           if trymatch(forms, args, pagemsg):
@@ -662,6 +707,8 @@ def infer_one_page_decls_1(page, index, text):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, unicode(page.title()), txt))
   genders = set()
+  headwords = set()
+  # Extract the genders and the headwords
   for t in text.filter_templates():
     if unicode(t.name).strip() in ["ru-noun", "ru-proper noun"]:
       m = re.search("^([mfn])", getparam(t, "2"))
@@ -669,6 +716,27 @@ def infer_one_page_decls_1(page, index, text):
         pagemsg("WARNING: Strange ru-noun template: %s" % unicode(t))
       else:
         genders.add(m.group(1))
+      head = getparam(t, "1")
+      if head:
+        headwords.add(head)
+      for i in xrange(2, 10):
+        head = getparam(t, "head" + str(i))
+        if head:
+          headwords.add(head)
+  # Extract a map of headword elements and the links involving them
+  split_headwords = set()
+  for headword in headwords:
+    splitvals = re.split(r"(\[\[[^\[\]]*\]\])", headword)
+    for i in xrange(len(splitvals)):
+      if i % 2 == 1:
+        split_headwords.add(splitvals[i])
+  linked_headwords = {}
+  for linked_headword in split_headwords:
+    linked_word = remove_links(linked_headword)
+    if linked_word in linked_headwords and linked_headwords[linked_word] != linked_headword:
+      pagemsg("WARNING: Found different links %s and %s for word %s in headword" % (
+        linked_headwords[linked_word], linked_headword, linked_word))
+    linked_headwords[linked_word] = linked_headword
 
   inferred_decls = []
   for t in text.filter_templates():
@@ -686,7 +754,7 @@ def infer_one_page_decls_1(page, index, text):
           gender = genders[0]
       else:
         gender = ""
-      args = infer_decl(t, gender, pagemsg)
+      args = infer_decl(t, gender, linked_headwords, pagemsg)
       if args:
         inferred_decls.append("{{%s|%s}}" % (decl_template, "|".join(args)))
         for i in xrange(15, 0, -1):
