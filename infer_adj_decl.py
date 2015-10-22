@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import re
+import re, argparse
 import traceback, sys
 import pywikibot
 import mwparserfromhell
@@ -10,10 +10,10 @@ from blib import msg, rmparam, getparam
 
 from rulib import *
 
-save = False
+verbose = True
 mockup = False
 # Uncomment the following line to enable test mode
-mockup = True
+#mockup = True
 
 decl_template = "ru-decl-adj"
 
@@ -29,8 +29,14 @@ def trymatch(forms, args, pagemsg, output_msg=True):
   if mockup:
     ok = True
   else:
-    tempcall = "{{ru-adj-forms|" + "|".join(args) + "}}"
+    tempcall = "{{ru-generate-adj-forms|" + "|".join(args) + "}}"
     result = site.expand_text(tempcall)
+    if verbose:
+      pagemsg("%s = %s" % (tempcall, result))
+    if result.startswith('<strong class="error">'):
+      result = re.sub("<.*?>", "", result)
+      pagemsg("ERROR: %s" % result)
+      return False
     pred_forms = {}
     for formspec in re.split(r"\|", result):
       case, value = re.split(r"=", formspec, 1)
@@ -87,9 +93,14 @@ def combine_stem(stem, decl):
     return stem + decl, ""
   if decl == u"ой":
     return make_unstressed(stem) + u"о́й", ""
+  if decl == u"ьий":
+    return stem + u"ий", u"ь"
   return stem, decl
 
 def infer_decl(t, pagemsg):
+  if verbose:
+    pagemsg("Processing %s" % unicode(t))
+
   tname = unicode(t.name).strip()
   forms = {}
 
@@ -253,6 +264,7 @@ def infer_one_page_decls_1(page, index, text):
   genders = set()
   for t in text.filter_templates():
     if unicode(t.name).strip() == "ru-decl-adj":
+      orig_template = unicode(t)
       args = infer_decl(t, pagemsg)
       if not args:
         # At least combine stem and declension, blanking decl when possible.
@@ -277,6 +289,11 @@ def infer_one_page_decls_1(page, index, text):
           else:
             t.add(i, arg)
             i += 1
+      if verbose:
+        new_template = unicode(t)
+        if orig_template != new_template:
+          pagemsg("Replacing template with %s" % new_template)
+
   return text, "Infer declension for manual decls (ru-decl-adj)"
 
 def infer_one_page_decls(page, index, text):
@@ -286,12 +303,6 @@ def infer_one_page_decls(page, index, text):
     msg("%s %s: WARNING: Got an error: %s" % (index, unicode(page.title()), repr(e)))
     traceback.print_exc(file=sys.stdout)
     return text, "no change"
-
-def iter_pages(iterator):
-  i = 0
-  for page in iterator:
-    i += 1
-    yield page, i
 
 test_templates = [
   u"""{{ru-decl-adj|высо́к|ий|высо́к|высоко́,высо́ко|высока́|высоки́,высо́ки}}""",
@@ -325,9 +336,28 @@ def test_infer():
     msg("newtext = %s" % unicode(newtext))
     msg("comment = %s" % comment)
 
+parser = argparse.ArgumentParser(description="Add pronunciation sections to Russian Wiktionary entries")
+parser.add_argument('start', help="Starting page index", nargs="?")
+parser.add_argument('end', help="Ending page index", nargs="?")
+parser.add_argument('--save', action="store_true", help="Save results")
+parser.add_argument('--verbose', action="store_true", help="More verbose output")
+parser.add_argument('--mockup', action="store_true", help="Use mocked-up test code")
+args = parser.parse_args()
+start, end = blib.get_args(args.start, args.end)
+mockup = args.mockup
+
+def ignore_page(page):
+  if not isinstance(page, basestring):
+    page = unicode(page.title())
+  if re.search(r"^(Appendix|Appendix talk|User|User talk|Talk):", page):
+    return True
+  return False
+
 if mockup:
   test_infer()
 else:
-  for page, index in iter_pages(blib.references("Template:ru-decl-adj")):
-    blib.do_edit(page, index, infer_one_page_decls, save=save)
-
+  for index, page in blib.references("Template:ru-decl-adj", start, end):
+    if ignore_page(page):
+      msg("Page %s %s: Skipping due to namespace" % (index, unicode(page.title())))
+    else:
+      blib.do_edit(page, index, infer_one_page_decls, save=args.save)
