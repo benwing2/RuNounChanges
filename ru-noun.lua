@@ -1653,7 +1653,16 @@ generate_forms_1 = function(args, per_word_info)
 		args["suffix" .. i] = split_russian_tr(args["suffix" .. i] or "", "dopair")
 	end
 	args.a = verify_animacy_value(args.a) or "i"
+	-- args.ndef, if set, is the default value for args.n; if unset, it defaults
+	-- to "both". It is set to "singular" in ru-proper noun+. We store the value
+	-- of args.n in args.orign before defaulting to args.ndef because we may
+	-- change it to plural-only later on if it was unspecified (this happens if
+	-- an individual word's lemma is plural), and to determine whether it was
+	-- unspecified, we need the original value before defaulting.
 	args.n = verify_number_value(args.n)
+	args.ndef = verify_number_value(args.ndef)
+	args.orign = args.n
+	args.n = args.n or args.ndef
 	args.prefix = split_russian_tr(args.prefix or "", "dopair")
 	args.suffix = split_russian_tr(args.suffix or "", "dopair")
 	-- Attach overall prefix to first per-word prefix, similarly for suffix
@@ -1722,6 +1731,7 @@ generate_forms_1 = function(args, per_word_info)
 		local decl = arg_set[3] or ""
 		local bare, baretr
 		if arg_set[4] then
+			error("Explicit bare no longer supported")
 			bare, baretr = split_russian_tr(arg_set[4])
 		end
 		local pl, pltr
@@ -1782,7 +1792,7 @@ generate_forms_1 = function(args, per_word_info)
 		end
 		if was_plural then
 			args.thisn = args.thisn or "p"
-			args.n = args.n or "p"
+			args.n = args.orign or "p"
 		elseif decl ~= "$" then
 			args.thisn = args.thisn or "b"
 		end
@@ -2048,8 +2058,8 @@ generate_forms_1 = function(args, per_word_info)
 					number == "pl" and args.pl or args.stem)
 				-- sanity checking; errors should have been caught in
 				-- canonicalize_decl()
-				assert(decl_cats[real_decl])
-				assert(decl_sufs[real_decl])
+				assert(decl_cats[real_decl], "real_decl " .. real_decl .. " nonexistent")
+				assert(decl_sufs[real_decl], "real_decl " .. real_decl .. " nonexistent")
 				tracking_code(stress, orig_decl, real_decl, args, n, islast)
 				do_stress_pattern(stress, args, real_decl, number, n, islast)
 
@@ -2525,8 +2535,8 @@ end
 
 local function strip_tr_ending(tr, ending)
 	if not tr then return nil end
-	local endingtr = rsub(translit_no_links(ending), "([Jj])", "%1?")
-	local strippedtr = rsub(tr, endingtr, "")
+	local endingtr = rsub(translit_no_links(ending), "^([Jj])", "%1?")
+	local strippedtr = rsub(tr, endingtr .. "$", "")
 	if strippedtr == tr then
 		error("Translit " .. tr .. " doesn't end with expected ending " .. endingtr)
 	end
@@ -2575,11 +2585,19 @@ local function detect_lemma_type(lemma, tr, gender, args, variant)
 	if base and args.thisa == "a" then
 		return base, strip_tr_ending(tr, ending), ulower(ending)
 	end
-	base, ending = rmatch(lemma, "^(.*)([ёоЁО]́?[нН][оО][кК][ъЪ]?)$")
+	base, ending = rmatch(lemma, "^(.*)([ёЁ]́?[нН][оО][кК][ъЪ]?)$")
 	if base then
 		return base, strip_tr_ending(tr, ending), ulower(ending)
 	end
-	base, ending = rmatch(lemma, "^(.*)([ёоЁО]́?[нН][оО][чЧ][еЕ][кК][ъЪ]?)$")
+	base, ending = rmatch(lemma, "^(.*[" .. com.sib_c .. "])([оО]́[нН][оО][кК][ъЪ]?)$")
+	if base then
+		return base, strip_tr_ending(tr, ending), ulower(ending)
+	end
+	base, ending = rmatch(lemma, "^(.*)([ёЁ]́?[нН][оО][чЧ][еЕ][кК][ъЪ]?)$")
+	if base then
+		return base, strip_tr_ending(tr, ending), ulower(ending)
+	end
+	base, ending = rmatch(lemma, "^(.*[" .. com.sib_c .. "])([оО]́[нН][оО][чЧ][еЕ][кК][ъЪ]?)$")
 	if base then
 		return base, strip_tr_ending(tr, ending), ulower(ending)
 	end
@@ -2651,7 +2669,7 @@ local function detect_lemma_type(lemma, tr, gender, args, variant)
 		if base then
 			return base, strip_tr_ending(tr, ending), gender == "m" and (args.old and "ъ" or "") or "а", ending
 		end
-		base, ending = rmatch(lemma, "^(.*[" .. com.vowel .. "]́?)([иИ]́?)$")
+		base, ending = rmatch(lemma, "^(.*[" .. com.vowel .. "й]́?)([иИ]́?)$")
 		if base then
 			return base, strip_tr_ending(tr, ending), gender == "m" and "й" or "я", ending
 		end
@@ -3099,6 +3117,9 @@ detect_stress_pattern = function(stem, decl, decl_cats, reducible,
 	-- Adjectival -ой always bears the stress
 	elseif rfind(decl, "%+ой") then
 		return "b"
+	-- Adjectival stressed-short, stressed-proper bears the stress
+	elseif rfind(decl, "^%+.*%-stressed") then
+		return "b"
 	-- Pattern b if ending was accented by user
 	elseif was_accented then
 		return "b"
@@ -3157,7 +3178,7 @@ determine_stress_variant = function(decl, stress)
 			if not b then
 				b, e = rmatch(decl, "^%+(.*)%-(proper)$")
 			end
-			if b then
+			if b and not rfind(b, "%-stressed") then
 				return "+" .. b .. "-stressed-" .. e
 			end
 		end
@@ -4230,11 +4251,12 @@ do_stress_pattern = function(stress, args, decl, number, n, islast)
 			-- Compute linked versions of potential lemma cases, for use
 			-- in the ru-noun+ headword. We substitute the original lemma
 			-- (before removing links) for forms that are the same as the
-			-- lemma.
+			-- lemma, if the original lemma has links.
 			if f[case] and (case == "nom_sg" or case == "nom_pl") then
 				local linked_forms = {}
 				for _, form in ipairs(f[case]) do
-					if close_enough_to_lemma(form[1], args.lemma_no_links) then
+					if close_enough_to_lemma(form[1], args.lemma_no_links) and
+							rfind(args.orig_lemma, "%[%[") then
 						table.insert(linked_forms, {args.orig_lemma, args.lemmatr})
 					else
 						table.insert(linked_forms, form)
@@ -4490,6 +4512,7 @@ local function process_overrides(args, f, n)
 				-- expected forms; but we'd have to figure out how to eliminate
 				-- the preposition that may be specified
 				if case ~= "loc" and case ~= "par" and case ~= "voc" and
+						not args.manual and
 						not contains_rutr_pair(f[case], form) then
 					form = concat_paired_russian_tr(form, {IRREGMARKER})
 				end
@@ -4513,10 +4536,10 @@ local function process_overrides(args, f, n)
 	-- if the nominative is overridden, use it to set the linked version unless
 	-- that is also specifically overridden
 	if args["nom_sg" .. n] and not args["nom_sg_linked" .. n] then
-		f["nom_sg_linked" .. n] = f["nom_sg" .. n]
+		f.nom_sg_linked = f.nom_sg
 	end
 	if args["nom_pl" .. n] and not args["nom_pl_linked" .. n] then
-		f["nom_pl_linked" .. n] = f["nom_pl" .. n]
+		f.nom_pl_linked = f.nom_pl
 	end
 
 	-- convert empty lists to nil to facilitate computation of accusative
