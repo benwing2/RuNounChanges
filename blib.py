@@ -1,25 +1,34 @@
 #!/usr/bin/env python
-#coding: utf-8
+# -*- coding: utf-8 -*-
 
 import pywikibot, mwparserfromhell, re, string, sys, codecs, urllib2, datetime, json
 
 site = pywikibot.Site()
 
+def remove_links(text):
+  text = re.sub(r"\[\[[^\[\]|]*\|", "", text)
+  text = re.sub(r"\[\[", "", text)
+  text = re.sub(r"\]\]", "", text)
+  return text
+
 def msg(text):
   print text.encode('utf-8')
 
-def parse(text):
+def parse_text(text):
   return mwparserfromhell.parser.Parser().parse(text, skip_style_tags=True)
 
-def getparam(t, param):
-  if t.has(param):
-    return unicode(t.get(param))
+def parse(page):
+  return parse_text(page.text)
+
+def getparam(template, param):
+  if template.has(param):
+    return unicode(template.get(param).value)
   else:
     return ""
 
-def rmparam(t, param):
-  if t.has(param):
-    t.remove(param)
+def rmparam(template, param):
+  if template.has(param):
+    template.remove(param)
 
 def display(page):
   pywikibot.output(u'# [[{0}]]'.format(page.title()))
@@ -32,7 +41,7 @@ def do_edit(page, index, func=None, null=False, save=False):
   while True:
     try:
       if func:
-        new, comment = func(page, index, parse(page.text))
+        new, comment = func(page, index, parse_text(page.text))
         
         if new:
           new = unicode(new)
@@ -71,35 +80,35 @@ def do_edit(page, index, func=None, null=False, save=False):
 def references(page, startsort = None, endsort = None, namespaces = None, includelinks = False):
   if isinstance(page, basestring):
     page = pywikibot.Page(site, page)
-  
+
   i = 0
   t = None
   steps = 50
-  
+
   for current in page.getReferences(onlyTemplateInclusion = not includelinks, namespaces = namespaces):
     i += 1
-    
+
     if endsort != None and i > endsort:
       break
-    
-    if startsort != None and i <= startsort:
+
+    if startsort != None and i < startsort:
       continue
-    
+
     if endsort != None and not t:
       t = datetime.datetime.now()
-    
-    yield current
-    
+
+    yield i, current
+
     if i % steps == 0:
       tdisp = ""
-      
+
       if endsort != None:
         told = t
         t = datetime.datetime.now()
         pagesleft = (endsort - i) / steps
         tfuture = t + (t - told) * pagesleft
         tdisp = ", est. " + tfuture.strftime("%X")
-      
+
       pywikibot.output(str(i) + "/" + str(endsort) + tdisp)
 
 
@@ -112,7 +121,7 @@ def cat_articles(page, startsort = None, endsort = None):
   for current in page.articles(startsort = startsort if not isinstance(startsort, int) else None):
     i += 1
     
-    if startsort != None and isinstance(startsort, int) and i <= startsort:
+    if startsort != None and isinstance(startsort, int) and i < startsort:
       continue
     
     if endsort != None:
@@ -122,7 +131,7 @@ def cat_articles(page, startsort = None, endsort = None):
       elif current.title(withNamespace=False) >= endsort:
         break
     
-    yield current
+    yield i, current
 
 
 def cat_subcats(page, startsort = None, endsort = None):
@@ -134,7 +143,7 @@ def cat_subcats(page, startsort = None, endsort = None):
   for current in page.subcategories(startsort = startsort if not isinstance(startsort, int) else None):
     i += 1
     
-    if startsort != None and isinstance(startsort, int) and i <= startsort:
+    if startsort != None and isinstance(startsort, int) and i < startsort:
       continue
     
     if endsort != None:
@@ -144,7 +153,7 @@ def cat_subcats(page, startsort = None, endsort = None):
       elif current.title() >= endsort:
         break
     
-    yield current
+    yield i, current
 
 
 def prefix(prefix, startsort = None, endsort = None, namespace = None):
@@ -153,13 +162,13 @@ def prefix(prefix, startsort = None, endsort = None, namespace = None):
   for current in site.prefixindex(prefix, namespace):
     i += 1
     
-    if startsort != None and i <= startsort:
+    if startsort != None and i < startsort:
       continue
     
     if endsort != None and i > endsort:
       break
     
-    yield current
+    yield i, current
 
 def stream(st, startsort = None, endsort = None):
   i = 0
@@ -167,7 +176,7 @@ def stream(st, startsort = None, endsort = None):
   for name in st:
     i += 1
     
-    if startsort != None and i <= startsort:
+    if startsort != None and i < startsort:
       continue
     if endsort != None and i > endsort:
       break
@@ -177,25 +186,61 @@ def stream(st, startsort = None, endsort = None):
     
     name = re.sub(ur"^[#*] *\[\[(.+)]]$", ur"\1", name, flags=re.UNICODE)
     
-    yield pywikibot.Page(site, name)
+    yield i, pywikibot.Page(site, name)
 
+def get_page_name(page):
+  if isinstance(page, basestring):
+    return page
+  return unicode(page.title())
 
-def get_args():
-  startsort = None
-  endsort = None
-  
-  if len(sys.argv) >= 2:
+def iter_items(items, startsort = None, endsort = None, get_name = get_page_name):
+  i = 0
+  t = None
+  steps = 50
+
+  for current in items:
+    i += 1
+
+    if startsort != None and isinstance(startsort, int) and i < startsort:
+      continue
+
+    if endsort != None:
+      if isinstance(endsort, int):
+        if i > endsort:
+          break
+      elif get_page_name(current) >= endsort:
+        break
+
+    if isinstance(endsort, int) and not t:
+      t = datetime.datetime.now()
+
+    yield i, current
+
+    if i % steps == 0:
+      tdisp = ""
+
+      if isinstance(endsort, int):
+        told = t
+        t = datetime.datetime.now()
+        pagesleft = (endsort - i) / steps
+        tfuture = t + (t - told) * pagesleft
+        tdisp = ", est. " + tfuture.strftime("%X")
+
+      pywikibot.output(str(i) + "/" + str(endsort) + tdisp)
+
+def get_args(startsort, endsort):
+  if startsort:
     try:
-      startsort = int(sys.argv[1])
+      startsort = int(startsort)
     except ValueError:
-      startsort = str.decode(sys.argv[1], "utf-8")
-  
-  if len(sys.argv) >= 3:
+      startsort = str.decode(startsort, "utf-8")
+
+  if endsort:
     try:
-      endsort = int(sys.argv[2])
+      endsort = int(endsort)
     except ValueError:
-      endsort = str.decode(sys.argv[2], "utf-8")
-  
+      endsort = str.decode(endsort, "utf-8")
+
   return (startsort, endsort)
 
 languages = None
