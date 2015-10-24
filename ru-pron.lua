@@ -13,7 +13,8 @@ QUESTIONS TO ASK OF ATITAREV/CINEMANTIQUE:
    out) (DONE. NO.)
 4. Ask A/C -- should сск be converted to ск (this is what's done currently)?
    (DONE. YES.)
-5, Ask A/C -- 'н[ндт]ск'] = 'нск', is this correct?
+5, Ask A/C -- 'н[ндт]ск'] = 'нск', is this correct? (DONE. NO. Use нск for ннск
+   but н(т)ск for н[дт]ск.)
 
 FIXME:
 
@@ -61,7 +62,8 @@ local AC = u(0x0301) -- acute =  ́
 local GR = u(0x0300) -- grave =  ̀
 local CFLEX = u(0x0302) -- circumflex =  ̂
 
-local vowels, vowels_c, non_vowels, non_vowels_c = '[aäeëɛəiyoöuü]', '([aäeëɛəiyoöuü])', '[^aäeëɛəiyoöuü]', '([^aäeëɛəiyoöuü])'
+local vowel_list = 'aeiouyɛäëöüɐəɪʊɨæɵʉ'
+local vowels, vowels_c, non_vowels, non_vowels_c = '[' .. vowel_list .. ']', '([' .. vowel_list .. '])', '[^' .. vowel_list .. ']', '([^' .. vowel_list .. '])'
 local accents = '[' .. AC .. GR .. CFLEX .. ']'
 local non_accents = '[^' .. AC .. GR .. CFLEX .. ']'
 
@@ -137,7 +139,7 @@ local phon_respellings = {
 		end end,
 
 	['[dt]z(j?)' .. vowels_c] = 'ĵz%1%2', ['^o[dt]s'] = 'ocs',
-	['čo'] = 'čjo', ['ča'] = 'čja', ['ču'] = 'čju',
+	['([čǰӂ])([aou])'] = '%1j%2',
 
 	['([^rn])[dt]c'] = '%1cc', ['[td]č'] = 'čč',
 	['stg'] = 'sg',
@@ -154,7 +156,8 @@ local phon_respellings = {
 	['[sz]tl'] = 'sl', ['[sz]tn'] = 'sn',
 	['[szšž]č'] = 'šč', ['[szšž]šč'] = 'šč',
 	['[zs]š'] = 'šš', ['[zs]ž'] = 'žž',
-	['n[ndt]sk'] = 'nsk',
+	['nnsk'] = 'nsk',
+	['n[dt]sk'] = 'n(t)sk',
 	['[sz]sk'] = 'sk',
 	['s[dt]sk'] = 'sck',
 	['gk'] = 'xk',
@@ -214,6 +217,12 @@ function export.ipa(text, adj, gem, pal)
 	text = rsub(text, 'э', 'ɛ')
 	-- transliterate and decompose acute and grave Latin vowels
 	text = com.translit(text)
+
+	-- handle old ě (e.g. сѣдло́), and ě̈ from сѣ̈дла
+	text = rsub(text, 'ě̈', 'jo' .. AC)
+	text = rsub(text, 'ě', 'e')
+	-- handle secondarily-stressed ё
+	text = rsub(text, AC .. GR, GR)
 
 	--phonetic respellings
 	for a, b in pairs(phon_respellings) do
@@ -413,16 +422,13 @@ function export.ipa(text, adj, gem, pal)
 				syl = rsub(syl, '(.*)́', 'ˈ%1')
 				syl = rsub(syl, '(.*)̀', 'ˌ%1')
 				syl = rsub(syl, '(.*)̂', '%1')
-				syl = rsub(syl, '([ʲčǰǯ]ː?)o', '%1ö')
+				syl = rsub(syl, '([ʲčǰǯӂ]ː?)o', '%1ö')
 				syl = rsub(syl, vowels_c, function(a)
 					if a ~= '' then
 						return allophones[a][1]
 					end end)
 
 			else
-				if not rfind((syllable[j-1] or '') .. syllable[j], '[ʺʹ]') and (j ~= #syllable or (j == #syllable and not rfind(syl, 'jə$'))) then
-					syl = rsub(syl, 'j' .. rsub(vowels_c, 'ü', ''), '(j)%1')
-				end
 				if stress[j+1] or (j == 1 and rfind(syl, '^' .. vowels)) then
 					syl = rsub(syl, vowels_c, function(a)
 						if a ~= '' then
@@ -440,6 +446,10 @@ function export.ipa(text, adj, gem, pal)
 		end
 
 		pron = table.concat(syl_conv, "")
+
+		-- Optional (j) before ɪ
+		pron = rsub(pron, "^jɪ", "(j)ɪ")
+		pron = rsub(pron, vowels_c .. "jɪ", "%1(j)ɪ")
 
 		--consonant assimilative palatalisation
 		pron = rsub(pron, '([szntd])(ˈ?)([tdčǰǯlnsz]ʲ?)', function(a, b, c)
@@ -479,6 +489,9 @@ function export.ipa(text, adj, gem, pal)
 	-- FIXME: Test cases are inconsistent about whether to apply this
 	--text = rsub(text, '[ɐə]([%-]?)ɐ(%l?)ˈ', '%1ɐː%2ˈ')
 	--text = rsub(text, 'ə([%-]?)[ɐə]', '%1əː')
+	
+	-- Assimilation involving hiatus of ɐ and ə
+	text = rsub(text, 'ə([%-]?)[ɐə]', 'ɐ%1ɐ')
 
 	-- double consonants, in words like секвойя and майя; FIXME, this won't
 	-- be correct if the preceding vowel is unstressed; we need to do this
