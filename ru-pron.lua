@@ -1,34 +1,20 @@
 --[[
 This module implements the template {{ru-IPA}} (FIXME, is it called elsewhere?)
 
-Author: Primarily Wyang, with help from Atitarev and a bit from others
-
-QUESTIONS TO ASK OF ATITAREV/CINEMANTIQUE:
-
-1. Ask Atitarev/Cinemantique about -ьо, is it same as (possibly unstressed)
-   -ьё? (DONE. YES.)
-2. Ask A/C -- should стск be treated like сск or ск? (the latter is what's
-   currently done) (DONE. NEITHER, TREAT AS СЦК.)
-3. Ask A/C -- should we ever reduce double vowels to long vowels? (commented
-   out) (DONE. NO.)
-4. Ask A/C -- should сск be converted to ск (this is what's done currently)?
-   (DONE. YES.)
-5, Ask A/C -- 'н[ндт]ск'] = 'нск', is this correct? (DONE. NO. Use нск for ннск
-   but н(т)ск for н[дт]ск.)
+Author: Primarily Wyang, with help from Atitarev, Benwing and a bit from others
 
 FIXME:
 
-1. Figure out issue with фильм, сельдь. (DONE)
-2. Figure out issue with Амударья́ and скамья́ (pre-tonal syllables). (DONE, MAY NOT BE RIGHT)
-3. Figure out issue with та́ять.
-4. Figure out what to do with monosyllabic unstressed words that are pronounced stressed.
-5. Geminated /j/ from -йя-: treat as any other gemination, meaning it may not always be
-   pronounced geminated. Currently we geminate it very late, after all the code that
-   reduces geminates. Should be done earlier and places that include regexps with /j/ should
-   be modified to also include the gemination marker ː.
-6. Handle secondarily-stressed ё.
-7. In асунсьо́н and Вьентья́н, put a syllable break after the н and before consonant + /j/.
-   Use the perm_sym_onset mechanism or at least the code that accesses that mechanism.
+1. Geminated /j/ from -йя-: treat as any other gemination, meaning it may
+   not always be pronounced geminated. Currently we geminate it very late,
+   after all the code that reduces geminates. Should be done earlier and
+   places that include regexps with /j/ should be modified to also include
+   the gemination marker ː.
+2. In асунсьо́н and Вьентья́н, put a syllable break after the н and before
+   consonant + /j/. Use the perm_sym_onset mechanism or at least the code
+   that accesses that mechanism.
+3. Handling сск - it should reduce to ск in all cases except when gem=y;
+   currently we always reduce it to ск
 
 ]]
 
