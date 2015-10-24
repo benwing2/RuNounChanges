@@ -48,8 +48,11 @@ local AC = u(0x0301) -- acute =  ́
 local GR = u(0x0300) -- grave =  ̀
 local CFLEX = u(0x0302) -- circumflex =  ̂
 
-local vowel_list = 'aeiouyɛäëöüɐəɪʊɨæɵʉ'
-local vowels, vowels_c, non_vowels, non_vowels_c = '[' .. vowel_list .. ']', '([' .. vowel_list .. '])', '[^' .. vowel_list .. ']', '([^' .. vowel_list .. '])'
+local vowel_list = 'aeiouyɛəäëöü'
+local ipa_vowel_list = vowel_list .. 'ɐɪʊɨæɵʉ'
+local vowels, vowels_c = '[' .. vowel_list .. ']', '([' .. vowel_list .. '])'
+local ipa_vowels, ipa_vowels_c = '[' .. ipa_vowel_list .. ']', '([' .. ipa_vowel_list .. '])'
+local non_vowels, non_vowels_c = '[^' .. vowel_list .. ']', '([^' .. vowel_list .. '])'
 local accents = '[' .. AC .. GR .. CFLEX .. ']'
 local non_accents = '[^' .. AC .. GR .. CFLEX .. ']'
 
@@ -224,7 +227,7 @@ function export.ipa(text, adj, gem, pal)
 	-- this purpose)
 	local word = rsplit(text, " ", true)
 	for i = 1, #word do
-		if not accentless['prep'][word[i]] and not accentless['post'][word[i]] and
+		if not (i < #word and accentless['prep'][word[i]]) and not (i > 1 and accentless['post'][word[i]]) and
 			ulen(rsub(word[i], non_vowels, '')) == 1 and
 			rsub(word[i], non_accents, '') == '' then
 			if (i > 1 and accentless['prep'][word[i-1]] or i < #word and accentless['post'][word[i+1]]) then
@@ -322,17 +325,8 @@ function export.ipa(text, adj, gem, pal)
 			trimmed_pron = usub(trimmed_pron, accent_pos + 1, -1)
 		end
 
-		--treat monosyllabic non-prepositions as if accented
-		pron = rsub(pron, '(.*)' .. vowels_c .. '(.*)', function(a, b, c)
-			if not rfind(a .. c, vowels) then
-				table.insert(pos, 1)
-			end end)
-
 		--split by syllable
 		syllable = rsplit(pron, '/', true)
-		if #syllable == 1 then
-			table.insert(pos, 1)
-		end
 
 		--convert list of stress positions to set; equivalent to ut.list_to_set()
 		for _, pos in ipairs(pos) do
@@ -402,7 +396,8 @@ function export.ipa(text, adj, gem, pal)
 			end
 
 			--vowel allophony
-			if stress[j] or (j == #syllable and rfind(syllable[j-1] .. syllable[j], '[aieäëü]́?o')) or rfind(syllable[j], GR) then
+			-- second clause in if-statement handles words like Токио and хаос
+			if stress[j] or (j == #syllable and j > 1 and rfind(syllable[j-1] .. syllable[j], '[aieäëü]́?o')) then
 				-- convert acute/grave/circumflex accent to appropriate
 				-- IPA marker of primary/secondary/unmarked stress
 				syl = rsub(syl, '(.*)́', 'ˈ%1')
@@ -435,7 +430,7 @@ function export.ipa(text, adj, gem, pal)
 
 		-- Optional (j) before ɪ
 		pron = rsub(pron, "^jɪ", "(j)ɪ")
-		pron = rsub(pron, vowels_c .. "([‿%-]?)jɪ", "%1%2(j)ɪ")
+		pron = rsub(pron, ipa_vowels_c .. "([‿%-]?)jɪ", "%1%2(j)ɪ")
 
 		--consonant assimilative palatalisation
 		pron = rsub(pron, '([szntd])(ˈ?)([tdčǰǯlnsz]ʲ?)', function(a, b, c)
