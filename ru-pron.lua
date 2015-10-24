@@ -435,7 +435,7 @@ function export.ipa(text, adj, gem, pal)
 
 		-- Optional (j) before ɪ
 		pron = rsub(pron, "^jɪ", "(j)ɪ")
-		pron = rsub(pron, vowels_c .. "jɪ", "%1(j)ɪ")
+		pron = rsub(pron, vowels_c .. "([‿%-]?)jɪ", "%1%2(j)ɪ")
 
 		--consonant assimilative palatalisation
 		pron = rsub(pron, '([szntd])(ˈ?)([tdčǰǯlnsz]ʲ?)', function(a, b, c)
