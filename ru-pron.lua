@@ -21,6 +21,7 @@ FIXME:
 local ut = require("Module:utils")
 local com = require("Module:ru-common")
 local m_ru_translit = require("Module:ru-translit")
+local strutils = require("Module:string utilities")
 
 local export = {}
 local u = mw.ustring.char
@@ -168,7 +169,8 @@ local accentless = {
        'k', 'ko', 'mež', 'na', 'nad', 'nado', 'o', 'ob', 'obo', 'ot',
        'po', 'pod', 'podo', 'pred', 'predo', 'pri', 'pro', 'pered', 'peredo',
        'čerez', 's', 'so', 'u', 'ne'}),
-	post = ut.list_to_set({'to', 'libo', 'nibudʹ', 'by', 'b', 'že', 'ž',
+	posthyphen = ut.list_to_set({'to'}),
+	post = ut.list_to_set({'libo', 'nibudʹ', 'by', 'b', 'že', 'ž',
        'ka', 'tka', 'li'})
 }
 
@@ -198,10 +200,6 @@ function export.ipa(text, adj, gem, pal)
 	end
 	gem = usub(gem or '', 1, 1)
 	text = ulower(text)
-	--replace hyphens with spaces; FIXME: needs handling for prefixes,
-	--e.g. по-, suffixes, e.g. -то, which are reduced (although we do
-	--handle these as separate words, see 'accentless')
-	text = rsub(text, '-', ' ')
 
 	-- translit will not respect э vs. е difference so we have to
 	-- do it ourselves before translit
@@ -222,17 +220,20 @@ function export.ipa(text, adj, gem, pal)
 
 	text = adj and rsub(text, '(.[aoe]́?)go(' .. AC .. '?)$', '%1vo%2') or text
 
-	-- add primary stress to single-syllable words preceded or followed by
-	-- unstressed particle or preposition; make remaining single-syllable
-	-- words have "unmarked" stress (treated as stressed but without a
-	-- primary or secondary stress marker; we repurpose a circumflex for
-	-- this purpose)
-	local word = rsplit(text, " ", true)
+	-- Add primary stress to single-syllable words preceded or followed by
+	-- unstressed particle or preposition. Make remaining single-syllable
+	-- words that aren't a particle or preposition have "unmarked" stress
+	-- (treated as stressed but without a primary or secondary stress marker;
+	-- we repurpose a circumflex for this purpose). We need to preserve the
+	-- distinction between spaces and hyphens because we only recognize
+	-- certain post-accentless particles following a dash (to distinguish e.g.
+	-- 'то' from '-то').
+	local word = strutils.capturing_split(text, "([ %-]+)")
 	for i = 1, #word do
-		if not accentless['prep'][word[i]] and not (i > 1 and accentless['post'][word[i]]) and
+		if not accentless['prep'][word[i]] and not (i > 2 and accentless['post'][word[i]]) and not (i > 2 and accentless['posthyphen'][word[i]] and word[i-1] == "-") and
 			ulen(rsub(word[i], non_vowels, '')) == 1 and
 			rsub(word[i], non_accents, '') == '' then
-			if (i > 1 and accentless['prep'][word[i-1]] or i < #word and accentless['post'][word[i+1]]) then
+			if (i > 2 and accentless['prep'][word[i-2]] or i < #word - 1 and accentless['post'][word[i+2]] or i < #word - 1 and word[i+1] == "-" and accentless['posthyphen'][word[i+2]]) then
 				word[i] = rsub(word[i], vowels_c, '%1' .. AC)
 			else
 				word[i] = rsub(word[i], vowels_c, '%1' .. CFLEX)
@@ -243,24 +244,24 @@ function export.ipa(text, adj, gem, pal)
 	-- make prepositions and particles liaise with the following or
 	-- preceding word
 	for i = 1, #word do
-		if i < #word and accentless['prep'][word[i]] then
-			word[i+1] = word[i] .. '‿' .. word[i+1]
-			word[i+1] = rsub(word[i+1], '([bdkstvxzž])‿i', '%1‿y')
-			word[i] = ''
-		elseif i > 1 and accentless['post'][word[i]] then
-			word[i-1] = word[i-1] .. word[i]
-			word[i] = ''
+		if i < #word - 1 and accentless['prep'][word[i]] then
+			word[i+1] = '‿'
+		elseif i > 2 and (accentless['post'][word[i]] or accentless['posthyphen'][word[i]] and word[i-1] == "-") then
+			word[i-1] = ''
 		end
 	end
 
-	-- rejoin words and eliminate stray spaces from blanking out words
-	text = table.concat(word, " ")
+	-- rejoin words, convert hyphens to spaces and eliminate stray spaces
+	text = table.concat(word, "")
+	text = rsub(text, '-', ' ')
 	text = rsub(text, '^ ', '')
 	text = rsub(text, ' $', '')
 	text = rsub(text, ' +', ' ')
 
-	-- some tidying up after transliteration
+	-- conversion of šč to geminate, with ǯ perversely representing IPA ɕ
 	text = rsub(text, 'šč', 'ǯː')
+	-- backing of /i/ after certain prepositions
+	text = rsub(text, '([bdkstvxzž])‿i', '%1‿y')
 	-- ьо is pronounced as (possibly unstressed) ьё, I think
 	text = rsub(text, 'ʹo', 'ʹjo')
 
