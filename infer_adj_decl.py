@@ -35,6 +35,26 @@ def expand_text(tempcall, pagemsg):
     return False
   return result
 
+def get_forms(result):
+  forms = {}
+  for formspec in re.split(r"\|", result):
+    case, value = re.split(r"=", formspec, 1)
+    forms[case] = value
+  return forms
+
+def get_case_forms(formval):
+  forms = set()
+  for form in re.split(",", formval):
+    # If there are two stresses, split into two words
+    if len(re.sub("[^́]", "", form)) == 2:
+      wordleft = re.sub("(.*)́([^́]*)$", r"\1\2", form) # remove right stress
+      wordright = re.sub("^([^́]*)́(.*)", r"\1\2", form) # remove left stress
+      forms.add(wordleft)
+      forms.add(wordright)
+    else:
+      forms.add(form)
+  return forms
+
 def compare_results(oldt, newt, pagemsg):
   oldt = unicode(oldt)
   newt = unicode(newt)
@@ -44,11 +64,23 @@ def compare_results(oldt, newt, pagemsg):
   newresult = expand_text(newt, pagemsg)
   if not oldresult or not newresult:
     return False
-  if oldresult != newresult:
-    pagemsg("WARNING: Old template and new template don't give same results: old %s = %s, new %s = %s" % (
-      oldt, oldresult, newt, newresult))
-    return False
-  return True
+  old_forms = get_forms(oldresult)
+  new_forms = get_forms(newresult)
+  cases = set(old_forms.keys())|set(new_forms.keys())
+  ok = True
+  for case in cases:
+    if old_forms[case] and not new_forms[case]:
+      pagemsg("WARNING: Missing value %s=%s in new template forms" % (case, old_forms[case]))
+      ok = False
+    elif new_forms[case] and not old_forms[case]:
+      pagemsg("WARNING: Extra value %s=%s in new template forms" % (case, new_forms[case]))
+      ok = False
+    else:
+      if get_case_forms(old_forms[case]) != get_case_forms(new_forms[case]):
+        pagemsg("WARNING: For case %s, old value %s not same as new value %s" % (
+          case, old_forms[case], new_forms[case]))
+        ok = False
+  return ok
 
 def detect_stem(stem, decl):
   if decl == "":
