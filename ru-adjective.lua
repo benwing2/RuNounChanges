@@ -14,6 +14,7 @@
 		4 or short_n: neuter singular short form (if exists)
 		5 or short_f: feminine singular short form (if exists)
 		6 or short_p: plural short form (if exists)
+		CASE_NUMGEN: Override a given form; see abbreviations below
 		suffix: any suffix to attach unchanged to the end of each form
 		notes: Notes to add to the end of the table
 		title: Override the title
@@ -21,7 +22,7 @@
 		   there's more than one; automatically superscripted
 		shorttailall: Same as shorttail= but applies to all short forms even
 		   if there's only one
-		CASE_NUMGEN: Override a given form; see abbreviations below
+		CASE_NUMGEN_tail: Like shorttailall but only for a specific form
 
 	Case abbreviations:
 		nom: nominative
@@ -224,6 +225,7 @@ function export.do_generate_forms(args, old, manual)
 		orig_args = mw.clone(args)
 	end
 
+    local SUBPAGENAME = mw.title.getCurrentTitle().subpageText
 	args.forms = {}
 	old = old or args.old
 	args.old = old
@@ -240,14 +242,7 @@ function export.do_generate_forms(args, old, manual)
 	manual = manual or args[2] == "manual"
 	local decl_types = manual and "$" or args[2] or ""
 	for _, decl_type in ipairs(rsplit(decl_types, ",")) do
-		local lemma
-		if manual then
-			lemma = "-"
-		elseif not args[1] then
-			error("Lemma (first argument) must be specified")
-		else
-			lemma = args[1]
-		end
+		local lemma = manual and "-" or args[1] or SUBPAGENAME
 
 		-- Auto-detect actual decl type, and get short accent and overriding
 		-- short stem, if specified.
@@ -258,9 +253,8 @@ function export.do_generate_forms(args, old, manual)
 			decl_type = "ый"
 		end
 
-		local allow_unaccented
-		stem, allow_unaccented = rsubb(stem, "^%*", "")
-		if not allow_unaccented and decl_type ~= "ой" and com.needs_accents(stem) then
+		stem, args.allow_unaccented = rsubb(stem, "^%*", "")
+		if not args.allow_unaccented and decl_type ~= "ой" and com.needs_accents(stem) then
 			error("Stem must have an accent in it: " .. stem)
 		end
 
@@ -299,8 +293,10 @@ function export.do_generate_forms(args, old, manual)
 		args.stem = stem
 		args.ustem = com.make_unstressed_once(stem)
 		local accented_stem = stem
-		if com.is_unstressed(accented_stem) then
-			accented_stem = com.make_ending_stressed(accented_stem)
+		if not args.allow_unaccented then
+			if com.is_unstressed(accented_stem) then
+				accented_stem = com.make_ending_stressed(accented_stem)
+			end
 		end
 
 		local short_forms_allowed = manual and true or decl_type == "ый" or
@@ -457,7 +453,7 @@ end
 
 local function get_form(forms)
 	local canon_forms = {}
-	for _, form in forms do
+	for _, form in ipairs(forms) do
 		local entry, notes = m_table_tools.get_notes(form)
 		ut.insert_if_not(canon_forms, m_links.remove_links(entry))
 	end
@@ -904,8 +900,12 @@ construct_bare_and_short_stem = function(args, short_accent, short_stem,
 	-- but be conservative -- only if monosyllabic, since otherwise we have
 	-- no idea where stress should end up; after all, the explicit short stem
 	-- is for exceptional cases.
-	if com.is_unstressed(short_stem) and com.is_monosyllabic(short_stem) then
-		short_stem = com.make_ending_stressed(short_stem)
+	if not args.allow_unaccented then
+		if com.is_monosyllabic(short_stem) then
+			short_stem = com.make_ending_stressed(short_stem)
+		elseif com.needs_accents(short_stem) then
+			error("Explicit short stem " .. short_stem .. " needs an accent")
+		end
 	end
 
 	if sc2 then
@@ -954,23 +954,31 @@ end
 -- Deduce the short accent pattern given short masc, fem, neut and plural.
 -- Each value should be a list of strings.
 deduce_short_accent = function(args)
-	local masc = canonicalize_override(args.short_m or args[short_cases.short_m])
-	local fem = canonicalize_override(args.short_f or args[short_cases.short_f])
-	local neut = canonicalize_override(args.short_n or args[short_cases.short_n])
-	local pl = canonicalize_override(args.short_p or args[short_cases.short_p])
+	local masc = canonicalize_override(args, "short_m") or canonicalize_override(args, short_cases.short_m)
+	local fem = canonicalize_override(args, "short_f") or canonicalize_override(args, short_cases.short_f)
+	local neut = canonicalize_override(args, "short_n") or canonicalize_override(args, short_cases.short_n)
+	local pl = canonicalize_override(args, "short_p") or canonicalize_override(args, short_cases.short_p)
 
 	local function convert_to_plus_minus(list)
 		if not list then return "missing" end
 		assert(type(list) == "table")
-		if #list == 0 then
+		if #list == 0 or #list == 1 and list[1] == "-" then
 			return "missing"
 		end
 		local stresses = {}
 		for _, x in ipairs(list) do
-			table.insert(stresses, (com.is_ending_stressed(x) or com.is_monosyllabic(x)) and "+" or "-")
+			local endstr = com.is_ending_stressed(x)
+			local multistr = endstr and com.is_multi_stressed(x)
+			if multistr then
+				track("short-multistress")
+			end
+			table.insert(stresses, multistr and "-+" or (endstr or com.is_monosyllabic(x)) and "+" or "-")
 		end
 		if #stresses == 1 then
 			return stresses[1]
+		end
+		if ut.contains(stresses, "-+") then
+			return "-+"
 		end
 		local has_plus = ut.contains(stresses, "+")
 		local has_minus = ut.contains(stresses, "-")
@@ -1419,9 +1427,7 @@ local unstressed_rules = {
 	["х"] = velar_rules,
 }
 
-local consonantal_suffixes = ut.list_to_set({"", "ь", "й"})
-
-local old_consonantal_suffixes = ut.list_to_set({"ъ", "ь", "й"})
+local nonsyllabic_suffixes = ut.list_to_set({"", "ъ", "ь", "й"})
 
 --------------------------------------------------------------------------
 --                           Declension functions                       --
@@ -1447,13 +1453,12 @@ local function combine_stem_and_suffix(stem, suf, rules, old)
 end
 
 local function attach_unstressed(args, suf, stem, ustem)
-	local old = args.old
 	if suf == nil then
 		return nil
-	elseif old and old_consonantal_suffixes[suf] or not old and consonantal_suffixes[suf] then
+	elseif nonsyllabic_suffixes[suf] then
 		if not args.bare then
 			return nil
-		elseif rfind(args.bare, old and "[йьъ]$" or "[йь]$") then
+		elseif rfind(args.bare, "[йьъ]$") then
 			return args.bare
 		elseif suf == "ъ" then
 			return args.bare .. suf
@@ -1463,18 +1468,17 @@ local function attach_unstressed(args, suf, stem, ustem)
 	end
 	suf = com.make_unstressed(suf)
 	local rules = unstressed_rules[ulower(usub(stem, -1))]
-	return combine_stem_and_suffix(stem, suf, rules, old)
+	return combine_stem_and_suffix(stem, suf, rules, args.old)
 end
 
 local function attach_stressed(args, suf, stem, ustem)
-	local old = args.old
 	if suf == nil then
 		return nil
 	elseif not rfind(suf, "[ё́]") then -- if suf has no "ё" or accent marks
 		return attach_unstressed(args, suf, stem, ustem)
 	end
 	local rules = stressed_rules[ulower(usub(ustem, -1))]
-	return combine_stem_and_suffix(ustem, suf, rules, old)
+	return combine_stem_and_suffix(ustem, suf, rules, args.old)
 end
 
 local function attach_both(args, suf, stem, ustem)
@@ -1530,19 +1534,57 @@ decline = function(args, decl, stressed)
 	end
 end
 
-canonicalize_override = function(val)
-	if not val then return nil end
-	return rsplit(val, "%s*,%s*")
+-- CASE may be a number to refer to numbered short-form overrides
+canonicalize_override = function(args, case)
+	local val = args[case]
+	if not val then
+		return nil
+	end
+	if rfind(val, "/") then
+		track("slash-in-override")
+		track("slash-in-override/" .. case)
+	end
+	if rfind(val, " ") then
+		track("space-in-override")
+		track("space-in-override/" .. case)
+	end
+	val = rsplit(val, "%s*,%s*")
+
+	-- auto-accent/check for necessary accents
+	local newvals = {}
+	for _, v in ipairs(val) do
+		if not args.allow_unaccented then
+			-- it's safe to accent monosyllabic stems
+			if com.is_monosyllabic(v) then
+				v = com.make_ending_stressed(v)
+			elseif com.needs_accents(v) then
+				error("Override " .. case .. "=" .. v .. " requires an accent")
+			end
+		end
+		table.insert(newvals, v)
+	end
+	val = newvals
+
+	return val
 end
 
 handle_forms_and_overrides = function(args, short_forms_allowed)
 	for _, case in ipairs(args.old and old_long_cases or long_cases) do
-		args[case] = canonicalize_override(args[case]) or args.forms[case]
+		if args.forms[case] then
+			local lastarg = #(args.forms[case])
+			if lastarg > 0 and args[case .. "_tail"] then
+				args.forms[case][lastarg] = args.forms[case][lastarg] .. args[case .. "_tail"]
+			end
+		end
+		args[case] = canonicalize_override(args, case) or args.forms[case]
 	end
 	for case, argnum in pairs(short_cases) do
 		if short_forms_allowed then
 			if args.forms[case] then
 				local lastarg = #(args.forms[case])
+				if lastarg > 0 and args[case .. "_tail"] then
+					args.forms[case][lastarg] = args.forms[case][lastarg] .. args[case .. "_tail"]
+				end
 				if lastarg > 0 and args.shorttailall then
 					args.forms[case][lastarg] = args.forms[case][lastarg] .. args.shorttailall
 				end
@@ -1550,7 +1592,7 @@ handle_forms_and_overrides = function(args, short_forms_allowed)
 					args.forms[case][lastarg] = args.forms[case][lastarg] .. args.shorttail
 				end
 			end
-			args[case] = canonicalize_override(args[case] or args[argnum]) or args.forms[case]
+			args[case] = canonicalize_override(args, case) or canonicalize_override(args, argnum) or args.forms[case]
 		else
 			args[case] = nil
 		end
