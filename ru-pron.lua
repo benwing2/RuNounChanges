@@ -227,7 +227,7 @@ function export.ipa(text, adj, gem, pal)
 	-- this purpose)
 	local word = rsplit(text, " ", true)
 	for i = 1, #word do
-		if not (i < #word and accentless['prep'][word[i]]) and not (i > 1 and accentless['post'][word[i]]) and
+		if not accentless['prep'][word[i]] and not (i > 1 and accentless['post'][word[i]]) and
 			ulen(rsub(word[i], non_vowels, '')) == 1 and
 			rsub(word[i], non_accents, '') == '' then
 			if (i > 1 and accentless['prep'][word[i-1]] or i < #word and accentless['post'][word[i+1]]) then
