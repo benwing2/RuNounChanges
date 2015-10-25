@@ -39,7 +39,7 @@ def expand_text(tempcall, pagemsg):
   #  pagemsg("%s = %s" % (tempcall, result))
   if result.startswith('<strong class="error">'):
     result = re.sub("<.*?>", "", result)
-    pagemsg("ERROR: %s" % result)
+    pagemsg("ERROR: %s = %s" % (tempcall, result))
     return False
   return result
 
@@ -75,16 +75,18 @@ def compare_results(oldt, newt, pagemsg):
   cases = set(old_forms.keys())|set(new_forms.keys())
   ok = True
   for case in cases:
-    if old_forms[case] and not new_forms[case]:
-      pagemsg("WARNING: Missing value %s=%s in new template forms" % (case, old_forms[case]))
+    oldval = old_forms.get(case, "-")
+    newval = new_forms.get(case, "-")
+    if oldval and not newval:
+      pagemsg("WARNING: Missing value %s=%s in new template forms" % (case, oldval))
       ok = False
-    elif new_forms[case] and not old_forms[case]:
-      pagemsg("WARNING: Extra value %s=%s in new template forms" % (case, new_forms[case]))
+    elif newval and not oldval:
+      pagemsg("WARNING: Extra value %s=%s in new template forms" % (case, newval))
       ok = False
     else:
-      if get_case_forms(old_forms[case]) != get_case_forms(new_forms[case]):
+      if get_case_forms(oldval) != get_case_forms(newval):
         pagemsg("WARNING: For case %s, old value %s not same as new value %s" % (
-          case, old_forms[case], new_forms[case]))
+          case, oldval, newval))
         ok = False
   return ok
 
@@ -117,6 +119,7 @@ def infer_decl(t, pagemsg):
   if verbose:
     pagemsg("Processing %s" % unicode(t))
 
+  orig_template = unicode(t)
   tname = unicode(t.name).strip()
   forms = {}
 
@@ -127,7 +130,8 @@ def infer_decl(t, pagemsg):
     form = remove_links(form)
     forms[case] = form
 
-  special = ""
+  specials = [""]
+  explicit_msg = None
 
   def get_form(case):
     if forms[case] == "-":
@@ -142,6 +146,8 @@ def infer_decl(t, pagemsg):
   if not m and not f and not n and not p:
     pagemsg("No short forms, skipping")
     return None
+  elif not m and f and n and p:
+    pagemsg("Missing short masculine but other short forms present, continuing")
   elif not m or not f or not n or not p:
     pagemsg("WARNING: Some short forms missing, skipping: m=%s, f=%s, n=%s, p=%s" % (m or "blank", f or "blank", n or "blank", p or "blank"))
     return None
@@ -220,26 +226,31 @@ def infer_decl(t, pagemsg):
     short_stem = ""
   elif short_stem + u"н" == stem and re.search(u"нн[иы]й$", stem + decl):
     pagemsg("Found special (2): short stem %s, long stem %s" % (short_stem, stem))
-    special = "(2)"
+    specials = ["(2)"]
     short_stem = ""
   else:
     pagemsg("WARNING: Found short stem %s different from long stem %s" %
         (short_stem, stem))
   real_short_stem = short_stem or stem
-  if special != "(2)" and mstem != real_short_stem:
+  if specials != ["(2)"] and mstem != real_short_stem:
     if mstem + u"н" == real_short_stem and re.search(u"нн$", real_short_stem):
       pagemsg("Found special (1): short stem %s, masculine stem %s" % (
         real_short_stem, mstem))
-      special = "(1)"
+      specials = ["(1)"]
     elif make_unstressed(stem) == mstem:
       # Can happen with monosyllabic masculines
       pass
+    elif not m:
+      pagemsg("Missing short masculine singular")
+      if real_short_stem.endswith(u"нн"):
+        specials = ["(1)"]
+      explicit_msg = "-"
     else:
       pagemsg("Masculine short stem %s differs from short stem %s, presumed reducible" % (mstem, real_short_stem))
-      if special:
+      if [x for x in specials if x != ""]:
         pagemsg("WARNING: Can't have reducible and special together")
         return None
-      special = "*"
+      specials = ["*", m]
   ff = f2 and "both" or fend and "end" or "stem"
   nn = n2 and "both" or nend and "end" or "stem"
   pp = p2 and "both" or pend and "end" or "stem"
@@ -253,8 +264,7 @@ def infer_decl(t, pagemsg):
             match("end", "stem", "both") and "c'" or
             match("end", "both", "both") and "c''" or
             None)
-  explicit_msg = None
-  if special == "*" and not is_one_syllable(m) and (
+  if "*" in specials and not is_one_syllable(m) and (
       (stress in ["b", "b'"]) != is_ending_stressed(m)):
     pagemsg("WARNING: (De)reducible short masc sg %s has wrong stress for accent pattern %s, setting manual masc sg" % (m, stress))
     explicit_msg = m
@@ -264,14 +274,39 @@ def infer_decl(t, pagemsg):
     return None
 
   stem, decl = combine_stem(stem, decl)
-  special = stress + special
-  declspec = special + (short_stem and (":" + short_stem) or "")
-  if decl:
-    declspec = decl + ":" + declspec
-  args = [stem, declspec]
-  if explicit_msg:
-    args.append(explicit_msg)
-  return args
+  for special in specials:
+    if special not in ["", "*", "(1)", "(2)"]:
+      if explicit_msg:
+        if special == explicit_msg:
+          pass
+        else:
+          pagemsg("WARNING: Something wrong; trying to set explicit short masc sg %s when there's an existing setting %s" % (
+            special, explicit_msg))
+      else:
+        explicit_msg = special
+      special = ""
+    special = stress + special
+    declspec = special + (short_stem and (":" + short_stem) or "")
+    if decl:
+      declspec = decl + ":" + declspec
+    args = [stem, declspec]
+    if explicit_msg:
+      args.append("short_m=" + explicit_msg)
+    new_arg_str = "|".join(args)
+    if new_arg_str:
+      new_arg_str = "|" + new_arg_str
+    new_named_params = [x for x in t.params
+        if unicode(x.name) not in ["1", "2", "3", "4", "5", "6", "7", "8",
+          "9", "10", "11", "12", "13", "14", "15",
+          "short_m", "short_f", "short_n", "short_p"]]
+    new_named_param_str = "|".join(unicode(x) for x in new_named_params)
+    if new_named_param_str:
+      new_named_param_str = "|" + new_named_param_str
+    new_template = "{{%s%s%s}}" % (tname, new_arg_str, new_named_param_str)
+    if compare_results(orig_template, new_template, pagemsg):
+      return args
+  pagemsg("WARNING: Unable to infer short accent")
+  return None
 
 
 def infer_one_page_decls_1(page, index, text):
@@ -293,9 +328,17 @@ def infer_one_page_decls_1(page, index, text):
               rmparam(t, i)
             else:
               break
+          new_template = unicode(t)
+          if orig_template != new_template:
+            if not compare_results(orig_template, new_template, pagemsg):
+              return None, None
         else:
           for i in xrange(15, 0, -1):
             rmparam(t, i)
+          rmparam(t, "short_m")
+          rmparam(t, "short_f")
+          rmparam(t, "short_n")
+          rmparam(t, "short_p")
           t.name = tempname
           i = 1
           for arg in args:
@@ -305,10 +348,8 @@ def infer_one_page_decls_1(page, index, text):
             else:
               t.add(i, arg)
               i += 1
-        new_template = unicode(t)
+          new_template = unicode(t)
         if orig_template != new_template:
-          if not compare_results(orig_template, new_template, pagemsg):
-            return None, None
           if verbose:
             pagemsg("Replacing %s with %s" % (orig_template, new_template))
 
