@@ -96,8 +96,8 @@ def detect_stem(stem, decl):
     if not m:
       return stem, decl
     stem = m.group(1)
-    decl = make_unstressed(m.group(2))
-    if re.search(velar_sib + "$", stem):
+    decl = make_unstressed_once(m.group(2))
+    if re.search("[" + velar + sib + "]$", stem):
       decl = u"ый"
     return stem, decl
   return stem, decl
@@ -106,11 +106,11 @@ def combine_stem(stem, decl):
   if decl == u"ий":
     return stem + decl, ""
   if decl == u"ый":
-    if re.search(velar_sib + "$", stem):
+    if re.search("[" + velar + sib + "]$", stem):
       decl = u"ий"
     return stem + decl, ""
   if decl == u"ой":
-    return make_unstressed(stem) + u"о́й", ""
+    return make_unstressed_once(stem) + u"о́й", ""
   if decl == u"ьий":
     return stem + u"ий", u"ь"
   return stem, decl
@@ -218,7 +218,7 @@ def infer_decl(t, pagemsg):
   elif is_stressed(pstem):
     short_stem = pstem
   else:
-    if make_unstressed(fstem) == make_unstressed(mstem):
+    if make_unstressed_once(fstem) == make_unstressed_once(mstem):
       short_stem = mstem
   if is_unstressed(stem):
     stem = make_ending_stressed(stem)
@@ -237,7 +237,7 @@ def infer_decl(t, pagemsg):
       pagemsg("Found special (1): short stem %s, masculine stem %s" % (
         real_short_stem, mstem))
       specials = ["(1)"]
-    elif make_unstressed(stem) == mstem:
+    elif make_unstressed_once(stem) == mstem:
       # Can happen with monosyllabic masculines
       pass
     elif not m:
@@ -264,7 +264,7 @@ def infer_decl(t, pagemsg):
             match("end", "stem", "both") and "c'" or
             match("end", "both", "both") and "c''" or
             None)
-  if "*" in specials and not is_one_syllable(m) and (
+  if "*" in specials and not is_monosyllabic(m) and (
       (stress in ["b", "b'"]) != is_ending_stressed(m)):
     pagemsg("WARNING: (De)reducible short masc sg %s has wrong stress for accent pattern %s, setting manual masc sg" % (m, stress))
     explicit_msg = m

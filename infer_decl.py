@@ -77,7 +77,7 @@ def compare_terms(case, real, pred, pagemsg):
   for realword, predword in zip(realwords, predwords):
     if realword == predword:
       pass
-    elif is_unstressed(realword) and make_unstressed(predword) == realword:
+    elif is_unstressed(realword) and make_unstressed_once(predword) == realword:
       pagemsg("For case %s, real word %s in %s missing an accent that's present in predicted word %s in %s; allowed" %
           (case, realword, real, predword, pred))
     else:
@@ -345,9 +345,9 @@ def get_lemma(linked_headwords, lemma, multiword, pagemsg):
   else:
     # Check if we have a linked version of the unstressed version of lemma; happens
     # esp. with monosyllabic words. If so, substituted stressed version into link.
-    linked_lemma = linked_headwords.get(make_unstressed(lemma), lemma)
+    linked_lemma = linked_headwords.get(make_unstressed_once(lemma), lemma)
     if "|" in linked_lemma:
-      linked_lemma = linked_lemma.replace("|" + make_unstressed(lemma) + "]]",
+      linked_lemma = linked_lemma.replace("|" + make_unstressed_once(lemma) + "]]",
           "|" + lemma + "]]")
     elif "[" in linked_lemma:
       linked_lemma = "[[" + lemma + "]]"
@@ -374,7 +374,7 @@ def infer_word(forms, noungender, linked_headwords, number, numonly, multiword, 
     lemma = caseforms[0]
     pagemsg("Found invariable word %s" % lemma)
     linked_lemma = get_lemma(linked_headwords, lemma, multiword, pagemsg)
-    if is_one_syllable(lemma) and not is_stressed(lemma):
+    if is_monosyllabic(lemma) and not is_nonsyllabic(lemma) and not is_stressed(lemma):
       pagemsg("Marking invariable word %s as unaccented" % lemma)
       linked_lemma = "*" + linked_lemma
     if old_template:
@@ -439,10 +439,10 @@ def infer_word(forms, noungender, linked_headwords, number, numonly, multiword, 
 
     def adj_by_prep():
       return (
-        numonly == "sg" and re.search(u"[ое][мй]$", make_unstressed(presg)) or
-        numonly != "sg" and re.search(u"[ыи]х$", make_unstressed(prepl)))
+        numonly == "sg" and re.search(u"[ое][мй]$", make_unstressed_once(presg)) or
+        numonly != "sg" and re.search(u"[ыи]х$", make_unstressed_once(prepl)))
 
-    if (re.search(u"([ыиіо]й|[яаь]я|[оеь]е)$", make_unstressed(nomsg)) and
+    if (re.search(u"([ыиіо]й|[яаь]я|[оеь]е)$", make_unstressed_once(nomsg)) and
         adj_by_prep()):
       if old_template:
         args = [linked_lemma, "+"] + anim + number
@@ -453,7 +453,7 @@ def infer_word(forms, noungender, linked_headwords, number, numonly, multiword, 
 
     # I think these are always in -ов/-ев/-ёв/-ин/-ын.
     #if re.search(u"([шщжчц]е|[ъоа]|)$", nomsg):
-    if (re.search(u"([ое]в|[ыи]н)([оаъ]?)$", make_unstressed(nomsg)) and
+    if (re.search(u"([ое]в|[ыи]н)([оаъ]?)$", make_unstressed_once(nomsg)) and
         adj_by_prep()):
       for adjpat in ["+", "+short", "+mixed", "+proper"]:
         if old_template:
@@ -516,7 +516,7 @@ def infer_word(forms, noungender, linked_headwords, number, numonly, multiword, 
               pagemsg("WARNING: Don't recognize fem 1st-decl or neut 2nd-decl %s ending in form %s" % (formcase, form))
             else:
               formstem = mm.group(1)
-              if make_unstressed(formstem) != stem:
+              if make_unstressed_once(formstem) != stem:
                 pagemsg("%s stem %s not accent-equiv to nom sg stem %s" % (
                   formcase, formstem, stem))
               elif formstem != stem:
@@ -539,11 +539,11 @@ def infer_word(forms, noungender, linked_headwords, number, numonly, multiword, 
             return None
           plstem = mm.group(1)
           nomplending = mm.group(2)
-          if plstem == stem or plstem == make_unstressed(stem) or make_unstressed(plstem) == stem:
+          if plstem == stem or plstem == make_unstressed_once(stem) or make_unstressed_once(plstem) == stem:
             plstem = None
           else:
             pagemsg("Found unusual plural stem: %s" % plstem)
-          unomplending = make_unstressed(nomplending)
+          unomplending = make_unstressed_once(nomplending)
           if (ending in [u"а", u"я"] and unomplending in [u"ы", u"и"] or
               ending not in [u"а", u"я"] and unomplending in [u"а", u"я"]):
             # Not a strange plural
@@ -561,11 +561,11 @@ def infer_word(forms, noungender, linked_headwords, number, numonly, multiword, 
         genplstem = plstem or stem
         for genpl_ending in expected_gen_pls:
           possible_genpls.append(genplstem + genpl_ending)
-          possible_unstressed_genpls.append(make_unstressed(genplstem + genpl_ending))
+          possible_unstressed_genpls.append(make_unstressed_once(genplstem + genpl_ending))
         if genpl in possible_genpls:
           pagemsg("Gen pl %s same as stem %s (modulo expected endings)" % (genpl, genplstem))
           genpls = ["", genpl]
-        elif make_unstressed(genpl) not in possible_unstressed_genpls:
+        elif make_unstressed_once(genpl) not in possible_unstressed_genpls:
           pagemsg("Stem %s not accent-equiv to gen pl %s (modulo expected endings)" % (genplstem, genpl))
           genpls = ["*", "(2)", "", genpl]
         elif is_unstressed(genplstem):
@@ -616,7 +616,7 @@ def infer_word(forms, noungender, linked_headwords, number, numonly, multiword, 
                 pagemsg("WARNING: Don't recognize nom pl ending in form %s" % nompl)
               else:
                 nomplstem = mm.group(1)
-                if make_unstressed(nomplstem) != stem:
+                if make_unstressed_once(nomplstem) != stem:
                   pagemsg("Nom pl stem %s not accent-equiv to gen sg stem %s" % (
                     nomplstem, stem))
                 elif nomplstem != stem:
@@ -640,7 +640,7 @@ def infer_word(forms, noungender, linked_headwords, number, numonly, multiword, 
               stress = "stem"
             if stem == nomsgstem:
               pagemsg("Nom sg stem %s same as stem" % nomsgstem)
-            elif make_unstressed(stem) != make_unstressed(nomsgstem):
+            elif make_unstressed_once(stem) != make_unstressed_once(nomsgstem):
               pagemsg("Stem %s not accent-equiv to nom sg stem %s" % (stem, nomsgstem))
               bare = "*"
             elif is_unstressed(stem):
@@ -660,11 +660,11 @@ def infer_word(forms, noungender, linked_headwords, number, numonly, multiword, 
               return None
             plstem = mm.group(1)
             nomplending = mm.group(2)
-            if plstem == stem or plstem == make_unstressed(stem) or make_unstressed(plstem) == stem:
+            if plstem == stem or plstem == make_unstressed_once(stem) or make_unstressed_once(plstem) == stem:
               plstem = None
             else:
               pagemsg("Found unusual plural stem: %s" % plstem)
-            unomplending = make_unstressed(nomplending)
+            unomplending = make_unstressed_once(nomplending)
             if unomplending in [u"ы", u"и"]:
               # Not a strange plural
               strange_plural = ""
