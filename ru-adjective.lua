@@ -466,8 +466,8 @@ function export.generate_forms(frame)
 	local args = export.do_generate_forms(args, false)
 	local ins_text = {}
 	for _, case in ipairs(old_cases) do
-		if args.forms[case] then
-			table.insert(ins_text, case .. "=" .. get_form(args.forms[case]))
+		if args[case] then
+			table.insert(ins_text, case .. "=" .. get_form(args[case]))
 		end
 	end
 	return table.concat(ins_text, "|")
@@ -484,10 +484,10 @@ function export.generate_form(frame)
 		error("Unrecognized form " .. form)
 	end
 	local args = export.do_generate_forms(args, false)
-	if not args.forms[form] then
+	if not args[form] then
 		return ""
 	else
-		return get_form(args.forms[form])
+		return get_form(args[form])
 	end
 end
 
