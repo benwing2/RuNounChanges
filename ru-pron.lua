@@ -114,8 +114,7 @@ local geminate_pref = {
 local phon_respellings = {
 	--['vstv'] = 'stv',
 	[vowels_c .. '([šž])j([ou])'] = '%1%2%3', [vowels_c .. '([šžc])e'] = '%1%2ɛ', [vowels_c .. '([šžc])i'] = '%1%2y',
-	-- FIXME!!! Shouldn't these also pay attention to diaeresis instead
-	-- of just acute accent?
+	-- FIXME!!! Should these also pay attention to grave accents?
 	['́tʹ?sja'] = '́cca', ['([^́])tʹ?sja'] = '%1ca',
 	['[dt](ʹ?)s(.?)(.?)'] = function(a, b, c)
 		if not (b == 'j' and c == 'a') then
@@ -133,7 +132,10 @@ local phon_respellings = {
 	['([^rn])[dt]c'] = '%1cc', ['[td]č'] = 'čč',
 	['stg'] = 'sg',
 
+	-- FIXME, are these necessary? It seems they are handled elsewhere as well
+	-- even without these two present
 	['([šžč])ʹ$'] = '%1',
+	['([šžč])ʹ([ %-])'] = '%1%2',
 
 	['sverxi'] = 'sverxy',
 	['stʹd'] = 'zd',
@@ -270,9 +272,9 @@ function export.ipa(text, adj, gem, pal)
 		['ju'] = 'ü'})
 
 	--voicing/devoicing assimilations
-	text = rsub(text, '([bdgzvž]+)([ %-%‿%ː]?[ptksčšǯcx])', function(a, b)
+	text = rsub(text, '([bdgzvž]+)([ %-%‿%ː]*[ptksčšǯcx])', function(a, b)
 		return rsub(a, '.', devoicing) .. b end)
-	text = rsub(text, '([ptksfšcčxǯ]+)([ %-%‿ʹ%ː]?[bdgzž])', function(a, b)
+	text = rsub(text, '([ptksfšcčxǯ]+)([ %-%‿ʹ%ː]*[bdgzž])', function(a, b)
 		return rsub(a, '.', voicing) .. b end)
 
 	--re-notate orthographic geminate consonants
