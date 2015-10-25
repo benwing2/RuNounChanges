@@ -295,13 +295,19 @@ function export.ipa(text, adj, gem, pal)
 		pron = rsub(pron, non_vowels_c .. 'ä$', '%1ʲə')
 		pron = rsub(pron, '%(j%)jə', 'jə')
 
-		--syllabify, inserting / at syllable boundaries
-		-- FIXME: The following used to have a / instead of a j. Changing this
-		-- fixed a lot of syllabification problems but I'm not sure if it's
-		-- totally correct or how it interacts with the code below handling
-		-- the pal=y case, which used to handle adding the j.
-		pron = rsub(pron, 'ʹ([äëöü])', 'ʹj%1')
+		-- insert /j/ before front vowels when required
+		pron = rsub(pron, '([ʹʺ])([äëöü])', '%1j%2')
 		pron = rsub(pron, 'ʹi', 'ʹji')
+		pron = rsub(pron, '‿([äëöü])', '‿j%1')
+		pron = rsub(pron, '^([äëöü])', 'j%1')
+		pron = rsub(pron, '(' .. vowels .. accents .. '?)([äëöü])', '%1j%2')
+		-- need to do this twice in words like вою́ю where two j's need to be
+		-- inserted in successive syllables
+		pron = rsub(pron, '(' .. vowels .. accents .. '?)([äëöü])', '%1j%2')
+		-- insert glottal stop after hard sign if required
+		pron = rsub(pron, 'ʺ([aɛiouy])', 'ʔ%1')
+
+		--syllabify, inserting / at syllable boundaries
 		pron = rsub(pron, '([aäeëɛəiyoöuü]' .. accents .. '?)', '%1/')
 		pron = rsub(pron, '/+$', '')
 		pron = rsub(pron, '/([^‿/aäeëɛəiyoöuü]*)([^‿/aäeëɛəiyoöuüʹːʲ])(ʹ?ʲ?ː?[aäeëɛəiyoöuü])', '%1/%2%3')
@@ -369,8 +375,7 @@ function export.ipa(text, adj, gem, pal)
 			--assimilative palatalisation of consonants when followed by front vowels
 			-- FIXME: I don't understand this code very well (Benwing)
 			if pal == 'y' or rfind(syl, '^[^cĵšžaäeëɛiyoöuü]*[eiəäëöüʹ]') or rfind(syl, '^[cĵšž][^cĵšžaäeëɛiyoöuüː]+[eiəäëöüʹ]') or rfind(syl, '^[cĵ][äëü]') then
-				syl = rsub(syl, '^([ʺʹ]?)([äëöü])', '%1j%2')
-				if not rfind(syl, 'ʺ') and not rfind(syl, 'ʹ' .. non_vowels .. '.*' .. vowels) then
+				if not rfind(syl, 'ʺ.*' .. vowels) and not rfind(syl, 'ʹ' .. non_vowels .. '.*' .. vowels) then
 					syl = rsub(syl, non_vowels_c .. '([ʹːj]?[aäeëɛəiyoöuüʹ])', function(a, b)
 						local set = '[mnpbtdkgcfvszxrl]'
 						if pal == 'y' then
@@ -380,9 +385,8 @@ function export.ipa(text, adj, gem, pal)
 						return rsub(a, set, '%1ʲ') .. b end)
 				end
 			end
-			syl = rsub(syl, 'ʺ([äëöü])', 'j%1')
-			syl = rsub(syl, 'ʺj', 'j')
-			syl = rsub(syl, 'ʺ([aɛiouy])', 'ʔ%1')
+
+			-- palatalization by soft sign
 			syl = rsub(syl, '(.?ː?)ʹ', function(a)
 				if rfind(a, '[čǰšžǯ]') then
 					return a
@@ -399,7 +403,7 @@ function export.ipa(text, adj, gem, pal)
 
 			--vowel allophony
 			-- second clause in if-statement handles words like Токио and хаос
-			if stress[j] or (j == #syllable and j > 1 and rfind(syllable[j-1] .. syllable[j], '[aieäëü]́?o')) then
+			if stress[j] or (j == #syllable and j > 1 and rfind(syllable[j-1] .. syllable[j], '[aieäëü]' .. accents .. '?o')) then
 				-- convert acute/grave/circumflex accent to appropriate
 				-- IPA marker of primary/secondary/unmarked stress
 				syl = rsub(syl, '(.*)́', 'ˈ%1')
@@ -429,6 +433,8 @@ function export.ipa(text, adj, gem, pal)
 		end
 
 		pron = table.concat(syl_conv, "")
+
+		pron = rsub(pron, "[ʹʺ]", "")
 
 		-- Optional (j) before ɪ
 		pron = rsub(pron, "^jɪ", "(j)ɪ")
