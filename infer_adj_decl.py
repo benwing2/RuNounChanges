@@ -25,52 +25,30 @@ all_stress_patterns = ["a", "a'", "b", "b'", "c", "c'", "c''"]
 
 site = pywikibot.Site()
 
-def trymatch(forms, args, pagemsg, output_msg=True):
-  if mockup:
-    ok = True
-  else:
-    tempcall = "{{ru-generate-adj-forms|" + "|".join(args) + "}}"
-    result = site.expand_text(tempcall)
-    if verbose:
-      pagemsg("%s = %s" % (tempcall, result))
-    if result.startswith('<strong class="error">'):
-      result = re.sub("<.*?>", "", result)
-      pagemsg("ERROR: %s" % result)
-      return False
-    pred_forms = {}
-    for formspec in re.split(r"\|", result):
-      case, value = re.split(r"=", formspec, 1)
-      pred_forms[case] = value
-    ok = True
-    for case in short_adj_cases:
-      pred_form = pred_forms.get(case, "")
-      real_form = forms.get(case, "")
-      if pred_form and not real_form:
-        pagemsg("Missing actual form for case %s (predicted %s)" % (case, pred_form))
-        ok = False
-      elif real_form and not pred_form:
-        pagemsg("Actual has extra form %s=%s not in predicted" % (case, real_form))
-        ok = False
-      elif pred_form != real_form:
-        if is_unstressed(real_form) and make_unstressed(pred_form) == real_form:
-          # Happens especially in monosyllabic forms
-          pagemsg("For case %s, actual form %s missing an accent that's present in predicted %s; allowed" % (real_form, pred_form))
-        if "," in pred_form and "," in real_form:
-          pred_forms = set(re.split(r"\s*,\s*", pred_form))
-          real_forms = set(re.split(r"\s*,\s*", real_form))
-          if pred_forms == real_forms:
-            pagemsg("For case %s, actual %s has same elements as predicted %s but different order; allowed" % (case, real_form, pred_form))
-          else:
-            pagemsg("For case %s, actual %s differs from predicted %s" % (case,
-              real_form, pred_form))
-            ok = False
-        else:
-          pagemsg("For case %s, actual %s differs from predicted %s" % (case,
-            real_form, pred_form))
-          ok = False
-  if ok:
-    pagemsg("Found a match: {{%s|%s}}" % (decl_template, "|".join(args)))
-  return ok
+def expand_text(tempcall, pagemsg):
+  result = site.expand_text(tempcall)
+  #if verbose:
+  #  pagemsg("%s = %s" % (tempcall, result))
+  if result.startswith('<strong class="error">'):
+    result = re.sub("<.*?>", "", result)
+    pagemsg("ERROR: %s" % result)
+    return False
+  return result
+
+def compare_results(oldt, newt, pagemsg):
+  oldt = unicode(oldt)
+  newt = unicode(newt)
+  oldt = re.sub(r"^\{\{[a-z-]+", "{{ru-generate-adj-forms", oldt)
+  newt = re.sub(r"^\{\{[a-z-]+", "{{ru-generate-adj-forms", newt)
+  oldresult = expand_text(oldt, pagemsg)
+  newresult = expand_text(newt, pagemsg)
+  if not oldresult or not newresult:
+    return False
+  if oldresult != newresult:
+    pagemsg("WARNING: Old template and new template don't give same results: old %s = %s, new %s = %s" % (
+      oldt, oldresult, newt, newresult))
+    return False
+  return True
 
 def detect_stem(stem, decl):
   if decl == "":
@@ -289,12 +267,14 @@ def infer_one_page_decls_1(page, index, text):
           else:
             t.add(i, arg)
             i += 1
-      if verbose:
-        new_template = unicode(t)
-        if orig_template != new_template:
-          pagemsg("Replacing template with %s" % new_template)
+      new_template = unicode(t)
+      if orig_template != new_template:
+        if not compare_results(orig_template, new_template, pagemsg):
+          return None, None
+        if verbose:
+          pagemsg("Replacing %s with %s" % (orig_template, new_template))
 
-  return text, "Infer declension for manual decls (ru-decl-adj)"
+  return text, "Convert adj decl to new form and infer short-accent pattern"
 
 def infer_one_page_decls(page, index, text):
   try:
@@ -302,7 +282,7 @@ def infer_one_page_decls(page, index, text):
   except StandardError as e:
     msg("%s %s: WARNING: Got an error: %s" % (index, unicode(page.title()), repr(e)))
     traceback.print_exc(file=sys.stdout)
-    return text, "no change"
+    return None, None
 
 test_templates = [
   u"""{{ru-decl-adj|высо́к|ий|высо́к|высоко́,высо́ко|высока́|высоки́,высо́ки}}""",
