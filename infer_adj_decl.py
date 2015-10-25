@@ -15,7 +15,7 @@ mockup = False
 # Uncomment the following line to enable test mode
 #mockup = True
 
-decl_template = "ru-decl-adj"
+decl_templates = ["ru-decl-adj", "ru-adj-old"]
 
 short_adj_cases = ["short_m", "short_f", "short_n", "short_p"]
 short_adj_cases_params = [("short_m", "3"),
@@ -26,6 +26,14 @@ all_stress_patterns = ["a", "a'", "b", "b'", "c", "c'", "c''"]
 site = pywikibot.Site()
 
 def expand_text(tempcall, pagemsg):
+  if tempcall.startswith("{{ru-decl-adj"):
+    tempcall = re.sub(r"^\{\{ru-decl-adj", "{{ru-generate-adj-forms", tempcall)
+  elif tempcall.startswith("{{ru-adj-old"):
+    tempcall = re.sub(r"^\{\{ru-adj-old", "{{ru-generate-adj-forms", tempcall)
+    tempcall = re.sub(r"\}\}$", "|old=y}}", tempcall)
+  else:
+    pagemsg("WARNING: Unrecognized template call %s" % tempcall)
+    return False
   result = site.expand_text(tempcall)
   #if verbose:
   #  pagemsg("%s = %s" % (tempcall, result))
@@ -58,8 +66,6 @@ def get_case_forms(formval):
 def compare_results(oldt, newt, pagemsg):
   oldt = unicode(oldt)
   newt = unicode(newt)
-  oldt = re.sub(r"^\{\{[a-z-]+", "{{ru-generate-adj-forms", oldt)
-  newt = re.sub(r"^\{\{[a-z-]+", "{{ru-generate-adj-forms", newt)
   oldresult = expand_text(oldt, pagemsg)
   newresult = expand_text(newt, pagemsg)
   if not oldresult or not newresult:
@@ -195,7 +201,7 @@ def infer_decl(t, pagemsg):
     pagemsg("WARNING: Unable to recognize plural ending: %s" % sp)
     return None
   pstem = mm.group(1)
-  mm = re.search(u"^(.*?)[ьй]?$", m)
+  mm = re.search(u"^(.*?)[ъьй]?$", m)
   assert mm
   mstem = mm.group(1)
   short_stem = stem
@@ -250,7 +256,7 @@ def infer_decl(t, pagemsg):
   explicit_msg = None
   if special == "*" and not is_one_syllable(m) and (
       (stress in ["b", "b'"]) != is_ending_stressed(m)):
-    pagemsg("WARNING: (Un)reducible short masc sg %s has wrong stress for accent pattern %s, setting manual masc sg" % (m, stress))
+    pagemsg("WARNING: (De)reducible short masc sg %s has wrong stress for accent pattern %s, setting manual masc sg" % (m, stress))
     explicit_msg = m
   if not stress:
     pagemsg("WARNING: Unrecognized stress: m=%s f=%s n=%s p=%s" % (
@@ -271,40 +277,40 @@ def infer_decl(t, pagemsg):
 def infer_one_page_decls_1(page, index, text):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, unicode(page.title()), txt))
-  genders = set()
-  for t in text.filter_templates():
-    if unicode(t.name).strip() == "ru-decl-adj":
-      orig_template = unicode(t)
-      args = infer_decl(t, pagemsg)
-      if not args:
-        # At least combine stem and declension, blanking decl when possible.
-        stem, decl = combine_stem(getparam(t, "1"), getparam(t, "2"))
-        t.add("1", stem)
-        t.add("2", decl)
-        # Remove any trailing blank arguments.
-        for i in xrange(15, 0, -1):
-          if not getparam(t, i):
+  for tempname in decl_templates:
+    for t in text.filter_templates():
+      if unicode(t.name).strip() == tempname:
+        orig_template = unicode(t)
+        args = infer_decl(t, pagemsg)
+        if not args:
+          # At least combine stem and declension, blanking decl when possible.
+          stem, decl = combine_stem(getparam(t, "1"), getparam(t, "2"))
+          t.add("1", stem)
+          t.add("2", decl)
+          # Remove any trailing blank arguments.
+          for i in xrange(15, 0, -1):
+            if not getparam(t, i):
+              rmparam(t, i)
+            else:
+              break
+        else:
+          for i in xrange(15, 0, -1):
             rmparam(t, i)
-          else:
-            break
-      else:
-        for i in xrange(15, 0, -1):
-          rmparam(t, i)
-        t.name = decl_template
-        i = 1
-        for arg in args:
-          if "=" in arg:
-            name, value = re.split("=", arg)
-            t.add(name, value)
-          else:
-            t.add(i, arg)
-            i += 1
-      new_template = unicode(t)
-      if orig_template != new_template:
-        if not compare_results(orig_template, new_template, pagemsg):
-          return None, None
-        if verbose:
-          pagemsg("Replacing %s with %s" % (orig_template, new_template))
+          t.name = tempname
+          i = 1
+          for arg in args:
+            if "=" in arg:
+              name, value = re.split("=", arg)
+              t.add(name, value)
+            else:
+              t.add(i, arg)
+              i += 1
+        new_template = unicode(t)
+        if orig_template != new_template:
+          if not compare_results(orig_template, new_template, pagemsg):
+            return None, None
+          if verbose:
+            pagemsg("Replacing %s with %s" % (orig_template, new_template))
 
   return text, "Convert adj decl to new form and infer short-accent pattern"
 
@@ -368,8 +374,9 @@ def ignore_page(page):
 if mockup:
   test_infer()
 else:
-  for index, page in blib.references("Template:ru-decl-adj", start, end):
-    if ignore_page(page):
-      msg("Page %s %s: Skipping due to namespace" % (index, unicode(page.title())))
-    else:
-      blib.do_edit(page, index, infer_one_page_decls, save=args.save)
+  for tempname in decl_templates:
+    for index, page in blib.references("Template:" + tempname, start, end):
+      if ignore_page(page):
+        msg("Page %s %s: Skipping due to namespace" % (index, unicode(page.title())))
+      else:
+        blib.do_edit(page, index, infer_one_page_decls, save=args.save)
