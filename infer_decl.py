@@ -194,6 +194,11 @@ def separate_multiwords(forms, splitre):
         else:
           words[i][case] = word
         i += 1
+  # Remove duplicates from individual words (e.g. if overall form was
+  # бри́твой О́ккама,бри́твою О́ккама)
+  for i in xrange(len(words)):
+    for case in words[i]:
+      words[i][case] = remove_duplicates(words[i][case])
   return words
 
 def arg1_is_stress(arg1):
