@@ -130,7 +130,7 @@ def try_to_stress(word):
     return word
 
 def add_soft_sign(stem):
-  if re.search("[" + vowels + "]$", stem):
+  if re.search("[" + vowel + "]$", stem):
     return stem + u"й"
   else:
     return stem + u"ь"
