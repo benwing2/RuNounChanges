@@ -113,7 +113,6 @@ local geminate_pref = {
 }
 
 local phon_respellings = {
-	--['vstv'] = 'stv',
 	[vowels_c .. '([šž])j([ou])'] = '%1%2%3', [vowels_c .. '([šžc])e'] = '%1%2ɛ', [vowels_c .. '([šžc])i'] = '%1%2y',
 	-- FIXME!!! Should these also pay attention to grave accents?
 	['́tʹ?sja'] = '́cca', ['([^́])tʹ?sja'] = '%1ca',
@@ -150,10 +149,10 @@ local phon_respellings = {
 	['[zs]š'] = 'šš', ['[zs]ž'] = 'žž',
 	['nnsk'] = 'nsk',
 	['n[dt]sk'] = 'n(t)sk',
-	['[sz]sk'] = 'sk',
 	['s[dt]sk'] = 'sck',
 	['gk'] = 'xk',
 	['n[dt]g'] = 'ng',
+	[
 }
 
 local cons_assim_palatal = {
@@ -350,6 +349,9 @@ function export.ipa(text, adj, gem, pal)
 			if rfind(syl, 'ː') and gem ~= 'y' then
 				local no_replace = false
 				if (j == 1 and not rfind(syl, 'ː$')) or stress[j-1] then
+					no_replace = true
+				elseif stress[j] and rfind(syl, 'sː$') and j < #syllable and rfind(syllable[j+1], 'k' .. vowels) then
+					-- special case for ssk and zsk
 					no_replace = true
 				else
 					local de_accent = rsub(word[i], accents, '')
