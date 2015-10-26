@@ -3,19 +3,15 @@
 	nouns.
 
 	Form of arguments: One of the following:
-		1. LEMMA|DECL|BARE|PLSTEM (all arguments optional)
-		2. ACCENT|LEMMA|DECL|BARE|PLSTEM (all arguments optional)
+		1. LEMMA|DECL|PLSTEM (all arguments optional)
+		2. ACCENT|LEMMA|DECL|PLSTEM (all arguments optional)
 		3. multiple sets of arguments separated by the literal word "or"
 
 	Arguments:
-		ACCENT: Accent pattern (a b c d e f b' d' f' f''). For compatibility,
-		   can also be a number, 1 through 6 equivalent to a through f and
-		   4* and 6* are equivalent to d' and f', except that for
-		   3rd-declension feminine nouns, 2 maps to b' instead of b, and 6
-		   maps to f'' instead of f. Multiple values can be specified,
-		   separated by commas. If omitted, defaults to a or b depending on
-		   the position of stress on the lemma or explicitly-specified
-		   declension.
+		ACCENT: Accent pattern (a b c d e f b' d' f' f''). Multiple values can
+		   be specified, separated by commas. If omitted, defaults to a or b
+		   depending on the position of stress on the lemma or
+		   explicitly-specified declension.
 		LEMMA: Lemma form (i.e. nom sg or nom pl), with appropriately-placed
 		   stress; or the stem, if an explicit declension is specified
 		   (in this case, the declension usually looks like an ending, and
@@ -28,13 +24,6 @@
 		   automatically be stressed; prefix with * to override both behaviors.
 		DECL: Declension field. Normally omitted to autodetect based on the
 		   lemma form; see below.
-		BARE: Present for compatibility; don't use this in new template calls.
-		   Irregular nom sg or gen pl form (specifically, the form used for
-		   cases with no suffix or with a nonsyllabic suffix -ь/-й/-ъ). If
-		   present, LEMMA for masculine nouns should omit the extra vowel
-		   normally present in the nom sg. In new template calls, use the *
-		   or (2) special cases in the declension field (see below), or failing
-		   that, use an explicit override nom_sg= or gen_pl=.
 		PLSTEM: special plural stem (defaults to stem of lemma)
 
 	Additional named arguments:
@@ -333,13 +322,8 @@ TODO:
    NOTE: Currently this variant only can be selected using new-style
    arguments where the gender can be given. Perhaps we should consider
    allowing gender to be specified with old-style explicit declensions.]
-20. Change stress pattern categories to use Zaliznyak-style accent
-   patterns. Do this when supporting b' and f'' and changing module
-   internally to use Zaliznyak-style accent patterns. [IMPLEMENTED. NEED TO
-   TEST.]
 21. Put back gender hints for pl adjectival nouns; used by ru-noun+.
    [IMPLEMENTED. NEED TO TEST.]
-22. Add proper support for Zaliznyak b', f''. [IMPLEMENTED. NEED TO TEST.]
 23. Mixed and proper-noun adjectives have built-in notes. We need to
    handle those notes with an "internal_notes" section similar to what is used
    in the adjective module. [IMPLEMENTED. NEED TO TEST.]
@@ -1170,22 +1154,11 @@ end
 --                              Main code                               --
 --------------------------------------------------------------------------
 
-local numbered_to_zaliznyak_stress_pattern = {
-	["1"] = "a",
-	["2"] = "b",
-	["3"] = "c",
-	["4"] = "d",
-	["4*"] = "d'",
-	["5"] = "e",
-	["6"] = "f",
-	["6*"] = "f'",
-}
-
 -- Used by do_generate_forms().
 local function arg1_is_stress(arg1)
 	if not arg1 then return false end
 	for _, arg in ipairs(rsplit(arg1, ",")) do
-		if not (rfind(arg, "^[a-f]'?'?$") or rfind(arg, "^[1-6]%*?$")) then
+		if not rfind(arg, "^[a-f]'?'?$") then
 			return false
 		end
 	end
@@ -1270,11 +1243,10 @@ function export.do_generate_forms(args, old)
 	-- is a string indicating how to join the word to the next one.
 	local per_word_info = {}
 
-	-- Gather arguments into a list of ARG_SET objects, containing
-	-- (potentially) elements 1, 2, 3, 4, 5, corresponding to accent pattern,
-	-- stem, declension type, bare stem, pl stem and coming from consecutive
-	-- numbered parameters. Sets of declension parameters are separated by the
-	-- word "or".
+	-- Gather arguments into a list of ARG_SET objects, containing (potentially)
+	-- elements 1, 2, 3, 4, corresponding to accent pattern, stem, declension
+	-- type, pl stem and coming from consecutive numbered parameters. Sets of
+	-- declension parameters are separated by the word "or".
 	local arg_sets = {}
 	-- Find maximum-numbered arg, allowing for holes
 	local max_arg = 0
@@ -1326,7 +1298,7 @@ function export.do_generate_forms(args, old)
 			if i - offset == 1 and not arg1_is_stress(args[i]) then
 				offset = offset - 1
 			end
-			if i - offset > 5 then
+			if i - offset > 4 then
 				error("Too many arguments for argument set: arg " .. i .. " = " .. (args[i] or "(blank)"))
 			end
 			arg_set[i - offset] = args[i]
@@ -1358,7 +1330,7 @@ function export.do_generate_forms_multi(args, old)
 
 	-- Gather arguments into a list of ARG_SET objects, containing
 	-- (potentially) elements 1, 2, 3, corresponding to accent pattern,
-	-- lemma, declension spec, pl stem, exactly as with do_generate_forms()
+	-- lemma+declension spec, pl stem, exactly as with do_generate_forms()
 	-- and {{ru-noun-table}} except that the values come from a single argument
 	-- of the form ACCENTPATTERN:LEMMADECL:PL where all but LEMMADECL may (and
 	-- probably will be) omitted and LEMMADECL may be of the following forms:
@@ -1413,10 +1385,10 @@ function export.do_generate_forms_multi(args, old)
 			if arg1_is_stress(vals[1]) then
 				arg_set[1] = vals[1]
 				arg_set[2] = vals[2]
-				arg_set[5] = vals[3]
+				arg_set[4] = vals[3]
 			else
 				arg_set[2] = vals[1]
-				arg_set[5] = vals[2]
+				arg_set[4] = vals[2]
 			end
 			-- recognize adjective
 			local adj_stem, adj_type = rmatch(arg_set[2], "^(.*)(%+.*)$")
@@ -1574,12 +1546,9 @@ generate_forms_1 = function(args, per_word_info)
 	local function do_arg_set(arg_set, n, islast)
 		local stress_arg = arg_set[1]
 		local decl = arg_set[3] or ""
-		if arg_set[4] then
-			error("Explicit bare no longer supported")
-		end
 		local pl, pltr
-		if arg_set[5] then
-			pl, pltr = split_russian_tr(arg_set[5])
+		if arg_set[4] then
+			pl, pltr = split_russian_tr(arg_set[4])
 		end
 
 		-- Extract special markers from declension class.
@@ -1589,7 +1558,7 @@ generate_forms_1 = function(args, per_word_info)
 			if #per_word_info > 1 or #per_word_info[1][1] > 1 then
 				error("Can't specify multiple words or argument sets when manual")
 			end
-			if bare or pl then
+			if pl then
 				error("Can't specify optional stem parameters when manual")
 			end
 		end
@@ -1663,7 +1632,6 @@ generate_forms_1 = function(args, per_word_info)
 			for i=1,#stress_arg do
 				local stress = stress_arg[i]
 				stress = override_stress_pattern(decl, stress)
-				stress = numbered_to_zaliznyak_stress_pattern[stress] or stress
 				if not stress_patterns[stress] then
 					error("Unrecognized accent pattern " .. stress)
 				end
@@ -2972,23 +2940,13 @@ end
 
 -- In certain special cases, depending on the declension, we override the
 -- user-specified stress pattern and convert it to something else.
--- NOTE: This function is run after alias resolution and accent removal,
--- but before canonicalizing the stress pattern from numbered to
--- Zaliznyak-style. FIXME: It's also run before splitting slash patterns
--- but should be run after.
+-- NOTE: This function is run after alias resolution and accent removal.
+-- FIXME: It's also run before splitting slash patterns but should be run after.
 override_stress_pattern = function(decl, stress)
-	-- ёнок and ёночек always bear stress; if user specified a or 1,
+	-- ёнок and ёночек always bear stress; if user specified a,
 	-- convert to b. Don't do this with slash patterns (see FIXME above).
-	if (stress == "a" or stress == "1") and (rfind(decl, "^ёнокъ?$") or rfind(decl, "^ёночекъ?$")) then
+	if stress == "a" and (rfind(decl, "^ёнокъ?$") or rfind(decl, "^ёночекъ?$")) then
 		return "b"
-	-- For compatibility, numbered pattern 2 can expand to either b or b';
-	-- similarly, 6 can expand to either f or f''.
-	elseif rfind(decl, "^ь%-f") then
-		if stress == "2" then
-			return "b'"
-		elseif stress == "6" then
-			return "f''"
-		end
 	end
 	return stress
 end
