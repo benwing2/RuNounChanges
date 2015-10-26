@@ -65,6 +65,8 @@ matching_stress_patterns["ending"]["none"] = {"by":"acc_sg", "ending":"b", "stem
 matching_stress_patterns["none"]["stem"] = {"by":"pre_pl", "stem":"a", "ending":"e"}
 matching_stress_patterns["none"]["ending"] = ["b"]
 
+manual_templates = ["ru-decl-noun", "ru-decl-noun-unc", "ru-decl-noun-pl"]
+
 site = pywikibot.Site()
 
 def compare_terms(case, real, pred, pagemsg):
@@ -391,7 +393,7 @@ def infer_word(forms, noungender, linked_headwords, number, numonly, multiword, 
   prepl = forms.get("pre_pl", "")
   prepl_stress = re.search(AC + u"хъ?$", prepl) and "ending" or "stem"
   bare = ""
-  genpls = []
+  genpls = [""]
 
   # Special case:
   if numonly == "pl" and nompl in [u"острова́", u"Острова́"]:
@@ -755,7 +757,7 @@ def infer_one_page_decls_1(page, index, text):
 
   inferred_decls = []
   for t in text.filter_templates():
-    if unicode(t.name).strip() in ["ru-decl-noun", "ru-decl-noun-unc", "ru-decl-noun-pl"]:
+    if unicode(t.name).strip() in manual_templates:
       if unicode(t.name).strip() == "ru-decl-noun-pl":
         genders = list(genders)
         if len(genders) == 0:
@@ -1396,9 +1398,10 @@ def ignore_page(page):
 if mockup:
   test_infer()
 else:
-  for index, page in blib.references("Template:ru-decl-noun", start, end):
-    if ignore_page(page):
-      msg("Page %s %s: Skipping due to namespace" % (index, unicode(page.title())))
-    else:
-      blib.do_edit(page, index, infer_one_page_decls, save=args.save)
+  for template in manual_templates:
+    for index, page in blib.references("Template:" + template, start, end):
+      if ignore_page(page):
+        msg("Page %s %s: Skipping due to namespace" % (index, unicode(page.title())))
+      else:
+        blib.do_edit(page, index, infer_one_page_decls, save=args.save)
 
