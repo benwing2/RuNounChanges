@@ -35,12 +35,12 @@ def expand_text(tempcall, pagemsg):
     pagemsg("WARNING: Unrecognized template call %s" % tempcall)
     return False
   result = site.expand_text(tempcall)
-  #if verbose:
-  #  pagemsg("%s = %s" % (tempcall, result))
   if result.startswith('<strong class="error">'):
     result = re.sub("<.*?>", "", result)
     pagemsg("ERROR: %s = %s" % (tempcall, result))
     return False
+  elif verbose:
+    pagemsg("Expanding %s" % tempcall)
   return result
 
 def get_forms(result):
@@ -57,10 +57,10 @@ def get_case_forms(formval):
     if len(re.sub("[^́]", "", form)) == 2:
       wordleft = re.sub("(.*)́([^́]*)$", r"\1\2", form) # remove right stress
       wordright = re.sub("^([^́]*)́(.*)", r"\1\2", form) # remove left stress
-      forms.add(wordleft)
-      forms.add(wordright)
+      forms.add(try_to_stress(wordleft))
+      forms.add(try_to_stress(wordright))
     else:
-      forms.add(form)
+      forms.add(try_to_stress(form))
   return forms
 
 def compare_results(oldt, newt, pagemsg):
@@ -89,6 +89,22 @@ def compare_results(oldt, newt, pagemsg):
           case, oldval, newval))
         ok = False
   return ok
+
+def trymatch(t, args, pagemsg):
+  orig_template = unicode(t)
+  tname = unicode(t.name).strip()
+  new_arg_str = "|".join(args)
+  if new_arg_str:
+    new_arg_str = "|" + new_arg_str
+  new_named_params = [x for x in t.params
+      if unicode(x.name) not in ["1", "2", "3", "4", "5", "6", "7", "8",
+        "9", "10", "11", "12", "13", "14", "15",
+        "short_m", "short_f", "short_n", "short_p"]]
+  new_named_param_str = "|".join(unicode(x) for x in new_named_params)
+  if new_named_param_str:
+    new_named_param_str = "|" + new_named_param_str
+  new_template = "{{%s%s%s}}" % (tname, new_arg_str, new_named_param_str)
+  return compare_results(orig_template, new_template, pagemsg)
 
 def detect_stem(stem, decl):
   if decl == "":
@@ -119,8 +135,6 @@ def infer_decl(t, pagemsg):
   if verbose:
     pagemsg("Processing %s" % unicode(t))
 
-  orig_template = unicode(t)
-  tname = unicode(t.name).strip()
   forms = {}
 
   # Initialize all cases to blank in case we don't set them again later
@@ -129,9 +143,6 @@ def infer_decl(t, pagemsg):
     form = form.strip()
     form = remove_links(form)
     forms[case] = form
-
-  specials = [""]
-  explicit_msg = None
 
   def get_form(case):
     if forms[case] == "-":
@@ -143,16 +154,27 @@ def infer_decl(t, pagemsg):
   n = get_form("short_n")
   p = get_form("short_p")
 
+  specials = ["", m]
+  explicit_msg = None
+
+  stem = getparam(t, "1")
+  decl = getparam(t, "2")
   if not m and not f and not n and not p:
     pagemsg("No short forms, skipping")
     return None
   elif not m and f and n and p:
     pagemsg("Missing short masculine but other short forms present, continuing")
+  elif m and not f and not n and not p:
+    pagemsg("Found only short m")
+    stem, decl = combine_stem(stem, decl)
+    args = [stem, decl] + ["short_m=%s" % m]
+    if trymatch(t, args, pagemsg):
+      return args
+    else:
+      return None
   elif not m or not f or not n or not p:
     pagemsg("WARNING: Some short forms missing, skipping: m=%s, f=%s, n=%s, p=%s" % (m or "blank", f or "blank", n or "blank", p or "blank"))
     return None
-  stem = getparam(t, "1")
-  decl = getparam(t, "2")
   if re.search("(^|:)[abc*]", decl):
     pagemsg("WARNING: Decl spec %s already has short accent class but short forms present? Skipping ...")
     return None
@@ -222,6 +244,7 @@ def infer_decl(t, pagemsg):
       short_stem = mstem
   if is_unstressed(stem):
     stem = make_ending_stressed(stem)
+  short_stem = try_to_stress(short_stem)
   if stem == short_stem:
     short_stem = ""
   elif short_stem + u"н" == stem and re.search(u"нн[иы]й$", stem + decl):
@@ -247,7 +270,7 @@ def infer_decl(t, pagemsg):
       explicit_msg = "-"
     else:
       pagemsg("Masculine short stem %s differs from short stem %s, presumed reducible" % (mstem, real_short_stem))
-      if [x for x in specials if x != ""]:
+      if "(1)" in specials or "(2)" in specials:
         pagemsg("WARNING: Can't have reducible and special together")
         return None
       specials = ["*", m]
@@ -265,7 +288,7 @@ def infer_decl(t, pagemsg):
             match("end", "both", "both") and "c''" or
             None)
   if "*" in specials and not is_monosyllabic(m) and (
-      (stress in ["b", "b'"]) != is_ending_stressed(m)):
+      (stress in ["b", "b'"]) != (not not is_ending_stressed(m))):
     pagemsg("WARNING: (De)reducible short masc sg %s has wrong stress for accent pattern %s, setting manual masc sg" % (m, stress))
     explicit_msg = m
   if not stress:
@@ -292,22 +315,10 @@ def infer_decl(t, pagemsg):
     args = [stem, declspec]
     if explicit_msg:
       args.append("short_m=" + explicit_msg)
-    new_arg_str = "|".join(args)
-    if new_arg_str:
-      new_arg_str = "|" + new_arg_str
-    new_named_params = [x for x in t.params
-        if unicode(x.name) not in ["1", "2", "3", "4", "5", "6", "7", "8",
-          "9", "10", "11", "12", "13", "14", "15",
-          "short_m", "short_f", "short_n", "short_p"]]
-    new_named_param_str = "|".join(unicode(x) for x in new_named_params)
-    if new_named_param_str:
-      new_named_param_str = "|" + new_named_param_str
-    new_template = "{{%s%s%s}}" % (tname, new_arg_str, new_named_param_str)
-    if compare_results(orig_template, new_template, pagemsg):
+    if trymatch(t, args, pagemsg):
       return args
   pagemsg("WARNING: Unable to infer short accent")
   return None
-
 
 def infer_one_page_decls_1(page, index, text):
   def pagemsg(txt):
