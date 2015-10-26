@@ -113,10 +113,14 @@ local geminate_pref = {
 }
 
 local phon_respellings = {
-	[vowels_c .. '([šž])j([ou])'] = '%1%2%3', [vowels_c .. '([šžc])e'] = '%1%2ɛ', [vowels_c .. '([šžc])i'] = '%1%2y',
+	{'n[dt]sk', 'n(t)sk'},
+	{'s[dt]sk', 'sck'},
+	{'^o[dt]s', 'ocs'},
+	{vowels_c .. '([šž])j([ou])', '%1%2%3'},
+	{vowels_c .. '([šžc])e', '%1%2ɛ'}, {vowels_c .. '([šžc])i', '%1%2y'},
 	-- FIXME!!! Should these also pay attention to grave accents?
-	['́tʹ?sja'] = '́cca', ['([^́])tʹ?sja'] = '%1ca',
-	['[dt](ʹ?)s(.?)(.?)'] = function(a, b, c)
+	{'́tʹ?sja', '́cca'}, {'([^́])tʹ?sja', '%1ca'},
+	{'[dt](ʹ?)s(.?)(.?)', function(a, b, c)
 		if not (b == 'j' and c == 'a') then
 			if rsub(b, vowels_c, '') ~= '' or b == 'j' and rsub(c, vowels_c, '') ~= '' then
 				-- s was followed by a vowel
@@ -124,35 +128,32 @@ local phon_respellings = {
 			else
 				return 'c' .. a .. 's' .. b .. c
 			end
-		end end,
+		end end },
 
-	['[dt]z(j?)' .. vowels_c] = 'ĵz%1%2', ['^o[dt]s'] = 'ocs',
-	['([čǰӂ])([aou])'] = '%1j%2',
+	{'[dt]z(j?)' .. vowels_c, 'ĵz%1%2'},
+	{'([čǰӂ])([aou])', '%1j%2'},
 
-	['([^rn])[dt]c'] = '%1cc', ['[td]č'] = 'čč',
-	['stg'] = 'sg',
+	{'([^rn])[dt]c', '%1cc'}, {'[td]č', 'čč'},
+	{'stg', 'sg'},
 
 	-- FIXME, are these necessary? It seems they are handled elsewhere as well
 	-- even without these two present
-	['([šžč])ʹ$'] = '%1',
-	['([šžč])ʹ([ %-])'] = '%1%2',
+	{'([šžč])ʹ$', '%1'},
+	{'([šžč])ʹ([ %-])', '%1%2'},
 
-	['sverxi'] = 'sverxy',
-	['stʹd'] = 'zd',
-	['tʹd'] = 'dd',
+	{'sverxi', 'sverxy'},
+	{'stʹd', 'zd'},
+	{'tʹd', 'dd'},
 
-	['r[dt]c'] = 'rc', ['r[dt]č'] = 'rč',
-	['zdn'] = 'zn', ['[sz][dt]c'] = 'sc',
-	['lnc'] = 'nc',	['n[dt]c'] = 'nc',
-	['[sz]tl'] = 'sl', ['[sz]tn'] = 'sn',
-	['[szšž]č'] = 'šč', ['[szšž]šč'] = 'šč',
-	['[zs]š'] = 'šš', ['[zs]ž'] = 'žž',
-	['nnsk'] = 'nsk',
-	['n[dt]sk'] = 'n(t)sk',
-	['s[dt]sk'] = 'sck',
-	['gk'] = 'xk',
-	['n[dt]g'] = 'ng',
-	[
+	{'r[dt]c', 'rc'}, {'r[dt]č', 'rč'},
+	{'zdn', 'zn'}, {'[sz][dt]c', 'sc'},
+	{'lnc', 'nc'},	{'n[dt]c', 'nc'},
+	{'[sz]tl', 'sl'}, {'[sz]tn', 'sn'},
+	{'[szšž]č', 'šč'}, {'[szšž]šč', 'šč'},
+	{'[zs]š', 'šš'}, {'[zs]ž', 'žž'},
+	{'nnsk', 'nsk'},
+	{'gk', 'xk'},
+	{'n[dt]g', 'ng'},
 }
 
 local cons_assim_palatal = {
@@ -213,8 +214,8 @@ function export.ipa(text, adj, gem, pal)
 	text = rsub(text, AC .. GR, GR)
 
 	--phonetic respellings
-	for a, b in pairs(phon_respellings) do
-		text = rsub(text, a, b)
+	for _, respell in ipairs(phon_respellings) do
+		text = rsub(text, respell[1], respell[2])
 	end
 
 	text = adj and rsub(text, '(.[aoe]́?)go(' .. AC .. '?)$', '%1vo%2') or text
