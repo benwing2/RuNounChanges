@@ -160,76 +160,24 @@
 
 TODO:
 
-1. FIXME: Multi-word issues:
-   -- Setting n=pl when auto-detecting a plural lemma. How does that interact
-      with multi-word stuff? (DONE)
-   -- compute_heading() -- what to do with multiple words? I assume we should
-      display info on the first noun (non-invariable, non-adjectival), and
-	  on the first adjectival otherwise, and finally on an invariable (DONE)
-   -- args.genders -- it should presumably come from the same word as is used
-      in compute_heading(); but we should allow the overall gender to be
-	  overridden, at least in ru-noun+ (DONE)
-   -- Bug in args.suffix: Gets added to every word in attach_with() and then
-      again at the end, after pltail and such. Needs to be added to the
-	  last word only, before pltail. Need also suffixN for individual words.
-	  (DONE, NEEDS TESTING)
-   -- Should have ..N versions of pltail and variants. (DONE, NEEDS TESTING)
-   -- Need to handle overrides of acc_sg, acc_pl (MIGHT WORK ALREADY)
-   -- Overrides of nom_sg/nom_pl should also override acc_sg/acc_pl if it
-      was originally empty and the animacy is inanimate; similarly for
-	  gen_sg/gen_pl and animates; this needs to work both for per-word and
-	  overall overrides. (DONE ALREADY?? NEEDS TESTING)
-   -- do_generate_forms(_multi) need to run part of make_table(), enough to
-      combine all per_word_info into single lists of forms and store back
-	  into args[case]. (DONE, NEEDS TESTING)
-   -- In generate_forms, should probably check if a=="i" and only return
-      acc_sg_in as acc_sg=; or if a=="a" and only return acc_sg_an as acc_sg=;
-      in old/new comparison code, do something similar, also when a=="b"
-      check if acc_sg_in==acc_sg_an and make it acc_sg; when a=="b" and the
-      _in and _an variants are different, might need to ignore them or check
-      that acc_sg_in==nom_sg and acc_sg_an==gen_sg; similarly for _pl
-	  (DONE, NEEDS TESTING)
-   -- Need to test with multiple words! (APPEARS TO WORK)
-   -- Current handling of <adj> won't work properly with multiple words;
-      will need to translate word-by-word in that case (should be solved by
-	  manual-translit branch) (DONE IN MANUAL-TRANSLIT BRANCH)
-   -- Make sure internal_notes handled correctly; we may run into issues with
-      multiple internal notes from different words, if we're not careful to
-	  use different footnote symbols for each type of footnote (which we don't
-	  do currently).
+1. Multi-word issues:
+   -- FIXME: Make sure internal_notes handled correctly; we may run into issues
+      with multiple internal notes from different words, if we're not careful
+      to use different footnote symbols for each type of footnote (which we
+      don't do currently). [NOT DONE, MAY NOT DO]
    -- Handling default lemma: With multiple words, we should probably split
-      the page name on spaces and default each word in turn
+      the page name on spaces and default each word in turn [NOT DONE, MAY
+      NOT DO]
 2. FIXME: Test that omitting a manual form leaves the form as a big dash.
 2a. FIXME: Test that omitting a manual form in ru-adjective leaves the form as
    a big dash.
-2b. If -е is used after a sibilant or ц as an explicit decl, it should
-   be converted to -о. Consider doing the same thing for explicit adj decl
-   +ий after velar/sibilant/ц. [IMPLEMENTED. NEED TO TEST.]
-2c. Changed pltailall= to add to all forms, not just last one; added
-   CASE_NUM_tailall. [NEED TO TEST.]
-2d. FIXME: For -ишко diminutives and -ище augmentatives, should add an
+2b. FIXME: For -ишко diminutives and -ище augmentatives, should add an
    appropriate category of some sort (currently marked by colloqfem= in
    category).
-2e. Add -ин variant that always triggers -ин declension so we don't
-   have to use old-style declensions. [IMPLEMENTED. NEED TO TEST.]
-2f. FIXME: Adding a note to dat_sg also adds it to loc_sg when it exists;
+2c. FIXME: Adding a note to dat_sg also adds it to loc_sg when it exists;
    seems wrong. See луг.
-3. Consider putting a triangle △ (U+25B3) or the smaller variant
-   ▵ (U+25B5) next to each irregular form. (We have the following cases:
-   special case (1) makes nom pl irreg, special case (2) makes gen pl irreg,
-   variant -ья makes the whole pl irreg as does an explicit plural stem,
-   overrides make the overridden case(s) irreg -- except that we should
-   check, for each form of each override, whether that form is among the
-   expected forms for that case and if so not mark it as irreg, so that
-   only the unexpected ones get marked as irreg [especially important when
-   there are multiple forms in an override, because typically some will
-   be regular]. If 'manual' is set, nothing is considered irregular,
-   and if anything is marked as irregular, we need an internal note
-   saying "△ Irregular form." and should put "irreg" in the header line;
-   currently our header-line code for this isn't so sophisticated. We should
-   make sure when checking overrides that we don't get tripped up by
-   footnote markers, and probably put the △ mark before any user-specified
-   footnote markers.) [IMPLEMENTED. NEED TO TEST.]
+2d. FIXME: When you have both d' and f in feminines and you use sgtail=*,
+   you get two *'s. See User:Benwing2/test-ru-noun-debug.
 3a. FIXME: Create category for irregular lemmas.
 3b. [FIXME: Consider adding an indicator in the header line when the ё/e
    alternation occurs. This is a bit tricky to calculate: If special case
@@ -266,9 +214,6 @@ TODO:
    be masculine or feminine, -а/я should be neuter except that -ія can be
    feminine or neuter due to old-style adjectival pluralia tantum nouns,
    anything else can be any gender.)
-7. Remove boolean recognize_plurals; this should always be true. Do in
-   conjunction with merging multiple-words/manual-translit branches. [DONE]
-8. Eliminate uses of о-ья, converting them to use -ья special case. [DONE]
 9. FIXME: Change stress-pattern detection and overriding to happen inside of
    looping over the two parts of a slash decl. Requires that the loop over
    the two parts happen outside of the loop over stress patterns. Requires
@@ -279,15 +224,60 @@ TODO:
    in it, which should have triggered an error whenever there was a nom_sg or
    nom_pl override but didn't. Is there an error causing this never to be
    called? Check.
-12. FIXME: Change 8* fem nouns to use the features of the new template; no more
-   ins_sg override. любо́вь, нелюбо́вь, вошь, це́рковь, ложь, рожь.]
+11. Multi-word issues:
+   -- Setting n=pl when auto-detecting a plural lemma. How does that interact
+      with multi-word stuff? (DONE)
+   -- compute_heading() -- what to do with multiple words? I assume we should
+      display info on the first noun (non-invariable, non-adjectival), and
+	  on the first adjectival otherwise, and finally on an invariable (DONE)
+   -- args.genders -- it should presumably come from the same word as is used
+      in compute_heading(); but we should allow the overall gender to be
+	  overridden, at least in ru-noun+ (DONE)
+   -- Bug in args.suffix: Gets added to every word in attach_with() and then
+      again at the end, after pltail and such. Needs to be added to the
+	  last word only, before pltail. Need also suffixN for individual words.
+	  (DONE, NEEDS TESTING)
+   -- Should have ..N versions of pltail and variants. (DONE, NEEDS TESTING)
+   -- Need to handle overrides of acc_sg, acc_pl (DONE)
+   -- Overrides of nom_sg/nom_pl should also override acc_sg/acc_pl if it
+      was originally empty and the animacy is inanimate; similarly for
+	  gen_sg/gen_pl and animates; this needs to work both for per-word and
+	  overall overrides. (DONE)
+   -- do_generate_forms(_multi) need to run part of make_table(), enough to
+      combine all per_word_info into single lists of forms and store back
+	  into args[case]. (DONE, NEEDS TESTING)
+   -- In generate_forms, should probably check if a=="i" and only return
+      acc_sg_in as acc_sg=; or if a=="a" and only return acc_sg_an as acc_sg=;
+      in old/new comparison code, do something similar, also when a=="b"
+      check if acc_sg_in==acc_sg_an and make it acc_sg; when a=="b" and the
+      _in and _an variants are different, might need to ignore them or check
+      that acc_sg_in==nom_sg and acc_sg_an==gen_sg; similarly for _pl
+	  (DONE, NEEDS TESTING)
+   -- Need to test with multiple words! [DONE]
+   -- Current handling of <adj> won't work properly with multiple words;
+      will need to translate word-by-word in that case (should be solved by
+	  manual-translit branch) [DONE]
+12. Consider putting a triangle △ (U+25B3) or the smaller variant
+   ▵ (U+25B5) next to each irregular form. (We have the following cases:
+   special case (1) makes nom pl irreg, special case (2) makes gen pl irreg,
+   variant -ья makes the whole pl irreg as does an explicit plural stem,
+   overrides make the overridden case(s) irreg -- except that we should
+   check, for each form of each override, whether that form is among the
+   expected forms for that case and if so not mark it as irreg, so that
+   only the unexpected ones get marked as irreg [especially important when
+   there are multiple forms in an override, because typically some will
+   be regular]. If 'manual' is set, nothing is considered irregular,
+   and if anything is marked as irregular, we need an internal note
+   saying "△ Irregular form." and should put "irreg" in the header line;
+   currently our header-line code for this isn't so sophisticated. We should
+   make sure when checking overrides that we don't get tripped up by
+   footnote markers, and probably put the △ mark before any user-specified
+   footnote markers.) [IMPLEMENTED. NEED TO TEST.]
 14. In multiple-words branch, fix ru-decl-noun-multi so it recognizes
    things like *, (1), (2) and ; without the need for a separator. Consider
    using semicolon as a separator, since we already use it to separate ё
    from a previous declension. Maybe use $ or ~ for an invariable word; don't
    use semicolon. [IMPLEMENTED. NEED TO TEST.]
-15. FIXME: In multiple-words branch, with normal ru-noun-table, allow -
-    as a joiner, now that $ is used for invariable.
 16. [Consider having ru-noun+ treat par= as a second genitive in
    the headword, as is done with край] [WON'T DO]
 17. [FIXME: Consider removing slash patterns and instead handling them by
@@ -337,8 +327,6 @@ TODO:
 26. Automatically superscript *, numbers and similar things at the
    beginning of a note. Also do this in adjective module. [IMPLEMENTED.
    NEED TO TEST.]
-27. Consider eliminating о-ья and replacing it with slash declension
-   о/-ья like we do for feminine, masculine soft, etc. nouns. [DONE.]
 28. Make the check for multiple stress patterns (categorizing/tracking)
    smarter, to keep a list of them and check at the end, so we handle
    multiple stress patterns specified through different arg sets.
@@ -347,35 +335,9 @@ TODO:
   case (1) vs. plural-detected variant. [IMPLEMENTED. NEED TO TEST FURTHER.]
 30. Solution to ambiguous plural involving gender spec "3f". [IMPLEMENTED;
    NEED TO TEST.]
-31. Make it so that the plural-specifying decl classes -а, -ья, and new -ы, -и
-   still auto-detect the class and convert the resulting auto-detected class
-   to one with the plural variant. It's useful then to have explicit names for
-   the plural-variant classes -а, -ья. I propose #-а, #-ья, which are aliases;
-   the canonical name is still -a, -ья so that you can still say something like
-   ин/-ья. We should similarly have # has the alias for -.  The classes
-   would look like (where * means to construct a slash class)
-
-   Orig        -а          -ья          -ы         -и
-   (blank)     -а          -ья          (blank)    (blank)
-   ъ           ъ-а         ъ-ья         ъ          ъ
-   ь-m         *           *            *          ь-m
-   а           *           *            а          а
-   я           *           *            *          я
-   о           о           *            о-и        о-и
-   е           *           *            *          *
-   ь-f         *           *            *          ь-f
-  [IMPLEMENTED. THEN REMOVED MOST PLURAL VARIANTS, LEAVING ONLY -ья AND
-  (1) AND (2). NEED TO TEST -ья, ALTHOUGH PRESUMABLY THEY GOT TESTED
-  THROUGH THE TEST PAGES AND THROUGH BEING RUN ON ALL THE EXISTING DECLED
-  RUSSIAN NOUNS IN WIKTIONARY.]
 33. With pluralia tantum adjectival nouns, we don't know the gender.
    By default we assume masculine (or feminine for old-style -ія nouns) and
    currently this goes into the category, but shouldn't. [IMPLEMENTED.]
-36. Add ability to specify manual translation. [IMPLEMENTED IN GITHUB
-   MANUAL-TRANSLIT BRANCH FOR NOUNS, NOT YET FOR ADJECTIVES, NOT TESTED,
-   ALMOST CERTAINLY HAS ERRORS]
-37. Support multiple words and new ru-decl-noun-multi. [IMPLEMENTED IN
-   MULTIPLE-WORDS BRANCH, NOT TESTED.]
 38. [Add accent pattern for ь-stem numbers. Wikitiki handled that through
    overriding the ins_sg. I thought there would be complications with the
    nom_sg in multi-syllabic words but no.] [INSTEAD, DISTINGUISHED b from b',
@@ -1603,8 +1565,8 @@ generate_forms_1 = function(args, per_word_info)
 				determine_decl(lemma, lemmatr, decl, args)
 		end
 		if was_plural then
-			args.thisn = args.thisn or "p"
 			args.n = args.orign or "p"
+			args.thisn = args["n" .. n] or args.n
 		elseif decl ~= "$" then
 			args.thisn = args.thisn or "b"
 		end
@@ -2025,7 +1987,7 @@ local function concat_case_args(args)
 		if args.n == "p" then
 			caseok = ispl
 		elseif args.n == "s" then
-			casepl = not ispl
+			caseok = not ispl
 		end
 		if case == "loc" and not args.any_overridden.loc or
 			case == "par" and not args.any_overridden.par or
@@ -4004,10 +3966,12 @@ local attachers = {
 
 -- Return true if FORM is "close enough" to LEMMA that we can substitute the
 -- linked form of the lemma. Currently this means exactly the same except that
--- we ignore acute and grave accent differences in monosyllables.
+-- we ignore acute and grave accent differences in monosyllables, and ignore
+-- notes that may have been appended (e.g. the triangle marking irregularity).
 local function close_enough_to_lemma(form, lemma)
-	return form == lemma or com.is_monosyllabic(form) and com.is_monosyllabic(lemma) and
-		com.remove_accents(form) == com.remove_accents(lemma)
+	local entry, notes = m_table_tools.get_notes(form)
+	return entry == lemma or com.is_monosyllabic(entry) and com.is_monosyllabic(lemma) and
+		com.remove_accents(entry) == com.remove_accents(lemma)
 end
 
 do_stress_pattern = function(stress, args, decl, number, n, islast)
@@ -4408,20 +4372,40 @@ handle_forms_and_overrides = function(args, n, islast)
 
 	local an = args.thisa
 	-- Maybe set the value of the animate/inanimate accusative variants based
-	-- on nom/acc/gen overrides. Do this if there wasn't a specific override
-	-- of this form and there wasn't a specific accusative suffix anywhere
-	-- (occurs in the fem sg and sometimes the neut sg).
-	if not args.this_any_non_nil.acc_sg and not args["acc_sg_an" .. n] then
-		f.acc_sg_an = f.acc_sg or an == "i" and f.nom_sg or f.gen_sg or f.acc_sg_an
+	-- on nom/acc/gen overrides. Don't do this if there was a specific override
+	-- of this form. Otherwise, always propagate an accusative singular
+	-- override, and propagate the nom/gen sg if there wasn't a specific
+	-- accusative suffix anywhere (occurs in the fem sg and sometimes the neut
+	-- sg). This logic duplicates logic in handle_overall_forms_and_overrides();
+	-- see long comment there. We need to duplicate the whole logic here to
+	-- handle words like мать-одиночка, which has an override of acc_sg1.
+	if not args["acc_sg_an" .. n] then
+		if args["acc_sg" .. n] then
+			f.acc_sg_an = f.acc_sg
+		elseif not args.this_any_non_nil.acc_sg then
+			f.acc_sg_an = f.acc_sg or an == "i" and f.nom_sg or f.gen_sg or f.acc_sg_an
+		end
 	end
-	if not args.this_any_non_nil.acc_sg and not args["acc_sg_in" .. n] then
-		f.acc_sg_in = f.acc_sg or an == "a" and f.gen_sg or f.nom_sg or f.acc_sg_in
+	if not args["acc_sg_in" .. n] then
+		if args["acc_sg" .. n] then
+			f.acc_sg_in = f.acc_sg
+		elseif not args.this_any_non_nil.acc_sg then
+			f.acc_sg_in = f.acc_sg or an == "a" and f.gen_sg or f.nom_sg or f.acc_sg_in
+		end
 	end
-	if not args.this_any_non_nil.acc_pl and not args["acc_pl_an" .. n] then
-		f.acc_pl_an = f.acc_pl or an== "i" and f.nom_pl or f.gen_pl or f.acc_pl_an
+	if not args["acc_pl_an" .. n] then
+		if args["acc_pl" .. n] then
+			f.acc_pl_an = f.acc_pl
+		elseif not args.this_any_non_nil.acc_pl then
+			f.acc_pl_an = f.acc_pl or an== "i" and f.nom_pl or f.gen_pl or f.acc_pl_an
+		end
 	end
-	if not args.this_any_non_nil.acc_pl and not args["acc_pl_in" .. n] then
-		f.acc_pl_in = f.acc_pl or an == "a" and f.gen_pl or f.nom_pl or f.acc_pl_in
+	if not args["acc_pl_in" .. n] then
+		if args["acc_pl" .. n] then
+			f.acc_pl_in = f.acc_pl
+		elseif not args.this_any_non_nil.acc_pl then
+			f.acc_pl_in = f.acc_pl or an == "a" and f.gen_pl or f.nom_pl or f.acc_pl_in
+		end
 	end
 
 	f.loc = f.loc or f.pre_sg
@@ -4481,6 +4465,9 @@ handle_overall_forms_and_overrides = function(args)
 		overall_forms[case] = concat_word_forms(args.per_word_info, case)
 	end
 
+	local acc_sg_overridden = args.acc_sg
+	local acc_pl_overridden = args.acc_pl
+	
 	process_overrides(args, overall_forms, "")
 
 	-- if IRREGMARKER is anywhere in text, remove all instances and put
@@ -4515,24 +4502,52 @@ handle_overall_forms_and_overrides = function(args)
 	end
 
 	-- Maybe set the value of the animate/inanimate accusative variants based
-	-- on nom/acc/gen overrides. Do this if there wasn't a specific override
-	-- of this form and there wasn't a specific accusative suffix anywhere
-	-- (occurs in the fem sg and sometimes the neut sg).
-	if not args.any_non_nil.acc_sg and not args.any_overridden.acc_sg_an then
-		args.acc_sg_an = args.acc_sg or args.a == "i" and args.nom_sg or args.gen_sg or args.acc_sg_an
+	-- on nom/acc/gen overrides. Don't do this if there was a specific override
+	-- of this form. Otherwise, always propagate an accusative singular
+	-- override, and propagate the nom/gen sg if there wasn't a specific
+	-- accusative suffix anywhere (occurs in the fem sg and sometimes the neut
+	-- sg). We need to do this somewhat complicated procedure to get overrides
+	-- to work correctly, e.g. acc_sg overrides of feminine and neuter nouns
+	-- (such as мать and полслова) and gen_sg/gen_pl overrides of masculine
+	-- animate nouns. We also ran into an issue with words like мазло that are
+	-- neuter-form but can be both masculine animate (in which case the
+	-- acc sg inherits from the genitive) and neuter animate (in which case the
+	-- acc sg has the fixed ending -о, same as nominative, despite the animacy).
+	-- Remember also that the animate/inanimate accusative variants are the ones
+	-- displayed, not the plain acc_sg/acc_pl ones.
+	if not args.any_overridden.acc_sg_an then
+		if acc_sg_overridden then
+			args.acc_sg_an = args.acc_sg
+		elseif not args.any_non_nil.acc_sg then
+			args.acc_sg_an = args.acc_sg or args.a == "i" and args.nom_sg or args.gen_sg or args.acc_sg_an
+		end
 	end
-	if not args.any_non_nil.acc_sg and not args.any_overridden.acc_sg_in then
-		args.acc_sg_in = args.acc_sg or args.a == "a" and args.gen_sg or args.nom_sg or args.acc_sg_in
+	if not args.any_overridden.acc_sg_in then
+		if acc_sg_overridden then
+			args.acc_sg_in = args.acc_sg
+		elseif not args.any_non_nil.acc_sg then
+			args.acc_sg_in = args.acc_sg or args.a == "a" and args.gen_sg or args.nom_sg or args.acc_sg_in
+		end
 	end
-	if not args.any_non_nil.acc_pl and not args.any_overridden.acc_pl_an then
-		args.acc_pl_an = args.acc_pl or args.a == "i" and args.nom_pl or args.gen_pl or args.acc_pl_an
+	if not args.any_overridden.acc_pl_an then
+		if acc_pl_overridden then
+			args.acc_pl_an = args.acc_pl
+		elseif not args.any_non_nil.acc_pl then
+			args.acc_pl_an = args.acc_pl or args.a == "i" and args.nom_pl or args.gen_pl or args.acc_pl_an
+		end
 	end
-	if not args.any_non_nil.acc_pl and not args.any_overridden.acc_pl_in then
-		args.acc_pl_in = args.acc_pl or args.a == "a" and args.gen_pl or args.nom_pl or args.acc_pl_in
+	if not args.any_overridden.acc_pl_in then
+		if acc_pl_overridden then
+			args.acc_pl_in = args.acc_pl
+		elseif not args.any_non_nil.acc_pl then
+			args.acc_pl_in = args.acc_pl or args.a == "a" and args.gen_pl or args.nom_pl or args.acc_pl_in
+		end
 	end
 
 	-- Try to set the values of acc_sg and acc_pl. The only time we can't is
 	-- when the noun is bianimate and the anim/inan values are different.
+	-- This is used primarily for generate_forms() and generate_multi_forms(),
+	-- since we don't actually display these forms.
 	if args.a == "a" then
 		args.acc_sg = args.acc_sg or args.acc_sg_an
 		args.acc_pl = args.acc_pl or args.acc_pl_an
