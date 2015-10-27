@@ -5,6 +5,7 @@ import re
 import pywikibot
 
 dosave = False
+overwrite = True
 
 stress_patterns = ["a", "b", "b'", "c", "d", "d'", "e", "f", "f'", "f''"]
 genders = ["masculine", "feminine", "neuter"]
@@ -46,50 +47,86 @@ adj_decls = [
       [u"-ый", u"-ые", ["hard-stem"]],
       [u"-ый", u"-ые", [u"ц-stem"]],
       [u"-ий", u"-ие", ["velar-stem", "sibilant-stem"]],
+      [u"-ий", u"-ьи", ["long possessive"]],
+      [u"a consonant (-ъ old-style)", u"-ы", ["short possessive"]],
+      [u"a consonant (-ъ old-style)", u"-ы", ["mixed possessive"]],
+      [u"a consonant (-ъ old-style)", u"-ы", ["proper possessive"]],
     ]],
     ["a", "feminine", [
       [u"-ая", u"-ые", ["hard-stem"]],
       [u"-aя", u"-ые", [u"ц-stem"]],
       [u"-ая", u"-ие", ["velar-stem", "sibilant-stem"]],
+      [u"-ья", u"-ьи", ["long possessive"]],
+      [u"-а", u"-ы", ["short possessive"]],
+      [u"-а", u"-ы", ["mixed possessive"]],
+      [u"-а", u"-ы", ["proper possessive"]],
     ]],
     ["a", "neuter", [
       [u"-ое", u"-ые", ["hard-stem"]],
       [u"-ее", u"-ые", [u"ц-stem"]],
       [u"-ое", u"-ие", ["velar-stem"]],
       [u"-ее", u"-ие", ["sibilant-stem"]],
+      [u"-ье", u"-ьи", ["long possessive"]],
+      [u"-о", u"-ы", ["short possessive"]],
+      [u"-о", u"-ы", ["mixed possessive"]],
+      [u"-о", u"-ы", ["proper possessive"]],
+    ]],
+    ["a", "plural-only", [
+      ["", u"-ые", ["hard-stem"]],
+      ["", u"-ые", [u"ц-stem"]],
+      ["", u"-ие", ["velar-stem", "sibilant-stem"]],
+      ["", u"-ьи", ["long possessive"]],
+      ["", u"-ы", ["short possessive"]],
+      ["", u"-ы", ["mixed possessive"]],
+      ["", u"-ы", ["proper possessive"]],
     ]],
     ["b", "masculine", [
       [u"-о́й", u"-ы́е", ["hard-stem"]],
       [u"-о́й", u"-ы́е", [u"ц-stem"]],
       [u"-о́й", u"-и́е", ["velar-stem", "sibilant-stem"]],
+      [u"-и́й", u"-ьи́", ["long possessive"]],
+      [u"a consonant (-ъ old-style)", u"-ы́", ["short possessive"]],
+      [u"a consonant (-ъ old-style)", u"-ы́", ["mixed possessive"]],
+      [u"a consonant (-ъ old-style)", u"-ы́", ["proper possessive"]],
     ]],
     ["b", "feminine", [
       [u"-а́я", u"-ы́е", ["hard-stem"]],
       [u"-áя", u"-ы́е", [u"ц-stem"]],
       [u"-а́я", u"-и́е", ["velar-stem", "sibilant-stem"]],
+      [u"-ья́", u"-ьи́", ["long possessive"]],
+      [u"-а́", u"-ы́", ["short possessive"]],
+      [u"-а́", u"-ы́", ["mixed possessive"]],
+      [u"-а́", u"-ы́", ["proper possessive"]],
     ]],
     ["b", "neuter", [
       [u"-о́е", u"-ы́е", ["hard-stem"]],
       [u"-о́е", u"-ы́е", [u"ц-stem"]],
       [u"-о́е", u"-и́е", ["velar-stem", "sibilant-stem"]],
+      [u"-ье́", u"-ьи́", ["long possessive"]],
+      [u"-о́", u"-ы́", ["short possessive"]],
+      [u"-о́", u"-ы́", ["mixed possessive"]],
+      [u"-о́", u"-ы́", ["proper possessive"]],
+    ]],
+    ["b", "plural-only", [
+      ["", u"-ы́е", ["hard-stem"]],
+      ["", u"-ы́е", [u"ц-stem"]],
+      ["", u"-и́е", ["velar-stem", "sibilant-stem"]],
+      ["", u"-ьи́", ["long possessive"]],
+      ["", u"-ы́", ["short possessive"]],
+      ["", u"-ы́", ["mixed possessive"]],
+      ["", u"-ы́", ["proper possessive"]],
     ]],
     ["", "masculine", [
       [u"-ий", u"-ие", ["soft-stem", "vowel-stem"]],
-      [u"-ий", u"-ьи", ["long possessive"]],
-      [u"a consonant (-ъ old-style)", u"-ы", ["short possessive"]],
-      [u"a consonant (-ъ old-style)", u"-ы", ["mixed possessive"]],
     ]],
     ["", "feminine", [
       [u"-яя", u"-ие", ["soft-stem", "vowel-stem"]],
-      [u"-ья", u"-ьи", ["long possessive"]],
-      [u"-а", u"-ы", ["short possessive"]],
-      [u"-а", u"-ы", ["mixed possessive"]],
     ]],
     ["", "neuter", [
       [u"-ее", u"-ие", ["soft-stem", "vowel-stem"]],
-      [u"-ье", u"-ьи", ["long possessive"]],
-      [u"-о", u"-ы", ["short possessive"]],
-      [u"-о", u"-ы", ["mixed possessive"]],
+    ]],
+    ["", "plural-only", [
+      ["", u"-ие", ["soft-stem", "vowel-stem"]],
     ]],
 ]
 
@@ -100,6 +137,8 @@ endings = [
     (u"-ь", u"-ья"),
     (u"suffix -ёнок", u"-ята"), (u"suffix -онок", u"-ата"),
     (u"suffix -ёнокъ", u"-ята"), (u"suffix -онокъ", u"-ата"),
+    (u"suffix -ёночек", u"-ятки"), (u"suffix -оночек", u"-атки"),
+    (u"suffix -ёночекъ", u"-ятки"), (u"suffix -оночекъ", u"-атки"),
     (u"suffix -ин", u"-e"), (u"suffix -инъ", u"-е"),
 ]
 sgendings = [u"-ё", u"stressed -е", u"-ьё"]
@@ -121,6 +160,9 @@ def create_cat(cat, args, adj=False):
     cat = "Category:Russian " + cat.replace("~", "nouns")
     text = "{{runouncatboiler|%s}}" % "|".join(args)
   page = pywikibot.Page(site, cat)
+  if not overwrite and page.exists():
+    msg("Page %s already exists, not overwriting" % cat)
+    return
   page.text = unicode(text)
   changelog = "Creating '%s' with text '%s'" % (cat, text)
   msg("Changelog = %s" % changelog)
@@ -162,10 +204,10 @@ for stress, gender, sgplstems in adj_decls:
 
 for sg, pl in endings:
   cat = "~ ending in %s with plural %s" % (sg, pl)
-  create_cat(cat, ["sgpl", sg, pl])
+  create_cat(cat, ["sgpl"])
 for sg in sgendings:
   cat = "~ ending in %s" % sg
-  create_cat(cat, ["sg", sg])
+  create_cat(cat, ["sg"])
 
 short_adj_stress_patterns = [
     ("a", "stem stress on all short forms"),
@@ -190,10 +232,11 @@ adj_patterns = [
     ("long", "possessive", u"-ий", u"-ья", u"-ье", u"-ьи"),
     ("mixed", "possessive", u"a consonant (-ъ old style)", u"-а", u"-о", u"-ы"),
     ("short", "possessive", u"a consonant (-ъ old style)", u"-а", u"-о", u"-ы"),
+    ("proper", "possessive", u"a consonant (-ъ old style)", u"-а", u"-о", u"-ы"),
 ]
 
-for stress, expl in short_adj_stress_patterns:
-  create_adj_cat("~ with short accent pattern " + stress, ["shortaccent", expl])
-
-for stem, stress, m, f, n, p in adj_patterns:
-  create_adj_cat("%s %s ~" % (stem, stress), ["adj", m, f, n, p])
+#for stress, expl in short_adj_stress_patterns:
+#  create_adj_cat("~ with short accent pattern " + stress, ["shortaccent", expl])
+#
+#for stem, stress, m, f, n, p in adj_patterns:
+#  create_adj_cat("%s %s ~" % (stem, stress), ["adj", m, f, n, p])
