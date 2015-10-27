@@ -13,8 +13,6 @@ FIXME:
 2. In асунсьо́н and Вьентья́н, put a syllable break after the н and before
    consonant + /j/. Use the perm_sym_onset mechanism or at least the code
    that accesses that mechanism.
-3. Handling сск - it should reduce to ск in all cases except when gem=y;
-   currently we always reduce it to ск
 
 ]]
 
@@ -115,6 +113,9 @@ local geminate_pref = {
 local phon_respellings = {
 	{'n[dt]sk', 'n(t)sk'},
 	{'s[dt]sk', 'sck'},
+	-- the following is for отсчи́тываться and подсчёт and is
+	-- ordered before changes that convert ts to c 
+	{'[cdt][sš]č', 'tšč'},
 	{'^o[dt]s', 'ocs'},
 	{vowels_c .. '([šž])j([ou])', '%1%2%3'},
 	{vowels_c .. '([šžc])e', '%1%2ɛ'}, {vowels_c .. '([šžc])i', '%1%2y'},
