@@ -420,6 +420,12 @@ local function ine(arg)
 	return arg
 end
 
+-- synthesize a frame so that exported functions meant to be called from
+-- templates can be called from the debug console.
+local function debug_frame(parargs, args)
+	return {args = args, getParent = function() return {args = parargs} end}
+end
+
 local function translit_no_links(ru)
 	return com.translit(m_links.remove_links(ru))
 end
@@ -567,7 +573,7 @@ local internal_notes_table = {}
 -- 'enable_categories' is a special hack for testing, which disables all
 -- category insertion if false. Delete this as soon as we've verified the
 -- working of the category code and created all the necessary categories.
-local enable_categories = false
+local enable_categories = true
 -- Category/type info corresponding to old-style declensions; see above.
 local declensions_old_cat = {}
 -- Category/type info corresponding to new-style declensions. Computed
@@ -2194,13 +2200,17 @@ function export.catboiler(frame)
 		local decltext =
 			stem == "3rd-declension" and "" or
 			" This is traditionally considered to belong to the " .. (gender == "feminine" and "1st" or "2nd") .. " declension."
-		return stem .. ", usually " .. gender .. " ~, normally ending in nominative singular " .. sgending .. " and nominative plural " .. plending .. "." .. stemtext .. decltext
+		return stem .. ", usually " .. gender .. " ~, normally ending in " .. sgending .. " in the nominative singular " ..
+			" and " .. plending .. " in the nominative plural." .. stemtext .. decltext
 	end
 
 	local function get_pos()
-		pos = rmatch(SUBPAGENAME, "^Russian (.-)s ")
-		if pos then
-			error("Invalid category name, should be e.g. \"Russian nouns with ...\"")
+		pos = rmatch(SUBPAGENAME, "^Russian.- ([^ ]*)s ")
+		if not pos then
+			pos = rmatch(SUBPAGENAME, "^Russian.- ([^ ]*)s$")
+		end
+		if not pos then
+			error("Invalid category name, should be e.g. \"Russian nouns with ...\" or \"Russian ... nouns\"")
 		end
 		return pos
 	end
@@ -2219,6 +2229,10 @@ function export.catboiler(frame)
 	elseif args[1] == "stemgender" then
 		if rfind(SUBPAGENAME, "invariable") then
 			maintext = "invariable (indeclinable) ~, which normally have the same form for all cases and numbers."
+			pos = rmatch(SUBPAGENAME, "^Russian invariable (.*)s$")
+			if not pos then
+				error("Invalid category name, should be e.g. \"Russian invariable nouns\"")
+			end
 		else
 			local stem, gender
 			stem, gender, pos = rmatch(SUBPAGENAME, "^Russian (.-) (.-)%-form (.*)s$")
@@ -2254,18 +2268,32 @@ function export.catboiler(frame)
 			stress == "b" and
 			"This " .. pos .. " is stressed according to accent pattern b (stress on the ending)." or
 			"All ~ of this class are stressed according to accent pattern a (stress on the stem)."
-		maintext = stem .. " " .. gender .. " ~, with " .. possessive .. "adjectival endings, ending in nominative singular " .. args[2] .. " and nominative plural " .. args[3] .. "." .. stemtext .. " " .. stresstext
+		maintext = stem .. " " .. gender .. " ~, with " .. possessive .. "adjectival endings, ending in " ..
+			(gender == "plural-only" and "" or args[2] .. " in the nominative singular and ") ..
+			args[3] .. " in the nominative plural." .. stemtext .. " " .. stresstext
 		insert_category(cats, "~ by stem type, gender and accent pattern", pos)
 	else
 		pos = get_pos()
 		if args[1] == "sg" then
-			maintext = "~ ending in nominative singular " .. args[2] .. "."
+			local sg = rmatch(SUBPAGENAME, "^Russian .* ending in (.*)$")
+			if not sg then
+				error("Invalid category name, should be e.g. \"Russian nouns ending in stressed -е\"")
+			end
+			maintext = "~ ending in " .. (args[2] or sg) .. " in the nominative singular."
 			insert_category(cats, "~ by singular ending", pos)
 		elseif args[1] == "pl" then
-			maintext = "~ ending in nominative plural " .. args[2] .. "."
+			local pl = rmatch(SUBPAGENAME, "^Russian .* with plural (.*)$")
+			if not pl then
+				error("Invalid category name, should be e.g. \"Russian nouns with plural -е\"")
+			end
+			maintext = "~ ending in " .. (args[2] or pl)  .. " in the nominative plural."
 			insert_category(cats, "~ by plural ending", pos)
 		elseif args[1] == "sgpl" then
-			maintext = "~ ending in nominative singular " .. args[2] .. " and nominative plural " .. args[3] .. "."
+			local sg, pl = rmatch(SUBPAGENAME, "^Russian .* ending in (.*) with plural (.*)$")
+			if not sg then
+				error("Invalid category name, should be e.g. \"Russian nouns ending in -о with plural -и\"")
+			end
+			maintext = "~ ending in " .. (args[2] or sg) .. " in the nominative singular, and " .. (args[3] or pl) .. " in the nominative plural."
 			insert_category(cats, "~ by singular and plural ending", pos)
 		elseif args[1] == "stress" then
 			maintext = "~ with accent pattern " .. args[2] .. "."
@@ -2283,10 +2311,16 @@ function export.catboiler(frame)
 
 	insert_category(cats, "~", pos, "at beginning")
 
+	-- format_categories doesn't work in category space so we need to hack our own
+	local categories = {}
+	for _, cat in ipairs(cats) do
+		table.insert(categories, "[[Category:" .. cat .. "]]")
+	end
+	
 	return "This category contains Russian " .. rsub(maintext, "~", pos .. "s")
 		.. "\n" ..
 		mw.getCurrentFrame():expandTemplate{title="ru-categoryTOC", args={}}
-		.. m_utilities.format_categories(cats, lang)
+		.. table.concat(categories, "")
 end
 
 --------------------------------------------------------------------------
