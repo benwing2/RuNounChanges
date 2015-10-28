@@ -1,7 +1,7 @@
 --[[
 This module implements the template {{ru-IPA}} (FIXME, is it called elsewhere?)
 
-Author: Primarily Wyang, with help from Atitarev, Benwing and a bit from others
+Author: Primarily Wyang, with help from Benwing, Atitarev and a bit from others
 
 FIXME:
 
@@ -13,7 +13,9 @@ FIXME:
 2. In асунсьо́н and Вьентья́н, put a syllable break after the н and before
    consonant + /j/. Use the perm_sym_onset mechanism or at least the code
    that accesses that mechanism.
-
+3. geminate_pref: Should expand to include both voicings, and also look at the
+   original spelling before voicing and gemination assimilations to make sure
+   we actually had the appropriate prefix.
 ]]
 
 local ut = require("Module:utils")
@@ -41,7 +43,7 @@ end
 -- If enabled, compare this module with new version of module to make
 -- sure all pronunciations are the same. Eventually consider removing this;
 -- but useful as new code is created.
-local test_new_ru_pron_module = false
+local test_new_ru_pron_module = true
 
 local AC = u(0x0301) -- acute =  ́
 local GR = u(0x0300) -- grave =  ̀
