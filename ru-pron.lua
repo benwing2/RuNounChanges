@@ -106,10 +106,31 @@ local voicing = {
 	['š'] = 'ž', ['c'] = 'ĵ', ['č'] = 'ǰ', ['x'] = 'χ', ['ǯ'] = 'ӂ'
 }
 
+-- Prefixes that we recognize specially when they end in a geminated
+-- consonant. The first element is the result after applying voicing/devoicing,
+-- gemination and other changes. The second element is the original spelling,
+-- so that we don't overmatch and get cases like Поттер. We check for these
+-- prefixes at the beginning of words and also preceded by ne-, po- and nepo-.
 local geminate_pref = {
-	--'^abː',
-	'^adː', '^bezː', '^braomː', '^vː', '^voszː', '^izː', '^inː', '^kontrː', '^nadː', '^niszː',
-	'^o[cdmtč]ː', '^podː', '^predː', '^paszː', '^pozː', '^sː', '^sverxː', '^subː', '^tröxː', '^čeresː', '^četyröxː', '^črezː',
+	--'abː', --'adː',
+	{'be[zs]ː', 'be[zs]'},
+	--'braomː',
+	{'[vf]ː', 'v'},
+	{'vo[zs]ː', 'vo[zs]'},
+	{'i[zs]ː', 'i[zs]'},
+	--'^inː',
+	{'kontrː', 'kontr'},
+	{'na[dt]ː', 'nad'},
+	--'^niszː',
+	{'o[cdtč]ː', 'ot'}, --'^omː',
+	{'o[bp]ː', 'ob'},
+    {'po[dt]ː', 'pod'},
+	{'pre[dt]ː', 'pred'}, --'^paszː', '^pozː',
+	{'ra[zs]ː', 'ra[zs]'},
+	{'[sz]ː', 's'},
+	{'me[žš]ː', 'mež'},
+	{'če?re[zs]ː', 'če?re[zs]'},
+	-- '^sverxː', '^subː', '^tröxː', '^četyröxː',
 }
 
 local phon_respellings = {
@@ -213,13 +234,8 @@ function export.ipa(text, adj, gem, pal)
 	-- handle old ě (e.g. сѣдло́), and ě̈ from сѣ̈дла
 	text = rsub(text, 'ě̈', 'jo' .. AC)
 	text = rsub(text, 'ě', 'e')
-	-- handle secondarily-stressed ё
-	text = rsub(text, AC .. GR, GR)
-
-	--phonetic respellings
-	for _, respell in ipairs(phon_respellings) do
-		text = rsub(text, respell[1], respell[2])
-	end
+	-- handle ё with secondary/tertiary stress
+	text = rsub(text, AC .. '([̀̂])', '%1')
 
 	text = adj and rsub(text, '(.[aoe]́?)go(' .. AC .. '?)$', '%1vo%2') or text
 
@@ -261,6 +277,15 @@ function export.ipa(text, adj, gem, pal)
 	text = rsub(text, ' $', '')
 	text = rsub(text, ' +', ' ')
 
+	-- save original word spelling before respellings, (de)voicing changes,
+	-- geminate changes, etc. for implementation of geminate_pref
+	local orig_word = rsplit(text, " ", true)
+
+	--phonetic respellings
+	for _, respell in ipairs(phon_respellings) do
+		text = rsub(text, respell[1], respell[2])
+	end
+
 	-- conversion of šč to geminate, with ǯ perversely representing IPA ɕ
 	text = rsub(text, 'šč', 'ǯː')
 	-- backing of /i/ after certain prepositions
@@ -291,6 +316,26 @@ function export.ipa(text, adj, gem, pal)
 		local stress = {} -- set of 1-based indices of stressed syllables
 		local pron = word[i]
 
+		-- Check for gemination at prefix boundaries; if so, convert the
+		-- regular gemination symbol ː to a special symbol ˑ that indicates
+		-- we always preserve the gemination unless gem=n. We look for
+		-- certain sequences at the beginning of a word, but make sure that
+		-- the original spelling is appropriate as well (see comment above
+		-- for geminate_pref).
+		local orig_pron = orig_word[i]
+		local deac = rsub(pron, accents, '')
+		local orig_deac = rsub(orig_pron, accents, '')
+		for _, gempref in ipairs(geminate_pref) do
+			local newspell = gempref[1]
+			local oldspell = gempref[2]
+			if rfind(orig_deac, '^' .. oldspell) and rfind(deac, '^' .. newspell) or
+				rfind(orig_deac, '^ne' .. oldspell) and rfind(deac, '^ne' .. newspell) or
+				rfind(orig_deac, '^po' .. oldspell) and rfind(deac, '^po' .. newspell) or
+				rfind(orig_deac, '^nepo' .. oldspell) and rfind(deac, '^nepo' .. newspell) then
+				pron = rsub(pron, '^([^ː]*)ː', '%1ˑ')
+			end
+		end
+
 		--optional iotation of 'e' in a two-vowel sequence and reduction of
 		--word-final 'e'; FIXME: Should this also include grave accent?
 		pron = rsub(pron, '([aäeëɛiyoöuü][́̂]?)ë([^́̂])', '%1(j)ë%2')
@@ -314,8 +359,8 @@ function export.ipa(text, adj, gem, pal)
 		--syllabify, inserting / at syllable boundaries
 		pron = rsub(pron, '([aäeëɛəiyoöuü]' .. accents .. '?)', '%1/')
 		pron = rsub(pron, '/+$', '')
-		pron = rsub(pron, '/([^‿/aäeëɛəiyoöuü]*)([^‿/aäeëɛəiyoöuüʹːʲ])(ʹ?ʲ?ː?[aäeëɛəiyoöuü])', '%1/%2%3')
-		pron = rsub(pron, '([^‿/aäeëɛəiyoöuü]?)([^‿/aäeëɛəiyoöuü])/([^‿/aäeëɛəiyoöuüʹːʲ])(ʹ?ʲ?ː?[aäeëɛəiyoöuü])', function(a, b, c, d)
+		pron = rsub(pron, '/([^‿/aäeëɛəiyoöuü]*)([^‿/aäeëɛəiyoöuüʹːˑʲ])(ʹ?ʲ?[ːˑ]?[aäeëɛəiyoöuü])', '%1/%2%3')
+		pron = rsub(pron, '([^‿/aäeëɛəiyoöuü]?)([^‿/aäeëɛəiyoöuü])/([^‿/aäeëɛəiyoöuüʹːˑʲ])(ʹ?ʲ?[ːˑ]?[aäeëɛəiyoöuü])', function(a, b, c, d)
 			if perm_syl_onset[a .. b .. c] then
 				return '/' .. a .. b .. c .. d
 			elseif perm_syl_onset[b .. c] then
@@ -357,13 +402,6 @@ function export.ipa(text, adj, gem, pal)
 				elseif stress[j] and rfind(syl, 'sː$') and j < #syllable and rfind(syllable[j+1], 'k' .. vowels) then
 					-- special case for ssk and zsk
 					no_replace = true
-				else
-					local de_accent = rsub(word[i], accents, '')
-					for i = 1, #geminate_pref do
-						if not no_replace and rfind(de_accent, geminate_pref[i]) then
-							no_replace = true
-						end
-					end
 				end
 				if gem == 'n' then
 					no_replace = false
@@ -377,6 +415,12 @@ function export.ipa(text, adj, gem, pal)
 				if rfind(word[i], non_accents .. 'nːyj$') then
 					syl = rsub(syl, 'nːyj', 'n(ː)yj')
 				end
+			end
+			-- ˑ is a special gemination symbol used at prefix boundaries that
+			-- we remove only when gem=n, else we convert it to regular
+			-- gemination
+			if rfind(syl, 'ˑ') then
+				syl = rsub(syl, 'ˑ', gem == n and '' or 'ː')
 			end
 
 			--assimilative palatalisation of consonants when followed by front vowels
