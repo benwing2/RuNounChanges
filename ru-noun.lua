@@ -178,7 +178,6 @@ TODO:
    seems wrong. See луг.
 2d. FIXME: When you have both d' and f in feminines and you use sgtail=*,
    you get two *'s. See User:Benwing2/test-ru-noun-debug.
-3a. FIXME: Create category for irregular lemmas.
 3b. [FIXME: Consider adding an indicator in the header line when the ё/e
    alternation occurs. This is a bit tricky to calculate: If special case
    ;ё is given, but also if ё occurs in the stem and the accent pattern is
@@ -204,8 +203,6 @@ TODO:
    nearly all circumstances.] [MIGHT BE TOO MUCH WORK]
 4. FIXME: Change calls to ru-adj11 to use the new proper name support in
    ru-adjective.
-5. FIXME: Create categories for use with the category code.
-6. FIXME: Integrate stress categories with those in Vitalik's module.
 6a. FIXME: In ru-headword, create a category for words whose gender doesn't
    match the form. (This is easy to do for ru-noun+ but harder for ru-noun.
    We would need to do limited autodetection of the ending: for singulars,
@@ -257,22 +254,6 @@ TODO:
    -- Current handling of <adj> won't work properly with multiple words;
       will need to translate word-by-word in that case (should be solved by
 	  manual-translit branch) [DONE]
-12. Consider putting a triangle △ (U+25B3) or the smaller variant
-   ▵ (U+25B5) next to each irregular form. (We have the following cases:
-   special case (1) makes nom pl irreg, special case (2) makes gen pl irreg,
-   variant -ья makes the whole pl irreg as does an explicit plural stem,
-   overrides make the overridden case(s) irreg -- except that we should
-   check, for each form of each override, whether that form is among the
-   expected forms for that case and if so not mark it as irreg, so that
-   only the unexpected ones get marked as irreg [especially important when
-   there are multiple forms in an override, because typically some will
-   be regular]. If 'manual' is set, nothing is considered irregular,
-   and if anything is marked as irregular, we need an internal note
-   saying "△ Irregular form." and should put "irreg" in the header line;
-   currently our header-line code for this isn't so sophisticated. We should
-   make sure when checking overrides that we don't get tripped up by
-   footnote markers, and probably put the △ mark before any user-specified
-   footnote markers.) [IMPLEMENTED. NEED TO TEST.]
 14. In multiple-words branch, fix ru-decl-noun-multi so it recognizes
    things like *, (1), (2) and ; without the need for a separator. Consider
    using semicolon as a separator, since we already use it to separate ё
@@ -338,10 +319,6 @@ TODO:
 33. With pluralia tantum adjectival nouns, we don't know the gender.
    By default we assume masculine (or feminine for old-style -ія nouns) and
    currently this goes into the category, but shouldn't. [IMPLEMENTED.]
-38. [Add accent pattern for ь-stem numbers. Wikitiki handled that through
-   overriding the ins_sg. I thought there would be complications with the
-   nom_sg in multi-syllabic words but no.] [INSTEAD, DISTINGUISHED b from b',
-   f' from f''. CAN USE PLAIN b.]
 39. [Eventually: Even with decl type explicitly given, the full stem with
     ending should be included.] [MAY NEVER IMPLEMENT]
 40. [Get error "Unable to dereduce" with strange noun ва́йя, what should
@@ -858,6 +835,10 @@ local function categorize_and_init_heading(stress, decl, args, n, islast)
 		return false
 	end
 
+	if args.manual then
+		return
+	end
+	
 	local h = args.heading_info
 
 	assert(decl)
@@ -2215,7 +2196,7 @@ function export.catboiler(frame)
 	end
 
 	local function get_pos()
-		pos = rmatch(SUBPAGENAME, "^Russian.- ([^ ]*)s ")
+		local pos = rmatch(SUBPAGENAME, "^Russian.- ([^ ]*)s ")
 		if not pos then
 			pos = rmatch(SUBPAGENAME, "^Russian.- ([^ ]*)s$")
 		end
@@ -2223,6 +2204,18 @@ function export.catboiler(frame)
 			error("Invalid category name, should be e.g. \"Russian nouns with ...\" or \"Russian ... nouns\"")
 		end
 		return pos
+	end
+
+	local function get_sort_key()
+		local pos, sort_key = rmatch(SUBPAGENAME, "^Russian.- ([^ ]*)s with (.*)$")
+		if sort_key then
+			return sort_key
+		end
+		pos, sort_key = rmatch(SUBPAGENAME, "^Russian ([^ ]*)s (.*)$")
+		if sort_key then
+			return sort_key
+		end
+		return rsub(SUBPAGENAME, "^Russian ", "")
 	end
 
 	local maintext, pos
@@ -2233,9 +2226,9 @@ function export.catboiler(frame)
 			error("Invalid category name, should be e.g. \"Russian velar-stem masculine-form accent-a nouns\"")
 		end
 		local stem_gender_text = get_stem_gender_text(stem, gender)
-		local accent_text = " This " .. pos .. " is stressed according to accent pattern " .. stress .. "."
+		local accent_text = " This " .. pos .. " is stressed according to accent pattern " .. rsub(stress, "'", "&#39;") .. "."
 		maintext = stem_gender_text .. accent_text
-		insert_category(cats, "~ by stem type, gender and accent pattern", pos)
+		insert_category(cats, "~ by stem type, gender and accent pattern|" .. get_sort_key(), pos)
 	elseif args[1] == "stemgender" then
 		if rfind(SUBPAGENAME, "invariable") then
 			maintext = "invariable (indeclinable) ~, which normally have the same form for all cases and numbers."
@@ -2251,7 +2244,7 @@ function export.catboiler(frame)
 			end
 			maintext = get_stem_gender_text(stem, gender)
 		end
-		insert_category(cats, "~ by stem type and gender", pos)
+		insert_category(cats, "~ by stem type and gender|" .. get_sort_key(), pos)
 	elseif args[1] == "adj" then
 		local stem, gender, stress
 		stem, gender, stress, pos = rmatch(SUBPAGENAME, "^Russian (.*) (.-) accent%-(.-) adjectival (.*)s$")
@@ -2281,7 +2274,7 @@ function export.catboiler(frame)
 		maintext = stem .. " " .. gender .. " ~, with " .. possessive .. "adjectival endings, ending in " ..
 			(gender == "plural-only" and "" or args[2] .. " in the nominative singular and ") ..
 			args[3] .. " in the nominative plural." .. stemtext .. " " .. stresstext
-		insert_category(cats, "~ by stem type, gender and accent pattern", pos)
+		insert_category(cats, "~ by stem type, gender and accent pattern|" .. get_sort_key(), pos)
 	else
 		pos = get_pos()
 		if args[1] == "sg" then
@@ -2297,29 +2290,41 @@ function export.catboiler(frame)
 				error("Invalid category name, should be e.g. \"Russian nouns with plural -е\"")
 			end
 			maintext = "~ ending in " .. (args[2] or pl)  .. " in the nominative plural."
-			insert_category(cats, "~ by plural ending", pos)
+			insert_category(cats, "~ by plural ending|" .. pl, pos)
 		elseif args[1] == "sgpl" then
 			local sg, pl = rmatch(SUBPAGENAME, "^Russian .* ending in (.*) with plural (.*)$")
 			if not sg then
 				error("Invalid category name, should be e.g. \"Russian nouns ending in -о with plural -и\"")
 			end
 			maintext = "~ ending in " .. (args[2] or sg) .. " in the nominative singular, and " .. (args[3] or pl) .. " in the nominative plural."
-			insert_category(cats, "~ by singular and plural ending", pos)
+			insert_category(cats, "~ by singular and plural ending|" .. sg .. " " .. pl, pos)
 		elseif args[1] == "stress" then
-			maintext = "~ with accent pattern " .. args[2] .. "."
-			insert_category(cats, "~ by accent pattern", pos)
+			local stress = rmatch(SUBPAGENAME, "^Russian .* with accent pattern (.*)$")
+			if not stress then
+				error("Invalid category name, should be e.g. \"Russian nouns with accent pattern d\"")
+			end
+			maintext = "~ with accent pattern " .. rsub(stress, "'", "&#39;") .. "."
+			insert_category(cats, "~ by accent pattern|" .. stress, pos)
 		elseif args[1] == "extracase" then
-			maintext = "~ with a separate " .. args[2] .. " singular case."
-			insert_category(cats, "~ by case form", pos)
+			local case = rmatch(SUBPAGENAME, "^Russian .* with (.*)$")
+			if not case then
+				error("Invalid category name, should be e.g. \"Russian nouns with vocative\"")
+			end
+			maintext = "~ with a separate " .. case .. " singular case."
+			insert_category(cats, "~ by case form|" .. case, pos)
 		elseif args[1] == "irregcase" then
-			maintext = "~ with an irregular " .. args[2] .. " case."
-			insert_category(cats, "~ by case form", pos)
+			local case = rmatch(SUBPAGENAME, "^Russian .* with irregular (.*)$")
+			if not case then
+				error("Invalid category name, should be e.g. \"Russian nouns with irregular nominative plural\"")
+			end
+			maintext = "~ with an irregular " .. case .. " case."
+			insert_category(cats, "~ by case form|" .. case, pos)
 		else
 			maintext = "~ " .. args[1]
 		end
 	end
 
-	insert_category(cats, "~", pos, "at beginning")
+	insert_category(cats, "~|" .. get_sort_key(), pos, "at beginning")
 
 	-- format_categories doesn't work in category space so we need to hack our own
 	local categories = {}
