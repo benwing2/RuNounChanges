@@ -964,7 +964,9 @@ local function categorize_and_init_heading(stress, decl, args, n, islast)
 			plsuffix = nil
 		end
 	end
-	local sgcat = sgsuffix and (resolve_cat(sgdc.singular, sgsuffix) or "ending in " .. (sgdc.suffix and "suffix " or "") .. "-" .. sgsuffix)
+	sgsuffix = sgsuffix and rsub(sgsuffix, "ъ$", "")
+	plsuffix = plsuffix and rsub(plsuffix, "ъ$", "")
+	local sgcat = sgsuffix and (resolve_cat(sgdc.singular, sgsuffix) or "ending in " .. (sgsuffix == "" and "a consonant" or (sgdc.suffix and "suffix " or "") .. "-" .. sgsuffix))
 	local plcat = plsuffix and (resolve_cat(pldc.plural, suffix) or "plural -" .. plsuffix)
 	if sgcat and sgdc.gensg then
 		for _, cat in ipairs(cat_to_list(sgcat)) do
@@ -972,7 +974,7 @@ local function categorize_and_init_heading(stress, decl, args, n, islast)
 		end
 	end
 	if sgcat and plcat and (sgdc.suffix or sgdc.alt_nom_pl or sgdc.irregpl or
-			is_slash_decl) then
+			is_slash_decl and plsuffix == "-ья") then
 		for _, scat in ipairs(cat_to_list(sgcat)) do
 			for _, pcat in ipairs(cat_to_list(plcat)) do
 				insert_cat("~ " .. scat .. " with " .. pcat)
@@ -1074,7 +1076,7 @@ local function compute_heading(args)
 	return headings, irreg_headings
 end
 
-local function compute_overall_heading_and_genders(args)
+local function compute_overall_heading_categories_and_genders(args)
 	local hinfo = args.per_word_heading_info
 	local index = 0
 
@@ -1101,12 +1103,14 @@ local function compute_overall_heading_and_genders(args)
 
 	-- Compute final heading
 	local headings = args.per_word_headings[index]
+	local categories = args.per_word_categories[index]
 	--local irreg_headings = args.per_word_irreg_headings[index]
 	--if #irreg_headings > 0 then
 	--	table.insert(headings, "irreg")
 	--end
 	if args.any_irreg then
 		table.insert(headings, "irreg")
+		insert_category(categories, "irregular ~", args.pos)
 	end
 	local heading = args.manual and "" or "(<span style=\"font-size: smaller;\">[[Appendix:Russian nouns#Declension tables|" .. table.concat(headings, " ") .. "]]</span>)"
 	--if #irreg_headings > 0 then
@@ -1114,6 +1118,7 @@ local function compute_overall_heading_and_genders(args)
 	--		table.concat(irreg_headings, " ") .. "</span>"
 	--end
 	args.heading = heading
+	args.categories = categories
 
 	args.genders = args.per_word_genders[index]
 end
@@ -1466,11 +1471,15 @@ generate_forms_1 = function(args, per_word_info)
 	-- used to generate the header. Initialized from 'args.heading_info',
 	-- which is initialized in categorize_and_init_heading().
 	args.per_word_heading_info = {}
+	-- List of CATEGORIES items, one per word, containing the categories
+	-- used to initialize the page categories. Initialized from
+	-- 'args.categories', which is initialized in categorize_and_init_heading().
+	args.per_word_categories = {}
 	-- List of HEADINGS items, one per word, containing the actual words that
 	-- go into the header if we were to use that word to construct the header.
 	-- Comes from compute_heading(). We use this to generate the actual header
 	-- string, which goes into 'args.heading' at the end (done in
-	-- compute_overall_heading_and_genders()).
+	-- compute_overall_heading_categories_and_genders()).
 	args.per_word_headings = {}
 	-- Similar to the previous but for the header words indicating
 	-- irregularities (not currently used; instead we just put 'irreg' for
@@ -1482,11 +1491,10 @@ generate_forms_1 = function(args, per_word_info)
 	-- headwords and actually includes animacy and number as well, e.g.
 	-- 'm-in' or 'f-an-p'). We end up selecting one such item and putting
 	-- it into 'args.genders' at the end
-	-- (in compute_overall_heading_and_genders()).
+	-- (in compute_overall_heading_categories_and_genders()).
 	args.per_word_genders = {}
 	args.any_overridden = {}
 	args.any_non_nil = {}
-	args.categories = {}
 	args.any_irreg = false
 	local function insert_cat(cat)
 		insert_category(args.categories, cat, args.pos)
@@ -1861,6 +1869,7 @@ generate_forms_1 = function(args, per_word_info)
 		args.heading_info = {animacy={}, number={}, gender={}, stress={},
 			stemetc={}, adjectival={}, reducible={},
 			irreg_nom_pl={}, irreg_gen_pl={}, irreg_pl_stem={}, irreg_misc={}}
+		args.categories = {}
 		args.genders = {}
 		args.this_any_non_nil = {}
 
@@ -1887,6 +1896,7 @@ generate_forms_1 = function(args, per_word_info)
 		end
 
 		table.insert(args.per_word_heading_info, args.heading_info)
+		table.insert(args.per_word_categories, args.categories)
 		local headings, irreg_headings = compute_heading(args)
 		table.insert(args.per_word_headings, headings)
 		table.insert(args.per_word_irreg_headings, irreg_headings)
@@ -1897,7 +1907,7 @@ generate_forms_1 = function(args, per_word_info)
 	end
 
 	handle_overall_forms_and_overrides(args)
-	compute_overall_heading_and_genders(args)
+	compute_overall_heading_categories_and_genders(args)
 
 	-- Test code to compare existing module to new one.
 	if test_new_ru_noun_module then
@@ -3115,10 +3125,6 @@ declensions_old["ъ-а"] = mw.clone(declensions_old["ъ"])
 declensions_old["ъ-а"]["nom_pl"] = "а́"
 
 declensions_old_cat["ъ-а"] = { decl="2nd", hard="hard", g="m", alt_nom_pl=true }
-declensions_cat["-а"] = {
-	singular = "ending in a consonant",
-	decl="2nd", hard="hard", g="m", alt_nom_pl=true
-}
 declensions_aliases["#-a"] = "-a"
 
 -- Hard-masculine declension, ending in a hard consonant
@@ -3141,10 +3147,6 @@ declensions_old["ъ-ья"] = {
 }
 
 declensions_old_cat["ъ-ья"] = { decl="2nd", hard="hard", g="m", irregpl=true }
-declensions_cat["-ья"] = {
-	singular = "ending in a consonant",
-	decl="2nd", hard="hard", g="m", irregpl=true,
-}
 declensions_aliases["#-ья"] = "-ья"
 
 ----------------- Masculine hard, suffixed, irregular plural -------------------
