@@ -838,7 +838,7 @@ local function categorize_and_init_heading(stress, decl, args, n, islast)
 	if args.manual then
 		return
 	end
-	
+
 	local h = args.heading_info
 
 	assert(decl)
@@ -965,9 +965,6 @@ local function categorize_and_init_heading(stress, decl, args, n, islast)
 
 	if args.pl ~= args.stem then
 		insert_cat("~ with irregular plural stem")
-		insert_if_not(h.irreg_pl_stem, "yes")
-	else
-		insert_if_not(h.irreg_pl_stem, "no")
 	end
 	if args.reducible and not sgdc.ignore_reduce then
 		insert_cat("~ with reducible stem")
@@ -975,48 +972,16 @@ local function categorize_and_init_heading(stress, decl, args, n, islast)
 	else
 		insert_if_not(h.reducible, "no")
 	end
-	if args.gen_pl or is_slash_decl then
-		insert_if_not(h.irreg_gen_pl, "yes")
-	elseif args.alt_gen_pl then
+	if args.alt_gen_pl then
 		insert_cat("~ with alternate genitive plural")
-		insert_if_not(h.irreg_gen_pl, "yes")
-	else
-		insert_if_not(h.irreg_gen_pl, "no")
-	end
-	if sgdc.alt_nom_pl or sgdc.irregpl or args.nom_pl or is_slash_decl then
-		insert_if_not(h.irreg_nom_pl, "yes")
-	else
-		insert_if_not(h.irreg_nom_pl, "no")
 	end
 	if sgdc.adj then
 		insert_cat("adjectival ~")
-	end
-	for _, case in ipairs(overridable_cases) do
-		if args[case .. n] or islast and args[case] then
-			local engcase = rsub(case, "^([a-z]*)", {
-				nom="nominative", gen="genitive", dat="dative",
-				acc="accusative", ins="instrumental", pre="prepositional",
-				par="partitive", loc="locative", voc="vocative"
-			})
-			engcase = rsub(engcase, "(_[a-z]*)", {
-				_sg=" singular", _pl=" plural",
-				_an=" animate", _in=" inanimate"
-			})
-			if case == "loc" or case == "voc" or case == "par" then
-				insert_cat("~ with " .. engcase)
-			elseif not args.manual then
-				if case ~= "nom_pl" and case ~= "gen_pl" then
-					insert_if_not(h.irreg_misc, "yes")
-				end
-				insert_cat("~ with irregular " .. engcase)
-			end
-		end
 	end
 end
 
 local function compute_heading(args)
 	local headings = {}
-	local irreg_headings = {}
 	local h = args.heading_info
 	table.insert(headings, args.a == "a" and "anim" or args.a == "i" and
 		"inan" or "bian")
@@ -1047,14 +1012,7 @@ local function compute_heading(args)
 	handle_bool(h.adjectival, "adj")
 	handle_bool(h.reducible, "reduc")
 
-	local function handle_irreg_bool(boolvals, text)
-		handle_bool(boolvals, text, irreg_headings)
-	end
-	handle_irreg_bool(h.irreg_pl_stem, "pl-stem")
-	handle_irreg_bool(h.irreg_nom_pl, "nom-pl")
-	handle_irreg_bool(h.irreg_gen_pl, "gen-pl")
-	handle_irreg_bool(h.irreg_misc, "misc")
-	return headings, irreg_headings
+  	return headings
 end
 
 local function compute_overall_heading_categories_and_genders(args)
@@ -1085,19 +1043,32 @@ local function compute_overall_heading_categories_and_genders(args)
 	-- Compute final heading
 	local headings = args.per_word_headings[index]
 	local categories = args.per_word_categories[index]
-	--local irreg_headings = args.per_word_irreg_headings[index]
-	--if #irreg_headings > 0 then
-	--	table.insert(headings, "irreg")
-	--end
 	if args.any_irreg then
 		table.insert(headings, "irreg")
 		insert_category(categories, "irregular ~", args.pos)
 	end
+	for _, case in ipairs(overridable_cases) do
+		if args.any_irreg_case[case] then
+			local engcase = rsub(case, "^([a-z]*)", {
+				nom="nominative", gen="genitive", dat="dative",
+				acc="accusative", ins="instrumental", pre="prepositional",
+				par="partitive", loc="locative", voc="vocative"
+			})
+			engcase = rsub(engcase, "(_[a-z]*)", {
+				_sg=" singular", _pl=" plural",
+				_an="", _in="",
+				--_an=" animate", _in=" inanimate"
+			})
+			insert_category(categories, "~ with irregular " .. engcase, args.pos)
+		elseif (case == "loc" or case == "voc" or case == "par") and
+			args.any_overridden[case] then
+			engcase = rsub(case, "^([a-z]*)", {
+				par="partitive", loc="locative", voc="vocative"
+			})
+			insert_category(categories, "~ with " .. engcase, args.pos)
+		end
+	end
 	local heading = args.manual and "" or "(<span style=\"font-size: smaller;\">[[Appendix:Russian nouns#Declension tables|" .. table.concat(headings, " ") .. "]]</span>)"
-	--if #irreg_headings > 0 then
-	--	heading = heading .. "<br /><span style=\"text-align: center;\">Irregularities: " ..
-	--		table.concat(irreg_headings, " ") .. "</span>"
-	--end
 	args.heading = heading
 	args.categories = categories
 
@@ -1462,11 +1433,6 @@ generate_forms_1 = function(args, per_word_info)
 	-- string, which goes into 'args.heading' at the end (done in
 	-- compute_overall_heading_categories_and_genders()).
 	args.per_word_headings = {}
-	-- Similar to the previous but for the header words indicating
-	-- irregularities (not currently used; instead we just put 'irreg' for
-	-- any irregularities, which is present whenever any form has an
-	-- IRREGMARKER next to it).
-	args.per_word_irreg_headings = {}
 	-- List of GENDERS items, one per word, containing the headword genders
 	-- for each word (where "headword gender" is in the format used in
 	-- headwords and actually includes animacy and number as well, e.g.
@@ -1477,6 +1443,7 @@ generate_forms_1 = function(args, per_word_info)
 	args.any_overridden = {}
 	args.any_non_nil = {}
 	args.any_irreg = false
+	args.any_irreg_case = {}
 	local function insert_cat(cat)
 		insert_category(args.categories, cat, args.pos)
 	end
@@ -1848,8 +1815,7 @@ generate_forms_1 = function(args, per_word_info)
 		local arg_sets, joiner = word_info[1], word_info[2]
 		args.forms = {}
 		args.heading_info = {animacy={}, number={}, gender={}, stress={},
-			stemetc={}, adjectival={}, reducible={},
-			irreg_nom_pl={}, irreg_gen_pl={}, irreg_pl_stem={}, irreg_misc={}}
+			stemetc={}, adjectival={}, reducible={}}
 		args.categories = {}
 		args.genders = {}
 		args.this_any_non_nil = {}
@@ -1878,9 +1844,8 @@ generate_forms_1 = function(args, per_word_info)
 
 		table.insert(args.per_word_heading_info, args.heading_info)
 		table.insert(args.per_word_categories, args.categories)
-		local headings, irreg_headings = compute_heading(args)
+		local headings = compute_heading(args)
 		table.insert(args.per_word_headings, headings)
-		table.insert(args.per_word_irreg_headings, irreg_headings)
 		table.insert(args.per_word_genders, args.genders)
 
 		handle_forms_and_overrides(args, n, islast)
@@ -2331,7 +2296,7 @@ function export.catboiler(frame)
 	for _, cat in ipairs(cats) do
 		table.insert(categories, "[[Category:" .. cat .. "]]")
 	end
-	
+
 	return "This category contains Russian " .. rsub(maintext, "~", pos .. "s")
 		.. "\n" ..
 		mw.getCurrentFrame():expandTemplate{title="ru-categoryTOC", args={}}
@@ -4508,17 +4473,18 @@ handle_overall_forms_and_overrides = function(args)
 
 	local acc_sg_overridden = args.acc_sg
 	local acc_pl_overridden = args.acc_pl
-	
+
 	process_overrides(args, overall_forms, "")
 
 	-- if IRREGMARKER is anywhere in text, remove all instances and put
 	-- at the end before any notes.
-	local function clean_irreg_marker(text)
+	local function clean_irreg_marker(case, text)
 		if rfind(text, IRREGMARKER) then
 			text = rsub(text, IRREGMARKER, "")
 			local entry, notes = m_table_tools.separate_notes(text)
 			insert_if_not(args.internal_notes, IRREGMARKER .. " Irregular.")
 			args.any_irreg = true
+			args.any_irreg_case[case] = true
 			return entry .. IRREGMARKER .. notes
 		else
 			return text
@@ -4532,9 +4498,9 @@ handle_overall_forms_and_overrides = function(args)
 			local cleaned_forms = {}
 			for _, form in ipairs(args[case]) do
 				local ru, tr = form[1], form[2]
-				ru = clean_irreg_marker(ru)
+				ru = clean_irreg_marker(case, ru)
 				if tr then
-					tr = clean_irreg_marker(tr)
+					tr = clean_irreg_marker(case, tr)
 				end
 				table.insert(cleaned_forms, {ru, tr})
 			end
@@ -4837,7 +4803,7 @@ local function template_postlude()
 end
 
 templates["full"] = template_prelude("45") .. [===[
-! style="width:10em;background:#d9ebff" | 
+! style="width:10em;background:#d9ebff" |
 ! style="background:#d9ebff" | singular
 ! style="background:#d9ebff" | plural
 |-
@@ -4867,7 +4833,7 @@ templates["full"] = template_prelude("45") .. [===[
 ]===] .. template_postlude()
 
 templates["full_a"] = template_prelude("50") .. [===[
-! style="width:15em;background:#d9ebff" | 
+! style="width:15em;background:#d9ebff" |
 ! style="background:#d9ebff" | singular
 ! style="background:#d9ebff" | plural
 |-
@@ -4900,7 +4866,7 @@ templates["full_a"] = template_prelude("50") .. [===[
 ]===] .. template_postlude()
 
 templates["full_af"] = template_prelude("50") .. [===[
-! style="width:15em;background:#d9ebff" | 
+! style="width:15em;background:#d9ebff" |
 ! style="background:#d9ebff" | singular
 ! style="background:#d9ebff" | plural
 |-
@@ -4932,7 +4898,7 @@ templates["full_af"] = template_prelude("50") .. [===[
 ]===] .. template_postlude()
 
 templates["half"] = template_prelude("30") .. [===[
-! style="width:10em;background:#d9ebff" | 
+! style="width:10em;background:#d9ebff" |
 ! style="background:#d9ebff" | {number}
 |-
 ! style="background:#eff7ff" | nominative
@@ -4955,7 +4921,7 @@ templates["half"] = template_prelude("30") .. [===[
 ]===] .. template_postlude()
 
 templates["half_a"] = template_prelude("35") .. [===[
-! style="width:15em;background:#d9ebff" | 
+! style="width:15em;background:#d9ebff" |
 ! style="background:#d9ebff" | {number}
 |-
 ! style="background:#eff7ff" | nominative
