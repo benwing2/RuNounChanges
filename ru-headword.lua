@@ -8,6 +8,7 @@ local m_links = require("Module:links")
 local m_headword = require("Module:headword")
 local m_utilities = require("Module:utilities")
 local m_table_tools = require("Module:table tools")
+local m_debug = require("Module:debug")
 
 local export = {}
 local pos_functions = {}
@@ -26,6 +27,11 @@ local function ine(x) return x ~= "" and x; end
 local function rsub(term, foo, bar)
 	local retval = rsubn(term, foo, bar)
 	return retval
+end
+
+local function track(page)
+	m_debug.track("ru-headword/" .. page)
+	return true
 end
 
 -- Clone parent's args while also assigning nil to empty strings.
@@ -75,6 +81,9 @@ function export.show(frame)
 	local i = 2
 
 	while head do
+		if rfind(head, " ") then
+			track("space-in-headword/" .. poscat)
+		end
 		if m_common.needs_accents(head) then
 			if not args.notrcat then
 				table.insert(categories, "Russian terms needing accents")
