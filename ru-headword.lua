@@ -71,7 +71,7 @@ function export.show(frame)
 	-- Get the head parameters
 	-- First get the 1st parameter. The remainder is named head2=, head3= etc.
 	local heads = {}
-	local head = args[1]
+	local head = args[1] or PAGENAME
 	local i = 2
 
 	while head do
@@ -86,52 +86,58 @@ function export.show(frame)
 		i = i + 1
 	end
 
-	if #heads == 0 and m_common.needs_accents(PAGENAME) then
-		table.insert(categories, "Russian terms needing accents")
-	end
+	-- Get transliteration(s)
+	local trs = {}
+	local i = 0
+	for _, head in ipairs(heads) do
+		head = m_links.remove_links(head)
+		local head_noaccents = rsub(head, "\204\129", "")
+		local tr_gen = mw.ustring.toNFC(lang:transliterate(head, nil))
+		local tr_gen_noaccents = mw.ustring.toNFC(lang:transliterate(head_noaccents, nil))
 
-	-- Get transliteration
-	local head = heads[1] and m_links.remove_links(heads[1]) or PAGENAME
-	local head_noaccents = rsub(head, "\204\129", "")
-	local tr_gen = mw.ustring.toNFC(lang:transliterate(head, nil))
-	local tr_gen_noaccents = mw.ustring.toNFC(lang:transliterate(head_noaccents, nil))
-
-	local tr = args.tr
-
-	if tr then
-		if not args.notrcat then
-			table.insert(categories, "Russian terms with irregular pronunciations")
+		i = i + 1
+		local tr
+		if i == 1 then
+			tr = args.tr
+		else
+			tr = args["tr" .. i]
 		end
-		local tr_fixed = tr
-		tr_fixed = rsub(tr_fixed, "ɛ", "e")
-		tr_fixed = rsub(tr_fixed, "([eoéó])v([oó])$", "%1g%2")
-		tr_fixed = rsub(tr_fixed, "([eoéó])v([oó][- ])", "%1g%2")
-		tr_fixed = mw.ustring.toNFC(tr_fixed)
 
-		if tr == tr_gen or tr == tr_gen_noaccents then
-			table.insert(tracking_categories, "ru headword with tr/redundant")
-		elseif tr_fixed == tr_gen then
-			table.insert(tracking_categories, "ru headword with tr/with manual adjustment")
-		elseif rfind(tr, ",") then
-			table.insert(tracking_categories, "ru headword with tr/comma")
-		elseif head_noaccents == PAGENAME then
+		if tr then
 			if not args.notrcat then
-				table.insert(tracking_categories, "ru headword with tr/headword is pagename")
+				table.insert(categories, "Russian terms with irregular pronunciations")
+			end
+			local tr_fixed = tr
+			tr_fixed = rsub(tr_fixed, "ɛ", "e")
+			tr_fixed = rsub(tr_fixed, "([eoéó])v([oó])$", "%1g%2")
+			tr_fixed = rsub(tr_fixed, "([eoéó])v([oó][- ])", "%1g%2")
+			tr_fixed = mw.ustring.toNFC(tr_fixed)
+
+			if tr == tr_gen or tr == tr_gen_noaccents then
+				table.insert(tracking_categories, "ru headword with tr/redundant")
+			elseif tr_fixed == tr_gen then
+				table.insert(tracking_categories, "ru headword with tr/with manual adjustment")
+			elseif rfind(tr, ",") then
+				table.insert(tracking_categories, "ru headword with tr/comma")
+			elseif head_noaccents == PAGENAME then
+				if not args.notrcat then
+					table.insert(tracking_categories, "ru headword with tr/headword is pagename")
+				end
+			else
+				table.insert(tracking_categories, "ru headword with tr/headword not pagename")
 			end
 		else
-			table.insert(tracking_categories, "ru headword with tr/headword not pagename")
+			tr = tr_gen
 		end
-	end
-
-	if not tr then
-		tr = tr_gen
+		
+		table.insert(trs, tr)
 	end
 
 	if pos_functions[poscat] then
 		pos_functions[poscat](args, heads, genders, inflections, categories)
 	end
 
-	return m_headword.full_headword(lang, nil, heads, tr, genders, inflections, categories, nil) ..
+	return m_headword.full_headword(lang, nil, heads, trs, genders, inflections, categories, nil) ..
 		m_utilities.format_categories(tracking_categories, lang, nil)
 end
 
@@ -141,6 +147,9 @@ local function noun_plus_or_multi(frame, multi)
 
 	local poscat = ine(frame.args[1]) or error("Part of speech has not been specified. Please pass parameter 1 to the module invocation.")
 	local old = ine(frame.args.old)
+	-- default value of n=, used in ru-proper noun+ where ndef=sg is set
+	local ndef = ine(frame.args.ndef)
+	args.ndef = args.ndef or ndef
 
 	local m_noun = require("Module:ru-noun")
 	if multi then
@@ -183,33 +192,40 @@ local function noun_plus_or_multi(frame, multi)
 		return newlist
 	end
 
+	local argsn = args.n or args.ndef
 	local heads, genitives, plurals
-	if args.n == "p" then
+	if argsn == "p" then
 		heads = remove_notes(args.nom_pl_linked)
 		genitives = remove_notes(args.gen_pl)
 		plurals = {{"-"}}
 	else
 		heads = remove_notes(args.nom_sg_linked)
 		genitives = remove_notes(args.gen_sg)
-		plurals = args.n == "s" and {{"-"}} or remove_notes(args.nom_pl)
+		plurals = argsn == "s" and {{"-"}} or remove_notes(args.nom_pl)
 	end
 
 	local feminines = process_arg_chain(args, "f", "f") -- do feminines
 	local masculines = process_arg_chain(args, "m", "m") -- do masculines
 
 	local trs = {}
+	local irregtr = false
 	for _, head in ipairs(heads) do
 		local ru, tr = head[1], head[2]
 		if not tr then
 			tr = lang:transliterate(m_links.remove_links(ru))
+		else
+			irregtr = true
 		end
 		table.insert(trs, tr)
 	end
-	heads = remove_tr(heads)
+	if irregtr and not args.notrcat then
+		table.insert(categories, "Russian terms with irregular pronunciations")
+	end
+heads = remove_tr(heads)
 	genitives = remove_tr(genitives)
 	plurals = remove_tr(plurals)
 
-	do_noun(genders, inflections, categories, args.n == "s",
+	do_noun(genders, inflections, categories, argsn == "s",
 		genitives, plurals, feminines, masculines)
 
 	return m_headword.full_headword(lang, nil, heads, trs, genders, inflections, categories, nil)
@@ -359,7 +375,7 @@ do_noun = function(genders, inflections, categories, no_plural,
 
 	-- Add the plural forms
 	-- If the noun is a plurale tantum, then ignore the 4th parameter altogether
-	if no_plural or genitives[1] == "-" then
+	if genitives[1] == "-" then
 		-- do nothing
 	elseif plural_genders[genders[1]] then
 		table.insert(inflections, {label = "[[Appendix:Glossary#plurale tantum|plurale tantum]]"})
@@ -431,7 +447,9 @@ pos_functions["adjectives"] = function(args, heads, genders, inflections, catego
 		local comp_parts = {label = "comparative"}
 
 		if comp == "peri" then
-			table.insert(comp_parts, "[[бо́лее]] " .. PAGENAME)
+			for _, head in ipairs(heads) do
+				table.insert(comp_parts, "[[бо́лее]] " .. head)
+			end
 		else
 			table.insert(comp_parts, comp)
 
@@ -463,7 +481,9 @@ pos_functions["adjectives"] = function(args, heads, genders, inflections, catego
 		local sup_parts = {label = "superlative"}
 
 		if sup == "peri" then
-			table.insert(sup_parts, "[[са́мый]] " .. PAGENAME)
+			for _, head in ipairs(heads) do
+				table.insert(sup_parts, "[[са́мый]] " .. head)
+			end
 		else
 			table.insert(sup_parts, sup)
 
