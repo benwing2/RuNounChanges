@@ -141,10 +141,10 @@
 			a specific declension type, as with regular nouns you need to
 			omit the ending from the lemma field and supply just the stem.
 			Possibilities are +ый, +ое, +ая, +ій, +ее, +яя, +ой, +о́е, +а́я,
-			+ьій, +ье, +ья, +-short or +#-short (masc), +о-short,
-			+о-stressed-short or +о́-short, +а-short, +а-stressed-short or
-			+а́-short, and similar for -mixed and -proper (except there aren't
-			any stressed mixed declensions).
+			+ьій, +ье, +ья, +$ (invariable but transliterated adjectivally),
+			+-short or +#-short (masc), +о-short, +о-stressed-short or +о́-short
+			+а-short, +а-stressed-short or +а́-short, and similar for -mixed
+			and -proper (except there aren't any stressed mixed declensions).
 		DECLTYPE/DECLTYPE is used for nouns with one declension in the
 			singular and a different one in the plural, for cases that
 			PLVARIANT and special case (1) below don't cover.
@@ -1048,7 +1048,17 @@ local function compute_overall_heading_categories_and_genders(args)
 		insert_category(categories, "irregular ~", args.pos)
 	end
 	for _, case in ipairs(overridable_cases) do
-		if args.any_irreg_case[case] then
+		local is_pl = rfind(case, "_pl")
+		if args.n == "s" and is_pl or args.n == "p" and not is_pl then
+			-- Don't create singular categories when plural-only or vice-versa
+		elseif (case == "loc" or case == "voc" or case == "par") then
+			if args.any_overridden[case] then
+				local engcase = rsub(case, "^([a-z]*)", {
+					par="partitive", loc="locative", voc="vocative"
+				})
+				insert_category(categories, "~ with " .. engcase, args.pos)
+			end
+		elseif args.any_irreg_case[case] then
 			local engcase = rsub(case, "^([a-z]*)", {
 				nom="nominative", gen="genitive", dat="dative",
 				acc="accusative", ins="instrumental", pre="prepositional",
@@ -1060,12 +1070,6 @@ local function compute_overall_heading_categories_and_genders(args)
 				--_an=" animate", _in=" inanimate"
 			})
 			insert_category(categories, "~ with irregular " .. engcase, args.pos)
-		elseif (case == "loc" or case == "voc" or case == "par") and
-			args.any_overridden[case] then
-			engcase = rsub(case, "^([a-z]*)", {
-				par="partitive", loc="locative", voc="vocative"
-			})
-			insert_category(categories, "~ with " .. engcase, args.pos)
 		end
 	end
 	local heading = args.manual and "" or "(<span style=\"font-size: smaller;\">[[Appendix:Russian nouns#Declension tables|" .. table.concat(headings, " ") .. "]]</span>)"
@@ -1264,6 +1268,7 @@ function export.do_generate_forms_multi(args, old)
 	--      *, left paren or semicolon),
 	--   LEMMA^DECL (for a noun with non-empty decl spec),
 	--   LEMMA$ (for an invariable word)
+	--   LEMMA+$ (for an invariable adjectival word, i.e. -го transliterated as -vo)
 	--   LEMMA+ (for an adjective with auto-detected decl class)
 	--   LEMMA+DECL (for an adjective with explicit decl class)
 	-- Sets of parameters for the same word are separated by the word "or".
@@ -1315,17 +1320,17 @@ function export.do_generate_forms_multi(args, old)
 				arg_set[2] = vals[1]
 				arg_set[4] = vals[2]
 			end
-			-- recognize adjective
-			local adj_stem, adj_type = rmatch(arg_set[2], "^(.*)(%+.*)$")
-			if adj_stem then
-				arg_set[2] = adj_stem
-				arg_set[3] = adj_type
+			-- recognize invariable
+			local inv_stem, inv_type = rmatch(arg_set[2], "^(.-)(%+?%$)$")
+			if inv_stem then
+				arg_set[2] = inv_stem
+				arg_set[3] = inv_type
 			else
-				-- recognize invariable
-				local inv_stem = rmatch(arg_set[2], "^(.*)%$$")
-				if inv_stem then
-					arg_set[2] = inv_stem
-					arg_set[3] = "$"
+				-- recognize adjective
+				local adj_stem, adj_type = rmatch(arg_set[2], "^(.*)(%+.*)$")
+				if adj_stem then
+					arg_set[2] = adj_stem
+					arg_set[3] = adj_type
 				else
 					-- recognize noun with ^
 					local noun_stem, noun_type = rmatch(arg_set[2], "^(.*)%^(.*)$")
@@ -1513,6 +1518,10 @@ generate_forms_1 = function(args, per_word_info)
 		args.orig_lemma = lemma
 		lemma = m_links.remove_links(lemma)
 		args.lemma_no_links = lemma
+		if decl == "+$" then
+			lemmatr = lemmatr or com.decompose(m_ru_translit.tr_adj(lemma))
+			decl = "$"
+		end
 		args.lemmatr = lemmatr
 
 		-- Convert lemma and decl arg into stem and canonicalized decl.
