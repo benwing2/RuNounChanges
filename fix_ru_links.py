@@ -29,20 +29,6 @@ def process_page(index, page, save, verbose):
 
   subbed_links = []
 
-  def sub_one_part_link(m):
-    subbed_links.append("[[%s]]" % m.group(1))
-    return "{{l|ru|%s}}" % m.group(1)
-
-  def sub_two_part_link(m):
-    subbed_links.append("[[%s|%s]]" % m.groups())
-    page, accented = m.groups()
-    page = re.sub("#Russian$", "", page)
-    if ru.remove_accents(accented) == page:
-      return "{{l|ru|%s}}" % accented
-    else:
-      pagemsg("WARNING: Russian page %s doesn't match accented %s" % (page, accented))
-      return "{{l|ru|%s|%s}}" % (page, accented)
-
   # Split off templates or tables, in each case allowing one nested template
   template_table_split_re = r"(\{\{(?:[^{}]|\{\{[^{}]*\}\})*\}\}|\{\|(?:[^{}]|\{\{[^{}]*\}\})*\|\})"
   foundrussian = False
@@ -61,6 +47,23 @@ def process_page(index, page, save, verbose):
         subsectitle = m.group(1)
         if subsectitle in ["Etymology", "Pronunciation"]:
           continue
+
+        def sub_one_part_link(m):
+          subbed_links.append("[[%s]]" % m.group(1))
+          template = subsectitle == "Usage notes" and "m" or "l"
+          return "{{%s|ru|%s}}" % (template, m.group(1))
+
+        def sub_two_part_link(m):
+          subbed_links.append("[[%s|%s]]" % m.groups())
+          template = subsectitle == "Usage notes" and "m" or "l"
+          page, accented = m.groups()
+          page = re.sub("#Russian$", "", page)
+          if ru.remove_accents(accented) == page:
+            return "{{%s|ru|%s}}" % (template, accented)
+          else:
+            pagemsg("WARNING: Russian page %s doesn't match accented %s" % (page, accented))
+            return "{{%s|ru|%s|%s}}" % (template, page, accented)
+
         # Split templates, then rejoin text involving templates that don't
         # have newlines in them
         split_templates = re.split(template_table_split_re, subsections[k], 0, re.S)
@@ -116,7 +119,7 @@ def process_page(index, page, save, verbose):
     if verbose:
       pagemsg("Replacing [[%s]] with [[%s]]" % (text, newtext))
 
-    comment = "Replace raw links with {{l|ru|...}} links: %s" % ",".join(subbed_links)
+    comment = "Replace raw links with templated links: %s" % ",".join(subbed_links)
     if save:
       pagemsg("Saving with comment = %s" % comment)
       page.text = newtext
