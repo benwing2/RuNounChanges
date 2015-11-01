@@ -86,12 +86,14 @@
 			GENDER
 			-VARIANT
 			GENDER-VARIANT
+			$
 			DECLTYPE
 			DECLTYPE/DECLTYPE
 			(also, can append various special-case markers to any of the above)
 		Or one of the following for adjectival nouns:
 			+
 			+ь
+			+$
 			+short, +mixed or +proper
 			+DECLTYPE
 		GENDER if present is m, f, n or 3f; for regular nouns, required if the
@@ -112,6 +114,11 @@
 			used for *animate* augmentative masculine neuter-form nouns in
 			-ище). Variants -ишко and -ище must be given with with special
 			case (1).
+		$ and +$ are for invariable nouns. They are principally useful in
+			multiword expressions where some of the words are invariable.
+			The only difference between the two is that +$ is for adjectival
+			nouns in the genitive case, and will transliterate the ending
+			-го(ся) as -vo(sja).
 		DECLTYPE is an explicit declension type. Normally you shouldn't use
 			this, and should instead let the declension type be autodetected
 			based on the ending, supplying the appropriate hint if needed
@@ -168,17 +175,23 @@ TODO:
    -- Handling default lemma: With multiple words, we should probably split
       the page name on spaces and default each word in turn [NOT DONE, MAY
       NOT DO]
-2. FIXME: Test that omitting a manual form leaves the form as a big dash.
-2a. FIXME: Test that omitting a manual form in ru-adjective leaves the form as
-   a big dash.
-2b. FIXME: For -ишко diminutives and -ище augmentatives, should add an
+2a. FIXME: For -ишко diminutives and -ище augmentatives, should add an
    appropriate category of some sort (currently marked by colloqfem= in
    category).
-2c. FIXME: Adding a note to dat_sg also adds it to loc_sg when it exists;
+2b. FIXME: Adding a note to dat_sg also adds it to loc_sg when it exists;
    seems wrong. See луг.
-2d. FIXME: When you have both d' and f in feminines and you use sgtail=*,
+2c. FIXME: When you have both d' and f in feminines and you use sgtail=*,
    you get two *'s. See User:Benwing2/test-ru-noun-debug.
-3b. [FIXME: Consider adding an indicator in the header line when the ё/e
+3. ADJECTIVE FIXMES:
+3a. FIXME: Change calls to ru-adj11 to use the new proper name support in
+   ru-adjective.
+3b. FIXME: Test that omitting a manual form in ru-adjective leaves the form as
+   a big dash.
+3c. FIXME: какой-либо and какой-то display genitives with translit -go
+   instead of -vo. To fix this properly requires implementing real
+   manual translit for adjectives.
+3d. FIXME: Implement real manual translit for adjectives.
+5. [FIXME: Consider adding an indicator in the header line when the ё/e
    alternation occurs. This is a bit tricky to calculate: If special case
    ;ё is given, but also if ё occurs in the stem and the accent pattern is
    as follows -- for sg-only, b' d' f' f'', also b d f if the noun is masc
@@ -201,8 +214,7 @@ TODO:
    unless perhaps the stem ends in the same way). It'd probably not
    possible to do this in a 100% foolproof way but can be "good enough" for
    nearly all circumstances.] [MIGHT BE TOO MUCH WORK]
-4. FIXME: Change calls to ru-adj11 to use the new proper name support in
-   ru-adjective.
+6. HEADWORD FIXMES:
 6a. FIXME: In ru-headword, create a category for words whose gender doesn't
    match the form. (This is easy to do for ru-noun+ but harder for ru-noun.
    We would need to do limited autodetection of the ending: for singulars,
@@ -211,6 +223,8 @@ TODO:
    be masculine or feminine, -а/я should be neuter except that -ія can be
    feminine or neuter due to old-style adjectival pluralia tantum nouns,
    anything else can be any gender.)
+6b. FIXME: Recognize invariable nouns and indicate as indeclinable. Probably
+   should work by checking the case forms to see if they're the same.
 9. FIXME: Change stress-pattern detection and overriding to happen inside of
    looping over the two parts of a slash decl. Requires that the loop over
    the two parts happen outside of the loop over stress patterns. Requires
