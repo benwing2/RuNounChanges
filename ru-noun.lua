@@ -2040,6 +2040,20 @@ function export.generate_form(frame)
 	end
 end
 
+-- The entry point for generating arguments of various sorts, including
+-- the case forms, gender, number and animacy.
+function export.generate_args(frame)
+	local args = clone_args(frame)
+	args = export.do_generate_forms(args, false)
+	local case_forms = concat_case_args(args)
+	local retargs = {}
+	table.insert(retargs, concat_case_args(args))
+	table.insert(retargs, "g=" .. table.concat(args.genders, ","))
+	table.insert(retargs, "a=" .. (args.n or "b"))
+	table.insert(retargs, "n=" .. (args.a or "a"))
+	return table.concat(retargs, "|")
+end
+
 -- The entry point for compatibility with {{ru-decl-noun-z}}.
 function export.show_z(frame)
 	local args = clone_args(frame)
