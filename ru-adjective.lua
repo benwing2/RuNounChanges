@@ -1683,6 +1683,7 @@ local function show_form(args, case)
 		local trx = lang:transliterate(m_links.remove_links(entry))
 		if case == "gen_m" then
 			trx = rsub(trx, "([aoeáóé]́?)go$", "%1vo")
+			trx = rsub(trx, "([aoeáóé]́?)gosja$", "%1vosja")
 		end
 		ut.insert_if_not(tr_vals, trx .. notes)
 	end
