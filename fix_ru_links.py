@@ -43,6 +43,8 @@ def process_page(index, page, save, verbose):
       pagemsg("WARNING: Russian page %s doesn't match accented %s" % (page, accented))
       return "{{l|ru|%s|%s}}" % (page, accented)
 
+  # Split off templates or tables, in each case allowing one nested template
+  template_table_split_re = r"(\{\{(?:[^{}]|\{\{[^{}]*\}\})*\}\}|\{\|(?:[^{}]|\{\{[^{}]*\}\})*\|\})"
   foundrussian = False
   sections = re.split("(^==[^=]*==\n)", text, 0, re.M)
   newtext = text
@@ -61,7 +63,7 @@ def process_page(index, page, save, verbose):
           continue
         # Split templates, then rejoin text involving templates that don't
         # have newlines in them
-        split_templates = re.split(r"(\{\{(?:[^{}]|\{\{[^{}]*\}\})*\}\})", subsections[k], 0, re.S)
+        split_templates = re.split(template_table_split_re, subsections[k], 0, re.S)
         for l in xrange(0, len(split_templates), 2):
           if "{" in split_templates[l] or "}" in split_templates[l]:
             pagemsg("WARNING: Stray brace in split_templates[%s]: Skipping page: [[%s]]" % (l, split_templates[l].replace("\n", r"\n")))
@@ -88,7 +90,7 @@ def process_page(index, page, save, verbose):
             #if verbose:
             #  pagemsg("Processing line: %s" % line)
             if line.startswith("*"):
-              split_line = re.split(r"(\{\{(?:[^{}]|\{\{[^{}]*\}\})*\}\})", line, 0, re.S)
+              split_line = re.split(template_table_split_re, line, 0, re.S)
               for ll in xrange(0, len(split_line), 2):
                 subline = split_line[ll]
                 subline = re.sub(r"\[\[([^A-Za-z\[\]|]*)\]\]", sub_one_part_link, subline)
