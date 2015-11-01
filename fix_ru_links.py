@@ -55,6 +55,10 @@ def process_page(index, page, save, verbose):
         # Split templates, then rejoin text involving templates that don't
         # have newlines in them
         split_templates = re.split(r"(\{\{(?:[^{}]|\{\{[^{}]*\}\})*\}\})", subsections[k], 0, re.S)
+        for l in xrange(0, len(split_templates), 2):
+          if "{" in split_templates[l] or "}" in split_templates[l]:
+            pagemsg("WARNING: Stray brace in split_templates[%s]: Skipping page: [[%s]]" % (l, split_templates[l].replace("\n", r"\n")))
+            return
         # Add an extra newline to first item so we can consistently check
         # below for lines beginning with *, rather than * directly after
         # a template; will remove the newline later
@@ -66,15 +70,16 @@ def process_page(index, page, save, verbose):
           else:
             split_text[-1] += split_templates[l] + split_templates[l+1]
 
+        #if verbose:
+        #  pagemsg("Processing split_text: %s" % split_text)
         # Split on newlines and look for lines beginning with *. Then
         # split on templates and look for links without Latin in them.
         for kk in xrange(0, len(split_text), 2):
           lines = re.split(r"(\n)", split_text[kk])
-          for l in xrange(1, len(lines), 2):
+          for l in xrange(0, len(lines), 2):
             line = lines[l]
-            if "{" in line or "}" in line:
-              pagemsg("WARNING: Stray brace in line %s: Skipping page" % line)
-              return
+            #if verbose:
+            #  pagemsg("Processing line: %s" % line)
             if line.startswith("*"):
               split_line = re.split(r"(\{\{(?:[^{}]|\{\{[^{}]*\}\})*\}\})", line, 0, re.S)
               for ll in xrange(0, len(split_line), 2):
