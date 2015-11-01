@@ -10,6 +10,8 @@
 #    with this removed (i.e. not plural). To check this we need to expand
 #    the result with n=sg removed and with ndef=sg and see what the gender is
 #    (it should be sg then).
+# 3. When checking gender mismatch, if there's animacy mismatch, punt and
+#    issue warning rather than allowing it.
 
 import pywikibot, re, sys, codecs, argparse
 
