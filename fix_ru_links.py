@@ -21,20 +21,27 @@ def process_page(index, page, save, verbose):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
-  def sub_two_part_link(m):
-    page, accented = m.groups()
-    page = re.sub("#Russian$", "", page)
-    if ru.remove_links(accented) == page:
-      return "{{l|ru|%s}}" % accented
-    else:
-      pagemsg("WARNING: Russian page %s doesn't match accented %s" % (page, accented))
-      return "{{l|ru|%s|%s}}" % (page, accented)
-
   if not page.exists():
     pagemsg("WARNING: Page doesn't exist")
     return
 
   text = unicode(page.text)
+
+  subbed_links = []
+
+  def sub_one_part_link(m):
+    subbed_links.append("[[%s]]" % m.group(1))
+    return "{{l|ru|%s}}" % m.group(1)
+
+  def sub_two_part_link(m):
+    subbed_links.append("[[%s|%s]]" % m.groups())
+    page, accented = m.groups()
+    page = re.sub("#Russian$", "", page)
+    if ru.remove_accents(accented) == page:
+      return "{{l|ru|%s}}" % accented
+    else:
+      pagemsg("WARNING: Russian page %s doesn't match accented %s" % (page, accented))
+      return "{{l|ru|%s|%s}}" % (page, accented)
 
   foundrussian = False
   sections = re.split("(^==[^=]*==\n)", text, 0, re.M)
@@ -83,7 +90,8 @@ def process_page(index, page, save, verbose):
             if line.startswith("*"):
               split_line = re.split(r"(\{\{(?:[^{}]|\{\{[^{}]*\}\})*\}\})", line, 0, re.S)
               for ll in xrange(0, len(split_line), 2):
-                subline = re.sub(r"\[\[([^A-Za-z\[\]|]*)\]\]", r"{{l|ru|\1}}", split_line[ll])
+                subline = split_line[ll]
+                subline = re.sub(r"\[\[([^A-Za-z\[\]|]*)\]\]", sub_one_part_link, subline)
                 subline = re.sub(r"\[\[([^A-Za-z\[\]|]*)\|([^A-Za-z\[\]|]*)\]\]", sub_two_part_link, subline)
                 subline = re.sub(r"\[\[([^A-Za-z\[\]|]*)#Russian\|([^A-Za-z\[\]|]*)\]\]", sub_two_part_link, subline)
                 if subline != split_line[ll]:
@@ -92,7 +100,9 @@ def process_page(index, page, save, verbose):
                   lines[l] = "".join(split_line)
                   split_text[kk] = "".join(lines)
                   # Strip off the newline we added at the beginning
-                  subsections[k] = ("".join(split_text))[1:]
+                  subsections[k] = "".join(split_text)
+                  assert subsections[k][0] == "\n"
+                  subsections[k] = subsections[k][1:]
                   sections[j] = "".join(subsections)
                   newtext = "".join(sections)
 
@@ -104,7 +114,7 @@ def process_page(index, page, save, verbose):
     if verbose:
       pagemsg("Replacing [[%s]] with [[%s]]" % (text, newtext))
 
-    comment = "Replace raw links with {{l|ru|...}} links"
+    comment = "Replace raw links with {{l|ru|...}} links: %s" % ",".join(subbed_links)
     if save:
       pagemsg("Saving with comment = %s" % comment)
       page.text = newtext
