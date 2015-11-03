@@ -8,12 +8,6 @@
 		2: declension type (usually omitted to autodetect based on the lemma),
 		   along with any short accent type and optional irregular short stem;
 		   see below.
-		3 or short_m: masculine singular short form (if exists); normally,
-		   don't use this or args 4/5/6, but instead specify a short accent
-		   type in arg 2, and use this only for irregular forms
-		4 or short_n: neuter singular short form (if exists)
-		5 or short_f: feminine singular short form (if exists)
-		6 or short_p: plural short form (if exists)
 		CASE_NUMGEN: Override a given form; see abbreviations below
 		suffix: any suffix to attach unchanged to the end of each form
 		notes: Notes to add to the end of the table
@@ -184,17 +178,14 @@ table.insert(old_long_cases, "nom_mp")
 
 -- Short cases and corresponding numbered arguments
 local short_cases = {
-	["short_m"] = 3,
-	["short_n"] = 4,
-	["short_f"] = 5,
-	["short_p"] = 6,
+	"short_m", "short_n", "short_f", "short_p"
 }
 
 -- Combine long and short cases
 local cases = mw.clone(long_cases)
 local old_cases = mw.clone(old_long_cases)
 
-for case, _ in pairs(short_cases) do
+for _, case in ipairs(short_cases) do
 	table.insert(cases, case)
 	table.insert(old_cases, case)
 end
@@ -225,6 +216,10 @@ function export.do_generate_forms(args, old, manual)
 		orig_args = mw.clone(args)
 	end
 
+	if args[3] or args[4] or args[5] or args[6] then
+		error("Numbered short forms no longer supported")
+	end
+	
     local SUBPAGENAME = mw.title.getCurrentTitle().subpageText
 	args.forms = {}
 	old = old or args.old
@@ -311,8 +306,7 @@ function export.do_generate_forms(args, old, manual)
 			if short_accent or short_stem then
 				error("Cannot specify short accent or short stem with declension type " .. decl_type .. ", as short forms aren't allowed")
 			end
-			if args[3] or args[4] or args[5] or args[6] or args.short_m or
-				args.short_f or args.short_n or args.short_p then
+			if args.short_m or args.short_f or args.short_n or args.short_p then
 				error("Cannot specify explicit short forms with declension type " .. decl_type .. ", as short forms aren't allowed")
 			end
 		end
@@ -510,8 +504,7 @@ tracking_code = function(decl_class, args, orig_short_accent, short_accent,
 		end
 	end
 	dotrack("")
-	if args[3] or args[4] or args[5] or args[6] or args.short_m or
-		args.short_f or args.short_n or args.short_p then
+	if args.short_m or args.short_f or args.short_n or args.short_p then
 		dotrack("short")
 	end
 	if orig_short_accent then
@@ -605,10 +598,10 @@ categorize = function(decl_type, args, orig_short_accent, short_accent,
 
 	local short_forms_allowed = ut.contains({"ый", "ой", "ій", "ий"})
 	if short_forms_allowed then
-		local override_m = args.short_m or args[3]
-		local override_f = args.short_f or args[5]
-		local override_n = args.short_n or args[4]
-		local override_p = args.short_p or args[6]
+		local override_m = args.short_m
+		local override_f = args.short_f
+		local override_n = args.short_n
+		local override_p = args.short_p
 		local has_short = short_accent or override_m or override_f or
 			override_n or override_p
 		local missing_short = override_m == "-" or
@@ -917,7 +910,7 @@ construct_bare_and_short_stem = function(args, short_accent, short_stem,
 
 	-- Construct bare form, used for short masculine; but use explicitly
 	-- given form if present.
-	local bare = args.short_m or args[3]
+	local bare = args.short_m
 	if not bare then
 		if reducible then
 			bare = dereduce_stem(short_stem, short_accent, old, decl)
@@ -954,10 +947,10 @@ end
 -- Deduce the short accent pattern given short masc, fem, neut and plural.
 -- Each value should be a list of strings.
 deduce_short_accent = function(args)
-	local masc = canonicalize_override(args, "short_m") or canonicalize_override(args, short_cases.short_m)
-	local fem = canonicalize_override(args, "short_f") or canonicalize_override(args, short_cases.short_f)
-	local neut = canonicalize_override(args, "short_n") or canonicalize_override(args, short_cases.short_n)
-	local pl = canonicalize_override(args, "short_p") or canonicalize_override(args, short_cases.short_p)
+	local masc = canonicalize_override(args, "short_m")
+	local fem = canonicalize_override(args, "short_f")
+	local neut = canonicalize_override(args, "short_n")
+	local pl = canonicalize_override(args, "short_p")
 
 	local function convert_to_plus_minus(list)
 		if not list then return "missing" end
@@ -1578,7 +1571,7 @@ handle_forms_and_overrides = function(args, short_forms_allowed)
 		end
 		args[case] = canonicalize_override(args, case) or args.forms[case]
 	end
-	for case, argnum in pairs(short_cases) do
+	for _, case in ipairs(short_cases) do
 		if short_forms_allowed then
 			if args.forms[case] then
 				local lastarg = #(args.forms[case])
@@ -1592,7 +1585,7 @@ handle_forms_and_overrides = function(args, short_forms_allowed)
 					args.forms[case][lastarg] = args.forms[case][lastarg] .. args.shorttail
 				end
 			end
-			args[case] = canonicalize_override(args, case) or canonicalize_override(args, argnum) or args.forms[case]
+			args[case] = canonicalize_override(args, case) or args.forms[case]
 		else
 			args[case] = nil
 		end
