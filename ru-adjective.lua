@@ -340,7 +340,7 @@ function export.do_generate_forms(args, old, manual)
 		tracking_code(decl_type, args, orig_short_accent, short_accent,
 			short_stem, short_forms_allowed)
 		if not manual and enable_categories then
-			categorize(decl_type, args, orig_short_accent, short_stem,
+			categorize(decl_type, args, orig_short_accent, short_accent,
 				short_stem)
 		end
 
