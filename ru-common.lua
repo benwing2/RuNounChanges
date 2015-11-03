@@ -1,5 +1,5 @@
 --[[
-This module holds some commonly used functions for Russian language.
+This module holds some commonly used functions for the Russian language.
 It's generally for use from other modules, not #invoke, although it can
 be invoked from a template using export.main().
 

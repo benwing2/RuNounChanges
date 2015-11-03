@@ -81,12 +81,19 @@ TODO:
    (1)?
 4. In the case of a non-dereducible short masc sing of stress type b, we don't
    currently move the stress to the last syllable. Should we?
+5. FIXME: In construct_bare_and_short_stem(), we start off BARE as the same
+   as args.short_m. This is problematic because there may be multiple values
+   and/or a note, etc. We need to call canonicalize_override() and maybe
+   take the first one? Ideally we should use all of them if more than one.
+6. FIXME: In decline(), we used to default acc_n to nom_n. Now we do that in
+   handle_forms_and_overrides(). Verify that this is more correct.
 ]=]--
 
 local m_utilities = require("Module:utilities")
 local ut = require("Module:utils")
 local m_links = require("Module:links")
 local com = require("Module:ru-common")
+local nom = require("Module:ru-nominal")
 local strutils = require("Module:string utilities")
 local m_table_tools = require("Module:table tools")
 local m_debug = require("Module:debug")
@@ -203,6 +210,7 @@ local decline
 local canonicalize_override
 local handle_forms_and_overrides
 local decline_short
+local make_table
 
 --------------------------------------------------------------------------
 --                               Main code                              --
@@ -227,7 +235,7 @@ function export.do_generate_forms(args, old, manual)
 	args.forms = {}
 	old = old or args.old
 	args.old = old
-	args.suffix = args.suffix or ""
+	args.suffix = nom.split_russian_tr(args.suffix or "", "dopair")
 	args.internal_notes = {}
 	-- Superscript footnote marker at beginning of note, similarly to what's
 	-- done at end of forms.
@@ -240,15 +248,19 @@ function export.do_generate_forms(args, old, manual)
 	manual = manual or args[2] == "manual"
 	local decl_types = manual and "$" or args[2] or ""
 	for _, decl_type in ipairs(rsplit(decl_types, ",")) do
-		local lemma = manual and "-" or args[1] or SUBPAGENAME
+		local lemma, lemmatr = nom.split_russian_tr(
+			manual and "-" or args[1] or SUBPAGENAME)
 
 		-- Auto-detect actual decl type, and get short accent and overriding
 		-- short stem, if specified.
-		local stem, short_accent, short_stem
-		stem, decl_type, short_accent, short_stem =
-			detect_stem_and_accent_type(lemma, decl_type)
+		local stem, stemtr, short_accent, short_stem, short_stemtr
+		stem, stemtr, decl_type, short_accent, short_stem =
+			detect_stem_and_accent_type(lemma, lemmatr, decl_type)
 		if rfind(decl_type, "^[іи]й$") and rfind(stem, "[" .. com.velar .. com.sib .. "]$") then
 			decl_type = "ый"
+		end
+		if short_stem then
+			short_stem, short_stemtr = nom.split_russian_tr(short_stem)
 		end
 
 		stem, args.allow_unaccented = rsubb(stem, "^%*", "")
@@ -288,12 +300,16 @@ function export.do_generate_forms(args, old, manual)
 		-- a square, which is glossed p. 69 to something I don't understand,
 		-- but may be saying that the masculine singular short form is
 		-- missing. If this is regular, we need to implement it.
-		args.stem = stem
-		args.ustem = com.make_unstressed_once(stem)
-		local accented_stem = stem
+		args.stem, args.stemtr = stem, stemtr
+		args.ustem, args.ustemtr = com.make_unstressed_once(stem, stemtr)
+		local accented_stem, accented_stemtr = stem, stemtr
 		if not args.allow_unaccented then
+			if accented_stemtr and com.is_unstressed(accented_stem) ~= com.is_unstressed(accented_stemtr) then
+				error("Stem " .. accented_stem .. " and translit " .. accented_stemtr .. " must have same accent pattern")
+			end
 			if com.is_unstressed(accented_stem) then
-				accented_stem = com.make_ending_stressed(accented_stem)
+				accented_stem, accented_stemtr =
+					com.make_ending_stressed(accented_stem, accented_stemtr)
 			end
 		end
 
@@ -317,7 +333,8 @@ function export.do_generate_forms(args, old, manual)
 		local orig_short_accent = short_accent
 		local short_decl_type
 		short_accent, short_decl_type = construct_bare_and_short_stem(args,
-			short_accent, short_stem, accented_stem, old, decl_type)
+			short_accent, short_stem, short_stemtr, accented_stem,
+			accented_stemtr, old, decl_type)
 
 		args.categories = {}
 
@@ -451,10 +468,16 @@ end
 local function get_form(forms)
 	local canon_forms = {}
 	for _, form in ipairs(forms) do
-		local entry, notes = m_table_tools.get_notes(form)
-		ut.insert_if_not(canon_forms, m_links.remove_links(entry))
+		local ru, tr = form[1], form[2]
+		local ruentry, runotes = m_table_tools.get_notes(ru)
+		local trentry, trnotes
+		if tr then
+			trentry, trnotes = m_table_tools.get_notes(tr)
+		end
+		ruentry = m_links.remove_links(ruentry)
+		ut.insert_if_not(canon_forms, {ruentry, trentry})
 	end
-	return table.concat(canon_forms, ",")
+	return nom.concat_forms(canon_forms)
 end
 
 -- The entry point for 'ru-adj-forms' to generate all adjective forms.
@@ -734,11 +757,13 @@ end
 -- Attempt to detect the type of the lemma based on its ending, separating
 -- off the base and the ending; also extract the accent type for short
 -- adjectives and optional short stem. DECL is the value passed in, and
--- might already specify the ending. Return four values: STEM, DECL,
+-- might already specify the ending. Return five values: STEM, STEMTR, DECL,
 -- SHORT_ACCENT (accent class of short adjective, or nil for no short
 -- adjectives other than specified through overrides), SHORT_STEM (special
--- stem of short adjective, nil if same as long stem).
-detect_stem_and_accent_type = function(lemma, decl)
+-- stem of short adjective, nil if same as long stem). The return value of
+-- SHORT_STEM is taken directly from the argument and will include any
+-- manual translit.
+detect_stem_and_accent_type = function(lemma, tr, decl)
 	if rfind(decl, "^[abc*(]") then
 		decl = ":" .. decl
 	end
@@ -767,7 +792,7 @@ detect_stem_and_accent_type = function(lemma, decl)
 			end
 			-- -ий/-ій will be converted to -ый after velars and sibilants
 			-- by the caller
-			return base, com.make_unstressed(ending), short_accent, short_stem
+			return base, nom.strip_tr_ending(tr, ending), com.make_unstressed(ending), short_accent, short_stem
 		else
 			-- It appears that short, mixed and proper adjectives are always
 			-- either of the -ов/ев/ёв or -ин/ын types. The former type is
@@ -780,7 +805,7 @@ detect_stem_and_accent_type = function(lemma, decl)
 			-- NOTE: Following regexp is accented
 			base = rmatch(lemma, "^([" .. com.uppercase .. "].*[иы]́н)ъ?$")
 			if base then
-				return base, "stressed-proper", short_accent, short_stem
+				return base, tr, "stressed-proper", short_accent, short_stem
 			end
 			base = rmatch(lemma, "^([" .. com.uppercase .. "].*[еёо]́?в)ъ?$")
 			if not base then
@@ -788,30 +813,30 @@ detect_stem_and_accent_type = function(lemma, decl)
 				base = rmatch(lemma, "^([" .. com.uppercase .. "].*[иы]н)ъ?$")
 			end
 			if base then
-				return base, "proper", short_accent, short_stem
+				return base, tr, "proper", short_accent, short_stem
 			end
 			base = rmatch(lemma, "^(.*[еёо]́?в)ъ?$")
 			if base then
-				return base, "short", short_accent, short_stem
+				return base, tr, "short", short_accent, short_stem
 			end
 			base = rmatch(lemma, "(.*[иы]́н)ъ?$") --accented
 			if base then
-				return base, "stressed-short", short_accent, short_stem
+				return base, tr, "stressed-short", short_accent, short_stem
 			end
 			base = rmatch(lemma, "(.*[иы]н)ъ?$") --unaccented
 			if base then
-				return base, "mixed", short_accent, short_stem
+				return base, tr, "mixed", short_accent, short_stem
 				-- error("With -ин/ын adjectives, must specify 'short' or 'mixed':" .. lemma)
 			end
 			error("Cannot determine stem type of adjective: " .. lemma)
 		end
 	elseif ut.contains({"short", "stressed-short", "mixed", "proper",
 		"stressed-proper"}, decl) then
-		local base, ending = rmatch(lemma, "^(.-)ъ?$")
+		local base = rmatch(lemma, "^(.-)ъ?$")
 		assert(base)
-		return base, decl, short_accent, short_stem
+		return base, tr, decl, short_accent, short_stem
 	else
-		return lemma, decl, short_accent, short_stem
+		return lemma, tr, decl, short_accent, short_stem
 	end
 end
 
@@ -820,35 +845,35 @@ end
 -- because we don't actually attach such a suffix in attach_unstressed() due
 -- to situations where we don't want the suffix added, e.g. бескра́йний with
 -- dereduced nom sg бескра́ен without expected -ь.
-local function add_bare_suffix(bare, old, decl, dereduced)
+local function add_bare_suffix(bare, baretr, old, decl, dereduced)
 	if old and decl ~= "ій" then
-		return bare .. "ъ"
+		return bare .. "ъ", baretr
 	elseif decl == "ий" or decl == "ій" then
 		-- This next special case is mentioned in Zaliznyak's 1980 grammatical
 		-- dictionary for adjectives (footnote, p. 60).
 		if dereduced and rfind(bare, "[нН]$") then
 			-- FIXME: What happens in this case old-style? I assume that
 			-- -ъ is added, but this is a guess.
-			return bare .. (old and "ъ" or "")
+			return bare .. (old and "ъ" or ""), baretr
 		elseif rfind(bare, "[" .. com.vowel .. "]́?$") then
 			-- This happens with adjectives like длинноше́ий, short masculine
 			-- singular длинноше́й.
-			return bare .. "й"
+			return bare .. "й", baretr and baretr .. "j" or nil
 		else
-			return bare .. "ь"
+			return bare .. "ь", baretr and baretr .. "ʹ" or nil
 		end
 	else
-		return bare
+		return bare, baretr
 	end
 end
 
 -- Construct bare form. Return nil if unable.
-local function dereduce_stem(accented_stem, short_accent, old, decl)
-	local ret = com.dereduce_stem(accented_stem, nil, rfind(short_accent, "^b"))
+local function dereduce_stem(accented_stem, accented_stemtr, short_accent, old, decl)
+	local ret, rettr = com.dereduce_stem(accented_stem, accented_stemtr, rfind(short_accent, "^b"))
 	if not ret then
 		return nil
 	end
-	return add_bare_suffix(ret, old, decl, true)
+	return add_bare_suffix(ret, rettr, old, decl, true)
 end
 
 -- Construct and set bare and short form in args, and canonicalize
@@ -856,7 +881,7 @@ end
 -- short accent and the short declension, which is usually the same as
 -- the corresponding long one.
 construct_bare_and_short_stem = function(args, short_accent, short_stem,
-	accented_stem, old, decl)
+	short_stemtr, accented_stem, accented_stemtr, old, decl)
 	-- Check if short forms allowed; if not, no short-form params can be given.
 	-- Construct bare version of stem; used for cases where the ending
 	-- is non-syllabic (i.e. short masculine singular of long adjectives,
@@ -880,19 +905,24 @@ construct_bare_and_short_stem = function(args, short_accent, short_stem,
 		error("Special cases 1 and 2, i.e. (1) and (2), not compatible")
 	end
 
-	local explicit_short_stem = short_stem
+	local explicit_short_stem, explicit_short_stemtr = short_stem, short_stemtr
 	local short_decl = decl
 
 	-- Construct short stem. May be explicitly given, else comes from
 	-- end-accented stem.
-	short_stem = short_stem or accented_stem
+	if not short_stem then
+		short_stem, short_stemtr = accented_stem, accented_stemtr
+	end
 	-- Try to accent unaccented short stem (happens only when explicitly given),
 	-- but be conservative -- only if monosyllabic, since otherwise we have
 	-- no idea where stress should end up; after all, the explicit short stem
 	-- is for exceptional cases.
 	if not args.allow_unaccented then
+		if short_stemtr and com.is_unstressed(short_stem) ~= com.is_unstressed(short_stemtr) then
+			error("Explicit short stem " .. short_stem .. " and translit " .. short_stemtr .. " must have same accent pattern")
+		end
 		if com.is_monosyllabic(short_stem) then
-			short_stem = com.make_ending_stressed(short_stem)
+			short_stem, short_stemtr = com.make_ending_stressed(short_stem, short_stemtr)
 		elseif com.needs_accents(short_stem) then
 			error("Explicit short stem " .. short_stem .. " needs an accent")
 		end
@@ -903,14 +933,24 @@ construct_bare_and_short_stem = function(args, short_accent, short_stem,
 			error("With special case 2, stem needs to end in -нн: " .. short_stem)
 		end
 		short_stem = rsub(short_stem, "нн$", "н")
+		if short_stemtr then
+			if not rfind(short_stemtr, "nn$") then
+				error("With special case 2, stem translit needs to end in -nn: " .. short_stemtr)
+			end
+			short_stemtr = rsub(short_stemtr, "nn$", "n")
+		end
 	end
 
 	-- Construct bare form, used for short masculine; but use explicitly
-	-- given form if present.
-	local bare = args.short_m
+	-- given form if present. FIXME: This is broken, should use
+	-- canonicalize_override().
+	local bare, baretr
+	if args.short_m then
+		bare, baretr = nom.split_russian_tr(args.short_m)
+	end
 	if not bare then
 		if reducible then
-			bare = dereduce_stem(short_stem, short_accent, old, decl)
+			bare, baretr = dereduce_stem(short_stem, short_stemtr, short_accent, old, decl)
 			if not bare then
 				error("Unable to dereduce stem: " .. short_stem)
 			end
@@ -920,23 +960,29 @@ construct_bare_and_short_stem = function(args, short_accent, short_stem,
 			bare = nil
 			short_decl = "ой-rare"
 		else
-			bare = short_stem
+			bare, baretr = short_stem, short_stemtr
 			if sc1 then
 				if not rfind(bare, "нн$") then
 					error("With special case 1, stem needs to end in -нн: " .. bare)
 				end
 				bare = rsub(bare, "нн$", "н")
+				if baretr then
+					if not rfind(baretr, "nn$") then
+						error("With special case 1, stem translit needs to end in -nn: " .. baretr)
+					end
+					baretr = rsub(baretr, "nn$", "n")
+				end
 			end
 			-- With special case 1 or 2, we don't ever want -ь added, so treat
 			-- it like a reducible (that may be why these are marked as
 			-- reducible in Zaliznyak).
-			bare = add_bare_suffix(bare, old, decl, sc1 or sc2)
+			bare, baretr = add_bare_suffix(bare, baretr, old, decl, sc1 or sc2)
 		end
 	end
 
-	args.short_stem = short_stem
-	args.short_ustem = com.make_unstressed_once(short_stem)
-	args.bare = bare
+	args.short_stem, args.short_stemtr = short_stem, short_stemtr
+	args.short_ustem, args.short_ustemtr = com.make_unstressed_once(short_stem, short_stemtr)
+	args.bare, args.baretr = bare, baretr
 
 	return short_accent, short_decl
 end
@@ -1292,145 +1338,110 @@ declensions_old["stressed-proper"] = declensions_old["proper"]
 
 declensions_old["$"] = declensions["$"]
 
---------------------------------------------------------------------------
---                          Sibilant/Velar/ц rules                      --
---------------------------------------------------------------------------
+local function frob_genitive_masc(decl)
+	-- signal to combine_stem_and_suffix() to use the special tr_adj()
+	-- function so that -го gets transliterated to -vo
+	if type(decl["gen_m"]) == "table" then
+		local entries = {}
+		for _, entry in ipairs(decl["gen_m"]) do
+			table.insert(entries, rsub(entry, "го$", "го<adj>"))
+		end
+		decl["gen_m"] = entries
+	else
+		decl["gen_m"] = rsub(decl["gen_m"], "го$", "го<adj>")
+	end
+end
 
-local stressed_sibilant_rules = {
-	["я"] = "а",
-	["ы"] = "и",
-	["ё"] = "о́",
-	["ю"] = "у",
-}
-
-local stressed_c_rules = {
-	["я"] = "а",
-	["ё"] = "о́",
-	["ю"] = "у",
-}
-
-local unstressed_sibilant_rules = {
-	["я"] = "а",
-	["ы"] = "и",
-	["о"] = "е",
-	["ю"] = "у",
-}
-
-local unstressed_c_rules = {
-	["я"] = "а",
-	["о"] = "е",
-	["ю"] = "у",
-}
-
-local velar_rules = {
-	["ы"] = "и",
-}
-
-local stressed_rules = {
-	["ш"] = stressed_sibilant_rules,
-	["щ"] = stressed_sibilant_rules,
-	["ч"] = stressed_sibilant_rules,
-	["ж"] = stressed_sibilant_rules,
-	["ц"] = stressed_c_rules,
-	["к"] = velar_rules,
-	["г"] = velar_rules,
-	["х"] = velar_rules,
-}
-
-local unstressed_rules = {
-	["ш"] = unstressed_sibilant_rules,
-	["щ"] = unstressed_sibilant_rules,
-	["ч"] = unstressed_sibilant_rules,
-	["ж"] = unstressed_sibilant_rules,
-	["ц"] = unstressed_c_rules,
-	["к"] = velar_rules,
-	["г"] = velar_rules,
-	["х"] = velar_rules,
-}
-
-local nonsyllabic_suffixes = ut.list_to_set({"", "ъ", "ь", "й"})
+-- Frob declensions, adding <adj> to gen_m forms ending in -го. This is
+-- a signal to add manual translit early on that renders -го as -vo.
+for decltype, decl in pairs(declensions_old) do
+	frob_genitive_masc(decl)
+end
+for decltype, decl in pairs(declensions) do
+	frob_genitive_masc(decl)
+end
 
 --------------------------------------------------------------------------
 --                           Declension functions                       --
 --------------------------------------------------------------------------
 
-local function combine_stem_and_suffix(stem, suf, rules, old)
-	local first = usub(suf, 1, 1)
-	if rules then
-		local conv = rules[first]
-		if conv then
-			if old then
-				local ending = usub(suf, 2)
-				if conv == "и" and rfind(ending, "^́?[аеёиійоуэюяѣ]") then
-					conv = "і"
-				end
-				suf = conv .. ending
-			else
-				suf = conv .. usub(suf, 2)
-			end
-		end
+local function attach_unstressed(args, suf, short)
+	local stem, stemtr
+	if short then
+		stem, stemtr = args.short_stem, args.short_stemtr
+	else
+		stem, stemtr = args.stem, args.stemtr
 	end
-	return stem .. suf
-end
-
-local function attach_unstressed(args, suf, stem, ustem)
 	if suf == nil then
 		return nil
-	elseif nonsyllabic_suffixes[suf] then
+	elseif nom.nonsyllabic_suffixes[suf] then
 		if not args.bare then
 			return nil
 		elseif rfind(args.bare, "[йьъ]$") then
-			return args.bare
+			return {args.bare, args.baretr}
 		elseif suf == "ъ" then
-			return args.bare .. suf
+			return nom.concat_russian_tr(args.bare, args.baretr, suf, nil, "dopair")
 		else
-			return args.bare
+			return {args.bare, args.baretr}
 		end
 	end
 	suf = com.make_unstressed(suf)
-	local rules = unstressed_rules[ulower(usub(stem, -1))]
-	return combine_stem_and_suffix(stem, suf, rules, args.old)
+	local rules = nom.unstressed_rules[ulower(usub(stem, -1))]
+	-- The parens around the return value drop all but the first return value
+	return (nom.combine_stem_and_suffix(stem, stemtr, suf, rules, args.old))
 end
 
-local function attach_stressed(args, suf, stem, ustem)
+local function attach_stressed(args, suf, short)
+	local ustem, ustemtr
+	if short then
+		ustem, ustemtr = args.short_ustem, args.short_ustemtr
+	else
+		ustem, ustemtr = args.ustem, args.ustemtr
+	end
 	if suf == nil then
 		return nil
 	elseif not rfind(suf, "[ё́]") then -- if suf has no "ё" or accent marks
-		return attach_unstressed(args, suf, stem, ustem)
+		return attach_unstressed(args, suf, short)
 	end
-	local rules = stressed_rules[ulower(usub(ustem, -1))]
-	return combine_stem_and_suffix(ustem, suf, rules, args.old)
+	local rules = nom.stressed_rules[ulower(usub(ustem, -1))]
+	-- The parens around the return value drop all but the first return value
+	return (nom.combine_stem_and_suffix(ustem, ustemtr, suf, rules, args.old))
 end
 
-local function attach_both(args, suf, stem, ustem)
+local function attach_both(args, suf, short)
 	local results = {}
 	-- Examples with stems with ё on Zaliznyak p. 61 list the
 	-- ending-stressed forms first, so go with that.
-	ut.insert_if_not(results, attach_stressed(args, suf, stem, ustem))
-	ut.insert_if_not(results, attach_unstressed(args, suf, stem, ustem))
+	-- NOTE: This assumes we get one value returned, not a list of such values.
+	table.insert(results, attach_stressed(args, suf, short))
+	table.insert(results, attach_unstressed(args, suf, short))
 	return results
 end
 
-local function attach_with(args, suf, fun, stem, ustem)
+local function attach_with(args, suf, fun, short)
 	if type(suf) == "table" then
-		local tbl = {}
+		local all_combineds = {}
 		for _, x in ipairs(suf) do
-			insert_list_into_table(tbl, attach_with(args, x, fun, stem, ustem))
+			local combineds = attach_with(args, x, fun, short)
+			for _, combined in ipairs(combineds) do
+				table.insert(all_combineds, combined)
+			end
 		end
-		return tbl
+		return all_combineds
 	else
-		local funval = fun(args, suf, stem, ustem)
+		local funval = fun(args, suf, short)
 		if funval then
 			local tbl = {}
-			if type(funval) ~= "table" then
+			assert(type(funval) == "table")
+			if type(funval[1]) ~= "table" then
 				funval = {funval}
 			end
 			for _, x in ipairs(funval) do
-				table.insert(tbl, x .. args.suffix)
+				table.insert(tbl, nom.concat_paired_russian_tr(x, args.suffix))
 			end
 			return tbl
 		else
-			return nil
+			return {}
 		end
 	end
 end
@@ -1440,18 +1451,13 @@ local function gen_form(args, decl, case, fun)
 		args.forms[case] = {}
 	end
 	insert_list_into_table(args.forms[case],
-		attach_with(args, decl[case], fun, args.stem, args.ustem))
+		attach_with(args, decl[case], fun, false))
 end
 
 decline = function(args, decl, stressed)
 	local attacher = stressed and attach_stressed or attach_unstressed
 	for _, case in ipairs(args.old and old_long_cases or long_cases) do
 		gen_form(args, decl, case, attacher)
-	end
-	-- default acc_n to nom_n; applies chiefly in the invariable declension
-	-- (used with manual declension tables)
-	if not args.acc_n then
-		args.acc_n = args.nom_n
 	end
 end
 
@@ -1466,15 +1472,19 @@ canonicalize_override = function(args, case)
 	-- auto-accent/check for necessary accents
 	local newvals = {}
 	for _, v in ipairs(val) do
+		local ru, tr = nom.split_russian_tr(v)
 		if not args.allow_unaccented then
+			if tr and com.is_unstressed(ru) ~= com.is_unstressed(tr) then
+				error("Override " .. ru .. " and translit " .. tr .. " must have same accent pattern")
+			end
 			-- it's safe to accent monosyllabic stems
-			if com.is_monosyllabic(v) then
-				v = com.make_ending_stressed(v)
-			elseif com.needs_accents(v) then
-				error("Override " .. case .. "=" .. v .. " requires an accent")
+			if com.is_monosyllabic(ru) then
+				ru, tr = com.make_ending_stressed(ru, tr)
+			elseif com.needs_accents(ru) then
+				error("Override " .. ru .. " for case " .. case .. " requires an accent")
 			end
 		end
-		table.insert(newvals, v)
+		table.insert(newvals, {ru, tr})
 	end
 	val = newvals
 
@@ -1482,30 +1492,52 @@ canonicalize_override = function(args, case)
 end
 
 handle_forms_and_overrides = function(args, short_forms_allowed)
-	for _, case in ipairs(args.old and old_long_cases or long_cases) do
-		if args.forms[case] then
-			local lastarg = #(args.forms[case])
-			if lastarg > 0 and args[case .. "_tail"] then
-				args.forms[case][lastarg] = args.forms[case][lastarg] .. args[case .. "_tail"]
+	local f = args.forms
+
+	local function append_note_all(case, value)
+		value = nom.split_russian_tr(value, "dopair")
+		if f[case] then
+			for i=1,#f[case] do
+				f[case][i] = nom.concat_paired_russian_tr(f[case][i], value)
 			end
 		end
-		args[case] = canonicalize_override(args, case) or args.forms[case]
 	end
+
+	local function append_note_last(case, value, gt_one)
+		value = nom.split_russian_tr(value, "dopair")
+		if f[case] then
+			local lastarg = #f[case]
+			if lastarg > (gt_one and 1 or 0) then
+				f[case][lastarg] = nom.concat_paired_russian_tr(f[case][lastarg], value)
+			end
+		end
+	end
+
+	for _, case in ipairs(args.old and old_long_cases or long_cases) do
+		if args[case .. "_tail"] then
+			append_note_last(case, args[case .. "_tail"])
+		end
+		if args[case .. "_tailall"] then
+			append_note_all(case, args[case .. "_tailall"])
+		end
+		args[case] = canonicalize_override(args, case) or f[case]
+	end
+
 	for _, case in ipairs(short_cases) do
 		if short_forms_allowed then
-			if args.forms[case] then
-				local lastarg = #(args.forms[case])
-				if lastarg > 0 and args[case .. "_tail"] then
-					args.forms[case][lastarg] = args.forms[case][lastarg] .. args[case .. "_tail"]
-				end
-				if lastarg > 0 and args.shorttailall then
-					args.forms[case][lastarg] = args.forms[case][lastarg] .. args.shorttailall
-				end
-				if lastarg > 1 and args.shorttail then
-					args.forms[case][lastarg] = args.forms[case][lastarg] .. args.shorttail
-				end
+			if args[case .. "_tail"] then
+				append_note_last(case, args[case .. "_tail"])
 			end
-			args[case] = canonicalize_override(args, case) or args.forms[case]
+			if args[case .. "_tailall"] then
+				append_note_all(case, args[case .. "_tailall"])
+			end
+			if args.shorttailall then
+				append_note_all(case, args.shorttailall)
+			end
+			if args.shorttail then
+				append_note_last(case, args.shorttail, ">1")
+			end
+			args[case] = canonicalize_override(args, case) or f[case]
 		else
 			args[case] = nil
 		end
@@ -1517,6 +1549,12 @@ handle_forms_and_overrides = function(args, short_forms_allowed)
 		if args[case] and #args[case] == 0 then
 			args[case] = nil
 		end
+	end
+
+	-- default acc_n to nom_n; applies chiefly in the invariable declension
+	-- (used with manual declension tables)
+	if not args.acc_n then
+		args.acc_n = args.nom_n
 	end
 end
 
@@ -1550,7 +1588,7 @@ local function gen_short_form(args, decl, case, fun)
 		args.forms["short_" .. case] = {}
 	end
 	insert_list_into_table(args.forms["short_" .. case],
-		attach_with(args, decl[case], fun, args.short_stem, args.short_ustem))
+		attach_with(args, decl[case], fun, true))
 end
 
 local attachers = {
@@ -1571,7 +1609,6 @@ end
 --                             Create the table                         --
 --------------------------------------------------------------------------
 
-local form_temp = [=[{term}<br/><span style="color: #888">{tr}</span>]=]
 local title_temp = [=[Declension of <b lang="ru" class="Cyrl">{lemma}</b>]=]
 local old_title_temp = [=[Pre-reform declension of <b lang="ru" class="Cyrl">{lemma}</b>]=]
 
@@ -1582,41 +1619,74 @@ local short_clause = nil
 local internal_notes_template = nil
 local notes_template = nil
 
-local function show_form(args, case)
-	local ru_vals = {}
-	local tr_vals = {}
-	for _, x in ipairs(args[case]) do
-		local entry, notes = m_table_tools.get_notes(x)
-		entry = com.remove_monosyllabic_accents(entry)
-		if old then
-			ut.insert_if_not(ru_vals, m_links.full_link(com.make_unstressed(entry), entry, lang, nil, nil, nil, {tr = "-"}, false) .. notes)
-		else
-			ut.insert_if_not(ru_vals, m_links.full_link(entry, nil, lang, nil, nil, nil, {tr = "-"}, false) .. notes)
-		end
-		local trx = lang:transliterate(m_links.remove_links(entry))
-		if case == "gen_m" then
-			trx = rsub(trx, "([aoeáóé]́?)go$", "%1vo")
-			trx = rsub(trx, "([aoeáóé]́?)gosja$", "%1vosja")
-		end
-		ut.insert_if_not(tr_vals, trx .. notes)
+-- Generate a string to substitute into a particular form in a Wiki-markup
+-- table. FORMS is the list of forms.
+local function show_form(forms, old, lemma)
+	local russianvals = {}
+	local latinvals = {}
+	local lemmavals = {}
+
+	-- Accumulate separately the Russian and transliteration into
+	-- RUSSIANVALS and LATINVALS, then concatenate each down below.
+	-- However, if LEMMA, we put each transliteration directly
+	-- after the corresponding Russian, in parens, and put the results
+	-- in LEMMAVALS, which get concatenated below. (This is used in the
+	-- title of the declension table.) (Actually, currently we don't
+	-- include the translit in the declension table title.)
+
+	if #forms == 1 and forms[1][1] == "-" then
+		return "&mdash;"
 	end
-	local term = table.concat(ru_vals, ", ")
-	local tr = table.concat(tr_vals, ", ")
-	return term, tr
+
+	for _, form in ipairs(forms) do
+		local ru, tr = form[1], form[2]
+		local ruentry, runotes = m_table_tools.get_notes(ru)
+		local trentry, trnotes
+		if tr then
+			trentry, trnotes = m_table_tools.get_notes(tr)
+		end
+		ruentry = com.remove_monosyllabic_accents(ruentry)
+		local ruspan, trspan
+		if old then
+			ruspan = m_links.full_link(com.remove_jo(ruentry), ruentry, lang, nil, nil, nil, {tr = "-"}, false) .. runotes
+		else
+			ruspan = m_links.full_link(ruentry, nil, lang, nil, nil, nil, {tr = "-"}, false) .. runotes
+		end
+		if not trentry then
+			trentry = nom.translit_no_links(ruentry)
+		end
+		if not trnotes then
+			trnotes = nom.translit_no_links(runotes)
+		end
+		trspan = m_links.remove_links(trentry) .. trnotes
+		trspan = "<span style=\"color: #888\">" .. trspan .. "</span>"
+
+		if lemma then
+			-- insert_if_not(lemmavals, ruspan .. " (" .. trspan .. ")")
+			ut.insert_if_not(lemmavals, ruspan)
+		else
+			ut.insert_if_not(russianvals, ruspan)
+			ut.insert_if_not(latinvals, trspan)
+		end
+	end
+
+	if lemma then
+		return table.concat(lemmavals, ", ")
+	else
+		local russian_span = table.concat(russianvals, ", ")
+		local latin_span = table.concat(latinvals, ", ")
+		return russian_span .. "<br />" .. latin_span
+	end
 end
 
 -- Make the table
 make_table = function(args)
-	local old = args.old
-	args.lemma, _ = m_links.remove_links(show_form(args, "nom_m"))
-	args.title = args.title or strutils.format(old and old_title_temp or title_temp, args)
+	args.lemma = m_links.remove_links(show_form(args.nom_m, args.old, true))
+	args.title = args.title or strutils.format(args.old and old_title_temp or title_temp, args)
 
-	for _, case in ipairs(old and old_cases or cases) do
-		if args[case] and #args[case] == 1 and args[case][1] == "-" then
-			args[case] = "&mdash;"
-		elseif args[case] then
-			local term, tr = show_form(args, case)
-			args[case] = strutils.format(form_temp, {["term"] = term, ["tr"] = tr})
+	for _, case in ipairs(args.old and old_cases or cases) do
+		if args[case] then
+			args[case] = show_form(args[case], args.old, false)
 		else
 			args[case] = nil
 		end
@@ -1624,7 +1694,7 @@ make_table = function(args)
 
 	local temp = not args.nom_n and proper_name_template or template
 
-	if old then
+	if args.old then
 		if args.nom_mp then
 			temp = template_mp
 			if args.short_m or args.short_n or args.short_f or args.short_p then
