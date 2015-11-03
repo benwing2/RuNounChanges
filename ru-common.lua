@@ -26,6 +26,7 @@ local usub = mw.ustring.sub
 
 local AC = u(0x0301) -- acute =  ́
 local GR = u(0x0300) -- grave =  ̀
+local CFLEX = u(0x0302) -- circumflex =  ̂
 local BREVE = u(0x0306) -- breve  ̆
 local DIA = u(0x0308) -- diaeresis =  ̈
 local CARON = u(0x030C) -- caron  ̌
@@ -178,8 +179,6 @@ end
 local recomposer = {
 	["и" .. BREVE] = "й",
 	["И" .. BREVE] = "Й",
-	["ж" .. BREVE] = "ӂ", -- used in ru-pron
-	["Ж" .. BREVE] = "Ӂ",
 	["е" .. DIA] = "ё", -- WARNING: Cyrillic е and Е
 	["Е" .. DIA] = "Ё",
 	["e" .. CARON] = "ě", -- WARNING: Latin e and E
@@ -190,6 +189,15 @@ local recomposer = {
 	["S" .. CARON] = "Š",
 	["z" .. CARON] = "ž",
 	["Z" .. CARON] = "Ž",
+	-- used in ru-pron:
+	["ж" .. BREVE] = "ӂ", -- used in ru-pron
+	["Ж" .. BREVE] = "Ӂ",
+	["j" .. CFLEX] = "ĵ",
+	["J" .. CFLEX] = "Ĵ",
+	["j" .. CARON] = "ǰ",
+	-- no composed uppercase equivalent of J-caron
+	["ʒ" .. CARON] = "ǯ",
+	["Ʒ" .. CARON] = "Ǯ",
 }
 
 -- Decompose acute, grave, etc. on letters (esp. Latin) into individivual
@@ -295,6 +303,7 @@ local function split_syllables(ru, tr)
 	-- but also includes any capturing groups in the split pattern.
 	local rusyllables = combine_captures(strutils.capturing_split(ru, "([" .. export.vowel .. "]" .. export.opt_accent .. ")"))
 	local trsyllables = combine_captures(strutils.capturing_split(tr, "([" .. export.tr_vowel .. "]" .. export.opt_accent .. ")"))
+	--error(table.concat(rusyllables, "/") .. "(" .. #rusyllables .. ") || " .. table.concat(trsyllables, "/") .. "(" .. #trsyllables .. ")")
 	if #rusyllables ~= #trsyllables then
 		error("Russian " .. ru .. " doesn't have same number of syllables as translit " .. tr)
 	end
