@@ -4386,7 +4386,7 @@ handle_forms_and_overrides = function(args, n, islast)
 				append_note_last(case, args[case .. "_tail" .. n])
 			end
 			if args[case .. "_tailall" .. n] then
-				append_note_all(case, args[case .. "_tail" .. n])
+				append_note_all(case, args[case .. "_tailall" .. n])
 			end
 			if not rfind(case, "_pl") then
 				if args["sgtailall" .. n] then
