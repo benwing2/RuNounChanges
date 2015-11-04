@@ -199,7 +199,6 @@ local tracking_code
 local categorize
 local detect_stem_and_accent_type
 local construct_bare_and_short_stem
-local deduce_short_accent
 local decline
 local canonicalize_override
 local handle_forms_and_overrides
@@ -218,6 +217,10 @@ function export.do_generate_forms(args, old, manual)
 
 	if args[3] or args[4] or args[5] or args[6] then
 		error("Numbered short forms no longer supported")
+	end
+	
+	if args.shorttailall then
+		track("shorttailall")
 	end
 	
     local SUBPAGENAME = mw.title.getCurrentTitle().subpageText
@@ -527,12 +530,6 @@ tracking_code = function(decl_class, args, orig_short_accent, short_accent,
 	if short_stem then
 		dotrack("explicit-short-stem")
 		dotrack("explicit-short-stem/" .. short_accent)
-	end
-	if not short_accent and not short_stem and short_forms_allowed then
-		local deduced_short = deduce_short_accent(args)
-		--for testing output of deduce_short_accent(); remove me!!!
-		--error(rsub(deduced_short, "''", "' '"))
-		dotrack("explicit-short/" .. deduced_short)
 	end
 	for _, case in ipairs(old_cases) do
 		if args[case] then
@@ -943,75 +940,6 @@ construct_bare_and_short_stem = function(args, short_accent, short_stem,
 
 	return short_accent, short_decl
 end
-
--- Deduce the short accent pattern given short masc, fem, neut and plural.
--- Each value should be a list of strings.
-deduce_short_accent = function(args)
-	local masc = canonicalize_override(args, "short_m")
-	local fem = canonicalize_override(args, "short_f")
-	local neut = canonicalize_override(args, "short_n")
-	local pl = canonicalize_override(args, "short_p")
-
-	local function convert_to_plus_minus(list)
-		if not list then return "missing" end
-		assert(type(list) == "table")
-		if #list == 0 or #list == 1 and list[1] == "-" then
-			return "missing"
-		end
-		local stresses = {}
-		for _, x in ipairs(list) do
-			local endstr = com.is_ending_stressed(x)
-			local multistr = endstr and com.is_multi_stressed(x)
-			if multistr then
-				track("short-multistress")
-			end
-			table.insert(stresses, multistr and "-+" or (endstr or com.is_monosyllabic(x)) and "+" or "-")
-		end
-		if #stresses == 1 then
-			return stresses[1]
-		end
-		if ut.contains(stresses, "-+") then
-			return "-+"
-		end
-		local has_plus = ut.contains(stresses, "+")
-		local has_minus = ut.contains(stresses, "-")
-		if has_plus and has_minus then
-			return "-+"
-		elseif has_plus then
-			return "+"
-		else
-			assert(has_minus)
-			return "-"
-		end
-	end
-
-	masc = convert_to_plus_minus(masc)
-	fem = convert_to_plus_minus(fem)
-	neut = convert_to_plus_minus(neut)
-	pl = convert_to_plus_minus(pl)
-
-	if masc == "missing" and fem == "missing" and neut == "missing" and
-			pl == "missing" then
-		return "missing"
-	elseif masc == "missing" and fem ~= "missing" and neut ~= "missing" and
-			pl ~= "missing" then
-		return "masc-missing"
-	elseif masc == "missing" or fem == "missing" or neut == "missing" or
-			pl == "missing" then
-		return "part-missing"
-	end
-	-- If the pattern calls for end stress in the masc, then masc should
-	-- be end-stressed; otherwise it may or may not be end-stressed.
-	for pattern, stressvals in pairs(short_stress_patterns) do
-		if stressvals.f == fem and stressvals.n == neut and stressvals.p == pl
-			and (stressvals.m ~= "+" or stressvals.m == masc) then
-			return pattern
-		end
-	end
-
-	return "unknown"
-end
-
 
 --------------------------------------------------------------------------
 --                                Declensions                           --
@@ -1532,14 +1460,6 @@ canonicalize_override = function(args, case)
 	local val = args[case]
 	if not val then
 		return nil
-	end
-	if rfind(val, "/") then
-		track("slash-in-override")
-		track("slash-in-override/" .. case)
-	end
-	if rfind(val, " ") then
-		track("space-in-override")
-		track("space-in-override/" .. case)
 	end
 	val = rsplit(val, "%s*,%s*")
 
