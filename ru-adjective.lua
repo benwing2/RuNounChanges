@@ -81,11 +81,7 @@ TODO:
    (1)?
 4. In the case of a non-dereducible short masc sing of stress type b, we don't
    currently move the stress to the last syllable. Should we?
-5. FIXME: In construct_bare_and_short_stem(), we start off BARE as the same
-   as args.short_m. This is problematic because there may be multiple values
-   and/or a note, etc. We need to call canonicalize_override() and maybe
-   take the first one? Ideally we should use all of them if more than one.
-6. FIXME: In decline(), we used to default acc_n to nom_n. Now we do that in
+5. FIXME: In decline(), we used to default acc_n to nom_n. Now we do that in
    handle_forms_and_overrides(). Verify that this is more correct.
 ]=]--
 
@@ -867,15 +863,6 @@ local function add_bare_suffix(bare, baretr, old, decl, dereduced)
 	end
 end
 
--- Construct bare form. Return nil if unable.
-local function dereduce_stem(accented_stem, accented_stemtr, short_accent, old, decl)
-	local ret, rettr = com.dereduce_stem(accented_stem, accented_stemtr, rfind(short_accent, "^b"))
-	if not ret then
-		return nil
-	end
-	return add_bare_suffix(ret, rettr, old, decl, true)
-end
-
 -- Construct and set bare and short form in args, and canonicalize
 -- short accent spec, handling cases *, (1) and (2). Return canonicalized
 -- short accent and the short declension, which is usually the same as
@@ -945,39 +932,35 @@ construct_bare_and_short_stem = function(args, short_accent, short_stem,
 	-- given form if present. FIXME: This is broken, should use
 	-- canonicalize_override().
 	local bare, baretr
-	if args.short_m then
-		bare, baretr = nom.split_russian_tr(args.short_m)
-	end
-	if not bare then
-		if reducible then
-			bare, baretr = dereduce_stem(short_stem, short_stemtr, short_accent, old, decl)
-			if not bare then
-				error("Unable to dereduce stem: " .. short_stem)
-			end
-		-- Special case when there isn't a short masculine singular and
-		-- the other forms are rare.
-		elseif short_accent == "b" and decl == "ой" and not explicit_short_stem then
-			bare = nil
-			short_decl = "ой-rare"
-		else
-			bare, baretr = short_stem, short_stemtr
-			if sc1 then
-				if not rfind(bare, "нн$") then
-					error("With special case 1, stem needs to end in -нн: " .. bare)
-				end
-				bare = rsub(bare, "нн$", "н")
-				if baretr then
-					if not rfind(baretr, "nn$") then
-						error("With special case 1, stem translit needs to end in -nn: " .. baretr)
-					end
-					baretr = rsub(baretr, "nn$", "n")
-				end
-			end
-			-- With special case 1 or 2, we don't ever want -ь added, so treat
-			-- it like a reducible (that may be why these are marked as
-			-- reducible in Zaliznyak).
-			bare, baretr = add_bare_suffix(bare, baretr, old, decl, sc1 or sc2)
+	if reducible then
+		bare, baretr = com.dereduce_stem(short_stem, short_stemtr, rfind(short_accent, "^b"))
+		if not bare then
+			error("Unable to dereduce stem: " .. short_stem)
 		end
+		bare, baretr = add_bare_suffix(bare, baretr, old, decl, true)
+	-- Special case when there isn't a short masculine singular and
+	-- the other forms are rare.
+	elseif short_accent == "b" and decl == "ой" and not explicit_short_stem then
+		bare, baretr = nil, nil
+		short_decl = "ой-rare"
+	else
+		bare, baretr = short_stem, short_stemtr
+		if sc1 then
+			if not rfind(bare, "нн$") then
+				error("With special case 1, stem needs to end in -нн: " .. bare)
+			end
+			bare = rsub(bare, "нн$", "н")
+			if baretr then
+				if not rfind(baretr, "nn$") then
+					error("With special case 1, stem translit needs to end in -nn: " .. baretr)
+				end
+				baretr = rsub(baretr, "nn$", "n")
+			end
+		end
+		-- With special case 1 or 2, we don't ever want -ь added, so treat
+		-- it like a reducible (that may be why these are marked as
+		-- reducible in Zaliznyak).
+		bare, baretr = add_bare_suffix(bare, baretr, old, decl, sc1 or sc2)
 	end
 
 	args.short_stem, args.short_stemtr = short_stem, short_stemtr
@@ -1461,7 +1444,6 @@ decline = function(args, decl, stressed)
 	end
 end
 
--- CASE may be a number to refer to numbered short-form overrides
 canonicalize_override = function(args, case)
 	local val = args[case]
 	if not val then
