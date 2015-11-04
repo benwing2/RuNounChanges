@@ -4738,7 +4738,7 @@ make_table = function(args)
 	data.title = args.title or strutils.format(args.old and old_title_temp or title_temp, data)
 
 	for _, case in ipairs(displayable_cases) do
-		data[case] = show_form(args[case], old, false)
+		data[case] = show_form(args[case], args.old, false)
 	end
 
 	local temp = nil
