@@ -109,7 +109,10 @@ function export.combine_stem_and_suffix(stem, tr, suf, rules, old)
 		local conv = rules[first]
 		if conv then
 			local ending = usub(suf, 2)
-			if old and conv == "и" and rfind(ending, "^́?[" .. com.vowel .. "]") then
+			-- The following regexp is not quite the same as com.vowels. For one thing
+			-- it includes й, which is important. It leaves out ы, which may or may not
+			-- be important.
+			if old and conv == "и" and rfind(ending, "^́?[аеёиійоуэюяѣ]") then
 				conv = "і"
 			end
 			suf = conv .. ending
