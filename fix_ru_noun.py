@@ -1,17 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# Convert ru-noun to ru-noun+, ru-proper noun to ru-proper noun+.
-#
-# FIXME:
-#
-# 1. If tr= occurs in ru-noun, skip. Eventually, move tr= to ru-noun-table.
-# 2. If proper noun, can remove n=sg, but only if the noun would be singular
-#    with this removed (i.e. not plural). To check this we need to expand
-#    the result with n=sg removed and with ndef=sg and see what the gender is
-#    (it should be sg then).
-# 3. When checking gender mismatch, if there's animacy mismatch, punt and
-#    issue warning rather than allowing it.
+# Convert ru-noun to ru-noun+, ru-proper noun to ru-proper noun+, transfer
+# manual translit in headword to declension template (ru-noun-table).
 
 import pywikibot, re, sys, codecs, argparse
 
@@ -27,6 +18,14 @@ def msg(text):
 
 def errmsg(text):
   print >>sys.stderr, text.encode("utf-8")
+
+def arg1_is_stress(arg1):
+  if not arg1:
+    return False
+  for arg in re.split(",", arg1):
+    if not (re.search("^[a-f]'?'?$", arg) or re.search(r"^[1-6]\*?$", arg)):
+      return False
+  return True
 
 def process_page(index, page, save, verbose):
   pagetitle = unicode(page.title())
@@ -84,6 +83,43 @@ def process_page(index, page, save, verbose):
 
   noun_table_template = noun_table_templates[0]
   headword_template = headword_templates[0]
+  frobbed_manual_translit = ""
+
+  headword_tr = getparam(headword_template, "tr")
+  if headword_tr:
+    if verbose:
+      pagemsg("Found headword manual translit tr=%s" % headword_tr)
+    # Punt if multi-arg-set, can't handle yet
+    for param in noun_table_template.params:
+      if not param.showkey:
+        val = unicode(param.value)
+        if val == "or":
+          pagemsg("WARNING: Manual translit and multi-decl templates, can't handle: %s" % unicode(noun_table_template))
+          return
+        if val == "-" or val == "_" or val.startswith("join:"):
+          pagemsg("WARNING: Manual translit and multi-word templates, can't handle: %s" % unicode(noun_table_template))
+          return
+    for i in xrange(2, 10):
+      if getparam(headword_template, "tr%s" % i):
+        pagemsg("WARNING: Headword template has translit param tr%s, can't handle: %s" % (
+          i, unicode(headword_template)))
+        return
+    if arg1_is_stress(getparam(noun_table_template, "1")):
+      lemma_arg = "2"
+    else:
+      lemma_arg = "1"
+    lemmaval = getparam(noun_table_template, lemma_arg)
+    if not lemmaval:
+      lemmaval = re.sub("^.*:", "", pagetitle)
+    lemmaval += "//" + headword_tr
+    orig_noun_table_template = unicode(noun_table_template)
+    noun_table_template.add(lemma_arg, lemmaval)
+    if verbose:
+      pagemsg("Replacing decl %s with %s" % (orig_noun_table_template,
+        unicode(noun_table_template)))
+    frobbed_manual_translit = (", transferred tr=%s to ru-noun-table" %
+        headword_tr)
+
   generate_template = re.sub(r"^\{\{ru-noun-table", "{{ru-generate-noun-args",
       unicode(noun_table_template))
   generate_result = expand_text(generate_template)
@@ -150,6 +186,22 @@ def process_page(index, page, save, verbose):
   proposed_genders = re.split(",", args["g"])
   if compare_genders(genders, proposed_genders):
     proposed_genders = []
+  else:
+    # Check for animacy mismatch, punt if so
+    cur_in = [x for x in genders if re.match(r"\bin\b", x)]
+    cur_an = [x for x in genders if re.match(r"\ban\b", x)]
+    proposed_in = [x for x in proposed_genders if re.match(r"\bin\b", x)]
+    proposed_an = [x for x in proposed_genders if re.match(r"\ban\b", x)]
+    if cur_in and proposed_an or cur_an and proposed_in:
+      pagemsg("WARNING: Animacy mismatch, skipping: cur=%s proposed=%s" % (
+        ",".join(genders), ",".join(proposed_genders)))
+      return
+    # Check for number mismatch, punt if so
+    cur_pl = [x for x in genders if re.match(r"\bp\b", x)]
+    if cur_pl and args["n"] != "p" or not cur_pl and args["n"] == "p":
+      pagemsg("WARNING: Number mismatch, skipping: cur=%s, proposed=%s, n=%s" % (
+        ",".join(genders), ",".join(proposed_genders), args["n"]))
+      return
 
   for param in headword_template.params:
     name = unicode(param.name)
@@ -165,16 +217,66 @@ def process_page(index, page, save, verbose):
         not re.search(r"^(head|g|gen|pl)[0-9]+$", name)):
       params_to_preserve.append(param)
 
-  # FIXME
+  orig_headword_template = unicode(headword_template)
+  del headword_template.params[:]
+  for param in noun_table_template.params:
+    headword_template.add(param.name, param.value)
+  i = 1
+  for g in proposed_genders:
+    headword_template.add("g" if i == 1 else "g%s" % i, g)
+  if unicode(headword_template.name) == "ru-proper noun":
+    # If proper noun and n is both then we need to add n=both because
+    # proper noun+ defaults to n=sg
+    if args["n"] == "b" and not getparam(headword_template, "n"):
+      if verbose:
+        pagemsg("Adding n=both to headword tempate")
+      headword_template.add("n", "both")
+    # Correspondingly, if n is sg then we can usually remove n=sg;
+    # but we need to check that the number is actually sg with n=sg
+    # removed because of the possibility of plurale tantum lemmas
+    if args["n"] == "s":
+      generate_template_with_ndef = generate_template.replace("}}", "|ndef=sg}}")
+      generate_template_with_ndef = re.sub(r"\|n=s[^=|{}]*", "",
+          generate_template_with_ndef)
+      generate_result = expand_text(generate_template_with_ndef)
+      if not generate_result:
+        pagemsg("WARNING: Error generating noun args")
+        return
+      ndef_args = {}
+      for arg in re.split(r"\|", generate_result):
+        name, value = re.split("=", arg)
+        ndef_args[name] = value
+      if ndef_args["n"] == "s":
+        existing_n = getparam(headword_template, "n")
+        if existing_n and not re.search(r"^s", existing_n):
+          pagemsg("WARNING: Something wrong: Found n=%s, not singular" %
+              existing_n)
+        else:
+          if verbose:
+            pagemsg("Removing n=sg from headword tempate")
+          rmparam(headword_template, "n")
+      elif verbose:
+        pagemsg("Unable to remove n= from headword template because n=%s" %
+            ndef_args["n"])
 
+  headword_template.extend(params_to_preserve)
+  if unicode(headword_template.name) == "ru-noun":
+    headword_template.name = "ru-noun+"
+    comment = "Convert ru-noun to ru-noun+"
+  else:
+    headword_template.name = "ru-proper noun+"
+    comment = "Convert ru-proper noun to ru-proper noun+"
+
+  if verbose:
+    pagemsg("Replacing headword %s with %s" % (orig_headword_template, unicode(headword_template)))
+
+  comment += frobbed_manual_translit
   if save:
-    comment = "Convert ru-noun to ru-noun+, ru-proper noun to ru-proper noun+"
-    if save:
-      pagemsg("Saving with comment = %s" % comment)
-      page.text = unicode(parsed)
-      page.save(comment=comment)
-    else:
-      pagemsg("Would save with comment = %s" % comment)
+    pagemsg("Saving with comment = %s" % comment)
+    page.text = unicode(parsed)
+    page.save(comment=comment)
+  else:
+    pagemsg("Would save with comment = %s" % comment)
 
 parser = argparse.ArgumentParser(description="Convert ru-noun to ru-noun+, ru-proper noun to ru-proper noun+")
 parser.add_argument('start', help="Starting page index", nargs="?")
