@@ -6,6 +6,8 @@ import pywikibot
 
 dosave = False
 overwrite = True
+donouns = False
+doadjs = True
 
 stress_patterns = ["a", "b", "b'", "c", "d", "d'", "e", "f", "f'", "f''"]
 genders = ["masculine", "feminine", "neuter"]
@@ -172,42 +174,43 @@ def create_cat(cat, args, adj=False):
 def create_adj_cat(cat, args):
   create_cat(cat, args, adj=True)
 
-for s in stress_patterns:
-  create_cat("~ with accent pattern %s" % s, ["stress", s])
-for c in extra_cases:
-  create_cat("~ with %s" % c, ["extracase", c])
-for c in cases:
-  for n in numbers:
-    create_cat("~ with irregular %s %s" % (c, n),
-        ["irregcase", "%s %s" % (c, n)])
+if donouns:
+  for s in stress_patterns:
+    create_cat("~ with accent pattern %s" % s, ["stress", s])
+  for c in extra_cases:
+    create_cat("~ with %s" % c, ["extracase", c])
+  for c in cases:
+    for n in numbers:
+      create_cat("~ with irregular %s %s" % (c, n),
+          ["irregcase", "%s %s" % (c, n)])
 
-create_cat("invariable ~", ["stemgender"])
-for gender in genders:
-  for stem_type in stem_types:
-    if gender == "masculine" and stem_type == "3rd-declension":
-      continue
-    create_cat("%s %s-form ~" % (stem_type, gender), ["stemgender"])
-for gender, stem_stresses in genders_stems_stress:
-  for stem, stresses in stem_stresses:
-    for stress in stresses:
-      create_cat("%s %s-form accent-%s ~" % (stem, gender, stress), ["stemgenderstress"])
+  create_cat("invariable ~", ["stemgender"])
+  for gender in genders:
+    for stem_type in stem_types:
+      if gender == "masculine" and stem_type == "3rd-declension":
+        continue
+      create_cat("%s %s-form ~" % (stem_type, gender), ["stemgender"])
+  for gender, stem_stresses in genders_stems_stress:
+    for stem, stresses in stem_stresses:
+      for stress in stresses:
+        create_cat("%s %s-form accent-%s ~" % (stem, gender, stress), ["stemgenderstress"])
 
-for stress, gender, sgplstems in adj_decls:
-  for sg, pl, stems in sgplstems:
-    for stem in stems:
-      if stress:
-        create_cat("%s %s accent-%s adjectival ~" % (stem, gender, stress),
-            ["adj", sg, pl])
-      else:
-        create_cat("%s %s adjectival ~" % (stem, gender),
-            ["adj", sg, pl])
+  for stress, gender, sgplstems in adj_decls:
+    for sg, pl, stems in sgplstems:
+      for stem in stems:
+        if stress:
+          create_cat("%s %s accent-%s adjectival ~" % (stem, gender, stress),
+              ["adj", sg, pl])
+        else:
+          create_cat("%s %s adjectival ~" % (stem, gender),
+              ["adj", sg, pl])
 
-for sg, pl in endings:
-  cat = "~ ending in %s with plural %s" % (sg, pl)
-  create_cat(cat, ["sgpl"])
-for sg in sgendings:
-  cat = "~ ending in %s" % sg
-  create_cat(cat, ["sg"])
+  for sg, pl in endings:
+    cat = "~ ending in %s with plural %s" % (sg, pl)
+    create_cat(cat, ["sgpl"])
+  for sg in sgendings:
+    cat = "~ ending in %s" % sg
+    create_cat(cat, ["sg"])
 
 short_adj_stress_patterns = [
     ("a", "stem stress on all short forms"),
@@ -235,8 +238,9 @@ adj_patterns = [
     ("proper", "possessive", u"a consonant (-ъ old style)", u"-а", u"-о", u"-ы"),
 ]
 
-#for stress, expl in short_adj_stress_patterns:
-#  create_adj_cat("~ with short accent pattern " + stress, ["shortaccent", expl])
-#
-#for stem, stress, m, f, n, p in adj_patterns:
-#  create_adj_cat("%s %s ~" % (stem, stress), ["adj", m, f, n, p])
+if doadjs:
+  for stress, expl in short_adj_stress_patterns:
+    create_adj_cat("~ with short accent pattern " + stress, ["shortaccent", expl])
+
+  for stem, stress, m, f, n, p in adj_patterns:
+    create_adj_cat("%s %s ~" % (stem, stress), ["adj", m, f, n, p])
