@@ -85,6 +85,10 @@ def process_page(index, page, save, verbose):
   headword_template = headword_templates[0]
   frobbed_manual_translit = ""
 
+  if verbose:
+    pagemsg("Found headword template: %s" % unicode(headword_template))
+    pagemsg("Found decl template: %s" % unicode(noun_table_template))
+
   headword_tr = getparam(headword_template, "tr")
   if headword_tr:
     if verbose:
@@ -143,7 +147,7 @@ def process_page(index, page, save, verbose):
     if set(g1) == set(g2):
       return True
     if len(g1) == 1 and len(g2) == 1:
-      if g1[0] == 'm' and g2[0].startswith("m-") or g1[0] == 'f' and g2[0].startswith("f-"):
+      if g1[0] == 'm' and g2[0].startswith("m-") or g1[0] == 'f' and g2[0].startswith("f-") or g1[0] == 'n' and g2[0].startswith("n-"):
         return True
     pagemsg("WARNING: gender mismatch, existing=%s, new=%s" % (
       ",".join(g1), ",".join(g2)))
@@ -157,7 +161,7 @@ def process_page(index, page, save, verbose):
     while val:
       ret.append(val)
       val = getparam(t, pref + str(i))
-    return val
+    return ret
 
   headwords = process_arg_chain(headword_template, "1", "head", pagetitle)
   genders = process_arg_chain(headword_template, "2", "g")
@@ -259,7 +263,7 @@ def process_page(index, page, save, verbose):
         pagemsg("Unable to remove n= from headword template because n=%s" %
             ndef_args["n"])
 
-  headword_template.extend(params_to_preserve)
+  headword_template.params.extend(params_to_preserve)
   if unicode(headword_template.name) == "ru-noun":
     headword_template.name = "ru-noun+"
     comment = "Convert ru-noun to ru-noun+"
