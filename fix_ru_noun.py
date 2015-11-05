@@ -4,6 +4,13 @@
 # Convert ru-noun to ru-noun+, ru-proper noun to ru-proper noun+, transfer
 # manual translit in headword to declension template (ru-noun-table).
 
+# FIXME:
+#
+# 1. When transfering translit, check if translit is already present and
+#    don't do anything if so.
+# 2. What about if there are links in the headword? They may disappear when
+#    we convert to ru-noun+. Need to be careful about this.
+
 import pywikibot, re, sys, codecs, argparse
 
 import blib
