@@ -41,6 +41,7 @@
 			DECLTYPE:SHORTACCENT
 			DECLTYPE
 			SHORTACCENT:SHORTSTEM
+			SHORTACCENT
 			(blank)
 		DECLTYPE should normally be omitted, and the declension autodetected
 			from the ending; or it should be ь, to indicate that an adjective
