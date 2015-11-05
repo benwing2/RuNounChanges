@@ -1999,8 +1999,8 @@ function export.generate_args(frame)
 	local retargs = {}
 	table.insert(retargs, concat_case_args(args))
 	table.insert(retargs, "g=" .. table.concat(args.genders, ","))
-	table.insert(retargs, "a=" .. (args.n or "b"))
-	table.insert(retargs, "n=" .. (args.a or "a"))
+	table.insert(retargs, "n=" .. (args.n or "b"))
+	table.insert(retargs, "a=" .. (args.a or "i"))
 	return table.concat(retargs, "|")
 end
 
