@@ -6,11 +6,9 @@
 
 # FIXME:
 #
-# 1. What about if there are links in the headword? They may disappear when
-#    we convert to ru-noun+. Need to be careful about this.
-# 2. Need to split on level-3 headers to handle multiple etymologies and
+# 1. Need to split on level-3 headers to handle multiple etymologies and
 #    pronunciation etc. sections.
-# 3. In try_to_stress(), need to stress monosyllabic transliterations
+# 2. In try_to_stress(), need to stress monosyllabic transliterations
 #    (e.g. in Ре́ин).
 
 import pywikibot, re, sys, codecs, argparse
@@ -64,6 +62,11 @@ def process_page(index, page, save, verbose):
   noun_table_templates = []
 
   for t in parsed.filter_templates():
+    if unicode(t.name) == "ru-decl-noun-see":
+      pagemsg("Found ru-decl-noun-see, skipping")
+      return
+
+  for t in parsed.filter_templates():
     if unicode(t.name) == "ru-noun-table":
       noun_table_templates.append(t)
 
@@ -86,10 +89,10 @@ def process_page(index, page, save, verbose):
       headword_templates.append(t)
 
   if len(headword_templates) > 1:
-    pagemsg("Found multiple headword templates, skipping")
+    pagemsg("WARNING: Found multiple headword templates, skipping")
     return
   if len(headword_templates) < 1:
-    pagemsg("Found no headword templates, skipping")
+    pagemsg("WARNING: Found no headword templates, skipping")
     return
 
   noun_table_template = noun_table_templates[0]
@@ -158,7 +161,7 @@ def process_page(index, page, save, verbose):
   args = {}
   for arg in re.split(r"\|", generate_result):
     name, value = re.split("=", arg)
-    args[name] = value
+    args[name] = re.sub("<!>", "|", value)
 
   def try_to_stress(form):
     if "//" in form:
@@ -210,17 +213,17 @@ def process_page(index, page, save, verbose):
   genitives = process_arg_chain(headword_template, "3", "gen")
   plurals = process_arg_chain(headword_template, "4", "pl")
   if args["n"] == "s":
-    if (not compare_forms("nom_sg", headwords, args["nom_sg"]) or
+    if (not compare_forms("nom_sg", headwords, args["nom_sg_linked"]) or
         not compare_forms("gen_sg", genitives, args["gen_sg"])):
       pagemsg("Existing and proposed forms not same, skipping")
       return
   elif args["n"] == "p":
-    if (not compare_forms("nom_pl", headwords, args["nom_pl"]) or
+    if (not compare_forms("nom_pl", headwords, args["nom_pl_linked"]) or
         not compare_forms("gen_pl", genitives, args["gen_pl"])):
       pagemsg("Existing and proposed forms not same, skipping")
       return
   elif args["n"] == "b":
-    if (not compare_forms("nom_sg", headwords, args["nom_sg"]) or
+    if (not compare_forms("nom_sg", headwords, args["nom_sg_linked"]) or
         not compare_forms("gen_sg", genitives, args["gen_sg"]) or
         not compare_forms("nom_pl", plurals, args["nom_pl"])):
       pagemsg("Existing and proposed forms not same, skipping")
@@ -291,7 +294,7 @@ def process_page(index, page, save, verbose):
       ndef_args = {}
       for arg in re.split(r"\|", generate_result):
         name, value = re.split("=", arg)
-        ndef_args[name] = value
+        ndef_args[name] = re.sub("<!>", "|", value)
       if ndef_args["n"] == "s":
         existing_n = getparam(headword_template, "n")
         if existing_n and not re.search(r"^s", existing_n):
