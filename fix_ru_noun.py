@@ -6,10 +6,12 @@
 
 # FIXME:
 #
-# 1. When transfering translit, check if translit is already present and
-#    don't do anything if so.
-# 2. What about if there are links in the headword? They may disappear when
+# 1. What about if there are links in the headword? They may disappear when
 #    we convert to ru-noun+. Need to be careful about this.
+# 2. Need to split on level-3 headers to handle multiple etymologies and
+#    pronunciation etc. sections.
+# 3. In try_to_stress(), need to stress monosyllabic transliterations
+#    (e.g. in Ре́ин).
 
 import pywikibot, re, sys, codecs, argparse
 
@@ -36,6 +38,8 @@ def arg1_is_stress(arg1):
 
 def process_page(index, page, save, verbose):
   pagetitle = unicode(page.title())
+  subpagetitle = re.sub("^.*:", "", pagetitle)
+
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -100,6 +104,10 @@ def process_page(index, page, save, verbose):
   if headword_tr:
     if verbose:
       pagemsg("Found headword manual translit tr=%s" % headword_tr)
+    if "," in headword_tr:
+      pagemsg("WARNING: Comma in headword manual translit, skipping: %s" %
+          headword_tr)
+      return
     # Punt if multi-arg-set, can't handle yet
     for param in noun_table_template.params:
       if not param.showkey:
@@ -121,15 +129,25 @@ def process_page(index, page, save, verbose):
       lemma_arg = "1"
     lemmaval = getparam(noun_table_template, lemma_arg)
     if not lemmaval:
-      lemmaval = re.sub("^.*:", "", pagetitle)
-    lemmaval += "//" + headword_tr
-    orig_noun_table_template = unicode(noun_table_template)
-    noun_table_template.add(lemma_arg, lemmaval)
-    if verbose:
-      pagemsg("Replacing decl %s with %s" % (orig_noun_table_template,
-        unicode(noun_table_template)))
-    frobbed_manual_translit = (", transferred tr=%s to ru-noun-table" %
-        headword_tr)
+      lemmaval = subpagetitle
+    if "//" in lemmaval:
+      m = re.search("^(.*?)//(.*)$", lemmaval)
+      if m.group(2) != headword_tr:
+        pagemsg("WARNING: Found existing manual translit in decl template %s, but doesn't match headword translit %s; skipping" % (
+          lemmaval, headword_tr))
+        return
+      else:
+        pagemsg("Already found manual translit in decl template %s" %
+            lemmaval)
+    else:
+      lemmaval += "//" + headword_tr
+      orig_noun_table_template = unicode(noun_table_template)
+      noun_table_template.add(lemma_arg, lemmaval)
+      if verbose:
+        pagemsg("Replacing decl %s with %s" % (orig_noun_table_template,
+          unicode(noun_table_template)))
+      frobbed_manual_translit = (", transferred tr=%s to ru-noun-table" %
+          headword_tr)
 
   generate_template = re.sub(r"^\{\{ru-noun-table", "{{ru-generate-noun-args",
       unicode(noun_table_template))
@@ -142,9 +160,18 @@ def process_page(index, page, save, verbose):
     name, value = re.split("=", arg)
     args[name] = value
 
+  def try_to_stress(form):
+    if "//" in form:
+      m = re.search("^(.*?)//(.*)$", form)
+      # FIXME: This should stress the translit as well
+      return ru.try_to_stress(m.group(1)) + "//" + m.group(2)
+    return ru.try_to_stress(form)
+
   def compare_forms(case, form1, form2):
     form2 = re.split(",", form2)
-    if form1 and set(form1) != set(form2):
+    # If existing value missing, OK; also allow for unstressed monosyllabic
+    # existing form matching stressed monosyllabic new form
+    if form1 and set(form1) != set(form2) and set(try_to_stress(x) for x in form1) != set(form2):
       pagemsg("WARNING: case %s, existing forms %s not same as proposed %s" %(
           case, ",".join(form1), ",".join(form2)))
       return False
@@ -162,15 +189,23 @@ def process_page(index, page, save, verbose):
 
   def process_arg_chain(t, first, pref, firstdefault=""):
     ret = []
-    val = getparam(t, first)
+    val = getparam(t, first) or firstdefault
     i = 2
-
     while val:
       ret.append(val)
       val = getparam(t, pref + str(i))
+      i += 1
     return ret
 
-  headwords = process_arg_chain(headword_template, "1", "head", pagetitle)
+  headwords = process_arg_chain(headword_template, "1", "head", subpagetitle)
+  translits = process_arg_chain(headword_template, "tr", "tr")
+  for i in xrange(len(translits)):
+    if len(headwords) <= i:
+      pagemsg("WARNING: Not enough headwords for translit tr%s=%s, skipping" % (
+        "" if i == 0 else str(i+1), translits[i]))
+      return
+    else:
+      headwords[i] += "//" + translits[i]
   genders = process_arg_chain(headword_template, "2", "g")
   genitives = process_arg_chain(headword_template, "3", "gen")
   plurals = process_arg_chain(headword_template, "4", "pl")
@@ -199,16 +234,16 @@ def process_page(index, page, save, verbose):
     proposed_genders = []
   else:
     # Check for animacy mismatch, punt if so
-    cur_in = [x for x in genders if re.match(r"\bin\b", x)]
-    cur_an = [x for x in genders if re.match(r"\ban\b", x)]
-    proposed_in = [x for x in proposed_genders if re.match(r"\bin\b", x)]
-    proposed_an = [x for x in proposed_genders if re.match(r"\ban\b", x)]
+    cur_in = [x for x in genders if re.search(r"\bin\b", x)]
+    cur_an = [x for x in genders if re.search(r"\ban\b", x)]
+    proposed_in = [x for x in proposed_genders if re.search(r"\bin\b", x)]
+    proposed_an = [x for x in proposed_genders if re.search(r"\ban\b", x)]
     if cur_in and proposed_an or cur_an and proposed_in:
       pagemsg("WARNING: Animacy mismatch, skipping: cur=%s proposed=%s" % (
         ",".join(genders), ",".join(proposed_genders)))
       return
     # Check for number mismatch, punt if so
-    cur_pl = [x for x in genders if re.match(r"\bp\b", x)]
+    cur_pl = [x for x in genders if re.search(r"\bp\b", x)]
     if cur_pl and args["n"] != "p" or not cur_pl and args["n"] == "p":
       pagemsg("WARNING: Number mismatch, skipping: cur=%s, proposed=%s, n=%s" % (
         ",".join(genders), ",".join(proposed_genders), args["n"]))
@@ -224,8 +259,8 @@ def process_page(index, page, save, verbose):
   params_to_preserve = []
   for param in headword_template.params:
     name = unicode(param.name)
-    if (name not in ["1", "2", "3", "4", "g", "gen", "pl"] and
-        not re.search(r"^(head|g|gen|pl)[0-9]+$", name)):
+    if (name not in ["1", "2", "3", "4", "g", "gen", "pl", "tr"] and
+        not re.search(r"^(head|g|gen|pl|tr)[0-9]+$", name)):
       params_to_preserve.append(param)
 
   orig_headword_template = unicode(headword_template)
