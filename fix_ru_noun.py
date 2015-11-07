@@ -9,7 +9,20 @@
 # 1. Need to split on level-3 headers to handle multiple etymologies and
 #    pronunciation etc. sections.
 # 2. In try_to_stress(), need to stress monosyllabic transliterations
-#    (e.g. in Ре́ин).
+#    (e.g. in Ре́йн).
+# 3. Add _raw case args to generate_args that preserve things exactly as
+#    in the arguments themselves, with links and notes. This is so we can
+#    get at the notes. Also add notes= as an argument. If there are notes,
+#    warn. Eventually we should consider modifying ru-noun+ and ru-proper noun+
+#    to display those notes after the headword, the way we do now.
+# 4. Ignore manual transliteration in genitive singular and nom pl; it won't
+#    be seen and doesn't exist in ru-noun or ru-proper noun, and would always
+#    cause comparisons to fail.
+# 5. When comparing forms, if failure, split on space and compare each word
+#    individually, including try_to_stress() for each word. May have to do
+#    something more sophisticated with links but probably not.
+# 6. Don't print "gender mismatch" when also animacy or number mismatch.
+# 7. Consider allowing a variant of a=bi that prints inanimate first.
 
 import pywikibot, re, sys, codecs, argparse
 
