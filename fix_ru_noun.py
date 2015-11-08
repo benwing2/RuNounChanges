@@ -6,8 +6,6 @@
 
 # FIXME:
 #
-# 1. Need to split on level-3 headers to handle multiple etymologies and
-#    pronunciation etc. sections.
 # 2. In try_to_stress(), need to stress monosyllabic transliterations
 #    (e.g. in Ре́йн).
 # 3. Add _raw case args to generate_args that preserve things exactly as
@@ -15,9 +13,6 @@
 #    get at the notes. Also add notes= as an argument. If there are notes,
 #    warn. Eventually we should consider modifying ru-noun+ and ru-proper noun+
 #    to display those notes after the headword, the way we do now.
-# 4. Ignore manual transliteration in genitive singular and nom pl; it won't
-#    be seen and doesn't exist in ru-noun or ru-proper noun, and would always
-#    cause comparisons to fail.
 # 5. When comparing forms, if failure, split on space and compare each word
 #    individually, including try_to_stress() for each word. May have to do
 #    something more sophisticated with links but probably not.
@@ -54,6 +49,67 @@ def process_page(index, page, save, verbose):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
+  text = unicode(page.text)
+
+  foundrussian = False
+  sections = re.split("(^==[^=]*==\n)", text, 0, re.M)
+  num_ru_noun_subs = 0
+  num_ru_proper_noun_subs = 0
+  transferred_tr = []
+  for j in xrange(2, len(sections), 2):
+    if sections[j-1] == "==Russian==\n":
+      if foundrussian:
+        pagemsg("WARNING: Found multiple Russian sections")
+        return
+      foundrussian = True
+
+      subsections = re.split("(^===[^=]*===\n)", sections[j], 0, re.M)
+      for k in xrange(2, len(subsections), 2):
+        retval = process_page_section(index, page, subsections[k], verbose)
+        if retval:
+          (replaced, this_num_ru_noun_subs, this_num_ru_proper_noun_subs,
+              this_transferred_tr) = retval
+          subsections[k] = replaced
+          num_ru_noun_subs += this_num_ru_noun_subs
+          num_ru_proper_noun_subs += this_num_ru_proper_noun_subs
+          transferred_tr.extend(this_transferred_tr)
+        else:
+          return
+      sections[j] = "".join(subsections)
+
+  new_text = "".join(sections)
+
+  if new_text == text:
+    pagemsg("WARNING: Can't find headword or decl template, skipping")
+  else:
+    notes = []
+    if num_ru_noun_subs == 1:
+      notes.append("convert ru-noun to ru-noun+")
+    elif num_ru_noun_subs > 1:
+      notes.append("convert ru-noun to ru-noun+ (%s)" % num_ru_noun_subs)
+    if num_ru_proper_noun_subs == 1:
+      notes.append("convert ru-proper noun to ru-proper noun+")
+    elif num_ru_proper_noun_subs > 1:
+      notes.append("convert ru-proper noun to ru-proper noun+ (%s)" % num_ru_proper_noun_subs)
+    if transferred_tr:
+      notes.append("transfer %s to ru-noun-table" % (
+        ",".join("tr=%s" % x for x in transferred_tr)))
+    assert notes
+    comment = "; ".join(notes)
+    if save:
+      pagemsg("Saving with comment = %s" % comment)
+      page.text = unicode(parsed)
+      page.save(comment=comment)
+    else:
+      pagemsg("Would save with comment = %s" % comment)
+
+def process_page_section(index, page, section, verbose):
+  pagetitle = unicode(page.title())
+  subpagetitle = re.sub("^.*:", "", pagetitle)
+
+  def pagemsg(txt):
+    msg("Page %s %s: %s" % (index, pagetitle, txt))
+
   def expand_text(tempcall):
     if verbose:
       pagemsg("Expanding text: %s" % tempcall)
@@ -68,16 +124,16 @@ def process_page(index, page, save, verbose):
 
   if not page.exists():
     pagemsg("WARNING: Page doesn't exist")
-    return
+    return None
 
-  parsed = blib.parse(page)
+  parsed = blib.parse_text(section)
 
   noun_table_templates = []
 
   for t in parsed.filter_templates():
     if unicode(t.name) == "ru-decl-noun-see":
       pagemsg("Found ru-decl-noun-see, skipping")
-      return
+      return None
 
   for t in parsed.filter_templates():
     if unicode(t.name) == "ru-noun-table":
@@ -85,15 +141,14 @@ def process_page(index, page, save, verbose):
 
   if len(noun_table_templates) > 1:
     pagemsg("WARNING: Multiple ru-noun-table templates, skipping")
-    return
+    return None
   if len(noun_table_templates) < 1:
-    pagemsg("WARNING: No ru-noun-table templates, skipping")
-    return
+    return unicode(parsed), 0, 0, []
 
   for t in parsed.filter_templates():
     if unicode(t.name) in ["ru-noun+", "ru-proper noun+"]:
       pagemsg("Found ru-noun+ or ru-proper noun+, skipping")
-      return
+      return None
 
   headword_templates = []
 
@@ -103,14 +158,13 @@ def process_page(index, page, save, verbose):
 
   if len(headword_templates) > 1:
     pagemsg("WARNING: Found multiple headword templates, skipping")
-    return
+    return None
   if len(headword_templates) < 1:
-    pagemsg("WARNING: Found no headword templates, skipping")
-    return
+    return unicode(parsed), 0, 0, []
 
   noun_table_template = noun_table_templates[0]
   headword_template = headword_templates[0]
-  frobbed_manual_translit = ""
+  frobbed_manual_translit = []
 
   if verbose:
     pagemsg("Found headword template: %s" % unicode(headword_template))
@@ -123,22 +177,22 @@ def process_page(index, page, save, verbose):
     if "," in headword_tr:
       pagemsg("WARNING: Comma in headword manual translit, skipping: %s" %
           headword_tr)
-      return
+      return None
     # Punt if multi-arg-set, can't handle yet
     for param in noun_table_template.params:
       if not param.showkey:
         val = unicode(param.value)
         if val == "or":
           pagemsg("WARNING: Manual translit and multi-decl templates, can't handle: %s" % unicode(noun_table_template))
-          return
+          return None
         if val == "-" or val == "_" or val.startswith("join:"):
           pagemsg("WARNING: Manual translit and multi-word templates, can't handle: %s" % unicode(noun_table_template))
-          return
+          return None
     for i in xrange(2, 10):
       if getparam(headword_template, "tr%s" % i):
         pagemsg("WARNING: Headword template has translit param tr%s, can't handle: %s" % (
           i, unicode(headword_template)))
-        return
+        return None
     if arg1_is_stress(getparam(noun_table_template, "1")):
       lemma_arg = "2"
     else:
@@ -151,7 +205,7 @@ def process_page(index, page, save, verbose):
       if m.group(2) != headword_tr:
         pagemsg("WARNING: Found existing manual translit in decl template %s, but doesn't match headword translit %s; skipping" % (
           lemmaval, headword_tr))
-        return
+        return None
       else:
         pagemsg("Already found manual translit in decl template %s" %
             lemmaval)
@@ -162,15 +216,14 @@ def process_page(index, page, save, verbose):
       if verbose:
         pagemsg("Replacing decl %s with %s" % (orig_noun_table_template,
           unicode(noun_table_template)))
-      frobbed_manual_translit = (", transferred tr=%s to ru-noun-table" %
-          headword_tr)
+      frobbed_manual_translit = [headword_tr]
 
   generate_template = re.sub(r"^\{\{ru-noun-table", "{{ru-generate-noun-args",
       unicode(noun_table_template))
   generate_result = expand_text(generate_template)
   if not generate_result:
     pagemsg("WARNING: Error generating noun args")
-    return
+    return None
   args = {}
   for arg in re.split(r"\|", generate_result):
     name, value = re.split("=", arg)
@@ -183,8 +236,15 @@ def process_page(index, page, save, verbose):
       return ru.try_to_stress(m.group(1)) + "//" + m.group(2)
     return ru.try_to_stress(form)
 
-  def compare_forms(case, form1, form2):
+  # FORM1 is the forms from ru-noun (or ru-proper noun); FORM2 is the combined
+  # set of forms from ru-noun-table, and needs to be split on commas.
+  # FORM1_LEMMA is true if the FORM1 values come from the ru-noun lemma.
+  def compare_forms(case, form1, form2, form1_lemma=False):
     form2 = re.split(",", form2)
+    if not form1_lemma:
+      # Ignore manual translit in decl forms when comparing non-lemma forms;
+      # not available from ru-noun (and not displayed anyway)
+      form2 = [re.sub("//.*$", "", x) for x in form2]
     # If existing value missing, OK; also allow for unstressed monosyllabic
     # existing form matching stressed monosyllabic new form
     if form1 and set(form1) != set(form2) and set(try_to_stress(x) for x in form1) != set(form2):
@@ -219,31 +279,31 @@ def process_page(index, page, save, verbose):
     if len(headwords) <= i:
       pagemsg("WARNING: Not enough headwords for translit tr%s=%s, skipping" % (
         "" if i == 0 else str(i+1), translits[i]))
-      return
+      return None
     else:
       headwords[i] += "//" + translits[i]
   genders = process_arg_chain(headword_template, "2", "g")
   genitives = process_arg_chain(headword_template, "3", "gen")
   plurals = process_arg_chain(headword_template, "4", "pl")
   if args["n"] == "s":
-    if (not compare_forms("nom_sg", headwords, args["nom_sg_linked"]) or
+    if (not compare_forms("nom_sg", headwords, args["nom_sg_linked"], True) or
         not compare_forms("gen_sg", genitives, args["gen_sg"])):
       pagemsg("Existing and proposed forms not same, skipping")
-      return
+      return None
   elif args["n"] == "p":
-    if (not compare_forms("nom_pl", headwords, args["nom_pl_linked"]) or
+    if (not compare_forms("nom_pl", headwords, args["nom_pl_linked"], True) or
         not compare_forms("gen_pl", genitives, args["gen_pl"])):
       pagemsg("Existing and proposed forms not same, skipping")
-      return
+      return None
   elif args["n"] == "b":
-    if (not compare_forms("nom_sg", headwords, args["nom_sg_linked"]) or
+    if (not compare_forms("nom_sg", headwords, args["nom_sg_linked"], True) or
         not compare_forms("gen_sg", genitives, args["gen_sg"]) or
         not compare_forms("nom_pl", plurals, args["nom_pl"])):
       pagemsg("Existing and proposed forms not same, skipping")
-      return
+      return None
   else:
     pagemsg("WARNING: Unrecognized number spec %s, skipping" % args["n"])
-    return
+    return None
 
   proposed_genders = re.split(",", args["g"])
   if compare_genders(genders, proposed_genders):
@@ -257,20 +317,20 @@ def process_page(index, page, save, verbose):
     if cur_in and proposed_an or cur_an and proposed_in:
       pagemsg("WARNING: Animacy mismatch, skipping: cur=%s proposed=%s" % (
         ",".join(genders), ",".join(proposed_genders)))
-      return
+      return None
     # Check for number mismatch, punt if so
     cur_pl = [x for x in genders if re.search(r"\bp\b", x)]
     if cur_pl and args["n"] != "p" or not cur_pl and args["n"] == "p":
       pagemsg("WARNING: Number mismatch, skipping: cur=%s, proposed=%s, n=%s" % (
         ",".join(genders), ",".join(proposed_genders), args["n"]))
-      return
+      return None
 
   for param in headword_template.params:
     name = unicode(param.name)
     if name not in ["1", "2", "3", "4"] and re.search(r"^[0-9]+$", name):
       pagemsg("WARNING: Extraneous numbered param %s=%s in headword template, skipping" % (
         unicode(param.name), unicode(param.value)))
-      return
+      return None
 
   params_to_preserve = []
   for param in headword_template.params:
@@ -303,7 +363,7 @@ def process_page(index, page, save, verbose):
       generate_result = expand_text(generate_template_with_ndef)
       if not generate_result:
         pagemsg("WARNING: Error generating noun args")
-        return
+        return None
       ndef_args = {}
       for arg in re.split(r"\|", generate_result):
         name, value = re.split("=", arg)
@@ -322,23 +382,19 @@ def process_page(index, page, save, verbose):
             ndef_args["n"])
 
   headword_template.params.extend(params_to_preserve)
+  ru_noun_changed = 0
+  ru_proper_noun_changed = 0
   if unicode(headword_template.name) == "ru-noun":
     headword_template.name = "ru-noun+"
-    comment = "Convert ru-noun to ru-noun+"
+    ru_noun_changed = 1
   else:
     headword_template.name = "ru-proper noun+"
-    comment = "Convert ru-proper noun to ru-proper noun+"
+    ru_proper_noun_changed = 1
 
   if verbose:
     pagemsg("Replacing headword %s with %s" % (orig_headword_template, unicode(headword_template)))
 
-  comment += frobbed_manual_translit
-  if save:
-    pagemsg("Saving with comment = %s" % comment)
-    page.text = unicode(parsed)
-    page.save(comment=comment)
-  else:
-    pagemsg("Would save with comment = %s" % comment)
+  return unicode(parsed), ru_noun_changed, ru_proper_noun_changed, frobbed_manual_translit
 
 parser = argparse.ArgumentParser(description="Convert ru-noun to ru-noun+, ru-proper noun to ru-proper noun+")
 parser.add_argument('start', help="Starting page index", nargs="?")
