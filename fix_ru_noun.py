@@ -16,7 +16,6 @@
 # 5. When comparing forms, if failure, split on space and compare each word
 #    individually, including try_to_stress() for each word. May have to do
 #    something more sophisticated with links but probably not.
-# 6. Don't print "gender mismatch" when also animacy or number mismatch.
 # 7. Consider allowing a variant of a=bi that prints inanimate first.
 
 import pywikibot, re, sys, codecs, argparse
@@ -240,6 +239,7 @@ def process_page_section(index, page, section, verbose):
   # set of forms from ru-noun-table, and needs to be split on commas.
   # FORM1_LEMMA is true if the FORM1 values come from the ru-noun lemma.
   def compare_forms(case, form1, form2, form1_lemma=False):
+    form1 = [re.sub(u"ё́", u"ё", x) for x in form1]
     form2 = re.split(",", form2)
     if not form1_lemma:
       # Ignore manual translit in decl forms when comparing non-lemma forms;
@@ -259,8 +259,6 @@ def process_page_section(index, page, section, verbose):
     if len(g1) == 1 and len(g2) == 1:
       if g1[0] == 'm' and g2[0].startswith("m-") or g1[0] == 'f' and g2[0].startswith("f-") or g1[0] == 'n' and g2[0].startswith("n-"):
         return True
-    pagemsg("WARNING: gender mismatch, existing=%s, new=%s" % (
-      ",".join(g1), ",".join(g2)))
     return False
 
   def process_arg_chain(t, first, pref, firstdefault=""):
@@ -307,7 +305,7 @@ def process_page_section(index, page, section, verbose):
 
   proposed_genders = re.split(",", args["g"])
   if compare_genders(genders, proposed_genders):
-    proposed_genders = []
+    genders = []
   else:
     # Check for animacy mismatch, punt if so
     cur_in = [x for x in genders if re.search(r"\bin\b", x)]
@@ -324,6 +322,8 @@ def process_page_section(index, page, section, verbose):
       pagemsg("WARNING: Number mismatch, skipping: cur=%s, proposed=%s, n=%s" % (
         ",".join(genders), ",".join(proposed_genders), args["n"]))
       return None
+    pagemsg("WARNING: gender mismatch, existing=%s, new=%s" % (
+      ",".join(genders), ",".join(proposed_genders)))
 
   for param in headword_template.params:
     name = unicode(param.name)
@@ -344,7 +344,7 @@ def process_page_section(index, page, section, verbose):
   for param in noun_table_template.params:
     headword_template.add(param.name, param.value)
   i = 1
-  for g in proposed_genders:
+  for g in genders:
     headword_template.add("g" if i == 1 else "g%s" % i, g)
   if unicode(headword_template.name) == "ru-proper noun":
     # If proper noun and n is both then we need to add n=both because
