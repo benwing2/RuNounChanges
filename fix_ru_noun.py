@@ -13,9 +13,6 @@
 #    get at the notes. Also add notes= as an argument. If there are notes,
 #    warn. Eventually we should consider modifying ru-noun+ and ru-proper noun+
 #    to display those notes after the headword, the way we do now.
-# 5. When comparing forms, if failure, split on space and compare each word
-#    individually, including try_to_stress() for each word. May have to do
-#    something more sophisticated with links but probably not.
 # 7. Consider allowing a variant of a=bi that prints inanimate first.
 
 import pywikibot, re, sys, codecs, argparse
@@ -239,6 +236,17 @@ def process_page_section(index, page, section, verbose):
   # set of forms from ru-noun-table, and needs to be split on commas.
   # FORM1_LEMMA is true if the FORM1 values come from the ru-noun lemma.
   def compare_forms(case, form1, form2, form1_lemma=False):
+    # Split on individual words and allow monosyllabic accent differences.
+    # FIXME: Will still have problems with [[X|Y]].
+    def compare_single_form(f1, f2):
+      words1 = re.split(" ", f1)
+      words2 = re.split(" ", f2)
+      if len(words1) != len(words2):
+        return False
+      for i in xrange(len(words1)):
+        if words1[i] != words2[i] and try_to_stress(words1[i]) != words2[i]:
+          return False
+      return True
     form1 = [re.sub(u"ё́", u"ё", x) for x in form1]
     form2 = re.split(",", form2)
     if not form1_lemma:
@@ -247,17 +255,26 @@ def process_page_section(index, page, section, verbose):
       form2 = [re.sub("//.*$", "", x) for x in form2]
     # If existing value missing, OK; also allow for unstressed monosyllabic
     # existing form matching stressed monosyllabic new form
-    if form1 and set(form1) != set(form2) and set(try_to_stress(x) for x in form1) != set(form2):
-      pagemsg("WARNING: case %s, existing forms %s not same as proposed %s" %(
-          case, ",".join(form1), ",".join(form2)))
-      return False
+    if form1:
+      if (set(form1) == set(form2) or
+          set(try_to_stress(x) for x in form1) == set(form2) or
+          len(form1) == 1 and len(form2) == 1 and compare_single_form(form1[0], form2[0])):
+        pass
+      else:
+        pagemsg("WARNING: case %s, existing forms %s not same as proposed %s" %(
+            case, ",".join(form1), ",".join(form2)))
+        return False
     return True
 
   def compare_genders(g1, g2):
     if set(g1) == set(g2):
       return True
     if len(g1) == 1 and len(g2) == 1:
-      if g1[0] == 'm' and g2[0].startswith("m-") or g1[0] == 'f' and g2[0].startswith("f-") or g1[0] == 'n' and g2[0].startswith("n-"):
+      # If genders don't match exactly, check if existing gender is missing
+      # animacy and allow that, so it gets overwritten with new gender
+      if g1[0] == re.sub("-(an|in)", "", g2[0]):
+        pagemsg("Existing gender %s missing animacy spec compared with proposed %s, allowed" % (
+          ",".join(g1), ",".join(g2)))
         return True
     return False
 
@@ -312,7 +329,7 @@ def process_page_section(index, page, section, verbose):
     cur_an = [x for x in genders if re.search(r"\ban\b", x)]
     proposed_in = [x for x in proposed_genders if re.search(r"\bin\b", x)]
     proposed_an = [x for x in proposed_genders if re.search(r"\ban\b", x)]
-    if cur_in and proposed_an or cur_an and proposed_in:
+    if not cur_an and proposed_an or not cur_in and proposed_in:
       pagemsg("WARNING: Animacy mismatch, skipping: cur=%s proposed=%s" % (
         ",".join(genders), ",".join(proposed_genders)))
       return None
