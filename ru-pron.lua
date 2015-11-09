@@ -440,6 +440,7 @@ function export.ipa(text, adj, gem, pal)
 			--remove consonant geminacy if non-initial and non-post-tonic
 			if rfind(syl, 'ː') and gem ~= 'y' then
 				local no_replace = false
+				local replace_opt = false
 				if (j == 1 and not rfind(syl, 'ː$')) or stress[j-1] then
 					no_replace = true
 				elseif stress[j] and rfind(syl, 'sː$') and j < #syllable and rfind(syllable[j+1], 'k' .. vowels) then
@@ -448,11 +449,16 @@ function export.ipa(text, adj, gem, pal)
 				end
 				if gem == 'n' then
 					no_replace = false
+				elseif gem == 'o' then
+					no_replace = false
+					replace_opt = true
 				end
 				if not no_replace then
-					syl = rsub(syl, '([^ɕӂn])ː', '%1')
+					syl = rsub(syl, '([^ɕӂn])ː', replace_opt and '%1(ː)' or '%1')
 					if gem == 'n' then
 						syl = rsub(syl, 'nː', 'n')
+					elseif gem == 'o' then
+						syl = rsub(syl, 'nː', 'n(ː)')
 					end
 				end
 				if rfind(word[i], non_accents .. 'nːyj$') then
