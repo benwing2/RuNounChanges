@@ -27,7 +27,9 @@
 		PLSTEM: special plural stem (defaults to stem of lemma)
 
 	Additional named arguments:
-		a: animacy (a = animate, i = inanimate, b = both, otherwise inanimate)
+		a: animacy (a/an/anim = animate, i/in/inan = inanimate, b/bi/both/ai = both
+		   (listing animate first in the headword), ia = both (listing inanimate
+		   first in the headword), otherwise inanimate)
 		n: number restriction (p = plural only, s = singular only, b = both;
 		   defaults to both unless the lemma is plural, in which case it
 		   defaults to plural only)
@@ -1101,8 +1103,10 @@ local function determine_headword_gender(args, sgdc, gender)
 		hgens = {gender .. "an" .. plsuffix}
 	elseif args.a == "i" then
 		hgens = {gender .. "in" .. plsuffix}
-	else
+	elseif args.a == "ai" then
 		hgens = {gender .. "an" .. plsuffix, gender .. "in" .. plsuffix}
+	else
+		hgens = {gender .. "in" .. plsuffix, gender .. "an" .. plsuffix}
 	end
 
 	-- Insert into list of genders
@@ -1323,11 +1327,16 @@ generate_forms_1 = function(args, per_word_info)
 
 	local function verify_animacy_value(val)
 		if not val then return nil end
-		local short = usub(val, 1, 1)
-		if short == "a" or short == "i" or short == "b" then
-			return short
+		if val == "a" or val == "an" or val == "anim" then
+			return "a"
+		elseif val == "i" or val == "in" or val == "inan" then
+			return "i"
+		elseif val == "b" or val == "bi" or val == "both" or val == "ai" then
+			return "ai"
+		elseif val == "ia" then
+			return "ia"
 		end
-		error("Animacy value " .. val .. " should be empty or start with 'a' (animate), 'i' (inanimate), or 'b' (both)")
+		error("Animacy value " .. val .. " should be empty or a/an/anim (animate), i/in/inan (inanimate), b/bi/both/ai (bianimate, listing animate first), or ia (bianimate, listing inanimate first)")
 		return nil
 	end
 
@@ -1933,7 +1942,7 @@ local function concat_case_args(args, do_all)
 			if rfind(case, "_[ai]n") then
 				caseok = false
 			end
-		--else -- args.a == "b"
+		--else -- bianimate
 		--	if case == "acc_sg" or case == "acc_pl" then
 		--		caseok = false
 		--	end
@@ -2012,6 +2021,8 @@ function export.generate_args(frame)
 	local retargs = {}
 	table.insert(retargs, concat_case_args(args, "doall"))
 	table.insert(retargs, "g=" .. table.concat(args.genders, ","))
+	-- The following is correct even with ndef because if ndef is 
+	-- set we will set it in args.n.
 	table.insert(retargs, "n=" .. (args.n or "b"))
 	table.insert(retargs, "a=" .. (args.a or "i"))
 	return table.concat(retargs, "|")
@@ -4450,7 +4461,7 @@ handle_overall_forms_and_overrides = function(args)
 	elseif args.a == "i" then
 		args.acc_sg = args.acc_sg or args.acc_sg_in
 		args.acc_pl = args.acc_pl or args.acc_pl_in
-	else
+	else -- bianimate
 		args.acc_sg = args.acc_sg or ut.equals(args.acc_sg_in, args.acc_sg_an) and args.acc_sg_in or nil
 		args.acc_pl = args.acc_pl or ut.equals(args.acc_pl_in, args.acc_pl_an) and args.acc_pl_in or nil
 	end
