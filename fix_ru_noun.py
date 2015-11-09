@@ -12,6 +12,9 @@
 #    warn. Eventually we should consider modifying ru-noun+ and ru-proper noun+
 #    to display those notes after the headword, the way we do now.
 # 2. If decl has a=bi and headword lists inan before an, change to a=ia.
+# 3. Skip stuff not in main namespace.
+# 4. Add debug code to print out full current and new text of page so I can
+#    verify that nothing bad is happening.
 
 import pywikibot, re, sys, codecs, argparse
 
