@@ -1566,11 +1566,15 @@ generate_forms_1 = function(args, per_word_info)
 			-- but nom pl же́лезы.
 			if stem_was_unstressed and args.jo_special then
 				-- Beware, Cyrillic еЕ in first rsub, Latin eE in second
-				stem = rsub(stem, "([еЕ])([^еЕ]*)$",
+				local new_stem = rsub(stem, "([еЕ])([^еЕ]*)$",
 					function(e, rest)
 						return (e == "Е" and "Ё" or "ё") .. rest
 					end
 				)
+				if stem == new_stem then
+					error("No е in stem to replace with ё")
+				end
+				stem = new_stem
 				if tr then
 					tr = rsub(tr, "([eE])([^eE]*)$",
 						function(e, rest)
@@ -1579,6 +1583,12 @@ generate_forms_1 = function(args, per_word_info)
 					)
 					tr = com.j_correction(tr)
 				end
+				-- This is used to handle железа́ with gen pl желёз and nom pl
+				-- же́лезы. We have two stressed stems, one for the gen pl and
+				-- one for the remaining pl cases, and the variable 'stem' can
+				-- handle only one, so we put the second (gen pl) stem in
+				-- stem_for_bare, which goes into the value of 'bare' (used
+				-- only for gen pl here).
 				stem_for_bare, tr_for_bare = stem, tr
 			end
 
@@ -1885,7 +1895,7 @@ function export.show_multi(frame)
 	return do_show_multi(frame)
 end
 
-local function get_form(forms)
+local function get_form(forms, preserve_links)
 	local canon_forms = {}
 	for _, form in ipairs(forms) do
 		local ru, tr = form[1], form[2]
@@ -1894,15 +1904,19 @@ local function get_form(forms)
 		if tr then
 			trentry, trnotes = m_table_tools.get_notes(tr)
 		end
-		ruentry = m_links.remove_links(ruentry)
+		if not preserve_links then
+			ruentry = m_links.remove_links(ruentry)
+		else
+			ruentry = rsub(ruentry, "|", "<!>")
+		end
 		insert_if_not(canon_forms, {ruentry, trentry})
 	end
 	return nom.concat_forms(canon_forms)
 end
 
-local function concat_case_args(args)
+local function concat_case_args(args, do_all)
 	local ins_text = {}
-	for _, case in ipairs(overridable_cases) do
+	for _, case in ipairs(do_all and all_cases or overridable_cases) do
 		local ispl = rfind(case, "_pl")
 		local caseok = true
 		if args.n == "p" then
@@ -1925,7 +1939,7 @@ local function concat_case_args(args)
 		--	end
 		end
 		if caseok and args[case] then
-			table.insert(ins_text, case .. "=" .. get_form(args[case]))
+			table.insert(ins_text, case .. "=" .. get_form(args[case], rfind(case, "_linked")))
 		end
 	end
 	return table.concat(ins_text, "|")
@@ -1995,9 +2009,8 @@ end
 function export.generate_args(frame)
 	local args = clone_args(frame)
 	args = export.do_generate_forms(args, false)
-	local case_forms = concat_case_args(args)
 	local retargs = {}
-	table.insert(retargs, concat_case_args(args))
+	table.insert(retargs, concat_case_args(args, "doall"))
 	table.insert(retargs, "g=" .. table.concat(args.genders, ","))
 	table.insert(retargs, "n=" .. (args.n or "b"))
 	table.insert(retargs, "a=" .. (args.a or "i"))
@@ -4730,7 +4743,7 @@ templates["full_a"] = template_prelude("50") .. [===[
 | {acc_pl_an}
 |-
 | {acc_sg_in}
-| {acc_pl_an}
+| {acc_pl_in}
 |-
 ! style="background:#eff7ff" | instrumental
 | {ins_sg}
