@@ -7,6 +7,7 @@ local m_common = require("Module:ru-common")
 local m_links = require("Module:links")
 local m_headword = require("Module:headword")
 local m_utilities = require("Module:utilities")
+local ut = require("Module:utils")
 local m_table_tools = require("Module:table tools")
 local m_debug = require("Module:debug")
 
@@ -278,8 +279,6 @@ do_noun = function(genders, inflections, categories, no_plural,
 		else
 			table.insert(genders, "?")
 		end
-	elseif #genders > 1 then
-		table.insert(categories, "Russian nouns with multiple genders")
 	end
 
 	-- Process the genders
@@ -319,6 +318,7 @@ do_noun = function(genders, inflections, categories, no_plural,
 		["n-an-p"] = true,
 		["n-in-p"] = true }
 
+	local real_genders = {}
 	for i, g in ipairs(genders) do
 		if g == "m" then
 			g = "m-?"
@@ -338,12 +338,17 @@ do_noun = function(genders, inflections, categories, no_plural,
 
 		genders[i] = g
 
+		local first_letter = g:sub(1,1)
+
 		-- Categorize by gender
-		if g:sub(1,1) == "m" then
+		if first_letter == "m" then
+			ut.insert_if_not(real_genders, "m")
 			table.insert(categories, "Russian masculine nouns")
-		elseif g:sub(1,1) == "f" then
+		elseif first_letter == "f" then
+			ut.insert_if_not(real_genders, "f")
 			table.insert(categories, "Russian feminine nouns")
-		elseif g:sub(1,1) == "n" then
+		elseif first_letter == "n" then
+			ut.insert_if_not(real_genders, "n")
 			table.insert(categories, "Russian neuter nouns")
 		end
 
@@ -362,6 +367,10 @@ do_noun = function(genders, inflections, categories, no_plural,
 				table.insert(categories, "Russian pluralia tantum with incomplete gender")
 			end
 		end
+	end
+
+	if #real_genders > 1 then
+		table.insert(categories, "Russian nouns with multiple genders")
 	end
 
 	-- Add the genitive forms
