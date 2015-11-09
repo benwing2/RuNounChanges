@@ -124,8 +124,8 @@ function export.show(frame)
 
 			if tr == tr_gen or tr == tr_gen_noaccents then
 				table.insert(tracking_categories, "ru headword with tr/redundant")
-			elseif tr_fixed == tr_gen then
-				table.insert(tracking_categories, "ru headword with tr/with manual adjustment")
+			--elseif tr_fixed == tr_gen then
+			--	table.insert(tracking_categories, "ru headword with tr/with manual adjustment")
 			elseif rfind(tr, ",") then
 				table.insert(tracking_categories, "ru headword with tr/comma")
 			elseif head_noaccents == PAGENAME then
