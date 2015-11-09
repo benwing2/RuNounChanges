@@ -6,14 +6,12 @@
 
 # FIXME:
 #
-# 2. In try_to_stress(), need to stress monosyllabic transliterations
-#    (e.g. in Ре́йн).
-# 3. Add _raw case args to generate_args that preserve things exactly as
+# 1. Add _raw case args to generate_args that preserve things exactly as
 #    in the arguments themselves, with links and notes. This is so we can
 #    get at the notes. Also add notes= as an argument. If there are notes,
 #    warn. Eventually we should consider modifying ru-noun+ and ru-proper noun+
 #    to display those notes after the headword, the way we do now.
-# 7. Consider allowing a variant of a=bi that prints inanimate first.
+# 2. If decl has a=bi and headword lists inan before an, change to a=ia.
 
 import pywikibot, re, sys, codecs, argparse
 
@@ -136,7 +134,7 @@ def process_page_section(index, page, section, verbose):
       noun_table_templates.append(t)
 
   if len(noun_table_templates) > 1:
-    pagemsg("WARNING: Multiple ru-noun-table templates, skipping")
+    pagemsg("WARNING: Found multiple ru-noun-table templates, skipping")
     return None
   if len(noun_table_templates) < 1:
     return unicode(parsed), 0, 0, []
@@ -239,8 +237,8 @@ def process_page_section(index, page, section, verbose):
     # Split on individual words and allow monosyllabic accent differences.
     # FIXME: Will still have problems with [[X|Y]].
     def compare_single_form(f1, f2):
-      words1 = re.split(" ", f1)
-      words2 = re.split(" ", f2)
+      words1 = re.split("[ -]", f1)
+      words2 = re.split("[ -]", f2)
       if len(words1) != len(words2):
         return False
       for i in xrange(len(words1)):
@@ -329,7 +327,7 @@ def process_page_section(index, page, section, verbose):
     cur_an = [x for x in genders if re.search(r"\ban\b", x)]
     proposed_in = [x for x in proposed_genders if re.search(r"\bin\b", x)]
     proposed_an = [x for x in proposed_genders if re.search(r"\ban\b", x)]
-    if not cur_an and proposed_an or not cur_in and proposed_in:
+    if (cur_in or not cur_an) and proposed_an or (cur_an or not cur_in) and proposed_in:
       pagemsg("WARNING: Animacy mismatch, skipping: cur=%s proposed=%s" % (
         ",".join(genders), ",".join(proposed_genders)))
       return None
@@ -339,7 +337,7 @@ def process_page_section(index, page, section, verbose):
       pagemsg("WARNING: Number mismatch, skipping: cur=%s, proposed=%s, n=%s" % (
         ",".join(genders), ",".join(proposed_genders), args["n"]))
       return None
-    pagemsg("WARNING: gender mismatch, existing=%s, new=%s" % (
+    pagemsg("WARNING: Gender mismatch, existing=%s, new=%s" % (
       ",".join(genders), ",".join(proposed_genders)))
 
   for param in headword_template.params:
