@@ -10,6 +10,39 @@ import rulib as ru
 
 site = pywikibot.Site()
 
+def hy_remove_accents(text):
+  text = re.sub(u"[՞՜՛՟]", "", text)
+  text = re.sub(u"և", u"ե", text)
+  text = re.sub(u"<sup>յ</sup>", u"յ", text)
+  text = re.sub(u"<sup>ի</sup>", u"ի", text)
+  return text
+
+def el_remove_accents(text):
+  return text
+
+def grc_remove_accents(text):
+  text = re.sub(u"[ᾸᾹ]", u"Α", text)
+  text = re.sub(u"[ᾰᾱ]", u"α", text)
+  text = re.sub(u"[ῘῙ]", u"Ι", text)
+  text = re.sub(u"[ῐῑ]", u"ι", text)
+  text = re.sub(u"[ῨῩ]", u"Υ", text)
+  text = re.sub(u"[ῠῡ]", u"υ", text)
+  return text
+
+return text
+
+languages = {
+    'ru':["Russian", ru.remove_accents, u"Ѐ-џҊ-ԧꚀ-ꚗ"],
+    'hy':["Armenian", hy_remove_accents, u"Ա-֏ﬓ-ﬗ"],
+    'el':["Greek", el_remove_accents, u"Ͱ-Ͽ"],
+    'grc':["Ancient Greek", grc_remove_accents, u"ἀ-῾Ͱ-Ͽ"],
+}
+
+thislangname = None
+thislangcode = None
+this_remove_accents = None
+this_charset = None
+
 def msg(text):
   print text.encode("utf-8")
 
@@ -31,15 +64,15 @@ def process_page(index, page, save, verbose):
 
   # Split off templates or tables, in each case allowing one nested template
   template_table_split_re = r"(\{\{(?:[^{}]|\{\{[^{}]*\}\})*\}\}|\{\|(?:[^{}]|\{\{[^{}]*\}\})*\|\})"
-  foundrussian = False
+  foundlang = False
   sections = re.split("(^==[^=]*==\n)", text, 0, re.M)
   newtext = text
   for j in xrange(2, len(sections), 2):
-    if sections[j-1] == "==Russian==\n":
-      if foundrussian:
+    if sections[j-1] == "==%s==\n" % thislangname:
+      if foundlang:
         pagemsg("WARNING: Found multiple Russian sections")
         return
-      foundrussian = True
+      foundlang = True
 
       subsections = re.split("(^==.*==\n)", sections[j], 0, re.M)
       for k in xrange(2, len(subsections), 2):
@@ -51,18 +84,18 @@ def process_page(index, page, save, verbose):
         def sub_one_part_link(m):
           subbed_links.append("[[%s]]" % m.group(1))
           template = subsectitle == "Usage notes" and "m" or "l"
-          return "{{%s|ru|%s}}" % (template, m.group(1))
+          return "{{%s|%s|%s}}" % (template, thislangcode, m.group(1))
 
         def sub_two_part_link(m):
           subbed_links.append("[[%s|%s]]" % m.groups())
           template = subsectitle == "Usage notes" and "m" or "l"
           page, accented = m.groups()
-          page = re.sub("#Russian$", "", page)
-          if ru.remove_accents(accented) == page:
-            return "{{%s|ru|%s}}" % (template, accented)
+          page = re.sub("#%s$" % thislangname, "", page)
+          if this_remove_accents(accented) == page:
+            return "{{%s|%s|%s}}" % (template, thislangcode, accented)
           else:
-            pagemsg("WARNING: Russian page %s doesn't match accented %s" % (page, accented))
-            return "{{%s|ru|%s|%s}}" % (template, page, accented)
+            pagemsg("WARNING: %s page %s doesn't match accented %s" % (thislangname, page, accented))
+            return "{{%s|%s|%s|%s}}" % (template, thislangcode, page, accented)
 
         # Split templates, then rejoin text involving templates that don't
         # have newlines in them
@@ -96,9 +129,9 @@ def process_page(index, page, save, verbose):
               split_line = re.split(template_table_split_re, line, 0, re.S)
               for ll in xrange(0, len(split_line), 2):
                 subline = split_line[ll]
-                subline = re.sub(r"\[\[([^A-Za-z\[\]|]*)\]\]", sub_one_part_link, subline)
+                subline = re.sub(r"\[\[([\W%s]*?)\]\]", sub_one_part_link, subline)
                 subline = re.sub(r"\[\[([^A-Za-z\[\]|]*)\|([^A-Za-z\[\]|]*)\]\]", sub_two_part_link, subline)
-                subline = re.sub(r"\[\[([^A-Za-z\[\]|]*)#Russian\|([^A-Za-z\[\]|]*)\]\]", sub_two_part_link, subline)
+                subline = re.sub(r"\[\[([^A-Za-z\[\]|]*)#%s\|([^A-Za-z\[\]|]*)\]\]" % thislangname, sub_two_part_link, subline)
                 if subline != split_line[ll]:
                   pagemsg("Replacing %s with %s in %s section" % (split_line[ll], subline, subsectitle))
                   split_line[ll] = subline
@@ -111,8 +144,8 @@ def process_page(index, page, save, verbose):
                   sections[j] = "".join(subsections)
                   newtext = "".join(sections)
 
-  if not foundrussian:
-    pagemsg("WARNING: Can't find Russian section")
+  if not foundlang:
+    pagemsg("WARNING: Can't find %s section" % thislangname)
     return
 
   if text != newtext:
@@ -127,15 +160,23 @@ def process_page(index, page, save, verbose):
     else:
       pagemsg("Would save with comment = %s" % comment)
 
-parser = argparse.ArgumentParser(description="Replace raw links with Russian-templated links")
+parser = argparse.ArgumentParser(description="Replace raw links with templated links")
 parser.add_argument('start', help="Starting page index", nargs="?")
 parser.add_argument('end', help="Ending page index", nargs="?")
 parser.add_argument('--save', action="store_true", help="Save results")
 parser.add_argument('--verbose', action="store_true", help="More verbose output")
+parser.add_argument('--lang', action="store_true", help="Language code for language to do")
 args = parser.parse_args()
 start, end = blib.get_args(args.start, args.end)
 
-for category in ["Russian lemmas", "Russian non-lemma forms"]:
+if not args.lang:
+  raise ValueError("Language code must be specified")
+if args.lang not in languages:
+  raise ValueError("Unrecognized language code: %s" % args.lang)
+thislangcode = args.lang
+thislangname, this_remove_accents, this_charset = languages[thislangcode]
+
+for category in ["%s lemmas" % thislangname, "%s non-lemma forms" % thislangname]:
   msg("Processing category: %s" % category)
   for i, page in blib.cat_articles(category, start, end):
     msg("Page %s %s: Processing" % (i, unicode(page.title())))
