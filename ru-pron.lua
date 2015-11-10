@@ -1,7 +1,7 @@
 --[[
 This module implements the template {{ru-IPA}} (FIXME, is it called elsewhere?)
 
-Author: Primarily Wyang, with help from Benwing, Atitarev and a bit from others
+Author: Wyang; significantly modified by Benwing, with help from Atitarev and a bit from others
 
 FIXME:
 
@@ -52,8 +52,8 @@ local CFLEX = u(0x0302) -- circumflex =  ̂
 local vowel_list = 'aeiouyɛəäëöü'
 local ipa_vowel_list = vowel_list .. 'ɐɪʊɨæɵʉ'
 local vowels, vowels_c = '[' .. vowel_list .. ']', '([' .. vowel_list .. '])'
-local ipa_vowels, ipa_vowels_c = '[' .. ipa_vowel_list .. ']', '([' .. ipa_vowel_list .. '])'
 local non_vowels, non_vowels_c = '[^' .. vowel_list .. ']', '([^' .. vowel_list .. '])'
+local ipa_vowels, ipa_vowels_c = '[' .. ipa_vowel_list .. ']', '([' .. ipa_vowel_list .. '])'
 local accents = '[' .. AC .. GR .. CFLEX .. ']'
 local non_accents = '[^' .. AC .. GR .. CFLEX .. ']'
 
@@ -462,9 +462,6 @@ function export.ipa(text, adj, gem, pal)
 						syl = rsub(syl, 'nː', 'n(ː)')
 					end
 				end
-				if rfind(word[i], non_accents .. 'nːyj$') then
-					syl = rsub(syl, 'nːyj', 'n(ː)yj')
-				end
 			end
 			-- ˑ is a special gemination symbol used at prefix boundaries that
 			-- we remove only when gem=n, else we convert it to regular
@@ -570,9 +567,21 @@ function export.ipa(text, adj, gem, pal)
 			if not rfind(word[i+1] or '', '^[bdgzvžn]') then
 				return devoicing[a]
 			end end)
-
 		pron = rsub(pron, '([bdgzvž])(ʲ?[ %-%‿]?[ptksčšɕcx])', function(a, b)
 			return devoicing[a] .. b end)
+
+		--make geminated n optional when after but not immediately after
+		--the stress, unless gemination should be preserved; do the sub
+		--repeatedly as long as we make changes, in case of multiple nn's
+		if gem ~= 'y' then
+			while true do
+				local new_pron = rsub(pron, '(ˈ.-' .. ipa_vowels .. '.-' .. ipa_vowels .. '.-)nː', '%1n(ː)')
+				if new_pron == pron then
+					break
+				end
+				pron = new_pron
+			end
+		end
 
 		if rfind(word[i], 'sä$') then
 			pron = rsub(pron, 'sʲə$', 's⁽ʲ⁾ə')
