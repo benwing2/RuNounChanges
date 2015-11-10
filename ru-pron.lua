@@ -43,7 +43,7 @@ end
 -- If enabled, compare this module with new version of module to make
 -- sure all pronunciations are the same. Eventually consider removing this;
 -- but useful as new code is created.
-local test_new_ru_pron_module = false
+local test_new_ru_pron_module = true
 
 local AC = u(0x0301) -- acute =  ́
 local GR = u(0x0300) -- grave =  ̀
@@ -337,13 +337,14 @@ function export.ipa(text, adj, gem, pal)
 		['ju'] = 'ü'})
 
 	--voicing/devoicing assimilations
-	text = rsub(text, '([bdgzvž]+)([ %-%‿%ː]*[ptksčšɕcx])', function(a, b)
+	text = rsub(text, '([bdgzvž]+)([ %-%‿%ː()]*[ptksčšɕcx])', function(a, b)
 		return rsub(a, '.', devoicing) .. b end)
-	text = rsub(text, '([ptksfšcčxɕ]+)([ %-%‿ʹ%ː]*[bdgzž])', function(a, b)
+	text = rsub(text, '([ptksfšcčxɕ]+)([ %-%‿ʹ%ː()]*[bdgzž])', function(a, b)
 		return rsub(a, '.', voicing) .. b end)
 
 	--re-notate orthographic geminate consonants
 	text = rsub(text, '([^' .. vowel_list .. '.%-_])' .. '%1', '%1ː')
+	text = rsub(text, '([^' .. vowel_list .. '.%-_])' .. '%(%1%)', '%1(ː)')
 
 	--split by word and process each word
 	word = rsplit(text, " ", true)
@@ -402,8 +403,8 @@ function export.ipa(text, adj, gem, pal)
 		--syllabify, inserting / at syllable boundaries
 		pron = rsub(pron, '([aäeëɛəiyoöuü]' .. accents .. '?)', '%1/')
 		pron = rsub(pron, '/+$', '')
-		pron = rsub(pron, '/([^‿/aäeëɛəiyoöuü]*)([^‿/aäeëɛəiyoöuüʹːˑʲ])(ʹ?ʲ?[ːˑ]?[aäeëɛəiyoöuü])', '%1/%2%3')
-		pron = rsub(pron, '([^‿/aäeëɛəiyoöuü]?)([^‿/aäeëɛəiyoöuü])/([^‿/aäeëɛəiyoöuüʹːˑʲ])(ʹ?ʲ?[ːˑ]?[aäeëɛəiyoöuü])', function(a, b, c, d)
+		pron = rsub(pron, '/([^‿/aäeëɛəiyoöuü]*)([^‿/aäeëɛəiyoöuüʹːˑ()ʲ])(ʹ?ʲ?[ːˑ()]*[aäeëɛəiyoöuü])', '%1/%2%3')
+		pron = rsub(pron, '([^‿/aäeëɛəiyoöuü]?)([^‿/aäeëɛəiyoöuü])/([^‿/aäeëɛəiyoöuüʹːˑ()ʲ])(ʹ?ʲ?[ːˑ()]*[aäeëɛəiyoöuü])', function(a, b, c, d)
 			if perm_syl_onset[a .. b .. c] then
 				return '/' .. a .. b .. c .. d
 			elseif perm_syl_onset[b .. c] then
@@ -438,7 +439,7 @@ function export.ipa(text, adj, gem, pal)
 			local syl = syllable[j]
 
 			--remove consonant geminacy if non-initial and non-post-tonic
-			if rfind(syl, 'ː') and gem ~= 'y' then
+			if rfind(syl, 'ː') and not rfind(syl, '%(ː%)') and gem ~= 'y' then
 				local no_replace = false
 				local replace_opt = false
 				if (j == 1 and not rfind(syl, 'ː$')) or stress[j-1] then
@@ -469,14 +470,14 @@ function export.ipa(text, adj, gem, pal)
 			-- we remove only when gem=n, else we convert it to regular
 			-- gemination
 			if rfind(syl, 'ˑ') then
-				syl = rsub(syl, 'ˑ', gem == 'n' and '' or 'ː')
+				syl = rsub(syl, 'ˑ', gem == 'n' and '' or gem == 'o' and '(ː)' or 'ː')
 			end
 
 			--assimilative palatalisation of consonants when followed by front vowels
 			-- FIXME: I don't understand this code very well (Benwing)
-			if pal == 'y' or rfind(syl, '^[^cĵšžaäeëɛiyoöuü]*[eiəäëöüʹ]') or rfind(syl, '^[cĵšž][^cĵšžaäeëɛiyoöuüː]+[eiəäëöüʹ]') or rfind(syl, '^[cĵ][äëü]') then
+			if pal == 'y' or rfind(syl, '^[^cĵšžaäeëɛiyoöuü]*[eiəäëöüʹ]') or rfind(syl, '^[cĵšž][^cĵšžaäeëɛiyoöuüː()]+[eiəäëöüʹ]') or rfind(syl, '^[cĵ][äëü]') then
 				if not rfind(syl, 'ʺ.*' .. vowels) and not rfind(syl, 'ʹ' .. non_vowels .. '.*' .. vowels) then
-					syl = rsub(syl, non_vowels_c .. '([ʹːj]?[aäeëɛəiyoöuüʹ])', function(a, b)
+					syl = rsub(syl, non_vowels_c .. '([ʹː()j]*[aäeëɛəiyoöuüʹ])', function(a, b)
 						local set = '[mnpbtdkgcfvszxrl]'
 						if pal == 'y' then
 							set = '[mnpbtdkgcfvszxrlɕӂšž]'
@@ -487,7 +488,7 @@ function export.ipa(text, adj, gem, pal)
 			end
 
 			-- palatalization by soft sign
-			syl = rsub(syl, '(.?ː?)ʹ', function(a)
+			syl = rsub(syl, '(.?[ː()]*)ʹ', function(a)
 				if rfind(a, '[čǰšžɕ]') then
 					return a
 				elseif a ~= 'ʲ' then
@@ -497,7 +498,7 @@ function export.ipa(text, adj, gem, pal)
 				end end)
 
 			--retraction of front vowels in syllables blocking assimilative palatalisation
-			if not rfind(syl, 'ʲː?' .. vowels) and not rfind(syl, '[čǰɕӂ]ː?[ei]') and not rfind(syl, '^j?i') then
+			if not rfind(syl, 'ʲ[ː()]*' .. vowels) and not rfind(syl, '[čǰɕӂ][ː()]*[ei]') and not rfind(syl, '^j?i') then
 				syl = rsub(syl, '[ei]', {['e'] = 'ɛ', ['i'] = 'y'})
 			end
 
@@ -509,7 +510,7 @@ function export.ipa(text, adj, gem, pal)
 				syl = rsub(syl, '(.*)́', 'ˈ%1')
 				syl = rsub(syl, '(.*)̀', 'ˌ%1')
 				syl = rsub(syl, '(.*)̂', '%1')
-				syl = rsub(syl, '([ʲčǰɕӂ]ː?)o', '%1ö')
+				syl = rsub(syl, '([ʲčǰɕӂ][ː()]*)o', '%1ö')
 				syl = rsub(syl, vowels_c, function(a)
 					if a ~= '' then
 						return allophones[a][1]
@@ -558,6 +559,7 @@ function export.ipa(text, adj, gem, pal)
 			end end)
 
 		--fronting of stressed 'a' between soft consonants
+		--FIXME: This doesn't look correct, should actually check for non-vowels
 		pron = rsub(pron, 'ˈ(..?.?)a(.?.?.?)', function(a, b)
 			if rfind(a, '[ʲčǰɕӂ]') and (b == '' or rfind(b, '[ʲčǰɕӂ]')) then
 				return 'ˈ' .. a .. 'æ' .. b
