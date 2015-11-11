@@ -132,6 +132,11 @@ def process_page(index, page, save, verbose):
             pagemsg("WARNING: Too many parts in link, skipping: [[%s]]" % text)
             return "[[%s]]" % text
           template = subsectitle == "Usage notes" and "m" or "l"
+          if thislangcode == "grc" and subsectitle == "Descendants":
+            pagemsg("Using langcode=el instead of grc in Descendants section")
+            langcode = "el"
+          else:
+            langcode = thislangcode
           subbed_links.append("[[%s]]" % text)
           page = None
           if len(parts) == 1:
@@ -149,7 +154,8 @@ def process_page(index, page, save, verbose):
           if translit:
             orig_translit = translit
             translit = re.sub(r"^\[\[(.*)\]\]$", r"\1", translit)
-            accented_translit = expand_text("{{xlit|%s|%s}}" % (thislangcode,
+            translit = re.sub(r"^''(.*)''$", r"\1", translit)
+            accented_translit = expand_text("{{xlit|%s|%s}}" % (langcode,
                 accented))
             if not accented_translit:
               # Error occurred computing transliteration
@@ -161,23 +167,32 @@ def process_page(index, page, save, verbose):
               pass
             else:
               levdist = levenshtein(accented_translit, translit)
-              acclen = len(accented_translit)
-              if (levdist == 1 and acclen >= 3 or levdist == 2 and acclen >= 5
-                  or levdist == 3 and acclen >= 8):
-                pagemsg("Levenshtein distance %s, accept translit difference between explicit %s and auto %s" % (
-                  levdist, translit, accented_translit))
+              tranlen = min(len(translit), len(accented_translit))
+              if accented_translit[0].isupper() != translit[0].isupper():
+                pagemsg("WARNING: Upper/lower mismatch between explicit %s and auto %s, not treating as translit" % (
+                  translit, accented_translit))
+                post_translit_arg = " (%s)" % orig_translit
+              elif translit.endswith("ic") or translit.endswith("an"):
+                pagemsg("WARNING: Explicit translit %s ends with -ic or -an, not treating as translit vs. auto-translit %s (Levenshtein distance %s)" % (
+                  translit, accented_translit, levdist))
+                post_translit_arg = " (%s)" % orig_translit
+              elif (levdist == 1 and tranlen >= 3 or levdist == 2 and tranlen >= 4
+                  or levdist == 3 and tranlen >= 5 or levdist == 4 and tranlen >= 7
+                  or levdist == 5 and tranlen >= 9):
+                pagemsg("Levenshtein distance %s and length %s, accept translit difference between explicit %s and auto %s" % (
+                  levdist, tranlen, translit, accented_translit))
                 if not this_ignore_translit:
                   translit_arg = "|tr=%s" % translit
               else:
                 pagemsg("WARNING: Levenshtein distance %s too big for length %s, not treating %s as transliteration of %s" % (
-                levdist, acclen, translit, accented_translit))
+                levdist, tranlen, translit, accented_translit))
                 post_translit_arg = " (%s)" % orig_translit
 
           if page:
-            return "{{%s|%s|%s|%s%s}}%s" % (template, thislangcode, page,
+            return "{{%s|%s|%s|%s%s}}%s" % (template, langcode, page,
                 accented, translit_arg, post_translit_arg)
           else:
-            return "{{%s|%s|%s%s}}%s" % (template, thislangcode, accented,
+            return "{{%s|%s|%s%s}}%s" % (template, langcode, accented,
                 translit_arg, post_translit_arg)
 
         # Split templates, then rejoin text involving templates that don't
