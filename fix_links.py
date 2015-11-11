@@ -29,25 +29,47 @@ def grc_remove_accents(text):
   text = re.sub(u"[ῠῡ]", u"υ", text)
   return text
 
-return text
-
+# Each element is full language name, function to remove accents to normalize
+# an entry, character set range(s), and whether to ignore translit
 languages = {
-    'ru':["Russian", ru.remove_accents, u"Ѐ-џҊ-ԧꚀ-ꚗ"],
-    'hy':["Armenian", hy_remove_accents, u"Ա-֏ﬓ-ﬗ"],
-    'el':["Greek", el_remove_accents, u"Ͱ-Ͽ"],
-    'grc':["Ancient Greek", grc_remove_accents, u"ἀ-῾Ͱ-Ͽ"],
+    'ru':["Russian", ru.remove_accents, u"Ѐ-џҊ-ԧꚀ-ꚗ", False],
+    'hy':["Armenian", hy_remove_accents, u"Ա-֏ﬓ-ﬗ", True],
+    'el':["Greek", el_remove_accents, u"Ͱ-Ͽ", True],
+    'grc':["Ancient Greek", grc_remove_accents, u"ἀ-῾Ͱ-Ͽ", True],
 }
 
 thislangname = None
 thislangcode = None
 this_remove_accents = None
 this_charset = None
+this_ignore_translit = False
 
 def msg(text):
   print text.encode("utf-8")
 
 def errmsg(text):
   print >>sys.stderr, text.encode("utf-8")
+
+# From wikibooks
+def levenshtein(s1, s2):
+    if len(s1) < len(s2):
+        return levenshtein(s2, s1)
+
+    # len(s1) >= len(s2)
+    if len(s2) == 0:
+        return len(s1)
+
+    previous_row = range(len(s2) + 1)
+    for i, c1 in enumerate(s1):
+        current_row = [i + 1]
+        for j, c2 in enumerate(s2):
+            insertions = previous_row[j + 1] + 1 # j+1 instead of j since previous_row and current_row are one character longer
+            deletions = current_row[j] + 1       # than s2
+            substitutions = previous_row[j] + (c1 != c2)
+            current_row.append(min(insertions, deletions, substitutions))
+        previous_row = current_row
+
+    return previous_row[-1]
 
 def process_page(index, page, save, verbose):
   pagetitle = unicode(page.title())
@@ -57,6 +79,18 @@ def process_page(index, page, save, verbose):
   if not page.exists():
     pagemsg("WARNING: Page doesn't exist")
     return
+
+  def expand_text(tempcall):
+    if verbose:
+      pagemsg("Expanding text: %s" % tempcall)
+    result = site.expand_text(tempcall, title=pagetitle)
+    if verbose:
+      pagemsg("Raw result is %s" % result)
+    if result.startswith('<strong class="error">'):
+      result = re.sub("<.*?>", "", result)
+      pagemsg("WARNING: Got error: %s" % result)
+      return False
+    return result
 
   text = unicode(page.text)
 
@@ -81,21 +115,70 @@ def process_page(index, page, save, verbose):
         if subsectitle in ["Etymology", "Pronunciation"]:
           continue
 
-        def sub_one_part_link(m):
-          subbed_links.append("[[%s]]" % m.group(1))
+        def sub_link(m):
+          text = m.group(1)
+          translit = m.group(2)
+          if re.search("[\[\]]", text):
+            pagemsg("WARNING: Stray brackets in link, skipping: [[%s]]" % text)
+            return "[[%s]]" % text
+          if not re.search("[^ -~]", text):
+            pagemsg("No non-Latin characters in link, skipping: [[%s]]" % text)
+            return "[[%s]]" % text
+          if not re.search("^[ -~%s]*$" % this_charset, text):
+            pagemsg("WARNING: Link contains non-Latin characters not in proper charset, skipping: [[%s]]" % text)
+            return "[[%s]]" % text
+          parts = re.split(r"\|", text)
+          if len(parts) > 2:
+            pagemsg("WARNING: Too many parts in link, skipping: [[%s]]" % text)
+            return "[[%s]]" % text
           template = subsectitle == "Usage notes" and "m" or "l"
-          return "{{%s|%s|%s}}" % (template, thislangcode, m.group(1))
-
-        def sub_two_part_link(m):
-          subbed_links.append("[[%s|%s]]" % m.groups())
-          template = subsectitle == "Usage notes" and "m" or "l"
-          page, accented = m.groups()
-          page = re.sub("#%s$" % thislangname, "", page)
-          if this_remove_accents(accented) == page:
-            return "{{%s|%s|%s}}" % (template, thislangcode, accented)
+          subbed_links.append("[[%s]]" % text)
+          page = None
+          if len(parts) == 1:
+            accented = text
           else:
-            pagemsg("WARNING: %s page %s doesn't match accented %s" % (thislangname, page, accented))
-            return "{{%s|%s|%s|%s}}" % (template, thislangcode, page, accented)
+            page, accented = parts
+            page = re.sub("#%s$" % thislangname, "", page)
+          if page:
+            if this_remove_accents(accented) == page:
+              page = None
+            else:
+              pagemsg("WARNING: %s page %s doesn't match accented %s" % (thislangname, page, accented))
+          translit_arg = ""
+          post_translit_arg = ""
+          if translit:
+            orig_translit = translit
+            translit = re.sub(r"^\[\[(.*)\]\]$", r"\1", translit)
+            accented_translit = expand_text("{{xlit|%s|%s}}" % (thislangcode,
+                accented))
+            if not accented_translit:
+              # Error occurred computing transliteration
+              post_translit_arg = " (%s)" % orig_translit
+            elif accented_translit == translit:
+              pagemsg("No translit difference between explicit %s and auto %s" % (
+                translit, accented_translit))
+              # Translit same as explicit translit, ignore
+              pass
+            else:
+              levdist = levenshtein(accented_translit, translit)
+              acclen = len(accented_translit)
+              if (levdist == 1 and acclen >= 3 or levdist == 2 and acclen >= 5
+                  or levdist == 3 and acclen >= 8):
+                pagemsg("Levenshtein distance %s, accept translit difference between explicit %s and auto %s" % (
+                  levdist, translit, accented_translit))
+                if not this_ignore_translit:
+                  translit_arg = "|tr=%s" % translit
+              else:
+                pagemsg("WARNING: Levenshtein distance %s too big for length %s, not treating %s as transliteration of %s" % (
+                levdist, acclen, translit, accented_translit))
+                post_translit_arg = " (%s)" % orig_translit
+
+          if page:
+            return "{{%s|%s|%s|%s%s}}%s" % (template, thislangcode, page,
+                accented, translit_arg, post_translit_arg)
+          else:
+            return "{{%s|%s|%s%s}}%s" % (template, thislangcode, accented,
+                translit_arg, post_translit_arg)
 
         # Split templates, then rejoin text involving templates that don't
         # have newlines in them
@@ -129,9 +212,7 @@ def process_page(index, page, save, verbose):
               split_line = re.split(template_table_split_re, line, 0, re.S)
               for ll in xrange(0, len(split_line), 2):
                 subline = split_line[ll]
-                subline = re.sub(r"\[\[([\W%s]*?)\]\]", sub_one_part_link, subline)
-                subline = re.sub(r"\[\[([^A-Za-z\[\]|]*)\|([^A-Za-z\[\]|]*)\]\]", sub_two_part_link, subline)
-                subline = re.sub(r"\[\[([^A-Za-z\[\]|]*)#%s\|([^A-Za-z\[\]|]*)\]\]" % thislangname, sub_two_part_link, subline)
+                subline = re.sub(r"\[\[([^A-Za-z]*?)\]\](?: \(([^()|]*?)\))?", sub_link, subline)
                 if subline != split_line[ll]:
                   pagemsg("Replacing %s with %s in %s section" % (split_line[ll], subline, subsectitle))
                   split_line[ll] = subline
@@ -160,24 +241,26 @@ def process_page(index, page, save, verbose):
     else:
       pagemsg("Would save with comment = %s" % comment)
 
-parser = argparse.ArgumentParser(description="Replace raw links with templated links")
-parser.add_argument('start', help="Starting page index", nargs="?")
-parser.add_argument('end', help="Ending page index", nargs="?")
-parser.add_argument('--save', action="store_true", help="Save results")
-parser.add_argument('--verbose', action="store_true", help="More verbose output")
-parser.add_argument('--lang', action="store_true", help="Language code for language to do")
-args = parser.parse_args()
-start, end = blib.get_args(args.start, args.end)
+if __name__ == "__main__":
+  parser = argparse.ArgumentParser(description="Replace raw links with templated links")
+  parser.add_argument('start', help="Starting page index", nargs="?")
+  parser.add_argument('end', help="Ending page index", nargs="?")
+  parser.add_argument('--save', action="store_true", help="Save results")
+  parser.add_argument('--verbose', action="store_true", help="More verbose output")
+  parser.add_argument('--lang', help="Language code for language to do")
+  args = parser.parse_args()
+  start, end = blib.get_args(args.start, args.end)
 
-if not args.lang:
-  raise ValueError("Language code must be specified")
-if args.lang not in languages:
-  raise ValueError("Unrecognized language code: %s" % args.lang)
-thislangcode = args.lang
-thislangname, this_remove_accents, this_charset = languages[thislangcode]
+  if not args.lang:
+    raise ValueError("Language code must be specified")
+  if args.lang not in languages:
+    raise ValueError("Unrecognized language code: %s" % args.lang)
+  thislangcode = args.lang
+  thislangname, this_remove_accents, this_charset, this_ignore_translit = (
+      languages[thislangcode])
 
-for category in ["%s lemmas" % thislangname, "%s non-lemma forms" % thislangname]:
-  msg("Processing category: %s" % category)
-  for i, page in blib.cat_articles(category, start, end):
-    msg("Page %s %s: Processing" % (i, unicode(page.title())))
-    process_page(i, page, args.save, args.verbose)
+  for category in ["%s lemmas" % thislangname, "%s non-lemma forms" % thislangname]:
+    msg("Processing category: %s" % category)
+    for i, page in blib.cat_articles(category, start, end):
+      msg("Page %s %s: Processing" % (i, unicode(page.title())))
+      process_page(i, page, args.save, args.verbose)
