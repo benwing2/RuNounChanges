@@ -17,9 +17,6 @@ def hy_remove_accents(text):
   text = re.sub(u"<sup>ի</sup>", u"ի", text)
   return text
 
-def el_remove_accents(text):
-  return text
-
 def grc_remove_accents(text):
   text = re.sub(u"[ᾸᾹ]", u"Α", text)
   text = re.sub(u"[ᾰᾱ]", u"α", text)
@@ -29,13 +26,28 @@ def grc_remove_accents(text):
   text = re.sub(u"[ῠῡ]", u"υ", text)
   return text
 
+def he_remove_accents(text):
+  text = re.sub(u"[\u0591-\u05BD\u05BF-\u05C5\u05C7]", "", text)
+  return text
+
+def ar_remove_accents(text):
+  text = re.sub(u"\u0671", u"\u0627", text)
+  text = re.sub(u"[\u064B-\u0652\u0670\u0640]", "", text)
+  return text
+
 # Each element is full language name, function to remove accents to normalize
 # an entry, character set range(s), and whether to ignore translit
 languages = {
     'ru':["Russian", ru.remove_accents, u"Ѐ-џҊ-ԧꚀ-ꚗ", False],
     'hy':["Armenian", hy_remove_accents, u"Ա-֏ﬓ-ﬗ", True],
-    'el':["Greek", el_remove_accents, u"Ͱ-Ͽ", True],
+    'el':["Greek", lambda x:x, u"Ͱ-Ͽ", True],
     'grc':["Ancient Greek", grc_remove_accents, u"ἀ-῾Ͱ-Ͽ", True],
+    'ta':["Tamil", lambda x:x, u"\u0B82-\u0BFA", True],
+    'te':["Telugu", lambda x:x, u"\u0C00-\u0C7F", True],
+    'gu':["Gujarati", lambda x:x, u"\u0A81-\u0AF9", "notranslit"],
+    'or':["Oriya", lambda x:x, u"\u0B01-\u0B77", "notranslit"],
+    'he':["Hebrew", he_remove_accents, u"\u0590-\u05FF\uFB1D-\uFB4F", "notranslit"],
+    'ar':["Arabic", ar_remove_accents, u"؀-ۿݐ-ݿࢠ-ࣿﭐ-﷽ﹰ-ﻼ", False],
 }
 
 thislangname = None
@@ -151,12 +163,18 @@ def process_page(index, page, save, verbose):
               pagemsg("WARNING: %s page %s doesn't match accented %s" % (thislangname, page, accented))
           translit_arg = ""
           post_translit_arg = ""
-          if translit:
+          if translit and this_ignore_translit == "notranslit":
+            pagemsg("WARNING: Unable to determine whether putative explicit translit %s is translit of %s" % (
+              translit, accented))
+            post_translit_arg = " (%s)" % translit
+          elif translit:
             orig_translit = translit
             translit = re.sub(r"^\[\[(.*)\]\]$", r"\1", translit)
             translit = re.sub(r"^''(.*)''$", r"\1", translit)
             accented_translit = expand_text("{{xlit|%s|%s}}" % (langcode,
                 accented))
+            if accented_translit == "":
+              pagemsg("WARNING: Unable to transliterate %s" % accented)
             if not accented_translit:
               # Error occurred computing transliteration
               post_translit_arg = " (%s)" % orig_translit
