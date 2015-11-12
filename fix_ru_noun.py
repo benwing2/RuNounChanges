@@ -167,6 +167,7 @@ def process_page_section(index, page, section, verbose):
     pagemsg("Found headword template: %s" % unicode(headword_template))
     pagemsg("Found decl template: %s" % unicode(noun_table_template))
 
+  # Retrieve headword translit and maybe transfer to decl
   headword_tr = getparam(headword_template, "tr")
   if headword_tr:
     if verbose:
@@ -214,6 +215,40 @@ def process_page_section(index, page, section, verbose):
         pagemsg("Replacing decl %s with %s" % (orig_noun_table_template,
           unicode(noun_table_template)))
       frobbed_manual_translit = [headword_tr]
+
+  def process_arg_chain(t, first, pref, firstdefault=""):
+    ret = []
+    val = getparam(t, first) or firstdefault
+    i = 2
+    while val:
+      ret.append(val)
+      val = getparam(t, pref + str(i))
+      i += 1
+    return ret
+
+  genders = process_arg_chain(headword_template, "2", "g")
+
+  # Change a=bi in decl to a=ia or a=ai, depending on order of anim/inan in
+  # headword template
+  if getparam(noun_table_template, "a") in ["b", "bi", "bian", "both"]:
+    saw_in = -1
+    saw_an = -1
+    for i,g in enumerate(genders):
+      if re.search(r"\bin\b", g) and saw_in < 0:
+        saw_in = i
+      if re.search(r"\ban\b", g) and saw_an < 0:
+        saw_an = i
+    if saw_in >= 0 and saw_an >= 0:
+      orig_noun_table_template = unicode(noun_table_template)
+      if saw_in < saw_an:
+        pagemsg("Replacing a=bi with a=ia in decl template")
+        noun_table_template.add("a", "ia")
+      else:
+        pagemsg("Replacing a=bi with a=ai in decl template")
+        noun_table_template.add("a", "ai")
+      if verbose:
+        pagemsg("Replacing decl %s with %s" % (orig_noun_table_template,
+          unicode(noun_table_template)))
 
   generate_template = re.sub(r"^\{\{ru-noun-table", "{{ru-generate-noun-args",
       unicode(noun_table_template))
@@ -279,16 +314,6 @@ def process_page_section(index, page, section, verbose):
         return True
     return False
 
-  def process_arg_chain(t, first, pref, firstdefault=""):
-    ret = []
-    val = getparam(t, first) or firstdefault
-    i = 2
-    while val:
-      ret.append(val)
-      val = getparam(t, pref + str(i))
-      i += 1
-    return ret
-
   headwords = process_arg_chain(headword_template, "1", "head", subpagetitle)
   translits = process_arg_chain(headword_template, "tr", "tr")
   for i in xrange(len(translits)):
@@ -298,7 +323,6 @@ def process_page_section(index, page, section, verbose):
       return None
     else:
       headwords[i] += "//" + translits[i]
-  genders = process_arg_chain(headword_template, "2", "g")
   genitives = process_arg_chain(headword_template, "3", "gen")
   plurals = process_arg_chain(headword_template, "4", "pl")
   if args["n"] == "s":
