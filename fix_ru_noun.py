@@ -46,6 +46,7 @@ def process_page(index, page, save, verbose):
   sections = re.split("(^==[^=]*==\n)", text, 0, re.M)
   num_ru_noun_subs = 0
   num_ru_proper_noun_subs = 0
+  num_replace_bian = 0
   transferred_tr = []
   for j in xrange(2, len(sections), 2):
     if sections[j-1] == "==Russian==\n":
@@ -59,10 +60,11 @@ def process_page(index, page, save, verbose):
         retval = process_page_section(index, page, subsections[k], verbose)
         if retval:
           (replaced, this_num_ru_noun_subs, this_num_ru_proper_noun_subs,
-              this_transferred_tr) = retval
+              this_num_replace_bian, this_transferred_tr) = retval
           subsections[k] = replaced
           num_ru_noun_subs += this_num_ru_noun_subs
           num_ru_proper_noun_subs += this_num_ru_proper_noun_subs
+          num_replace_bian += this_num_replace_bian
           transferred_tr.extend(this_transferred_tr)
         else:
           return
@@ -82,14 +84,18 @@ def process_page(index, page, save, verbose):
       notes.append("convert ru-proper noun to ru-proper noun+")
     elif num_ru_proper_noun_subs > 1:
       notes.append("convert ru-proper noun to ru-proper noun+ (%s)" % num_ru_proper_noun_subs)
+    if num_replace_bian == 1:
+      notes.append("replace a=bi in decl template")
+    elif num_replace_bian > 1:
+      notes.append("replace a=bi in decl template (%s)" % num_replace_bian)
     if transferred_tr:
-      notes.append("transfer %s to ru-noun-table" % (
+      notes.append("transfer %s to decl template" % (
         ",".join("tr=%s" % x for x in transferred_tr)))
     assert notes
     comment = "; ".join(notes)
     if save:
       pagemsg("Saving with comment = %s" % comment)
-      page.text = unicode(parsed)
+      page.text = new_text
       page.save(comment=comment)
     else:
       pagemsg("Would save with comment = %s" % comment)
@@ -120,6 +126,7 @@ def process_page_section(index, page, section, verbose):
   parsed = blib.parse_text(section)
 
   noun_table_templates = []
+  noun_old_templates = []
 
   for t in parsed.filter_templates():
     if unicode(t.name) == "ru-decl-noun-see":
@@ -129,12 +136,17 @@ def process_page_section(index, page, section, verbose):
   for t in parsed.filter_templates():
     if unicode(t.name) == "ru-noun-table":
       noun_table_templates.append(t)
+    if unicode(t.name) == "ru-noun-old":
+      noun_old_templates.append(t)
 
   if len(noun_table_templates) > 1:
     pagemsg("WARNING: Found multiple ru-noun-table templates, skipping")
     return None
+  if len(noun_old_templates) > 1:
+    pagemsg("WARNING: Found multiple ru-noun-old templates, skipping")
+    return None
   if len(noun_table_templates) < 1:
-    return unicode(parsed), 0, 0, []
+    return unicode(parsed), 0, 0, 0, []
 
   for t in parsed.filter_templates():
     if unicode(t.name) in ["ru-noun+", "ru-proper noun+"]:
@@ -151,15 +163,19 @@ def process_page_section(index, page, section, verbose):
     pagemsg("WARNING: Found multiple headword templates, skipping")
     return None
   if len(headword_templates) < 1:
-    return unicode(parsed), 0, 0, []
+    return unicode(parsed), 0, 0, 0, []
 
   noun_table_template = noun_table_templates[0]
+  noun_old_template = noun_old_templates[0] if len(noun_old_templates) == 1 else None
   headword_template = headword_templates[0]
   frobbed_manual_translit = []
+  decl_templates = [x for x in [noun_table_template, noun_old_template] if x]
 
   if verbose:
     pagemsg("Found headword template: %s" % unicode(headword_template))
     pagemsg("Found decl template: %s" % unicode(noun_table_template))
+    if noun_old_template:
+      pagemsg("Found old decl template: %s" % unicode(noun_old_template))
 
   # Retrieve headword translit and maybe transfer to decl
   headword_tr = getparam(headword_template, "tr")
@@ -171,44 +187,45 @@ def process_page_section(index, page, section, verbose):
           headword_tr)
       return None
     # Punt if multi-arg-set, can't handle yet
-    for param in noun_table_template.params:
-      if not param.showkey:
-        val = unicode(param.value)
-        if val == "or":
-          pagemsg("WARNING: Manual translit and multi-decl templates, can't handle: %s" % unicode(noun_table_template))
+    for decl_template in decl_templates:
+      for param in decl_template.params:
+        if not param.showkey:
+          val = unicode(param.value)
+          if val == "or":
+            pagemsg("WARNING: Manual translit and multi-decl templates, can't handle: %s" % unicode(decl_template))
+            return None
+          if val == "-" or val == "_" or val.startswith("join:"):
+            pagemsg("WARNING: Manual translit and multi-word templates, can't handle: %s" % unicode(decl_template))
+            return None
+      for i in xrange(2, 10):
+        if getparam(headword_template, "tr%s" % i):
+          pagemsg("WARNING: Headword template has translit param tr%s, can't handle: %s" % (
+            i, unicode(headword_template)))
           return None
-        if val == "-" or val == "_" or val.startswith("join:"):
-          pagemsg("WARNING: Manual translit and multi-word templates, can't handle: %s" % unicode(noun_table_template))
-          return None
-    for i in xrange(2, 10):
-      if getparam(headword_template, "tr%s" % i):
-        pagemsg("WARNING: Headword template has translit param tr%s, can't handle: %s" % (
-          i, unicode(headword_template)))
-        return None
-    if arg1_is_stress(getparam(noun_table_template, "1")):
-      lemma_arg = "2"
-    else:
-      lemma_arg = "1"
-    lemmaval = getparam(noun_table_template, lemma_arg)
-    if not lemmaval:
-      lemmaval = subpagetitle
-    if "//" in lemmaval:
-      m = re.search("^(.*?)//(.*)$", lemmaval)
-      if m.group(2) != headword_tr:
-        pagemsg("WARNING: Found existing manual translit in decl template %s, but doesn't match headword translit %s; skipping" % (
-          lemmaval, headword_tr))
-        return None
+      if arg1_is_stress(getparam(decl_template, "1")):
+        lemma_arg = "2"
       else:
-        pagemsg("Already found manual translit in decl template %s" %
-            lemmaval)
-    else:
-      lemmaval += "//" + headword_tr
-      orig_noun_table_template = unicode(noun_table_template)
-      noun_table_template.add(lemma_arg, lemmaval)
-      if verbose:
-        pagemsg("Replacing decl %s with %s" % (orig_noun_table_template,
-          unicode(noun_table_template)))
-      frobbed_manual_translit = [headword_tr]
+        lemma_arg = "1"
+      lemmaval = getparam(decl_template, lemma_arg)
+      if not lemmaval:
+        lemmaval = subpagetitle
+      if "//" in lemmaval:
+        m = re.search("^(.*?)//(.*)$", lemmaval)
+        if m.group(2) != headword_tr:
+          pagemsg("WARNING: Found existing manual translit in decl template %s, but doesn't match headword translit %s; skipping" % (
+            lemmaval, headword_tr))
+          return None
+        else:
+          pagemsg("Already found manual translit in decl template %s" %
+              lemmaval)
+      else:
+        lemmaval += "//" + headword_tr
+        orig_decl_template = unicode(decl_template)
+        decl_template.add(lemma_arg, lemmaval)
+        if verbose:
+          pagemsg("Replacing decl %s with %s" % (orig_decl_template,
+            unicode(decl_template)))
+        frobbed_manual_translit = [headword_tr]
 
   def process_arg_chain(t, first, pref, firstdefault=""):
     ret = []
@@ -222,27 +239,32 @@ def process_page_section(index, page, section, verbose):
 
   genders = process_arg_chain(headword_template, "2", "g")
 
+  bian_replaced = 0
+
   # Change a=bi in decl to a=ia or a=ai, depending on order of anim/inan in
   # headword template
-  if getparam(noun_table_template, "a") in ["b", "bi", "bian", "both"]:
-    saw_in = -1
-    saw_an = -1
-    for i,g in enumerate(genders):
-      if re.search(r"\bin\b", g) and saw_in < 0:
-        saw_in = i
-      if re.search(r"\ban\b", g) and saw_an < 0:
-        saw_an = i
-    if saw_in >= 0 and saw_an >= 0:
-      orig_noun_table_template = unicode(noun_table_template)
-      if saw_in < saw_an:
-        pagemsg("Replacing a=bi with a=ia in decl template")
-        noun_table_template.add("a", "ia")
-      else:
-        pagemsg("Replacing a=bi with a=ai in decl template")
-        noun_table_template.add("a", "ai")
-      if verbose:
-        pagemsg("Replacing decl %s with %s" % (orig_noun_table_template,
-          unicode(noun_table_template)))
+  for decl_template in decl_templates:
+    if getparam(decl_template, "a") in ["b", "bi", "bian", "both"]:
+      saw_in = -1
+      saw_an = -1
+      for i,g in enumerate(genders):
+        if re.search(r"\bin\b", g) and saw_in < 0:
+          saw_in = i
+        if re.search(r"\ban\b", g) and saw_an < 0:
+          saw_an = i
+      if saw_in >= 0 and saw_an >= 0:
+        orig_decl_template = unicode(decl_template)
+        if saw_in < saw_an:
+          pagemsg("Replacing a=bi with a=ia in decl template")
+          decl_template.add("a", "ia")
+          bian_replaced = 1
+        else:
+          pagemsg("Replacing a=bi with a=ai in decl template")
+          decl_template.add("a", "ai")
+          bian_replaced = 1
+        if verbose:
+          pagemsg("Replacing decl %s with %s" % (orig_decl_template,
+            unicode(decl_template)))
 
   generate_template = re.sub(r"^\{\{ru-noun-table", "{{ru-generate-noun-args",
       unicode(noun_table_template))
@@ -439,7 +461,7 @@ def process_page_section(index, page, section, verbose):
   if verbose:
     pagemsg("Replacing headword %s with %s" % (orig_headword_template, unicode(headword_template)))
 
-  return unicode(parsed), ru_noun_changed, ru_proper_noun_changed, frobbed_manual_translit
+  return unicode(parsed), ru_noun_changed, ru_proper_noun_changed, bian_replaced, frobbed_manual_translit
 
 parser = argparse.ArgumentParser(description="Convert ru-noun to ru-noun+, ru-proper noun to ru-proper noun+")
 parser.add_argument('start', help="Starting page index", nargs="?")
