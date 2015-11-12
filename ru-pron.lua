@@ -13,9 +13,6 @@ FIXME:
 2. In асунсьо́н and Вьентья́н, put a syllable break after the н and before
    consonant + /j/. Use the perm_sym_onset mechanism or at least the code
    that accesses that mechanism.
-3. Make it possible to write e.g. гру́п(п)а and have it converted to optional
-   gemination. (Need to check all terms involving гру́ппа and fix appropriately,
-   e.g. группа войск, рок группа).
 ]]
 
 local ut = require("Module:utils")
@@ -43,7 +40,7 @@ end
 -- If enabled, compare this module with new version of module to make
 -- sure all pronunciations are the same. Eventually consider removing this;
 -- but useful as new code is created.
-local test_new_ru_pron_module = true
+local test_new_ru_pron_module = false
 
 local AC = u(0x0301) -- acute =  ́
 local GR = u(0x0300) -- grave =  ̀
