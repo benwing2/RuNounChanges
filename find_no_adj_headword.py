@@ -24,12 +24,17 @@ def process_page(index, page):
   parsed = blib.parse(page)
 
   found_headword_template = False
-  found_decl_template = False
   for t in parsed.filter_templates():
     if unicode(t.name) in ["ru-adj"]:
       found_headword_template = True
   if not found_headword_template:
-    pagemsg("Missing adj headword template")
+    notes = []
+    for t in parsed.filter_templates():
+      if unicode(t.name) in ["ru-noun", "ru-noun+", "ru-proper noun", "ru-proper noun+"]:
+        notes.append("found noun header (%s)" % unicode(t.name))
+      if unicode(t.name) == "head":
+        notes.append("found head header (%s)" % getparam(t, "2"))
+    pagemsg("Missing adj headword template%s" % (notes and "; " + ",".join(notes)))
 
 parser = argparse.ArgumentParser(description="Find nouns without declension")
 parser.add_argument('start', help="Starting page index", nargs="?")
