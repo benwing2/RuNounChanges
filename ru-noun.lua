@@ -1904,26 +1904,37 @@ function export.show_multi(frame)
 	return do_show_multi(frame)
 end
 
-local function get_form(forms, preserve_links)
+local function get_form(forms, preserve_links, raw)
 	local canon_forms = {}
 	for _, form in ipairs(forms) do
-		local ru, tr = form[1], form[2]
-		local ruentry, runotes = m_table_tools.get_notes(ru)
-		local trentry, trnotes
-		if tr then
-			trentry, trnotes = m_table_tools.get_notes(tr)
-		end
-		if not preserve_links then
-			ruentry = m_links.remove_links(ruentry)
+		if raw then
+			local ru, tr = form[1], form[2]
+			ru = rsub(ru, "|", "<!>")
+			if tr then
+				tr = rsub(tr, "|", "<!>")
+			end
+			insert_if_not(canon_forms, {ru, tr})
 		else
+			local ru, tr = form[1], form[2]
+			local ruentry, runotes = m_table_tools.get_notes(ru)
+			local trentry, trnotes
+			if tr then
+				trentry, trnotes = m_table_tools.get_notes(tr)
+			end
+			if not preserve_links then
+				ruentry = m_links.remove_links(ruentry)
+			end
 			ruentry = rsub(ruentry, "|", "<!>")
+			if trentry then
+				trentry = rsub(trentry, "|", "<!>")
+			end
+			insert_if_not(canon_forms, {ruentry, trentry})
 		end
-		insert_if_not(canon_forms, {ruentry, trentry})
 	end
 	return nom.concat_forms(canon_forms)
 end
 
-local function concat_case_args(args, do_all)
+local function concat_case_args(args, do_all, raw)
 	local ins_text = {}
 	for _, case in ipairs(do_all and all_cases or overridable_cases) do
 		local ispl = rfind(case, "_pl")
@@ -1948,7 +1959,8 @@ local function concat_case_args(args, do_all)
 		--	end
 		end
 		if caseok and args[case] then
-			table.insert(ins_text, case .. "=" .. get_form(args[case], rfind(case, "_linked")))
+			table.insert(ins_text, case .. (raw and "_raw" or "") .. "=" ..
+				get_form(args[case], rfind(case, "_linked"), raw))
 		end
 	end
 	return table.concat(ins_text, "|")
@@ -2020,6 +2032,7 @@ function export.generate_args(frame)
 	args = export.do_generate_forms(args, false)
 	local retargs = {}
 	table.insert(retargs, concat_case_args(args, "doall"))
+	table.insert(retargs, concat_case_args(args, "doall", "raw"))
 	table.insert(retargs, "g=" .. table.concat(args.genders, ","))
 	-- The following is correct even with ndef because if ndef is 
 	-- set we will set it in args.n.
