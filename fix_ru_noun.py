@@ -6,14 +6,8 @@
 
 # FIXME:
 #
-# 1. Add _raw case args to generate_args that preserve things exactly as
-#    in the arguments themselves, with links and notes. This is so we can
-#    get at the notes. Also add notes= as an argument. If there are notes,
-#    warn. Eventually we should consider modifying ru-noun+ and ru-proper noun+
-#    to display those notes after the headword, the way we do now.
-# 2. If decl has a=bi and headword lists inan before an, change to a=ia.
-# 3. Skip stuff not in main namespace.
-# 4. Add debug code to print out full current and new text of page so I can
+# 1. Skip stuff not in main namespace.
+# 2. Add debug code to print out full current and new text of page so I can
 #    verify that nothing bad is happening.
 
 import pywikibot, re, sys, codecs, argparse
@@ -325,25 +319,34 @@ def process_page_section(index, page, section, verbose):
       headwords[i] += "//" + translits[i]
   genitives = process_arg_chain(headword_template, "3", "gen")
   plurals = process_arg_chain(headword_template, "4", "pl")
+  cases_to_check = None
   if args["n"] == "s":
     if (not compare_forms("nom_sg", headwords, args["nom_sg_linked"], True) or
         not compare_forms("gen_sg", genitives, args["gen_sg"])):
       pagemsg("Existing and proposed forms not same, skipping")
       return None
+    cases_to_check = ["nom_sg", "gen_sg"]
   elif args["n"] == "p":
     if (not compare_forms("nom_pl", headwords, args["nom_pl_linked"], True) or
         not compare_forms("gen_pl", genitives, args["gen_pl"])):
       pagemsg("Existing and proposed forms not same, skipping")
       return None
+    cases_to_check = ["nom_pl", "gen_pl"]
   elif args["n"] == "b":
     if (not compare_forms("nom_sg", headwords, args["nom_sg_linked"], True) or
         not compare_forms("gen_sg", genitives, args["gen_sg"]) or
         not compare_forms("nom_pl", plurals, args["nom_pl"])):
       pagemsg("Existing and proposed forms not same, skipping")
       return None
+    cases_to_check = ["nom_sg", "gen_sg", "nom_pl"]
   else:
     pagemsg("WARNING: Unrecognized number spec %s, skipping" % args["n"])
     return None
+
+  for case in cases_to_check:
+    raw_case = re.sub(u"△", "", ru.remove_links(args[case + "_raw"]))
+    if args[case] != raw_case:
+      pagemsg("WARNING: Raw case %s contains footnote symbol" % args[case + "_raw"])
 
   proposed_genders = re.split(",", args["g"])
   if compare_genders(genders, proposed_genders):
