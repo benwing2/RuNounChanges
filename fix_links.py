@@ -36,16 +36,20 @@ def ar_remove_accents(text):
   return text
 
 # Each element is full language name, function to remove accents to normalize
-# an entry, character set range(s), and whether to ignore translit
+# an entry, character set range(s), and whether to ignore translit (info
+# from [[Module:links]], or "notranslit" if the language doesn't do
+# auto-translit)
 languages = {
     'ru':["Russian", ru.remove_accents, u"Ѐ-џҊ-ԧꚀ-ꚗ", False],
     'hy':["Armenian", hy_remove_accents, u"Ա-֏ﬓ-ﬗ", True],
     'el':["Greek", lambda x:x, u"Ͱ-Ͽ", True],
     'grc':["Ancient Greek", grc_remove_accents, u"ἀ-῾Ͱ-Ͽ", True],
+    'hi':["Hindi", lambda x:x, u"\u0900-\u097F\uA8E0-\uA8FD", False],
     'ta':["Tamil", lambda x:x, u"\u0B82-\u0BFA", True],
     'te':["Telugu", lambda x:x, u"\u0C00-\u0C7F", True],
     'gu':["Gujarati", lambda x:x, u"\u0A81-\u0AF9", "notranslit"],
     'or':["Oriya", lambda x:x, u"\u0B01-\u0B77", "notranslit"],
+    'pa':["Punjabi", lambda x:x, u"\u0A01-\u0A75", "notranslit"],
     'he':["Hebrew", he_remove_accents, u"\u0590-\u05FF\uFB1D-\uFB4F", "notranslit"],
     'ar':["Arabic", ar_remove_accents, u"؀-ۿݐ-ݿࢠ-ࣿﭐ-﷽ﹰ-ﻼ", False],
 }
@@ -116,7 +120,7 @@ def process_page(index, page, save, verbose):
   for j in xrange(2, len(sections), 2):
     if sections[j-1] == "==%s==\n" % thislangname:
       if foundlang:
-        pagemsg("WARNING: Found multiple Russian sections")
+        pagemsg("WARNING: Found multiple %s sections" % thislangname)
         return
       foundlang = True
 
@@ -174,36 +178,37 @@ def process_page(index, page, save, verbose):
             accented_translit = expand_text("{{xlit|%s|%s}}" % (langcode,
                 accented))
             if accented_translit == "":
-              pagemsg("WARNING: Unable to transliterate %s" % accented)
+              pagemsg("WARNING: Unable to transliterate %s (putative explicit transit %s)" % (
+                accented, translit))
             if not accented_translit:
               # Error occurred computing transliteration
               post_translit_arg = " (%s)" % orig_translit
             elif accented_translit == translit:
-              pagemsg("No translit difference between explicit %s and auto %s" % (
-                translit, accented_translit))
+              pagemsg("No translit difference between explicit %s and auto %s (%s %s)" % (
+                translit, accented_translit, thislangname, accented))
               # Translit same as explicit translit, ignore
               pass
             else:
               levdist = levenshtein(accented_translit, translit)
               tranlen = min(len(translit), len(accented_translit))
               if accented_translit[0].isupper() != translit[0].isupper():
-                pagemsg("WARNING: Upper/lower mismatch between explicit %s and auto %s, not treating as translit" % (
-                  translit, accented_translit))
+                pagemsg("WARNING: Upper/lower mismatch between explicit %s and auto %s, not treating as translit (%s %s)" % (
+                  translit, accented_translit, thislangname, accented))
                 post_translit_arg = " (%s)" % orig_translit
-              elif translit.endswith("ic") or translit.endswith("an"):
-                pagemsg("WARNING: Explicit translit %s ends with -ic or -an, not treating as translit vs. auto-translit %s (Levenshtein distance %s)" % (
-                  translit, accented_translit, levdist))
+              elif thislangcode == "grc" and (translit.endswith("ic") or translit.endswith("an")):
+                pagemsg("WARNING: Explicit translit %s ends with -ic or -an, not treating as translit vs. auto-translit %s (Levenshtein distance %s, %s %s)" % (
+                  translit, accented_translit, levdist, thislangname, accented))
                 post_translit_arg = " (%s)" % orig_translit
               elif (levdist == 1 and tranlen >= 3 or levdist == 2 and tranlen >= 4
                   or levdist == 3 and tranlen >= 5 or levdist == 4 and tranlen >= 7
                   or levdist == 5 and tranlen >= 9):
-                pagemsg("Levenshtein distance %s and length %s, accept translit difference between explicit %s and auto %s" % (
-                  levdist, tranlen, translit, accented_translit))
+                pagemsg("Levenshtein distance %s and length %s, accept translit difference between explicit %s and auto %s (%s %s)" % (
+                  levdist, tranlen, translit, accented_translit, thislangname, accented))
                 if not this_ignore_translit:
                   translit_arg = "|tr=%s" % translit
               else:
-                pagemsg("WARNING: Levenshtein distance %s too big for length %s, not treating %s as transliteration of %s" % (
-                levdist, tranlen, translit, accented_translit))
+                pagemsg("WARNING: Levenshtein distance %s too big for length %s, not treating %s as transliteration of %s (%s %s)" % (
+                levdist, tranlen, translit, accented_translit, thislangname, accented))
                 post_translit_arg = " (%s)" % orig_translit
 
           if page:
@@ -218,7 +223,7 @@ def process_page(index, page, save, verbose):
         split_templates = re.split(template_table_split_re, subsections[k], 0, re.S)
         for l in xrange(0, len(split_templates), 2):
           if "{" in split_templates[l] or "}" in split_templates[l]:
-            pagemsg("WARNING: Stray brace in split_templates[%s]: Skipping page: [[%s]]" % (l, split_templates[l].replace("\n", r"\n")))
+            pagemsg("WARNING: Stray brace in split_templates[%s]: Skipping page: <<%s>>" % (l, split_templates[l].replace("\n", r"\n")))
             return
         # Add an extra newline to first item so we can consistently check
         # below for lines beginning with *, rather than * directly after
@@ -264,7 +269,7 @@ def process_page(index, page, save, verbose):
 
   if text != newtext:
     if verbose:
-      pagemsg("Replacing [[%s]] with [[%s]]" % (text, newtext))
+      pagemsg("Replacing <<%s>> with <<%s>>" % (text, newtext))
 
     comment = "Replace raw links with templated links: %s" % ",".join(subbed_links)
     if save:
