@@ -65,7 +65,15 @@ local perm_syl_onset = ut.list_to_set({
 -- FIXME: Consider changing ӂ internally to ʑ to match ɕ (it is used externally
 -- in e.g. дроӂӂи (pronunciation spelling of дрожжи)
 local translit_conv = {
-	['c'] = 't͡s', ['č'] = 't͡ɕ', ['g'] = 'ɡ', ['ĵ'] = 'd͡z', ['ǰ'] = 'd͡ʑ', ['ӂ'] = 'ʑ', ['š'] = 'ʂ', ['ž'] = 'ʐ'
+	['c'] = 't͡s', ['č'] = 't͡ɕ', ['ĉ'] = 't͡ʂ',
+	['g'] = 'ɡ', ['ĝ'] = 'd͡ʐ',
+	['ĵ'] = 'd͡z', ['ǰ'] = 'd͡ʑ', ['ӂ'] = 'ʑ',
+	['š'] = 'ʂ', ['ž'] = 'ʐ'
+}
+
+local translit_conv_j = {
+	['cʲ'] = 'tʲ͡sʲ',
+	['ĵʲ'] = 'dʲ͡zʲ'
 }
 
 local allophones = {
@@ -143,9 +151,13 @@ local phon_respellings = {
 	{'[cdt][sš]č', 'tšč'},
 	{'^o[dt]s', 'ocs'},
 	{vowels_c .. '([šž])j([ou])', '%1%2%3'},
-	{vowels_c .. '([šžc])e', '%1%2ɛ'}, {vowels_c .. '([šžc])i', '%1%2y'},
+	{vowels_c .. '([šžc])e', '%1%2ɛ'},
+	{vowels_c .. '([šžc])i', '%1%2y'},
 	-- FIXME!!! Should these also pay attention to grave accents?
-	{'́tʹ?sja', '́cca'}, {'([^́])tʹ?sja', '%1ca'},
+	{'́tʹ?sja$', '́cca'},
+	{'́tʹ?sja([ ,%-/‿])', '́cca%1'},
+	{'([^́])tʹ?sja$', '%1ca'},
+	{'([^́])tʹ?sja([ ,%-/‿])', '%1ca%2'},
 	{'[dt](ʹ?)s(.?)(.?)', function(a, b, c)
 		if not (b == 'j' and c == 'a') then
 			if rsub(b, vowels_c, '') ~= '' or b == 'j' and rsub(c, vowels_c, '') ~= '' then
@@ -159,22 +171,18 @@ local phon_respellings = {
 	{'[dt]z(j?)' .. vowels_c, 'ĵz%1%2'},
 	{'([čǰӂ])([aou])', '%1j%2'},
 
-	{'([^rn])[dt]c', '%1cc'}, {'[td]č', 'čč'},
+	{'([rn])[dt]([cč])', '%1%2'},
+	{'[dt]([cč])', '%1%1'},
 	{'stg', 'sg'},
-
-	-- FIXME, are these necessary? It seems they are handled elsewhere as well
-	-- even without these two present
-	{'([šžč])ʹ$', '%1'},
-	{'([šžč])ʹ([ %-])', '%1%2'},
 
 	{'sverxi', 'sverxy'},
 	{'stʹd', 'zd'},
 	{'tʹd', 'dd'},
 
-	{'r[dt]c', 'rc'}, {'r[dt]č', 'rč'},
-	{'zdn', 'zn'}, {'[sz][dt]c', 'sc'},
-	{'lnc', 'nc'},	{'n[dt]c', 'nc'},
-	{'[sz]tl', 'sl'}, {'[sz]tn', 'sn'},
+	{'zdn', 'zn'},
+	{'[sz][dt]c', 'sc'},
+	{'lnc', 'nc'},
+	{'[sz]t([ln])', 's%1'},
 	{'ščč', 'ɕč'},
 	-- зч and жч become щ, as does сч at the beginning of a word and
 	-- in the sequence счёт; else сч becomes ɕč, as щч always does
@@ -305,10 +313,13 @@ function export.ipa(text, adj, gem, pal)
 
 	-- rejoin words, convert hyphens to spaces and eliminate stray spaces
 	text = table.concat(word, "")
-	text = rsub(text, '-', ' ')
+	text = rsub(text, '%-', ' ')
+	text = rsub(text, '%s+', ' ')
 	text = rsub(text, '^ ', '')
 	text = rsub(text, ' $', '')
-	text = rsub(text, ' +', ' ')
+	
+	-- convert commas to IPA foot boundaries
+	text = rsub(text, '%s*,%s+', ' | ')
 
 	-- save original word spelling before respellings, (de)voicing changes,
 	-- geminate changes, etc. for implementation of geminate_pref
@@ -469,7 +480,7 @@ function export.ipa(text, adj, gem, pal)
 
 			--assimilative palatalisation of consonants when followed by front vowels
 			-- FIXME: I don't understand this code very well (Benwing)
-			if pal == 'y' or rfind(syl, '^[^cĵšžaäeëɛiyoöuü]*[eiəäëöüʹ]') or rfind(syl, '^[cĵšž][^cĵšžaäeëɛiyoöuüː()]+[eiəäëöüʹ]') or rfind(syl, '^[cĵ][äëü]') then
+			if pal == 'y' or rfind(syl, '^[^cĵĉĝšžaäeëɛiyoöuü]*[eiəäëöüʹ]') or rfind(syl, '^[cĵĉĝšž][^cĵĉĝšžaäeëɛiyoöuüː()]+[eiəäëöüʹ]') or rfind(syl, '^[cĵ][äëü]') then
 				if not rfind(syl, 'ʺ.*' .. vowels) and not rfind(syl, 'ʹ' .. non_vowels .. '.*' .. vowels) then
 					syl = rsub(syl, non_vowels_c .. '([ʹː()j]*[aäeëɛəiyoöuüʹ])', function(a, b)
 						local set = '[mnpbtdkgcfvszxrl]'
@@ -584,7 +595,10 @@ function export.ipa(text, adj, gem, pal)
 			pron = rsub(pron, 'sʲə$', 's⁽ʲ⁾ə')
 		end
 
-		pron = rsub(pron, '[cčgĵǰšžɕӂ]', translit_conv)
+		-- not yet, until we implement all the assimilations
+		-- pron = rsub(pron, '[cĵ]ʲ', translit_conv_j)
+		pron = rsub(pron, '[cčgĉĝĵǰšžɕӂ]', translit_conv)
+
 		word[i] = pron
 	end
 
@@ -595,7 +609,7 @@ function export.ipa(text, adj, gem, pal)
 	-- FIXME: Test cases are inconsistent about whether to apply this
 	--text = rsub(text, '[ɐə]([%-]?)ɐ(%l?)ˈ', '%1ɐː%2ˈ')
 	--text = rsub(text, 'ə([%-]?)[ɐə]', '%1əː')
-	
+
 	-- Assimilation involving hiatus of ɐ and ə
 	text = rsub(text, 'ə([%-]?)[ɐə]', 'ɐ%1ɐ')
 
@@ -619,3 +633,4 @@ return export
 
 -- For Vim, so we get 4-space tabs
 -- vim: set ts=4 sw=4 noet:
+	
