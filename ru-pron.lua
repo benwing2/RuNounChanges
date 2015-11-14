@@ -106,6 +106,8 @@ local devoicing = {
 	['b'] = 'p', ['d'] = 't', ['g'] = 'k',
 	['z'] = 's', ['v'] = 'f',
 	['ž'] = 'š', ['ɣ'] = 'x',
+	['ĵ'] = 'c', ['ǰ'] = 'č', ['ĝ'] = 'ĉ',
+	['ӂ'] = 'ɕ',
 
 	['bʲ'] = 'pʲ', ['dʲ'] = 'tʲ',
 	['zʲ'] = 'sʲ', ['vʲ'] = 'fʲ',
@@ -115,7 +117,8 @@ local devoicing = {
 local voicing = {
 	['p'] = 'b', ['t'] = 'd', ['k'] = 'g',
 	['s'] = 'z', ['f'] = 'v',
-	['š'] = 'ž', ['c'] = 'ĵ', ['č'] = 'ǰ', ['x'] = 'ɣ', ['ɕ'] = 'ӂ'
+	['š'] = 'ž', ['c'] = 'ĵ', ['č'] = 'ǰ', ['ĉ'] = 'ĝ',
+	['x'] = 'ɣ', ['ɕ'] = 'ӂ'
 }
 
 -- Prefixes that we recognize specially when they end in a geminated
@@ -155,35 +158,35 @@ local geminate_pref = {
 }
 
 local phon_respellings = {
-	{'n[dt]sk', 'n(t)sk'},
-	{'s[dt]sk', 'sck'},
-	-- the following is for отсчи́тываться and подсчёт and is
-	-- ordered before changes that convert ts to c 
-	{'[cdt][sš]č', 'tšč'},
-	{'^o[dt]s', 'ocs'},
+	-- vowel changes after always-hard or always-soft consonants
 	{vowels_c .. '([šž])j([ou])', '%1%2%3'},
 	{vowels_c .. '([šžc])e', '%1%2ɛ'},
 	{vowels_c .. '([šžc])i', '%1%2y'},
-	-- FIXME!!! Should these also pay attention to grave accents?
-	{'́tʹ?sja$', '́cca'},
-	{'́tʹ?sja([ ,%-/‿])', '́cca%1'},
-	{'([^́])tʹ?sja$', '%1ca'},
-	{'([^́])tʹ?sja([ ,%-/‿])', '%1ca%2'},
-	{'[dt](ʹ?)s(.?)(.?)', function(a, b, c)
-		if not (b == 'j' and c == 'a') then
-			if rsub(b, vowels_c, '') ~= '' or b == 'j' and rsub(c, vowels_c, '') ~= '' then
-				-- s was followed by a vowel
-				return 'c' .. a .. b .. c
-			else
-				return 'c' .. a .. 's' .. b .. c
-			end
-		end end },
-
-	{'[dt]z(j?)' .. vowels_c, 'ĵz%1%2'},
 	{'([čǰӂ])([aou])', '%1j%2'},
 
+	-- the following seven are ordered before changes that affect ts
+	-- FIXME!!! Should these also pay attention to grave accents?
+	{'́tʹ?sja$', '́cca'},
+	{'́tʹ?sja([ %-‿])', '́cca%1'},
+	{'([^́])tʹ?sja$', '%1ca'},
+	{'([^́])tʹ?sja([ %-‿])', '%1ca%2'},
+	{'n[dt]sk', 'n(t)sk'},
+	{'s[dt]sk', 'sck'},
+	-- the following is for отсчи́тываться and подсчёт
+	{'[cdt][sš]č', 'čšč'},
+
+	-- main changes for affricate assimilation of [dt] + sibilant,
+	-- including ts
+	{'[dt](ʹ?[ %-‿]?)s', 'c%1s'},
+	{'[dt](ʹ?[ %-‿]?)z', 'ĵ%1z'},
+	{'[dt](ʹ?[ %-‿]?)š', 'ĉ%1š'},
+	{'[dt](ʹ?[ %-‿]?)ž', 'ĝ%1ž'},
+
+	-- changes for assimilation of [dt] + affricate
+	{'[sz][dt]c', 'sc'},
 	{'([rn])[dt]([cč])', '%1%2'},
 	{'[dt]([cč])', '%1%1'},
+
 	{'stg', 'sg'},
 
 	{'sverxi', 'sverxy'},
@@ -191,7 +194,6 @@ local phon_respellings = {
 	{'tʹd', 'dd'},
 
 	{'zdn', 'zn'},
-	{'[sz][dt]c', 'sc'},
 	{'lnc', 'nc'},
 	{'[sz]t([ln])', 's%1'},
 	{'ščč', 'ɕč'},
@@ -211,7 +213,7 @@ local phon_respellings = {
 
 local cons_assim_palatal = {
 	-- assimilation of tn, dn, nč, nɕ is handled specially
-	compulsory = ut.list_to_set({'stʲ', 'zdʲ', 'ntʲ', 'ndʲ'}),
+	compulsory = ut.list_to_set({'stʲ', 'zdʲ', 'ntʲ', 'ndʲ', 'csʲ', 'ĵzʲ'}),
 	optional = ut.list_to_set({'slʲ', 'zlʲ', 'snʲ', 'znʲ', 'nsʲ', 'nzʲ',
 		'mpʲ', 'mbʲ', 'mfʲ', 'fmʲ'})
 }
@@ -357,9 +359,9 @@ function export.ipa(text, adj, gem, pal)
 		['ju'] = 'ü'})
 
 	--voicing/devoicing assimilations
-	text = rsub(text, '([bdgzvž]+)([ %-%‿%ː()]*[ptksčšɕcx])', function(a, b)
+	text = rsub(text, '([bdgvɣzžĝĵǰӂ]+)([ %-%‿%ː()]*[ptkxsščɕcĉ])', function(a, b)
 		return rsub(a, '.', devoicing) .. b end)
-	text = rsub(text, '([ptksfšcčxɕ]+)([ %-%‿ʹ%ː()]*[bdgzž])', function(a, b)
+	text = rsub(text, '([ptkfxsščɕcĉ]+)([ %-%‿ʹ%ː()]*[bdgɣzžĝĵǰӂ])', function(a, b)
 		return rsub(a, '.', voicing) .. b end)
 
 	--re-notate orthographic geminate consonants
@@ -568,7 +570,7 @@ function export.ipa(text, adj, gem, pal)
 			end end)
 
 		--general consonant assimilative palatalisation
-		pron = rsub_repeatedly(pron, '([szntdpbmf])([ˈˌ]?)([tdlnszpbmf]ʲ)', function(a, b, c)
+		pron = rsub_repeatedly(pron, '([szntdpbmfcĵ])([ˈˌ]?)([tdlnszpbmf]ʲ)', function(a, b, c)
 			if cons_assim_palatal['compulsory'][a..c] then
 				return a .. 'ʲ' .. b .. c
 			elseif cons_assim_palatal['optional'][a..c] then
@@ -598,11 +600,12 @@ function export.ipa(text, adj, gem, pal)
 			end end)
 
 		--final devoicing and devoicing assimilation
-		pron = rsub(pron, '([bdgzvžɣ]ʲ?)$', function(a)
-			if not rfind(word[i+1] or '', '^[bdgzvžn]') then
+		--FIXME: This seems partly duplicative of assimilations above
+		pron = rsub(pron, '([bdgvɣzžĝĵǰӂ]ʲ?)$', function(a)
+			if not rfind(word[i+1] or '', '^[bdgvɣzžĝĵǰӂn]') then
 				return devoicing[a]
 			end end)
-		pron = rsub(pron, '([bdgzvž])(ʲ?[ %-%‿]?[ptksčšɕcx])', function(a, b)
+		pron = rsub(pron, '([bdgvɣzžĝĵǰӂ])(ʲ?[ %-%‿]?[ptkxsščɕcĉ])', function(a, b)
 			return devoicing[a] .. b end)
 
 		--make geminated n optional when after but not immediately after
@@ -616,8 +619,7 @@ function export.ipa(text, adj, gem, pal)
 			pron = rsub(pron, 'sʲə$', 's⁽ʲ⁾ə')
 		end
 
-		-- not yet, until we implement all the assimilations
-		-- pron = rsub(pron, '[cĵ]ʲ', translit_conv_j)
+		pron = rsub(pron, '[cĵ]ʲ', translit_conv_j)
 		pron = rsub(pron, '[cčgĉĝĵǰšžɕӂ]', translit_conv)
 
 		word[i] = pron
