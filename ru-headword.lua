@@ -231,9 +231,39 @@ local function noun_plus_or_multi(frame, multi)
 	if irregtr and not args.notrcat then
 		table.insert(categories, "Russian terms with irregular pronunciations")
 	end
-heads = remove_tr(heads)
+
+	-- Combine adjacent heads by their transliteration (which should always
+	-- be different, as identical heads including translit have previously
+	-- been removed)
+	heads = remove_tr(heads)
+	local i = 1
+	while i < #heads do
+		if heads[i] == heads[i+1] then
+			trs[i] = trs[i] .. ", " .. trs[i+1]
+			table.remove(heads, i+1)
+			table.remove(trs, i+1)
+		else
+			i = i + 1
+		end
+	end
+
+	-- Eliminate transliteration from genitives and remove duplicates
+	-- (which may occur when there are two translits for a form)
 	genitives = remove_tr(genitives)
+	local genitives_no_dups = {}
+	for _, gen in ipairs(genitives) do
+		ut.insert_if_not(genitives_no_dups, gen)
+	end
+	genitives = genitives_no_dups
+
+	-- Eliminate transliteration from plurals and remove duplicates
+	-- (which may occur when there are two translits for a form)
 	plurals = remove_tr(plurals)
+	local plurals_no_dups = {}
+	for _, pl in ipairs(plurals) do
+		ut.insert_if_not(plurals_no_dups, pl)
+	end
+	plurals = plurals_no_dups
 
 	do_noun(genders, inflections, categories, argsn == "s",
 		genitives, plurals, feminines, masculines)
