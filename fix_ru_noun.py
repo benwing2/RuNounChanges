@@ -66,8 +66,6 @@ def process_page(index, page, save, verbose):
           num_ru_proper_noun_subs += this_num_ru_proper_noun_subs
           num_replace_bian += this_num_replace_bian
           transferred_tr.extend(this_transferred_tr)
-        else:
-          return
       sections[j] = "".join(subsections)
 
   new_text = "".join(sections)
