@@ -2834,7 +2834,7 @@ detect_adj_type = function(lemma, tr, decl, old)
 	else
 		base = lemma
 	end
-	if ending then
+	if ending and ending ~= "" then
 		tr = nom.strip_tr_ending(tr, ending)
 	end
 
