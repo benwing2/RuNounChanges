@@ -929,9 +929,7 @@ construct_bare_and_short_stem = function(args, short_accent, short_stem,
 		end
 	end
 
-	-- Construct bare form, used for short masculine; but use explicitly
-	-- given form if present. FIXME: This is broken, should use
-	-- canonicalize_override().
+	-- Construct bare form, used for short masculine.
 	local bare, baretr
 	if reducible then
 		bare, baretr = com.dereduce_stem(short_stem, short_stemtr, rfind(short_accent, "^b"))
@@ -1596,9 +1594,14 @@ local title_temp = [=[Declension of <b lang="ru" class="Cyrl">{lemma}</b>]=]
 local old_title_temp = [=[Pre-reform declension of <b lang="ru" class="Cyrl">{lemma}</b>]=]
 
 local template = nil
+local template_no_neuter = nil
 local proper_name_template = nil
 local template_mp = nil
+local template_mp_no_neuter = nil
 local short_clause = nil
+local short_clause_no_neuter = nil
+local short_clause_mp = nil
+local short_clause_mp_no_neuter = nil
 local internal_notes_template = nil
 local notes_template = nil
 
@@ -1675,17 +1678,17 @@ make_table = function(args)
 		end
 	end
 
-	local temp = not args.nom_n and proper_name_template or template
+	local temp = not args.nom_n and proper_name_template or args.noneuter and template_no_neuter or template
 
 	if args.old then
 		if args.nom_mp then
-			temp = template_mp
+			temp = args.noneuter and template_mp_no_neuter or template_mp
 			if args.short_m or args.short_n or args.short_f or args.short_p then
 				args.short_m = args.short_m or "&mdash;"
 				args.short_n = args.short_n or "&mdash;"
 				args.short_f = args.short_f or "&mdash;"
 				args.short_p = args.short_p or "&mdash;"
-				args.short_clause = strutils.format(short_clause_mp, args)
+				args.short_clause = strutils.format(args.noneuter and short_clause_mp_no_neuter or short_clause_mp, args)
 			else
 				args.short_clause = ""
 			end
@@ -1698,7 +1701,7 @@ make_table = function(args)
 			args.short_n = args.short_n or "&mdash;"
 			args.short_f = args.short_f or "&mdash;"
 			args.short_p = args.short_p or "&mdash;"
-			args.short_clause = strutils.format(short_clause, args)
+			args.short_clause = strutils.format(args.noneuter and short_clause_no_neuter or short_clause, args)
 		else
 			args.short_clause = ""
 		end
@@ -1722,6 +1725,16 @@ short_clause = [===[
 | {short_f}
 | {short_p}]===]
 
+-- Used for new-style templates
+short_clause_no_neuter = [===[
+
+! style="height:0.2em;background:#d9ebff" colspan="5" |
+|-
+! style="background:#eff7ff" colspan="2" | short form
+| {short_m}
+| {short_f}
+| {short_p}]===]
+
 -- Used for old-style templates
 short_clause_mp = [===[
 
@@ -1730,6 +1743,16 @@ short_clause_mp = [===[
 ! style="background:#eff7ff" colspan="2" | short form
 | {short_m}
 | {short_n}
+| {short_f}
+| colspan="2" | {short_p}]===]
+
+-- Used for old-style templates
+short_clause_mp_no_neuter = [===[
+
+! style="height:0.2em;background:#d9ebff" colspan="6" |
+|-
+! style="background:#eff7ff" colspan="2" | short form
+| {short_m}
 | {short_f}
 | colspan="2" | {short_p}]===]
 
@@ -1803,6 +1826,49 @@ template = template_prelude() .. [===[
 |-
 ! style="background:#eff7ff" colspan="2" | prepositional
 | colspan="2" | {pre_m}
+| {pre_f}
+| {pre_p}
+]===] .. template_postlude()
+
+-- Used for both new-style and old-style templates
+template_no_neuter = template_prelude("55") .. [===[
+! style="width:20%;background:#d9ebff" colspan="2" |
+! style="background:#d9ebff" | masculine
+! style="background:#d9ebff" | feminine
+! style="background:#d9ebff" | plural
+|-
+! style="background:#eff7ff" colspan="2" | nominative
+| {nom_m}
+| {nom_f}
+| {nom_p}
+|-
+! style="background:#eff7ff" colspan="2" | genitive
+| {gen_m}
+| {gen_f}
+| {gen_p}
+|-
+! style="background:#eff7ff" colspan="2" | dative
+| {dat_m}
+| {dat_f}
+| {dat_p}
+|-
+! style="background:#eff7ff" rowspan="2" | accusative
+! style="background:#eff7ff" | animate
+| {gen_m}
+| rowspan="2" | {acc_f}
+| {gen_p}
+|-
+! style="background:#eff7ff" | inanimate
+| {nom_m}
+| {nom_p}
+|-
+! style="background:#eff7ff" colspan="2" | instrumental
+| {ins_m}
+| {ins_f}
+| {ins_p}
+|-
+! style="background:#eff7ff" colspan="2" | prepositional
+| {pre_m}
 | {pre_f}
 | {pre_p}
 ]===] .. template_postlude()
@@ -1890,6 +1956,52 @@ template_mp = template_prelude() .. [===[
 |-
 ! style="background:#eff7ff" colspan="2" | prepositional
 | colspan="2" | {pre_m}
+| {pre_f}
+| colspan="2" | {pre_p}
+]===] .. template_postlude()
+
+-- Used for old-style templates
+template_mp_no_neuter = template_prelude("60") .. [===[
+! style="width:20%;background:#d9ebff" colspan="2" |
+! style="background:#d9ebff" | masculine
+! style="background:#d9ebff" | feminine
+! style="background:#d9ebff" | m. plural
+! style="background:#d9ebff" | n./f. plural
+|-
+! style="background:#eff7ff" colspan="2" | nominative
+| {nom_m}
+| {nom_f}
+| {nom_mp}
+| {nom_p}
+|-
+! style="background:#eff7ff" colspan="2" | genitive
+| {gen_m}
+| {gen_f}
+| colspan="2" | {gen_p}
+|-
+! style="background:#eff7ff" colspan="2" | dative
+| {dat_m}
+| {dat_f}
+| colspan="2" | {dat_p}
+|-
+! style="background:#eff7ff" rowspan="2" | accusative
+! style="background:#eff7ff" | animate
+| {gen_m}
+| rowspan="2" | {acc_f}
+| colspan="2" | {gen_p}
+|-
+! style="background:#eff7ff" | inanimate
+| {nom_m}
+| {nom_mp}
+| {nom_p}
+|-
+! style="background:#eff7ff" colspan="2" | instrumental
+| {ins_m}
+| {ins_f}
+| colspan="2" | {ins_p}
+|-
+! style="background:#eff7ff" colspan="2" | prepositional
+| {pre_m}
 | {pre_f}
 | colspan="2" | {pre_p}
 ]===] .. template_postlude()
