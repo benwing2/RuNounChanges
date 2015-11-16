@@ -37,6 +37,17 @@ local function rsub(term, foo, bar)
 	return retval
 end
 
+-- apply rsub() repeatedly until no change
+local function rsub_repeatedly(term, foo, bar)
+	while true do
+		local new_term = rsub(term, foo, bar)
+		if new_term == term then
+			return term
+		end
+		term = new_term
+	end
+end
+
 -- If enabled, compare this module with new version of module to make
 -- sure all pronunciations are the same. Eventually consider removing this;
 -- but useful as new code is created.
@@ -199,9 +210,10 @@ local phon_respellings = {
 }
 
 local cons_assim_palatal = {
-	compulsory = ut.list_to_set({'stʲ', 'zdʲ', 'nč', 'nɕ', 'ntʲ', 'ndʲ'}),
-	optional = ut.list_to_set({'slʲ', 'zlʲ', 'snʲ', 'znʲ', 'tnʲ', 'dnʲ',
-		'nsʲ', 'nzʲ'})
+	-- assimilation of tn, dn, nč, nɕ is handled specially
+	compulsory = ut.list_to_set({'stʲ', 'zdʲ', 'ntʲ', 'ndʲ'}),
+	optional = ut.list_to_set({'slʲ', 'zlʲ', 'snʲ', 'znʲ', 'nsʲ', 'nzʲ',
+		'mpʲ', 'mbʲ', 'mfʲ', 'fmʲ'})
 }
 
 --@Wyang - they may carry the stress too, as alternatives - по́ небу/по не́бу, etc.
@@ -556,12 +568,17 @@ function export.ipa(text, adj, gem, pal)
 			end end)
 
 		--general consonant assimilative palatalisation
-		pron = rsub(pron, '([szntd])([ˈˌ]?)([tdčǰɕlnsz]ʲ?)', function(a, b, c)
+		pron = rsub_repeatedly(pron, '([szntdpbmf])([ˈˌ]?)([tdlnszpbmf]ʲ)', function(a, b, c)
 			if cons_assim_palatal['compulsory'][a..c] then
 				return a .. 'ʲ' .. b .. c
 			elseif cons_assim_palatal['optional'][a..c] then
 				return a .. '⁽ʲ⁾' .. b .. c
+			else
+				return a .. b .. c
 			end end)
+
+		-- further assimilation before alveolopalatals
+		pron = rsub(pron, 'n([ˈˌ]?)([čǰɕӂ])', 'nʲ%1%2')
 
 		--fronting of stressed 'a' between soft consonants
 		--FIXME: This doesn't look correct, should actually check for non-vowels
@@ -582,13 +599,7 @@ function export.ipa(text, adj, gem, pal)
 		--the stress, unless gemination should be preserved; do the sub
 		--repeatedly as long as we make changes, in case of multiple nn's
 		if gem ~= 'y' then
-			while true do
-				local new_pron = rsub(pron, '(ˈ.-' .. ipa_vowels .. '.-' .. ipa_vowels .. '.-)nː', '%1n(ː)')
-				if new_pron == pron then
-					break
-				end
-				pron = new_pron
-			end
+			pron = rsub_repeatedly(pron, '(ˈ.-' .. ipa_vowels .. '.-' .. ipa_vowels .. '.-)nː', '%1n(ː)')
 		end
 
 		if rfind(word[i], 'sä$') then
@@ -633,4 +644,3 @@ return export
 
 -- For Vim, so we get 4-space tabs
 -- vim: set ts=4 sw=4 noet:
-	
