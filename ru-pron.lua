@@ -175,10 +175,23 @@ local phon_respellings = {
 	-- the following is for отсчи́тываться and подсчёт
 	{'[cdt][sš]č', 'čšč'},
 
-	-- main changes for affricate assimilation of [dt] + sibilant,
-	-- including ts
-	{'[dt](ʹ?[ %-‿]?)s', 'c%1s'},
-	{'[dt](ʹ?[ %-‿]?)z', 'ĵ%1z'},
+	-- main changes for affricate assimilation of [dt] + sibilant, including ts;
+	-- we either convert to "short" variants t͡s, d͡z, etc. or to "long" variants
+	-- t͡ss, d͡zz, etc.
+	-- 1. т с, д з across word boundary, also т/с, д/з with explicitly written
+	--    slash, use long variants.
+	{'[dt](ʹ?[ %-‿/])s', 'c%1s'},
+	{'[dt](ʹ?[ %-‿/])z', 'ĵ%1z'},
+	-- 2. тс, дз + vowel use long variants.
+	{'[dt](ʹ?)s(j?' .. vowels .. ')', 'c%1s%2'},
+	{'[dt](ʹ?)z(j?' .. vowels .. ')', 'ĵ%1z%2'},
+	-- 3. тьс, дьз use long variants.
+	{'[dt]ʹs', 'cʹs'},
+	{'[dt]ʹz', 'ĵʹz'},
+	-- 4. other тс, дз use short variants.
+	{'[dt]s', 'c'},
+	{'[dt]z', 'ĵ'},
+	-- 5. тш, дж always use long variants (FIXME, may change)
 	{'[dt](ʹ?[ %-‿]?)š', 'ĉ%1š'},
 	{'[dt](ʹ?[ %-‿]?)ž', 'ĝ%1ž'},
 
