@@ -580,6 +580,16 @@ function export.ipa(text, adj, gem, pal)
 		-- further assimilation before alveolopalatals
 		pron = rsub(pron, 'n([ˈˌ]?)([čǰɕӂ])', 'nʲ%1%2')
 
+		-- optional palatal assimilation of вп, вб only word-initially
+		pron = rsub(pron, '^([ˈˌ]?[fv])([ˈˌ]?[pb]ʲ)', '%1⁽ʲ⁾%2')
+
+		-- optional palatal assimilation of бв but not in обв-
+		pron = rsub(pron, 'b([ˈˌ]?vʲ)', 'b⁽ʲ⁾%1')
+		if rfind(word[i], '^o' .. accents .. '?bv') then
+			-- exclude ^abv- (if it occurs)
+			pron = rsub(pron, '^([ˈˌ]?[ɐo][ˈˌ]?)b⁽ʲ⁾([ˈˌ]?vʲ)', '%1b%2')
+		end
+
 		--fronting of stressed 'a' between soft consonants
 		--FIXME: This doesn't look correct, should actually check for non-vowels
 		pron = rsub(pron, 'ˈ(..?.?)a(.?.?.?)', function(a, b)
