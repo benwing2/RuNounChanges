@@ -57,13 +57,14 @@ local AC = u(0x0301) -- acute =  ́
 local GR = u(0x0300) -- grave =  ̀
 local CFLEX = u(0x0302) -- circumflex =  ̂
 
-local vowel_list = 'aeiouyɛəäëöü'
-local ipa_vowel_list = vowel_list .. 'ɐɪʊɨæɵʉ'
-local vowels, vowels_c = '[' .. vowel_list .. ']', '([' .. vowel_list .. '])'
-local non_vowels, non_vowels_c = '[^' .. vowel_list .. ']', '([^' .. vowel_list .. '])'
-local ipa_vowels, ipa_vowels_c = '[' .. ipa_vowel_list .. ']', '([' .. ipa_vowel_list .. '])'
-local accents = '[' .. AC .. GR .. CFLEX .. ']'
-local non_accents = '[^' .. AC .. GR .. CFLEX .. ']'
+local vow = 'aeiouyɛəäëöü'
+local ipa_vow = vow .. 'ɐɪʊɨæɵʉ'
+local vowels, vowels_c = '[' .. vow .. ']', '([' .. vow .. '])'
+local non_vowels, non_vowels_c = '[^' .. vow .. ']', '([^' .. vow .. '])'
+local ipa_vowels, ipa_vowels_c = '[' .. ipa_vow .. ']', '([' .. ipa_vow .. '])'
+local acc = AC .. GR .. CFLEX
+local accents = '[' .. acc .. ']'
+local non_accents = '[^' .. acc .. ']'
 
 local perm_syl_onset = ut.list_to_set({
 	'str', 'sp', 'st', 'sk', 'sf', 'sx', 'sc',
@@ -388,8 +389,8 @@ function export.ipa(text, adj, gem, pal)
 		return rsub(a, '.', voicing) .. b end)
 
 	--re-notate orthographic geminate consonants
-	text = rsub(text, '([^' .. vowel_list .. '.%-_])' .. '%1', '%1ː')
-	text = rsub(text, '([^' .. vowel_list .. '.%-_])' .. '%(%1%)', '%1(ː)')
+	text = rsub(text, '([^' .. vow .. '.%-_])' .. '%1', '%1ː')
+	text = rsub(text, '([^' .. vow .. '.%-_])' .. '%(%1%)', '%1(ː)')
 
 	--split by word and process each word
 	word = rsplit(text, " ", true)
@@ -427,9 +428,9 @@ function export.ipa(text, adj, gem, pal)
 
 		--optional iotation of 'e' in a two-vowel sequence and reduction of
 		--word-final 'e'; FIXME: Should this also include grave accent?
-		pron = rsub(pron, '([aäeëɛiyoöuü][́̂]?)ë([^́̂])', '%1(j)ë%2')
+		pron = rsub(pron, '([' .. vow .. '][́̂]?)ë([^́̂])', '%1(j)ë%2')
 		pron = rsub(pron, 'e$', 'ə')
-		pron = rsub(pron, '([aäeëɛəiyoöuüʹ])([́̂]?)[äë]$', '%1%2jə')
+		pron = rsub(pron, '([' .. vow .. 'ʹ])([́̂]?)[äë]$', '%1%2jə')
 		pron = rsub(pron, non_vowels_c .. 'ä$', '%1ʲə')
 		pron = rsub(pron, '%(j%)jə', 'jə')
 
@@ -445,18 +446,30 @@ function export.ipa(text, adj, gem, pal)
 		-- insert glottal stop after hard sign if required
 		pron = rsub(pron, 'ʺ([aɛiouy])', 'ʔ%1')
 
-		--syllabify, inserting / at syllable boundaries
-		pron = rsub(pron, '([aäeëɛəiyoöuü]' .. accents .. '?)', '%1/')
-		pron = rsub(pron, '/+$', '')
-		pron = rsub(pron, '/([^‿/aäeëɛəiyoöuü]*)([^‿/aäeëɛəiyoöuüʹːˑ()ʲ])(ʹ?ʲ?[ːˑ()]*[aäeëɛəiyoöuü])', '%1/%2%3')
-		pron = rsub(pron, '([^‿/aäeëɛəiyoöuü]?)([^‿/aäeëɛəiyoöuü])/([^‿/aäeëɛəiyoöuüʹːˑ()ʲ])(ʹ?ʲ?[ːˑ()]*[aäeëɛəiyoöuü])', function(a, b, c, d)
+		--syllabify, inserting @ at syllable boundaries
+		pron = rsub(pron, '(' .. vowels .. accents .. '?)', '%1@')
+		pron = rsub(pron, '@+$', '')
+		pron = rsub(pron, '@([^‿@' .. vow .. ']*)([^‿@' .. vow .. 'ʹːˑ()ʲ])(ʹ?ʲ?[ːˑ()]*[' .. vow .. '])', '%1@%2%3')
+		pron = rsub(pron, '([^‿@' .. vow .. ']?)([^‿@' .. vow .. '])@([^‿@' .. vow .. 'ʹːˑ()ʲ])(ʹ?ʲ?[ːˑ()]*[' .. vow .. '])', function(a, b, c, d)
 			if perm_syl_onset[a .. b .. c] then
-				return '/' .. a .. b .. c .. d
+				return '@' .. a .. b .. c .. d
 			elseif perm_syl_onset[b .. c] then
-				return a .. '/' .. b .. c .. d
+				return a .. '@' .. b .. c .. d
 			end end)
-		pron = rsub(pron, '/([^‿/aäeëɛəiyoöuü]+)$', '%1')
-		pron = rsub(pron, '/‿', '‿/')
+		pron = rsub(pron, '@([^‿@' .. vow .. ']+)$', '%1')
+		pron = rsub(pron, '@‿', '‿@')
+
+		--if / is present (explicit syllable boundary), remove any @
+		--(automatic boundary) and convert / to @
+		if rfind(pron, '/') then
+			pron = rsub(pron, '[^' .. vow .. acc .. ']+', function(x)
+				if rfind(x, '/') then
+					x = rsub(x, '@', '')
+					x = rsub(x, '/', '@')
+				end
+				return x
+			end)
+		end
 
 		--write 1-based syllable indexes of stressed syllables (acute or grave) to
 		--the list POS
@@ -466,13 +479,13 @@ function export.ipa(text, adj, gem, pal)
 		local count = 0
 		while rfind(trimmed_pron, accents) do
 			local accent_pos = rfind(trimmed_pron, accents)
-			count = count + ulen(rsub(usub(trimmed_pron, 1, accent_pos - 1), '[^%/]', ''))
+			count = count + ulen(rsub(usub(trimmed_pron, 1, accent_pos - 1), '[^%@]', ''))
 			table.insert(pos, count + 1)
 			trimmed_pron = usub(trimmed_pron, accent_pos + 1, -1)
 		end
 
 		--split by syllable
-		syllable = rsplit(pron, '/', true)
+		syllable = rsplit(pron, '@', true)
 
 		--convert list of stress positions to set; equivalent to ut.list_to_set()
 		for _, pos in ipairs(pos) do
@@ -527,7 +540,7 @@ function export.ipa(text, adj, gem, pal)
 			-- FIXME: I don't understand this code very well (Benwing)
 			if pal == 'y' or rfind(syl, '^[^cĵĉĝšžaäeëɛiyoöuü]*[eiəäëöüʹ]') or rfind(syl, '^[cĵĉĝšž][^cĵĉĝšžaäeëɛiyoöuüː()]+[eiəäëöüʹ]') or rfind(syl, '^[cĵ][äëü]') then
 				if not rfind(syl, 'ʺ.*' .. vowels) and not rfind(syl, 'ʹ' .. non_vowels .. '.*' .. vowels) then
-					syl = rsub(syl, non_vowels_c .. '([ʹː()j]*[aäeëɛəiyoöuüʹ])', function(a, b)
+					syl = rsub(syl, non_vowels_c .. '([ʹː()j]*[' .. vow .. 'ʹ])', function(a, b)
 						local set = '[mnpbtdkgcfvszxrl]'
 						if pal == 'y' then
 							set = '[mnpbtdkgcfvszxrlɕӂšž]'
