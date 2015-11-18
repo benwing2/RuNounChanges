@@ -66,6 +66,7 @@ FIXME:
 14. Eliminate pal=y. Consider first asking Wyang why this was put in
    originally.
 15. (DONE) Add test cases: Цю́рих, от а́ба, others.
+15a. Add test cases: фуррь.
 16. Caused a change in ко̀е-кто, perhaps because I rewrote code that accepted
     an acute or circumflex accent to also take a grave accent. See how
 	кое is actually pronounced here and take action if needed.
@@ -436,8 +437,8 @@ function export.ipa(text, adj, gem, pal)
 	-- sort of stress
 	text = rsub(text, TILDE, '')
 
-	-- convert commas to IPA foot boundaries
-	text = rsub(text, '%s*,%s+', ' | ')
+	-- convert commas and en/en dashes to IPA foot boundaries
+	text = rsub(text, '%s*[,–—]%s*', ' | ')
 
 	-- save original word spelling before respellings, (de)voicing changes,
 	-- geminate changes, etc. for implementation of geminate_pref
@@ -463,9 +464,9 @@ function export.ipa(text, adj, gem, pal)
 		['ju'] = 'ü'})
 
 	--voicing/devoicing assimilations
-	text = rsub(text, '([bdgvɣzžĝĵǰӂ]+)([ %-%‿%ː()]*[ptkxsščɕcĉ])', function(a, b)
+	text = rsub(text, '([bdgvɣzžĝĵǰӂ]+)([ %-%‿%ː()/]*[ptkfxsščɕcĉ])', function(a, b)
 		return rsub(a, '.', devoicing) .. b end)
-	text = rsub(text, '([ptkfxsščɕcĉ]+)([ %-%‿ʹ%ː()]*[bdgɣzžĝĵǰӂ])', function(a, b)
+	text = rsub(text, '([ptkfxsščɕcĉ]+)([ %-%‿ʹ%ː()/]*[bdgɣzžĝĵǰӂ])', function(a, b)
 		return rsub(a, '.', voicing) .. b end)
 
 	--re-notate orthographic geminate consonants
