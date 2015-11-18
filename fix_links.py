@@ -131,24 +131,22 @@ def process_page(index, page, save, verbose):
         if subsectitle in ["Etymology", "Pronunciation"]:
           continue
 
-        def sub_link(m):
-          text = m.group(1)
-          translit = m.group(2)
+        def sub_link(orig, text, translit, origtemplate):
           if re.search("[\[\]]", text):
-            pagemsg("WARNING: Stray brackets in link, skipping: [[%s]]" % text)
-            return "[[%s]]" % text
+            pagemsg("WARNING: Stray brackets in link, skipping: %s" % orig)
+            return orig
           if not re.search("[^ -~]", text):
-            pagemsg("No non-Latin characters in link, skipping: [[%s]]" % text)
-            return "[[%s]]" % text
+            pagemsg("No non-Latin characters in link, skipping: %s" % orig)
+            return orig
           if not re.search("^[ -~%s]*$" % this_charset, text):
-            pagemsg("WARNING: Link contains non-Latin characters not in proper charset, skipping: [[%s]]" % text)
-            return "[[%s]]" % text
+            pagemsg("WARNING: Link contains non-Latin characters not in proper charset, skipping: %s" % orig)
+            return orig
           parts = re.split(r"\|", text)
           if len(parts) > 2:
-            pagemsg("WARNING: Too many parts in link, skipping: [[%s]]" % text)
-            return "[[%s]]" % text
-          template = subsectitle == "Usage notes" and "m" or "l"
-          if thislangcode == "grc" and subsectitle == "Descendants":
+            pagemsg("WARNING: Too many parts in link, skipping: %s" % orig)
+            return orig
+          template = origtemplate or subsectitle == "Usage notes" and "m" or "l"
+          if not origtemplate and thislangcode == "grc" and subsectitle == "Descendants":
             pagemsg("Using langcode=el instead of grc in Descendants section")
             langcode = "el"
           else:
@@ -218,6 +216,12 @@ def process_page(index, page, save, verbose):
             return "{{%s|%s|%s%s}}%s" % (template, langcode, accented,
                 translit_arg, post_translit_arg)
 
+        def sub_raw_link(m):
+          return sub_link(m.group(0), m.group(1), m.group(2), None)
+
+        def sub_template_link(m):
+          return sub_link(m.group(0), m.group(2), m.group(3), m.group(1))
+
         # Split templates, then rejoin text involving templates that don't
         # have newlines in them
         split_templates = re.split(template_table_split_re, subsections[k], 0, re.S)
@@ -250,9 +254,20 @@ def process_page(index, page, save, verbose):
               split_line = re.split(template_table_split_re, line, 0, re.S)
               for ll in xrange(0, len(split_line), 2):
                 subline = split_line[ll]
-                subline = re.sub(r"\[\[([^A-Za-z]*?)\]\](?: \(([^()|]*?)\))?", sub_link, subline)
-                if subline != split_line[ll]:
-                  pagemsg("Replacing %s with %s in %s section" % (split_line[ll], subline, subsectitle))
+                replaced = False
+                new_subline = re.sub(r"\[\[([^A-Za-z]*?)\]\](?: \(([^()|]*?)\))?", sub_raw_link, subline)
+                if new_subline != subline:
+                  pagemsg("Replacing %s with %s in %s section" % (subline, new_subline, subsectitle))
+                  subline = new_subline
+                  replaced = True
+                # Only try subbing template links with what looks like a
+                # following translit
+                new_subline = re.sub(r"\{\{([lm])\|%s\|([^A-Za-z{}]*?)\}\}(?: \(([^()|]*?)\))" % thislangcode, sub_template_link, subline)
+                if new_subline != subline:
+                  pagemsg("Replacing %s with %s in %s section" % (subline, new_subline, subsectitle))
+                  subline = new_subline
+                  replaced = True
+                if replaced:
                   split_line[ll] = subline
                   lines[l] = "".join(split_line)
                   split_text[kk] = "".join(lines)
