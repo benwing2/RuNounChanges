@@ -13,6 +13,34 @@ FIXME:
 2. In асунсьо́н and Вьентья́н, put a syllable break after the н and before
    consonant + /j/. Use the perm_sym_onset mechanism or at least the code
    that accesses that mechanism.
+3. Should have geminated jj in йе (occurs in e.g. фойе́). Should work with
+   gem=y (seee FIXME #1).
+4. Fix non-palatal е in льстец.
+5. In львёнок, rendered as ˈlʲvɵnək instead of ˈlʲvʲɵnək. Might be same
+   issue as льстец, having to do with ь in beginning.
+6. In prefixes/suffixes like -ин, treat single syllable as unstressed.
+7. In ни́ндзя, дз becomes palatal and н should palatal-assimilate to it.
+8. In собра́ние, Anatoli renders it as sɐˈbranʲɪ(j)ə with optional (j).
+   Ask him when this exactly applies.
+9. In под сту́лом, should render as pɐt͡s‿ˈstuləm when actually renders as
+   pɐˈt͡s‿stuləm. Also occurs in без ша́пки (bʲɪˈʂ‿ʂapkʲɪ instead of
+   bʲɪʂ‿ˈʂapkʲɪ); has something to do with ‿. Similarly occurs in
+   не к ме́сту, which should render as nʲɪ‿k‿ˈmʲestʊ.
+10. убе́жищa renders as ʊˈbʲeʐɨɕːʲə instead of ʊˈbʲeʐɨɕːə;
+   уда́ча similarly becomes ʊˈdat͡ɕʲə instead of ʊˈdat͡ɕə.
+11. тро́лль renders with geminated final l, and with ʲ on wrong side of
+   gemination (ːʲ instead of ʲː); note how this also occurs above in -ɕːʲə
+   from убе́жищa. (This issue with тро́лль will be masked by the change to
+   generally degeminate l; might need example with final -ннь, if it exists.)
+12. May be additional errors with gemination in combination with explicit
+    / syllable boundary, because of the code expecting that syllable breaks
+	occur in certain places; should probably rewrite the whole gemination code
+	to be less fragile and not depend on exactly where syllable breaks
+	occur in consonant clusters, which it does now (might want to rewrite
+	to avoid the whole business of breaking by syllable and processing
+	syllable-by-syllable).
+13. Many assimilations won't work properly with an explicit / syllable
+   boundary.
 ]]
 
 local ut = require("Module:utils")
