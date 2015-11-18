@@ -12,7 +12,8 @@ FIXME:
    the gemination marker ː.
 2. In асунсьо́н and Вьентья́н, put a syllable break after the н and before
    consonant + /j/. Use the perm_sym_onset mechanism or at least the code
-   that accesses that mechanism.
+   that accesses that mechanism. Should possibly do this also in VCʲj and
+   V‿Cʲj and VCj and V‿Cj sequences; ask Cinemantique if this makes sense.
 3. Should have geminated jj in йе (occurs in e.g. фойе́). Should work with
    gem=y (see FIXME #1).
 4. Fix non-palatal е in льстец.
