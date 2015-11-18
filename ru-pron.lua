@@ -500,11 +500,11 @@ function export.ipa(text, adj, gem, pal)
 					replace_opt = true
 				end
 				if not no_replace then
-					syl = rsub(syl, '([^ɕӂn])ː', replace_opt and '%1(ː)' or '%1')
+					syl = rsub(syl, '([^ɕӂžn])ː', replace_opt and '%1(ː)' or '%1')
 					if gem == 'n' then
-						syl = rsub(syl, 'nː', 'n')
+						syl = rsub(syl, '([žn])ː', '%1')
 					elseif gem == 'o' then
-						syl = rsub(syl, 'nː', 'n(ː)')
+						syl = rsub(syl, '([žn])ː', '%1(ː)')
 					end
 				end
 			end
