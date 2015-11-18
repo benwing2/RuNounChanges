@@ -212,6 +212,11 @@ local geminate_pref = {
 	-- '^sverxː', '^subː', '^tröxː', '^četyröxː',
 }
 
+local sztab = { s='cs', z='ĵz' }
+local function ot_pod_sz(pre, sz)
+	return pre .. sztab[sz]
+end
+
 local phon_respellings = {
 	-- vowel changes after always-hard or always-soft consonants
 	{vowels_c .. '([šž])j([ou])', '%1%2%3'},
@@ -246,12 +251,12 @@ local phon_respellings = {
 	-- 3. тьс, дьз use long variants.
 	{'[dt]ʹs', 'cʹs'},
 	{'[dt]ʹz', 'ĵʹz'},
-	-- 4. word-initial отс-, подс- use long variants because there is
+	-- 4. word-initial от[сз]-, под[сз]- use long variants because there is
 	--    a morpheme boundary.
-	{'^ots', 'ocs'},
-	{'([ %-‿])ots', '%1ocs'},
-	{'^pods', 'pocs'},
-	{'([ %-‿])pods', '%1pocs'},
+	{'^(o' .. accents .. '?)t([sz])', ot_pod_sz},
+	{'([ %-‿]o' .. accents .. '?)t([sz])', ot_pod_sz},
+	{'^(po' .. accents .. '?)d([sz])', ot_pod_sz},
+	{'([ %-‿]po' .. accents .. '?)d([sz])', ot_pod_sz},
 	-- 5. other тс, дз use short variants.
 	{'[dt]s', 'c'},
 	{'[dt]z', 'ĵ'},
