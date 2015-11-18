@@ -485,6 +485,7 @@ function export.ipa(text, adj, gem, pal)
 
 			--remove consonant geminacy if non-initial and non-post-tonic
 			if rfind(syl, 'ː') and not rfind(syl, '%(ː%)') and gem ~= 'y' then
+				-- logic to determine whether to apply changes
 				local no_replace = false
 				local replace_opt = false
 				if (j == 1 and not rfind(syl, 'ː$')) or stress[j-1] then
@@ -499,6 +500,9 @@ function export.ipa(text, adj, gem, pal)
 					no_replace = false
 					replace_opt = true
 				end
+				-- if changes need applying, then apply; but don't affect
+				-- ɕɕ or ӂӂ under any circumstances, and only affect žž and nn
+				-- if gem=n or gem=opt
 				if not no_replace then
 					syl = rsub(syl, '([^ɕӂžn])ː', replace_opt and '%1(ː)' or '%1')
 					if gem == 'n' then
@@ -513,6 +517,10 @@ function export.ipa(text, adj, gem, pal)
 			-- gemination
 			if rfind(syl, 'ˑ') then
 				syl = rsub(syl, 'ˑ', gem == 'n' and '' or gem == 'o' and '(ː)' or 'ː')
+			end
+			-- remove all geminacy of l unless gem=y or gem=opt
+			if gem ~= 'y' and gem ~= 'o' then
+				syl = rsub(syl, 'lː', 'l')
 			end
 
 			--assimilative palatalisation of consonants when followed by front vowels
