@@ -164,14 +164,17 @@ local phon_respellings = {
 	{vowels_c .. '([šžc])i', '%1%2y'},
 	{'([čǰӂ])([aou])', '%1j%2'},
 
-	-- the following seven are ordered before changes that affect ts
-	-- FIXME!!! Should these also pay attention to grave accents?
+	-- the following eight are ordered before changes that affect ts
+	-- FIXME!!! Should these next fouralso pay attention to grave accents?
 	{'́tʹ?sja$', '́cca'},
 	{'́tʹ?sja([ %-‿])', '́cca%1'},
 	{'([^́])tʹ?sja$', '%1ca'},
 	{'([^́])tʹ?sja([ %-‿])', '%1ca%2'},
 	{'n[dt]sk', 'n(t)sk'},
 	{'s[dt]sk', 'sck'},
+	-- the following is ordered before the next one, which applies assimilation
+	-- of [тд] to щ
+	{'n[dt]šč', 'nšč'},
 	-- the following is for отсчи́тываться and подсчёт
 	{'[cdt][sš]č', 'čšč'},
 
