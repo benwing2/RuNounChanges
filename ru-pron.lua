@@ -19,7 +19,7 @@ FIXME:
 5. In львёнок, rendered as ˈlʲvɵnək instead of ˈlʲvʲɵnək. Might be same
    issue as льстец, having to do with ь in beginning.
 6. In prefixes/suffixes like -ин, treat single syllable as unstressed.
-7. In ни́ндзя, дз becomes palatal and н should palatal-assimilate to it.
+7. (DONE) In ни́ндзя, дз becomes palatal and н should palatal-assimilate to it.
 8. In собра́ние, Anatoli renders it as sɐˈbranʲɪ(j)ə with optional (j).
    Ask him when this exactly applies.
 9. In под сту́лом, should render as pɐt͡s‿ˈstuləm when actually renders as
@@ -265,7 +265,8 @@ local phon_respellings = {
 
 local cons_assim_palatal = {
 	-- assimilation of tn, dn, nč, nɕ is handled specially
-	compulsory = ut.list_to_set({'stʲ', 'zdʲ', 'ntʲ', 'ndʲ', 'csʲ', 'ĵzʲ'}),
+	compulsory = ut.list_to_set({'stʲ', 'zdʲ', 'ntʲ', 'ndʲ', 'csʲ', 'ĵzʲ',
+		'ncʲ', 'nĵʲ'}),
 	optional = ut.list_to_set({'slʲ', 'zlʲ', 'snʲ', 'znʲ', 'nsʲ', 'nzʲ',
 		'mpʲ', 'mbʲ', 'mfʲ', 'fmʲ'})
 }
@@ -642,7 +643,7 @@ function export.ipa(text, adj, gem, pal)
 			end end)
 
 		--general consonant assimilative palatalisation
-		pron = rsub_repeatedly(pron, '([szntdpbmfcĵ])([ˈˌ]?)([tdlnszpbmf]ʲ)', function(a, b, c)
+		pron = rsub_repeatedly(pron, '([szntdpbmfcĵ])([ˈˌ]?)([lszntdpbmfcĵ]ʲ)', function(a, b, c)
 			if cons_assim_palatal['compulsory'][a..c] then
 				return a .. 'ʲ' .. b .. c
 			elseif cons_assim_palatal['optional'][a..c] then
