@@ -378,10 +378,8 @@ function export.ipa(text, adj, gem, pal)
 	text = adj and rsub(text, '(.[aoe]́?)go(' .. AC .. '?) ', '%1vo%2 ') or text
 	text = adj and rsub(text, '(.[aoe]́?)go(' .. AC .. '?)sja ', '%1vo%2sja ') or text
 
-	-- eliminate stray spaces
+	-- canonicalize multiple spaces
 	text = rsub(text, '%s+', ' ')
-	text = rsub(text, '^ ', '')
-	text = rsub(text, ' $', '')
 
 	-- Add primary stress to single-syllable words preceded or followed by
 	-- unstressed particle or preposition. Make remaining single-syllable
@@ -398,9 +396,10 @@ function export.ipa(text, adj, gem, pal)
 		if not accentless['prep'][word[i]] and not (i > 2 and accentless['post'][word[i]]) and not (i > 2 and accentless['posthyphen'][word[i]] and word[i-1] == "-") and
 			ulen(rsub(word[i], non_vowels, '')) == 1 and
 			rsub(word[i], non_accents, '') == '' then
-			if (i == 2 and word[1] == "-" or i > 2 and word[i-1] == " -" or
-				i == #word - 1 and word[i+1] == "-" or
-				i < #word - 1 and word[i+1] == "- ") then
+			if (i == 3 and word[2] == "-" and word[1] == "" or
+				i >= 3 and word[i-1] == " -" or
+				i == #word - 2 and word[i+1] == "-" and word[i+2] == "" or
+				i <= #word - 2 and word[i+1] == "- ") then
 				-- prefix or suffix, leave unstressed
 			elseif (i > 2 and accentless['prep'][word[i-2]] or i < #word - 1 and accentless['post'][word[i+2]] or i < #word - 1 and word[i+1] == "-" and accentless['posthyphen'][word[i+2]]) then
 				-- preceded by a preposition, or followed by an unstressed
@@ -522,7 +521,7 @@ function export.ipa(text, adj, gem, pal)
 		-- rsub(pron, '[äe]$', 'ə'), and move it after the line directly
 		-- following it; try this.
 		pron = rsub(pron, non_vowels_c .. '([ː()]*)ä$', function(a, b)
-			if rfind(a, "čǰɕӂ") then
+			if rfind(a, "[čǰɕӂ]") then
 				return a .. b .. 'ə'
 			else
 				return a .. 'ʲ' .. b .. 'ə'
