@@ -29,15 +29,24 @@ FIXME:
    This should probably be done by marking such words with a special sign,
    e.g.  ̆, to indicate no stress.
 7. (DONE) In ни́ндзя, дз becomes palatal and н should palatal-assimilate to it.
-8. In собра́ние, Anatoli renders it as sɐˈbranʲɪ(j)ə with optional (j).
-   Ask him when this exactly applies. Does it apply in all ɪjə sequences?
-   Only word-finally? Also ijə?
-9. In под сту́лом, should render as pɐt͡s‿ˈstuləm when actually renders as
+8. In под сту́лом, should render as pɐt͡s‿ˈstuləm when actually renders as
    pɐˈt͡s‿stuləm. Also occurs in без ша́пки (bʲɪˈʂ‿ʂapkʲɪ instead of
    bʲɪʂ‿ˈʂapkʲɪ); has something to do with ‿. Similarly occurs in
    не к ме́сту, which should render as nʲɪ‿k‿ˈmʲestʊ.
-10. убе́жищa renders as ʊˈbʲeʐɨɕːʲə instead of ʊˈbʲeʐɨɕːə;
-   уда́ча similarly becomes ʊˈdat͡ɕʲə instead of ʊˈdat͡ɕə.
+9. In собра́ние, Anatoli renders it as sɐˈbranʲɪ(j)ə with optional (j).
+   Ask him when this exactly applies. Does it apply in all ɪjə sequences?
+   Only word-finally? Also ijə?
+10. (DONE, BUT I SUSPECT THE OFFENDING CLAUSE, LABELED 10a, CAN BE REWRITTEN
+   MUCH MORE SIMPLY, SEE COMMENT AT CLAUSE; FIX THIS UP) убе́жищa renders as
+   ʊˈbʲeʐɨɕːʲə instead of ʊˈbʲeʐɨɕːə; уда́ча similarly becomes ʊˈdat͡ɕʲə instead
+   of ʊˈdat͡ɕə.
+10a. Remove the "offending clause" just mentioned, labeled FIXME (10a), and fix
+   it as the comment above it describes.
+10b. Remove the clause labeled "FIXME (10b)".
+10c. Investigate the clause labeled "FIXME (10c)". This relates to FIXME #9
+   above concerning собра́ние.
+10d. Investigate the clause labeled "FIXME (10d)" and apply the instructions
+   there about removing a line and seeing whether anything changes.
 11. (SHOULD HAVE FIXED ISSUE OF ːʲ OCCURRING INSTEAD OF ʲː IN тро́лль,
    NEED TO TEST) тро́лль renders with geminated final l, and with ʲ on wrong
    side of gemination (ːʲ instead of ʲː); note how this also occurs above in
@@ -470,11 +479,30 @@ function export.ipa(text, adj, gem, pal)
 		end
 
 		--optional iotation of 'e' in a two-vowel sequence and reduction of
-		--word-final 'e'; FIXME: Should this also include grave accent?
-		pron = rsub(pron, '([' .. vow .. '][́̂]?)ë([^́̂])', '%1(j)ë%2')
+		--word-final 'e'
+		-- FIXME (10c)! the following line won't trigger word-finally,
+		-- should it?
+		-- FIXME (10d)! should it apply only when previous vowel is going to
+		-- turn into ɪ or i? It will currently apply in a word like по́ет
+		-- (but even without it, (j) would occur due to a later change that
+		-- makes (j) optional before ɪ, which is what ë will turn into; this
+		-- suggests this line can be removed without harm.
+		pron = rsub(pron, '(' .. vowels .. accents .. '?)ë(' .. non_accents .. ')', '%1(j)ë%2')
 		pron = rsub(pron, 'e$', 'ə')
-		pron = rsub(pron, '([' .. vow .. 'ʹ])([́̂]?)[äë]$', '%1%2jə')
-		pron = rsub(pron, non_vowels_c .. 'ä$', '%1ʲə')
+		pron = rsub(pron, '([' .. vow .. 'ʹ]' .. accents .. '?)[äë]$', '%1jə')
+
+		-- FIXME (10a)! I suspect this whole clause isn't necessary, and it's
+		-- enough to modify the line rsub(pron, 'e$', 'ə') above to be
+		-- rsub(pron, '[äe]$', 'ə'), and move it after the line directly
+		-- following it; try this.
+		pron = rsub(pron, non_vowels_c .. '([ː()]*)ä$', function(a, b)
+			if rfind(a, "čǰɕӂ") then
+				return a .. b .. 'ə'
+			else
+				return a .. 'ʲ' .. b .. 'ə'
+			end
+		end)
+		-- FIXME (10b)! I suspect this isn't necessary.
 		pron = rsub(pron, '%(j%)jə', 'jə')
 
 		-- insert /j/ before front vowels when required
