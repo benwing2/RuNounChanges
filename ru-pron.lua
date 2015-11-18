@@ -583,9 +583,11 @@ function export.ipa(text, adj, gem, pal)
 			if pal == 'y' or rfind(syl, '^[^cĵĉĝšžaäeëɛiyoöuü]*[eiəäëöüʹ]') or rfind(syl, '^[cĵĉĝšž][^cĵĉĝšžaäeëɛiyoöuüː()]+[eiəäëöüʹ]') or rfind(syl, '^[cĵ][äëü]') then
 				if not rfind(syl, 'ʺ.*' .. vowels) and not rfind(syl, 'ʹ' .. non_vowels .. '.*' .. vowels) then
 					syl = rsub(syl, non_vowels_c .. '([ʹː()j]*[' .. vow .. 'ʹ])', function(a, b)
-						local set = '[mnpbtdkgcfvszxrl]'
+						local set = '[mnpbtdkgcĵfvszxɣrl]'
 						if pal == 'y' then
-							set = '[mnpbtdkgcfvszxrlɕӂšž]'
+							-- FIXME, should this also include hushing
+							-- affricates ĉĝčǰ?
+							set = '[mnpbtdkgcĵfvszxɣrlɕӂšž]'
 						end
 						set = '(' .. set .. ')'
 						return rsub(a, set, '%1ʲ') .. b end)
@@ -594,7 +596,7 @@ function export.ipa(text, adj, gem, pal)
 
 			-- palatalization by soft sign
 			syl = rsub(syl, '(.?[ː()]*)ʹ', function(a)
-				if rfind(a, '[čǰšžɕ]') then
+				if rfind(a, '[čǰšžɕӂ]') then
 					return a
 				elseif a ~= 'ʲ' then
 					return a .. 'ʲ'
