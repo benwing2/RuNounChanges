@@ -191,10 +191,16 @@ local phon_respellings = {
 	-- 3. тьс, дьз use long variants.
 	{'[dt]ʹs', 'cʹs'},
 	{'[dt]ʹz', 'ĵʹz'},
-	-- 4. other тс, дз use short variants.
+	-- 4. word-initial отс-, подс- use long variants because there is
+	--    a morpheme boundary.
+	{'^ots', 'ocs'},
+	{'([ %-‿])ots', '%1ocs'},
+	{'^pods', 'pocs'},
+	{'([ %-‿])pods', '%1pocs'},
+	-- 5. other тс, дз use short variants.
 	{'[dt]s', 'c'},
 	{'[dt]z', 'ĵ'},
-	-- 5. тш, дж always use long variants (FIXME, may change)
+	-- 6. тш, дж always use long variants (FIXME, may change)
 	{'[dt](ʹ?[ %-‿]?)š', 'ĉ%1š'},
 	{'[dt](ʹ?[ %-‿]?)ž', 'ĝ%1ž'},
 
