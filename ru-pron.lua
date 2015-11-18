@@ -65,7 +65,10 @@ FIXME:
    boundary.
 14. Eliminate pal=y. Consider first asking Wyang why this was put in
    originally.
-15. Add test cases: Цю́рих, от а́ба, others.
+15. (DONE) Add test cases: Цю́рих, от а́ба, others.
+16. Caused a change in ко̀е-кто, perhaps because I rewrote code that accepted
+    an acute or circumflex accent to also take a grave accent. See how
+	кое is actually pronounced here and take action if needed.
 ]]
 
 local ut = require("Module:utils")
