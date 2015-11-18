@@ -26,9 +26,8 @@ FIXME:
    assimilative palatalization" converts e to ɛ and i to y in such cases
    of blocked palatalization. Ask Cinemantique if this whole business makes
    any sense.
-6. In prefixes/suffixes like -ин, treat single syllable word as unstressed.
-   This should probably be done by marking such words with a special sign,
-   e.g.  ̆, to indicate no stress.
+6. (DONE) In prefixes/suffixes like -ин, treat single syllable word as
+   unstressed. Also support tilde to force unstressed syllable.
 7. (DONE) In ни́ндзя, дз becomes palatal and н should palatal-assimilate to it.
 8. (DONE) In под сту́лом, should render as pɐt͡s‿ˈstuləm when actually renders as
    pɐˈt͡s‿stuləm. Also occurs in без ша́пки (bʲɪˈʂ‿ʂapkʲɪ instead of
@@ -109,13 +108,14 @@ local test_new_ru_pron_module = false
 local AC = u(0x0301) -- acute =  ́
 local GR = u(0x0300) -- grave =  ̀
 local CFLEX = u(0x0302) -- circumflex =  ̂
+local TILDE = u(0x0303) -- tilde  ̃
 
 local vow = 'aeiouyɛəäëöü'
 local ipa_vow = vow .. 'ɐɪʊɨæɵʉ'
 local vowels, vowels_c = '[' .. vow .. ']', '([' .. vow .. '])'
 local non_vowels, non_vowels_c = '[^' .. vow .. ']', '([^' .. vow .. '])'
 local ipa_vowels, ipa_vowels_c = '[' .. ipa_vow .. ']', '([' .. ipa_vow .. '])'
-local acc = AC .. GR .. CFLEX
+local acc = AC .. GR .. CFLEX .. TILDE
 local accents = '[' .. acc .. ']'
 local non_accents = '[^' .. acc .. ']'
 
@@ -358,7 +358,7 @@ function export.ipa(text, adj, gem, pal)
 	-- translit will not respect э vs. е difference so we have to
 	-- do it ourselves before translit
 	text = rsub(text, 'э', 'ɛ')
-	-- transliterate and decompose acute and grave Latin vowels
+	-- transliterate and decompose acute, grave, circumflex, tilde Latin vowels
 	text = com.translit(text)
 
 	-- handle old ě (e.g. сѣдло́), and ě̈ from сѣ̈дла
@@ -372,22 +372,36 @@ function export.ipa(text, adj, gem, pal)
 	text = adj and rsub(text, '(.[aoe]́?)go(' .. AC .. '?) ', '%1vo%2 ') or text
 	text = adj and rsub(text, '(.[aoe]́?)go(' .. AC .. '?)sja ', '%1vo%2sja ') or text
 
+	-- eliminate stray spaces
+	text = rsub(text, '%s+', ' ')
+	text = rsub(text, '^ ', '')
+	text = rsub(text, ' $', '')
+
 	-- Add primary stress to single-syllable words preceded or followed by
 	-- unstressed particle or preposition. Make remaining single-syllable
-	-- words that aren't a particle or preposition have "unmarked" stress
-	-- (treated as stressed but without a primary or secondary stress marker;
-	-- we repurpose a circumflex for this purpose). We need to preserve the
+	-- words that aren't a particle or preposition or have an accent mark
+	-- or begin or end with a hyphen have "tertiary" stress (treated as
+	-- stressed but without a primary or secondary stress marker; we
+	-- repurpose a circumflex for this purpose). We need to preserve the
 	-- distinction between spaces and hyphens because we only recognize
 	-- certain post-accentless particles following a dash (to distinguish e.g.
-	-- 'то' from '-то').
+	-- 'то' from '-то') and we recognize hyphens for the purpose of marking
+	-- unstressed prefixes and suffixes.
 	local word = strutils.capturing_split(text, "([ %-]+)")
 	for i = 1, #word do
 		if not accentless['prep'][word[i]] and not (i > 2 and accentless['post'][word[i]]) and not (i > 2 and accentless['posthyphen'][word[i]] and word[i-1] == "-") and
 			ulen(rsub(word[i], non_vowels, '')) == 1 and
 			rsub(word[i], non_accents, '') == '' then
-			if (i > 2 and accentless['prep'][word[i-2]] or i < #word - 1 and accentless['post'][word[i+2]] or i < #word - 1 and word[i+1] == "-" and accentless['posthyphen'][word[i+2]]) then
+			if (i == 2 and word[1] == "-" or i > 2 and word[i-1] == " -" or
+				i == #word - 1 and word[i+1] == "-" or
+				i < #word - 1 and word[i+1] == "- ") then
+				-- prefix or suffix, leave unstressed
+			elseif (i > 2 and accentless['prep'][word[i-2]] or i < #word - 1 and accentless['post'][word[i+2]] or i < #word - 1 and word[i+1] == "-" and accentless['posthyphen'][word[i+2]]) then
+				-- preceded by a preposition, or followed by an unstressed
+				-- particle or by -то; add primary stress
 				word[i] = rsub(word[i], vowels_c, '%1' .. AC)
 			else
+				-- add tertiary stress
 				word[i] = rsub(word[i], vowels_c, '%1' .. CFLEX)
 			end
 		end
@@ -404,12 +418,16 @@ function export.ipa(text, adj, gem, pal)
 	end
 
 	-- rejoin words, convert hyphens to spaces and eliminate stray spaces
+	-- resulting from this
 	text = table.concat(word, "")
-	text = rsub(text, '%-', ' ')
-	text = rsub(text, '%s+', ' ')
+	text = rsub(text, '[%-%s]+', ' ')
 	text = rsub(text, '^ ', '')
 	text = rsub(text, ' $', '')
-	
+
+	-- eliminate tildes, which have served their purpose of preventing any
+	-- sort of stress
+	text = rsub(text, TILDE, '')
+
 	-- convert commas to IPA foot boundaries
 	text = rsub(text, '%s*,%s+', ' | ')
 

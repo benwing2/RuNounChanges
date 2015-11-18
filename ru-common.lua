@@ -27,12 +27,13 @@ local usub = mw.ustring.sub
 local AC = u(0x0301) -- acute =  ́
 local GR = u(0x0300) -- grave =  ̀
 local CFLEX = u(0x0302) -- circumflex =  ̂
+local TILDE = u(0x0303) -- tilde =  ̃
 local BREVE = u(0x0306) -- breve  ̆
 local DIA = u(0x0308) -- diaeresis =  ̈
 local CARON = u(0x030C) -- caron  ̌
 
 -- any accent
-export.accent = AC .. GR .. DIA .. BREVE .. CARON
+export.accent = AC .. GR .. DIA .. BREVE .. TILDE .. CARON
 -- regex for any optional accent(s)
 export.opt_accent = "[" .. export.accent .. "]*"
 -- any composed Cyrillic vowel with grave accent
