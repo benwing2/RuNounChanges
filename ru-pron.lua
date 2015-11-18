@@ -14,14 +14,24 @@ FIXME:
    consonant + /j/. Use the perm_sym_onset mechanism or at least the code
    that accesses that mechanism.
 3. Should have geminated jj in йе (occurs in e.g. фойе́). Should work with
-   gem=y (seee FIXME #1).
+   gem=y (see FIXME #1).
 4. Fix non-palatal е in льстец.
-5. In львёнок, rendered as ˈlʲvɵnək instead of ˈlʲvʲɵnək. Might be same
-   issue as льстец, having to do with ь in beginning.
-6. In prefixes/suffixes like -ин, treat single syllable as unstressed.
+5. In львёнок, rendered as ˈlʲvɵnək instead of ˈlʲvʲɵnək. Apparently same
+   issue as льстец, having to do with ь in beginning. This apparently has
+   to do with the "assimilative palatalization of consonants when followed
+   by front vowels" code, which blocks palatalization when the syllable
+   begins with a cluster with a hard sign, or a soft sign followed by a
+   consonant. Then "retraction of front vowels in syllables blocking
+   assimilative palatalization" converts e to ɛ and i to y in such cases
+   of blocked palatalization. Ask Cinemantique if this whole business makes
+   any sense.
+6. In prefixes/suffixes like -ин, treat single syllable word as unstressed.
+   This should probably be done by marking such words with a special sign,
+   e.g.  ̆, to indicate no stress.
 7. (DONE) In ни́ндзя, дз becomes palatal and н should palatal-assimilate to it.
 8. In собра́ние, Anatoli renders it as sɐˈbranʲɪ(j)ə with optional (j).
-   Ask him when this exactly applies.
+   Ask him when this exactly applies. Does it apply in all ɪjə sequences?
+   Only word-finally? Also ijə?
 9. In под сту́лом, should render as pɐt͡s‿ˈstuləm when actually renders as
    pɐˈt͡s‿stuləm. Also occurs in без ша́пки (bʲɪˈʂ‿ʂapkʲɪ instead of
    bʲɪʂ‿ˈʂapkʲɪ); has something to do with ‿. Similarly occurs in
@@ -41,6 +51,8 @@ FIXME:
 	syllable-by-syllable).
 13. Many assimilations won't work properly with an explicit / syllable
    boundary.
+14. Eliminate pal=y. Consider first asking Wyang why this was put in
+   originally.
 ]]
 
 local ut = require("Module:utils")
@@ -565,7 +577,7 @@ function export.ipa(text, adj, gem, pal)
 				syl = rsub(syl, 'lː', 'l')
 			end
 
-			--assimilative palatalisation of consonants when followed by front vowels
+			--assimilative palatalization of consonants when followed by front vowels
 			-- FIXME: I don't understand this code very well (Benwing)
 			if pal == 'y' or rfind(syl, '^[^cĵĉĝšžaäeëɛiyoöuü]*[eiəäëöüʹ]') or rfind(syl, '^[cĵĉĝšž][^cĵĉĝšžaäeëɛiyoöuüː()]+[eiəäëöüʹ]') or rfind(syl, '^[cĵ][äëü]') then
 				if not rfind(syl, 'ʺ.*' .. vowels) and not rfind(syl, 'ʹ' .. non_vowels .. '.*' .. vowels) then
@@ -589,7 +601,7 @@ function export.ipa(text, adj, gem, pal)
 					return 'ʲ'
 				end end)
 
-			--retraction of front vowels in syllables blocking assimilative palatalisation
+			--retraction of front vowels in syllables blocking assimilative palatalization
 			if not rfind(syl, 'ʲ[ː()]*' .. vowels) and not rfind(syl, '[čǰɕӂ][ː()]*[ei]') and not rfind(syl, '^j?i') then
 				syl = rsub(syl, '[ei]', {['e'] = 'ɛ', ['i'] = 'y'})
 			end
@@ -633,7 +645,7 @@ function export.ipa(text, adj, gem, pal)
 		pron = rsub(pron, "^jɪ", "(j)ɪ")
 		pron = rsub(pron, ipa_vowels_c .. "([‿%-]?)jɪ", "%1%2(j)ɪ")
 
-		--consonant assimilative palatalisation of tn/dn, depending on
+		--consonant assimilative palatalization of tn/dn, depending on
 		--whether [rl] precedes
 		pron = rsub(pron, '([rl]?)([ˈˌ]?[dt])([ˈˌ]?nʲ)', function(a, b, c)
 			if a == '' then
@@ -642,7 +654,7 @@ function export.ipa(text, adj, gem, pal)
 				return a .. b .. '⁽ʲ⁾' .. c
 			end end)
 
-		--general consonant assimilative palatalisation
+		--general consonant assimilative palatalization
 		pron = rsub_repeatedly(pron, '([szntdpbmfcĵ])([ˈˌ]?)([lszntdpbmfcĵ]ʲ)', function(a, b, c)
 			if cons_assim_palatal['compulsory'][a..c] then
 				return a .. 'ʲ' .. b .. c
