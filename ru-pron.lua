@@ -201,8 +201,8 @@ local phon_respellings = {
 	{'[dt]s', 'c'},
 	{'[dt]z', 'ĵ'},
 	-- 6. тш, дж always use long variants (FIXME, may change)
-	{'[dt](ʹ?[ %-‿]?)š', 'ĉ%1š'},
-	{'[dt](ʹ?[ %-‿]?)ž', 'ĝ%1ž'},
+	{'[dt](ʹ?[ %-‿/]?)š', 'ĉ%1š'},
+	{'[dt](ʹ?[ %-‿/]?)ž', 'ĝ%1ž'},
 
 	-- changes for assimilation of [dt] + affricate
 	{'[sz][dt]c', 'sc'},
@@ -227,8 +227,8 @@ local phon_respellings = {
 	{'([ %-‿])sč', '%1šč'},
  	{'sčjo(' .. accents .. '?)t', 'ščjo%1t'},
  	{'sč', 'ɕč'},
-	{'[zs]([ %-‿]?)š', 'š%1š'},
-	{'[zs]([ %-‿]?)ž', 'ž%1ž'},
+	{'[zs]([ %-‿/]?)š', 'š%1š'},
+	{'[zs]([ %-‿/]?)ž', 'ž%1ž'},
 	{'nnsk', 'nsk'},
 	{'gk', 'xk'},
 	{'n[dt]g', 'ng'},
