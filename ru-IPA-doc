@@ -18,15 +18,24 @@ Parameters:
 * Indicate secondary stress as e.g. ѐ or ы̀.
 * Indicate "tertiary" stress as e.g. е̂ or ы̂ (i.e. where a vowel is to be treated as stressed but should not be marked as possessing either primary or secondary stress).
 
-==Nonstandard phonetic symbols==
+==Special phonetic symbols and rules==
 * In Cyrillic, use ɣ to indicate [ɣ] (the voiced fricative pronunciation of the letter г), and ӂ to indicate [ʑ] (the soft pronunciation of ж, as in words like {{m|ru|съе́зжая}}, {{m|ru|вожжа́}} or {{m|ru|дро́жжи}}).
-* Use щч or ɕч to force the pronunciation [ɕt͡ɕ] (by default, some instances of сч are pronounced [ɕt͡ɕ] and some are pronounced [ɕː], according to somewhat complex rules).
-* Use / to force a syllable boundary before a consonant. This also forces the "long" pronunciation [t͡ss] of тс, and similarly [d͡zz] for дз, and is useful particularly when another consonant follows, because otherwise the "short" pronunciations [t͡s] and [d͡z] would be used; an example is ветслу́жба, which should be written вѐт/слу́жба.
+* Use щч or ɕч to force the pronunciation [ɕt͡ɕ]. By default, some instances of сч are pronounced [ɕt͡ɕ] and some are pronounced [ɕː], according to the following rules:
+*# [зж]ч and [сзшж]щ are pronounced [ɕː], like щ.
+*# сч at the beginning of a word and in the sequence счёт is pronounced [ɕː].
+*# Other сч are pronounced [ɕt͡ɕ].
+* Use / to force a syllable boundary before a consonant. This also forces the "long" pronunciation [t͡ss] of тс, and similarly [d͡zz] for дз, and is useful particularly when another consonant follows, because otherwise the "short" pronunciations [t͡s] and [d͡z] would be used; an example is ветслу́жба, which should be written вѐт/слу́жба. The exact rules for when the short and long pronunciations are used is as follows:
+*# [дт] с and [дт] з across a word boundary use the long pronunciation, as do [дт]/с and [дт]/з with explicitly written slash.
+*# [дт]с + vowel and [дт]з + vowel use the long pronunciation.
+*# [дт]ьс and [дт]ьз use the long pronunciation, with palatalized tʲ͡sʲ and dʲ͡zʲ.
+*# Word-initial отс-, подс- use the long pronunciation, because there is a morpheme boundary involved.
+*# Other [дт]с and [дт]з use the short pronunciation.
+*# [дт]ш and [дт]ж, including with an intervening ь, always use the long pronunciations t͡ʂʂ and d͡ʐʐ (possibly with the first part palatalized).
 
 ==Gemination==
 Rules for when gemination is preserved:
 * Gemination is normally preserved directly after the stress; also elsewhere for жж and зж, and for нн before the stress. Optional gemination normally occurs in нн that is after but not directly after the stress. Gemination is normally not preserved in лл, even directly after the stress. Use {{para|gem}} to override all of these defaults.
-* Gemination is always preserved in щ and palatalized ӂӂ, and in combinations that are pronounced the same (e.g. some сч), regardless of {{para|gem}}.
+* Gemination is always preserved in щ and palatalized ӂӂ, and in combinations that are pronounced the same (e.g. some сч, see above), regardless of {{para|gem}}.
 * Gemination is normally preserved at boundaries between certain prefixes and roots (e.g. рас-, раз-, ис-, из-, под-, от-, в-, с-, нис-, низ-, контр-; also the same when prefixed by не-). Use {{para|gem}} to override.
 * However, gemination is normally not preserved before another consonant, except at prefix boundaries or in the combinations сск or зск. Use {{para|gem}} to override.
 <includeonly>
