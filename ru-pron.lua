@@ -38,9 +38,10 @@ FIXME:
    не к ме́сту, which should render as nʲɪ‿k‿ˈmʲestʊ.
 10. убе́жищa renders as ʊˈbʲeʐɨɕːʲə instead of ʊˈbʲeʐɨɕːə;
    уда́ча similarly becomes ʊˈdat͡ɕʲə instead of ʊˈdat͡ɕə.
-11. тро́лль renders with geminated final l, and with ʲ on wrong side of
-   gemination (ːʲ instead of ʲː); note how this also occurs above in -ɕːʲə
-   from убе́жищa. (This issue with тро́лль will be masked by the change to
+11. (SHOULD HAVE FIXED ISSUE OF ːʲ OCCURRING INSTEAD OF ʲː IN тро́лль,
+   NEED TO TEST) тро́лль renders with geminated final l, and with ʲ on wrong
+   side of gemination (ːʲ instead of ʲː); note how this also occurs above in
+   -ɕːʲə from убе́жищa. (This issue with тро́лль will be masked by the change to
    generally degeminate l; might need example with final -ннь, if it exists.)
 12. May be additional errors with gemination in combination with explicit
     / syllable boundary, because of the code expecting that syllable breaks
@@ -595,13 +596,13 @@ function export.ipa(text, adj, gem, pal)
 			end
 
 			-- palatalization by soft sign
-			syl = rsub(syl, '(.?[ː()]*)ʹ', function(a)
+			syl = rsub(syl, '(.?)([ː()]*)ʹ', function(a, b)
 				if rfind(a, '[čǰšžɕӂ]') then
-					return a
+					return a .. b
 				elseif a ~= 'ʲ' then
-					return a .. 'ʲ'
+					return a .. 'ʲ' .. b
 				else
-					return 'ʲ'
+					return a .. b
 				end end)
 
 			--retraction of front vowels in syllables blocking assimilative palatalization
