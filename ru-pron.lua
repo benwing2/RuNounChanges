@@ -29,10 +29,11 @@ FIXME:
    This should probably be done by marking such words with a special sign,
    e.g.  ̆, to indicate no stress.
 7. (DONE) In ни́ндзя, дз becomes palatal and н should palatal-assimilate to it.
-8. In под сту́лом, should render as pɐt͡s‿ˈstuləm when actually renders as
+8. (DONE) In под сту́лом, should render as pɐt͡s‿ˈstuləm when actually renders as
    pɐˈt͡s‿stuləm. Also occurs in без ша́пки (bʲɪˈʂ‿ʂapkʲɪ instead of
    bʲɪʂ‿ˈʂapkʲɪ); has something to do with ‿. Similarly occurs in
-   не к ме́сту, which should render as nʲɪ‿k‿ˈmʲestʊ.
+   не к ме́сту, which should render as nʲɪ‿k‿ˈmʲestʊ, and от я́блони, which
+   should render as ɐt‿ˈjæblənʲɪ.
 9. In собра́ние, Anatoli renders it as sɐˈbranʲɪ(j)ə with optional (j).
    Ask him when this exactly applies. Does it apply in all ɪjə sequences?
    Only word-finally? Also ijə?
@@ -63,7 +64,7 @@ FIXME:
    boundary.
 14. Eliminate pal=y. Consider first asking Wyang why this was put in
    originally.
-15. Add test cases: Цю́рих, others.
+15. Add test cases: Цю́рих, от а́ба, others.
 ]]
 
 local ut = require("Module:utils")
@@ -518,16 +519,25 @@ function export.ipa(text, adj, gem, pal)
 		pron = rsub(pron, 'ʺ([aɛiouy])', 'ʔ%1')
 
 		--syllabify, inserting @ at syllable boundaries
+		--1. insert @ after each vowel
 		pron = rsub(pron, '(' .. vowels .. accents .. '?)', '%1@')
+		--2. eliminate word-final @
 		pron = rsub(pron, '@+$', '')
-		pron = rsub(pron, '@([^‿@' .. vow .. ']*)([^‿@' .. vow .. 'ʹːˑ()ʲ])(ʹ?ʲ?[ːˑ()]*[' .. vow .. '])', '%1@%2%3')
-		pron = rsub(pron, '([^‿@' .. vow .. ']?)([^‿@' .. vow .. '])@([^‿@' .. vow .. 'ʹːˑ()ʲ])(ʹ?ʲ?[ːˑ()]*[' .. vow .. '])', function(a, b, c, d)
+		--3. in a consonant cluster, move @ forward so it's before the
+		--   last consonant
+		pron = rsub(pron, '@([^@' .. vow .. ']*)([^‿@' .. vow .. 'ʹːˑ()ʲ])(ʹ?ʲ?[ːˑ()]*‿?[' .. vow .. '])', '%1@%2%3')
+		--4. move @ backward if in the middle of a "permanent onset" cluster,
+		--   e.g. sk, str, that comes before a vowel, putting the @ before
+		--   the permanent onset cluster
+		pron = rsub(pron, '([^‿@' .. vow .. ']?)([^‿@' .. vow .. '])@([^‿@' .. vow .. 'ʹːˑ()ʲ])(ʹ?ʲ?[ːˑ()]*‿?[' .. vow .. '])', function(a, b, c, d)
 			if perm_syl_onset[a .. b .. c] then
 				return '@' .. a .. b .. c .. d
 			elseif perm_syl_onset[b .. c] then
 				return a .. '@' .. b .. c .. d
 			end end)
+		--5. remove @ followed by a final consonant cluster
 		pron = rsub(pron, '@([^‿@' .. vow .. ']+)$', '%1')
+		--6. make sure @ isn't directly before linking ‿
 		pron = rsub(pron, '@‿', '‿@')
 
 		--if / is present (explicit syllable boundary), remove any @
