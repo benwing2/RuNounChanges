@@ -53,6 +53,7 @@ FIXME:
    boundary.
 14. Eliminate pal=y. Consider first asking Wyang why this was put in
    originally.
+15. Add test cases: Цю́рих, others.
 ]]
 
 local ut = require("Module:utils")
