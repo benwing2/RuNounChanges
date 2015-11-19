@@ -16,7 +16,7 @@ FIXME:
    Should work with gem=y (see FIXME #1). Words with йе: фойе́, колба Эрленмейера,
    скала Айерс, Айерс-Рок, йети, Кайенна, конве́йер, конвейерный, сайентология,
    фейерверк, Гава́йев. Note also Гава́йи with йи.
-3. In асунсьо́н and Вьентья́н, put a syllable break after the н and before
+3. In Асунсьо́н and Вьентья́н, put a syllable break after the н and before
    consonant + /j/. Use the perm_sym_onset mechanism or at least the code
    that accesses that mechanism. Should possibly do this also in VCʲj and
    V‿Cʲj and VCj and V‿Cj sequences; ask Cinemantique if this makes sense.
@@ -589,6 +589,9 @@ function export.ipa(text, adj, gem)
 		-- final e, ë after a vowel in certain cases to be left as is,
 		-- eventually resulting in ɪ, e.g. in ко̀е with secondary stress.
 		-- We may need something here if this is correct.
+
+		---- HACK for кое-, convert to койи.
+		pron = rsub(pron, '^ko(' .. accents .. ')jë', 'ko%1ji')
 
 		-- reduction of word-final a, e
 		pron = rsub(pron, '[äeë]$', 'ə')
