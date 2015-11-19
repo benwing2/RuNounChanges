@@ -70,6 +70,9 @@ FIXME:
 16. Caused a change in ко̀е-кто, perhaps because I rewrote code that accepted
     an acute or circumflex accent to also take a grave accent. See how
 	кое is actually pronounced here and take action if needed.
+17. (DONE, NEEDS CHECKING, CHECK евф- WORD) Rewrote voicing/devoicing
+    assimilation; should make assimilation of евфемизм (or similar with
+	евф- or эвф-) automatic and not require phon=.
 ]]
 
 local ut = require("Module:utils")
@@ -167,10 +170,6 @@ local devoicing = {
 	['ž'] = 'š', ['ɣ'] = 'x',
 	['ĵ'] = 'c', ['ǰ'] = 'č', ['ĝ'] = 'ĉ',
 	['ӂ'] = 'ɕ',
-
-	['bʲ'] = 'pʲ', ['dʲ'] = 'tʲ',
-	['zʲ'] = 'sʲ', ['vʲ'] = 'fʲ',
-	['žʲ'] = 'šʲ'
 }
 
 local voicing = {
@@ -463,11 +462,24 @@ function export.ipa(text, adj, gem, pal)
 		['jo'] = 'ö',
 		['ju'] = 'ü'})
 
-	--voicing/devoicing assimilations
-	text = rsub(text, '([bdgvɣzžĝĵǰӂ]+)([ %-%‿%ː()/]*[ptkfxsščɕcĉ])', function(a, b)
-		return rsub(a, '.', devoicing) .. b end)
-	text = rsub(text, '([ptkfxsščɕcĉ]+)([ %-%‿ʹ%ː()/]*[bdgɣzžĝĵǰӂ])', function(a, b)
-		return rsub(a, '.', voicing) .. b end)
+	--voicing, devoicing
+	--1. absolutely final devoicing
+	text = rsub(text, '([bdgvɣzžĝĵǰӂ])(ʹ?)$', function(a, b)
+		return devoicing[a] .. b end)
+	--2. word-final devoicing before another word
+	text = rsub(text, '([bdgvɣzžĝĵǰӂ])(ʹ? [^bdgvɣzžĝĵǰӂn])', function(a, b)
+		return devoicing[a] .. b end)
+	--3. voicing/devoicing assimilation; repeat to handle recursive assimilation
+	while true do
+		local new_text = rsub(text, '([bdgvɣzžĝĵǰӂ])([ %-%‿ʹ%ː()/]*[ptkfxsščɕcĉ])', function(a, b)
+			return devoicing[a] .. b end)
+		new_text = rsub(new_text, '([ptkfxsščɕcĉ])([ %-%‿ʹ%ː()/]*[bdgɣzžĝĵǰӂ])', function(a, b)
+			return voicing[a] .. b end)
+		if new_text == text then
+			break
+		end
+		text = new_text
+	end
 
 	--re-notate orthographic geminate consonants
 	text = rsub(text, '([^' .. vow .. '.%-_])' .. '%1', '%1ː')
@@ -753,15 +765,6 @@ function export.ipa(text, adj, gem, pal)
 			if rfind(a, '[ʲčǰɕӂ]') and (b == '' or rfind(b, '[ʲčǰɕӂ]')) then
 				return 'ˈ' .. a .. 'æ' .. b
 			end end)
-
-		--final devoicing and devoicing assimilation
-		--FIXME: This seems partly duplicative of assimilations above
-		pron = rsub(pron, '([bdgvɣzžĝĵǰӂ]ʲ?)$', function(a)
-			if not rfind(word[i+1] or '', '^[bdgvɣzžĝĵǰӂn]') then
-				return devoicing[a]
-			end end)
-		pron = rsub(pron, '([bdgvɣzžĝĵǰӂ])(ʲ?[ %-%‿]?[ptkxsščɕcĉ])', function(a, b)
-			return devoicing[a] .. b end)
 
 		--make geminated n optional when after but not immediately after
 		--the stress, unless gemination should be preserved; do the sub
