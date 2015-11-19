@@ -506,7 +506,7 @@ function export.ipa(text, adj, gem)
 	text = rsub(text, '(j[%(ː%)]*)([aeou])', function(a, b)
 		return a .. iotating[b] end)
 	-- eliminate j after consonant and before iotated vowel
-	text = rsub(text, '([^' .. vowel .. acc .. 'ʹʺ‿ ]/?)j([äëöü])', '%1%2')
+	text = rsub(text, '([^' .. vow .. acc .. 'ʹʺ‿ ]/?)j([äëöü])', '%1%2')
 
 	--split by word and process each word
 	word = rsplit(text, " ", true)
@@ -546,11 +546,11 @@ function export.ipa(text, adj, gem)
 			-- special gemination symbol used at prefix boundaries that we
 			-- remove only when gem=n, else we convert it to regular gemination
 			pron = rsub(pron, 'ˑ', 'ː')
-		elif gem == 'o' then
+		elseif gem == 'o' then
 			-- make geminates optional, except for ɕӂ, also ignore left paren
 			-- in (ː) sequence
 			pron = rsub(pron, '([^ɕӂ%(%)])[ːˑ]', '%1(ː)')
-		elif gem == 'n' then
+		elseif gem == 'n' then
 			-- remove gemination, except for ɕӂ
 			pron = rsub(pron, '([^ɕӂ%(%)])[ːˑ]', '%1')
 		else
