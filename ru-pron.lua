@@ -67,8 +67,8 @@ FIXME:
 	syllable and processing syllable-by-syllable).
 13. Many assimilations won't work properly with an explicit / syllable
    boundary.
-14. Eliminate pal=y. Consider first asking Wyang why this was put in
-   originally.
+14. (DONE, ASK WYANG FOR ITS PURPOSE) Eliminate pal=y. Consider first asking
+   Wyang why this was put in originally.
 15. (DONE) Add test cases: Цю́рих, от а́ба, others.
 15a. Add test cases: фуррь, по абе́д (for assimilation of schwas across ‿,
     CHECK THIS IS A WORD)
@@ -129,8 +129,6 @@ local vow = 'aeiouyɛəäëöü'
 local ipa_vow = vow .. 'ɐɪʊɨæɵʉ'
 local vowels, vowels_c = '[' .. vow .. ']', '([' .. vow .. '])'
 local non_vowels, non_vowels_c = '[^' .. vow .. ']', '([^' .. vow .. '])'
-local ipa_vowels, ipa_vowels_c = '[' .. ipa_vow .. ']', '([' .. ipa_vow .. '])'
-local non_ipa_vowels, non_ipa_vowels_c = '[^' .. ipa_vow .. ']', '([^' .. ipa_vow .. '])'
 local acc = AC .. GR .. CFLEX .. TILDE
 local accents = '[' .. acc .. ']'
 local non_accents = '[^' .. acc .. ']'
@@ -346,16 +344,16 @@ local function track(page)
 	return true
 end
 
-function export.ipa(text, adj, gem, pal)
+function export.ipa(text, adj, gem)
 	local new_module_result
 	-- Test code to compare existing module to new one.
 	if test_new_ru_pron_module then
 		local m_new_ru_pron = require("Module:User:Benwing2/ru-pron")
-		new_module_result = m_new_ru_pron.ipa(text, adj, gem, pal)
+		new_module_result = m_new_ru_pron.ipa(text, adj, gem)
 	end
 
 	if type(text) == 'table' then
-		text, adj, gem, pal = (ine(text.args.phon) or ine(text.args[1])), ine(text.args.adj), ine(text.args.gem), ine(text.args.pal)
+		text, adj, gem = (ine(text.args.phon) or ine(text.args[1])), ine(text.args.adj), ine(text.args.gem)
 		if not text then
 			text = mw.title.getCurrentTitle().text
 		end
@@ -366,9 +364,6 @@ function export.ipa(text, adj, gem, pal)
 	if gem ~= '' then
 		track("gem")
 		track("gem/" .. gem)
-	end
-	if pal == 'y' then
-		track("pal")
 	end
 	if adj then
 		track("adj")
@@ -646,18 +641,10 @@ function export.ipa(text, adj, gem, pal)
 			-- assimilative palatalization of consonants when followed by
 			-- front vowels; FIXME, this code should be moved outside of the
 			-- per-syllable loop and cleaned up; it can probably be drastically
-			-- simplified, and pal=y removed (not used anywhere)
-			if pal == 'y' or rfind(syl, '^[^cĵĉĝšžaäeëɛiyoöuü]*[eiəäëöüʹ]') or rfind(syl, '^[cĵĉĝšž][^cĵĉĝšžaäeëɛiyoöuüː()]+[eiəäëöüʹ]') or rfind(syl, '^[cĵ][äëü]') then
+			-- simplified
+			if rfind(syl, '^[^cĵĉĝšž' .. vow .. ']*[eiəäëöüʹ]') or rfind(syl, '^[cĵĉĝšž][^cĵĉĝšž' .. vow .. 'ː()]+[eiəäëöüʹ]') or rfind(syl, '^[cĵ][äëü]') then
 				if not rfind(syl, 'ʺ.*' .. vowels) and not rfind(syl, 'ʹ' .. non_vowels .. '.*' .. vowels) then
-					syl = rsub(syl, non_vowels_c .. '([ʹː()j]*[' .. vow .. 'ʹ])', function(a, b)
-						local set = '[mnpbtdkgcĵfvszxɣrl]'
-						if pal == 'y' then
-							-- FIXME, should this also include hushing
-							-- affricates ĉĝčǰ?
-							set = '[mnpbtdkgcĵfvszxɣrlɕӂšž]'
-						end
-						set = '(' .. set .. ')'
-						return rsub(a, set, '%1ʲ') .. b end)
+					syl = rsub(syl, '([mnpbtdkgcĵfvszxɣrl])([ʹː()j]*[' .. vow .. 'ʹ])', '%1ʲ%2')
 				end
 			end
 
@@ -713,7 +700,7 @@ function export.ipa(text, adj, gem, pal)
 
 		-- Optional (j) before ɪ
 		pron = rsub(pron, "^jɪ", "(j)ɪ")
-		pron = rsub(pron, ipa_vowels_c .. "([‿%-]?)jɪ", "%1%2(j)ɪ")
+		pron = rsub(pron, '([' .. ipa_vow .. '][‿%-]?)jɪ', "%1(j)ɪ")
 
 		--consonant assimilative palatalization of tn/dn, depending on
 		--whether [rl] precedes
