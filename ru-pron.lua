@@ -52,19 +52,18 @@ FIXME:
 10d. (DONE, NEEDS TESTING) Investigate the clause labeled "FIXME (10d)"
    and apply the instructions there about removing a line and seeing
    whether anything changes.
-11. (SHOULD HAVE FIXED ISSUE OF ːʲ OCCURRING INSTEAD OF ʲː IN тро́лль,
-   NEED TO TEST; STILL ISSUE OF FINAL GEMINATE) тро́лль renders with geminated
-   final l, and with ʲ on wrong side of gemination (ːʲ instead of ʲː); note
-   how this also occurs above in -ɕːʲə from убе́жищa. (This issue with тро́лль
+11. (DONE, NEEDS TESTING) тро́лль renders with geminated final l, and
+   with ʲ on wrong side of gemination (ːʲ instead of ʲː); note how this
+   also occurs above in -ɕːʲə from убе́жищa. (This issue with тро́лль
    will be masked by the change to generally degeminate l; use фуррь; note
    also галльский.)
-12. May be additional errors with gemination in combination with explicit
-    / syllable boundary, because of the code expecting that syllable breaks
-	occur in certain places; should probably rewrite the whole gemination code
-	to be less fragile and not depend on exactly where syllable breaks
-	occur in consonant clusters, which it does now (might want to rewrite
-	to avoid the whole business of breaking by syllable and processing
-	syllable-by-syllable).
+12. (DONE, NEEDS TESTING) May be additional errors with gemination in
+    combination with explicit / syllable boundary, because of the code
+	expecting that syllable breaks occur in certain places; should probably
+	rewrite the whole gemination code to be less fragile and not depend on
+	exactly where syllable breaks occur in consonant clusters, which it does
+	now (might want to rewrite to avoid the whole business of breaking by
+	syllable and processing syllable-by-syllable).
 13. Many assimilations won't work properly with an explicit / syllable
    boundary.
 14. Eliminate pal=y. Consider first asking Wyang why this was put in
@@ -127,6 +126,7 @@ local ipa_vow = vow .. 'ɐɪʊɨæɵʉ'
 local vowels, vowels_c = '[' .. vow .. ']', '([' .. vow .. '])'
 local non_vowels, non_vowels_c = '[^' .. vow .. ']', '([^' .. vow .. '])'
 local ipa_vowels, ipa_vowels_c = '[' .. ipa_vow .. ']', '([' .. ipa_vow .. '])'
+local non_ipa_vowels, non_ipa_vowels_c = '[^' .. ipa_vow .. ']', '([^' .. ipa_vow .. '])'
 local acc = AC .. GR .. CFLEX .. TILDE
 local accents = '[' .. acc .. ']'
 local non_accents = '[^' .. acc .. ']'
@@ -529,6 +529,45 @@ function export.ipa(text, adj, gem, pal)
 			end
 		end
 
+		--degemination, optional gemination
+		if gem == 'y' then
+			-- leave geminates alone, convert ˑ to regular gemination; ˑ is a
+			-- special gemination symbol used at prefix boundaries that we
+			-- remove only when gem=n, else we convert it to regular gemination
+			pron = rsub(pron, 'ˑ', 'ː')
+		elif gem == 'o' then
+			-- make geminates optional, except for ɕӂ, also ignore left paren
+			-- in (ː) sequence
+			pron = rsub(pron, '([^ɕӂ%(%)])[ːˑ]', '%1(ː)')
+		elif gem == 'n' then
+			-- remove gemination, except for ɕӂ
+			pron = rsub(pron, '([^ɕӂ%(%)])[ːˑ]', '%1')
+		else
+			-- degeminate l's
+			pron = rsub(pron, '(l)ː', '%1')
+			-- preserve gemination between vowels immediately after the stress,
+			-- special gemination symbol ˑ also remains, ɕӂ remain geminated,
+			-- žn remain geminated between vowels even not immediately after
+			-- the stress, n becomes optionally geminated when after but not
+			-- immediately after the stress, ssk and zsk remain geminated
+			-- immediately after the stress, else degeminate; we signal that
+			-- gemination should remain by converting to special symbol ˑ,
+			-- then removing remaining ː not after ɕӂ and left paren; do
+			-- various subs repeatedly in case of multiple geminations in a word
+			-- 1. immediately after the stress
+			pron = rsub_repeatedly(pron, '(' .. vowels .. accents .. '[^ɕӂ%(%)])ː(' .. vowels .. ')', '%1ˑ%2')
+			-- 2. remaining geminate n after the stress between vowels
+			pron = rsub_repeatedly(pron, '(' .. AC .. '.-' .. vowels .. accents .. '?n)ː(' .. vowels .. ')', '%1(ː)%2')
+			-- 3. remaining ž and n between vowels
+			pron = rsub_repeatedly(pron, '(' .. vowels .. accents .. '?[žn])ː(' .. vowels .. ')', '%1ˑ%2')
+			-- 4. ssk (and zsk, already normalized) immediately after the stress
+			pron = rsub(pron, '(' .. vowels .. accents .. 's)ːk', '%1ˑk')
+			-- 5. eliminate remaining gemination
+			pron = rsub(pron, '([^ɕӂ%(%)])ː', '%1')
+			-- 6. convert special gemination symbol ˑ to regular gemination
+			pron = rsub(pron, 'ˑ', 'ː')
+		end
+
 		-- FIXME! There was some more complex logic here that may cause
 		-- final e, ë after a vowel in certain cases to be left as is,
 		-- eventually resulting in ɪ, e.g. in ко̀е with secondary stress.
@@ -600,46 +639,6 @@ function export.ipa(text, adj, gem, pal)
 		for j = 1, #syllable do
 			local syl = syllable[j]
 
-			--remove consonant geminacy if non-initial and non-post-tonic
-			if rfind(syl, 'ː') and not rfind(syl, '%(ː%)') and gem ~= 'y' then
-				-- logic to determine whether to apply changes
-				local no_replace = false
-				local replace_opt = false
-				if (j == 1 and not rfind(syl, 'ː$')) or stress[j-1] then
-					no_replace = true
-				elseif stress[j] and rfind(syl, 'sː$') and j < #syllable and rfind(syllable[j+1], 'k' .. vowels) then
-					-- special case for ssk and zsk
-					no_replace = true
-				end
-				if gem == 'n' then
-					no_replace = false
-				elseif gem == 'o' then
-					no_replace = false
-					replace_opt = true
-				end
-				-- if changes need applying, then apply; but don't affect
-				-- ɕɕ or ӂӂ under any circumstances, and only affect žž and nn
-				-- if gem=n or gem=opt
-				if not no_replace then
-					syl = rsub(syl, '([^ɕӂžn])ː', replace_opt and '%1(ː)' or '%1')
-					if gem == 'n' then
-						syl = rsub(syl, '([žn])ː', '%1')
-					elseif gem == 'o' then
-						syl = rsub(syl, '([žn])ː', '%1(ː)')
-					end
-				end
-			end
-			-- ˑ is a special gemination symbol used at prefix boundaries that
-			-- we remove only when gem=n, else we convert it to regular
-			-- gemination
-			if rfind(syl, 'ˑ') then
-				syl = rsub(syl, 'ˑ', gem == 'n' and '' or gem == 'o' and '(ː)' or 'ː')
-			end
-			-- remove all geminacy of l unless gem=y or gem=opt
-			if gem ~= 'y' and gem ~= 'o' then
-				syl = rsub(syl, 'lː', 'l')
-			end
-
 			--assimilative palatalization of consonants when followed by front vowels
 			-- FIXME: I don't understand this code very well (Benwing)
 			if pal == 'y' or rfind(syl, '^[^cĵĉĝšžaäeëɛiyoöuü]*[eiəäëöüʹ]') or rfind(syl, '^[cĵĉĝšž][^cĵĉĝšžaäeëɛiyoöuüː()]+[eiəäëöüʹ]') or rfind(syl, '^[cĵ][äëü]') then
@@ -675,10 +674,12 @@ function export.ipa(text, adj, gem, pal)
 			-- second clause in if-statement handles words like Токио and хаос
 			if stress[j] or (j == #syllable and j > 1 and rfind(syllable[j-1] .. syllable[j], '[aieäëü]' .. accents .. '?o')) then
 				-- convert acute/grave/circumflex accent to appropriate
-				-- IPA marker of primary/secondary/unmarked stress
+				-- IPA marker of primary/secondary/unmarked stress; we keep
+				-- unmarked stress marked for the moment with ^ for the
+				-- degemination code below
 				syl = rsub(syl, '(.*)́', 'ˈ%1')
 				syl = rsub(syl, '(.*)̀', 'ˌ%1')
-				syl = rsub(syl, '(.*)̂', '%1')
+				syl = rsub(syl, '(.*)̂', '^%1')
 				syl = rsub(syl, '([ʲčǰɕӂ][ː()]*)o', '%1ö')
 				syl = rsub(syl, vowels_c, function(a)
 					if a ~= '' then
@@ -712,7 +713,7 @@ function export.ipa(text, adj, gem, pal)
 
 		--consonant assimilative palatalization of tn/dn, depending on
 		--whether [rl] precedes
-		pron = rsub(pron, '([rl]?)([ˈˌ]?[dt])([ˈˌ]?nʲ)', function(a, b, c)
+		pron = rsub(pron, '([rl]?)([ˈˌ%^]?[dt])([ˈˌ]?nʲ)', function(a, b, c)
 			if a == '' then
 				return a .. b .. 'ʲ' .. c
 			else
@@ -720,7 +721,7 @@ function export.ipa(text, adj, gem, pal)
 			end end)
 
 		--general consonant assimilative palatalization
-		pron = rsub_repeatedly(pron, '([szntdpbmfcĵ])([ˈˌ]?)([lszntdpbmfcĵ]ʲ)', function(a, b, c)
+		pron = rsub_repeatedly(pron, '([szntdpbmfcĵ])([ˈˌ%^]?)([lszntdpbmfcĵ]ʲ)', function(a, b, c)
 			if cons_assim_palatal['compulsory'][a..c] then
 				return a .. 'ʲ' .. b .. c
 			elseif cons_assim_palatal['optional'][a..c] then
@@ -730,31 +731,27 @@ function export.ipa(text, adj, gem, pal)
 			end end)
 
 		-- further assimilation before alveolopalatals
-		pron = rsub(pron, 'n([ˈˌ]?)([čǰɕӂ])', 'nʲ%1%2')
+		pron = rsub(pron, 'n([ˈˌ%^]?)([čǰɕӂ])', 'nʲ%1%2')
 
 		-- optional palatal assimilation of вп, вб only word-initially
-		pron = rsub(pron, '^([ˈˌ]?[fv])([ˈˌ]?[pb]ʲ)', '%1⁽ʲ⁾%2')
+		pron = rsub(pron, '^([ˈˌ%^]?[fv])([ˈˌ%^]?[pb]ʲ)', '%1⁽ʲ⁾%2')
 
 		-- optional palatal assimilation of бв but not in обв-
-		pron = rsub(pron, 'b([ˈˌ]?vʲ)', 'b⁽ʲ⁾%1')
+		pron = rsub(pron, 'b([ˈˌ%^]?vʲ)', 'b⁽ʲ⁾%1')
 		if rfind(word[i], '^o' .. accents .. '?bv') then
 			-- exclude ^abv- (if it occurs)
-			pron = rsub(pron, '^([ˈˌ]?[ɐo][ˈˌ]?)b⁽ʲ⁾([ˈˌ]?vʲ)', '%1b%2')
+			pron = rsub(pron, '^([ˈˌ%^]?[ɐo][ˈˌ%^]?)b⁽ʲ⁾([ˈˌ%^]?vʲ)', '%1b%2')
 		end
 
 		--fronting of stressed 'a' between soft consonants
 		--FIXME: This doesn't look correct, should actually check for non-vowels
-		pron = rsub(pron, 'ˈ(..?.?)a(.?.?.?)', function(a, b)
-			if rfind(a, '[ʲčǰɕӂ]') and (b == '' or rfind(b, '[ʲčǰɕӂ]')) then
-				return 'ˈ' .. a .. 'æ' .. b
+		pron = rsub(pron, '([ˈˌ%^])(..?.?)a(.?.?.?)', function(a, b, c)
+			if rfind(b, '[ʲčǰɕӂ]') and (c == '' or rfind(c, '[ʲčǰɕӂ]')) then
+				return a .. b .. 'æ' .. c
 			end end)
 
-		--make geminated n optional when after but not immediately after
-		--the stress, unless gemination should be preserved; do the sub
-		--repeatedly as long as we make changes, in case of multiple nn's
-		if gem ~= 'y' then
-			pron = rsub_repeatedly(pron, '(ˈ.-' .. ipa_vowels .. '.-' .. ipa_vowels .. '.-)nː', '%1n(ː)')
-		end
+		-- remove "unmarked" stress marker ^, which has served its purpose
+		pron = rsub(pron, '%^', '')
 
 		if rfind(word[i], 'sä$') then
 			pron = rsub(pron, 'sʲə$', 's⁽ʲ⁾ə')
