@@ -9,13 +9,16 @@ FIXME:
    not always be pronounced geminated. Currently we geminate it very late,
    after all the code that reduces geminates. Should be done earlier and
    places that include regexps with /j/ should be modified to also include
-   the gemination marker ː.
-2. In асунсьо́н and Вьентья́н, put a syllable break after the н and before
+   the gemination marker ː. Words with йя: аллилу́йя, ауйяма, ва́йя, ма́йя,
+   папа́йя, парано́йя, пира́йя, ра́йя, секво́йя, Гава́йям.
+2. Should have geminated jj in йе (occurs in e.g. фойе́). Should work with
+   gem=y (see FIXME #1). Words with йе: фойе́, колба Эрленмейера,
+   скала Айерс, Айерс-Рок, йети, Кайенна, конвейер, конвейерный, сайентология,
+   фейерверк, Гава́йев. Note also Гава́йи with йи.
+3. In асунсьо́н and Вьентья́н, put a syllable break after the н and before
    consonant + /j/. Use the perm_sym_onset mechanism or at least the code
    that accesses that mechanism. Should possibly do this also in VCʲj and
    V‿Cʲj and VCj and V‿Cj sequences; ask Cinemantique if this makes sense.
-3. Should have geminated jj in йе (occurs in e.g. фойе́). Should work with
-   gem=y (see FIXME #1).
 4. Fix non-palatal е in льстец.
 5. In львёнок, rendered as ˈlʲvɵnək instead of ˈlʲvʲɵnək. Apparently same
    issue as льстец, having to do with ь in beginning. This apparently has
