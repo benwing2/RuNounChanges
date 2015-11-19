@@ -295,6 +295,10 @@ local phon_respellings = {
 	{'nnsk', 'nsk'},
 	{'gk', 'xk'},
 	{'n[dt]g', 'ng'},
+
+	{'šč', 'ɕː'}, -- conversion of šč to geminate
+	{'([bdkstvxzž])‿i', '%1‿y'}, -- backing of /i/ after certain prepositions
+	{'ʹo', 'ʹjo'}, -- ьо is pronounced as (possibly unstressed) ьё
 }
 
 local cons_assim_palatal = {
@@ -373,8 +377,8 @@ function export.ipa(text, adj, gem, pal)
 	-- handle old ě (e.g. сѣдло́), and ě̈ from сѣ̈дла
 	text = rsub(text, 'ě̈', 'jo' .. AC)
 	text = rsub(text, 'ě', 'e')
-	-- handle ё with secondary/tertiary stress
-	text = rsub(text, AC .. '([̀̂])', '%1')
+	-- handle sequences of accents (esp from ё with secondary/tertiary stress)
+	text = rsub(text, accents .. '+(' .. accents .. ')', '%1')
 
 	text = adj and rsub(text, '(.[aoe]́?)go(' .. AC .. '?)$', '%1vo%2') or text
 	text = adj and rsub(text, '(.[aoe]́?)go(' .. AC .. '?)sja$', '%1vo%2sja') or text
@@ -447,13 +451,6 @@ function export.ipa(text, adj, gem, pal)
 	for _, respell in ipairs(phon_respellings) do
 		text = rsub(text, respell[1], respell[2])
 	end
-
-	-- conversion of šč to geminate
-	text = rsub(text, 'šč', 'ɕː')
-	-- backing of /i/ after certain prepositions
-	text = rsub(text, '([bdkstvxzž])‿i', '%1‿y')
-	-- ьо is pronounced as (possibly unstressed) ьё, I think
-	text = rsub(text, 'ʹo', 'ʹjo')
 
 	--rewrite iotated vowels
 	text = rsub(text, 'j[aeou]', {
