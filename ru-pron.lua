@@ -512,8 +512,6 @@ function export.ipa(text, adj, gem)
 	--split by word and process each word
 	word = rsplit(text, " ", true)
 	for i = 1, #word do
-		local syllable = {} -- list of syllables
-		local stress = {} -- set of 1-based indices of stressed syllables
 		local pron = word[i]
 
 		-- Check for gemination at prefix boundaries; if so, convert the
@@ -634,27 +632,19 @@ function export.ipa(text, adj, gem)
 			end)
 		end
 
-		--write 1-based syllable indexes of stressed syllables (acute or grave) to
-		--the list POS
-		local pos = {}
-
-		local trimmed_pron = pron
-		local count = 0
-		while rfind(trimmed_pron, accents) do
-			local accent_pos = rfind(trimmed_pron, accents)
-			count = count + ulen(rsub(usub(trimmed_pron, 1, accent_pos - 1), '[^%@]', ''))
-			table.insert(pos, count + 1)
-			trimmed_pron = usub(trimmed_pron, accent_pos + 1, -1)
-		end
-
 		--split by syllable
-		syllable = rsplit(pron, '@', true)
+		local syllable = rsplit(pron, '@', true)
 
-		--convert list of stress positions to set; equivalent to ut.list_to_set()
-		for _, pos in ipairs(pos) do
-			stress[pos] = true
+		--create set of 1-based syllable indexes of stressed syllables
+		--(acute, grave, circumflex)
+		local stress = {}
+		for j = 1, #syllable do
+			if rfind(syllable[j], accents) then
+				stress[j] = true
+			end
 		end
 
+		-- iterate syllable by syllable to handle stress marks, vowel allophony
 		local syl_conv = {}
 		for j = 1, #syllable do
 			local syl = syllable[j]
