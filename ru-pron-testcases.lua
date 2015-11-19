@@ -15,6 +15,17 @@ function tests:check_pron(Cyrl, IPA, Cyrl_word, gem)
 end
  
 function tests:test_pron()
+	self:check_pron("кало́сс", "kɐˈlos")
+	self:check_pron("Иоа́нн", "(j)ɪɐˈan")
+	self:check_pron("йе́ти", "ˈjetʲɪ")
+	self:check_pron("англо-норма́ннский", "ˌanɡlə nɐrˈmanskʲɪj")
+	self:check_pron("фуррь", "furʲ")
+	self:check_pron("ха́ос", "ˈxaos")
+	self:check_pron("эвфеми́зм", "ɨfʲɪˈmʲizm")
+	self:check_pron("хору́гвь", "xɐˈrukfʲ")
+	self:check_pron("наря́д на ку́хню", "nɐˈrʲæd nɐ‿ˈkuxnʲʉ")
+	self:check_pron("ко̀е-кто́", "ˌko(j)ɪ ˈkto")
+	self:check_pron("по абази́ну", "pɐ‿ɐbɐˈzʲinʊ")
 	self:check_pron("подсти́лка", "pɐt͡sˈstʲilkə")
 	self:check_pron("э́ллипс", "ˈɛlʲɪps")
 	self:check_pron("иди́ллия", "ɪˈdʲilʲɪjə")
@@ -374,3 +385,6 @@ function tests:test_pron()
 end
  
 return tests
+
+-- For Vim, so we get 4-space tabs
+-- vim: set ts=4 sw=4 noet:

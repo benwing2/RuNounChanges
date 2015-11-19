@@ -14,7 +14,7 @@ FIXME:
    папа́йя, парано́йя, пира́йя, ра́йя, секво́йя, Гава́йям.
 2. (DONE, NEEDS TESTING) Should have geminated jj in йе (occurs in e.g. фойе́).
    Should work with gem=y (see FIXME #1). Words with йе: фойе́, колба Эрленмейера,
-   скала Айерс, Айерс-Рок, йети, Кайенна, конвейер, конвейерный, сайентология,
+   скала Айерс, Айерс-Рок, йети, Кайенна, конве́йер, конвейерный, сайентология,
    фейерверк, Гава́йев. Note also Гава́йи with йи.
 3. In асунсьо́н and Вьентья́н, put a syllable break after the н and before
    consonant + /j/. Use the perm_sym_onset mechanism or at least the code
@@ -75,13 +75,13 @@ FIXME:
 14. (DONE, ASK WYANG FOR ITS PURPOSE) Eliminate pal=y. Consider first asking
    Wyang why this was put in originally.
 15. (DONE) Add test cases: Цю́рих, от а́ба, others.
-15a. Add test cases: фуррь, по абе́д (for assimilation of schwas across ‿,
-    CHECK THIS IS A WORD)
-15b. Add test case англо-норма́ннский (to make sure degemination of нн occurs
-    not between vowels), multi-syllable word ending in a geminate: ато́лл
-	(not so good because лл always degeminated), коло́сс, Иоа́нн (good because
-	of нн), ха́ос, эвфеми́зм, хору́гвь (NOTE: ruwikt claims гв is voiced, I
-	doubt it, ask Cinemantique), наря́д на ку́хню (non-devoicing of д before
+15a. (DONE) Add test cases: фуррь, по абази́ну (for assimilation of schwas
+    across ‿)
+15b. (DONE) Add test case англо-норма́ннский (to make sure degemination of нн
+    occurs when not between vowels), multi-syllable word ending in a geminate:
+	ато́лл (not so good because лл always degeminated), коло́сс, Иоа́нн (good
+	because of нн), ха́ос, эвфеми́зм, хору́гвь (NOTE: ruwikt claims гв is voiced,
+	I doubt it, ask Cinemantique), наря́д на ку́хню (non-devoicing of д before
 	н in next word, ask Cinemantique about this, does it also apply to мрл?),
 	ко̀е-кто́
 16. Caused a change in ко̀е-кто́, perhaps because I rewrote code that accepted
