@@ -76,6 +76,8 @@ FIXME:
 17. (DONE, NEEDS CHECKING, CHECK евф- WORD) Rewrote voicing/devoicing
     assimilation; should make assimilation of евфемизм (or similar with
 	евф- or эвф-) automatic and not require phon=.
+18. (DONE, NEEDS TESTING) Removed redundant fronting-of-a code near end;
+    make sure this doesn't change anything.
 ]]
 
 local ut = require("Module:utils")
@@ -674,13 +676,10 @@ function export.ipa(text, adj, gem, pal)
 			-- second clause in if-statement handles words like Токио and хаос
 			if stress[j] or (j == #syllable and j > 1 and rfind(syllable[j-1] .. syllable[j], '[aieäëü]' .. accents .. '?o')) then
 				-- convert acute/grave/circumflex accent to appropriate
-				-- IPA marker of primary/secondary/unmarked stress; we keep
-				-- unmarked stress marked for the moment with ^ for code below
-				-- (FIXME, only currently for fronting of a, probably not
-				-- necessary as this should only occur in stressed syllables)
+				-- IPA marker of primary/secondary/unmarked stress
 				syl = rsub(syl, '(.*)́', 'ˈ%1')
 				syl = rsub(syl, '(.*)̀', 'ˌ%1')
-				syl = rsub(syl, '(.*)̂', '^%1')
+				syl = rsub(syl, '(.*)̂', '%1')
 				syl = rsub(syl, '([ʲčǰɕӂ][ː()]*)o', '%1ö')
 				syl = rsub(syl, vowels_c, function(a)
 					if a ~= '' then
@@ -714,7 +713,7 @@ function export.ipa(text, adj, gem, pal)
 
 		--consonant assimilative palatalization of tn/dn, depending on
 		--whether [rl] precedes
-		pron = rsub(pron, '([rl]?)([ˈˌ%^]?[dt])([ˈˌ]?nʲ)', function(a, b, c)
+		pron = rsub(pron, '([rl]?)([ˈˌ]?[dt])([ˈˌ]?nʲ)', function(a, b, c)
 			if a == '' then
 				return a .. b .. 'ʲ' .. c
 			else
@@ -722,7 +721,7 @@ function export.ipa(text, adj, gem, pal)
 			end end)
 
 		--general consonant assimilative palatalization
-		pron = rsub_repeatedly(pron, '([szntdpbmfcĵ])([ˈˌ%^]?)([lszntdpbmfcĵ]ʲ)', function(a, b, c)
+		pron = rsub_repeatedly(pron, '([szntdpbmfcĵ])([ˈˌ]?)([lszntdpbmfcĵ]ʲ)', function(a, b, c)
 			if cons_assim_palatal['compulsory'][a..c] then
 				return a .. 'ʲ' .. b .. c
 			elseif cons_assim_palatal['optional'][a..c] then
@@ -732,27 +731,17 @@ function export.ipa(text, adj, gem, pal)
 			end end)
 
 		-- further assimilation before alveolopalatals
-		pron = rsub(pron, 'n([ˈˌ%^]?)([čǰɕӂ])', 'nʲ%1%2')
+		pron = rsub(pron, 'n([ˈˌ]?)([čǰɕӂ])', 'nʲ%1%2')
 
 		-- optional palatal assimilation of вп, вб only word-initially
-		pron = rsub(pron, '^([ˈˌ%^]?[fv])([ˈˌ%^]?[pb]ʲ)', '%1⁽ʲ⁾%2')
+		pron = rsub(pron, '^([ˈˌ]?[fv])([ˈˌ]?[pb]ʲ)', '%1⁽ʲ⁾%2')
 
 		-- optional palatal assimilation of бв but not in обв-
-		pron = rsub(pron, 'b([ˈˌ%^]?vʲ)', 'b⁽ʲ⁾%1')
+		pron = rsub(pron, 'b([ˈˌ]?vʲ)', 'b⁽ʲ⁾%1')
 		if rfind(word[i], '^o' .. accents .. '?bv') then
 			-- exclude ^abv- (if it occurs)
-			pron = rsub(pron, '^([ˈˌ%^]?[ɐo][ˈˌ%^]?)b⁽ʲ⁾([ˈˌ%^]?vʲ)', '%1b%2')
+			pron = rsub(pron, '^([ˈˌ]?[ɐo][ˈˌ]?)b⁽ʲ⁾([ˈˌ]?vʲ)', '%1b%2')
 		end
-
-		--fronting of stressed 'a' between soft consonants
-		--FIXME: This doesn't look correct, should actually check for non-vowels
-		pron = rsub(pron, '([ˈˌ%^])(..?.?)a(.?.?.?)', function(a, b, c)
-			if rfind(b, '[ʲčǰɕӂ]') and (c == '' or rfind(c, '[ʲčǰɕӂ]')) then
-				return a .. b .. 'æ' .. c
-			end end)
-
-		-- remove "unmarked" stress marker ^, which has served its purpose
-		pron = rsub(pron, '%^', '')
 
 		if rfind(word[i], 'sä$') then
 			pron = rsub(pron, 'sʲə$', 's⁽ʲ⁾ə')
