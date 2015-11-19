@@ -643,8 +643,10 @@ function export.ipa(text, adj, gem, pal)
 		for j = 1, #syllable do
 			local syl = syllable[j]
 
-			--assimilative palatalization of consonants when followed by front vowels
-			-- FIXME: I don't understand this code very well (Benwing)
+			-- assimilative palatalization of consonants when followed by
+			-- front vowels; FIXME, this code should be moved outside of the
+			-- per-syllable loop and cleaned up; it can probably be drastically
+			-- simplified, and pal=y removed (not used anywhere)
 			if pal == 'y' or rfind(syl, '^[^cĵĉĝšžaäeëɛiyoöuü]*[eiəäëöüʹ]') or rfind(syl, '^[cĵĉĝšž][^cĵĉĝšžaäeëɛiyoöuüː()]+[eiəäëöüʹ]') or rfind(syl, '^[cĵ][äëü]') then
 				if not rfind(syl, 'ʺ.*' .. vowels) and not rfind(syl, 'ʹ' .. non_vowels .. '.*' .. vowels) then
 					syl = rsub(syl, non_vowels_c .. '([ʹː()j]*[' .. vow .. 'ʹ])', function(a, b)
