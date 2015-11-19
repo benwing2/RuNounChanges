@@ -747,13 +747,14 @@ function export.ipa(text, adj, gem, pal)
 			pron = rsub(pron, 'sʲə$', 's⁽ʲ⁾ə')
 		end
 
-		pron = rsub(pron, '[cĵ]ʲ', translit_conv_j)
-		pron = rsub(pron, '[cčgĉĝĵǰšžɕӂ]', translit_conv)
-
 		word[i] = pron
 	end
 
 	text = table.concat(word, " ")
+
+	-- convert special symbols to IPA
+	text = rsub(text, '[cĵ]ʲ', translit_conv_j)
+	text = rsub(text, '[cčgĉĝĵǰšžɕӂ]', translit_conv)
 
 	-- long vowels; FIXME, may not apply at all; might apply across hyphens
 	-- but not spaces; but we don't currently preserve hyphens this far;
