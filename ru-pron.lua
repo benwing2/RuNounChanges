@@ -20,18 +20,21 @@ FIXME:
    consonant + /j/. Use the perm_sym_onset mechanism or at least the code
    that accesses that mechanism. Should possibly do this also in VCʲj and
    V‿Cʲj and VCj and V‿Cj sequences; ask Cinemantique if this makes sense.
-4. Fix non-palatal е in льстец. Other words that will be affected (and
-   probably wrong): льви́ца, львя́тник, льняно́й, льстить, льди́на, львиный,
-   manual pronunciation given as lʲvʲit͡sə and lʲvʲɵnək. Ask Cinemantique.
-5. In львёнок, rendered as ˈlʲvɵnək instead of ˈlʲvʲɵnək. Apparently same
-   issue as льстец, having to do with ь in beginning. This apparently has
-   to do with the "assimilative palatalization of consonants when followed
-   by front vowels" code, which blocks palatalization when the syllable
-   begins with a cluster with a hard sign, or a soft sign followed by a
-   consonant. Then "retraction of front vowels in syllables blocking
-   assimilative palatalization" converts e to ɛ and i to y in such cases
-   of blocked palatalization (not needed for žcš, which are handled by
-   phon_respellings). Ask Cinemantique if this whole business makes any sense.
+4. (DONE, NEED TO RUN IT BY CINEMANTIQUE, NEED TO EDIT льстец AND REMOVE
+   MANUAL TRANSLIT, EDIT львёнок, львица) Fix non-palatal е in льстец.
+   Other words that will be affected (and probably wrong): льви́ца, львя́тник,
+   льняно́й, льстить, льди́на, львиный, manual pronunciation given as lʲvʲit͡sə
+   and lʲvʲɵnək. Ask Cinemantique.
+5. (DONE, NEED TO RUN IT BY CINEMANTIQUE) In львёнок, rendered as ˈlʲvɵnək
+   instead of ˈlʲvʲɵnək. Apparently same issue as льстец, having to do with
+   ь in beginning. This apparently has to do with the "assimilative
+   palatalization of consonants when followed by front vowels" code, which
+   blocks palatalization when the syllable begins with a cluster with a hard
+   sign, or a soft sign followed by a consonant. Then "retraction of front
+   vowels in syllables blocking assimilative palatalization" converts e to ɛ
+   and i to y in such cases of blocked palatalization (not needed for žcš,
+   which are handled by phon_respellings). Ask Cinemantique if this whole
+   business makes any sense.
 6. (DONE) In prefixes/suffixes like -ин, treat single syllable word as
    unstressed. Also support tilde to force unstressed syllable.
 7. (DONE) In ни́ндзя, дз becomes palatal and н should palatal-assimilate to it.
@@ -579,6 +582,12 @@ function export.ipa(text, adj, gem)
 			pron = rsub(pron, 'ˑ', 'ː')
 		end
 
+		-- assimilative palatalization of consonants when followed by
+		-- front vowels or soft sign; we include ə here because it should
+		-- occur only word-finally from front äeë; note that retraction of
+		-- е and и before цшж was done above in phon_respellings
+		pron = rsub(pron, '([mnpbtdkgcĵfvszxɣrl])([ː()]*[eiəäëöüʹ])', '%1ʲ%2')
+
 		-- FIXME! There was some more complex logic here that may cause
 		-- final e, ë after a vowel in certain cases to be left as is,
 		-- eventually resulting in ɪ, e.g. in ко̀е with secondary stress.
@@ -649,31 +658,6 @@ function export.ipa(text, adj, gem)
 		local syl_conv = {}
 		for j = 1, #syllable do
 			local syl = syllable[j]
-
-			-- assimilative palatalization of consonants when followed by
-			-- front vowels; FIXME, this code should be moved outside of the
-			-- per-syllable loop and cleaned up; it can probably be drastically
-			-- simplified
-			if rfind(syl, '^[^cĵĉĝšž' .. vow .. ']*[eiəäëöüʹ]') or rfind(syl, '^[cĵĉĝšž][^cĵĉĝšž' .. vow .. 'ː()]+[eiəäëöüʹ]') or rfind(syl, '^[cĵ][äëü]') then
-				if not rfind(syl, 'ʺ.*' .. vowels) and not rfind(syl, 'ʹ' .. non_vowels .. '.*' .. vowels) then
-					syl = rsub(syl, '([mnpbtdkgcĵfvszxɣrl])([ʹː()j]*[' .. vow .. 'ʹ])', '%1ʲ%2')
-				end
-			end
-
-			-- palatalization by soft sign
-			syl = rsub(syl, '(.?)([ː()]*)ʹ', function(a, b)
-				if rfind(a, '[čǰšžɕӂ]') then
-					return a .. b
-				elseif a ~= 'ʲ' then
-					return a .. 'ʲ' .. b
-				else
-					return a .. b
-				end end)
-
-			--retraction of front vowels in syllables blocking assimilative palatalization
-			if not rfind(syl, 'ʲ[ː()]*' .. vowels) and not rfind(syl, '[čǰɕӂ][ː()]*[ei]') and not rfind(syl, '^j?i') then
-				syl = rsub(syl, '[ei]', {['e'] = 'ɛ', ['i'] = 'y'})
-			end
 
 			--vowel allophony
 			-- second clause in if-statement handles words like Токио and хаос
