@@ -27,8 +27,8 @@ FIXME:
    begins with a cluster with a hard sign, or a soft sign followed by a
    consonant. Then "retraction of front vowels in syllables blocking
    assimilative palatalization" converts e to ɛ and i to y in such cases
-   of blocked palatalization. Ask Cinemantique if this whole business makes
-   any sense.
+   of blocked palatalization (not needed for žcš, which are handled by
+   phon_respellings). Ask Cinemantique if this whole business makes any sense.
 6. (DONE) In prefixes/suffixes like -ин, treat single syllable word as
    unstressed. Also support tilde to force unstressed syllable.
 7. (DONE) In ни́ндзя, дз becomes palatal and н should palatal-assimilate to it.
