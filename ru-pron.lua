@@ -1,7 +1,8 @@
 --[[
 This module implements the template {{ru-IPA}} (FIXME, is it called elsewhere?)
 
-Author: Wyang; significantly modified by Benwing, with help from Atitarev and a bit from others
+Author: Originally Wyang; largely rewritten by Benwing, additional contributions
+        from Atitarev and a bit from others
 
 FIXME:
 
