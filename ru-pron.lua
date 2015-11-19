@@ -69,7 +69,8 @@ FIXME:
 14. Eliminate pal=y. Consider first asking Wyang why this was put in
    originally.
 15. (DONE) Add test cases: Цю́рих, от а́ба, others.
-15a. Add test cases: фуррь.
+15a. Add test cases: фуррь, по абе́д (for assimilation of schwas across ‿,
+    CHECK THIS IS A WORD)
 16. Caused a change in ко̀е-кто, perhaps because I rewrote code that accepted
     an acute or circumflex accent to also take a grave accent. See how
 	кое is actually pronounced here and take action if needed.
@@ -756,14 +757,8 @@ function export.ipa(text, adj, gem, pal)
 	text = rsub(text, '[cĵ]ʲ', translit_conv_j)
 	text = rsub(text, '[cčgĉĝĵǰšžɕӂ]', translit_conv)
 
-	-- long vowels; FIXME, may not apply at all; might apply across hyphens
-	-- but not spaces; but we don't currently preserve hyphens this far;
-	-- FIXME: Test cases are inconsistent about whether to apply this
-	--text = rsub(text, '[ɐə]([%-]?)ɐ(%l?)ˈ', '%1ɐː%2ˈ')
-	--text = rsub(text, 'ə([%-]?)[ɐə]', '%1əː')
-
 	-- Assimilation involving hiatus of ɐ and ə
-	text = rsub(text, 'ə([%-]?)[ɐə]', 'ɐ%1ɐ')
+	text = rsub(text, 'ə([‿%-]?)[ɐə]', 'ɐ%1ɐ')
 
 	if test_new_ru_pron_module then
 		if new_module_result ~= text then
