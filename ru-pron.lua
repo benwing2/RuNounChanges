@@ -20,7 +20,9 @@ FIXME:
    consonant + /j/. Use the perm_sym_onset mechanism or at least the code
    that accesses that mechanism. Should possibly do this also in VCʲj and
    V‿Cʲj and VCj and V‿Cj sequences; ask Cinemantique if this makes sense.
-4. Fix non-palatal е in льстец.
+4. Fix non-palatal е in льстец. Other words that will be affected (and
+   probably wrong): льви́ца, львя́тник, льняно́й, льстить, льди́на, львиный,
+   manual pronunciation given as lʲvʲit͡sə and lʲvʲɵnək. Ask Cinemantique.
 5. In львёнок, rendered as ˈlʲvɵnək instead of ˈlʲvʲɵnək. Apparently same
    issue as льстец, having to do with ь in beginning. This apparently has
    to do with the "assimilative palatalization of consonants when followed
@@ -72,12 +74,22 @@ FIXME:
 15. (DONE) Add test cases: Цю́рих, от а́ба, others.
 15a. Add test cases: фуррь, по абе́д (for assimilation of schwas across ‿,
     CHECK THIS IS A WORD)
-16. Caused a change in ко̀е-кто, perhaps because I rewrote code that accepted
+15b. Add test case англо-норма́ннский (to make sure degemination of нн occurs
+    not between vowels), multi-syllable word ending in a geminate: ато́лл
+	(not so good because лл always degeminated), коло́сс, Иоа́нн (good because
+	of нн), ха́ос, эвфеми́зм, хору́гвь (NOTE: ruwikt claims гв is voiced, I
+	doubt it, ask Cinemantique), наря́д на ку́хню (non-devoicing of д before
+	н in next word, ask Cinemantique about this, does it also apply to мрл?),
+	ко̀е-кто́
+16. Caused a change in ко̀е-кто́, perhaps because I rewrote code that accepted
     an acute or circumflex accent to also take a grave accent. See how
-	кое is actually pronounced here and take action if needed.
-17. (DONE, NEEDS CHECKING, CHECK евф- WORD) Rewrote voicing/devoicing
-    assimilation; should make assimilation of евфемизм (or similar with
-	евф- or эвф-) automatic and not require phon=.
+	кое is actually pronounced here and take action if needed. (ruwiki claims
+	кое is indeed pronounced like кои, ask Cinemantique what the rule for
+	final -е is and why different in кое vs. мороженое, anything to do with
+	secondary stress on о?)
+17. (DONE, NEEDS CHECKING, CHECK эвфеми́зм) Rewrote voicing/devoicing
+    assimilation; should make assimilation of эвфеми́зм automatic and not
+	require phon=.
 18. (DONE, NEEDS TESTING) Removed redundant fronting-of-a code near end;
     make sure this doesn't change anything.
 ]]
