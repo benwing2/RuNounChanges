@@ -493,7 +493,7 @@ function export.ipa(text, adj, gem, pal)
 	text = rsub(text, '(j[%(ː%)]*)([aeou])', function(a, b)
 		return a .. iotating[b] end)
 	-- eliminate j after consonant and before iotated vowel
-	text = rsub(text, '([^' .. vowel .. acc .. 'ʹʺ‿]/?)j([äëöü])', '%1%2')
+	text = rsub(text, '([^' .. vowel .. acc .. 'ʹʺ‿ ]/?)j([äëöü])', '%1%2')
 
 	--split by word and process each word
 	word = rsplit(text, " ", true)
