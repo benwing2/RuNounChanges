@@ -675,8 +675,9 @@ function export.ipa(text, adj, gem, pal)
 			if stress[j] or (j == #syllable and j > 1 and rfind(syllable[j-1] .. syllable[j], '[aieäëü]' .. accents .. '?o')) then
 				-- convert acute/grave/circumflex accent to appropriate
 				-- IPA marker of primary/secondary/unmarked stress; we keep
-				-- unmarked stress marked for the moment with ^ for the
-				-- degemination code below
+				-- unmarked stress marked for the moment with ^ for code below
+				-- (FIXME, only currently for fronting of a, probably not
+				-- necessary as this should only occur in stressed syllables)
 				syl = rsub(syl, '(.*)́', 'ˈ%1')
 				syl = rsub(syl, '(.*)̀', 'ˌ%1')
 				syl = rsub(syl, '(.*)̂', '^%1')
