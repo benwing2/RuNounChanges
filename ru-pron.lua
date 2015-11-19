@@ -544,10 +544,9 @@ function export.ipa(text, adj, gem, pal)
 		pron = rsub(pron, '%(j%)jə', 'jə')
 
 		-- insert /j/ before front vowels when required
-		pron = rsub(pron, '([ʹʺ])([äëöü])', '%1j%2')
 		pron = rsub(pron, 'ʹi', 'ʹji')
-		pron = rsub(pron, '‿([äëöü])', '‿j%1')
 		pron = rsub(pron, '^([äëöü])', 'j%1')
+		pron = rsub(pron, '([ʹʺ‿])([äëöü])', '%1j%2')
 		pron = rsub(pron, '(' .. vowels .. accents .. '?)([äëöü])', '%1j%2')
 		-- need to do this twice in words like вою́ю where two j's need to be
 		-- inserted in successive syllables
