@@ -5,14 +5,14 @@ Author: Wyang; significantly modified by Benwing, with help from Atitarev and a 
 
 FIXME:
 
-1. Geminated /j/ from -йя-: treat as any other gemination, meaning it may
-   not always be pronounced geminated. Currently we geminate it very late,
-   after all the code that reduces geminates. Should be done earlier and
-   places that include regexps with /j/ should be modified to also include
+1. (DONE, NEEDS TESTING) Geminated /j/ from -йя-: treat as any other gemination,
+   meaning it may not always be pronounced geminated. Currently we geminate it
+   very late, after all the code that reduces geminates. Should be done earlier
+   and places that include regexps with /j/ should be modified to also include
    the gemination marker ː. Words with йя: аллилу́йя, ауйяма, ва́йя, ма́йя,
    папа́йя, парано́йя, пира́йя, ра́йя, секво́йя, Гава́йям.
-2. Should have geminated jj in йе (occurs in e.g. фойе́). Should work with
-   gem=y (see FIXME #1). Words with йе: фойе́, колба Эрленмейера,
+2. (DONE, NEEDS TESTING) Should have geminated jj in йе (occurs in e.g. фойе́).
+   Should work with gem=y (see FIXME #1). Words with йе: фойе́, колба Эрленмейера,
    скала Айерс, Айерс-Рок, йети, Кайенна, конвейер, конвейерный, сайентология,
    фейерверк, Гава́йев. Note also Гава́йи with йи.
 3. In асунсьо́н and Вьентья́н, put a syllable break after the н and before
@@ -41,16 +41,17 @@ FIXME:
    Ask him when this exactly applies. Does it apply in all ɪjə sequences?
    Only word-finally? Also ijə?
 10. (DONE, BUT I SUSPECT THE OFFENDING CLAUSE, LABELED 10a, CAN BE REWRITTEN
-   MUCH MORE SIMPLY, SEE COMMENT AT CLAUSE; FIX THIS UP) убе́жищa renders as
-   ʊˈbʲeʐɨɕːʲə instead of ʊˈbʲeʐɨɕːə; уда́ча similarly becomes ʊˈdat͡ɕʲə instead
-   of ʊˈdat͡ɕə.
-10a. Remove the "offending clause" just mentioned, labeled FIXME (10a), and fix
-   it as the comment above it describes.
-10b. Remove the clause labeled "FIXME (10b)".
-10c. Investigate the clause labeled "FIXME (10c)". This relates to FIXME #9
-   above concerning собра́ние.
-10d. Investigate the clause labeled "FIXME (10d)" and apply the instructions
-   there about removing a line and seeing whether anything changes.
+   MUCH MORE SIMPLY, SEE COMMENT AT CLAUSE; FIX THIS UP) (DONE, NEEDS TESTING)
+   убе́жищa renders as ʊˈbʲeʐɨɕːʲə instead of ʊˈbʲeʐɨɕːə; уда́ча similarly
+   becomes ʊˈdat͡ɕʲə instead of ʊˈdat͡ɕə.
+10a. (DONE, NEEDS TESTING) Remove the "offending clause" just mentioned,
+   labeled FIXME (10a), and fix it as the comment above it describes.
+10b. (DONE, NEEDS TESTING) Remove the clause labeled "FIXME (10b)".
+10c. (DONE, NEEDS TESTING) Investigate the clause labeled "FIXME (10c)".
+   This relates to FIXME #9 above concerning собра́ние.
+10d. (DONE, NEEDS TESTING) Investigate the clause labeled "FIXME (10d)"
+   and apply the instructions there about removing a line and seeing
+   whether anything changes.
 11. (SHOULD HAVE FIXED ISSUE OF ːʲ OCCURRING INSTEAD OF ʲː IN тро́лль,
    NEED TO TEST; STILL ISSUE OF FINAL GEMINATE) тро́лль renders with geminated
    final l, and with ʲ on wrong side of gemination (ːʲ instead of ʲː); note
@@ -180,6 +181,13 @@ local voicing = {
 	['s'] = 'z', ['f'] = 'v',
 	['š'] = 'ž', ['c'] = 'ĵ', ['č'] = 'ǰ', ['ĉ'] = 'ĝ',
 	['x'] = 'ɣ', ['ɕ'] = 'ӂ'
+}
+
+local iotating = {
+	['a'] = 'ä',
+	['e'] = 'ë',
+	['o'] = 'ö',
+	['u'] = 'ü'
 }
 
 -- Prefixes that we recognize specially when they end in a geminated
@@ -371,9 +379,12 @@ function export.ipa(text, adj, gem, pal)
 		track("shch")
 	end
 
-	-- translit will not respect э vs. е difference so we have to
-	-- do it ourselves before translit
+	-- translit doesn't always convert э to ɛ (depends on whether a consonant
+	-- precedes), so do it ourselves before translit
 	text = rsub(text, 'э', 'ɛ')
+	-- vowel + йе should have double jj, but the translit module will translit
+	-- it the same as vowel + е, so do it ourselves before translit
+	text = rsub(text, '([' .. com.vowel .. ']' .. com.opt_accent .. ')йе', '%1jje')
 	-- transliterate and decompose acute, grave, circumflex, tilde Latin vowels
 	text = com.translit(text)
 
@@ -455,13 +466,6 @@ function export.ipa(text, adj, gem, pal)
 		text = rsub(text, respell[1], respell[2])
 	end
 
-	--rewrite iotated vowels
-	text = rsub(text, 'j[aeou]', {
-		['ja'] = 'ä',
-		['je'] = 'ë',
-		['jo'] = 'ö',
-		['ju'] = 'ü'})
-
 	--voicing, devoicing
 	--1. absolutely final devoicing
 	text = rsub(text, '([bdgvɣzžĝĵǰӂ])(ʹ?)$', function(a, b)
@@ -484,6 +488,12 @@ function export.ipa(text, adj, gem, pal)
 	--re-notate orthographic geminate consonants
 	text = rsub(text, '([^' .. vow .. '.%-_])' .. '%1', '%1ː')
 	text = rsub(text, '([^' .. vow .. '.%-_])' .. '%(%1%)', '%1(ː)')
+
+	--rewrite iotated vowels
+	text = rsub(text, '(j[%(ː%)]*)([aeou])', function(a, b)
+		return a .. iotating[b] end)
+	-- eliminate j after consonant and before iotated vowel
+	text = rsub(text, '([^' .. vowel .. acc .. 'ʹʺ‿]/?)j([äëöü])', '%1%2')
 
 	--split by word and process each word
 	word = rsplit(text, " ", true)
@@ -519,41 +529,15 @@ function export.ipa(text, adj, gem, pal)
 			end
 		end
 
-		--optional iotation of 'e' in a two-vowel sequence and reduction of
-		--word-final 'e'
-		-- FIXME (10c)! the following line won't trigger word-finally,
-		-- should it?
-		-- FIXME (10d)! should it apply only when previous vowel is going to
-		-- turn into ɪ or i? It will currently apply in a word like по́ет
-		-- (but even without it, (j) would occur due to a later change that
-		-- makes (j) optional before ɪ, which is what ë will turn into; this
-		-- suggests this line can be removed without harm.
-		pron = rsub(pron, '(' .. vowels .. accents .. '?)ë(' .. non_accents .. ')', '%1(j)ë%2')
-		pron = rsub(pron, 'e$', 'ə')
-		pron = rsub(pron, '([' .. vow .. 'ʹ]' .. accents .. '?)[äë]$', '%1jə')
+		-- FIXME! There was some more complex logic here that may cause
+		-- final e, ë after a vowel in certain cases to be left as is,
+		-- eventually resulting in ɪ, e.g. in ко̀е with secondary stress.
+		-- We may need something here if this is correct.
 
-		-- FIXME (10a)! I suspect this whole clause isn't necessary, and it's
-		-- enough to modify the line rsub(pron, 'e$', 'ə') above to be
-		-- rsub(pron, '[äe]$', 'ə'), and move it after the line directly
-		-- following it; try this.
-		pron = rsub(pron, non_vowels_c .. '([ː()]*)ä$', function(a, b)
-			if rfind(a, "[čǰɕӂ]") then
-				return a .. b .. 'ə'
-			else
-				return a .. 'ʲ' .. b .. 'ə'
-			end
-		end)
-		-- FIXME (10b)! I suspect this isn't necessary.
-		pron = rsub(pron, '%(j%)jə', 'jə')
-
-		-- insert /j/ before front vowels when required
+		-- reduction of word-final a, e
+		pron = rsub(pron, '[äeë]$', 'ə')
+		-- insert j before i when required
 		pron = rsub(pron, 'ʹi', 'ʹji')
-		pron = rsub(pron, '^([äëöü])', 'j%1')
-		pron = rsub(pron, '([ʹʺ‿])([äëöü])', '%1j%2')
-		pron = rsub(pron, '(' .. vowels .. accents .. '?)([äëöü])', '%1j%2')
-		-- need to do this twice in words like вою́ю where two j's need to be
-		-- inserted in successive syllables
-		pron = rsub(pron, '(' .. vowels .. accents .. '?)([äëöü])', '%1j%2')
 		-- insert glottal stop after hard sign if required
 		pron = rsub(pron, 'ʺ([aɛiouy])', 'ʔ%1')
 
@@ -792,12 +776,6 @@ function export.ipa(text, adj, gem, pal)
 
 	-- Assimilation involving hiatus of ɐ and ə
 	text = rsub(text, 'ə([%-]?)[ɐə]', 'ɐ%1ɐ')
-
-	-- double consonants, in words like секвойя and майя; FIXME, this won't
-	-- be correct if the preceding vowel is unstressed; we need to do this
-	-- check before the code that handles geminates, and then make sure that
-	-- any further code involving /j/ checks for the geminate marker ː
-	text = rsub(text, 'jʲ', 'jː')
 
 	if test_new_ru_pron_module then
 		if new_module_result ~= text then
