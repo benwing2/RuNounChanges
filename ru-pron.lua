@@ -236,7 +236,7 @@ local geminate_pref = {
     {'po[tdcč]ː', 'pod'},
 	{'pre[tdcč]ː', 'pred'}, --'^paszː', '^pozː',
 	{'ra[szšž]ː', 'ra[sz]'},
-	{'[szšž]ː', 's'},
+	{'[szšž]ː', '[szšž]'}, -- ž on right side for жжёт etc.
 	{'me[žš]ː', 'mež'},
 	{'če?re[szšž]ː', 'če?re[sz]'},
 	-- certain double prefixes involving ra[zs]-
@@ -577,7 +577,7 @@ function export.ipa(text, adj, gem)
 			-- 3. remaining ž and n between vowels
 			pron = rsub_repeatedly(pron, '(' .. vowels .. accents .. '?[žn])ː(' .. vowels .. ')', '%1ˑ%2')
 			-- 4. ssk (and zsk, already normalized) immediately after the stress
-			pron = rsub(pron, '(' .. vowels .. accents .. 's)ːk', '%1ˑk')
+			pron = rsub(pron, '(' .. vowels .. accents .. 's)ː(k' .. vowels .. ')', '%1ˑ%2')
 			-- 5. eliminate remaining gemination
 			pron = rsub(pron, '([^ɕӂ%(%)])ː', '%1')
 			-- 6. convert special gemination symbol ˑ to regular gemination
@@ -588,6 +588,9 @@ function export.ipa(text, adj, gem)
 		pron = rsub(pron, 'ʹi', 'ʹji')
 		-- insert glottal stop after hard sign if required
 		pron = rsub(pron, 'ʺ([aɛiouy])', 'ʔ%1')
+
+		-- add tertiary stress to final -о after vowels, e.g. То́кио
+		pron = rsub(pron, '(' .. vowels .. accents .. '?o)$', '%1' .. CFLEX)
 
 		-- assimilative palatalization of consonants when followed by
 		-- front vowels or soft sign
@@ -655,34 +658,27 @@ function export.ipa(text, adj, gem)
 		for j = 1, #syllable do
 			local syl = syllable[j]
 
+			local alnum
+
 			--vowel allophony
-			-- second clause in if-statement handles words like Токио and хаос
-			if stress[j] or (j == #syllable and j > 1 and rfind(syllable[j-1] .. syllable[j], '[aieäëü]' .. accents .. '?o')) then
+			if stress[j] then
 				-- convert acute/grave/circumflex accent to appropriate
 				-- IPA marker of primary/secondary/unmarked stress
+				alnum = 1
 				syl = rsub(syl, '(.*)́', 'ˈ%1')
 				syl = rsub(syl, '(.*)̀', 'ˌ%1')
-				syl = rsub(syl, '(.*)̂', '%1')
+				syl = rsub(syl, CFLEX, '')
+				-- FIXME, it seems strange to do this here
 				syl = rsub(syl, '([ʲčǰɕӂ][ː()]*)o', '%1ö')
-				syl = rsub(syl, vowels_c, function(a)
-					if a ~= '' then
-						return allophones[a][1]
-					end end)
-
+			elseif stress[j+1] or (j == 1 and rfind(syl, '^' .. vowels)) then
+				alnum = 2
 			else
-				if stress[j+1] or (j == 1 and rfind(syl, '^' .. vowels)) then
-					syl = rsub(syl, vowels_c, function(a)
-						if a ~= '' then
-							return allophones[a][2]
-						end end)
-
-				else
-					syl = rsub(syl, vowels_c, function(a)
-						if a ~= '' then
-							return allophones[a][3]
-						end end)
-				end
+				alnum = 3
 			end
+			syl = rsub(syl, vowels_c, function(a)
+				if a ~= '' then
+					return allophones[a][alnum]
+				end end)
 			syl_conv[j] = syl
 		end
 
