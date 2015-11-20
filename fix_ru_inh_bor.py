@@ -55,6 +55,17 @@ def process_page(index, page, save, verbose):
       text))
     return m.group(0)
 
+  # re.sub() substitution function for replacing {{etyl|*|ru}} [[FOO]]
+  # with {{bor|ru|*|FOO}}.
+  def do_bor_raw(m):
+    langcode, term = m.groups()
+    if langcode in ["orv", "sla-pro", "ine-bsl-pro", "ine-pro"]:
+      pagemsg("Not creating {{bor}} for inherited language %s: %s" % (
+        langcode, m.group(0)))
+      return m.group(0)
+    borrowed_langs[langcode] = borrowed_langs.get(langcode, 0) + 1
+    return "{{bor|ru|%s%s}}" % (langcode, term)
+
   text = unicode(page.text)
   orig_text = text
 
@@ -74,6 +85,8 @@ def process_page(index, page, save, verbose):
       break
     text = new_text
 
+  found_borrowing = False
+
   # Do borrowings. We look for a line beginning with either [Ff]rom or nothing,
   # followed by {{etyl|*|ru}} {{m...}} or {{etyl|*|ru}} {{term...}}, where
   # * must not be one of the inheritance-chain languages (orv, sla-pro,
@@ -82,13 +95,29 @@ def process_page(index, page, save, verbose):
   # There should only be one such substitution.
   new_text = re.sub(r"^((?:[Ff]rom +)?)(\{\{ety[lm]\|([^|{}\n]*)\|ru\}\} +\{\{(?:term|m|l)[^{}\n]*\}\})",
     lambda m:do_inh_bor(m, do_bor=True), text, 0, re.M)
-  if new_text == text:
-    m = re.search(r"\{\{bor(rowing)?\|ru[^{}]*\}\}", text)
-    if m:
-      pagemsg("Already contains borrowing: %s" % m.group(0))
-    else:
-      pagemsg("WARNING: Can't find proper template")
+  if new_text != text:
+    found_borrowing = True
   text = new_text
+
+  new_text = re.sub(r"^(?:[Ff]rom +)?\{\{ety[lm]\|([^|{}\n]*)\|ru\}\} +\[\[(.*?)\]\]",
+    do_bor_raw, text, 0, re.M)
+  if new_text != text:
+    found_borrowing = True
+  text = new_text
+
+  if not found_borrowing:
+    m = re.search(r"\{\{bor(rowing)?\|[^{}]*\}\}", text)
+    if m:
+      parsed = blib.parse_text(m.group(0))
+      for t in parsed.filter_templates():
+        if unicode(t.name) in ["bor", "borrowing"] and (
+            getparam(t, "lang") == "ru" or
+            not getparam(t, "lang") and getparam(t, "1") == "ru"):
+          found_borrowing = True
+          pagemsg("Already contains borrowing: %s" % m.group(0))
+
+  if not found_borrowing:
+    pagemsg("WARNING: Can't find proper borrowing template")
 
   if text != orig_text:
     comment = "Use {{inh}}/{{bor}} in Russian for terms inherited or borrowed"
