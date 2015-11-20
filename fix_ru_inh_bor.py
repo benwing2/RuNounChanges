@@ -35,8 +35,8 @@ def process_page(index, page, save, verbose):
     parsed = blib.parse_text(text)
     for t in parsed.filter_templates():
       targs = ""
-      if unicode(t.name) == "m" and getparam(t, "1") == langcode:
-        targs = re.sub(r"^\{\{\s*m\s*\|\s*%s\s*" % langcode, "", unicode(t))
+      if unicode(t.name) in ["m", "l"] and getparam(t, "1") == langcode:
+        targs = re.sub(r"^\{\{\s*[ml]\s*\|\s*%s\s*" % langcode, "", unicode(t))
       elif unicode(t.name) == "term" and getparam(t, "lang") == langcode:
         rmparam(t, "lang")
         targs = re.sub(r"^\{\{\s*term\s*", "", unicode(t))
@@ -51,7 +51,7 @@ def process_page(index, page, save, verbose):
           new_text = prefix_text + "{{inh|ru|%s%s" % (langcode, targs)
         pagemsg("Replacing <%s> with <%s>" % (m.group(0), new_text))
         return new_text
-    pagemsg("WARNING: Something went wrong, can't find {{m|...}} or {{term|...}}, or wrong langcode: %s" % (
+    pagemsg("WARNING: Something went wrong, can't find {{m|...}} or {{l|...}} or {{term|...}}, or wrong langcode: %s" % (
       text))
     return m.group(0)
 
@@ -67,8 +67,8 @@ def process_page(index, page, save, verbose):
   # {{m|...}} or {{term|...}} must match the * in the previous {{etyl}}
   # template. Repeat until no more substitutions, to handle chains of
   # inheritance.
-  while true:
-    new_text = re.sub(r"^((?:[^{}\n]*[Ff]rom +)?(?:\{\{inh\|ru\|(?:orv|sla-pro|ine-bsl-pro|ine-pro)(?:\|[^{}\n]*)}\},? +from +)*)(\{\{etyl\|(orv|sla-pro|ine-bsl-pro|ine-pro)\|ru\}\} +\{\{(?:term|m)[^{}\n]*\}\})",
+  while True:
+    new_text = re.sub(r"^((?:[^{}\n]*[Ff]rom +)?(?:\{\{inh\|ru\|(?:orv|sla-pro|ine-bsl-pro|ine-pro)(?:\|[^{}\n]*)}\},? +from +)*)(\{\{ety[lm]\|(orv|sla-pro|ine-bsl-pro|ine-pro)\|ru\}\} +\{\{(?:term|m)[^{}\n]*\}\})",
       do_inh_bor, text, 0, re.M)
     if new_text == text:
       break
@@ -80,8 +80,15 @@ def process_page(index, page, save, verbose):
   # ine-bsl-pro or ine-pro) and the language inside of {{m|...} or
   # {{term|...}} must match the * in the previous {{etyl}} template.
   # There should only be one such substitution.
-  text = re.sub(r"^((?:[Ff]rom +)?)(\{\{etyl\|([^|{}\n]*)\|ru\}\} +\{\{(?:term|m)[^{}\n]*\}\})",
+  new_text = re.sub(r"^((?:[Ff]rom +)?)(\{\{ety[lm]\|([^|{}\n]*)\|ru\}\} +\{\{(?:term|m|l)[^{}\n]*\}\})",
     lambda m:do_inh_bor(m, do_bor=True), text, 0, re.M)
+  if new_text == text:
+    m = re.search(r"\{\{bor(rowing)?\|ru[^{}]*\}\}", text)
+    if m:
+      pagemsg("Already contains borrowing: %s" % m.group(0))
+    else:
+      pagemsg("WARNING: Can't find proper template")
+  text = new_text
 
   if text != orig_text:
     comment = "Use {{inh}}/{{bor}} in Russian for terms inherited or borrowed"
@@ -102,7 +109,8 @@ parser.add_argument('--verbose', action="store_true", help="More verbose output"
 args = parser.parse_args()
 start, end = blib.get_args(args.start, args.end)
 
-for cat in ["Russian terms derived from Old East Slavic", "Russian terms derived from Proto-Slavic"]:
+for cat in ["Russian terms derived from English", "Russian lemmas",
+    "Russian non-lemma forms"]:
   msg("Processing category %s" % cat)
   for i, page in blib.cat_articles(cat, start, end):
     msg("Page %s %s: Processing" % (i, unicode(page.title())))
