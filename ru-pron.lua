@@ -584,30 +584,25 @@ function export.ipa(text, adj, gem)
 			pron = rsub(pron, 'ˑ', 'ː')
 		end
 
-		-- assimilative palatalization of consonants when followed by
-		-- front vowels or soft sign; we include ə here because it should
-		-- occur only word-finally from front äeë
-		pron = rsub(pron, '([mnpbtdkgfvszxɣrl])([ː()]*[eiəäëöüʹ])', '%1ʲ%2')
-		pron = rsub(pron, '([cĵ])([ː()]*[äöüʹ])', '%1ʲ%2')
-		-- retraction of е and и before цшж; FIXME, this is partly done
-		-- above in phon_respellings, should be cleaned up
-		pron = rsub(pron, '([cĵšžĉĝ][ː()]*)([ei])', function(a, b)
-			return a .. retracting[b] end)
-
-		-- FIXME! There was some more complex logic here that may cause
-		-- final e, ë after a vowel in certain cases to be left as is,
-		-- eventually resulting in ɪ, e.g. in ко̀е with secondary stress.
-		-- We may need something here if this is correct.
-
-		---- HACK for кое-, convert to койи.
-		pron = rsub(pron, '^ko(' .. accents .. ')jë', 'ko%1ji')
-
-		-- reduction of word-final a, e
-		pron = rsub(pron, '[äeë]$', 'ə')
 		-- insert j before i when required
 		pron = rsub(pron, 'ʹi', 'ʹji')
 		-- insert glottal stop after hard sign if required
 		pron = rsub(pron, 'ʺ([aɛiouy])', 'ʔ%1')
+
+		-- assimilative palatalization of consonants when followed by
+		-- front vowels or soft sign
+		pron = rsub(pron, '([mnpbtdkgfvszxɣrl])([ː()]*[eiäëöüʹ])', '%1ʲ%2')
+		pron = rsub(pron, '([cĵ])([ː()]*[äöüʹ])', '%1ʲ%2')
+
+		-- reduction of word-final a, e; but special HACK for кое-,
+		-- convert to койи.
+		pron = rsub(pron, '^ko(' .. accents .. ')jë', 'ko%1ji')
+		pron = rsub(pron, '[äeë]$', 'ə')
+
+		-- retraction of е and и before цшж; FIXME, this is partly done
+		-- above in phon_respellings, should be cleaned up
+		pron = rsub(pron, '([cĵšžĉĝ][ː()]*)([ei])', function(a, b)
+			return a .. retracting[b] end)
 
 		--syllabify, inserting @ at syllable boundaries
 		--1. insert @ after each vowel
