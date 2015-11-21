@@ -95,6 +95,8 @@ FIXME:
 	require phon=.
 18. (DONE, NEEDS TESTING) Removed redundant fronting-of-a code near end;
     make sure this doesn't change anything.
+19. (ASK CINEMANTIQUE) do сь and зь assimilate before шж, and if so do they
+    become ɕʑ?
 ]]
 
 local ut = require("Module:utils")
@@ -260,7 +262,7 @@ local phon_respellings = {
 	{vowels_c .. '([šžc])i', '%1%2y'},
 	{'([čǰӂ])([aou])', '%1j%2'},
 
-	-- the following eight are ordered before changes that affect ts
+	-- the following six are ordered before changes that affect ts
 	-- FIXME!!! Should these next fouralso pay attention to grave accents?
 	{'́tʹ?sja⁀', '́cca⁀'},
 	{'([^́])tʹ?sja⁀', '%1ca⁀'},
@@ -295,6 +297,9 @@ local phon_respellings = {
 	-- 6. тш, дж always use long variants (FIXME, may change)
 	{'[dt](ʹ?[ %-‿⁀/]*)š', 'ĉ%1š'},
 	{'[dt](ʹ?[ %-‿⁀/]*)ž', 'ĝ%1ž'},
+	-- 7. soften palatalized hard hushing affricates resulting from the previous
+	{'ĉʹ', 'č'},
+	{'ĝʹ', 'ǰ'},
 
 	-- changes for assimilation of [dt] + affricate
 	{'[sz][dt]c', 'sc'},
@@ -398,6 +403,7 @@ function export.ipa(text, adj, gem)
 	text = rsub(text, "``", DUBGR)
 	text = rsub(text, "`", GR)
 	text = rsub(text, "@", DOTABOVE)
+	text = rsub(text, CFLEX, DUBGR)
 
 	-- translit doesn't always convert э to ɛ (depends on whether a consonant
 	-- precedes), so do it ourselves before translit
