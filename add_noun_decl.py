@@ -126,7 +126,7 @@ def process_page(index, page, save, verbose):
       elif val == "_" or val == "-" or re.search("^join:", val):
         pagemsg("WARNING: Found multiword decl during decl lookup for %s, skipping" %
             lemma)
-        return
+        return None
       elif val == "or":
         end_arg_set = True
 
@@ -159,7 +159,7 @@ def process_page(index, page, save, verbose):
 
     # Now gather all params, including named ones.
     params = []
-    params.extend(numbered_params)
+    params.extend((str(i+1), val) for i, val in zip(xrange(len(numbered_params)), numbered_params))
     num = None
     anim = None
     for p in decl_template.params:
@@ -215,7 +215,7 @@ def process_page(index, page, save, verbose):
         ",".join(headword_trs))
     return
 
-  inflected_words = set(ru.remove_accents(blib.remove_links(x.value)) for x in see_template.params)
+  inflected_words = set(ru.remove_accents(blib.remove_links(unicode(x.value))) for x in see_template.params)
   headword = getparam(headword_template, "1")
   if "-" in headword:
     pagemsg("WARNING: Can't handle hyphens in headword, yet, skipping")
@@ -229,7 +229,7 @@ def process_page(index, page, save, verbose):
 
   # FIXME! This won't work if the words are separated by hyphens, hence we
   # issue an error if hyphens found; but should eventually handle.
-  headwords = re.findall(r"\[\[(.*?)\]\]|[^ ]+", headword)
+  headwords = re.findall(r"(\[\[.*?\]\]|[^ ]+)", headword)
   pagemsg("Found headwords: %s" % " @@ ".join(headwords))
 
   params = []
@@ -241,12 +241,12 @@ def process_page(index, page, save, verbose):
   offset = 0
   for word in headwords:
     wordind += 1
-    m = re.search("^\[\[([^|]+)\|([^|]+\]\]$", word)
+    m = re.search(r"^\[\[([^|]+)\|([^|]+)\]\]$", word)
     if m:
       lemma, infl = m.groups()
       lemma = ru.remove_accents(lemma)
     else:
-      m = re.search("^\[\[([^|]+)\]\]$", word)
+      m = re.search(r"^\[\[([^|]+)\]\]$", word)
       if m:
         infl = m.group(1)
       else:
@@ -271,7 +271,7 @@ def process_page(index, page, save, verbose):
           pagemsg("WARNING: Multiple inflected nouns, can't handle, skipping")
           return
         overall_num = num
-        overall_anum = anim
+        overall_anim = anim
       for name, val in wordparams:
         if re.search("^[0-9]+$", name):
           name = str(int(name) + offset)
@@ -288,7 +288,7 @@ def process_page(index, page, save, verbose):
       offset += 2
 
   if overall_anim:
-    params.append("a", overall_anim)
+    params.append(("a", overall_anim))
   if overall_num:
     overall_num = overall_num[0:1]
     canon_nums = {"s":"sg", "p":"pl", "b":"both"}
@@ -296,6 +296,7 @@ def process_page(index, page, save, verbose):
       overall_num = canon_nums[overall_num]
     else:
       pagemsg("Bogus value for overall num in decl, skipping: %s" % overall_num)
+      return
     if headword_is_proper:
       plval = getparam(headword_template, "4")
       if plval and plval != "-":
@@ -342,8 +343,8 @@ def process_page(index, page, save, verbose):
     return None
 
   orig_headword_template = unicode(headword_template)
-  params_to_preserve = fix_old_headword_params(headword_template, new_params,
-      genders, pagemsg_with_proposed)
+  params_to_preserve = runoun.fix_old_headword_params(headword_template,
+      params, genders, pagemsg_with_proposed)
   if params_to_preserve == None:
     return None
 

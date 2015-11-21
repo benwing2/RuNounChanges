@@ -131,7 +131,7 @@ def check_old_noun_headword_forms(headword_template, args, subpagetitle, pagemsg
     pagemsg("WARNING: Gender mismatch, existing=%s, new=%s" % (
       ",".join(genders), ",".join(proposed_genders)))
 
-    return genders
+  return genders
 
 def fix_old_headword_params(headword_template, new_params, genders, pagemsg):
 
