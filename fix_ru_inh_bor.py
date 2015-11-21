@@ -46,7 +46,7 @@ def process_page(index, page, save, verbose):
               targs, text))
           return m.group(0)
         if do_bor:
-          new_text = "{{bor|ru|%s%s" % (langcode, targs)
+          new_text = prefix_text + "{{bor|ru|%s%s" % (langcode, targs)
         else:
           new_text = prefix_text + "{{inh|ru|%s%s" % (langcode, targs)
         pagemsg("Replacing <%s> with <%s>" % (m.group(0), new_text))
@@ -93,7 +93,7 @@ def process_page(index, page, save, verbose):
   # ine-bsl-pro or ine-pro) and the language inside of {{m|...} or
   # {{term|...}} must match the * in the previous {{etyl}} template.
   # There should only be one such substitution.
-  new_text = re.sub(r"^((?:[Ff]rom +)?)(\{\{ety[lm]\|([^|{}\n]*)\|ru\}\} +\{\{(?:term|m|l)[^{}\n]*\}\})",
+  new_text = re.sub(r"^((?:[^{}\[\]\n]+\. +)?)(?:From +)?(\{\{ety[lm]\|([^|{}\n]*)\|ru\}\} +\{\{(?:term|m|l)[^{}\n]*\}\})",
     lambda m:do_inh_bor(m, do_bor=True), text, 0, re.M)
   if new_text != text:
     found_borrowing = True
