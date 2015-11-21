@@ -27,6 +27,7 @@ import blib
 from blib import getparam, rmparam
 
 import rulib as ru
+import runounlib as runoun
 
 site = pywikibot.Site()
 
@@ -36,20 +37,24 @@ def msg(text):
 def errmsg(text):
   print >>sys.stderr, text.encode("utf-8")
 
-def arg1_is_stress(arg1):
-  if not arg1:
-    return False
-  for arg in re.split(",", arg1):
-    if not (re.search("^[a-f]'?'?$", arg) or re.search(r"^[1-6]\*?$", arg)):
-      return False
-  return True
-
 def process_page(index, page, save, verbose):
   pagetitle = unicode(page.title())
   subpagetitle = re.sub("^.*:", "", pagetitle)
 
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
+
+  def expand_text(tempcall):
+    if verbose:
+      pagemsg("Expanding text: %s" % tempcall)
+    result = site.expand_text(tempcall, title=pagetitle)
+    if verbose:
+      pagemsg("Raw result is %s" % result)
+    if result.startswith('<strong class="error">'):
+      result = re.sub("<.*?>", "", result)
+      pagemsg("WARNING: Got error: %s" % result)
+      return False
+    return result
 
   origtext = page.text
   parsed = blib.parse_text(origtext)
@@ -107,7 +112,6 @@ def process_page(index, page, save, verbose):
       pname = unicode(p.name)
       if re.search("^[0-9]+$", pname):
         highest_numbered_param = max(highest_numbered_param, int(pname))
-    for i in xrange(1, highest_numbered_param + 1)
 
     # Now gather the numbered arguments into arg sets. Code taken from
     # ru-noun.lua.
@@ -138,7 +142,7 @@ def process_page(index, page, save, verbose):
     numbered_params = []
     for arg_set in arg_sets:
       lemma_arg = 0
-      if len(arg_set) > 0 and arg1_is_stress(arg_set[0]):
+      if len(arg_set) > 0 and runoun.arg1_is_stress(arg_set[0]):
         lemma_arg = 1
       if len(arg_set) <= lemma_arg:
         arg_set.append("")
@@ -203,12 +207,28 @@ def process_page(index, page, save, verbose):
     pagemsg("WARNING: Can't find headword template, skipping")
     return
 
-  inflected_words = set(ru.remove_accents(ru.remove_links(x.value)) for x in see_template.params)
+  headword_is_proper = unicode(headword_template.name) == "ru-proper noun"
+
+  headword_trs = blib.process_arg_chain(headword_template, "tr", "tr")
+  if headword_trs:
+    pagemsg("WARNING: Found headword manual translit, skipping: %s" %
+        ",".join(headword_trs))
+    return
+
+  inflected_words = set(ru.remove_accents(blib.remove_links(x.value)) for x in see_template.params)
   headword = getparam(headword_template, "1")
   if "-" in headword:
     pagemsg("WARNING: Can't handle hyphens in headword, yet, skipping")
     return
-  # FIXME! This won't work if the words are separated by hyphens.
+  for badparam in ["head2", "gen2", "pl2"]:
+    val = getparam(headword_template, badparam)
+    if val:
+      pagemsg("WARNING: Found extra param, can't handle, skipping: %s=%s" % (
+        badparam, val))
+      return
+
+  # FIXME! This won't work if the words are separated by hyphens, hence we
+  # issue an error if hyphens found; but should eventually handle.
   headwords = re.findall(r"\[\[(.*?)\]\]|[^ ]+", headword)
   pagemsg("Found headwords: %s" % " @@ ".join(headwords))
 
@@ -261,33 +281,94 @@ def process_page(index, page, save, verbose):
 
     else:
       # Invariable
-      if rulib.is_unstressed(infl):
+      if ru.is_unstressed(infl):
         word = "*" + word
       params.append((str(offset + 1), word))
       params.append((str(offset + 2), "$"))
       offset += 2
 
-  ...
-  # FIXME: Set the number and animacy, and extract the gender/num/animacy
-  # values using generate_args(), and compare with the gender/num/animacy
-  # values found in the template. Error if not same. The animacy comes
-  # directly from overall_anim, while the number should be singular if
-  # the noun is proper, else ceom from overall_num.
-
-  # {{ru-noun|[[сахарный|са́харная]] [[вата|ва́та]]|f-in}}
-
-  ...
-
-  new_text = unicode(parsed)
-
-  if new_text != origtext:
-    comment = "Replace ru-(proper )noun with ru-(proper )noun+ with appropriate declension"
-    if save:
-      pagemsg("Saving with comment = %s" % comment)
-      page.text = new_text
-      page.save(comment=comment)
+  if overall_anim:
+    params.append("a", overall_anim)
+  if overall_num:
+    overall_num = overall_num[0:1]
+    canon_nums = {"s":"sg", "p":"pl", "b":"both"}
+    if overall_num in canon_nums:
+      overall_num = canon_nums[overall_num]
     else:
-      pagemsg("Would save with comment = %s" % comment)
+      pagemsg("Bogus value for overall num in decl, skipping: %s" % overall_num)
+    if headword_is_proper:
+      plval = getparam(headword_template, "4")
+      if plval and plval != "-":
+        if overall_num != "both":
+          pagemsg("WARNING: Proper noun is apparently sg/pl but main noun not, skipping: %s" %
+              headword)
+          return
+      elif overall_num == "both":
+        pagemsg("Proper noun has sg/pl main noun underlying it, assuming singular: %s" %
+            headword)
+        overall_num = None
+      elif overall_num == "sg":
+        overall_num = None
+    if overall_num:
+      params.append("n", overall_num)
+
+  generate_template = (blib.parse_text("{{ru-generate-noun-args}}").
+      filter_templates()[0])
+  for name, value in params:
+    generate_template.add(name, value)
+  proposed_template_text = unicode(generate_template)
+  if headword_is_proper:
+    proposed_template_text = re.sub(r"^\{\{ru-generate-noun-args",
+        "{{ru-proper noun+", proposed_template_text)
+  else:
+    proposed_template_text = re.sub(r"^\{\{ru-generate-noun-args",
+        "{{ru-noun+", proposed_template_text)
+
+  def pagemsg_with_proposed(text):
+    pagemsg("Proposed new template (WARNING, omits explicit gender and params to preserve from old template): %s" % proposed_template_text)
+    pagemsg(text)
+
+  if headword_is_proper:
+    generate_template.add("ndef", "sg")
+  generate_result = expand_text(unicode(generate_template))
+  if not generate_result:
+    pagemsg_with_proposed("WARNING: Error generating noun args")
+    return
+  args = ru.split_generate_args(generate_result)
+
+  genders = runoun.check_old_noun_headword_forms(headword_template, args,
+      subpagetitle, pagemsg_with_proposed)
+  if genders == None:
+    return None
+
+  orig_headword_template = unicode(headword_template)
+  params_to_preserve = fix_old_headword_params(headword_template, new_params,
+      genders, pagemsg_with_proposed)
+  if params_to_preserve == None:
+    return None
+
+  headword_template.params.extend(params_to_preserve)
+
+  notes = []
+  ru_noun_changed = 0
+  ru_proper_noun_changed = 0
+  if unicode(headword_template.name) == "ru-noun":
+    headword_template.name = "ru-noun+"
+    notes.append("convert multi-word ru-noun to ru-noun+ by looking up decls")
+  else:
+    headword_template.name = "ru-proper noun+"
+    notes.append("convert multi-word ru-proper noun to ru-proper noun+ by looking up decls")
+
+  pagemsg("Replacing headword %s with %s" % (orig_headword_template, unicode(headword_template)))
+
+  comment = "; ".join(notes)
+  if save:
+    pagemsg("Saving with comment = %s" % comment)
+    page.text = unicode(parsed)
+    page.save(comment=comment)
+  else:
+    pagemsg("Would save with comment = %s" % comment)
+
 
 parser = argparse.ArgumentParser(description="Convert ru-noun to ru-noun+, ru-proper noun to ru-proper noun+ for multiword nouns")
 parser.add_argument('start', help="Starting page index", nargs="?")

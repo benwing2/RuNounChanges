@@ -16,6 +16,7 @@ import blib
 from blib import getparam, rmparam
 
 import rulib as ru
+import runounlib as runoun
 
 site = pywikibot.Site()
 
@@ -24,14 +25,6 @@ def msg(text):
 
 def errmsg(text):
   print >>sys.stderr, text.encode("utf-8")
-
-def arg1_is_stress(arg1):
-  if not arg1:
-    return False
-  for arg in re.split(",", arg1):
-    if not (re.search("^[a-f]'?'?$", arg) or re.search(r"^[1-6]\*?$", arg)):
-      return False
-  return True
 
 def process_page(index, page, save, verbose):
   pagetitle = unicode(page.title())
@@ -200,7 +193,7 @@ def process_page_section(index, page, section, verbose):
           pagemsg("WARNING: Headword template has translit param tr%s, can't handle: %s" % (
             i, unicode(headword_template)))
           return None
-      if arg1_is_stress(getparam(decl_template, "1")):
+      if runoun.arg1_is_stress(getparam(decl_template, "1")):
         lemma_arg = "2"
       else:
         lemma_arg = "1"
@@ -220,22 +213,11 @@ def process_page_section(index, page, section, verbose):
         lemmaval += "//" + headword_tr
         orig_decl_template = unicode(decl_template)
         decl_template.add(lemma_arg, lemmaval)
-        if verbose:
-          pagemsg("Replacing decl %s with %s" % (orig_decl_template,
-            unicode(decl_template)))
+        pagemsg("Replacing decl %s with %s" % (orig_decl_template,
+          unicode(decl_template)))
         frobbed_manual_translit = [headword_tr]
 
-  def process_arg_chain(t, first, pref, firstdefault=""):
-    ret = []
-    val = getparam(t, first) or firstdefault
-    i = 2
-    while val:
-      ret.append(val)
-      val = getparam(t, pref + str(i))
-      i += 1
-    return ret
-
-  genders = process_arg_chain(headword_template, "2", "g")
+  genders = blib.process_arg_chain(headword_template, "2", "g")
 
   bian_replaced = 0
 
@@ -260,9 +242,8 @@ def process_page_section(index, page, section, verbose):
           pagemsg("Replacing a=bi with a=ai in decl template")
           decl_template.add("a", "ai")
           bian_replaced = 1
-        if verbose:
-          pagemsg("Replacing decl %s with %s" % (orig_decl_template,
-            unicode(decl_template)))
+        pagemsg("Replacing decl %s with %s" % (orig_decl_template,
+          unicode(decl_template)))
 
   generate_template = re.sub(r"^\{\{ru-noun-table", "{{ru-generate-noun-args",
       unicode(noun_table_template))
@@ -270,153 +251,28 @@ def process_page_section(index, page, section, verbose):
   if not generate_result:
     pagemsg("WARNING: Error generating noun args")
     return None
-  args = {}
-  for arg in re.split(r"\|", generate_result):
-    name, value = re.split("=", arg)
-    args[name] = re.sub("<!>", "|", value)
+  args = ru.split_generate_args(generate_result)
 
-  def try_to_stress(form):
-    if "//" in form:
-      m = re.search("^(.*?)//(.*)$", form)
-      # FIXME: This should stress the translit as well
-      return ru.try_to_stress(m.group(1)) + "//" + m.group(2)
-    return ru.try_to_stress(form)
-
-  # FORM1 is the forms from ru-noun (or ru-proper noun); FORM2 is the combined
-  # set of forms from ru-noun-table, and needs to be split on commas.
-  # FORM1_LEMMA is true if the FORM1 values come from the ru-noun lemma.
-  def compare_forms(case, form1, form2, form1_lemma=False):
-    # Split on individual words and allow monosyllabic accent differences.
-    # FIXME: Will still have problems with [[X|Y]].
-    def compare_single_form(f1, f2):
-      words1 = re.split("[ -]", f1)
-      words2 = re.split("[ -]", f2)
-      if len(words1) != len(words2):
-        return False
-      for i in xrange(len(words1)):
-        if words1[i] != words2[i] and try_to_stress(words1[i]) != words2[i]:
-          return False
-      return True
-    form1 = [re.sub(u"ё́", u"ё", x) for x in form1]
-    form2 = re.split(",", form2)
-    if not form1_lemma:
-      # Ignore manual translit in decl forms when comparing non-lemma forms;
-      # not available from ru-noun (and not displayed anyway)
-      form2 = [re.sub("//.*$", "", x) for x in form2]
-    # If existing value missing, OK; also allow for unstressed monosyllabic
-    # existing form matching stressed monosyllabic new form
-    if form1:
-      if (set(form1) == set(form2) or
-          set(try_to_stress(x) for x in form1) == set(form2) or
-          len(form1) == 1 and len(form2) == 1 and compare_single_form(form1[0], form2[0])):
-        pass
-      else:
-        pagemsg("WARNING: case %s, existing forms %s not same as proposed %s" %(
-            case, ",".join(form1), ",".join(form2)))
-        return False
-    return True
-
-  def compare_genders(g1, g2):
-    if set(g1) == set(g2):
-      return True
-    if len(g1) == 1 and len(g2) == 1:
-      # If genders don't match exactly, check if existing gender is missing
-      # animacy and allow that, so it gets overwritten with new gender
-      if g1[0] == re.sub("-(an|in)", "", g2[0]):
-        pagemsg("Existing gender %s missing animacy spec compared with proposed %s, allowed" % (
-          ",".join(g1), ",".join(g2)))
-        return True
-    return False
-
-  headwords = process_arg_chain(headword_template, "1", "head", subpagetitle)
-  translits = process_arg_chain(headword_template, "tr", "tr")
-  for i in xrange(len(translits)):
-    if len(headwords) <= i:
-      pagemsg("WARNING: Not enough headwords for translit tr%s=%s, skipping" % (
-        "" if i == 0 else str(i+1), translits[i]))
-      return None
-    else:
-      headwords[i] += "//" + translits[i]
-  genitives = process_arg_chain(headword_template, "3", "gen")
-  plurals = process_arg_chain(headword_template, "4", "pl")
-  cases_to_check = None
-  if args["n"] == "s":
-    if (not compare_forms("nom_sg", headwords, args["nom_sg_linked"], True) or
-        not compare_forms("gen_sg", genitives, args["gen_sg"])):
-      pagemsg("Existing and proposed forms not same, skipping")
-      return None
-    cases_to_check = ["nom_sg", "gen_sg"]
-  elif args["n"] == "p":
-    if (not compare_forms("nom_pl", headwords, args["nom_pl_linked"], True) or
-        not compare_forms("gen_pl", genitives, args["gen_pl"])):
-      pagemsg("Existing and proposed forms not same, skipping")
-      return None
-    cases_to_check = ["nom_pl", "gen_pl"]
-  elif args["n"] == "b":
-    if (not compare_forms("nom_sg", headwords, args["nom_sg_linked"], True) or
-        not compare_forms("gen_sg", genitives, args["gen_sg"]) or
-        not compare_forms("nom_pl", plurals, args["nom_pl"])):
-      pagemsg("Existing and proposed forms not same, skipping")
-      return None
-    cases_to_check = ["nom_sg", "gen_sg", "nom_pl"]
-  else:
-    pagemsg("WARNING: Unrecognized number spec %s, skipping" % args["n"])
+  genders = runoun.check_old_noun_headword_forms(headword_template, args,
+      subpagetitle, pagemsg)
+  if genders == None:
     return None
 
-  for case in cases_to_check:
-    raw_case = re.sub(u"△", "", ru.remove_links(args[case + "_raw"]))
-    if args[case] != raw_case:
-      pagemsg("WARNING: Raw case %s contains footnote symbol" % args[case + "_raw"])
-
-  proposed_genders = re.split(",", args["g"])
-  if compare_genders(genders, proposed_genders):
-    genders = []
-  else:
-    # Check for animacy mismatch, punt if so
-    cur_in = [x for x in genders if re.search(r"\bin\b", x)]
-    cur_an = [x for x in genders if re.search(r"\ban\b", x)]
-    proposed_in = [x for x in proposed_genders if re.search(r"\bin\b", x)]
-    proposed_an = [x for x in proposed_genders if re.search(r"\ban\b", x)]
-    if (cur_in or not cur_an) and proposed_an or (cur_an or not cur_in) and proposed_in:
-      pagemsg("WARNING: Animacy mismatch, skipping: cur=%s proposed=%s" % (
-        ",".join(genders), ",".join(proposed_genders)))
-      return None
-    # Check for number mismatch, punt if so
-    cur_pl = [x for x in genders if re.search(r"\bp\b", x)]
-    if cur_pl and args["n"] != "p" or not cur_pl and args["n"] == "p":
-      pagemsg("WARNING: Number mismatch, skipping: cur=%s, proposed=%s, n=%s" % (
-        ",".join(genders), ",".join(proposed_genders), args["n"]))
-      return None
-    pagemsg("WARNING: Gender mismatch, existing=%s, new=%s" % (
-      ",".join(genders), ",".join(proposed_genders)))
-
-  for param in headword_template.params:
-    name = unicode(param.name)
-    if name not in ["1", "2", "3", "4"] and re.search(r"^[0-9]+$", name):
-      pagemsg("WARNING: Extraneous numbered param %s=%s in headword template, skipping" % (
-        unicode(param.name), unicode(param.value)))
-      return None
-
-  params_to_preserve = []
-  for param in headword_template.params:
-    name = unicode(param.name)
-    if (name not in ["1", "2", "3", "4", "g", "gen", "pl", "tr"] and
-        not re.search(r"^(head|g|gen|pl|tr)[0-9]+$", name)):
-      params_to_preserve.append(param)
+  new_params = []
+  for param in noun_table_template.params:
+    new_params.append((param.name, param.value))
 
   orig_headword_template = unicode(headword_template)
-  del headword_template.params[:]
-  for param in noun_table_template.params:
-    headword_template.add(param.name, param.value)
-  i = 1
-  for g in genders:
-    headword_template.add("g" if i == 1 else "g%s" % i, g)
+  params_to_preserve = fix_old_headword_params(headword_template, new_params,
+      genders, pagemsg)
+  if params_to_preserve == None:
+    return None
+
   if unicode(headword_template.name) == "ru-proper noun":
     # If proper noun and n is both then we need to add n=both because
     # proper noun+ defaults to n=sg
     if args["n"] == "b" and not getparam(headword_template, "n"):
-      if verbose:
-        pagemsg("Adding n=both to headword tempate")
+      pagemsg("Adding n=both to headword tempate")
       headword_template.add("n", "both")
     # Correspondingly, if n is sg then we can usually remove n=sg;
     # but we need to check that the number is actually sg with n=sg
@@ -429,20 +285,16 @@ def process_page_section(index, page, section, verbose):
       if not generate_result:
         pagemsg("WARNING: Error generating noun args")
         return None
-      ndef_args = {}
-      for arg in re.split(r"\|", generate_result):
-        name, value = re.split("=", arg)
-        ndef_args[name] = re.sub("<!>", "|", value)
+      ndef_args = ru.split_generate_args(generate_result)
       if ndef_args["n"] == "s":
         existing_n = getparam(headword_template, "n")
         if existing_n and not re.search(r"^s", existing_n):
           pagemsg("WARNING: Something wrong: Found n=%s, not singular" %
               existing_n)
         else:
-          if verbose:
-            pagemsg("Removing n=sg from headword tempate")
+          pagemsg("Removing n=sg from headword tempate")
           rmparam(headword_template, "n")
-      elif verbose:
+      else:
         pagemsg("Unable to remove n= from headword template because n=%s" %
             ndef_args["n"])
 
@@ -456,8 +308,7 @@ def process_page_section(index, page, section, verbose):
     headword_template.name = "ru-proper noun+"
     ru_proper_noun_changed = 1
 
-  if verbose:
-    pagemsg("Replacing headword %s with %s" % (orig_headword_template, unicode(headword_template)))
+  pagemsg("Replacing headword %s with %s" % (orig_headword_template, unicode(headword_template)))
 
   return unicode(parsed), ru_noun_changed, ru_proper_noun_changed, bian_replaced, frobbed_manual_translit
 

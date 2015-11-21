@@ -141,7 +141,7 @@ def infer_decl(t, pagemsg):
   for case, numparam in short_adj_cases_params:
     form = getparam(t, case) or getparam(t, numparam)
     form = form.strip()
-    form = remove_links(form)
+    form = blib.remove_links(form)
     forms[case] = form
 
   def get_form(case):

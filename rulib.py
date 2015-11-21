@@ -141,16 +141,10 @@ def add_hard_neuter(stem):
   else:
     return stem + u"о"
 
-def do_assert(cond, msg=None):
-  if msg:
-    assert cond, msg
-  else:
-    assert cond
-  return True
-
-def remove_links(text):
-  # eliminate [[FOO| in [[FOO|BAR]], and then remaining [[ and ]]
-  text = re.sub(r"\[\[[^|\[\]]*\|", "", text)
-  text = re.sub(r"\[\[|\]\]", "", text)
-  return text
+def split_generate_args(tempresult):
+  args = {}
+  for arg in re.split(r"\|", tempresult):
+    name, value = re.split("=", arg)
+    args[name] = re.sub("<!>", "|", value)
+  return args
 

@@ -6,9 +6,9 @@ import pywikibot, mwparserfromhell, re, string, sys, codecs, urllib2, datetime, 
 site = pywikibot.Site()
 
 def remove_links(text):
+  # eliminate [[FOO| in [[FOO|BAR]], and then remaining [[ and ]]
   text = re.sub(r"\[\[[^\[\]|]*\|", "", text)
-  text = re.sub(r"\[\[", "", text)
-  text = re.sub(r"\]\]", "", text)
+  text = re.sub(r"\[\[|\]\]", "", text)
   return text
 
 def msg(text):
@@ -29,6 +29,26 @@ def getparam(template, param):
 def rmparam(template, param):
   if template.has(param):
     template.remove(param)
+
+def do_assert(cond, msg=None):
+  if msg:
+    assert cond, msg
+  else:
+    assert cond
+  return True
+
+# Retrieve a chain of arguments from template T, where the first argument
+# is named FIRST and the remainder are named PREF2, PREF3, etc.
+# If FIRSTDEFAULT is given, use if FIRST is missing or empty.
+def process_arg_chain(t, first, pref, firstdefault=""):
+  ret = []
+  val = getparam(t, first) or firstdefault
+  i = 2
+  while val:
+    ret.append(val)
+    val = getparam(t, pref + str(i))
+    i += 1
+  return ret
 
 def display(page):
   pywikibot.output(u'# [[{0}]]'.format(page.title()))

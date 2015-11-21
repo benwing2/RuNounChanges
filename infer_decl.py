@@ -240,7 +240,7 @@ def infer_decl(t, noungender, linked_headwords, pagemsg):
   for case in getcases:
     if case:
       form = getparam(t, i).strip()
-      form = remove_links(form)
+      form = blib.remove_links(form)
       if case == "pre_sg" or case == "pre_pl":
         # eliminate leading preposition
         form = re.sub(ur"^о(б|бо)?\s+", "", form)
@@ -754,7 +754,7 @@ def infer_one_page_decls_1(page, index, text):
         split_headwords.add(splitvals[i])
   linked_headwords = {}
   for linked_headword in split_headwords:
-    linked_word = remove_links(linked_headword)
+    linked_word = blib.remove_links(linked_headword)
     if linked_word in linked_headwords and linked_headwords[linked_word] != linked_headword:
       pagemsg("WARNING: Found different links %s and %s for word %s in headword" % (
         linked_headwords[linked_word], linked_headword, linked_word))
