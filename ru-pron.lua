@@ -256,6 +256,7 @@ local function ot_pod_sz(pre, sz)
 end
 
 local phon_respellings = {
+	{'h', 'ɣ'},
 	-- vowel changes after always-hard or always-soft consonants
 	{vowels_c .. '([šž])j([ou])', '%1%2%3'},
 	{vowels_c .. '([šžc])e', '%1%2ɛ'},
@@ -325,7 +326,6 @@ local phon_respellings = {
 	{'sč', 'ɕč'},
 	{'[zs]([ ‿⁀/]*)š', 'š%1š'},
 	{'[zs]([ ‿⁀/]*)ž', 'ž%1ž'},
-	{'gk', 'xk'},
 	{'n[dt]g', 'ng'},
 
 	{'šč', 'ɕː'}, -- conversion of šč to geminate
@@ -403,6 +403,7 @@ function export.ipa(text, adj, gem)
 	text = rsub(text, "``", DUBGR)
 	text = rsub(text, "`", GR)
 	text = rsub(text, "@", DOTABOVE)
+	text = rsub(text, "%^", CFLEX)
 	text = rsub(text, CFLEX, DUBGR)
 
 	-- translit doesn't always convert э to ɛ (depends on whether a consonant
@@ -486,7 +487,7 @@ function export.ipa(text, adj, gem)
 
 	-- add tertiary stress to final -о after vowels, e.g. То́кио;
 	-- this needs to be done before eliminating dot-above
-	pron = rsub(pron, '(' .. vowels .. accents .. '?o)⁀', '%1' .. DUBGR .. '⁀')
+	text = rsub(text, '(' .. vowels .. accents .. '?o)⁀', '%1' .. DUBGR .. '⁀')
 
 	-- eliminate dot-above, which has served its purpose of preventing any
 	-- sort of stress
@@ -611,8 +612,8 @@ function export.ipa(text, adj, gem)
 
 		-- reduction of word-final a, e; but special HACK for кое-,
 		-- convert to койи.
-		pron = rsub(pron, '⁀ko(' .. accents .. ')jë⁀', '⁀ko%2ji⁀')
-		pron = rsub(pron, '[äeë]⁀', 'ə⁀')
+		pron = rsub(pron, '⁀ko(' .. accents .. ')jë⁀', '⁀ko%1ji⁀')
+		pron = rsub(pron, '[äeë]⁀$', 'ə⁀')
 
 		-- retraction of е and и before цшж; FIXME, this is partly done
 		-- above in phon_respellings, should be cleaned up
@@ -655,7 +656,7 @@ function export.ipa(text, adj, gem)
 
 		--handle word-initial unstressed o and a; note, vowels always
 		--followed by at least one char because of word-final ⁀
-		pron = rsub(pron, '(⁀@?)[ao]([^' .. acc .. '])', '%1ɐ%2')
+		pron = rsub(pron, '^⁀[ao]([^' .. acc .. '])', 'ɐ%1')
 
 		--split by syllable
 		local syllable = rsplit(pron, '@', true)
