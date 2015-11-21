@@ -625,10 +625,13 @@ function export.ipa(text, adj, gem)
 		pron = rsub(pron, '(' .. vowels .. accents .. '?)', '%1@')
 		--2. eliminate word-final @
 		pron = rsub(pron, '@+⁀$', '⁀')
-		--3. in a consonant cluster, move @ forward so it's before the
+		--3. move @ forward directly before any ‿⁀, as long as at least
+		--   one consonant follows that; we will move it across ‿⁀ later
+		pron = rsub(pron, '@([^‿⁀@' .. vow .. ']*)([‿⁀]+[^‿⁀@' .. vow .. '])', '%1@%2')
+		--4. in a consonant cluster, move @ forward so it's before the
 		--   last consonant
-		pron = rsub(pron, '@([^@' .. vow .. ']*)([^‿⁀@' .. vow .. 'ʹːˑ()ʲ])(ʹ?ʲ?[ːˑ()]*‿?[' .. vow .. '])', '%1@%2%3')
-		--4. move @ backward if in the middle of a "permanent onset" cluster,
+		pron = rsub(pron, '@([^‿⁀@' .. vow .. ']*)([^‿⁀@' .. vow .. 'ʹːˑ()ʲ]ʹ?ʲ?[ːˑ()]*‿?[' .. vow .. '])', '%1@%2')
+		--5. move @ backward if in the middle of a "permanent onset" cluster,
 		--   e.g. sk, str, that comes before a vowel, putting the @ before
 		--   the permanent onset cluster
 		pron = rsub(pron, '([^‿⁀@' .. vow .. ']?)([^‿⁀@' .. vow .. '])@([^‿⁀@' .. vow .. 'ʹːˑ()ʲ])(ʹ?ʲ?[ːˑ()]*[‿⁀]*[' .. vow .. '])', function(a, b, c, d)
@@ -637,9 +640,9 @@ function export.ipa(text, adj, gem)
 			elseif perm_syl_onset[b .. c] then
 				return a .. '@' .. b .. c .. d
 			end end)
-		--5. remove @ followed by a final consonant cluster
+		--6. remove @ followed by a final consonant cluster
 		pron = rsub(pron, '@([^‿⁀@' .. vow .. ']+⁀)$', '%1')
-		--6. make sure @ isn't directly before linking ‿⁀
+		--7. make sure @ isn't directly before linking ‿⁀
 		pron = rsub(pron, '@([‿⁀]+)', '%1@')
 
 		--if / is present (explicit syllable boundary), remove any @
@@ -656,7 +659,7 @@ function export.ipa(text, adj, gem)
 
 		--handle word-initial unstressed o and a; note, vowels always
 		--followed by at least one char because of word-final ⁀
-		pron = rsub(pron, '^⁀[ao]([^' .. acc .. '])', 'ɐ%1')
+		pron = rsub(pron, '^⁀[ao]([^' .. acc .. '])', '⁀ɐ%1')
 
 		--split by syllable
 		local syllable = rsplit(pron, '@', true)
@@ -735,8 +738,8 @@ function export.ipa(text, adj, gem)
 		-- optional palatal assimilation of бв but not in обв-
 		pron = rsub(pron, 'b([ˈˌ]?vʲ)', 'b⁽ʲ⁾%1')
 		if rfind(word[i], '⁀o' .. accents .. '?bv') then
-			-- exclude ⁀abv- (if it occurs)
-			pron = rsub(pron, '⁀([ˈˌ]?[ɐo][ˈˌ]?)b⁽ʲ⁾([ˈˌ]?vʲ)', '⁀%1b%2')
+			-- ə in case of a word with a preceding preposition
+			pron = rsub(pron, '⁀([ˈˌ]?[ɐəo][ˈˌ]?)b⁽ʲ⁾([ˈˌ]?vʲ)', '⁀%1b%2')
 		end
 
 		if rfind(word[i], 'sä⁀') then
