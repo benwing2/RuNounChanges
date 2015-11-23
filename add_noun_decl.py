@@ -62,6 +62,8 @@ pl_data = [
     [u"о", u"и", "n", True]
 ]
 
+consonant_re = u"[бдфгклмнпрствхзшщчжц]"
+
 def process_page(index, page, save, verbose):
   pagetitle = unicode(page.title())
   subpagetitle = re.sub("^.*:", "", pagetitle)
@@ -186,7 +188,7 @@ def process_page(index, page, save, verbose):
         if sgend:
           check_sgend = sgend
         else:
-          check_sgend = u"[бдфгклмнпрствхзшщчжц]"
+          check_sgend = consonant_re
         if re.search(check_sgend + "$", canon_lemma) and canon_infl == re.sub(sgend + "$", plend, canon_lemma):
           ispl = True
           found_gender = gender
@@ -374,6 +376,10 @@ def process_page(index, page, save, verbose):
 
   pagemsg("Found headwords: %s" % " @@ ".join(headwords))
 
+  # Get headword genders (includes animacy and number)
+  genders = blib.process_arg_chain(headword_template, "2", "g")
+  genders_include_pl = len(x for x in genders if re.search(r"\bp\b")) > 0
+
   # Extract lemmas and inflections for each word in headword
   lemmas_infls = []
   saw_unlinked_word = False
@@ -410,6 +416,8 @@ def process_page(index, page, save, verbose):
       wordind += 1
       is_inflected = False
       lemma, infl = lemmainfl
+      canon_infl = ru.remove_accents(infl).lower()
+      canon_lemma = lemma.lower()
       if re.search(u"(ый|ий|ой)$", lemma):
         if re.search(u"(ый|ий|о́й|[ая]́?я|[ое]́?е|[ыи]́?е)$", infl):
           is_inflected = True
@@ -421,7 +429,7 @@ def process_page(index, page, save, verbose):
         else:
           pagemsg("Assuming word #%s is adjectival, uninflected: lemma=%s, infl=%s" %
               (wordind, lemma, infl))
-      elif lemma.lower() == ru.remove_accents(infl.lower()):
+      elif canon_lemma == canon_infl:
         is_inflected = True
         pagemsg("Assuming word #%s is noun, inflected: lemma=%s, infl=%s" %
             (wordind, lemma, infl))
@@ -432,15 +440,28 @@ def process_page(index, page, save, verbose):
         else:
           saw_noun = True
       else:
-        # FIXME, be smarter about plural nouns
         # FIXME, be smarter about nouns conjoined with и, e.g. Адам и Ева,
         # (might not be worth it, only five such nouns)
-        pagemsg("Assuming word #%s is non-adjectival, uninflected: lemma=%s, infl=%s" %
-            (wordind, lemma, infl))
-        if not saw_noun:
-          pagemsg("WARNING: No inflected noun in headword, skipping: %s" %
-              headword)
-          return
+        if genders_include_pl and not_saw_noun and not reached_uninflected:
+          # Check for plural inflection
+          for sgend, plend, gender, is_sc1 in pl_data:
+            if sgend:
+              check_sgend = sgend
+            else:
+              check_sgend = consonant_re
+            if re.search(check_sgend + "$", canon_lemma) and canon_infl == re.sub(sgend + "$", plend, canon_lemma):
+              pagemsg("Assuming word #%s is plural noun, inflected: lemma=%s, infl=%s" %
+                  (wordind, lemma, infl))
+              saw_noun = True
+              is_inflected = True
+              break
+        if not is_inflected:
+          pagemsg("Assuming word #%s is non-adjectival, uninflected: lemma=%s, infl=%s" %
+              (wordind, lemma, infl))
+          if not saw_noun:
+            pagemsg("WARNING: No inflected noun in headword, skipping: %s" %
+                headword)
+            return
       if is_inflected:
         if reached_uninflected:
           pagemsg("WARNING: Word #%s is apparently inflected and follows uninflected words, something might be wrong (or could be accusative after preposition), skipping: lemma=%s, infl=%s" %
@@ -510,8 +531,6 @@ def process_page(index, page, save, verbose):
   if not saw_noun:
     pagemsg(u"WARNING: No inflected nouns, something might be wrong (e.g. the пистоле́т-пулемёт То́мпсона problem), can't handle, skipping")
     return
-
-  genders = blib.process_arg_chain(headword_template, "2", "g")
 
   saw_in = -1
   saw_an = -1
@@ -592,14 +611,16 @@ def process_page(index, page, save, verbose):
     return
   args = ru.split_generate_args(generate_result)
 
-  genders = runoun.check_old_noun_headword_forms(headword_template, args,
+  # This will check number mismatch (and animacy mismatch, but that shouldn't
+  # occur as we've taken the animacy directly from the headword)
+  new_genders = runoun.check_old_noun_headword_forms(headword_template, args,
       subpagetitle, pagemsg_with_proposed)
-  if genders == None:
+  if new_genders == None:
     return None
 
   orig_headword_template = unicode(headword_template)
   params_to_preserve = runoun.fix_old_headword_params(headword_template,
-      params, genders, pagemsg_with_proposed)
+      params, new_genders, pagemsg_with_proposed)
   if params_to_preserve == None:
     return None
 
