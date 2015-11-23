@@ -223,6 +223,8 @@ def process_page(index, page, save, verbose):
     pagemsg("WARNING: Can't find headword template, skipping")
     return
 
+  pagemsg("Found headword template: %s" % unicode(headword_template))
+
   headword_is_proper = unicode(headword_template.name) == "ru-proper noun"
 
   headword_trs = blib.process_arg_chain(headword_template, "tr", "tr")
@@ -242,9 +244,36 @@ def process_page(index, page, save, verbose):
         badparam, val))
       return
 
-  # FIXME! This won't work if the words are separated by hyphens, hence we
-  # issue an error if hyphens found; but should eventually handle.
-  headwords = re.findall(r"(\[\[.*?\]\]|[^ ]+)", headword)
+  # Here we use a capturing split, and treat what we want to capture as
+  # the splitting text, backwards from what you'd expect. The separators
+  # will fall at 0, 2, ... and the headwords as 1, 3, ... There will be
+  # an odd number of items, and the first and last should be empty.
+  headwords_separators = re.split(r"(\[\[.*?\]\]|[^ \-]+)", headword)
+  if headwords_separators[0] != "" or headwords_separators[-1] != "":
+    pagemsg("WARNING: Found junk at beginning or end of headword, skipping")
+    return
+  headwords = []
+  # Separator at index 0 is the separator that goes after the first word
+  # and before the second word.
+  separators = []
+  wordind = 0
+  # FIXME, Here we try to handle hyphens, but we'll still have problems with
+  # words like изба́-чита́льня with conjoined nouns, both inflected, because
+  # we assume only one inflected noun (should be fixable without too much
+  # work). We'll also have problems with e.g. пистолет-пулемёт Томпсона,
+  # because the words are linked individually but the ru-decl-noun-see
+  # has пистолет-пулемёт given as a single entry. We have a check below
+  # to try to catch this case, because no inflected nouns will show up.
+  for i in xrange(1, len(headwords_separators), 2):
+    hword = headwords_separators[i]
+    separator = headwords_separators[i+1]
+    if separator != " " and separator != "-":
+      pagemsg("WARNING: Separator after word #%s isn't a space or hyphen, can't handle: word=<%s>, separator=<%s>" %
+          (wordind + 1, hword, separator))
+      return
+    headwords.append(hword)
+    separators.append(separator)
+
   pagemsg("Found headwords: %s" % " @@ ".join(headwords))
 
   # Extract lemmas and inflections for each word in headword
@@ -266,6 +295,7 @@ def process_page(index, page, save, verbose):
     lemmas_infls.append((lemma, infl))
 
   if see_template:
+    pagemsg("Found decl-see template: %s" % unicode(see_template))
     inflected_words = set(ru.remove_accents(blib.remove_links(unicode(x.value)))
         for x in see_template.params)
   else:
@@ -338,7 +368,15 @@ def process_page(index, page, save, verbose):
     lemma, infl = lemmainfl
     # If not first word, add _ separator between words
     if wordind > 1:
-      params.append((str(offset + 1), "_"))
+      if separators[wordind - 2] == "-":
+        separator = "-"
+      elif separators[wordind - 2] == " ":
+        separator = "_"
+      else:
+        pagemsg("WARNING: Something wrong, separator for word #%2 isn't space or hyphen: <%s>" %
+            separators[wordind - 2])
+        return
+      params.append((str(offset + 1), separator)
       offset += 1
 
     if lemma in inflected_words:
@@ -370,6 +408,10 @@ def process_page(index, page, save, verbose):
       params.append((str(offset + 1), word))
       params.append((str(offset + 2), "$"))
       offset += 2
+
+  if not saw_noun:
+    pagemsg(u"WARNING: No inflected nouns, something might be wrong (e.g. the пистоле́т-пулемёт То́мпсона problem), can't handle, skipping")
+    return
 
   genders = blib.process_arg_chain(headword_template, "2", "g")
 
