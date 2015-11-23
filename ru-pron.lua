@@ -114,8 +114,8 @@ FIXME:
 	in the case of optional assimilation is to give two pronunciations
 	separated by commas, one with non-front vowel + hard consonant, the
 	other with front vowel + soft consonant.
-23. Implement compulsory assimilation of xkʲ; ask Cinemantique to make
-    sure this is correct.
+23. (DONE, NEED TO ASK CINEMANTIQUE) Implement compulsory assimilation of xkʲ;
+    ask Cinemantique to make sure this is correct.
 ]]
 
 local ut = require("Module:utils")
