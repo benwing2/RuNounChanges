@@ -13,13 +13,15 @@ FIXME:
    the gemination marker ː. Words with йя: аллилу́йя, ауйяма, ва́йя, ма́йя,
    папа́йя, парано́йя, пира́йя, ра́йя, секво́йя, Гава́йям.
 2. (DONE, NEEDS TESTING) Should have geminated jj in йе (occurs in e.g. фойе́).
-   Should work with gem=y (see FIXME #1). Words with йе: фойе́, колба Эрленмейера,
-   скала Айерс, Айерс-Рок, йети, Кайенна, конве́йер, конвейерный, сайентология,
-   фейерверк, Гава́йев. Note also Гава́йи with йи.
-3. In Асунсьо́н and Вьентья́н, put a syllable break after the н and before
-   consonant + /j/. Use the perm_sym_onset mechanism or at least the code
-   that accesses that mechanism. Should possibly do this also in VCʲj and
-   V‿Cʲj and VCj and V‿Cj sequences; ask Cinemantique if this makes sense.
+   Should work with gem=y (see FIXME #1). Words with йе: фойе́,
+   колба Эрленмейера, скала Айерс, Айерс-Рок, йети, Кайенна, конве́йер,
+   конвейерный, сайентология, фейерверк, Гава́йев. Note also Гава́йи with йи.
+3. (FIXME, DONE BUT NEEDS RETHINKING -- currently done both in CCʲj and VCʲj,
+   maybe should only be done in CCʲj) In Асунсьо́н and Вьентья́н, put a syllable
+   break after the н and before consonant + /j/. Use the perm_sym_onset
+   mechanism or at least the code that accesses that mechanism. Should
+   possibly do this also in VCʲj and V‿Cʲj and VCj and V‿Cj sequences;
+   ask Cinemantique if this makes sense.
 4. (DONE, NEED TO RUN IT BY CINEMANTIQUE, NEED TO EDIT льстец AND REMOVE
    MANUAL TRANSLIT, EDIT львёнок, львица) Fix non-palatal е in льстец.
    Other words that will be affected (and probably wrong): льви́ца, львя́тник,
@@ -97,6 +99,22 @@ FIXME:
     make sure this doesn't change anything.
 19. (DONE, ANSWER IS YES) do сь and зь assimilate before шж, and
     if so do they become ɕʑ? Ask Cinemantique.
+20. Add pos= to handle final -е. Possibilities appear to be neut (neuter noun),
+    adj (adjective, autodetected whether singular or plural), comp
+	(comparative), pre (prepositional case), adv (adverb), verb or v (2nd
+	plural verb forms).
+21. Figure out what to do with devoicing or non-devoicing before mnrlv vowel.
+    Apparently non-devoicing before vowel is only in fast speech with a
+	close juncture and Anatoli doesn't want that; but what about before
+	the consonants?
+22. Figure out what to do with fronting of a and u after or between soft
+    consonants, esp. when triggered by a following soft consonant with
+	optional or compulsory assimilation. Probably the correct thing to do
+	in the case of optional assimilation is to give two pronunciations
+	separated by commas, one with non-front vowel + hard consonant, the
+	other with front vowel + soft consonant.
+23. Implement compulsory assimilation of xkʲ; ask Cinemantique to make
+    sure this is correct.
 ]]
 
 local ut = require("Module:utils")
