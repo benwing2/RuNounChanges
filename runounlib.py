@@ -26,18 +26,33 @@ def check_old_noun_headword_forms(headword_template, args, subpagetitle, pagemsg
   # set of forms from ru-noun-table, and needs to be split on commas.
   # FORM1_LEMMA is true if the FORM1 values come from the ru-noun lemma.
   def compare_forms(case, form1, form2, form1_lemma=False):
+    def fixup_link(f):
+      m = re.search(r"^\[\[([^|]*?)\|([^|]*?)\]\]$", f)
+      if m:
+        lemma, infl = m.groups()
+        if ru.remove_accents(infl) == ru.remove_accents(lemma):
+          return "[[%s]]" % infl
+      return f
     # Split on individual words and allow monosyllabic accent differences.
     # FIXME: Will still have problems with [[X|Y]].
     def compare_single_form(f1, f2):
+      pagemsg("Comparing f1=%s f2=%s" % (f1, f2))
       words1 = re.split("[ -]", f1)
       words2 = re.split("[ -]", f2)
       if len(words1) != len(words2):
         return None
       for i in xrange(len(words1)):
-        if words1[i] != words2[i] and try_to_stress(words1[i]) != words2[i]:
-          return None
+        pagemsg("Comparing words1=%s words2=%s" % (words1[i], words2[i]))
+        if words1[i] != words2[i]:
+          w1 = try_to_stress(fixup_link(words1[i]))
+          w2 = words2[i]
+          # Allow case where existing is missing a link as compared to
+          # proposed (but not other way around; we don't want a link
+          # disappearing)
+          if w1 != w2 and w1 != blib.remove_links(w2):
+            return None
       return True
-    form1 = [re.sub(u"ё́", u"ё", x) for x in form1]
+    form1 = [fixup_link(re.sub(u"ё́", u"ё", x)) for x in form1]
     form2 = re.split(",", form2)
     if not form1_lemma:
       # Ignore manual translit in decl forms when comparing non-lemma forms;
