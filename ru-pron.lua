@@ -107,7 +107,8 @@ FIXME:
     Apparently non-devoicing before vowel is only in fast speech with a
 	close juncture and Anatoli doesn't want that; but what about before
 	the consonants?
-22. Figure out what to do with fronting of a and u after or between soft
+22. (DONE, NEEDS TESTING, NEED TO REMOVE ADDITION OF BRACKETS FROM ru-IPA)
+    Figure out what to do with fronting of a and u after or between soft
     consonants, esp. when triggered by a following soft consonant with
 	optional or compulsory assimilation. Probably the correct thing to do
 	in the case of optional assimilation is to give two pronunciations
@@ -197,10 +198,10 @@ local allophones = {
 	['u'] = { 'u', 'ʊ', 'ʊ' },
 	['y'] = { 'ɨ', 'ɨ', 'ɨ' },
 	['ɛ'] = { 'ɛ', 'ɨ', 'ɨ' },
-	['ä'] = { 'æ', 'ɪ', 'ɪ' },
+	['ä'] = { 'a', 'ɪ', 'ɪ' },
 	['ë'] = { 'e', 'ɪ', 'ɪ' },
 	['ö'] = { 'ɵ', 'ɪ', 'ɪ' },
-	['ü'] = { 'ʉ', 'ʉ', 'ʉ' },
+	['ü'] = { 'u', 'ʊ', 'ʊ' },
 	['ə'] = { 'ə', 'ə', 'ə' },
 }
 
@@ -229,6 +230,12 @@ local iotating = {
 local retracting = {
 	['e'] = 'ɛ',
 	['i'] = 'y',
+}
+
+local fronting = {
+	['a'] = 'æ',
+	['u'] = 'ʉ',
+	['ʊ'] = 'ʉ',
 }
 
 -- Prefixes that we recognize specially when they end in a geminated
@@ -366,8 +373,8 @@ local phon_respellings = {
 
 local cons_assim_palatal = {
 	-- assimilation of tn, dn, nč, nɕ is handled specially
-	compulsory = ut.list_to_set({'stʲ', 'zdʲ', 'ntʲ', 'ndʲ', 'csʲ', 'ĵzʲ',
-		'ncʲ', 'nĵʲ'}),
+	compulsory = ut.list_to_set({'stʲ', 'zdʲ', 'ntʲ', 'ndʲ', 'xkʲ',
+	    'csʲ', 'ĵzʲ', 'ncʲ', 'nĵʲ'}),
 	optional = ut.list_to_set({'slʲ', 'zlʲ', 'snʲ', 'znʲ', 'nsʲ', 'nzʲ',
 		'mpʲ', 'mbʲ', 'mfʲ', 'fmʲ'})
 }
@@ -781,7 +788,31 @@ function export.ipa(text, adj, gem)
 		word[i] = pron
 	end
 
-	text = table.concat(word, " ")
+	text = '[' .. table.concat(word, " ") .. ']'
+
+	-- Front a and u between soft consonants. If between a soft and
+	-- optionally soft consonant (should only occur in that order, shouldn't
+	-- ever have a or u preceded by optionally soft consonant),
+	-- split the result into two. We only split into two even if there
+	-- happen to be multiple optionally fronted a's and u's to avoid
+	-- excessive numbers of possibilities (and it simplifies the code).
+	-- 1. First, temporarily add soft symbol to inherently soft consonants.
+	text = rsub(text, '([čǰɕӂj])', '%1ʲ')
+	-- 2. Handle case of au between two soft consonants
+	text = rsub('(ʲ[ː()]*)([auʊ])([ˈˌ]?.ʲ)', function(a, b, c)
+		return a .. fronting[b] .. c end)
+	-- 3. Handle case of au between soft and optionally soft consonant
+	if rfind(text, 'ʲ[ː()]*[auʊ][ˈˌ]?.⁽ʲ⁾') or rfind(text, 'ʲ[ː()]*[auʊ][ˈˌ]?%(jʲ%)') then
+		opt_hard = rsub(text, '(ʲ[ː()]*)([auʊ])([ˈˌ]?.)⁽ʲ⁾', '%1%2%3')
+		opt_hard = rsub(opt_hard, '(ʲ[ː()]*)([auʊ])([ˈˌ]?)%(jʲ%)', '%1%2%3')
+		opt_soft = rsub(text, '(ʲ[ː()]*)([auʊ])([ˈˌ]?.)⁽ʲ⁾', function(a, b, c)
+			return a .. fronting[b] .. c .. 'ʲ' end)
+		opt_soft = rsub(opt_soft, '(ʲ[ː()]*)([auʊ])([ˈˌ]?)%(jʲ%)', function(a, b, c)
+			return a .. fronting[b] .. c .. 'jʲ' end)
+		text = opt_hard .. ', ' .. opt_soft
+	end
+	-- 4. Undo addition of soft symbol to inherently soft consonants.
+	text = rsub(text, '([čǰɕӂj])ʲ', '%1')
 
 	-- convert special symbols to IPA
 	text = rsub(text, '[cĵ]ʲ', translit_conv_j)
