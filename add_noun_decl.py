@@ -437,6 +437,8 @@ def process_page(index, page, save, verbose):
   else:
     proposed_template_text = re.sub(r"^\{\{ru-generate-noun-args",
         "{{ru-noun+", proposed_template_text)
+  proposed_decl_text = re.sub(r"^\{\{ru-generate-noun-args",
+        "{{ru-noun-table", unicode(generate_template))
 
   def pagemsg_with_proposed(text):
     pagemsg("Proposed new template (WARNING, omits explicit gender and params to preserve from old template): %s" % proposed_template_text)
@@ -475,10 +477,38 @@ def process_page(index, page, save, verbose):
 
   pagemsg("Replacing headword %s with %s" % (orig_headword_template, unicode(headword_template)))
 
+  newtext = unicode(parsed)
+  if not see_template:
+    if "==Declension==" in newtext:
+      pagemsg("WARNING: No ru-decl-noun-see template, but found declension section, not adding new declension, proposed declension follows: %s" %
+          proposed_decl_text)
+    else:
+      nounsecs = re.findall("^===(?:Noun|Proper noun)===$", newtext, re.M)
+      if len(nounsecs) == 0:
+        pagemsg("WARNING: Found no noun sections, not adding new declension, proposed declension follows: %s" %
+            proposed_decl_text)
+      elif len(nounsecs) > 1:
+        pagemsg("WARNING: Found multiple noun sections, not adding new declension, proposed declension follows: %s" %
+            proposed_decl_text)
+      else:
+        text = newtext
+        # Sub in after Noun or Proper noun section, before a following section
+        # (====Synonyms====) or a wikilink ([[pl:гонка вооружений]]).
+        newtext = re.sub(r"^(===(?:Noun|Proper noun)===$.*?)^(==|\[\[)",
+            r"\1====Declension====\n%s\n\n" % proposed_decl_text, 1, re.M|re.S)
+        if text == newtext:
+          pagemsg("WARNING: Something wrong, can't sub in new declension, proposed declension follows: %s" %
+              proposed_decl_text)
+        else:
+          pagemsg("Subbed in new declension: %s" % proposed_decl_text)
+          notes.append("create declension from headword")
+          if verbose:
+            pagemsg("Replaced <%s> with <%s>" % text, newtext)
+
   comment = "; ".join(notes)
   if save:
     pagemsg("Saving with comment = %s" % comment)
-    page.text = unicode(parsed)
+    page.text = newtext
     page.save(comment=comment)
   else:
     pagemsg("Would save with comment = %s" % comment)
