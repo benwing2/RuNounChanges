@@ -474,7 +474,7 @@ def process_page(index, page, save, verbose):
         pagemsg("WARNING: Something wrong, separator for word #%2 isn't space or hyphen: <%s>" %
             separators[wordind - 2])
         return
-      params.append((str(offset + 1), separator)
+      params.append((str(offset + 1), separator))
       offset += 1
 
     if lemma in inflected_words:
