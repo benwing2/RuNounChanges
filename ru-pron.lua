@@ -555,7 +555,7 @@ function export.ipa(text, adj, gem)
 	while true do
 		local new_text = rsub(text, '([bdgvɣzžĝĵǰӂ])([ ‿⁀ʹː()/]*[ptkfxsščɕcĉ])', function(a, b)
 			return devoicing[a] .. b end)
-		new_text = rsub(new_text, '([ptkfxsščɕcĉ])([ ‿⁀ʹː()/]*[bdgɣzžĝĵǰӂ])', function(a, b)
+		new_text = rsub(new_text, '([ptkfxsščɕcĉ])([ ‿⁀ʹː()/]*v?[ ‿⁀ʹː()/]*[bdgɣzžĝĵǰӂ])', function(a, b)
 			return voicing[a] .. b end)
 		if new_text == text then
 			break
