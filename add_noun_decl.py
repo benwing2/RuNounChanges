@@ -46,6 +46,22 @@ def msg(text):
 def errmsg(text):
   print >>sys.stderr, text.encode("utf-8")
 
+# [singular ending, plural ending, gender, requires special case (1)]
+pl_data = [
+    ["", u"ы", "m", False],
+    ["", u"и", "m", False],
+    [u"ь", u"и", "m", False],
+    [u"й", u"и", "m", False],
+    ["", u"а", "m", True],
+    [u"а", u"ы", "f", False],
+    [u"а", u"и", "f", False],
+    [u"я", u"и", "f", False],
+    [u"о", u"а", "n", False],
+    [u"е", u"а", "n", False],
+    [u"е", u"я", "n", False],
+    [u"о", u"и", "n", True]
+]
+
 def process_page(index, page, save, verbose):
   pagetitle = unicode(page.title())
   subpagetitle = re.sub("^.*:", "", pagetitle)
@@ -125,13 +141,8 @@ def process_page(index, page, save, verbose):
     # FIXME!!! We need to be a lot more sophisticated in reality to handle
     # plurals.
     assert unicode(decl_template.name) == "ru-noun-table"
-    if ru.remove_accents(infl).lower() != lemma.lower():
-      pagemsg("WARNING: For word#%s, inflection not same as lemma, probably plural, can't handle yet, skipping: lemma=%s, infl=%s" %
-          (wordind, lemma, infl))
-      return None
 
-    # Substitute the wordlink for any lemmas in the declension. This means
-    # we need to split out the arg sets in the declension and check the
+    # Split out the arg sets in the declension and check the
     # lemma of each one, taking care to handle cases where there is no lemma
     # (it would default to the page name).
 
@@ -165,6 +176,32 @@ def process_page(index, page, save, verbose):
       else:
         arg_set.append(val)
 
+    canon_infl = ru.remove_accents(infl).lower()
+    canon_lemma = lemma.lower()
+    if canon_infl != canon_lemma:
+      ispl = False
+      need_sc1 = False
+      found_gender = None
+      for sgend, plend, gender, is_sc1 in pl_data:
+        if sgend:
+          check_sgend = sgend
+        else:
+          check_sgend = u"[бдфгклмнпрствхзшщчжц]"
+        if re.search(check_sgend + "$", canon_lemma) and canon_infl == re.sub(sgend + "$", plend, canon_lemma):
+          ispl = True
+          found_gender = gender
+          need_sc1 = is_sc1
+          break
+      if ispl:
+        # FIXME, Implement this
+        pagemsg("WARNING: For word#%s, found plural inflection but can't handle yet, skipping: lemma=%s, infl=%s" %
+          (wordind, lemma, infl))
+        return None
+      pagemsg("WARNING: For word#%s, inflection not same as lemma, probably plural, can't handle yet, skipping: lemma=%s, infl=%s" %
+          (wordind, lemma, infl))
+      return None
+
+    # Substitute the wordlink for any lemmas in the declension.
     # Concatenate all the numbered params, substituting the wordlink into
     # the lemma as necessary.
     numbered_params = []
