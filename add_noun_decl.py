@@ -72,20 +72,39 @@ def process_page(index, page, save, verbose):
       wordlink = "[[%s|%s]]" % (lemma, infl)
 
     if not declpage.exists():
-      pagemsg("WARNING: Page doesn't exist, can't locate decl for %s" % lemma)
-      return None
+      if re.search(u"(ий|ый|ой)$", lemma):
+        pagemsg("WARNING: Page doesn't exist, assuming word #%s adjectival: lemma=%s, infl=%s" %
+            (wordind, lemma, infl))
+        return [("1", wordlink), ("2", "+")], True, None, None
+      else:
+        pagemsg("WARNING: Page doesn't exist, can't locate decl for word #%s, skipping: lemma=%s, infl=%s" %
+            (wordind, lemma, infl))
+        return None
     parsed = blib.parse_text(declpage.text)
-    decl_template = None
+    decl_templates = []
     for t in parsed.filter_templates():
       if unicode(t.name) in ["ru-noun-table", "ru-decl-adj"]:
-        if decl_template:
-          pagemsg("WARNING: Multiple decl templates during decl lookup for %s" % lemma)
-          return None
-        decl_template = t
+        decl_templates.append(t)
 
-    if not decl_template:
-      pagemsg("WARNING: No decl template during decl lookup for %s" % lemma)
+    if not decl_templates:
+      pagemsg("WARNING: No decl template during decl lookup for word #%s, skipping: lemma=%s, infl=%s" %
+          (wordind, lemma, infl))
       return None
+
+    if len(decl_templates) == 1:
+      decl_template = decl_templates[0]
+    else:
+      # Multiple decl templates
+      for t in decl_templates:
+        if unicode(t.name) == "ru-decl-adj" and re.search(u"(ий|ый|ой)$", lemma):
+          pagemsg("WARNING: Multiple decl templates during decl lookup for word #%s, assuming adjectival: lemma=%s, infl=%s" %
+            (wordind, lemma, infl))
+          decl_template = t
+          break
+      else:
+        pagemsg("WARNING: Multiple decl templates during decl lookup for word #%s and not adjectival, skipping: lemma=%s, infl=%s" %
+            (wordind, lemma, infl))
+        return None
 
     if unicode(decl_template.name) == "ru-decl-adj":
       if re.search(ur"\bь\b", getparam(decl_template, "2")):
@@ -97,9 +116,9 @@ def process_page(index, page, save, verbose):
     # FIXME!!! We need to be a lot more sophisticated in reality to handle
     # plurals.
     assert unicode(decl_template.name) == "ru-noun-table"
-    if ru.remove_accents(infl) != lemma:
-      pagemsg("WARNING: Inflection %s not same as lemma %s, probably plural, can't handle yet, skipping" %
-          (infl, lemma))
+    if ru.remove_accents(infl).lower() != lemma.lower():
+      pagemsg("WARNING: For word#%s, inflection not same as lemma, probably plural, can't handle yet, skipping: lemma=%s, infl=%s" %
+          (wordind, lemma, infl))
       return None
 
     # Substitute the wordlink for any lemmas in the declension. This means
@@ -124,8 +143,8 @@ def process_page(index, page, save, verbose):
       if i == highest_numbered_param + 1:
         end_arg_set = True
       elif val == "_" or val == "-" or re.search("^join:", val):
-        pagemsg("WARNING: Found multiword decl during decl lookup for %s, skipping" %
-            lemma)
+        pagemsg("WARNING: Found multiword decl during decl lookup for word #%s, skipping: lemma=%s, infl=%s" %
+            (wordind, lemma, infl))
         return None
       elif val == "or":
         end_arg_set = True
@@ -170,8 +189,8 @@ def process_page(index, page, save, verbose):
       elif pname == "n":
         num = val
       elif pname == "notes":
-        pagemsg("WARNING: Found notes= during decl lookup for %s, skipping: notes=%s" % (
-          lemma, val))
+        pagemsg("WARNING: Found notes= during decl lookup for word #%s, skipping: lemma=%s, infl=%s, notes=%s" % (
+          wordind, lemma, infl, val))
         return None
       elif re.search("^[0-9]+$", pname):
         pass
@@ -200,9 +219,6 @@ def process_page(index, page, save, verbose):
         return
       headword_template = t
 
-  if not see_template:
-    pagemsg("No ru-decl-noun-see templates, skipping")
-    return
   if not headword_template:
     pagemsg("WARNING: Can't find headword template, skipping")
     return
@@ -215,7 +231,6 @@ def process_page(index, page, save, verbose):
         ",".join(headword_trs))
     return
 
-  inflected_words = set(ru.remove_accents(blib.remove_links(unicode(x.value))) for x in see_template.params)
   headword = getparam(headword_template, "1")
   if "-" in headword:
     pagemsg("WARNING: Can't handle hyphens in headword, yet, skipping")
@@ -232,15 +247,10 @@ def process_page(index, page, save, verbose):
   headwords = re.findall(r"(\[\[.*?\]\]|[^ ]+)", headword)
   pagemsg("Found headwords: %s" % " @@ ".join(headwords))
 
-  params = []
-  saw_noun = False
-  overall_num = None
-  overall_anim = None
-
-  wordind = 0
-  offset = 0
+  # Extract lemmas and inflections for each word in headword
+  lemmas_infls = []
+  saw_unlinked_word = False
   for word in headwords:
-    wordind += 1
     m = re.search(r"^\[\[([^|]+)\|([^|]+)\]\]$", word)
     if m:
       lemma, infl = m.groups()
@@ -251,8 +261,81 @@ def process_page(index, page, save, verbose):
         infl = m.group(1)
       else:
         infl = word
+        saw_unlinked_word = True
       lemma = ru.remove_accents(infl)
+    lemmas_infls.append((lemma, infl))
 
+  if see_template:
+    inflected_words = set(ru.remove_accents(blib.remove_links(unicode(x.value)))
+        for x in see_template.params)
+  else:
+    # Try to figure out which words are inflected and which words aren't
+    pagemsg("No ru-decl-noun-see template, inferring which headword words are inflected")
+    if saw_unlinked_word:
+      pagemsg("WARNING: Unlinked word(s) in headword, skipping: %s" % headword)
+      return
+    inflected_words = set()
+    saw_noun = False
+    reached_uninflected = False
+    wordind = 0
+    for word, lemmainfl in zip(headwords, lemmas_infls):
+      wordind += 1
+      is_inflected = False
+      lemma, infl = lemmainfl
+      if re.search(u"(ый|ий|ой)$", lemma):
+        if re.search(u"(ый|ий|о́й|[ая]́?я|[ое]́?е|[ыи]́?е)$", infl):
+          is_inflected = True
+          pagemsg("Assuming word #%s is adjectival, inflected: lemma=%s, infl=%s" %
+              (wordind, lemma, infl))
+          if saw_noun:
+            pagemsg("WARNING: Word #%s is adjectival inflected and follows inflected noun: lemma=%s, infl=%s" %
+                (wordind, lemma, infl))
+        else:
+          pagemsg("Assuming word #%s is adjectival, uninflected: lemma=%s, infl=%s" %
+              (wordind, lemma, infl))
+      elif lemma.lower() == ru.remove_accents(infl.lower()):
+        is_inflected = True
+        pagemsg("Assuming word #%s is noun, inflected: lemma=%s, infl=%s" %
+            (wordind, lemma, infl))
+        if saw_noun:
+          pagemsg("WARNING: Saw second apparently inflected noun at word #%s, skipping: lemma=%s, infl=%s" %
+              (wordind, lemma, infl))
+          return
+        else:
+          saw_noun = True
+      else:
+        # FIXME, be smarter about plural nouns
+        # FIXME, be smarter about nouns conjoined with и, e.g. Адам и Ева,
+        # (might not be worth it, only five such nouns)
+        pagemsg("Assuming word #%s is non-adjectival, uninflected: lemma=%s, infl=%s" %
+            (wordind, lemma, infl))
+        if not saw_noun:
+          pagemsg("WARNING: No inflected noun in headword, skipping: %s" %
+              headword)
+          return
+      if is_inflected:
+        if reached_uninflected:
+          pagemsg("WARNING: Word #%s is apparently inflected and follows uninflected words, something might be wrong (or could be accusative after preposition), skipping: lemma=%s, infl=%s" %
+                (wordind, lemma, infl))
+          # FIXME, compile list where this is allowed
+          return
+        inflected_words.add(lemma)
+      else:
+        reached_uninflected = True
+        if lemma in inflected_words:
+          pagemsg("WARNING: Lemma appears both in inflected and uninflected words, can't handle skipping: lemma=%s (infl=%s at second appearance at word#%s)" %
+              (lemma, infl, wordind))
+
+  params = []
+  saw_noun = False
+  overall_num = None
+  overall_anim = None
+
+  wordind = 0
+  offset = 0
+  for word, lemmainfl in zip(headwords, lemmas_infls):
+    wordind += 1
+    lemma, infl = lemmainfl
     # If not first word, add _ separator between words
     if wordind > 1:
       params.append((str(offset + 1), "_"))
@@ -272,6 +355,7 @@ def process_page(index, page, save, verbose):
           return
         overall_num = num
         overall_anim = anim
+        saw_noun = True
       for name, val in wordparams:
         if re.search("^[0-9]+$", name):
           name = str(int(name) + offset)
@@ -287,15 +371,44 @@ def process_page(index, page, save, verbose):
       params.append((str(offset + 2), "$"))
       offset += 2
 
-  if overall_anim:
-    params.append(("a", overall_anim))
+  genders = blib.process_arg_chain(headword_template, "2", "g")
+
+  saw_in = -1
+  saw_an = -1
+  for i,g in enumerate(genders):
+    if re.search(r"\bin\b", g) and saw_in < 0:
+      saw_in = i
+    if re.search(r"\ban\b", g) and saw_an < 0:
+      saw_an = i
+  if saw_in >= 0 and saw_an >= 0 and saw_in < saw_an:
+    headword_anim = "ia"
+  elif saw_in >= 0 and saw_an >= 0:
+    headword_anim = "ai"
+  elif saw_an >= 0:
+    headword_anim = "an"
+  elif saw_in >= 0:
+    headword_anim = "in"
+  else:
+    headword_anim = overall_anim
+
+  if overall_anim in ["i", "in", "inan"] or not overall_anim:
+    overall_anim = "in"
+  elif overall_anim in ["a", "an", "anim"]:
+    overall_anim = "an"
+
+  if overall_anim != headword_anim:
+    pagemsg("WARNING: Overriding decl anim %s with headword anim %s" % (
+      overall_anim, headword_anim))
+  if headword_anim and headword_anim != "in":
+    params.append(("a", headword_anim))
+
   if overall_num:
     overall_num = overall_num[0:1]
     canon_nums = {"s":"sg", "p":"pl", "b":"both"}
     if overall_num in canon_nums:
       overall_num = canon_nums[overall_num]
     else:
-      pagemsg("Bogus value for overall num in decl, skipping: %s" % overall_num)
+      pagemsg("WARNING: Bogus value for overall num in decl, skipping: %s" % overall_num)
       return
     if headword_is_proper:
       plval = getparam(headword_template, "4")
@@ -305,13 +418,13 @@ def process_page(index, page, save, verbose):
               headword)
           return
       elif overall_num == "both":
-        pagemsg("Proper noun has sg/pl main noun underlying it, assuming singular: %s" %
+        pagemsg("WARNING: Proper noun has sg/pl main noun underlying it, assuming singular: %s" %
             headword)
         overall_num = None
       elif overall_num == "sg":
         overall_num = None
     if overall_num:
-      params.append("n", overall_num)
+      params.append(("n", overall_num))
 
   generate_template = (blib.parse_text("{{ru-generate-noun-args}}").
       filter_templates()[0])
@@ -333,7 +446,7 @@ def process_page(index, page, save, verbose):
     generate_template.add("ndef", "sg")
   generate_result = expand_text(unicode(generate_template))
   if not generate_result:
-    pagemsg_with_proposed("WARNING: Error generating noun args")
+    pagemsg_with_proposed("WARNING: Error generating noun args, skipping")
     return
   args = ru.split_generate_args(generate_result)
 
