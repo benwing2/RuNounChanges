@@ -84,19 +84,19 @@ FIXME:
 	I doubt it, ask Cinemantique), наря́д на ку́хню (non-devoicing of д before
 	н in next word, ask Cinemantique about this, does it also apply to мрл?),
 	ко̀е-кто́
-16. Caused a change in ко̀е-кто́, perhaps because I rewrote code that accepted
-    an acute or circumflex accent to also take a grave accent. See how
-	кое is actually pronounced here and take action if needed. (ruwiki claims
-	кое is indeed pronounced like кои, ask Cinemantique what the rule for
-	final -е is and why different in кое vs. мороженое, anything to do with
-	secondary stress on о?)
+16. (DONE, ADDED SPECIAL HACK) Caused a change in ко̀е-кто́, perhaps because
+    I rewrote code that accepted an acute or circumflex accent to also take
+    a grave accent. See how кое is actually pronounced here and take action if
+    needed. (ruwiki claims кое is indeed pronounced like кои, ask Cinemantique
+    what the rule for final -е is and why different in кое vs. мороженое,
+    anything to do with secondary stress on о?)
 17. (DONE, NEEDS CHECKING, CHECK эвфеми́зм) Rewrote voicing/devoicing
     assimilation; should make assimilation of эвфеми́зм automatic and not
 	require phon=.
 18. (DONE, NEEDS TESTING) Removed redundant fronting-of-a code near end;
     make sure this doesn't change anything.
-19. (ASK CINEMANTIQUE) do сь and зь assimilate before шж, and if so do they
-    become ɕʑ?
+19. (DONE, ANSWER IS YES) do сь and зь assimilate before шж, and
+    if so do they become ɕʑ? Ask Cinemantique.
 ]]
 
 local ut = require("Module:utils")
@@ -146,7 +146,6 @@ local CFLEX = u(0x0302) -- circumflex =  ̂
 local vow = 'aeiouyɛəäëöü'
 local ipa_vow = vow .. 'ɐɪʊɨæɵʉ'
 local vowels, vowels_c = '[' .. vow .. ']', '([' .. vow .. '])'
-local non_vowels, non_vowels_c = '[^' .. vow .. ']', '([^' .. vow .. '])'
 local acc = AC .. GR .. DUBGR .. DOTABOVE
 local accents = '[' .. acc .. ']'
 
@@ -261,7 +260,10 @@ local phon_respellings = {
 	{vowels_c .. '([šž])j([ou])', '%1%2%3'},
 	{vowels_c .. '([šžc])e', '%1%2ɛ'},
 	{vowels_c .. '([šžc])i', '%1%2y'},
+	-- the following will also affect šč = ɕː
 	{'([čǰӂ])([aou])', '%1j%2'},
+
+	{'šč', 'ɕː'}, -- conversion of šč to geminate
 
 	-- the following six are ordered before changes that affect ts
 	-- FIXME!!! Should these next fouralso pay attention to grave accents?
@@ -269,11 +271,6 @@ local phon_respellings = {
 	{'([^́])tʹ?sja⁀', '%1ca⁀'},
 	{'n[dt]sk', 'n(t)sk'},
 	{'s[dt]sk', 'sck'},
-	-- the following is ordered before the next one, which applies assimilation
-	-- of [тд] to щ
-	{'n[dt]šč', 'nšč'},
-	-- the following is for отсчи́тываться and подсчёт
-	{'[cdt][sš]č', 'čšč'},
 
 	-- main changes for affricate assimilation of [dt] + sibilant, including ts;
 	-- we either convert to "short" variants t͡s, d͡z, etc. or to "long" variants
@@ -302,34 +299,50 @@ local phon_respellings = {
 	{'ĉʹ', 'č'},
 	{'ĝʹ', 'ǰ'},
 
-	-- changes for assimilation of [dt] + affricate
+	-- changes that generate ɕː and ɕč through assimilation:
+	-- зч and жч become ɕː, as does сч at the beginning of a word and in the
+	-- sequence счёт when not following [цдт] (подсчёт); else сч becomes ɕč
+	-- (отсчи́тываться), as щч always does (рассчитáть written ращчита́ть)
+	{'[cdt]sč', 'čɕː'},
+	{'ɕːč', 'ɕč'},
+	{'[zž]č', 'ɕː'},
+	{'[szšž]ɕː?', 'ɕː'},
+	{'⁀sč', '⁀ɕː'},
+	{'sčjo(' .. accents .. '?)t', 'ɕːjo%1t'},
+	{'sč', 'ɕč'},
+
+	-- misc. changes for assimilation of [dtsz] + sibilants and affricates
 	{'[sz][dt]c', 'sc'},
 	{'([rn])[dt]([cč])', '%1%2'},
 	{'[dt]([cč])', '%1%1'},
-
-	{'stg', 'sg'},
+	-- the following is ordered before the next one, which applies assimilation
+	-- of [тд] to щ (including across word boundaries)
+	{'n[dt]ɕ', 'nɕ'},
+	-- [сз] and [сз]ь before soft affricates [щч], including across word
+	-- boundaries; note that the common sequence сч has already been handled
+	{'[zs]ʹ?([ ‿⁀/]*[ɕč])', 'ɕ%1'},
+	-- reduction of too many ɕ's, which can happen from the previous
+	{'ɕɕː', 'ɕː'},
+	-- assimilation before [тдц] and [тдц]ь before щ
+	{'[cdt]ʹ?([ ‿⁀/]*)ɕ', 'č%1ɕ'},
+	-- assimilation of [сз] and [сз]ь before [шж]
+	{'[zs]([ ‿⁀/]*)š', 'š%1š'},
+	{'[zs]([ ‿⁀/]*)ž', 'ž%1ž'},
+	{'[zs]ʹ([ ‿⁀/]*)š', 'ɕ%1š'},
+	{'[zs]ʹ([ ‿⁀/]*)ž', 'ӂ%1ž'},
 
 	{'sverxi', 'sverxy'},
 	{'stʹd', 'zd'},
 	{'tʹd', 'dd'},
 
+	-- loss of consonants in certain clusters
+	{'([ns])[dt]g', '%1g'},
 	{'zdn', 'zn'},
 	{'lnc', 'nc'},
 	{'[sz]t([ln])', 's%1'},
-	{'ščč', 'ɕč'},
-	-- зч and жч become щ, as does сч at the beginning of a word and
-	-- in the sequence счёт; else сч becomes ɕč, as щч always does
-	{'[zž]č', 'šč'},
-	{'[szšž]šč', 'šč'},
-	{'⁀sč', '⁀šč'},
-	{'sčjo(' .. accents .. '?)t', 'ščjo%1t'},
-	{'sč', 'ɕč'},
-	{'[zs]([ ‿⁀/]*)š', 'š%1š'},
-	{'[zs]([ ‿⁀/]*)ž', 'ž%1ž'},
-	{'n[dt]g', 'ng'},
-
-	{'šč', 'ɕː'}, -- conversion of šč to geminate
-	{'([bdkstvxzž])⁀‿⁀i', '%1⁀‿⁀y'}, -- backing of /i/ after certain prepositions
+	
+	 -- backing of /i/ after hard consonants in close juncture
+	{'([mnpbtdkgfvszxɣrlšžcĵĉĝ])⁀‿⁀i', '%1⁀‿⁀y'},
 	{'ʹo', 'ʹjo'}, -- ьо is pronounced as (possibly unstressed) ьё
 }
 
@@ -439,7 +452,7 @@ function export.ipa(text, adj, gem)
 	local word = strutils.capturing_split(text, "([ %-]+)")
 	for i = 1, #word do
 		if not accentless['prep'][word[i]] and not (i > 2 and accentless['post'][word[i]]) and not (i > 2 and accentless['posthyphen'][word[i]] and word[i-1] == "-") and
-			ulen(rsub(word[i], non_vowels, '')) == 1 and
+			ulen(rsub(word[i], '[^' .. vow .. ']', '')) == 1 and
 			not rfind(word[i], accents) then
 			if (i == 3 and word[2] == "-" and word[1] == "" or
 				i >= 3 and word[i-1] == " -" or
@@ -462,8 +475,7 @@ function export.ipa(text, adj, gem)
 	-- preceding word
 	for i = 1, #word do
 		if i < #word - 1 and accentless['prep'][word[i]] then
-			-- we will eliminate ⁀ later
-			word[i+1] = '⁀‿⁀'
+			word[i+1] = '‿'
 		elseif i > 2 and (accentless['post'][word[i]] or accentless['posthyphen'][word[i]] and word[i-1] == "-") then
 			-- we will eliminate ⁀ later
 			word[i-1] = '⁀⁀'
@@ -480,10 +492,12 @@ function export.ipa(text, adj, gem)
 	-- convert commas and en/en dashes to IPA foot boundaries
 	text = rsub(text, '%s*[,–—]%s*', ' | ')
 
-	-- add a ⁀ at the beginning and end of every word; we will remove this
-	-- later but it makes it easier to do word-beginning and word-end rsubs
+	-- add a ⁀ at the beginning and end of every word and at close juncture
+	-- boundaries; we will remove this later but it makes it easier to do
+	-- word-beginning and word-end rsubs
 	text = rsub(text, ' ', '⁀ ⁀')
 	text = '⁀' .. text .. '⁀'
+	text = rsub(text, '‿', '⁀‿⁀')
 
 	-- add tertiary stress to final -о after vowels, e.g. То́кио;
 	-- this needs to be done before eliminating dot-above
@@ -510,7 +524,7 @@ function export.ipa(text, adj, gem)
 	text = rsub(text, '([bdgvɣzžĝĵǰӂ])(ʹ?⁀)$', function(a, b)
 		return devoicing[a] .. b end)
 	--2. word-final devoicing before another word
-	text = rsub(text, '([bdgvɣzžĝĵǰӂ])(ʹ?⁀ ⁀[^bdgvɣzžĝĵǰӂn])', function(a, b)
+	text = rsub(text, '([bdgvɣzžĝĵǰӂ])(ʹ?⁀ ⁀[^bdgvɣzžĝĵǰӂnmlrv' .. vow .. '])', function(a, b)
 		return devoicing[a] .. b end)
 	--3. voicing/devoicing assimilation; repeat to handle recursive assimilation
 	while true do
@@ -593,29 +607,31 @@ function export.ipa(text, adj, gem)
 			-- 3. remaining ž and n between vowels
 			pron = rsub_repeatedly(pron, '(' .. vowels .. accents .. '?[žn])ː(' .. vowels .. ')', '%1ˑ%2')
 			-- 4. ssk (and zsk, already normalized) immediately after the stress
-			pron = rsub(pron, '(' .. vowels .. accents .. 's)ː(k' .. vowels .. ')', '%1ˑ%2')
+			pron = rsub(pron, '(' .. vowels .. accents .. '[^' .. vow .. ']*s)ː(k)', '%1ˑ%2')
 			-- 5. eliminate remaining gemination
 			pron = rsub(pron, '([^ɕӂ%(%)])ː', '%1')
 			-- 6. convert special gemination symbol ˑ to regular gemination
 			pron = rsub(pron, 'ˑ', 'ː')
 		end
 
-		-- insert j before i when required
+		-- handle soft and hard signs, assimilative palatalization
+		-- 1. insert j before i when required
 		pron = rsub(pron, 'ʹi', 'ʹji')
-		-- insert glottal stop after hard sign if required
+		-- 2. insert glottal stop after hard sign if required
 		pron = rsub(pron, 'ʺ([aɛiouy])', 'ʔ%1')
-
-		-- assimilative palatalization of consonants when followed by
-		-- front vowels or soft sign
+		-- 3. assimilative palatalization of consonants when followed by
+		--    front vowels or soft sign
 		pron = rsub(pron, '([mnpbtdkgfvszxɣrl])([ː()]*[eiäëöüʹ])', '%1ʲ%2')
 		pron = rsub(pron, '([cĵ])([ː()]*[äöüʹ])', '%1ʲ%2')
+		-- 4. remove hard and soft signs
+		pron = rsub(pron, "[ʹʺ]", "")
 
 		-- reduction of word-final a, e; but special HACK for кое-,
 		-- convert to койи.
 		pron = rsub(pron, '⁀ko(' .. accents .. ')jë⁀', '⁀ko%1ji⁀')
 		pron = rsub(pron, '[äeë]⁀$', 'ə⁀')
 
-		-- retraction of е and и before цшж; FIXME, this is partly done
+		-- retraction of е and и after цшж; FIXME, this is partly done
 		-- above in phon_respellings, should be cleaned up
 		pron = rsub(pron, '([cĵšžĉĝ][ː()]*)([ei])', function(a, b)
 			return a .. retracting[b] end)
@@ -627,15 +643,15 @@ function export.ipa(text, adj, gem)
 		pron = rsub(pron, '@+⁀$', '⁀')
 		--3. move @ forward directly before any ‿⁀, as long as at least
 		--   one consonant follows that; we will move it across ‿⁀ later
-		pron = rsub(pron, '@([^‿⁀@' .. vow .. ']*)([‿⁀]+[^‿⁀@' .. vow .. '])', '%1@%2')
+		pron = rsub(pron, '@([^@' .. vow .. acc .. ']*)([‿⁀]+[^‿⁀@' .. vow .. acc .. '])', '%1@%2')
 		--4. in a consonant cluster, move @ forward so it's before the
 		--   last consonant
-		pron = rsub(pron, '@([^‿⁀@' .. vow .. ']*)([^‿⁀@' .. vow .. 'ʹːˑ()ʲ]ʹ?ʲ?[ːˑ()]*‿?[' .. vow .. '])', '%1@%2')
+		pron = rsub(pron, '@([^‿⁀@' .. vow .. acc .. ']*)([^‿⁀@' .. vow .. acc .. 'ːˑ()ʲ]ʲ?[ːˑ()]*‿?[' .. vow .. acc .. '])', '%1@%2')
 		--5. move @ backward if in the middle of a "permanent onset" cluster,
 		--   e.g. sk, str, that comes before a vowel, putting the @ before
 		--   the permanent onset cluster
-		pron = rsub(pron, '([^‿⁀@' .. vow .. ']?)([^‿⁀@' .. vow .. '])@([^‿⁀@' .. vow .. 'ʹːˑ()ʲ])(ʹ?ʲ?[ːˑ()]*[‿⁀]*[' .. vow .. '])', function(a, b, c, d)
-			if perm_syl_onset[a .. b .. c] then
+		pron = rsub(pron, '([^‿⁀@' .. vow .. acc .. ']?)([^‿⁀@' .. vow .. acc .. '])@([^‿⁀@' .. vow .. acc .. 'ːˑ()ʲ])(ʲ?[ːˑ()]*[‿⁀]*[' .. vow .. acc .. '])', function(a, b, c, d)
+			if perm_syl_onset[a .. b .. c] or b == 'ʲ' and c == 'j' then
 				return '@' .. a .. b .. c .. d
 			elseif perm_syl_onset[b .. c] then
 				return a .. '@' .. b .. c .. d
@@ -657,8 +673,10 @@ function export.ipa(text, adj, gem)
 			end)
 		end
 
-		--handle word-initial unstressed o and a; note, vowels always
-		--followed by at least one char because of word-final ⁀
+		-- handle word-initial unstressed o and a; note, vowels always
+		-- followed by at least one char because of word-final ⁀
+		-- do after syllabification because syllabification doesn't know
+		-- about ɐ as a vowel
 		pron = rsub(pron, '^⁀[ao]([^' .. acc .. '])', '⁀ɐ%1')
 
 		--split by syllable
@@ -688,8 +706,6 @@ function export.ipa(text, adj, gem)
 				syl = rsub(syl, '(.*)́', 'ˈ%1')
 				syl = rsub(syl, '(.*)̀', 'ˌ%1')
 				syl = rsub(syl, DUBGR, '')
-				-- FIXME, it seems strange to do this here
-				syl = rsub(syl, '([ʲčǰɕӂ][ː()]*)o', '%1ö')
 			elseif stress[j+1] then
 				alnum = 2
 			else
@@ -703,8 +719,6 @@ function export.ipa(text, adj, gem)
 		end
 
 		pron = table.concat(syl_conv, "")
-
-		pron = rsub(pron, "[ʹʺ]", "")
 
 		-- Optional (j) before ɪ, which is always unstressed
 		pron = rsub(pron, "⁀jɪ", "⁀(j)ɪ")
