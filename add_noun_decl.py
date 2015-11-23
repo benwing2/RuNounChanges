@@ -50,7 +50,7 @@ def errmsg(text):
 pl_data = [
     ["", u"ы", "m", False],
     ["", u"и", "m", False],
-    [u"ь", u"и", "m", False],
+    [u"ь", u"и", "mf", False],
     [u"й", u"и", "m", False],
     ["", u"а", "m", True],
     [u"а", u"ы", "f", False],
@@ -178,10 +178,10 @@ def process_page(index, page, save, verbose):
 
     canon_infl = ru.remove_accents(infl).lower()
     canon_lemma = lemma.lower()
+    ispl = False
+    need_sc1 = False
+    found_gender = None
     if canon_infl != canon_lemma:
-      ispl = False
-      need_sc1 = False
-      found_gender = None
       for sgend, plend, gender, is_sc1 in pl_data:
         if sgend:
           check_sgend = sgend
@@ -192,16 +192,13 @@ def process_page(index, page, save, verbose):
           found_gender = gender
           need_sc1 = is_sc1
           break
-      if ispl:
-        # FIXME, Implement this
-        pagemsg("WARNING: For word#%s, found plural inflection but can't handle yet, skipping: lemma=%s, infl=%s" %
-          (wordind, lemma, infl))
+      else:
+        pagemsg("WARNING: For word#%s, inflection not same as lemma, not recognized as plural, can't handle, skipping: lemma=%s, infl=%s" %
+            (wordind, lemma, infl))
         return None
-      pagemsg("WARNING: For word#%s, inflection not same as lemma, probably plural, can't handle yet, skipping: lemma=%s, infl=%s" %
-          (wordind, lemma, infl))
-      return None
 
     # Substitute the wordlink for any lemmas in the declension.
+    # If plural, also add gender and verify special case (1) as necessary.
     # Concatenate all the numbered params, substituting the wordlink into
     # the lemma as necessary.
     numbered_params = []
@@ -216,8 +213,63 @@ def process_page(index, page, save, verbose):
           ru.remove_accents(infl).lower()):
         arg_set[lemma_arg] = wordlink
       else:
-        pagemsg("WARNING: Can't sub word link %s into decl lemma %s" % (
-          wordlink, arg_set[lemma_arg]))
+        pagemsg("WARNING: Can't sub word link %s into decl lemma %s%s" % (
+          wordlink, arg_set[lemma_arg], ispl and ", skipping" or ""))
+        if ispl:
+          return None
+
+      if ispl:
+        # Add the gender
+        if len(arg_set) <= lemma_arg + 1:
+          arg_set.append("")
+        declarg = arg_set[lemma_arg + 1]
+
+        # First, sub in gender
+        m = re.search("(3f|[mfn])", declarg)
+        if found_gender == "mf":
+          if not m:
+            pagemsg(u"WARNING: For singular in -ь and plural in -и, need gender in singular and don't have it, word #%s, skipping: lemma=%s, infl=%s" %
+                (wordinfl, lemma, infl))
+            return None
+          decl_gender = m.group(1)
+          if decl_gender == "n":
+            pagemsg(u"WARNING: For singular in -ь and plural in -и, can't have neuter gender for word #%s, skipping: lemma=%s, infl=%s" %
+                (wordinfl, lemma, infl))
+            return None
+          elif decl_gender in ["m", "3f"]:
+            pagemsg(u"Singular in -ь and plural in -и, already found gender %s in decl for word #%s, taking no action: lemma=%s, infl=%s" %
+                (decl_gender, wordind, lemma, infl))
+          else:
+            assert gender == "f"
+            pagemsg(u"Singular in -ь and plural in -и, replacing f with 3f so singular will be recognized for word #%s: lemma=%s, infl=%s" %
+                (wordind, lemma, infl))
+            declarg = re.sub("f", "3f", declarg, 1)
+        else:
+          if m:
+            decl_gender = m.group(1)
+            if decl_gender == found_gender:
+              pagemsg("Already found gender %s in decl for word #%s, taking no action: lemma=%s, infl=%s" %
+                  (found_gender, wordind, lemma, infl))
+            else:
+              pagemsg("WARNING: Found wrong gender %s in decl for word #%s, forcibly replacing with lemma-form-derived gender %s: lemma=%s, infl=%s" %
+                  (decl_gender, wordind, found_gender, lemma, infl))
+              declarg = re.sub("(3f|[mfn])", found_gender, declarg, 1)
+          else:
+            pagemsg("No gender in decl for word #%s, adding gender %s: lemma=%s, infl=%s" %
+                (wordind, found_gender, lemma, infl))
+            declarg = found_gender + decl_arg
+
+        # Now check special case 1
+        if need_sc1 != ("(1)" in declarg):
+          if need_sc1:
+            pagemsg("Irregular plural calls for special case (1), but not present in decl arg for word #%s, skipping: declarg=%s, lemma=%s, infl=%s" % (
+              wordind, declarg, lemma, infl))
+            return None
+          else:
+            pagemsg("Special case (1) present in decl arg but plural for word #%s is regular, skipping: declarg=%s, lemma=%s, infl=%s" % (
+              wordind, declarg, lemma, infl))
+            return None
+
       if numbered_params:
         numbered_params.append("or")
       numbered_params.extend(arg_set)
