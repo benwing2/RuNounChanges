@@ -23,7 +23,7 @@
 
 # FIXME:
 #
-# 1. Warnings like this should be fixable:
+# 1. (DONE, NEEDS TESTING) Warnings like this should be fixable:
 #    Page 99 Дедушка Мороз: WARNING: Can't sub word link [[мороз|Моро́з]] into decl lemma моро́з
 # 2. This warning should be fixable:
 #    Page 756 десертное вино: WARNING: case nom_sg, existing forms [[десе́ртный|десе́ртное]] [[вино́]] not same as proposed [[десертный|десе́ртное]] [[вино́]]
@@ -174,9 +174,9 @@ def process_page(index, page, save, verbose):
         lemma_arg = 1
       if len(arg_set) <= lemma_arg:
         arg_set.append("")
-      if not arg_set[lemma_arg] or arg_set[lemma_arg] == infl or (
-          ru.is_monosyllabic(infl) and ru.remove_accents(arg_set[lemma_arg]) ==
-          ru.remove_accents(infl)):
+      if not arg_set[lemma_arg] or arg_set[lemma_arg].lower() == infl.lower() or (
+          ru.is_monosyllabic(infl) and ru.remove_accents(arg_set[lemma_arg]).lower() ==
+          ru.remove_accents(infl).lower()):
         arg_set[lemma_arg] = wordlink
       else:
         pagemsg("WARNING: Can't sub word link %s into decl lemma %s" % (
