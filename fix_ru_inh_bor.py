@@ -27,6 +27,8 @@ def process_page(index, page, save, verbose):
   def do_inh_bor(m, do_bor=False):
     prefix_text, text, langcode = m.groups()
     if do_bor:
+      prefix_text = re.sub("^[Ff]rom +", "", prefix_text)
+      prefix_text = re.sub(r"\. +From ", ". ", prefix_text)
       if langcode in ["orv", "sla-pro", "ine-bsl-pro", "ine-pro"]:
         pagemsg("Not creating {{bor}} for inherited language %s: %s" % (
           langcode, text))
@@ -64,7 +66,7 @@ def process_page(index, page, save, verbose):
         langcode, m.group(0)))
       return m.group(0)
     borrowed_langs[langcode] = borrowed_langs.get(langcode, 0) + 1
-    return "{{bor|ru|%s%s}}" % (langcode, term)
+    return "{{bor|ru|%s|%s}}" % (langcode, term)
 
   text = unicode(page.text)
   orig_text = text
@@ -88,12 +90,13 @@ def process_page(index, page, save, verbose):
   found_borrowing = False
 
   # Do borrowings. We look for a line beginning with either [Ff]rom or nothing,
-  # followed by {{etyl|*|ru}} {{m...}} or {{etyl|*|ru}} {{term...}}, where
+  # or beginning with a sentence followed by ". From ", followed by
+  # {{etyl|*|ru}} {{m...}} or {{etyl|*|ru}} {{term...}}, where
   # * must not be one of the inheritance-chain languages (orv, sla-pro,
   # ine-bsl-pro or ine-pro) and the language inside of {{m|...} or
   # {{term|...}} must match the * in the previous {{etyl}} template.
   # There should only be one such substitution.
-  new_text = re.sub(r"^((?:[^{}\[\]\n]+\. +)?)(?:From +)?(\{\{ety[lm]\|([^|{}\n]*)\|ru\}\} +\{\{(?:term|m|l)[^{}\n]*\}\})",
+  new_text = re.sub(r"^([^{}\[\]\n]+\. +From +|[Ff]rom +| *)(\{\{ety[lm]\|([^|{}\n]*)\|ru\}\} +\{\{(?:term|m|l)[^{}\n]*\}\})",
     lambda m:do_inh_bor(m, do_bor=True), text, 0, re.M)
   if new_text != text:
     found_borrowing = True
@@ -106,8 +109,7 @@ def process_page(index, page, save, verbose):
   text = new_text
 
   if not found_borrowing:
-    m = re.search(r"\{\{bor(rowing)?\|[^{}]*\}\}", text)
-    if m:
+    for m in re.finditer(r"\{\{bor(rowing)?\|[^{}]*\}\}", text):
       parsed = blib.parse_text(m.group(0))
       for t in parsed.filter_templates():
         if unicode(t.name) in ["bor", "borrowing"] and (
@@ -138,8 +140,7 @@ parser.add_argument('--verbose', action="store_true", help="More verbose output"
 args = parser.parse_args()
 start, end = blib.get_args(args.start, args.end)
 
-for cat in ["Russian terms derived from English", "Russian lemmas",
-    "Russian non-lemma forms"]:
+for cat in ["Russian lemmas", "Russian non-lemma forms"]:
   msg("Processing category %s" % cat)
   for i, page in blib.cat_articles(cat, start, end):
     msg("Page %s %s: Processing" % (i, unicode(page.title())))
