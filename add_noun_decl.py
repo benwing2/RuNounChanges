@@ -29,7 +29,9 @@
 #    Page 756 десертное вино: WARNING: case nom_sg, existing forms [[десе́ртный|десе́ртное]] [[вино́]] not same as proposed [[десертный|десе́ртное]] [[вино́]]
 # 3. (DONE, DEFINITELY NEEDS TESTING) Plural nouns
 # 4. Multiple inflected nouns, esp. in hyphenated compounds
-# 5. Don't choke when found notes=, instead combine nouns and issue warning
+# 5. (DONE) Don't choke when found notes= as long as there's only one
+#    (choke if multiple because the footnote symbols might be duplicated),
+#    instead issue warning
 
 import pywikibot, re, sys, codecs, argparse
 
@@ -339,9 +341,10 @@ def process_page(index, page, save, verbose):
       elif pname == "n":
         num = val
       elif pname == "notes":
-        pagemsg("WARNING: Found notes= during decl lookup for word #%s, skipping: lemma=%s, infl=%s, notes=%s" % (
-          wordind, lemma, infl, val))
-        return None
+        params.append((pname, val))
+      elif pname == "title":
+        pagemsg("WARNING: Found explicit title= for word #%s, ignoring: lemma=%s, infl=%s, title=%s" %
+            (wordind, lemma, infl, val))
       elif re.search("^[0-9]+$", pname):
         pass
       else:
@@ -532,6 +535,7 @@ def process_page(index, page, save, verbose):
 
   wordind = 0
   offset = 0
+  decl_notes = []
   for word, lemmainfl in zip(headwords, lemmas_infls):
     wordind += 1
     lemma, infl = lemmainfl
@@ -564,10 +568,13 @@ def process_page(index, page, save, verbose):
         overall_anim = anim
         saw_noun = True
       for name, val in wordparams:
-        if re.search("^[0-9]+$", name):
-          name = str(int(name) + offset)
-          num_numbered_params += 1
-        params.append((name, val))
+        if name == "notes":
+          decl_notes.append(val)
+        else:
+          if re.search("^[0-9]+$", name):
+            name = str(int(name) + offset)
+            num_numbered_params += 1
+          params.append((name, val))
       offset += num_numbered_params
 
     else:
@@ -578,6 +585,13 @@ def process_page(index, page, save, verbose):
       params.append((str(offset + 2), "$"))
       offset += 2
 
+  if len(decl_notes) > 1:
+    pagemsg("WARNING: Found multiple notes=, can't handle, skipping: notes=%s" %
+        " // ".join("<%s>" % x for x in decl_notes))
+    return
+  elif len(decl_notes) == 1:
+    pagemsg("WARNING: Found notes=, need to check: notes=<%s>" % decl_notes[0])
+    params.append(("notes", decl_notes[0]))
   if not saw_noun:
     pagemsg(u"WARNING: No inflected nouns, something might be wrong (e.g. the пистоле́т-пулемёт То́мпсона problem), can't handle, skipping")
     return
