@@ -88,6 +88,17 @@ use_given_decl = {u"туз": u"{{ru-noun-table|b|a=a}}",
     u"ключ": u"{{ru-noun-table|b}}",
 }
 
+allow_no_inflected_noun = [
+    u"крайний нападающий",
+    u"придыхательный согласный",
+    u"разрисованный Пикассо",
+    u"Пикассо прямоугольчатый",
+]
+is_short_adj = [
+    u"ахиллесов",
+    u"крокодилов"
+]
+
 def process_page(index, page, save, verbose):
   pagetitle = unicode(page.title())
   subpagetitle = re.sub("^.*:", "", pagetitle)
@@ -125,7 +136,7 @@ def process_page(index, page, save, verbose):
       wordlink = "[[%s|%s]]" % (lemma, infl)
 
     if not declpage.exists():
-      if re.search(u"(ий|ый|ой)$", lemma):
+      if lemma in is_short_adj or re.search(u"(ий|ый|ой)$", lemma):
         pagemsg("WARNING: Page doesn't exist, assuming word #%s adjectival: lemma=%s, infl=%s" %
             (wordind, lemma, infl))
         return [("1", wordlink), ("2", "+")], True, None, None
@@ -138,11 +149,12 @@ def process_page(index, page, save, verbose):
     headword_templates = []
     decl_z_templates = []
     for t in parsed.filter_templates():
-      if unicode(t.name) in ["ru-noun-table", "ru-decl-adj"]:
+      tname = unicode(t.name)
+      if tname in ["ru-noun-table", "ru-decl-adj"]:
         decl_templates.append(t)
-      if unicode(t.name) in ["ru-noun", "ru-proper noun"]:
+      if tname in ["ru-noun", "ru-proper noun"]:
         headword_templates.append(t)
-      if unicode(t.name) in ["ru-decl-noun-z"]:
+      if tname in ["ru-decl-noun-z"]:
         decl_z_templates.append(t)
 
     if not decl_templates:
@@ -405,6 +417,9 @@ def process_page(index, page, save, verbose):
         pagemsg("WARNING: Multiple ru-noun or ru-proper noun templates, skipping")
         return
       headword_template = t
+    if tname == "ru-pre-reform":
+      pagemsg("WARNING: Found ru-pre-reform template, skipping")
+      return
 
   if not headword_template:
     pagemsg("WARNING: Can't find headword template, skipping")
@@ -507,7 +522,14 @@ def process_page(index, page, save, verbose):
       lemma, infl = lemmainfl
       canon_infl = ru.remove_accents(infl).lower()
       canon_lemma = lemma.lower()
-      if re.search(u"(ый|ий|ой)$", lemma):
+      if lemma in is_short_adj:
+          is_inflected = True
+          pagemsg("Assuming word #%s is short adjectival, inflected: lemma=%s, infl=%s" %
+              (wordind, lemma, infl))
+          if saw_noun:
+            pagemsg("WARNING: Word #%s is adjectival inflected and follows inflected noun: lemma=%s, infl=%s" %
+                (wordind, lemma, infl))
+      elif re.search(u"(ый|ий|ой)$", lemma):
         if re.search(u"(ый|ий|о́й|[ая]́?я|[ое]́?е|[ыи]́?е)$", infl):
           is_inflected = True
           pagemsg("Assuming word #%s is adjectival, inflected: lemma=%s, infl=%s" %
@@ -636,7 +658,7 @@ def process_page(index, page, save, verbose):
   elif len(decl_notes) == 1:
     pagemsg("WARNING: Found notes=, need to check: notes=<%s>" % decl_notes[0])
     params.append(("notes", decl_notes[0]))
-  if not saw_noun:
+  if not saw_noun and not pagetitle in allow_no_inflected_noun:
     pagemsg(u"WARNING: No inflected nouns, something might be wrong (e.g. the пистоле́т-пулемёт То́мпсона problem), can't handle, skipping")
     return
 
