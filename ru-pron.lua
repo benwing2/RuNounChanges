@@ -502,8 +502,7 @@ function export.ipa(text, adj, gem, bracket)
 		if i < #word - 1 and accentless['prep'][word[i]] then
 			word[i+1] = '‿'
 		elseif i > 2 and (accentless['post'][word[i]] or accentless['posthyphen'][word[i]] and word[i-1] == "-") then
-			-- we will eliminate ⁀ later
-			word[i-1] = '⁀⁀'
+			word[i-1] = '‿'
 		end
 	end
 
