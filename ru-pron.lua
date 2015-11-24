@@ -156,10 +156,6 @@ end
 -- but useful as new code is created.
 local test_new_ru_pron_module = false
 
--- Enable this to test fronting of a/u only between soft consonants,
--- and then remove the condition when we're sure it works and we want it
-local restricted_fronting = true
-
 local AC = u(0x0301) -- acute =  ́
 local GR = u(0x0300) -- grave =  ̀
 local DUBGR = u(0x030F) -- double grave =  ̏
@@ -208,11 +204,6 @@ local allophones = {
 	['ü'] = { 'u', 'ʊ', 'ʊ' },
 	['ə'] = { 'ə', 'ə', 'ə' },
 }
-
-if not restricted_fronting then
-	allophones['ä'] = { 'æ', 'ɪ', 'ɪ' }
-	allophones['ü'] = { 'ʉ', 'ʉ', 'ʉ' }
-end
 
 local devoicing = {
 	['b'] = 'p', ['d'] = 't', ['g'] = 'k',
@@ -802,31 +793,29 @@ function export.ipa(text, adj, gem, bracket)
 		text = '[' .. text .. ']'
 	end
 
-	if restricted_fronting then
-		-- Front a and u between soft consonants. If between a soft and
-		-- optionally soft consonant (should only occur in that order, shouldn't
-		-- ever have a or u preceded by optionally soft consonant),
-		-- split the result into two. We only split into two even if there
-		-- happen to be multiple optionally fronted a's and u's to avoid
-		-- excessive numbers of possibilities (and it simplifies the code).
-		-- 1. First, temporarily add soft symbol to inherently soft consonants.
-		text = rsub(text, '([čǰɕӂj])', '%1ʲ')
-		-- 2. Handle case of au between two soft consonants
-		text = rsub(text, '(ʲ[ː()]*)([auʊ])([ˈˌ]?.ʲ)', function(a, b, c)
-			return a .. fronting[b] .. c end)
-		-- 3. Handle case of au between soft and optionally soft consonant
-		if rfind(text, 'ʲ[ː()]*[auʊ][ˈˌ]?.⁽ʲ⁾') or rfind(text, 'ʲ[ː()]*[auʊ][ˈˌ]?%(jʲ%)') then
-			opt_hard = rsub(text, '(ʲ[ː()]*)([auʊ])([ˈˌ]?.)⁽ʲ⁾', '%1%2%3')
-			opt_hard = rsub(opt_hard, '(ʲ[ː()]*)([auʊ])([ˈˌ]?)%(jʲ%)', '%1%2%3')
-			opt_soft = rsub(text, '(ʲ[ː()]*)([auʊ])([ˈˌ]?.)⁽ʲ⁾', function(a, b, c)
-				return a .. fronting[b] .. c .. 'ʲ' end)
-			opt_soft = rsub(opt_soft, '(ʲ[ː()]*)([auʊ])([ˈˌ]?)%(jʲ%)', function(a, b, c)
-				return a .. fronting[b] .. c .. 'jʲ' end)
-			text = opt_hard .. ', ' .. opt_soft
-		end
-		-- 4. Undo addition of soft symbol to inherently soft consonants.
-		text = rsub(text, '([čǰɕӂj])ʲ', '%1')
+	-- Front a and u between soft consonants. If between a soft and
+	-- optionally soft consonant (should only occur in that order, shouldn't
+	-- ever have a or u preceded by optionally soft consonant),
+	-- split the result into two. We only split into two even if there
+	-- happen to be multiple optionally fronted a's and u's to avoid
+	-- excessive numbers of possibilities (and it simplifies the code).
+	-- 1. First, temporarily add soft symbol to inherently soft consonants.
+	text = rsub(text, '([čǰɕӂj])', '%1ʲ')
+	-- 2. Handle case of au between two soft consonants
+	text = rsub(text, '(ʲ[ː()]*)([auʊ])([ˈˌ]?.ʲ)', function(a, b, c)
+		return a .. fronting[b] .. c end)
+	-- 3. Handle case of au between soft and optionally soft consonant
+	if rfind(text, 'ʲ[ː()]*[auʊ][ˈˌ]?.⁽ʲ⁾') or rfind(text, 'ʲ[ː()]*[auʊ][ˈˌ]?%(jʲ%)') then
+		opt_hard = rsub(text, '(ʲ[ː()]*)([auʊ])([ˈˌ]?.)⁽ʲ⁾', '%1%2%3')
+		opt_hard = rsub(opt_hard, '(ʲ[ː()]*)([auʊ])([ˈˌ]?)%(jʲ%)', '%1%2%3')
+		opt_soft = rsub(text, '(ʲ[ː()]*)([auʊ])([ˈˌ]?.)⁽ʲ⁾', function(a, b, c)
+			return a .. fronting[b] .. c .. 'ʲ' end)
+		opt_soft = rsub(opt_soft, '(ʲ[ː()]*)([auʊ])([ˈˌ]?)%(jʲ%)', function(a, b, c)
+			return a .. fronting[b] .. c .. 'jʲ' end)
+		text = opt_hard .. ', ' .. opt_soft
 	end
+	-- 4. Undo addition of soft symbol to inherently soft consonants.
+	text = rsub(text, '([čǰɕӂj])ʲ', '%1')
 
 	-- convert special symbols to IPA
 	text = rsub(text, '[cĵ]ʲ', translit_conv_j)
