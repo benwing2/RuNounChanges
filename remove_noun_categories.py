@@ -34,7 +34,7 @@ def process_page(index, page, save, verbose, do_noun):
     else:
       pagemsg("Would save with comment = %s" % comment)
 
-parser = argparse.ArgumentParser(description="Remove redundant audio-link categories")
+parser = argparse.ArgumentParser(description="Remove redundant 'Russian nouns' category")
 parser.add_argument('start', help="Starting page index", nargs="?")
 parser.add_argument('end', help="Ending page index", nargs="?")
 parser.add_argument('--save', action="store_true", help="Save results")
