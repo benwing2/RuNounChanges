@@ -564,8 +564,10 @@ def process_page(index, page, save, verbose):
         if saw_noun:
           if wordind == 2 and len(headwords) == 2 and separator == "-":
             pagemsg("WARNING: Found apparent coordinate noun headword A-B, using first noun for overall num and anim, please check")
+          elif see_template:
+            pagemsg("WARNING: Multiple inflected nouns with ru-decl-noun-see template, allowing but please check")
           else:
-            pagemsg("WARNING: Multiple inflected nouns, can't handle, skipping")
+            pagemsg("WARNING: Multiple inflected nouns without ru-decl-noun-see template, can't handle, skipping")
             return
         else:
           overall_num = num
@@ -585,6 +587,8 @@ def process_page(index, page, save, verbose):
       # Invariable
       if ru.is_unstressed(infl):
         word = "*" + word
+      if infl == u"и":
+        pagemsg(u"WARNING: Found и, check number args")
       params.append((str(offset + 1), word))
       params.append((str(offset + 2), "$"))
       offset += 2
