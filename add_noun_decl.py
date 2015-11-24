@@ -32,6 +32,9 @@
 # 5. (DONE) Don't choke when found notes= as long as there's only one
 #    (choke if multiple because the footnote symbols might be duplicated),
 #    instead issue warning
+# 6. (DONE) Check that all parts of ru-decl-noun-see are used, error if not
+# 7. (DONE) Handle all_parts_declined
+# 8. Check on гей-брак, do both parts decline?
 
 import pywikibot, re, sys, codecs, argparse
 
@@ -65,6 +68,15 @@ pl_data = [
     [u"о", u"и", "n", True]
 ]
 
+infer_adj_lemma = [
+    [u"ая", u"ый"],
+    [u"а́я", u"о́й"],
+    [u"яя", u"ий"],
+    [u"ое", u"ый"],
+    [u"о́е", u"о́й"],
+    [u"ее", u"ий"],
+]
+
 consonant_re = u"[бдфгклмнпрствхзшщчжц]"
 
 particles = [
@@ -93,10 +105,27 @@ allow_no_inflected_noun = [
     u"придыхательный согласный",
     u"разрисованный Пикассо",
     u"Пикассо прямоугольчатый",
+    u"сербско-хорватский",
 ]
+
 is_short_adj = [
     u"ахиллесов",
     u"крокодилов"
+]
+
+is_uninflected = [
+    u"Фибоначчи",
+]
+
+all_parts_declined = [
+    u"э оборотное",
+    u"апельсиновый сок",
+    u"бульбоуретральная железа",
+    u"земляной волк",
+    u"отложительный падеж",
+    u"снежный человек",
+    u"крайний нападающий",
+    u"шапка-невидимка",
 ]
 
 def process_page(index, page, save, verbose):
@@ -105,6 +134,10 @@ def process_page(index, page, save, verbose):
 
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
+
+  if ":" in pagetitle:
+    pagemsg("WARNING: Colon in page title, skipping")
+    return
 
   def expand_text(tempcall):
     if verbose:
@@ -304,12 +337,15 @@ def process_page(index, page, save, verbose):
       if len(arg_set) <= lemma_arg:
         arg_set.append("")
       arglemma = arg_set[lemma_arg]
+      manualtr = ""
+      if "//" in arglemma:
+        arglemma, manualtr = re.search("^(.*?)(//.*?)$").groups()
       if (not arglemma or arglemma.lower() == infl.lower() or
           ru.is_monosyllabic(infl) and ru.remove_accents(arglemma).lower() ==
           ru.remove_accents(infl).lower() or
           ispl and ru.remove_accents(arglemma).lower() == lemma.lower()
           ):
-        arg_set[lemma_arg] = wordlink
+        arg_set[lemma_arg] = wordlink + manualtr
       else:
         pagemsg("WARNING: Can't sub word link %s into decl lemma %s%s" % (
           wordlink, arg_set[lemma_arg], ispl and ", skipping" or ""))
@@ -474,6 +510,16 @@ def process_page(index, page, save, verbose):
       pagemsg("WARNING: Separator after word #%s isn't a space or hyphen, can't handle: word=<%s>, separator=<%s>" %
           (wordind + 1, hword, separator))
       return
+    # Canonicalize link in headword
+    m = re.search(r"^\[\[([^\[\]|]+)\|([^\[\]|]+)\]\]$", hword)
+    if m:
+      lemma, infl = m.groups()
+      lemma = ru.remove_accents(re.sub("#Russian$", "", lemma))
+      if lemma == ru.remove_accents(infl):
+        hword = "[[%s]]" % infl
+      else:
+        hword = "[[%s|%s]]" % (lemma, infl)
+    lemmas_infls.append((lemma, infl))
     headwords.append(hword)
     separators.append(separator)
     wordind += 1
@@ -488,29 +534,44 @@ def process_page(index, page, save, verbose):
   lemmas_infls = []
   saw_unlinked_word = False
   for word in headwords:
-    m = re.search(r"^\[\[([^|]+)\|([^|]+)\]\]$", word)
+    m = re.search(r"^\[\[([^\[\]|]+)\|([^\[\]|]+)\]\]$", word)
     if m:
       lemma, infl = m.groups()
-      lemma = ru.remove_accents(re.sub("#Russian$", "", lemma))
     else:
-      m = re.search(r"^\[\[([^|]+)\]\]$", word)
+      m = re.search(r"^\[\[([^\[\]|]+)\]\]$", word)
       if m:
         infl = m.group(1)
+        lemma = ru.remove_accents(infl)
+      elif pagetitle in all_parts_declined:
+        infl = word
+        lemma = ru.remove_accents(infl)
+        for inflsuffix, lemmasuffix in infer_adj_lemma:
+          if re.search(inflsuffix + "$", infl):
+            lemma = ru.remove_accents(re.sub(inflsuffix + "$", lemmasuffix, infl))
+            lemma = re.sub(u"([кгхшжчщ])ый$", r"\1ий", lemma)
+            pagemsg("WARNING: Inferring adjectival lemma from inflection, please check: lemma=%s, infl=%s" %
+                (lemma, infl))
+            break
+        else:
+          pagemsg("WARNING: Assuming %s is noun, please check: lemma=%s, infl=%s" %
+              (lemma, infl))
       else:
         infl = word
+        lemma = ru.remove_accents(infl)
         saw_unlinked_word = True
-      lemma = ru.remove_accents(infl)
     lemmas_infls.append((lemma, infl))
 
   if see_template:
     pagemsg("Found decl-see template: %s" % unicode(see_template))
     inflected_words = set(ru.remove_accents(blib.remove_links(unicode(x.value)))
         for x in see_template.params)
+    if saw_unlinked_word:
+      pagemsg("WARNING: Unlinked word(s) in headword, found decl-see template, proceeding, please check: %s" % headword)
   else:
     # Try to figure out which words are inflected and which words aren't
     pagemsg("No ru-decl-noun-see template, inferring which headword words are inflected")
     if saw_unlinked_word:
-      pagemsg("WARNING: Unlinked word(s) in headword, skipping: %s" % headword)
+      pagemsg("WARNING: Unlinked word(s) in headword, no decl-see template, skipping: %s" % headword)
       return
     inflected_words = set()
     saw_noun = False
@@ -530,7 +591,7 @@ def process_page(index, page, save, verbose):
             pagemsg("WARNING: Word #%s is adjectival inflected and follows inflected noun: lemma=%s, infl=%s" %
                 (wordind, lemma, infl))
       elif re.search(u"(ый|ий|ой)$", lemma):
-        if re.search(u"(ый|ий|о́й|[ая]́?я|[ое]́?е|[ыи]́?е)$", infl):
+        if re.search(u"(ый|ий|о́й|[ая]́?я|[ое]́?е|[ыи]́?е|ь[яеи])$", infl):
           is_inflected = True
           pagemsg("Assuming word #%s is adjectival, inflected: lemma=%s, infl=%s" %
               (wordind, lemma, infl))
@@ -540,16 +601,27 @@ def process_page(index, page, save, verbose):
         else:
           pagemsg("Assuming word #%s is adjectival, uninflected: lemma=%s, infl=%s" %
               (wordind, lemma, infl))
-      elif canon_lemma == canon_infl and canon_lemma not in particles:
-        is_inflected = True
-        pagemsg("Assuming word #%s is noun, inflected: lemma=%s, infl=%s" %
-            (wordind, lemma, infl))
-        if saw_noun:
-          pagemsg("WARNING: Saw second apparently inflected noun at word #%s, skipping: lemma=%s, infl=%s" %
+      elif canon_lemma == canon_infl:
+        if canon_lemma in particles:
+          pagemsg("Assuming word #%s is an uninflected particle: lemma=%s, infl=%s" %
               (wordind, lemma, infl))
-          return
+        elif canon_lemma in is_uninflected:
+          pagemsg("Assuming word #%s is an uninflected non-particle because listed as uninflected: lemma=%s, infl=%s" %
+              (wordind, lemma, infl))
         else:
-          saw_noun = True
+          is_inflected = True
+          pagemsg("Assuming word #%s is noun, inflected: lemma=%s, infl=%s" %
+              (wordind, lemma, infl))
+          if saw_noun:
+            if pagetitle in all_parts_declined:
+              pagemsg("Saw second apparently inflected noun at word #%s, allowed because pagetitle in all_parts_declined: lemma=%s, infl=%s" %
+                  (wordind, lemma, infl))
+            else:
+              pagemsg("WARNING: Saw second apparently inflected noun at word #%s, skipping: lemma=%s, infl=%s" %
+                  (wordind, lemma, infl))
+              return
+          else:
+            saw_noun = True
       else:
         # FIXME, be smarter about nouns conjoined with и, e.g. Адам и Ева,
         # (might not be worth it, only five such nouns)
@@ -575,10 +647,16 @@ def process_page(index, page, save, verbose):
             return
       if is_inflected:
         if reached_uninflected:
-          pagemsg("WARNING: Word #%s is apparently inflected and follows uninflected words, something might be wrong (or could be accusative after preposition), skipping: lemma=%s, infl=%s" %
+          if separators[wordind - 2] == "-":
+            # Cases like сербско-хорватский, Народно-Демократическая,
+            # Центрально-Африканская, военно-морские
+            pagemsg("WARNING: Word #%s is apparently inflected and follows uninflected word after hyphen, allowed, please check: lemma=%s, infl=%s" %
                 (wordind, lemma, infl))
-          # FIXME, compile list where this is allowed
-          return
+          else:
+            pagemsg("WARNING: Word #%s is apparently inflected and follows uninflected words, something might be wrong (or could be accusative after preposition), skipping: lemma=%s, infl=%s" %
+                  (wordind, lemma, infl))
+            # FIXME, compile list where this is allowed
+            return
         inflected_words.add(lemma)
       else:
         reached_uninflected = True
@@ -611,6 +689,7 @@ def process_page(index, page, save, verbose):
       offset += 1
 
     if lemma in inflected_words:
+      inflected_words.remove(lemma)
       pagemsg("Looking up declension for lemma %s, infl %s" % (lemma, infl))
       retval = find_decl_args(lemma, infl, wordind)
       if not retval:
@@ -650,6 +729,11 @@ def process_page(index, page, save, verbose):
       params.append((str(offset + 1), word))
       params.append((str(offset + 2), "$"))
       offset += 2
+
+  if inflected_words:
+    pagemsg("WARNING: Some inflected words left over, something wrong, skipping: %s" %
+        ", ".join(inflected_words))
+    return
 
   if len(decl_notes) > 1:
     pagemsg("WARNING: Found multiple notes=, can't handle, skipping: notes=%s" %
