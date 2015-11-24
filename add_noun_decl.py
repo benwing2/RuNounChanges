@@ -28,7 +28,7 @@
 # 2. (DONE) This warning should be fixable:
 #    Page 756 десертное вино: WARNING: case nom_sg, existing forms [[десе́ртный|десе́ртное]] [[вино́]] not same as proposed [[десертный|десе́ртное]] [[вино́]]
 # 3. (DONE, DEFINITELY NEEDS TESTING) Plural nouns
-# 4. Multiple inflected nouns, esp. in hyphenated compounds
+# 4. (DONE, NEEDS TESTING) Multiple inflected nouns, esp. in hyphenated compounds
 # 5. (DONE) Don't choke when found notes= as long as there's only one
 #    (choke if multiple because the footnote symbols might be duplicated),
 #    instead issue warning
@@ -562,11 +562,15 @@ def process_page(index, page, save, verbose):
       num_numbered_params = 0
       if not isadj:
         if saw_noun:
-          pagemsg("WARNING: Multiple inflected nouns, can't handle, skipping")
-          return
-        overall_num = num
-        overall_anim = anim
-        saw_noun = True
+          if wordind == 2 and len(headwords) == 2 and separator == "-":
+            pagemsg("WARNING: Found apparent coordinate noun headword A-B, using first noun for overall num and anim, please check")
+          else:
+            pagemsg("WARNING: Multiple inflected nouns, can't handle, skipping")
+            return
+        else:
+          overall_num = num
+          overall_anim = anim
+          saw_noun = True
       for name, val in wordparams:
         if name == "notes":
           decl_notes.append(val)
