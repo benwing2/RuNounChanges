@@ -13,25 +13,18 @@
 import pywikibot, re, sys, codecs, argparse
 
 import blib
-from blib import getparam, rmparam
+from blib import getparam, rmparam, msg, site
 
 import rulib as ru
 import runounlib as runoun
 
-site = pywikibot.Site()
-
-def msg(text):
-  print text.encode("utf-8")
-
-def errmsg(text):
-  print >>sys.stderr, text.encode("utf-8")
-
 def process_page(index, page, save, verbose):
   pagetitle = unicode(page.title())
   subpagetitle = re.sub("^.*:", "", pagetitle)
-
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
+
+  pagemsg("Processing")
 
   text = unicode(page.text)
 
@@ -94,21 +87,11 @@ def process_page(index, page, save, verbose):
 def process_page_section(index, page, section, verbose):
   pagetitle = unicode(page.title())
   subpagetitle = re.sub("^.*:", "", pagetitle)
-
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
   def expand_text(tempcall):
-    if verbose:
-      pagemsg("Expanding text: %s" % tempcall)
-    result = site.expand_text(tempcall, title=pagetitle)
-    if verbose:
-      pagemsg("Raw result is %s" % result)
-    if result.startswith('<strong class="error">'):
-      result = re.sub("<.*?>", "", result)
-      pagemsg("WARNING: Got error: %s" % result)
-      return False
-    return result
+    return blib.expand_text(tempcall, pagetitle, pagemsg, verbose)
 
   if not page.exists():
     pagemsg("WARNING: Page doesn't exist")
@@ -321,5 +304,4 @@ args = parser.parse_args()
 start, end = blib.get_args(args.start, args.end)
 
 for i, page in blib.references("Template:ru-noun-table", start, end):
-  msg("Page %s %s: Processing" % (i, unicode(page.title())))
   process_page(i, page, args.save, args.verbose)

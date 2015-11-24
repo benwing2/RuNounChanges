@@ -39,18 +39,10 @@
 import pywikibot, re, sys, codecs, argparse
 
 import blib
-from blib import getparam, rmparam
+from blib import getparam, rmparam, msg, site
 
 import rulib as ru
 import runounlib as runoun
-
-site = pywikibot.Site()
-
-def msg(text):
-  print text.encode("utf-8")
-
-def errmsg(text):
-  print >>sys.stderr, text.encode("utf-8")
 
 # [singular ending, plural ending, gender, requires special case (1)]
 pl_data = [
@@ -131,27 +123,17 @@ all_parts_declined = [
 def process_page(index, page, save, verbose):
   pagetitle = unicode(page.title())
   subpagetitle = re.sub("^.*:", "", pagetitle)
-
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
+
+  pagemsg("Processing")
 
   if ":" in pagetitle:
     pagemsg("WARNING: Colon in page title, skipping")
     return
 
   def expand_text(tempcall):
-    if verbose:
-      pagemsg("Expanding text: %s" % tempcall)
-    result = site.expand_text(tempcall, title=pagetitle)
-    if verbose:
-      pagemsg("Raw result is %s" % result)
-    if result.startswith('<strong class="error">'):
-      result = re.sub("<.*?>", "", result)
-      if not verbose:
-        pagemsg("Expanding text: %s" % tempcall)
-      pagemsg("WARNING: Got error: %s" % result)
-      return False
-    return result
+    return blib.expand_text(tempcall, pagetitle, pagemsg, verbose)
 
   origtext = page.text
   parsed = blib.parse_text(origtext)
@@ -907,5 +889,4 @@ for pos in ["nouns", "proper nouns"]:
       "Template:tracking/ru-headword/hyphen-no-space-in-headword/%s" % pos]:
     msg("PROCESSING REFERENCES TO: %s" % refpage)
     for i, page in blib.references(refpage, start, end):
-      msg("Page %s %s: Processing" % (i, unicode(page.title())))
       process_page(i, page, args.save, args.verbose)

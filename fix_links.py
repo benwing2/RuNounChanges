@@ -4,11 +4,9 @@
 import pywikibot, re, sys, codecs, argparse
 
 import blib
-from blib import getparam, rmparam
+from blib import getparam, rmparam, msg, site
 
 import rulib as ru
-
-site = pywikibot.Site()
 
 def hy_remove_accents(text):
   text = re.sub(u"[՞՜՛՟]", "", text)
@@ -60,12 +58,6 @@ this_remove_accents = None
 this_charset = None
 this_ignore_translit = False
 
-def msg(text):
-  print text.encode("utf-8")
-
-def errmsg(text):
-  print >>sys.stderr, text.encode("utf-8")
-
 # From wikibooks
 def levenshtein(s1, s2):
     if len(s1) < len(s2):
@@ -92,21 +84,12 @@ def process_page(index, page, save, verbose):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
+  def expand_text(tempcall):
+    return blib.expand_text(tempcall, pagetitle, pagemsg, verbose)
+
   if not page.exists():
     pagemsg("WARNING: Page doesn't exist")
     return
-
-  def expand_text(tempcall):
-    if verbose:
-      pagemsg("Expanding text: %s" % tempcall)
-    result = site.expand_text(tempcall, title=pagetitle)
-    if verbose:
-      pagemsg("Raw result is %s" % result)
-    if result.startswith('<strong class="error">'):
-      result = re.sub("<.*?>", "", result)
-      pagemsg("WARNING: Got error: %s" % result)
-      return False
-    return result
 
   text = unicode(page.text)
 

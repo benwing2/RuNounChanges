@@ -4,22 +4,16 @@
 import pywikibot, re, sys, codecs, argparse
 
 import blib
-from blib import getparam, rmparam
-
-site = pywikibot.Site()
+from blib import getparam, rmparam, msg, site
 
 borrowed_langs = {}
-
-def msg(text):
-  print text.encode("utf-8")
-
-def errmsg(text):
-  print >>sys.stderr, text.encode("utf-8")
 
 def process_page(index, page, save, verbose):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
+
+  pagemsg("Processing")
 
   # re.sub() substitution function for replacing {{etyl|*|ru}} {{m|*|FOO}}
   # with either {{inh|ru|*|FOO}} or {{bor|ru|*|FOO}}, depending on the
@@ -143,7 +137,6 @@ start, end = blib.get_args(args.start, args.end)
 for cat in ["Russian lemmas", "Russian non-lemma forms"]:
   msg("Processing category %s" % cat)
   for i, page in blib.cat_articles(cat, start, end):
-    msg("Page %s %s: Processing" % (i, unicode(page.title())))
     process_page(i, page, args.save, args.verbose)
 
 msg("")

@@ -18,7 +18,7 @@ import traceback, sys
 import pywikibot
 import mwparserfromhell
 import blib
-from blib import msg, rmparam, getparam
+from blib import rmparam, getparam, msg, site
 
 from rulib import *
 
@@ -66,8 +66,6 @@ matching_stress_patterns["none"]["stem"] = {"by":"pre_pl", "stem":"a", "ending":
 matching_stress_patterns["none"]["ending"] = ["b"]
 
 manual_templates = ["ru-decl-noun", "ru-decl-noun-unc", "ru-decl-noun-pl"]
-
-site = pywikibot.Site()
 
 def compare_terms(case, real, pred, pagemsg):
   if real == pred:

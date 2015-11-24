@@ -6,7 +6,7 @@ import traceback, sys
 import pywikibot
 import mwparserfromhell
 import blib
-from blib import msg, rmparam, getparam
+from blib import msg, rmparam, getparam, site
 
 from rulib import *
 
@@ -22,8 +22,6 @@ short_adj_cases_params = [("short_m", "3"),
   ("short_f", "5"), ("short_n", "4"), ("short_p", "6")]
 
 all_stress_patterns = ["a", "a'", "b", "b'", "c", "c'", "c''"]
-
-site = pywikibot.Site()
 
 def expand_text(tempcall, pagemsg):
   if tempcall.startswith("{{ru-decl-adj"):

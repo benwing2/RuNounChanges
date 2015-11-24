@@ -4,20 +4,14 @@
 import pywikibot, re, sys, codecs, argparse
 
 import blib
-from blib import getparam, rmparam
-
-site = pywikibot.Site()
-
-def msg(text):
-  print text.encode("utf-8")
-
-def errmsg(text):
-  print >>sys.stderr, text.encode("utf-8")
+from blib import getparam, rmparam, msg, site
 
 def process_page(index, page, save, verbose, do_noun):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
+
+  pagemsg("Processing")
 
   text = unicode(page.text)
   parsed = blib.parse(page)
@@ -53,6 +47,4 @@ for template in ["ru-proper noun", "ru-proper noun+"]:
   temppage = "Template:" + template
   msg("Processing %s" % temppage)
   for i, page in blib.references(temppage, start, end):
-    if args.verbose:
-      msg("Page %s %s: Processing" % (i, unicode(page.title())))
     process_page(i, page, args.save, args.verbose, do_noun=False)

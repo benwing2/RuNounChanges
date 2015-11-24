@@ -4,23 +4,16 @@
 import pywikibot, re, sys, codecs, argparse
 
 import blib
-from blib import getparam, rmparam
+from blib import getparam, rmparam, msg, site
 
 import rulib as ru
-
-site = pywikibot.Site()
-
-def msg(text):
-  print text.encode("utf-8")
-
-def errmsg(text):
-  print >>sys.stderr, text.encode("utf-8")
 
 def process_page(index, page):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
+  pagemsg("Processing")
   parsed = blib.parse(page)
 
   found_headword_template = False

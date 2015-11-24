@@ -12,7 +12,10 @@ def remove_links(text):
   return text
 
 def msg(text):
-  print text.encode('utf-8')
+  print text.encode("utf-8")
+
+def errmsg(text):
+  print >>sys.stderr, text.encode("utf-8")
 
 def parse_text(text):
   return mwparserfromhell.parser.Parser().parse(text, skip_style_tags=True)
@@ -56,6 +59,20 @@ def display(page):
 def dump(page):
   old = page.get(get_redirect=True)
   pywikibot.output(u'Contents of [[{0}]]:\n{1}\n----------'.format(page.title(), old), toStdout = True)
+
+def expand_text(tempcall, pagetitle, pagemsg, verbose):
+  if verbose:
+    pagemsg("Expanding text: %s" % tempcall)
+  result = site.expand_text(tempcall, title=pagetitle)
+  if verbose:
+    pagemsg("Raw result is %s" % result)
+  if result.startswith('<strong class="error">'):
+    result = re.sub("<.*?>", "", result)
+    if not verbose:
+      pagemsg("Expanding text: %s" % tempcall)
+    pagemsg("WARNING: Got error: %s" % result)
+    return False
+  return result
 
 def do_edit(page, index, func=None, null=False, save=False):
   while True:
