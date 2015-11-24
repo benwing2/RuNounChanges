@@ -29,6 +29,7 @@
 #    Page 756 десертное вино: WARNING: case nom_sg, existing forms [[десе́ртный|десе́ртное]] [[вино́]] not same as proposed [[десертный|десе́ртное]] [[вино́]]
 # 3. (DONE, DEFINITELY NEEDS TESTING) Plural nouns
 # 4. Multiple inflected nouns, esp. in hyphenated compounds
+# 5. Don't choke when found notes=, instead combine nouns and issue warning
 
 import pywikibot, re, sys, codecs, argparse
 
@@ -149,7 +150,7 @@ def process_page(index, page, save, verbose):
             # FIXME, properly we should convert to either ai or ia depending
             # on the order of genders in the headword; this will have to
             # be a task for the script that converts z-decl to regular decl
-            decl_template.add("a", "both")
+            decl_template.add("a", "bi")
           # FIXME, save/convert overrides; but don't seem to be any in the
           # few words with zdecl (звезда, ёж)
           params_to_preserve = []
@@ -581,6 +582,13 @@ def process_page(index, page, save, verbose):
     pagemsg(u"WARNING: No inflected nouns, something might be wrong (e.g. the пистоле́т-пулемёт То́мпсона problem), can't handle, skipping")
     return
 
+  if overall_anim in ["i", "in", "inan"] or not overall_anim:
+    overall_anim = "in"
+  elif overall_anim in ["a", "an", "anim"]:
+    overall_anim = "an"
+  elif overall_anim in ["b", "bi", "bian", "both"]:
+    overall_anim = "bi"
+
   saw_in = -1
   saw_an = -1
   for i,g in enumerate(genders):
@@ -598,11 +606,6 @@ def process_page(index, page, save, verbose):
     headword_anim = "in"
   else:
     headword_anim = overall_anim
-
-  if overall_anim in ["i", "in", "inan"] or not overall_anim:
-    overall_anim = "in"
-  elif overall_anim in ["a", "an", "anim"]:
-    overall_anim = "an"
 
   if overall_anim != headword_anim:
     pagemsg("WARNING: Overriding decl anim %s with headword anim %s" % (
