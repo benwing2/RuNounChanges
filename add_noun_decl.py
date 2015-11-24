@@ -37,7 +37,7 @@
 # 8. Check on гей-брак, do both parts decline?
 # 9. If there's a loc with на or в or something similar, warn about it because
 #    it may not convert well as a single-word override, cf. ось зла
-# 10. Implement use_given_page_decl
+# 10. (DONE) Implement use_given_page_decl
 
 import pywikibot, re, sys, codecs, argparse
 
@@ -125,6 +125,12 @@ use_given_page_decl = {
     u"жёлтый свет": {u"свет":u"{{ru-noun-table|par=све́ту|loc=свету́|n=sg}}"},
     u"амарантовый цвет": {u"цвет":u"{{ru-noun-table|c||(1)|par=+}}"},`
     u"противоположный пол": {u"пол":u"{{ru-noun-table|e}}"},
+    u"звуковая волна": {u"волна":u"{{ru-noun-table|f,d|волна́}}"},
+    u"ночной клуб": {u"клуб":u"{{ru-noun-table}}"},
+    u"правоохранительные органы": {u"орган":u"{{ru-noun-table|о́рган}}"},
+    u"степная рысь": {u"рысь":u"{{ru-noun-table||f|a=an}}"},
+    u"ход конём": {u"ход":u"{{ru-noun-table|c|n=sg|par=+|loc=в +,на +}}"},
+    u"Ростов-на-Дону": {u"Ростов":u"{{ru-noun-table|Росто́в|n=sg}}"},
 }
 
 allow_no_inflected_noun = [
@@ -273,6 +279,16 @@ def process_page(index, page, save, verbose):
           pagemsg("WARNING: Multiple decl templates during decl lookup for word #%s and not adjectival, using overriding declension %s: lemma=%s, infl=%s" %
               (wordind, overriding_decl, lemma, infl))
           decl_template = blib.parse_text(overriding_decl).filter_templates()[0]
+        elif pagetitle in use_given_page_decl:
+          overriding_decl = use_given_page_decl[pagetitle].get(lemma, None)
+          if not overriding_decl:
+            pagemsg("WARNING: Missing entry for ambiguous-decl lemma for word #%s, skipping: lemma=%s, infl=%s" %
+              (wordind, lemma, infl))
+            return
+          else:
+            pagemsg("WARNING: Multiple decl templates during decl lookup for word #%s and not adjectival, using overriding declension %s: lemma=%s, infl=%s" %
+                (wordind, overriding_decl, lemma, infl))
+            decl_template = blib.parse_text(overriding_decl).filter_templates()[0]
         else:
           pagemsg("WARNING: Multiple decl templates during decl lookup for word #%s and not adjectival, skipping: lemma=%s, infl=%s" %
               (wordind, lemma, infl))
