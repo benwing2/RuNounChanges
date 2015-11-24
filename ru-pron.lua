@@ -401,16 +401,16 @@ local function track(page)
 	return true
 end
 
-function export.ipa(text, adj, gem)
+function export.ipa(text, adj, gem, bracket)
 	local new_module_result
 	-- Test code to compare existing module to new one.
 	if test_new_ru_pron_module then
 		local m_new_ru_pron = require("Module:User:Benwing2/ru-pron")
-		new_module_result = m_new_ru_pron.ipa(text, adj, gem)
+		new_module_result = m_new_ru_pron.ipa(text, adj, gem, bracket)
 	end
 
 	if type(text) == 'table' then
-		text, adj, gem = (ine(text.args.phon) or ine(text.args[1])), ine(text.args.adj), ine(text.args.gem)
+		text, adj, gem, bracket = (ine(text.args.phon) or ine(text.args[1])), ine(text.args.adj), ine(text.args.gem), ine(text.args.bracket)
 		if not text then
 			text = mw.title.getCurrentTitle().text
 		end
@@ -788,7 +788,10 @@ function export.ipa(text, adj, gem)
 		word[i] = pron
 	end
 
-	text = '[' .. table.concat(word, " ") .. ']'
+	text = table.concat(word, " ")
+	if bracket then
+		text = '[' .. text .. ']'
+	end
 
 	-- Front a and u between soft consonants. If between a soft and
 	-- optionally soft consonant (should only occur in that order, shouldn't
