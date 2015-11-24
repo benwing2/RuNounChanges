@@ -99,11 +99,7 @@ def process_page(index, page, save, verbose):
   else:
     pagemsg("Skipping")
 
-parser = argparse.ArgumentParser(description="Fix uses of ru-adj11")
-parser.add_argument('start', help="Starting page index", nargs="?")
-parser.add_argument('end', help="Ending page index", nargs="?")
-parser.add_argument('--save', action="store_true", help="Save results")
-parser.add_argument('--verbose', action="store_true", help="More verbose output")
+parser = blib.create_argparser("Fix uses of ru-adj11")
 args = parser.parse_args()
 start, end = blib.get_args(args.start, args.end)
 

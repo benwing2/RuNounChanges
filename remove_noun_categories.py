@@ -28,11 +28,7 @@ def process_page(index, page, save, verbose, do_noun):
     else:
       pagemsg("Would save with comment = %s" % comment)
 
-parser = argparse.ArgumentParser(description="Remove redundant 'Russian nouns' category")
-parser.add_argument('start', help="Starting page index", nargs="?")
-parser.add_argument('end', help="Ending page index", nargs="?")
-parser.add_argument('--save', action="store_true", help="Save results")
-parser.add_argument('--verbose', action="store_true", help="More verbose output")
+parser = blib.create_argparser("Remove redundant 'Russian nouns' category")
 args = parser.parse_args()
 start, end = blib.get_args(args.start, args.end)
 
@@ -40,8 +36,6 @@ for template in ["ru-noun", "ru-noun+"]:
   temppage = "Template:" + template
   msg("Processing %s" % temppage)
   for i, page in blib.references(temppage, start, end):
-    if args.verbose:
-      msg("Page %s %s: Processing" % (i, unicode(page.title())))
     process_page(i, page, args.save, args.verbose, do_noun=True)
 for template in ["ru-proper noun", "ru-proper noun+"]:
   temppage = "Template:" + template

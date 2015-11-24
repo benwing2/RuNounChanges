@@ -95,11 +95,7 @@ def process_page(index, page, save, verbose):
   else:
     pagemsg("Would save with comment = %s" % comment)
 
-parser = argparse.ArgumentParser(description="Convert ru-decl-noun-see into ru-noun-table decl template, taken from headword ru-(proper )noun+ template")
-parser.add_argument('start', help="Starting page index", nargs="?")
-parser.add_argument('end', help="Ending page index", nargs="?")
-parser.add_argument('--save', action="store_true", help="Save results")
-parser.add_argument('--verbose', action="store_true", help="More verbose output")
+parser = blib.create_argparser("Convert ru-decl-noun-see into ru-noun-table decl template, taken from headword ru-(proper )noun+ template")
 args = parser.parse_args()
 start, end = blib.get_args(args.start, args.end)
 

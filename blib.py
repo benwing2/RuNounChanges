@@ -280,6 +280,14 @@ def get_args(startsort, endsort):
 
   return (startsort, endsort)
 
+def create_argparser(desc):
+  parser = argparse.ArgumentParser(description=desc)
+  parser.add_argument('start', help="Starting page index", nargs="?")
+  parser.add_argument('end', help="Ending page index", nargs="?")
+  parser.add_argument('--save', action="store_true", help="Save results")
+  parser.add_argument('--verbose', action="store_true", help="More verbose output")
+  return parser
+
 languages = None
 languages_byCode = None
 languages_byCanonicalName = None

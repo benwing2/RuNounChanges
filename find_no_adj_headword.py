@@ -30,9 +30,7 @@ def process_page(index, page):
         notes.append("found head header (%s)" % getparam(t, "2"))
     pagemsg("Missing adj headword template%s" % (notes and "; " + ",".join(notes)))
 
-parser = argparse.ArgumentParser(description="Find nouns without declension")
-parser.add_argument('start', help="Starting page index", nargs="?")
-parser.add_argument('end', help="Ending page index", nargs="?")
+parser = blib.create_argparser("Find nouns without declension")
 args = parser.parse_args()
 start, end = blib.get_args(args.start, args.end)
 

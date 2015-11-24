@@ -876,11 +876,7 @@ def process_page(index, page, save, verbose):
     pagemsg("Would save with comment = %s" % comment)
 
 
-parser = argparse.ArgumentParser(description="Convert ru-noun to ru-noun+, ru-proper noun to ru-proper noun+ for multiword nouns")
-parser.add_argument('start', help="Starting page index", nargs="?")
-parser.add_argument('end', help="Ending page index", nargs="?")
-parser.add_argument('--save', action="store_true", help="Save results")
-parser.add_argument('--verbose', action="store_true", help="More verbose output")
+parser = blib.create_argparser("Convert ru-noun to ru-noun+, ru-proper noun to ru-proper noun+ for multiword nouns")
 args = parser.parse_args()
 start, end = blib.get_args(args.start, args.end)
 

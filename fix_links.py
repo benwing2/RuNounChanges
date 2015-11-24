@@ -278,11 +278,7 @@ def process_page(index, page, save, verbose):
       pagemsg("Would save with comment = %s" % comment)
 
 if __name__ == "__main__":
-  parser = argparse.ArgumentParser(description="Replace raw links with templated links")
-  parser.add_argument('start', help="Starting page index", nargs="?")
-  parser.add_argument('end', help="Ending page index", nargs="?")
-  parser.add_argument('--save', action="store_true", help="Save results")
-  parser.add_argument('--verbose', action="store_true", help="More verbose output")
+  parser = blib.create_argparser("Replace raw links with templated links")
   parser.add_argument('--lang', help="Language code for language to do")
   args = parser.parse_args()
   start, end = blib.get_args(args.start, args.end)

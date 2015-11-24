@@ -295,11 +295,7 @@ def process_page_section(index, page, section, verbose):
 
   return unicode(parsed), ru_noun_changed, ru_proper_noun_changed, bian_replaced, frobbed_manual_translit
 
-parser = argparse.ArgumentParser(description="Convert ru-noun to ru-noun+, ru-proper noun to ru-proper noun+")
-parser.add_argument('start', help="Starting page index", nargs="?")
-parser.add_argument('end', help="Ending page index", nargs="?")
-parser.add_argument('--save', action="store_true", help="Save results")
-parser.add_argument('--verbose', action="store_true", help="More verbose output")
+parser = blib.create_argparser("Convert ru-noun to ru-noun+, ru-proper noun to ru-proper noun+")
 args = parser.parse_args()
 start, end = blib.get_args(args.start, args.end)
 

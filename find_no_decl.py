@@ -26,9 +26,7 @@ def process_page(index, page):
   if found_headword_template and not found_decl_template:
     pagemsg("Found headword template without decl")
 
-parser = argparse.ArgumentParser(description="Find nouns without declension")
-parser.add_argument('start', help="Starting page index", nargs="?")
-parser.add_argument('end', help="Ending page index", nargs="?")
+parser = blib.create_argparser("Find nouns without declension")
 args = parser.parse_args()
 start, end = blib.get_args(args.start, args.end)
 
