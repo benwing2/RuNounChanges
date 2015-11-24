@@ -84,7 +84,7 @@ particles = [
 # sure more than one declension isn't actually used in different lemmas
 use_given_decl = {u"туз": u"{{ru-noun-table|b|a=a}}",
     u"род": u"{{ru-noun-table|e}}",
-    u"лев": u"{{ru-noun+|b||*|a=an}}",
+    u"лев": u"{{ru-noun-table|b||*|a=an}}",
     u"ключ": u"{{ru-noun-table|b}}",
 }
 
@@ -425,9 +425,6 @@ def process_page(index, page, save, verbose):
     return
 
   headword = getparam(headword_template, "1")
-  if "-" in headword:
-    pagemsg("WARNING: Can't handle hyphens in headword, yet, skipping")
-    return
   for badparam in ["head2", "gen2", "pl2"]:
     val = getparam(headword_template, badparam)
     if val:
@@ -534,7 +531,7 @@ def process_page(index, page, save, verbose):
       else:
         # FIXME, be smarter about nouns conjoined with и, e.g. Адам и Ева,
         # (might not be worth it, only five such nouns)
-        if genders_include_pl and not_saw_noun and not reached_uninflected:
+        if genders_include_pl and not saw_noun and not reached_uninflected:
           # Check for plural inflection
           for sgend, plend, gender, is_sc1 in pl_data:
             if sgend:
@@ -766,10 +763,11 @@ def process_page(index, page, save, verbose):
             proposed_decl_text)
       else:
         text = newtext
+        newtext = re.sub(r"\n*$", "\n\n", newtext)
         # Sub in after Noun or Proper noun section, before a following section
         # (====Synonyms====) or a wikilink ([[pl:гонка вооружений]]) or
         # a category ([[Category:...]]).
-        newtext = re.sub(r"^(===(?:Noun|Proper noun)===$.*?)^(==|\[\[)",
+        newtext = re.sub(r"^(===(?:Noun|Proper noun)===$.*?)^(==|\[\[|\Z)",
             r"\1====Declension====\n%s\n\n\2" % proposed_decl_text, newtext,
             1, re.M|re.S)
         if text == newtext:

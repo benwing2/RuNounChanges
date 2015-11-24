@@ -26,26 +26,25 @@ def check_old_noun_headword_forms(headword_template, args, subpagetitle, pagemsg
   # set of forms from ru-noun-table, and needs to be split on commas.
   # FORM1_LEMMA is true if the FORM1 values come from the ru-noun lemma.
   def compare_forms(case, form1, form2, form1_lemma=False):
+    def fixup_one_link(m):
+      lemma, infl = m.groups()
+      # Make sure to remove accents, cf. [[десе́ртный|десе́ртное]]
+      lemma = ru.remove_accents(re.sub("#Russian$", "", lemma))
+      if ru.remove_accents(infl) == lemma:
+        return "[[%s]]" % infl
+      return "[[%s|%s]]" % (lemma, infl)
+
     def fixup_link(f):
-      m = re.search(r"^\[\[([^|]*?)\|([^|]*?)\]\]$", f)
-      if m:
-        lemma, infl = m.groups()
-        # Make sure to remove accents, cf. [[десе́ртный|десе́ртное]]
-        lemma = ru.remove_accents(re.sub("#Russian$", "", lemma))
-        if ru.remove_accents(infl) == lemma:
-          return "[[%s]]" % infl
-        return "[[%s|%s]]" % (lemma, infl)
-      return f
+      return re.sub(r"\[\[([^\[\]|]*?)\|([^\[\]|]*?)\]\]", fixup_one_link, f)
+
     # Split on individual words and allow monosyllabic accent differences.
     # FIXME: Will still have problems with [[X|Y]].
     def compare_single_form(f1, f2):
-      pagemsg("Comparing f1=%s f2=%s" % (f1, f2))
       words1 = re.split("[ -]", f1)
       words2 = re.split("[ -]", f2)
       if len(words1) != len(words2):
         return None
       for i in xrange(len(words1)):
-        pagemsg("Comparing words1=%s words2=%s" % (words1[i], words2[i]))
         if words1[i] != words2[i]:
           w1 = try_to_stress(fixup_link(words1[i]))
           w2 = words2[i]
