@@ -1,0 +1,14 @@
+grep 'WARNING' "$@" | \
+  perl -pe 's/^Page.*?: //;' \
+    -e 's/[^ -~\n]//g;' \
+    -e 's/\{\{.*?\}\}//g;' \
+    -e 's/\[\[.*?\]\]//g;' \
+    -e 's/notes=<.*?>//g;' \
+    -e 's/#[0-9]+//g;' \
+    -e 's/,//g;' \
+    -e 's/ -+ / /g;' \
+    -e 's/ +/ /g;' \
+    -e 's/tr=[a-z]*//;' \
+    -e 's/skipping: .*/skipping:/;' \
+    -e 's/(decl lemma|same as proposed) \/\/.*/$1 \/\//;' \
+    |sort|uniq -c|sort -nr
