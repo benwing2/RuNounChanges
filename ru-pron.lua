@@ -103,19 +103,20 @@ FIXME:
     adj (adjective, autodetected whether singular or plural), comp
 	(comparative), pre (prepositional case), adv (adverb), verb or v (2nd
 	plural verb forms).
-21. Figure out what to do with devoicing or non-devoicing before mnrlv vowel.
-    Apparently non-devoicing before vowel is only in fast speech with a
-	close juncture and Anatoli doesn't want that; but what about before
+21. (DONE, DEVOICE UNLESS NEXT WORD BEGINS WITH VOICED OBSTRUENT OR V+VOICED
+    OBSTRUENT) Figure out what to do with devoicing or non-devoicing before
+	mnrlv vowel. Apparently non-devoicing before vowel is only in fast speech
+	with a close juncture and Anatoli doesn't want that; but what about before
 	the consonants?
-22. (DONE, NEEDS TESTING, NEED TO REMOVE ADDITION OF BRACKETS FROM ru-IPA)
-    Figure out what to do with fronting of a and u after or between soft
-    consonants, esp. when triggered by a following soft consonant with
+22. (DONE) (DONE, NEEDS TESTING, NEED TO REMOVE ADDITION OF BRACKETS FROM
+    ru-IPA) Figure out what to do with fronting of a and u after or between
+	soft consonants, esp. when triggered by a following soft consonant with
 	optional or compulsory assimilation. Probably the correct thing to do
 	in the case of optional assimilation is to give two pronunciations
 	separated by commas, one with non-front vowel + hard consonant, the
 	other with front vowel + soft consonant.
-23. (DONE, NEED TO ASK CINEMANTIQUE) Implement compulsory assimilation of xkʲ;
-    ask Cinemantique to make sure this is correct.
+23. (DONE, OK) Implement compulsory assimilation of xkʲ; ask Cinemantique to
+    make sure this is correct.
 ]]
 
 local ut = require("Module:utils")
