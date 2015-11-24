@@ -35,6 +35,9 @@
 # 6. (DONE) Check that all parts of ru-decl-noun-see are used, error if not
 # 7. (DONE) Handle all_parts_declined
 # 8. Check on гей-брак, do both parts decline?
+# 9. If there's a loc with на or в or something similar, warn about it because
+#    it may not convert well as a single-word override, cf. ось зла
+# 10. Implement use_given_page_decl
 
 import pywikibot, re, sys, codecs, argparse
 
@@ -90,6 +93,38 @@ use_given_decl = {u"туз": u"{{ru-noun-table|b|a=a}}",
     u"род": u"{{ru-noun-table|e}}",
     u"лев": u"{{ru-noun-table|b||*|a=an}}",
     u"ключ": u"{{ru-noun-table|b}}",
+    u"плата": u"{{ru-noun-table|пла́та}}",
+    u"брак": u"{{ru-noun-table}}",
+}
+
+use_given_page_decl = {
+    u"двоюродный дед": {u"дед":u"{{ru-noun-table|a=an}}"},
+    u"двоюродный дядя": {u"дядя":u"{{ru-noun-table|дя́дя|(2)|or|c|дя́дя|-ья|a=an}}"},
+    u"шах и мат": {u"мат":u"{{ru-noun-table}}"},
+    u"ионический ордер": {u"ордер":u"{{ru-noun-table|о́рдер|or|c||(1)}}"},
+    u"коринфский ордер": {u"ордер":u"{{ru-noun-table|о́рдер|or|c||(1)}}"},
+    u"корпус турбины": {u"корпус":u"{{ru-noun-table|ко́рпус}}"},
+    u"бронирование кабины": {u"бронирование":u"{{ru-noun-table|бронирова́ние}}"},
+    u"троюродная дядя": {u"дядя":u"{{ru-noun-table|дя́дя|(2)|or|c|дя́дя|-ья|a=an}}"},
+    u"половой орган": {u"орган":u"{{ru-noun-table|о́рган}}"},
+    u"вес нетто": {u"вес":u"{{ru-noun-table|c||(1)}}"},
+    u"древесный уголь": {u"уголь":u"{{ru-noun-table|f''||f|loc=на +}}"},
+    u"ось зла": {u"ось":u"{{ru-noun-table}}"},
+    u"свет очей": {u"свет":u"{{ru-noun-table|par=све́ту|loc=свету́|n=sg}}"},
+    u"дорожный чек": {u"чек":u"{{ru-noun-table}}"},
+    u"зелёный лук": {u"лук":u"{{ru-noun-table}}"},
+    u"воздушное судно": {u"судно":u"{{ru-noun+|c|су́дно|(2)|суд}}"},
+    u"Пепельная среда": {u"среда":u"{{ru-noun-table|f|среда́}}"},
+    u"зелёный свет": {u"свет":u"{{ru-noun-table|par=све́ту|loc=свету́|n=sg}}"},
+    u"окружающая среда": {u"среда":u"{{ru-noun-table|d|среда́}}"},
+    u"парусное судно": {u"судно":u"{{ru-noun+|c|су́дно|(2)|суд}}"},
+    u"барабанный бой": {u"бой":u"{{ru-noun-table|c|loc=бою́}}"},
+    u"ордер на арест": {u"ордер":u"{{ru-noun-table|c|о́рдер|(1)}}"},
+    u"чёрная американка": {u"американка":u"{{ru-noun-table|америка́нка|*|a=an}}"},
+    u"красный свет": {u"свет":u"{{ru-noun-table|par=све́ту|loc=свету́|n=sg}}"},
+    u"жёлтый свет": {u"свет":u"{{ru-noun-table|par=све́ту|loc=свету́|n=sg}}"},
+    u"амарантовый цвет": {u"цвет":u"{{ru-noun-table|c||(1)|par=+}}"},`
+    u"противоположный пол": {u"пол":u"{{ru-noun-table|e}}"},
 }
 
 allow_no_inflected_noun = [
