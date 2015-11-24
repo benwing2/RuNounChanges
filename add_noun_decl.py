@@ -5,20 +5,20 @@
 # for multiword nouns by looking up the individual declensions of the words.
 
 # Example page:
-# 
+#
 # ==Russian==
-# 
+#
 # ===Pronunciation===
 # * {{ru-IPA|са́харная ва́та}}
-# 
+#
 # ===Noun===
 # {{ru-noun|[[сахарный|са́харная]] [[вата|ва́та]]|f-in}}
-# 
+#
 # # [[cotton candy]], [[candy floss]], [[fairy floss]]
-# 
+#
 # ====Declension====
 # {{ru-decl-noun-see|сахарный|вата}}
-# 
+#
 # [[Category:ru:Foods]]
 
 # FIXME:
@@ -66,6 +66,27 @@ pl_data = [
 ]
 
 consonant_re = u"[бдфгклмнпрствхзшщчжц]"
+
+particles = [
+  # List of prepositions and particles, from ru-pron.lua
+  u"по", u"в", u"на", u"до",
+  u"без", u"близ", u"в", u"во", u"до",
+  u"из-под", u"из-за", u"за", u"из", u"изо",
+  u"к", u"ко", u"меж", u"на", u"над", u"надо", u"о", u"об", u"обо", u"от",
+  u"по", u"под", u"подо", u"пред", u"предо", u"при", u"про", u"перед", u"передо",
+  u"через", u"с", u"со", u"у", u"не",
+  # Others
+  u"и", u"де"
+  ]
+
+# List of words where we use the specified declension, to deal with cases
+# where there are multiple declensions; we have to be careful here to make
+# sure more than one declension isn't actually used in different lemmas
+use_given_decl = {u"туз": u"{{ru-noun-table|b|a=a}}",
+    u"род": u"{{ru-noun-table|e}}",
+    u"лев": u"{{ru-noun+|b||*|a=an}}",
+    u"ключ": u"{{ru-noun-table|b}}",
+}
 
 def process_page(index, page, save, verbose):
   pagetitle = unicode(page.title())
@@ -164,7 +185,7 @@ def process_page(index, page, save, verbose):
               return None
           decl_templates = [decl_template]
 
-      elif "Russian indeclinable nouns" in declpage.text or [
+      elif "[[Category:Russian indeclinable nouns]]" in declpage.text or [
         x for x in headword_templates if getparam(x, "3") == "-"]:
         return [("1", wordlink), ("2", "$")], False, None, None
       else:
@@ -183,9 +204,15 @@ def process_page(index, page, save, verbose):
           decl_template = t
           break
       else:
-        pagemsg("WARNING: Multiple decl templates during decl lookup for word #%s and not adjectival, skipping: lemma=%s, infl=%s" %
-            (wordind, lemma, infl))
-        return None
+        if lemma in use_given_decl:
+          overriding_decl = use_given_decl[lemma]
+          pagemsg("WARNING: Multiple decl templates during decl lookup for word #%s and not adjectival, using overriding declension %s: lemma=%s, infl=%s" %
+              (wordind, overriding_decl, lemma, infl))
+          decl_template = blib.parse_text(overriding_decl).filter_templates()[0]
+        else:
+          pagemsg("WARNING: Multiple decl templates during decl lookup for word #%s and not adjectival, skipping: lemma=%s, infl=%s" %
+              (wordind, lemma, infl))
+          return None
 
     if unicode(decl_template.name) == "ru-decl-adj":
       if re.search(ur"\bь\b", getparam(decl_template, "2")):
@@ -380,6 +407,10 @@ def process_page(index, page, save, verbose):
 
   headword_is_proper = unicode(headword_template.name) == "ru-proper noun"
 
+  if getparam(headword_template, "3") == "-" or "[[Category:Russian indeclinable nouns]]" in page.text:
+    pagemsg("WARNING: Indeclinable noun, skipping")
+    return
+
   headword_trs = blib.process_arg_chain(headword_template, "tr", "tr")
   if headword_trs:
     pagemsg("WARNING: Found headword manual translit, skipping: %s" %
@@ -440,7 +471,7 @@ def process_page(index, page, save, verbose):
     m = re.search(r"^\[\[([^|]+)\|([^|]+)\]\]$", word)
     if m:
       lemma, infl = m.groups()
-      lemma = ru.remove_accents(lemma)
+      lemma = ru.remove_accents(re.sub("#Russian$", "", lemma))
     else:
       m = re.search(r"^\[\[([^|]+)\]\]$", word)
       if m:
@@ -482,7 +513,7 @@ def process_page(index, page, save, verbose):
         else:
           pagemsg("Assuming word #%s is adjectival, uninflected: lemma=%s, infl=%s" %
               (wordind, lemma, infl))
-      elif canon_lemma == canon_infl:
+      elif canon_lemma == canon_infl and canon_lemma not in particles:
         is_inflected = True
         pagemsg("Assuming word #%s is noun, inflected: lemma=%s, infl=%s" %
             (wordind, lemma, infl))

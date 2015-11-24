@@ -30,11 +30,11 @@ def check_old_noun_headword_forms(headword_template, args, subpagetitle, pagemsg
       m = re.search(r"^\[\[([^|]*?)\|([^|]*?)\]\]$", f)
       if m:
         lemma, infl = m.groups()
-        if ru.remove_accents(infl) == ru.remove_accents(lemma):
+        # Make sure to remove accents, cf. [[десе́ртный|десе́ртное]]
+        lemma = ru.remove_accents(re.sub("#Russian$", "", lemma))
+        if ru.remove_accents(infl) == lemma:
           return "[[%s]]" % infl
-        # Handle [[десе́ртный|десе́ртное]] vs. [[десертный|десе́ртное]]
-        if lemma != ru.remove_accents(lemma):
-          return "[[%s|%s]]" % (ru.remove_accents(lemma), infl)
+        return "[[%s|%s]]" % (lemma, infl)
       return f
     # Split on individual words and allow monosyllabic accent differences.
     # FIXME: Will still have problems with [[X|Y]].
