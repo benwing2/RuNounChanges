@@ -82,8 +82,14 @@ function export.show(frame)
 	local i = 2
 
 	while head do
+		-- The following are for my bot script to fix up headwords to
+		-- use ru-noun+ or ru-proper noun+, and add declensions as needed
 		if rfind(head, " ") then
 			track("space-in-headword/" .. poscat)
+		elseif rfind(head, ".%-.") then
+			-- We only look for hyphens between characters so we don't
+			-- get tripped up by prefixes and suffixes
+			track("hyphen-no-space-in-headword/" .. poscat)
 		end
 		if m_common.needs_accents(head) then
 			if not args.notrcat then
