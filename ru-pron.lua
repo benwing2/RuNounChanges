@@ -158,7 +158,7 @@ local test_new_ru_pron_module = false
 
 -- Enable this to test fronting of a/u only between soft consonants,
 -- and then remove the condition when we're sure it works and we want it
-local restricted_fronting = false
+local restricted_fronting = true
 
 local AC = u(0x0301) -- acute =  ́
 local GR = u(0x0300) -- grave =  ̀
@@ -685,7 +685,7 @@ function export.ipa(text, adj, gem, bracket)
 		--   e.g. sk, str, that comes before a vowel, putting the @ before
 		--   the permanent onset cluster
 		pron = rsub(pron, '([^‿⁀@' .. vow .. acc .. ']?)([^‿⁀@' .. vow .. acc .. '])@([^‿⁀@' .. vow .. acc .. 'ːˑ()ʲ])(ʲ?[ːˑ()]*[‿⁀]*[' .. vow .. acc .. '])', function(a, b, c, d)
-			if perm_syl_onset[a .. b .. c] or b == 'ʲ' and c == 'j' then
+			if perm_syl_onset[a .. b .. c] or c == 'j' and rfind(b, '[čǰɕӂʲ]') then
 				return '@' .. a .. b .. c .. d
 			elseif perm_syl_onset[b .. c] then
 				return a .. '@' .. b .. c .. d
@@ -768,7 +768,7 @@ function export.ipa(text, adj, gem, bracket)
 			end end)
 
 		--general consonant assimilative palatalization
-		pron = rsub_repeatedly(pron, '([szntdpbmfcĵ])([ˈˌ]?)([lszntdpbmfcĵ]ʲ)', function(a, b, c)
+		pron = rsub_repeatedly(pron, '([szntdpbmfcĵx])([ˈˌ]?)([szntdpbmfcĵlk]ʲ)', function(a, b, c)
 			if cons_assim_palatal['compulsory'][a..c] then
 				return a .. 'ʲ' .. b .. c
 			elseif cons_assim_palatal['optional'][a..c] then
@@ -812,7 +812,7 @@ function export.ipa(text, adj, gem, bracket)
 		-- 1. First, temporarily add soft symbol to inherently soft consonants.
 		text = rsub(text, '([čǰɕӂj])', '%1ʲ')
 		-- 2. Handle case of au between two soft consonants
-		text = rsub('(ʲ[ː()]*)([auʊ])([ˈˌ]?.ʲ)', function(a, b, c)
+		text = rsub(text, '(ʲ[ː()]*)([auʊ])([ˈˌ]?.ʲ)', function(a, b, c)
 			return a .. fronting[b] .. c end)
 		-- 3. Handle case of au between soft and optionally soft consonant
 		if rfind(text, 'ʲ[ː()]*[auʊ][ˈˌ]?.⁽ʲ⁾') or rfind(text, 'ʲ[ː()]*[auʊ][ˈˌ]?%(jʲ%)') then
