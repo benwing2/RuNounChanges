@@ -109,14 +109,65 @@ def process_page(index, page, save, verbose):
         return None
     parsed = blib.parse_text(declpage.text)
     decl_templates = []
+    headword_templates = []
+    decl_z_templates = []
     for t in parsed.filter_templates():
       if unicode(t.name) in ["ru-noun-table", "ru-decl-adj"]:
         decl_templates.append(t)
+      if unicode(t.name) in ["ru-noun", "ru-proper noun"]:
+        headword_templates.append(t)
+      if unicode(t.name) in ["ru-decl-noun-z"]:
+        decl_z_templates.append(t)
 
     if not decl_templates:
-      pagemsg("WARNING: No decl template during decl lookup for word #%s, skipping: lemma=%s, infl=%s" %
-          (wordind, lemma, infl))
-      return None
+      if decl_z_templates:
+        # {{ru-decl-noun-z|звезда́|f-in|d|ё}}
+        # {{ru-decl-noun-z|ёж|m-inan|b}}
+        if len(decl_z_templates) > 1:
+          pagemsg("WARNING: Multiple decl-z templates during decl lookup for word #%s, skipping: lemma=%s, infl=%s" %
+            (wordind, lemma, infl))
+          return None
+        else:
+          decl_z_template = decl_z_templates[0]
+          decl_template = blib.parse_text("{{ru-noun-table}}")
+          decl_template.add("1", getparam(decl_z_template, "3"))
+          decl_template.add("2", getparam(decl_z_template, "1"))
+          zgender_anim = getparam(decl_z_template, "2")
+          m = re.search(r"^([mfn])-(an|in|inan)$", zgender_anim)
+          if not m:
+            pagemsg("Unable to recognize z-decl gender/anim spec for word #%s, skipping: spec=%s, lemma=%s, infl=%s" %
+                (wordind, zgender_anim, lemma, infl))
+            return None
+          zgender, zanim = m.groups()
+          zspecial = zgender + re.sub(u"ё", u";ё", getparam(decl_z_template, "4"))
+          # FIXME, properly we should check whether the gender is actually
+          # needed and leave it off if not
+          decl_template.add("3", zspecial)
+          if zanim == "an":
+            decl_template.add("a", "an")
+          elif zanim == "inan":
+            # FIXME, properly we should convert to either ai or ia depending
+            # on the order of genders in the headword; this will have to
+            # be a task for the script that converts z-decl to regular decl
+            decl_template.add("a", "both")
+          # FIXME, save/convert overrides; but don't seem to be any in the
+          # few words with zdecl (звезда, ёж)
+          params_to_preserve = []
+          for param in decl_z_template.params:
+            name = unicode(param.name)
+            if name not in ["1", "2", "3", "4"]:
+              pagemsg("WARNING: Found named or extraneous numbered params in z-decl for word #%s, can't handle yet, skipping: %s, lemma=%s, infl=%s" %
+                  (wordind, unicode(decl_z_template), lemma, infl))
+              return None
+          decl_templates = [decl_template]
+
+      elif "Russian indeclinable nouns" in declpage.text or [
+        x for x in headword_templates if getparam(x, "3") == "-"]:
+        return [("1", wordlink), ("2", "$")], False, None, None
+      else:
+        pagemsg("WARNING: No decl template during decl lookup for word #%s, skipping: lemma=%s, infl=%s" %
+            (wordind, lemma, infl))
+        return None
 
     if len(decl_templates) == 1:
       decl_template = decl_templates[0]
@@ -684,8 +735,9 @@ args = parser.parse_args()
 start, end = blib.get_args(args.start, args.end)
 
 for pos in ["nouns", "proper nouns"]:
-  refpage = "Template:tracking/ru-headword/space-in-headword/%s" % pos
-  msg("PROCESSING REFERENCES TO: %s" % refpage)
-  for i, page in blib.references(refpage, start, end):
-    msg("Page %s %s: Processing" % (i, unicode(page.title())))
-    process_page(i, page, args.save, args.verbose)
+  for refpage in ["Template:tracking/ru-headword/space-in-headword/%s" % pos,
+      "Template:tracking/ru-headword/hyphen-no-space-in-headword/%s" % pos]:
+    msg("PROCESSING REFERENCES TO: %s" % refpage)
+    for i, page in blib.references(refpage, start, end):
+      msg("Page %s %s: Processing" % (i, unicode(page.title())))
+      process_page(i, page, args.save, args.verbose)
