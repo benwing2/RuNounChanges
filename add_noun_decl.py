@@ -103,6 +103,8 @@ def process_page(index, page, save, verbose):
       pagemsg("Raw result is %s" % result)
     if result.startswith('<strong class="error">'):
       result = re.sub("<.*?>", "", result)
+      if not verbose:
+        pagemsg("Expanding text: %s" % tempcall)
       pagemsg("WARNING: Got error: %s" % result)
       return False
     return result
@@ -153,7 +155,7 @@ def process_page(index, page, save, verbose):
           return None
         else:
           decl_z_template = decl_z_templates[0]
-          decl_template = blib.parse_text("{{ru-noun-table}}")
+          decl_template = blib.parse_text("{{ru-noun-table}}").filter_templates()[0]
           decl_template.add("1", getparam(decl_z_template, "3"))
           decl_template.add("2", getparam(decl_z_template, "1"))
           zgender_anim = getparam(decl_z_template, "2")
@@ -289,9 +291,12 @@ def process_page(index, page, save, verbose):
         lemma_arg = 1
       if len(arg_set) <= lemma_arg:
         arg_set.append("")
-      if not arg_set[lemma_arg] or arg_set[lemma_arg].lower() == infl.lower() or (
-          ru.is_monosyllabic(infl) and ru.remove_accents(arg_set[lemma_arg]).lower() ==
-          ru.remove_accents(infl).lower()):
+      arglemma = arg_set[lemma_arg]
+      if (not arglemma or arglemma.lower() == infl.lower() or
+          ru.is_monosyllabic(infl) and ru.remove_accents(arglemma).lower() ==
+          ru.remove_accents(infl).lower() or
+          ispl and ru.remove_accents(arglemma).lower() == lemma.lower()
+          ):
         arg_set[lemma_arg] = wordlink
       else:
         pagemsg("WARNING: Can't sub word link %s into decl lemma %s%s" % (
@@ -338,7 +343,7 @@ def process_page(index, page, save, verbose):
           else:
             pagemsg("No gender in decl for word #%s, adding gender %s: lemma=%s, infl=%s" %
                 (wordind, found_gender, lemma, infl))
-            declarg = found_gender + decl_arg
+            declarg = found_gender + declarg
 
         # Now check special case 1
         if need_sc1 != ("(1)" in declarg):
@@ -350,6 +355,8 @@ def process_page(index, page, save, verbose):
             pagemsg("Special case (1) present in decl arg but plural for word #%s is regular, skipping: declarg=%s, lemma=%s, infl=%s" % (
               wordind, declarg, lemma, infl))
             return None
+
+        arg_set[lemma_arg + 1] = declarg
 
       if numbered_params:
         numbered_params.append("or")
@@ -451,18 +458,19 @@ def process_page(index, page, save, verbose):
   for i in xrange(1, len(headwords_separators), 2):
     hword = headwords_separators[i]
     separator = headwords_separators[i+1]
-    if separator != " " and separator != "-":
+    if i < len(headwords_separators) - 2 and separator != " " and separator != "-":
       pagemsg("WARNING: Separator after word #%s isn't a space or hyphen, can't handle: word=<%s>, separator=<%s>" %
           (wordind + 1, hword, separator))
       return
     headwords.append(hword)
     separators.append(separator)
+    wordind += 1
 
   pagemsg("Found headwords: %s" % " @@ ".join(headwords))
 
   # Get headword genders (includes animacy and number)
   genders = blib.process_arg_chain(headword_template, "2", "g")
-  genders_include_pl = len(x for x in genders if re.search(r"\bp\b")) > 0
+  genders_include_pl = len([x for x in genders if re.search(r"\bp\b", x)]) > 0
 
   # Extract lemmas and inflections for each word in headword
   lemmas_infls = []
@@ -759,9 +767,11 @@ def process_page(index, page, save, verbose):
       else:
         text = newtext
         # Sub in after Noun or Proper noun section, before a following section
-        # (====Synonyms====) or a wikilink ([[pl:гонка вооружений]]).
+        # (====Synonyms====) or a wikilink ([[pl:гонка вооружений]]) or
+        # a category ([[Category:...]]).
         newtext = re.sub(r"^(===(?:Noun|Proper noun)===$.*?)^(==|\[\[)",
-            r"\1====Declension====\n%s\n\n" % proposed_decl_text, 1, re.M|re.S)
+            r"\1====Declension====\n%s\n\n\2" % proposed_decl_text, newtext,
+            1, re.M|re.S)
         if text == newtext:
           pagemsg("WARNING: Something wrong, can't sub in new declension, proposed declension follows: %s" %
               proposed_decl_text)
@@ -769,7 +779,7 @@ def process_page(index, page, save, verbose):
           pagemsg("Subbed in new declension: %s" % proposed_decl_text)
           notes.append("create declension from headword")
           if verbose:
-            pagemsg("Replaced <%s> with <%s>" % text, newtext)
+            pagemsg("Replaced <%s> with <%s>" % (text, newtext))
 
   comment = "; ".join(notes)
   if save:
