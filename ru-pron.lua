@@ -549,7 +549,7 @@ function export.ipa(text, adj, gem, bracket)
 	text = rsub(text, '([bdgvɣzžĝĵǰӂ])(ʹ?⁀)$', function(a, b)
 		return devoicing[a] .. b end)
 	--2. word-final devoicing before another word
-	text = rsub(text, '([bdgvɣzžĝĵǰӂ])(ʹ?⁀ ⁀[^bdgvɣzžĝĵǰӂ])', function(a, b)
+	text = rsub(text, '([bdgvɣzžĝĵǰӂ])(ʹ?⁀ ⁀[^bdgɣzžĝĵǰӂ])', function(a, b)
 		return devoicing[a] .. b end)
 	--3. voicing/devoicing assimilation; repeat to handle recursive assimilation
 	while true do
