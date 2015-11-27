@@ -210,10 +210,13 @@ def process_page(index, page, save, verbose):
     for t in parsed.filter_templates():
       tname = unicode(t.name)
       if tname in ["ru-noun-table", "ru-decl-adj"]:
+        pagemsg("find_decl_args: Found decl template: %s" % unicode(t))
         decl_templates.append(t)
       if tname in ["ru-noun", "ru-proper noun"]:
+        pagemsg("find_decl_args: Found headword template: %s" % unicode(t))
         headword_templates.append(t)
       if tname in ["ru-decl-noun-z"]:
+        pagemsg("find_decl_args: Found z-decl template: %s" % unicode(t))
         decl_z_templates.append(t)
 
     if not decl_templates:
@@ -226,13 +229,15 @@ def process_page(index, page, save, verbose):
           return None
         else:
           decl_z_template = decl_z_templates[0]
+          pagemsg("find_decl_args: Using z-decl template: %s" % decl_z_template)
+
           decl_template = blib.parse_text("{{ru-noun-table}}").filter_templates()[0]
           decl_template.add("1", getparam(decl_z_template, "3"))
           decl_template.add("2", getparam(decl_z_template, "1"))
           zgender_anim = getparam(decl_z_template, "2")
           m = re.search(r"^([mfn])-(an|in|inan)$", zgender_anim)
           if not m:
-            pagemsg("Unable to recognize z-decl gender/anim spec for word #%s, skipping: spec=%s, lemma=%s, infl=%s" %
+            pagemsg("WARNING: Unable to recognize z-decl gender/anim spec for word #%s, skipping: spec=%s, lemma=%s, infl=%s" %
                 (wordind, zgender_anim, lemma, infl))
             return None
           zgender, zanim = m.groups()
@@ -297,6 +302,7 @@ def process_page(index, page, save, verbose):
               (wordind, lemma, infl))
           return None
 
+    pagemsg("find_decl_args: Using decl template: %s" % decl_template)
     if unicode(decl_template.name) == "ru-decl-adj":
       if re.search(ur"\bь\b", getparam(decl_template, "2")):
         return [("1", wordlink), ("2", u"+ь")], True, None, None
@@ -432,11 +438,11 @@ def process_page(index, page, save, verbose):
         # Now check special case 1
         if need_sc1 != ("(1)" in declarg):
           if need_sc1:
-            pagemsg("Irregular plural calls for special case (1), but not present in decl arg for word #%s, skipping: declarg=%s, lemma=%s, infl=%s" % (
+            pagemsg("WARNING: Irregular plural calls for special case (1), but not present in decl arg for word #%s, skipping: declarg=%s, lemma=%s, infl=%s" % (
               wordind, declarg, lemma, infl))
             return None
           else:
-            pagemsg("Special case (1) present in decl arg but plural for word #%s is regular, skipping: declarg=%s, lemma=%s, infl=%s" % (
+            pagemsg("WARNING: Special case (1) present in decl arg but plural for word #%s is regular, skipping: declarg=%s, lemma=%s, infl=%s" % (
               wordind, declarg, lemma, infl))
             return None
 
@@ -891,9 +897,18 @@ def process_page(index, page, save, verbose):
     notes.append("convert multi-word ru-proper noun to ru-proper noun+ by looking up decls")
 
   pagemsg("Replacing headword %s with %s" % (orig_headword_template, unicode(headword_template)))
-
   newtext = unicode(parsed)
-  if not see_template:
+
+  if see_template:
+    orig_see_template = unicode(see_template)
+    del see_template.params[:]
+    see_template.name = "ru-noun-table"
+    for name, value in params:
+      see_template.add(name, value)
+    pagemsg("Replacing see-template %s with decl %s" % (orig_see_template, unicode(see_template)))
+    notes.append("replace see-template with declension")
+    newtext = unicode(parsed)
+  else:
     if "==Declension==" in newtext:
       pagemsg("WARNING: No ru-decl-noun-see template, but found declension section, not adding new declension, proposed declension follows: %s" %
           proposed_decl_text)
