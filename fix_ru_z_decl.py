@@ -17,6 +17,13 @@ def process_page(index, page, save, verbose):
 
   pagemsg("Processing")
 
+  if ":" in pagetitle:
+    pagemsg("WARNING: Colon in page title, skipping")
+    return
+
+  def expand_text(tempcall):
+    return blib.expand_text(tempcall, pagetitle, pagemsg, verbose)
+
   parsed = blib.parse(page)
 
   headword_templates = []
@@ -44,14 +51,37 @@ def process_page(index, page, save, verbose):
           subpagetitle, pagemsg, headword_template=headword_template)
       if not ru_noun_table_template:
         pagemsg("WARNING: Unable to convert z-decl template: %s" % unicode(t))
-      else:
-        origt = unicode(t)
-        t.name = "ru-noun-table"
-        del t.params[:]
-        for param in ru_noun_table_template.params:
-          t.add(param.name, param.value)
-        pagemsg("Replacing z-decl %s with regular decl %s" %
-            (origt, unicode(t)))
+        continue
+
+      generate_template = re.sub(r"^\{\{ru-noun-table",
+          "{{ru-generate-noun-args", unicode(ru_noun_table_template))
+      if unicode(headword_template.name) == "ru-proper noun":
+        generate_template = re.sub(r"\}\}$", "|ndef=sg}}", generate_template)
+
+      def pagemsg_with_proposed(text):
+        pagemsg("Proposed ru-noun-table template: %s" %
+            unicode(ru_noun_table_template))
+        pagemsg(text)
+
+      generate_result = expand_text(unicode(generate_template))
+      if not generate_result:
+        pagemsg_with_proposed("WARNING: Error generating noun args, skipping")
+        continue
+      args = ru.split_generate_args(generate_result)
+
+      # This will check number mismatch and animacy mismatch
+      new_genders = runoun.check_old_noun_headword_forms(headword_template,
+          args, subpagetitle, pagemsg_with_proposed)
+      if new_genders == None:
+        continue
+
+      origt = unicode(t)
+      t.name = "ru-noun-table"
+      del t.params[:]
+      for param in ru_noun_table_template.params:
+        t.add(param.name, param.value)
+      pagemsg("Replacing z-decl %s with regular decl %s" %
+          (origt, unicode(t)))
 
   if num_z_decl > 1:
     pagemsg("WARNING: Found multiple z-decl templates (%s)" % num_z_decl)
