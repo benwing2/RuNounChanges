@@ -229,38 +229,22 @@ def process_page(index, page, save, verbose):
           return None
         else:
           decl_z_template = decl_z_templates[0]
-          pagemsg("find_decl_args: Using z-decl template: %s" % decl_z_template)
-
-          decl_template = blib.parse_text("{{ru-noun-table}}").filter_templates()[0]
-          decl_template.add("1", getparam(decl_z_template, "3"))
-          decl_template.add("2", getparam(decl_z_template, "1"))
-          zgender_anim = getparam(decl_z_template, "2")
-          m = re.search(r"^([mfn])-(an|in|inan)$", zgender_anim)
-          if not m:
-            pagemsg("WARNING: Unable to recognize z-decl gender/anim spec for word #%s, skipping: spec=%s, lemma=%s, infl=%s" %
-                (wordind, zgender_anim, lemma, infl))
-            return None
-          zgender, zanim = m.groups()
-          zspecial = zgender + re.sub(u"ё", u";ё", getparam(decl_z_template, "4"))
-          # FIXME, properly we should check whether the gender is actually
-          # needed and leave it off if not
-          decl_template.add("3", zspecial)
-          if zanim == "an":
-            decl_template.add("a", "an")
-          elif zanim == "inan":
-            # FIXME, properly we should convert to either ai or ia depending
-            # on the order of genders in the headword; this will have to
-            # be a task for the script that converts z-decl to regular decl
-            decl_template.add("a", "bi")
-          # FIXME, save/convert overrides; but don't seem to be any in the
-          # few words with zdecl (звезда, ёж)
-          params_to_preserve = []
-          for param in decl_z_template.params:
-            name = unicode(param.name)
-            if name not in ["1", "2", "3", "4"]:
-              pagemsg("WARNING: Found named or extraneous numbered params in z-decl for word #%s, can't handle yet, skipping: %s, lemma=%s, infl=%s" %
-                  (wordind, unicode(decl_z_template), lemma, infl))
-              return None
+          headword_template = None
+          pagemsg("find_decl_args: Using z-decl template: %s" %
+              unicode(decl_z_template))
+          if len(headword_templates) == 0:
+            pagemsg("WARNING: find_decl_args: No headword templates for use with z-decl template conversion during decl lookup for word #%s: lemma=%s, infl=%s, zdecl=%s" %
+                (wordind, lemma, infl, unicode(decl_z_template)))
+          elif len(headword_templates) > 1:
+            pagemsg("WARNING: find_decl_args: Multiple headword templates for use with z-decl template conversion during decl lookup for word #%s, ignoring: lemma=%s, infl=%s, zdecl=%s" %
+                (wordind, lemma, infl, unicode(decl_z_template)))
+          else:
+            headword_template = headword_templates[0]
+            pagemsg("find_decl_args: For word #%s, lemma=%s, infl=%s, using headword template %s for use with z-decl template %s" %
+                (wordind, lemma, infl, unicode(headword_template),
+                  unicode(decl_z_template)))
+          decl_template = runoun.convert_zdecl_to_ru_noun_table(decl_z_template,
+              subpagetitle, pagemsg, headword_template=headword_template)
           decl_templates = [decl_template]
 
       elif "[[Category:Russian indeclinable nouns]]" in declpage.text or [
