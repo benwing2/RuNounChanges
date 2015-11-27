@@ -5,6 +5,7 @@ import re
 
 import rulib as ru
 import blib
+from blib import getparam, rmparam
 
 def arg1_is_stress(arg1):
   if not arg1:
@@ -21,22 +22,22 @@ def try_to_stress(form):
     return ru.try_to_stress(m.group(1)) + "//" + m.group(2)
   return ru.try_to_stress(form)
 
+def fixup_link(f):
+  def fixup_one_link(m):
+    lemma, infl = m.groups()
+    # Make sure to remove accents, cf. [[десе́ртный|десе́ртное]]
+    lemma = ru.remove_accents(re.sub("#Russian$", "", lemma))
+    if ru.remove_accents(infl) == lemma:
+      return "[[%s]]" % infl
+    return "[[%s|%s]]" % (lemma, infl)
+
+  return re.sub(r"\[\[([^\[\]|]*?)\|([^\[\]|]*?)\]\]", fixup_one_link, f)
+
 def check_old_noun_headword_forms(headword_template, args, subpagetitle, pagemsg, laxer_comparison=False):
   # FORM1 is the forms from ru-noun (or ru-proper noun); FORM2 is the combined
   # set of forms from ru-noun-table, and needs to be split on commas.
   # FORM1_LEMMA is true if the FORM1 values come from the ru-noun lemma.
   def compare_forms(case, form1, form2, form1_lemma=False):
-    def fixup_one_link(m):
-      lemma, infl = m.groups()
-      # Make sure to remove accents, cf. [[десе́ртный|десе́ртное]]
-      lemma = ru.remove_accents(re.sub("#Russian$", "", lemma))
-      if ru.remove_accents(infl) == lemma:
-        return "[[%s]]" % infl
-      return "[[%s|%s]]" % (lemma, infl)
-
-    def fixup_link(f):
-      return re.sub(r"\[\[([^\[\]|]*?)\|([^\[\]|]*?)\]\]", fixup_one_link, f)
-
     # Split on individual words and allow monosyllabic accent differences.
     # FIXME: Will still have problems with [[X|Y]].
     def compare_single_form(f1, f2):
@@ -179,3 +180,188 @@ def fix_old_headword_params(headword_template, new_params, genders, pagemsg):
     headword_template.add("g" if i == 1 else "g%s" % i, g)
 
   return params_to_preserve
+
+def extract_headword_anim_spec(headword_template):
+  genders = blib.process_arg_chain(headword_template, "2", "g")
+  saw_in = -1
+  saw_an = -1
+  for i,g in enumerate(genders):
+    if re.search(r"\bin\b", g) and saw_in < 0:
+      saw_in = i
+    if re.search(r"\ban\b", g) and saw_an < 0:
+      saw_an = i
+  if saw_in >= 0 and saw_an >= 0 and saw_in < saw_an:
+    return "ia"
+  elif saw_in >= 0 and saw_an >= 0:
+    return "ai"
+  elif saw_an >= 0:
+    return "an"
+  elif saw_in >= 0:
+    return "in"
+  else:
+    return None
+
+# Convert given z-decl template to an ru-noun-table template given the
+# subpagetitle (after any colon), pagemsg function, and optional headword
+# template for converting bianimate animacy to either ai or ia.
+def convert_zdecl_to_ru_noun_table(decl_z_template, subpagetitle, pagemsg,
+    headword_template=None):
+  zdecl = unicode(decl_z_template)
+  decl_template = blib.parse_text("{{ru-noun-table}}").filter_templates()[0]
+  # {{ru-decl-noun-z|звезда́|f-in|d|ё}}
+  # {{ru-decl-noun-z|ёж|m-inan|b}}
+  zlemma = getparam(decl_z_template, "1")
+  zgender_anim = getparam(decl_z_template, "2")
+  zstress = getparam(decl_z_template, "3")
+  zspecial = re.sub(u"ё", u";ё", getparam(decl_z_template, "4"))
+  m = re.search(r"^([mfn])-(an|in|inan)$", zgender_anim)
+  if not m:
+    pagemsg("WARNING: Unable to recognize z-decl gender/anim spec, skipping: %s" %
+        zgender_anim)
+    return None
+  zgender, zanim = m.groups()
+
+  if not zlemma:
+    pagemsg("WARNING: Empty lemma, skipping: %s" % zdecl)
+    return None
+
+  # Remove unnecessary gender
+  need_gender = (re.search(u"[иы]́?$", zlemma) or
+      zgender == "n" and re.search(u"[яа]́?$", zlemma) or
+      zgender == "m" and re.search(u"[яа]́?$", zlemma) and "(1)" in zspecial or
+      zlemma.endswith(u"ь"))
+  if not need_gender:
+    normal_gender = (re.search(u"[оеё]́?$", zlemma) and "n" or
+        re.search(u"[ая]́?$", zlemma) and "f" or "m")
+    if normal_gender != zgender:
+      pagemsg("WARNING: Gender mismatch, normal gender=%s, explicit gender=%s, keeping gender" %
+          (normal_gender, zgender))
+      need_gender = True
+  if need_gender:
+    pagemsg("Preserving gender in z-decl: %s" % zdecl)
+    zspecial = zgender + zspecial
+  else:
+    pagemsg("Not preserving gender in z-decl: %s" % zdecl)
+
+  # Remove unnecessary stress
+  stressed_lemma = ru.try_to_stress(zlemma)
+  def check_defstress(defstr, reason):
+    if defstr == zstress:
+      pagemsg("Removing stress %s as default because %s: stressed_lemma=%s, template=%s" %
+          (defstr, reason, stressed_lemma, zdecl))
+    return defstr
+  if ru.is_nonsyllabic(stressed_lemma):
+    default_stress = check_defstress("b", "nonsyllabic lemma")
+  elif re.search(u"([аяоеыи]́|ё́?)$", stressed_lemma):
+    default_stress = check_defstress("b", "ending-accented lemma")
+  # No need for special-casing for ёнок or а́нин, as they are considered
+  # accent a by ru-decl-noun-z
+  else:
+    default_stress = check_defstress("a", "stem-accented lemma")
+  if default_stress == zstress:
+    zstress = ""
+  else:
+    pagemsg("Not removing stress %s: %s" % (zstress, zdecl))
+
+  # Remove unnecessary lemma
+  if ru.try_to_stress(subpagetitle) == stressed_lemma:
+    pagemsg(u"Removing lemma %s because identical to subpagetitle %s (modulo monosyllabic stress differences): %s" %
+        (zlemma, subpagetitle, zdecl))
+    zlemma = ""
+
+  if zstress:
+    decl_template.add("1", zstress)
+    offset = 1
+  else:
+    offset = 0
+  decl_template.add(str(1 + offset), zlemma)
+  decl_template.add(str(2 + offset), zspecial)
+  if not getparam(decl_template, "3"):
+    rmparam(decl_template, "3")
+    if not getparam(decl_template, "2"):
+      rmparam(decl_template, "2")
+      if not getparam(decl_template, "1"):
+        rmparam(decl_template, "1")
+
+  headword_anim_spec = headword_template and extract_headword_anim_spec(headword_template)
+  def anim_mismatch(zdecl_an, allowed_headword_ans):
+    if headword_anim_spec and headword_anim_spec not in allowed_headword_ans:
+      pagemsg("WARNING: z-decl anim %s disagrees with headword-derived %s (%s allowed): zdecl=%s, headword=%s" %
+          (zdecl_an, headword_anim_spec, ",".join(allowed_headword_ans),
+            zdecl, unicode(headword_template)))
+
+  if zanim == "an":
+    anim_mismatch(zanim, ["an"])
+    pagemsg("Preserving z-decl -an as a=an: %s" % zdecl)
+    decl_template.add("a", "an")
+  elif zanim == "inan":
+    anim_mismatch(zanim, ["ai", "ia"])
+    if headword_anim_spec in ["ai", "ia"]:
+      pagemsg("Converting z-decl -inan to a=%s: %s" %
+          (headword_anim_spec, zdecl))
+      decl_template.add("a", headword_anim_spec)
+    else:
+      pagemsg("WARNING: Unable to convert z-decl -inan to a=ai or a=ia, preserving as a=bi: zdecl=%s, headword=%s" %
+          (zdecl, unicode(headword_template or "(no headword)")))
+      decl_template.add("a", "bi")
+  else:
+    assert(zanim == "in")
+    anim_mismatch(zanim, ["in"])
+    pagemsg("Dropping z-decl -in as default: %s" % zdecl)
+
+  znum = getparam(decl_z_template, "n")
+  if znum:
+    if znum == "pl":
+      pagemsg("WARNING: Found n=pl in z-decl, should convert manually to plural lemma: %s" %
+          zdecl)
+    pagemsg("Preserving z-decl n=%s: %s" % (znum, zdecl))
+    decl_template.add("n", znum)
+
+  preserve_params = [
+    'nom_sg', 'gen_sg', 'dat_sg', 'acc_sg', 'ins_sg', 'prp_sg',
+    'nom_pl', 'gen_pl', 'dat_pl', 'acc_pl', 'ins_pl', 'prp_pl',
+    'voc'
+  ]
+  renamed_params = {'prp_sg':'pre_sg', 'prp_pl':'pre_pl'}
+
+  for param in preserve_params:
+    val = getparam(decl_z_template, param)
+    if not val:
+      continue
+    newval = fixup_link(val)
+    newvals = re.split(r"\s*,\s*", newval)
+    newvals = [re.sub(r"^\[\[([^\[\]|]*)\]\]$", r"\1", x) for x in newvals]
+    newval= ",".join(newvals)
+    newparam = renamed_params.get(param, param)
+    pagemsg("Preserving z-decl override %s=%s%s%s: %s" % (
+      newparam, newval,
+      "" if newparam == param else "; renamed from %s" % param,
+      "" if newval == val else "; canonicalized from %s=%s" % (param, val),
+      zdecl))
+    decl_template.add(newparam, newval)
+  loc = getparam(decl_z_template, 'loc')
+  if loc:
+    if loc == u"в":
+      newloc = u"в +"
+    elif loc == u"на":
+      newloc = u"на +"
+    else:
+      newloc = u"в/на +"
+    pagemsg("Preserving z-decl locative loc=%s (canonicalized from loc=%s): %s" %
+        (newloc, loc, zdecl))
+    decl_template.add("loc", newloc)
+  par = getparam(decl_z_template, 'par')
+  if par:
+    newpar="+"
+    pagemsg("Preserving z-decl partitive par=%s (canonicalized from par=%s): %s" %
+        (newpar, par, zdecl))
+    decl_template.add('par', newpar)
+  notes = getparam(decl_z_template, 'note')
+  if notes:
+    pagemsg("WARNING: Found z-decl note=<%s>, converting to notes= but probably needs fixing up with footnote symbol and pltail or similar: %s" %
+        (notes, zdecl))
+    decl_template.add('notes', notes)
+
+  #pagemsg("Replacing z-decl %s with regular decl %s" %
+  #    (zdecl, unicode(decl_template)))
+  return decl_template

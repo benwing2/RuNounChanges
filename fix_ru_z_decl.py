@@ -7,6 +7,7 @@ import blib
 from blib import getparam, rmparam, msg, site
 
 import rulib as ru
+import runounlib as runoun
 
 def process_page(index, page, save, verbose):
   pagetitle = unicode(page.title())
@@ -18,60 +19,42 @@ def process_page(index, page, save, verbose):
 
   parsed = blib.parse(page)
 
+  headword_templates = []
+  for t in parsed.filter_templates():
+    if unicode(t.name) in ["ru-noun", "ru-proper noun"]:
+      headword_templates.append(t)
+
+  headword_template = None
+  if len(headword_templates) > 1:
+    pagemsg("WARNING: Multiple old-style headword templates, not sure which one to use, using none")
+    for ht in headword_templates:
+      pagemsg("Ignored headword template: %s" % unicode(ht))
+  elif len(headword_templates) == 0:
+    pagemsg("WARNING: No old-style headword templates")
+  else:
+    headword_template = headword_templates[0]
+    pagemsg("Found headword template: %s" % unicode(headword_template))
+
+  num_z_decl = 0
   for t in parsed.filter_templates():
     if unicode(t.name) == "ru-decl-noun-z":
-      # {{ru-decl-noun-z|звезда́|f-in|d|ё}}
-      # {{ru-decl-noun-z|ёж|m-inan|b}}
-      zlemma = getparam(t, "1")
-      zgender_anim = getparam(t, "2")
-      zstress = getparam(t, "3")
-      zspecial = re.sub(u"ё", u";ё", getparam(t, "4"))
-      m = re.search(r"^([mfn])-(an|in|inan)$", zgender_anim)
-      if not m:
-        pagemsg("Unable to recognize z-decl gender/anim spec, skipping: %s" %
-            zgender_anim)
-        return
-      zgender, zanim = m.groups()
+      num_z_decl += 1
+      pagemsg("Found z-decl template: %s" % unicode(t))
+      ru_noun_table_template = runoun.convert_zdecl_to_ru_noun_table(t,
+          subpagetitle, pagemsg, headword_template=headword_template)
+      if not ru_noun_table_template:
+        pagemsg("WARNING: Unable to convert z-decl template: %s" % unicode(t))
+      else:
+        origt = unicode(t)
+        t.name = "ru-noun-table"
+        del t.params[:]
+        for param in ru_noun_table_template.params:
+          t.add(param.name, param.value)
+        pagemsg("Replacing z-decl %s with regular decl %s" %
+            (origt, unicode(t)))
 
-      # Remove unnecessary gender
-      need_gender = (re.search(u"[иы]́?$", zlemma) or
-          zgender == "n" and re.search(u"[яа]́?$", zlemma) or
-          zgender == "m" and re.search(u"[яа]́?$", zlemma) and "(1)" in zspecial or
-          zlemma.endswith(u"ь"))
-      if not need_gender:
-        normal_gender = (re.search(u"[ое]́$", zlemma) and "n" or
-            re.search(u"[ая]́$", zlemma) and "f" or "m")
-        if normal_gender != zgender:
-          pagemsg("WARNING: Gender mismatch, normal gender=%s, explicit gender=%s, keeping gender" %
-              (normal_gender, zgender))
-          need_gender = True
-      if need_gender:
-        zspecial = zgender + zspecial
-
-      # Remove unnecessary stress
-      if ru.is_nonsyllabic
-      # FIXME, properly we should check whether the gender is actually
-      # needed and leave it off if not
-      decl_template.add("3", zspecial)
-      if zanim == "an":
-        decl_template.add("a", "an")
-      elif zanim == "inan":
-        # FIXME, properly we should convert to either ai or ia depending
-        # on the order of genders in the headword; this will have to
-        # be a task for the script that converts z-decl to regular decl
-        decl_template.add("a", "bi")
-      # FIXME, save/convert overrides; but don't seem to be any in the
-      # few words with zdecl (звезда, ёж)
-      params_to_preserve = []
-      for param in decl_z_template.params:
-        name = unicode(param.name)
-        if name not in ["1", "2", "3", "4"]:
-          pagemsg("WARNING: Found named or extraneous numbered params in z-decl for word #%s, can't handle yet, skipping: %s, lemma=%s, infl=%s" %
-              (wordind, unicode(decl_z_template), lemma, infl))
-          return None
-      decl_templates = [decl_template]
-
-      FIXME
+  if num_z_decl > 1:
+    pagemsg("WARNING: Found multiple z-decl templates (%s)" % num_z_decl)
 
   comment = "Replace ru-decl-noun-z with ru-noun-table"
   if save:
