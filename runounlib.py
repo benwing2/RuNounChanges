@@ -21,7 +21,7 @@ def try_to_stress(form):
     return ru.try_to_stress(m.group(1)) + "//" + m.group(2)
   return ru.try_to_stress(form)
 
-def check_old_noun_headword_forms(headword_template, args, subpagetitle, pagemsg):
+def check_old_noun_headword_forms(headword_template, args, subpagetitle, pagemsg, laxer_comparison=False):
   # FORM1 is the forms from ru-noun (or ru-proper noun); FORM2 is the combined
   # set of forms from ru-noun-table, and needs to be split on commas.
   # FORM1_LEMMA is true if the FORM1 values come from the ru-noun lemma.
@@ -46,19 +46,24 @@ def check_old_noun_headword_forms(headword_template, args, subpagetitle, pagemsg
         return None
       for i in xrange(len(words1)):
         if words1[i] != words2[i]:
-          w1 = try_to_stress(fixup_link(words1[i]))
+          w1 = fixup_link(words1[i])
           w2 = words2[i]
+          # Allow case where existing is monosyllabic and missing a stress
+          # compared with proposed
+          w1 = {w1, try_to_stress(w1)}
           # Allow case where existing is missing a link as compared to
           # proposed (but not other way around; we don't want a link
           # disappearing)
-          if w1 != w2 and w1 != blib.remove_links(w2):
+          w2 = {w2, blib.remove_links(w2)}
+          if not (w1 & w2):
             return None
       return True
     form1 = [fixup_link(re.sub(u"ё́", u"ё", x)) for x in form1]
     form2 = re.split(",", form2)
-    if not form1_lemma:
+    if laxer_comparison or not form1_lemma:
       # Ignore manual translit in decl forms when comparing non-lemma forms;
-      # not available from ru-noun (and not displayed anyway)
+      # not available from ru-noun (and not displayed anyway); also when
+      # laxer_comparison is set, which happens in add_noun_decl
       form2 = [re.sub("//.*$", "", x) for x in form2]
     # If existing value missing, OK; also allow for unstressed monosyllabic
     # existing form matching stressed monosyllabic new form

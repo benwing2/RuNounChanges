@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import pywikibot, mwparserfromhell, re, string, sys, codecs, urllib2, datetime, json
+import pywikibot, mwparserfromhell, re, string, sys, codecs, urllib2, datetime, json, argparse
 
 site = pywikibot.Site()
 

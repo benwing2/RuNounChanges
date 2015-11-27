@@ -102,32 +102,35 @@ use_given_page_decl = {
     u"двоюродный дядя": {u"дядя":u"{{ru-noun-table|дя́дя|(2)|or|c|дя́дя|-ья|a=an}}"},
     u"шах и мат": {u"мат":u"{{ru-noun-table}}"},
     u"ионический ордер": {u"ордер":u"{{ru-noun-table|о́рдер|or|c||(1)}}"},
+    u"ионический орден": {u"орден":u"{{ru-noun-table|c|о́рден|(1)}}"},
     u"коринфский ордер": {u"ордер":u"{{ru-noun-table|о́рдер|or|c||(1)}}"},
+    u"коринфский орден": {u"орден":u"{{ru-noun-table|c|о́рден|(1)}}"},
     u"корпус турбины": {u"корпус":u"{{ru-noun-table|ко́рпус}}"},
     u"бронирование кабины": {u"бронирование":u"{{ru-noun-table|бронирова́ние}}"},
-    u"троюродная дядя": {u"дядя":u"{{ru-noun-table|дя́дя|(2)|or|c|дя́дя|-ья|a=an}}"},
+    u"троюродный дядя": {u"дядя":u"{{ru-noun-table|дя́дя|(2)|or|c|дя́дя|-ья|a=an}}"},
     u"половой орган": {u"орган":u"{{ru-noun-table|о́рган}}"},
     u"вес нетто": {u"вес":u"{{ru-noun-table|c||(1)}}"},
     u"древесный уголь": {u"уголь":u"{{ru-noun-table|f''||f|loc=на +}}"},
-    u"ось зла": {u"ось":u"{{ru-noun-table}}"},
+    u"ось зла": {u"ось":u"{{ru-noun-table|f''||f|loc=на +}}"},
     u"свет очей": {u"свет":u"{{ru-noun-table|par=све́ту|loc=свету́|n=sg}}"},
     u"дорожный чек": {u"чек":u"{{ru-noun-table}}"},
     u"зелёный лук": {u"лук":u"{{ru-noun-table}}"},
-    u"воздушное судно": {u"судно":u"{{ru-noun+|c|су́дно|(2)|суд}}"},
+    u"воздушное судно": {u"судно":u"{{ru-noun-table|c|су́дно|(2)|суд}}"},
     u"Пепельная среда": {u"среда":u"{{ru-noun-table|f|среда́}}"},
     u"зелёный свет": {u"свет":u"{{ru-noun-table|par=све́ту|loc=свету́|n=sg}}"},
     u"окружающая среда": {u"среда":u"{{ru-noun-table|d|среда́}}"},
-    u"парусное судно": {u"судно":u"{{ru-noun+|c|су́дно|(2)|суд}}"},
+    u"парусное судно": {u"судно":u"{{ru-noun-table|c|су́дно|(2)|суд}}"},
     u"барабанный бой": {u"бой":u"{{ru-noun-table|c|loc=бою́}}"},
     u"ордер на арест": {u"ордер":u"{{ru-noun-table|c|о́рдер|(1)}}"},
     u"чёрная американка": {u"американка":u"{{ru-noun-table|америка́нка|*|a=an}}"},
     u"красный свет": {u"свет":u"{{ru-noun-table|par=све́ту|loc=свету́|n=sg}}"},
     u"жёлтый свет": {u"свет":u"{{ru-noun-table|par=све́ту|loc=свету́|n=sg}}"},
-    u"амарантовый цвет": {u"цвет":u"{{ru-noun-table|c||(1)|par=+}}"},`
+    u"амарантовый цвет": {u"цвет":u"{{ru-noun-table|c||(1)|par=+}}"},
     u"противоположный пол": {u"пол":u"{{ru-noun-table|e}}"},
     u"звуковая волна": {u"волна":u"{{ru-noun-table|f,d|волна́}}"},
     u"ночной клуб": {u"клуб":u"{{ru-noun-table}}"},
     u"правоохранительные органы": {u"орган":u"{{ru-noun-table|о́рган}}"},
+    u"негласное правило": {u"правило":u"{{ru-noun-table|пра́вило}}"},
     u"степная рысь": {u"рысь":u"{{ru-noun-table||f|a=an}}"},
     u"ход конём": {u"ход":u"{{ru-noun-table|c|n=sg|par=+|loc=в +,на +}}"},
     u"Ростов-на-Дону": {u"Ростов":u"{{ru-noun-table|Росто́в|n=sg}}"},
@@ -147,7 +150,7 @@ is_short_adj = [
 ]
 
 is_uninflected = [
-    u"Фибоначчи",
+    u"фибоначчи",
 ]
 
 all_parts_declined = [
@@ -372,7 +375,7 @@ def process_page(index, page, save, verbose):
       arglemma = arg_set[lemma_arg]
       manualtr = ""
       if "//" in arglemma:
-        arglemma, manualtr = re.search("^(.*?)(//.*?)$").groups()
+        arglemma, manualtr = re.search("^(.*?)(//.*?)$", arglemma).groups()
       if (not arglemma or arglemma.lower() == infl.lower() or
           ru.is_monosyllabic(infl) and ru.remove_accents(arglemma).lower() ==
           ru.remove_accents(infl).lower() or
@@ -463,6 +466,9 @@ def process_page(index, page, save, verbose):
       elif re.search("^[0-9]+$", pname):
         pass
       else:
+        if pname == "loc" and re.search(ur"^(на|в)\b", val, re.U):
+          pagemsg(u"WARNING: на or в found in loc= for word #%s, may not work in multi-word lemma: loc=%s, lemma=%s, infl=%s" %
+              (wordind, val, lemma, infl))
         pname += str(wordind)
         params.append((pname, val))
 
@@ -552,7 +558,6 @@ def process_page(index, page, save, verbose):
         hword = "[[%s]]" % infl
       else:
         hword = "[[%s|%s]]" % (lemma, infl)
-    lemmas_infls.append((lemma, infl))
     headwords.append(hword)
     separators.append(separator)
     wordind += 1
@@ -586,7 +591,7 @@ def process_page(index, page, save, verbose):
                 (lemma, infl))
             break
         else:
-          pagemsg("WARNING: Assuming %s is noun, please check: lemma=%s, infl=%s" %
+          pagemsg("WARNING: Assuming word is inflected adj or noun, please check: lemma=%s, infl=%s" %
               (lemma, infl))
       else:
         infl = word
@@ -863,7 +868,7 @@ def process_page(index, page, save, verbose):
   # This will check number mismatch (and animacy mismatch, but that shouldn't
   # occur as we've taken the animacy directly from the headword)
   new_genders = runoun.check_old_noun_headword_forms(headword_template, args,
-      subpagetitle, pagemsg_with_proposed)
+      subpagetitle, pagemsg_with_proposed, laxer_comparison=True)
   if new_genders == None:
     return None
 
