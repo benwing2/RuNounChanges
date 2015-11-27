@@ -25,14 +25,31 @@ def process_page(index, page, save, verbose):
       zlemma = getparam(t, "1")
       zgender_anim = getparam(t, "2")
       zstress = getparam(t, "3")
-      zspecial = getparam(t, "4")
+      zspecial = re.sub(u"ё", u";ё", getparam(t, "4"))
       m = re.search(r"^([mfn])-(an|in|inan)$", zgender_anim)
       if not m:
         pagemsg("Unable to recognize z-decl gender/anim spec, skipping: %s" %
             zgender_anim)
         return
       zgender, zanim = m.groups()
-      zspecial = zgender + re.sub(u"ё", u";ё", zspecial)
+
+      # Remove unnecessary gender
+      need_gender = (re.search(u"[иы]́?$", zlemma) or
+          zgender == "n" and re.search(u"[яа]́?$", zlemma) or
+          zgender == "m" and re.search(u"[яа]́?$", zlemma) and "(1)" in zspecial or
+          zlemma.endswith(u"ь"))
+      if not need_gender:
+        normal_gender = (re.search(u"[ое]́$", zlemma) and "n" or
+            re.search(u"[ая]́$", zlemma) and "f" or "m")
+        if normal_gender != zgender:
+          pagemsg("WARNING: Gender mismatch, normal gender=%s, explicit gender=%s, keeping gender" %
+              (normal_gender, zgender))
+          need_gender = True
+      if need_gender:
+        zspecial = zgender + zspecial
+
+      # Remove unnecessary stress
+      if ru.is_nonsyllabic
       # FIXME, properly we should check whether the gender is actually
       # needed and leave it off if not
       decl_template.add("3", zspecial)
