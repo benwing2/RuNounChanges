@@ -286,7 +286,7 @@ def process_page(index, page, save, verbose):
               (wordind, lemma, infl))
           return None
 
-    pagemsg("find_decl_args: Using decl template: %s" % decl_template)
+    pagemsg("find_decl_args: Using decl template: %s" % unicode(decl_template))
     if unicode(decl_template.name) == "ru-decl-adj":
       if re.search(ur"\bь\b", getparam(decl_template, "2")):
         return [("1", wordlink), ("2", u"+ь")], True, None, None
