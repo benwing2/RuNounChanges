@@ -207,13 +207,17 @@ def extract_headword_anim_spec(headword_template):
 def convert_zdecl_to_ru_noun_table(decl_z_template, subpagetitle, pagemsg,
     headword_template=None):
   zdecl = unicode(decl_z_template)
+  zdeclcopy = blib.parse_text(zdecl).filter_templates()[0]
   decl_template = blib.parse_text("{{ru-noun-table}}").filter_templates()[0]
   # {{ru-decl-noun-z|звезда́|f-in|d|ё}}
   # {{ru-decl-noun-z|ёж|m-inan|b}}
-  zlemma = getparam(decl_z_template, "1")
-  zgender_anim = getparam(decl_z_template, "2")
-  zstress = getparam(decl_z_template, "3")
-  zspecial = re.sub(u"ё", u";ё", getparam(decl_z_template, "4"))
+  def getp(param):
+    rmparam(zdeclcopy, param)
+    return getparam(decl_z_template, param).strip()
+  zlemma = getp("1")
+  zgender_anim = getp("2")
+  zstress = getp("3")
+  zspecial = re.sub(u"ё", u";ё", getp("4"))
   m = re.search(r"^([mfn])-(an|in|inan)$", zgender_anim)
   if not m:
     pagemsg("WARNING: Unable to recognize z-decl gender/anim spec, skipping: %s" %
@@ -309,7 +313,7 @@ def convert_zdecl_to_ru_noun_table(decl_z_template, subpagetitle, pagemsg,
     anim_mismatch(zanim, ["in"])
     pagemsg("Dropping z-decl -in as default: %s" % zdecl)
 
-  znum = getparam(decl_z_template, "n")
+  znum = getp("n")
   if znum:
     if znum == "pl":
       pagemsg("WARNING: Found n=pl in z-decl, should convert manually to plural lemma: %s" %
@@ -325,7 +329,7 @@ def convert_zdecl_to_ru_noun_table(decl_z_template, subpagetitle, pagemsg,
   renamed_params = {'prp_sg':'pre_sg', 'prp_pl':'pre_pl'}
 
   for param in preserve_params:
-    val = getparam(decl_z_template, param)
+    val = getp(param)
     if not val:
       continue
     newval = fixup_link(val)
@@ -339,7 +343,7 @@ def convert_zdecl_to_ru_noun_table(decl_z_template, subpagetitle, pagemsg,
       "" if newval == val else "; canonicalized from %s=%s" % (param, val),
       zdecl))
     decl_template.add(newparam, newval)
-  loc = getparam(decl_z_template, 'loc')
+  loc = getp("loc")
   if loc:
     if loc == u"в":
       newloc = u"в +"
@@ -350,17 +354,20 @@ def convert_zdecl_to_ru_noun_table(decl_z_template, subpagetitle, pagemsg,
     pagemsg("Preserving z-decl locative loc=%s (canonicalized from loc=%s): %s" %
         (newloc, loc, zdecl))
     decl_template.add("loc", newloc)
-  par = getparam(decl_z_template, 'par')
+  par = getp("par")
   if par:
     newpar="+"
     pagemsg("Preserving z-decl partitive par=%s (canonicalized from par=%s): %s" %
         (newpar, par, zdecl))
     decl_template.add('par', newpar)
-  notes = getparam(decl_z_template, 'note')
+  notes = getp("note")
   if notes:
     pagemsg("WARNING: Found z-decl note=<%s>, converting to notes= but probably needs fixing up with footnote symbol and pltail or similar: %s" %
         (notes, zdecl))
     decl_template.add('notes', notes)
+
+  if zdeclcopy.params:
+    pagemsg("WARNING: Extraneous params in z-decl: %s" % unicode(zdeclcopy))
 
   #pagemsg("Replacing z-decl %s with regular decl %s" %
   #    (zdecl, unicode(decl_template)))

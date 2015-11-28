@@ -53,27 +53,28 @@ def process_page(index, page, save, verbose):
         pagemsg("WARNING: Unable to convert z-decl template: %s" % unicode(t))
         continue
 
-      generate_template = re.sub(r"^\{\{ru-noun-table",
-          "{{ru-generate-noun-args", unicode(ru_noun_table_template))
-      if unicode(headword_template.name) == "ru-proper noun":
-        generate_template = re.sub(r"\}\}$", "|ndef=sg}}", generate_template)
+      if headword_template:
+        generate_template = re.sub(r"^\{\{ru-noun-table",
+            "{{ru-generate-noun-args", unicode(ru_noun_table_template))
+        if unicode(headword_template.name) == "ru-proper noun":
+          generate_template = re.sub(r"\}\}$", "|ndef=sg}}", generate_template)
 
-      def pagemsg_with_proposed(text):
-        pagemsg("Proposed ru-noun-table template: %s" %
-            unicode(ru_noun_table_template))
-        pagemsg(text)
+        def pagemsg_with_proposed(text):
+          pagemsg("Proposed ru-noun-table template: %s" %
+              unicode(ru_noun_table_template))
+          pagemsg(text)
 
-      generate_result = expand_text(unicode(generate_template))
-      if not generate_result:
-        pagemsg_with_proposed("WARNING: Error generating noun args, skipping")
-        continue
-      args = ru.split_generate_args(generate_result)
+        generate_result = expand_text(unicode(generate_template))
+        if not generate_result:
+          pagemsg_with_proposed("WARNING: Error generating noun args, skipping")
+          continue
+        args = ru.split_generate_args(generate_result)
 
-      # This will check number mismatch and animacy mismatch
-      new_genders = runoun.check_old_noun_headword_forms(headword_template,
-          args, subpagetitle, pagemsg_with_proposed)
-      if new_genders == None:
-        continue
+        # This will check number mismatch and animacy mismatch
+        new_genders = runoun.check_old_noun_headword_forms(headword_template,
+            args, subpagetitle, pagemsg_with_proposed)
+        if new_genders == None:
+          continue
 
       origt = unicode(t)
       t.name = "ru-noun-table"
@@ -86,13 +87,15 @@ def process_page(index, page, save, verbose):
   if num_z_decl > 1:
     pagemsg("WARNING: Found multiple z-decl templates (%s)" % num_z_decl)
 
-  comment = "Replace ru-decl-noun-z with ru-noun-table"
-  if save:
-    pagemsg("Saving with comment = %s" % comment)
-    page.text = unicode(parsed)
-    page.save(comment=comment)
-  else:
-    pagemsg("Would save with comment = %s" % comment)
+  newtext = unicode(parsed)
+  if page.text != newtext:
+    comment = "Replace ru-decl-noun-z with ru-noun-table"
+    if save:
+      pagemsg("Saving with comment = %s" % comment)
+      page.text = newtext
+      page.save(comment=comment)
+    else:
+      pagemsg("Would save with comment = %s" % comment)
 
 parser = blib.create_argparser("Convert ru-decl-noun-z into ru-noun-table")
 args = parser.parse_args()
