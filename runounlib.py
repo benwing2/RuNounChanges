@@ -175,9 +175,8 @@ def fix_old_headword_params(headword_template, new_params, genders, pagemsg):
   del headword_template.params[:]
   for name, value in new_params:
     headword_template.add(name, value)
-  i = 1
-  for g in genders:
-    headword_template.add("g" if i == 1 else "g%s" % i, g)
+  for i, g in enumerate(genders):
+    headword_template.add("g" if i == 0 else "g%s" % (i + 1), g)
 
   return params_to_preserve
 
