@@ -38,6 +38,8 @@
 # 9. If there's a loc with на or в or something similar, warn about it because
 #    it may not convert well as a single-word override, cf. ось зла
 # 10. (DONE) Implement use_given_page_decl
+# 11. (DONE) Adding declension to proper nouns, should use n=sg if proper noun
+#    is singular-only
 
 import pywikibot, re, sys, codecs, argparse
 
@@ -110,7 +112,7 @@ use_given_page_decl = {
     u"троюродный дядя": {u"дядя":u"{{ru-noun-table|дя́дя|(2)|or|c|дя́дя|-ья|a=an}}"},
     u"половой орган": {u"орган":u"{{ru-noun-table|о́рган}}"},
     u"вес нетто": {u"вес":u"{{ru-noun-table|c||(1)}}"},
-    u"древесный уголь": {u"уголь":u"{{ru-noun-table|f''||f|loc=на +}}"},
+    u"древесный уголь": {u"уголь":u"{{ru-noun-table|a,b|у́голь|m*}}"},
     u"ось зла": {u"ось":u"{{ru-noun-table|f''||f|loc=на +}}"},
     u"свет очей": {u"свет":u"{{ru-noun-table|par=све́ту|loc=свету́|n=sg}}"},
     u"дорожный чек": {u"чек":u"{{ru-noun-table}}"},
@@ -456,6 +458,15 @@ def process_page(index, page, save, verbose):
       elif re.search("^[0-9]+$", pname):
         pass
       else:
+        if pname == "loc":
+          pagemsg("WARNING: Found loc= for word #%s, please check: loc=%s, lemma=%s, infl=%s" % (
+            wordind, val, lemma, infl))
+        if pname == "par":
+          pagemsg("WARNING: Found par= for word #%s, please check: par=%s, lemma=%s, infl=%s" % (
+            wordind, val, lemma, infl))
+        if pname == "voc":
+          pagemsg("WARNING: Found voc= for word #%s, please check: voc=%s, lemma=%s, infl=%s" % (
+            wordind, val, lemma, infl))
         if pname == "loc" and re.search(ur"^(на|в)\b", val, re.U):
           pagemsg(u"WARNING: на or в found in loc= for word #%s, may not work in multi-word lemma: loc=%s, lemma=%s, infl=%s" %
               (wordind, val, lemma, infl))
@@ -829,8 +840,8 @@ def process_page(index, page, save, verbose):
     if overall_num:
       params.append(("n", overall_num))
 
-  generate_template = (blib.parse_text("{{ru-generate-noun-args}}").
-      filter_templates()[0])
+  generate_template = (
+      blib.parse_text("{{ru-generate-noun-args}}").filter_templates()[0])
   for name, value in params:
     generate_template.add(name, value)
   proposed_template_text = unicode(generate_template)
@@ -840,8 +851,9 @@ def process_page(index, page, save, verbose):
   else:
     proposed_template_text = re.sub(r"^\{\{ru-generate-noun-args",
         "{{ru-noun+", proposed_template_text)
-  proposed_decl_text = re.sub(r"^\{\{ru-generate-noun-args",
-        "{{ru-noun-table", unicode(generate_template))
+  proposed_decl = blib.parse_text("{{ru-noun-table}}").filter_templates()[0]
+  for param in generate_template.params:
+    proposed_decl.add(param.name, param.value)
 
   def pagemsg_with_proposed(text):
     pagemsg("Proposed new template (WARNING, omits explicit gender and params to preserve from old template): %s" % proposed_template_text)
@@ -853,11 +865,13 @@ def process_page(index, page, save, verbose):
   if not generate_result:
     pagemsg_with_proposed("WARNING: Error generating noun args, skipping")
     return
-  args = ru.split_generate_args(generate_result)
+  genargs = ru.split_generate_args(generate_result)
+  if headword_is_proper and genargs["n"] == "s" and not getparam(proposed_decl, "n"):
+    proposed_decl.add("n", "sg")
 
   # This will check number mismatch (and animacy mismatch, but that shouldn't
   # occur as we've taken the animacy directly from the headword)
-  new_genders = runoun.check_old_noun_headword_forms(headword_template, args,
+  new_genders = runoun.check_old_noun_headword_forms(headword_template, genargs,
       subpagetitle, pagemsg_with_proposed, laxer_comparison=True)
   if new_genders == None:
     return None
@@ -887,23 +901,23 @@ def process_page(index, page, save, verbose):
     orig_see_template = unicode(see_template)
     del see_template.params[:]
     see_template.name = "ru-noun-table"
-    for name, value in params:
-      see_template.add(name, value)
+    for param in proposed_decl.params:
+      see_template.add(param.name, param.value)
     pagemsg("Replacing see-template %s with decl %s" % (orig_see_template, unicode(see_template)))
     notes.append("replace see-template with declension")
     newtext = unicode(parsed)
   else:
     if "==Declension==" in newtext:
       pagemsg("WARNING: No ru-decl-noun-see template, but found declension section, not adding new declension, proposed declension follows: %s" %
-          proposed_decl_text)
+          unicode(proposed_decl))
     else:
       nounsecs = re.findall("^===(?:Noun|Proper noun)===$", newtext, re.M)
       if len(nounsecs) == 0:
         pagemsg("WARNING: Found no noun sections, not adding new declension, proposed declension follows: %s" %
-            proposed_decl_text)
+            unicode(proposed_decl))
       elif len(nounsecs) > 1:
         pagemsg("WARNING: Found multiple noun sections, not adding new declension, proposed declension follows: %s" %
-            proposed_decl_text)
+            unicode(proposed_decl))
       else:
         text = newtext
         newtext = re.sub(r"\n*$", "\n\n", newtext)
@@ -911,13 +925,13 @@ def process_page(index, page, save, verbose):
         # (====Synonyms====) or a wikilink ([[pl:гонка вооружений]]) or
         # a category ([[Category:...]]).
         newtext = re.sub(r"^(===(?:Noun|Proper noun)===$.*?)^(==|\[\[|\Z)",
-            r"\1====Declension====\n%s\n\n\2" % proposed_decl_text, newtext,
+            r"\1====Declension====\n%s\n\n\2" % unicode(proposed_decl), newtext,
             1, re.M|re.S)
         if text == newtext:
           pagemsg("WARNING: Something wrong, can't sub in new declension, proposed declension follows: %s" %
-              proposed_decl_text)
+              unicode(proposed_decl))
         else:
-          pagemsg("Subbed in new declension: %s" % proposed_decl_text)
+          pagemsg("Subbed in new declension: %s" % unicode(proposed_decl))
           notes.append("create declension from headword")
           if verbose:
             pagemsg("Replaced <%s> with <%s>" % (text, newtext))
@@ -932,12 +946,13 @@ def process_page(index, page, save, verbose):
 
 
 parser = blib.create_argparser("Convert ru-noun to ru-noun+, ru-proper noun to ru-proper noun+ for multiword nouns")
-args = parser.parse_args()
-start, end = blib.get_args(args.start, args.end)
+pargs = parser.parse_args()
+start, end = blib.get_args(pargs.start, pargs.end)
 
+#for pos in ["proper nouns"]:
 for pos in ["nouns", "proper nouns"]:
   for refpage in ["Template:tracking/ru-headword/space-in-headword/%s" % pos,
       "Template:tracking/ru-headword/hyphen-no-space-in-headword/%s" % pos]:
     msg("PROCESSING REFERENCES TO: %s" % refpage)
     for i, page in blib.references(refpage, start, end):
-      process_page(i, page, args.save, args.verbose)
+      process_page(i, page, pargs.save, pargs.verbose)
