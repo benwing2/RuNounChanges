@@ -10,19 +10,20 @@ Parameters:
 : Indicate that final -го should be pronounced /vo/, as in the genitive of adjectives.
 ; {{para|gem}}
 : If <code>y</code>, force gemination to be preserved in places it otherwise wouldn't. If <code>n</code>, force degemination in places it otherwise would be preserved. If <code>opt</code>, force optional gemination, including in places it wouldn't normally be preserved. See below.
-; {{para|pal}}
-: Force palatalization of consonants where not indicated by spelling. Not currently used anywhere.
+; {{para|raw}}
+: Render the result "raw", e.g. {{ru-IPA|вода́|raw=y}} instead of {{ru-IPA|вода́}}.
 
 ==Accent marks==
-* Indicate primary stress as e.g. е́ or ы́.
-* Indicate secondary stress as e.g. ѐ or ы̀.
-* Indicate "tertiary" stress as e.g. е̂ or ы̂ (i.e. where a vowel is to be treated as stressed but should not be marked as possessing either primary or secondary stress).
+* Indicate primary stress with an acute accent, e.g. е́ or ы́.
+* Indicate secondary stress with a grave accent, e.g. ѐ or ы̀.
+* Indicate "tertiary" stress with a circumflex or double grave accent, e.g. е̂ or ы̂ or е̏ or ы̏ (i.e. where a vowel is to be treated as stressed but should not be marked as possessing either primary or secondary stress).
+* Force the reduced pronunciation of a vowel that would otherwise be stressed (e.g. in a single-syllable word) with a dot above, e.g. е̇ or ы̇.
 
 ==Special phonetic symbols and rules==
-* In Cyrillic, use ɣ to indicate [ɣ] (the voiced fricative pronunciation of the letter г), and ӂ to indicate [ʑ] (the soft pronunciation of ж, as in words like {{m|ru|съе́зжая}}, {{m|ru|вожжа́}} or {{m|ru|дро́жжи}}).
+* In Cyrillic, use h or ɣ to indicate [ɣ] (the voiced fricative pronunciation of the letter г), and ӂ to indicate [ʑ] (the soft pronunciation of ж, as in words like {{m|ru|съе́зжая}}, {{m|ru|вожжа́}} or {{m|ru|дро́жжи}}).
 * Use щч or ɕч to force the pronunciation [ɕt͡ɕ]. By default, some instances of сч are pronounced [ɕt͡ɕ] and some are pronounced [ɕː], according to the following rules:
 *# [зж]ч and [сзшж]щ are pronounced [ɕː], like щ.
-*# сч at the beginning of a word and in the sequence счёт is pronounced [ɕː].
+*# сч at the beginning of a word and in the sequence счёт (unless preceded by [дтц]) is pronounced [ɕː]: hence счита́ть {{ru-IPA|счита́ть|raw=y}}, просчёт {{ru-IPA|просчёт|raw=y}}, подсчёт {{ru-IPA|подсчёт|raw=y}}.
 *# Other сч are pronounced [ɕt͡ɕ].
 * Use / to force a syllable boundary before a consonant. This also forces the "long" pronunciation [t͡ss] of тс, and similarly [d͡zz] for дз, and is useful particularly when another consonant follows, because otherwise the "short" pronunciations [t͡s] and [d͡z] would be used; an example is ветслу́жба, which should be written вѐт/слу́жба. The exact rules for when the short and long pronunciations are used is as follows:
 *# [дт] с and [дт] з across a word boundary use the long pronunciation, as do [дт]/с and [дт]/з with explicitly written slash.
@@ -31,13 +32,33 @@ Parameters:
 *# Word-initial отс-, подс- use the long pronunciation, because there is a morpheme boundary involved.
 *# Other [дт]с and [дт]з use the short pronunciation.
 *# [дт]ш and [дт]ж, including with an intervening ь, always use the long pronunciations t͡ʂʂ and d͡ʐʐ (possibly with the first part palatalized).
+* Use ‿ to force close juncture between words (treat the combination as a single word). Examples: {{temp|ru-IPA|не́‿за‿што}} becomes {{ru-IPA|не́‿за‿што|raw=y}}, {{temp|ru-IPA|гра̂д‿идёт}} becomes {{ru-IPA|гра̂д‿идёт|raw=y}}.
+* Comma and em/en dashes (– and —) are converted to foot boundaries ( | ).
 
 ==Gemination==
-Rules for when gemination is preserved:
-* Gemination is normally preserved directly after the stress; also elsewhere for жж and зж, and for нн before the stress. Optional gemination normally occurs in нн that is after but not directly after the stress. Gemination is normally not preserved in лл, even directly after the stress. Use {{para|gem}} to override all of these defaults.
-* Gemination is always preserved in щ and palatalized ӂӂ, and in combinations that are pronounced the same (e.g. some сч, see above), regardless of {{para|gem}}.
-* Gemination is normally preserved at boundaries between certain prefixes and roots (e.g. рас-, раз-, ис-, из-, под-, от-, в-, с-, нис-, низ-, контр-; also the same when prefixed by не-). Use {{para|gem}} to override.
-* However, gemination is normally not preserved before another consonant, except at prefix boundaries or in the combinations сск or зск. Use {{para|gem}} to override.
+Geminated consonants (including cases like зж that become geminated after assimilation) may or may not be rendered with gemination. Use {{para|gem}} to override the defaults, e.g.:
+# {{temp|ru-IPA|да́нный|gem=y}} becomes {{ru-IPA|да́нный|gem=y|raw=y}}
+# {{temp|ru-IPA|да́нный|gem=n}} becomes {{ru-IPA|да́нный|gem=n|raw=y}}
+# {{temp|ru-IPA|да́нный|gem=opt}} becomes {{ru-IPA|да́нный|gem=opt|raw=y}}
+As an exception, щ is always rendered [ɕː], and ӂӂ is always rendered [ʑː], regardless of {{para|gem}}. The same thing applies to combinations that are pronounced as щ (e.g. some сч, see above), regardless of {{para|gem}}.
+
+Optional gemination can also be forced by writing ''C(C)'', e.g. {{temp|ru-IPA|да́н(н)ый}} becomes {{ru-IPA|да́н(н)ый|raw=y}}.
+
+By default, gemination is normally preserved:
+* When occurring directly after the stress and between vowels, except for лл.
+* In the combinations йя, йе, йи, йьо, йю when occurring directly after the stress and between vowels; these are treated as containing /jj/.
+* When occurring at the beginning of a word in вв-, сс-, жж-, зз-, шш- and combinations pronounced the same (e.g. сз-).
+* Whenever the pronunciation [ɕː] (e.g. from щ and initial сч-) and [ʑː] (from ӂӂ) occurs. As mentioned above, this cannot be overridden by {{para|gem}}.
+* In the combinations жж and зж when occurring between vowels anywhere in a word.
+* In the combination нн when occurring between vowels before the stress.
+* In the combination сск when occurring directly after the stress.
+* At boundaries between certain prefixes and roots (e.g. рас-, раз-, ис-, из-, под-, от-, в-, с-, нис-, низ-, контр-; also the same when additionally prefixed by не-).
+
+By default, gemination is normally rendered as optional:
+* In the combination нн when occurring between vowels after but not directly after the stress: {{temp|ru-IPA|жа́ренный}} becomes {{ru-IPA|жа́ренный|raw=y}}.
+
+By default, gemination is normally not preserved in all other circumstances. Note that this includes most occurrences of gemination not between vowels, e.g. {{temp|ru-IPA|финн}} becomes {{ru-IPA|финн|raw=y}}.
+
 <includeonly>
 [[Category:Russian templates|Pronunciation]]
 [[Category:Pronunciation templates]]
