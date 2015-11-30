@@ -130,7 +130,8 @@ def check_old_noun_headword_forms(headword_template, args, subpagetitle, pagemsg
   for case in cases_to_check:
     raw_case = re.sub(u"△", "", blib.remove_links(args[case + "_raw"]))
     if args[case] != raw_case:
-      pagemsg("WARNING: Raw case %s contains footnote symbol" % args[case + "_raw"])
+      pagemsg("WARNING: Raw case %s=%s contains footnote symbol" % (
+        case, args[case + "_raw"]))
 
   proposed_genders = re.split(",", args["g"])
   if compare_genders(genders, proposed_genders):
