@@ -8,7 +8,7 @@ function tests:check_pron(Cyrl, IPA, Cyrl_word, pos, gem)
 	self:equals(
 		m_links.full_link(Cyrl_word or Cyrl, Cyrl_word or Cyrl, lang, nil, nil, nil, { tr = '-' }, true) ..
 			(Cyrl_word and (" (respelled " .. Cyrl .. ")") or "") .. (pos and ", pos=" .. pos or "") .. (gem and ", gem=" .. gem or ""),
-		m_ru_pron.ipa(Cyrl, nil, gem, nil, pos),
+		m_ru_pron.ipa(Cyrl, nil, gem, pos, nil),
 		IPA,
 		{nowiki=true}
 	)

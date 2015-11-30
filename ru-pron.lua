@@ -464,7 +464,7 @@ local function track(page)
 	return true
 end
 
-function export.ipa(text, adj, gem, bracket, pos)
+function export.ipa(text, adj, gem, pos, bracket)
 	local new_module_result
 	-- Test code to compare existing module to new one.
 	if test_new_ru_pron_module then
@@ -473,12 +473,16 @@ function export.ipa(text, adj, gem, bracket, pos)
 	end
 
 	if type(text) == 'table' then
-		text, adj, gem, bracket, pos = (ine(text.args.phon) or ine(text.args[1])), ine(text.args.adj), ine(text.args.gem), ine(text.args.bracket), ine(text.args.pos)
+		text, adj, gem, pos, bracket = (ine(text.args.phon) or ine(text.args[1])), ine(text.args.adj), ine(text.args.gem), ine(text.args.pos), ine(text.args.bracket)
 		if not text then
 			text = mw.title.getCurrentTitle().text
 		end
 	end
 	gem = usub(gem or '', 1, 1)
+	bracket = ine(usub(bracket or '', 1, 1))
+	if bracket == 'n' then
+		bracket = nil
+	end
 
 	pos = pos or "def"
 	-- If a multipart part of speech, split into components, and convert
