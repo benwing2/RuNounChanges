@@ -479,10 +479,25 @@ function export.ipa(text, adj, gem, bracket, pos)
 		end
 	end
 	gem = usub(gem or '', 1, 1)
-	pos = pos or 'def'
-	if not final_e[pos] then
-		error("Unrecognized part of speech '" .. pos .. "': Should be n/noun/neut, a/adj, c/com, pre, dat, adv, inv, voc, v/verb, pro, hi/high, mid, lo/low/schwa or omitted")
+
+	pos = pos or "def"
+	-- If a multipart part of speech, split into components, and convert
+	-- each blank component to the default.
+	if rfind(pos, "/") then
+		pos = rsplit(pos, "/")
+		for i=1,#pos do
+			if pos[i] == "" then
+				pos[i] = "def"
+			end
+		end
 	end
+	-- Verify that pos (or each part of multipart pos) is recognized
+	for _, p in ipairs(type(pos) == "table" and pos or {pos}) do
+		if not final_e[pos] then
+			error("Unrecognized part of speech '" .. pos .. "': Should be n/noun/neut, a/adj, c/com, pre, dat, adv, inv, voc, v/verb, pro, hi/high, mid, lo/low/schwa or omitted")
+		end
+	end
+
 	text = ulower(text)
 
 	if gem ~= '' then
@@ -644,6 +659,10 @@ function export.ipa(text, adj, gem, bracket, pos)
 
 	--split by word and process each word
 	word = rsplit(text, " ", true)
+
+	if type(pos) == "table" and #pos ~= #word then
+		error("Number of parts of speech (" .. #pos .. ") should match number of combined words (" .. #word .. ")")
+	end
 	for i = 1, #word do
 		local pron = word[i]
 
@@ -731,7 +750,8 @@ function export.ipa(text, adj, gem, bracket, pos)
 		-- speech, handling aliases and defaults and converting 'e' to 'ê'
 		-- so that the unstressed [e] sound is preserved
 		function fetch_e_sub(ending)
-			local chart = final_e[pos]
+			local thispos = type(pos) == "table" and pos[i] or pos
+			local chart = final_e[thispos]
 			while type(chart) == "string" do -- handle aliases
 				chart = final_e[chart]
 			end
