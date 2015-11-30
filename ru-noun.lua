@@ -4571,8 +4571,9 @@ local function concat_word_forms_1(word_forms, trailing_forms)
 				-- is principally used in overall overrides, where we stuff
 				-- the entire override into the last word
 				local full_form = form[1] == "" and trailing_form or
-					nom.concat_paired_russian_tr(
-						nom.concat_paired_russian_tr(form, joiner), trailing_form)
+					nom.concat_paired_russian_tr(form,
+						nom.concat_paired_russian_tr(joiner, trailing_form),
+						"movenotes")
 				if rfind(full_form[1], "<insa>") and rfind(full_form[1], "<insb>") then
 					-- REJECT! So we don't get mixtures of the two feminine
 					-- instrumental singular endings.

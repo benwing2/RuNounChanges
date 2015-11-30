@@ -10,6 +10,7 @@ local ut = require("Module:utils")
 local m_links = require("Module:links")
 local com = require("Module:ru-common")
 local m_ru_translit = require("Module:ru-translit")
+local m_table_tools = require("Module:table tools")
 
 local u = mw.ustring.char
 local rfind = mw.ustring.find
@@ -52,10 +53,28 @@ function export.split_russian_tr(term, dopair)
 	end
 end
 
-function export.concat_russian_tr(ru1, tr1, ru2, tr2, dopair)
+-- Concatenate two Russian strings RU1 and RU2 that may have corresponding
+-- manual transliteration TR1 and TR2 (which should be nil if there is no
+-- manual translit). If DOPAIR, return a two-item list of the combined
+-- Russian and manual translit (which will be nil if both TR1 and TR2 are
+-- nil); else, return two values, the combined Russian and manual translit.
+-- If MOVENOTES, extract any footnote symbols at the end of RU1 and move
+-- them to the end of the concatenated string, before any footnote symbols
+-- for RU2; same thing goes for TR1 and TR2.
+function export.concat_russian_tr(ru1, tr1, ru2, tr2, dopair, movenotes)
+	local function concat_maybe_moving_notes(x, y)
+		if movenotes then
+			local xentry, xnotes = m_table_tools.get_notes(x)
+			local yentry, xnotes = m_table_tools.get_notes(y)
+			return xentry .. yentry .. xnotes .. ynotes
+		else
+			return x .. y
+		end
+	end
+
 	local ru, tr
 	if not tr1 and not tr2 then
-		ru = ru1 .. ru2
+		ru = concat_maybe_moving_notes(ru1, ru2)
 	else
 		if not tr1 then
 			tr1 = export.translit_no_links(ru1)
@@ -63,7 +82,7 @@ function export.concat_russian_tr(ru1, tr1, ru2, tr2, dopair)
 		if not tr2 then
 			tr2 = export.translit_no_links(ru2)
 		end
-		ru, tr = ru1 .. ru2, com.j_correction(tr1 .. tr2)
+		ru, tr = concat_maybe_moving_notes(ru1 .. ru2), com.j_correction(concat_maybe_moving_notes(tr1 .. tr2))
 	end
 	if dopair then
 		return {ru, tr}
@@ -72,12 +91,20 @@ function export.concat_russian_tr(ru1, tr1, ru2, tr2, dopair)
 	end
 end
 
-function export.concat_paired_russian_tr(term1, term2)
+-- Concatenate two Russian/translit combinations (where each combination is
+-- a two-element list of {RUSSIAN, TRANSLIT} where TRANSLIT may be nil) by
+-- individually concatenating the Russian and translit portions, and return
+-- a concatenated combination as a two-element list. If the manual translit
+-- portions of both terms on entry are nil, the result will also have nil
+-- manual translit. If MOVENOTES, extract any footnote symbols at the end
+-- of TERM1 and move them after the concatenated string and before any
+-- footnote symbols at the end of TERM2.
+function export.concat_paired_russian_tr(term1, term2, movenotes)
 	assert(type(term1) == "table")
 	assert(type(term2) == "table")
 	local ru1, tr1 = term1[1], term1[2]
 	local ru2, tr2 = term2[1], term2[2]
-	return export.concat_russian_tr(ru1, tr1, ru2, tr2, "dopair")
+	return export.concat_russian_tr(ru1, tr1, ru2, tr2, "dopair", movenotes)
 end
 
 function export.concat_forms(forms)
