@@ -91,7 +91,7 @@ particles = [
 # List of words where we use the specified declension, to deal with cases
 # where there are multiple declensions; we have to be careful here to make
 # sure more than one declension isn't actually used in different lemmas
-use_given_decl = {u"туз": u"{{ru-noun-table|b|a=a}}",
+use_given_decl = {u"туз": u"{{ru-noun-table|b}}",
     u"род": u"{{ru-noun-table|e}}",
     u"лев": u"{{ru-noun-table|b||*|a=an}}",
     u"ключ": u"{{ru-noun-table|b}}",
@@ -166,6 +166,12 @@ all_parts_declined = [
     u"шапка-невидимка",
 ]
 
+keep_locative = [
+    u"социальная сеть",
+    u"Западный берег реки Иордан",
+    u"Западный берег"
+]
+    
 def process_page(index, page, save, verbose):
   pagetitle = unicode(page.title())
   subpagetitle = re.sub("^.*:", "", pagetitle)
@@ -458,20 +464,29 @@ def process_page(index, page, save, verbose):
       elif re.search("^[0-9]+$", pname):
         pass
       else:
+        keepparam = True
         if pname == "loc":
-          pagemsg("WARNING: Found loc= for word #%s, please check: loc=%s, lemma=%s, infl=%s" % (
+          if pagetitle in keep_locative:
+            pagemsg("Keeping locative for word #%s because page in keep_locative: loc=%s, lemma=%s, infl=%s" % (
             wordind, val, lemma, infl))
+          else:
+            pagemsg("WARNING: Discarding locative for word #%s: loc=%s, lemma=%s, infl=%s" % (
+            wordind, val, lemma, infl))
+            keepparam = False
         if pname == "par":
-          pagemsg("WARNING: Found par= for word #%s, please check: par=%s, lemma=%s, infl=%s" % (
+          pagemsg("WARNING: Discarding partitive for word #%s: par=%s, lemma=%s, infl=%s" % (
             wordind, val, lemma, infl))
+          keepparam = False
         if pname == "voc":
-          pagemsg("WARNING: Found voc= for word #%s, please check: voc=%s, lemma=%s, infl=%s" % (
+          pagemsg("WARNING: Discarding vocative for word #%s: voc=%s, lemma=%s, infl=%s" % (
             wordind, val, lemma, infl))
-        if pname == "loc" and re.search(ur"^(на|в)\b", val, re.U):
-          pagemsg(u"WARNING: на or в found in loc= for word #%s, may not work in multi-word lemma: loc=%s, lemma=%s, infl=%s" %
-              (wordind, val, lemma, infl))
-        pname += str(wordind)
-        params.append((pname, val))
+          keepparam = False
+        if keepparam:
+          if pname == "loc" and re.search(ur"^(на|в)\b", val, re.U):
+            pagemsg(u"WARNING: на or в found in loc= for word #%s, may not work in multi-word lemma: loc=%s, lemma=%s, infl=%s" %
+                (wordind, val, lemma, infl))
+          pname += str(wordind)
+          params.append((pname, val))
 
     return params, False, num, anim
 
