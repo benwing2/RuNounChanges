@@ -405,11 +405,13 @@ local accentless = {
 --
 -- Parts of speech:
 --   def = default used in absence of pos
---   n/noun = neuter noun
+--   n/noun = neuter noun in the nominative/accusative
+--   inv = invariable noun
 --   a/adj = adjective (typically either neuter in -ое or -ее, or plural in
 --                    -ие, -ые, or -ье)
 --   c/com = comparative (typically either in -ее or sibilant + -е)
---   pre = prepositional or dative case
+--   pre = prepositional case
+--   dat = dative case (treated same as prepositional)
 --   adv = adverb
 --   voc = vocative case
 --   v/vb/verb = verbal ending (usually 2nd-plural in -те)
@@ -435,9 +437,11 @@ local final_e = {
 	com={ve='e', hardsib='y', softsib='e'},
 	c='com',
 	pre={oe='e', ve='e', softpaired='e', hardsib='y', softsib='e'},
+	dat='pre',
 	adv={softpaired='e', hardsib='y', softsib='e'},
-	voc={},
-	verb={},
+	voc='mid',
+	inv='mid',
+	verb={softpaired='e'},
 	v='verb',
 	vb='verb'
 	pro={oe='i', ve='i'},
@@ -477,7 +481,7 @@ function export.ipa(text, adj, gem, bracket, pos)
 	gem = usub(gem or '', 1, 1)
 	pos = pos or 'def'
 	if not final_e[pos] then
-		error("Unrecognized part of speech '" .. pos .. "': Should be n/noun/neut, a/adj, c/com, pre, adv, voc, v/verb, pro, hi/high, mid, lo/low/schwa or omitted")
+		error("Unrecognized part of speech '" .. pos .. "': Should be n/noun/neut, a/adj, c/com, pre, dat, adv, inv, voc, v/verb, pro, hi/high, mid, lo/low/schwa or omitted")
 	end
 	text = ulower(text)
 
@@ -728,7 +732,7 @@ function export.ipa(text, adj, gem, bracket, pos)
 		-- so that the unstressed [e] sound is preserved
 		function fetch_e_sub(ending)
 			local chart = final_e[pos]
-			if type(chart) == "string" then -- handle aliases
+			while type(chart) == "string" do -- handle aliases
 				chart = final_e[chart]
 			end
 			assert(type(chart) == "table")
