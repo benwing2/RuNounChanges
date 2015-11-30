@@ -50,7 +50,7 @@ def process_page(index, page, save, verbose):
         return
       foundrussian = True
 
-      subsections = re.split("(^===Etymology [0-9]+===\n)", sections[j], 0, re.M)
+      subsections = re.split("(^===(?:Etymology|Pronunciation) [0-9]+===\n)", sections[j], 0, re.M)
       # If no separate etymology sections, add extra stuff at the beginning
       # to fit the pattern
       if len(subsections) == 1:
@@ -124,8 +124,9 @@ def process_page(index, page, save, verbose):
         pos = set()
         prons = []
         parsed = blib.parse_text(subsections[k])
-        tnames = [unicode(t.name) for t in parsed.filter_templates()]
         for t in parsed.filter_templates():
+          def getp(param):
+            return getparam(t, param)
           tname = unicode(t.name)
           if tname in ["ru-noun", "ru-proper noun"]:
             if getparam(t, "2") == "-":
@@ -137,21 +138,50 @@ def process_page(index, page, save, verbose):
           elif tname in ["ru-noun+", "ru-proper noun+"]:
             pagemsg("Found declined noun: %s" % unicode(t))
             pos.add("n")
-          elif tname == "comparative of":
+          elif tname == "comparative of" and getp("lang") == "ru":
             pagemsg("Found comparative: %s" % unicode(t))
             pos.add("com")
           elif tname == "ru-adv":
-            if "comparative of" in tnames:
-              pagemsg("Skipping ru-adv because 'comparative of' seen: %s" % unicode(t))
-            else:
-              pagemsg("Found adverb: %s" % unicode(t))
-              pos.add("adv")
+            pagemsg("Found adverb: %s" % unicode(t))
+            pos.add("adv")
           elif tname == "ru-adj":
-            if "comparative of" in tnames:
-              pagemsg("Skipping ru-adj because 'comparative of' seen: %s" % unicode(t))
-            else:
-              pagemsg("Found adjective: %s" % unicode(t))
-              pos.add("a")
+            pagemsg("Found adjective: %s" % unicode(t))
+            pos.add("a")
+          elif tname == "head" and getp("1") == "ru" and getp("2") == "verb form":
+            pagemsg("Found verb form: %s" % unicode(t))
+            pos.add("v")
+          elif tname == "head" and getp("1") == "ru" and getp("2") == "adjective form":
+            pagemsg("Found adjective form: %s" % unicode(t))
+            pos.add("a")
+          elif tname == "head" and getp("1") == "ru" and getp("2") == "pronoun form":
+            pagemsg("Found pronoun form: %s" % unicode(t))
+            pos.add("pro")
+          elif tname == "inflection of" and getp("lang") == "ru":
+            for param in t.params:
+              if unicode(param.value) in ["pre", "prep", "prepositional"]:
+                pagemsg("Found prepositional case inflection: %s" % unicode(t))
+                pos.add("pre")
+                break
+            for param in t.params:
+              if unicode(param.value) in ["dat", "dative"]:
+                pagemsg("Found dative case inflection: %s" % unicode(t))
+                pos.add("dat")
+                break
+            for param in t.params:
+              if unicode(param.value) in ["voc", "vocative"]:
+                pagemsg("Found vocative case inflection: %s" % unicode(t))
+                pos.add("voc")
+                break
+          elif tname == "prepositional singular of" and getp("lang") == "ru":
+            pagemsg("Found prepositional case inflection: %s" % unicode(t))
+            pos.add("pre")
+          elif tname == "dative singular of" and getp("lang") == "ru":
+            pagemsg("Found dative case inflection: %s" % unicode(t))
+            pos.add("dat")
+          elif tname == "vocative singular of" and getp("lang") == "ru":
+            pagemsg("Found vocative case inflection: %s" % unicode(t))
+            pos.add("voc")
+
 
 
             ...
