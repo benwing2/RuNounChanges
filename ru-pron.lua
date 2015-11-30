@@ -415,7 +415,8 @@ local accentless = {
 --   adv = adverb
 --   voc = vocative case (currently treated as 'mid')
 --   v/vb/verb = verbal ending (usually 2nd-plural in -те)
---   pro = pronoun (кое-, какие-)
+--   pro = pronoun (кое-, какие-, ваше)
+--   num = pronoun (двое, трое, четыре; currently treated as 'mid')
 --   hi/high = force high values ([ɪ] or [ɨ])
 --   mid = force mid values ([e] or [ɨ])
 --   lo/low/schwa = force low, really schwa, values ([ə])
@@ -445,6 +446,7 @@ local final_e = {
 	v='verb',
 	vb='verb'
 	pro={oe='i', ve='i'},
+	num='mid',
 	-- forced values
 	high={oe='i', ve='i', je='i', softpaired='i', hardsib='y', softsib='i'},
 	hi='high',

@@ -42,7 +42,8 @@ The possible part of speech codes are:
 * <code>adv</code> = adverb
 * <code>voc</code> = vocative case (currently treated as <code>mid</code>)
 * <code>v</code>, <code>vb</code>, <code>verb</code> = verbal ending (usually 2nd-plural in -те)
-* <code>pro</code> = pronoun (кое-, какие-)
+* <code>pro</code> = pronoun (кое-, какие-, ваше)
+* <code>num</code> = number (двое, трое, четыре; currently treated as <code>mid</code>)
 * <code>hi</code> or <code>high</code> = force high values ([ɪ] or [ɨ])
 * <code>mid</code> = force mid values ([e] or [ɨ])
 * <code>lo</code>, <code>low</code>, <code>schwa</code> = force low/schwa value ([ə])
