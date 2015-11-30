@@ -12,6 +12,8 @@ Parameters:
 : If <code>y</code>, force gemination to be preserved in places it otherwise wouldn't. If <code>n</code>, force degemination in places it otherwise would be preserved. If <code>opt</code>, force optional gemination, including in places it wouldn't normally be preserved. See below.
 ; {{para|raw}}
 : Render the result "raw", e.g. {{ru-IPA|вода́|raw=y}} instead of {{ru-IPA|вода́}}.
+; {{para|bracket}}
+: Control whether brackets appear around the generated IPA. Default is yes. Use {{para|bracket|n}} or {{para|bracket|}} to suppress the bracket.
 
 ==Accent marks==
 * Indicate primary stress with an acute accent, e.g. е́ or ы́.
