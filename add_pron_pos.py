@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# Add pos= to ru-IPA pronunciations. Also find instances where и or я has
+# Add pos= to ru-IPA pronunciations. Also find instances where и/я/ы/а has
 # been used phonetically in place of е and put back to е.
 
 import pywikibot, re, sys, codecs, argparse
+from collections import Counter
 
 import blib
 from blib import getparam, rmparam, msg, site
@@ -56,71 +57,52 @@ def process_page(index, page, save, verbose):
       if len(subsections) == 1:
         subsections = ["", ""] + subsections
 
-      saw_unstressed_e = False
-      saw_unstressed_i = False
-      saw_unstressed_ja = False
-      saw_unstressed_y = False
-      saw_unstressed_a = False
-      saw_ru_IPA = False
+      subsections_with_ru_ipa_to_fix = set()
+      subsections_with_ru_ipa = set()
       for k in xrange(0, len(subsections), 2):
         for t in blib.parse_text(subsections[k]).filter_templates():
           if unicode(t.name) == "ru-IPA":
-            saw_ru_IPA = True
+            subsections_with_ru_ipa.add(k)
+            if getparam(t, "pos"):
+              pagemsg("Already has pos=, skipping template in section %s: %s" %
+                  (k/2, unicode(t)))
+            else:
+              phon = (getparam(t, "phon") or getparam(t, "1") or pagetitle).lower()
+              if ru.is_monosyllabic(phon):
+                pagemsg("Monosyllabic pronun, skipping template in section %s: %s" %
+                    (k/2, unicode(t)))
+              else:
+                if re.search(u"([еия]|цы|[кгхцшжщч]а)" + ru.DOTABOVE + "?$", phon):
+                  pagemsg("Found template that will be modified, in section %s: %s" %
+                      (k/2, unicode(t)))
+                  subsections_with_ru_ipa_to_fix.add(k)
+                elif not re.search(u"[еэѐ][" + ru.AC + ru.GR + ru.CFLEX + ru.DUBGR + "]?$", phon):
+                  pagemsg(u"WARNING: ru-IPA pronunciation doesn't end in [еэия] or hard sibilant + [ыа], something wrong, skipping template in section %s: %s" %
+                      (k/2, unicode(t)))
+                else:
+                  pagemsg(u"Pronun with final -э or stressed vowel, skipping template in section %s: %s" %
+                      (k/2, unicode(t)))
 
-            phon = (getparam(t, "phon") or getparam(t, "1") or pagetitle).lower()
-            if not ru.is_monosyllabic(phon):
-              if re.search(u"е" + ru.DOTABOVE + "?$", phon):
-                saw_unstressed_e = True
-              elif re.search(u"и" + ru.DOTABOVE + "?$", phon):
-                saw_unstressed_i = True
-              elif re.search(u"я" + ru.DOTABOVE + "?$", phon):
-                saw_unstressed_ja = True
-              elif re.search(u"[цшж]ы" + ru.DOTABOVE + "?$", phon):
-                saw_unstressed_y = True
-              elif re.search(u"[цшж]а" + ru.DOTABOVE + "?$", phon):
-                saw_unstressed_a = True
-              elif not re.search(u"[еэѐ][" + ru.AC + ru.GR + ru.CFLEX + ru.DUBGR + "]?$", phon):
-                pagemsg(u"WARNING: ru-IPA phonology doesn't end in [еэия] or hard sibilant + [ыа], something wrong, skipping page: %s" %
-                    unicode(t))
-                return
-      if not saw_ru_IPA:
-        pagemsg("WARNING: No ru-IPA on page, skipping page")
+      if not subsections_with_ru_ipa:
+        pagemsg("No ru-IPA on page, skipping page")
         return
-      if saw_unstressed_e:
-        pagemsg(u"Saw unstressed -е, continuing")
-      if saw_unstressed_i:
-        pagemsg(u"Saw unstressed -и, continuing")
-      if saw_unstressed_ja:
-        pagemsg(u"Saw unstressed -я, continuing")
-      if saw_unstressed_y:
-        pagemsg(u"Saw unstressed -ы after hard sibilant, continuing")
-      if saw_unstressed_a:
-        pagemsg(u"Saw unstressed -а after hard sibilant, continuing")
-      if (not saw_unstressed_e and not saw_unstressed_i
-          and not saw_unstressed_ja and not saw_unstressed_y
-          and not saw_unstressed_a):
-        pagemsg(u"No unstressed -е/и/я, skipping page")
+      if not subsections_with_ru_ipa_to_fix:
+        pagemsg("No fixable ru-IPA on page, skipping page")
         return
 
-      pron_for_all_etym = []
-      first_section_parsed = blib.parse_text(subsections[0])
-      for t in first_section_parsed.filter_templates():
-        if unicode(t.name) == "ru-IPA":
-          pron_for_all_etym.append(t)
-          pagemsg("Saw ru-IPA covering multiple etymological sections: %s" %
-              unicode(t))
       # If saw ru-IPA covering multiple etym sections, make sure we don't
       # also have pronuns inside the etym sections, and then treat as one
       # single section for the purposes of finding POS's
-      if pron_for_all_etym:
-        for k in xrange(2, len(subsections), 2):
-          for t in blib.parse_text(subsections[k]).filter_templates():
-            if unicode(t.name) == "ru-IPA":
-              pagemsg("WARNING: Saw ru-IPA covering multiple etym sections and also ru-IPA inside an etym section, skipping page")
-              return
+      if 0 in subsections_with_ru_ipa:
+        if len(subsections_with_ru_ipa) > 1:
+          pagemsg("WARNING: Saw ru-IPA in section 0 (covering multiple etym or pronun sections) and also inside etym/pronun section(s) %s; skipping page" %
+              (",".join(k/2 for k in subsections_with_ru_ipa if k > 0)))
+          return
         subsections = ["", "", "".join(subsections)]
+        subsections_with_ru_ipa_to_fix = {2}
 
-      for k in xrange(2, len(subsections), 2):
+      for k in subsections_with_ru_ipa_to_fix:
+        pagemsg("Fixing section %s" % (k/2))
         pos = set()
         prons = []
         parsed = blib.parse_text(subsections[k])
@@ -182,17 +164,102 @@ def process_page(index, page, save, verbose):
             pagemsg("Found vocative case inflection: %s" % unicode(t))
             pos.add("voc")
 
+        if "dat" in pos and "pre" in pos:
+          pagemsg("Removing pos=dat because pos=pre is found")
+          pos.remove("dat")
+        if "com" in pos:
+          if "adj" in pos:
+            pagemsg("Removing pos=adj because pos=com is found")
+          if "adv" in pos:
+            pagemsg("Removing pos=adv because pos=com is found")
+        if not pos:
+          pagemsg("WARNING: Can't locate any parts of speech, skipping section")
+          continue
+        if len(pos) > 1:
+          pagemsg("WARNING: Found multiple parts of speech, skipping section: %s" %
+              ",".join(pos))
+          continue
+        pos = list(pos)[0]
 
+        for t in parsed.filter_templates():
+          if unicode(t.name) == "ru-IPA":
+            param = "phon"
+            phon = getparam(t, param)
+            if not val:
+              param = "1"
+              phon = getparam(t, "1")
+              if not val:
+                param = "pagetitle"
+                phon = pagetitle
+            lphon = phon.lower()
+            origt = unicode(t)
+            if getparam(t, "pos"):
+              pass # Already output msg
+            elif ru.is_monosyllabic(phon):
+              pass # Already output msg
+            elif re.search(u"([еия]|цы|[кгхцшжщч]а)" + ru.DOTABOVE + "?$", lphon):
+              # Found a template to modify
+              if re.search(u"е" + ru.DOTABOVE + "?$", lphon):
+                pass # No need to canonicalize
+              else:
+                if re.search(u"и" + ru.DOTABOVE + "?$", lphon):
+                  pagemsg(u"phon=%s ends in -и, will modify to -е in section %s: %s" % (phon, k/2, unicode(t)))
+                  notes.append(u"unstressed -и -> -е")
+                elif re.search(u"я" + ru.DOTABOVE + "?$", lphon):
+                  pagemsg(u"phon=%s ends in -я, will modify to -е in section %s: %s" % (phon, k/2, unicode(t)))
+                  notes.append(u"unstressed -я -> -е")
+                elif re.search(u"цы" + ru.DOTABOVE + "?$", lphon):
+                  pagemsg(u"phon=%s ends in ц + -ы, will modify to -е in section %s: %s" % (phon, k/2, unicode(t)))
+                  notes.append(u"unstressed -ы after ц -> -е")
+                elif re.search(u"[кгхцшжщч]а" + ru.DOTABOVE + "?$", lphon):
+                  pagemsg(u"phon=%s ends in unpaired cons + -а, will modify to -е in section %s: %s" % (phon, k/2, unicode(t)))
+                  notes.append(u"unstressed -а after unpaired cons -> -е")
+                else:
+                  assert False, "Something wrong, strange ending, logic not correct: section %s, phon=%s" % (k/2, phon)
+                newphon = re.sub(u"[ияыа](" + ru.DOTABOVE + "?)$", ur"е\1", phon)
+                newphon = re.sub(u"[ИЯЫА](" + ru.DOTABOVE + "?)$", ur"Е\1", newphon)
+                assert param != "pagetitle", u"Something wrong, page title should end in -е: section %s, phon=%s" % (k/2, phon)
+                if pos in ["voc", "inv", "pro"]:
+                  pagemsg(u"WARNING: pos=%s may be unstable or inconsistent in handling final -е, please check change in section %s: %s" % (
+                    pos, k/2, unicode(t)))
+                pagemsg("Modified phon=%s to %s in section %s: %s" % (
+                  phon, newphon, k/2, unicode(t)))
+                t.add(param, newphon)
 
-            ...
+              t.add("pos", pos)
+              notes.append("added pos=%s" % pos)
+              pagemsg("Replaced %s with %s in section %s" % (
+                origt, unicode(t), k/2))
         subsections[k] = unicode(parsed)
       sections[j] = "".join(subsections)
 
   new_text = "".join(sections)
 
+  def fmt_key_val(key, val):
+    if val == 1:
+      return "%s" % key
+    else:
+      return "%s (%s)" % (key, val)
+
   if new_text != text:
-    notes.append("add pos= to ru-IPA templates")
+    if verbose:
+      pagemsg("Replacing <%s> with <%s>" % (text, new_text))
     assert notes
+    # Group identical notes together and append the number of such identical
+    # notes if > 1, putting 'added pos=X' notes before others, so we get e.g.
+    # "added pos=n (2); added pos=a; unstressed -и -> -е (2)" from five
+    # original notes.
+    # 1. Count items in notes[] and return a key-value list in descending order
+    notescount = Counter(notes).most_common()
+    # 2. Extract 'added pos=X' items; we put them first; note, descending order
+    #    of # of times each note has been seen is maintained
+    added_pos = [(x, y) for x, y in notescount if x.startswith("added pos=")]
+    # 3. Extract other items
+    not_added_pos = [(x, y) for x, y in notescount if not x.startswith("added pos=")]
+    # 4. Recreate notes for 'added pos=X', then others
+    notes = [fmt_key_val(x, y) for x, y in added_pos]
+    notes.extend([fmt_key_val(x, y) for x, y in not_added_pos])
+
     comment = "; ".join(notes)
     if save:
       pagemsg("Saving with comment = %s" % comment)
