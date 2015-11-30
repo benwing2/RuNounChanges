@@ -10,6 +10,8 @@ Parameters:
 : Indicate that final -го should be pronounced /vo/, as in the genitive of adjectives.
 ; {{para|gem}}
 : If <code>y</code>, force gemination to be preserved in places it otherwise wouldn't. If <code>n</code>, force degemination in places it otherwise would be preserved. If <code>opt</code>, force optional gemination, including in places it wouldn't normally be preserved. See below.
+; {{para|pos}}
+: Part of speech code for controlling phonological outcomes that depend on the grammatical role of the word or words in question. Currently used only for final unstressed -е. See below.
 ; {{para|raw}}
 : Render the result "raw", e.g. {{ru-IPA|вода́|raw=y}} instead of {{ru-IPA|вода́}}.
 ; {{para|bracket}}
@@ -20,6 +22,30 @@ Parameters:
 * Indicate secondary stress with a grave accent, e.g. ѐ or ы̀.
 * Indicate "tertiary" stress with a circumflex or double grave accent, e.g. е̂ or ы̂ or е̏ or ы̏ (i.e. where a vowel is to be treated as stressed but should not be marked as possessing either primary or secondary stress).
 * Force the reduced pronunciation of a vowel that would otherwise be stressed (e.g. in a single-syllable word) with a dot above, e.g. е̇ or ы̇.
+
+==Part of speech codes==
+The value of the {{para|pos}} parameter can be either a single part of speech code or a series of such codes separated by slashes. In the former case, the same part of speech applies to all words in a multi-word phrase. In the latter case, there should be as many codes as there are ''phonological words'' (otherwise, an error will result, tell you the expected number of words). Rules for phonological words:
+* Both spaces and hyphens separate phonological words. Hence ка-гэ-бэ is three phonological words.
+* A comma, en dash (–) or em dash (—) counts as a phonological word.
+* Unstressed [[clitic]] particles that phonologically join to an adjacent word (indicated by a ‿ sign between the words on output) do ''not'' count as separate phonological words, even if separated from the adjacent word by a space or hyphen in the input. Examples are prepositions such as с, к, о, на, без, перед and post-particles such as же, ли, либо, нибудь, but only when these particles have no stress mark on them or are explicitly joined to the adjacent word using the ‿ sign. When in doubt, the IPA output should clarify things: Each phonological word is separated by a space, and each space delimits a phonological word.
+
+As mentioned above, part of speech codes are currently only used for determining the correct pronunciation of unstressed final -е (which may be pronounced [ə], [e], [ɪ] or [ɨ], depending on part of speech and the preceding letters).
+
+The possible part of speech codes are:
+* ''omitted'' or <code>def</code> = Default ([ə] in the ending -ое, else same as <code>mid</code>)
+* <code>n</code> or <code>noun<code> = Neuter noun in the nominative/accusative
+* <code>inv</code> = invariable noun or other word (currently treated as <code>mid</code>)
+* <code>a</code> or <code>adj</code> = adjective (typically either neuter in -ое or -ее, or plural in -ие, -ые, or -ье)
+* <code>c</code> or <code>com</code> = comparative (typically either in -ее or sibilant + -е)
+* <code>pre</code> = prepositional case
+* <code>dat</code> = dative case (treated same as prepositional)
+* <code>adv</code> = adverb
+* <code>voc</code> = vocative case (currently treated as <code>mid</code>)
+* <code>v</code>, <code>vb</code>, <code>verb</code> = verbal ending (usually 2nd-plural in -те)
+* <code>pro</code> = pronoun (кое-, какие-)
+* <code>hi</code> or <code>high</code> = force high values ([ɪ] or [ɨ])
+* <code>mid</code> = force mid values ([e] or [ɨ])
+* <code>lo</code>, <code>low</code>, <code>schwa</code> = force low/schwa value ([ə])
 
 ==Special phonetic symbols and rules==
 * In Cyrillic, use h or ɣ to indicate [ɣ] (the voiced fricative pronunciation of the letter г), and ӂ to indicate [ʑ] (the soft pronunciation of ж, as in words like {{m|ru|съе́зжая}}, {{m|ru|вожжа́}} or {{m|ru|дро́жжи}}).
