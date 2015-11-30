@@ -86,12 +86,13 @@ FIXME:
 	I doubt it, ask Cinemantique), наря́д на ку́хню (non-devoicing of д before
 	н in next word, ask Cinemantique about this, does it also apply to мрл?),
 	ко̀е-кто́
-16. (DONE, ADDED SPECIAL HACK) Caused a change in ко̀е-кто́, perhaps because
-    I rewrote code that accepted an acute or circumflex accent to also take
-    a grave accent. See how кое is actually pronounced here and take action if
-    needed. (ruwiki claims кое is indeed pronounced like кои, ask Cinemantique
-    what the rule for final -е is and why different in кое vs. мороженое,
-    anything to do with secondary stress on о?)
+16. (DONE, ADDED SPECIAL HACK; THEN REMOVED IT, SHOULD HANDLE THROUGH pos=pro)
+    Caused a change in ко̀е-кто́, perhaps because I rewrote code that accepted
+	an acute or circumflex accent to also take a grave accent. See how кое is
+	actually pronounced here and take action if needed. (ruwiki claims кое is
+	indeed pronounced like кои, ask Cinemantique what the rule for final -е
+	is and why different in кое vs. мороженое, anything to do with secondary
+	stress on о?)
 17. (DONE, NEEDS CHECKING, CHECK эвфеми́зм) Rewrote voicing/devoicing
     assimilation; should make assimilation of эвфеми́зм automatic and not
 	require phon=.
@@ -99,9 +100,9 @@ FIXME:
     make sure this doesn't change anything.
 19. (DONE, ANSWER IS YES) do сь and зь assimilate before шж, and
     if so do they become ɕʑ? Ask Cinemantique.
-20. Add pos= to handle final -е. Possibilities appear to be neut (neuter noun),
-    adj (adjective, autodetected whether singular or plural), comp
-	(comparative), pre (prepositional case), adv (adverb), verb or v (2nd
+20. (DONE) Add pos= to handle final -е. Possibilities appear to be neut
+    (neuter noun), adj (adjective, autodetected whether singular or plural),
+	comp (comparative), pre (prepositional case), adv (adverb), verb or v (2nd
 	plural verb forms).
 21. (DONE, DEVOICE UNLESS NEXT WORD BEGINS WITH VOICED OBSTRUENT OR V+VOICED
     OBSTRUENT) Figure out what to do with devoicing or non-devoicing before
@@ -166,7 +167,7 @@ local CFLEX = u(0x0302) -- circumflex =  ̂
 local vow = 'aeiouyɛəäëöü'
 local ipa_vow = vow .. 'ɐɪʊɨæɵʉ'
 local vowels, vowels_c = '[' .. vow .. ']', '([' .. vow .. '])'
-local acc = AC .. GR .. DUBGR .. DOTABOVE
+local acc = AC .. GR .. CFLEX .. DOTABOVE
 local accents = '[' .. acc .. ']'
 
 local perm_syl_onset = ut.list_to_set({
@@ -283,10 +284,9 @@ end
 local phon_respellings = {
 	{'h', 'ɣ'},
 	-- vowel changes after always-hard or always-soft consonants
-	{vowels_c .. '([šž])j([ou])', '%1%2%3'},
-	{vowels_c .. '([šžc])e', '%1%2ɛ'},
-	{vowels_c .. '([šžc])i', '%1%2y'},
-	-- the following will also affect šč = ɕː
+	{'([šž])j([ou])', '%2%3'},
+	-- the following will also affect šč = ɕː, and do it before
+	-- converting šč -> ɕː just below
 	{'([čǰӂ])([aou])', '%1j%2'},
 
 	{'šč', 'ɕː'}, -- conversion of šč to geminate
@@ -392,6 +392,64 @@ local accentless = {
        'ka', 'tka', 'li'})
 }
 
+-- Pronunciation of final unstressed -е, depending on the part of speech and
+--   exact ending.
+--
+-- Endings:
+--   oe = -ое
+--   ve = any other vowel plus -е (FIXME, may have to split out -ее)
+--   je = -ье
+--   softpaired = soft paired consonant + -е
+--   hardsib = hard sibilant (ц, ш, ж) + -е
+--   softsib = soft sibilant (ч, щ) + -е
+--
+-- Parts of speech:
+--   def = default used in absence of pos
+--   n/noun = neuter noun
+--   a/adj = adjective (typically either neuter in -ое or -ее, or plural in
+--                    -ие, -ые, or -ье)
+--   c/com = comparative (typically either in -ее or sibilant + -е)
+--   pre = prepositional or dative case
+--   adv = adverb
+--   voc = vocative case
+--   v/vb/verb = verbal ending (usually 2nd-plural in -те)
+--   pro = pronoun (кое-, какие-)
+--   hi/high = force high values ([ɪ] or [ɨ])
+--   mid = force mid values ([e] or [ɨ])
+--   lo/low/schwa = force low, really schwa, values ([ə])
+--
+-- Possible values:
+--   1. ə [ə], e [e], i [ɪ] after a vowel or soft consonant
+--   2. ə [ə] or y [ɨ] after a hard sibilant
+--
+-- If a part of speech doesn't have an entry for a given type of ending,
+--   it receives the default value. If a part of speech's entry is a string,
+--   it's an alias for another way of specifying the same part of speech
+--   (e.g. n=noun).
+local final_e = {
+	def={oe='ə', ve='e', je='e', softpaired='e', hardsib='y', softsib='e'}
+	noun={oe='ə', ve='e', je='e', softpaired='e', hardsib='ə', softsib='e'},
+	n='noun',
+	adj={oe='ə', ve='e', je='ə'}, -- FIXME: Not sure about -ее, e.g. neut adj си́нее
+	a='adj',
+	com={ve='e', hardsib='y', softsib='e'},
+	c='com',
+	pre={oe='e', ve='e', softpaired='e', hardsib='y', softsib='e'},
+	adv={softpaired='e', hardsib='y', softsib='e'},
+	voc={},
+	verb={},
+	v='verb',
+	vb='verb'
+	pro={oe='i', ve='i'},
+	-- forced values
+	high={oe='i', ve='i', je='i', softpaired='i', hardsib='y', softsib='i'},
+	hi='high',
+	mid={oe='e', ve='e', je='e', softpaired='e', hardsib='y', softsib='e'},
+	low={oe='ə', ve='ə', je='ə', softpaired='ə', hardsib='ə', softsib='ə'},
+	lo='low',
+	schwa='low'
+}
+
 local function ine(x)
 	return x ~= "" and x or nil
 end
@@ -402,21 +460,25 @@ local function track(page)
 	return true
 end
 
-function export.ipa(text, adj, gem, bracket)
+function export.ipa(text, adj, gem, bracket, pos)
 	local new_module_result
 	-- Test code to compare existing module to new one.
 	if test_new_ru_pron_module then
 		local m_new_ru_pron = require("Module:User:Benwing2/ru-pron")
-		new_module_result = m_new_ru_pron.ipa(text, adj, gem, bracket)
+		new_module_result = m_new_ru_pron.ipa(text, adj, gem, bracket, pos)
 	end
 
 	if type(text) == 'table' then
-		text, adj, gem, bracket = (ine(text.args.phon) or ine(text.args[1])), ine(text.args.adj), ine(text.args.gem), ine(text.args.bracket)
+		text, adj, gem, bracket, pos = (ine(text.args.phon) or ine(text.args[1])), ine(text.args.adj), ine(text.args.gem), ine(text.args.bracket), ine(text.args.pos)
 		if not text then
 			text = mw.title.getCurrentTitle().text
 		end
 	end
 	gem = usub(gem or '', 1, 1)
+	pos = pos or 'def'
+	if not final_e[pos] then
+		error("Unrecognized part of speech '" .. pos .. "': Should be n/noun/neut, a/adj, c/com, pre, adv, voc, v/verb, pro, hi/high, mid, lo/low/schwa or omitted")
+	end
 	text = ulower(text)
 
 	if gem ~= '' then
@@ -438,12 +500,15 @@ function export.ipa(text, adj, gem, bracket)
 	if rfind(text, CFLEX) then
 		track("cflex")
 	end
+	if rfind(text, DUBGR) then
+		track("dubgr")
+	end
 
 	text = rsub(text, "``", DUBGR)
 	text = rsub(text, "`", GR)
 	text = rsub(text, "@", DOTABOVE)
 	text = rsub(text, "%^", CFLEX)
-	text = rsub(text, CFLEX, DUBGR)
+	text = rsub(text, DUBGR, CFLEX)
 
 	-- translit doesn't always convert э to ɛ (depends on whether a consonant
 	-- precedes), so do it ourselves before translit
@@ -491,7 +556,7 @@ function export.ipa(text, adj, gem, bracket)
 				word[i] = rsub(word[i], vowels_c, '%1' .. AC)
 			else
 				-- add tertiary stress
-				word[i] = rsub(word[i], vowels_c, '%1' .. DUBGR)
+				word[i] = rsub(word[i], vowels_c, '%1' .. CFLEX)
 			end
 		end
 	end
@@ -526,7 +591,7 @@ function export.ipa(text, adj, gem, bracket)
 
 	-- add tertiary stress to final -о after vowels, e.g. То́кио;
 	-- this needs to be done before eliminating dot-above
-	text = rsub(text, '(' .. vowels .. accents .. '?o)⁀', '%1' .. DUBGR .. '⁀')
+	text = rsub(text, '(' .. vowels .. accents .. '?o)⁀', '%1' .. CFLEX .. '⁀')
 
 	-- eliminate dot-above, which has served its purpose of preventing any
 	-- sort of stress
@@ -651,10 +716,48 @@ function export.ipa(text, adj, gem, bracket)
 		-- 4. remove hard and soft signs
 		pron = rsub(pron, "[ʹʺ]", "")
 
-		-- reduction of word-final a, e; but special HACK for кое-,
-		-- convert to койи.
-		pron = rsub(pron, '⁀ko(' .. accents .. ')jë⁀', '⁀ko%1ji⁀')
-		pron = rsub(pron, '[äeë]⁀$', 'ə⁀')
+		-- reduction of unstressed word-final -я, -е; but special-case
+		-- unstressed не, же. Final -я always becomes [ə]; final -е may
+		-- become [ə], [e], [ɪ] or [ɨ] depending on the part of speech and
+		-- the preceding consonants/vowels.
+		pron = rsub(pron, 'ä⁀', 'ə⁀')
+		pron = rsub(pron, '⁀ne⁀', '⁀ni⁀')
+		pron = rsub(pron, '⁀že⁀', '⁀žy⁀')
+		-- function to fetch the appropriate value for ending and part of
+		-- speech, handling aliases and defaults and converting 'e' to 'ê'
+		-- so that the unstressed [e] sound is preserved
+		function fetch_e_sub(ending)
+			local chart = final_e[pos]
+			if type(chart) == "string" then -- handle aliases
+				chart = final_e[chart]
+			end
+			assert(type(chart) == "table")
+			local sub = chart[ending] or final_e['def'][ending]
+			assert(sub)
+			if sub == 'e' then
+				-- add CFLEX to preserve the unstressed [e] sound, which
+				-- will otherwise be converted to [ɪ]; NOTE: DO NOT use ê
+				-- here directly because it's a single composed char, when
+				-- we need the e and accent to be separate
+				return 'e' .. CFLEX
+			else
+				return sub
+			end
+		end
+		-- handle substitutions in two parts, one for vowel+j+e sequences
+		-- and the other for cons+e sequences
+		pron = rsub(pron, vowels_c .. '(' .. accents .. '?j)ë⁀', function(v, ac)
+			 local ty = v == 'o' and 'oe' or 've'
+			 return v .. ac .. fetch_e_sub(ty)
+		end)
+		-- consonant may palatalized, geminated or optional-geminated
+		pron = rsub(pron, '(.)(ʲ?[ː()]*)[eë]⁀', function(ch, mod)
+			 local ty = ch == 'j' and 'je' or
+				rfind(ch, '[cĵšžĉĝ]') and 'hardsib' or
+				rfind(ch, '[čǰɕӂ]') and 'softsib' or
+				'softpaired'
+			 return ch ..modc .. fetch_e_sub(ty)
+		end)
 
 		-- retraction of е and и after цшж; FIXME, this is partly done
 		-- above in phon_respellings, should be cleaned up
@@ -730,7 +833,7 @@ function export.ipa(text, adj, gem, bracket)
 				alnum = 1
 				syl = rsub(syl, '(.*)́', 'ˈ%1')
 				syl = rsub(syl, '(.*)̀', 'ˌ%1')
-				syl = rsub(syl, DUBGR, '')
+				syl = rsub(syl, CFLEX, '')
 			elseif stress[j+1] then
 				alnum = 2
 			else
