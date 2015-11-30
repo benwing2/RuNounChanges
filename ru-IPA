@@ -1,6 +1,6 @@
 <includeonly>{{#if:{{{raw|}}}<!--
-  -->|{{#invoke:ru-pron|ipa|{{{phon|{{{1|{{PAGENAME}}}}}}}}|adj={{{adj|}}}|gem={{{gem|}}}|bracket={{{bracket|y}}}}}<!--
-  -->|{{IPA|{{#invoke:ru-pron|ipa|{{{phon|{{{1|{{PAGENAME}}}}}}}}|adj={{{adj|}}}|gem={{{gem|}}}|bracket={{{bracket|y}}}}}|lang=ru}}<!--
+  -->|{{#invoke:ru-pron|ipa|{{{phon|{{{1|{{PAGENAME}}}}}}}}|adj={{{adj|}}}|gem={{{gem|}}}|pos={{{pos|}}}|bracket={{{bracket|y}}}}}<!--
+  -->|{{IPA|{{#invoke:ru-pron|ipa|{{{phon|{{{1|{{PAGENAME}}}}}}}}|adj={{{adj|}}}|gem={{{gem|}}}|pos={{{pos|}}}|bracket={{{bracket|y}}}}}|lang=ru}}<!--
   -->}}<!--
 
 Phonetic respelling:
