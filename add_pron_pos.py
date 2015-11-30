@@ -66,6 +66,7 @@ def process_page(index, page, save, verbose):
         for t in blib.parse_text(subsections[k]).filter_templates():
           if unicode(t.name) == "ru-IPA":
             saw_ru_IPA = True
+
             phon = (getparam(t, "phon") or getparam(t, "1") or pagetitle).lower()
             if not ru.is_monosyllabic(phon):
               if re.search(u"е" + ru.DOTABOVE + "?$", phon):
@@ -123,9 +124,36 @@ def process_page(index, page, save, verbose):
         pos = set()
         prons = []
         parsed = blib.parse_text(subsections[k])
+        tnames = [unicode(t.name) for t in parsed.filter_templates()]
         for t in parsed.filter_templates():
           tname = unicode(t.name)
           if tname in ["ru-noun", "ru-proper noun"]:
+            if getparam(t, "2") == "-":
+              pagemsg("Found invariable noun: %s" % unicode(t))
+              pos.add("inv")
+            else:
+              pagemsg("Found declined noun: %s" % unicode(t))
+              pos.add("n")
+          elif tname in ["ru-noun+", "ru-proper noun+"]:
+            pagemsg("Found declined noun: %s" % unicode(t))
+            pos.add("n")
+          elif tname == "comparative of":
+            pagemsg("Found comparative: %s" % unicode(t))
+            pos.add("com")
+          elif tname == "ru-adv":
+            if "comparative of" in tnames:
+              pagemsg("Skipping ru-adv because 'comparative of' seen: %s" % unicode(t))
+            else:
+              pagemsg("Found adverb: %s" % unicode(t))
+              pos.add("adv")
+          elif tname == "ru-adj":
+            if "comparative of" in tnames:
+              pagemsg("Skipping ru-adj because 'comparative of' seen: %s" % unicode(t))
+            else:
+              pagemsg("Found adjective: %s" % unicode(t))
+              pos.add("a")
+
+
             ...
         subsections[k] = unicode(parsed)
       sections[j] = "".join(subsections)

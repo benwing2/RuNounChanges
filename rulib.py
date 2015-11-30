@@ -5,7 +5,10 @@ import re
 
 AC = u"\u0301" # acute =  ́
 GR = u"\u0300" # grave =  ̀
+CFLEX = u"\u0302" # circumflex =  ̂
+DOTABOVE = u"\u0307" # dot above =  ̇
 DI = u"\u0308" # diaeresis =  ̈
+DUBGR = u"\u030F" # double grave =  ̏
 
 composed_grave_vowel = u"ѐЀѝЍ"
 vowel_no_jo = u"аеиоуяэыюіѣѵАЕИОУЯЭЫЮІѢѴ" + composed_grave_vowel #omit ёЁ
