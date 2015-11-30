@@ -406,14 +406,14 @@ local accentless = {
 -- Parts of speech:
 --   def = default used in absence of pos
 --   n/noun = neuter noun in the nominative/accusative
---   inv = invariable noun
+--   inv = invariable noun or other word (currently treated as 'mid')
 --   a/adj = adjective (typically either neuter in -ое or -ее, or plural in
 --                    -ие, -ые, or -ье)
 --   c/com = comparative (typically either in -ее or sibilant + -е)
 --   pre = prepositional case
 --   dat = dative case (treated same as prepositional)
 --   adv = adverb
---   voc = vocative case
+--   voc = vocative case (currently treated as 'mid')
 --   v/vb/verb = verbal ending (usually 2nd-plural in -те)
 --   pro = pronoun (кое-, какие-)
 --   hi/high = force high values ([ɪ] or [ɨ])
