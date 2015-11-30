@@ -939,9 +939,9 @@ function export.ipa(text, adj, gem, pos, bracket)
 		return a .. fronting[b] .. c end)
 	-- 3. Handle case of au between soft and optionally soft consonant
 	if rfind(text, 'ʲ[ː()]*[auʊ][ˈˌ]?.⁽ʲ⁾') or rfind(text, 'ʲ[ː()]*[auʊ][ˈˌ]?%(jʲ%)') then
-		opt_hard = rsub(text, '(ʲ[ː()]*)([auʊ])([ˈˌ]?.)⁽ʲ⁾', '%1%2%3')
+		local opt_hard = rsub(text, '(ʲ[ː()]*)([auʊ])([ˈˌ]?.)⁽ʲ⁾', '%1%2%3')
 		opt_hard = rsub(opt_hard, '(ʲ[ː()]*)([auʊ])([ˈˌ]?)%(jʲ%)', '%1%2%3')
-		opt_soft = rsub(text, '(ʲ[ː()]*)([auʊ])([ˈˌ]?.)⁽ʲ⁾', function(a, b, c)
+		local opt_soft = rsub(text, '(ʲ[ː()]*)([auʊ])([ˈˌ]?.)⁽ʲ⁾', function(a, b, c)
 			return a .. fronting[b] .. c .. 'ʲ' end)
 		opt_soft = rsub(opt_soft, '(ʲ[ː()]*)([auʊ])([ˈˌ]?)%(jʲ%)', function(a, b, c)
 			return a .. fronting[b] .. c .. 'jʲ' end)
