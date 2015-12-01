@@ -296,7 +296,7 @@ def process_page(index, page, save, verbose):
 
     pagemsg("find_decl_args: Using decl template: %s" % unicode(decl_template))
     if unicode(decl_template.name) == "ru-decl-adj":
-      if re.search(ur"\bь\b", getparam(decl_template, "2")):
+      if re.search(ur"\bь\b", getparam(decl_template, "2"), re.U):
         return [("1", wordlink), ("2", u"+ь")], True, None, None
       else:
         return [("1", wordlink), ("2", "+")], True, None, None
