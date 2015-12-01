@@ -405,18 +405,26 @@ local accentless = {
 --
 -- Parts of speech:
 --   def = default used in absence of pos
---   n/noun = neuter noun in the nominative/accusative
---   inv = invariable noun or other word (currently treated as 'mid')
---   a/adj = adjective (typically either neuter in -ое or -ее, or plural in
---                    -ие, -ые, or -ье)
---   c/com = comparative (typically either in -ее or sibilant + -е)
---   pre = prepositional case
---   dat = dative case (treated same as prepositional)
---   adv = adverb
+--   n/noun = neuter noun in the nominative/accusative singular (but not ending
+--     in adjectival -ое or -ее; those should be considered as adjectives)
+--   pre = prepositional case singular
+--   dat = dative case singular (treated same as prepositional case singular)
 --   voc = vocative case (currently treated as 'mid')
---   v/vb/verb = verbal ending (usually 2nd-plural in -те)
---   pro = pronoun (кое-, какие-, ваше)
---   num = pronoun (двое, трое, четыре; currently treated as 'mid')
+--   nnp = noun nominative plural in -е (гра́ждане, боя́ре, армя́не); not
+--     adjectival plurals in -ие or -ые, including adjectival nouns
+--     (да́нные, а́вторские)
+--   inv = invariable noun or other word (currently treated as 'mid')
+--   a/adj = adjective or adjectival noun (typically either neuter in -ое or
+--     -ее, or plural in -ие, -ые, or -ье, or short neuter in unpaired
+--     sibilant + -е)
+--   c/com = comparative (typically either in -ее or sibilant + -е)
+--   adv = adverb
+--   p = preposition (treated same as adverb)
+--   v/vb/verb = finite verbal form (usually 2nd-plural in -те); not
+--     participle forms, which should be treated as adjectives
+--   pro = pronoun (кое-, какие-, ваше, сколькие)
+--   num = pronoun (двое, трое, обе, четыре; currently treated as 'mid')
+--   pref = prefix (treated as 'high' because integral part of word)
 --   hi/high = force high values ([ɪ] or [ɨ])
 --   mid = force mid values ([e] or [ɨ])
 --   lo/low/schwa = force low, really schwa, values ([ə])
@@ -433,20 +441,23 @@ local final_e = {
 	def={oe='ə', ve='e', je='e', softpaired='e', hardsib='y', softsib='e'}
 	noun={oe='ə', ve='e', je='e', softpaired='e', hardsib='ə', softsib='e'},
 	n='noun',
-	adj={oe='ə', ve='e', je='ə'}, -- FIXME: Not sure about -ее, e.g. neut adj си́нее
+	pre={oe='e', ve='e', softpaired='e', hardsib='y', softsib='e'},
+	dat='pre',
+	voc='mid',
+	nnp={softpaired='e'}, -- FIXME, not sure about this
+	inv='mid', --FIXME, not sure about this (e.g. вице-, кофе)
+	adj={oe='ə', ve='e', je='ə'}, -- FIXME: Not sure about -ее, e.g. neut adj си́нее; FIXME, not sure about short neuter adj, e.g. похо́же from похо́жий, дорогосто́яще from дорогосто́ящий, should this be treated as neuter noun?
 	a='adj',
 	com={ve='e', hardsib='y', softsib='e'},
 	c='com',
-	pre={oe='e', ve='e', softpaired='e', hardsib='y', softsib='e'},
-	dat='pre',
 	adv={softpaired='e', hardsib='y', softsib='e'},
-	voc='mid',
-	inv='mid',
+	p='adv', --FIXME, not sure about prepositions
 	verb={softpaired='e'},
 	v='verb',
 	vb='verb'
-	pro={oe='i', ve='i'},
-	num='mid',
+	pro={oe='i', ve='i'}, --FIXME, not sure about ваше, сколькие, какие-, кое-
+	num='mid', --FIXME, not sure about обе
+	pref='high',
 	-- forced values
 	high={oe='i', ve='i', je='i', softpaired='i', hardsib='y', softsib='i'},
 	hi='high',
