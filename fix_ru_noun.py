@@ -6,7 +6,7 @@
 
 # FIXME:
 #
-# 1. Skip stuff not in main namespace.
+# 1. (DONE) Skip stuff not in main namespace.
 # 2. Add debug code to print out full current and new text of page so I can
 #    verify that nothing bad is happening.
 
@@ -26,6 +26,10 @@ def process_page(index, page, save, verbose):
 
   pagemsg("Processing")
 
+  if ":" in pagetitle:
+    pagemsg("WARNING: Colon in page title, skipping")
+    return
+
   text = unicode(page.text)
 
   foundrussian = False
@@ -37,7 +41,7 @@ def process_page(index, page, save, verbose):
   for j in xrange(2, len(sections), 2):
     if sections[j-1] == "==Russian==\n":
       if foundrussian:
-        pagemsg("WARNING: Found multiple Russian sections")
+        pagemsg("WARNING: Found multiple Russian sections, skipping")
         return
       foundrussian = True
 
@@ -94,7 +98,7 @@ def process_page_section(index, page, section, verbose):
     return blib.expand_text(tempcall, pagetitle, pagemsg, verbose)
 
   if not page.exists():
-    pagemsg("WARNING: Page doesn't exist")
+    pagemsg("WARNING: Page doesn't exist, skipping")
     return None
 
   parsed = blib.parse_text(section)
@@ -166,14 +170,14 @@ def process_page_section(index, page, section, verbose):
         if not param.showkey:
           val = unicode(param.value)
           if val == "or":
-            pagemsg("WARNING: Manual translit and multi-decl templates, can't handle: %s" % unicode(decl_template))
+            pagemsg("WARNING: Manual translit and multi-decl templates, can't handle, skipping: %s" % unicode(decl_template))
             return None
           if val == "-" or val == "_" or val.startswith("join:"):
-            pagemsg("WARNING: Manual translit and multi-word templates, can't handle: %s" % unicode(decl_template))
+            pagemsg("WARNING: Manual translit and multi-word templates, can't handle, skipping: %s" % unicode(decl_template))
             return None
       for i in xrange(2, 10):
         if getparam(headword_template, "tr%s" % i):
-          pagemsg("WARNING: Headword template has translit param tr%s, can't handle: %s" % (
+          pagemsg("WARNING: Headword template has translit param tr%s, can't handle, skipping: %s" % (
             i, unicode(headword_template)))
           return None
       if runoun.arg1_is_stress(getparam(decl_template, "1")):
@@ -232,7 +236,7 @@ def process_page_section(index, page, section, verbose):
       unicode(noun_table_template))
   generate_result = expand_text(generate_template)
   if not generate_result:
-    pagemsg("WARNING: Error generating noun args")
+    pagemsg("WARNING: Error generating noun args, skipping")
     return None
   args = ru.split_generate_args(generate_result)
 
@@ -266,7 +270,7 @@ def process_page_section(index, page, section, verbose):
           generate_template_with_ndef)
       generate_result = expand_text(generate_template_with_ndef)
       if not generate_result:
-        pagemsg("WARNING: Error generating noun args")
+        pagemsg("WARNING: Error generating noun args, skipping")
         return None
       ndef_args = ru.split_generate_args(generate_result)
       if ndef_args["n"] == "s":
@@ -278,7 +282,7 @@ def process_page_section(index, page, section, verbose):
           pagemsg("Removing n=sg from headword tempate")
           rmparam(headword_template, "n")
       else:
-        pagemsg("Unable to remove n= from headword template because n=%s" %
+        pagemsg("WARNING: Unable to remove n= from headword template because n=%s" %
             ndef_args["n"])
 
   headword_template.params.extend(params_to_preserve)
