@@ -118,8 +118,14 @@ def process_page(index, page, save, verbose):
               pagemsg("Found declined noun: %s" % unicode(t))
               pos.add("n")
           elif tname in ["ru-noun+", "ru-proper noun+"]:
-            pagemsg("Found declined noun: %s" % unicode(t))
-            pos.add("n")
+            for param in t.params:
+              if re.search("^[0-9]+$", unicode(param.name)) and "+" in unicode(param.val):
+                pagemsg("Found declined adjectival noun, treating as adjective: %s" % unicode(t))
+                pos.add("a")
+                break
+            else:
+              pagemsg("Found declined noun: %s" % unicode(t))
+              pos.add("n")
           elif tname == "comparative of" and getp("lang") == "ru":
             pagemsg("Found comparative: %s" % unicode(t))
             pos.add("com")
