@@ -32,7 +32,7 @@ def process_page(index, page, save, verbose):
       saw_e = True
       break
   if not saw_e:
-    pagemsg("No possible final unstressed -е in page title, skipping")
+    pagemsg(u"No possible final unstressed -е in page title, skipping")
     return
   if " " in pagetitle or "-" in pagetitle:
     pagemsg("WARNING: Space or hyphen in page title and probable final unstressed -e, not sure how to handle yet")
@@ -168,10 +168,12 @@ def process_page(index, page, save, verbose):
           pagemsg("Removing pos=dat because pos=pre is found")
           pos.remove("dat")
         if "com" in pos:
-          if "adj" in pos:
+          if "a" in pos:
             pagemsg("Removing pos=adj because pos=com is found")
+            pos.remove("a")
           if "adv" in pos:
             pagemsg("Removing pos=adv because pos=com is found")
+            pos.remove("adv")
         if not pos:
           pagemsg("WARNING: Can't locate any parts of speech, skipping section")
           continue
@@ -185,10 +187,10 @@ def process_page(index, page, save, verbose):
           if unicode(t.name) == "ru-IPA":
             param = "phon"
             phon = getparam(t, param)
-            if not val:
+            if not phon:
               param = "1"
               phon = getparam(t, "1")
-              if not val:
+              if not phon:
                 param = "pagetitle"
                 phon = pagetitle
             lphon = phon.lower()
@@ -275,5 +277,4 @@ start, end = blib.get_args(args.start, args.end)
 for category in ["Russian lemmas", "Russian non-lemma forms"]:
   msg("Processing category: %s" % category)
   for i, page in blib.cat_articles(category, start, end):
-    msg("Page %s %s: Processing" % (i, unicode(page.title())))
     process_page(i, page, args.save, args.verbose)
