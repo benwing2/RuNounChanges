@@ -331,7 +331,7 @@ TODO:
 29. More sophisticated handling of user-requested plural variant vs. special
   case (1) vs. plural-detected variant. [IMPLEMENTED. NEED TO TEST FURTHER.]
 30. Solution to ambiguous plural involving gender spec "3f". [IMPLEMENTED;
-   NEED TO TEST.]
+   NEED TO TEST. Use запчасти.]
 33. With pluralia tantum adjectival nouns, we don't know the gender.
    By default we assume masculine (or feminine for old-style -ія nouns) and
    currently this goes into the category, but shouldn't. [IMPLEMENTED.]
