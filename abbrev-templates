@@ -1,0 +1,263 @@
+ru-abbrev of:
+
+{{abbreviation of|lang=ru|{{{1|}}}|{{{2|}}}|{{{3|}}}|tr={{{tr|}}}|dot={{{dot|}}}|nocap={{#if:{{{cap|}}}||1}}}}<!--
+--><noinclude>{{documentation}}</noinclude>
+
+ru-abbrev of/documentation:
+
+{{documentation subpage}}
+==Usage==
+This template is used to properly format a Russian [[abbreviation]]. The word or words may or may not have direct or indirect links. If a term does not exist in Wiktionary and is not an appropriate entry, the link may go to Wikipedia. The following parameters exist:
+
+{| class="wikitable"
+|-
+! Parameter !! Description !! Notes
+|-
+| <code>1</code> || if {{para|2}} is empty, {{para|1}} is what the abbreviation stands for, as it is to be displayed, with the page link automatically derived from it; else, it is the page to link to, with the display form specified separately in {{para|2}} || normally required
+|-
+| <code>2</code> || see comments for {{para|1}} || normally omitted
+|-
+| <code>3</code> || English-language gloss || optional
+|-
+| <code>tr</code> || Manual transliteration || normally omitted, defaulting to the automatic transliteration of the display form
+|-
+| <code>cap</code> || If non-empty, capitalize the first letter of ''abbreviation'' || normally omitted
+|-
+| <code>dot</code> || If non-empty, punctuation to emit after the rest of the template || normally omitted, and no punctuation will be emitted
+|}
+
+The page is automatically placed in the category [[:Category:Russian abbreviations]].
+
+;Examples:
+
+{| class="wikitable"
+|-
+! Word !! Kode !! Result !! Notes
+|-
+| {{m|ru|а́ва}} || <code><nowiki>{{ru-abbrev of|авата́р||[[avatar]]}}</nowiki></code> || {{ru-abbrev of|авата́р||[[avatar]]}} || links to the page named ''аватар'' (accents automatically stripped)
+|-
+|{{m|ru|Ж}} || <code><nowiki>{{ru-abbrev of|[[женский|же́нская]] [[убо́рная]]||women's restroom}}: [[ladies' room]], women's [[toilet]]</nowiki></code> || {{ru-abbrev of|[[женский|же́нская]] [[убо́рная]]||women's restroom}}: [[ladies' room]], women's [[toilet]] || link to individual words (a bare link like <code><nowiki>[[убо́рная]]</nowiki></code> is automatically accent-stripped to produce a link to the page named ''уборная''); note literal meaning using the gloss param, and fluent definition following the template
+|}
+<includeonly>
+[[Category:Russian definition-line templates]]
+</includeonly>
+
+ru-acronym of:
+
+{{acronym of|lang=ru|{{{1|}}}|{{{2|}}}|{{{3|}}}|tr={{{tr|}}}|dot={{{dot|}}}|nocap={{#if:{{{cap|}}}||1}}}}<!--
+-->[[Category:Russian abbreviations]]<!--
+--><noinclude>{{documentation}}</noinclude>
+
+ru-acronym of/documentation:
+
+{{documentation subpage}}
+==Usage==
+This template is used to properly format a Russian [[acronym]]. The word or words may or may not have direct or indirect links. If a term does not exist in Wiktionary and is not an appropriate entry, the link may go to Wikipedia. The following parameters exist:
+
+{| class="wikitable"
+|-
+! Parameter !! Description !! Notes
+|-
+| <code>1</code> || if {{para|2}} is empty, {{para|1}} is what the acronym stands for, as it is to be displayed, with the page link automatically derived from it; else, it is the page to link to, with the display form specified separately in {{para|2}} || normally required
+|-
+| <code>2</code> || see comments for {{para|1}} || normally omitted
+|-
+| <code>3</code> || English-language gloss || optional
+|-
+| <code>tr</code> || Manual transliteration || normally omitted, defaulting to the automatic transliteration of the display form
+|-
+| <code>cap</code> || If non-empty, capitalize the first letter of ''acronym'' || normally omitted
+|-
+| <code>dot</code> || If non-empty, punctuation to emit after the rest of the template || normally omitted, and no punctuation will be emitted
+|}
+
+The page is automatically placed in the categories [[:Category:Russian acronyms]] and [[:Category:Russian abbreviations]].
+
+;Examples:
+
+{| class="wikitable"
+|-
+! Word !! Kode !! Result !! Notes
+|-
+| {{m|ru|ВОВ}} || <code><nowiki>{{ru-acronym of|Вели́кая Оте́чественная война́||[[Great Patriotic War]]}} {{gloss|World War II}}</nowiki></code> || {{ru-acronym of|Вели́кая Оте́чественная война́||[[Great Patriotic War]]}} {{gloss|World War II}} || links to the page named ''Великая Отечественная война'' (accents automatically stripped)
+|-
+| {{m|ru|вуз}} || <code><nowiki>{{ru-acronym of|[[высший|вы́сшее]] [[учебный|уче́бное]] [[заведе́ние]]||higher/highest educational establishment}}: [[university]], [[college]], [[institute]]</nowiki></code> || {{ru-acronym of|[[высший|вы́сшее]] [[учебный|уче́бное]] [[заведе́ние]]||higher/highest educational establishment}}: [[university]], [[college]], [[institute]] || link to individual words (a bare link like <code><nowiki>[[заведе́ние]]</nowiki></code> is automatically accent-stripped to produce a link to the page named ''заведение''); note literal meaning using the gloss param, and fluent definition following the template
+|-
+| {{m|ru|ГЛОНА́СС}} || <code><nowiki>{{ru-acronym of|[[глобальный|ГЛОбальная]] [[навигация|НАвигационная]] [[спутник|Спутниковая]] [[система|Система]]}}: [[GLONASS]], Global Navigation Satellite System ([[GPS]])</nowiki></code> || {{ru-acronym of|[[глобальный|ГЛОбальная]] [[навигация|НАвигационная]] [[спутник|Спутниковая]] [[система|Система]]}}: [[GLONASS]], Global Navigation Satellite System ([[GPS]]) || note that the definition includes the corresponding English acronym for the system
+|}
+<includeonly>
+[[Category:Russian definition-line templates]]
+</includeonly>
+
+ru-initialism of:
+
+{{initialism of|lang=ru|{{{1|}}}|{{{2|}}}|{{{3|}}}|tr={{{tr|}}}|dot={{{dot|}}}|nocap={{#if:{{{cap|}}}||1}}}}<!--
+-->[[Category:Russian abbreviations]]<!--
+--><noinclude>{{documentation}}</noinclude>
+
+{{documentation subpage}}
+==Usage==
+This template is used to properly format a Russian [[initialism]]. The word or words may or may not have direct or indirect links. If a term does not exist in Wiktionary and is not an appropriate entry, the link may go to Wikipedia. The following parameters exist:
+
+{| class="wikitable"
+|-
+! Parameter !! Description !! Notes
+|-
+| <code>1</code> || if {{para|2}} is empty, {{para|1}} is what the initialism stands for, as it is to be displayed, with the page link automatically derived from it; else, it is the page to link to, with the display form specified separately in {{para|2}} || normally required
+|-
+| <code>2</code> || see comments for {{para|1}} || normally omitted
+|-
+| <code>3</code> || English-language gloss || optional
+|-
+| <code>tr</code> || Manual transliteration || normally omitted, defaulting to the automatic transliteration of the display form
+|-
+| <code>cap</code> || If non-empty, capitalize the first letter of ''initialism'' || normally omitted
+|-
+| <code>dot</code> || If non-empty, punctuation to emit after the rest of the template || normally omitted, and no punctuation will be emitted
+|}
+
+The page is automatically placed in the categories [[:Category:Russian initialisms]] and [[:Category:Russian abbreviations]].
+
+;Examples:
+
+{| class="wikitable"
+|-
+! Word !! Kode !! Result !! Notes
+|-
+| {{m|ru|БТР}} || <code><nowiki>{{ru-initialism of|бронетранспортёр||[[APC]]}}</nowiki></code> || {{ru-initialism of|бронетранспортёр||[[APC]]}} || links to the page named ''бронетранспортёр''
+|-
+| {{m|ru|ДНР}} || <code><nowiki>{{ru-initialism of|Доне́цкая Наро́дная Респу́блика||[[Donetsk People's Republic]]}}</nowiki></code> || {{ru-initialism of|Доне́цкая Наро́дная Респу́блика||[[Donetsk People's Republic]]}} || links to the page named ''Донецкая Народная Республика'' (accents automatically stripped when constructing the link)
+|-
+| {{m|ru|АНБ}} || <code><nowiki>{{ru-initialism of|[[агентство|Аге́нтство]] [[национальный|национа́льной]] [[безопасность|безопа́сности]]||Agency of National Security}}: [[NSA]], {{w|National Security Agency}} {{gloss|US}}</nowiki></code> || {{ru-initialism of|[[агентство|Аге́нтство]] [[национальный|национа́льной]] [[безопасность|безопа́сности]]||Agency of National Security}}: [[NSA]], {{w|National Security Agency}} {{gloss|US}} || link to individual words; note literal meaning using the gloss param, and fluent definition following the template
+|}
+<includeonly>
+[[Category:Russian definition-line templates]]
+</includeonly>
+
+ru-etym abbrev of:
+
+{{#if:{{{nocap|}}}|a|A}}bbreviation of {{m|ru|{{{1|}}}|{{{2|}}}|{{{3|}}}|tr={{{tr|}}}}}<!--
+-->[[Category:Russian abbreviations]]<!--
+--><noinclude>{{documentation}}</noinclude>
+
+ru-etym abbrev of/documentation:
+
+{{documentation subpage}}
+==Usage==
+This template is used to properly format a Russian [[abbreviation]] in an etymology section. The word or words may or may not have direct or indirect links. If a term does not exist in Wiktionary and is not an appropriate entry, the link may go to Wikipedia. The following parameters exist:
+
+{| class="wikitable"
+|-
+! Parameter !! Description !! Notes
+|-
+| <code>1</code> || if {{para|2}} is empty, {{para|1}} is what the abbreviation stands for, as it is to be displayed, with the page link automatically derived from it; else, it is the page to link to, with the display form specified separately in {{para|2}} || normally required
+|-
+| <code>2</code> || see comments for {{para|1}} || normally omitted
+|-
+| <code>3</code> || English-language gloss || optional
+|-
+| <code>tr</code> || Manual transliteration || normally omitted, defaulting to the automatic transliteration of the display form
+|-
+| <code>nocap</code> || If non-empty, don't capitalize the first letter of ''Abbreviation'' || normally omitted
+|}
+
+The page is automatically placed in the category [[:Category:Russian abbreviations]].
+
+;Examples:
+
+{| class="wikitable"
+|-
+! Word !! Kode !! Result !! Notes
+|-
+| {{m|ru|зав}} || <code><nowiki>{{ru-etym abbrev of|заве́дующий}}.</nowiki></code> || {{ru-etym abbrev of|заве́дующий}}. || links to the page named ''заведующий'' (accents automatically stripped)
+|-
+| {{m|ru|вещмешо́к}} || <code><nowiki>{{ru-etym abbrev of|[[вещево́й]] [[мешо́к]]||clothing sack, duffel bag}}.</nowiki></code> || {{ru-etym abbrev of|[[вещево́й]] [[мешо́к]]||clothing sack, duffel bag}}. || link to individual words (a bare link like <code><nowiki>[[мешо́к]]</nowiki></code> is automatically accent-stripped to produce a link to the page named ''мешок'')
+|}
+<includeonly>
+[[Category:Russian definition-line templates]]
+</includeonly>
+
+ru-etym acronym of:
+
+{{#if:{{{nocap|}}}|a|A}}cronym of {{m|ru|{{{1|}}}|{{{2|}}}|{{{3|}}}|tr={{{tr|}}}}}<!--
+-->[[Category:Russian acronyms]]<!--
+-->[[Category:Russian abbreviations]]<!--
+--><noinclude>{{documentation}}</noinclude>
+
+ru-etym acronym of/documentation:
+
+{{documentation subpage}}
+==Usage==
+This template is used to properly format a Russian [[acronym]] in an etymology section. The word or words may or may not have direct or indirect links. If a term does not exist in Wiktionary and is not an appropriate entry, the link may go to Wikipedia. The following parameters exist:
+
+{| class="wikitable"
+|-
+! Parameter !! Description !! Notes
+|-
+| <code>1</code> || if {{para|2}} is empty, {{para|1}} is what the acronym stands for, as it is to be displayed, with the page link automatically derived from it; else, it is the page to link to, with the display form specified separately in {{para|2}} || normally required
+|-
+| <code>2</code> || see comments for {{para|1}} || normally omitted
+|-
+| <code>3</code> || English-language gloss || optional
+|-
+| <code>tr</code> || Manual transliteration || normally omitted, defaulting to the automatic transliteration of the display form
+|-
+| <code>nocap</code> || If non-empty, don't capitalize the first letter of ''Abbreviation'' || normally omitted
+|}
+
+The page is automatically placed in the categories [[:Category:Russian acronyms]] and [[:Category:Russian abbreviations]].
+
+;Examples:
+
+{| class="wikitable"
+|-
+! Word !! Kode !! Result !! Notes
+|-
+| {{m|ru|нэп}} || <code><nowiki>{{ru-etym acronym of|[[новый|но́вая]] [[экономический|экономи́ческая]] [[поли́тика]]}}.</nowiki></code> || {{ru-etym acronym of|[[новый|но́вая]] [[экономический|экономи́ческая]] [[поли́тика]]}}. || link to individual words (a bare link like <code><nowiki>[[поли́тика]]</nowiki></code> is automatically accent-stripped to produce a link to the page named ''политика'')
+|}
+<includeonly>
+[[Category:Russian definition-line templates]]
+</includeonly>
+
+ru-etym initialism of:
+
+{{#if:{{{nocap|}}}|i|I}}nitialism of {{m|ru|{{{1|}}}|{{{2|}}}|{{{3|}}}|tr={{{tr|}}}}}<!--
+-->[[Category:Russian initialisms]]<!--
+-->[[Category:Russian abbreviations]]<!--
+--><noinclude>{{documentation}}</noinclude>
+
+ru-etym initialism of/documentation:
+
+{{documentation subpage}}
+==Usage==
+This template is used to properly format a Russian [[initialism]] in an etymology section. The word or words may or may not have direct or indirect links. If a term does not exist in Wiktionary and is not an appropriate entry, the link may go to Wikipedia. The following parameters exist:
+
+{| class="wikitable"
+|-
+! Parameter !! Description !! Notes
+|-
+| <code>1</code> || if {{para|2}} is empty, {{para|1}} is what the initialism stands for, as it is to be displayed, with the page link automatically derived from it; else, it is the page to link to, with the display form specified separately in {{para|2}} || normally required
+|-
+| <code>2</code> || see comments for {{para|1}} || normally omitted
+|-
+| <code>3</code> || English-language gloss || optional
+|-
+| <code>tr</code> || Manual transliteration || normally omitted, defaulting to the automatic transliteration of the display form
+|-
+| <code>nocap</code> || If non-empty, don't capitalize the first letter of ''Abbreviation'' || normally omitted
+|}
+
+The page is automatically placed in the categories [[:Category:Russian initialisms]] and [[:Category:Russian abbreviations]].
+
+;Examples:
+
+{| class="wikitable"
+|-
+! Word !! Kode !! Result !! Notes
+|-
+| {{m|ru|АК-47}} || <code><nowiki>{{ru-etym initialism of|[[автома́т Кала́шникова]] 1947}}, from the name of the designer [[w:Mikhail Kalashnikov|Mikhail Kalashnikov]].</nowiki></code> || {{ru-etym initialism of|[[автома́т Кала́шникова]] 1947}}, from the name of the designer [[w:Mikhail Kalashnikov|Mikhail Kalashnikov]]. || link to individual words (a bare link like <code><nowiki>[[автома́т Кала́шникова]]</nowiki></code> is automatically accent-stripped to produce a link to the page named ''автомат Калашникова'')
+|}
+<includeonly>
+[[Category:Russian definition-line templates]]
+</includeonly>
+
