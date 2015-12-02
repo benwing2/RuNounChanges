@@ -185,7 +185,7 @@ ud}}.
 ===Noun===
 {{ru-noun+|а́ва}}
 
-# {{lb|ru|slang}} {{ru-abbrev of|аватар||[[avatar]]}}
+# {{lb|ru|slang}} {{ru-abbrev of|авата́р||[[avatar]]}}
 
 ====Declension====
 {{ru-noun-table|а́ва}}
@@ -402,7 +402,7 @@ ud}}.
 ==Russian==
 
 ===Etymology===
-{{ru-etym abbrev of|[[вещево́й]] [[мешо́к]]}}.
+{{ru-etym abbrev of|[[вещево́й]] [[мешо́к]]||clothing sack}}.
 
 ===Pronunciation===
 * {{ru-IPA|вещмешо́к}}
@@ -539,7 +539,7 @@ ud}}.
 
 ==Russian==
 
-===Abbreviation===
+===Noun===
 {{ru-noun+|n=sg|a=an}}
 
 # {{ru-abbrev of|госпожа́}}: [[Mrs.]], [[Mistress]], [[Madam]]
@@ -551,7 +551,7 @@ ud}}.
 
 ==Russian==
 
-===Abbreviation===
+===Noun===
 {{ru-noun+|a|*г-н|a=an|n=sg}}
 
 # {{ru-abbrev of|господи́н}}: [[Mr.]], [[Mister]], [[sir]]
@@ -696,7 +696,7 @@ ud}}.
 ==Russian==
 
 ===Etymology===
-{{ru-abbrev of|[[городско́й]] [[комите́т]]}}.
+{{ru-etym abbrev of|[[городско́й]] [[комите́т]]}}.
 
 ===Pronunciation===
 * {{ru-IPA|горко́м}}
@@ -815,10 +815,10 @@ From {{inh|ru|sla-pro|*gradъ}}, from {{inh|ru|ine-pro|*greh₃d-}}. Cognate wit
 ===Etymology 3===
 {{bor|ru|la|gradus}}.
 
-====Abbreviation====
+====Noun====
 {{ru-noun|град.|m-in|-}}
 
-# {{ru-abbrev of|[[гра́дус]]||[[degree]]}}
+# {{ru-abbrev of|гра́дус||[[degree]]}}
 
 [[Category:ru:Weather]]
 
@@ -944,7 +944,7 @@ From {{inh|ru|sla-pro|*da}}.
 
 ===Etymology 2===
 
-====Abbreviation====
+====Prefix====
 {{head|ru|prefix}}
 
 # {{ru-abbrev of|дека-||[[deca-]] (x 10)}}
@@ -1190,7 +1190,7 @@ From {{inh|ru|sla-pro|*da}}.
 ===Noun===
 {{ru-noun||f-in}}
 
-# {{ru-abbrev of|[[женский|же́нская]] [[убо́рная]]||[[ladies' room]], women's [[toilet]]}}
+# {{ru-abbrev of|[[женский|же́нская]] [[убо́рная]]||women's restroom}}: [[ladies' room]], women's [[toilet]]
 
 
 ж.
@@ -1545,7 +1545,7 @@ From {{inh|ru|sla-pro|*da}}.
 
 ===Etymology 2===
 
-====Abbreviation====
+====Noun====
 {{ru-noun|кал|f-in|-}}
 
 # {{ru-abbrev of|калория|[[calorie]]}}
