@@ -84,8 +84,8 @@ def process_page(index, page, save, verbose):
               phon = (getparam(t, "phon") or getparam(t, "1") or pagetitle).lower()
               phonwords = re.split("([ -]+)", phon)
               if len(phonwords) != len(titlewords):
-                pagemsg("WARNING: #Words (%s) in phon=%s not same as #words (%s) in title, skipping phon" %
-                    len(phonwords), phon, len(titlewords))
+                pagemsg("WARNING: #Words (%s) in phon=%s not same as #words (%s) in title, skipping phon" % (
+                    (len(phonwords)+1)//2, phon, (len(titlewords)+1)//2))
               else:
                 for i in xrange(0, len(phonwords), 2):
                   titleword = titlewords[i]
@@ -147,7 +147,7 @@ def process_page(index, page, save, verbose):
                 pos.add("n")
             elif tname in ["ru-noun+", "ru-proper noun+"]:
               for param in t.params:
-                if re.search("^[0-9]+$", unicode(param.name)) and "+" in unicode(param.val):
+                if re.search("^[0-9]+$", unicode(param.name)) and "+" in unicode(param.value):
                   pagemsg("Found declined adjectival noun, treating as adjective: %s" % unicode(t))
                   pos.add("a")
                   break
@@ -173,7 +173,7 @@ def process_page(index, page, save, verbose):
               elif getp("2") == "pronoun form":
                 pagemsg("Found pronoun form: %s" % unicode(t))
                 pos.add("pro")
-              elif "preposition":
+              elif getp("2") == "preposition":
                 pagemsg("Found preposition: %s" % unicode(t))
                 pos.add("p")
               elif getp("2") == "numeral":
@@ -225,11 +225,14 @@ def process_page(index, page, save, verbose):
             pos.remove("dat")
           if "com" in pos:
             if "a" in pos:
-              pagemsg("Removing pos=adj because pos=com is found")
+              pagemsg("Removing pos=a because pos=com is found")
               pos.remove("a")
             if "adv" in pos:
               pagemsg("Removing pos=adv because pos=com is found")
               pos.remove("adv")
+          if "a" in pos and "nnp" in pos:
+            pagemsg("Removing pos=nnp because pos=a is found")
+            pos.remove("nnp")
           if not pos:
             pagemsg("WARNING: Can't locate any parts of speech, skipping section")
             continue
@@ -260,7 +263,7 @@ def process_page(index, page, save, verbose):
                 for i in xrange(0, len(phonwords), 2):
                   titleword = titlewords[i]
                   phonword = phonwords[i]
-                  lphon = phonword.lower()
+                  lphonword = phonword.lower()
                   wordno = i//2 + 1
 
                   if ru.is_monosyllabic(phonword):
