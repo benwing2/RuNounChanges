@@ -124,6 +124,9 @@ def process_page_section(index, page, section, verbose):
     pagemsg("WARNING: Found multiple ru-noun-old templates, skipping")
     return None
   if len(noun_table_templates) < 1:
+    if noun_old_templates:
+      pagemsg("WARNING: No ru-noun-table templates but found ru-noun-old template(s): %s" %
+          ", ".join(unicode(x) for x in noun_old_templates))
     return unicode(parsed), 0, 0, 0, []
 
   for t in parsed.filter_templates():
@@ -250,8 +253,8 @@ def process_page_section(index, page, section, verbose):
     new_params.append((param.name, param.value))
 
   orig_headword_template = unicode(headword_template)
-  params_to_preserve = fix_old_headword_params(headword_template, new_params,
-      genders, pagemsg)
+  params_to_preserve = runoun.fix_old_headword_params(headword_template,
+      new_params, genders, pagemsg)
   if params_to_preserve == None:
     return None
 
@@ -303,5 +306,7 @@ parser = blib.create_argparser("Convert ru-noun to ru-noun+, ru-proper noun to r
 args = parser.parse_args()
 start, end = blib.get_args(args.start, args.end)
 
-for i, page in blib.references("Template:ru-noun-table", start, end):
-  process_page(i, page, args.save, args.verbose)
+for template in ["Template:ru-noun", "Template:ru-proper noun"]:
+  msg("Processing references to %s" % template)
+  for i, page in blib.references(template, start, end):
+    process_page(i, page, args.save, args.verbose)
