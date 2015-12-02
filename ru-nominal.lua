@@ -64,8 +64,8 @@ end
 function export.concat_russian_tr(ru1, tr1, ru2, tr2, dopair, movenotes)
 	local function concat_maybe_moving_notes(x, y)
 		if movenotes then
-			local xentry, xnotes = m_table_tools.get_notes(x)
-			local yentry, xnotes = m_table_tools.get_notes(y)
+			local xentry, xnotes = m_table_tools.separate_notes(x)
+			local yentry, ynotes = m_table_tools.separate_notes(y)
 			return xentry .. yentry .. xnotes .. ynotes
 		else
 			return x .. y
@@ -82,7 +82,7 @@ function export.concat_russian_tr(ru1, tr1, ru2, tr2, dopair, movenotes)
 		if not tr2 then
 			tr2 = export.translit_no_links(ru2)
 		end
-		ru, tr = concat_maybe_moving_notes(ru1 .. ru2), com.j_correction(concat_maybe_moving_notes(tr1 .. tr2))
+		ru, tr = concat_maybe_moving_notes(ru1, ru2), com.j_correction(concat_maybe_moving_notes(tr1, tr2))
 	end
 	if dopair then
 		return {ru, tr}
