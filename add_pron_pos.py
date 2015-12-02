@@ -30,11 +30,15 @@ def process_page(index, page, save, verbose):
 
   pagemsg("Processing")
 
+  override_pos = pages_pos.get(pagetitle, None)
+  if override_pos:
+    del pages_pos[pagetitle]
+
   if ":" in pagetitle:
     pagemsg("WARNING: Colon in page title, skipping page")
     return
 
-  titlewords = re.split("([ -]+)", re.sub("[!?]$", "", pagetitle))
+  titlewords = re.split(u"([ ‿-]+)", re.sub("[!?]$", "", pagetitle))
   saw_e = False
   for word in titlewords:
     if word.endswith(u"е") and not ru.is_monosyllabic(word):
@@ -43,10 +47,6 @@ def process_page(index, page, save, verbose):
   if not saw_e:
     pagemsg(u"No possible final unstressed -е in page title, skipping")
     return
-
-  override_pos = pages_pos.get(pagetitle, None)
-  if override_pos:
-    del pages_pos[pagetitle]
 
   if (" " in pagetitle or "-" in pagetitle) and not override_pos:
     pagemsg("WARNING: Space or hyphen in page title and probable final unstressed -e, not sure how to handle yet")
@@ -82,7 +82,7 @@ def process_page(index, page, save, verbose):
                   (k//2, unicode(t)))
             else:
               phon = (getparam(t, "phon") or getparam(t, "1") or pagetitle).lower()
-              phonwords = re.split("([ -]+)", phon)
+              phonwords = re.split(u"([ ‿-]+)", phon)
               if len(phonwords) != len(titlewords):
                 pagemsg("WARNING: #Words (%s) in phon=%s not same as #words (%s) in title, skipping phon" % (
                     (len(phonwords)+1)//2, phon, (len(titlewords)+1)//2))
@@ -302,12 +302,20 @@ def process_page(index, page, save, verbose):
                       pos, phon, newphon, k//2, unicode(t)))
                   pagemsg("Modified phon=%s to %s in section %s: %s" % (
                     phon, newphon, k//2, unicode(t)))
-                  t.add(param, newphon)
+                  if pos == "none":
+                    pagemsg("WARNING: pos=none, should not occur, not modifying phon=%s to %s in section %s: %s" % (
+                      phon, newphon, k//2, unicode(t)))
+                  else:
+                    t.add(param, newphon)
 
-                t.add("pos", pos)
-                notes.append("added pos=%s%s" % (pos, override_pos and " (override)" or ""))
-                pagemsg("Replaced %s with %s in section %s%s" % (
-                  origt, unicode(t), k//2, override_pos and " (using override)" or ""))
+                if pos == "none":
+                  pagemsg("WARNING: pos=none, should not occur, not setting pos= in section %s: %s" %
+                      (k//2, unicode(t)))
+                else:
+                  t.add("pos", pos)
+                  notes.append("added pos=%s%s" % (pos, override_pos and " (override)" or ""))
+                  pagemsg("Replaced %s with %s in section %s%s" % (
+                    origt, unicode(t), k//2, override_pos and " (using override)" or ""))
         subsections[k] = unicode(parsed)
       sections[j] = "".join(subsections)
 
@@ -359,10 +367,7 @@ if args.posfile:
       msg("WARNING: Can't parse line: %s" % line)
     else:
       pos, page = m.groups()
-      if pos == "none":
-        msg("Skipping line with pos=none: %s" % line)
-      else:
-        pages_pos[page] = pos
+      pages_pos[page] = pos
 
 for category in ["Russian lemmas", "Russian non-lemma forms"]:
   msg("Processing category: %s" % category)
