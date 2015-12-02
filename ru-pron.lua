@@ -386,16 +386,28 @@ local cons_assim_palatal = {
 		'mpʲ', 'mbʲ', 'mfʲ', 'fmʲ'})
 }
 
---@Wyang - they may carry the stress too, as alternatives - по́ небу/по не́бу, etc.
+-- words which will be treated as accentless (i.e. their vowels will be
+-- reduced), and which will liaise with a preceding or following word;
+-- this will not happen if the words have an accent mark, cf.
+-- по́ небу vs. по не́бу, etc.
 local accentless = {
-	prep = ut.list_to_set({'bez', 'bliz', 'v', 'vo', 'do',
+	-- class 'pre': particles that join with a following word
+	pre = ut.list_to_set({'bez', 'bliz', 'v', 'vo', 'do',
        'iz-pod', 'iz-za', 'za', 'iz', 'izo',
-       'k', 'ko', 'mež', 'na', 'nad', 'nado', 'o', 'ob', 'obo', 'ot',
+       'k', 'ko', 'mež', 'na', 'nad', 'nado', 'ob', 'obo', 'ot',
        'po', 'pod', 'podo', 'pred', 'predo', 'pri', 'pro', 'pered', 'peredo',
        'čerez', 's', 'so', 'u', 'ne'}),
-	posthyphen = ut.list_to_set({'to'}),
+	-- class 'prespace': particles that join with a following word, but only
+	--   if a space (not a hyphen) separates them; hyphens are used here
+	--   to spell out letters, e.g. а-эн-бэ́ for АНБ (NSA = National Security
+	--   Agency) or о-а-э́ for ОАЭ (UAE = United Arab Emirates)
+	prespace = ut.list_to_list({'a', 'o'}),
+	-- class 'post': particles that join with a preceding word
 	post = ut.list_to_set({'libo', 'nibudʹ', 'by', 'b', 'že', 'ž',
-       'ka', 'tka', 'li'})
+       'ka', 'tka', 'li'}),
+	-- class 'posthyphen': particles that join with a preceding word, but only
+	--   if a hyphen (not a space) separates them
+	posthyphen = ut.list_to_set({'to'}),
 }
 
 -- Pronunciation of final unstressed -е, depending on the part of speech and
@@ -573,41 +585,64 @@ function export.ipa(text, adj, gem, pos, bracket)
 	text = rsub(text, '%s+', ' ')
 
 	-- Add primary stress to single-syllable words preceded or followed by
-	-- unstressed particle or preposition. Make remaining single-syllable
-	-- words that aren't a particle or preposition or have an accent mark
-	-- or begin or end with a hyphen have "tertiary" stress (treated as
-	-- stressed but without a primary or secondary stress marker; we
-	-- repurpose a circumflex for this purpose). We need to preserve the
-	-- distinction between spaces and hyphens because we only recognize
-	-- certain post-accentless particles following a dash (to distinguish e.g.
-	-- 'то' from '-то') and we recognize hyphens for the purpose of marking
+	-- unstressed particle or preposition. Add "tertiary" stress to remaining
+	-- single-syllable words that aren't a particle, preposition, prefix or
+	-- suffix ("tertiary stress" means they are treated as stressed for the
+	-- purposes of vowel reduction but aren't marked with a primary or
+	-- secondary stress marker; we repurpose a circumflex for this purpose).
+	-- We need to preserve the distinction between spaces and hyphens because
+	-- (1) we only recognize certain post-accentless particles following a
+	-- hyphen (to distinguish e.g. 'то' from '-то'); (2) we only recognize
+	-- certain pre-accentless particles preceding a space (to distinguish
+	-- particles 'о' and 'а' from spelled letters о and а, which should not
+	-- be reduced); and (3) we recognize hyphens for the purpose of marking
 	-- unstressed prefixes and suffixes.
 	local word = strutils.capturing_split(text, "([ %-]+)")
 	for i = 1, #word do
-		if not accentless['prep'][word[i]] and not (i > 2 and accentless['post'][word[i]]) and not (i > 2 and accentless['posthyphen'][word[i]] and word[i-1] == "-") and
+		-- check for single-syllable words that need a stress; they must meet
+		-- the following conditions:
+		-- 1. must not be an accentless word, which is any of the following:
+		--         1a. in the "pre" class, or
+		if not (accentless['pre'][word[i]] or
+				-- 1b. in the "prespace" class if followed by space and another word, or
+				i < #word - 1 and accentless['prespace'][word[i]] and word[i+1] == " " or
+				-- 1c. in the "post" class if preceded by another word, or
+				i > 2 and accentless['post'][word[i]] or
+				-- 1d. in the "posthyphen" class preceded by a hyphen and another word;
+				i > 2 and accentless['posthyphen'][word[i]] and word[i-1] == "-") and
+		-- 2. must be one syllable;
 			ulen(rsub(word[i], '[^' .. vow .. ']', '')) == 1 and
-			not rfind(word[i], accents) then
-			if (i == 3 and word[2] == "-" and word[1] == "" or
+		-- 3. must not have any accents (including dot-above, forcing reduction);
+			not rfind(word[i], accents) and
+		-- 4. must not be a prefix or suffix, identified by a preceding or trailing hyphen, i.e. one of the following:
+		--         4a. utterance-initial preceded by a hyphen, or
+			not (i == 3 and word[2] == "-" and word[1] == "" or
+			    -- 4b. non-utterance-initial preceded by a hyphen, or
 				i >= 3 and word[i-1] == " -" or
+			    -- 4c. utterance-final followed by a hyphen, or
 				i == #word - 2 and word[i+1] == "-" and word[i+2] == "" or
+			    -- 4d. non-utterance-final followed by a hyphen;
 				i <= #word - 2 and word[i+1] == "- ") then
-				-- prefix or suffix, leave unstressed
-			elseif (i > 2 and accentless['prep'][word[i-2]] or i < #word - 1 and accentless['post'][word[i+2]] or i < #word - 1 and word[i+1] == "-" and accentless['posthyphen'][word[i+2]]) then
-				-- preceded by a preposition, or followed by an unstressed
-				-- particle or by -то; add primary stress
+
+		-- OK, we have a stressable single-syllable word; either add primary
+		-- or tertiary stress:
+		-- 1. add primary stress if preceded or followed by an accentless word,
+			if (i > 2 and accentless['pre'][word[i-2]] or
+				i > 2 and word[i-1] == " " and accentless['prespace'][word[i-2]] or
+				i < #word - 1 and accentless['post'][word[i+2]] or
+				i < #word - 1 and word[i+1] == "-" and accentless['posthyphen'][word[i+2]]) then
 				word[i] = rsub(word[i], vowels_c, '%1' .. AC)
+		-- 2. else add tertiary stress
 			else
-				-- add tertiary stress
 				word[i] = rsub(word[i], vowels_c, '%1' .. CFLEX)
 			end
 		end
 	end
 
-
-	-- make prepositions and particles liaise with the following or
+	-- make unaccented prepositions and particles liaise with the following or
 	-- preceding word
 	for i = 1, #word do
-		if i < #word - 1 and accentless['prep'][word[i]] then
+		if i < #word - 1 and (accentless['pre'][word[i]] or accentless['prespace'][word[i]] and word[i+1] == " ") then
 			word[i+1] = '‿'
 		elseif i > 2 and (accentless['post'][word[i]] or accentless['posthyphen'][word[i]] and word[i-1] == "-") then
 			word[i-1] = '‿'
