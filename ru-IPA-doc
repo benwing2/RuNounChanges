@@ -33,17 +33,20 @@ As mentioned above, part of speech codes are currently only used for determining
 
 The possible part of speech codes are:
 * ''omitted'' or <code>def</code> = Default ([ə] in the ending -ое, else same as <code>mid</code>)
-* <code>n</code> or <code>noun<code> = Neuter noun in the nominative/accusative
-* <code>inv</code> = invariable noun or other word (currently treated as <code>mid</code>)
-* <code>a</code> or <code>adj</code> = adjective (typically either neuter in -ое or -ее, or plural in -ие, -ые, or -ье)
-* <code>c</code> or <code>com</code> = comparative (typically either in -ее or sibilant + -е)
-* <code>pre</code> = prepositional case
-* <code>dat</code> = dative case (treated same as prepositional)
-* <code>adv</code> = adverb
+* <code>n</code> or <code>noun<code> = Neuter noun in the nominative/accusative  (but not ending in adjectival -ое or -ее; those should be considered as adjectives)
+* <code>pre</code> = prepositional case singular
+* <code>dat</code> = dative case singular (treated same as prepositional)
 * <code>voc</code> = vocative case (currently treated as <code>mid</code>)
-* <code>v</code>, <code>vb</code>, <code>verb</code> = verbal ending (usually 2nd-plural in -те)
-* <code>pro</code> = pronoun (кое-, какие-, ваше)
-* <code>num</code> = number (двое, трое, четыре; currently treated as <code>mid</code>)
+* <code>nnp</code> = noun nominative plural in -е (гра́ждане, боя́ре, армя́не); not adjectival plurals in -ие or -ые, including adjectival nouns (да́нные, а́вторские)
+* <code>inv</code> = invariable noun or other word (currently treated as <code>mid</code>)
+* <code>a</code> or <code>adj</code> = adjective or adjectival noun (typically either neuter in -ое or -ее, or plural in -ие, -ые, or -ье, or short neuter in unpaired sibilant + -е)
+* <code>c</code> or <code>com</code> = comparative (typically either in -ее or sibilant + -е)
+* <code>adv</code> = adverb
+* <code>p</code> = preposition (treated same as adverb)
+* <code>v</code>, <code>vb</code>, <code>verb</code> = verbal ending (usually 2nd-plural in -те); not participle forms, which should be treated as adjectives
+* <code>pro</code> = pronoun (кое-, какие-, ваше, сколькие)
+* <code>num</code> = number (двое, трое, обе, четыре; currently treated as <code>mid</code>)
+* <code>pref</code> = prefix (treated as <code>high</code> because integral part of word)
 * <code>hi</code> or <code>high</code> = force high values ([ɪ] or [ɨ])
 * <code>mid</code> = force mid values ([e] or [ɨ])
 * <code>lo</code>, <code>low</code>, <code>schwa</code> = force low/schwa value ([ə])
