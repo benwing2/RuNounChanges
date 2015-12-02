@@ -118,93 +118,25 @@ def references(page, startsort = None, endsort = None, namespaces = None, includ
   if isinstance(page, basestring):
     page = pywikibot.Page(site, page)
 
-  i = 0
-  t = None
-  steps = 50
-
-  for current in page.getReferences(onlyTemplateInclusion = not includelinks, namespaces = namespaces):
-    i += 1
-
-    if endsort != None and i > endsort:
-      break
-
-    if startsort != None and i < startsort:
-      continue
-
-    if endsort != None and not t:
-      t = datetime.datetime.now()
-
+  for i, current in iter_items(page.getReferences(onlyTemplateInclusion = not includelinks, namespaces = namespaces), startsort, endsort):
     yield i, current
-
-    if i % steps == 0:
-      tdisp = ""
-
-      if endsort != None:
-        told = t
-        t = datetime.datetime.now()
-        pagesleft = (endsort - i) / steps
-        tfuture = t + (t - told) * pagesleft
-        tdisp = ", est. " + tfuture.strftime("%X")
-
-      pywikibot.output(str(i) + "/" + str(endsort) + tdisp)
-
 
 def cat_articles(page, startsort = None, endsort = None):
   if isinstance(page, basestring):
     page = pywikibot.Category(site, "Category:" + page)
   
-  i = 0
-  
-  for current in page.articles(startsort = startsort if not isinstance(startsort, int) else None):
-    i += 1
-    
-    if startsort != None and isinstance(startsort, int) and i < startsort:
-      continue
-    
-    if endsort != None:
-      if isinstance(endsort, int):
-        if i > endsort:
-          break
-      elif current.title(withNamespace=False) >= endsort:
-        break
-    
+  for i, current in iter_items(page.articles(startsort = startsort if not isinstance(startsort, int) else None), startsort, endsort):
     yield i, current
-
 
 def cat_subcats(page, startsort = None, endsort = None):
   if isinstance(page, basestring):
     page = pywikibot.Category(site, "Category:" + page)
   
-  i = 0
-  
-  for current in page.subcategories(startsort = startsort if not isinstance(startsort, int) else None):
-    i += 1
-    
-    if startsort != None and isinstance(startsort, int) and i < startsort:
-      continue
-    
-    if endsort != None:
-      if isinstance(endsort, int):
-        if i > endsort:
-          break
-      elif current.title() >= endsort:
-        break
-    
+  for i, current in iter_items(page.subcategories(startsort = startsort if not isinstance(startsort, int) else None), startsort, endsort):
     yield i, current
 
-
 def prefix(prefix, startsort = None, endsort = None, namespace = None):
-  i = 0
-  
-  for current in site.prefixindex(prefix, namespace):
-    i += 1
-    
-    if startsort != None and i < startsort:
-      continue
-    
-    if endsort != None and i > endsort:
-      break
-    
+  for i, current in iter_items(site.prefixindex(prefix, namespace), startsort, endsort):
     yield i, current
 
 def stream(st, startsort = None, endsort = None):
@@ -228,6 +160,11 @@ def stream(st, startsort = None, endsort = None):
 def get_page_name(page):
   if isinstance(page, basestring):
     return page
+  # FIXME: withNamespace=False was used previously by cat_articles, in a
+  # line like this:
+  #    elif current.title(withNamespace=False) >= endsort:
+  # Should we add this flag or support an option to add it?
+  #return unicode(page.title(withNamespace=False))
   return unicode(page.title())
 
 def iter_items(items, startsort = None, endsort = None, get_name = get_page_name):
