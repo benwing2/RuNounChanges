@@ -237,7 +237,13 @@ TODO:
    in it, which should have triggered an error whenever there was a nom_sg or
    nom_pl override but didn't. Is there an error causing this never to be
    called? Check.
-11. Multi-word issues:
+11a. FIXME: In a multiword lemma, using loc2=+ causes only the second word
+    to get linked instead of the whole expression. Same for par2=+, voc2=+.
+11b. FIXME: Using loc=+ with a multiword lemma should do the right thing, same
+    as if locN=+ is specified for each individual word. Instead it generates
+    the locative as a whole from the dative, which fails e.g. if some of the
+    words are adjectival. Same for par=+, voc=+.
+13. Multi-word issues:
    -- Setting n=pl when auto-detecting a plural lemma. How does that interact
       with multi-word stuff? (DONE)
    -- compute_heading() -- what to do with multiple words? I assume we should
