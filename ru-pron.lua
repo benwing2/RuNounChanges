@@ -118,6 +118,12 @@ FIXME:
 	other with front vowel + soft consonant.
 23. (DONE, OK) Implement compulsory assimilation of xkʲ; ask Cinemantique to
     make sure this is correct.
+24. Add а to list of unstressed particles, but only recognize it and о
+    (and perhaps all the others) when not followed by a hyphen; then fix
+	unnecessary cases with о̂ (look at tracking cflex category) and the various
+	hacks used in а ведь, а сейчас, а то, а не то, а также, а как же; will
+	need to add а̂ to а капелла and possibly elsewhere; use different-pron
+	tracking to catch this.
 ]]
 
 local ut = require("Module:utils")
