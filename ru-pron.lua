@@ -441,7 +441,7 @@ local accentless = {
 --   v/vb/verb = finite verbal form (usually 2nd-plural in -те); not
 --     participle forms, which should be treated as adjectives
 --   pro = pronoun (кое-, какие-, ваше, сколькие)
---   num = pronoun (двое, трое, обе, четыре; currently treated as 'mid')
+--   num = number (двое, трое, обе, четыре; currently treated as 'mid')
 --   pref = prefix (treated as 'high' because integral part of word)
 --   hi/high = force high values ([ɪ] or [ɨ])
 --   mid = force mid values ([e] or [ɨ])
