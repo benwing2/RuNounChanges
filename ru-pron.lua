@@ -133,8 +133,13 @@ FIXME:
 	by an obstruent; verify that our code works this way.
 27. (DONE, NEEDS TESTING) Implement _ to block all assimilation; probably this
     will happen automatically and we just need to remove the _ at the end.
-28. If we need partial reduction of non-final е/я to [ə] instead of [ɪ], one
+28. (DONE, NEEDS TESTING) Change unstressed palatal o to have values like
+    regular o, for words like майора́т, Ога́йо, Йоха́ннесбург
+29. If we need partial reduction of non-final е/я to [ə] instead of [ɪ], one
     way is to use another diacritic, e.g. dot-under; or use a spelling like ьа.
+30. BUG: воѐнно-морско́й becomes [vɐˌenːə mɐrˈskoj] without [je], must be due
+    to ѐ being a composed character (may be a bug in the translit module; add
+	a test case).
 ]]
 
 local ut = require("Module:utils")
@@ -226,7 +231,7 @@ local allophones = {
 	['ɛ'] = { 'ɛ', 'ɨ', 'ɨ' },
 	['ä'] = { 'a', 'ɪ', 'ɪ' },
 	['ë'] = { 'e', 'ɪ', 'ɪ' },
-	['ö'] = { 'ɵ', 'ɪ', 'ɪ' },
+	['ö'] = { 'ɵ', 'ɐ', 'ə' },
 	['ü'] = { 'u', 'ʊ', 'ʊ' },
 	['ə'] = { 'ə', 'ə', 'ə' },
 }
