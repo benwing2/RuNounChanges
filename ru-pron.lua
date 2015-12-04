@@ -166,6 +166,8 @@ end
 -- sure all pronunciations are the same. Eventually consider removing this;
 -- but useful as new code is created.
 local test_new_ru_pron_module = false
+-- If enabled, do new code for final -е; else, the old way
+local new_final_e_code = false
 
 local AC = u(0x0301) -- acute =  ́
 local GR = u(0x0300) -- grave =  ̀
@@ -833,23 +835,30 @@ function export.ipa(text, adj, gem, pos, bracket)
 				return sub
 			end
 		end
-		-- handle substitutions in two parts, one for vowel+j+e sequences
-		-- and the other for cons+e sequences
-		pron = rsub(pron, vowels_c .. '(' .. accents .. '?j)ë⁀', function(v, ac)
-			 local ty = v == 'o' and 'oe' or 've'
-			 return v .. ac .. fetch_e_sub(ty)
-		end)
-		-- consonant may palatalized, geminated or optional-geminated
-		pron = rsub(pron, '(.)(ʲ?[ː()]*)[eë]⁀', function(ch, mod)
-			 local ty = ch == 'j' and 'je' or
-				rfind(ch, '[cĵšžĉĝ]') and 'hardsib' or
-				rfind(ch, '[čǰɕӂ]') and 'softsib' or
-				'softpaired'
-			 return ch ..modc .. fetch_e_sub(ty)
-		end)
+		if new_final_e_code then
+			-- handle substitutions in two parts, one for vowel+j+e sequences
+			-- and the other for cons+e sequences
+			pron = rsub(pron, vowels_c .. '(' .. accents .. '?j)ë⁀', function(v, ac)
+				 local ty = v == 'o' and 'oe' or 've'
+				 return v .. ac .. fetch_e_sub(ty)
+			end)
+			-- consonant may palatalized, geminated or optional-geminated
+			pron = rsub(pron, '(.)(ʲ?[ː()]*)[eë]⁀', function(ch, mod)
+				 local ty = ch == 'j' and 'je' or
+					rfind(ch, '[cĵšžĉĝ]') and 'hardsib' or
+					rfind(ch, '[čǰɕӂ]') and 'softsib' or
+					'softpaired'
+				 return ch ..modc .. fetch_e_sub(ty)
+			end)
+		else
+			-- Do the old way, which mostly converts final -е to schwa, but
+			-- has highly broken retraction code for vowel + [шжц] + е before
+			-- it that causes final -е in this circumstance to become [ɨ].
+			pron = rsub(pron, vowels_c .. '([cĵšžĉĝ][ː()]*)[eë]', '%1%2ɛ')
+			pron = rsub(pron, '[eë]⁀', 'ə⁀')
+		end
 
-		-- retraction of е and и after цшж; FIXME, this is partly done
-		-- above in phon_respellings, should be cleaned up
+		-- retraction of е and и after цшж
 		pron = rsub(pron, '([cĵšžĉĝ][ː()]*)([ei])', function(a, b)
 			return a .. retracting[b] end)
 
