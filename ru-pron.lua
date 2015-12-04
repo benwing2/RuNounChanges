@@ -127,6 +127,10 @@ FIXME:
 25. (DONE, NEEDS TESTING) Add / before цз, чж in Chinese words to ensure
     syllable boundary in right place; ensure that this doesn't mess things up
 	when occurring at beginning of word or whatever.
+26. Rule on voicing assimilation before v: It says in Chew "A Computational
+    Phonology of Russian" that v is an obstruent before obstruents and a
+	sonorant before sonorants, i.e. v triggers voicing assimilation if followed
+	by an obstruent; verify that our code works this way.
 ]]
 
 local ut = require("Module:utils")
