@@ -182,10 +182,15 @@ local acc = AC .. GR .. CFLEX .. DOTABOVE
 local accents = '[' .. acc .. ']'
 
 local perm_syl_onset = ut.list_to_set({
-	'str', 'sp', 'st', 'sk', 'sf', 'sx', 'sc',
-	'pr', 'kr', 'fr', 'xr',
-	'pl', 'tl', 'kl', 'gl', 'fl', 'xl',
+	'spr', 'str', 'skr', 'spl', 'skl',
+	-- FIXME, do we want sc?
+	'sp', 'st', 'sk', 'sf', 'sx', 'sc',
+	'pr', 'br', 'tr', 'dr', 'kr', 'gr', 'fr', 'vr', 'xr',
+	'pl', 'bl', 'kl', 'gl', 'fl', 'vl', 'xl',
+	-- FIXME, do we want the following? If so, do we want vn?
 	'ml', 'mn',
+	-- FIXME, dž is now converted to ĝž, which will have a syllable
+	-- boundary in between
 	'šč', 'dž',
 })
 
