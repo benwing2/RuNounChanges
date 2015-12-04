@@ -127,10 +127,14 @@ FIXME:
 25. (DONE, NEEDS TESTING) Add / before цз, чж in Chinese words to ensure
     syllable boundary in right place; ensure that this doesn't mess things up
 	when occurring at beginning of word or whatever.
-26. Rule on voicing assimilation before v: It says in Chew "A Computational
+26. (DONE?) Rule on voicing assimilation before v: It says in Chew "A Computational
     Phonology of Russian" that v is an obstruent before obstruents and a
 	sonorant before sonorants, i.e. v triggers voicing assimilation if followed
 	by an obstruent; verify that our code works this way.
+27. (DONE, NEEDS TESTING) Implement _ to block all assimilation; probably this
+    will happen automatically and we just need to remove the _ at the end.
+28. If we need partial reduction of non-final е/я to [ə] instead of [ɪ], one
+    way is to use another diacritic, e.g. dot-under; or use a spelling like ьа.
 ]]
 
 local ut = require("Module:utils")
@@ -705,6 +709,8 @@ function export.ipa(text, adj, gem, pos, bracket)
 	end
 
 	--voicing, devoicing
+	--NOTE: v before an obstruent assimilates in voicing and triggers voicing
+	--assimilation of a preceding consonant; neither happens before a sonorant
 	--1. absolutely final devoicing
 	text = rsub(text, '([bdgvɣzžĝĵǰӂ])(ʹ?⁀)$', function(a, b)
 		return devoicing[a] .. b end)
@@ -1037,7 +1043,8 @@ function export.ipa(text, adj, gem, pos, bracket)
 	text = rsub(text, 'ə([‿⁀]*)[ɐə]', 'ɐ%1ɐ')
 
 	-- eliminate ⁀ symbol at word boundaries
-	text = rsub(text, '⁀', '')
+	-- eliminate _ symbol that prevents assimilations
+	text = rsub(text, '[⁀_]', '')
 
 	if test_new_ru_pron_module then
 		if new_module_result ~= text then
