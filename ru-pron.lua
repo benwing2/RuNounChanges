@@ -118,12 +118,15 @@ FIXME:
 	other with front vowel + soft consonant.
 23. (DONE, OK) Implement compulsory assimilation of xkʲ; ask Cinemantique to
     make sure this is correct.
-24. Add а to list of unstressed particles, but only recognize it and о
-    (and perhaps all the others) when not followed by a hyphen; then fix
-	unnecessary cases with о̂ (look at tracking cflex category) and the various
-	hacks used in а ведь, а сейчас, а то, а не то, а также, а как же; will
-	need to add а̂ to а капелла and possibly elsewhere; use different-pron
-	tracking to catch this.
+24. (DONE, NEEDS TESTING) Add а to list of unstressed particles, but only
+    recognize it and о (and perhaps all the others) when not followed by a
+	hyphen; then fix unnecessary cases with о̂ (look at tracking cflex
+	category) and the various hacks used in а ведь, а сейчас, а то, а не то,
+	а также, а как же; will need to add а̂ to а капелла and possibly elsewhere;
+	use different-pron tracking to catch this.
+25. (DONE, NEEDS TESTING) Add / before цз, чж in Chinese words to ensure
+    syllable boundary in right place; ensure that this doesn't mess things up
+	when occurring at beginning of word or whatever.
 ]]
 
 local ut = require("Module:utils")
@@ -270,7 +273,7 @@ local geminate_pref = {
     {'po[tdcč]ː', 'pod'},
 	{'pre[tdcč]ː', 'pred'}, --'^paszː', '^pozː',
 	{'ra[szšž]ː', 'ra[sz]'},
-	{'[szšž]ː', '[szšž]'}, -- ž on right side for жжёт etc.
+	{'[szšž]ː', '[szšž]'}, -- ž on right for жжёт etc., ш on left for США
 	{'me[žš]ː', 'mež'},
 	{'če?re[szšž]ː', 'če?re[sz]'},
 	-- certain double prefixes involving ra[zs]-
@@ -297,12 +300,16 @@ local phon_respellings = {
 
 	{'šč', 'ɕː'}, -- conversion of šč to geminate
 
-	-- the following six are ordered before changes that affect ts
-	-- FIXME!!! Should these next fouralso pay attention to grave accents?
+	-- the following group is ordered before changes that affect ts
+	-- FIXME!!! Should these also pay attention to grave accents?
 	{'́tʹ?sja⁀', '́cca⁀'},
 	{'([^́])tʹ?sja⁀', '%1ca⁀'},
 	{'n[dt]sk', 'n(t)sk'},
 	{'s[dt]sk', 'sck'},
+
+	-- Add / before цз, чж sequences (Chinese words)
+	{'cz', '/cz'},
+	{'čž', '/čž'},
 
 	-- main changes for affricate assimilation of [dt] + sibilant, including ts;
 	-- we either convert to "short" variants t͡s, d͡z, etc. or to "long" variants
@@ -866,13 +873,8 @@ function export.ipa(text, adj, gem, pos, bracket)
 			elseif perm_syl_onset[b .. c] then
 				return a .. '@' .. b .. c .. d
 			end end)
-		--6. remove @ followed by a final consonant cluster
-		pron = rsub(pron, '@([^‿⁀@' .. vow .. ']+⁀)$', '%1')
-		--7. make sure @ isn't directly before linking ‿⁀
-		pron = rsub(pron, '@([‿⁀]+)', '%1@')
-
-		--if / is present (explicit syllable boundary), remove any @
-		--(automatic boundary) and convert / to @
+		--6. if / is present (explicit syllable boundary), remove any @
+		--   (automatic boundary) and convert / to @
 		if rfind(pron, '/') then
 			pron = rsub(pron, '[^' .. vow .. acc .. ']+', function(x)
 				if rfind(x, '/') then
@@ -882,6 +884,13 @@ function export.ipa(text, adj, gem, pos, bracket)
 				return x
 			end)
 		end
+		--7. remove @ followed by a final consonant cluster
+		pron = rsub(pron, '@([^‿⁀@' .. vow .. ']+⁀)$', '%1')
+		--8. remove @ preceded by an initial consonant cluster (should only
+		--   happen when / is inserted by user or in цз, чж sequences)
+		pron = rsub(pron, '^(⁀[^‿⁀@' .. vow .. ']+)@', '%1')
+		--9. make sure @ isn't directly before linking ‿⁀
+		pron = rsub(pron, '@([‿⁀]+)', '%1@')
 
 		-- handle word-initial unstressed o and a; note, vowels always
 		-- followed by at least one char because of word-final ⁀
