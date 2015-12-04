@@ -15,6 +15,7 @@ function tests:check_pron(Cyrl, IPA, Cyrl_word, gem)
 end
 
 function tests:test_pron()
+	self:check_pron("воѐнно-морско́й", "vɐˌjenːə mɐrˈskoj")
 	self:check_pron("а не то", "ɐ‿nʲɪ‿ˈto")
 	self:check_pron("а как же", "ɐ‿ˈkag‿ʐɨ")
 	self:check_pron("а̂ капэ́лла", "a kɐˈpɛl(ː)ə", "а капе́лла", "opt")

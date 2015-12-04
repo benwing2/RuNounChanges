@@ -99,6 +99,7 @@ function tests:test_pron()
 	self:check_pron("ко̀е-кто́", "ˌko(j)ɪ ˈkto", nil, "pro")
 	-- compare to ?
 	self:check_pron("каки́е-нибудь лека́рства", "kɐˈkʲi(j)ɪ‿nʲɪbʊtʲ lʲɪˈkarstvə", nil, "pro")
+	self:check_pron("воѐнно-морско́й", "vɐˌjenːə mɐrˈskoj")
 	self:check_pron("а не то", "ɐ‿nʲɪ‿ˈto")
 	self:check_pron("а как же", "ɐ‿ˈkag‿ʐɨ")
 	self:check_pron("а̂ капэ́лла", "a kɐˈpɛl(ː)ə", "а капе́лла", nil, "opt")
