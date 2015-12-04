@@ -15,46 +15,89 @@ function tests:check_pron(Cyrl, IPA, Cyrl_word, pos, gem)
 end
 
 function tests:test_pron()
+	-- compare to a word in моро́женая, a word in -нои or -наи (or обы́чаи)
 	self:check_pron("моро́женое", "mɐˈroʐɨnəjə", nil, "n")
+	-- compare to собра́ния, собра́нии
 	self:check_pron("собра́ние", "sɐˈbranʲɪ(j)e", nil, "n")
+	-- compare to всле́дствия, всле́дствии
 	self:check_pron("всле́дствие", "ˈfs⁽ʲ⁾lʲet͡stvʲɪje", nil, "n")
+	-- compare to сча́стья, го́стьи
 	self:check_pron("сча́стье", "ˈɕːæsʲtʲje", nil, "n")
+	-- compare to со́лнца, брето́нци
 	self:check_pron("со́лнце", "ˈsont͡sə", nil, "n")
+	-- compare to се́рдца, две́рци
 	self:check_pron("се́рдце", "ˈsʲert͡sə", nil, "n")
+	-- compare to ло́жа, a word in -жи
 	self:check_pron("ло́же", "ˈloʐə", nil, "n")
+	-- compare to по́ля, до́ли
 	self:check_pron("по́ле", "ˈpolʲe", nil, "n")
+	-- compare to ?
 	self:check_pron("жили́ще", "ʐɨˈlʲiɕːe", nil, "n")
+	-- compare to ?
 	self:check_pron("ве́че", "ˈvʲet͡ɕe", nil, "n")
+	-- compare to ?
 	self:check_pron("а́вторские", "ˈaftərskʲɪje", nil, "a")
+	-- compare to ?
 	self:check_pron("да́нные", "ˈdanːɨje", nil, "a")
+	-- compare to ?
 	self:check_pron("си́нее", "ˈsʲinʲɪje", nil, "a")
+	-- compare to ?
 	self:check_pron("ли́сье", "ˈlʲisʲjə", nil, "a")
+	-- compare to ?
+	self:check_pron("си́не", "ˈsʲinʲe", nil, "a")
+	-- compare to ?
 	self:check_pron("дурне́е", "dʊrˈnʲeje", nil, "c")
+	-- compare to ?
 	self:check_pron("бо́льше", "ˈbolʲʂɨ", nil, "c")
+	-- compare to ?
 	self:check_pron("доро́же", "dɐˈroʐɨ", nil, "c")
+	-- compare to ?
 	self:check_pron("ле́хче", "ˈlʲext͡ɕe", "ле́гче", "c")
+	-- compare to ?
 	self:check_pron("гу́ще", "ˈɡuɕːe", nil, "c")
+	-- compare to ?
 	self:check_pron("досе́ле", "dɐˈsʲelʲe", nil, "adv")
+	-- compare to ?
 	self:check_pron("та́кже", "ˈtaɡʐɨ", nil, "adv")
+	-- compare to ?
 	self:check_pron("ина́че", "ɪˈnat͡ɕe", nil, "adv")
+	-- compare to ?
 	self:check_pron("злове́ще", "zlɐˈvʲeɕːe", nil, "adv")
+	-- compare to ?
 	self:check_pron("вкра́тце", "ˈfkrat͡sːɨ", nil, "adv")
+	-- compare to ?
 	self:check_pron("не пла́чьте", "nʲɪ‿ˈplat͡ɕtʲe", nil, "v")
+	-- compare to ?
 	self:check_pron("дава́йте", "dɐˈvajtʲe", nil, "v")
+	-- compare to ?
 	self:check_pron("дво́е", "ˈdvoje", nil, "mid")
+	-- compare to ?
 	self:check_pron("дво́е", "ˈdvojə", nil, "low")
+	-- compare to ?
 	self:check_pron("четы́ре", "t͡ɕɪˈtɨrʲe", nil, "mid")
+	-- compare to ?
 	self:check_pron("о го́де", "ɐ‿ˈɡodʲe", nil, "pre")
+	-- compare to ?
 	self:check_pron("о вы́игрыше", "ɐ‿ˈvɨɪɡrɨʂɨ", nil, "pre")
+	-- compare to ?
 	self:check_pron("о такела́же", "ɐ‿təkʲɪˈlaʐɨ", nil, "pre")
+	-- compare to ?
 	self:check_pron("о пла́че", "ɐ‿ˈplat͡ɕe", nil, "pre")
+	-- compare to ?
 	self:check_pron("об австрали́йце", "ɐb‿əfstrɐˈlʲijt͡sɨ", nil, "pre")
+	-- compare to ?
 	self:check_pron("о бо́е", "ɐ‿ˈboje", nil, "pre")
+	-- compare to ?
 	self:check_pron("об и́нее", "ɐˈb‿ɨnʲɪje", nil, "pre")
+	-- compare to ?
 	self:check_pron("кня́же", "ˈknʲaʐɨ", nil, "voc")
+	-- compare to ?
 	self:check_pron("ста́рче", "ˈstart͡ɕe", nil, "voc")
+	-- compare to ?
 	self:check_pron("сы́не", "ˈsɨnʲe", nil, "voc")
+	-- compare to ?
 	self:check_pron("ко̀е-кто́", "ˌko(j)ɪ ˈkto", nil, "pro")
+	-- compare to ?
 	self:check_pron("каки́е-нибудь лека́рства", "kɐˈkʲi(j)ɪ‿nʲɪbʊtʲ lʲɪˈkarstvə", nil, "pro")
 	self:check_pron("а не то", "ɐ‿nʲɪ‿ˈto")
 	self:check_pron("а как же", "ɐ‿ˈkag‿ʐɨ")
