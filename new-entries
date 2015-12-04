@@ -1,14 +1,5 @@
 дирижабле
 
-==Bulgarian==
-
-===Noun===
-{{head|bg|noun form|sc=Cyrl|tr=dirižable}}
-
-# {{vocative singular of|дирижабъл|lang=bg|sc=Cyrl}}
-
-----
-
 ==Russian==
 
 ===Pronunciation===
@@ -36,26 +27,6 @@
 
 небе
 
-==Bulgarian==
-
-===Etymology===
-From {{inh|bg|sla-pro|*nebo}}, from {{etyl|ine-pro|bg}} {{m|ine-pro|*nébʰos||clo
-ud}}.
-
-===Pronunciation===
-* {{IPA|/nɛˈbɛ/|lang=bg}}
-
-===Noun===
-{{bg-noun|g=n|tr=nebé}}
-
-# [[sky]]
-# [[heaven]]
-
-====Inflection====
-{{bg-decl-noun|g=n|небеса|небето|небесата}}
-
-----
-
 ==Russian==
 
 ===Pronunciation===
@@ -68,8 +39,6 @@ ud}}.
 
 теле
 
-----
-
 ==Russian==
 
 ===Pronunciation===
@@ -79,8 +48,6 @@ ud}}.
 {{ru-noun form|те́ле|n-in}}
 
 # {{prepositional singular of|те́ло|lang=ru}}
-
-----
 
 
 хоре
@@ -108,12 +75,12 @@ ud}}.
 # {{prepositional singular of|хорь||[[ferret]], [[polecat]]|lang=ru}}
 
 
-0-ой (rewrite {{abbreviation of|lang=ru|нулево́й|nocap=1|dot=}} -> {{ru-abbrev of|нулево́й}})
+0-ой (rewrite {{abbreviation of|lang=ru|нулево́й|nocap=1|dot=}} -> {{ru-abbrev of|нулево́й}}, add phon= to ru-IPA)
 
 ==Russian==
 
 ===Pronunciation===
-* {{ru-IPA|нулево́й}}
+* {{ru-IPA|phon=нулево́й}}
 
 ===Adjective===
 {{ru-adj|0-о́й}}
@@ -140,7 +107,7 @@ ud}}.
 9-ый
 
 
-АБК
+АБК [check the pronunciation, one word or three, or both possibilities?]
 
 ==Russian==
 
@@ -190,6 +157,36 @@ ud}}.
 ====Declension====
 {{ru-noun-table|а́ва}}
 
+
+Азербайджанская ССР
+
+==Russian==
+{{wikipedia|lang=ru}}
+[[Image:Flag of Azerbaijan SSR.svg|thumb|Флаг Азербайджанской ССР.]]
+
+===Pronunciation===
+* {{ru-IPA|phon=Азербайджа́нская эс-эс-э́р}}
+* {{audio|Ru-Азербайджанская ССР.ogg|Audio|lang=ru}}
+
+===Proper noun===
+{{ru-proper noun+|[[азербайджанский|Азербайджа́нская]]|+|_|[[ССР]]|$}}
+
+# [[Azerbaijan SSR]] ''(a republic of the [[USSR]] from 1920 to 1991)''.
+
+====Declension====
+{{ru-noun-table|[[азербайджанский|Азербайджа́нская]]|+|_|[[ССР]]|$|n=sg}}
+
+====Synonyms====
+* {{l|ru|Азербайджан}}
+
+====Abbreviations====
+* {{l|ru|АзССР}}
+
+====See also====
+* {{l|ru|Союз Советских Социалистических Республик}}
+
+[[Category:ru:Countries]]
+
 АК-47
 
 ==Russian==
@@ -203,7 +200,7 @@ ud}}.
 * {{ru-IPA|phon=ака́ со́рок семь}}
 
 ===Proper noun===
-{{ru-proper noun|АК-47|m-in|-}}
+{{ru-proper noun||m-in|-}}
 
 # {{context|weapons|lang=ru}} [[AK-47]], [[Kalashnikov]] [[assault rifle]].
 
@@ -249,7 +246,7 @@ ud}}.
 * {{ru-IPA|phon=а-эн-бэ́}}
 
 ===Proper noun===
-{{ru-proper noun|АНБ|n-in}}
+{{ru-proper noun||n-in|-}}
 
 # {{ru-initialism of|[[агентство|Аге́нтство]] [[национальный|национа́льной]] [[безопасность|безопа́сности]]||Agency of National Security}}: [[NSA]], {{w|National Security Agency}} {{gloss|US}}
 
@@ -262,7 +259,7 @@ ud}}.
 {{wikipedia|lang=ru|Азиатско-Тихоокеанский регио́н}}
 
 ===Pronunciation===
-* {{ru-IPA|phon=атээ́р}}
+* {{ru-IPA|phon=а-тэ-э́р}}
 
 ===Proper noun===
 {{ru-proper noun||m-in|-}}
@@ -311,11 +308,11 @@ ud}}.
 {{wikipedia|lang=ru|Бронетранспортёр}}
 
 ===Pronunciation===
-* {{ru-IPA|бэ-тэ-э́р}}
-* {{ru-IPA|бэтээ́р}}
+* {{ru-IPA|phon=бэ-тэ-э́р}}
+* {{ru-IPA|phon=бэтээ́р}}
 
 ===Noun===
-{{ru-noun||m-in}}
+{{ru-noun||m-in|-}}
 
 # {{ru-initialism of|бронетранспортёр||[[APC]]}}
 
@@ -334,7 +331,7 @@ ud}}.
 * {{ru-IPA|phon=восто́к}}
 
 ===Noun===
-{{ru-noun||m-in}}
+{{ru-noun||m-in|-}}
 
 # {{ru-abbrev of|восто́к||[[east]]}}
 
@@ -344,7 +341,7 @@ ud}}.
 * {{l|ru|Ю}}
 
 
-ВВП
+ВВП [check the pronunciation, one word or three, or both?]
 
 ==Russian==
 {{wikipedia|lang=ru}}
@@ -353,10 +350,10 @@ ud}}.
 {{ru-etym initialism of|[[валово́й]] [[вну́тренний]] [[проду́кт]]}}.
 
 ===Pronunciation===
-* {{ru-IPA|вэвэпэ́}}
+* {{ru-IPA|phon=вэвэпэ́}}
 
 ===Noun===
-{{ru-noun|ВВП|m-in|-}}
+{{ru-noun||m-in|-}}
 
 # [[GDP]]; [[gross domestic product]]
 #: {{ux|ru|[[ожида́емый]] [[рост]] '''ВВП'''|expected growth of '''the GDP'''|inline=y}}
@@ -368,11 +365,11 @@ ud}}.
 [[Image:ВДНХ.jpg|thumb|ВДНХ в Москве]]
 
 ===Pronunciation===
-* {{ru-IPA|вэ-дэ-эн-ха́}}
+* {{ru-IPA|phon=вэ-дэ-эн-ха́}}
 * {{audio|Ru-ВДНХ.ogg|Audio|lang=ru}}
 
 ===Noun===
-{{ru-noun|ВДНХ|f-in|-}}
+{{ru-noun||f-in|-}}
 
 # {{ru-initialism of|[[вы́ставка]] [[достижение|достиже́ний]] [[народный|наро́дного]] [[хозяйство|хозя́йства]]|tr=výstavka dostižénij naródnovo xozjájstva}}: [[VDNKh]] {{gloss|USSR, all-Soviet Union exhibition centre}}, now called {{term|[[всероссийский|Всеросси́йский]] [[вы́ставочный]] [[центр]]|lang=ru}} (ВВЦ - vɛ-vɛ-cé)
 # Name of the corresponding [[Metro]] station in [[Moscow]]
@@ -418,14 +415,13 @@ ud}}.
 
 ВОВ
 
-{{also|BOB|Bob|bob|bób}}
 ==Russian==
 
 ===Pronunciation===
 * {{ru-IPA}}
 
 ===Noun===
-{{ru-noun|ВОВ|f-in|-}}
+{{ru-noun||f-in|-}}
 
 # {{ru-acronym of|Вели́кая Оте́чественная война́}}: the [[Great Patriotic War]] (WW II)
 
@@ -471,7 +467,6 @@ ud}}.
 
 вольт
 
-{{also|волт}}
 ==Russian==
 
 ===Pronunciation===
@@ -501,7 +496,7 @@ ud}}.
 ==Russian==
 
 ===Pronunciation===
-* {{ru-IPA|вэ-тэ-о́}}
+* {{ru-IPA|phon=вэ-тэ-о́}}
 
 ===Proper noun===
 {{head|ru|proper noun|g=f}}
@@ -562,7 +557,6 @@ ud}}.
 
 ГАИ [FIXME, HOW DECLINED?]
 
-{{also|Appendix:Variations of "hai"}}
 ==Russian==
 
 ===Pronunciation===
@@ -717,7 +711,7 @@ ud}}.
 {{ru-etym acronym of|[[государственный|госуда́рственный]] [[департамент|департа́мент]]}}.
 
 ===Pronunciation===
-* {{ru-IPA|го̀с департа́мент}}
+* {{ru-IPA|го̀сдепарта́мент}}
 * {{ru-IPA|госдепарта́мент}}
 
 ===Noun===
@@ -760,7 +754,6 @@ ud}}.
 
 ГОСТ
 
-{{also|гост}}
 ==Russian==
 
 ===Pronunciation===
@@ -952,7 +945,7 @@ From {{inh|ru|sla-pro|*da}}.
 [[Category:ru:Units of measure]]
 
 
-дал
+дал [check declension]
 
 ==Russian==
 
@@ -1067,11 +1060,11 @@ From {{inh|ru|sla-pro|*da}}.
 ==Russian==
 
 ===Pronunciation===
-* {{ru-IPA|ДНР|phon=дэ-эн-э́р}}
+* {{ru-IPA|phon=дэ-эн-э́р}}
 * {{audio|Ru-ДНР.ogg|Audio}}
 
 ===Proper noun===
-{{ru-proper noun|ДНР|f}}
+{{ru-proper noun||f-in|-}}
 
 # {{ru-initialism of|Доне́цкая Наро́дная Респу́блика||[[Donetsk People's Republic]]}}
 
@@ -1176,10 +1169,10 @@ From {{inh|ru|sla-pro|*da}}.
 {{wikipedia|lang=ru|Евразийский Сою́з}}
 
 ===Pronunciation===
-* {{ru-IPA|е-а-э́с}}
+* {{ru-IPA|phon=е-а-э́с}}
 
 ===Noun===
-{{ru-proper noun|ЕАС|m-in|-}}
+{{ru-proper noun||m-in|-}}
 
 # {{ru-initialism of|Еврази́йский сою́з}}: [[Eurasian Union]], [[EAU]]
 
@@ -1188,7 +1181,7 @@ From {{inh|ru|sla-pro|*da}}.
 ==Russian==
 
 ===Noun===
-{{ru-noun||f-in}}
+{{ru-noun||f-in|-}}
 
 # {{ru-abbrev of|[[женский|же́нская]] [[убо́рная]]||women's restroom}}: [[ladies' room]], women's [[toilet]]
 
@@ -1198,7 +1191,7 @@ From {{inh|ru|sla-pro|*da}}.
 ==Russian==
 
 ===Noun===
-{{ru-noun||m-in}}
+{{ru-noun||m-in|-}}
 
 # {{cx|grammar|lang=ru}} {{ru-abbrev of|же́нский род||feminine gender}}
 
@@ -1253,7 +1246,7 @@ From {{inh|ru|sla-pro|*da}}.
 ==Russian==
 
 ===Noun===
-{{ru-noun||m-in}}
+{{ru-noun||m-in|-}}
 
 # {{ru-abbrev of|за́пад||[[west]]}}
 
@@ -1361,7 +1354,6 @@ From {{inh|ru|sla-pro|*da}}.
 
 зам
 
-{{also|зам.}}
 ==Russian==
 
 ===Pronunciation===
@@ -1378,16 +1370,15 @@ From {{inh|ru|sla-pro|*da}}.
 
 зам.
 
-{{also|зам}}
 ==Russian==
 
 ===Noun===
-{{ru-noun||m-an}}
+{{ru-noun||m-an|-}}
 
 # {{ru-abbrev of|замести́тель||[[substitute]], [[deputy]]}}
 
 ===Noun===
-{{ru-noun||m-in}}
+{{ru-noun||m-in|-}}
 
 # {{lb|ru|rare}} {{ru-abbrev of|замыка́тель||(electrical) [[switch]]; [[contactor]]; [[lock]]ing [[mechanism]]}}
 
@@ -1442,7 +1433,7 @@ From {{inh|ru|sla-pro|*da}}.
 {{wikipedia|lang=ru}}
 
 ===Pronunciation===
-* {{ru-IPA|ЗРК|phon=зэ-эр-ка́}}
+* {{ru-IPA|phon=зэ-эр-ка́}}
 
 ===Noun===
 [[Image:S-350E Vityaz - MAKS2013firstpix01.jpg|thumb|ЗРК «[[витязь|Ви́тязь]]»]]
@@ -1546,7 +1537,7 @@ From {{inh|ru|sla-pro|*da}}.
 ===Etymology 2===
 
 ====Noun====
-{{ru-noun|кал|f-in|-}}
+{{ru-noun||f-in|-}}
 
 # {{ru-abbrev of|калория|[[calorie]]}}
 
@@ -1595,12 +1586,12 @@ From {{inh|ru|sla-pro|*da}}.
 ===Pronunciation===
 * {{ru-IPA|phon=ка̀-гэ-бэ́}}
 * {{ru-IPA|phon=кэ̀-гэ-бэ́}}
-* {{ru-IPA|КГБ|phon=кагэбэ́}} {{i|fast speech, casual}}
-* {{ru-IPA|КГБ|phon=кэгэбэ́}} {{i|fast speech, casual}}
+* {{ru-IPA|phon=кагэбэ́}} {{i|fast speech, casual}}
+* {{ru-IPA|phon=кэгэбэ́}} {{i|fast speech, casual}}
 * {{audio|Ru-KGB.ogg|Audio|lang=ru}}
 
 ===Noun===
-{{ru-noun|КГБ|m-in|-}}
+{{ru-noun||m-in|-}}
 
 # {{ru-initialism of|[[комитет|Комите́т]] [[государственный|госуда́рственной]] [[безопасность|безопа́сности]]||State Security Committee}}: [[KGB]]
 
@@ -1631,11 +1622,11 @@ From {{inh|ru|sla-pro|*da}}.
 {{wikipedia|lang=ru|Коре́йская Наро́дно-Демократи́ческая Респу́блика}}
 
 ===Pronunciation===
-* {{ru-IPA||phon=ка-эн-дэ-э́р}}
+* {{ru-IPA|phon=ка-эн-дэ-э́р}}
 * {{audio|Ru-КНДР.ogg|Audio|lang=ru}}
 
 ===Proper noun===
-{{ru-proper noun|КНДР|f-in|-}}
+{{ru-proper noun||f-in|-}}
 
 # {{ru-initialism of|Коре́йская Наро́дно-Демократи́ческая Респу́блика}}: [[Democratic People's Republic of Korea]]
 
@@ -1655,7 +1646,7 @@ From {{inh|ru|sla-pro|*da}}.
 * {{audio|Ru-КНР.ogg|Audio|lang=ru}}
 
 ===Proper noun===
-{{ru-proper noun|КНР|f-in|-}}
+{{ru-proper noun||f-in|-}}
 
 # {{ru-initialism of|lang=ru|Кита́йская Наро́дная Респу́блика||Chinese People's Republic}}: [[People's Republic of China]]
 
@@ -1766,12 +1757,12 @@ From {{inh|ru|sla-pro|*da}}.
 # {{inflection of|lang=ru|контро́льный||f|nom|s}}
 
 ===Noun===
-{{ru-noun+|[[контрольный|контро́льная]]|+}}
+{{ru-noun+|контро́льная|+}}
 
 # {{lb|ru|colloquial}} {{ru-abbrev of|[[контро́льная рабо́та]]}}: a (small) [[test]] {{gloss|at school}}
 
 ====Declension====
-{{ru-noun-table|[[контрольный|контро́льная]]|+}}
+{{ru-noun-table|контро́льная|+}}
 
 
 контрольная работа
@@ -1841,7 +1832,7 @@ From {{inh|ru|sla-pro|*da}}.
 ===Adjective===
 {{ru-adj}}
 
-# {{ru-abbrev of|левый||left}}
+# {{ru-abbrev of|ле́вый||left}}
 # {{lb|ru|diesel oil marking}} {{ru-abbrev of|летний||[[summer]]}}
 # {{lb|ru|shipping}} {{ru-abbrev of|?||[[lightweight]] (ship class)}}
 
@@ -1892,10 +1883,10 @@ From {{inh|ru|sla-pro|*da}}.
 ==Russian==
 
 ===Pronunciation===
-* {{ru-IPA|эл-гэ-бэ-тэ́}}
+* {{ru-IPA|phon=эл-гэ-бэ-тэ́}}
 
 ===Noun===
-{{ru-noun|ЛГБТ|m-an-p|-}}
+{{ru-noun||m-an-p|-}}
 
 # {{ru-initialism of|[[лесбиянка|лесбия́нки]], [[гей|ге́и]], [[бисексуал|бисексуа́лы]] [[и]] [[трансгендер|трансге́ндеры]]|tr=lesbijánki, géi, bisɛksuály i transgéndɛry}}: [[LGBT]] {{gloss|Lesbian, Gay, Bisexual, Transgender/Transexual}}
 
@@ -1913,13 +1904,13 @@ From {{inh|ru|sla-pro|*da}}.
 * {{ru-IPA|ликбе́з}}
 
 ===Noun===
-{{ru-noun|ликбе́з|m-in|ликбе́за|ликбе́зы}}
+{{ru-noun+|ликбе́з}}
 
 # {{lb|ru|Soviet Union}} [[Likbez]]
 # {{lb|ru|colloquial}} [[ground]]ing {{gloss|giving a basic education in a particular subject}}
 
 ====Declension====
-{{ru-decl-noun-z|ликбе́з|m-in|a}}
+{{ru-noun-table|ликбе́з}}
 
 ====Derived terms====
 * {{l|ru|ликбе́зник}}
@@ -1935,11 +1926,11 @@ From {{inh|ru|sla-pro|*da}}.
 ==Russian==
 
 ===Pronunciation===
-* {{ru-IPA|ЛНР|phon=эл-эн-э́р}}
-* {{audio|Ru-ЛНР.ogg|Audio}}
+* {{ru-IPA|phon=эл-эн-э́р}}
+* {{audio|Ru-ЛНР.ogg|Audio|lang=ru}}
 
 ===Proper noun===
-{{ru-proper noun|ЛНР|f-in|-}}
+{{ru-proper noun||f-in|-}}
 
 # {{ru-initialism of|Луга́нская Наро́дная Респу́блика||Lugansk People's Republic}}
 
@@ -1951,16 +1942,17 @@ From {{inh|ru|sla-pro|*da}}.
 
 ===Etymology===
 {{bor|ru|en|LSD}}, initialism of {{m|en|lysergic acid diethylamide}}.
+
 ===Pronunciation===
 * {{ru-IPA|phon=эл-эс-дэ́}}
 
 ===Noun===
-{{ru-noun|ЛСД|m-in|-}}
+{{ru-noun||m-in|-}}
 
 # [[LSD]], [[acid]] ({{l|ru|диэтилами́д d-лизерги́новой кислоты́}})
 
 
-ЛЭП
+ЛЭП [check that this is an acronym not initialism, and check the declension]
 
 ==Russian==
 {{wikipedia|lang=ru|ли́ния электропередачи}}
@@ -1969,7 +1961,7 @@ From {{inh|ru|sla-pro|*da}}.
 * {{ru-IPA}}
 
 ===Noun===
-{{ru-noun|ЛЭП|f-in|-}}
+{{ru-noun||f-in|-}}
 
 # {{ru-acronym of|[[ли́ния]] [[электрический|электро]][[передача|переда́чи]]}}: [[electric power]] [[transmission line]]
 
@@ -2058,7 +2050,7 @@ From {{inh|ru|sla-pro|*da}}.
 ==Russian==
 
 ===Noun===
-{{ru-noun|Мб|m-in|-}}
+{{ru-noun||m-in|-}}
 
 # {{ru-initialism of|мегаба́йт}}: [[MB]] ([[megabyte]])
 
@@ -2082,7 +2074,7 @@ From {{inh|ru|sla-pro|*da}}.
 {{ru-noun-table|медпу́нкт}}
 
 
-между прочим
+между прочим [is между stressed or unstressed?]
 
 ==Russian==
 
@@ -2197,13 +2189,13 @@ From {{inh|ru|sla-pro|*da}}.
 # {{cx|government|lang=ru}} [[ministry]] of [[defense]]
 
 
-МК [ask Anatoli, what does this stand for?]
+МК [ask Anatoli, what does this stand for? check ru-noun header; also, one word or two, or both?]
 
 ==Russian==
 {{wikipedia|lang=ru}}
 
 ===Pronunciation===
-* {{ru-IPA|эмка́}}
+* {{ru-IPA|phon=эмка́}}
 
 ===Noun===
 {{ru-noun||?|-}}
@@ -2211,7 +2203,7 @@ From {{inh|ru|sla-pro|*da}}.
 # {{ru-initialism of|?}}: [[calculator]], [[microcomputer]]
 
 
-мл
+мл [fix pronunciation]
 
 ==Russian==
 
@@ -2317,7 +2309,7 @@ From {{inh|ru|sla-pro|*da}}.
 {{wikipedia|lang=ru}}
 
 ===Pronunciation===
-* {{ru-IPA|эн-дэ-э́с}}
+* {{ru-IPA|phon=эн-дэ-э́с}}
 
 ===Noun===
 {{ru-noun||m-in|-}}
@@ -2412,7 +2404,7 @@ From {{inh|ru|sla-pro|*da}}.
 * {{ru-IPA|phon=эн-ка̂-э́р}}
 
 ===Proper noun===
-{{ru-proper noun|НКР|f-in|-}}
+{{ru-proper noun||f-in|-}}
 
 # {{ru-initialism of|Наго́рно-Караба́хская Респу́блика}}: [[Nagorno-Karabakh Republic]]
 
@@ -2505,7 +2497,7 @@ From {{inh|ru|sla-pro|*da}}.
 ==Russian==
 
 ===Pronunciation===
-* {{ru-IPA|и-ка́}}
+* {{ru-IPA|phon=и-ка́}}
 
 ===Adjective===
 {{ru-adj}}
@@ -2513,7 +2505,7 @@ From {{inh|ru|sla-pro|*da}}.
 # {{ru-initialism of|инфракра́сный}}
 
 ===Noun===
-{{ru-noun|ИК|f-in|-}}
+{{ru-noun||f-in|-}}
 
 # {{lb|ru|linguistics}} {{ru-initialism of|интонацио́нная констру́кция}}
 
@@ -2695,7 +2687,7 @@ From {{inh|ru|sla-pro|*da}}.
 [[Category:ru:Aviation]]
 [[Category:ru:Weapons]]
 
-МХАТ
+МХАТ [check the pronunciation]
 
 ==Russian==
 
@@ -2706,15 +2698,15 @@ From {{inh|ru|sla-pro|*da}}.
 * {{ru-IPA|МХАТ}}
 
 ===Proper noun===
-{{ru-proper noun|МХАТ|m-in|МХА́Та}}
+{{ru-proper noun+}}
 
 # [[w:Moscow Art Theatre|Moscow Art Theatre]]
 
 ====Declension====
-{{ru-decl-noun-z|МХА́Т|m-in|a|n=sg}}
+{{ru-noun-table|n=sg}}
 
 
-НЭП
+НЭП [ask Anatoli, how declined?]
 
 ==Russian==
 
@@ -2725,11 +2717,11 @@ From {{inh|ru|sla-pro|*da}}.
 * {{ru-IPA|НЭП}}
 
 ===Noun===
-{{ru-noun|НЭП|m-in}}
+{{ru-noun||m-in}}
 
 # {{cx|historical|Soviet Union|lang=ru}} {{ru-acronym of|[[новый|но́вая]] [[экономический|экономи́ческая]] [[поли́тика]]}}: [[NEP]] ({{w|New Economic Policy}})
 
-ОАЭ
+ОАЭ [ô won't be needed anymore]
 
 ==Russian==
 
@@ -2737,13 +2729,13 @@ From {{inh|ru|sla-pro|*da}}.
 * {{ru-IPA|phon=о̂-а-э́}}
 
 ===Proper noun===
-{{ru-proper noun|ОАЭ|m-in-p|-}}
+{{ru-proper noun|ОАЭ́|m-in-p|-}}
 
 # {{ru-initialism of|Объединённые Ара́бские Эмира́ты|g=m-p}}: [[UAE]], [[United Arab Emirates]]
 
 [[Category:ru:Countries]]
 
-ОБСЕ
+ОБСЕ [ô won't be needed anymore]
 
 ==Russian==
 {{wikipedia|lang=ru|Организация по безопасности и сотрудничеству в Европе}}
@@ -2771,7 +2763,7 @@ From {{inh|ru|sla-pro|*da}}.
 #: {{ux|ru|[[Сове́т Безопа́сности ОО́Н]]|[[United Nations Security Council]]|inline=y}}
 #: {{ux|ru|[[Генера́льная Ассамбле́я ОО́Н]]|[[United Nations General Assembly]]|inline=y}}
 
-ООО [ask Anatoli to verify pronun]
+ООО [ask Anatoli to verify pronun; also, ô won't be needed anymore]
 
 ==Russian==
 {{wikipedia|lang=ru|Общество с ограниченной ответственностью}}
@@ -2785,7 +2777,7 @@ From {{inh|ru|sla-pro|*da}}.
 # {{ru-initialism of|[[о́бщество]] [[с]] [[ограниченный|ограни́ченной]] [[ответственность|отве́тственностью]]|g=n}}: [[LLC]], a [[limited liability company]]
 
 
-ОРВИ
+ОРВИ [ô won't be needed anymore]
 
 ==Russian==
 
@@ -2826,7 +2818,7 @@ From {{inh|ru|sla-pro|*da}}.
 * {{ru-IPA|phon=пэ-эм-же́}}
 
 ===Noun===
-{{ru-noun|ПМЖ|n-in|-}}
+{{ru-noun||n-in|-}}
 
 # {{ru-initialism of|[[постоянный|постоя́нное]] [[ме́сто жи́тельства]]}}: (place of) [[permanent]] [[residence]] {{gloss|used in reference to people moving to another place/country, as opposed to those going for a visit}}
 #: {{ux|ru|inline=y|[[выезжать|выезжа́ть]] [[на]] ПМЖ [[в]] [[Канада|Кана́ду]]|to move (permanently) to Canada}}
@@ -2845,7 +2837,7 @@ From {{inh|ru|sla-pro|*da}}.
 * {{ru-IPA|phon=пэ-тэ-у́}}
 
 ===Noun===
-{{ru-noun|ПТУ|n-in|-}}
+{{ru-noun||n-in|-}}
 
 # {{ru-initialism of|[[профессиональный|профессиона́льное]] [[технический|техни́ческое]] [[учи́лище]]||professional technical college}}: institution for adult education at a basic or intermediate level, [[college]]
 
@@ -2881,7 +2873,7 @@ From {{inh|ru|sla-pro|*da}}.
 * {{ru-IPA|РЭБ}}
 
 ===Noun===
-{{ru-noun|РЭБ|f-in}}
+{{ru-noun||f-in}}
 
 # {{ru-acronym of|радиоэлектронная борьба́||[[electronic warfare]]}}
 
@@ -2991,8 +2983,8 @@ From {{inh|ru|sla-pro|*da}}.
 [[Image:Flag of the Soviet Union.svg|thumb|Флаг СССР]]
 
 ===Pronunciation===
-* {{ru-IPA|phon=эс эс эс э́р}}
-* {{ru-IPA|phon=эс эс э́р}} {{i|non-standard but common}}
+* {{ru-IPA|phon=эс-эс-эс-э́р}}
+* {{ru-IPA|phon=эс-эс-э́р}} {{i|non-standard but common}}
 
 ===Noun===
 {{ru-noun||m-in|-}}
@@ -3000,19 +2992,19 @@ From {{inh|ru|sla-pro|*da}}.
 # {{ru-initialism of|Сою́з Сове́тских Социалисти́ческих Респу́блик||USSR}}
 
 ====Usage notes====
-* As it is hard to pronounce, many Russians abbreviated the word to "ССР" {{IPAchar|[ɛs ɛs ˈɛr]}}, officially also expanded into {{m|ru|Сою́з}} {{m|ru|ССР}} or more often into {{m|ru|Сою́з}}.
+* As it is hard to pronounce, many Russians abbreviated the word to "ССР" {{IPAchar|[ɛs ɛs ˈɛr]}}, officially also expanded into {{m|ru|[[Сою́з]] [[ССР]]}} or more often into {{m|ru|Сою́з}}.
 
 [[Category:ru:Countries]]
 
-США
+США [check that сша pronun is geminated at beginning, and ask Anatoli if this is correct]
 
 ==Russian==
 {{wikipedia|lang=ru|Соединённые Шта́ты Аме́рики}}
 
 ===Pronunciation===
 * {{audio|Ru-США.ogg|Audio|lang=ru}}
-* {{ru-IPA||phon=сэ ше а́}}
-* {{ru-IPA||phon=сша}}
+* {{ru-IPA|phon=сэ-ше-а́}}
+* {{ru-IPA|сша}}
 
 ===Noun===
 {{ru-noun||m-in-p|-}}
@@ -3163,10 +3155,10 @@ From {{inh|ru|sla-pro|*da}}.
 ==Russian==
 
 ===Pronunciation===
-* {{ru-IPA|эф-эс-бэ́}}
-* {{ru-IPA|эфэсбэ́}}
-* {{ru-IPA|фэ-эс-бэ́}}
-* {{ru-IPA|фээсбэ́}}
+* {{ru-IPA|phon=эф-эс-бэ́}}
+* {{ru-IPA|phon=эфэсбэ́}}
+* {{ru-IPA|phon=фэ-эс-бэ́}}
+* {{ru-IPA|phon=фээсбэ́}}
 
 ===Noun===
 {{ru-noun||f-in|-}}
@@ -3196,7 +3188,7 @@ From {{inh|ru|sla-pro|*da}}.
 # {{ru-initialism of|[[центральный|Центра́льное]] [[разведывательный|разве́дывательное]] [[управле́ние]]}}: [[CIA]], {{w|Central Intelligence Agency}}
 
 
-Ч. П.
+Ч. П. [check pronun, one word or two?]
 
 ==Russian==
 {{wikipedia|lang=ru|Ч. П. — Чрезвычайное происшествие}}
@@ -3208,7 +3200,7 @@ From {{inh|ru|sla-pro|*da}}.
 * {{ru-IPA||phon=чепэ́}}
 
 ===Noun===
-{{ru-noun|Ч. П.|n-in|-}}
+{{ru-noun||n-in|-}}
 
 # {{ru-abbrev of|[[чрезвычайный|чрезвыча́йное]] [[происше́ствие]]}} or {{ru-abbrev of|[[чрезвычайный|чрезвыча́йное]] [[положе́ние]]}}: [[emergency]], [[accident]]
 
@@ -3539,12 +3531,12 @@ Possibly, {{ru-etym acronym of|nocap=1|[[производи́тель]] [[раб
 * {{ru-IPA|райко́м}}
 
 ===Noun===
-{{ru-noun|райко́м|m-in|райко́ма|райко́мы}}
+{{ru-noun+|райко́м}}
 
 # {{cx|Soviet Union|lang=ru}} [[district]] [[committee]]
 
 ====Declension====
-{{ru-decl-noun-z|райко́м|m-in|a}}
+{{ru-noun-table|райко́м}}
 
 ====Derived terms====
 * {{l|ru|райко́мовец}}
@@ -3682,7 +3674,7 @@ Possibly, {{ru-etym acronym of|nocap=1|[[производи́тель]] [[раб
 {{ru-noun-table|сельсове́т}}
 
 
-скл.
+скл. [check the pronunciation]
 
 ==Russian==
 
@@ -3690,12 +3682,12 @@ Possibly, {{ru-etym acronym of|nocap=1|[[производи́тель]] [[раб
 * {{ru-IPA|скл.}}
 
 ===Noun===
-{{ru-noun||n-in}}
+{{ru-noun||n-in|-}}
 
 # {{cx|grammar|lang=ru}} {{ru-abbrev of|склоне́ние||[[declension]]}}
 
 ===Noun===
-{{ru-noun||m-in}}
+{{ru-noun||m-in|-}}
 
 # {{ru-abbrev of|склад||warehouse}}
 
@@ -3715,14 +3707,16 @@ From {{inh|ru|sla-pro|*slonъ}}, possibly a deverbative from *{{term||sloniti s�
 {{ru-noun+|b|a=an}}
 
 # [[elephant]]
-# {{context|chess|lang=ru}} [[bishop]] (Russian abbreviation: '''[[С#Russian|С]]''')
-
-====Synonyms====
-; chess piece
-: [[офицер]] ''(informal)''
+# {{context|chess|lang=ru}} [[bishop]]
 
 ====Declension====
 {{ru-noun-table|b|a=an}}
+
+====Abbreviations====
+* {{sense|chess piece}} {{l|ru|С}}
+
+====Synonyms====
+* {{sense|chess piece}} {{l|ru|офицер}} {{i|informal}}
 
 ====Derived terms====
 * {{l|ru|слонёнок}}
@@ -3749,12 +3743,12 @@ From {{inh|ru|sla-pro|*slonъ}}, possibly a deverbative from *{{term||sloniti s�
 {{ru-IPA|со̀цсе́ть}}
 
 ===Noun===
-{{ru-noun+|e|соцсе́ть|f|loc=соцсети́}}
+{{ru-noun+|e|соцсе́ть|f|loc=+}}
 
 # [[social network]] {{gloss|a network of personal or business contacts on the Internet}}
 
 ====Declension====
-{{ru-noun-table|e|соцсе́ть|f|loc=соцсети́}}
+{{ru-noun-table|e|соцсе́ть|f|loc=+}}
 
 
 спец
@@ -3776,7 +3770,7 @@ From {{inh|ru|sla-pro|*slonъ}}, possibly a deverbative from *{{term||sloniti s�
 {{ru-noun-table|b|спе́ц|a=an}}
 
 
-спецназ
+спецназ [is there secondary stress?]
 
 ==Russian==
 
@@ -3787,12 +3781,12 @@ From {{inh|ru|sla-pro|*slonъ}}, possibly a deverbative from *{{term||sloniti s�
 * {{ru-IPA|спецна́з}}
 
 ===Noun===
-{{ru-noun|спецна́з|m-in|спецна́за|}}
+{{ru-noun+|спецна́з}}
 
 # {{cx|military|lang=ru}} [[Spetsnaz]]
 
 ====Declension====
-{{ru-decl-noun-z|спецна́з|m-in|a}}
+{{ru-noun-table|спецна́з}}
 
 ====Derived terms====
 * {{l|ru|спецна́зовец}}
@@ -3819,7 +3813,7 @@ From {{inh|ru|sla-pro|*slonъ}}, possibly a deverbative from *{{term||sloniti s�
 
 
 
-спецслужба
+спецслужба [is there secondary stress?]
 
 ==Russian==
 
@@ -3948,7 +3942,7 @@ From {{compound|стена́|газе́та|lang=ru}}, {{ru-etym acronym of|[[с
 * {{l|ru|супер-}} — a prefix
 
 
-т.
+т. [check the pronunciation]
 
 ==Russian==
 
@@ -3963,7 +3957,7 @@ From {{compound|стена́|газе́та|lang=ru}}, {{ru-etym acronym of|[[с
 ====Synonyms====
 * {{l|ru|тов.}}
 
-т. г.
+т. г. [check the pronunciation, one word or two?]
 
 ==Russian==
 
@@ -3982,7 +3976,7 @@ From {{compound|стена́|газе́та|lang=ru}}, {{ru-etym acronym of|[[с
 # of the [[current]] [[year]]
 
 
-т/г
+т/г [check the pronunciation, one word or two?]
 
 ==Russian==
 
@@ -4001,7 +3995,7 @@ From {{compound|стена́|газе́та|lang=ru}}, {{ru-etym acronym of|[[с
 # of the [[current]] [[year]]
 
 
-тервер
+тервер [how declined? is this invariable?]
 
 ==Russian==
 
@@ -4072,13 +4066,13 @@ From {{m|ru|то́чный}}, the form "точь" is possibly an abbreviation of
 {{ru-noun-table|тура́}}
 
 ====Abbreviations====
-* {{l|ru|Л}} {{qualifier|chess}}
+* {{sense|chess rook}} {{l|ru|Л}}
 
 ====Synonyms====
 * {{l|ru|ладья́}} {{qualifier|formal}}
 
 
-укр
+укр [check the pronunciation]
 
 ==Russian==
 
