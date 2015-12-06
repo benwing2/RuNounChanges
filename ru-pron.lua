@@ -195,15 +195,10 @@ local acc = AC .. GR .. CFLEX .. DOTABOVE
 local accents = '[' .. acc .. ']'
 
 local perm_syl_onset = ut.list_to_set({
-	'spr', 'str', 'skr', 'spl', 'skl',
-	-- FIXME, do we want sc?
-	'sp', 'st', 'sk', 'sf', 'sx', 'sc',
-	'pr', 'br', 'tr', 'dr', 'kr', 'gr', 'fr', 'vr', 'xr',
-	'pl', 'bl', 'kl', 'gl', 'fl', 'vl', 'xl',
-	-- FIXME, do we want the following? If so, do we want vn?
+	'str', 'sp', 'st', 'sk', 'sf', 'sx', 'sc',
+	'pr', 'kr', 'fr', 'xr',
+	'pl', 'tl', 'kl', 'gl', 'fl', 'xl',
 	'ml', 'mn',
-	-- FIXME, dž is now converted to ĝž, which will have a syllable
-	-- boundary in between
 	'šč', 'dž',
 })
 
@@ -327,9 +322,9 @@ local phon_respellings = {
 	{'n[dt]sk', 'n(t)sk'},
 	{'s[dt]sk', 'sck'},
 
-	-- Add / before цз, чж sequences (Chinese words)
+	-- Add / before цз, чж sequences (Chinese words) and assimilate чж
 	{'cz', '/cz'},
-	{'čž', '/čž'},
+	{'čž', '/ĝž'},
 
 	-- main changes for affricate assimilation of [dt] + sibilant, including ts;
 	-- we either convert to "short" variants t͡s, d͡z, etc. or to "long" variants
@@ -428,7 +423,7 @@ local accentless = {
 	--   if a space (not a hyphen) separates them; hyphens are used here
 	--   to spell out letters, e.g. а-эн-бэ́ for АНБ (NSA = National Security
 	--   Agency) or о-а-э́ for ОАЭ (UAE = United Arab Emirates)
-	prespace = ut.list_to_list({'a', 'o'}),
+	prespace = ut.list_to_set({'a', 'o'}),
 	-- class 'post': particles that join with a preceding word
 	post = ut.list_to_set({'libo', 'nibudʹ', 'by', 'b', 'že', 'ž',
        'ka', 'tka', 'li'}),
@@ -483,7 +478,7 @@ local accentless = {
 --   it's an alias for another way of specifying the same part of speech
 --   (e.g. n=noun).
 local final_e = {
-	def={oe='ə', ve='e', je='e', softpaired='e', hardsib='y', softsib='e'}
+	def={oe='ə', ve='e', je='e', softpaired='e', hardsib='y', softsib='e'},
 	noun={oe='ə', ve='e', je='e', softpaired='e', hardsib='ə', softsib='e'},
 	n='noun',
 	pre={oe='e', ve='e', softpaired='e', hardsib='y', softsib='e'},
@@ -499,7 +494,7 @@ local final_e = {
 	p='adv', --FIXME, not sure about prepositions
 	verb={softpaired='e'},
 	v='verb',
-	vb='verb'
+	vb='verb',
 	pro={oe='i', ve='i'}, --FIXME, not sure about ваше, сколькие, какие-, кое-
 	num='mid', --FIXME, not sure about обе
 	pref='high',
@@ -522,7 +517,7 @@ local function track(page)
 	return true
 end
 
-function export.ipa(text, adj, gem, pos, bracket)
+function export.ipa(text, adj, gem, bracket, pos)
 	local new_module_result
 	-- Test code to compare existing module to new one.
 	if test_new_ru_pron_module then
@@ -531,7 +526,7 @@ function export.ipa(text, adj, gem, pos, bracket)
 	end
 
 	if type(text) == 'table' then
-		text, adj, gem, pos, bracket = (ine(text.args.phon) or ine(text.args[1])), ine(text.args.adj), ine(text.args.gem), ine(text.args.pos), ine(text.args.bracket)
+		text, adj, gem, bracket, pos = (ine(text.args.phon) or ine(text.args[1])), ine(text.args.adj), ine(text.args.gem), ine(text.args.bracket), ine(text.args.pos)
 		if not text then
 			text = mw.title.getCurrentTitle().text
 		end
@@ -831,7 +826,7 @@ function export.ipa(text, adj, gem, pos, bracket)
 		-- become [ə], [e], [ɪ] or [ɨ] depending on the part of speech and
 		-- the preceding consonants/vowels.
 		pron = rsub(pron, 'ä⁀', 'ə⁀')
-		pron = rsub(pron, '⁀ne⁀', '⁀ni⁀')
+		pron = rsub(pron, '⁀nʲe⁀', '⁀nʲi⁀')
 		pron = rsub(pron, '⁀že⁀', '⁀žy⁀')
 		-- function to fetch the appropriate value for ending and part of
 		-- speech, handling aliases and defaults and converting 'e' to 'ê'
@@ -868,12 +863,13 @@ function export.ipa(text, adj, gem, pos, bracket)
 					rfind(ch, '[cĵšžĉĝ]') and 'hardsib' or
 					rfind(ch, '[čǰɕӂ]') and 'softsib' or
 					'softpaired'
-				 return ch ..modc .. fetch_e_sub(ty)
+				 return ch ..mod .. fetch_e_sub(ty)
 			end)
 		else
 			-- Do the old way, which mostly converts final -е to schwa, but
-			-- has highly broken retraction code for vowel + [шжц] + е before
-			-- it that causes final -е in this circumstance to become [ɨ].
+			-- has highly broken retraction code for vowel + [шжц] + е (but
+			-- not with accent on vowel!) before it that causes final -е in
+			-- this circumstance to become [ɨ].
 			pron = rsub(pron, vowels_c .. '([cĵšžĉĝ][ː()]*)[eë]', '%1%2ɛ')
 			pron = rsub(pron, '[eë]⁀', 'ə⁀')
 		end
