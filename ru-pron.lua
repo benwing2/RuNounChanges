@@ -226,7 +226,7 @@ local allophones = {
 	['ɛ'] = { 'ɛ', 'ɨ', 'ɨ' },
 	['ä'] = { 'a', 'ɪ', 'ɪ' },
 	['ë'] = { 'e', 'ɪ', 'ɪ' },
-	['ö'] = { 'ɵ', 'ɐ', 'ə' },
+	['ö'] = { 'ɵ', 'ɪ', 'ɪ' },
 	['ü'] = { 'u', 'ʊ', 'ʊ' },
 	['ə'] = { 'ə', 'ə', 'ə' },
 }
@@ -307,11 +307,6 @@ end
 
 local phon_respellings = {
 	{'h', 'ɣ'},
-	-- vowel changes after always-hard or always-soft consonants
-	{'([šž])j([ou])', '%2%3'},
-	-- the following will also affect šč = ɕː, and do it before
-	-- converting šč -> ɕː just below
-	{'([čǰӂ])([aou])', '%1j%2'},
 
 	{'šč', 'ɕː'}, -- conversion of šč to geminate
 
@@ -397,7 +392,6 @@ local phon_respellings = {
 	
 	 -- backing of /i/ after hard consonants in close juncture
 	{'([mnpbtdkgfvszxɣrlšžcĵĉĝ])⁀‿⁀i', '%1⁀‿⁀y'},
-	{'ʹo', 'ʹjo'}, -- ьо is pronounced as (possibly unstressed) ьё
 }
 
 local cons_assim_palatal = {
@@ -688,9 +682,30 @@ function export.ipa(text, adj, gem, bracket, pos)
 	text = '⁀' .. text .. '⁀'
 	text = rsub(text, '‿', '⁀‿⁀')
 
-	-- add tertiary stress to final -о after vowels, e.g. То́кио;
-	-- this needs to be done before eliminating dot-above
+	-- save original word spelling before respellings, (de)voicing changes,
+	-- geminate changes, etc. for implementation of geminate_pref
+	local orig_word = rsplit(text, " ", true)
+
+	-- insert or remove /j/ before [aou] so that palatal versions of these
+	-- vowels are always preceded by /j/ and non-palatal versions never are
+	-- (do this before the change below adding tertiary stress to final
+	-- palatal о):
+	-- (1) Non-palatal [ou] after always-hard шж (e.g. in брошю́ра, жю́ри)
+	--     despite the spelling (FIXME, should this also affect [a]?)
+	text = rsub(text, '([šž])j([ou])', '%2%3')
+	-- (2) Palatal [aou] after always-soft щчӂ and voiced variant ǰ (NOTE:
+	--     this happens before the change šč -> ɕː in phon_respellings)
+	text = rsub(text, '([čǰӂ])([aou])', '%1j%2')
+	-- (3) ьо is pronounced as ьйо, i.e. like (possibly unstressed) ьё, e.g.
+	--     in Асунсьо́н
+	text = rsub(text, 'ʹo', 'ʹjo')
+
+	-- add tertiary stress to some final -о (this needs to be done before
+	-- eliminating dot-above, after adding ⁀, after adding /j/ before palatal о):
+	-- (1) after vowels, e.g. То́кио
 	text = rsub(text, '(' .. vowels .. accents .. '?o)⁀', '%1' .. CFLEX .. '⁀')
+	-- (2) when palatal, e.g. ра́нчо, га́учо, ма́чо, Ога́йо
+	text = rsub(text, 'jo⁀', 'jo' .. CFLEX .. '⁀')
 
 	-- eliminate dot-above, which has served its purpose of preventing any
 	-- sort of stress
@@ -698,10 +713,6 @@ function export.ipa(text, adj, gem, bracket, pos)
 
 	text = adj and rsub(text, '(.[aoe]́?)go(' .. AC .. '?)⁀', '%1vo%2⁀') or text
 	text = adj and rsub(text, '(.[aoe]́?)go(' .. AC .. '?)⁀', '%1vo%2sja⁀') or text
-
-	-- save original word spelling before respellings, (de)voicing changes,
-	-- geminate changes, etc. for implementation of geminate_pref
-	local orig_word = rsplit(text, " ", true)
 
 	--phonetic respellings
 	for _, respell in ipairs(phon_respellings) do
@@ -869,8 +880,9 @@ function export.ipa(text, adj, gem, bracket, pos)
 			-- Do the old way, which mostly converts final -е to schwa, but
 			-- has highly broken retraction code for vowel + [шжц] + е (but
 			-- not with accent on vowel!) before it that causes final -е in
-			-- this circumstance to become [ɨ].
+			-- this circumstance to become [ɨ], and a special hack for кое-.
 			pron = rsub(pron, vowels_c .. '([cĵšžĉĝ][ː()]*)[eë]', '%1%2ɛ')
+			pron = rsub(pron, '⁀ko(' .. accents .. ')jë⁀', '⁀ko%1ji⁀')
 			pron = rsub(pron, '[eë]⁀', 'ə⁀')
 		end
 
