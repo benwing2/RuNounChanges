@@ -17,13 +17,9 @@ Parameters:
 ; {{para|bracket}}
 : Control whether brackets appear around the generated IPA. Default is yes. Use {{para|bracket|n}} or {{para|bracket|}} to suppress the bracket.
 
-==Accent marks==
-* Indicate primary stress with an acute accent, e.g. е́ or ы́.
-* Indicate secondary stress with a grave accent, e.g. ѐ or ы̀.
-* Indicate "tertiary" stress with a circumflex or double grave accent, e.g. е̂ or ы̂ or е̏ or ы̏ (i.e. where a vowel is to be treated as stressed but should not be marked as possessing either primary or secondary stress).
-* Force the reduced pronunciation of a vowel that would otherwise be stressed (e.g. in a single-syllable word) with a dot above, e.g. е̇ or ы̇.
-
 ==Part of speech codes==
+'''NOTE: The following section is not yet implemented.'''
+
 The value of the {{para|pos}} parameter can be either a single part of speech code or a series of such codes separated by slashes. In the former case, the same part of speech applies to all words in a multi-word phrase. In the latter case, there should be as many codes as there are ''phonological words'' (otherwise, an error will result, tell you the expected number of words). Rules for phonological words:
 * Both spaces and hyphens separate phonological words. Hence ка-гэ-бэ is three phonological words.
 * A comma, en dash (–) or em dash (—) counts as a phonological word.
@@ -51,23 +47,30 @@ The possible part of speech codes are:
 * <code>mid</code> = force mid values ([e] or [ɨ])
 * <code>lo</code>, <code>low</code>, <code>schwa</code> = force low/schwa value ([ə])
 
-==Special phonetic symbols and rules==
-* In Cyrillic, use h or ɣ to indicate [ɣ] (the voiced fricative pronunciation of the letter г), and ӂ to indicate [ʑ] (the soft pronunciation of ж, as in words like {{m|ru|съе́зжая}}, {{m|ru|вожжа́}} or {{m|ru|дро́жжи}}).
-* Use щч or ɕч to force the pronunciation [ɕt͡ɕ]. By default, some instances of сч are pronounced [ɕt͡ɕ] and some are pronounced [ɕː], according to the following rules:
-*# [зж]ч and [сзшж]щ are pronounced [ɕː], like щ.
-*# сч at the beginning of a word and in the sequence счёт (unless preceded by [дтц]) is pronounced [ɕː]: hence счита́ть {{ru-IPA|счита́ть|raw=y}}, просчёт {{ru-IPA|просчёт|raw=y}}, подсчёт {{ru-IPA|подсчёт|raw=y}}.
-*# Other сч are pronounced [ɕt͡ɕ].
-* Use / to force a syllable boundary before a consonant. This also forces the "long" pronunciation [t͡ss] of тс, and similarly [d͡zz] for дз, and is useful particularly when another consonant follows, because otherwise the "short" pronunciations [t͡s] and [d͡z] would be used; an example is ветслу́жба, which should be written вѐт/слу́жба. The exact rules for when the short and long pronunciations are used is as follows:
-*# [дт] с and [дт] з across a word boundary use the long pronunciation, as do [дт]/с and [дт]/з with explicitly written slash.
-*# [дт]с + vowel and [дт]з + vowel use the long pronunciation.
-*# [дт]ьс and [дт]ьз use the long pronunciation, with palatalized tʲ͡sʲ and dʲ͡zʲ.
-*# Word-initial отс-, подс- use the long pronunciation, because there is a morpheme boundary involved.
-*# Other [дт]с and [дт]з use the short pronunciation.
-*# [дт]ш and [дт]ж, including with an intervening ь, always use the long pronunciations t͡ʂʂ and d͡ʐʐ (possibly with the first part palatalized).
-* Use ‿ to force close juncture between words (treat the combination as a single word). Examples: {{temp|ru-IPA|не́‿за‿што}} becomes {{ru-IPA|не́‿за‿што|raw=y}}, {{temp|ru-IPA|гра̂д‿идёт}} becomes {{ru-IPA|гра̂д‿идёт|raw=y}}.
+==Special symbols==
+
+===Accent marks===
+* Indicate primary stress with an acute accent, e.g. е́ or ы́.
+* Indicate secondary stress with a grave accent, e.g. ѐ or ы̀.
+* Indicate "tertiary" stress with a circumflex or double grave accent, e.g. е̂ or ы̂ or е̏ or ы̏ (i.e. where a vowel is to be treated as stressed but should not be marked as possessing either primary or secondary stress).
+* Force the reduced pronunciation of a vowel that would otherwise be stressed (e.g. in a single-syllable word) with a dot above, e.g. е̇ or ы̇.
+* Force a semi-reduced pronunciation ([ə] or [ɐ], instead of [ɪ]) of я or palatal а with a dot below, i.e. я̣ or а̣. This should be used in noun and verb endings, i.e. third-plural -ят, dative plural -ям, instrumental plural -ями, prepositional plural -ях.
+
+===Special consonants===
+* Use h or ɣ to indicate [ɣ] (the voiced fricative pronunciation of the letter г).
+* Use ӂ to indicate [ʑ] (the soft pronunciation of ж, as in words like {{m|ru|съе́зжая}}, {{m|ru|вожжа́}} or {{m|ru|дро́жжи}}).
+* Use щч or ɕч to force the pronunciation [ɕt͡ɕ]. By default, some instances of сч are pronounced [ɕt͡ɕ] and some are pronounced [ɕː]; see below.
+
+===Special punctuation===
+* Use / to force a syllable boundary before a consonant. This also forces the "long" pronunciation [t͡ss] of тс, and similarly [d͡zz] for дз, and is useful particularly when another consonant follows, because otherwise the "short" pronunciations [t͡s] and [d͡z] would be used. An example is ветслу́жба; if written вѐтслу́жба, the result is {{ru-IPA|вѐтслу́жба|raw=y}}, but if written вѐт/слу́жба, the result is {{ru-IPA|вѐт/слу́жба|raw=y}}. See below for the exact rules of when short and long pronunciations of тс and дз are used.
+* Use _ between consonants to prevent all assimilations between consonants, including voicing assimilation, palatalization assimilation, consonant reductions (e.g. лнц to нц, стл to сл), etc.
+* Use ‿ to force close juncture between words (treat the combination as a single word). Examples: {{temp|ru-IPA|не́‿за‿што}} becomes {{ru-IPA|не́‿за‿што|raw=y}} and {{temp|ru-IPA|гра̂д‿идёт}} becomes {{ru-IPA|гра̂д‿идёт|raw=y}}.
 * Comma and em/en dashes (– and —) are converted to foot boundaries ( | ).
 
-==Gemination==
+==Phonological rules==
+The following sections detail some of the phonological rules used when generating pronunciation.
+
+===Gemination===
 Geminated consonants (including cases like зж that become geminated after assimilation) may or may not be rendered with gemination. Use {{para|gem}} to override the defaults, e.g.:
 # {{temp|ru-IPA|да́нный|gem=y}} becomes {{ru-IPA|да́нный|gem=y|raw=y}}
 # {{temp|ru-IPA|да́нный|gem=n}} becomes {{ru-IPA|да́нный|gem=n|raw=y}}
@@ -90,6 +93,22 @@ By default, gemination is normally rendered as optional:
 * In the combination нн when occurring between vowels after but not directly after the stress: {{temp|ru-IPA|жа́ренный}} becomes {{ru-IPA|жа́ренный|raw=y}}.
 
 By default, gemination is normally not preserved in all other circumstances. Note that this includes most occurrences of gemination not between vowels, e.g. {{temp|ru-IPA|финн}} becomes {{ru-IPA|финн|raw=y}}.
+
+===Pronunciation of сч===
+сч is sometimes rendered as [ɕt͡ɕ] and sometimes as [ɕː], according to the following rules:
+# [зж]ч and [сзшж]щ are pronounced [ɕː], like щ.
+# сч at the beginning of a word and in the sequence счёт (unless preceded by [дтц]) is pronounced [ɕː]: hence счита́ть {{ru-IPA|счита́ть|raw=y}}, просчёт {{ru-IPA|просчёт|raw=y}}, подсчёт {{ru-IPA|подсчёт|raw=y}}.
+# Other сч are pronounced [ɕt͡ɕ].
+As mentioned above, this can be overridden using щч to force the pronunciation [ɕt͡ɕ], and щ to force the pronunciation [ɕː].
+
+===Pronunciation of тс, дз, тш, дж===
+тс and дз are sometimes rendered with the "short" pronunciations [t͡s] and [d͡z], and sometimes with the "long" pronunciations [t͡ss] and [d͡zz]. тш and дж always use "long" variants. Specifically:
+# [дт] с and [дт] з across a word boundary use the long pronunciation, as do [дт]/с and [дт]/з with explicitly written slash.
+# [дт]с + vowel and [дт]з + vowel use the long pronunciation.
+# [дт]ьс and [дт]ьз use the long pronunciation, with palatalized [tʲ͡sʲ] and [dʲ͡zʲ].
+# Word-initial отс-, подс- use the long pronunciation, because there is a morpheme boundary involved.
+# Other [дт]с and [дт]з use the short pronunciation.
+# [дт]ш and [дт]ж, including with an intervening ь, always use the long pronunciations [t͡ʂʂ] and [d͡ʐʐ] (possibly with the first part palatalized).
 
 <includeonly>
 [[Category:Russian templates|Pronunciation]]
