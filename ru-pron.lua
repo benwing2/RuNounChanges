@@ -191,6 +191,7 @@ local CFLEX = u(0x0302) -- circumflex =  ̂
 local vow = 'aeiouyɛəäëöü'
 local ipa_vow = vow .. 'ɐɪʊɨæɵʉ'
 local vowels, vowels_c = '[' .. vow .. ']', '([' .. vow .. '])'
+-- No need to include DUBGR here because we rewrite it to CFLEX very early
 local acc = AC .. GR .. CFLEX .. DOTABOVE
 local accents = '[' .. acc .. ']'
 
@@ -509,6 +510,16 @@ local function track(page)
 	local m_debug = require("Module:debug")
 	m_debug.track("ru-pron/" .. page)
 	return true
+end
+
+-- For use with {{ru-IPA|phon=...}}; remove accents that we don't want
+-- to appear in the phonetic respelling
+function export.phon_respelling(text)
+	if type(text) == 'table' then
+		text = ine(text.args[1])
+	end
+	text = rsub(text, '[' .. CFLEX .. DUBGR .. DOTABOVE .. ']', '')
+	return text
 end
 
 function export.ipa(text, adj, gem, bracket, pos)
