@@ -184,15 +184,16 @@ local new_final_e_code = false
 
 local AC = u(0x0301) -- acute =  ́
 local GR = u(0x0300) -- grave =  ̀
+local CFLEX = u(0x0302) -- circumflex =  ̂
 local DUBGR = u(0x030F) -- double grave =  ̏
 local DOTABOVE = u(0x0307) -- dot above =  ̇
-local CFLEX = u(0x0302) -- circumflex =  ̂
+local DOTBELOW = u(0x0323) -- dot below =  ̣
 
-local vow = 'aeiouyɛəäëöü'
+local vow = 'aeiouyɛəäạëöü'
 local ipa_vow = vow .. 'ɐɪʊɨæɵʉ'
 local vowels, vowels_c = '[' .. vow .. ']', '([' .. vow .. '])'
 -- No need to include DUBGR here because we rewrite it to CFLEX very early
-local acc = AC .. GR .. CFLEX .. DOTABOVE
+local acc = AC .. GR .. CFLEX .. DOTABOVE .. DOTBELOW
 local accents = '[' .. acc .. ']'
 
 local perm_syl_onset = ut.list_to_set({
@@ -231,6 +232,7 @@ local allophones = {
 	['y'] = { 'ɨ', 'ɨ', 'ɨ' },
 	['ɛ'] = { 'ɛ', 'ɨ', 'ɨ' },
 	['ä'] = { 'a', 'ɪ', 'ɪ' },
+	['ạ'] = { 'a', 'ɐ', 'ə' },
 	['ë'] = { 'e', 'ɪ', 'ɪ' },
 	['ö'] = { 'ɵ', 'ɪ', 'ɪ' },
 	['ü'] = { 'u', 'ʊ', 'ʊ' },
@@ -523,7 +525,7 @@ function export.phon_respelling(text)
 	if type(text) == 'table' then
 		text = ine(text.args[1])
 	end
-	text = rsub(text, '[' .. CFLEX .. DUBGR .. DOTABOVE .. ']', '')
+	text = rsub(text, '[' .. CFLEX .. DUBGR .. DOTABOVE .. DOTBELOW .. ']', '')
 	return text
 end
 
@@ -619,16 +621,18 @@ function export.ipa(text, adj, gem, bracket, pos)
 	-- Add primary stress to single-syllable words preceded or followed by
 	-- unstressed particle or preposition. Add "tertiary" stress to remaining
 	-- single-syllable words that aren't a particle, preposition, prefix or
-	-- suffix ("tertiary stress" means they are treated as stressed for the
-	-- purposes of vowel reduction but aren't marked with a primary or
-	-- secondary stress marker; we repurpose a circumflex for this purpose).
-	-- We need to preserve the distinction between spaces and hyphens because
-	-- (1) we only recognize certain post-accentless particles following a
-	-- hyphen (to distinguish e.g. 'то' from '-то'); (2) we only recognize
-	-- certain pre-accentless particles preceding a space (to distinguish
-	-- particles 'о' and 'а' from spelled letters о and а, which should not
-	-- be reduced); and (3) we recognize hyphens for the purpose of marking
-	-- unstressed prefixes and suffixes.
+	-- suffix and don't already bear an accent (including force-reduction
+	-- accents, i.e. dot-above/dot-below); "tertiary stress" means a vowel is
+	-- treated as stressed for the purposes of vowel reduction but isn't
+	-- marked with a primary or secondary stress marker; we repurpose a
+	-- circumflex for this purpose. We need to preserve the distinction
+	-- between spaces and hyphens because (1) we only recognize certain
+	-- post-accentless particles following a hyphen (to distinguish e.g.
+	-- 'то' from '-то'); (2) we only recognize certain pre-accentless
+	-- particles preceding a space (to distinguish particles 'о' and 'а' from
+	-- spelled letters о and а, which should not be reduced); and (3) we
+	-- recognize hyphens for the purpose of marking unstressed prefixes and
+	-- suffixes.
 	local word = strutils.capturing_split(text, "([ %-]+)")
 	for i = 1, #word do
 		-- check for single-syllable words that need a stress; they must meet
@@ -726,6 +730,11 @@ function export.ipa(text, adj, gem, bracket, pos)
 	-- eliminate dot-above, which has served its purpose of preventing any
 	-- sort of stress
 	text = rsub(text, DOTABOVE, '')
+	-- eliminate dot-below
+	text = rsub(text, 'ja' .. DOTBELOW, 'jạ')
+	if rfind(text, DOTBELOW) then
+		error("Dot-below accent can only be placed on я or palatal а")
+	end
 
 	text = adj and rsub(text, '(.[aoe]́?)go(' .. AC .. '?)⁀', '%1vo%2⁀') or text
 	text = adj and rsub(text, '(.[aoe]́?)go(' .. AC .. '?)⁀', '%1vo%2sja⁀') or text
@@ -763,8 +772,9 @@ function export.ipa(text, adj, gem, bracket, pos)
 	--rewrite iotated vowels
 	text = rsub(text, '(j[%(ː%)]*)([aeou])', function(a, b)
 		return a .. iotating[b] end)
-	-- eliminate j after consonant and before iotated vowel
-	text = rsub(text, '([^' .. vow .. acc .. 'ʹʺ‿⁀ ]/?)j([äëöü])', '%1%2')
+	-- eliminate j after consonant and before iotated vowel (including
+	-- semi-reduced ạ)
+	text = rsub(text, '([^' .. vow .. acc .. 'ʹʺ‿⁀ ]/?)j([äạëöü])', '%1%2')
 
 	--split by word and process each word
 	word = rsplit(text, " ", true)
@@ -843,8 +853,8 @@ function export.ipa(text, adj, gem, bracket, pos)
 		pron = rsub(pron, 'ʺ([aɛiouy])', 'ʔ%1')
 		-- 3. assimilative palatalization of consonants when followed by
 		--    front vowels or soft sign
-		pron = rsub(pron, '([mnpbtdkgfvszxɣrl])([ː()]*[eiäëöüʹ])', '%1ʲ%2')
-		pron = rsub(pron, '([cĵ])([ː()]*[äöüʹ])', '%1ʲ%2')
+		pron = rsub(pron, '([mnpbtdkgfvszxɣrl])([ː()]*[eiäạëöüʹ])', '%1ʲ%2')
+		pron = rsub(pron, '([cĵ])([ː()]*[äạöüʹ])', '%1ʲ%2')
 		-- 4. remove hard and soft signs
 		pron = rsub(pron, "[ʹʺ]", "")
 
@@ -852,7 +862,7 @@ function export.ipa(text, adj, gem, bracket, pos)
 		-- unstressed не, же. Final -я always becomes [ə]; final -е may
 		-- become [ə], [e], [ɪ] or [ɨ] depending on the part of speech and
 		-- the preceding consonants/vowels.
-		pron = rsub(pron, 'ä⁀', 'ə⁀')
+		pron = rsub(pron, '[äạ]⁀', 'ə⁀')
 		pron = rsub(pron, '⁀nʲe⁀', '⁀nʲi⁀')
 		pron = rsub(pron, '⁀že⁀', '⁀žy⁀')
 		-- function to fetch the appropriate value for ending and part of
@@ -1028,7 +1038,7 @@ function export.ipa(text, adj, gem, bracket, pos)
 			pron = rsub(pron, '⁀([ˈˌ]?[ɐəo][ˈˌ]?)b⁽ʲ⁾([ˈˌ]?vʲ)', '⁀%1b%2')
 		end
 
-		if rfind(word[i], 'sä⁀') then
+		if rfind(word[i], 's[äạ]⁀') then
 			pron = rsub(pron, 'sʲə⁀', 's⁽ʲ⁾ə⁀')
 		end
 
