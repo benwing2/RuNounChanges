@@ -18,7 +18,7 @@ FIXME:
    конвейерный, сайентология, фейерверк, Гава́йев. Note also Гава́йи with йи.
 3. (FIXME, DONE BUT NEEDS RETHINKING -- currently done both in CCʲj and VCʲj,
    maybe should only be done in CCʲj) In Асунсьо́н and Вьентья́н, put a syllable
-   break after the н and before consonant + /j/. Use the perm_sym_onset
+   break after the н and before consonant + /j/. Use the perm_syl_onset
    mechanism or at least the code that accesses that mechanism. Should
    possibly do this also in VCʲj and V‿Cʲj and VCj and V‿Cj sequences;
    ask Cinemantique if this makes sense.
@@ -196,10 +196,15 @@ local acc = AC .. GR .. CFLEX .. DOTABOVE
 local accents = '[' .. acc .. ']'
 
 local perm_syl_onset = ut.list_to_set({
-	'str', 'sp', 'st', 'sk', 'sf', 'sx', 'sc',
-	'pr', 'kr', 'fr', 'xr',
-	'pl', 'tl', 'kl', 'gl', 'fl', 'xl',
+	'spr', 'str', 'skr', 'spl', 'skl',
+	-- FIXME, do we want sc?
+	'sp', 'st', 'sk', 'sf', 'sx', 'sc',
+	'pr', 'br', 'tr', 'dr', 'kr', 'gr', 'fr', 'vr', 'xr',
+	'pl', 'bl', 'kl', 'gl', 'fl', 'vl', 'xl',
+	-- FIXME, do we want the following? If so, do we want vn?
 	'ml', 'mn',
+	-- FIXME, dž is now converted to ĝž, which will have a syllable
+	-- boundary in between
 	'šč', 'dž',
 })
 
@@ -1043,20 +1048,20 @@ function export.ipa(text, adj, gem, bracket, pos)
 	-- excessive numbers of possibilities (and it simplifies the code).
 	-- 1. First, temporarily add soft symbol to inherently soft consonants.
 	text = rsub(text, '([čǰɕӂj])', '%1ʲ')
-	-- 2. Handle case of au between two soft consonants
+	-- 2. Handle case of [au] between two soft consonants
 	text = rsub(text, '(ʲ[ː()]*)([auʊ])([ˈˌ]?.ʲ)', function(a, b, c)
 		return a .. fronting[b] .. c end)
-	-- 3. Handle case of au between soft and optionally soft consonant
-	if rfind(text, 'ʲ[ː()]*[auʊ][ˈˌ]?.⁽ʲ⁾') or rfind(text, 'ʲ[ː()]*[auʊ][ˈˌ]?%(jʲ%)') then
+	-- 3. Handle [au] between soft consonant and optional j, which is still fronted
+	text = rsub(text, '(ʲ[ː()]*)([auʊ])([ˈˌ]?%(jʲ%))', function(a, b, c)
+			return a .. fronting[b] .. c end)
+	-- 4. Handle case of [au] between soft and optionally soft consonant
+	if rfind(text, 'ʲ[ː()]*[auʊ][ˈˌ]?.⁽ʲ⁾') then
 		local opt_hard = rsub(text, '(ʲ[ː()]*)([auʊ])([ˈˌ]?.)⁽ʲ⁾', '%1%2%3')
-		opt_hard = rsub(opt_hard, '(ʲ[ː()]*)([auʊ])([ˈˌ]?)%(jʲ%)', '%1%2%3')
 		local opt_soft = rsub(text, '(ʲ[ː()]*)([auʊ])([ˈˌ]?.)⁽ʲ⁾', function(a, b, c)
 			return a .. fronting[b] .. c .. 'ʲ' end)
-		opt_soft = rsub(opt_soft, '(ʲ[ː()]*)([auʊ])([ˈˌ]?)%(jʲ%)', function(a, b, c)
-			return a .. fronting[b] .. c .. 'jʲ' end)
 		text = opt_hard .. ', ' .. opt_soft
 	end
-	-- 4. Undo addition of soft symbol to inherently soft consonants.
+	-- 5. Undo addition of soft symbol to inherently soft consonants.
 	text = rsub(text, '([čǰɕӂj])ʲ', '%1')
 
 	-- convert special symbols to IPA
