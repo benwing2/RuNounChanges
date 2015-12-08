@@ -8,100 +8,101 @@ function tests:check_pron(Cyrl, IPA, Cyrl_word, pos, gem)
 	self:equals(
 		m_links.full_link(Cyrl_word or Cyrl, Cyrl_word or Cyrl, lang, nil, nil, nil, { tr = '-' }, true) ..
 			(Cyrl_word and (" (respelled " .. Cyrl .. ")") or "") .. (pos and ", pos=" .. pos or "") .. (gem and ", gem=" .. gem or ""),
-		m_ru_pron.ipa(Cyrl, nil, gem, pos, nil),
+		m_ru_pron.ipa(Cyrl, nil, gem, nil, pos),
 		IPA,
 		{nowiki=true}
 	)
 end
 
 function tests:test_pron()
-	-- compare to a word in моро́женая, a word in -нои or -наи (or обы́чаи)
+	-- compare to моро́женая, a word in -нои or -наи (or обы́чаи)
 	self:check_pron("моро́женое", "mɐˈroʐɨnəjə", nil, "n")
-	-- compare to собра́ния, собра́нии
+	-- compare to собра́ния, о собра́нии
 	self:check_pron("собра́ние", "sɐˈbranʲɪ(j)e", nil, "n")
-	-- compare to всле́дствия, всле́дствии
+	-- compare to всле́дствия, о всле́дствии
 	self:check_pron("всле́дствие", "ˈfs⁽ʲ⁾lʲet͡stvʲɪje", nil, "n")
-	-- compare to сча́стья, го́стьи
+	-- compare to сча́стья, о го́стье, го́стьи
 	self:check_pron("сча́стье", "ˈɕːæsʲtʲje", nil, "n")
-	-- compare to со́лнца, брето́нци
+	-- compare to со́лнца, брето́нца, о брето́нце, брето́нцы
 	self:check_pron("со́лнце", "ˈsont͡sə", nil, "n")
-	-- compare to се́рдца, две́рци
+	-- compare to се́рдца, две́рца, о две́рце, две́рцы
 	self:check_pron("се́рдце", "ˈsʲert͡sə", nil, "n")
-	-- compare to ло́жа, a word in -жи
+	-- compare to ло́жа, до́жи
 	self:check_pron("ло́же", "ˈloʐə", nil, "n")
 	-- compare to по́ля, до́ли
 	self:check_pron("по́ле", "ˈpolʲe", nil, "n")
-	-- compare to ?
+	-- compare to жили́ща, пи́ща, о пи́ще, пи́щи
 	self:check_pron("жили́ще", "ʐɨˈlʲiɕːe", nil, "n")
-	-- compare to ?
+	-- compare to ве́ча, встре́чи
 	self:check_pron("ве́че", "ˈvʲet͡ɕe", nil, "n")
-	-- compare to ?
+	-- compare to Гео́ргия, Гео́ргии
 	self:check_pron("а́вторские", "ˈaftərskʲɪje", nil, "a")
-	-- compare to ?
+	-- compare to Алба́ния, Алба́нии, си́нее
 	self:check_pron("да́нные", "ˈdanːɨje", nil, "a")
-	-- compare to ?
+	-- compare to Абисси́ния, Абисси́нии
 	self:check_pron("си́нее", "ˈsʲinʲɪje", nil, "a")
-	-- compare to ?
+	-- compare to ли́сья, ли́сьи
 	self:check_pron("ли́сье", "ˈlʲisʲjə", nil, "a")
-	-- compare to ?
+	-- compare to рази́ня, рази́не, си́ни
 	self:check_pron("си́не", "ˈsʲinʲe", nil, "a")
-	-- compare to ?
+	-- compare to Гвине́я, о Гвине́е, Гвине́и
 	self:check_pron("дурне́е", "dʊrˈnʲeje", nil, "c")
-	-- compare to ?
+	-- compare to По́льша, о По́льше, По́льши
 	self:check_pron("бо́льше", "ˈbolʲʂɨ", nil, "c")
-	-- compare to ?
+	-- compare to до́жа, о до́же, до́жи
 	self:check_pron("доро́же", "dɐˈroʐɨ", nil, "c")
-	-- compare to ?
+	-- compare to сме́рча, о сме́рче, сме́рчи
 	self:check_pron("ле́хче", "ˈlʲext͡ɕe", "ле́гче", "c")
-	-- compare to ?
+	-- compare to гу́ща, о гу́ще, гу́щи
 	self:check_pron("гу́ще", "ˈɡuɕːe", nil, "c")
-	-- compare to ?
+	-- compare to неде́ля, неде́ле, неде́ли
 	self:check_pron("досе́ле", "dɐˈsʲelʲe", nil, "adv")
-	-- compare to ?
+	-- compare to ста́жа, о ста́же, ста́жи
 	self:check_pron("та́кже", "ˈtaɡʐɨ", nil, "adv")
-	-- compare to ?
+	-- compare to да́ча, о да́че, да́чи
 	self:check_pron("ина́че", "ɪˈnat͡ɕe", nil, "adv")
-	-- compare to ?
+	-- compare to ве́ща, ве́ще, ве́щи (from ве́щий)
 	self:check_pron("злове́ще", "zlɐˈvʲeɕːe", nil, "adv")
-	-- compare to ?
+	-- compare to пла́ца, пла́це, пла́цы
 	self:check_pron("вкра́тце", "ˈfkrat͡sːɨ", nil, "adv")
-	-- compare to ?
+	-- compare to тя́тя, о тя́те, тя́ти
 	self:check_pron("не пла́чьте", "nʲɪ‿ˈplat͡ɕtʲe", nil, "v")
-	-- compare to ?
+	-- compare to тётя, о тёте, тёти
 	self:check_pron("дава́йте", "dɐˈvajtʲe", nil, "v")
-	-- compare to ?
+	-- compare to сбо́я, сбо́е, сбо́и
 	self:check_pron("дво́е", "ˈdvoje", nil, "mid")
-	-- compare to ?
+	-- compare to сбо́я, сбо́е, сбо́и
 	self:check_pron("дво́е", "ˈdvojə", nil, "low")
-	-- compare to ?
+	-- compare to ши́ре (from широко́), зве́ря, о зве́ре, зве́ри
 	self:check_pron("четы́ре", "t͡ɕɪˈtɨrʲe", nil, "mid")
-	-- compare to ?
+	-- compare to тётя, о тёте, тёти, пло́ти
 	self:check_pron("о го́де", "ɐ‿ˈɡodʲe", nil, "pre")
-	-- compare to ?
+	-- compare to вы́игрыша, вы́игрыши
 	self:check_pron("о вы́игрыше", "ɐ‿ˈvɨɪɡrɨʂɨ", nil, "pre")
-	-- compare to ?
+	-- compare to такела́жа, колла́жа, о колла́же, колла́жи
 	self:check_pron("о такела́же", "ɐ‿təkʲɪˈlaʐɨ", nil, "pre")
-	-- compare to ?
+	-- compare to да́ча, о да́че, да́чи
 	self:check_pron("о пла́че", "ɐ‿ˈplat͡ɕe", nil, "pre")
-	-- compare to ?
+	-- compare to австрали́йца, австрали́йци
 	self:check_pron("об австрали́йце", "ɐb‿əfstrɐˈlʲijt͡sɨ", nil, "pre")
-	-- compare to ?
+	-- compare to сбо́я, о сбо́е, сбо́и
 	self:check_pron("о бо́е", "ɐ‿ˈboje", nil, "pre")
-	-- compare to ?
+	-- compare to ине́я, ине́и
 	self:check_pron("об и́нее", "ɐˈb‿ɨnʲɪje", nil, "pre")
-	-- compare to ?
+	-- compare to пля́жа, пля́же, пля́жи
 	self:check_pron("кня́же", "ˈknʲaʐɨ", nil, "voc")
-	-- compare to ?
+	-- compare to ха́рча, о ха́рче, сме́рча, о сме́рче, сме́рчи
 	self:check_pron("ста́рче", "ˈstart͡ɕe", nil, "voc")
-	-- compare to ?
+	-- compare to ды́ня, o ды́не, ды́ни
 	self:check_pron("сы́не", "ˈsɨnʲe", nil, "voc")
-	-- compare to ?
+	-- compare to сбо́я, о сбо́е, сбо́и
 	self:check_pron("ко̀е-кто́", "ˌko(j)ɪ ˈkto", nil, "pro")
-	-- compare to ?
+	-- compare to ки́я, о ки́и
 	self:check_pron("каки́е-нибудь лека́рства", "kɐˈkʲi(j)ɪ‿nʲɪbʊtʲ lʲɪˈkarstvə", nil, "pro")
 	self:check_pron("воѐнно-морско́й", "vɐˌjenːə mɐrˈskoj")
+	self:check_pron("ра́нчо", "ˈranʲt͡ɕɵ")
 	self:check_pron("а не то", "ɐ‿nʲɪ‿ˈto")
-	self:check_pron("а как же", "ɐ‿ˈkag‿ʐɨ")
+	self:check_pron("а как же", "ɐ‿ˈkaɡ‿ʐɨ")
 	self:check_pron("а̂ капэ́лла", "a kɐˈpɛl(ː)ə", "а капе́лла", nil, "opt")
 	self:check_pron("о-а-э́", "o a ˈɛ")
 	self:check_pron("лёгкий", "ˈlʲɵxʲkʲɪj")
@@ -158,7 +159,7 @@ function tests:test_pron()
 	self:check_pron("льстец", "lʲsʲtʲet͡s")
 	self:check_pron("инсти́нкт", "ɪn⁽ʲ⁾ˈsʲtʲinkt")
 	self:check_pron("ни́ндзя", "ˈnʲinʲdʲ͡zʲzʲə")
-	self:check_pron("Хэйлунцзя́н", "xɨjlʊnʲdʲ͡zʲˈzʲan")
+	self:check_pron("Хэйлунцзя́н", "xɨjlʊnʲˈdʲ͡zʲzʲan")
 	self:check_pron("проце́нтщик", "prɐˈt͡sɛnʲɕːɪk")
 	self:check_pron("брюзжа́ть", "brʲʊˈʐːatʲ")
 	self:check_pron("львёнок", "ˈlʲvʲɵnək")
