@@ -1,33 +1,31 @@
 --[[
-This module implements the template {{ru-IPA}} (FIXME, is it called elsewhere?)
+This module implements the template {{ru-IPA}}.
 
-Author: Originally Wyang; largely rewritten by Benwing, additional contributions
+Author: Originally Wyang; rewritten by Benwing; additional contributions
         from Atitarev and a bit from others
 
 FIXME:
 
-1. (DONE, NEEDS TESTING) Geminated /j/ from -йя-: treat as any other gemination,
-   meaning it may not always be pronounced geminated. Currently we geminate it
-   very late, after all the code that reduces geminates. Should be done earlier
-   and places that include regexps with /j/ should be modified to also include
+1. (DONE) Geminated /j/ from -йя-: treat as any other gemination, meaning it
+   may not always be pronounced geminated. Currently we geminate it very late,
+   after all the code that reduces geminates. Should be done earlier and
+   places that include regexps with /j/ should be modified to also include
    the gemination marker ː. Words with йя: аллилу́йя, ауйяма, ва́йя, ма́йя,
    папа́йя, парано́йя, пира́йя, ра́йя, секво́йя, Гава́йям.
-2. (DONE, NEEDS TESTING) Should have geminated jj in йе (occurs in e.g. фойе́).
-   Should work with gem=y (see FIXME #1). Words with йе: фойе́,
-   колба Эрленмейера, скала Айерс, Айерс-Рок, йети, Кайенна, конве́йер,
-   конвейерный, сайентология, фейерверк, Гава́йев. Note also Гава́йи with йи.
-3. (FIXME, DONE BUT NEEDS RETHINKING -- currently done both in CCʲj and VCʲj,
-   maybe should only be done in CCʲj) In Асунсьо́н and Вьентья́н, put a syllable
+2. (DONE) Should have geminated jj in йе (occurs in e.g. фойе́). Should work
+   with gem=y (see FIXME #1). Words with йе: фойе́, колба Эрленмейера, скала
+   Айерс, Айерс-Рок, йети, Кайенна, конве́йер, конвейерный, сайентология,
+   фейерверк, Гава́йев. Note also Гава́йи with йи.
+3. (DONE, CINEMANTIQUE OK WITH FIXES) In Асунсьо́н and Вьентья́н, put a syllable
    break after the н and before consonant + /j/. Use the perm_syl_onset
    mechanism or at least the code that accesses that mechanism. Should
    possibly do this also in VCʲj and V‿Cʲj and VCj and V‿Cj sequences;
    ask Cinemantique if this makes sense.
-4. (DONE, NEED TO RUN IT BY CINEMANTIQUE, NEED TO EDIT льстец AND REMOVE
-   MANUAL TRANSLIT, EDIT львёнок, львица) Fix non-palatal е in льстец.
-   Other words that will be affected (and probably wrong): льви́ца, львя́тник,
+4. (DONE, CINEMANTIQUE OK WITH FIXES) Fix non-palatal е in льстец.  Other
+   words that will be affected (and probably wrong): льви́ца, львя́тник,
    льняно́й, льстить, льди́на, львиный, manual pronunciation given as lʲvʲit͡sə
    and lʲvʲɵnək. Ask Cinemantique.
-5. (DONE, NEED TO RUN IT BY CINEMANTIQUE) In львёнок, rendered as ˈlʲvɵnək
+5. (DONE, CINEMANTIQUE SAYS NO IT DOESN'T) In львёнок, rendered as ˈlʲvɵnək
    instead of ˈlʲvʲɵnək. Apparently same issue as льстец, having to do with
    ь in beginning. This apparently has to do with the "assimilative
    palatalization of consonants when followed by front vowels" code, which
@@ -45,26 +43,23 @@ FIXME:
    bʲɪʂ‿ˈʂapkʲɪ); has something to do with ‿. Similarly occurs in
    не к ме́сту, which should render as nʲɪ‿k‿ˈmʲestʊ, and от я́блони, which
    should render as ɐt‿ˈjæblənʲɪ.
-9. In собра́ние, Anatoli renders it as sɐˈbranʲɪ(j)ə with optional (j).
-   Ask him when this exactly applies. Does it apply in all ɪjə sequences?
-   Only word-finally? Also ijə?
-10. (DONE, BUT I SUSPECT THE OFFENDING CLAUSE, LABELED 10a, CAN BE REWRITTEN
-   MUCH MORE SIMPLY, SEE COMMENT AT CLAUSE; FIX THIS UP) (DONE, NEEDS TESTING)
-   убе́жищa renders as ʊˈbʲeʐɨɕːʲə instead of ʊˈbʲeʐɨɕːə; уда́ча similarly
-   becomes ʊˈdat͡ɕʲə instead of ʊˈdat͡ɕə.
-10a. (DONE, NEEDS TESTING) Remove the "offending clause" just mentioned,
-   labeled FIXME (10a), and fix it as the comment above it describes.
-10b. (DONE, NEEDS TESTING) Remove the clause labeled "FIXME (10b)".
-10c. (DONE, NEEDS TESTING) Investigate the clause labeled "FIXME (10c)".
-   This relates to FIXME #9 above concerning собра́ние.
+9. (STILL UNCLEAR) In собра́ние, Anatoli renders it as sɐˈbranʲɪ(j)ə with
+   optional (j). Ask him when this exactly applies. Does it apply in all ɪjə
+   sequences? Only word-finally? Also ijə?
+10. (DONE) убе́жищa renders as ʊˈbʲeʐɨɕːʲə instead of ʊˈbʲeʐɨɕːə; уда́ча
+   similarly becomes ʊˈdat͡ɕʲə instead of ʊˈdat͡ɕə.
+10a. (DONE) Remove the "offending clause" just mentioned, labeled FIXME (10a),
+   and fix it as the comment above it describes.
+10b. (DONE) Remove the clause labeled "FIXME (10b)".
+10c. (DONE) Investigate the clause labeled "FIXME (10c)".  This relates to
+   FIXME #9 above concerning собра́ние.
 10d. (DONE, NEEDS TESTING) Investigate the clause labeled "FIXME (10d)"
    and apply the instructions there about removing a line and seeing
    whether anything changes.
-11. (DONE, NEEDS TESTING) тро́лль renders with geminated final l, and
-   with ʲ on wrong side of gemination (ːʲ instead of ʲː); note how this
-   also occurs above in -ɕːʲə from убе́жищa. (This issue with тро́лль
-   will be masked by the change to generally degeminate l; use фуррь; note
-   also галльский.)
+11. (DONE) тро́лль renders with geminated final l, and with ʲ on wrong side of
+   gemination (ːʲ instead of ʲː); note how this also occurs above in -ɕːʲə
+   from убе́жищa. (This issue with тро́лль will be masked by the change to
+   generally degeminate l; use фуррь; note also галльский.)
 12. (DONE, NEEDS TESTING) May be additional errors with gemination in
     combination with explicit / syllable boundary, because of the code
 	expecting that syllable breaks occur in certain places; should probably
@@ -86,18 +81,18 @@ FIXME:
 	I doubt it, ask Cinemantique), наря́д на ку́хню (non-devoicing of д before
 	н in next word, ask Cinemantique about this, does it also apply to мрл?),
 	ко̀е-кто́
-16. (DONE, ADDED SPECIAL HACK; THEN REMOVED IT, SHOULD HANDLE THROUGH pos=pro)
-    Caused a change in ко̀е-кто́, perhaps because I rewrote code that accepted
+16. (DONE, ADDED SPECIAL HACK; REMOVED WITH NEW FINAL-Е CODE, SHOULD HANDLE
+    THROUGH pos=pro; DOESN'T HAVE ANYTHING TO DO WITH SECONDARY STRESS ON О)
+	Caused a change in ко̀е-кто́, perhaps because I rewrote code that accepted
 	an acute or circumflex accent to also take a grave accent. See how кое is
 	actually pronounced here and take action if needed. (ruwiki claims кое is
 	indeed pronounced like кои, ask Cinemantique what the rule for final -е
 	is and why different in кое vs. мороженое, anything to do with secondary
 	stress on о?)
-17. (DONE, NEEDS CHECKING, CHECK эвфеми́зм) Rewrote voicing/devoicing
-    assimilation; should make assimilation of эвфеми́зм automatic and not
-	require phon=.
-18. (DONE, NEEDS TESTING) Removed redundant fronting-of-a code near end;
-    make sure this doesn't change anything.
+17. (DONE) Rewrote voicing/devoicing assimilation; should make assimilation of
+    эвфеми́зм automatic and not require phon=.
+18. (DONE) Removed redundant fronting-of-a code near end; make sure this
+    doesn't change anything.
 19. (DONE, ANSWER IS YES) do сь and зь assimilate before шж, and
     if so do they become ɕʑ? Ask Cinemantique.
 20. (DONE) Add pos= to handle final -е. Possibilities appear to be neut
@@ -109,8 +104,7 @@ FIXME:
 	mnrlv vowel. Apparently non-devoicing before vowel is only in fast speech
 	with a close juncture and Anatoli doesn't want that; but what about before
 	the consonants?
-22. (DONE) (DONE, NEEDS TESTING, NEED TO REMOVE ADDITION OF BRACKETS FROM
-    ru-IPA) Figure out what to do with fronting of a and u after or between
+22. (DONE) Figure out what to do with fronting of a and u after or between
 	soft consonants, esp. when triggered by a following soft consonant with
 	optional or compulsory assimilation. Probably the correct thing to do
 	in the case of optional assimilation is to give two pronunciations
@@ -118,28 +112,30 @@ FIXME:
 	other with front vowel + soft consonant.
 23. (DONE, OK) Implement compulsory assimilation of xkʲ; ask Cinemantique to
     make sure this is correct.
-24. (DONE, NEEDS TESTING) Add а to list of unstressed particles, but only
-    recognize it and о (and perhaps all the others) when not followed by a
-	hyphen; then fix unnecessary cases with о̂ (look at tracking cflex
-	category) and the various hacks used in а ведь, а сейчас, а то, а не то,
-	а также, а как же; will need to add а̂ to а капелла and possibly elsewhere;
-	use different-pron tracking to catch this.
-25. (DONE, NEEDS TESTING) Add / before цз, чж in Chinese words to ensure
-    syllable boundary in right place; ensure that this doesn't mess things up
-	when occurring at beginning of word or whatever.
-26. (DONE?) Rule on voicing assimilation before v: It says in Chew "A Computational
-    Phonology of Russian" that v is an obstruent before obstruents and a
-	sonorant before sonorants, i.e. v triggers voicing assimilation if followed
-	by an obstruent; verify that our code works this way.
+24. (DONE, BUT ANATOLI THINKS CONJUNCTION A MIGHT NOT BE REDUCED) Add а to
+    list of unstressed particles, but only recognize it and о (and perhaps all
+	the others) when not followed by a hyphen; then fix unnecessary cases with
+	о̂ (look at tracking cflex category) and the various hacks used in а ведь,
+	а сейчас, а то, а не то, а также, а как же; will need to add а̂ to а капелла
+	and possibly elsewhere; use different-pron tracking to catch this.
+25. (DONE) Add / before цз, чж in Chinese words to ensure syllable boundary in
+    right place; ensure that this doesn't mess things up when occurring at
+	beginning of word or whatever.
+26. (DONE) Rule on voicing assimilation before v: It says in Chew "A
+    Computational Phonology of Russian" that v is an obstruent before
+	obstruents and a sonorant before sonorants, i.e. v triggers voicing
+	assimilation if followed by an obstruent; verify that our code works this
+	way.
 27. (DONE, NEEDS TESTING) Implement _ to block all assimilation; probably this
     will happen automatically and we just need to remove the _ at the end.
-28. (DONE, NEEDS TESTING) Change unstressed palatal o to have values like
+28. (NOT DONE, NOT CORRECT) Change unstressed palatal o to have values like
     regular o, for words like майора́т, Ога́йо, Йоха́ннесбург
-29. If we need partial reduction of non-final е/я to [ə] instead of [ɪ], one
-    way is to use another diacritic, e.g. dot-under; or use a spelling like ьа.
-30. BUG: воѐнно-морско́й becomes [vɐˌenːə mɐrˈskoj] without [je], must be due
-    to ѐ being a composed character (may be a bug in the translit module; add
-	a test case).
+29. (DONE) If we need partial reduction of non-final е/я to [ə] instead of [ɪ],
+    one way is to use another diacritic, e.g. dot-under; or use a spelling
+	like ьа.
+30. (DONE) BUG: воѐнно-морско́й becomes [vɐˌenːə mɐrˈskoj] without [je], must be
+    due to ѐ being a composed character (may be a bug in the translit module;
+	add a test case).
 ]]
 
 local ut = require("Module:utils")
