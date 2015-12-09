@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# Add pos= to ru-IPA pronunciations. Also find instances where и/я/ы/а has
+# Add pos= to ru-IPA pronunciations. Also find instances where и/я/ы/а/е̂ has
 # been used phonetically in place of е and put back to е.
 
 # FIXME:
@@ -97,12 +97,12 @@ def process_page(index, page, save, verbose):
                   elif not titleword.endswith(u"е"):
                     pagemsg(u"Skipping title word %s (#%s) in section %s because doesn't end in -е" %
                         (titleword, wordno, k//2))
-                  elif re.search(u"([еия]|цы|[кгхцшжщч]а)" + ru.DOTABOVE + "?$", phonword):
+                  elif re.search(u"([еия]|цы|е̂|[кгхцшжщч]а)" + ru.DOTABOVE + "?$", phonword):
                     pagemsg("Found template that will be modified due to phonword %s, titleword %s (#%s) in section %s: %s" %
                         (phonword, titleword, wordno, k//2, unicode(t)))
                     subsections_with_ru_ipa_to_fix.add(k)
                   elif not re.search(u"[еэѐ][" + ru.AC + ru.GR + ru.CFLEX + ru.DUBGR + "]?$", phonword):
-                    pagemsg(u"WARNING: ru-IPA pronunciation word %s (#%s) doesn't end in [еэия] or hard sibilant + [ыа] when corresponding titleword %s ends in -е, something wrong in section %s: %s" %
+                    pagemsg(u"WARNING: ru-IPA pronunciation word %s (#%s) doesn't end in [еэия] or е̂ or hard sibilant + [ыа] when corresponding titleword %s ends in -е, something wrong in section %s: %s" %
                         (phonword, wordno, titleword, k//2, unicode(t)))
                   else:
                     pagemsg(u"Pronun word %s (#%s) with final -э or stressed vowel, ignoring in section %s: %s" %
@@ -270,7 +270,7 @@ def process_page(index, page, save, verbose):
                     pass # Already output msg
                   elif not titleword.endswith(u"е"):
                     pass # Already output msg
-                  elif re.search(u"([еия]|цы|[кгхцшжщч]а)" + ru.DOTABOVE + "?$", lphonword):
+                  elif re.search(u"([еия]|цы|е̂|[кгхцшжщч]а)" + ru.DOTABOVE + "?$", lphonword):
                     # Found a template to modify
                     if re.search(u"е" + ru.DOTABOVE + "?$", lphonword):
                       pass # No need to canonicalize
@@ -278,6 +278,10 @@ def process_page(index, page, save, verbose):
                       if re.search(u"и" + ru.DOTABOVE + "?$", lphonword):
                         pagemsg(u"phon=%s (word #%s) ends in -и, will modify to -е in section %s: %s" % (phonword, wordno, k//2, unicode(t)))
                         notes.append(u"unstressed -и -> -е")
+                      elif re.search(u"е̂$", lphonword):
+                        # Make this a warning because we're not sure this is correct
+                        pagemsg(u"WARNING: phon=%s (word #%s) ends in -е̂, will modify to -е in section %s: %s" % (phonword, wordno, k//2, unicode(t)))
+                        notes.append(u"-е̂ -> -е")
                       elif re.search(u"я" + ru.DOTABOVE + "?$", lphonword):
                         pagemsg(u"phon=%s (word #%s) ends in -я, will modify to -е in section %s: %s" % (phonword, wordno, k//2, unicode(t)))
                         notes.append(u"unstressed -я -> -е")
@@ -289,8 +293,8 @@ def process_page(index, page, save, verbose):
                         notes.append(u"unstressed -а after unpaired cons -> -е")
                       else:
                         assert False, "Something wrong, strange ending, logic not correct: section %s, phon=%s (word #%s)" % (k//2, phonword, wordno)
-                      newphonword = re.sub(u"[ияыа](" + ru.DOTABOVE + "?)$", ur"е\1", phonword)
-                      newphonword = re.sub(u"[ИЯЫА](" + ru.DOTABOVE + "?)$", ur"Е\1", newphonword)
+                      newphonword = re.sub(u"(?:[ияыа]|е̂)(" + ru.DOTABOVE + "?)$", ur"е\1", phonword)
+                      newphonword = re.sub(u"(?:[ИЯЫА]|Е̂)(" + ru.DOTABOVE + "?)$", ur"Е\1", newphonword)
                       pagemsg("Modified phon=%s (word #%s) to %s in section %s: %s" % (
                         phonword, wordno, newphonword, k//2, unicode(t)))
                       phonwords[i] = newphonword
