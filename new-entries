@@ -1297,10 +1297,25 @@ TODO:
 путь в тысячу вёрст начинается с первого шага: add accent on путь in both ru-IPA and headword; add accent in headword in вёрст
 пушка-гаубица: use hyphen not space in ru-IPA
 [IMPORTANT] пятьдесят: Ask Anatoli, is phon=пееся́т correct?
-
-
-
-
+развёртывание: remove acute accent from ё in ru-IPA
+[IMPORTANT] развитый: Headword has two stresses, ru-IPA needs it too
+разводить: remove stray slash in ru-IPA
+ракушка: pron has two stresses, headword needs them too (?)
+рамэн: in headword, use two words instead of multi-accent word
+расставаться: use gem=y, gem=n instead of single/double с in ru-IPA; or use gem=opt
+расстаться: use gem=y, gem=n instead of single/double с in ru-IPA; or use gem=opt
+[IMPORTANT] Рейкьявик: need phon= in ru-IPA; add manual translit to headword
+рейх: need manual translit in headword
+[IMPORTANT] Род-Айленд: use two words or tie bar (ask Anatoli why one word necessary); ask Anatoli if the е is or can be non-palatal
+Рождество: remove duplicate ru-IPA
+роженица: in headword, use three words instead of multi-accent word
+рок-группа: use hyphen not space in ru-IPA
+рок-н-ролл: use hyphen not single word, or tie bar
+[IMPORTANT] Российская СФСР: use phon=
+[IMPORTANT] руки не из того места растут: use adj=y not phon=
+руль высоты: Use accent on monosyllable in ru-IPA
+[IMPORTANT] рунетчик: need phon= in ru-IPA; add manual translit to headword
+рыба-кит: remove accent from рыба in headword
 
 
 
