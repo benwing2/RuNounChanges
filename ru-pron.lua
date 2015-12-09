@@ -171,9 +171,10 @@ local function rsub_repeatedly(term, foo, bar)
 	end
 end
 
--- If enabled, compare this module with new version of module to make
--- sure all pronunciations are the same. Eventually consider removing this;
--- but useful as new code is created.
+-- If enabled, compare this module with new version of module in
+-- Module:User:Benwing2/ru-pron to make sure all pronunciations are the same.
+-- To check for differences, go to Template:tracking/ru-pron/different-pron
+-- and look at what links to the page.
 local test_new_ru_pron_module = false
 -- If enabled, do new code for final -е; else, the old way
 local new_final_e_code = false
@@ -724,9 +725,11 @@ function export.ipa(text, adj, gem, bracket, pos)
 	text = rsub(text, 'jo⁀', 'jo' .. CFLEX .. '⁀')
 
 	-- eliminate dot-above, which has served its purpose of preventing any
-	-- sort of stress
+	-- sort of stress (needs to be done after adding tertiary stress to
+	-- final -о)
 	text = rsub(text, DOTABOVE, '')
-	-- eliminate dot-below
+	-- eliminate dot-below (needs to be done after changes above that insert
+	-- j before [aou] after always-soft щчӂ)
 	text = rsub(text, 'ja' .. DOTBELOW, 'jạ')
 	if rfind(text, DOTBELOW) then
 		error("Dot-below accent can only be placed on я or palatal а")
@@ -836,7 +839,7 @@ function export.ipa(text, adj, gem, bracket, pos)
 			pron = rsub_repeatedly(pron, '(' .. vowels .. accents .. '?[žn])ː(' .. vowels .. ')', '%1ˑ%2')
 			-- 4. ssk (and zsk, already normalized) immediately after the stress
 			pron = rsub(pron, '(' .. vowels .. accents .. '[^' .. vow .. ']*s)ː(k)', '%1ˑ%2')
-			-- 5. eliminate remaining gemination
+			-- 5. eliminate remaining gemination, except for ɕː and ӂː
 			pron = rsub(pron, '([^ɕӂ%(%)])ː', '%1')
 			-- 6. convert special gemination symbol ˑ to regular gemination
 			pron = rsub(pron, 'ˑ', 'ː')
