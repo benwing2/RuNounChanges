@@ -20,13 +20,20 @@ cons = cons_except_sib_c + sib_c
 velar = u"кгхКГХ"
 uppercase = u"АЕИОУЯЭЫЁЮІѢѴБДФГЙКЛМНПРСТВХЗЬЪШЩЧЖЦ"
 
-# Does a word of set of connected text need accents? We need to split by word
+# Does a phrase of connected text need accents? We need to split by word
 # and check each one.
-def needs_accents(text):
+def needs_accents(text, split_dash=False):
+  # A word needs accents if it is unstressed and contains more than one vowel;
+  # but if split_dash, allow cases like динь-динь with multiple monosyllabic
+  # words separated by a hyphen. We don't just split on hyphens at top level
+  # otherwise a word like Али-Баба́ will "need accents".
   def word_needs_accents(word):
-    # A word needs accents if it is unstressed and contains more than one vowel
-    return is_unstressed(word) and not is_monosyllabic(word)
-  words = re.split(r"\s", text)
+    if not is_unstressed(word):
+      return False
+    for sw in re.split(r"-", word) if split_dash else [word]:
+      if not is_monosyllabic(sw):
+        return True
+    return False
   for word in words:
     if word_needs_accents(word):
       return True
