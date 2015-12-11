@@ -34,6 +34,7 @@ def needs_accents(text, split_dash=False):
       if not is_monosyllabic(sw):
         return True
     return False
+  words = re.split(r"\s", text)
   for word in words:
     if word_needs_accents(word):
       return True
