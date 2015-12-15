@@ -1940,31 +1940,38 @@ local function get_form(forms, preserve_links, raw)
 	return nom.concat_forms(canon_forms)
 end
 
+local function case_will_be_displayed(args, case)
+	local ispl = rfind(case, "_pl")
+	local caseok = true
+	if args.n == "p" then
+		caseok = ispl
+	elseif args.n == "s" then
+		caseok = not ispl
+	end
+	if case == "loc" and not args.any_overridden.loc or
+		case == "par" and not args.any_overridden.par or
+		case == "voc" and not args.any_overridden.voc then
+		caseok = false
+	end
+	if args.a == "a" or args.a == "i" then
+		if rfind(case, "_[ai]n") then
+			caseok = false
+		end
+	--else -- bianimate
+	--	if case == "acc_sg" or case == "acc_pl" then
+	--		caseok = false
+	--	end
+	end
+	if not args[case] then
+		caseok = false
+	end
+	return caseok
+end
+
 local function concat_case_args(args, do_all, raw)
 	local ins_text = {}
 	for _, case in ipairs(do_all and all_cases or overridable_cases) do
-		local ispl = rfind(case, "_pl")
-		local caseok = true
-		if args.n == "p" then
-			caseok = ispl
-		elseif args.n == "s" then
-			caseok = not ispl
-		end
-		if case == "loc" and not args.any_overridden.loc or
-			case == "par" and not args.any_overridden.par or
-			case == "voc" and not args.any_overridden.voc then
-			caseok = false
-		end
-		if args.a == "a" or args.a == "i" then
-			if rfind(case, "_[ai]n") then
-				caseok = false
-			end
-		--else -- bianimate
-		--	if case == "acc_sg" or case == "acc_pl" then
-		--		caseok = false
-		--	end
-		end
-		if caseok and args[case] then
+		if case_will_be_displayed(args, case) then
 			table.insert(ins_text, case .. (raw and "_raw" or "") .. "=" ..
 				get_form(args[case], rfind(case, "_linked"), raw))
 		end
@@ -3834,9 +3841,6 @@ local function attach_with(args, case, suf, fun, irreg, n, islast)
 	else
 		local combined, realsuf = fun(args, case, suf)
 		local irregsuf = irreg and {IRREGMARKER} or {""}
-		if irreg and combined then
-			insert_if_not(args.internal_notes, IRREGMARKER .. " Irregular.")
-		end
 		return {combined and nom.concat_paired_russian_tr(
 			nom.concat_paired_russian_tr(args["prefix" .. n], combined),
 			nom.concat_paired_russian_tr(args["suffix" .. n], irregsuf)) or nil},
@@ -4401,9 +4405,11 @@ handle_overall_forms_and_overrides = function(args)
 		if rfind(text, IRREGMARKER) then
 			text = rsub(text, IRREGMARKER, "")
 			local entry, notes = m_table_tools.separate_notes(text)
-			insert_if_not(args.internal_notes, IRREGMARKER .. " Irregular.")
-			args.any_irreg = true
-			args.any_irreg_case[case] = true
+			if case_will_be_displayed(args, case) then
+				insert_if_not(args.internal_notes, IRREGMARKER .. " Irregular.")
+				args.any_irreg = true
+				args.any_irreg_case[case] = true
+			end
 			return entry .. IRREGMARKER .. notes
 		else
 			return text
