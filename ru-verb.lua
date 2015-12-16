@@ -6,7 +6,13 @@
 ]=]--
 
 local m_utilities = require("Module:utilities")
+local ut = require("Module:utils")
 local com = require("Module:ru-common")
+local m_debug = require("Module:debug")
+
+-- If enabled, compare this module with new version of module to make
+-- sure all conjugations are the same.
+local test_new_ru_verb_module = false
 
 local export = {}
 
@@ -17,11 +23,85 @@ local conjugations = {}
 
 local lang = require("Module:languages").getByCode("ru")
 
--- The main entry point.
--- This is the only function that can be invoked from a template.
-function export.show(frame)
-	local conj_type = frame.args[1] or error("Conjugation type has not been specified. Please pass parameter 1 to the module invocation")
-	local args = frame:getParent().args
+local function track(page)
+	m_debug.track("ru-verb/" .. page)
+	return true
+end
+
+local PAGENAME, NAMESPACE
+
+-- Forward functions
+
+local present_e_a
+local present_e_b
+local present_e_c
+local present_je_a
+local present_je_b
+local present_je_c
+local present_i_a
+local present_i_b
+local present_i_c
+local make_reflexive_alt
+local make_reflexive
+local make_table
+
+local all_verb_forms = {
+	-- present tense
+	"pres_1sg", "pres_1sg2",
+	"pres_2sg", "pres_2sg2",
+	"pres_3sg", "pres_3sg2",
+	"pres_1pl", "pres_1pl2",
+	"pres_2pl", "pres_2pl2",
+	"pres_3pl", "pres_3pl2",
+	-- present-future tense
+	"pres_futr_1sg", "pres_futr_1sg2",
+	"pres_futr_2sg", "pres_futr_2sg2",
+	"pres_futr_3sg", "pres_futr_3sg2",
+	"pres_futr_1pl", "pres_futr_1pl2",
+	"pres_futr_2pl", "pres_futr_2pl2",
+	"pres_futr_3pl", "pres_futr_3pl2",
+	-- future tense
+	"futr_1sg", "futr_1sg2",
+	"futr_2sg", "futr_2sg2",
+	"futr_3sg", "futr_3sg2",
+	"futr_1pl", "futr_1pl2",
+	"futr_2pl", "futr_2pl2",
+	"futr_3pl", "futr_3pl2",
+	-- imperative
+	"impr_sg", "impr_sg2",
+	"impr_pl", "impr_pl2",
+	-- past
+	"past_m", "past_m2", "past_m3",
+	"past_f", "past_f2", "past_f3",
+	"past_n", "past_n2", "past_n3",
+	"past_pl", "past_pl2", "past_pl3",
+	"past_m_short",
+	"past_f_short",
+	"past_n_short",
+	"past_pl_short",
+
+	-- active participles
+	"pres_actv_part", "pres_actv_part2",
+	"past_actv_part", "past_actv_part2",
+	-- passive participles
+	"pres_pasv_part", "pres_pasv_part2",
+	"past_pasv_part", "past_pasv_part2",
+	-- adverbial participles
+	"pres_adv_part", "pres_adv_part2",
+	"past_adv_part", "past_adv_part2",
+	"past_adv_part_short", "past_adv_part_short2",
+	-- infinitive
+	"infinitive",
+}
+
+local all_verb_props = mw.clone(all_verb_forms)
+table.insert(all_verb_props, "title")
+table.insert(all_verb_props, "perf")
+table.insert(all_verb_props, "intr")
+table.insert(all_verb_props, "impers")
+table.insert(all_verb_props, "categories")
+
+function export.generate_forms(conj_type, args)
 	PAGENAME = mw.title.getCurrentTitle().text
 	NAMESPACE = mw.title.getCurrentTitle().nsText
 
@@ -110,7 +190,59 @@ function export.show(frame)
 		table.insert(categories, "Russian impersonal verbs")
 	end
 
-	return make_table(forms, title, perf, intr or refl, impers) .. m_utilities.format_categories(categories, lang)
+	return forms, title, perf, intr or refl, impers, categories
+end
+
+local function concat_vals(val)
+	if type(val) == "table" then
+		return table.concat(val, ",")
+	else
+		return val
+	end
+end
+
+-- The main entry point.
+-- This is the only function that can be invoked from a template.
+function export.show(frame)
+	local conj_type = frame.args[1] or error("Conjugation type has not been specified. Please pass parameter 1 to the module invocation")
+	local args = frame:getParent().args
+
+	local args_clone
+	if test_new_ru_verb_module then
+		args_clone = mw.clone(args)
+	end
+
+	local forms, title, perf, intr, impers, categories = export.generate_forms(conj_type, args)
+
+	-- Test code to compare existing module to new one.
+	if test_new_ru_verb_module then
+		local m_new_ru_verb = require("Module:User:Benwing2/ru-verb")
+		local newforms, newtitle, newperf, newintr, newimpers, newcategories = m_new_ru_verb.generate_forms(conj_type, args_clone)
+		forms.title = title
+		forms.perf = perf
+		forms.intr = intr
+		forms.impers = impers
+		forms.categories = categories
+		newforms.title = newtitle
+		newforms.perf = newperf
+		newforms.intr = newintr
+		newforms.impers = newimpers
+		newforms.categories = newcategories
+		for _, form in ipairs(all_verb_props) do
+			local val = forms[form]
+			local newval = newforms[form]
+			if not ut.equals(val, newval) then
+				-- Uncomment this to display the particular case and
+				-- differing forms.
+				--error(form .. " " .. (val and concat_vals(val) or "nil") .. " || " .. (newval and concat_vals(newval) or "nil"))
+				track("different-conj")
+			end
+			break
+		end
+	end
+
+	return make_table(forms, title, perf, intr, impers) .. m_utilities.format_categories(categories, lang)
+
 end
 
 --[=[
@@ -3115,7 +3247,7 @@ end
 ]=]--
 
 -- Present forms with -e-, no j-vowels.
-function present_e_a(forms, stem)
+present_e_a = function(forms, stem)
 
 	forms["pres_futr_1sg"] = stem .. "у"
 	forms["pres_futr_2sg"] = stem .. "ешь"
@@ -3125,7 +3257,7 @@ function present_e_a(forms, stem)
 	forms["pres_futr_3pl"] = stem .. "ут"
 end
 
-function present_e_b(forms, stem)
+present_e_b = function(forms, stem)
 
 	if mw.ustring.find(stem, "[аэыоуяеиёю́]$") then
 		forms["pres_futr_1sg"] = stem .. "ю́"
@@ -3141,7 +3273,7 @@ function present_e_b(forms, stem)
 	forms["pres_futr_2pl"] = stem .. "ёте"
 end
 
-function present_e_c(forms, stem)
+present_e_c = function(forms, stem)
 	local stem_noa = com.make_unstressed(stem)
 
 	forms["pres_futr_1sg"] = stem_noa .. "у́"
@@ -3153,7 +3285,7 @@ function present_e_c(forms, stem)
 end
 
 -- Present forms with -e-, with j-vowels.
-function present_je_a(forms, stem, no_iotation)
+present_je_a = function(forms, stem, no_iotation)
 	local iotated_stem = com.iotation(stem, shch)
 
 	-- Verbs ending in a hushing consonant do not get j-vowels in the endings.
@@ -3184,7 +3316,7 @@ function present_je_a(forms, stem, no_iotation)
 	end
 end
 
-function present_je_b(forms, stem)
+present_je_b = function(forms, stem)
 
 	forms["pres_futr_1sg"] = stem .. "ю́"
 	forms["pres_futr_2sg"] = stem .. "ёшь"
@@ -3194,7 +3326,7 @@ function present_je_b(forms, stem)
 	forms["pres_futr_3pl"] = stem .. "ю́т"
 end
 
-function present_je_c(forms, stem, shch)
+present_je_c = function(forms, stem, shch)
 	-- shch - iotatate final т as щ, not ч
 
 	-- iotate the stem
@@ -3230,7 +3362,7 @@ function present_je_c(forms, stem, shch)
 end
 
 -- Present forms with -i-.
-function present_i_a(forms, stem, shch)
+present_i_a = function(forms, stem, shch)
 	-- shch - iotatate final т as щ, not ч
 	-- iotate the stem
 	local iotated_stem = com.iotation(stem, shch)
@@ -3254,7 +3386,7 @@ function present_i_a(forms, stem, shch)
 	forms["pres_futr_2pl"] = stem .. "ите"
 end
 
-function present_i_b(forms, stem, no_1sg_futr, shch)
+present_i_b = function(forms, stem, no_1sg_futr, shch)
 	-- parameter no_1sg_futr - no 1st person singular future if no_1sg_futr = 1
 	if not no_1sg_futr then
 		no_1sg_futr = 0
@@ -3291,7 +3423,7 @@ function present_i_b(forms, stem, no_1sg_futr, shch)
 
 end
 
-function present_i_c(forms, stem, shch)
+present_i_c = function(forms, stem, shch)
 	-- shch - iotatate final т as щ, not ч
 
 	local stem_noa = com.make_unstressed(stem)
@@ -3324,7 +3456,7 @@ function present_i_c(forms, stem, shch)
 end
 
 -- add alternative form stressed on the reflexive particle
-function make_reflexive_alt(forms)
+make_reflexive_alt = function(forms)
 
 	for key, form in pairs(forms) do
 		if form ~= "" then
@@ -3340,7 +3472,7 @@ function make_reflexive_alt(forms)
 end
 
 -- Add the reflexive particle to all verb forms
-function make_reflexive(forms)
+make_reflexive = function(forms)
 	for key, form in pairs(forms) do
 		-- The particle is "сь" after a vowel, "ся" after a consonant
 		-- append "ся" if "ся́" was not attached already
@@ -3358,7 +3490,7 @@ function make_reflexive(forms)
 end
 
 -- Make the table
-function make_table(forms, title, perf, intr, impers)
+make_table = function(forms, title, perf, intr, impers)
 	local title = "Conjugation of <span lang=\"ru\" class=\"Cyrl\">''" .. forms["infinitive"] .. "''</span>" .. (title and " (" .. title .. ")" or "")
 
 	-- Intransitive verbs have no passive participles.
@@ -3680,3 +3812,6 @@ function make_table(forms, title, perf, intr, impers)
 end
 
 return export
+
+-- For Vim, so we get 4-space tabs
+-- vim: set ts=4 sw=4 noet:
