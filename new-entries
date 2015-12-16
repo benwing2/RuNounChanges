@@ -26,35 +26,26 @@ TODO:
 
 а ведь: use accent on ведь in ru-IPA
 [IMPORTANT] а как же: has Latin e in ru-IPA; check for Latin using template tracking
-а сейчас: ru-IPA has unnecessary tie bar
 Абаддон: use capital letter in ru-IPA
 [IMPORTANT] абы: existing ru-IPA missing accent; add check for this to addpron.py
-Австро-Венгрия: use tie bar in ru-IPA
 [IMPORTANT] адекватность: has unnecessary first param with phon= in ru-IPA; remove using addpron.py
 Алтайский край: Use accent on край in ru-IPA
 [IMPORTANT] алфавит: Don't duplicate ru-IPA pron -- asked Anatoli
-Аль-Джазира: Use tie bar in ru-IPA
-Аль-Каида: Use tie bar in ru-IPA
 американский негр: Use accent on негр in ru-IPA
 англо-норманка: Use secondary or no stress on англо- in headword
-Андорра-ла-Велья: Use tie bar in ru-IPA
-Андорра-ла-Вьеха: Use tie bar in ru-IPA
 [IMPORTANT]: аниме has empty unnecessary first param with phon= in ru-IPA; remove using addpron.py
 аннотирование: Use gem=n instead of single н in ru-IPA
 Апеннинский полуостров: Use gem=n instead of single н in ru-IPA
 Апеннины: Use gem=n instead of single н in ru-IPA
-апостроф: pron has two stresses, headword needs them too (?)
 аргандова лампа: has stray L2R at end of ru-IPA
 Армия Соединённых Штатов Америки: Use capital letter in ru-IPA
 Арран: Use gem=n instead of single р in ru-IPA
 Архангельск: Use capital letter in ru-IPA
 ахиллово сухожилие: Use gem=n instead of single л in ru-IPA (actually gem=n not necessary)
-ба-бах: Use tie bar in ru-IPA
 Барышников: Use capital letter in ru-IPA
 Басов: Use capital letter in ru-IPA
 Баффинова Земля: Use gem=n instead of single ф in ru-IPA
 Бетховен: use capital Б in ru-IPA
-бить баклуши: Use tie bar in ru-IPA
 благодаря тому, что: Add comma in ru-IPA
 благородный газ: Add accent to газ in headword
 бобслей: pron has two stresses, headword needs them too (?)
@@ -64,19 +55,15 @@ TODO:
 Брежнев: use capital Б in ru-IPA
 бритьё: Remove accent from ё
 брюзжать, визжать, въезжать, выезжать, доезжать, дребезжать, мозжечок, объезжать, переезжать, подъезжать, приезжать, разъезжать, съезжая, уезжать, езжай, езжайте, поезжай, поезжайте, съезжая, жужжание, жужжать, можжевельник: no need for gem=y, use зж not жж in ru-IPA when spelling has it
-позже: no need for жж in ru-IPA
 будь верен сам себе: Use будь not буть in pron
 Булгаков: use capital Б in ru-IPA
 булочная: Should headword have two translits?
 бэби-бум: Headword shouldn't have accent on бум
 в любви и на войне все средства хороши: Headword should have accent on все
-в то же время: Use tie bar in ru-IPA
-в то же самое время: Use tie bar in ru-IPA
 в эти дни: Use accent on дни in ru-IPA
 Вавилов: Use capital letter in ru-IPA
 век живи — век учись: Put en-dash into ru-IPA
 весь: Don't copy same pronun 3 times
-весь день: Use tie bar in ru-IPA
 високосный год: Use accent on год in ru-IPA
 водяной кресс: Use accent on кресс in ru-IPA
 военно-морской флот: Use accent on флот in ru-IPA
@@ -92,7 +79,6 @@ TODO:
 всё равно: Get rid of manual translit
 всё хорошо, что хорошо кончается: Add comma in ru-IPA
 вставной зуб: Use accent on зуб in ru-IPA
-ВТО: Use phon=
 вы в порядке: Use accent on вы in both ru-IPA and headword
 вы верите в Бога: Use accent on вы in both ru-IPA and headword
 вы говорите по-русски: Use accent on вы in both ru-IPA and headword
@@ -100,30 +86,15 @@ TODO:
 вы можете мне помочь: Use accent on вы in both ru-IPA and headword
 вы принимаете какие-нибудь лекарства: Use accent on вы in both ru-IPA and headword
 вы принимаете какие-нибудь медикаменты: Use accent on вы in both ru-IPA and headword
-где тонко, там и рвётся: use comma and tie bar in ru-IPA
-гей-вечеринка: Use tie bar in ru-IPA
-гей-движение: Use tie bar in ru-IPA
-гей-клуб: Use tie bar in ru-IPA
-гей-культура: Use tie bar in ru-IPA
-гей-парад: Use tie bar in ru-IPA
-гей-порно: Use tie bar in ru-IPA
-гей-сообщество: Use tie bar in ru-IPA
-гей-фестиваль: Use tie bar in ru-IPA
 Генеральная Ассамблея ООН: Use О̂О́Н not о̂-о́н
-Голд-Кост: Use tie bar in ru-IPA
 головная боль: Use accent on боль in ru-IPA
 головной мозг: Use accent on monosyllable in ru-IPA
 гоп-стоп: Use accents on monosyllables in ru-IPA
 гражданская война в США: No need for circumflex accent in ru-IPA
-Гран-при: Use tie bar in ru-IPA
 грузоподъёмность: Omit accent on ё in ru-IPA
 группа войск: Use accent on monosyllable in ru-IPA
 групповой секс: Use accent on monosyllable in ru-IPA
-Гуанчжоу: use headword pronun in ru-IPA
-Гуйчжоу: use headword pronun in ru-IPA
-д'Артаньян: Use tie bar in ru-IPA
 далматский дог: Use accent on monosyllable in ru-IPA
-Дар-эс-Салам: Use tie bar in ru-IPA
 два: Add accent in headword
 две: Add accent in headword
 Дед Мороз: Use accent on monosyllable in ru-IPA
@@ -134,15 +105,10 @@ TODO:
 джоггинг: use gem=n instead of single г in ru-IPA
 днём: remove manual translit
 до бемоль: add accent to monosyl in headword
-до сих пор: use tie bar in ru-IPA
 до скорого: headword needs manual translit or adj signal
-до тех пор пока: use tie bar in ru-IPA
 дождевой червь: Use accent on monosyllable in ru-IPA
-долго ль: use tie bar in ru-IPA
-дребезжать: no need for gem=y
 дубль-вэ: add accent on вэ in ru-IPA
 если гора не идёт к Магомету, то Магомет идёт к горе: in ru-IPA, add comma, don't need secondary stress on то (I think); if necessary use tertiary stress
-если не: Use headword-derived pronun
 ещё как: add accent to monosyl in headword
 ещё нет: Use accent on monosyllable in ru-IPA
 ёб: remove manual translit
@@ -165,12 +131,8 @@ TODO:
 зубной врач: Use accent on monosyllable in ru-IPA
 зуммер: use gem=n instead of single м in ru-IPA
 и да и нет: add accent to monosyl in headword 
-и так: use tie bar in ru-IPA
 и-а: Use accent on monosyllable in ru-IPA
 идти на риск: Use accent on monosyllable in ru-IPA, add accent to monosyl in headword
-из-за: use tie bar in ru-IPA (may not be necessary, should recognize из-за maybe, although stress mark may preclude this)
-из-за того, что: use tie bar in ru-IPA
-из-под: use tie bar in ru-IPA 
 именная часть составного сказуемого: Use accent on monosyllable in ru-IPA
 импортёр: remove acute accent from ё in ru-IPA
 [IMPORTANT] индонезийский: does it have both palatal and non-palatal е, like индонезийка?
@@ -197,22 +159,16 @@ TODO:
 [IMPORTANT] контрреволюционный, контрреволюция: does this have pronun контреволюционный with one р, by analogy with контрразведка?
 короче, Склифосовский: add comma to ru-IPA
 кот в мешке: Use accent on monosyllable in ru-IPA
-Кот-д'Ивуар: use tie bar in ru-IPA
 который час: add accent to monosyl in headword
 красный свет: add accent to monosyl in headword
 крёстная дочь: Use accent on monosyllable in ru-IPA
 крёстная мать: Use accent on monosyllable in ru-IPA
-кроме того: Use tie bar in ru-IPA
 кря-кря: add accent to monosyl in headword
 кто-нибудь здесь говорит по-английски: fix accent in headword, should be кто́-нибудь not кто-нибу́дь
-ку-ку: use tie bar in ru-IPA
 куда-нибудь: remove accent from нибудь in headword
-Ла-Манш: use tie bar in ru-IPA
-Ла-Пас: use tie bar in ru-IPA
 ларёк: remove acute accent from ё in ru-IPA
 легче: not necessary to use хч, will be done automatically
 лист Мёбиуса: Use accent on monosyllable in ru-IPA
-лить как из ведра: Use tie bar in ru-IPA; add accent to monosyl in headword
 лицо, ищущее убежище: add comma in ru-IPA
 лобковая кость: Use accent on monosyllable in ru-IPA
 локтевая кость: Use accent on monosyllable in ru-IPA
@@ -284,11 +240,9 @@ TODO:
 помощник: headword needs manual translit
 помощница: headword needs manual translit
 помпезный: use phon= for помьпе́зный; but check that palatal assimilation doesn't automatically make the м palatal
-попасть как кур во щи: use tie bar in ru-IPA; add accent to monosyl in headword
 порядочный: headword should have two translits
 потенция: headword needs manual translit
 потёмки: remove acute accent from ё in ru-IPA
-потому что: use tie bar in ru-IPA
 поторопиться: remove lang=ru in ru-IPA
 [IMPORTANT] поэтапный, поэтика, поэтический: do they need an alternative with о̂, like поэт?
 прерванный половой акт: Use accent on monosyllable in ru-IPA
@@ -307,14 +261,12 @@ TODO:
 путь в тысячу вёрст начинается с первого шага: add accent on путь in both ru-IPA and headword; add accent in headword in вёрст
 пушка-гаубица: use hyphen not space in ru-IPA
 развёртывание: remove acute accent from ё in ru-IPA
-[IMPORTANT] развитый: Headword has two stresses, ru-IPA needs it too
 разводить: remove stray slash in ru-IPA
 ракушка: pron has two stresses, headword needs them too (?)
 расставаться: use gem=y, gem=n instead of single/double с in ru-IPA; or use gem=opt
 расстаться: use gem=y, gem=n instead of single/double с in ru-IPA; or use gem=opt
 рейх: need manual translit in headword
 рок-группа: use hyphen not space in ru-IPA
-рок-н-ролл: use hyphen not single word, or tie bar
 руль высоты: Use accent on monosyllable in ru-IPA
 рыба-кит: remove accent from рыба in headword
 Салехард: use capital letter in ru-IPA
@@ -325,15 +277,11 @@ TODO:
 Саратов: use capital letter in ru-IPA
 Сатурн: use capital letter in ru-IPA
 Святой Дух: Use accent on monosyllable in ru-IPA
-севанская форель: need alt manual translit in headword
 Северный Кипр: Use accent on monosyllable in ru-IPA
 Северный морской путь: Use accent on monosyllable in ru-IPA
 седалищная кость: Use accent on monosyllable in ru-IPA
 семёрка: remove acute accent from ё in ru-IPA
 сё: remove manual translit
-сканер: need alt manual translit in headword
-скучнее: need alt manual translit in headword
-сленг: need alt manual translit in headword
 слоновая кость: Use accent on monosyllable in ru-IPA
 слышал звон, да не знает, где он: add accent to monosyl in headword
 снегоуборочный: need alt manual translit in headword
@@ -1453,62 +1401,8 @@ TODO:
 
 программное обеспечение
 
-==Russian==
-
-===Pronunciation===
-* {{ru-IPA|програ́ммное обеспече́ние}}
-
-===Noun===
-{{ru-noun+|[[программный|програ́ммное]]|+|_|[[обеспече́ние]]}}
-
-# {{cx|computing|lang=ru}} [[software]] {{gloss|encoded computer instructions}}
-
-====Declension====
-{{ru-noun-table|[[программный|програ́ммное]]|+|_|[[обеспече́ние]]}}
-
-====Abbreviations====
-* {{l|ru|ПО}}
-
-====Synonyms====
-* {{l|ru|со́фтвер|tr=sóftvɛr}}, {{l|ru|софтве́р|tr=softvɛ́r}}, {{l|ru|софт}}
 
 
-прораб
-
-==Russian==
-
-===Etymology===
-Possibly, {{ru-etym acronym of|nocap=1|[[производи́тель]] [[работа|рабо́т]]}}.
-
-===Pronunciation===
-* {{ru-IPA|прора́б}}
-
-===Noun===
-{{ru-noun+|прора́б|a=an}}
-
-# [[foreman]], [[leadman]], [[ganger]] (leader of a work crew)
-
-====Declension====
-{{ru-noun-table|прора́б|a=an}}
-
-
-профорг
-
-==Russian==
-
-===Etymology===
-{{ru-etym acronym of|профсою́зный организа́тор||trade union organizer}}.
-
-===Pronunciation===
-* {{ru-IPA|профо́рг}}
-
-===Noun===
-{{ru-noun+|профо́рг|a=an}}
-
-# [[trade union]] [[boss]]
-
-====Declension====
-{{ru-noun-table|профо́рг|a=an}}
 
 
 рад
@@ -1523,67 +1417,5 @@ Possibly, {{ru-etym acronym of|nocap=1|[[производи́тель]] [[раб
 
 =====Declension=====
 {{ru-noun-table|or||(2)}}
-
-
-райком
-
-==Russian==
-
-===Etymology===
-{{ru-etym acronym of|[[райо́нный]] [[комите́т]]}}.
-
-===Pronunciation===
-* {{ru-IPA|райко́м}}
-
-===Noun===
-{{ru-noun+|райко́м}}
-
-# {{cx|Soviet Union|lang=ru}} [[district]] [[committee]]
-
-====Declension====
-{{ru-noun-table|райко́м}}
-
-====Derived terms====
-* {{l|ru|райко́мовец}}
-* {{l|ru|райко́мовский}}
-
-
-райцентр
-
-==Russian==
-
-===Etymology===
-{{ru-etym acronym of|[[райо́нный]] [[центр]]}}.
-
-===Pronunciation===
-* {{ru-IPA|райце́нтр}}
-
-===Noun===
-{{ru-noun+|райце́нтр}}
-
-# [[capital]]/[[centre]] of a [[district]]/[[region]]
-
-====Declension====
-{{ru-noun-table|райце́нтр}}
-
-
-
-роддом
-
-==Russian==
-
-===Etymology===
-{{ru-etym-acronym of|[[роди́льный]] [[дом]]}}.
-
-===Pronunciation===
-* {{ru-IPA|роддо́м}}
-
-===Noun===
-{{ru-noun+|c|роддо́м|(1)|or}}
-
-# [[maternity]] home, maternity hospital
-
-====Declension====
-{{ru-noun-table|c|роддо́м|(1)|or}}
 
 
