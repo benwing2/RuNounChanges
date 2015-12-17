@@ -260,14 +260,12 @@ function export.show(frame)
 			local val = vals[prop]
 			local newval = newvals[prop]
 			-- deal with impedance mismatch between old style (plain string)
-			-- and new style (Russian/translit array)
+			-- and new style (Russian/translit array), and empty string vs. nil
 			if not ut.contains(non_form_props, prop) then
-				if type(val) == "string" then
-					val = {val}
-				end
-				if type(newval) == "string" then
-					newval = {newval}
-				end
+				if type(val) == "string" then val = {val} end
+				if val and val[1] == "" then val = nil end
+				if type(newval) == "string" then newval = {newval} end
+				if newval and newval[1] == "" then newval = nil end
 			end
 			if not ut.equals(val, newval) then
 				-- Uncomment this to display the particular case and
@@ -289,9 +287,9 @@ end
 
 local function combine(stem, tr, ending)
 	if not ending then
-		return nil
+		return {""}
 	end
-	if rfind(ending, AC) then
+	if com.is_stressed(ending) then
 		stem, tr = com.make_unstressed_once(stem, tr)
 	end
 	stem = stem .. ending
