@@ -396,7 +396,7 @@ conjugations["3a"] = function(args)
 	-- non-empty if no short past participle forms to be used
 	local no_short_past_partcpl = args[4]
 	-- "нь" if "-нь"/"-ньте" instead of "-ни"/"-ните" in the imperative
-	local impr_end = args[5] -- FIXME, didn't have ine() equivalent
+	local impr_end = args[5]
 	-- optional full infinitive form for verbs like достичь
 	local full_inf = args[6]
 	-- optional short masculine past form for verbs like вять
@@ -517,7 +517,7 @@ conjugations["4a"] = function(args)
 
 	local stem = getarg(args, 2)
 	-- for "a" stress type "й" - after vowels, "ь" - after single consonants, "и" - after consonant clusters
-	local impr_end_param = args[3] -- FIXME, didn't have ine() equiv
+	local impr_end_param = args[3]
 	-- optional parameter for verbs like похитить (похи́щу) (4a), защитить (защищу́) (4b), поглотить (поглощу́) (4c) with a different iotation (т -> щ, not ч)
 	local shch = args[4]
 
@@ -585,7 +585,7 @@ conjugations["4b"] = function(args)
 	local shch = args[3]
 	-- some verbs don't have 1st person singular - победить, возродить, use "no_1sg_futr=1" in the template
 	local no_1sg_futr = "0"
-	local past_f = args["past_f"] -- FIXME, didn't have ine() equiv
+	local past_f = args["past_f"]
 
 	if not args["no_1sg_futr"] then
 		no_1sg_futr = 0
@@ -3585,8 +3585,8 @@ make_table = function(forms, title, perf, intr, impers)
 
 	-- Add transliterations to all forms
 	for key, form in pairs(forms) do
-		-- check for empty strings and nil's
-		if form ~= "" and form then
+		-- check for empty strings, dashes and nil's
+		if form ~= "" and form and form ~= "-" then
 			forms[key] = "<span lang=\"ru\" class=\"Cyrl\">[[" .. com.remove_accents(form) .. "#Russian|" .. form .. "]]</span><br/><span style=\"color: #888\">" .. lang:transliterate(form) .. "</span>"
 		else
 			forms[key] = "&mdash;"
