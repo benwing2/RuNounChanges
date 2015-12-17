@@ -594,7 +594,8 @@ conjugations["4a"] = function(args)
 
 	forms["past_actv_part"] = stem .. "ивший"
 	forms["pres_pasv_part"] = stem .. "имый"
-	forms["past_adv_part"] = stem .. "ивши"; forms["past_adv_part_short"] = stem .. "ив"
+	forms["past_adv_part"] = stem .. "ивши"
+	forms["past_adv_part_short"] = stem .. "ив"
 
 	-- if shch is nil, pass nothing, otherwise pass "щ"
 	if not shch then
@@ -642,7 +643,8 @@ conjugations["4b"] = function(args)
 
 	forms["past_actv_part"] = stem .. "и́вший"
 	forms["pres_pasv_part"] = stem .. "и́мый"
-	forms["past_adv_part"] = stem .. "и́вши"; forms["past_adv_part_short"] = stem .. "и́в"
+	forms["past_adv_part"] = stem .. "и́вши"
+	forms["past_adv_part_short"] = stem .. "и́в"
 
 	-- if shch is nil, pass nothing, otherwise pass "щ"
 	if not shch then
@@ -1061,7 +1063,8 @@ conjugations["6c"] = function(args)
 
 	forms["past_actv_part"] = stem_noa .. "а́вший"
 	forms["pres_pasv_part"] = ""
-	forms["past_adv_part"] = stem_noa .. "а́вши"; forms["past_adv_part_short"] = stem_noa .. "а́в"
+	forms["past_adv_part"] = stem_noa .. "а́вши"
+	forms["past_adv_part_short"] = stem_noa .. "а́в"
 
 	-- Verbs ending in a hushing consonant do not get j-vowels in the endings.
 	if rfind(iotated_stem, "[шщжч]$") or no_iotation then
@@ -1130,7 +1133,8 @@ conjugations["7a"] = function(args)
 	end
 
 	forms["pres_pasv_part"] = ""
-	forms["past_adv_part"] = past_adv_part; forms["past_adv_part_short"] = ""
+	forms["past_adv_part"] = past_adv_part
+	forms["past_adv_part_short"] = ""
 
 	present_e_a(forms, pres_stem)
 
@@ -1266,7 +1270,8 @@ conjugations["8a"] = function(args)
 	forms["pres_pasv_part"] = ""
 	forms["pres_adv_part"] = ""
 
-	forms["past_adv_part"] = past_m .. "ши"; forms["past_adv_part_short"] = ""
+	forms["past_adv_part"] = past_m .. "ши"
+	forms["past_adv_part_short"] = ""
 
 	local iotated_stem = com.iotation_new(stem)
 
@@ -1307,7 +1312,8 @@ conjugations["8b"] = function(args)
 	end
 	forms["pres_adv_part"] = ""
 
-	forms["past_adv_part"] = past_m .. "ши"; forms["past_adv_part_short"] = ""
+	forms["past_adv_part"] = past_m .. "ши"
+	forms["past_adv_part_short"] = ""
 
 	local iotated_stem = com.iotation_new(stem)
 
@@ -1346,7 +1352,8 @@ conjugations["9a"] = function(args)
 	forms["past_actv_part"] = stem .. "евший"
 	-- default is blank
 
-	forms["past_adv_part"] = stem .. "евши"; forms["past_adv_part_short"] = stem .. "ев"
+	forms["past_adv_part"] = stem .. "евши"
+	forms["past_adv_part_short"] = stem .. "ев"
 
 	present_e_a(forms, pres_stem)
 
@@ -1387,12 +1394,14 @@ conjugations["9b"] = function(args)
 
 	--тереть -> тёрши
 	if impf then
-		forms["past_adv_part"] = stem .. "ши"; forms["past_adv_part_short"] = ""
+		forms["past_adv_part"] = stem .. "ши"
+		forms["past_adv_part_short"] = ""
 	end
 	
 	--растереть -> растере́вши, растер́ев
 	if pf then
-		forms["past_adv_part"] = stem_noa .. "е́вши"; forms["past_adv_part_short"] = stem_noa .. "е́в"
+		forms["past_adv_part"] = stem_noa .. "е́вши"
+		forms["past_adv_part_short"] = stem_noa .. "е́в"
 	end
 
 	present_e_b(forms, pres_stem)
@@ -1425,7 +1434,8 @@ conjugations["10a"] = function(args)
 	forms["past_actv_part"] = stem .. "овший"
 	forms["pres_pasv_part"] = ""
 	forms["pres_adv_part"] = ""
-	forms["past_adv_part"] = stem .. "овши"; forms["past_adv_part_short"] = stem .. "ов"
+	forms["past_adv_part"] = stem .. "овши"
+	forms["past_adv_part_short"] = stem .. "ов"
 
 	present_je_a(forms, stem)
 
@@ -1455,7 +1465,8 @@ conjugations["10c"] = function(args)
 	forms["past_actv_part"] = inf_stem .. "вший"
 	forms["pres_pasv_part"] = ""
 	forms["pres_adv_part"] = pres_stem_noa .. "я́"
-	forms["past_adv_part"] = inf_stem .. "вши"; forms["past_adv_part_short"] = inf_stem .. "в"
+	forms["past_adv_part"] = inf_stem .. "вши"
+	forms["past_adv_part_short"] = inf_stem .. "в"
 
 	present_je_c(forms, pres_stem, nil)
 
@@ -1485,7 +1496,8 @@ conjugations["11a"] = function(args)
 	forms["past_actv_part"] = stem .. "ивший"
 	-- default is blank
 
-	forms["past_adv_part"] = stem .. "ивши"; forms["past_adv_part_short"] = stem .. "ив"
+	forms["past_adv_part"] = stem .. "ивши"
+	forms["past_adv_part_short"] = stem .. "ив"
 
 	forms["pres_futr_1sg"] = stem .. "ью"
 	forms["pres_futr_2sg"] = stem .. "ьешь"
@@ -1521,7 +1533,8 @@ conjugations["11b"] = function(args)
 	forms["past_actv_part"] = stem .. "и́вший"
 	-- default is blank
 
-	forms["past_adv_part"] = stem .. "и́вши"; forms["past_adv_part_short"] = stem .. "и́в"
+	forms["past_adv_part"] = stem .. "и́вши"
+	forms["past_adv_part_short"] = stem .. "и́в"
 
 	forms["pres_futr_1sg"] = pres_stem .. "ью́"
 	forms["pres_futr_2sg"] = pres_stem .. "ьёшь"
@@ -1562,7 +1575,8 @@ conjugations["12a"] = function(args)
 	forms["past_actv_part"] = stem .. "вший"
 	-- default is blank
 
-	forms["past_adv_part"] = stem .. "вши"; forms["past_adv_part_short"] = stem .. "в"
+	forms["past_adv_part"] = stem .. "вши"
+	forms["past_adv_part_short"] = stem .. "в"
 
 	forms["pres_futr_1sg"] = pres_stem .. "ю"
 	forms["pres_futr_2sg"] = pres_stem .. "ешь"
@@ -1599,7 +1613,8 @@ conjugations["12b"] = function(args)
 	forms["past_actv_part"] = stem .. "вший"
 	-- default is blank
 
-	forms["past_adv_part"] = stem .. "вши"; forms["past_adv_part_short"] = stem .. "в"
+	forms["past_adv_part"] = stem .. "вши"
+	forms["past_adv_part_short"] = stem .. "в"
 
 	forms["pres_futr_1sg"] = pres_stem .. "ю́"
 	forms["pres_futr_2sg"] = pres_stem .. "ёшь"
@@ -1641,7 +1656,8 @@ conjugations["13b"] = function(args)
 	forms["past_actv_part"] = stem .. "вший"
 	-- default is blank
 
-	forms["past_adv_part"] = stem .. "вши"; forms["past_adv_part_short"] = stem .. "в"
+	forms["past_adv_part"] = stem .. "вши"
+	forms["past_adv_part_short"] = stem .. "в"
 
 	forms["pres_futr_1sg"] = pres_stem .. "ю́"
 	forms["pres_futr_2sg"] = pres_stem .. "ёшь"
@@ -1678,7 +1694,8 @@ conjugations["14a"] = function(args)
 	forms["past_actv_part"] = stem .. "вший"
 	-- default is blank
 
-	forms["past_adv_part"] = stem .. "вши"; forms["past_adv_part_short"] = stem .. "в"
+	forms["past_adv_part"] = stem .. "вши"
+	forms["past_adv_part_short"] = stem .. "в"
 
 	present_e_a(forms, pres_stem)
 
@@ -1716,7 +1733,8 @@ conjugations["14b"] = function(args)
 
 	forms["past_actv_part"] = stem .. "вший"
 
-	forms["past_adv_part"] = stem .. "вши"; forms["past_adv_part_short"] = stem .. "в"
+	forms["past_adv_part"] = stem .. "вши"
+	forms["past_adv_part_short"] = stem .. "в"
 
 	present_e_b(forms, pres_stem)
 
@@ -1788,7 +1806,8 @@ conjugations["14c"] = function(args)
 
 	forms["past_actv_part"] = stem .. "вший"
 
-	forms["past_adv_part"] = stem .. "вши"; forms["past_adv_part_short"] = stem .. "в"
+	forms["past_adv_part"] = stem .. "вши"
+	forms["past_adv_part_short"] = stem .. "в"
 
 	present_e_c(forms, pres_stem)
 
@@ -1846,7 +1865,8 @@ conjugations["15a"] = function(args)
 	forms["past_actv_part"] = stem .. "вший"
 	forms["pres_pasv_part"] = ""
 	forms["pres_adv_part"] = ""
-	forms["past_adv_part"] = stem .. "вши"; forms["past_adv_part_short"] = stem .. "в"
+	forms["past_adv_part"] = stem .. "вши"
+	forms["past_adv_part_short"] = stem .. "в"
 
 	present_e_a(forms, stem .. "н")
 
@@ -1872,7 +1892,8 @@ conjugations["16a"] = function(args)
 	forms["past_actv_part"] = stem .. "вший"
 	forms["pres_pasv_part"] = ""
 	forms["pres_adv_part"] = ""
-	forms["past_adv_part"] = stem .. "вши"; forms["past_adv_part_short"] = stem .. "в"
+	forms["past_adv_part"] = stem .. "вши"
+	forms["past_adv_part_short"] = stem .. "в"
 
 	present_e_a(forms, stem .. "в")
 
@@ -1902,7 +1923,8 @@ conjugations["16b"] = function(args)
 	forms["past_actv_part"] = stem .. "вший"
 	forms["pres_pasv_part"] = ""
 	forms["pres_adv_part"] = stem_noa .. "вя́"
-	forms["past_adv_part"] = stem .. "вши"; forms["past_adv_part_short"] = stem .. "в"
+	forms["past_adv_part"] = stem .. "вши"
+	forms["past_adv_part_short"] = stem .. "в"
 
 	present_e_b(forms, stem_noa .. "в")
 
@@ -1948,7 +1970,8 @@ conjugations["irreg-бежать"] = function(args)
 
 	forms["past_actv_part"] = prefix .. "бежа́вший"
 	forms["pres_pasv_part"] = ""
-	forms["past_adv_part"] = prefix .. "бежа́вши"; forms["past_adv_part_short"] = prefix .. "бежа́в"
+	forms["past_adv_part"] = prefix .. "бежа́вши"
+	forms["past_adv_part_short"] = prefix .. "бежа́в"
 
 	forms["pres_actv_part"] = prefix .. "бегу́щий"
 	forms["pres_adv_part"] = ""
@@ -1973,7 +1996,8 @@ conjugations["irreg-бежать"] = function(args)
 		forms["infinitive"] = prefix .. "бежать"
 
 		forms["past_actv_part"] = prefix .. "бежавший"
-		forms["past_adv_part"] = prefix .. "бежавши"; forms["past_adv_part_short"] = prefix .. "бежав"
+		forms["past_adv_part"] = prefix .. "бежавши"
+		forms["past_adv_part_short"] = prefix .. "бежав"
 
 		forms["impr_sg"] = prefix .. "беги"
 		forms["impr_pl"] = prefix .. "бегите"
@@ -2004,7 +2028,8 @@ conjugations["irreg-спать"] = function(args)
 
 	forms["past_actv_part"] = prefix .. "спа́вший"
 	forms["pres_pasv_part"] = ""
-	forms["past_adv_part"] = prefix .. "спа́вши"; forms["past_adv_part_short"] = prefix .. "спа́в"
+	forms["past_adv_part"] = prefix .. "спа́вши"
+	forms["past_adv_part_short"] = prefix .. "спа́в"
 
 	forms["pres_actv_part"] = prefix .. "спя́щий"
 	forms["pres_adv_part"] = prefix .. "спя́"
@@ -2029,7 +2054,8 @@ conjugations["irreg-спать"] = function(args)
 		forms["infinitive"] = prefix .. "спать"
 
 		forms["past_actv_part"] = prefix .. "спавший"
-		forms["past_adv_part"] = prefix .. "спавши"; forms["past_adv_part_short"] = ""
+		forms["past_adv_part"] = prefix .. "спавши"
+		forms["past_adv_part_short"] = ""
 
 		forms["impr_sg"] = prefix .. "спи"
 		forms["impr_pl"] = prefix .. "спите"
@@ -2060,7 +2086,8 @@ conjugations["irreg-хотеть"] = function(args)
 
 	forms["past_actv_part"] = prefix .. "хоте́вший"
 	forms["pres_pasv_part"] = ""
-	forms["past_adv_part"] = prefix .. "хоте́вши"; forms["past_adv_part_short"] = prefix .. "хоте́в"
+	forms["past_adv_part"] = prefix .. "хоте́вши"
+	forms["past_adv_part_short"] = prefix .. "хоте́в"
 
 	forms["pres_actv_part"] = prefix .. "хотя́щий"
 	forms["pres_adv_part"] = prefix .. "хотя́"
@@ -2103,7 +2130,8 @@ conjugations["irreg-дать"] = function(args)
 
 	forms["past_actv_part"] = prefix .. "да́вший"
 	forms["pres_pasv_part"] = ""
-	forms["past_adv_part"] = prefix .. "да́вши"; forms["past_adv_part_short"] = prefix .. "да́в"
+	forms["past_adv_part"] = prefix .. "да́вши"
+	forms["past_adv_part_short"] = prefix .. "да́в"
 
 	forms["pres_actv_part"] = "даю́щий"
 	forms["pres_adv_part"] = ""
@@ -2137,7 +2165,8 @@ conjugations["irreg-дать"] = function(args)
 
 		forms["past_actv_part"] = prefix .. "давший"
 
-		forms["past_adv_part"] = prefix .. "давши"; forms["past_adv_part_short"] = prefix .. "дав"
+		forms["past_adv_part"] = prefix .. "давши"
+		forms["past_adv_part_short"] = prefix .. "дав"
 
 		forms["impr_sg"] = prefix .. "дай"
 		forms["impr_pl"] = prefix .. "дайте"
@@ -2181,7 +2210,8 @@ conjugations["irreg-есть"] = function(args)
 
 	forms["past_actv_part"] = prefix .. "е́вший"
 	forms["pres_pasv_part"] = "едо́мый"
-	forms["past_adv_part"] = prefix .. "е́вши"; forms["past_adv_part_short"] = prefix .. "е́в"
+	forms["past_adv_part"] = prefix .. "е́вши"
+	forms["past_adv_part_short"] = prefix .. "е́в"
 
 	forms["pres_actv_part"] = "едя́щий"
 	forms["pres_adv_part"] = "едя́"
@@ -2206,7 +2236,8 @@ conjugations["irreg-есть"] = function(args)
 		forms["infinitive"] = prefix .. "есть"
 
 		forms["past_actv_part"] = prefix .. "евший"
-		forms["past_adv_part"] = prefix .. "евши"; forms["past_adv_part_short"] = prefix .. "ев"
+		forms["past_adv_part"] = prefix .. "евши"
+		forms["past_adv_part_short"] = prefix .. "ев"
 
 		forms["impr_sg"] = prefix .. "ешь"
 		forms["impr_pl"] = prefix .. "ешьте"
@@ -2237,7 +2268,8 @@ conjugations["irreg-сыпать"] = function(args)
 
 	forms["past_actv_part"] = prefix .. "сы́павший"
 	forms["pres_pasv_part"] = prefix .. "сы́племый"
-	forms["past_adv_part"] = prefix .. "сы́павши"; forms["past_adv_part_short"] = prefix .. "сы́пав"
+	forms["past_adv_part"] = prefix .. "сы́павши"
+	forms["past_adv_part_short"] = prefix .. "сы́пав"
 
 	forms["pres_actv_part"] = prefix .. "сы́плющий"
 	forms["pres_adv_part"] = prefix .. "сы́пля"
@@ -2267,7 +2299,8 @@ conjugations["irreg-сыпать"] = function(args)
 		forms["infinitive"] = prefix .. "сыпать"
 
 		forms["past_actv_part"] = prefix .. "сыпавший"
-		forms["past_adv_part"] = prefix .. "сыпавши"; forms["past_adv_part_short"] = prefix .. "сыпав"
+		forms["past_adv_part"] = prefix .. "сыпавши"
+		forms["past_adv_part_short"] = prefix .. "сыпав"
 
 		forms["impr_sg"] = prefix .. "сыпь"
 		forms["impr_pl"] = prefix .. "сыпьте"
@@ -2303,7 +2336,8 @@ conjugations["irreg-лгать"] = function(args)
 
 	forms["past_actv_part"] = prefix .. "лга́вший"
 	forms["pres_pasv_part"] = ""
-	forms["past_adv_part"] = prefix .. "лга́вши"; forms["past_adv_part_short"] = prefix .. "лга́в"
+	forms["past_adv_part"] = prefix .. "лга́вши"
+	forms["past_adv_part_short"] = prefix .. "лга́в"
 
 	forms["pres_actv_part"] = prefix .. "лгу́щий"
 	forms["pres_adv_part"] = ""
@@ -2339,7 +2373,8 @@ conjugations["irreg-мочь"] = function(args)
 	forms["past_actv_part"] = prefix .. "мо́гший"
 	forms["pres_pasv_part"] = ""
 
-	forms["past_adv_part"] = ""; forms["past_adv_part_short"] = ""
+	forms["past_adv_part"] = ""
+	forms["past_adv_part_short"] = ""
 
 	forms["pres_actv_part"] = prefix .. "мо́гущий"
 	forms["pres_adv_part"] = ""
@@ -2372,7 +2407,8 @@ conjugations["irreg-слать"] = function(args)
 
 	forms["past_actv_part"] = prefix .. "сла́вший"
 	forms["pres_pasv_part"] = ""
-	forms["past_adv_part"] = prefix .. "сла́вши"; forms["past_adv_part_short"] = prefix .. "сла́в"
+	forms["past_adv_part"] = prefix .. "сла́вши"
+	forms["past_adv_part_short"] = prefix .. "сла́в"
 
 	forms["pres_actv_part"] = prefix .. "шлю́щий"
 	forms["pres_adv_part"] = ""
@@ -2396,7 +2432,8 @@ conjugations["irreg-слать"] = function(args)
 	if prefix == "вы́" then
 		forms["infinitive"] = prefix .. "слать"
 		forms["past_actv_part"] = prefix .. "славший"
-		forms["past_adv_part"] = prefix .. "славши"; forms["past_adv_part_short"] = prefix .. "слав"
+		forms["past_adv_part"] = prefix .. "славши"
+		forms["past_adv_part_short"] = prefix .. "слав"
 
 		forms["impr_sg"] = prefix .. "шли"
 		forms["impr_pl"] = prefix .. "шлите"
@@ -2430,20 +2467,23 @@ conjugations["irreg-идти"] = function(args)
 		forms["impr_sg"] = prefix .. "йди"
 		forms["impr_pl"] = prefix .. "йдите"
 		present_e_a(forms, prefix .. "йд")
-		forms["past_adv_part"] = prefix .. "шедши"; forms["past_adv_part_short"] = prefix .. "йдя"
+		forms["past_adv_part"] = prefix .. "шедши"
+		forms["past_adv_part_short"] = prefix .. "йдя"
 	elseif prefix == "при" then
 		forms["infinitive"] = prefix .. "йти́"
 		forms["impr_sg"] = prefix .. "ди́"
 		forms["impr_pl"] = prefix .. "ди́те"
 		present_e_b(forms, prefix .. "д")
-		forms["past_adv_part"] = prefix .. "ше́дши"; forms["past_adv_part_short"] = prefix .. "дя́"
+		forms["past_adv_part"] = prefix .. "ше́дши"
+		forms["past_adv_part_short"] = prefix .. "дя́"
 	else
 		forms["infinitive"] = prefix .. "йти́"
 		forms["pres_actv_part"] = prefix .. "иду́щий"
 		forms["impr_sg"] = prefix .. "йди́"
 		forms["impr_pl"] = prefix .. "йди́те"
 		present_e_b(forms, prefix .. "йд")
-		forms["past_adv_part"] = prefix .. "ше́дши"; forms["past_adv_part_short"] = prefix .. "йдя́"
+		forms["past_adv_part"] = prefix .. "ше́дши"
+		forms["past_adv_part_short"] = prefix .. "йдя́"
 	end
 
 	-- only идти, present imperfective
@@ -2456,7 +2496,8 @@ conjugations["irreg-идти"] = function(args)
 		forms["impr_sg"] = "иди́"
 		forms["impr_pl"] = "иди́те"
 		present_e_b(forms, "ид")
-		forms["past_adv_part"] = "ше́дши"; forms["past_adv_part_short"] = ""
+		forms["past_adv_part"] = "ше́дши"
+		forms["past_adv_part_short"] = ""
 	end
 
 	-- вы́йти (perfective)
@@ -2494,7 +2535,8 @@ conjugations["irreg-ехать"] = function(args)
 	forms["infinitive"] = past_stem .. "ать"
 	forms["past_actv_part"] = past_stem .. "авший"
 	forms["pres_pasv_part"] = ""
-	forms["past_adv_part"] = past_stem .. "авши"; forms["past_adv_part_short"] = past_stem .. "ав"
+	forms["past_adv_part"] = past_stem .. "авши"
+	forms["past_adv_part_short"] = past_stem .. "ав"
 	--вы́ехать has no present
 	forms["pres_actv_part"] = pres_stem .. "ущий"
 	forms["pres_adv_part"] = ""
@@ -2537,8 +2579,10 @@ conjugations["irreg-минуть"] = function(args)
 	forms["past_actv_part2"] = stem .. "увший"
 	forms["pres_pasv_part"] = ""
 	forms["pres_adv_part"] = ""
-	forms["past_adv_part"] = stem_noa .. "у́вши"; forms["past_adv_part_short"] = stem_noa .. "у́в"
-	forms["past_adv_part2"] = stem .. "увши"; forms["past_adv_part_short2"] = stem .. "ув"
+	forms["past_adv_part"] = stem_noa .. "у́вши"
+	forms["past_adv_part_short"] = stem_noa .. "у́в"
+	forms["past_adv_part2"] = stem .. "увши"
+	forms["past_adv_part_short2"] = stem .. "ув"
 
 	present_e_c(forms, stem)
 
@@ -2571,7 +2615,8 @@ conjugations["irreg-живописать-миновать"] = function(args)
 	forms["past_actv_part"] = inf_stem .. "вший"
 	forms["pres_pasv_part"] = ""
 	forms["pres_adv_part"] = pres_stem .. "я"
-	forms["past_adv_part"] = inf_stem .. "вши"; forms["past_adv_part_short"] = inf_stem .. "в"
+	forms["past_adv_part"] = inf_stem .. "вши"
+	forms["past_adv_part_short"] = inf_stem .. "в"
 
 	present_je_a(forms, pres_stem)
 
@@ -2597,7 +2642,8 @@ conjugations["irreg-лечь"] = function(args)
 	forms["past_actv_part"] = prefix .. "лёгший"
 	forms["pres_pasv_part"] = ""
 
-	forms["past_adv_part"] = prefix .. "лёгши"; forms["past_adv_part_short"] = ""
+	forms["past_adv_part"] = prefix .. "лёгши"
+	forms["past_adv_part_short"] = ""
 
 	forms["pres_actv_part"] = ""
 	forms["pres_adv_part"] = ""
@@ -2631,7 +2677,8 @@ conjugations["irreg-зиждиться"] = function(args)
 	forms["past_actv_part"] = prefix .. "зи́ждивший"
 	forms["pres_pasv_part"] = ""
 
-	forms["past_adv_part"] = prefix .. "зи́ждивши"; forms["past_adv_part_short"] = ""
+	forms["past_adv_part"] = prefix .. "зи́ждивши"
+	forms["past_adv_part_short"] = ""
 
 	forms["pres_actv_part"] = prefix .. "зи́ждущий"
 	forms["pres_adv_part"] = prefix .. "зи́ждя"
@@ -2665,7 +2712,8 @@ conjugations["irreg-клясть"] = function(args)
 	forms["past_actv_part"] = prefix .. "кля́вший"
 	forms["pres_pasv_part"] = prefix .. "кляну́щий"
 
-	forms["past_adv_part"] = prefix .. "кля́вши"; forms["past_adv_part_short"]  =prefix .. "кля́в"
+	forms["past_adv_part"] = prefix .. "кля́вши"
+	forms["past_adv_part_short"]  =prefix .. "кля́в"
 
 	forms["pres_actv_part"] = prefix .. "кляну́щий"
 	forms["pres_adv_part"] = prefix .. "кляня́"
@@ -2706,7 +2754,8 @@ conjugations["irreg-слыхать-видать"] = function(args)
 	forms["past_actv_part"] = stem .. "вший"
 	forms["pres_pasv_part"] = ""
 
-	forms["past_adv_part"] = stem .. "вши"; forms["past_adv_part_short"] = stem .. "в"
+	forms["past_adv_part"] = stem .. "вши"
+	forms["past_adv_part_short"] = stem .. "в"
 
 	-- no present forms or imperatives
 	forms["pres_actv_part"] = ""
@@ -2741,7 +2790,8 @@ conjugations["irreg-стелить-стлать"] = function(args)
 
 	forms["past_actv_part"] = prefix .. stem .. "вший"
 	forms["pres_pasv_part"] = prefix .. "стели́мый"
-	forms["past_adv_part"] = prefix .. stem .. "вши"; forms["past_adv_part_short"] = prefix  .. stem .. "в"
+	forms["past_adv_part"] = prefix .. stem .. "вши"
+	forms["past_adv_part_short"] = prefix  .. stem .. "в"
 
 	forms["pres_actv_part"] = prefix .. "сте́лющий"
 	forms["pres_adv_part"] = prefix .. "стеля́"
@@ -2786,14 +2836,17 @@ conjugations["irreg-быть"] = function(args)
 
 	--only for "бы́ть" - бу́дучи
 	if forms["infinitive"] == "бы́ть" then
-		forms["past_adv_part"] = "бу́дучи"; forms["past_adv_part_short"] = ""
+		forms["past_adv_part"] = "бу́дучи"
+		forms["past_adv_part_short"] = ""
 	end
 
-	forms["past_adv_part"] = prefix .. "бы́вши"; forms["past_adv_part_short"] = prefix .. "бы́в"
+	forms["past_adv_part"] = prefix .. "бы́вши"
+	forms["past_adv_part_short"] = prefix .. "бы́в"
 
 	-- if the prefix is stressed
 	if rfind(prefix, "[́]") then
-		forms["past_adv_part"] = prefix .. "бывши"; forms["past_adv_part_short"] = prefix .. "быв"
+		forms["past_adv_part"] = prefix .. "бывши"
+		forms["past_adv_part_short"] = prefix .. "быв"
 	end
 
 	forms["pres_actv_part"] = "су́щий"
@@ -2906,7 +2959,8 @@ conjugations["irreg-ссать-сцать"] = function(args)
 
 	forms["past_actv_part"] = prefix .. stem .. "вший"
 	forms["pres_pasv_part"] = ""
-	forms["past_adv_part"] = prefix .. stem .. "вши"; forms["past_adv_part_short"] = prefix  .. stem .. "в"
+	forms["past_adv_part"] = prefix .. stem .. "вши"
+	forms["past_adv_part_short"] = prefix  .. stem .. "в"
 
 	forms["pres_adv_part"] = ""
 
@@ -2928,7 +2982,8 @@ conjugations["irreg-чтить"] = function(args)
  
 	forms["past_actv_part"] = prefix .. "чти́вший"
 	forms["pres_pasv_part"] = "чти́мый"
-	forms["past_adv_part"] = prefix .. "чти́вши"; forms["past_adv_part_short"] = prefix .. "чти́в"
+	forms["past_adv_part"] = prefix .. "чти́вши"
+	forms["past_adv_part_short"] = prefix .. "чти́в"
  
 	forms["pres_actv_part"] = prefix .. "чтя́щий"
 	forms["pres_actv_part2"] = prefix .. "чту́щий"
@@ -2963,7 +3018,8 @@ conjugations["irreg-ошибиться"] = function(args)
  
 	forms["past_actv_part"] = prefix .. "ошиби́вший"
 	forms["pres_pasv_part"] = ""
-	forms["past_adv_part"] = prefix .. "ошиби́вши"; forms["past_adv_part_short"] = ""
+	forms["past_adv_part"] = prefix .. "ошиби́вши"
+	forms["past_adv_part_short"] = ""
  
 	forms["pres_actv_part"] = ""
 	forms["pres_actv_part2"] = ""
@@ -2997,7 +3053,8 @@ conjugations["irreg-плескать"] = function(args)
 
 	forms["past_actv_part"] = prefix .. "плеска́вший"
 	forms["pres_pasv_part"] = prefix .. "плеска́емый"
-	forms["past_adv_part"] = prefix .. "плеска́вши"; forms["past_adv_part_short"] = prefix .. "плеска́в"
+	forms["past_adv_part"] = prefix .. "плеска́вши"
+	forms["past_adv_part_short"] = prefix .. "плеска́в"
 
 	forms["pres_actv_part"] = prefix .. "плеска́ющий"
 	forms["pres_actv_part2"] = prefix .. "пле́щущий"
@@ -3043,7 +3100,8 @@ end
 	forms["past_actv_part"] = prefix .. "реве́вший"
 	forms["pres_pasv_part"] = ""
 	forms["pres_adv_part"] = prefix .. "ревя́"
-	forms["past_adv_part"] = prefix .. "реве́вши"; forms["past_adv_part_short"] = prefix .. "реве́в"
+	forms["past_adv_part"] = prefix .. "реве́вши"
+	forms["past_adv_part_short"] = prefix .. "реве́в"
  
 	forms["pres_futr_1sg"] = prefix .. "реву́"
 	forms["pres_futr_2sg"] = prefix .. "ревёшь"
@@ -3075,7 +3133,8 @@ conjugations["irreg-внимать"] = function(args)
 	forms["past_actv_part"] = prefix .. "внима́вший"
 	forms["pres_pasv_part"] = prefix .. "вне́млемый"
 	forms["pres_pasv_part2"] = prefix .. "внима́емый"
-	forms["past_adv_part"] = prefix .. "внима́вши"; forms["past_adv_part_short"] = prefix .. "внима́в"
+	forms["past_adv_part"] = prefix .. "внима́вши"
+	forms["past_adv_part_short"] = prefix .. "внима́в"
  
 	forms["pres_actv_part"] = prefix .. "вне́млющий"
 	forms["pres_actv_part2"] = prefix .. "внима́ющий"
@@ -3125,7 +3184,8 @@ conjugations["irreg-обязывать"] = function(args)
 	forms["past_actv_part"] = prefix .. "обя́зывавший"
 	forms["pres_pasv_part"] = prefix .. "обя́зываемый"
 	forms["pres_pasv_part2"] = prefix .. "обязу́емый"
-	forms["past_adv_part"] = prefix .. "обя́зывавши"; forms["past_adv_part_short"] = prefix .. "обя́зывав"
+	forms["past_adv_part"] = prefix .. "обя́зывавши"
+	forms["past_adv_part_short"] = prefix .. "обя́зывав"
 
 	forms["pres_actv_part"] = prefix .. "обя́зывающий"
 	forms["pres_actv_part2"] = prefix .. "обязу́ющий"
@@ -3164,41 +3224,21 @@ end
 ]=]--
 
 -- Present forms with -e-, no j-vowels.
-present_e_a = function(forms, stem)
-
-	forms["pres_futr_1sg"] = stem .. "у"
-	forms["pres_futr_2sg"] = stem .. "ешь"
-	forms["pres_futr_3sg"] = stem .. "ет"
-	forms["pres_futr_1pl"] = stem .. "ем"
-	forms["pres_futr_2pl"] = stem .. "ете"
-	forms["pres_futr_3pl"] = stem .. "ут"
+present_e_a = function(forms, stem, tr)
+	set_paradigm(forms, "pres_futr", stem, tr,
+		"у", "ешь", "ет", "ем", "ете", "ут")
 end
 
-present_e_b = function(forms, stem)
-
-	if rfind(stem, "[аэыоуяеиёю́]$") then
-		forms["pres_futr_1sg"] = stem .. "ю́"
-		forms["pres_futr_3pl"] = stem .. "ю́т"
-	else
-		forms["pres_futr_1sg"] = stem .. "у́"
-		forms["pres_futr_3pl"] = stem .. "у́т"
-	end
-
-	forms["pres_futr_2sg"] = stem .. "ёшь"
-	forms["pres_futr_3sg"] = stem .. "ёт"
-	forms["pres_futr_1pl"] = stem .. "ём"
-	forms["pres_futr_2pl"] = stem .. "ёте"
+present_e_b = function(forms, stem, tr)
+	local vowel_stem = rfind(stem, "[аэыоуяеиёю́]$")
+	set_paradigm(forms, "pres_futr", stem, tr,
+		vowel_stem and "ю́" or "у́", "ёшь", "ёт", "ём", "ёте",
+		vowel_stem and "ю́т" or "у́т")
 end
 
-present_e_c = function(forms, stem)
-	local stem_noa = com.make_unstressed(stem)
-
-	forms["pres_futr_1sg"] = stem_noa .. "у́"
-	forms["pres_futr_2sg"] = stem .. "ешь"
-	forms["pres_futr_3sg"] = stem .. "ет"
-	forms["pres_futr_1pl"] = stem .. "ем"
-	forms["pres_futr_2pl"] = stem .. "ете"
-	forms["pres_futr_3pl"] = stem .. "ут"
+present_e_c = function(forms, stem, tr)
+	set_paradigm(forms, "pres_futr", stem, tr,
+		"у́", "ешь", "ет", "ем", "ете", "ут")
 end
 
 -- Present forms with -e-, with j-vowels.
@@ -3309,12 +3349,6 @@ present_i_c = function(forms, stem, shch)
 		forms["pres_futr_1sg"] = iotated_stem .. "у́"
 	else
 		forms["pres_futr_1sg"] = iotated_stem .. "ю́"
-	end
-
-	if rfind(stem, "[шщжч]$") then
-		forms["pres_futr_3pl"] = stem .. "ат"
-	else
-		forms["pres_futr_3pl"] = stem .. "ят"
 	end
 
 	if rfind(stem, "[шщжч]$") then
@@ -3459,7 +3493,6 @@ make_table = function(forms, title, perf, intr, impers)
 		forms["pres_1pl"] = forms["pres_futr_1pl"]
 		forms["pres_2pl"] = forms["pres_futr_2pl"]
 		forms["pres_3pl"] = forms["pres_futr_3pl"]
-		forms["pres_2sg"] = forms["pres_futr_2sg"]
 		-- alternatives
 		forms["pres_1sg2"] = forms["pres_futr_1sg2"]
 		forms["pres_2sg2"] = forms["pres_futr_2sg2"]
