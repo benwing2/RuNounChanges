@@ -643,7 +643,7 @@ conjugations["4c"] = function(args)
 	-- remove accent for some forms
 	local stem_noa = com.remove_accents(stem)
 	-- replace consonants for 1st person singular present/future
-	local iotated_stem = com.iotation(stem_noa)
+	local iotated_stem = com.iotation_new(stem_noa)
 
 	forms["infinitive"] = stem_noa .. "и́ть"
 
@@ -791,7 +791,7 @@ conjugations["5c"] = function(args)
 	-- remove accent for some forms
 	local stem_noa = com.remove_accents(stem)
 	-- replace consonants for 1st person singular present/future
-	local iotated_stem = com.iotation(stem_noa)
+	local iotated_stem = com.iotation_new(stem_noa)
 
 	forms["infinitive"] = past_stem .. "ть"
 
@@ -845,7 +845,7 @@ conjugations["6a"] = function(args)
 	local pres_stem = args["pres_stem"] or stem
 
 	-- replace consonants for 1st person singular present/future
-	local iotated_stem = com.iotation(pres_stem)
+	local iotated_stem = com.iotation_new(pres_stem)
 
 	if rfind(iotated_stem, "[шщжч]$") then
 		forms["pres_actv_part"] = iotated_stem .. "ущий"
@@ -993,16 +993,16 @@ conjugations["6c"] = function(args)
 	-- iotate the stem
 	local iotated_stem = ""
 	if not shch then
-		iotated_stem = com.iotation(stem)
+		iotated_stem = com.iotation_new(stem)
 	else
-		iotated_stem = com.iotation(stem, shch)
+		iotated_stem = com.iotation_new(stem, nil, shch)
 	end
 	-- iotate the 2nd stem
 	local iotated_stem_noa = ""
 	if not shch then
-		iotated_stem_noa = com.iotation(stem_noa)
+		iotated_stem_noa = com.iotation_new(stem_noa)
 	else
-		iotated_stem_noa = com.iotation(stem_noa, shch)
+		iotated_stem_noa = com.iotation_new(stem_noa, nil, shch)
 	end
 		
 	local no_iotation = nil
@@ -1221,7 +1221,7 @@ conjugations["8a"] = function(args)
 
 	forms["past_adv_part"] = past_m .. "ши"; forms["past_adv_part_short"] = ""
 
-	local iotated_stem = com.iotation(stem)
+	local iotated_stem = com.iotation_new(stem)
 
 	forms["pres_futr_1sg"] = stem .. "у"
 	forms["pres_futr_2sg"] = iotated_stem .. "ешь"
@@ -1262,7 +1262,7 @@ conjugations["8b"] = function(args)
 
 	forms["past_adv_part"] = past_m .. "ши"; forms["past_adv_part_short"] = ""
 
-	local iotated_stem = com.iotation(stem)
+	local iotated_stem = com.iotation_new(stem)
 
 	forms["pres_futr_1sg"] = stem .. "у́"
 	forms["pres_futr_3pl"] = stem .. "у́т"
@@ -3156,7 +3156,7 @@ end
 
 -- Present forms with -e-, with j-vowels.
 present_je_a = function(forms, stem, no_iotation)
-	local iotated_stem = com.iotation(stem, shch)
+	local iotated_stem = com.iotation_new(stem, nil, shch)
 
 	-- Verbs ending in a hushing consonant do not get j-vowels in the endings.
 	if rfind(iotated_stem, "[шщжч]$") then
@@ -3204,9 +3204,9 @@ present_je_c = function(forms, stem, shch)
 	-- iotate the stem
 	local iotated_stem = ""
 	if not shch then
-		iotated_stem = com.iotation(stem)
+		iotated_stem = com.iotation_new(stem)
 	else
-		iotated_stem = com.iotation(stem, shch)
+		iotated_stem = com.iotation_new(stem, nil, shch)
 	end
 	
 	local iotated_stem_noa = com.make_unstressed(iotated_stem)
@@ -3235,7 +3235,7 @@ end
 present_i_a = function(forms, stem, shch)
 	-- shch - iotatate final т as щ, not ч
 	-- iotate the stem
-	local iotated_stem = com.iotation(stem, shch)
+	local iotated_stem = com.iotation_new(stem, nil, shch)
 
 	-- Verbs ending in a hushing consonant do not get j-vowels in the endings.
 	if rfind(iotated_stem, "[шщжч]$") then
@@ -3268,7 +3268,7 @@ present_i_b = function(forms, stem, no_1sg_futr, shch)
 	end
 
 	-- iotate the stem
-	local iotated_stem = com.iotation(stem, shch)
+	local iotated_stem = com.iotation_new(stem, nil, shch)
 
 	-- Make 1st person future singular blank if no_1sg_futr = 1
 	if no_1sg_futr == 1 then
@@ -3298,7 +3298,7 @@ present_i_c = function(forms, stem, shch)
 
 	local stem_noa = com.make_unstressed(stem)
 	-- iotate the stem
-	local iotated_stem = com.iotation(stem_noa, shch)
+	local iotated_stem = com.iotation_new(stem_noa, nil, shch)
 
 	-- Verbs ending in a hushing consonant do not get j-vowels in the endings.
 	if rfind(iotated_stem, "[шщжч]$") then
