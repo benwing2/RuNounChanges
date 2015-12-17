@@ -25,6 +25,7 @@ local lang = require("Module:languages").getByCode("ru")
 
 local rfind = mw.ustring.find
 local rsubn = mw.ustring.gsub
+local rmatch = mw.ustring.match
 
 -- version of rsubn() that discards all but the first return value
 local function rsub(term, foo, bar)
@@ -141,9 +142,19 @@ function export.generate_forms(conj_type, args)
 	local forms, title, categories
 
 	if conjugations[conj_type] then
-		forms, title, categories = conjugations[conj_type](args)
+		forms = conjugations[conj_type](args)
 	else
 		error("Unknown conjugation type '" .. conj_type .. "'")
+	end
+
+	if rfind(conj_type, "^irreg") then
+		categories = {"Russian irregular verbs"}
+		title = "irregular"
+	else
+		local class_num = rmatch(conj_type, "^([0-9]+)")
+		assert(class_num and class_num ~= "")
+		categories = {"Russian class " .. class_num .. " verbs"}
+		title = "class " .. class_num
 	end
 
 	-- This form is not always present on verbs, so it needs to be specified explicitly.
@@ -265,8 +276,6 @@ end
 
 conjugations["1a"] = function(args)
 	local forms = {}
-	local categories = {"Russian class 1 verbs"}
-	local title = "class 1"
 
 	local stem = getarg(args, 2)
 	local tr = args.tr
@@ -290,13 +299,11 @@ conjugations["1a"] = function(args)
 	forms["past_n"] = stem .. "ло"
 	forms["past_pl"] = stem .. "ли"
 
-	return forms, title, categories
+	return forms
 end
 
 conjugations["2a"] = function(args)
 	local forms = {}
-	local categories = {"Russian class 2 verbs"}
-	local title = "class 2"
 
 	local inf_stem = getarg(args, 2)
 	local pres_stem = inf_stem
@@ -342,13 +349,11 @@ conjugations["2a"] = function(args)
 	forms["past_n"] = inf_stem .. "ло"
 	forms["past_pl"] = inf_stem .. "ли"
 
-	return forms, title, categories
+	return forms
 end
 
 conjugations["2b"] = function(args)
 	local forms = {}
-	local categories = {"Russian class 2 verbs"}
-	local title = "class 2"
 
 	local inf_stem = getarg(args, 2)
 	local pres_stem = inf_stem
@@ -381,14 +386,12 @@ conjugations["2b"] = function(args)
 	forms["past_n"] = inf_stem .. "ло"
 	forms["past_pl"] = inf_stem .. "ли"
 
-	return forms, title, categories
+	return forms
 end
 
 conjugations["3a"] = function(args)
 
 	local forms = {}
-	local categories = {"Russian class 3 verbs"}
-	local title = "class 3"
 
 	local stem = getarg(args, 2)
 	-- non-empty if no short past forms to be used
@@ -449,13 +452,11 @@ conjugations["3a"] = function(args)
 		forms["past_m_short"] = past_m_short
 	end
 
-	return forms, title, categories
+	return forms
 end
 
 conjugations["3b"] = function(args)
 	local forms = {}
-	local categories = {"Russian class 3 verbs"}
-	local title = "class 3"
 
 	local stem = getarg(args, 2)
 
@@ -477,13 +478,11 @@ conjugations["3b"] = function(args)
 	forms["past_n"] = stem .. "у́ло"
 	forms["past_pl"] = stem .. "у́ли"
 
-	return forms, title, categories
+	return forms
 end
 
 conjugations["3c"] = function(args)
 	local forms = {}
-	local categories = {"Russian class 3 verbs"}
-	local title = "class 3"
 
 	local stem = getarg(args, 2)
 	-- remove accent for some forms
@@ -507,13 +506,11 @@ conjugations["3c"] = function(args)
 	forms["past_n"] = stem_noa .. "у́ло"
 	forms["past_pl"] = stem_noa .. "у́ли"
 
-	return forms, title, categories
+	return forms
 end
 
 conjugations["4a"] = function(args)
 	local forms = {}
-	local categories = {"Russian class 4 verbs"}
-	local title = "class 4"
 
 	local stem = getarg(args, 2)
 	-- for "a" stress type "й" - after vowels, "ь" - after single consonants, "и" - after consonant clusters
@@ -572,13 +569,11 @@ conjugations["4a"] = function(args)
 	forms["past_n"] = stem .. "ило"
 	forms["past_pl"] = stem .. "или"
 
-	return forms, title, categories
+	return forms
 end
 
 conjugations["4b"] = function(args)
 	local forms = {}
-	local categories = {"Russian class 4 verbs"}
-	local title = "class 4"
 
 	local stem = getarg(args, 2)
 	-- optional parameter for verbs like похитить (похи́щу) (4a), защитить (защищу́) (4b), поглотить (поглощу́) (4c) with a different iotation (т -> щ, not ч)
@@ -635,13 +630,11 @@ conjugations["4b"] = function(args)
 		forms["past_f"] = stem .. "и́ла"
 	end
 
-	return forms, title, categories
+	return forms
 end
 
 conjugations["4c"] = function(args)
 	local forms = {}
-	local categories = {"Russian class 4 verbs"}
-	local title = "class 4"
 
 	local stem = getarg(args, 2)
 	-- optional parameter for verbs like похитить (похи́щу) (4a), защитить (защищу́) (4b), поглотить (поглощу́) (4c) with a different iotation (т -> щ, not ч)
@@ -687,13 +680,11 @@ conjugations["4c"] = function(args)
 		forms["pres_actv_part"] = "су́шащий"
 	end
 
-	return forms, title, categories
+	return forms
 end
 
 conjugations["5a"] = function(args)
 	local forms = {}
-	local categories = {"Russian class 5 verbs"}
-	local title = "class 5"
 
 	local stem = getarg(args, 2)
 	-- обидеть, выстоять have different past tense and infinitive forms
@@ -739,13 +730,11 @@ conjugations["5a"] = function(args)
 	forms["past_n"] = past_stem .. "ло"
 	forms["past_pl"] = past_stem .. "ли"
 
-	return forms, title, categories
+	return forms
 end
 
 conjugations["5b"] = function(args)
 	local forms = {}
-	local categories = {"Russian class 5 verbs"}
-	local title = "class 5"
 
 	local stem = getarg(args, 2)
 	local past_stem = getarg(args, 3)
@@ -788,13 +777,11 @@ conjugations["5b"] = function(args)
 	forms["impr_sg"] = stem .. impr_end
 	forms["impr_pl"] = stem .. impr_end .. "те"
 
-	return forms, title, categories
+	return forms
 end
 
 conjugations["5c"] = function(args)
 	local forms = {}
-	local categories = {"Russian class 5 verbs"}
-	local title = "class 5"
 
 	local stem = getarg(args, 2)
 	local past_stem = getarg(args, 3)
@@ -837,13 +824,11 @@ conjugations["5c"] = function(args)
 	forms["past_n"] = past_stem .. "ло"
 	forms["past_pl"] = past_stem .. "ли"
 
-	return forms, title, categories
+	return forms
 end
 
 conjugations["6a"] = function(args)
 	local forms = {}
-	local categories = {"Russian class 6 verbs"}
-	local title = "class 6"
 
 	local stem = getarg(args, 2)
 	local impr_end = args[3]
@@ -929,13 +914,11 @@ conjugations["6a"] = function(args)
 		forms["impr_pl"] = impr_sg .. "те"
 	end
 
-	return forms, title, categories
+	return forms
 end
 
 conjugations["6b"] = function(args)
 	local forms = {}
-	local categories = {"Russian class 6 verbs"}
-	local title = "class 6"
 
 	local stem = getarg(args, 2)
 	-- звать - зов, драть - дер
@@ -996,13 +979,11 @@ conjugations["6b"] = function(args)
 	--разобрали́сь (разобрали́)
 	forms["past_pl2"] = past_pl2
 
-	return forms, title, categories
+	return forms
 end
 
 conjugations["6c"] = function(args)
 	local forms = {}
-	local categories = {"Russian class 6 verbs"}
-	local title = "class 6"
 
 	local stem = getarg(args, 2)
 	-- optional parameter for verbs like клеветать (клевещу́
@@ -1065,13 +1046,11 @@ conjugations["6c"] = function(args)
 	forms["past_n"] = stem_noa .. "а́ло"
 	forms["past_pl"] = stem_noa .. "а́ли"
 
-	return forms, title, categories
+	return forms
 end
 
 conjugations["7a"] = function(args)
 	local forms = {}
-	local categories = {"Russian class 7 verbs"}
-	local title = "class 7"
 
 	local full_inf = getarg(args, 2)
 	local pres_stem = getarg(args, 3)
@@ -1141,13 +1120,11 @@ conjugations["7a"] = function(args)
 		forms["past_pl"] = past_stem .. "ли"
 	end
 	
-	return forms, title, categories
+	return forms
 end
 
 conjugations["7b"] = function(args)
 	local forms = {}
-	local categories = {"Russian class 7 verbs"}
-	local title = "class 7"
 
 	local full_inf = getarg(args, 2)
 	local pres_stem = getarg(args, 3)
@@ -1224,14 +1201,11 @@ conjugations["7b"] = function(args)
 		forms["past_pl"] = past_stem .. "ли"
 	end
 
-	return forms, title, categories
+	return forms
 end
 
 conjugations["8a"] = function(args)
-
 	local forms = {}
-	local categories = {"Russian class 8 verbs"}
-	local title = "class 8"
 
 	local stem = getarg(args, 2)
 	local full_inf = getarg(args, 3)
@@ -1264,14 +1238,11 @@ conjugations["8a"] = function(args)
 	forms["past_n"] = stem .. "ло"
 	forms["past_pl"] = stem .. "ли"
 
-	return forms, title, categories
+	return forms
 end
 
 conjugations["8b"] = function(args)
-
 	local forms = {}
-	local categories = {"Russian class 8 verbs"}
-	local title = "class 8"
 
 	local stem = getarg(args, 2)
 	local full_inf = getarg(args, 3)
@@ -1309,14 +1280,11 @@ conjugations["8b"] = function(args)
 	forms["past_n"] = stem .. "ло́"
 	forms["past_pl"] = stem .. "ли́"
 
-	return forms, title, categories
+	return forms
 end
 
 conjugations["9a"] = function(args)
-
 	local forms = {}
-	local categories = {"Russian class 9 verbs"}
-	local title = "class 9"
 
 	local stem = getarg(args, 2)
 	local pres_stem = getarg(args, 3)
@@ -1343,14 +1311,11 @@ conjugations["9a"] = function(args)
 	forms["past_n"] = stem .. "ло"
 	forms["past_pl"] = stem .. "ли"
 
-	return forms, title, categories
+	return forms
 end
 
 conjugations["9b"] = function(args)
-
 	local forms = {}
-	local categories = {"Russian class 9 verbs"}
-	local title = "class 9"
 	
 	--for this type, it's important to distinguish impf and pf
 	local verb_type = getarg(args, 1, "impf", "Verb type (first parameter)")
@@ -1399,13 +1364,11 @@ conjugations["9b"] = function(args)
 		forms["past_f"] = stem .. "ла"
 	end
 
-	return forms, title, categories
+	return forms
 end
 
 conjugations["10a"] = function(args)
 	local forms = {}
-	local categories = {"Russian class 10 verbs"}
-	local title = "class 10"
 
 	local stem = getarg(args, 2)
 
@@ -1427,14 +1390,11 @@ conjugations["10a"] = function(args)
 	forms["past_n"] = stem .. "оло"
 	forms["past_pl"] = stem .. "оли"
 
-	return forms, title, categories
+	return forms
 end
 
 conjugations["10c"] = function(args)
-
 	local forms = {}
-	local categories = {"Russian class 10 verbs"}
-	local title = "class 10"
 
 	local inf_stem = getarg(args, 2)
 	-- present tense stressed stem "моло́ть" - м́елет
@@ -1460,14 +1420,11 @@ conjugations["10c"] = function(args)
 	forms["past_n"] = inf_stem .. "ло"
 	forms["past_pl"] = inf_stem .. "ли"
 
-	return forms, title, categories
+	return forms
 end
 
 conjugations["11a"] = function(args)
-
 	local forms = {}
-	local categories = {"Russian class 11 verbs"}
-	local title = "class 11"
 
 	local stem = getarg(args, 2)
 
@@ -1498,14 +1455,11 @@ conjugations["11a"] = function(args)
 	forms["past_n"] = stem .. "ило"
 	forms["past_pl"] = stem .. "или"
 
-	return forms, title, categories
+	return forms
 end
 
 conjugations["11b"] = function(args)
-
 	local forms = {}
-	local categories = {"Russian class 11 verbs"}
-	local title = "class 11"
 
 	local stem = getarg(args, 2)
 	local pres_stem = getarg(args, 3)
@@ -1543,14 +1497,11 @@ conjugations["11b"] = function(args)
 		forms["past_f"] = stem .. "и́ла"
 	end
 
-	return forms, title, categories
+	return forms
 end
 
 conjugations["12a"] = function(args)
-
 	local forms = {}
-	local categories = {"Russian class 12 verbs"}
-	local title = "class 12"
 
 	local stem = getarg(args, 2)
 	local pres_stem = getarg(args, 3)
@@ -1581,14 +1532,11 @@ conjugations["12a"] = function(args)
 	forms["past_n"] = stem .. "ло"
 	forms["past_pl"] = stem .. "ли"
 
-	return forms, title, categories
+	return forms
 end
 
 conjugations["12b"] = function(args)
-
 	local forms = {}
-	local categories = {"Russian class 12 verbs"}
-	local title = "class 12"
 
 	local stem = getarg(args, 2)
 	local pres_stem = getarg(args, 3)
@@ -1628,14 +1576,11 @@ conjugations["12b"] = function(args)
 	forms["past_n"] = stem .. "ло"
 	forms["past_pl"] = stem .. "ли"
 
-	return forms, title, categories
+	return forms
 end
 
 conjugations["13b"] = function(args)
-
 	local forms = {}
-	local categories = {"Russian class 13 verbs"}
-	local title = "class 13"
 
 	local stem = getarg(args, 2)
 	local pres_stem = getarg(args, 3)
@@ -1666,14 +1611,12 @@ conjugations["13b"] = function(args)
 	forms["past_n"] = stem .. "ло"
 	forms["past_pl"] = stem .. "ли"
 
-	return forms, title, categories
+	return forms
 end
 
 conjugations["14a"] = function(args)
 	-- only one verb: вы́жать
 	local forms = {}
-	local categories = {"Russian class 14 verbs"}
-	local title = "class 14"
 
 	local stem = getarg(args, 2)
 	local pres_stem = getarg(args, 3)
@@ -1700,14 +1643,11 @@ conjugations["14a"] = function(args)
 	forms["past_n"] = stem .. "ло"
 	forms["past_pl"] = stem .. "ли"
 
-	return forms, title, categories
+	return forms
 end
 
 conjugations["14b"] = function(args)
-
 	local forms = {}
-	local categories = {"Russian class 14 verbs"}
-	local title = "class 14"
 
 	local stem = getarg(args, 2)
 	local pres_stem = getarg(args, 3)
@@ -1776,14 +1716,11 @@ conjugations["14b"] = function(args)
 		forms["past_pl2"] = past_pl2
 	end
 
-	return forms, title, categories
+	return forms
 end
 
 conjugations["14c"] = function(args)
-
 	local forms = {}
-	local categories = {"Russian class 14 verbs"}
-	local title = "class 14"
 
 	local stem = getarg(args, 2)
 	local pres_stem = getarg(args, 3)
@@ -1848,13 +1785,11 @@ conjugations["14c"] = function(args)
 		forms["past_pl2"] = past_pl2
 	end
 
-	return forms, title, categories
+	return forms
 end
 
 conjugations["15a"] = function(args)
 	local forms = {}
-	local categories = {"Russian class 15 verbs"}
-	local title = "class 15"
 
 	local stem = getarg(args, 2)
 
@@ -1876,13 +1811,11 @@ conjugations["15a"] = function(args)
 	forms["past_n"] = stem .. "ло"
 	forms["past_pl"] = stem .. "ли"
 
-	return forms, title, categories
+	return forms
 end
 
 conjugations["16a"] = function(args)
 	local forms = {}
-	local categories = {"Russian class 16 verbs"}
-	local title = "class 16"
 
 	local stem = getarg(args, 2)
 
@@ -1904,13 +1837,11 @@ conjugations["16a"] = function(args)
 	forms["past_n"] = stem .. "ло"
 	forms["past_pl"] = stem .. "ли"
 
-	return forms, title, categories
+	return forms
 end
 
 conjugations["16b"] = function(args)
 	local forms = {}
-	local categories = {"Russian class 16 verbs"}
-	local title = "class 16"
 
 	local stem = getarg(args, 2)
 	local stem_noa = com.make_unstressed(stem)
@@ -1957,14 +1888,12 @@ conjugations["16b"] = function(args)
 		forms["past_pl2"] = past_pl2
 	end
 
-	return forms, title, categories
+	return forms
 end
 
 conjugations["irreg-бежать"] = function(args)
 	-- irregular, only for verbs derived from бежать with the same stress pattern
 	local forms = {}
-	local categories = {"Russian irregular verbs"}
-	local title = "irregular"
 
 	local prefix = args[2] or ""
 
@@ -2015,14 +1944,12 @@ conjugations["irreg-бежать"] = function(args)
 		forms["past_pl"] = prefix .. "бежали"
 	end
 
-	return forms, title, categories
+	return forms
 end
 
 conjugations["irreg-спать"] = function(args)
 	-- irregular, only for verbs derived from спать
 	local forms = {}
-	local categories = {"Russian irregular verbs"}
-	local title = "irregular"
 
 	local prefix = args[2] or ""
 
@@ -2073,14 +2000,12 @@ conjugations["irreg-спать"] = function(args)
 		forms["past_pl"] = prefix .. "спали"
 	end
 
-	return forms, title, categories
+	return forms
 end
 
 conjugations["irreg-хотеть"] = function(args)
 	-- irregular, only for verbs derived from хотеть with the same stress pattern
 	local forms = {}
-	local categories = {"Russian irregular verbs"}
-	local title = "irregular"
 
 	local prefix = args[2] or ""
 
@@ -2108,14 +2033,12 @@ conjugations["irreg-хотеть"] = function(args)
 	forms["past_n"] = prefix .. "хоте́ло"
 	forms["past_pl"] = prefix .. "хоте́ли"
 
-	return forms, title, categories
+	return forms
 end
 
 conjugations["irreg-дать"] = function(args)
 	-- irregular, only for verbs derived from дать with the same stress pattern and вы́дать
 	local forms = {}
-	local categories = {"Russian irregular verbs"}
-	local title = "irregular"
 
 	--for this type, it's important to distinguish if it's reflexive to set some stress patterns
 	local verb_type = getarg(args, 1, "refl", "Verb type (first parameter)")
@@ -2198,14 +2121,12 @@ conjugations["irreg-дать"] = function(args)
 		forms["past_pl"] = past_pl
 	end
 
-	return forms, title, categories
+	return forms
 end
 
 conjugations["irreg-есть"] = function(args)
 	-- irregular, only for verbs derived from есть
 	local forms = {}
-	local categories = {"Russian irregular verbs"}
-	local title = "irregular"
 
 	local prefix = args[2] or ""
 
@@ -2256,14 +2177,12 @@ conjugations["irreg-есть"] = function(args)
 		forms["past_pl"] = prefix .. "ели"
 	end
 
-	return forms, title, categories
+	return forms
 end
 
 conjugations["irreg-сыпать"] = function(args)
 	-- irregular, only for verbs derived from сыпать
 	local forms = {}
-	local categories = {"Russian irregular verbs"}
-	local title = "irregular"
 
 	local prefix = args[2] or ""
 
@@ -2324,14 +2243,12 @@ conjugations["irreg-сыпать"] = function(args)
 		forms["past_pl"] = prefix .. "сыпали"
 	end
 
-	return forms, title, categories
+	return forms
 end
 
 conjugations["irreg-лгать"] = function(args)
 	-- irregular, only for verbs derived from лгать with the same stress pattern
 	local forms = {}
-	local categories = {"Russian irregular verbs"}
-	local title = "irregular"
 
 	local prefix = args[2] or ""
 
@@ -2359,14 +2276,12 @@ conjugations["irreg-лгать"] = function(args)
 	forms["past_n"] = prefix .. "лга́ло"
 	forms["past_pl"] = prefix .. "лга́ли"
 
-	return forms, title, categories
+	return forms
 end
 
 conjugations["irreg-мочь"] = function(args)
 	-- irregular, only for verbs derived from мочь with the same stress pattern
 	local forms = {}
-	local categories = {"Russian irregular verbs"}
-	local title = "irregular"
 
 	local prefix = args[2] or ""
 
@@ -2397,14 +2312,12 @@ conjugations["irreg-мочь"] = function(args)
 	forms["past_n"] = prefix .. "могло́"
 	forms["past_pl"] = prefix .. "могли́"
 
-	return forms, title, categories
+	return forms
 end
 
 conjugations["irreg-слать"] = function(args)
 	-- irregular, only for verbs derived from слать
 	local forms = {}
-	local categories = {"Russian irregular verbs"}
-	local title = "irregular"
 
 	local prefix = args[2] or ""
 
@@ -2454,14 +2367,12 @@ conjugations["irreg-слать"] = function(args)
 		forms["past_pl"] = prefix .. "слали"
 	end
 
-	return forms, title, categories
+	return forms
 end
 
 conjugations["irreg-идти"] = function(args)
 	-- irregular, only for verbs derived from идти, including прийти́ and в́ыйти
 	local forms = {}
-	local categories = {"Russian irregular verbs"}
-	local title = "irregular"
 
 	local prefix = args[2] or ""
 
@@ -2516,14 +2427,12 @@ conjugations["irreg-идти"] = function(args)
 		forms["past_pl"] = prefix .. "шли́"
 	end
 
-	return forms, title, categories
+	return forms
 end
 
 conjugations["irreg-ехать"] = function(args)
 	-- irregular, only for verbs derived from ехать
 	local forms = {}
-	local categories = {"Russian irregular verbs"}
-	local title = "irregular"
 
 	local prefix = args[2] or ""
 
@@ -2564,14 +2473,12 @@ conjugations["irreg-ехать"] = function(args)
 	forms["past_n"] = past_stem .. "ало"
 	forms["past_pl"] = past_stem .. "али"
 
-	return forms, title, categories
+	return forms
 end
 
 conjugations["irreg-минуть"] = function(args)
 	-- for the irregular verb "ми́нуть"
 	local forms = {}
-	local categories = {"Russian irregular verbs"}
-	local title = "irregular"
 
 	local stem = getarg(args, 2)
 	local stem_noa = com.make_unstressed(stem)
@@ -2601,14 +2508,12 @@ conjugations["irreg-минуть"] = function(args)
 	forms["past_n2"] = stem .. "уло"
 	forms["past_pl2"] = stem .. "ули"
 
-	return forms, title, categories
+	return forms
 end
 
 conjugations["irreg-живописать-миновать"] = function(args)
 	-- for irregular verbs "живописа́ть" and "минова́ть", mixture of types 1 and 2
 	local forms = {}
-	local categories = {"Russian irregular verbs"}
-	local title = "irregular"
 
 	local inf_stem = getarg(args, 2)
 	local pres_stem = getarg(args, 3)
@@ -2631,14 +2536,12 @@ conjugations["irreg-живописать-миновать"] = function(args)
 	forms["past_n"] = inf_stem .. "ло"
 	forms["past_pl"] = inf_stem .. "ли"
 
-	return forms, title, categories
+	return forms
 end
 
 conjugations["irreg-лечь"] = function(args)
 	-- irregular, only for verbs derived from лечь with the same stress pattern
 	local forms = {}
-	local categories = {"Russian irregular verbs"}
-	local title = "irregular"
 
 	local prefix = args[2] or ""
 
@@ -2667,14 +2570,12 @@ conjugations["irreg-лечь"] = function(args)
 	forms["past_n"] = prefix .. "легло́"
 	forms["past_pl"] = prefix .. "легли́"
 
-	return forms, title, categories
+	return forms
 end
 
 conjugations["irreg-зиждиться"] = function(args)
 	-- irregular, only for verbs derived from зиждиться with the same stress pattern
 	local forms = {}
-	local categories = {"Russian irregular verbs"}
-	local title = "irregular"
 
 	local prefix = args[2] or ""
 
@@ -2703,14 +2604,12 @@ conjugations["irreg-зиждиться"] = function(args)
 	forms["past_n"] = prefix .. "зи́ждило"
 	forms["past_pl"] = prefix .. "зи́ждили"
 
-	return forms, title, categories
+	return forms
 end
 
 conjugations["irreg-клясть"] = function(args)
 	-- irregular, only for verbs derived from клясть with the same stress pattern
 	local forms = {}
-	local categories = {"Russian irregular verbs"}
-	local title = "irregular"
 
 	local prefix = args[2] or ""
 
@@ -2746,14 +2645,12 @@ conjugations["irreg-клясть"] = function(args)
 
 	forms["past_f"] = prefix .. "кляла́"
 
-	return forms, title, categories
+	return forms
 end
 
 conjugations["irreg-слыхать-видать"] = function(args)
 	-- irregular, only for isolated verbs derived from слыхать or видать with the same stress pattern
 	local forms = {}
-	local categories = {"Russian irregular verbs"}
-	local title = "irregular"
 
 	local stem = getarg(args, 2)
 
@@ -2783,14 +2680,12 @@ conjugations["irreg-слыхать-видать"] = function(args)
 	forms["past_n"] = stem .. "ло"
 	forms["past_pl"] = stem .. "ли"
 
-	return forms, title, categories
+	return forms
 end
 
 conjugations["irreg-стелить-стлать"] = function(args)
 	-- irregular, only for verbs derived from стелить and стлать with the same stress pattern
 	local forms = {}
-	local categories = {"Russian irregular verbs"}
-	local title = "irregular"
 
 	local stem = getarg(args, 2)
 	local prefix = args[3] or ""
@@ -2819,14 +2714,12 @@ conjugations["irreg-стелить-стлать"] = function(args)
 	forms["past_n"] = prefix .. stem .. "ло"
 	forms["past_pl"] = prefix .. stem .. "ли"
 
-	return forms, title, categories
+	return forms
 end
 
 conjugations["irreg-быть"] = function(args)
 	-- irregular, only for verbs derived from быть with various stress patterns, the actual verb быть different from its derivatives
 	local forms = {}
-	local categories = {"Russian irregular verbs"}
-	local title = "irregular"
 
 	local prefix = args[2] or ""
 	local past_m = args["past_m"]
@@ -2919,14 +2812,12 @@ conjugations["irreg-быть"] = function(args)
 		forms["past_pl"] = past_pl
 	end
 
-	return forms, title, categories
+	return forms
 end
 
 conjugations["irreg-ссать-сцать"] = function(args)
 	-- irregular, only for verbs derived from ссать and сцать (both vulgar!)
 	local forms = {}
-	local categories = {"Russian irregular verbs"}
-	local title = "irregular"
 
 	local stem = getarg(args, 2)
 	local pres_stem = getarg(args, 3)
@@ -2977,14 +2868,12 @@ conjugations["irreg-ссать-сцать"] = function(args)
 	forms["past_n"] = prefix .. stem .. "ло"
 	forms["past_pl"] = prefix .. stem .. "ли"
 
-	return forms, title, categories
+	return forms
 end
 
 conjugations["irreg-чтить"] = function(args)
 	-- irregular, only for verbs derived from чтить
 	local forms = {}
-	local categories = {"Russian irregular verbs"}
-	local title = "irregular"
 	
 	local prefix = args[2] or ""
 	
@@ -3014,14 +2903,12 @@ conjugations["irreg-чтить"] = function(args)
 	forms["past_n"] = prefix .. "чти́ло"
 	forms["past_pl"] = prefix .. "чти́ли"
  
-	return forms, title, categories
+	return forms
 end
 
 conjugations["irreg-ошибиться"] = function(args)
 	-- irregular, only for for ошибиться
 	local forms = {}
-	local categories = {"Russian irregular verbs"}
-	local title = "irregular"
 	
 	local prefix = args[2] or ""
 	
@@ -3050,14 +2937,12 @@ conjugations["irreg-ошибиться"] = function(args)
 	forms["past_n"] = prefix .. "оши́бло"
 	forms["past_pl"] = prefix .. "оши́бли"
  
-	return forms, title, categories
+	return forms
 end
 
 conjugations["irreg-плескать"] = function(args)
 	-- irregular, only for verbs derived from плескать
 	local forms = {}
-	local categories = {"Russian irregular verbs"}
-	local title = "irregular"
 
 	local prefix = args[2] or ""
 
@@ -3096,14 +2981,12 @@ conjugations["irreg-плескать"] = function(args)
 	forms["past_n"] = prefix .. "плеска́ло"
 	forms["past_pl"] = prefix .. "плеска́ли"
 
-	return forms, title, categories
+	return forms
 end
 
  conjugations["irreg-реветь"] = function(args)
 	-- irregular, only for verbs derived from "реветь"
 	local forms = {}
-	local categories = {"Russian irregular verbs"}
-	local title = "irregular"
  
 	local prefix = args[2] or ""
  
@@ -3131,14 +3014,12 @@ end
 	forms["past_n"] = prefix .. "реве́ло"
 	forms["past_pl"] = prefix .. "реве́ли"
 
-	return forms, title, categories
+	return forms
 end
 
 conjugations["irreg-внимать"] = function(args)
 	-- irregular, only for verbs derived from внимать
 	local forms = {}
-	local categories = {"Russian irregular verbs"}
-	local title = "irregular"
  
 	local prefix = args[2] or ""
  
@@ -3178,15 +3059,12 @@ conjugations["irreg-внимать"] = function(args)
 	forms["past_n"] = prefix .. "внима́ло"
 	forms["past_pl"] = prefix .. "внима́ли"
  
-
-	return forms, title, categories
+	return forms
 end
 
 conjugations["irreg-обязывать"] = function(args)
 	-- irregular, only for the reflexive verb обязаться
 	local forms = {}
-	local categories = {"Russian irregular verbs"}
-	local title = "irregular"
 
 	local prefix = args[2] or ""
 	local past_m = args["past_m"]
@@ -3231,7 +3109,7 @@ conjugations["irreg-обязывать"] = function(args)
 	forms["past_n"] = prefix .. "обя́зывало"
 	forms["past_pl"] = prefix .. "обя́зывали"
 
-	return forms, title, categories
+	return forms
 end
 
 --[=[
