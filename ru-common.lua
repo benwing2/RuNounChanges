@@ -72,50 +72,50 @@ end
 -- this function enables the module to be called from a template;
 -- FIXME, does this actually work?
 function export.main(frame)
-    if type(export[frame.args[1]]) == 'function' then
-        return export[frame.args[1]](frame.args[2], frame.args[3])
-    else
-        return export[frame.args[1]][frame.args[2]]
-    end
+	if type(export[frame.args[1]]) == 'function' then
+		return export[frame.args[1]](frame.args[2], frame.args[3])
+	else
+		return export[frame.args[1]][frame.args[2]]
+	end
 end
 
 -- selects preposition о, об or обо for next phrase, which can start from
 -- punctuation
 function export.obo(phr)
-    --Algorithm design is mainly inherited from w:ru:template:Обо
-    local w = rmatch(phr,"[%p%s%c]*(.-)[%p%s%c]") or rmatch(phr,"[%p%s%c]*(.-)$")
-    if not w then return nil end
-    if string.find(" всей всём всех мне ",' '..ulower(w)..' ',1,true) then return 'обо' end
-    local ws=usub(w,1,2)
-    if ws==uupper(ws) then -- abbrev
-        if rmatch(ws,"^[ЙУНФЫАРОЛЭСМИRYUIOASFHLXNMÖÜÄΑΕΟΥΩ]") then return 'об' else return 'о' end
-    elseif rmatch(uupper(w),"^[АОЭИУЫAOIEÖÜÄΑΕΟΥΩ]") then
-        return 'об'
-    else
-        return 'о'
-    end
+	--Algorithm design is mainly inherited from w:ru:template:Обо
+	local w = rmatch(phr,"[%p%s%c]*(.-)[%p%s%c]") or rmatch(phr,"[%p%s%c]*(.-)$")
+	if not w then return nil end
+	if string.find(" всей всём всех мне ",' '..ulower(w)..' ',1,true) then return 'обо' end
+	local ws=usub(w,1,2)
+	if ws==uupper(ws) then -- abbrev
+		if rmatch(ws,"^[ЙУНФЫАРОЛЭСМИRYUIOASFHLXNMÖÜÄΑΕΟΥΩ]") then return 'об' else return 'о' end
+	elseif rmatch(uupper(w),"^[АОЭИУЫAOIEÖÜÄΑΕΟΥΩ]") then
+		return 'об'
+	else
+		return 'о'
+	end
 end
 
 -- Apply Proto-Slavic iotation. This is the change that is affected by a
 -- Slavic -j- after a consonant.
 function export.iotation(stem, shch)
-    stem = rsub(stem, "[сх]$", "ш")
-    stem = rsub(stem, "ск$", "щ")
-    stem = rsub(stem, "ст$", "щ")
-    stem = rsub(stem, "[кц]$", "ч")
+	stem = rsub(stem, "[сх]$", "ш")
+	stem = rsub(stem, "ск$", "щ")
+	stem = rsub(stem, "ст$", "щ")
+	stem = rsub(stem, "[кц]$", "ч")
 
-    -- normally "т" is iotated as "ч" but there are many verbs that are iotated with "щ"
-    if shch == "щ" then
-        stem = rsub(stem, "т$", "щ")
-    else
-        stem = rsub(stem, "т$", "ч")
-    end
+	-- normally "т" is iotated as "ч" but there are many verbs that are iotated with "щ"
+	if shch == "щ" then
+		stem = rsub(stem, "т$", "щ")
+	else
+		stem = rsub(stem, "т$", "ч")
+	end
 
-    stem = rsub(stem, "[гдз]$", "ж")
+	stem = rsub(stem, "[гдз]$", "ж")
 
-    stem = rsub(stem, "([бвмпф])$", "%1л")
+	stem = rsub(stem, "([бвмпф])$", "%1л")
 
-    return stem
+	return stem
 end
 
 -- Does a set of Cyrillic words in connected text need accents? We need to
@@ -226,25 +226,25 @@ function export.recompose(text)
 end
 
 local grave_decomposer = {
-    ["ѐ"] = "е" .. GR,
-    ["Ѐ"] = "Е" .. GR,
-    ["ѝ"] = "и" .. GR,
-    ["Ѝ"] = "И" .. GR,
+	["ѐ"] = "е" .. GR,
+	["Ѐ"] = "Е" .. GR,
+	["ѝ"] = "и" .. GR,
+	["Ѝ"] = "И" .. GR,
 }
 
 -- decompose precomposed Cyrillic chars w/grave accent; not necessary for
 -- acute accent as there aren't precomposed Cyrillic chars w/acute accent,
 -- and undesirable for precomposed ё and Ё
 function export.decompose_grave(word)
-    return rsub(word, "[ѐЀѝЍ]", grave_decomposer)
+	return rsub(word, "[ѐЀѝЍ]", grave_decomposer)
 end
 
 local grave_deaccenter = {
-    [GR] = "", -- grave accent
-    ["ѐ"] = "е", -- composed Cyrillic chars w/grave accent
-    ["Ѐ"] = "Е",
-    ["ѝ"] = "и",
-    ["Ѝ"] = "И",
+	[GR] = "", -- grave accent
+	["ѐ"] = "е", -- composed Cyrillic chars w/grave accent
+	["Ѐ"] = "Е",
+	["ѝ"] = "и",
+	["Ѝ"] = "И",
 }
 
 local deaccenter = mw.clone(grave_deaccenter)
@@ -253,7 +253,7 @@ deaccenter[AC] = "" -- acute accent
 -- remove acute and grave accents; don't affect composed diaeresis in ёЁ or
 -- uncomposed diaeresis in -ѣ̈- (as in plural сѣ̈дла of сѣдло́)
 function export.remove_accents(word, tr)
-    local ru_removed = rsub(word, "[́̀ѐЀѝЍ]", deaccenter)
+	local ru_removed = rsub(word, "[́̀ѐЀѝЍ]", deaccenter)
 	if not tr then
 		return ru_removed, nil
 	end
@@ -347,7 +347,7 @@ function export.make_unstressed(ru, tr)
 end
 
 function remove_jo_ru(word)
-    return rsub(word, "[̈ёЁ]", destresser)
+	return rsub(word, "[̈ёЁ]", destresser)
 end
 
 -- remove diaeresis stress marks only
@@ -373,7 +373,7 @@ end
 
 local function make_unstressed_once_ru(word)
 	-- leave graves alone
-    return rsub(word, "([́̈ёЁ])([^́̈ёЁ]*)$", function(x, rest) return destresser[x] .. rest; end, 1)
+	return rsub(word, "([́̈ёЁ])([^́̈ёЁ]*)$", function(x, rest) return destresser[x] .. rest; end, 1)
 end
 
 -- make last stressed syllable (acute or diaeresis) unstressed; leave
@@ -407,7 +407,7 @@ end
 
 local function make_unstressed_once_at_beginning_ru(word)
 	-- leave graves alone
-    return rsub(word, "^([^́̈ёЁ]*)([́̈ёЁ])", function(rest, x) return rest .. destresser[x]; end, 1)
+	return rsub(word, "^([^́̈ёЁ]*)([́̈ёЁ])", function(rest, x) return rest .. destresser[x]; end, 1)
 end
 
 -- make first stressed syllable (acute or diaeresis) unstressed; leave
