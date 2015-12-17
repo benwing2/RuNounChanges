@@ -23,12 +23,42 @@ local conjugations = {}
 
 local lang = require("Module:languages").getByCode("ru")
 
+local rfind = mw.ustring.find
+local rsubn = mw.ustring.gsub
+
+-- version of rsubn() that discards all but the first return value
+local function rsub(term, foo, bar)
+	local retval = rsubn(term, foo, bar)
+	return retval
+end
+
+-- ine() (if-not-empty)
+local function ine(arg)
+	if not arg or arg == "" then return nil end
+	return arg
+end
+
+-- Clone parent's args while also assigning nil to empty strings.
+local function clone_args(frame)
+	local args = {}
+	for pname, param in pairs(frame:getParent().args) do
+		args[pname] = ine(param)
+	end
+	return args
+end
+
+local function getarg(args, arg, default, paramdesc)
+	paramdesc = paramdesc or "Parameter " .. arg
+        default = default or "-"
+	--PAGENAME = mw.title.getCurrentTitle().text
+	local NAMESPACE = mw.title.getCurrentTitle().nsText
+	return args[arg] or (NAMESPACE == "Template" and default) or error(paramdesc .. " has not been provided")
+end
+
 local function track(page)
 	m_debug.track("ru-verb/" .. page)
 	return true
 end
-
-local PAGENAME, NAMESPACE
 
 -- Forward functions
 
@@ -102,12 +132,9 @@ table.insert(all_verb_props, "impers")
 table.insert(all_verb_props, "categories")
 
 function export.generate_forms(conj_type, args)
-	PAGENAME = mw.title.getCurrentTitle().text
-	NAMESPACE = mw.title.getCurrentTitle().nsText
-
 	-- Verb type, one of impf, pf, impf-intr, pf-intr, impf-refl, pf-refl.
 	-- Default to impf on the template page so that there is no script error.
-	local verb_type = args[1] or (NAMESPACE == "Template" and "impf") or error("Verb type (first parameter) has not been provided")
+	local verb_type = getarg(args, 1, "impf", "Verb type (first parameter)")
 	-- verbs may have reflexive ending stressed in the masculine singular: занялся́, начался́, etc.
 	local reflex_stress = args["reflex_stress"] -- "ся́"
 
@@ -123,38 +150,23 @@ function export.generate_forms(conj_type, args)
 	forms["past_pasv_part"] = args["past_pasv_part"] or ""
 
 	--alternative forms
-	forms["impr_sg2"] = forms["impr_sg2"] or args["impr_sg2"]
-	forms["impr_pl2"] = forms["impr_pl2"] or args["impr_pl2"]
-	forms["pres_actv_part2"] = forms["pres_actv_part2"] or args["pres_actv_part2"]
-	forms["past_actv_part2"] = forms["past_actv_part2"] or args["past_actv_part2"]
-	forms["pres_pasv_part2"] = forms["pres_pasv_part2"] or args["pres_pasv_part2"]
-	forms["past_pasv_part2"] = forms["past_pasv_part2"] or args["past_pasv_part2"]
-	forms["pres_adv_part2"] = forms["pres_adv_part2"] or args["pres_adv_part2"]
-	forms["past_adv_part2"] = forms["past_adv_part2"] or args["past_adv_part2"]
-	forms["past_adv_part_short2"] = forms["past_adv_part_short2"] or args["past_adv_part_short2"]
-	forms["past_m2"] = forms["past_m2"] or args["past_m2"]
-	forms["past_m3"] = forms["past_m3"] or args["past_m3"]
-	forms["past_f2"] = forms["past_f2"] or args["past_f2"]
-	forms["past_n2"] = forms["past_n2"] or args["past_n2"]
-	forms["past_pl2"] = forms["past_pl2"] or args["past_pl2"]
-	forms["pres_futr_1sg2"] = forms["pres_futr_1sg2"] or args["pres_futr_1sg2"]
-	forms["pres_futr_2sg2"] = forms["pres_futr_2sg2"] or args["pres_futr_2sg2"]
-	forms["pres_futr_3sg2"] = forms["pres_futr_3sg2"] or args["pres_futr_3sg2"]
-	forms["pres_futr_1pl2"] = forms["pres_futr_1pl2"] or args["pres_futr_1pl2"]
-	forms["pres_futr_2pl2"] = forms["pres_futr_2pl2"] or args["pres_futr_2pl2"]
-	forms["pres_futr_3pl2"] = forms["pres_futr_3pl2"] or args["pres_futr_3pl2"]
-
-	--бдеть, победить have no 1st person sg present (impf) / future (pf)
-	if args["no_1sg_pres"] then
-		if args["no_1sg_pres"] == "1" then
-			forms["pres_futr_1sg"] = ""
-		end
+	local altforms = {"impr_sg2", "impr_pl2",
+		"pres_actv_part2", "past_actv_part2", "pres_pasv_part2", "past_pasv_part2",
+		"pres_adv_part2", "past_adv_part2", "past_adv_part_short2",
+		"past_m2", "past_m3", "past_f2", "past_n2", "past_pl2",
+		"pres_futr_1sg2", "pres_futr_2sg2", "pres_futr_3sg2",
+		"pres_futr_1pl2", "pres_futr_2pl2", "pres_futr_3pl2"}
+	for _, altform in ipairs(altforms) do
+		forms[altform] = forms[altform] or args[altform]
 	end
 
-	if args["no_1sg_futr"] then
-		if args["no_1sg_futr"] == "1" then
-			forms["pres_futr_1sg"] = ""
-		end
+	--бдеть, победить have no 1st person sg present (impf) / future (pf)
+	if args["no_1sg_pres"] == "1" then
+		forms["pres_futr_1sg"] = ""
+	end
+
+	if args["no_1sg_futr"] == "1" then
+		forms["pres_futr_1sg"] = ""
 	end
 
 	local intr = (verb_type == "impf-intr" or verb_type == "pf-intr" or verb_type == "pf-impers" or verb_type == "impf-impers" or verb_type == "pf-impers-refl" or verb_type == "impf-impers-refl")
@@ -205,7 +217,7 @@ end
 -- This is the only function that can be invoked from a template.
 function export.show(frame)
 	local conj_type = frame.args[1] or error("Conjugation type has not been specified. Please pass parameter 1 to the module invocation")
-	local args = frame:getParent().args
+	local args = clone_args(frame)
 
 	local args_clone
 	if test_new_ru_verb_module then
@@ -256,7 +268,8 @@ conjugations["1a"] = function(args)
 	local categories = {"Russian class 1 verbs"}
 	local title = "class 1"
 
-	local stem = args[2] or (NAMESPACE == "Template" and "-") or error("Second parameter has not been provided")
+	local stem = getarg(args, 2)
+	local tr = args.tr
 
 	forms["infinitive"] = stem .. "ть"
 
@@ -264,7 +277,8 @@ conjugations["1a"] = function(args)
 	forms["past_actv_part"] = stem .. "вший"
 	forms["pres_pasv_part"] = stem .. "емый"
 	forms["pres_adv_part"] = stem .. "я"
-	forms["past_adv_part"] = stem .. "вши"; forms["past_adv_part_short"] = stem .. "в"
+	forms["past_adv_part"] = stem .. "вши"
+	forms["past_adv_part_short"] = stem .. "в"
 
 	present_je_a(forms, stem)
 
@@ -284,30 +298,30 @@ conjugations["2a"] = function(args)
 	local categories = {"Russian class 2 verbs"}
 	local title = "class 2"
 
-	local inf_stem = args[2] or (NAMESPACE == "Template" and "-") or error("Second parameter has not been provided")
+	local inf_stem = getarg(args, 2)
 	local pres_stem = inf_stem
 	local pres_stem = inf_stem
 	local pres_stem = inf_stem
 
 	-- -ева- change to -ю- after most consonants and vowels, to -у- after hissing sounds and ц
-	if mw.ustring.find(pres_stem, "ова$") then
-		pres_stem = mw.ustring.gsub(pres_stem, "ова$", "у")
-	elseif mw.ustring.find(pres_stem, "о́ва$") then
-		pres_stem = mw.ustring.gsub(pres_stem, "о́ва$", "у́")
-	elseif mw.ustring.find(pres_stem, "ова́$") then
-		pres_stem = mw.ustring.gsub(pres_stem, "ова́$", "у́")
-	elseif mw.ustring.find(pres_stem, "[жцчшщ]ева$") then
-		pres_stem = mw.ustring.gsub(pres_stem, "ева$", "у")
-	elseif mw.ustring.find(pres_stem, "[жцчшщ]е́ва$") then
-		pres_stem = mw.ustring.gsub(pres_stem, "е́ва$", "у́")
-	elseif mw.ustring.find(pres_stem, "[жцчшщ]ева́$") then
-		pres_stem = mw.ustring.gsub(pres_stem, "ева́$", "у́")
-	elseif mw.ustring.find(pres_stem, "[бвгдзклмнпрстфхьаэыоуяеиёю́]ева$") then
-		pres_stem = mw.ustring.gsub(pres_stem, "ева$", "ю")
-	elseif mw.ustring.find(pres_stem, "[бвгдзклмнпрстфхьаэыоуяеиёю́]е́ва$") then
-		pres_stem = mw.ustring.gsub(pres_stem, "е́ва$", "ю́")
-	elseif mw.ustring.find(pres_stem, "[бвгдзклмнпрстфхьаэыоуяеиёю́]ева́$") then
-		pres_stem = mw.ustring.gsub(pres_stem, "ева́$", "ю́")
+	if rfind(pres_stem, "ова$") then
+		pres_stem = rsub(pres_stem, "ова$", "у")
+	elseif rfind(pres_stem, "о́ва$") then
+		pres_stem = rsub(pres_stem, "о́ва$", "у́")
+	elseif rfind(pres_stem, "ова́$") then
+		pres_stem = rsub(pres_stem, "ова́$", "у́")
+	elseif rfind(pres_stem, "[жцчшщ]ева$") then
+		pres_stem = rsub(pres_stem, "ева$", "у")
+	elseif rfind(pres_stem, "[жцчшщ]е́ва$") then
+		pres_stem = rsub(pres_stem, "е́ва$", "у́")
+	elseif rfind(pres_stem, "[жцчшщ]ева́$") then
+		pres_stem = rsub(pres_stem, "ева́$", "у́")
+	elseif rfind(pres_stem, "[бвгдзклмнпрстфхьаэыоуяеиёю́]ева$") then
+		pres_stem = rsub(pres_stem, "ева$", "ю")
+	elseif rfind(pres_stem, "[бвгдзклмнпрстфхьаэыоуяеиёю́]е́ва$") then
+		pres_stem = rsub(pres_stem, "е́ва$", "ю́")
+	elseif rfind(pres_stem, "[бвгдзклмнпрстфхьаэыоуяеиёю́]ева́$") then
+		pres_stem = rsub(pres_stem, "ева́$", "ю́")
 	end
 
 	forms["infinitive"] = inf_stem .. "ть"
@@ -336,15 +350,15 @@ conjugations["2b"] = function(args)
 	local categories = {"Russian class 2 verbs"}
 	local title = "class 2"
 
-	local inf_stem = args[2] or (NAMESPACE == "Template" and "-") or error("Second parameter has not been provided")
+	local inf_stem = getarg(args, 2)
 	local pres_stem = inf_stem
 	-- all -ова- change to -у-
-	pres_stem = mw.ustring.gsub(pres_stem, "о(́?)ва(́?)$", "у%1%2")
+	pres_stem = rsub(pres_stem, "о(́?)ва(́?)$", "у%1%2")
 	-- -ева- change to -ю- after most consonants and vowels, to -у- after hissing sounds and ц
-	if mw.ustring.find(pres_stem, "[бвгдзклмнпрстфхьаэыоуяеиёю́]е(́?)ва(́?)$") then
-		pres_stem = mw.ustring.gsub(pres_stem, "е(́?)ва(́?)$", "ю%1%2")
-	elseif mw.ustring.find(pres_stem, "[жцчшщ]е(́?)ва(́?)$") then
-		pres_stem = mw.ustring.gsub(pres_stem, "е(́?)ва(́?)$", "у%1%2")
+	if rfind(pres_stem, "[бвгдзклмнпрстфхьаэыоуяеиёю́]е(́?)ва(́?)$") then
+		pres_stem = rsub(pres_stem, "е(́?)ва(́?)$", "ю%1%2")
+	elseif rfind(pres_stem, "[жцчшщ]е(́?)ва(́?)$") then
+		pres_stem = rsub(pres_stem, "е(́?)ва(́?)$", "у%1%2")
 	end
 
 	local pres_stem_noa = com.remove_accents(pres_stem)
@@ -376,17 +390,17 @@ conjugations["3a"] = function(args)
 	local categories = {"Russian class 3 verbs"}
 	local title = "class 3"
 
-	local stem = args[2] or (NAMESPACE == "Template" and "-") or error("Second parameter has not been provided")
+	local stem = getarg(args, 2)
 	-- non-empty if no short past forms to be used
-	local no_short_past = args[3]; if no_short_past == "" then no_short_past = nil end
+	local no_short_past = args[3]
 	-- non-empty if no short past participle forms to be used
-	local no_short_past_partcpl = args[4]; if no_short_past_partcpl == "" then no_short_past_partcpl = nil end
+	local no_short_past_partcpl = args[4]
 	-- "нь" if "-нь"/"-ньте" instead of "-ни"/"-ните" in the imperative
-	local impr_end = args[5]
+	local impr_end = args[5] -- FIXME, didn't have ine() equivalent
 	-- optional full infinitive form for verbs like достичь
-	local full_inf = args[6]; if full_inf == "" then full_inf = nil end
+	local full_inf = args[6]
 	-- optional short masculine past form for verbs like вять
-	local past_m_short = args[7]; if past_m_short == "" then past_m_short = nil end
+	local past_m_short = args[7]
 
 	-- if full infinitive is not passed, build from the stem, otherwise use the optional parameter
 	if not full_inf then
@@ -443,7 +457,7 @@ conjugations["3b"] = function(args)
 	local categories = {"Russian class 3 verbs"}
 	local title = "class 3"
 
-	local stem = args[2] or (NAMESPACE == "Template" and "-") or error("Second parameter has not been provided")
+	local stem = getarg(args, 2)
 
 	forms["infinitive"] = stem .. "у́ть"
 
@@ -471,7 +485,7 @@ conjugations["3c"] = function(args)
 	local categories = {"Russian class 3 verbs"}
 	local title = "class 3"
 
-	local stem = args[2] or (NAMESPACE == "Template" and "-") or error("Second parameter has not been provided")
+	local stem = getarg(args, 2)
 	-- remove accent for some forms
 	local stem_noa = com.remove_accents(stem)
 
@@ -501,24 +515,24 @@ conjugations["4a"] = function(args)
 	local categories = {"Russian class 4 verbs"}
 	local title = "class 4"
 
-	local stem = args[2] or (NAMESPACE == "Template" and "-") or error("Second parameter has not been provided")
+	local stem = getarg(args, 2)
 	-- for "a" stress type "й" - after vowels, "ь" - after single consonants, "и" - after consonant clusters
-	local impr_end_param = args[3]
+	local impr_end_param = args[3] -- FIXME, didn't have ine() equiv
 	-- optional parameter for verbs like похитить (похи́щу) (4a), защитить (защищу́) (4b), поглотить (поглощу́) (4c) with a different iotation (т -> щ, not ч)
-	local shch = args[4]; if shch == "" then shch = nil end
+	local shch = args[4]
 
 	--set defaults if nothing is passed, "й" for stems ending in a vowel, "ь" for single consonant ending, "и" for double consonant ending
 	-- "й" after any vowel, with or without an acute accent (беспоко́ить), no parameter passed
 	local impr_end = ""
 	if impr_end_param then
 		impr_end = impr_end_param
-	elseif mw.ustring.find(stem, "[аэыоуяеиёю́]$") then
+	elseif rfind(stem, "[аэыоуяеиёю́]$") then
 		impr_end = "й"
 	-- "и" after two consonants in a row (мо́рщить, зафре́ндить), no parameter passed
-	elseif mw.ustring.find(stem, "[бвгджзклмнпрстфхцчшщь][бвгджзклмнпрстфхцчшщ]$") then
+	elseif rfind(stem, "[бвгджзклмнпрстфхцчшщь][бвгджзклмнпрстфхцчшщ]$") then
 		impr_end = "и"
 	-- "ь" after a single consonant (бре́дить), no parameter passed
-	elseif mw.ustring.find(stem, "[аэыоуяеиёю́][бвгджзклмнпрстфхцчшщ]$") then
+	elseif rfind(stem, "[аэыоуяеиёю́][бвгджзклмнпрстфхцчшщ]$") then
 		impr_end = "ь"
 	-- default
 	else --default
@@ -528,7 +542,7 @@ conjugations["4a"] = function(args)
 	forms["infinitive"] = stem .. "ить"
 
 	-- Verbs ending in a hushing consonant do not get j-vowels in the endings.
-	if mw.ustring.find(stem, "[шщжч]$") then
+	if rfind(stem, "[шщжч]$") then
 		forms["pres_actv_part"] = stem .. "ащий"
 		forms["pres_adv_part"] = stem .. "а"
 		-- use the passed parameter or default
@@ -566,12 +580,12 @@ conjugations["4b"] = function(args)
 	local categories = {"Russian class 4 verbs"}
 	local title = "class 4"
 
-	local stem = args[2] or (NAMESPACE == "Template" and "-") or error("Second parameter has not been provided")
+	local stem = getarg(args, 2)
 	-- optional parameter for verbs like похитить (похи́щу) (4a), защитить (защищу́) (4b), поглотить (поглощу́) (4c) with a different iotation (т -> щ, not ч)
-	local shch = args[3]; if shch == "" then shch = nil end
+	local shch = args[3]
 	-- some verbs don't have 1st person singular - победить, возродить, use "no_1sg_futr=1" in the template
 	local no_1sg_futr = "0"
-	local past_f = args["past_f"]
+	local past_f = args["past_f"] -- FIXME, didn't have ine() equiv
 
 	if not args["no_1sg_futr"] then
 		no_1sg_futr = 0
@@ -584,7 +598,7 @@ conjugations["4b"] = function(args)
 	forms["infinitive"] = stem .. "и́ть"
 
 	-- Verbs ending in a hushing consonant do not get j-vowels in the endings.
-	if mw.ustring.find(stem, "[шщжч]$") then
+	if rfind(stem, "[шщжч]$") then
 		forms["pres_actv_part"] = stem .. "а́щий"
 		forms["pres_adv_part"] = stem .. "а́"
 	else
@@ -629,9 +643,9 @@ conjugations["4c"] = function(args)
 	local categories = {"Russian class 4 verbs"}
 	local title = "class 4"
 
-	local stem = args[2] or (NAMESPACE == "Template" and "-") or error("Second parameter has not been provided")
+	local stem = getarg(args, 2)
 	-- optional parameter for verbs like похитить (похи́щу) (4a), защитить (защищу́) (4b), поглотить (поглощу́) (4c) with a different iotation (т -> щ, not ч)
-	local shch = args[3]; if shch == "" then shch = nil end
+	local shch = args[3]
 
 	-- remove accent for some forms
 	local stem_noa = com.remove_accents(stem)
@@ -645,7 +659,7 @@ conjugations["4c"] = function(args)
 	forms["past_adv_part"] = stem_noa .. "и́вши"; forms["past_adv_part_short"] = stem_noa .. "и́в"
 
 	-- Verbs ending in a hushing consonant do not get j-vowels in the endings.
-	if mw.ustring.find(stem, "[шщжч]$") then
+	if rfind(stem, "[шщжч]$") then
 		forms["pres_actv_part"] = stem_noa .. "а́щий"
 		forms["pres_adv_part"] = stem_noa .. "а́"
 	else
@@ -681,11 +695,11 @@ conjugations["5a"] = function(args)
 	local categories = {"Russian class 5 verbs"}
 	local title = "class 5"
 
-	local stem = args[2] or (NAMESPACE == "Template" and "-") or error("Second parameter has not been provided")
+	local stem = getarg(args, 2)
 	-- обидеть, выстоять have different past tense and infinitive forms
-	local past_stem = args[3]; if past_stem == "" then past_stem = nil end
+	local past_stem = args[3]
 	-- imperative ending, выгнать - выгони
-	local impr_end = args[4]; if impr_end == "" then impr_end = nil end
+	local impr_end = args[4]
 
 	if not past_stem then
 		past_stem = stem .. "е"
@@ -698,7 +712,7 @@ conjugations["5a"] = function(args)
 	forms["infinitive"] = past_stem .. "ть"
 
 	-- Verbs ending in a hushing consonant do not get j-vowels in the endings.
-	if mw.ustring.find(stem, "[шщжч]$") then
+	if rfind(stem, "[шщжч]$") then
 		forms["pres_actv_part"] = stem .. "ащий"
 		forms["pres_adv_part"] = stem .. "а"
 	else
@@ -711,7 +725,7 @@ conjugations["5a"] = function(args)
 	forms["past_adv_part"] = past_stem .. "вши"; forms["past_adv_part_short"] = past_stem .. "в"
 
 	-- "й" after any vowel (e.g. выстоять), with or without an acute accent, otherwise "ь"
-	if mw.ustring.find(stem, "[аэыоуяеиёю́]$") and impr_end == nil then
+	if rfind(stem, "[аэыоуяеиёю́]$") and impr_end == nil then
 		impr_end = "й"
 	end
 
@@ -733,12 +747,12 @@ conjugations["5b"] = function(args)
 	local categories = {"Russian class 5 verbs"}
 	local title = "class 5"
 
-	local stem = args[2] or (NAMESPACE == "Template" and "-") or error("Second parameter has not been provided")
-	local past_stem = args[3] or (NAMESPACE == "Template" and "-") or error("Third parameter has not been provided")
+	local stem = getarg(args, 2)
+	local past_stem = getarg(args, 3)
 	-- irreg: лежать - лёжа
-	local pres_adv_part = args[4]; if pres_adv_part == "" then pres_adv_part = nil end
+	local pres_adv_part = args[4]
 
-	if mw.ustring.find(stem, "[шщжч]$") then
+	if rfind(stem, "[шщжч]$") then
 		forms["pres_actv_part"] = stem .. "а́щий"
 	else
 		forms["pres_actv_part"] = stem .. "я́щий"
@@ -747,7 +761,7 @@ conjugations["5b"] = function(args)
 	-- override if passed as a parameter, e.g. лёжа
 	if pres_adv_part then
 		forms["pres_adv_part"] = pres_adv_part
-	elseif mw.ustring.find(stem, "[шщжч]$") and not pres_adv_part then
+	elseif rfind(stem, "[шщжч]$") and not pres_adv_part then
 		forms["pres_adv_part"] = stem .. "а́"
 	else
 		forms["pres_adv_part"] = stem .. "я́"
@@ -767,7 +781,7 @@ conjugations["5b"] = function(args)
 
 	-- "й" after any vowel (e.g. выстоять), with or without an acute accent, otherwise "ь"
 	local impr_end = "и́"
-	if mw.ustring.find(stem, "[аэыоуяеиёю́]$") then
+	if rfind(stem, "[аэыоуяеиёю́]$") then
 		impr_end = "́й" -- the last vowel is stressed (an acute accent before "й")
 	end
 
@@ -782,10 +796,10 @@ conjugations["5c"] = function(args)
 	local categories = {"Russian class 5 verbs"}
 	local title = "class 5"
 
-	local stem = args[2] or (NAMESPACE == "Template" and "-") or error("Second parameter has not been provided")
-	local past_stem = args[3] or (NAMESPACE == "Template" and "-") or error("Third parameter has not been provided")
+	local stem = getarg(args, 2)
+	local past_stem = getarg(args, 3)
 	-- e.g. гнать - гнала́
-	local fem_past = args[4]; if fem_past == "" then fem_past = nil end
+	local fem_past = args[4]
 
 	-- remove accent for some forms
 	local stem_noa = com.remove_accents(stem)
@@ -799,7 +813,7 @@ conjugations["5c"] = function(args)
 	forms["past_adv_part"] = past_stem .. "вши"; forms["past_adv_part_short"] = past_stem .. "в"
 
 	-- Verbs ending in a hushing consonant do not get j-vowels in the endings.
-	if mw.ustring.find(stem, "[шщжч]$") then
+	if rfind(stem, "[шщжч]$") then
 		forms["pres_actv_part"] = stem_noa .. "а́щий"
 		forms["pres_adv_part"] = stem_noa .. "а́"
 	else
@@ -831,30 +845,30 @@ conjugations["6a"] = function(args)
 	local categories = {"Russian class 6 verbs"}
 	local title = "class 6"
 
-	local stem = args[2] or (NAMESPACE == "Template" and "-") or error("Second parameter has not been provided")
-	local impr_end = args[3]; if impr_end == "" then impr_end = nil end
+	local stem = getarg(args, 2)
+	local impr_end = args[3]
 	-- irregular imperatives (сыпать  - сыпь is moved to a separate function but the parameter may still be needed)
-	local impr_sg = args[4]; if impr_sg == "" then impr_sg = nil end
+	local impr_sg = args[4]
 	-- optional full infinitive form for verbs like колебать
-	local full_inf = args[5]; if full_inf == "" then full_inf = nil end
+	local full_inf = args[5]
 	-- no iotation, e.g. вырвать - вы́рву
 	local no_iotation = nil
 	if args["no_iotation"] == "1" then
 		no_iotation = "1"
 	end
 	-- вызвать - вы́зову (в́ызов)
-	local pres_stem = args["pres_stem"]; if pres_stem == "" or not pres_stem then pres_stem = stem end
+	local pres_stem = args["pres_stem"] or stem
 
 	-- replace consonants for 1st person singular present/future
 	local iotated_stem = com.iotation(pres_stem)
 
-	if mw.ustring.find(iotated_stem, "[шщжч]$") then
+	if rfind(iotated_stem, "[шщжч]$") then
 		forms["pres_actv_part"] = iotated_stem .. "ущий"
 	else
 		forms["pres_actv_part"] = iotated_stem .. "ющий"
 	end
 
-	if mw.ustring.find(iotated_stem, "[шщжч]$") then
+	if rfind(iotated_stem, "[шщжч]$") then
 		forms["pres_adv_part"] = iotated_stem .. "а"
 	else
 		forms["pres_adv_part"] = iotated_stem .. "я"
@@ -864,7 +878,7 @@ conjugations["6a"] = function(args)
 		forms["pres_adv_part"] = pres_stem .. "я"
 	end
 
-	if mw.ustring.find(stem, "[аэыоуяеиёю́]$") then
+	if rfind(stem, "[аэыоуяеиёю́]$") then
 		forms["infinitive"] = stem .. "ять"
 		forms["past_actv_part"] = stem .. "явший"
 		forms["past_adv_part"] = stem .. "явши"; forms["past_adv_part_short"] = stem .. "яв"
@@ -895,9 +909,9 @@ conjugations["6a"] = function(args)
 
 	present_je_a(forms, pres_stem, no_iotation)
 
-	if not impr_end and mw.ustring.find(stem, "[аэыоуяеиёю́]$") and not impr_end then
+	if not impr_end and rfind(stem, "[аэыоуяеиёю́]$") and not impr_end then
 		impr_end = "й"
-	elseif not impr_end and not mw.ustring.find(stem, "[аэыоуяеиёю́]$") and not impr_end then
+	elseif not impr_end and not rfind(stem, "[аэыоуяеиёю́]$") and not impr_end then
 		impr_end = "и"
 	end
 
@@ -923,10 +937,10 @@ conjugations["6b"] = function(args)
 	local categories = {"Russian class 6 verbs"}
 	local title = "class 6"
 
-	local stem = args[2] or (NAMESPACE == "Template" and "-") or error("Second parameter has not been provided")
+	local stem = getarg(args, 2)
 	-- звать - зов, драть - дер
-	local pres_stem = args[3]; if pres_stem == "" or not pres_stem then pres_stem = stem end
-	local past_f = args[4]; if past_f == "" then past_f = nil end
+	local pres_stem = args[3] or stem
+	local past_f = args[4]
 	local past_n2 = args["past_n2"]
 	local past_pl2 = args["past_pl2"]
 
@@ -934,28 +948,28 @@ conjugations["6b"] = function(args)
 
 	present_e_b(forms, pres_stem)
 
-	if not impr_end and mw.ustring.find(stem, "[аэыоуяеиёю́]$") and not impr_end then
+	if not impr_end and rfind(stem, "[аэыоуяеиёю́]$") then
 		impr_end = "́й" -- accent on the preceding vowel
-	elseif not impr_end and not mw.ustring.find(stem, "[аэыоуяеиёю́]$") and not impr_end then
+	elseif not impr_end and not rfind(stem, "[аэыоуяеиёю́]$") then
 		impr_end = "и́"
 	end
 
 	forms["impr_sg"] = pres_stem .. impr_end
 	forms["impr_pl"] = pres_stem .. impr_end .. "те"
 
-	if mw.ustring.find(pres_stem, "[шщжч]$") then
+	if rfind(pres_stem, "[шщжч]$") then
 		forms["pres_adv_part"] = pres_stem .. "а́"
 	else
 		forms["pres_adv_part"] = pres_stem .. "я́"
 	end
 
-	if mw.ustring.find(pres_stem, "[аэыоуяеиёю́]$") then
+	if rfind(pres_stem, "[аэыоуяеиёю́]$") then
 		forms["pres_actv_part"] = pres_stem .. "ю́щий"
 	else
 		forms["pres_actv_part"] = pres_stem .. "у́щий"
 	end
 
-	if mw.ustring.find(stem, "[аэыоуяеиёю́]$") then
+	if rfind(stem, "[аэыоуяеиёю́]$") then
 		forms["infinitive"] = stem .. "я́ть"
 		forms["past_actv_part"] = stem .. "я́вший"
 		forms["past_adv_part"] = stem .. "я́вши"; forms["past_adv_part_short"] = stem .. "́яв"
@@ -990,9 +1004,9 @@ conjugations["6c"] = function(args)
 	local categories = {"Russian class 6 verbs"}
 	local title = "class 6"
 
-	local stem = args[2] or (NAMESPACE == "Template" and "-") or error("Second parameter has not been provided")
+	local stem = getarg(args, 2)
 	-- optional parameter for verbs like клеветать (клевещу́
-	local shch = args[3]; if shch == "" then shch = nil end
+	local shch = args[3]
 	-- remove accent for some forms
 	local stem_noa = com.make_unstressed(stem)
 	-- iotate the stem
@@ -1022,14 +1036,14 @@ conjugations["6c"] = function(args)
 	forms["past_adv_part"] = stem_noa .. "а́вши"; forms["past_adv_part_short"] = stem_noa .. "а́в"
 
 	-- Verbs ending in a hushing consonant do not get j-vowels in the endings.
-	if mw.ustring.find(iotated_stem, "[шщжч]$") or no_iotation then
+	if rfind(iotated_stem, "[шщжч]$") or no_iotation then
 		forms["pres_actv_part"] = iotated_stem ..  "ущий"
 	else
 		forms["pres_actv_part"] = iotated_stem ..  "ющий"
 	end
 
 	-- Verbs ending in a hushing consonant do not get j-vowels in the endings.
-	if mw.ustring.find(iotated_stem_noa, "[шщжч]$") then
+	if rfind(iotated_stem_noa, "[шщжч]$") then
 		forms["pres_adv_part"] = iotated_stem_noa ..  "а́"
 	else
 		forms["pres_adv_part"] = iotated_stem_noa ..  "я́"
@@ -1059,11 +1073,11 @@ conjugations["7a"] = function(args)
 	local categories = {"Russian class 7 verbs"}
 	local title = "class 7"
 
-	local full_inf = args[2] or (NAMESPACE == "Template" and "-") or error("Second parameter has not been provided")
-	local pres_stem = args[3] or (NAMESPACE == "Template" and "-") or error("Third parameter has not been provided")
-	local past_stem = args[4] or (NAMESPACE == "Template" and "-") or error("Fourth parameter has not been provided")
-	local impr_sg = args[5] or (NAMESPACE == "Template" and "-") or error("Fifth parameter has not been provided")
-	local past_adv_part = args[6] or (NAMESPACE == "Template" and "-") or error("Sixth parameter has not been provided")
+	local full_inf = getarg(args, 2)
+	local pres_stem = getarg(args, 3)
+	local past_stem = getarg(args, 4)
+	local impr_sg = getarg(args, 5)
+	local past_adv_part = getarg(args, 6)
 	local past_m = args["past_m"]
 	local past_f = args["past_f"]
 	local past_n = args["past_n"]
@@ -1098,7 +1112,7 @@ conjugations["7a"] = function(args)
 	forms["impr_pl"] = impr_sg .. "те"
 
 	-- 0 ending if the past stem ends in a consonant
-	if mw.ustring.find(past_stem, "[аэыоуяеиёю́]$") then
+	if rfind(past_stem, "[аэыоуяеиёю́]$") then
 		forms["past_m"] = past_stem .. "л"
 	else
 		forms["past_m"] = past_stem
@@ -1135,9 +1149,9 @@ conjugations["7b"] = function(args)
 	local categories = {"Russian class 7 verbs"}
 	local title = "class 7"
 
-	local full_inf = args[2] or (NAMESPACE == "Template" and "-") or error("Second parameter has not been provided")
-	local pres_stem = args[3] or (NAMESPACE == "Template" and "-") or error("Third parameter has not been provided")
-	local past_stem = args[4] or (NAMESPACE == "Template" and "-") or error("Fourth parameter has not been provided")
+	local full_inf = getarg(args, 2)
+	local pres_stem = getarg(args, 3)
+	local past_stem = getarg(args, 4)
 
 	local pres_pasv_part = args["pres_pasv_part"]
 	local past_actv_part = args["past_actv_part"]
@@ -1184,7 +1198,7 @@ conjugations["7b"] = function(args)
 	forms["impr_pl"] = pres_stem .. "и́те"
 
 	-- 0 ending if the past stem ends in a consonant
-	if mw.ustring.find(past_stem, "[аэыоуяеиёю́]$") then
+	if rfind(past_stem, "[аэыоуяеиёю́]$") then
 		forms["past_m"] = past_stem .. "л"
 	else
 		forms["past_m"] = past_stem
@@ -1219,9 +1233,9 @@ conjugations["8a"] = function(args)
 	local categories = {"Russian class 8 verbs"}
 	local title = "class 8"
 
-	local stem = args[2] or (NAMESPACE == "Template" and "-") or error("Second parameter has not been provided")
-	local full_inf = args[3] or (NAMESPACE == "Template" and "-") or error("Third parameter has not been provided")
-	local past_m = args["past_m"] or (NAMESPACE == "Template" and "-") or error("past_m parameter has not been provided")
+	local stem = getarg(args, 2)
+	local full_inf = getarg(args, 3)
+	local past_m = getarg(args, "past_m")
 	-- if full infinitive is not passed, build from the stem, otherwise use the optional parameter
 	forms["infinitive"] = full_inf
 
@@ -1259,9 +1273,9 @@ conjugations["8b"] = function(args)
 	local categories = {"Russian class 8 verbs"}
 	local title = "class 8"
 
-	local stem = args[2] or (NAMESPACE == "Template" and "-") or error("Second parameter has not been provided")
-	local full_inf = args[3] or (NAMESPACE == "Template" and "-") or error("Third parameter has not been provided")
-	local past_m = args["past_m"] or (NAMESPACE == "Template" and "-") or error("past_m parameter has not been provided")
+	local stem = getarg(args, 2)
+	local full_inf = getarg(args, 3)
+	local past_m = getarg(args, "past_m")
 	local pres_pasv_part = args["pres_pasv_part"]
 	-- if full infinitive is not passed, build from the stem, otherwise use the optional parameter
 	forms["infinitive"] = full_inf
@@ -1304,8 +1318,8 @@ conjugations["9a"] = function(args)
 	local categories = {"Russian class 9 verbs"}
 	local title = "class 9"
 
-	local stem = args[2] or (NAMESPACE == "Template" and "-") or error("Second parameter has not been provided")
-	local pres_stem = args[3] or (NAMESPACE == "Template" and "-") or error("Third parameter has not been provided")
+	local stem = getarg(args, 2)
+	local pres_stem = getarg(args, 3)
 
 	forms["infinitive"] = stem .. "еть"
 
@@ -1339,12 +1353,12 @@ conjugations["9b"] = function(args)
 	local title = "class 9"
 	
 	--for this type, it's important to distinguish impf and pf
-	local verb_type = args[1] or (NAMESPACE == "Template" and "impf") or error("Verb type (first parameter) has not been provided")
+	local verb_type = getarg(args, 1, "impf", "Verb type (first parameter)")
 	local impf = (verb_type == "impf" or verb_type == "impf-intr" or verb_type == "impf-impers" or verb_type == "impf-refl" or verb_type == "impf-impers-refl")
 	local pf = (verb_type == "pf" or verb_type == "pf-intr" or verb_type == "pf-impers" or verb_type == "pf-refl" or verb_type == "pf-impers-refl")
 	
-	local stem = args[2] or (NAMESPACE == "Template" and "-") or error("Second parameter has not been provided")
-	local pres_stem = args[3] or (NAMESPACE == "Template" and "-") or error("Third parameter has not been provided")
+	local stem = getarg(args, 2)
+	local pres_stem = getarg(args, 3)
 	local past_adv_part2 = args["past_adv_part2"]
 	local past_f = args["past_f"]
 	-- remove stress, replace ё with е
@@ -1393,7 +1407,7 @@ conjugations["10a"] = function(args)
 	local categories = {"Russian class 10 verbs"}
 	local title = "class 10"
 
-	local stem = args[2] or (NAMESPACE == "Template" and "-") or error("Second parameter has not been provided")
+	local stem = getarg(args, 2)
 
 	forms["infinitive"] = stem .. "оть"
 
@@ -1422,9 +1436,9 @@ conjugations["10c"] = function(args)
 	local categories = {"Russian class 10 verbs"}
 	local title = "class 10"
 
-	local inf_stem = args[2] or (NAMESPACE == "Template" and "-") or error("Second parameter has not been provided")
+	local inf_stem = getarg(args, 2)
 	-- present tense stressed stem "моло́ть" - м́елет
-	local pres_stem = args[3] or (NAMESPACE == "Template" and "-") or error("Third parameter has not been provided")
+	local pres_stem = getarg(args, 3)
 	-- remove accent for some forms
 	local pres_stem_noa = com.remove_accents(pres_stem)
 
@@ -1455,7 +1469,7 @@ conjugations["11a"] = function(args)
 	local categories = {"Russian class 11 verbs"}
 	local title = "class 11"
 
-	local stem = args[2] or (NAMESPACE == "Template" and "-") or error("Second parameter has not been provided")
+	local stem = getarg(args, 2)
 
 	forms["infinitive"] = stem .. "ить"
 
@@ -1493,8 +1507,8 @@ conjugations["11b"] = function(args)
 	local categories = {"Russian class 11 verbs"}
 	local title = "class 11"
 
-	local stem = args[2] or (NAMESPACE == "Template" and "-") or error("Second parameter has not been provided")
-	local pres_stem = args[3] or (NAMESPACE == "Template" and "-") or error("Third parameter has not been provided")
+	local stem = getarg(args, 2)
+	local pres_stem = getarg(args, 3)
 	local past_f = args["past_f"]
 
 	forms["infinitive"] = stem .. "и́ть"
@@ -1538,8 +1552,8 @@ conjugations["12a"] = function(args)
 	local categories = {"Russian class 12 verbs"}
 	local title = "class 12"
 
-	local stem = args[2] or (NAMESPACE == "Template" and "-") or error("Second parameter has not been provided")
-	local pres_stem = args[3] or (NAMESPACE == "Template" and "-") or error("Third parameter has not been provided")
+	local stem = getarg(args, 2)
+	local pres_stem = getarg(args, 3)
 
 	forms["infinitive"] = stem .. "ть"
 
@@ -1576,8 +1590,8 @@ conjugations["12b"] = function(args)
 	local categories = {"Russian class 12 verbs"}
 	local title = "class 12"
 
-	local stem = args[2] or (NAMESPACE == "Template" and "-") or error("Second parameter has not been provided")
-	local pres_stem = args[3] or (NAMESPACE == "Template" and "-") or error("Third parameter has not been provided")
+	local stem = getarg(args, 2)
+	local pres_stem = getarg(args, 3)
 	-- гнила́ needs a parameter, default - пе́ла
 	local past_f = args["past_f"]
 
@@ -1623,8 +1637,8 @@ conjugations["13b"] = function(args)
 	local categories = {"Russian class 13 verbs"}
 	local title = "class 13"
 
-	local stem = args[2] or (NAMESPACE == "Template" and "-") or error("Second parameter has not been provided")
-	local pres_stem = args[3] or (NAMESPACE == "Template" and "-") or error("Third parameter has not been provided")
+	local stem = getarg(args, 2)
+	local pres_stem = getarg(args, 3)
 
 	forms["infinitive"] = stem .. "ть"
 
@@ -1661,8 +1675,8 @@ conjugations["14a"] = function(args)
 	local categories = {"Russian class 14 verbs"}
 	local title = "class 14"
 
-	local stem = args[2] or (NAMESPACE == "Template" and "-") or error("Second parameter has not been provided")
-	local pres_stem = args[3] or (NAMESPACE == "Template" and "-") or error("Third parameter has not been provided")
+	local stem = getarg(args, 2)
+	local pres_stem = getarg(args, 3)
 
 	forms["infinitive"] = stem .. "ть"
 
@@ -1695,8 +1709,8 @@ conjugations["14b"] = function(args)
 	local categories = {"Russian class 14 verbs"}
 	local title = "class 14"
 
-	local stem = args[2] or (NAMESPACE == "Template" and "-") or error("Second parameter has not been provided")
-	local pres_stem = args[3] or (NAMESPACE == "Template" and "-") or error("Third parameter has not been provided")
+	local stem = getarg(args, 2)
+	local pres_stem = getarg(args, 3)
 	-- заня́ться has three forms: за́нялся, зан́ялся, занялся́
 	local past_m = args["past_m"]
 	local past_m2 = args["past_m2"]
@@ -1771,8 +1785,8 @@ conjugations["14c"] = function(args)
 	local categories = {"Russian class 14 verbs"}
 	local title = "class 14"
 
-	local stem = args[2] or (NAMESPACE == "Template" and "-") or error("Second parameter has not been provided")
-	local pres_stem = args[3] or (NAMESPACE == "Template" and "-") or error("Third parameter has not been provided")
+	local stem = getarg(args, 2)
+	local pres_stem = getarg(args, 3)
 	local pres_stem_noa = com.make_unstressed(pres_stem)
 	local past_m = args["past_m"]
 	local past_f = args["past_f"]
@@ -1842,7 +1856,7 @@ conjugations["15a"] = function(args)
 	local categories = {"Russian class 15 verbs"}
 	local title = "class 15"
 
-	local stem = args[2] or (NAMESPACE == "Template" and "-") or error("Second parameter has not been provided")
+	local stem = getarg(args, 2)
 
 	forms["infinitive"] = stem .. "ть"
 
@@ -1870,7 +1884,7 @@ conjugations["16a"] = function(args)
 	local categories = {"Russian class 16 verbs"}
 	local title = "class 16"
 
-	local stem = args[2] or (NAMESPACE == "Template" and "-") or error("Second parameter has not been provided")
+	local stem = getarg(args, 2)
 
 	forms["infinitive"] = stem .. "ть"
 
@@ -1898,7 +1912,7 @@ conjugations["16b"] = function(args)
 	local categories = {"Russian class 16 verbs"}
 	local title = "class 16"
 
-	local stem = args[2] or (NAMESPACE == "Template" and "-") or error("Second parameter has not been provided")
+	local stem = getarg(args, 2)
 	local stem_noa = com.make_unstressed(stem)
 
 	local past_n2 = args["past_n2"]
@@ -1952,7 +1966,7 @@ conjugations["irreg-бежать"] = function(args)
 	local categories = {"Russian irregular verbs"}
 	local title = "irregular"
 
-	local prefix = args[2]; if not prefix then prefix = "" end
+	local prefix = args[2] or ""
 
 	forms["infinitive"] = prefix .. "бежа́ть"
 
@@ -2010,7 +2024,7 @@ conjugations["irreg-спать"] = function(args)
 	local categories = {"Russian irregular verbs"}
 	local title = "irregular"
 
-	local prefix = args[2]; if not prefix then prefix = "" end
+	local prefix = args[2] or ""
 
 	forms["infinitive"] = prefix .. "спа́ть"
 
@@ -2068,7 +2082,7 @@ conjugations["irreg-хотеть"] = function(args)
 	local categories = {"Russian irregular verbs"}
 	local title = "irregular"
 
-	local prefix = args[2]; if not prefix then prefix = "" end
+	local prefix = args[2] or ""
 
 	forms["infinitive"] = prefix .. "хоте́ть"
 
@@ -2104,10 +2118,10 @@ conjugations["irreg-дать"] = function(args)
 	local title = "irregular"
 
 	--for this type, it's important to distinguish if it's reflexive to set some stress patterns
-	local verb_type = args[1] or (NAMESPACE == "Template" and "refl") or error("Verb type (first parameter) has not been provided")
+	local verb_type = getarg(args, 1, "refl", "Verb type (first parameter)")
 	local refl = (verb_type == "impf-refl" or verb_type == "pf-refl" or verb_type == "impf-impers-refl" or verb_type == "pf-impers-refl")
 	
-	local prefix = args[2]; if not prefix then prefix = "" end
+	local prefix = args[2] or ""
 	-- alternative past masculine forms: со́здал/созд́ал, п́ередал/переда́л, ́отдал/отд́ал, etc.
 	local past_m = args["past_m"]
 	local past_m2 = args["past_m2"]
@@ -2193,7 +2207,7 @@ conjugations["irreg-есть"] = function(args)
 	local categories = {"Russian irregular verbs"}
 	local title = "irregular"
 
-	local prefix = args[2]; if not prefix then prefix = "" end
+	local prefix = args[2] or ""
 
 	forms["infinitive"] = prefix .. "е́сть"
 
@@ -2251,7 +2265,7 @@ conjugations["irreg-сыпать"] = function(args)
 	local categories = {"Russian irregular verbs"}
 	local title = "irregular"
 
-	local prefix = args[2]; if not prefix then prefix = "" end
+	local prefix = args[2] or ""
 
 	forms["infinitive"] = prefix .. "сы́пать"
 
@@ -2319,7 +2333,7 @@ conjugations["irreg-лгать"] = function(args)
 	local categories = {"Russian irregular verbs"}
 	local title = "irregular"
 
-	local prefix = args[2]; if not prefix then prefix = "" end
+	local prefix = args[2] or ""
 
 	forms["infinitive"] = prefix .. "лга́ть"
 
@@ -2354,15 +2368,9 @@ conjugations["irreg-мочь"] = function(args)
 	local categories = {"Russian irregular verbs"}
 	local title = "irregular"
 
-	local prefix = args[2]; if not prefix then prefix = "" end
+	local prefix = args[2] or ""
 
 	local no_past_adv = "0"
-
-	local forms = {}
-	local categories = {"Russian irregular verbs"}
-	local title = "irregular"
-
-	local prefix = args[2]; if not prefix then prefix = "" end
 
 	forms["infinitive"] = prefix .. "мо́чь"
 
@@ -2398,7 +2406,7 @@ conjugations["irreg-слать"] = function(args)
 	local categories = {"Russian irregular verbs"}
 	local title = "irregular"
 
-	local prefix = args[2]; if not prefix then prefix = "" end
+	local prefix = args[2] or ""
 
 	forms["infinitive"] = prefix .. "сла́ть"
 
@@ -2455,7 +2463,7 @@ conjugations["irreg-идти"] = function(args)
 	local categories = {"Russian irregular verbs"}
 	local title = "irregular"
 
-	local prefix = args[2]; if not prefix then prefix = "" end
+	local prefix = args[2] or ""
 
 	forms["pres_pasv_part"] = ""
 
@@ -2517,7 +2525,7 @@ conjugations["irreg-ехать"] = function(args)
 	local categories = {"Russian irregular verbs"}
 	local title = "irregular"
 
-	local prefix = args[2]; if not prefix then prefix = "" end
+	local prefix = args[2] or ""
 
 	local pres_stem = prefix .. "е́д"
 	local past_stem = prefix .. "е́х"
@@ -2565,7 +2573,7 @@ conjugations["irreg-минуть"] = function(args)
 	local categories = {"Russian irregular verbs"}
 	local title = "irregular"
 
-	local stem = args[2] or (NAMESPACE == "Template" and "-") or error("Second parameter has not been provided")
+	local stem = getarg(args, 2)
 	local stem_noa = com.make_unstressed(stem)
 
 	forms["infinitive"] = stem .. "уть"
@@ -2602,8 +2610,8 @@ conjugations["irreg-живописать-миновать"] = function(args)
 	local categories = {"Russian irregular verbs"}
 	local title = "irregular"
 
-	local inf_stem = args[2] or (NAMESPACE == "Template" and "-") or error("Second parameter has not been provided")
-	local pres_stem = args[3] or (NAMESPACE == "Template" and "-") or error("Third parameter has not been provided")
+	local inf_stem = getarg(args, 2)
+	local pres_stem = getarg(args, 3)
 
 	forms["infinitive"] = inf_stem .. "ть"
 
@@ -2632,13 +2640,7 @@ conjugations["irreg-лечь"] = function(args)
 	local categories = {"Russian irregular verbs"}
 	local title = "irregular"
 
-	local prefix = args[2]; if not prefix then prefix = "" end
-
-	local forms = {}
-	local categories = {"Russian irregular verbs"}
-	local title = "irregular"
-
-	local prefix = args[2]; if not prefix then prefix = "" end
+	local prefix = args[2] or ""
 
 	forms["infinitive"] = prefix .. "ле́чь"
 
@@ -2674,13 +2676,7 @@ conjugations["irreg-зиждиться"] = function(args)
 	local categories = {"Russian irregular verbs"}
 	local title = "irregular"
 
-	local prefix = args[2]; if not prefix then prefix = "" end
-
-	local forms = {}
-	local categories = {"Russian irregular verbs"}
-	local title = "irregular"
-
-	local prefix = args[2]; if not prefix then prefix = "" end
+	local prefix = args[2] or ""
 
 	forms["infinitive"] = prefix .. "зи́ждить"
 
@@ -2716,13 +2712,7 @@ conjugations["irreg-клясть"] = function(args)
 	local categories = {"Russian irregular verbs"}
 	local title = "irregular"
 
-	local prefix = args[2]; if not prefix then prefix = "" end
-
-	local forms = {}
-	local categories = {"Russian irregular verbs"}
-	local title = "irregular"
-
-	local prefix = args[2]; if not prefix then prefix = "" end
+	local prefix = args[2] or ""
 
 	forms["infinitive"] = prefix .. "кля́сть"
 
@@ -2765,7 +2755,7 @@ conjugations["irreg-слыхать-видать"] = function(args)
 	local categories = {"Russian irregular verbs"}
 	local title = "irregular"
 
-	local stem = args[2] or (NAMESPACE == "Template" and "-") or error("Second parameter has not been provided")
+	local stem = getarg(args, 2)
 
 	forms["infinitive"] = stem .. "ть"
 
@@ -2802,8 +2792,8 @@ conjugations["irreg-стелить-стлать"] = function(args)
 	local categories = {"Russian irregular verbs"}
 	local title = "irregular"
 
-	local stem = args[2] or (NAMESPACE == "Template" and "-") or error("Second parameter has not been provided")
-	local prefix = args[3]; if not prefix then prefix = "" end
+	local stem = getarg(args, 2)
+	local prefix = args[3] or ""
 
 	forms["infinitive"] = prefix .. stem .. "ть"
 
@@ -2838,7 +2828,7 @@ conjugations["irreg-быть"] = function(args)
 	local categories = {"Russian irregular verbs"}
 	local title = "irregular"
 
-	local prefix = args[2]; if not prefix then prefix = "" end
+	local prefix = args[2] or ""
 	local past_m = args["past_m"]
 	local past_f = args["past_f"]
 	local past_n = args["past_n"]
@@ -2862,7 +2852,7 @@ conjugations["irreg-быть"] = function(args)
 	forms["past_adv_part"] = prefix .. "бы́вши"; forms["past_adv_part_short"] = prefix .. "бы́в"
 
 	-- if the prefix is stressed
-	if mw.ustring.find(prefix, "[́]") then
+	if rfind(prefix, "[́]") then
 		forms["past_adv_part"] = prefix .. "бывши"; forms["past_adv_part_short"] = prefix .. "быв"
 	end
 
@@ -2890,7 +2880,7 @@ conjugations["irreg-быть"] = function(args)
 	end
 
 	-- if the prefix is stressed, e.g. "вы́быть"
-	if mw.ustring.find(prefix, "[́]") then
+	if rfind(prefix, "[́]") then
 		forms["pres_futr_1sg"] = prefix .. "буду"
 		forms["pres_futr_2sg"] = prefix .. "будешь"
 		forms["pres_futr_3sg"] = prefix .. "будет"
@@ -2905,7 +2895,7 @@ conjugations["irreg-быть"] = function(args)
 	forms["past_pl"] = prefix .. "бы́ли"
 
 	-- if the prefix is stressed
-	if mw.ustring.find(prefix, "[́]") then
+	if rfind(prefix, "[́]") then
 		forms["past_m"] = prefix .. "был"
 		forms["past_f"] = prefix .. "была"
 		forms["past_n"] = prefix .. "было"
@@ -2938,19 +2928,19 @@ conjugations["irreg-ссать-сцать"] = function(args)
 	local categories = {"Russian irregular verbs"}
 	local title = "irregular"
 
-	local stem = args[2] or (NAMESPACE == "Template" and "-") or error("Second parameter has not been provided")
-	local pres_stem = args[3] or (NAMESPACE == "Template" and "-") or error("Third parameter has not been provided")
+	local stem = getarg(args, 2)
+	local pres_stem = getarg(args, 3)
 
-	local prefix = args[4]; if not prefix then prefix = "" end
+	local prefix = args[4] or ""
 	-- if the prefix is stressed, remove stress from the stem
-	if mw.ustring.find(prefix, "[́]") then
+	if rfind(prefix, "[́]") then
 		stem = com.remove_accents(stem)
 	end
 
 	forms["infinitive"] = prefix .. stem .. "ть"
 
 	-- if the prefix is stressed
-	if mw.ustring.find(prefix, "[́]") then
+	if rfind(prefix, "[́]") then
 		forms["pres_actv_part"] = prefix .. pres_stem .. "ущий"
 
 		forms["impr_sg"] = prefix .. pres_stem .. "ы"
@@ -2996,7 +2986,7 @@ conjugations["irreg-чтить"] = function(args)
 	local categories = {"Russian irregular verbs"}
 	local title = "irregular"
 	
-	local prefix = args[2]; if not prefix then prefix = "" end
+	local prefix = args[2] or ""
 	
 	forms["infinitive"] = prefix .. "чти́ть"
  
@@ -3033,7 +3023,7 @@ conjugations["irreg-ошибиться"] = function(args)
 	local categories = {"Russian irregular verbs"}
 	local title = "irregular"
 	
-	local prefix = args[2]; if not prefix then prefix = "" end
+	local prefix = args[2] or ""
 	
 	forms["infinitive"] = prefix .. "ошиби́ть"
  
@@ -3069,7 +3059,7 @@ conjugations["irreg-плескать"] = function(args)
 	local categories = {"Russian irregular verbs"}
 	local title = "irregular"
 
-	local prefix = args[2]; if not prefix then prefix = "" end
+	local prefix = args[2] or ""
 
 	forms["infinitive"] = prefix .. "плеска́ть"
 
@@ -3115,7 +3105,7 @@ end
 	local categories = {"Russian irregular verbs"}
 	local title = "irregular"
  
-	local prefix = args[2]; if not prefix then prefix = "" end
+	local prefix = args[2] or ""
  
 	forms["infinitive"] = prefix .. "реве́ть"
  
@@ -3150,7 +3140,7 @@ conjugations["irreg-внимать"] = function(args)
 	local categories = {"Russian irregular verbs"}
 	local title = "irregular"
  
-	local prefix = args[2]; if not prefix then prefix = "" end
+	local prefix = args[2] or ""
  
 	forms["infinitive"] = prefix .. "внима́ть"
  
@@ -3198,7 +3188,7 @@ conjugations["irreg-обязывать"] = function(args)
 	local categories = {"Russian irregular verbs"}
 	local title = "irregular"
 
-	local prefix = args[2]; if not prefix then prefix = "" end
+	local prefix = args[2] or ""
 	local past_m = args["past_m"]
 	local past_m2 = args["past_m2"]
 	local past_f = args["past_f"]
@@ -3261,7 +3251,7 @@ end
 
 present_e_b = function(forms, stem)
 
-	if mw.ustring.find(stem, "[аэыоуяеиёю́]$") then
+	if rfind(stem, "[аэыоуяеиёю́]$") then
 		forms["pres_futr_1sg"] = stem .. "ю́"
 		forms["pres_futr_3pl"] = stem .. "ю́т"
 	else
@@ -3291,13 +3281,13 @@ present_je_a = function(forms, stem, no_iotation)
 	local iotated_stem = com.iotation(stem, shch)
 
 	-- Verbs ending in a hushing consonant do not get j-vowels in the endings.
-	if mw.ustring.find(iotated_stem, "[шщжч]$") then
+	if rfind(iotated_stem, "[шщжч]$") then
 		forms["pres_futr_1sg"] = iotated_stem .. "у"
 	else
 		forms["pres_futr_1sg"] = iotated_stem .. "ю"
 	end
 
-	if mw.ustring.find(iotated_stem, "[шщжч]$") then
+	if rfind(iotated_stem, "[шщжч]$") then
 		forms["pres_futr_3pl"] = iotated_stem .. "ут"
 	else
 		forms["pres_futr_3pl"] = iotated_stem .. "ют"
@@ -3344,14 +3334,14 @@ present_je_c = function(forms, stem, shch)
 	local iotated_stem_noa = com.make_unstressed(iotated_stem)
 
 	-- Verbs ending in a hushing consonant do not get j-vowels in the endings.
-	if mw.ustring.find(iotated_stem, "[шщжч]$") or no_iotation then
+	if rfind(iotated_stem, "[шщжч]$") or no_iotation then
 		forms["pres_futr_1sg"] = iotated_stem_noa .. "у́"
 	else
 		forms["pres_futr_1sg"] = iotated_stem_noa .. "ю́"
 	end
 
 	-- Verbs ending in a hushing consonant do not get j-vowels in the endings.
-	if mw.ustring.find(iotated_stem, "[шщжч]$") or no_iotation then
+	if rfind(iotated_stem, "[шщжч]$") or no_iotation then
 		forms["pres_futr_3pl"] = iotated_stem .. "ут"
 	else
 		forms["pres_futr_3pl"] = iotated_stem .. "ют"
@@ -3370,13 +3360,13 @@ present_i_a = function(forms, stem, shch)
 	local iotated_stem = com.iotation(stem, shch)
 
 	-- Verbs ending in a hushing consonant do not get j-vowels in the endings.
-	if mw.ustring.find(iotated_stem, "[шщжч]$") then
+	if rfind(iotated_stem, "[шщжч]$") then
 		forms["pres_futr_1sg"] = iotated_stem .. "у"
 	else
 		forms["pres_futr_1sg"] = iotated_stem .. "ю"
 	end
 
-	if mw.ustring.find(stem, "[шщжч]$") then
+	if rfind(stem, "[шщжч]$") then
 		forms["pres_futr_3pl"] = stem .. "ат"
 	else
 		forms["pres_futr_3pl"] = stem .. "ят"
@@ -3406,13 +3396,13 @@ present_i_b = function(forms, stem, no_1sg_futr, shch)
 	if no_1sg_futr == 1 then
 		forms["pres_futr_1sg"] = ""
 	-- Verbs ending in a hushing consonant do not get j-vowels in the endings.
-	elseif mw.ustring.find(iotated_stem, "[шщжч]$") then
+	elseif rfind(iotated_stem, "[шщжч]$") then
 		forms["pres_futr_1sg"] = iotated_stem .. "у́"
 	else
 		forms["pres_futr_1sg"] = iotated_stem .. "ю́"
 	end
 
-	if mw.ustring.find(stem, "[шщжч]$") then
+	if rfind(stem, "[шщжч]$") then
 		forms["pres_futr_3pl"] = stem .. "а́т"
 	else
 		forms["pres_futr_3pl"] = stem .. "я́т"
@@ -3433,19 +3423,19 @@ present_i_c = function(forms, stem, shch)
 	local iotated_stem = com.iotation(stem_noa, shch)
 
 	-- Verbs ending in a hushing consonant do not get j-vowels in the endings.
-	if mw.ustring.find(iotated_stem, "[шщжч]$") then
+	if rfind(iotated_stem, "[шщжч]$") then
 		forms["pres_futr_1sg"] = iotated_stem .. "у́"
 	else
 		forms["pres_futr_1sg"] = iotated_stem .. "ю́"
 	end
 
-	if mw.ustring.find(stem, "[шщжч]$") then
+	if rfind(stem, "[шщжч]$") then
 		forms["pres_futr_3pl"] = stem .. "ат"
 	else
 		forms["pres_futr_3pl"] = stem .. "ят"
 	end
 
-	if mw.ustring.find(stem, "[шщжч]$") then
+	if rfind(stem, "[шщжч]$") then
 		forms["pres_futr_3pl"] = stem .. "ат"
 	else
 		forms["pres_futr_3pl"] = stem .. "ят"
@@ -3463,7 +3453,7 @@ make_reflexive_alt = function(forms)
 	for key, form in pairs(forms) do
 		if form ~= "" then
 			-- if a form doesn't contain a stress, add a stressed particle "ся́"
-			if not mw.ustring.find(form, "[́]") then
+			if not rfind(form, "[́]") then
 				-- only applies to past masculine forms
 				if key == "past_m" or key == "past_m2" or key == "past_m3" then
 					forms[key] = form .. "ся́"
@@ -3478,8 +3468,8 @@ make_reflexive = function(forms)
 	for key, form in pairs(forms) do
 		-- The particle is "сь" after a vowel, "ся" after a consonant
 		-- append "ся" if "ся́" was not attached already
-		if form ~= "" and not mw.ustring.find(form, "ся́$") then
-			if mw.ustring.find(form, "[аэыоуяеиёю́]$") then
+		if form ~= "" and not rfind(form, "ся́$") then
+			if rfind(form, "[аэыоуяеиёю́]$") then
 				forms[key] = form .. "сь"
 			else
 				forms[key] = form .. "ся"
