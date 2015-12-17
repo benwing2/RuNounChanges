@@ -8,6 +8,7 @@
 local m_utilities = require("Module:utilities")
 local ut = require("Module:utils")
 local com = require("Module:ru-common")
+local nom = require("Module:ru-nominal")
 local m_debug = require("Module:debug")
 
 -- If enabled, compare this module with new version of module to make
@@ -23,9 +24,12 @@ local conjugations = {}
 
 local lang = require("Module:languages").getByCode("ru")
 
+local u = mw.ustring.char
 local rfind = mw.ustring.find
 local rsubn = mw.ustring.gsub
 local rmatch = mw.ustring.match
+
+local AC = u(0x0301) -- acute =  ́
 
 -- version of rsubn() that discards all but the first return value
 local function rsub(term, foo, bar)
@@ -126,11 +130,10 @@ local all_verb_forms = {
 }
 
 local all_verb_props = mw.clone(all_verb_forms)
-table.insert(all_verb_props, "title")
-table.insert(all_verb_props, "perf")
-table.insert(all_verb_props, "intr")
-table.insert(all_verb_props, "impers")
-table.insert(all_verb_props, "categories")
+local non_form_props = {"title", "perf", "intr", "impers", "categories"}
+for _, prop in ipairs(non_form_props) do
+	table.insert(all_verb_props, prop)
+end
 
 function export.generate_forms(conj_type, args)
 	-- Verb type, one of impf, pf, impf-intr, pf-intr, impf-refl, pf-refl.
@@ -158,7 +161,7 @@ function export.generate_forms(conj_type, args)
 	end
 
 	-- This form is not always present on verbs, so it needs to be specified explicitly.
-	forms["past_pasv_part"] = args["past_pasv_part"] or ""
+	forms["past_pasv_part"] = args["past_pasv_part"] and nom.split_russian_tr(args["past_pasv_part"], "dopair") or ""
 
 	--alternative forms
 	local altforms = {"impr_sg2", "impr_pl2",
@@ -168,7 +171,7 @@ function export.generate_forms(conj_type, args)
 		"pres_futr_1sg2", "pres_futr_2sg2", "pres_futr_3sg2",
 		"pres_futr_1pl2", "pres_futr_2pl2", "pres_futr_3pl2"}
 	for _, altform in ipairs(altforms) do
-		forms[altform] = forms[altform] or args[altform]
+		forms[altform] = forms[altform] or args[altform] and nom.split_russian_tr(args[altform], "dopair")
 	end
 
 	--бдеть, победить have no 1st person sg present (impf) / future (pf)
@@ -256,6 +259,16 @@ function export.show(frame)
 		for _, prop in ipairs(all_verb_props) do
 			local val = vals[prop]
 			local newval = newvals[prop]
+			-- deal with impedance mismatch between old style (plain string)
+			-- and new style (Russian/translit array)
+			if not ut.contains(non_form_props, prop) then
+				if type(val) == "string" then
+					val = {val}
+				end
+				if type(newval) == "string" then
+					newval = {newval}
+				end
+			end
 			if not ut.equals(val, newval) then
 				-- Uncomment this to display the particular case and
 				-- differing forms.
@@ -271,33 +284,89 @@ function export.show(frame)
 end
 
 --[=[
+	Functions for working with stems, paradigms, Russian/translit
+]=]--
+
+local function combine(stem, tr, ending)
+	if not ending then
+		return nil
+	end
+	if rfind(ending, AC) then
+		stem, tr = com.make_unstressed_once(stem, tr)
+	end
+	stem = stem .. ending
+	if tr then
+		tr = tr .. com.translit(ending)
+	end
+	return {stem, tr}
+end
+
+local function extract_russian_tr(form, notranslit)
+	local ru, tr
+	if type(form) == "table" then
+		ru, tr = form[1], form[2]
+	else
+		ru = form
+	end
+	if not tr and not notranslit then
+		tr = ru and com.translit(ru)
+	end
+	return ru, tr
+end
+
+local function set_paradigm(forms, prefix, stem, tr,
+	sg1, sg2, sg3, pl1, pl2, pl3)
+	forms[prefix .. "_1sg"] = combine(stem, tr, sg1)
+	forms[prefix .. "_2sg"] = combine(stem, tr, sg2)
+	forms[prefix .. "_3sg"] = combine(stem, tr, sg3)
+	forms[prefix .. "_1pl"] = combine(stem, tr, pl1)
+	forms[prefix .. "_2pl"] = combine(stem, tr, pl2)
+	forms[prefix .. "_3pl"] = combine(stem, tr, pl3)
+end
+
+local function set_participles_2stem(forms,
+	pres_stem, pres_tr, past_stem, past_tr,
+	pres_actv, past_actv, pres_pasv, pres_adv, past_adv, past_adv_short)
+	forms["pres_actv_part"] = combine(pres_stem, pres_tr, pres_actv)
+	forms["past_actv_part"] = combine(past_stem, past_tr, past_actv)
+	forms["pres_pasv_part"] = combine(pres_stem, pres_tr, pres_pasv)
+	forms["pres_adv_part"] = combine(pres_stem, pres_tr, pres_adv)
+	forms["past_adv_part"] = combine(past_stem, past_tr, past_adv)
+	forms["past_adv_part_short"] = combine(past_stem, past_tr, past_adv_short)
+end
+
+local function set_participles(forms, stem, tr, pres_actv, past_actv,
+	pres_pasv, pres_adv, past_adv, past_adv_short)
+	set_participles_2stem(forms, stem, tr, stem, tr,
+	pres_actv, past_actv, pres_pasv, pres_adv, past_adv, past_adv_short)
+end
+
+local function set_imper(forms, stem, tr, sg, pl)
+	forms["impr_sg"] = combine(stem, tr, sg)
+	forms["impr_pl"] = combine(stem, tr, pl)
+end
+
+local function set_past(forms, stem, tr, m, f, n, pl)
+	forms["past_m"] = combine(stem, tr, m)
+	forms["past_f"] = combine(stem, tr, f)
+	forms["past_n"] = combine(stem, tr, n)
+	forms["past_pl"] = combine(stem, tr, pl)
+end
+
+--[=[
 	Conjugation functions
 ]=]--
 
 conjugations["1a"] = function(args)
 	local forms = {}
 
-	local stem = getarg(args, 2)
-	local tr = args.tr
+	local stem, tr = nom.split_russian_tr(getarg(args, 2))
 
-	forms["infinitive"] = stem .. "ть"
-
-	forms["pres_actv_part"] = stem .. "ющий"
-	forms["past_actv_part"] = stem .. "вший"
-	forms["pres_pasv_part"] = stem .. "емый"
-	forms["pres_adv_part"] = stem .. "я"
-	forms["past_adv_part"] = stem .. "вши"
-	forms["past_adv_part_short"] = stem .. "в"
-
-	present_je_a(forms, stem)
-
-	forms["impr_sg"] = stem .. "й"
-	forms["impr_pl"] = stem .. "йте"
-
-	forms["past_m"] = stem .. "л"
-	forms["past_f"] = stem .. "ла"
-	forms["past_n"] = stem .. "ло"
-	forms["past_pl"] = stem .. "ли"
+	forms["infinitive"] = combine(stem, tr, "ть")
+	set_participles(forms, stem, tr, "ющий", "вший", "емый", "я", "вши", "в")
+	present_je_a(forms, stem, tr)
+	set_imper(forms, stem, tr, "й", "йте")
+	set_past(forms, stem, tr, "л", "ла", "ло", "ли")
 
 	return forms
 end
@@ -305,49 +374,27 @@ end
 conjugations["2a"] = function(args)
 	local forms = {}
 
-	local inf_stem = getarg(args, 2)
-	local pres_stem = inf_stem
-	local pres_stem = inf_stem
-	local pres_stem = inf_stem
+	local inf_stem, inf_tr = nom.split_russian_tr(getarg(args, 2))
+	local pres_stem, pres_tr = inf_stem, inf_tr
 
+	-- all -ова- change to -у-
+	pres_stem = rsub(pres_stem, "о(́?)ва(́?)$", "у%1%2")
+	pres_tr = pres_tr and rsub(pres_tr, "o(́?)va(́?)$", "u%1%2")
 	-- -ева- change to -ю- after most consonants and vowels, to -у- after hissing sounds and ц
-	if rfind(pres_stem, "ова$") then
-		pres_stem = rsub(pres_stem, "ова$", "у")
-	elseif rfind(pres_stem, "о́ва$") then
-		pres_stem = rsub(pres_stem, "о́ва$", "у́")
-	elseif rfind(pres_stem, "ова́$") then
-		pres_stem = rsub(pres_stem, "ова́$", "у́")
-	elseif rfind(pres_stem, "[жцчшщ]ева$") then
-		pres_stem = rsub(pres_stem, "ева$", "у")
-	elseif rfind(pres_stem, "[жцчшщ]е́ва$") then
-		pres_stem = rsub(pres_stem, "е́ва$", "у́")
-	elseif rfind(pres_stem, "[жцчшщ]ева́$") then
-		pres_stem = rsub(pres_stem, "ева́$", "у́")
-	elseif rfind(pres_stem, "[бвгдзклмнпрстфхьаэыоуяеиёю́]ева$") then
-		pres_stem = rsub(pres_stem, "ева$", "ю")
-	elseif rfind(pres_stem, "[бвгдзклмнпрстфхьаэыоуяеиёю́]е́ва$") then
-		pres_stem = rsub(pres_stem, "е́ва$", "ю́")
-	elseif rfind(pres_stem, "[бвгдзклмнпрстфхьаэыоуяеиёю́]ева́$") then
-		pres_stem = rsub(pres_stem, "ева́$", "ю́")
+	if rfind(pres_stem, "[бвгдзклмнпрстфхьаэыоуяеиёю́]е(́?)ва(́?)$") then
+		pres_stem = rsub(pres_stem, "е(́?)ва(́?)$", "ю%1%2")
+		pres_tr = pres_tr and rsub(pres_tr, "e(́?)va(́?)$", "ju%1%2")
+	elseif rfind(pres_stem, "[жцчшщ]е(́?)ва(́?)$") then
+		pres_stem = rsub(pres_stem, "е(́?)ва(́?)$", "у%1%2")
+		pres_tr = pres_tr and rsub(pres_tr, "e(́?)va(́?)$", "u%1%2")
 	end
 
-	forms["infinitive"] = inf_stem .. "ть"
-
-	forms["pres_actv_part"] = pres_stem .. "ющий"
-	forms["past_actv_part"] = inf_stem .. "вший"
-	forms["pres_pasv_part"] = pres_stem .. "емый"
-	forms["pres_adv_part"] = pres_stem .. "я"
-	forms["past_adv_part"] = inf_stem .. "вши"; forms["past_adv_part_short"] = inf_stem .. "в"
-
-	present_je_a(forms, pres_stem)
-
-	forms["impr_sg"] = pres_stem .. "й"
-	forms["impr_pl"] = pres_stem .. "йте"
-
-	forms["past_m"] = inf_stem .. "л"
-	forms["past_f"] = inf_stem .. "ла"
-	forms["past_n"] = inf_stem .. "ло"
-	forms["past_pl"] = inf_stem .. "ли"
+	forms["infinitive"] = combine(inf_stem, inf_tr, "ть")
+	set_participles_2stem(forms, pres_stem, pres_tr, inf_stem, inf_tr,
+		"ющий", "вший", "емый", "я", "вши", "в")
+	present_je_a(forms, pres_stem, pres_tr)
+	set_imper(forms, pres_stem, pres_tr, "й", "йте")
+	set_past(forms, inf_stem, inf_tr, "л", "ла", "ло", "ли")
 
 	return forms
 end
@@ -355,36 +402,27 @@ end
 conjugations["2b"] = function(args)
 	local forms = {}
 
-	local inf_stem = getarg(args, 2)
-	local pres_stem = inf_stem
+	local inf_stem, inf_tr = nom.split_russian_tr(getarg(args, 2))
+	local pres_stem, pres_tr = inf_stem, inf_tr
+
 	-- all -ова- change to -у-
 	pres_stem = rsub(pres_stem, "о(́?)ва(́?)$", "у%1%2")
+	pres_tr = pres_tr and rsub(pres_tr, "o(́?)va(́?)$", "u%1%2")
 	-- -ева- change to -ю- after most consonants and vowels, to -у- after hissing sounds and ц
 	if rfind(pres_stem, "[бвгдзклмнпрстфхьаэыоуяеиёю́]е(́?)ва(́?)$") then
 		pres_stem = rsub(pres_stem, "е(́?)ва(́?)$", "ю%1%2")
+		pres_tr = pres_tr and rsub(pres_tr, "e(́?)va(́?)$", "ju%1%2")
 	elseif rfind(pres_stem, "[жцчшщ]е(́?)ва(́?)$") then
 		pres_stem = rsub(pres_stem, "е(́?)ва(́?)$", "у%1%2")
+		pres_tr = pres_tr and rsub(pres_tr, "e(́?)va(́?)$", "u%1%2")
 	end
 
-	local pres_stem_noa = com.remove_accents(pres_stem)
-
-	forms["infinitive"] = inf_stem .. "ть"
-
-	forms["pres_actv_part"] = pres_stem_noa .. "ю́щий"
-	forms["past_actv_part"] = inf_stem .. "вший"
-	forms["pres_pasv_part"] = ""
-	forms["pres_adv_part"] = pres_stem_noa .. "я́"
-	forms["past_adv_part"] = inf_stem .. "вши"; forms["past_adv_part_short"] = inf_stem .. "в"
-
-	present_je_b(forms, pres_stem_noa)
-
-	forms["impr_sg"] = pres_stem .. "й"
-	forms["impr_pl"] = pres_stem .. "йте"
-
-	forms["past_m"] = inf_stem .. "л"
-	forms["past_f"] = inf_stem .. "ла"
-	forms["past_n"] = inf_stem .. "ло"
-	forms["past_pl"] = inf_stem .. "ли"
+	forms["infinitive"] = combine(inf_stem, inf_tr, "ть")
+	set_participles_2stem(forms, pres_stem, pres_tr, inf_stem, inf_tr,
+		"ю́щий", "вший", nil, "я́", "вши", "в")
+	present_je_b(forms, pres_stem, pres_tr)
+	set_imper(forms, pres_stem, pres_tr, "й", "йте")
+	set_past(forms, inf_stem, inf_tr, "л", "ла", "ло", "ли")
 
 	return forms
 end
@@ -417,7 +455,8 @@ conjugations["3a"] = function(args)
 	-- default is blank
 	forms["pres_pasv_part"] = ""
 	forms["pres_adv_part"] = ""
-	forms["past_adv_part"] = stem .. "нувши"; forms["past_adv_part_short"] = stem .. "нув"
+	forms["past_adv_part"] = stem .. "нувши"
+	forms["past_adv_part_short"] = stem .. "нув"
 
 	present_e_a(forms, stem .. "н")
 
@@ -466,7 +505,8 @@ conjugations["3b"] = function(args)
 	forms["past_actv_part"] = stem .. "у́вший"
 	forms["pres_pasv_part"] = ""
 	forms["pres_adv_part"] = ""
-	forms["past_adv_part"] = stem .. "у́вши"; forms["past_adv_part_short"] = stem .. "у́в"
+	forms["past_adv_part"] = stem .. "у́вши"
+	forms["past_adv_part_short"] = stem .. "у́в"
 
 	present_e_b(forms, stem)
 
@@ -494,7 +534,8 @@ conjugations["3c"] = function(args)
 	forms["past_actv_part"] = stem_noa .. "у́вший"
 	forms["pres_pasv_part"] = ""
 	forms["pres_adv_part"] = ""
-	forms["past_adv_part"] = stem_noa .. "у́вши"; forms["past_adv_part_short"] = stem_noa .. "у́в"
+	forms["past_adv_part"] = stem_noa .. "у́вши"
+	forms["past_adv_part_short"] = stem_noa .. "у́в"
 
 	present_e_c(forms, stem)
 
@@ -649,7 +690,8 @@ conjugations["4c"] = function(args)
 
 	forms["past_actv_part"] = stem_noa .. "и́вший"
 	forms["pres_pasv_part"] = stem_noa .. "и́мый"
-	forms["past_adv_part"] = stem_noa .. "и́вши"; forms["past_adv_part_short"] = stem_noa .. "и́в"
+	forms["past_adv_part"] = stem_noa .. "и́вши"
+	forms["past_adv_part_short"] = stem_noa .. "и́в"
 
 	-- Verbs ending in a hushing consonant do not get j-vowels in the endings.
 	if rfind(stem, "[шщжч]$") then
@@ -713,7 +755,8 @@ conjugations["5a"] = function(args)
 
 	forms["past_actv_part"] = past_stem .. "вший"
 	forms["pres_pasv_part"] = stem .. "имый"
-	forms["past_adv_part"] = past_stem .. "вши"; forms["past_adv_part_short"] = past_stem .. "в"
+	forms["past_adv_part"] = past_stem .. "вши"
+	forms["past_adv_part_short"] = past_stem .. "в"
 
 	-- "й" after any vowel (e.g. выстоять), with or without an acute accent, otherwise "ь"
 	if rfind(stem, "[аэыоуяеиёю́]$") and impr_end == nil then
@@ -758,7 +801,8 @@ conjugations["5b"] = function(args)
 
 	forms["infinitive"] = past_stem .. "ть"
 	forms["past_actv_part"] = past_stem .. "вший"
-	forms["past_adv_part"] = past_stem .. "вши"; forms["past_adv_part_short"] = past_stem .. "в"
+	forms["past_adv_part"] = past_stem .. "вши"
+	forms["past_adv_part_short"] = past_stem .. "в"
 	forms["past_m"] = past_stem .. "л"
 	forms["past_f"] = past_stem .. "ла"
 	forms["past_n"] = past_stem .. "ло"
@@ -797,7 +841,8 @@ conjugations["5c"] = function(args)
 
 	forms["past_actv_part"] = past_stem .. "вший"
 	forms["pres_pasv_part"] = stem_noa .. "и́мый"
-	forms["past_adv_part"] = past_stem .. "вши"; forms["past_adv_part_short"] = past_stem .. "в"
+	forms["past_adv_part"] = past_stem .. "вши"
+	forms["past_adv_part_short"] = past_stem .. "в"
 
 	-- Verbs ending in a hushing consonant do not get j-vowels in the endings.
 	if rfind(stem, "[шщжч]$") then
@@ -866,7 +911,8 @@ conjugations["6a"] = function(args)
 	if rfind(stem, "[аэыоуяеиёю́]$") then
 		forms["infinitive"] = stem .. "ять"
 		forms["past_actv_part"] = stem .. "явший"
-		forms["past_adv_part"] = stem .. "явши"; forms["past_adv_part_short"] = stem .. "яв"
+		forms["past_adv_part"] = stem .. "явши"
+		forms["past_adv_part_short"] = stem .. "яв"
 		forms["past_m"] = stem .. "ял"
 		forms["past_f"] = stem .. "яла"
 		forms["past_n"] = stem .. "яло"
@@ -874,7 +920,8 @@ conjugations["6a"] = function(args)
 	else
 		forms["infinitive"] = stem .. "ать"
 		forms["past_actv_part"] = stem .. "авший"
-		forms["past_adv_part"] = stem .. "авши"; forms["past_adv_part_short"] = stem .. "ав"
+		forms["past_adv_part"] = stem .. "авши"
+		forms["past_adv_part_short"] = stem .. "ав"
 		forms["past_m"] = stem .. "ал"
 		forms["past_f"] = stem .. "ала"
 		forms["past_n"] = stem .. "ало"
@@ -892,7 +939,7 @@ conjugations["6a"] = function(args)
 		forms["pres_pasv_part"] = iotated_stem .. "емый"
 	end
 
-	present_je_a(forms, pres_stem, no_iotation)
+	present_je_a(forms, pres_stem, nil, no_iotation)
 
 	if not impr_end and rfind(stem, "[аэыоуяеиёю́]$") and not impr_end then
 		impr_end = "й"
@@ -955,7 +1002,8 @@ conjugations["6b"] = function(args)
 	if rfind(stem, "[аэыоуяеиёю́]$") then
 		forms["infinitive"] = stem .. "я́ть"
 		forms["past_actv_part"] = stem .. "я́вший"
-		forms["past_adv_part"] = stem .. "я́вши"; forms["past_adv_part_short"] = stem .. "́яв"
+		forms["past_adv_part"] = stem .. "я́вши"
+		forms["past_adv_part_short"] = stem .. "́яв"
 		forms["past_m"] = stem .. "я́л"
 		forms["past_f"] = stem .. "я́ла"
 		forms["past_n"] = stem .. "я́ло"
@@ -963,7 +1011,8 @@ conjugations["6b"] = function(args)
 	else
 		forms["infinitive"] = stem .. "а́ть"
 		forms["past_actv_part"] = stem .. "а́вший"
-		forms["past_adv_part"] = stem .. "а́вши"; forms["past_adv_part_short"] = stem .. "а́в"
+		forms["past_adv_part"] = stem .. "а́вши"
+		forms["past_adv_part_short"] = stem .. "а́в"
 		forms["past_m"] = stem .. "а́л"
 		forms["past_f"] = stem .. "а́ла"
 		forms["past_n"] = stem .. "а́ло"
@@ -1030,12 +1079,12 @@ conjugations["6c"] = function(args)
 		forms["pres_adv_part"] = iotated_stem_noa ..  "я́"
 	end
 
-	--present_je_c(forms, stem, no_iotation)
+	--present_je_c(forms, stem, nil, no_iotation)
 	-- if shch is nil, pass nothing, otherwise pass "щ"
 	if not shch then
-		present_je_c(forms, stem)    -- param #3 must be a string
+		present_je_c(forms, stem, nil)    -- param #3 must be a string
 	else -- tell the conjugator that this is an exception
-		present_je_c(forms, stem, shch)
+		present_je_c(forms, stem, nil, shch)
 	end	
 
 	forms["impr_sg"] = iotated_stem_noa .. "и́"
@@ -1410,7 +1459,7 @@ conjugations["10c"] = function(args)
 	forms["pres_adv_part"] = pres_stem_noa .. "я́"
 	forms["past_adv_part"] = inf_stem .. "вши"; forms["past_adv_part_short"] = inf_stem .. "в"
 
-	present_je_c(forms, pres_stem)
+	present_je_c(forms, pres_stem, nil)
 
 	forms["impr_sg"] = pres_stem_noa .. "и́"
 	forms["impr_pl"] = pres_stem_noa .. "и́те"
@@ -3155,80 +3204,37 @@ present_e_c = function(forms, stem)
 end
 
 -- Present forms with -e-, with j-vowels.
-present_je_a = function(forms, stem, no_iotation)
-	local iotated_stem = com.iotation_new(stem, nil, shch)
+present_je_a = function(forms, stem, tr, no_iotation)
+	local iotated_stem, iotated_tr = com.iotation_new(stem, tr, shch)
 
 	-- Verbs ending in a hushing consonant do not get j-vowels in the endings.
-	if rfind(iotated_stem, "[шщжч]$") then
-		forms["pres_futr_1sg"] = iotated_stem .. "у"
-	else
-		forms["pres_futr_1sg"] = iotated_stem .. "ю"
-	end
-
-	if rfind(iotated_stem, "[шщжч]$") then
-		forms["pres_futr_3pl"] = iotated_stem .. "ут"
-	else
-		forms["pres_futr_3pl"] = iotated_stem .. "ют"
-	end
-
-	forms["pres_futr_2sg"] = iotated_stem .. "ешь"
-	forms["pres_futr_3sg"] = iotated_stem .. "ет"
-	forms["pres_futr_1pl"] = iotated_stem .. "ем"
-	forms["pres_futr_2pl"] = iotated_stem .. "ете"
+	local hushing = rfind(iotated_stem, "[шщжч]$")
+	set_paradigm(forms, "pres_futr", iotated_stem, iotated_tr,
+		hushing and "у" or "ю", "ешь", "ет", "ем", "ете",
+		hushing and "ут" or "ют")
 
 	if no_iotation then
-		forms["pres_futr_1sg"] = stem .. "у"
-		forms["pres_futr_3pl"] = stem .. "ут"
-		forms["pres_futr_2sg"] = stem .. "ешь"
-		forms["pres_futr_3sg"] = stem .. "ет"
-		forms["pres_futr_1pl"] = stem .. "ем"
-		forms["pres_futr_2pl"] = stem .. "ете"
+		set_paradigm(forms, "pres_futr", stem, tr,
+			"у", "ешь", "ет", "ем", "ете", "ут")
 	end
 end
 
-present_je_b = function(forms, stem)
-
-	forms["pres_futr_1sg"] = stem .. "ю́"
-	forms["pres_futr_2sg"] = stem .. "ёшь"
-	forms["pres_futr_3sg"] = stem .. "ёт"
-	forms["pres_futr_1pl"] = stem .. "ём"
-	forms["pres_futr_2pl"] = stem .. "ёте"
-	forms["pres_futr_3pl"] = stem .. "ю́т"
+present_je_b = function(forms, stem, tr)
+	set_paradigm(forms, "pres_futr", stem, tr,
+		"ю́", "ёшь", "ёт", "ём", "ёте", "ю́т")
 end
 
-present_je_c = function(forms, stem, shch)
-	-- shch - iotatate final т as щ, not ч
+present_je_c = function(forms, stem, tr, shch)
+	-- shch - iotate final т as щ, not ч
 
 	-- iotate the stem
-	local stem_noa = com.make_unstressed(stem)
-	-- iotate the stem
-	local iotated_stem = ""
-	if not shch then
-		iotated_stem = com.iotation_new(stem)
-	else
-		iotated_stem = com.iotation_new(stem, nil, shch)
-	end
-	
-	local iotated_stem_noa = com.make_unstressed(iotated_stem)
+	local iotated_stem, iotated_tr = com.iotation_new(stem, tr, shch)
 
 	-- Verbs ending in a hushing consonant do not get j-vowels in the endings.
-	if rfind(iotated_stem, "[шщжч]$") or no_iotation then
-		forms["pres_futr_1sg"] = iotated_stem_noa .. "у́"
-	else
-		forms["pres_futr_1sg"] = iotated_stem_noa .. "ю́"
-	end
-
-	-- Verbs ending in a hushing consonant do not get j-vowels in the endings.
-	if rfind(iotated_stem, "[шщжч]$") or no_iotation then
-		forms["pres_futr_3pl"] = iotated_stem .. "ут"
-	else
-		forms["pres_futr_3pl"] = iotated_stem .. "ют"
-	end
-
-	forms["pres_futr_2sg"] = iotated_stem .. "ешь"
-	forms["pres_futr_3sg"] = iotated_stem .. "ет"
-	forms["pres_futr_1pl"] = iotated_stem .. "ем"
-	forms["pres_futr_2pl"] = iotated_stem .. "ете"
+	local hushing = rfind(iotated_stem, "[шщжч]$") -- or no_iotation
+	set_paradigm(forms, "pres_futr", iotated_stem, iotated_tr,
+		hushing and "у́" or "ю́", "ешь", "ет", "ем", "ете",
+		hushing and "ут" or "ют")
 end
 
 -- Present forms with -i-.
@@ -3327,14 +3333,15 @@ end
 
 -- add alternative form stressed on the reflexive particle
 make_reflexive_alt = function(forms)
-
 	for key, form in pairs(forms) do
-		if form ~= "" then
+		local ru, tr = extract_russian_tr(form, "notranslit")
+		-- check for empty strings, dashes and nil's
+		if ru ~= "" and ru and ru ~= "-" then
 			-- if a form doesn't contain a stress, add a stressed particle "ся́"
-			if not rfind(form, "[́]") then
+			if not rfind(ru, "[́]") then
 				-- only applies to past masculine forms
 				if key == "past_m" or key == "past_m2" or key == "past_m3" then
-					forms[key] = form .. "ся́"
+					forms[key] = {ru .. "ся́", tr and tr .. "sja" .. AC}
 				end
 			end
 		end
@@ -3344,13 +3351,17 @@ end
 -- Add the reflexive particle to all verb forms
 make_reflexive = function(forms)
 	for key, form in pairs(forms) do
-		-- The particle is "сь" after a vowel, "ся" after a consonant
-		-- append "ся" if "ся́" was not attached already
-		if form ~= "" and not rfind(form, "ся́$") then
-			if rfind(form, "[аэыоуяеиёю́]$") then
-				forms[key] = form .. "сь"
-			else
-				forms[key] = form .. "ся"
+		local ru, tr = extract_russian_tr(form, "notranslit")
+		-- check for empty strings, dashes and nil's
+		if ru ~= "" and ru and ru ~= "-" then
+			-- The particle is "сь" after a vowel, "ся" after a consonant
+			-- append "ся" if "ся́" was not attached already
+			if not rfind(ru, "ся́$") then
+				if rfind(ru, "[аэыоуяеиёю́]$") then
+					forms[key] = {ru .. "сь", tr and tr .. "sʹ"}
+				else
+					forms[key] = {ru .. "ся", tr and tr .. "sja"}
+				end
 			end
 		end
 	end
@@ -3361,7 +3372,9 @@ end
 
 -- Make the table
 make_table = function(forms, title, perf, intr, impers)
-	local title = "Conjugation of <span lang=\"ru\" class=\"Cyrl\">''" .. forms["infinitive"] .. "''</span>" .. (title and " (" .. title .. ")" or "")
+	local inf, inf_tr = extract_russian_tr(forms["infinitive"])
+
+	local title = "Conjugation of <span lang=\"ru\" class=\"Cyrl\">''" .. inf .. "''</span>" .. (title and " (" .. title .. ")" or "")
 
 	-- Intransitive verbs have no passive participles.
 	if intr then
@@ -3458,14 +3471,12 @@ make_table = function(forms, title, perf, intr, impers)
 		forms["pres_3pl2"] = forms["pres_futr_3pl2"]
 	end
 	
-	local inf = forms["infinitive"]
-	local inf_tr = lang:transliterate(forms["infinitive"])
-
 	-- Add transliterations to all forms
 	for key, form in pairs(forms) do
+		local ru, tr = extract_russian_tr(form)
 		-- check for empty strings, dashes and nil's
-		if form ~= "" and form and form ~= "-" then
-			forms[key] = "<span lang=\"ru\" class=\"Cyrl\">[[" .. com.remove_accents(form) .. "#Russian|" .. form .. "]]</span><br/><span style=\"color: #888\">" .. lang:transliterate(form) .. "</span>"
+		if ru ~= "" and ru and ru ~= "-" then
+			forms[key] = "<span lang=\"ru\" class=\"Cyrl\">[[" .. com.remove_accents(ru) .. "#Russian|" .. ru .. "]]</span><br/><span style=\"color: #888\">" .. tr .. "</span>"
 		else
 			forms[key] = "&mdash;"
 		end
