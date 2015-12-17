@@ -250,8 +250,8 @@ function export.show(frame)
 				-- differing forms.
 				--error(prop .. " " .. (val and concat_vals(val) or "nil") .. " || " .. (newval and concat_vals(newval) or "nil"))
 				track("different-conj")
+				break
 			end
-			break
 		end
 	end
 
