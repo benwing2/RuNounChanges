@@ -218,23 +218,25 @@ function export.show(frame)
 	if test_new_ru_verb_module then
 		local m_new_ru_verb = require("Module:User:Benwing2/ru-verb")
 		local newforms, newtitle, newperf, newintr, newimpers, newcategories = m_new_ru_verb.generate_forms(conj_type, args_clone)
-		forms.title = title
-		forms.perf = perf
-		forms.intr = intr
-		forms.impers = impers
-		forms.categories = categories
-		newforms.title = newtitle
-		newforms.perf = newperf
-		newforms.intr = newintr
-		newforms.impers = newimpers
-		newforms.categories = newcategories
-		for _, form in ipairs(all_verb_props) do
-			local val = forms[form]
-			local newval = newforms[form]
+		local vals = mw.clone(forms)
+		vals.title = title
+		vals.perf = perf
+		vals.intr = intr
+		vals.impers = impers
+		vals.categories = categories
+		local newvals = mw.clone(newforms)
+		newvals.title = newtitle
+		newvals.perf = newperf
+		newvals.intr = newintr
+		newvals.impers = newimpers
+		newvals.categories = newcategories
+		for _, prop in ipairs(all_verb_props) do
+			local val = vals[prop]
+			local newval = newvals[prop]
 			if not ut.equals(val, newval) then
 				-- Uncomment this to display the particular case and
 				-- differing forms.
-				--error(form .. " " .. (val and concat_vals(val) or "nil") .. " || " .. (newval and concat_vals(newval) or "nil"))
+				--error(prop .. " " .. (val and concat_vals(val) or "nil") .. " || " .. (newval and concat_vals(newval) or "nil"))
 				track("different-conj")
 			end
 			break
