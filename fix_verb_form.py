@@ -1,0 +1,156 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# Fix up raw verb forms when possible, canonicalize existing 'conjugation of'
+# to 'inflection of'
+
+import pywikibot, re, sys, codecs, argparse
+from collections import Counter
+
+import blib
+from blib import getparam, rmparam, msg, site
+
+import rulib as ru
+import runounlib as runoun
+
+def process_page(index, page, save, verbose):
+  pagetitle = unicode(page.title())
+  subpagetitle = re.sub("^.*:", "", pagetitle)
+  def pagemsg(txt):
+    msg("Page %s %s: %s" % (index, pagetitle, txt))
+
+  pagemsg("Processing")
+
+  if ":" in pagetitle:
+    pagemsg("WARNING: Colon in page title, skipping page")
+    return
+
+  text = unicode(page.text)
+  notes = []
+
+  foundrussian = False
+  sections = re.split("(^==[^=]*==\n)", text, 0, re.M)
+
+  for j in xrange(2, len(sections), 2):
+    if sections[j-1] == "==Russian==\n":
+      if foundrussian:
+        pagemsg("WARNING: Found multiple Russian sections, skipping page")
+        return
+      foundrussian = True
+
+      # Try to canonicalize existing 'conjugation of'
+      parsed = blib.parse_text(sections[j])
+      for t in parsed.filter_templates():
+        if unicode(t.name) == "conjugation of" and getparam(t, "lang") == "ru":
+          origt = unicode(t)
+          t.name = "inflection of"
+          newt = unicode(t)
+          if origt != newt:
+            pagemsg("Replaced %s with %s" % (origt, newt))
+            notes.append("converted 'conjugation of' to 'inflection of'")
+      sections[j] = unicode(parsed)
+
+      # Try to add 'inflection of' to raw-specified participial inflection
+      def add_participle_inflection_of(m):
+        prefix = m.group(1)
+        tense = m.group(2).lower()
+        if tense == "present":
+          tense = "pres"
+        voice = m.group(3).lower()
+        if voice == "active":
+          voice = "act"
+        elif voice == "passive":
+          voice = "pass"
+        elif voice == "adverbial":
+          voice = "adv"
+        lemma = m.group(4)
+        retval = prefix + "{{inflection of|lang=ru|%s||%s|%s|part}}" % (lemma, tense, voice)
+        pagemsg("Replaced <%s> with %s" % (m.group(0), retval))
+        notes.append("converted raw to 'inflection of' for %s/%s/part" % (tense, voice))
+        return retval
+      newsec = re.sub(r"(# |\()'*(present|past) participle (active|passive|adverbial) of'* '*(?:\[\[|\{\{[lm]\|ru\||\{\{term\|)([^|]*?)(?:\]\]|\}\}|\|+lang=ru\}\})'*", add_participle_inflection_of,
+          sections[j], 0, re.I)
+      newsec = re.sub(r"(# |\()'*(present|past) (active|passive|adverbial) participle of'* '*(?:\[\[|\{\{[lm]\|ru\||\{\{term\|)([^|]*?)(?:\]\]|\}\}|\|+lang=ru\}\})'*", add_participle_inflection_of,
+          newsec, 0, re.I)
+      sections[j] = newsec
+
+      # Try to add 'inflection of' to raw-specified past inflection
+      def add_past_inflection_of(m):
+        prefix = m.group(1)
+        gender = {"masculine":"m", "male":"m", "feminine":"f", "female":"f",
+            "neuter":"n", "neutral":"n", "plural":"p"}[m.group(2).lower()]
+        lemma = m.group(3)
+        retval = prefix + "{{inflection of|lang=ru|%s||%s%s|past|ind}}" % (lemma, gender, gender != "p" and "|s" or "")
+        pagemsg("Replaced <%s> with %s" % (m.group(0), retval))
+        notes.append("converted raw to 'inflection of' for %s%s/past/ind" % (gender, gender != "p" and "/s" or ""))
+        return retval
+      newsec = re.sub(r"(# |\()'*(male|masculine|female|feminine|neutral|neuter|plural) (?:singular |)past (?:tense |form |)of'* '*(?:\[\[|\{\{[lm]\|ru\||\{\{term\|)([^|]*?)(?:\]\]|\}\}|\|+lang=ru\}\})'*", add_past_inflection_of,
+          sections[j], 0, re.I)
+      newsec = re.sub(r"(# |\()'*past(?:-tense| tense|) (male|masculine|female|feminine|neutral|neuter|plural) (?:singular |)(?:form |)of'* '*(?:\[\[|\{\{[lm]\|ru\||\{\{term\|)([^|]*?)(?:\]\]|\}\}|\|+lang=ru\}\})'*", add_past_inflection_of,
+          newsec, 0, re.I)
+      sections[j] = newsec
+
+      # Try to add 'inflection of' to raw-specified imperative inflection
+      def add_imper_inflection_of(m):
+        prefix = m.group(1)
+        number = {"singular":"s", "plural":"p"}[m.group(2).lower()]
+        lemma = m.group(3)
+        retval = prefix + "{{inflection of|lang=ru|%s||2|%s|imp}}" % (lemma, number)
+        pagemsg("Replaced <%s> with %s" % (m.group(0), retval))
+        notes.append("converted raw to 'inflection of' for 2/%s/imp" % number)
+        return retval
+      newsec = re.sub(r"(# |\()'*(singular|plural) imperative (?:form |)of'* '*(?:\[\[|\{\{[lm]\|ru\||\{\{term\|)([^|]*?)(?:\]\]|\}\}|\|+lang=ru\}\})'*", add_imper_inflection_of,
+          sections[j], 0, re.I)
+      newsec = re.sub(r"(# |\()'*imperative (singular|plural) (?:form |)of'* '*(?:\[\[|\{\{[lm]\|ru\||\{\{term\|)([^|]*?)(?:\]\]|\}\}|\|+lang=ru\}\})'*", add_imper_inflection_of,
+          newsec, 0, re.I)
+      sections[j] = newsec
+
+      # Try to add 'inflection of' to raw-specified finite pres/fut inflection
+      def add_pres_fut_inflection_of(m):
+        prefix = m.group(1)
+        person = m.group(2)[0]
+        number = {"singular":"s", "plural":"p"}[m.group(3).lower()]
+        tense = {"present":"pres", "future":"fut"}[m.group(4).lower()]
+        lemma = m.group(5)
+        retval = prefix + "{{inflection of|lang=ru|%s||%s|%s|%s|ind}}" % (lemma, person, number, tense)
+        pagemsg("Replaced <%s> with %s" % (m.group(0), retval))
+        notes.append("converted raw to 'inflection of' for %s/%s/%s/ind" % (person, number, tense))
+        return retval
+      newsec = re.sub(r"(# |\()'*(1st|2nd|3rd)(?:-person| person|) (singular|plural) (present|future) (?:tense |)of'* '*(?:\[\[|\{\{[lm]\|ru\||\{\{term\|)([^|]*?)(?:\]\]|\}\}|\|+lang=ru\}\})'*", add_pres_fut_inflection_of,
+          sections[j], 0, re.I)
+      sections[j] = newsec
+
+  new_text = "".join(sections)
+
+  if new_text != text:
+    if verbose:
+      pagemsg("Replacing <%s> with <%s>" % (text, new_text))
+    assert notes
+    # Group identical notes together and append the number of such identical
+    # notes if > 1
+    # 1. Count items in notes[] and return a key-value list in descending order
+    notescount = Counter(notes).most_common()
+    # 2. Recreate notes
+    def fmt_key_val(key, val):
+      if val == 1:
+        return "%s" % key
+      else:
+        return "%s (%s)" % (key, val)
+    notes = [fmt_key_val(x, y) for x, y in notescount]
+
+    comment = "; ".join(notes)
+    if save:
+      pagemsg("Saving with comment = %s" % comment)
+      page.text = new_text
+      page.save(comment=comment)
+    else:
+      pagemsg("Would save with comment = %s" % comment)
+
+parser = blib.create_argparser(u"Convert raw verb forms to use 'inflection of'")
+args = parser.parse_args()
+start, end = blib.get_args(args.start, args.end)
+
+for category in ["Russian verb forms"]:
+  msg("Processing category: %s" % category)
+  for i, page in blib.cat_articles(category, start, end):
+    process_page(i, page, args.save, args.verbose)
