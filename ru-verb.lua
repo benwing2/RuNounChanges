@@ -78,6 +78,7 @@ local present_i_b
 local present_i_c
 local make_reflexive_alt
 local make_reflexive
+local finish_generating_forms
 local make_table
 
 local all_verb_forms = {
@@ -216,7 +217,10 @@ function export.do_generate_forms(conj_type, args)
 		table.insert(categories, "Russian impersonal verbs")
 	end
 
-	return forms, title, perf, intr or refl, impers, categories
+	intr = intr or refl
+	finish_generating_forms(forms, title, perf, intr, impers)
+
+	return forms, title, perf, intr, impers, categories
 end
 
 local function fetch_forms(forms)
@@ -232,14 +236,16 @@ local function fetch_forms(forms)
 	for _, proplist in ipairs(all_verb_forms) do
 		local vallist = {}
 		local propname = proplist[1]
-		for _, prop in ipairs(proplist) do
-			local val = fetch_one_form(prop)
-			if val then
-				table.insert(vallist, val)
+		if not rfind(propname, "^pres_futr") then
+			for _, prop in ipairs(proplist) do
+				local val = fetch_one_form(prop)
+				if val then
+					table.insert(vallist, val)
+				end
 			end
-		end
-		if #vallist > 0 then
-			table.insert(vals, propname .. "=" .. table.concat(vallist, ","))
+			if #vallist > 0 then
+				table.insert(vals, propname .. "=" .. table.concat(vallist, ","))
+			end
 		end
 	end
 	return table.concat(vals, "|")
@@ -3436,11 +3442,10 @@ make_reflexive = function(forms)
 	forms["past_adv_part_short"] = ""
 end
 
--- Make the table
-make_table = function(forms, title, perf, intr, impers)
+-- Finish generating the forms, clearing out some forms when impersonal/intr,
+-- selecting present or future forms from pres_futr_*, etc.
+finish_generating_forms = function(forms, title, perf, intr, impers)
 	local inf, inf_tr = extract_russian_tr(forms["infinitive"], "notranslit")
-
-	local title = "Conjugation of <span lang=\"ru\" class=\"Cyrl\">''" .. inf .. "''</span>" .. (title and " (" .. title .. ")" or "")
 
 	-- Intransitive verbs have no passive participles.
 	if intr then
@@ -3567,6 +3572,13 @@ make_table = function(forms, title, perf, intr, impers)
 		forms["futr_2pl2"] = nil
 		forms["futr_3pl2"] = nil
 	end
+end
+
+-- Make the table
+make_table = function(forms, title, perf, intr, impers)
+	local inf, inf_tr = extract_russian_tr(forms["infinitive"], "notranslit")
+
+	local title = "Conjugation of <span lang=\"ru\" class=\"Cyrl\">''" .. inf .. "''</span>" .. (title and " (" .. title .. ")" or "")
 
 	local function add_links(ru, rusuf, tr)
 		return "<span lang=\"ru\" class=\"Cyrl\">[[" .. com.remove_accents(ru) .. "#Russian|" .. ru .. "]]" .. rusuf .. "</span><br/><span style=\"color: #888\">" .. tr .. "</span>"
