@@ -82,60 +82,60 @@ local make_table
 
 local all_verb_forms = {
 	-- present tense
-	"pres_1sg", "pres_1sg2",
-	"pres_2sg", "pres_2sg2",
-	"pres_3sg", "pres_3sg2",
-	"pres_1pl", "pres_1pl2",
-	"pres_2pl", "pres_2pl2",
-	"pres_3pl", "pres_3pl2",
+	{"pres_1sg", "pres_1sg2"},
+	{"pres_2sg", "pres_2sg2"},
+	{"pres_3sg", "pres_3sg2"},
+	{"pres_1pl", "pres_1pl2"},
+	{"pres_2pl", "pres_2pl2"},
+	{"pres_3pl", "pres_3pl2"},
 	-- present-future tense
-	"pres_futr_1sg", "pres_futr_1sg2",
-	"pres_futr_2sg", "pres_futr_2sg2",
-	"pres_futr_3sg", "pres_futr_3sg2",
-	"pres_futr_1pl", "pres_futr_1pl2",
-	"pres_futr_2pl", "pres_futr_2pl2",
-	"pres_futr_3pl", "pres_futr_3pl2",
+	{"pres_futr_1sg", "pres_futr_1sg2"},
+	{"pres_futr_2sg", "pres_futr_2sg2"},
+	{"pres_futr_3sg", "pres_futr_3sg2"},
+	{"pres_futr_1pl", "pres_futr_1pl2"},
+	{"pres_futr_2pl", "pres_futr_2pl2"},
+	{"pres_futr_3pl", "pres_futr_3pl2"},
 	-- future tense
-	"futr_1sg", "futr_1sg2",
-	"futr_2sg", "futr_2sg2",
-	"futr_3sg", "futr_3sg2",
-	"futr_1pl", "futr_1pl2",
-	"futr_2pl", "futr_2pl2",
-	"futr_3pl", "futr_3pl2",
+	{"futr_1sg", "futr_1sg2"},
+	{"futr_2sg", "futr_2sg2"},
+	{"futr_3sg", "futr_3sg2"},
+	{"futr_1pl", "futr_1pl2"},
+	{"futr_2pl", "futr_2pl2"},
+	{"futr_3pl", "futr_3pl2"},
 	-- imperative
-	"impr_sg", "impr_sg2",
-	"impr_pl", "impr_pl2",
+	{"impr_sg", "impr_sg2"},
+	{"impr_pl", "impr_pl2"},
 	-- past
-	"past_m", "past_m2", "past_m3",
-	"past_f", "past_f2", "past_f3",
-	"past_n", "past_n2", "past_n3",
-	"past_pl", "past_pl2", "past_pl3",
-	"past_m_short",
-	"past_f_short",
-	"past_n_short",
-	"past_pl_short",
+	{"past_m", "past_m2", "past_m3"},
+	{"past_f", "past_f2"},
+	{"past_n", "past_n2"},
+	{"past_pl", "past_pl2"},
+	{"past_m_short"},
+	{"past_f_short"},
+	{"past_n_short"},
+	{"past_pl_short"},
 
 	-- active participles
-	"pres_actv_part", "pres_actv_part2",
-	"past_actv_part", "past_actv_part2",
+	{"pres_actv_part", "pres_actv_part2"},
+	{"past_actv_part", "past_actv_part2"},
 	-- passive participles
-	"pres_pasv_part", "pres_pasv_part2",
-	"past_pasv_part", "past_pasv_part2",
+	{"pres_pasv_part", "pres_pasv_part2"},
+	{"past_pasv_part", "past_pasv_part2"},
 	-- adverbial participles
-	"pres_adv_part", "pres_adv_part2",
-	"past_adv_part", "past_adv_part2",
-	"past_adv_part_short", "past_adv_part_short2",
+	{"pres_adv_part", "pres_adv_part2"},
+	{"past_adv_part", "past_adv_part2"},
+	{"past_adv_part_short", "past_adv_part_short2"},
 	-- infinitive
-	"infinitive",
+	{"infinitive"},
 }
 
 local all_verb_props = mw.clone(all_verb_forms)
 local non_form_props = {"title", "perf", "intr", "impers", "categories"}
 for _, prop in ipairs(non_form_props) do
-	table.insert(all_verb_props, prop)
+	table.insert(all_verb_props, {prop})
 end
 
-function export.generate_forms(conj_type, args)
+function export.do_generate_forms(conj_type, args)
 	-- Verb type, one of impf, pf, impf-intr, pf-intr, impf-refl, pf-refl.
 	-- Default to impf on the template page so that there is no script error.
 	local verb_type = getarg(args, 1, "impf", "Verb type (first parameter)")
@@ -219,6 +219,39 @@ function export.generate_forms(conj_type, args)
 	return forms, title, perf, intr or refl, impers, categories
 end
 
+local function fetch_forms(forms)
+	local function fetch_one_form(form)
+		local val = forms[form]
+		if type(val) == "table" then
+			return val[2] and val[1] .. "//" .. val[2] or val[1]
+		end
+		if type(val) == "string" and val ~= "" then return val end
+		return nil
+	end
+	local vals = {}
+	for _, proplist in ipairs(all_verb_forms) do
+		local vallist = {}
+		local propname = proplist[1]
+		for _, prop in ipairs(proplist) do
+			local val = fetch_one_form(prop)
+			if val then
+				table.insert(vallist, val)
+			end
+		end
+		if #vallist > 0 then
+			table.insert(vals, propname .. "=" .. table.concat(vallist, ","))
+		end
+	end
+	return table.concat(vals, "|")
+end
+
+function export.generate_forms(frame)
+	local conj_type = frame.args[1] or error("Conjugation type has not been specified. Please pass parameter 1 to the module invocation")
+	local args = clone_args(frame)
+	local forms, title, perf, intr, impers, categories = export.do_generate_forms(conj_type, args)
+	return fetch_forms(forms)
+end
+
 local function concat_vals(val)
 	if type(val) == "table" then
 		return table.concat(val, ",")
@@ -238,12 +271,12 @@ function export.show(frame)
 		args_clone = mw.clone(args)
 	end
 
-	local forms, title, perf, intr, impers, categories = export.generate_forms(conj_type, args)
+	local forms, title, perf, intr, impers, categories = export.do_generate_forms(conj_type, args)
 
 	-- Test code to compare existing module to new one.
 	if test_new_ru_verb_module then
 		local m_new_ru_verb = require("Module:User:Benwing2/ru-verb")
-		local newforms, newtitle, newperf, newintr, newimpers, newcategories = m_new_ru_verb.generate_forms(conj_type, args_clone)
+		local newforms, newtitle, newperf, newintr, newimpers, newcategories = m_new_ru_verb.do_generate_forms(conj_type, args_clone)
 		local vals = mw.clone(forms)
 		vals.title = title
 		vals.perf = perf
@@ -256,29 +289,30 @@ function export.show(frame)
 		newvals.intr = newintr
 		newvals.impers = newimpers
 		newvals.categories = newcategories
-		for _, prop in ipairs(all_verb_props) do
-			local val = vals[prop]
-			local newval = newvals[prop]
-			-- deal with impedance mismatch between old style (plain string)
-			-- and new style (Russian/translit array), and empty string vs. nil
-			if not ut.contains(non_form_props, prop) then
-				if type(val) == "string" then val = {val} end
-				if val and val[1] == "" then val = nil end
-				if type(newval) == "string" then newval = {newval} end
-				if newval and newval[1] == "" then newval = nil end
-			end
-			if not ut.equals(val, newval) then
-				-- Uncomment this to display the particular case and
-				-- differing forms.
-				--error(prop .. " " .. (val and concat_vals(val) or "nil") .. " || " .. (newval and concat_vals(newval) or "nil"))
-				track("different-conj")
-				break
+		for _, proplist in ipairs(all_verb_props) do
+			for _, prop in ipairs(proplist) do
+				local val = vals[prop]
+				local newval = newvals[prop]
+				-- deal with impedance mismatch between old style (plain string)
+				-- and new style (Russian/translit array), and empty string vs. nil
+				if not ut.contains(non_form_props, prop) then
+					if type(val) == "string" then val = {val} end
+					if val and val[1] == "" then val = nil end
+					if type(newval) == "string" then newval = {newval} end
+					if newval and newval[1] == "" then newval = nil end
+				end
+				if not ut.equals(val, newval) then
+					-- Uncomment this to display the particular case and
+					-- differing forms.
+					--error(prop .. " " .. (val and concat_vals(val) or "nil") .. " || " .. (newval and concat_vals(newval) or "nil"))
+					track("different-conj")
+					break
+				end
 			end
 		end
 	end
 
 	return make_table(forms, title, perf, intr, impers) .. m_utilities.format_categories(categories, lang)
-
 end
 
 --[=[
