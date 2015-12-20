@@ -3438,7 +3438,7 @@ end
 
 -- Make the table
 make_table = function(forms, title, perf, intr, impers)
-	local inf, inf_tr = extract_russian_tr(forms["infinitive"])
+	local inf, inf_tr = extract_russian_tr(forms["infinitive"], "notranslit")
 
 	local title = "Conjugation of <span lang=\"ru\" class=\"Cyrl\">''" .. inf .. "''</span>" .. (title and " (" .. title .. ")" or "")
 
@@ -3536,34 +3536,22 @@ make_table = function(forms, title, perf, intr, impers)
 		forms["pres_3pl2"] = forms["pres_futr_3pl2"]
 	end
 	
-	-- Add transliterations to all forms
-	for key, form in pairs(forms) do
-		local ru, tr = extract_russian_tr(form)
-		-- check for empty strings, dashes and nil's
-		if ru ~= "" and ru and ru ~= "-" then
-			forms[key] = "<span lang=\"ru\" class=\"Cyrl\">[[" .. com.remove_accents(ru) .. "#Russian|" .. ru .. "]]</span><br/><span style=\"color: #888\">" .. tr .. "</span>"
-		else
-			forms[key] = "&mdash;"
-		end
+	local function insert_future(inf, inf_tr)
+		forms["futr_1sg"] = {"бу́ду" .. inf, inf_tr and "búdu" .. inf_tr}
+		forms["futr_2sg"] = {"бу́дешь" .. inf, inf_tr and "búdešʹ" .. inf_tr}
+		forms["futr_3sg"] = {"бу́дет" .. inf, inf_tr and "búdet" .. inf_tr}
+		forms["futr_1pl"] = {"бу́дем" .. inf, inf_tr and "búdem" .. inf_tr}
+		forms["futr_2pl"] = {"бу́дете" .. inf, inf_tr and "búdete" .. inf_tr}
+		forms["futr_3pl"] = {"бу́дут" .. inf, inf_tr and "búdut" .. inf_tr}
 	end
 
 	if not perf then
-		forms["futr_1sg"] = "<span lang=\"ru\" class=\"Cyrl\">[[буду#Russian|бу́ду]] " .. inf .. "</span><br/><span style=\"color: #888\">búdu " .. inf_tr .. "</span>"
-		forms["futr_2sg"] = "<span lang=\"ru\" class=\"Cyrl\">[[будешь#Russian|бу́дешь]] " .. inf .. "</span><br/><span style=\"color: #888\">búdešʹ " .. inf_tr .. "</span>"
-		forms["futr_3sg"] = "<span lang=\"ru\" class=\"Cyrl\">[[будет#Russian|бу́дет]] " .. inf .. "</span><br/><span style=\"color: #888\">búdet " .. inf_tr .. "</span>"
-		forms["futr_1pl"] = "<span lang=\"ru\" class=\"Cyrl\">[[будем#Russian|бу́дем]] " .. inf .. "</span><br/><span style=\"color: #888\">búdem " .. inf_tr .. "</span>"
-		forms["futr_2pl"] = "<span lang=\"ru\" class=\"Cyrl\">[[будете#Russian|бу́дете]] " .. inf .. "</span><br/><span style=\"color: #888\">búdete " .. inf_tr .. "</span>"
-		forms["futr_3pl"] = "<span lang=\"ru\" class=\"Cyrl\">[[будут#Russian|бу́дут]] " .. inf .. "</span><br/><span style=\"color: #888\">búdut " .. inf_tr .. "</span>"
+		insert_future(" " .. inf, inf_tr and " " .. inf_tr)
 	end
 
 	-- only for "бы́ть" the future forms are бу́ду, бу́дешь, etc.
 	if inf == "бы́ть" then
-		forms["futr_1sg"] = "<span lang=\"ru\" class=\"Cyrl\">[[буду#Russian|бу́ду]] " .. "</span><br/><span style=\"color: #888\">búdu " .. "</span>"
-		forms["futr_2sg"] = "<span lang=\"ru\" class=\"Cyrl\">[[будешь#Russian|бу́дешь]] " .. "</span><br/><span style=\"color: #888\">búdešʹ " .. "</span>"
-		forms["futr_3sg"] = "<span lang=\"ru\" class=\"Cyrl\">[[будет#Russian|бу́дет]] "  .. "</span><br/><span style=\"color: #888\">búdet " .. "</span>"
-		forms["futr_1pl"] = "<span lang=\"ru\" class=\"Cyrl\">[[будем#Russian|бу́дем]] "  .. "</span><br/><span style=\"color: #888\">búdem "  .. "</span>"
-		forms["futr_2pl"] = "<span lang=\"ru\" class=\"Cyrl\">[[будете#Russian|бу́дете]] "  .. "</span><br/><span style=\"color: #888\">búdete "  .. "</span>"
-		forms["futr_3pl"] = "<span lang=\"ru\" class=\"Cyrl\">[[будут#Russian|бу́дут]] "  .. "</span><br/><span style=\"color: #888\">búdut "  .. "</span>"
+		insert_future("", nil)
 	end
 
 	if impers then
@@ -3578,6 +3566,31 @@ make_table = function(forms, title, perf, intr, impers)
 		forms["futr_1pl2"] = nil
 		forms["futr_2pl2"] = nil
 		forms["futr_3pl2"] = nil
+	end
+
+	local function add_links(ru, rusuf, tr)
+		return "<span lang=\"ru\" class=\"Cyrl\">[[" .. com.remove_accents(ru) .. "#Russian|" .. ru .. "]]" .. rusuf .. "</span><br/><span style=\"color: #888\">" .. tr .. "</span>"
+	end
+
+	-- Add transliterations to all forms
+	for key, form in pairs(forms) do
+		local ru, tr = extract_russian_tr(form)
+		-- check for empty strings, dashes and nil's
+		if ru ~= "" and ru and ru ~= "-" then
+			if rfind(key, "^futr") then
+				-- Add link to first word (form of 'to be')
+				tobe, inf = rmatch(ru, "^([^ ]*) ([^ ]*)$")
+				if tobe then
+					forms[key] = add_links(tobe, " " .. inf, tr)
+				else
+					forms[key] = add_links(ru, "", tr)
+				end
+			else
+				forms[key] = add_links(ru, "", tr)
+			end
+		else
+			forms[key] = "&mdash;"
+		end
 	end
 
 	-- alternative forms
