@@ -2,7 +2,7 @@
 	This module contains functions for creating inflection tables for Russian
 	verbs.
 	
-	Author: Atitarev, earliest version by CodeCat
+	Author: Atitarev, partly rewritten by Benwing, earliest version by CodeCat
 ]=]--
 
 local m_utilities = require("Module:utilities")
@@ -591,7 +591,8 @@ end
 conjugations["4a"] = function(args)
 	local forms = {}
 
-	local stem = getarg(args, 2)
+	local stem, tr = nom.split_russian_tr(getarg(args, 2))
+
 	-- for "a" stress type "й" - after vowels, "ь" - after single consonants, "и" - after consonant clusters
 	local impr_end_param = args[3]
 	-- optional parameter for verbs like похитить (похи́щу) (4a), защитить (защищу́) (4b), поглотить (поглощу́) (4c) with a different iotation (т -> щ, not ч)
@@ -615,39 +616,24 @@ conjugations["4a"] = function(args)
 		impr_end = "ь"
 	end
 
-	forms["infinitive"] = stem .. "ить"
+	forms["infinitive"] = combine(stem, tr, "ить")
 
 	-- Verbs ending in a hushing consonant do not get j-vowels in the endings.
-	if rfind(stem, "[шщжч]$") then
-		forms["pres_actv_part"] = stem .. "ащий"
-		forms["pres_adv_part"] = stem .. "а"
-		-- use the passed parameter or default
-		forms["impr_sg"] = stem .. impr_end
-		forms["impr_pl"] = stem .. impr_end .. "те"
-	else
-		forms["pres_actv_part"] = stem .. "ящий"
-		forms["pres_adv_part"] = stem .. "я"
-		-- use the passed parameter or default
-		forms["impr_sg"] = stem .. impr_end
-		forms["impr_pl"] = stem .. impr_end .. "те"
-	end
-
-	forms["past_actv_part"] = stem .. "ивший"
-	forms["pres_pasv_part"] = stem .. "имый"
-	forms["past_adv_part"] = stem .. "ивши"
-	forms["past_adv_part_short"] = stem .. "ив"
+	local hushing = rfind(stem, "[шщжч]$")
+	set_participles(forms, stem, tr, hushing and "ащий" or "ящий",
+		"ивший", "имый", hushing and "а" or "я", "ивши", "ив")
 
 	-- if shch is nil, pass nothing, otherwise pass "щ"
 	if not shch then
-		present_i_a(forms, stem)    -- param #3 must be a string
+		present_i_a(forms, stem, tr)    -- param #4 must be a string
 	else -- tell the conjugator that this is an exception
-		present_i_a(forms, stem, shch)
+		present_i_a(forms, stem, tr, shch)
 	end
 
-	forms["past_m"] = stem .. "ил"
-	forms["past_f"] = stem .. "ила"
-	forms["past_n"] = stem .. "ило"
-	forms["past_pl"] = stem .. "или"
+	-- use the passed parameter or default
+	set_imper(forms, stem, tr, impr_end, impr_end .. "те")
+
+	set_past(forms, stem, tr, "ил", "ила", "ило", "или")
 
 	return forms
 end
@@ -655,12 +641,12 @@ end
 conjugations["4b"] = function(args)
 	local forms = {}
 
-	local stem = getarg(args, 2)
+	local stem, tr = nom.split_russian_tr(getarg(args, 2))
 	-- optional parameter for verbs like похитить (похи́щу) (4a), защитить (защищу́) (4b), поглотить (поглощу́) (4c) with a different iotation (т -> щ, not ч)
 	local shch = args[3]
 	-- some verbs don't have 1st person singular - победить, возродить, use "no_1sg_futr=1" in the template
 	local no_1sg_futr = "0"
-	local past_f = args["past_f"]
+	local past_f = args["past_f"] and nom.split_russian_tr(args["past_f"], "dopair")
 
 	if not args["no_1sg_futr"] then
 		no_1sg_futr = 0
@@ -670,27 +656,18 @@ conjugations["4b"] = function(args)
 		no_1sg_futr = 0
 	end
 
-	forms["infinitive"] = stem .. "и́ть"
+	forms["infinitive"] = combine(stem, tr, "и́ть")
 
 	-- Verbs ending in a hushing consonant do not get j-vowels in the endings.
-	if rfind(stem, "[шщжч]$") then
-		forms["pres_actv_part"] = stem .. "а́щий"
-		forms["pres_adv_part"] = stem .. "а́"
-	else
-		forms["pres_actv_part"] = stem .. "я́щий"
-		forms["pres_adv_part"] = stem .. "я́"
-	end
-
-	forms["past_actv_part"] = stem .. "и́вший"
-	forms["pres_pasv_part"] = stem .. "и́мый"
-	forms["past_adv_part"] = stem .. "и́вши"
-	forms["past_adv_part_short"] = stem .. "и́в"
+	local hushing = rfind(stem, "[шщжч]$")
+	set_participles(forms, stem, tr, hushing and "а́щий" or "я́щий",
+		"и́вший", "и́мый", hushing and "а́" or "я́", "и́вши", "и́в")
 
 	-- if shch is nil, pass nothing, otherwise pass "щ"
 	if not shch then
-		present_i_b(forms, stem, 0)
+		present_i_b(forms, stem, tr, 0)
 	else -- т-щ, not т-ч
-		present_i_b(forms, stem, 0, shch)
+		present_i_b(forms, stem, tr, 0, shch)
 	end
 
 	-- make 1st person future singular blank if no_1sg_futr = 1
@@ -698,17 +675,11 @@ conjugations["4b"] = function(args)
 		forms["pres_futr_1sg"] = ""
 	end
 
-	forms["impr_sg"] = stem .. "и́"
-	forms["impr_pl"] = stem .. "и́те"
+	set_imper(forms, stem, tr, "и́", "и́те")
 
-	forms["past_m"] = stem .. "и́л"
-	forms["past_n"] = stem .. "и́ло"
-	forms["past_pl"] = stem .. "и́ли"
-
+	set_past(forms, stem, tr, "и́л", "и́ла", "и́ло", "и́ли")
 	if past_f then
 		forms["past_f"] = past_f
-	else
-		forms["past_f"] = stem .. "и́ла"
 	end
 
 	return forms
@@ -726,39 +697,26 @@ conjugations["4c"] = function(args)
 	-- replace consonants for 1st person singular present/future
 	local iotated_stem = com.iotation_new(stem_noa)
 
-	forms["infinitive"] = stem_noa .. "и́ть"
-
-	forms["past_actv_part"] = stem_noa .. "и́вший"
-	forms["pres_pasv_part"] = stem_noa .. "и́мый"
-	forms["past_adv_part"] = stem_noa .. "и́вши"
-	forms["past_adv_part_short"] = stem_noa .. "и́в"
+	forms["infinitive"] = combine(stem, tr, "и́ть")
 
 	-- Verbs ending in a hushing consonant do not get j-vowels in the endings.
-	if rfind(stem, "[шщжч]$") then
-		forms["pres_actv_part"] = stem_noa .. "а́щий"
-		forms["pres_adv_part"] = stem_noa .. "а́"
-	else
-		forms["pres_actv_part"] = stem_noa .. "я́щий"
-		forms["pres_adv_part"] = stem_noa .. "я́"
-	end
-
-	forms["impr_sg"] = stem_noa .. "и́"
-	forms["impr_pl"] = stem_noa .. "и́те"
+	local hushing = rfind(stem, "[шщжч]$")
+	set_participles(forms, stem, tr, hushing and "а́щий" or "я́щий",
+		"и́вший", "и́мый", hushing and "а́" or "я́", "и́вши", "и́в")
 
 	-- if shch is nil, pass nothing, otherwise pass "щ"
 	if not shch then
-		present_i_c(forms, stem)    -- param #3 must be a string
+		present_i_c(forms, stem, tr)    -- param #4 must be a string
 	else -- tell the conjugator that this is an exception
-		present_i_c(forms, stem, shch)
+		present_i_c(forms, stem, tr, shch)
 	end
 
-	forms["past_m"] = stem_noa .. "и́л"
-	forms["past_f"] = stem_noa .. "и́ла"
-	forms["past_n"] = stem_noa .. "и́ло"
-	forms["past_pl"] = stem_noa .. "и́ли"
+	set_imper(forms, stem, tr, "и́", "и́те")
+
+	set_past(forms, stem, tr, "и́л", "и́ла", "и́ло", "и́ли")
 
 	-- pres_actv_part for суши́ть -> су́шащий
-	if forms["infinitive"] == "суши́ть" then
+	if ut.equals(forms["infinitive"], {"суши́ть"}) then
 		forms["pres_actv_part"] = "су́шащий"
 	end
 
@@ -1123,7 +1081,7 @@ conjugations["6c"] = function(args)
 	--present_je_c(forms, stem, nil, no_iotation)
 	-- if shch is nil, pass nothing, otherwise pass "щ"
 	if not shch then
-		present_je_c(forms, stem, nil)    -- param #3 must be a string
+		present_je_c(forms, stem, nil)    -- param #4 must be a string
 	else -- tell the conjugator that this is an exception
 		present_je_c(forms, stem, nil, shch)
 	end	
@@ -3316,31 +3274,23 @@ present_je_c = function(forms, stem, tr, shch)
 end
 
 -- Present forms with -i-.
-present_i_a = function(forms, stem, shch)
-	-- shch - iotatate final т as щ, not ч
+present_i_a = function(forms, stem, tr, shch)
+	-- shch - iotate final т as щ, not ч
+
 	-- iotate the stem
-	local iotated_stem = com.iotation_new(stem, nil, shch)
+	local iotated_stem, iotated_tr = com.iotation_new(stem, tr, shch)
 
 	-- Verbs ending in a hushing consonant do not get j-vowels in the endings.
-	if rfind(iotated_stem, "[шщжч]$") then
-		forms["pres_futr_1sg"] = iotated_stem .. "у"
-	else
-		forms["pres_futr_1sg"] = iotated_stem .. "ю"
-	end
-
-	if rfind(stem, "[шщжч]$") then
-		forms["pres_futr_3pl"] = stem .. "ат"
-	else
-		forms["pres_futr_3pl"] = stem .. "ят"
-	end
-
-	forms["pres_futr_2sg"] = stem .. "ишь"
-	forms["pres_futr_3sg"] = stem .. "ит"
-	forms["pres_futr_1pl"] = stem .. "им"
-	forms["pres_futr_2pl"] = stem .. "ите"
+	local iotated_hushing = rfind(iotated_stem, "[шщжч]$")
+	local hushing = rfind(stem, "[шщжч]$")
+	local ending_1sg = iotated_hushing and "у" or "ю"
+	set_paradigm(forms, "pres_futr", stem, tr,
+		ending_1sg, "ишь", "ит", "им", "ите",
+		hushing and "ат" or "ят")
+	forms["pres_futr_1sg"] = combine(iotated_stem, iotated_tr, ending_1sg)
 end
 
-present_i_b = function(forms, stem, no_1sg_futr, shch)
+present_i_b = function(forms, stem, tr, no_1sg_futr, shch)
 	-- parameter no_1sg_futr - no 1st person singular future if no_1sg_futr = 1
 	if not no_1sg_futr then
 		no_1sg_futr = 0
@@ -3352,55 +3302,37 @@ present_i_b = function(forms, stem, no_1sg_futr, shch)
 	end
 
 	-- iotate the stem
-	local iotated_stem = com.iotation_new(stem, nil, shch)
+	local iotated_stem, iotated_tr = com.iotation_new(stem, tr, shch)
 
+	-- Verbs ending in a hushing consonant do not get j-vowels in the endings.
+	local iotated_hushing = rfind(iotated_stem, "[шщжч]$")
+	local hushing = rfind(stem, "[шщжч]$")
+	local ending_1sg = iotated_hushing and "у́" or "ю́"
+	set_paradigm(forms, "pres_futr", stem, tr,
+		ending_1sg, "и́шь", "и́т", "и́м", "и́те",
+		hushing and "а́т" or "я́т")
 	-- Make 1st person future singular blank if no_1sg_futr = 1
 	if no_1sg_futr == 1 then
 		forms["pres_futr_1sg"] = ""
-	-- Verbs ending in a hushing consonant do not get j-vowels in the endings.
-	elseif rfind(iotated_stem, "[шщжч]$") then
-		forms["pres_futr_1sg"] = iotated_stem .. "у́"
 	else
-		forms["pres_futr_1sg"] = iotated_stem .. "ю́"
+		forms["pres_futr_1sg"] = combine(iotated_stem, iotated_tr, ending_1sg)
 	end
-
-	if rfind(stem, "[шщжч]$") then
-		forms["pres_futr_3pl"] = stem .. "а́т"
-	else
-		forms["pres_futr_3pl"] = stem .. "я́т"
-	end
-
-	forms["pres_futr_2sg"] = stem .. "и́шь"
-	forms["pres_futr_3sg"] = stem .. "и́т"
-	forms["pres_futr_1pl"] = stem .. "и́м"
-	forms["pres_futr_2pl"] = stem .. "и́те"
-
 end
 
-present_i_c = function(forms, stem, shch)
-	-- shch - iotatate final т as щ, not ч
+present_i_c = function(forms, stem, tr, shch)
+	-- shch - iotate final т as щ, not ч
 
-	local stem_noa = com.make_unstressed(stem)
 	-- iotate the stem
-	local iotated_stem = com.iotation_new(stem_noa, nil, shch)
+	local iotated_stem, iotated_tr = com.iotation_new(stem, tr, shch)
 
 	-- Verbs ending in a hushing consonant do not get j-vowels in the endings.
-	if rfind(iotated_stem, "[шщжч]$") then
-		forms["pres_futr_1sg"] = iotated_stem .. "у́"
-	else
-		forms["pres_futr_1sg"] = iotated_stem .. "ю́"
-	end
-
-	if rfind(stem, "[шщжч]$") then
-		forms["pres_futr_3pl"] = stem .. "ат"
-	else
-		forms["pres_futr_3pl"] = stem .. "ят"
-	end
-
-	forms["pres_futr_2sg"] = stem .. "ишь"
-	forms["pres_futr_3sg"] = stem .. "ит"
-	forms["pres_futr_1pl"] = stem .. "им"
-	forms["pres_futr_2pl"] = stem .. "ите"
+	local iotated_hushing = rfind(iotated_stem, "[шщжч]$")
+	local hushing = rfind(stem, "[шщжч]$")
+	local ending_1sg = iotated_hushing and "у́" or "ю́"
+	set_paradigm(forms, "pres_futr", stem, tr,
+		ending_1sg, "ишь", "ит", "им", "ите",
+		hushing and "ат" or "ят")
+	forms["pres_futr_1sg"] = combine(iotated_stem, iotated_tr, ending_1sg)
 end
 
 -- add alternative form stressed on the reflexive particle
