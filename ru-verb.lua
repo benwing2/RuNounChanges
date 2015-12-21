@@ -3,6 +3,23 @@
 	verbs.
 	
 	Author: Atitarev, partly rewritten by Benwing, earliest version by CodeCat
+
+	NOTE: This module is partly converted to support manual translit, in the
+	form CYRILLIC//LATIN (i.e. with a // separating the Cyrillic and Latin
+	parts). All the general infrastructure supports manual translit; the
+	only thing that doesn't is some of the specific verb conjugation functions.
+	In particular, all of the class 1, 2 and 4 conjugation functions support
+	manual translit, and the rest don't, To convert another, follow the
+	model of one of the already-converted functions.
+
+	Note that an individual form (an entry in the 'forms' table) can be
+	either a string (no special manual translit; generally this originates
+	from the portion of the code that doesn't support manual translit), or
+	a one-element list {CYRILLIC} (no special manual translit), or a
+	two-element list {CYRILLIC, LATIN} with manual translit specified.
+	The code is careful only to generate manual translit when it's needed,
+	to avoid penalizing the majority of cases where manual transit isn't
+	needed.
 ]=]--
 
 local m_utilities = require("Module:utilities")
