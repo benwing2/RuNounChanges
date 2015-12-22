@@ -48,9 +48,7 @@ TODO:
 Бетховен: use capital Б in ru-IPA
 благодаря тому, что: Add comma in ru-IPA
 благородный газ: Add accent to газ in headword
-бобслей: pron has two stresses, headword needs them too (?)
 Бородин: use capital Б in ru-IPA
-братина: pron has two stresses, headword needs them too (?)
 Браун: use capital Б in ru-IPA
 Брежнев: use capital Б in ru-IPA
 бритьё: Remove accent from ё
@@ -62,8 +60,6 @@ TODO:
 в любви и на войне все средства хороши: Headword should have accent on все
 в эти дни: Use accent on дни in ru-IPA
 Вавилов: Use capital letter in ru-IPA
-век живи — век учись: Put en-dash into ru-IPA
-весь: Don't copy same pronun 3 times
 високосный год: Use accent on год in ru-IPA
 водяной кресс: Use accent on кресс in ru-IPA
 военно-морской флот: Use accent on флот in ru-IPA
@@ -86,7 +82,6 @@ TODO:
 вы можете мне помочь: Use accent on вы in both ru-IPA and headword
 вы принимаете какие-нибудь лекарства: Use accent on вы in both ru-IPA and headword
 вы принимаете какие-нибудь медикаменты: Use accent on вы in both ru-IPA and headword
-Генеральная Ассамблея ООН: Use О̂О́Н not о̂-о́н
 головная боль: Use accent on боль in ru-IPA
 головной мозг: Use accent on monosyllable in ru-IPA
 гоп-стоп: Use accents on monosyllables in ru-IPA
@@ -99,10 +94,8 @@ TODO:
 две: Add accent in headword
 Дед Мороз: Use accent on monosyllable in ru-IPA
 [IMPORTANT] Демиург: use phon=; modify addpron.py to check for е/э differences without phon=; add manual translit to headword
-[IMPORTANT] демонстрация: no need for duplicate ru-IPA, two variants might be real
 День смеха: Use accent on monosyllable in ru-IPA
 Джек-Потрошитель: Use accent on monosyllable in ru-IPA
-джоггинг: use gem=n instead of single г in ru-IPA
 днём: remove manual translit
 до бемоль: add accent to monosyl in headword
 до скорого: headword needs manual translit or adj signal
@@ -137,7 +130,6 @@ TODO:
 импортёр: remove acute accent from ё in ru-IPA
 [IMPORTANT] индонезийский: does it have both palatal and non-palatal е, like индонезийка?
 [IMPORTANT] Индонезия: does it have both palatal and non-palatal е, like индонезийка?
-индустрия: pron has two stresses, headword needs them too (?)
 инертный газ: Use accent on monosyllable in ru-IPA
 [IMPORTANT] инстинкт: don't need duplicate ru-IPA, may have two variants
 Йемен: ru-IPA has both palatal and non-palatal е, headword should agree
@@ -217,7 +209,6 @@ TODO:
 ответственность: ru-IPA missing accent
 [IMPORTANT] отгадать, отгадывать: Two primary acute accents, fix; make addpron.py fix this automatically
 отзывать: gem=y probably does nothing here, remove it
-отсвет: pron has two stresses, headword needs them too (?)
 Оттава: use gem=n instead of single т in ru-IPA
 отчего: use adj=y instead of phon=
 панно: use gem=n instead of single н in ru-IPA; or use gem=opt
@@ -229,12 +220,10 @@ TODO:
 [IMPORTANT] плавательный бассейн: headword needs manual translit (will be done automatically when I run add_noun_decl.py)
 по мере того как: use adj=y
 по-прежнему: use hyphen not space in ru-IPA
-по-украински: pron has two stresses, headword needs them too (?)
 повод: stray slash in ru-IPA
 подоплёка: remove acute accent from ё in ru-IPA
 пол боевого отделения: Use accent on monosyllable in ru-IPA
 [IMPORTANT] полезная модель: needs manual translit (will be done automatically once add_noun_decl.py is run)
-полиграфия: pron has two stresses, headword needs them too (?)
 половой акт: Use accent on monosyllable in ru-IPA
 половой член: Use accent on monosyllable in ru-IPA
 помощник: headword needs manual translit
@@ -1398,14 +1387,4 @@ TODO:
 
 ====Declension====
 {{ru-noun-table|примка́мера}}
-
-программное обеспечение
-
-
-
-
-
-рад
-
-
 
