@@ -83,9 +83,9 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
         infltype, inflection, " (%s)" % infltr if infltr else "",
         lemmatype, lemma, " (%s)" % lemmatr if lemmatr else ""))
 
-  is_participle = infltype.endswith("participle")
+  is_participle = "participle" in infltype
   is_vn = infltype == "verbal noun"
-  is_verb_part = pos == "Verb"
+  uses_inflection_of = infltemp == "inflection of"
   vn_or_participle = is_vn or is_participle
   lemma_is_verb = is_verb_part or vn_or_participle
 
@@ -96,8 +96,6 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
 
   # Prepare to create page
   pagemsg("Creating entry")
-  infl_no_vowels = pagename
-  lemma_no_vowels = remove_diacritics(lemma)
   page = pywikibot.Page(site, pagename)
 
   def compare_param(template, param, value):
@@ -222,15 +220,39 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
               return template_head_match_info(template, form)[2]
             head_matches_tuples = [template_head_match_info(t, inflection)
                 for t in parsed.filter_templates()]
-            def compare_inflections(template, infls):
+
+            # True if the inflection codes in template T (an 'inflection of'
+            # template) exactly match the inflections given in INFLS (in
+            # any order)
+            def compare_inflections(t, infls):
+              infl_params = []
+              for param in t.params:
+                name = unicode(param.name)
+                value = unicode(param.value)
+                if name not in ["1", "2"] and re.search("^[0-9]+$", name):
+                  infl_params.append(value)
+              inflset = set(infls)
+              paramset = set(infl_params)
+              if inflset == paramset:
+                return True
+              union = inflset | paramset
+              if union == paramset:
+                pagemsg("WARNING: Found actual inflection %s whose codes are a superset of intended codes %s" % (
+                  unicode(t), "|".join(infls)))
+              elif union == inflset:
+                pagemsg("WARNING: Found actual inflection %s whose codes are a subset of intended codes %s" % (
+                  unicode(t), "|".join(infls)))
+              return False
+
             # Now get a list of (TEMPLATE, PARAM) for all matching templates,
             # where PARAM is the matching head param, as above.
-            infl_headword_templates = (
-                [(t, param) for t, param, matches in head_matches_tuples
-                 if t.name == infltemp and matches]
+            infl_headword_templates = [(t, param)
+                for t, param, matches in head_matches_tuples
+                if unicode(t.name) == infltemp and matches]
             defn_templates = [t for t in parsed.filter_templates()
-                if t.name == deftemp and compare_param(t, "1", lemma)
-                and compare_inflections(...)]
+                if unicode(t.name) == deftemp and compare_param(t, "1", lemma)
+                and (not deftemp_needs_lang or compare_param(t, "lang", "ru"))
+                and (not uses_inflection_of or compare_inflections(t, deftemp_param))]
 
             def particip_mismatch_check():
               if particip_pos_mismatch:
@@ -282,22 +304,7 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
                     pagemsg("Found non-matching definitional template for %s: %s"
                         % (infltype, unicode(d_t)))
 
-                if verb_part_inserted_defn:
-                  # If we already inserted an entry or found an exact-matching
-                  # entry, check for duplicate entries. Currently we combine
-                  # entries with the same inflection and conjugational form
-                  # and separate lemmas, but previously created separate
-                  # entries. We will add the new definition to the existing
-                  # section but need to check for the previously added separate
-                  # sections.
-                  if found_exact_matching and len(defn_templates) == 1:
-                    pagemsg("Found duplicate definition, deleting")
-                    subsections[j - 1] = ""
-                    subsections[j] = ""
-                    sections[i] = ''.join(subsections)
-                    notes.append("delete duplicate definition for %s %s, form %s"
-                        % (infltype, inflection, verb_part_form))
-                elif not found_exact_matching:
+                if not found_exact_matching:
                   subsections[j] = unicode(parsed)
                   if subsections[j][-1] != '\n':
                     subsections[j] += '\n'
@@ -308,57 +315,7 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
                   comment = "Add new definitional template to existing defn: %s %s, %s %s, pos=%s" % (
                       infltype, inflection, lemmatype, lemma, pos)
 
-                # Don't break, so we can check for duplicate entries.
-                # We set need_new_entry to false so we won't insert a new
-                # one down below.
-                verb_part_inserted_defn = True
-                need_new_entry = False
-
-            # At this point, didn't find either headword or definitional
-            # template, or both.
-            elif vn_or_participle:
-              # Insert {{ar-verbal noun of}} (or equivalent for participles).
-              # Return comment (can't set it inside of fn).
-              def insert_vn_defn():
-                subsections[j] = unicode(parsed)
-                subsections[j] = re.sub("^#",
-                    "# %s\n#" % new_defn_template,
-                    subsections[j], 1, re.M)
-                sections[i] = ''.join(subsections)
-                pagemsg("Insert existing defn with {{%s}} at beginning" % (
-                    deftemp))
-                return "Insert existing defn with {{%s}} at beginning: %s %s, %s %s" % (
-                    deftemp, infltype, inflection, lemmatype, lemma)
-
-              # If verb or participle, see if we found inflection headword
-              # template at least. If so, add definition to beginning as
-              # {{ar-verbal noun of}} (or equivalent for participles).
-              if infl_headword_templates:
-                infl_headword_template, infl_headword_matching_param = \
-                    infl_headword_templates[0]
-
-                # Check for i3rab in existing infl and remove it if so
-                check_maybe_remove_i3rab(infl_headword_template,
-                    infl_headword_matching_param, infltype)
-
-                # Now actually add {{ar-verbal noun of}} (or equivalent
-                # for participles).
-                comment = insert_vn_defn()
                 break
-
-              elif is_participle:
-                # Couldn't find headword template; if we're a participle,
-                # see if there's a generic noun or adjective template
-                # with the same head.
-                for other_template in ["ar-noun", "ar-adj"]:
-                  other_headword_templates = [
-                      t for t in parsed.filter_templates()
-                      if t.name == other_template and template_head_matches(t, inflection)]
-                  if other_headword_templates:
-                      pagemsg("WARNING: Found %s matching %s" %
-                          (other_template, infltype))
-                      # FIXME: Should we break here? Should we insert
-                      # a participle defn?
 
             # At this point, didn't find either headword or definitional
             # template, or both, and not vn or participle. If we found
@@ -413,9 +370,9 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
                 if re.match("^===+Verb===+", subsections[j - 1]):
                   parsed = blib.parse_text(subsections[j])
                   for t in parsed.filter_templates():
-                    if (t.name == deftemp and compare_param(t, "1", lemma) or
-                        t.name == infltemp and (not t.has("2") or compare_param(t, "2", verb_part_form)) or
-                        t.name == "ar-verb" and re.sub("-.*$", "", getparam(t, "1")) == verb_part_form and remove_diacritics(get_dicform(page, t)) == remove_diacritics(lemma)):
+                    if (unicode(t.name) == deftemp and compare_param(t, "1", lemma) or
+                        unicode(t.name) == infltemp and (not t.has("2") or compare_param(t, "2", verb_part_form)) or
+                        unicode(t.name) == "ar-verb" and re.sub("-.*$", "", getparam(t, "1")) == verb_part_form and remove_diacritics(get_dicform(page, t)) == remove_diacritics(lemma)):
                       insert_at = j + 1
             if insert_at:
               pagemsg("Found section to insert verb part after: [[%s]]" %
@@ -739,6 +696,84 @@ def create_verb_forms(save, startFrom, upTo, formspec):
                   "verb form %s" % formname, "dictionary form",
                   "head|ru|verb form", "",
                   "inflection of", infls)
+
+# Create required forms for all nouns/verbs/adjectives.
+# SAVE is as in create_inflection_entry(). STARTFROM and UPTO, if not None,
+# delimit the range of pages to process (inclusive on both ends).
+#
+# FORMSPEC specifies the form(s) to do, a comma-separated list of form codes,
+# possibly including aliases (e.g. 'all'). FORM_INFLECTION_DICT is a dictionary
+# mapping possible form codes to the corresponding inflection codes in
+# {{inflection of|...}}. FORM_ALIASES is a dictionary mapping aliases to
+# form codes.
+#
+# POS specifies the part of speech (lowercase, singular, e.g. "verb").
+# INFLTEMP specifies the inflection template name (e.g. "head|ru|verb form" or
+# "ru-noun form"). DICFORM_CODE specifies the form code for the dictionary
+# form (e.g. "infinitive", "nom_m" or "nom_sg").
+#
+# IS_INFLECTION_TEMPLATE is a function that is passed one argument, a template,
+# and should indicate if it's an inflection template (e.g. 'ru-conj-2a' for
+# verbs). CREATE_FORM_GENERATOR is a function that's passed one argument,
+# a template, and should return a template (a string) that can be expanded to
+# yield a set of forms, identified by form codes.
+def create_forms(save, startFrom, upTo, formspec,
+    form_inflection_dict, form_aliases, pos, infltemp, dicform_code,
+    is_inflection_template, create_form_generator):
+  forms_desired = parse_form_spec(formspec, form_inflection_dict,
+      form_aliases)
+  for index, page in blib.cat_articles("Russian %ss" % pos, startFrom, upTo):
+    def pagemsg(txt):
+      msg("Page %s %s: %s" % (index, page, txt))
+    def expand_text(tempcall):
+      return blib.expand_text(tempcall, pagetitle, pagemsg, verbose)
+
+    for t in blib.parse(page).filter_templates():
+      tname = unicode(t.name)
+      if is_inflection_template(t):
+        result = blib.expand_text(create_form_generator(t))
+        if not result:
+          pagemsg("WARNING: Error generating %s forms, skipping" % pos)
+          continue
+        args = ru.split_generate_args(result)
+        dicforms = args[dicform_code]
+        for dicform in re.split(",", dicforms):
+          for form, infls in forms_desired:
+            if form != dicform_code and form in args and args[form]:
+              dicformru, dicformtr = split_ru_tr(dicform)
+              for formval in re.split(",", args[form]):
+                formvalru, formvaltr = split_ru_tr(formval)
+                create_inflection_entry(save, index, formvalru, formvaltr,
+                  dicformru, dicformtr, pos.capitalize(),
+                  "%s form %s" % (pos, formname), "dictionary form",
+                  infltemp, "",
+                  "inflection of", infls)
+
+def create_verb_generator(t):
+  verbtype = re.sub(r"^ru-conj-", "", unicode(t.name))
+  params = re.sub(r"^\{\{ru-conj-.*?\|(.*)\}\}$", r"\1", unicode(t))
+  return "{{ru-generate-verb-forms|type=%s|%s}}" % (verbtype, params)
+
+def create_verb_forms(save, startFrom, upTo, formspec):
+  create_forms(save, startFrom, upTo, formspec,
+      verb_form_inflection_dict, verb_form_aliases,
+      "verb", "head|ru|verb form", "infinitive",
+      lambda t:unicode(t.name).startswith("ru-conj"),
+      create_verb_generator)
+
+def create_adj_forms(save, startFrom, upTo, formspec):
+  create_forms(save, startFrom, upTo, formspec,
+      adj_form_inflection_dict, adj_form_aliases,
+      "adjective", "head|ru|adjective form", "nom_m",
+      lambda t:unicode(t.name) == "ru-decl-adj",
+      lambda t:re.sub(r"^\{\{ru-decl-adj", "{{ru-generate-adj-forms", unicode(t)))
+
+def create_noun_forms(save, startFrom, upTo, formspec):
+  create_forms(save, startFrom, upTo, formspec,
+      noun_form_inflection_dict, noun_form_aliases,
+      "noun", "ru-noun form", "nom_sg",
+      lambda t:unicode(t.name) == "ru-noun-table",
+      lambda t:re.sub(r"^\{\{ru-noun-table", "{{ru-generate-noun-forms", unicode(t)))
 
 pa = blib.create_argparser("Create Russian inflection entries")
 pa.add_argument("--adj-form",
