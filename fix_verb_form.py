@@ -50,6 +50,65 @@ def process_page(index, page, save, verbose):
             notes.append("converted 'conjugation of' to 'inflection of'")
       sections[j] = unicode(parsed)
 
+      # Try to canonicalize 'inflection of' involving the imperative
+      parsed = blib.parse_text(sections[j])
+      for t in parsed.filter_templates():
+        if unicode(t.name) == "inflection of" and getparam(t, "lang") == "ru":
+          # Fetch the numbered params starting with 3
+          numbered_params = []
+          for i in xrange(3,20):
+            numbered_params.append(getparam(t, str(i)))
+          while len(numbered_params) > 0 and not numbered_params[-1]:
+            del numbered_params[-1]
+          # Now canonicalize
+          numparamstr = "/".join(numbered_params)
+          canon_params = []
+          while True:
+            m = (re.search(r"^(?:s|\(singular\))/(?:imp|imperative)$", numparamstr) or
+                 re.search(r"^(?:imp|imperative)/(?:s|\(singular\))$", numparamstr)
+                 )
+            if m:
+              canon_params = ["2", "s", "imp"]
+              break
+            m = (re.search(r"^(?:p|\(plural\))/(?:imp|imperative)$", numparamstr) or
+                 re.search(r"^(?:imp|imperative)/(?:p|\(plural\))$", numparamstr)
+                 )
+            if m:
+              canon_params = ["2", "p", "imp"]
+              break
+            break
+          if canon_params:
+            origt = unicode(t)
+            # Fetch param 1 and param 2. Erase all numbered params.
+            # Put back param 1 and param 2 (this will put them after lang=ru),
+            # then the replacements for the higher params.
+            param1 = getparam(t, "1")
+            param2 = getparam(t, "2")
+            for i in xrange(19,0,-1):
+              rmparam(t, str(i))
+            t.add("1", param1)
+            t.add("2", param2)
+            for i, param in enumerate(canon_params):
+              t.add(str(i+3), param)
+            newt = unicode(t)
+            if origt != newt:
+              pagemsg("Replaced %s with %s" % (origt, newt))
+              notes.append("canonicalized 'inflection of' for %s" % "/".join(canon_params))
+            else:
+              pagemsg("Apparently already canonicalized: %s" % newt)
+      sections[j] = unicode(parsed)
+
+      parsed = blib.parse_text(sections[j])
+      for t in parsed.filter_templates():
+        if unicode(t.name) == "inflection of" and getparam(t, "lang") == "ru":
+          origt = unicode(t)
+          t.name = "inflection of"
+          newt = unicode(t)
+          if origt != newt:
+            pagemsg("Replaced %s with %s" % (origt, newt))
+            notes.append("converted 'conjugation of' to 'inflection of'")
+      sections[j] = unicode(parsed)
+
       # Try to add 'inflection of' to raw-specified participial inflection
       def add_participle_inflection_of(m):
         prefix = m.group(1)
