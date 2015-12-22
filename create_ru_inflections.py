@@ -23,41 +23,9 @@ import rulib as ru
 
 verbose = True
 
-def remove_diacritics(word):
-  return re.sub(DIACRITIC_ANY, "", word)
-
-def remove_links(text):
-  text = re.sub(r"\[\[[^|\]]*?\|", "", text)
-  text = re.sub(r"\[\[", "", text)
-  text = re.sub(r"\]\]", "", text)
-  return text
-
-def get_vn_gender(word, form):
-  # Remove -un or -u i3rab
-  word = re.sub(UNU + "$", "", reorder_shadda(word))
-  if word.endswith(TAM):
-    return "f"
-  elif word.endswith(AN + AMAQ) or word.endswith(AN + ALIF):
-    return "m"
-  elif word.endswith(ALIF + HAMZA):
-    if form != "I":
-      return "m"
-    elif re.match("^.[" + A + I + U + "]." + A + ALIF + HAMZA + "$", word):
-      # only 3 consonants including hamza, which subs for a final-weak
-      # consonant
-      return "m"
-    else:
-      return "?"
-  elif (word.endswith(AMAQ) or word.endswith(AMAD) or word.endswith(ALIF)):
-    return "?"
-  else:
-    return "m"
-
 # Make sure there are two trailing newlines
 def ensure_two_trailing_nl(text):
   return re.sub(r"\n*$", r"\n\n", text)
-
-lemma_inflection_counts = {}
 
 # Create or insert a section describing a given inflection of a given lemma.
 # INFLECTION is the vocalized inflectional form (e.g. the
@@ -66,25 +34,31 @@ lemma_inflection_counts = {}
 # and LEMMATR are the associated manual transliterations (if any). POS is the
 # part of speech of the word (capitalized, e.g. "Noun"). Only save the changed
 # page if SAVE is true. INDEX is the numeric index of the lemma page, for
-# ID purposes and to aid restarting. INFLTYPE is e.g. "plural", "feminine",
-# "verbal noun", "active participle" or "passive participle", and is used in
-# messages; both POS and INFLTYPE are used in special-case code that is
-# appropriate to only certain inflectional types. LEMMATYPE is e.g.
-# "singular", "masculine" or "dictionary form" and is used in messages.
+# ID purposes and to aid restarting. INFLTYPE is e.g. "adj form nom_m",
+# and is used in messages; both POS and INFLTYPE are used in special-case
+# code that is appropriate to only certain inflectional types. LEMMATYPE is
+# e.g. "infinitive" or "masculine singular" and is used in messages.
+#
 # INFLTEMP is the headword template for the inflected-word entry (e.g.
-# "ar-noun-pl", "ar-adj-pl" or "ar-adj-fem"). INFLTEMP_PARAM is a parameter
-# or parameters to add to the created INFLTEMP template, and should be either
-# empty or of the form "|foo=bar" (or e.g. "|foo=bar|baz=bat" for more than
-# one parameter). DEFTEMP is the definitional template that points to the
-# base form (e.g. "plural of", "masculine plural of" or "feminine of").
-# DEFTEMP_PARAM is a parameter or parameters to add to the created DEFTEMP
-# template, similar to INFLTEMP_PARAM. If ENTRYTEXT is given, this is the
-# text to use for the entry, starting directly after the "==Etymology==" line,
-# which is assumed to be necessary. If not given, this text is synthesized
-# from the other parameters.
+# "head|ru|verb form" or "ru-noun form"; we special-case "head|" headword
+# templates). INFLTEMP_PARAM is a parameter or parameters to add to the
+# created INFLTEMP template, and should be either empty or of the form
+# "|foo=bar" (or e.g. "|foo=bar|baz=bat" for more than one parameter).
+#
+# DEFTEMP is the definitional template that points to the base form (e.g.
+# "inflection of" or "past passive participle of"). DEFTEMP_PARAM is a
+# parameter or parameters to add to the created DEFTEMP template, similar
+# to INFLTEMP_PARAM; or (if DEFTEMP is "inflection of") it should be a list
+# of inflection codes (e.g. ['2', 's', 'pres', 'ind']). DEFTEMP_NEEDS_LANG
+# indicates whether the definition template specified by DEFTEMP needs to
+# have a 'lang' parameter with value 'ru'.
+# 
+# If ENTRYTEXT is given, this is the text to use for the entry, starting
+# directly after the "==Etymology==" line, which is assumed to be necessary.
+# If not given, this text is synthesized from the other parameters.
 def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
     pos, infltype, lemmatype, infltemp, infltemp_param, deftemp,
-    deftemp_param, entrytext=None):
+    deftemp_param, deftemp_needs_lang=True, entrytext=None):
 
   # Did we insert an entry or find an existing one? If not, we need to
   # add a new one. If we break out of the loop through subsections of the
@@ -112,13 +86,6 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
   is_participle = infltype.endswith("participle")
   is_vn = infltype == "verbal noun"
   is_verb_part = pos == "Verb"
-  if is_verb_part:
-    # Make sure infltemp_param is '|' + FORM, as we expect
-    assert(len(infltemp_param) >= 2 and infltemp_param[0] == '|'
-        and infltemp_param[1] in ["I", "V", "X"])
-    verb_part_form = infltemp_param[1:]
-    verb_part_inserted_defn = False
-  is_plural_noun = infltype == "plural" and pos == "Noun"
   vn_or_participle = is_vn or is_participle
   lemma_is_verb = is_verb_part or vn_or_participle
 
@@ -230,20 +197,18 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
           if match_pos or particip_pos_mismatch:
             parsed = blib.parse_text(subsections[j])
 
-            # Find the inflection headword (e.g. 'ar-noun-pl') and
-            # definitional (e.g. 'plural of') templates. We require that
-            # they match, either exactly (apart from i3rab) or only in the
-            # consonants. If verb part, also require that the conj form match
-            # in the inflection headword template, but don't require that
-            # the lemma match in the definitional template.
+            # Find the inflection headword (e.g. 'ru-noun form' or
+            # 'head|ru|verb form') and definitional (typically 'inflection of')
+            # templates.
 
             # First, for each template, return a tuple of
             # (template, param, matches), where MATCHES is true if any head
             # matches FORM and PARAM is the (first) matching head param.
             def template_head_match_info(template, form):
               # Look at all heads
-              if compare_param(template, "1", form):
-                return (template, "1", True)
+              firstparam = "head" if infltemp.startswith("head|") else "1"
+              if compare_param(template, firstparam, form):
+                return (template, firstparam, True)
               i = 2
               while True:
                 param = "head" + str(i)
@@ -257,28 +222,15 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
               return template_head_match_info(template, form)[2]
             head_matches_tuples = [template_head_match_info(t, inflection)
                 for t in parsed.filter_templates()]
+            def compare_inflections(template, infls):
             # Now get a list of (TEMPLATE, PARAM) for all matching templates,
             # where PARAM is the matching head param, as above.
             infl_headword_templates = (
                 [(t, param) for t, param, matches in head_matches_tuples
-                 if t.name == infltemp and matches
-                 and (not is_verb_part or compare_param(t, "2", verb_part_form))])
+                 if t.name == infltemp and matches]
             defn_templates = [t for t in parsed.filter_templates()
-                if t.name == deftemp and (is_verb_part or
-                compare_param(t, "1", lemma))]
-            # Special-case handling for actual noun plurals. We expect an
-            # ar-noun but if we encounter an ar-coll-noun with the plural as
-            # the (collective) head and the singular as the singulative, we
-            # output a message and skip so we don't end up creating a
-            # duplicate entry.
-            if is_plural_noun:
-              headword_collective_templates = [t for t in parsed.filter_templates()
-                  if t.name == "ar-coll-noun" and template_head_matches(t, inflection)
-                  and compare_param(t, "sing", lemma)]
-              if headword_collective_templates:
-                pagemsg("WARNING: Exists and has Russian section and found collective noun with %s already in it; taking no action"
-                    % (infltype))
-                break
+                if t.name == deftemp and compare_param(t, "1", lemma)
+                and compare_inflections(...)]
 
             def particip_mismatch_check():
               if particip_pos_mismatch:
@@ -296,9 +248,8 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
             # check all the parameters of the definitional template,
             # because there may be multiple definitional templates
             # corresponding to different inflections that have the same form
-            # for the same lemma (e.g. يَكْتُنُو yaktubū is both subjunctive and
-            # jussive, and يَكْتُبْنَ yaktubna is all 3 of indicative, subjunctive
-            # and jussive).
+            # for the same lemma (e.g. 2nd pl indic and imperative are often
+            # the same).
             if defn_templates and infl_headword_templates:
               pagemsg("Exists and has Russian section and found %s already in it"
                   % (infltype))
@@ -314,7 +265,6 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
                 def compare_verb_part_defn_templates(code1, code2):
                   pagemsg("Comparing %s with %s" % (code1, code2))
                   def canonicalize_defn_template(code):
-                    code = reorder_shadda(code)
                     code = re.sub(r"\[\[.*?\]\]", "", code)
                     code = re.sub(r"\|gloss=[^|}]*", "", code)
                     code = re.sub(r"\|lang=ar", "", code)
@@ -363,58 +313,6 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
                 # one down below.
                 verb_part_inserted_defn = True
                 need_new_entry = False
-
-              # Else, not verb form. Remove i3rab from existing headword and
-              # definitional template, and maybe update the template heads
-              # with better-vocalized versions.
-              else:
-                if len(defn_templates) > 1:
-                  pagemsg("WARNING: Found multiple definitional templates for %s; taking no action"
-                      % (infltype))
-                  break
-                defn_template = defn_templates[0]
-
-                #### Rest of this code primarily for plurals and feminines,
-                #### which may be partly vocalized and may have existing i3rab.
-                #### For verbal nouns and participles, we require exact match
-                #### so conditions like 'len(inflection) > len(existing_infl)'
-                #### won't apply, and there generally isn't existing i3rab.
-                
-                # Check for i3rab in existing infl and remove it if so.
-                existing_infl = \
-                    check_maybe_remove_i3rab(infl_headword_template,
-                        infl_headword_matching_param, infltype)
-
-                # Check for i3rab in existing lemma and remove it if so
-                existing_lemma = \
-                    check_maybe_remove_i3rab(defn_template, "1", lemmatype)
-
-                # Replace existing infl with new one
-                if len(inflection) > len(existing_infl):
-                  pagemsg("Updating existing %s %s with %s" %
-                      (infltemp, existing_infl, inflection))
-                  infl_headword_template.add(infl_headword_matching_param,
-                    inflection)
-                  if infltr:
-                    trparam = "tr" if infl_headword_matching_param == "1" \
-                        else infl_headword_matching_param.replace("head", "tr")
-                    infl_headword_template.add(trparam, infltr)
-
-                # Replace existing lemma with new one
-                if len(lemma) > len(existing_lemma):
-                  pagemsg("Updating existing '%s' %s with %s" %
-                      (deftemp, existing_lemma, lemma))
-                  defn_template.add("1", lemma)
-                  if lemmatr:
-                    defn_template.add("tr", lemmatr)
-
-                #### End of code primarily for plurals and feminines.
-
-                subsections[j] = unicode(parsed)
-                sections[i] = ''.join(subsections)
-                comment = "Update Russian with better vocalized versions: %s %s, %s %s, pos=%s" % (
-                    infltype, inflection, lemmatype, lemma, pos)
-                break
 
             # At this point, didn't find either headword or definitional
             # template, or both.
@@ -665,178 +563,30 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
     if save:
       page.save(comment = comment)
 
-def create_noun_plural(save, index, inflection, infltr, lemma, lemmatr, pos):
-  create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr, pos,
-      "plural", "singular", "ar-noun-pl", "", "plural of", "|lang=ar")
+# Parse a noun/verb/adv form spec, one or more forms separated by commas,
+# possibly including aliases.
+def parse_form_spec(formspec, infl_dict, aliases):
+  def check(variable, value, possible):
+    if not value in possible:
+      raise ValueError("Invalid value '%s' for %s, expected one of %s" % (
+        value, variable, '/'.join(possible)))
 
-def create_adj_plural(save, index, inflection, infltr, lemma, lemmatr, pos):
-  create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr, pos,
-      "plural", "singular", "ar-adj-pl", "", "masculine plural of", "|lang=ar")
+  forms = []
+  for form in re.split(",", formspec):
+    if form in aliases:
+      for f in aliases[form]:
+        if form not in forms:
+          forms.append(form)
+    elif form in infl_dict:
+      if form not in forms:
+        forms.append(form)
+    else:
+      raise ValueError("Invalid value '%s'" % form)
 
-def create_noun_feminine_entry(save, index, inflection, infltr, lemma, lemmatr,
-    pos):
-  create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr, pos,
-      "feminine", "masculine", None, # FIXME
-      "", "feminine of", "|lang=ar")
-
-def create_adj_feminine_entry(save, index, inflection, infltr, lemma, lemmatr,
-    pos):
-  create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr, pos,
-      "feminine", "masculine", "ar-adj-fem", "", "feminine of", "|lang=ar")
-
-def create_inflection_entries(save, pos, tempname, startFrom, upTo, createfn,
-    param):
-  for cat in [u"Russian %ss" % pos.lower()]:
-    for page, index in blib.cat_articles(cat, startFrom, upTo):
-      for template in blib.parse(page).filter_templates():
-        if template.name == tempname:
-          lemma = getparam(template, "1")
-          lemmatr = getparam(template, "tr")
-          # Handle blank head; use page title
-          if lemma == "":
-            lemma = page.title()
-            msg("Page %s: blank head in template %s (tr=%s)" % (
-              lemma, tempname, lemmatr))
-          infl = getparam(template, param)
-          infltr = getparam(template, param + "tr")
-          if infl:
-            createfn(save, index, infl, infltr, lemma, lemmatr, pos)
-          i = 2
-          while infl:
-            infl = getparam(template, param + str(i))
-            infltr = getparam(template, param + str(i) + "tr")
-            if infl:
-              otherhead = getparam(template, "head" + str(i))
-              otherheadtr = getparam(template, "tr" + str(i))
-              if otherhead:
-                msg("Page %s: Using head%s %s (tr=%s) as lemma for %s (tr=%s)" % (
-                  lemma, i, otherhead, otherheadtr, infl, infltr))
-                createfn(save, index, infl, infltr, otherhead, otherheadtr, pos)
-              else:
-                createfn(save, index, infl, infltr, lemma, lemmatr, pos)
-            i += 1
-
-def create_plurals(save, pos, tempname, startFrom, upTo):
-  return create_inflection_entries(save, pos, tempname, startFrom, upTo,
-      create_noun_plural if pos == "Noun" else create_adj_plural, "pl")
-
-def create_feminines(save, pos, tempname, startFrom, upTo):
-  return create_inflection_entries(save, pos, tempname, startFrom, upTo,
-      create_noun_feminine if pos == "Noun" else create_adj_feminine, "f")
-
-def expand_template(page, text):
-  # Make an expand-template call to expand the template text.
-  # The code here is based on the expand_text() function of the Page object.
-  # FIXME: Use site.expand_text(text, title=page.title(withSection=False))
-  req = pywikibot.data.api.Request(action="expandtemplates",
-      text = text,
-      title = page.title(withSection=False),
-      site = page.site,
-      prop = "wikitext" # "*"
-      )
-  #return req.submit()["expandtemplates"]["*"]
-  return req.submit()["expandtemplates"]["wikitext"]
-
-def get_part_prop(page, template, prefix):
-  # Make an expand-template call to convert the conjugation template to
-  # the desired form or property.
-  return expand_template(page,
-      re.sub("\{\{ar-(conj|verb)\|", "{{%s|" % prefix, unicode(template)))
-
-def get_dicform(page, template):
-  return get_part_prop(page, template, "ar-past3sm")
-
-def get_passive(page, template):
-  return get_part_prop(page, template, "ar-verb-prop|passive")
-
-# For a given value of passive= (yes, impers, no, only, only-impers), does
-# the verb have an active form?
-def has_active_form(passive):
-  assert(passive in ["yes", "impers", "no", "only", "only-impers"])
-  return passive in ["yes", "impers", "no"]
-
-# For a given value of passive= (yes, impers, no, only, only-impers) and a
-# given person/number/gender combination, does the verb have a passive form?
-# Supply None for PERS for non-finite verb parts (participles).
-def has_passive_form(passive, pers):
-  assert(passive in ["yes", "impers", "no", "only", "only-impers"])
-  # If no person or it's 3sm, then impersonal passives have it. Otherwise no.
-  if not pers or pers == "3sm":
-    return passive != "no"
-  return passive == "yes" or passive =="only"
-
-# Create a verbal noun entry, either creating a new page or adding to an
-# existing page. Do nothing if entry is already present. SAVE, INDEX are as in
-# create_inflection_entry(). VN is the vocalized verbal noun; VERBPAGE is the
-# Page object representing the dictionary-form verb of this verbal noun;
-# TEMPLATE is the conjugation template for the verb, i.e. {{ar-conj|...}};
-# UNCERTAIN is true if the verbal noun is uncertain (indicated with a ? at
-# the end of the vn=... parameter in the conjugation template).
-def create_verbal_noun(save, index, vn, form, page, template, uncertain):
-  dicform = get_dicform(page, template)
-
-  gender = get_vn_gender(vn, form)
-  if gender == "?":
-    msg("Page %s %s: WARNING: Unable to determine gender: verbal noun %s, dictionary form %s"
-        % (index, remove_diacritics(vn), vn, dicform))
-    genderparam = ""
-  else:
-    genderparam = "|%s" % gender
-
-  defparam = "|form=%s%s" % (form, uncertain and "|uncertain=yes" or "")
-  create_inflection_entry(save, index, vn, None, dicform, None, "Noun",
-    "verbal noun", "dictionary form", "ar-noun", genderparam,
-    "ar-verbal noun of", defparam)
-
-def create_verbal_nouns(save, startFrom, upTo):
-  for page, index in blib.cat_articles("Russian verbs", startFrom, upTo):
-    for template in blib.parse(page).filter_templates():
-      if template.name == "ar-conj":
-        form = re.sub("-.*$", "", getparam(template, "1"))
-        vnvalue = getparam(template, "vn")
-        uncertain = False
-        if vnvalue.endswith("?"):
-          vnvalue = vnvalue[:-1]
-          uncertain = True
-        if not vnvalue:
-          if form != "I":
-            # Augmented verb. Fetch auto-generated verbal noun(s).
-            vnvalue = get_part_prop(page, template, "ar-verb-part-all|vn")
-          else:
-            continue
-        vns = re.split(u"[,،]", vnvalue)
-        for vn in vns:
-          create_verbal_noun(save, index, vn, form, page, template, uncertain)
-
-def create_participle(save, index, part, page, template, actpass, apshort):
-  dicform = get_dicform(page, template)
-
-  # Retrieve form, eliminate any weakness value (e.g. "I" from "I-sound")
-  form = re.sub("-.*$", "", getparam(template, "1"))
-  create_inflection_entry(save, index, part, None, dicform, None, "Participle",
-    "%s participle" % actpass, "dictionary form",
-    "ar-%s-participle" % apshort, "|" + form,
-    "%s participle of" % actpass, "|lang=ar")
-
-def create_participles(save, startFrom, upTo):
-  for page, index in blib.cat_articles("Russian verbs", startFrom, upTo):
-    for template in blib.parse(page).filter_templates():
-      if template.name == "ar-conj":
-        passive = get_passive(page, template)
-        if has_active_form(passive):
-          apvalue = get_part_prop(page, template, "ar-verb-part-all|ap")
-          if apvalue:
-            aps = re.split(",", apvalue)
-            for ap in aps:
-              create_participle(save, index, ap, page, template, "active",
-                  "act")
-        if has_passive_form(passive, None):
-          ppvalue = get_part_prop(page, template, "ar-verb-part-all|pp")
-          if ppvalue:
-            pps = re.split(",", ppvalue)
-            for pp in pps:
-              create_participle(save, index, pp, page, template, "passive",
-                  "pass")
+  infls = []
+  for form in forms:
+    infls.append([form, infl_dict[form]])
+  return infls
 
 adj_form_inflection_list = [
   ["nom_m": ("nom", "m", "s")],
@@ -943,61 +693,14 @@ verb_form_aliases = {
     "part":["pres_actv_part", "past_actv_part", "pres_pasv_part", "past_pasv_part", "pres_adv_part", "past_adv_part", "past_adv_part_short"]
 }
 
-# Create a single verb form. SAVE, INDEX are as in create_inflection_entry().
-# PAGE is the page of the lemma. DICFORM is the accented infinitive.
-# of the lemma, PASSIVE is the value of the 'passive' property of the lemma.
-# VOICE is either "active" or "passive", and PERSON and TENSE
-# indicate the particular person/number/gender/tense/mood combination, using
-# the codes passed to {{ar-verb-part-all|...}}. We refuse to do combinations
-# not compatible with the value of PASSIVE, and we refuse to do the
-# dictionary form (3sm-perf, or 3sm-ps-perf for passive-only verbs).
-# We assume that impossible parts (passive and non-2nd-person imperatives)
-# have already been filtered.
-def create_verb_form(save, index, page, inf, formname, forms, infls):
-  # Refuse to do the dictionary form.
-  if formname == "infinitive":
-    return
-  if not forms:
-    return
-  infl_person = persons_infl_entry[person]
-  infl_tense = tenses_infl_entry[tense] % voices_infl_entry[voice]
-  partid = (voice == "active" and "%s-%s" % (person, tense) or
-      "%s-ps-%s" % (person, tense))
-  # Retrieve form, eliminate any weakness value (e.g. "I" from "I-sound")
-  form = re.sub("-.*$", "", getparam(template, "1"))
-  value = get_part_prop(page, template, "ar-verb-part-all|%s" % partid)
-  if value:
-    parts = re.split(",", value)
-    for part in parts:
-      create_inflection_entry(save, index, part, None, dicform, None, "Verb",
-        "verb part %s" % partid, "dictionary form",
-        "ar-verb-form", "|" + form,
-        "inflection of", "||lang=ar|%s|%s" % (infl_person, infl_tense))
-
-# Parse a noun/verb/adv form spec, one or more forms separated by commas,
-# possibly including aliases.
-def parse_form_spec(formspec, infl_dict, aliases):
-  def check(variable, value, possible):
-    if not value in possible:
-      raise ValueError("Invalid value '%s' for %s, expected one of %s" % (
-        value, variable, '/'.join(possible)))
-
-  forms = []
-  for form in re.split(",", formspec):
-    if form in aliases:
-      for f in aliases[form]:
-        if form not in forms:
-          forms.append(form)
-    elif form in infl_dict:
-      if form not in forms:
-        forms.append(form)
-    else:
-      raise ValueError("Invalid value '%s'" % form)
-
-  infls = []
-  for form in forms:
-    infls.append([form, infl_dict[form]])
-  return infls
+def split_ru_tr(form):
+  if "//" in form:
+    rutr = re.split("//", form)
+    assert len(rutr) == 2
+    ru, tr = rutr
+    return (ru, tr)
+  else:
+    return (form, None)
 
 # Create required verb parts for all verbs. PART specifies the part(s) to do.
 # If "all", do all parts (other than 3sm-perf, the dictionary form);
@@ -1024,10 +727,18 @@ def create_verb_forms(save, startFrom, upTo, formspec):
           pagemsg("WARNING: Error generating verb forms, skipping")
           continue
         args = ru.split_generate_args(result)
-        dicform = args["infinitive"]
-        for form, infls in forms_desired:
-          if form in args:
-            create_verb_form(save, index, page, dicform, form, args[form], infls)
+        dicforms = args["infinitive"]
+        for dicform in re.split(",", dicforms):
+          for form, infls in forms_desired:
+            if form != "infinitive" and form in args and args[form]:
+              dicformru, dicformtr = split_ru_tr(dicform)
+              for formval in re.split(",", args[form]):
+                formvalru, formvaltr = split_ru_tr(formval)
+                create_inflection_entry(save, index, formvalru, formvaltr,
+                  dicformru, dicformtr, "Verb",
+                  "verb form %s" % formname, "dictionary form",
+                  "head|ru|verb form", "",
+                  "inflection of", infls)
 
 pa = blib.create_argparser("Create Russian inflection entries")
 pa.add_argument("--adj-form",
