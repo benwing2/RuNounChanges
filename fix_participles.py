@@ -153,7 +153,7 @@ def process_page(index, page, save, verbose, nowarn=False):
   if not notes and not found_participle and not nowarn:
     pagemsg("WARNING: No participles found")
 
-parser = blib.create_argparser(u"Add 'inflection of' for raw short adjective forms and canonicalize existing 'inflection of'")
+parser = blib.create_argparser(u"Canonicalize various participle definition lines and fix headword and section header")
 args = parser.parse_args()
 start, end = blib.get_args(args.start, args.end)
 
