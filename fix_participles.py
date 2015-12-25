@@ -80,13 +80,14 @@ def process_page(index, page, save, verbose, nowarn=False):
             origt = unicode(t)
             origname = unicode(t.name)
             t.name = "ru-participle of"
-            # Fetch param 1 and param 2, and non-numbered params except lang=.
+            # Fetch param 1 and param 2, and non-numbered params except lang=
+            # and nocat=.
             param1 = getparam(t, "1")
             param2 = getparam(t, "2")
             non_numbered_params = []
             for param in t.params:
               pname = unicode(param.name)
-              if not re.search(r"^[0-9]+$", pname) and pname != "lang":
+              if not re.search(r"^[0-9]+$", pname) and pname not in ["lang", "nocat"]:
                 non_numbered_params.append((pname, param.value))
             # Convert 3rd parameter to gloss= if called for
             if gloss3:
@@ -124,7 +125,35 @@ def process_page(index, page, save, verbose, nowarn=False):
         subsections[k] = unicode(parsed)
       sections[j] = "".join(subsections)
 
+      # Rearrange Participle and Noun/Adjective sections; repeat until no
+      # change, in case we have both Noun and Adjective sections before the
+      # Participle
+      subsections = re.split("(^===([^=]*)===\n)", sections[j], 0, re.M)
+      while True:
+        rearranged = False
+        for k in xrange(2, len(subsections), 2):
+          if subsections[k-1] in ["===Noun===\n", "===Adjective===\n"] and k+1 < len(subsections) and subsections[k+1] == "===Participle===\n":
+            tmp = subsections[k-1]
+            subsections[k-1] = subsections[k+1]
+            subsections[k+1] = tmp
+            tmp = subsections[k]
+            subsections[k] = subsections[k+2]
+            subsections[k+2] = tmp
+            rearranged = True
+            pagemsg("Swapped %s with %s" % (subsections[k+1].replace("\n", r"\n"), subsections[k-1].replace("\n", r"\n")))
+            notes.append("swap Participle section with Noun/Adjective")
+        if not rearranged:
+          break
+      sections[j] = "".join(subsections)
+
   new_text = "".join(sections)
+
+  new_new_text = re.sub(r"\[\[Category:Russian [a-z ]*participles]]", "", new_text)
+  new_new_text = re.sub(r"\n\n\n+", "\n\n", new_new_text)
+  if new_text != new_new_text:
+    pagemsg("Removed manual participle categories")
+    notes.append("remove manual participle categories")
+    new_text = new_new_text
 
   if new_text != text:
     if verbose:
