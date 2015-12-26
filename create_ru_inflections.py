@@ -210,19 +210,12 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
         # head matches the inflected form
         for j in xrange(len(subsections)):
           match_pos = False
-          particip_pos_mismatch = False
           if j > 0 and (j % 2) == 0:
             if re.match("^===+%s===+\n" % pos, subsections[j - 1]):
               match_pos = True
-            if is_participle:
-              for mismatch_pos in ["Noun", "Adjective"]:
-                if re.match("^===+%s===+\n" % mismatch_pos, subsections[j - 1]):
-                  particip_pos_mismatch = True
-                  particip_mismatch_pos = mismatch_pos
-                  break
 
           # Found a POS match
-          if match_pos or particip_pos_mismatch:
+          if match_pos:
             parsed = blib.parse_text(subsections[j])
 
             # Find the inflection headword (e.g. 'ru-noun form' or
@@ -284,11 +277,6 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
                 and (not deftemp_needs_lang or compare_param(t, "lang", "ru"))
                 and (not uses_inflection_of or compare_inflections(t, deftemp_param))]
 
-            def particip_mismatch_check():
-              if particip_pos_mismatch:
-                pagemsg("WARNING: Found match for %s but in ===%s=== section rather than ===%s==="
-                    % (infltype, particip_mismatch_pos, pos))
-
             # Make sure there's exactly one headword template.
             if len(infl_headword_templates) > 1:
               pagemsg("WARNING: Found multiple inflection headword templates for %s; taking no action"
@@ -300,8 +288,6 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
             if defn_templates and infl_headword_templates:
               pagemsg("Exists and has Russian section and found %s already in it"
                   % (infltype))
-
-              particip_mismatch_check()
               break
 
             # At this point, didn't find either headword or definitional
