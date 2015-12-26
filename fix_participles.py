@@ -148,6 +148,9 @@ def process_page(index, page, save, verbose, nowarn=False):
 
   new_text = "".join(sections)
 
+  if "Etymology 1" in new_text:
+    pagemsg("WARNING: Multiple etymology sections, might need to manually fix up")
+
   new_new_text = re.sub(r"\[\[Category:Russian [a-z ]*participles]]", "", new_text)
   new_new_text = re.sub(r"\n\n\n+", "\n\n", new_new_text)
   if new_text != new_new_text:
