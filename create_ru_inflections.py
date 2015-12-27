@@ -14,6 +14,23 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# FIXME:
+#
+# 1. Add pronunciation. For nouns and verbs with unstressed -я in the ending
+#    (3rd plural verb, dat/ins/pre plural noun), we need to add a dot-under.
+#    Otherwise we use the form itself. With multiple etymologies, we need
+#    to do more. If there's a combined pronunciation, we need to check if
+#    all the forms under all the etymologies are the same. If so, do nothing,
+#    else, we need to delete the combined pronunciation and add pronunciations
+#    individually to each section. If there are already split pronunciations,
+#    we just add a pronunciation to the individual section. It might make
+#    sense to do this in addpron.py.
+# 2. Review handling of manual translit. Currently we check to see if the
+#    manual translit matches and if not we don't see the inflection as
+#    already present. Probably instead we should issue a warning when this
+#    happens. Also, we need to check if there are multiple forms with the
+#    same Cyrillic but different translit, and combine the manual translits.
+
 import pywikibot, re, sys, codecs, argparse
 
 import blib
@@ -442,8 +459,17 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
     if save:
       page.save(comment = comment)
 
-# Parse a noun/verb/adv form spec, one or more forms separated by commas,
-# possibly including aliases.
+# Parse a noun/verb/adv form spec (from the user), one or more forms separated
+# by commas, possibly including aliases. INFL_DICT is a dictionary
+# mapping possible form codes to a tuple specifying the corresponding set of
+# inflection codes in {{inflection of|...}}, or a list of multiple such tuples
+# (for cases where a single form code refers to multiple inflections, such
+# as with adjectives, where the form code gen_m specifies not only the genitive
+# masculine singular but also the genitive neuter singular and the animate
+# accusative masculine singular. ALIASES is a dictionary mapping aliases to
+# form codes. Returns a list of tuples (FORM, INFLSETS), where FORM is a form
+# code and INFLSETS is the corresponding value entry in INFL_DICT (a tuple of
+# inflection codes, or a list of such tuples).
 def parse_form_spec(formspec, infl_dict, aliases):
   forms = []
   for form in re.split(",", formspec):
@@ -459,19 +485,19 @@ def parse_form_spec(formspec, infl_dict, aliases):
 
   infls = []
   for form in forms:
-    infls.append([form, infl_dict[form]])
+    infls.append((form, infl_dict[form]))
   return infls
 
 adj_form_inflection_list = [
-  ["nom_m": ("nom", "m", "s")],
+  ["nom_m": [("nom", "m", "s"), ("in", "acc", "m", "s")]],
   ["nom_f": ("nom", "f", "s")],
   ["nom_n": ("nom", "n", "s")],
-  ["nom_p": ("nom", "p")],
+  ["nom_p": [("nom", "p"), ("in", "acc", "p")]],
   ["nom_mp": ("nom", "m", "p")],
-  ["gen_m": ("gen", "m", "s")],
+  ["gen_m": [("gen", "m", "s"), ("an", "acc", "m", "s"), ("gen", "n", "s")]],
   ["gen_f": ("gen", "f", "s")],
-  ["gen_p": ("gen", "p")],
-  ["dat_m": ("dat", "m", "s")],
+  ["gen_p": [("gen", "p"), ("an", "acc", "p")]],
+  ["dat_m": [("dat", "m", "s"), ("dat", "n", "s")]],
   ["dat_f": ("dat", "f", "s")],
   ["dat_p": ("dat", "p")],
   ["acc_f": ("acc", "f", "s")],
@@ -502,12 +528,16 @@ nom_form_inflection_list = [
   ["gen_sg": ("gen", "s")],
   ["dat_sg": ("dat", "s")],
   ["acc_sg": ("acc", "s")],
+  ["acc_sg_an": ("an", "acc", "s")],
+  ["acc_sg_in": ("in", "acc", "s")],
   ["ins_sg": ("ins", "s")],
   ["pre_sg": ("pre", "s")],
   ["nom_pl": ("nom", "p")],
   ["gen_pl": ("gen", "p")],
   ["dat_pl": ("dat", "p")],
   ["acc_pl": ("acc", "p")],
+  ["acc_pl_an": ("an", "acc", "p")],
+  ["acc_pl_in": ("in", "acc", "p")],
   ["ins_pl": ("ins", "p")],
   ["pre_pl": ("pre", "p")],
 ]
@@ -582,9 +612,9 @@ def split_ru_tr(form):
 #
 # FORMSPEC specifies the form(s) to do, a comma-separated list of form codes,
 # possibly including aliases (e.g. 'all'). FORM_INFLECTION_DICT is a dictionary
-# mapping possible form codes to the corresponding inflection codes in
-# {{inflection of|...}}. FORM_ALIASES is a dictionary mapping aliases to
-# form codes.
+# mapping possible form codes to a tuple of the corresponding inflection codes
+# in {{inflection of|...}}, or a list of such tuples; see 'parse_form_spec'.
+# FORM_ALIASES is a dictionary mapping aliases to form codes.
 #
 # POS specifies the part of speech (lowercase, singular, e.g. "verb").
 # INFLTEMP specifies the inflection template name (e.g. "head|ru|verb form" or
@@ -617,16 +647,22 @@ def create_forms(save, startFrom, upTo, formspec,
         args = ru.split_generate_args(result)
         dicforms = args[dicform_code]
         for dicform in re.split(",", dicforms):
-          for form, infls in forms_desired:
+          for form, inflsets in forms_desired:
+            # Skip the dictionary form; also skip forms that don't have
+            # listed inflections (e.g. singulars with plural-only nouns,
+            # animate/inanimate variants when a noun isn't bianimate):
             if form != dicform_code and form in args and args[form]:
               dicformru, dicformtr = split_ru_tr(dicform)
               for formval in re.split(",", args[form]):
                 formvalru, formvaltr = split_ru_tr(formval)
-                create_inflection_entry(save, index, formvalru, formvaltr,
-                  dicformru, dicformtr, pos.capitalize(),
-                  "%s form %s" % (pos, formname), "dictionary form",
-                  infltemp, "",
-                  "inflection of", infls)
+                if type(inflsets) is not list:
+                  inflsets = [inflsets]
+                for inflset in inflsets:
+                  create_inflection_entry(save, index, formvalru, formvaltr,
+                    dicformru, dicformtr, pos.capitalize(),
+                    "%s form %s" % (pos, formname), "dictionary form",
+                    infltemp, "",
+                    "inflection of", inflset)
 
 def create_verb_generator(t):
   verbtype = re.sub(r"^ru-conj-", "", unicode(t.name))
