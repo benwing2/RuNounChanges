@@ -30,6 +30,8 @@
 #    already present. Probably instead we should issue a warning when this
 #    happens. Also, we need to check if there are multiple forms with the
 #    same Cyrillic but different translit, and combine the manual translits.
+# 3. When grouping participles with nouns/adjectives, don't do it if
+#    participle is adverbial.
 
 import pywikibot, re, sys, codecs, argparse
 
