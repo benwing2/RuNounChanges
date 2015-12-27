@@ -13,6 +13,10 @@ from blib import getparam, rmparam, msg, site
 import rulib as ru
 import runounlib as runoun
 
+# Make sure there are two trailing newlines
+def ensure_two_trailing_nl(text):
+  return re.sub(r"\n*$", r"\n\n", text)
+
 def process_page(index, page, save, verbose, nowarn=False):
   pagetitle = unicode(page.title())
   subpagetitle = re.sub("^.*:", "", pagetitle)
@@ -30,7 +34,18 @@ def process_page(index, page, save, verbose, nowarn=False):
 
   found_participle = False
   foundrussian = False
-  sections = re.split("(^==[^=]*==\n)", text, 0, re.M)
+
+  # Split off interwiki links at end
+  m = re.match(r"^(.*?\n)(\n*(\[\[[a-z0-9_\-]+:[^\]]+\]\]\n*)*)$",
+      page.text, re.S)
+  if m:
+    pagebody = m.group(1)
+    pagetail = m.group(2)
+  else:
+    pagebody = page.text
+    pagetail = ""
+
+  sections = re.split("(^==[^=\n]+==\n)", pagebody, 0, re.M)
 
   for j in xrange(2, len(sections), 2):
     if sections[j-1] == "==Russian==\n":
@@ -39,23 +54,36 @@ def process_page(index, page, save, verbose, nowarn=False):
         return
       foundrussian = True
 
-      subsections = re.split("(^===.*===\n)", sections[j], 0, re.M)
+      # Split off categories at end
+      m = re.match(r"^(.*?\n)(\n*(\[\[Category:[^\]]+\]\]\n*)*)$",
+          sections[j], re.S)
+      if m:
+        secbody = m.group(1)
+        sectail = m.group(2)
+      else:
+        secbody = sections[j]
+        sectail = ""
+
+      subsections = re.split("(^===.*===\n)", secbody, 0, re.M)
       for k in xrange(2, len(subsections), 2):
+        found_subsec_participle = False
         # Try to canonicalize existing 'inflection of'
         parsed = blib.parse_text(subsections[k])
         for t in parsed.filter_templates():
           gloss3 = True
           tname = unicode(t.name)
+          canon_params = None
           if tname == "ru-participle of":
             found_participle = True
+            found_subsec_participle = True
           elif tname == "present active participle of" and getparam(t, "lang") == "ru":
             canon_params = ["pres", "act"]
           elif tname == "past active participle of" and getparam(t, "lang") == "ru":
             canon_params = ["past", "act"]
-          elif tname == "present active participle of" and getparam(t, "lang") == "ru":
-            canon_params = ["pres", "act"]
-          elif tname == "past active participle of" and getparam(t, "lang") == "ru":
-            canon_params = ["past", "act"]
+          elif tname == "present passive participle of" and getparam(t, "lang") == "ru":
+            canon_params = ["pres", "pass"]
+          elif tname == "past passive participle of" and getparam(t, "lang") == "ru":
+            canon_params = ["past", "pass"]
           elif tname == "inflection of" and getparam(t, "lang") == "ru":
             gloss3 = False
             # Fetch the numbered params starting with 3
@@ -68,15 +96,17 @@ def process_page(index, page, save, verbose, nowarn=False):
             numparamstr = "/".join(numbered_params)
             canon_params = []
             while True:
-              m = re.search(r"^(pres|past)(?:/(perfective|imperfective))?/(act|actv|pass|pasv)/(?:part|ptcp)$", numparamstr)
+              m = re.search(r"^(pres|past)(?:/(perfective|imperfective|pfv|impfv))?/(act|actv|pass|pasv)/(?:part|ptcp)$", numparamstr)
               if m:
                 canon_params = [m.group(1)]
                 if m.group(2):
-                  canon_params.append({"imperfective":"impfv", "perfective":"pfv"}[m.group(2)])
+                  canon_params.append({"perfective":"pfv", "imperfective":"impfv", "pfv":"pfv", "impfv":"impfv"}[m.group(2)])
+                canon_params.append({"act":"act", "actv":"act", "pass":"pass", "pasv":"pass"}[m.group(3)])
                 break
               break
           if canon_params:
             found_participle = True
+            found_subsec_participle = True
             origt = unicode(t)
             origname = unicode(t.name)
             t.name = "ru-participle of"
@@ -106,29 +136,29 @@ def process_page(index, page, save, verbose, nowarn=False):
               t.add(name, value)
             newt = unicode(t)
             pagemsg("Replaced %s with %s" % (origt, newt))
-            notes.append("replaced '%s' with %s" % (origname, "/".join(canon_params)))
-          if found_participle:
-            if "Verb" in subsections[k-1]:
-              origsubsec = subsections[k-1]
-              subsections[k-1] = re.sub("Verb", "Participle", subsections[k-1])
-              pagemsg("Replaced %s with %s" % (origsubsec.replace("\n", r"\n"),
-                subsections[k-1].replace("\n", r"\n")))
-              notes.append("set section header to Participle")
-        for t in parsed.filter_templates():
-          if unicode(t.name) == "head" and getparam(t, "1") == "ru":
-            origt = unicode(t)
-            t.add("2", "participle")
-            newt = unicode(t)
-            if origt != newt:
-              pagemsg("Replaced %s with %s" % (origt, newt))
-              notes.append("set headword part of speech to 'participle'")
+            notes.append("replaced '%s' with 'ru-participle of/%s'" % (origname, "/".join(canon_params)))
+        if found_subsec_participle:
+          if "Verb" in subsections[k-1]:
+            origsubsec = subsections[k-1]
+            subsections[k-1] = re.sub("Verb", "Participle", subsections[k-1])
+            pagemsg("Replaced %s with %s" % (origsubsec.replace("\n", r"\n"),
+              subsections[k-1].replace("\n", r"\n")))
+            notes.append("set section header to Participle")
+          for t in parsed.filter_templates():
+            if unicode(t.name) == "head" and getparam(t, "1") == "ru":
+              origt = unicode(t)
+              t.add("2", "participle")
+              newt = unicode(t)
+              if origt != newt:
+                pagemsg("Replaced %s with %s" % (origt, newt))
+                notes.append("set headword part of speech to 'participle'")
         subsections[k] = unicode(parsed)
-      sections[j] = "".join(subsections)
+      secbody = "".join(subsections)
 
       # Rearrange Participle and Noun/Adjective sections; repeat until no
       # change, in case we have both Noun and Adjective sections before the
       # Participle
-      subsections = re.split("(^===([^=]*)===\n)", sections[j], 0, re.M)
+      subsections = re.split("(^===[^=]*===\n)", secbody, 0, re.M)
       while True:
         rearranged = False
         for k in xrange(2, len(subsections), 2):
@@ -137,26 +167,26 @@ def process_page(index, page, save, verbose, nowarn=False):
             subsections[k-1] = subsections[k+1]
             subsections[k+1] = tmp
             tmp = subsections[k]
-            subsections[k] = subsections[k+2]
+            subsections[k] = ensure_two_trailing_nl(subsections[k+2])
             subsections[k+2] = tmp
             rearranged = True
             pagemsg("Swapped %s with %s" % (subsections[k+1].replace("\n", r"\n"), subsections[k-1].replace("\n", r"\n")))
             notes.append("swap Participle section with Noun/Adjective")
         if not rearranged:
           break
-      sections[j] = "".join(subsections)
+      sections[j] = "".join(subsections) + sectail
 
-  new_text = "".join(sections)
+  new_text = "".join(sections) + pagetail
 
   if "Etymology 1" in new_text:
     pagemsg("WARNING: Multiple etymology sections, might need to manually fix up")
 
   new_new_text = re.sub(r"\[\[Category:Russian [a-z ]*participles]]", "", new_text)
-  new_new_text = re.sub(r"\n\n\n+", "\n\n", new_new_text)
   if new_text != new_new_text:
     pagemsg("Removed manual participle categories")
     notes.append("remove manual participle categories")
     new_text = new_new_text
+  new_text = re.sub(r"\n\n\n+", "\n\n", new_text)
 
   if new_text != text:
     if verbose:
