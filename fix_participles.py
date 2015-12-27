@@ -4,6 +4,11 @@
 # Fix up short adjective forms when possible, canonicalizing existing
 # 'inflection of' and converting raw inflection to 'inflection of'
 
+# FIXME:
+#
+# 1. When swapping participles with nouns/adjectives, don't do it for
+#    adverbial participles
+
 import pywikibot, re, sys, codecs, argparse
 from collections import Counter
 
@@ -96,12 +101,12 @@ def process_page(index, page, save, verbose, nowarn=False):
             numparamstr = "/".join(numbered_params)
             canon_params = []
             while True:
-              m = re.search(r"^(pres|past)(?:/(perfective|imperfective|pfv|impfv))?/(act|actv|pass|pasv)/(?:part|ptcp)$", numparamstr)
+              m = re.search(r"^(pres|past)(?:/(perfective|imperfective|pfv|impfv))?/(act|actv|pass|pasv|adverbial|adv)/(?:part|ptcp)$", numparamstr)
               if m:
                 canon_params = [m.group(1)]
                 if m.group(2):
                   canon_params.append({"perfective":"pfv", "imperfective":"impfv", "pfv":"pfv", "impfv":"impfv"}[m.group(2)])
-                canon_params.append({"act":"act", "actv":"act", "pass":"pass", "pasv":"pass"}[m.group(3)])
+                canon_params.append({"act":"act", "actv":"act", "pass":"pass", "pasv":"pass", "adverbial":"adv", "adv":"adv"}[m.group(3)])
                 break
               break
           if canon_params:
