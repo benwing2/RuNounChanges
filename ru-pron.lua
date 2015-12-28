@@ -177,7 +177,7 @@ end
 -- and look at what links to the page.
 local test_new_ru_pron_module = false
 -- If enabled, do new code for final -е; else, the old way
-local new_final_e_code = false
+local new_final_e_code = true
 
 local AC = u(0x0301) -- acute =  ́
 local GR = u(0x0300) -- grave =  ̀
@@ -413,19 +413,19 @@ local cons_assim_palatal = {
 -- по́ небу vs. по не́бу, etc.
 local accentless = {
 	-- class 'pre': particles that join with a following word
-	pre = ut.list_to_set({'bez', 'bliz', 'v', 'vo', 'do',
-       'iz-pod', 'iz-za', 'za', 'iz', 'izo',
-       'k', 'ko', 'mež', 'na', 'nad', 'nado', 'ob', 'obo', 'ot',
-       'po', 'pod', 'podo', 'pred', 'predo', 'pri', 'pro', 'pered', 'peredo',
-       'čerez', 's', 'so', 'u', 'ne'}),
+	pre = ut.list_to_set({'bez', 'bliz', 'v', 'vo', 'da', 'do',
+       'za', 'iz', 'iz-pod', 'iz-za', 'izo', 'k', 'ko', 'mež',
+       'na', 'nad', 'nado', 'ne', 'ni', 'ob', 'obo', 'ot', 'oto',
+       'pered', 'peredo', 'po', 'pod', 'podo', 'pred', 'predo', 'pri', 'pro',
+       's', 'so', 'u', 'čerez'}),
 	-- class 'prespace': particles that join with a following word, but only
 	--   if a space (not a hyphen) separates them; hyphens are used here
 	--   to spell out letters, e.g. а-эн-бэ́ for АНБ (NSA = National Security
 	--   Agency) or о-а-э́ for ОАЭ (UAE = United Arab Emirates)
 	prespace = ut.list_to_set({'a', 'o'}),
 	-- class 'post': particles that join with a preceding word
-	post = ut.list_to_set({'libo', 'nibudʹ', 'by', 'b', 'že', 'ž',
-       'ka', 'tka', 'li'}),
+	post = ut.list_to_set({'by', 'b', 'ž', 'že', 'li', 'libo', 'lʹ', 'ka',
+	   'nibudʹ', 'tka'}),
 	-- class 'posthyphen': particles that join with a preceding word, but only
 	--   if a hyphen (not a space) separates them
 	posthyphen = ut.list_to_set({'to'}),
@@ -523,6 +523,23 @@ function export.phon_respelling(text)
 		text = ine(text.args[1])
 	end
 	text = rsub(text, '[' .. CFLEX .. DUBGR .. DOTABOVE .. DOTBELOW .. ']', '')
+	text = rsub(text, '‿', ' ')
+	return text
+end
+
+-- For use with {{ru-IPA|adj=...}}; rewrite adjectival endings to the form
+-- used for phonetic respelling
+function export.adj_respelling(text)
+	if type(text) == 'table' then
+		text = ine(text.args[1])
+	end
+	-- ого, его, аго (pre-reform spelling), with optional accent on either
+	-- vowel, optionally with reflexive -ся suffix, at end of phrase or end
+	-- of word followed by space or hyphen
+	text = rsub(text, '(.[аое]́?)го(' .. AC .. '?)$', '%1во%2')
+	text = rsub(text, '(.[аое]́?)го(' .. AC .. '?ся)$', '%1во%2')
+	text = rsub(text, '(.[аое]́?)го(' .. AC .. '?[ %-])', '%1во%2')
+	text = rsub(text, '(.[аое]́?)го(' .. AC .. '?ся[ %-])', '%1во%2')
 	return text
 end
 
@@ -736,7 +753,7 @@ function export.ipa(text, adj, gem, bracket, pos)
 	end
 
 	text = adj and rsub(text, '(.[aoe]́?)go(' .. AC .. '?)⁀', '%1vo%2⁀') or text
-	text = adj and rsub(text, '(.[aoe]́?)go(' .. AC .. '?)⁀', '%1vo%2sja⁀') or text
+	text = adj and rsub(text, '(.[aoe]́?)go(' .. AC .. '?)sja⁀', '%1vo%2sja⁀') or text
 
 	--phonetic respellings
 	for _, respell in ipairs(phon_respellings) do
@@ -929,11 +946,11 @@ function export.ipa(text, adj, gem, bracket, pos)
 		--5. move @ backward if in the middle of a "permanent onset" cluster,
 		--   e.g. sk, str, that comes before a vowel, putting the @ before
 		--   the permanent onset cluster
-		pron = rsub(pron, '([^‿⁀@' .. vow .. acc .. ']?)([^‿⁀@' .. vow .. acc .. '])@([^‿⁀@' .. vow .. acc .. 'ːˑ()ʲ])(ʲ?[ːˑ()]*[‿⁀]*[' .. vow .. acc .. '])', function(a, b, c, d)
+		pron = rsub(pron, '([^‿⁀@_' .. vow .. acc .. ']?)(_*)([^‿⁀@_' .. vow .. acc .. '])(_*)@([^‿⁀@' .. vow .. acc .. 'ːˑ()ʲ])(ʲ?[ːˑ()]*[‿⁀]*[' .. vow .. acc .. '])', function(a, aund, b, bund, c, d)
 			if perm_syl_onset[a .. b .. c] or c == 'j' and rfind(b, '[čǰɕӂʲ]') then
-				return '@' .. a .. b .. c .. d
+				return '@' .. a .. aund .. b .. bund .. c .. d
 			elseif perm_syl_onset[b .. c] then
-				return a .. '@' .. b .. c .. d
+				return a .. aund .. '@' .. b .. bund .. c .. d
 			end end)
 		--6. if / is present (explicit syllable boundary), remove any @
 		--   (automatic boundary) and convert / to @
