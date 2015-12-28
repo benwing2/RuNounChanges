@@ -277,11 +277,11 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
               paramset = set(infl_params)
               if inflset == paramset:
                 return True
-              union = inflset | paramset
-              if union == paramset:
-                pagemsg("WARNING: Found actual inflection %s whose codes are a superset of intended codes %s" % (
+              if paramset > inflset:
+                pagemsg("WARNING: Found actual inflection %s whose codes are a superset of intended codes %s, accepting" % (
                   unicode(t), "|".join(infls)))
-              elif union == inflset:
+                return True
+              if paramset < inflset:
                 pagemsg("WARNING: Found actual inflection %s whose codes are a subset of intended codes %s" % (
                   unicode(t), "|".join(infls)))
               return False
