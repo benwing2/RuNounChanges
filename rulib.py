@@ -7,8 +7,10 @@ AC = u"\u0301" # acute =  ́
 GR = u"\u0300" # grave =  ̀
 CFLEX = u"\u0302" # circumflex =  ̂
 DOTABOVE = u"\u0307" # dot above =  ̇
+DOTBELOW = u"\u0323" # dot below =  ̣
 DI = u"\u0308" # diaeresis =  ̈
 DUBGR = u"\u030F" # double grave =  ̏
+accents = AC + GR + CFLEX + DOTABOVE + DOTBELOW + DI + DUBGR
 
 composed_grave_vowel = u"ѐЀѝЍ"
 vowel_no_jo = u"аеиоуяэыюіѣѵАЕИОУЯЭЫЮІѢѴ" + composed_grave_vowel #omit ёЁ
@@ -28,7 +30,7 @@ def needs_accents(text, split_dash=False):
   # words separated by a hyphen. We don't just split on hyphens at top level
   # otherwise a word like Али-Баба́ will "need accents".
   def word_needs_accents(word):
-    if not is_unstressed(word):
+    if not is_unaccented(word):
       return False
     for sw in re.split(r"-", word) if split_dash else [word]:
       if not is_monosyllabic(sw):
@@ -47,6 +49,9 @@ def is_stressed(word):
 
 def is_unstressed(word):
   return not is_stressed(word)
+
+def is_unaccented(word):
+  return not re.search("[" + accents + u"ёЁѐЀѝЍ]", word)
 
 def is_ending_stressed(word):
   return (re.search(u"[ёЁ][^" + vowel + "]*$", word) or
@@ -135,7 +140,7 @@ def make_beginning_stressed(word):
   return correct_grave_acute_clash(word)
 
 def try_to_stress(word):
-  if is_unstressed(word) and is_monosyllabic(word):
+  if is_unaccented(word) and is_monosyllabic(word):
     return make_ending_stressed(word)
   else:
     return word
