@@ -66,7 +66,7 @@ TODO:
 воздушный фильтр: Use accent on фильтр in ru-IPA
 воздушный шар: Use accent on шар in ru-IPA
 вопросительный знак: Use accent on знак in ru-IPA
-восклицательный знак: Use accent on знак in ru-IPA 
+восклицательный знак: Use accent on знак in ru-IPA
 все наверх: Use accent on все in headword
 все права защищены: Use accent on все in headword
 все права сохранены: Use accent on все in headword
@@ -123,7 +123,7 @@ TODO:
 знание — сила: add en dash in ru-IPA
 зубной врач: Use accent on monosyllable in ru-IPA
 зуммер: use gem=n instead of single м in ru-IPA
-и да и нет: add accent to monosyl in headword 
+и да и нет: add accent to monosyl in headword
 и-а: Use accent on monosyllable in ru-IPA
 идти на риск: Use accent on monosyllable in ru-IPA, add accent to monosyl in headword
 именная часть составного сказуемого: Use accent on monosyllable in ru-IPA
@@ -366,23 +366,6 @@ TODO:
 
 
 
-
-негр
-
-
-
-неопознанный летающий объект
-
-
-
-НКР
-
-
-
-ноут
-
-
-
 нпр. [ask Anatoli what this stands for]
 
 ==Russian==
@@ -398,100 +381,19 @@ TODO:
 
 нэп
 
-==Russian==
 
-===Alternative forms===
-* {{l|ru|НЭП}}
-
-===Etymology===
-{{ru-etym acronym of|[[новый|но́вая]] [[экономический|экономи́ческая]] [[поли́тика]]}}.
-
-===Pronunciation===
-* {{ru-IPA}}
-
-===Noun===
-{{ru-noun+}}
-
-# {{cx|historical|Soviet Union|lang=ru}} NEP ({{w|New Economic Policy}}), {{alternative case form of|НЭП|lang=ru}}
-
-====Declension====
-{{ru-noun-table}}
 
 
 
 демшиза
 
-==Russian==
-{{wikipedia|lang=ru}}
-
-===Etymology===
-{{ru-etym acronym of|[[демокра́тия]] [[шизофрени́я]]||democracy schizophrenia}}. Used when the convictions of the radical democrats are compared to schizophrenia.
-
-===Pronunciation===
-* {{ru-IPA|демшиза́}}
-
-===Noun===
-{{ru-noun+|d|демшиза́}}
-
-# {{context|derogatory|lang=ru}} the state of mind of a rabid radical democrat
-#* [[:w:ru:Крылов, Константин Анатольевич|Konstantin Krylov]] about [[:w:Anna Politkovskaya|Anna Politkovskaya]] in [[:w:ru:Спецназ России (газета)|Спецназ России]] (Specnaz Rossii), [http://www.specnaz.ru/article/?967 Одержимая], ''October 2006'', retrieved on 5-2-2009
-#*: ''[[:w:ru:Анна Политковская|Анна]] уходит из «Общей газеты» и находит себе место у Дмитрия Муратова в «Новой». «[[:w:Novaya Gazeta|Новая газета]]» — это своеобразный ноев ковчег для хорошо сохранившейся '''демшизы'''.''
-# {{lb|ru|collective}} rabid radical democrats
-
-====Declension====
-{{ru-noun-table|d|демшиза́}}
-
-====Derived terms====
-* {{l|ru|демшизовый}}
-
-====Related terms====
-* {{l|ru|либераст}}
 
 ИК
 
-==Russian==
 
-===Pronunciation===
-* {{ru-IPA|phon=и-ка́}}
-
-===Adjective===
-{{ru-adj}}
-
-# {{ru-initialism of|инфракра́сный}}
-
-===Noun===
-{{ru-noun||f-in|-}}
-
-# {{lb|ru|linguistics}} {{ru-initialism of|интонацио́нная констру́кция}}
 
 Ким
 
-==Russian==
-
-===Pronunciation===
-* {{ru-IPA}}
-
-===Etymology 1===
-{{bor|ru|ko|김}}
-
-====Proper noun====
-{{ru-proper noun+|a=an|n=both}}
-
-# {{surname|Korean|from=Korean|lang=ru|dot=,}} [[Kim]]
-
-=====Declension=====
-{{ru-noun-table|a=an}}
-
-===Etymology 2===
-{{ru-etym acronym of|Коммунистический интернациона́л молодёжи||Young Communist International}}.
-
-====Proper noun====
-{{ru-proper noun+|a=an|n=both}}
-
-# {{given name|male|lang=ru}}, [[Kim]], occasionally used during the time of the [[USSR]]
-
-=====Declension=====
-{{ru-noun-table|a=an}}
 
 комбат
 
@@ -1387,4 +1289,3 @@ TODO:
 
 ====Declension====
 {{ru-noun-table|примка́мера}}
-
