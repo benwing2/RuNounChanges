@@ -34,10 +34,10 @@
 #    participle is adverbial.
 # 4. Need more special-casing of participles, e.g. head is 'participle',
 #    name of POS is "Participle", defn uses 'ru-participle of'.
-# 5. Need to group short adjectives with adverbs (cf. агресси́вно "aggressively"
-#    and also "aggressive (short n s)"). When doing this, may need to take
-#    into account manual translit (адеква́тно with tr=adɛkvátno, both an
-#    adverb and short adjective).
+# 5. (DONE) Need to group short adjectives with adverbs (cf. агресси́вно
+#    "aggressively" and also "aggressive (short n s)"). When doing this,
+#    may need to take into account manual translit (адеква́тно with
+#    tr=adɛkvátno, both an adverb and short adjective).
 # 6. When wrapping a single-etymology entry to create multiple etymologies,
 #    consider moving the pronunciation to the top above the etymologies.
 #    (Currently addpron.py isn't able to extract split pronunciations and
@@ -49,6 +49,34 @@
 #    check the existing headword(s) (and existing pronunciation?) to make
 #    sure their pronunciation is compatible with the new headwords; for this
 #    reason it might make more sense to do this in addpron.py.
+# 7. When a given form value has multiple forms and they are the same except
+#    for accents, we should combine them into a single entry with multiple
+#    heads, cf. бе́дный with short plural бедны́,бе́дны. Cf. also глубо́кий
+#    with short neuter singular глубоко́,глубо́ко, an existing entry with
+#    both forms already there (and in addition an adverb глубоко́, put into
+#    its own etymology section). Verify that we correctly note the
+#    already-existing entry and do nothing. This means we may need to
+#    deal with the heads being out of order. (We can use template_head_matches()
+#    separately on each head to match, which will also allow us to handle
+#    the case where for some reason there are three existing heads and we
+#    want to match two; and will allow us to issue a warning when we want to
+#    match two heads and can only match one. Example where such a warning
+#    should be issued: красно.)
+# 8. (DONE) When comparing params, we should allow the param to have a
+#    missing accent relative to the expected value (cf.
+#    {{inflection of|lang=ru|апатичный|...}} vs. expected value апати́чный).
+# 9. (DONE) When comparing params, if we're checking the value of head= or
+#    1= and it's missing, we should substitute the pagetitle (e.g. expected
+#    short form бе́л, actual template {{head|ru|adjective form}}, similarly
+#    with бла́г, which also has a noun form entry).
+# 10. When creating a POS form (as we usually are), check for a POS entry
+#    with the same head and issue a warning if so (e.g. short adj neuter sg
+#    бесконе́чно, with an ru-adj entry already present).
+# 11. (DONE) Need to group short adjectives with predicatives
+#    (head|ru|predicative).
+# 12. (DONE) Need to group adjectives with participle forms
+#    (head|ru|participle form), cf. используемы.
+# 13. (DONE) Handle redirects, e.g. чёрен redirect to чёрный.
 
 import pywikibot, re, sys, codecs, argparse
 
@@ -153,6 +181,8 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
     return blib.expand_text(tempcall, pagename, pagemsg, verbose)
 
   is_participle = "participle" in infltype
+  is_adj_form = "adjective form" in infltype
+  is_short_adj_form = "adjective form short" in infltype
   deftemp_uses_inflection_of = deftemp == "inflection of"
   infltemp_is_head = infltemp.startswith("head|")
 
@@ -165,9 +195,41 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
   pagemsg("Creating entry")
   page = pywikibot.Page(site, pagename)
 
+  # Check whether parameter PARAM of TEMPLATE matches VALUE.
   def compare_param(template, param, value):
     paramval = getparam(template, param)
+    # If checking the first param, substitute page name if missing.
+    if not paramval and param in ["1", "head"]:
+      paramval = pagename
+    # Allow cases where the parameter says e.g. апатичный (missing an accent)
+    # and the value compared to is e.g. апати́чный (with an accent).
+    if ru.is_unaccented(paramval) and ru.remove_accents(value) == paramval:
+      return True
+    # Allow cases that differ only in grave accents (typically if one of the
+    # values has a grave accent and the other doesn't).
+    if re.sub(ru.GR, "", paramval) == re.sub(ru.GR, "", value):
+      return True
     return paramval == value
+
+  # First, for each template, return a tuple of
+  # (template, param, matches), where MATCHES is true if any head
+  # matches FORM and PARAM is the (first) matching head param.
+  def template_head_match_info(template, form):
+    # Look at all heads
+    firstparam = "head" if unicode(template.name) == "head" else "1"
+    if compare_param(template, firstparam, form):
+      return (template, firstparam, True)
+    i = 2
+    while True:
+      param = "head" + str(i)
+      if not getparam(template, param):
+        return (template, None, False)
+      if compare_param(template, param, form):
+        return (template, param, True)
+      i += 1
+  # True if any head in the template matches FORM.
+  def template_head_matches(template, form):
+    return template_head_match_info(template, form)[2]
 
   # Prepare parts of new entry to insert
   if entrytext:
@@ -256,35 +318,9 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
           if match_pos:
             parsed = blib.parse_text(subsections[j])
 
-            # Find the inflection headword (e.g. 'ru-noun form' or
-            # 'head|ru|verb form') and definitional (typically 'inflection of')
-            # templates.
-
-            # First, for each template, return a tuple of
-            # (template, param, matches), where MATCHES is true if any head
-            # matches FORM and PARAM is the (first) matching head param.
-            def template_head_match_info(template, form):
-              # Look at all heads
-              firstparam = "head" if infltemp_is_head else "1"
-              if compare_param(template, firstparam, form):
-                return (template, firstparam, True)
-              i = 2
-              while True:
-                param = "head" + str(i)
-                if not getparam(template, param):
-                  return (template, None, False)
-                if compare_param(template, param, form):
-                  return (template, param, True)
-                i += 1
-            # True if any head in the template matches FORM.
-            def template_head_matches(template, form):
-              return template_head_match_info(template, form)[2]
-            head_matches_tuples = [template_head_match_info(t, inflection)
-                for t in parsed.filter_templates()]
-
             # True if the inflection codes in template T (an 'inflection of'
             # template) exactly match the inflections given in INFLS (in
-            # any order)
+            # any order), or if the former are a superset of the latter
             def compare_inflections(t, infls):
               infl_params = []
               for param in t.params:
@@ -305,8 +341,15 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
                   unicode(t), "|".join(infls)))
               return False
 
+            # Find the inflection headword (e.g. 'ru-noun form' or
+            # 'head|ru|verb form') and definitional (typically 'inflection of')
+            # templates.
+            head_matches_tuples = [template_head_match_info(t, inflection)
+                for t in parsed.filter_templates()]
+
             # Now get a list of (TEMPLATE, PARAM) for all matching templates,
             # where PARAM is the matching head param, as above.
+
             def template_name(t):
               if infltemp_is_head:
                 return "|".join([unicode(t.name), getparam(t, "1"), getparam(t, "2")])
@@ -379,10 +422,10 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
                 if re.match("^===+(Noun|Adjective)===+", subsections[j - 1]):
                   parsed = blib.parse_text(subsections[j])
                   for t in parsed.filter_templates():
-                    if (t.name in ["ru-adj"] and
+                    if (unicode(t.name) in ["ru-adj", "ru-noun", "ru-proper noun"] and
                         template_head_matches(t, inflection) and insert_at is None):
                       insert_at = j - 1
-                    if (t.name in ["ru-noun+", "ru-proper noun+"] and insert_at is None):
+                    if (unicode(t.name) in ["ru-noun+", "ru-proper noun+"] and insert_at is None):
                       lemma = fetch_noun_lemma(template, expand_text)
                       if lemma is None:
                         pagemsg("WARNING: Error generating noun forms")
@@ -406,8 +449,74 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
               sections[i] = ''.join(subsections)
               break
 
+          # If adjective form, try to find an existing participle form with
+          # the same lemma to insert after. If short adjective form, also
+          # try to find an existing adverb or predicative with the same
+          # lemma to insert after. In all cases, insert after the last such
+          # one.
+          if is_adj_form:
+            insert_at = None
+            for j in xrange(2, len(subsections), 2):
+              if re.match("^===+Participle===+", subsections[j - 1]):
+                parsed = blib.parse_text(subsections[j])
+                for t in parsed.filter_templates():
+                  if (unicode(t.name) == "head" and getparam(t, "1") == "ru" and
+                      getparam(t, "2") == "participle form" and
+                      template_head_matches(t, inflection)):
+                    insert_at = j + 1
+              if is_short_adj_form:
+                if re.match("^===+Adverb===+", subsections[j - 1]):
+                  parsed = blib.parse_text(subsections[j])
+                  for t in parsed.filter_templates():
+                    if (unicode(t.name) in ["ru-adv"] and
+                        template_head_matches(t, inflection)):
+                      insert_at = j + 1
+                elif re.match("^===+Predicative===+", subsections[j - 1]):
+                  parsed = blib.parse_text(subsections[j])
+                  for t in parsed.filter_templates():
+                    if (unicode(t.name) == "head" and getparam(t, "1") == "ru" and
+                        getparam(t, "2") == "predicative" and
+                        template_head_matches(t, inflection)):
+                      insert_at = j + 1
+            if insert_at:
+              pagemsg("Found section to insert adjective form after: [[%s]]" %
+                  subsections[insert_at - 1])
+
+              # Determine indent level and skip past sections at higher indent
+              m = re.match("^(==+)", subsections[insert_at - 2])
+              indentlevel = len(m.group(1))
+              while insert_at < len(subsections):
+                if (insert_at % 2) == 0:
+                  insert_at += 1
+                  continue
+                m = re.match("^(==+)", subsections[insert_at])
+                newindent = len(m.group(1))
+                if newindent <= indentlevel:
+                  break
+                pagemsg("Skipped past higher-indented subsection: [[%s]]" %
+                    subsections[insert_at])
+                insert_at += 1
+
+              if is_short_adj_form:
+                possible_shared_pos = "adverb/predicative/participle form"
+              else:
+                possible_shared_pos = "participle form"
+              pagemsg("Inserting after %s section for same lemma" %
+                  possible_shared_pos)
+              comment = "Insert entry for %s %s of %s after %s section for same lemma" % (
+                infltype, inflection, lemma, possible_shared_pos)
+              subsections[insert_at - 1] = ensure_two_trailing_nl(
+                  subsections[insert_at - 1])
+              if indentlevel == 3:
+                subsections[insert_at:insert_at] = [newpos + "\n"]
+              else:
+                assert(indentlevel == 4)
+                subsections[insert_at:insert_at] = [newposl4 + "\n"]
+              sections[i] = ''.join(subsections)
+              break
+
           pagemsg("Exists and has Russian section, appending to end of section")
-          # FIXME! Conceivably instead of inserting at end we should insert
+          # [FIXME! Conceivably instead of inserting at end we should insert
           # next to any existing ===Noun=== (or corresponding POS, whatever
           # it is), in particular after the last one. However, this makes less
           # sense when we create separate etymologies, as we do. Conceivably
@@ -415,7 +524,7 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
           # containing an entry of the same part of speech.
           #
           # (Perhaps for now we should just skip creating entries if we find
-          # an existing Russian entry?)
+          # an existing Russian entry?)] -- comment out of date
           if "\n===Etymology 1===\n" in sections[i]:
             j = 2
             while ("\n===Etymology %s===\n" % j) in sections[i]:
@@ -456,11 +565,24 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
       comment = "Create Russian section and entry for %s %s of %s, pos=%s; append at end" % (
           infltype, inflection, lemma, pos)
 
-      sections[-1] = ensure_two_trailing_nl(sections[-1])
-      sections += ["----\n\n", newsection]
+      if sections:
+        sections[-1] = ensure_two_trailing_nl(sections[-1])
+        sections += ["----\n\n", newsection]
+      else:
+        pagemsg("WARNING: No language sections in current page")
+        notes.append("formerly empty")
+        if pagehead.lower().startswith("#redirect"):
+          pagemsg("WARNING: Page is redirect, overwriting")
+          notes.append("overwriting redirect")
+          pagehead = re.sub(r"#redirect *\[\[(.*?)\]\] *(<!--.*?--> *)*\n*",
+              r"{{also|\1}}\n", pagehead, 0, re.I)
+        sections += [newsection]
 
     # End of loop over sections in existing page; rejoin sections
     newtext = pagehead + ''.join(sections) + pagetail
+
+    # Eliminate sequences of 3 or more newlines
+    newtext = re.sub(r"\n\n\n+", r"\n\n", newtext)
 
     if page.text == newtext:
       pagemsg("No change in text")
