@@ -32,6 +32,8 @@
 #    same Cyrillic but different translit, and combine the manual translits.
 # 3. When grouping participles with nouns/adjectives, don't do it if
 #    participle is adverbial.
+# 4. Need more special-casing of participles, e.g. head is 'participle' and
+#    name of POS is "Participle".
 
 import pywikibot, re, sys, codecs, argparse
 
@@ -161,13 +163,14 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
     # verb parts and participles; these parts don't exist when 'entrytext'
     # was passed in, but that isn't a problem because it isn't passed in
     # when creating verb parts or participles.
-    new_headword_template_prefix = "%s|%s" % (infltemp, inflection)
+    new_headword_template_prefix = "%s|%s%s" % (infltemp,
+        "head=" if infltemp.startswith("head|") else "", inflection)
     new_headword_template = "{{%s%s%s}}" % (new_headword_template_prefix,
         infltemp_param, "|tr=%s" % infltr if infltr else "")
-    new_defn_template = "{{%s|%s%s%s}}" % (
-      deftemp, lemma,
-      "|tr=%s" % lemmatr if lemmatr else "",
-      deftemp_param)
+    new_defn_template = "{{%s%s|%s%s%s}}" % (
+      deftemp, "|lang=ru" if deftemp_needs_lang else "",
+      lemma, "|tr=%s" % lemmatr if lemmatr else "",
+      deftemp_param if isinstance(deftemp_param, basestring) else "||" + "|".join(deftemp_param))
     newposbody = """%s
 
 # %s
@@ -477,8 +480,8 @@ def parse_form_spec(formspec, infl_dict, aliases):
   for form in re.split(",", formspec):
     if form in aliases:
       for f in aliases[form]:
-        if form not in forms:
-          forms.append(form)
+        if f not in forms:
+          forms.append(f)
     elif form in infl_dict:
       if form not in forms:
         forms.append(form)
@@ -491,29 +494,29 @@ def parse_form_spec(formspec, infl_dict, aliases):
   return infls
 
 adj_form_inflection_list = [
-  ["nom_m": [("nom", "m", "s"), ("in", "acc", "m", "s")]],
-  ["nom_f": ("nom", "f", "s")],
-  ["nom_n": ("nom", "n", "s")],
-  ["nom_p": [("nom", "p"), ("in", "acc", "p")]],
-  ["nom_mp": ("nom", "m", "p")],
-  ["gen_m": [("gen", "m", "s"), ("an", "acc", "m", "s"), ("gen", "n", "s")]],
-  ["gen_f": ("gen", "f", "s")],
-  ["gen_p": [("gen", "p"), ("an", "acc", "p")]],
-  ["dat_m": [("dat", "m", "s"), ("dat", "n", "s")]],
-  ["dat_f": ("dat", "f", "s")],
-  ["dat_p": ("dat", "p")],
-  ["acc_f": ("acc", "f", "s")],
-  ["acc_n": ("acc", "n", "s")],
-  ["ins_m": ("ins", "m", "s")],
-  ["ins_f": ("ins", "f", "s")],
-  ["ins_p": ("ins", "p")],
-  ["pre_m": ("pre", "m", "s")],
-  ["pre_f": ("pre", "f", "s")],
-  ["pre_p": ("pre", "p")],
-  ["short_m": ("short", "m", "s")],
-  ["short_f": ("short", "f", "s")],
-  ["short_n": ("short", "n", "s")],
-  ["short_p": ("short", "p")]
+  ["nom_m", [("nom", "m", "s"), ("in", "acc", "m", "s")]],
+  ["nom_f", ("nom", "f", "s")],
+  ["nom_n", ("nom", "n", "s")],
+  ["nom_p", [("nom", "p"), ("in", "acc", "p")]],
+  ["nom_mp", ("nom", "m", "p")],
+  ["gen_m", [("gen", "m", "s"), ("an", "acc", "m", "s"), ("gen", "n", "s")]],
+  ["gen_f", ("gen", "f", "s")],
+  ["gen_p", [("gen", "p"), ("an", "acc", "p")]],
+  ["dat_m", [("dat", "m", "s"), ("dat", "n", "s")]],
+  ["dat_f", ("dat", "f", "s")],
+  ["dat_p", ("dat", "p")],
+  ["acc_f", ("acc", "f", "s")],
+  ["acc_n", ("acc", "n", "s")],
+  ["ins_m", ("ins", "m", "s")],
+  ["ins_f", ("ins", "f", "s")],
+  ["ins_p", ("ins", "p")],
+  ["pre_m", ("pre", "m", "s")],
+  ["pre_f", ("pre", "f", "s")],
+  ["pre_p", ("pre", "p")],
+  ["short_m", ("short", "m", "s")],
+  ["short_f", ("short", "f", "s")],
+  ["short_n", ("short", "n", "s")],
+  ["short_p", ("short", "p")]
 ]
     
 adj_form_inflection_dict = dict(adj_form_inflection_list)
@@ -526,22 +529,22 @@ adj_form_aliases = {
 }
 
 nom_form_inflection_list = [
-  ["nom_sg": ("nom", "s")],
-  ["gen_sg": ("gen", "s")],
-  ["dat_sg": ("dat", "s")],
-  ["acc_sg": ("acc", "s")],
-  ["acc_sg_an": ("an", "acc", "s")],
-  ["acc_sg_in": ("in", "acc", "s")],
-  ["ins_sg": ("ins", "s")],
-  ["pre_sg": ("pre", "s")],
-  ["nom_pl": ("nom", "p")],
-  ["gen_pl": ("gen", "p")],
-  ["dat_pl": ("dat", "p")],
-  ["acc_pl": ("acc", "p")],
-  ["acc_pl_an": ("an", "acc", "p")],
-  ["acc_pl_in": ("in", "acc", "p")],
-  ["ins_pl": ("ins", "p")],
-  ["pre_pl": ("pre", "p")],
+  ["nom_sg", ("nom", "s")],
+  ["gen_sg", ("gen", "s")],
+  ["dat_sg", ("dat", "s")],
+  ["acc_sg", ("acc", "s")],
+  ["acc_sg_an", ("an", "acc", "s")],
+  ["acc_sg_in", ("in", "acc", "s")],
+  ["ins_sg", ("ins", "s")],
+  ["pre_sg", ("pre", "s")],
+  ["nom_pl", ("nom", "p")],
+  ["gen_pl", ("gen", "p")],
+  ["dat_pl", ("dat", "p")],
+  ["acc_pl", ("acc", "p")],
+  ["acc_pl_an", ("an", "acc", "p")],
+  ["acc_pl_in", ("in", "acc", "p")],
+  ["ins_pl", ("ins", "p")],
+  ["pre_pl", ("pre", "p")],
 ]
     
 nom_form_inflection_dict = dict(nom_form_inflection_list)
@@ -634,28 +637,29 @@ def create_forms(save, startFrom, upTo, formspec,
   forms_desired = parse_form_spec(formspec, form_inflection_dict,
       form_aliases)
   for index, page in blib.cat_articles("Russian %ss" % pos, startFrom, upTo):
+    pagetitle = unicode(page.title())
     def pagemsg(txt):
-      msg("Page %s %s: %s" % (index, page, txt))
+      msg("Page %s %s: %s" % (index, pagetitle, txt))
     def expand_text(tempcall):
       return blib.expand_text(tempcall, pagetitle, pagemsg, verbose)
 
     for t in blib.parse(page).filter_templates():
       tname = unicode(t.name)
       if is_inflection_template(t):
-        result = blib.expand_text(create_form_generator(t))
+        result = expand_text(create_form_generator(t))
         if not result:
           pagemsg("WARNING: Error generating %s forms, skipping" % pos)
           continue
         args = ru.split_generate_args(result)
         dicforms = args[dicform_code]
         for dicform in re.split(",", dicforms):
-          for form, inflsets in forms_desired:
+          for formname, inflsets in forms_desired:
             # Skip the dictionary form; also skip forms that don't have
             # listed inflections (e.g. singulars with plural-only nouns,
             # animate/inanimate variants when a noun isn't bianimate):
-            if form != dicform_code and form in args and args[form]:
+            if formname != dicform_code and formname in args and args[formname]:
               dicformru, dicformtr = split_ru_tr(dicform)
-              for formval in re.split(",", args[form]):
+              for formval in re.split(",", args[formname]):
                 formvalru, formvaltr = split_ru_tr(formval)
                 if type(inflsets) is not list:
                   inflsets = [inflsets]
@@ -728,7 +732,7 @@ because it is the same as the dictionary/lemma form. Also, non-existent forms
 for particular verbs will not be created.""")
 
 params = pa.parse_args()
-startFrom, upTo = blib.parse_start_end(params.start, params.end)
+startFrom, upTo = blib.get_args(params.start, params.end)
 
 if params.adj_form:
   create_adj_forms(params.save, startFrom, upTo, params.adj_form)
