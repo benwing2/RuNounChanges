@@ -32,8 +32,23 @@
 #    same Cyrillic but different translit, and combine the manual translits.
 # 3. When grouping participles with nouns/adjectives, don't do it if
 #    participle is adverbial.
-# 4. Need more special-casing of participles, e.g. head is 'participle' and
-#    name of POS is "Participle".
+# 4. Need more special-casing of participles, e.g. head is 'participle',
+#    name of POS is "Participle", defn uses 'ru-participle of'.
+# 5. Need to group short adjectives with adverbs (cf. агресси́вно "aggressively"
+#    and also "aggressive (short n s)"). When doing this, may need to take
+#    into account manual translit (адеква́тно with tr=adɛkvátno, both an
+#    adverb and short adjective).
+# 6. When wrapping a single-etymology entry to create multiple etymologies,
+#    consider moving the pronunciation to the top above the etymologies.
+#    (Currently addpron.py isn't able to extract split pronunciations and
+#    convert to combined form. We might consider making it do so; if so,
+#    we should probably make it correctly handle {{audio}} and {{hyphenation}}
+#    and such, which I would say can safely be moved up to the top section
+#    if there's only one split pronunciation with such templates.) If we
+#    make this script move the pronunciation to the top, we need to have it
+#    check the existing headword(s) (and existing pronunciation?) to make
+#    sure their pronunciation is compatible with the new headwords; for this
+#    reason it might make more sense to do this in addpron.py.
 
 import pywikibot, re, sys, codecs, argparse
 
@@ -138,7 +153,8 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
     return blib.expand_text(tempcall, pagename, pagemsg, verbose)
 
   is_participle = "participle" in infltype
-  uses_inflection_of = infltemp == "inflection of"
+  deftemp_uses_inflection_of = deftemp == "inflection of"
+  infltemp_is_head = infltemp.startswith("head|")
 
   if inflection == "-":
     pagemsg("Not creating %s entry - for %s %s%s" % (
@@ -164,7 +180,7 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
     # was passed in, but that isn't a problem because it isn't passed in
     # when creating verb parts or participles.
     new_headword_template_prefix = "%s|%s%s" % (infltemp,
-        "head=" if infltemp.startswith("head|") else "", inflection)
+        "head=" if infltemp_is_head else "", inflection)
     new_headword_template = "{{%s%s%s}}" % (new_headword_template_prefix,
         infltemp_param, "|tr=%s" % infltr if infltr else "")
     new_defn_template = "{{%s%s|%s%s%s}}" % (
@@ -249,7 +265,7 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
             # matches FORM and PARAM is the (first) matching head param.
             def template_head_match_info(template, form):
               # Look at all heads
-              firstparam = "head" if infltemp.startswith("head|") else "1"
+              firstparam = "head" if infltemp_is_head else "1"
               if compare_param(template, firstparam, form):
                 return (template, firstparam, True)
               i = 2
@@ -291,13 +307,18 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
 
             # Now get a list of (TEMPLATE, PARAM) for all matching templates,
             # where PARAM is the matching head param, as above.
+            def template_name(t):
+              if infltemp_is_head:
+                return "|".join([unicode(t.name), getparam(t, "1"), getparam(t, "2")])
+              else:
+                return unicode(t.name)
             infl_headword_templates = [(t, param)
                 for t, param, matches in head_matches_tuples
-                if unicode(t.name) == infltemp and matches]
+                if template_name(t) == infltemp and matches]
             defn_templates = [t for t in parsed.filter_templates()
                 if unicode(t.name) == deftemp and compare_param(t, "1", lemma)
                 and (not deftemp_needs_lang or compare_param(t, "lang", "ru"))
-                and (not uses_inflection_of or compare_inflections(t, deftemp_param))]
+                and (not deftemp_uses_inflection_of or compare_inflections(t, deftemp_param))]
 
             # Make sure there's exactly one headword template.
             if len(infl_headword_templates) > 1:
