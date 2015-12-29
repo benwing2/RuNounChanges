@@ -25,10 +25,10 @@
 #    individually to each section. If there are already split pronunciations,
 #    we just add a pronunciation to the individual section. It might make
 #    sense to do this in addpron.py.
-# 2. Review handling of manual translit. Currently we check to see if the
-#    manual translit matches and if not we don't see the inflection as
-#    already present. Probably instead we should issue a warning when this
-#    happens. Also, we need to check if there are multiple forms with the
+# 2. (DONE) Currently we check to see if the manual translit matches and
+#    if not we don't see the inflection as already present. Probably instead
+#    we should issue a warning when this happens.
+# 2a. We need to check if there are multiple forms with the
 #    same Cyrillic but different translit, and combine the manual translits.
 # 3. When grouping participles with nouns/adjectives, don't do it if
 #    participle is adverbial.
@@ -69,9 +69,9 @@
 #    1= and it's missing, we should substitute the pagetitle (e.g. expected
 #    short form бе́л, actual template {{head|ru|adjective form}}, similarly
 #    with бла́г, which also has a noun form entry).
-# 10. When creating a POS form (as we usually are), check for a POS entry
-#    with the same head and issue a warning if so (e.g. short adj neuter sg
-#    бесконе́чно, with an ru-adj entry already present).
+# 10. (DONE) When creating a POS form (as we usually are), check for a POS
+#    entry with the same head and issue a warning if so (e.g. short adj
+#    neuter sg бесконе́чно, with an ru-adj entry already present).
 # 11. (DONE) Need to group short adjectives with predicatives
 #    (head|ru|predicative).
 # 12. (DONE) Need to group adjectives with participle forms
@@ -111,15 +111,23 @@ def fetch_noun_lemma(template, expand_text):
 
 # Return True if LEMMA (the output of fetch_noun_lemma()) matches the
 # specified Cyrillic term RU, with possible manual transliteration TR
-# (may be empty). FIXME: If either the lemma specifies manual translit or
-# TR is given, we should consider transliterating the other one in case
-# of redundant manual translit.
-def lemma_matches(lemma, ru, tr):
-  if tr:
-    ru = ru + "//" + tr
+# (may be empty). Issue a warning if Cyrillic matches but not translit.
+# FIXME: If either the lemma specifies manual translit or TR is given,
+# we should consider transliterating the other one in case of redundant
+# manual translit.
+def lemma_matches(lemma, ru, tr, pagemsg):
   for lem in re.split(",", lemma):
-    if ru == lem:
-      return True
+    if "//" in lem:
+      lemru, lemtr = re.split("//", lem, 1)
+    else:
+      lemru, lemtr = lem, ""
+    if ru == lemru:
+      trmatches = not tr and not lemtr or tr == lemtr
+      if not trmatches:
+        pagemsg("WARNING: Value %s matches lemma %s of ru-(proper )noun+, but translit %s doesn't match %s" % (
+          ru, lemru, tr, lemtr))
+      else:
+        return True
   return False
 
 # Create or insert a section describing a given inflection of a given lemma.
@@ -147,13 +155,20 @@ def lemma_matches(lemma, ru, tr):
 # of inflection codes (e.g. ['2', 's', 'pres', 'ind']). DEFTEMP_NEEDS_LANG
 # indicates whether the definition template specified by DEFTEMP needs to
 # have a 'lang' parameter with value 'ru'.
-# 
+#
 # If ENTRYTEXT is given, this is the text to use for the entry, starting
 # directly after the "==Etymology==" line, which is assumed to be necessary.
 # If not given, this text is synthesized from the other parameters.
+#
+# IS_LEMMA_TEMPLATE is a function that is passed one argument, a template,
+# and should indicate if it's a lemma template (e.g. 'ru-adj' for adjectives).
+# This is used to issue warnings in case of non-lemma forms where there's
+# a corresponding lemma (NOTE, this situation could be legitimate for nouns).
+#
 def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
     pos, infltype, lemmatype, infltemp, infltemp_param, deftemp,
-    deftemp_param, deftemp_needs_lang=True, entrytext=None):
+    deftemp_param, deftemp_needs_lang=True, entrytext=None,
+    is_lemma_template=None):
 
   # Did we insert an entry or find an existing one? If not, we need to
   # add a new one. If we break out of the loop through subsections of the
@@ -195,41 +210,69 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
   pagemsg("Creating entry")
   page = pywikibot.Page(site, pagename)
 
-  # Check whether parameter PARAM of TEMPLATE matches VALUE.
-  def compare_param(template, param, value):
-    paramval = getparam(template, param)
+  # Check whether parameter PARAM of template T matches VALUE.
+  def compare_param(t, param, value, valuetr):
+    paramval = getparam(t, param)
     # If checking the first param, substitute page name if missing.
     if not paramval and param in ["1", "head"]:
       paramval = pagename
     # Allow cases where the parameter says e.g. апатичный (missing an accent)
     # and the value compared to is e.g. апати́чный (with an accent).
     if ru.is_unaccented(paramval) and ru.remove_accents(value) == paramval:
-      return True
+      matches = True
     # Allow cases that differ only in grave accents (typically if one of the
     # values has a grave accent and the other doesn't).
-    if re.sub(ru.GR, "", paramval) == re.sub(ru.GR, "", value):
-      return True
-    return paramval == value
+    elif re.sub(ru.GR, "", paramval) == re.sub(ru.GR, "", value):
+      matches = True
+    else:
+      matches = paramval == value
+    # Now, if there's a match, check the translit
+    if matches:
+      if param in ["1", "head"]:
+        trparam = "tr"
+      elif param.startswith("head"):
+        trparam = re.sub("^head", "tr", param)
+      else:
+        assert not valuetr, "Translit cannot be specified with a non-head parameter"
+        return True
+      trparamval = getparam(t, trparam)
+      if not valuetr and not trparamval:
+        return True
+      if valuetr == trparamval:
+        return True
+      pagemsg("WARNING: Value %s matches param %s=%s, but translit %s doesn't match param %s=%s: %s" % (
+        value, param, paramval, valuetr, trparam, trparamval, unicode(t)))
+      return False
+    return False
 
-  # First, for each template, return a tuple of
-  # (template, param, matches), where MATCHES is true if any head
-  # matches FORM and PARAM is the (first) matching head param.
-  def template_head_match_info(template, form):
+  # Return a tuple of (T, PARAM, MATCHES), where T is a template,
+  # MATCHES is true if any head matches FORM and PARAM is the (first)
+  # matching head param.
+  def template_head_match_info(t, form, formtr):
     # Look at all heads
-    firstparam = "head" if unicode(template.name) == "head" else "1"
-    if compare_param(template, firstparam, form):
-      return (template, firstparam, True)
+    firstparam = "head" if unicode(t.name) == "head" else "1"
+    if compare_param(t, firstparam, form, formtr):
+      return (t, firstparam, True)
     i = 2
     while True:
       param = "head" + str(i)
-      if not getparam(template, param):
-        return (template, None, False)
-      if compare_param(template, param, form):
-        return (template, param, True)
+      if not getparam(t, param):
+        return (t, None, False)
+      if compare_param(t, param, form, formtr):
+        return (t, param, True)
       i += 1
-  # True if any head in the template matches FORM.
-  def template_head_matches(template, form):
-    return template_head_match_info(template, form)[2]
+
+  # True if any head in the template matches FORM with translit FORMTR.
+  # Knows how to deal with ru-noun+ and ru-proper noun+.
+  def template_head_matches(t, form, formtr):
+    if unicode(t.name) in ["ru-noun+", "ru-proper noun+"]:
+      lemma = fetch_noun_lemma(t, expand_text)
+      if lemma is None:
+        pagemsg("WARNING: Error generating noun forms")
+        return False
+      else:
+        return lemma_matches(lemma, form, formtr, pagemsg)
+    return template_head_match_info(t, form, formtr)[2]
 
   # Prepare parts of new entry to insert
   if entrytext:
@@ -303,6 +346,13 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
         if mm:
           sections[i:i+1] = [mm.group(1), mm.group(2)]
 
+        # When creating non-lemma forms, warn about matching lemma template
+        if is_lemma_template:
+          parsed = blib.parse_text(sections[i])
+          for t in parsed.filter_templates():
+            if is_lemma_template(t) and template_head_matches(t, inflection, infltr):
+              pagemsg("WARNING: Creating non-lemma form and found matching lemma template: %s" % unicode(t))
+
         subsections = re.split("(^===+[^=\n]+===+\n)", sections[i], 0, re.M)
 
         # Go through each subsection in turn, looking for subsection
@@ -344,7 +394,7 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
             # Find the inflection headword (e.g. 'ru-noun form' or
             # 'head|ru|verb form') and definitional (typically 'inflection of')
             # templates.
-            head_matches_tuples = [template_head_match_info(t, inflection)
+            head_matches_tuples = [template_head_match_info(t, inflection, infltr)
                 for t in parsed.filter_templates()]
 
             # Now get a list of (TEMPLATE, PARAM) for all matching templates,
@@ -359,8 +409,8 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
                 for t, param, matches in head_matches_tuples
                 if template_name(t) == infltemp and matches]
             defn_templates = [t for t in parsed.filter_templates()
-                if unicode(t.name) == deftemp and compare_param(t, "1", lemma)
-                and (not deftemp_needs_lang or compare_param(t, "lang", "ru"))
+                if unicode(t.name) == deftemp and compare_param(t, "1", lemma, lemmatr)
+                and (not deftemp_needs_lang or compare_param(t, "lang", "ru", None))
                 and (not deftemp_uses_inflection_of or compare_inflections(t, deftemp_param))]
 
             # Make sure there's exactly one headword template.
@@ -422,15 +472,9 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
                 if re.match("^===+(Noun|Adjective)===+", subsections[j - 1]):
                   parsed = blib.parse_text(subsections[j])
                   for t in parsed.filter_templates():
-                    if (unicode(t.name) in ["ru-adj", "ru-noun", "ru-proper noun"] and
-                        template_head_matches(t, inflection) and insert_at is None):
+                    if (unicode(t.name) in ["ru-adj", "ru-noun", "ru-proper noun", "ru-noun+", "ru-proper noun+"] and
+                        template_head_matches(t, inflection, infltr) and insert_at is None):
                       insert_at = j - 1
-                    if (unicode(t.name) in ["ru-noun+", "ru-proper noun+"] and insert_at is None):
-                      lemma = fetch_noun_lemma(template, expand_text)
-                      if lemma is None:
-                        pagemsg("WARNING: Error generating noun forms")
-                      elif lemma_matches(lemma, inflection, infltr):
-                        insert_at = j - 1
 
             if insert_at is not None:
               pagemsg("Found section to insert participle before: [[%s]]" %
@@ -462,21 +506,21 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
                 for t in parsed.filter_templates():
                   if (unicode(t.name) == "head" and getparam(t, "1") == "ru" and
                       getparam(t, "2") == "participle form" and
-                      template_head_matches(t, inflection)):
+                      template_head_matches(t, inflection, infltr)):
                     insert_at = j + 1
               if is_short_adj_form:
                 if re.match("^===+Adverb===+", subsections[j - 1]):
                   parsed = blib.parse_text(subsections[j])
                   for t in parsed.filter_templates():
                     if (unicode(t.name) in ["ru-adv"] and
-                        template_head_matches(t, inflection)):
+                        template_head_matches(t, inflection, infltr)):
                       insert_at = j + 1
                 elif re.match("^===+Predicative===+", subsections[j - 1]):
                   parsed = blib.parse_text(subsections[j])
                   for t in parsed.filter_templates():
                     if (unicode(t.name) == "head" and getparam(t, "1") == "ru" and
                         getparam(t, "2") == "predicative" and
-                        template_head_matches(t, inflection)):
+                        template_head_matches(t, inflection, infltr)):
                       insert_at = j + 1
             if insert_at:
               pagemsg("Found section to insert adjective form after: [[%s]]" %
@@ -661,7 +705,7 @@ adj_form_inflection_list = [
   ["short_n", ("short", "n", "s")],
   ["short_p", ("short", "p")]
 ]
-    
+
 adj_form_inflection_dict = dict(adj_form_inflection_list)
 adj_form_aliases = {
     "all":[x for x, y in adj_form_inflection_list],
@@ -689,7 +733,7 @@ nom_form_inflection_list = [
   ["ins_pl", ("ins", "p")],
   ["pre_pl", ("pre", "p")],
 ]
-    
+
 nom_form_inflection_dict = dict(nom_form_inflection_list)
 nom_form_aliases = {
     "all":[x for x, y in nom_form_inflection_list]
@@ -772,11 +816,16 @@ def split_ru_tr(form):
 # IS_INFLECTION_TEMPLATE is a function that is passed one argument, a template,
 # and should indicate if it's an inflection template (e.g. 'ru-conj-2a' for
 # verbs). CREATE_FORM_GENERATOR is a function that's passed one argument,
-# a template, and should return a template (a string) that can be expanded to
-# yield a set of forms, identified by form codes.
+# an inflection template, and should return a template (a string) that can be
+# expanded to yield a set of forms, identified by form codes.
+#
+# IS_LEMMA_TEMPLATE is a function that is passed one argument, a template,
+# and should indicate if it's a lemma template (e.g. 'ru-adj' for adjectives).
+# This is used to issue warnings in case of non-lemma forms where there's
+# a corresponding lemma (NOTE, this situation could be legitimate for nouns).
 def create_forms(save, startFrom, upTo, formspec,
     form_inflection_dict, form_aliases, pos, infltemp, dicform_code,
-    is_inflection_template, create_form_generator):
+    is_inflection_template, create_form_generator, is_lemma_template):
   forms_desired = parse_form_spec(formspec, form_inflection_dict,
       form_aliases)
   for index, page in blib.cat_articles("Russian %ss" % pos, startFrom, upTo):
@@ -810,8 +859,8 @@ def create_forms(save, startFrom, upTo, formspec,
                   create_inflection_entry(save, index, formvalru, formvaltr,
                     dicformru, dicformtr, pos.capitalize(),
                     "%s form %s" % (pos, formname), "dictionary form",
-                    infltemp, "",
-                    "inflection of", inflset)
+                    infltemp, "", "inflection of", inflset,
+                    is_lemma_template=is_lemma_template)
 
 def create_verb_generator(t):
   verbtype = re.sub(r"^ru-conj-", "", unicode(t.name))
@@ -823,21 +872,24 @@ def create_verb_forms(save, startFrom, upTo, formspec):
       verb_form_inflection_dict, verb_form_aliases,
       "verb", "head|ru|verb form", "infinitive",
       lambda t:unicode(t.name).startswith("ru-conj"),
-      create_verb_generator)
+      create_verb_generator,
+      lambda t:unicode(t.name) == "ru-verb")
 
 def create_adj_forms(save, startFrom, upTo, formspec):
   create_forms(save, startFrom, upTo, formspec,
       adj_form_inflection_dict, adj_form_aliases,
       "adjective", "head|ru|adjective form", "nom_m",
       lambda t:unicode(t.name) == "ru-decl-adj",
-      lambda t:re.sub(r"^\{\{ru-decl-adj", "{{ru-generate-adj-forms", unicode(t)))
+      lambda t:re.sub(r"^\{\{ru-decl-adj", "{{ru-generate-adj-forms", unicode(t)),
+      lambda t:unicode(t.name) == "ru-adj")
 
 def create_noun_forms(save, startFrom, upTo, formspec):
   create_forms(save, startFrom, upTo, formspec,
       noun_form_inflection_dict, noun_form_aliases,
       "noun", "ru-noun form", "nom_sg",
       lambda t:unicode(t.name) == "ru-noun-table",
-      lambda t:re.sub(r"^\{\{ru-noun-table", "{{ru-generate-noun-forms", unicode(t)))
+      lambda t:re.sub(r"^\{\{ru-noun-table", "{{ru-generate-noun-forms", unicode(t)),
+      lambda t:unicode(t.name) in ["ru-noun", "ru-proper noun", "ru-noun+", "ru-proper noun+"])
 
 pa = blib.create_argparser("Create Russian inflection entries")
 pa.add_argument("--adj-form",
