@@ -242,6 +242,33 @@ def process_page(index, page, save, verbose):
             continue
           pos = list(pos)[0]
 
+        # Check whether there's a pronunciation with final -е for a given
+        # word. There are some entries that have multiple pronunciations,
+        # one with final -е and one with something else, e.g. final -и,
+        # and we want to leave those alone with a warning.
+        saw_final_e = {}
+        for t in parsed.filter_templates():
+          if unicode(t.name) == "ru-IPA":
+            param = "phon"
+            phon = getparam(t, param)
+            if not phon:
+              param = "1"
+              phon = getparam(t, "1")
+              if not phon:
+                param = "pagetitle"
+                phon = pagetitle
+            if getparam(t, "pos"):
+              pass # Already output msg
+            else:
+              phonwords = re.split("([ -]+)", phon)
+              if len(phonwords) != len(titlewords):
+                pass # Already output message
+              else:
+                for i in xrange(0, len(phonwords), 2):
+                  if re.search(u"е$", phonwords[i]):
+                    saw_final_e[i] = True
+
+        # Now modify the templates.
         for t in parsed.filter_templates():
           if unicode(t.name) == "ru-IPA":
             param = "phon"
@@ -275,6 +302,10 @@ def process_page(index, page, save, verbose):
                     if re.search(u"е" + ru.DOTABOVE + "?$", lphonword):
                       pass # No need to canonicalize
                     else:
+                      if saw_final_e.get(i, False):
+                        pagemsg(u"WARNING: Found another pronunciation with final -е, skipping: phon=%s (word #%s)" % (
+                          phonword, wordno))
+                        continue
                       if re.search(u"и" + ru.DOTABOVE + "?$", lphonword):
                         pagemsg(u"phon=%s (word #%s) ends in -и, will modify to -е in section %s: %s" % (phonword, wordno, k//2, unicode(t)))
                         notes.append(u"unstressed -и -> -е")
