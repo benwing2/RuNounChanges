@@ -185,7 +185,7 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
 
   # Fetch pagename, create pagemsg() fn to output msg with page name included
   pagename = ru.remove_accents(inflection)
-  def pagemsg(text, simple = False):
+  def pagemsg(text, simple=False):
     if simple:
       msg("Page %s %s: %s" % (index, pagename, text))
     else:
@@ -625,13 +625,21 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
     # End of loop over sections in existing page; rejoin sections
     newtext = pagehead + ''.join(sections) + pagetail
 
-    # Eliminate sequences of 3 or more newlines
-    newtext = re.sub(r"\n\n\n+", r"\n\n", newtext)
+    if page.text != newtext:
+      assert comment or notes
+
+    # Eliminate sequences of 3 or more newlines, which may come from
+    # ensure_two_trailing_nl(). Add comment if none, in case of existing page
+    # with extra newlines.
+    newnewtext = re.sub(r"\n\n\n+", r"\n\n", newtext)
+    if newnewtext != newtext and not comment and not notes:
+      notes = ["eliminate sequences of 3 or more newlines"]
+    newtext = newnewtext
 
     if page.text == newtext:
       pagemsg("No change in text")
     elif verbose:
-      pagemsg("Replacing [[%s]] with [[%s]]" % (page.text, newtext),
+      pagemsg("Replacing <%s> with <%s>" % (page.text, newtext),
           simple = True)
     else:
       pagemsg("Text has changed")
@@ -646,10 +654,11 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
     else:
       comment = notestext
   if page.text != existing_text:
-    assert(comment)
-    pagemsg("comment = %s" % comment, simple = True)
     if save:
-      page.save(comment = comment)
+      pagemsg("Saving with comment = %s" % comment, simple=True)
+      page.save(comment=comment)
+    else:
+      pagemsg("Would save with comment = %s" % comment, simple=True)
 
 # Parse a noun/verb/adv form spec (from the user), one or more forms separated
 # by commas, possibly including aliases. INFL_DICT is a dictionary
