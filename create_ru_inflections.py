@@ -16,19 +16,20 @@
 
 # FIXME:
 #
-# 1. Add pronunciation. For nouns and verbs with unstressed -я in the ending
-#    (3rd plural verb, dat/ins/pre plural noun), we need to add a dot-under.
-#    Otherwise we use the form itself. With multiple etymologies, we need
-#    to do more. If there's a combined pronunciation, we need to check if
-#    all the forms under all the etymologies are the same. If so, do nothing,
-#    else, we need to delete the combined pronunciation and add pronunciations
-#    individually to each section. If there are already split pronunciations,
-#    we just add a pronunciation to the individual section. It might make
-#    sense to do this in addpron.py.
+# 1. (NOT DONE, INSTEAD HANDLED IN ADDPRON,PY) Add pronunciation. For nouns
+#    and verbs with unstressed -я in the ending (3rd plural verb, dat/ins/pre
+#    plural noun), we need to add a dot-under. Otherwise we use the form
+#    itself. With multiple etymologies, we need to do more. If there's a
+#    combined pronunciation, we need to check if all the forms under all the
+#    etymologies are the same. If so, do nothing, else, we need to delete the
+#    combined pronunciation and add pronunciations individually to each
+#    section. If there are already split pronunciations, we just add a
+#    pronunciation to the individual section. It might make sense to do this
+#    in addpron.py.
 # 2. (DONE) Currently we check to see if the manual translit matches and
 #    if not we don't see the inflection as already present. Probably instead
 #    we should issue a warning when this happens.
-# 2a. We need to check if there are multiple forms with the
+# 2a. (DONE) We need to check if there are multiple forms with the
 #    same Cyrillic but different translit, and combine the manual translits.
 # 3. When grouping participles with nouns/adjectives, don't do it if
 #    participle is adverbial.
@@ -38,23 +39,15 @@
 #    "aggressively" and also "aggressive (short n s)"). When doing this,
 #    may need to take into account manual translit (адеква́тно with
 #    tr=adɛkvátno, both an adverb and short adjective).
-# 6. When wrapping a single-etymology entry to create multiple etymologies,
-#    consider moving the pronunciation to the top above the etymologies.
-#    (Currently addpron.py isn't able to extract split pronunciations and
-#    convert to combined form. We might consider making it do so; if so,
-#    we should probably make it correctly handle {{audio}} and {{hyphenation}}
-#    and such, which I would say can safely be moved up to the top section
-#    if there's only one split pronunciation with such templates.) If we
-#    make this script move the pronunciation to the top, we need to have it
-#    check the existing headword(s) (and existing pronunciation?) to make
-#    sure their pronunciation is compatible with the new headwords; for this
-#    reason it might make more sense to do this in addpron.py.
-# 7. When a given form value has multiple forms and they are the same except
-#    for accents, we should combine them into a single entry with multiple
-#    heads, cf. бе́дный with short plural бедны́,бе́дны. Cf. also глубо́кий
-#    with short neuter singular глубоко́,глубо́ко, an existing entry with
-#    both forms already there (and in addition an adverb глубоко́, put into
-#    its own etymology section). Verify that we correctly note the
+# 6. (NOT DONE, INSTEAD HANDLED IN ADDPRON.PY) When wrapping a single-etymology
+#    entry to create multiple etymologies, consider moving the pronunciation
+#    to the top above the etymologies.
+# 7. (DONE) When a given form value has multiple forms and they are the same
+#    except for accents, we should combine them into a single entry with
+#    multiple heads, cf. бе́дный with short plural бедны́,бе́дны. Cf. also
+#    глубо́кий with short neuter singular глубоко́,глубо́ко, an existing entry
+#    with both forms already there (and in addition an adverb глубоко́, put
+#    into its own etymology section). Verify that we correctly note the
 #    already-existing entry and do nothing. This means we may need to
 #    deal with the heads being out of order. (We can use template_head_matches()
 #    separately on each head to match, which will also allow us to handle
@@ -82,6 +75,7 @@ import pywikibot, re, sys, codecs, argparse
 
 import blib
 from blib import getparam, rmparam, msg, site
+from collections import OrderedDict
 
 import rulib as ru
 
@@ -131,16 +125,18 @@ def lemma_matches(lemma, ru, tr, pagemsg):
   return False
 
 # Create or insert a section describing a given inflection of a given lemma.
-# INFLECTION is the vocalized inflectional form (e.g. the
-# plural, feminine, verbal noun, participle, etc.); LEMMA is the vocalized
-# lemma (e.g. the singular, masculine or dictionary form of a verb); INFLTR
-# and LEMMATR are the associated manual transliterations (if any). POS is the
-# part of speech of the word (capitalized, e.g. "Noun"). Only save the changed
-# page if SAVE is true. INDEX is the numeric index of the lemma page, for
-# ID purposes and to aid restarting. INFLTYPE is e.g. "adj form nom_m",
-# and is used in messages; both POS and INFLTYPE are used in special-case
-# code that is appropriate to only certain inflectional types. LEMMATYPE is
-# e.g. "infinitive" or "masculine singular" and is used in messages.
+# INFLECTIONS is the list of tuples of (INFL, INFLTR), i.e. accented
+# inflectional form (e.g. the plural, feminine, verbal noun, participle,
+# etc.) and associated manual transliteration (or None); LEMMA is the
+# accented lemma (e.g. the singular, masculine or dictionary form of a
+# verb); and LEMMATR is the associated manual transliterations (if any).
+# POS is the part of speech of the word (capitalized, e.g. "Noun"). Only
+# save the changed page if SAVE is true. INDEX is the numeric index of
+# the lemma page, for ID purposes and to aid restarting. INFLTYPE is e.g.
+# "adj form nom_m", and is used in messages; both POS and INFLTYPE are
+# used in special-case code that is appropriate to only certain inflectional
+# types. LEMMATYPE is e.g. "infinitive" or "masculine singular" and is
+# used in messages.
 #
 # INFLTEMP is the headword template for the inflected-word entry (e.g.
 # "head|ru|verb form" or "ru-noun form"; we special-case "head|" headword
@@ -165,7 +161,7 @@ def lemma_matches(lemma, ru, tr, pagemsg):
 # This is used to issue warnings in case of non-lemma forms where there's
 # a corresponding lemma (NOTE, this situation could be legitimate for nouns).
 #
-def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
+def create_inflection_entry(save, index, inflections, lemma, lemmatr,
     pos, infltype, lemmatype, infltemp, infltemp_param, deftemp,
     deftemp_param, deftemp_needs_lang=True, entrytext=None,
     is_lemma_template=None):
@@ -181,17 +177,23 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
   # accented version of the lemma as it appears in the lemma's headword
   # template often has links in it when the form is multiword.
   lemma = blib.remove_links(lemma)
-  inflection = blib.remove_links(inflection)
+  inflections = [(blib.remove_links(infl), infltr) for infl, infltr in inflections]
+
+  joined_infls = ",".join(infl for infl, infltr in inflections)
+  joined_infls_with_tr = ",".join("%s (%s)" % (infl, infltr) if infltr else "%s" % infl for infl, infltr in inflections)
 
   # Fetch pagename, create pagemsg() fn to output msg with page name included
-  pagename = ru.remove_accents(inflection)
+  pagenames = set(ru.remove_accents(infl) for infl, infltr in inflections)
+  # If multiple inflections, they should have the same pagename minus accents
+  assert len(pagenames) == 1
+  pagename = list(pagenames)[0]
+
   def pagemsg(text, simple=False):
     if simple:
       msg("Page %s %s: %s" % (index, pagename, text))
     else:
-      msg("Page %s %s: %s: %s %s%s, %s %s%s" % (index, pagename, text,
-        infltype, inflection, " (%s)" % infltr if infltr else "",
-        lemmatype, lemma, " (%s)" % lemmatr if lemmatr else ""))
+      msg("Page %s %s: %s: %s %s, %s %s%s" % (index, pagename, text, infltype,
+        joined_infls_with_tr, lemmatype, lemma, " (%s)" % lemmatr if lemmatr else ""))
   def expand_text(tempcall):
     return blib.expand_text(tempcall, pagename, pagemsg, verbose)
 
@@ -201,10 +203,11 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
   deftemp_uses_inflection_of = deftemp == "inflection of"
   infltemp_is_head = infltemp.startswith("head|")
 
-  if inflection == "-":
-    pagemsg("Not creating %s entry - for %s %s%s" % (
-      infltype, lemmatype, lemma, " (%s)" % lemmatr if lemmatr else ""))
-    return
+  for infl, infltr in inflections:
+    if infl == "-":
+      pagemsg("Not creating %s entry - for %s %s%s" % (
+        infltype, lemmatype, lemma, " (%s)" % lemmatr if lemmatr else ""))
+      return
 
   # Prepare to create page
   pagemsg("Creating entry")
@@ -245,26 +248,9 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
       return False
     return False
 
-  # Return a tuple of (T, PARAM, MATCHES), where T is a template,
-  # MATCHES is true if any head matches FORM and PARAM is the (first)
-  # matching head param.
-  def template_head_match_info(t, form, formtr):
-    # Look at all heads
-    firstparam = "head" if unicode(t.name) == "head" else "1"
-    if compare_param(t, firstparam, form, formtr):
-      return (t, firstparam, True)
-    i = 2
-    while True:
-      param = "head" + str(i)
-      if not getparam(t, param):
-        return (t, None, False)
-      if compare_param(t, param, form, formtr):
-        return (t, param, True)
-      i += 1
-
   # True if any head in the template matches FORM with translit FORMTR.
   # Knows how to deal with ru-noun+ and ru-proper noun+.
-  def template_head_matches(t, form, formtr):
+  def template_head_matches_one_form(t, form, formtr):
     if unicode(t.name) in ["ru-noun+", "ru-proper noun+"]:
       lemma = fetch_noun_lemma(t, expand_text)
       if lemma is None:
@@ -272,22 +258,57 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
         return False
       else:
         return lemma_matches(lemma, form, formtr, pagemsg)
-    return template_head_match_info(t, form, formtr)[2]
+    # Look at all heads
+    firstparam = "head" if unicode(t.name) == "head" else "1"
+    if compare_param(t, firstparam, form, formtr):
+      return True
+    i = 2
+    while True:
+      param = "head" + str(i)
+      if not getparam(t, param):
+        return False
+      if compare_param(t, param, form, formtr):
+        return True
+      i += 1
+
+  # True if the heads in the template match all the inflections in INFLECTIONS,
+  # a list of (FORM, FORMTR) tuples. Warn if some but not all match.
+  # Knows how to deal with ru-noun+ and ru-proper noun+.
+  def template_head_matches(t, inflections):
+    some_match = False
+    all_match = True
+    for infl, infltr in inflections:
+      if template_head_matches_one_form(t, infl, infltr):
+        some_match = True
+      else:
+        all_match = False
+    if some_match and not all_match:
+      pagemsg("WARNING: Some but not all inflections %s match template: %s" %
+          (joined_infls_with_tr, unicode(t)))
+    return all_match
 
   # Prepare parts of new entry to insert
   if entrytext:
     entrytextl4 = re.sub("^==(.*?)==$", r"===\1===", entrytext, 0, re.M)
     newsection = "==Russian==\n\n===Etymology===\n" + entrytext
   else:
+    headparam = []
+    headno = 0
+    for infl, infltr in inflections:
+      headno += 1
+      if headno == 1:
+        headparam.append("%s%s%s" % ("head=" if infltemp_is_head else "", infl,
+          "|tr=%s" % infltr if infltr else ""))
+      else:
+        headparam.append("head%s=%s%s" % (headno, infl,
+          "|tr=%s" % infltr if infltr else ""))
     # Synthesize new entry. Some of the parts here besides 'entrytext',
     # 'entrytextl4' and 'newsection' are used down below when creating
     # verb parts and participles; these parts don't exist when 'entrytext'
     # was passed in, but that isn't a problem because it isn't passed in
     # when creating verb parts or participles.
-    new_headword_template_prefix = "%s|%s%s" % (infltemp,
-        "head=" if infltemp_is_head else "", inflection)
-    new_headword_template = "{{%s%s%s}}" % (new_headword_template_prefix,
-        infltemp_param, "|tr=%s" % infltr if infltr else "")
+    new_headword_template = "{{%s|%s%s}}" % (infltemp, "|".join(headparam),
+        infltemp_param)
     new_defn_template = "{{%s%s|%s%s%s}}" % (
       deftemp, "|lang=ru" if deftemp_needs_lang else "",
       lemma, "|tr=%s" % lemmatr if lemmatr else "",
@@ -310,7 +331,7 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
     # Page doesn't exist. Create it.
     pagemsg("Creating page")
     comment = "Create page for Russian %s %s of %s, pos=%s" % (
-        infltype, inflection, lemma, pos)
+        infltype, joined_infls, lemma, pos)
     page.text = newsection
     if verbose:
       pagemsg("New text is [[%s]]" % page.text)
@@ -350,7 +371,7 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
         if is_lemma_template:
           parsed = blib.parse_text(sections[i])
           for t in parsed.filter_templates():
-            if is_lemma_template(t) and template_head_matches(t, inflection, infltr):
+            if is_lemma_template(t) and template_head_matches(t, inflections):
               pagemsg("WARNING: Creating non-lemma form and found matching lemma template: %s" % unicode(t))
 
         subsections = re.split("(^===+[^=\n]+===+\n)", sections[i], 0, re.M)
@@ -394,20 +415,15 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
             # Find the inflection headword (e.g. 'ru-noun form' or
             # 'head|ru|verb form') and definitional (typically 'inflection of')
             # templates.
-            head_matches_tuples = [template_head_match_info(t, inflection, infltr)
-                for t in parsed.filter_templates()]
-
-            # Now get a list of (TEMPLATE, PARAM) for all matching templates,
-            # where PARAM is the matching head param, as above.
 
             def template_name(t):
               if infltemp_is_head:
                 return "|".join([unicode(t.name), getparam(t, "1"), getparam(t, "2")])
               else:
                 return unicode(t.name)
-            infl_headword_templates = [(t, param)
-                for t, param, matches in head_matches_tuples
-                if template_name(t) == infltemp and matches]
+            infl_headword_templates = [t for t in parsed.filter_templates()
+                if template_name(t) == infltemp and
+                template_head_matches(t, inflections)]
             defn_templates = [t for t in parsed.filter_templates()
                 if unicode(t.name) == deftemp and compare_param(t, "1", lemma, lemmatr)
                 and (not deftemp_needs_lang or compare_param(t, "lang", "ru", None))
@@ -430,30 +446,16 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
             # template, or both. If we found headword template, insert
             # new definition in same section.
             elif infl_headword_templates:
-              # Previously, when looking for a matching headword template,
-              # we may not have required the vowels to match exactly
-              # (e.g. when creating plurals). But now we want to make sure
-              # they do, or we will put the new definition under a wrong
-              # headword.
-              infl_headword_template, infl_headword_matching_param = \
-                  infl_headword_templates[0]
-              # Also make sure manual translit matches
-              trparam = "tr" if infl_headword_matching_param in ["1", "head"] \
-                  else infl_headword_matching_param.replace("head", "tr")
-              existing_tr = getparam(infl_headword_template, trparam)
-              # infltr may be None and existing_tr may be "", but
-              # they should match
-              if (infltr or None) == (existing_tr or None):
-                subsections[j] = unicode(parsed)
-                if subsections[j][-1] != '\n':
-                  subsections[j] += '\n'
-                subsections[j] = re.sub(r"^(.*\n#[^\n]*\n)",
-                    r"\1# %s\n" % new_defn_template, subsections[j], 1, re.S)
-                sections[i] = ''.join(subsections)
-                pagemsg("Adding new definitional template to existing defn for pos = %s" % (pos))
-                comment = "Add new definitional template to existing defn: %s %s, %s %s, pos=%s" % (
-                    infltype, inflection, lemmatype, lemma, pos)
-                break
+              subsections[j] = unicode(parsed)
+              if subsections[j][-1] != '\n':
+                subsections[j] += '\n'
+              subsections[j] = re.sub(r"^(.*\n#[^\n]*\n)",
+                  r"\1# %s\n" % new_defn_template, subsections[j], 1, re.S)
+              sections[i] = ''.join(subsections)
+              pagemsg("Adding new definitional template to existing defn for pos = %s" % (pos))
+              comment = "Add new definitional template to existing defn: %s %s, %s %s, pos=%s" % (
+                  infltype, joined_infls, lemmatype, lemma, pos)
+              break
 
         # else of for loop over subsections, i.e. no break out of loop
         else:
@@ -473,7 +475,7 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
                   parsed = blib.parse_text(subsections[j])
                   for t in parsed.filter_templates():
                     if (unicode(t.name) in ["ru-adj", "ru-noun", "ru-proper noun", "ru-noun+", "ru-proper noun+"] and
-                        template_head_matches(t, inflection, infltr) and insert_at is None):
+                        template_head_matches(t, inflections) and insert_at is None):
                       insert_at = j - 1
 
             if insert_at is not None:
@@ -481,7 +483,7 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
                   subsections[insert_at + 1])
 
               comment = "Insert entry for %s %s of %s before section for same lemma" % (
-                infltype, inflection, lemma)
+                infltype, joined_infls, lemma)
               if insert_at > 0:
                 subsections[insert_at - 1] = ensure_two_trailing_nl(
                     subsections[insert_at - 1])
@@ -506,21 +508,21 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
                 for t in parsed.filter_templates():
                   if (unicode(t.name) == "head" and getparam(t, "1") == "ru" and
                       getparam(t, "2") == "participle form" and
-                      template_head_matches(t, inflection, infltr)):
+                      template_head_matches(t, inflections)):
                     insert_at = j + 1
               if is_short_adj_form:
                 if re.match("^===+Adverb===+", subsections[j - 1]):
                   parsed = blib.parse_text(subsections[j])
                   for t in parsed.filter_templates():
                     if (unicode(t.name) in ["ru-adv"] and
-                        template_head_matches(t, inflection, infltr)):
+                        template_head_matches(t, inflections)):
                       insert_at = j + 1
                 elif re.match("^===+Predicative===+", subsections[j - 1]):
                   parsed = blib.parse_text(subsections[j])
                   for t in parsed.filter_templates():
                     if (unicode(t.name) == "head" and getparam(t, "1") == "ru" and
                         getparam(t, "2") == "predicative" and
-                        template_head_matches(t, inflection, infltr)):
+                        template_head_matches(t, inflections)):
                       insert_at = j + 1
             if insert_at:
               pagemsg("Found section to insert adjective form after: [[%s]]" %
@@ -548,7 +550,7 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
               pagemsg("Inserting after %s section for same lemma" %
                   possible_shared_pos)
               comment = "Insert entry for %s %s of %s after %s section for same lemma" % (
-                infltype, inflection, lemma, possible_shared_pos)
+                infltype, joined_infls, lemma, possible_shared_pos)
               subsections[insert_at - 1] = ensure_two_trailing_nl(
                   subsections[insert_at - 1])
               if indentlevel == 3:
@@ -575,13 +577,14 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
               j += 1
             pagemsg("Found multiple etymologies, adding new section \"Etymology %s\"" % (j))
             comment = "Append entry (Etymology %s) for %s %s of %s, pos=%s in existing Russian section" % (
-              j, infltype, inflection, lemma, pos)
+              j, infltype, joined_infls, lemma, pos)
             sections[i] = ensure_two_trailing_nl(sections[i])
+
             sections[i] += "===Etymology %s===\n" % j + entrytextl4
           else:
             pagemsg("Wrapping existing text in \"Etymology 1\" and adding \"Etymology 2\"")
             comment = "Wrap existing Russian section in Etymology 1, append entry (Etymology 2) for %s %s of %s, pos=%s" % (
-                infltype, inflection, lemma, pos)
+                infltype, joined_infls, lemma, pos)
             # Wrap existing text in "Etymology 1" and increase the indent level
             # by one of all headers
             sections[i] = re.sub("^\n*==Russian==\n+", "", sections[i])
@@ -600,14 +603,14 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
       elif m.group(1) > "Russian":
         pagemsg("Exists; inserting before %s section" % (m.group(1)))
         comment = "Create Russian section and entry for %s %s of %s, pos=%s; insert before %s section" % (
-            infltype, inflection, lemma, pos, m.group(1))
+            infltype, joined_infls, lemma, pos, m.group(1))
         sections[i:i] = [newsection, "\n----\n\n"]
         break
 
     else: # else of for loop over sections, i.e. no break out of loop
       pagemsg("Exists; adding section to end")
       comment = "Create Russian section and entry for %s %s of %s, pos=%s; append at end" % (
-          infltype, inflection, lemma, pos)
+          infltype, joined_infls, lemma, pos)
 
       if sections:
         sections[-1] = ensure_two_trailing_nl(sections[-1])
@@ -852,20 +855,73 @@ def create_forms(save, startFrom, upTo, formspec,
           pagemsg("WARNING: Error generating %s forms, skipping" % pos)
           continue
         args = ru.split_generate_args(result)
-        dicforms = args[dicform_code]
-        for dicform in re.split(",", dicforms):
+        dicforms = re.split(",", args[dicform_code])
+        if len(dicforms) > 1:
+          pagemsg("create_forms: Found multiple dictionary forms: %s" % args[dicform_code])
+        for dicform in dicforms:
           for formname, inflsets in forms_desired:
             # Skip the dictionary form; also skip forms that don't have
             # listed inflections (e.g. singulars with plural-only nouns,
             # animate/inanimate variants when a noun isn't bianimate):
             if formname != dicform_code and formname in args and args[formname]:
               dicformru, dicformtr = split_ru_tr(dicform)
-              for formval in re.split(",", args[formname]):
+
+              # Group inflections by unaccented Russian, so we process
+              # multiple accent variants together
+              formvals_by_pagename = OrderedDict()
+              formvals = re.split(",", args[formname])
+              if len(formvals) > 1:
+                pagemsg("create_forms: Found multiple form values for %s=%s, dictionary form %s" %
+                    (formname, args[formname], dicform))
+              for formval in formvals:
                 formvalru, formvaltr = split_ru_tr(formval)
+                formval_no_accents = ru.remove_accents(formvalru)
+                if formval_no_accents in formvals_by_pagename:
+                  formvals_by_pagename[formval_no_accents].append((formvalru, formvaltr))
+                else:
+                  formvals_by_pagename[formval_no_accents] = [(formvalru, formvaltr)]
+              # Process groups of inflections
+              formvals_by_pagename_items = formvals_by_pagename.items()
+              if len(formvals_by_pagename_items) > 1:
+                pagemsg("create_forms: For form %s, found multiple page names %s" % (
+                  formname, ",".join("%s" % formval_no_accents for formval_no_accents, inflections in formvals_by_pagename_items)))
+              for formval_no_accents, inflections in formvals_by_pagename_items:
+                if len(inflections) > 1:
+                  pagemsg("create_forms: For pagename %s, found multiple inflections %s" % (
+                    formval_no_accents, ",".join("%s%s" % (infl, " (%s)" % infltr if infltr else "") for infl, infltr in inflections)))
+                # Group inflections by Russian, to group multiple translits
+                formvals_by_russian = OrderedDict()
+                for formvalru, formvaltr in inflections:
+                  if formvalru in formvals_by_russian:
+                    formvals_by_russian[formvalru].append(formvaltr)
+                  else:
+                    formvals_by_russian[formvalru] = [formvaltr]
+                inflections = []
+                # If there is more than one translit, then generate the
+                # translit for any missing translit and join by commas
+                for russian, translits in formvals_by_russian.iteritems():
+                  if len(translits) == 1:
+                    inflections.append((russian, translits[0]))
+                  else:
+                    manual_translits = []
+                    for translit in translits:
+                      if translit:
+                        manual_translits.append(translit)
+                      else:
+                        translit = expand_text("{{xlit|ru|%s}}" % russian)
+                        if not translit:
+                          pagemsg("WARNING: Error generating translit for %s" % russian)
+                        else:
+                          manual_translits.append(translit)
+                    joined_manual_translits = ", ".join(manual_translits)
+                    pagemsg("create_forms: For Russian %s, found multiple manual translits %s" %
+                        (russian, joined_manual_translits))
+                    inflections.append((russian, joined_manual_translits))
+
                 if type(inflsets) is not list:
                   inflsets = [inflsets]
                 for inflset in inflsets:
-                  create_inflection_entry(save, index, formvalru, formvaltr,
+                  create_inflection_entry(save, index, inflections,
                     dicformru, dicformtr, pos.capitalize(),
                     "%s form %s" % (pos, formname), "dictionary form",
                     infltemp, "", "inflection of", inflset,
