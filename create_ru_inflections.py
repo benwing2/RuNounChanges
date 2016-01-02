@@ -78,8 +78,15 @@
 # 16. (DONE) When doing future, skip periphrastic future.
 # 17. (DONE) Always skip inflections that would go on the lemma page to handle
 #     e.g. accusative inanimate masculine and plural, and accusative neuter.
+# 18. (DONE) One-syllable noun forms end up accented, but the existing forms
+#     might be unaccented. We probably want to (a) de-accent monosyllabic forms,
+#     (b) when comparing forms in compare_param(), allow accented monosyllabic
+#     to compare to unaccented monosyllabic. This may be important for
+#     adjectives and verbs as well.
+# 19. (DONE) Warn if existing head or inflection has multiple accents (взя́ло́).
 
 import pywikibot, re, sys, codecs, argparse
+import traceback
 
 import blib
 from blib import getparam, rmparam, msg, site
@@ -98,7 +105,7 @@ def ensure_two_trailing_nl(text):
 # term is either a Cyrillic word or words, or a combination CYRILLIC/LATIN
 # with manual transliteration. May return None if an error occurred
 # in template expansion.
-def fetch_noun_lemma(template, expand_text):
+def fetch_noun_lemma(t, expand_text):
   if unicode(t.name) == "ru-noun+":
     generate_template = re.sub(r"^\{\{ru-noun\+",
         "{{ru-generate-noun-forms", unicode(t))
@@ -223,7 +230,14 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
 
   # Check whether parameter PARAM of template T matches VALUE.
   def compare_param(t, param, value, valuetr):
-    paramval = getparam(t, param)
+    value = ru.remove_monosyllabic_accents(value)
+    paramval = ru.remove_monosyllabic_accents(getparam(t, param))
+    if ru.is_multi_stressed(paramval):
+      pagemsg("WARNING: Param %s=%s has multiple accents: %s" % (
+        param, paramval, unicode(t)))
+    if ru.is_multi_stressed(value):
+      pagemsg("WARNING: Value %s to compare to param %s=%s has multiple accents" % (
+        value, param, paramval))
     # If checking the first param, substitute page name if missing.
     if not paramval and param in ["1", "head"]:
       paramval = pagename
@@ -333,7 +347,13 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
 
   comment = None
   notes = []
-  existing_text = page.text
+
+  try:
+    existing_text = page.text
+  except pywikibot.exceptions.InvalidTitle as e:
+    pagemsg("Invalid title, skipping")
+    traceback.print_exc(file=sys.stdout)
+    return
 
   if not page.exists():
     # Page doesn't exist. Create it.
@@ -735,7 +755,7 @@ adj_form_aliases = {
     "short":["short_m", "short_n", "short_f", "short_p"]
 }
 
-nom_form_inflection_list = [
+noun_form_inflection_list = [
   ["nom_sg", ("nom", "s")],
   ["gen_sg", ("gen", "s")],
   ["dat_sg", ("dat", "s")],
@@ -754,37 +774,41 @@ nom_form_inflection_list = [
   ["pre_pl", ("pre", "p")],
 ]
 
-nom_form_inflection_dict = dict(nom_form_inflection_list)
-nom_form_aliases = {
-    "all":[x for x, y in nom_form_inflection_list]
+noun_form_inflection_dict = dict(noun_form_inflection_list)
+noun_form_aliases = {
+    "all":[x for x, y in noun_form_inflection_list],
+    "sg":["nom_sg", "gen_sg", "dat_sg", "acc_sg", "acc_sg_an", "acc_sg_in",
+      "ins_sg", "pre_sg"],
+    "pl":["nom_pl", "gen_pl", "dat_pl", "acc_pl", "acc_pl_an", "acc_pl_in",
+      "ins_pl", "pre_pl"],
 }
 
 verb_form_inflection_list = [
   # present tense
-  ["pres_1sg", ("1", "sg", "pres", "ind")],
-  ["pres_2sg", ("2", "sg", "pres", "ind")],
-  ["pres_3sg", ("3", "sg", "pres", "ind")],
-  ["pres_1pl", ("1", "pl", "pres", "ind")],
-  ["pres_2pl", ("2", "pl", "pres", "ind")],
-  ["pres_3pl", ("3", "pl", "pres", "ind")],
+  ["pres_1sg", ("1", "s", "pres", "ind")],
+  ["pres_2sg", ("2", "s", "pres", "ind")],
+  ["pres_3sg", ("3", "s", "pres", "ind")],
+  ["pres_1pl", ("1", "p", "pres", "ind")],
+  ["pres_2pl", ("2", "p", "pres", "ind")],
+  ["pres_3pl", ("3", "p", "pres", "ind")],
   # future tense
-  ["futr_1sg", ("1", "sg", "fut", "ind")],
-  ["futr_2sg", ("2", "sg", "fut", "ind")],
-  ["futr_3sg", ("3", "sg", "fut", "ind")],
-  ["futr_1pl", ("1", "pl", "fut", "ind")],
-  ["futr_2pl", ("2", "pl", "fut", "ind")],
-  ["futr_3pl", ("3", "pl", "fut", "ind")],
+  ["futr_1sg", ("1", "s", "fut", "ind")],
+  ["futr_2sg", ("2", "s", "fut", "ind")],
+  ["futr_3sg", ("3", "s", "fut", "ind")],
+  ["futr_1pl", ("1", "p", "fut", "ind")],
+  ["futr_2pl", ("2", "p", "fut", "ind")],
+  ["futr_3pl", ("3", "p", "fut", "ind")],
   # imperative
-  ["impr_sg", ("2", "sg", "imp")],
-  ["impr_pl", ("2", "pl", "imp")],
+  ["impr_sg", ("2", "s", "imp")],
+  ["impr_pl", ("2", "p", "imp")],
   # past
-  ["past_m", ("m", "sg", "past", "ind")],
-  ["past_f", ("f", "sg", "past", "ind")],
-  ["past_n", ("n", "sg", "past", "ind")],
+  ["past_m", ("m", "s", "past", "ind")],
+  ["past_f", ("f", "s", "past", "ind")],
+  ["past_n", ("n", "s", "past", "ind")],
   ["past_pl", ("p", "past", "ind")],
-  ["past_m_short", ("short", "m", "sg", "past", "ind")],
-  ["past_f_short", ("short", "f", "sg", "past", "ind")],
-  ["past_n_short", ("short", "n", "sg", "past", "ind")],
+  ["past_m_short", ("short", "m", "s", "past", "ind")],
+  ["past_f_short", ("short", "f", "s", "past", "ind")],
+  ["past_n_short", ("short", "n", "s", "past", "ind")],
   ["past_pl_short", ("short", "p", "past", "ind")],
   # active participles
   ["pres_actv_part", ("pres", "act", "part")],
@@ -905,8 +929,9 @@ def group_translits(formvals, pagemsg, expand_text):
 #
 # POS specifies the part of speech (lowercase, singular, e.g. "verb").
 # INFLTEMP specifies the inflection template name (e.g. "head|ru|verb form" or
-# "ru-noun form"). DICFORM_CODE specifies the form code for the dictionary
-# form (e.g. "infinitive", "nom_m" or "nom_sg").
+# "ru-noun form"). DICFORM_CODES specifies the form code for the dictionary
+# form (e.g. "infinitive", "nom_m") or a list of such codes to try (e.g.
+# ["nom_sg", "nom_pl"]).
 #
 # EXPECTED_HEADER specifies the header that the inflection template (e.g.
 # 'ru-decl-adj' for adjectives, 'ru-conj-2a' etc. for verbs) should be under
@@ -932,11 +957,13 @@ def group_translits(formvals, pagemsg, expand_text):
 # true if the particular form value in question is to be skipped. This is
 # used e.g. to skip periphrastic future forms.
 def create_forms(save, startFrom, upTo, formspec,
-    form_inflection_dict, form_aliases, pos, infltemp, dicform_code,
+    form_inflection_dict, form_aliases, pos, infltemp, dicform_codes,
     expected_header, expected_poses, skip_poses, is_inflection_template,
     create_form_generator, is_lemma_template, skip_inflections=None):
   forms_desired = parse_form_spec(formspec, form_inflection_dict,
       form_aliases)
+  if type(dicform_codes) is not list:
+    dicform_codes = [dicform_codes]
   for index, page in blib.cat_articles("Russian %ss" % pos, startFrom, upTo):
     pagetitle = unicode(page.title())
     def pagemsg(txt):
@@ -956,12 +983,23 @@ def create_forms(save, startFrom, upTo, formspec,
         pagemsg("WARNING: Error generating %s forms, skipping" % pos)
         continue
       args = ru.split_generate_args(result)
+      for dicform_code in dicform_codes:
+        if dicform_code in args:
+          break
+      else:
+        pagemsg("WARNING: No dictionary form available among putative codes %s, skipping" %
+            ",".join(dicform_codes))
+        continue
+      if dicform_code != dicform_codes[0]:
+        pagemsg("create_forms: Using non-default dictionary form code %s" % dicform_code)
       dicforms = re.split(",", args[dicform_code])
       if len(dicforms) > 1:
         pagemsg("create_forms: Found multiple dictionary forms: %s" % args[dicform_code])
+      # Fetch dictionary forms, remove accents on monosyllables
+      dicforms = [split_ru_tr(dicform) for dicform in dicforms]
+      dicforms = [(ru.remove_monosyllabic_accents(dicru), dictr) for dicru, dictr in dicforms]
       # Group dictionary forms by Russian, to group multiple translits
-      dicforms = group_translits([split_ru_tr(dicform) for dicform in dicforms],
-          pagemsg, expand_text)
+      dicforms = group_translits(dicforms, pagemsg, expand_text)
       for dicformru, dicformtr in dicforms:
         for formname, inflsets in forms_desired:
           # Skip the dictionary form; also skip forms that don't have
@@ -992,6 +1030,7 @@ def create_forms(save, startFrom, upTo, formspec,
               pagemsg("create_forms: For form %s, found multiple page names %s" % (
                 formname, ",".join("%s" % formval_no_accents for formval_no_accents, inflections in formvals_by_pagename_items)))
             for formval_no_accents, inflections in formvals_by_pagename_items:
+              inflections = [(ru.remove_monosyllabic_accents(infl), infltr) for infl, infltr in inflections]
               inflections_printed = ",".join("%s%s" %
                   (infl, " (%s)" % infltr if infltr else "")
                   for infl, infltr in inflections)
@@ -1025,8 +1064,8 @@ def create_verb_forms(save, startFrom, upTo, formspec):
   create_forms(save, startFrom, upTo, formspec,
       verb_form_inflection_dict, verb_form_aliases,
       "verb", "head|ru|verb form", "infinitive",
-      "Conjugation", ["Verb"], [],
-      lambda t:unicode(t.name).startswith("ru-conj"),
+      "Conjugation", ["Verb", "Idiom"], [],
+      lambda t:unicode(t.name).startswith("ru-conj") and unicode(t.name) != "ru-conj-verb-see",
       create_verb_generator,
       lambda t:unicode(t.name) == "ru-verb",
       skip_inflections=skip_future_periphrastic)
@@ -1046,7 +1085,7 @@ def create_adj_forms(save, startFrom, upTo, formspec):
 def create_noun_forms(save, startFrom, upTo, formspec):
   create_forms(save, startFrom, upTo, formspec,
       noun_form_inflection_dict, noun_form_aliases,
-      "noun", "ru-noun form", "nom_sg",
+      "noun", "ru-noun form", ["nom_sg", "nom_pl"],
       "Declension", ["Noun", "Proper noun"], [],
       lambda t:unicode(t.name) == "ru-noun-table",
       lambda t:re.sub(r"^\{\{ru-noun-table", "{{ru-generate-noun-forms", unicode(t)),
@@ -1066,11 +1105,16 @@ adjectives will not be created.""")
 pa.add_argument("--noun-form",
     help="""Do specified noun-form inflections, a comma-separated list.
 Each element is compatible with the override specifications used in
-'ru-noun-table': nom_sg, gen_sg, dat_sg, acc_sg, ins_sg, pre_sg. Also
-possible is 'all' (all forms), 'sg' (all singular forms), 'pl' (all plural
-forms). orms). The nominative singular form will not be created even if
-specified, because it is the same as the dictionary/lemma form. Also,
-non-existent forms for particular nouns will not be created.""")
+'ru-noun-table': nom_sg, gen_sg, dat_sg, acc_sg, ins_sg, pre_sg, nom_pl,
+gen_pl, dat_pl, acc_pl, ins_pl, pre_pl, acc_sg_an, acc_sg_in, acc_pl_an,
+acc_pl_in. Also possible is 'all' (all forms), 'sg' (all singular forms),
+'pl' (all plural forms). The nominative singular form will not be created
+even if specified, because it is the same as the dictionary/lemma form,
+nor will accusative singulars that have the same form as the nominative
+singular (or accusative plurals that have the same form as the nominative
+plural, for pluralia tantum). Also, non-existent forms for particular nouns
+will not be created. Note that the animate/inanimate accusative variants
+are only for bianimate nouns.""")
 pa.add_argument("--verb-form",
     help="""Do specified verb-form inflections, a comma-separated list.
 Each element is compatible with the specifications used in module ru-verb:
@@ -1095,4 +1139,4 @@ if params.adj_form:
 if params.noun_form:
   create_noun_forms(params.save, startFrom, upTo, params.noun_form)
 if params.verb_form:
-  create_verb_forms(params.save, startFrom, upTo, params.verb_forms)
+  create_verb_forms(params.save, startFrom, upTo, params.verb_form)
