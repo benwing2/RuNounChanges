@@ -70,6 +70,9 @@
 # 12. (DONE) Need to group adjectives with participle forms
 #    (head|ru|participle form), cf. используемы.
 # 13. (DONE) Handle redirects, e.g. чёрен redirect to чёрный.
+# 14. (DONE) Only process inflection templates under the right part of speech,
+#    to avoid the issue with преданный, which has one adjectival inflection
+#    as an adjective and a different one as a participle.
 
 import pywikibot, re, sys, codecs, argparse
 
@@ -810,6 +813,34 @@ def split_ru_tr(form):
   else:
     return (form, None)
 
+def sechead_matches_poses(sechead, matching_poses):
+  for pos in matching_poses:
+    m = re.search("^===+([^=\n]+)===+\n$", sechead)
+    assert m
+    if m.group(1) == pos:
+      return True
+  return False
+
+def find_inflection_templates(text, matching_poses, is_inflection_template):
+  templates = []
+
+  sections = re.split("(^==[^=\n]+==\n)", text, 0, re.M)
+  for i in xrange(2, len(sections), 2):
+    if sections[i-1] == "==Russian==\n":
+      l3secs = re.split("(^===[^=\n]+===\n)", sections[i], 0, re.M)
+      for j in xrange(2, len(l3secs), 2):
+        if sechead_matches_poses(l3secs[j-1], matching_poses):
+          for t in blib.parse_text(l3secs[j]).filter_templates():
+            if is_inflection_template(t):
+              templates.append(t)
+        l4secs = re.split("(^====[^=\n]+====\n)", l3secs[j], 0, re.M)
+        for k in xrange(2, len(l4secs), 2):
+          if sechead_matches_poses(l4secs[k-1], matching_poses):
+            for t in blib.parse_text(l4secs[k]).filter_templates():
+              if is_inflection_template(t):
+                templates.append(t)
+  return templates
+
 # Create required forms for all nouns/verbs/adjectives.
 # SAVE is as in create_inflection_entry(). STARTFROM and UPTO, if not None,
 # delimit the range of pages to process (inclusive on both ends).
@@ -825,11 +856,14 @@ def split_ru_tr(form):
 # "ru-noun form"). DICFORM_CODE specifies the form code for the dictionary
 # form (e.g. "infinitive", "nom_m" or "nom_sg").
 #
-# IS_INFLECTION_TEMPLATE is a function that is passed one argument, a template,
-# and should indicate if it's an inflection template (e.g. 'ru-conj-2a' for
-# verbs). CREATE_FORM_GENERATOR is a function that's passed one argument,
-# an inflection template, and should return a template (a string) that can be
-# expanded to yield a set of forms, identified by form codes.
+# MATCHING_POSES specifies the parts of speech to look under to find
+# inflection templates; a list of capitalized parts of speech, e.g.
+# "Proper nouns". IS_INFLECTION_TEMPLATE is a function that is passed
+# one argument, a template, and should indicate if it's an inflection template
+# (e.g. 'ru-conj-2a' for verbs). CREATE_FORM_GENERATOR is a function that's
+# passed one argument, an inflection template, and should return a template
+# (a string) that can be expanded to yield a set of forms, identified by form
+# codes.
 #
 # IS_LEMMA_TEMPLATE is a function that is passed one argument, a template,
 # and should indicate if it's a lemma template (e.g. 'ru-adj' for adjectives).
@@ -837,7 +871,8 @@ def split_ru_tr(form):
 # a corresponding lemma (NOTE, this situation could be legitimate for nouns).
 def create_forms(save, startFrom, upTo, formspec,
     form_inflection_dict, form_aliases, pos, infltemp, dicform_code,
-    is_inflection_template, create_form_generator, is_lemma_template):
+    matching_poses, is_inflection_template, create_form_generator,
+    is_lemma_template):
   forms_desired = parse_form_spec(formspec, form_inflection_dict,
       form_aliases)
   for index, page in blib.cat_articles("Russian %ss" % pos, startFrom, upTo):
@@ -847,85 +882,87 @@ def create_forms(save, startFrom, upTo, formspec,
     def expand_text(tempcall):
       return blib.expand_text(tempcall, pagetitle, pagemsg, verbose)
 
-    for t in blib.parse(page).filter_templates():
-      tname = unicode(t.name)
-      if is_inflection_template(t):
-        result = expand_text(create_form_generator(t))
-        if not result:
-          pagemsg("WARNING: Error generating %s forms, skipping" % pos)
-          continue
-        args = ru.split_generate_args(result)
-        dicforms = re.split(",", args[dicform_code])
-        if len(dicforms) > 1:
-          pagemsg("create_forms: Found multiple dictionary forms: %s" % args[dicform_code])
-        for dicform in dicforms:
-          for formname, inflsets in forms_desired:
-            # Skip the dictionary form; also skip forms that don't have
-            # listed inflections (e.g. singulars with plural-only nouns,
-            # animate/inanimate variants when a noun isn't bianimate):
-            if formname != dicform_code and formname in args and args[formname]:
-              dicformru, dicformtr = split_ru_tr(dicform)
+    # Find the inflection templates. Rather than just look for all inflection
+    # templates, we look for those under the right parts of speech. This is
+    # to avoid the issue with преданный, which has one adjectival inflection
+    # as an adjective and a different one as a participle.
+    for t in find_inflection_templates(page.text, matching_poses, is_inflection_template):
+      result = expand_text(create_form_generator(t))
+      if not result:
+        pagemsg("WARNING: Error generating %s forms, skipping" % pos)
+        continue
+      args = ru.split_generate_args(result)
+      dicforms = re.split(",", args[dicform_code])
+      if len(dicforms) > 1:
+        pagemsg("create_forms: Found multiple dictionary forms: %s" % args[dicform_code])
+      for dicform in dicforms:
+        for formname, inflsets in forms_desired:
+          # Skip the dictionary form; also skip forms that don't have
+          # listed inflections (e.g. singulars with plural-only nouns,
+          # animate/inanimate variants when a noun isn't bianimate):
+          if formname != dicform_code and formname in args and args[formname]:
+            dicformru, dicformtr = split_ru_tr(dicform)
 
-              # Group inflections by unaccented Russian, so we process
-              # multiple accent variants together
-              formvals_by_pagename = OrderedDict()
-              formvals = re.split(",", args[formname])
-              if len(formvals) > 1:
-                pagemsg("create_forms: Found multiple form values for %s=%s, dictionary form %s" %
-                    (formname, args[formname], dicform))
-              for formval in formvals:
-                formvalru, formvaltr = split_ru_tr(formval)
-                formval_no_accents = ru.remove_accents(formvalru)
-                if formval_no_accents in formvals_by_pagename:
-                  formvals_by_pagename[formval_no_accents].append((formvalru, formvaltr))
+            # Group inflections by unaccented Russian, so we process
+            # multiple accent variants together
+            formvals_by_pagename = OrderedDict()
+            formvals = re.split(",", args[formname])
+            if len(formvals) > 1:
+              pagemsg("create_forms: Found multiple form values for %s=%s, dictionary form %s" %
+                  (formname, args[formname], dicform))
+            for formval in formvals:
+              formvalru, formvaltr = split_ru_tr(formval)
+              formval_no_accents = ru.remove_accents(formvalru)
+              if formval_no_accents in formvals_by_pagename:
+                formvals_by_pagename[formval_no_accents].append((formvalru, formvaltr))
+              else:
+                formvals_by_pagename[formval_no_accents] = [(formvalru, formvaltr)]
+            # Process groups of inflections
+            formvals_by_pagename_items = formvals_by_pagename.items()
+            if len(formvals_by_pagename_items) > 1:
+              pagemsg("create_forms: For form %s, found multiple page names %s" % (
+                formname, ",".join("%s" % formval_no_accents for formval_no_accents, inflections in formvals_by_pagename_items)))
+            for formval_no_accents, inflections in formvals_by_pagename_items:
+              if len(inflections) > 1:
+                pagemsg("create_forms: For pagename %s, found multiple inflections %s" % (
+                  formval_no_accents, ",".join("%s%s" % (infl, " (%s)" % infltr if infltr else "") for infl, infltr in inflections)))
+              # Group inflections by Russian, to group multiple translits
+              formvals_by_russian = OrderedDict()
+              for formvalru, formvaltr in inflections:
+                if formvalru in formvals_by_russian:
+                  formvals_by_russian[formvalru].append(formvaltr)
                 else:
-                  formvals_by_pagename[formval_no_accents] = [(formvalru, formvaltr)]
-              # Process groups of inflections
-              formvals_by_pagename_items = formvals_by_pagename.items()
-              if len(formvals_by_pagename_items) > 1:
-                pagemsg("create_forms: For form %s, found multiple page names %s" % (
-                  formname, ",".join("%s" % formval_no_accents for formval_no_accents, inflections in formvals_by_pagename_items)))
-              for formval_no_accents, inflections in formvals_by_pagename_items:
-                if len(inflections) > 1:
-                  pagemsg("create_forms: For pagename %s, found multiple inflections %s" % (
-                    formval_no_accents, ",".join("%s%s" % (infl, " (%s)" % infltr if infltr else "") for infl, infltr in inflections)))
-                # Group inflections by Russian, to group multiple translits
-                formvals_by_russian = OrderedDict()
-                for formvalru, formvaltr in inflections:
-                  if formvalru in formvals_by_russian:
-                    formvals_by_russian[formvalru].append(formvaltr)
-                  else:
-                    formvals_by_russian[formvalru] = [formvaltr]
-                inflections = []
-                # If there is more than one translit, then generate the
-                # translit for any missing translit and join by commas
-                for russian, translits in formvals_by_russian.iteritems():
-                  if len(translits) == 1:
-                    inflections.append((russian, translits[0]))
-                  else:
-                    manual_translits = []
-                    for translit in translits:
-                      if translit:
-                        manual_translits.append(translit)
+                  formvals_by_russian[formvalru] = [formvaltr]
+              inflections = []
+              # If there is more than one translit, then generate the
+              # translit for any missing translit and join by commas
+              for russian, translits in formvals_by_russian.iteritems():
+                if len(translits) == 1:
+                  inflections.append((russian, translits[0]))
+                else:
+                  manual_translits = []
+                  for translit in translits:
+                    if translit:
+                      manual_translits.append(translit)
+                    else:
+                      translit = expand_text("{{xlit|ru|%s}}" % russian)
+                      if not translit:
+                        pagemsg("WARNING: Error generating translit for %s" % russian)
                       else:
-                        translit = expand_text("{{xlit|ru|%s}}" % russian)
-                        if not translit:
-                          pagemsg("WARNING: Error generating translit for %s" % russian)
-                        else:
-                          manual_translits.append(translit)
-                    joined_manual_translits = ", ".join(manual_translits)
-                    pagemsg("create_forms: For Russian %s, found multiple manual translits %s" %
-                        (russian, joined_manual_translits))
-                    inflections.append((russian, joined_manual_translits))
+                        manual_translits.append(translit)
+                  joined_manual_translits = ", ".join(manual_translits)
+                  pagemsg("create_forms: For Russian %s, found multiple manual translits %s" %
+                      (russian, joined_manual_translits))
+                  inflections.append((russian, joined_manual_translits))
 
-                if type(inflsets) is not list:
-                  inflsets = [inflsets]
-                for inflset in inflsets:
-                  create_inflection_entry(save, index, inflections,
-                    dicformru, dicformtr, pos.capitalize(),
-                    "%s form %s" % (pos, formname), "dictionary form",
-                    infltemp, "", "inflection of", inflset,
-                    is_lemma_template=is_lemma_template)
+              if type(inflsets) is not list:
+                inflsets = [inflsets]
+              for inflset in inflsets:
+                create_inflection_entry(save, index, inflections,
+                  dicformru, dicformtr, pos.capitalize(),
+                  "%s form %s" % (pos, formname), "dictionary form",
+                  infltemp, "", "inflection of", inflset,
+                  is_lemma_template=is_lemma_template)
 
 def create_verb_generator(t):
   verbtype = re.sub(r"^ru-conj-", "", unicode(t.name))
@@ -936,7 +973,7 @@ def create_verb_forms(save, startFrom, upTo, formspec):
   create_forms(save, startFrom, upTo, formspec,
       verb_form_inflection_dict, verb_form_aliases,
       "verb", "head|ru|verb form", "infinitive",
-      lambda t:unicode(t.name).startswith("ru-conj"),
+      ["Verb"], lambda t:unicode(t.name).startswith("ru-conj"),
       create_verb_generator,
       lambda t:unicode(t.name) == "ru-verb")
 
@@ -944,7 +981,7 @@ def create_adj_forms(save, startFrom, upTo, formspec):
   create_forms(save, startFrom, upTo, formspec,
       adj_form_inflection_dict, adj_form_aliases,
       "adjective", "head|ru|adjective form", "nom_m",
-      lambda t:unicode(t.name) == "ru-decl-adj",
+      ["Adjective"], lambda t:unicode(t.name) == "ru-decl-adj",
       lambda t:re.sub(r"^\{\{ru-decl-adj", "{{ru-generate-adj-forms", unicode(t)),
       lambda t:unicode(t.name) == "ru-adj")
 
@@ -952,6 +989,7 @@ def create_noun_forms(save, startFrom, upTo, formspec):
   create_forms(save, startFrom, upTo, formspec,
       noun_form_inflection_dict, noun_form_aliases,
       "noun", "ru-noun form", "nom_sg",
+      ["Noun", "Proper Noun"],
       lambda t:unicode(t.name) == "ru-noun-table",
       lambda t:re.sub(r"^\{\{ru-noun-table", "{{ru-generate-noun-forms", unicode(t)),
       lambda t:unicode(t.name) in ["ru-noun", "ru-proper noun", "ru-noun+", "ru-proper noun+"])
