@@ -813,32 +813,43 @@ def split_ru_tr(form):
   else:
     return (form, None)
 
-def sechead_matches_poses(sechead, matching_poses):
-  for pos in matching_poses:
-    m = re.search("^===+([^=\n]+)===+\n$", sechead)
-    assert m
-    if m.group(1) == pos:
-      return True
-  return False
-
-def find_inflection_templates(text, matching_poses, is_inflection_template):
+# Find inflection templates, skipping those under SKIP_POSES and issuing
+# warnings for bad headers and bad level indentation, according to
+# EXPECTED_HEADER and EXPECTED_POSES (see comment to create_forms()).
+def find_inflection_templates(text, expected_header, expected_poses, skip_poses,
+    is_inflection_template, pagemsg):
   templates = []
 
   sections = re.split("(^==[^=\n]+==\n)", text, 0, re.M)
   for i in xrange(2, len(sections), 2):
     if sections[i-1] == "==Russian==\n":
-      l3secs = re.split("(^===[^=\n]+===\n)", sections[i], 0, re.M)
-      for j in xrange(2, len(l3secs), 2):
-        if sechead_matches_poses(l3secs[j-1], matching_poses):
-          for t in blib.parse_text(l3secs[j]).filter_templates():
-            if is_inflection_template(t):
+      subsections = re.split("(^===+[^=\n]+===+\n)", sections[i], 0, re.M)
+      headers_at_level = {}
+      last_levelno = 2
+      for j in xrange(2, len(subsections), 2):
+        m = re.search("^(=+)([^=\n]+)", subsections[j-1])
+        levelno = len(m.group(1))
+        header = m.group(2)
+        headers_at_level[levelno] = header
+        if levelno - last_levelno > 1:
+          pagemsg("WARNING: Misformatted header level (jump by %s - %s = %s, in section %s)" % (
+            levelno, last_levelno, levelno - last_levelno, subsections[j-1].replace("\n", "")))
+        last_levelno = levelno
+        parsed = blib.parse_text(subsections[j])
+        for t in parsed.filter_templates():
+          if is_inflection_template(t):
+            if header != expected_header:
+              pagemsg("WARNING: Expected inflection template under %s header but instead found under %s header" % (
+                expected_header, header))
+            pos_header = headers_at_level.get(levelno-1, None)
+            if pos_header and pos_header not in expected_poses:
+              pagemsg("WARNING: Inflection template under unexpected part of speech %s" %
+                  pos_header)
+            if pos_header not in skip_poses:
               templates.append(t)
-        l4secs = re.split("(^====[^=\n]+====\n)", l3secs[j], 0, re.M)
-        for k in xrange(2, len(l4secs), 2):
-          if sechead_matches_poses(l4secs[k-1], matching_poses):
-            for t in blib.parse_text(l4secs[k]).filter_templates():
-              if is_inflection_template(t):
-                templates.append(t)
+            else:
+              pagemsg("Skipping inflection template because under part of speech %s: %s" % (
+                pos_header, unicode(t)))
   return templates
 
 # Create required forms for all nouns/verbs/adjectives.
@@ -856,14 +867,19 @@ def find_inflection_templates(text, matching_poses, is_inflection_template):
 # "ru-noun form"). DICFORM_CODE specifies the form code for the dictionary
 # form (e.g. "infinitive", "nom_m" or "nom_sg").
 #
-# MATCHING_POSES specifies the parts of speech to look under to find
-# inflection templates; a list of capitalized parts of speech, e.g.
-# "Proper nouns". IS_INFLECTION_TEMPLATE is a function that is passed
-# one argument, a template, and should indicate if it's an inflection template
-# (e.g. 'ru-conj-2a' for verbs). CREATE_FORM_GENERATOR is a function that's
-# passed one argument, an inflection template, and should return a template
-# (a string) that can be expanded to yield a set of forms, identified by form
-# codes.
+# EXPECTED_HEADER specifies the header that the inflection template (e.g.
+# 'ru-decl-adj' for adjectives, 'ru-conj-2a' etc. for verbs) should be under
+# (Declension or Conjugation); a warning will be issued if it's wrong.
+# EXPECTED_POSES is a list of the parts of speech that the inflection template
+# should be under (e.g. ["Noun", "Proper noun"]); a warning will be issued if
+# an unexpected part of speech is found. A warning is also issued if the
+# level indentation is wrong. SKIP_POSES is a list of parts of speech to skip
+# the inflections of (e.g. ["Participle", "Pronoun"] for adjectives).
+# IS_INFLECTION_TEMPLATE is a function that is passed one argument, a template,
+# and should indicate if it's an inflection template. CREATE_FORM_GENERATOR
+# is a function that's passed one argument, an inflection template, and should
+# return a template (a string) that can be expanded to yield a set of forms,
+# identified by form codes.
 #
 # IS_LEMMA_TEMPLATE is a function that is passed one argument, a template,
 # and should indicate if it's a lemma template (e.g. 'ru-adj' for adjectives).
@@ -871,8 +887,8 @@ def find_inflection_templates(text, matching_poses, is_inflection_template):
 # a corresponding lemma (NOTE, this situation could be legitimate for nouns).
 def create_forms(save, startFrom, upTo, formspec,
     form_inflection_dict, form_aliases, pos, infltemp, dicform_code,
-    matching_poses, is_inflection_template, create_form_generator,
-    is_lemma_template):
+    expected_header, expected_poses, skip_poses, is_inflection_template,
+    create_form_generator, is_lemma_template):
   forms_desired = parse_form_spec(formspec, form_inflection_dict,
       form_aliases)
   for index, page in blib.cat_articles("Russian %ss" % pos, startFrom, upTo):
@@ -883,10 +899,12 @@ def create_forms(save, startFrom, upTo, formspec,
       return blib.expand_text(tempcall, pagetitle, pagemsg, verbose)
 
     # Find the inflection templates. Rather than just look for all inflection
-    # templates, we look for those under the right parts of speech. This is
-    # to avoid the issue with преданный, which has one adjectival inflection
-    # as an adjective and a different one as a participle.
-    for t in find_inflection_templates(page.text, matching_poses, is_inflection_template):
+    # templates, we may skip those under certain parts of speech, e.g.
+    # participles for adjective forms. This is to avoid the issue with
+    # преданный, which has one adjectival inflection as an adjective
+    # and a different one as a participle.
+    for t in find_inflection_templates(page.text, expected_header,
+        expected_poses, skip_poses, is_inflection_template, pagemsg):
       result = expand_text(create_form_generator(t))
       if not result:
         pagemsg("WARNING: Error generating %s forms, skipping" % pos)
@@ -973,7 +991,8 @@ def create_verb_forms(save, startFrom, upTo, formspec):
   create_forms(save, startFrom, upTo, formspec,
       verb_form_inflection_dict, verb_form_aliases,
       "verb", "head|ru|verb form", "infinitive",
-      ["Verb"], lambda t:unicode(t.name).startswith("ru-conj"),
+      "Conjugation", ["Verb"], [],
+      lambda t:unicode(t.name).startswith("ru-conj"),
       create_verb_generator,
       lambda t:unicode(t.name) == "ru-verb")
 
@@ -981,7 +1000,11 @@ def create_adj_forms(save, startFrom, upTo, formspec):
   create_forms(save, startFrom, upTo, formspec,
       adj_form_inflection_dict, adj_form_aliases,
       "adjective", "head|ru|adjective form", "nom_m",
-      ["Adjective"], lambda t:unicode(t.name) == "ru-decl-adj",
+      # Proper noun can occur because names are formatted using {{ru-decl-adj}}
+      # with decl type 'proper'.
+      "Declension", ["Adjective", "Participle", "Pronoun", "Proper noun"],
+      ["Participle", "Pronoun", "Proper noun"],
+      lambda t:unicode(t.name) == "ru-decl-adj",
       lambda t:re.sub(r"^\{\{ru-decl-adj", "{{ru-generate-adj-forms", unicode(t)),
       lambda t:unicode(t.name) == "ru-adj")
 
@@ -989,7 +1012,7 @@ def create_noun_forms(save, startFrom, upTo, formspec):
   create_forms(save, startFrom, upTo, formspec,
       noun_form_inflection_dict, noun_form_aliases,
       "noun", "ru-noun form", "nom_sg",
-      ["Noun", "Proper Noun"],
+      "Declension", ["Noun", "Proper noun"], [],
       lambda t:unicode(t.name) == "ru-noun-table",
       lambda t:re.sub(r"^\{\{ru-noun-table", "{{ru-generate-noun-forms", unicode(t)),
       lambda t:unicode(t.name) in ["ru-noun", "ru-proper noun", "ru-noun+", "ru-proper noun+"])
