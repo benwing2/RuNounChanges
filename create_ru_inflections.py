@@ -73,6 +73,8 @@
 # 14. (DONE) Only process inflection templates under the right part of speech,
 #    to avoid the issue with преданный, which has one adjectival inflection
 #    as an adjective and a different one as a participle.
+# 15. (DONE) Also combine dictionary forms with the same Russian but different
+#    translit, so скучный works correctly.
 
 import pywikibot, re, sys, codecs, argparse
 
@@ -852,6 +854,42 @@ def find_inflection_templates(text, expected_header, expected_poses, skip_poses,
                 pos_header, unicode(t)))
   return templates
 
+# Given a list of form values, each of which is a tuple (RUSSIAN, TRANSLIT)
+# where the TRANSLIT may be None or the empty string (in both cases treated
+# as missing), group by RUSSIAN to handle cases where multiple translits are
+# possible, generate any missing translits and join by commas. Return the list
+# of form values, in the same order except with multiple translits combined.
+def group_translits(formvals, pagemsg, expand_text):
+  # Group formvals by Russian, to group multiple translits
+  formvals_by_russian = OrderedDict()
+  for formvalru, formvaltr in formvals:
+    if formvalru in formvals_by_russian:
+      formvals_by_russian[formvalru].append(formvaltr)
+    else:
+      formvals_by_russian[formvalru] = [formvaltr]
+  formvals = []
+  # If there is more than one translit, then generate the
+  # translit for any missing translit and join by commas
+  for russian, translits in formvals_by_russian.iteritems():
+    if len(translits) == 1:
+      formvals.append((russian, translits[0]))
+    else:
+      manual_translits = []
+      for translit in translits:
+        if translit:
+          manual_translits.append(translit)
+        else:
+          translit = expand_text("{{xlit|ru|%s}}" % russian)
+          if not translit:
+            pagemsg("WARNING: Error generating translit for %s" % russian)
+          else:
+            manual_translits.append(translit)
+      joined_manual_translits = ", ".join(manual_translits)
+      pagemsg("create_forms: For Russian %s, found multiple manual translits %s" %
+          (russian, joined_manual_translits))
+      formvals.append((russian, joined_manual_translits))
+  return formvals
+
 # Create required forms for all nouns/verbs/adjectives.
 # SAVE is as in create_inflection_entry(). STARTFROM and UPTO, if not None,
 # delimit the range of pages to process (inclusive on both ends).
@@ -913,21 +951,23 @@ def create_forms(save, startFrom, upTo, formspec,
       dicforms = re.split(",", args[dicform_code])
       if len(dicforms) > 1:
         pagemsg("create_forms: Found multiple dictionary forms: %s" % args[dicform_code])
-      for dicform in dicforms:
+      # Group dictionary forms by Russian, to group multiple translits
+      dicforms = group_translits([split_ru_tr(dicform) for dicform in dicforms],
+          pagemsg, expand_text)
+      for dicformru, dicformtr in dicforms:
         for formname, inflsets in forms_desired:
           # Skip the dictionary form; also skip forms that don't have
           # listed inflections (e.g. singulars with plural-only nouns,
           # animate/inanimate variants when a noun isn't bianimate):
           if formname != dicform_code and formname in args and args[formname]:
-            dicformru, dicformtr = split_ru_tr(dicform)
 
             # Group inflections by unaccented Russian, so we process
             # multiple accent variants together
             formvals_by_pagename = OrderedDict()
             formvals = re.split(",", args[formname])
             if len(formvals) > 1:
-              pagemsg("create_forms: Found multiple form values for %s=%s, dictionary form %s" %
-                  (formname, args[formname], dicform))
+              pagemsg("create_forms: Found multiple form values for %s=%s, dictionary form %s%s" %
+                  (formname, args[formname], dicformru, dicformtr and " (%s)" % dicformtr or ""))
             for formval in formvals:
               formvalru, formvaltr = split_ru_tr(formval)
               formval_no_accents = ru.remove_accents(formvalru)
@@ -945,33 +985,7 @@ def create_forms(save, startFrom, upTo, formspec,
                 pagemsg("create_forms: For pagename %s, found multiple inflections %s" % (
                   formval_no_accents, ",".join("%s%s" % (infl, " (%s)" % infltr if infltr else "") for infl, infltr in inflections)))
               # Group inflections by Russian, to group multiple translits
-              formvals_by_russian = OrderedDict()
-              for formvalru, formvaltr in inflections:
-                if formvalru in formvals_by_russian:
-                  formvals_by_russian[formvalru].append(formvaltr)
-                else:
-                  formvals_by_russian[formvalru] = [formvaltr]
-              inflections = []
-              # If there is more than one translit, then generate the
-              # translit for any missing translit and join by commas
-              for russian, translits in formvals_by_russian.iteritems():
-                if len(translits) == 1:
-                  inflections.append((russian, translits[0]))
-                else:
-                  manual_translits = []
-                  for translit in translits:
-                    if translit:
-                      manual_translits.append(translit)
-                    else:
-                      translit = expand_text("{{xlit|ru|%s}}" % russian)
-                      if not translit:
-                        pagemsg("WARNING: Error generating translit for %s" % russian)
-                      else:
-                        manual_translits.append(translit)
-                  joined_manual_translits = ", ".join(manual_translits)
-                  pagemsg("create_forms: For Russian %s, found multiple manual translits %s" %
-                      (russian, joined_manual_translits))
-                  inflections.append((russian, joined_manual_translits))
+              inflections = group_translits(inflections, pagemsg, expand_text)
 
               if type(inflsets) is not list:
                 inflsets = [inflsets]
