@@ -50,7 +50,43 @@ def process_page(index, page, save, verbose):
             notes.append("converted 'conjugation of' to 'inflection of'")
       sections[j] = unicode(parsed)
 
-      # Try to canonicalize 'inflection of' involving the imperative
+      # Try to split 'inflection of' containing 'present or future' into two
+      # defns
+      newsec = re.sub(r"^# \{\{inflection of\|(.*?)\|present or future\|(.*?)\}\}$",
+          r"# {{inflection of|\1|pres|\2}}\n# {{inflection of|\1|fut|\2}}",
+          sections[j], 0, re.M)
+      if newsec != sections[j]:
+        notes.append("split 'present or future' form code into two defns with 'pres' and 'fut'")
+        sections[j] = newsec
+
+      # Convert 'indc' to 'ind', 'futr' to 'fut'
+      parsed = blib.parse_text(sections[j])
+      for t in parsed.filter_templates():
+        if unicode(t.name) == "inflection of" and getparam(t, "lang") == "ru":
+          # Handle 'indc'
+          origt = unicode(t)
+          for i in xrange(3,20):
+            val = getparam(t, str(i))
+            if val == "indc":
+              t.add(str(i), "ind")
+          newt = unicode(t)
+          if origt != newt:
+            pagemsg("Replaced %s with %s" % (origt, newt))
+            notes.append("converted 'indc' form code to 'ind'")
+          # Handle 'futr'
+          origt = unicode(t)
+          for i in xrange(3,20):
+            val = getparam(t, str(i))
+            if val == "futr":
+              t.add(str(i), "fut")
+          newt = unicode(t)
+          if origt != newt:
+            pagemsg("Replaced %s with %s" % (origt, newt))
+            notes.append("converted 'futr' form code to 'fut'")
+      sections[j] = unicode(parsed)
+
+      # Try to canonicalize 'inflection of' involving the imperative,
+      # present, future
       parsed = blib.parse_text(sections[j])
       for t in parsed.filter_templates():
         if unicode(t.name) == "inflection of" and getparam(t, "lang") == "ru":
@@ -77,6 +113,10 @@ def process_page(index, page, save, verbose):
               canon_params = ["2", "p", "imp"]
               break
             break
+            m = re.search(r"^([123])/([sp])/(pres|fut)$", numparamstr)
+            if m:
+              canon_params = [m.group(1), m.group(2), m.group(3), "ind"]
+              break
           if canon_params:
             origt = unicode(t)
             # Fetch param 1 and param 2. Erase all numbered params.
@@ -96,17 +136,6 @@ def process_page(index, page, save, verbose):
               notes.append("canonicalized 'inflection of' for %s" % "/".join(canon_params))
             else:
               pagemsg("Apparently already canonicalized: %s" % newt)
-      sections[j] = unicode(parsed)
-
-      parsed = blib.parse_text(sections[j])
-      for t in parsed.filter_templates():
-        if unicode(t.name) == "inflection of" and getparam(t, "lang") == "ru":
-          origt = unicode(t)
-          t.name = "inflection of"
-          newt = unicode(t)
-          if origt != newt:
-            pagemsg("Replaced %s with %s" % (origt, newt))
-            notes.append("converted 'conjugation of' to 'inflection of'")
       sections[j] = unicode(parsed)
 
       # Try to add 'inflection of' to raw-specified participial inflection
