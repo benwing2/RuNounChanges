@@ -75,6 +75,9 @@
 #    as an adjective and a different one as a participle.
 # 15. (DONE) Also combine dictionary forms with the same Russian but different
 #    translit, so скучный works correctly.
+# 16. (DONE) When doing future, skip periphrastic future.
+# 17. (DONE) Always skip inflections that would go on the lemma page to handle
+#     e.g. accusative inanimate masculine and plural, and accusative neuter.
 
 import pywikibot, re, sys, codecs, argparse
 
@@ -923,10 +926,15 @@ def group_translits(formvals, pagemsg, expand_text):
 # and should indicate if it's a lemma template (e.g. 'ru-adj' for adjectives).
 # This is used to issue warnings in case of non-lemma forms where there's
 # a corresponding lemma (NOTE, this situation could be legitimate for nouns).
+#
+# SKIP_INFLECTIONS, if supplied, should be a function of three arguments, the
+# form name, Russian and translit (which may be missing), and should return
+# true if the particular form value in question is to be skipped. This is
+# used e.g. to skip periphrastic future forms.
 def create_forms(save, startFrom, upTo, formspec,
     form_inflection_dict, form_aliases, pos, infltemp, dicform_code,
     expected_header, expected_poses, skip_poses, is_inflection_template,
-    create_form_generator, is_lemma_template):
+    create_form_generator, is_lemma_template, skip_inflections=None):
   forms_desired = parse_form_spec(formspec, form_inflection_dict,
       form_aliases)
   for index, page in blib.cat_articles("Russian %ss" % pos, startFrom, upTo):
@@ -971,7 +979,10 @@ def create_forms(save, startFrom, upTo, formspec,
             for formval in formvals:
               formvalru, formvaltr = split_ru_tr(formval)
               formval_no_accents = ru.remove_accents(formvalru)
-              if formval_no_accents in formvals_by_pagename:
+              if skip_inflections and skip_inflections(formname, formvalru, formvaltr):
+                pagemsg("create_forms: Skipping %s=%s%s" % (formname, formvalru,
+                  formvaltr and " (%s)" % formvaltr or ""))
+              elif formval_no_accents in formvals_by_pagename:
                 formvals_by_pagename[formval_no_accents].append((formvalru, formvaltr))
               else:
                 formvals_by_pagename[formval_no_accents] = [(formvalru, formvaltr)]
@@ -981,25 +992,34 @@ def create_forms(save, startFrom, upTo, formspec,
               pagemsg("create_forms: For form %s, found multiple page names %s" % (
                 formname, ",".join("%s" % formval_no_accents for formval_no_accents, inflections in formvals_by_pagename_items)))
             for formval_no_accents, inflections in formvals_by_pagename_items:
-              if len(inflections) > 1:
-                pagemsg("create_forms: For pagename %s, found multiple inflections %s" % (
-                  formval_no_accents, ",".join("%s%s" % (infl, " (%s)" % infltr if infltr else "") for infl, infltr in inflections)))
-              # Group inflections by Russian, to group multiple translits
-              inflections = group_translits(inflections, pagemsg, expand_text)
+              inflections_printed = ",".join("%s%s" %
+                  (infl, " (%s)" % infltr if infltr else "")
+                  for infl, infltr in inflections)
+              if formval_no_accents == ru.remove_accents(dicformru):
+                pagemsg("create_forms: Skipping form %s=%s because would go on lemma page" % (formname, inflections_printed))
+              else:
+                if len(inflections) > 1:
+                  pagemsg("create_forms: For pagename %s, found multiple inflections %s" % (
+                    formval_no_accents, inflections_printed))
+                # Group inflections by Russian, to group multiple translits
+                inflections = group_translits(inflections, pagemsg, expand_text)
 
-              if type(inflsets) is not list:
-                inflsets = [inflsets]
-              for inflset in inflsets:
-                create_inflection_entry(save, index, inflections,
-                  dicformru, dicformtr, pos.capitalize(),
-                  "%s form %s" % (pos, formname), "dictionary form",
-                  infltemp, "", "inflection of", inflset,
-                  is_lemma_template=is_lemma_template)
+                if type(inflsets) is not list:
+                  inflsets = [inflsets]
+                for inflset in inflsets:
+                  create_inflection_entry(save, index, inflections,
+                    dicformru, dicformtr, pos.capitalize(),
+                    "%s form %s" % (pos, formname), "dictionary form",
+                    infltemp, "", "inflection of", inflset,
+                    is_lemma_template=is_lemma_template)
 
 def create_verb_generator(t):
   verbtype = re.sub(r"^ru-conj-", "", unicode(t.name))
   params = re.sub(r"^\{\{ru-conj-.*?\|(.*)\}\}$", r"\1", unicode(t))
   return "{{ru-generate-verb-forms|type=%s|%s}}" % (verbtype, params)
+
+def skip_future_periphrastic(formname, ru, tr):
+  return re.search(ur"^(бу́ду|бу́дешь|бу́дет|бу́дем|бу́дете|бу́дут) ", ru)
 
 def create_verb_forms(save, startFrom, upTo, formspec):
   create_forms(save, startFrom, upTo, formspec,
@@ -1008,7 +1028,8 @@ def create_verb_forms(save, startFrom, upTo, formspec):
       "Conjugation", ["Verb"], [],
       lambda t:unicode(t.name).startswith("ru-conj"),
       create_verb_generator,
-      lambda t:unicode(t.name) == "ru-verb")
+      lambda t:unicode(t.name) == "ru-verb",
+      skip_inflections=skip_future_periphrastic)
 
 def create_adj_forms(save, startFrom, upTo, formspec):
   create_forms(save, startFrom, upTo, formspec,
