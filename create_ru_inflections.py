@@ -84,6 +84,7 @@
 #     to compare to unaccented monosyllabic. This may be important for
 #     adjectives and verbs as well.
 # 19. (DONE) Warn if existing head or inflection has multiple accents (взя́ло́).
+# 20. (DONE) Remove blank params from existing form codes when comparing.
 
 import pywikibot, re, sys, codecs, argparse
 import traceback
@@ -425,7 +426,7 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
               for param in t.params:
                 name = unicode(param.name)
                 value = unicode(param.value)
-                if name not in ["1", "2"] and re.search("^[0-9]+$", name):
+                if name not in ["1", "2"] and re.search("^[0-9]+$", name) and value:
                   infl_params.append(value)
               inflset = set(infls)
               paramset = set(infl_params)
@@ -1054,7 +1055,7 @@ def create_forms(save, startFrom, upTo, formspec,
 
 def create_verb_generator(t):
   verbtype = re.sub(r"^ru-conj-", "", unicode(t.name))
-  params = re.sub(r"^\{\{ru-conj-.*?\|(.*)\}\}$", r"\1", unicode(t))
+  params = re.sub(r"^\{\{ru-conj-.*?\|(.*)\}\}$", r"\1", unicode(t), 0, re.S)
   return "{{ru-generate-verb-forms|type=%s|%s}}" % (verbtype, params)
 
 def skip_future_periphrastic(formname, ru, tr):
