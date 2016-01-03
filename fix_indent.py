@@ -14,10 +14,6 @@ def process_page(index, page, save, verbose, warn_on_no_change=False):
   pagemsg("Processing")
 
   text = unicode(page.text)
-  if "===Etymology 1===" in text:
-    pagemsg("WARNING: Skipping page because ===Etymology 1===")
-    return
-
   origtext = text
   notes = []
 
@@ -38,6 +34,10 @@ def process_page(index, page, save, verbose, warn_on_no_change=False):
         pagemsg("WARNING: Found multiple Russian sections, skipping page")
         return
       foundrussian = True
+
+    if "===Etymology 1===" in sections[j]:
+      pagemsg("WARNING: Skipping page because ===Etymology 1===")
+      return
 
     sections[j] = fix_indent(sections[j], "Pronunciation", 3)
     sections[j] = fix_indent(sections[j], "Alternative forms", 3)
