@@ -59,30 +59,76 @@ def process_page(index, page, save, verbose):
         notes.append("split 'present or future' form code into two defns with 'pres' and 'fut'")
         sections[j] = newsec
 
-      # Convert 'indc' to 'ind', 'futr' to 'fut'
+      # Convert 'indc' to 'ind', 'futr' to 'fut', 'perfective' and
+      # '(perfective)' to 'pfv', 'imperfective' and '(imperfective)' to 'impfv',
+      # 'impr' to 'imp'
       parsed = blib.parse_text(sections[j])
       for t in parsed.filter_templates():
         if unicode(t.name) == "inflection of" and getparam(t, "lang") == "ru":
-          # Handle 'indc'
+          for frm, to in [
+              ("indc", "ind"), ("indicative", "ind"),
+              ("futr", "fut"), ("future", "fut"),
+              ("impr", "imp"), ("imperative", "imp"),
+              ("perfective", "pfv"), ("(perfective)", "pfv"),
+              ("imperfective", "impfv"), ("(imperfective)", "impfv"),
+              ("singular", "s"), ("(singular)", "s"),
+              ("plural", "p"), ("(plural)", "p"),
+              ("masculine", "m"), ("(masculine)", "m"),
+              ("feminine", "f"), ("(feminine)", "f"),
+              ("neuter", "n"), ("(neuter)", "n"), ("neutral", "n"), ("(neutral)", "n"),
+              ]:
+            origt = unicode(t)
+            for i in xrange(3,20):
+              val = getparam(t, str(i))
+              if val == frm:
+                t.add(str(i), to)
+            newt = unicode(t)
+            if origt != newt:
+              pagemsg("Replaced %s with %s" % (origt, newt))
+              notes.append("converted '%s' form code to '%s'" % (frm, to))
+      sections[j] = unicode(parsed)
+
+      # Remove blank form codes and canonicalize position of lang=, tr=
+      parsed = blib.parse_text(sections[j])
+      for t in parsed.filter_templates():
+        if unicode(t.name) == "inflection of" and getparam(t, "lang") == "ru":
           origt = unicode(t)
+          # Fetch the numbered params starting with 3, skipping blank ones
+          numbered_params = []
           for i in xrange(3,20):
             val = getparam(t, str(i))
-            if val == "indc":
-              t.add(str(i), "ind")
+            if val:
+              numbered_params.append(val)
+          # Fetch param 1 and param 2, and non-numbered params except lang=
+          # and nocat=.
+          param1 = getparam(t, "1")
+          param2 = getparam(t, "2")
+          tr = getparam(t, "tr")
+          nocat = getparam(t, "nocat")
+          non_numbered_params = []
+          for param in t.params:
+            pname = unicode(param.name)
+            if not re.search(r"^[0-9]+$", pname) and pname not in ["lang", "nocat", "tr"]:
+              non_numbered_params.append((pname, param.value))
+          # Erase all params.
+          del t.params[:]
+          # Put back lang, param 1, param 2, tr, then the replacements for the
+          # higher numbered params, then the non-numbered params.
+          t.add("lang", "ru")
+          t.add("1", param1)
+          t.add("2", param2)
+          if tr:
+            t.add("tr", tr)
+          for i, param in enumerate(numbered_params):
+            t.add(str(i+3), param)
+          for name, value in non_numbered_params:
+            t.add(name, value)
           newt = unicode(t)
           if origt != newt:
             pagemsg("Replaced %s with %s" % (origt, newt))
-            notes.append("converted 'indc' form code to 'ind'")
-          # Handle 'futr'
-          origt = unicode(t)
-          for i in xrange(3,20):
-            val = getparam(t, str(i))
-            if val == "futr":
-              t.add(str(i), "fut")
-          newt = unicode(t)
-          if origt != newt:
-            pagemsg("Replaced %s with %s" % (origt, newt))
-            notes.append("converted 'futr' form code to 'fut'")
+            notes.append("removed any blank form codes and maybe rearranged lang=, tr=")
+            if nocat:
+              notes.append("removed nocat=")
       sections[j] = unicode(parsed)
 
       # Try to canonicalize 'inflection of' involving the imperative,
@@ -93,30 +139,41 @@ def process_page(index, page, save, verbose):
           # Fetch the numbered params starting with 3
           numbered_params = []
           for i in xrange(3,20):
-            numbered_params.append(getparam(t, str(i)))
+            val = getparam(t, str(i))
+            if val:
+              numbered_params.append(val)
           while len(numbered_params) > 0 and not numbered_params[-1]:
             del numbered_params[-1]
           # Now canonicalize
           numparamstr = "/".join(numbered_params)
+          numparamset = set(numbered_params)
           canon_params = []
           while True:
-            m = (re.search(r"^(?:s|\(singular\))/(?:imp|imperative)$", numparamstr) or
-                 re.search(r"^(?:imp|imperative)/(?:s|\(singular\))$", numparamstr)
-                 )
-            if m:
-              canon_params = ["2", "s", "imp"]
-              break
-            m = (re.search(r"^(?:p|\(plural\))/(?:imp|imperative)$", numparamstr) or
-                 re.search(r"^(?:imp|imperative)/(?:p|\(plural\))$", numparamstr)
-                 )
-            if m:
-              canon_params = ["2", "p", "imp"]
-              break
+            if numparamset == {'s', 'pfv', 'imp'}:
+              canon_params = ['2', 's', 'pfv', 'imp']
+            elif numparamset == {'s', 'impfv', 'imp'}:
+              canon_params = ['2', 's', 'impfv', 'imp']
+            elif numparamset == {'s', 'imp'}:
+              canon_params = ['2', 's', 'imp']
+            elif numparamset == {'p', 'pfv', 'imp'}:
+              canon_params = ['2', 'p', 'pfv', 'imp']
+            elif numparamset == {'p', 'impfv', 'imp'}:
+              canon_params = ['2', 'p', 'impfv', 'imp']
+            elif numparamset == {'p', 'imp'}:
+              canon_params = ['2', 'p', 'imp']
+            elif numparamset == {'m', 's', 'past'}:
+              canon_params = ['m', 's', 'past', 'ind']
+            elif numparamset == {'f', 's', 'past'}:
+              canon_params = ['f', 's', 'past', 'ind']
+            elif numparamset == {'n', 's', 'past'}:
+              canon_params = ['n', 's', 'past', 'ind']
+            elif numparamset == {'p', 'past'}:
+              canon_params = ['p', 'past', 'ind']
+            else:
+              m = re.search(r"^([123])/([sp])/(pres|fut)$", numparamstr)
+              if m:
+                canon_params = [m.group(1), m.group(2), m.group(3), "ind"]
             break
-            m = re.search(r"^([123])/([sp])/(pres|fut)$", numparamstr)
-            if m:
-              canon_params = [m.group(1), m.group(2), m.group(3), "ind"]
-              break
           if canon_params:
             origt = unicode(t)
             # Fetch param 1 and param 2. Erase all numbered params.
