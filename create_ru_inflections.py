@@ -1203,15 +1203,13 @@ def create_forms(lemmas_to_process, save, startFrom, upTo, formspec,
   if type(dicform_codes) is not list:
     dicform_codes = [dicform_codes]
 
-  pages_to_process = blib.cat_articles("Russian %ss" % pos, startFrom, upTo)
-
   # If lemmas_to_process, we want to process the lemmas in the order they're
   # in this list, but the lemmas in the list have е in place of ё, so we need
   # to do some work to get the corresponding pages with ё in them.
   if lemmas_to_process:
     lemmas_to_process_set = set(lemmas_to_process)
     unaccented_lemmas = {}
-    for index, page in pages_to_process:
+    for index, page in blib.cat_articles("Russian %ss" % pos):
       pagetitle = unicode(page.title())
       unaccented_title = ru.make_unstressed(pagetitle)
       if unaccented_title in lemmas_to_process_set:
@@ -1227,6 +1225,8 @@ def create_forms(lemmas_to_process, save, startFrom, upTo, formspec,
         msg("WARNING: Can't find pages to match lemma %s" % lemma)
     pages_to_process = ((index, pywikibot.Page(site, page)) for index, page in
         blib.iter_items(pagetitles_to_process, startFrom, upTo))
+  else:
+    pages_to_process = blib.cat_articles("Russian %ss" % pos, startFrom, upTo)
 
   for index, page in pages_to_process:
     pagetitle = unicode(page.title())
