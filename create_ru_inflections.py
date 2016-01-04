@@ -89,6 +89,17 @@
 # 22. (DONE) Compute and output total time.
 # 23. (DONE) Add ability to specify lemmas to process (for short adjs, lemmas
 #     will be missing accents and will have е in place of ё).
+# 24. (DONE) It might be problematic to update the gender to have -p in it
+#     because some of the existing definitions might be singular, particularly
+#     in nouns where genitive singular and nominative plural are often the same.
+#     This suggests that we should remove -p from the gender (alternatively
+#     we'd have to parse all the definitions to see if any are singular).
+#     Similar issues exist in adjectives (e.g. -ым dat pl and m/n ins sg);
+#     gender issues also exist in adjectives, since e.g. many forms are
+#     shared between masculine and neuter. This suggests we shouldn't specify
+#     gender at all for adjectives except maybe short forms.
+# 25. (DONE) In compare_param(), allow for links in the param, which e.g. may
+#     be [[выходить#Etymology 1|выходи́ть]].
 
 import pywikibot, re, sys, codecs, argparse, time
 import traceback
@@ -242,7 +253,7 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
   # Check whether parameter PARAM of template T matches VALUE.
   def compare_param(t, param, value, valuetr):
     value = ru.remove_monosyllabic_accents(value)
-    paramval = ru.remove_monosyllabic_accents(getparam(t, param))
+    paramval = ru.remove_monosyllabic_accents(blib.remove_links(getparam(t, param)))
     if ru.is_multi_stressed(paramval):
       pagemsg("WARNING: Param %s=%s has multiple accents: %s" % (
         param, paramval, unicode(t)))
@@ -515,11 +526,7 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
             # WARNING_ON_FALSE), else modify existing gender if needed, and
             # return True. (E.g. existing "p" matches new "m-an" and will be
             # modified to "m-an-p"; # existing "m-p" matches new "m" and will
-            # be left alone.) Similar checks are done for the second gender.
-            # We don't currently handle the situation where e.g. the existing
-            # gender is both "m-p" and "f-p" and the new gender is "f-p" and
-            # "m-p" in reverse order. To handle that, we would need to sort
-            # both sets of genders by some criterion.)
+            # be left alone.)
             def check_fix_noun_adj_gender(headword_template, gender, warning_on_false):
               def gender_compatible(existing, new):
                 # Compare existing and new m/f gender
@@ -1336,12 +1343,12 @@ def create_verb_forms(save, startFrom, upTo, formspec, lemmas_to_process):
       get_verb_gender, skip_inflections=skip_future_periphrastic)
 
 def get_adj_gender(t, formname, args):
-  if "_mp" in formname:
-    return ["m-p"]
-  else:
+  if "short" in formname:
     m = re.search("_([mfnp])", formname)
     assert m
     return [m.group(1)]
+  else:
+    return []
 
 def create_adj_forms(save, startFrom, upTo, formspec, lemmas_to_process):
   create_forms(lemmas_to_process, save, startFrom, upTo, formspec,
@@ -1356,6 +1363,9 @@ def create_adj_forms(save, startFrom, upTo, formspec, lemmas_to_process):
       lambda t:unicode(t.name) == "ru-adj",
       get_adj_gender)
 
+def get_noun_gender(t, formname, args):
+  return [re.sub("-p$", "", x) for x in re.split(",", args["g"])]
+
 def create_noun_forms(save, startFrom, upTo, formspec, lemmas_to_process):
   create_forms(lemmas_to_process, save, startFrom, upTo, formspec,
       noun_form_inflection_dict, noun_form_aliases,
@@ -1364,7 +1374,7 @@ def create_noun_forms(save, startFrom, upTo, formspec, lemmas_to_process):
       lambda t:unicode(t.name) == "ru-noun-table",
       lambda t:re.sub(r"^\{\{ru-noun-table", "{{ru-generate-noun-args", unicode(t)),
       lambda t:unicode(t.name) in ["ru-noun", "ru-proper noun", "ru-noun+", "ru-proper noun+"],
-      lambda t, formname, args:re.split(",", args["g"]))
+      get_noun_gender)
 
 pa = blib.create_argparser("Create Russian inflection entries")
 pa.add_argument("--adj-form",
