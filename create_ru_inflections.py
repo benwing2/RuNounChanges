@@ -97,9 +97,13 @@
 #     Similar issues exist in adjectives (e.g. -ым dat pl and m/n ins sg);
 #     gender issues also exist in adjectives, since e.g. many forms are
 #     shared between masculine and neuter. This suggests we shouldn't specify
-#     gender at all for adjectives except maybe short forms.
+#     gender at all for adjectives except maybe short forms. (NOTE: Per
+#     Anatoli's request we don't include gender for short adjectives either.)
 # 25. (DONE) In compare_param(), allow for links in the param, which e.g. may
 #     be [[выходить#Etymology 1|выходи́ть]].
+# 26. (DONE) Anatoli wants adjective forms to not show gender in the headword,
+#     and verb forms to have "gender" (actually aspect) shown in the definition
+#     line instead of the headword.
 
 import pywikibot, re, sys, codecs, argparse, time
 import traceback
@@ -183,6 +187,13 @@ def lemma_matches(lemma, ru, tr, pagemsg):
 # indicates whether the definition template specified by DEFTEMP needs to
 # have a 'lang' parameter with value 'ru'.
 #
+# GENDER should be a list of genders to use in adding or updating gender
+# (assumed to be parameter g= in INFLTEMP if it's a "head|" headword template,
+# else parameter 2=, and g2=, g3= for additional genders). If no genders
+# are relevant, supply an empty list. (NOTE: This is special-cased for verbs,
+# and inserts the "gender" [actually the aspect, perfective/imperfective]
+# into the definition line.)
+#
 # If ENTRYTEXT is given, this is the text to use for the entry, starting
 # directly after the "==Etymology==" line, which is assumed to be necessary.
 # If not given, this text is synthesized from the other parameters.
@@ -191,10 +202,6 @@ def lemma_matches(lemma, ru, tr, pagemsg):
 # and should indicate if it's a lemma template (e.g. 'ru-adj' for adjectives).
 # This is used to issue warnings in case of non-lemma forms where there's
 # a corresponding lemma (NOTE, this situation could be legitimate for nouns).
-#
-# GENDER, if specified, should be a list of genders to use in adding or
-# updating gender (assumed to be parameter g= in INFLTEMP if it's a "head|"
-# headword template, else parameter 2=, and g2=, g3= for additional genders).
 def create_inflection_entry(save, index, inflections, lemma, lemmatr,
     pos, infltype, lemmatype, infltemp, infltemp_param, deftemp,
     deftemp_param, gender, deftemp_needs_lang=True, entrytext=None,
@@ -236,6 +243,8 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
   is_short_adj_form = "adjective form short" in infltype
   is_noun_or_adj = "noun" in infltype or "adjective" in infltype
   is_noun_adj_plural = is_noun_or_adj and ("_p" in infltype or "_mp" in infltype)
+  is_verb_form = "verb form" in infltype
+
   deftemp_uses_inflection_of = deftemp == "inflection of"
   infltemp_is_head = infltemp.startswith("head|")
   first_gender_param = "g" if infltemp_is_head else "2"
@@ -360,7 +369,7 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
     for g in gender:
       genderno += 1
       if genderno == 1:
-        genderparams.append("|g=%s" % g if infltemp_is_head else "|%s" % g )
+        genderparams.append("|g=%s" % g if infltemp_is_head else "|%s" % g)
       else:
         genderparams.append("|g%s=%s" % (genderno, g))
 
@@ -476,14 +485,19 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
                   unicode(t), "|".join(infls)))
                 return True
               if paramset < inflset:
-                pagemsg("WARNING: Found actual inflection %s whose codes are a subset of intended codes %s" % (
-                  unicode(t), "|".join(infls)))
+                # Check to see if we match except for a missing perfective or
+                # imperfective aspect, which we will update.
+                if (paramset | {"pfv"}) == inflset or (paramset | {"impfv"}) == inflset:
+                  pagemsg("Need to update actual inflection %s with intended codes %s" % (
+                    unicode(t), "|".join(infls)))
+                  return "update"
+                else:
+                  pagemsg("WARNING: Found actual inflection %s whose codes are a subset of intended codes %s" % (
+                    unicode(t), "|".join(infls)))
               return False
 
-            # Find the inflection headword (e.g. 'ru-noun form' or
-            # 'head|ru|verb form') and definitional (typically 'inflection of')
-            # templates.
-
+            # Find the inflection headword template(s) (e.g. 'ru-noun form' or
+            # 'head|ru|verb form').
             def template_name(t):
               if infltemp_is_head:
                 return "|".join([unicode(t.name), getparam(t, "1"), getparam(t, "2")])
@@ -492,10 +506,26 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
             infl_headword_templates = [t for t in parsed.filter_templates()
                 if template_name(t) == infltemp and
                 template_head_matches(t, inflections)]
-            defn_templates = [t for t in parsed.filter_templates()
-                if unicode(t.name) == deftemp and compare_param(t, "1", lemma, lemmatr)
-                and (not deftemp_needs_lang or compare_param(t, "lang", "ru", None))
-                and (not deftemp_uses_inflection_of or compare_inflections(t, deftemp_param))]
+
+            # Find the definitional (typically 'inflection of') template(s).
+            # We store a tuple of (TEMPLATE, NEEDS_UPDATE) where NEEDS_UDPATE
+            # is true if we need to overwrite the form codes (this happens
+            # when we want to add the verb aspect 'pfv' or 'impfv' to the
+            # form codes).
+            defn_templates = []
+            for t in parsed.filter_templates():
+              if (unicode(t.name) == deftemp and
+                  compare_param(t, "1", lemma, lemmatr) and
+                  (not deftemp_needs_lang or
+                    compare_param(t, "lang", "ru", None))):
+                if not deftemp_uses_inflection_of:
+                  defn_templates.append((t, False))
+                else:
+                  result = compare_inflections(t, deftemp_param)
+                  if result == "update":
+                    defn_templates.append((t, True))
+                  elif result:
+                    defn_templates.append((t, False))
 
             def fetch_param_chain(t, firstparam, parampref):
               vals = []
@@ -599,21 +629,21 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
                       (newparam, g))
                 subsections[j] = unicode(parsed)
                 sections[i] = ''.join(subsections)
-                notes.append("updated gender %s" % g)
+                notes.append("update gender %s" % g)
               return True # changed and "changed" or "nochange"
 
-            # For verbs, the only gender is 'pf' or 'impf'
-            def check_fix_verb_gender(headword_template, gender):
-              existing_genders = fetch_param_chain(headword_template,
-                  first_gender_param, "g")
-              for g in gender:
-                if g not in existing_genders:
-                  newparam = append_param_to_chain(headword_template, g,
-                    first_gender_param, "g")
-                  pagemsg("Added verb gender %s=%s" % (newparam, g))
-                  subsections[j] = unicode(parsed)
-                  sections[i] = ''.join(subsections)
-                  notes.append("updated gender %s" % g)
+            # For verbs, the only gender is 'pf' or 'impf' (CURRENTLY UNUSED)
+            #def check_fix_verb_gender(headword_template, gender):
+            #  existing_genders = fetch_param_chain(headword_template,
+            #      first_gender_param, "g")
+            #  for g in gender:
+            #    if g not in existing_genders:
+            #      newparam = append_param_to_chain(headword_template, g,
+            #        first_gender_param, "g")
+            #      pagemsg("Added verb gender %s=%s" % (newparam, g))
+            #      subsections[j] = unicode(parsed)
+            #      sections[i] = ''.join(subsections)
+            #      notes.append("update gender %s" % g)
 
             # Update the gender in HEADWORD_TEMPLATE according to GENDER
             # (which might be empty, meaning no updating) using
@@ -633,8 +663,6 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
                   if not check_fix_noun_adj_gender(headword_template, gender,
                       warning_on_false):
                     return False
-                else:
-                  check_fix_verb_gender(headword_template, gender)
               # REMAINING CODE IN FUNCTION NOT CURRENTLY USED
               # First check that we can update params before changing anything
               for param, value in params:
@@ -657,11 +685,48 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
                 else:
                   headword_template.add(param, value)
                   changed = True
-                  notes.append("updated %s=%s" % (param, value))
+                  notes.append("update %s=%s" % (param, value))
               if changed:
                 subsections[j] = unicode(parsed)
                 sections[i] = ''.join(subsections)
               return True
+
+            # Replace the form-code parameters in 'inflection of'
+            # (or 'ru-participle of') with those in INFLS, putting the
+            # non-form-code parameters in the right places.
+            def check_fix_defn_params(t, infls):
+              # Following code mostly copied from fix_verb_form.py
+              origt = unicode(t)
+              # Fetch param 1 and param 2, and non-numbered params.
+              param1 = getparam(t, "1")
+              param2 = getparam(t, "2")
+              lang = getparam(t, "lang")
+              tr = getparam(t, "tr")
+              non_numbered_params = []
+              for param in t.params:
+                pname = unicode(param.name)
+                if not re.search(r"^[0-9]+$", pname) and pname not in ["lang", "tr"]:
+                  non_numbered_params.append((pname, param.value))
+              # Erase all params.
+              del t.params[:]
+              # Put back lang, param 1, param 2, tr, then the replacements
+              # for the higher numbered params, then the non-numbered params.
+              if lang:
+                t.add("lang", lang)
+              t.add("1", param1)
+              t.add("2", param2)
+              if tr:
+                t.add("tr", tr)
+              for paramno, param in enumerate(infls):
+                t.add(str(paramno+3), param)
+              for name, value in non_numbered_params:
+                t.add(name, value)
+              newt = unicode(t)
+              if origt != newt:
+                pagemsg("Replaced %s with %s" % (origt, newt))
+                notes.append("update form codes (pfv/impfv)")
+                subsections[j] = unicode(parsed)
+                sections[i] = ''.join(subsections)
 
             # Make sure there's exactly one headword template.
             if len(infl_headword_templates) > 1:
@@ -674,8 +739,17 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
             if defn_templates and infl_headword_templates:
               pagemsg("Exists and has Russian section and found %s already in it"
                   % (infltype))
+              # Maybe fix up auxiliary parameters (e.g. gender) in the headword
+              # template.
               check_fix_infl_params(infl_headword_templates[0], [], gender,
                   True)
+              # Maybe override the current form code parameters in the
+              # definition template(s) with the supplied ones (i.e. those
+              # derived from the declension/conjugation template on the
+              # lemma page).
+              for t, needs_update in defn_templates:
+                if needs_update:
+                  check_fix_defn_params(t, deftemp_param)
               # "Do nothing", but set a comment, in case we made a template
               # change like changing gender.
               comment = "Update params of existing entry: %s %s, %s %s" % (
@@ -874,7 +948,7 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
         notes.append("formerly empty")
         if pagehead.lower().startswith("#redirect"):
           pagemsg("WARNING: Page is redirect, overwriting")
-          notes.append("overwriting redirect")
+          notes.append("overwrite redirect")
           pagehead = re.sub(r"#redirect *\[\[(.*?)\]\] *(<!--.*?--> *)*\n*",
               r"{{also|\1}}\n", pagehead, 0, re.I)
         sections += [newsection]
@@ -1183,10 +1257,11 @@ def group_translits(formvals, pagemsg, expand_text):
 # This is used to issue warnings in case of non-lemma forms where there's
 # a corresponding lemma (NOTE, this situation could be legitimate for nouns).
 #
-# GET_GENDER is a function of three arguments (a template, the form code
-# and the arguments resulting from calling CREATE_FORM_GENERATOR and parsing
-# the result into a dictionary). It should return a list of gender codes to
-# to be inserted into the headword template.
+# GET_GENDER, if supplied, should be a function of three arguments (a template,
+# the form code and the arguments resulting from calling CREATE_FORM_GENERATOR
+# and parsing the result into a dictionary). It should return a list of gender
+# codes to be inserted into the headword template. (NOTE: This is special-cased
+# for verbs.)
 #
 # SKIP_INFLECTIONS, if supplied, should be a function of three arguments, the
 # form name, Russian and translit (which may be missing), and should return
@@ -1195,7 +1270,7 @@ def group_translits(formvals, pagemsg, expand_text):
 def create_forms(lemmas_to_process, save, startFrom, upTo, formspec,
     form_inflection_dict, form_aliases, pos, infltemp, dicform_codes,
     expected_header, expected_poses, skip_poses, is_inflection_template,
-    create_form_generator, is_lemma_template, get_gender,
+    create_form_generator, is_lemma_template, get_gender=None,
     skip_inflections=None):
 
   forms_desired = parse_form_spec(formspec, form_inflection_dict,
@@ -1311,8 +1386,15 @@ def create_forms(lemmas_to_process, save, startFrom, upTo, formspec,
 
                 if type(inflsets) is not list:
                   inflsets = [inflsets]
-                gender = get_gender(t, formname, args)
+                gender = get_gender(t, formname, args) if get_gender else []
                 for inflset in inflsets:
+                  if pos == "verb":
+                    assert gender == ["pf"] or gender == ["impf"]
+                    if gender == ["pf"]:
+                      inflset = inflset + ("pfv",)
+                    else:
+                      inflset = inflset + ("impfv",)
+                    gender = []
                   create_inflection_entry(save, index, inflections,
                     dicformru, dicformtr, pos.capitalize(),
                     "%s form %s" % (pos, formname), "dictionary form",
@@ -1340,7 +1422,8 @@ def create_verb_forms(save, startFrom, upTo, formspec, lemmas_to_process):
       lambda t:unicode(t.name).startswith("ru-conj") and unicode(t.name) != "ru-conj-verb-see",
       create_verb_generator,
       lambda t:unicode(t.name) == "ru-verb",
-      get_verb_gender, skip_inflections=skip_future_periphrastic)
+      get_gender=get_verb_gender,
+      skip_inflections=skip_future_periphrastic)
 
 def get_adj_gender(t, formname, args):
   if "short" in formname:
@@ -1361,7 +1444,8 @@ def create_adj_forms(save, startFrom, upTo, formspec, lemmas_to_process):
       lambda t:unicode(t.name) == "ru-decl-adj",
       lambda t:re.sub(r"^\{\{ru-decl-adj", "{{ru-generate-adj-forms", unicode(t)),
       lambda t:unicode(t.name) == "ru-adj",
-      get_adj_gender)
+      #get_gender=get_adj_gender
+      )
 
 def get_noun_gender(t, formname, args):
   return [re.sub("-p$", "", x) for x in re.split(",", args["g"])]
@@ -1374,7 +1458,7 @@ def create_noun_forms(save, startFrom, upTo, formspec, lemmas_to_process):
       lambda t:unicode(t.name) == "ru-noun-table",
       lambda t:re.sub(r"^\{\{ru-noun-table", "{{ru-generate-noun-args", unicode(t)),
       lambda t:unicode(t.name) in ["ru-noun", "ru-proper noun", "ru-noun+", "ru-proper noun+"],
-      get_noun_gender)
+      get_gender=get_noun_gender)
 
 pa = blib.create_argparser("Create Russian inflection entries")
 pa.add_argument("--adj-form",
