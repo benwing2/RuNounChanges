@@ -87,6 +87,8 @@
 # 20. (DONE) Remove blank params from existing form codes when comparing.
 # 21. (DONE) Add support for genders.
 # 22. (DONE) Compute and output total time.
+# 23. (DONE) Add ability to specify lemmas to process (for short adjs, lemmas
+#     will be missing accents and will have е in place of ё).
 
 import pywikibot, re, sys, codecs, argparse, time
 import traceback
@@ -1135,6 +1137,11 @@ def group_translits(formvals, pagemsg, expand_text):
   return formvals
 
 # Create required forms for all nouns/verbs/adjectives.
+#
+# LEMMAS_TO_PROCESS is a list of lemma pages to process. Entries are assumed
+# to be without accents and have е in place of ё. If empty, process all lemmas
+# of the appropriate part of speech.
+#
 # SAVE is as in create_inflection_entry(). STARTFROM and UPTO, if not None,
 # delimit the range of pages to process (inclusive on both ends).
 #
@@ -1178,17 +1185,46 @@ def group_translits(formvals, pagemsg, expand_text):
 # form name, Russian and translit (which may be missing), and should return
 # true if the particular form value in question is to be skipped. This is
 # used e.g. to skip periphrastic future forms.
-def create_forms(save, startFrom, upTo, formspec,
+def create_forms(lemmas_to_process, save, startFrom, upTo, formspec,
     form_inflection_dict, form_aliases, pos, infltemp, dicform_codes,
     expected_header, expected_poses, skip_poses, is_inflection_template,
     create_form_generator, is_lemma_template, get_gender,
     skip_inflections=None):
+
   forms_desired = parse_form_spec(formspec, form_inflection_dict,
       form_aliases)
   if type(dicform_codes) is not list:
     dicform_codes = [dicform_codes]
-  for index, page in blib.cat_articles("Russian %ss" % pos, startFrom, upTo):
+
+  pages_to_process = blib.cat_articles("Russian %ss" % pos, startFrom, upTo)
+
+  # If lemmas_to_process, we want to process the lemmas in the order they're
+  # in this list, but the lemmas in the list have е in place of ё, so we need
+  # to do some work to get the corresponding pages with ё in them.
+  if lemmas_to_process:
+    lemmas_to_process_set = set(lemmas_to_process)
+    unaccented_lemmas = {}
+    for index, page in pages_to_process:
+      pagetitle = unicode(page.title())
+      unaccented_title = ru.make_unstressed(pagetitle)
+      if unaccented_title in lemmas_to_process_set:
+        if unaccented_title in unaccented_lemmas:
+          unaccented_lemmas[unaccented_title].append(pagetitle)
+        else:
+          unaccented_lemmas[unaccented_title] = [pagetitle]
+    pagetitles_to_process = []
+    for lemma in lemmas_to_process:
+      if lemma in unaccented_lemmas:
+        pagetitles_to_process.extend(unaccented_lemmas[lemma])
+      else:
+        msg("WARNING: Can't find pages to match lemma %s" % lemma)
+    pages_to_process = ((index, pywikibot.Page(site, page)) for index, page in
+        blib.iter_items(pagetitles_to_process, startFrom, upTo))
+
+  for index, page in pages_to_process:
     pagetitle = unicode(page.title())
+    #if lemmas_to_process and ru.make_unstressed(pagetitle) not in lemmas_to_process:
+    #  continue
     def pagemsg(txt):
       msg("Page %s %s: %s" % (index, pagetitle, txt))
     def expand_text(tempcall):
@@ -1289,8 +1325,8 @@ def get_verb_gender(t, formname, args):
   assert gender in ["pf", "impf"]
   return [gender]
 
-def create_verb_forms(save, startFrom, upTo, formspec):
-  create_forms(save, startFrom, upTo, formspec,
+def create_verb_forms(save, startFrom, upTo, formspec, lemmas_to_process):
+  create_forms(lemmas_to_process, save, startFrom, upTo, formspec,
       verb_form_inflection_dict, verb_form_aliases,
       "verb", "head|ru|verb form", "infinitive",
       "Conjugation", ["Verb", "Idiom"], [],
@@ -1307,8 +1343,8 @@ def get_adj_gender(t, formname, args):
     assert m
     return [m.group(1)]
 
-def create_adj_forms(save, startFrom, upTo, formspec):
-  create_forms(save, startFrom, upTo, formspec,
+def create_adj_forms(save, startFrom, upTo, formspec, lemmas_to_process):
+  create_forms(lemmas_to_process, save, startFrom, upTo, formspec,
       adj_form_inflection_dict, adj_form_aliases,
       "adjective", "head|ru|adjective form", "nom_m",
       # Proper noun can occur because names are formatted using {{ru-decl-adj}}
@@ -1320,8 +1356,8 @@ def create_adj_forms(save, startFrom, upTo, formspec):
       lambda t:unicode(t.name) == "ru-adj",
       get_adj_gender)
 
-def create_noun_forms(save, startFrom, upTo, formspec):
-  create_forms(save, startFrom, upTo, formspec,
+def create_noun_forms(save, startFrom, upTo, formspec, lemmas_to_process):
+  create_forms(lemmas_to_process, save, startFrom, upTo, formspec,
       noun_form_inflection_dict, noun_form_aliases,
       "noun", "ru-noun form", ["nom_sg", "nom_pl"],
       "Declension", ["Noun", "Proper noun"], [],
@@ -1369,15 +1405,21 @@ forms), 'futr' (all future forms), 'impr' (all imperative forms), 'past'
 (all past forms). The infinitive form will not be created even if specified,
 because it is the same as the dictionary/lemma form. Also, non-existent forms
 for particular verbs will not be created.""")
+pa.add_argument("--lemmafile",
+    help=u"""List of lemmas to process. Assumed to be without accents and have е in place of ё.""")
 
 params = pa.parse_args()
 startFrom, upTo = blib.get_args(params.start, params.end)
 
+if params.lemmafile:
+  lemmas_to_process = [x.strip() for x in codecs.open(params.lemmafile, "r", "utf-8")]
+else:
+  lemmas_to_process = []
 if params.adj_form:
-  create_adj_forms(params.save, startFrom, upTo, params.adj_form)
+  create_adj_forms(params.save, startFrom, upTo, params.adj_form, lemmas_to_process)
 if params.noun_form:
-  create_noun_forms(params.save, startFrom, upTo, params.noun_form)
+  create_noun_forms(params.save, startFrom, upTo, params.noun_form, lemmas_to_process)
 if params.verb_form:
-  create_verb_forms(params.save, startFrom, upTo, params.verb_form)
+  create_verb_forms(params.save, startFrom, upTo, params.verb_form, lemmas_to_process)
 
 blib.elapsed_time()
