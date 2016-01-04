@@ -104,6 +104,8 @@
 # 26. (DONE) Anatoli wants adjective forms to not show gender in the headword,
 #     and verb forms to have "gender" (actually aspect) shown in the definition
 #     line instead of the headword.
+# 27. (DONE) Remove gender from verb headwords.
+# 28. (DONE) Don't include head=/1= if same as pagename.
 
 import pywikibot, re, sys, codecs, argparse, time
 import traceback
@@ -352,16 +354,21 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
     # when creating verb parts or participles.
 
     # 1. Get the head=/1= and head2=,head3= etc. headword params.
-    headparam = []
+    headparams = []
     headno = 0
-    for infl, infltr in inflections:
-      headno += 1
-      if headno == 1:
-        headparam.append("%s%s%s" % ("head=" if infltemp_is_head else "", infl,
-          "|tr=%s" % infltr if infltr else ""))
-      else:
-        headparam.append("head%s=%s%s" % (headno, infl,
-          "|tr=%s" % infltr if infltr else ""))
+    if len(inflections) == 1 and inflections[0][0] == pagename and not inflections[0][1]:
+      # Don't add head=/1= params if there's only one inflection that's the
+      # same as the pagename and there's no translit.
+      pass
+    else:
+      for infl, infltr in inflections:
+        headno += 1
+        if headno == 1:
+          headparams.append("|%s%s%s" % ("head=" if infltemp_is_head else "",
+            infl, "|tr=%s" % infltr if infltr else ""))
+        else:
+          headparams.append("|head%s=%s%s" % (headno, infl,
+            "|tr=%s" % infltr if infltr else ""))
 
     # 2. Get the g=/2= and g2=,g3= etc. headword params.
     genderparams = []
@@ -374,7 +381,7 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
         genderparams.append("|g%s=%s" % (genderno, g))
 
     # 3. Synthesize headword template.
-    new_headword_template = "{{%s|%s%s%s}}" % (infltemp, "|".join(headparam),
+    new_headword_template = "{{%s%s%s%s}}" % (infltemp, "".join(headparams),
         "".join(genderparams), infltemp_param)
 
     # 4. Synthesize definition template.
@@ -549,6 +556,19 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
                   t.add(next_param, val)
                   return next_param
 
+            def remove_param_chain(t, firstparam, parampref):
+              paramno = 0
+              changed = False
+              while True:
+                paramno += 1
+                next_param = firstparam if paramno == 1 else "%s%s" % (
+                    parampref, paramno)
+                if getparam(t, next_param):
+                  rmparam(t, next_param)
+                  changed = True
+                else:
+                  return changed
+
             # For nouns and adjectives, check the existing gender of the given
             # headword template and attempt to make sure it matches the given
             # gender or can be compatibly modified to the new gender. Return
@@ -663,6 +683,15 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
                   if not check_fix_noun_adj_gender(headword_template, gender,
                       warning_on_false):
                     return False
+              if is_verb_form:
+                # If verb form, remove any existing gender, since it
+                # instead goes into the definition line
+                if remove_param_chain(headword_template, first_gender_param,
+                    "g"):
+                  subsections[j] = unicode(parsed)
+                  sections[i] = ''.join(subsections)
+                  notes.append("remove gender")
+
               # REMAINING CODE IN FUNCTION NOT CURRENTLY USED
               # First check that we can update params before changing anything
               for param, value in params:
@@ -1317,8 +1346,11 @@ def create_forms(lemmas_to_process, save, startFrom, upTo, formspec,
     # participles for adjective forms. This is to avoid the issue with
     # преданный, which has one adjectival inflection as an adjective
     # and a different one as a participle.
-    for t in find_inflection_templates(page.text, expected_header,
-        expected_poses, skip_poses, is_inflection_template, pagemsg):
+    inflection_templates = find_inflection_templates(page.text, expected_header,
+        expected_poses, skip_poses, is_inflection_template, pagemsg)
+    if len(inflection_templates) > 1 and pos == "adjective":
+      pagemsg("WARNING: Multiple inflection templates for %s" % pagetitle)
+    for t in inflection_templates:
       result = expand_text(create_form_generator(t))
       if not result:
         pagemsg("WARNING: Error generating %s forms, skipping" % pos)
