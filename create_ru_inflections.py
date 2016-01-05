@@ -242,10 +242,13 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
 
   is_participle = "participle" in infltype
   is_adj_form = "adjective form" in infltype
+  is_noun_form = "noun form" in infltype
+  is_verb_form = "verb form" in infltype
   is_short_adj_form = "adjective form short" in infltype
   is_noun_or_adj = "noun" in infltype or "adjective" in infltype
   is_noun_adj_plural = is_noun_or_adj and ("_p" in infltype or "_mp" in infltype)
-  is_verb_form = "verb form" in infltype
+  generic_infltype = (re.sub(" form.*", " form", infltype) if " form" in infltype
+      else "participle" if is_participle else infltype)
 
   deftemp_uses_inflection_of = deftemp == "inflection of"
   infltemp_is_head = infltemp.startswith("head|")
@@ -822,6 +825,56 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
           # matching POS and appropriate headword template whose head matches
           # the the inflected form.
 
+          def insert_new_text_before_section(insert_at):
+            pagemsg("Found section to insert %s before: [[%s]]" % (
+                generic_infltype, subsections[insert_at + 1]))
+
+            comment = "Insert entry for %s %s of %s before section for same lemma" % (
+              infltype, joined_infls, lemma)
+            if insert_at > 0:
+              subsections[insert_at - 1] = ensure_two_trailing_nl(
+                  subsections[insert_at - 1])
+            if indentlevel == 3:
+              subsections[insert_at:insert_at] = [newpos + "\n"]
+            else:
+              assert(indentlevel == 4)
+              subsections[insert_at:insert_at] = [newposl4 + "\n"]
+            sections[i] = ''.join(subsections)
+            return comment
+
+          def insert_new_text_after_section(insert_at, secafter_desc):
+            pagemsg("Found section to insert %s after: [[%s]]" % (
+                generic_infltype, subsections[insert_at - 1]))
+
+            # Determine indent level and skip past sections at higher indent
+            m = re.match("^(==+)", subsections[insert_at - 2])
+            indentlevel = len(m.group(1))
+            while insert_at < len(subsections):
+              if (insert_at % 2) == 0:
+                insert_at += 1
+                continue
+              m = re.match("^(==+)", subsections[insert_at])
+              newindent = len(m.group(1))
+              if newindent <= indentlevel:
+                break
+              pagemsg("Skipped past higher-indented subsection: [[%s]]" %
+                  subsections[insert_at])
+              insert_at += 1
+
+            secmsg = "%s section for same lemma" % secafter_desc
+            pagemsg("Inserting after %s" % secmsg)
+            comment = "Insert entry for %s %s of %s after %s" % (
+              infltype, joined_infls, lemma, secmsg)
+            subsections[insert_at - 1] = ensure_two_trailing_nl(
+                subsections[insert_at - 1])
+            if indentlevel == 3:
+              subsections[insert_at:insert_at] = [newpos + "\n"]
+            else:
+              assert(indentlevel == 4)
+              subsections[insert_at:insert_at] = [newposl4 + "\n"]
+            sections[i] = ''.join(subsections)
+            return comment
+
           # If participle, try to find an existing noun or adjective with the
           # same lemma to insert before. Insert before the first such one.
           if is_participle:
@@ -836,20 +889,7 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
                       insert_at = j - 1
 
             if insert_at is not None:
-              pagemsg("Found section to insert participle before: [[%s]]" %
-                  subsections[insert_at + 1])
-
-              comment = "Insert entry for %s %s of %s before section for same lemma" % (
-                infltype, joined_infls, lemma)
-              if insert_at > 0:
-                subsections[insert_at - 1] = ensure_two_trailing_nl(
-                    subsections[insert_at - 1])
-              if indentlevel == 3:
-                subsections[insert_at:insert_at] = [newpos + "\n"]
-              else:
-                assert(indentlevel == 4)
-                subsections[insert_at:insert_at] = [newposl4 + "\n"]
-              sections[i] = ''.join(subsections)
+              comment = insert_new_text_before_section(insert_at)
               break
 
           # If adjective form, try to find an existing participle form with
@@ -882,41 +922,34 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
                         template_head_matches(t, inflections)):
                       insert_at = j + 1
             if insert_at:
-              pagemsg("Found section to insert adjective form after: [[%s]]" %
-                  subsections[insert_at - 1])
-
-              # Determine indent level and skip past sections at higher indent
-              m = re.match("^(==+)", subsections[insert_at - 2])
-              indentlevel = len(m.group(1))
-              while insert_at < len(subsections):
-                if (insert_at % 2) == 0:
-                  insert_at += 1
-                  continue
-                m = re.match("^(==+)", subsections[insert_at])
-                newindent = len(m.group(1))
-                if newindent <= indentlevel:
-                  break
-                pagemsg("Skipped past higher-indented subsection: [[%s]]" %
-                    subsections[insert_at])
-                insert_at += 1
-
-              if is_short_adj_form:
-                possible_shared_pos = "adverb/predicative/participle form"
-              else:
-                possible_shared_pos = "participle form"
-              pagemsg("Inserting after %s section for same lemma" %
-                  possible_shared_pos)
-              comment = "Insert entry for %s %s of %s after %s section for same lemma" % (
-                infltype, joined_infls, lemma, possible_shared_pos)
-              subsections[insert_at - 1] = ensure_two_trailing_nl(
-                  subsections[insert_at - 1])
-              if indentlevel == 3:
-                subsections[insert_at:insert_at] = [newpos + "\n"]
-              else:
-                assert(indentlevel == 4)
-                subsections[insert_at:insert_at] = [newposl4 + "\n"]
-              sections[i] = ''.join(subsections)
+              comment = insert_new_text_after_section(insert_at,
+                  "adverb/predicative/participle form" if is_short_adj_form
+                  else "participle form")
               break
+
+          # Now try to find an existing section corresponding to the same
+          # lemma. This happens e.g. with verb forms, such as смо́трите
+          # 2nd plural pres ind vs. смотри́те 2nd plural imperative, or
+          # with nouns of e.g. accent patterns c and d, in the gen sg vs.
+          # nom pl of masculine nouns.
+          #
+          # Insert after the last such section.
+
+          insert_at = None
+          for j in xrange(2, len(subsections), 2):
+            if re.match("^===+%s===+\n" % pos, subsections[j - 1]):
+              parsed = blib.parse_text(subsections[j])
+              defn_templates = [t for t in parsed.filter_templates()
+                  if unicode(t.name) == deftemp and
+                  compare_param(t, "1", lemma, lemmatr) and
+                  (not deftemp_needs_lang or
+                    compare_param(t, "lang", "ru", None))]
+              if defn_templates:
+                insert_at = j + 1
+
+          if insert_at:
+            comment = insert_new_text_after_section(insert_at, generic_infltype)
+            break
 
           pagemsg("Exists and has Russian section, appending to end of section")
           # [FIXME! Conceivably instead of inserting at end we should insert
