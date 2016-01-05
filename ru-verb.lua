@@ -30,7 +30,7 @@ local m_debug = require("Module:debug")
 
 -- If enabled, compare this module with new version of module to make
 -- sure all conjugations are the same.
-local test_new_ru_verb_module = false
+local test_new_ru_verb_module = true
 
 local export = {}
 
@@ -98,6 +98,32 @@ local make_reflexive
 local finish_generating_forms
 local make_table
 
+-- Examples of alternatives in use:
+	-- past_m2: со́здал/созд́ал, п́ередал/переда́л, ́отдал/отд́ал
+	-- past_m3:	for verbs with three past masculine sg forms: за́нялся, заня́лся, занялс́я (заня́ться)
+	-- past_n2: да́ло, дал́о; вз́яло, взяло́
+	-- past_pl2: разобрали́сь (разобрали́)
+	-- past_m_short: short forms in 3a (исчез, сох, etc.)
+	-- past_f_short: short forms in 3a (исчезла, сохла, etc.)
+	-- past_n_short: short forms in 3a (исчезло, сохло, etc.)
+	-- past_pl_short: short forms in 3a (исчезли, сохли, etc.)
+	-- past_adv_parts: 
+	--   тереть: тере́вши, тёрши, short: тере́в
+	--   умереть: умере́вши, у́мерши, short: умере́в
+	-- pres_adv_part: сыпля, сыпя
+	-- pres_2sg2: сыплешь, сыпешь
+	-- pres_3sg2: сыплет, сыпет
+	-- pres_1pl2: сыплем, сыпем
+	-- pres_2pl2: сыплете, сыпете
+	-- pres_3pl2: сыплют, сыпют
+	-- futr_2sg2: насыплешь, насыпешь
+	-- futr_3sg2: насыплет, насыпет
+	-- futr_1pl2: насыплем, насыпем
+	-- futr_2pl2: насыплете, насыпете
+	-- futr_3pl2: насыплют, насыпют
+
+-- List of all verb forms. Each element is a list, where the first element
+-- is the "main" form and the remainder are alternatives.
 local all_verb_forms = {
 	-- present tense
 	{"pres_1sg", "pres_1sg2"},
@@ -147,6 +173,57 @@ local all_verb_forms = {
 	{"infinitive"},
 }
 
+-- List of the "main" verb forms, i.e. those which aren't alternatives (which
+-- end with a "2" or "3"). If these are missing, they need to end up with a
+-- value of "", whereas the alternatives need to end up with a value of nil.
+local main_verb_forms = {}
+-- List of the "alternative" verb forms; see above.
+local alt_verb_forms = {}
+
+-- Compile main_verb_forms and alt_verb_forms.
+for _, proplist in ipairs(all_verb_forms) do
+	local i = 0
+	for _, prop in ipairs(proplist) do
+		i = i + 1
+		if i == 1 then
+			table.insert(main_verb_forms, prop)
+		else
+			table.insert(alt_verb_forms, prop)
+		end
+	end
+end
+
+-- Map listing the forms to be displayed, and the verb forms used to generate
+-- the displayed form, in order. For example, under past_m will be found
+-- {"past_m_short", "past_m", "past_m2", "past_m3"} because those forms in
+-- that order are displayed in the table under "masculine singular past".
+local disp_verb_form_map = {}
+for _, proplist in ipairs(all_verb_forms) do
+	local key = proplist[1]
+	-- if we find short forms, insert them at the beginning of the list for
+	-- the corresponding full forms. This requires that short forms are
+	-- listed in all_verb_forms after the corresponding full forms.
+	if rfind(key, "_short$") then
+		local full_key = rsub(key, "_short$", "")
+		-- short forms should occur in list after full forms
+		assert(#(disp_verb_form_map[full_key]) > 0)
+		-- build entry for full form, consisting first of the short forms,
+		-- in order, then the full forms, in order.
+		local new_entry = {}
+		for _, form in ipairs(proplist) do
+			table.insert(new_entry, form)
+		end
+		for _, form in ipairs(disp_verb_form_map[full_key]) do
+			table.insert(new_entry, form)
+		end
+		disp_verb_form_map[full_key] = new_entry
+	elseif rfind(key, "^pres_futr") then
+		-- skip these forms, not displayed
+	else
+		disp_verb_form_map[key] = mw.clone(proplist)
+	end
+end
+
 local all_verb_props = mw.clone(all_verb_forms)
 local non_form_props = {"title", "perf", "intr", "impers", "categories"}
 for _, prop in ipairs(non_form_props) do
@@ -178,29 +255,29 @@ function export.do_generate_forms(conj_type, args)
 		title = "class " .. class_num
 	end
 
-	-- This form is not always present on verbs, so it needs to be specified explicitly.
-	forms["past_pasv_part"] = args["past_pasv_part"] and nom.split_russian_tr(args["past_pasv_part"], "dopair") or ""
+	--handle main form overrides (formerly we only had past_pasv_part as a
+	--general override, plus scattered main-form overrides in particular
+	--conjugation classes)
+	for _, mainform in ipairs(main_verb_forms) do
+		forms[mainform] = args[mainform] and nom.split_russian_tr(args[mainform], "dopair") or forms[mainform] or ""
+	end
 
-	--alternative forms
-	local altforms = {"impr_sg2", "impr_pl2",
-		"pres_actv_part2", "past_actv_part2", "pres_pasv_part2", "past_pasv_part2",
-		"pres_adv_part2", "past_adv_part2", "past_adv_part_short2",
-		"past_m2", "past_m3", "past_f2", "past_n2", "past_pl2",
-		"pres_futr_1sg2", "pres_futr_2sg2", "pres_futr_3sg2",
-		"pres_futr_1pl2", "pres_futr_2pl2", "pres_futr_3pl2"}
-	for _, altform in ipairs(altforms) do
-		forms[altform] = forms[altform] or args[altform] and nom.split_russian_tr(args[altform], "dopair")
+	--handle alternative form overrides
+	for _, altform in ipairs(alt_verb_forms) do
+		forms[altform] = args[altform] and nom.split_russian_tr(args[altform], "dopair") or forms[altform]
 	end
 
 	--бдеть, победить have no 1st person sg present (impf) / future (pf)
-	if args["no_1sg_pres"] == "1" then
+	if args["no_1sg_pres"] == "1" or args["no_1sg_futr"] == "1" then
+		track("no-1sg-pres-fut")
 		forms["pres_futr_1sg"] = ""
 	end
 
-	if args["no_1sg_futr"] == "1" then
-		forms["pres_futr_1sg"] = ""
+	if verb_type ~= "pf" and verb_type ~= "pf-intr" and verb_type ~= "pf-refl" and verb_type ~= "pf-impers" and verb_type ~= "pf-impers-refl" and
+	   verb_type ~= "impf" and verb_type ~= "impf-intr" and verb_type ~= "impf-refl" and verb_type ~= "impf-impers" and verb_type ~= "impf-impers-refl" then
+	   	error("Invalid verb type " .. verb_type)
 	end
-
+	
 	local intr = (verb_type == "impf-intr" or verb_type == "pf-intr" or verb_type == "pf-impers" or verb_type == "impf-impers" or verb_type == "pf-impers-refl" or verb_type == "impf-impers-refl")
 	local refl = (verb_type == "impf-refl" or verb_type == "pf-refl" or verb_type == "pf-impers-refl" or verb_type == "impf-impers-refl")
 	local perf = (verb_type == "pf" or verb_type == "pf-intr" or verb_type == "pf-refl" or verb_type == "pf-impers" or verb_type == "pf-impers-refl")
@@ -663,7 +740,6 @@ conjugations["4b"] = function(args)
 	local shch = args[3]
 	-- some verbs don't have 1st person singular - победить, возродить, use "no_1sg_futr=1" in the template
 	local no_1sg_futr = "0"
-	local past_f = args["past_f"] and nom.split_russian_tr(args["past_f"], "dopair")
 
 	if not args["no_1sg_futr"] then
 		no_1sg_futr = 0
@@ -695,9 +771,6 @@ conjugations["4b"] = function(args)
 	set_imper(forms, stem, tr, "и́", "и́те")
 
 	set_past(forms, stem, tr, "и́л", "и́ла", "и́ло", "и́ли")
-	if past_f then
-		forms["past_f"] = past_f
-	end
 
 	return forms
 end
@@ -986,8 +1059,6 @@ conjugations["6b"] = function(args)
 	-- звать - зов, драть - дер
 	local pres_stem = args[3] or stem
 	local past_f = args[4]
-	local past_n2 = args["past_n2"]
-	local past_pl2 = args["past_pl2"]
 
 	forms["pres_pasv_part"] = ""
 
@@ -1038,10 +1109,8 @@ conjugations["6b"] = function(args)
 	if past_f then
 		forms["past_f"] = past_f
 	end
-	--разобрало́сь (разобрало́)
-	forms["past_n2"] = past_n2
-	--разобрали́сь (разобрали́)
-	forms["past_pl2"] = past_pl2
+	--for разобрало́сь, past_n2 разобрало́ now handled through general mechanism
+	--for разобрали́сь, past_pl2 разобрали́ now handled through general mechanism
 
 	return forms
 end
@@ -1122,30 +1191,14 @@ conjugations["7a"] = function(args)
 	local past_stem = getarg(args, 4)
 	local impr_sg = getarg(args, 5)
 	local past_adv_part = getarg(args, 6)
-	local past_m = args["past_m"]
-	local past_f = args["past_f"]
-	local past_n = args["past_n"]
-	local past_pl = args["past_pl"]
-	local pres_adv_part = args["pres_adv_part"]
-	local past_actv_part = args["past_actv_part"]
 
 	forms["infinitive"] = full_inf
 
 	forms["pres_actv_part"] = pres_stem .. "ущий"
-
-	-- вычесть - "" (non-existent)
-	if past_actv_part then
-		forms["past_actv_part"] = past_actv_part
-	else
-		forms["past_actv_part"] = past_stem .. "ший"
-	end
-
-	-- лезть - ле́зши (non-existent)
-	if pres_adv_part then
-		forms["pres_adv_part"] = pres_adv_part
-	else
-		forms["pres_adv_part"] =pres_stem .. "я"
-	end
+	-- вычесть - non-existent past_actv_part handled through general mechanism
+	forms["past_actv_part"] = past_stem .. "ший"
+	-- лезть - ле́зши - non-existent past_actv_part handled through general mechanism
+	forms["pres_adv_part"] = pres_stem .. "я"
 
 	forms["pres_pasv_part"] = ""
 	forms["past_adv_part"] = past_adv_part
@@ -1163,29 +1216,11 @@ conjugations["7a"] = function(args)
 		forms["past_m"] = past_stem
 	end
 
-	-- вычесть - вы́чел
-	if past_m then
-		forms["past_m"] = past_m
-	end
-	
-	if past_f then
-		forms["past_f"] = past_f
-	else
-		forms["past_f"] = past_stem .. "ла"
-	end
-	
-	if past_n then
-		forms["past_n"] = past_n
-	else
-		forms["past_n"] = past_stem .. "ло"
-	end
+	-- вычесть - past_m=вы́чел handled through general mechanism
+	forms["past_f"] = past_stem .. "ла"
+	forms["past_n"] = past_stem .. "ло"
+	forms["past_pl"] = past_stem .. "ли"
 
-	if past_pl then
-		forms["past_pl"] = past_pl
-	else
-		forms["past_pl"] = past_stem .. "ли"
-	end
-	
 	return forms
 end
 
@@ -1196,44 +1231,15 @@ conjugations["7b"] = function(args)
 	local pres_stem = getarg(args, 3)
 	local past_stem = getarg(args, 4)
 
-	local pres_pasv_part = args["pres_pasv_part"]
-	local past_actv_part = args["past_actv_part"]
-	local past_adv_part = args["past_adv_part"]
-	local past_adv_part_short = args["past_adv_part_short"]
-
-	local past_m = args["past_m"]
-	local past_n = args["past_n"]
-	local past_f = args["past_f"]
-	local past_pl = args["past_pl"]
-
 	forms["infinitive"] = full_inf
 
 	forms["pres_actv_part"] = pres_stem .. "у́щий"
 	forms["pres_adv_part"] = pres_stem .. "я́"
 
-	if past_actv_part then
-		forms["past_actv_part"] = past_actv_part
-	else
-		forms["past_actv_part"] = past_stem .. "ший"
-	end
-
-	if past_adv_part then
-		forms["past_adv_part"] = past_adv_part
-	else
-		forms["past_adv_part"] = past_stem .. "вши"
-	end
-
-	if past_adv_part_short then
-		forms["past_adv_part_short"] = past_adv_part_short
-	else
-		forms["past_adv_part_short"] = past_stem .. "в"
-	end
-
-	if pres_pasv_part then
-		forms["pres_pasv_part"] = pres_pasv_part
-	else
-		forms["pres_pasv_part"] = ""
-	end
+	forms["past_actv_part"] = past_stem .. "ший"
+	forms["past_adv_part"] = past_stem .. "вши"
+	forms["past_adv_part_short"] = past_stem .. "в"
+	forms["pres_pasv_part"] = ""
 
 	present_e_b(forms, pres_stem)
 
@@ -1247,25 +1253,9 @@ conjugations["7b"] = function(args)
 		forms["past_m"] = past_stem
 	end
 
-	if past_m then
-		forms["past_m"] = past_m
-	end
-
-	if past_f then
-		forms["past_f"] = past_f
-	else
-		forms["past_f"] = past_stem .. "ла"
-	end
-	if past_n then
-		forms["past_n"] = past_n
-	else
-		forms["past_n"] = past_stem .. "ло"
-	end
-	if past_pl then
-		forms["past_pl"] = past_pl
-	else
-		forms["past_pl"] = past_stem .. "ли"
-	end
+	forms["past_f"] = past_stem .. "ла"
+	forms["past_n"] = past_stem .. "ло"
+	forms["past_pl"] = past_stem .. "ли"
 
 	return forms
 end
@@ -1314,17 +1304,13 @@ conjugations["8b"] = function(args)
 	local stem = getarg(args, 2)
 	local full_inf = getarg(args, 3)
 	local past_m = getarg(args, "past_m")
-	local pres_pasv_part = args["pres_pasv_part"]
 	-- if full infinitive is not passed, build from the stem, otherwise use the optional parameter
 	forms["infinitive"] = full_inf
 
 	forms["pres_actv_part"] = stem .. "у́щий"
 	forms["past_actv_part"] = past_m .. "ший"
-	-- default is blank
+	-- default is blank; влечь -> влеко́мый handled through general override mechanism
 	forms["pres_pasv_part"] = ""
-	if pres_pasv_part then --влечь -> влеко́мый
-		forms["pres_pasv_part"] = pres_pasv_part
-	end
 	forms["pres_adv_part"] = ""
 
 	forms["past_adv_part"] = past_m .. "ши"
@@ -1393,8 +1379,6 @@ conjugations["9b"] = function(args)
 	
 	local stem = getarg(args, 2)
 	local pres_stem = getarg(args, 3)
-	local past_adv_part2 = args["past_adv_part2"]
-	local past_f = args["past_f"]
 	-- remove stress, replace ё with е
 	local stem_noa = com.make_unstressed(stem)
 
@@ -1428,12 +1412,6 @@ conjugations["9b"] = function(args)
 	forms["past_f"] = stem .. "ла"
 	forms["past_n"] = stem .. "ло"
 	forms["past_pl"] = stem .. "ли"
-	
-	if past_f then
-		forms["past_f"] = past_f
-	else
-		forms["past_f"] = stem .. "ла"
-	end
 
 	return forms
 end
@@ -1537,7 +1515,6 @@ conjugations["11b"] = function(args)
 
 	local stem = getarg(args, 2)
 	local pres_stem = getarg(args, 3)
-	local past_f = args["past_f"]
 
 	forms["infinitive"] = stem .. "и́ть"
 
@@ -1562,15 +1539,10 @@ conjugations["11b"] = function(args)
 	forms["impr_pl"] = stem .. "е́йте"
 
 	forms["past_m"] = stem .. "и́л"
+	-- пила́, лила́ handled through general override mechanism
 	forms["past_f"] = stem .. "и́ла"
 	forms["past_n"] = stem .. "и́ло"
 	forms["past_pl"] = stem .. "и́ли"
-	-- пила́, лила́
-	if past_f then
-		forms["past_f"] =past_f
-	else
-		forms["past_f"] = stem .. "и́ла"
-	end
 
 	return forms
 end
@@ -1616,8 +1588,6 @@ conjugations["12b"] = function(args)
 
 	local stem = getarg(args, 2)
 	local pres_stem = getarg(args, 3)
-	-- гнила́ needs a parameter, default - пе́ла
-	local past_f = args["past_f"]
 
 	forms["infinitive"] = stem .. "ть"
 
@@ -1642,14 +1612,9 @@ conjugations["12b"] = function(args)
 	forms["impr_sg"] = pres_stem .. "́й"
 	forms["impr_pl"] = pres_stem .. "́йте"
 
-	-- гнила́
-	if past_f then
-		forms["past_f"] = past_f
-	else
-		forms["past_f"] = stem .. "ла"
-	end
-
 	forms["past_m"] = stem .. "л"
+	-- гнила́ needs a parameter (handled through general override mechanism), default - пе́ла
+	forms["past_f"] = stem .. "ла"
 	forms["past_n"] = stem .. "ло"
 	forms["past_pl"] = stem .. "ли"
 
@@ -1732,13 +1697,6 @@ conjugations["14b"] = function(args)
 	local pres_stem = getarg(args, 3)
 	-- заня́ться has three forms: за́нялся, зан́ялся, занялся́
 	local past_m = args["past_m"]
-	local past_m2 = args["past_m2"]
-	local past_m3 = args["past_m3"]
-	local past_f = args["past_f"]
-	local past_n = args["past_n"]
-	local past_n2 = args["past_n2"]
-	local past_pl = args["past_pl"]
-	local past_pl2 = args["past_pl2"]
 
 	forms["infinitive"] = stem .. "ть"
 
@@ -1758,6 +1716,7 @@ conjugations["14b"] = function(args)
 
 	if past_m then
 		forms["past_m"] = past_m
+		forms["past_f"] = past_m .. "а"
 		forms["past_n"] = past_m .. "о"
 		forms["past_pl"] = past_m .. "и"
 	else
@@ -1765,35 +1724,6 @@ conjugations["14b"] = function(args)
 		forms["past_f"] = stem .. "ла"
 		forms["past_n"] = stem .. "ло"
 		forms["past_pl"] = stem .. "ли"
-	end
-
-	if past_f then
-		forms["past_f"] = past_f
-	end
-
-	-- override these if supplied
-	if past_n then
-		forms["past_n"] = past_n
-	end
-
-	if past_pl then
-		forms["past_pl"] = past_pl
-	end
-
-	if past_m2 then
-		forms["past_m2"] = past_m2
-	end
-
-	if past_m3 then
-		forms["past_m3"] = past_m3
-	end
-
-	if past_n2 then
-		forms["past_n2"] = past_n2
-	end
-
-	if past_pl2 then
-		forms["past_pl2"] = past_pl2
 	end
 
 	return forms
@@ -1806,12 +1736,6 @@ conjugations["14c"] = function(args)
 	local pres_stem = getarg(args, 3)
 	local pres_stem_noa = com.make_unstressed(pres_stem)
 	local past_m = args["past_m"]
-	local past_f = args["past_f"]
-	local past_n = args["past_n"]
-	local past_pl = args["past_pl"]
-	local past_m2 = args["past_m2"]
-	local past_n2 = args["past_n2"]
-	local past_pl2 = args["past_pl2"]
 
 	forms["infinitive"] = stem .. "ть"
 
@@ -1829,41 +1753,18 @@ conjugations["14c"] = function(args)
 	forms["impr_sg"] = pres_stem_noa .. "и́"
 	forms["impr_pl"] = pres_stem_noa .. "и́те"
 
+	--two forms for past_m: при́нялся, принялс́я (handled through general override mechanism)
+	--изъя́ла but приняла́ (handled through general override mechanism)
 	if past_m then
 		forms["past_m"] = past_m
+		forms["past_f"] = past_m .. "а"
 		forms["past_n"] = past_m .. "о"
 		forms["past_pl"] = past_m .. "и"
 	else
 		forms["past_m"] = stem .. "л"
+		forms["past_f"] = stem .. "ла"
 		forms["past_n"] = stem .. "ло"
 		forms["past_pl"] = stem .. "ли"
-	end
-
-	if past_n then
-		forms["past_n"] = past_n
-	end
-	--изъя́ла but приняла́
-	if past_f then
-		forms["past_f"] = past_f
-	else
-		forms["past_f"] = stem .. "ла"
-	end
-
-	--two forms: при́нялся, принялс́я
-	if past_m2 then
-		forms["past_m2"] = past_m2
-	end
-
-	if past_n2 then
-		forms["past_n2"] = past_n2
-	end
-
-	if past_pl then
-		forms["past_pl"] = past_pl
-	end
-
-	if past_pl2 then
-		forms["past_pl2"] = past_pl2
 	end
 
 	return forms
@@ -1929,9 +1830,6 @@ conjugations["16b"] = function(args)
 	local stem = getarg(args, 2)
 	local stem_noa = com.make_unstressed(stem)
 
-	local past_n2 = args["past_n2"]
-	local past_pl2 = args["past_pl2"]
-
 	forms["infinitive"] = stem .. "ть"
 
 	forms["pres_actv_part"] = stem_noa .. "ву́щий"
@@ -1951,26 +1849,7 @@ conjugations["16b"] = function(args)
 	forms["past_n"] = stem .. "ло"
 	forms["past_pl"] = stem .. "ли"
 
-	if past_m then
-		forms["past_m"] = past_m
-	end
-
-	if past_n then
-		forms["past_n"] = past_n
-	end
-
-	if past_pl then
-		forms["past_pl"] = past_pl
-	end
-
-	-- прижило́сь, прижи́лось
-	if past_n2 then
-		forms["past_n2"] = past_n2
-	end
-
-	if past_pl2 then
-		forms["past_pl2"] = past_pl2
-	end
+	-- past_n2 of прижило́сь, прижи́лось handled through general override mechanism
 
 	return forms
 end
@@ -2135,11 +2014,7 @@ conjugations["irreg-дать"] = function(args)
 	
 	local prefix = args[2] or ""
 	-- alternative past masculine forms: со́здал/созд́ал, п́ередал/переда́л, ́отдал/отд́ал, etc.
-	local past_m = args["past_m"]
-	local past_m2 = args["past_m2"]
-	local past_f = args["past_f"]
-	local past_n = args["past_n"]
-	local past_pl = args["past_pl"]
+	-- handled through general override mechanism.
 
 	forms["infinitive"] = prefix .. "да́ть"
 
@@ -2161,9 +2036,8 @@ conjugations["irreg-дать"] = function(args)
 	forms["pres_futr_2pl"] = prefix .. "дади́те"
 	forms["pres_futr_3pl"] = prefix .. "даду́т"
 
+	-- past_m2 of пе́редал, ́отдал, пр́одал, з́адал, etc. handled through general override mechanism
 	forms["past_m"] = prefix .. "да́л"
-	-- пе́редал, ́отдал, пр́одал, з́адал, etc.
-	forms["past_m2"] = past_m2
 	forms["past_f"] = prefix .. "дала́"
 	forms["past_n"] = prefix .. "да́ло"
 	forms["past_n2"] = prefix .. "дало́" --same with "взять"
@@ -2197,19 +2071,6 @@ conjugations["irreg-дать"] = function(args)
 		forms["past_f"] = prefix .. "дала"
 		forms["past_n"] = prefix .. "дало"
 		forms["past_pl"] = prefix .. "дали"
-	end
-
-	if past_m then
-		forms["past_m"] = past_m
-	end
-	if past_f then
-		forms["past_f"] = past_f
-	end
-	if past_n then
-		forms["past_n"] = past_n
-	end
-	if past_pl then
-		forms["past_pl"] = past_pl
 	end
 
 	return forms
@@ -2721,6 +2582,7 @@ conjugations["irreg-клясть"] = function(args)
 	local forms = {}
 
 	local prefix = args[2] or ""
+	local past_m = args["past_m"]
 
 	forms["infinitive"] = prefix .. "кля́сть"
 
@@ -2743,10 +2605,10 @@ conjugations["irreg-клясть"] = function(args)
 	forms["pres_futr_2pl"] = prefix .. "клянёте"
 	forms["pres_futr_3pl"] = prefix .. "кляну́т"
 
-	if args["past_m"] then
-		forms["past_m"] = args["past_m"]
-		forms["past_n"] = args["past_m"] .. "о"
-		forms["past_pl"] = args["past_m"] .. "и"
+	if past_m then
+		forms["past_m"] = past_m
+		forms["past_n"] = past_m .. "о"
+		forms["past_pl"] = past_m .. "и"
 	else
 		forms["past_m"] = prefix .. "кля́л"
 		forms["past_n"] = prefix .. "кля́ло"
@@ -2834,10 +2696,6 @@ conjugations["irreg-быть"] = function(args)
 	local forms = {}
 
 	local prefix = args[2] or ""
-	local past_m = args["past_m"]
-	local past_f = args["past_f"]
-	local past_n = args["past_n"]
-	local past_pl = args["past_pl"]
 
 	if prefix == ""
 		then forms["infinitive"] = "бы́ть"
@@ -2910,22 +2768,8 @@ conjugations["irreg-быть"] = function(args)
 		forms["past_pl"] = prefix .. "были"
 	end
 
-	-- при́был
-	if past_m then
-		forms["past_m"] = past_m
-	end
-	-- прибыла́
-	if past_f then
-		forms["past_f"] = past_f
-	end
-	-- сбыло́сь
-	if past_n then
-		forms["past_n"] = past_n
-	end
-	-- сбыли́сь
-	if past_pl then
-		forms["past_pl"] = past_pl
-	end
+	-- past_m=при́бып, past_f=рибыла́, past_n=сбыло́сь, past_pl=сбыли́сь
+	-- handled through general override mechanism.
 
 	return forms
 end
@@ -3188,11 +3032,6 @@ conjugations["irreg-обязывать"] = function(args)
 	local forms = {}
 
 	local prefix = args[2] or ""
-	local past_m = args["past_m"]
-	local past_m2 = args["past_m2"]
-	local past_f = args["past_f"]
-	local past_n = args["past_n"]
-	local past_pl = args["past_pl"]
 
 	forms["infinitive"] = prefix .. "обя́зывать"
 
@@ -3554,98 +3393,20 @@ make_table = function(forms, title, perf, intr, impers)
 		end
 	end
 
-	-- alternative forms
-	local alt_impr_sg = forms["impr_sg"]
-	if forms["impr_sg2"] then alt_impr_sg = forms["impr_sg"] .. ",<br/>" .. forms["impr_sg2"] end
-	local alt_impr_pl = forms["impr_pl"]
-	if forms["impr_pl2"] then alt_impr_pl = forms["impr_pl"] .. ",<br/>" .. forms["impr_pl2"] end
-	-- со́здал/созд́ал, п́ередал/переда́л, ́отдал/отд́ал
-	local alt_past_m = forms["past_m"]
-	if forms["past_m2"] then alt_past_m = forms["past_m"] .. ",<br/>" .. forms["past_m2"] end
-	--for verbs with three past masculine sg forms: за́нялся, заня́лся, занялс́я (заня́ться)
-	if forms["past_m3"] then alt_past_m = alt_past_m .. ",<br/>" .. forms["past_m3"] end
-	-- short forms in 3a (исчез, сох, etc.)
-	if forms["past_m_short"] then alt_past_m = forms["past_m_short"] .. ",<br/>" .. alt_past_m end
-	local alt_past_f = forms["past_f"]
-	if forms["past_f2"] then alt_past_f = forms["past_f"] .. ",<br/>" .. forms["past_f2"] end
-	-- short forms in 3a (исчезла, сохла, etc.)
-	if forms["past_f_short"] then alt_past_f = forms["past_f_short"] .. ",<br/>" .. alt_past_f end
-	-- да́ло, дал́о; вз́яло, взяло́
-	local alt_past_n = forms["past_n"]
-	if forms["past_n2"] then alt_past_n = forms["past_n"] .. ",<br/>" .. forms["past_n2"] end
-	-- short forms in 3a (исчезло, сохло, etc.)
-	if forms["past_n_short"] then alt_past_n = forms["past_n_short"] .. ",<br/>" .. alt_past_n end
-	-- разобрали́сь (разобрали́)
-	local alt_past_pl = forms["past_pl"]
-	if forms["past_pl2"] then alt_past_pl = forms["past_pl"] .. ",<br/>" .. forms["past_pl2"] end
-	-- short forms in 3a (исчезли, сохли, etc.)
-	if forms["past_pl_short"] then alt_past_pl = forms["past_pl_short"] .. ",<br/>" .. alt_past_pl end
-	--
-	-- тереть: тере́вши, тёрши, short: тере́в
-	-- умереть: умере́вши, у́мерши, short: умере́в
-	local past_adv_parts = {}
-	if forms["past_adv_part_short"] ~= "&mdash;" then
-		table.insert(past_adv_parts, forms["past_adv_part_short"])
+	local disp = {}
+	for dispform, sourceforms in pairs(disp_verb_form_map) do
+		local entry = {}
+		for _, form in ipairs(sourceforms) do
+			if forms[form] and forms[form] ~= "&mdash;" then
+				table.insert(entry, forms[form])
+			end
+		end
+		disp[dispform] = table.concat(entry, ",<br/>")
+		if disp[dispform] == "" then
+			disp[dispform] = "&mdash;"
+		end
 	end
-	if forms["past_adv_part_short2"] then
-		table.insert(past_adv_parts, forms["past_adv_part_short2"])
-	end
-	table.insert(past_adv_parts, forms["past_adv_part"])
-	if forms["past_adv_part2"] then
-		table.insert(past_adv_parts, forms["past_adv_part2"])
-	end
-	local alt_past_adv_part = table.concat(past_adv_parts, ",<br/>")
-	-- сыпля, сыпя
-	local alt_pres_adv_part = forms["pres_adv_part"]
-	if forms["pres_adv_part2"] and not perf then alt_pres_adv_part = forms["pres_adv_part"] .. ",<br/>" .. forms["pres_adv_part2"] end
-
-	local alt_pres_1sg = forms["pres_1sg"]
-	if forms["pres_1sg2"] and not perf then alt_pres_1sg = forms["pres_1sg"] .. ",<br/>" .. forms["pres_1sg2"] end
-	-- сыплешь, сыпешь
-	local alt_pres_2sg = forms["pres_2sg"]
-	if forms["pres_2sg2"] and not perf then alt_pres_2sg = forms["pres_2sg"] .. ",<br/>" .. forms["pres_2sg2"] end
-	-- сыплет, сыпет
-	local alt_pres_3sg = forms["pres_3sg"]
-	if forms["pres_3sg2"] and not perf then alt_pres_3sg = forms["pres_3sg"] .. ",<br/>" .. forms["pres_3sg2"] end
-	-- сыплем, сыпем
-	local alt_pres_1pl = forms["pres_1pl"]
-	if forms["pres_1pl2"] and not perf then alt_pres_1pl = forms["pres_1pl"] .. ",<br/>" .. forms["pres_1pl2"] end
-	-- сыплете, сыпете
-	local alt_pres_2pl = forms["pres_2pl"]
-	if forms["pres_2pl2"] and not perf then alt_pres_2pl = forms["pres_2pl"] .. ",<br/>" .. forms["pres_2pl2"] end
-	-- сыплют, сыпют
-	local alt_pres_3pl = forms["pres_3pl"]
-	if forms["pres_3pl2"] and not perf then alt_pres_3pl = forms["pres_3pl"] .. ",<br/>" .. forms["pres_3pl2"] end
-	local alt_futr_1sg = forms["futr_1sg"]
-	if forms["futr_1sg2"] then alt_futr_1sg = forms["futr_1sg"] .. ",<br/>" .. forms["futr_1sg2"] end
-	-- насыплешь, насыпешь
-	local alt_futr_2sg = forms["futr_2sg"]
-	if forms["futr_2sg2"] then alt_futr_2sg = forms["futr_2sg"] .. ",<br/>" .. forms["futr_2sg2"] end
-	-- насыплет, насыпет
-	local alt_futr_3sg = forms["futr_3sg"]
-	if forms["futr_3sg2"] then alt_futr_3sg = forms["futr_3sg"] .. ",<br/>" .. forms["futr_3sg2"] end
-	-- насыплем, насыпем
-	local alt_futr_1pl = forms["futr_1pl"]
-	if forms["futr_1pl2"] then alt_futr_1pl = forms["futr_1pl"] .. ",<br/>" .. forms["futr_1pl2"] end
-	-- насыплете, насыпете
-	local alt_futr_2pl = forms["futr_2pl"]
-	if forms["futr_2pl2"] then alt_futr_2pl = forms["futr_2pl"] .. ",<br/>" .. forms["futr_2pl2"] end
-	-- насыплют, насыпют
-	local alt_futr_3pl = forms["futr_3pl"]
-	if forms["futr_3pl2"] then alt_futr_3pl = forms["futr_3pl"] .. ",<br/>" .. forms["futr_3pl2"] end
-
-	local alt_pres_actv_part = forms["pres_actv_part"]
-	if forms["pres_actv_part2"] then alt_pres_actv_part = forms["pres_actv_part"] .. ",<br/>" .. forms["pres_actv_part2"] end
-
-	local alt_past_actv_part = forms["past_actv_part"]
-	if forms["past_actv_part2"] then alt_past_actv_part = forms["past_actv_part"] .. ",<br/>" .. forms["past_actv_part2"] end
-
-	local alt_pres_pasv_part = forms["pres_pasv_part"]
-	if forms["pres_pasv_part2"] then alt_pres_pasv_part = forms["pres_pasv_part"] .. ",<br/>" .. forms["pres_pasv_part2"] end
-
-	local alt_past_pasv_part = forms["past_pasv_part"]
-	if forms["past_pasv_part2"] then alt_past_pasv_part = forms["past_pasv_part"] .. ",<br/>" .. forms["past_pasv_part2"] end
-
+	
 	return [=[<div class="NavFrame" style="width:49.6em;">
 <div class="NavHead" style="text-align:left; background:#e0e0ff;">]=] .. title .. [=[</div>
 <div class="NavContent">
@@ -3656,7 +3417,7 @@ make_table = function(forms, title, perf, intr, impers)
 
 |-
 ! [[неопределённая форма|infinitive]]
-| colspan="2" | ]=] .. forms["infinitive"] .. [=[
+| colspan="2" | ]=] .. disp.infinitive .. [=[
 
 |- class="rowgroup"
 ! style="width:15em" | [[причастие|participles]]
@@ -3664,15 +3425,15 @@ make_table = function(forms, title, perf, intr, impers)
 ! [[прошедшее время|past tense]]
 |-
 ! [[действительный залог|active]]
-| ]=] .. alt_pres_actv_part .. [=[ || ]=] .. alt_past_actv_part .. [=[
+| ]=] .. disp.pres_actv_part .. [=[ || ]=] .. disp.past_actv_part .. [=[
 
 |-
 ! [[страдательный залог|passive]]
-| ]=] .. alt_pres_pasv_part .. [=[ || ]=] .. alt_past_pasv_part .. [=[
+| ]=] .. disp.pres_pasv_part .. [=[ || ]=] .. disp.past_pasv_part .. [=[
 
 |-
 ! [[деепричастие|adverbial]]
-| ]=] .. alt_pres_adv_part .. [=[ || ]=] .. alt_past_adv_part .. [=[
+| ]=] .. disp.pres_adv_part .. [=[ || ]=] .. disp.past_adv_part .. [=[
 
 |- class="rowgroup"
 !
@@ -3680,27 +3441,27 @@ make_table = function(forms, title, perf, intr, impers)
 ! [[будущее время|future tense]]
 |-
 ! [[первое лицо|1st]] [[единственное число|singular]] (<span lang="ru" class="Cyrl">я</span>)
-| ]=] .. alt_pres_1sg .. [=[ || ]=] .. alt_futr_1sg .. [=[
+| ]=] .. disp.pres_1sg .. [=[ || ]=] .. disp.futr_1sg .. [=[
 
 |-
 ! [[второе лицо|2nd]] [[единственное число|singular]] (<span lang="ru" class="Cyrl">ты</span>)
-| ]=] .. alt_pres_2sg .. [=[ || ]=] .. alt_futr_2sg .. [=[
+| ]=] .. disp.pres_2sg .. [=[ || ]=] .. disp.futr_2sg .. [=[
 
 |-
 ! [[третье лицо|3rd]] [[единственное число|singular]] (<span lang="ru" class="Cyrl">он/она́/оно́</span>)
-| ]=] .. alt_pres_3sg .. [=[ || ]=] .. alt_futr_3sg .. [=[
+| ]=] .. disp.pres_3sg .. [=[ || ]=] .. disp.futr_3sg .. [=[
 
 |-
 ! [[первое лицо|1st]] [[множественное число|plural]] (<span lang="ru" class="Cyrl">мы</span>)
-| ]=] .. alt_pres_1pl .. [=[ || ]=] .. alt_futr_1pl .. [=[
+| ]=] .. disp.pres_1pl .. [=[ || ]=] .. disp.futr_1pl .. [=[
 
 |-
 ! [[второе лицо|2nd]] [[множественное число|plural]] (<span lang="ru" class="Cyrl">вы</span>)
-| ]=] .. alt_pres_2pl .. [=[ || ]=] .. alt_futr_2pl .. [=[
+| ]=] .. disp.pres_2pl .. [=[ || ]=] .. disp.futr_2pl .. [=[
 
 |-
 ! [[третье лицо|3rd]] [[множественное число|plural]] (<span lang="ru" class="Cyrl">они́</span>)
-| ]=] .. alt_pres_3pl .. [=[ || ]=] .. alt_futr_3pl .. [=[
+| ]=] .. disp.pres_3pl .. [=[ || ]=] .. disp.futr_3pl .. [=[
 
 |- class="rowgroup"
 ! [[повелительное наклонение|imperative]]
@@ -3708,7 +3469,7 @@ make_table = function(forms, title, perf, intr, impers)
 ! [[множественное число|plural]]
 |-
 !
-| ]=] .. alt_impr_sg .. [=[ || ]=] .. alt_impr_pl .. [=[
+| ]=] .. disp.impr_sg .. [=[ || ]=] .. disp.impr_pl .. [=[
 
 |- class="rowgroup"
 ! [[прошедшее время|past tense]]
@@ -3716,15 +3477,15 @@ make_table = function(forms, title, perf, intr, impers)
 ! [[множественное число|plural]]<br/>(<span lang="ru" class="Cyrl">мы/вы/они́</span>)
 |-
 ! [[мужской род|masculine]] (<span lang="ru" class="Cyrl">я/ты/он</span>)
-| ]=] .. alt_past_m .. [=[ || rowspan="3" | ]=] .. alt_past_pl .. [=[
+| ]=] .. disp.past_m .. [=[ || rowspan="3" | ]=] .. disp.past_pl .. [=[
 
 |-
 ! [[женский род|feminine]] (<span lang="ru" class="Cyrl">я/ты/она́</span>)
-| ]=] .. alt_past_f .. [=[
+| ]=] .. disp.past_f .. [=[
 
 |-
 ! style="background-color:#ffffe0; text-align:left;" | [[средний род|neuter]] (<span lang="ru" class="Cyrl">оно́</span>)
-| ]=] .. alt_past_n .. [=[
+| ]=] .. disp.past_n .. [=[
 
 |}
 </div>
