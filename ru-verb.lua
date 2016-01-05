@@ -30,7 +30,7 @@ local m_debug = require("Module:debug")
 
 -- If enabled, compare this module with new version of module to make
 -- sure all conjugations are the same.
-local test_new_ru_verb_module = true
+local test_new_ru_verb_module = false
 
 local export = {}
 
@@ -132,13 +132,6 @@ local all_verb_forms = {
 	{"pres_1pl", "pres_1pl2"},
 	{"pres_2pl", "pres_2pl2"},
 	{"pres_3pl", "pres_3pl2"},
-	-- present-future tense
-	{"pres_futr_1sg", "pres_futr_1sg2"},
-	{"pres_futr_2sg", "pres_futr_2sg2"},
-	{"pres_futr_3sg", "pres_futr_3sg2"},
-	{"pres_futr_1pl", "pres_futr_1pl2"},
-	{"pres_futr_2pl", "pres_futr_2pl2"},
-	{"pres_futr_3pl", "pres_futr_3pl2"},
 	-- future tense
 	{"futr_1sg", "futr_1sg2"},
 	{"futr_2sg", "futr_2sg2"},
@@ -146,6 +139,17 @@ local all_verb_forms = {
 	{"futr_1pl", "futr_1pl2"},
 	{"futr_2pl", "futr_2pl2"},
 	{"futr_3pl", "futr_3pl2"},
+	-- present-future tense. The conjugation functions generate the
+	-- "present-future" tense instead of either the present or future tense,
+	-- since the same forms are used in the present imperfect and future
+	-- perfect. These forms are later copied into the present or future in
+	-- finish_generating_forms().
+	{"pres_futr_1sg", "pres_futr_1sg2"},
+	{"pres_futr_2sg", "pres_futr_2sg2"},
+	{"pres_futr_3sg", "pres_futr_3sg2"},
+	{"pres_futr_1pl", "pres_futr_1pl2"},
+	{"pres_futr_2pl", "pres_futr_2pl2"},
+	{"pres_futr_3pl", "pres_futr_3pl2"},
 	-- imperative
 	{"impr_sg", "impr_sg2"},
 	{"impr_pl", "impr_pl2"},
@@ -255,16 +259,37 @@ function export.do_generate_forms(conj_type, args)
 		title = "class " .. class_num
 	end
 
+	-- The conjugation functions generate present-future forms instead of
+	-- either the present or future tense. They are later copied to the
+	-- present or future tense in finish_generating_forms(). So to handle
+	-- overrides of the present or future tense, we need to generate
+	-- present-future forms as well.
+	local function canonicalize_pres_futr(formcode)
+		if rfind(formcode, "^pres_[123]") then
+			return rsub(formcode, "^pres_", "^pres_futr_")
+		elseif rfind(formcode, "^futr_[123]") then
+			return rsub(formcode, "^pres_", "^pres_futr_")
+		else
+			return formcode
+		end
+	end
+
 	--handle main form overrides (formerly we only had past_pasv_part as a
 	--general override, plus scattered main-form overrides in particular
 	--conjugation classes)
 	for _, mainform in ipairs(main_verb_forms) do
-		forms[mainform] = args[mainform] and nom.split_russian_tr(args[mainform], "dopair") or forms[mainform] or ""
+		if args[mainform] then
+			forms[canonicalize_pres_futr(mainform)] = nom.split_russian_tr(args[mainform], "dopair")
+		else
+			forms[mainform] = forms[mainform] or ""
+		end
 	end
 
 	--handle alternative form overrides
 	for _, altform in ipairs(alt_verb_forms) do
-		forms[altform] = args[altform] and nom.split_russian_tr(args[altform], "dopair") or forms[altform]
+		if args[altform] then
+			forms[canonicalize_pres_futr(altform)] = nom.split_russian_tr(args[altform], "dopair")
+		end
 	end
 
 	--бдеть, победить have no 1st person sg present (impf) / future (pf)
