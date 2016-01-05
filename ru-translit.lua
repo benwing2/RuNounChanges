@@ -17,7 +17,12 @@ local tab = {
 	['Ѣ']='Ě', ['ѣ']='ě', ['Ѵ']='I', ['ѵ']='i',
 }
 
+-- following based on ru-common for use with is_monosyllabic()
+-- any Cyrillic vowel, including ёЁ and composed Cyrillic vowels with grave accent
+local cyr_vowel = "аеиоуяэыюіѣѵАЕИОУЯЭЫЮІѢѴѐЀѝЍёЁ"
+
 -- FIXME! Doesn't work with ɣ, which gets included in this character set
+-- FIXME! Integrate this with cyr_vowel
 local non_consonants = "[АОУҮЫЭЯЁЮИЕЪЬІѢѴаоуүыэяёюиеъьіѣѵAEIOUYĚƐaeiouyěɛʹʺ%A]"
 
 local map_to_plain_e_map = {["Е"] = "E", ["е"] = "e", ["Ѣ"] = "Ě", ["ѣ"] = "ě", ["Э"] = "Ɛ", ["э"] = "ɛ"}
@@ -39,15 +44,45 @@ end
 -- avoid problems converting to e or je
 local decompose_grave_map = {['ѐ'] = 'е' .. GR, ['Ѐ'] = 'Е' .. GR, ['ѝ'] = 'и' .. GR, ['Ѝ'] = 'И' .. GR}
 
+-- True if Cyrillic word has no more than one vowel; includes non-syllabic
+-- stems such as льд-; copied from ru-common to avoid having to import that
+-- module (which would slow things down significantly)
+local function is_monosyllabic(word)
+	return not mw.ustring.find(word, "[" .. cyr_vowel .. "].*[" .. cyr_vowel .. "]")
+end
+
 -- Transliterates text, which should be a single word or phrase. It should
 -- include stress marks, which are then preserved in the transliteration.
-function export.tr(text, lang, sc)
+-- ё is a special case: it is rendered (j)ó in multisyllabic words and
+-- monosyllabic words in multi-word phrases, but rendered (j)o without an
+-- accent in isolated monosyllabic words, unless INCLUDE_MONOSYLLABIC_JO_ACCENT
+-- is specified. (This is used in conjugation and declension tables.)
+function export.tr(text, lang, sc, include_monosyllabic_jo_accent)
 	-- Remove word-final hard sign
 	text = mw.ustring.gsub(text, "[Ъъ]$", "")
 	text = mw.ustring.gsub(text, "[Ъъ]([- ])", "%1")
 
-	-- ё after a "hushing" consonant becomes ó (ё is mostly stressed)
-	text = mw.ustring.gsub(text, "([жшчщЖШЧЩ])ё","%1ó")
+	 -- the if-statement below isn't necessary but may speed things up,
+	 -- particularly when include_monosyllabic_jo_accent isn't set, in that
+	 -- in the majority of cases where ё doesn't occur, we avoid a pattern find
+	 -- (in is_monosyllabic()) and three pattern subs. The translit module needs
+	 -- to be as fast as possible since it may be called hundreds or
+	 -- thousands of times on some pages.
+	 if mw.ustring.find(text, "[Ёё]") then
+		-- We need to special-case ё after a "hushing" consonant, which becomes
+		-- ó (or o), without j. We also need special cases for monosyllabic ё
+		-- when INCLUDE_MONOSYLLABIC_JO_ACCENT isn't set, so we don't add the
+		-- accent mark that we would otherwise include.
+		if not include_monosyllabic_jo_accent and is_monosyllabic(text) then
+			text = mw.ustring.gsub(text, "([жшчщЖШЧЩ])ё","%1o")
+			text = text:gsub("ё", "jo")
+			text = text:gsub("Ё", "Jo")
+		else
+			text = mw.ustring.gsub(text, "([жшчщЖШЧЩ])ё","%1ó")
+			-- conversion of remaining ё will occur as a result of 'tab'.
+		end
+	end
+
 	-- ю after ж and ш becomes u (e.g. брошюра, жюри)
 	text = mw.ustring.gsub(text, "([жшЖШ])ю","%1u")
 
@@ -55,17 +90,22 @@ function export.tr(text, lang, sc)
 	-- Latin e or je
 	text = mw.ustring.gsub(text, "[ѐЀѝЍ]", decompose_grave_map)
 
-	-- е after a dash at the beginning of a word becomes e, and э becomes ɛ
-	-- (like after a consonant)
-	text = mw.ustring.gsub(text, "^(%-)([ЕеѢѣЭэ])", map_to_plain_e)
-	text = mw.ustring.gsub(text, "(%s%-)([ЕеѢѣЭэ])", map_to_plain_e)
+	 -- the if-statement below isn't necessary but may speed things up in that
+	 -- in the majority of cases where the letters below don't occur, we avoid
+	 -- six pattern subs.
+	 if mw.ustring.find(text, "[ЕеѢѣЭэ]") then
+		-- е after a dash at the beginning of a word becomes e, and э becomes ɛ
+		-- (like after a consonant)
+		text = mw.ustring.gsub(text, "^(%-)([ЕеѢѣЭэ])", map_to_plain_e)
+		text = mw.ustring.gsub(text, "(%s%-)([ЕеѢѣЭэ])", map_to_plain_e)
 
-	-- е after a vowel or at the beginning of a word becomes je, and э becomes e
-	text = mw.ustring.gsub(text, "^([ЕеѢѣЭэ])", map_to_je)
-	text = mw.ustring.gsub(text, "(" .. non_consonants .. ")([ЕеѢѣЭэ])", map_to_je)
-	-- need to do it twice in case of sequences of such vowels
-	text = mw.ustring.gsub(text, "^([ЕеѢѣЭэ])", map_to_je)
-	text = mw.ustring.gsub(text, "(" .. non_consonants .. ")([ЕеѢѣЭэ])", map_to_je)
+		-- е after a vowel or at the beginning of a word becomes je, and э becomes e
+		text = mw.ustring.gsub(text, "^([ЕеѢѣЭэ])", map_to_je)
+		text = mw.ustring.gsub(text, "(" .. non_consonants .. ")([ЕеѢѣЭэ])", map_to_je)
+		-- need to do it twice in case of sequences of such vowels
+		text = mw.ustring.gsub(text, "^([ЕеѢѣЭэ])", map_to_je)
+		text = mw.ustring.gsub(text, "(" .. non_consonants .. ")([ЕеѢѣЭэ])", map_to_je)
+	end
 
 	text = mw.ustring.gsub(text, "([МмЛл][яеё][́̀]?)г([кч])", "%1х%2")
 	return (mw.ustring.gsub(text,'.',tab))
