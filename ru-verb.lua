@@ -123,56 +123,62 @@ local make_table
 	-- futr_3pl2: насыплют, насыпют
 
 -- List of all verb forms. Each element is a list, where the first element
--- is the "main" form and the remainder are alternatives.
+-- is the "main" form and the remainder are alternatives. The following
+-- *MUST* hold:
+-- 1. Short forms (those ending in "_short") must be listed after the
+--    corresponding non-short forms.
+-- 2. For each person, e.g. '2sg', there must be the same number of
+--    futr_PERSON, pres_PERSON and pres_futr_PERSON forms, and the alternative
+--    forms must be listed in the same order.
 local all_verb_forms = {
 	-- present tense
-	{"pres_1sg", "pres_1sg2"},
-	{"pres_2sg", "pres_2sg2"},
-	{"pres_3sg", "pres_3sg2"},
-	{"pres_1pl", "pres_1pl2"},
-	{"pres_2pl", "pres_2pl2"},
-	{"pres_3pl", "pres_3pl2"},
+	{"pres_1sg", "pres_1sg2", "pres_1sg3", "pres_1sg4"},
+	{"pres_2sg", "pres_2sg2", "pres_2sg3", "pres_2sg4"},
+	{"pres_3sg", "pres_3sg2", "pres_3sg3", "pres_3sg4"},
+	{"pres_1pl", "pres_1pl2", "pres_1pl3", "pres_1pl4"},
+	{"pres_2pl", "pres_2pl2", "pres_2pl3", "pres_2pl4"},
+	{"pres_3pl", "pres_3pl2", "pres_3pl3", "pres_3pl4"},
 	-- future tense
-	{"futr_1sg", "futr_1sg2"},
-	{"futr_2sg", "futr_2sg2"},
-	{"futr_3sg", "futr_3sg2"},
-	{"futr_1pl", "futr_1pl2"},
-	{"futr_2pl", "futr_2pl2"},
-	{"futr_3pl", "futr_3pl2"},
+	{"futr_1sg", "futr_1sg2", "futr_1sg3", "futr_1sg4"},
+	{"futr_2sg", "futr_2sg2", "futr_2sg3", "futr_2sg4"},
+	{"futr_3sg", "futr_3sg2", "futr_3sg3", "futr_3sg4"},
+	{"futr_1pl", "futr_1pl2", "futr_1pl3", "futr_1pl4"},
+	{"futr_2pl", "futr_2pl2", "futr_2pl3", "futr_2pl4"},
+	{"futr_3pl", "futr_3pl2", "futr_3pl3", "futr_3pl4"},
 	-- present-future tense. The conjugation functions generate the
 	-- "present-future" tense instead of either the present or future tense,
 	-- since the same forms are used in the present imperfect and future
 	-- perfect. These forms are later copied into the present or future in
 	-- finish_generating_forms().
-	{"pres_futr_1sg", "pres_futr_1sg2"},
-	{"pres_futr_2sg", "pres_futr_2sg2"},
-	{"pres_futr_3sg", "pres_futr_3sg2"},
-	{"pres_futr_1pl", "pres_futr_1pl2"},
-	{"pres_futr_2pl", "pres_futr_2pl2"},
-	{"pres_futr_3pl", "pres_futr_3pl2"},
+	{"pres_futr_1sg", "pres_futr_1sg2", "pres_futr_1sg3", "pres_futr_1sg4"},
+	{"pres_futr_2sg", "pres_futr_2sg2", "pres_futr_2sg3", "pres_futr_2sg4"},
+	{"pres_futr_3sg", "pres_futr_3sg2", "pres_futr_3sg3", "pres_futr_3sg4"},
+	{"pres_futr_1pl", "pres_futr_1pl2", "pres_futr_1pl3", "pres_futr_1pl4"},
+	{"pres_futr_2pl", "pres_futr_2pl2", "pres_futr_2pl3", "pres_futr_2pl4"},
+	{"pres_futr_3pl", "pres_futr_3pl2", "pres_futr_3pl3", "pres_futr_3pl4"},
 	-- imperative
-	{"impr_sg", "impr_sg2"},
-	{"impr_pl", "impr_pl2"},
+	{"impr_sg", "impr_sg2", "impr_sg3", "impr_sg4"},
+	{"impr_pl", "impr_pl2", "impr_pl3", "impr_pl4"},
 	-- past
-	{"past_m", "past_m2", "past_m3"},
-	{"past_f", "past_f2"},
-	{"past_n", "past_n2"},
-	{"past_pl", "past_pl2"},
-	{"past_m_short"},
-	{"past_f_short"},
-	{"past_n_short"},
-	{"past_pl_short"},
+	{"past_m", "past_m2", "past_m3", "past_m4"},
+	{"past_f", "past_f2", "past_f3", "past_f4"},
+	{"past_n", "past_n2", "past_n3", "past_n4"},
+	{"past_pl", "past_pl2", "past_pl3", "past_pl4"},
+	{"past_m_short", "past_m_short2", "past_m_short3", "past_m_short4"},
+	{"past_f_short", "past_f_short2", "past_f_short3", "past_f_short4"},
+	{"past_n_short", "past_n_short2", "past_n_short3", "past_n_short4"},
+	{"past_pl_short", "past_pl_short2", "past_pl_short3", "past_pl_short4"},
 
 	-- active participles
-	{"pres_actv_part", "pres_actv_part2"},
-	{"past_actv_part", "past_actv_part2"},
+	{"pres_actv_part", "pres_actv_part2", "pres_actv_part3", "pres_actv_part4"},
+	{"past_actv_part", "past_actv_part2", "past_actv_part3", "past_actv_part4"},
 	-- passive participles
-	{"pres_pasv_part", "pres_pasv_part2"},
-	{"past_pasv_part", "past_pasv_part2"},
+	{"pres_pasv_part", "pres_pasv_part2", "pres_pasv_part3", "pres_pasv_part4"},
+	{"past_pasv_part", "past_pasv_part2", "past_pasv_part3", "past_pasv_part4"},
 	-- adverbial participles
-	{"pres_adv_part", "pres_adv_part2"},
-	{"past_adv_part", "past_adv_part2"},
-	{"past_adv_part_short", "past_adv_part_short2"},
+	{"pres_adv_part", "pres_adv_part2", "pres_adv_part3", "pres_adv_part4"},
+	{"past_adv_part", "past_adv_part2", "past_adv_part3", "past_adv_part4"},
+	{"past_adv_part_short", "past_adv_part_short2", "past_adv_part_short3", "past_adv_part_short4"},
 	-- infinitive
 	{"infinitive"},
 }
@@ -183,16 +189,22 @@ local all_verb_forms = {
 local main_verb_forms = {}
 -- List of the "alternative" verb forms; see above.
 local alt_verb_forms = {}
+-- Table mapping "main" to corresponding "alternative" forms.
+local main_to_alt_verb_forms = {}
 
--- Compile main_verb_forms and alt_verb_forms.
+-- Compile main_verb_forms, alt_verb_forms, main_to_alt_verb_forms.
 for _, proplist in ipairs(all_verb_forms) do
 	local i = 0
+	local mainform
 	for _, prop in ipairs(proplist) do
 		i = i + 1
 		if i == 1 then
 			table.insert(main_verb_forms, prop)
+			main_to_alt_verb_forms[prop] = {}
+			mainform = prop
 		else
 			table.insert(alt_verb_forms, prop)
+			table.insert(main_to_alt_verb_forms[mainform], prop)
 		end
 	end
 end
@@ -3225,7 +3237,7 @@ make_reflexive_alt = function(forms)
 			-- if a form doesn't contain a stress, add a stressed particle "ся́"
 			if not rfind(ru, "[́]") then
 				-- only applies to past masculine forms
-				if key == "past_m" or key == "past_m2" or key == "past_m3" then
+				if rfind(key, "^past_m") then
 					forms[key] = {ru .. "ся́", tr and tr .. "sja" .. AC}
 				end
 			end
@@ -3260,98 +3272,77 @@ end
 finish_generating_forms = function(forms, title, perf, intr, impers)
 	local inf, inf_tr = extract_russian_tr(forms["infinitive"], "notranslit")
 
+	-- Set the main form FORM to the empty string, and corresponding alt forms
+	-- to nil.
+	local function clear_form(form)
+		forms[form] = ""
+		for _, altform in ipairs(main_to_alt_verb_forms[form]) do
+			forms[altform] = nil
+		end
+	end
+
+	-- Copy the main form FROMFORM to the main form TOFORM, and copy all
+	-- associated alternative forms.
+	local function copy_form(fromform, toform)
+		forms[toform] = forms[fromform]
+		local altfromforms = main_to_alt_verb_forms[fromform]
+		local alttoforms = main_to_alt_verb_forms[toform]
+		local num_alt_forms = #altfromforms
+		assert(#alttoforms == num_alt_forms)
+		for i=1,num_alt_forms do
+			forms[alttoforms[i]] = forms[altfromforms[i]]
+		end
+	end
+
 	-- Intransitive verbs have no passive participles.
 	if intr then
-		forms["pres_pasv_part"] = ""
-		forms["pres_pasv_part2"] = nil
-		forms["past_pasv_part"] = ""
-		forms["past_pasv_part2"] = nil
+		clear_form("pres_pasv_part")
+		clear_form("past_pasv_part")
 	end
 
 	if impers then
-		forms["pres_futr_1sg"] = ""
-		forms["pres_futr_2sg"] = ""
-		forms["pres_futr_1pl"] = ""
-		forms["pres_futr_2pl"] = ""
-		forms["pres_futr_3pl"] = ""
-		forms["past_m"] = ""
-		forms["past_f"] = ""
-		forms["past_pl"] = ""
-		forms["pres_actv_part"] = ""
-		forms["past_actv_part"] = ""
-		forms["pres_adv_part"] = ""
-		forms["past_adv_part"] = ""
-		forms["past_adv_part_short"] = ""
-		forms["impr_sg"] = ""
-		forms["impr_pl"] = ""
-		--alternatives
-		forms["pres_futr_1sg2"] = nil
-		forms["pres_futr_2sg2"] = nil
-		forms["pres_futr_1pl2"] = nil
-		forms["pres_futr_2pl2"] = nil
-		forms["pres_futr_3pl2"] = nil
-		forms["past_m2"] = nil
-		forms["past_m3"] = nil
-		forms["past_f2"] = nil
-		forms["past_pl2"] = nil
-		forms["pres_actv_part2"] = nil
-		forms["past_actv_part2"] = nil
-		forms["pres_adv_part2"] = nil
-		forms["past_adv_part2"] = nil
-		forms["past_adv_part_short2"] = nil
-		forms["impr_sg2"] = nil
-		forms["impr_pl2"] = nil
+		clear_form("pres_futr_1sg")
+		clear_form("pres_futr_2sg")
+		clear_form("pres_futr_1pl")
+		clear_form("pres_futr_2pl")
+		clear_form("pres_futr_3pl")
+		clear_form("past_m")
+		clear_form("past_f")
+		clear_form("past_pl")
+		clear_form("pres_actv_part")
+		clear_form("past_actv_part")
+		clear_form("pres_adv_part")
+		clear_form("past_adv_part")
+		clear_form("past_adv_part_short")
+		clear_form("impr_sg")
+		clear_form("impr_pl")
 	end
 
 	-- Perfective verbs have no present forms.
 	if perf then
-		forms["pres_actv_part"] = ""
-		forms["pres_pasv_part"] = ""
-		forms["pres_adv_part"] = ""
-		forms["pres_1sg"] = ""
-		forms["pres_2sg"] = ""
-		forms["pres_3sg"] = ""
-		forms["pres_1pl"] = ""
-		forms["pres_2pl"] = ""
-		forms["pres_3pl"] = ""
-		--alternatives
-		forms["pres_actv_part2"] = nil
-		forms["pres_pasv_part2"] = nil
-		forms["pres_adv_part2"] = nil
-		forms["pres_1sg2"] = nil
-		forms["pres_2sg2"] = nil
-		forms["pres_3sg2"] = nil
-		forms["pres_1pl2"] = nil
-		forms["pres_2pl2"] = nil
-		forms["pres_3pl2"] = nil
+		clear_form("pres_actv_part")
+		clear_form("pres_pasv_part")
+		clear_form("pres_adv_part")
+		clear_form("pres_1sg")
+		clear_form("pres_2sg")
+		clear_form("pres_3sg")
+		clear_form("pres_1pl")
+		clear_form("pres_2pl")
+		clear_form("pres_3pl")
 
-		forms["futr_1sg"] = forms["pres_futr_1sg"]
-		forms["futr_2sg"] = forms["pres_futr_2sg"]
-		forms["futr_3sg"] = forms["pres_futr_3sg"]
-		forms["futr_1pl"] = forms["pres_futr_1pl"]
-		forms["futr_2pl"] = forms["pres_futr_2pl"]
-		forms["futr_3pl"] = forms["pres_futr_3pl"]
-		-- alternatives
-		forms["futr_1sg2"] = forms["pres_futr_1sg2"]
-		forms["futr_2sg2"] = forms["pres_futr_2sg2"]
-		forms["futr_3sg2"] = forms["pres_futr_3sg2"]
-		forms["futr_1pl2"] = forms["pres_futr_1pl2"]
-		forms["futr_2pl2"] = forms["pres_futr_2pl2"]
-		forms["futr_3pl2"] = forms["pres_futr_3pl2"]
+		copy_form("pres_futr_1sg", "futr_1sg")
+		copy_form("pres_futr_2sg", "futr_2sg")
+		copy_form("pres_futr_3sg", "futr_3sg")
+		copy_form("pres_futr_1pl", "futr_1pl")
+		copy_form("pres_futr_2pl", "futr_2pl")
+		copy_form("pres_futr_3pl", "futr_3pl")
 	else
-		forms["pres_1sg"] = forms["pres_futr_1sg"]
-		forms["pres_2sg"] = forms["pres_futr_2sg"]
-		forms["pres_3sg"] = forms["pres_futr_3sg"]
-		forms["pres_1pl"] = forms["pres_futr_1pl"]
-		forms["pres_2pl"] = forms["pres_futr_2pl"]
-		forms["pres_3pl"] = forms["pres_futr_3pl"]
-		-- alternatives
-		forms["pres_1sg2"] = forms["pres_futr_1sg2"]
-		forms["pres_2sg2"] = forms["pres_futr_2sg2"]
-		forms["pres_3sg2"] = forms["pres_futr_3sg2"]
-		forms["pres_1pl2"] = forms["pres_futr_1pl2"]
-		forms["pres_2pl2"] = forms["pres_futr_2pl2"]
-		forms["pres_3pl2"] = forms["pres_futr_3pl2"]
+		copy_form("pres_futr_1sg", "pres_1sg")
+		copy_form("pres_futr_2sg", "pres_2sg")
+		copy_form("pres_futr_3sg", "pres_3sg")
+		copy_form("pres_futr_1pl", "pres_1pl")
+		copy_form("pres_futr_2pl", "pres_2pl")
+		copy_form("pres_futr_3pl", "pres_3pl")
 	end
 	
 	local function insert_future(inf, inf_tr)
@@ -3373,17 +3364,11 @@ finish_generating_forms = function(forms, title, perf, intr, impers)
 	end
 
 	if impers then
-		forms["futr_1sg"] = ""
-		forms["futr_2sg"] = ""
-		forms["futr_1pl"] = ""
-		forms["futr_2pl"] = ""
-		forms["futr_3pl"] = ""
-		--alternatives
-		forms["futr_1sg2"] = nil
-		forms["futr_2sg2"] = nil
-		forms["futr_1pl2"] = nil
-		forms["futr_2pl2"] = nil
-		forms["futr_3pl2"] = nil
+		clear_form("futr_1sg")
+		clear_form("futr_2sg")
+		clear_form("futr_1pl")
+		clear_form("futr_2pl")
+		clear_form("futr_3pl")
 	end
 end
 
