@@ -278,9 +278,9 @@ function export.do_generate_forms(conj_type, args)
 	-- present-future forms as well.
 	local function canonicalize_pres_futr(formcode)
 		if rfind(formcode, "^pres_[123]") then
-			return rsub(formcode, "^pres_", "^pres_futr_")
+			return rsub(formcode, "^pres_", "pres_futr_")
 		elseif rfind(formcode, "^futr_[123]") then
-			return rsub(formcode, "^pres_", "^pres_futr_")
+			return rsub(formcode, "^futr_", "pres_futr_")
 		else
 			return formcode
 		end
