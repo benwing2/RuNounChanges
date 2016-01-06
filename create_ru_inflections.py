@@ -106,6 +106,14 @@
 #     line instead of the headword.
 # 27. (DONE) Remove gender from verb headwords.
 # 28. (DONE) Don't include head=/1= if same as pagename.
+# 29. (DONE) When checking heads against an existing headword template, make
+#     sure there aren't extra heads in the existing template, e.g. if the
+#     existing template says {{head|ru|noun|head=FOO|head2=BAR}} and the new
+#     template has only FOO, don't treat this as a match. Occurs for example in
+#     спалить, where the 2nd pl pres ind can be спали́ть or спа́лить, which are
+#     grouped together, but the 2nd pl imp can only be спали́ть.
+# 30. (DONE) Add --overwrite-lemmas to correct entries where the conjugation
+#     or declension table was originally incorrect and later fixed.
 
 import pywikibot, re, sys, codecs, argparse, time
 import traceback
@@ -122,43 +130,24 @@ verbose = True
 def ensure_two_trailing_nl(text):
   return re.sub(r"\n*$", r"\n\n", text)
 
-# Given an ru-noun+ or ru-proper noun+ template, fetch the lemma, which
-# is of the form of one or more terms separted by commas, where each
-# term is either a Cyrillic word or words, or a combination CYRILLIC/LATIN
-# with manual transliteration. May return None if an error occurred
-# in template expansion.
-def fetch_noun_lemma(t, expand_text):
-  if unicode(t.name) == "ru-noun+":
-    generate_template = re.sub(r"^\{\{ru-noun\+",
-        "{{ru-generate-noun-forms", unicode(t))
-  else:
-    generate_template = re.sub(r"^\{\{ru-proper noun\+",
-        "{{ru-generate-noun-forms|ndef=sg", unicode(t))
-  generate_result = expand_text(generate_template)
-  if not generate_result:
-    return None
-  args = ru.split_generate_args(generate_result)
-  return args["nom_sg"] if "nom_sg" in args else args["nom_pl"]
-
-# Return True if LEMMA (the output of fetch_noun_lemma()) matches the
+# Return True if LEMMA (in the form RUSSIAN or RUSSIAN/TRANSLIT) matches the
 # specified Cyrillic term RU, with possible manual transliteration TR
 # (may be empty). Issue a warning if Cyrillic matches but not translit.
 # FIXME: If either the lemma specifies manual translit or TR is given,
 # we should consider transliterating the other one in case of redundant
 # manual translit.
 def lemma_matches(lemma, ru, tr, pagemsg):
-  for lem in re.split(",", lemma):
-    if "//" in lem:
-      lemru, lemtr = re.split("//", lem, 1)
+  if "//" in lemma:
+    lemru, lemtr = re.split("//", lemma, 1)
+  else:
+    lemru, lemtr = lemma, ""
+  if ru == lemru:
+    trmatches = not tr and not lemtr or tr == lemtr
+    if not trmatches:
+      pagemsg("WARNING: Value %s matches lemma %s of ru-(proper )noun+, but translit %s doesn't match %s" % (
+        ru, lemru, tr, lemtr))
     else:
-      lemru, lemtr = lem, ""
-    if ru == lemru:
-      trmatches = not tr and not lemtr or tr == lemtr
-      if not trmatches:
-        pagemsg("WARNING: Value %s matches lemma %s of ru-(proper )noun+, but translit %s doesn't match %s" % (
-          ru, lemru, tr, lemtr))
-      else:
-        return True
+      return True
   return False
 
 # Create or insert a section describing a given inflection of a given lemma.
@@ -204,10 +193,15 @@ def lemma_matches(lemma, ru, tr, pagemsg):
 # and should indicate if it's a lemma template (e.g. 'ru-adj' for adjectives).
 # This is used to issue warnings in case of non-lemma forms where there's
 # a corresponding lemma (NOTE, this situation could be legitimate for nouns).
+#
+# LEMMAS_TO_OVERWRITE is a list of lemma pages the forms of which to overwrite
+# the inflection codes of when an existing definition template (e.g.
+# 'inflection of') is found with matching lemma. Entries are without accents
+# but with ё.
 def create_inflection_entry(save, index, inflections, lemma, lemmatr,
     pos, infltype, lemmatype, infltemp, infltemp_param, deftemp,
     deftemp_param, gender, deftemp_needs_lang=True, entrytext=None,
-    is_lemma_template=None):
+    is_lemma_template=None, lemmas_to_overwrite=[]):
 
   # Did we insert an entry or find an existing one? If not, we need to
   # add a new one. If we break out of the loop through subsections of the
@@ -306,43 +300,64 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
       return False
     return False
 
-  # True if any head in the template matches FORM with translit FORMTR.
-  # Knows how to deal with ru-noun+ and ru-proper noun+.
-  def template_head_matches_one_form(t, form, formtr):
-    if unicode(t.name) in ["ru-noun+", "ru-proper noun+"]:
-      lemma = fetch_noun_lemma(t, expand_text)
-      if lemma is None:
-        pagemsg("WARNING: Error generating noun forms")
-        return False
-      else:
-        return lemma_matches(lemma, form, formtr, pagemsg)
-    # Look at all heads
-    firstparam = "head" if unicode(t.name) == "head" else "1"
-    if compare_param(t, firstparam, form, formtr):
-      return True
-    i = 2
-    while True:
-      param = "head" + str(i)
-      if not getparam(t, param):
-        return False
-      if compare_param(t, param, form, formtr):
-        return True
-      i += 1
-
   # True if the heads in the template match all the inflections in INFLECTIONS,
-  # a list of (FORM, FORMTR) tuples. Warn if some but not all match.
-  # Knows how to deal with ru-noun+ and ru-proper noun+.
+  # a list of (FORM, FORMTR) tuples. Warn if some but not all match, and
+  # warn if all match but some heads are left over. Knows how to deal with
+  # ru-noun+ and ru-proper noun+.
   def template_head_matches(t, inflections):
     some_match = False
     all_match = True
-    for infl, infltr in inflections:
-      if template_head_matches_one_form(t, infl, infltr):
-        some_match = True
+    left_over_heads = False
+
+    if unicode(t.name) in ["ru-noun+", "ru-proper noun+"]:
+      lemmaarg = ru.fetch_noun_lemma(t, expand_text)
+      if lemmaarg is None:
+        pagemsg("WARNING: Error generating noun forms")
+        return False
       else:
-        all_match = False
+        lemmas = set(re.split(",", lemmaarg))
+        # Check to see whether all inflections match, and remove head params
+        # that have matched so we can check if any are left over
+        for infl, infltr in inflections:
+          for lem in lemmas:
+            if lemma_matches(lem, infl, infltr, pagemsg):
+              some_match = True
+              lemmas.remove(lem)
+              break
+          else:
+            all_match = False
+        left_over_heads = lemmas
+    else:
+      # Get list of head params
+      headparams = set()
+      headparams.add("head" if unicode(t.name) == "head" else "1")
+      i = 1
+      while True:
+        i += 1
+        param = "head" + str(i)
+        if not getparam(t, param):
+          break
+        headparams.add(param)
+
+      # Check to see whether all inflections match, and remove head params
+      # that have matched so we can check if any are left over
+      for infl, infltr in inflections:
+        for param in headparams:
+          if compare_param(t, param, infl, infltr):
+            some_match = True
+            headparams.remove(param)
+            break
+        else:
+          all_match = False
+      left_over_heads = headparams
+
     if some_match and not all_match:
       pagemsg("WARNING: Some but not all inflections %s match template: %s" %
           (joined_infls_with_tr, unicode(t)))
+    elif all_match and left_over_heads:
+      pagemsg("WARNING: All inflections %s match template, but extra heads in template, treating as a non-match: %s" %
+          (joined_infls_with_tr, unicode(t)))
+      return False
     return all_match
 
   # Prepare parts of new entry to insert
@@ -490,6 +505,8 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
               paramset = set(infl_params)
               if inflset == paramset:
                 return True
+              if ru.remove_accents(lemma) in lemmas_to_overwrite:
+                return "update"
               if paramset > inflset:
                 pagemsg("WARNING: Found actual inflection %s whose codes are a superset of intended codes %s, accepting" % (
                   unicode(t), "|".join(infls)))
@@ -1285,6 +1302,11 @@ def group_translits(formvals, pagemsg, expand_text):
 # to be without accents and have е in place of ё. If empty, process all lemmas
 # of the appropriate part of speech.
 #
+# LEMMAS_TO_OVERWRITE is a list of lemma pages the forms of which to overwrite
+# the inflection codes of when an existing definition template (e.g.
+# 'inflection of') is found with matching lemma. Entries are without accents
+# but with ё, unlike LEMMAS_TO_PROCESS.
+#
 # SAVE is as in create_inflection_entry(). STARTFROM and UPTO, if not None,
 # delimit the range of pages to process (inclusive on both ends).
 #
@@ -1329,8 +1351,8 @@ def group_translits(formvals, pagemsg, expand_text):
 # form name, Russian and translit (which may be missing), and should return
 # true if the particular form value in question is to be skipped. This is
 # used e.g. to skip periphrastic future forms.
-def create_forms(lemmas_to_process, save, startFrom, upTo, formspec,
-    form_inflection_dict, form_aliases, pos, infltemp, dicform_codes,
+def create_forms(lemmas_to_process, lemmas_to_overwrite, save, startFrom, upTo,
+    formspec, form_inflection_dict, form_aliases, pos, infltemp, dicform_codes,
     expected_header, expected_poses, skip_poses, is_inflection_template,
     create_form_generator, is_lemma_template, get_gender=None,
     skip_inflections=None):
@@ -1464,7 +1486,8 @@ def create_forms(lemmas_to_process, save, startFrom, upTo, formspec,
                     dicformru, dicformtr, pos.capitalize(),
                     "%s form %s" % (pos, formname), "dictionary form",
                     infltemp, "", "inflection of", inflset, gender,
-                    is_lemma_template=is_lemma_template)
+                    is_lemma_template=is_lemma_template,
+                    lemmas_to_overwrite=lemmas_to_overwrite)
 
 def create_verb_generator(t):
   verbtype = re.sub(r"^ru-conj-", "", unicode(t.name))
@@ -1479,9 +1502,10 @@ def get_verb_gender(t, formname, args):
   assert gender in ["pf", "impf"]
   return [gender]
 
-def create_verb_forms(save, startFrom, upTo, formspec, lemmas_to_process):
-  create_forms(lemmas_to_process, save, startFrom, upTo, formspec,
-      verb_form_inflection_dict, verb_form_aliases,
+def create_verb_forms(save, startFrom, upTo, formspec, lemmas_to_process,
+    lemmas_to_overwrite):
+  create_forms(lemmas_to_process, lemmas_to_overwrite, save, startFrom, upTo,
+      formspec, verb_form_inflection_dict, verb_form_aliases,
       "verb", "head|ru|verb form", "infinitive",
       "Conjugation", ["Verb", "Idiom"], [],
       lambda t:unicode(t.name).startswith("ru-conj") and unicode(t.name) != "ru-conj-verb-see",
@@ -1498,9 +1522,10 @@ def get_adj_gender(t, formname, args):
   else:
     return []
 
-def create_adj_forms(save, startFrom, upTo, formspec, lemmas_to_process):
-  create_forms(lemmas_to_process, save, startFrom, upTo, formspec,
-      adj_form_inflection_dict, adj_form_aliases,
+def create_adj_forms(save, startFrom, upTo, formspec, lemmas_to_process,
+    lemmas_to_overwrite):
+  create_forms(lemmas_to_process, lemmas_to_overwrite, save, startFrom, upTo,
+      formspec, adj_form_inflection_dict, adj_form_aliases,
       "adjective", "head|ru|adjective form", "nom_m",
       # Proper noun can occur because names are formatted using {{ru-decl-adj}}
       # with decl type 'proper'.
@@ -1515,9 +1540,10 @@ def create_adj_forms(save, startFrom, upTo, formspec, lemmas_to_process):
 def get_noun_gender(t, formname, args):
   return [re.sub("-p$", "", x) for x in re.split(",", args["g"])]
 
-def create_noun_forms(save, startFrom, upTo, formspec, lemmas_to_process):
-  create_forms(lemmas_to_process, save, startFrom, upTo, formspec,
-      noun_form_inflection_dict, noun_form_aliases,
+def create_noun_forms(save, startFrom, upTo, formspec, lemmas_to_process,
+      lemmas_to_overwrite):
+  create_forms(lemmas_to_process, lemmas_to_overwrite, save, startFrom, upTo,
+      formspec, noun_form_inflection_dict, noun_form_aliases,
       "noun", "ru-noun form", ["nom_sg", "nom_pl"],
       "Declension", ["Noun", "Proper noun"], [],
       lambda t:unicode(t.name) == "ru-noun-table",
@@ -1565,7 +1591,13 @@ forms), 'futr' (all future forms), 'impr' (all imperative forms), 'past'
 because it is the same as the dictionary/lemma form. Also, non-existent forms
 for particular verbs will not be created.""")
 pa.add_argument("--lemmafile",
-    help=u"""List of lemmas to process. Assumed to be without accents and have е in place of ё.""")
+    help=u"""List of lemmas to process. Assumed to be without accents and have
+е in place of ё.""")
+pa.add_argument("--overwrite-lemmas",
+    help=u"""List of lemmas where the current inflections are considered to
+have errors in them (e.g. due to the conjugation template having incorrect
+aspect) and thus should be overwritten. Entries are without accents but
+with ё, unlike --lemmafile.""")
 
 params = pa.parse_args()
 startFrom, upTo = blib.get_args(params.start, params.end)
@@ -1574,11 +1606,15 @@ if params.lemmafile:
   lemmas_to_process = [x.strip() for x in codecs.open(params.lemmafile, "r", "utf-8")]
 else:
   lemmas_to_process = []
+if params.overwrite_lemmas:
+  lemmas_to_overwrite = [x.strip() for x in codecs.open(params.overwrite_lemmas, "r", "utf-8")]
+else:
+  lemmas_to_overwrite = []
 if params.adj_form:
-  create_adj_forms(params.save, startFrom, upTo, params.adj_form, lemmas_to_process)
+  create_adj_forms(params.save, startFrom, upTo, params.adj_form, lemmas_to_process, lemmas_to_overwrite)
 if params.noun_form:
-  create_noun_forms(params.save, startFrom, upTo, params.noun_form, lemmas_to_process)
+  create_noun_forms(params.save, startFrom, upTo, params.noun_form, lemmas_to_process, lemmas_to_overwrite)
 if params.verb_form:
-  create_verb_forms(params.save, startFrom, upTo, params.verb_form, lemmas_to_process)
+  create_verb_forms(params.save, startFrom, upTo, params.verb_form, lemmas_to_process, lemmas_to_overwrite)
 
 blib.elapsed_time()
