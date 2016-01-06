@@ -164,3 +164,21 @@ def split_generate_args(tempresult):
     args[name] = re.sub("<!>", "|", value)
   return args
 
+# Given an ru-noun+ or ru-proper noun+ template, fetch the lemma, which
+# is of the form of one or more terms separted by commas, where each
+# term is either a Cyrillic word or words, or a combination CYRILLIC/LATIN
+# with manual transliteration. May return None if an error occurred
+# in template expansion.
+def fetch_noun_lemma(t, expand_text):
+  if unicode(t.name) == "ru-noun+":
+    generate_template = re.sub(r"^\{\{ru-noun\+",
+        "{{ru-generate-noun-forms", unicode(t))
+  else:
+    generate_template = re.sub(r"^\{\{ru-proper noun\+",
+        "{{ru-generate-noun-forms|ndef=sg", unicode(t))
+  generate_result = expand_text(generate_template)
+  if not generate_result:
+    return None
+  args = split_generate_args(generate_result)
+  return args["nom_sg"] if "nom_sg" in args else args["nom_pl"]
+
