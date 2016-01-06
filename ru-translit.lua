@@ -9,7 +9,18 @@ FIXME:
 ]=]
 
 local u = mw.ustring.char
+local rfind = mw.ustring.find
+local rsub = mw.ustring.gsub -- WARNING: Don't return this directly in a function, or surround in parens
+local rmatch = mw.ustring.match
+local rsplit = mw.text.split
+local ulower = mw.ustring.lower
+local usub = mw.ustring.sub
+
 local GR = u(0x0300) -- grave =  ̀
+
+local function ine(x) -- if not empty
+	if x == "" then return nil else return x end
+end
 
 local tab = {
 	["А"]="A", ["Б"]="B", ["В"]="V", ["Г"]="G", ["Д"]="D", ["Е"]="E", ["Ё"]="Jó", ["Ж"]="Ž", ["З"]="Z", ["И"]="I", ["Й"]="J",
@@ -56,7 +67,7 @@ local decompose_grave_map = {['ѐ'] = 'е' .. GR, ['Ѐ'] = 'Е' .. GR, ['ѝ'] = 
 -- stems such as льд-; copied from ru-common to avoid having to import that
 -- module (which would slow things down significantly)
 local function is_monosyllabic(word)
-	return not mw.ustring.find(word, "[" .. cyr_vowel .. "].*[" .. cyr_vowel .. "]")
+	return not rfind(word, "[" .. cyr_vowel .. "].*[" .. cyr_vowel .. "]")
 end
 
 -- Transliterates text, which should be a single word or phrase. It should
@@ -67,8 +78,8 @@ end
 -- is specified. (This is used in conjugation and declension tables.)
 function export.tr(text, lang, sc, include_monosyllabic_jo_accent)
 	-- Remove word-final hard sign
-	text = mw.ustring.gsub(text, "[Ъъ]$", "")
-	text = mw.ustring.gsub(text, "[Ъъ]([- ])", "%1")
+	text = rsub(text, "[Ъъ]$", "")
+	text = rsub(text, "[Ъъ]([- ])", "%1")
 
 	 -- the if-statement below isn't necessary but may speed things up,
 	 -- particularly when include_monosyllabic_jo_accent isn't set, in that
@@ -76,69 +87,97 @@ function export.tr(text, lang, sc, include_monosyllabic_jo_accent)
 	 -- (in is_monosyllabic()) and three pattern subs. The translit module needs
 	 -- to be as fast as possible since it may be called hundreds or
 	 -- thousands of times on some pages.
-	 if mw.ustring.find(text, "[Ёё]") then
+	 if rfind(text, "[Ёё]") then
 		-- We need to special-case ё after a "hushing" consonant, which becomes
 		-- ó (or o), without j. We also need special cases for monosyllabic ё
 		-- when INCLUDE_MONOSYLLABIC_JO_ACCENT isn't set, so we don't add the
 		-- accent mark that we would otherwise include.
 		if not include_monosyllabic_jo_accent and is_monosyllabic(text) then
-			text = mw.ustring.gsub(text, "([жшчщЖШЧЩ])ё","%1o")
+			text = rsub(text, "([жшчщЖШЧЩ])ё","%1o")
 			text = text:gsub("ё", "jo")
 			text = text:gsub("Ё", "Jo")
 		else
-			text = mw.ustring.gsub(text, "([жшчщЖШЧЩ])ё","%1ó")
+			text = rsub(text, "([жшчщЖШЧЩ])ё","%1ó")
 			-- conversion of remaining ё will occur as a result of 'tab'.
 		end
 	end
 
 	-- ю after ж and ш becomes u (e.g. брошюра, жюри)
-	text = mw.ustring.gsub(text, "([жшЖШ])ю","%1u")
+	text = rsub(text, "([жшЖШ])ю","%1u")
 
 	-- decompose composed grave characters before we convert Cyrillic е to
 	-- Latin e or je
-	text = mw.ustring.gsub(text, "[ѐЀѝЍ]", decompose_grave_map)
+	text = rsub(text, "[ѐЀѝЍ]", decompose_grave_map)
 
 	 -- the if-statement below isn't necessary but may speed things up in that
 	 -- in the majority of cases where the letters below don't occur, we avoid
 	 -- six pattern subs.
-	 if mw.ustring.find(text, "[ЕеѢѣЭэ]") then
+	 if rfind(text, "[ЕеѢѣЭэ]") then
 		-- е after a dash at the beginning of a word becomes e, and э becomes ɛ
 		-- (like after a consonant)
-		text = mw.ustring.gsub(text, "^(%-)([ЕеѢѣЭэ])", map_to_plain_e)
-		text = mw.ustring.gsub(text, "(%s%-)([ЕеѢѣЭэ])", map_to_plain_e)
+		text = rsub(text, "^(%-)([ЕеѢѣЭэ])", map_to_plain_e)
+		text = rsub(text, "(%s%-)([ЕеѢѣЭэ])", map_to_plain_e)
 
 		-- е after a vowel or at the beginning of a word becomes je, and э becomes e
-		text = mw.ustring.gsub(text, "^([ЕеѢѣЭэ])", map_to_je)
-		text = mw.ustring.gsub(text, "(" .. non_consonants .. ")([ЕеѢѣЭэ])", map_to_je)
+		text = rsub(text, "^([ЕеѢѣЭэ])", map_to_je)
+		text = rsub(text, "(" .. non_consonants .. ")([ЕеѢѣЭэ])", map_to_je)
 		-- need to do it twice in case of sequences of such vowels
-		text = mw.ustring.gsub(text, "^([ЕеѢѣЭэ])", map_to_je)
-		text = mw.ustring.gsub(text, "(" .. non_consonants .. ")([ЕеѢѣЭэ])", map_to_je)
+		text = rsub(text, "^([ЕеѢѣЭэ])", map_to_je)
+		text = rsub(text, "(" .. non_consonants .. ")([ЕеѢѣЭэ])", map_to_je)
 	end
 
-	text = mw.ustring.gsub(text, "([МмЛл][яеё][́̀]?)г([кч])", "%1х%2")
-	return (mw.ustring.gsub(text,'.',tab))
+	text = rsub(text, "([МмЛл][яеё][́̀]?)г([кч])", "%1х%2")
+	return (rsub(text,'.',tab))
 end
 
---for adjectives and pronouns
-function export.tr_adj(text, include_monosyllabic_jo_accent)
+-- translit with various special-case substitutions
+function export.tr_sub(text, include_monosyllabic_jo_accent, adj, shto, sub)
 	if type(text) == 'table' then -- called directly from a template
+		include_monosyllabic_jo_accent = ine(text.args.include_monosyllabic_jo_accent)
+		adj = ine(text.args.adj)
+		shto = ine(text.args.shto)
+		sub = ine(text.args.sub)
 		text = text.args[1]
+	end
+
+	if sub then
+		subs = rsplit(sub, ",")
+		for _, subpair in ipairs(subs) do
+			subsplit = rsplit(subpair, "/")
+			text = rsub(text, subsplit[1], subsplit[2])
+		end
 	end
 
 	local tr = export.tr(text, nil, nil, include_monosyllabic_jo_accent)
 
-	--handle genitive/accusative endings, which are spelled -ого/-его/-аго
-	-- (-ogo/-ego/-ago) but transliterated -ovo/-evo/-avo; only for adjectives
-	-- and pronouns, excluding words like много, ого (-аго occurs in
-	-- pre-reform spelling); \204\129 is an acute accent, \204\128 is a grave accent
-	local pattern = "([oeaóéáOEAÓÉÁ][\204\129\204\128]?)([gG])([oO][\204\129\204\128]?)"
-	local reflexive = "([sS][jJ][aáAÁ][\204\129\204\128]?)"
-	local v = {["g"] = "v", ["G"] = "V"}
-	local repl = function(e, g, o, sja) return e .. v[g] .. o .. (sja or "") end
-	tr = mw.ustring.gsub(tr, pattern .. "%f[^%a\204\129\204\128]", repl)
-	tr = mw.ustring.gsub(tr, pattern .. reflexive .. "%f[^%a\204\129\204\128]", repl)
+	if adj then
+		--handle genitive/accusative endings, which are spelled -ого/-его/-аго
+		-- (-ogo/-ego/-ago) but transliterated -ovo/-evo/-avo; only for adjectives
+		-- and pronouns, excluding words like много, ого (-аго occurs in
+		-- pre-reform spelling); \204\129 is an acute accent, \204\128 is a grave accent
+		local pattern = "([oeaóéáOEAÓÉÁ][\204\129\204\128]?)([gG])([oO][\204\129\204\128]?)"
+		local reflexive = "([sS][jJ][aáAÁ][\204\129\204\128]?)"
+		local v = {["g"] = "v", ["G"] = "V"}
+		local repl = function(e, g, o, sja) return e .. v[g] .. o .. (sja or "") end
+		tr = rsub(tr, pattern .. "%f[^%a\204\129\204\128]", repl)
+		tr = rsub(tr, pattern .. reflexive .. "%f[^%a\204\129\204\128]", repl)
+	end
+
+	if shto then
+		tr = rsub(tr, "%f[%a\204\129\204\128]čto([\204\129\204\128]?)%f[^%a\204\129\204\128]", "što%1")
+	end
 
 	return tr
+end
+
+--for adjectives, pronouns
+function export.tr_adj(text, include_monosyllabic_jo_accent)
+	if type(text) == 'table' then -- called directly from a template
+		include_monosyllabic_jo_accent = ine(text.args.include_monosyllabic_jo_accent)
+		text = text.args[1]
+	end
+
+	return export.tr_sub(text, include_monosyllabic_jo_accent, "adj")
 end
 
 return export
