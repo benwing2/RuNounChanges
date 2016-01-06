@@ -1,5 +1,13 @@
 local export = {}
 
+--[=[
+
+FIXME:
+
+1. If you write '''Б'''ез, it transliterates to '''B'''jez instead of '''B'''ez.
+
+]=]
+
 local u = mw.ustring.char
 local GR = u(0x0300) -- grave =  ̀
 
@@ -112,17 +120,17 @@ function export.tr(text, lang, sc, include_monosyllabic_jo_accent)
 end
 
 --for adjectives and pronouns
-function export.tr_adj(text)
+function export.tr_adj(text, include_monosyllabic_jo_accent)
 	if type(text) == 'table' then -- called directly from a template
 		text = text.args[1]
 	end
 
-	local tr = export.tr(text)
+	local tr = export.tr(text, nil, nil, include_monosyllabic_jo_accent)
 
 	--handle genitive/accusative endings, which are spelled -ого/-его/-аго
 	-- (-ogo/-ego/-ago) but transliterated -ovo/-evo/-avo; only for adjectives
 	-- and pronouns, excluding words like много, ого (-аго occurs in
-	-- pre-reform spelling)
+	-- pre-reform spelling); \204\129 is an acute accent, \204\128 is a grave accent
 	local pattern = "([oeaóéáOEAÓÉÁ][\204\129\204\128]?)([gG])([oO][\204\129\204\128]?)"
 	local reflexive = "([sS][jJ][aáAÁ][\204\129\204\128]?)"
 	local v = {["g"] = "v", ["G"] = "V"}
