@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import re
+from collections import OrderedDict
 
 AC = u"\u0301" # acute =  ́
 GR = u"\u0300" # grave =  ̀
@@ -182,3 +183,38 @@ def fetch_noun_lemma(t, expand_text):
   args = split_generate_args(generate_result)
   return args["nom_sg"] if "nom_sg" in args else args["nom_pl"]
 
+# Given a list of form values, each of which is a tuple (RUSSIAN, TRANSLIT)
+# where the TRANSLIT may be None or the empty string (in both cases treated
+# as missing), group by RUSSIAN to handle cases where multiple translits are
+# possible, generate any missing translits and join by commas. Return the list
+# of form values, in the same order except with multiple translits combined.
+def group_translits(formvals, pagemsg, expand_text):
+  # Group formvals by Russian, to group multiple translits
+  formvals_by_russian = OrderedDict()
+  for formvalru, formvaltr in formvals:
+    if formvalru in formvals_by_russian:
+      formvals_by_russian[formvalru].append(formvaltr)
+    else:
+      formvals_by_russian[formvalru] = [formvaltr]
+  formvals = []
+  # If there is more than one translit, then generate the
+  # translit for any missing translit and join by commas
+  for russian, translits in formvals_by_russian.iteritems():
+    if len(translits) == 1:
+      formvals.append((russian, translits[0]))
+    else:
+      manual_translits = []
+      for translit in translits:
+        if translit:
+          manual_translits.append(translit)
+        else:
+          translit = expand_text("{{xlit|ru|%s}}" % russian)
+          if not translit:
+            pagemsg("WARNING: Error generating translit for %s" % russian)
+          else:
+            manual_translits.append(translit)
+      joined_manual_translits = ", ".join(manual_translits)
+      pagemsg("NOTE: For Russian %s, found multiple manual translits %s" %
+          (russian, joined_manual_translits))
+      formvals.append((russian, joined_manual_translits))
+  return formvals
