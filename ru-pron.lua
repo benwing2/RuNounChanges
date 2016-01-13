@@ -136,6 +136,8 @@ FIXME:
 30. (DONE) BUG: воѐнно-морско́й becomes [vɐˌenːə mɐrˈskoj] without [je], must be
     due to ѐ being a composed character (may be a bug in the translit module;
 	add a test case).
+31. (DONE) Final unstressed -е that becomes [e] should become [ɪ] when not
+    followed by end of utterance or pause.
 ]]
 
 local ut = require("Module:utils")
@@ -185,6 +187,7 @@ local CFLEX = u(0x0302) -- circumflex =  ̂
 local DUBGR = u(0x030F) -- double grave =  ̏
 local DOTABOVE = u(0x0307) -- dot above =  ̇
 local DOTBELOW = u(0x0323) -- dot below =  ̣
+local TEMPCFLEX = u(0xFFF1) -- placeholder to be converted to a circumflex
 
 local vow = 'aeiouyɛəäạëöü'
 local ipa_vow = vow .. 'ɐɪʊɨæɵʉ'
@@ -400,10 +403,10 @@ local phon_respellings = {
 }
 
 local cons_assim_palatal = {
-	-- assimilation of tn, dn, nč, nɕ is handled specially
-	compulsory = ut.list_to_set({'stʲ', 'zdʲ', 'ntʲ', 'ndʲ', 'xkʲ',
+	-- assimilation of tn, dn, sn, zn, st, zd, nč, nɕ is handled specially
+	compulsory = ut.list_to_set({'ntʲ', 'ndʲ', 'xkʲ',
 	    'csʲ', 'ĵzʲ', 'ncʲ', 'nĵʲ'}),
-	optional = ut.list_to_set({'slʲ', 'zlʲ', 'snʲ', 'znʲ', 'nsʲ', 'nzʲ',
+	optional = ut.list_to_set({'slʲ', 'zlʲ', 'nsʲ', 'nzʲ',
 		'mpʲ', 'mbʲ', 'mfʲ', 'fmʲ'})
 }
 
@@ -576,8 +579,8 @@ function export.ipa(text, adj, gem, bracket, pos)
 	end
 	-- Verify that pos (or each part of multipart pos) is recognized
 	for _, p in ipairs(type(pos) == "table" and pos or {pos}) do
-		if not final_e[pos] then
-			error("Unrecognized part of speech '" .. pos .. "': Should be n/noun/neut, a/adj, c/com, pre, dat, adv, inv, voc, v/verb, pro, hi/high, mid, lo/low/schwa or omitted")
+		if not final_e[p] then
+			error("Unrecognized part of speech '" .. p .. "': Should be n/noun/neut, a/adj, c/com, pre, dat, adv, inv, voc, v/verb, pro, hi/high, mid, lo/low/schwa or omitted")
 		end
 	end
 
@@ -867,11 +870,13 @@ function export.ipa(text, adj, gem, bracket, pos)
 		pron = rsub(pron, 'ʹi', 'ʹji')
 		-- 2. insert glottal stop after hard sign if required
 		pron = rsub(pron, 'ʺ([aɛiouy])', 'ʔ%1')
-		-- 3. assimilative palatalization of consonants when followed by
+		-- 3. (ь) indicating optional palatalization
+		pron = rsub(pron, '%(ʹ%)', '⁽ʲ⁾')
+		-- 4. assimilative palatalization of consonants when followed by
 		--    front vowels or soft sign
 		pron = rsub(pron, '([mnpbtdkgfvszxɣrl])([ː()]*[eiäạëöüʹ])', '%1ʲ%2')
 		pron = rsub(pron, '([cĵ])([ː()]*[äạöüʹ])', '%1ʲ%2')
-		-- 4. remove hard and soft signs
+		-- 5. remove hard and soft signs
 		pron = rsub(pron, "[ʹʺ]", "")
 
 		-- reduction of unstressed word-final -я, -е; but special-case
@@ -894,11 +899,16 @@ function export.ipa(text, adj, gem, bracket, pos)
 			local sub = chart[ending] or final_e['def'][ending]
 			assert(sub)
 			if sub == 'e' then
-				-- add CFLEX to preserve the unstressed [e] sound, which
-				-- will otherwise be converted to [ɪ]; NOTE: DO NOT use ê
-				-- here directly because it's a single composed char, when
-				-- we need the e and accent to be separate
-				return 'e' .. CFLEX
+				-- add TEMPCFLEX (which will be converted to CFLEX) to preserve
+				-- the unstressed [e] sound, which will otherwise be converted
+				-- to [ɪ]; we do this instead of adding CFLEX directly because
+				-- we later convert some instances of the resulting 'e' to
+				-- 'i', and we don't want to do this when the user explicitly
+				-- wrote a Cyrillic е with a circumflex on it. [NOTE that
+				-- formerly applied when we added CFLEX directly: DO NOT
+				-- use ê here directly because it's a single composed char,
+				-- when we need the e and accent to be separate.]
+				return 'e' .. TEMPCFLEX
 			else
 				return sub
 			end
@@ -908,7 +918,7 @@ function export.ipa(text, adj, gem, bracket, pos)
 			-- and the other for cons+e sequences
 			pron = rsub(pron, vowels_c .. '(' .. accents .. '?j)ë⁀', function(v, ac)
 				 local ty = v == 'o' and 'oe' or 've'
-				 return v .. ac .. fetch_e_sub(ty)
+				 return v .. ac .. fetch_e_sub(ty) .. '⁀'
 			end)
 			-- consonant may palatalized, geminated or optional-geminated
 			pron = rsub(pron, '(.)(ʲ?[ː()]*)[eë]⁀', function(ch, mod)
@@ -916,8 +926,19 @@ function export.ipa(text, adj, gem, bracket, pos)
 					rfind(ch, '[cĵšžĉĝ]') and 'hardsib' or
 					rfind(ch, '[čǰɕӂ]') and 'softsib' or
 					'softpaired'
-				 return ch ..mod .. fetch_e_sub(ty)
+				 return ch ..mod .. fetch_e_sub(ty) .. '⁀'
 			end)
+			-- final [e] should become [ɪ] when not followed by pause or
+			-- end of utterance (in other words, followed by space plus
+			-- anything but a pause symbol, or followed by tie bar).
+			pron = rsub(pron, 'e' .. TEMPCFLEX .. '⁀‿', 'i⁀‿')
+			if i < #word and word[i+1] ~= '⁀|⁀' then
+				pron = rsub(pron, 'e' .. TEMPCFLEX .. '⁀$', 'i⁀')
+			end
+			-- now convert TEMPCFLEX to CFLEX; we use TEMPCFLEX so the previous
+			-- two regexps won't affect cases where the user explicitly wrote
+			-- a circumflex
+			pron = rsub(pron, TEMPCFLEX, CFLEX)
 		else
 			-- Do the old way, which mostly converts final -е to schwa, but
 			-- has highly broken retraction code for vowel + [шжц] + е (but
@@ -1022,9 +1043,18 @@ function export.ipa(text, adj, gem, bracket, pos)
 		pron = rsub(pron, "⁀jɪ", "⁀(j)ɪ")
 		pron = rsub(pron, '([' .. ipa_vow .. '])jɪ', "%1(j)ɪ")
 
-		--consonant assimilative palatalization of tn/dn, depending on
+		--consonant assimilative palatalization of tn/dn/sn/zn, depending on
 		--whether [rl] precedes
-		pron = rsub(pron, '([rl]?)([ˈˌ]?[dt])([ˈˌ]?nʲ)', function(a, b, c)
+		pron = rsub(pron, '([rl]?)([ˈˌ]?[dtsz])([ˈˌ]?nʲ)', function(a, b, c)
+			if a == '' then
+				return a .. b .. 'ʲ' .. c
+			else
+				return a .. b .. '⁽ʲ⁾' .. c
+			end end)
+
+		--consonant assimilative palatalization of st/zd, depending on
+		--whether [rl] precedes
+		pron = rsub(pron, '([rl]?)([ˈˌ]?[sz])([ˈˌ]?[td]ʲ)', function(a, b, c)
 			if a == '' then
 				return a .. b .. 'ʲ' .. c
 			else
