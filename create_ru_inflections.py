@@ -114,6 +114,9 @@
 #     grouped together, but the 2nd pl imp can only be спали́ть.
 # 30. (DONE) Add --overwrite-lemmas to correct entries where the conjugation
 #     or declension table was originally incorrect and later fixed.
+# 31. (DONE) Add --lemmas-no-jo so that lemmas specified using --lemmafile
+#     don't have to have е in place of ё, so that we can do only the pages
+#     specified using --overwrite-lemmas.
 
 import pywikibot, re, sys, codecs, argparse, time
 import traceback
@@ -196,8 +199,7 @@ def lemma_matches(lemma, ru, tr, pagemsg):
 #
 # LEMMAS_TO_OVERWRITE is a list of lemma pages the forms of which to overwrite
 # the inflection codes of when an existing definition template (e.g.
-# 'inflection of') is found with matching lemma. Entries are without accents
-# but with ё.
+# 'inflection of') is found with matching lemma. Entries are without accents.
 def create_inflection_entry(save, index, inflections, lemma, lemmatr,
     pos, infltype, lemmatype, infltemp, infltemp_param, deftemp,
     deftemp_param, gender, deftemp_needs_lang=True, entrytext=None,
@@ -1263,13 +1265,12 @@ def find_inflection_templates(text, expected_header, expected_poses, skip_poses,
 # Create required forms for all nouns/verbs/adjectives.
 #
 # LEMMAS_TO_PROCESS is a list of lemma pages to process. Entries are assumed
-# to be without accents and have е in place of ё. If empty, process all lemmas
-# of the appropriate part of speech.
+# to be without accents; if LEMMAS_NO_JO, they have е in place of ё. If empty,
+# process all lemmas of the appropriate part of speech.
 #
 # LEMMAS_TO_OVERWRITE is a list of lemma pages the forms of which to overwrite
 # the inflection codes of when an existing definition template (e.g.
-# 'inflection of') is found with matching lemma. Entries are without accents
-# but with ё, unlike LEMMAS_TO_PROCESS.
+# 'inflection of') is found with matching lemma. Entries are without accents.
 #
 # SAVE is as in create_inflection_entry(). STARTFROM and UPTO, if not None,
 # delimit the range of pages to process (inclusive on both ends).
@@ -1315,11 +1316,11 @@ def find_inflection_templates(text, expected_header, expected_poses, skip_poses,
 # form name, Russian and translit (which may be missing), and should return
 # true if the particular form value in question is to be skipped. This is
 # used e.g. to skip periphrastic future forms.
-def create_forms(lemmas_to_process, lemmas_to_overwrite, save, startFrom, upTo,
-    formspec, form_inflection_dict, form_aliases, pos, infltemp, dicform_codes,
-    expected_header, expected_poses, skip_poses, is_inflection_template,
-    create_form_generator, is_lemma_template, get_gender=None,
-    skip_inflections=None):
+def create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite, save,
+    startFrom, upTo, formspec, form_inflection_dict, form_aliases, pos,
+    infltemp, dicform_codes, expected_header, expected_poses, skip_poses,
+    is_inflection_template, create_form_generator, is_lemma_template,
+    get_gender=None, skip_inflections=None):
 
   forms_desired = parse_form_spec(formspec, form_inflection_dict,
       form_aliases)
@@ -1329,7 +1330,7 @@ def create_forms(lemmas_to_process, lemmas_to_overwrite, save, startFrom, upTo,
   # If lemmas_to_process, we want to process the lemmas in the order they're
   # in this list, but the lemmas in the list have е in place of ё, so we need
   # to do some work to get the corresponding pages with ё in them.
-  if lemmas_to_process:
+  if lemmas_to_process and lemmas_no_jo:
     lemmas_to_process_set = set(lemmas_to_process)
     unaccented_lemmas = {}
     for index, page in blib.cat_articles("Russian %ss" % pos):
@@ -1348,6 +1349,9 @@ def create_forms(lemmas_to_process, lemmas_to_overwrite, save, startFrom, upTo,
         msg("WARNING: Can't find pages to match lemma %s" % lemma)
     pages_to_process = ((index, pywikibot.Page(site, page)) for index, page in
         blib.iter_items(pagetitles_to_process, startFrom, upTo))
+  elif lemmas_to_process:
+    pages_to_process = ((index, pywikibot.Page(site, page)) for index, page in
+        blib.iter_items(lemmas_to_process, startFrom, upTo))
   else:
     pages_to_process = blib.cat_articles("Russian %ss" % pos, startFrom, upTo)
 
@@ -1467,9 +1471,9 @@ def get_verb_gender(t, formname, args):
   return [gender]
 
 def create_verb_forms(save, startFrom, upTo, formspec, lemmas_to_process,
-    lemmas_to_overwrite):
-  create_forms(lemmas_to_process, lemmas_to_overwrite, save, startFrom, upTo,
-      formspec, verb_form_inflection_dict, verb_form_aliases,
+    lemmas_no_jo, lemmas_to_overwrite):
+  create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite, save,
+      startFrom, upTo, formspec, verb_form_inflection_dict, verb_form_aliases,
       "verb", "head|ru|verb form", "infinitive",
       "Conjugation", ["Verb", "Idiom"], [],
       lambda t:unicode(t.name).startswith("ru-conj") and unicode(t.name) != "ru-conj-verb-see",
@@ -1487,9 +1491,9 @@ def get_adj_gender(t, formname, args):
     return []
 
 def create_adj_forms(save, startFrom, upTo, formspec, lemmas_to_process,
-    lemmas_to_overwrite):
-  create_forms(lemmas_to_process, lemmas_to_overwrite, save, startFrom, upTo,
-      formspec, adj_form_inflection_dict, adj_form_aliases,
+    lemmas_no_jo, lemmas_to_overwrite):
+  create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite, save,
+      startFrom, upTo, formspec, adj_form_inflection_dict, adj_form_aliases,
       "adjective", "head|ru|adjective form", "nom_m",
       # Proper noun can occur because names are formatted using {{ru-decl-adj}}
       # with decl type 'proper'.
@@ -1505,9 +1509,9 @@ def get_noun_gender(t, formname, args):
   return [re.sub("-p$", "", x) for x in re.split(",", args["g"])]
 
 def create_noun_forms(save, startFrom, upTo, formspec, lemmas_to_process,
-      lemmas_to_overwrite):
-  create_forms(lemmas_to_process, lemmas_to_overwrite, save, startFrom, upTo,
-      formspec, noun_form_inflection_dict, noun_form_aliases,
+      lemmas_no_jo, lemmas_to_overwrite):
+  create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite, save,
+      startFrom, upTo, formspec, noun_form_inflection_dict, noun_form_aliases,
       "noun", "ru-noun form", ["nom_sg", "nom_pl"],
       "Declension", ["Noun", "Proper noun"], [],
       lambda t:unicode(t.name) == "ru-noun-table",
@@ -1555,13 +1559,15 @@ forms), 'futr' (all future forms), 'impr' (all imperative forms), 'past'
 because it is the same as the dictionary/lemma form. Also, non-existent forms
 for particular verbs will not be created.""")
 pa.add_argument("--lemmafile",
-    help=u"""List of lemmas to process. Assumed to be without accents and have
-е in place of ё.""")
+    help=u"""List of lemmas to process, without accents. May have е in place
+of ё; see '--lemmas-no-jo'.""")
+pa.add_argument("--lemmas-no-jo",
+    help=u"""If specified, lemmas specified using --lemmafile have е in place of ё.""",
+    action="store_true")
 pa.add_argument("--overwrite-lemmas",
     help=u"""List of lemmas where the current inflections are considered to
 have errors in them (e.g. due to the conjugation template having incorrect
-aspect) and thus should be overwritten. Entries are without accents but
-with ё, unlike --lemmafile.""")
+aspect) and thus should be overwritten. Entries are without accents.""")
 
 params = pa.parse_args()
 startFrom, upTo = blib.get_args(params.start, params.end)
@@ -1575,10 +1581,10 @@ if params.overwrite_lemmas:
 else:
   lemmas_to_overwrite = []
 if params.adj_form:
-  create_adj_forms(params.save, startFrom, upTo, params.adj_form, lemmas_to_process, lemmas_to_overwrite)
+  create_adj_forms(params.save, startFrom, upTo, params.adj_form, lemmas_to_process, params.lemmas_no_jo, lemmas_to_overwrite)
 if params.noun_form:
-  create_noun_forms(params.save, startFrom, upTo, params.noun_form, lemmas_to_process, lemmas_to_overwrite)
+  create_noun_forms(params.save, startFrom, upTo, params.noun_form, lemmas_to_process, params.lemmas_no_jo, lemmas_to_overwrite)
 if params.verb_form:
-  create_verb_forms(params.save, startFrom, upTo, params.verb_form, lemmas_to_process, lemmas_to_overwrite)
+  create_verb_forms(params.save, startFrom, upTo, params.verb_form, lemmas_to_process, params.lemmas_no_jo, lemmas_to_overwrite)
 
 blib.elapsed_time()
