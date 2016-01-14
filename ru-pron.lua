@@ -136,8 +136,11 @@ FIXME:
 30. (DONE) BUG: воѐнно-морско́й becomes [vɐˌenːə mɐrˈskoj] without [je], must be
     due to ѐ being a composed character (may be a bug in the translit module;
 	add a test case).
-31. (DONE) Final unstressed -е that becomes [e] should become [ɪ] when not
-    followed by end of utterance or pause.
+31. In в Япо́нии, в Евро́пе, the initial [j] should be required not optional.
+32. (DONE) Should be possible to write п(ь)я́нка, скам(ь)я́ and get optional
+    palatalization.
+33. (CODE PRESENT BUT NOT COMPLETED) Final unstressed -е that becomes [e]
+    should become [ɪ] when not followed by end of utterance or pause.
 ]]
 
 local ut = require("Module:utils")
@@ -180,6 +183,8 @@ end
 local test_new_ru_pron_module = false
 -- If enabled, do new code for final -е; else, the old way
 local new_final_e_code = true
+-- If enabled, do special case for final -е not before a pause
+local final_e_non_pausal = false
 
 local AC = u(0x0301) -- acute =  ́
 local GR = u(0x0300) -- grave =  ̀
@@ -623,8 +628,9 @@ function export.ipa(text, adj, gem, bracket, pos)
 	text = rsub(text, '([' .. com.vowel .. ']' .. com.opt_accent .. ')й([еѐ])',
 		'%1йй%2')
 	-- transliterate and decompose Latin vowels with accents, recomposing
-	-- certain key combinations
-	text = com.translit(text)
+	-- certain key combinations; don't include accent on monosyllabic ё, so
+	-- that we end up without an accent on such words
+	text = com.translit(text, true)
 
 	-- handle old ě (e.g. сѣдло́), and ě̈ from сѣ̈дла
 	text = rsub(text, 'ě̈', 'jo' .. AC)
@@ -928,17 +934,19 @@ function export.ipa(text, adj, gem, bracket, pos)
 					'softpaired'
 				 return ch ..mod .. fetch_e_sub(ty) .. '⁀'
 			end)
-			-- final [e] should become [ɪ] when not followed by pause or
-			-- end of utterance (in other words, followed by space plus
-			-- anything but a pause symbol, or followed by tie bar).
-			pron = rsub(pron, 'e' .. TEMPCFLEX .. '⁀‿', 'i⁀‿')
-			if i < #word and word[i+1] ~= '⁀|⁀' then
-				pron = rsub(pron, 'e' .. TEMPCFLEX .. '⁀$', 'i⁀')
+			if final_e_non_pausal then
+				-- final [e] should become [ɪ] when not followed by pause or
+				-- end of utterance (in other words, followed by space plus
+				-- anything but a pause symbol, or followed by tie bar).
+				pron = rsub(pron, 'e' .. TEMPCFLEX .. '⁀‿', 'i⁀‿')
+				if i < #word and word[i+1] ~= '⁀|⁀' then
+					pron = rsub(pron, 'e' .. TEMPCFLEX .. '⁀$', 'i⁀')
+				end
+				-- now convert TEMPCFLEX to CFLEX; we use TEMPCFLEX so the previous
+				-- two regexps won't affect cases where the user explicitly wrote
+				-- a circumflex
+				pron = rsub(pron, TEMPCFLEX, CFLEX)
 			end
-			-- now convert TEMPCFLEX to CFLEX; we use TEMPCFLEX so the previous
-			-- two regexps won't affect cases where the user explicitly wrote
-			-- a circumflex
-			pron = rsub(pron, TEMPCFLEX, CFLEX)
 		else
 			-- Do the old way, which mostly converts final -е to schwa, but
 			-- has highly broken retraction code for vowel + [шжц] + е (but
