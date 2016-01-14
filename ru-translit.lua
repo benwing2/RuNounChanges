@@ -5,6 +5,8 @@ local export = {}
 FIXME:
 
 1. If you write '''Б'''ез, it transliterates to '''B'''jez instead of '''B'''ez.
+2. (DONE) Convert ъ to nothing before comma or other non-letter particle, e.g.
+   in Однимъ словомъ, идешь на чтеніе.
 
 ]=]
 
@@ -37,12 +39,12 @@ local tab = {
 }
 
 -- following based on ru-common for use with is_monosyllabic()
--- any Cyrillic vowel, including ёЁ and composed Cyrillic vowels with grave accent
-local cyr_vowel = "аеиоуяэыюіѣѵАЕИОУЯЭЫЮІѢѴѐЀѝЍёЁ"
+-- any Cyrillic or Latin vowel, including ёЁ and composed Cyrillic vowels with grave accent;
+-- not including accented Latin vowels except ě (FIXME, might want to change this)
+local vowels = "аеиоуяэыюіѣѵүАЕИОУЯЭЫЮІѢѴҮѐЀѝЍёЁAEIOUYĚƐaeiouyěɛ"
 
 -- FIXME! Doesn't work with ɣ, which gets included in this character set
--- FIXME! Integrate this with cyr_vowel
-local non_consonants = "[АОУҮЫЭЯЁЮИЕЪЬІѢѴаоуүыэяёюиеъьіѣѵAEIOUYĚƐaeiouyěɛʹʺ%A]"
+local non_consonants = "[" .. vowels .. "ЪЬъьʹʺ%A]"
 
 local map_to_plain_e_map = {["Е"] = "E", ["е"] = "e", ["Ѣ"] = "Ě", ["ѣ"] = "ě", ["Э"] = "Ɛ", ["э"] = "ɛ"}
 local function map_to_plain_e(pre, e)
@@ -63,11 +65,12 @@ end
 -- avoid problems converting to e or je
 local decompose_grave_map = {['ѐ'] = 'е' .. GR, ['Ѐ'] = 'Е' .. GR, ['ѝ'] = 'и' .. GR, ['Ѝ'] = 'И' .. GR}
 
--- True if Cyrillic word has no more than one vowel; includes non-syllabic
--- stems such as льд-; copied from ru-common to avoid having to import that
--- module (which would slow things down significantly)
+-- True if Cyrillic or decomposed Latin word has no more than one vowel;
+-- includes non-syllabic stems such as льд-; copied from ru-common and modified
+-- to avoid having to import that module (which would slow things down
+-- significantly)
 local function is_monosyllabic(word)
-	return not rfind(word, "[" .. cyr_vowel .. "].*[" .. cyr_vowel .. "]")
+	return not rfind(word, "[" .. vowels .. "].*[" .. vowels .. "]")
 end
 
 -- Transliterates text, which should be a single word or phrase. It should
@@ -77,9 +80,10 @@ end
 -- accent in isolated monosyllabic words, unless INCLUDE_MONOSYLLABIC_JO_ACCENT
 -- is specified. (This is used in conjugation and declension tables.)
 function export.tr(text, lang, sc, include_monosyllabic_jo_accent)
-	-- Remove word-final hard sign
+	-- Remove word-final hard sign, either utterance-finally or followed by
+	-- a non-letter character such as space, comma, period, hyphen, etc.
 	text = rsub(text, "[Ъъ]$", "")
-	text = rsub(text, "[Ъъ]([- ])", "%1")
+	text = rsub(text, "[Ъъ]([%A])", "%1")
 
 	 -- the if-statement below isn't necessary but may speed things up,
 	 -- particularly when include_monosyllabic_jo_accent isn't set, in that
@@ -164,7 +168,12 @@ function export.tr_sub(text, include_monosyllabic_jo_accent, adj, shto, sub)
 	end
 
 	if shto then
+		-- Handle что
 		tr = rsub(tr, "%f[%a\204\129\204\128]čto([\204\129\204\128]?)%f[^%a\204\129\204\128]", "što%1")
+		-- Handle чтобы, чтоб
+		tr = rsub(tr, "%f[%a\204\129\204\128]čto([\204\129\204\128]?by?)%f[^%a\204\129\204\128]", "što%1")
+		-- Handle ничто
+		tr = rsub(tr, "%f[%a\204\129\204\128]ničto([\204\129\204\128]?)%f[^%a\204\129\204\128]", "ništo%1")
 	end
 
 	return tr
