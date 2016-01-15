@@ -4,7 +4,6 @@
 # Remove gender from adjective forms.
 
 import pywikibot, re, sys, codecs, argparse
-from collections import Counter
 
 import blib
 from blib import getparam, rmparam, msg, site
@@ -54,8 +53,7 @@ def process_page(index, page, save, verbose):
     if verbose:
       pagemsg("Replacing <%s> with <%s>" % (text, new_text))
     assert notes
-
-    comment = "; ".join(notes)
+    comment = "; ".join(blib.group_notes(notes))
     if save:
       pagemsg("Saving with comment = %s" % comment)
       page.text = new_text

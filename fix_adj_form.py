@@ -5,7 +5,6 @@
 # 'inflection of' and converting raw inflection to 'inflection of'
 
 import pywikibot, re, sys, codecs, argparse
-from collections import Counter
 
 import blib
 from blib import getparam, rmparam, msg, site
@@ -131,19 +130,7 @@ def process_page(index, page, save, verbose):
     if verbose:
       pagemsg("Replacing <%s> with <%s>" % (text, new_text))
     assert notes
-    # Group identical notes together and append the number of such identical
-    # notes if > 1
-    # 1. Count items in notes[] and return a key-value list in descending order
-    notescount = Counter(notes).most_common()
-    # 2. Recreate notes
-    def fmt_key_val(key, val):
-      if val == 1:
-        return "%s" % key
-      else:
-        return "%s (%s)" % (key, val)
-    notes = [fmt_key_val(x, y) for x, y in notescount]
-
-    comment = "; ".join(notes)
+    comment = "; ".join(blib.group_notes(notes))
     if save:
       pagemsg("Saving with comment = %s" % comment)
       page.text = new_text

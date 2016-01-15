@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import pywikibot, mwparserfromhell, re, string, sys, codecs, urllib2, datetime, json, argparse, time
+from collections import Counter
 
 site = pywikibot.Site()
 
@@ -216,6 +217,20 @@ def get_args(startsort, endsort):
       endsort = str.decode(endsort, "utf-8")
 
   return (startsort, endsort)
+
+def group_notes(notes):
+  # Group identical notes together and append the number of such identical
+  # notes if > 1
+  # 1. Count items in notes[] and return a key-value list in descending order
+  notescount = Counter(notes).most_common()
+  # 2. Recreate notes
+  def fmt_key_val(key, val):
+    if val == 1:
+      return "%s" % key
+    else:
+      return "%s (%s)" % (key, val)
+  notes = [fmt_key_val(x, y) for x, y in notescount]
+  return notes
 
 starttime = time.time()
 
