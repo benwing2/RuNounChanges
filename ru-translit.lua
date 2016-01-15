@@ -19,23 +19,26 @@ local ulower = mw.ustring.lower
 local usub = mw.ustring.sub
 
 local GR = u(0x0300) -- grave =  ̀
+local TEMP_G = u(0xFFF1) -- substitute to preserve g from changing to v
 
 local function ine(x) -- if not empty
 	if x == "" then return nil else return x end
 end
 
+-- In this table, we now map Cyrillic е and э to je and e, and handle the
+-- post-consonant version (plain e and ɛ) specially.
 local tab = {
-	["А"]="A", ["Б"]="B", ["В"]="V", ["Г"]="G", ["Д"]="D", ["Е"]="E", ["Ё"]="Jó", ["Ж"]="Ž", ["З"]="Z", ["И"]="I", ["Й"]="J",
+	["А"]="A", ["Б"]="B", ["В"]="V", ["Г"]="G", ["Д"]="D", ["Е"]="Je", ["Ё"]="Jó", ["Ж"]="Ž", ["З"]="Z", ["И"]="I", ["Й"]="J",
 	["К"]="K", ["Л"]="L", ["М"]="M", ["Н"]="N", ["О"]="O", ["П"]="P", ["Р"]="R", ["С"]="S", ["Т"]="T", ["У"]="U", ["Ф"]="F",
-	["Х"]="X", ["Ц"]="C", ["Ч"]="Č", ["Ш"]="Š", ["Щ"]="Šč", ["Ъ"]="ʺ", ["Ы"]="Y", ["Ь"]="ʹ", ["Э"]="Ɛ", ["Ю"]="Ju", ["Я"]="Ja",
-	['а']='a', ['б']='b', ['в']='v', ['г']='g', ['д']='d', ['е']='e', ['ё']='jó', ['ж']='ž', ['з']='z', ['и']='i', ['й']='j',
+	["Х"]="X", ["Ц"]="C", ["Ч"]="Č", ["Ш"]="Š", ["Щ"]="Šč", ["Ъ"]="ʺ", ["Ы"]="Y", ["Ь"]="ʹ", ["Э"]="E", ["Ю"]="Ju", ["Я"]="Ja",
+	['а']='a', ['б']='b', ['в']='v', ['г']='g', ['д']='d', ['е']='je', ['ё']='jó', ['ж']='ž', ['з']='z', ['и']='i', ['й']='j',
 	['к']='k', ['л']='l', ['м']='m', ['н']='n', ['о']='o', ['п']='p', ['р']='r', ['с']='s', ['т']='t', ['у']='u', ['ф']='f',
-	['х']='x', ['ц']='c', ['ч']='č', ['ш']='š', ['щ']='šč', ['ъ']='ʺ', ['ы']='y', ['ь']='ʹ', ['э']='ɛ', ['ю']='ju', ['я']='ja',
+	['х']='x', ['ц']='c', ['ч']='č', ['ш']='š', ['щ']='šč', ['ъ']='ʺ', ['ы']='y', ['ь']='ʹ', ['э']='e', ['ю']='ju', ['я']='ja',
 	-- Russian style quotes
 	['«']='“', ['»']='”',
 	-- archaic, pre-1918 letters
 	['І']='I', ['і']='i', ['Ѳ']='F', ['ѳ']='f',
-	['Ѣ']='Ě', ['ѣ']='ě', ['Ѵ']='I', ['ѵ']='i',
+	['Ѣ']='Jě', ['ѣ']='jě', ['Ѵ']='I', ['ѵ']='i',
 }
 
 -- following based on ru-common for use with is_monosyllabic()
@@ -45,6 +48,7 @@ local vowels = "аеиоуяэыюіѣѵүАЕИОУЯЭЫЮІѢѴҮѐЀѝЍёЁ
 
 -- FIXME! Doesn't work with ɣ, which gets included in this character set
 local non_consonants = "[" .. vowels .. "ЪЬъьʹʺ%A]"
+local consonants = "[^" .. vowels .. "ЪЬъьʹʺ%A]"
 
 local map_to_plain_e_map = {["Е"] = "E", ["е"] = "e", ["Ѣ"] = "Ě", ["ѣ"] = "ě", ["Э"] = "Ɛ", ["э"] = "ɛ"}
 local function map_to_plain_e(pre, e)
@@ -121,25 +125,29 @@ function export.tr(text, lang, sc, include_monosyllabic_jo_accent)
 		-- (like after a consonant)
 		text = rsub(text, "^(%-)([ЕеѢѣЭэ])", map_to_plain_e)
 		text = rsub(text, "(%s%-)([ЕеѢѣЭэ])", map_to_plain_e)
+		text = rsub(text, "(" .. consonants .. "'*)([ЕеѢѣЭэ])", map_to_plain_e)
 
+		-- This is now the default
 		-- е after a vowel or at the beginning of a word becomes je, and э becomes e
-		text = rsub(text, "^([ЕеѢѣЭэ])", map_to_je)
-		text = rsub(text, "(" .. non_consonants .. ")([ЕеѢѣЭэ])", map_to_je)
-		-- need to do it twice in case of sequences of such vowels
-		text = rsub(text, "^([ЕеѢѣЭэ])", map_to_je)
-		text = rsub(text, "(" .. non_consonants .. ")([ЕеѢѣЭэ])", map_to_je)
+		-- text = rsub(text, "^([ЕеѢѣЭэ])", map_to_je)
+		-- text = rsub(text, "(" .. non_consonants .. ")([ЕеѢѣЭэ])", map_to_je)
+		-- -- need to do it twice in case of sequences of such vowels
+		-- text = rsub(text, "^([ЕеѢѣЭэ])", map_to_je)
+		-- text = rsub(text, "(" .. non_consonants .. ")([ЕеѢѣЭэ])", map_to_je)
 	end
 
-	text = rsub(text, "([МмЛл][яеё][́̀]?)г([кч])", "%1х%2")
+	-- of the two e's below, one is Latin, one Cyrillic, so it works regardless
+	-- of whether we convert Cyrillic е early to Latin e
+	text = rsub(text, "([МмЛл][яеeё][́̀]?)г([кч])", "%1х%2")
 	return (rsub(text,'.',tab))
 end
 
 -- translit with various special-case substitutions
-function export.tr_sub(text, include_monosyllabic_jo_accent, adj, shto, sub)
+function export.tr_sub(text, include_monosyllabic_jo_accent, noadj, noshto, sub)
 	if type(text) == 'table' then -- called directly from a template
 		include_monosyllabic_jo_accent = ine(text.args.include_monosyllabic_jo_accent)
-		adj = ine(text.args.adj)
-		shto = ine(text.args.shto)
+		noadj = ine(text.args.noadj)
+		noshto = ine(text.args.noshto)
 		sub = ine(text.args.sub)
 		text = text.args[1]
 	end
@@ -154,7 +162,16 @@ function export.tr_sub(text, include_monosyllabic_jo_accent, adj, shto, sub)
 
 	local tr = export.tr(text, nil, nil, include_monosyllabic_jo_accent)
 
-	if adj then
+	-- the second half of the if-statement below is an optimization; see above.
+	if not noadj and tr:find("go") then
+		-- handle много
+		tr = rsub(tr, "%f[%a\204\129\204\128](mno[\204\129\204\128]?)go%f[^%a\204\129\204\128]", "%1" .. TEMP_G .. "o")
+		-- handle немного
+		tr = rsub(tr, "%f[%a\204\129\204\128](nemno[\204\129\204\128]?)go%f[^%a\204\129\204\128]", "%1" .. TEMP_G .. "o")
+		-- handle лого, сого, ого
+		tr = rsub(tr, "%f[%a\204\129\204\128]([ls]?o[\204\129\204\128]?)g(o[\204\129\204\128]?)%f[^%a\204\129\204\128]", "%1" .. TEMP_G .. "%2")
+		-- handle лего
+		tr = rsub(tr, "%f[%a\204\129\204\128](le[\204\129\204\128]?)go%f[^%a\204\129\204\128]", "%1" .. TEMP_G .. "o")
 		--handle genitive/accusative endings, which are spelled -ого/-его/-аго
 		-- (-ogo/-ego/-ago) but transliterated -ovo/-evo/-avo; only for adjectives
 		-- and pronouns, excluding words like много, ого (-аго occurs in
@@ -165,9 +182,16 @@ function export.tr_sub(text, include_monosyllabic_jo_accent, adj, shto, sub)
 		local repl = function(e, g, o, sja) return e .. v[g] .. o .. (sja or "") end
 		tr = rsub(tr, pattern .. "%f[^%a\204\129\204\128]", repl)
 		tr = rsub(tr, pattern .. reflexive .. "%f[^%a\204\129\204\128]", repl)
+		-- handle сегодня
+		tr = rsub(tr, "%f[%a\204\129\204\128]seg(o[\204\129\204\128]?dnja)%f[^%a\204\129\204\128]", "sev%1")
+		-- handle сегодняшн-
+		tr = rsub(tr, "%f[%a\204\129\204\128]seg(o[\204\129\204\128]?dnjašn)", "sev%1")
+		-- replace TEMP_G with g; must be done after the -go -> -vo changes
+		tr = rsub(tr, TEMP_G, "g")
 	end
 
-	if shto then
+	-- the second half of the if-statement below is an optimization; see above.
+	if not noshto and tr:find("čto") then
 		-- Handle что
 		tr = rsub(tr, "%f[%a\204\129\204\128]čto([\204\129\204\128]?)%f[^%a\204\129\204\128]", "što%1")
 		-- Handle чтобы, чтоб
@@ -186,7 +210,7 @@ function export.tr_adj(text, include_monosyllabic_jo_accent)
 		text = text.args[1]
 	end
 
-	return export.tr_sub(text, include_monosyllabic_jo_accent, "adj")
+	return export.tr_sub(text, include_monosyllabic_jo_accent, false, "noshto")
 end
 
 return export
