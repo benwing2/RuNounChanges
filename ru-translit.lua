@@ -8,7 +8,10 @@ FIXME:
    '''B'''ez.
 2. (DONE) Convert ъ to nothing before comma or other non-letter particle, e.g.
    in Однимъ словомъ, идешь на чтеніе.
-
+3. (DONE) Make special-casing for adjectives in -го and for что (and friends)
+    be the default, and implement transformations in Cyrillic rather than after
+    translit so that we can display the transformed Cyrillic in the
+    "phonetic respelling" notation of {{ru-IPA}}.
 ]=]
 
 local u = mw.ustring.char
@@ -78,13 +81,71 @@ local function is_monosyllabic(word)
 	return not rfind(word, "[" .. vowels .. "].*[" .. vowels .. "]")
 end
 
--- Transliterates text, which should be a single word or phrase. It should
--- include stress marks, which are then preserved in the transliteration.
--- ё is a special case: it is rendered (j)ó in multisyllabic words and
--- monosyllabic words in multi-word phrases, but rendered (j)o without an
--- accent in isolated monosyllabic words, unless INCLUDE_MONOSYLLABIC_JO_ACCENT
--- is specified. (This is used in conjugation and declension tables.)
-function export.tr(text, lang, sc, include_monosyllabic_jo_accent)
+-- Apply transformations to the Cyrillic to more closely match pronunciation.
+-- Return two arguments: the "original" text (after decomposing composed
+-- grave characters), and the transformed text. If the two are different,
+-- {{ru-IPA}} should display a "phonetic respelling" notation. 
+-- NOADJ disables special-casing for adjectives in -го, while FORCEADJ forces
+-- special-casing for adjectives and disables checking for exceptions
+-- (e.g. много). NOSHTO disables special-casing for что and related words.
+function export.apply_tr_fixes(text, noadj, noshto, forceadj)
+	-- decompose composed grave characters before we convert Cyrillic е to
+	-- Latin e or je
+	text = rsub(text, "[ѐЀѝЍ]", decompose_grave_map)
+
+	local origtext = text
+	-- the second half of the if-statement below is an optimization; see above.
+	if not noadj and text:find("го") then
+		if not forceadj then
+			-- handle много
+			text = rsub(text, "%f[%a\204\129\204\128]([Мм]но[\204\129\204\128]?)го%f[^%a\204\129\204\128]", "%1" .. TEMP_G .. "о")
+			-- handle немного
+			text = rsub(text, "%f[%a\204\129\204\128]([Нн]емно[\204\129\204\128]?)го%f[^%a\204\129\204\128]", "%1" .. TEMP_G .. "о")
+			-- handle лого, сого, ого
+			text = rsub(text, "%f[%a\204\129\204\128]([лсЛС]?[Оо][\204\129\204\128]?)г(о[\204\129\204\128]?)%f[^%a\204\129\204\128]", "%1" .. TEMP_G .. "%2")
+			-- handle лего
+			text = rsub(text, "%f[%a\204\129\204\128]([Лл]е[\204\129\204\128]?)го%f[^%a\204\129\204\128]", "%1" .. TEMP_G .. "о")
+		end
+		--handle genitive/accusative endings, which are spelled -ого/-его/-аго
+		-- (-ogo/-ego/-ago) but transliterated -ovo/-evo/-avo; only for adjectives
+		-- and pronouns, excluding words like много, ого (-аго occurs in
+		-- pre-reform spelling); \204\129 is an acute accent, \204\128 is a grave accent
+		local pattern = "([оеаОЕА][\204\129\204\128]?)([гГ])([оО][\204\129\204\128]?)"
+		local reflexive = "([сС][яЯ][\204\129\204\128]?)"
+		local v = {["г"] = "в", ["Г"] = "В"}
+		local repl = function(e, g, o, sja) return e .. v[g] .. o .. (sja or "") end
+		text = rsub(text, pattern .. "%f[^%a\204\129\204\128]", repl)
+		text = rsub(text, pattern .. reflexive .. "%f[^%a\204\129\204\128]", repl)
+		-- handle сегодня
+		text = rsub(text, "%f[%a\204\129\204\128]([Сс]е)г(о[\204\129\204\128]?дня)%f[^%a\204\129\204\128]", "%1в%2")
+		-- handle сегодняшн-
+		text = rsub(text, "%f[%a\204\129\204\128]([Сс]е)г(о[\204\129\204\128]?дняшн)", "%1в%2")
+		-- replace TEMP_G with g; must be done after the -go -> -vo changes
+		text = rsub(text, TEMP_G, "г")
+	end
+
+	-- the second half of the if-statement below is an optimization; see above.
+	if not noshto and text:find("то") then
+		local ch2sh = {["ч"] = "ш", ["Ч"] = "Ш"}
+		-- Handle что
+		text = rsub(text, "%f[%a\204\129\204\128]([Чч])(то[\204\129\204\128]?)%f[^%a\204\129\204\128]",
+			function(ch, to) return ch2sh[ch] .. to end)
+		-- Handle чтобы, чтоб
+		text = rsub(text, "%f[%a\204\129\204\128]([Чч])(то[\204\129\204\128]?бы?)%f[^%a\204\129\204\128]",
+			function(ch, to) return ch2sh[ch] .. to end)
+		-- Handle ничто
+		text = rsub(text, "%f[%a\204\129\204\128]([Нн]и)ч(то[\204\129\204\128]?)%f[^%a\204\129\204\128]", "%1ш%2")
+	end
+
+	text = rsub(text, "([МмЛл][яеё][\204\129\204\128]?)г([кч])", "%1х%2")
+
+	return origtext, text
+end
+
+-- Transliterate after the pronunciation-related transformations of
+-- export.apply_tr_fixes() have been applied. Called from {{ru-IPA}}.
+-- INCLUDE_MONOSYLLABIC_JO_ACCENT is as in export.tr().
+function export.tr_after_fixes(text, include_monosyllabic_jo_accent)
 	-- Remove word-final hard sign, either utterance-finally or followed by
 	-- a non-letter character such as space, comma, period, hyphen, etc.
 	text = rsub(text, "[Ъъ]$", "")
@@ -114,10 +175,6 @@ function export.tr(text, lang, sc, include_monosyllabic_jo_accent)
 	-- ю after ж and ш becomes u (e.g. брошюра, жюри)
 	text = rsub(text, "([жшЖШ])ю","%1u")
 
-	-- decompose composed grave characters before we convert Cyrillic е to
-	-- Latin e or je
-	text = rsub(text, "[ѐЀѝЍ]", decompose_grave_map)
-
 	 -- the if-statement below isn't necessary but may speed things up in that
 	 -- in the majority of cases where the letters below don't occur, we avoid
 	 -- six pattern subs.
@@ -137,15 +194,31 @@ function export.tr(text, lang, sc, include_monosyllabic_jo_accent)
 		-- text = rsub(text, "(" .. non_consonants .. ")([ЕеѢѣЭэ])", map_to_je)
 	end
 
-	-- of the two e's below, one is Latin, one Cyrillic, so it works regardless
-	-- of whether we convert Cyrillic е early to Latin e
-	text = rsub(text, "([МмЛл][яеeё][́̀]?)г([кч])", "%1х%2")
-	return (rsub(text,'.',tab))
+	text = (rsub(text,'.',tab))
+	return text
+end
+
+-- Transliterates text, which should be a single word or phrase. It should
+-- include stress marks, which are then preserved in the transliteration.
+-- ё is a special case: it is rendered (j)ó in multisyllabic words and
+-- monosyllabic words in multi-word phrases, but rendered (j)o without an
+-- accent in isolated monosyllabic words, unless INCLUDE_MONOSYLLABIC_JO_ACCENT
+-- is specified. (This is used in conjugation and declension tables.)
+-- NOADJ disables special-casing for adjectives in -го, while FORCEADJ forces
+-- special-casing for adjectives and disables checking for exceptions
+-- (e.g. много). NOSHTO disables special-casing for что and related words.
+function export.tr(text, lang, sc, include_monosyllabic_jo_accent, noadj, noshto, forceadj)
+	local origtext, subbed_text = export.apply_tr_fixes(text, noadj, noshto, forceadj)
+	return export.tr_after_fixes(subbed_text, include_monosyllabic_jo_accent)
 end
 
 -- translit with various special-case substitutions; NOADJ disables
--- special-casing for adjectives, while FORCEADJ forces special-casing for
--- adjectives and disables checking for expections (e.g. много)
+-- special-casing for adjectives in -го, while FORCEADJ forces special-casing
+-- for adjectives and disables checking for expections (e.g. много).
+-- NOSHTO disables special-casing for что and related words. SUB is used
+-- to implement arbitrary substitutions in the Cyrillic text before other
+-- transformations are applied and before translit. It is of the form
+-- FROM/TO,FROM/TO,...
 function export.tr_sub(text, include_monosyllabic_jo_accent, noadj, noshto, sub,
 	forceadj)
 	if type(text) == 'table' then -- called directly from a template
@@ -164,52 +237,7 @@ function export.tr_sub(text, include_monosyllabic_jo_accent, noadj, noshto, sub,
 		end
 	end
 
-	local tr = export.tr(text, nil, nil, include_monosyllabic_jo_accent)
-
-	-- the second half of the if-statement below is an optimization; see above.
-	if not noadj and tr:find("go") then
-		if not forceadj then
-			-- handle много
-			tr = rsub(tr, "%f[%a\204\129\204\128]([Mm]no[\204\129\204\128]?)go%f[^%a\204\129\204\128]", "%1" .. TEMP_G .. "o")
-			-- handle немного
-			tr = rsub(tr, "%f[%a\204\129\204\128]([Nn]emno[\204\129\204\128]?)go%f[^%a\204\129\204\128]", "%1" .. TEMP_G .. "o")
-			-- handle лого, сого, ого
-			tr = rsub(tr, "%f[%a\204\129\204\128]([lsLS]?[Oo][\204\129\204\128]?)g(o[\204\129\204\128]?)%f[^%a\204\129\204\128]", "%1" .. TEMP_G .. "%2")
-			-- handle лего
-			tr = rsub(tr, "%f[%a\204\129\204\128]([Ll]e[\204\129\204\128]?)go%f[^%a\204\129\204\128]", "%1" .. TEMP_G .. "o")
-		end
-		--handle genitive/accusative endings, which are spelled -ого/-его/-аго
-		-- (-ogo/-ego/-ago) but transliterated -ovo/-evo/-avo; only for adjectives
-		-- and pronouns, excluding words like много, ого (-аго occurs in
-		-- pre-reform spelling); \204\129 is an acute accent, \204\128 is a grave accent
-		local pattern = "([oeaóéáOEAÓÉÁ][\204\129\204\128]?)([gG])([oO][\204\129\204\128]?)"
-		local reflexive = "([sS][jJ][aáAÁ][\204\129\204\128]?)"
-		local v = {["g"] = "v", ["G"] = "V"}
-		local repl = function(e, g, o, sja) return e .. v[g] .. o .. (sja or "") end
-		tr = rsub(tr, pattern .. "%f[^%a\204\129\204\128]", repl)
-		tr = rsub(tr, pattern .. reflexive .. "%f[^%a\204\129\204\128]", repl)
-		-- handle сегодня
-		tr = rsub(tr, "%f[%a\204\129\204\128]([Ss]e)g(o[\204\129\204\128]?dnja)%f[^%a\204\129\204\128]", "%1v%2")
-		-- handle сегодняшн-
-		tr = rsub(tr, "%f[%a\204\129\204\128]([Ss]e)g(o[\204\129\204\128]?dnjašn)", "%1v%2")
-		-- replace TEMP_G with g; must be done after the -go -> -vo changes
-		tr = rsub(tr, TEMP_G, "g")
-	end
-
-	-- the second half of the if-statement below is an optimization; see above.
-	if not noshto and tr:find("to") then
-		local ch2sh = {["č"] = "š", ["Č"] = "Š"}
-		-- Handle что
-		tr = rsub(tr, "%f[%a\204\129\204\128]([Čč])(to[\204\129\204\128]?)%f[^%a\204\129\204\128]",
-			function(ch, to) return ch2sh[ch] .. to end)
-		-- Handle чтобы, чтоб
-		tr = rsub(tr, "%f[%a\204\129\204\128]([Čč])(to[\204\129\204\128]?by?)%f[^%a\204\129\204\128]",
-			function(ch, to) return ch2sh[ch] .. to end)
-		-- Handle ничто
-		tr = rsub(tr, "%f[%a\204\129\204\128]([Nn]i)č(to[\204\129\204\128]?)%f[^%a\204\129\204\128]", "%1š%2")
-	end
-
-	return tr
+	return export.tr(text, nil, nil, include_monosyllabic_jo_accent, noadj, noshto, forceadj)
 end
 
 --for adjectives, pronouns
@@ -222,8 +250,8 @@ function export.tr_adj(text, include_monosyllabic_jo_accent)
 	-- we have to include "forceadj" because typically when tr_adj() is called
 	-- from the noun or adjective modules, it's called with suffix ого, which
 	-- would otherwise trigger the exceptional case and be transliterated as ogo
-	return export.tr_sub(text, include_monosyllabic_jo_accent, false,
-		"noshto", nil, "forceadj")
+	return export.tr(text, nil, nil, include_monosyllabic_jo_accent, false,
+		"noshto", "forceadj")
 end
 
 return export
