@@ -942,10 +942,10 @@ function export.ipa(text, adj, gem, bracket, pos)
 				if i < #word and word[i+1] ~= '⁀|⁀' then
 					pron = rsub(pron, 'e' .. TEMPCFLEX .. '⁀$', 'i⁀')
 				end
-				-- now convert TEMPCFLEX to CFLEX; we use TEMPCFLEX so the previous
-				-- two regexps won't affect cases where the user explicitly wrote
-				-- a circumflex
 			end
+			-- now convert TEMPCFLEX to CFLEX; we use TEMPCFLEX so the previous
+			-- two regexps won't affect cases where the user explicitly wrote
+			-- a circumflex
 			pron = rsub(pron, TEMPCFLEX, CFLEX)
 		else
 			-- Do the old way, which mostly converts final -е to schwa, but
