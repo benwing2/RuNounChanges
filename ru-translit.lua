@@ -4,7 +4,8 @@ local export = {}
 
 FIXME:
 
-1. If you write '''Б'''ез, it transliterates to '''B'''jez instead of '''B'''ez.
+1. (DONE) If you write '''Б'''ез, it transliterates to '''B'''jez instead of
+   '''B'''ez.
 2. (DONE) Convert ъ to nothing before comma or other non-letter particle, e.g.
    in Однимъ словомъ, идешь на чтеніе.
 
@@ -142,8 +143,11 @@ function export.tr(text, lang, sc, include_monosyllabic_jo_accent)
 	return (rsub(text,'.',tab))
 end
 
--- translit with various special-case substitutions
-function export.tr_sub(text, include_monosyllabic_jo_accent, noadj, noshto, sub)
+-- translit with various special-case substitutions; NOADJ disables
+-- special-casing for adjectives, while FORCEADJ forces special-casing for
+-- adjectives and disables checking for expections (e.g. много)
+function export.tr_sub(text, include_monosyllabic_jo_accent, noadj, noshto, sub,
+	forceadj)
 	if type(text) == 'table' then -- called directly from a template
 		include_monosyllabic_jo_accent = ine(text.args.include_monosyllabic_jo_accent)
 		noadj = ine(text.args.noadj)
@@ -164,14 +168,16 @@ function export.tr_sub(text, include_monosyllabic_jo_accent, noadj, noshto, sub)
 
 	-- the second half of the if-statement below is an optimization; see above.
 	if not noadj and tr:find("go") then
-		-- handle много
-		tr = rsub(tr, "%f[%a\204\129\204\128](mno[\204\129\204\128]?)go%f[^%a\204\129\204\128]", "%1" .. TEMP_G .. "o")
-		-- handle немного
-		tr = rsub(tr, "%f[%a\204\129\204\128](nemno[\204\129\204\128]?)go%f[^%a\204\129\204\128]", "%1" .. TEMP_G .. "o")
-		-- handle лого, сого, ого
-		tr = rsub(tr, "%f[%a\204\129\204\128]([ls]?o[\204\129\204\128]?)g(o[\204\129\204\128]?)%f[^%a\204\129\204\128]", "%1" .. TEMP_G .. "%2")
-		-- handle лего
-		tr = rsub(tr, "%f[%a\204\129\204\128](le[\204\129\204\128]?)go%f[^%a\204\129\204\128]", "%1" .. TEMP_G .. "o")
+		if not forceadj then
+			-- handle много
+			tr = rsub(tr, "%f[%a\204\129\204\128]([Mm]no[\204\129\204\128]?)go%f[^%a\204\129\204\128]", "%1" .. TEMP_G .. "o")
+			-- handle немного
+			tr = rsub(tr, "%f[%a\204\129\204\128]([Nn]emno[\204\129\204\128]?)go%f[^%a\204\129\204\128]", "%1" .. TEMP_G .. "o")
+			-- handle лого, сого, ого
+			tr = rsub(tr, "%f[%a\204\129\204\128]([lsLS]?[Oo][\204\129\204\128]?)g(o[\204\129\204\128]?)%f[^%a\204\129\204\128]", "%1" .. TEMP_G .. "%2")
+			-- handle лего
+			tr = rsub(tr, "%f[%a\204\129\204\128]([Ll]e[\204\129\204\128]?)go%f[^%a\204\129\204\128]", "%1" .. TEMP_G .. "o")
+		end
 		--handle genitive/accusative endings, which are spelled -ого/-его/-аго
 		-- (-ogo/-ego/-ago) but transliterated -ovo/-evo/-avo; only for adjectives
 		-- and pronouns, excluding words like много, ого (-аго occurs in
@@ -183,21 +189,24 @@ function export.tr_sub(text, include_monosyllabic_jo_accent, noadj, noshto, sub)
 		tr = rsub(tr, pattern .. "%f[^%a\204\129\204\128]", repl)
 		tr = rsub(tr, pattern .. reflexive .. "%f[^%a\204\129\204\128]", repl)
 		-- handle сегодня
-		tr = rsub(tr, "%f[%a\204\129\204\128]seg(o[\204\129\204\128]?dnja)%f[^%a\204\129\204\128]", "sev%1")
+		tr = rsub(tr, "%f[%a\204\129\204\128]([Ss]e)g(o[\204\129\204\128]?dnja)%f[^%a\204\129\204\128]", "%1v%2")
 		-- handle сегодняшн-
-		tr = rsub(tr, "%f[%a\204\129\204\128]seg(o[\204\129\204\128]?dnjašn)", "sev%1")
+		tr = rsub(tr, "%f[%a\204\129\204\128]([Ss]e)g(o[\204\129\204\128]?dnjašn)", "%1v%2")
 		-- replace TEMP_G with g; must be done after the -go -> -vo changes
 		tr = rsub(tr, TEMP_G, "g")
 	end
 
 	-- the second half of the if-statement below is an optimization; see above.
-	if not noshto and tr:find("čto") then
+	if not noshto and tr:find("to") then
+		local ch2sh = {["č"] = "š", ["Č"] = "Š"}
 		-- Handle что
-		tr = rsub(tr, "%f[%a\204\129\204\128]čto([\204\129\204\128]?)%f[^%a\204\129\204\128]", "što%1")
+		tr = rsub(tr, "%f[%a\204\129\204\128]([Čč])(to[\204\129\204\128]?)%f[^%a\204\129\204\128]",
+			function(ch, to) return ch2sh[ch] .. to end)
 		-- Handle чтобы, чтоб
-		tr = rsub(tr, "%f[%a\204\129\204\128]čto([\204\129\204\128]?by?)%f[^%a\204\129\204\128]", "što%1")
+		tr = rsub(tr, "%f[%a\204\129\204\128]([Čč])(to[\204\129\204\128]?by?)%f[^%a\204\129\204\128]",
+			function(ch, to) return ch2sh[ch] .. to end)
 		-- Handle ничто
-		tr = rsub(tr, "%f[%a\204\129\204\128]ničto([\204\129\204\128]?)%f[^%a\204\129\204\128]", "ništo%1")
+		tr = rsub(tr, "%f[%a\204\129\204\128]([Nn]i)č(to[\204\129\204\128]?)%f[^%a\204\129\204\128]", "%1š%2")
 	end
 
 	return tr
@@ -210,7 +219,11 @@ function export.tr_adj(text, include_monosyllabic_jo_accent)
 		text = text.args[1]
 	end
 
-	return export.tr_sub(text, include_monosyllabic_jo_accent, false, "noshto")
+	-- we have to include "forceadj" because typically when tr_adj() is called
+	-- from the noun or adjective modules, it's called with suffix ого, which
+	-- would otherwise trigger the exceptional case and be transliterated as ogo
+	return export.tr_sub(text, include_monosyllabic_jo_accent, false,
+		"noshto", nil, "forceadj")
 end
 
 return export
