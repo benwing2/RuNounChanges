@@ -685,10 +685,13 @@ function export.ipa(text, adj, gem, bracket, pos)
 		if not (accentless['pre'][word[i]] or
 				-- 1b. in the "prespace" class if followed by space and another word, or
 				i < #word - 1 and accentless['prespace'][word[i]] and word[i+1] == " " or
-				-- 1c. in the "post" class if preceded by another word, or
-				i > 2 and accentless['post'][word[i]] or
-				-- 1d. in the "posthyphen" class preceded by a hyphen and another word;
-				i > 2 and accentless['posthyphen'][word[i]] and word[i-1] == "-") and
+				-- 1c. in the "post" class if preceded by another word and
+				--     not followed by a hyphen (this is because words like
+				--     ка and же are also used for spelling initialisms), or
+				i > 2 and accentless['post'][word[i]] and word[i+1] ~= "-" or
+				-- 1d. in the "posthyphen" class preceded by a hyphen and another word
+				--     (and not followed by a hyphen, see 1c);
+				i > 2 and accentless['posthyphen'][word[i]] and word[i-1] == "-" and word[i+1] ~= "-") and
 		-- 2. must be one syllable;
 			ulen(rsub(word[i], '[^' .. vow .. ']', '')) == 1 and
 		-- 3. must not have any accents (including dot-above, forcing reduction);
@@ -708,8 +711,8 @@ function export.ipa(text, adj, gem, bracket, pos)
 		-- 1. add primary stress if preceded or followed by an accentless word,
 			if (i > 2 and accentless['pre'][word[i-2]] or
 				i > 2 and word[i-1] == " " and accentless['prespace'][word[i-2]] or
-				i < #word - 1 and accentless['post'][word[i+2]] or
-				i < #word - 1 and word[i+1] == "-" and accentless['posthyphen'][word[i+2]]) then
+				i < #word - 1 and accentless['post'][word[i+2]] and word[i+3] ~= "-" or
+				i < #word - 1 and word[i+1] == "-" and accentless['posthyphen'][word[i+2]] and word[i+3] ~= "-") then
 				word[i] = rsub(word[i], vowels_c, '%1' .. AC)
 		-- 2. else add tertiary stress
 			else
@@ -723,7 +726,8 @@ function export.ipa(text, adj, gem, bracket, pos)
 	for i = 1, #word do
 		if i < #word - 1 and (accentless['pre'][word[i]] or accentless['prespace'][word[i]] and word[i+1] == " ") then
 			word[i+1] = '‿'
-		elseif i > 2 and (accentless['post'][word[i]] or accentless['posthyphen'][word[i]] and word[i-1] == "-") then
+		elseif i > 2 and (accentless['post'][word[i]] and word[i+1] ~= "-" or
+				accentless['posthyphen'][word[i]] and word[i-1] == "-" and word[i+1] ~= "-") then
 			word[i-1] = '‿'
 		end
 	end
