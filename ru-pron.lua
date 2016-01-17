@@ -655,6 +655,9 @@ function export.ipa(text, adj, gem, bracket, pos)
 	-- handle sequences of accents (esp from ё with secondary/tertiary stress)
 	text = rsub(text, accents .. '+(' .. accents .. ')', '%1')
 
+	-- convert commas and en/en dashes to IPA foot boundaries
+	text = rsub(text, '%s*[,–—]%s*', ' | ')
+
 	-- canonicalize multiple spaces
 	text = rsub(text, '%s+', ' ')
 
@@ -731,9 +734,6 @@ function export.ipa(text, adj, gem, bracket, pos)
 	text = rsub(text, '[%-%s]+', ' ')
 	text = rsub(text, '^ ', '')
 	text = rsub(text, ' $', '')
-
-	-- convert commas and en/en dashes to IPA foot boundaries
-	text = rsub(text, '%s*[,–—]%s*', ' | ')
 
 	-- add a ⁀ at the beginning and end of every word and at close juncture
 	-- boundaries; we will remove this later but it makes it easier to do
