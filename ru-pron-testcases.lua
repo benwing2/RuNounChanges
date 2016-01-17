@@ -1,14 +1,16 @@
 local tests = require('Module:UnitTests')
 local m_ru_pron = require('Module:ru-pron')
 local m_links = require('Module:links')
+local m_ru_translit = require('Module:ru-translit')
 
 local lang = require('Module:languages').getByCode('ru')
 
 function tests:check_pron(Cyrl, IPA, Cyrl_word, pos, gem)
+	local origtext, transformed_text = m_ru_translit.apply_tr_fixes(Cyrl)
 	self:equals(
 		m_links.full_link(Cyrl_word or Cyrl, Cyrl_word or Cyrl, lang, nil, nil, nil, { tr = '-' }, true) ..
 			(Cyrl_word and (" (respelled " .. Cyrl .. ")") or "") .. (pos and ", pos=" .. pos or "") .. (gem and ", gem=" .. gem or ""),
-		m_ru_pron.ipa(Cyrl, nil, gem, nil, pos),
+		m_ru_pron.ipa(transformed_text, nil, gem, nil, pos),
 		IPA,
 		{nowiki=true}
 	)
