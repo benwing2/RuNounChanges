@@ -176,6 +176,17 @@ local function rsub_repeatedly(term, foo, bar)
 	end
 end
 
+-- Clone parent's args while also assigning nil to empty strings.
+local function clone_args(frame)
+	local args = {}
+	for pname, param in pairs(frame:getParent().args) do
+		if param == "" then args[pname] = nil
+		else args[pname] = param
+		end
+	end
+	return args
+end
+
 -- If enabled, compare this module with new version of module in
 -- Module:User:Benwing2/ru-pron to make sure all pronunciations are the same.
 -- To check for differences, go to Template:tracking/ru-pron/different-pron
@@ -524,33 +535,36 @@ local function track(page)
 	return true
 end
 
--- For use with {{ru-IPA|phon=...}}; remove accents that we don't want
--- to appear in the phonetic respelling
-function export.phon_respelling(text)
-	if type(text) == 'table' then
-		text = ine(text.args[1])
-	end
+-- remove accents that we don't want to appear in the phonetic respelling
+function phon_respelling(text)
 	text = rsub(text, '[' .. CFLEX .. DUBGR .. DOTABOVE .. DOTBELOW .. ']', '')
 	text = rsub(text, '‿', ' ')
 	return text
 end
 
--- For use with {{ru-IPA|adj=...}}; rewrite adjectival endings to the form
--- used for phonetic respelling
-function export.adj_respelling(text)
-	if type(text) == 'table' then
-		text = ine(text.args[1])
+function export.ru_IPA(frame)
+	local args = clone_args(frame)
+	local text = args.phon or args[1] or mw.title.getCurrentTitle().text
+	local origtext, transformed_text = m_ru_translit.apply_tr_fixes(text,
+		args.noadj, args.noshto)
+	local maintext = export.ipa(transformed_text, args.adj, args.gem, args.bracket or "y", args.pos)
+	if args.raw then
+		return maintext
+	else
+		local anntext = (args.ann == "y" and "'''" .. phon_respelling(text) .. "''':&#32;" or
+			args.ann and "'''" .. args.ann .. "''':&#32;" or
+			"")
+		local lang = require("Module:languages").getByCode("ru")
+		maintext = require("Module:IPA").format_IPA_full(lang, {{pron = maintext}})
+		local respelling_text = (args.phon and "&nbsp;(''phonetic respelling'': " .. phon_respelling(args.phon) .. ")" or
+			origtext ~= transformed_text and "&nbsp;(''phonetic respelling'': " .. phon_respelling(transformed_text) .. ")" or
+			"")
+		return anntext .. maintext .. respelling_text
 	end
-	-- ого, его, аго (pre-reform spelling), with optional accent on either
-	-- vowel, optionally with reflexive -ся suffix, at end of phrase or end
-	-- of word followed by space or hyphen
-	text = rsub(text, '(.[аое]́?)го(' .. AC .. '?)$', '%1во%2')
-	text = rsub(text, '(.[аое]́?)го(' .. AC .. '?ся)$', '%1во%2')
-	text = rsub(text, '(.[аое]́?)го(' .. AC .. '?[ %-])', '%1во%2')
-	text = rsub(text, '(.[аое]́?)го(' .. AC .. '?ся[ %-])', '%1во%2')
-	return text
 end
 
+-- NOTE: We now require that TEXT is already passed through
+-- m_ru_translit.apply_tr_fixes().
 function export.ipa(text, adj, gem, bracket, pos)
 	local new_module_result
 	-- Test code to compare existing module to new one.
@@ -629,8 +643,11 @@ function export.ipa(text, adj, gem, bracket, pos)
 		'%1йй%2')
 	-- transliterate and decompose Latin vowels with accents, recomposing
 	-- certain key combinations; don't include accent on monosyllabic ё, so
-	-- that we end up without an accent on such words
-	text = com.translit(text, true)
+	-- that we end up without an accent on such words. NOTE: Not clear we
+	-- need to be decomposing like this any more, although it is still
+	-- useful if the user supplies Latin text, which we allow (although
+	-- undocumented).
+	text = com.decompose(m_ru_translit.tr_after_fixes(text))
 
 	-- handle old ě (e.g. сѣдло́), and ě̈ from сѣ̈дла
 	text = rsub(text, 'ě̈', 'jo' .. AC)
