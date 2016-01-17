@@ -90,6 +90,12 @@ def process_page(index, page, save, verbose, romaji_to_keep):
           rmparam(t, "rom")
           notes.append("remove rom= from %s" % tname)
 
+      # Remove hidx=
+      if t.has("hidx"):
+        pagemsg("Removing hidx=%s: %s" % (getparam(t, "hidx"), unicode(t)))
+        rmparam(t, "hidx")
+        notes.append("remove hidx= from %s" % tname)
+
       newt = unicode(t)
       if origt != newt:
         pagemsg("Replaced %s with %s" % (origt, newt))
