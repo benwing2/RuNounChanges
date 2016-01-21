@@ -58,10 +58,14 @@ def is_ending_stressed(word):
   return (re.search(u"[ёЁ][^" + vowel + "]*$", word) or
     re.search("[" + vowel + u"][́̈][^" + vowel + "]*$", word))
 
-# True if a word has two or more stresses
-def is_multi_stressed(word):
-  word = re.sub(u"[ёЁ]", u"е́", word)
-  return re.search("[" + vowel + u"][́̈].*[" + vowel + u"][́̈]", word)
+# True if any word in text has two or more stresses
+def is_multi_stressed(text):
+  text = re.sub(u"[ёЁ]", u"е́", text)
+  words = re.split(r"[\s-]", text)
+  for word in words:
+    if re.search("[" + vowel + u"][́̈].*[" + vowel + u"][́̈]", word):
+      return True
+  return False
 
 def is_beginning_stressed(word):
   return (re.search("^[^" + vowel + u"]*[ёЁ]", word) or
