@@ -165,22 +165,33 @@ def split_generate_args(tempresult):
     args[name] = re.sub("<!>", "|", value)
   return args
 
+# Given an ru-noun+ or ru-proper noun+ template, fetch the arguments
+# associated with it. May return None if an error occurred in template
+# expansion.
+def fetch_noun_args(t, expand_text, forms_only=False):
+  generate_template = ("ru-generate-noun-forms" if forms_only else
+      "ru-generate-noun-args")
+  if unicode(t.name) == "ru-noun+":
+    generate_template = re.sub(r"^\{\{ru-noun\+",
+        "{{%s" % generate_template, unicode(t))
+  else:
+    generate_template = re.sub(r"^\{\{ru-proper noun\+",
+        "{{%s|ndef=sg" % generate_template, unicode(t))
+  generate_result = expand_text(generate_template)
+  if not generate_result:
+    return None
+  return split_generate_args(generate_result)
+
 # Given an ru-noun+ or ru-proper noun+ template, fetch the lemma, which
 # is of the form of one or more terms separted by commas, where each
 # term is either a Cyrillic word or words, or a combination CYRILLIC/LATIN
 # with manual transliteration. May return None if an error occurred
 # in template expansion.
 def fetch_noun_lemma(t, expand_text):
-  if unicode(t.name) == "ru-noun+":
-    generate_template = re.sub(r"^\{\{ru-noun\+",
-        "{{ru-generate-noun-forms", unicode(t))
-  else:
-    generate_template = re.sub(r"^\{\{ru-proper noun\+",
-        "{{ru-generate-noun-forms|ndef=sg", unicode(t))
-  generate_result = expand_text(generate_template)
-  if not generate_result:
+  # FIXME, probably not necessary to specify forms_only=True
+  args = fetch_noun_args(t, expand_text, forms_only=True)
+  if args is None:
     return None
-  args = split_generate_args(generate_result)
   return args["nom_sg"] if "nom_sg" in args else args["nom_pl"]
 
 # Given a list of form values, each of which is a tuple (RUSSIAN, TRANSLIT)
