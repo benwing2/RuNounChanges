@@ -67,6 +67,9 @@ def is_multi_stressed(text):
       return True
   return False
 
+def number_of_accents(text):
+  return len(re.sub("[^" + accents + u"ёЁѐЀѝЍ]", "", text))
+
 def is_beginning_stressed(word):
   return (re.search("^[^" + vowel + u"]*[ёЁ]", word) or
     re.search("^[^" + vowel + "]*[" + vowel + u"]́", word))
