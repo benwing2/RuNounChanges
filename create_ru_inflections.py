@@ -167,6 +167,10 @@
 # 44. (DONE) Implement ignore_headword_gender to handle редактор, where there
 #     are multiple headwords with different genders, and the gender derivable
 #     from the declension template is accurate.
+# 45. (DONE) BUG: Creates entry as {{ru-noun form|f-in}} instead of
+#     {{ru-noun form||f-in}} when param 1 empty (e.g. in genitive plural аб).
+# 46. (DONE) If no defn's or defn's wrongly use * instead of #, can't
+#     substitute; check for this and issue warning
 
 import pywikibot, re, sys, codecs, argparse, time
 import traceback
@@ -185,6 +189,12 @@ verbose = True
 ignore_headword_gender = [
     u"редактор"
 ]
+
+def check_re_sub(pagemsg, action, refrom, reto, text, numsub=1, flags=0):
+  newtext = re.sub(refrom, reto, text, numsub, flags)
+  if newtext == text:
+    pagemsg("WARNING: When %s, no substitution occurred" % action)
+  return newtext
 
 # Make sure there are two trailing newlines
 def ensure_two_trailing_nl(text):
@@ -486,9 +496,12 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
     # 1. Get the head=/1= and head2=,head3= etc. headword params.
     headparams = []
     headno = 0
+    no_param1 = False
     if len(inflections) == 1 and inflections[0][0] == pagename and not inflections[0][1]:
       # Don't add head=/1= params if there's only one inflection that's the
-      # same as the pagename and there's no translit.
+      # same as the pagename and there's no translit. But if we add gender
+      # below, we may need to add a blank param 1 before it.
+      no_param1 = True
       pass
     else:
       for infl, infltr in inflections:
@@ -506,7 +519,8 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
     for g in gender:
       genderno += 1
       if genderno == 1:
-        genderparams.append("|g=%s" % g if infltemp_is_head else "|%s" % g)
+        genderparams.append("|g=%s" % g if infltemp_is_head else
+            "||%s" % g if no_param1 else "|%s" % g)
       else:
         genderparams.append("|g%s=%s" % (genderno, g))
 
@@ -962,11 +976,13 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
                 if re.search(r"^# \{\{%s\|" % deftemp, subsections[j], re.M):
                   if not subsections[j].endswith("\n"):
                     subsections[j] += "\n"
-                  subsections[j] = re.sub(r"(^(# \{\{%s\|.*\n)+)" % deftemp,
+                  subsections[j] = check_re_sub(pagemsg, "inserting definition into existing section",
+                      r"(^(# \{\{%s\|.*\n)+)" % deftemp,
                       r"\1# %s\n" % new_defn_template, subsections[j],
                       1, re.M)
                 else:
-                  subsections[j] = re.sub(r"^#", "# %s\n#" % new_defn_template,
+                  subsections[j] = check_re_sub(pagemsg, "inserting definition into existing section",
+                      r"^#", "# %s\n#" % new_defn_template,
                       subsections[j], 1, re.M)
                 sections[i] = ''.join(subsections)
                 pagemsg("Insert existing defn with {{%s}} at beginning after any existing such defns" % (
