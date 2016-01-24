@@ -190,6 +190,7 @@
 # 54. (DONE) Warn when we create new etymology that maybe should be placed
 #     in same etymology section because of existing noun or noun form where
 #     one is plurale tantum and the other is related regular plural.
+# 55. (DONE) Implement skip_lemma_pages, skip_form_pages.
 
 import pywikibot, re, sys, codecs, argparse, time
 import traceback
@@ -207,6 +208,14 @@ verbose = True
 # in the declension is acceptable
 ignore_headword_gender = [
     u"редактор"
+]
+
+skip_lemma_pages = [
+]
+
+skip_form_pages = [
+    # neuter not masculine gender
+    u"ребята", u"ребят", u"ребятам", u"ребятами", u"реятах"
 ]
 
 def check_re_sub(pagemsg, action, refrom, reto, text, numsub=1, flags=0):
@@ -359,6 +368,10 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
         joined_infls_with_tr(), lemmatype, lemma, " (%s)" % lemmatr if lemmatr else ""))
   def expand_text(tempcall):
     return blib.expand_text(tempcall, pagename, pagemsg, verbose)
+
+  if pagename in skip_form_pages:
+    pagemsg("WARNING: Skipping form because in skip_form_pages")
+    return
 
   # Remove any redundant manual translit
   lemma, lemmatr = check_for_redundant_translit(lemma, lemmatr, pagemsg, expand_text)
@@ -625,7 +638,7 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
                 pagemsg("WARNING: Creating non-lemma form and found matching lemma template: %s" % unicode(t))
               if is_noun_form:
                 tname = unicode(t.name)
-                if tname in ["ru-noun", "ru-proper noun"] and any([re.search(r"\bp\b", x) for x in getparam(t, "2", "g")]):
+                if tname in ["ru-noun", "ru-proper noun"] and any([re.search(r"\bp\b", x) for x in blib.process_arg_chain(t, "2", "g")]):
                   found_plurale_tantum_lemma = True
                 elif tname in ["ru-noun+", "ru-proper noun+"]:
                   args = ru.fetch_noun_args(t, expand_text)
@@ -1248,7 +1261,7 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
                   if (unicode(t.name) in ["ru-noun form"] and
                       template_head_matches(t, inflections, "checking for plural noun form") and (
                         plural_in_existing_defn_templates or
-                        any([re.search(r"\bp\b", y) for y in process_arg_chain(t, "2", "g")]))):
+                        any([re.search(r"\bp\b", y) for y in blib.process_arg_chain(t, "2", "g")]))):
                     found_plural_noun_form = True
             if found_plural_noun_form or found_plurale_tantum_lemma:
               pagemsg("WARNING: Creating new etymology for plural noun form and found existing plural noun form or noun lemma")
@@ -1683,12 +1696,13 @@ def create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite, save,
 
   for index, page in pages_to_process:
     pagetitle = unicode(page.title())
-    #if lemmas_to_process and ru.make_unstressed(pagetitle) not in lemmas_to_process:
-    #  continue
     def pagemsg(txt):
       msg("Page %s %s: %s" % (index, pagetitle, txt))
     def expand_text(tempcall):
       return blib.expand_text(tempcall, pagetitle, pagemsg, verbose)
+    if pagetitle in skip_lemma_pages:
+      pagemsg("WARNING: Skipping lemma because in skip_lemma_pages")
+      continue
 
     # Find the inflection templates. Rather than just look for all inflection
     # templates, we may skip those under certain parts of speech, e.g.

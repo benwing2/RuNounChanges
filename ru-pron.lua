@@ -141,6 +141,8 @@ FIXME:
     palatalization.
 33. (CODE PRESENT BUT NOT COMPLETED) Final unstressed -е that becomes [e]
     should become [ɪ] when not followed by end of utterance or pause.
+34. In То́гане (phon=То́ганэ), final -э should be pronounced [e]. Should apply
+    in general to -э after paired consonants, but not to e.g. се́рдце.
 ]]
 
 local ut = require("Module:utils")
@@ -387,6 +389,11 @@ local phon_respellings = {
 	-- misc. changes for assimilation of [dtsz] + sibilants and affricates
 	{'[sz][dt]c', 'sc'},
 	{'([rn])[dt]([cč])', '%1%2'},
+	-- дц, тц + vowel always remain geminated, so mark this with ˑ; if not
+	-- followed by a vowel, use normal gemination (it will normally be
+	-- degeminated)
+	-- FIXME, does this also happen with дч, тч, or not?
+	{'[dt]([cč])(' .. vowels .. ')', '%1ˑ%2'},
 	{'[dt]([cč])', '%1%1'},
 	-- the following is ordered before the next one, which applies assimilation
 	-- of [тд] to щ (including across word boundaries)
@@ -406,6 +413,7 @@ local phon_respellings = {
 
 	{'sverxi', 'sverxy'},
 	{'stʹd', 'zd'},
+	-- FIXME, does this always remain geminated?
 	{'tʹd', 'dd'},
 
 	-- loss of consonants in certain clusters
@@ -743,6 +751,7 @@ function export.ipa(text, adj, gem, bracket, pos)
 	-- boundaries; we will remove this later but it makes it easier to do
 	-- word-beginning and word-end rsubs
 	text = rsub(text, ' ', '⁀ ⁀')
+	text = rsub(text, '([!?])', '⁀%1⁀')
 	text = '⁀' .. text .. '⁀'
 	text = rsub(text, '‿', '⁀‿⁀')
 
@@ -801,9 +810,9 @@ function export.ipa(text, adj, gem, bracket, pos)
 		return devoicing[a] .. b end)
 	--3. voicing/devoicing assimilation; repeat to handle recursive assimilation
 	while true do
-		local new_text = rsub(text, '([bdgvɣzžĝĵǰӂ])([ ‿⁀ʹː()/]*[ptkfxsščɕcĉ])', function(a, b)
+		local new_text = rsub(text, '([bdgvɣzžĝĵǰӂ])([ ‿⁀ʹːˑ()/]*[ptkfxsščɕcĉ])', function(a, b)
 			return devoicing[a] .. b end)
-		new_text = rsub(new_text, '([ptkfxsščɕcĉ])([ ‿⁀ʹː()/]*v?[ ‿⁀ʹː()/]*[bdgɣzžĝĵǰӂ])', function(a, b)
+		new_text = rsub(new_text, '([ptkfxsščɕcĉ])([ ‿⁀ʹːˑ()/]*v?[ ‿⁀ʹːˑ()/]*[bdgɣzžĝĵǰӂ])', function(a, b)
 			return voicing[a] .. b end)
 		if new_text == text then
 			break
@@ -816,7 +825,7 @@ function export.ipa(text, adj, gem, bracket, pos)
 	text = rsub(text, '([^' .. vow .. '.%-_])' .. '%(%1%)', '%1(ː)')
 
 	--rewrite iotated vowels
-	text = rsub(text, '(j[%(ː%)]*)([aeou])', function(a, b)
+	text = rsub(text, '(j[%(ːˑ%)]*)([aeou])', function(a, b)
 		return a .. iotating[b] end)
 	-- eliminate j after consonant and before iotated vowel (including
 	-- semi-reduced ạ)
