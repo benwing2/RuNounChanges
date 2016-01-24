@@ -171,6 +171,22 @@
 #     {{ru-noun form||f-in}} when param 1 empty (e.g. in genitive plural аб).
 # 46. (DONE) If no defn's or defn's wrongly use * instead of #, can't
 #     substitute; check for this and issue warning
+# 47. (DONE) When adding plural to gender, check that there aren't existing
+#     {{inflection of|...}} that are singular.
+# 48. (DONE) Issue a warning when there are footnotes attached to a particular
+#     form, including the footnote if possible.
+# 49. (DONE) Do a bot run to correct cases of 'prep' to be 'pre'. Also
+#     reverse things like s|gen to be gen|s.
+# 50. (DONE) BUG: лебёдка gives acc_sg_an and acc_sg_in both лебёдку, when
+#     should instead give acc_sg лебёдку.
+# 51. (DONE) Support locative, partitive, vocative cases for nouns.
+# 52. Export the raw versions of adjective forms in [[Module:ru-adjective]]
+#     and use them to issue warnings about footnote symbols. (This will apply
+#     especially to short adjectives. We've already created them; do another
+#     run to get the warnings.)
+# 53. When creating noun forms, put after any adjective forms with same form
+#     and lemma, and when creating adjective forms, put before any nouns forms
+#     with same form and lemma.
 
 import pywikibot, re, sys, codecs, argparse, time
 import traceback
@@ -700,6 +716,15 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
                   elif result:
                     defn_templates_for_already_present_entry.append((t, False))
 
+            singular_in_existing_defn_templates = False
+            for t in parsed.filter_templates():
+              if (unicode(t.name) == deftemp and
+                  (not deftemp_needs_lang or
+                    compare_param(t, "lang", "ru", None))):
+                for paramno in xrange(1, 20):
+                  if getparam(t, str(paramno)) == "s":
+                    singular_in_existing_defn_templates = True
+
             def fetch_param_chain(t, firstparam, parampref):
               vals = []
               paramno = 0
@@ -745,10 +770,10 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
             # be left alone.)
             def check_fix_noun_adj_gender(headword_template, gender, warning_on_false):
               def gender_compatible(existing, new):
-                # Compare existing and new m/f gender
-                m = re.search(r"\b([mf])\b", existing)
+                # Compare existing and new m/f/n gender
+                m = re.search(r"\b([mfn])\b", existing)
                 existing_mf = m and m.group(1)
-                m = re.search(r"\b([mf])\b", new)
+                m = re.search(r"\b([mfn])\b", new)
                 new_mf = m and m.group(1)
                 if existing_mf and new_mf and existing_mf != new_mf:
                   pagemsg("%sCan't modify mf gender from %s to %s" % (
@@ -774,7 +799,11 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
                 existing_p = m and m.group(1)
                 m = re.search(r"\b([p])\b", new)
                 new_p = m and m.group(1)
-                if existing_p and not is_noun_adj_plural:
+                if singular_in_existing_defn_templates and (existing_p or new_p):
+                  new_p = ""
+                  pagemsg("%sRemoving plural from existing gender %s, new gender %s because singular inflections present" % (
+                      "WARNING: " if warning_on_false else "", existing, new))
+                elif existing_p and not is_noun_adj_plural:
                   new_p = ""
                   pagemsg("%sRemoving plural from gender %s because new form isn't plural" % (
                       "WARNING: " if warning_on_false else "", existing))
@@ -805,6 +834,8 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
                             "g%s" % (paramno + 1))
                         pagemsg("Modifying gender param %s from %s to %s" %
                             (newparam, existing, new_gender))
+                        notes.append("modify gender from %s to %s" %
+                            (existing, new_gender))
                         headword_template.add(newparam, new_gender)
                         changed = True
                       break
@@ -817,11 +848,11 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
                       first_gender_param, "g")
                   pagemsg("Adding new gender param %s=%s" %
                       (newparam, g))
+                  notes.append("add gender %s" % g)
                   changed = True
                 if changed:
                   subsections[j] = unicode(parsed)
                   sections[i] = ''.join(subsections)
-                  notes.append("update gender %s" % g)
               return True # changed and "changed" or "nochange"
 
             # For verbs, the only gender is 'pf' or 'impf' (CURRENTLY UNUSED)
@@ -1301,6 +1332,9 @@ noun_form_inflection_list = [
   ["acc_sg_in", ("in", "acc", "s")],
   ["ins_sg", ("ins", "s")],
   ["pre_sg", ("pre", "s")],
+  ["loc", ("loc", "s")],
+  ["par", ("par", "s")],
+  ["voc", ("voc", "s")],
   ["nom_pl", ("nom", "p")],
   ["gen_pl", ("gen", "p")],
   ["dat_pl", ("dat", "p")],
@@ -1599,6 +1633,13 @@ def create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite, save,
           # listed inflections (e.g. singulars with plural-only nouns,
           # animate/inanimate variants when a noun isn't bianimate):
           if formname != dicform_code and formname in args and args[formname]:
+            # Warn if footnote symbol found; may need to manually add a note
+            if formname + "_raw" in args:
+              raw_form = re.sub(u"△", "", blib.remove_links(args[formname + "_raw"]))
+              if args[formname] != raw_form:
+                pagemsg("WARNING: Raw form %s=%s contains footnote symbol (notes=%s)" % (
+                  formname, args[formname + "_raw"],
+                  t.has("notes") and "<%s>" % getparam(t, "notes") or "NO NOTES"))
 
             # Group inflections by unaccented Russian, so we process
             # multiple accent variants together
