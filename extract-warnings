@@ -11,4 +11,5 @@ grep 'WARNING' "$@" | \
     -e 's/tr=[a-z]*//;' \
     -e 's/skipping: .*/skipping:/;' \
     -e 's/(decl lemma|same as proposed) \/\/.*/$1 \/\//;' \
+    -e 's/noun form .*? /noun form /;' \
     |sort|uniq -c|sort -nr
