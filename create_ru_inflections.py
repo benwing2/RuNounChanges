@@ -184,9 +184,9 @@
 #     and use them to issue warnings about footnote symbols. (This will apply
 #     especially to short adjectives. We've already created them; do another
 #     run to get the warnings.)
-# 53. When creating noun forms, put after any adjective forms with same form
-#     and lemma, and when creating adjective forms, put before any nouns forms
-#     with same form and lemma.
+# 53. (DONE) When creating noun forms, put after any adjective forms with same
+#     form and lemma, and when creating adjective forms, put before any nouns
+#     forms with same form and lemma.
 
 import pywikibot, re, sys, codecs, argparse, time
 import traceback
@@ -1028,14 +1028,17 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
             break
           # At this point we couldn't find an existing subsection with
           # matching POS and appropriate headword template whose head matches
-          # the the inflected form.
+          # the inflected form.
 
-          def insert_new_text_before_section(insert_at):
+          def insert_new_text_before_section(insert_at, secbefore_desc,
+              matching):
             pagemsg("Found section to insert %s before: [[%s]]" % (
                 generic_infltype, subsections[insert_at + 1]))
 
-            comment = "Insert entry for %s %s of %s before section for same lemma" % (
-              infltype, joined_infls, lemma)
+            secmsg = "%s section for same %s" % (secbefore_desc, matching)
+            pagemsg("Inserting before %s" % secmsg)
+            comment = "Insert entry for %s %s of %s before %s" % (
+              infltype, joined_infls, lemma, secmsg)
             if insert_at > 0:
               subsections[insert_at - 1] = ensure_two_trailing_nl(
                   subsections[insert_at - 1])
@@ -1047,7 +1050,8 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
             sections[i] = ''.join(subsections)
             return comment
 
-          def insert_new_text_after_section(insert_at, secafter_desc):
+          def insert_new_text_after_section(insert_at, secafter_desc,
+              matching):
             pagemsg("Found section to insert %s after: [[%s]]" % (
                 generic_infltype, subsections[insert_at - 1]))
 
@@ -1066,7 +1070,7 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
                   subsections[insert_at])
               insert_at += 1
 
-            secmsg = "%s section for same lemma" % secafter_desc
+            secmsg = "%s section for same %s" % (secafter_desc, matching)
             pagemsg("Inserting after %s" % secmsg)
             comment = "Insert entry for %s %s of %s after %s" % (
               infltype, joined_infls, lemma, secmsg)
@@ -1081,26 +1085,26 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
             return comment
 
           # If participle, try to find an existing noun or adjective with the
-          # same lemma to insert before. Insert before the first such one.
+          # same headword to insert before. Insert before the first such one.
           if is_participle:
             insert_at = None
-            for j in xrange(len(subsections)):
-              if j > 0 and (j % 2) == 0:
-                if re.match("^===+(Noun|Adjective)===+", subsections[j - 1]):
-                  parsed = blib.parse_text(subsections[j])
-                  for t in parsed.filter_templates():
-                    if (unicode(t.name) in ["ru-adj", "ru-noun", "ru-proper noun", "ru-noun+", "ru-proper noun+"] and
-                        template_head_matches(t, inflections, "checking for existing noun with lemma matching participle") and insert_at is None):
-                      insert_at = j - 1
+            for j in xrange(2, len(subsections), 2):
+              if re.match("^===+(Noun|Adjective)===+", subsections[j - 1]):
+                parsed = blib.parse_text(subsections[j])
+                for t in parsed.filter_templates():
+                  if (unicode(t.name) in ["ru-adj", "ru-noun", "ru-proper noun", "ru-noun+", "ru-proper noun+"] and
+                      template_head_matches(t, inflections, "checking for existing noun with headword matching participle") and insert_at is None):
+                    insert_at = j - 1
 
             if insert_at is not None:
-              comment = insert_new_text_before_section(insert_at)
+              comment = insert_new_text_before_section(insert_at,
+                  "noun/adjective", "headword")
               break
 
           # If adjective form, try to find an existing participle form with
-          # the same lemma to insert after. If short adjective form, also
+          # the same headword to insert after. If short adjective form, also
           # try to find an existing adverb or predicative with the same
-          # lemma to insert after. In all cases, insert after the last such
+          # headword to insert after. In all cases, insert after the last such
           # one.
           if is_adj_form:
             insert_at = None
@@ -1110,26 +1114,77 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
                 for t in parsed.filter_templates():
                   if (unicode(t.name) == "head" and getparam(t, "1") == "ru" and
                       getparam(t, "2") == "participle form" and
-                      template_head_matches(t, inflections, "checking for existing participle with lemma matching adjective")):
+                      template_head_matches(t, inflections, "checking for existing participle with headword matching adjective")):
                     insert_at = j + 1
               if is_short_adj_form:
                 if re.match("^===+Adverb===+", subsections[j - 1]):
                   parsed = blib.parse_text(subsections[j])
                   for t in parsed.filter_templates():
                     if (unicode(t.name) in ["ru-adv"] and
-                        template_head_matches(t, inflections, "checking for existing adverb with lemma matching short adjective")):
+                        template_head_matches(t, inflections, "checking for existing adverb with headword matching short adjective")):
                       insert_at = j + 1
                 elif re.match("^===+Predicative===+", subsections[j - 1]):
                   parsed = blib.parse_text(subsections[j])
                   for t in parsed.filter_templates():
                     if (unicode(t.name) == "head" and getparam(t, "1") == "ru" and
                         getparam(t, "2") == "predicative" and
-                        template_head_matches(t, inflections, "checking for existing predicative with lemma matching short adjective")):
+                        template_head_matches(t, inflections, "checking for existing predicative with headword matching short adjective")):
                       insert_at = j + 1
             if insert_at:
               comment = insert_new_text_after_section(insert_at,
                   "adverb/predicative/participle form" if is_short_adj_form
-                  else "participle form")
+                  else "participle form", "headword")
+              break
+
+          def matching_defn_templates(parsed):
+            return [t for t in parsed.filter_templates()
+                if unicode(t.name) == deftemp and
+                compare_param(t, "1", lemma, lemmatr) and
+                (not deftemp_needs_lang or
+                  compare_param(t, "lang", "ru", None))]
+
+          # If adjective form, try to find noun form with same headword
+          # (inflection) and definition (lemma) to insert before (this happens
+          # with nouns that are substantivized adjectives). Insert before
+          # first such one.
+          if is_adj_form:
+            insert_at = None
+            for j in xrange(2, len(subsections), 2):
+              if re.match("^===Noun===+", subsections[j - 1]):
+                parsed = blib.parse_text(subsections[j])
+                defn_templates = matching_defn_templates(parsed)
+                for t in parsed.filter_templates():
+                  if (unicode(t.name) in ["ru-noun form"] and
+                      template_head_matches(t, inflections, "checking for existing noun form with headword and defn matching adj form") and
+                      defn_templates and
+                      insert_at is None):
+                    insert_at = j - 1
+
+            if insert_at is not None:
+              comment = insert_new_text_before_section(insert_at, "noun form",
+                  "headword and definition")
+              break
+
+          # If noun form, try to find adjective form with same headword
+          # (inflection) and definition (lemma) to insert after (this happens
+          # with nouns that are substantivized adjectives). Insert after
+          # last such one.
+          if is_noun_form:
+            insert_at = None
+            for j in xrange(2, len(subsections), 2):
+              if re.match("^===Adjective===+", subsections[j - 1]):
+                parsed = blib.parse_text(subsections[j])
+                defn_templates = matching_defn_templates(parsed)
+                for t in parsed.filter_templates():
+                  if (unicode(t.name) == "head" and getparam(t, "1") == "ru" and
+                      getparam(t, "2") == "adjective form" and
+                      template_head_matches(t, inflections, "checking for existing adj form with headword and defn matching noun form") and
+                      defn_templates):
+                    insert_at = j + 1
+
+            if insert_at:
+              comment = insert_new_text_after_section(insert_at, "adj form",
+                  "headword and definition")
               break
 
           # Now try to find an existing section corresponding to the same
@@ -1144,16 +1199,13 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
           for j in xrange(2, len(subsections), 2):
             if re.match("^===+%s===+\n" % pos, subsections[j - 1]):
               parsed = blib.parse_text(subsections[j])
-              defn_templates = [t for t in parsed.filter_templates()
-                  if unicode(t.name) == deftemp and
-                  compare_param(t, "1", lemma, lemmatr) and
-                  (not deftemp_needs_lang or
-                    compare_param(t, "lang", "ru", None))]
+              defn_templates = matching_defn_templates(parsed)
               if defn_templates:
                 insert_at = j + 1
 
           if insert_at:
-            comment = insert_new_text_after_section(insert_at, generic_infltype)
+            comment = insert_new_text_after_section(insert_at, generic_infltype,
+                "definition")
             break
 
           pagemsg("Exists and has Russian section, appending to end of section")
