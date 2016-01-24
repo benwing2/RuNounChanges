@@ -187,6 +187,9 @@
 # 53. (DONE) When creating noun forms, put after any adjective forms with same
 #     form and lemma, and when creating adjective forms, put before any nouns
 #     forms with same form and lemma.
+# 54. (DONE) Warn when we create new etymology that maybe should be placed
+#     in same etymology section because of existing noun or noun form where
+#     one is plurale tantum and the other is related regular plural.
 
 import pywikibot, re, sys, codecs, argparse, time
 import traceback
@@ -600,6 +603,8 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
         sections.append("")
       sections[-1] += splitsections[i]
 
+    found_plurale_tantum_lemma = False
+
     # Go through each section in turn, looking for existing Russian section
     for i in xrange(len(sections)):
       m = re.match("^==([^=\n]+)==$", sections[i], re.M)
@@ -615,8 +620,20 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
         if is_lemma_template:
           parsed = blib.parse_text(sections[i])
           for t in parsed.filter_templates():
-            if is_lemma_template(t) and template_head_matches(t, inflections, "checking for lemma"):
-              pagemsg("WARNING: Creating non-lemma form and found matching lemma template: %s" % unicode(t))
+            if is_lemma_template(t):
+              if template_head_matches(t, inflections, "checking for lemma"):
+                pagemsg("WARNING: Creating non-lemma form and found matching lemma template: %s" % unicode(t))
+              if is_noun_form:
+                tname = unicode(t.name)
+                if tname in ["ru-noun", "ru-proper noun"] and any([re.search(r"\bp\b", x) for x in getparam(t, "2", "g")]):
+                  found_plurale_tantum_lemma = True
+                elif tname in ["ru-noun+", "ru-proper noun+"]:
+                  args = ru.fetch_noun_args(t, expand_text)
+                  if args is None:
+                    pagemsg("WARNING: Error expanding template when checking for plurale tantum nouns: %s" %
+                        unicode(t))
+                  elif args["n"] == "p":
+                    found_plurale_tantum_lemma = True
 
         subsections = re.split("(^===+[^=\n]+===+\n)", sections[i], 0, re.M)
 
@@ -1207,6 +1224,34 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
             comment = insert_new_text_after_section(insert_at, generic_infltype,
                 "definition")
             break
+
+          # Check for another plural noun form if we're a plural noun form
+          if is_noun_form and is_noun_adj_plural:
+            found_plural_noun_form = False
+            for j in xrange(2, len(subsections), 2):
+              if re.match("^===Noun===+", subsections[j - 1]):
+                parsed = blib.parse_text(subsections[j])
+                # First check for plural in a defn template
+                plural_in_existing_defn_templates = False
+                for t in parsed.filter_templates():
+                  if (unicode(t.name) == deftemp and
+                      (not deftemp_needs_lang or
+                        compare_param(t, "lang", "ru", None))):
+                    for paramno in xrange(1, 20):
+                      if getparam(t, str(paramno)) == "p":
+                        plural_in_existing_defn_templates = True
+                # Now check for matching ru-noun form, where either there was
+                # a plural in a defn template or there's a plural gender
+                # (the latter is necessary because plurale tantum forms don't
+                # have "p" in the defn template)
+                for t in parsed.filter_templates():
+                  if (unicode(t.name) in ["ru-noun form"] and
+                      template_head_matches(t, inflections, "checking for plural noun form") and (
+                        plural_in_existing_defn_templates or
+                        any([re.search(r"\bp\b", y) for y in process_arg_chain(t, "2", "g")]))):
+                    found_plural_noun_form = True
+            if found_plural_noun_form or found_plurale_tantum_lemma:
+              pagemsg("WARNING: Creating new etymology for plural noun form and found existing plural noun form or noun lemma")
 
           pagemsg("Exists and has Russian section, appending to end of section")
           # [FIXME! Conceivably instead of inserting at end we should insert
