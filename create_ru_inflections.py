@@ -211,6 +211,8 @@
 #     to insert into where we do modify the gender. This will be important
 #     when adding accusatives where inanimate and animate variants exist
 #     as separate entries.
+# 60. (DONE) When splitting forms based on stress variants, handle reduced/
+#     dereduced stems.
 
 import pywikibot, re, sys, codecs, argparse, time
 import traceback
@@ -224,6 +226,8 @@ import rulib as ru
 
 verbose = True
 
+AC = u"\u0301" # acute accent
+
 # List of nouns where there are multiple headword genders and the gender
 # in the declension is acceptable
 ignore_headword_gender = [
@@ -236,8 +240,12 @@ skip_lemma_pages = [
 skip_form_pages = [
     # Pages with multiple lemmas with different stresses, where the algorithm
     # to split them doesn't work
-    u"договора",
-    u"договоров"
+    u"договора", u"договоров", # (from договор)
+    # will also need to do договорам, договорами, договорах (-а́м, -а́ми, -а́х
+    # go only with до́говор)
+    u"саженей", # (from сажень)
+    # will also need to do саженям, саженями, саженях (-а́м, -а́ми, -а́х go only
+    # with са́жень)
 ]
 
 def check_re_sub(pagemsg, action, refrom, reto, text, numsub=1, flags=0):
@@ -1610,7 +1618,8 @@ def find_inflection_templates(text, expected_header, expected_poses, skip_poses,
 # Return a list of tuples of (DICFORMS, ARGS), where ARGS is a table of
 # form strings (multiple forms separated by commas), and DICFORMS is a list
 # of (RUSSIAN, TRANSLIT) tuples.
-def split_forms_with_stress_variants(args, forms_desired, dicforms, pagemsg):
+def split_forms_with_stress_variants(args, forms_desired, dicforms, pagemsg,
+    expand_text):
   if len(dicforms) == 1:
     return [(dicforms, args)]
   dicforms_printed = ",".join(["%s (%s)" % (dicru, dictr) if dictr else dicru for dicru, dictr in dicforms])
@@ -1632,10 +1641,28 @@ def split_forms_with_stress_variants(args, forms_desired, dicforms, pagemsg):
     pagemsg("WARNING: Two dictionary forms %s and %s aren't stress variants, not splitting" %
         (dicform1, dicform2))
     return [(dicforms, args)]
-  dicform1_stem = re.sub(u"[аяеоь]́?$", "", dicform1)
-  dicform2_stem = re.sub(u"[аяеоь]́?$", "", dicform2)
+  dicform1_stem = re.sub(u"[аяеоьыий]́?$", "", dicform1)
+  dicform2_stem = re.sub(u"[аяеоьыий]́?$", "", dicform2)
+  # Also compute reduced/unreduced stem
+  # The stem for reduce_stem() should preserve -й
+  dicform1_stem_for_reduce = re.sub(u"[аяеоьыи]́?$", "", dicform1)
+  dicform2_stem_for_reduce = re.sub(u"[аяеоьыи]́?$", "", dicform2)
+  dicform1_epenthetic_vowel = dicform1.endswith(AC)
+  dicform2_epenthetic_vowel = dicform2.endswith(AC)
+  if re.search(u"[аяеоыи]́?$", dicform1):
+    dicform1_reduced_stem = expand_text("{{#invoke:ru-common|dereduce_stem|%s||%s}}" %
+        (dicform1_stem_for_reduce, "y" if dicform1_epenthetic_vowel else ""))
+    dicform2_reduced_stem = expand_text("{{#invoke:ru-common|dereduce_stem|%s||%s}}" %
+        (dicform2_stem_for_reduce, "y" if dicform2_epenthetic_vowel else ""))
+  else:
+    dicform1_reduced_stem = expand_text("{{#invoke:ru-common|reduce_stem|%s}}" %
+        dicform1_stem_for_reduce)
+    dicform2_reduced_stem = expand_text("{{#invoke:ru-common|reduce_stem|%s}}" %
+        dicform2_stem_for_reduce)
+
   args1 = args.copy()
   args2 = args.copy()
+
   def doform(formname):
     if formname not in args:
       return
@@ -1649,6 +1676,10 @@ def split_forms_with_stress_variants(args, forms_desired, dicforms, pagemsg):
         forms1.append(formval)
       elif formval.startswith(dicform2_stem):
         forms2.append(formval)
+      elif dicform1_reduced_stem and formval.startswith(dicform1_reduced_stem):
+        forms1.append(formval)
+      elif dicform2_reduced_stem and formval.startswith(dicform2_reduced_stem):
+        forms2.append(formval)
       else:
         forms1.append(formval)
         forms2.append(formval)
@@ -1661,6 +1692,7 @@ def split_forms_with_stress_variants(args, forms_desired, dicforms, pagemsg):
     pagemsg("For form %s=%s, split into %s for %s and %s for %s" % (
       formname, argval, args1[formname], dicform1, args2[formname],
       dicform2))
+
   for formname, inflsets in forms_desired:
     doform(formname)
     doform(formname + "_raw")
@@ -1804,7 +1836,7 @@ def create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite, save,
       # Group dictionary forms by Russian, to group multiple translits
       dicforms = ru.group_translits(dicforms, pagemsg, expand_text)
       dicforms_args_sets = split_forms_with_stress_variants(args, forms_desired,
-          dicforms, pagemsg)
+          dicforms, pagemsg, expand_text)
       for split_dicforms, split_args in dicforms_args_sets:
         for dicformru, dicformtr in split_dicforms:
           for formname, inflsets in forms_desired:
