@@ -41,10 +41,10 @@ def do_assert(cond, msg=None):
     assert cond
   return True
 
-# Retrieve a chain of arguments from template T, where the first argument
+# Retrieve a chain of parameters from template T, where the first parameter
 # is named FIRST and the remainder are named PREF2, PREF3, etc.
 # If FIRSTDEFAULT is given, use if FIRST is missing or empty.
-def process_arg_chain(t, first, pref, firstdefault=""):
+def fetch_param_chain(t, first, pref, firstdefault=""):
   ret = []
   val = getparam(t, first) or firstdefault
   i = 2
@@ -53,6 +53,29 @@ def process_arg_chain(t, first, pref, firstdefault=""):
     val = getparam(t, pref + str(i))
     i += 1
   return ret
+
+def append_param_to_chain(t, val, firstparam, parampref):
+  paramno = 0
+  while True:
+    paramno += 1
+    next_param = firstparam if paramno == 1 else "%s%s" % (
+        parampref, paramno)
+    if not getparam(t, next_param):
+      t.add(next_param, val)
+      return next_param
+
+def remove_param_chain(t, firstparam, parampref):
+  paramno = 0
+  changed = False
+  while True:
+    paramno += 1
+    next_param = firstparam if paramno == 1 else "%s%s" % (
+        parampref, paramno)
+    if getparam(t, next_param):
+      rmparam(t, next_param)
+      changed = True
+    else:
+      return changed
 
 def display(page):
   pywikibot.output(u'# [[{0}]]'.format(page.title()))

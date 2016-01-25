@@ -524,7 +524,7 @@ def process_page(index, page, save, verbose):
     pagemsg("WARNING: Indeclinable noun, skipping")
     return
 
-  headword_trs = blib.process_arg_chain(headword_template, "tr", "tr")
+  headword_trs = blib.fetch_param_chain(headword_template, "tr", "tr")
   if headword_trs:
     pagemsg("WARNING: Found headword manual translit, skipping: %s" %
         ",".join(headword_trs))
@@ -581,7 +581,7 @@ def process_page(index, page, save, verbose):
   pagemsg("Found headwords: %s" % " @@ ".join(headwords))
 
   # Get headword genders (includes animacy and number)
-  genders = blib.process_arg_chain(headword_template, "2", "g")
+  genders = blib.fetch_param_chain(headword_template, "2", "g")
   genders_include_pl = len([x for x in genders if re.search(r"\bp\b", x)]) > 0
 
   # Extract lemmas and inflections for each word in headword

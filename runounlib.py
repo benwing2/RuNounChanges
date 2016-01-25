@@ -91,8 +91,8 @@ def check_old_noun_headword_forms(headword_template, args, subpagetitle, pagemsg
         return True
     return None
 
-  headwords = blib.process_arg_chain(headword_template, "1", "head", subpagetitle)
-  translits = blib.process_arg_chain(headword_template, "tr", "tr")
+  headwords = blib.fetch_param_chain(headword_template, "1", "head", subpagetitle)
+  translits = blib.fetch_param_chain(headword_template, "tr", "tr")
   for i in xrange(len(translits)):
     if len(headwords) <= i:
       pagemsg("WARNING: Not enough headwords for translit tr%s=%s, skipping" % (
@@ -100,9 +100,9 @@ def check_old_noun_headword_forms(headword_template, args, subpagetitle, pagemsg
       return None
     else:
       headwords[i] += "//" + translits[i]
-  genitives = blib.process_arg_chain(headword_template, "3", "gen")
-  plurals = blib.process_arg_chain(headword_template, "4", "pl")
-  genders = blib.process_arg_chain(headword_template, "2", "g")
+  genitives = blib.fetch_param_chain(headword_template, "3", "gen")
+  plurals = blib.fetch_param_chain(headword_template, "4", "pl")
+  genders = blib.fetch_param_chain(headword_template, "2", "g")
   cases_to_check = None
   if args["n"] == "s":
     if (not compare_forms("nom_sg", headwords, args["nom_sg_linked"], True) or
@@ -182,7 +182,7 @@ def fix_old_headword_params(headword_template, new_params, genders, pagemsg):
   return params_to_preserve
 
 def extract_headword_anim_spec(headword_template):
-  genders = blib.process_arg_chain(headword_template, "2", "g")
+  genders = blib.fetch_param_chain(headword_template, "2", "g")
   saw_in = -1
   saw_an = -1
   for i,g in enumerate(genders):

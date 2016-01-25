@@ -207,7 +207,7 @@ def process_page_section(index, page, section, verbose):
           unicode(decl_template)))
         frobbed_manual_translit = [headword_tr]
 
-  genders = blib.process_arg_chain(headword_template, "2", "g")
+  genders = blib.fetch_param_chain(headword_template, "2", "g")
 
   bian_replaced = 0
 

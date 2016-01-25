@@ -660,7 +660,7 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
                 pagemsg("WARNING: Creating non-lemma form and found matching lemma template: %s" % unicode(t))
               if is_noun_form:
                 tname = unicode(t.name)
-                if tname in ["ru-noun", "ru-proper noun"] and any([re.search(r"\bp\b", x) for x in blib.process_arg_chain(t, "2", "g")]):
+                if tname in ["ru-noun", "ru-proper noun"] and any([re.search(r"\bp\b", x) for x in blib.fetch_param_chain(t, "2", "g")]):
                   found_plurale_tantum_lemma = True
                 elif tname in ["ru-noun+", "ru-proper noun+"]:
                   args = ru.fetch_noun_args(t, expand_text)
@@ -777,41 +777,6 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
                   if getparam(t, str(paramno)) == "s":
                     singular_in_existing_defn_templates = True
 
-            def fetch_param_chain(t, firstparam, parampref):
-              vals = []
-              paramno = 0
-              while True:
-                paramno += 1
-                val = getparam(t, firstparam if paramno == 1 else "%s%s" % (
-                  parampref, paramno))
-                if not val:
-                  return vals
-                else:
-                  vals.append(val)
-
-            def append_param_to_chain(t, val, firstparam, parampref):
-              paramno = 0
-              while True:
-                paramno += 1
-                next_param = firstparam if paramno == 1 else "%s%s" % (
-                    parampref, paramno)
-                if not getparam(t, next_param):
-                  t.add(next_param, val)
-                  return next_param
-
-            def remove_param_chain(t, firstparam, parampref):
-              paramno = 0
-              changed = False
-              while True:
-                paramno += 1
-                next_param = firstparam if paramno == 1 else "%s%s" % (
-                    parampref, paramno)
-                if getparam(t, next_param):
-                  rmparam(t, next_param)
-                  changed = True
-                else:
-                  return changed
-
             # For nouns and adjectives, check the existing gender of the given
             # headword template and attempt to make sure it matches the given
             # gender or can be compatibly modified to the new gender. Return
@@ -868,7 +833,7 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
               if len(gender) == 0:
                 return True # "nochange"
 
-              existing_genders = fetch_param_chain(headword_template,
+              existing_genders = blib.fetch_param_chain(headword_template,
                   first_gender_param, "g")
               for g in gender:
                 if g in existing_genders:
@@ -896,7 +861,7 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
                       "WARNING: " if warning_on_false else "",
                       ",".join(existing_genders), g))
                 if not found_compat:
-                  newparam = append_param_to_chain(headword_template, g,
+                  newparam = blib.append_param_to_chain(headword_template, g,
                       first_gender_param, "g")
                   pagemsg("Adding new gender param %s=%s" %
                       (newparam, g))
@@ -909,11 +874,11 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
 
             # For verbs, the only gender is 'pf' or 'impf' (CURRENTLY UNUSED)
             #def check_fix_verb_gender(headword_template, gender):
-            #  existing_genders = fetch_param_chain(headword_template,
+            #  existing_genders = blib.fetch_param_chain(headword_template,
             #      first_gender_param, "g")
             #  for g in gender:
             #    if g not in existing_genders:
-            #      newparam = append_param_to_chain(headword_template, g,
+            #      newparam = blib.append_param_to_chain(headword_template, g,
             #        first_gender_param, "g")
             #      pagemsg("Added verb gender %s=%s" % (newparam, g))
             #      subsections[j] = unicode(parsed)
@@ -941,8 +906,8 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
               if is_verb_form:
                 # If verb form, remove any existing gender, since it
                 # instead goes into the definition line
-                if remove_param_chain(headword_template, first_gender_param,
-                    "g"):
+                if blib.remove_param_chain(headword_template,
+                    first_gender_param, "g"):
                   subsections[j] = unicode(parsed)
                   sections[i] = ''.join(subsections)
                   notes.append("remove gender")
@@ -1283,7 +1248,7 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
                   if (unicode(t.name) in ["ru-noun form"] and
                       template_head_matches(t, inflections, "checking for plural noun form") and (
                         plural_in_existing_defn_templates or
-                        any([re.search(r"\bp\b", y) for y in blib.process_arg_chain(t, "2", "g")]))):
+                        any([re.search(r"\bp\b", y) for y in blib.fetch_param_chain(t, "2", "g")]))):
                     found_plural_noun_form = True
             if found_plural_noun_form or found_plurale_tantum_lemma:
               pagemsg("WARNING: Creating new etymology for plural noun form and found existing plural noun form or noun lemma")
@@ -1564,9 +1529,9 @@ def get_headword_noun_gender(section, pagemsg, expand_text):
     # followed by an indeclinable feminine one, and a masculine inflection
     # table.
     if tname in ["ru-noun", "ru-proper noun"] and getparam(t, "3") != "-":
-      new_genders = blib.process_arg_chain(t, "2", "g")
+      new_genders = blib.fetch_param_chain(t, "2", "g")
     elif tname in ["ru-noun+", "ru-proper noun+"]:
-      new_genders = blib.process_arg_chain(t, "g", "g")
+      new_genders = blib.fetch_param_chain(t, "g", "g")
       if not new_genders:
         args = ru.fetch_noun_args(t, expand_text)
         if args is None:
