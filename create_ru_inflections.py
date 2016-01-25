@@ -191,6 +191,10 @@
 #     in same etymology section because of existing noun or noun form where
 #     one is plurale tantum and the other is related regular plural.
 # 55. (DONE) Implement skip_lemma_pages, skip_form_pages.
+# 56. (DONE) Plural forms in -ата/-ята are neuter in the plural even though the
+#     singular is masculine.
+# 57. (DONE) BUG: Gender cleared after first inflset in loop in create_forms(),
+#     but there might be multiple inflsets.
 
 import pywikibot, re, sys, codecs, argparse, time
 import traceback
@@ -214,8 +218,6 @@ skip_lemma_pages = [
 ]
 
 skip_form_pages = [
-    # neuter not masculine gender
-    u"ребята", u"ребят", u"ребятам", u"ребятами", u"реятах"
 ]
 
 def check_re_sub(pagemsg, action, refrom, reto, text, numsub=1, flags=0):
@@ -1523,6 +1525,11 @@ def split_ru_tr(form):
   else:
     return (form, None)
 
+def get_noun_gender_from_args(args):
+  gender = re.split(",", args["g"])
+  #gender = [re.sub("-p$", "", x) for x in gender]
+  return gender
+
 # Find the noun gender from the headword. Return None if no headword present,
 # else a list of genders, which may be empty if headword doesn't specify
 # genders.
@@ -1546,7 +1553,7 @@ def get_headword_noun_gender(section, pagemsg, expand_text):
           pagemsg("WARNING: Error generating args for headword template: %s" %
               unicode(t))
         else:
-          new_genders = re.split(",", args["g"])
+          new_genders = get_noun_gender_from_args(args)
     if new_genders:
       #new_genders = [re.sub("-p$", "", x) for x in new_genders]
       if genders_seen and new_genders != genders_seen:
@@ -1715,7 +1722,7 @@ def create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite, save,
         expand_text)
     if len(inflection_templates) > 1 and pos == "adjective":
       pagemsg("WARNING: Multiple inflection templates for %s" % pagetitle)
-    for t, gender in inflection_templates:
+    for t, headword_gender in inflection_templates:
       result = expand_text(create_form_generator(t))
       if not result:
         pagemsg("WARNING: Error generating %s forms, skipping" % pos)
@@ -1790,18 +1797,28 @@ def create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite, save,
 
                 if type(inflsets) is not list:
                   inflsets = [inflsets]
-                gender = gender or (get_gender(t, formname, args) if get_gender else [])
+                form_gender = headword_gender or (get_gender(t, formname, args) if get_gender else [])
+                if pos == "noun":
+                  # Nouns with plural in -ята, -ата are neuter in the plural
+                  # in the corresponding forms, even though the singular is
+                  # masc. This is tricky with words like ребёнок and мальчонок
+                  # that have two plurals, one in -и and one in -ата/ята.
+                  if (re.search(ur"[яа]́?та(,|$)", args["nom_pl"]) and
+                      re.search(ur"[яа]т(|а|ам|ами|ах)$", formval_no_accents)):
+                    form_gender = [re.sub(r"\bm\b", "n", g) for g in form_gender]
+
                 for inflset in inflsets:
+                  inflset_gender = form_gender
                   # Add perfective or imperfective to verb inflection codes
                   # depending on gender, then clear gender so we don't set
                   # it on the headword.
                   if pos == "verb":
-                    assert gender == ["pf"] or gender == ["impf"]
-                    if gender == ["pf"]:
+                    assert inflset_gender == ["pf"] or inflset_gender == ["impf"]
+                    if inflset_gender == ["pf"]:
                       inflset = inflset + ("pfv",)
                     else:
                       inflset = inflset + ("impfv",)
-                    gender = []
+                    inflset_gender = []
                   # For plurale tantum nouns, don't include "plural" in
                   # inflection codes.
                   if pos == "noun" and dicform_code == "nom_pl":
@@ -1810,7 +1827,7 @@ def create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite, save,
                   create_inflection_entry(save, index, inflections,
                     dicformru, dicformtr, pos.capitalize(),
                     "%s form %s" % (pos, formname), "dictionary form",
-                    infltemp, "", "inflection of", inflset, gender,
+                    infltemp, "", "inflection of", inflset, inflset_gender,
                     is_lemma_template=is_lemma_template,
                     lemmas_to_overwrite=lemmas_to_overwrite)
 
@@ -1862,10 +1879,10 @@ def create_adj_forms(save, startFrom, upTo, formspec, lemmas_to_process,
       #get_gender=get_adj_gender
       )
 
+# WARNING: This isn't used unless the noun is in ignore_headword_gender;
+# see get_headword_noun_gender().
 def get_noun_gender(t, formname, args):
-  gender = re.split(",", args["g"])
-  #gender = [re.sub("-p$", "", x) for x in gender]
-  return gender
+  return get_noun_gender_from_args(args)
 
 def create_noun_forms(save, startFrom, upTo, formspec, lemmas_to_process,
       lemmas_no_jo, lemmas_to_overwrite):
