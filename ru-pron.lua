@@ -143,6 +143,14 @@ FIXME:
     should become [ɪ] when not followed by end of utterance or pause.
 34. In То́гане (phon=То́ганэ), final -э should be pronounced [e]. Should apply
     in general to -э after paired consonants, but not to e.g. се́рдце.
+35. (DONE) тц,дц,тч,дч shoud be always-geminated by default.
+36. (DONE) treat ! and ? as separate words so we don't have issues with
+    word-final -е before them.
+37. Distinguish stress accents from other accents.
+38. т(ь)ся not directly after the stress should be optionally geminated.
+39. нра̀вственно-эти́ческий should have optional not mandatory gemination of нн.
+40. (DONE) Make дц in -дцат- be optionally-geminated, for words like
+    одиннадцать, двадцать, тридцатый, etc.
 ]]
 
 local ut = require("Module:utils")
@@ -389,10 +397,11 @@ local phon_respellings = {
 	-- misc. changes for assimilation of [dtsz] + sibilants and affricates
 	{'[sz][dt]c', 'sc'},
 	{'([rn])[dt]([cč])', '%1%2'},
-	-- дц, тц + vowel always remain geminated, so mark this with ˑ; if not
-	-- followed by a vowel, use normal gemination (it will normally be
-	-- degeminated)
-	-- FIXME, does this also happen with дч, тч, or not?
+	-- -дцат- (in numerals) has optionally-geminated дц
+	{'dca(' .. accents .. '?)t', 'c(c)a%1t'},
+	-- дц, тц, дч, тч + vowel always remain geminated, so mark this with ˑ;
+	-- if not followed by a vowel, as in e.g. путч, use normal gemination
+	-- (it will normally be degeminated)
 	{'[dt]([cč])(' .. vowels .. ')', '%1ˑ%2'},
 	{'[dt]([cč])', '%1%1'},
 	-- the following is ordered before the next one, which applies assimilation
@@ -413,7 +422,7 @@ local phon_respellings = {
 
 	{'sverxi', 'sverxy'},
 	{'stʹd', 'zd'},
-	-- FIXME, does this always remain geminated?
+	-- this will often become degeminated
 	{'tʹd', 'dd'},
 
 	-- loss of consonants in certain clusters
