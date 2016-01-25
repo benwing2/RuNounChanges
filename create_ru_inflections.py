@@ -195,6 +195,22 @@
 #     singular is masculine.
 # 57. (DONE) BUG: Gender cleared after first inflset in loop in create_forms(),
 #     but there might be multiple inflsets.
+# 58. (DONE) Figure out what to do with #445 обеспе́чение,обеспече́ние where
+#     there are two lemmas with different stresses. Probably we should try
+#     to split the forms and issue a warning if we can't. If there are two
+#     lemmas that differ only in stress, then what we can do is extract the
+#     stem (remove [аяеоь] possibly with accent), and assign the each form
+#     to one of the stems based on matching the prefix, and if we can't
+#     assign this way, assign to both, and if one stem ends up with no form,
+#     take the other one's. Alternatively, we could just issue a warning,
+#     clean these up manually and add them to the skip lists.
+# 59. Be smarter about how we insert defns into existing sections. First
+#     do a pass where we check just for already-present defns and headwords,
+#     then do a pass where we check for sections to insert into where we don't
+#     have to modify the gender, then do a pass where we check for sections
+#     to insert into where we do modify the gender. This will be important
+#     when adding accusatives where inanimate and animate variants exist
+#     as separate entries.
 
 import pywikibot, re, sys, codecs, argparse, time
 import traceback
@@ -218,6 +234,10 @@ skip_lemma_pages = [
 ]
 
 skip_form_pages = [
+    # Pages with multiple lemmas with different stresses, where the algorithm
+    # to split them doesn't work
+    u"договора",
+    u"договоров"
 ]
 
 def check_re_sub(pagemsg, action, refrom, reto, text, numsub=1, flags=0):
@@ -1608,6 +1628,79 @@ def find_inflection_templates(text, expected_header, expected_poses, skip_poses,
                 pos_header, unicode(t)))
   return templates
 
+# Split forms where there are stress variants with corresponding stress-variant
+# forms, e.g. #445 обеспе́чение,обеспече́ние with genitive singular
+# обеспе́чения,обеспече́ния etc. where обеспе́чения should be assigned to
+# обеспе́чение and обеспече́ния to обеспече́ние. Also handle cases like
+# пе́тля,петля́ with one nominative plural пе́тли that matches one of the stress
+# variants but should be assigned to both, and cases like до́говор,догово́р with
+# genitive plural до́говоров,догово́ров,договоро́в where до́говоров goes with
+# до́говор, догово́ров goes with догово́р, and до́говоров goes with both. Also
+# don't get tripped up by instrumental singular of feminines, where there
+# are four forms, two for each stress variant. We use the following algorithm:
+# If there are two lemmas that differ only in stress, then extract the stem
+# (remove [аяеоь] possibly with accent), and assign each form to one of the
+# stems based on matching the prefix, and if we can't assign this way, assign
+# to both, and if one stem ends up with no form, take the other one's.
+# Return a list of tuples of (DICFORMS, ARGS), where ARGS is a table of
+# form strings (multiple forms separated by commas), and DICFORMS is a list
+# of (RUSSIAN, TRANSLIT) tuples.
+def split_forms_with_stress_variants(args, forms_desired, dicforms, pagemsg):
+  if len(dicforms) == 1:
+    return [(dicforms, args)]
+  dicforms_printed = ",".join(["%s (%s)" % (dicru, dictr) if dictr else dicru for dicru, dictr in dicforms])
+  pagemsg("WARNING: Multiple (%s) dictionary forms: %s" % (
+    len(dicforms), dicforms_printed))
+  if len(dicforms) > 2:
+    pagemsg("WARNING: More than two (%s) dictionary forms, not sure how to split: %s" % (
+      len(dicforms), dicforms_printed))
+    return [(dicforms, args)]
+  dicform1, dicform1tr = dicforms[0]
+  dicform2, dicform2tr = dicforms[1]
+  if dicform1tr:
+    pagemsg("WARNING: Dictionary form 1 of 2 %s has translit %s, can't handle" % (dicform1, dicform1tr))
+    return [(dicforms, args)]
+  if dicform2tr:
+    pagemsg("WARNING: Dictionary form 2 of 2 %s has translit %s, can't handle" % (dicform2, dicform2tr))
+    return [(dicforms, args)]
+  if ru.remove_accents(dicform1) != ru.remove_accents(dicform2):
+    pagemsg("WARNING: Two dictionary forms %s and %s aren't stress variants, not splitting" %
+        (dicform1, dicform2))
+    return [(dicforms, args)]
+  dicform1_stem = re.sub(u"[аяеоь]́?$", "", dicform1)
+  dicform2_stem = re.sub(u"[аяеоь]́?$", "", dicform2)
+  args1 = args.copy()
+  args2 = args.copy()
+  def doform(formname):
+    if formname not in args:
+      return
+    forms1 = []
+    forms2 = []
+    # Remove links in case we're dealing with a _raw form
+    argval = blib.remove_links(args[formname])
+    formvals = re.split(",", argval)
+    for formval in formvals:
+      if formval.startswith(dicform1_stem):
+        forms1.append(formval)
+      elif formval.startswith(dicform2_stem):
+        forms2.append(formval)
+      else:
+        forms1.append(formval)
+        forms2.append(formval)
+    if not forms1:
+      forms1 = forms2
+    elif not forms2:
+      forms2 = forms1
+    args1[formname] = ",".join(forms1)
+    args2[formname] = ",".join(forms2)
+    pagemsg("For form %s=%s, split into %s for %s and %s for %s" % (
+      formname, argval, args1[formname], dicform1, args2[formname],
+      dicform2))
+  for formname, inflsets in forms_desired:
+    doform(formname)
+    doform(formname + "_raw")
+  return [([(dicform1, None)], args1), ([(dicform2, None)], args2)]
+
 # Create required forms for all nouns/verbs/adjectives.
 #
 # LEMMAS_TO_PROCESS is a list of lemma pages to process. Entries are assumed
@@ -1745,91 +1838,95 @@ def create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite, save,
       dicforms = [(ru.remove_monosyllabic_accents(dicru), dictr) for dicru, dictr in dicforms]
       # Group dictionary forms by Russian, to group multiple translits
       dicforms = ru.group_translits(dicforms, pagemsg, expand_text)
-      for dicformru, dicformtr in dicforms:
-        for formname, inflsets in forms_desired:
-          # Skip the dictionary form; also skip forms that don't have
-          # listed inflections (e.g. singulars with plural-only nouns,
-          # animate/inanimate variants when a noun isn't bianimate):
-          if formname != dicform_code and formname in args and args[formname]:
-            # Warn if footnote symbol found; may need to manually add a note
-            if formname + "_raw" in args:
-              raw_form = re.sub(u"△", "", blib.remove_links(args[formname + "_raw"]))
-              if args[formname] != raw_form:
-                pagemsg("WARNING: Raw form %s=%s contains footnote symbol (notes=%s)" % (
-                  formname, args[formname + "_raw"],
-                  t.has("notes") and "<%s>" % getparam(t, "notes") or "NO NOTES"))
+      dicforms_args_sets = split_forms_with_stress_variants(args, forms_desired,
+          dicforms, pagemsg)
+      for split_dicforms, split_args in dicforms_args_sets:
+        for dicformru, dicformtr in split_dicforms:
+          for formname, inflsets in forms_desired:
+            # Skip the dictionary form; also skip forms that don't have
+            # listed inflections (e.g. singulars with plural-only nouns,
+            # animate/inanimate variants when a noun isn't bianimate):
+            if formname != dicform_code and formname in split_args and split_args[formname]:
+              # Warn if footnote symbol found; may need to manually add a note
+              if formname + "_raw" in split_args:
+                raw_form = re.sub(u"△", "", blib.remove_links(split_args[formname + "_raw"]))
+                if split_args[formname] != raw_form:
+                  pagemsg("WARNING: Raw form %s=%s contains footnote symbol (notes=%s)" % (
+                    formname, split_args[formname + "_raw"],
+                    t.has("notes") and "<%s>" % getparam(t, "notes") or "NO NOTES"))
 
-            # Group inflections by unaccented Russian, so we process
-            # multiple accent variants together
-            formvals_by_pagename = OrderedDict()
-            formvals = re.split(",", args[formname])
-            if len(formvals) > 1:
-              pagemsg("create_forms: Found multiple form values for %s=%s, dictionary form %s%s" %
-                  (formname, args[formname], dicformru, dicformtr and " (%s)" % dicformtr or ""))
-            for formval in formvals:
-              formvalru, formvaltr = split_ru_tr(formval)
-              formval_no_accents = ru.remove_accents(formvalru)
-              if skip_inflections and skip_inflections(formname, formvalru, formvaltr):
-                pagemsg("create_forms: Skipping %s=%s%s" % (formname, formvalru,
-                  formvaltr and " (%s)" % formvaltr or ""))
-              elif formval_no_accents in formvals_by_pagename:
-                formvals_by_pagename[formval_no_accents].append((formvalru, formvaltr))
-              else:
-                formvals_by_pagename[formval_no_accents] = [(formvalru, formvaltr)]
-            # Process groups of inflections
-            formvals_by_pagename_items = formvals_by_pagename.items()
-            if len(formvals_by_pagename_items) > 1:
-              pagemsg("create_forms: For form %s, found multiple page names %s" % (
-                formname, ",".join("%s" % formval_no_accents for formval_no_accents, inflections in formvals_by_pagename_items)))
-            for formval_no_accents, inflections in formvals_by_pagename_items:
-              inflections = [(ru.remove_monosyllabic_accents(infl), infltr) for infl, infltr in inflections]
-              inflections_printed = ",".join("%s%s" %
-                  (infl, " (%s)" % infltr if infltr else "")
-                  for infl, infltr in inflections)
-              if formval_no_accents == ru.remove_accents(dicformru):
-                pagemsg("create_forms: Skipping form %s=%s because would go on lemma page" % (formname, inflections_printed))
-              else:
-                if len(inflections) > 1:
-                  pagemsg("create_forms: For pagename %s, found multiple inflections %s" % (
-                    formval_no_accents, inflections_printed))
-                # Group inflections by Russian, to group multiple translits
-                inflections = ru.group_translits(inflections, pagemsg, expand_text)
+              # Group inflections by unaccented Russian, so we process
+              # multiple accent variants together
+              formvals_by_pagename = OrderedDict()
+              formvals = re.split(",", split_args[formname])
+              if len(formvals) > 1:
+                pagemsg("create_forms: Found multiple form values for %s=%s, dictionary form %s%s" %
+                    (formname, split_args[formname], dicformru, dicformtr and " (%s)" % dicformtr or ""))
+              for formval in formvals:
+                formvalru, formvaltr = split_ru_tr(formval)
+                formval_no_accents = ru.remove_accents(formvalru)
+                if skip_inflections and skip_inflections(formname, formvalru, formvaltr):
+                  pagemsg("create_forms: Skipping %s=%s%s" % (formname, formvalru,
+                    formvaltr and " (%s)" % formvaltr or ""))
+                elif formval_no_accents in formvals_by_pagename:
+                  formvals_by_pagename[formval_no_accents].append((formvalru, formvaltr))
+                else:
+                  formvals_by_pagename[formval_no_accents] = [(formvalru, formvaltr)]
+              # Process groups of inflections
+              formvals_by_pagename_items = formvals_by_pagename.items()
+              if len(formvals_by_pagename_items) > 1:
+                pagemsg("create_forms: For form %s, found multiple page names %s" % (
+                  formname, ",".join("%s" % formval_no_accents for formval_no_accents, inflections in formvals_by_pagename_items)))
+              for formval_no_accents, inflections in formvals_by_pagename_items:
+                inflections = [(ru.remove_monosyllabic_accents(infl), infltr) for infl, infltr in inflections]
+                inflections_printed = ",".join("%s%s" %
+                    (infl, " (%s)" % infltr if infltr else "")
+                    for infl, infltr in inflections)
+                if formval_no_accents == ru.remove_accents(dicformru):
+                  pagemsg("create_forms: Skipping form %s=%s because would go on lemma page" % (formname, inflections_printed))
+                else:
+                  if len(inflections) > 1:
+                    pagemsg("create_forms: For pagename %s, found multiple inflections %s" % (
+                      formval_no_accents, inflections_printed))
+                  # Group inflections by Russian, to group multiple translits
+                  inflections = ru.group_translits(inflections, pagemsg, expand_text)
 
-                if type(inflsets) is not list:
-                  inflsets = [inflsets]
-                form_gender = headword_gender or (get_gender(t, formname, args) if get_gender else [])
-                if pos == "noun":
-                  # Nouns with plural in -ята, -ата are neuter in the plural
-                  # in the corresponding forms, even though the singular is
-                  # masc. This is tricky with words like ребёнок and мальчонок
-                  # that have two plurals, one in -и and one in -ата/ята.
-                  if (re.search(ur"[яа]́?та(,|$)", args["nom_pl"]) and
-                      re.search(ur"[яа]т(|а|ам|ами|ах)$", formval_no_accents)):
-                    form_gender = [re.sub(r"\bm\b", "n", g) for g in form_gender]
+                  if type(inflsets) is not list:
+                    inflsets = [inflsets]
+                  form_gender = headword_gender or (get_gender(t, formname, split_args) if get_gender else [])
+                  if pos == "noun":
+                    # Nouns with plural in -ята, -ата are neuter in the plural
+                    # in the corresponding forms, even though the singular is
+                    # masc. This is tricky with words like ребёнок and мальчонок
+                    # that have two plurals, one in -и and one in -ата/ята.
+                    if ("nom_pl" in split_args and
+                        re.search(ur"[яа]́?та(,|$)", split_args["nom_pl"]) and
+                        re.search(ur"[яа]т(|а|ам|ами|ах)$", formval_no_accents)):
+                      form_gender = [re.sub(r"\bm\b", "n", g) for g in form_gender]
 
-                for inflset in inflsets:
-                  inflset_gender = form_gender
-                  # Add perfective or imperfective to verb inflection codes
-                  # depending on gender, then clear gender so we don't set
-                  # it on the headword.
-                  if pos == "verb":
-                    assert inflset_gender == ["pf"] or inflset_gender == ["impf"]
-                    if inflset_gender == ["pf"]:
-                      inflset = inflset + ("pfv",)
-                    else:
-                      inflset = inflset + ("impfv",)
-                    inflset_gender = []
-                  # For plurale tantum nouns, don't include "plural" in
-                  # inflection codes.
-                  if pos == "noun" and dicform_code == "nom_pl":
-                    inflset = tuple(x for x in inflset if x != "p")
+                  for inflset in inflsets:
+                    inflset_gender = form_gender
+                    # Add perfective or imperfective to verb inflection codes
+                    # depending on gender, then clear gender so we don't set
+                    # it on the headword.
+                    if pos == "verb":
+                      assert inflset_gender == ["pf"] or inflset_gender == ["impf"]
+                      if inflset_gender == ["pf"]:
+                        inflset = inflset + ("pfv",)
+                      else:
+                        inflset = inflset + ("impfv",)
+                      inflset_gender = []
+                    # For plurale tantum nouns, don't include "plural" in
+                    # inflection codes.
+                    if pos == "noun" and dicform_code == "nom_pl":
+                      inflset = tuple(x for x in inflset if x != "p")
 
-                  create_inflection_entry(save, index, inflections,
-                    dicformru, dicformtr, pos.capitalize(),
-                    "%s form %s" % (pos, formname), "dictionary form",
-                    infltemp, "", "inflection of", inflset, inflset_gender,
-                    is_lemma_template=is_lemma_template,
-                    lemmas_to_overwrite=lemmas_to_overwrite)
+                    create_inflection_entry(save, index, inflections,
+                      dicformru, dicformtr, pos.capitalize(),
+                      "%s form %s" % (pos, formname), "dictionary form",
+                      infltemp, "", "inflection of", inflset, inflset_gender,
+                      is_lemma_template=is_lemma_template,
+                      lemmas_to_overwrite=lemmas_to_overwrite)
 
 def create_verb_generator(t):
   verbtype = re.sub(r"^ru-conj-", "", unicode(t.name))
