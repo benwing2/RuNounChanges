@@ -204,7 +204,7 @@
 #     assign this way, assign to both, and if one stem ends up with no form,
 #     take the other one's. Alternatively, we could just issue a warning,
 #     clean these up manually and add them to the skip lists.
-# 59. Be smarter about how we insert defns into existing sections. First
+# 59. (DONE) Be smarter about how we insert defns into existing sections. First
 #     do a pass where we check just for already-present defns and headwords,
 #     then do a pass where we check for sections to insert into where we don't
 #     have to modify the gender, then do a pass where we check for sections
@@ -674,8 +674,7 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
 
         subsections = re.split("(^===+[^=\n]+===+\n)", sections[i], 0, re.M)
 
-        # We will loop through the subsections 3 times (NOT IMPLEMENTED YET,
-        #   currently only one time)
+        # We will loop through the subsections 3 times:
         # Pass 0 = check for existing headword and definition; break if so
         # Pass 1 = if no existing definition, check for ability to insert
         #          new defn into existing subsection without modifying gender;
@@ -687,7 +686,7 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
         # proceed below to insert a new subsection, and possibly a whole
         # new etymology section or Russian-language section
 
-        for process_section_pass in xrange(1):
+        for process_section_pass in xrange(3):
           need_outer_break = False
 
           # Go through each subsection in turn, looking for subsection
@@ -698,15 +697,16 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
               # Found a POS match
               parsed = blib.parse_text(subsections[j])
 
-              # For nouns and adjectives, check the existing gender of the given
-              # headword template and attempt to make sure it matches the given
-              # gender or can be compatibly modified to the new gender. Return
-              # False if genders incompatible, else modify existing gender if
-              # needed, and return True. (E.g. existing "p" matches new "m-an"
-              # and will be modified to "m-an-p"; # existing "m-p" matches new
-              # "m" and will be left alone.)
+              # For nouns and adjectives, check the existing gender of the
+              # given headword template and attempt to make sure it matches
+              # the given gender or can be compatibly modified to the new
+              # gender. Return False if genders incompatible and FIX_INCOMPAT
+              # is False, else modify existing gender if needed, and return
+              # True. (E.g. existing "p" matches new "m-an" and will be
+              # modified to "m-an-p"; # existing "m-p" matches new "m" and
+              # will be left alone.)
               def check_fix_noun_adj_gender(headword_template, gender,
-                  singular_in_existing_defn_templates):
+                  singular_in_existing_defn_templates, fix_incompat):
                 def gender_compatible(existing, new):
                   # Compare existing and new m/f/n gender
                   m = re.search(r"\b([mfn])\b", existing)
@@ -754,6 +754,26 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
 
                 existing_genders = blib.fetch_param_chain(headword_template,
                     first_gender_param, "g")
+
+                if not fix_incompat:
+                  # If we're not allowed to fix an incompatible gender by
+                  # adding a new gender, first make sure we can harmonize
+                  # all the genders before modifying anything.
+                  for g in gender:
+                    if g in existing_genders:
+                      continue
+                    found_compat = False
+                    if existing_genders:
+                      # Try to modify an existing gender to match the new gender
+                      for paramno, existing in enumerate(existing_genders):
+                        new_gender = gender_compatible(existing, g)
+                        if new_gender:
+                          found_compat = True
+                    # FIXME: If there are no existing genders, we return False
+                    # here. Should we instead allow this?
+                    if not found_compat:
+                      return False
+
                 for g in gender:
                   if g in existing_genders:
                     continue
@@ -779,6 +799,7 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
                       pagemsg("WARNING: Unable to modify existing genders %s to match new gender %s" % (
                         ",".join(existing_genders), g))
                   if not found_compat:
+                    assert fix_incompat
                     newparam = blib.append_param_to_chain(headword_template, g,
                         first_gender_param, "g")
                     pagemsg("Adding new gender param %s=%s" %
@@ -805,7 +826,7 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
 
               # Update the gender in HEADWORD_TEMPLATE according to GENDER
               # (which might be empty, meaning no updating) using
-              # check_fix_gender(). Also update any other parameters in
+              # check_fix_*_gender(). Also update any other parameters in
               # HEADWORD_TEMPLATE according to PARAMS. (NOTE: We don't
               # currently have any such params, but we preserve this code
               # in any we will in the future.) Return False and issue a
@@ -813,13 +834,19 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
               # wanted to set already existed in HEADWORD_TEMPLATE with a
               # different value); else return True. If changes were made,
               # an appropriate note will be added to 'notes' and the
-              # section and subsection text updated.
+              # section and subsection text updated. The argument
+              # SINGULAR_IN_EXISTING_DEFN_TEMPLATES indicates whether there's
+              # an existing definition template (e.g. {{inflection of|...}})
+              # with the inflection code "s" (singular); if so, when
+              # harmonizing the gender we remove plural gender.
+              # FIX_INCOMPAT_GENDER says whether we add a new gender to
+              # the headword template when gender harmonization fails.
               def check_fix_infl_params(headword_template, params, gender,
-                  singular_in_existing_defn_templates):
+                  singular_in_existing_defn_templates, fix_incompat_gender):
                 if gender:
                   if is_noun_or_adj:
                     if not check_fix_noun_adj_gender(headword_template, gender,
-                        singular_in_existing_defn_templates):
+                        singular_in_existing_defn_templates, fix_incompat_gender):
                       return False
                 if is_verb_form:
                   # If verb form, remove any existing gender, since it
@@ -933,6 +960,7 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
                   return "|".join([unicode(t.name), getparam(t, "1"), getparam(t, "2")])
                 else:
                   return unicode(t.name)
+
               # When checking to see if entry (headword and definition) already
               # present, allow extra heads, so e.g. when checking for 2nd pl
               # fut ind спали́те and we find a headword with both спали́те and
@@ -997,13 +1025,14 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
               # We found both templates and their heads matched; inflection
               # entry is already present.
               if (infl_headword_templates_for_already_present_entry and
-                  defn_templates_for_already_present_entry):
+                  defn_templates_for_already_present_entry and
+                  process_section_pass == 0):
                 pagemsg("Exists and has Russian section and found %s already in it"
                     % (infltype))
                 # Maybe fix up auxiliary parameters (e.g. gender) in the headword
                 # template.
                 check_fix_infl_params(infl_headword_templates_for_already_present_entry[0],
-                    [], gender, singular_in_existing_defn_templates)
+                    [], gender, singular_in_existing_defn_templates, True)
                 # Maybe override the current form code parameters in the
                 # definition template(s) with the supplied ones (i.e. those
                 # derived from the declension/conjugation template on the
@@ -1023,13 +1052,15 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
               # definition template for the same lemma, insert new definition
               # in same section.
               elif (infl_headword_templates_for_inserting_in_same_section and
-                  defn_templates_for_inserting_in_same_section):
+                  defn_templates_for_inserting_in_same_section and
+                  process_section_pass > 0):
                 # Make sure we can set the gender appropriately (and other
                 # inflection parameters, if any were to exist). If not, we will
                 # end up checking for more entries and maybe adding an entirely
                 # new entry.
                 if check_fix_infl_params(infl_headword_templates_for_inserting_in_same_section[0],
-                    [], gender, singular_in_existing_defn_templates):
+                    [], gender, singular_in_existing_defn_templates,
+                    process_section_pass == 2):
                   subsections[j] = unicode(parsed)
                   # If there's already a defn line present, insert after
                   # any such defn lines. Else, insert at beginning.
