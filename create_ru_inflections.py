@@ -222,11 +222,12 @@ import blib
 from blib import getparam, rmparam, msg, site
 from collections import OrderedDict
 
-import rulib as ru
+import rulib
 
 verbose = True
 
 AC = u"\u0301" # acute accent
+GR = u"\u0300" # grave accent
 
 # List of nouns where there are multiple headword genders and the gender
 # in the declension is acceptable
@@ -365,13 +366,6 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
     deftemp_param, gender, deftemp_needs_lang=True, entrytext=None,
     is_lemma_template=None, lemmas_to_overwrite=[]):
 
-  # Did we insert an entry or find an existing one? If not, we need to
-  # add a new one. If we break out of the loop through subsections of the
-  # Russian section, we also don't need an entry; but we have this flag
-  # because in some cases we need to continue checking subsections after
-  # we've inserted an entry, to delete duplicate ones.
-  need_new_entry = True
-
   # Remove any links that may esp. appear in the lemma, since the
   # accented version of the lemma as it appears in the lemma's headword
   # template often has links in it when the form is multiword.
@@ -385,7 +379,7 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
     return ",".join("%s (%s)" % (infl, infltr) if infltr else "%s" % infl for infl, infltr in inflections)
 
   # Fetch pagename, create pagemsg() fn to output msg with page name included
-  pagenames = set(ru.remove_accents(infl) for infl, infltr in inflections)
+  pagenames = set(rulib.remove_accents(infl) for infl, infltr in inflections)
   # If multiple inflections, they should have the same pagename minus accents
   assert len(pagenames) == 1
   pagename = list(pagenames)[0]
@@ -433,12 +427,12 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
 
   # Check whether parameter PARAM of template T matches VALUE.
   def compare_param(t, param, value, valuetr):
-    value = ru.remove_monosyllabic_accents(value)
-    paramval = ru.remove_monosyllabic_accents(blib.remove_links(getparam(t, param)))
-    if ru.is_multi_stressed(paramval):
+    value = rulib.remove_monosyllabic_accents(value)
+    paramval = rulib.remove_monosyllabic_accents(blib.remove_links(getparam(t, param)))
+    if rulib.is_multi_stressed(paramval):
       pagemsg("WARNING: Param %s=%s has multiple accents: %s" % (
         param, paramval, unicode(t)))
-    if ru.is_multi_stressed(value):
+    if rulib.is_multi_stressed(value):
       pagemsg("WARNING: Value %s to compare to param %s=%s has multiple accents" % (
         value, param, paramval))
     # If checking the first param, substitute page name if missing.
@@ -446,17 +440,17 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
       paramval = pagename
     # Allow cases where the parameter says e.g. апатичный (missing an accent)
     # and the value compared to is e.g. апати́чный (with an accent).
-    if ru.is_unaccented(paramval) and ru.remove_accents(value) == paramval:
+    if rulib.is_unaccented(paramval) and rulib.remove_accents(value) == paramval:
       matches = True
     # Allow cases that differ only in grave accents (typically if one of the
     # values has a grave accent and the other doesn't).
-    elif re.sub(ru.GR, "", paramval) == re.sub(ru.GR, "", value):
+    elif re.sub(GR, "", paramval) == re.sub(GR, "", value):
       matches = True
     else:
       matches = paramval == value
-    if ru.remove_accents(value) == ru.remove_accents(paramval):
-      valueaccents = ru.number_of_accents(value)
-      paramvalaccents = ru.number_of_accents(paramval)
+    if rulib.remove_accents(value) == rulib.remove_accents(paramval):
+      valueaccents = rulib.number_of_accents(value)
+      paramvalaccents = rulib.number_of_accents(paramval)
       if valueaccents != paramvalaccents:
         pagemsg("WARNING: Value %s (%s accents) matches param %s=%s (%s accents) except for accents, and different numbers of accents: %s" % (
           value, valueaccents, param, paramval, paramvalaccents,
@@ -490,7 +484,7 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
     left_over_heads = False
 
     if unicode(t.name) in ["ru-noun+", "ru-proper noun+"]:
-      lemmaarg = ru.fetch_noun_lemma(t, expand_text)
+      lemmaarg = rulib.fetch_noun_lemma(t, expand_text)
       if lemmaarg is None:
         pagemsg("WARNING: Error generating noun forms when %s" % purpose)
         return False
@@ -671,7 +665,7 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
                 if tname in ["ru-noun", "ru-proper noun"] and any([re.search(r"\bp\b", x) for x in blib.fetch_param_chain(t, "2", "g")]):
                   found_plurale_tantum_lemma = True
                 elif tname in ["ru-noun+", "ru-proper noun+"]:
-                  args = ru.fetch_noun_args(t, expand_text)
+                  args = rulib.fetch_noun_args(t, expand_text)
                   if args is None:
                     pagemsg("WARNING: Error expanding template when checking for plurale tantum nouns: %s" %
                         unicode(t))
@@ -707,7 +701,7 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
               paramset = set(infl_params)
               if inflset == paramset:
                 return True
-              if ru.remove_accents(lemma) in lemmas_to_overwrite:
+              if rulib.remove_accents(lemma) in lemmas_to_overwrite:
                 return "update"
               if paramset > inflset:
                 pagemsg("WARNING: Found actual inflection %s whose codes are a superset of intended codes %s, accepting" % (
@@ -1049,8 +1043,6 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
 
         # else of for loop over subsections, i.e. no break out of loop
         else:
-          if not need_new_entry:
-            break
           # At this point we couldn't find an existing subsection with
           # matching POS and appropriate headword template whose head matches
           # the inflected form.
@@ -1541,7 +1533,7 @@ def get_headword_noun_gender(section, pagemsg, expand_text):
     elif tname in ["ru-noun+", "ru-proper noun+"]:
       new_genders = blib.fetch_param_chain(t, "g", "g")
       if not new_genders:
-        args = ru.fetch_noun_args(t, expand_text)
+        args = rulib.fetch_noun_args(t, expand_text)
         if args is None:
           pagemsg("WARNING: Error generating args for headword template: %s" %
               unicode(t))
@@ -1637,7 +1629,7 @@ def split_forms_with_stress_variants(args, forms_desired, dicforms, pagemsg,
   if dicform2tr:
     pagemsg("WARNING: Dictionary form 2 of 2 %s has translit %s, can't handle" % (dicform2, dicform2tr))
     return [(dicforms, args)]
-  if ru.remove_accents(dicform1) != ru.remove_accents(dicform2):
+  if rulib.remove_accents(dicform1) != rulib.remove_accents(dicform2):
     pagemsg("WARNING: Two dictionary forms %s and %s aren't stress variants, not splitting" %
         (dicform1, dicform2))
     return [(dicforms, args)]
@@ -1771,7 +1763,7 @@ def create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite, save,
     unaccented_lemmas = {}
     for index, page in blib.cat_articles("Russian %ss" % pos):
       pagetitle = unicode(page.title())
-      unaccented_title = ru.make_unstressed(pagetitle)
+      unaccented_title = rulib.make_unstressed(pagetitle)
       if unaccented_title in lemmas_to_process_set:
         if unaccented_title in unaccented_lemmas:
           unaccented_lemmas[unaccented_title].append(pagetitle)
@@ -1817,7 +1809,7 @@ def create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite, save,
       if not result:
         pagemsg("WARNING: Error generating %s forms, skipping" % pos)
         continue
-      args = ru.split_generate_args(result)
+      args = rulib.split_generate_args(result)
       for dicform_code in dicform_codes:
         if dicform_code in args:
           break
@@ -1832,9 +1824,9 @@ def create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite, save,
         pagemsg("create_forms: Found multiple dictionary forms: %s" % args[dicform_code])
       # Fetch dictionary forms, remove accents on monosyllables
       dicforms = [split_ru_tr(dicform) for dicform in dicforms]
-      dicforms = [(ru.remove_monosyllabic_accents(dicru), dictr) for dicru, dictr in dicforms]
+      dicforms = [(rulib.remove_monosyllabic_accents(dicru), dictr) for dicru, dictr in dicforms]
       # Group dictionary forms by Russian, to group multiple translits
-      dicforms = ru.group_translits(dicforms, pagemsg, expand_text)
+      dicforms = rulib.group_translits(dicforms, pagemsg, expand_text)
       dicforms_args_sets = split_forms_with_stress_variants(args, forms_desired,
           dicforms, pagemsg, expand_text)
       for split_dicforms, split_args in dicforms_args_sets:
@@ -1861,7 +1853,7 @@ def create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite, save,
                     (formname, split_args[formname], dicformru, dicformtr and " (%s)" % dicformtr or ""))
               for formval in formvals:
                 formvalru, formvaltr = split_ru_tr(formval)
-                formval_no_accents = ru.remove_accents(formvalru)
+                formval_no_accents = rulib.remove_accents(formvalru)
                 if skip_inflections and skip_inflections(formname, formvalru, formvaltr):
                   pagemsg("create_forms: Skipping %s=%s%s" % (formname, formvalru,
                     formvaltr and " (%s)" % formvaltr or ""))
@@ -1875,18 +1867,18 @@ def create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite, save,
                 pagemsg("create_forms: For form %s, found multiple page names %s" % (
                   formname, ",".join("%s" % formval_no_accents for formval_no_accents, inflections in formvals_by_pagename_items)))
               for formval_no_accents, inflections in formvals_by_pagename_items:
-                inflections = [(ru.remove_monosyllabic_accents(infl), infltr) for infl, infltr in inflections]
+                inflections = [(rulib.remove_monosyllabic_accents(infl), infltr) for infl, infltr in inflections]
                 inflections_printed = ",".join("%s%s" %
                     (infl, " (%s)" % infltr if infltr else "")
                     for infl, infltr in inflections)
-                if formval_no_accents == ru.remove_accents(dicformru):
+                if formval_no_accents == rulib.remove_accents(dicformru):
                   pagemsg("create_forms: Skipping form %s=%s because would go on lemma page" % (formname, inflections_printed))
                 else:
                   if len(inflections) > 1:
                     pagemsg("create_forms: For pagename %s, found multiple inflections %s" % (
                       formval_no_accents, inflections_printed))
                   # Group inflections by Russian, to group multiple translits
-                  inflections = ru.group_translits(inflections, pagemsg, expand_text)
+                  inflections = rulib.group_translits(inflections, pagemsg, expand_text)
 
                   if type(inflsets) is not list:
                     inflsets = [inflsets]
