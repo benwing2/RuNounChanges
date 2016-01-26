@@ -533,7 +533,7 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
       # that have matched so we can check if any are left over
       for infl, infltr in inflections:
         for param in headparams:
-          if compare_param(t, param, infl, infltr):
+          if compare_param(t, param, infl, infltr, issue_warnings=issue_warnings):
             some_match = True
             headparams.remove(param)
             break
@@ -1045,7 +1045,8 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
               defn_templates_for_inserting_in_same_section = []
               for t in parsed.filter_templates():
                 if (unicode(t.name) == deftemp and
-                    compare_param(t, "1", lemma, lemmatr) and
+                    compare_param(t, "1", lemma, lemmatr,
+                      issue_warnings=issue_warnings) and
                     (not deftemp_needs_lang or
                       compare_param(t, "lang", "ru", None,
                         issue_warnings=issue_warnings))):
@@ -1083,8 +1084,9 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
               if (infl_headword_templates_for_already_present_entry and
                   defn_templates_for_already_present_entry and
                   process_section_pass in [0, 1]):
-                pagemsg("Exists and has Russian section and found %s already in it"
-                    % (infltype))
+                if process_section_pass == 0:
+                  pagemsg("Exists and has Russian section and found %s already in it"
+                      % (infltype))
                 # Maybe fix up auxiliary parameters (e.g. gender) in the
                 # headword template.
                 if check_fix_infl_params(infl_headword_templates_for_already_present_entry[0],
@@ -1142,7 +1144,7 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
           if need_outer_break:
             break
 
-        # else of for loop over passes 0-2, i.e. no break out of loop
+        # else of for loop over passes 0-3, i.e. no break out of loop
         else:
           # At this point we couldn't find an existing subsection with
           # matching POS and appropriate headword template whose head matches
