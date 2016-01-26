@@ -211,6 +211,10 @@
 #     to insert into where we do modify the gender. This will be important
 #     when adding accusatives where inanimate and animate variants exist
 #     as separate entries.
+# 59a. (DONE) See #59; we actually need four passes, not three, splitting
+#     the first pass where we check for already-present defns and headwords
+#     in two, first where we're not allowed to add a gender and second where
+#     we are.
 # 60. (DONE) When splitting forms based on stress variants, handle reduced/
 #     dereduced stems.
 # 61. (DONE) Fix bug where head2 has translit tr= instead of tr2=.
@@ -397,6 +401,9 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
     else:
       msg("Page %s %s: %s: %s %s, %s %s%s" % (index, pagename, text, infltype,
         joined_infls_with_tr(), lemmatype, lemma, " (%s)" % lemmatr if lemmatr else ""))
+  def pagemsg_if(doit, text, simple=False):
+    if doit:
+      pagemsg(text, simple=simple)
   def expand_text(tempcall):
     return blib.expand_text(tempcall, pagename, pagemsg, verbose)
 
@@ -433,14 +440,14 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
   page = pywikibot.Page(site, pagename)
 
   # Check whether parameter PARAM of template T matches VALUE.
-  def compare_param(t, param, value, valuetr):
+  def compare_param(t, param, value, valuetr, issue_warnings=True):
     value = rulib.remove_monosyllabic_accents(value)
     paramval = rulib.remove_monosyllabic_accents(blib.remove_links(getparam(t, param)))
     if rulib.is_multi_stressed(paramval):
-      pagemsg("WARNING: Param %s=%s has multiple accents: %s" % (
+      pagemsg_if(issue_warnings, "WARNING: Param %s=%s has multiple accents: %s" % (
         param, paramval, unicode(t)))
     if rulib.is_multi_stressed(value):
-      pagemsg("WARNING: Value %s to compare to param %s=%s has multiple accents" % (
+      pagemsg_if(issue_warnings, "WARNING: Value %s to compare to param %s=%s has multiple accents" % (
         value, param, paramval))
     # If checking the first param, substitute page name if missing.
     if not paramval and param in ["1", "head"]:
@@ -459,7 +466,7 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
       valueaccents = rulib.number_of_accents(value)
       paramvalaccents = rulib.number_of_accents(paramval)
       if valueaccents != paramvalaccents:
-        pagemsg("WARNING: Value %s (%s accents) matches param %s=%s (%s accents) except for accents, and different numbers of accents: %s" % (
+        pagemsg_if(issue_warnings, "WARNING: Value %s (%s accents) matches param %s=%s (%s accents) except for accents, and different numbers of accents: %s" % (
           value, valueaccents, param, paramval, paramvalaccents,
           unicode(t)))
     # Now, if there's a match, check the translit
@@ -476,7 +483,7 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
         return True
       if valuetr == trparamval:
         return True
-      pagemsg("WARNING: Value %s matches param %s=%s, but translit %s doesn't match param %s=%s: %s" % (
+      pagemsg_if(issue_warnings, "WARNING: Value %s matches param %s=%s, but translit %s doesn't match param %s=%s: %s" % (
         value, param, paramval, valuetr, trparam, trparamval, unicode(t)))
       return False
     return False
@@ -485,7 +492,7 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
   # a list of (FORM, FORMTR) tuples. Warn if some but not all match, and
   # warn if all match but some heads are left over. Knows how to deal with
   # ru-noun+ and ru-proper noun+.
-  def template_head_matches(t, inflections, purpose, fail_when_left_over_heads=False):
+  def template_head_matches(t, inflections, purpose, fail_when_left_over_heads=False, issue_warnings=True):
     some_match = False
     all_match = True
     left_over_heads = False
@@ -493,7 +500,7 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
     if unicode(t.name) in ["ru-noun+", "ru-proper noun+"]:
       lemmaarg = rulib.fetch_noun_lemma(t, expand_text)
       if lemmaarg is None:
-        pagemsg("WARNING: Error generating noun forms when %s" % purpose)
+        pagemsg_if(issue_warnings, "WARNING: Error generating noun forms when %s" % purpose)
         return False
       else:
         lemmas = set(re.split(",", lemmaarg))
@@ -501,7 +508,9 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
         # that have matched so we can check if any are left over
         for infl, infltr in inflections:
           for lem in lemmas:
-            if lemma_matches(lem, infl, infltr, pagemsg, expand_text):
+            if lemma_matches(lem, infl, infltr,
+                lambda x:pagemsg_if(issue_warnings, x),
+                expand_text):
               some_match = True
               lemmas.remove(lem)
               break
@@ -533,15 +542,15 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
       left_over_heads = headparams
 
     if some_match and not all_match:
-      pagemsg("WARNING: Some but not all inflections %s match template when %s: %s" %
+      pagemsg_if(issue_warnings, "WARNING: Some but not all inflections %s match template when %s: %s" %
           (joined_infls_with_tr(), purpose, unicode(t)))
     elif all_match and left_over_heads:
       if fail_when_left_over_heads:
-        pagemsg("WARNING: All inflections %s match template, but extra heads in template when %s, treating as a non-match: %s" %
+        pagemsg_if(issue_warnings, "WARNING: All inflections %s match template, but extra heads in template when %s, treating as a non-match: %s" %
             (joined_infls_with_tr(), purpose, unicode(t)))
         return False
       else:
-        pagemsg("WARNING: All inflections %s match template, but extra heads in template when %s: %s" %
+        pagemsg_if(issue_warnings, "WARNING: All inflections %s match template, but extra heads in template when %s: %s" %
             (joined_infls_with_tr(), purpose, unicode(t)))
     return all_match
 
@@ -681,19 +690,48 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
 
         subsections = re.split("(^===+[^=\n]+===+\n)", sections[i], 0, re.M)
 
-        # We will loop through the subsections 3 times:
-        # Pass 0 = check for existing headword and definition; break if so
-        # Pass 1 = if no existing definition, check for ability to insert
-        #          new defn into existing subsection without modifying gender;
-        #          break if so
-        # Pass 2 = if got this far, check for ability to insert new defn
-        #          into existing subsection with gender modification
+        # We will loop through the subsections up to 4 times, seeing if we
+        # can find a match or a way of inserting a new definition. If so, we
+        # break the loop.
+        #
+        # Pass 0 = check for existing headword and definition, without adding
+        #          a new gender to the headword; break if so
+        # Pass 1 = same, but this time allow a new gender to be added;
+        #          break if existing headword and definition found
+        # Pass 2 = if no existing definition, check for ability to insert
+        #          new defn into existing subsection without adding a new
+        #          gender; break if so
+        # Pass 3 = if got this far, check for ability to insert new defn
+        #          into existing subsection adding a new gender
         #
         # If we got through all three passes without breaking, we will
         # proceed below to insert a new subsection, and possibly a whole
-        # new etymology section or Russian-language section
+        # new etymology section or Russian-language section.
+        #
+        # We do this to handle certain situations where there are multiple
+        # subsections. For example, моль has three separate etymologically
+        # unrelated meanings, with different declensions and genders. моль
+        # meaning "clothes moth" is feminine animate, while моль meaning
+        # "minor (music)" or "mole (chemistry)" is masculine inanimate.
+        # моли is gen/dat/pre sg and nom pl or моль "clothes moth", and
+        # nom/acc pl of the other two meanings. After the gen sg and nom pl
+        # were created by the bot, it was hand-edited and split into two
+        # etymology sections, one feminine animate with definitions for
+        # gen sg and nom pl and the second masculine inanimate with a
+        # definition for nom pl. When processing the nom pl of the masculine
+        # inanimate meanings, if we don't have separate passes with and
+        # without allowing for adding gender, we'll match the first etymology
+        # section and add masculine inanimate gender to it, when there's
+        # already a suitable entry in the second etymology section. Similarly,
+        # when processing the acc pl of the masculine inanimate meanings,
+        # without separate passes we would insert the defn into the first
+        # etymology section and modify the gender, when it should go into
+        # the second. In other circumstances, without separate passes to
+        # first check for existing definitions we might add a definition for
+        # a form into an earlier subsection when there's already such a
+        # definition in a later subsection.
 
-        for process_section_pass in xrange(3):
+        for process_section_pass in xrange(4):
           need_outer_break = False
 
           # Go through each subsection in turn, looking for subsection
@@ -931,7 +969,7 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
               # True if the inflection codes in template T (an 'inflection of'
               # template) exactly match the inflections given in INFLS (in
               # any order), or if the former are a superset of the latter
-              def compare_inflections(t, infls):
+              def compare_inflections(t, infls, issue_warnings=True):
                 infl_params = []
                 for param in t.params:
                   name = unicode(param.name)
@@ -945,18 +983,18 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
                 if rulib.remove_accents(lemma) in lemmas_to_overwrite:
                   return "update"
                 if paramset > inflset:
-                  pagemsg("WARNING: Found actual inflection %s whose codes are a superset of intended codes %s, accepting" % (
+                  pagemsg_if(issue_warnings, "WARNING: Found actual inflection %s whose codes are a superset of intended codes %s, accepting" % (
                     unicode(t), "|".join(infls)))
                   return True
                 if paramset < inflset:
                   # Check to see if we match except for a missing perfective or
                   # imperfective aspect, which we will update.
                   if (paramset | {"pfv"}) == inflset or (paramset | {"impfv"}) == inflset:
-                    pagemsg("Need to update actual inflection %s with intended codes %s" % (
+                    pagemsg_if(issue_warnings, "Need to update actual inflection %s with intended codes %s" % (
                       unicode(t), "|".join(infls)))
                     return "update"
                   else:
-                    pagemsg("WARNING: Found actual inflection %s whose codes are a subset of intended codes %s" % (
+                    pagemsg_if(issue_warnings, "WARNING: Found actual inflection %s whose codes are a subset of intended codes %s" % (
                       unicode(t), "|".join(infls)))
                 return False
 
@@ -979,16 +1017,24 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
               # only fut ind. Many verbs work this way. The two forms of the
               # fut ind are found under separate conjugation templates so we
               # won't get a single request with both of them.)
+              #
+              # Set ISSUE_WARNINGS appropriately so we only issue warnings
+              # on the first pass, rather than duplicating up to four times
+              # on each pass.
+              issue_warnings = process_section_pass == 0
               infl_headword_templates_for_already_present_entry = [
                   t for t in parsed.filter_templates()
                   if template_name(t) == infltemp and
-                  template_head_matches(t, inflections, "checking for already-present entry")]
+                  template_head_matches(t, inflections,
+                    "checking for already-present entry",
+                    issue_warnings=issue_warnings)]
               infl_headword_templates_for_inserting_in_same_section = [
                   t for t in parsed.filter_templates()
                   if template_name(t) == infltemp and
                   template_head_matches(t, inflections,
                     "checking for inserting defn in same section",
-                    fail_when_left_over_heads=True)]
+                    fail_when_left_over_heads=True,
+                    issue_warnings=issue_warnings)]
 
               # Find the definitional (typically 'inflection of') template(s).
               # We store a tuple of (TEMPLATE, NEEDS_UPDATE) where NEEDS_UDPATE
@@ -1001,12 +1047,14 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
                 if (unicode(t.name) == deftemp and
                     compare_param(t, "1", lemma, lemmatr) and
                     (not deftemp_needs_lang or
-                      compare_param(t, "lang", "ru", None))):
+                      compare_param(t, "lang", "ru", None,
+                        issue_warnings=issue_warnings))):
                   defn_templates_for_inserting_in_same_section.append(t)
                   if not deftemp_uses_inflection_of:
                     defn_templates_for_already_present_entry.append((t, False))
                   else:
-                    result = compare_inflections(t, deftemp_param)
+                    result = compare_inflections(t, deftemp_param,
+                        issue_warnings=issue_warnings)
                     if result == "update":
                       defn_templates_for_already_present_entry.append((t, True))
                     elif result:
@@ -1016,7 +1064,8 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
               for t in parsed.filter_templates():
                 if (unicode(t.name) == deftemp and
                     (not deftemp_needs_lang or
-                      compare_param(t, "lang", "ru", None))):
+                      compare_param(t, "lang", "ru", None,
+                        issue_warnings=issue_warnings))):
                   for paramno in xrange(1, 20):
                     if getparam(t, str(paramno)) == "s":
                       singular_in_existing_defn_templates = True
@@ -1033,26 +1082,27 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
               # entry is already present.
               if (infl_headword_templates_for_already_present_entry and
                   defn_templates_for_already_present_entry and
-                  process_section_pass == 0):
+                  process_section_pass in [0, 1]):
                 pagemsg("Exists and has Russian section and found %s already in it"
                     % (infltype))
-                # Maybe fix up auxiliary parameters (e.g. gender) in the headword
-                # template.
-                check_fix_infl_params(infl_headword_templates_for_already_present_entry[0],
-                    [], gender, singular_in_existing_defn_templates, True)
-                # Maybe override the current form code parameters in the
-                # definition template(s) with the supplied ones (i.e. those
-                # derived from the declension/conjugation template on the
-                # lemma page).
-                for t, needs_update in defn_templates_for_already_present_entry:
-                  if needs_update:
-                    check_fix_defn_params(t, deftemp_param)
-                # "Do nothing", but set a comment, in case we made a template
-                # change like changing gender.
-                comment = "Update params of existing entry: %s %s, %s %s" % (
-                    infltype, joined_infls, lemmatype, lemma)
-                need_outer_break = True
-                break
+                # Maybe fix up auxiliary parameters (e.g. gender) in the
+                # headword template.
+                if check_fix_infl_params(infl_headword_templates_for_already_present_entry[0],
+                    [], gender, singular_in_existing_defn_templates,
+                    process_section_pass == 1):
+                  # Maybe override the current form code parameters in the
+                  # definition template(s) with the supplied ones (i.e. those
+                  # derived from the declension/conjugation template on the
+                  # lemma page).
+                  for t, needs_update in defn_templates_for_already_present_entry:
+                    if needs_update:
+                      check_fix_defn_params(t, deftemp_param)
+                  # "Do nothing", but set a comment, in case we made a template
+                  # change like changing gender.
+                  comment = "Update params of existing entry: %s %s, %s %s" % (
+                      infltype, joined_infls, lemmatype, lemma)
+                  need_outer_break = True
+                  break
 
               # At this point, didn't find either headword or definitional
               # template, or both. If we found headword template and another
@@ -1060,15 +1110,14 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
               # in same section.
               elif (infl_headword_templates_for_inserting_in_same_section and
                   defn_templates_for_inserting_in_same_section and
-                  process_section_pass > 0):
+                  process_section_pass in [2, 3]):
                 # Make sure we can set the gender appropriately (and other
                 # inflection parameters, if any were to exist). If not, we will
                 # end up checking for more entries and maybe adding an entirely
                 # new entry.
                 if check_fix_infl_params(infl_headword_templates_for_inserting_in_same_section[0],
                     [], gender, singular_in_existing_defn_templates,
-                    process_section_pass == 2):
-                  subsections[j] = unicode(parsed)
+                    process_section_pass == 3):
                   # If there's already a defn line present, insert after
                   # any such defn lines. Else, insert at beginning.
                   if re.search(r"^# \{\{%s\|" % deftemp, subsections[j], re.M):
