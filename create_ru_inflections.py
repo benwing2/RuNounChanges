@@ -213,6 +213,7 @@
 #     as separate entries.
 # 60. (DONE) When splitting forms based on stress variants, handle reduced/
 #     dereduced stems.
+# 61. (DONE) Fix bug where head2 has translit tr= instead of tr2=.
 
 import pywikibot, re, sys, codecs, argparse, time
 import traceback
@@ -567,7 +568,7 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
             infl, "|tr=%s" % infltr if infltr else ""))
         else:
           headparams.append("|head%s=%s%s" % (headno, infl,
-            "|tr=%s" % infltr if infltr else ""))
+            "|tr%s=%s" % (headno, infltr if infltr else "")))
 
     # 2. Get the g=/2= and g2=,g3= etc. headword params.
     genderparams = []
