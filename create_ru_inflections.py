@@ -583,7 +583,7 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
             infl, "|tr=%s" % infltr if infltr else ""))
         else:
           headparams.append("|head%s=%s%s" % (headno, infl,
-            "|tr%s=%s" % (headno, infltr if infltr else "")))
+            "|tr%s=%s" % (headno, infltr) if infltr else ""))
 
     # 2. Get the g=/2= and g2=,g3= etc. headword params.
     genderparams = []
