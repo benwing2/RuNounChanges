@@ -248,6 +248,12 @@ skip_form_pages = [
     u"саженей", # (from сажень)
     # will also need to do саженям, саженями, саженях (-а́м, -а́ми, -а́х go only
     # with са́жень)
+    u"творога", u"твороги", u"творогов" # (from творог)
+    # will also need to do all other parts (difficulties handling accent
+    # pattern b with masculine nouns)
+    u"интервьюера", u"интервьюеры", u"интервьюеров" # (from интервьюер)
+    # will also need to do all other parts (difficulties with splitting when
+    # manual translit is present)
 ]
 
 def check_re_sub(pagemsg, action, refrom, reto, text, numsub=1, flags=0):
