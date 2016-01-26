@@ -693,107 +693,10 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
           # Go through each subsection in turn, looking for subsection
           # matching the POS with an appropriate headword template whose
           # head matches the inflected form
-          for j in xrange(len(subsections)):
-            match_pos = False
-            if j > 0 and (j % 2) == 0:
-              if re.match("^===+%s===+\n" % pos, subsections[j - 1]):
-                match_pos = True
-
-            # Found a POS match
-            if match_pos:
+          for j in xrange(2, len(subsections), 2):
+            if re.match("^===+%s===+\n" % pos, subsections[j - 1]):
+              # Found a POS match
               parsed = blib.parse_text(subsections[j])
-
-              # True if the inflection codes in template T (an 'inflection of'
-              # template) exactly match the inflections given in INFLS (in
-              # any order), or if the former are a superset of the latter
-              def compare_inflections(t, infls):
-                infl_params = []
-                for param in t.params:
-                  name = unicode(param.name)
-                  value = unicode(param.value)
-                  if name not in ["1", "2"] and re.search("^[0-9]+$", name) and value:
-                    infl_params.append(value)
-                inflset = set(infls)
-                paramset = set(infl_params)
-                if inflset == paramset:
-                  return True
-                if rulib.remove_accents(lemma) in lemmas_to_overwrite:
-                  return "update"
-                if paramset > inflset:
-                  pagemsg("WARNING: Found actual inflection %s whose codes are a superset of intended codes %s, accepting" % (
-                    unicode(t), "|".join(infls)))
-                  return True
-                if paramset < inflset:
-                  # Check to see if we match except for a missing perfective or
-                  # imperfective aspect, which we will update.
-                  if (paramset | {"pfv"}) == inflset or (paramset | {"impfv"}) == inflset:
-                    pagemsg("Need to update actual inflection %s with intended codes %s" % (
-                      unicode(t), "|".join(infls)))
-                    return "update"
-                  else:
-                    pagemsg("WARNING: Found actual inflection %s whose codes are a subset of intended codes %s" % (
-                      unicode(t), "|".join(infls)))
-                return False
-
-              # Find the inflection headword template(s) (e.g. 'ru-noun form' or
-              # 'head|ru|verb form').
-              def template_name(t):
-                if infltemp_is_head:
-                  return "|".join([unicode(t.name), getparam(t, "1"), getparam(t, "2")])
-                else:
-                  return unicode(t.name)
-              # When checking to see if entry (headword and definition) already
-              # present, allow extra heads, so e.g. when checking for 2nd pl
-              # fut ind спали́те and we find a headword with both спали́те and
-              # спа́лите we won't skip it. But when checking for headword without
-              # definition to insert a new definition under it, make sure no
-              # left-over heads, otherwise we will insert 2nd pl imperative
-              # спали́те under the entry with both спали́те and спа́лите, which is
-              # incorrect. (спали́те is both fut ind and imper, but спа́лите is
-              # only fut ind. Many verbs work this way. The two forms of the
-              # fut ind are found under separate conjugation templates so we
-              # won't get a single request with both of them.)
-              infl_headword_templates_for_already_present_entry = [
-                  t for t in parsed.filter_templates()
-                  if template_name(t) == infltemp and
-                  template_head_matches(t, inflections, "checking for already-present entry")]
-              infl_headword_templates_for_inserting_in_same_section = [
-                  t for t in parsed.filter_templates()
-                  if template_name(t) == infltemp and
-                  template_head_matches(t, inflections,
-                    "checking for inserting defn in same section",
-                    fail_when_left_over_heads=True)]
-
-              # Find the definitional (typically 'inflection of') template(s).
-              # We store a tuple of (TEMPLATE, NEEDS_UPDATE) where NEEDS_UDPATE
-              # is true if we need to overwrite the form codes (this happens
-              # when we want to add the verb aspect 'pfv' or 'impfv' to the
-              # form codes).
-              defn_templates_for_already_present_entry = []
-              defn_templates_for_inserting_in_same_section = []
-              for t in parsed.filter_templates():
-                if (unicode(t.name) == deftemp and
-                    compare_param(t, "1", lemma, lemmatr) and
-                    (not deftemp_needs_lang or
-                      compare_param(t, "lang", "ru", None))):
-                  defn_templates_for_inserting_in_same_section.append(t)
-                  if not deftemp_uses_inflection_of:
-                    defn_templates_for_already_present_entry.append((t, False))
-                  else:
-                    result = compare_inflections(t, deftemp_param)
-                    if result == "update":
-                      defn_templates_for_already_present_entry.append((t, True))
-                    elif result:
-                      defn_templates_for_already_present_entry.append((t, False))
-
-              singular_in_existing_defn_templates = False
-              for t in parsed.filter_templates():
-                if (unicode(t.name) == deftemp and
-                    (not deftemp_needs_lang or
-                      compare_param(t, "lang", "ru", None))):
-                  for paramno in xrange(1, 20):
-                    if getparam(t, str(paramno)) == "s":
-                      singular_in_existing_defn_templates = True
 
               # For nouns and adjectives, check the existing gender of the given
               # headword template and attempt to make sure it matches the given
@@ -802,7 +705,8 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
               # needed, and return True. (E.g. existing "p" matches new "m-an"
               # and will be modified to "m-an-p"; # existing "m-p" matches new
               # "m" and will be left alone.)
-              def check_fix_noun_adj_gender(headword_template, gender):
+              def check_fix_noun_adj_gender(headword_template, gender,
+                  singular_in_existing_defn_templates):
                 def gender_compatible(existing, new):
                   # Compare existing and new m/f/n gender
                   m = re.search(r"\b([mfn])\b", existing)
@@ -910,10 +814,12 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
               # different value); else return True. If changes were made,
               # an appropriate note will be added to 'notes' and the
               # section and subsection text updated.
-              def check_fix_infl_params(headword_template, params, gender):
+              def check_fix_infl_params(headword_template, params, gender,
+                  singular_in_existing_defn_templates):
                 if gender:
                   if is_noun_or_adj:
-                    if not check_fix_noun_adj_gender(headword_template, gender):
+                    if not check_fix_noun_adj_gender(headword_template, gender,
+                        singular_in_existing_defn_templates):
                       return False
                 if is_verb_form:
                   # If verb form, remove any existing gender, since it
@@ -988,8 +894,101 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
                   subsections[j] = unicode(parsed)
                   sections[i] = ''.join(subsections)
 
+              # True if the inflection codes in template T (an 'inflection of'
+              # template) exactly match the inflections given in INFLS (in
+              # any order), or if the former are a superset of the latter
+              def compare_inflections(t, infls):
+                infl_params = []
+                for param in t.params:
+                  name = unicode(param.name)
+                  value = unicode(param.value)
+                  if name not in ["1", "2"] and re.search("^[0-9]+$", name) and value:
+                    infl_params.append(value)
+                inflset = set(infls)
+                paramset = set(infl_params)
+                if inflset == paramset:
+                  return True
+                if rulib.remove_accents(lemma) in lemmas_to_overwrite:
+                  return "update"
+                if paramset > inflset:
+                  pagemsg("WARNING: Found actual inflection %s whose codes are a superset of intended codes %s, accepting" % (
+                    unicode(t), "|".join(infls)))
+                  return True
+                if paramset < inflset:
+                  # Check to see if we match except for a missing perfective or
+                  # imperfective aspect, which we will update.
+                  if (paramset | {"pfv"}) == inflset or (paramset | {"impfv"}) == inflset:
+                    pagemsg("Need to update actual inflection %s with intended codes %s" % (
+                      unicode(t), "|".join(infls)))
+                    return "update"
+                  else:
+                    pagemsg("WARNING: Found actual inflection %s whose codes are a subset of intended codes %s" % (
+                      unicode(t), "|".join(infls)))
+                return False
+
+              # Find the inflection headword template(s) (e.g. 'ru-noun form' or
+              # 'head|ru|verb form').
+              def template_name(t):
+                if infltemp_is_head:
+                  return "|".join([unicode(t.name), getparam(t, "1"), getparam(t, "2")])
+                else:
+                  return unicode(t.name)
+              # When checking to see if entry (headword and definition) already
+              # present, allow extra heads, so e.g. when checking for 2nd pl
+              # fut ind спали́те and we find a headword with both спали́те and
+              # спа́лите we won't skip it. But when checking for headword without
+              # definition to insert a new definition under it, make sure no
+              # left-over heads, otherwise we will insert 2nd pl imperative
+              # спали́те under the entry with both спали́те and спа́лите, which is
+              # incorrect. (спали́те is both fut ind and imper, but спа́лите is
+              # only fut ind. Many verbs work this way. The two forms of the
+              # fut ind are found under separate conjugation templates so we
+              # won't get a single request with both of them.)
+              infl_headword_templates_for_already_present_entry = [
+                  t for t in parsed.filter_templates()
+                  if template_name(t) == infltemp and
+                  template_head_matches(t, inflections, "checking for already-present entry")]
+              infl_headword_templates_for_inserting_in_same_section = [
+                  t for t in parsed.filter_templates()
+                  if template_name(t) == infltemp and
+                  template_head_matches(t, inflections,
+                    "checking for inserting defn in same section",
+                    fail_when_left_over_heads=True)]
+
+              # Find the definitional (typically 'inflection of') template(s).
+              # We store a tuple of (TEMPLATE, NEEDS_UPDATE) where NEEDS_UDPATE
+              # is true if we need to overwrite the form codes (this happens
+              # when we want to add the verb aspect 'pfv' or 'impfv' to the
+              # form codes).
+              defn_templates_for_already_present_entry = []
+              defn_templates_for_inserting_in_same_section = []
+              for t in parsed.filter_templates():
+                if (unicode(t.name) == deftemp and
+                    compare_param(t, "1", lemma, lemmatr) and
+                    (not deftemp_needs_lang or
+                      compare_param(t, "lang", "ru", None))):
+                  defn_templates_for_inserting_in_same_section.append(t)
+                  if not deftemp_uses_inflection_of:
+                    defn_templates_for_already_present_entry.append((t, False))
+                  else:
+                    result = compare_inflections(t, deftemp_param)
+                    if result == "update":
+                      defn_templates_for_already_present_entry.append((t, True))
+                    elif result:
+                      defn_templates_for_already_present_entry.append((t, False))
+
+              singular_in_existing_defn_templates = False
+              for t in parsed.filter_templates():
+                if (unicode(t.name) == deftemp and
+                    (not deftemp_needs_lang or
+                      compare_param(t, "lang", "ru", None))):
+                  for paramno in xrange(1, 20):
+                    if getparam(t, str(paramno)) == "s":
+                      singular_in_existing_defn_templates = True
+
               # Make sure there's exactly one headword template.
-              if len(infl_headword_templates_for_already_present_entry) > 1:
+              if (len(infl_headword_templates_for_already_present_entry) > 1
+                  or len(infl_headword_templates_for_inserting_in_same_section) > 1):
                 pagemsg("WARNING: Found multiple inflection headword templates for %s; taking no action"
                     % (infltype))
                 need_outer_break = True
@@ -1003,7 +1002,8 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
                     % (infltype))
                 # Maybe fix up auxiliary parameters (e.g. gender) in the headword
                 # template.
-                check_fix_infl_params(infl_headword_templates_for_already_present_entry[0], [], gender)
+                check_fix_infl_params(infl_headword_templates_for_already_present_entry[0],
+                    [], gender, singular_in_existing_defn_templates)
                 # Maybe override the current form code parameters in the
                 # definition template(s) with the supplied ones (i.e. those
                 # derived from the declension/conjugation template on the
@@ -1029,7 +1029,7 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
                 # end up checking for more entries and maybe adding an entirely
                 # new entry.
                 if check_fix_infl_params(infl_headword_templates_for_inserting_in_same_section[0],
-                    [], gender):
+                    [], gender, singular_in_existing_defn_templates):
                   subsections[j] = unicode(parsed)
                   # If there's already a defn line present, insert after
                   # any such defn lines. Else, insert at beginning.
