@@ -218,6 +218,12 @@
 # 60. (DONE) When splitting forms based on stress variants, handle reduced/
 #     dereduced stems.
 # 61. (DONE) Fix bug where head2 has translit tr= instead of tr2=.
+# 62. (DONE) Handle manual translit when splitting stress variants. Probably
+#     can just pretend it's not there.
+# 63. (DONE) Allow manually-specified split forms when splitting stress
+#     variants.
+# 64. (DONE) When stress variants are present, ensure that newly created
+#     subsections for different variants end up in the same etymology section.
 
 import pywikibot, re, sys, codecs, argparse, time
 import traceback
@@ -244,20 +250,34 @@ skip_lemma_pages = [
 ]
 
 skip_form_pages = [
-    # Pages with multiple lemmas with different stresses, where the algorithm
-    # to split them doesn't work
-    u"договора", u"договоров", # (from договор)
-    # will also need to do договорам, договорами, договорах (-а́м, -а́ми, -а́х
-    # go only with до́говор)
-    u"саженей", # (from сажень)
-    # will also need to do саженям, саженями, саженях (-а́м, -а́ми, -а́х go only
-    # with са́жень)
-    u"творога", u"твороги", u"творогов" # (from творог)
-    # will also need to do all other parts (difficulties handling accent
-    # pattern b with masculine nouns)
-    u"интервьюера", u"интервьюеры", u"интервьюеров" # (from интервьюер)
-    # will also need to do all other parts (difficulties with splitting when
-    # manual translit is present)
+]
+
+# Used to manually assign forms to lemmas when there are stress variants.
+# Each entry is (FORMREGEX, LEMMA) where FORMREGEX is a regex with accents
+# that should match the form, and LEMMA is the corresponding lemma.
+manual_split_form_list = [
+    (u"^бондар", u"бонда́рь"),
+    (u"^грабар", u"граба́рь"),
+    (u"^договор", u"до́говор"),
+    (u"^кожух", u"кожу́х"),
+    (u"^козы́рн.*ка́рт", u"козы́рная ка́рта"),
+    (u"^козырн.*ка́рт", u"козырна́я ка́рта"),
+    (u"^колок", u"коло́к"),
+    (u"^ко́мплекс.*чис", u"ко́мплексное число́"),
+    (u"^компле́кс.*чис", u"компле́ксное число́"),
+    (u"^лемех", u"леме́х"),
+    (u"^морск.*у́ш", u"морско́е у́шко"),
+    (u"^морск.*уш", u"морско́е ушко́"),
+    (u"^не́топыр", u"не́топырь"),
+    (u"^нетопыр", u"нетопы́рь"),
+    (u"^обух", u"обу́х"),
+    (u"^пехтер", u"пехте́рь"),
+    (u"^програ́ммн.*обеспече́н", u"програ́ммное обеспече́ние"),
+    (u"^програ́ммн.*обеспе́чен", u"програ́ммное обеспе́чение"),
+    (u"^пяден", u"пя́день"),
+    (u"^рыбар", u"рыба́рь"),
+    (u"^сажен", u"са́жень"),
+    (u"^творог", u"творо́г"),
 ]
 
 def check_re_sub(pagemsg, action, refrom, reto, text, numsub=1, flags=0):
@@ -372,10 +392,15 @@ def lemma_matches(lemma, ru, tr, pagemsg, expand_text):
 # LEMMAS_TO_OVERWRITE is a list of lemma pages the forms of which to overwrite
 # the inflection codes of when an existing definition template (e.g.
 # 'inflection of') is found with matching lemma. Entries are without accents.
+#
+# ALLOW_STRESS_MISMATCH_IN_DEFN is used when dealing with stress variants to
+# allow for stress mismatch when inserting a new subsection next to an
+# existing one, instead of creating a new etymology section.
 def create_inflection_entry(save, index, inflections, lemma, lemmatr,
     pos, infltype, lemmatype, infltemp, infltemp_param, deftemp,
     deftemp_param, gender, deftemp_needs_lang=True, entrytext=None,
-    is_lemma_template=None, lemmas_to_overwrite=[]):
+    is_lemma_template=None, lemmas_to_overwrite=[],
+    allow_stress_mismatch_in_defn=False):
 
   # Remove any links that may esp. appear in the lemma, since the
   # accented version of the lemma as it appears in the lemma's headword
@@ -440,7 +465,8 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
   page = pywikibot.Page(site, pagename)
 
   # Check whether parameter PARAM of template T matches VALUE.
-  def compare_param(t, param, value, valuetr, issue_warnings=True):
+  def compare_param(t, param, value, valuetr, issue_warnings=True,
+      allow_stress_mismatch=False):
     value = rulib.remove_monosyllabic_accents(value)
     paramval = rulib.remove_monosyllabic_accents(blib.remove_links(getparam(t, param)))
     if rulib.is_multi_stressed(paramval):
@@ -460,6 +486,8 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
     # values has a grave accent and the other doesn't).
     elif re.sub(GR, "", paramval) == re.sub(GR, "", value):
       matches = True
+    elif allow_stress_mismatch:
+      matches = rulib.remove_accents(paramval) == rulib.remove_accents(value)
     else:
       matches = paramval == value
     if rulib.remove_accents(value) == rulib.remove_accents(paramval):
@@ -480,6 +508,13 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
         return True
       trparamval = getparam(t, trparam)
       if not valuetr and not trparamval:
+        return True
+      # If allow stress mismatch, compare without accents; but need first
+      # to decompose each so rulib.remove_accents() successfully removes the
+      # accents
+      if (allow_stress_mismatch and valuetr and trparamval and
+          rulib.remove_accents(unicodedata.normalize("NFD", valuetr)) ==
+          rulib.remove_accents(unicodedata.normalize("NFD", trparamval))):
         return True
       if valuetr == trparamval:
         return True
@@ -1256,10 +1291,11 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
                   else "participle form", "headword")
               break
 
-          def matching_defn_templates(parsed):
+          def matching_defn_templates(parsed, allow_stress_mismatch=False):
             return [t for t in parsed.filter_templates()
                 if unicode(t.name) == deftemp and
-                compare_param(t, "1", lemma, lemmatr) and
+                compare_param(t, "1", lemma, lemmatr,
+                  allow_stress_mismatch=allow_stress_mismatch) and
                 (not deftemp_needs_lang or
                   compare_param(t, "lang", "ru", None))]
 
@@ -1319,7 +1355,8 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
           for j in xrange(2, len(subsections), 2):
             if re.match("^===+%s===+\n" % pos, subsections[j - 1]):
               parsed = blib.parse_text(subsections[j])
-              defn_templates = matching_defn_templates(parsed)
+              defn_templates = matching_defn_templates(parsed,
+                  allow_stress_mismatch=allow_stress_mismatch_in_defn)
               if defn_templates:
                 insert_at = j + 1
 
@@ -1726,12 +1763,13 @@ def split_forms_with_stress_variants(args, forms_desired, dicforms, pagemsg,
     return [(dicforms, args)]
   dicform1, dicform1tr = dicforms[0]
   dicform2, dicform2tr = dicforms[1]
-  if dicform1tr:
-    pagemsg("WARNING: Dictionary form 1 of 2 %s has translit %s, can't handle" % (dicform1, dicform1tr))
-    return [(dicforms, args)]
-  if dicform2tr:
-    pagemsg("WARNING: Dictionary form 2 of 2 %s has translit %s, can't handle" % (dicform2, dicform2tr))
-    return [(dicforms, args)]
+  # We can just more or less ignore the translit and it works.
+  #if dicform1tr:
+  #  pagemsg("WARNING: Dictionary form 1 of 2 %s has translit %s, can't handle" % (dicform1, dicform1tr))
+  #  return [(dicforms, args)]
+  #if dicform2tr:
+  #  pagemsg("WARNING: Dictionary form 2 of 2 %s has translit %s, can't handle" % (dicform2, dicform2tr))
+  #  return [(dicforms, args)]
   if rulib.remove_accents(dicform1) != rulib.remove_accents(dicform2):
     pagemsg("WARNING: Two dictionary forms %s and %s aren't stress variants, not splitting" %
         (dicform1, dicform2))
@@ -1767,6 +1805,23 @@ def split_forms_with_stress_variants(args, forms_desired, dicforms, pagemsg,
     argval = blib.remove_links(args[formname])
     formvals = re.split(",", argval)
     for formval in formvals:
+      formlemma = None
+      for formregex, lemma in manual_split_form_list:
+        if re.search(formregex, formval):
+          pagemsg("Found matching manually specified form regex %s, lemma %s" %
+              (formregex, lemma))
+          formlemma = lemma
+          break
+      if formlemma:
+        if formlemma == dicform1:
+          forms1.append(formval)
+          continue
+        elif formlemma == dicform2:
+          forms2.append(formval)
+          continue
+        else:
+          pagemsg("WARNING: Lemma %s doesn't match either lemma %s or %s" % (
+            formlemma, dicform1, dicform2))
       if formval.startswith(dicform1_stem):
         forms1.append(formval)
       elif formval.startswith(dicform2_stem):
@@ -1932,6 +1987,11 @@ def create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite, save,
       dicforms = rulib.group_translits(dicforms, pagemsg, expand_text)
       dicforms_args_sets = split_forms_with_stress_variants(args, forms_desired,
           dicforms, pagemsg, expand_text)
+      # If multiple stress variants, allow stress mismatch when comparing
+      # definitions to see if we can insert a subsection next to an existing
+      # one rather than create a new etymology section, so the stress variants
+      # end up in the same etymology section
+      allow_stress_mismatch = len(dicforms_args_sets) > 1
       for split_dicforms, split_args in dicforms_args_sets:
         for dicformru, dicformtr in split_dicforms:
           for formname, inflsets in forms_desired:
@@ -1986,15 +2046,16 @@ def create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite, save,
                   if type(inflsets) is not list:
                     inflsets = [inflsets]
                   form_gender = headword_gender or (get_gender(t, formname, split_args) if get_gender else [])
-                  if pos == "noun":
-                    # Nouns with plural in -ята, -ата are neuter in the plural
-                    # in the corresponding forms, even though the singular is
-                    # masc. This is tricky with words like ребёнок and мальчонок
-                    # that have two plurals, one in -и and one in -ата/ята.
-                    if ("nom_pl" in split_args and
-                        re.search(ur"[яа]́?та(,|$)", split_args["nom_pl"]) and
-                        re.search(ur"[яа]т(|а|ам|ами|ах)$", formval_no_accents)):
-                      form_gender = [re.sub(r"\bm\b", "n", g) for g in form_gender]
+                  # This isn't agreed upon; probably masculine is better
+                  #if pos == "noun":
+                  #  # Nouns with plural in -ята, -ата are neuter in the plural
+                  #  # in the corresponding forms, even though the singular is
+                  #  # masc. This is tricky with words like ребёнок and мальчонок
+                  #  # that have two plurals, one in -и and one in -ата/ята.
+                  #  if ("nom_pl" in split_args and
+                  #      re.search(ur"[яа]́?та(,|$)", split_args["nom_pl"]) and
+                  #      re.search(ur"[яа]т(|а|ам|ами|ах)$", formval_no_accents)):
+                  #    form_gender = [re.sub(r"\bm\b", "n", g) for g in form_gender]
 
                   for inflset in inflsets:
                     inflset_gender = form_gender
@@ -2018,7 +2079,8 @@ def create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite, save,
                       "%s form %s" % (pos, formname), "dictionary form",
                       infltemp, "", "inflection of", inflset, inflset_gender,
                       is_lemma_template=is_lemma_template,
-                      lemmas_to_overwrite=lemmas_to_overwrite)
+                      lemmas_to_overwrite=lemmas_to_overwrite,
+                      allow_stress_mismatch_in_defn=allow_stress_mismatch)
 
 def create_verb_generator(t):
   verbtype = re.sub(r"^ru-conj-", "", unicode(t.name))
