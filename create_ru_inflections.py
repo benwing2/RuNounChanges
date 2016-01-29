@@ -224,6 +224,18 @@
 #     variants.
 # 64. (DONE) When stress variants are present, ensure that newly created
 #     subsections for different variants end up in the same etymology section.
+# 65. (DONE) When both singular and plural inflections are present, there
+#     should be two genders, e.g. f-in and f-in-p. However, if there's an
+#     existing f-in and only plural inflections, it should be converted to
+#     f-in-p. To do this, treat e.g. existing f-in as f-in-s if a singular
+#     inflection is present, else as f-in with unspecified plurality. Treat
+#     new inflection f-in as f-in-s always, and ensure that the gender is
+#     e.g. f-in-p whenever we're dealing with a new plural inflection. Then
+#     we can apply the same algorithm used to harmonize m and f, or in and an.
+#     But we should modify the "Unable to" warnings to specify the gender
+#     class (gender, animacy, plurality) that couldn't be harmonized, so we
+#     can check specially for harmonization problems involving true gender
+#     and animacy.
 
 import pywikibot, re, sys, codecs, argparse, time
 import traceback
@@ -782,8 +794,8 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
               # the given gender or can be compatibly modified to the new
               # gender. Return False if genders incompatible and FIX_INCOMPAT
               # is False, else modify existing gender if needed, and return
-              # True. (E.g. existing "p" matches new "m-an" and will be
-              # modified to "m-an-p"; # existing "m-p" matches new "m" and
+              # True. (E.g. existing "m" matches new "an" and will be
+              # modified to "m-an"; # existing "m-an" matches new "m" and
               # will be left alone.)
               def check_fix_noun_adj_gender(headword_template, gender,
                   singular_in_existing_defn_templates, fix_incompat):
@@ -796,7 +808,7 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
                   if existing_mf and new_mf and existing_mf != new_mf:
                     pagemsg("WARNING: Can't modify mf gender from %s to %s" % (
                         existing_mf, new_mf))
-                    return False
+                    return False, "true gender"
                   new_mf = new_mf or existing_mf
 
                   # Compare existing and new animacy
@@ -807,27 +819,26 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
                   if existing_an and new_an and existing_an != new_an:
                     pagemsg("WARNING: Can't modify animacy from %s to %s" % (
                         existing_an, new_an))
-                    return False
+                    return False, "animacy"
                   new_an = new_an or existing_an
 
                   # Compare existing and new plurality
                   m = re.search(r"\b([p])\b", existing)
                   existing_p = m and m.group(1)
+                  if not existing_p and singular_in_existing_defn_templates:
+                    existing_p = "s"
                   m = re.search(r"\b([p])\b", new)
                   new_p = m and m.group(1)
-                  if singular_in_existing_defn_templates and (existing_p or new_p):
-                    new_p = ""
-                    pagemsg("WARNING: Removing plural from existing gender %s, new gender %s because singular inflections present" % (
-                        existing, new))
-                  elif existing_p and not is_noun_adj_plural:
-                    new_p = ""
-                    pagemsg("WARNING: Removing plural from gender %s because new form isn't plural" % (
-                        existing))
-                  else:
-                    new_p = new_p or existing_p
+                  if not new_p:
+                    new_p = "s"
+                  if existing_p and new_p and existing_p != new_p:
+                    pagemsg("WARNING: Can't modify plurality from %s to %s" % (
+                        existing_p, new_p))
+                    return False, "plurality"
+                  new_p = new_p or existing_p
 
                   # Construct result
-                  return '-'.join([x for x in [new_mf, new_an, new_p] if x])
+                  return '-'.join([x for x in [new_mf, new_an, new_p] if x and x != "s"]), None
 
                 if len(gender) == 0:
                   return True # "nochange"
@@ -846,7 +857,7 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
                     if existing_genders:
                       # Try to modify an existing gender to match the new gender
                       for paramno, existing in enumerate(existing_genders):
-                        new_gender = gender_compatible(existing, g)
+                        new_gender, harmonization_problem = gender_compatible(existing, g)
                         if new_gender:
                           found_compat = True
                     # FIXME: If there are no existing genders, we return False
@@ -861,8 +872,9 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
                   changed = False
                   if existing_genders:
                     # Try to modify an existing gender to match the new gender
+                    harmonization_problems = []
                     for paramno, existing in enumerate(existing_genders):
-                      new_gender = gender_compatible(existing, g)
+                      new_gender, harmonization_problem = gender_compatible(existing, g)
                       if new_gender:
                         found_compat = True
                         if existing != new_gender:
@@ -875,8 +887,12 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
                           headword_template.add(newparam, new_gender)
                           changed = True
                         break
+                      assert harmonization_problem
+                      if harmonization_problem not in harmonization_problems:
+                        harmonization_problems.append(harmonization_problem)
                     else:
-                      pagemsg("WARNING: Unable to modify existing genders %s to match new gender %s" % (
+                      pagemsg("WARNING: Unable to modify %s in existing genders %s to match new gender %s" % (
+                        ",".join(harmonization_problems),
                         ",".join(existing_genders), g))
                   if not found_compat:
                     assert fix_incompat
@@ -926,7 +942,8 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
                 if gender:
                   if is_noun_or_adj:
                     if not check_fix_noun_adj_gender(headword_template, gender,
-                        singular_in_existing_defn_templates, fix_incompat_gender):
+                        singular_in_existing_defn_templates,
+                        fix_incompat_gender):
                       return False
                 if is_verb_form:
                   # If verb form, remove any existing gender, since it
@@ -2069,6 +2086,19 @@ def create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite, save,
                       else:
                         inflset = inflset + ("impfv",)
                       inflset_gender = []
+                    # If we're dealing with plural noun inflection, make sure
+                    # gender contains plural.
+                    if pos == "noun" and "_pl" in formname:
+                      new_inflset_gender = []
+                      for g in inflset_gender:
+                        if not re.search(r"\bp\b", g):
+                          if not g:
+                            g = "p"
+                          else:
+                            g += "-p"
+                        if g not in new_inflset_gender:
+                          new_inflset_gender.append(g)
+                      inflset_gender = new_inflset_gender
                     # For plurale tantum nouns, don't include "plural" in
                     # inflection codes.
                     if pos == "noun" and dicform_code == "nom_pl":
