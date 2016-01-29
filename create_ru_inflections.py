@@ -236,6 +236,17 @@
 #     class (gender, animacy, plurality) that couldn't be harmonized, so we
 #     can check specially for harmonization problems involving true gender
 #     and animacy.
+# 66. Remove в, на, в/на from beginning of locatives, and issue warning and
+#     don't create locative entries if there's still a space in the locative
+#     and no space in the dictionary form (to handle cases where there's
+#     something like 'в фобу́/на фобу́').
+# 67. Implement allow_in_same_etym_section, for pairs where one is a plurale
+#     tantum and the other the corresponding singular and so we want the
+#     subsections for each to go next to each other rather than in separate
+#     etym sections.
+# 68. Implement allow_defn_in_same_subsection, for closely related lemmas
+#     that share some of their forms where we allow definition lines for
+#     forms of the two to sit under the same headword.
 
 import pywikibot, re, sys, codecs, argparse, time
 import traceback
@@ -290,6 +301,61 @@ manual_split_form_list = [
     (u"^рыбар", u"рыба́рь"),
     (u"^сажен", u"са́жень"),
     (u"^творог", u"творо́г"),
+]
+
+# These represent pairs of lemmas, typically where the first one is a plurale
+# tantum and the second one the corresponding singular. When creating forms
+# of one of these words and checking for existing noun form subsections to
+# insert next to, if the headword forms match and a definition is found that
+# matches the other lemma of the pair, we treat the whole subsection as a match
+# and insert the new subsection after it, rather than creating a new
+# etymology section. FIXME: We should similarly implement this for noun lemmas,
+# so that if we're creating a form of the second one and we find a lemma
+# matching the first one that's plural, insert the subsection after the lemma
+# rather than creating a new etymology section.
+allow_in_same_etym_section = [
+    (u"бакенбарды", u"бакенбарда"),
+    (u"боеприпасы", u"боеприпас"),
+    (u"бубны", u"бубна"),
+    (u"внутренности", u"внутренность"),
+    (u"вожжи", u"вожжа"),
+    (u"внучата", u"внук"),
+    (u"войска", u"войско"),
+    (u"волосы", u"волос"),
+    (u"выборы", u"выбор"),
+    # I got to the beginning of the д's in
+    # create_ru_inflections.noun-nom-gen-form.out.25; later entries are from
+    # going through earlier freq-sorted runs.
+    (u"домашние", u"домашний"),
+    (u"заморозки", u"зоморозок"),
+    (u"мозги", u"мозг"),
+    (u"наушники", u"наушник"),
+    (u"окружающие", u"окружающее"),
+    (u"пики", u"пика"),
+    (u"полдни", u"полдень"),
+    (u"правнучата", u"правнук"),
+    (u"слухи", u"слух"),
+    # FIXME! This should be split into стих "verse" (goes with стихи),
+    # стих "mood" (does not go)
+    (u"стихи", u"стих"),
+    (u"усы", u"ус"),
+    (u"французы", u"француз"),
+    (u"часы", u"час"),
+    (u"шлёпанцы", u"шлёпанец"),
+]
+
+# These represent pairs of lemmas where we allow definition lines from the
+# two to go under the same headword; this only happens for closely related
+# alternative forms (often, where one has an epenthetic vowel in the
+# nominative singular and the other doesn't; by convention, we list the one
+# with the epenthetic vowel first).
+allow_defn_in_same_subsection = [
+    (u"бобёр", u"бобр"),
+    (u"ветер", u"ветр"),
+    (u"водоросель", u"водоросль"),
+    (u"нуль", u"ноль"),
+    (u"огонь", u"огнь"),
+    (u"уголь", u"угль"),
 ]
 
 def check_re_sub(pagemsg, action, refrom, reto, text, numsub=1, flags=0):
