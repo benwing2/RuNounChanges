@@ -1846,7 +1846,7 @@ def split_forms_with_stress_variants(args, forms_desired, dicforms, pagemsg,
   for formname, inflsets in forms_desired:
     doform(formname)
     doform(formname + "_raw")
-  return [([(dicform1, None)], args1), ([(dicform2, None)], args2)]
+  return [([(dicform1, dicform1tr)], args1), ([(dicform2, dicform2tr)], args2)]
 
 # Create required forms for all nouns/verbs/adjectives.
 #
