@@ -309,18 +309,22 @@ manual_split_form_list = [
 # insert next to, if the headword forms match and a definition is found that
 # matches the other lemma of the pair, we treat the whole subsection as a match
 # and insert the new subsection after it, rather than creating a new
-# etymology section. FIXME: We should similarly implement this for noun lemmas,
-# so that if we're creating a form of the second one and we find a lemma
-# matching the first one that's plural, insert the subsection after the lemma
-# rather than creating a new etymology section.
+# etymology section. We do similarly for noun lemmas, so that if we're creating
+# a form of the second one and we find a lemma matching the first one that's
+# plural, insert the subsection after the lemma rather than creating a new
+# etymology section.
 allow_in_same_etym_section = [
+    (u"авиалинии", u"авиалиния"),
+    (u"агулы", u"агул"),
     (u"бакенбарды", u"бакенбарда"),
     (u"бега", u"бег"),
     (u"боеприпасы", u"боеприпас"),
+    (u"бразды", u"бразда"),
+    (u"брюхоногие", u"брюхоногий"),
     (u"бубны", u"бубна"),
     (u"внутренности", u"внутренность"),
-    (u"вожжи", u"вожжа"),
     (u"внучата", u"внук"),
+    (u"вожжи", u"вожжа"),
     (u"войска", u"войско"),
     (u"волосы", u"волос"),
     (u"выборы", u"выбор"),
