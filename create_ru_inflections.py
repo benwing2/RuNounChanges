@@ -236,16 +236,16 @@
 #     class (gender, animacy, plurality) that couldn't be harmonized, so we
 #     can check specially for harmonization problems involving true gender
 #     and animacy.
-# 66. Remove в, на, в/на from beginning of locatives, and issue warning and
-#     don't create locative entries if there's still a space in the locative
-#     and no space in the dictionary form (to handle cases where there's
-#     something like 'в фобу́/на фобу́').
-# 67. Implement allow_in_same_etym_section, for pairs where one is a plurale
-#     tantum and the other the corresponding singular and so we want the
-#     subsections for each to go next to each other rather than in separate
+# 66. (DONE) Remove в, на, в/на from beginning of locatives, and issue warning
+#     and don't create locative entries if there's still a space in the
+#     locative and no space in the dictionary form (to handle cases where
+#     there's something like 'в фобу́/на фобу́').
+# 67. (DONE) Implement allow_in_same_etym_section, for pairs where one is a
+#     plurale tantum and the other the corresponding singular and so we want
+#     the subsections for each to go next to each other rather than in separate
 #     etym sections.
-# 68. Implement allow_defn_in_same_subsection, for closely related lemmas
-#     that share some of their forms where we allow definition lines for
+# 68. (DONE) Implement allow_defn_in_same_subsection, for closely related
+#     lemmas that share some of their forms where we allow definition lines for
 #     forms of the two to sit under the same headword.
 
 import pywikibot, re, sys, codecs, argparse, time
@@ -315,6 +315,7 @@ manual_split_form_list = [
 # rather than creating a new etymology section.
 allow_in_same_etym_section = [
     (u"бакенбарды", u"бакенбарда"),
+    (u"бега", u"бег"),
     (u"боеприпасы", u"боеприпас"),
     (u"бубны", u"бубна"),
     (u"внутренности", u"внутренность"),
@@ -323,25 +324,51 @@ allow_in_same_etym_section = [
     (u"войска", u"войско"),
     (u"волосы", u"волос"),
     (u"выборы", u"выбор"),
-    # I got to the beginning of the д's in
-    # create_ru_inflections.noun-nom-gen-form.out.25; later entries are from
-    # going through earlier freq-sorted runs.
+    (u"доспехи", u"доспех"),
     (u"домашние", u"домашний"),
+    (u"жабры", u"жабра"),
     (u"заморозки", u"зоморозок"),
+    (u"кавычки", u"кавычка"),
+    (u"капли", u"капля"),
+    (u"карты", u"карта"),
+    (u"кости", u"кость"),
+    (u"коньки", u"конёк"),
+    (u"курсы", u"курс"),
+    (u"ладоши", u"ладоша"),
+    (u"леса", u"лес"),
+    (u"литавры", u"литавра"),
     (u"мозги", u"мозг"),
+    (u"мурашки", u"мурашка"),
+    (u"нарты", u"нарта"),
+    (u"наручники", u"наручник"),
     (u"наушники", u"наушник"),
+    (u"небеса", u"небо"),
+    (u"новости", u"новость"),
+    (u"ноты", u"нота"),
+    (u"окрестности", u"окрестность"),
     (u"окружающие", u"окружающее"),
+    (u"отбросы", u"отброс"),
+    (u"падонки", u"падонак"),
     (u"пики", u"пика"),
     (u"полдни", u"полдень"),
+    (u"почести", u"почесть"),
+    (u"права", u"право"),
     (u"правнучата", u"правнук"),
+    (u"реалии", u"реалия"),
     (u"слухи", u"слух"),
+    (u"сопли", u"сопля"),
     # FIXME! This should be split into стих "verse" (goes with стихи),
     # стих "mood" (does not go)
     (u"стихи", u"стих"),
+    (u"тапочки", u"тапочка"),
+    (u"трефы", u"трефа"),
     (u"усы", u"ус"),
     (u"французы", u"француз"),
+    (u"цимбалы", u"цимбал"),
     (u"часы", u"час"),
+    (u"шашки", u"шашка"),
     (u"шлёпанцы", u"шлёпанец"),
+    (u"японцы", u"японец"),
 ]
 
 # These represent pairs of lemmas where we allow definition lines from the
@@ -353,9 +380,17 @@ allow_defn_in_same_subsection = [
     (u"бобёр", u"бобр"),
     (u"ветер", u"ветр"),
     (u"водоросель", u"водоросль"),
+    (u"деревцо", u"деревце"),
+    (u"либеральничание", u"либеральничанье"),
+    (u"мнение", u"мненье"),
     (u"нуль", u"ноль"),
     (u"огонь", u"огнь"),
+    (u"собрание", u"собранье"),
+    (u"судия", u"судья"),
+    (u"уединение", u"уединенье"),
     (u"уголь", u"угль"),
+    (u"умиление", u"умиленье"),
+    (u"чёрт", u"чорт"),
 ]
 
 def check_re_sub(pagemsg, action, refrom, reto, text, numsub=1, flags=0):
@@ -801,6 +836,9 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
                   elif args["n"] == "p":
                     found_plurale_tantum_lemma = True
 
+        if found_plurale_tantum_lemma and is_noun_form and is_noun_adj_plural:
+          pagemsg("WARNING: Found plurale tantum lemma and creating plural noun form, might need to add lemmas to allow_in_same_etym_section")
+
         subsections = re.split("(^===+[^=\n]+===+\n)", sections[i], 0, re.M)
 
         # We will loop through the subsections up to 4 times, seeing if we
@@ -1154,6 +1192,18 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
                     fail_when_left_over_heads=True,
                     issue_warnings=issue_warnings)]
 
+              def check_for_closely_related_lemma(otherlemma, lemma,
+                  issue_warnings=True):
+                otherlemma = rulib.remove_accents(otherlemma)
+                lemma = rulib.remove_accents(lemma)
+                for lemma1, lemma2 in allow_defn_in_same_subsection:
+                  if (lemma1 == otherlemma and lemma2 == lemma or
+                      lemma2 == otherlemma and lemma1 == lemma):
+                    pagemsg_if(issue_warnings, "Allowing lemma %s to share headword with lemma %s because in allow_defn_in_same_subsection" %
+                        (lemma, otherlemma))
+                    return True
+                return False
+
               # Find the definitional (typically 'inflection of') template(s).
               # We store a tuple of (TEMPLATE, NEEDS_UPDATE) where NEEDS_UDPATE
               # is true if we need to overwrite the form codes (this happens
@@ -1178,6 +1228,16 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
                       defn_templates_for_already_present_entry.append((t, True))
                     elif result:
                       defn_templates_for_already_present_entry.append((t, False))
+                # Also see if the definition template matches a closely-related
+                # lemma where we allow the two to share the same headword
+                # (e.g. огонь and alternative form огнь)
+                elif (unicode(t.name) == deftemp and
+                    check_for_closely_related_lemma(getparam(t, "1"), lemma,
+                      issue_warnings=issue_warnings) and
+                    (not deftemp_needs_lang or
+                      compare_param(t, "lang", "ru", None,
+                        issue_warnings=issue_warnings))):
+                  defn_templates_for_inserting_in_same_section.append(t)
 
               singular_in_existing_defn_templates = False
               for t in parsed.filter_templates():
@@ -1374,11 +1434,33 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
                   else "participle form", "headword")
               break
 
-          def matching_defn_templates(parsed, allow_stress_mismatch=False):
+          # Check whether lemma LEMMA of form to add and already-existing
+          # form of OTHERLEMMA are pairs in allow_in_same_etym_section.
+          # If FIRST_ONLY, require that OTHERLEMMA is the first one
+          # (the plurale tantum); we use this when creating a form that
+          # will be in the same etym section as a plurale tantum lemma,
+          # so we don't by accident end up inserting in the same etym section
+          # as a normal singular lemma.
+          def check_for_matching_sg_pl_pair(otherlemma, lemma,
+              first_only=False):
+            otherlemma = rulib.remove_accents(otherlemma)
+            lemma = rulib.remove_accents(lemma)
+            for lemma1, lemma2 in allow_in_same_etym_section:
+              if (lemma1 == otherlemma and lemma2 == lemma or
+                  not first_only and lemma2 == otherlemma and lemma1 == lemma):
+                pagemsg("Allowing new subsection for lemma %s in same etym section as lemma %s because in allow_in_same_etym_section list" %
+                    (lemma, otherlemma))
+                return True
+            return False
+
+          def matching_defn_templates(parsed, allow_stress_mismatch=False,
+              check_for_sg_pl_pairs=False):
             return [t for t in parsed.filter_templates()
                 if unicode(t.name) == deftemp and
-                compare_param(t, "1", lemma, lemmatr,
-                  allow_stress_mismatch=allow_stress_mismatch) and
+                (compare_param(t, "1", lemma, lemmatr,
+                  allow_stress_mismatch=allow_stress_mismatch) or
+                  check_for_sg_pl_pairs and check_for_matching_sg_pl_pair(
+                    getparam(t, "1"), lemma)) and
                 (not deftemp_needs_lang or
                   compare_param(t, "lang", "ru", None))]
 
@@ -1426,6 +1508,38 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
                   "headword and definition")
               break
 
+          # Try to find plurale tantum noun lemma for paired lemma in
+          # allow_in_same_etym_section list (e.g. creating gen_sg/nom_pl
+          # бакенбарды of бакенбарда, on same page as plurale tantum
+          # бакенбарды). Insert after the last such one.
+          if is_noun_form:
+            insert_at = None
+            for j in xrange(2, len(subsections), 2):
+              if re.match("^===+Noun===+", subsections[j - 1]):
+                parsed = blib.parse_text(subsections[j])
+                for t in parsed.filter_templates():
+                  if unicode(t.name) in ["ru-noun+", "ru-proper noun+"]:
+                    otherlemmaarg = rulib.fetch_noun_lemma(t, expand_text)
+                    if otherlemmaarg is None:
+                      pagemsg("WARNING: Error generating noun forms when %s" % purpose)
+                    else:
+                      otherlemmas = set(re.split(",", otherlemmaarg))
+                      for otherlemma in otherlemmas:
+                        if check_for_matching_sg_pl_pair(otherlemma, lemma,
+                            first_only=True):
+                          insert_at = j + 1
+                  elif unicode(t.name) in ["ru-noun", "ru-proper noun"]:
+                    otherlemmas = blib.fetch_param_chain(t, "1", "head")
+                    for otherlemma in otherlemmas:
+                      if check_for_matching_sg_pl_pair(otherlemma, lemma,
+                          first_only=True):
+                        insert_at = j + 1
+
+            if insert_at:
+              comment = insert_new_text_after_section(insert_at,
+                  "plurale tantum noun", "lemma pair in allow_in_same_etym_section")
+              break
+
           # Now try to find an existing section corresponding to the same
           # lemma. This happens e.g. with verb forms, such as смо́трите
           # 2nd plural pres ind vs. смотри́те 2nd plural imperative, or
@@ -1439,7 +1553,8 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
             if re.match("^===+%s===+\n" % pos, subsections[j - 1]):
               parsed = blib.parse_text(subsections[j])
               defn_templates = matching_defn_templates(parsed,
-                  allow_stress_mismatch=allow_stress_mismatch_in_defn)
+                  allow_stress_mismatch=allow_stress_mismatch_in_defn,
+                  check_for_sg_pl_pairs=is_noun_form)
               if defn_templates:
                 insert_at = j + 1
 
@@ -2169,6 +2284,31 @@ def create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite, save,
                     # inflection codes.
                     if pos == "noun" and dicform_code == "nom_pl":
                       inflset = tuple(x for x in inflset if x != "p")
+                    # Frob the locative of nouns, removing в, на, в/на, на/в.
+                    if pos == "noun" and formname == "loc":
+                      def frob_locative(ru, tr):
+                        newru = re.sub(u"^(в|на|в/на|на/в) ", "", ru)
+                        if ru != newru:
+                          pagemsg("Modifying locative from %s to %s" %
+                              (ru, newru))
+                          ru = newru
+                        if tr:
+                          tr = re.sub("^(v|na|v/na|na/v) ", "", tr)
+                        return ru, tr
+                      inflections = [frob_locative(ru, tr) for ru, tr in
+                          inflections]
+                      # If space in locative and not in lemma, then presumably
+                      # there's some other prefix we weren't able to remove,
+                      # so skip creating locative
+                      skip_locative = False
+                      for ru, tr in inflections:
+                        if " " in ru and " " not in dicformru:
+                          pagemsg("WARNING: Space in locative %s but not in lemma %s, skipping" %
+                              (ru, dicformru))
+                          skip_locative = True
+                          break
+                      if skip_locative:
+                        continue
 
                     create_inflection_entry(save, index, inflections,
                       dicformru, dicformtr, pos.capitalize(),
