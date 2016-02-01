@@ -236,8 +236,8 @@
 #     class (gender, animacy, plurality) that couldn't be harmonized, so we
 #     can check specially for harmonization problems involving true gender
 #     and animacy.
-# 66. (DONE) Remove в, на, в/на from beginning of locatives, and issue warning
-#     and don't create locative entries if there's still a space in the
+# 66. (DONE) Remove в, во, на, в/на from beginning of locatives, and issue
+#     warning and don't create locative entries if there's still a space in the
 #     locative and no space in the dictionary form (to handle cases where
 #     there's something like 'в фобу́/на фобу́').
 # 67. (DONE) Implement allow_in_same_etym_section, for pairs where one is a
@@ -328,19 +328,22 @@ allow_in_same_etym_section = [
     (u"войска", u"войско"),
     (u"волосы", u"волос"),
     (u"выборы", u"выбор"),
-    (u"доспехи", u"доспех"),
     (u"домашние", u"домашний"),
+    (u"доспехи", u"доспех"),
     (u"жабры", u"жабра"),
     (u"заморозки", u"зоморозок"),
     (u"кавычки", u"кавычка"),
     (u"капли", u"капля"),
     (u"карты", u"карта"),
-    (u"кости", u"кость"),
     (u"коньки", u"конёк"),
+    (u"кости", u"кость"),
+    (u"кракозябры", u"кракозябра"),
     (u"курсы", u"курс"),
     (u"ладоши", u"ладоша"),
     (u"леса", u"лес"),
     (u"литавры", u"литавра"),
+    (u"люди", u"человек"),
+    (u"лыжи", u"лыжа"),
     (u"мозги", u"мозг"),
     (u"мурашки", u"мурашка"),
     (u"нарты", u"нарта"),
@@ -359,6 +362,7 @@ allow_in_same_etym_section = [
     (u"права", u"право"),
     (u"правнучата", u"правнук"),
     (u"реалии", u"реалия"),
+    (u"ребята", u"ребёнок"),
     (u"слухи", u"слух"),
     (u"сопли", u"сопля"),
     # FIXME! This should be split into стих "verse" (goes with стихи),
@@ -370,6 +374,7 @@ allow_in_same_etym_section = [
     (u"французы", u"француз"),
     (u"цимбалы", u"цимбал"),
     (u"часы", u"час"),
+    (u"червы", u"черва"),
     (u"шашки", u"шашка"),
     (u"шлёпанцы", u"шлёпанец"),
     (u"японцы", u"японец"),
@@ -2288,10 +2293,11 @@ def create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite, save,
                     # inflection codes.
                     if pos == "noun" and dicform_code == "nom_pl":
                       inflset = tuple(x for x in inflset if x != "p")
-                    # Frob the locative of nouns, removing в, на, в/на, на/в.
+                    # Frob the locative of nouns, removing в, на, в/на, на/в,
+                    # and variants with во.
                     if pos == "noun" and formname == "loc":
                       def frob_locative(ru, tr):
-                        newru = re.sub(u"^(в|на|в/на|на/в) ", "", ru)
+                        newru = re.sub(u"^(во?|на|во?/на|на/во?) ", "", ru)
                         if ru != newru:
                           pagemsg("Modifying locative from %s to %s" %
                               (ru, newru))
