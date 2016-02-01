@@ -247,6 +247,8 @@
 # 68. (DONE) Implement allow_defn_in_same_subsection, for closely related
 #     lemmas that share some of their forms where we allow definition lines for
 #     forms of the two to sit under the same headword.
+# 69. If there are multiple entries for the same lemma that differ in
+#     animacy, we should add the animacy to plurals and to singular masculines.
 
 import pywikibot, re, sys, codecs, argparse, time
 import traceback
