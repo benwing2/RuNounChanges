@@ -247,8 +247,9 @@
 # 68. (DONE) Implement allow_defn_in_same_subsection, for closely related
 #     lemmas that share some of their forms where we allow definition lines for
 #     forms of the two to sit under the same headword.
-# 69. If there are multiple entries for the same lemma that differ in
+# 69. (DONE) If there are multiple entries for the same lemma that differ in
 #     animacy, we should add the animacy to plurals and to singular masculines.
+# 70. (DONE) Warn when lemma or inflections have multiple stresses.
 
 import pywikibot, re, sys, codecs, argparse, time
 import traceback
@@ -587,6 +588,13 @@ def create_inflection_entry(save, index, inflections, lemma, lemmatr,
   # Prepare to create page
   pagemsg("Creating entry")
   page = pywikibot.Page(site, pagename)
+
+  # Warn on multi-stressed words
+  if rulib.is_multi_stressed(lemma):
+    pagemsg("WARNING: Lemma %s has multiple accents")
+  for infl, infltr in inflections:
+    if rulib.is_multi_stressed(infl):
+      pagemsg("WARNING: Inflection %s has multiple accents")
 
   # Check whether parameter PARAM of template T matches VALUE.
   def compare_param(t, param, value, valuetr, issue_warnings=True,
@@ -2171,6 +2179,23 @@ def create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite, save,
         expand_text)
     if len(inflection_templates) > 1 and pos == "adjective":
       pagemsg("WARNING: Multiple inflection templates for %s" % pagetitle)
+    # Check for multiple animacies in nouns; if so, make sure m acc sg and
+    # all acc pl reflect the animacy
+    multiple_noun_animacies = False
+    if pos == "noun":
+      saw_animate = False
+      saw_inanimate = False
+      for t, headword_gender in inflection_templates:
+        if headword_gender:
+          for g in headword_gender:
+            if re.search(r"\ban\b", g):
+              saw_animate = True
+            if re.search(r"\bin\b", g):
+              saw_inanimate = True
+      if saw_animate and saw_inanimate:
+        multiple_noun_animacies = True
+        pagemsg("Found multiple animacies for noun")
+
     for t, headword_gender in inflection_templates:
       result = expand_text(create_form_generator(t))
       if not result:
@@ -2291,6 +2316,37 @@ def create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite, save,
                         if g not in new_inflset_gender:
                           new_inflset_gender.append(g)
                       inflset_gender = new_inflset_gender
+                    # For nouns with multiple animacies where we're dealing
+                    # with an accusative that varies depending on animacy,
+                    # make sure the animacy is in the inflection codes.
+                    # The accusative plural always varies depending on animacy;
+                    # the accusative singular varies for masculine-type nouns
+                    # and for neuter-type nouns that are actually masculine.
+                    # We check for this by seeing if one of the genders is
+                    # masculine and the accusative singular is the same as
+                    # the nom sg or gen sg (which will filter out feminine-type
+                    # nouns that have masculine gender, such as дядя).
+                    if (pos == "noun" and multiple_noun_animacies and
+                        "an" not in inflset and "in" not in inflset and
+                        (formname == "acc_pl" or formname == "acc_sg" and
+                          [re.search(r"\bm\b", g) for g in inflset_gender] and
+                          (split_args["acc_sg"] == split_args.get("nom_sg", None) or
+                            split_args["acc_sg"] == split_args.get("gen_sg", None)))):
+                      found_animate = any(re.search(r"\ban\b", g) for g in inflset_gender)
+                      found_inanimate = any(re.search(r"\bin\b", g) for g in inflset_gender)
+                      if found_animate and found_inanimate:
+                        pagemsg("WARNING: Something wrong, lemma is bianimate (gender=%s) and animacy codes not inflset %s" % (
+                          ",".join(inflset_gender), "|".join(inflset)))
+                      elif found_animate:
+                        newinflset = ("an",) + inflset
+                        pagemsg("Multiple noun animacies, adding animate form code, modifying inflset from %s to %s" %
+                            ("|".join(inflset), "|".join(newinflset)))
+                        inflset = newinflset
+                      elif found_inanimate:
+                        newinflset = ("in",) + inflset
+                        pagemsg("Multiple noun animacies, adding inanimate form code, modifying inflset from %s to %s" %
+                            ("|".join(inflset), "|".join(newinflset)))
+                        inflset = newinflset
                     # For plurale tantum nouns, don't include "plural" in
                     # inflection codes.
                     if pos == "noun" and dicform_code == "nom_pl":
