@@ -269,10 +269,11 @@ GR = u"\u0300" # grave accent
 # List of nouns where there are multiple headword genders and the gender
 # in the declension is acceptable
 ignore_headword_gender = [
-    u"редактор"
+    u"редактор",
 ]
 
 skip_lemma_pages = [
+    u"тысяча",
 ]
 
 skip_form_pages = [
