@@ -596,7 +596,23 @@ function export.ipa(text, adj, gem, bracket, pos)
 			text = mw.title.getCurrentTitle().text
 		end
 	end
-	gem = usub(gem or '', 1, 1)
+	gem = gem or ""
+	-- If a multipart gemination spec, split into components.
+	if rfind(gem, "/") then
+		gem = rsplit(gem, "/")
+		for i=1,#gem do
+			gem[i] = usub(gem[i], 1, 1)
+		end
+	else
+		gem = usub(gem, 1, 1)
+	end
+	-- Verify that gem (or each part of multipart gem) is recognized
+	for _, g in ipairs(type(gem) == "table" and gem or {gem}) do
+		if g ~= "" and g ~= "y" and g ~= "o" and g ~= "n" then
+			error("Unrecognized gemination spec '" .. g .. ": Should be y, yes, o, opt, n, no, or empty")
+		end
+	end
+
 	bracket = ine(usub(bracket or '', 1, 1))
 	if bracket == 'n' then
 		bracket = nil
@@ -622,9 +638,10 @@ function export.ipa(text, adj, gem, bracket, pos)
 
 	text = ulower(text)
 
-	if gem ~= '' then
+	local combined_gem = type(gem) == "table" and table.concat(gem, "/") or gem
+	if combined_gem ~= "" then
 		track("gem")
-		track("gem/" .. gem)
+		track("gem/" .. combined_gem)
 	end
 	if adj then
 		track("adj")
@@ -847,6 +864,9 @@ function export.ipa(text, adj, gem, bracket, pos)
 	--split by word and process each word
 	word = rsplit(text, " ", true)
 
+	if type(gem) == "table" and #gem ~= #word then
+		error("Number of gemination specs (" .. #gem .. ") should match number of combined words (" .. #word .. ")")
+	end
 	if type(pos) == "table" and #pos ~= #word then
 		error("Number of parts of speech (" .. #pos .. ") should match number of combined words (" .. #word .. ")")
 	end
@@ -876,16 +896,17 @@ function export.ipa(text, adj, gem, bracket, pos)
 		end
 
 		--degemination, optional gemination
-		if gem == 'y' then
+		local thisgem = type(gem) == "table" and gem[i] or gem
+		if thisgem == 'y' then
 			-- leave geminates alone, convert ˑ to regular gemination; ˑ is a
 			-- special gemination symbol used at prefix boundaries that we
 			-- remove only when gem=n, else we convert it to regular gemination
 			pron = rsub(pron, 'ˑ', 'ː')
-		elseif gem == 'o' then
+		elseif thisgem == 'o' then
 			-- make geminates optional, except for ɕӂ, also ignore left paren
 			-- in (ː) sequence
 			pron = rsub(pron, '([^ɕӂ%(%)])[ːˑ]', '%1(ː)')
-		elseif gem == 'n' then
+		elseif thisgem == 'n' then
 			-- remove gemination, except for ɕӂ
 			pron = rsub(pron, '([^ɕӂ%(%)])[ːˑ]', '%1')
 		else
