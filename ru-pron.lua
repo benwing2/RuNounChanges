@@ -629,7 +629,11 @@ function export.ipa(text, adj, gem, bracket, pos)
 	if adj then
 		track("adj")
 	end
-	if rfind(text, "[a-zščžáéíóúýàèìòùỳ]") then
+	-- don't include h here because we allow it as a legitimate alternative
+	-- for ɣ. Include vowels with all of the accents that have special meaning
+	-- for this module. (FIXME, maybe should also include double-grave accents,
+	-- although probably not used anywhere.)
+	if rfind(text, "[a-gi-zščžáéíóúýàèìòùỳâêîôûŷạẹịọụỵȧėȯẏ]") then
 		track("latin-text")
 	end
 	if rfind(text, "[сз]ч") then
