@@ -250,6 +250,8 @@
 # 69. (DONE) If there are multiple entries for the same lemma that differ in
 #     animacy, we should add the animacy to plurals and to singular masculines.
 # 70. (DONE) Warn when lemma or inflections have multiple stresses.
+# 71. BUG: Remove accent from monosyllabic transliterations (e.g. forms of
+#     бог|tr=box).
 
 import pywikibot, re, sys, codecs, argparse, time
 import traceback
@@ -286,6 +288,8 @@ manual_split_form_list = [
     (u"^бондар", u"бонда́рь"),
     (u"^грабар", u"граба́рь"),
     (u"^договор", u"до́говор"),
+    (u"^йо́ркширск.*терье́р", u"йо́ркширский терье́р"),
+    (u"^йоркши́рск.*терье́р", u"йоркши́рский терье́р"),
     (u"^кожух", u"кожу́х"),
     (u"^козы́рн.*ка́рт", u"козы́рная ка́рта"),
     (u"^козырн.*ка́рт", u"козырна́я ка́рта"),
