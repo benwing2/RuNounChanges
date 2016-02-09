@@ -283,7 +283,8 @@ skip_form_pages = [
 
 # Used to manually assign forms to lemmas when there are stress variants.
 # Each entry is (FORMREGEX, LEMMA) where FORMREGEX is a regex with accents
-# that should match the form, and LEMMA is the corresponding lemma.
+# that should match the form, and LEMMA is the corresponding lemma with
+# accents.
 manual_split_form_list = [
     (u"^бондар", u"бонда́рь"),
     (u"^грабар", u"граба́рь"),
@@ -303,12 +304,17 @@ manual_split_form_list = [
     (u"^нетопыр", u"нетопы́рь"),
     (u"^обух", u"обу́х"),
     (u"^пехтер", u"пехте́рь"),
-    (u"^програ́ммн.*обеспече́н", u"програ́ммное обеспече́ние"),
+    # split algorithm doesn't currently handle adjectives correctly
+    (u"^Пика́ссо прямоуго́льчат", u"Пика́ссо прямоуго́льчатый"),
+    (u"^Пикассо́ прямоуго́льчат", u"Пикассо́ прямоуго́льчатый"),
     (u"^програ́ммн.*обеспе́чен", u"програ́ммное обеспе́чение"),
+    (u"^програ́ммн.*обеспече́н", u"програ́ммное обеспече́ние"),
     (u"^пяден", u"пя́день"),
     (u"^рыбар", u"рыба́рь"),
     (u"^сажен", u"са́жень"),
     (u"^творог", u"творо́г"),
+    (u"^тео́ри.*ха́оса", u"тео́рия ха́оса"),
+    (u"^тео́ри.*хао́са", u"тео́рия хао́са"),
 ]
 
 # These represent pairs of lemmas, typically where the first one is a plurale
@@ -2498,6 +2504,9 @@ for particular verbs will not be created.""")
 pa.add_argument("--lemmafile",
     help=u"""List of lemmas to process, without accents. May have е in place
 of ё; see '--lemmas-no-jo'.""")
+pa.add_argument("--lemmas",
+    help=u"""Comma-separated list of lemmas to process. May have е in place
+of ё; see '--lemmas-no-jo'.""")
 pa.add_argument("--lemmas-no-jo",
     help=u"""If specified, lemmas specified using --lemmafile have е in place of ё.""",
     action="store_true")
@@ -2511,6 +2520,8 @@ startFrom, upTo = blib.get_args(params.start, params.end)
 
 if params.lemmafile:
   lemmas_to_process = [x.strip() for x in codecs.open(params.lemmafile, "r", "utf-8")]
+elif params.lemmas:
+  lemmas_to_process = re.split(",", params.lemmas.decode("utf-8"))
 else:
   lemmas_to_process = []
 if params.overwrite_lemmas:
