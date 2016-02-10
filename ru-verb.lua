@@ -82,6 +82,14 @@ local function getarg(args, arg, default, paramdesc)
 	return args[arg] or (NAMESPACE == "Template" and default) or error(paramdesc .. " has not been provided")
 end
 
+local function get_stressed_arg(args, arg, default, paramdesc)
+	local retval = getarg(args, arg, default, paramdesc)
+	if not com.is_nonsyllabic(retval) and not com.is_stressed(retval) then
+		error("Argument value " .. retval .. " (parameter " .. arg .. ") must be stressed")
+	end
+	return retval
+end
+
 local function track(page)
 	m_debug.track("ru-verb/" .. page)
 	return true
@@ -534,7 +542,7 @@ end
 conjugations["1a"] = function(args)
 	local forms = {}
 
-	local stem, tr = nom.split_russian_tr(getarg(args, 2))
+	local stem, tr = nom.split_russian_tr(get_stressed_arg(args, 2))
 
 	forms["infinitive"] = combine(stem, tr, "ть")
 	set_participles(forms, stem, tr, "ющий", "вший", "емый", "я", "вши", "в")
@@ -548,7 +556,7 @@ end
 conjugations["2a"] = function(args)
 	local forms = {}
 
-	local inf_stem, inf_tr = nom.split_russian_tr(getarg(args, 2))
+	local inf_stem, inf_tr = nom.split_russian_tr(get_stressed_arg(args, 2))
 	local pres_stem, pres_tr = inf_stem, inf_tr
 
 	-- all -ова- change to -у-
@@ -576,7 +584,7 @@ end
 conjugations["2b"] = function(args)
 	local forms = {}
 
-	local inf_stem, inf_tr = nom.split_russian_tr(getarg(args, 2))
+	local inf_stem, inf_tr = nom.split_russian_tr(get_stressed_arg(args, 2))
 	local pres_stem, pres_tr = inf_stem, inf_tr
 
 	-- all -ова- change to -у-
@@ -605,16 +613,16 @@ conjugations["3a"] = function(args)
 
 	local forms = {}
 
-	local stem = getarg(args, 2)
+	local stem = get_stressed_arg(args, 2)
 	-- non-empty if no short past forms to be used
 	local no_short_past = args[3]
 	-- non-empty if no short past participle forms to be used
 	local no_short_past_partcpl = args[4]
 	-- "нь" if "-нь"/"-ньте" instead of "-ни"/"-ните" in the imperative
 	local impr_end = args[5]
-	-- optional full infinitive form for verbs like достичь
+	-- optional full infinitive form for verbs like дости́чь
 	local full_inf = args[6]
-	-- optional short masculine past form for verbs like вять
+	-- optional short masculine past form for verbs like вя́нуть
 	local past_m_short = args[7]
 
 	-- if full infinitive is not passed, build from the stem, otherwise use the optional parameter
@@ -698,7 +706,7 @@ end
 conjugations["3c"] = function(args)
 	local forms = {}
 
-	local stem = getarg(args, 2)
+	local stem = get_stressed_arg(args, 2)
 	-- remove accent for some forms
 	local stem_noa = com.remove_accents(stem)
 
@@ -727,7 +735,7 @@ end
 conjugations["4a"] = function(args)
 	local forms = {}
 
-	local stem, tr = nom.split_russian_tr(getarg(args, 2))
+	local stem, tr = nom.split_russian_tr(get_stressed_arg(args, 2))
 
 	-- for "a" stress type "й" - after vowels, "ь" - after single consonants, "и" - after consonant clusters
 	local impr_end_param = args[3]
@@ -820,7 +828,7 @@ end
 conjugations["4c"] = function(args)
 	local forms = {}
 
-	local stem = getarg(args, 2)
+	local stem = get_stressed_arg(args, 2)
 	-- optional parameter for verbs like похитить (похи́щу) (4a), защитить (защищу́) (4b), поглотить (поглощу́) (4c) with a different iotation (т -> щ, not ч)
 	local shch = args[3]
 
@@ -858,7 +866,7 @@ end
 conjugations["5a"] = function(args)
 	local forms = {}
 
-	local stem = getarg(args, 2)
+	local stem = get_stressed_arg(args, 2)
 	-- обидеть, выстоять have different past tense and infinitive forms
 	local past_stem = args[3]
 	-- imperative ending, выгнать - выгони
@@ -910,7 +918,7 @@ conjugations["5b"] = function(args)
 	local forms = {}
 
 	local stem = getarg(args, 2)
-	local past_stem = getarg(args, 3)
+	local past_stem = get_stressed_arg(args, 3)
 	-- irreg: лежать - лёжа
 	local pres_adv_part = args[4]
 
@@ -957,8 +965,8 @@ end
 conjugations["5c"] = function(args)
 	local forms = {}
 
-	local stem = getarg(args, 2)
-	local past_stem = getarg(args, 3)
+	local stem = get_stressed_arg(args, 2)
+	local past_stem = get_stressed_arg(args, 3)
 	-- e.g. гнать - гнала́
 	local fem_past = args[4]
 
@@ -1005,7 +1013,7 @@ end
 conjugations["6a"] = function(args)
 	local forms = {}
 
-	local stem = getarg(args, 2)
+	local stem = get_stressed_arg(args, 2)
 	local impr_end = args[3]
 	-- irregular imperatives (сыпать  - сыпь is moved to a separate function but the parameter may still be needed)
 	local impr_sg = args[4]
@@ -1160,7 +1168,7 @@ end
 conjugations["6c"] = function(args)
 	local forms = {}
 
-	local stem = getarg(args, 2)
+	local stem = get_stressed_arg(args, 2)
 	-- optional parameter for verbs like клеветать (клевещу́
 	local shch = args[3]
 	-- remove accent for some forms
@@ -1228,11 +1236,11 @@ end
 conjugations["7a"] = function(args)
 	local forms = {}
 
-	local full_inf = getarg(args, 2)
-	local pres_stem = getarg(args, 3)
-	local past_stem = getarg(args, 4)
-	local impr_sg = getarg(args, 5)
-	local past_adv_part = getarg(args, 6)
+	local full_inf = get_stressed_arg(args, 2)
+	local pres_stem = get_stressed_arg(args, 3)
+	local past_stem = get_stressed_arg(args, 4)
+	local impr_sg = get_stressed_arg(args, 5)
+	local past_adv_part = get_stressed_arg(args, 6)
 
 	forms["infinitive"] = full_inf
 
@@ -1269,9 +1277,9 @@ end
 conjugations["7b"] = function(args)
 	local forms = {}
 
-	local full_inf = getarg(args, 2)
+	local full_inf = get_stressed_arg(args, 2)
 	local pres_stem = getarg(args, 3)
-	local past_stem = getarg(args, 4)
+	local past_stem = get_stressed_arg(args, 4)
 
 	forms["infinitive"] = full_inf
 
@@ -1305,9 +1313,9 @@ end
 conjugations["8a"] = function(args)
 	local forms = {}
 
-	local stem = getarg(args, 2)
-	local full_inf = getarg(args, 3)
-	local past_m = getarg(args, "past_m")
+	local stem = get_stressed_arg(args, 2)
+	local full_inf = get_stressed_arg(args, 3)
+	local past_m = get_stressed_arg(args, "past_m")
 	-- if full infinitive is not passed, build from the stem, otherwise use the optional parameter
 	forms["infinitive"] = full_inf
 
@@ -1344,8 +1352,8 @@ conjugations["8b"] = function(args)
 	local forms = {}
 
 	local stem = getarg(args, 2)
-	local full_inf = getarg(args, 3)
-	local past_m = getarg(args, "past_m")
+	local full_inf = get_stressed_arg(args, 3)
+	local past_m = get_stressed_arg(args, "past_m")
 	-- if full infinitive is not passed, build from the stem, otherwise use the optional parameter
 	forms["infinitive"] = full_inf
 
@@ -1382,8 +1390,8 @@ end
 conjugations["9a"] = function(args)
 	local forms = {}
 
-	local stem = getarg(args, 2)
-	local pres_stem = getarg(args, 3)
+	local stem = get_stressed_arg(args, 2)
+	local pres_stem = get_stressed_arg(args, 3)
 
 	forms["infinitive"] = stem .. "еть"
 
@@ -1461,7 +1469,7 @@ end
 conjugations["10a"] = function(args)
 	local forms = {}
 
-	local stem = getarg(args, 2)
+	local stem = get_stressed_arg(args, 2)
 
 	forms["infinitive"] = stem .. "оть"
 
@@ -1488,9 +1496,9 @@ end
 conjugations["10c"] = function(args)
 	local forms = {}
 
-	local inf_stem = getarg(args, 2)
+	local inf_stem = get_stressed_arg(args, 2)
 	-- present tense stressed stem "моло́ть" - м́елет
-	local pres_stem = getarg(args, 3)
+	local pres_stem = get_stressed_arg(args, 3)
 	-- remove accent for some forms
 	local pres_stem_noa = com.remove_accents(pres_stem)
 
@@ -1519,7 +1527,7 @@ end
 conjugations["11a"] = function(args)
 	local forms = {}
 
-	local stem = getarg(args, 2)
+	local stem = get_stressed_arg(args, 2)
 
 	forms["infinitive"] = stem .. "ить"
 
@@ -1592,8 +1600,8 @@ end
 conjugations["12a"] = function(args)
 	local forms = {}
 
-	local stem = getarg(args, 2)
-	local pres_stem = getarg(args, 3)
+	local stem = get_stressed_arg(args, 2)
+	local pres_stem = get_stressed_arg(args, 3)
 
 	forms["infinitive"] = stem .. "ть"
 
@@ -1628,7 +1636,7 @@ end
 conjugations["12b"] = function(args)
 	local forms = {}
 
-	local stem = getarg(args, 2)
+	local stem = get_stressed_arg(args, 2)
 	local pres_stem = getarg(args, 3)
 
 	forms["infinitive"] = stem .. "ть"
@@ -1666,7 +1674,7 @@ end
 conjugations["13b"] = function(args)
 	local forms = {}
 
-	local stem = getarg(args, 2)
+	local stem = get_stressed_arg(args, 2)
 	local pres_stem = getarg(args, 3)
 
 	forms["infinitive"] = stem .. "ть"
@@ -1703,8 +1711,8 @@ conjugations["14a"] = function(args)
 	-- only one verb: вы́жать
 	local forms = {}
 
-	local stem = getarg(args, 2)
-	local pres_stem = getarg(args, 3)
+	local stem = get_stressed_arg(args, 2)
+	local pres_stem = get_stressed_arg(args, 3)
 
 	forms["infinitive"] = stem .. "ть"
 
@@ -1735,10 +1743,10 @@ end
 conjugations["14b"] = function(args)
 	local forms = {}
 
-	local stem = getarg(args, 2)
+	local stem = get_stressed_arg(args, 2)
 	local pres_stem = getarg(args, 3)
 	-- заня́ться has three forms: за́нялся, зан́ялся, занялся́
-	local past_m = args["past_m"]
+	local past_m = args["past_m"] and get_stressed_arg(args, "past_m")
 
 	forms["infinitive"] = stem .. "ть"
 
@@ -1774,10 +1782,10 @@ end
 conjugations["14c"] = function(args)
 	local forms = {}
 
-	local stem = getarg(args, 2)
-	local pres_stem = getarg(args, 3)
+	local stem = get_stressed_arg(args, 2)
+	local pres_stem = get_stressed_arg(args, 3)
 	local pres_stem_noa = com.make_unstressed(pres_stem)
-	local past_m = args["past_m"]
+	local past_m = args["past_m"] and get_stressed_arg(args, "past_m")
 
 	forms["infinitive"] = stem .. "ть"
 
@@ -1815,7 +1823,7 @@ end
 conjugations["15a"] = function(args)
 	local forms = {}
 
-	local stem = getarg(args, 2)
+	local stem = get_stressed_arg(args, 2)
 
 	forms["infinitive"] = stem .. "ть"
 
@@ -1842,11 +1850,12 @@ end
 conjugations["16a"] = function(args)
 	local forms = {}
 
-	local stem = getarg(args, 2)
+	local stem = get_stressed_arg(args, 2)
+	local stem_noa = com.make_unstressed(stem)
 
 	forms["infinitive"] = stem .. "ть"
 
-	forms["pres_actv_part"] = stem .. "ву́щий"
+	forms["pres_actv_part"] = stem_noa .. "ву́щий"
 	forms["past_actv_part"] = stem .. "вший"
 	forms["pres_pasv_part"] = ""
 	forms["pres_adv_part"] = ""
@@ -1869,7 +1878,7 @@ end
 conjugations["16b"] = function(args)
 	local forms = {}
 
-	local stem = getarg(args, 2)
+	local stem = get_stressed_arg(args, 2)
 	local stem_noa = com.make_unstressed(stem)
 
 	forms["infinitive"] = stem .. "ть"
@@ -2487,7 +2496,7 @@ conjugations["irreg-минуть"] = function(args)
 	-- for the irregular verb "ми́нуть"
 	local forms = {}
 
-	local stem = getarg(args, 2)
+	local stem = get_stressed_arg(args, 2)
 	local stem_noa = com.make_unstressed(stem)
 
 	forms["infinitive"] = stem .. "уть"
@@ -2524,8 +2533,8 @@ conjugations["irreg-живописать-миновать"] = function(args)
 	-- for irregular verbs "живописа́ть" and "минова́ть", mixture of types 1 and 2
 	local forms = {}
 
-	local inf_stem = getarg(args, 2)
-	local pres_stem = getarg(args, 3)
+	local inf_stem = get_stressed_arg(args, 2)
+	local pres_stem = get_stressed_arg(args, 3)
 
 	forms["infinitive"] = inf_stem .. "ть"
 
@@ -2666,7 +2675,7 @@ conjugations["irreg-слыхать-видать"] = function(args)
 	-- irregular, only for isolated verbs derived from слыхать or видать with the same stress pattern
 	local forms = {}
 
-	local stem = getarg(args, 2)
+	local stem = get_stressed_arg(args, 2)
 
 	forms["infinitive"] = stem .. "ть"
 
@@ -2702,7 +2711,7 @@ conjugations["irreg-стелить-стлать"] = function(args)
 	-- irregular, only for verbs derived from стелить and стлать with the same stress pattern
 	local forms = {}
 
-	local stem = getarg(args, 2)
+	local stem = get_stressed_arg(args, 2)
 	local prefix = args[3] or ""
 
 	forms["infinitive"] = prefix .. stem .. "ть"
@@ -2820,7 +2829,7 @@ conjugations["irreg-ссать-сцать"] = function(args)
 	-- irregular, only for verbs derived from ссать and сцать (both vulgar!)
 	local forms = {}
 
-	local stem = getarg(args, 2)
+	local stem = get_stressed_arg(args, 2)
 	local pres_stem = getarg(args, 3)
 
 	local prefix = args[4] or ""
