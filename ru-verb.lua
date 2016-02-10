@@ -20,6 +20,11 @@
 	The code is careful only to generate manual translit when it's needed,
 	to avoid penalizing the majority of cases where manual transit isn't
 	needed.
+
+FIXME:
+
+1. Find any current uses of pres_futr_* overrides and remove them,
+   converting to pres_ or futr_. Then make pres_futr_ overrides illegal.
 ]=]--
 
 local m_utilities = require("Module:utilities")
