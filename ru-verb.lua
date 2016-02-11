@@ -953,7 +953,7 @@ conjugations["5b"] = function(args)
 
 	present_i_b(forms, stem)
 
-	-- "й" after any vowel (e.g. выстоять), with or without an acute accent, otherwise "ь"
+	-- "й" after any vowel (e.g. выстоять), with or without an acute accent, otherwise "и́"
 	local impr_end = "и́"
 	if rfind(stem, "[аэыоуяеиёю́]$") then
 		impr_end = "́й" -- the last vowel is stressed (an acute accent before "й")
@@ -1117,9 +1117,10 @@ conjugations["6b"] = function(args)
 
 	present_e_b(forms, pres_stem)
 
-	if not impr_end and rfind(stem, "[аэыоуяеиёю́]$") then
+	local impr_end
+	if rfind(stem, "[аэыоуяеиёю́]$") then
 		impr_end = "́й" -- accent on the preceding vowel
-	elseif not impr_end and not rfind(stem, "[аэыоуяеиёю́]$") then
+	else
 		impr_end = "и́"
 	end
 
@@ -1172,7 +1173,7 @@ conjugations["6c"] = function(args)
 	local forms = {}
 
 	local stem = get_stressed_arg(args, 2)
-	-- optional parameter for verbs like клеветать (клевещу́
+	-- optional parameter for verbs like клеветать (клевещу́)
 	local shch = args[3]
 	-- remove accent for some forms
 	local stem_noa = com.make_unstressed(stem)
