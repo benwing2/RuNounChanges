@@ -759,6 +759,9 @@ conjugations["4a"] = function(args)
 	else --default
 		impr_end = "ь"
 	end
+	if impr_end ~= "и" and impr_end ~= "й" and impr_end ~= "ь" then
+		error("Invalid parameter 3 value " .. impr_end)
+	end
 
 	forms["infinitive"] = combine(stem, tr, "ить")
 
