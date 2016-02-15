@@ -516,22 +516,22 @@ pages_already_erased = set()
 # types. LEMMATYPE is e.g. "infinitive" or "masculine singular" and is
 # used in messages.
 #
-# INFLTEMP is the headword template for the inflected-word entry (e.g.
+# HEADTEMP is the headword template for the inflected-word entry (e.g.
 # "head|ru|verb form" or "ru-noun form"; we special-case "head|" headword
-# templates). INFLTEMP_PARAM is a parameter or parameters to add to the
-# created INFLTEMP template, and should be either empty or of the form
+# templates). HEADTEMP_PARAM is a parameter or parameters to add to the
+# created HEADTEMP template, and should be either empty or of the form
 # "|foo=bar" (or e.g. "|foo=bar|baz=bat" for more than one parameter).
 #
 # DEFTEMP is the definitional template that points to the base form (e.g.
-# "inflection of" or "past passive participle of"). DEFTEMP_PARAM is a
-# parameter or parameters to add to the created DEFTEMP template, similar
-# to INFLTEMP_PARAM; or (if DEFTEMP is "inflection of") it should be a list
+# "inflection of" or "ru-participle of"). DEFTEMP_PARAM is a parameter
+# or parameters to add to the created DEFTEMP template, similar to
+# HEADTEMP_PARAM; or (if DEFTEMP is "inflection of") it should be a list
 # of inflection codes (e.g. ['2', 's', 'pres', 'ind']). DEFTEMP_NEEDS_LANG
 # indicates whether the definition template specified by DEFTEMP needs to
 # have a 'lang' parameter with value 'ru'.
 #
 # GENDER should be a list of genders to use in adding or updating gender
-# (assumed to be parameter g= in INFLTEMP if it's a "head|" headword template,
+# (assumed to be parameter g= in HEADTEMP if it's a "head|" headword template,
 # else parameter 2=, and g2=, g3= for additional genders). If no genders
 # are relevant, supply an empty list. (NOTE: This is special-cased for verbs,
 # and inserts the "gender" [actually the aspect, perfective/imperfective]
@@ -554,7 +554,7 @@ pages_already_erased = set()
 # allow for stress mismatch when inserting a new subsection next to an
 # existing one, instead of creating a new etymology section.
 def create_inflection_entry(program_args, save, index, inflections, lemma,
-    lemmatr, pos, infltype, lemmatype, infltemp, infltemp_param, deftemp,
+    lemmatr, pos, infltype, lemmatype, headtemp, headtemp_param, deftemp,
     deftemp_param, gender, deftemp_needs_lang=True, entrytext=None,
     is_lemma_template=None, lemmas_to_overwrite=[],
     allow_stress_mismatch_in_defn=False):
@@ -608,8 +608,8 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
       else "participle" if is_participle else infltype)
 
   deftemp_uses_inflection_of = deftemp == "inflection of"
-  infltemp_is_head = infltemp.startswith("head|")
-  first_gender_param = "g" if infltemp_is_head else "2"
+  headtemp_is_head = headtemp.startswith("head|")
+  first_gender_param = "g" if headtemp_is_head else "2"
 
   for infl, infltr in inflections:
     if infl == "-":
@@ -778,7 +778,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
       for infl, infltr in inflections:
         headno += 1
         if headno == 1:
-          headparams.append("|%s%s%s" % ("head=" if infltemp_is_head else "",
+          headparams.append("|%s%s%s" % ("head=" if headtemp_is_head else "",
             infl, "|tr=%s" % infltr if infltr else ""))
         else:
           headparams.append("|head%s=%s%s" % (headno, infl,
@@ -790,14 +790,14 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
     for g in gender:
       genderno += 1
       if genderno == 1:
-        genderparams.append("|g=%s" % g if infltemp_is_head else
+        genderparams.append("|g=%s" % g if headtemp_is_head else
             "||%s" % g if no_param1 else "|%s" % g)
       else:
         genderparams.append("|g%s=%s" % (genderno, g))
 
     # 3. Synthesize headword template.
-    new_headword_template = "{{%s%s%s%s}}" % (infltemp, "".join(headparams),
-        "".join(genderparams), infltemp_param)
+    new_headword_template = "{{%s%s%s%s}}" % (headtemp, "".join(headparams),
+        "".join(genderparams), headtemp_param)
 
     # 4. Synthesize definition template.
     new_defn_template = "{{%s%s|%s%s%s}}" % (
@@ -1221,7 +1221,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
               # Find the inflection headword template(s) (e.g. 'ru-noun form' or
               # 'head|ru|verb form').
               def template_name(t):
-                if infltemp_is_head:
+                if headtemp_is_head:
                   return "|".join([unicode(t.name), getparam(t, "1"), getparam(t, "2")])
                 else:
                   return unicode(t.name)
@@ -1244,13 +1244,13 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
               issue_warnings = process_section_pass == 0
               infl_headword_templates_for_already_present_entry = [
                   t for t in parsed.filter_templates()
-                  if template_name(t) == infltemp and
+                  if template_name(t) == headtemp and
                   template_head_matches(t, inflections,
                     "checking for already-present entry",
                     issue_warnings=issue_warnings)]
               infl_headword_templates_for_inserting_in_same_section = [
                   t for t in parsed.filter_templates()
-                  if template_name(t) == infltemp and
+                  if template_name(t) == headtemp and
                   template_head_matches(t, inflections,
                     "checking for inserting defn in same section",
                     fail_when_left_over_heads=True,
@@ -2131,7 +2131,7 @@ def split_forms_with_stress_variants(args, forms_desired, dicforms, pagemsg,
 # FORM_ALIASES is a dictionary mapping aliases to form codes.
 #
 # POS specifies the part of speech (lowercase, singular, e.g. "verb").
-# INFLTEMP specifies the inflection template name (e.g. "head|ru|verb form" or
+# HEADTEMP specifies the headword template name (e.g. "head|ru|verb form" or
 # "ru-noun form"). DICFORM_CODES specifies the form code for the dictionary
 # form (e.g. "infinitive", "nom_m") or a list of such codes to try (e.g.
 # ["nom_sg", "nom_pl"]).
@@ -2167,7 +2167,7 @@ def split_forms_with_stress_variants(args, forms_desired, dicforms, pagemsg,
 # used e.g. to skip periphrastic future forms.
 def create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite,
     program_args, save, startFrom, upTo, formspec, form_inflection_dict,
-    form_aliases, pos, infltemp, dicform_codes, expected_header,
+    form_aliases, pos, headtemp, dicform_codes, expected_header,
     expected_poses, skip_poses, is_inflection_template, create_form_generator,
     is_lemma_template, get_gender=None, skip_inflections=None):
 
@@ -2427,7 +2427,7 @@ def create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite,
                     create_inflection_entry(program_args, save, index,
                       inflections, dicformru, dicformtr, pos.capitalize(),
                       "%s form %s" % (pos, formname), "dictionary form",
-                      infltemp, "", "inflection of", inflset, inflset_gender,
+                      headtemp, "", "inflection of", inflset, inflset_gender,
                       is_lemma_template=is_lemma_template,
                       lemmas_to_overwrite=lemmas_to_overwrite,
                       allow_stress_mismatch_in_defn=allow_stress_mismatch)
@@ -2449,8 +2449,8 @@ def create_verb_forms(save, startFrom, upTo, formspec, lemmas_to_process,
     lemmas_no_jo, lemmas_to_overwrite, program_args):
   create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite,
       program_args, save, startFrom, upTo, formspec, verb_form_inflection_dict,
-      verb_form_aliases, "verb", "head|ru|verb form", "infinitive",
-      "Conjugation", ["Verb", "Idiom"], [],
+      verb_form_aliases, "verb", "head|ru|verb form",
+      "infinitive", "Conjugation", ["Verb", "Idiom"], [],
       lambda t:unicode(t.name).startswith("ru-conj") and unicode(t.name) != "ru-conj-verb-see",
       create_verb_generator,
       lambda t:unicode(t.name) == "ru-verb",
@@ -2489,8 +2489,8 @@ def create_noun_forms(save, startFrom, upTo, formspec, lemmas_to_process,
       lemmas_no_jo, lemmas_to_overwrite, program_args):
   create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite,
       program_args, save, startFrom, upTo, formspec, noun_form_inflection_dict,
-      noun_form_aliases, "noun", "ru-noun form", ["nom_sg", "nom_pl"],
-      "Declension", ["Noun", "Proper noun"], [],
+      noun_form_aliases, "noun", "ru-noun form",
+      ["nom_sg", "nom_pl"], "Declension", ["Noun", "Proper noun"], [],
       lambda t:unicode(t.name) == "ru-noun-table",
       lambda t:re.sub(r"^\{\{ru-noun-table", "{{ru-generate-noun-args", unicode(t)),
       lambda t:unicode(t.name) in ["ru-noun", "ru-proper noun", "ru-noun+", "ru-proper noun+"],
