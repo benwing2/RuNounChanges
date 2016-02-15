@@ -16,7 +16,7 @@
 
 # FIXME:
 #
-# 1. (NOT DONE, INSTEAD HANDLED IN ADDPRON,PY) Add pronunciation. For nouns
+# 1. (NOT DONE, INSTEAD HANDLED IN ADDPRON.PY) Add pronunciation. For nouns
 #    and verbs with unstressed -я in the ending (3rd plural verb, dat/ins/pre
 #    plural noun), we need to add a dot-under. Otherwise we use the form
 #    itself. With multiple etymologies, we need to do more. If there's a
@@ -252,6 +252,14 @@
 # 70. (DONE) Warn when lemma or inflections have multiple stresses.
 # 71. BUG: Remove accent from monosyllabic transliterations (e.g. forms of
 #     бог|tr=box).
+# 72. Sometimes past passive participles have been borrowed from
+#     perfective to imperfective verbs (e.g. делать has сделанный as past
+#     passive participle). To deal with this, if the verb is imperfective,
+#     and it has one or more perfective verbs listed (that aren't the same
+#     verb, as with biaspectual verbs), check for each of the imperfective
+#     verb's past passive participles to see whether any of the corresponding
+#     perfective verbs have the same word listed as a past passive participle,
+#     and if so, ignore the participle on the imperfective verb.
 
 import pywikibot, re, sys, codecs, argparse, time
 import traceback
