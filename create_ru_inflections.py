@@ -276,6 +276,7 @@ ignore_headword_gender = [
 
 skip_lemma_pages = [
     u"тысяча",
+    u"роженица",
 ]
 
 skip_form_pages = [
@@ -310,6 +311,10 @@ manual_split_form_list = [
     (u"^програ́ммн.*обеспе́чен", u"програ́ммное обеспе́чение"),
     (u"^програ́ммн.*обеспече́н", u"програ́ммное обеспече́ние"),
     (u"^пяден", u"пя́день"),
+    # FIXME, following three don't work because of the three-way split
+    (u"^рожени́ц", u"рожени́ца"),
+    (u"^роже́ниц", u"роже́ница"),
+    (u"^ро́жениц", u"ро́женица"),
     (u"^рыбар", u"рыба́рь"),
     (u"^сажен", u"са́жень"),
     (u"^творог", u"творо́г"),
@@ -392,6 +397,12 @@ allow_in_same_etym_section = [
     (u"шашки", u"шашка"),
     (u"шлёпанцы", u"шлёпанец"),
     (u"японцы", u"японец"),
+]
+
+# List of lemmas where we allow stress mismatches to go into the same etym
+# section.
+allow_stress_mismatch_list = [
+    u"щавель"
 ]
 
 # These represent pairs of lemmas where we allow definition lines from the
@@ -820,7 +831,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
     if program_args.overwrite_page:
       if pagename in pages_already_erased:
         pagemsg("WARNING: Not overwriting page, already overwritten previously")
-      elif "==Etymology 1==" in pagetext:
+      elif "==Etymology 1==" in pagetext and not program_args.overwrite_etymologies:
         pagemsg("WARNING: Found ==Etymology 1== in page text, not overwriting, skipping form")
         return
       else:
@@ -2252,7 +2263,7 @@ def create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite,
       # definitions to see if we can insert a subsection next to an existing
       # one rather than create a new etymology section, so the stress variants
       # end up in the same etymology section
-      allow_stress_mismatch = len(dicforms_args_sets) > 1
+      allow_stress_mismatch = len(dicforms_args_sets) > 1 or pagetitle in allow_stress_mismatch_list
       for split_dicforms, split_args in dicforms_args_sets:
         for dicformru, dicformtr in split_dicforms:
           for formname, inflsets in forms_desired:
@@ -2532,7 +2543,11 @@ have errors in them (e.g. due to the conjugation template having incorrect
 aspect) and thus should be overwritten. Entries are without accents.""")
 pa.add_argument("--overwrite-page", action="store_true",
     help=u"""If specified, overwrite the entire existing page of inflections.
-Won't do this if it finds "Etymology N". WARNING: Be careful!""")
+Won't do this if it finds "Etymology N", unless --overwrite-etymologies is
+given. WARNING: Be careful!""")
+pa.add_argument("--overwrite-etymologies", action="store_true",
+    help=u"""If specified and --overwrite-page, overwrite the entire existing
+page of inflections even if "Etymology N". WARNING: Be careful!""")
 
 params = pa.parse_args()
 startFrom, upTo = blib.get_args(params.start, params.end)
