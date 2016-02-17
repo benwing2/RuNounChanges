@@ -525,10 +525,10 @@ pages_already_erased = set()
 # DEFTEMP is the definitional template that points to the base form (e.g.
 # "inflection of" or "ru-participle of"). DEFTEMP_PARAM is a parameter
 # or parameters to add to the created DEFTEMP template, similar to
-# HEADTEMP_PARAM; or (if DEFTEMP is "inflection of") it should be a list
-# of inflection codes (e.g. ['2', 's', 'pres', 'ind']). DEFTEMP_NEEDS_LANG
-# indicates whether the definition template specified by DEFTEMP needs to
-# have a 'lang' parameter with value 'ru'.
+# HEADTEMP_PARAM; or it should be a list of inflection codes (e.g.
+# ['2', 's', 'pres', 'ind']). DEFTEMP_NEEDS_LANG indicates whether the
+# definition template specified by DEFTEMP needs to have a 'lang' parameter
+# with value 'ru'.
 #
 # GENDER should be a list of genders to use in adding or updating gender
 # (assumed to be parameter g= in HEADTEMP if it's a "head|" headword template,
@@ -548,7 +548,7 @@ pages_already_erased = set()
 #
 # LEMMAS_TO_OVERWRITE is a list of lemma pages the forms of which to overwrite
 # the inflection codes of when an existing definition template (e.g.
-# 'inflection of') is found with matching lemma. Entries are without accents.
+# "inflection of") is found with matching lemma. Entries are without accents.
 #
 # ALLOW_STRESS_MISMATCH_IN_DEFN is used when dealing with stress variants to
 # allow for stress mismatch when inserting a new subsection next to an
@@ -597,15 +597,16 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
   lemma, lemmatr = check_for_redundant_translit(lemma, lemmatr, pagemsg, expand_text)
   inflections = [check_for_redundant_translit(infl, infltr, pagemsg, expand_text) for infl, infltr in inflections]
 
-  is_participle = "participle" in infltype
+  is_participle = "_part" in infltype
+  is_adverbial_participle = "adv_part" in infltype
   is_adj_form = "adjective form" in infltype
   is_noun_form = "noun form" in infltype
   is_verb_form = "verb form" in infltype
   is_short_adj_form = "adjective form short" in infltype
   is_noun_or_adj = "noun" in infltype or "adjective" in infltype
   is_noun_adj_plural = is_noun_or_adj and ("_p" in infltype or "_mp" in infltype)
-  generic_infltype = (re.sub(" form.*", " form", infltype) if " form" in infltype
-      else "participle" if is_participle else infltype)
+  generic_infltype = ("participle" if is_participle else
+      re.sub(" form.*", " form", infltype) if " form" in infltype else infltype)
 
   deftemp_uses_inflection_of = deftemp == "inflection of"
   headtemp_is_head = headtemp.startswith("head|")
@@ -1149,8 +1150,8 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                 #  sections[i] = ''.join(subsections)
                 return True
 
-              # Replace the form-code parameters in 'inflection of'
-              # (or 'ru-participle of') with those in INFLS, putting the
+              # Replace the form-code parameters in "inflection of"
+              # (or "ru-participle of") with those in INFLS, putting the
               # non-form-code parameters in the right places.
               def check_fix_defn_params(t, infls):
                 # Following code mostly copied from fix_verb_form.py
@@ -1186,7 +1187,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                   subsections[j] = unicode(parsed)
                   sections[i] = ''.join(subsections)
 
-              # True if the inflection codes in template T (an 'inflection of'
+              # True if the inflection codes in template T (an "inflection of"
               # template) exactly match the inflections given in INFLS (in
               # any order), or if the former are a superset of the latter
               def compare_inflections(t, infls, issue_warnings=True):
@@ -1268,7 +1269,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                     return True
                 return False
 
-              # Find the definitional (typically 'inflection of') template(s).
+              # Find the definitional (typically "inflection of") template(s).
               # We store a tuple of (TEMPLATE, NEEDS_UPDATE) where NEEDS_UDPATE
               # is true if we need to overwrite the form codes (this happens
               # when we want to add the verb aspect 'pfv' or 'impfv' to the
@@ -1283,7 +1284,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                       compare_param(t, "lang", "ru", None,
                         issue_warnings=issue_warnings))):
                   defn_templates_for_inserting_in_same_section.append(t)
-                  if not deftemp_uses_inflection_of:
+                  if isinstance(deftemp, basestring):
                     defn_templates_for_already_present_entry.append((t, False))
                   else:
                     result = compare_inflections(t, deftemp_param,
@@ -1397,6 +1398,10 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
             pagemsg("Found section to insert %s before: [[%s]]" % (
                 generic_infltype, subsections[insert_at + 1]))
 
+            # Determine indent level
+            m = re.match("^(==+)", subsections[insert_at])
+            indentlevel = len(m.group(1))
+
             secmsg = "%s section for same %s" % (secbefore_desc, matching)
             pagemsg("Inserting before %s" % secmsg)
             comment = "Insert entry for %s %s of %s before %s" % (
@@ -1448,7 +1453,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
 
           # If participle, try to find an existing noun or adjective with the
           # same headword to insert before. Insert before the first such one.
-          if is_participle:
+          if is_participle and not is_adverbial_participle:
             insert_at = None
             for j in xrange(2, len(subsections), 2):
               if re.match("^===+(Noun|Adjective)===+", subsections[j - 1]):
@@ -2119,7 +2124,7 @@ def split_forms_with_stress_variants(args, forms_desired, dicforms, pagemsg,
 #
 # LEMMAS_TO_OVERWRITE is a list of lemma pages the forms of which to overwrite
 # the inflection codes of when an existing definition template (e.g.
-# 'inflection of') is found with matching lemma. Entries are without accents.
+# "inflection of") is found with matching lemma. Entries are without accents.
 #
 # SAVE is as in create_inflection_entry(). STARTFROM and UPTO, if not None,
 # delimit the range of pages to process (inclusive on both ends).
@@ -2135,6 +2140,8 @@ def split_forms_with_stress_variants(args, forms_desired, dicforms, pagemsg,
 # "ru-noun form"). DICFORM_CODES specifies the form code for the dictionary
 # form (e.g. "infinitive", "nom_m") or a list of such codes to try (e.g.
 # ["nom_sg", "nom_pl"]).
+#
+# NOTE: There is special-case code that depends on the part of speech.
 #
 # EXPECTED_HEADER specifies the header that the inflection template (e.g.
 # 'ru-decl-adj' for adjectives, 'ru-conj-2a' etc. for verbs) should be under
@@ -2165,11 +2172,16 @@ def split_forms_with_stress_variants(args, forms_desired, dicforms, pagemsg,
 # form name, Russian and translit (which may be missing), and should return
 # true if the particular form value in question is to be skipped. This is
 # used e.g. to skip periphrastic future forms.
+#
+# PPPP_SET is a set of perfective past passive participles extracted in a
+# separate run, which will not be considered as imperfective participles even
+# if found in an imperfective conjugation.
 def create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite,
     program_args, save, startFrom, upTo, formspec, form_inflection_dict,
     form_aliases, pos, headtemp, dicform_codes, expected_header,
     expected_poses, skip_poses, is_inflection_template, create_form_generator,
-    is_lemma_template, get_gender=None, skip_inflections=None):
+    is_lemma_template, get_gender=None, skip_inflections=None,
+    pppp_set=None):
 
   forms_desired = parse_form_spec(formspec, form_inflection_dict,
       form_aliases)
@@ -2314,6 +2326,7 @@ def create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite,
                 inflections_printed = ",".join("%s%s" %
                     (infl, " (%s)" % infltr if infltr else "")
                     for infl, infltr in inflections)
+
                 if formval_no_accents == rulib.remove_accents(dicformru):
                   pagemsg("create_forms: Skipping form %s=%s because would go on lemma page" % (formname, inflections_printed))
                 else:
@@ -2336,6 +2349,18 @@ def create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite,
                   #      re.search(ur"[яа]́?та(,|$)", split_args["nom_pl"]) and
                   #      re.search(ur"[яа]т(|а|ам|ами|ах)$", formval_no_accents)):
                   #    form_gender = [re.sub(r"\bm\b", "n", g) for g in form_gender]
+
+                  if formname == "past_pasv_part" and form_gender == ["impf"]:
+                    filtered_inflections = []
+                    for infl, infltr in inflections:
+                      if pppp_set and infl in pppp_set:
+                        pagemsg("create_forms: Skipping imperfective past passive participle %s%s because in perfective past passive participle list"
+                            % (infl, " (%s)" % infltr if infltr else ""))
+                      else:
+                        filtered_inflections.append((infl, infltr))
+                    if not filtered_inflections:
+                      continue
+                    inflections = filtered_inflections
 
                   for inflset in inflsets:
                     inflset_gender = form_gender
@@ -2423,14 +2448,25 @@ def create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite,
                           break
                       if skip_locative:
                         continue
-
+                    if pos == "verb" and "part" in inflset:
+                      inflset = tuple(x for x in inflset if x != "part")
+                      header_pos = "Participle"
+                      deftemp = "ru-participle of"
+                      deftemp_needs_lang = False
+                      our_headtemp = "head|ru|participle"
+                    else:
+                      header_pos = pos.capitalize()
+                      deftemp = "inflection of"
+                      deftemp_needs_lang = True
+                      our_headtemp = headtemp
                     create_inflection_entry(program_args, save, index,
-                      inflections, dicformru, dicformtr, pos.capitalize(),
+                      inflections, dicformru, dicformtr, header_pos,
                       "%s form %s" % (pos, formname), "dictionary form",
-                      headtemp, "", "inflection of", inflset, inflset_gender,
-                      is_lemma_template=is_lemma_template,
+                      our_headtemp, "", deftemp, inflset,
+                      inflset_gender, is_lemma_template=is_lemma_template,
                       lemmas_to_overwrite=lemmas_to_overwrite,
-                      allow_stress_mismatch_in_defn=allow_stress_mismatch)
+                      allow_stress_mismatch_in_defn=allow_stress_mismatch,
+                      deftemp_needs_lang=deftemp_needs_lang)
 
 def create_verb_generator(t):
   verbtype = re.sub(r"^ru-conj-", "", unicode(t.name))
@@ -2446,16 +2482,18 @@ def get_verb_gender(t, formname, args):
   return [gender]
 
 def create_verb_forms(save, startFrom, upTo, formspec, lemmas_to_process,
-    lemmas_no_jo, lemmas_to_overwrite, program_args):
+    lemmas_no_jo, lemmas_to_overwrite, program_args, pppp_set):
   create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite,
       program_args, save, startFrom, upTo, formspec, verb_form_inflection_dict,
+      # NOTE: 'head|ru|verb form' will be overridden with participles
       verb_form_aliases, "verb", "head|ru|verb form",
       "infinitive", "Conjugation", ["Verb", "Idiom"], [],
       lambda t:unicode(t.name).startswith("ru-conj") and unicode(t.name) != "ru-conj-verb-see",
       create_verb_generator,
       lambda t:unicode(t.name) == "ru-verb",
       get_gender=get_verb_gender,
-      skip_inflections=skip_future_periphrastic)
+      skip_inflections=skip_future_periphrastic,
+      pppp_set=pppp_set)
 
 def get_adj_gender(t, formname, args):
   if "short" in formname:
@@ -2545,6 +2583,10 @@ of ё; see '--lemmas-no-jo'.""")
 pa.add_argument("--lemmas-no-jo",
     help=u"""If specified, lemmas specified using --lemmafile have е in place of ё.""",
     action="store_true")
+pa.add_argument("--perfective-past-passive-participles", "--pppp",
+    help=u"""File containing list of extracted perfective past passive
+participles, which won't be considered imperfective participles even if found
+in an imperfective conjugation. Entries are with accents.""")
 pa.add_argument("--overwrite-lemmas",
     help=u"""List of lemmas where the current inflections are considered to
 have errors in them (e.g. due to the conjugation template having incorrect
@@ -2570,11 +2612,15 @@ if params.overwrite_lemmas:
   lemmas_to_overwrite = [x.strip() for x in codecs.open(params.overwrite_lemmas, "r", "utf-8")]
 else:
   lemmas_to_overwrite = []
+if params.perfective_past_passive_participles:
+  pppp_set = set(x.strip() for x in codecs.open(params.perfective_past_passive_participles, "r", "utf-8"))
+else:
+  pppp_set = None
 if params.adj_form:
   create_adj_forms(params.save, startFrom, upTo, params.adj_form, lemmas_to_process, params.lemmas_no_jo, lemmas_to_overwrite, params)
 if params.noun_form:
   create_noun_forms(params.save, startFrom, upTo, params.noun_form, lemmas_to_process, params.lemmas_no_jo, lemmas_to_overwrite, params)
 if params.verb_form:
-  create_verb_forms(params.save, startFrom, upTo, params.verb_form, lemmas_to_process, params.lemmas_no_jo, lemmas_to_overwrite, params)
+  create_verb_forms(params.save, startFrom, upTo, params.verb_form, lemmas_to_process, params.lemmas_no_jo, lemmas_to_overwrite, params, pppp_set)
 
 blib.elapsed_time()
