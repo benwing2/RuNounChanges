@@ -34,6 +34,12 @@ def rmparam(template, param):
   if template.has(param):
     template.remove(param)
 
+def set_template_name(template, name, origname):
+  if origname.endswith("\n"):
+    template.name = name + "\n"
+  else:
+    template.name = name
+
 def do_assert(cond, msg=None):
   if msg:
     assert cond, msg
