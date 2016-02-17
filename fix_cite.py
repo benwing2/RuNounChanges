@@ -58,8 +58,9 @@ def process_page(index, page, save, verbose):
     pagemsg("WARNING: Page doesn't exist")
     return
 
-  if ":" in pagetitle and not pagetitle.startswith("Citations:"):
-    pagemsg("WARNING: Colon in page title, skipping page")
+  if ":" in pagetitle and not re.search(
+      "^(Citations|Appendix|Reconstruction|Transwiki):", pagetitle):
+    pagemsg("WARNING: Colon in page title and not a recognized namespace to include, skipping page")
     return
 
   text = unicode(page.text)
