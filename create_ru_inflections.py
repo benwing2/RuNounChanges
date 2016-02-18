@@ -1284,7 +1284,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                       compare_param(t, "lang", "ru", None,
                         issue_warnings=issue_warnings))):
                   defn_templates_for_inserting_in_same_section.append(t)
-                  if isinstance(deftemp, basestring):
+                  if isinstance(deftemp_param, basestring):
                     defn_templates_for_already_present_entry.append((t, False))
                   else:
                     result = compare_inflections(t, deftemp_param,
