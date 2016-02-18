@@ -30,10 +30,13 @@ from blib import getparam, rmparam, set_template_name, msg, errmsg, site
 
 import rulib
 
-replace_templates = ["reference-book", "cite wikipedia", "cite-usenet",
-    "quote-usenet", "cite book", "cite journal", "cite news", "cite web",
+replace_templates = [
+    "reference-book", "cite wikipedia",
+    "cite-usenet", "quote-usenet",
+    "cite book", "cite journal", "cite news", "cite web",
     "quote-news", "reference-journal", "reference-news", "reference-song",
-    "reference-us-patent", "reference-video"]
+    "reference-us-patent", "reference-video"
+    ]
 
 simple_replace = [
     ("cite wikipedia", "quote-wikipedia"),
@@ -59,7 +62,7 @@ def process_page(index, page, save, verbose):
     return
 
   if ":" in pagetitle and not re.search(
-      "^(Citations|Appendix|Reconstruction|Transwiki):", pagetitle):
+      "^(Citations|Appendix|Reconstruction|Transwiki|Talk|Wiktionary|[A-Za-z]+ talk):", pagetitle):
     pagemsg("WARNING: Colon in page title and not a recognized namespace to include, skipping page")
     return
 
@@ -93,10 +96,19 @@ def process_page(index, page, save, verbose):
           idval = getparam(t, fr)
           isbn_re = r"^(\s*)(10-ISBN +|ISBN-13 +|ISBN:? +|ISBN[-=] *)"
           if re.search(isbn_re, idval, re.I):
+            isbn_sub = "sub"
+          elif re.search(r"^[0-9]", idval.strip()):
+            isbn_sub = "direct"
+          else:
+            isbn_sub = False
+          if isbn_sub:
             rmparam(t, to) # in case of blank param
             tfr = t.get(fr)
             tfr.name = to
-            newval = re.sub(isbn_re, r"\1", idval, 0, re.I)
+            if isbn_sub == "sub":
+              newval = re.sub(isbn_re, r"\1", idval, 0, re.I)
+            else:
+              newval = idval
             tfr.value = newval
             pagemsg("id=%s -> isbn=%s" % (idval.replace("\n", r"\n"),
               newval.replace("\n", r"\n")))
@@ -128,9 +140,9 @@ def process_page(index, page, save, verbose):
         pagemsg("Replacing %s with %s in %s" %
             (origt, unicode(t), in_what))
 
-  for j in xrange(2, len(subsections), 2):
+  for j in xrange(0, len(subsections), 2):
     parsed = blib.parse_text(subsections[j])
-    if re.search(r"^===*References===*\n", subsections[j-1]):
+    if j > 0 and re.search(r"^===*References===*\n", subsections[j-1]):
       replace_in_reference(parsed, "==References== section")
       subsections[j] = unicode(parsed)
     else:
@@ -179,8 +191,8 @@ def process_page(index, page, save, verbose):
             pagemsg("WARNING: Found prefix=%s, not # or #*: %s" %
                 (prefix, unicode(t)))
         notes.append("%s -> quote-usenet%s" % (tname.strip(),
-          removed_prefix and (
-            ", remove prefix=%s, insert #* before template" % prefix or "")))
+          removed_prefix and
+            ", remove prefix=%s, insert #* before template" % prefix or ""))
         pagemsg("Replacing %s with %s outside of reference section" %
             (origt, unicode(t)))
     subsections[j] = unicode(parsed)
@@ -212,5 +224,6 @@ if __name__ == "__main__":
   for template in replace_templates:
     msg("Processing references to Template:%s" % template)
     errmsg("Processing references to Template:%s" % template)
-    for i, page in blib.references("Template:%s" % template, start, end):
+    for i, page in blib.references("Template:%s" % template, start, end,
+        includelinks=True):
       process_page(i, page, args.save, args.verbose)
