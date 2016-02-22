@@ -317,12 +317,6 @@ function export.do_generate_forms(conj_type, args)
 		end
 	end
 
-	--бдеть, победить have no 1st person sg present (impf) / future (pf)
-	if args["no_1sg_pres"] == "1" or args["no_1sg_futr"] == "1" then
-		track("no-1sg-pres-fut")
-		forms["pres_futr_1sg"] = ""
-	end
-
 	if verb_type ~= "pf" and verb_type ~= "pf-intr" and verb_type ~= "pf-refl" and verb_type ~= "pf-impers" and verb_type ~= "pf-impers-refl" and
 	   verb_type ~= "impf" and verb_type ~= "impf-intr" and verb_type ~= "impf-refl" and verb_type ~= "impf-impers" and verb_type ~= "impf-impers-refl" then
 	   	error("Invalid verb type " .. verb_type)
@@ -791,16 +785,6 @@ conjugations["4b"] = function(args)
 	local stem, tr = nom.split_russian_tr(getarg(args, 2))
 	-- optional parameter for verbs like похитить (похи́щу) (4a), защитить (защищу́) (4b), поглотить (поглощу́) (4c) with a different iotation (т -> щ, not ч)
 	local shch = args[3]
-	-- some verbs don't have 1st person singular - победить, возродить, use "no_1sg_futr=1" in the template
-	local no_1sg_futr = "0"
-
-	if not args["no_1sg_futr"] then
-		no_1sg_futr = 0
-	elseif args["no_1sg_futr"] == "1" then
-		no_1sg_futr = 1
-	else
-		no_1sg_futr = 0
-	end
 
 	forms["infinitive"] = combine(stem, tr, "и́ть")
 
@@ -811,14 +795,9 @@ conjugations["4b"] = function(args)
 
 	-- if shch is nil, pass nothing, otherwise pass "щ"
 	if not shch then
-		present_i_b(forms, stem, tr, 0)
+		present_i_b(forms, stem, tr)
 	else -- т-щ, not т-ч
-		present_i_b(forms, stem, tr, 0, shch)
-	end
-
-	-- make 1st person future singular blank if no_1sg_futr = 1
-	if no_1sg_futr == 1 then
-		forms["pres_futr_1sg"] = ""
+		present_i_b(forms, stem, tr, shch)
 	end
 
 	set_imper(forms, stem, tr, "и́", "и́те")
@@ -3193,12 +3172,7 @@ present_i_a = function(forms, stem, tr, shch)
 	forms["pres_futr_1sg"] = combine(iotated_stem, iotated_tr, ending_1sg)
 end
 
-present_i_b = function(forms, stem, tr, no_1sg_futr, shch)
-	-- parameter no_1sg_futr - no 1st person singular future if no_1sg_futr = 1
-	if not no_1sg_futr then
-		no_1sg_futr = 0
-	end
-
+present_i_b = function(forms, stem, tr, shch)
 	-- parameter shch - iotatate final т as щ, not ч
 	if not shch then
 		shch = ""
@@ -3214,12 +3188,7 @@ present_i_b = function(forms, stem, tr, no_1sg_futr, shch)
 	set_paradigm(forms, "pres_futr", stem, tr,
 		ending_1sg, "и́шь", "и́т", "и́м", "и́те",
 		hushing and "а́т" or "я́т")
-	-- Make 1st person future singular blank if no_1sg_futr = 1
-	if no_1sg_futr == 1 then
-		forms["pres_futr_1sg"] = ""
-	else
-		forms["pres_futr_1sg"] = combine(iotated_stem, iotated_tr, ending_1sg)
-	end
+	forms["pres_futr_1sg"] = combine(iotated_stem, iotated_tr, ending_1sg)
 end
 
 present_i_c = function(forms, stem, tr, shch)
