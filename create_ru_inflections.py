@@ -2588,9 +2588,10 @@ pa.add_argument("--perfective-past-passive-participles", "--pppp",
 participles, which won't be considered imperfective participles even if found
 in an imperfective conjugation. Entries are with accents.""")
 pa.add_argument("--overwrite-lemmas",
-    help=u"""List of lemmas where the current inflections are considered to
-have errors in them (e.g. due to the conjugation template having incorrect
-aspect) and thus should be overwritten. Entries are without accents.""")
+    help=u"""File containing list of lemmas where the current inflections are
+considered to have errors in them (e.g. due to the conjugation template having
+incorrect aspect) and thus should be overwritten. Entries are without
+accents.""")
 pa.add_argument("--overwrite-page", action="store_true",
     help=u"""If specified, overwrite the entire existing page of inflections.
 Won't do this if it finds "Etymology N", unless --overwrite-etymologies is
