@@ -1320,7 +1320,6 @@ conjugations["8a"] = function(args)
 	local stem = get_stressed_arg(args, 2)
 	local full_inf = get_stressed_arg(args, 3)
 	local past_m = get_stressed_arg(args, "past_m")
-	-- if full infinitive is not passed, build from the stem, otherwise use the optional parameter
 	forms["infinitive"] = full_inf
 
 	forms["pres_actv_part"] = stem .. "ущий"
@@ -1358,7 +1357,6 @@ conjugations["8b"] = function(args)
 	local stem = getarg(args, 2)
 	local full_inf = get_stressed_arg(args, 3)
 	local past_m = get_stressed_arg(args, "past_m")
-	-- if full infinitive is not passed, build from the stem, otherwise use the optional parameter
 	forms["infinitive"] = full_inf
 
 	forms["pres_actv_part"] = stem .. "у́щий"
@@ -1399,13 +1397,12 @@ conjugations["9a"] = function(args)
 
 	forms["infinitive"] = stem .. "еть"
 
-	-- prefective only
+	-- perfective only
 	forms["pres_actv_part"] = ""
 	forms["pres_pasv_part"] = ""
 	forms["pres_adv_part"] = ""
 
 	forms["past_actv_part"] = stem .. "евший"
-	-- default is blank
 
 	forms["past_adv_part"] = stem .. "евши"
 	forms["past_adv_part_short"] = stem .. "ев"
@@ -1439,11 +1436,11 @@ conjugations["9b"] = function(args)
 	forms["infinitive"] = stem_noa .. "е́ть"
 
 	forms["pres_actv_part"] = pres_stem .. "у́щий"
+	-- default is blank
 	forms["pres_pasv_part"] = ""
 	forms["pres_adv_part"] = ""
 
 	forms["past_actv_part"] = stem .. "ший"
-	-- default is blank
 
 	--тереть -> тёрши
 	if impf then
@@ -1451,7 +1448,7 @@ conjugations["9b"] = function(args)
 		forms["past_adv_part_short"] = ""
 	end
 	
-	--растереть -> растере́вши, растер́ев
+	--растереть -> растере́вши, растере́в
 	if pf then
 		forms["past_adv_part"] = stem_noa .. "е́вши"
 		forms["past_adv_part_short"] = stem_noa .. "е́в"
@@ -1501,7 +1498,7 @@ conjugations["10c"] = function(args)
 	local forms = {}
 
 	local inf_stem = get_stressed_arg(args, 2)
-	-- present tense stressed stem "моло́ть" - м́елет
+	-- present tense stressed stem "моло́ть" - ме́лет
 	local pres_stem = get_stressed_arg(args, 3)
 	-- remove accent for some forms
 	local pres_stem_noa = com.remove_accents(pres_stem)
@@ -1535,13 +1532,12 @@ conjugations["11a"] = function(args)
 
 	forms["infinitive"] = stem .. "ить"
 
-	-- prefective only
+	-- perfective only
 	forms["pres_actv_part"] = ""
 	forms["pres_pasv_part"] = ""
 	forms["pres_adv_part"] = ""
 
 	forms["past_actv_part"] = stem .. "ивший"
-	-- default is blank
 
 	forms["past_adv_part"] = stem .. "ивши"
 	forms["past_adv_part_short"] = stem .. "ив"
@@ -1577,7 +1573,6 @@ conjugations["11b"] = function(args)
 	forms["pres_adv_part"] = pres_stem .. "ья́"
 
 	forms["past_actv_part"] = stem .. "и́вший"
-	-- default is blank
 
 	forms["past_adv_part"] = stem .. "и́вши"
 	forms["past_adv_part_short"] = stem .. "и́в"
@@ -1614,7 +1609,6 @@ conjugations["12a"] = function(args)
 	forms["pres_adv_part"] = pres_stem .. "я"
 
 	forms["past_actv_part"] = stem .. "вший"
-	-- default is blank
 
 	forms["past_adv_part"] = stem .. "вши"
 	forms["past_adv_part_short"] = stem .. "в"
@@ -1646,11 +1640,11 @@ conjugations["12b"] = function(args)
 	forms["infinitive"] = stem .. "ть"
 
 	forms["pres_actv_part"] = pres_stem .. "ю́щий"
+	-- default is blank
 	forms["pres_pasv_part"] = ""
 	forms["pres_adv_part"] = pres_stem .. "я́"
 
 	forms["past_actv_part"] = stem .. "вший"
-	-- default is blank
 
 	forms["past_adv_part"] = stem .. "вши"
 	forms["past_adv_part_short"] = stem .. "в"
@@ -1688,7 +1682,6 @@ conjugations["13b"] = function(args)
 	forms["pres_adv_part"] = stem .. "я"
 
 	forms["past_actv_part"] = stem .. "вший"
-	-- default is blank
 
 	forms["past_adv_part"] = stem .. "вши"
 	forms["past_adv_part_short"] = stem .. "в"
@@ -1726,7 +1719,6 @@ conjugations["14a"] = function(args)
 	forms["pres_adv_part"] = ""
 
 	forms["past_actv_part"] = stem .. "вший"
-	-- default is blank
 
 	forms["past_adv_part"] = stem .. "вши"
 	forms["past_adv_part_short"] = stem .. "в"
