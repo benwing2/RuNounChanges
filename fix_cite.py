@@ -72,6 +72,50 @@ def process_page(index, page, save, verbose):
   subsections = re.split("(^==.*==\n)", text, 0, re.M)
   newtext = text
 
+  def move_param(t, fr, to, frob_from=None):
+    if t.has(fr):
+      oldval = getparam(t, fr)
+      if not oldval.strip():
+        rmparam(t, fr)
+        pagemsg("Removing blank param %s" % fr)
+        return
+      if frob_from:
+        newval = frob_from(oldval)
+        if not newval or not newval.strip():
+          return
+      else:
+        newval = oldval
+
+      if getparam(t, to).strip():
+          pagemsg("WARNING: Would replace %s= -> %s= but %s= is already present: %s"
+              % (fr, to, to, unicode(t)))
+      elif oldval != newval:
+        rmparam(t, to) # in case of blank param
+        tfr = t.get(fr)
+        tfr.name = to
+        tfr.value = newval
+        pagemsg("%s=%s -> %s=%s" % (fr, oldval.replace("\n", r"\n"), to,
+          newval.replace("\n", r"\n")))
+      else:
+        rmparam(t, to) # in case of blank param
+        t.get(fr).name = to
+        pagemsg("%s -> %s" % (fr, to))
+
+  def fix_page_params(t):
+    origt = unicode(t)
+    for param in ["page", "pages"]:
+      pageval = getparam(t, param)
+      if re.search(r"^\s*pp?\.\s*", pageval):
+        pageval = re.sub(r"^(\s*)pp?\.\s*", r"\1", pageval)
+        t.add(param, pageval)
+        notes.append("remove p(p). from %s=" % pageval)
+        pagemsg("remove p(p). from %s=" % pageval)
+    if re.search(r"^[0-9]+$", getparam(t, "pages").strip()):
+      move_param(t, "pages", "page")
+    if re.search(r"^[0-9]+[-–—]$", getparam(t, "page").strip()):
+      move_param(t, "page", "pages")
+    return origt != unicode(t)
+
   def fix_cite_book_params(t):
     origt = unicode(t)
     if getparam(t, "origyear").strip() and getparam(t, "year").strip():
@@ -83,42 +127,20 @@ def process_page(index, page, save, verbose):
         t.get("year").name = "year_published"
         t.get("origyear").name = "year"
         pagemsg("year -> year_published, origyear -> year")
-    for fr, to in [("origdate", "date"), ("origmonth", "month"),
-        ("id", "isbn")]:
-      if t.has(fr):
-        if not getparam(t, fr).strip():
-          rmparam(t, fr)
-          pagemsg("Removing blank param %s" % fr)
-        elif getparam(t, to).strip():
-            pagemsg("WARNING: Would replace %s= -> %s= but %s= is already present: %s"
-                % (fr, to, to, unicode(t)))
-        elif fr == "id":
-          idval = getparam(t, fr)
-          isbn_re = r"^(\s*)(10-ISBN +|ISBN-13 +|ISBN:? +|ISBN[-=] *)"
-          if re.search(isbn_re, idval, re.I):
-            isbn_sub = "sub"
-          elif re.search(r"^[0-9]", idval.strip()):
-            isbn_sub = "direct"
-          else:
-            isbn_sub = False
-          if isbn_sub:
-            rmparam(t, to) # in case of blank param
-            tfr = t.get(fr)
-            tfr.name = to
-            if isbn_sub == "sub":
-              newval = re.sub(isbn_re, r"\1", idval, 0, re.I)
-            else:
-              newval = idval
-            tfr.value = newval
-            pagemsg("id=%s -> isbn=%s" % (idval.replace("\n", r"\n"),
-              newval.replace("\n", r"\n")))
-          else:
-            pagemsg("WARNING: Would replace id= -> isbn= but id=%s doesn't begin with 'ISBN '" %
-                idval.replace("\n", r"\n"))
-        else:
-          rmparam(t, to) # in case of blank param
-          t.get(fr).name = to
-          pagemsg("%s -> %s" % (fr, to))
+    move_param(t, "origdate", "date")
+    move_param(t, "origmonth", "month")
+    def frob_isbn(idval):
+      isbn_re = r"^(\s*)(10-ISBN +|ISBN-13 +|ISBN:? +|ISBN[-=] *)"
+      if re.search(isbn_re, idval, re.I):
+        return re.sub(isbn_re, r"\1", idval, 0, re.I)
+      elif re.search(r"^[0-9]", idval.strip()):
+        return idval
+      else:
+        pagemsg("WARNING: Would replace id= -> isbn= but id=%s doesn't begin with 'ISBN '" %
+            idval.replace("\n", r"\n"))
+        return None
+    move_param(t, "id", "isbn", frob_isbn)
+    fix_page_params(t)
     return origt != unicode(t)
 
   def replace_in_reference(parsed, in_what):
@@ -129,6 +151,7 @@ def process_page(index, page, save, verbose):
         set_template_name(t, "cite-journal", tname)
         pagemsg("%s -> cite-journal" % tname.strip())
         notes.append("%s -> cite-journal" % tname.strip())
+        fix_page_params(t)
         pagemsg("Replacing %s with %s in %s" %
             (origt, unicode(t), in_what))
       if tname.strip() == "reference-book":
@@ -160,11 +183,13 @@ def process_page(index, page, save, verbose):
           set_template_name(t, to, tname)
           pagemsg("%s -> %s" % (fr, to))
           notes.append("%s -> %s" % (fr, to))
+          fix_page_params(t)
           pagemsg("Replacing %s with %s" % (origt, unicode(t)))
       if tname.strip() in ["reference-journal", "reference-news"]:
         set_template_name(t, "quote-journal", tname)
         pagemsg("%s -> quote-journal" % tname.strip())
         notes.append("%s -> quote-journal" % tname.strip())
+        fix_page_params(t)
         pagemsg("Replacing %s with %s outside of reference section" %
             (origt, unicode(t)))
       if tname.strip() == "reference-book":
@@ -176,8 +201,9 @@ def process_page(index, page, save, verbose):
         pagemsg("Replacing %s with %s outside of reference section" %
             (origt, unicode(t)))
       if tname.strip() in ["cite-usenet", "quote-usenet"]:
-        set_template_name(t, "quote-usenet", tname)
-        pagemsg("%s -> quote-usenet" % tname.strip())
+        move_param(t, "text", "passage")
+        set_template_name(t, "quote-newsgroup", tname)
+        pagemsg("%s -> quote-newsgroup" % tname.strip())
         prefix = getparam(t, "prefix").strip()
         removed_prefix = False
         if prefix:
@@ -190,7 +216,7 @@ def process_page(index, page, save, verbose):
           else:
             pagemsg("WARNING: Found prefix=%s, not # or #*: %s" %
                 (prefix, unicode(t)))
-        notes.append("%s -> quote-usenet%s" % (tname.strip(),
+        notes.append("%s -> quote-newsgroup%s" % (tname.strip(),
           removed_prefix and
             ", remove prefix=%s, insert #* before template" % prefix or ""))
         pagemsg("Replacing %s with %s outside of reference section" %
