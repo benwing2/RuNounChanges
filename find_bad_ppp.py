@@ -67,6 +67,7 @@ from blib import getparam, rmparam, msg, site
 
 import rulib
 
+# FIXME, not used
 def iotate(word):
   if re.search(u"[бвфпм]$", word):
     return [word + u"л"]
@@ -84,7 +85,47 @@ def iotate(word):
     return [re.sub(u"к$", u"ч", word)]
   return [word]
 
-def process_page(index, page, save, verbose):
+# Form the past passive participle from the verb type, infinitive and
+# other parts. For the moment we don't try to get the stress right,
+# and return a form without stress or ё.
+def form_ppp(verbtype, pagetitle, args):
+  def form_ppp_1(verbtype, pagetitle, args):
+    def first_entry(forms):
+      forms = re.sub(",.*", "", forms)
+      return re.sub("//.*", "", forms)
+    if not re.search("^[0-9]+", verbtype):
+      return None
+    verbtype = int(re.sub("^([0-9]+).*", r"\1", verbtype))
+    if ((pagetitle.endswith(u"ать") or pagetitle.endswith(u"ять")) and
+        verbtype != 14):
+      return re.sub(u"ть$", u"нный", pagetitle)
+    if pagetitle.endswith(u"еть") and verbtype == 1:
+      return re.sub(u"ть$", u"нный", pagetitle)
+    if verbtype in [4, 5]:
+      sg1 = args["pres_1sg"] if "pres_1sg" in args else args["futr_1sg"]
+      if not sg1 or sg1 == "-":
+        return None
+      sg1 = first_entry(sg1)
+      assert re.search(u"[ую]́?$", sg1)
+      return re.sub(u"[ую]́?$", u"енный", sg1)
+    if verbtype in [7, 8]:
+      sg3 = args["pres_3sg"] if "pres_3sg" in args else args["futr_3sg"]
+      sg3 = first_entry(sg3)
+      assert re.search(u"[её]́?т$", sg3)
+      return re.sub(u"[её]́?т$", u"енный", sg3)
+    if verbtype in [3, 10]:
+      return re.sub(u"ть$", u"тый", pagetitle)
+    assert verbtype in [9, 11, 12, 14, 15, 16]
+    pastm = first_entry(args["past_m"])
+    return re.sub(u"л?$", u"тый", pastm)
+
+  retval = form_ppp_1(verbtype, pagetitle, args)
+  if retval:
+    return rulib.make_unstressed(retval)
+  else:
+    return None
+
+def process_page(index, page, save, verbose, fix_pages):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -94,7 +135,9 @@ def process_page(index, page, save, verbose):
 
   pagemsg("Processing")
 
+  text = unicode(page.text)
   parsed = blib.parse(page)
+  notes = []
   for t in parsed.filter_templates():
     tname = unicode(t.name)
     if tname.startswith("ru-conj-") and tname != "ru-conj-verb-see":
@@ -107,15 +150,22 @@ def process_page(index, page, save, verbose):
         continue
       args = rulib.split_generate_args(result)
       if "past_pasv_part" in args:
+        forms_to_remove = []
         for form in re.split(",", args["past_pasv_part"]):
+          origform = form
           form = re.sub("//.*", "", form)
+          fix_form = False
           if not re.search(ur"([аяеё]́?нный|тый)$", form):
             pagemsg("WARNING: Past passive participle doesn't end correctly: %s" % form)
+            fix_form = True
           unstressed_page = rulib.make_unstressed(pagetitle)
           unstressed_form = rulib.make_unstressed(form)
+          warned = False
           if unstressed_form[0] != unstressed_page[0]:
             pagemsg("WARNING: Past passive participle doesn't begin with same letter, probably for wrong aspect: %s"
                 % form)
+            warned = True
+            fix_form = True
           if form.endswith(u"нный"):
             if pagetitle.endswith(u"ать"):
               good_ending = u"анный"
@@ -126,11 +176,61 @@ def process_page(index, page, save, verbose):
             if not unstressed_form.endswith(good_ending):
               pagemsg("WARNING: Past passive participle doesn't end right, probably for wrong aspect: %s"
                   % form)
+              warned = True
+              fix_form = True
+          if not warned:
+            correct_form = form_ppp(verbtype, pagetitle, args)
+            if correct_form and unstressed_form != correct_form:
+              pagemsg("WARNING: Past passive participle not formed according to rule, probably wrong: found %s, expected %s"
+                  % (unstressed_form, correct_form))
+              fix_form = True
+          if fix_form:
+            forms_to_remove.append(origform)
+        if forms_to_remove and pagetitle in fix_pages:
+          curvals = []
+          for i in ["", "2", "3", "4", "5", "6", "7", "8", "9"]:
+            val = getparam(t, "past_pasv_part" + i)
+            if val:
+              curvals.append(val)
+          newvals = [x for x in curvals if x not in forms_to_remove]
+          if len(curvals) - len(newvals) != len(forms_to_remove):
+            pagemsg("WARNING: Something wrong, couldn't remove all PPP forms %s"
+                % ",".join(forms_to_remove))
+          curindex = 1
+          origt = unicode(t)
+          for newval in newvals:
+            t.add("past_pasv_part" + ("" if curindex == 1 else str(curindex)), newval)
+            curindex += 1
+          for i in xrange(curindex, 10):
+            rmparam(t, "past_pasv_part" + ("" if i == 1 else str(i)))
+          pagemsg("Replacing %s with %s" % (origt, unicode(t)))
+          notes.append("removed bad past pasv part(s) %s"
+              % ",".join(forms_to_remove))
+
+  new_text = unicode(parsed)
+
+  if new_text != text:
+    if verbose:
+      pagemsg("Replacing <%s> with <%s>" % (text, new_text))
+    assert notes
+    comment = "; ".join(notes)
+    if save:
+      pagemsg("Saving with comment = %s" % comment)
+      page.text = new_text
+      page.save(comment=comment)
+    else:
+      pagemsg("Would save with comment = %s" % comment)
 
 parser = blib.create_argparser(u"Find Russian terms without bad past passive participles")
+parser.add_argument('--fix-pagefile', help="File containing pages to fix.")
 args = parser.parse_args()
 start, end = blib.get_args(args.start, args.end)
 
-for category in ["Russian verbs"]:
-  for i, page in blib.cat_articles(category, start, end):
-    process_page(i, page, args.save, args.verbose)
+if args.fix_pagefile:
+  fixpages = [x.strip() for x in codecs.open(args.fix_pagefile, "r", "utf-8")]
+  for i, page in blib.iter_items(fixpages, start, end):
+    process_page(i, pywikibot.Page(site, page), args.save, args.verbose, fixpages)
+else:
+  for category in ["Russian verbs"]:
+    for i, page in blib.cat_articles(category, start, end):
+      process_page(i, page, args.save, args.verbose, [])
