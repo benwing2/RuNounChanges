@@ -1,7 +1,7 @@
 --[=[
 	This module contains functions for creating inflection tables for Russian
 	verbs.
-	
+
 	Author: Atitarev, partly rewritten by Benwing, earliest version by CodeCat
 
 	NOTE: This module is partly converted to support manual translit, in the
@@ -120,7 +120,7 @@ local make_table
 	-- past_f_short: short forms in 3a (исчезла, сохла, etc.)
 	-- past_n_short: short forms in 3a (исчезло, сохло, etc.)
 	-- past_pl_short: short forms in 3a (исчезли, сохли, etc.)
-	-- past_adv_parts: 
+	-- past_adv_parts:
 	--   тереть: тере́вши, тёрши, short: тере́в
 	--   умереть: умере́вши, у́мерши, short: умере́в
 	-- pres_adv_part: сыпля, сыпя
@@ -321,7 +321,7 @@ function export.do_generate_forms(conj_type, args)
 	   verb_type ~= "impf" and verb_type ~= "impf-intr" and verb_type ~= "impf-refl" and verb_type ~= "impf-impers" and verb_type ~= "impf-impers-refl" then
 	   	error("Invalid verb type " .. verb_type)
 	end
-	
+
 	local intr = (verb_type == "impf-intr" or verb_type == "pf-intr" or verb_type == "pf-impers" or verb_type == "impf-impers" or verb_type == "pf-impers-refl" or verb_type == "impf-impers-refl")
 	local refl = (verb_type == "impf-refl" or verb_type == "pf-refl" or verb_type == "pf-impers-refl" or verb_type == "impf-impers-refl")
 	local perf = (verb_type == "pf" or verb_type == "pf-intr" or verb_type == "pf-refl" or verb_type == "pf-impers" or verb_type == "pf-impers-refl")
@@ -1170,12 +1170,12 @@ conjugations["6c"] = function(args)
 	else
 		iotated_stem_noa = com.iotation_new(stem_noa, nil, shch)
 	end
-		
+
 	local no_iotation = nil
 	if args["no_iotation"] == "1" then
 		no_iotation = "1"
 	end
-	
+
 	forms["infinitive"] = stem_noa .. "а́ть"
 
 	forms["past_actv_part"] = stem_noa .. "а́вший"
@@ -1203,7 +1203,7 @@ conjugations["6c"] = function(args)
 		present_je_c(forms, stem, nil)    -- param #4 must be a string
 	else -- tell the conjugator that this is an exception
 		present_je_c(forms, stem, nil, shch)
-	end	
+	end
 
 	forms["impr_sg"] = iotated_stem_noa .. "и́"
 	forms["impr_pl"] = iotated_stem_noa .. "и́те"
@@ -1401,12 +1401,12 @@ end
 
 conjugations["9b"] = function(args)
 	local forms = {}
-	
+
 	--for this type, it's important to distinguish impf and pf
 	local verb_type = getarg(args, 1, "impf", "Verb type (first parameter)")
 	local impf = (verb_type == "impf" or verb_type == "impf-intr" or verb_type == "impf-impers" or verb_type == "impf-refl" or verb_type == "impf-impers-refl")
 	local pf = (verb_type == "pf" or verb_type == "pf-intr" or verb_type == "pf-impers" or verb_type == "pf-refl" or verb_type == "pf-impers-refl")
-	
+
 	local stem = getarg(args, 2)
 	local pres_stem = getarg(args, 3)
 	-- remove stress, replace ё with е
@@ -1426,7 +1426,7 @@ conjugations["9b"] = function(args)
 		forms["past_adv_part"] = stem .. "ши"
 		forms["past_adv_part_short"] = ""
 	end
-	
+
 	--растереть -> растере́вши, растере́в
 	if pf then
 		forms["past_adv_part"] = stem_noa .. "е́вши"
@@ -2037,7 +2037,7 @@ conjugations["irreg-дать"] = function(args)
 	--for this type, it's important to distinguish if it's reflexive to set some stress patterns
 	local verb_type = getarg(args, 1, "refl", "Verb type (first parameter)")
 	local refl = (verb_type == "impf-refl" or verb_type == "pf-refl" or verb_type == "impf-impers-refl" or verb_type == "pf-impers-refl")
-	
+
 	local prefix = args[2] or ""
 	-- alternative past masculine forms: со́здал/созд́ал, п́ередал/переда́л, ́отдал/отд́ал, etc.
 	-- handled through general override mechanism.
@@ -2068,7 +2068,7 @@ conjugations["irreg-дать"] = function(args)
 	forms["past_n"] = prefix .. "да́ло"
 	forms["past_n2"] = prefix .. "дало́" --same with "взять"
 	forms["past_pl"] = prefix .. "да́ли"
-	
+
 	if refl then
 		forms["past_n"] = prefix .. "дало́"
 		forms["past_n2"] = nil
@@ -2860,23 +2860,23 @@ end
 conjugations["irreg-чтить"] = function(args)
 	-- irregular, only for verbs derived from чтить
 	local forms = {}
-	
+
 	local prefix = args[2] or ""
-	
+
 	forms["infinitive"] = prefix .. "чти́ть"
- 
+
 	forms["past_actv_part"] = prefix .. "чти́вший"
 	forms["pres_pasv_part"] = "чти́мый"
 	forms["past_adv_part"] = prefix .. "чти́вши"
 	forms["past_adv_part_short"] = prefix .. "чти́в"
- 
+
 	forms["pres_actv_part"] = prefix .. "чтя́щий"
 	forms["pres_actv_part2"] = prefix .. "чту́щий"
 	forms["pres_adv_part"] = prefix .. "чтя́"
- 
+
 	forms["impr_sg"] = prefix .. "чти́"
 	forms["impr_pl"] = prefix .. "чти́те"
- 
+
 	forms["pres_futr_1sg"] = prefix .. "чту́"
 	forms["pres_futr_2sg"] = prefix .. "чти́шь"
 	forms["pres_futr_3sg"] = prefix .. "чти́т"
@@ -2884,70 +2884,70 @@ conjugations["irreg-чтить"] = function(args)
 	forms["pres_futr_2pl"] = prefix .. "чти́те"
 	forms["pres_futr_3pl"] = prefix .. "чтя́т"
 	forms["pres_futr_3pl2"] = prefix .. "чту́т"
- 
+
 	forms["past_m"] = prefix .. "чти́л"
 	forms["past_f"] = prefix .. "чти́ла"
 	forms["past_n"] = prefix .. "чти́ло"
 	forms["past_pl"] = prefix .. "чти́ли"
- 
+
 	return forms
 end
 
 conjugations["irreg-шибить"] = function(args)
 	-- irregular, only for verbs in -шибить(ся)
 	local forms = {}
-	
+
 	local prefix = args[2] or ""
-	
+
 	forms["infinitive"] = prefix .. "шиби́ть"
- 
+
 	forms["past_actv_part"] = prefix .. "шиби́вший"
 	forms["pres_pasv_part"] = ""
 	forms["past_adv_part"] = prefix .. "шиби́вши"
 	forms["past_adv_part_short"] = prefix .. "шиби́в"
- 
+
 	forms["pres_actv_part"] = ""
 	forms["pres_actv_part2"] = ""
 	forms["pres_adv_part"] = ""
- 
+
 	forms["impr_sg"] = prefix .. "шиби́"
 	forms["impr_pl"] = prefix .. "шиби́те"
- 
+
 	forms["pres_futr_1sg"] = prefix .. "шибу́"
 	forms["pres_futr_2sg"] = prefix .. "шибёшь"
 	forms["pres_futr_3sg"] = prefix .. "шибёт"
 	forms["pres_futr_1pl"] = prefix .. "шибём"
 	forms["pres_futr_2pl"] = prefix .. "шибёте"
 	forms["pres_futr_3pl"] = prefix .. "шибу́т"
- 
+
 	forms["past_m"] = prefix .. "ши́б"
 	forms["past_f"] = prefix .. "ши́бла"
 	forms["past_n"] = prefix .. "ши́бло"
 	forms["past_pl"] = prefix .. "ши́бли"
- 
+
 	-- if the prefix is stressed (probably only вы́-)
 	if rfind(prefix, "[́]") then
 		forms["infinitive"] = prefix .. "шибить"
- 
+
 		forms["past_actv_part"] = prefix .. "шибивший"
 		forms["past_adv_part"] = prefix .. "шибивши"
 		forms["past_adv_part_short"] = prefix .. "шибив"
- 
+
 		forms["impr_sg"] = prefix .. "шиби"
 		forms["impr_pl"] = prefix .. "шибите"
- 
+
 		forms["pres_futr_1sg"] = prefix .. "шибу"
 		forms["pres_futr_2sg"] = prefix .. "шибешь"
 		forms["pres_futr_3sg"] = prefix .. "шибет"
 		forms["pres_futr_1pl"] = prefix .. "шибем"
 		forms["pres_futr_2pl"] = prefix .. "шибете"
 		forms["pres_futr_3pl"] = prefix .. "шибут"
- 
+
 		forms["past_m"] = prefix .. "шиб"
 		forms["past_f"] = prefix .. "шибла"
 		forms["past_n"] = prefix .. "шибло"
 		forms["past_pl"] = prefix .. "шибли"
-	end		
+	end
 
 	return forms
 end
@@ -3000,29 +3000,29 @@ end
  conjugations["irreg-реветь"] = function(args)
 	-- irregular, only for verbs derived from "реветь"
 	local forms = {}
- 
+
 	local prefix = args[2] or ""
- 
+
 	forms["infinitive"] = prefix .. "реве́ть"
- 
+
 	forms["pres_actv_part"] = prefix .. "реву́щий"
 	forms["past_actv_part"] = prefix .. "реве́вший"
 	forms["pres_pasv_part"] = ""
 	forms["pres_adv_part"] = prefix .. "ревя́"
 	forms["past_adv_part"] = prefix .. "реве́вши"
 	forms["past_adv_part_short"] = prefix .. "реве́в"
- 
+
 	forms["pres_futr_1sg"] = prefix .. "реву́"
 	forms["pres_futr_2sg"] = prefix .. "ревёшь"
 	forms["pres_futr_3sg"] = prefix .. "ревёт"
 	forms["pres_futr_1pl"] = prefix .. "ревём"
 	forms["pres_futr_2pl"] = prefix .. "ревёте"
 	forms["pres_futr_3pl"] = prefix .. "реву́т"
- 
+
 	-- no imperative
 	forms["impr_sg"] = prefix .. "реви́"
 	forms["impr_pl"] = prefix .. "реви́те"
- 
+
 	forms["past_m"] = prefix .. "реве́л"
 	forms["past_f"] = prefix .. "реве́ла"
 	forms["past_n"] = prefix .. "реве́ло"
@@ -3034,62 +3034,62 @@ end
 conjugations["irreg-внимать"] = function(args)
 	-- irregular, only for внимать
 	local forms = {}
- 
+
 	local prefix = args[2] or ""
- 
+
 	forms["infinitive"] = prefix .. "внима́ть"
- 
+
 	forms["past_actv_part"] = prefix .. "внима́вший"
 	forms["pres_pasv_part"] = prefix .. "вне́млемый"
 	forms["pres_pasv_part2"] = prefix .. "внима́емый"
 	forms["past_adv_part"] = prefix .. "внима́вши"
 	forms["past_adv_part_short"] = prefix .. "внима́в"
- 
+
 	forms["pres_actv_part"] = prefix .. "вне́млющий"
 	forms["pres_actv_part2"] = prefix .. "внима́ющий"
 	forms["pres_adv_part"] = prefix .. "вне́мля́"
 	forms["pres_adv_part2"] = prefix .. "внима́я"
- 
+
 	forms["impr_sg"] = prefix .. "вне́мли́"
 	forms["impr_pl"] = prefix .. "вне́мли́те"
 	forms["impr_sg2"] = prefix .. "внима́й"
 	forms["impr_pl2"] = prefix .. "внима́йте"
- 
+
 	forms["pres_futr_1sg"] = prefix .. "вне́млю́"
 	forms["pres_futr_2sg"] = prefix .. "вне́млешь"
 	forms["pres_futr_3sg"] = prefix .. "вне́млет"
 	forms["pres_futr_1pl"] = prefix .. "вне́млем"
 	forms["pres_futr_2pl"] = prefix .. "вне́млете"
 	forms["pres_futr_3pl"] = prefix .. "вне́млют"
-	
+
 	forms["pres_futr_1sg2"] = prefix .. "внима́ю"
 	forms["pres_futr_2sg2"] = prefix .. "внима́ешь"
 	forms["pres_futr_3sg2"] = prefix .. "внима́ет"
 	forms["pres_futr_1pl2"] = prefix .. "внима́ем"
 	forms["pres_futr_2pl2"] = prefix .. "внима́ете"
 	forms["pres_futr_3pl2"] = prefix .. "внима́ют"
- 
+
 	forms["past_m"] = prefix .. "внима́л"
 	forms["past_f"] = prefix .. "внима́ла"
 	forms["past_n"] = prefix .. "внима́ло"
 	forms["past_pl"] = prefix .. "внима́ли"
- 
+
 	return forms
 end
 
 conjugations["irreg-внять"] = function(args)
 	-- irregular, only for внять
 	local forms = {}
- 
+
 	local prefix = args[2] or ""
- 
+
 	forms["infinitive"] = prefix .. "вня́ть"
- 
+
 	forms["past_actv_part"] = prefix .. "вня́вший"
 	forms["pres_pasv_part"] = prefix .. ""
 	forms["past_adv_part"] = prefix .. "вня́вши"
 	forms["past_adv_part_short"] = prefix .. "вня́в"
- 
+
 	forms["pres_actv_part"] = prefix .. ""
 	forms["pres_adv_part"] = prefix .. ""
 
@@ -3097,26 +3097,26 @@ conjugations["irreg-внять"] = function(args)
 	forms["impr_pl"] = prefix .. "вними́те"
 	forms["impr_sg2"] = prefix .. "вонми́"
 	forms["impr_pl2"] = prefix .. "вонми́те"
- 
+
 	forms["pres_futr_1sg"] = prefix .. "вниму́"
 	forms["pres_futr_2sg"] = prefix .. "вни́мешь"
 	forms["pres_futr_3sg"] = prefix .. "вни́мет"
 	forms["pres_futr_1pl"] = prefix .. "вни́мем"
 	forms["pres_futr_2pl"] = prefix .. "вни́мете"
 	forms["pres_futr_3pl"] = prefix .. "вни́мут"
-	
+
 	forms["pres_futr_1sg2"] = prefix .. "вонму́"
 	forms["pres_futr_2sg2"] = prefix .. "во́нмешь"
 	forms["pres_futr_3sg2"] = prefix .. "во́нмет"
 	forms["pres_futr_1pl2"] = prefix .. "во́нмем"
 	forms["pres_futr_2pl2"] = prefix .. "во́нмете"
 	forms["pres_futr_3pl2"] = prefix .. "во́нмут"
- 
+
 	forms["past_m"] = prefix .. "вня́л"
 	forms["past_f"] = prefix .. "вняла́"
 	forms["past_n"] = prefix .. "вня́ло"
 	forms["past_pl"] = prefix .. "вня́ли"
- 
+
 	return forms
 end
 
@@ -3156,7 +3156,7 @@ conjugations["irreg-обязывать"] = function(args)
 	forms["pres_futr_3sg2"] = prefix .. "обязу́ет"
 	forms["pres_futr_1pl2"] = prefix .. "обязу́ем"
 	forms["pres_futr_2pl2"] = prefix .. "обязу́ете"
-	forms["pres_futr_3pl2"] = prefix .. "обязу́ют"	
+	forms["pres_futr_3pl2"] = prefix .. "обязу́ют"
 
 	forms["past_m"] = prefix .. "обя́зывал"
 	forms["past_f"] = prefix .. "обя́зывала"
@@ -3390,7 +3390,7 @@ finish_generating_forms = function(forms, title, perf, intr, impers)
 		copy_form("pres_futr_2pl", "pres_2pl")
 		copy_form("pres_futr_3pl", "pres_3pl")
 	end
-	
+
 	local function insert_future(inf, inf_tr)
 		forms["futr_1sg"] = {"бу́ду" .. inf, inf_tr and "búdu" .. inf_tr}
 		forms["futr_2sg"] = {"бу́дешь" .. inf, inf_tr and "búdešʹ" .. inf_tr}
@@ -3462,7 +3462,7 @@ make_table = function(forms, title, perf, intr, impers)
 			disp[dispform] = "&mdash;"
 		end
 	end
-	
+
 	return [=[<div class="NavFrame" style="width:49.6em;">
 <div class="NavHead" style="text-align:left; background:#e0e0ff;">]=] .. title .. [=[</div>
 <div class="NavContent">
