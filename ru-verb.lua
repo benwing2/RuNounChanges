@@ -32,6 +32,7 @@ local ut = require("Module:utils")
 local com = require("Module:ru-common")
 local nom = require("Module:ru-nominal")
 local m_debug = require("Module:debug")
+local m_table_tools = require("Module:table tools")
 
 -- If enabled, compare this module with new version of module to make
 -- sure all conjugations are the same.
@@ -72,6 +73,24 @@ local function clone_args(frame)
 		args[pname] = ine(param)
 	end
 	return args
+end
+
+-- FIXME: Move to utils
+-- Iterate over a chain of parameters, FIRST then PREF2, PREF3, ...,
+-- inserting into LIST (newly created if omitted). Return LIST.
+local function process_arg_chain(args, first, pref, list)
+	if not list then
+		list = {}
+	end
+	local val = args[first]
+	local i = 2
+
+	while val do
+		table.insert(list, val)
+		val = args[pref .. i]
+		i = i + 1
+	end
+	return list
 end
 
 local function getarg(args, arg, default, paramdesc)
@@ -265,11 +284,15 @@ function export.do_generate_forms(conj_type, args)
 	local verb_type = getarg(args, 1, "impf", "Verb type (first parameter)")
 	-- verbs may have reflexive ending stressed in the masculine singular: занялся́, начался́, etc.
 	local reflex_stress = args["reflex_stress"] -- "ся́"
+	local notes = process_arg_chain(args, "notes", "notes")
 
-	local forms, title, categories
+	local forms, title, categories, internal_notes
 
 	if conjugations[conj_type] then
-		forms = conjugations[conj_type](args)
+		forms, internal_notes = conjugations[conj_type](args)
+		if not internal_notes then
+			internal_notes = {}
+		end
 	else
 		error("Unknown conjugation type '" .. conj_type .. "'")
 	end
@@ -358,7 +381,7 @@ function export.do_generate_forms(conj_type, args)
 	intr = intr or refl
 	finish_generating_forms(forms, title, perf, intr, impers)
 
-	return forms, title, perf, intr, impers, categories
+	return forms, title, perf, intr, impers, categories, notes, internal_notes
 end
 
 local function fetch_forms(forms)
@@ -392,7 +415,7 @@ end
 function export.generate_forms(frame)
 	local conj_type = frame.args[1] or error("Conjugation type has not been specified. Please pass parameter 1 to the module invocation")
 	local args = clone_args(frame)
-	local forms, title, perf, intr, impers, categories = export.do_generate_forms(conj_type, args)
+	local forms, title, perf, intr, impers, categories, notes, internal_notes = export.do_generate_forms(conj_type, args)
 	return fetch_forms(forms)
 end
 
@@ -415,24 +438,28 @@ function export.show(frame)
 		args_clone = mw.clone(args)
 	end
 
-	local forms, title, perf, intr, impers, categories = export.do_generate_forms(conj_type, args)
+	local forms, title, perf, intr, impers, categories, notes, internal_notes = export.do_generate_forms(conj_type, args)
 
 	-- Test code to compare existing module to new one.
 	if test_new_ru_verb_module then
 		local m_new_ru_verb = require("Module:User:Benwing2/ru-verb")
-		local newforms, newtitle, newperf, newintr, newimpers, newcategories = m_new_ru_verb.do_generate_forms(conj_type, args_clone)
+		local newforms, newtitle, newperf, newintr, newimpers, newcategories, newnotes, newinternal_notes = m_new_ru_verb.do_generate_forms(conj_type, args_clone)
 		local vals = mw.clone(forms)
 		vals.title = title
 		vals.perf = perf
 		vals.intr = intr
 		vals.impers = impers
 		vals.categories = categories
+		vals.notes = notes
+		vals.internal_notes = internal_notes
 		local newvals = mw.clone(newforms)
 		newvals.title = newtitle
 		newvals.perf = newperf
 		newvals.intr = newintr
 		newvals.impers = newimpers
 		newvals.categories = newcategories
+		newvals.notes = newnotes
+		newvals.internal_notes = newinternal_notes
 		for _, proplist in ipairs(all_verb_props) do
 			for _, prop in ipairs(proplist) do
 				local val = vals[prop]
@@ -456,7 +483,7 @@ function export.show(frame)
 		end
 	end
 
-	return make_table(forms, title, perf, intr, impers) .. m_utilities.format_categories(categories, lang)
+	return make_table(forms, title, perf, intr, impers, notes, internal_notes) .. m_utilities.format_categories(categories, lang)
 end
 
 --[=[
@@ -1404,8 +1431,8 @@ conjugations["9b"] = function(args)
 
 	--for this type, it's important to distinguish impf and pf
 	local verb_type = getarg(args, 1, "impf", "Verb type (first parameter)")
-	local impf = (verb_type == "impf" or verb_type == "impf-intr" or verb_type == "impf-impers" or verb_type == "impf-refl" or verb_type == "impf-impers-refl")
-	local pf = (verb_type == "pf" or verb_type == "pf-intr" or verb_type == "pf-impers" or verb_type == "pf-refl" or verb_type == "pf-impers-refl")
+	local impf = rfind(verb_type, "^impf")
+	local pf = rfind(verb_type, "^pf")
 
 	local stem = getarg(args, 2)
 	local pres_stem = getarg(args, 3)
@@ -2036,7 +2063,7 @@ conjugations["irreg-дать"] = function(args)
 
 	--for this type, it's important to distinguish if it's reflexive to set some stress patterns
 	local verb_type = getarg(args, 1, "refl", "Verb type (first parameter)")
-	local refl = (verb_type == "impf-refl" or verb_type == "pf-refl" or verb_type == "impf-impers-refl" or verb_type == "pf-impers-refl")
+	local refl = rfind(verb_type, "refl")
 
 	local prefix = args[2] or ""
 	-- alternative past masculine forms: со́здал/созд́ал, п́ередал/переда́л, ́отдал/отд́ал, etc.
@@ -3280,11 +3307,16 @@ make_reflexive_alt = function(forms)
 		local ru, tr = extract_russian_tr(form, "notranslit")
 		-- check for empty strings, dashes and nil's
 		if ru ~= "" and ru and ru ~= "-" then
+			local ruentry, runotes = m_table_tools.separate_notes(ru)
+			local trentry, trnotes
+			if tr then
+				trentry, trnotes = m_table_tools.separate_notes(tr)
+			end
 			-- if a form doesn't contain a stress, add a stressed particle "ся́"
-			if not rfind(ru, "[́]") then
+			if not rfind(ruentry, "[́]") then
 				-- only applies to past masculine forms
 				if rfind(key, "^past_m") then
-					forms[key] = {ru .. "ся́", tr and tr .. "sja" .. AC}
+					forms[key] = {ruentry .. "ся́" .. runotes, trentry and trentry .. "sja" .. AC .. trnotes}
 				end
 			end
 		end
@@ -3297,13 +3329,18 @@ make_reflexive = function(forms)
 		local ru, tr = extract_russian_tr(form, "notranslit")
 		-- check for empty strings, dashes and nil's
 		if ru ~= "" and ru and ru ~= "-" then
+			local ruentry, runotes = m_table_tools.separate_notes(ru)
+			local trentry, trnotes
+			if tr then
+				trentry, trnotes = m_table_tools.separate_notes(tr)
+			end
 			-- The particle is "сь" after a vowel, "ся" after a consonant
 			-- append "ся" if "ся́" was not attached already
-			if not rfind(ru, "ся́$") then
-				if rfind(ru, "[аэыоуяеиёю́]$") then
-					forms[key] = {ru .. "сь", tr and tr .. "sʹ"}
+			if not rfind(ruentry, "ся́$") then
+				if rfind(ruentry, "[аэыоуяеиёю́]$") then
+					forms[key] = {ruentry .. "сь" .. runotes, trentry and trentry .. "sʹ" .. trnotes}
 				else
-					forms[key] = {ru .. "ся", tr and tr .. "sja"}
+					forms[key] = {ruentry .. "ся" .. runotes, trentry and trentry .. "sja" .. trnotes}
 				end
 			end
 		end
@@ -3419,13 +3456,13 @@ finish_generating_forms = function(forms, title, perf, intr, impers)
 end
 
 -- Make the table
-make_table = function(forms, title, perf, intr, impers)
+make_table = function(forms, title, perf, intr, impers, notes, internal_notes)
 	local inf, inf_tr = extract_russian_tr(forms["infinitive"], "notranslit")
 
 	local title = "Conjugation of <span lang=\"ru\" class=\"Cyrl\">''" .. inf .. "''</span>" .. (title and " (" .. title .. ")" or "")
 
-	local function add_links(ru, rusuf, tr)
-		return "<span lang=\"ru\" class=\"Cyrl\">[[" .. com.remove_accents(ru) .. "#Russian|" .. ru .. "]]" .. rusuf .. "</span><br/><span style=\"color: #888\">" .. tr .. "</span>"
+	local function add_links(ru, rusuf, runotes, tr, trnotes)
+		return "<span lang=\"ru\" class=\"Cyrl\">[[" .. com.remove_accents(ru) .. "#Russian|" .. ru .. "]]" .. rusuf .. runotes .. "</span><br/><span style=\"color: #888\">" .. tr .. trnotes .. "</span>"
 	end
 
 	-- Add transliterations to all forms
@@ -3433,16 +3470,18 @@ make_table = function(forms, title, perf, intr, impers)
 		local ru, tr = extract_russian_tr(form)
 		-- check for empty strings, dashes and nil's
 		if ru ~= "" and ru and ru ~= "-" then
+			local ruentry, runotes = m_table_tools.get_notes(ru)
+			local trentry, trnotes = m_table_tools.get_notes(tr)
 			if rfind(key, "^futr") then
 				-- Add link to first word (form of 'to be')
-				tobe, inf = rmatch(ru, "^([^ ]*) ([^ ]*)$")
+				tobe, inf = rmatch(ruentry, "^([^ ]*) ([^ ]*)$")
 				if tobe then
-					forms[key] = add_links(tobe, " " .. inf, tr)
+					forms[key] = add_links(tobe, " " .. inf, runotes, trentry, trnotes)
 				else
-					forms[key] = add_links(ru, "", tr)
+					forms[key] = add_links(ruentry, "", runotes, trentry, trnotes)
 				end
 			else
-				forms[key] = add_links(ru, "", tr)
+				forms[key] = add_links(ruentry, "", runotes, trentry, trnotes)
 			end
 		else
 			forms[key] = "&mdash;"
@@ -3463,11 +3502,29 @@ make_table = function(forms, title, perf, intr, impers)
 		end
 	end
 
+	local all_notes = {}
+	for _, note in ipairs(internal_notes) do
+		local symbol, entry = m_table_tools.get_initial_notes(note)
+		table.insert(all_notes, symbol .. entry)
+	end
+	for _, note in ipairs(notes) do
+		local symbol, entry = m_table_tools.get_initial_notes(note)
+		table.insert(all_notes, symbol .. entry)
+	end
+
+	local notes_text
+	if #all_notes > 0 then
+		notes_text = "\n|+ " .. table.concat(all_notes, "\n|+ ") .. "\n"
+	else
+		notes_text = ""
+	end
+
 	return [=[<div class="NavFrame" style="width:49.6em;">
 <div class="NavHead" style="text-align:left; background:#e0e0ff;">]=] .. title .. [=[</div>
 <div class="NavContent">
 {| class="inflection inflection-ru inflection-verb inflection-table"
-|+ Note 1: for declension of participles, see their entries. Adverbial participles are indeclinable.
+|+ Note: for declension of participles, see their entries. Adverbial participles are indeclinable.
+]=] .. notes_text .. [=[
 |- class="rowgroup"
 ! colspan="3" | ]=] .. (perf and [=[[[совершенный вид|perfective aspect]]]=] or [=[[[несовершенный вид|imperfective aspect]]]=]) .. [=[
 
