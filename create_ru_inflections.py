@@ -837,17 +837,6 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
       pagemsg("New text is [[%s]]" % page.text)
   else: # Page does exist
     pagetext = existing_text
-    if program_args.overwrite_page:
-      if pagename in pages_already_erased:
-        pagemsg("WARNING: Not overwriting page, already overwritten previously")
-      elif "==Etymology 1==" in pagetext and not program_args.overwrite_etymologies:
-        pagemsg("WARNING: Found ==Etymology 1== in page text, not overwriting, skipping form")
-        return
-      else:
-        notes.append("overwrite page")
-        pagemsg("WARNING: Overwriting entire page")
-        pagetext = ""
-        pages_already_erased.add(pagename)
 
     # Split off interwiki links at end
     m = re.match(r"^(.*?\n)(\n*(\[\[[a-z0-9_\-]+:[^\]]+\]\]\n*)*)$",
@@ -881,6 +870,18 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
         mm = re.match(r"^(.*?\n)(\n*--+\n*)$", sections[i], re.S)
         if mm:
           sections[i:i+1] = [mm.group(1), mm.group(2)]
+
+        if program_args.overwrite_page:
+          if pagename in pages_already_erased:
+            pagemsg("WARNING: Not overwriting page, already overwritten previously")
+          elif "==Etymology 1==" in sections[i] and not program_args.overwrite_etymologies:
+            pagemsg("WARNING: Found ==Etymology 1== in page text, not overwriting, skipping form")
+            return
+          else:
+            notes.append("overwrite section")
+            pagemsg("WARNING: Overwriting entire Russian section")
+            sections[i] = ""
+            pages_already_erased.add(pagename)
 
         # When creating non-lemma forms, warn about matching lemma template
         if is_lemma_template:
@@ -1670,7 +1671,12 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
           #
           # (Perhaps for now we should just skip creating entries if we find
           # an existing Russian entry?)] -- comment out of date
-          if "\n===Etymology 1===\n" in sections[i]:
+          if not sections[i]: # Erased section
+            pagemsg("Blank section, creating it")
+            comment = "Create Russian section for %s %s of %s, pos=%s" % (
+              infltype, joined_infls, lemma, pos)
+            sections[i] = newsection
+          elif "\n===Etymology 1===\n" in sections[i]:
             j = 2
             while ("\n===Etymology %s===\n" % j) in sections[i]:
               j += 1
