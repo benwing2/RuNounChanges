@@ -93,6 +93,19 @@ local function process_arg_chain(args, first, pref, list)
 	return list
 end
 
+-- FIXME: Move to utils
+-- Set a chain of parameters, FIRST then PREF2, PREF3, ..., from LIST.
+local function set_arg_chain(args, first, pref, list)
+	local param = first
+	local i = 2
+
+	for _, val in ipairs(list) do
+		args[param] = val
+		param = pref .. i
+		i = i + 1
+	end
+end
+	
 local function getarg(args, arg, default, paramdesc)
 	paramdesc = paramdesc or "Parameter " .. arg
         default = default or "-"
@@ -283,19 +296,20 @@ function export.do_generate_forms(conj_type, args)
 	-- Default to impf on the template page so that there is no script error.
 	local verb_type = getarg(args, 1, "impf", "Verb type (first parameter)")
 	-- verbs may have reflexive ending stressed in the masculine singular: занялся́, начался́, etc.
-	local reflex_stress = args["reflex_stress"] -- "ся́"
 	local notes = process_arg_chain(args, "notes", "notes")
 
-	local forms, title, categories, internal_notes
+	local forms, title, categories, internal_notes, default_reflex_stress
 
 	if conjugations[conj_type] then
-		forms, internal_notes = conjugations[conj_type](args)
+		forms, internal_notes, default_reflex_stress = conjugations[conj_type](args)
 		if not internal_notes then
 			internal_notes = {}
 		end
 	else
 		error("Unknown conjugation type '" .. conj_type .. "'")
 	end
+
+	local reflex_stress = args["reflex_stress"] or default_reflex_stress -- "ся́"
 
 	if rfind(conj_type, "^irreg") then
 		categories = {"Russian irregular verbs"}
@@ -359,7 +373,7 @@ function export.do_generate_forms(conj_type, args)
 	end
 
 	-- call alternative reflexive form to add a stressed "ся́" particle
-	if reflex_stress then
+	if reflex_stress and reflex_stress ~= "n" and reflex_stress ~= "no" then
 		make_reflexive_alt(forms)
 	end
 
@@ -387,11 +401,28 @@ end
 local function fetch_forms(forms)
 	local function fetch_one_form(form)
 		local val = forms[form]
+		local ru, tr
 		if type(val) == "table" then
-			return val[2] and val[1] .. "//" .. val[2] or val[1]
+			ru, tr = val[1], val[2]
+		elseif type(val) == "string" and val ~= "" and val ~= "-" then
+			ru = val
 		end
-		if type(val) == "string" and val ~= "" then return val end
-		return nil
+		if not ru then
+			return nil
+		end
+		local ruentry, runotes = m_table_tools.get_notes(ru)
+		local trentry, trnotes
+		if tr then
+			trentry, trnotes = m_table_tools.get_notes(tr)
+		end
+		-- There shouldn't be any links.
+		-- ruentry = m_links.remove_links(ruentry)
+		-- There shouldn't be any vertical bars.
+		-- ruentry = rsub(ruentry, "|", "<!>")
+		-- if trentry then
+		-- 	trentry = rsub(trentry, "|", "<!>")
+		-- end
+		return trentry and ruentry .. "//" .. trentry or ruentry
 	end
 	local vals = {}
 	for _, proplist in ipairs(all_verb_forms) do
@@ -435,6 +466,7 @@ function export.show(frame)
 
 	local args_clone
 	if test_new_ru_verb_module then
+		-- args may be modified by do_generate_forms()
 		args_clone = mw.clone(args)
 	end
 
@@ -490,11 +522,13 @@ end
 	Functions for working with stems, paradigms, Russian/translit
 ]=]--
 
+-- Combine a stem with optional translit with an ending, returning a tuple
+-- {RUSSIAN, TR}.
 local function combine(stem, tr, ending)
 	if not ending then
 		return {""}
 	end
-	if com.is_stressed(ending) then
+	if stem ~= "" and com.is_stressed(ending) then
 		stem, tr = com.make_unstressed_once(stem, tr)
 	end
 	stem = stem .. ending
@@ -502,6 +536,21 @@ local function combine(stem, tr, ending)
 		tr = tr .. com.translit(ending)
 	end
 	return {stem, tr}
+end
+
+-- Set an individual form PARAM in FORMS with value based on stem STEM (with
+-- optional translit TR) and ENDINGS, either a single string or a list of
+-- strings. If there are multiple endings listed, they will go successively
+-- into PARAM, PARAM2, etc. (e.g. past_m, past_m2, etc.).
+local function set_form(forms, param, stem, tr, endings)
+	if type(endings) ~= "table" then
+		endings = {endings}
+	end
+	local entries = {}
+	for _, val in ipairs(endings) do
+		ut.insert_if_not(entries, combine(stem, tr, val))
+	end
+	set_arg_chain(forms, param, param, entries)
 end
 
 local function extract_russian_tr(form, notranslit)
@@ -517,25 +566,25 @@ local function extract_russian_tr(form, notranslit)
 	return ru, tr
 end
 
-local function set_paradigm(forms, prefix, stem, tr,
+local function set_pres_futr(forms, stem, tr,
 	sg1, sg2, sg3, pl1, pl2, pl3)
-	forms[prefix .. "_1sg"] = combine(stem, tr, sg1)
-	forms[prefix .. "_2sg"] = combine(stem, tr, sg2)
-	forms[prefix .. "_3sg"] = combine(stem, tr, sg3)
-	forms[prefix .. "_1pl"] = combine(stem, tr, pl1)
-	forms[prefix .. "_2pl"] = combine(stem, tr, pl2)
-	forms[prefix .. "_3pl"] = combine(stem, tr, pl3)
+	set_form(forms, "pres_futr_1sg", stem, tr, sg1)
+	set_form(forms, "pres_futr_2sg", stem, tr, sg2)
+	set_form(forms, "pres_futr_3sg", stem, tr, sg3)
+	set_form(forms, "pres_futr_1pl", stem, tr, pl1)
+	set_form(forms, "pres_futr_2pl", stem, tr, pl2)
+	set_form(forms, "pres_futr_3pl", stem, tr, pl3)
 end
 
 local function set_participles_2stem(forms,
 	pres_stem, pres_tr, past_stem, past_tr,
 	pres_actv, past_actv, pres_pasv, pres_adv, past_adv, past_adv_short)
-	forms["pres_actv_part"] = combine(pres_stem, pres_tr, pres_actv)
-	forms["past_actv_part"] = combine(past_stem, past_tr, past_actv)
-	forms["pres_pasv_part"] = combine(pres_stem, pres_tr, pres_pasv)
-	forms["pres_adv_part"] = combine(pres_stem, pres_tr, pres_adv)
-	forms["past_adv_part"] = combine(past_stem, past_tr, past_adv)
-	forms["past_adv_part_short"] = combine(past_stem, past_tr, past_adv_short)
+	set_form(forms, "pres_actv_part", pres_stem, pres_tr, pres_actv)
+	set_form(forms, "past_actv_part", past_stem, past_tr, past_actv)
+	set_form(forms, "pres_pasv_part", pres_stem, pres_tr, pres_pasv)
+	set_form(forms, "pres_adv_part", pres_stem, pres_tr, pres_adv)
+	set_form(forms, "past_adv_part", past_stem, past_tr, past_adv)
+	set_form(forms, "past_adv_part_short", past_stem, past_tr, past_adv_short)
 end
 
 local function set_participles(forms, stem, tr, pres_actv, past_actv,
@@ -545,15 +594,101 @@ local function set_participles(forms, stem, tr, pres_actv, past_actv,
 end
 
 local function set_imper(forms, stem, tr, sg, pl)
-	forms["impr_sg"] = combine(stem, tr, sg)
-	forms["impr_pl"] = combine(stem, tr, pl)
+	set_form(forms, "impr_sg", stem, tr, sg)
+	set_form(forms, "impr_pl", stem, tr, pl)
 end
 
 local function set_past(forms, stem, tr, m, f, n, pl)
-	forms["past_m"] = combine(stem, tr, m)
-	forms["past_f"] = combine(stem, tr, f)
-	forms["past_n"] = combine(stem, tr, n)
-	forms["past_pl"] = combine(stem, tr, pl)
+	set_form(forms, "past_m", stem, tr, m)
+	set_form(forms, "past_f", stem, tr, f)
+	set_form(forms, "past_n", stem, tr, n)
+	set_form(forms, "past_pl", stem, tr, pl)
+end
+
+local function set_past_by_stress(forms, past_stress, prefix, stem, args,
+		verb_type)
+	local internal_notes, default_reflex_stress
+	local ustem = com.make_unstressed(stem)
+	if prefix == "пере" then
+		stressed_prefix = "пе́ре"
+	elseif prefix == "раз" then
+		stressed_prefix = "ро́з"
+	elseif prefix == "рас" then
+		-- Does this ever occur?
+		stressed_prefix = "ро́с"
+	elseif prefix == "ра" and rfind(stem, "^[сз]") then
+		-- Type 9/11/14/16 with automatically split prefix; probably
+		-- never happens.
+		stressed_prefix = "ро́"
+	else
+		stressed_prefix = com.make_ending_stressed(prefix)
+	end
+	if past_stress == "a" then
+		-- (/под/пере/при/по)забы́ть, раздобы́ть, (/пере/по)забы́ться
+		set_past(forms, prefix .. stem, nil, "", "а", "о", "и")
+	elseif past_stress == "a(1)" then
+		-- вы́дать, вы́быть
+		set_past(forms, prefix .. ustem, nil, "", "а", "о", "и")
+	elseif past_stress == "c" then
+		-- изда́ть, возда́ть, сдать, пересозда́ть, воссозда́ть, надда́ть, наподда́ть, etc.
+		-- быть, избы́ть, сбыть
+		-- клясть, закля́сть
+		set_past(forms, prefix .. stem, nil, "", "а́", "о", "и")
+	elseif past_stress == "c'" then
+		-- дать
+		--same with "взять"
+		set_past(forms, prefix .. stem, nil, "", "а́", {"о", "о́"}, "и")
+	elseif past_stress == "c''" and rfind(verb_type, "refl") then
+		-- all verbs in -да́ться; избы́ться, сбы́ться; all verbs in -кля́сться
+		set_past(forms, prefix, nil, {stem, ustem .. "1"}, ustem .. "а́",
+			{ustem .. "о́", stem .. "о"}, {ustem .. "и́", stem .. "и"})
+		-- Only display the internal note if the form with the note will be
+		-- displayed (i.e. not impersonal, and no override of this form).
+		-- FIXME: We should have a more general mechanism to check for this.
+		if not args["past_m2"] and not rfind(verb_type, "impers") then
+			internal_notes = {"1 Dated."}
+			default_reflex_stress = "ся́"
+		end
+	elseif past_stress == "c(1)" then
+		--прибы́ть, убы́ть
+		--прокля́сть
+		set_past(forms, stressed_prefix .. ustem, nil, "", "а́", "о", "и")
+	elseif past_stress == "c(1),c" then
+		-- зада́ть, обда́ть, отда́ть, подда́ть, переда́ть (пе́редал), преда́ть, прода́т, разда́ть (ро́здал), созда́ть, etc.
+		-- отбы́ть, побы́ть, пробы́ть
+		-- Here we need to include the prefix in the "ending" because of
+		-- раздать (ро́здал/разда́л).
+		set_past(forms, "", nil,
+			{stressed_prefix .. ustem, prefix .. stem},
+			prefix .. ustem .. "а́",
+			{stressed_prefix .. ustem .. "о", prefix .. stem .. "о"},
+			{stressed_prefix .. ustem .. "и", prefix .. stem .. "и"})
+	elseif past_stress == "c,c(1)" then
+		-- добы́ть
+		set_past(forms, "", nil,
+			{prefix .. stem, stressed_prefix .. ustem},
+			prefix .. ustem .. "а́",
+			{prefix .. stem .. "о", stressed_prefix .. ustem .. "о"},
+			{prefix .. stem .. "и", stressed_prefix .. ustem .. "и"})
+	else
+		error("Unrecognized past-stress value " .. past_stress .. ", should be a or a(1) or c or c' or c'' or c(1) or c(1),c or c,c(1)")
+	end
+	
+	return internal_notes, default_reflex_stress
+end
+
+local function split_prefix(ru, tr)
+	local rusyl, trsyl = com.split_syllables(ru, tr)
+	local last_ru = rusyl[#rusyl]
+	local last_tr = trsyl and trsyl[#trsyl]
+	table.remove(rusyl, #rusyl)
+	local prefix_ru = table.concat(rusyl, "")
+	local prefix_tr
+	if trsyl then
+		table.remove(trsyl, #trsyl)
+		trsyl = table.concat(trsyl, "")
+	end
+	return prefix_ru, prefix_tr, last_ru, last_tr
 end
 
 --[=[
@@ -675,10 +810,7 @@ conjugations["3a"] = function(args)
 		forms["past_actv_part_short"] = stem .. "ший"
 	end
 
-	forms["past_m"] = stem .. "нул"
-	forms["past_f"] = stem .. "нула"
-	forms["past_n"] = stem .. "нуло"
-	forms["past_pl"] = stem .. "нули"
+	set_past(forms, stem .. "нул", nil, "", "а", "о", "и")
 
 	-- if the 3rd argument is empty add short past forms
 	if not no_short_past then
@@ -716,10 +848,7 @@ conjugations["3b"] = function(args)
 	forms["impr_sg"] = stem .. "и́"
 	forms["impr_pl"] = stem .. "и́те"
 
-	forms["past_m"] = stem .. "у́л"
-	forms["past_f"] = stem .. "у́ла"
-	forms["past_n"] = stem .. "у́ло"
-	forms["past_pl"] = stem .. "у́ли"
+	set_past(forms, stem .. "у́л", nil, "", "а", "о", "и")
 
 	return forms
 end
@@ -745,10 +874,7 @@ conjugations["3c"] = function(args)
 	forms["impr_sg"] = stem_noa .. "и́"
 	forms["impr_pl"] = stem_noa .. "и́те"
 
-	forms["past_m"] = stem_noa .. "у́л"
-	forms["past_f"] = stem_noa .. "у́ла"
-	forms["past_n"] = stem_noa .. "у́ло"
-	forms["past_pl"] = stem_noa .. "у́ли"
+	set_past(forms, stem_noa .. "у́л", nil, "", "а", "о", "и")
 
 	return forms
 end
@@ -914,11 +1040,7 @@ conjugations["5a"] = function(args)
 	forms["impr_pl"] = stem .. impr_end .. "те"
 
 	present_i_a(forms, stem)
-
-	forms["past_m"] = past_stem .. "л"
-	forms["past_f"] = past_stem .. "ла"
-	forms["past_n"] = past_stem .. "ло"
-	forms["past_pl"] = past_stem .. "ли"
+	set_past(forms, past_stem .. "л", nil, "", "а", "о", "и")
 
 	return forms
 end
@@ -950,10 +1072,7 @@ conjugations["5b"] = function(args)
 	forms["past_actv_part"] = past_stem .. "вший"
 	forms["past_adv_part"] = past_stem .. "вши"
 	forms["past_adv_part_short"] = past_stem .. "в"
-	forms["past_m"] = past_stem .. "л"
-	forms["past_f"] = past_stem .. "ла"
-	forms["past_n"] = past_stem .. "ло"
-	forms["past_pl"] = past_stem .. "ли"
+	set_past(forms, past_stem .. "л", nil, "", "а", "о", "и")
 
 	forms["pres_pasv_part"] = stem .. "и́мый"
 
@@ -1060,19 +1179,13 @@ conjugations["6a"] = function(args)
 		forms["past_actv_part"] = stem .. "явший"
 		forms["past_adv_part"] = stem .. "явши"
 		forms["past_adv_part_short"] = stem .. "яв"
-		forms["past_m"] = stem .. "ял"
-		forms["past_f"] = stem .. "яла"
-		forms["past_n"] = stem .. "яло"
-		forms["past_pl"] = stem .. "яли"
+		set_past(forms, stem .. "ял", nil, "", "а", "о", "и")
 	else
 		forms["infinitive"] = stem .. "ать"
 		forms["past_actv_part"] = stem .. "авший"
 		forms["past_adv_part"] = stem .. "авши"
 		forms["past_adv_part_short"] = stem .. "ав"
-		forms["past_m"] = stem .. "ал"
-		forms["past_f"] = stem .. "ала"
-		forms["past_n"] = stem .. "ало"
-		forms["past_pl"] = stem .. "али"
+		set_past(forms, stem .. "ал", nil, "", "а", "о", "и")
 	end
 
 	-- if full infinitive is not passed, build from the stem, otherwise use the optional parameter
@@ -1150,19 +1263,13 @@ conjugations["6b"] = function(args)
 		forms["past_actv_part"] = stem .. "я́вший"
 		forms["past_adv_part"] = stem .. "я́вши"
 		forms["past_adv_part_short"] = stem .. "́яв"
-		forms["past_m"] = stem .. "я́л"
-		forms["past_f"] = stem .. "я́ла"
-		forms["past_n"] = stem .. "я́ло"
-		forms["past_pl"] = stem .. "я́ли"
+		set_past(forms, stem .. "я́л", nil, "", "а", "о", "и")
 	else
 		forms["infinitive"] = stem .. "а́ть"
 		forms["past_actv_part"] = stem .. "а́вший"
 		forms["past_adv_part"] = stem .. "а́вши"
 		forms["past_adv_part_short"] = stem .. "а́в"
-		forms["past_m"] = stem .. "а́л"
-		forms["past_f"] = stem .. "а́ла"
-		forms["past_n"] = stem .. "а́ло"
-		forms["past_pl"] = stem .. "а́ли"
+		set_past(forms, stem .. "а́л", nil, "", "а", "о", "и")
 	end
 
 	-- ждала́, подождала́
@@ -1235,10 +1342,7 @@ conjugations["6c"] = function(args)
 	forms["impr_sg"] = iotated_stem_noa .. "и́"
 	forms["impr_pl"] = iotated_stem_noa .. "и́те"
 
-	forms["past_m"] = stem_noa .. "а́л"
-	forms["past_f"] = stem_noa .. "а́ла"
-	forms["past_n"] = stem_noa .. "а́ло"
-	forms["past_pl"] = stem_noa .. "а́ли"
+	set_past(forms, stem_noa .. "а́л", nil, "", "а", "о", "и")
 
 	return forms
 end
@@ -1269,17 +1373,10 @@ conjugations["7a"] = function(args)
 	forms["impr_sg"] = impr_sg
 	forms["impr_pl"] = impr_sg .. "те"
 
-	-- 0 ending if the past stem ends in a consonant
-	if rfind(past_stem, "[аэыоуяеиёю́]$") then
-		forms["past_m"] = past_stem .. "л"
-	else
-		forms["past_m"] = past_stem
-	end
-
 	-- вычесть - past_m=вы́чел handled through general mechanism
-	forms["past_f"] = past_stem .. "ла"
-	forms["past_n"] = past_stem .. "ло"
-	forms["past_pl"] = past_stem .. "ли"
+	set_past(forms, past_stem, nil,
+		-- 0 ending if the past stem ends in a consonant
+		rfind(past_stem, "[аэыоуяеиёю́]$") and "л" or "", "ла", "ло", "ли")
 
 	return forms
 end
@@ -1306,16 +1403,9 @@ conjugations["7b"] = function(args)
 	forms["impr_sg"] = pres_stem .. "и́"
 	forms["impr_pl"] = pres_stem .. "и́те"
 
-	-- 0 ending if the past stem ends in a consonant
-	if rfind(past_stem, "[аэыоуяеиёю́]$") then
-		forms["past_m"] = past_stem .. "л"
-	else
-		forms["past_m"] = past_stem
-	end
-
-	forms["past_f"] = past_stem .. "ла"
-	forms["past_n"] = past_stem .. "ло"
-	forms["past_pl"] = past_stem .. "ли"
+	set_past(forms, past_stem, nil,
+		-- 0 ending if the past stem ends in a consonant
+		rfind(past_stem, "[аэыоуяеиёю́]$") and "л" or "", "ла", "ло", "ли")
 
 	return forms
 end
@@ -1418,10 +1508,7 @@ conjugations["9a"] = function(args)
 	forms["impr_sg"] = pres_stem .. "и"
 	forms["impr_pl"] = pres_stem .. "ите"
 
-	forms["past_m"] = stem
-	forms["past_f"] = stem .. "ла"
-	forms["past_n"] = stem .. "ло"
-	forms["past_pl"] = stem .. "ли"
+	set_past(forms, stem, nil, "", "ла", "ло", "ли")
 
 	return forms
 end
@@ -1465,10 +1552,7 @@ conjugations["9b"] = function(args)
 	forms["impr_sg"] = pres_stem .. "и́"
 	forms["impr_pl"] = pres_stem .. "и́те"
 
-	forms["past_m"] = stem
-	forms["past_f"] = stem .. "ла"
-	forms["past_n"] = stem .. "ло"
-	forms["past_pl"] = stem .. "ли"
+	set_past(forms, stem, nil, "", "ла", "ло", "ли")
 
 	return forms
 end
@@ -1492,10 +1576,7 @@ conjugations["10a"] = function(args)
 	forms["impr_sg"] = stem .. "и"
 	forms["impr_pl"] = stem .. "ите"
 
-	forms["past_m"] = stem .. "ол"
-	forms["past_f"] = stem .. "ола"
-	forms["past_n"] = stem .. "оло"
-	forms["past_pl"] = stem .. "оли"
+	set_past(forms, stem .. "ол", nil, "", "а", "о", "и")
 
 	return forms
 end
@@ -1523,10 +1604,7 @@ conjugations["10c"] = function(args)
 	forms["impr_sg"] = pres_stem_noa .. "и́"
 	forms["impr_pl"] = pres_stem_noa .. "и́те"
 
-	forms["past_m"] = inf_stem .. "л"
-	forms["past_f"] = inf_stem .. "ла"
-	forms["past_n"] = inf_stem .. "ло"
-	forms["past_pl"] = inf_stem .. "ли"
+	set_past(forms, inf_stem .. "л", nil, "", "а", "о", "и")
 
 	return forms
 end
@@ -1558,10 +1636,7 @@ conjugations["11a"] = function(args)
 	forms["impr_sg"] = stem .. "ей"
 	forms["impr_pl"] = stem .. "ейте"
 
-	forms["past_m"] = stem .. "ил"
-	forms["past_f"] = stem .. "ила"
-	forms["past_n"] = stem .. "ило"
-	forms["past_pl"] = stem .. "или"
+	set_past(forms, stem .. "ил", nil, "", "а", "о", "и")
 
 	return forms
 end
@@ -1593,11 +1668,8 @@ conjugations["11b"] = function(args)
 	forms["impr_sg"] = stem .. "е́й"
 	forms["impr_pl"] = stem .. "е́йте"
 
-	forms["past_m"] = stem .. "и́л"
 	-- пила́, лила́ handled through general override mechanism
-	forms["past_f"] = stem .. "и́ла"
-	forms["past_n"] = stem .. "и́ло"
-	forms["past_pl"] = stem .. "и́ли"
+	set_past(forms, stem .. "и́л", nil, "", "а", "о", "и")
 
 	return forms
 end
@@ -1629,10 +1701,7 @@ conjugations["12a"] = function(args)
 	forms["impr_sg"] = pres_stem .. "й"
 	forms["impr_pl"] = pres_stem .. "йте"
 
-	forms["past_m"] = stem .. "л"
-	forms["past_f"] = stem .. "ла"
-	forms["past_n"] = stem .. "ло"
-	forms["past_pl"] = stem .. "ли"
+	set_past(forms, stem .. "л", nil, "", "а", "о", "и")
 
 	return forms
 end
@@ -1666,11 +1735,8 @@ conjugations["12b"] = function(args)
 	forms["impr_sg"] = pres_stem .. "́й"
 	forms["impr_pl"] = pres_stem .. "́йте"
 
-	forms["past_m"] = stem .. "л"
 	-- гнила́ needs a parameter (handled through general override mechanism), default - пе́ла
-	forms["past_f"] = stem .. "ла"
-	forms["past_n"] = stem .. "ло"
-	forms["past_pl"] = stem .. "ли"
+	set_past(forms, stem .. "л", nil, "", "а", "о", "и")
 
 	return forms
 end
@@ -1702,10 +1768,7 @@ conjugations["13b"] = function(args)
 	forms["impr_sg"] = stem .. "й"
 	forms["impr_pl"] = stem .. "йте"
 
-	forms["past_m"] = stem .. "л"
-	forms["past_f"] = stem .. "ла"
-	forms["past_n"] = stem .. "ло"
-	forms["past_pl"] = stem .. "ли"
+	set_past(forms, stem .. "л", nil, "", "а", "о", "и")
 
 	return forms
 end
@@ -1734,10 +1797,7 @@ conjugations["14a"] = function(args)
 	forms["impr_sg"] = pres_stem .. "и"
 	forms["impr_pl"] = pres_stem .. "ите"
 
-	forms["past_m"] = stem .. "л"
-	forms["past_f"] = stem .. "ла"
-	forms["past_n"] = stem .. "ло"
-	forms["past_pl"] = stem .. "ли"
+	set_past(forms, stem .. "л", nil, "", "а", "о", "и")
 
 	return forms
 end
@@ -1766,17 +1826,7 @@ conjugations["14b"] = function(args)
 	forms["impr_sg"] = pres_stem .. "и́"
 	forms["impr_pl"] = pres_stem .. "и́те"
 
-	if past_m then
-		forms["past_m"] = past_m
-		forms["past_f"] = past_m .. "а"
-		forms["past_n"] = past_m .. "о"
-		forms["past_pl"] = past_m .. "и"
-	else
-		forms["past_m"] = stem .. "л"
-		forms["past_f"] = stem .. "ла"
-		forms["past_n"] = stem .. "ло"
-		forms["past_pl"] = stem .. "ли"
-	end
+	set_past(forms, past_m or stem .. "л", nil, "", "а", "о", "и")
 
 	return forms
 end
@@ -1807,17 +1857,7 @@ conjugations["14c"] = function(args)
 
 	--two forms for past_m: при́нялся, принялс́я (handled through general override mechanism)
 	--изъя́ла but приняла́ (handled through general override mechanism)
-	if past_m then
-		forms["past_m"] = past_m
-		forms["past_f"] = past_m .. "а"
-		forms["past_n"] = past_m .. "о"
-		forms["past_pl"] = past_m .. "и"
-	else
-		forms["past_m"] = stem .. "л"
-		forms["past_f"] = stem .. "ла"
-		forms["past_n"] = stem .. "ло"
-		forms["past_pl"] = stem .. "ли"
-	end
+	set_past(forms, past_m or stem .. "л", nil, "", "а", "о", "и")
 
 	return forms
 end
@@ -1841,10 +1881,7 @@ conjugations["15a"] = function(args)
 	forms["impr_sg"] = stem .. "нь"
 	forms["impr_pl"] = stem .. "ньте"
 
-	forms["past_m"] = stem .. "л"
-	forms["past_f"] = stem .. "ла"
-	forms["past_n"] = stem .. "ло"
-	forms["past_pl"] = stem .. "ли"
+	set_past(forms, stem .. "л", nil, "", "а", "о", "и")
 
 	return forms
 end
@@ -1852,8 +1889,12 @@ end
 conjugations["16a"] = function(args)
 	local forms = {}
 
+	local verb_type = getarg(args, 1, "refl", "Verb type (first parameter)")
+
 	local stem = get_stressed_arg(args, 2)
 	local stem_noa = com.make_unstressed(stem)
+	local past_stress = args[3] or "a(1)"
+	local prefix, _, base, _ = split_prefix(stem)
 
 	forms["infinitive"] = stem .. "ть"
 
@@ -1869,19 +1910,23 @@ conjugations["16a"] = function(args)
 	forms["impr_sg"] = stem .. "ви"
 	forms["impr_pl"] = stem .. "вите"
 
-	forms["past_m"] = stem .. "л"
-	forms["past_f"] = stem .. "ла"
-	forms["past_n"] = stem .. "ло"
-	forms["past_pl"] = stem .. "ли"
+	local internal_notes, default_reflex_stress = set_past_by_stress(forms,
+		past_stress, prefix, base .. "л", args, verb_type)
 
-	return forms
+	return forms, internal_notes, default_reflex_stress
 end
 
 conjugations["16b"] = function(args)
 	local forms = {}
 
+	--for this type, it's important to distinguish if it's reflexive to set some stress patterns
+	local verb_type = getarg(args, 1, "refl", "Verb type (first parameter)")
+	local refl = rfind(verb_type, "refl")
+
 	local stem = get_stressed_arg(args, 2)
 	local stem_noa = com.make_unstressed(stem)
+	local past_stress = args[3] or refl and "c''" or "c"
+	local prefix, _, base, _ = split_prefix(stem)
 
 	forms["infinitive"] = stem .. "ть"
 
@@ -1897,14 +1942,12 @@ conjugations["16b"] = function(args)
 	forms["impr_sg"] = stem_noa .. "ви́"
 	forms["impr_pl"] = stem_noa .. "ви́те"
 
-	forms["past_m"] = stem .. "л"
-	forms["past_f"] = stem_noa .. "ла́"
-	forms["past_n"] = stem .. "ло"
-	forms["past_pl"] = stem .. "ли"
+	local internal_notes, default_reflex_stress = set_past_by_stress(forms,
+		past_stress, prefix, base .. "л", args, verb_type)
+
+	return forms, internal_notes, default_reflex_stress
 
 	-- past_n2 of прижило́сь, прижи́лось handled through general override mechanism
-
-	return forms
 end
 
 conjugations["irreg-бежать"] = function(args)
@@ -1933,10 +1976,7 @@ conjugations["irreg-бежать"] = function(args)
 	forms["pres_futr_2pl"] = prefix .. "бежи́те"
 	forms["pres_futr_3pl"] = prefix .. "бегу́т"
 
-	forms["past_m"] = prefix .. "бежа́л"
-	forms["past_f"] = prefix .. "бежа́ла"
-	forms["past_n"] = prefix .. "бежа́ло"
-	forms["past_pl"] = prefix .. "бежа́ли"
+	set_past(forms, prefix .. "бежа́л", nil, "", "а", "о", "и")
 
 	-- вы́бежать (perfective)
 	if prefix == "вы́" then
@@ -1956,10 +1996,7 @@ conjugations["irreg-бежать"] = function(args)
 		forms["pres_futr_2pl"] = prefix .. "бежите"
 		forms["pres_futr_3pl"] = prefix .. "бегут"
 
-		forms["past_m"] = prefix .. "бежал"
-		forms["past_f"] = prefix .. "бежала"
-		forms["past_n"] = prefix .. "бежало"
-		forms["past_pl"] = prefix .. "бежали"
+		set_past(forms, prefix .. "бежал", nil, "", "а", "о", "и")
 	end
 
 	return forms
@@ -1991,10 +2028,7 @@ conjugations["irreg-спать"] = function(args)
 	forms["pres_futr_2pl"] = prefix .. "спи́те"
 	forms["pres_futr_3pl"] = prefix .. "спя́т"
 
-	forms["past_m"] = prefix .. "спа́л"
-	forms["past_f"] = prefix .. "спала́"
-	forms["past_n"] = prefix .. "спа́ло"
-	forms["past_pl"] = prefix .. "спа́ли"
+	set_past(forms, prefix .. "спа́л", nil, "", "а́", "о", "и")
 
 	-- вы́спаться (perfective, reflexive), reflexive endings are added later
 	if prefix == "вы́" then
@@ -2014,10 +2048,7 @@ conjugations["irreg-спать"] = function(args)
 		forms["pres_futr_2pl"] = prefix .. "спите"
 		forms["pres_futr_3pl"] = prefix .. "спят"
 
-		forms["past_m"] = prefix .. "спал"
-		forms["past_f"] = prefix .. "спала"
-		forms["past_n"] = prefix .. "спало"
-		forms["past_pl"] = prefix .. "спали"
+		set_past(forms, prefix .. "спал", nil, "", "а", "о", "и")
 	end
 
 	return forms
@@ -2049,10 +2080,7 @@ conjugations["irreg-хотеть"] = function(args)
 	forms["pres_futr_2pl"] = prefix .. "хоти́те"
 	forms["pres_futr_3pl"] = prefix .. "хотя́т"
 
-	forms["past_m"] = prefix .. "хоте́л"
-	forms["past_f"] = prefix .. "хоте́ла"
-	forms["past_n"] = prefix .. "хоте́ло"
-	forms["past_pl"] = prefix .. "хоте́ли"
+	set_past(forms, prefix .. "хоте́л", nil, "", "а", "о", "и")
 
 	return forms
 end
@@ -2066,8 +2094,7 @@ conjugations["irreg-дать"] = function(args)
 	local refl = rfind(verb_type, "refl")
 
 	local prefix = args[2] or ""
-	-- alternative past masculine forms: со́здал/созд́ал, п́ередал/переда́л, ́отдал/отд́ал, etc.
-	-- handled through general override mechanism.
+	local past_stress = args[3] or prefix == "вы́" and "a(1)" or refl and "c''" or "c'"
 
 	forms["infinitive"] = prefix .. "да́ть"
 
@@ -2089,17 +2116,8 @@ conjugations["irreg-дать"] = function(args)
 	forms["pres_futr_2pl"] = prefix .. "дади́те"
 	forms["pres_futr_3pl"] = prefix .. "даду́т"
 
-	-- past_m2 of пе́редал, ́отдал, пр́одал, з́адал, etc. handled through general override mechanism
-	forms["past_m"] = prefix .. "да́л"
-	forms["past_f"] = prefix .. "дала́"
-	forms["past_n"] = prefix .. "да́ло"
-	forms["past_n2"] = prefix .. "дало́" --same with "взять"
-	forms["past_pl"] = prefix .. "да́ли"
-
-	if refl then
-		forms["past_n"] = prefix .. "дало́"
-		forms["past_n2"] = nil
-	end
+	local internal_notes, default_reflex_stress = set_past_by_stress(forms,
+		past_stress, prefix, "да́л", args, verb_type)
 
 	-- вы́дать (perfective)
 	if prefix == "вы́" then
@@ -2119,14 +2137,9 @@ conjugations["irreg-дать"] = function(args)
 		forms["pres_futr_1pl"] = prefix .. "дадим"
 		forms["pres_futr_2pl"] = prefix .. "дадите"
 		forms["pres_futr_3pl"] = prefix .. "дадут"
-
-		forms["past_m"] = prefix .. "дал"
-		forms["past_f"] = prefix .. "дала"
-		forms["past_n"] = prefix .. "дало"
-		forms["past_pl"] = prefix .. "дали"
 	end
 
-	return forms
+	return forms, internal_notes, default_reflex_stress
 end
 
 conjugations["irreg-есть"] = function(args)
@@ -2155,10 +2168,7 @@ conjugations["irreg-есть"] = function(args)
 	forms["pres_futr_2pl"] = prefix .. "еди́те"
 	forms["pres_futr_3pl"] = prefix .. "едя́т"
 
-	forms["past_m"] = prefix .. "е́л"
-	forms["past_f"] = prefix .. "е́ла"
-	forms["past_n"] = prefix .. "е́ло"
-	forms["past_pl"] = prefix .. "е́ли"
+	set_past(forms, prefix .. "е́л", nil, "", "а", "о", "и")
 
 	-- вы́есть (perfective)
 	if prefix == "вы́" then
@@ -2178,10 +2188,7 @@ conjugations["irreg-есть"] = function(args)
 		forms["pres_futr_2pl"] = prefix .. "едите"
 		forms["pres_futr_3pl"] = prefix .. "едят"
 
-		forms["past_m"] = prefix .. "ел"
-		forms["past_f"] = prefix .. "ела"
-		forms["past_n"] = prefix .. "ело"
-		forms["past_pl"] = prefix .. "ели"
+		set_past(forms, prefix .. "ел", nil, "", "а", "о", "и")
 	end
 
 	return forms
@@ -2218,10 +2225,7 @@ conjugations["irreg-сыпать"] = function(args)
 	forms["pres_futr_2pl2"] = prefix .. "сы́пете"
 	forms["pres_futr_3pl"] = prefix .. "сы́плют"
 
-	forms["past_m"] = prefix .. "сы́пал"
-	forms["past_f"] = prefix .. "сы́пала"
-	forms["past_n"] = prefix .. "сы́пало"
-	forms["past_pl"] = prefix .. "сы́пали"
+	set_past(forms, prefix .. "сы́пал", nil, "", "а", "о", "и")
 
 	-- вы́сыпать (perfective), not to confuse with высыпа́ть (1a, imperfective)
 	if prefix == "вы́" then
@@ -2246,10 +2250,7 @@ conjugations["irreg-сыпать"] = function(args)
 		forms["pres_futr_3pl"] = prefix .. "сыплют"
 		forms["pres_futr_3pl2"] = prefix .. "сыпют"
 
-		forms["past_m"] = prefix .. "сыпал"
-		forms["past_f"] = prefix .. "сыпала"
-		forms["past_n"] = prefix .. "сыпало"
-		forms["past_pl"] = prefix .. "сыпали"
+		set_past(forms, prefix .. "сыпал", nil, "", "а", "о", "и")
 	end
 
 	return forms
@@ -2281,10 +2282,7 @@ conjugations["irreg-лгать"] = function(args)
 	forms["pres_futr_2pl"] = prefix .. "лжёте"
 	forms["pres_futr_3pl"] = prefix .. "лгу́т"
 
-	forms["past_m"] = prefix .. "лга́л"
-	forms["past_f"] = prefix .. "лгала́"
-	forms["past_n"] = prefix .. "лга́ло"
-	forms["past_pl"] = prefix .. "лга́ли"
+	set_past(forms, prefix .. "лга́л", nil, "", "а́", "о", "и")
 
 	return forms
 end
@@ -2318,10 +2316,7 @@ conjugations["irreg-мочь"] = function(args)
 	forms["pres_futr_2pl"] = prefix .. "мо́жете"
 	forms["pres_futr_3pl"] = prefix .. "мо́гут"
 
-	forms["past_m"] = prefix .. "мо́г"
-	forms["past_f"] = prefix .. "могла́"
-	forms["past_n"] = prefix .. "могло́"
-	forms["past_pl"] = prefix .. "могли́"
+	set_past(forms, prefix, nil, "мо́г", "могла́", "могло́", "могли́")
 
 	return forms
 end
@@ -2352,10 +2347,7 @@ conjugations["irreg-слать"] = function(args)
 	forms["pres_futr_2pl"] = prefix .. "шлёте"
 	forms["pres_futr_3pl"] = prefix .. "шлю́т"
 
-	forms["past_m"] = prefix .. "сла́л"
-	forms["past_f"] = prefix .. "сла́ла"
-	forms["past_n"] = prefix .. "сла́ло"
-	forms["past_pl"] = prefix .. "сла́ли"
+	set_past(forms, prefix .. "сла́л", nil, "", "а", "о", "и")
 
 	-- вы́слать (perfective)
 	if prefix == "вы́" then
@@ -2374,10 +2366,7 @@ conjugations["irreg-слать"] = function(args)
 		forms["pres_futr_2pl"] = prefix .. "шлете"
 		forms["pres_futr_3pl"] = prefix .. "шлют"
 
-		forms["past_m"] = prefix .. "слал"
-		forms["past_f"] = prefix .. "слала"
-		forms["past_n"] = prefix .. "слало"
-		forms["past_pl"] = prefix .. "слали"
+		set_past(forms, prefix .. "слал", nil, "", "а", "о", "и")
 	end
 
 	return forms
@@ -2432,16 +2421,10 @@ conjugations["irreg-идти"] = function(args)
 	-- вы́йти (perfective)
 	if prefix == "вы́" then
 		forms["past_actv_part"] = prefix .. "шедший"
-		forms["past_m"] = prefix .. "шел"
-		forms["past_f"] = prefix .. "шла"
-		forms["past_n"] = prefix .. "шло"
-		forms["past_pl"] = prefix .. "шли"
+		set_past(forms, prefix, nil, "шел", "шла", "шло", "шли")
 	else
 		forms["past_actv_part"] = prefix .. "ше́дший"
-		forms["past_m"] = prefix .. "шёл"
-		forms["past_f"] = prefix .. "шла́"
-		forms["past_n"] = prefix .. "шло́"
-		forms["past_pl"] = prefix .. "шли́"
+		set_past(forms, prefix, nil, "шёл", "шла́", "шло́", "шли́")
 	end
 
 	return forms
@@ -2486,10 +2469,7 @@ conjugations["irreg-ехать"] = function(args)
 
 	present_e_a(forms, pres_stem)
 
-	forms["past_m"] = past_stem .. "ал"
-	forms["past_f"] = past_stem .. "ала"
-	forms["past_n"] = past_stem .. "ало"
-	forms["past_pl"] = past_stem .. "али"
+	set_past(forms, past_stem .. "ал", nil, "", "а", "о", "и")
 
 	return forms
 end
@@ -2519,14 +2499,7 @@ conjugations["irreg-минуть"] = function(args)
 	forms["impr_sg"] = ""
 	forms["impr_pl"] = ""
 
-	forms["past_m"] = stem_noa .. "у́л"
-	forms["past_f"] = stem_noa .. "у́ла"
-	forms["past_n"] = stem_noa .. "у́ло"
-	forms["past_pl"] = stem_noa .. "у́ли"
-	forms["past_m2"] = stem .. "ул"
-	forms["past_f2"] = stem .. "ула"
-	forms["past_n2"] = stem .. "уло"
-	forms["past_pl2"] = stem .. "ули"
+	set_past(forms, stem, nil, {"у́л", "ул"}, {"у́ла", "ула"}, {"у́ло", "уло"}, {"у́ли", "ули"})
 
 	return forms
 end
@@ -2552,10 +2525,7 @@ conjugations["irreg-живописать-миновать"] = function(args)
 	forms["impr_sg"] = pres_stem .. "й"
 	forms["impr_pl"] = pres_stem .. "йте"
 
-	forms["past_m"] = inf_stem .. "л"
-	forms["past_f"] = inf_stem .. "ла"
-	forms["past_n"] = inf_stem .. "ло"
-	forms["past_pl"] = inf_stem .. "ли"
+	set_past(forms, inf_stem .. "л", nil, "", "а", "о", "и")
 
 	return forms
 end
@@ -2587,10 +2557,7 @@ conjugations["irreg-лечь"] = function(args)
 	forms["pres_futr_2pl"] = prefix .. "ля́жете"
 	forms["pres_futr_3pl"] = prefix .. "ля́гут"
 
-	forms["past_m"] = prefix .. "лёг"
-	forms["past_f"] = prefix .. "легла́"
-	forms["past_n"] = prefix .. "легло́"
-	forms["past_pl"] = prefix .. "легли́"
+	set_past(forms, prefix, nil, "лёг", "легла́", "легло́", "легли́")
 
 	return forms
 end
@@ -2622,10 +2589,7 @@ conjugations["irreg-зиждиться"] = function(args)
 	forms["pres_futr_2pl"] = prefix .. "зи́ждете"
 	forms["pres_futr_3pl"] = prefix .. "зи́ждут"
 
-	forms["past_m"] = prefix .. "зи́ждил"
-	forms["past_f"] = prefix .. "зи́ждила"
-	forms["past_n"] = prefix .. "зи́ждило"
-	forms["past_pl"] = prefix .. "зи́ждили"
+	set_past(forms, prefix .. "зи́ждил", nil, "", "а", "о", "и")
 
 	return forms
 end
@@ -2634,8 +2598,12 @@ conjugations["irreg-клясть"] = function(args)
 	-- irregular, only for verbs derived from клясть with the same stress pattern
 	local forms = {}
 
+	--for this type, it's important to distinguish if it's reflexive to set some stress patterns
+	local verb_type = getarg(args, 1, "refl", "Verb type (first parameter)")
+	local refl = rfind(verb_type, "refl")
+
 	local prefix = args[2] or ""
-	local past_m = args["past_m"]
+	local past_stress = args[3] or prefix == "вы́" and "a(1)" or refl and "c''" or "c"
 
 	forms["infinitive"] = prefix .. "кля́сть"
 
@@ -2658,19 +2626,10 @@ conjugations["irreg-клясть"] = function(args)
 	forms["pres_futr_2pl"] = prefix .. "клянёте"
 	forms["pres_futr_3pl"] = prefix .. "кляну́т"
 
-	if past_m then
-		forms["past_m"] = past_m
-		forms["past_n"] = past_m .. "о"
-		forms["past_pl"] = past_m .. "и"
-	else
-		forms["past_m"] = prefix .. "кля́л"
-		forms["past_n"] = prefix .. "кля́ло"
-		forms["past_pl"] = prefix .. "кля́ли"
-	end
+	local internal_notes, default_reflex_stress = set_past_by_stress(forms,
+		past_stress, prefix, "кля́л", args, verb_type)
 
-	forms["past_f"] = prefix .. "кляла́"
-
-	return forms
+	return forms, internal_notes, default_reflex_stress
 end
 
 conjugations["irreg-слыхать-видать"] = function(args)
@@ -2701,10 +2660,7 @@ conjugations["irreg-слыхать-видать"] = function(args)
 	forms["pres_futr_2pl"] = ""
 	forms["pres_futr_3pl"] = ""
 
-	forms["past_m"] = stem .. "л"
-	forms["past_f"] = stem .. "ла"
-	forms["past_n"] = stem .. "ло"
-	forms["past_pl"] = stem .. "ли"
+	set_past(forms, stem .. "л", nil, "", "а", "о", "и")
 
 	return forms
 end
@@ -2736,10 +2692,7 @@ conjugations["irreg-стелить-стлать"] = function(args)
 	forms["pres_futr_2pl"] = prefix .. "сте́лете"
 	forms["pres_futr_3pl"] = prefix .. "сте́лют"
 
-	forms["past_m"] = prefix .. stem .. "л"
-	forms["past_f"] = prefix .. stem .. "ла"
-	forms["past_n"] = prefix .. stem .. "ло"
-	forms["past_pl"] = prefix .. stem .. "ли"
+	set_past(forms, prefix .. stem .. "л", nil, "", "а", "о", "и")
 
 	return forms
 end
@@ -2748,22 +2701,24 @@ conjugations["irreg-быть"] = function(args)
 	-- irregular, only for verbs derived from быть with various stress patterns, the actual verb быть different from its derivatives
 	local forms = {}
 
+	--for this type, it's important to distinguish if it's reflexive to set some stress patterns
+	local verb_type = getarg(args, 1, "refl", "Verb type (first parameter)")
+	local refl = rfind(verb_type, "refl")
+
 	local prefix = args[2] or ""
+	local past_stress = args[3] or prefix == "вы́" and "a(1)" or refl and "c''" or "c"
 
-	if prefix == ""
-		then forms["infinitive"] = "бы́ть"
-	else
-		forms["infinitive"] = prefix .. "бы́ть"
-	end
+	forms["infinitive"] = prefix .. "бы́ть"
 
+	forms["pres_actv_part"] = prefix .. "су́щий"
 	forms["past_actv_part"] = prefix .. "бы́вший"
-
 	forms["pres_pasv_part"] = ""
 
 	--only for "бы́ть" - бу́дучи
-	if forms["infinitive"] == "бы́ть" then
-		forms["past_adv_part"] = "бу́дучи"
-		forms["past_adv_part_short"] = ""
+	if prefix == "" then
+		forms["pres_adv_part"] = "бу́дучи"
+	else
+		forms["pres_adv_part"] = ""
 	end
 
 	forms["past_adv_part"] = prefix .. "бы́вши"
@@ -2771,12 +2726,12 @@ conjugations["irreg-быть"] = function(args)
 
 	-- if the prefix is stressed
 	if rfind(prefix, "[́]") then
+		forms["infinitive"] = prefix .. "быть"
+		forms["pres_actv_part"] = prefix .. "сущий"
+		forms["past_actv_part"] = prefix .. "бывший"
 		forms["past_adv_part"] = prefix .. "бывши"
 		forms["past_adv_part_short"] = prefix .. "быв"
 	end
-
-	forms["pres_actv_part"] = "су́щий"
-	forms["pres_adv_part"] = ""
 
 	forms["impr_sg"] = prefix .. "бу́дь"
 	forms["impr_pl"] = prefix .. "бу́дьте"
@@ -2808,23 +2763,10 @@ conjugations["irreg-быть"] = function(args)
 		forms["pres_futr_3pl"] = prefix .. "будут"
 	end
 
-	forms["past_m"] = prefix .. "бы́л"
-	forms["past_f"] = prefix .. "была́"
-	forms["past_n"] = prefix .. "бы́ло"
-	forms["past_pl"] = prefix .. "бы́ли"
+	local internal_notes, default_reflex_stress = set_past_by_stress(forms,
+		past_stress, prefix, "бы́л", args, verb_type)
 
-	-- if the prefix is stressed
-	if rfind(prefix, "[́]") then
-		forms["past_m"] = prefix .. "был"
-		forms["past_f"] = prefix .. "была"
-		forms["past_n"] = prefix .. "было"
-		forms["past_pl"] = prefix .. "были"
-	end
-
-	-- past_m=при́бып, past_f=рибыла́, past_n=сбыло́сь, past_pl=сбыли́сь
-	-- handled through general override mechanism.
-
-	return forms
+	return forms, internal_notes, default_reflex_stress
 end
 
 conjugations["irreg-ссать-сцать"] = function(args)
@@ -2876,10 +2818,7 @@ conjugations["irreg-ссать-сцать"] = function(args)
 
 	forms["pres_adv_part"] = ""
 
-	forms["past_m"] = prefix .. stem .. "л"
-	forms["past_f"] = prefix .. stem .. "ла"
-	forms["past_n"] = prefix .. stem .. "ло"
-	forms["past_pl"] = prefix .. stem .. "ли"
+	set_past(forms, prefix .. stem .. "л", nil, "", "а", "о", "и")
 
 	return forms
 end
@@ -2912,10 +2851,7 @@ conjugations["irreg-чтить"] = function(args)
 	forms["pres_futr_3pl"] = prefix .. "чтя́т"
 	forms["pres_futr_3pl2"] = prefix .. "чту́т"
 
-	forms["past_m"] = prefix .. "чти́л"
-	forms["past_f"] = prefix .. "чти́ла"
-	forms["past_n"] = prefix .. "чти́ло"
-	forms["past_pl"] = prefix .. "чти́ли"
+	set_past(forms, prefix .. "чти́л", nil, "", "а", "о", "и")
 
 	return forms
 end
@@ -2947,10 +2883,7 @@ conjugations["irreg-шибить"] = function(args)
 	forms["pres_futr_2pl"] = prefix .. "шибёте"
 	forms["pres_futr_3pl"] = prefix .. "шибу́т"
 
-	forms["past_m"] = prefix .. "ши́б"
-	forms["past_f"] = prefix .. "ши́бла"
-	forms["past_n"] = prefix .. "ши́бло"
-	forms["past_pl"] = prefix .. "ши́бли"
+	set_past(forms, prefix .. "ши́б", nil, "", "ла", "ло", "ли")
 
 	-- if the prefix is stressed (probably only вы́-)
 	if rfind(prefix, "[́]") then
@@ -2970,10 +2903,7 @@ conjugations["irreg-шибить"] = function(args)
 		forms["pres_futr_2pl"] = prefix .. "шибете"
 		forms["pres_futr_3pl"] = prefix .. "шибут"
 
-		forms["past_m"] = prefix .. "шиб"
-		forms["past_f"] = prefix .. "шибла"
-		forms["past_n"] = prefix .. "шибло"
-		forms["past_pl"] = prefix .. "шибли"
+		set_past(forms, prefix .. "шиб", nil, "", "ла", "ло", "ли")
 	end
 
 	return forms
@@ -3016,10 +2946,7 @@ conjugations["irreg-плескать"] = function(args)
 	forms["pres_futr_2pl2"] = prefix .. "пле́щете"
 	forms["pres_futr_3pl2"] = prefix .. "пле́щут"
 
-	forms["past_m"] = prefix .. "плеска́л"
-	forms["past_f"] = prefix .. "плеска́ла"
-	forms["past_n"] = prefix .. "плеска́ло"
-	forms["past_pl"] = prefix .. "плеска́ли"
+	set_past(forms, prefix .. "плеска́л", nil, "", "а", "о", "и")
 
 	return forms
 end
@@ -3050,10 +2977,7 @@ end
 	forms["impr_sg"] = prefix .. "реви́"
 	forms["impr_pl"] = prefix .. "реви́те"
 
-	forms["past_m"] = prefix .. "реве́л"
-	forms["past_f"] = prefix .. "реве́ла"
-	forms["past_n"] = prefix .. "реве́ло"
-	forms["past_pl"] = prefix .. "реве́ли"
+	set_past(forms, prefix .. "реве́л", nil, "", "а", "о", "и")
 
 	return forms
 end
@@ -3066,40 +2990,22 @@ conjugations["irreg-внимать"] = function(args)
 
 	forms["infinitive"] = prefix .. "внима́ть"
 
-	forms["past_actv_part"] = prefix .. "внима́вший"
-	forms["pres_pasv_part"] = prefix .. "вне́млемый"
-	forms["pres_pasv_part2"] = prefix .. "внима́емый"
-	forms["past_adv_part"] = prefix .. "внима́вши"
-	forms["past_adv_part_short"] = prefix .. "внима́в"
+	set_participles(forms, prefix, nil,
+		{"вне́млющий", "внима́ющий"}, -- pres_actv
+		"внима́вший", -- past_actv
+		{"вне́млемый", "внима́емый"}, -- pres_pasv
+		{"вне́мля", "внемля́", "внима́я"}, -- pres_adv
+		"внима́вши", -- past_adv
+		"внима́в" -- past_adv_short
+	)
+	set_imper(forms, prefix, nil, {"вне́мли", "внемли́", "внима́й"},
+		{"вне́млите", "внемли́те", "внима́йте"})
+	set_pres_futr(forms, prefix, nil, {"вне́млю", "внемлю́", "внима́ю"},
+		{"вне́млешь", "внима́ешь"}, {"вне́млет", "внима́ет"},
+		{"вне́млем", "внима́ем"}, {"вне́млете", "внима́ете"},
+		{"вне́млют", "внима́ют"})
 
-	forms["pres_actv_part"] = prefix .. "вне́млющий"
-	forms["pres_actv_part2"] = prefix .. "внима́ющий"
-	forms["pres_adv_part"] = prefix .. "вне́мля́"
-	forms["pres_adv_part2"] = prefix .. "внима́я"
-
-	forms["impr_sg"] = prefix .. "вне́мли́"
-	forms["impr_pl"] = prefix .. "вне́мли́те"
-	forms["impr_sg2"] = prefix .. "внима́й"
-	forms["impr_pl2"] = prefix .. "внима́йте"
-
-	forms["pres_futr_1sg"] = prefix .. "вне́млю́"
-	forms["pres_futr_2sg"] = prefix .. "вне́млешь"
-	forms["pres_futr_3sg"] = prefix .. "вне́млет"
-	forms["pres_futr_1pl"] = prefix .. "вне́млем"
-	forms["pres_futr_2pl"] = prefix .. "вне́млете"
-	forms["pres_futr_3pl"] = prefix .. "вне́млют"
-
-	forms["pres_futr_1sg2"] = prefix .. "внима́ю"
-	forms["pres_futr_2sg2"] = prefix .. "внима́ешь"
-	forms["pres_futr_3sg2"] = prefix .. "внима́ет"
-	forms["pres_futr_1pl2"] = prefix .. "внима́ем"
-	forms["pres_futr_2pl2"] = prefix .. "внима́ете"
-	forms["pres_futr_3pl2"] = prefix .. "внима́ют"
-
-	forms["past_m"] = prefix .. "внима́л"
-	forms["past_f"] = prefix .. "внима́ла"
-	forms["past_n"] = prefix .. "внима́ло"
-	forms["past_pl"] = prefix .. "внима́ли"
+	set_past(forms, prefix .. "внима́л", nil, "", "а", "о", "и")
 
 	return forms
 end
@@ -3139,10 +3045,7 @@ conjugations["irreg-внять"] = function(args)
 	forms["pres_futr_2pl2"] = prefix .. "во́нмете"
 	forms["pres_futr_3pl2"] = prefix .. "во́нмут"
 
-	forms["past_m"] = prefix .. "вня́л"
-	forms["past_f"] = prefix .. "вняла́"
-	forms["past_n"] = prefix .. "вня́ло"
-	forms["past_pl"] = prefix .. "вня́ли"
+	set_past(forms, prefix .. "вня́л", nil, "", "а́", "о", "и")
 
 	return forms
 end
@@ -3185,10 +3088,7 @@ conjugations["irreg-обязывать"] = function(args)
 	forms["pres_futr_2pl2"] = prefix .. "обязу́ете"
 	forms["pres_futr_3pl2"] = prefix .. "обязу́ют"
 
-	forms["past_m"] = prefix .. "обя́зывал"
-	forms["past_f"] = prefix .. "обя́зывала"
-	forms["past_n"] = prefix .. "обя́зывало"
-	forms["past_pl"] = prefix .. "обя́зывали"
+	set_past(forms, prefix .. "обя́зывал", nil, "", "а", "о", "и")
 
 	return forms
 end
@@ -3199,20 +3099,18 @@ end
 
 -- Present forms with -e-, no j-vowels.
 present_e_a = function(forms, stem, tr)
-	set_paradigm(forms, "pres_futr", stem, tr,
-		"у", "ешь", "ет", "ем", "ете", "ут")
+	set_pres_futr(forms, stem, tr, "у", "ешь", "ет", "ем", "ете", "ут")
 end
 
 present_e_b = function(forms, stem, tr)
 	local vowel_stem = rfind(stem, "[аэыоуяеиёю́]$")
-	set_paradigm(forms, "pres_futr", stem, tr,
+	set_pres_futr(forms, stem, tr,
 		vowel_stem and "ю́" or "у́", "ёшь", "ёт", "ём", "ёте",
 		vowel_stem and "ю́т" or "у́т")
 end
 
 present_e_c = function(forms, stem, tr)
-	set_paradigm(forms, "pres_futr", stem, tr,
-		"у́", "ешь", "ет", "ем", "ете", "ут")
+	set_pres_futr(forms, stem, tr, "у́", "ешь", "ет", "ем", "ете", "ут")
 end
 
 -- Present forms with -e-, with j-vowels.
@@ -3221,19 +3119,17 @@ present_je_a = function(forms, stem, tr, no_iotation)
 
 	-- Verbs ending in a hushing consonant do not get j-vowels in the endings.
 	local hushing = rfind(iotated_stem, "[шщжч]$")
-	set_paradigm(forms, "pres_futr", iotated_stem, iotated_tr,
+	set_pres_futr(forms, iotated_stem, iotated_tr,
 		hushing and "у" or "ю", "ешь", "ет", "ем", "ете",
 		hushing and "ут" or "ют")
 
 	if no_iotation then
-		set_paradigm(forms, "pres_futr", stem, tr,
-			"у", "ешь", "ет", "ем", "ете", "ут")
+		set_pres_futr(forms, stem, tr, "у", "ешь", "ет", "ем", "ете", "ут")
 	end
 end
 
 present_je_b = function(forms, stem, tr)
-	set_paradigm(forms, "pres_futr", stem, tr,
-		"ю́", "ёшь", "ёт", "ём", "ёте", "ю́т")
+	set_pres_futr(forms, stem, tr, "ю́", "ёшь", "ёт", "ём", "ёте", "ю́т")
 end
 
 present_je_c = function(forms, stem, tr, shch)
@@ -3244,7 +3140,7 @@ present_je_c = function(forms, stem, tr, shch)
 
 	-- Verbs ending in a hushing consonant do not get j-vowels in the endings.
 	local hushing = rfind(iotated_stem, "[шщжч]$") -- or no_iotation
-	set_paradigm(forms, "pres_futr", iotated_stem, iotated_tr,
+	set_pres_futr(forms, iotated_stem, iotated_tr,
 		hushing and "у́" or "ю́", "ешь", "ет", "ем", "ете",
 		hushing and "ут" or "ют")
 end
@@ -3260,7 +3156,7 @@ present_i_a = function(forms, stem, tr, shch)
 	local iotated_hushing = rfind(iotated_stem, "[шщжч]$")
 	local hushing = rfind(stem, "[шщжч]$")
 	local ending_1sg = iotated_hushing and "у" or "ю"
-	set_paradigm(forms, "pres_futr", stem, tr,
+	set_pres_futr(forms, stem, tr,
 		ending_1sg, "ишь", "ит", "им", "ите",
 		hushing and "ат" or "ят")
 	forms["pres_futr_1sg"] = combine(iotated_stem, iotated_tr, ending_1sg)
@@ -3279,7 +3175,7 @@ present_i_b = function(forms, stem, tr, shch)
 	local iotated_hushing = rfind(iotated_stem, "[шщжч]$")
 	local hushing = rfind(stem, "[шщжч]$")
 	local ending_1sg = iotated_hushing and "у́" or "ю́"
-	set_paradigm(forms, "pres_futr", stem, tr,
+	set_pres_futr(forms, stem, tr,
 		ending_1sg, "и́шь", "и́т", "и́м", "и́те",
 		hushing and "а́т" or "я́т")
 	forms["pres_futr_1sg"] = combine(iotated_stem, iotated_tr, ending_1sg)
@@ -3295,7 +3191,7 @@ present_i_c = function(forms, stem, tr, shch)
 	local iotated_hushing = rfind(iotated_stem, "[шщжч]$")
 	local hushing = rfind(stem, "[шщжч]$")
 	local ending_1sg = iotated_hushing and "у́" or "ю́"
-	set_paradigm(forms, "pres_futr", stem, tr,
+	set_pres_futr(forms, stem, tr,
 		ending_1sg, "ишь", "ит", "им", "ите",
 		hushing and "ат" or "ят")
 	forms["pres_futr_1sg"] = combine(iotated_stem, iotated_tr, ending_1sg)
