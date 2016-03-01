@@ -23,7 +23,7 @@
 
 FIXME:
 
-1. Find any current uses of pres_futr_* overrides and remove them,
+1. (DONE) Find any current uses of pres_futr_* overrides and remove them,
    converting to pres_ or futr_. Then make pres_futr_ overrides illegal.
 ]=]--
 
@@ -140,6 +140,7 @@ local present_i_b
 local present_i_c
 local make_reflexive_alt
 local make_reflexive
+local handle_forms_and_overrides
 local finish_generating_forms
 local make_table
 
@@ -170,9 +171,11 @@ local make_table
 -- List of all verb forms. Each element is a list, where the first element
 -- is the "main" form and the remainder are alternatives. The following
 -- *MUST* hold:
--- 1. Short forms (those ending in "_short") must be listed after the
+-- 1. Forms must be given in the order they will appear in the outputted
+--    table.
+-- 2. Short forms (those ending in "_short") must be listed after the
 --    corresponding non-short forms.
--- 2. For each person, e.g. '2sg', there must be the same number of
+-- 3. For each person, e.g. '2sg', there must be the same number of
 --    futr_PERSON, pres_PERSON and pres_futr_PERSON forms, and the alternative
 --    forms must be listed in the same order.
 local all_verb_forms = {
@@ -234,22 +237,28 @@ local all_verb_forms = {
 local main_verb_forms = {}
 -- List of the "alternative" verb forms; see above.
 local alt_verb_forms = {}
--- Table mapping "main" to corresponding "alternative" forms.
-local main_to_alt_verb_forms = {}
+-- Table mapping "main" to the list of all forms in the series.
+local main_to_all_verb_forms = {}
 
--- Compile main_verb_forms, alt_verb_forms, main_to_alt_verb_forms.
+-- List of the main verb forms for the past.
+local past_verb_forms = {"past_m", "past_f", "past_n", "past_pl"}
+-- List of the main verb forms for the present.
+local pres_verb_forms = {"pres_1sg", "pres_2sg", "pres_3sg",
+	"pres_1pl", "pres_2pl", "pres_3pl"}
+-- List of the main verb forms for the future.
+local futr_verb_forms = {"futr_1sg", "futr_2sg", "futr_3sg",
+	"futr_1pl", "futr_2pl", "futr_3pl"}
+
+-- Compile main_verb_forms, alt_verb_forms, main_to_all_verb_forms.
 for _, proplist in ipairs(all_verb_forms) do
 	local i = 0
-	local mainform
+	main_to_all_verb_forms[proplist[1]] = proplist
 	for _, prop in ipairs(proplist) do
 		i = i + 1
 		if i == 1 then
 			table.insert(main_verb_forms, prop)
-			main_to_alt_verb_forms[prop] = {}
-			mainform = prop
 		else
 			table.insert(alt_verb_forms, prop)
-			table.insert(main_to_alt_verb_forms[mainform], prop)
 		end
 	end
 end
@@ -286,7 +295,7 @@ for _, proplist in ipairs(all_verb_forms) do
 end
 
 local all_verb_props = mw.clone(all_verb_forms)
-local non_form_props = {"title", "perf", "intr", "impers", "categories"}
+local non_form_props = {"title", "perf", "intr", "impers", "categories", "notes", "internal_notes"}
 for _, prop in ipairs(non_form_props) do
 	table.insert(all_verb_props, {prop})
 end
@@ -321,39 +330,6 @@ function export.do_generate_forms(conj_type, args)
 		title = "class " .. class_num
 	end
 
-	-- The conjugation functions generate present-future forms instead of
-	-- either the present or future tense. They are later copied to the
-	-- present or future tense in finish_generating_forms(). So to handle
-	-- overrides of the present or future tense, we need to generate
-	-- present-future forms as well.
-	local function canonicalize_pres_futr(formcode)
-		if rfind(formcode, "^pres_[123]") then
-			return rsub(formcode, "^pres_", "pres_futr_")
-		elseif rfind(formcode, "^futr_[123]") then
-			return rsub(formcode, "^futr_", "pres_futr_")
-		else
-			return formcode
-		end
-	end
-
-	--handle main form overrides (formerly we only had past_pasv_part as a
-	--general override, plus scattered main-form overrides in particular
-	--conjugation classes)
-	for _, mainform in ipairs(main_verb_forms) do
-		if args[mainform] then
-			forms[canonicalize_pres_futr(mainform)] = nom.split_russian_tr(args[mainform], "dopair")
-		else
-			forms[mainform] = forms[mainform] or ""
-		end
-	end
-
-	--handle alternative form overrides
-	for _, altform in ipairs(alt_verb_forms) do
-		if args[altform] then
-			forms[canonicalize_pres_futr(altform)] = nom.split_russian_tr(args[altform], "dopair")
-		end
-	end
-
 	if verb_type ~= "pf" and verb_type ~= "pf-intr" and verb_type ~= "pf-refl" and verb_type ~= "pf-impers" and verb_type ~= "pf-impers-refl" and
 	   verb_type ~= "impf" and verb_type ~= "impf-intr" and verb_type ~= "impf-refl" and verb_type ~= "impf-impers" and verb_type ~= "impf-impers-refl" then
 	   	error("Invalid verb type " .. verb_type)
@@ -371,6 +347,8 @@ function export.do_generate_forms(conj_type, args)
 	else
 		table.insert(categories, "Russian imperfective verbs")
 	end
+
+	handle_forms_and_overrides(args, forms, perf)
 
 	-- call alternative reflexive form to add a stressed "ся́" particle
 	if reflex_stress and reflex_stress ~= "n" and reflex_stress ~= "no" then
@@ -504,7 +482,8 @@ function export.show(frame)
 					if type(newval) == "string" then newval = {newval} end
 					if newval and newval[1] == "" then newval = nil end
 				end
-				if not ut.equals(val, newval) then
+				-- Ignore changes in pres_futr_*, which aren't displayed
+				if not ut.equals(val, newval) and not rfind(prop, "^pres_futr") then
 					-- Uncomment this to display the particular case and
 					-- differing forms.
 					--error(prop .. " " .. (val and concat_vals(val) or "nil") .. " || " .. (newval and concat_vals(newval) or "nil"))
@@ -3246,69 +3225,23 @@ make_reflexive = function(forms)
 	forms["past_adv_part_short"] = ""
 end
 
--- Finish generating the forms, clearing out some forms when impersonal/intr,
--- selecting present or future forms from pres_futr_*, etc.
-finish_generating_forms = function(forms, title, perf, intr, impers)
+local function setup_pres_futr(forms, perf)
 	local inf, inf_tr = extract_russian_tr(forms["infinitive"], "notranslit")
-
-	-- Set the main form FORM to the empty string, and corresponding alt forms
-	-- to nil.
-	local function clear_form(form)
-		forms[form] = ""
-		for _, altform in ipairs(main_to_alt_verb_forms[form]) do
-			forms[altform] = nil
-		end
-	end
 
 	-- Copy the main form FROMFORM to the main form TOFORM, and copy all
 	-- associated alternative forms.
 	local function copy_form(fromform, toform)
-		forms[toform] = forms[fromform]
-		local altfromforms = main_to_alt_verb_forms[fromform]
-		local alttoforms = main_to_alt_verb_forms[toform]
-		local num_alt_forms = #altfromforms
-		assert(#alttoforms == num_alt_forms)
-		for i=1,num_alt_forms do
-			forms[alttoforms[i]] = forms[altfromforms[i]]
+		local fromforms = main_to_all_verb_forms[fromform]
+		local toforms = main_to_all_verb_forms[toform]
+		local numforms = #fromforms
+		assert(#toforms == numforms)
+		for i=1,numforms do
+			forms[toforms[i]] = forms[fromforms[i]]
 		end
 	end
 
-	-- Intransitive verbs have no passive participles.
-	if intr then
-		clear_form("pres_pasv_part")
-		clear_form("past_pasv_part")
-	end
-
-	if impers then
-		clear_form("pres_futr_1sg")
-		clear_form("pres_futr_2sg")
-		clear_form("pres_futr_1pl")
-		clear_form("pres_futr_2pl")
-		clear_form("pres_futr_3pl")
-		clear_form("past_m")
-		clear_form("past_f")
-		clear_form("past_pl")
-		clear_form("pres_actv_part")
-		clear_form("past_actv_part")
-		clear_form("pres_adv_part")
-		clear_form("past_adv_part")
-		clear_form("past_adv_part_short")
-		clear_form("impr_sg")
-		clear_form("impr_pl")
-	end
-
-	-- Perfective verbs have no present forms.
+	-- Copy pres_futr_* to pres_* (imperfective) or futr_* (perfective).
 	if perf then
-		clear_form("pres_actv_part")
-		clear_form("pres_pasv_part")
-		clear_form("pres_adv_part")
-		clear_form("pres_1sg")
-		clear_form("pres_2sg")
-		clear_form("pres_3sg")
-		clear_form("pres_1pl")
-		clear_form("pres_2pl")
-		clear_form("pres_3pl")
-
 		copy_form("pres_futr_1sg", "futr_1sg")
 		copy_form("pres_futr_2sg", "futr_2sg")
 		copy_form("pres_futr_3sg", "futr_3sg")
@@ -3341,13 +3274,173 @@ finish_generating_forms = function(forms, title, perf, intr, impers)
 	if inf == "бы́ть" then
 		insert_future("", nil)
 	end
+end
+
+-- Set up pres_* or futr_*; handle *sym/*tail/*tailall notes and overrides.
+handle_forms_and_overrides = function(args, forms, perf)
+	setup_pres_futr(forms, perf)
+	
+	local function append_value(forms, prop, value)
+		if forms[prop] and forms[prop] ~= "" and forms[prop] ~= "-" then
+			value = nom.split_russian_tr(value, "dopair")
+			local curval = forms[prop]
+			if type(curval) == "string" then
+				curval = {curval}
+			end
+			forms[prop] = nom.concat_paired_russian_tr(curval, value)
+		end
+	end
+
+	local function append_note_all(forms, proplist, value)
+		for _, prop in ipairs(proplist) do
+			append_value(forms, prop, value)
+		end
+	end
+
+	local function append_note_last(forms, proplist, value, gt_one)
+		local numprops = 0
+		local lastprop
+		-- Find the last property in the series with a value
+		for _, prop in ipairs(proplist) do
+			if forms[prop] and forms[prop] ~= "" and forms[prop] ~= "-" then
+				numprops = numprops + 1
+				lastprop = prop
+			end
+		end
+		if numprops > (gt_one and 1 or 0) then
+			append_value(forms, lastprop, value)
+		end
+	end
+
+	for _, proplist in ipairs(all_verb_forms) do
+		local vallist = {}
+		-- Handle PROP_sym, which applies to all overridable properties, including
+		-- alternative forms, and applies to exactly that property.
+		for _, prop in ipairs(proplist) do
+			if args[prop .. "_sym"] then
+				append_value(forms, prop, args[prop .. "_sym"])
+			end
+		end
+		local propname = proplist[1]
+		-- Handle PROP_tail, which applies to a series of properties (e.g. past_m,
+		-- past_m2, ...) and appends to the last one.
+		if args[propname .. "_tail"] then
+			append_note_last(forms, proplist, args[propname .. "_tail"])
+		end
+		-- Handle PROP_tailall, which applies to a series of properties and
+		-- appends to all.
+		if args[propname .. "_tailall"] then
+			append_note_all(forms, proplist, args[propname .. "_tailall"])
+		end
+	end
+
+	if args["pasttail"] then
+		for _, prop in ipairs(past_verb_forms) do
+			append_note_last(forms, main_to_all_verb_forms[prop], args["pasttail"], ">1")
+		end
+	end
+	if args["pasttailall"] then
+		for _, prop in ipairs(past_verb_forms) do
+			append_note_all(forms, main_to_all_verb_forms[prop], args["pasttailall"])
+		end
+	end
+	if args["prestail"] then
+		for _, prop in ipairs(pres_verb_forms) do
+			append_note_last(forms, main_to_all_verb_forms[prop], args["prestail"], ">1")
+		end
+	end
+	if args["prestailall"] then
+		for _, prop in ipairs(pres_verb_forms) do
+			append_note_all(forms, main_to_all_verb_forms[prop], args["prestailall"])
+		end
+	end
+	if args["futrtail"] then
+		for _, prop in ipairs(futr_verb_forms) do
+			append_note_last(forms, main_to_all_verb_forms[prop], args["futrtail"], ">1")
+		end
+	end
+	if args["futrtailall"] then
+		for _, prop in ipairs(futr_verb_forms) do
+			append_note_all(forms, main_to_all_verb_forms[prop], args["futrtailall"])
+		end
+	end
+
+	--handle main form overrides (formerly we only had past_pasv_part as a
+	--general override, plus scattered main-form overrides in particular
+	--conjugation classes)
+	for _, mainform in ipairs(main_verb_forms) do
+		if args[mainform] then
+			forms[mainform] = nom.split_russian_tr(args[mainform], "dopair")
+		else
+			forms[mainform] = forms[mainform] or ""
+		end
+	end
+
+	--handle alternative form overrides
+	for _, altform in ipairs(alt_verb_forms) do
+		if args[altform] then
+			forms[altform] = nom.split_russian_tr(args[altform], "dopair")
+		end
+	end
+end
+
+-- Finish generating the forms, clearing out some forms when impersonal/intr,
+-- selecting present or future forms from pres_futr_*, etc.
+finish_generating_forms = function(forms, title, perf, intr, impers)
+	-- Set the main form FORM to the empty string, and corresponding alt forms
+	-- to nil.
+	local function clear_form(form)
+		local i = 0
+		for _, altform in ipairs(main_to_all_verb_forms[form]) do
+			i = i + 1
+			if i == 1 then
+				forms[altform] = ""
+			else
+				forms[altform] = nil
+			end
+		end
+	end
+
+	-- Intransitive verbs have no passive participles.
+	if intr then
+		clear_form("pres_pasv_part")
+		clear_form("past_pasv_part")
+	end
 
 	if impers then
+		clear_form("pres_1sg")
+		clear_form("pres_2sg")
+		clear_form("pres_1pl")
+		clear_form("pres_2pl")
+		clear_form("pres_3pl")
 		clear_form("futr_1sg")
 		clear_form("futr_2sg")
 		clear_form("futr_1pl")
 		clear_form("futr_2pl")
 		clear_form("futr_3pl")
+		clear_form("past_m")
+		clear_form("past_f")
+		clear_form("past_pl")
+		clear_form("pres_actv_part")
+		clear_form("past_actv_part")
+		clear_form("pres_adv_part")
+		clear_form("past_adv_part")
+		clear_form("past_adv_part_short")
+		clear_form("impr_sg")
+		clear_form("impr_pl")
+	end
+
+	-- Perfective verbs have no present forms.
+	if perf then
+		clear_form("pres_actv_part")
+		clear_form("pres_pasv_part")
+		clear_form("pres_adv_part")
+		clear_form("pres_1sg")
+		clear_form("pres_2sg")
+		clear_form("pres_3sg")
+		clear_form("pres_1pl")
+		clear_form("pres_2pl")
+		clear_form("pres_3pl")
 	end
 end
 
