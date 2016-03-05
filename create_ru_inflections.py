@@ -283,8 +283,9 @@ ignore_headword_gender = [
 ]
 
 skip_lemma_pages = [
-    u"тысяча",
-    u"роженица",
+    u"тысяча", # cardinal number (?)
+    u"роженица", # 3 stress variants
+    u"лицо, ищущее убежище", # can't properly handle comma in title
 ]
 
 skip_form_pages = [
@@ -427,6 +428,8 @@ allow_defn_in_same_subsection = [
     (u"мнение", u"мненье"),
     (u"нуль", u"ноль"),
     (u"огонь", u"огнь"),
+    (u"остыть", u"остынуть"),
+    (u"простыть", u"простынуть"),
     (u"собрание", u"собранье"),
     (u"судия", u"судья"),
     (u"уединение", u"уединенье"),
