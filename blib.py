@@ -83,6 +83,22 @@ def remove_param_chain(t, firstparam, parampref):
     else:
       return changed
 
+def set_param_chain(t, values, firstparam, parampref):
+  paramno = 0
+  for val in values:
+    paramno += 1
+    next_param = firstparam if paramno == 1 else "%s%s" % (
+        parampref, paramno)
+    t.add(next_param, val)
+  while True:
+    paramno += 1
+    next_param = firstparam if paramno == 1 else "%s%s" % (
+        parampref, paramno)
+    if getparam(t, next_param):
+      rmparam(t, next_param)
+    else:
+      break
+
 def display(page):
   pywikibot.output(u'# [[{0}]]'.format(page.title()))
 
