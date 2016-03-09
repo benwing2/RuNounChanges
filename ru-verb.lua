@@ -156,6 +156,7 @@ end
 
 -- Forward functions
 
+local prepare_past_stress_indicator
 local present_e_a
 local present_e_b
 local present_e_c
@@ -339,7 +340,7 @@ function export.do_generate_forms(conj_type, args)
 	-- verbs may have reflexive ending stressed in the masculine singular: занялся́, начался́, etc.
 	local notes = get_arg_chain(args, "notes", "notes")
 
-	local forms, title, categories, internal_notes, default_reflex_stress
+	local forms, title, categories, past_stress, internal_notes, default_reflex_stress
 
 	track("conj-" .. conj_type) -- FIXME, convert to regular category
 
@@ -348,7 +349,8 @@ function export.do_generate_forms(conj_type, args)
 	end
 
 	if conjugations[conj_type] then
-		forms, internal_notes, default_reflex_stress = conjugations[conj_type](args, verb_type)
+		forms, past_stress, internal_notes, default_reflex_stress =
+			conjugations[conj_type](args, verb_type)
 		if not internal_notes then
 			internal_notes = {}
 		end
@@ -371,10 +373,11 @@ function export.do_generate_forms(conj_type, args)
 		local class_num = rmatch(conj_type, "^([0-9]+)")
 		assert(class_num and class_num ~= "")
 		categories = {"Russian class " .. class_num .. " verbs"}
-		title = "class " .. conj_type ..
-			(perf and " perfective" or " imperfective") ..
-			(impers and " impersonal" or intr and " intransitive" or " transitive")
+		title = "class " .. conj_type
 	end
+	title = title .. prepare_past_stress_indicator(past_stress) ..
+		(perf and " perfective" or " imperfective") ..
+		(impers and " impersonal" or intr and " intransitive" or " transitive")
 
 	local has_ppp = false
 	for _, form in ipairs(main_to_all_verb_forms["past_pasv_part"]) do
@@ -676,11 +679,23 @@ local function append_past(forms, stem, tr, m, f, n, pl)
 	append_form(forms, "past_pl", stem, tr, pl)
 end
 
-local function set_past_by_stress(forms, past_stresses, prefix, stem, args,
+prepare_past_stress_indicator = function(past_stress)
+	if not past_stress or past_stress == "a" then
+		return ""
+	end
+	past_stress = rsub(past_stress, "%(1%)", "①")
+	past_stress = rsub(past_stress, "(.),%1①", "%1[①]")
+	past_stress = rsub(past_stress, "(.)①,%1", "%1[①]")
+	past_stress = rsub(past_stress, "''", "&#39;&#39;")
+	past_stress = rsub(past_stress, "-nd", "")
+	past_stress = rsub(past_stress, "-bd", "")
+	return "/" .. past_stress
+end
+
+local function set_past_by_stress(forms, past_stresses, prefix, base, args,
 		verb_type, no_pastml)
 	local internal_notes = {}, default_reflex_stress
 	for _, past_stress in ipairs(rsplit(past_stresses, ",")) do
-		local ustem = com.make_unstressed(stem)
 		local pastml = no_pastml and "" or "л"
 		if prefix == "пере" then
 			stressed_prefix = "пе́ре"
@@ -689,63 +704,44 @@ local function set_past_by_stress(forms, past_stresses, prefix, stem, args,
 		elseif prefix == "рас" then
 			-- Does this ever occur?
 			stressed_prefix = "ро́с"
-		elseif prefix == "ра" and rfind(stem, "^[сз]") then
+		elseif prefix == "ра" and rfind(base, "^[сз]") then
 			-- Type 9/11/14/16 with automatically split prefix; may never happen.
 			stressed_prefix = "ро́"
 		else
 			stressed_prefix = com.make_ending_stressed(prefix)
 		end
+		-- Normally the base is stressed and the prefix isn't, but it could
+		-- be the other way around, e.g. in запереть and запереться, where
+		-- the stress on the prefix is used to get prefix-stressed participles.
+		-- To deal with this, we usually combine base and prefix unchanged,
+		-- but in combination with stressed_prefix we always want an unstressed
+		-- base, and when a stressed -ся́ is called for, we want both of them
+		-- unstressed.
+		local ubase = com.make_unstressed(base)
+		local uprefix = com.make_unstressed(prefix)
 		if past_stress == "a" then
 			-- (/под/пере/при/по)забы́ть, раздобы́ть, (/пере/по)забы́ться
-			append_past(forms, prefix .. stem, nil, pastml, "ла", "ло", "ли")
+			append_past(forms, prefix .. base, nil, pastml, "ла", "ло", "ли")
 		elseif past_stress == "a(1)" then
 			-- вы́дать, вы́быть, etc.; also проби́ть with the meaning
 			-- "to strike (of a clock)" (which is a(1),a or similar)
-			append_past(forms, stressed_prefix .. ustem, nil, pastml, "ла", "ло", "ли")
+			append_past(forms, stressed_prefix .. ubase, nil, pastml, "ла", "ло", "ли")
 		elseif past_stress == "b" then
-			append_past(forms, prefix .. stem, nil, pastml, "ла́", "ло́", "ли́")
+			append_past(forms, prefix .. base, nil, pastml, "ла́", "ло́", "ли́")
 		elseif past_stress == "b*" then
 			-- See comment in type c''. We want to see whether we actually
 			-- added an argument, and if so, where.
 			local argset = append_to_arg_chain(forms, "past_m", "past_m",
-				combine(prefix, nil, ustem .. pastml))
+				combine(uprefix, nil, ubase .. pastml))
 			if argset and not args[argset] and not rfind(verb_type, "impers") then
 				default_reflex_stress = "ся́"
 			end
-			append_past(forms, prefix .. stem, nil, pastml, "ла́", "ло́", "ли́")
+			append_past(forms, prefix .. base, nil, pastml, "ла́", "ло́", "ли́")
 		elseif past_stress == "c" then
 			-- изда́ть, возда́ть, сдать, пересозда́ть, воссозда́ть, надда́ть, наподда́ть, etc.
 			-- быть, избы́ть, сбыть
 			-- клясть, закля́сть
-			append_past(forms, prefix .. stem, nil, pastml, "ла́", "ло", "ли")
-		elseif past_stress == "c'" then
-			-- дать
-			--same with "взять"
-			append_past(forms, prefix .. stem, nil, pastml, "ла́", {"ло", "ло́"}, "ли")
-		elseif past_stress == "c''" or past_stress == "c''-nd" or past_stress == "c''-bd" then
-			 if not rfind(verb_type, "refl") then
-				error("Only reflexive verbs can take past stress variant " .. past_stress)
-			 end
-			-- c'' (-ся́ dated): all verbs in -да́ться; избы́ться, сбы́ться; all verbs in -кля́сться
-			-- c''-nd (-ся́ not dated): various verbs in -ня́ться per Zaliznyak
-			-- c''-bd (-ся́ becoming dated): various verbs in -ня́ться per ruwikt
-			local note_symbol = past_stress == "c''-nd" and "" or "1"
-			append_past(forms, prefix .. stem, nil,
-				pastml, "ла́", {"ло́", "ло"}, {"ли́", "ли"})
-			-- We want to see whether we actually added an argument, and if
-			-- so, where.
-			local argset = append_to_arg_chain(forms, "past_m", "past_m",
-				combine(prefix, nil, ustem .. pastml .. note_symbol))
-			-- Only display the internal note and set the default reflex
-			-- stress if the form with the note will be displayed (i.e. not
-			-- impersonal, and no override of this form). FIXME: We should
-			-- have a more general mechanism to check for this.
-			if not args[argset] and not rfind(verb_type, "impers") then
-				ut.insert_if_not(internal_notes,
-					past_stress == "c''" and "1 Dated." or
-					past_stress == "c''-bd" and "1 Becoming dated." or nil)
-				default_reflex_stress = "ся́"
-			end
+			append_past(forms, prefix .. base, nil, pastml, "ла́", "ло", "ли")
 		elseif past_stress == "c(1)" then
 			-- прибы́ть, убы́ть
 			-- прокля́сть
@@ -758,11 +754,51 @@ local function set_past_by_stress(forms, past_stresses, prefix, stem, args,
 			-- раздать [ро́здал/раздала́]), we need to separate the endings that
 			-- take the stressed prefix and those that take the unstressed
 			-- prefix with stressed ending.
-			append_past(forms, stressed_prefix .. ustem, nil,
+			append_past(forms, stressed_prefix .. ubase, nil,
 				pastml, {}, "ло", "ли")
-			append_past(forms, prefix .. stem, nil, {}, "ла́", {}, {})
+			append_past(forms, prefix .. base, nil, {}, "ла́", {}, {})
+		elseif past_stress == "c'" then
+			-- дать
+			--same with "взять"
+			append_past(forms, prefix .. base, nil, pastml, "ла́", {"ло", "ло́"}, "ли")
+		elseif past_stress == "c''" or past_stress == "c''-nd" or past_stress == "c''-bd" then
+			 if not rfind(verb_type, "refl") then
+				error("Only reflexive verbs can take past stress variant " .. past_stress)
+			 end
+			-- c'' (-ся́ dated): all verbs in -да́ться; избы́ться, сбы́ться; all verbs in -кля́сться
+			-- c''-nd (-ся́ not dated): various verbs in -ня́ться per Zaliznyak
+			-- c''-bd (-ся́ becoming dated): various verbs in -ня́ться per ruwikt
+			local note_symbol = past_stress == "c''-nd" and "" or "1"
+			append_past(forms, prefix .. base, nil,
+				pastml, "ла́", {"ло́", "ло"}, {"ли́", "ли"})
+			-- We want to see whether we actually added an argument, and if
+			-- so, where.
+			local argset = append_to_arg_chain(forms, "past_m", "past_m",
+				combine(uprefix, nil, ubase .. pastml .. note_symbol))
+			-- Only display the internal note and set the default reflex
+			-- stress if the form with the note will be displayed (i.e. not
+			-- impersonal, and no override of this form). FIXME: We should
+			-- have a more general mechanism to check for this.
+			if not args[argset] and not rfind(verb_type, "impers") then
+				ut.insert_if_not(internal_notes,
+					past_stress == "c''" and "1 Dated." or
+					past_stress == "c''-bd" and "1 Becoming dated." or nil)
+				default_reflex_stress = "ся́"
+			end
+		elseif past_stress == "c''(1)" then
+			-- запере́ться
+			-- See comment in type c''. We want to see whether we actually
+			-- added an argument, and if so, where.
+			local argset = append_to_arg_chain(forms, "past_m", "past_m",
+				combine(uprefix, nil, ubase .. pastml))
+			if argset and not args[argset] and not rfind(verb_type, "impers") then
+				default_reflex_stress = "ся́"
+			end
+			append_past(forms, prefix .. base, nil, {}, "ла́", "ло́", "ли́")
+			append_past(forms, stressed_prefix .. ubase, nil,
+				pastml, {}, "ло", "ли")
 		else
-			error("Unrecognized past-stress value " .. past_stress .. ", should be a, a(1), b, b*, c, c', c'', c''-nd, c''-bd, c(1) or comma-separated list")
+			error("Unrecognized past-stress value " .. past_stress .. ", should be a, a(1), b, b*, c, c(1), c', c'', c''-nd, c''-bd, c''(1) or comma-separated list")
 		end
 	end
 
@@ -1076,7 +1112,7 @@ conjugations["5a"] = function(args, verb_type)
 	local internal_notes, default_reflex_stress = set_past_by_stress(forms,
 		past_stress, "", past_stem, args, verb_type)
 
-	return forms, internal_notes, default_reflex_stress
+	return forms, past_stress, internal_notes, default_reflex_stress
 end
 
 conjugations["5b"] = function(args, verb_type)
@@ -1104,7 +1140,7 @@ conjugations["5b"] = function(args, verb_type)
 	local internal_notes, default_reflex_stress = set_past_by_stress(forms,
 		past_stress, "", past_stem, args, verb_type)
 
-	return forms, internal_notes, default_reflex_stress
+	return forms, past_stress, internal_notes, default_reflex_stress
 end
 
 conjugations["5c"] = function(args, verb_type)
@@ -1133,7 +1169,7 @@ conjugations["5c"] = function(args, verb_type)
 	local internal_notes, default_reflex_stress = set_past_by_stress(forms,
 		past_stress, "", past_stem, args, verb_type)
 
-	return forms, internal_notes, default_reflex_stress
+	return forms, past_stress, internal_notes, default_reflex_stress
 end
 
 conjugations["6a"] = function(args, verb_type)
@@ -1170,7 +1206,7 @@ conjugations["6a"] = function(args, verb_type)
 	local internal_notes, default_reflex_stress = set_past_by_stress(forms,
 		past_stress, "", inf_past_stem, args, verb_type)
 
-	return forms, internal_notes, default_reflex_stress
+	return forms, past_stress, internal_notes, default_reflex_stress
 end
 
 conjugations["6b"] = function(args, verb_type)
@@ -1222,7 +1258,7 @@ conjugations["6b"] = function(args, verb_type)
 	local internal_notes, default_reflex_stress = set_past_by_stress(forms,
 		past_stress, "", stem .. (vowel_end_stem and "я́" or "а́"), args, verb_type)
 
-	return forms, internal_notes, default_reflex_stress
+	return forms, past_stress, internal_notes, default_reflex_stress
 end
 
 conjugations["6c"] = function(args, verb_type)
@@ -1271,7 +1307,7 @@ conjugations["6c"] = function(args, verb_type)
 	local internal_notes, default_reflex_stress = set_past_by_stress(forms,
 		past_stress, "", stem_noa .. "а́", args, verb_type)
 
-	return forms, internal_notes, default_reflex_stress
+	return forms, past_stress, internal_notes, default_reflex_stress
 end
 
 conjugations["7a"] = function(args, verb_type)
@@ -1308,7 +1344,7 @@ conjugations["7a"] = function(args, verb_type)
 		-- 0 ending if the past stem ends in a consonant
 		not rfind(past_stem, "[аэыоуяеиёю́]$") and "no-pastml")
 
-	return forms, internal_notes, default_reflex_stress
+	return forms, past_stress, internal_notes, default_reflex_stress
 end
 
 conjugations["7b"] = function(args, verb_type)
@@ -1340,7 +1376,7 @@ conjugations["7b"] = function(args, verb_type)
 		-- 0 ending if the past stem ends in a consonant
 		not rfind(past_stem, "[аэыоуяеиёю́]$") and "no-pastml")
 
-	return forms, internal_notes, default_reflex_stress
+	return forms, past_stress, internal_notes, default_reflex_stress
 end
 
 conjugations["8a"] = function(args)
@@ -1443,12 +1479,11 @@ conjugations["9a"] = function(args)
 	forms["impr_sg"] = pres_stem .. "и"
 	forms["impr_pl"] = pres_stem .. "ите"
 
-	local internal_notes, default_reflex_stress
 	-- past_m doesn't end in л
-	internal_notes, default_reflex_stress = set_past_by_stress(forms,
+	local internal_notes, default_reflex_stress = set_past_by_stress(forms,
 		past_stress, prefix, base, args, verb_type, "no-pastml")
 
-	return forms, internal_notes, default_reflex_stress
+	return forms, past_stress, internal_notes, default_reflex_stress
 end
 
 conjugations["9b"] = function(args, verb_type)
@@ -1486,12 +1521,11 @@ conjugations["9b"] = function(args, verb_type)
 	forms["impr_sg"] = pres_stem .. "и́"
 	forms["impr_pl"] = pres_stem .. "и́те"
 
-	local internal_notes, default_reflex_stress
 	-- past_m doesn't end in л
-	internal_notes, default_reflex_stress = set_past_by_stress(forms,
+	local internal_notes, default_reflex_stress = set_past_by_stress(forms,
 		past_stress, prefix, base, args, verb_type, "no-pastml")
 
-	return forms, internal_notes, default_reflex_stress
+	return forms, past_stress, internal_notes, default_reflex_stress
 end
 
 conjugations["10a"] = function(args)
@@ -1578,7 +1612,7 @@ conjugations["11a"] = function(args, verb_type)
 	local internal_notes, default_reflex_stress = set_past_by_stress(forms,
 		past_stress, prefix, base, args, verb_type)
 
-	return forms, internal_notes, default_reflex_stress
+	return forms, past_stress, internal_notes, default_reflex_stress
 end
 
 conjugations["11b"] = function(args, verb_type)
@@ -1614,7 +1648,7 @@ conjugations["11b"] = function(args, verb_type)
 	local internal_notes, default_reflex_stress = set_past_by_stress(forms,
 		past_stress, prefix, base, args, verb_type)
 
-	return forms, internal_notes, default_reflex_stress
+	return forms, past_stress, internal_notes, default_reflex_stress
 end
 
 conjugations["12a"] = function(args)
@@ -1745,7 +1779,7 @@ conjugations["14a"] = function(args, verb_type)
 	local internal_notes, default_reflex_stress = set_past_by_stress(forms,
 		past_stress, prefix, base, args, verb_type)
 
-	return forms, internal_notes, default_reflex_stress
+	return forms, past_stress, internal_notes, default_reflex_stress
 end
 
 conjugations["14b"] = function(args, verb_type)
@@ -1773,11 +1807,10 @@ conjugations["14b"] = function(args, verb_type)
 	forms["impr_sg"] = pres_stem .. "и́"
 	forms["impr_pl"] = pres_stem .. "и́те"
 
-	local internal_notes, default_reflex_stress
-	internal_notes, default_reflex_stress = set_past_by_stress(forms,
+	local internal_notes, default_reflex_stress = set_past_by_stress(forms,
 		past_stress, prefix, base, args, verb_type)
 
-	return forms, internal_notes, default_reflex_stress
+	return forms, past_stress, internal_notes, default_reflex_stress
 end
 
 conjugations["14c"] = function(args, verb_type)
@@ -1807,11 +1840,10 @@ conjugations["14c"] = function(args, verb_type)
 
 	--two forms for past_m: при́нялся, принялс́я (handled through general override mechanism)
 	--изъя́ла but приняла́ (handled through general override mechanism)
-	local internal_notes, default_reflex_stress
-	internal_notes, default_reflex_stress = set_past_by_stress(forms,
+	local internal_notes, default_reflex_stress = set_past_by_stress(forms,
 		past_stress, prefix, base, args, verb_type)
 
-	return forms, internal_notes, default_reflex_stress
+	return forms, past_stress, internal_notes, default_reflex_stress
 end
 
 conjugations["15a"] = function(args)
@@ -1863,7 +1895,7 @@ conjugations["16a"] = function(args, verb_type)
 	local internal_notes, default_reflex_stress = set_past_by_stress(forms,
 		past_stress, prefix, base, args, verb_type)
 
-	return forms, internal_notes, default_reflex_stress
+	return forms, past_stress, internal_notes, default_reflex_stress
 end
 
 conjugations["16b"] = function(args, verb_type)
@@ -1888,12 +1920,11 @@ conjugations["16b"] = function(args, verb_type)
 	forms["impr_sg"] = stem_noa .. "ви́"
 	forms["impr_pl"] = stem_noa .. "ви́те"
 
+	-- past_n2 of прижило́сь, прижи́лось handled through general override mechanism
 	local internal_notes, default_reflex_stress = set_past_by_stress(forms,
 		past_stress, prefix, base, args, verb_type)
 
-	return forms, internal_notes, default_reflex_stress
-
-	-- past_n2 of прижило́сь, прижи́лось handled through general override mechanism
+	return forms, past_stress, internal_notes, default_reflex_stress
 end
 
 conjugations["irreg-бежать"] = function(args)
@@ -2084,7 +2115,7 @@ conjugations["irreg-дать"] = function(args, verb_type)
 		forms["pres_futr_3pl"] = prefix .. "дадут"
 	end
 
-	return forms, internal_notes, default_reflex_stress
+	return forms, past_stress, internal_notes, default_reflex_stress
 end
 
 conjugations["irreg-есть"] = function(args)
@@ -2573,7 +2604,7 @@ conjugations["irreg-клясть"] = function(args, verb_type)
 	local internal_notes, default_reflex_stress = set_past_by_stress(forms,
 		past_stress, prefix, "кля́", args, verb_type)
 
-	return forms, internal_notes, default_reflex_stress
+	return forms, past_stress, internal_notes, default_reflex_stress
 end
 
 conjugations["irreg-слыхать-видать"] = function(args)
@@ -2668,7 +2699,7 @@ conjugations["irreg-быть"] = function(args, verb_type)
 	forms["past_adv_part_short"] = prefix .. "бы́в"
 
 	-- if the prefix is stressed
-	if rfind(prefix, "[́]") then
+	if com.is_stressed(prefix) then
 		forms["infinitive"] = prefix .. "быть"
 		forms["pres_actv_part"] = prefix .. "сущий"
 		forms["past_actv_part"] = prefix .. "бывший"
@@ -2697,7 +2728,7 @@ conjugations["irreg-быть"] = function(args, verb_type)
 	end
 
 	-- if the prefix is stressed, e.g. "вы́быть"
-	if rfind(prefix, "[́]") then
+	if com.is_stressed(prefix) then
 		forms["pres_futr_1sg"] = prefix .. "буду"
 		forms["pres_futr_2sg"] = prefix .. "будешь"
 		forms["pres_futr_3sg"] = prefix .. "будет"
@@ -2709,7 +2740,7 @@ conjugations["irreg-быть"] = function(args, verb_type)
 	local internal_notes, default_reflex_stress = set_past_by_stress(forms,
 		past_stress, prefix, "бы́", args, verb_type)
 
-	return forms, internal_notes, default_reflex_stress
+	return forms, past_stress, internal_notes, default_reflex_stress
 end
 
 conjugations["irreg-ссать-сцать"] = function(args)
@@ -2721,14 +2752,14 @@ conjugations["irreg-ссать-сцать"] = function(args)
 
 	local prefix = args[4] or ""
 	-- if the prefix is stressed, remove stress from the stem
-	if rfind(prefix, "[́]") then
+	if com.is_stressed(prefix) then
 		stem = com.remove_accents(stem)
 	end
 
 	forms["infinitive"] = prefix .. stem .. "ть"
 
 	-- if the prefix is stressed
-	if rfind(prefix, "[́]") then
+	if com.is_stressed(prefix) then
 		forms["pres_actv_part"] = prefix .. pres_stem .. "ущий"
 
 		forms["impr_sg"] = prefix .. pres_stem .. "ы"
@@ -2829,7 +2860,7 @@ conjugations["irreg-шибить"] = function(args)
 	set_past(forms, prefix .. "ши́б", nil, "", "ла", "ло", "ли")
 
 	-- if the prefix is stressed (probably only вы́-)
-	if rfind(prefix, "[́]") then
+	if com.is_stressed(prefix) then
 		forms["infinitive"] = prefix .. "шибить"
 
 		forms["past_actv_part"] = prefix .. "шибивший"
@@ -3152,7 +3183,7 @@ make_reflexive_alt = function(forms)
 				trentry, trnotes = m_table_tools.separate_notes(tr)
 			end
 			-- if a form doesn't contain a stress, add a stressed particle "ся́"
-			if not rfind(ruentry, "[́]") then
+			if com.is_unstressed(ruentry) then
 				-- only applies to past masculine forms
 				if rfind(key, "^past_m") then
 					forms[key] = {ruentry .. "ся́" .. runotes, trentry and trentry .. "sja" .. AC .. trnotes}
