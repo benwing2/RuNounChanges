@@ -278,6 +278,8 @@ local pres_verb_forms = {"pres_1sg", "pres_2sg", "pres_3sg",
 -- List of the main verb forms for the future.
 local futr_verb_forms = {"futr_1sg", "futr_2sg", "futr_3sg",
 	"futr_1pl", "futr_2pl", "futr_3pl"}
+-- List of the main verb forms for the imperative.
+local impr_verb_forms = {"impr_sg", "impr_pl"}
 
 -- Compile main_verb_forms, alt_verb_forms, main_to_all_verb_forms.
 for _, proplist in ipairs(all_verb_forms) do
@@ -369,8 +371,9 @@ function export.do_generate_forms(conj_type, args)
 		local class_num = rmatch(conj_type, "^([0-9]+)")
 		assert(class_num and class_num ~= "")
 		categories = {"Russian class " .. class_num .. " verbs"}
-		title = "class " .. conj_type .. (perf and " perfective" or " imperfective") .. (
-			impers and " impersonal" or "")
+		title = "class " .. conj_type ..
+			(perf and " perfective" or " imperfective") ..
+			(impers and " impersonal" or intr and " intransitive" or " transitive")
 	end
 
 	local has_ppp = false
@@ -572,7 +575,7 @@ end
 -- Combine a stem with optional translit with an ending, returning a tuple
 -- {RUSSIAN, TR}.
 local function combine(stem, tr, ending)
-	if not ending then
+	if not ending or ending == "-" then
 		return {""}
 	end
 	if stem ~= "" and com.is_stressed(ending) then
@@ -639,19 +642,19 @@ end
 
 local function set_participles_2stem(forms,
 	pres_stem, pres_tr, past_stem, past_tr,
-	pres_actv, past_actv, pres_pasv, pres_adv, past_adv, past_adv_short)
+	pres_actv, pres_pasv, pres_adv, past_actv, past_adv, past_adv_short)
 	set_form(forms, "pres_actv_part", pres_stem, pres_tr, pres_actv)
-	set_form(forms, "past_actv_part", past_stem, past_tr, past_actv)
 	set_form(forms, "pres_pasv_part", pres_stem, pres_tr, pres_pasv)
 	set_form(forms, "pres_adv_part", pres_stem, pres_tr, pres_adv)
+	set_form(forms, "past_actv_part", past_stem, past_tr, past_actv)
 	set_form(forms, "past_adv_part", past_stem, past_tr, past_adv)
 	set_form(forms, "past_adv_part_short", past_stem, past_tr, past_adv_short)
 end
 
-local function set_participles(forms, stem, tr, pres_actv, past_actv,
-	pres_pasv, pres_adv, past_adv, past_adv_short)
+local function set_participles(forms, stem, tr,
+	pres_actv, pres_pasv, pres_adv, past_actv, past_adv, past_adv_short)
 	set_participles_2stem(forms, stem, tr, stem, tr,
-	pres_actv, past_actv, pres_pasv, pres_adv, past_adv, past_adv_short)
+		pres_actv, pres_pasv, pres_adv, past_actv, past_adv, past_adv_short)
 end
 
 local function set_imper(forms, stem, tr, sg, pl)
@@ -709,8 +712,7 @@ local function set_past_by_stress(forms, past_stresses, prefix, stem, args,
 			if argset and not args[argset] and not rfind(verb_type, "impers") then
 				default_reflex_stress = "ся́"
 			end
-			append_past(forms, prefix, nil, stem .. pastml,
-				ustem .. "ла́", ustem .. "ло́", ustem .. "ли́")
+			append_past(forms, prefix .. stem, nil, pastml, "ла́", "ло́", "ли́")
 		elseif past_stress == "c" then
 			-- изда́ть, возда́ть, сдать, пересозда́ть, воссозда́ть, надда́ть, наподда́ть, etc.
 			-- быть, избы́ть, сбыть
@@ -728,9 +730,8 @@ local function set_past_by_stress(forms, past_stresses, prefix, stem, args,
 			-- c''-nd (-ся́ not dated): various verbs in -ня́ться per Zaliznyak
 			-- c''-bd (-ся́ becoming dated): various verbs in -ня́ться per ruwikt
 			local note_symbol = past_stress == "c''-nd" and "" or "1"
-			append_past(forms, prefix, nil,
-				stem .. pastml, ustem .. "ла́",
-				{ustem .. "ло́", stem .. "ло"}, {ustem .. "ли́", stem .. "ли"})
+			append_past(forms, prefix .. stem, nil,
+				pastml, "ла́", {"ло́", "ло"}, {"ли́", "ли"})
 			-- We want to see whether we actually added an argument, and if
 			-- so, where.
 			local argset = append_to_arg_chain(forms, "past_m", "past_m",
@@ -740,23 +741,28 @@ local function set_past_by_stress(forms, past_stresses, prefix, stem, args,
 			-- impersonal, and no override of this form). FIXME: We should
 			-- have a more general mechanism to check for this.
 			if not args[argset] and not rfind(verb_type, "impers") then
-				ut.insert_if_not(internal_notes, "c''" and "1 Dated." or
-					"c''-bd" and "1 Becoming dated." or nil)
+				ut.insert_if_not(internal_notes,
+					past_stress == "c''" and "1 Dated." or
+					past_stress == "c''-bd" and "1 Becoming dated." or nil)
 				default_reflex_stress = "ся́"
 			end
 		elseif past_stress == "c(1)" then
-			--прибы́ть, убы́ть
-			--прокля́сть
+			-- прибы́ть, убы́ть
+			-- прокля́сть
 			-- also, c(1),c:
-			-- зада́ть, обда́ть, отда́ть, подда́ть, переда́ть (пе́редал), преда́ть, прода́т, разда́ть (ро́здал), созда́ть, etc.
-			-- отбы́ть, побы́ть, пробы́ть
-			-- Here we need to include the prefix in the "ending" because of
-			-- раздать (ро́здал/разда́л).
+			--   зада́ть, обда́ть, отда́ть, подда́ть, переда́ть (пе́редал), преда́ть, прода́ть, разда́ть (ро́здал), созда́ть, etc.
+			--   отбы́ть, побы́ть, пробы́ть
 			-- also, c,c(1):
-			-- добы́ть
-			append_past(forms, stressed_prefix .. ustem, nil, pastml, "ла́", "ло", "ли")
+			--   добы́ть
+			-- Because the prefix may vary depending on stress (esp. for
+			-- раздать [ро́здал/раздала́]), we need to separate the endings that
+			-- take the stressed prefix and those that take the unstressed
+			-- prefix with stressed ending.
+			append_past(forms, stressed_prefix .. ustem, nil,
+				pastml, {}, "ло", "ли")
+			append_past(forms, prefix .. stem, nil, {}, "ла́", {}, {})
 		else
-			error("Unrecognized past-stress value " .. past_stress .. ", should be a or a, a(1), b, b*, c, c', c'', c''-nd, c''-bd, c(1) or a comma-separated list")
+			error("Unrecognized past-stress value " .. past_stress .. ", should be a, a(1), b, b*, c, c', c'', c''-nd, c''-bd, c(1) or comma-separated list")
 		end
 	end
 
@@ -787,7 +793,7 @@ conjugations["1a"] = function(args)
 	local stem, tr = nom.split_russian_tr(get_stressed_arg(args, 2))
 
 	forms["infinitive"] = combine(stem, tr, "ть")
-	set_participles(forms, stem, tr, "ющий", "вший", "емый", "я", "вши", "в")
+	set_participles(forms, stem, tr, "ющий", "емый", "я", "вший", "вши", "в")
 	present_je_a(forms, stem, tr)
 	set_imper(forms, stem, tr, "й", "йте")
 	set_past(forms, stem, tr, "л", "ла", "ло", "ли")
@@ -815,7 +821,7 @@ conjugations["2a"] = function(args)
 
 	forms["infinitive"] = combine(inf_stem, inf_tr, "ть")
 	set_participles_2stem(forms, pres_stem, pres_tr, inf_stem, inf_tr,
-		"ющий", "вший", "емый", "я", "вши", "в")
+		"ющий", "емый", "я", "вший", "вши", "в")
 	present_je_a(forms, pres_stem, pres_tr)
 	set_imper(forms, pres_stem, pres_tr, "й", "йте")
 	set_past(forms, inf_stem, inf_tr, "л", "ла", "ло", "ли")
@@ -843,7 +849,7 @@ conjugations["2b"] = function(args)
 
 	forms["infinitive"] = combine(inf_stem, inf_tr, "ть")
 	set_participles_2stem(forms, pres_stem, pres_tr, inf_stem, inf_tr,
-		"ю́щий", "вший", nil, "я́", "вши", "в")
+		"ю́щий", "-", "я́", "вший", "вши", "в")
 	present_je_b(forms, pres_stem, pres_tr)
 	set_imper(forms, pres_stem, pres_tr, "й", "йте")
 	set_past(forms, inf_stem, inf_tr, "л", "ла", "ло", "ли")
@@ -874,14 +880,9 @@ conjugations["3a"] = function(args)
 		forms["infinitive"] = full_inf
 	end
 
-	forms["pres_actv_part"] = stem .. "нущий"
-	forms["past_actv_part"] = stem .. "нувший"
-	-- default is blank
-	forms["pres_pasv_part"] = ""
-	forms["pres_adv_part"] = ""
-	forms["past_adv_part"] = stem .. "нувши"
-	forms["past_adv_part_short"] = stem .. "нув"
-
+	set_participles(forms, stem, nil,
+		-- default is blank for pres passive and adverbial
+		"нущий", "-", "-", "нувший", "нувши", "нув")
 	present_e_a(forms, stem .. "н")
 
 	-- "ни" or "нь"
@@ -922,13 +923,9 @@ conjugations["3b"] = function(args)
 
 	forms["infinitive"] = stem .. "у́ть"
 
-	forms["pres_actv_part"] = stem .. "у́щий"
-	forms["past_actv_part"] = stem .. "у́вший"
-	forms["pres_pasv_part"] = ""
-	forms["pres_adv_part"] = ""
-	forms["past_adv_part"] = stem .. "у́вши"
-	forms["past_adv_part_short"] = stem .. "у́в"
-
+	set_participles(forms, stem, nil,
+		-- default is blank for pres passive and adverbial
+		"у́щий", "-", "-", "у́вший", "у́вши", "у́в")
 	present_e_b(forms, stem)
 
 	forms["impr_sg"] = stem .. "и́"
@@ -948,13 +945,9 @@ conjugations["3c"] = function(args)
 
 	forms["infinitive"] = stem_noa .. "у́ть"
 
-	forms["pres_actv_part"] = stem_noa .. "у́щий"
-	forms["past_actv_part"] = stem_noa .. "у́вший"
-	forms["pres_pasv_part"] = ""
-	forms["pres_adv_part"] = ""
-	forms["past_adv_part"] = stem_noa .. "у́вши"
-	forms["past_adv_part_short"] = stem_noa .. "у́в"
-
+	set_participles(forms, stem_noa, nil,
+		-- default is blank for pres passive and adverbial
+		"у́щий", "-", "-", "у́вший", "у́вши", "у́в")
 	present_e_c(forms, stem)
 
 	forms["impr_sg"] = stem_noa .. "и́"
@@ -969,11 +962,10 @@ conjugations["4a"] = function(args)
 	local forms = {}
 
 	local stem, tr = nom.split_russian_tr(get_stressed_arg(args, 2))
-
 	-- for "a" stress type "й" - after vowels, "ь" - after single consonants, "и" - after consonant clusters
 	local impr_end_param = args[3]
 	-- optional parameter for verbs like похитить (похи́щу) (4a), защитить (защищу́) (4b), поглотить (поглощу́) (4c) with a different iotation (т -> щ, not ч)
-	local shch = args[4]
+	local shch = args[4] -- should be щ if anything
 
 	--set defaults if nothing is passed, "й" for stems ending in a vowel, "ь" for single consonant ending, "и" for double consonant ending
 	-- "й" after any vowel, with or without an acute accent (беспоко́ить), no parameter passed
@@ -1001,18 +993,9 @@ conjugations["4a"] = function(args)
 	-- Verbs ending in a hushing consonant do not get j-vowels in the endings.
 	local hushing = rfind(stem, "[шщжч]$")
 	set_participles(forms, stem, tr, hushing and "ащий" or "ящий",
-		"ивший", "имый", hushing and "а" or "я", "ивши", "ив")
-
-	-- if shch is nil, pass nothing, otherwise pass "щ"
-	if not shch then
-		present_i_a(forms, stem, tr)    -- param #4 must be a string
-	else -- tell the conjugator that this is an exception
-		present_i_a(forms, stem, tr, shch)
-	end
-
-	-- use the passed parameter or default
+		"имый", hushing and "а" or "я", "ивший", "ивши", "ив")
+	present_i_a(forms, stem, tr, shch)
 	set_imper(forms, stem, tr, impr_end, impr_end .. "те")
-
 	set_past(forms, stem, tr, "ил", "ила", "ило", "или")
 
 	return forms
@@ -1023,24 +1006,16 @@ conjugations["4b"] = function(args)
 
 	local stem, tr = nom.split_russian_tr(getarg(args, 2))
 	-- optional parameter for verbs like похитить (похи́щу) (4a), защитить (защищу́) (4b), поглотить (поглощу́) (4c) with a different iotation (т -> щ, not ч)
-	local shch = args[3]
+	local shch = args[3] -- should be щ if anything
 
 	forms["infinitive"] = combine(stem, tr, "и́ть")
 
 	-- Verbs ending in a hushing consonant do not get j-vowels in the endings.
 	local hushing = rfind(stem, "[шщжч]$")
 	set_participles(forms, stem, tr, hushing and "а́щий" or "я́щий",
-		"и́вший", "и́мый", hushing and "а́" or "я́", "и́вши", "и́в")
-
-	-- if shch is nil, pass nothing, otherwise pass "щ"
-	if not shch then
-		present_i_b(forms, stem, tr)
-	else -- т-щ, not т-ч
-		present_i_b(forms, stem, tr, shch)
-	end
-
+		"и́мый", hushing and "а́" or "я́", "и́вший", "и́вши", "и́в")
+	present_i_b(forms, stem, tr, shch)
 	set_imper(forms, stem, tr, "и́", "и́те")
-
 	set_past(forms, stem, tr, "и́л", "и́ла", "и́ло", "и́ли")
 
 	return forms
@@ -1051,7 +1026,7 @@ conjugations["4c"] = function(args)
 
 	local stem = get_stressed_arg(args, 2)
 	-- optional parameter for verbs like похитить (похи́щу) (4a), защитить (защищу́) (4b), поглотить (поглощу́) (4c) with a different iotation (т -> щ, not ч)
-	local shch = args[3]
+	local shch = args[3] -- should be щ if anything
 
 	-- remove accent for some forms
 	local stem_noa = com.remove_accents(stem)
@@ -1063,17 +1038,9 @@ conjugations["4c"] = function(args)
 	-- Verbs ending in a hushing consonant do not get j-vowels in the endings.
 	local hushing = rfind(stem, "[шщжч]$")
 	set_participles(forms, stem, tr, hushing and "а́щий" or "я́щий",
-		"и́вший", "и́мый", hushing and "а́" or "я́", "и́вши", "и́в")
-
-	-- if shch is nil, pass nothing, otherwise pass "щ"
-	if not shch then
-		present_i_c(forms, stem, tr)    -- param #4 must be a string
-	else -- tell the conjugator that this is an exception
-		present_i_c(forms, stem, tr, shch)
-	end
-
+		"и́мый", hushing and "а́" or "я́", "и́вший", "и́вши", "и́в")
+	present_i_c(forms, stem, tr, shch)
 	set_imper(forms, stem, tr, "и́", "и́те")
-
 	set_past(forms, stem, tr, "и́л", "и́ла", "и́ло", "и́ли")
 
 	-- pres_actv_part for суши́ть -> су́шащий
@@ -1084,101 +1051,68 @@ conjugations["4c"] = function(args)
 	return forms
 end
 
-conjugations["5a"] = function(args)
+conjugations["5a"] = function(args, verb_type)
 	local forms = {}
 
 	local stem = get_stressed_arg(args, 2)
 	-- обидеть, выстоять have different past tense and infinitive forms
-	local past_stem = args[3]
+	local past_stem = args[3] or stem .. "е"
 	-- imperative ending, выгнать - выгони
-	local impr_end = args[4]
-
-	if not past_stem then
-		past_stem = stem .. "е"
-	end
-
-	if not impr_end then
-		impr_end = "ь"
-	end
+	-- "й" after any vowel (e.g. выстоять), with or without an acute accent, otherwise "ь"
+	local impr_end = args[4] or rfind(stem, "[аэыоуяеиёю́]$") and "й" or "ь"
+	local past_stress = args[5] or "a"
 
 	forms["infinitive"] = past_stem .. "ть"
 
 	-- Verbs ending in a hushing consonant do not get j-vowels in the endings.
-	if rfind(stem, "[шщжч]$") then
-		forms["pres_actv_part"] = stem .. "ащий"
-		forms["pres_adv_part"] = stem .. "а"
-	else
-		forms["pres_actv_part"] = stem .. "ящий"
-		forms["pres_adv_part"] = stem .. "я"
-	end
-
-	forms["past_actv_part"] = past_stem .. "вший"
-	forms["pres_pasv_part"] = stem .. "имый"
-	forms["past_adv_part"] = past_stem .. "вши"
-	forms["past_adv_part_short"] = past_stem .. "в"
-
-	-- "й" after any vowel (e.g. выстоять), with or without an acute accent, otherwise "ь"
-	if rfind(stem, "[аэыоуяеиёю́]$") and impr_end == nil then
-		impr_end = "й"
-	end
-
-	forms["impr_sg"] = stem .. impr_end
-	forms["impr_pl"] = stem .. impr_end .. "те"
-
+	local hushing = rfind(stem, "[шщжч]$")
+	set_participles_2stem(forms, stem, nil, past_stem, nil,
+		hushing and "ащий" or "ящий", "имый", hushing and "а" or "я",
+		"вший", "вши", "в")
 	present_i_a(forms, stem)
-	set_past(forms, past_stem .. "л", nil, "", "а", "о", "и")
+	set_imper(forms, stem, nil, impr_end, impr_end .. "те")
 
-	return forms
+	-- set prefix to "" as past stem may vary in length and no (1) variants
+	local internal_notes, default_reflex_stress = set_past_by_stress(forms,
+		past_stress, "", past_stem, args, verb_type)
+
+	return forms, internal_notes, default_reflex_stress
 end
 
-conjugations["5b"] = function(args)
+conjugations["5b"] = function(args, verb_type)
 	local forms = {}
 
 	local stem = getarg(args, 2)
 	local past_stem = get_stressed_arg(args, 3)
-	if args[4] then
-		error("Use pres_adv_part= instead of 4th arg")
-	end
+	local past_stress = args[4] or "a"
+
+	-- "й" after any vowel (e.g. выстоять), with or without an acute accent, otherwise "и́"
+	local impr_end = rfind(stem, "[аэыоуяеиёю́]$") and "́й" -- the last vowel is stressed (an acute accent before "й")
+		or "и́"
 
 	forms["infinitive"] = past_stem .. "ть"
 
-	if rfind(stem, "[шщжч]$") then
-		forms["pres_actv_part"] = stem .. "а́щий"
-		forms["pres_adv_part"] = stem .. "а́"
-	else
-		forms["pres_actv_part"] = stem .. "я́щий"
-		forms["pres_adv_part"] = stem .. "я́"
-	end
-	forms["pres_pasv_part"] = stem .. "и́мый"
-
-	forms["past_actv_part"] = past_stem .. "вший"
-	forms["past_adv_part"] = past_stem .. "вши"
-	forms["past_adv_part_short"] = past_stem .. "в"
-
+	-- Verbs ending in a hushing consonant do not get j-vowels in the endings.
+	local hushing = rfind(stem, "[шщжч]$")
+	set_participles_2stem(forms, stem, nil, past_stem, nil,
+		hushing and "а́щий" or "я́щий", "и́мый", hushing and "а́" or "я́",
+		"вший", "вши", "в")
 	present_i_b(forms, stem)
+	set_imper(forms, stem, nil, impr_end, impr_end .. "те")
 
-	-- "й" after any vowel (e.g. выстоять), with or without an acute accent, otherwise "и́"
-	local impr_end = "и́"
-	if rfind(stem, "[аэыоуяеиёю́]$") then
-		impr_end = "́й" -- the last vowel is stressed (an acute accent before "й")
-	end
+	-- set prefix to "" as past stem may vary in length and no (1) variants
+	local internal_notes, default_reflex_stress = set_past_by_stress(forms,
+		past_stress, "", past_stem, args, verb_type)
 
-	forms["impr_sg"] = stem .. impr_end
-	forms["impr_pl"] = stem .. impr_end .. "те"
-
-	set_past(forms, past_stem .. "л", nil, "", "а", "о", "и")
-
-	return forms
+	return forms, internal_notes, default_reflex_stress
 end
 
-conjugations["5c"] = function(args)
+conjugations["5c"] = function(args, verb_type)
 	local forms = {}
 
 	local stem = get_stressed_arg(args, 2)
 	local past_stem = get_stressed_arg(args, 3)
-	if args[4] then
-		error("Use past_f= instead of 4th arg")
-	end
+	local past_stress = args[4] or "a"
 
 	-- remove accent for some forms
 	local stem_noa = com.remove_accents(stem)
@@ -1187,135 +1121,74 @@ conjugations["5c"] = function(args)
 
 	forms["infinitive"] = past_stem .. "ть"
 
-	forms["past_actv_part"] = past_stem .. "вший"
-	forms["pres_pasv_part"] = stem_noa .. "и́мый"
-	forms["past_adv_part"] = past_stem .. "вши"
-	forms["past_adv_part_short"] = past_stem .. "в"
-
 	-- Verbs ending in a hushing consonant do not get j-vowels in the endings.
-	if rfind(stem, "[шщжч]$") then
-		forms["pres_actv_part"] = stem_noa .. "а́щий"
-		forms["pres_adv_part"] = stem_noa .. "а́"
-	else
-		forms["pres_actv_part"] = stem_noa .. "я́щий"
-		forms["pres_adv_part"] = stem_noa .. "я́"
-	end
-
-	forms["impr_sg"] = stem_noa .. "и́"
-	forms["impr_pl"] = stem_noa .. "и́те"
-
+	local hushing = rfind(stem, "[шщжч]$")
+	set_participles_2stem(forms, stem_noa, nil, past_stem, nil,
+		hushing and "а́щий" or "я́щий", "и́мый", hushing and "а́" or "я́",
+		"вший", "вши", "в")
 	present_i_c(forms, stem)
+	set_imper(forms, stem_noa, nil, "и́", "и́те")
 
-	set_past(forms, past_stem .. "л", nil, "", "а", "о", "и")
+	-- set prefix to "" as past stem may vary in length and no (1) variants
+	local internal_notes, default_reflex_stress = set_past_by_stress(forms,
+		past_stress, "", past_stem, args, verb_type)
 
-	return forms
+	return forms, internal_notes, default_reflex_stress
 end
 
-conjugations["6a"] = function(args)
+conjugations["6a"] = function(args, verb_type)
 	local forms = {}
 
 	local stem = get_stressed_arg(args, 2)
-	local impr_end = args[3]
+	local vowel_end_stem = rfind(stem, "[аэыоуяеиёю́]$")
+	local impr_end = args[3] or vowel_end_stem and "й" or "и"
 	-- irregular imperatives (сыпать  - сыпь is moved to a separate function but the parameter may still be needed)
 	local impr_sg = args[4]
 	-- optional infinitive/past stem for verbs like колеба́ть
-	local inf_past_stem = args[5]
+	local inf_past_stem = args[5] or vowel_end_stem and stem .. "я" or stem .. "а"
+	local past_stress = args[6] or "a"
 	-- no iotation, e.g. вырвать - вы́рву
-	local no_iotation = nil
-	if args["no_iotation"] == "1" then
-		no_iotation = "1"
-	end
+	local no_iotation = args["no_iotation"] == "1" and "1" or nil
 	-- вызвать - вы́зову (в́ызов)
 	local pres_stem = args["pres_stem"] and get_stressed_arg(args, "pres_stem") or stem
-
 	-- replace consonants for 1st person singular present/future
-	local iotated_stem = com.iotation_new(pres_stem)
+	local iotated_stem = no_iotation and pres_stem or com.iotation_new(pres_stem)
 
-	if rfind(iotated_stem, "[шщжч]$") then
-		forms["pres_actv_part"] = iotated_stem .. "ущий"
-	else
-		forms["pres_actv_part"] = iotated_stem .. "ющий"
-	end
-
-	if rfind(iotated_stem, "[шщжч]$") then
-		forms["pres_adv_part"] = iotated_stem .. "а"
-	else
-		forms["pres_adv_part"] = iotated_stem .. "я"
-	end
-
-	if no_iotation then
-		forms["pres_adv_part"] = pres_stem .. "я"
-	end
-
-	if not inf_past_stem then
-		if rfind(stem, "[аэыоуяеиёю́]$") then
-			inf_past_stem = stem .. "я"
-		else
-			inf_past_stem = stem .. "а"
-		end
-	end
 	forms["infinitive"] = inf_past_stem .. "ть"
-	forms["past_actv_part"] = inf_past_stem .. "вший"
-	forms["past_adv_part"] = inf_past_stem .. "вши"
-	forms["past_adv_part_short"] = inf_past_stem .. "в"
-	set_past(forms, inf_past_stem .. "л", nil, "", "а", "о", "и")
 
-	if no_iotation then
-		forms["pres_pasv_part"] = stem .. "емый"
-	else
-		forms["pres_pasv_part"] = iotated_stem .. "емый"
-	end
-
+	-- Verbs ending in a hushing consonant do not get j-vowels in the endings.
+	local hushing = rfind(iotated_stem, "[шщжч]$")
+	set_participles_2stem(forms, iotated_stem, nil,	inf_past_stem, nil,
+		hushing and "ущий" or "ющий", "емый", hushing and "а" or "я",
+		"вший", "вши", "в")
 	present_je_a(forms, pres_stem, nil, no_iotation)
 
-	if not impr_end then
-		if rfind(stem, "[аэыоуяеиёю́]$") then
-			impr_end = "й"
-		else
-			impr_end = "и"
-		end
-	end
+	-- irreg impr_sg: сыпать  - сыпь, сыпьте
+	set_imper(forms, impr_sg or iotated_stem .. impr_end, nil, "", "те")
 
-	if no_iotation then
-		forms["impr_sg"] = pres_stem .. impr_end
-		forms["impr_pl"] = pres_stem .. impr_end .. "те"
-	else
-		forms["impr_sg"] = iotated_stem .. impr_end
-		forms["impr_pl"] = iotated_stem .. impr_end .. "те"
-	end
+	-- set prefix to "" as past stem may vary in length and no (1) variants
+	local internal_notes, default_reflex_stress = set_past_by_stress(forms,
+		past_stress, "", inf_past_stem, args, verb_type)
 
-	-- irreg: сыпать  - сыпь, сыпьте
-	if impr_sg then
-		forms["impr_sg"] = impr_sg
-		forms["impr_pl"] = impr_sg .. "те"
-	end
-
-	return forms
+	return forms, internal_notes, default_reflex_stress
 end
 
-conjugations["6b"] = function(args)
+conjugations["6b"] = function(args, verb_type)
 	local forms = {}
 
 	local stem = getarg(args, 2)
+	local vowel_end_stem = rfind(stem, "[аэыоуяеиёю́]$")
 	-- звать - зов, драть - дер
 	local pres_stem = args[3] or stem
-	if args[4] then
-		error("Use past_f= instead of 4th arg")
-	end
+	local past_stress = args[4] or "a"
 
 	forms["pres_pasv_part"] = ""
 
 	present_e_b(forms, pres_stem)
 
-	local impr_end
-	if rfind(stem, "[аэыоуяеиёю́]$") then
-		impr_end = "́й" -- accent on the preceding vowel
-	else
-		impr_end = "и́"
-	end
-
-	forms["impr_sg"] = pres_stem .. impr_end
-	forms["impr_pl"] = pres_stem .. impr_end .. "те"
+	local impr_end = vowel_end_stem and "́й" -- accent on the preceding vowel
+		or "и́"
+	set_imper(forms, pres_stem, nil, impr_end, impr_end .. "те")
 
 	if rfind(pres_stem, "[шщжч]$") then
 		forms["pres_adv_part"] = pres_stem .. "а́"
@@ -1329,61 +1202,46 @@ conjugations["6b"] = function(args)
 		forms["pres_actv_part"] = pres_stem .. "у́щий"
 	end
 
-	if rfind(stem, "[аэыоуяеиёю́]$") then
+	if vowel_end_stem then
 		forms["infinitive"] = stem .. "я́ть"
 		forms["past_actv_part"] = stem .. "я́вший"
 		forms["past_adv_part"] = stem .. "я́вши"
-		forms["past_adv_part_short"] = stem .. "́яв"
-		set_past(forms, stem .. "я́л", nil, "", "а", "о", "и")
+		forms["past_adv_part_short"] = stem .. "я́в"
 	else
 		forms["infinitive"] = stem .. "а́ть"
 		forms["past_actv_part"] = stem .. "а́вший"
 		forms["past_adv_part"] = stem .. "а́вши"
 		forms["past_adv_part_short"] = stem .. "а́в"
-		set_past(forms, stem .. "а́л", nil, "", "а", "о", "и")
 	end
 
 	-- past_f for ждала́, подождала́ now handled through general mechanism
 	--for разобрало́сь, past_n2 разобрало́ now handled through general mechanism
 	--for разобрали́сь, past_pl2 разобрали́ now handled through general mechanism
 
-	return forms
+	-- set prefix to "" as past stem may vary in length and no (1) variants
+	local internal_notes, default_reflex_stress = set_past_by_stress(forms,
+		past_stress, "", stem .. (vowel_end_stem and "я́" or "а́"), args, verb_type)
+
+	return forms, internal_notes, default_reflex_stress
 end
 
-conjugations["6c"] = function(args)
+conjugations["6c"] = function(args, verb_type)
 	local forms = {}
 
 	local stem = get_stressed_arg(args, 2)
 	-- optional parameter for verbs like клеветать (клевещу́)
-	local shch = args[3]
+	local shch = args[3] -- if present, should be щ
 	-- remove accent for some forms
 	local stem_noa = com.make_unstressed(stem)
 	-- iotate the stem
-	local iotated_stem = ""
-	if not shch then
-		iotated_stem = com.iotation_new(stem)
-	else
-		iotated_stem = com.iotation_new(stem, nil, shch)
-	end
+	local iotated_stem = com.iotation_new(stem, nil, shch)
 	-- iotate the 2nd stem
-	local iotated_stem_noa = ""
-	if not shch then
-		iotated_stem_noa = com.iotation_new(stem_noa)
-	else
-		iotated_stem_noa = com.iotation_new(stem_noa, nil, shch)
-	end
+	local iotated_stem_noa = com.iotation_new(stem_noa, nil, shch)
+	local past_stress = args[4] or "a"
 
-	local no_iotation = nil
-	if args["no_iotation"] == "1" then
-		no_iotation = "1"
-	end
+	local no_iotation = args["no_iotation"] == "1" and "1" or nil
 
 	forms["infinitive"] = stem_noa .. "а́ть"
-
-	forms["past_actv_part"] = stem_noa .. "а́вший"
-	forms["pres_pasv_part"] = ""
-	forms["past_adv_part"] = stem_noa .. "а́вши"
-	forms["past_adv_part_short"] = stem_noa .. "а́в"
 
 	-- Verbs ending in a hushing consonant do not get j-vowels in the endings.
 	if rfind(iotated_stem, "[шщжч]$") or no_iotation then
@@ -1392,6 +1250,8 @@ conjugations["6c"] = function(args)
 		forms["pres_actv_part"] = iotated_stem ..  "ющий"
 	end
 
+	forms["pres_pasv_part"] = ""
+
 	-- Verbs ending in a hushing consonant do not get j-vowels in the endings.
 	if rfind(iotated_stem_noa, "[шщжч]$") then
 		forms["pres_adv_part"] = iotated_stem_noa ..  "а́"
@@ -1399,32 +1259,29 @@ conjugations["6c"] = function(args)
 		forms["pres_adv_part"] = iotated_stem_noa ..  "я́"
 	end
 
+	forms["past_actv_part"] = stem_noa .. "а́вший"
+	forms["past_adv_part"] = stem_noa .. "а́вши"
+	forms["past_adv_part_short"] = stem_noa .. "а́в"
+
 	--present_je_c(forms, stem, nil, no_iotation)
-	-- if shch is nil, pass nothing, otherwise pass "щ"
-	if not shch then
-		present_je_c(forms, stem, nil)    -- param #4 must be a string
-	else -- tell the conjugator that this is an exception
-		present_je_c(forms, stem, nil, shch)
-	end
+	present_je_c(forms, stem, nil, shch)
+	set_imper(forms, iotated_stem_noa, nil, "и́", "и́те")
 
-	forms["impr_sg"] = iotated_stem_noa .. "и́"
-	forms["impr_pl"] = iotated_stem_noa .. "и́те"
+	-- set prefix to "" as past stem may vary in length and no (1) variants
+	local internal_notes, default_reflex_stress = set_past_by_stress(forms,
+		past_stress, "", stem_noa .. "а́", args, verb_type)
 
-	set_past(forms, stem_noa .. "а́л", nil, "", "а", "о", "и")
-
-	return forms
+	return forms, internal_notes, default_reflex_stress
 end
 
-conjugations["7a"] = function(args)
+conjugations["7a"] = function(args, verb_type)
 	local forms = {}
 
 	local full_inf = get_stressed_arg(args, 2)
 	local pres_stem = get_stressed_arg(args, 3)
 	local past_stem = get_stressed_arg(args, 4)
 	local impr_sg = get_stressed_arg(args, 5)
-	if args[6] then
-		error("Use past_adv_part= instead of 6th arg")
-	end
+	local past_stress = args[6] or "a"
 
 	forms["infinitive"] = full_inf
 
@@ -1444,19 +1301,23 @@ conjugations["7a"] = function(args)
 	forms["impr_pl"] = impr_sg .. "те"
 
 	-- вычесть - past_m=вы́чел handled through general mechanism
-	set_past(forms, past_stem, nil,
-		-- 0 ending if the past stem ends in a consonant
-		rfind(past_stem, "[аэыоуяеиёю́]$") and "л" or "", "ла", "ло", "ли")
 
-	return forms
+	-- set prefix to "" as past stem may vary in length and no (1) variants
+	local internal_notes, default_reflex_stress = set_past_by_stress(forms,
+		past_stress, "", past_stem, args, verb_type,
+		-- 0 ending if the past stem ends in a consonant
+		not rfind(past_stem, "[аэыоуяеиёю́]$") and "no-pastml")
+
+	return forms, internal_notes, default_reflex_stress
 end
 
-conjugations["7b"] = function(args)
+conjugations["7b"] = function(args, verb_type)
 	local forms = {}
 
 	local full_inf = get_stressed_arg(args, 2)
 	local pres_stem = getarg(args, 3)
 	local past_stem = get_stressed_arg(args, 4)
+	local past_stress = args[5] or "a"
 
 	forms["infinitive"] = full_inf
 
@@ -1473,11 +1334,13 @@ conjugations["7b"] = function(args)
 	forms["impr_sg"] = pres_stem .. "и́"
 	forms["impr_pl"] = pres_stem .. "и́те"
 
-	set_past(forms, past_stem, nil,
+	-- set prefix to "" as past stem may vary in length and no (1) variants
+	local internal_notes, default_reflex_stress = set_past_by_stress(forms,
+		past_stress, "", past_stem, args, verb_type,
 		-- 0 ending if the past stem ends in a consonant
-		rfind(past_stem, "[аэыоуяеиёю́]$") and "л" or "", "ла", "ло", "ли")
+		not rfind(past_stem, "[аэыоуяеиёю́]$") and "no-pastml")
 
-	return forms
+	return forms, internal_notes, default_reflex_stress
 end
 
 conjugations["8a"] = function(args)
@@ -3072,9 +2935,9 @@ conjugations["irreg-внимать"] = function(args)
 
 	set_participles(forms, prefix, nil,
 		{"вне́млющий", "внима́ющий"}, -- pres_actv
-		"внима́вший", -- past_actv
 		{"вне́млемый", "внима́емый"}, -- pres_pasv
 		{"вне́мля", "внемля́", "внима́я"}, -- pres_adv
+		"внима́вший", -- past_actv
 		"внима́вши", -- past_adv
 		"внима́в" -- past_adv_short
 	)
@@ -3463,6 +3326,16 @@ handle_forms_and_overrides = function(args, forms, perf)
 	if args["futrtailall"] then
 		for _, prop in ipairs(futr_verb_forms) do
 			append_note_all(forms, main_to_all_verb_forms[prop], args["futrtailall"])
+		end
+	end
+	if args["imprtail"] then
+		for _, prop in ipairs(impr_verb_forms) do
+			append_note_last(forms, main_to_all_verb_forms[prop], args["imprtail"], ">1")
+		end
+	end
+	if args["imprtailall"] then
+		for _, prop in ipairs(impr_verb_forms) do
+			append_note_all(forms, main_to_all_verb_forms[prop], args["imprtailall"])
 		end
 	end
 
