@@ -1214,7 +1214,7 @@ conjugations["6a"] = function(args, verb_type)
 		vowel_end_stem and stem .. "я" or stem .. "а"
 	local past_stress = args[6] or "a"
 	-- no iotation, e.g. вырвать - вы́рву
-	local no_iotation = check_opt_arg(args, "no_iotation", "1")
+	local no_iotation = check_opt_arg(args, "no_iotation", {"1"})
 	-- вызвать - вы́зову (в́ызов)
 	local pres_stem = get_opt_stressed_arg(args, "pres_stem") or stem
 	-- replace consonants for 1st person singular present/future
@@ -1223,7 +1223,7 @@ conjugations["6a"] = function(args, verb_type)
 	forms["infinitive"] = inf_past_stem .. "ть"
 
 	-- Verbs ending in a hushing consonant do not get j-vowels in the endings.
-	local hushing = rfind(iotated_stem, "[шщжч]$")
+	local hushing = rfind(iotated_stem, "[шщжч]$") or no_iotation
 	set_participles_2stem(forms, iotated_stem, nil,	inf_past_stem, nil,
 		hushing and "ущий" or "ющий", "емый", hushing and "а" or "я",
 		"вший", "вши", "в")
