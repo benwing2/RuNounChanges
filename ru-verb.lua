@@ -1385,28 +1385,22 @@ conjugations["8a"] = function(args)
 	local stem = get_stressed_arg(args, 2)
 	local full_inf = get_stressed_arg(args, 3)
 	local past_m = get_stressed_arg(args, "past_m")
+	if past_m ~= stem then
+		track("8a-stem-pastm-mismatch")
+	end
 	forms["infinitive"] = full_inf
 
-	forms["pres_actv_part"] = stem .. "ущий"
-	forms["past_actv_part"] = past_m .. "ший"
-	-- default is blank
-	forms["pres_pasv_part"] = ""
-	forms["pres_adv_part"] = ""
-
-	forms["past_adv_part"] = past_m .. "ши"
-	forms["past_adv_part_short"] = ""
+	-- default for pres_pasv_part is blank
+	set_participles_2stem(forms, stem, nil, past_m, nil,
+		"ущий", "-", "-", "ший", "ши", "-")
 
 	local iotated_stem = com.iotation_new(stem)
 
-	forms["pres_futr_1sg"] = stem .. "у"
-	forms["pres_futr_2sg"] = iotated_stem .. "ешь"
-	forms["pres_futr_3sg"] = iotated_stem .. "ет"
-	forms["pres_futr_1pl"] = iotated_stem .. "ем"
-	forms["pres_futr_2pl"] = iotated_stem .. "ете"
-	forms["pres_futr_3pl"] = stem .. "ут"
+	set_pres_futr(forms, iotated_stem, nil,	"у", "ешь", "ет", "ем", "ете", "ут")
+	forms["pres_futr_1sg"] = combine(stem, nil, "у")
+	forms["pres_futr_3pl"] = combine(stem, nil, "ут")
 
-	forms["impr_sg"] = stem .. "и"
-	forms["impr_pl"] = stem .. "ите"
+	set_imper(forms, stem, nil, "и", "ите")
 
 	forms["past_m"] = past_m
 	forms["past_f"] = stem .. "ла"
@@ -1422,29 +1416,23 @@ conjugations["8b"] = function(args)
 	local stem = getarg(args, 2)
 	local full_inf = get_stressed_arg(args, 3)
 	local past_m = get_stressed_arg(args, "past_m")
+	if com.make_unstressed(past_m) ~= stem then
+		track("8b-stem-pastm-mismatch")
+	end
 	forms["infinitive"] = full_inf
 
-	forms["pres_actv_part"] = stem .. "у́щий"
-	forms["past_actv_part"] = past_m .. "ший"
-	-- default is blank; влечь -> влеко́мый handled through general override mechanism
-	forms["pres_pasv_part"] = ""
-	forms["pres_adv_part"] = ""
-
-	forms["past_adv_part"] = past_m .. "ши"
-	forms["past_adv_part_short"] = ""
+	-- default for pres_pasv_part is blank; влечь -> влеко́мый handled throug
+	-- general override mechanism
+	set_participles_2stem(forms, stem, nil, past_m, nil,
+		"у́щий", "-", "-", "ший", "ши", "-")
 
 	local iotated_stem = com.iotation_new(stem)
 
-	forms["pres_futr_1sg"] = stem .. "у́"
-	forms["pres_futr_3pl"] = stem .. "у́т"
+	set_pres_futr(forms, iotated_stem, nil,	"у́", "ёшь", "ёт", "ём", "ёте", "у́т")
+	forms["pres_futr_1sg"] = combine(stem, nil, "у́")
+	forms["pres_futr_3pl"] = combine(stem, nil, "у́т")
 
-	forms["pres_futr_2sg"] = iotated_stem .. "ёшь"
-	forms["pres_futr_3sg"] = iotated_stem .. "ёт"
-	forms["pres_futr_1pl"] = iotated_stem .. "ём"
-	forms["pres_futr_2pl"] = iotated_stem .. "ёте"
-
-	forms["impr_sg"] = stem .. "и́"
-	forms["impr_pl"] = stem .. "и́те"
+	set_imper(forms, stem, nil, "и́", "и́те")
 
 	forms["past_m"] = past_m
 	forms["past_f"] = stem .. "ла́"
