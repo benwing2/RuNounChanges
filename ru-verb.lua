@@ -414,7 +414,8 @@ function export.do_generate_forms(conj_type, args)
 	end
 	title = title .. prepare_past_stress_indicator(past_stress) ..
 		(perf and " perfective" or " imperfective") ..
-		(impers and " impersonal" or intr and " intransitive" or " transitive")
+		(impers and " impersonal" or refl and " reflexive" or
+		 intr and " intransitive" or " transitive")
 
 	local has_ppp = false
 	for _, form in ipairs(main_to_all_verb_forms["past_pasv_part"]) do
