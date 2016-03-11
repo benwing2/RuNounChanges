@@ -74,6 +74,10 @@ local function ine(arg)
 	return arg
 end
 
+local function is_vowel_stem(stem)
+	return rfind(stem, "[" .. com.vowel .. AC .. "]$")
+end
+
 -- Clone parent's args while also assigning nil to empty strings.
 local function clone_args(frame)
 	local args = {}
@@ -887,7 +891,7 @@ conjugations["2a"] = function(args, data)
 	pres_stem = rsub(pres_stem, "о(́?)ва(́?)$", "у%1%2")
 	pres_tr = pres_tr and rsub(pres_tr, "o(́?)va(́?)$", "u%1%2")
 	-- -ева- change to -ю- after most consonants and vowels, to -у- after hissing sounds and ц
-	if rfind(pres_stem, "[бвгдзклмнпрстфхьаэыоуяеиёю́]е(́?)ва(́?)$") then
+	if rfind(pres_stem, "[бвгдзклмнпрстфхь" .. com.vowel .. AC .. "]е(́?)ва(́?)$") then
 		pres_stem = rsub(pres_stem, "е(́?)ва(́?)$", "ю%1%2")
 		pres_tr = pres_tr and rsub(pres_tr, "e(́?)va(́?)$", "ju%1%2")
 	elseif rfind(pres_stem, "[жцчшщ]е(́?)ва(́?)$") then
@@ -915,7 +919,7 @@ conjugations["2b"] = function(args, data)
 	pres_stem = rsub(pres_stem, "о(́?)ва(́?)$", "у%1%2")
 	pres_tr = pres_tr and rsub(pres_tr, "o(́?)va(́?)$", "u%1%2")
 	-- -ева- change to -ю- after most consonants and vowels, to -у- after hissing sounds and ц
-	if rfind(pres_stem, "[бвгдзклмнпрстфхьаэыоуяеиёю́]е(́?)ва(́?)$") then
+	if rfind(pres_stem, "[бвгдзклмнпрстфхь" .. com.vowel .. AC .. "]е(́?)ва(́?)$") then
 		pres_stem = rsub(pres_stem, "е(́?)ва(́?)$", "ю%1%2")
 		pres_tr = pres_tr and rsub(pres_tr, "e(́?)va(́?)$", "ju%1%2")
 	elseif rfind(pres_stem, "[жцчшщ]е(́?)ва(́?)$") then
@@ -940,7 +944,7 @@ conjugations["3oa"] = function(args, data)
 	-- (5), [(6)] or similar
 	local variants = args[3] or ""
 	local orig_variants = variants
-	local vowel_stem = rfind(stem, "[аэыоуяеиёю́]$")
+	local vowel_stem = is_vowel_stem(stem)
 	local impr_end = check_opt_arg(args, 4, {"нь", "ни"}) or vowel_stem and "нь" or "ни"
 
 	-- Allow brackets around both numbers, e.g. [(5)(6)]
@@ -1096,13 +1100,13 @@ conjugations["4a"] = function(args, data)
 	local impr_end = ""
 	if impr_end_param then
 		impr_end = impr_end_param
-	elseif rfind(stem, "[аэыоуяеиёю́]$") then
+	elseif is_vowel_stem(stem) then
 		impr_end = "й"
 	-- "и" after two consonants in a row (мо́рщить, зафре́ндить), no parameter passed
 	elseif rfind(stem, "[бвгджзклмнпрстфхцчшщь][бвгджзклмнпрстфхцчшщ]$") then
 		impr_end = "и"
 	-- "ь" after a single consonant (бре́дить), no parameter passed
-	elseif rfind(stem, "[аэыоуяеиёю́][бвгджзклмнпрстфхцчшщ]$") then
+	elseif rfind(stem, "[" .. com.vowel .. AC .. "][бвгджзклмнпрстфхцчшщ]$") then
 		impr_end = "ь"
 	-- default
 	else --default
@@ -1180,7 +1184,7 @@ conjugations["5a"] = function(args, data)
 	local past_stem = get_opt_stressed_arg(args, 3) or stem .. "е"
 	-- imperative ending, выгнать - выгони
 	-- "й" after any vowel (e.g. выстоять), with or without an acute accent, otherwise "ь"
-	local impr_end = check_opt_arg(args, 4, {"и", "й", "ь"}) or rfind(stem, "[аэыоуяеиёю́]$") and "й" or "ь"
+	local impr_end = check_opt_arg(args, 4, {"и", "й", "ь"}) or is_vowel_stem(stem) and "й" or "ь"
 	local past_stress = args[5] or "a"
 
 	forms["infinitive"] = past_stem .. "ть"
@@ -1207,7 +1211,7 @@ conjugations["5b"] = function(args, data)
 	local past_stress = args[4] or "a"
 
 	-- "й" after any vowel (e.g. выстоять), with or without an acute accent, otherwise "и́"
-	local impr_end = rfind(stem, "[аэыоуяеиёю́]$") and "́й" -- the last vowel is stressed (an acute accent before "й")
+	local impr_end = is_vowel_stem(stem) and "́й" -- the last vowel is stressed (an acute accent before "й")
 		or "и́"
 
 	forms["infinitive"] = past_stem .. "ть"
@@ -1258,7 +1262,7 @@ conjugations["6a"] = function(args, data)
 	local forms = {}
 
 	local stem = get_stressed_arg(args, 2)
-	local vowel_end_stem = rfind(stem, "[аэыоуяеиёю́]$")
+	local vowel_end_stem = is_vowel_stem(stem)
 	local impr_end = check_opt_arg(args, 3, {"и", "й", "ь"}) or
 		vowel_end_stem and "й" or "и"
 	-- irregular imperatives (сыпать  - сыпь is moved to a separate function but the parameter may still be needed)
@@ -1296,7 +1300,7 @@ conjugations["6b"] = function(args, data)
 	local forms = {}
 
 	local stem = get_unstressed_arg(args, 2)
-	local vowel_end_stem = rfind(stem, "[аэыоуяеиёю́]$")
+	local vowel_end_stem = is_vowel_stem(stem)
 	-- звать - зов, драть - дер
 	local pres_stem = get_opt_unstressed_arg(args, 3) or stem
 	local past_stress = args[4] or "a"
@@ -1315,7 +1319,7 @@ conjugations["6b"] = function(args, data)
 		forms["pres_adv_part"] = pres_stem .. "я́"
 	end
 
-	if rfind(pres_stem, "[аэыоуяеиёю́]$") then
+	if is_vowel_stem(pres_stem) then
 		forms["pres_actv_part"] = pres_stem .. "ю́щий"
 	else
 		forms["pres_actv_part"] = pres_stem .. "у́щий"
@@ -1415,7 +1419,7 @@ conjugations["7a"] = function(args, data)
 	-- set prefix to "" as past stem may vary in length and no (1) variants
 	set_past_by_stress(forms, past_stress, "", past_stem, args, data,
 		-- 0 ending if the past stem ends in a consonant
-		not rfind(past_stem, "[аэыоуяеиёю́]$") and "no-pastml")
+		not is_vowel_stem(past_stem) and "no-pastml")
 
 	return forms
 end
@@ -1438,7 +1442,7 @@ conjugations["7b"] = function(args, data)
 	-- set prefix to "" as past stem may vary in length and no (1) variants
 	set_past_by_stress(forms, past_stress, "", past_stem, args, data,
 		-- 0 ending if the past stem ends in a consonant
-		not rfind(past_stem, "[аэыоуяеиёю́]$") and "no-pastml")
+		not is_vowel_stem(past_stem) and "no-pastml")
 
 	return forms
 end
@@ -3119,7 +3123,7 @@ present_e_a = function(forms, stem, tr)
 end
 
 present_e_b = function(forms, stem, tr)
-	local vowel_stem = rfind(stem, "[аэыоуяеиёю́]$")
+	local vowel_stem = is_vowel_stem(stem)
 	set_pres_futr(forms, stem, tr,
 		vowel_stem and "ю́" or "у́", "ёшь", "ёт", "ём", "ёте",
 		vowel_stem and "ю́т" or "у́т")
@@ -3224,7 +3228,7 @@ make_reflexive = function(forms, reflex_stress)
 			if tr then
 				trentry, trnotes = m_table_tools.separate_notes(tr)
 			end
-			if rfind(ruentry, "[аэыоуяеиёю́]$") then
+			if is_vowel_stem(ruentry) then
 				forms[key] = {ruentry .. "сь" .. runotes, trentry and trentry .. "sʹ" .. trnotes}
 			-- if a past_m form doesn't contain a stress, add a stressed
 			-- particle "ся́" if called for
