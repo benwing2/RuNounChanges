@@ -78,6 +78,27 @@ local function is_vowel_stem(stem)
 	return rfind(stem, "[" .. com.vowel .. AC .. "]$")
 end
 
+-- Return the next number to use as an internal note symbol, starting at 1.
+-- We look at existing internal notes to see if the symbol is already used.
+local function next_note_symbol(data)
+	local nextsym = 1
+	while true do
+		local sym_already_seen = false
+		for _, note in ipairs(data.internal_notes) do
+			if rfind(note, "^" .. nextsym .. " ") then
+				sym_already_seen = true
+				break
+			end
+		end
+		if sym_already_seen then
+			nextsym = nextsym + 1
+		else
+			break
+		end
+	end
+	return nextsym
+end
+
 -- Clone parent's args while also assigning nil to empty strings.
 local function clone_args(frame)
 	local args = {}
@@ -389,6 +410,7 @@ function export.do_generate_forms(conj_type, args)
 
 	local data = {}
 	data.verb_type = verb_type
+	data.internal_notes = {}
 	if rfind(conj_type, "^irreg") then
 		data.title = "irregular"
 	else
@@ -396,11 +418,7 @@ function export.do_generate_forms(conj_type, args)
 	end
 
 	if conjugations[conj_type] then
-		forms, past_stress =
-			conjugations[conj_type](args, data)
-		if not data.internal_notes then
-			data.internal_notes = {}
-		end
+		forms = conjugations[conj_type](args, data)
 	else
 		error("Unknown conjugation type '" .. conj_type .. "'")
 	end
@@ -738,7 +756,6 @@ end
 
 local function set_past_by_stress(forms, past_stresses, prefix, base, args,
 		data, no_pastml)
-	data.internal_notes = {}
 	for _, past_stress in ipairs(rsplit(past_stresses, ",")) do
 		local pastml = no_pastml and "" or "л"
 		if prefix == "пере" then
@@ -812,7 +829,8 @@ local function set_past_by_stress(forms, past_stresses, prefix, base, args,
 			-- c'' (-ся́ dated): all verbs in -да́ться; избы́ться, сбы́ться; all verbs in -кля́сться
 			-- c''-nd (-ся́ not dated): various verbs in -ня́ться per Zaliznyak
 			-- c''-bd (-ся́ becoming dated): various verbs in -ня́ться per ruwikt
-			local note_symbol = past_stress == "c''-nd" and "" or "1"
+			local note_symbol = past_stress == "c''-nd" and "" or
+				next_note_symbol(data)
 			append_past(forms, prefix .. base, nil,
 				pastml, "ла́", {"ло́", "ло"}, {"ли́", "ли"})
 			-- We want to see whether we actually added an argument, and if
@@ -825,8 +843,8 @@ local function set_past_by_stress(forms, past_stresses, prefix, base, args,
 			-- have a more general mechanism to check for this.
 			if not args[argset] and not rfind(data.verb_type, "impers") then
 				ut.insert_if_not(data.internal_notes,
-					past_stress == "c''" and "1 Dated." or
-					past_stress == "c''-bd" and "1 Becoming dated." or nil)
+					past_stress == "c''" and note_symbol .. " Dated." or
+					past_stress == "c''-bd" and note_symbol .. " Becoming dated." or nil)
 				data.default_reflex_stress = "ся́"
 			end
 		elseif past_stress == "c''(1)" then
@@ -1429,20 +1447,45 @@ conjugations["7b"] = function(args, data)
 
 	local full_inf = get_stressed_arg(args, 2)
 	local pres_stem = get_unstressed_arg(args, 3)
-	local past_stem = get_stressed_arg(args, 4)
+	local past_stem = get_opt_stressed_arg(args, 4) or ""
 	local past_stress = args[5] or "a"
+	local var9
+	past_stem, var9 = rsubb(past_stem, "%(9%)")
 
 	forms["infinitive"] = full_inf
 
-	set_participles_2stem(forms, pres_stem, nil, past_stem, nil,
-		"у́щий", "-", "я́", "ший", "вши", "в")
 	present_e_b(forms, pres_stem)
 	set_imper(forms, pres_stem, nil, "и́", "и́те")
-
-	-- set prefix to "" as past stem may vary in length and no (1) variants
-	set_past_by_stress(forms, past_stress, "", past_stem, args, data,
-		-- 0 ending if the past stem ends in a consonant
-		not is_vowel_stem(past_stem) and "no-pastml")
+	if past_stem == "" then
+		local past_part_stem = pres_stem
+		local past_tense_stem = pres_stem
+		local vowel_pp = is_vowel_stem(past_part_stem)
+		past_tense_stem = rsub(past_tense_stem, "е(́?[^" .. com.vowel .. "]*)$",
+			"ё%1")
+		past_tense_stem = rsub(past_tense_stem, "[дт]$", "")
+		local pap = vowel_pp and "вши" or "ши"
+		local var9_note_symbol = next_note_symbol(data)
+		set_participles_2stem(forms, pres_stem, nil, past_part_stem, nil,
+			"у́щий", "-", "я́",
+			vowel_pp and "вший" or "ший",
+			var9 and {"я́", pap .. var9_note_symbol} or pap,
+			vowel_pp and not var9 and "в" or "-")
+		if var9 then
+			ut.insert_if_not(data.internal_notes, var9_note_symbol .. " Dated.")
+		end
+		-- set prefix to "" as past stem may vary in length and no (1) variants
+		set_past_by_stress(forms, past_stress, "", past_tense_stem, args, data,
+			-- 0 ending if the past stem ends in a consonant
+			not is_vowel_stem(past_tense_stem) and "no-pastml")
+	else
+		-- The old way; FIXME, fix up verbs and delete
+		set_participles_2stem(forms, pres_stem, nil, past_stem, nil,
+			"у́щий", "-", "я́", "ший", "вши", "в")
+		-- set prefix to "" as past stem may vary in length and no (1) variants
+		set_past_by_stress(forms, past_stress, "", past_stem, args, data,
+			-- 0 ending if the past stem ends in a consonant
+			not is_vowel_stem(past_stem) and "no-pastml")
+	end
 
 	return forms
 end
