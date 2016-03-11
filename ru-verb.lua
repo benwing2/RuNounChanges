@@ -202,7 +202,6 @@ local present_je_c
 local present_i_a
 local present_i_b
 local present_i_c
-local make_reflexive_alt
 local make_reflexive
 local handle_forms_and_overrides
 local finish_generating_forms
@@ -467,14 +466,10 @@ function export.do_generate_forms(conj_type, args)
 
 	handle_forms_and_overrides(args, forms, perf)
 
-	-- call alternative reflexive form to add a stressed "ся́" particle
-	if reflex_stress and reflex_stress ~= "n" and reflex_stress ~= "no" then
-		make_reflexive_alt(forms)
-	end
-
 	-- Reflexive/intransitive/transitive
 	if refl then
-		make_reflexive(forms)
+		make_reflexive(forms, reflex_stress and reflex_stress ~= "n" and
+			reflex_stress ~= "no")
 		table.insert(categories, "Russian reflexive verbs")
 	elseif intr then
 		table.insert(categories, "Russian intransitive verbs")
@@ -3218,30 +3213,8 @@ present_i_c = function(forms, stem, tr, shch)
 	forms["pres_futr_1sg"] = combine(iotated_stem, iotated_tr, ending_1sg)
 end
 
--- add alternative form stressed on the reflexive particle
-make_reflexive_alt = function(forms)
-	for key, form in pairs(forms) do
-		local ru, tr = extract_russian_tr(form, "notranslit")
-		-- check for empty strings, dashes and nil's
-		if ru ~= "" and ru and ru ~= "-" then
-			local ruentry, runotes = m_table_tools.separate_notes(ru)
-			local trentry, trnotes
-			if tr then
-				trentry, trnotes = m_table_tools.separate_notes(tr)
-			end
-			-- if a form doesn't contain a stress, add a stressed particle "ся́"
-			if com.is_unstressed(ruentry) then
-				-- only applies to past masculine forms
-				if rfind(key, "^past_m") then
-					forms[key] = {ruentry .. "ся́" .. runotes, trentry and trentry .. "sja" .. AC .. trnotes}
-				end
-			end
-		end
-	end
-end
-
 -- Add the reflexive particle to all verb forms
-make_reflexive = function(forms)
+make_reflexive = function(forms, reflex_stress)
 	for key, form in pairs(forms) do
 		local ru, tr = extract_russian_tr(form, "notranslit")
 		-- check for empty strings, dashes and nil's
@@ -3251,14 +3224,14 @@ make_reflexive = function(forms)
 			if tr then
 				trentry, trnotes = m_table_tools.separate_notes(tr)
 			end
-			-- The particle is "сь" after a vowel, "ся" after a consonant
-			-- append "ся" if "ся́" was not attached already
-			if not rfind(ruentry, "ся́$") then
-				if rfind(ruentry, "[аэыоуяеиёю́]$") then
-					forms[key] = {ruentry .. "сь" .. runotes, trentry and trentry .. "sʹ" .. trnotes}
-				else
-					forms[key] = {ruentry .. "ся" .. runotes, trentry and trentry .. "sja" .. trnotes}
-				end
+			if rfind(ruentry, "[аэыоуяеиёю́]$") then
+				forms[key] = {ruentry .. "сь" .. runotes, trentry and trentry .. "sʹ" .. trnotes}
+			-- if a past_m form doesn't contain a stress, add a stressed
+			-- particle "ся́" if called for
+			elseif reflex_stress and com.is_unstressed(ruentry) and rfind(key, "^past_m") then
+				forms[key] = {ruentry .. "ся́" .. runotes, trentry and trentry .. "sja" .. AC .. trnotes}
+			else
+				forms[key] = {ruentry .. "ся" .. runotes, trentry and trentry .. "sja" .. trnotes}
 			end
 		end
 	end
