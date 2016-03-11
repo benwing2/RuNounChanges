@@ -931,6 +931,61 @@ conjugations["2b"] = function(args)
 	return forms
 end
 
+conjugations["3oa"] = function(args)
+	local forms = {}
+
+	local stem = get_stressed_arg(args, 2)
+	-- (5), [(6)] or similar
+	local variants = args[3] or ""
+	local orig_variants = variants
+	local vowel_stem = rfind(stem, "[аэыоуяеиёю́]$")
+	local impr_end = check_opt_arg(args, 4, {"нь", "ни"}) or vowel_stem and "нь" or "ни"
+
+	-- Allow brackets around both numbers, e.g. [(5)(6)]
+	variants = rsub(variants, "%[(%([56]%))(%([56]%))%]", "[%1][%2]")
+	local opt_5, opt_6, req_5, req_6
+	variants, opt_5 = rsubb(variants, "%[%(5%)%]", "")
+	variants, opt_6 = rsubb(variants, "%[%(6%)%]", "")
+	variants, req_5 = rsubb(variants, "%(5%)", "")
+	variants, req_6 = rsubb(variants, "%(6%)", "")
+	if variants ~= "" then
+		error("Unrecognized variant spec " .. orig_variants .. ", should be e.g. (5) or [(6)] or [(5)](6)")
+	end
+	if req_5 and opt_5 then
+		error("Can't specify both (5) and [(5)]")
+	end
+	if req_6 and opt_6 then
+		error("Can't specify both (6) and [(6)]")
+	end
+
+	forms["infinitive"] = stem .. "нуть"
+
+	set_participles(forms, stem, nil,
+		-- default is blank for pres passive and adverbial
+		"нущий", "-", "-",
+		req_6 and "нувший" or
+		opt_6 and (vowel_stem and {"вший", "нувший"} or {"ший", "нувший"}) or
+		vowel_stem and "вший" or "ший",
+		req_6 and "нувши" or
+		opt_6 and (vowel_stem and {"вши", "нувши"} or {"ши", "нувши"}) or
+		vowel_stem and "вши" or "ши",
+		req_6 and "нув" or
+		opt_6 and (vowel_stem and {"в", "нув"} or "нув") or
+		vowel_stem and "в" or "-")
+
+	present_e_a(forms, stem .. "н")
+	-- "ни" or "нь"
+	set_imper(forms, stem .. impr_end, nil, "", "те")
+
+	forms["past_m"] = (req_5 or opt_5) and stem .. "нул" or "-"
+	forms["past_m_short"] = not req_5 and (vowel_stem and stem .. "л" or stem) or nil
+	forms["past_f_short"] = stem .. "ла"
+	forms["past_n_short"] = stem .. "ло"
+	forms["past_pl_short"] = stem .. "ли"
+
+	return forms
+end
+
 conjugations["3a"] = function(args)
 
 	local forms = {}
