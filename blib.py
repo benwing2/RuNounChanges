@@ -99,6 +99,21 @@ def set_param_chain(t, values, firstparam, parampref):
     else:
       break
 
+def sort_params(t):
+  numbered_params = []
+  named_params = []
+  for param in t.params:
+    if re.search(r"^[0-9]+$", unicode(param.name)):
+      numbered_params.append((param.name, param.value))
+    else:
+      named_params.append((param.name, param.value))
+  numbered_params.sort(key=lambda nameval:int(unicode(nameval[0])))
+  del t.params[:]
+  for name, value in numbered_params:
+    t.add(name, value)
+  for name, value in named_params:
+    t.add(name, value)
+
 def display(page):
   pywikibot.output(u'# [[{0}]]'.format(page.title()))
 
