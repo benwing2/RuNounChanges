@@ -440,8 +440,8 @@ function export.do_generate_forms(conj_type, args)
 	end
 	data.title = data.title ..
 		(perf and " perfective" or " imperfective") ..
-		(impers and " impersonal" or refl and " reflexive" or
-		 intr and " intransitive" or " transitive")
+		(refl and " reflexive" or intr and " intransitive" or " transitive") ..
+		(impers and " impersonal" or "")
 
 	local has_ppp = false
 	for _, form in ipairs(main_to_all_verb_forms["past_pasv_part"]) do
@@ -881,6 +881,72 @@ local function split_prefix(ru, tr)
 	return prefix_ru, prefix_tr, last_ru, last_tr
 end
 
+local function set_imper_by_variant(forms, stem, tr, variant, verbclass)
+	local vowel_stem = is_vowel_stem(stem)
+	local stress = rmatch(verbclass, "([abc])$")
+	if not stress then
+		error("Unrecognized verb class '" .. verbclass .. "', should end with a, b or c")
+	end
+	local longend = stress == "a" and "и" or "и́"
+	local shortend = vowel_stem and (com.is_unstressed(stem) and "́й" -- accent on previous vowel
+		or "й") or "ь"
+	local function set_short_imper()
+		set_imper(forms, stem, tr, shortend, shortend .. "те")
+	end		
+	local function set_long_imper()
+		set_imper(forms, stem, tr, longend, longend .. "те")
+	end		
+	if impr_end == "(2)" then
+		-- use short variants with вы́- (for these verbs, long is expected)
+		if not rfind(stem, "^вы́-") then
+			error("Should only specify imperative variant (2) with verbs in вы́-, not " .. stem)
+		end
+		set_short_imper()
+	elseif impr_end == "[(2)]" then
+		-- use both long and short variants
+		set_imper(forms, stem, tr, {longend, shortend}, {longend  .. "те", shortend .. "те"})
+	elseif impr_end == "(3)" then
+		-- long in singular, short in plural
+		set_imper(forms, stem, tr, longend, shortend .. "те")
+	elseif impr_end == "[(3)]" then
+		-- long and short in singular, short in plural
+		set_imper(forms, stem, tr, {longend, shortend}, shortend .. "те")
+	elseif impr_end == "ь" or impr_end == "й" then
+		-- short variants wanted
+		set_short_imper()
+	elseif impr_end == "и" then
+		-- long variants wanted
+		set_long_imper()
+	else
+		assert(not impr_end or impr_end == "")
+		if vowel_stem then
+			if verbclass == "4b" or verbclass == "4c" or (
+				verbclass == "4a" and rfind(stem, "^вы́-")) then
+				set_long_imper()
+			else
+				set_short_imper()
+			end
+		else -- consonant stem
+			if stress == "b" or stress == "c" then
+				set_long_imper()
+			else
+				assert(stress == "a")
+				-- "и" after вы́-, e.g. вы́садить
+				-- "и" after final щ, e.g. тара́щиться (although this particular
+				--    verb has a [(3)] spec attached to it)
+				if rfind(stem, "^вы́-") or rfind(stem, "щ$") or 
+					-- "и" after two consonants in a row (мо́рщить, зафре́ндить)
+					rfind(stem, "[бвгджзклмнпрстфхцчшщь][бвгджзклмнпрстфхцчшщ]$") then
+					set_long_imper()
+				else
+					-- "ь" after a single consonant (бре́дить)
+					set_short_imper()
+				end
+			end
+		end
+	end
+end
+
 --[=[
 	Conjugation functions
 ]=]--
@@ -965,6 +1031,10 @@ conjugations["3oa"] = function(args, data)
 	local vowel_stem = is_vowel_stem(stem)
 	local impr_end = check_opt_arg(args, 4, {"нь", "ни"}) or vowel_stem and "нь" or "ни"
 
+	local variants_title = rsub(variants, "%(5%)", "⑤")
+	variants_title = rsub(variants_title, "%(6%)", "⑥")
+	data.title = "class 3°a" .. variants_title
+	
 	-- Allow brackets around both numbers, e.g. [(5)(6)]
 	variants = rsub(variants, "%[(%([56]%))(%([56]%))%]", "[%1][%2]")
 	local opt_5, opt_6, req_5, req_6
@@ -1109,27 +1179,9 @@ conjugations["4a"] = function(args, data)
 
 	local stem, tr = nom.split_russian_tr(get_stressed_arg(args, 2))
 	-- for "a" stress type "й" - after vowels, "ь" - after single consonants, "и" - after consonant clusters
-	local impr_end_param = check_opt_arg(args, 3, {"и", "й", "ь"})
+	local impr_end_param = check_opt_arg(args, 3, {"и", "й", "ь", "(2)", "[(2)]", "(3)", "[(3)]"})
 	-- optional parameter for verbs like похитить (похи́щу) (4a), защитить (защищу́) (4b), поглотить (поглощу́) (4c) with a different iotation (т -> щ, not ч)
 	local shch = check_opt_arg(args, 4, {"щ"})
-
-	--set defaults if nothing is passed, "й" for stems ending in a vowel, "ь" for single consonant ending, "и" for double consonant ending
-	-- "й" after any vowel, with or without an acute accent (беспоко́ить), no parameter passed
-	local impr_end = ""
-	if impr_end_param then
-		impr_end = impr_end_param
-	elseif is_vowel_stem(stem) then
-		impr_end = "й"
-	-- "и" after two consonants in a row (мо́рщить, зафре́ндить), no parameter passed
-	elseif rfind(stem, "[бвгджзклмнпрстфхцчшщь][бвгджзклмнпрстфхцчшщ]$") then
-		impr_end = "и"
-	-- "ь" after a single consonant (бре́дить), no parameter passed
-	elseif rfind(stem, "[" .. com.vowel .. AC .. "][бвгджзклмнпрстфхцчшщ]$") then
-		impr_end = "ь"
-	-- default
-	else --default
-		impr_end = "ь"
-	end
 
 	forms["infinitive"] = combine(stem, tr, "ить")
 
@@ -1138,7 +1190,7 @@ conjugations["4a"] = function(args, data)
 	set_participles(forms, stem, tr, hushing and "ащий" or "ящий",
 		"имый", hushing and "а" or "я", "ивший", "ивши", "ив")
 	present_i_a(forms, stem, tr, shch)
-	set_imper(forms, stem, tr, impr_end, impr_end .. "те")
+	set_imper_by_variant(forms, stem, tr, impr_end_param, "4a")
 	set_past(forms, stem, tr, "ил", "ила", "ило", "или")
 
 	return forms
@@ -1446,46 +1498,47 @@ conjugations["7b"] = function(args, data)
 	local forms = {}
 
 	local full_inf = get_stressed_arg(args, 2)
-	local pres_stem = get_unstressed_arg(args, 3)
-	local past_stem = get_opt_stressed_arg(args, 4) or ""
-	local past_stress = args[5] or "a"
+	local past_part_stem = get_opt_stressed_arg(args, 4)
+	local pres_stem = past_part_stem and get_unstressed_arg(args, 3) or get_stressed_arg(args, 3)
+	local past_stress = args[5] or ""
 	local var9
-	past_stem, var9 = rsubb(past_stem, "%(9%)")
+	past_stress, var9 = rsubb(past_stress, "%(9%)", "")
+	if past_stress == "" then
+		past_stress = "a"
+	end
+	local past_tense_stem = get_opt_stressed_arg(args, 6)
 
 	forms["infinitive"] = full_inf
 
 	present_e_b(forms, pres_stem)
 	set_imper(forms, pres_stem, nil, "и́", "и́те")
-	if past_stem == "" then
-		local past_part_stem = pres_stem
-		local past_tense_stem = pres_stem
-		local vowel_pp = is_vowel_stem(past_part_stem)
-		past_tense_stem = rsub(past_tense_stem, "е(́?[^" .. com.vowel .. "]*)$",
+	if not past_part_stem then
+		past_part_stem = pres_stem
+		if past_stress ~= "b" then
+			past_part_stem = rsub(past_part_stem, "[дт]$", "")
+		end
+	end
+	if not past_tense_stem then	
+		past_tense_stem = past_part_stem
+		past_tense_stem = rsub(past_tense_stem, "е́([^" .. com.vowel .. "]*)$",
 			"ё%1")
 		past_tense_stem = rsub(past_tense_stem, "[дт]$", "")
-		local pap = vowel_pp and "вши" or "ши"
-		local var9_note_symbol = next_note_symbol(data)
-		set_participles_2stem(forms, pres_stem, nil, past_part_stem, nil,
-			"у́щий", "-", "я́",
-			vowel_pp and "вший" or "ший",
-			var9 and {"я́", pap .. var9_note_symbol} or pap,
-			vowel_pp and not var9 and "в" or "-")
-		if var9 then
-			ut.insert_if_not(data.internal_notes, var9_note_symbol .. " Dated.")
-		end
-		-- set prefix to "" as past stem may vary in length and no (1) variants
-		set_past_by_stress(forms, past_stress, "", past_tense_stem, args, data,
-			-- 0 ending if the past stem ends in a consonant
-			not is_vowel_stem(past_tense_stem) and "no-pastml")
-	else
-		-- The old way; FIXME, fix up verbs and delete
-		set_participles_2stem(forms, pres_stem, nil, past_stem, nil,
-			"у́щий", "-", "я́", "ший", "вши", "в")
-		-- set prefix to "" as past stem may vary in length and no (1) variants
-		set_past_by_stress(forms, past_stress, "", past_stem, args, data,
-			-- 0 ending if the past stem ends in a consonant
-			not is_vowel_stem(past_stem) and "no-pastml")
 	end
+	local vowel_pp = is_vowel_stem(past_part_stem)
+	local pap = vowel_pp and "вши" or "ши"
+	local var9_note_symbol = next_note_symbol(data)
+	set_participles_2stem(forms, pres_stem, nil, past_part_stem, nil,
+		"у́щий", "-", "я́",
+		vowel_pp and "вший" or "ший",
+		var9 and {"я́", pap .. var9_note_symbol} or pap,
+		vowel_pp and not var9 and "в" or "-")
+	if var9 then
+		ut.insert_if_not(data.internal_notes, var9_note_symbol .. " Dated.")
+	end
+	-- set prefix to "" as past stem may vary in length and no (1) variants
+	set_past_by_stress(forms, past_stress, "", past_tense_stem, args, data,
+		-- 0 ending if the past stem ends in a consonant
+		not is_vowel_stem(past_tense_stem) and "no-pastml")
 
 	return forms
 end
