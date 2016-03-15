@@ -41,7 +41,7 @@ def process_page(index, page, direc, save, verbose):
       direc = direc.replace("npp", "")
       yo = u"ё" in direc
       direc = direc.replace(u"ё", "")
-      direc = direc.replace("7b/", "")
+      direc = re.sub("7b/?", "", direc)
       if re.search(u"е́?[^аэыоуяеиёю]*$", presstem):
         if not yo:
           pagemsg(u"Something wrong, е-stem present and no ё directive")
@@ -52,15 +52,23 @@ def process_page(index, page, direc, save, verbose):
       else:
         presstem = ru.make_ending_stressed(presstem)
       pap = getparam(t, "past_actv_part")
-      if pap and pap == presstem + u"ший":
-        pagemsg("Removing past_actv_part=%s because same as predicted" % pap)
-        rmparam(t, "past_actv_part")
+      pred_pap = presstem + u"ший"
+      if direc not in ["b", "b(9)"] and re.search(u"[дт]$", presstem):
+        pred_pap = re.sub(u"[дт]$", "", presstem) + u"вший"
+      if pap:
+        if pap == pred_pap:
+          pagemsg("Removing past_actv_part=%s because same as predicted" % pap)
+          rmparam(t, "past_actv_part")
+        else:
+          pagemsg("Not removing unpredictable past_actv_part=%s (predicted %s)" %
+              (pap, pred_pap))
       for param in t.params:
         if not re.search("^([0-9]+$|past_pasv_part)", unicode(param.name)):
           pagemsg("Found additional named param %s" % unicode(param))
       t.add("3", presstem)
-      t.add("4", "")
-      t.add("5", direc)
+      if direc:
+        t.add("4", "")
+        t.add("5", direc)
       blib.sort_params(t)
       #blib.set_param_chain(t, ppps, "past_pasv_part", "past_pasv_part")
       notes.append("set class-7b verb to directive %s%s" %
@@ -95,8 +103,8 @@ for i, line in blib.iter_items(lines, start, end):
     msg("Skipping comment: %s" % line)
   elif " " not in line:
     msg("Skipping because no space: %s" % line)
-  elif "7b/b" not in line:
-    msg("Skipping because 7b/b not in line: %s" % line)
+  elif "7b" not in line:
+    msg("Skipping because 7b not in line: %s" % line)
   else:
     page, direc = re.split(" ", line)
     process_page(i, pywikibot.Page(site, page), direc, args.save, args.verbose)
