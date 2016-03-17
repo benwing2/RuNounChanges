@@ -995,6 +995,10 @@ local function set_imper_by_variant(forms, stem, tr, variant, verbclass)
 	local function set_long_imper()
 		set_imper(forms, stem, tr, longend, longend .. "те")
 	end
+	if variant and variant ~= "" then
+		track("explicit-imper")
+		track("explicit-imper/" .. verbclass)
+	end
 	if variant == "(2)" then
 		-- use short variants with вы́- (for these verbs, long is expected)
 		if not rfind(stem, "^вы́-") then
@@ -1017,7 +1021,7 @@ local function set_imper_by_variant(forms, stem, tr, variant, verbclass)
 		-- long variants wanted
 		set_long_imper()
 	else
-		assert(not impr_end or impr_end == "")
+		assert(not variant or variant == "")
 		if vowel_stem then
 			if verbclass == "4b" or verbclass == "4c" or (
 				verbclass == "4a" and rfind(stem, "^вы́-")) then
