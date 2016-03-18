@@ -2061,6 +2061,7 @@ conjugations["14c"] = function(args, data)
 
 	local stem = get_stressed_arg(args, 2)
 	local pres_stem = get_stressed_arg(args, 3)
+	local pres_stem_noa = com.make_unstressed(pres_stem)
 	parse_variants(data, args[4], {"past"})
 	no_stray_args(args, 4)
 	local prefix, _, base, _ = split_prefix(stem)
