@@ -1344,11 +1344,6 @@ conjugations["4c"] = function(args, data)
 	set_imper(forms, stem, tr, "и́", "и́те")
 	set_past(forms, stem, tr, "и́л", "и́ла", "и́ло", "и́ли")
 
-	-- pres_actv_part for суши́ть -> су́шащий
-	if ut.equals(forms["infinitive"], {"суши́ть"}) then
-		forms["pres_actv_part"] = "су́шащий"
-	end
-
 	return forms
 end
 
