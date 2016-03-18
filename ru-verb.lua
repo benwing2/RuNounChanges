@@ -1283,12 +1283,11 @@ conjugations["4a"] = function(args, data)
 	local forms = {}
 
 	local stem, tr = nom.split_russian_tr(get_stressed_arg(args, 2))
+	-- imperative variants, also щ, used for verbs like похитить (похи́щу) (4a),
+	-- защитить (защищу́) (4b), поглотить (поглощу́) (4c) with a different
+	-- iotation (т -> щ, not ч)
 	parse_variants(data, args[3], {"23", "и", "щ"})
-	-- the old way of doing things has a separate щ parameter, now combined
-	-- into arg3: for verbs like похитить (похи́щу) (4a), защитить (защищу́) (4b),
-	-- поглотить (поглощу́) (4c) with a different iotation (т -> щ, not ч)
-	local shch = check_opt_arg(args, 4, {"щ"}) or data.shch
-	no_stray_args(args, 4)
+	no_stray_args(args, 3)
 
 	forms["infinitive"] = combine(stem, tr, "ить")
 
@@ -1296,7 +1295,7 @@ conjugations["4a"] = function(args, data)
 	local hushing = rfind(stem, "[шщжч]$")
 	set_participles(forms, stem, tr, hushing and "ащий" or "ящий",
 		"имый", hushing and "а" or "я", "ивший", "ивши", "ив")
-	present_i_a(forms, stem, tr, shch)
+	present_i_a(forms, stem, tr, data.shch)
 	set_imper_by_variant(forms, stem, tr, data.imper_variant, "4a")
 	set_past(forms, stem, tr, "ил", "ила", "ило", "или")
 
