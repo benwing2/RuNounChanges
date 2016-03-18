@@ -99,15 +99,6 @@ local function next_note_symbol(data)
 	return nextsym
 end
 
--- Clone parent's args while also assigning nil to empty strings.
-local function clone_args(frame)
-	local args = {}
-	for pname, param in pairs(frame:getParent().args) do
-		args[pname] = ine(param)
-	end
-	return args
-end
-
 -- FIXME: Move to utils
 -- Iterate over a chain of parameters, FIRST then PREF2, PREF3, ...,
 -- inserting into LIST (newly created if omitted). Return LIST.
@@ -330,6 +321,16 @@ local all_verb_forms = {
 	{"infinitive"},
 }
 
+local prop_aliases = {
+	pap="past_actv_part",
+	ppp="past_pasv_part",
+	prap="pres_actv_part",
+	prpp="pres_pasv_part",
+	pradp="pres_adv_part",
+	padp="past_adv_part",
+	padp_short="past_adv_part_short"
+}
+
 -- List of the "main" verb forms, i.e. those which aren't alternatives (which
 -- end with a "2" or "3"). If these are missing, they need to end up with a
 -- value of "", whereas the alternatives need to end up with a value of nil.
@@ -399,6 +400,23 @@ local all_verb_props = mw.clone(all_verb_forms)
 local non_form_props = {"title", "perf", "intr", "impers", "categories", "notes", "internal_notes"}
 for _, prop in ipairs(non_form_props) do
 	table.insert(all_verb_props, {prop})
+end
+
+-- Clone parent's args while also assigning nil to empty strings. Handle
+-- aliases in the process.
+local function clone_args_handle_aliases(frame)
+	local args = {}
+	for pname, param in pairs(frame:getParent().args) do
+		local argval = ine(param)
+		local mainprop, num = rmatch(pname, "^([a-z_]+)([0-9]*)$")
+		if not mainprop then
+			args[pname] = argval
+		else
+			mainprop = prop_aliases[mainprop] or mainprop
+			args[mainprop .. num] = argval
+		end
+	end
+	return args
 end
 
 function export.do_generate_forms(conj_type, args)
@@ -565,7 +583,7 @@ end
 
 function export.generate_forms(frame)
 	local conj_type = frame.args[1] or error("Conjugation type has not been specified. Please pass parameter 1 to the module invocation")
-	local args = clone_args(frame)
+	local args = clone_args_handle_aliases(frame)
 	local forms, title, perf, intr, impers, categories, notes, internal_notes = export.do_generate_forms(conj_type, args)
 	return fetch_forms(forms)
 end
@@ -582,7 +600,7 @@ end
 -- This is the only function that can be invoked from a template.
 function export.show(frame)
 	local conj_type = frame.args[1] or error("Conjugation type has not been specified. Please pass parameter 1 to the module invocation")
-	local args = clone_args(frame)
+	local args = clone_args_handle_aliases(frame)
 
 	local args_clone
 	if test_new_ru_verb_module then
@@ -3615,6 +3633,9 @@ handle_forms_and_overrides = function(args, forms, perf)
 	end
 
 	local function parse_and_stress_override(form, val)
+		if rfind(form, "^pres_futr") then
+			error("Overrides of pres_futr* are illegal")
+		end
 		local allow_unaccented
 		val, allow_unaccented = rsubb(val, "^%*", "")
 		local ru, tr = nom.split_russian_tr(val)
