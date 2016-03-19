@@ -2153,7 +2153,7 @@ def split_forms_with_stress_variants(args, forms_desired, dicforms, pagemsg,
 # NOTE: There is special-case code that depends on the part of speech.
 #
 # EXPECTED_HEADER specifies the header that the inflection template (e.g.
-# 'ru-decl-adj' for adjectives, 'ru-conj-2a' etc. for verbs) should be under
+# 'ru-decl-adj' for adjectives, 'ru-conj' for verbs) should be under
 # (Declension or Conjugation); a warning will be issued if it's wrong.
 # EXPECTED_POSES is a list of the parts of speech that the inflection template
 # should be under (e.g. ["Noun", "Proper noun"]); a warning will be issued if
@@ -2477,11 +2477,6 @@ def create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite,
                       allow_stress_mismatch_in_defn=allow_stress_mismatch,
                       deftemp_needs_lang=deftemp_needs_lang)
 
-def create_verb_generator(t):
-  verbtype = re.sub(r"^ru-conj-", "", unicode(t.name))
-  params = re.sub(r"^\{\{ru-conj-.*?\|(.*)\}\}$", r"\1", unicode(t), 0, re.S)
-  return "{{ru-generate-verb-forms|type=%s|%s}}" % (verbtype, params)
-
 def skip_future_periphrastic(formname, ru, tr):
   return re.search(ur"^(бу́ду|бу́дешь|бу́дет|бу́дем|бу́дете|бу́дут) ", ru)
 
@@ -2497,7 +2492,8 @@ def create_verb_forms(save, startFrom, upTo, formspec, lemmas_to_process,
       # NOTE: 'head|ru|verb form' will be overridden with participles
       verb_form_aliases, "verb", "head|ru|verb form",
       "infinitive", "Conjugation", ["Verb", "Idiom"], [],
-      lambda t:unicode(t.name).startswith("ru-conj") and unicode(t.name) != "ru-conj-verb-see",
+      lambda t:unicode(t.name) == "ru-conj",
+      lambda t:re.sub(r"^\{\{ru-conj", "{{ru-generate-verb-forms", unicode(t)),
       create_verb_generator,
       lambda t:unicode(t.name) == "ru-verb",
       get_gender=get_verb_gender,

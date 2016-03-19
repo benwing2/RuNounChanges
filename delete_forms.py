@@ -20,10 +20,8 @@ def process_decl(index, pagetitle, decl, forms, save, verbose):
   def expand_text(tempcall):
     return blib.expand_text(tempcall, pagetitle, pagemsg, verbose)
 
-  if decl.startswith("{{ru-conj-"):
-    m = re.search(r"^\{\{ru-conj-(.*?)\|(.*)\}\}$", decl)
-    verbtype, params = m.groups()
-    tempcall = "{{ru-generate-verb-forms|type=%s|%s}}" % (verbtype, params)
+  if decl.startswith("{{ru-conj|"):
+    tempcall = re.sub(r"^\{\{ru-conj", "{{ru-generate-verb-forms", decl)
   elif decl.startswith("{{ru-noun-table"):
     tempcall = re.sub(r"^\{\{ru-noun-table", "{{ru-generate-noun-args", decl)
   else:

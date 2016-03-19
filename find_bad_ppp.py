@@ -140,10 +140,8 @@ def process_page(index, page, save, verbose, fix_pages):
   notes = []
   for t in parsed.filter_templates():
     tname = unicode(t.name)
-    if tname.startswith("ru-conj-") and tname != "ru-conj-verb-see":
-      m = re.search(r"^\{\{ru-conj-(.*?)\|(.*)\}\}$", unicode(t), re.S)
-      verbtype, params = m.groups()
-      tempcall = "{{ru-generate-verb-forms|type=%s|%s}}" % (verbtype, params)
+    if tname == "ru-conj":
+      tempcall = re.sub(r"\{\{ru-conj", "{{ru-generate-verb-forms", unicode(t))
       result = expand_text(tempcall)
       if not result:
         pagemsg("WARNING: Error generating forms, skipping")
