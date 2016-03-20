@@ -2481,7 +2481,7 @@ def skip_future_periphrastic(formname, ru, tr):
   return re.search(ur"^(бу́ду|бу́дешь|бу́дет|бу́дем|бу́дете|бу́дут) ", ru)
 
 def get_verb_gender(t, formname, args):
-  gender = re.sub("-.*", "", getparam(t, "1"))
+  gender = re.sub("-.*", "", getparam(t, "2"))
   assert gender in ["pf", "impf"]
   return [gender]
 
@@ -2494,7 +2494,6 @@ def create_verb_forms(save, startFrom, upTo, formspec, lemmas_to_process,
       "infinitive", "Conjugation", ["Verb", "Idiom"], [],
       lambda t:unicode(t.name) == "ru-conj",
       lambda t:re.sub(r"^\{\{ru-conj", "{{ru-generate-verb-forms", unicode(t)),
-      create_verb_generator,
       lambda t:unicode(t.name) == "ru-verb",
       get_gender=get_verb_gender,
       skip_inflections=skip_future_periphrastic,
