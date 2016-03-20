@@ -345,7 +345,9 @@ TODO:
     ending should be included.] [MAY NEVER IMPLEMENT]
 40. [Get error "Unable to dereduce" with strange noun ва́йя, what should
   happen?] [WILL NOT FIX; USE AN OVERRIDE]
-
+41. In творог, module generates partitive творогу́ when it should copy the
+   dative творогу́,тво́рогу. (DONE)
+42. [[груз 200]] doesn't work. Interprets 200 as a footnote symbol.
 ]=]--
 
 local m_utilities = require("Module:utilities")
@@ -375,6 +377,8 @@ local ulen = mw.ustring.len
 local AC = u(0x0301) -- acute =  ́
 local CFLEX = u(0x0302) -- circumflex =  ̂
 local IRREGMARKER = "△"
+-- text class to check lowercase arg against to see if Latin text embedded in it
+local latin_text_class = "[a-zščžěáéíóúýàèìòùỳâêîôûŷạẹịọụỵȧėȯẏ]"
 
 -- version of rsubn() that discards all but the first return value
 local function rsub(term, foo, bar)
@@ -1484,7 +1488,8 @@ generate_forms_1 = function(args, per_word_info)
 		lemma = m_links.remove_links(lemma)
 		args.lemma_no_links = lemma
 		if decl == "+$" then
-			lemmatr = lemmatr or com.decompose(m_ru_translit.tr_adj(lemma))
+			track("invadj")
+			lemmatr = lemmatr or com.decompose(m_ru_translit.tr_adj(lemma, "include monosyllabic jo accent"))
 			decl = "$"
 		end
 		args.lemmatr = lemmatr
@@ -1839,6 +1844,21 @@ generate_forms_1 = function(args, per_word_info)
 	handle_overall_forms_and_overrides(args)
 	compute_overall_heading_categories_and_genders(args)
 
+	for _, case in ipairs(all_cases) do
+		if args[case] then
+			for _, form in ipairs(args[case]) do
+				local ru, tr = form[1], form[2]
+				local ruentry, runotes = m_table_tools.get_notes(ru)
+				ruentry = m_links.remove_links(ruentry)
+				if rfind(ulower(ruentry), latin_text_class) then
+					--error("Found Latin text " .. ruentry .. " in case " .. case) 
+					track("latin-text")
+					track("latin-text/" .. case)
+				end
+			end
+		end
+	end
+
 	-- Test code to compare existing module to new one.
 	if test_new_ru_noun_module then
 		local m_new_ru_noun = require("Module:User:Benwing2/ru-noun")
@@ -1957,10 +1977,18 @@ local function case_will_be_displayed(args, case)
 		if rfind(case, "_[ai]n") then
 			caseok = false
 		end
-	--else -- bianimate
-	--	if case == "acc_sg" or case == "acc_pl" then
-	--		caseok = false
-	--	end
+	else -- bianimate
+		-- don't include inanimate/animate variants if combined variant exists
+		-- (typically because inanimate/animate variants are the same);
+		-- FIXME: This could conceivably be different from how the display
+		-- code works, which just checks that the inanimate/animate variants
+		-- are the same when deciding whether to display them, in particular
+		-- if there is an override. Here we are following the algorithm of
+		-- handle_overall_forms_and_overrides().
+		if (case == "acc_sg_in" or case == "acc_sg_an") and args.acc_sg or
+		   (case == "acc_pl_in" or case == "acc_pl_an") and args.acc_pl then
+		   	caseok = false
+		end
 	end
 	if not args[case] then
 		caseok = false
@@ -4111,28 +4139,46 @@ canonicalize_override = function(args, case, forms, n)
 	if case == "loc" or case == "par" then
 		local new_vals = {}
 		for _, rutr in ipairs(vals) do
-			local ru, tr = rutr[1], rutr[2]
 			-- don't just handle + by itself in case the arg has в or на
 			-- or whatever attached to it
-			if rfind(ru, "^%+") or rfind(ru, "[%s%[|]%+") then
+			if rfind(rutr[1], "^%+") or rfind(rutr[1], "[%s%[|]%+") then
 				for _, dat in ipairs(forms["dat_sg"]) do
+					local ru, tr = rutr[1], rutr[2]
 					local datru, dattr = dat[1], dat[2]
 					local valru, valtr
+					-- separate off any footnote symbols (which may have been
+					-- introduced by a *tail or *tailall argument, which we need
+					-- to process before this stage so overrides don't get
+					-- automatically marked with footnote symbols); if par,
+					-- try to preserve them, but with loc this can cause
+					-- problems in case there are multiple dative forms
+					-- (stress variants) and the last one is marked with a
+					-- footnote symbol (occurs in грудь)
+					local datru_entry, datru_notes = m_table_tools.separate_notes(datru)
+					local dattr_entry, dattr_notes
+					if dattr then
+						dattr_entry, dattr_notes = m_table_tools.separate_notes(dattr)
+					end
 					if case == "par" then
-						valru, valtr = datru, dattr
+						valru, valtr = datru_entry, dattr_entry
 					else
-						valru, valtr = com.make_ending_stressed(datru, dattr)
+						valru, valtr = com.make_ending_stressed(datru_entry, dattr_entry)
+						datru_notes = ""
+						dattr_notes = ""
 					end
 					-- wrap the word in brackets so it's linked; but not if it
 					-- appears to already be linked
 					ru = rsub(ru, "^%+", "[[" .. valru .. "]]")
 					ru = rsub(ru, "([%[|])%+", "%1" .. valru)
 					ru = rsub(ru, "(%s)%+", "%1[[" .. valru .. "]]")
+					ru = ru .. datru_notes
 					-- do the translit; but it shouldn't have brackets in it
-					if tr then
+					if tr or valtr then
+						tr = tr or nom.translit_no_links(rutr[1])
 						valtr = valtr or nom.translit_no_links(valru)
 						tr = rsub(tr, "^%+", valtr)
 						tr = rsub(tr, "(%s)%+", "%1" .. valtr)
+						tr = tr .. dattr_notes
 					end
 					table.insert(new_vals, {ru, tr})
 				end
@@ -4494,6 +4540,12 @@ end
 
 -- Generate a string to substitute into a particular form in a Wiki-markup
 -- table. FORMS is the list of forms, generated by concat_word_forms().
+-- OLD is true if we're dealing with a pre-reform declension (in this case,
+-- the page we link to has е in place of ё, for reasons I'm not completely
+-- sure of). LEMMA is true is we're formatting the entry for use in displaying
+-- the lemma in the declension table title. In this case, we don't include
+-- the translit, and remove monosyllabic accents from the Cyrillic (but not
+-- in multiword expressions).
 local function show_form(forms, old, lemma)
 	local russianvals = {}
 	local latinvals = {}
@@ -4517,6 +4569,12 @@ local function show_form(forms, old, lemma)
 		local trentry, trnotes
 		if tr then
 			trentry, trnotes = m_table_tools.get_notes(tr)
+		end
+		if lemma and com.is_monosyllabic(ruentry) then
+			ruentry = com.remove_accents(ruentry)
+			if trentry then
+				trentry = com.remove_accents(trentry)
+			end
 		end
 		local ruspan, trspan
 		if old then
@@ -4623,7 +4681,7 @@ make_table = function(args)
 	data.after_title = " " .. args.heading
 	data.number = numbers[args.n]
 
-	data.lemma = show_form(args[args.n == "p" and "nom_pl_linked" or "nom_sg_linked"], args.old, true)
+	data.lemma = show_form(args[args.n == "p" and "nom_pl_linked" or "nom_sg_linked"], args.old, "lemma")
 	data.title = args.title or strutils.format(args.old and old_title_temp or title_temp, data)
 
 	for _, case in ipairs(displayable_cases) do
@@ -4715,10 +4773,10 @@ local function template_prelude(min_width)
 	min_width = min_width or "70"
 	return rsub([===[
 <div>
-<div class="NavFrame" style="display: inline-block; min-width: MINWIDTHem">
-<div class="NavHead" style="background:#eff7ff;">{title}<span style="font-weight: normal;">{after_title}</span></div>
+<div class="NavFrame" style="display:inline-block; min-width:MINWIDTHem">
+<div class="NavHead" style="background:#eff7ff;">{title}<span style="font-weight:normal;">{after_title}</span></div>
 <div class="NavContent">
-{\op}| style="background:#F9F9F9;text-align:center; min-width:MINWIDTHem" class="inflection-table"
+{\op}| style="background:#F9F9F9; text-align:center; min-width:MINWIDTHem; width:100%;" class="inflection-table"
 |-
 ]===], "MINWIDTH", min_width)
 end
