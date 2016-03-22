@@ -348,6 +348,8 @@ TODO:
 41. In творог, module generates partitive творогу́ when it should copy the
    dative творогу́,тво́рогу. (DONE)
 42. [[груз 200]] doesn't work. Interprets 200 as a footnote symbol.
+43. When converting е -> ё not after cons and with translit, we should
+   convert e -> o to avoid double j. (DONE)
 ]=]--
 
 local m_utilities = require("Module:utilities")
@@ -1596,11 +1598,21 @@ generate_forms_1 = function(args, per_word_info)
 				end
 				stem = new_stem
 				if tr then
-					tr = rsub(tr, "([eE])([^eE]*)$",
-						function(e, rest)
-							return (e == "E" and "Jo" or "jo") .. rest
+					local subbed
+					-- e after j -> o, e not after j -> jo; don't just convert e -> jo
+					-- and then map jjo -> jo because we want to preserve double j
+					tr, subbed = rsubb(tr, "([jJ])([eE])([^eE]*)$",
+						function(j, e, rest)
+							return j .. (e == "E" and "O" or "o") .. AC .. rest
 						end
 					)
+					if not subbed then
+						tr = rsub(tr, "([eE])([^eE]*)$",
+							function(e, rest)
+								return (e == "E" and "Jo" or "jo") .. AC .. rest
+							end
+						)
+					end
 					tr = com.j_correction(tr)
 				end
 				-- This is used to handle железа́ with gen pl желёз and nom pl
@@ -1863,6 +1875,7 @@ generate_forms_1 = function(args, per_word_info)
 	if test_new_ru_noun_module then
 		local m_new_ru_noun = require("Module:User:Benwing2/ru-noun")
 		local newargs = m_new_ru_noun.do_generate_forms(orig_args, old)
+		local difdecl = false
 		for _, case in ipairs(all_cases) do
 			local arg = args[case]
 			local newarg = newargs[case]
@@ -1886,15 +1899,18 @@ generate_forms_1 = function(args, per_word_info)
 				--end
 				if monosyl_accent_diff then
 					track("monosyl-accent-diff")
+					difdecl = true
 				else
 					-- Uncomment this to display the particular case and
 					-- differing forms.
 					--error(case .. " " .. (arg and nom.concat_forms(arg) or "nil") .. " || " .. (newarg and nom.concat_forms(newarg) or "nil"))
 					track("different-decl")
+					difdecl = true
 				end
 				break
 			end
 		end
+		if not difdecl then track("same-decl") end
 	end
 
 	return args
