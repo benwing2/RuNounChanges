@@ -219,7 +219,7 @@ def process_page(index, page, save, verbose, fix_pages):
     else:
       pagemsg("Would save with comment = %s" % comment)
 
-parser = blib.create_argparser(u"Find Russian terms without bad past passive participles")
+parser = blib.create_argparser(u"Find Russian terms with bad past passive participles")
 parser.add_argument('--fix-pagefile', help="File containing pages to fix.")
 args = parser.parse_args()
 start, end = blib.get_args(args.start, args.end)
