@@ -141,32 +141,44 @@ def process_page(index, page, save, verbose):
       t2 = blib.parse_text(unicode(t)).filter_templates()[0]
       for form in manual_ppp_forms:
         rmparam(t2, form)
-      variant = "+p"
-      t2.add("1", param1 + variant)
-      tempcall = re.sub(r"\{\{ru-conj", "{{ru-generate-verb-forms", unicode(t2))
-      result = expand_text(tempcall)
-      if not result:
-        pagemsg("WARNING: Error generating forms, skipping")
-        continue
-      args = rulib.split_generate_args(result)
-      if "past_pasv_part" not in args:
-        pagemsg("WARNING: Something wrong, no past passive participle generated: %s" % unicode(t))
-        continue
-      auto_ppps = []
-      for form in manual_ppp_forms:
-        ppp = getparam(t, form)
-        if ppp and ppp != "-":
-          auto_ppps.append(ppp)
-      if manual_ppps == auto_ppps:
-        pagemsg("Manual PPP's %s same as auto-generated PPP's, switching to auto"
-            % ",".join(manual_ppps))
+      variants_to_try = ["+p"]
+      if u"ё" in re.sub(u"ённый$", "", manual_ppps[0]):
+        variants_to_try.append(u"+pё")
+      if u"жденный" in manual_ppps[0] or u"ждённый" in manual_ppps[0]:
+        variants_to_try.append(u"+pжд")
+      notsamemsgs = []
+      for variant in variants_to_try:
+        t2.add("1", param1 + variant)
+        tempcall = re.sub(r"\{\{ru-conj", "{{ru-generate-verb-forms", unicode(t2))
+        result = expand_text(tempcall)
+        if not result:
+          pagemsg("WARNING: Error generating forms, skipping")
+          continue
+        args = rulib.split_generate_args(result)
+        if "past_pasv_part" not in args:
+          pagemsg("WARNING: Something wrong, no past passive participle generated: %s" % unicode(t))
+          continue
+        auto_ppps = []
         for form in manual_ppp_forms:
-          rmparam(t, form)
-        t.add("1", param1 + variant)
-        notes.append("replaced manual PPP's with variant %s" % variant)
-      else:
-        pagemsg("WARNING: Manual PPP's %s not same as auto-generated PPP's %s" %
-          (",".join(manual_ppps), ",".join(auto_ppps)))
+          if form in args:
+            for ppp in re.split(",", args[form]):
+              if ppp and ppp != "-":
+                auto_ppps.append(ppp)
+        if manual_ppps == auto_ppps:
+          pagemsg("Manual PPP's %s same as auto-generated PPP's, switching to auto"
+              % ",".join(manual_ppps))
+          for form in manual_ppp_forms:
+            rmparam(t, form)
+          t.add("1", param1 + variant)
+          notes.append("replaced manual PPP's with variant %s" % variant)
+          break
+        else:
+          notsamemsgs.append("WARNING: Manual PPP's %s not same as auto-generated PPP's %s: %s" %
+            (",".join(manual_ppps), ",".join(auto_ppps), unicode(t)))
+      else: # no break in for loop
+        for m in notsamemsgs:
+          pagemsg(m)
+
     newt = unicode(t)
     if origt != newt:
       pagemsg("Replaced %s with %s" % (origt, newt))
