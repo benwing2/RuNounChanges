@@ -1321,6 +1321,62 @@ local function set_class_4_ppp(forms, data, stem, tr)
 	end
 end
 
+-- Set the past passive participle for class-7 and class-8 verbs. These
+-- form the PPP by adding to the base of the 3sg pres/futr (i.e. minus
+-- -ет/-ёт). The stress follows the stress of the past singular feminine.
+-- Only types a, a(1) and b exist, meaning that if the past singular feminine
+-- is ending-stressed then the PPP ending is -ённый, otherwise it is -енный
+-- with the stress of the 3sg pres/futr base preserved (and added to the
+-- last syllable if the base has no stress, as in 7b укра́сть, 3sg украдёт,
+-- fem sg past укра́ла, PPP укра́денный).
+local function set_class_7_8_ppp(forms, args, data)
+	if not data.ppp then
+		return
+	end
+	local sg3_bases = {}
+	-- Extract 3sg bases. It's unlikely that there is more than one possible
+	-- form but we support it.
+	-- FIXME: We don't support checking for overrides here; doing so isn't
+	-- overly hard but is a bit tricky because the overrides will be either
+	-- pres_3sg or futr_3sg, depending on the aspect of the verb.
+	-- FIXME: We don't support manual translit here, because neither 7 nor 8
+	-- support it elsewhere.
+	for _, form in pairs(main_to_all_verb_forms["pres_futr_3sg"]) do
+		local ru, tr
+		if forms[form] then
+			ru, tr = extract_russian_tr(forms[form])
+		end
+		if ru and ru ~= "" and ru ~= "-" then
+			ru = rsub(ru, "[её]т$", "")
+			if com.is_unstressed(ru) then
+				ru = com.make_ending_stressed(ru)
+			end
+			ut.insert_if_not(sg3_bases, ru)
+		end
+	end
+
+	-- Here we do the same rigmarole as in set_ppp_from_past_m(), to respect
+	-- any past_f overrides that might have been set. It's unlikely that
+	-- there is more than one possible form but we support it.
+	for _, form in pairs(main_to_all_verb_forms["past_f"]) do
+		local ru, tr
+		if args[form] then
+			local override = parse_and_stress_override(form, args[form])
+			ru, tr = extract_russian_tr(override)
+		end
+		if (not ru or ru == "" or ru == "-") and forms[form] then
+			ru, tr = extract_russian_tr(forms[form])
+		end
+		if ru and ru ~= "" and ru ~= "-" then
+			for _, base in ipairs(sg3_bases) do
+				append_ppp(forms, base, nil,
+					-- check if past_f is ending-stressed
+					rfind(ru, AC .. "$") and "ённый" or "енный")
+			end
+		end
+	end
+end
+
 --[=[
 	Conjugation functions
 ]=]--
@@ -1831,12 +1887,14 @@ local function guts_of_class_7(args, data, forms, pres_stem,
 	set_past_by_stress(forms, data.past_stress, "", past_tense_stem, args, data,
 		-- 0 ending if the past stem ends in a consonant
 		not is_vowel_stem(past_tense_stem) and "no-pastml")
+	-- set PPP; must be done after both present 3sg and past fem have been set
+	set_class_7_8_ppp(forms, args, data)
 end
 
 conjugations["7a"] = function(args, data)
 	local forms = {}
 
-	parse_variants(data, args[1], {"23", "и", "9","past"})
+	parse_variants(data, args[1], {"23", "и", "9","past", "+p"})
 	local full_inf = get_stressed_arg(args, 3)
 	local pres_stem = get_stressed_arg(args, 4)
 	local past_part_stem = get_opt_stressed_arg(args, 5)
@@ -1859,7 +1917,7 @@ end
 conjugations["7b"] = function(args, data)
 	local forms = {}
 
-	parse_variants(data, args[1], {"9", "past"})
+	parse_variants(data, args[1], {"9", "past", "+p"})
 	local full_inf = get_stressed_arg(args, 3)
 	local past_part_stem = get_opt_stressed_arg(args, 5)
 	local pres_stem = past_part_stem and get_unstressed_arg(args, 4) or get_stressed_arg(args, 4)
@@ -1879,6 +1937,7 @@ end
 conjugations["8a"] = function(args, data)
 	local forms = {}
 
+	parse_variants(data, args[1], {"+p"})
 	local stem = get_stressed_arg(args, 3)
 	local full_inf = get_stressed_arg(args, 4)
 	no_stray_args(args, 4)
@@ -1905,12 +1964,16 @@ conjugations["8a"] = function(args, data)
 	forms["past_n"] = stem .. "ло"
 	forms["past_pl"] = stem .. "ли"
 
+	-- set PPP; must be done after both present 3sg and past fem have been set
+	set_class_7_8_ppp(forms, args, data)
+
 	return forms
 end
 
 conjugations["8b"] = function(args, data)
 	local forms = {}
 
+	parse_variants(data, args[1], {"+p"})
 	local stem = get_unstressed_arg(args, 3)
 	local full_inf = get_stressed_arg(args, 4)
 	no_stray_args(args, 4)
@@ -1937,6 +2000,9 @@ conjugations["8b"] = function(args, data)
 	forms["past_f"] = stem .. "ла́"
 	forms["past_n"] = stem .. "ло́"
 	forms["past_pl"] = stem .. "ли́"
+
+	-- set PPP; must be done after both present 3sg and past fem have been set
+	set_class_7_8_ppp(forms, args, data)
 
 	return forms
 end
