@@ -1937,7 +1937,7 @@ end
 conjugations["8a"] = function(args, data)
 	local forms = {}
 
-	parse_variants(data, args[1], {"+p"})
+	parse_variants(data, args[1], {"past", "+p"})
 	local stem = get_stressed_arg(args, 3)
 	local full_inf = get_stressed_arg(args, 4)
 	no_stray_args(args, 4)
@@ -1958,11 +1958,10 @@ conjugations["8a"] = function(args, data)
 	forms["pres_futr_3pl"] = combine(stem, nil, "ут")
 
 	set_imper(forms, stem, nil, "и", "ите")
-
+	-- set prefix to "" as stem may vary in length and no (1) variants
+	set_past_by_stress(forms, data.past_stress, "", stem, args, data,
+		"no-pastml")
 	forms["past_m"] = past_m
-	forms["past_f"] = stem .. "ла"
-	forms["past_n"] = stem .. "ло"
-	forms["past_pl"] = stem .. "ли"
 
 	-- set PPP; must be done after both present 3sg and past fem have been set
 	set_class_7_8_ppp(forms, args, data)
@@ -1973,8 +1972,9 @@ end
 conjugations["8b"] = function(args, data)
 	local forms = {}
 
-	parse_variants(data, args[1], {"+p"})
-	local stem = get_unstressed_arg(args, 3)
+	parse_variants(data, args[1], {"past", "+p"}, "b")
+	local stem = data.past_stress == "b" and get_unstressed_arg(args, 3) or
+		get_stressed_arg(args, 3)
 	local full_inf = get_stressed_arg(args, 4)
 	no_stray_args(args, 4)
 	local past_m = get_stressed_arg(args, "past_m")
@@ -1983,7 +1983,7 @@ conjugations["8b"] = function(args, data)
 	end
 	forms["infinitive"] = full_inf
 
-	-- default for pres_pasv_part is blank; влечь -> влеко́мый handled throug
+	-- default for pres_pasv_part is blank; влечь -> влеко́мый handled through
 	-- general override mechanism
 	set_participles_2stem(forms, stem, nil, past_m, nil,
 		"у́щий", "-", "-", "ший", "ши", "-")
@@ -1995,11 +1995,10 @@ conjugations["8b"] = function(args, data)
 	forms["pres_futr_3pl"] = combine(stem, nil, "у́т")
 
 	set_imper(forms, stem, nil, "и́", "и́те")
-
+	-- set prefix to "" as stem may vary in length and no (1) variants
+	set_past_by_stress(forms, data.past_stress, "", stem, args, data,
+		"no-pastml")
 	forms["past_m"] = past_m
-	forms["past_f"] = stem .. "ла́"
-	forms["past_n"] = stem .. "ло́"
-	forms["past_pl"] = stem .. "ли́"
 
 	-- set PPP; must be done after both present 3sg and past fem have been set
 	set_class_7_8_ppp(forms, args, data)
