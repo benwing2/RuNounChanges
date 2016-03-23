@@ -997,6 +997,9 @@ local function set_past_by_stress(forms, past_stresses, prefix, base, args,
 		elseif past_stress == "b" then
 			append_past(forms, prefix .. base, nil, pastml, "ла́", "ло́", "ли́")
 		elseif past_stress == "b*" then
+			 if not rfind(data.verb_type, "refl") then
+				error("Only reflexive verbs can take past stress variant " .. past_stress)
+			 end
 			-- See comment in type c''. We want to see whether we actually
 			-- added an argument, and if so, where.
 			local argset = append_to_arg_chain(forms, "past_m", "past_m",
@@ -1004,7 +1007,7 @@ local function set_past_by_stress(forms, past_stresses, prefix, base, args,
 			if argset and not args[argset] and not rfind(data.verb_type, "impers") then
 				data.default_reflex_stress = "ся́"
 			end
-			append_past(forms, prefix .. base, nil, pastml, "ла́", "ло́", "ли́")
+			append_past(forms, prefix .. base, nil, {}, "ла́", "ло́", "ли́")
 		elseif past_stress == "c" then
 			-- изда́ть, возда́ть, сдать, пересозда́ть, воссозда́ть, надда́ть, наподда́ть, etc.
 			-- быть, избы́ть, сбыть
