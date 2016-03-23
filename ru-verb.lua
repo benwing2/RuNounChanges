@@ -1713,7 +1713,7 @@ end
 conjugations["6a"] = function(args, data)
 	local forms = {}
 
-	parse_variants(data, args[1], {"23", "и", "past", "+p", "7"})
+	parse_variants(data, args[1], {"23", "и", "past", "+p", "7", "ё"})
 	local stem = get_stressed_arg(args, 3)
 	local vowel_end_stem = is_vowel_stem(stem)
 	-- optional infinitive/past stem for verbs like колеба́ть
@@ -1755,7 +1755,7 @@ end
 conjugations["6b"] = function(args, data)
 	local forms = {}
 
-	parse_variants(data, args[1], {"past", "+p", "7"})
+	parse_variants(data, args[1], {"past", "+p", "7", "ё"})
 	local stem = get_unstressed_arg(args, 3)
 	local vowel_end_stem = is_vowel_stem(stem)
 	-- звать - зов, драть - дер
@@ -1810,7 +1810,7 @@ conjugations["6c"] = function(args, data)
 	local forms = {}
 
 	-- optional щ parameter for verbs like клеветать (клевещу́), past stress
-	parse_variants(data, args[1], {"щ", "past", "+p", "7"})
+	parse_variants(data, args[1], {"щ", "past", "+p", "7", "ё"})
 	local stem = get_stressed_arg(args, 3)
 	no_stray_args(args, 3)
 	-- remove accent for some forms
