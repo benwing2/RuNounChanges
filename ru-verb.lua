@@ -1639,8 +1639,9 @@ conjugations["4b"] = function(args, data)
 	present_i_b(forms, stem, tr, data.shch)
 	set_imper(forms, stem, tr, "и́", "и́те")
 	-- set prefix to "" as past stem may vary in length and no (1) variants
-	set_past_by_stress(forms, data.past_stress, "", nil, stem .. "и́",
-		tr and tr .. "i" .. AC, args, data)
+	local stem_noa, tr_noa = com.make_unstressed_once(stem ,tr)
+	set_past_by_stress(forms, data.past_stress, "", nil, stem_noa .. "и́",
+		tr_noa and tr_noa .. "i" .. AC, args, data)
 
 	return forms
 end
@@ -1665,9 +1666,9 @@ conjugations["4c"] = function(args, data)
 	set_class_4_ppp(forms, data, stem, tr)
 	present_i_c(forms, stem, tr, data.shch)
 	set_imper(forms, stem, tr, "и́", "и́те")
-	-- set prefix to "" as past stem may vary in length and no (1) variants
-	set_past_by_stress(forms, data.past_stress, "", nil, stem .. "и́",
-		tr and tr .. "i" .. AC, args, data)
+	local stem_noa, tr_noa = com.make_unstressed_once(stem ,tr)
+	set_past_by_stress(forms, data.past_stress, "", nil, stem_noa .. "и́",
+		tr_noa and tr_noa .. "i" .. AC, args, data)
 
 	return forms
 end
@@ -2559,9 +2560,9 @@ conjugations["irreg-спать"] = function(args, data)
 		forms["impr_sg"] = prefix .. "спи́"
 		forms["impr_pl"] = prefix .. "спи́те"
 		present_i_b(forms, prefix .. "сп")
+		set_past(forms, prefix .. "спа́л", nil, "", "а́", "о", "и")
 	end
 
-	set_past(forms, prefix .. "спа́л", nil, "", "а́", "о", "и")
 
 	return forms
 end
@@ -2632,6 +2633,7 @@ conjugations["irreg-дать"] = function(args, data)
 		forms["impr_pl"] = prefix .. "да́йте"
 		append_pres_futr(forms, prefix, nil,
 			"да́м", "да́шь", "да́ст", "дади́м", "дади́те", "даду́т")
+	end
 
 	set_past_by_stress(forms, data.past_stress, prefix, nil, "да́", nil,
 		args, data)
@@ -2697,12 +2699,10 @@ conjugations["irreg-сыпать"] = function(args, data)
 		forms["past_adv_part"] = prefix .. "сыпавши"
 		forms["past_adv_part_short"] = prefix .. "сыпав"
 
-		forms["impr_sg"] = prefix .. "сыпь"
-		forms["impr_pl"] = prefix .. "сыпьте"
-
+		set_imper(forms, prefix .. "сып", nil, {"и", "ь"}, "ьте")
 		present_je_a(forms, prefix .. "сыпл")
 		append_pres_futr(forms, prefix .. "сып", nil,
-			{}, "ешь", "ет", "ем", "ете", "ют")
+			{}, "ешь", "ет", "ем", "ете", {})
 
 		set_past(forms, prefix .. "сыпал", nil, "", "а", "о", "и")
 	else
@@ -2717,12 +2717,10 @@ conjugations["irreg-сыпать"] = function(args, data)
 		forms["pres_adv_part"] = prefix .. "сы́пля"
 		forms["pres_adv_part2"] = prefix .. "сы́пя"
 
-		forms["impr_sg"] = prefix .. "сы́пь"
-		forms["impr_pl"] = prefix .. "сы́пьте"
-
+		set_imper(forms, prefix .. "сы́п", nil, "ь", "ьте")
 		present_je_a(forms, prefix .. "сы́пл")
 		append_pres_futr(forms, prefix .. "сы́п", nil,
-			{}, "ешь", "ет", "ем", "ете", "ют")
+			{}, "ешь", "ет", "ем", "ете", {})
 
 		set_past(forms, prefix .. "сы́пал", nil, "", "а", "о", "и")
 	end
