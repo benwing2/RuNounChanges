@@ -507,6 +507,18 @@ function export.do_generate_forms(conj_type, args)
 		track("perfective-no-ppp")
 	end
 
+	-- FIXME, temporary tracking for places that need conversion to past stress
+	-- variant
+	if args["past_m2"] or args["past_m3"] or args["past_m4"] or
+		args["past_f"] or args["past_f2"] or args["past_f3"] or args["past_f4"] or
+		args["past_n"] or args["past_n2"] or args["past_n3"] or args["past_n4"] or
+		args["past_pl"] or args["past_pl2"] or args["past_pl3"] or args["past_pl4"] then
+		track("explicit-past")
+	end
+	if args["reflex_stress"] then
+		track("reflex-stress")
+	end
+
 	-- Perfective/imperfective
 	if data.perf then
 		table.insert(categories, "Russian perfective verbs")
