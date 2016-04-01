@@ -8,8 +8,8 @@ from blib import getparam, rmparam, msg, site
 
 import rulib as ru
 
-parser = argparse.ArgumentParser(description="Generate verb stubs for class-1a verbs.")
-parser.add_argument('--direcfile', help="File containing pages to fix.")
+parser = argparse.ArgumentParser(description="Generate verb stubs.")
+parser.add_argument('--direcfile', help="File containing directives.")
 args = parser.parse_args()
 
 for line in codecs.open(args.direcfile, "r", "utf-8"):
