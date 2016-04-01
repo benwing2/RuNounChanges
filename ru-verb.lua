@@ -1806,43 +1806,22 @@ conjugations["6b"] = function(args, data)
 	local pres_stem = get_opt_unstressed_arg(args, 4) or stem
 	no_stray_args(args, 4)
 
-	forms["pres_pasv_part"] = ""
+	forms["infinitive"] = stem .. (vowel_end_stem and "я́ть" or "а́ть")
+	set_participles_2stem(forms, pres_stem, nil, stem, nil,
+		is_vowel_stem(pres_stem) and "ю́щий" or "у́щий",
+		"",
+		rfind(pres_stem, "[шщжч]$") and "а́" or "я́",
+		vowel_end_stem and "я́вший" or "а́вший",
+		vowel_end_stem and "я́вши" or "а́вши",
+		vowel_end_stem and "я́в" or "а́в")
+	set_moving_ppp(forms, data)
 
 	present_e_b(forms, pres_stem)
-
 	local impr_end = vowel_end_stem and "́й" -- accent on the preceding vowel
 		or "и́"
 	set_imper(forms, pres_stem, nil, impr_end, impr_end .. "те")
 
-	if rfind(pres_stem, "[шщжч]$") then
-		forms["pres_adv_part"] = pres_stem .. "а́"
-	else
-		forms["pres_adv_part"] = pres_stem .. "я́"
-	end
-
-	if is_vowel_stem(pres_stem) then
-		forms["pres_actv_part"] = pres_stem .. "ю́щий"
-	else
-		forms["pres_actv_part"] = pres_stem .. "у́щий"
-	end
-
-	if vowel_end_stem then
-		forms["infinitive"] = stem .. "я́ть"
-		forms["past_actv_part"] = stem .. "я́вший"
-		forms["past_adv_part"] = stem .. "я́вши"
-		forms["past_adv_part_short"] = stem .. "я́в"
-	else
-		forms["infinitive"] = stem .. "а́ть"
-		forms["past_actv_part"] = stem .. "а́вший"
-		forms["past_adv_part"] = stem .. "а́вши"
-		forms["past_adv_part_short"] = stem .. "а́в"
-	end
-	set_moving_ppp(forms, data)
-
-	-- past_f for ждала́, подождала́ now handled through general mechanism
-	--for разобрало́сь, past_n2 разобрало́ now handled through general mechanism
-	--for разобрали́сь, past_pl2 разобрали́ now handled through general mechanism
-
+	-- e.g. ждала́, подождала́, разобрало́сь, разобрали́сь
 	-- set prefix to "" as past stem may vary in length and no (1) variants
 	set_past_by_stress(forms, data.past_stress, "", nil,
 		stem .. (vowel_end_stem and "я́" or "а́"), nil, args, data)
