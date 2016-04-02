@@ -1,0 +1,2735 @@
+наблюдательный
+
+==Russian==
+
+===Etymology===
+{{affix|ru|наблюда́тель|-ный}}
+
+===Pronunciation===
+* {{ru-IPA|наблюда́тельный}}
+
+===Adjective===
+{{ru-adj|наблюда́тельный|наблюда́тельнее}}
+
+# {{lb|ru|attributive}} [[observation]], [[observational]]
+#: {{ru-ux|'''наблюда́тельный''' [[пункт]]|observation post|inline=y}}
+# [[observant]]
+#: {{ru-ux|'''наблюда́тельный''' [[ребёнок]]|observant child|inline=y}}
+# {{lb|ru|attributive}} [[supervision]], [[supervisory]]
+#: {{ru-ux|'''наблюда́тельный''' [[сове́т]]|supervisory council|inline=y}}
+
+====Declension====
+{{ru-decl-adj|наблюда́тельный|a*}}
+
+====Related terms====
+* {{l|ru|наблюда́ть}}
+* {{l|ru|наблюда́ться}}
+* {{l|ru|наблюда́тель}}
+* {{l|ru|наблюде́ние}}
+
+
+
+объемный
+
+==Russian==
+
+===Adjective===
+{{ru-adj-alt-ё|объёмный}}
+
+
+
+объёмный
+
+==Russian==
+
+===Etymology===
+{{affix|ru|объём|-ный}}
+
+===Pronunciation===
+* {{ru-IPA|объёмный}}
+
+===Adjective===
+{{ru-adj|объёмный|объёмнее}}
+
+# {{lb|ru|attributive}} [[volume]]
+# [[voluminous]], [[roomy]]
+# by [[volume]]
+#: {{ru-ux|'''объёмный''' [[вес]]|[[bulk weight]], weight by volume|inline=y}}
+# [[volumetric]]
+#: {{ru-ux|'''объёмный''' [[ана́лиз]]|volumetric analysis|inline=y}}
+# [[three-dimensional]]
+#: {{ru-ux|'''объёмное''' [[изображе́ние]]|[[stereoscopic]] image|inline=y}}
+#: {{ru-ux|'''объёмная [[фигу́ра]]|three-dimensional figure|inline=y}}
+
+====Declension====
+{{ru-decl-adj|объёмный|a*}}
+
+====Related terms====
+* {{l|ru|объёмистый}}
+
+
+
+удлиненный
+
+==Russian==
+
+===Adjective===
+{{ru-adj-alt-ё|удлинённый}}
+
+
+удлинённый
+
+==Russian==
+
+===Pronunciation===
+* {{ru-IPA}}
+
+===Participle===
+{{head|ru|participle|head=удлинённый}}
+
+# {{ru-participle of|удлини́ть||past|pass}}
+
+====Declension====
+{{ru-decl-adj|удлинённый|b(2)}}
+
+===Adjective===
+{{ru-adj|удлинённый}}
+
+# [[elongated]], [[lengthened]]
+
+====Declension====
+{{ru-decl-adj|удлинённый|a(1)}}
+
+====Related terms====
+* {{l|ru|удлиня́ть|g=impf}}, {{l|ru|удлини́ть|g=pf}}
+
+
+
+
+неинтересный
+
+==Russian==
+
+===Etymology===
+{{affix|ru|не-|интере́сный}}
+
+===Pronunciation===
+* {{ru-IPA|неинтере́сный}}
+
+===Adjective===
+{{ru-adj|неинтере́сный}}
+
+# [[uninteresting]], [[boring]]
+# {{lb|ru|figurative|colloquial}} [[ugly]], [[unattractive]]
+
+====Declension====
+{{ru-decl-adj|неинтере́сный|a*}}
+
+====Synonyms====
+* {{sense|uninteresting}} {{l|ru|ску́чный}}
+
+====Antonyms====
+* {{l|ru|интере́сный}}
+
+
+
+элитный
+
+==Russian==
+
+===Etymology===
+{{affix|ru|эли́та|-ный}}
+
+===Pronunciation===
+* {{ru-IPA|эли́тный}}
+
+===Adjective===
+{{ru-adj|эли́тный|эли́тнее}}
+
+# [[elite]]
+# [[best]], [[choice]]
+#: {{ru-ux|элитные сорта кофе|choice coffees|inline=y}}
+# {{lb|ru|colloquial}} [[luxury]], [[luxurious]]
+#: {{ru-ux|эли́тный жило́й дом|luxury residential building|inline=y}}
+
+====Declension====
+{{ru-decl-adj|эли́тный|a*}}
+
+====Synonyms====
+* {{sense|best}} {{l|ru|лу́чший}}, {{l|ru|отбо́рный}}
+* {{sense|luxury}} {{l|ru|элита́рный}}
+
+====Related terms====
+* {{l|ru|эли́та}}
+
+
+рваный
+
+==Russian==
+
+===Etymology===
+{{affix|ru|рвать|-ный}}
+
+===Pronunciation===
+* {{ru-IPA|рва́ный}}
+
+===Adjective===
+{{ru-adj|рва́ный}}
+
+# [[torn]]
+#: {{ru-ux|рва́ная ра́на|[[laceration]]}}
+# [[jagged]]
+# [[uneven]]
+
+====Declension====
+{{ru-decl-adj|рва́ный}}
+
+====Synonyms====
+* {{sense|torn}} {{l|ru|разо́рванный}}
+* {{sense|torn}} {{l|ru|зазу́бренный}}
+* {{sense|torn}} {{l|ru|неро́вный}}, {{l|ru|ломаный}}
+
+====Related terms====
+* {{l|ru|рвать}}
+
+
+танковый
+
+==Russian==
+
+===Etymology===
+{{affix|ru|танк|-овый}}
+
+===Pronunciation===
+* {{ru-IPA|та́нковый}}
+
+===Adjective===
+{{ru-adj|та́нковый}}
+
+# {{lb|ru|attributive}} [[tank]]
+#: {{ru-ux|'''та́нковая''' [[брига́да]]|tank brigade|inline=y}}
+# [[armored]]
+#: {{ru-ux|'''та́нковая''' [[диви́зия]]|armored division|inline=y}}
+
+====Declension====
+{{ru-decl-adj|та́нковый}}
+
+====Related terms====
+* {{l|ru|танк}}
+* {{l|ru|танке́тка}}
+* {{l|ru|танки́ст}}
+
+
+
+
+логичный
+
+==Russian==
+
+===Etymology===
+{{affix|ru|ло́гика|-ный}}
+
+===Pronunciation===
+* {{ru-IPA|логи́чный}}
+
+===Adjective===
+{{ru-adj|логи́чный|логи́чнее}}
+
+# [[logical]]
+
+====Synonyms====
+* {{l|ru|логи́ческий}}
+
+====Declension====
+{{ru-decl-adj|логи́чный|a*}}
+
+====Related terms====
+* {{l|ru|ло́гика}}
+* {{l|ru|ло́гик}}
+
+
+
+спасительный [does this have short forms?]
+
+==Russian==
+
+===Etymology===
+{{affix|ru|спаси́тель|-ный}}
+
+===Pronunciation===
+* {{ru-IPA|спаси́тельный}}
+
+===Adjective===
+{{ru-adj|спаси́тельный}}
+
+# [[saving]], [[salutary]]
+#: {{ru-ux|'''спаси́тельная''' [[возмо́жность]]/[[шанс]]|[[heaven-sent]] [[opportunity]]|inline=y}}
+# bringing [[salvation]]
+
+====Declension====
+{{ru-decl-adj|спаси́тельный|a*}}
+
+====Related terms====
+* {{l|ru|спаси́тель}}
+* {{l|ru|спаса́ть|g=impf}}, {{l|ru|спасти́|g=pf}}
+
+
+
+
+чуткий
+
+==Russian==
+
+===Etymology===
+{{rfe|lang=ru}}
+
+===Pronunciation===
+* {{ru-IPA|чу́ткий}}
+
+===Adjective===
+{{ru-adj|чу́ткий|чу́тче}}
+
+# [[sensitive]] (of a person, instrument, etc.)
+# [[sharp]], [[keen]] (sense of hearing, smell, etc.)
+#: {{ru-ux|'''чу́ткая''' [[соба́ка]]|[[keen-nosed]] dog|inline=y}}
+# [[sympathetic]], [[thoughtful]], [[tactful]]
+#: {{ru-ux|'''чу́ткий''' [[подхо́д]]|tactful approach|inline=y}}
+# [[light]] (sleep)
+#: {{ru-ux|'''чу́ткий''' [[сон]]|light sleep|inline=y}}
+
+====Declension====
+{{ru-decl-adj|чу́ткий|c*}}
+
+====Related terms====
+* {{l|ru|чу́ткость}}
+
+
+
+лабораторный [short forms? ruwikt says yes]
+
+==Russian==
+
+===Etymology===
+{{affix|ru|лаборато́рия|-ный}}
+
+===Pronunciation===
+* {{ru-IPA|лаборато́рный}}
+
+===Adjective===
+{{ru-adj|лаборато́рный}}
+
+# {{lb|ru|attributive}} [[laboratory]]
+
+====Declension====
+{{ru-decl-adj|лаборато́рный}}
+
+====Related terms====
+* {{l|ru|лаборато́рия}}
+
+
+
+непостижимый
+
+==Russian==
+
+===Etymology===
+{{affix|ru|не-|постижи́мый}}
+
+===Pronunciation===
+* {{ru-IPA|непостижи́мый}}
+
+===Adjective===
+{{ru-adj|непостижи́мый|непостижи́мее}}
+
+# [[incomprehensible]], [[unfathomable]]
+
+====Declension====
+{{ru-decl-adj|непостижи́мый|a}}
+
+====Related terms====
+* {{l|ru|постига́ть|g=impf}}, {{l|ru|пости́гнуть|g=pf}}, {{l|ru|пости́чь|g=pf}}
+* {{l|ru|постиже́ние}}
+
+
+
+пронзительный
+
+==Russian==
+
+===Etymology===
+{{affix|ru|пронзи́ть|-ель|-ный}}
+
+===Pronunciation===
+* {{ru-IPA|пронзи́тельный}}
+
+===Adjective===
+{{ru-adj|пронзи́тельный}}
+
+# [[piercing]], [[penetrating]]
+# [[shrill]], [[strident]]
+
+====Declension====
+{{ru-decl-adj|пронзи́тельный|a*}}
+
+====Related terms====
+* {{l|ru|пронза́ть|g=impf}}, {{l|ru|пронзи́ть|g=pf}}
+
+
+
+расчетный
+
+==Russian==
+
+===Adjective===
+{{ru-adj-alt-ё|расчётный}}
+
+
+расчётный
+
+==Russian==
+
+===Etymology===
+{{affix|ru|расчёт|-ный}}
+
+===Pronunciation===
+* {{ru-IPA|расчётный}}
+
+===Adjective===
+{{ru-adj|расчётный}}
+
+# {{lb|ru|attributive}} [[calculation]]
+# {{lb|ru|attributive}} [[pay]], [[payment]]
+#: {{ru-ux|'''расчётная''' [[ве́домость]]|[[payroll]]|inline=y}}
+#: {{ru-ux|'''расчётная''' [[пала́та]]|[[clearing house]]|inline=y}}
+# [[estimated]]
+
+====Declension====
+{{ru-decl-adj|расчётный}}
+
+====Related terms====
+* {{l|ru|}}
+
+
+
+схожий
+
+==Russian==
+
+===Etymology===
+{{affix|ru|сход|-ий}}
+
+===Pronunciation===
+* {{ru-IPA|схо́жий}}
+
+===Adjective===
+{{ru-adj|схо́жий}}
+
+# {{lb|ru|colloquial}} [[similar]]
+
+====Declension====
+{{ru-decl-adj|схо́жий|a}}
+
+====Synonyms====
+* {{l|ru|схо́дный}}
+
+====Related terms====
+* {{l|ru|схо́жесть}}
+
+
+
+чудный
+
+==Russian==
+
+===Etymology===
+{{affix|ru|чу́до|-ный}}
+
+===Pronunciation===
+* {{ru-IPA|чу́дный}}
+
+===Adjective===
+{{ru-adj|чу́дный}}
+
+# [[marvelous]], [[wonderful]]
+# [[beautiful]]
+# [[excellent]]
+
+====Declension====
+{{ru-decl-adj|чу́дный|a*}}
+
+====Synonyms====
+* {{sense|wonderful}} {{l|ru|удиви́тельный}}, {{l|ru|чуде́сный}}, {{l|ru|волше́бный}}
+* {{sense|beautiful}} {{l|ru|преле́стный}}, {{l|ru|прекра́сный}}
+* {{sense|excellent}} {{l|ru|отли́чный}}, {{l|ru|прекра́сный}}
+
+====Related terms====
+* {{l|ru|чу́дно}}
+* {{l|ru|чудно́}}
+* {{l|ru|чу́дность}}
+
+
+
+двухэтажный [does this have secondary stress?]
+
+==Russian==
+
+===Etymology===
+{{affix|ru|[[два|двух]]|эта́ж|-ный}}
+
+===Pronunciation===
+* {{ru-IPA|двухэта́жный}}
+
+===Adjective===
+{{ru-adj|двухэта́жный}}
+
+# [[two-story]]
+# [[double-decker]]
+
+====Declension====
+{{ru-decl-adj|двухэта́жный}}
+
+====Related terms====
+* {{l|ru|трёхэта́жный}}
+* {{l|ru|четырёхэта́жный}}
+
+
+
+пластмассовый
+
+==Russian==
+
+===Etymology===
+{{affix|ru|пластма́сса|-овый}}
+
+===Pronunciation===
+* {{ru-IPA|пластма́ссовый}}
+
+===Adjective===
+{{ru-adj|пластма́ссовый}}
+
+# [[plastic]]
+
+====Declension====
+{{ru-decl-adj|пластма́ссовый}}
+
+====Synonyms====
+* {{l|ru|пла́стиковый}}
+
+====Related terms====
+* {{l|ru|пластма́сса}}
+
+
+
+пристальный
+
+==Russian==
+
+===Etymology===
+{{affix|ru|приста́ть|-альный}}
+
+===Pronunciation===
+* {{ru-IPA|при́стальный}}
+
+===Adjective===
+{{ru-adj|при́стальный}}
+
+# [[intent]] (look)
+# [[rapt]], [[steadfast]] (attention)
+
+====Declension====
+{{ru-decl-adj|при́стальный|a*}}
+
+====Related terms====
+* {{l|ru|приста́ть}}
+
+
+
+эффектный [does this have short forms?]
+
+==Russian==
+
+===Etymology===
+{{affix|ru|эффе́кт|-ный}}
+
+===Pronunciation===
+* {{ru-IPA|эффе́ктный}}
+
+===Adjective===
+{{ru-adj|эффе́ктный}}
+
+# [[showy]], [[spectacular]]
+# [[striking]]
+#: {{ru-ux|'''эффе́ктное''' [[появле́ние]]|[[striking]] [[appearance]]|inline=y}}
+
+====Declension====
+{{ru-decl-adj|эффе́ктный|a*}}
+
+====Related terms====
+* {{l|ru|эффе́кт}}
+
+
+
+молекулярный [short forms? see https://books.google.com/books?id=42kMAQAAIAAJ&pg=PA159&dq=%D0%BC%D0%BE%D0%BB%D0%B5%D0%BA%D1%83%D0%BB%D1%8F%D1%80%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwipj9fas63LAhVQA44KHXotA_AQ6AEIKjAC#v=onepage&q=%D0%BC%D0%BE%D0%BB%D0%B5%D0%BA%D1%83%D0%BB%D1%8F%D1%80%D0%BD%D1%8B&f=false] 
+
+==Russian==
+
+===Etymology===
+Probably from {{der|ru|de|molekular}} + {{affix|ru|-ный}}.
+
+===Pronunciation===
+* {{ru-IPA|молекуля́рный}}
+
+===Adjective===
+{{ru-adj|молекуля́рный}}
+
+# [[molecular]]
+#: {{ru-ux|'''молекуля́рная''' [[биоло́гия]]|[[molecular biology]]|inline=y}}
+
+====Declension====
+{{ru-decl-adj|молекуля́рный|a*}}
+
+====Related terms====
+* {{l|ru|моле́кула}}
+
+
+
+
+серийный [short forms? cf. https://books.google.com/books?id=T7yyAAAAIAAJ&q=%D1%81%D0%B5%D1%80%D0%B8%D0%B9%D0%BD%D1%8B&dq=%D1%81%D0%B5%D1%80%D0%B8%D0%B9%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwim57nZt63LAhUN2GMKHc_9Dc8Q6AEIJTAB]
+
+==Russian==
+
+===Etymology===
+{{affix|ru|се́рия|-ный}}
+
+===Pronunciation===
+* {{ru-IPA|сери́йный}}
+
+===Adjective===
+{{ru-adj|сери́йный}}
+
+# [[serial]], {{lb|ru|attributive}} [[series]]
+#: {{ru-ux|'''сери́йное''' [[произво́дство]]|series production|inline=y}}
+
+====Declension====
+{{ru-decl-adj|сери́йный|a*}}
+
+====Related terms====
+* {{l|ru|се́рия}}
+
+
+летный
+
+==Russian==
+
+===Etymology===
+{{affix|ru|ле́то|-ный}}
+
+===Pronunciation===
+* {{ru-IPA|ле́тный}}
+
+===Adjective===
+{{ru-adj|ле́тный|летне́е}}
+
+# {{lb|ru|attributive}} [[summer]]
+# {{lb|ru|dated}} [[old]] (of a person)
+
+====Declension====
+{{ru-decl-adj|ле́тный|c'*}}
+
+====Synonyms====
+* {{sense|old}} {{l|ru|ста́рый}}
+
+====Related terms====
+* {{l|ru|ле́то}}
+
+лётный
+
+==Russian==
+
+===Etymology===
+{{affix|ru|лёт|-ный}}
+
+===Pronunciation===
+* {{ru-IPA}}
+
+===Adjective===
+{{ru-adj|лётный}}
+
+# {{lb|ru|attributive}} [[flying]], [[flight]]
+#: {{ru-ux|[[лётная полоса́]]|[[runway]]|inline=y}}
+#: {{ru-ux|[[лётное по́ле]]|[[airfield]]|inline=y}}
+
+====Declension====
+{{ru-decl-adj|лётный}}
+
+====Related terms====
+* {{l|ru|лёт}}
+* {{l|ru|лете́ть|g=impf}}, {{l|ru|полете́ть|g=pf}}
+
+
+
+дореволюционный
+
+==Russian==
+
+===Etymology===
+{{affix|ru|до-}} + {{der|ru|de|Revolution}} + {{affix|ru|-ный}}
+
+===Pronunciation===
+* {{ru-IPA|дореволюцио́нный}}
+
+===Adjective===
+{{ru-adj|дореволюцио́нный}}
+
+# [[prerevolutionary]]
+# specifically, before the {{w|October Revolution}}
+
+====Declension====
+{{ru-decl-adj|дореволюцио́нный}}
+
+====Related terms====
+* {{l|ru|револю́ция}}
+
+
+
+
+потерпевший
+
+==Russian==
+
+===Pronunciation===
+* {{ru-IPA|потерпе́вший}}
+
+===Participle===
+{{head|ru|participle|head=потерпе́вший}}
+
+# {{ru-participle of|потерпе́ть||past|act}}
+
+====Declension====
+{{ru-decl-adj|потерпе́вший}}
+
+===Adjective===
+{{ru-adj|потерпе́вший}}
+
+# {{lb|ru|law}} [[injured]], [[wronged]]
+#: {{ru-ux|'''потерпе́вшая''' [[сторона́]]|injured party|inline=y}}
+
+====Declension====
+{{ru-decl-adj|потерпе́вший}}
+
+===Noun===
+{{ru-noun+|потерпе́вший|+|f=потерпе́вшая}}
+
+# {{lb|ru|law}} [[victim]]
+
+====Declension====
+{{ru-noun-table|потерпе́вший}}
+
+===Related terms===
+* {{l|ru|терпе́ть|g=impf}}, {{l|ru|потерпе́ть|g=pf}}
+
+
+
+кассационный
+
+==Russian==
+
+===Etymology===
+Probably from {{der|ru|de|Kassation}} + {{affix|ru|-ный}}
+
+===Pronunciation===
+* {{ru-IPA|кассацио́нный}}
+
+===Adjective===
+{{ru-adj|кассацио́нный}}
+
+# {{lb|ru|law|attributive}} [[appeal]], [[cassation]]
+#: {{ru-ux|'''кассацио́нная''' [[жа́лоба]]|[[appeal]]|inline=y}}
+
+====Declension====
+{{ru-decl-adj|кассацио́нный}}
+
+====Related terms====
+* {{l|ru|касса́ция}}
+
+
+
+
+небывалый
+
+==Russian==
+
+===Etymology===
+{{affix|ru|не-|быва́лый}}
+
+===Pronunciation===
+* {{ru-IPA|небыва́лый}}
+
+===Adjective===
+{{ru-adj|небыва́лый}}
+
+# [[unprecedented]], [[unheard-of]]
+# [[imaginary]], [[fantastic]]
+
+====Declension====
+{{ru-decl-adj|небыва́лый|a}}
+
+====Related terms====
+* {{l|ru|быва́лый}}
+
+
+
+
+нечистый
+
+==Russian==
+
+===Etymology===
+{{affix|ru|не-|чи́стый}}
+
+===Pronunciation===
+* {{ru-IPA|нечи́стый|нечисте́е}}
+
+===Adjective===
+{{ru-adj|нечи́стый}}
+
+# [[dirty]], [[unclean]]
+#: {{ru-ux|'''нечи́стая''' [[у́лица]]|dirty street|inline=y}}
+# [[defective]], [[sloppy]], [[inaccurate]]
+#: {{ru-ux|'''нечи́стая''' [[рабо́та]]|sloppy work|inline=y}}
+# [[dishonest]], [[morally]] [[bankrupt]]
+#: {{ru-ux|[[там|Там]] [[вестись|ведётся]] '''нечи́стая''' [[игра́]].|A dishonest game is being played there.}}
+# [[impure]]
+# [[evil]], [[diabolical]]
+#: {{ru-ux|'''нечи́стая''' [[си́ла]]|evil spirit|inline=y}}
+
+====Declension====
+{{ru-decl-adj|нечи́стый|c'}}
+
+====Synonyms====
+* {{sense|dirty}} {{l|ru|гря́зный}}, {{l|ru|загрязнённый}}
+* {{sense|sloppy, defective}} {{l|ru|неаккура́тный}}, {{l|ru|топо́рный}}
+* {{sense|dishonest}} {{l|ru|гря́зный}}, {{l|ru|мошенни́ческий}}, {{l|ru|обманный}}
+* {{sense|evil}} {{l|ru|потусторонний}}, {{l|ru|дьявольский}}
+
+===Noun===
+{{ru-noun+|нечи́стый|+}}
+
+# [[devil]]
+
+====Declension====
+{{ru-noun-table|нечи́стый|+}}
+
+====Synonyms====
+* {{l|ru|дьявол}}, {{l|ru|чёрт}}, {{l|ru|бес}}
+
+===Related terms===
+* {{l|ru|чи́стый}}
+
+
+
+
+надлежащий
+
+==Russian==
+
+===Pronunciation===
+* {{ru-IPA|надлежа́щий}}
+
+===Participle===
+{{head|ru|participle|head=надлежа́щий}}
+
+# {{ru-participle of|надлежа́ть||pres|act}}
+
+====Declension====
+{{ru-decl-adj|надлежа́щий}}
+
+===Adjective===
+{{ru-adj|надлежа́щий}}
+
+# [[proper]], [[fitting]], [[suitable]]
+#: {{ru-ux|'''надлежа́щие''' [[мера|ме́ры]]|suitable measures|inline=y}}
+
+====Declension====
+{{ru-decl-adj|надлежа́щий}}
+
+====Related terms====
+* {{l|ru|надлежа́ть}}
+
+
+
+
+жилищно-коммунальный
+
+==Russian==
+
+{{wikipedia|lang=ru|жилищно-коммунальные услуги}}
+===Etymology===
+{{affix|ru|[[жилищный|жили́щно-]]|[[коммуна́льный]]}}
+
+===Pronunciation===
+* {{ru-IPA|жили́щно-коммуна́льный}}
+
+===Adjective===
+{{ru-adj|[[жилищный|жили́щно-]][[коммуна́льный]]}}
+
+# [[housing]] and [[communal]]
+#: {{ru-ux|жили́щно-коммуна́льные [[услуга|услу́ги]]|housing and communal services|inline=y}}
+
+====Declension====
+{{ru-decl-adj|жили́щно-коммуна́льный}}
+
+====Related terms====
+* {{l|ru|жили́щный}}
+* {{l|ru|коммуна́льный}}
+
+
+
+округлый
+
+==Russian==
+
+===Etymology===
+{{affix|ru|о-|круг|-лый}}
+
+===Pronunciation===
+* {{ru-IPA|окру́глый}}
+
+===Adjective===
+{{ru-adj|окру́глый}}
+
+# [[rounded]]
+# [[smooth]], [[measured]]
+
+====Declension====
+{{ru-decl-adj|окру́глый|окру́глее}}
+
+====Synonyms====
+# {{sense|rounded}} {{l|ru|кру́глый}}
+# {{sense|smooth, measured}} {{l|ru|пла́вный}}, {{l|ru|разме́ренный}}
+
+====Related terms====
+* {{l|ru|круг}}
+* {{l|ru|окру́га}}
+* {{l|ru|округле́ние}}
+* {{l|ru|округлённый}}
+* {{l|ru|округлённость}}
+* {{l|ru|округля́ть|g=impf}}, {{l|ru|округи́ть|g=pf}}
+* {{l|ru|округля́ться|g=impf}}, {{l|ru|округи́ться|g=pf}}
+
+
+
+
+призванный
+
+==Russian==
+
+===Pronunciation===
+* {{ru-IPA|при́званный}}
+
+===Participle===
+{{head|ru|participle|head=при́званный}}
+
+# {{ru-participle of|призва́ть||past|pass}}
+
+====Declension====
+{{ru-decl-adj|при́званный|a(2),c(2)|shorttail=*|notes=* Dated.}}
+
+===Adjective===
+{{ru-adj|при́званный|при́званнее}}
+
+# {{rfdef|lang=ru}}
+
+====Declension====
+{{ru-decl-adj|при́званный|a(2)}}
+
+===Noun===
+{{ru-noun+|при́званный|+|a=an|f=при́званная}}
+
+# [[conscript]]
+
+====Declension====
+{{ru-noun-table|при́званный|+|a=an}}
+
+
+
+
+воронежский
+
+==Russian==
+
+===Etymology===
+{{affix|ru|Воро́неж|-ский}}
+
+===Pronunciation===
+* {{ru-IPA|воро́нежский}}
+
+===Adjective===
+{{ru-adj|воро́нежский}}
+
+# {{lb|ru|attributive}} [[Voronezh]]
+
+====Declension====
+{{ru-decl-adj|воро́нежский}}
+
+====Related terms====
+* {{l|ru|Воро́неж}}
+
+
+
+
+всесоюзный
+
+==Russian==
+{{wikipedia|lang=ru|Съезд Советов СССР}}
+
+===Etymology===
+{{affix|ru|[[весь|все]]|[[сою́з]]|-ный}}
+
+===Pronunciation===
+* {{ru-IPA|всесою́зный}}
+
+===Adjective===
+{{ru-adj|всесою́зный}}
+
+# [[All-Union]] (referring to the whole of the [[Soviet Union]])
+#: {{ru-ux|'''всесою́зный''' [[съезд]]|All-Union Congress|inline=y}}
+
+====Declension====
+{{ru-decl-adj|всесою́зный}}
+
+====Related terms====
+* {{l|ru|сою́з}}
+
+------------- from here -------------
+
+штатный
+
+==Russian==
+
+===Etymology===
+{{affix|ru|штат|-ный}}
+
+===Pronunciation===
+* {{ru-IPA|шта́тный}}
+
+===Adjective===
+{{ru-adj|шта́тный}}
+
+# {{rfdef|lang=ru}} [6 defs]
+
+====Declension====
+{{ru-decl-adj|шта́тный|a*}}
+
+====Synonyms====
+* {{sense|sense#4}} {{l|ru|компле́ктный}}, {{l|ru|вну́тренний}}, {{l|ru|встро́енный}}, {{l|ru|ордина́рный}}
+* {{sense|sense#5}} {{l|ru|норма́льный}}, {{l|ru|допусти́мый}}, {{l|ru|пла́новый}}, {{l|ru|успе́шный}}, {{l|ru|безупре́чный}}
+* {{sense|sense#6}} {{l|ru|норма́льный}}, {{l|ru|допусти́мый}}, {{l|ru|пла́новый}}, {{l|ru|предусмо́тренный}}
+
+====Antonyms====
+* {{sense|sense#1, sense#3}} {{l|ru|внешта́тный}}, {{l|ru|зашта́тный}}
+* {{sense|sense#4}} {{l|ru|нешта́тный}}, {{l|ru|некомпле́ктный}}
+* {{sense|sense#5}} {{l|ru|нешта́тный}}, {{l|ru|недопусти́мый}}, {{l|ru|непла́новый}}, {{l|ru|э́кстренный}}, {{l|ru|авари́йный}}
+* {{sense|sense#6}} {{l|ru|нешта́тный}}, {{l|ru|недопусти́мый}}, {{l|ru|непла́новый}}, {{l|ru|э́кстренный}}, {{l|ru|авари́йный}}, {{l|ru|чрезвыча́йный}}
+
+====Related terms====
+* {{l|ru|штат}}
+* {{l|ru|шта́тшкий}}
+
+пострадавший
+
+==Russian==
+
+===Pronunciation===
+* {{ru-IPA|пострада́вший}}
+
+===Participle===
+{{head|ru|participle|head=пострада́вший}}
+
+# {{ru-participle of|пострада́ть||past|act}}
+
+===Adjective===
+{{ru-adj|пострада́вший}}
+
+# [[injured]], [[damaged]], [[suffering]], [[stricken]]
+
+====Declension====
+{{ru-decl-adj|пострада́вший}}
+
+====Synonyms====
+* {{l|ru|потерпе́вший}}
+
+===Noun===
+{{ru-noun+|пострада́вший|+}}
+
+# [[victim]]
+
+====Declension====
+{{ru-noun-table|пострада́вший|+}}
+
+====Synonyms====
+* {{l|ru|же́ртва}}
+
+====Related terms====
+* {{l|ru|страда́ть|g=impf}}, {{l|ru|пострада́ть|g=pf}}
+
+внушительный
+
+==Russian==
+
+===Etymology===
+{{affix|ru|внуши́ть|-тельный}}
+
+===Pronunciation===
+* {{ru-IPA|внуши́тельный}}
+
+===Adjective===
+{{ru-adj|внуши́тельный|внуши́тельнее}}
+
+# [[impressive]]
+# [[imposing]]
+
+====Declension====
+{{ru-decl-adj|внуши́тельный|a*}}
+
+====Synonyms====
+* {{sense|impressive}} {{l|ru|соли́дный}}, {{l|ru|значи́тельный}}, {{l|ru|импоза́нтный}}
+* {{sense|imposing}} {{l|ru|соли́дный}}, {{l|ru|большо́й}}
+
+====Derived terms====
+* {{l|ru|внуши́тельно}}
+* {{l|ru|внуши́тельность}}
+
+====Related terms====
+* {{l|ru|внуша́ть|g=impf}}, {{l|ru|внуши́ть|g=pf}}
+* {{l|ru|внуше́ние}}
+
+инновацио́нный
+
+==Russian==
+
+===Etymology===
+Perhaps from {{der|ru|de|Innovation}} + {{affix|ru|-ный}}.
+
+===Pronunciation===
+* {{ru-IPA|инновацио́нный}}
+
+===Adjective===
+{{ru-adj|инновацио́нный}}
+
+# {{lb|ru|attributive}} [[innovation]]
+# [[innovative]]
+
+====Declension====
+{{ru-decl-adj|инновацио́нный|a*}}
+
+====Derived terms====
+* {{l|ru|инновацио́нно}}
+* {{l|ru|инновацио́нность}}
+
+====Related terms====
+* {{l|ru|иннова́ция}}
+
+продолжительный
+
+==Russian==
+
+===Etymology===
+{{affix|ru|продо́лжить|-тельный}}
+
+===Pronunciation===
+* {{ru-IPA|продолжи́тельный}}
+
+===Adjective===
+{{ru-adj|продолжи́тельный|продолжи́тельнее}}
+
+# [[long]]
+# [[prolonged]], [[extended]]
+# {{i|of sound}} [[protracted]]
+
+====Declension====
+{{ru-decl-adj|продолжи́тельный|a*}}
+
+====Synonyms====
+* {{sense|long}} {{l|ru|до́лгий}}, {{l|ru|дли́тельный}}
+* {{sense|protracted sound}} {{l|ru|протя́жный}}
+
+====Antonyms====
+* {{sense|long}} {{l|ru|кратковре́менный}}, {{l|ru|непродолжи́тельный}}
+
+====Related terms====
+* {{l|ru|продолжа́ть|g=impf}}, {{l|ru|продо́лжить|g=pf}}
+* {{l|ru|продолже́ние}}
+* {{l|ru|продолжи́тельность}}
+
+пухлый [ask Anatoli to verify defs esp. "swollen" and antonyms]
+
+==Russian==
+
+===Etymology===
+{{affix|ru|[[пухнуть|пух-]]|-лый}}
+
+===Pronunciation===
+* {{ru-IPA|пу́хлый}}
+
+===Adjective===
+{{ru-adj|пу́хлый}}
+
+# [[plump]], [[chubby]]
+# [[swollen]], [[puffy]]
+
+====Declension====
+{{ru-decl-adj|пу́хлый|c}}
+
+====Synonyms====
+* {{sense|plump}} {{l|ru|располне́вший}}, {{l|ru|одутлова́тый}}
+
+====Antonyms====
+* {{sense|plump}} {{l|ru|то́щий}}, {{l|ru|костля́вый}}, {{l|ru|худо́й}}
+* {{sense|swollen}} {{l|ru|то́нкий}}, {{l|ru|впа́вший}}
+
+====Related terms====
+* {{l|ru|пу́хнуть|g=impf}}, {{l|ru|вспу́хнуть|g=pf}}
+
+физиологический
+
+==Russian==
+
+===Etymology===
+{{affix|ru|физиоло́гия|-и́ческий}}
+
+===Pronunciation===
+* {{ru-IPA|физиологи́ческий}}
+
+===Adjective===
+{{ru-adj|физиологи́ческий}}
+
+# [[physiological]]
+# {{lb|ru|figurative}} [[sensual]], [[carnal]] {{i|as opposed to romantic}}
+
+====Declension====
+{{ru-decl-adj|физиологи́ческий}}
+
+====Synonyms====
+* {{sense|carnal}} {{l|ru|пло́тский}}
+
+====Antonyms====
+* {{sense|carnal}} {{l|ru|романти́ческий}}
+
+====Related terms====
+* {{l|ru|физиоло́гия}}
+* {{l|ru|физио́лог}}
+
+вишнёвый
+
+==Russian==
+
+===Alternative forms===
+* {{l|ru|ви́шневий}} {{i|dated}}
+
+===Etymology===
+{{affix|ru|ви́шня|-ёвый}}
+
+===Pronunciation===
+* {{ru-IPA}}
+
+===Adjective===
+{{ru-adj}}
+
+# {{lb|ru|attributive}} [[cherry]]
+# [[cherry]]-[[colored]]
+
+====Declension====
+{{ru-decl-adj}}
+
+====Related terms====
+* {{l|ru|ви́шня}}
+* {{l|ru|вишнёвка}}
+
+вишневый
+
+==Russian==
+
+===Etymology 1===
+{{affix|ru|ви́шня|-евый}}
+
+====Pronunciation====
+* {{ru-IPA|ви́шневый}}
+
+====Adjective====
+{{ru-adj|ви́шневый}}
+
+# {{lb|ru|dated}} {{altform of|lang=ru|вишнёвый}}
+
+=====Declension=====
+{{ru-decl-adj|ви́шневый}}
+
+=====Related terms=====
+* {{l|ru|ви́шня}}
+* {{l|ru|вишнёвка}}
+
+===Etymology 2===
+
+====Adjective====
+{{ru-adj-alt-ё|вишнёвый}}
+
+------------- from here -------------
+
+==Russian==
+
+===Etymology===
+{{affix|ru|foo|-ный}}
+
+===Pronunciation===
+* {{ru-IPA|fooный}}
+
+===Adjective===
+{{ru-adj|fooный}}
+
+# {{rfdef|lang=ru}}
+
+====Declension====
+{{ru-decl-adj|fooный}}
+
+====Synonyms====
+
+====Related terms====
+* {{l|ru|}}
+
+------------- from here -------------
+
+==Russian==
+
+===Etymology===
+{{affix|ru|[[один]]|[[еди́нственный]]}}
+
+===Pronunciation===
+* {{ru-IPA|оди́н-еди́нственный}}
+
+===Adjective===
+{{ru-adj|[[оди́н]]-[[еди́нственный]]}}
+
+# {{lb|ru|colloquial}} [[one and only]], [[sole]]
+
+====Declension====
+{{ru-decl-adj|оди́н-еди́нственный}}
+
+====Synonyms====
+* {{l|ru|еди́нственный}}
+
+====Related terms====
+* {{l|ru|оди́н}}
+* {{l|ru|еди́нственно}}
+* {{l|ru|еди́нство}}
+* {{l|ru|еди́ный}}
+* {{l|ru|единo-}}
+
+рождественский
+
+==Russian==
+
+===Etymology===
+{{affix|ru|Рождество́|-енский}}
+
+===Pronunciation===
+* {{ru-IPA|рожде́ственский}}
+
+===Adjective===
+{{ru-adj|рожде́ственский}}
+
+# {{lb|ru|attributive}} [[Christmas]]
+
+====Declension====
+{{ru-decl-adj|рожде́ственский}}
+
+====Related terms====
+* {{l|ru|Рождество́}}
+* {{l|ru|рождество́}}
+* {{l|ru|роди́ть}}
+
+
+стихийный
+
+==Russian==
+
+===Etymology===
+{{affix|ru|стихи́я|-ный}}
+
+===Pronunciation===
+* {{ru-IPA|стихи́йный}}
+
+===Adjective===
+{{ru-adj|стихи́йный}}
+
+# [[spontaneous]]
+# [[elemental]]
+
+====Declension====
+{{ru-decl-adj|стихи́йный|a*}}
+
+====Derived terms====
+* {{l|ru|стихи́йность}}
+
+
+глиняный
+
+==Russian==
+
+===Etymology===
+{{affix|ru|гли́на|-яный}}
+
+===Pronunciation===
+* {{ru-IPA|гли́няный}}
+
+===Adjective===
+{{ru-adj|гли́няный}}
+
+# {{lb|ru|attributive}} [[clay]]
+# {{lb|ru|attributive}} [[pottery]]
+#: {{ru-ux|'''гли́няная''' [[посу́да]]|[[pottery]]|inline=y}}
+
+====Declension====
+{{ru-decl-adj|гли́няный}}
+
+====Synonyms====
+* {{sense|clay}} {{l|ru|гли́нистый}}, {{l|ru|глиноби́тный}}
+
+====Related terms====
+* {{l|ru|гли́на}}
+
+недостойный
+
+==Russian==
+
+===Etymology===
+{{affix|ru|не-|досто́йный}}
+
+===Pronunciation===
+* {{ru-IPA|недосто́йный}}
+
+===Adjective===
+{{ru-adj|недосто́йный}}
+
+# {{rfdef|lang=ru}}
+
+====Declension====
+{{ru-decl-adj|недосто́йный|a*|short_m=недосто́ин}}
+
+====Synonyms====
+* {{sense|dishonest}} {{l|ru|бесче́стный}}, {{l|ru|безнра́вственный}}
+
+====Antonyms====
+* {{l|ru|досто́йный}}
+
+====Related terms====
+* {{l|ru|недосто́йно}}
+* {{l|ru|досто́йно}}
+* {{l|ru|досто́йный}}
+* {{l|ru|досто́инство}}
+
+остроумный
+
+==Russian==
+
+===Etymology===
+{{affix|ru|[[острый|остро-]]|[[ум]]|-ный}}
+
+===Pronunciation===
+* {{ru-IPA|остроу́мный}}
+
+===Adjective===
+{{ru-adj|остроу́мный}}
+
+# [[witty]]
+# [[clever]]
+
+====Declension====
+{{ru-decl-adj|остроу́мный|a*}}
+
+====Related terms====
+* {{l|ru|о́стрый}}
+* {{l|ru|ум}}
+
+плановый
+
+==Russian==
+
+===Etymology===
+{{affix|ru|план|-овый}}
+
+===Pronunciation===
+* {{ru-IPA|пла́новый}}
+
+===Adjective===
+{{ru-adj|пла́новый}}
+
+# {{lb|ru|attributive}} [[plan]], [[planning]]
+# [[planned]]
+# {{rfdef|lang=ru}}
+
+====Declension====
+{{ru-decl-adj|пла́новый|a}}
+
+====Antonyms====
+* {{l|ru|непла́новый}}
+
+====Related terms====
+* {{l|ru|план}}
+* {{l|ru|плани́ровать}}
+* {{l|ru|планови́к}}
+
+стартовый
+
+==Russian==
+
+===Etymology===
+{{affix|ru|старт|-овый}}
+
+===Pronunciation===
+* {{ru-IPA|ста́ртовый}}
+
+===Adjective===
+{{ru-adj|ста́ртовый}}
+
+# {{rfdef|lang=ru}}
+
+====Declension====
+{{ru-decl-adj|ста́ртовый}}
+
+====Related terms====
+* {{l|ru|старт}}
+* {{l|ru|стартова́ть}}
+* {{l|ru|ста́ртер}}
+
+цветочный [ask Anatoli if short forms exist]
+
+==Russian==
+
+===Etymology===
+{{affix|ru|цвето́к|-ный}}
+
+===Pronunciation===
+* {{ru-IPA|цвето́чный}}
+
+===Adjective===
+{{ru-adj|цвето́чный}}
+
+# {{lb|ru|attributive}} [[flower]]
+# [[floral]]
+
+====Declension====
+{{ru-decl-adj|цвето́чный}}
+
+====Related terms====
+* {{l|ru|цвето́к}}
+* {{l|ru|цвет}}
+
+недействительный
+
+==Russian==
+
+===Etymology===
+{{affix|ru|не-|десйстви́телный}}
+
+===Pronunciation===
+* {{ru-IPA|недействи́тельный}}
+
+===Adjective===
+{{ru-adj|недействи́тельный}}
+
+# {{rfdef|lang=ru}}
+
+====Declension====
+{{ru-decl-adj|недействи́тельный|a*}}
+
+====Antonyms====
+* {{l|ru|действи́тельный}}
+
+====Derived terms====
+* {{l|ru|недействи́тельность}}
+
+====Related terms====
+* {{l|ru|действи́тельно}}
+* {{l|ru|действи́тельность}}
+* {{l|ru|де́йствие}}
+* {{l|ru|де́йственный}}
+* {{l|ru|де́йствовать}}
+* {{l|ru|де́йствующий}}
+
+необъяснимый
+
+==Russian==
+
+===Etymology===
+{{affix|ru|не-|объясни́мый}}
+
+===Pronunciation===
+* {{ru-IPA|необъясни́мый}}
+
+===Adjective===
+{{ru-adj|необъясни́мый}}
+
+# [[inexplicable]]
+
+====Declension====
+{{ru-decl-adj|необъясни́мый|a}}
+
+====Synonyms====
+* {{l|ru|неизъясни́мый}}
+
+====Antonyms====
+* {{l|ru|объясни́мый}}
+
+====Derived terms====
+* {{l|ru|необъясни́мо}}
+* {{l|ru|необъясни́мость}}
+
+====Related terms====
+* {{l|ru|объясня́ть|g=impf}}, {{l|ru|объясни́ть|g=pf}}
+
+лохматый
+
+==Russian==
+
+===Etymology===
+{{affix|ru|foo|-ный}}
+
+===Pronunciation===
+* {{ru-IPA|лохма́тый}}
+
+===Adjective===
+{{ru-adj|лохма́тый|лохма́тее}}
+
+# {{rfdef|lang=ru}}
+
+====Declension====
+{{ru-decl-adj|лохма́тый|a}}
+
+====Synonyms====
+* {{sense|hairy}} {{l|ru|косма́тый}}, {{l|ru|кудлатый}}
+
+====Derived terms====
+* {{l|ru|лохма́тость}}
+* {{l|ru|лохма́тить}}
+
+====Related terms====
+* {{l|ru|лохмо́тья}}
+
+рискованный
+
+==Russian==
+
+===Etymology===
+Constructed as if the past passive participle of {{m|ru|рискова́ть|to [[risk]]}}.
+
+===Pronunciation===
+* {{ru-IPA|риско́ванный}}
+
+===Adjective===
+{{ru-adj|риско́ванный}}
+
+# [[risky]], [[dodgy]]
+# [[risque]]
+
+====Declension====
+{{ru-decl-adj|риско́ванный}}
+
+====Derived terms====
+* {{l|ru|риско́ванное}}
+
+====Antonyms====
+* {{l|ru|остро́жный}}
+
+====Related terms====
+* {{l|ru|рискова́ть}}
+
+------------- from here -------------
+
+==Russian==
+
+===Etymology===
+{{affix|ru|foo|-ный}}
+
+===Pronunciation===
+* {{ru-IPA|fooный}}
+
+===Adjective===
+{{ru-adj|fooный}}
+
+# {{rfdef|lang=ru}}
+
+====Declension====
+{{ru-decl-adj|fooный}}
+
+====Synonyms====
+
+====Related terms====
+* {{l|ru|}}
+
+табачный
+исковой
+консервативный
+подпольный
+смысловой
+чеховский
+дворянский
+деликатный
+долгожданный
+настойчивый
+одесский
+радиолокационный
+уполномоченный
+целостный
+цельный
+взрывной
+выставочный
+гнусный
+дальневосточный
+действенный
+дочерний
+избыточный
+морозный
+недопустимый
+неприличный
+обаятельный
+развивающийся
+съемочный
+фондовый
+
+
+Page 8251 основательно
+Page 8266 раздраженно
+Page 8354 начисто
+Page 8474 нет-нет
+Page 8475 неужто
+Page 8495 только-только
+
+
+
+непреме́нный
+
+==Russian==
+
+===Etymology===
+{{bor|ru|cu|непрѣмѣньнъ}}. Compare inherited {{m|ru|переме́нный||variable}}, {{m|ru|переме́на||change}}.
+
+===Pronunciation===
+* {{ru-IPA|непреме́нный}}
+
+===Adjective===
+{{ru-adj|непреме́нный}}
+
+# {{rfdef|lang=ru}}
+
+====Declension====
+{{ru-decl-adj|непреме́нный|a*}}
+
+====Related terms====
+* {{l|ru|переме́нный}}
+* {{l|ru|переме́на}}
+* {{l|ru|перемени́ть}}, {{l|ru|перемени́ться}}
+* {{l|ru|переме́нчивый}}
+
+ни́зший
+
+==Russian==
+
+===Pronunciation===
+* {{ru-IPA|ни́зший}}
+
+===Adjective===
+{{ru-adj|ни́зший}}
+
+# {{superlative of|lang=ru|POS=adjective|ни́зкий}}
+# {{rfdef|lang=ru}}: относящийся к непривилегированным классам
+# {{rfdef|lang=ru}}: простейший, самый примитивный
+# {{rfdef|lang=ru}}: находящийся на первой, начальной ступени развития
+# {{rfdef|lang=ru}}: начальный
+# {{rfdef|lang=ru}}: младший по положению, подчиненный
+# {{rfdef|lang=ru}}: последний в ряду чего-л
+
+====Declension====
+{{ru-decl-adj|ни́зший}}
+
+====Related terms====
+* {{l|ru|ни́зкий}}, {{l|ru|ни́зко}}, {{l|ru|ни́же}}
+* {{l|ru|низ}}
+* {{l|ru|ни́зость}}
+* {{l|ru|низово́й}}
+* {{l|ru|ни́зом}}
+* {{l|ru|ни́зменный}}, {{l|ru|ни́зменность}}
+
+------------- from here -------------
+
+одаренный
+
+==Russian==
+
+===Adjective===
+{{ru-adj-alt-ё|одарённый}}
+
+одарённый
+
+==Russian==
+
+===Pronunciation===
+* {{ru-IPA}}
+
+===Participle===
+{{head|ru|participle}}
+
+# {{ru-participle of|одари́ть||past|pass}}
+
+====Declension====
+{{ru-decl-adj|одарённый|b(2)}}
+
+===Adjective===
+{{ru-adj}}
+
+# [[gifted]], [[talented]]? {{rfdef|lang=ru}}
+
+====Declension====
+{{ru-decl-adj|одарённый|a(1)}}
+
+====Synonyms====
+* {{l|ru|дароти́вый}}, {{l|ru|тала́нтивый}}
+
+====Antonyms====
+* {{l|ru|безда́рный}}, {{l|ru|неодарённый}}
+
+===Adjective===
+{{ru-adj}}
+
+# {{rfdef|lang=ru}}: чем-либо; статив. чем и кр. ф.· имеющий от природы какие-либо незаурядные способности, свойства, черты характера и т. п.
+
+====Declension====
+{{ru-decl-adj|одарённый|b(2)}}
+
+===Related terms===
+* {{l|ru|одаря́ть|g=impf}}, {{l|ru|одари́ть|g=pf}}
+* {{l|ru|одарённость}}
+* {{l|ru|дар}}
+* {{l|ru|дари́ть|g=impf}}, {{l|ru|подари́ть|g=pf}}
+* {{l|ru|дарёный}}
+* {{l|ru|дарова́ть}}, {{l|ru|дарова́ние}}
+* {{l|ru|дарови́тый}}
+* {{l|ru|дарово́й}}
+
+самоде́льный само-+де́лать+alt2=дел-+ный a*?y [[homemade]];- rel:де́лать/сде́лать
+сбо́рный сбор+-ный a*?n - rel:сбо́рная,сбор,сбо́рка,сбо́рник,сбо́рщик,сбо́рочный
+се́веро-за́падный север+alt1=се́веро-+за́пад+-ный -? northwest;northwesterly;- rel:се́веро-за́пад,се́вер,за́пад
+счетный
+
+==Russian==
+
+===Adjective===
+{{ru-adj-alt-ё|счётный}}
+
+счётный счёт+-ный -? +[[calculation]];+[[account]];- rel:счёт:счёты,счётчик,счита́ть/сосчита́ть,счетово́д
+тоскливо
+
+==Russian==
+
+===Etymology===
+{{affix|ru|тоскли́вый|-о}}
+
+===Pronunciation===
+* {{ru-IPA|тоскли́во}}
+
+===Adverb===
+{{ru-adv|тоскли́во}}
+
+# {{rfdef|lang=ru}}
+
+удивленный
+
+==Russian==
+
+===Adjective===
+{{ru-adj-alt-ё|удивлённый}}
+
+удивлённый
+
+==Russian==
+
+===Pronunciation===
+* {{ru-IPA}}
+
+===Participle===
+{{head|ru|participle}}
+
+# {{ru-participle of|удиви́ть||past|pass}}
+
+====Declension====
+{{ru-decl-adj|удивлённый|b(2)}}
+
+===Adjective===
+{{ru-adj}}
+
+# [[surprised]]? {{rfdef|lang=ru}} [взгляд, etc.]
+
+====Declension====
+{{ru-decl-adj|удивлённый|a(1)}}
+
+====Derived terms====
+* {{l|ru|удивлённо}}
+
+===Related terms===
+* {{l|ru|удивля́ть|g=impf}}, {{l|ru|удиви́ть|g=pf}}
+* {{l|ru|удивля́ться|g=impf}}, {{l|ru|удиви́ться|g=pf}}
+* {{l|ru|удивле́ние}}
+* {{l|ru|удиви́тельный}}, {{l|ru|удиви́тельно}}
+
+возлю́бленная
+
+==Russian==
+
+===Etymology===
+Feminine of {{m|ru|возлю́бленный||sweetheart}}, originally a participle meaning "beloved" of {{m|ru|возлюби́ть||to love}}.
+
+===Noun===
+{{ru-noun+|возлю́бленная|+|m=возлю́бленный}}
+
+# [[sweetheart]]
+
+====Declension====
+{{ru-noun-table|возлю́бленная|+}}
+
+====Related terms====
+* {{l|ru|возлю́бленный}}
+* {{l|ru|возлюби́ть}}
+
+инфекционный ?de:Infektion+-ный a*?y [[infectious]];- rel:инфе́кция
+обоснованный
+
+==Russian==
+
+===Pronunciation===
+* {{ru-IPA|обосно́ванный}}
+
+===Participle===
+{{head|ru|participle|head=обосно́ванный}}
+
+# {{ru-participle of|обоснова́ть||past|pass}}
+
+====Declension====
+{{ru-decl-adj|обосно́ванный|a(2)}}
+
+===Adjective===
+{{ru-adj|обосно́ванный|обосно́ваннее}}
+
+# {{rfdef|lang=ru}}
+
+====Declension====
+{{ru-decl-adj|обосно́ванный|a(1)}}
+
+====Derived terms====
+* {{l|ru|обосно́ванность}}
+
+===Related terms===
+* {{l|ru|обосно́вывать|g=impf}}, {{l|ru|обоснова́ть|g=pf}}
+* {{l|ru|обосно́вываться|g=impf}}, {{l|ru|обоснова́ться|g=pf}}
+* {{l|ru|обоснова́ние}}
+
+одино́чный оди́н+-о́чный a*?y - rel:одино́чка,одино́чество,одино́кий:одино́ко,оди́н
+цветово́й цвет+-ово́й - +[[color]] rel:цвет,цветно́й,цвети́стый
+эстра́дный эстра́да+-ный a*?n +[[vaudeville]];- rel:эстра́да
+генера́льский генера́л+-ский - [[general]]'s;- rel:генера́л,генера́льный,генералите́т,генерали́ссимус
+ка́мерный
+
+==Russian==
+
+===Etymology===
+{{affix|ru|ка́мера|-ный}}
+
+===Pronunciation===
+* {{ru-IPA|ка́мерный}}
+
+===Adjective===
+{{ru-adj|ка́мерный|ка́мернее}}
+
+# {{lb|ru|attributive}} [[chamber]]
+#: {{ru-ux|'''ка́мерная''' [[му́зыка]]|[[chamber music]]|inline=y}}
+# {{lb|ru|attributive}} [[camera]]
+# [[chambered]]
+# {{lb|ru|figurative}} [[small-scale]]
+
+====Declension====
+{{ru-decl-adj|ка́мерный|a*}}
+
+====Related terms====
+* {{l|ru|ка́мера}}
+* {{l|ru|камерге́р}}
+* {{l|ru|камерди́нер}}
+* {{l|ru|камери́стка}}
+
+куби́ческий куб+-и́ческий - [[cubic]];+[[cube]] rel:куб,ку́бик,кубату́ра,куби́зм,кубоме́тр
+ку́рский Курск+alt1=Кур-+-ский - +[[Kursk]] rel:Курск
+легкомы́сленный лёгкий+alt1=легко-+мысль+-енный a(1) [[flighty]];[[frivolous]];- rel:легкомы́слие,лёгкий:лёгкость,мысль,мы́сленный
+незачем
+ритуа́льный ритуа́л+-ный a*? [[ritual]];[[ritualistic]]?;- rel:ритуа́л
+латера́льный <<la:laterālis+-ный a*?n [[lateral]];- rel:латера́ль
+ско́рбный скорбь+-ный a* - rel:скорбь,скорбе́ть,скорбя́щий der:ско́рбно
+стациона́рный <<la:statiōnārius+-ный a* - rel:стациона́р
+стрелко́вый - - - rel:стреля́ть/стрельну́ть,стрела́,стре́лка,стрело́к,стрельба́,стре́ляный,стрелови́дный
+хво́йный хво́я+-ный - +[[pine]];[[coniferous]];- rel:хво́я
+волево́й во́ля+-ево́й - - rel:во́ля,во́льный:во́льно:во́льность
+ева́нгельский ева́нгелие+-ский - - rel:ева́нгелие,евангели́ст,евангели́ческий
+концептуа́льный <<la:conceptuālis+-ный a*?y [[conceptual]];- der:концептуа́льность rel:конце́пт,конце́пция,концептуализова́ть,концептуализа́ция,концептуализи́рование,концептуали́зм
+мали́новый мали́на+-овый
+
+==Russian==
+
+===Etymology===
+{{affix|ru|мали́на|-овый}}
+
+===Pronunciation===
+* {{ru-IPA|мали́новый}}
+
+===Adjective===
+{{ru-adj|мали́новый|мали́новее}}
+
+# {{lb|ru|attributive}} [[raspberry]]
+# [[crimson]]
+# having a [[pleasant]], [[soft]] [[timbre]]
+
+====Declension====
+{{ru-decl-adj|мали́новый|a}}
+
+====Related terms====
+* {{l|ru|мали́на}}
+* {{l|ru|мали́новка}}
+
+му́сорный му́сор+-ный a*?y +[[garbage]];+[[trash]];#[[unwanted]];- rel:му́сор,му́сорщик,мусоропрово́д,мусоросжига́тельный
+считанный
+
+==Russian==
+
+===Pronunciation===
+* {{ru-IPA|счи́танный}}
+
+===Participle===
+{{head|ru|participle|head=счи́танный}}
+
+# {{ru-participle of|счита́ть||past|pass}}
+
+====Declension====
+{{ru-decl-adj|счи́танный|a(2)}}
+
+===Adjective===
+{{ru-adj|счи́танный}}
+
+# {{rfdef|lang=ru}}
+
+====Declension====
+{{ru-decl-adj|счи́танный}}
+
+===Related terms===
+* {{l|ru|счита́ть|g=impf}}, {{l|ru|сосчита́ть|g=pf}}
+* {{l|ru|счёт}}, {{l|ru|счёты}}
+* {{l|ru|счётный}}
+* {{l|ru|счётчик}}
+* {{l|ru|счетово́д}}
+
+чу́вственный чу́вство+-енный a*,a(1) - rel:чу́вство,чу́вствовать/почу́вствовать,чувстви́тельный:чувстви́тельность
+
+
+обобщенный
+
+
+==Russian==
+
+===Adjective===
+{{ru-adj-alt-ё|обобщённый}}
+
+обобщённый
+
+==Russian==
+
+===Pronunciation===
+* {{ru-IPA}}
+
+===Participle===
+{{head|ru|participle}}
+
+# {{ru-participle of|обобщи́ть||past|pass}}
+
+====Declension====
+{{ru-decl-adj|обобщённый|b(2)}}
+
+===Adjective===
+{{ru-adj}}
+
+# {{rfdef|lang=ru}}
+
+====Declension====
+{{ru-decl-adj|обобщённый|a(1)}}
+
+===Related terms===
+* {{l|ru|обобща́ть|g=impf}}, {{l|ru|обобщи́ть|g=pf}}
+* {{l|ru|обобще́ние}}
+* {{l|ru|о́бщий}}
+
+перечи́сленный
+
+==Russian==
+
+===Pronunciation===
+* {{ru-IPA|перечи́сленный}}
+
+===Participle===
+{{head|ru|participle|head=перечи́сленный}}
+
+# {{ru-participle of|перечи́слить||past|pass}}
+
+====Declension====
+{{ru-decl-adj|перечи́сленный|a(2)}}
+
+===Adjective===
+{{ru-adj|перечи́сленный}}
+
+# {{rfdef|lang=ru}}
+
+====Declension====
+{{ru-decl-adj|перечи́сленный}}
+
+===Related terms===
+* {{l|ru|перечисля́ть|g=impf}}, {{l|ru|перечи́слить|g=pf}}
+* {{l|ru|перечисле́ние}}
+* {{l|ru|чи́слить}}
+* {{l|ru|число́}}
+* {{l|ru|чи́сленный}}, {{l|ru|чи́сленно}}, {{l|ru|чи́сленность}}
+* {{l|ru|числи́тель}}, {{l|ru|числи́тельное}}
+* {{l|ru|числово́й}}
+
+при́знанный
+
+==Russian==
+
+===Pronunciation===
+* {{ru-IPA|при́знанный}}
+
+===Participle===
+{{head|ru|participle|head=при́знанный}}
+
+# {{ru-participle of|перечи́слить||past|pass}}
+
+====Declension====
+{{ru-decl-adj|при́знанный|a(2)}}
+
+===Adjective===
+{{ru-adj|при́знанный}}
+
+# {{rfdef|lang=ru}}
+
+====Declension====
+{{ru-decl-adj|при́знанный|a(1)}}
+
+===Related terms===
+* {{l|ru|признава́ть|g=impf}}, {{l|ru|призна́ть|g=pf}}
+* {{l|ru|признава́ться|g=impf}}, {{l|ru|призна́ться|g=pf}}
+* {{l|ru|призна́тельный}}, {{l|ru|призна́тельность}}
+* {{l|ru|призна́ние}}
+* {{l|ru|при́знак}}
+
+упрощенный
+
+==Russian==
+
+===Adjective===
+{{ru-adj-alt-ё|упрощённый}}
+
+упрощённый
+
+==Russian==
+
+===Pronunciation===
+* {{ru-IPA}}
+
+===Participle===
+{{head|ru|participle}}
+
+# {{ru-participle of|упрости́ть||past|pass}}
+
+====Declension====
+{{ru-decl-adj|упрощённый|b(2)}}
+
+===Adjective===
+{{ru-adj}}
+
+# {{rfdef|lang=ru}}
+
+====Declension====
+{{ru-decl-adj|упрощённый|a(1)}}
+
+===Related terms===
+* {{l|ru|упроща́ть|g=impf}}, {{l|ru|упрости́ть|g=pf}}
+* {{l|ru|упроща́ться|g=impf}}, {{l|ru|упрости́ться|g=pf}}
+* {{l|ru|упроще́ние}}
+* {{l|ru|упроще́нство}}, {{l|ru|проще́нчество}}
+* {{l|ru|упроще́нческий}}
+
+
+------------- from here -------------
+
+ха-ха-ха
+
+==Russian==
+
+===Etymology===
+Onomatopoeic.
+
+===Pronunciation===
+* {{ru-IPA|ха-ха-ха́}}?
+
+===Interjection===
+{{head|ru|interjection|head=ха-ха-ха́}}
+
+# [[ha ha]] {{gloss|sound of [[laughter]]}}
+# {{rfdef|lang=ru}}
+
+хрипло
+
+==Russian==
+
+===Etymology===
+{{affix|ru|хри́плый|-о}}
+
+===Pronunciation===
+* {{ru-IPA|хри́пло}}
+
+===Adverb===
+{{ru-adv|хри́пло}}
+
+# [[hoarsely]]
+# {{rfdef|lang=ru}}
+
+богородица
+
+==Russian==
+
+===Etymology===
+{{affix|ru|бог|alt1=бого-|роди́ть|-ица}}
+
+===Pronunciation===
+* {{ru-IPA|богоро́дица}}
+
+===Noun===
+{{ru-noun+|богоро́дица|a=an|n=sg}}
+
+# {{alternative form of|lang=ru|Богоро́дица}}
+
+====Declension====
+{{ru-noun-table|богоро́дица|a=an|n=sg}}
+
+сдержанно
+
+==Russian==
+
+===Etymology===
+{{affix|ru|сде́ржанный|-о}}
+
+===Pronunciation===
+* {{ru-IPA|сде́ржанно}}
+
+===Adverb===
+{{ru-adv|сде́ржанно}}
+
+# {{rfdef|lang=ru}}
+
+
+явственно
+
+==Russian==
+
+===Etymology===
+{{affix|ru|я́вственный|-о}}
+
+===Pronunciation===
+* {{ru-IPA|я́вственно}}
+
+===Adverb===
+{{ru-adv|я́вственно}}
+
+# {{rfdef|lang=ru}}
+
+насмерть
+
+==Russian==
+
+===Etymology===
+{{affix|ru|на|смерть}}
+
+===Pronunciation===
+* {{ru-IPA|на́смерть}}
+
+===Adverb===
+{{ru-adv|на́смерть}}
+
+# {{rfdef|lang=ru}}
+
+
+следующее
+
+==Russian==
+
+===Etymology===
+Substantivized neuter of {{m|ru|сле́дующий||[[next]], [[following]]}}.
+
+===Pronunciation===
+* {{ru-IPA|сле́дующее}}
+
+===Noun===
+{{ru-noun+|сле́дующее|+}}
+
+# the [[following]]
+# {{rfdef|lang=ru}}
+
+====Declension====
+{{ru-noun-table|сле́дующее|+}}
+
+рассеянно
+
+==Russian==
+
+===Etymology===
+{{affix|ru|рассе́янный|-о}}
+
+===Pronunciation===
+* {{ru-IPA|рассе́янно}}
+
+===Adverb===
+{{ru-adv|рассе́янно}}
+
+# {{rfdef|lang=ru}}
+
+
+попутно
+
+==Russian==
+
+===Etymology===
+{{affix|ru|попу́тный|-о}}
+
+===Pronunciation===
+* {{ru-IPA|попу́тно}}
+
+===Adverb===
+{{ru-adv|попу́тно}}
+
+# {{rfdef|lang=ru}}
+
+
+церка
+
+==Russian==
+
+===Etymology===
+Ultimately from {{der|ru|la|cercus}}.
+
+===Pronunciation===
+* {{ru-IPA|це́рка}}
+
+===Noun===
+{{ru-noun+|це́рка}}
+
+# [[cercus]] {{gloss|one of a pair of [[appendages]] attached to the last [[abdominal]] [[segment]] of certain [[insects]]}}
+# {{rfdef|lang=ru}}
+
+====Declension====
+{{ru-noun-table|це́рка}}
+
+
+больная
+
+==Russian==
+
+===Etymology===
+Substantivized feminine of {{m|ru|больно́й||[[sick]]}}.
+
+===Pronunciation===
+* {{ru-IPA|больна́я}}
+
+===Noun===
+{{ru-noun+|больна́я|a=an|m=больно́й}}
+
+# [[female]] [[patient]]
+# {{rfdef|lang=ru}}
+
+====Declension====
+{{ru-noun-table|больна́я|a=an}}
+
+
+восторженно
+
+==Russian==
+
+===Etymology===
+{{affix|ru|восто́рженный|-о}}
+
+===Pronunciation===
+* {{ru-IPA|восто́рженно}}
+
+===Adverb===
+{{ru-adv|восто́рженно}}
+
+# {{rfdef|lang=ru}}
+
+всего-то
+
+==Russian==
+
+===Etymology===
+{{affix|ru|всего́|-то}}
+
+===Pronunciation===
+* {{ru-IPA|всего́-то}}
+
+===Adverb===
+{{ru-adv|всего́-то}}
+
+# {{rfdef|lang=ru}}
+
+третья
+
+==Russian==
+
+===Etymology===
+Substantivized feminine of {{m|ru|тре́тий||third}}???
+
+===Pronunciation===
+* {{ru-IPA|тре́тья}}
+
+===Noun===
+{{ru-noun+|тре́тья|+}}
+
+# {{rfdef|lang=ru}}
+
+====Declension====
+{{ru-noun-table|тре́тья|+}}
+
+
+
+вдаль
+
+==Russian==
+
+===Etymology===
+{{affix|ru|в|даль}}
+
+===Pronunciation===
+* {{ru-IPA}}
+
+===Adverb===
+{{ru-adv}}
+
+# {{rfdef|lang=ru}}
+
+вопросительно
+
+==Russian==
+
+===Etymology===
+{{affix|ru|вопроси́тельный|-о}}
+
+===Pronunciation===
+* {{ru-IPA|вопроси́тельно}}
+
+===Adverb===
+{{ru-adv|вопроси́тельно}}
+
+# {{rfdef|lang=ru}}
+
+
+назавтра
+
+==Russian==
+
+===Etymology===
+{{affix|ru|на|за́втра}}
+
+===Pronunciation===
+* {{ru-IPA|наза́втра}}
+
+===Adverb===
+{{ru-adv|наза́втра}}
+
+# {{rfdef|lang=ru}}
+
+хриплый
+
+------------- from here -------------
+
+наподо́бие
+
+==Russian==
+
+===Etymology===
+{{affix|ru|на|подо́бие}}
+
+===Pronunciation===
+* {{ru-IPA|наподо́бие}}
+
+===Preposition===
+{{head|ru|preposition|наподо́бие}} {{i|+ {{glink|genitive}}}}
+
+# {{rfdef|lang=ru}}
+
+легково́й лёгкий+-ово́й - +[[passenger]];- rel:лёгкий,легко́
+насу́щный на+-су́щий+-ный a* - comp:насу́щнее der:насу́щно,насу́щность rel:су́щий,су́щность,существо́,существова́ть,существова́ние,суще́ственный
+нехи́трый не+-хи́трый *c'' - 
+
+==Russian==
+
+===Etymology===
+{{affix|ru|не-|хи́трый}}
+
+===Pronunciation===
+* {{ru-IPA|нехи́трый}}
+
+===Adjective===
+{{ru-adj|нехи́трый}}
+
+# {{rfdef|lang=ru}}
+
+====Declension====
+{{ru-decl-adj|нехи́трый|*c''|short_m=нехитёр}}
+
+====Synonyms====
+* {{sense|FIXME}} {{l|ru|простоду́шный}}
+* {{sense|simple}} {{l|ru|просто́й}}, {{l|ru|незамыслова́тый}}, {{l|ru|несло́жный}}, {{l|ru|немудрёный}}
+
+цирково́й цирк+-ово́й - +[[circus]];- rel:цирк,цирка́ч
+э́дакий э́дак+-ий - - syn:э́такий rel:э́так
+дамский да́ма+-ский - [[lady]]'s,[[ladies]]';- rel:да́ма
+компактный ?de:kompakt+-ный a* - comp:компа́ктнее der:компа́ктно,компа́ктность rel:компа́кт-ди́ск,,компакти́ровать:компакти́роваться:компакти́рование,компа́ктор,компа́ктус,компактифика́ция:компактифици́ровать:компактифици́роваться
+позо́рный позо́р+-ный a* - comp:позо́рнее der:позо́рно rel:позо́р,позо́рить/опозо́рить,позо́рище syn:+(shameful)посты́дный
+поко́рный покори́ться+alt1=покор+-ный a* - der:поко́рность rel:покоря́ть/покори́ть,покоря́ться/покори́ться,покоре́ние,покори́тель syn:послу́шный ant:непоко́рный,стропти́вый
+системати́ческий ?de:systematisch+-и́ческий - [[systematic]];- der:системати́чески rel:систе́ма,систематизи́ровать
+та́мошний там+-ошний 
+
+==Russian==
+
+===Etymology===
+{{affix|ru|там|-ошний}}
+
+===Pronunciation===
+* {{ru-IPA|та́мошний}}
+
+===Adjective===
+{{ru-adj|та́мошний}}
+
+# {{rfdef|lang=ru}}
+
+====Declension====
+{{ru-decl-adj|та́мошний|a*|short_m=-}}
+
+====Related terms====
+* {{l|ru|там}}
+
+
+унизи́тельный уни́зить+-тельный a* - rel:унижа́ть/уни́зить,унижа́ться/уни́зиться,униже́ние,уни́женный
+дохо́дный дохо́д+-ный а* [[profitable]];- comp:дохо́днее der:дохо́дно,дохо́дность rel:дохо́д,доходи́ть
+новгоро́дский Но́вгород+-ский - +[[Novgorod]] rel:Но́вгород,новгоро́дец:новгоро́дка
+профсою́зный профсою́з+-ный - [[trade-union]] rel:профсою́з,сою́з,профе́ссия:профессиона́л,профессиона́льный
+ску́дный скудеть+alt1=скуд-+-ный c' [[meager]],[[scarce]];- syn:+бе́дный,недоста́точный ant:+бога́тый,ще́дрый,оби́льный rel:скуде́ть/оскуде́ть
+игру́шечный игру́шка+-ный a*?y +[[toy]];[[miniature]];- syn:+(not_real)ненасто́ящий rel:игру́шка,игра́ть/сыгра́ть,игра́,игрово́й,игро́к,игра́льный,игри́вый:игри́вость
+
+каково́й
+
+==Russian==
+
+===Etymology===
+{{affix|ru|как|-ово́й}}
+
+===Pronunciation===
+* {{ru-IPA|каково́й}}
+
+===Determiner===
+{{head|ru|determiner|head=|каково́й}}
+
+# {{rfdef|lang=ru}}
+
+====Declension====
+{{ru-decl-adj|каково́й}}
+
+====Synonyms====
+* {{l|ru|како́й}}
+* {{l|ru|кото́рый}}
+
+====Related terms====
+* {{l|ru|как}}
+* {{l|ru|каково́}}
+
+мя́тый
+
+==Russian==
+
+===Pronunciation===
+* {{ru-IPA|мя́тый}}
+
+===Participle===
+{{head|ru|participle|head=мя́тый}}
+
+# {{ru-participle of|мять||past|pass}}
+
+====Declension====
+{{ru-decl-adj|мя́тый|a}}
+
+===Adjective===
+{{ru-adj|мя́тый}}
+
+# [[creased]]
+# [[rumpled]], [[crumpled]]
+# [[crushed]], [[flattened]]
+# [[weary]], [[exhausted]]
+# {{rfdef|lang=ru}}
+
+====Declension====
+{{ru-decl-adj|мя́тый|a}}
+
+====Synonyms====
+# {{sense|creased}} {{l|ru|помя́тый}}
+# {{sense|rumpled}} {{l|ru|измя́тый}}, {{l|ru|помя́тый}}
+# {{sense|crushed}} {{l|ru|давленый}}, {{l|ru|раздавленный}}, {{l|ru|сплющенный}}
+# {{sense|weary}} {{l|ru|изнурённый}}
+
+===Related terms===
+* {{l|ru|мять|g=impf}}, {{l|ru|измя́ть|g=pf}}, {{l|ru|помя́ть|g=pf}}, {{l|ru|смять|g=pf}}
+
+побе́дный побе́да+-ный а* - rel:побе́да,побежда́ть/победи́ть,победи́тель:победи́тельница,победоно́сный
+сжа́тый
+
+==Russian==
+
+===Pronunciation===
+* {{ru-IPA|сжа́тый}}
+
+===Participle===
+{{head|ru|participle|head=сжа́тый}}
+
+# {{ru-participle of|сжать||past|pass|gloss=to [[squeeze]], to [[compress]], to [[clench]]}}
+# {{ru-participle of|сжать||past|pass|gloss=to [[reap]]}}
+
+====Declension====
+{{ru-decl-adj|сжа́тый|a}}
+
+===Adjective===
+{{ru-adj|сжа́тый}}
+
+# {{i|air, etc.}} [[compressed]]
+# {{lb|ru|computers}} [[compressed]]
+# [[clenched]]
+# [[concise]], [[brief]], [[succinct]]
+# {{rfdef|lang=ru}}
+
+====Declension====
+{{ru-decl-adj|сжа́тый|a}}
+
+====Synonyms====
+# {{sense|concise}} {{l|ru|кра́ткий}}, {{l|ru|непродожи́тельный}}
+
+====Antonyms====
+# {{sense|concise}} {{l|ru|кра́ткий}}, {{l|ru|непродожи́тельный}}
+
+===Related terms===
+* {{l|ru|сжима́ть|g=impf||to [[squeeze]], to [[compress]], to [[clench]]}}, {{l|ru|сжать|g=pf}}
+* {{l|ru|жать|g=impf||to [[reap]]}}, {{l|ru|сжать|g=pf}}
+* {{l|ru|сжа́тие}}
+* {{l|ru|сжа́тость}}
+
+
+сокрове́нный - a*,a(1) - rel:сокро́вище:сокро́вищница
+черно-белый
+
+==Russian==
+
+===Adjective===
+{{ru-adj-alt-ё|чёрно-белый}}
+
+чёрно-бе́лый чёрный+alt1=чёрно-+бе́лый - [[black-and-white]];- syn:(+art,television)цветно́й,полноцве́тный
+капри́зный капри́з+-ный a* [[capricious]];- syn:+своенра́вный,своево́льный,избало́ванный rel:капри́з,капри́зничать
+климати́ческий кли́мат+-и́ческий - [[climatic]];+[[climate]];- der:климати́чески rel:кли́мат,микроклимати́ческий
+миграцио́нный ?de:Migration+-ный a*? [[migratory]]?;- rel:мигра́ция,мигри́ровать
+нестанда́ртный не-+станда́ртный a* [[nonstandard];[[custom]];- syn:+своеобра́зный,оригина́льный der:нестанда́ртно,нестанда́ртность rel:нестанда́рт,нестандартизи́рованный
+неулови́мый не-+улови́мый a [[elusive]];barely_[[perceptible]];- syn:+(barely_perceptible) неощути́мый,незаме́тный der:неулови́мо,неулови́мость rel:улови́мый,уло́в,ула́вливать/улови́ть,уло́вка
+окружно́й о́круг+-но́й - +[[district]];- окру́га,орку́жность,rel:окружа́ть/окружи́ть,округля́ть/округли́ть,окруже́ние
+отчетный
+
+==Russian==
+
+===Adjective===
+{{ru-adj-alt-ё|отчётный}}
+
+отчётный отчёт+-ный a*?n +[[report]];[[reported]];- der:отчётность rel:отчёт,отчётливый
+разруши́тельный разру́шить+-тельный a*?y [[destructive]];- rel:разруша́ть/разру́шить,разруши́тель,разруше́ние,разру́ха
+фина́льный фина́л+-ный a*?y [[final]];- syn:заверша́ющий rel:фина́л,финали́ст:финали́стка,финали́зм,фина́ль
+эксплуатацио́нный ?эксплуата́ция+-о́нный a*?y [[operational]];- rel:эксплуата́ция,эксплуати́ровать:эксплуати́роваться:эксплуати́рование,эксплуатну́ть,эксплуата́тор:эксплуата́торский,эксплуата́нт der:эксплуатацио́нник
+весо́мый вес+-о́мый a - comp:весо́мее syn:+(weighty)ве́ский,тяжёлый ant:лёгкий,невесо́мый der:весо́мо,весо́мость rel:вес,ве́сить
+гости́ничный гости́ница+-ный - +[[hotel]];- rel:гости́ница,гость:го́стья,гости́ть,гости́ная
+ми́ленький  - - 
+
+
+
+==Russian==
+
+===Etymology===
+{{affix|ми́лый|-енький}}
+
+===Pronunciation===
+* {{ru-IPA|ми́ленький}}
+
+===Adjective===
+{{ru-adj|ми́ленький}}
+
+# {{rfdef|lang=ru}}
+#: {{ru-ux|'''ми́ленькие''' [[мышка|мы́шки]] [[мыть|мы́ли]] [[с]] [[мыло|мы́лом]] [[миска|ми́ски]]|nice little mice washed in bowls with soap (a Russian [[tongue-twister]])}}
+
+====Declension====
+{{ru-decl-adj|ми́ленький}}
+
+====Related terms====
+* {{l|ru|ми́лый}}, {{l|ru|ми́ло}}, {{l|ru|ми́лость}}
+* {{l|ru|ми́лая}}
+* {{l|ru|милови́дный}}
+* {{l|ru|ми́лостивый}}
+* {{l|ru|милосе́рдие}}
+* {{l|ru|ми́ловать}}
+
+
+мохнатый
+опорный
+рогатый
+сканда́льный - a*? -
+владимирский
+вышестоящий
+докторский
+негосуда́рственный не-+госуда́рственный a*,a(1)? [[nonstate]];[[nongovernmental]];- rel:госуда́рственный:госуда́рственность,госуда́рство,гусода́рь
+немаловажный
+оборотный
+карто́нный карто́н+-ный - +[[cardboard]] rel:карто́н,карто́нка,картона́ж:картона́жный,ка́рта,ка́рточка,ка́рточный
+моде́льный - a*? -
+небритый
+нью-йоркский
+продо́льный - a*? -
+складской
+ювелирный
+доброжела́тельный добрый+alt1=добро-+желате́ль+-ный a*? -
+магистра́льный - a*? -
+несложный
+неуместный
+окрестный
+отличительный
+проблемный
+учредительный
+ве́домственный ве́домство+-енный a*,a(1)? [[departmental]];- rel:ве́домство,ве́домо,ведо́мый
+губернский
+гулкий
+дощатый
+желаемый
+нечеловеческий
+партизанский
+придворный
+радиоактивный
+тематический
+ценовой
