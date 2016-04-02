@@ -15,6 +15,7 @@ args = parser.parse_args()
 for line in codecs.open(args.direcfile, "r", "utf-8"):
   line = line.strip()
   els = re.split(r"\s+", line)
+  els = [el.replace("_", " ") for el in els]
   adj, etym, short, defns = els[0], els[1], els[2], els[3]
   assert re.search(u"(ый|ий|о́й)$", adj)
   if etym == "-":
@@ -61,7 +62,7 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
       elif defn.startswith("!"):
         prefix = "{{lb|ru|colloquial}} "
         defn = re.sub(r"^!", "", defn)
-      defnlines.append("# %s%s\n" % (prefix, defn))
+      defnlines.append("# %s%s\n" % (prefix, defn.replace(",", ", ")))
   defntext = "".join(defnlines)
 
   syntext = ""
@@ -76,17 +77,22 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
 * {{l|ru|}}
 
 """
+  comptext = ""
   for synantrel in els[4:]:
-    m = re.search(r"^(syn|ant|der|rel):(.*)", synantrel)
+    m = re.search(r"^(syn|ant|der|rel|comp):(.*)", synantrel)
     if not m:
-      msg("Element %s doesn't start with syn:, ant:, der: or rel:" % synantrel)
+      msg("Element %s doesn't start with syn:, ant:, der:, rel: or comp:" % synantrel)
     assert m
     sartype, vals = m.groups()
     if sartype in ["syn", "ant"]:
       lines = []
       for synantgroup in re.split(";", vals):
         sensetext = ""
-        if synantgroup.startswith("*"):
+        if synantgroup.startswith("*("):
+          m = re.search(r"^\*\((.*?)\)(.*)$", synantgroup)
+          sensetext = "{{sense|%s}} " % m.group(1)
+          synantgroup = m.group(2)
+        elif synantgroup.startswith("*"):
           sensetext = "{{sense|FIXME}} "
           synantgroup = re.sub(r"\*", "", synantgroup)
         else:
@@ -102,6 +108,8 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
         syntext = synantguts
       else:
         anttext = synantguts
+    elif sartype == "comp":
+      comptext = "|%s" % vals
     else: # derived or related terms
       lines = []
       for derrelgroup in re.split(",", vals):
@@ -131,7 +139,7 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
 * {{ru-IPA|%s}}
 
 ===Adjective===
-{{ru-adj|%s}}
+{{ru-adj|%s%s}}
 
 %s
 ====Declension====
@@ -139,5 +147,5 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
 
 %s%s%s%s[[ru:%s]]
 
-""" % (ru.remove_accents(adj), etymtext, adj, adj, defntext,
+""" % (ru.remove_accents(adj), etymtext, adj, adj, comptext, defntext,
   decltext, syntext, anttext, dertext, reltext, ru.remove_accents(adj)))
