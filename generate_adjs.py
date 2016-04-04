@@ -78,10 +78,11 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
 
 """
   comptext = ""
+  prontext = adj
   for synantrel in els[4:]:
-    m = re.search(r"^(syn|ant|der|rel|comp):(.*)", synantrel)
+    m = re.search(r"^(syn|ant|der|rel|comp|pron):(.*)", synantrel)
     if not m:
-      msg("Element %s doesn't start with syn:, ant:, der:, rel: or comp:" % synantrel)
+      msg("Element %s doesn't start with syn:, ant:, der:, rel:, comp: or pron:" % synantrel)
     assert m
     sartype, vals = m.groups()
     if sartype in ["syn", "ant"]:
@@ -110,23 +111,35 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
         anttext = synantguts
     elif sartype == "comp":
       comptext = "|%s" % vals
+    elif sartype == "pron":
+      prontext = "%s" % vals
     else: # derived or related terms
-      lines = []
-      for derrelgroup in re.split(",", vals):
-        if "/" in derrelgroup:
-          impf, pf = re.split("/", derrelgroup)
-          lines.append("* {{l|ru|%s|g=impf}}, {{l|ru|%s|g=pf}}\n" % (impf, pf))
+      if vals == "-":
+        if sartype == "der":
+          dertext = ""
         else:
-          links = []
-          for derrel in re.split(":", derrelgroup):
-            links.append("{{l|ru|%s}}" % derrel)
-          lines.append("* %s\n" % ", ".join(links))
-      derrelguts = "====%s terms====\n%s\n" % (
-          "Derived" if sartype == "der" else "Related", "".join(lines))
-      if sartype == "der":
-        dertext = derrelguts
+          reltext = ""
       else:
-        reltext = derrelguts
+        lines = []
+        for derrelgroup in re.split(",", vals):
+          if "/" in derrelgroup:
+            impfpfverbs = re.split("/", derrelgroup)
+            links = []
+            links.append("{{l|ru|%s|g=impf}}" % impfpfverbs[0])
+            for pf in impfpfverbs[1:]:
+              links.append("{{l|ru|%s|g=pf}}" % impfpfverbs[1])
+            lines.append("* %s\n" % ", ".join(links))
+          else:
+            links = []
+            for derrel in re.split(":", derrelgroup):
+              links.append("{{l|ru|%s}}" % derrel)
+            lines.append("* %s\n" % ", ".join(links))
+        derrelguts = "====%s terms====\n%s\n" % (
+            "Derived" if sartype == "der" else "Related", "".join(lines))
+        if sartype == "der":
+          dertext = derrelguts
+        else:
+          reltext = derrelguts
 
   msg("""%s
 
@@ -147,5 +160,5 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
 
 %s%s%s%s[[ru:%s]]
 
-""" % (ru.remove_accents(adj), etymtext, adj, adj, comptext, defntext,
+""" % (ru.remove_accents(adj), etymtext, prontext, adj, comptext, defntext,
   decltext, syntext, anttext, dertext, reltext, ru.remove_accents(adj)))
