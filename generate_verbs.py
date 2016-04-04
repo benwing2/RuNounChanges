@@ -24,24 +24,37 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
   elif etym == "r":
     assert isrefl
     etymtext = re.sub(u"^(.*?)(ся|сь)$", r"{{affix|ru|\1|-\2}}", verb)
-  elif etym.startswith("?"):
-    etymtext = "Perhaps {{affix|ru|%s}}." % "|".join(re.split(r"\+",
-      re.sub(r"^\?", "", etym)))
   else:
-    etymtext = "{{affix|ru|%s}}" % "|".join(re.split(r"\+", etym))
+    prefix = ""
+    suffix = ""
+    if etym.startswith("?"):
+      prefix = "Perhaps from "
+      suffix = "."
+      etym = re.sub(r"^\?", "", etym)
+    elif etym.startswith("<<"):
+      prefix = "Ultimately from "
+      suffix = "."
+      etym = re.sub(r"^<<", "", etym)
+    m = re.search(r"^(de|la|en):(.*?)\+(.*)$", etym)
+    if m:
+      prefix += "{{der|ru|%s|%s}} + " % (m.group(1), m.group(2))
+      etym = m.group(3)
+    etymtext = "%s{{affix|ru|%s}}%s" % (prefix,
+        "|".join(re.split(r"\+", etym)), suffix)
   headword_aspect = re.sub("-.*", "", aspect)
-  assert headword_aspect in ["pf", "impf"]
+  assert headword_aspect in ["pf", "impf", "both"]
   corverbtext = ""
   if corverbs != "-":
     corverbno = 1
     for corverb in re.split(",", corverbs):
       corverbtext += "|%s%s=%s" % (
-          "pf" if headword_aspect == "impf" else "impf",
+          "impf" if headword_aspect == "pf" else "pf",
           "" if corverbno == 1 else str(corverbno), corverb)
       corverbno += 1
   verbbase = re.sub(u"(ся|сь)$", "", verb)
   passivetext = ("\n# {{passive of|lang=ru|%s}}" % verbbase
       if etym == "r" else "")
+
   if "|" not in conj:
     if conj.startswith("4a"):
       assert verbbase.endswith(u"ить")
@@ -61,6 +74,9 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
     elif conj.startswith("3c"):
       assert verbbase.endswith(u"ну́ть")
       conjargs = ru.make_ending_stressed(re.sub(u"у́ть", "", verbbase))
+    elif conj.startswith("2a") or conj.startswith("2b"):
+      assert re.search(u"ва́?ть$", verbbase)
+      conjargs = re.sub(u"ть$", "", verbbase)
     elif conj.startswith("1a"):
       conjargs = re.sub(u"ть$", "", verbbase)
     else:
@@ -69,6 +85,15 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
   else:
     conjargs = re.sub(r"^.*?\|", "", conj)
     conj = re.sub(r"\|.*$", "", conj)
+  reflsuf = "-refl" if isrefl else ""
+  if aspect == "both":
+    conjtext = """''imperfective''
+{{ru-conj|%s|impf%s|%s}}
+''perfective''
+{{ru-conj|%s|pf%s|%s}}""" % (conj, reflsuf, conjargs, conj, reflsuf, conjargs)
+  else:
+    conjtext = "{{ru-conj|%s|%s%s|%s}}" % (conj, aspect, reflsuf, conjargs)
+
   alttext = ""
   syntext = ""
   anttext = ""
@@ -126,18 +151,16 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
       else:
         lines = []
         for derrelgroup in re.split(",", vals):
-          if "/" in derrelgroup:
-            impfpfverbs = re.split("/", derrelgroup)
-            links = []
-            links.append("{{l|ru|%s|g=impf}}" % impfpfverbs[0])
-            for pf in impfpfverbs[1:]:
-              links.append("{{l|ru|%s|g=pf}}" % impfpfverbs[1])
-            lines.append("* %s\n" % ", ".join(links))
-          else:
-            links = []
-            for derrel in re.split(":", derrelgroup):
+          links = []
+          for derrel in re.split(":", derrelgroup):
+            if "/" in derrel:
+              impfpfverbs = re.split("/", derrel)
+              links.append("{{l|ru|%s|g=impf}}" % impfpfverbs[0])
+              for pf in impfpfverbs[1:]:
+                links.append("{{l|ru|%s|g=pf}}" % impfpfverbs[1])
+            else:
               links.append("{{l|ru|%s}}" % derrel)
-            lines.append("* %s\n" % ", ".join(links))
+          lines.append("* %s\n" % ", ".join(links))
         derrelguts = "====%s terms====\n%s\n" % (
             "Derived" if sartype == "der" else "Related", "".join(lines))
         if sartype == "der":
@@ -161,10 +184,10 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
 # {{rfdef|lang=ru}}%s
 
 ====Conjugation====
-{{ru-conj|%s|%s%s|%s}}
+%s
 
 %s%s%s%s[[ru:%s]]
 
 """ % (ru.remove_accents(verb), alttext, etymtext, verb, verb, headword_aspect,
-  corverbtext, passivetext, conj, aspect, "-refl" if isrefl else "", conjargs,
-  syntext, anttext, dertext, reltext, ru.remove_accents(verb)))
+  corverbtext, passivetext, conjtext, syntext, anttext, dertext, reltext,
+  ru.remove_accents(verb)))
