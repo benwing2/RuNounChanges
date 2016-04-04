@@ -15,6 +15,7 @@ args = parser.parse_args()
 for line in codecs.open(args.direcfile, "r", "utf-8"):
   line = line.strip()
   els = re.split(r"\s+", line)
+  els = [el.replace("_", " ") for el in els]
   verb, etym, aspect, corverbs, conj = els[0], els[1], els[2], els[3], els[4]
   assert re.search(u"(ть(ся)?|ти́?(сь)?|чь(ся)?)$", verb)
   isrefl = re.search(u"(ся|сь)$", verb)
@@ -24,7 +25,7 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
     assert isrefl
     etymtext = re.sub(u"^(.*?)(ся|сь)$", r"{{affix|ru|\1|-\2}}", verb)
   elif etym.startswith("?"):
-    etymtext = "Probably {{affix|ru|%s}}." % "|".join(re.split(r"\+",
+    etymtext = "Perhaps {{affix|ru|%s}}." % "|".join(re.split(r"\+",
       re.sub(r"^\?", "", etym)))
   else:
     etymtext = "{{affix|ru|%s}}" % "|".join(re.split(r"\+", etym))
@@ -41,20 +42,34 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
   verbbase = re.sub(u"(ся|сь)$", "", verb)
   passivetext = ("\n# {{passive of|lang=ru|%s}}" % verbbase
       if etym == "r" else "")
-  if conj.startswith("4a"):
-    assert verbbase.endswith(u"ить")
-    conjargs = re.sub(u"ить", "", verbbase)
-  elif conj.startswith("4b"):
-    assert verbbase.endswith(u"и́ть")
-    conjargs = re.sub(u"и́ть", "", verbbase)
-  elif conj.startswith("4c"):
-    assert verbbase.endswith(u"и́ть")
-    conjargs = ru.make_ending_stressed(re.sub(u"и́ть", "", verbbase))
-  elif conj.startswith("1a"):
-    conjargs = re.sub(u"ть$", "", verbbase)
+  if "|" not in conj:
+    if conj.startswith("4a"):
+      assert verbbase.endswith(u"ить")
+      conjargs = re.sub(u"ить", "", verbbase)
+    elif conj.startswith("4b"):
+      assert verbbase.endswith(u"и́ть")
+      conjargs = re.sub(u"и́ть", "", verbbase)
+    elif conj.startswith("4c"):
+      assert verbbase.endswith(u"и́ть")
+      conjargs = ru.make_ending_stressed(re.sub(u"и́ть", "", verbbase))
+    elif conj.startswith("3a") or conj.startswith(u"3°a") or conj.startswith("3oa"):
+      assert verbbase.endswith(u"нуть")
+      conjargs = re.sub(u"нуть$", "", verbbase)
+    elif conj.startswith("3b"):
+      assert verbbase.endswith(u"ну́ть")
+      conjargs = re.sub(u"у́ть$", "", verbbase)
+    elif conj.startswith("3c"):
+      assert verbbase.endswith(u"ну́ть")
+      conjargs = ru.make_ending_stressed(re.sub(u"у́ть", "", verbbase))
+    elif conj.startswith("1a"):
+      conjargs = re.sub(u"ть$", "", verbbase)
+    else:
+      msg("Unrecognized conjugation type and no arguments: %s" % conj)
+      assert False
   else:
     conjargs = re.sub(r"^.*?\|", "", conj)
     conj = re.sub(r"\|.*$", "", conj)
+  alttext = ""
   syntext = ""
   anttext = ""
   dertext = ""
@@ -68,7 +83,7 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
 
 """
   for synantrel in els[5:]:
-    m = re.search(r"^(syn|ant|der|rel):(.*)", synantrel)
+    m = re.search(r"^(syn|ant|der|rel|alt):(.*)", synantrel)
     if not m:
       msg("Element %s doesn't start with syn:, ant:, der: or rel:" % synantrel)
     assert m
@@ -77,7 +92,11 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
       lines = []
       for synantgroup in re.split(";", vals):
         sensetext = ""
-        if synantgroup.startswith("*"):
+        if synantgroup.startswith("*("):
+          m = re.search(r"^\*\((.*?)\)(.*)$", synantgroup)
+          sensetext = "{{sense|%s}} " % m.group(1)
+          synantgroup = m.group(2)
+        elif synantgroup.startswith("*"):
           sensetext = "{{sense|FIXME}} "
           synantgroup = re.sub(r"\*", "", synantgroup)
         else:
@@ -93,29 +112,44 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
         syntext = synantguts
       else:
         anttext = synantguts
-    else: # derived or related terms
+    elif sartype == "alt":
       lines = []
-      for derrelgroup in re.split(",", vals):
-        if "/" in derrelgroup:
-          impf, pf = re.split("/", derrelgroup)
-          lines.append("* {{l|ru|%s|g=impf}}, {{l|ru|%s|g=pf}}\n" % (impf, pf))
+      for altform in re.split(",", vals):
+        lines.append("* {{l|ru|%s}}\n" % altform)
+      alttext = "===Alternative forms===\n%s\n" % "".join(lines)
+    else: # derived or related terms
+      if vals == "-":
+        if sartype == "der":
+          dertext = ""
         else:
-          links = []
-          for derrel in re.split(":", derrelgroup):
-            links.append("{{l|ru|%s}}" % derrel)
-          lines.append("* %s\n" % ", ".join(links))
-      derrelguts = "====%s terms====\n%s\n" % (
-          "Derived" if sartype == "der" else "Related", "".join(lines))
-      if sartype == "der":
-        dertext = derrelguts
+          reltext = ""
       else:
-        reltext = derrelguts
+        lines = []
+        for derrelgroup in re.split(",", vals):
+          if "/" in derrelgroup:
+            impfpfverbs = re.split("/", derrelgroup)
+            links = []
+            links.append("{{l|ru|%s|g=impf}}" % impfpfverbs[0])
+            for pf in impfpfverbs[1:]:
+              links.append("{{l|ru|%s|g=pf}}" % impfpfverbs[1])
+            lines.append("* %s\n" % ", ".join(links))
+          else:
+            links = []
+            for derrel in re.split(":", derrelgroup):
+              links.append("{{l|ru|%s}}" % derrel)
+            lines.append("* %s\n" % ", ".join(links))
+        derrelguts = "====%s terms====\n%s\n" % (
+            "Derived" if sartype == "der" else "Related", "".join(lines))
+        if sartype == "der":
+          dertext = derrelguts
+        else:
+          reltext = derrelguts
 
   msg("""%s
 
 ==Russian==
 
-===Etymology===
+%s===Etymology===
 %s
 
 ===Pronunciation===
@@ -131,6 +165,6 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
 
 %s%s%s%s[[ru:%s]]
 
-""" % (ru.remove_accents(verb), etymtext, verb, verb, headword_aspect,
+""" % (ru.remove_accents(verb), alttext, etymtext, verb, verb, headword_aspect,
   corverbtext, passivetext, conj, aspect, "-refl" if isrefl else "", conjargs,
   syntext, anttext, dertext, reltext, ru.remove_accents(verb)))
