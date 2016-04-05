@@ -481,6 +481,9 @@ function export.do_generate_forms(conj_type, args)
 	data.refl = rfind(verb_type, "refl")
 	data.perf = rfind(verb_type, "^pf")
 	data.iter = args["iter"]
+	data.nopres = args["nopres"]
+	data.nofutr = args["nofutr"]
+	data.noimpr = args["noimpr"]
 	if data.iter and data.perf then
 		error("Iterative verbs must be imperfective")
 	end
@@ -575,8 +578,7 @@ function export.do_generate_forms(conj_type, args)
 		table.insert(categories, "Russian iterative verbs")
 	end
 
-	finish_generating_forms(forms, data.title, data.perf, data.intr or data.refl,
-		data.impers, data.iter)
+	finish_generating_forms(forms, data)
 
 	return forms, data.title, data.perf, data.intr or data.refl, data.impers, categories, notes, data.internal_notes
 end
@@ -3765,7 +3767,7 @@ end
 
 -- Finish generating the forms, clearing out some forms when impersonal/intr,
 -- selecting present or future forms from pres_futr_*, etc.
-finish_generating_forms = function(forms, title, perf, intr, impers, iter)
+finish_generating_forms = function(forms, data)
 	-- Set the main form FORM to the empty string, and corresponding alt forms
 	-- to nil.
 	local function clear_form(form)
@@ -3780,13 +3782,13 @@ finish_generating_forms = function(forms, title, perf, intr, impers, iter)
 		end
 	end
 
-	-- Intransitive verbs have no passive participles.
-	if intr then
+	-- Intransitive and reflexive verbs have no passive participles.
+	if data.intr or data.refl then
 		clear_form("pres_pasv_part")
 		clear_form("past_pasv_part")
 	end
 
-	if impers then
+	if data.impers then
 		clear_form("pres_1sg")
 		clear_form("pres_2sg")
 		clear_form("pres_1pl")
@@ -3809,8 +3811,9 @@ finish_generating_forms = function(forms, title, perf, intr, impers, iter)
 		clear_form("impr_pl")
 	end
 
-	-- Perfective and iterative verbs have no present forms.
-	if perf or iter then
+	-- Perfective and iterative verbs have no present forms, as well as
+	-- verbs marked nopres=1.
+	if data.perf or data.iter or data.nopres then
 		clear_form("pres_actv_part")
 		clear_form("pres_pasv_part")
 		clear_form("pres_adv_part")
@@ -3821,10 +3824,13 @@ finish_generating_forms = function(forms, title, perf, intr, impers, iter)
 		clear_form("pres_2pl")
 		clear_form("pres_3pl")
 	end
-	-- Iterative verbs also have no imperative or future forms.
-	if iter then
+	-- Iterative verbs and verbs marked noimpr=1 have no imperative forms.
+	if data.iter or data.noimpr then
 		clear_form("impr_sg")
 		clear_form("impr_pl")
+	end
+	-- Iterative verbs and verbs marked nofutr=1 have no future forms.
+	if data.iter or data.nofutr then
 		clear_form("futr_1sg")
 		clear_form("futr_2sg")
 		clear_form("futr_3sg")
