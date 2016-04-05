@@ -3,9 +3,7 @@
 
 import re, sys, codecs, argparse
 
-import blib
-from blib import getparam, rmparam, msg, site
-
+from blib import msg
 import rulib as ru
 
 parser = argparse.ArgumentParser(description="Generate adjective stubs.")
