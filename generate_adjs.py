@@ -8,14 +8,22 @@ import rulib as ru
 
 parser = argparse.ArgumentParser(description="Generate adjective stubs.")
 parser.add_argument('--direcfile', help="File containing directives.")
+parser.add_argument('--adverb', action="store_true",
+    help="Directive file contains adverbs instead of adjectives.")
 args = parser.parse_args()
 
 for line in codecs.open(args.direcfile, "r", "utf-8"):
   line = line.strip()
   els = re.split(r"\s+", line)
   els = [el.replace("_", " ") for el in els]
-  adj, etym, short, defns = els[0], els[1], els[2], els[3]
-  assert re.search(u"(ый|ий|о́й)$", adj)
+  isadv = args.adverb
+  if isadv:
+    term, etym, defns = els[0], els[1], els[2]
+    remainder = els[3:]
+  else:
+    term, etym, short, defns = els[0], els[1], els[2], els[3]
+    remainder = els[4:]
+    assert re.search(u"(ый|ий|о́й)$", term)
   if etym == "-":
     etymtext = "===Etymology===\n{{rfe|lang=ru}}\n\n"
   elif etym == "--":
@@ -39,12 +47,13 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
         "|".join(re.split(r"\+", etym)), suffix)
 
   # Create declension
-  short = re.sub(r"\?.*$", "", short) # eliminate uncertainty notations
-  if short == "-":
-    shorttext = ""
-  else:
-    shorttext = "|%s" % short
-  decltext = "{{ru-decl-adj|%s%s}}" % (adj, shorttext)
+  if not isadv:
+    short = re.sub(r"\?.*$", "", short) # eliminate uncertainty notations
+    if short == "-":
+      shorttext = ""
+    else:
+      shorttext = "|%s" % short
+    decltext = "{{ru-decl-adj|%s%s}}" % (term, shorttext)
 
   # Create definition
   defnlines = []
@@ -97,8 +106,8 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
 
 """
   comptext = ""
-  prontext = adj
-  for synantrel in els[4:]:
+  prontext = term
+  for synantrel in remainder:
     m = re.search(r"^(syn|ant|der|rel|comp|pron|alt|part):(.*)", synantrel)
     if not m:
       msg("Element %s doesn't start with syn:, ant:, der:, rel:, comp:, pron:, alt: or part:" % synantrel)
@@ -149,7 +158,7 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
 %s
 
 ====Declension====
-{{ru-decl-adj|%s%s}}\n\n""" % (adj, "\n".join(infleclines), adj,
+{{ru-decl-adj|%s%s}}\n\n""" % (term, "\n".join(infleclines), term,
     "" if partshort == "-" else "|" + partshort)
     else: # derived or related terms
       if vals == "-":
@@ -179,7 +188,25 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
         else:
           reltext = derrelguts
 
-  msg("""%s
+  if isadv:
+    msg("""%s
+
+==Russian==
+
+%s%s===Pronunciation===
+* {{ru-IPA|%s}}
+
+===Adverb===
+{{ru-adv|%s}}
+
+%s
+%s%s%s%s[[ru:%s]]
+
+""" % (ru.remove_accents(term), alttext, etymtext, prontext, term,
+    defntext, syntext, anttext, dertext, reltext,
+    ru.remove_accents(term)))
+  else:
+    msg("""%s
 
 ==Russian==
 
@@ -195,6 +222,6 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
 
 %s%s%s%s[[ru:%s]]
 
-""" % (ru.remove_accents(adj), alttext, etymtext, prontext, parttext, adj,
-  comptext, defntext, decltext, syntext, anttext, dertext, reltext,
-  ru.remove_accents(adj)))
+""" % (ru.remove_accents(term), alttext, etymtext, prontext, parttext, term,
+    comptext, defntext, decltext, syntext, anttext, dertext, reltext,
+    ru.remove_accents(term)))
