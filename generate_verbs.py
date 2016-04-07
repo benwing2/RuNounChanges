@@ -155,7 +155,7 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
               impfpfverbs = re.split("/", derrel)
               links.append("{{l|ru|%s|g=impf}}" % impfpfverbs[0])
               for pf in impfpfverbs[1:]:
-                links.append("{{l|ru|%s|g=pf}}" % impfpfverbs[1])
+                links.append("{{l|ru|%s|g=pf}}" % pf)
             else:
               links.append("{{l|ru|%s}}" % derrel)
           lines.append("* %s\n" % ", ".join(links))
