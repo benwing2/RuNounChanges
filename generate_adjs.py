@@ -17,7 +17,9 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
   adj, etym, short, defns = els[0], els[1], els[2], els[3]
   assert re.search(u"(ый|ий|о́й)$", adj)
   if etym == "-":
-    etymtext = "{{rfe|lang=ru}}"
+    etymtext = "===Etymology===\n{{rfe|lang=ru}}\n\n"
+  elif etym == "--":
+    etymtext = ""
   else:
     prefix = ""
     suffix = ""
@@ -33,7 +35,7 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
     if m:
       prefix += "{{der|ru|%s|%s}} + " % (m.group(1), m.group(2))
       etym = m.group(3)
-    etymtext = "%s{{affix|ru|%s}}%s" % (prefix,
+    etymtext = "===Etymology===\n%s{{affix|ru|%s}}%s\n\n" % (prefix,
         "|".join(re.split(r"\+", etym)), suffix)
 
   # Create declension
@@ -50,19 +52,38 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
     if defn == "-":
       defnlines.append("# {{rfdef|lang=ru}}\n")
     else:
+      labels = []
       prefix = ""
-      if defn.startswith("+"):
-        prefix = "{{lb|ru|attributive}} "
-        defn = re.sub(r"^\+", "", defn)
-      elif defn.startswith("#"):
-        prefix = "{{lb|ru|figurative}} "
-        defn = re.sub(r"^#", "", defn)
-      elif defn.startswith("!"):
-        prefix = "{{lb|ru|colloquial}} "
-        defn = re.sub(r"^!", "", defn)
-      defnlines.append("# %s%s\n" % (prefix, defn.replace(",", ", ")))
+      while True:
+        if defn.startswith("+"):
+          labels.append("attributive")
+          defn = re.sub(r"^\+", "", defn)
+        elif defn.startswith("#"):
+          labels.append("figurative")
+          defn = re.sub(r"^#", "", defn)
+        elif defn.startswith("(f)"):
+          labels.append("figurative")
+          defn = re.sub(r"^\(f\)", "", defn)
+        elif defn.startswith("(d)"):
+          labels.append("dated")
+          defn = re.sub(r"^\(d\)", "", defn)
+        elif defn.startswith("!"):
+          labels.append("colloquial")
+          defn = re.sub(r"^!", "", defn)
+        else:
+          break
+      if labels:
+        prefix = "{{lb|ru|%s}} " % "|".join(labels)
+      if defn.startswith("altof:"):
+        defnline = "{{alternative form of|lang=ru|%s}}" % (
+            re.sub("^altof:", "", defn))
+      else:
+        defnline = defn.replace(",", ", ")
+      defnlines.append("# %s%s\n" % (prefix, defnline))
   defntext = "".join(defnlines)
 
+  alttext = ""
+  parttext = ""
   syntext = ""
   anttext = ""
   dertext = ""
@@ -78,9 +99,9 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
   comptext = ""
   prontext = adj
   for synantrel in els[4:]:
-    m = re.search(r"^(syn|ant|der|rel|comp|pron):(.*)", synantrel)
+    m = re.search(r"^(syn|ant|der|rel|comp|pron|alt|part):(.*)", synantrel)
     if not m:
-      msg("Element %s doesn't start with syn:, ant:, der:, rel:, comp: or pron:" % synantrel)
+      msg("Element %s doesn't start with syn:, ant:, der:, rel:, comp:, pron:, alt: or part:" % synantrel)
     assert m
     sartype, vals = m.groups()
     if sartype in ["syn", "ant"]:
@@ -111,6 +132,25 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
       comptext = "|%s" % vals
     elif sartype == "pron":
       prontext = "%s" % vals
+    elif sartype == "alt":
+      lines = []
+      for altform in re.split(",", vals):
+        lines.append("* {{l|ru|%s}}\n" % altform)
+      alttext = "===Alternative forms===\n%s\n" % "".join(lines)
+    elif sartype == "part":
+      verbs, parttypes, partshort = re.split(":", vals)
+      infleclines = []
+      for verb in re.split(",", verbs):
+        for parttype in re.split(",", parttypes):
+          infleclines.append("# {{ru-participle of|%s||%s}}" % (verb, parttype))
+      parttext = """===Participle===
+{{head|ru|participle|head=%s}}
+
+%s
+
+====Declension====
+{{ru-decl-adj|%s%s}}\n\n""" % (adj, "\n".join(infleclines), adj,
+    "" if partshort == "-" else "|" + partshort)
     else: # derived or related terms
       if vals == "-":
         if sartype == "der":
@@ -143,13 +183,10 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
 
 ==Russian==
 
-===Etymology===
-%s
-
-===Pronunciation===
+%s%s===Pronunciation===
 * {{ru-IPA|%s}}
 
-===Adjective===
+%s===Adjective===
 {{ru-adj|%s%s}}
 
 %s
@@ -158,5 +195,6 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
 
 %s%s%s%s[[ru:%s]]
 
-""" % (ru.remove_accents(adj), etymtext, prontext, adj, comptext, defntext,
-  decltext, syntext, anttext, dertext, reltext, ru.remove_accents(adj)))
+""" % (ru.remove_accents(adj), alttext, etymtext, prontext, parttext, adj,
+  comptext, defntext, decltext, syntext, anttext, dertext, reltext,
+  ru.remove_accents(adj)))
