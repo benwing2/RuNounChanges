@@ -32,8 +32,8 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
           if verb.startswith("+"):
             gender = "|g=%s" % aspect
             verb = re.sub("^\+", "", verb)
-          links.append("* {{l|ru|%s%s}}" % (verb, gender))
-          return ", ".join(links)
+          links.append("{{l|ru|%s%s}}" % (verb, gender))
+        return "* " + ", ".join(links)
     group.append((do_line(pf, "pf"), do_line(impf, "impf")))
 if group:
   groups.append(group)
@@ -43,6 +43,8 @@ def is_noequiv(x):
 def sort_aspect_pair(x, y):
   xpf, ximpf = x
   ypf, yimpf = y
+  xpf = ru.remove_accents(xpf)
+  ypf = ru.remove_accents(ypf)
   if not is_noequiv(xpf) and not is_noequiv(ypf):
     return cmp(xpf, ypf)
   elif not is_noequiv(ximpf) and not is_noequiv(yimpf):
