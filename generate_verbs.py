@@ -13,15 +13,14 @@ args = parser.parse_args()
 for line in codecs.open(args.direcfile, "r", "utf-8"):
   line = line.strip()
   els = re.split(r"\s+", line)
-  els = [el.replace("_", " ") for el in els]
+  # Replace _ with space, but not in the conjugation, where param names
+  # may well have an underscore in them
+  els = [el if i == 4 else el.replace("_", " ") for i, el in enumerate(els)]
   verb, etym, aspect, corverbs, conj = els[0], els[1], els[2], els[3], els[4]
   assert re.search(u"(ть(ся)?|ти́?(сь)?|чь(ся)?)$", verb)
   isrefl = re.search(u"(ся|сь)$", verb)
   if etym == "-":
     etymtext = "{{rfe|lang=ru}}"
-  elif etym == "r":
-    assert isrefl
-    etymtext = re.sub(u"^(.*?)(ся|сь)$", r"{{affix|ru|\1|-\2}}", verb)
   else:
     prefix = ""
     suffix = ""
@@ -33,12 +32,16 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
       prefix = "Ultimately from "
       suffix = "."
       etym = re.sub(r"^<<", "", etym)
-    m = re.search(r"^(de|la|en):(.*?)\+(.*)$", etym)
-    if m:
-      prefix += "{{der|ru|%s|%s}} + " % (m.group(1), m.group(2))
-      etym = m.group(3)
-    etymtext = "%s{{affix|ru|%s}}%s" % (prefix,
-        "|".join(re.split(r"\+", etym)), suffix)
+    if etym == "r":
+      assert isrefl
+      etymtext = re.sub(u"^(.*?)(ся|сь)$", r"{{affix|ru|\1|-\2}}", verb)
+    else:
+      m = re.search(r"^(de|la|en):(.*?)\+(.*)$", etym)
+      if m:
+        prefix += "{{der|ru|%s|%s}} + " % (m.group(1), m.group(2))
+        etym = m.group(3)
+      etymtext = "%s{{affix|ru|%s}}%s" % (prefix,
+          "|".join(re.split(r"\+", etym)), suffix)
   headword_aspect = re.sub("-.*", "", aspect)
   assert headword_aspect in ["pf", "impf", "both"]
   corverbtext = ""
