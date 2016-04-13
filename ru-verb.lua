@@ -467,14 +467,6 @@ function export.do_generate_forms(conj_type, args)
 		data.title = "class " .. conj_type
 	end
 
-	if conjugations[conj_type] then
-		forms = conjugations[conj_type](args, data)
-	else
-		error("Unknown conjugation type '" .. conj_type .. "'")
-	end
-
-	local reflex_stress = args["reflex_stress"] or data.default_reflex_stress -- "ся́"
-
 	--impersonal
 	data.impers = rfind(verb_type, "impers")
 	data.intr = data.impers or rfind(verb_type, "intr")
@@ -482,38 +474,11 @@ function export.do_generate_forms(conj_type, args)
 	data.perf = rfind(verb_type, "^pf")
 	data.iter = args["iter"]
 	data.nopres = args["nopres"]
+	data.nopast = args["nopast"]
 	data.nofutr = args["nofutr"]
 	data.noimpr = args["noimpr"]
 	if data.iter and data.perf then
 		error("Iterative verbs must be imperfective")
-	end
-
-	if rfind(conj_type, "^irreg") then
-		categories = {"Russian irregular verbs"}
-	else
-		local class_num = rmatch(conj_type, "^([0-9]+)")
-		assert(class_num and class_num ~= "")
-		categories = {"Russian class " .. class_num .. " verbs"}
-	end
-	data.title = data.title ..
-		(data.perf and " perfective" or " imperfective") ..
-		(data.refl and " reflexive" or data.intr and " intransitive" or " transitive") ..
-		(data.impers and " impersonal" or "") ..
-		(data.iter and " iterative" or "")
-
-	local has_ppp = false
-	for _, form in ipairs(main_to_all_verb_forms["past_pasv_part"]) do
-		if args[form] then
-			has_ppp = true
-			break
-		end
-	end
-	local shouldnt_have_ppp = data.refl or data.intr and not data.impers
-	if has_ppp and shouldnt_have_ppp then
-		error("Shouldn't specify past passive participle with reflexive or intransitive verbs")
-	elseif data.perf and not shouldnt_have_ppp and not has_ppp then
-		-- possible omissions
-		track("perfective-no-ppp")
 	end
 
 	-- FIXME, temporary tracking for places that need conversion to past stress
@@ -527,6 +492,42 @@ function export.do_generate_forms(conj_type, args)
 	if args["reflex_stress"] then
 		track("reflex-stress")
 	end
+
+	data.ppp_override = false
+	for _, form in ipairs(main_to_all_verb_forms["past_pasv_part"]) do
+		if args[form] then
+			data.ppp_override = true
+			break
+		end
+	end
+	data.shouldnt_have_ppp = data.refl or data.intr and not data.impers
+	if data.ppp_override and data.shouldnt_have_ppp then
+		error("Shouldn't specify past passive participle with reflexive or intransitive verbs")
+	elseif data.perf and not data.shouldnt_have_ppp and not data.ppp_override then
+		-- possible omissions
+		track("perfective-no-ppp")
+	end
+
+	if conjugations[conj_type] then
+		forms = conjugations[conj_type](args, data)
+	else
+		error("Unknown conjugation type '" .. conj_type .. "'")
+	end
+
+	local reflex_stress = args["reflex_stress"] or data.default_reflex_stress -- "ся́"
+
+	if rfind(conj_type, "^irreg") then
+		categories = {"Russian irregular verbs"}
+	else
+		local class_num = rmatch(conj_type, "^([0-9]+)")
+		assert(class_num and class_num ~= "")
+		categories = {"Russian class " .. class_num .. " verbs"}
+	end
+	data.title = data.title ..
+		(data.perf and " perfective" or " imperfective") ..
+		(data.refl and " reflexive" or data.intr and " intransitive" or " transitive") ..
+		(data.impers and " impersonal" or "") ..
+		(data.iter and " iterative" or "")
 
 	-- Perfective/imperfective
 	if data.perf then
@@ -903,8 +904,7 @@ local function parse_variants(data, variants, allowed, def_past_stress)
 				end
 				data.var6 = var == "(6)" and "req" or "opt"
 			elseif ut.contains({"(7)", "[(7)]", "(8)", "[(8)]", "+p"}, var) then
-				local shouldnt_have_ppp = data.refl or data.intr and not data.impers
-				if shouldnt_have_ppp then
+				if data.shouldnt_have_ppp then
 					error("Shouldn't specify past passive participle with reflexive or intransitive verbs")
 				end
 				if data.ppp then
@@ -984,6 +984,9 @@ local function parse_variants(data, variants, allowed, def_past_stress)
 	end
 	if data.zhd and not data.ppp then
 		error("Variant жд specified without calling for past passive participle")
+	end
+	if data.perf and not data.ppp and not data.ppp_override and not data.shouldnt_have_ppp and not data.impers then
+		error("For perfective transitive verbs, need to specify past passive participle by variant or override; use |ppp=- if no such participle")
 	end
 	data.past_stress = variants == "" and (def_past_stress or "a") or variants
 	data.title = data.title ..
@@ -3823,6 +3826,21 @@ finish_generating_forms = function(forms, data)
 		clear_form("pres_1pl")
 		clear_form("pres_2pl")
 		clear_form("pres_3pl")
+	end
+	-- Some verbs (e.g. грясти́, густи́) have no past
+	if data.nopast then
+		clear_form("past_m")
+		clear_form("past_f")
+		clear_form("past_n")
+		clear_form("past_pl")
+		clear_form("past_m_short")
+		clear_form("past_f_short")
+		clear_form("past_n_short")
+		clear_form("past_pl_short")
+		clear_form("past_actv_part")
+		clear_form("past_pasv_part")
+		clear_form("past_adv_part")
+		clear_form("past_adv_part_short")
 	end
 	-- Iterative verbs and verbs marked noimpr=1 have no imperative forms.
 	if data.iter or data.noimpr then
