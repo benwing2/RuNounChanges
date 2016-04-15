@@ -417,9 +417,9 @@ local function clone_args_handle_aliases(frame)
 		local mainprop, num = rmatch(pname, "^([a-z_]+)([0-9]*)$")
 		if not mainprop then
 			if pname == 1 and argval then
-				-- [°o1a] matches 3°a, 3oa, 4a1a
-				conj_type = rmatch(argval, "^([0-9]+[°o1a]*[abc])")
-				argval = rsub(argval, "^[0-9]+[°o1a]*[abc]/?", "")
+				-- [°o1a] matches 3°a, 3oa, 4a1a, 6c1a, 1a6a, etc.
+				conj_type = rmatch(argval, "^([0-9]+[°o0-9abc]*[abc])")
+				argval = rsub(argval, "^[0-9]+[°o0-9abc]*[abc]/?", "")
 				if not conj_type then
 					conj_type = rmatch(argval, "^(irreg%-[абцдефгчийклмнопярстувшхызёюжэщьъ%-]*)")
 					argval = rsub(argval, "^irreg%-[абцдефгчийклмнопярстувшхызёюжэщьъ%-]*/?", "")
@@ -1142,20 +1142,21 @@ local function split_prefix(ru, tr)
 	return prefix_ru, prefix_tr, last_ru, last_tr
 end
 
-local function set_imper_by_variant(forms, stem, tr, variant, verbclass)
+local function append_imper_by_variant(forms, stem, tr, variant, verbclass, note)
 	local vowel_stem = is_vowel_stem(stem)
 	local stress = rmatch(verbclass, "([abc])$")
 	if not stress then
 		error("Unrecognized verb class '" .. verbclass .. "', should end with a, b or c")
 	end
+	note = note or ""
 	local longend = stress == "a" and "и" or "и́"
 	local shortend = vowel_stem and (com.is_unstressed(stem) and "́й" -- accent on previous vowel
 		or "й") or "ь"
-	local function set_short_imper()
-		set_imper(forms, stem, tr, shortend, shortend .. "те")
+	local function append_short_imper()
+		append_imper(forms, stem, tr, shortend .. note, shortend .. "те" .. note)
 	end
-	local function set_long_imper()
-		set_imper(forms, stem, tr, longend, longend .. "те")
+	local function append_long_imper()
+		append_imper(forms, stem, tr, longend .. note, longend .. "те" .. note)
 	end
 	if variant and variant ~= "" then
 		track("explicit-imper")
@@ -1166,34 +1167,36 @@ local function set_imper_by_variant(forms, stem, tr, variant, verbclass)
 		if not rfind(stem, "^вы́-") then
 			error("Should only specify imperative variant (2) with verbs in вы́-, not " .. stem)
 		end
-		set_short_imper()
+		append_short_imper()
 	elseif variant == "[(2)]" then
 		-- use both long and short variants
-		set_imper(forms, stem, tr, {longend, shortend}, {longend  .. "те", shortend .. "те"})
+		append_long_imper()
+		append_short_imper()
 	elseif variant == "(3)" then
 		-- long in singular, short in plural
-		set_imper(forms, stem, tr, longend, shortend .. "те")
+		append_imper(forms, stem, tr, longend .. note, shortend .. "те" .. note)
 	elseif variant == "[(3)]" then
 		-- long and short in singular, short in plural
-		set_imper(forms, stem, tr, {longend, shortend}, shortend .. "те")
+		append_imper(forms, stem, tr, {longend .. note, shortend .. note},
+			shortend .. "те" .. note)
 	elseif variant == "ь" or variant == "й" then
 		-- short variants wanted
-		set_short_imper()
+		append_short_imper()
 	elseif variant == "и" then
 		-- long variants wanted
-		set_long_imper()
+		append_long_imper()
 	else
 		assert(not variant or variant == "")
 		if vowel_stem then
 			if verbclass == "4b" or verbclass == "4c" or (
 				verbclass == "4a" and rfind(stem, "^вы́-")) then
-				set_long_imper()
+				append_long_imper()
 			else
-				set_short_imper()
+				append_short_imper()
 			end
 		else -- consonant stem
 			if stress == "b" or stress == "c" then
-				set_long_imper()
+				append_long_imper()
 			else
 				assert(stress == "a")
 				-- "и" after вы́-, e.g. вы́садить
@@ -1202,10 +1205,10 @@ local function set_imper_by_variant(forms, stem, tr, variant, verbclass)
 				if rfind(stem, "^вы́-") or rfind(stem, "щ$") or
 					-- "и" after two consonants in a row (мо́рщить, зафре́ндить)
 					rfind(stem, "[бвгджзклмнпрстфхцчшщь][бвгджзклмнпрстфхцчшщ]$") then
-					set_long_imper()
+					append_long_imper()
 				else
 					-- "ь" after a single consonant (бре́дить)
-					set_short_imper()
+					append_short_imper()
 				end
 			end
 		end
@@ -1545,7 +1548,7 @@ conjugations["3°a"] = function(args, data)
 		vowel_stem and "в" or "-")
 	set_moving_ppp(forms, data)
 	present_e_a(forms, stem .. "н")
-	set_imper_by_variant(forms, stem .. "н", nil, data.imper_variant, "3°a")
+	append_imper_by_variant(forms, stem .. "н", nil, data.imper_variant, "3°a")
 
 	forms["past_m"] = data.var5 and stem .. "нул" or "-"
 	forms["past_m_short"] = data.var5 ~= "req" and (vowel_stem and stem .. "л" or stem) or nil
@@ -1572,7 +1575,7 @@ conjugations["3a"] = function(args, data)
 	set_moving_ppp(forms, data)
 	present_e_a(forms, stem .. "н")
 
-	set_imper_by_variant(forms, stem .. "н", nil, data.imper_variant, "3a")
+	append_imper_by_variant(forms, stem .. "н", nil, data.imper_variant, "3a")
 	set_past(forms, stem .. "нул", nil, "", "а", "о", "и")
 
 	return forms
@@ -1635,7 +1638,7 @@ conjugations["4a"] = function(args, data)
 		"имый", hushing and "а" or "я", "ивший", "ивши", "ив")
 	set_class_4_ppp(forms, data, stem, tr)
 	present_i_a(forms, stem, tr, data.shch)
-	set_imper_by_variant(forms, stem, tr, data.imper_variant, "4a")
+	append_imper_by_variant(forms, stem, tr, data.imper_variant, "4a")
 	-- set prefix to "" as past stem may vary in length and no (1) variants
 	set_past_by_stress(forms, data.past_stress, "", nil, stem .. "и",
 		tr and tr .. "i", args, data)
@@ -1666,7 +1669,7 @@ conjugations["4a1a"] = function(args, data)
 	set_class_4_ppp(forms, data, stem4, tr4)
 	present_i_a(forms, stem4, tr4, data.shch)
 	present_je_a(forms, stem1, tr1)
-	set_imper_by_variant(forms, stem4, tr4, data.imper_variant, "4a")
+	append_imper_by_variant(forms, stem4, tr4, data.imper_variant, "4a")
 	append_imper(forms, stem1, tr1, "й", "йте")
 	-- set prefix to "" as past stem may vary in length and no (1) variants
 	set_past_by_stress(forms, data.past_stress, "", nil, stem4 .. "и",
@@ -1785,7 +1788,7 @@ local function guts_of_class_5(args, data)
 	else
 		present_i_c(forms, stem)
 	end
-	set_imper_by_variant(forms, stem, nil, data.imper_variant, data.conj_type)
+	append_imper_by_variant(forms, stem, nil, data.imper_variant, data.conj_type)
 
 	-- set prefix to "" as past stem may vary in length and no (1) variants
 	set_past_by_stress(forms, data.past_stress, "", nil, past_stem, nil,
@@ -1806,9 +1809,21 @@ conjugations["5c"] = function(args, data)
 	return guts_of_class_5(args, data)
 end
 
-conjugations["6a"] = function(args, data)
+-- Implement 6a, 6a1a and 1a6a.
+local function guts_of_6a(args, data, vclass)
 	local forms = {}
 
+	-- In type 6a1a and 1a6a, forms of both 6a and 1a can occur. They are
+	-- the same in the infinitive and past. In the present adverbial participle
+	-- and the imperative, the type 1a forms are preferred and the type 6a
+	-- forms are dated. In the remaining present forms, one or the other is
+	-- slightly preferred (type 6a for 6a1a, type 1a for 1a6a).
+	if vclass == "6a1a" then
+		data.title = "class 6a//1a"
+	elseif vclass == "1a6a" then
+		data.title = "class 1a//6a"
+		-- if vclass is just 6a, data.title already set correctly
+	end
 	parse_variants(data, args[1], {"23", "и", "past", "+p", "7", "ё"})
 	local stem = get_stressed_arg(args, 3)
 	local vowel_end_stem = is_vowel_stem(stem)
@@ -1829,28 +1844,84 @@ conjugations["6a"] = function(args, data)
 
 	-- Verbs ending in a hushing consonant do not get j-vowels in the endings.
 	local hushing = rfind(iotated_stem, "[шщжч]$") or no_iotation
-	append_participles_2stem(forms, iotated_stem, nil,	inf_past_stem, nil,
-		hushing and "ущий" or "ющий", "емый", hushing and "а" or "я",
-		"вший", "вши", "в")
+
+	-- Participles
+	if vclass == "6a" then
+		append_participles_2stem(forms, iotated_stem, nil, inf_past_stem, nil,
+			hushing and "ущий" or "ющий", "емый", hushing and "а" or "я",
+			"вший", "вши", "в")
+	elseif vclass == "6a1a" then
+		-- first the preferred type 6a present active/passive participles
+		append_participles(forms, iotated_stem, nil,
+			hushing and "ущий" or "ющий", "емый", {}, {}, {}, {})
+		-- then all the type 1a forms (both are the same in the past)
+		append_participles(forms, inf_past_stem, nil, "ющий", "емый", "я",
+			"вший", "вши", "в")
+		-- then the dated type 6a present adverbial participle
+		append_participles(forms, iotated_stem, nil,
+			{}, {}, hushing and "а*" or "я*", {}, {}, {})
+	else -- type 1a6a
+		-- first the preferred type 1a forms (both are the same in the past)
+		append_participles(forms, inf_past_stem, nil, "ющий", "емый", "я",
+			"вший", "вши", "в")
+		-- then the type 6a forms (dated in present adverbial participle)
+		append_participles(forms, iotated_stem, nil,
+			hushing and "ущий" or "ющий", "емый", hushing and "а*" or "я*",
+			{}, {}, {})
+	end
 	set_moving_ppp(forms, data)
+
+	-- Present/future tense
+	if vclass == "1a6a" then
+		-- Do type 1a forms
+		present_je_a(forms, inf_past_stem)
+	end
 	if no_iotation then
 		present_e_a(forms, pres_stem)
 	else
 		present_je_a(forms, pres_stem)
 	end
+	if vclass == "6a1a" then
+		-- Do type 1a forms
+		present_je_a(forms, inf_past_stem)
+	end
 
+	-- Imperative forms; if 1a6a or 6a1a, type 6a forms are dated
+	local dated_note = vclass == "6a" and "" or "*"
+	if vclass ~= "6a" then
+		-- Do type 1a forms first.
+		set_imper(forms, inf_past_stem, nil, "й", "йте")
+	end
+	-- Do type 6a forms
 	if impr_sg then
 		-- irreg impr_sg: сыпать  - сыпь, сыпьте
-		set_imper(forms, impr_sg, nil, "", "те")
+		set_imper(forms, impr_sg, nil, "" .. dated_note, "те" .. dated_note)
 	else
-		set_imper_by_variant(forms, iotated_stem, nil, data.imper_variant, "6a")
+		append_imper_by_variant(forms, iotated_stem, nil, data.imper_variant,
+			"6a", dated_note)
 	end
 
 	-- set prefix to "" as past stem may vary in length and no (1) variants
 	set_past_by_stress(forms, data.past_stress, "", nil, inf_past_stem, nil,
 		args, data)
 
+	if vclass ~= "6a" then
+		ut.insert_if_not(data.internal_notes, "* Dated.")
+	end
+
 	return forms
+end
+
+conjugations["6a"] = function(args, data)
+	return guts_of_6a(args, data, "6a")
+end
+
+conjugations["6a1a"] = function(args, data)
+	return guts_of_6a(args, data, "6a1a")
+end
+
+conjugations["1a6a"] = function(args, data)
+	return guts_of_6a(args, data, "1a6a")
 end
 
 conjugations["6b"] = function(args, data)
@@ -2010,7 +2081,7 @@ conjugations["7a"] = function(args, data)
 	forms["infinitive"] = full_inf
 
 	present_e_a(forms, pres_stem)
-	set_imper_by_variant(forms, pres_stem, nil, data.imper_variant, "7a")
+	append_imper_by_variant(forms, pres_stem, nil, data.imper_variant, "7a")
 	-- вычесть - non-existent past_actv_part handled through general mechanism
 	-- лезть - ле́зши - non-existent past_actv_part handled through general mechanism
 	-- вычесть - past_m=вы́чел handled through general mechanism
