@@ -1893,12 +1893,12 @@ local function guts_of_6a(args, data, vclass)
 	local dated_note = vclass == "6a" and "" or "*"
 	if vclass ~= "6a" then
 		-- Do type 1a forms first.
-		set_imper(forms, inf_past_stem, nil, "й", "йте")
+		append_imper(forms, inf_past_stem, nil, "й", "йте")
 	end
 	-- Do type 6a forms
 	if impr_sg then
 		-- irreg impr_sg: сыпать  - сыпь, сыпьте
-		set_imper(forms, impr_sg, nil, "" .. dated_note, "те" .. dated_note)
+		append_imper(forms, impr_sg, nil, "" .. dated_note, "те" .. dated_note)
 	else
 		append_imper_by_variant(forms, iotated_stem, nil, data.imper_variant,
 			"6a", dated_note)
@@ -1981,9 +1981,20 @@ conjugations["6b"] = function(args, data)
 	return forms
 end
 
-conjugations["6c"] = function(args, data)
+-- Implement 6c and 6c1a.
+local function guts_of_6c(args, data, vclass)
 	local forms = {}
 
+	-- In type 6c1a, forms of both 6c and 1a can occur. They are
+	-- the same in the infinitive and past. In the present active participle
+	-- and the present/future, the type 6c forms are preferred and the type 1a
+	-- forms are colloquial. In the remaining present forms and the imperative,
+	-- both are equally preferred (we put the 6c forms first because Zaliznyak
+	-- lists 6c first).
+	if vclass == "6c1a" then
+		data.title = "class 6c//1a"
+	end
+	
 	-- optional щ parameter for verbs like клеветать (клевещу́), past stress
 	parse_variants(data, args[1], {"щ", "past", "+p", "7", "ё"})
 	local stem = get_stressed_arg(args, 3)
@@ -1992,32 +2003,22 @@ conjugations["6c"] = function(args, data)
 	local stem_noa = com.make_unstressed(stem)
 	-- iotate the stem
 	local iotated_stem = com.iotation(stem, nil, data.shch)
-	-- iotate the 2nd stem
-	local iotated_stem_noa = com.iotation(stem_noa, nil, data.shch)
+	local stem1a = stem_noa .. "а́"
 	-- applies only to стона́ть, застона́ть, простона́ть
 	local no_iotation = check_opt_arg(args, "no_iotation", {"1"})
 
 	forms["infinitive"] = stem_noa .. "а́ть"
 
 	-- Verbs ending in a hushing consonant do not get j-vowels in the endings.
-	if rfind(iotated_stem, "[шщжч]$") or no_iotation then
-		forms["pres_actv_part"] = iotated_stem ..  "ущий"
-	else
-		forms["pres_actv_part"] = iotated_stem ..  "ющий"
+	local hushing = rfind(iotated_stem, "[шщжч]$")
+	-- Participles
+	append_participles_2stem(forms, iotated_stem, nil, stem_noa, nil,
+		(hushing or no_iotation) and "ущий" or "ющий", {},
+		hushing and "а́" or "я́", "а́вший", "а́вши", "а́в")
+	if vclass == "6c1a" then
+		-- then all the type 1a forms (both are the same in the past)
+		append_participles(forms, stem1a, nil, "ющий*", "емый", "я")
 	end
-
-	forms["pres_pasv_part"] = ""
-
-	-- Verbs ending in a hushing consonant do not get j-vowels in the endings.
-	if rfind(iotated_stem_noa, "[шщжч]$") then
-		forms["pres_adv_part"] = iotated_stem_noa ..  "а́"
-	else
-		forms["pres_adv_part"] = iotated_stem_noa ..  "я́"
-	end
-
-	forms["past_actv_part"] = stem_noa .. "а́вший"
-	forms["past_adv_part"] = stem_noa .. "а́вши"
-	forms["past_adv_part_short"] = stem_noa .. "а́в"
 	set_moving_ppp(forms, data)
 
 	if no_iotation then
@@ -2025,13 +2026,29 @@ conjugations["6c"] = function(args, data)
 	else
 		present_je_c(forms, stem, nil, data.shch)
 	end
-	set_imper(forms, iotated_stem_noa, nil, "и́", "и́те")
+	append_imper(forms, iotated_stem, nil, "и́", "и́те")
+	if vclass == "6c1a" then
+		present_je_a(forms, stem1a, nil, "*")
+		append_imper(forms, stem1a, nil, "й", "йте")
+	end
 
 	-- set prefix to "" as past stem may vary in length and no (1) variants
 	set_past_by_stress(forms, data.past_stress, "", nil, stem_noa .. "а́", nil,
 		args, data)
 
+	if vclass == "6c1a" then
+		ut.insert_if_not(data.internal_notes, "* Colloquial; type-6 forms preferred.")
+	end
+
 	return forms
+end
+
+conjugations["6c"] = function(args, data)
+	return guts_of_6c(args, data, "6c")
+end
+
+conjugations["6c1a"] = function(args, data)
+	return guts_of_6c(args, data, "6c1a")
 end
 
 local function guts_of_class_7(args, data, forms, pres_stem,
@@ -3550,13 +3567,15 @@ present_e_c = function(forms, stem, tr)
 end
 
 -- Present forms with -e-, with j-vowels.
-present_je_a = function(forms, stem, tr)
+present_je_a = function(forms, stem, tr, note)
 	local iotated_stem, iotated_tr = com.iotation(stem, tr)
 
 	local hushing = rfind(iotated_stem, "[шщжч]$")
+	note = note or ""
 	append_pres_futr(forms, iotated_stem, iotated_tr,
-		hushing and "у" or "ю", "ешь", "ет", "ем", "ете",
-		hushing and "ут" or "ют")
+		hushing and "у" .. note or "ю" .. note, "ешь" .. note, "ет" .. note,
+		"ем" .. note, "ете" .. note,
+		hushing and "ут" .. note or "ют" .. note)
 end
 
 present_je_b = function(forms, stem, tr)
