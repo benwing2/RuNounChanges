@@ -546,12 +546,15 @@ function export.do_generate_forms(conj_type, args)
 	if type(inf) == "table" then
 		inf = inf[1]
 	end
+	inf, _ = m_table_tools.get_notes(inf) -- remove any footnote symbols (e.g. грясти́)
 	local inf_noaccent = com.remove_accents(inf)
 	if data.refl then
 		if rfind(inf_noaccent, "и$") then
 			inf_noaccent = inf_noaccent .. "сь"
+			inf = inf .. "сь"
 		else
 			inf_noaccent = inf_noaccent .. "ся"
+			inf = inf .. "ся"
 		end
 	end
 	if NAMESPACE == "" and inf_noaccent ~= PAGENAME then
