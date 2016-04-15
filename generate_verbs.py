@@ -57,7 +57,28 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
       if etym == "r" else "")
 
   if "|" not in conj:
-    if conj.startswith("4a"):
+    if conj.startswith("6a"):
+      assert re.search(u"[ая]ть$", verbbase)
+      conjargs = re.sub(u"[ая]ть$", "", verbbase)
+    elif conj.startswith("6b"):
+      assert re.search(u"[ая]́ть$", verbbase)
+      conjargs = re.sub(u"[ая]́ть$", "", verbbase)
+    elif conj.startswith("6c"):
+      assert re.search(u"[ая]́ть$", verbbase)
+      conjargs = ru.make_ending_stressed(re.sub(u"[ая]́ть$", "", verbbase))
+    elif conj.startswith("5a"):
+      assert re.search(u"[еая]ть$", verbbase)
+      conjargs = "%s|%s" % (re.sub(u"[еая]ть$", "", verbbase),
+          re.sub(u"ть$", "", verbbase))
+    elif conj.startswith("5b"):
+      assert re.search(u"[еая]́ть$", verbbase)
+      conjargs = "%s|%s" % (re.sub(u"[еая]́ть$", "", verbbase),
+          re.sub(u"ть$", "", verbbase))
+    elif conj.startswith("5c"):
+      assert re.search(u"[еая]́ть$", verbbase)
+      conjargs = "%s|%s" % (ru.make_ending_stressed(re.sub(u"[еая]́ть$", "", verbbase)),
+          re.sub(u"ть$", "", verbbase))
+    elif conj.startswith("4a"):
       assert verbbase.endswith(u"ить")
       conjargs = re.sub(u"ить", "", verbbase)
     elif conj.startswith("4b"):
