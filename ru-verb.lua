@@ -417,9 +417,10 @@ local function clone_args_handle_aliases(frame)
 		local mainprop, num = rmatch(pname, "^([a-z_]+)([0-9]*)$")
 		if not mainprop then
 			if pname == 1 and argval then
-				-- [°o1a] matches 3°a, 3oa, 4a1a, 6c1a, 1a6a, etc.
-				conj_type = rmatch(argval, "^([0-9]+[°o0-9abc]*[abc])")
-				argval = rsub(argval, "^[0-9]+[°o0-9abc]*[abc]/?", "")
+				-- This complex spec matches matches 3°a, 3oa, 4a1a, 6c1a,
+				-- 1a6a, 6a1as13, 6a1as14, etc.
+				conj_type = rmatch(argval, "^([0-9]+[°o0-9abc]*[abc]s?1?[34]?)")
+				argval = rsub(argval, "^[0-9]+[°o0-9abc]*[abc]s?1?[34]?/?", "")
 				if not conj_type then
 					conj_type = rmatch(argval, "^(irreg%-[абцдефгчийклмнопярстувшхызёюжэщьъ%-]*)")
 					argval = rsub(argval, "^irreg%-[абцдефгчийклмнопярстувшхызёюжэщьъ%-]*/?", "")
@@ -1816,12 +1817,19 @@ end
 local function guts_of_6a(args, data, vclass)
 	local forms = {}
 
-	-- In type 6a1a and 1a6a, forms of both 6a and 1a can occur. They are
-	-- the same in the infinitive and past. In the present adverbial participle
-	-- and the imperative, the type 1a forms are preferred and the type 6a
-	-- forms are dated. In the remaining present forms, one or the other is
-	-- slightly preferred (type 6a for 6a1a, type 1a for 1a6a).
-	if vclass == "6a1a" then
+	-- Type 6a1a, section 13:
+	-- Forms of both 6a and 1a can occur. They are the same in the infinitive
+	-- and past. In the present active participle and the present/future, the
+	-- type 6 forms are preferred and the type 1a forms are colloquial. In the
+	-- remaining present forms and the imperative, both are equally preferred
+	-- (we put the type-6 forms first because Zaliznyak lists them first).
+	-- Type 6a1a section 14, type 1a6a:
+	-- Forms of both 6a and 1a can occur. They are the same in the infinitive
+	-- and past. In the present adverbial participle and the imperative, the
+	-- type 1a forms are preferred and the type 6a forms are dated. In the
+	-- remaining present forms, one or the other is slightly preferred (type
+	-- 6a for 6a1a, type 1a for 1a6a).
+	if vclass == "6a1as13" or vclass == "6a1as14" then
 		data.title = "class 6a//1a"
 	elseif vclass == "1a6a" then
 		data.title = "class 1a//6a"
@@ -1849,11 +1857,15 @@ local function guts_of_6a(args, data, vclass)
 	local hushing = rfind(iotated_stem, "[шщжч]$") or no_iotation
 
 	-- Participles
-	if vclass == "6a" then
+	if vclass == "6a" or vclass == "6a1as13" then
 		append_participles_2stem(forms, iotated_stem, nil, inf_past_stem, nil,
 			hushing and "ущий" or "ющий", "емый", hushing and "а" or "я",
 			"вший", "вши", "в")
-	elseif vclass == "6a1a" then
+		if vclass == "6a1as13" then
+			-- then all the type 1a forms (both are the same in the past)
+			append_participles(forms, inf_past_stem, nil, "ющий*", "емый", "я")
+		end
+	elseif vclass == "6a1as14" then
 		-- first the preferred type 6a present active/passive participles
 		append_participles(forms, iotated_stem, nil,
 			hushing and "ущий" or "ющий", "емый", {}, {}, {}, {})
@@ -1875,41 +1887,63 @@ local function guts_of_6a(args, data, vclass)
 	set_moving_ppp(forms, data)
 
 	-- Present/future tense
-	if vclass == "1a6a" then
+	local function class_6_present()
+		if no_iotation then
+			present_e_a(forms, pres_stem)
+		else
+			present_je_a(forms, pres_stem)
+		end
+	end
+	if vclass == "6a" then
+		class_6_present()
+	elseif vclass == "1a6a" then
 		-- Do type 1a forms
 		present_je_a(forms, inf_past_stem)
-	end
-	if no_iotation then
-		present_e_a(forms, pres_stem)
+		class_6_present()
+	elseif vclass == "6a1as14" then
+		class_6_present()
+		-- Do type 1a forms
+		present_je_a(forms, inf_past_stem)
 	else
-		present_je_a(forms, pres_stem)
-	end
-	if vclass == "6a1a" then
+		-- 6a1as13
+		class_6_present()
 		-- Do type 1a forms
-		present_je_a(forms, inf_past_stem)
+		present_je_a(forms, inf_past_stem, nil, "*")
 	end
 
-	-- Imperative forms; if 1a6a or 6a1a, type 6a forms are dated
-	local dated_note = vclass == "6a" and "" or "*"
-	if vclass ~= "6a" then
-		-- Do type 1a forms first.
+	-- Imperative forms; if 1a6a or 6a1as14, type 6a forms are dated;
+	-- if 6a1as13, type 6a forms go first.
+	local function class_1_impr()
 		append_imper(forms, inf_past_stem, nil, "й", "йте")
 	end
-	-- Do type 6a forms
-	if impr_sg then
-		-- irreg impr_sg: сыпать  - сыпь, сыпьте
-		append_imper(forms, impr_sg, nil, "" .. dated_note, "те" .. dated_note)
+	local function class_6_impr()
+		local dated_note = (vclass == "6a1as14" or vclass == "1a6a") and "*" or ""
+		if impr_sg then
+			-- irreg impr_sg: сыпать  - сыпь, сыпьте
+			append_imper(forms, impr_sg, nil, "" .. dated_note, "те" .. dated_note)
+		else
+			append_imper_by_variant(forms, iotated_stem, nil, data.imper_variant,
+				"6a", dated_note)
+		end
+	end
+	if vclass == "6a1as14" or vclass == "1a6a" then
+		class_1_impr()
+		class_6_impr()
+	elseif vclass == "6a1as13" then
+		class_6_impr()
+		class_1_impr()
 	else
-		append_imper_by_variant(forms, iotated_stem, nil, data.imper_variant,
-			"6a", dated_note)
+		class_6_impr()
 	end
 
 	-- set prefix to "" as past stem may vary in length and no (1) variants
 	set_past_by_stress(forms, data.past_stress, "", nil, inf_past_stem, nil,
 		args, data)
 
-	if vclass ~= "6a" then
+	if vclass == "6a1as14" or vclass == "1a6a" then
 		ut.insert_if_not(data.internal_notes, "* Dated.")
+	elseif vclass == "6a1as13" then
+		ut.insert_if_not(data.internal_notes, "* Colloquial; type-6 forms preferred.")
 	end
 
 	return forms
@@ -1919,8 +1953,12 @@ conjugations["6a"] = function(args, data)
 	return guts_of_6a(args, data, "6a")
 end
 
-conjugations["6a1a"] = function(args, data)
-	return guts_of_6a(args, data, "6a1a")
+conjugations["6a1as13"] = function(args, data)
+	return guts_of_6a(args, data, "6a1as13")
+end
+
+conjugations["6a1as14"] = function(args, data)
+	return guts_of_6a(args, data, "6a1as14")
 end
 
 conjugations["1a6a"] = function(args, data)
@@ -3395,40 +3433,7 @@ conjugations["irreg-шибить"] = function(args, data)
 	return forms
 end
 
-conjugations["irreg-плескать"] = function(args, data)
-	-- irregular, only for verbs derived from плескать
-	local forms = {}
-
-	parse_variants(data, args[1], {})
-	local prefix = args[3] or ""
-	no_stray_args(args, 3)
-
-	forms["infinitive"] = prefix .. "плеска́ть"
-
-	forms["past_actv_part"] = prefix .. "плеска́вший"
-	forms["pres_pasv_part"] = prefix .. "плеска́емый"
-	forms["past_adv_part"] = prefix .. "плеска́вши"
-	forms["past_adv_part_short"] = prefix .. "плеска́в"
-
-	forms["pres_actv_part"] = prefix .. "плеска́ющий"
-	forms["pres_actv_part2"] = prefix .. "пле́щущий"
-	forms["pres_adv_part"] = prefix .. "плеска́я"
-	forms["pres_adv_part2"] = prefix .. "плеща́"
-
-	forms["impr_sg"] = prefix .. "плеска́й"
-	forms["impr_sg2"] = prefix .. "плещи́"
-	forms["impr_pl"] = prefix .. "плеска́йте"
-	forms["impr_pl2"] = prefix .. "плещи́те"
-
-	present_je_a(forms, prefix .. "плеска́")
-	-- we could as well write present_je_c(forms, prefix .. "плеск")
-	present_e_c(forms, prefix .. "пле́щ")
-	set_past(forms, prefix .. "плеска́л", nil, "", "а", "о", "и")
-
-	return forms
-end
-
- conjugations["irreg-реветь"] = function(args, data)
+conjugations["irreg-реветь"] = function(args, data)
 	-- irregular, only for verbs derived from "реветь"
 	local forms = {}
 
