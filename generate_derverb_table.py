@@ -39,7 +39,11 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
               verb = re.sub(r"^\(i\)", "", verb)
             else:
               break
-          links.append("{{l|ru|%s%s}}" % (verb, gender))
+          m = re.search(r"^\[(.*)\]$", verb)
+          if m:
+            links.append("[{{l|ru|%s%s}}]" % (m.group(1), gender))
+          else:
+            links.append("{{l|ru|%s%s}}" % (verb, gender))
         return "* " + ", ".join(links) + (" {{i|iterative}}" if neediter else "")
     group.append((do_line(pf, "pf"), do_line(impf, "impf")))
 if group:
@@ -47,11 +51,7 @@ if group:
 
 def is_noequiv(x):
   return x == "* (no equivalent)"
-def sort_aspect_pair(x, y):
-  xpf, ximpf = x
-  ypf, yimpf = y
-  #xpf = ru.remove_accents(xpf)
-  #ypf = ru.remove_accents(ypf)
+def compare_aspect_pair(xpf, ximpf, ypf, yimpf):
   if not is_noequiv(xpf) and not is_noequiv(ypf):
     return cmp(xpf, ypf)
   elif not is_noequiv(ximpf) and not is_noequiv(yimpf):
@@ -62,6 +62,18 @@ def sort_aspect_pair(x, y):
     return cmp(ximpf, ypf)
   else:
     return 0
+def sort_aspect_pair(x, y):
+  xpf, ximpf = x
+  ypf, yimpf = y
+  # First compare ignoring accents, so that влить goes before вли́ться,
+  # then compare with accents so e.g. рассы́пать and рассыпа́ть are ordered
+  # consistently.
+  retval = compare_aspect_pair(ru.remove_accents(xpf), ru.remove_accents(ximpf),
+    ru.remove_accents(ypf), ru.remove_accents(yimpf))
+  if retval == 0:
+    return compare_aspect_pair(xpf, ximpf, ypf, yimpf)
+  else:
+    return retval
 
 pfs = []
 impfs = []
