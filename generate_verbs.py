@@ -36,7 +36,7 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
       assert isrefl
       etymtext = re.sub(u"^(.*?)(ся|сь)$", r"{{affix|ru|\1|-\2}}", verb)
     else:
-      m = re.search(r"^(de|la|en):(.*?)\+(.*)$", etym)
+      m = re.search(r"^(de|fr|la|en):(.*?)\+(.*)$", etym)
       if m:
         prefix += "{{der|ru|%s|%s}} + " % (m.group(1), m.group(2))
         etym = m.group(3)

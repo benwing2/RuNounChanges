@@ -39,7 +39,7 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
       prefix = "Ultimately from "
       suffix = "."
       etym = re.sub(r"^<<", "", etym)
-    m = re.search(r"^(de|la|en):(.*?)\+(.*)$", etym)
+    m = re.search(r"^(de|fr|la|en):(.*?)\+(.*)$", etym)
     if m:
       prefix += "{{der|ru|%s|%s}} + " % (m.group(1), m.group(2))
       etym = m.group(3)
