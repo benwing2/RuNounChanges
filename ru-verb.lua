@@ -1461,7 +1461,7 @@ conjugations["1a"] = function(args, data)
 	return forms
 end
 
-local function guts_of_class_2(args, data)
+local function guts_of_2(args, data)
 	local forms = {}
 
 	local inf_stem, inf_tr = nom.split_russian_tr(get_stressed_arg(args, 3))
@@ -1519,11 +1519,11 @@ local function guts_of_class_2(args, data)
 end
 
 conjugations["2a"] = function(args, data)
-	return guts_of_class_2(args, data)
+	return guts_of_2(args, data)
 end
 
 conjugations["2b"] = function(args, data)
-	return guts_of_class_2(args, data)
+	return guts_of_2(args, data)
 end
 
 conjugations["3°a"] = function(args, data)
@@ -1735,7 +1735,7 @@ end
 
 -- Combined class 5. But there's enough conditional code that it might make
 -- more sense to separate them again.
-local function guts_of_class_5(args, data)
+local function guts_of_5(args, data)
 	local forms = {}
 	local is5a = data.conj_type == "5a"
 	local is5b = data.conj_type == "5b"
@@ -1802,18 +1802,18 @@ local function guts_of_class_5(args, data)
 end
 
 conjugations["5a"] = function(args, data)
-	return guts_of_class_5(args, data)
+	return guts_of_5(args, data)
 end
 
 conjugations["5b"] = function(args, data)
-	return guts_of_class_5(args, data)
+	return guts_of_5(args, data)
 end
 
 conjugations["5c"] = function(args, data)
-	return guts_of_class_5(args, data)
+	return guts_of_5(args, data)
 end
 
--- Implement 6a, 6a1a and 1a6a.
+-- Implement 6a, 6°a, 6a1as13, 6a1as14, and 1a6a.
 local function guts_of_6a(args, data, vclass)
 	local forms = {}
 
@@ -1833,6 +1833,8 @@ local function guts_of_6a(args, data, vclass)
 		data.title = "class 6a//1a"
 	elseif vclass == "1a6a" then
 		data.title = "class 1a//6a"
+	elseif vclass == "6°a" then
+		data.title = "class 6°a" -- in case we used 6oa
 		-- if vclass is just 6a, data.title already set correctly
 	end
 	parse_variants(data, args[1], {"23", "и", "past", "+p", "7", "ё"})
@@ -1845,7 +1847,7 @@ local function guts_of_6a(args, data, vclass)
 	local impr_sg = get_opt_stressed_arg(args, 5)
 	no_stray_args(args, 5)
 	-- no iotation, e.g. вырвать - вы́рву
-	local no_iotation = check_opt_arg(args, "no_iotation", {"1"})
+	local no_iotation = check_opt_arg(args, "no_iotation", {"1"}) or vclass == "6°a"
 	-- вызвать - вы́зову (в́ызов)
 	local pres_stem = get_opt_stressed_arg(args, "pres_stem") or stem
 	-- replace consonants for 1st person singular present/future
@@ -1857,7 +1859,7 @@ local function guts_of_6a(args, data, vclass)
 	local hushing = rfind(iotated_stem, "[шщжч]$") or no_iotation
 
 	-- Participles
-	if vclass == "6a" or vclass == "6a1as13" then
+	if vclass == "6a" or vclass == "6°a" or vclass == "6a1as13" then
 		append_participles_2stem(forms, iotated_stem, nil, inf_past_stem, nil,
 			hushing and "ущий" or "ющий", "емый", hushing and "а" or "я",
 			"вший", "вши", "в")
@@ -1894,7 +1896,7 @@ local function guts_of_6a(args, data, vclass)
 			present_je_a(forms, pres_stem)
 		end
 	end
-	if vclass == "6a" then
+	if vclass == "6a" or vclass == "6°a" then
 		class_6_present()
 	elseif vclass == "1a6a" then
 		-- Do type 1a forms
@@ -1953,6 +1955,14 @@ conjugations["6a"] = function(args, data)
 	return guts_of_6a(args, data, "6a")
 end
 
+conjugations["6°a"] = function(args, data)
+	return guts_of_6a(args, data, "6°a")
+end
+
+conjugations["6oa"] = function(args, data)
+	return guts_of_6a(args, data, "6°a")
+end
+
 conjugations["6a1as13"] = function(args, data)
 	return guts_of_6a(args, data, "6a1as13")
 end
@@ -1965,9 +1975,10 @@ conjugations["1a6a"] = function(args, data)
 	return guts_of_6a(args, data, "1a6a")
 end
 
-conjugations["6b"] = function(args, data)
+local function guts_of_6b(args, data)
 	local forms = {}
 
+	data.title = "class 6°b"
 	parse_variants(data, args[1], {"past", "+p", "7", "ё"})
 	local stem = get_unstressed_arg(args, 3)
 	local vowel_end_stem = is_vowel_stem(stem)
@@ -2019,7 +2030,19 @@ conjugations["6b"] = function(args, data)
 	return forms
 end
 
--- Implement 6c and 6c1a.
+conjugations["6b"] = function(args, data)
+	return guts_of_6b(args, data)
+end
+
+conjugations["6°b"] = function(args, data)
+	return guts_of_6b(args, data)
+end
+
+conjugations["6ob"] = function(args, data)
+	return guts_of_6b(args, data)
+end
+
+-- Implement 6c, 6°c and 6c1a.
 local function guts_of_6c(args, data, vclass)
 	local forms = {}
 
@@ -2031,6 +2054,8 @@ local function guts_of_6c(args, data, vclass)
 	-- lists 6c first).
 	if vclass == "6c1a" then
 		data.title = "class 6c//1a"
+	elseif vclass == "6°c" then
+		data.title = "class 6°c" -- in case user used 6oc
 	end
 	
 	-- optional щ parameter for verbs like клеветать (клевещу́), past stress
@@ -2043,7 +2068,7 @@ local function guts_of_6c(args, data, vclass)
 	local iotated_stem = com.iotation(stem, nil, data.shch)
 	local stem1a = stem_noa .. "а́"
 	-- applies only to стона́ть, застона́ть, простона́ть
-	local no_iotation = check_opt_arg(args, "no_iotation", {"1"})
+	local no_iotation = check_opt_arg(args, "no_iotation", {"1"}) or vclass == "6°c"
 
 	forms["infinitive"] = stem_noa .. "а́ть"
 
@@ -2085,11 +2110,19 @@ conjugations["6c"] = function(args, data)
 	return guts_of_6c(args, data, "6c")
 end
 
+conjugations["6°c"] = function(args, data)
+	return guts_of_6c(args, data, "6°c")
+end
+
+conjugations["6oc"] = function(args, data)
+	return guts_of_6c(args, data, "6°c")
+end
+
 conjugations["6c1a"] = function(args, data)
 	return guts_of_6c(args, data, "6c1a")
 end
 
-local function guts_of_class_7(args, data, forms, pres_stem,
+local function guts_of_7(args, data, forms, pres_stem,
 	past_part_stem,	past_tense_stem)
 	local is7b = data.conj_type == "7b"
 	if not past_part_stem then
@@ -2143,7 +2176,7 @@ conjugations["7a"] = function(args, data)
 	-- вычесть - non-existent past_actv_part handled through general mechanism
 	-- лезть - ле́зши - non-existent past_actv_part handled through general mechanism
 	-- вычесть - past_m=вы́чел handled through general mechanism
-	guts_of_class_7(args, data, forms, pres_stem, past_part_stem,
+	guts_of_7(args, data, forms, pres_stem, past_part_stem,
 		past_tense_stem)
 
 	return forms
@@ -2163,7 +2196,7 @@ conjugations["7b"] = function(args, data)
 
 	present_e_b(forms, pres_stem)
 	set_imper(forms, pres_stem, nil, "и́", "и́те")
-	guts_of_class_7(args, data, forms, pres_stem, past_part_stem,
+	guts_of_7(args, data, forms, pres_stem, past_part_stem,
 		past_tense_stem)
 
 	return forms
