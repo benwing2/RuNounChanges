@@ -2175,15 +2175,12 @@ conjugations["8a"] = function(args, data)
 	parse_variants(data, args[1], {"past", "+p"})
 	local stem = get_stressed_arg(args, 3)
 	local full_inf = get_stressed_arg(args, 4)
-	no_stray_args(args, 4)
-	local past_m = get_stressed_arg(args, "past_m")
-	if past_m ~= stem then
-		track("8a-stem-pastm-mismatch")
-	end
+	local stressed_past_stem = args[5] and get_stressed_arg(args, 5) or stem
+	no_stray_args(args, 5)
 	forms["infinitive"] = full_inf
 
 	-- default for pres_pasv_part is blank
-	append_participles_2stem(forms, stem, nil, past_m, nil,
+	append_participles_2stem(forms, stem, nil, stressed_past_stem, nil,
 		"ущий", "-", "-", "ший", "ши", "-")
 
 	local iotated_stem = com.iotation(stem)
@@ -2195,7 +2192,7 @@ conjugations["8a"] = function(args, data)
 	-- set prefix to "" as stem may vary in length and no (1) variants
 	set_past_by_stress(forms, data.past_stress, "", nil, stem, nil, args, data,
 		"no-pastml")
-	forms["past_m"] = past_m
+	forms["past_m"] = stressed_past_stem
 
 	-- set PPP; must be done after both present 3sg and past fem have been set
 	set_class_7_8_ppp(forms, args, data)
@@ -2207,19 +2204,16 @@ conjugations["8b"] = function(args, data)
 	local forms = {}
 
 	parse_variants(data, args[1], {"past", "+p"}, "b")
-	local stem = data.past_stress == "b" and get_unstressed_arg(args, 3) or
+	local stem = data.past_stress == "b" and args[5] and getarg(args, 3) or
 		get_stressed_arg(args, 3)
 	local full_inf = get_stressed_arg(args, 4)
-	no_stray_args(args, 4)
-	local past_m = get_stressed_arg(args, "past_m")
-	if com.make_unstressed(past_m) ~= stem then
-		track("8b-stem-pastm-mismatch")
-	end
+	local stressed_past_stem = args[5] and get_stressed_arg(args, 5) or stem
+	no_stray_args(args, 5)
 	forms["infinitive"] = full_inf
 
 	-- default for pres_pasv_part is blank; влечь -> влеко́мый handled through
 	-- general override mechanism
-	append_participles_2stem(forms, stem, nil, past_m, nil,
+	append_participles_2stem(forms, stem, nil, stressed_past_stem, nil,
 		"у́щий", "-", "-", "ший", "ши", "-")
 
 	local iotated_stem = com.iotation(stem)
@@ -2230,7 +2224,7 @@ conjugations["8b"] = function(args, data)
 	-- set prefix to "" as stem may vary in length and no (1) variants
 	set_past_by_stress(forms, data.past_stress, "", nil, stem, nil, args, data,
 		"no-pastml")
-	forms["past_m"] = past_m
+	forms["past_m"] = stressed_past_stem
 
 	-- set PPP; must be done after both present 3sg and past fem have been set
 	set_class_7_8_ppp(forms, args, data)
