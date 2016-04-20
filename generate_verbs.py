@@ -57,44 +57,44 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
       if etym == "r" else "")
 
   if "|" not in conj:
-    if conj.startswith("6a"):
+    if conj.startswith("6a") or conj.startswith(u"6°a") or conj.startswith("6oa"):
       assert re.search(u"[ая]ть$", verbbase)
       conjargs = re.sub(u"[ая]ть$", "", verbbase)
-    elif conj.startswith("6b"):
-      assert re.search(u"[ая]́ть$", verbbase)
+    elif conj.startswith("6b") or conj.startswith(u"6°b") or conj.startswith("6ob"):
+      assert ru.is_monosyllabic(verbbase) or re.search(u"[ая]́ть$", verbbase)
       conjargs = re.sub(u"[ая]́ть$", "", verbbase)
-    elif conj.startswith("6c"):
-      assert re.search(u"[ая]́ть$", verbbase)
+    elif conj.startswith("6c") or conj.startswith(u"6°c") or conj.startswith("6oc"):
+      assert ru.is_monosyllabic(verbbase) or re.search(u"[ая]́ть$", verbbase)
       conjargs = ru.make_ending_stressed(re.sub(u"[ая]́ть$", "", verbbase))
     elif conj.startswith("5a"):
       assert re.search(u"[еая]ть$", verbbase)
       conjargs = "%s|%s" % (re.sub(u"[еая]ть$", "", verbbase),
           re.sub(u"ть$", "", verbbase))
     elif conj.startswith("5b"):
-      assert re.search(u"[еая]́ть$", verbbase)
+      assert ru.is_monosyllabic(verbbase) or re.search(u"[еая]́ть$", verbbase)
       conjargs = "%s|%s" % (re.sub(u"[еая]́ть$", "", verbbase),
           re.sub(u"ть$", "", verbbase))
     elif conj.startswith("5c"):
-      assert re.search(u"[еая]́ть$", verbbase)
+      assert ru.is_monosyllabic(verbbase) or re.search(u"[еая]́ть$", verbbase)
       conjargs = "%s|%s" % (ru.make_ending_stressed(re.sub(u"[еая]́ть$", "", verbbase)),
           re.sub(u"ть$", "", verbbase))
     elif conj.startswith("4a"):
       assert verbbase.endswith(u"ить")
       conjargs = re.sub(u"ить", "", verbbase)
     elif conj.startswith("4b"):
-      assert verbbase.endswith(u"и́ть")
+      assert ru.is_monosyllabic(verbbase) or verbbase.endswith(u"и́ть")
       conjargs = re.sub(u"и́ть", "", verbbase)
     elif conj.startswith("4c"):
-      assert verbbase.endswith(u"и́ть")
+      assert ru.is_monosyllabic(verbbase) or verbbase.endswith(u"и́ть")
       conjargs = ru.make_ending_stressed(re.sub(u"и́ть", "", verbbase))
     elif conj.startswith("3a") or conj.startswith(u"3°a") or conj.startswith("3oa"):
       assert verbbase.endswith(u"нуть")
       conjargs = re.sub(u"нуть$", "", verbbase)
     elif conj.startswith("3b"):
-      assert verbbase.endswith(u"ну́ть")
+      assert ru.is_monosyllabic(verbbase) or verbbase.endswith(u"ну́ть")
       conjargs = re.sub(u"у́ть$", "", verbbase)
     elif conj.startswith("3c"):
-      assert verbbase.endswith(u"ну́ть")
+      assert ru.is_monosyllabic(verbbase) or verbbase.endswith(u"ну́ть")
       conjargs = ru.make_ending_stressed(re.sub(u"у́ть", "", verbbase))
     elif conj.startswith("2a") or conj.startswith("2b"):
       assert re.search(u"ва́?ть$", verbbase)
