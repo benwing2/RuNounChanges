@@ -177,9 +177,15 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
           for derrel in re.split(":", derrelgroup):
             if "/" in derrel:
               impfpfverbs = re.split("/", derrel)
-              links.append("{{l|ru|%s|g=impf}}" % impfpfverbs[0])
+              if "|" in impfpfverbs[0]:
+                links.append("{{l|ru|%s}}" % impfpfverbs[0])
+              else:
+                links.append("{{l|ru|%s|g=impf}}" % impfpfverbs[0])
               for pf in impfpfverbs[1:]:
-                links.append("{{l|ru|%s|g=pf}}" % pf)
+                if "|" in pf:
+                  links.append("{{l|ru|%s}}" % pf)
+                else:
+                  links.append("{{l|ru|%s|g=pf}}" % pf)
             else:
               links.append("{{l|ru|%s}}" % derrel)
           lines.append("* %s\n" % ", ".join(links))

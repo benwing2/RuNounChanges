@@ -169,18 +169,22 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
       else:
         lines = []
         for derrelgroup in re.split(",", vals):
-          if "/" in derrelgroup:
-            impfpfverbs = re.split("/", derrelgroup)
-            links = []
-            links.append("{{l|ru|%s|g=impf}}" % impfpfverbs[0])
-            for pf in impfpfverbs[1:]:
-              links.append("{{l|ru|%s|g=pf}}" % impfpfverbs[1])
-            lines.append("* %s\n" % ", ".join(links))
-          else:
-            links = []
-            for derrel in re.split(":", derrelgroup):
+          links = []
+          for derrel in re.split(":", derrelgroup):
+            if "/" in derrel:
+              impfpfverbs = re.split("/", derrel)
+              if "|" in impfpfverbs[0]:
+                links.append("{{l|ru|%s}}" % impfpfverbs[0])
+              else:
+                links.append("{{l|ru|%s|g=impf}}" % impfpfverbs[0])
+              for pf in impfpfverbs[1:]:
+                if "|" in pf:
+                  links.append("{{l|ru|%s}}" % pf)
+                else:
+                  links.append("{{l|ru|%s|g=pf}}" % pf)
+            else:
               links.append("{{l|ru|%s}}" % derrel)
-            lines.append("* %s\n" % ", ".join(links))
+          lines.append("* %s\n" % ", ".join(links))
         derrelguts = "====%s terms====\n%s\n" % (
             "Derived" if sartype == "der" else "Related", "".join(lines))
         if sartype == "der":
