@@ -129,10 +129,11 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
 * {{l|ru|}}
 
 """
+  prontext = verb
   for synantrel in els[5:]:
-    m = re.search(r"^(syn|ant|der|rel|alt):(.*)", synantrel)
+    m = re.search(r"^(syn|ant|der|rel|pron|alt):(.*)", synantrel)
     if not m:
-      msg("Element %s doesn't start with syn:, ant:, der: or rel:" % synantrel)
+      msg("Element %s doesn't start with syn:, ant:, der:, rel:, pron: or alt:" % synantrel)
     assert m
     sartype, vals = m.groups()
     if sartype in ["syn", "ant"]:
@@ -159,6 +160,8 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
         syntext = synantguts
       else:
         anttext = synantguts
+    elif sartype == "pron":
+      prontext = "%s" % vals
     elif sartype == "alt":
       lines = []
       for altform in re.split(",", vals):
@@ -216,6 +219,6 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
 
 %s%s%s%s[[ru:%s]]
 
-""" % (ru.remove_accents(verb), alttext, etymtext, verb, verb, headword_aspect,
+""" % (ru.remove_accents(verb), alttext, etymtext, prontext, verb, headword_aspect,
   corverbtext, passivetext, conjtext, syntext, anttext, dertext, reltext,
   ru.remove_accents(verb)))
