@@ -1847,7 +1847,7 @@ local function guts_of_6a(args, data, vclass)
 	local impr_sg = get_opt_stressed_arg(args, 5)
 	no_stray_args(args, 5)
 	-- no iotation, e.g. вырвать - вы́рву
-	local no_iotation = check_opt_arg(args, "no_iotation", {"1"}) or vclass == "6°a"
+	local no_iotation = vclass == "6°a"
 	-- вызвать - вы́зову (в́ызов)
 	local pres_stem = get_opt_stressed_arg(args, "pres_stem") or stem
 	-- replace consonants for 1st person singular present/future
@@ -1975,10 +1975,13 @@ conjugations["1a6a"] = function(args, data)
 	return guts_of_6a(args, data, "1a6a")
 end
 
-local function guts_of_6b(args, data)
+-- implement 6b, 6°b (actually identical)
+local function guts_of_6b(args, data, vclass)
 	local forms = {}
 
-	data.title = "class 6°b"
+	if vclass == "6°b" then
+		data.title = "class 6°b" -- in case user specified 6ob
+	end
 	parse_variants(data, args[1], {"past", "+p", "7", "ё"})
 	local stem = get_unstressed_arg(args, 3)
 	local vowel_end_stem = is_vowel_stem(stem)
@@ -2031,15 +2034,15 @@ local function guts_of_6b(args, data)
 end
 
 conjugations["6b"] = function(args, data)
-	return guts_of_6b(args, data)
+	return guts_of_6b(args, data, "6b")
 end
 
 conjugations["6°b"] = function(args, data)
-	return guts_of_6b(args, data)
+	return guts_of_6b(args, data, "6°b")
 end
 
 conjugations["6ob"] = function(args, data)
-	return guts_of_6b(args, data)
+	return guts_of_6b(args, data, "6°b")
 end
 
 -- Implement 6c, 6°c and 6c1a.
@@ -2068,7 +2071,7 @@ local function guts_of_6c(args, data, vclass)
 	local iotated_stem = com.iotation(stem, nil, data.shch)
 	local stem1a = stem_noa .. "а́"
 	-- applies only to стона́ть, застона́ть, простона́ть
-	local no_iotation = check_opt_arg(args, "no_iotation", {"1"}) or vclass == "6°c"
+	local no_iotation = vclass == "6°c"
 
 	forms["infinitive"] = stem_noa .. "а́ть"
 
