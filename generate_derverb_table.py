@@ -24,27 +24,35 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
     pf, impf = re.split(r"\s+", line)
     def do_line(direc, aspect):
       links = []
-      neediter = False
       if direc == "-":
         return "* (no equivalent)"
       else:
         for verb in re.split(",", direc):
           gender = ""
+          notes = []
           while True:
             if verb.startswith("+"):
               gender = "|g=%s" % aspect
               verb = re.sub(r"^\+", "", verb)
             elif verb.startswith("(i)"):
-              neediter = True
+              notes.append("iterative")
               verb = re.sub(r"^\(i\)", "", verb)
+            elif verb.startswith("(n)"):
+              notes.append("nonstandard")
+              verb = re.sub(r"^\(n\)", "", verb)
+            elif verb.startswith("(d)"):
+              notes.append("dated")
+              verb = re.sub(r"^\(d\)", "", verb)
             else:
               break
           m = re.search(r"^\[(.*)\]$", verb)
           if m:
-            links.append("[{{l|ru|%s%s}}]" % (m.group(1), gender))
+            links.append("[{{l|ru|%s%s}}]%s" % (m.group(1), gender,
+              notes and " {{i|%s}}" % ", ".join(notes) or ""))
           else:
-            links.append("{{l|ru|%s%s}}" % (verb, gender))
-        return "* " + ", ".join(links) + (" {{i|iterative}}" if neediter else "")
+            links.append("{{l|ru|%s%s}}%s" % (verb, gender,
+              notes and " {{i|%s}}" % ", ".join(notes) or ""))
+        return "* " + ", ".join(links)
     group.append((do_line(pf, "pf"), do_line(impf, "impf")))
 if group:
   groups.append(group)
