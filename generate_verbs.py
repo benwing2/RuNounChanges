@@ -108,11 +108,14 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
     conjargs = re.sub(r"^.*?\|", "", conj)
     conj = re.sub(r"\|.*$", "", conj)
   reflsuf = "-refl" if isrefl else ""
-  if aspect == "both":
+  if aspect.startswith("both"):
+    pfaspect = re.sub("^both", "pf", aspect)
+    impfaspect = re.sub("^both", "impf", aspect)
     conjtext = """''imperfective''
-{{ru-conj|%s|impf%s|%s}}
+{{ru-conj|%s|%s%s|%s}}
 ''perfective''
-{{ru-conj|%s|pf%s|%s}}""" % (conj, reflsuf, conjargs, conj, reflsuf, conjargs)
+{{ru-conj|%s|%s%s|%s}}""" % (conj, impfaspect, reflsuf, conjargs,
+    conj, pfaspect, reflsuf, conjargs)
   else:
     conjtext = "{{ru-conj|%s|%s%s|%s}}" % (conj, aspect, reflsuf, conjargs)
 
@@ -178,6 +181,33 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
         for derrelgroup in re.split(",", vals):
           links = []
           for derrel in re.split(":", derrelgroup):
+            # Handle #ref, which we replace with the corresponding reflexive
+            # verb pair for non-reflexive verbs and vice-versa
+            if "#ref" in derrel:
+              if isrefl:
+                refverb = re.sub(u"с[ья]$", "", verb) + "|g=" + headword_aspect
+                correfverbs = []
+                if corverbs != "-":
+                  for corverb in re.split(",", corverbs):
+                    correfverbs.append("%s|g=%s" % (
+                      re.sub(u"с[ья]$", "", corverb),
+                      "impf" if headword_aspect == "pf" else "pf"))
+              else:
+                refverb = (re.search(u"и́?$", verb) and verb + u"сь" or
+                    verb + u"ся") + "|g=" + headword_aspect
+                correfverbs = []
+                if corverbs != "-":
+                  for corverb in re.split(",", corverbs):
+                    correfverbs.append("%s|g=%s" % (
+                        (re.search(u"и́?$", corverb) and corverb + u"сь" or
+                          corverb + u"ся"),
+                        "impf" if headword_aspect == "pf" else "pf"))
+              if headword_aspect == "impf":
+                refverbs = [refverb] + correfverbs
+              else:
+                refverbs = correfverbs + [refverb]
+              derrel = re.sub("#ref", "/".join(refverbs), derrel)
+
             if "/" in derrel:
               impfpfverbs = re.split("/", derrel)
               if "|" in impfpfverbs[0]:
