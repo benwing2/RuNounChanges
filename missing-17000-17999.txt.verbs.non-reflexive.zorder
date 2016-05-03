@@ -631,8 +631,52 @@ Only used in the negative.
 зачёркивать зачеркну́ть+-ивать impf зачеркну́ть 1a rel:черка́ть/черкну́ть
 перечеркну́ть пере-+черкну́ть pf перечёркивать 3b+pё rel:черка́ть/черкну́ть
 перечёркивать перечеркну́ть+-ивать impf перечеркну́ть 1a rel:черка́ть/черкну́ть
-чи́ркнуть ? pf-intr ? 3a
-юркну́ть ? pf-intr ? 3b
+чи́ркать - impf чи́ркнуть 1a+p rel:-
+
+====Derived terms====
+{{top2}}
+''imperfective''
+* [{{l|ru|чи́ркать}}]
+* (no equivalent)
+* {{l|ru|исчи́ркивать}}
+* (no equivalent)
+* (no equivalent)
+* (no equivalent)
+{{mid2}}
+''perfective''
+* {{l|ru|чи́ркнуть}}
+* {{l|ru|зачи́ркать}}
+* {{l|ru|исчи́ркать}}
+* {{l|ru|начи́ркать}}
+* {{l|ru|перечи́ркать}}
+* {{l|ru|почи́ркать}}
+{{bottom2}}
+
+чи́ркнуть ?чи́ркать+-нуть pf-intr чи́ркать 3a rel:-
+[don't use] юркну́ть - pf-intr - 3b rel:ю́ркий
+
+==Russian==
+
+===Etymology===
+From {{affix|ru|ю́ркий|-ну́ть}} or {{affix|ru|ю́ркий|-нуть}}.
+
+===Pronunciation===
+* {{ru-IPA|юркну́ть|ann=y}}
+* {{ru-IPA|ю́ркнуть|ann=y}}
+
+===Verb===
+{{ru-verb|юркну́ть|pf|head2=ю́ркнуть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|3b|pf-intr|юркн}} ''or'' {{ru-conj|3a|pf-intr|ю́ркн}}
+
+====Related terms====
+* {{l|ru|ю́ркий}}
+
+[[ru:юркнуть]]
+
 потону́ть по-+тону́ть impf-intr потопа́ть 3c
 [don't use] потопа́ть потону́ть+alt1=потоп-+-а́ть impf-intr потону́ть 1a
 [don't use] пото́пать по-+то́пать pf-intr ? 1a
