@@ -208,12 +208,12 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
                     "impf" if headword_aspect == "pf" else "pf"))
               else:
                 refverb = (re.search(u"и́?$", verb) and verb + u"сь" or
-                    verb + u"ся") + "|g=" + headword_aspect
+                    rulib.try_to_stress(verb) + u"ся") + "|g=" + headword_aspect
                 correfverbs = []
                 for corverb in corverbs:
                   correfverbs.append("%s|g=%s" % (
                       (re.search(u"и́?$", corverb) and corverb + u"сь" or
-                        corverb + u"ся"),
+                        rulib.try_to_stress(corverb) + u"ся"),
                       "impf" if headword_aspect == "pf" else "pf"))
               if headword_aspect == "impf":
                 refverbs = [refverb] + correfverbs
