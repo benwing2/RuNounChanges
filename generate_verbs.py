@@ -12,6 +12,9 @@ args = parser.parse_args()
 
 def check_stress(word):
   word = re.sub(r"|.*", "", word)
+  if word.startswith("-") or word.endswith("-"):
+    # Allow unstressed prefix (e.g. разо-) and unstressed suffix (e.g. -овать)
+    return
   if rulib.needs_accents(word):
     msg("Word %s missing an accent" % word)
     assert False
@@ -82,7 +85,7 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
     elif conj.startswith("5a"):
       assert re.search(u"[еая]ть$", verbbase)
       conjargs = "%s|%s" % (re.sub(u"[еая]ть$", "", verbbase),
-          re.sub(u"ть$", "", verbbase))
+          rulib.try_to_stress(re.sub(u"ть$", "", verbbase)))
     elif conj.startswith("5b"):
       assert rulib.is_monosyllabic(verbbase) or re.search(u"[еая]́ть$", verbbase)
       conjargs = "%s|%s" % (re.sub(u"[еая]́?ть$", "", verbbase),
@@ -90,7 +93,7 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
     elif conj.startswith("5c"):
       assert rulib.is_monosyllabic(verbbase) or re.search(u"[еая]́ть$", verbbase)
       conjargs = "%s|%s" % (rulib.make_ending_stressed(re.sub(u"[еая]́?ть$", "", verbbase)),
-          re.sub(u"ть$", "", verbbase))
+          rulib.try_to_stress(re.sub(u"ть$", "", verbbase)))
     elif conj.startswith("4a"):
       assert verbbase.endswith(u"ить")
       conjargs = re.sub(u"ить", "", verbbase)
@@ -113,7 +116,7 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
       assert re.search(u"ва́?ть$", verbbase)
       conjargs = re.sub(u"ть$", "", verbbase)
     elif conj.startswith("1a"):
-      conjargs = re.sub(u"ть$", "", verbbase)
+      conjargs = rulib.try_to_stress(re.sub(u"ть$", "", verbbase))
     else:
       msg("Unrecognized conjugation type and no arguments: %s" % conj)
       assert False
@@ -198,9 +201,11 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
           for derrel in re.split(":", derrelgroup):
             # Handle #ref, which we replace with the corresponding reflexive
             # verb pair for non-reflexive verbs and vice-versa
+            gender_arg = ("|g=impf|g2=pf" if headword_aspect == "both" else
+                "|g=" + headword_aspect)
             if "#ref" in derrel:
               if isrefl:
-                refverb = re.sub(u"с[ья]$", "", verb) + "|g=" + headword_aspect
+                refverb = re.sub(u"с[ья]$", "", verb) + gender_arg
                 correfverbs = []
                 for corverb in corverbs:
                   correfverbs.append("%s|g=%s" % (
@@ -208,7 +213,7 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
                     "impf" if headword_aspect == "pf" else "pf"))
               else:
                 refverb = (re.search(u"и́?$", verb) and verb + u"сь" or
-                    rulib.try_to_stress(verb) + u"ся") + "|g=" + headword_aspect
+                    rulib.try_to_stress(verb) + u"ся") + gender_arg
                 correfverbs = []
                 for corverb in corverbs:
                   correfverbs.append("%s|g=%s" % (
