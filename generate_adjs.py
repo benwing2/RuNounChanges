@@ -92,6 +92,9 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
         elif defn.startswith("(c)"):
           labels.append("colloquial")
           defn = re.sub(r"^\(c\)", "", defn)
+        elif defn.startswith("(l)"):
+          labels.append("literary")
+          defn = re.sub(r"^\(l\)", "", defn)
         else:
           break
       if labels:
