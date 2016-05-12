@@ -148,11 +148,12 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
 * {{l|ru|}}
 
 """
+  seetext = ""
   prontext = verb
   for synantrel in els[5:]:
-    m = re.search(r"^(syn|ant|der|rel|pron|alt):(.*)", synantrel)
+    m = re.search(r"^(syn|ant|der|rel|see|pron|alt):(.*)", synantrel)
     if not m:
-      msg("Element %s doesn't start with syn:, ant:, der:, rel:, pron: or alt:" % synantrel)
+      msg("Element %s doesn't start with syn:, ant:, der:, rel:, see:, pron: or alt:" % synantrel)
     assert m
     sartype, vals = m.groups()
     if sartype in ["syn", "ant"]:
@@ -188,12 +189,14 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
         check_stress(altform)
         lines.append("* {{l|ru|%s}}\n" % altform)
       alttext = "===Alternative forms===\n%s\n" % "".join(lines)
-    else: # derived or related terms
+    else: # derived or related terms or see also
       if vals == "-":
         if sartype == "der":
           dertext = ""
-        else:
+        elif sartype == "rel":
           reltext = ""
+        else:
+          seetext = ""
       else:
         lines = []
         for derrelgroup in re.split(",", vals):
@@ -243,12 +246,15 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
               check_stress(derrel)
               links.append("{{l|ru|%s}}" % derrel)
           lines.append("* %s\n" % ", ".join(links))
-        derrelguts = "====%s terms====\n%s\n" % (
-            "Derived" if sartype == "der" else "Related", "".join(lines))
+        derrelguts = "====%s====\n%s\n" % (
+            "Derived terms" if sartype == "der" else
+            "Related terms" if sartype == "rel" else "See also", "".join(lines))
         if sartype == "der":
           dertext = derrelguts
-        else:
+        elif sartype == "rel":
           reltext = derrelguts
+        else:
+          seetext = derrelguts
 
   msg("""%s
 
@@ -268,8 +274,8 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
 ====Conjugation====
 %s
 
-%s%s%s%s[[ru:%s]]
+%s%s%s%s%s[[ru:%s]]
 
 """ % (rulib.remove_accents(verb), alttext, etymtext, prontext, verb, headword_aspect,
   corverbtext, passivetext, conjtext, syntext, anttext, dertext, reltext,
-  rulib.remove_accents(verb)))
+  seetext, rulib.remove_accents(verb)))
