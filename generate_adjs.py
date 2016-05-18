@@ -4,13 +4,22 @@
 import re, sys, codecs, argparse
 
 from blib import msg
-import rulib as ru
+import rulib
 
 parser = argparse.ArgumentParser(description="Generate adjective stubs.")
 parser.add_argument('--direcfile', help="File containing directives.")
 parser.add_argument('--adverb', action="store_true",
     help="Directive file contains adverbs instead of adjectives.")
 args = parser.parse_args()
+
+def check_stress(word):
+  word = re.sub(r"|.*", "", word)
+  if word.startswith("-") or word.endswith("-"):
+    # Allow unstressed prefix (e.g. разо-) and unstressed suffix (e.g. -овать)
+    return
+  if rulib.needs_accents(word):
+    msg("Word %s missing an accent" % word)
+    assert False
 
 for line in codecs.open(args.direcfile, "r", "utf-8"):
   line = line.strip()
@@ -26,6 +35,7 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
     term, etym, short, defns = els[0], els[1], els[2], els[3]
     remainder = els[4:]
     assert re.search(u"(ый|ий|о́й)$", term)
+  check_stress(term)
   if etym == "-":
     etymtext = "===Etymology===\n{{rfe|lang=ru}}\n\n"
   elif etym == "--":
@@ -61,7 +71,11 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
 
   # Create definition
   defnlines = []
-  for defn in re.split(";", defns):
+  # the following regex uses a negative lookbehind so we split on a semicolon
+  # but not on a backslashed semicolon, which we then replace with a regular
+  # semicolon in the next line
+  for defn in re.split(r"(?<![\\]);", defns):
+    defn = defn.replace(r"\;", ";")
     if defn == "-":
       defnlines.append("# {{rfdef|lang=ru}}\n")
     elif defn.startswith("ux:"):
@@ -147,6 +161,7 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
           sensetext = ""
         links = []
         for synant in re.split(",", synantgroup):
+          check_stress(synant)
           links.append("{{l|ru|%s}}" % synant)
         lines.append("* %s%s\n" % (sensetext, ", ".join(links)))
       synantguts = "====%s====\n%s\n" % (
@@ -163,6 +178,7 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
     elif sartype == "alt":
       lines = []
       for altform in re.split(",", vals):
+        check_stress(altform)
         lines.append("* {{l|ru|%s}}\n" % altform)
       alttext = "===Alternative forms===\n%s\n" % "".join(lines)
     elif sartype == "part":
@@ -192,6 +208,8 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
           for derrel in re.split(":", derrelgroup):
             if "/" in derrel:
               impfpfverbs = re.split("/", derrel)
+              for impfpfverb in impfpfverbs:
+                check_stress(impfpfverb)
               if "|" in impfpfverbs[0]:
                 links.append("{{l|ru|%s}}" % impfpfverbs[0])
               else:
@@ -202,6 +220,7 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
                 else:
                   links.append("{{l|ru|%s|g=pf}}" % pf)
             else:
+              check_stress(derrel)
               links.append("{{l|ru|%s}}" % derrel)
           lines.append("* %s\n" % ", ".join(links))
         derrelguts = "====%s terms====\n%s\n" % (
@@ -229,6 +248,10 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
   if defns == "--":
     maintext = ""
 
+  # If both adjective and participle header, move related-terms text to level 3
+  if maintext and parttext and reltext:
+    reltext = re.sub("^====Related terms====", "===Related terms===", reltext)
+
   msg("""%s
 
 ==Russian==
@@ -238,5 +261,5 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
 
 %s%s%s%s%s%s[[ru:%s]]
 
-""" % (ru.remove_accents(term), alttext, etymtext, prontext, parttext,
-  maintext, syntext, anttext, dertext, reltext, ru.remove_accents(term)))
+""" % (rulib.remove_accents(term), alttext, etymtext, prontext, parttext,
+  maintext, syntext, anttext, dertext, reltext, rulib.remove_accents(term)))
