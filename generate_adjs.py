@@ -34,7 +34,13 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
   else:
     term, etym, short, defns = els[0], els[1], els[2], els[3]
     remainder = els[4:]
+  translit = None
+  declterm = term
+  if "//" in term:
+    term, translit = re.split("//", term)
+  if not isadv:
     assert re.search(u"(ый|ий|о́й)$", term)
+  trtext = translit and "|tr=" + translit or ""
   check_stress(term)
   if etym == "-":
     etymtext = "===Etymology===\n{{rfe|lang=ru}}\n\n"
@@ -67,7 +73,7 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
       shorttext = ""
     else:
       shorttext = "|%s" % short
-    decltext = "{{ru-decl-adj|%s%s}}" % (term, shorttext)
+    decltext = "{{ru-decl-adj|%s%s}}" % (declterm, shorttext)
 
   # Create definition
   defnlines = []
@@ -97,6 +103,9 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
         elif defn.startswith("(d)"):
           labels.append("dated")
           defn = re.sub(r"^\(d\)", "", defn)
+        elif defn.startswith("(p)"):
+          labels.append("poetic")
+          defn = re.sub(r"^\(p\)", "", defn)
         elif defn.startswith("(n)"):
           labels.append("nonstandard")
           defn = re.sub(r"^\(n\)", "", defn)
@@ -188,12 +197,12 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
         for parttype in re.split(",", parttypes):
           infleclines.append("# {{ru-participle of|%s||%s}}" % (verb, parttype))
       parttext = """===Participle===
-{{head|ru|participle|head=%s}}
+{{head|ru|participle|head=%s%s}}
 
 %s
 
 ====Declension====
-{{ru-decl-adj|%s%s}}\n\n""" % (term, "\n".join(infleclines), term,
+{{ru-decl-adj|%s%s}}\n\n""" % (term, trtext, "\n".join(infleclines), declterm,
     "" if partshort == "-" else "|" + partshort)
     else: # derived or related terms
       if vals == "-":
@@ -232,19 +241,19 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
 
   if isadv:
     maintext = """===Adverb===
-{{ru-adv|%s}}
+{{ru-adv|%s%s}}
 
 %s
-""" % (term, defntext)
+""" % (term, trtext, defntext)
   else:
     maintext = """===Adjective===
-{{ru-adj|%s%s}}
+{{ru-adj|%s%s%s}}
 
 %s
 ====Declension====
 %s
 
-""" % (term, comptext, defntext, decltext)
+""" % (term, trtext, comptext, defntext, decltext)
   if defns == "--":
     maintext = ""
 
