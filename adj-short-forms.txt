@@ -316,3 +316,33 @@ missing-13000-13999.adjs.zorder, part 1
 * [[кукольный]] "doll (attrib.); puppet (attrib.)" yes? [see [https://books.google.com/books?id=Ekg1AQAAIAAJ&q=%D0%BA%D1%83%D0%BA%D0%BE%D0%BB%D1%8C%D0%BD%D1%8B&dq=%D0%BA%D1%83%D0%BA%D0%BE%D0%BB%D1%8C%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwis2L-3q-zMAhVGlJQKHaXdAUIQ6AEILTAC]: Вот почему наши кукольники часто спорят о том, кукольны их спектакли или не кукольны, и продолжают выяснять свои взаимоотношения с драматическим театром. ]
 * [[сольный]] "solo" yes? [see (pre-rev.) [https://books.google.com/books?id=PIN3BAAAQBAJ&pg=PA159&dq=%D1%81%D0%BE%D0%BB%D1%8C%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwjnpfnSo-zMAhXEpI8KHT-eCgs4FBDoAQhTMAg]: Вы еще очень молоды и сольны, и сани сейчасъ сказали, что ...]
 * [[бревенчатый]] "made of logs, timbered" yes? [see [https://books.google.com/books?id=MWLnAAAAMAAJ&q=%D0%B1%D1%80%D0%B5%D0%B2%D0%B5%D0%BD%D1%87%D0%B0%D1%82%D1%8B&dq=%D0%B1%D1%80%D0%B5%D0%B2%D0%B5%D0%BD%D1%87%D0%B0%D1%82%D1%8B&hl=en&sa=X&ved=0ahUKEwjsjeOFsOzMAhULymMKHbFpASY4PBDoAQgbMAA]: Они обширны, бревенчаты, с башнями и многими лесенками. ]
+
+
+------------------------
+
+missing-14000-14999.adjs.zorder, part 1
+
+* [[тридцатилетний]] "thirty-year" no? [can't find examples]
+* [[столетний]] "hundred-year" no? [can't find examples]
+* [[плавучий]] "floating, buoyant" yes? [see [https://books.google.com/books?id=3YSeAAAAQBAJ&pg=PT282&dq=%D0%BF%D0%BB%D0%B0%D0%B2%D1%83%D1%87&hl=en&sa=X&ved=0ahUKEwjf3vnRte_MAhVEVh4KHdQsDfA4ChDoAQhWMAk]: Там есть деревья тысячи пород, дающие плоды с чудесным вкусом, есть животные, что не боятся человека, есть острова, подобные коралловым, но наш коралл плавуч, и ветры кружат эти острова по океану, словно огромные ...] [see [https://books.google.com/books?id=yMBLAAAAMAAJ&q=%D0%BF%D0%BB%D0%B0%D0%B2%D1%83%D1%87%D0%B8&dq=%D0%BF%D0%BB%D0%B0%D0%B2%D1%83%D1%87%D0%B8&hl=en&sa=X&ved=0ahUKEwiQ5L2Utu_MAhXPsh4KHfoFAF8Q6AEIMzAD]: При высокой скорости течения (опыты VI и VII) пестрятки были более плавучи, чем ранее (II, III и IV).]
+* [[захватывающий]] "thrilling, exciting" yes? [see [https://books.google.com/books?id=Tba5CgAAQBAJ&pg=PT34&dq=%D0%B7%D0%B0%D1%85%D0%B2%D0%B0%D1%82%D1%8B%D0%B2%D0%B0%D1%8E%D1%89%D0%B8&hl=en&sa=X&ved=0ahUKEwjMxuy_tu_MAhXFVh4KHRHXAFAQ6AEIIjAB]: так захватывающи были словесные образы, воздвигаемые между развалинами и котлованом.]
+* [[улыбчивый]] "smiling" yes? [see [https://books.google.com/books?id=KAMtDAAAQBAJ&pg=PA352&dq=%D1%83%D0%BB%D1%8B%D0%B1%D1%87%D0%B8%D0%B2%D1%8B&hl=en&sa=X&ved=0ahUKEwjdtPzptu_MAhWLGR4KHaUFDZkQ6AEIIzAB]: Впрочем, не все лица были улыбчивы и приветливыми...]
+* [[внешнеторговый]] "trade (attrib.)" no? [can't find examples]
+* [[грунтовый]] "ground (attrib.), subterranean" no? [can't find examples]
+* [[портовый]] "port (attrib.)" no? [can't find examples]
+* [[асфальтовый]] "asphalt" no? [can't find examples]
+* [[искомый]] "desired, sought-after" yes? [see [https://books.google.com/books?id=4kn8AgAAQBAJ&pg=PA60&dq=%D0%B8%D1%81%D0%BA%D0%BE%D0%BC%D1%8B&hl=en&sa=X&ved=0ahUKEwi3xtvxqe_MAhXH2B4KHRrjCP84HhDoAQg4MAQ#v=onepage&q=%D0%B8%D1%81%D0%BA%D0%BE%D0%BC%D1%8B&f=false]: Славяне выделывали самые лучшие меха и кожи, особенно сыромятные, которые всюду были искомы.]
+* [[юго-западный]] "southwest" no? [can't find examples]
+
+
+
+missing-14000-14999.adjs.zorder, part 2
+
+
+
+* [[обоюдный]] "mutual, reciprocal" yes?
+* [[литейный]] "founding, casting" no?
+* [[дипломный]] "towards a degree" no?
+* [[укромный]] "secluded" yes? [see [https://books.google.com/books?id=ud8zCgAAQBAJ&pg=PT27&dq=%D1%83%D0%BA%D1%80%D0%BE%D0%BC%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwjCnsX7m_HMAhVCjZQKHczfALsQ6AEIVzAI]: как парижский оссуарий, и не столь укромны и пугающе тесны, как римские катакомбы.]
+* [[природоохранный]] "environmental" yes?
+* [[множественный]] "plural" yes?
