@@ -181,8 +181,15 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
       else:
         anttext = synantguts
     elif sartype == "comp":
-      comptext = "|%s" % vals
+      comptext = ""
+      for i, comp in enumerate(re.split(",", vals)):
+        check_stress(comp)
+        if i == 0:
+          comptext += "|%s" % comp
+        else:
+          comptext += "|comp%s=%s" % (i + 1, comp)
     elif sartype == "pron":
+      check_stress(vals)
       prontext = "%s" % vals
     elif sartype == "alt":
       lines = []
