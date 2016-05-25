@@ -374,3 +374,36 @@ missing-14000-14999.adjs.zorder, part 2
 * [[восстановительный]] "of restoration" no? [can't find examples]
 * [[отопительный]] "heating (attrib.)" no? [can't find examples]
 * [[патрульный]] "patrol (attrib.)" no? [can't find examples]
+
+------------------------
+
+missing-15000-15999.adjs.zorder, part 1
+
+* [[расхожий]] "everyday-use; in great demand" yes? [see [https://books.google.com/books?id=gXuzCwAAQBAJ&pg=PT107&dq=%D1%80%D0%B0%D1%81%D1%85%D0%BE%D0%B6%D0%B8&hl=en&sa=X&ved=0ahUKEwiB0qKgvPLMAhXKJiYKHQEUApEQ6AEIMTAD]: Какими бы заумными ни были мои слова, они вполне обыденны, расхожи.]
+* [[сорокалетний]] "forty-year" no?
+* [[тысячелетний]] "thousand-year" no?
+* [[двухлетний]] "two-year" no?
+* [[обслуживающий]] "service (attrib.)"?" no? [can't find examples]
+* [[перерабатывающий]] "reprocessing (attrib.)" no? [can't find examples]
+* [[ликующ]] "exultant, jubilant" yes? [see [https://books.google.com/books?id=88rZHRF8ifwC&pg=PT73&dq=%D0%BB%D0%B8%D0%BA%D1%83%D1%8E%D1%89&hl=en&sa=X&ved=0ahUKEwiphYnVi_TMAhUl54MKHSaxDqMQ6AEIKTAC]: так весел, так ликующ, так дерзкорадостен был его стремительный взор.]
+* [[разовый]] "one-time, nonrecurrent" yes? [see [https://books.google.com/books?id=WmU6AQAAIAAJ&q=%D1%80%D0%B0%D0%B7%D0%BE%D0%B2%D1%8B&dq=%D1%80%D0%B0%D0%B7%D0%BE%D0%B2%D1%8B&hl=en&sa=X&ved=0ahUKEwjr5_iXk_TMAhVDLlIKHYSfAkg4FBDoAQhKMAc]: И, наоборот, предприятия, для которых поставки на Крайний Север разовы, случайны, отказываются от изготовления тары, ] [also [https://books.google.com/books?id=xrKcAAAAMAAJ&q=%D1%80%D0%B0%D0%B7%D0%BE%D0%B2%D1%8B&dq=%D1%80%D0%B0%D0%B7%D0%BE%D0%B2%D1%8B&hl=en&sa=X&ved=0ahUKEwi9oLuSlPTMAhUMxYMKHS_uDJI4PBDoAQgyMAM]: Обменяться ими невозможно. Состояние каждого общества и его культура уникальны, разовы. Более того, даже взятое отдельно общество не остается тождественным себе.]
+* [[апельсиновый]] "orange (attrib.)" no? [can't find examples]
+* [[перламутровый]] "mother-of-pearl (attrib.), pearlescent" yes? [see [https://books.google.com/books?id=ViRjAAAAMAAJ&q=%D0%BF%D0%B5%D1%80%D0%BB%D0%B0%D0%BC%D1%83%D1%82%D1%80%D0%BE%D0%B2%D1%8B&dq=%D0%BF%D0%B5%D1%80%D0%BB%D0%B0%D0%BC%D1%83%D1%82%D1%80%D0%BE%D0%B2%D1%8B&hl=en&sa=X&ved=0ahUKEwio7Y7QlvTMAhUh2IMKHVUADy44KBDoAQgoMAI]: У моего хозяина, отца мальчишки, они перламутровы, нежнейшей расцветки, диковинной формы.]
+* [[кассовый]] "cash (attrib.), box office (attrib.)" yes? [see [https://books.google.com/books?id=N9UoAQAAIAAJ&q=%D0%BA%D0%B0%D1%81%D1%81%D0%BE%D0%B2%D1%8B&dq=%D0%BA%D0%B0%D1%81%D1%81%D0%BE%D0%B2%D1%8B&hl=en&sa=X&ved=0ahUKEwiUwKGjl_TMAhWHxYMKHXDdDjo4ChDoAQhJMAc]: Современный режиссер вообще очень застенчив. Ему часто приходится обслуживать пожилых звезд — они капризны и кассовы. Это сочетание из любого постановщика сделает ягненка.]
+* [[инвалидный]] "invalid (attrib.), disabled" yes? [see [https://books.google.com/books?id=SSAJAAAAIAAJ&q=%D0%B8%D0%BD%D0%B2%D0%B0%D0%BB%D0%B8%D0%B4%D0%BD%D1%8B&dq=%D0%B8%D0%BD%D0%B2%D0%B0%D0%BB%D0%B8%D0%B4%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwj137resPTMAhVDVyYKHTuGBvU4FBDoAQgrMAM]: Однако здесь имеются значительные видовые отличия: у человека особи с набором ХО глубоко инвалидны.]
+* [[погодный]] "weather (attrib.); yearly" maybe? [see [https://books.google.com/books?id=PCAKAQAAIAAJ&q=%D0%BF%D0%BE%D0%B3%D0%BE%D0%B4%D0%BD%D1%8B&dq=%D0%BF%D0%BE%D0%B3%D0%BE%D0%B4%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwjxpNblsfTMAhUDxCYKHXvhDsI4FBDoAQguMAM]: (термин не совсем удачный, поскольку в летописях все записи «погодны») летописной записи 1416 г., т. е. ее древности, принадлежности летописцу-современнику, вовсе не свидетельствует о достоверности сообщаемых в записи сведений.]
+* [[кислородный]] "oxygen (attrib.)" no? [can't find examples]
+* [[одноэтажный]] "one-story" no?
+* [[прогнозный]] "forecast (attrib.)" no?
+* [[змеиный]] "snake (attrib.); serpentine" no? [can't clearly find examples]
+* [[гусиный]] "goose (attrib.)" no? [can't clearly find examples]
+* [[мышиный]] "mouse (attrib.); mouselike; mousy (color)" no? [can't clearly find examples]
+* [[подъёмный]] "lifting (attrib.)" no?
+* [[потомственный]] "hereditary; by birth" yes? [see [https://books.google.com/books?id=q_ovAAAAMAAJ&q=%D0%BF%D0%BE%D1%82%D0%BE%D0%BC%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%B5%D0%BD&dq=%D0%BF%D0%BE%D1%82%D0%BE%D0%BC%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%B5%D0%BD&hl=en&sa=X&ved=0ahUKEwj09I2m7vTMAhVF4iYKHXcHB6oQ6AEIHzAA]: что ему нет нужды справляться с существующими общегосударственными законами, что он вполне независим от народа и потомственен в ...] [also see [https://books.google.com/books?id=ZMUiAQAAIAAJ&q=%D0%BF%D0%BE%D1%82%D0%BE%D0%BC%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D1%8B&dq=%D0%BF%D0%BE%D1%82%D0%BE%D0%BC%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwivwtyn7fTMAhXE4CYKHSUOAJo4RhDoAQgxMAM]: Но уделы - потомственны, а переход их к следующим поколениям неизбежно грозит - по мере ослабления семейных связей - разрушением единства общей отчины; владение ею по уделам легко может перейти в обособление ее ...
+] [also see from 1858 [https://books.google.com/books?id=XtVdAAAAcAAJ&pg=PA293&dq=%D0%BF%D0%BE%D1%82%D0%BE%D0%BC%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwj15JrD7PTMAhXI0iYKHUFcCKg4ChDoAQhYMAg]: Правомъ считался мѣстный, долговременный обычай; собственность и владѣніе обыкновенно были потомственны и неотчуждаемы] [also from 1891 [https://books.google.com/books?id=h9Q4AQAAMAAJ&pg=PA253&dq=%D0%BF%D0%BE%D1%82%D0%BE%D0%BC%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwj227aE7fTMAhXH4CYKHaykARw4MhDoAQhEMAY]: Но чины сіи, колико ни знатны были и колико ихъ многіе люди ни добивались, не были потомственны, а уже по паденіи Римской Западной Имперіи,]
+* [[межгосударственный]] "interstate" yes? [see [https://books.google.com/books?id=W2LuBgAAQBAJ&pg=PT89&dq=%D0%BC%D0%B5%D0%B6%D0%B3%D0%BE%D1%81%D1%83%D0%B4%D0%B0%D1%80%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwjTo7uygfXMAhURySYKHdBaAa0Q6AEIKjAC]: Все они были межгосударственны – не подчинялись королям, а их резиденции находились почти во всех странах мира Ксантины. ]
+* [[антропогенный]] "anthropogenic" yes? [see [https://books.google.com/books?id=73gkAgAAQBAJ&pg=PT66&dq=%D0%B0%D0%BD%D1%82%D1%80%D0%BE%D0%BF%D0%BE%D0%B3%D0%B5%D0%BD%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwjyierWiPXMAhXDSCYKHUshAUUQ6AEIKzAC]: Все эти процессы не характерныдля природы, они антропогенны: сырье извлекается из невозобновимых ресурсов, неиспользуемых природой;]
+* [[новоявленный]] "newly-emerged" no? [can't find examples; claimed to be a(1)]
+* [[вожделенный]] "desired" yes? [see [https://books.google.com/books?id=ZAl8BwAAQBAJ&pg=PT589&dq=%D0%B2%D0%BE%D0%B6%D0%B4%D0%B5%D0%BB%D0%B5%D0%BD%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwjUndGYjvXMAhWJ6iYKHfXcCY84FBDoAQhSMAc]: Последствия того и другого суда или вожделенны или бедственны. ]
+* [[вышеперечисленный]] "above-mentioned" no? [can't find examples; claimed to be a(1)]
+* [[торгово-промышленный]] "commercial-industrial" no? [can't find examples; claimed to be a(1)]
