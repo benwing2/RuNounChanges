@@ -377,12 +377,12 @@ missing-14000-14999.adjs.zorder, part 2
 
 ------------------------
 
-missing-15000-15999.adjs.zorder, part 1-2
+missing-15000-15999.adjs.zorder, part 1
 
 * [[расхожий]] "everyday-use; in great demand" yes? [see [https://books.google.com/books?id=gXuzCwAAQBAJ&pg=PT107&dq=%D1%80%D0%B0%D1%81%D1%85%D0%BE%D0%B6%D0%B8&hl=en&sa=X&ved=0ahUKEwiB0qKgvPLMAhXKJiYKHQEUApEQ6AEIMTAD]: Какими бы заумными ни были мои слова, они вполне обыденны, расхожи.]
-* [[сорокалетний]] "forty-year" no?
-* [[тысячелетний]] "thousand-year" no?
-* [[двухлетний]] "two-year" no?
+* [[сорокалетний]] "forty-year" no? [haven't been able to find examples for any similarly constructed adjectives]
+* [[тысячелетний]] "thousand-year" no? [haven't been able to find examples for any similarly constructed adjectives]
+* [[двухлетний]] "two-year" no? [haven't been able to find examples for any similarly constructed adjectives]
 * [[обслуживающий]] "service (attrib.)"?" no? [can't find examples]
 * [[перерабатывающий]] "reprocessing (attrib.)" no? [can't find examples]
 * [[ликующ]] "exultant, jubilant" yes? [see [https://books.google.com/books?id=88rZHRF8ifwC&pg=PT73&dq=%D0%BB%D0%B8%D0%BA%D1%83%D1%8E%D1%89&hl=en&sa=X&ved=0ahUKEwiphYnVi_TMAhUl54MKHSaxDqMQ6AEIKTAC]: так весел, так ликующ, так дерзкорадостен был его стремительный взор.]
@@ -393,12 +393,19 @@ missing-15000-15999.adjs.zorder, part 1-2
 * [[инвалидный]] "invalid (attrib.), disabled" yes? [see [https://books.google.com/books?id=SSAJAAAAIAAJ&q=%D0%B8%D0%BD%D0%B2%D0%B0%D0%BB%D0%B8%D0%B4%D0%BD%D1%8B&dq=%D0%B8%D0%BD%D0%B2%D0%B0%D0%BB%D0%B8%D0%B4%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwj137resPTMAhVDVyYKHTuGBvU4FBDoAQgrMAM]: Однако здесь имеются значительные видовые отличия: у человека особи с набором ХО глубоко инвалидны.]
 * [[погодный]] "weather (attrib.); yearly" maybe? [see [https://books.google.com/books?id=PCAKAQAAIAAJ&q=%D0%BF%D0%BE%D0%B3%D0%BE%D0%B4%D0%BD%D1%8B&dq=%D0%BF%D0%BE%D0%B3%D0%BE%D0%B4%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwjxpNblsfTMAhUDxCYKHXvhDsI4FBDoAQguMAM]: (термин не совсем удачный, поскольку в летописях все записи «погодны») летописной записи 1416 г., т. е. ее древности, принадлежности летописцу-современнику, вовсе не свидетельствует о достоверности сообщаемых в записи сведений.]
 * [[кислородный]] "oxygen (attrib.)" no? [can't find examples]
-* [[одноэтажный]] "one-story" no?
-* [[прогнозный]] "forecast (attrib.)" no?
+
+
+
+missing-15000-15999.adjs.zorder, part 2
+
+
+
+* [[одноэтажный]] "one-story" yes? [see from 1902 [https://books.google.com/books?id=_KoDAAAAYAAJ&pg=PA21&dq=%D0%BE%D0%B4%D0%BD%D0%BE%D1%8D%D1%82%D0%B0%D0%B6%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwj2ktSc-_bMAhVL6SYKHV7-Drw4ChDoAQg4MAQ#v=onepage&q=%D0%BE%D0%B4%D0%BD%D0%BE%D1%8D%D1%82%D0%B0%D0%B6%D0%BD%D1%8B&f=false]: Домá большею частью одноэтажны и невзрачны, исключеніе представляютъ Калле-Ривадавіа, улица, которая, начинаясь на берегу рѣки, дѣлитъ Б. на двѣ половины; ее пересѣкаетъ Калле Флорида съ роскошнѣйшими ...]
+* [[прогнозный]] "forecast (attrib.)" yes? [see [https://books.google.com/books?id=ihd_AAAAMAAJ&q=%D0%BF%D1%80%D0%BE%D0%B3%D0%BD%D0%BE%D0%B7%D0%BD%D1%8B&dq=%D0%BF%D1%80%D0%BE%D0%B3%D0%BD%D0%BE%D0%B7%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwjXsLrb-_bMAhWDKyYKHapXBAA4ChDoAQhQMAg]: Анализ баланса КНС дополнил результаты, полученные ранее методом Монте-Карло, свидетельствующие, что три модели структурно различны и прогнозны лучше согласуются по относительным (изменения КНС), чем по ...]
 * [[змеиный]] "snake (attrib.); serpentine" no? [can't clearly find examples]
 * [[гусиный]] "goose (attrib.)" no? [can't clearly find examples]
 * [[мышиный]] "mouse (attrib.); mouselike; mousy (color)" no? [can't clearly find examples]
-* [[подъёмный]] "lifting (attrib.)" no?
+* [[подъёмный]] "lifting (attrib.)" yes? [see [https://books.google.com/books?id=eij9CQAAQBAJ&pg=PT188&dq=%D0%BF%D0%BE%D0%B4%D1%8A%D1%91%D0%BC%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwjamMSV_PbMAhWM7iYKHT34DQsQ6AEIKjAC]: Транспортные самолёты с войсками и военной техникой, во всяком случае, сесть не смогут, вертолёты могут сесть и не на лётное поле, но вертолёты не так подъёмны.]
 * [[потомственный]] "hereditary; by birth" yes? [see [https://books.google.com/books?id=q_ovAAAAMAAJ&q=%D0%BF%D0%BE%D1%82%D0%BE%D0%BC%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%B5%D0%BD&dq=%D0%BF%D0%BE%D1%82%D0%BE%D0%BC%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%B5%D0%BD&hl=en&sa=X&ved=0ahUKEwj09I2m7vTMAhVF4iYKHXcHB6oQ6AEIHzAA]: что ему нет нужды справляться с существующими общегосударственными законами, что он вполне независим от народа и потомственен в ...] [also see [https://books.google.com/books?id=ZMUiAQAAIAAJ&q=%D0%BF%D0%BE%D1%82%D0%BE%D0%BC%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D1%8B&dq=%D0%BF%D0%BE%D1%82%D0%BE%D0%BC%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwivwtyn7fTMAhXE4CYKHSUOAJo4RhDoAQgxMAM]: Но уделы - потомственны, а переход их к следующим поколениям неизбежно грозит - по мере ослабления семейных связей - разрушением единства общей отчины; владение ею по уделам легко может перейти в обособление ее ...
 ] [also see from 1858 [https://books.google.com/books?id=XtVdAAAAcAAJ&pg=PA293&dq=%D0%BF%D0%BE%D1%82%D0%BE%D0%BC%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwj15JrD7PTMAhXI0iYKHUFcCKg4ChDoAQhYMAg]: Правомъ считался мѣстный, долговременный обычай; собственность и владѣніе обыкновенно были потомственны и неотчуждаемы] [also from 1891 [https://books.google.com/books?id=h9Q4AQAAMAAJ&pg=PA253&dq=%D0%BF%D0%BE%D1%82%D0%BE%D0%BC%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwj227aE7fTMAhXH4CYKHaykARw4MhDoAQhEMAY]: Но чины сіи, колико ни знатны были и колико ихъ многіе люди ни добивались, не были потомственны, а уже по паденіи Римской Западной Имперіи,]
 * [[межгосударственный]] "interstate" yes? [see [https://books.google.com/books?id=W2LuBgAAQBAJ&pg=PT89&dq=%D0%BC%D0%B5%D0%B6%D0%B3%D0%BE%D1%81%D1%83%D0%B4%D0%B0%D1%80%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwjTo7uygfXMAhURySYKHdBaAa0Q6AEIKjAC]: Все они были межгосударственны – не подчинялись королям, а их резиденции находились почти во всех странах мира Ксантины. ]
@@ -424,16 +431,28 @@ missing-15000-15999.adjs.zorder, part 3
 
 * [[апикальный]] "apical" yes? [see [https://books.google.com/books?id=tWgeAQAAMAAJ&q=%D0%B0%D0%BF%D0%B8%D0%BA%D0%B0%D0%BB%D1%8C%D0%BD%D1%8B&dq=%D0%B0%D0%BF%D0%B8%D0%BA%D0%B0%D0%BB%D1%8C%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwiCo-Te2vbMAhWMTSYKHemSCdcQ6AEILzAD]: Пупки тергум апикальны и расположены с противоположной отверстию головки стороны — дорзомаргинальны, пупки скутум расположены у основания и со стороны отверстия головки — вентральнобазальны.]
 * [[двукратный]] "double, twofold, second" yes? [see [https://books.google.com/books?id=aKk1AQAAIAAJ&q=%D0%B4%D0%B2%D1%83%D0%BA%D1%80%D0%B0%D1%82%D0%BD%D1%8B&dq=%D0%B4%D0%B2%D1%83%D0%BA%D1%80%D0%B0%D1%82%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwizofif3_bMAhUG0iYKHWkVB4cQ6AEINjAE]: Они, однако, не могут превышать четырех, так как точки Бг ("] Б2, Бг |~| Б2 не более чем двукратны на дивизоре С3.]
-* [[кабельный]] "cable (attrib.)" no?
+* [[кабельный]] "cable (attrib.)" no? [can't find examples]
 * [[культуральный]] "cultural; culture (attrib.)" yes? [see [https://books.google.com/books?id=3gQrAQAAIAAJ&q=%D0%BA%D1%83%D0%BB%D1%8C%D1%82%D1%83%D1%80%D0%B0%D0%BB%D1%8C%D0%BD%D1%8B&dq=%D0%BA%D1%83%D0%BB%D1%8C%D1%82%D1%83%D1%80%D0%B0%D0%BB%D1%8C%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwibv6WH4_bMAhWC4CYKHauXDGQ4UBDoAQhQMAk]: Поглядели бы Вы, как поляки «культуральны» в действительной жизни — в своих отношениях к белорусскому православному народу]
 * [[маститый]] "venerable" yes? [hard to find examples, overlap from масти́ты "mastitises"
 * [[многодетный]] "having many children" yes? [see [https://books.google.com/books?id=rAESAQAAIAAJ&q=%D0%BC%D0%BD%D0%BE%D0%B3%D0%BE%D0%B4%D0%B5%D1%82%D0%BD%D1%8B&dq=%D0%BC%D0%BD%D0%BE%D0%B3%D0%BE%D0%B4%D0%B5%D1%82%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwigipKv5vbMAhUMMSYKHRrfCHUQ6AEINTAD]: Семьи в обследованных р-нах Западной Грузии более многодетны, а в р-нах Картли и Месхети почти 40 % семей не имеют в своем составе детей до 16 лет;]
-
-
-
-
-
-
+* [[оздоровительный]] "health (attrib.); sanitary" yes? [see [https://books.google.com/books?id=HtScAAAAMAAJ&q=%D0%BE%D0%B7%D0%B4%D0%BE%D1%80%D0%BE%D0%B2%D0%B8%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D1%8B&dq=%D0%BE%D0%B7%D0%B4%D0%BE%D1%80%D0%BE%D0%B2%D0%B8%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwipu4aj7PbMAhUMLyYKHVkkCvc4ChDoAQgjMAE]: Установлено, что эмоции сопровождаются определённым химическим составом крови: плохие мысли отравляют существование, разрушают здоровье, в то время как хорошие — благодательны, созидательны, оздоровительны и ...]
 * [[окаянный]] "cursed" yes? [see [https://books.google.com/books?id=0Y2CAQAAQBAJ&pg=PT22&dq=%D0%BE%D0%BA%D0%B0%D1%8F%D0%BD%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwiO8bbvzPbMAhXJHpQKHfF1ALE4HhDoAQgoMAI]: что при всех видимых добрых делах мы окаянны, слепы,нищи,наги. Самые великие ...]
+* [[патентный]] "patent (attrib.)" no? [can't find examples]
+* [[подвальный]] "basement (attrib.)" no? [can't find examples]
+* [[породистый]] "thoroughbred" yes? [see [https://books.google.com/books?id=2KSSCwAAQBAJ&pg=PT31&dq=%D0%BF%D0%BE%D1%80%D0%BE%D0%B4%D0%B8%D1%81%D1%82%D1%8B&hl=en&sa=X&ved=0ahUKEwid2bm98_bMAhXL8CYKHdrlCa4Q6AEIOjAE#v=onepage&q=%D0%BF%D0%BE%D1%80%D0%BE%D0%B4%D0%B8%D1%81%D1%82%D1%8B&f=false]: Женщины были породисты и дороги. Полный гламур. Мужчины не представляли собой однородной массы.]
+* [[посмертный]] "posthumous" yes? [see [https://books.google.com/books?id=ElstCwAAQBAJ&pg=PT849&dq=%D0%BF%D0%BE%D1%81%D0%BC%D0%B5%D1%80%D1%82%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwiThYnk8_bMAhUD6yYKHceWDloQ6AEIPDAE]: Являются ли повреждения, причиненные колесами подвижного состава, прижизненными или они посмертны?]
+* [[правозащитный]] "remedial" yes? [can't find examples but I assume yes]
+* [[противоракетный]] "antimissile" no? [can't find examples]
+* [[протокольный]] "protocol (attrib.)" yes? [see [https://books.google.com/books?id=CEqaBQAAQBAJ&pg=PR189&dq=%D0%BF%D1%80%D0%BE%D1%82%D0%BE%D0%BA%D0%BE%D0%BB%D1%8C%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwidg-KW9vbMAhVSziYKHdpaCDMQ6AEIJDAB#v=onepage&q=%D0%BF%D1%80%D0%BE%D1%82%D0%BE%D0%BA%D0%BE%D0%BB%D1%8C%D0%BD%D1%8B&f=false]: Рисунки немецкого художника не столь живописны, какуего предшественников, и его образы более протокольны. Такоеих решение побуждалозрителя занять позицию исследователя, получившего их для изучения иоценки.] [also see [https://books.google.com/books?id=jyCuCQAAQBAJ&pg=PT335&dq=%D0%BF%D1%80%D0%BE%D1%82%D0%BE%D0%BA%D0%BE%D0%BB%D1%8C%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwidg-KW9vbMAhVSziYKHdpaCDMQ6AEIKzAC]: Нет, при общении нам мало одних слов; они слишком протокольны, мертвы.]
+* [[пушечный]] "gun (attrib.); canon (attrib.)" no? [can't find examples]
+
+
+
+
+missing-15000-15999.adjs.zorder, part 4
+
+
+
+
 * [[солидарный]] "solidary" yes? [see [https://books.google.com/books?id=ui0zAAAAIAAJ&q=%22%D1%81%D0%BE%D0%BB%D0%B8%D0%B4%D0%B0%D1%80%D0%BD%D1%8B%22&dq=%22%D1%81%D0%BE%D0%BB%D0%B8%D0%B4%D0%B0%D1%80%D0%BD%D1%8B%22&hl=en&sa=X&ved=0ahUKEwifq4KxzfbMAhUEJpQKHVYPD8QQ6AEIPTAF]: Мы всегда были солидарны с Советским Союзом.]
 * [[элитарны]] "elite" yes? [see [https://books.google.com/books?id=oybGAgAAQBAJ&pg=PT99&dq=%D1%8D%D0%BB%D0%B8%D1%82%D0%B0%D1%80%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwiujpjYzfbMAhWDNJQKHXHAAwIQ6AEIHTAA#v=onepage&q=%D1%8D%D0%BB%D0%B8%D1%82%D0%B0%D1%80%D0%BD%D1%8B&f=false]:  Если сравнивать академические events со всеми прочими, то академические мероприятия гораздо более элитарны.]
