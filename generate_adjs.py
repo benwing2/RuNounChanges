@@ -17,7 +17,7 @@ def check_stress(word):
   if word.startswith("-") or word.endswith("-"):
     # Allow unstressed prefix (e.g. разо-) and unstressed suffix (e.g. -овать)
     return
-  if rulib.needs_accents(word):
+  if rulib.needs_accents(word, split_dash=True):
     msg("Word %s missing an accent" % word)
     assert False
 
