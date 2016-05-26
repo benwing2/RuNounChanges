@@ -377,7 +377,7 @@ missing-14000-14999.adjs.zorder, part 2
 
 ------------------------
 
-missing-15000-15999.adjs.zorder, part 1
+missing-15000-15999.adjs.zorder, part 1-2
 
 * [[расхожий]] "everyday-use; in great demand" yes? [see [https://books.google.com/books?id=gXuzCwAAQBAJ&pg=PT107&dq=%D1%80%D0%B0%D1%81%D1%85%D0%BE%D0%B6%D0%B8&hl=en&sa=X&ved=0ahUKEwiB0qKgvPLMAhXKJiYKHQEUApEQ6AEIMTAD]: Какими бы заумными ни были мои слова, они вполне обыденны, расхожи.]
 * [[сорокалетний]] "forty-year" no?
@@ -407,3 +407,33 @@ missing-15000-15999.adjs.zorder, part 1
 * [[вожделенный]] "desired" yes? [see [https://books.google.com/books?id=ZAl8BwAAQBAJ&pg=PT589&dq=%D0%B2%D0%BE%D0%B6%D0%B4%D0%B5%D0%BB%D0%B5%D0%BD%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwjUndGYjvXMAhWJ6iYKHfXcCY84FBDoAQhSMAc]: Последствия того и другого суда или вожделенны или бедственны. ]
 * [[вышеперечисленный]] "above-mentioned" no? [can't find examples; claimed to be a(1)]
 * [[торгово-промышленный]] "commercial-industrial" no? [can't find examples; claimed to be a(1)]
+* [[агропромышленный]] "agribusiness (attrib.)" no? [can't find examples; claimed to be a(1)]
+* [[первостепенный]] "paramount" yes? [see [https://books.google.com/books?id=B05coYCHWV0C&pg=PA39&dq=%D0%BF%D0%B5%D1%80%D0%B2%D0%BE%D1%81%D1%82%D0%B5%D0%BF%D0%B5%D0%BD%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwjqhOG_tfbMAhUKp5QKHfi7C88Q6AEIMjAD]: По этой причине много личных расходов связано с удовлетворением потребностей, которые по сути своей вовсе не первостепенны.]
+* [[проверенный]] "tested" yes? [see [https://books.google.com/books?id=VRA-CwAAQBAJ&pg=PT208&dq=%D0%BF%D1%80%D0%BE%D0%B2%D0%B5%D1%80%D0%B5%D0%BD%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwjzrqqAt_bMAhXEi5QKHSmyAasQ6AEIQjAF]: Все узлы и агрегаты были тщательно проверенны и подготовлены к работе] [also see [https://books.google.com/books?id=peTSCwAAQBAJ&pg=PA98&dq=%D0%BF%D1%80%D0%BE%D0%B2%D0%B5%D1%80%D0%B5%D0%BD%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwjzrqqAt_bMAhXEi5QKHSmyAasQ6AEIOzAE]: Скажем нужно точно знать – какие книги надлежащего качества и кем проверенны.]
+* [[комиссионный]] "commission (attrib.)" no? [can't find examples]
+* [[геоинформационный]] "geoinformation (attrib.)" no? [can't find examples]
+
+
+
+
+missing-15000-15999.adjs.zorder, part 3
+
+
+
+
+
+* [[апикальный]] "apical" yes? [see [https://books.google.com/books?id=tWgeAQAAMAAJ&q=%D0%B0%D0%BF%D0%B8%D0%BA%D0%B0%D0%BB%D1%8C%D0%BD%D1%8B&dq=%D0%B0%D0%BF%D0%B8%D0%BA%D0%B0%D0%BB%D1%8C%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwiCo-Te2vbMAhWMTSYKHemSCdcQ6AEILzAD]: Пупки тергум апикальны и расположены с противоположной отверстию головки стороны — дорзомаргинальны, пупки скутум расположены у основания и со стороны отверстия головки — вентральнобазальны.]
+* [[двукратный]] "double, twofold, second" yes? [see [https://books.google.com/books?id=aKk1AQAAIAAJ&q=%D0%B4%D0%B2%D1%83%D0%BA%D1%80%D0%B0%D1%82%D0%BD%D1%8B&dq=%D0%B4%D0%B2%D1%83%D0%BA%D1%80%D0%B0%D1%82%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwizofif3_bMAhUG0iYKHWkVB4cQ6AEINjAE]: Они, однако, не могут превышать четырех, так как точки Бг ("] Б2, Бг |~| Б2 не более чем двукратны на дивизоре С3.]
+* [[кабельный]] "cable (attrib.)" no?
+* [[культуральный]] "cultural; culture (attrib.)" yes? [see [https://books.google.com/books?id=3gQrAQAAIAAJ&q=%D0%BA%D1%83%D0%BB%D1%8C%D1%82%D1%83%D1%80%D0%B0%D0%BB%D1%8C%D0%BD%D1%8B&dq=%D0%BA%D1%83%D0%BB%D1%8C%D1%82%D1%83%D1%80%D0%B0%D0%BB%D1%8C%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwibv6WH4_bMAhWC4CYKHauXDGQ4UBDoAQhQMAk]: Поглядели бы Вы, как поляки «культуральны» в действительной жизни — в своих отношениях к белорусскому православному народу]
+* [[маститый]] "venerable" yes? [hard to find examples, overlap from масти́ты "mastitises"
+* [[многодетный]] "having many children" yes? [see [https://books.google.com/books?id=rAESAQAAIAAJ&q=%D0%BC%D0%BD%D0%BE%D0%B3%D0%BE%D0%B4%D0%B5%D1%82%D0%BD%D1%8B&dq=%D0%BC%D0%BD%D0%BE%D0%B3%D0%BE%D0%B4%D0%B5%D1%82%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwigipKv5vbMAhUMMSYKHRrfCHUQ6AEINTAD]: Семьи в обследованных р-нах Западной Грузии более многодетны, а в р-нах Картли и Месхети почти 40 % семей не имеют в своем составе детей до 16 лет;]
+
+
+
+
+
+
+* [[окаянный]] "cursed" yes? [see [https://books.google.com/books?id=0Y2CAQAAQBAJ&pg=PT22&dq=%D0%BE%D0%BA%D0%B0%D1%8F%D0%BD%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwiO8bbvzPbMAhXJHpQKHfF1ALE4HhDoAQgoMAI]: что при всех видимых добрых делах мы окаянны, слепы,нищи,наги. Самые великие ...]
+* [[солидарный]] "solidary" yes? [see [https://books.google.com/books?id=ui0zAAAAIAAJ&q=%22%D1%81%D0%BE%D0%BB%D0%B8%D0%B4%D0%B0%D1%80%D0%BD%D1%8B%22&dq=%22%D1%81%D0%BE%D0%BB%D0%B8%D0%B4%D0%B0%D1%80%D0%BD%D1%8B%22&hl=en&sa=X&ved=0ahUKEwifq4KxzfbMAhUEJpQKHVYPD8QQ6AEIPTAF]: Мы всегда были солидарны с Советским Союзом.]
+* [[элитарны]] "elite" yes? [see [https://books.google.com/books?id=oybGAgAAQBAJ&pg=PT99&dq=%D1%8D%D0%BB%D0%B8%D1%82%D0%B0%D1%80%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwiujpjYzfbMAhWDNJQKHXHAAwIQ6AEIHTAA#v=onepage&q=%D1%8D%D0%BB%D0%B8%D1%82%D0%B0%D1%80%D0%BD%D1%8B&f=false]:  Если сравнивать академические events со всеми прочими, то академические мероприятия гораздо более элитарны.]
