@@ -136,6 +136,7 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
       defnlines.append("# %s%s\n" % (prefix, defnline))
   defntext = "".join(defnlines)
 
+  alsotext = ""
   alttext = ""
   parttext = ""
   syntext = ""
@@ -150,15 +151,18 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
 * {{l|ru|}}
 
 """
+  seetext = ""
   comptext = ""
   prontext = term
   for synantrel in remainder:
-    m = re.search(r"^(syn|ant|der|rel|comp|pron|alt|part):(.*)", synantrel)
+    m = re.search(r"^(also|syn|ant|der|rel|see|comp|pron|alt|part):(.*)", synantrel)
     if not m:
-      msg("Element %s doesn't start with syn:, ant:, der:, rel:, comp:, pron:, alt: or part:" % synantrel)
+      msg("Element %s doesn't start with also:, syn:, ant:, der:, rel:, see:, comp:, pron:, alt: or part:" % synantrel)
     assert m
     sartype, vals = m.groups()
-    if sartype in ["syn", "ant"]:
+    if sartype == "also":
+      alsotext = "{{also|%s}}\n" % vals.replace(",", "|")
+    elif sartype in ["syn", "ant"]:
       lines = []
       for synantgroup in re.split(";", vals):
         sensetext = ""
@@ -214,12 +218,14 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
 ====Declension====
 {{ru-decl-adj|%s%s}}\n\n""" % (term, trtext, "\n".join(infleclines), declterm,
     "" if partshort == "-" else "|" + partshort)
-    else: # derived or related terms
+    else: # derived or related terms or see also
       if vals == "-":
         if sartype == "der":
           dertext = ""
-        else:
+        elif sartype == "rel":
           reltext = ""
+        else:
+          seetext = ""
       else:
         lines = []
         for derrelgroup in re.split(",", vals):
@@ -242,12 +248,15 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
               check_stress(derrel)
               links.append("{{l|ru|%s}}" % derrel)
           lines.append("* %s\n" % ", ".join(links))
-        derrelguts = "====%s terms====\n%s\n" % (
-            "Derived" if sartype == "der" else "Related", "".join(lines))
+        derrelguts = "====%s====\n%s\n" % (
+            "Derived terms" if sartype == "der" else
+            "Related terms" if sartype == "rel" else "See also", "".join(lines))
         if sartype == "der":
           dertext = derrelguts
-        else:
+        elif sartype == "rel":
           reltext = derrelguts
+        else:
+          seetext = derrelguts
 
   if isadv:
     maintext = """===Adverb===
@@ -273,12 +282,13 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
 
   msg("""%s
 
-==Russian==
+%s==Russian==
 
 %s%s===Pronunciation===
 * {{ru-IPA|%s}}
 
-%s%s%s%s%s%s[[ru:%s]]
+%s%s%s%s%s%s%s[[ru:%s]]
 
-""" % (rulib.remove_accents(term), alttext, etymtext, prontext, parttext,
-  maintext, syntext, anttext, dertext, reltext, rulib.remove_accents(term)))
+""" % (rulib.remove_accents(term), alsotext, alttext, etymtext, prontext,
+  parttext, maintext, syntext, anttext, dertext, reltext, seetext,
+  rulib.remove_accents(term)))
