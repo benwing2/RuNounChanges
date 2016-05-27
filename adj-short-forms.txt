@@ -454,5 +454,11 @@ missing-15000-15999.adjs.zorder, part 4
 
 
 
+* [[ресурсный]] "resource (attrib.)" yes? [see [https://books.google.com/books?id=hCc0CwAAQBAJ&pg=PT86&dq=%D1%80%D0%B5%D1%81%D1%83%D1%80%D1%81%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwjC_v2ak_nMAhVKmpQKHY5UDlwQ6AEIJDAB]: И эти взаимоотношения далеко не всегда ресурсны и позитивны для развития личности, как это, например, символически изображено в романе Гессе «Степной Волк».]
 * [[солидарный]] "solidary" yes? [see [https://books.google.com/books?id=ui0zAAAAIAAJ&q=%22%D1%81%D0%BE%D0%BB%D0%B8%D0%B4%D0%B0%D1%80%D0%BD%D1%8B%22&dq=%22%D1%81%D0%BE%D0%BB%D0%B8%D0%B4%D0%B0%D1%80%D0%BD%D1%8B%22&hl=en&sa=X&ved=0ahUKEwifq4KxzfbMAhUEJpQKHVYPD8QQ6AEIPTAF]: Мы всегда были солидарны с Советским Союзом.]
+* [[тракторный]] "tractor (attrib.)" no? [can't find examples]
+* [[транснациональный]] "transnational" yes? [see [https://books.google.com/books?id=_doJAQAAQBAJ&pg=PT284&dq=%D1%82%D1%80%D0%B0%D0%BD%D1%81%D0%BD%D0%B0%D1%86%D0%B8%D0%BE%D0%BD%D0%B0%D0%BB%D1%8C%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwigtLGQlPnMAhXLF5QKHcjrAzcQ6AEIMjAD]: Хотя теперь есть понимание, что они транснациональны и цель их – мировое господство.]
+* [[фамильный]] "family (attrib.)" no? [can't find examples]
+* [[черноволосый]] "black-haired" yes? [see [https://books.google.com/books?id=3FkdDAAAQBAJ&pg=PT92&dq=%D1%87%D0%B5%D1%80%D0%BD%D0%BE%D0%B2%D0%BE%D0%BB%D0%BE%D1%81%D1%8B&hl=en&sa=X&ved=0ahUKEwie5KqIlfnMAhWCkpQKHUqbA-EQ6AEIHzAA#v=onepage&q=%D1%87%D0%B5%D1%80%D0%BD%D0%BE%D0%B2%D0%BE%D0%BB%D0%BE%D1%81%D1%8B&f=false]: Она родила ему трех дочерей и сына, и все были черноволосы. ]
+* [[экзистенциальный]] "existential" yes? [see [https://books.google.com/books?id=RGOSCgAAQBAJ&pg=PT75&dq=%D0%B5%D0%BA%D0%B7%D0%B8%D1%81%D1%82%D0%B5%D0%BD%D1%86%D0%B8%D0%B0%D0%BB%D1%8C%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwifhZDLkPnMAhUhGaYKHWK_BYsQ6AEIHzAA]: Эти слова к тому же экзистенциальны — их произносит герой диалога Сократ перед своей казнью. Они экзистенциальны и у Платона. ]
 * [[элитарны]] "elite" yes? [see [https://books.google.com/books?id=oybGAgAAQBAJ&pg=PT99&dq=%D1%8D%D0%BB%D0%B8%D1%82%D0%B0%D1%80%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwiujpjYzfbMAhWDNJQKHXHAAwIQ6AEIHTAA#v=onepage&q=%D1%8D%D0%BB%D0%B8%D1%82%D0%B0%D1%80%D0%BD%D1%8B&f=false]:  Если сравнивать академические events со всеми прочими, то академические мероприятия гораздо более элитарны.]
