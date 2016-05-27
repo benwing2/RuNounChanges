@@ -130,6 +130,19 @@
 
 -------------------
 
+KoreanQuoter review
+
+* [[дворцовый]] "palace (attrib.)" no? [can't find examples]
+* [[редакционный]] "editorial" yes? [see [https://books.google.com/books?id=BLJHAQAAIAAJ&q=%D1%80%D0%B5%D0%B4%D0%B0%D0%BA%D1%86%D0%B8%D0%BE%D0%BD%D0%BD%D1%8B&dq=%D1%80%D0%B5%D0%B4%D0%B0%D0%BA%D1%86%D0%B8%D0%BE%D0%BD%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwiXtI7shPrMAhUJYyYKHcOgCw44HhDoAQgnMAI]: Если все другие записи объективированы, редакционны, то эта представляет собой цитату, нечто частное, относящееся к авторству доктора Кожевникова.]
+* [[оконный]] "window" no?
+* [[подготовительный]] "preparatory" yes?
+* [[охранный]] "guarding (attrib.), protection (attrib.)" no? [can't find examples]
+* [[аристократичный]] "aristocratic, grand" yes?
+* [[ипотечный]] "hypothecary, mortgage (attrib.)" no?
+* [[устричный]] "oyster (attrib.)" no?
+
+-------------------
+
 missing-11000-11999.adjs.zorder, part 1
 
 * [[десятилетний]] "ten-year; ten-year-old" no?
@@ -462,3 +475,15 @@ missing-15000-15999.adjs.zorder, part 4
 * [[черноволосый]] "black-haired" yes? [see [https://books.google.com/books?id=3FkdDAAAQBAJ&pg=PT92&dq=%D1%87%D0%B5%D1%80%D0%BD%D0%BE%D0%B2%D0%BE%D0%BB%D0%BE%D1%81%D1%8B&hl=en&sa=X&ved=0ahUKEwie5KqIlfnMAhWCkpQKHUqbA-EQ6AEIHzAA#v=onepage&q=%D1%87%D0%B5%D1%80%D0%BD%D0%BE%D0%B2%D0%BE%D0%BB%D0%BE%D1%81%D1%8B&f=false]: Она родила ему трех дочерей и сына, и все были черноволосы. ]
 * [[экзистенциальный]] "existential" yes? [see [https://books.google.com/books?id=RGOSCgAAQBAJ&pg=PT75&dq=%D0%B5%D0%BA%D0%B7%D0%B8%D1%81%D1%82%D0%B5%D0%BD%D1%86%D0%B8%D0%B0%D0%BB%D1%8C%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwifhZDLkPnMAhUhGaYKHWK_BYsQ6AEIHzAA]: Эти слова к тому же экзистенциальны — их произносит герой диалога Сократ перед своей казнью. Они экзистенциальны и у Платона. ]
 * [[элитарны]] "elite" yes? [see [https://books.google.com/books?id=oybGAgAAQBAJ&pg=PT99&dq=%D1%8D%D0%BB%D0%B8%D1%82%D0%B0%D1%80%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwiujpjYzfbMAhWDNJQKHXHAAwIQ6AEIHTAA#v=onepage&q=%D1%8D%D0%BB%D0%B8%D1%82%D0%B0%D1%80%D0%BD%D1%8B&f=false]:  Если сравнивать академические events со всеми прочими, то академические мероприятия гораздо более элитарны.]
+
+
+------------------------
+
+missing-16000-16999.adjs.zorder, part 1
+
+
+* [[многосторонний]] "multifaceted" yes? [see [https://books.google.com/books?id=HhlpAAAAMAAJ&q=%D0%BC%D0%BD%D0%BE%D0%B3%D0%BE%D1%81%D1%82%D0%BE%D1%80%D0%BE%D0%BD%D0%BD%D0%B8&dq=%D0%BC%D0%BD%D0%BE%D0%B3%D0%BE%D1%81%D1%82%D0%BE%D1%80%D0%BE%D0%BD%D0%BD%D0%B8&hl=en&sa=X&ved=0ahUKEwigzqmCsvnMAhULHGMKHRUIDCAQ6AEILTAC]: Одним словом, гомилии достаточно многосторонни по содержанию, и историк ...]
+* [[семилетний]] "seven-year" no? [haven't been able to find examples for any similarly constructed adjectives]
+* [[движущий]] "moving, driving, motive" no? [can't find examples]
+* [[пугающий]] "frightening" yes? [see [https://books.google.com/books?id=66GmwoMJiSMC&pg=PA443&dq=%D0%BF%D1%83%D0%B3%D0%B0%D1%8E%D1%89%D0%B8&hl=en&sa=X&ved=0ahUKEwjh57S9uvnMAhXD26YKHVHsARcQ6AEINDAD]: Я даже не знаю, как мне определить эти чувства, они настолько же странны, насколько пугающи.]
+* [[недостающий]] "missing, lacking" no? [can't find examples]
