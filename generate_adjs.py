@@ -33,6 +33,9 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
     remainder = els[3:]
   else:
     term, etym, short, defns = els[0], els[1], els[2], els[3]
+    if short.startswith("?"):
+      msg("Short adjective declension starts with ?, need to fix: %s" % short)
+      assert False
     remainder = els[4:]
   translit = None
   declterm = term
@@ -57,7 +60,7 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
       prefix = "Ultimately from "
       suffix = "."
       etym = re.sub(r"^<<", "", etym)
-    m = re.search(r"^([a-z-]+):(.*)", etym)
+    m = re.search(r"^([a-zA-Z.-]+):(.*)", etym)
     if m:
       langtext = "|lang1=%s" % m.group(1)
       etym = m.group(2)
