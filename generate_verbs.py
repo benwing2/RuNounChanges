@@ -149,7 +149,7 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
 
 """
   seetext = ""
-  prontext = verb
+  prontext = "* {{ru-IPA|%s}}\n" % verb
   for synantrel in els[5:]:
     m = re.search(r"^(syn|ant|der|rel|see|pron|alt):(.*)", synantrel)
     if not m:
@@ -182,7 +182,11 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
       else:
         anttext = synantguts
     elif sartype == "pron":
-      prontext = "%s" % vals
+      prontext = ""
+      check_stress(vals)
+      for i, pron in enumerate(re.split(",", vals)):
+        check_stress(pron)
+        prontext += "* {{ru-IPA|%s}}\n" % pron
     elif sartype == "alt":
       lines = []
       for altform in re.split(",", vals):
@@ -264,8 +268,7 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
 %s
 
 ===Pronunciation===
-* {{ru-IPA|%s}}
-
+%s
 ===Verb===
 {{ru-verb|%s|%s%s}}
 

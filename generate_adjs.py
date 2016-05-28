@@ -153,7 +153,7 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
 """
   seetext = ""
   comptext = ""
-  prontext = term
+  prontext = "* {{ru-IPA|%s}}\n" % term
   for synantrel in remainder:
     m = re.search(r"^(also|syn|ant|der|rel|see|comp|pron|alt|part):(.*)", synantrel)
     if not m:
@@ -196,8 +196,11 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
         else:
           comptext += "|comp%s=%s" % (i + 1, comp)
     elif sartype == "pron":
+      prontext = ""
       check_stress(vals)
-      prontext = "%s" % vals
+      for i, pron in enumerate(re.split(",", vals)):
+        check_stress(pron)
+        prontext += "* {{ru-IPA|%s}}\n" % pron
     elif sartype == "alt":
       lines = []
       for altform in re.split(",", vals):
@@ -285,8 +288,7 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
 %s==Russian==
 
 %s%s===Pronunciation===
-* {{ru-IPA|%s}}
-
+%s
 %s%s%s%s%s%s%s[[ru:%s]]
 
 """ % (rulib.remove_accents(term), alsotext, alttext, etymtext, prontext,
