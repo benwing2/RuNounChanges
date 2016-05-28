@@ -134,12 +134,24 @@ KoreanQuoter review
 
 * [[дворцовый]] "palace (attrib.)" no? [can't find examples]
 * [[редакционный]] "editorial" yes? [see [https://books.google.com/books?id=BLJHAQAAIAAJ&q=%D1%80%D0%B5%D0%B4%D0%B0%D0%BA%D1%86%D0%B8%D0%BE%D0%BD%D0%BD%D1%8B&dq=%D1%80%D0%B5%D0%B4%D0%B0%D0%BA%D1%86%D0%B8%D0%BE%D0%BD%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwiXtI7shPrMAhUJYyYKHcOgCw44HhDoAQgnMAI]: Если все другие записи объективированы, редакционны, то эта представляет собой цитату, нечто частное, относящееся к авторству доктора Кожевникова.]
-* [[оконный]] "window" no?
-* [[подготовительный]] "preparatory" yes?
-* [[охранный]] "guarding (attrib.), protection (attrib.)" no? [can't find examples]
-* [[аристократичный]] "aristocratic, grand" yes?
-* [[ипотечный]] "hypothecary, mortgage (attrib.)" no?
-* [[устричный]] "oyster (attrib.)" no?
+* [[оконный]] "window" no? [can't find examples]
+* [[подготовительный]] "preparatory" no? [can't find examples]
+* [[охранный]] "guarding (attrib.), protection (attrib.)" no? [see the following, probably not a good example: [https://books.google.com/books?id=pGtKAAAAYAAJ&pg=PA92&dq=%D0%BE%D1%85%D1%80%D0%B0%D0%BD%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwi6pa32mPrMAhVI7yYKHTbWAN44FBDoAQhKMAc] ихъ наслѣдники какъ прямо и справедливо есть при всемъ томъ совершенно и непрестанно содержаны и охранны будутъ,]
+* [[аристократичный]] "aristocratic, grand" yes? [see [https://books.google.com/books?id=p4MoAQAAMAAJ&q=%D0%B0%D1%80%D0%B8%D1%81%D1%82%D0%BE%D0%BA%D1%80%D0%B0%D1%82%D0%B8%D1%87%D0%BD%D1%8B&dq=%D0%B0%D1%80%D0%B8%D1%81%D1%82%D0%BE%D0%BA%D1%80%D0%B0%D1%82%D0%B8%D1%87%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwi2-fCpmfrMAhXFeCYKHTcnBTsQ6AEIIzAB]: Западные народы — аристократичны, ибо пропитаны принципом индивидуализма. Они аристократичны, несмотря на все свои парламенты, да и демократизм их проявляется только в сфере политической, а в социальной жизни ...]
+* [[ипотечный]] "hypothecary, mortgage (attrib.)" no? [can't find examples]
+* [[устричный]] "oyster (attrib.)" no? [can't find examples]
+* [[прощальный]] "farewall (attrib.)" yes? [see [https://books.google.com/books?id=dQUpAQAAIAAJ&q=%D0%BF%D1%80%D0%BE%D1%89%D0%B0%D0%BB%D1%8C%D0%BD%D1%8B&dq=%D0%BF%D1%80%D0%BE%D1%89%D0%B0%D0%BB%D1%8C%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwjB5vqOm_rMAhUK2SYKHe_IABg4MhDoAQgbMAA]: Они исповедально чисты, овеяны легкой грустью, ибо по сути прощальны, и озарены надеждой. Из многоцветья жизни отобрано одно, творчество, но оно не противопоставлено жизни, поскольку само жизнью является, связка ...] [also from 1908: [https://books.google.com/books?id=2KdJAQAAMAAJ&pg=RA1-PA160&dq=%D0%BF%D1%80%D0%BE%D1%89%D0%B0%D0%BB%D1%8C%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwjXn5SSmvrMAhWJ6iYKHSp3A-E4ChDoAQhAMAU]: прощальныя слова Свѣта,–впрочемъ, они по существу не могутъ быть прощальны, такъ какъ Свѣтъ неугасимъ.]
+* [[фондовый]] "fund (attrib.)" no? [can't find examples]
+* [[развивающийся]] "developing" no? [can't find examples]
+* [[дочерный]] "daughter (attrib.); affiliated, branch (attrib.)" no? [can't find examples]
+* [[дальневосточный]] "Far East" no? [can't find examples]
+* [[выставочный]] "exhibition (attrib.)" yes? [see [https://books.google.com/books?id=fC0MAQAAMAAJ&q=%D0%B2%D1%8B%D1%81%D1%82%D0%B0%D0%B2%D0%BE%D1%87%D0%BD%D1%8B&dq=%D0%B2%D1%8B%D1%81%D1%82%D0%B0%D0%B2%D0%BE%D1%87%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwjAvNrwnfrMAhUI7yYKHa4FDlk4ChDoAQgbMAA]: документы (прежде всего это касается письменных источников) не менее зрелищны, эмоциональны и выставочны, чем музейные экспонаты (вещественные памятники, произведения изобразительного и прикладного искусства, ...]
+* [[радиолокационный]] "radar" no?
+* [[подпольный]] "underground" no? [currently yes]
+* [[табачный]] "tobacco (attrib.); (dial.) rotten" maybe? [currently no]
+* [[кленовый]] "maple (attrib.)" no?
+
+got as far back as Mar 23
 
 -------------------
 
@@ -487,3 +499,17 @@ missing-16000-16999.adjs.zorder, part 1
 * [[движущий]] "moving, driving, motive" no? [can't find examples]
 * [[пугающий]] "frightening" yes? [see [https://books.google.com/books?id=66GmwoMJiSMC&pg=PA443&dq=%D0%BF%D1%83%D0%B3%D0%B0%D1%8E%D1%89%D0%B8&hl=en&sa=X&ved=0ahUKEwjh57S9uvnMAhXD26YKHVHsARcQ6AEINDAD]: Я даже не знаю, как мне определить эти чувства, они настолько же странны, насколько пугающи.]
 * [[недостающий]] "missing, lacking" no? [can't find examples]
+
+
+missing-16000-16999.adjs.zorder, part 2
+
+
+* [[бежевый]] "beige" yes? [see [https://books.google.com/books?id=YqYXAQAAIAAJ&q=%D0%B1%D0%B5%D0%B6%D0%B5%D0%B2%D1%8B&dq=%D0%B1%D0%B5%D0%B6%D0%B5%D0%B2%D1%8B&hl=en&sa=X&ved=0ahUKEwj2lZPIrfvMAhXIlJQKHQmACpw4FBDoAQg5MAU]: Его ресницы бежевы, как штиблеты. ]
+* [[рейтинговый]] "rating (attrib.)" yes? [see [https://books.google.com/books?id=JQMsAQAAIAAJ&q=%D1%80%D0%B5%D0%B9%D1%82%D0%B8%D0%BD%D0%B3%D0%BE%D0%B2%D1%8B&dq=%D1%80%D0%B5%D0%B9%D1%82%D0%B8%D0%BD%D0%B3%D0%BE%D0%B2%D1%8B&hl=en&sa=X&ved=0ahUKEwjKn6HYrfvMAhXEYqYKHYncA9cQ6AEILDAC]: Рейтинговые программы кормят и себя, и нерейтинговые, и новостийные, которые в принципе рейтинговы, но очень дороги. ]
+* [[карликовый]] "midget, tiny" yes? [see [https://books.google.com/books?id=3ecZAQAAIAAJ&q=%D0%BA%D0%B0%D1%80%D0%BB%D0%B8%D0%BA%D0%BE%D0%B2%D1%8B&dq=%D0%BA%D0%B0%D1%80%D0%BB%D0%B8%D0%BA%D0%BE%D0%B2%D1%8B&hl=en&sa=X&ved=0ahUKEwiKvMqOrfvMAhWHKJQKHWb2C6oQ6AEISjAG]: Не такая уж я дурочка, чтобы не понять, насколько жизнь моих подружек старшего возраста была спокойна, а интересы — карликовы. ]
+* [[сверхновый]] "supernova (attrib.)" no?
+* [[жанровый]] "genre (attrib.)" no?
+* [[углеводородный]] "hydrocarbon (attrib.), hydrocarbonic" no?
+* [[трёхэтажный]] "three-story" yes?
+* [[гриппозный]] "influenza (attrib.), influenzal" no?
+* [[многослойный]] "mutilayered" yes? [see [https://books.google.com/books?id=xVwgAQAAMAAJ&q=%D0%BC%D0%BD%D0%BE%D0%B3%D0%BE%D1%81%D0%BB%D0%BE%D0%B9%D0%BD%D1%8B&dq=%D0%BC%D0%BD%D0%BE%D0%B3%D0%BE%D1%81%D0%BB%D0%BE%D0%B9%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwi5y_SF3fvMAhVG32MKHUeUAVIQ6AEIKTAC]: В то же время реальные геологические реды существенно многослойны. ]
