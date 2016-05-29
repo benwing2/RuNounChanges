@@ -514,3 +514,33 @@ missing-16000-16999.adjs.zorder, part 2
 * [[гриппозный]] "influenza (attrib.), influenzal" no? [can't find examples]
 * [[многослойный]] "mutilayered" yes? [see [https://books.google.com/books?id=xVwgAQAAMAAJ&q=%D0%BC%D0%BD%D0%BE%D0%B3%D0%BE%D1%81%D0%BB%D0%BE%D0%B9%D0%BD%D1%8B&dq=%D0%BC%D0%BD%D0%BE%D0%B3%D0%BE%D1%81%D0%BB%D0%BE%D0%B9%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwi5y_SF3fvMAhVG32MKHUeUAVIQ6AEIKTAC]: В то же время реальные геологические реды существенно многослойны. ]
 * [[средиземный]] "Mediterranean; inland" no? [can't find examples]
+
+
+missing-16000-16999.adjs.zorder, part 3
+
+
+* [[барабанный]] "drum (attrib.)" maybe? [see [https://books.google.com/books?id=kBQtAAAAIAAJ&q=%D0%B1%D0%B0%D1%80%D0%B0%D0%B1%D0%B0%D0%BD%D0%BD%D1%8B&dq=%D0%B1%D0%B0%D1%80%D0%B0%D0%B1%D0%B0%D0%BD%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwiJx-W6xfzMAhUDQiYKHXf4AHI4HhDoAQhQMAg]: Стихи, напечатанные в сборнике, частью вовсе плохи, барабанны (например стихи Александра Полякова), частью не возвышаются над уровнем посредственности и лишены своего поэтического восприятия жизни, своей окраски.]
+* [[лесохозяственный]] "forestry (attrib.)" no? [can't find examples, claimed to be a*,a(1)]
+* [[приветственный]] "welcoming" yes? [see [https://books.google.com/books?id=MjbSCwAAQBAJ&pg=PT183&dq=%D0%BF%D1%80%D0%B8%D0%B2%D0%B5%D1%82%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwjR_PWExPzMAhVkzIMKHfhNDScQ6AEIKzAC]: Мы вошли в хозяйский дом уже полон друзей левых взглядов, для которых иронические улыбочки были не приветственны, поскольку нападать на СССР и Россию не очень ...]
+* [[минный]] "mine (attrib.)" no? [can't find examples, swamped by proper names; claimed to be a*]
+* [[вакцинный]] "vaccine (attrib.)" no? [can't find examples; claimed to be a*]
+* [[многомиллионный]] "multimillion" yes? [see [https://books.google.com/books?id=p5eHTKyMqwwC&q=%D0%BC%D0%BD%D0%BE%D0%B3%D0%BE%D0%BC%D0%B8%D0%BB%D0%BB%D0%B8%D0%BE%D0%BD%D0%BD%D1%8B&dq=%D0%BC%D0%BD%D0%BE%D0%B3%D0%BE%D0%BC%D0%B8%D0%BB%D0%BB%D0%B8%D0%BE%D0%BD%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwjdv6zz0PzMAhXG5CYKHezzB1AQ6AEIKjAC]: который причиняют лесные пожары; во всяком случае, ежегодные убытки от лесных пожаров многомиллионны.]
+* [[навигационный]] "navigation (attrib.), navigational" no? [can't find examples]
+* [[экспедиционный]] "expedition (attrib.), expeditionary" no? [can't find examples]
+* [[композиционный]] "composition (attrib.)" no?
+* [[бронный]] "armor (attrib.)" no?
+* [[радиоэлектронный]] "radio-electronics (attrib.)" no?
+* [[железобетонный]] "reinforced concrete (attrib.)" no?
+* [[озёрный]] "lake (attrib.)" no?
+* [[якорный]] "anchor (attrib.)" no?
+* [[номенклатурный]] "nomenclature (attrib.); nomenklatura (attrib.)" no?
+* [[ветхозаветный]] "Old Testament (attrib.)" no?
+* [[вертолётный]] "helicopter (attrib.)" no?
+* [[десантный]] "landing (mil., attrib.); assault (mil., attrib.)" no?
+* [[двухместный]] "two-person" no?
+* [[перекрёсный]] "cross-" yes? [see [https://books.google.com/books?id=AtRjBAAAQBAJ&pg=PA53&dq=%D0%BF%D0%B5%D1%80%D0%B5%D0%BA%D1%80%D1%91%D1%81%D1%82%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwiP14maqv7MAhVK9WMKHViDA_AQ6AEIJDAB]: Движения рук и ног в ходьбе строго перекрёстны . ]
+* [[подсолнечный]] "sunflower (attrib.)" no?
+* [[библиотечный]] "library (attrib.)" no?
+* [[аптечный]] "drug (attrib.), drug (attrib.)" no?
+* [[фабричный]] "factory (attrib.), factory-made" no? maybe?
+* [[яичный]] "egg (attrib.)" no?
