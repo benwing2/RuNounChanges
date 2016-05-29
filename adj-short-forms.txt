@@ -527,20 +527,20 @@ missing-16000-16999.adjs.zorder, part 3
 * [[многомиллионный]] "multimillion" yes? [see [https://books.google.com/books?id=p5eHTKyMqwwC&q=%D0%BC%D0%BD%D0%BE%D0%B3%D0%BE%D0%BC%D0%B8%D0%BB%D0%BB%D0%B8%D0%BE%D0%BD%D0%BD%D1%8B&dq=%D0%BC%D0%BD%D0%BE%D0%B3%D0%BE%D0%BC%D0%B8%D0%BB%D0%BB%D0%B8%D0%BE%D0%BD%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwjdv6zz0PzMAhXG5CYKHezzB1AQ6AEIKjAC]: который причиняют лесные пожары; во всяком случае, ежегодные убытки от лесных пожаров многомиллионны.]
 * [[навигационный]] "navigation (attrib.), navigational" no? [can't find examples]
 * [[экспедиционный]] "expedition (attrib.), expeditionary" no? [can't find examples]
-* [[композиционный]] "composition (attrib.)" no?
-* [[бронный]] "armor (attrib.)" no?
-* [[радиоэлектронный]] "radio-electronics (attrib.)" no?
-* [[железобетонный]] "reinforced concrete (attrib.)" no?
-* [[озёрный]] "lake (attrib.)" no?
-* [[якорный]] "anchor (attrib.)" no?
-* [[номенклатурный]] "nomenclature (attrib.); nomenklatura (attrib.)" no?
-* [[ветхозаветный]] "Old Testament (attrib.)" no?
-* [[вертолётный]] "helicopter (attrib.)" no?
-* [[десантный]] "landing (mil., attrib.); assault (mil., attrib.)" no?
-* [[двухместный]] "two-person" no?
+* [[композиционный]] "composition (attrib.); compositional" yes? [see [https://books.google.com/books?id=rO_uAAAAMAAJ&q=%D0%BA%D0%BE%D0%BC%D0%BF%D0%BE%D0%B7%D0%B8%D1%86%D0%B8%D0%BE%D0%BD%D0%BD%D1%8B&dq=%D0%BA%D0%BE%D0%BC%D0%BF%D0%BE%D0%B7%D0%B8%D1%86%D0%B8%D0%BE%D0%BD%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwjdyomJ2v7MAhXBLSYKHSbUDa4Q6AEIHzAA]: Тогда, если формация 5 п-кратно композиционна (тотально композиционна), то формации ЯЛ и й п-кратно композиционны (соответственно, тотально композиционны)]
+* [[бронный]] "armor (attrib.)" no? [can't find examples]
+* [[радиоэлектронный]] "radio-electronics (attrib.)" no? [can't find examples]
+* [[железобетонный]] "reinforced concrete (attrib.)" yes? [see [https://books.google.com/books?id=oXaDAQAAQBAJ&pg=PT70&dq=%D0%B6%D0%B5%D0%BB%D0%B5%D0%B7%D0%BE%D0%B1%D0%B5%D1%82%D0%BE%D0%BD%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwiUgMnN2_7MAhVHeSYKHZYyB84Q6AEIKDAC]: Бредовые идеи непоколебимы, железобетонны, они абсолютно не поддаются коррекции либо переубеждению]
+* [[озёрный]] "lake (attrib.)" no? [can't find examples, swamped by proper names]
+* [[якорный]] "anchor (attrib.)" no? [can't find examples]
+* [[номенклатурный]] "nomenclature (attrib.); nomenklatura (attrib.)" yes? [see [https://books.google.com/books?id=eAorqXQeb2kC&pg=PT56&dq=%D0%BD%D0%BE%D0%BC%D0%B5%D0%BD%D0%BA%D0%BB%D0%B0%D1%82%D1%83%D1%80%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwiJzIGO3f7MAhUFziYKHQUOB6UQ6AEIPzAF]: Когда партноменклатура (в широком смысле этого слова, ибо завкафедрой политэкономии и главный режиссер театра более «номенклатурны», чем, скажем, инструктор райкома) открыто взбунтовалась против партмаксимума, ] [also see [https://books.google.com/books?id=YG88AAAAIAAJ&q=%D0%BD%D0%BE%D0%BC%D0%B5%D0%BD%D0%BA%D0%BB%D0%B0%D1%82%D1%83%D1%80%D0%BD%D1%8B&dq=%D0%BD%D0%BE%D0%BC%D0%B5%D0%BD%D0%BA%D0%BB%D0%B0%D1%82%D1%83%D1%80%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwibyIDB3f7MAhXJSyYKHQAMDao4ChDoAQgxMAM]: во-первых, они не понятны, чтобы соотноситься с понятиями; во-вторых, они уже номенклатурны, что исключает нарицательность]
+* [[ветхозаветный]] "Old Testament (attrib.)" yes? [see [https://books.google.com/books?id=BVo4AQAAIAAJ&q=%D0%B2%D0%B5%D1%82%D1%85%D0%BE%D0%B7%D0%B0%D0%B2%D0%B5%D1%82%D0%BD%D1%8B&dq=%D0%B2%D0%B5%D1%82%D1%85%D0%BE%D0%B7%D0%B0%D0%B2%D0%B5%D1%82%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwiWovav3v7MAhWMOCYKHc2yDbQ4ChDoAQgpMAI]: Ока и Москва были древни, ветхозаветны: реки, небо, пески, сосны, болота, ржаные поля, —]
+* [[вертолётный]] "helicopter (attrib.)" no? [can't find examples]
+* [[десантный]] "landing (mil., attrib.); assault (mil., attrib.)" no? [can't find examples]
+* [[двухместный]] "two-person" yes? [see [https://books.google.com/books?id=AVCLAQAAQBAJ&pg=PA418&dq=%D0%B4%D0%B2%D1%83%D1%85%D0%BC%D0%B5%D1%81%D1%82%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwisvv3R3_7MAhVJbSYKHT1ZAyIQ6AEIHjAA]: С другой стороны, экспериенциальные состояния, по существу, двухместны, то есть являются отношениями:] [also see [https://books.google.com/books?id=iuUbAQAAIAAJ&q=%D0%B4%D0%B2%D1%83%D1%85%D0%BC%D0%B5%D1%81%D1%82%D0%BD%D1%8B&dq=%D0%B4%D0%B2%D1%83%D1%85%D0%BC%D0%B5%D1%81%D1%82%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwisvv3R3_7MAhVJbSYKHT1ZAyIQ6AEILTAC]: Подобно операторам, лежащим в основе внутренней модальной рамки, они также двухместны.]
 * [[перекрёсный]] "cross-" yes? [see [https://books.google.com/books?id=AtRjBAAAQBAJ&pg=PA53&dq=%D0%BF%D0%B5%D1%80%D0%B5%D0%BA%D1%80%D1%91%D1%81%D1%82%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwiP14maqv7MAhVK9WMKHViDA_AQ6AEIJDAB]: Движения рук и ног в ходьбе строго перекрёстны . ]
-* [[подсолнечный]] "sunflower (attrib.)" no?
-* [[библиотечный]] "library (attrib.)" no?
-* [[аптечный]] "drug (attrib.), drug (attrib.)" no?
-* [[фабричный]] "factory (attrib.), factory-made" no? maybe?
-* [[яичный]] "egg (attrib.)" no?
+* [[подсолнечный]] "sunflower (attrib.)" no? [can't find examples]
+* [[библиотечный]] "library (attrib.)" no? [can't find examples]
+* [[аптечный]] "drug (attrib.), drug (attrib.)" no? [can't find examples]
+* [[фабричный]] "factory (attrib.), factory-made" yes? [see [https://books.google.com/books?id=3MQXAQAAIAAJ&q=%D1%84%D0%B0%D0%B1%D1%80%D0%B8%D1%87%D0%BD%D1%8B&dq=%D1%84%D0%B0%D0%B1%D1%80%D0%B8%D1%87%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwjw37mf4v7MAhWK7iYKHbv9BhQ4FBDoAQhdMAk]:  Мы — деревенские... Мы не фабричны!] [also see [https://books.google.com/books?id=mV9gAAAAMAAJ&q=%D1%84%D0%B0%D0%B1%D1%80%D0%B8%D1%87%D0%BD%D1%8B&dq=%D1%84%D0%B0%D0%B1%D1%80%D0%B8%D1%87%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwj68e754v7MAhWFTCYKHSo8BIQ4RhDoAQg6MAU]: Это для меня составляет тоже удовольствие. Продажа вин незначительна, и денег получать приходится немного, потому что вино дорогое, а публика — простонародье, все больше фабричны, такие, как мы, Гришки да Мишки, ...]
+* [[яичный]] "egg (attrib.)" yes? [see from 1810: [https://books.google.com/books?id=TG9mAAAAcAAJ&pg=PA359&dq=%D1%8F%D0%B8%D1%87%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwiz06Cf4_7MAhUJLSYKHaWYC-sQ6AEIUjAJ]: Онѣ больше яичны, нежели остроконечны, сидятѣ по сторонамъ вѣтьвей, на изогнутыхъ черешкахъ, и растутъ прямо вверьхъ.]
