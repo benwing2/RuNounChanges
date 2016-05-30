@@ -544,3 +544,17 @@ missing-16000-16999.adjs.zorder, part 3
 * [[аптечный]] "drug (attrib.), drug (attrib.)" no? [can't find examples]
 * [[фабричный]] "factory (attrib.), factory-made" yes? [see [https://books.google.com/books?id=3MQXAQAAIAAJ&q=%D1%84%D0%B0%D0%B1%D1%80%D0%B8%D1%87%D0%BD%D1%8B&dq=%D1%84%D0%B0%D0%B1%D1%80%D0%B8%D1%87%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwjw37mf4v7MAhWK7iYKHbv9BhQ4FBDoAQhdMAk]:  Мы — деревенские... Мы не фабричны!] [also see [https://books.google.com/books?id=mV9gAAAAMAAJ&q=%D1%84%D0%B0%D0%B1%D1%80%D0%B8%D1%87%D0%BD%D1%8B&dq=%D1%84%D0%B0%D0%B1%D1%80%D0%B8%D1%87%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwj68e754v7MAhWFTCYKHSo8BIQ4RhDoAQg6MAU]: Это для меня составляет тоже удовольствие. Продажа вин незначительна, и денег получать приходится немного, потому что вино дорогое, а публика — простонародье, все больше фабричны, такие, как мы, Гришки да Мишки, ...]
 * [[яичный]] "egg (attrib.)" yes? [see from 1810: [https://books.google.com/books?id=TG9mAAAAcAAJ&pg=PA359&dq=%D1%8F%D0%B8%D1%87%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwiz06Cf4_7MAhUJLSYKHaWYC-sQ6AEIUjAJ]: Онѣ больше яичны, нежели остроконечны, сидятѣ по сторонамъ вѣтьвей, на изогнутыхъ черешкахъ, и растутъ прямо вверьхъ.]
+
+missing-16000-16999.adjs.zorder, part 4
+
+* [[проволочный]] "wire (attrib.)" no? [can't find examples]
+* [[сточный]] "drainage (attrib.)" yes? [see [https://books.google.com/books?id=0hwjAQAAIAAJ&q=%D1%81%D1%82%D0%BE%D1%87%D0%BD%D1%8B&dq=%D1%81%D1%82%D0%BE%D1%87%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwjs_IuXmYHNAhUKOSYKHTVEBko4KBDoAQg0MAQ]: В зависимости от указанных различий в одних районах озера бессточны, в других же — сточны. Определение критической величины ...]
+* [[северо-восто́чный]] "northeast" no? [can't find examples]
+* [[епархиальный]] "diocese (attrib.), diocesal" no? [can't find examples]
+* [[кафедральный]] "cathedral (attrib.)" no? [can't find examples]
+* [[сакральный]] "sacral" yes? [see [https://books.google.com/books?id=quAoAQAAIAAJ&q=%D1%81%D0%B0%D0%BA%D1%80%D0%B0%D0%BB%D1%8C%D0%BD%D1%8B&dq=%D1%81%D0%B0%D0%BA%D1%80%D0%B0%D0%BB%D1%8C%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwjnk8HDmoHNAhXDKCYKHXxaBbIQ6AEIMjAD]: Уже не могли не замечать их тупости, их невежества, свинства — но эти животные были сакральны, как ...]
+* [[ортодоксальный]] "orthodox" yes? [see [https://books.google.com/books?id=Lt04AQAAIAAJ&q=%D0%BE%D1%80%D1%82%D0%BE%D0%B4%D0%BE%D0%BA%D1%81%D0%B0%D0%BB%D1%8C%D0%BD%D1%8B&dq=%D0%BE%D1%80%D1%82%D0%BE%D0%B4%D0%BE%D0%BA%D1%81%D0%B0%D0%BB%D1%8C%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwjC5_TjmoHNAhXH5iYKHW7ZDnMQ6AEIQDAF]: Барменские проповедники мало чем отличаются друг от друга: все строго ортодоксальны, с большей или меньшей примесью пиетизма. ]
+* [[распредельтеильный]] "distribution (attrib.), distributive" no? [can't find examples]
+* [[холодильный]] "refrigeration (attrib.), refrigerating" no? [can't find examples]
+* [[баскетбольный]] "basketball (attrib.)" no? [can't find examples]
+* [[курносый]] "pug-nosed" yes? [see [https://books.google.com/books?id=SUdKnVFSPywC&pg=PA271&dq=%D0%BA%D1%83%D1%80%D0%BD%D0%BE%D1%81%D1%8B&hl=en&sa=X&ved=0ahUKEwiYsKH7oIHNAhWGVyYKHXZXCM4Q6AEIMjAD]: Эфиопы говорят, что их боги курносы и черны, фракийцы же представляют своих богов голубоглазыми и рыжеватыми. ]
