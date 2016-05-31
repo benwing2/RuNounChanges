@@ -558,3 +558,22 @@ missing-16000-16999.adjs.zorder, part 4
 * [[холодильный]] "refrigeration (attrib.), refrigerating" no? [can't find examples]
 * [[баскетбольный]] "basketball (attrib.)" no? [can't find examples]
 * [[курносый]] "pug-nosed" yes? [see [https://books.google.com/books?id=SUdKnVFSPywC&pg=PA271&dq=%D0%BA%D1%83%D1%80%D0%BD%D0%BE%D1%81%D1%8B&hl=en&sa=X&ved=0ahUKEwiYsKH7oIHNAhWGVyYKHXZXCM4Q6AEIMjAD]: Эфиопы говорят, что их боги курносы и черны, фракийцы же представляют своих богов голубоглазыми и рыжеватыми. ]
+
+
+
+------------------------
+
+missing-17000-17999.adjs.zorder, part 1
+
+
+
+* [[экий]] "what a ..." no? [too much interference to find possible short forms]
+* [[малюсенький]] "tiny" yes? [see [https://books.google.com/books?id=GZZKAQAAIAAJ&q=%D0%BC%D0%B0%D0%BB%D1%8E%D1%81%D0%B5%D0%BD%D0%B5%D0%BA&dq=%D0%BC%D0%B0%D0%BB%D1%8E%D1%81%D0%B5%D0%BD%D0%B5%D0%BA&hl=en&sa=X&ved=0ahUKEwiqlM3WjYPNAhXh5IMKHe9uDhwQ6AEIHDAA]: Когда птенец вылупляется из яйца, в гнезде он еще мал-малюсенек, и лететь не может. И пищи необходимой добыть не может.]
+* [[ползучий]] "creeping" yes? [see [https://books.google.com/books?id=Ude0AAAAQBAJ&pg=PT128&dq=%D0%BF%D0%BE%D0%BB%D0%B7%D1%83%D1%87%D0%B8&hl=en&sa=X&ved=0ahUKEwjr49PvkoPNAhWrxYMKHWPmCdA4ChDoAQgbMAA#v=onepage&q=%D0%BF%D0%BE%D0%BB%D0%B7%D1%83%D1%87%D0%B8&f=false]: Границы самих государств, надо добавить, несколько ползучи и поддаются некоторой коррекции со стороны других государств — других участков мозга. ]
+* [[ситцевый]] "chintz (attrib.)" no? [can't find examples]
+* [[кодовый]] "code (attrib.)" no? [can't find examples]
+* [[цинковый]] "zinc (attrib.)" no? [can't find examples]
+* [[промысловый]] "commercial" no? [can't find examples]
+* [[двухметровый]] "two-meter" no? [can't find examples]
+* [[джинсовый]] "jeans (attrib.), denim (attrib.)" no? [can't find examples]
+* [[пуховый]] "down (attrib.), downy" no? [can't find examples]
