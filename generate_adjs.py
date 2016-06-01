@@ -10,6 +10,8 @@ parser = argparse.ArgumentParser(description="Generate adjective stubs.")
 parser.add_argument('--direcfile', help="File containing directives.")
 parser.add_argument('--adverb', action="store_true",
     help="Directive file contains adverbs instead of adjectives.")
+parser.add_argument('--noun', action="store_true",
+    help="Directive file contains nouns instead of adjectives.")
 args = parser.parse_args()
 
 def check_stress(word):
@@ -21,27 +23,40 @@ def check_stress(word):
     msg("Word %s missing an accent" % word)
     assert False
 
+# Form for adjectives and nouns:
+#
+# TERM ETYM DECL DEF ...
+#
+# where DECL can have ... to represent position of term in it (otherwise,
+# the declension is placed after the term, separated by a vertical bar).
+# (For adjectives, DECL is used for the short adjective declension.)
+#
+# Form for adverbs:
+#
+# TERM ETYM DEF ...
+
 for line in codecs.open(args.direcfile, "r", "utf-8"):
   line = line.strip()
   els = re.split(r"\s+", line)
   isadv = args.adverb
-  # Replace _ with space, but not in the short form, where there may be
+  isnoun = args.noun
+  # Replace _ with space, but not in the declension, where there may be
   # an underscore, e.g. a|short_m=-
   els = [el if i == 2 and not isadv else el.replace("_", " ") for i, el in enumerate(els)]
   if isadv:
     term, etym, defns = els[0], els[1], els[2]
     remainder = els[3:]
   else:
-    term, etym, short, defns = els[0], els[1], els[2], els[3]
-    if short.startswith("?"):
-      msg("Short adjective declension starts with ?, need to fix: %s" % short)
+    term, etym, decl, defns = els[0], els[1], els[2], els[3]
+    if decl.startswith("?"):
+      msg("Declension starts with ?, need to fix: %s" % decl)
       assert False
     remainder = els[4:]
   translit = None
   declterm = term
   if "//" in term:
     term, translit = re.split("//", term)
-  if not isadv:
+  if not isadv and not isnoun:
     assert re.search(u"(ый|ий|о́й)$", term)
   trtext = translit and "|tr=" + translit or ""
   check_stress(term)
@@ -71,12 +86,13 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
 
   # Create declension
   if not isadv:
-    short = re.sub(r"\?.*$", "", short) # eliminate uncertainty notations
-    if short == "-":
-      shorttext = ""
+    decl = decl.replace("?", "") # eliminate uncertainty notations
+    if decl == "-":
+      decltext = declterm
+    elif "..." in decl:
+      decltext = decl.replace("...", declterm)
     else:
-      shorttext = "|%s" % short
-    decltext = "{{ru-decl-adj|%s%s}}" % (declterm, shorttext)
+      decltext = "%s|%s" % (declterm, decl)
 
   # Create definition
   defnlines = []
@@ -267,13 +283,22 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
 
 %s
 """ % (term, trtext, defntext)
+  elif isnoun:
+    maintext = """===Noun===
+{{ru-noun+|%s}}
+
+%s
+====Declension====
+{{ru-noun-table|%s}}
+
+""" % (decltext, defntext, decltext)
   else:
     maintext = """===Adjective===
 {{ru-adj|%s%s%s}}
 
 %s
 ====Declension====
-%s
+{{ru-decl-adj|%s}}
 
 """ % (term, trtext, comptext, defntext, decltext)
   if defns == "--":
