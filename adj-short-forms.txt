@@ -586,3 +586,4 @@ missing-17000-17999.adjs.zorder, part 2
 * [[каждодневный]] "everyday" yes? [see [https://books.google.com/books?id=tYxMAAAAMAAJ&q=%D0%BA%D0%B0%D0%B6%D0%B4%D0%BE%D0%B4%D0%BD%D0%B5%D0%B2%D0%BD%D1%8B&dq=%D0%BA%D0%B0%D0%B6%D0%B4%D0%BE%D0%B4%D0%BD%D0%B5%D0%B2%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwjKqbyct4PNAhUE_4MKHS7GA7EQ6AEIHzAA]: Грузия — это как бы страна без будней, пение и лоза здесь каждодневны, как каждодневны и убранство, соцветие нарядов, соцветие жизни.]
 * [[уездный]] "district (attrib.)" yes? [see [https://books.google.com/books?id=wrdHAQAAIAAJ&q=%D1%83%D0%B5%D0%B7%D0%B4%D0%BD%D1%8B&dq=%D1%83%D0%B5%D0%B7%D0%B4%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwjAg4yVvYPNAhXo24MKHWfTDVo4ChDoAQg7MAU]: Все ясно каждому. Детали даже не национальны, а локальны (почти уездны).]
 * [[надводный]] "surface (attrib.)" no? [can't find examples]
+* [[вакуумный]] "vacuum (attrib.)" no? [can't find examples]
