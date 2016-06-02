@@ -8,6 +8,8 @@ import rulib
 
 parser = argparse.ArgumentParser(description="Generate adjective stubs.")
 parser.add_argument('--direcfile', help="File containing directives.")
+parser.add_argument('--pos', action="store_true",
+    help="First field is part of speech (n, adj, adv).")
 parser.add_argument('--adverb', action="store_true",
     help="Directive file contains adverbs instead of adjectives.")
 parser.add_argument('--noun', action="store_true",
@@ -38,12 +40,21 @@ def check_stress(word):
 for line in codecs.open(args.direcfile, "r", "utf-8"):
   line = line.strip()
   els = re.split(r"\s+", line)
-  isadv = args.adverb
-  isnoun = args.noun
+  if args.pos:
+    pos = els[0]
+    assert pos in ["n", "adj", "adv"]
+    del els[0]
+  else:
+    if args.adverb:
+      pos = "adv"
+    elif args.noun:
+      pos = "n"
+    else:
+      pos = "adj"
   # Replace _ with space, but not in the declension, where there may be
   # an underscore, e.g. a|short_m=-
-  els = [el if i == 2 and not isadv else el.replace("_", " ") for i, el in enumerate(els)]
-  if isadv:
+  els = [el if i == 2 and pos != "adv" else el.replace("_", " ") for i, el in enumerate(els)]
+  if pos == "adv":
     term, etym, defns = els[0], els[1], els[2]
     remainder = els[3:]
   else:
@@ -56,7 +67,7 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
   declterm = term
   if "//" in term:
     term, translit = re.split("//", term)
-  if not isadv and not isnoun:
+  if pos == "adj":
     assert re.search(u"(ый|ий|о́й)$", term)
   trtext = translit and "|tr=" + translit or ""
   check_stress(term)
@@ -85,7 +96,7 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
         "|".join(re.split(r"\+", etym)), langtext, suffix)
 
   # Create declension
-  if not isadv:
+  if pos != "adv":
     decl = decl.replace("?", "") # eliminate uncertainty notations
     if decl == "-":
       decltext = declterm
@@ -145,8 +156,11 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
         defnline = "{{alternative form of|lang=ru|%s}}" % (
             re.sub("^altof:", "", defn))
       elif defn.startswith("dim:"):
-        defnline = "{{diminutive of|lang=ru|%s}}" % (
-            re.sub("^dim:", "", defn))
+        dimparts = re.split(":", defn)
+        assert len(dimparts) in [2, 3]
+        defnline = "{{diminutive of|lang=ru|%s}}" % dimparts[1]
+        if len(dimparts) == 3:
+          defnline = "%s: %s" % (defnline, dimparts[2])
       else:
         defnline = defn.replace(",", ", ")
       defnlines.append("# %s%s\n" % (prefix, defnline))
@@ -277,13 +291,13 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
         else:
           seetext = derrelguts
 
-  if isadv:
+  if pos == "adv":
     maintext = """===Adverb===
 {{ru-adv|%s%s}}
 
 %s
 """ % (term, trtext, defntext)
-  elif isnoun:
+  elif pos == "n":
     maintext = """===Noun===
 {{ru-noun+|%s}}
 
