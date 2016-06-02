@@ -314,41 +314,89 @@ Short forms {{lang|ru|быва́л, быва́ла, быва́ло, быва́л
 
 [[ru:несостоявшийся]]
 
-непосе́да ? a=an|g=m|g2=f ?
-вы́рубка
-экосистема
-катюша
-вмиг
-наугад
-штатское
-угрожающе
-враз
-траги́чески траги́ческий+-и
-юриди́чески юриди́ческий+-и
-механи́чески механи́ческий+-и
-крити́чески крити́ческий+-и
-скепти́чески скепти́ческий+-и [[skeptically]];-
+n непосе́да ?не-+по-+сесть+alt3=сед-+-а a=an|g=m|g2=f [[fidgety]]_[[person]],[[fidget]];-
+n вы́рубка вы́рубить+-ка - [[cut_down|cutting_down]];[[glade]],[[clearing]];- rel:вы́рубок,FIXME
+n экосисте́ма - - [[ecosystem]];-
+n катю́ша - - [[Katyusha]];-
+
+===Etymology===
+From {{m|ru|Катю́ша}}, diminutive of {{m|ru|Ка́тя||[[Katya]]}}, in turn diminutive of {{m|ru|Екатери́на||[[Katherine]]}}.
+
+adv вмиг в+миг (c)[[very]]_[[quickly]];[[immediately]];-
+adv науга́д - [[at_random]];-
+adj шта́тский штат+-ский - [[civilian]];- rel:штат der:шта́тское
+
+===Noun===
+{{ru-noun+|шта́тский|+|a=an}}
+
+# [[civilian]]
+
+====Declension====
+{{ru-noun-table|шта́тский|+|a=an}}
+
+n шта́тское - [[civilian]]_[[clothing]];- rel:шта́тский,штат
+
+===Etymology===
+Substantivized neuter of {{m|ru|шта́тский}}.
+
+угрожа́ющий -- a [[threatening]];- part:угрожа́ть:pres|act|impfv:-
+угрожа́юще угрожа́ющий+-е [[threateningly]];-
+враз в+раз (c)[[together]],[[simultaneously]];[[immediately]],[[at_once]];- syn:*(simultaneously)ра́зом;*(immediately)сра́зу
+adv траги́чески траги́ческий+-и [[tragically]];-
+adv юриди́чески юриди́ческий+-и [[legally]],[[juridically]],[[de_jure]];-
+adv механи́чески механи́ческий+-и [[mechanically]];-
+adv крити́чески крити́ческий+-и [[critically]];-
+adv скепти́чески скепти́ческий+-и [[skeptically]];-
 э́дак
 [don't use] ры́жик ? - ?
 [don't use] ры́жик ? a=an ?
 ник
 м-м
 мимоходом
-всего́-на́всего pron:всего̀-на́всего
-лего́нько
-укоризненно
+adv всего́-на́всего pron:всего̀-на́всего
+adv лего́нько лег+alt1=лег(ко́)+-о́нько dim:легко́:very_[[slightly]],_very_[[lightly]];-
+adj укори́зненный укори́зна+-енный a(1) [[reproachful]],[[disapproving]];- comp:укори́зненнее
+adv укори́зненно укори́зненный+-о [[reproachfully]],[[disapprovingly]];-
+возмущенный
+
+==Russian==
+
+===Participle===
+{{ru-pos-alt-ё|возмущённый|participle}}
+
+===Adjective===
+{{ru-adj-alt-ё|возмущённый}}
+
+[don't use] возмущённый -- b(2) [[outraged]],[[perturbed]]_{{i|towards_someone}};- part:возмути́ть:past|pass|pfv:b(2) rel:возмуща́ть/возмути́ть,возмуща́ться/возмути́ться,возмуще́ние,возмути́тельный:возмути́тельно,невозмути́мый
+[don't use] возмущённый -- a(1) [[angry]],[[indignant]]_{{i|look,_appearance,_etc.}};- part:возмути́ть:past|pass|pfv:b(2)
 возмущенно
-собственноручно
-ежемесячно
-мечта́тельно
-пронзи́тельно
-наяву
-по-хорошему
-наспех
-вконец
-настежь
-милая
-картогра́фия
+
+==Russian==
+
+===Adverb===
+{{ru-pos-alt-ё|возмущённо|adverb}}
+
+adv возмущённо возмущённый+-о [[indignantly]];-
+adv собственнору́чно собственнору́чный+-о with_one's_own_[[hand]];-
+adv ежеме́сячно ежеме́сячный+-о [[monthly]];-
+adj мечта́тельный мечта́ть+-тельный a* [[dreamy]];- comp:мечта́тельнее
+adv мечта́тельно мечта́тельный+-о [[dreamily]];-
+adv пронзи́тельно пронзи́тельный+-о [[stridently]];- rel:пронза́ть/пронзи́ть
+adv наяву́ - in_[[real_life]],not_in_a_[[dream]];-
+
+===Etymology===
+Constructed as if from {{affix|ru|на|ява|alt2=яву́}}, from {{lang|ru|*ява́}} (compare {{cog|uk|ява́||[[reality]]}}, and {{cog|ru|явь}} with the same meaning).
+
+adv по-хоро́шему по+хороший+alt2=хоро́шему [[properly]];[[thoroughly]];-
+adv на́спех на+спех+t2=[[hurry]] [[hurriedly]];-
+adv вконе́ц в+коне́ц [[entirely]],[[completely]],[[absolutely]];-
+adv на́стежь на+стежь+t2=[[road]],_[[path]] [[wide_open]];-
+n ми́лая - +|a=an [[sweetheart]],[[darling]];-
+
+===Etymology===
+Substantivized feminine of {{m|ru|ми́лый}}.
+
+n картогра́фия ?fr:cartographie+cartograph(ie)+-ия - [[cartography]];-
 разро́знить - pf разро́знивать 4a+p rel:рознь:ро́зно der:разро́зненный
 
 ===Etymology===
