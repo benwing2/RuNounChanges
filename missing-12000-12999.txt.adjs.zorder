@@ -334,14 +334,10 @@ adj шта́тский штат+-ский - [[civilian]];- rel:штат der:шт
 ====Declension====
 {{ru-noun-table|шта́тский|+|a=an}}
 
-n шта́тское - [[civilian]]_[[clothing]];- rel:шта́тский,штат
-
-===Etymology===
-Substantivized neuter of {{m|ru|шта́тский}}.
-
-угрожа́ющий -- a [[threatening]];- part:угрожа́ть:pres|act|impfv:-
-угрожа́юще угрожа́ющий+-е [[threateningly]];-
-враз в+раз (c)[[together]],[[simultaneously]];[[immediately]],[[at_once]];- syn:*(simultaneously)ра́зом;*(immediately)сра́зу
+n шта́тское sn:шта́тский [[civilian]]_[[clothing]];- rel:шта́тский,штат
+adj угрожа́ющий -- a [[threatening]];- part:угрожа́ть:pres|act|impfv:-
+adv угрожа́юще угрожа́ющий+-е [[threateningly]];-
+adv враз в+раз (c)[[together]],[[simultaneously]];[[immediately]],[[at_once]];- syn:*(simultaneously)ра́зом;*(immediately)сра́зу
 adv траги́чески траги́ческий+-и [[tragically]];-
 adv юриди́чески юриди́ческий+-и [[legally]],[[juridically]],[[de_jure]];-
 adv механи́чески механи́ческий+-и [[mechanically]];-
@@ -391,11 +387,7 @@ adv по-хоро́шему по+хороший+alt2=хоро́шему [[proper
 adv на́спех на+спех+t2=[[hurry]] [[hurriedly]];-
 adv вконе́ц в+коне́ц [[entirely]],[[completely]],[[absolutely]];-
 adv на́стежь на+стежь+t2=[[road]],_[[path]] [[wide_open]];-
-n ми́лая - +|a=an [[sweetheart]],[[darling]];-
-
-===Etymology===
-Substantivized feminine of {{m|ru|ми́лый}}.
-
+n ми́лая sf:ми́лый +|a=an [[sweetheart]],[[darling]];-
 n картогра́фия ?fr:cartographie+cartograph(ie)+-ия - [[cartography]];-
 разро́знить - pf разро́знивать 4a+p rel:рознь:ро́зно der:разро́зненный
 
