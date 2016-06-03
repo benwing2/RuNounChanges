@@ -76,24 +76,31 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
   elif etym == "--":
     etymtext = ""
   else:
-    prefix = ""
-    suffix = ""
-    if etym.startswith("?"):
-      prefix = "Perhaps from "
-      suffix = "."
-      etym = re.sub(r"^\?", "", etym)
-    elif etym.startswith("<<"):
-      prefix = "Ultimately from "
-      suffix = "."
-      etym = re.sub(r"^<<", "", etym)
-    m = re.search(r"^([a-zA-Z.-]+):(.*)", etym)
+    m = re.search(r"^s([mfnp]):(.*)", etym)
     if m:
-      langtext = "|lang1=%s" % m.group(1)
-      etym = m.group(2)
+      gender = {"m":"masculine", "f":"feminine", "n":"neuter", "p":"plural"}
+      etymtext = "Substantivized %s of {{m|ru|%s}}." % (gender[m.group(1)],
+          m.group(2))
     else:
-      langtext = ""
-    etymtext = "===Etymology===\n%s{{affix|ru|%s%s}}%s\n\n" % (prefix,
-        "|".join(re.split(r"\+", etym)), langtext, suffix)
+      prefix = ""
+      suffix = ""
+      if etym.startswith("?"):
+        prefix = "Perhaps from "
+        suffix = "."
+        etym = re.sub(r"^\?", "", etym)
+      elif etym.startswith("<<"):
+        prefix = "Ultimately from "
+        suffix = "."
+        etym = re.sub(r"^<<", "", etym)
+      m = re.search(r"^([a-zA-Z.-]+):(.*)", etym)
+      if m:
+        langtext = "|lang1=%s" % m.group(1)
+        etym = m.group(2)
+      else:
+        langtext = ""
+      etymtext = "%s{{affix|ru|%s%s}}%s" % (prefix,
+          "|".join(re.split(r"\+", etym)), langtext, suffix)
+    etymtext = "===Etymology===\n%s\n\n" % etymtext
 
   # Create declension
   if pos != "adv":
