@@ -9,12 +9,19 @@ import rulib
 parser = argparse.ArgumentParser(description="Generate adjective stubs.")
 parser.add_argument('--direcfile', help="File containing directives.")
 parser.add_argument('--pos', action="store_true",
-    help="First field is part of speech (n, adj, adv).")
+    help="First field is part of speech (n, adj, adv, pcl, pred, conj, int).")
 parser.add_argument('--adverb', action="store_true",
     help="Directive file contains adverbs instead of adjectives.")
 parser.add_argument('--noun', action="store_true",
     help="Directive file contains nouns instead of adjectives.")
 args = parser.parse_args()
+
+pos_to_full_pos = {
+  "pcl": "Particle",
+  "pred": "Predicative",
+  "conj": "Conjunction",
+  "int": "Interjection"
+}
 
 def check_stress(word):
   word = re.sub(r"|.*", "", word)
@@ -42,7 +49,7 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
   els = re.split(r"\s+", line)
   if args.pos:
     pos = els[0]
-    assert pos in ["n", "adj", "adv"]
+    assert pos in ["n", "adj", "adv", "pcl", "pred", "conj", "int"]
     del els[0]
   else:
     if args.adverb:
@@ -53,8 +60,8 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
       pos = "adj"
   # Replace _ with space, but not in the declension, where there may be
   # an underscore, e.g. a|short_m=-
-  els = [el if i == 2 and pos != "adv" else el.replace("_", " ") for i, el in enumerate(els)]
-  if pos == "adv":
+  els = [el if i == 2 and (pos == "n" or pos == "adj") else el.replace("_", " ") for i, el in enumerate(els)]
+  if pos != "n" and pos != "adj":
     term, etym, defns = els[0], els[1], els[2]
     remainder = els[3:]
   else:
@@ -103,7 +110,7 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
     etymtext = "===Etymology===\n%s\n\n" % etymtext
 
   # Create declension
-  if pos != "adv":
+  if pos == "n" or pos == "adj":
     decl = decl.replace("?", "") # eliminate uncertainty notations
     if decl == "-":
       decltext = declterm
@@ -298,13 +305,7 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
         else:
           seetext = derrelguts
 
-  if pos == "adv":
-    maintext = """===Adverb===
-{{ru-adv|%s%s}}
-
-%s
-""" % (term, trtext, defntext)
-  elif pos == "n":
+  if pos == "n":
     maintext = """===Noun===
 {{ru-noun+|%s}}
 
@@ -313,7 +314,7 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
 {{ru-noun-table|%s}}
 
 """ % (decltext, defntext, decltext)
-  else:
+  elif pos == "adj":
     maintext = """===Adjective===
 {{ru-adj|%s%s%s}}
 
@@ -322,6 +323,20 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
 {{ru-decl-adj|%s}}
 
 """ % (term, trtext, comptext, defntext, decltext)
+  elif pos == "adv":
+    maintext = """===Adverb===
+{{ru-adv|%s%s}}
+
+%s
+""" % (term, trtext, defntext)
+  else:
+    full_pos = pos_to_full_pos[pos]
+    maintext = """===%s===
+{{head|ru|%s|head=%s%s}}
+
+%s
+""" % (full_pos, full_pos.lower(), term, trtext, defntext)
+
   if defns == "--":
     maintext = ""
 
