@@ -375,12 +375,24 @@ Obsolete comparative of {{m|ru|пусто́й}}.
 понима́юще понима́ющий+-е [[knowingly]],[[consciously]];[[intelligently];-
 дру́жески дру́жеский+-и [[amiably]],in_a_[[friendly]]_[[manner]];-
 гран-при́ fr:grand_prix - [[grand_prize]];-
-невзнача́й ? [[casually]],[[accidentally]];-
+невзнача́й не-+вз-+на-+чаять+alt4=чай [[casually]],[[accidentally]];-
+
+===Etymology===
+Per Vasmer, {{affix|ru|не-|вз-|на-|чаять|alt4=чай}}.
+
+===References===
+* {{R:ru:Vasmer}}
+
 part дак - (n)[[now]],[[after_all]];- syn:так
 n контра́ктник контра́кт+-ник - [[contractor]];-
 adv вбок в-+бок [[sideways]],to_the_[[side]];- rel:в,бок
-прямиком
-цитокин
+n прями́к прямо́й+-и́к b|...|a=ia {{lb|ru|dialectal|inanimate}}_[[straight]]_[[path]];{{lb|ru|dialectal|animate}}_[[direct]],_[[frank]]_[[person]];-
+прямико́м - (c)[[straight]],[[direct]];(c)by_the_[[shortest]]_[[path]];(c)[[openly]],without_[[hiding]]_anything;-
+
+===Etymology===
+Instrumental case of {{m|ru|прямик||straight path}}.
+
+цитоки́н <<en:cytokine - {{lb|ru|biochemistry|medicine}}_[[cytokine]];- rel:цитокини́н,цитокине́з
 дешево
 
 ==Russian==
@@ -396,10 +408,10 @@ adv вбок в-+бок [[sideways]],to_the_[[side]];- rel:в,бок
 ===Etymology===
 From {{affix|ru|на|мертво́}} or from {{affix|ru|на|мёртво}}.
 
-adj ши́бкий ? c* -
+adj ши́бкий ?шиба́ть+-кий c* - comp:ши́бче
 adv ши́бко ши́бкий+-о - {{lb|ru|regional}}_[[soon]],[[quickly]];(n)[[exceedingly]],[[very]];-
 adv любо́вно любо́вный+-о [[fondly]],[[lovingly]];[[amorously]];-
-adj ехи́дный ? a* [[malicious]];[[snide]],[[sarcastic]];-
+adj ехи́дный - a* [[malicious]];[[snide]],[[sarcastic]];-
 adv ехи́дно ехи́дный+-о [[maliciously]];[[mockingly]],[[sarcastically]];-
 adv взволно́ванно взволно́ванный+-о [[excitedly]];[[anxiously]];-
 возбужденно
@@ -441,30 +453,53 @@ adv единогла́сно единогла́сный+-о [[unanimously]];-
 adv органи́чно органи́чный+-о [[organically]];-
 adj безогово́рочный без+-огово́рка+-ный a* [[unconditional]],without_[[reservation]];-
 adv безогово́рочно безогово́рочный+-о [[unconditionally]];-
-adj спе́шный ? a* [[hurried]],[[hasty]];- ant:неспе́шный
+adj спе́шный спех+t1=[[hurry]]+-ный a* [[hurried]],[[hasty]];- ant:неспе́шный
 adj неспе́шный не-+спе́шный a* (l)[[slow]],[[unhurried]],[[leisurely]];- ant:спе́шный
 adv неспе́шно неспе́шный+-о [[slowly]],in_a_[[leisurely]]_[[manner]];-
-то́шный ? c* (c)[[nauseating]],[[disgusting]],[[sickening]];(c)[[tedious]];-
+то́шный - c* (c)[[nauseating]],[[disgusting]],[[sickening]];(c)[[tedious]];-
 [don't use] adv то́шно то́шный+-о (c)[[disgustingly]],[[sickeningly]];(c)[[miserably]];-
 [don't use] pred то́шно то́шный+-о (c)it_is_[[nauseating]],it_is_[[sickening]];it_is_[[miserable]],it_is_[[wretched]];-
-кардина́льно кардина́льный+-о [[radically]],[[drastically]],[[completely]];-
-уважи́тельно уважи́тельный+-о [[respectully]];[[validly]];-
-ослепи́тельно ослепи́тельный+-о -
-довери́тельно довери́тельный+-о -
-нереши́тельно нерешительный+-о [[indecisively]];-
-непроизво́льный не-+произво́льный a* [[involuntary]];-
-непроизво́льно непроизво́льный+-о [[involuntarily]];-
-неча́стый не-+ча́стый c [[infrequent]];-
-неча́сто неча́стый+-о [[rarely]],[[infrequently]];-
-на́глухо на-+глу́хо [[tightly]];-
-пра́ймер en:primer - {{lb|ru|biology|genetics}}_[[primer]];-
-сро́ду с+род+alt2=ро́ду (n)[[never_ever]];-
-по-ино́му по+иной+alt2=ино́му [[differently]],[[otherwise]];- syn:по-друго́му,ина́че
+adv кардина́льно кардина́льный+-о [[radically]],[[drastically]],[[completely]];-
+adv уважи́тельно уважи́тельный+-о [[respectully]];[[validly]];-
+adv ослепи́тельно ослепи́тельный+-о -
+adv довери́тельно довери́тельный+-о -
+adv нереши́тельно нерешительный+-о [[indecisively]];-
+adj непроизво́льный не-+произво́льный a* [[involuntary]];-
+adv непроизво́льно непроизво́льный+-о [[involuntarily]];-
+adj неча́стый не-+ча́стый c [[infrequent]];-
+adv неча́сто неча́стый+-о [[rarely]],[[infrequently]];-
+adv на́глухо на-+глу́хо [[tightly]];-
+n пра́ймер en:primer - {{lb|ru|biology|genetics}}_[[primer]];-
+adv сро́ду с+род+alt2=ро́ду (n)[[never_ever]];-
+adv по-ино́му по+иной+alt2=ино́му [[differently]],[[otherwise]];- syn:по-друго́му,ина́че
 [don't use] conj кабы́ - [[if_only]];-
 [don't use] pcl кабы́ - -
-при́став-исполни́тель ? ? [[bailiff]];-
-за́годя ? [[in_advance]],[[previously]];-
-вич-инфекция
+n при́став-исполни́тель при́став+исполни́тель - [[bailiff]];-
+
+===Noun===
+{{ru-noun+|c|[[при́став]]|(1)|or|_|[[исполни́тель]]|a=an}}
+
+====Declension====
+{{ru-noun-table|c|при́став|(1)|or|_|исполни́тель|a=an}}
+
+adv за́годя - [[in_advance]],[[previously]];-
+
+n вич-инфе́кция -- - altof:ВИЧ-инфе́кция pron:ви́ч-инфе́кция
+
+===Noun===
+{{ru-noun+|[[ВИЧ|вич]]-[[инфе́кция]]}}
+
+====Declension====
+{{ru-noun-table|[[ВИЧ|вич]]-[[инфе́кция]]}}
+
+n ВИЧ-инфе́кция ВИЧ+инфе́кция - [[HIV]] [[infection]] pron:ВИ́Ч-инфе́кция
+
+===Noun===
+{{ru-noun+|[[ВИЧ]]-[[инфе́кция]]}}
+
+====Declension====
+{{ru-noun-table|[[ВИЧ]]-[[инфе́кция]]}}
+
 окрова́вить
 вопия́ть
 проница́ть
