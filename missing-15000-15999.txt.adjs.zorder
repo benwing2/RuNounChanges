@@ -468,7 +468,7 @@ adv психи́чески психи́ческий+-и [[mentally]];[[psychical
 adv малый+alt1=ма́ло-+малый+alt2=ма́л(ый)+-ски pron:ма̀ло-ма́льски [[somewhat]],[[more_or_less]],[[to_some_extent]];[[at_all]],to_the_[[slightest]]_[[degree]];-
 n налогови́к на-+логова+-и́к b|...|a=an [[taxman]];-
 int ок en:OK [[OK]],[[okay]];-
-adv насовсе́м на-+совсе́м -
+adv насовсе́м на-+совсе́м - (c)[[for_keeps]],[[for_good]],[[permanently]];-
 живьем
 
 ==Russian==
@@ -537,7 +537,6 @@ adv потому́-то потому́+-то [[therefore]],[[so]];-
 
 ==Russian==
 
-
 ===Noun===
 {{ru-noun-alt-ё|мушкетёр|m-an}}
 
@@ -546,7 +545,30 @@ adv потому́-то потому́+-то [[therefore]],[[so]];-
 ===Etymology===
 {{bor|ru|fr|mousquetaire}}, influenced by the common ending {{m|ru|-ёр}}.
 
-вице-губерна́тор вице-+губерна́тор - [[vice-]][[governor]],[[deputy]]_[[governor]];- pron:вѝце-губерна́тор der:вице-губерна́торский,вице-губерна́торство
+вице-губерна́тор
+
+==Russian==
+
+===Etymology===
+{{affix|ru|вице-|губерна́тор}}
+
+===Pronunciation===
+* {{ru-IPA|вѝце-губерна́тор|pos=inv}}
+
+===Noun===
+{{ru-noun+|[[вице-]][[губерна́тор]]|a=an}}
+
+# [[vice-]][[governor]], [[deputy]] [[governor]]
+
+====Declension====
+{{ru-noun-table|[[вице-]][[губерна́тор]|a=an}}
+
+====Derived terms====
+* {{l|ru|вице-губерна́торский}}
+* {{l|ru|вице-губерна́торство}}
+
+[[ru:вице-губернатор]]
+
 [don't use] n аму́р fr:amour - [[cupid]]_{{gloss|representation_of_the_god_[[Cupid]]_as_a_boy_with_a_[[bow_and_arrow]]}};(f)[[handsome]]_[[boy]];{{lb|plural_only|dated|colloquial}}_[[amorous]]_[[adventures]];-
 [don't use] n аму́р - - [[amur]]_{{gloss|[[carp]]-like_fish}};-
 
@@ -554,7 +576,7 @@ adv потому́-то потому́+-то [[therefore]],[[so]];-
 From the [[Amur]] river.
 
 adv счас -- {{lb|ru|dialectal}}_{{alternative_form_of|lang=ru|сейча́с}};-
-ге́рпес <<la:herpes - [[herpes]];-
+n ге́рпес <<la:herpes - [[herpes]];-
 не-ет
 
 ==Russian==
@@ -572,12 +594,20 @@ Lengthening of {{m|ru|нет}}.
 
 [[ru:не-ет]]
 
-помаленьку
-по-нашему
-буль-буль
-перламутр
-перл
-фармацевтика
+adv помале́ньку - [[little_by_little]],[[gradually]];-
+
+===Etymology===
+From {{affix|ru|по|маленький|alt2=мале́ньку}}, apparently an obsolete short dative form.
+
+adv по-на́шему по+наш+alt2=на́шему in_our_[[opinion]];as_we_would_[[like]];in_our_[[language]];according_to_our_[[custom]];-
+int буль-буль - {{n-g|Represents the sound of liquid bubbling or gurgling.}}
+
+===Etymology===
+Onomatopoeic.
+
+n перламу́тр de:Perlmutter - [[mother-of-pearl]],[[nacre]];-
+n перл ?de:Perl - {{lb|ru|also|figurative|printing}}_[[pearl]];{{lb|ru|computing}}_[[Perl]];-
+n фармаце́втика <<grc:φαρμακευτική - [[pharmaceutics]]_{{gloss|the_art_and_science_of_dispensing_drugs}}
 грани́ть
 оздорови́ть
 оздоровля́ть
