@@ -9,7 +9,7 @@ import rulib
 parser = argparse.ArgumentParser(description="Generate adjective stubs.")
 parser.add_argument('--direcfile', help="File containing directives.")
 parser.add_argument('--pos', action="store_true",
-    help="First field is part of speech (n, adj, adv, pcl, pred, conj, int).")
+    help="First field is part of speech (n, adj, adv, pcl, pred, prep, conj, int).")
 parser.add_argument('--adverb', action="store_true",
     help="Directive file contains adverbs instead of adjectives.")
 parser.add_argument('--noun', action="store_true",
@@ -17,8 +17,13 @@ parser.add_argument('--noun', action="store_true",
 args = parser.parse_args()
 
 pos_to_full_pos = {
+  # The first three are special-cased
+  "n": "Noun",
+  "adj": "Adjective",
+  "adv": "Adverb",
   "pcl": "Particle",
   "pred": "Predicative",
+  "prep": "Preposition",
   "conj": "Conjunction",
   "int": "Interjection"
 }
@@ -49,7 +54,7 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
   els = re.split(r"\s+", line)
   if args.pos:
     pos = els[0]
-    assert pos in ["n", "adj", "adv", "pcl", "pred", "conj", "int"]
+    assert pos in pos_to_full_pos
     del els[0]
   else:
     if args.adverb:
@@ -88,6 +93,18 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
       gender = {"m":"masculine", "f":"feminine", "n":"neuter", "p":"plural"}
       etymtext = "Substantivized %s of {{m|ru|%s}}." % (gender[m.group(1)],
           m.group(2))
+    elif ":" in etym and "+" not in etym:
+      prefix = ""
+      if etym.startswith("?"):
+        prefix = "Perhaps borrowed from "
+        etym = re.sub(r"^\?", "", etym)
+      elif etym.startswith("<<"):
+        prefix = "Ultimately borrowed from "
+        etym = re.sub(r"^<<", "", etym)
+      m = re.search(r"^([a-zA-Z.-]+):(.*)", etym)
+      assert m
+      etymtext = "%s{{bor|ru|%s|%s%s}}." % (prefix, m.group(1), m.group(2),
+          prefix and "|notext=1" or "")
     else:
       prefix = ""
       suffix = ""
@@ -153,6 +170,9 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
         elif defn.startswith("(n)"):
           labels.append("nonstandard")
           defn = re.sub(r"^\(n\)", "", defn)
+        elif defn.startswith("(v)"):
+          labels.append("vernacular")
+          defn = re.sub(r"^\(v\)", "", defn)
         elif defn.startswith("!"):
           labels.append("colloquial")
           defn = re.sub(r"^!", "", defn)
