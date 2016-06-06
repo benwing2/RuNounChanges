@@ -314,17 +314,25 @@ Short forms {{lang|ru|быва́л, быва́ла, быва́ло, быва́л
 
 [[ru:несостоявшийся]]
 
-n непосе́да ?не-+по-+сесть+alt3=сед-+-а a=an|g=m|g2=f [[fidgety]]_[[person]],[[fidget]];-
-n вы́рубка вы́рубить+-ка - [[cut_down|cutting_down]];[[glade]],[[clearing]];- rel:вы́рубок,FIXME
-n экосисте́ма - - [[ecosystem]];-
-n катю́ша - - [[Katyusha]];-
+
+
+----------------- from here ----------------
+
+
+
+
+
+n непосе́да ?не-+по-+сесть+alt3=сед-+-а a=an|g=m|g2=f [[fidgety]]_[[person]],[[fidget]];- der:непосе́дливый:непосе́дливость rel:сади́ться/сесть
+n вы́рубка вы́рубить+-ка - [[cut_down|cutting_down]];[[glade]],[[clearing]];- rel:вы́рубок,выруба́ть/вы́рубить
+n экосисте́ма - - [[ecosystem]];- rel:эколо́гия:экологи́ческий,систе́ма,системати́ческий:системати́чески
+n катю́ша - - [[Katyusha]]_{{gloss|vehicle-mounted_[[rocket_launcher]]}};-
 
 ===Etymology===
 From {{m|ru|Катю́ша}}, diminutive of {{m|ru|Ка́тя||[[Katya]]}}, in turn diminutive of {{m|ru|Екатери́на||[[Katherine]]}}.
 
-adv вмиг в+миг (c)[[very]]_[[quickly]];[[immediately]];-
-adv науга́д - [[at_random]];-
-adj шта́тский штат+-ский - [[civilian]];- rel:штат der:шта́тское
+adv вмиг в+миг (c)[[very]]_[[quickly]];[[immediately]];- rel:миг,ми́гом,мига́ть/мигну́ть,мига́ние,мига́лка
+adv науга́д на+угадать+alt2=угад(а́ть) [[at_random]];by_[[guesswork]];- syn:(at_random)науда́чу rel:уга́дывать/угада́ть,уга́дчик
+adj шта́тский штат+-ский - [[civilian]];- rel:штат:шта́тный der:шта́тское
 
 ===Noun===
 {{ru-noun+|шта́тский|+|a=an}}
@@ -334,14 +342,14 @@ adj шта́тский штат+-ский - [[civilian]];- rel:штат der:шт
 ====Declension====
 {{ru-noun-table|шта́тский|+|a=an}}
 
-n шта́тское sn:шта́тский [[civilian]]_[[clothing]];- rel:шта́тский,штат
-adj угрожа́ющий -- a [[threatening]];- part:угрожа́ть:pres|act|impfv:-
-adv угрожа́юще угрожа́ющий+-е [[threateningly]];-
-adv враз в+раз (c)[[together]],[[simultaneously]];[[immediately]],[[at_once]];- syn:*(simultaneously)ра́зом;*(immediately)сра́зу
-adv траги́чески траги́ческий+-и [[tragically]];-
-adv юриди́чески юриди́ческий+-и [[legally]],[[juridically]],[[de_jure]];-
-adv механи́чески механи́ческий+-и [[mechanically]];-
-adv крити́чески крити́ческий+-и [[critically]];-
+n шта́тское sn:шта́тский [[civilian]]_[[clothing]];- rel:шта́тский,штат:шта́тный
+adj угрожа́ющий -- a [[threatening]];- part:угрожа́ть:pres|act|impfv:- rel:угрожа́ть,угро́за,грози́ть/погрози́ть,грози́ться,гро́зный
+adv угрожа́юще угрожа́ющий+-е [[threateningly]];- rel:угрожа́ть,угро́за,грози́ть/погрози́ть,грози́ться,гро́зный
+adv враз в+раз (c)[[together]],[[simultaneously]];[[immediately]],[[at_once]];- syn:*(simultaneously)ра́зом;*(immediately)сра́зу rel:раз,рази́ть/срази́ть,ре́зать/поре́зать/разре́зать/заре́зать/сре́зать
+adv траги́чески траги́ческий+-и [[tragically]];- rel:траги́ческий,траги́чный:траги́чно:траги́чность,тра́гик,траге́дия,траги́чески,траги́зм,трагикоме́дия:трагикоми́ческий
+adv юриди́чески юриди́ческий+-и [[legally]],[[juridically]],[[de_jure]];- rel:юриди́ческий,юри́ст,юриспруде́нция,юриско́нсульт,юрисди́кция
+adv механи́чески механи́ческий+-и [[mechanically]];- rel:механи́ческий,механизи́ровать:механизи́рованный:механиза́ция:механиза́тор,меха́ника:меха́ник:механи́ческий:механи́чески,механи́зм
+adv крити́чески крити́ческий+-и [[critically]]_{{gloss|[[crucially]]\;_extremely_[[seriously]]\;_in_a_[[criticizing]]_manner}};- rel:крити́ческий,кри́тик:кри́тика,критикова́ть,критика́н:критика́нство
 adv скепти́чески скепти́ческий+-и [[skeptically]];-
 э́дак
 [don't use] ры́жик ? - ?

@@ -255,6 +255,7 @@ missing-11000-11999.adjs.zorder, part 2
 
 missing-11000-11999.adjs.zorder -- part N, adverbs
 
+* [[поочерёдный]] "alternating; successive" yes? [see [https://books.google.com/books?id=aYw9CgAAQBAJ&pg=PA92&dq=%D0%BF%D0%BE%D0%BE%D1%87%D0%B5%D1%80%D1%91%D0%B4%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwjis93915LNAhVC0iYKHYo7CMsQ6AEIHjAA]: Не вдруг, конечно. Рассвирепела душа, некогда благолюбивая. Успехи добра и зла постепенны и поочерёдны, но как проникнуть в сердцевину души, чтобы увидеть в ней борение совести с мятежной страстью, и никто не увидел, ...]
 * [[потенциальный]] "potential" yes? [see [https://books.google.com/books?id=M9s-AQAAIAAJ&q=%D0%BF%D0%BE%D1%82%D0%B5%D0%BD%D1%86%D0%B8%D0%B0%D0%BB%D1%8C%D0%BD%D1%8B&dq=%D0%BF%D0%BE%D1%82%D0%B5%D0%BD%D1%86%D0%B8%D0%B0%D0%BB%D1%8C%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwjsz-jO9ofNAhUH6GMKHYgCB1QQ6AEIYzAJ]: Анализ ситуации, отвечающий правильным разностным аналогам операторов Я, которые вещественны и потенциальны, с ...]
 
 ------------------------
@@ -574,6 +575,10 @@ missing-16000-16999.adjs.zorder, part 4
 * [[баскетбольный]] "basketball (attrib.)" no? [can't find examples]
 * [[курносый]] "pug-nosed" yes? [see [https://books.google.com/books?id=SUdKnVFSPywC&pg=PA271&dq=%D0%BA%D1%83%D1%80%D0%BD%D0%BE%D1%81%D1%8B&hl=en&sa=X&ved=0ahUKEwiYsKH7oIHNAhWGVyYKHXZXCM4Q6AEIMjAD]: Эфиопы говорят, что их боги курносы и черны, фракийцы же представляют своих богов голубоглазыми и рыжеватыми. ]
 
+
+missing-16000-16999.adjs.zorder, part N - adverbs
+
+* [[молниеносный]] "lightning-fast" yes? [see [https://books.google.com/books?id=YOQYBAAAQBAJ&pg=PA61&dq=%D0%BC%D0%BE%D0%BB%D0%BD%D0%B8%D0%B5%D0%BD%D0%BE%D1%81%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwiuxMCmvpLNAhUE4GMKHSYWBZAQ6AEIJzAB]: Неудивительно, что вскоре флот Чжэн Ши походил на «единый кулак», удары которого были молниеносны и столь сильны]
 
 
 ------------------------

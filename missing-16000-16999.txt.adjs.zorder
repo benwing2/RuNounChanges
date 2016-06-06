@@ -365,55 +365,137 @@ From {{affix|ru|посо́л|-ский}} or (based on the presence of {{lang|ru|
 
 
 
-ниоткуда
-подложка
-лиана
-рыбина
-невпопад
-аттитюд
-природопользование
-лесопользование
-отмывание
-провидение
-поодиночке
-посредине
-довольно-таки
-зоркий
-кулик
-передатчик
-впрок
-дыбом
-вчетвером
-истукан
-бостон
-о-о
-ревниво
-неистово
-далеко-далеко
-наголо
-неудержимо
-неразрывно
-нещадно
-остроумно
-общественно
+adv ниотку́да ни+отку́да from_[[nowhere]];-
+n подло́жка подложить+alt2=подлож(и́ть)+-ка * [[base]],[[mount]];[[back]],[[backing]];{{lb|ru|medicine|engineering}}_[[substrate]];-
+n лиа́на fr:liane - [[liana]],[[creeper]];-
+n ры́бина ры́ба+-ина a=ai {{lb|ru|animate|colloquial}}_[[big]]_[[fish]];{{lb|ru|inanimate|nautical}}_[[ribband]],[[diagonal]]\;_[[batten]];-
+adv впопа́д - [[appropriately]];- syn:кста́ти,к_ме́сту,во́время,уме́стно
+adv невпопа́д не-+впопа́д [[inappropriately]],[[out_of_place]];- syn:некста́ти,не_к_ме́сту,неуме́стно
+n аттитю́д fr:attitude - [[attitude]];-
+n природопо́льзование приро́да+alt1=природо-+по́льзование - [[environmental]]_[[management]],[[wildlife]]_[[management]],use_of_[[natural_resources]];- pron:приро̀допо́льзование
+лесопо́льзование лес+alt1=лесо-+по́льзование - [[forest]]_[[management]],[[forest]]_[[use]];-
+отмыва́ние отмыва́ть+-а́ние - [[laundering]]_{{i|of_[[money]],_[[drugs]],_etc.}};-
+[don't use] n прови́дение прови́деть+-ение - [[foresight]];-
+[don't use] n провиде́ние прови́деть+-е́ние - {{lb|ru|religion}}_[[providence]]\;_[[Providence]];-
+adv поодино́чке по+одиночка+alt2=одино́чке [[singly]],[[one_by_one]];-
+[don't use] adv посреди́не - altof:посере́дине
+[don't use] prep посреди́не - altof:посере́дине
+
+===Etymology===
+{{etyl|ru|cu}} variant of {{m|ru|посереди́не}}.
+
+adv дово́льно-таки́ дово́льно+таки́ [[rather]],[[somewhat]];- syn:дово́льно
+adj зо́ркий зреть+alt1=зр(еть)+-кий a'* [[sharp-eyed]];[[vigilant]],[[watchful]];- comp:зо́рче
+n кули́к - b|... [[sandpiper]],[[snipe]];-
+n переда́тчик переда́ть+-чик а|a=ai {{lb|ru|animate}}_[[sender]];{{lb|ru|inanimate|radio|television}} [[transmitter]];-
+[don't use] adv впрок в+прок+t2=[[benefit]];- for_[[future]]_[[use]],in_[[reserve]];-
+[don't use] pred впрок - it_is_to_someone's_[[benefit]],it_[[profits]];-
+adv ды́бом - [[on_end]];-
+
+===Etymology===
+Apparently the instrumental case of a no-longer-existent word; compare {{m|ru|на дыбы́||on its [[hind]] [[legs]]_{{i|of a horse}}}}, and see {{affix|ru|-ом}}.
+
+adv вчетверо́м в-+че́тверо+-о́м four_[[together]];-
+истука́н - - [[idol]];[[statue]];(f)[[sedentary]],_[[insensate]]_[[person]];-
+
+===Etymology===
+From {{inh|ru|orv|истуканъ}}, past passive participle of {{m|orv|истукати||to [[carve]]}};  compare {{m|ru|ту́кать||to [[hit]]}}.
+
+босто́н en:Boston - [[high-grade]]_[[woolen]]_[[cloth]];[[Boston]]_{{gloss|old_card_game}};{{w|Boston (dance)|Boston}}_{{gloss|type_of_dance}};-
+int о-о - (c)[[ow]];[[uh-oh]]_{{gloss|expressing_[[fear]]}};[[golly]]_{{gloss|expressing_[[surprise]]}};-
+
+===Etymology===
+Onomatopoeic.
+
+===Pronunciation===
+* {{ru-IPA-manual|[oː]}}
+
+adj ревни́вый ревность+alt1=ре́вн(ость)+-и́вый a [[jealous]];- comp:ревни́вее
+adv ревни́во ревни́вый+-о [[jealously]];-
+
+adv неи́стово неи́стовый+-о [[frantically]];[[furiously]];-
+adv далеко́-далеко́ далеко́+далеко́ [[far]]_[[far_away]],[[very]]_[[far]];-
+[don't use] adv на́голо на́+голый+alt2=го́ло [[close]]_to_the_[[skin]],[[closely]]_[[shaven]];-
+[don't use] adv наголо́ - [[naked]]_{{i|metal}},to_the_[[bare]]_[[metal]];-
+
+===Etymology===
+From {{affix|ru|на|голый|alt2=го́ло}}, with stress shift.
+
+неудержи́мо неудержи́мый+-о [[irrepressibly]];[[uncontrollably]];-
+разры́вный разры́в+-ный a* [[breakable]];[[separable]],[[extricable]];-
+неразры́вный не-+разры́вный a* [[unbreakable]];[[inseparable]],[[inextricable]];-
+неразры́вно неразры́вный+-о [[unbreakably]];[[inseparably]],[[inextricably]];-
+неща́дный не-+щадить+щад(и́ть)+-ный a* [[merciless]],[[ruthless]];[[vehement]],very_[[strong]];-
+неща́дно неща́дный+-о [[mercilessly]],[[ruthlessly]];[[desperately]],[[vehemently]],very_[[strongly]];-
+остроу́мно остроу́мный+-о [[wittily]],[[cleverly]];- rel:остроу́мный,о́стрый,ум
+обще́ственно обще́ственный+-о [[socially]];-
 отдаленно
-целенаправленно
-несравненно
+
+==Russian==
+
+===Adverb===
+{{ru-pos-alt-ё|отдалённо|adverb}}
+
+===Adjective===
+{{ru-pos-alt-ё|отдалённо|adjective form}}
+
+adv отдалённо отдалённый+-о [[distantly]],[[remotely]];-
+
+===Adjective===
+{{head|ru|adjective form|head=отдалённо}}
+
+# {{inflection of|lang=ru|отдалённый||short|n|s}}
+
+adv целенапра́вленно целенапра́вленный+-о [[purposefully]],in_a_[[dedicated]]_or_[[committed]]_[[manner]];-
+adj несравне́нный ?не-+сравни́ть+-е́нный a* (l)[[incomparable]],[[matchless]];-
+adv несравне́нно несравне́нный+-о [[incomparably]];-
 обреченно
-молниеносно
-бесповоротно
-азартно
-простодушно
-натурально
-законодательно
-там-то
-имхо
-субтип
-оп
-припас
-единоросс
+
+==Russian==
+
+===Adverb===
+{{ru-pos-alt-ё|обречённо|adverb}}
+
+===Adjective===
+{{ru-pos-alt-ё|обречённо|adjective form}}
+
+adv обречённо обречённый+-о in_a_[[doomed]]_[[manner]];-
+
+===Adjective===
+{{head|ru|adjective form|head=обречённо}}
+
+# {{inflection of|lang=ru|обречённый||short|n|s}}
+
+adj молниено́сный мо́лния+alt1=молние-+-но́сный a* [[lightning_fast]];- rel:мо́лния
+adv молниено́сно молниено́сный+-о like_[[lightning]];with_[[lightning]]_[[speed]];-
+adj бесповоро́тный бес-+поворо́т+-ный a* [[irrevocable]],[[irreversible]];[[rotation]]-[[free]];-
+adv бесповоро́тно бесповоро́тный+-о [[definitively]],[[irrevocably]];-
+adv аза́ртно аза́ртный+-о [[recklessly]],[[hazardously]];[[heatedly]],[[excitedly]];-
+adv простоду́шно простоду́шный+-о [[artlessly]],[[simply]];-
+adv натура́льно натура́льный+-о [[naturally]];- rel:натура́льный:ненатура́льный,FIXME
+adv законода́тельно законода́тельный+-о [[legislatively]];-
+adv та́м-то
+adv имхо́ en:IMHO [[IMHO]]_{{gloss|in_my_humble_opinion}};-
+[ask Anatoli or Wanjuscha to fix stress] n су́бтип ?en:subtype - [[subtype]];-
+int оп - [[oops]];-
+припа́с - - [[supply]],[[provision]];-
+[ask if there is secondary stress] единоро́сс - a=an [[member]]_of_the_[[United_Russia]]_[[party]];-
 напролет
+
+==Russian==
+
+===Adverb===
+{{ru-adv-alt-ё|напролёт}}
+
+adv напролёт - without_a_[[break]];-
 гнет
+
+==Russian==
+
+===Noun===
+{{ru-noun-alt-ё|гнёт}}
+
+гнёт - n=sg press_for_[[pickling]]_or_[[salting]];(f)[[oppression]],[[yoke]];-
 доверху
 в-четвертых
 спецназовец
@@ -436,6 +518,7 @@ From {{affix|ru|посо́л|-ский}} or (based on the presence of {{lang|ru|
 умышля́ть
 умы́слить
 заспа́ть
+законода́ть
 уём
 железобето́н
 единоду́шие
