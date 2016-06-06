@@ -26,10 +26,21 @@ parser.add_argument("--pagefile", help="File containing pages to check")
 args = parser.parse_args()
 start, end = blib.get_args(args.start, args.end)
 
+lemmas = set()
+msg("Reading Russian lemmas")
+for i, page in blib.cat_articles("Russian lemmas", start, end):
+  lemmas.add(unicode(page.title()))
+
 lines = [x.strip() for x in codecs.open(args.pagefile, "r", "utf-8")]
 for i, pagename in blib.iter_items(lines, start, end):
-  page = pywikibot.Page(site, pagename)
-  if page.exists():
+  if pagename in lemmas:
     msg("Page %s [[%s]]: exists" % (i, pagename))
   else:
-    msg("Page %s [[%s]]: does not exist" % (i, pagename))
+    page = pywikibot.Page(site, pagename)
+    if page.exists():
+      if re.search("#redirect", unicode(page.text), re.I):
+        msg("Page %s [[%s]]: exists as redirect" % (i, pagename))
+      else:
+        msg("Page %s [[%s]]: exists as non-lemma" % (i, pagename))
+    else:
+      msg("Page %s [[%s]]: does not exist" % (i, pagename))
