@@ -102,6 +102,8 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
         prefix = "Ultimately borrowed from "
         etym = re.sub(r"^<<", "", etym)
       m = re.search(r"^([a-zA-Z.-]+):(.*)", etym)
+      if not m:
+        msg("Bad etymology form: %s" % etym)
       assert m
       etymtext = "%s{{bor|ru|%s|%s%s}}." % (prefix, m.group(1), m.group(2),
           prefix and "|notext=1" or "")
