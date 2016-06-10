@@ -379,7 +379,7 @@ adv тво́рчески тво́рческий+-и [[creatively]];- rel:тво�
 n пермя́к Пермь+-я́к b|...|a=an [[Permian]]_{{gloss|inhabitant_of_[[Perm]]}};- der:пермя́чка rel:Пермь,пе́рмский
 adj зя́бкий - a'* (c)[[chilly]];(c)[[cold-blooded]];(c)[[sensitive]]_to_[[cold]];- der:зя́бко,зя́бнуть
 [don't use] adv зя́бко зя́бкий+-о (c)against_the_[[cold]];- rel:зя́бкий,зя́бнуть
-[don't use] pred зя́бко зя́бкий+-о (c)it_is_[[chilly]];ru:[[я|мне]]_'''зя́бко'''|I_am_[[cold]];-
+[don't use] pred зя́бко зя́бкий+-о (c)it_is_[[chilly]];ux:[[я|мне]]_'''зя́бко'''|I_am_[[cold]];-
 
 ==Russian==
 
@@ -399,6 +399,7 @@ adj зя́бкий - a'* (c)[[chilly]];(c)[[cold-blooded]];(c)[[sensitive]]_to_[
 {{head|ru|predicative|head=зя́бко}}
 
 # {{lb|ru|colloquial}} it is [[chilly]]
+#: {{ru-ux|[[я|мне]] '''зя́бко'''|I am [[cold]]|inline=y}}
 # {{rfdef|lang=ru}}
 
 ===Related terms===
