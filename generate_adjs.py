@@ -3,7 +3,7 @@
 
 import re, sys, codecs, argparse
 
-from blib import msg
+from blib import msg, errmsg
 import rulib
 
 parser = argparse.ArgumentParser(description="Generate adjective stubs.")
@@ -28,14 +28,7 @@ pos_to_full_pos = {
   "int": "Interjection"
 }
 
-def check_stress(word):
-  word = re.sub(r"|.*", "", word)
-  if word.startswith("-") or word.endswith("-"):
-    # Allow unstressed prefix (e.g. разо-) and unstressed suffix (e.g. -овать)
-    return
-  if rulib.needs_accents(word, split_dash=True):
-    msg("Word %s missing an accent" % word)
-    assert False
+opt_arg_regex = r"^(also|syn|ant|der|rel|see|comp|pron|alt|part):(.*)"
 
 # Form for adjectives and nouns:
 #
@@ -50,6 +43,20 @@ def check_stress(word):
 # TERM ETYM DEF ...
 
 for line in codecs.open(args.direcfile, "r", "utf-8"):
+
+  def error(text):
+    errmsg("ERROR: Processing line: %s" % line)
+    errmsg("ERROR: %s" % text)
+    assert False
+
+  def check_stress(word):
+    word = re.sub(r"|.*", "", word)
+    if word.startswith("-") or word.endswith("-"):
+      # Allow unstressed prefix (e.g. разо-) and unstressed suffix (e.g. -овать)
+      return
+    if rulib.needs_accents(word, split_dash=True):
+      error("Word %s missing an accent" % word)
+
   line = line.strip()
   els = re.split(r"\s+", line)
   if args.pos:
@@ -72,8 +79,7 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
   else:
     term, etym, decl, defns = els[0], els[1], els[2], els[3]
     if decl.startswith("?"):
-      msg("Declension starts with ?, need to fix: %s" % decl)
-      assert False
+      error("Declension starts with ?, need to fix: %s: Processing line: %s" % decl)
     remainder = els[4:]
   translit = None
   declterm = term
@@ -83,7 +89,9 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
     assert re.search(u"(ый|ий|о́й)$", term)
   trtext = translit and "|tr=" + translit or ""
   check_stress(term)
-  if etym == "-":
+  if etym == "?":
+    error("Etymology consists of bare question mark")
+  elif etym == "-":
     etymtext = "===Etymology===\n{{rfe|lang=ru}}\n\n"
   elif etym == "--":
     etymtext = ""
@@ -103,8 +111,7 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
         etym = re.sub(r"^<<", "", etym)
       m = re.search(r"^([a-zA-Z.-]+):(.*)", etym)
       if not m:
-        msg("Bad etymology form: %s" % etym)
-      assert m
+        error("Bad etymology form: %s" % etym)
       etymtext = "%s{{bor|ru|%s|%s%s}}." % (prefix, m.group(1), m.group(2),
           prefix and "|notext=1" or "")
     else:
@@ -140,6 +147,8 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
 
   # Create definition
   defnlines = []
+  if re.search(opt_arg_regex, defns):
+    error("Found optional-argument prefix in definition: %s" % defns)
   # the following regex uses a negative lookbehind so we split on a semicolon
   # but not on a backslashed semicolon, which we then replace with a regular
   # semicolon in the next line
@@ -208,23 +217,14 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
   syntext = ""
   anttext = ""
   dertext = ""
-  reltext = """====Related terms====
-* {{l|ru|}}
-* {{l|ru|}}
-* {{l|ru|}}
-* {{l|ru|}}
-* {{l|ru|}}
-* {{l|ru|}}
-
-"""
+  reltext = None
   seetext = ""
   comptext = ""
   prontext = "* {{ru-IPA|%s}}\n" % term
   for synantrel in remainder:
-    m = re.search(r"^(also|syn|ant|der|rel|see|comp|pron|alt|part):(.*)", synantrel)
+    m = re.search(opt_arg_regex, synantrel)
     if not m:
-      msg("Element %s doesn't start with also:, syn:, ant:, der:, rel:, see:, comp:, pron:, alt: or part:" % synantrel)
-    assert m
+      error("Element %s doesn't start with also:, syn:, ant:, der:, rel:, see:, comp:, pron:, alt: or part:" % synantrel)
     sartype, vals = m.groups()
     if sartype == "also":
       alsotext = "{{also|%s}}\n" % vals.replace(",", "|")
@@ -326,6 +326,9 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
           reltext = derrelguts
         else:
           seetext = derrelguts
+
+  if reltext == None:
+    error("No related terms; should specify some or use rel:- to disable them")
 
   if pos == "n":
     maintext = """===Noun===
