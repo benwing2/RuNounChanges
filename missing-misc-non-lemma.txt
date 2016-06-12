@@ -20,6 +20,8 @@ adv недо́рого недорого́й+-о [[inexpensively]],[[cheaply]];-
 pcl быва́ло ? [[would]]_([[often]]);ux:[[он|Он]],_'''бы́вало''',_[[ча́сто]]_[[плакать|пла́кал]].|He would often cry.;-
 [don't use] adv светло́
 [don't use] pred светло́
+[don't use] adv прохла́дно прохла́дный+-о - rel:прохла́дный rel:прохлажда́ться/прохлади́ться,прохлади́тельный,прохла́да,прохла́дец:прохла́дца
+[don't use] pred прохла́дно прохла́дный+-о it_is_[[cool]];ux:[[сего́дня]]_'''прохла́дно'''|it's_cool_today;it_is_[[chilly]];ux:[[я|мне]]_'''прохла́дно'''|I_am_chilly;- rel:прохла́дный
 [don't use] суждено́ [special-case use of short form of суждённый]
 [don't use] поло́жено [special-case use of short form of поло́женный]
 adv насторожённо насторожённый+-о FIXME alt:насторо́женно rel:FIXME
@@ -37,12 +39,14 @@ adv насторо́женно насторо́женный+-о altof:насто
 [don't use] pcl по́длинно
 [don't use] adv скве́рно
 [don't use] pred скве́рно
+[don't use] adv чуде́сно чуде́сный+-о [[wonderfully]],[[marvelously]];- rel:чуде́сный,чу́до:чудно́й,чу́дный:чу́дно,чуда́к:чудакова́тый:чуда́ческий:чуда́чество,чу́дище:чудо́вище:чудо́вищный:чудо́вищность
+[don't use] int чуде́сно - [[wonderful]]!,[[marvelous]]!;-
 [already done] сму́тно
 [don't use] adv любопы́тно любопы́тный+-о - rel:любопы́тный:нелюбопы́тный
 [don't use] pred любопы́тно -
 [don't use] adv ую́тно
 [don't use] pred ую́тно
-[don't use] adv непривы́чно непривы́чный+-о [[unusually]];- rel:непривы́чный:привы́чный,привыка́ть/привы́кнуть,привы́чка syn:необы́чно,необыкнове́нно
+[don't use] adv непривы́чно непривы́чный+-о [[unusually]];- rel:непривы́чный:привы́чный,привыка́ть/привы́кнуть,привы́чка syn:необы́чно,необыкнове́нно ant:привы́чно
 [don't use] pred непривы́чно - [[unaccustomed]];ux:[[я|мне]]_'''непривы́чно'''_{{i|+_infinitive}}|I_am_not_[[used_to]]_(doing_something);-
 pred жела́тельно
 [don't use] adv отврати́тельно
