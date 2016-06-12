@@ -1,0 +1,60 @@
+int бра́во
+
+партнерство
+
+==Russian==
+
+===Noun===
+{{ru-noun-alt-ё|партнёрство|m-in}}
+
+n партнёрство партнёр+-ство - [[partnership]];{{lb|ru|economics|law}}_[[partnership]];- rel:FIXME
+[don't use] adv нелегко́
+[don't use] pred нелегко́
+[don't use] adv ди́ко ди́кий+-о [[wild]];[[wildly]];[[absurdly]];[[shyly]];- rel:ди́кий:ди́кость,дика́рь,дико́вина:дико́винка:дико́винный,дикорасту́щий
+[don't use] pred ди́ко - it_is_[[desolate]];it_is_[[absurd]];-
+adv недо́рого недорого́й+-о [[inexpensively]],[[cheaply]];-
+[don't use] adv тя́жко
+[don't use] pred тя́жко
+[don't use] adv жу́тко
+[don't use] pred жу́тко
+pcl быва́ло ? [[would]]_([[often]]);ux:[[он|Он]],_'''бы́вало''',_[[ча́сто]]_[[плакать|пла́кал]].|He would often cry.;-
+[don't use] adv светло́
+[don't use] pred светло́
+[don't use] суждено́ [special-case use of short form of суждённый]
+[don't use] поло́жено [special-case use of short form of поло́женный]
+adv насторожённо насторожённый+-о FIXME alt:насторо́женно rel:FIXME
+adv насторо́женно насторо́женный+-о altof:насторожённый rel:FIXME
+
+===Etymology 2===
+
+====Adverb====
+{{ru-pos-alt-ё|насторожённо|adverb}}
+
+====Adjective form====
+{{ru-pos-alt-ё|насторожённо|adjective form}}
+
+[don't use] adv по́длинно
+[don't use] pcl по́длинно
+[don't use] adv скве́рно
+[don't use] pred скве́рно
+[already done] сму́тно
+[don't use] adv любопы́тно любопы́тный+-о - rel:любопы́тный:нелюбопы́тный
+[don't use] pred любопы́тно -
+[don't use] adv ую́тно
+[don't use] pred ую́тно
+[don't use] adv непривы́чно непривы́чный+-о [[unusually]];- rel:непривы́чный:привы́чный,привыка́ть/привы́кнуть,привы́чка syn:необы́чно,необыкнове́нно
+[don't use] pred непривы́чно - [[unaccustomed]];ux:[[я|мне]]_'''непривы́чно'''_{{i|+_infinitive}}|I_am_not_[[used_to]]_(doing_something);-
+pred жела́тельно
+[don't use] adv отврати́тельно
+[don't use] pred отврати́тельно
+adv сле́по слепо́й+-о [[blindly]];- rel:слепо́й,FIXME
+adv ску́по скупо́й+-о FIXME rel:скупо́й,FIXME
+adv нау́тро на+у́тро [[next]]_[[morning]];-
+adv сы́ро сыро́й+-о FIXME rel:сыро́й
+adv чего́-то
+[don't use] adv непро́сто непросто́й+-о
+[don't use] pred непро́сто -
+што
+pred при́нято при́нятый+-о it_is_[[customary]];ux:[[У|у]]_[[мы|нас]]_[[не]]_'''при́нято'''_{{i|+_infinitive}}|it_is_not_our_[[custom]]_to_(do_something);- rel:при́нятый,принима́ть/приня́ть,принима́ться/приня́ться,приня́тие
+хо
+заве́домый
