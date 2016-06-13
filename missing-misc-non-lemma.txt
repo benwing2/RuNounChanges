@@ -449,14 +449,49 @@ pred жела́тельно жела́тельный+-о it_is_[[desirable]];- r
 
 [[ru:отвратительно]]
 
-adv сле́по слепо́й+-о [[blindly]];- rel:слепо́й,FIXME
-adv ску́по скупо́й+-о FIXME rel:скупо́й,FIXME
-adv нау́тро на+у́тро [[next]]_[[morning]];-
-adv сы́ро сыро́й+-о FIXME rel:сыро́й
-adv чего́-то
-[don't use] adv непро́сто непросто́й+-о
-[don't use] pred непро́сто -
-што
+adv сле́по слепо́й+-о [[blindly]];- rel:слепо́й:слепота́,слепи́ть,сле́пнуть,слепя́щий,слепе́ц,слепы́ш
+adv ску́по скупо́й+-о [[sparingly]],[[frugally]];[[tersely]];- rel:скупо́й:ску́пость,скупи́ться/поскупи́ться,скупе́ц,скупердя́й
+adv нау́тро на+у́тро [[next]]_[[morning]];- rel:у́тро:у́тром,поутру́
+pred сы́ро сыро́й+-о it_is_[[damp]],it_is_[[wet]];- rel:сыро́й:сы́рость,сыре́ть/отсыре́ть,сыре́ц,сырьё
+adv чего́-то - (c)[[somehow]];- rel:что́-то,что,чего́
+[don't use] adv непро́сто непросто́й+-о with_[[difficulty]];- rel:непросто́й,просто́й:про́сто:простота́:про́ще,проста́к,простова́тый,простоду́шие:простоду́шный,про́сто-на́просто
+[don't use] pred непро́сто - it_is_[[complicated]],it_is_[[difficult]];- rel:-
+
+==Russian==
+
+===Etymology===
+{{affix|ru|непросто́й|-о}}
+
+===Pronunciation===
+* {{ru-IPA|непро́сто}}
+
+===Adverb===
+{{ru-adv|непро́сто}}
+
+# with [[difficulty]]
+# {{rfdef|lang=ru}}
+
+===Predicative===
+{{head|ru|predicative|head=непро́сто}}
+
+# it is [[complicated]], it is [[difficult]]
+# {{rfdef|lang=ru}}
+
+===Related terms===
+* {{l|ru|непросто́й}}
+* {{l|ru|просто́й}}, {{l|ru|про́сто}}, {{l|ru|простота́}}, {{l|ru|про́ще}}
+* {{l|ru|проста́к}}
+* {{l|ru|простова́тый}}
+* {{l|ru|простоду́шие}}, {{l|ru|простоду́шный}}
+* {{l|ru|про́сто-на́просто}}
+
+[[ru:непросто]]
+
+[don't use] што
 pred при́нято при́нятый+-о it_is_[[customary]];ux:[[У|у]]_[[мы|нас]]_[[не]]_'''при́нято'''_{{i|+_infinitive}}|it_is_not_our_[[custom]]_to_(do_something);- rel:при́нятый,принима́ть/приня́ть,принима́ться/приня́ться,приня́тие
-хо
-заве́домый
+int хо - [[ha]]_{{gloss|expressing_laughter}};{{n-g|expressing_surprise,irony,regret,or_admiration}};- rel:ха-ха́,ха-ха-ха́
+
+===Etymology===
+Onomatopoeic.
+
+adj заве́домый за-+ве́домый а [[obvious]];[[notorious]];- der:заве́домо rel:ве́домый:ве́домо,ве́дать,неве́домый:неве́домо,неве́дение,невдомёк,весть:неве́сть,ве́стник
