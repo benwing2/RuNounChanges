@@ -1,4 +1,4 @@
-int бра́во
+int it:bravo бра́во [[bravo]]! rel:брави́ссимо,бра́вый,браву́рный,брави́ровать,брава́да
 
 партнерство
 
@@ -7,25 +7,231 @@ int бра́во
 ===Noun===
 {{ru-noun-alt-ё|партнёрство|m-in}}
 
-n партнёрство партнёр+-ство - [[partnership]];{{lb|ru|economics|law}}_[[partnership]];- rel:FIXME
-[don't use] adv нелегко́
-[don't use] pred нелегко́
+n партнёрство партнёр+-ство - [[partnership]];{{lb|ru|economics|law}}_[[partnership]];- rel:партнёр
+[don't use] adv нелегко́ нелёгкий+-о́ [[not]]_[[easily]],with_[[difficulty]];- ant:легко́ rel:нелёгкий,лёгкий:лёгкость:ле́гче,легча́ть/полегча́ть,легково́й
+[don't use] pred нелегко́ - it_is_not_[[easy]] rel:-
+
+==Russian==
+
+===Etymology===
+{{affix|ru|нелёгкий|-о́}}
+
+===Pronunciation===
+* {{ru-IPA|нелегко́}}
+
+===Adverb===
+{{ru-adv|нелегко́}}
+
+# [[not]] [[easily]], with [[difficulty]]
+# {{rfdef|lang=ru}}
+
+====Antonyms====
+* {{l|ru|легко́}}
+
+===Predicative===
+{{head|ru|predicative|head=нелегко́}}
+
+# it is not [[easy]]
+
+===Related terms===
+* {{l|ru|нелёгкий}}
+* {{l|ru|лёгкий}}, {{l|ru|лёгкость}}, {{l|ru|ле́гче}}
+* {{l|ru|легча́ть|g=impf}}, {{l|ru|полегча́ть|g=pf}}
+* {{l|ru|легково́й}}
+
+[[ru:нелегко]]
+
 [don't use] adv ди́ко ди́кий+-о [[wild]];[[wildly]];[[absurdly]];[[shyly]];- rel:ди́кий:ди́кость,дика́рь,дико́вина:дико́винка:дико́винный,дикорасту́щий
-[don't use] pred ди́ко - it_is_[[desolate]];it_is_[[absurd]];-
+[don't use] pred ди́ко - it_is_[[desolate]];it_is_[[absurd]];- rel:-
 adv недо́рого недорого́й+-о [[inexpensively]],[[cheaply]];-
-[don't use] adv тя́жко
-[don't use] pred тя́жко
-[don't use] adv жу́тко
-[don't use] pred жу́тко
-pcl быва́ло ? [[would]]_([[often]]);ux:[[он|Он]],_'''бы́вало''',_[[ча́сто]]_[[плакать|пла́кал]].|He would often cry.;-
-[don't use] adv светло́
-[don't use] pred светло́
-[don't use] adv прохла́дно прохла́дный+-о - rel:прохла́дный rel:прохлажда́ться/прохлади́ться,прохлади́тельный,прохла́да,прохла́дец:прохла́дца
+
+==Russian==
+
+===Etymology===
+{{affix|ru|ди́кий|-о}}
+
+===Pronunciation===
+* {{ru-IPA|ди́ко}}
+
+===Adverb===
+{{ru-adv|ди́ко}}
+
+# [[wild]]
+# [[wildly]]
+# [[absurdly]]
+# [[shyly]]
+# {{rfdef|lang=ru}}
+
+===Predicative===
+{{head|ru|predicative|head=ди́ко}}
+
+# it is [[desolate]]
+# it is [[absurd]]
+# {{rfdef|lang=ru}}
+
+===Related terms===
+* {{l|ru|ди́кий}}, {{l|ru|ди́кость}}
+* {{l|ru|дика́рь}}
+* {{l|ru|дико́вина}}, {{l|ru|дико́винка}}, {{l|ru|дико́винный}}
+* {{l|ru|дикорасту́щий}}
+
+[[ru:дико]]
+
+[don't use] adv тя́жко тя́жкий+-о [[sorely]],[[gravely]],[[heavily]];with_[[difficulty]];- rel:тя́жкий,тяжёлый:тяжело́,тяготи́ть,тягота́,тяготе́ть,тяну́ть/потяну́ть,тя́жесть,тяга́ться/потяга́ться,тя́га,тя́гость:тя́гостный,тя́говый,тя́гло:тя́глый:тя́гловый
+[don't use] pred тя́жко - it_is_[[heavy]];it_is_[[hard]];- rel:-
+
+==Russian==
+
+===Etymology===
+{{affix|ru|тя́жкий|-о}}
+
+===Pronunciation===
+* {{ru-IPA|тя́жко}}
+
+===Adverb===
+{{ru-adv|тя́жко}}
+
+# [[sorely]], [[gravely]], [[heavily]]
+# with [[difficulty]]
+# {{rfdef|lang=ru}}
+
+===Predicative===
+{{head|ru|predicative|head=тя́жко}}
+
+# it is [[heavy]]
+# it is [[hard]]
+# {{rfdef|lang=ru}}
+
+===Related terms===
+* {{l|ru|тя́жкий}}
+* {{l|ru|тяжёлый}}, {{l|ru|тяжело́}}
+* {{l|ru|тяготи́ть}}
+* {{l|ru|тягота́}}
+* {{l|ru|тяготе́ть}}
+* {{l|ru|тяну́ть|g=impf}}, {{l|ru|потяну́ть|g=pf}}
+* {{l|ru|тя́жесть}}
+* {{l|ru|тяга́ться|g=impf}}, {{l|ru|потяга́ться|g=pf}}
+* {{l|ru|тя́га}}
+* {{l|ru|тя́гость}}, {{l|ru|тя́гостный}}
+* {{l|ru|тя́говый}}
+* {{l|ru|тя́гло}}, {{l|ru|тя́глый}}, {{l|ru|тя́гловый}}
+
+[[ru:тяжко]]
+
+[don't use] adv жу́тко жу́ткий+-о [[frighteningly]];(c)[[terribly]],[[extremely]];- rel:жу́ткий,жуть
+[don't use] pred жу́тко - [[terrified]];ux:[[я|мне]]_'''жу́тко'''|I_am_terrified;[[frightening]];ux:[[но́чью]]_[[быть|бы́ло]]_'''жу́тко'''|it_was_frightening_at_night;- rel:-
+
+==Russian==
+
+===Etymology===
+{{affix|ru|жу́ткий|-о}}
+
+===Pronunciation===
+* {{ru-IPA|жу́тко}}
+
+===Adverb===
+{{ru-adv|жу́тко}}
+
+# [[frighteningly]]
+# {{lb|ru|colloquial}} [[terribly]], [[extremely]]
+# {{rfdef|lang=ru}}
+
+===Predicative===
+{{head|ru|predicative|head=жу́тко}}
+
+# [[terrified]]
+#: {{ru-ux|[[я|мне]] '''жу́тко'''|I am terrified|inline=y}}
+# [[frightening]]
+#: {{ru-ux|[[но́чью]] [[быть|бы́ло]] '''жу́тко'''|it was frightening at night|inline=y}}
+# {{rfdef|lang=ru}}
+
+===Related terms===
+* {{l|ru|жу́ткий}}
+* {{l|ru|жуть}}
+
+[[ru:жутко]]
+
+pcl быва́ло - (c)[[would]]_([[often]]);ux:[[он|Он]],_'''бы́вало''',_[[ча́сто]]_[[плакать|пла́кал]].|He would often cry.;- rel:быва́ть,быва́лый,быть,бы́вший
+
+===Etymology===
+Apparently the neuter singular past tense of {{m|ru|быва́ть||to be (customarily)}}.
+
+[don't use] adv светло́ све́тлый+-о́ [[brightly]];[[warmly]],with_[[kindness]];- rel:све́тлый:све́тлость,свети́ть:свети́ться:светя́щийся,свет:светово́й,свеча́:све́чка:свече́ние:свечно́й,светля́к:светлячо́к,свети́ло,свети́льник,све́точ
+[don't use] pred светло́ - it_is_[[light]];ux:[[уже́]]_'''светло́'''|it_is_already_[[light]];- rel:-
+
+==Russian==
+
+===Etymology===
+{{affix|ru|све́тлый|-о́}}
+
+===Pronunciation===
+* {{ru-IPA|светло́}}
+
+===Adverb===
+{{ru-adv|светло́}}
+
+# [[brightly]]
+# [[warmly]], with [[kindness]]
+# {{rfdef|lang=ru}}
+
+===Predicative===
+{{head|ru|predicative|head=светло́}}
+
+# it is [[light]]
+#: {{ru-ux|[[уже́]] '''светло́'''|it is already [[light]]|inline=y}}
+# {{rfdef|lang=ru}}
+
+===Related terms===
+* {{l|ru|све́тлый}}, {{l|ru|све́тлость}}
+* {{l|ru|свети́ть}}, {{l|ru|свети́ться}}, {{l|ru|светя́щийся}}
+* {{l|ru|свет}}, {{l|ru|светово́й}}
+* {{l|ru|свеча́}}, {{l|ru|све́чка}}, {{l|ru|свече́ние}}, {{l|ru|свечно́й}}
+* {{l|ru|светля́к}}, {{l|ru|светлячо́к}}
+* {{l|ru|свети́ло}}
+* {{l|ru|свети́льник}}
+* {{l|ru|све́точ}}
+
+[[ru:светло]]
+
+[don't use] adv прохла́дно прохла́дный+-о [[coolly]];- rel:прохла́дный,прохлажда́ться/прохлади́ться,прохлади́тельный,прохла́да,прохла́дец:прохла́дца
 [don't use] pred прохла́дно прохла́дный+-о it_is_[[cool]];ux:[[сего́дня]]_'''прохла́дно'''|it's_cool_today;it_is_[[chilly]];ux:[[я|мне]]_'''прохла́дно'''|I_am_chilly;- rel:прохла́дный
+
+==Russian==
+
+===Etymology===
+{{affix|ru|прохла́дный|-о}}
+
+===Pronunciation===
+* {{ru-IPA|прохла́дно}}
+
+===Adverb===
+{{ru-adv|прохла́дно}}
+
+# [[coolly]]
+# {{rfdef|lang=ru}}
+
+===Predicative===
+{{head|ru|predicative|head=прохла́дно}}
+
+# it is [[cool]]
+#: {{ru-ux|[[сего́дня]] '''прохла́дно'''|it's cool today|inline=y}}
+# it is [[chilly]]
+#: {{ru-ux|[[я|мне]] '''прохла́дно'''|I am chilly|inline=y}}
+# {{rfdef|lang=ru}}
+
+===Related terms===
+* {{l|ru|прохла́дный}}
+* {{l|ru|прохлажда́ться|g=impf}}, {{l|ru|прохлади́ться|g=pf}}
+* {{l|ru|прохлади́тельный}}
+* {{l|ru|прохла́да}}
+* {{l|ru|прохла́дец}}, {{l|ru|прохла́дца}}
+
+[[ru:прохладно]]
+
 [don't use] суждено́ [special-case use of short form of суждённый]
-[don't use] поло́жено [special-case use of short form of поло́женный]
-adv насторожённо насторожённый+-о FIXME alt:насторо́женно rel:FIXME
-adv насторо́женно насторо́женный+-о altof:насторожённый rel:FIXME
+pred поло́жено - [[should]],[[ought_to]],[[supposed_to]];ux:[[ты|тебе́]]_'''поло́жено'''_[[слу́шаться]]|you_ought_to_obey;- rel:поло́женный,класть/положи́ть,полага́ться/положи́ться,положе́ние,положи́тельный
+adv насторожённо насторожённый+-о [[warily]];- alt:насторо́женно rel:насторожённый:насторо́женный,насторожённость:насторо́женность,настора́живать/насторожи́ть,настора́живаться/насторожи́ться,настороже́,сторожи́ть,сто́рож:сторожево́й,сторо́жка
+adv насторо́женно насторо́женный+-о altof:насторожённый rel:насторожённый:насторо́женный,насторожённость:насторо́женность,настора́живать/насторожи́ть,настора́живаться/насторожи́ться,настороже́,сторожи́ть,сто́рож:сторожево́й,сторо́жка
 
 ===Etymology 2===
 
@@ -35,22 +241,214 @@ adv насторо́женно насторо́женный+-о altof:насто
 ====Adjective form====
 {{ru-pos-alt-ё|насторожённо|adjective form}}
 
-[don't use] adv по́длинно
-[don't use] pcl по́длинно
-[don't use] adv скве́рно
-[don't use] pred скве́рно
+adv по́длинно по́длинный+-о [[really]],[[truly]];(d)[[actually]]_{{i|sentential_adverb}};- rel:по́длинный,по́длинник,дли́нный:дли́нно:длина́:длиннота́,дли́ться/продли́ться,дли́тельный:дли́тельность
+[don't use] adv скве́рно скве́рный+-о [[badly]],[[bad]];- rel:скве́рный,скверносло́вить:скверносло́вие:скверносло́в
+[don't use] pred скве́рно - it_is_[[bad]],it_is_[[unpleasant]];- rel:-
+
+==Russian==
+
+===Etymology===
+{{affix|ru|скве́рный|-о}}
+
+===Pronunciation===
+* {{ru-IPA|скве́рно}}
+
+===Adverb===
+{{ru-adv|скве́рно}}
+
+# [[badly]], [[bad]]
+# {{rfdef|lang=ru}}
+
+===Predicative===
+{{head|ru|predicative|head=скве́рно}}
+
+# it is [[bad]], it is [[unpleasant]]
+# {{rfdef|lang=ru}}
+
+===Related terms===
+* {{l|ru|скве́рный}}
+* {{l|ru|скверносло́вить}}, {{l|ru|скверносло́вие}}, {{l|ru|скверносло́в}}
+
+[[ru:скверно]]
+
 [don't use] adv чуде́сно чуде́сный+-о [[wonderfully]],[[marvelously]];- rel:чуде́сный,чу́до:чудно́й,чу́дный:чу́дно,чуда́к:чудакова́тый:чуда́ческий:чуда́чество,чу́дище:чудо́вище:чудо́вищный:чудо́вищность
-[don't use] int чуде́сно - [[wonderful]]!,[[marvelous]]!;-
+[don't use] int чуде́сно - [[wonderful]]!,[[marvelous]]!;- rel:-
+
+==Russian==
+
+===Etymology===
+{{affix|ru|чуде́сный|-о}}
+
+===Pronunciation===
+* {{ru-IPA|чуде́сно}}
+
+===Adverb===
+{{ru-adv|чуде́сно}}
+
+# [[wonderfully]], [[marvelously]]
+# {{rfdef|lang=ru}}
+
+===Interjection===
+{{head|ru|interjection|head=чуде́сно}}
+
+# [[wonderful]]!, [[marvelous]]!
+# {{rfdef|lang=ru}}
+
+===Related terms===
+* {{l|ru|чуде́сный}}
+* {{l|ru|чу́до}}, {{l|ru|чудно́й}}
+* {{l|ru|чу́дный}}, {{l|ru|чу́дно}}
+* {{l|ru|чуда́к}}, {{l|ru|чудакова́тый}}, {{l|ru|чуда́ческий}}, {{l|ru|чуда́чество}}
+* {{l|ru|чу́дище}}, {{l|ru|чудо́вище}}, {{l|ru|чудо́вищный}}, {{l|ru|чудо́вищность}}
+
+[[ru:чудесно]]
+
 [already done] сму́тно
-[don't use] adv любопы́тно любопы́тный+-о - rel:любопы́тный:нелюбопы́тный
-[don't use] pred любопы́тно -
-[don't use] adv ую́тно
-[don't use] pred ую́тно
+[don't use] adv любопы́тно любопы́тный+-о [[curiously]],with_[[curiosity]];- rel:любопы́тный:нелюбопы́тный,любопы́тство,любопы́тствовать/полюбопы́тствовать,любо́й,лю́бо,любова́ться/полюбова́ться,люби́ть,любо́вь:любо́вный:любо́вно,люби́мый:люби́мец:люби́мчик,люби́тель,лю́бящий,любе́зный:любе́зно:любе́зность:любе́зничать,пытли́вый,пыта́ться/попыта́ться,пыта́ть,пы́тка
+[don't use] pred любопы́тно - it_is_[[curious]];ux:[[я|мне]]_'''любопы́тно'''|I_am_curious;- rel:-
+
+==Russian==
+
+===Etymology===
+{{affix|ru|любопы́тный|-о}}
+
+===Pronunciation===
+* {{ru-IPA|любопы́тно}}
+
+===Adverb===
+{{ru-adv|любопы́тно}}
+
+# [[curiously]], with [[curiosity]]
+# {{rfdef|lang=ru}}
+
+===Predicative===
+{{head|ru|predicative|head=любопы́тно}}
+
+# it is [[curious]]
+#: {{ru-ux|[[я|мне]] '''любопы́тно'''|I am curious|inline=y}}
+# {{rfdef|lang=ru}}
+
+[[ru:любопытно]]
+
+===Related terms===
+* {{l|ru|любопы́тный}}, {{l|ru|нелюбопы́тный}}
+* {{l|ru|любопы́тство}}
+* {{l|ru|любопы́тствовать|g=impf}}, {{l|ru|полюбопы́тствовать|g=pf}}
+* {{l|ru|любо́й}}
+* {{l|ru|лю́бо}}
+* {{l|ru|любова́ться|g=impf}}, {{l|ru|полюбова́ться|g=pf}}
+* {{l|ru|люби́ть}}
+* {{l|ru|любо́вь}}, {{l|ru|любо́вный}}, {{l|ru|любо́вно}}
+* {{l|ru|люби́мый}}, {{l|ru|люби́мец}}, {{l|ru|люби́мчик}}
+* {{l|ru|люби́тель}}
+* {{l|ru|лю́бящий}}
+* {{l|ru|любе́зный}}, {{l|ru|любе́зно}}, {{l|ru|любе́зность}}, {{l|ru|любе́зничать}}
+* {{l|ru|пытли́вый}}
+* {{l|ru|пыта́ться|g=impf}}, {{l|ru|попыта́ться|g=pf}}
+* {{l|ru|пыта́ть}}
+* {{l|ru|пы́тка}}
+
+[[ru:любопытно]]
+
+[don't use] adv ую́тно ую́тный+-о [[comfortably]],[[cozily]];- rel:ую́тный,ую́т
+[don't use] pred ую́тно - it_is_[[comfortable]];ux:[[я|мне]]_'''ую́тно'''|I_am_comfortable;- rel:-
+
+==Russian==
+
+===Etymology===
+{{affix|ru|ую́тный|-о}}
+
+===Pronunciation===
+* {{ru-IPA|ую́тно}}
+
+===Adverb===
+{{ru-adv|ую́тно}}
+
+# [[comfortably]], [[cozily]]
+# {{rfdef|lang=ru}}
+
+===Predicative===
+{{head|ru|predicative|head=ую́тно}}
+
+# it is [[comfortable]]
+#: {{ru-ux|[[я|мне]] '''ую́тно'''|I am comfortable|inline=y}}
+# {{rfdef|lang=ru}}
+
+===Related terms===
+* {{l|ru|ую́тный}}
+* {{l|ru|ую́т}}
+
+[[ru:уютно]]
+
 [don't use] adv непривы́чно непривы́чный+-о [[unusually]];- rel:непривы́чный:привы́чный,привыка́ть/привы́кнуть,привы́чка syn:необы́чно,необыкнове́нно ant:привы́чно
-[don't use] pred непривы́чно - [[unaccustomed]];ux:[[я|мне]]_'''непривы́чно'''_{{i|+_infinitive}}|I_am_not_[[used_to]]_(doing_something);-
-pred жела́тельно
-[don't use] adv отврати́тельно
-[don't use] pred отврати́тельно
+[don't use] pred непривы́чно - [[unaccustomed]];ux:[[я|мне]]_'''непривы́чно'''_{{i|+_infinitive}}|I_am_not_[[used_to]]_(doing_something);- rel:-
+
+==Russian==
+
+===Etymology===
+{{affix|ru|непривы́чный|-о}}
+
+===Pronunciation===
+* {{ru-IPA|непривы́чно}}
+
+===Adverb===
+{{ru-adv|непривы́чно}}
+
+# [[unusually]]
+# {{rfdef|lang=ru}}
+
+====Synonyms====
+* {{l|ru|необы́чно}}, {{l|ru|необыкнове́нно}}
+
+====Antonyms====
+* {{l|ru|привы́чно}}
+
+===Predicative===
+{{head|ru|predicative|head=непривы́чно}}
+
+# [[unaccustomed]]
+#: {{ru-ux|[[я|мне]] '''непривы́чно''' {{i|+ infinitive}}|I am not [[used to]] (doing something)|inline=y}}
+# {{rfdef|lang=ru}}
+
+===Related terms===
+* {{l|ru|непривы́чный}}, {{l|ru|привы́чный}}
+* {{l|ru|привыка́ть|g=impf}}, {{l|ru|привы́кнуть|g=pf}}
+* {{l|ru|привы́чка}}
+
+[[ru:непривычно]]
+
+pred жела́тельно жела́тельный+-о it_is_[[desirable]];- rel:жела́тельный,жела́ть/пожела́ть,жела́нный,жела́ние,жела́ющие
+[don't use] adv отврати́тельно отврати́тельный+-о [[disgustingly]],[[nauseatingly]];(c)(f)[[horribly]],very_[[badly]];- rel:отврати́тельный,отвраща́ть/отврати́ть,отвраще́ние
+[don't use] pred отврати́тельно - it_is_[[disgusting]],it_is_[[repugnant]];- rel:-
+
+==Russian==
+
+===Etymology===
+{{affix|ru|отврати́тельный|-о}}
+
+===Pronunciation===
+* {{ru-IPA|отврати́тельно}}
+
+===Adverb===
+{{ru-adv|отврати́тельно}}
+
+# [[disgustingly]], [[nauseatingly]]
+# {{lb|ru|colloquial|figurative}} [[horribly]], very [[badly]]
+# {{rfdef|lang=ru}}
+
+===Predicative===
+{{head|ru|predicative|head=отврати́тельно}}
+
+# it is [[disgusting]], it is [[repugnant]]
+# {{rfdef|lang=ru}}
+
+===Related terms===
+* {{l|ru|отврати́тельный}}
+* {{l|ru|отвраща́ть|g=impf}}, {{l|ru|отврати́ть|g=pf}}
+* {{l|ru|отвраще́ние}}
+
+[[ru:отвратительно]]
+
 adv сле́по слепо́й+-о [[blindly]];- rel:слепо́й,FIXME
 adv ску́по скупо́й+-о FIXME rel:скупо́й,FIXME
 adv нау́тро на+у́тро [[next]]_[[morning]];-
