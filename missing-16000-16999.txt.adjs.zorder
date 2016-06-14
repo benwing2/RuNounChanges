@@ -376,9 +376,9 @@ From {{affix|ru|в|попасть|alt2=попа́д}}, where the second part app
 
 adv невпопа́д не-+впопа́д (c)[[inappropriately]],[[out_of_place]],not_[[to_the_point]];- rel:в,попада́ть/попа́сть,попада́ться/попа́сться,попада́ниеsyn:некста́ти,не_к_ме́сту,неуме́стно
 n аттитю́д fr:attitude - [[attitude]];- rel:-
-n природопо́льзование приро́да+alt1=природо-+по́льзование - [[environmental]]_[[management]],[[wildlife]]_[[management]],use_of_[[natural_resources]];- pron:приро̀допо́льзование
-лесопо́льзование лес+alt1=лесо-+по́льзование - [[forest]]_[[management]],[[forest]]_[[use]];- rel:приро́да:приро́дный,прирождённый,по́льзвование,по́льза,по́льзоваться/вопо́льзоваться,по́льзователь
-отмыва́ние отмыва́ть+-а́ние - [[laundering]]_{{i|of_[[money]],_[[drugs]],_etc.}};- rel:отмыва́ть/отмы́ть,отмыва́ться/отмы́ться
+n природопо́льзование приро́да+alt1=природо-+по́льзование - [[environmental]]_[[management]],[[wildlife]]_[[management]],use_of_[[natural_resources]];- pron:приро̀допо́льзование rel:приро́да:приро́дный,прирождённый,по́льзвование,по́льза,по́льзоваться/вопо́льзоваться,по́льзователь
+n лесопо́льзование лес+alt1=лесо-+по́льзование - [[forest]]_[[management]],[[forest]]_[[use]];- rel:лес:лесно́й,по́льзвование,по́льза,по́льзоваться/вопо́льзоваться,по́льзователь
+n отмыва́ние отмыва́ть+-а́ние - [[laundering]]_{{i|of_[[money]],_[[drugs]],_etc.}};- rel:отмыва́ть/отмы́ть,отмыва́ться/отмы́ться
 [don't use] n прови́дение прови́деть+-ение - [[foresight]],[[vision]];- rel:прови́деть,прови́дец
 [don't use] n провиде́ние прови́деть+-е́ние - {{lb|ru|religion}}_[[providence]]\;_[[Providence]];- rel:прови́деть,прови́дец
 
@@ -459,7 +459,7 @@ adv поодино́чке по+одиночка+alt2=одино́чке [[singl
 adv дово́льно-таки́ дово́льно+таки́ [[rather]],[[somewhat]];- syn:дово́льно rel:дово́льный,дово́льство:дово́льствие,дово́льствоваться/удово́льствоваться,таки́,так:та́кже,тако́в:таково́й,тако́й:тако́й-то
 adj зо́ркий зреть+alt1=зр(еть)+-кий a'* [[sharp-eyed]];[[vigilant]],[[watchful]];- comp:зо́рче der:зо́рко:зо́ркость rel:зреть/узре́ть,зре́ние,зри́мый,зри́тель:зри́тельный,зря́чий,зрачо́к
 n кули́к - b|... [[sandpiper]],[[snipe]];- rel:-
-n переда́тчик переда́ть+-чик а|a=ai {{lb|ru|animate}}_[[sender]],[[messenger]];{{lb|ru|inanimate|radio|television}} [[transmitter]];- rel:передава́ть/переда́ть,передава́ться/переда́ться,переда́ча,переда́точный
+n переда́тчик переда́ть+-чик а|a=ai {{lb|ru|animate}}_[[sender]],[[messenger]];{{lb|ru|inanimate|radio|television}}_[[transmitter]];- rel:передава́ть/переда́ть,передава́ться/переда́ться,переда́ча,переда́точный
 [don't use] adv впрок в+прок+t2=[[benefit]],_[[use]] for_[[future]]_[[use]],in_[[reserve]],[[in_store]];to_one's_[[benefit]];ux:[[э́то]]_[[ты|тебе́]]_[[не]]_[[пойти́|пойдёт]]_'''впрок'''|it_won't_do_you_any_good;- rel:в,прок
 [don't use] pred впрок - it_is_to_someone's_[[benefit]],it_[[profits]];ux:[[он|ему́]]_'''впрок'''|it's_going_right_for_him;- rel:-
 
@@ -503,8 +503,8 @@ n истука́н - - [[idol]];[[statue]];(f)[[sedentary]],_[[insensate]]_[[per
 ===Etymology===
 From {{inh|ru|orv|истуканъ}}, past passive participle of {{m|orv|истукати||to [[carve]]}};  compare {{m|ru|ту́кать||to [[hit]]}}.
 
-n босто́н en:Boston - [[high-grade]]_[[woolen]]_[[cloth]];[[Boston]]_{{gloss|old_card_game}};{{w|Boston (dance)|Boston}}_{{gloss|type_of_dance}};- rel:Бо́стон
-int о-о - (c)[[ow]];[[uh-oh]]_{{gloss|expressing_[[fear]]}};[[golly]]_{{gloss|expressing_[[surprise]]}};-
+n босто́н en:Boston - [[high-grade]]_[[woolen]]_[[cloth]];[[Boston]]_{{gloss|old_card_game}};{{w|Boston_(dance)|Boston}}_{{gloss|type_of_dance}};- rel:Бо́стон
+int о-о - (c)[[ow]];[[uh-oh]]_{{gloss|expressing_[[fear]]}};[[golly]]_{{gloss|expressing_[[surprise]]}};- rel:о,ого́,о-го-го́
 
 ===Etymology===
 Onomatopoeic.
@@ -629,12 +629,12 @@ int оп - [[oops]];- rel:-
 ===Etymology===
 Onomatopoeic.
 
-припа́с - - {{lb|ru|often|plural}}_[[supply]],[[provision]];- rel:припаса́ть/припасти́
+n припа́с - - {{lb|ru|often|plural}}_[[supply]],[[provision]];- rel:припаса́ть/припасти́
 
 ===Etymology===
 Deverbal noun from {{m|ru|припасти́}}.
 
-[ask if there is secondary stress] единоро́сс - a=an [[member]]_of_the_[[United_Russia]]_[[party]];- rel:оди́н:еди́ный:едине́ние,еди́нство:еди́нственный:еди́нственно,едини́ца:едини́чный,Росси́я:росси́йский:россия́нин,ру́сский
+[ask if there is secondary stress] n единоро́сс - a=an [[member]]_of_the_[[United_Russia]]_[[party]];- rel:оди́н:еди́ный:едине́ние,еди́нство:еди́нственный:еди́нственно,едини́ца:едини́чный,Росси́я:росси́йский:россия́нин,ру́сский
 
 ===Etymology===
 Shortening of {{m|ru|Еди́ная Росси́я||[[United Russia]]}}.
@@ -654,7 +654,7 @@ adv напролёт на+пролёт (c)[[straight]]_[[through]],without_a_[[b
 ===Noun===
 {{ru-noun-alt-ё|гнёт}}
 
-гнёт - n=sg press_for_[[pickling]]_or_[[salting]];[[burden]],[[yoke]];(f)[[oppression]];- rel:гнести́,гнету́щий
+n гнёт - n=sg press_for_[[pickling]]_or_[[salting]];[[burden]],[[yoke]];(f)[[oppression]];- rel:гнести́,гнету́щий
 
 ===Etymology===
 Deverbal noun from {{m|ru|гнести́}}.
