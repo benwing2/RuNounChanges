@@ -71,8 +71,9 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
     else:
       pos = "adj"
   # Replace _ with space, but not in the declension, where there may be
-  # an underscore, e.g. a|short_m=-
-  els = [el if i == 2 and (pos == "n" or pos == "adj") else el.replace("_", " ") for i, el in enumerate(els)]
+  # an underscore, e.g. a|short_m=-; but allow \s to stand for a space in
+  # the declension
+  els = [el.replace(r"\s", " ") if i == 2 and (pos == "n" or pos == "adj") else el.replace("_", " ") for i, el in enumerate(els)]
   if pos != "n" and pos != "adj":
     term, etym, defns = els[0], els[1], els[2]
     remainder = els[3:]
