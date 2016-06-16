@@ -159,6 +159,17 @@ KoreanQuoter review
 
 got as far back as through Mar 16 2016
 
+July 13 2015:
+
+* [[смертоносный]] "lethal, fatal" yes? [see [https://books.google.com/books?id=QxoNCAAAQBAJ&pg=PT451&dq=%D1%81%D0%BC%D0%B5%D1%80%D1%82%D0%BE%D0%BD%D0%BE%D1%81%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwiG846M0qbNAhXC7YMKHTRlD1YQ6AEIQzAF]: Раны медиана наичастее смертоносны бывают.]
+-------------------
+
+missing-misc-non-lemmas
+
+* [[тепе́решний]] "present, of now" no? [can't find examples]
+
+
+
 -------------------
 
 missing-11000-11999.adjs.zorder, part 1
@@ -583,6 +594,7 @@ missing-16000-16999.adjs.zorder, part 4
 missing-16000-16999.adjs.zorder, part N - adverbs
 
 * [[молниеносный]] "lightning-fast" yes? [see [https://books.google.com/books?id=YOQYBAAAQBAJ&pg=PA61&dq=%D0%BC%D0%BE%D0%BB%D0%BD%D0%B8%D0%B5%D0%BD%D0%BE%D1%81%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwiuxMCmvpLNAhUE4GMKHSYWBZAQ6AEIJzAB]: Неудивительно, что вскоре флот Чжэн Ши походил на «единый кулак», удары которого были молниеносны и столь сильны]
+* [[ведущий]] "main, leading" no? [can't find clear examples]
 
 
 ------------------------
@@ -611,6 +623,14 @@ missing-17000-17999.adjs.zorder, part 2
 * [[уездный]] "district (attrib.)" yes? [see [https://books.google.com/books?id=wrdHAQAAIAAJ&q=%D1%83%D0%B5%D0%B7%D0%B4%D0%BD%D1%8B&dq=%D1%83%D0%B5%D0%B7%D0%B4%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwjAg4yVvYPNAhXo24MKHWfTDVo4ChDoAQg7MAU]: Все ясно каждому. Детали даже не национальны, а локальны (почти уездны).]
 * [[надводный]] "surface (attrib.)" no? [can't find examples]
 * [[вакуумный]] "vacuum (attrib.)" no? [can't find examples]
+
+missing-17000-17999.adjs.zorder, part 3
+
+* [[отработанный]] "waste (attrib.), exhaust (attrib.)" no? [Ushakov says only long forms exist]
+* [[предвоенный]] "pre-war" no? [can't find examples]
+* [[песенный]] "song-like" yes? [see [https://books.google.com/books?id=RE48AQAAIAAJ&q=%D0%BF%D0%B5%D1%81%D0%B5%D0%BD%D0%BD%D1%8B&dq=%D0%BF%D0%B5%D1%81%D0%B5%D0%BD%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwjD1seC5avNAhUI7WMKHRd1C9g4ChDoAQhLMAg]: Вряд ли ошибусь, если скажу, что именно этой начиненности народной песней он обязан тем, что почти все его стихи необыкновенно песенны.]
+
+
 
 missing-17000-17999.adjs.zorder -- part N, adverbs
 
