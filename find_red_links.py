@@ -40,6 +40,8 @@ for i, pagename in blib.iter_items(lines, start, end):
     if page.exists():
       if re.search("#redirect", unicode(page.text), re.I):
         msg("Page %s [[%s]]: exists as redirect" % (i, pagename))
+      elif re.search(r"\{\{superlative of", unicode(page.text)):
+        msg("Page %s [[%s]]: exists as superlative" % (i, pagename))
       else:
         msg("Page %s [[%s]]: exists as non-lemma" % (i, pagename))
     else:
