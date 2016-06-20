@@ -672,6 +672,15 @@ missing-18000-18999.adjs.zorder, part 3
 * [[связующий]] "connecting" no? [can't find examples]
 * [[звенящий]] "ringing, jingling, clinking" yes? [see from 1879 [https://books.google.com/books?id=AZFFAQAAMAAJ&pg=RA1-PA207&dq=%D0%B7%D0%B2%D0%B5%D0%BD%D1%8F%D1%89%D0%B8&hl=en&sa=X&ved=0ahUKEwiE5tSj9LXNAhXl5YMKHccrBbk4KBDoAQgbMAA]: Всѣ они цементированы известью, иногда желѣзисты и звенящи.] [also more recent [https://books.google.com/books?id=easyAAAAIAAJ&q=%D0%B7%D0%B2%D0%B5%D0%BD%D1%8F%D1%89%D0%B8&dq=%D0%B7%D0%B2%D0%B5%D0%BD%D1%8F%D1%89%D0%B8&hl=en&sa=X&ved=0ahUKEwil-vmE9bXNAhXG7YMKHVYjDEw4RhDoAQguMAM]: Время оставляет от сражений донесения и мемуары, карты и схемы. Донесения подчас лапидарно-звенящи. В мемуарах нередко обнаруживается то, ...] [also [https://books.google.com/books?id=O6cbAAAAMAAJ&q=%D0%B7%D0%B2%D0%B5%D0%BD%D1%8F%D1%89%D0%B8&dq=%D0%B7%D0%B2%D0%B5%D0%BD%D1%8F%D1%89%D0%B8&hl=en&sa=X&ved=0ahUKEwil-vmE9bXNAhXG7YMKHVYjDEw4RhDoAQhWMAk]: Поэт любит свой Казахстан горячо и преданно, но судьба казахского народа мыслится им в нерасторжимом единении с судьбами всех народов страны. Прозрачны, звенящи, проникновенно лиричны стихи поэта о красавице ...]
 
+missing-18000-18999.adjs.zorder, part 4
+
+* [[лаковый]] "lacquered" yes? [see [https://books.google.com/books?id=pJVKAQAAIAAJ&q=%D0%BB%D0%B0%D0%BA%D0%BE%D0%B2%D1%8B&dq=%D0%BB%D0%B0%D0%BA%D0%BE%D0%B2%D1%8B&hl=en&sa=X&ved=0ahUKEwiugaj3irbNAhXLpYMKHfNdCpw4WhDoAQhIMAc]: Зеленые листочки были очень упруги, лаковы. Было загадочно и таинственно. Холмами, виноградниками — (натянута проволока между рядами), огоньками домов — наконец-то показавшимися — проходили стада древних зверей ...]
+* [[бамбуковый]] "bamboo (attrib.)" no? [can't find examples]
+* [[долларовый]] "dollar (attrib.)" no? [can't find examples]
+* [[балансовый]] "balance (attrib.)" no? [can't find examples]
+* [[актовый]] "assembly (attrib.)" no? [can't find examples]
+* [[тестовый]] "test (attrib.)" no? [can't find examples]
+
 missing-18000-18999.adjs.zorder, part ?
 
 * [[решётчатый]] "lattice (attrib.), latticed, slatted" yes? [see [https://books.google.com/books?id=3hMOAQAAIAAJ&q=%D1%80%D0%B5%D1%88%D0%B5%D1%82%D1%87%D0%B0%D1%82%D1%8B&dq=%D1%80%D0%B5%D1%88%D0%B5%D1%82%D1%87%D0%B0%D1%82%D1%8B&hl=en&sa=X&ved=0ahUKEwiN7Nu1n7PNAhUB4mMKHdIUAVkQ6AEIMTAD]: Ни одна из них не запирается глухой дверью; все двери здесь решетчаты.]
