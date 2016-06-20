@@ -680,6 +680,7 @@ missing-18000-18999.adjs.zorder, part 4
 * [[балансовый]] "balance (attrib.)" no? [can't find examples]
 * [[актовый]] "assembly (attrib.)" no? [can't find examples]
 * [[тестовый]] "test (attrib.)" no? [can't find examples]
+* [[подоходный]] "income (attrib.)" yes? [see [https://books.google.com/books?id=5wOrziSXwNwC&pg=PT13&dq=%D0%BF%D0%BE%D0%B4%D0%BE%D1%85%D0%BE%D0%B4%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwiMtru6yrfNAhUINpQKHYQOBfYQ6AEIJTAB#v=onepage&q=%D0%BF%D0%BE%D0%B4%D0%BE%D1%85%D0%BE%D0%B4%D0%BD%D1%8B&f=false]: Но будьте уверены, что наши косвенные налоги столь же прогрессивно подоходны, как и ваши цензы.]
 
 missing-18000-18999.adjs.zorder, part ?
 
