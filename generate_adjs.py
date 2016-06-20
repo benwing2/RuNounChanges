@@ -80,7 +80,7 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
   else:
     term, etym, decl, defns = els[0], els[1], els[2], els[3]
     if decl.startswith("?"):
-      error("Declension starts with ?, need to fix: %s: Processing line: %s" % decl)
+      error("Declension starts with ?, need to fix: %s" % decl)
     remainder = els[4:]
   translit = None
   declterm = term
@@ -283,11 +283,13 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
       parttext = """===Participle===
 {{head|ru|participle|head=%s%s}}
 
-%s
-
-====Declension====
-{{ru-decl-adj|%s%s}}\n\n""" % (term, trtext, "\n".join(infleclines), declterm,
-    "" if partshort == "-" else "|" + partshort)
+%s\n\n""" % (term, trtext, "\n".join(infleclines))
+      if "adv" in parttype:
+        partdecltext = ""
+      else:
+        partdecltext = """====Declension====
+{{ru-decl-adj|%s%s}}\n\n""" % (declterm, "" if partshort == "-" else "|" + partshort)
+      parttext += partdecltext
     else: # derived or related terms or see also
       if vals == "-":
         if sartype == "der":
