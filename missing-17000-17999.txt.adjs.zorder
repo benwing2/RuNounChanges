@@ -412,44 +412,123 @@ From {{etyl|sla-pro|ru}}; compare {{m|orv|нарокъ||pebble used for divinati
 
 
 
+------------------ from here --------------------
+
+
+
+
+
+
 
 [ask Anatoli to check pronunciation, is -ка reduced?]
 
-int дава́й-ка дава́й+-ка [[let's]];[[come_on]];- rel:дава́й,дава́йте,дава́ть/дать
+int дава́й-ка дава́й+-ка [[let's]];[[come_on]] rel:дава́й,дава́йте,дава́ть/дать
 
 ====Usage notes====
 Has the same meanings as {{m|ru|дава́й}} but expresses greater urgency. Used to address a single person.
 
-int на́те - (c)[[here_you_are]],[[here]]_is_...,[[take]]_it!;-
+int на́те - (c)[[here_you_are]],[[here]]_is_...,[[take]]_it! rel:на
 
 ===Etymology===
 Imperative plural of {{m|ru|на}}.
 
 [already done?] ..удак
 
-n про́сека про-+сечь+alt2=сек-+-а - [[glade]],[[clearing]];[[cleared]]_[[path]]_in_a_[[forest]];- alt:про́сек rel:сечь/вы́сечь,се́чься,сече́ние,се́чка,сека́ч
-n капе́лла//kapɛ́lla ?it:capella - [[choir]]_of_[[singers]]_{{gloss|from_the_18th_century,_mixed_ensemble_of_singers_and_musicians}};[[concert_hall]]_for_[[chamber_music]];[[chapel]];- rel:капелла́н,капельме́йстер pron:phon=капэ́лла|gem=y
-[don't use] n при́ма ?it:prima - {{lb|ru|music}}_[[tonic]],[[unison]]_[[interval]];- rel:-
-[don't use] n при́ма ?it:prima a=an {{lb|ru|music|ballet}}_[[principal]]_[[female]]_[[soloist]];-
+n про́сека про-+сечь+alt2=сек-+-а - [[glade]],[[clearing]];[[cleared]]_[[path]]_in_a_[[forest]] alt:про́сек rel:сечь/вы́сечь,се́чься,сече́ние,се́чка,сека́ч
+n капе́лла//kapɛ́lla ?it:capella - [[choir]]_of_[[singers]]_{{gloss|from_the_18th_century,_mixed_ensemble_of_singers_and_musicians}};[[concert_hall]]_for_[[chamber_music]];[[chapel]] rel:капелла́н,капельме́йстер pron:phon=капэ́лла|gem=y
+[don't use] n при́ма ?it:prima - {{lb|ru|music}}_[[tonic]],[[unison]]_[[interval]] rel:-
+[don't use] n при́ма ?it:prima a=an {{lb|ru|music|ballet}}_[[principal]]_[[female]]_[[soloist]] rel:примадо́нна
+
+==Russian==
+
+===Etymology===
+Perhaps borrowed from {{bor|ru|it|prima|notext=1}}.
+
+===Pronunciation===
+* {{ru-IPA|при́ма}}
+
+===Noun===
+{{ru-noun+|при́ма}}
+
+# {{lb|ru|music}} [[tonic]], [[unison]] [[interval]]
+
+====Declension====
+{{ru-noun-table|при́ма}}
+
+===Noun===
+{{ru-noun+|при́ма|a=an}}
+
+# {{lb|ru|music|ballet}} [[principal]] [[female]] [[soloist]]
+
+====Declension====
+{{ru-noun-table|при́ма|a=an}}
+
+====Related terms====
+* {{l|ru|примадо́нна}}
+
+[[ru:прима]]
+
+
 n и́род - a=an (n)[[tormentor]],[[villain]];- rel:И́род
 
 ===Etymology===
 From {{m|ru|И́род||[[Herod]]}}.
 
 n оспа́ривание оспа́ривать+-а́ние - [[contestation]];[[avoidance]];- rel:оспа́ривать/оспо́рить
-n пара́дное sn:пара́дный + [[front]]_[[door]];-
-adv понаслы́шке ?по+наслышаться+alt2=наслы́ш(аться)+-ка [[by]]_[[hearsay]];-
-adv на́двое на+дво́е in_[[two]],in_[[half]],into_[[two]]_[[parts]];-
-adj торжеству́ющий -- a [[triumphant]],[[exultant]];- part:торжествова́ть:pres|act|impfv:-
-adv торжеству́юще торжеству́ющий+-е [[triumphantly]];-
-adv напока́з на+пока́з [[for]]_[[show]];[[on]]_[[display]];-
-adv биологи́чески биологи́ческий+-и [[biologically]];-
-adv органи́чески органи́ческий+-и [[organically]];-
-adv по-хозя́йски ? ?
-adj мастерско́й ма́стер+-ско́й - altof:ма́стерский der:мастерски́
-adj ма́стерский ма́стер+-ский - [[masterful]],[[masterly]];- der:ма́стерски
-[don't use] adv мастерски́ мастерско́й+-и́ [[masterfully]];-
-[don't use] adv ма́стерски ма́стерский+-и [[masterfully]];-
+n пара́дное sn:пара́дный + [[front]]_[[door]];- rel:пара́д:пара́дный
+adv понаслы́шке ?по+наслышаться+alt2=наслы́ш(аться)+-ка [[by]]_[[hearsay]];- rel:наслы́шаться,наслы́шан,наслу́шаться,слу́шать/послу́шать,слу́шаться/послу́шаться,слу́шатель,слу́шание,слух,слыха́ть,слы́шать,слы́шный:слы́шно,слы́шимость
+adv на́двое на+дво́е in_[[two]],in_[[half]],into_[[two]]_[[parts]];- rel:дво́е,два,двои́ться,дво́йка,двойно́й,дво́йня,дво́йственный:дво́йственность,два́жды,двоя́кий:двоя́ко
+[already done] adj торжеству́ющий -- a [[triumphant]],[[exultant]];- part:торжествова́ть:pres|act|impfv:-
+adv торжеству́юще торжеству́ющий+-е [[triumphantly]];- rel:торжеству́ющий,торжествова́ть/восторжествова́ть,торжество́,торже́ственный:торже́ственно:торже́ственность
+adv напока́з на+пока́з [[for]]_[[show]];[[on]]_[[display]] rel:пока́з:показно́й,показа́ть/пока́зывать,показа́ться/пока́зываться,показа́ние,показа́тель:показа́тельный,показу́ха
+adv биологи́чески биологи́ческий+-и [[biologically]] rel:биологи́ческий,биоло́гия:био́лог
+adv органи́чески органи́ческий+-и [[organically]] rel:органи́ческий,органи́чный,о́рган,органи́зм
+adv по-хозя́йски по-+хозя́йский+-и [[thriftily]] rel:хозя́йский,хозя́ин:хозя́йка,хозя́йство:хозя́йственный:хозя́йственность:хозя́йственник,хозя́йствовать:хозя́йствование,хозя́йчик,хозя́йничать
+adj мастерско́й ма́стер+-ско́й - [[masterful]],[[masterly]] der:мастерски́,мастерска́я alt:ма́стерский rel:ма́стер:мастерство́,мастери́ть,мастеро́к
+adj ма́стерский ма́стер+-ский - altof:мастерско́й der:ма́стерски rel:ма́стер:мастерство́,мастери́ть,мастерска́я,мастеро́к
+[don't use] adv мастерски́ мастерско́й+-и́ [[masterfully]] rel:мастерско́й:ма́стерский,ма́стер:мастерство́,мастери́ть,мастерска́я,мастеро́к
+[don't use] adv ма́стерски ма́стерский+-и [[masterfully]] rel:мастерско́й:ма́стерский,ма́стер:мастерство́,мастери́ть,мастерска́я,мастеро́к
+
+==Russian==
+
+===Etymology 1===
+{{affix|ru|мастерско́й|-и́}}
+
+====Pronunciation====
+* {{ru-IPA|мастерски́}}
+
+====Adverb====
+{{ru-adv|мастерски́}}
+
+# [[masterfully]]
+
+=====Related terms=====
+* {{l|ru|мастерско́й}}, {{l|ru|ма́стерский}}
+* {{l|ru|ма́стер}}, {{l|ru|мастерство́}}
+* {{l|ru|мастери́ть}}
+* {{l|ru|мастерска́я}}
+* {{l|ru|мастеро́к}}
+
+===Etymology 2===
+{{affix|ru|ма́стерский|-и}}
+
+====Pronunciation====
+* {{ru-IPA|ма́стерски}}
+
+====Adverb====
+{{ru-adv|ма́стерски}}
+
+# [[masterfully]]
+
+=====Related terms=====
+* {{l|ru|мастерско́й}}, {{l|ru|ма́стерский}}
+* {{l|ru|ма́стер}}, {{l|ru|мастерство́}}
+* {{l|ru|мастери́ть}}
+* {{l|ru|мастерска́я}}
+* {{l|ru|мастеро́к}}
+
+[[ru:мастерски]]
+
 ма́ри
 
 ==Russian==
@@ -465,43 +544,108 @@ adj ма́стерский ма́стер+-ский - [[masterful]],[[masterly]]
 
 # [[Mari]] person
 
-n внедоро́жник ? - [[SUV]];-
-n со́тник со́т+-ник a=an [[centurion]];-
-[don't use] n универса́л ? a=an [[factotum]],[[jack-of-all-trades]];-
-[don't use] n универса́л ? - [[station_wagon]];{{lb|ru|historical|legal}}_type_of_[[legal]]_[[decree]]_or_[[manifest]]_issued_in_[[Poland]]_and_[[Ukraine]];-
-adv нава́лом ?на+вал+alt2=ва́лом in_[[bulk]];-
-сашин
-n керн ? - [[core]];-
-adv суетли́во суетли́вый+-о [[fussily]];- rel:суетли́вый,FIXME
-adj вкра́дчивый ? a [[smarmy]];[[insinuating]];(f)[[cautious]],[[delicate]];- comp:вкра́дчивее
-adv вкра́дчиво вкра́дчивый+-о [[suavely]];- rel:вкрадчивый:вкра́дчивость
-adv сто́йко сто́йкий+-о [[robustly]],[[durably]];[[steadfastly]],[[stubbornly]],[[persistently]];{{lb|ru|chemistry}}_[[stably]];-
-adv зо́рко зо́ркий+-о [[vigilantly]],[[watchfully]];-
-adv немно́жечко немно́го+-ечко dim:немно́го||a_[[little]]_[[bit]],[[some]];-
-adj поголо́вный поголовье+alt1=поголо́в(ье)+-ный a* [[reckoned]]_by_[[head]];[[universal]],without_[[exception]];-
-adv поголо́вно поголо́вный+-о -
-adj безнака́занный ? a(1) [[unpunished]];- comp:безнаказа́ннее
-adv безнака́занно безнака́занный+-о with_[[impunity]];-
-adj неуста́нный ? a* [[constant]],[[incessant]],[[relentless]];-
-adv неуста́нно неуста́нный+-о [[constantly]],[[incessantly]],[[relentlessly]];-
-adj самозабве́нный ? a*,a(1) [[selfless]];-
-adv самозабве́нно самозабве́нный+-о [[selflessly]];-
-adj проникнове́нный проникновение+alt1=проникнове́н(ие)+-ный a* [[profound]];-
-adv проникнове́нно проникнове́нны+-о [[profoundly]];-
-adv легкомы́сленно легкомы́сленный+-о [[thoughtlessly]];-
-adj двусмы́сленный дву-+смы́слить+-енный a(1) - ant:*(ambiguous)недвусмы́сленный
-adj недвусмы́сленный не-+двусмы́сленный a(1) [[explicit]],[[unequivocal]],[[unambiguous]];- ant:двусмы́сленный
-adv недвусмы́сленно недвусмы́сленный+-о [[explicitly]],[[unequivocally]],[[unambiguously]];-
-adv ум́ышленно ум́ышленный+-о [[deliberately]],[[intentionally]];-
-adv кла́ссно кла́ссный+-о {{lb|ru|slang}}_[[cool]],[[OK]],[[nice]];-
-adv поминутно
-adv доброже́лательно доброже́лательный+-о [[benevolently]];-
-adv пренебрежи́тельно пренебрежи́тельный+-о [[contemptuously]];-
-adj неукосни́тельный ? a* [[strict]],[[rigorous]];- comp:неукосни́тельнее
-adv неукосни́тельно неукосни́тельный+-о [[strictly]],[[rigorously]];-
-adj предусмотри́тельный ? a* [[provident]],[[prudent]],[[precautionary]];- comp:предусмотри́тельнее
-adv предусмотри́тельно предусмотри́тельный+-о [[providently]],[[prudently]];-
-adv оглуши́тельно оглуши́тельный+-о [[deafeningly]];(f)[[resoundingly]];-
+n внедоро́жник вне-+доро́га+-ник - [[SUV]];- rel:вне:вне́шний:вне́шне,доро́га:доро́жка:доро́жный
+n со́тник со́т+-ник a=an [[centurion]];- rel:сто:со́тый,со́тня
+[don't use] n универса́л <<la:ūniversālis a=an [[factotum]],[[jack-of-all-trades]];- rel:универса́льный:универса́льность
+[don't use] n универса́л - - [[station_wagon]];{{lb|ru|historical|legal}}_type_of_[[legal]]_[[decree]]_or_[[manifest]]_issued_in_[[Poland]]_and_[[Ukraine]];- rel:-
+
+==Russian==
+
+===Etymology===
+Ultimately borrowed from {{bor|ru|la|ūniversālis|notext=1}}.
+
+===Pronunciation===
+* {{ru-IPA|универса́л}}
+
+===Noun===
+{{ru-noun+|универса́л|a=an}}
+
+# [[factotum]], [[jack-of-all-trades]]
+# {{rfdef|lang=ru}}
+
+====Declension====
+{{ru-noun-table|универса́л|a=an}}
+
+===Noun===
+{{ru-noun+|универса́л}}
+
+# [[station wagon]]
+# {{lb|ru|historical|legal}} type of [[legal]] [[decree]] or [[manifest]] issued in [[Poland]] and [[Ukraine]]
+# {{rfdef|lang=ru}}
+
+====Declension====
+{{ru-noun-table|универса́л}}
+
+===Related terms===
+* {{l|ru|универса́льный}}, {{l|ru|универса́льность}}
+
+[[ru:универсал]]
+
+adv нава́лом ?навалить+alt1=навал(и́ть)+-ом (c)in_[[bulk]],in_a_[[pile]];(c)[[lots]],[[a_lot]]_{{i|of;_+{{glink|genitive}}}} rel:нава́ливать/навали́ть,нава́ливаться/навали́ться
+
+са́шин
+
+==Russian==
+
+===Pronunciation===
+* {{ru-IPA|са́шин}}
+
+===Adjective===
+{{ru-adj|са́шин}}
+
+# [[Sasha]]'s
+
+====Declension====
+{{ru-decl-adj|са́шин}}
+
+====Related terms====
+* {{l|ru|Са́ша}}
+
+[[ru:сашин]]
+
+n керн de:Kern - [[core]];- rel:-
+adv суетли́во суетли́вый+-о [[fussily]];[[restlessly]],in_a_[[bustling]]_manner rel:суетли́вый,суета́,суети́ться
+adj вкра́дчивый вкрасться+alt1=вкрад-+-чивый a [[smarmy]],[[ingratiating]],[[insinuating]];(f)[[suave]],[[soft]],[[gentle]];- comp:вкра́дчивее der:вкра́дчиво:вкра́дчивость rel:вкра́дываться/вкра́сться,красть/укра́сть,кра́сться,кра́деный,кра́дущийся,кра́дучись
+adv вкра́дчиво вкра́дчивый+-о [[suavely]];- rel:вкра́дчивый:вкра́дчивость,вкра́дываться/вкра́сться,красть/укра́сть,кра́сться,кра́деный,кра́дущийся,кра́дучись
+adv сто́йко сто́йкий+-о [[steadfastly]],[[stubbornly]],[[persistently]];[[stoically]] rel:сто́йкий:сто́йкость,сто́йка,сто́йло,стоймя́,стоя́ть,стоя́ние,сто́я,сто́ящий,стоя́нка,стоя́к
+adv зо́рко зо́ркий+-о [[vigilantly]],[[watchfully]] rel:зо́ркий:зо́ркость,зреть/узре́ть,зре́ние,зри́мый,зри́тель:зри́тельный,зря́чий,зрачо́к
+adv немно́жечко немно́го+-ечко (c)dim:немно́го||a_[[little]]_[[bit]];- rel:немно́го:немно́жко:немно́гое:немно́гие
+adj поголо́вный поголовье+alt1=поголо́в(ье)+-ный a* [[general]],[[total]],[[universal]],without_[[exception]];+[[capitation]]\;_by_[[head]];- der:поголо́вно rel:поголо́вье,голова́:голо́вка:голо́вушка:головно́й
+adv поголо́вно поголо́вный+-о [[universally]],[[to_a_man]],without_[[exception]] rel:поголо́вный,поголо́вье,голова́:голо́вка:голо́вушка:головно́й
+adj безнака́занный без-+нака́занный a(1) [[unpunished]] comp:безнака́заннее der:безнака́занно:безнака́занность rel:нака́зывать/наказа́ть,наказа́ние,наказу́емый,нака́з
+adv безнака́занно безнака́занный+-о with_[[impunity]] rel:безнака́занный:безнака́занность,нака́зывать/наказа́ть,наказа́ние,наказу́емый,нака́з
+adj неуста́нный не-+устать+alt2=уст(а́ть)+-а́нный a* [[constant]],[[incessant]],[[relentless]];[[tireless]] der:неуста́нно rel:устава́ть/уста́ть,у́сталь:уста́лый:уста́лость
+adv неуста́нно неуста́нный+-о [[constantly]],[[incessantly]],[[relentlessly]];[[tirelessly]] rel:неуста́нный,устава́ть/уста́ть,у́сталь:уста́лый:уста́лость
+adj самозабве́нный самозабвение+alt1=самозабве́н(ие)+-ный a*,a(1) [[selfless]],[[self-]][[forgetful]];[[all-consuming]] der:самозабве́нно rel:самозабве́ние,забве́ние,забыва́ть/забы́ть,забытьё,забы́тый,забы́вчивый:забы́вчивость
+adv самозабве́нно самозабве́нный+-о [[selflessly]],[[self-]][[forgetfully]] rel:самозабве́ние:самозабве́нный,забве́ние,забыва́ть/забы́ть,забытьё,забы́тый,забы́вчивый:забы́вчивость
+adj проникнове́нный проникновение+alt1=проникнове́н(ие)+-ный a* [[penetrating]],[[piercing]];[[heartfelt]],[[sincere]] der:проникнове́нно:проникнове́нность syn:*(penetrating)прони́зывающий rel:проникнове́ние,проника́ть/прони́кнуть,проника́ться/прони́кнуться,проника́ние
+adv проникнове́нно проникнове́нны+-о with_[[emotion]],with_[[conviction]],[[sincerely]] rel:проникнове́нный:проникнове́нность,проникнове́ние,проника́ть/прони́кнуть,проника́ться/прони́кнуться,проника́ние
+adv легкомы́сленно легкомы́сленный+-о [[thoughtlessly]];- rel:легкомы́слие:легкомы́сленный,лёгкий:лёгкость,мысль:мы́сленный
+adj двусмы́сленный дву-+смыслить+alt2=смы́сл(ить)+-енный a(1) [[ambiguous]],[[equivocal]];[[suggestive]] ant:*(ambiguous)недвусмы́сленный der:недвусмы́сленный:недвусмы́сленно,двусмы́сленность rel:два:дво́е:дву-:двух-,смы́слить:смысл:смыслово́й,мысль
+adj недвусмы́сленный не-+двусмы́сленный a(1) [[explicit]],[[unequivocal]],[[unambiguous]] ant:двусмы́сленный der:недвусмы́сленно rel:два:дво́е:дву-:двух-,смы́слить:смысл:смыслово́й,мысль
+adv недвусмы́сленно недвусмы́сленный+-о [[explicitly]],[[unequivocally]],[[unambiguously]] rel:двусмы́сленный:недвусмы́сленный,два:дво́е:дву-:двух-,смы́слить:смысл:смыслово́й,мысль
+adv ум́ышленно ум́ышленный+-о [[deliberately]],[[intentionally]] rel:умы́шленный,умышля́ть/умы́слить,умы́сел,мысль
+adv кла́ссно кла́ссный+-о {{lb|ru|slang}}_[[cool]],[[awesome]],[[fantastic]] rel:класс:кла́ссный:кла́ссовый,кла́ссик:кла́ссика:класси́ческий:классици́зм
+adv помину́тно помину́тный+-о [[continually]],[[constantly]] rel:помину́тный,мину́та:мину́тка:мину́точка:мину́тный
+adv доброжела́тельно доброжела́тельный+-о [[benevolently]] rel:доброжела́тельный:доброжела́тельность,доброжела́тель:доброжела́тельница,доброжела́тельство:доброжела́тельствовать,до́брый:добро́:добротá,жела́ть,жела́тельный
+adv пренебрежи́тельно пренебрежи́тельный+-о [[contemptuously]],[[scornfully]],[[disdainfully]] rel:пренебрежи́тельный:пренебрежи́тельность,пренебрега́ть/пренебре́чь,пренебреже́ние
+adj неукосни́тельный не-+укосни́ть+t2=to_[[delay]],_to_[[hesitate]]+-тельный a* [[strict]],[[rigorous]];[[unfailing]] comp:неукосни́тельнее der:неукосни́тельно rel:укосня́ть/укосни́ть
+adv неукосни́тельно неукосни́тельный+-о [[strictly]],[[rigorously]];[[unfailingly]] rel:неукосни́тельный,укосня́ть/укосни́ть
+adj предусмотри́тельный предусмотре́ть+-тельный a* [[prudent]],[[precautionary]],[[far-sighted]] comp:предусмотри́тельнее der:предусмотри́тельно:предусмотри́тельность rel:предусма́тривать/предусмотре́ть,смотре́ть
+adv предусмотри́тельно предусмотри́тельный+-о [[prudently]],with_[[foresight]] rel:предусмотри́тельный:предусмотри́тельность,предусма́тривать/предусмотре́ть,смотре́ть
+adv оглуши́тельно оглуши́тельный+-о [[deafeningly]];(f)[[resoundingly]],[[stunningly]] rel:оглуши́тельный,оглуша́ть/оглуши́ть,глуши́тель,глухо́й:глу́хо:глухота́,глуха́рь
+
+
+
+
+
+------------- from here -----------------
+
+
+
+
+
+
 n ка́ртер ? - [[crankcase]];-
 n генпрокуро́р - a=an ? pron:гѐнпрокуро́р
 
@@ -527,6 +671,8 @@ adj вью́щийся
 n исполи́н ? a=an ?
 n вы́хлоп ? - ?
 n то́ждество ? - ?
+n самозабве́ние само-+забве́ние - [[selflessness]],[[self-]][[forgetfulness]];[[self-consciousness]];[[absorption]],[[reverie]] der:самозабве́нный:самозабве́нно rel:забве́ние,забыва́ть/забы́ть,забытьё,забы́тый,забы́вчивый:забы́вчивость
+нака́занный
 
 
 хо́лить
