@@ -733,7 +733,7 @@ missing-18000-18999.adjs.zorder, part 7
 
 ---------------------------
 
-missing-19000-19999.txt.adjs.zorder
+missing-19000-19999.txt.adjs.zorder, part 1
 
 * [[опережающий]] "advanced, anticipatory" yes? [see [https://books.google.com/books?id=CEMrAQAAIAAJ&q=%D0%BE%D0%BF%D0%B5%D1%80%D0%B5%D0%B6%D0%B0%CC%81%D1%8E%D1%89&dq=%D0%BE%D0%BF%D0%B5%D1%80%D0%B5%D0%B6%D0%B0%CC%81%D1%8E%D1%89&hl=en&sa=X&ved=0ahUKEwjCx6XZ0rzNAhXFr48KHWWyC4QQ6AEIJDAB]: Руслан Элинин слишком шустр и опережающ в своих реакциях, чтобы быть Простаком...]
 * [[торжествующий]] "triumphant" yes? [see [https://books.google.com/books?id=JYGlAAAAQBAJ&pg=PT184&dq=%D1%82%D0%BE%D1%80%D0%B6%D0%B5%D1%81%D1%82%D0%B2%D1%83%D1%8E%D1%89&hl=en&sa=X&ved=0ahUKEwim58mC1LzNAhUDso8KHXi1AxAQ6AEILDAC]: Голос метрдотеля был звонок и торжествующ. ]
@@ -760,3 +760,26 @@ missing-19000-19999.txt.adjs.zorder
 * [[непарный]] "unpaired" yes? [see [https://books.google.com/books?id=KUGLAQAAQBAJ&pg=PA76&dq=%D0%BD%D0%B5%D0%BF%D0%B0%D1%80%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwjIyNeu8rzNAhUQ0GMKHRgHDrQQ6AEIWTAI]: Из этих четырех частей две задние — крестец и копчик, расположены по средней линии; они непарны и являются продолжением позвоночника, составляя его крестцовый и копчиковый ...]
 * [[машинописный]] "typewritten" no? [can't find examples]
 * [[компромиссный]] "compromise (attrib.)" yes? [see [https://books.google.com/books?id=1XmIAQAAQBAJ&pg=PT39&dq=%D0%BA%D0%BE%D0%BC%D0%BF%D1%80%D0%BE%D0%BC%D0%B8%D1%81%D1%81%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwivy6OO9LzNAhXGjZQKHencBCEQ6AEIKjAC]: Культурные же характеристики и различия менее изменчивы, компромиссны и разрешимы, чем политические и экономические, как отмечает автор.]
+
+missing-19000-19999.txt.adjs.zorder, part 2
+
+* [[прокатный]] "for rent; rolling (attrib.), rolled" no? [can't find examples]
+* [[бесплотный]] "incorporeal" yes? [see [https://books.google.com/books?id=Aq5axopOtYYC&pg=PT53&dq=%D0%B1%D0%B5%D1%81%D0%BF%D0%BB%D0%BE%D1%82%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwiq7razz73NAhXH6YMKHUGZD7cQ6AEIMjAD]: Вы все должны быть бесплотны, как ангелы!]
+* [[нотный]] "music (attrib.)" no? [can't find examples]
+* [[стоймостный]] "cost (attrib.)" no? [can't find examples]
+* [[постановный]] "theater production, staging (attrib.)" yes? [see [https://books.google.com/books?id=cOkpAQAAIAAJ&q=%D0%BF%D0%BE%D1%81%D1%82%D0%B0%D0%BD%D0%BE%D0%B2%D0%BE%D1%87%D0%BD%D1%8B&dq=%D0%BF%D0%BE%D1%81%D1%82%D0%B0%D0%BD%D0%BE%D0%B2%D0%BE%D1%87%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwiNv8i0gb_NAhXEopQKHV2BA9kQ6AEIMDAD]: Предметы эти не постановочны. В них есть свой внутренний смысл, они живут своей особой жизнью, отнюдь не лишь утилитарной.]
+* [[прогулочный]] "leisure (attrib.), leisurely" no? [can't find examples]
+* [[среднемесячный]] "average monthly" no? [can't find examples]
+* [[привокзальный]] "located near the train station" no? [can't find examples]
+* [[скальный]] "rock (attrib.), rocky" no? [can't find examples]
+* [[электоральный]] "electoral" no? [can't find examples]
+* [[патриархальный]] "patriarchal" yes? [see [https://books.google.com/books?id=glkMAAAAIAAJ&q=%D0%BF%D0%B0%D1%82%D1%80%D0%B8%D0%B0%D1%80%D1%85%D0%B0%D0%BB%D1%8C%D0%BD%D1%8B&dq=%D0%BF%D0%B0%D1%82%D1%80%D0%B8%D0%B0%D1%80%D1%85%D0%B0%D0%BB%D1%8C%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwjPqtDKjL_NAhXGNY8KHQe6BzsQ6AEIOjAE]: Экономические основы жизни были патриархальны, патриархальны были и формы быта, которые на них покоились. ]
+* [[застольный]] "occurring at the table" yes? [see [https://books.google.com/books?id=PpxkAAAAMAAJ&q=%D0%B7%D0%B0%D1%81%D1%82%D0%BE%D0%BB%D1%8C%D0%BD%D1%8B&dq=%D0%B7%D0%B0%D1%81%D1%82%D0%BE%D0%BB%D1%8C%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwjms971ib_NAhXDi5QKHbJBAQY4MhDoAQg3MAQ]: Если оценки Платона просто «пейзажны» или застольны, если у Лукиана они имеют разнообразные места действий ...]
+* [[покатый]] "sloping" yes? [see [https://books.google.com/books?id=TLyiAwAAQBAJ&pg=PT80&dq=%D0%BF%D0%BE%D0%BA%D0%B0%D1%82%D1%8B&hl=en&sa=X&ved=0ahUKEwj_ioefjL_NAhWLN48KHdaTDyM4HhDoAQhDMAU]: Плечи его были так покаты, что руки, казалось, выходили прямо из туловища. ]
+* [[скалистый]] "rocky" yes? [see [https://books.google.com/books?id=Gf05AQAAIAAJ&q=%D1%81%D0%BA%D0%B0%D0%BB%D0%B8%D1%81%D1%82%D1%8B&dq=%D1%81%D0%BA%D0%B0%D0%BB%D0%B8%D1%81%D1%82%D1%8B&hl=en&sa=X&ved=0ahUKEwj2o4i4j7_NAhXHp5QKHTGjDiA4FBDoAQhDMAY]: Берега его круты и скалисты, береговая линия изрезана слабо, почти нет сколько-нибудь удобных бухт и якорных стоянок.]
+
+-----------------------------
+
+other cases [starting Jun 23 2016]
+
+* [[классный]] "class (of school) (attrib.); (colloq.) awesome, cool" no? [cna't find examples]
