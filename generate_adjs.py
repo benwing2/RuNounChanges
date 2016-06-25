@@ -87,7 +87,16 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
   if "//" in term:
     term, translit = re.split("//", term)
   if pos == "adj":
-    assert re.search(u"(ый|ий|о́й)$", term)
+    if term.endswith(u"ся"):
+      adjrefl = True
+      if "//" in declterm:
+        msg("Can't handle reflexive adjectives with manual translit yet")
+        assert False
+      declterm = re.sub(u"ся$", "", term)
+      assert re.search(u"(ый|ий|о́й)$", declterm)
+    else:
+      adjrefl = False
+      assert re.search(u"(ый|ий|о́й)$", term)
   trtext = translit and "|tr=" + translit or ""
   check_stress(term)
   if etym == "?":
@@ -288,7 +297,9 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
         partdecltext = ""
       else:
         partdecltext = """====Declension====
-{{ru-decl-adj|%s%s}}\n\n""" % (declterm, "" if partshort == "-" else "|" + partshort)
+{{ru-decl-adj|%s%s%s}}\n\n""" % (declterm,
+          "" if partshort == "-" else "|" + partshort,
+          u"|suffix=ся" if adjrefl else "")
       parttext += partdecltext
     else: # derived or related terms or see also
       if vals == "-":
@@ -348,9 +359,10 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
 
 %s
 ====Declension====
-{{ru-decl-adj|%s}}
+{{ru-decl-adj|%s%s}}
 
-""" % (term, trtext, comptext, defntext, decltext)
+""" % (term, trtext, comptext, defntext, decltext,
+      u"|suffix=ся" if adjrefl else "")
   elif pos == "adv":
     maintext = """===Adverb===
 {{ru-adv|%s%s}}
