@@ -731,6 +731,11 @@ missing-18000-18999.adjs.zorder, part 7
 ]
 * [[сердечно-сосудистый]] "cardiovascular" no? [can't find examples]
 
+missing-18000-18999.txt.adjs.zorder, part N -- adverbs
+
+* [[умоляющ]] "pleading, imploring, suppliant" yes? [see [https://books.google.com/books?id=w9wYAQAAIAAJ&q=%D1%83%D0%BC%D0%BE%D0%BB%D1%8F%D1%8E%D1%89&dq=%D1%83%D0%BC%D0%BE%D0%BB%D1%8F%D1%8E%D1%89&hl=en&sa=X&ved=0ahUKEwjJ-eLQ_cPNAhXE4IMKHRIJCdcQ6AEILDAC]: малахит ее глаз был сер, тускл, водянист и умоляющ, впервые так умоляющ.]
+
+
 ---------------------------
 
 missing-19000-19999.txt.adjs.zorder, part 1
