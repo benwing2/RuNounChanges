@@ -84,6 +84,7 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
     remainder = els[4:]
   translit = None
   declterm = term
+  adjrefl = False
   if "//" in term:
     term, translit = re.split("//", term)
   if pos == "adj":
@@ -95,7 +96,6 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
       declterm = re.sub(u"ся$", "", term)
       assert re.search(u"(ый|ий|о́й)$", declterm)
     else:
-      adjrefl = False
       assert re.search(u"(ый|ий|о́й)$", term)
   trtext = translit and "|tr=" + translit or ""
   check_stress(term)
