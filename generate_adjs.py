@@ -188,6 +188,9 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
         elif defn.startswith("(p)"):
           labels.append("poetic")
           defn = re.sub(r"^\(p\)", "", defn)
+        elif defn.startswith("(h)"):
+          labels.append("historical")
+          defn = re.sub(r"^\(h\)", "", defn)
         elif defn.startswith("(n)"):
           labels.append("nonstandard")
           defn = re.sub(r"^\(n\)", "", defn)
