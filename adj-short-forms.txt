@@ -772,7 +772,7 @@ missing-19000-19999.txt.adjs.zorder, part 2
 * [[бесплотный]] "incorporeal" yes? [see [https://books.google.com/books?id=Aq5axopOtYYC&pg=PT53&dq=%D0%B1%D0%B5%D1%81%D0%BF%D0%BB%D0%BE%D1%82%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwiq7razz73NAhXH6YMKHUGZD7cQ6AEIMjAD]: Вы все должны быть бесплотны, как ангелы!]
 * [[нотный]] "music (attrib.)" no? [can't find examples]
 * [[стоймостный]] "cost (attrib.)" no? [can't find examples]
-* [[постановный]] "theater production, staging (attrib.)" yes? [see [https://books.google.com/books?id=cOkpAQAAIAAJ&q=%D0%BF%D0%BE%D1%81%D1%82%D0%B0%D0%BD%D0%BE%D0%B2%D0%BE%D1%87%D0%BD%D1%8B&dq=%D0%BF%D0%BE%D1%81%D1%82%D0%B0%D0%BD%D0%BE%D0%B2%D0%BE%D1%87%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwiNv8i0gb_NAhXEopQKHV2BA9kQ6AEIMDAD]: Предметы эти не постановочны. В них есть свой внутренний смысл, они живут своей особой жизнью, отнюдь не лишь утилитарной.]
+* [[постановочный]] "theater production, staging (attrib.)" yes? [see [https://books.google.com/books?id=cOkpAQAAIAAJ&q=%D0%BF%D0%BE%D1%81%D1%82%D0%B0%D0%BD%D0%BE%D0%B2%D0%BE%D1%87%D0%BD%D1%8B&dq=%D0%BF%D0%BE%D1%81%D1%82%D0%B0%D0%BD%D0%BE%D0%B2%D0%BE%D1%87%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwiNv8i0gb_NAhXEopQKHV2BA9kQ6AEIMDAD]: Предметы эти не постановочны. В них есть свой внутренний смысл, они живут своей особой жизнью, отнюдь не лишь утилитарной.]
 * [[прогулочный]] "leisure (attrib.), leisurely" no? [can't find examples]
 * [[среднемесячный]] "average monthly" no? [can't find examples]
 * [[привокзальный]] "located near the train station" no? [can't find examples]
@@ -787,4 +787,4 @@ missing-19000-19999.txt.adjs.zorder, part 2
 
 other cases [starting Jun 23 2016]
 
-* [[классный]] "class (of school) (attrib.); (colloq.) awesome, cool" no? [cna't find examples]
+* [[классный]] "class (of school) (attrib.); (colloq.) awesome, cool" no? [can't find examples]
