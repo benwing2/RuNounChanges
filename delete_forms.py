@@ -37,6 +37,7 @@ def process_decl(index, pagetitle, decl, forms, save, verbose):
   for form in forms:
     if form in args:
       for formpagename in re.split(",", args[form]):
+        formpagename = re.sub("//.*$", "", formpagename)
         formpagename = rulib.remove_accents(formpagename)
         formpage = pywikibot.Page(site, formpagename)
         if not formpage.exists():
@@ -48,12 +49,19 @@ def process_decl(index, pagetitle, decl, forms, save, verbose):
           if "Etymology 1" in text:
             pagemsg("WARNING: Found 'Etymology 1', skipping form %s" % formpagename)
           else:
-            comment = "Delete erroneously created form of %s" % pagetitle
-            if save:
-              formpage.delete(comment)
-            else:
-              pagemsg("Would delete page %s with comment=%s" %
-                  (formpagename, comment))
+            skip_form = False
+            for m in re.finditer(r"^==([^=]*?)==$", text, re.M):
+              if m.group(1) != "Russian":
+                pagemsg("WARNING: Found entry for non-Russian language %s, skipping form %s" %
+                    (m.group(1), formpagename))
+                skip_form = True
+            if not skip_form:
+              comment = "Delete erroneously created form of %s" % pagetitle
+              if save:
+                formpage.delete(comment)
+              else:
+                pagemsg("Would delete page %s with comment=%s" %
+                    (formpagename, comment))
 
 parser = blib.create_argparser(u"Delete erroneously created forms")
 parser.add_argument("--declfile", help="File containing declensions to expand to get forms.")
@@ -80,5 +88,8 @@ elif args.forms == "all-noun":
 else:
   forms = re.split(",", args.forms)
 for i, line in blib.iter_items(lines, start, end):
-  pagetitle, decl = re.split(" ", line, 1)
+  if "!!!" in line:
+    pagetitle, decl = re.split("!!!", line)
+  else:
+    pagetitle, decl = re.split(" ", line, 1)
   process_decl(i, pagetitle, decl, forms, args.save, args.verbose)
