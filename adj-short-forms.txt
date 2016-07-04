@@ -785,6 +785,21 @@ missing-19000-19999.txt.adjs.zorder, part 2
 
 -----------------------------
 
+
+missing-freq10000.adjs.zorder
+
+* [[дрожащий]] "shaky, trembling" yes? [see [https://books.google.com/books?id=jt2KAQAAQBAJ&pg=PA145&dq=%D0%B4%D1%80%D0%BE%D0%B6%D0%B0%D1%89&hl=en&sa=X&ved=0ahUKEwil0P3_mtDNAhWG44MKHTVnAnk4FBDoAQhQMAc]: В 3 д. он является страдальцем, изнемогающим под бременем лет и нищеты, голос его дрожащ и прерывист, взоры его дики, на лице начертаны глубокие следы бедствий и страстей;]
+* [[растущий]] "growing" yes? [see [https://books.google.com/books?id=A50vAAAAIAAJ&q=%D1%80%D0%B0%D1%81%D1%82%D1%83%D1%89%D0%B8&dq=%D1%80%D0%B0%D1%81%D1%82%D1%83%D1%89%D0%B8&hl=en&sa=X&ved=0ahUKEwjRnJSXq9XNAhUC2oMKHdE6CjIQ6AEIQzAG]: Конопли-посконь да будут растущи и крепки ...] [also see [https://books.google.com/books?id=Xhv4BQAAQBAJ&pg=PT131&dq=%D1%80%D0%B0%D1%81%D1%82%D1%83%D1%89%D0%B8&hl=en&sa=X&ved=0ahUKEwjRnJSXq9XNAhUC2oMKHdE6CjIQ6AEITjAI]: группа американских и маньчясурских ясеней—быстро растущи, устойчивы в городских посадках; липы голландские и крымские—стойкие к дыму ...]
+* [[возбудающий]] "exciting, stimulating, provocative" yes? [see [https://books.google.com/books?id=TV6BAQAAQBAJ&pg=PT214&dq=%D0%B2%D0%BE%D0%B7%D0%B1%D1%83%D0%B6%D0%B4%D0%B0%D1%8E%D1%89&hl=en&sa=X&ved=0ahUKEwj3qYe9rNXNAhUG54MKHQzADmQQ6AEIRzAH]: Теперь фронтальный вид женщин также возбуждающ, как и «тыловой»... ]
+* [[нарастающий]] "growing, increasing" yes? [see [https://books.google.com/books?id=BZkuAAAAMAAJ&q=%D0%BD%D0%B0%D1%80%D0%B0%D1%81%D1%82%D0%B0%D1%8E%D1%89&dq=%D0%BD%D0%B0%D1%80%D0%B0%D1%81%D1%82%D0%B0%D1%8E%D1%89&hl=en&sa=X&ved=0ahUKEwiO4eiJrdXNAhUh9YMKHYfPBBMQ6AEIWjAJ]: Заметим, что процесс этот лишь тогда ценен и плодотворен, если он непрерывен и нарастающ.]
+* [[возрастающий]] "ascending, increasing; progressive, incremental" yes? [see [https://books.google.com/books?id=gAC4AAAAIAAJ&q=%D0%B2%D0%BE%D0%B7%D1%80%D0%B0%D1%81%D1%82%D0%B0%D1%8E%D1%89%D0%B8&dq=%D0%B2%D0%BE%D0%B7%D1%80%D0%B0%D1%81%D1%82%D0%B0%D1%8E%D1%89%D0%B8&hl=en&sa=X&ved=0ahUKEwjX3vfosNXNAhWm7YMKHXdcB8U4HhDoAQg_MAY]: так как функции в этих задачах одинаковы [и] монотонно возрастающи, то из условий (5) и (22) следует, что в равенства р^ = Р1 вытекает ...]
+* [[ледниковый]] "glacial" no? [can't find examples]
+* [[рубиновый]] "ruby (attrib.)" no? [can't find examples]
+* [[озимый]] "winter (attrib.) (of crops)" no? [can't find examples]
+* [[общенародный]] "nationwide, national" yes? [see [https://books.google.com/books?id=3lMjDAAAQBAJ&pg=PT398&dq=%D0%BE%D0%B1%D1%89%D0%B5%D0%BD%D0%B0%D1%80%D0%BE%D0%B4%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwijmILlsdrNAhWFwiYKHdpxAeQ4ChDoAQg0MAM]: Однако в этом случае суд может явиться защитником и безнравственных взглядов, раз они общенародны]
+* [[шоссейный]] "highway, road (attrib.)" no? [can't find examples]
+
+
 other cases [starting Jun 23 2016]
 
 * [[классный]] "class (of school) (attrib.); (colloq.) awesome, cool" no? [can't find examples]
