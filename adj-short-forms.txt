@@ -786,7 +786,7 @@ missing-19000-19999.txt.adjs.zorder, part 2
 -----------------------------
 
 
-missing-freq10000.adjs.zorder
+missing-freq10000.adjs.zorder, part 1
 
 * [[дрожащий]] "shaky, trembling" yes? [see [https://books.google.com/books?id=jt2KAQAAQBAJ&pg=PA145&dq=%D0%B4%D1%80%D0%BE%D0%B6%D0%B0%D1%89&hl=en&sa=X&ved=0ahUKEwil0P3_mtDNAhWG44MKHTVnAnk4FBDoAQhQMAc]: В 3 д. он является страдальцем, изнемогающим под бременем лет и нищеты, голос его дрожащ и прерывист, взоры его дики, на лице начертаны глубокие следы бедствий и страстей;]
 * [[растущий]] "growing" yes? [see [https://books.google.com/books?id=A50vAAAAIAAJ&q=%D1%80%D0%B0%D1%81%D1%82%D1%83%D1%89%D0%B8&dq=%D1%80%D0%B0%D1%81%D1%82%D1%83%D1%89%D0%B8&hl=en&sa=X&ved=0ahUKEwjRnJSXq9XNAhUC2oMKHdE6CjIQ6AEIQzAG]: Конопли-посконь да будут растущи и крепки ...] [also see [https://books.google.com/books?id=Xhv4BQAAQBAJ&pg=PT131&dq=%D1%80%D0%B0%D1%81%D1%82%D1%83%D1%89%D0%B8&hl=en&sa=X&ved=0ahUKEwjRnJSXq9XNAhUC2oMKHdE6CjIQ6AEITjAI]: группа американских и маньчясурских ясеней—быстро растущи, устойчивы в городских посадках; липы голландские и крымские—стойкие к дыму ...]
@@ -798,6 +798,17 @@ missing-freq10000.adjs.zorder
 * [[озимый]] "winter (attrib.) (of crops)" no? [can't find examples]
 * [[общенародный]] "nationwide, national" yes? [see [https://books.google.com/books?id=3lMjDAAAQBAJ&pg=PT398&dq=%D0%BE%D0%B1%D1%89%D0%B5%D0%BD%D0%B0%D1%80%D0%BE%D0%B4%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwijmILlsdrNAhWFwiYKHdpxAeQ4ChDoAQg0MAM]: Однако в этом случае суд может явиться защитником и безнравственных взглядов, раз они общенародны]
 * [[шоссейный]] "highway, road (attrib.)" no? [can't find examples]
+
+missing-freq10000.adjs.zorder, part 2
+
+* [[поваренный]] "culinary" no? [can't find examples; putatively a*|short_m=-]
+* [[всемерный]] "all possible" yes? [see [https://books.google.com/books?id=xEo8AQAAIAAJ&q=%D0%B2%D1%81%D0%B5%D0%BC%D0%B5%D1%80%D0%BD%D1%8B&dq=%D0%B2%D1%81%D0%B5%D0%BC%D0%B5%D1%80%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwiMicrijN7NAhUT6GMKHVC9DccQ6AEIOzAF]: Они всемерны и всевременны, оттого близки и понятны каждому... ]
+* [[серный]] "sulfur (attrib.), sulfuric" no? [no short forms in ruwikt; impossible to find short forms due to interference from серны "chamois (pl.)" and from OCR errors]
+* [[запасный]] "spare, in reserve" yes? [see [https://books.google.com/books?id=0wH4ReUeTsoC&pg=PA340&dq=%D0%B7%D0%B0%D0%BF%D0%B0%D1%81%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwiTiZKAj97NAhVH5WMKHVFrBKI4MhDoAQg-MAU]: чтобъ ратные люди на твою государеву службу были запасны.] [also see [https://books.google.com/books?id=MZ4HAwAAQBAJ&pg=PA115&dq=%D0%B7%D0%B0%D0%BF%D0%B0%D1%81%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwjKg73Jjt7NAhUDx2MKHWdYDDA4HhDoAQgxMAQ]: ... такъ и всѣ другія, были такъ запасны, что теперешняя Императрица при вступленіи на Царство нашла для себя довольно денегъ на всю свою роскошь. ]
+* [[выжидательный]] "waiting, hesitating" yes? [see [https://books.google.com/books?id=Uuo3GWv9omYC&pg=PT60&dq=%D0%B2%D1%8B%D0%B6%D0%B8%D0%B4%D0%B0%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwiywaKjkN7NAhVP0GMKHc2_DYgQ6AEIOzAE]: Тифлисские политики стали в своих связях с контрреволюцией более осторожны, более выжидательны, более ...]
+* [[освободительный]] "liberation (attrib.)" yes? [see [https://books.google.com/books?id=00A8AQAAIAAJ&q=%D0%BE%D1%81%D0%B2%D0%BE%D0%B1%D0%BE%D0%B4%D0%B8%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D1%8B+-%D0%BD%D0%B0%D1%86%D0%B8%D0%BE%D0%BD%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE&dq=%D0%BE%D1%81%D0%B2%D0%BE%D0%B1%D0%BE%D0%B4%D0%B8%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D1%8B+-%D0%BD%D0%B0%D1%86%D0%B8%D0%BE%D0%BD%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE&hl=en&sa=X&ved=0ahUKEwj86tiIld7NAhVH42MKHYS1DFY4HhDoAQg7MAU]: Таким образом, все эти партизанщина и бандитизм были тождественны друг другу, преступны, а не освободительны по своей сути. ] [see [https://books.google.com/books?id=_tc9AQAAMAAJ&pg=PA20&dq=%D0%BE%D1%81%D0%B2%D0%BE%D0%B1%D0%BE%D0%B4%D0%B8%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D1%8B+-%D0%BD%D0%B0%D1%86%D0%B8%D0%BE%D0%BD%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE&hl=en&sa=X&ved=0ahUKEwi4hbuFkd7NAhUM6GMKHTlRCuI4FBDoAQhEMAY]: Эти акты были дѣйствительно „освободительны“ для прибалтійскаго дворянства, которое наконецъ вздохнуло свободно, съ отмѣною законовъ 1804 года, отмахнувъ отъ себя мучительный призракъ шведской аграрной политики, ...]
+* [[оросительный]] "irrigation (attrib.)" no? [can't find examples]
+* [[дымчатый]] "smoky; tinted, smoke-colored" yes? [see [https://books.google.com/books?id=dR25AAAAQBAJ&pg=PT159&dq=%D0%B4%D1%8B%D0%BC%D1%87%D0%B0%D1%82%D1%8B&hl=en&sa=X&ved=0ahUKEwit5YDylt7NAhVF44MKHZEgC-I4ChDoAQhXMAk]: ... белым кремом тюрбанов; они были дымчаты, как облачка кальяна. ]
 
 
 other cases [starting Jun 23 2016]
