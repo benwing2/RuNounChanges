@@ -15,9 +15,12 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Find redlinks (non-existent pages) in multiword lemmas, i.e. individual
-# words in multiword lemmas that don't exist as lemmas.
+# words in multiword lemmas that don't exist as lemmas. Output data in two
+# ways: As we encounter each redlink (but only the first time encountered),
+# and sorted by number of occurrences.
 
 import pywikibot, re, sys, codecs, argparse
+import traceback
 
 import blib
 from blib import getparam, rmparam, msg, site
@@ -33,11 +36,8 @@ nonexistent_lemmas = {}
 # For each nonexistent lemma seen, list of all pages referencing it.
 nonexistent_lemmas_refs = {}
 lemmas = set()
-msg("Reading Russian lemmas")
-for i, page in blib.cat_articles("Russian lemmas", start, end):
-  lemmas.add(unicode(page.title()))
 
-def process_page(index, page, save, verbose):
+def process_page(index, page, verbose):
   pagetitle = unicode(page.title())
   subpagetitle = re.sub("^.*:", "", pagetitle)
   def pagemsg(txt):
@@ -64,7 +64,13 @@ def process_page(index, page, save, verbose):
       lemma_count[lemma] = 1
       if lemma not in lemmas:
         page = pywikibot.Page(site, lemma)
-        if page.exists():
+        try:
+          exists = page.exists()
+        except pywikibot.exceptions.InvalidTitle as e:
+          pagemsg("WARNING: Invalid title: %s" % lemma)
+          traceback.print_exc(file=sys.stdout)
+          exists = False
+        if exists:
           if re.search("#redirect", unicode(page.text), re.I):
             nonexistent_msg = "exists as redirect"
           elif re.search(r"\{\{superlative of", unicode(page.text)):
@@ -81,15 +87,32 @@ def process_page(index, page, save, verbose):
     if not arg_set:
       return
     offset = 0
-    if re.search(r"^[a-f]'*$", arg_set[offset]):
+    if re.search(r"^[a-f]'*(,[a-f]'*)*$", arg_set[offset]):
       offset = 1
     if len(arg_set) <= offset:
       return
-    lemma = arg_set[offset]
+    # Remove * meaning non-stressed
+    lemma = re.sub(r"^\*", "", arg_set[offset])
+    # Remove translit
+    lemma = re.sub("//.*$", "", lemma)
     if not lemma:
       return
-    lemma = rulib.remove_accents(blib.remove_links(lemma))
-    check_lemma(lemma)
+    headwords_separators = re.split(r"(\[\[.*?\]\]|[^ \-]+)", lemma)
+    if headwords_separators[0] != "" or headwords_separators[-1] != "":
+      pagemsg("WARNING: Found junk at beginning or end of headword, skipping: %s" % lemma)
+      return
+    wordind = 0
+    for i in xrange(1, len(headwords_separators), 2):
+      hword = headwords_separators[i]
+      separator = headwords_separators[i+1]
+      if i < len(headwords_separators) - 2 and separator != " " and separator != "-":
+        pagemsg("WARNING: Separator after word #%s isn't a space or hyphen, can't handle: word=<%s>, separator=<%s>" %
+            (wordind + 1, hword, separator))
+        continue
+      hword = hword.replace("#Russian", "")
+      hword = rulib.remove_accents(blib.remove_right_side_links(hword))
+      check_lemma(hword)
+      wordind += 1
 
   def process_new_style_headword(htemp):
     # Split out the arg sets in the declension and check the
@@ -106,8 +129,8 @@ def process_page(index, page, save, verbose):
     arg_set = []
     for i in xrange(1, highest_numbered_param + 2):
       end_arg_set = False
-      val = getparam(decl_template, str(i))
-      if (i == highest_numbered_param + 1 or elif val in ["or", "_", "-"] or
+      val = getparam(htemp, str(i))
+      if (i == highest_numbered_param + 1 or val in ["or", "_", "-"] or
           re.search("^join:", val)):
         end_arg_set = True
 
@@ -131,12 +154,17 @@ parser = blib.create_argparser(u"Find red links in multiword lemmas")
 args = parser.parse_args()
 start, end = blib.get_args(args.start, args.end)
 
+msg("Reading Russian lemmas")
+for i, page in blib.cat_articles("Russian lemmas", start, end):
+  lemmas.add(unicode(page.title()))
+
 for pos in ["nouns", "proper nouns"]:
   tracking_page = "Template:tracking/ru-headword/space-in-headword/" + pos
   msg("PROCESSING REFERENCES TO: %s" % tracking_page)
   for index, page in blib.references(tracking_page, start, end):
-    process_page(index, page)
+    process_page(index, page, args.verbose)
 
-for lemma, nonexistent_msg in sorted(nonexistent_lemmas.items(), key=lambda lemma:-lemma_count[lemma]):
-  msg("* [[%s]] (%s occurrences): %s (refs: %s)" % (lemma, lemma_count[lemma],
-    nonexistent_msg, ", ".join(nonexistent_lemmas_refs[lemma])))
+for lemma, nonexistent_msg in sorted(nonexistent_lemmas.items(), key=lambda pair:(-lemma_count[pair[0]], pair[0])):
+  msg("* [[%s]] (%s occurrence%s): %s (refs: %s)" % (lemma, lemma_count[lemma],
+    "" if lemma_count[lemma] == 1 else "s", nonexistent_msg,
+    ", ".join("[[%s]]" % x for x in nonexistent_lemmas_refs[lemma])))

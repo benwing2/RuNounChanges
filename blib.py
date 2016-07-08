@@ -12,6 +12,12 @@ def remove_links(text):
   text = re.sub(r"\[\[|\]\]", "", text)
   return text
 
+def remove_right_side_links(text):
+  # eliminate |BAR]] in [[FOO|BAR]], and then remaining [[ and ]]
+  text = re.sub(r"\|[^\[\]|]*\]\]", "", text)
+  text = re.sub(r"\[\[|\]\]", "", text)
+  return text
+
 def msg(text):
   print text.encode("utf-8")
 
