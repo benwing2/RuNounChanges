@@ -17,8 +17,9 @@ parser.add_argument('--noun', action="store_true",
 args = parser.parse_args()
 
 pos_to_full_pos = {
-  # The first three are special-cased
+  # The first four are special-cased
   "n": "Noun",
+  "pn": "Proper noun",
   "adj": "Adjective",
   "adv": "Adverb",
   "pcl": "Particle",
@@ -73,8 +74,8 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
   # Replace _ with space, but not in the declension, where there may be
   # an underscore, e.g. a|short_m=-; but allow \s to stand for a space in
   # the declension
-  els = [el.replace(r"\s", " ") if i == 2 and (pos == "n" or pos == "adj") else el.replace("_", " ") for i, el in enumerate(els)]
-  if pos != "n" and pos != "adj":
+  els = [el.replace(r"\s", " ") if i == 2 and (pos in ["n", "pn", "adj"]) else el.replace("_", " ") for i, el in enumerate(els)]
+  if pos not in ["n", "pn", "adj"]:
     term, etym, defns = els[0], els[1], els[2]
     remainder = els[3:]
   else:
@@ -146,14 +147,30 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
     etymtext = "===Etymology===\n%s\n\n" % etymtext
 
   # Create declension
-  if pos == "n" or pos == "adj":
+  if pos in ["n", "pn", "adj"]:
     decl = decl.replace("?", "") # eliminate uncertainty notations
     if decl == "-":
-      decltext = declterm
+      hdecltext = declterm
     elif "..." in decl:
-      decltext = decl.replace("...", declterm)
+      hdecltext = decl.replace("...", declterm)
     else:
-      decltext = "%s|%s" % (declterm, decl)
+      hdecltext = "%s|%s" % (declterm, decl)
+    # hdecltext is the declension as used in the headword template,
+    # decltext is the declension as used in the declension template
+    hdecltext = "|" + hdecltext
+    decltext = hdecltext
+    # Eliminate masculine/feminine equiv from actual decl
+    decltext = re.sub(r"\|[mf]=[^|]*?(\||$)", r"\1", decltext)
+    # Eliminate gender from actual decl
+    decltext = re.sub(r"\|g[0-9]*=[^|]*?(\||$)", r"\1", decltext)
+    # ru-proper noun+ defaults to n=sg but ru-decl-noun defaults to n=both.
+    # The specified declension is for ru-proper noun+ so convert it to work
+    # with ru-decl-noun by removing n=both or adding n=sg as necessary.
+    if pos == "pn":
+      if "|n=both" in hdecltext:
+        decltext = decltext.replace("|n=both", "")
+      elif "|n=" not in hdecltext:
+        decltext = decltext + "|n=sg"
 
   # Create definition
   defnlines = []
@@ -219,6 +236,10 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
         defnline = "{{diminutive of|lang=ru|%s}}" % dimparts[1]
         if len(dimparts) == 3:
           defnline = "%s: %s" % (defnline, dimparts[2])
+      elif defn.startswith("gn:"):
+        gnparts = re.split(":", defn)
+        assert len(gnparts) in [2]
+        defnline = "{{given name|lang=ru|%s}}" % gnparts[1]
       else:
         defnline = defn.replace(",", ", ")
       defnlines.append("# %s%s\n" % (prefix, defnline))
@@ -348,34 +369,38 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
     error("No related terms; should specify some or use rel:- to disable them")
 
   if pos == "n":
-    maintext = """===Noun===
-{{ru-noun+|%s}}
+    maintext = """{{ru-noun+%s}}
 
 %s
 ====Declension====
-{{ru-noun-table|%s}}
+{{ru-noun-table%s}}
 
-""" % (decltext, defntext, decltext)
+""" % (hdecltext, defntext, decltext)
+  elif pos == "pn":
+    maintext = """{{ru-proper noun+%s}}
+
+%s
+====Declension====
+{{ru-noun-table%s}}
+
+""" % (hdecltext, defntext, decltext)
   elif pos == "adj":
-    maintext = """===Adjective===
-{{ru-adj|%s%s%s}}
+    maintext = """{{ru-adj|%s%s%s}}
 
 %s
 ====Declension====
-{{ru-decl-adj|%s%s}}
+{{ru-decl-adj%s%s}}
 
 """ % (term, trtext, comptext, defntext, decltext,
       u"|suffix=ся" if adjrefl else "")
   elif pos == "adv":
-    maintext = """===Adverb===
-{{ru-adv|%s%s}}
+    maintext = """{{ru-adv|%s%s}}
 
 %s
 """ % (term, trtext, defntext)
   else:
     full_pos = pos_to_full_pos[pos]
-    maintext = """===%s===
-{{head|ru|%s|head=%s%s}}
+    maintext = """{{head|ru|%s|head=%s%s}}
 
 %s
 """ % (full_pos, full_pos.lower(), term, trtext, defntext)
@@ -393,8 +418,9 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
 
 %s%s===Pronunciation===
 %s
-%s%s%s%s%s%s%s[[ru:%s]]
+%s===%s===
+%s%s%s%s%s%s[[ru:%s]]
 
 """ % (rulib.remove_accents(term), alsotext, alttext, etymtext, prontext,
-  parttext, maintext, syntext, anttext, dertext, reltext, seetext,
-  rulib.remove_accents(term)))
+  parttext, pos_to_full_pos[pos], maintext, syntext, anttext, dertext,
+  reltext, seetext, rulib.remove_accents(term)))
