@@ -48,16 +48,17 @@ else:
   words = lines
 
 for i, pagename in blib.iter_items(words, start, end):
-  if pagename in lemmas:
-    msg("Page %s [[%s]]: exists" % (i, pagename))
+  m = re.search(u"[^-Ѐ-џҊ-ԧꚀ-ꚗ]", pagename)
+  if m:
+    msg("Page %s [[%s]]: skipped due to non-Cyrillic characters" % (i, pagename))
   else:
-    m = re.search(u"[^-Ѐ-џҊ-ԧꚀ-ꚗ]", pagename)
-    if m:
-      msg("Page %s [[%s]]: skipped due to non-Cyrillic characters" % (i, pagename))
-    else:
-      for pagenm, pagetype in [(pagename, ""),
-          (pagename.capitalize(), " (capitalized)"),
-          (pagename.upper(), " (uppercased)")]:
+    for pagenm, pagetype in [(pagename, ""),
+        (pagename.capitalize(), " (capitalized)"),
+        (pagename.upper(), " (uppercased)")]:
+      if pagenm in lemmas:
+        msg("Page %s [[%s]]: exists%s" % (i, pagename, pagetype))
+        break
+      else:
         page = pywikibot.Page(site, pagenm)
         if page.exists():
           if re.search("#redirect", unicode(page.text), re.I):
@@ -67,5 +68,5 @@ for i, pagename in blib.iter_items(words, start, end):
           else:
             msg("Page %s [[%s]]: exists%s as non-lemma" % (i, pagename, pagetype))
           break
-      else:
-        msg("Page %s [[%s]]: does not exist" % (i, pagename))
+    else:
+      msg("Page %s [[%s]]: does not exist" % (i, pagename))
