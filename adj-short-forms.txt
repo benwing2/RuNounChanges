@@ -811,6 +811,28 @@ missing-freq10000.adjs.zorder, part 2
 * [[дымчатый]] "smoky; tinted, smoke-colored" yes? [see [https://books.google.com/books?id=dR25AAAAQBAJ&pg=PT159&dq=%D0%B4%D1%8B%D0%BC%D1%87%D0%B0%D1%82%D1%8B&hl=en&sa=X&ved=0ahUKEwit5YDylt7NAhVF44MKHZEgC-I4ChDoAQhXMAk]: ... белым кремом тюрбанов; они были дымчаты, как облачка кальяна. ]
 
 
+------------------------------
+
+
+missing-freq32600-1-12999.txt.adjs.zorder, part 1
+
+* [[бильярдный]] "billiard (attrib.)" no? [can't find examples]
+* [[брюхатый]] "potbellied, paunchy" yes? [see [https://books.google.com/books?id=7bliAwAAQBAJ&pg=PT507&dq=%D0%B1%D1%80%D1%8E%D1%85%D0%B0%D1%82%D1%8B&hl=en&sa=X&ved=0ahUKEwiLtKP12u_NAhVDyWMKHfoaD5s4ChDoAQhGMAY]: Эти реки текли на Север прямо, а баржи были брюхаты, вместительны – ]
+* [[булочный]] "roll, bun (attrib.)" no? [can't find examples]
+* [[воспитательный]] "inflammatory" yes? [see [https://books.google.com/books?id=PIQHAQAAMAAJ&q=%D0%B2%D0%BE%D1%81%D0%BF%D0%B0%D0%BB%D0%B8%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D1%8B&dq=%D0%B2%D0%BE%D1%81%D0%BF%D0%B0%D0%BB%D0%B8%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwi-2qCn3O_NAhVW22MKHdCjAVQ4FBDoAQhSMAk]: Обиды, одиночество, давление взрослых, столкновения с несправедливостью, лицемерием, коллективной травлей — для ребенка воспалительны и неизбывны. ]
+* [[входящий]] "incoming" no? [hard to find examples, masked by Bulgarian; but apparent examples for исходящий "outgoing"; see below]
+* [[гнойный]] "festering" yes? [see [https://books.google.com/books?id=36QXAQAAIAAJ&q=%D0%B3%D0%BD%D0%BE%D0%B9%D0%BD%D1%8B&dq=%D0%B3%D0%BD%D0%BE%D0%B9%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwiZ7aC43-_NAhUD52MKHf-uC0s4bhDoAQhBMAY]:  Того примите, не мешкая, кто будет молить о помощи, взывать к милосердию, чьи раны будут гнойны и ужасны.]
+* [[ежовый]] "hedgehog (attrib.); (fig.) barbed" no? [can't find examples]
+* [[желудочный]] "stomach (attrib.); gastric" no? [can't find examples]
+* [[иммиграционный]] "immigration (attrib.)" no? [can't find examples]
+* [[исходящий]] "outgoing" yes? [see [https://books.google.com/books?id=rThhAAAAQBAJ&pg=PT368&dq=%22%D0%B8%D1%81%D1%85%D0%BE%D0%B4%D1%8F%D1%89%D0%B8%22+%22%D0%B1%D1%8B%D0%BB%D0%B8%22&hl=en&sa=X&ved=0ahUKEwiTzfDv6O_NAhUN9mMKHSusD7sQ6AEIOzAE]: Времянем же и сам султан приходящи к ним живет тамо у них по воли своей неделю, и две, и три не исходящи, ...]
+* [[котельный]] "boiler (attrib.)" no? [can't find examples]
+* [[лыковый]] "bast (attrib.)" no? [hard to find examples, masked by proper name]
+* [[межпланетный]] "interplanetary" no? [can't find examples]
+* [[переходящий]] "transitory" yes? [see [https://books.google.com/books?id=JAW4CgAAQBAJ&pg=PT14&dq=%D0%BF%D0%B5%D1%80%D0%B5%D1%85%D0%BE%D0%B4%D1%8F%D1%89&hl=en&sa=X&ved=0ahUKEwjZu_Cu4fDNAhXIxYMKHQIqCtI4ChDoAQhNMAc]: Это всего лишь гормональный процесс — он бессознателен, естественен и переходящ.]
+
+
+
 other cases [starting Jun 23 2016]
 
 * [[классный]] "class (of school) (attrib.); (colloq.) awesome, cool" no? [can't find examples]
