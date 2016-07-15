@@ -3,8 +3,9 @@
 
 import re, sys, codecs, argparse
 
-from blib import msg
+from blib import msg, errmsg
 import rulib
+import generate_pos
 
 parser = argparse.ArgumentParser(description="Generate verb stubs.")
 parser.add_argument('--direcfile', help="File containing directives.")
@@ -20,11 +21,17 @@ def check_stress(word):
     assert False
 
 for line in codecs.open(args.direcfile, "r", "utf-8"):
+  def error(text):
+    errmsg("ERROR: Processing line: %s" % line)
+    errmsg("ERROR: %s" % text)
+    assert False
+
   line = line.strip()
   els = re.split(r"\s+", line)
   # Replace _ with space, but not in the conjugation, where param names
-  # may well have an underscore in them
-  els = [el if i == 4 else el.replace("_", " ") for i, el in enumerate(els)]
+  # may well have an underscore in them; but allow \s to stand for a space in
+  # the conjugation
+  els = [el.replace(r"\s", " ") if i == 4 else el.replace("_", " ") for i, el in enumerate(els)]
   verb, etym, aspect, corverbs, conj = els[0], els[1], els[2], els[3], els[4]
   assert re.search(u"(ть(ся)?|ти́?(сь)?|чь(ся)?)$", verb)
   check_stress(verb)
@@ -69,7 +76,7 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
         "" if corverbno == 1 else str(corverbno), corverb)
     corverbno += 1
   verbbase = re.sub(u"(ся|сь)$", "", verb)
-  passivetext = ("\n# {{passive of|lang=ru|%s}}" % verbbase
+  passivetext = ("# {{passive of|lang=ru|%s}}\n" % verbbase
       if etym == "r" else "")
 
   if "|" not in conj:
@@ -139,21 +146,14 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
   syntext = ""
   anttext = ""
   dertext = ""
-  reltext = """====Related terms====
-* {{l|ru|}}
-* {{l|ru|}}
-* {{l|ru|}}
-* {{l|ru|}}
-* {{l|ru|}}
-* {{l|ru|}}
-
-"""
+  reltext = None
   seetext = ""
   prontext = "* {{ru-IPA|%s}}\n" % verb
+  defntext = "# {{rfdef|lang=ru}}\n"
   for synantrel in els[5:]:
-    m = re.search(r"^(syn|ant|der|rel|see|pron|alt):(.*)", synantrel)
+    m = re.search(r"^(syn|ant|der|rel|see|pron|alt|def):(.*)", synantrel)
     if not m:
-      msg("Element %s doesn't start with syn:, ant:, der:, rel:, see:, pron: or alt:" % synantrel)
+      msg("Element %s doesn't start with syn:, ant:, der:, rel:, see:, pron:, alt: or def:" % synantrel)
     assert m
     sartype, vals = m.groups()
     if sartype in ["syn", "ant"]:
@@ -193,6 +193,8 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
         check_stress(altform)
         lines.append("* {{l|ru|%s}}\n" % altform)
       alttext = "===Alternative forms===\n%s\n" % "".join(lines)
+    elif sartype == "def":
+      defntext = generate_pos.generate_defn(re.sub(r"^def:", "", vals))
     else: # derived or related terms or see also
       if vals == "-":
         if sartype == "der":
@@ -260,6 +262,9 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
         else:
           seetext = derrelguts
 
+  if reltext == None:
+    error("No related terms; should specify some or use rel:- to disable them")
+
   msg("""%s
 
 ==Russian==
@@ -272,13 +277,12 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
 ===Verb===
 {{ru-verb|%s|%s%s}}
 
-# {{rfdef|lang=ru}}%s
-
+%s%s
 ====Conjugation====
 %s
 
 %s%s%s%s%s[[ru:%s]]
 
 """ % (rulib.remove_accents(verb), alttext, etymtext, prontext, verb, headword_aspect,
-  corverbtext, passivetext, conjtext, syntext, anttext, dertext, reltext,
-  seetext, rulib.remove_accents(verb)))
+  corverbtext, defntext, passivetext, conjtext, syntext, anttext, dertext,
+  reltext, seetext, rulib.remove_accents(verb)))
