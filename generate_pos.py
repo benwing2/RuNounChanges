@@ -39,6 +39,9 @@ def generate_defn(defns):
         elif defn.startswith("(n)"):
           labels.append("nonstandard")
           defn = re.sub(r"^\(n\)", "", defn)
+        elif defn.startswith("(lc)"):
+          labels.extend(["low", "_", "colloquial"])
+          defn = re.sub(r"^\(lc\)", "", defn)
         elif defn.startswith("(v)"):
           labels.append("vernacular")
           defn = re.sub(r"^\(v\)", "", defn)
