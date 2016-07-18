@@ -334,12 +334,21 @@ From {{affix|ru|у-|-сыпи́ть}}, causative of {{m|ru|спать}}, from {{
 [don't use] заколеба́ть за-+колеба́ть pf колеба́ть 6a|заколе́б|заколеба́|ppp=- def:{{lb|ru|transitive}}_to_[[begin]]_to_[[shake]],to_[[begin]]_to_[[rock]]/[[sway]] rel:колеба́ть/поколеба́ть,колеба́ться/поколеба́ться,колеба́ние,непоколеби́мый
 [don't use] заколеба́ть за-+колеба́ть pf колеба́ть 1a def:{{lb|ru|slang|rude}}_to_[[torment]],to_[[pester]],to_[[strongly]]_[[annoy]]
 заколеба́ться r pf колеба́ться 6a|заколе́б|заколеба́ def:to_[[start]]_[[swaying]],[[oscillating]];to_[[start]]_[[doubting]];(f)to_[[become]]_[[unstable]];{{lb|ru|slang|euphemistic}}_to_become_[[tired]]_and_[[irritated]]_from_[[repeated]]_[[unsuccessful]]_[[attempts]]_at_something
-потя́гиваться r impf потяну́ться 1a def:{{lb|ru|intransitive}}_to_[[stretch]]_{{gloss|of_a_person,to_take_a_[[stretch]]}} rel:FIXME
-потяну́ться r pf тяну́ться,потя́гиваться 3c def:{{lb|ru|intransitive}}_to_[[stretch]]_{{gloss|of_a_person,to_take_a_[[stretch]]}},FIXME(MORE_DEFS) rel:FIXME
-перева́ливаться ? impf перевали́ться 1a
-перевали́ться ? pf перева́ливаться 4c
-приню́хиваться ? impf приню́хаться 1a
-приню́хаться ? pf приню́хиваться 1a
+потя́гиваться r impf потяну́ться 1a def:{{lb|ru|intransitive}}_to_[[stretch]]_{{gloss|of_a_person,to_take_a_[[stretch]]}} rel:потя́гивать,тяну́ть/потяну́ть,тяготи́ть,тяготе́ть,тя́жкий:тя́жко,тяжёлый:тяжело́,тя́жесть,тяга́ться/потяга́ться,тя́га,тя́гость:тя́гостный,тя́говый,тя́гло:тя́глый:тя́гловый
+потяну́ться r pf тяну́ться,потя́гиваться 3c def:{{lb|ru|intransitive}}_to_[[stretch]]_{{gloss|of_a_person,to_take_a_[[stretch]]}};to_[[reach]]_{{i|{{m|ru|за}}/{{m|ru|к}} for}};to_[[follow]]_in_[[succession]] rel:тяну́ть/потяну́ть,потя́гивать,тяготи́ть,тяготе́ть,тя́жкий:тя́жко,тяжёлый:тяжело́,тя́жесть,тяга́ться/потяга́ться,тя́га,тя́гость:тя́гостный,тя́говый,тя́гло:тя́глый:тя́гловый
+перева́ливаться r impf перевали́ться 1a def:{{lb|ru|intransitive}}_to_[[roll_over]];{{lb|ru|imperfective_only}}_to_[[waddle]] rel:#ref,перева́л:перева́лка:перева́лочный,вали́ть/свали́ть/повали́ть,вали́ться/повали́ться/свали́ться,ва́лкий,ва́лка
+перевали́ться r pf перева́ливаться 4c def:{{lb|ru|intransitive}}_to_[[roll_over]] rel:#ref,перева́л:перева́лка:перева́лочный,вали́ть/свали́ть/повали́ть,вали́ться/повали́ться/свали́ться,ва́лкий,ва́лка
+приню́хиваться приню́хаться+-ивать impf приню́хаться 1a def:(c)to_[[sniff]]_{{i|{{m|ru|к}}; so as to recognize a smell}};(c)to_become_[[accustomed]]_to_the_[[smell]]_{{i|{{m|ru|к}}_of_something}} rel:ню́хать/поню́хать,нюх:нюха́ч,ню́хательный
+приню́хаться при-+ню́хать+-ся pf приню́хиваться 1a def:(c)to_[[sniff]]_{{i|{{m|ru|к}}; so as to recognize a smell}};(c)to_become_[[accustomed]]_to_the_[[smell]]_{{i|{{m|ru|к}}_of_something}} rel:ню́хать/поню́хать,нюх:нюха́ч,ню́хательный
+задергать
+
+==Russian==
+
+===Verb===
+{{ru-verb-alt-ё|задёргать|pf}}
+
+задёргать за-+дёргать pf задёргивать 1a def:{{lb|ru|perfective_only}}_to_[[tug]]_at_{{i|+_{{glink|instrumental}}}};(c)to_[[torment]]_(a_[[horse]])_through_[[repeatedly]]_[[tugging]]_the_[[reins]];(c)to_[[harass]]_or_[[torment]]_[[through]]_[[repeated]]_[[demands]] rel:дёргать/дёрнуть,дёргаться/дёрнуться,дёрганье:дёргание
+
 задергаться
 
 ==Russian==
@@ -347,12 +356,58 @@ From {{affix|ru|у-|-сыпи́ть}}, causative of {{m|ru|спать}}, from {{
 ===Verb===
 {{ru-verb-alt-ё|задёргаться|pf}}
 
-задёргаться ? pf ? 1a
-сбежа́ться ? pf сбега́ться irreg-бежа́ть|с
-[don't use] сбега́ться ? impf сбежа́ться 1a
-[don't use] сбе́гаться ? pf ? 1a def:[привыкнуть_бегать_вместе];-
-унижа́ться ? impf уни́зиться 1a
-уни́зиться ? pf унижа́ться 4a
+задёргаться r pf - 1a def:to_[[start]]_to_[[twitch]] rel:дёргать/дёрнуть,дёргаться/дёрнуться,дёрганье:дёргание
+сбежа́ться с-+бежа́ть-+ся pf сбега́ться irreg-бежа́ть|с def:to_[[come]]_[[running]]_{{i|of_many_people}} rel:сбега́ть/сбежа́ть,сбе́гать,бежа́ть/побежа́ть,бе́гать/побе́гать,бег,бего́м,бегле́ц:бегля́нка,бе́глый:бе́гло:бе́глость,беготня́,бе́гство,бе́женец:бе́женка
+[don't use] сбега́ться с-+бе́гать+-а́ть+-ся impf сбежа́ться 1a def:to_[[come]]_[[running]]_{{i|of_many_people}} rel:сбега́ть/сбежа́ть,сбе́гать,бежа́ть/побежа́ть,бе́гать/побе́гать,бег,бего́м,бегле́ц:бегля́нка,бе́глый:бе́гло:бе́глость,беготня́,бе́гство,бе́женец:бе́женка
+[don't use] сбе́гаться с-+бе́гать+-ся pf - 1a rel:- def:to_[[get_used_to]]_[[running]]_[[together]]
+
+==Russian==
+
+===Etymology 1===
+{{affix|ru|с-|бе́гать|-а́ть|-ся}}
+
+====Pronunciation====
+* {{ru-IPA|сбега́ться}}
+
+====Verb====
+{{ru-verb|сбега́ться|impf|pf=сбежа́ться}}
+
+# to [[come]] [[running]] {{i|of many people}}
+
+=====Conjugation=====
+{{ru-conj|1a|impf-refl|сбега́}}
+
+===Etymology 2===
+{{affix|ru|с-|бе́гать|-ся}}
+
+====Pronunciation====
+* {{ru-IPA|сбе́гаться}}
+
+====Verb====
+{{ru-verb|сбе́гаться|pf}}
+
+# to [[get used to]] [[running]] [[together]]
+
+=====Conjugation=====
+{{ru-conj|1a|pf-refl|сбе́га}}
+
+===Related terms===
+* {{l|ru|сбега́ть|g=impf}}, {{l|ru|сбежа́ть|g=pf}}
+* {{l|ru|сбе́гать}}
+* {{l|ru|бежа́ть|g=impf}}, {{l|ru|побежа́ть|g=pf}}
+* {{l|ru|бе́гать|g=impf}}, {{l|ru|побе́гать|g=pf}}
+* {{l|ru|бег}}
+* {{l|ru|бего́м}}
+* {{l|ru|бегле́ц}}, {{l|ru|бегля́нка}}
+* {{l|ru|бе́глый}}, {{l|ru|бе́гло}}, {{l|ru|бе́глость}}
+* {{l|ru|беготня́}}
+* {{l|ru|бе́гство}}
+* {{l|ru|бе́женец}}, {{l|ru|бе́женка}}
+
+[[ru:сбегаться]]
+
+унижа́ться r impf уни́зиться 1a
+уни́зиться r pf унижа́ться 4a
 вы́сморкаться ? pf ? 1a
 сго́рбиться ? pf ? 4a[(2)]
 повози́ться ? pf ? 4c
