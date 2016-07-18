@@ -36,6 +36,12 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
   assert re.search(u"(ть(ся)?|ти́?(сь)?|чь(ся)?)$", verb)
   check_stress(verb)
   isrefl = re.search(u"(ся|сь)$", verb)
+  if etym == "?":
+    error("Etymology consists of bare question mark")
+  elif etym == "-":
+    etymtext = "===Etymology===\n{{rfe|lang=ru}}\n\n"
+  elif etym == "--":
+    etymtext = ""
   if etym == "-":
     etymtext = "{{rfe|lang=ru}}"
   else:
@@ -70,6 +76,8 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
   corverbtext = ""
   corverbno = 1
   for corverb in corverbs:
+    if "?" in corverb:
+      error("? in corresponding aspect-pair verb '%s'" % corverb)
     check_stress(corverb)
     corverbtext += "|%s%s=%s" % (
         "impf" if headword_aspect == "pf" else "pf",
