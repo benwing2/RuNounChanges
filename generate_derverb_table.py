@@ -58,9 +58,11 @@ def render_groups(groups):
 
 def combine_prefix(prefix, suffix):
   if ru.is_stressed(prefix):
-    return "* {{l|ru|" + prefix + ru.make_unstressed(suffix) + "}}"
+    verb = prefix + ru.make_unstressed(suffix)
   else:
-    return "* {{l|ru|" + prefix + suffix + "}}"
+    verb = prefix + suffix
+  verb = ru.remove_monosyllabic_accents(verb)
+  return "* {{l|ru|" + verb + "}}"
 # Each group is delineated by a line containing only a hyphen in the
 # directive file, and consists of a list of (pf, impf) pairs. Multiple tables
 # are delineated by a line containing two or more hyphens.
