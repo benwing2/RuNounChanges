@@ -199,7 +199,54 @@ Perhaps from {{affix|ru|зуд|-е́ть}}.
 пригла́дить при-+гла́дить pf пригла́живать 4a+p def:to_[[smooth]];to_[[slick_back]]_(hair) rel:гла́дить/вы́гладить/погла́дить,гла́дкий:гла́дко:гла́дкость,гладь,глади́льный
 пригла́живать пригла́дить+-ивать impf пригла́дить 1a rel:гла́дить/вы́гладить/погла́дить,гла́дкий:гла́дко:гла́дкость,гладь,глади́льныйdef:to_[[smooth]];to_[[slick_back]]_(hair)
 [don't use] прока́зить ?прока́за+-ить impf-intr напрока́зить 4a def:altof:прока́зничать der:напрока́зить,спрока́зить rel:прока́за
-[don't use] прокази́ть - pf - 4b+p|проказ|pasttail=*|imprtail=*|paptail=*|padptail=*|padp_shorttail=*|notes=*\sDated. def:to_[[afflict]]_with_[[leprosy]] der:прокажённый rel:прока́за,искази́ть
+[don't use] прокази́ть ?прока́за+-и́ть pf - 4b+p|проказ|pasttail=*|imprtail=*|paptail=*|padptail=*|padp_shorttail=*|notes=*\sDated. def:to_[[afflict]]_with_[[leprosy]] der:прокажённый rel:прока́за,искази́ть
+
+==Russian==
+
+===Etymology 1===
+Perhaps from {{affix|ru|прока́за|-ить}}.
+
+====Pronunciation====
+* {{ru-IPA|прока́зить}}
+
+====Verb====
+{{ru-verb|прока́зить|impf|pf=напрока́зить}}
+
+# {{alternative form of|lang=ru|прока́зничать}}
+
+=====Conjugation=====
+{{ru-conj|4a|impf-intr|прока́з}}
+
+=====Derived terms=====
+* {{l|ru|напрока́зить}}
+* {{l|ru|спрока́зить}}
+
+=====Related terms=====
+* {{l|ru|прока́за}}
+
+===Etymology 2===
+Perhaps from {{affix|ru|прока́за|-и́ть}}.
+
+====Pronunciation====
+* {{ru-IPA|прокази́ть}}
+
+====Verb====
+{{ru-verb|прокази́ть|pf}}
+
+# to [[afflict]] with [[leprosy]]
+
+=====Conjugation=====
+{{ru-conj|4b+p|pf|проказ|pasttail=*|imprtail=*|paptail=*|padptail=*|padp_shorttail=*|notes=* Dated.}}
+
+=====Derived terms=====
+* {{l|ru|прокажённый}}
+
+=====Related terms=====
+* {{l|ru|прока́за}}
+* {{l|ru|искази́ть}}
+
+[[ru:проказить]]
+
 прока́зничать прока́за+-ничать impf-intr напрока́зничать 1a def:to_[[play]]_[[pranks]],to_make_[[mischief]];to_[[horse_around]] der:напрока́зничать,попрока́зничать alt:прока́зить rel:прока́за,прока́зливый,прока́зник
 конту́зить конту́зия+-ить pf - 4a+p def:{{lb|ru|often_impersonal}}_to_[[bruise]],to_[[contuse]];ux:[[его́]]_'''конту́зило'''|he_became_[[bruised]] rel:конту́зия
 
@@ -332,7 +379,38 @@ From {{affix|ru|у-|-сыпи́ть}}, causative of {{m|ru|спать}}, from {{
 встрять в-+-стрять pf-intr встрева́ть 15a|встря́ rel:застрева́ть/застря́ть def:to_[[meddle]]/[[intervene]]_in
 встрева́ть в-+-стрева́ть impf-intr встрять 1a rel:застрева́ть/застря́ть def:to_[[meddle]]/[[intervene]]_in
 [don't use] заколеба́ть за-+колеба́ть pf колеба́ть 6a|заколе́б|заколеба́|ppp=- def:{{lb|ru|transitive}}_to_[[begin]]_to_[[shake]],to_[[begin]]_to_[[rock]]/[[sway]] rel:колеба́ть/поколеба́ть,колеба́ться/поколеба́ться,колеба́ние,непоколеби́мый
-[don't use] заколеба́ть за-+колеба́ть pf колеба́ть 1a def:{{lb|ru|slang|rude}}_to_[[torment]],to_[[pester]],to_[[strongly]]_[[annoy]]
+[don't use] заколеба́ть за-+колеба́ть pf колеба́ть 1a def:{{lb|ru|slang|rude}}_to_[[torment]],to_[[pester]],to_[[strongly]]_[[annoy]] rel:-
+
+===Etymology===
+{{affix|ru|за-|колеба́ть}}
+
+===Pronunciation===
+* {{ru-IPA|заколеба́ть}}
+
+===Verb===
+{{ru-verb|заколеба́ть|pf|impf=колеба́ть}}
+
+# {{lb|ru|transitive}} to [[begin]] to [[shake]], to [[begin]] to [[rock]]/[[sway]]
+
+====Conjugation====
+{{ru-conj|6a|pf|заколе́б|заколеба́|ppp=-}}
+
+====Related terms====
+* {{l|ru|колеба́ть|g=impf}}, {{l|ru|поколеба́ть|g=pf}}
+* {{l|ru|колеба́ться|g=impf}}, {{l|ru|поколеба́ться|g=pf}}
+* {{l|ru|колеба́ние}}
+* {{l|ru|непоколеби́мый}}
+
+===Verb===
+{{ru-verb|заколеба́ть|pf|impf=колеба́ть}}
+
+# {{lb|ru|slang|rude}} to [[torment]], to [[pester]], to [[strongly]] [[annoy]]
+
+====Conjugation====
+{{ru-conj|1a|pf|заколеба́}}
+
+[[ru:заколебать]]
+
 заколеба́ться r pf колеба́ться 6a|заколе́б|заколеба́ def:to_[[start]]_[[swaying]],[[oscillating]];to_[[start]]_[[doubting]];(f)to_[[become]]_[[unstable]];{{lb|ru|slang|euphemistic}}_to_become_[[tired]]_and_[[irritated]]_from_[[repeated]]_[[unsuccessful]]_[[attempts]]_at_something
 потя́гиваться r impf потяну́ться 1a def:{{lb|ru|intransitive}}_to_[[stretch]]_{{gloss|of_a_person,to_take_a_[[stretch]]}} rel:потя́гивать,тяну́ть/потяну́ть,тяготи́ть,тяготе́ть,тя́жкий:тя́жко,тяжёлый:тяжело́,тя́жесть,тяга́ться/потяга́ться,тя́га,тя́гость:тя́гостный,тя́говый,тя́гло:тя́глый:тя́гловый
 потяну́ться r pf тяну́ться,потя́гиваться 3c def:{{lb|ru|intransitive}}_to_[[stretch]]_{{gloss|of_a_person,to_take_a_[[stretch]]}};to_[[reach]]_{{i|{{m|ru|за}}/{{m|ru|к}} for}};to_[[follow]]_in_[[succession]] rel:тяну́ть/потяну́ть,потя́гивать,тяготи́ть,тяготе́ть,тя́жкий:тя́жко,тяжёлый:тяжело́,тя́жесть,тяга́ться/потяга́ться,тя́га,тя́гость:тя́гостный,тя́говый,тя́гло:тя́глый:тя́гловый
