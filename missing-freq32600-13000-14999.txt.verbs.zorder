@@ -520,14 +520,16 @@ From {{affix|ru|у-|-сыпи́ть}}, causative of {{m|ru|спать}}, from {{
 {{bottom2}}
 
 топо́рщиться r impf - 4a[(3)] def:to_[[stand_on_end]]_{{i|of_hair_or_fur}};to_[[wrinkle]],to_[[pucker]]_{{i|of_[[material]]}};to_[[stick_out]] rel:-
-спа́сться с-+пасть+-ся pf спада́ться 7b|спа́сть|спа́д def:to_[[shrink]]_{{i|of_an_[[elastic]]_[[object]]_or_[[bodily]]_[[organ]]}} rel:FIXME
-спада́ться спа́сться+-а́ть impf спа́сться 1a def:to_[[shrink]]_{{i|of_an_[[elastic]]_[[object]]_or_[[bodily]]_[[organ]]}} rel:FIXME
-взду́ться ? pf вздува́ться 12a|FIXME
-вздува́ться ? impf взду́ться 1a
-раздви́нуться r pf раздвига́ться 3a
-раздвига́ться r impf раздви́нуться 1a
-притро́нуться ? pf притра́гиваться 3a
-притра́гиваться ? impf притро́нуться 1a
+спа́сться с-+пасть+-ся pf спада́ться 7b|спа́сть|спа́д def:to_[[shrink]]_{{i|of_an_[[elastic]]_[[object]]_or_[[bodily]]_[[organ]]}} rel:спада́ние,па́дать/упа́сть/пасть,па́дающий:па́дучий:па́дший,паде́ние,па́дкий
+спада́ться спа́сться+-а́ть impf спа́сться 1a def:to_[[shrink]]_{{i|of_an_[[elastic]]_[[object]]_or_[[bodily]]_[[organ]]}} rel:спада́ние,па́дать/упа́сть/пасть,па́дающий:па́дучий:па́дший,паде́ние,па́дкий
+вздуть вз-+дуть pf вздува́ть 12a+p|взду́|взду́ der:#ref,взду́тый,взду́тие rel:дуть/поду́ть,ду́тый,дутьё def:{{lb|ru|also|impersonal}}_to_[[bloat]],to_[[cause]]_to_[[swell]];ux:[[у]]_[[он|него́]]_'''взду́ло'''_[[щека|щёку]]|his_[[cheek]]_is_[[swollen]];to_[[blow]]_(something)_[[upward]];(c)to_[[inflate]]_([[prices]]);{{lb|ru|perfective_only|low|_|colloquial}}_to_[[beat_up]],to_[[thrash]]
+вздува́ть вздуть+-ва́ть impf вздуть 1a def:{{lb|ru|also|impersonal}}_to_[[bloat]],to_[[cause]]_to_[[swell]];ux:[[у]]_[[он|него́]]_'''вздува́ет'''_[[щека|щёку]]|his_[[cheek]]_is_[[swell_up|swelling_up]];to_[[blow]]_(something)_[[upward]];(c)to_[[inflate]]_([[prices]]) der:#ref rel:взду́тый,взду́тие,дуть/поду́ть,ду́тый,дутьё
+взду́ться r pf вздува́ться 12a|взду́|взду́ def:{{lb|ru|intransitive}}_to_[[swell_up]] rel:#ref,взду́тый,взду́тие,дуть/поду́ть,ду́тый,дутьё
+вздува́ться r impf взду́ться 1a def:{{lb|ru|intransitive}}_to_[[swell_up]] rel:#ref,взду́тый,взду́тие,дуть/поду́ть,ду́тый,дутьё
+раздви́нуться r pf раздвига́ться 3a def:{{lb|ru|intransitive}}_to_[[expand]];to_[[make_way]]_{{i|of_a_[[crowd]]}};{{lb|ru|intransitive}}_to_[[part]]_{{i|of_a_[[curtain]]}} rel:#ref,раздвижно́й,дви́гать/дви́нуть,движе́ние,дви́жимый:дви́жимость,дви́жущий
+раздвига́ться r impf раздви́нуться 1a def:{{lb|ru|intransitive}}_to_[[expand]];to_[[make_way]]_{{i|of_a_[[crowd]]}};{{lb|ru|intransitive}}_to_[[part]]_{{i|of_a_[[curtain]]}} rel:#ref,раздвижно́й,дви́гать/дви́нуть,движе́ние,дви́жимый:дви́жимость,дви́жущий
+притро́нуться при-+тро́нуть+-ся pf притра́гиваться 3a def:to_[[touch]] rel:тро́гать/тро́нуть,тро́гаться/тро́нуться,тро́гательный:тро́гательность,тро́нутый
+притра́гиваться притро́нуться+alt1=притра́г-+-ивать+-ся impf притро́нуться 1a def:to_[[touch]]  rel:тро́гать/тро́нуть,тро́гаться/тро́нуться,тро́гательный:тро́гательность,тро́нутый
 
 
 
