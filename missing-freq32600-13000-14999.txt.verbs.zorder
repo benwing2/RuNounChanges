@@ -45,7 +45,7 @@
 
 разбрести́сь раз-+брести́+-сь pf разбреда́ться 7b/b(9)+p|разбрести́|разбре́д def:to_[[wander_off]]_in_[[different]]_[[directions]]_{{i|of_many_people}} rel:брести́,броди́ть,бродя́чий,бродя́га:бродя́жничать,бродя́жничество
 разбреда́ться разбрести́сь+-а́ть impf разбрести́сь 1a def:to_[[wander_off]]_in_[[different]]_[[directions]]_{{i|of_many_people}} rel:брести́,броди́ть,бродя́чий,бродя́га:бродя́жничать,бродя́жничество
-[not in dict] позвя́кивать по-+звя́кать+-ивать pf-intr - 1a rel:звя́кать/звя́кнуть,звя́канье def:to_[[clink]],to_[[jingle]]_[[periodically]]
+[not in dict] позвя́кивать по-+звя́кать+-ивать pf-intr - 1a rel:звя́кать/звя́кнуть,звя́канье def:to_[[clink]]_[[intermittently]],to_[[jingle]]_[[periodically]]
 прогресси́ровать прогре́сс+-и́ровать impf-intr - 2a def:to_[[progress]]_{{i|also_of_an_[[illness]]}} rel:прогре́сс,прогресси́вный,прогре́ссия
 сплевывать
 
@@ -56,7 +56,7 @@
 
 втолко́вывать втолкова́ть+-ывать impf втолкова́ть 1a def:(c)to_[[make]]_[[understand]],to_[[get_across]]_to_{{i|someone}} rel:толкова́ть,толк,толкова́ние,толкова́тель
 втолкова́ть в-+толкова́ть pf втолко́вывать 2a+p def:(c)to_[[make]]_[[understand]],to_[[get_across]]_to_{{i|someone}} rel:толкова́ть,толк,толкова́ние,толкова́тель
-ви́дывать ви́деть+-ывать impf - 1a|ви́дыва|ppp=-|iter=1 def:(c)to_[[see]]_[[repeatedly]],_iterative_form_of_{{m|ru|ви́деть}} rel:ви́деть/уви́деть,вида́ть/повида́ть,ви́деться/уви́деться,вид,ви́дный:ви́дно,видне́ться,ви́димый:ви́димо:ви́димость,ви́данный,ви́дение:виде́ние
+ви́дывать ви́деть+-ывать impf - 1a|ви́дыва|ppp=-|iter=1 def:(c)to_[[see]]_[[repeatedly]],iterative_form_of_{{m|ru|ви́деть}} rel:ви́деть/уви́деть,вида́ть/повида́ть,ви́деться/уви́деться,вид,ви́дный:ви́дно,видне́ться,ви́димый:ви́димо:ви́димость,ви́данный,ви́дение:виде́ние
 поса́пывать по-+сопе́ть+-ывать impf-intr - 1a rel:сопе́ть,со́пли:сопли́вый,сопло́ def:to_[[snort]],to_[[sniff]]
 припля́сывать при-+пляса́ть+-ывать impf-intr - 1a def:to_[[dance]]_[[up_and_down]] rel:пляса́ть:спляса́ть,пляс:пля́ска:плясово́й,плясова́я,плясу́н
 отбежа́ть от-+бежа́ть pf-intr отбега́ть irreg-бежать|от rel:бежа́ть/побежа́ть,бе́гать/побе́гать,бег,бего́м,бегле́ц:бегля́нка,бе́глый:бе́гло:бе́глость,беготня́,бе́гство,бе́женец:бе́женка
@@ -110,7 +110,7 @@
 захихи́кать за-+хихи́кать pf-intr хихи́кать 1a def:to_[[start]]_[[giggling]] rel:хихи́кать/хихи́кнуть,хихи́канье
 растолка́ть рас-+толка́ть pf раста́лкивать 1a+p def:to_[[push]]_[[away]],[[aside]],or_[[apart]]_(many_people);to_[[wake_up]]_by_shaking rel:толка́ть/толкну́ть,толка́ться/толкну́ться,толка́ние,толка́ч,толкотня́
 раста́лкивать растолка́ть+-ивать impf растолка́ть,растолкну́ть 1a def:to_[[push]]_[[away]],[[aside]],or_[[apart]]_(many_people);to_[[wake_up]]_by_shaking rel:толка́ть/толкну́ть,толка́ться/толкну́ться,толка́ние,толка́ч,толкотня́
-попра́ть - pf попира́ть 6°b+p|futrtail=*|imprtail=*|notes=*\sDated. def:to_[[violate]],to_[[humiliate]];(d)to_[[trample]] rel:-
+попра́ть - pf попира́ть 6°b+p|попр|futrtailall=*|imprtailall=*|notes=*\sDated. def:to_[[violate]],to_[[humiliate]];(d)to_[[trample]] rel:-
 
 ===Etymology===
 From {{inh|ru|orv|попьрати}}, borrowed from {{der|ru|cu|попьрати}}, composed as if from {{affix|ru|по-|прать||to [[crush]], to [[stomp]]; to [[go]] [[against]], to [[resist]]}}, from {{der|ru|sla-pro|*perti}}; cognate with {{m|ru|попере́ть}}.
@@ -197,7 +197,7 @@ Perhaps from {{affix|ru|зуд|-е́ть}}.
 зага́дить за-+га́дить pf зага́живать 4a+p def:to_[[soil]],to_[[pollute]] der:зага́женный rel:гад:га́дина:гадю́ка,га́дкий:га́дость,гадли́вый
 зага́живать зага́дить+-ивать impf зага́дить 1a def:to_[[soil]],to_[[pollute]] rel:зага́женный,гад:га́дина:гадю́ка,га́дкий:га́дость,гадли́вый
 пригла́дить при-+гла́дить pf пригла́живать 4a+p def:to_[[smooth]];to_[[slick_back]]_(hair) rel:гла́дить/вы́гладить/погла́дить,гла́дкий:гла́дко:гла́дкость,гладь,глади́льный
-пригла́живать пригла́дить+-ивать impf пригла́дить 1a rel:гла́дить/вы́гладить/погла́дить,гла́дкий:гла́дко:гла́дкость,гладь,глади́льныйdef:to_[[smooth]];to_[[slick_back]]_(hair)
+пригла́живать пригла́дить+-ивать impf пригла́дить 1a rel:гла́дить/вы́гладить/погла́дить,гла́дкий:гла́дко:гла́дкость,гладь,глади́льный def:to_[[smooth]];to_[[slick_back]]_(hair)
 [don't use] прока́зить ?прока́за+-ить impf-intr напрока́зить 4a def:altof:прока́зничать der:напрока́зить,спрока́зить rel:прока́за
 [don't use] прокази́ть ?прока́за+-и́ть pf - 4b+p|проказ|pasttail=*|imprtail=*|paptail=*|padptail=*|padp_shorttail=*|notes=*\sDated. def:to_[[afflict]]_with_[[leprosy]] der:прокажённый rel:прока́за,искази́ть
 
@@ -236,7 +236,7 @@ Perhaps from {{affix|ru|прока́за|-и́ть}}.
 # to [[afflict]] with [[leprosy]]
 
 =====Conjugation=====
-{{ru-conj|4b+p|pf|проказ|pasttail=*|imprtail=*|paptail=*|padptail=*|padp_shorttail=*|notes=* Dated.}}
+{{ru-conj|4b+p|pf|проказ|pasttailall=*|imprtailall=*|futrtailall=*|paptail=*|padptail=*|padp_shorttail=*|infinitive_tail=*|notes=* Dated.}}
 
 =====Derived terms=====
 * {{l|ru|прокажённый}}
@@ -256,8 +256,8 @@ Perhaps from {{affix|ru|прока́за|-и́ть}}.
 присели́ть при-+сели́ть pf приселя́ть 4b+p def:(c)to_[[settle]]_([[somewhere_else]]);- rel:сели́ть:сели́ться,селе́ние,село́:се́льский
 
 ====Conjugation====
-{{ru-verb|4b+p|pf|присел}} ''or''
-{{ru-verb|4c(7)|pf|присе́л}}
+{{ru-conj|4b+p|pf|присел}} ''or''
+{{ru-conj|4c(7)|pf|присе́л}}
 
 приселя́ть присели́ть+-я́ть impf присели́ть 1a def:(c)to_[[settle]]_([[somewhere_else]]);- rel:сели́ть:сели́ться,селе́ние,село́:се́льский
 проломи́ть про-+ломи́ть pf прола́мывать 4c+p der:#ref def:to_[[break_through]],to_[[penetrate]],to_[[pierce]],to_make_a_[[hole]]_in;to_[[fracture]]_(one's_[[skull]]) rel:пролома́ть,проло́м,ломи́ть,лома́ть/слома́ть,лома́ться/слома́ться,ло́мкий:ло́мкость,ло́мка,ло́маный
@@ -301,14 +301,14 @@ From {{affix|ru|у-|-сыпи́ть}}, causative of {{m|ru|спать}}, from {{
 {{bottom2}}
 
 погости́ть по-+гости́ть pf-intr - 4b def:to_[[stay]]_for_[[awhile]]_{{i|at_someone's_[[house]]}} rel:гости́ть,гость:гостево́й,гости́ница,гостеприи́мный:гостеприи́мство
-всучи́ть в-+сучи́ть pf всу́чивать,всуча́ть 4c+p def:(c)to_[[palm_off]]_onto,to_[[foist]]_onto rel:сучить,сучёный
+всучи́ть в-+сучи́ть pf всу́чивать,всуча́ть 4c+p def:(c)to_[[palm_off]]_onto,to_[[foist]]_onto rel:сучи́ть,сучёный
 
 ====Conjugation====
-{{ru-verb|4c+p|всу́ч}} ''or''
-{{ru-verb|4b(8)|всуч}}
+{{ru-conj|4c+p|pf|всу́ч}} ''or''
+{{ru-conj|4b(8)|pf|всуч}}
 
-всу́чивать всучи́ть+-ивать impf всучи́ть 1a alt:всуча́ть def:(c)to_[[palm_off]]_onto,to_[[foist]]_onto rel:сучить,сучёный
-всуча́ть всучи́ть+-а́ть impf всучи́ть 1a def:altof:всу́чивать rel:сучить,сучёный
+всу́чивать всучи́ть+-ивать impf всучи́ть 1a alt:всуча́ть def:(c)to_[[palm_off]]_onto,to_[[foist]]_onto rel:сучи́ть,сучёный
+всуча́ть всучи́ть+-а́ть impf всучи́ть 1a def:altof:всу́чивать rel:сучи́ть,сучёный
 наколо́ть на-+коло́ть pf нака́лывать 10c+p|наколо́|нако́л def:to_[[prick]];to_[[pin]]_(something)_[[on]];to_[[slaughter]]_([[many]]_[[animals]]);to_[[chop]],to_[[split]]_(a_[[good]]_[[amount]]_of_[[wood]]) der:#ref rel:коло́ть/кольну́ть/расколо́ть/заколо́ть,ко́лотый,колотьё,колу́н,коло́да:коло́дка
 нака́лывать наколо́ть+-ывать impf наколо́ть 1a def:to_[[prick]];to_[[pin]]_(something)_[[on]] der:#ref rel:коло́ть/кольну́ть/расколо́ть/заколо́ть,ко́лотый,колотьё,колу́н,коло́да:коло́дка
 споро́ть с-+поро́ть pf спа́рывать 10c+p|споро́|спо́р def:to_[[remove]]_(something_[[sewn]])_by_[[tear_out|tearing_out]]_the_[[stitches]];(c)to_[[blurt_out]] rel:поро́ть/вы́пороть/распоро́ть,по́рка
@@ -322,8 +322,8 @@ From {{affix|ru|у-|-сыпи́ть}}, causative of {{m|ru|спать}}, from {{
 
 промёрзнуть про-+мёрзнуть pf-intr промёрзать 3°a der:промёрзлый def:to_[[freeze]]_[[through]],to_be_[[frozen]]_[[solid]];to_be_[[chilled]]_[[through]] rel:мёрзнуть/замёрзнуть,мерзлота́,моро́з:моро́зный:моро́зец,моро́зить,моро́женый:моро́женое:моро́женщик,морози́лька:морози́льник
 промерза́ть промёрзнуть+alt1=промёрз(нуть)+-а́ть impf-intr промёрзнуть 1a def:to_[[freeze]]_[[through]],to_be_[[frozen]]_[[solid]];to_be_[[chilled]]_[[through]] rel:промёрзлый,мёрзнуть/замёрзнуть,мерзлота́,моро́з:моро́зный:моро́зец,моро́зить,моро́женый:моро́женое:моро́женщик,морози́лька:морози́льник
-козыря́ть козырь+-я́ть impf-intr козырну́ть 1a der:козырну́ть,откозыря́ть,откозырну́ть rel:ко́зырь:козырно́й:козы́рный,козырёк def:(c)to_[[trump]]_{{gloss|to_[[play]]_a_[[trump_card]];(c)to_[[salute]];(c)to_[[flaunt]]_{{i|+_{{glink|instrumental}}}}
-козырну́ть козыря́ть+-ну́ть pf-intr козыря́ть 3b der:откозырну́ть def:(c)to_[[trump]]_{{gloss|to_[[play]]_a_[[trump_card]];(c)to_[[salute]];(c)to_[[flaunt]]_{{i|+_{{glink|instrumental}}}}rel:ко́зырь:козырно́й:козы́рный,козырёк
+козыря́ть козырь+-я́ть impf-intr козырну́ть 1a der:козырну́ть,откозыря́ть,откозырну́ть rel:ко́зырь:козырно́й:козы́рный,козырёк def:(c)to_[[trump]]_{{gloss|to_[[play]]_a_[[trump_card]]}};(c)to_[[salute]];(c)to_[[flaunt]]_{{i|+_{{glink|instrumental}}}}
+козырну́ть козыря́ть+-ну́ть pf-intr козыря́ть 3b der:откозырну́ть def:(c)to_[[trump]]_{{gloss|to_[[play]]_a_[[trump_card]]}};(c)to_[[salute]];(c)to_[[flaunt]]_{{i|+_{{glink|instrumental}}}} rel:ко́зырь:козырно́й:козы́рный,козырёк
 пры́скать - impf пры́снуть,попры́скать 6a1as14+p def:to_[[burst]]_into_[[laughter]];to_[[dart]],to_[[dash]];to_[[sprinkle]]_{{i|+_{{glink|instrumental}}}};{{lb|ru|imperfective_only}}_to_[[drizzle]],to_[[fall]]_in_[[small]]_[[drops]]_{{i|of_[[rain]]}} rel:-
 
 ====Derived terms====
@@ -367,7 +367,7 @@ From {{affix|ru|у-|-сыпи́ть}}, causative of {{m|ru|спать}}, from {{
 * {{l|ru|спры́снуть}}
 {{bottom2}}
 
-пры́снуть ?прыскать+пры́с(кать)+-нуть pf пры́скать 3a+p def:to_[[burst]]_into_[[laughter]];to_[[dart]],to_[[dash]];to_[[sprinkle]]_{{i|+_{{glink|instrumental}}}};{{lb|ru|perfective_only}}_to_[[gush]],to_[[spurt]] rel:-
+пры́снуть ?прыскать+alt1=пры́с(кать)+-нуть pf пры́скать 3a+p def:to_[[burst]]_into_[[laughter]];to_[[dart]],to_[[dash]];to_[[sprinkle]]_{{i|+_{{glink|instrumental}}}};{{lb|ru|perfective_only}}_to_[[gush]],to_[[spurt]] rel:-
 
 ====Derived terms====
 * ''See {{m|ru|пры́скать}} for derived verbs.''
@@ -378,8 +378,8 @@ From {{affix|ru|у-|-сыпи́ть}}, causative of {{m|ru|спать}}, from {{
 заплыва́ть заплы́ть+-вать impf-intr заплы́ть 1a def:to_[[swim]]_{{i|somewhere_far_away}};to_[[swim]]_or_[[sail]]_{{i|{{m|ru|в}}_into}};to_be_[[bloated]],[[swollen]] rel:заплы́в,плыть/поплы́ть,пла́вать,пла́вание,плав,пла́вающий
 встрять в-+-стрять pf-intr встрева́ть 15a|встря́ rel:застрева́ть/застря́ть def:to_[[meddle]]/[[intervene]]_in
 встрева́ть в-+-стрева́ть impf-intr встрять 1a rel:застрева́ть/застря́ть def:to_[[meddle]]/[[intervene]]_in
-[don't use] заколеба́ть за-+колеба́ть pf колеба́ть 6a|заколе́б|заколеба́|ppp=- def:{{lb|ru|transitive}}_to_[[begin]]_to_[[shake]],to_[[begin]]_to_[[rock]]/[[sway]] rel:колеба́ть/поколеба́ть,колеба́ться/поколеба́ться,колеба́ние,непоколеби́мый
-[don't use] заколеба́ть за-+колеба́ть pf колеба́ть 1a def:{{lb|ru|slang|rude}}_to_[[torment]],to_[[pester]],to_[[strongly]]_[[annoy]] rel:-
+[don't use] заколеба́ть за-+колеба́ть pf колеба́ть 6a|заколе́б|заколеба́|ppp=- def:{{lb|ru|transitive}}_to_[[begin]]_to_[[shake]],to_[[begin]]_to_[[rock]]/[[sway]] rel:колеба́ть/поколеба́ть,колеба́ться/поколеба́ться,колеба́ние,непоколеби́мый der:заколеба́ться
+[don't use] заколеба́ть за-+колеба́ть pf колеба́ть 1a|заколеба́|ppp=- def:{{lb|ru|slang|rude}}_to_[[torment]],to_[[pester]],to_[[strongly]]_[[annoy]] rel:-
 
 ===Etymology===
 {{affix|ru|за-|колеба́ть}}
@@ -395,6 +395,9 @@ From {{affix|ru|у-|-сыпи́ть}}, causative of {{m|ru|спать}}, from {{
 ====Conjugation====
 {{ru-conj|6a|pf|заколе́б|заколеба́|ppp=-}}
 
+====Derived terms====
+* {{l|ru|заколеба́ться|g=pf}}
+
 ====Related terms====
 * {{l|ru|колеба́ть|g=impf}}, {{l|ru|поколеба́ть|g=pf}}
 * {{l|ru|колеба́ться|g=impf}}, {{l|ru|поколеба́ться|g=pf}}
@@ -407,17 +410,17 @@ From {{affix|ru|у-|-сыпи́ть}}, causative of {{m|ru|спать}}, from {{
 # {{lb|ru|slang|rude}} to [[torment]], to [[pester]], to [[strongly]] [[annoy]]
 
 ====Conjugation====
-{{ru-conj|1a|pf|заколеба́}}
+{{ru-conj|1a|pf|заколеба́|ppp=-}}
 
 [[ru:заколебать]]
 
 заколеба́ться r pf колеба́ться 6a|заколе́б|заколеба́ def:to_[[start]]_[[swaying]],[[oscillating]];to_[[start]]_[[doubting]];(f)to_[[become]]_[[unstable]];{{lb|ru|slang|euphemistic}}_to_become_[[tired]]_and_[[irritated]]_from_[[repeated]]_[[unsuccessful]]_[[attempts]]_at_something
 потя́гиваться r impf потяну́ться 1a def:{{lb|ru|intransitive}}_to_[[stretch]]_{{gloss|of_a_person,to_take_a_[[stretch]]}} rel:потя́гивать,тяну́ть/потяну́ть,тяготи́ть,тяготе́ть,тя́жкий:тя́жко,тяжёлый:тяжело́,тя́жесть,тяга́ться/потяга́ться,тя́га,тя́гость:тя́гостный,тя́говый,тя́гло:тя́глый:тя́гловый
-потяну́ться r pf тяну́ться,потя́гиваться 3c def:{{lb|ru|intransitive}}_to_[[stretch]]_{{gloss|of_a_person,to_take_a_[[stretch]]}};to_[[reach]]_{{i|{{m|ru|за}}/{{m|ru|к}} for}};to_[[follow]]_in_[[succession]] rel:тяну́ть/потяну́ть,потя́гивать,тяготи́ть,тяготе́ть,тя́жкий:тя́жко,тяжёлый:тяжело́,тя́жесть,тяга́ться/потяга́ться,тя́га,тя́гость:тя́гостный,тя́говый,тя́гло:тя́глый:тя́гловый
+потяну́ться r pf тяну́ться,потя́гиваться 3c def:{{lb|ru|intransitive}}_to_[[stretch]]_{{gloss|of_a_person,to_take_a_[[stretch]]}};to_[[reach]]_{{i|{{m|ru|за}}/{{m|ru|к}}_for}};to_[[follow]]_in_[[succession]] rel:тяну́ть/потяну́ть,потя́гивать,тяготи́ть,тяготе́ть,тя́жкий:тя́жко,тяжёлый:тяжело́,тя́жесть,тяга́ться/потяга́ться,тя́га,тя́гость:тя́гостный,тя́говый,тя́гло:тя́глый:тя́гловый
 перева́ливаться r impf перевали́ться 1a def:{{lb|ru|intransitive}}_to_[[roll_over]];{{lb|ru|imperfective_only}}_to_[[waddle]] rel:#ref,перева́л:перева́лка:перева́лочный,вали́ть/свали́ть/повали́ть,вали́ться/повали́ться/свали́ться,ва́лкий,ва́лка
 перевали́ться r pf перева́ливаться 4c def:{{lb|ru|intransitive}}_to_[[roll_over]] rel:#ref,перева́л:перева́лка:перева́лочный,вали́ть/свали́ть/повали́ть,вали́ться/повали́ться/свали́ться,ва́лкий,ва́лка
-приню́хиваться приню́хаться+-ивать impf приню́хаться 1a def:(c)to_[[sniff]]_{{i|{{m|ru|к}}; so as to recognize a smell}};(c)to_become_[[accustomed]]_to_the_[[smell]]_{{i|{{m|ru|к}}_of_something}} rel:ню́хать/поню́хать,нюх:нюха́ч,ню́хательный
-приню́хаться при-+ню́хать+-ся pf приню́хиваться 1a def:(c)to_[[sniff]]_{{i|{{m|ru|к}}; so as to recognize a smell}};(c)to_become_[[accustomed]]_to_the_[[smell]]_{{i|{{m|ru|к}}_of_something}} rel:ню́хать/поню́хать,нюх:нюха́ч,ню́хательный
+приню́хиваться приню́хаться+-ивать impf приню́хаться 1a def:(c)to_[[sniff]]_{{i|{{m|ru|к}}\;_so_as_to_[[recognize]]_a_[[smell]]}};(c)to_become_[[accustomed]]_to_the_[[smell]]_{{i|{{m|ru|к}}_of_something}} rel:ню́хать/поню́хать,нюх:нюха́ч,ню́хательный
+приню́хаться при-+ню́хать+-ся pf приню́хиваться 1a def:(c)to_[[sniff]]_{{i|{{m|ru|к}}\;_so_as_to_[[recognize]]_a_[[smell]]}};(c)to_become_[[accustomed]]_to_the_[[smell]]_{{i|{{m|ru|к}}_of_something}} rel:ню́хать/поню́хать,нюх:нюха́ч,ню́хательный
 задергать
 
 ==Russian==
@@ -539,7 +542,7 @@ From {{affix|ru|у-|-сыпи́ть}}, causative of {{m|ru|спать}}, from {{
 сго́рбиться r pf го́рбиться 4a[(2)] rel:#ref,сго́рбленный,горбу́н:горбу́нья,горб:горба́тый,горби́на:горби́нка def:{{lb|ru|intransitive}}_to_[[hunch]]_over
 повози́ться r pf вози́ться 4c def:to_[[fiddle]],to_[[busy]]_oneself,to_[[waste_time]];to_[[frolic]],to_[[play_around]];-  rel:#ref,везти́/повезти́,воз
 посторони́ться по-+сторони́ться pf сторони́ться 4b rel:посторо́нний:сторо́нний,сторона́,сторо́нник def:to_[[step_aside]],to_[[make_way]]
-лучи́ть луч+-и́ть impf ? 4b+p def:{{lb|ru|regional}}_to_[[hunt]]_(fish,etc.)_at_[[night]]_with_a_[[lit]]_[[torch]] rel:луче́ние,луч:лучи́на,лу́чник
+лучи́ть луч+-и́ть impf - 4b+p def:{{lb|ru|regional}}_to_[[hunt]]_(fish,etc.)_at_[[night]]_with_a_[[lit]]_[[torch]] rel:луче́ние,луч:лучи́на,лу́чник
 
 ====Derived terms====
 {{top2}}
