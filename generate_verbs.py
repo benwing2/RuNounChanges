@@ -8,6 +8,7 @@ import rulib
 import generate_pos
 
 parser = argparse.ArgumentParser(description="Generate verb stubs.")
+parser.add_argument('--reqdef', help="Require a definition.")
 parser.add_argument('--direcfile', help="File containing directives.")
 args = parser.parse_args()
 
@@ -30,8 +31,8 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
   els = re.split(r"\s+", line)
   # Replace _ with space, but not in the conjugation, where param names
   # may well have an underscore in them; but allow \s to stand for a space in
-  # the conjugation
-  els = [el.replace(r"\s", " ") if i == 4 else el.replace("_", " ") for i, el in enumerate(els)]
+  # the conjugation, and \u to stand for an underscore elsewhere.
+  els = [el.replace(r"\s", " ") if i == 4 else el.replace("_", " ").replace(r"\u", "_") for i, el in enumerate(els)]
   verb, etym, aspect, corverbs, conj = els[0], els[1], els[2], els[3], els[4]
   assert re.search(u"(ть(ся)?|ти́?(сь)?|чь(ся)?)$", verb)
   check_stress(verb)
@@ -157,11 +158,11 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
   reltext = None
   seetext = ""
   prontext = "* {{ru-IPA|%s}}\n" % verb
-  defntext = "# {{rfdef|lang=ru}}\n"
+  notetext = ""
   for synantrel in els[5:]:
-    m = re.search(r"^(syn|ant|der|rel|see|pron|alt|def):(.*)", synantrel)
+    m = re.search(r"^(syn|ant|der|rel|see|pron|alt|def|note):(.*)", synantrel)
     if not m:
-      msg("Element %s doesn't start with syn:, ant:, der:, rel:, see:, pron:, alt: or def:" % synantrel)
+      msg("Element %s doesn't start with syn:, ant:, der:, rel:, see:, pron:, alt:, def: or note:" % synantrel)
     assert m
     sartype, vals = m.groups()
     if sartype in ["syn", "ant"]:
@@ -202,7 +203,9 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
         lines.append("* {{l|ru|%s}}\n" % altform)
       alttext = "===Alternative forms===\n%s\n" % "".join(lines)
     elif sartype == "def":
-      defntext = generate_pos.generate_defn(re.sub(r"^def:", "", vals))
+      defntext = generate_pos.generate_defn(vals)
+    elif sartype == "note":
+      notetext = " {{i|%s}}" % vals
     else: # derived or related terms or see also
       if vals == "-":
         if sartype == "der":
@@ -270,6 +273,11 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
         else:
           seetext = derrelguts
 
+  if defntext == None:
+    if args.reqdef:
+      error("No definition; should specify one or use def:-")
+    else:
+      defntext = "# {{rfdef|lang=ru}}\n"
   if reltext == None:
     error("No related terms; should specify some or use rel:- to disable them")
 
@@ -283,7 +291,7 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
 ===Pronunciation===
 %s
 ===Verb===
-{{ru-verb|%s|%s%s}}
+{{ru-verb|%s|%s%s}}%s
 
 %s%s
 ====Conjugation====
@@ -291,6 +299,7 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
 
 %s%s%s%s%s[[ru:%s]]
 
-""" % (rulib.remove_accents(verb), alttext, etymtext, prontext, verb, headword_aspect,
-  corverbtext, defntext, passivetext, conjtext, syntext, anttext, dertext,
+""" % (rulib.remove_accents(verb), alttext, etymtext, prontext,
+  verb, headword_aspect, corverbtext, notetext,
+  defntext, passivetext, conjtext, syntext, anttext, dertext,
   reltext, seetext, rulib.remove_accents(verb)))
