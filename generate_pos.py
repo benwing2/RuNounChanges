@@ -54,6 +54,18 @@ def generate_defn(defns):
         elif defn.startswith("(l)"):
           labels.append("literary")
           defn = re.sub(r"^\(l\)", "", defn)
+        elif defn.startswith("(tr)"):
+          labels.append("transitive")
+          defn = re.sub(r"^\(tr\)", "", defn)
+        elif defn.startswith("(in)"):
+          labels.append("intransitive")
+          defn = re.sub(r"^\(in\)", "", defn)
+        elif defn.startswith("(io)"):
+          labels.append("imperfective only")
+          defn = re.sub(r"^\(io\)", "", defn)
+        elif defn.startswith("(po)"):
+          labels.append("perfective only")
+          defn = re.sub(r"^\(po\)", "", defn)
         else:
           break
       if labels:
