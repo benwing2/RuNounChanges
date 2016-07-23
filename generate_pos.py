@@ -66,6 +66,9 @@ def generate_defn(defns):
         elif defn.startswith("(po)"):
           labels.append("perfective only")
           defn = re.sub(r"^\(po\)", "", defn)
+        elif defn.startswith("(im)"):
+          labels.append("impersonal")
+          defn = re.sub(r"^\(im\)", "", defn)
         else:
           break
       if labels:
