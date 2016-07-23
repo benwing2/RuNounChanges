@@ -1,6 +1,6 @@
 свезти́ с-+везти́ pf свози́ть 7b/b(9)+p|свезти́|свёз def:(po)(tr)to_[[transport]],to_[[drive]],to_[[convey]];(c)(po)(tr)to_[[transport]]_[[there_and_back]],to_[[drive]]_[[there_and_back]];(tr)to_[[transport]]_[[down]],to_[[drive]]_[[down]];to_[[transport]]_[[away]],to_[[carry]]_[[away]]_{{i|by_[[vehicle]]}};to_[[gather]]_[[together]] rel:везти́/повезти́,вози́ть/повози́ть,воз
 [don't use] свози́ть с-+вози́ть impf свезти́ 4c def:(tr)to_[[transport]]_[[down]],to_[[drive]]_[[down]];to_[[transport]]_[[away]],to_[[carry]]_[[away]]_{{i|by_[[vehicle]]}};(tr)to_[[gather]]_[[together]] rel:везти́/повезти́,вози́ть/повози́ть,воз
-[don't use] свози́ть с-+вози́ть pf - 4c+p def:to_[[transport]]_[[there_and_back]],to_[[drive]]_[[there_and_back]] rel:-
+[don't use] свози́ть с-+вози́ть pf - 4c+p def:(tr)to_[[transport]]_[[there_and_back]],to_[[drive]]_[[there_and_back]] rel:-
 
 ==Russian==
 
@@ -23,12 +23,12 @@
 ===Verb===
 {{ru-verb|свози́ть|pf}}
 
-# to [[transport]] [[there and back]], to [[drive]] [[there and back]]
+# {{lb|ru|transitive}} to [[transport]] [[there and back]], to [[drive]] [[there and back]]
 
 ====Conjugation====
 {{ru-conj|4c+p|pf|сво́з}}
 
-====Related terms====
+===Related terms===
 * {{l|ru|везти́|g=impf}}, {{l|ru|повезти́|g=pf}}
 * {{l|ru|вози́ть|g=impf}}, {{l|ru|повози́ть|g=pf}}
 * {{l|ru|воз}}
@@ -66,11 +66,63 @@
 поку́сывать по-+куса́ть+-ывать impf - 1a|поку́сыва|ppp=- def:dim:куса́ть|pos=verbs:(c)to_[[nibble]],to_[[bite]]_a_[[little]],to_[[bite]]_[[sometimes]] rel:куса́ть/укуси́ть,куса́ться,кусо́к:кусо́чек,кусково́й,куса́чки
 разма́тывать размота́ть+-ывать impf размота́ть 1a der:#ref def:(tr)to_[[unwind]],to_[[unreel]] rel:мота́ть/мотну́ть
 размота́ть раз-+мота́ть pf разма́тывать 1a+p def:(tr)to_[[unwind]],to_[[unreel]] rel:мота́ть/мотну́ть
-налега́ть налечь+alt1=налег-+а́ть impf-intr нале́чь 1a note:{{m|ru|на}}_+_{{glink|accusative}} def:to_[[lean]]_on;(c)to_[[apply_oneself]]_to;to_[[wield]]_[[energetically]] rel:ложи́ться/лечь,ложи́ть,ло́же
+налега́ть налечь+alt1=налег-+-а́ть impf-intr нале́чь 1a note:{{m|ru|на}}_+_{{glink|accusative}} def:to_[[lean]]_on;(c)to_[[apply_oneself]]_to;to_[[wield]]_[[energetically]] rel:ложи́ться/лечь,ложи́ть,ло́же
 нале́чь на-+лечь pf-intr налега́ть irreg-лечь|на note:{{m|ru|на}}_+_{{glink|accusative}} def:to_[[lean]]_on;(c)to_[[apply_oneself]]_to;to_[[wield]]_[[energetically]] rel:ложи́ться/лечь,ложи́ть,ло́же
-[don't use] забры́згать за-+бры́згать pf-intr бры́згать 6a def:to_[[begin]]_to_[[splatter]],to_[[begin]]_to_[[splash]] note:+_{{glink|instrumental}}
-[don't use] забры́згать за-+бры́згать pf бры́згать,забры́згивать 1a+p def:to_[[sprinkle]] der:забры́згиваться rel:FIXME
-забры́згивать забры́згать+-ивать impf забры́згать 1a der:забры́згиваться
+[don't use] забры́згать за-+бры́згать pf-intr бры́згать 6a def:to_[[begin]]_to_[[splatter]],to_[[begin]]_to_[[splash]] note:+_{{glink|instrumental}} rel:-
+[don't use] забры́згать за-+бры́згать pf бры́згать,забры́згивать 1a+p def:to_[[sprinkle]]_(someone_with_liquid);(tr)to_[[spray]]_(someone_with_liquid) der:забры́згиваться rel:бры́згать/бры́знуть,бры́гзи,брызгови́к
+
+забрызгать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|за-|бры́згать}}
+
+===Pronunciation===
+* {{ru-IPA|забры́згать}}
+
+===Verb===
+{{ru-verb|забры́згать|pf|impf=бры́згать}} {{i|+ {{glink|instrumental}}}}
+
+# to [[begin]] to [[splatter]], to [[begin]] to [[splash]]
+
+====Conjugation====
+{{ru-conj|6a|pf-intr|забры́зг}}
+
+===Verb===
+{{ru-verb|забры́згать|pf|impf=бры́згать|impf2=забры́згивать}}
+
+# to [[sprinkle]] (someone with liquid)
+# {{lb|ru|transitive}} to [[spray]] (someone with liquid)
+
+====Conjugation====
+{{ru-conj|1a+p|pf|забры́зга}}
+
+====Derived terms====
+* {{l|ru|забры́згиваться}}
+
+===Related terms===
+* {{l|ru|бры́згать|g=impf}}, {{l|ru|бры́знуть|g=pf}}
+* {{l|ru|бры́гзи}}
+* {{l|ru|брызгови́к}}
+
+[[ru:забрызгать]]
+
+забры́згивать забры́згать+-ивать impf забры́згать 1a der:забры́згиваться def:to_[[sprinkle]]_(someone_with_liquid);(tr)to_[[spray]]_(someone_with_liquid) rel:бры́згать/бры́знуть,бры́гзи,брызгови́к
+
+
+
+
+
+
+------------------- from here -------------------
+
+
+
+
+
+
+
 подергать
 
 ==Russian==
@@ -78,29 +130,36 @@
 ===Verb===
 {{ru-verb-alt-ё|подёргать|pf}}
 
-подёргать по-+дёргать pf ? 1a+p
-заморга́ть за-+морга́ть pf-intr ? 1a
-взбежа́ть вз-+бежа́ть pf-intr взбега́ть irreg-бежать|вз
-взбега́ть вз-+бе́гать+-а́ть impf-intr взбежа́ть 1a
-ла́зать ? impf-intr пола́зать 1a def:altof:ла́зить
+подёргать по-+дёргать pf подёргивать 1a+p note:+_{{glink|accusative}}_or_{{m|ru|на}}_+_{{glink|accusative}} def:to_[[pull]]_[[at]]_{{i|multiple_times}} rel:дёргать/дёрнуть,дёргаться/дёрнуться
+заморга́ть за-+морга́ть pf-intr морга́ть 1a def:to_begin_to_[[blink]],to_begin_to_[[wink]] rel:морга́ть/моргну́ть
+взбежа́ть вз-+бежа́ть pf-intr взбега́ть irreg-бежать|вз def:to_[[run]]_[[up]]_{{gloss|to_run_in_an_upward_direction,e.g._up_a_[[hill]]}} rel:бежа́ть/побежа́ть,бе́гать/побе́гать,бег,бего́м,бегле́ц:бегля́нка,бе́глый:бе́гло:бе́глость,беготня́,бе́гство,бе́женец:бе́женка
+взбега́ть вз-+бе́гать+-а́ть impf-intr взбежа́ть 1a def:to_[[run]]_[[up]]_{{gloss|to_run_in_an_upward_direction,e.g._up_a_[[hill]]}} rel:бежа́ть/побежа́ть,бе́гать/побе́гать,бег,бего́м,бегле́ц:бегля́нка,бе́глый:бе́гло:бе́глость,беготня́,бе́гство,бе́женец:бе́женка
+ла́зать - impf-intr пола́зать 1a def:altof:ла́зить rel:ла́занье,лезть/поле́зть,лаз,лазу́тчик
 
 ====Derived terms====
 * ''See {{m|ru|ла́зить}} for derived verbs.''
 
-пола́зать по-+ла́зать pf-intr ла́зать 1a def:altof:пола́зить
-изма́зать из-+ма́зать pf изма́зывать 6a+p
-изма́зывать изма́зать+-ывать impf изма́зать 1a
-запа́чкать за-+па́чкать pf ? 1a+p
-приде́лать при-+де́лать pf приде́лывать 1a+p
-приде́лывать приде́лать+-ывать impf приде́лать 1a
-перелома́ть пере-+лома́ть pf ? 1a+p
-вогна́ть во-+гнать pf вгоня́ть 5c/c+p|вго́н|вогна́
-вгоня́ть в-+гоня́ть impf вогна́ть 1a
-размина́ть раз-+-мина́ть impf размя́ть 1a
-размя́ть раз-+мя́ть pf размина́ть 14b+p|размя́|разомн
-поцара́пать по-+цара́пать pf ? 1a+p
-зато́пать за-+то́пать pf-intr ? 1a
-ля́пать ? impf ? 1a+p
+пола́зать по-+ла́зать pf-intr ла́зать 1a def:altof:пола́зить rel:ла́занье,лезть/поле́зть,лаз,лазу́тчик
+изма́зать из-+ма́зать pf изма́зывать 6a+p def:(tr)to_[[make]]_[[dirty]],to_[[smear]] der:#ref  rel:ма́зать/пома́зать/вы́мазать/прома́зать,ма́заться/нама́заться,мазь,мазня́,мазу́т
+изма́зывать изма́зать+-ывать impf изма́зать 1a def:(tr)to_[[make]]_[[dirty]],to_[[smear]] der:#ref rel:ма́зать/пома́зать/вы́мазать/прома́зать,ма́заться/нама́заться,мазь,мазня́,мазу́т
+запа́чкать за-+па́чкать pf па́чкать 1a+p der:#ref def:to_[[soil]],to_[[dirty]],to_[[stain]];to_[[daub]] rel:пачку́н,пачкотня́
+приде́лать при-+де́лать pf приде́лывать 1a+p def:to_[[fasten]],to_[[attach]]_{{i|{{m|ru|к}}_to}} rel:де́лать/сде́лать,де́ло:делово́й,де́льный,де́ланный:де́ланность,делови́тый
+приде́лывать приде́лать+-ывать impf приде́лать 1a def:to_[[fasten]],to_[[attach]]_{{i|{{m|ru|к}}_to}} rel:де́лать/сде́лать,де́ло:делово́й,де́льный,де́ланный:де́ланность,делови́тый
+перелома́ть пере-+лома́ть pf - 1a+p def:to_[[break]]_{{i|multiple_things}} rel:перело́м,перела́мывать/переломи́ть,лома́ть/слома́ть,лома́ться/слома́ться,ломи́ть,ло́мкий:ло́мкость,ло́мка,ло́маный
+вогна́ть во-+гнать pf вгоня́ть 5c/c+p|вго́н|вогна́ note:{{m|ru|в}}_+_{{glink|accusative}} def:to_[[herd]]_(cattle,etc.)_[[into]];(c)to_[[hammer]]_[[in]],to_[[force]]_[[in]];ux:'''вогна́ть'''_[[в]]_[[краска|кра́ску]]|to_[[make]]_[[blush]] rel:гнать:гна́ться,гоня́ть:гоня́ться,гоне́ние,гони́тель,го́нка:го́ночный,го́нщик,гоне́ц
+вгоня́ть в-+гоня́ть impf вогна́ть 1a note:{{m|ru|в}}_+_{{glink|accusative}} def:to_[[herd]]_(cattle,etc.)_[[into]];(c)to_[[hammer]]_[[in]],to_[[force]]_[[in]];ux:'''вогна́ть'''_[[в]]_[[краска|кра́ску]]|to_[[make]]_[[blush]] rel:гнать:гна́ться,гоня́ть:гоня́ться,гоне́ние,гони́тель,го́нка:го́ночный,го́нщик,гоне́ц
+размина́ть раз-+-мина́ть impf размя́ть 1a def:to_[[knead]];to_[[mash]];(c)to_[[stretch]]_(one's_[[legs]],[[muscles]],etc.) rel:мять/размя́ть/измя́ть/помя́ть/смять der:#ref
+размя́ть раз-+мя́ть pf размина́ть 14b+p|размя́|разомн def:to_[[knead]];to_[[mash]];(c)to_[[stretch]]_(one's_[[legs]],[[muscles]],etc.) rel:мять/размя́ть/измя́ть/помя́ть/смять der:#ref
+поцара́пать по-+цара́пать pf - 1a+p def:to_[[scratch]]_[[slightly]],to_[[mar]]_[[slightly]];- rel:цара́пать/цара́пнуть,цара́паться,цара́пина
+зато́пать за-+то́пать pf-intr то́пать 1a to_begin_to_[[stamp]]_(one's_[[feet]])_{{i|+_{{glink|instrumental}}}} rel:то́пать/то́пнуть,то́пот,топота́ть,топта́ть:топта́ние,топча́к
+ля́пать - impf ля́пнуть,сля́пать,наля́пать 1a+p rel:ляп,тяп-ляп
+
+[definition]
+
+# {{lb|ru|colloquial|pejorative}} to [[make]] [[hastily]], to [[throw together]], {{g|pf}} — {{m|ru|сля́пать}}
+# {{lb|ru|colloquial|pejorative}} to [[slap]], to [[splotch]] ([[paint]] on something), {{g|pf}} — {{m|ru|наля́пать}}
+# {{lb|ru|colloquial|pejorative}} to [[whack]], to [[hit]]
+# {{lb|ru|colloquial|pejorative}} to [[blurt out]], to [[blab]], {{g|pf}} — {{m|ru|ля́пнуть}}
 
 ====Derived terms====
 {{top2}}
@@ -131,16 +190,16 @@
 * {{l|ru|сля́пать}}
 {{bottom2}}
 
-заля́пать за-+ля́пать pf заля́пывать 1a+p
-заля́пывать заля́пать+-ывать impf заля́пать 1a
-подра́ть по-+драть pf ? 6°b/c+p|подр|подер
-запляса́ть за-+пляса́ть pf-intr ? 6c
-затрепета́ть за-+трепета́ть pf-intr ? 6cщ
-запричита́ть за-+причита́ть pf-intr ? 1a
-разболта́ть раз-+болта́ть pf разба́лтывать 1a+p
-разба́лтывать разболта́ть+-ывать impf разболта́ть 1a
-гогота́ть ? impf-intr ? 6c der:загогота́ть,погогота́ть
-пласта́ть ? impf ? 1a+p
+заля́пать за-+ля́пать pf заля́пывать 1a+p def:to_[[slap]],_to_[[splotch]]_([[paint]]_on_something) rel:ля́пать/ля́пнуть/сля́пать/наля́пать,ляп,тяп-ляп
+заля́пывать заля́пать+-ывать impf заля́пать 1a def:to_[[slap]],_to_[[splotch]]_([[paint]]_on_something) rel:ля́пать/ля́пнуть/сля́пать/наля́пать,ляп,тяп-ляп
+подра́ть по-+драть pf - 6°b/c+p|подр|подер def:(lc)to_[[rip_up]],to_[[tear_up]];(lc)to_[[wear_out]]_(shoes,etc.);(lc)to_[[pull]];(lc)to_[[punish]]_by_[[pulling]]_([[hair]],[[ears]]);(lc)_to_[[run]]_[[quickly]];(lc)to_[[devour]]_{{i|of_[[animals]]}};- rel:драть,дра́ка,драчли́вый,драчу́н
+запляса́ть за-+пляса́ть pf-intr пляса́ть 6c def:to_begin_to_[[dance]] rel:пляс:пля́ска:плясово́й,плясова́я,плясу́н
+затрепета́ть за-+трепета́ть pf-intr трепета́ть 6cщ def:to_begin_to_[[tremble]];to_begin_to_[[palpitate]];to_begin_to_[[shiver]] rel:трепета́ние,тре́пет:тре́петный:тре́петно
+запричита́ть за-+причита́ть pf-intr причита́ть 1a def:to_begin_to_[[wail]],to_begin_to_[[weep]],to_begin_to_[[lament]] rel:причита́ние
+разболта́ть раз-+болта́ть pf разба́лтывать 1a+p der:#ref def:(c)to_[[reveal]],to_[[give_away]]_(a_[[secret]]);(c)to_[[shake_up]],to_[[mix]],to_[[stir]];(c)to_[[loosen]] rel:болта́ть/изболта́ть,болтли́вый:болтли́вость,болту́н:болту́нья,болтовня́,болта́нка
+разба́лтывать разболта́ть+-ывать impf разболта́ть 1a der:#ref def:(c)to_[[reveal]],to_[[give_away]]_(a_[[secret]]);(c)to_[[shake_up]],to_[[mix]],to_[[stir]];(c)to_[[loosen]] rel:болта́ть/изболта́ть,болтли́вый:болтли́вость,болту́н:болту́нья,болтовня́,болта́нка
+гогота́ть - impf-intr - 6c der:загогота́ть,погогота́ть,гогота́нье def:to_[[cackle]]_{{i|of_[[geese]]}} rel:го́гот
+пласта́ть пласт+-а́ть impf - 1a+p def:(c)to_[[cut]]_in_[[layers]];to_[[gut]],to_[[eviscerate]]_([[fish]]) rel:пласт,пласти́на:пласти́нка
 
 ====Derived terms====
 {{top2}}
@@ -159,74 +218,77 @@
 * {{l|ru|упласта́ть}}
 {{bottom2}}
 
-распласта́ть рас-+пласта́ть pf распла́стывать 1a+p
-распла́стывать распласта́ть+-ывать impf распласта́ть 1a
-напу́тать на-+пу́тать pf напу́тывать 1a+p
-напу́тывать напу́тать+-ывать impf напу́тать 1a
-заворча́ть за-+ворча́ть pf-intr ? 5b
+распласта́ть рас-+пласта́ть pf распла́стывать 1a+p def:to_[[cut]]_into_[[layers]];(tr)to_[[spread]]_[[flat]] rel:пласта́ть,пласт,пласти́на:пласти́нка der:#ref
+распла́стывать распласта́ть+-ывать impf распласта́ть 1a def:to_[[cut]]_into_[[layers]];(tr)to_[[spread]]_[[flat]] rel:пласта́ть,пласт,пласти́на:пласти́нка der:#ref
+напу́тать на-+пу́тать pf напу́тывать 1a+p def:(c)(tr)to_[[botch]],to_[[mess_up]];(c)to_[[mix_up]],to_[[get]]_[[wrong]]_{{i|{{m|ru|в}}_+_{{glink|prepositional}}}} rel:пу́тать/спу́тать/перепу́тать/впу́тать,пу́таться/спу́таться/впу́таться,пу́таный,пу́таник:пу́таница
+напу́тывать напу́тать+-ывать impf напу́тать 1a rel:пу́тать/спу́тать/перепу́тать/впу́тать,пу́таться/спу́таться/впу́таться,пу́таный,пу́таник:пу́таница
+заворча́ть за-+ворча́ть pf-intr ворча́ть 5b to_begin_to_[[grumble]];to_begin_to_[[growl]] rel:ворча́ть,ворча́ние,ворчли́вый,ворчу́н:ворчу́нья
 ржаветь
 
 ==Russian==
 
 ===Etymology===
-{{rfe|lang=ru}}
+From {{affix|ru|ржа́вый|-еть}}, or from {{affix|affix|ru|ржавый|-е́ть}} for the end-stressed version.
 
 ===Pronunciation===
-* {{ru-IPA|ржаве́ть|ann=y}}
 * {{ru-IPA|ржа́веть|ann=y}}
+* {{ru-IPA|ржаве́ть|ann=y}}
 
 ===Verb===
-{{ru-verb|ржаве́ть|impf|head2=ржа́веть}}
+{{ru-verb|ржа́веть|impf|head2=ржаве́ть|pf=заржа́веть|pf2=заржаве́ть}}
 
-# {{rfdef|lang=ru}}
+# to [[rust]]
 
 ====Conjugation====
-{{ru-conj|1a|impf-intr|ржаве́}} ''or'' {{ru-conj|1a|impf-intr|ржа́ве}}
+{{ru-conj|1a|impf-intr|ржа́ве}} ''or'' {{ru-conj|1a|impf-intr|ржаве́}} 
 
 ====Derived terms====
-* {{l|ru|заржаве́ть|g=pf}}, {{l|ru|заржа́веть|g=pf}}
-* {{l|ru|оторжаве́ть|g=pf}}, {{l|ru|оторжа́веть|g=pf}}
-* {{l|ru|перержаве́ть|g=pf}}, {{l|ru|перержа́веть|g=pf}}
-* {{l|ru|поржаве́ть|g=pf}}, {{l|ru|поржа́веть|g=pf}}
-* {{l|ru|приржаве́ть|g=pf}}, {{l|ru|приржа́веть|g=pf}}
-* {{l|ru|проржаве́ть|g=pf}}, {{l|ru|проржа́веть|g=pf}}
+* {{l|ru|заржа́веть|g=pf}}, {{l|ru|заржаве́ть|g=pf}}
+* {{l|ru|оторжа́веть|g=pf}}, {{l|ru|оторжаве́ть|g=pf}}
+* {{l|ru|перержа́веть|g=pf}}, {{l|ru|перержаве́ть|g=pf}}
+* {{l|ru|поржа́веть|g=pf}}, {{l|ru|поржаве́ть|g=pf}}
+* {{l|ru|приржа́веть|g=pf}}, {{l|ru|приржаве́ть|g=pf}}
+* {{l|ru|проржа́веть|g=pf}}, {{l|ru|проржаве́ть|g=pf}}
 
 ====Related terms====
-FIXME
+* {{l|ru|ржа}}, {{l|ru|ржа́вый}}
+* {{l|ru|ржа́вчина}}
 
 заржаветь
 
 ==Russian==
 
 ===Etymology===
-From {{affix|ru|за-|ржаве́ть}} or {{affix|ru|за-|ржа́веть}}.
+From {{affix|ru|за-|ржа́веть}} or {{affix|ru|за-|ржаве́ть}}.
 
 ===Pronunciation===
-* {{ru-IPA|заржаве́ть|ann=y}}
 * {{ru-IPA|заржа́веть|ann=y}}
+* {{ru-IPA|заржаве́ть|ann=y}}
 
 ===Verb===
-{{ru-verb|заржаве́ть|pf|head2=заржа́веть}}
+{{ru-verb|заржа́веть|pf|head2=заржаве́ть|impf=ржа́веть|impf2=ржаве́ть}}
 
-# {{rfdef|lang=ru}}
+# to [[rust]]
 
 ====Conjugation====
-{{ru-conj|1a|pf-intr|заржаве́}} ''or'' {{ru-conj|1a|pf-intr|заржа́ве}}
+{{ru-conj|1a|pf-intr|заржа́ве}} ''or'' {{ru-conj|1a|pf-intr|заржаве́}}
 
 ====Related terms====
-FIXME
+* {{l|ru|ржа}}, {{l|ru|ржа́вый}}
+* {{l|ru|ржа́вчина}}
 
-хмеле́ть ? impf-intr ? 1a der:захмеле́ть,охмеле́ть
-захмеле́ть за-+хмеле́ть pf-intr ? 1a
-обесси́леть ? pf-intr ? 1a
-истле́ть ис-+тлеть pf-intr тлеть,истлева́ть 1a
-истлева́ть истле́ть+-вать impf-intr истле́ть 1a
-прозвене́ть про-+звене́ть pf-intr звене́ть 5b
-умне́ть ? impf-intr ? 1a der:поумне́ть
-поумне́ть по-+умне́ть pf-intr ? 1a
-сипе́ть ? impf-intr ? 5b der:засипе́ть,посипе́ть,просипе́ть
-утерпе́ть у-+терпе́ть pf-intr ? 5c
-дуре́ть ? impf-intr ? 1a
+хмеле́ть хмель+-е́ть impf-intr охмеле́ть,захмеле́ть 1a der:захмеле́ть,охмеле́ть def:(c)to_become_[[intoxicated]],[[drunk]],[[tipsy]]_or_[[high]];(f)(c)to_become_[[exhilarated]] rel:хмель:хмелёк,хмельно́й:хмелно́е
+захмеле́ть за-+хмеле́ть pf-intr хмеле́ть 1a def:(c)to_become_[[intoxicated]],[[drunk]],[[tipsy]]_or_[[high]];(f)(c)to_become_[[exhilarated]] rel:хмель:хмелёк,хмельно́й:хмелно́е
+охмеле́ть о-+хмеле́ть pf-intr хмеле́ть 1a def:(c)to_become_[[intoxicated]],[[drunk]],[[tipsy]]_or_[[high]];(f)(c)to_become_[[exhilarated]] rel:хмель:хмелёк,хмельно́й:хмелно́е
+обесси́леть о-+бессилие+alt2=бесси́л(ие)+-еть pf-intr - 1a rel:обесси́ливать/обесси́лить,бесси́лие:бесси́льный,бес-,си́ла:си́льный:си́льно def:(in)to_[[weaken]],to_get_[[weak]]_{{i|of_a_person}}
+истле́ть ис-+тлеть pf-intr тлеть,истлева́ть 1a rel:тле́ться,тле́ние:тле́нный,тлетво́рный def:to_[[rot]],to_[[decay]],to_[[putrefy]],to_[[moulder]];(in)to_[[burn]]_to_[[ashes]]
+истлева́ть истле́ть+-вать impf-intr истле́ть 1a rel:тлеть:тле́ться,тле́ние:тле́нный,тлетво́рный def:to_[[rot]],to_[[decay]],to_[[putrefy]],to_[[moulder]];(in)to_[[burn]]_to_[[ashes]]
+прозвене́ть про-+звене́ть pf-intr звене́ть 5b def:to_[[resound]],to_[[ring_out]]_{{gloss|to_make_a_[[loud]]_[[sound]]}} rel:звони́ть/позвони́ть,звон,зво́нкий,звоно́к,звона́рь,зво́нница
+умне́ть умный+-е́ть impf-intr поумне́ть 1a der:поумне́ть def:to_become_[[wiser]] rel:у́мный:неу́мный:безу́мный,ум,у́мник,у́мница,у́мничать
+поумне́ть по-+умне́ть pf-intr умне́ть 1a def:to_become_[[wiser]] rel:у́мный:неу́мный:безу́мный,ум,у́мник,у́мница,у́мничать
+сипе́ть - impf-intr - 5b der:засипе́ть,посипе́ть,просипе́ть rel:си́плый,си́пнуть def:to_[[speak]]_[[hoarsely]];(im)to_be_[[hoarse]];ux:[[у]]_[[я|меня́]]_[[в]]_[[горло|го́рле]]_'''сипи́т'''|my_throat_is_hoarse;to_[[hiss]]_{{i|from_[[heat]]}}
+утерпе́ть у-+терпе́ть pf-intr - 5c def:to_[[hold_back|hold_oneself_back]],to_[[restrain]]_oneself rel:терпе́ть/потерпе́ть,терпе́ться,терпе́ние,терпи́мый:терпи́мо:терпи́мость,терпели́вый:терпели́во:терпели́вость
+дуре́ть ?дурь+-е́ть impf-intr одуре́ть 1a def:(c)to_[[go_crazy]] der:одуре́ние,одуре́лый rel:дурь,дури́ть,дура́к:дурачо́к:дура́цкий,дура́чить/одура́чить:дура́чество
 
 ====Derived terms====
 {{top2}}
@@ -239,12 +301,13 @@ FIXME
 * {{l|ru|сдуре́ть}}
 {{bottom2}}
 
-одуре́ть ?о-+дуре́ть pf-intr одурева́ть 1a
+одуре́ть ?о-+дуре́ть pf-intr дуре́ть,одурева́ть 1a def:(c)to_[[go_crazy]] der:одуре́ние,одуре́лый rel:дурь,дури́ть,дура́к:дурачо́к:дура́цкий,дура́чить/одура́чить:дура́чество
 лысе́ть ? impf-intr ? 1a der:облысе́ть,полысе́ть
 запоте́ть за-+поте́ть pf-intr потеть,запотева́ть 1a
 запотева́ть запоте́ть+-ва́ть impf-intr запоте́ть 1a
 осточерте́ть ? pf-intr ? 1a
 переле́зть пере-+лезть pf перелеза́ть 7a 7a|переле́зть|переле́з|переле́з|pap=переле́зши|ppp=-
+перелеза́ть переле́зть+-а́ть impf-intr переле́зть 1a
 прошиби́ть про-+шиби́ть pf прошиба́ть irreg-шибить|про|ppp=проши́бленный
 прошиба́ть прошиби́ть+-а́ть impf прошиби́ть 1a
 дроби́ть ? impf ? 4b+p
