@@ -8,7 +8,7 @@ import rulib
 import generate_pos
 
 parser = argparse.ArgumentParser(description="Generate verb stubs.")
-parser.add_argument('--reqdef', help="Require a definition.")
+parser.add_argument('--reqdef', help="Require a definition.", action="store_true")
 parser.add_argument('--direcfile', help="File containing directives.")
 args = parser.parse_args()
 
