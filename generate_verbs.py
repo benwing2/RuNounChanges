@@ -159,6 +159,7 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
   seetext = ""
   prontext = "* {{ru-IPA|%s}}\n" % verb
   notetext = ""
+  defntext = None
   for synantrel in els[5:]:
     m = re.search(r"^(syn|ant|der|rel|see|pron|alt|def|note):(.*)", synantrel)
     if not m:
