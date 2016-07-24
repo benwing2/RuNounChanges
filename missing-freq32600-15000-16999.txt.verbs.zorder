@@ -802,20 +802,139 @@ Perhaps from {{affix|ru|хрип|-нуть}}.
 переката́ть пере-+ката́ть pf перека́тывать 1a+p def:(c)to_[[roll]]_{{i|all_or_many_thing_from_one_place_to_another}};(c)to_take_(all_or_many_people)_for_a_[[ride]];(c)to_[[resmooth]]_by_[[rolling]]_([[linen]],[[felt]],etc.);(c)to_[[smooth]]_(all_or_many_items_of_[[linen]],[[felt]],etc.) rel:перекати́ть/перека́тывать,перекати́-по́ле,кати́ть/покати́ть,кати́ться/покати́ться,ката́ть/поката́ть/вы́катать,ката́ться/поката́ться,като́к,кату́шка,ката́лка
 перека́тываться r impf перекати́ться 1a def:(in)to_[[roll_over]];(in)to_[[roll]]_[[across]];(c)(io)to_[[rumble]]_{{i|of_[[thunder]]}} rel:#ref,перека́т,переката́ть,перекати́-по́ле,кати́ть/покати́ть,кати́ться/покати́ться,ката́ть/поката́ть/вы́катать,ката́ться/поката́ться,като́к,кату́шка,ката́лка
 перекати́ться r pf перека́тываться 4c def:(in)to_[[roll_over]];(in)to_[[roll]]_[[across]] rel:#ref,переката́ть,перекати́-по́ле,кати́ть/покати́ть,кати́ться/покати́ться,ката́ть/поката́ть/вы́катать,ката́ться/поката́ться,като́к,кату́шка,ката́лка
-увяза́ться r pf увя́зываться 6c rel:#ref,вяза́ть/связа́ть,вяза́ние,вя́заный,вяза́льный,вяза́нка,вя́зка def:to_[[tie_in]]_with,to_[[coordinate]]_with_{{i|{{m|ru|с}}_+_{{glink|instrumental}}}}
-увя́зываться r impf увяза́ться 1a rel:#ref,вяза́ть/связа́ть,вяза́ние,вя́заный,вяза́льный,вяза́нка,вя́зка def:to_[[tie_in]]_with,to_[[coordinate]]_with_{{i|{{m|ru|с}}_+_{{glink|instrumental}}}}
-окопа́ть о-+копа́ть pf ока́пывать 1a+p
-[don't use] ока́пывать окопа́ть+-ывать impf окопа́ть 1a
-[don't use] ока́пывать ока́пать+-ывать impf ока́пать 1a def:(c)to_[[stain]]_{{gloss|in_[[various]]_[[places]]_or_with_many_[[drops]]}}
-окопа́ться r pf ока́пываться 1a
-[don't use] ока́пываться r impf окопа́ться 1a
-[don't use] ока́пываться r impf ока́паться 1a def:(c)to_[[stain]]_oneself_{{gloss|in_[[various]]_[[places]]_or_with_many_[[drops]]}} syn:обка́пываться
-заплета́ться ? impf заплести́сь 1a
-заплести́сь ? pf заплета́ться 7b/b(9)|заплести́|заплёт
-распласта́ться ? pf распла́стываться 1a
-распла́стываться ? impf распласта́ться
-трепыха́ться ? impf ? 1a
-меша́ться r impf ? 1a
+увяза́ться r pf увя́зываться 6c rel:#ref,вяза́ть/связа́ть,вяза́ние,вя́заный,вяза́льный,вяза́нка,вя́зка def:to_[[tie_in]]_with,to_[[coordinate]]_with_{{i|{{m|ru|с}}_+_{{glink|instrumental}}}};(c)to_[[follow]],to_[[trail]]_{{i|{{m|ru|за}}_+_{{glink|instrumental}}}}
+увя́зываться r impf увяза́ться 1a rel:#ref,вяза́ть/связа́ть,вяза́ние,вя́заный,вяза́льный,вяза́нка,вя́зка def:to_[[tie_in]]_with,to_[[coordinate]]_with_{{i|{{m|ru|с}}_+_{{glink|instrumental}}}};(c)to_[[follow]],to_[[trail]]_{{i|{{m|ru|за}}_+_{{glink|instrumental}}}}
+окопа́ть о-+копа́ть pf ока́пывать 1a+p def:to_[[dig_up]]_the_[[ground]]_[[around]]_(something);ux:'''окопа́ть'''_[[яблоня|я́блоню]]|to_dig_up_the_ground_around_the_apple_tree;to_[[surround]]_with_a_[[ditch]],to_[[dig]]_a_[[ditch]]_[[around]];ux:'''окопа́ть'''_[[гряда|гряду́]]|to_dig_a_ditch_around_the_ridge rel:копа́ть/вы́копать,копа́ться,копа́ние,копа́тель der:#ref
+[don't use] ока́пывать окопа́ть+-ывать impf окопа́ть 1a def:to_[[dig_up]]_the_[[ground]]_[[around]]_(something);ux:'''ока́пывать'''_[[яблоня|я́блоню]]|to_dig_up_the_ground_around_the_apple_tree;to_[[surround]]_with_a_[[ditch]],to_[[dig]]_a_[[ditch]]_[[around]];ux:'''ока́пывать'''_[[гряда|гряду́]]|to_dig_a_ditch_around_the_ridge rel:копа́ть/вы́копать,копа́ться,копа́ние,копа́тель der:#ref
+[don't use] ока́пывать ока́пать+-ывать impf ока́пать 1a def:(c)to_[[stain]]_{{gloss|in_[[various]]_[[places]]_or_with_many_[[drops]]}} rel:ка́пать/ка́пнуть,ка́панье,ка́пля:ка́пелька:ка́пельку syn:обка́пывать der:#ref
+
+==Russian==
+
+===Pronunciation===
+* {{ru-IPA|ока́пывать}}
+
+===Etymology 1===
+{{affix|ru|окопа́ть|-ывать}}
+
+====Verb====
+{{ru-verb|ока́пывать|impf|pf=окопа́ть}}
+
+# to [[dig up]] the [[ground]] [[around]] (something)
+#: {{ru-ux|'''ока́пывать''' [[яблоня|я́блоню]]|to dig up the ground around the apple tree|inline=y}}
+# to [[surround]] with a [[ditch]], to [[dig]] a [[ditch]] [[around]]
+#: {{ru-ux|'''ока́пывать''' [[гряда|гряду́]]|to dig a ditch around the ridge|inline=y}}
+
+=====Conjugation=====
+{{ru-conj|1a|impf|ока́пыва}}
+
+=====Derived terms=====
+* {{l|ru|ока́пываться|g=impf}}, {{l|ru|окопа́ться|g=pf}}
+
+=====Related terms=====
+* {{l|ru|копа́ть|g=impf}}, {{l|ru|вы́копать|g=pf}}
+* {{l|ru|копа́ться}}
+* {{l|ru|копа́ние}}
+* {{l|ru|копа́тель}}
+
+===Etymology 2===
+{{affix|ru|ока́пать|-ывать}}
+
+====Verb====
+{{ru-verb|ока́пывать|impf|pf=ока́пать}}
+
+# {{lb|ru|colloquial}} to [[stain]] {{gloss|in [[various]] [[places]] or with many [[drops]]}}
+
+=====Conjugation=====
+{{ru-conj|1a|impf|ока́пыва}}
+
+=====Synonyms=====
+* {{l|ru|обка́пывать}}
+
+=====Derived terms=====
+* {{l|ru|ока́пываться|g=impf}}, {{l|ru|ока́паться|g=pf}}
+
+=====Related terms=====
+* {{l|ru|ка́пать|g=impf}}, {{l|ru|ка́пнуть|g=pf}}
+* {{l|ru|ка́панье}}
+* {{l|ru|ка́пля}}, {{l|ru|ка́пелька}}, {{l|ru|ка́пельку}}
+
+[[ru:окапывать]]
+
+
+окопа́ться r pf ока́пываться 1a def:{{lb|ru|military}}_to_[[dig_in]]_{{gloss|to_dig_[[trenches]]_for_[[protection]]_against_[[attack]]}} rel:#ref,копа́ть/вы́копать,копа́ться,копа́ние,копа́тель
+[don't use] ока́пываться r impf окопа́ться 1a rel:#ref,копа́ть/вы́копать,копа́ться,копа́ние,копа́тель def:{{lb|ru|military}}_to_[[dig_in]]_{{gloss|to_dig_[[trenches]]_for_[[protection]]_against_[[attack]]}}
+[don't use] ока́пываться r impf ока́паться 1a def:(c)to_[[stain]]_oneself_{{gloss|in_[[various]]_[[places]]_or_with_many_[[drops]]}} syn:обка́пываться rel:#ref,ка́пать/ка́пнуть,ка́панье,ка́пля:ка́пелька:ка́пельку
+
+==Russian==
+
+===Pronunciation===
+* {{ru-IPA|ока́пываться}}
+
+===Etymology 1===
+{{affix|ru|ока́пывать|t1=to [[dig]] [[around]]|-ся}}
+
+====Verb====
+{{ru-verb|ока́пываться|impf|pf=окопа́ться}}
+
+# {{lb|ru|military}} to [[dig in]] {{gloss|to dig [[trenches]] for [[protection]] against [[attack]]}}
+# {{passive of|lang=ru|ока́пывать}}
+
+=====Conjugation=====
+{{ru-conj|1a|impf-refl|ока́пыва}}
+
+=====Related terms=====
+* {{l|ru|ока́пывать|g=impf}}, {{l|ru|окопа́ть|g=pf}}
+* {{l|ru|копа́ть|g=impf}}, {{l|ru|вы́копать|g=pf}}
+* {{l|ru|копа́ться}}
+* {{l|ru|копа́ние}}
+* {{l|ru|копа́тель}}
+
+===Etymology 2===
+{{affix|ru|ока́пывать|t1=to [[stain]] {{i|in [[various [[places]] or with many [[drops]]}}|-ся}}
+
+====Verb====
+{{ru-verb|ока́пываться|impf|pf=ока́паться}}
+
+# {{lb|ru|colloquial}} to [[stain]] oneself {{gloss|in [[various]] [[places]] or with many [[drops]]}}
+# {{passive of|lang=ru|ока́пывать}}
+
+=====Conjugation=====
+{{ru-conj|1a|impf-refl|ока́пыва}}
+
+=====Synonyms=====
+* {{l|ru|обка́пываться}}
+
+=====Related terms=====
+* {{l|ru|ока́пывать|g=impf}}, {{l|ru|ока́пать|g=pf}}
+* {{l|ru|ка́пать|g=impf}}, {{l|ru|ка́пнуть|g=pf}}
+* {{l|ru|ка́панье}}
+* {{l|ru|ка́пля}}, {{l|ru|ка́пелька}}, {{l|ru|ка́пельку}}
+
+[[ru:окапываться]]
+
+
+заплета́ть заплести+alt1=заплет-+-а́ть impf заплести́ 1a def:to_[[braid]] rel:плести́/сплести́,плетёный,плете́ние,плеть,плётка,плетёнка der:#ref
+заплести́ за-+плести́ pf заплета́ть 7b/b(9)+p|заплести́|заплёт def:to_[[braid]] rel:плести́/сплести́,плетёный,плете́ние,плеть,плётка,плетёнка der:#ref
+заплета́ться r impf заплести́сь 1a def:(c)(ip)to_be_[[slurred]]_{{i|of_[[speech]]}};ux:[[у]]_[[он|нево́]]_[[язы́к]]_'''заплета́еться'''|his_speech_is_slurred;(c)(ip)to_be_[[wobbly]],to_[[totter]]_{{i|of_one's_[[legs]]}};to_[[intertwine]] rel:#ref,плести́/сплести́,плетёный,плете́ние,плеть,плётка,плетёнка
+заплести́сь r pf заплета́ться 7b/b(9)|заплести́|заплёт def:to_[[intertwine]] rel:#ref,плести́/сплести́,плетёный,плете́ние,плеть,плётка,плетёнка
+распласта́ться r pf распла́стываться 1a def:to_[[lie]]_[[flat]] rel:#ref,пласта́ть,пласт,пласти́на:пласти́нка
+распла́стываться r impf распласта́ться def:to_[[lie]]_[[flat]] rel:#ref,пласта́ть,пласт,пласти́на:пласти́нка
+трепыха́ть - impf-intr - 1a def:(lc)to_[[thrash]]_[[around]];(lc)to_[[quiver]],[[flutter]];(lc)to_[[beat]],to_[[flap]]_{{i|+_{{glink|instrumental}},_e.g._one's_[[wings]]}} der:трепыха́ться rel:тре́пет:тре́петный:тре́петно,трепета́ть:трепета́ние,трёпка,трепа́ть/потрепа́ть/истрепа́ть,трепа́ться/истрепа́ться
+трепыха́ться трепыха́ть+-ся impf - 1a def:(c)to_[[thrash]]_[[around]];(c)to_[[quiver]],[[flutter]] rel:трепыха́ть,тре́пет:тре́петный:тре́петно,трепета́ть:трепета́ние,трёпка,трепа́ть/потрепа́ть/истрепа́ть,трепа́ться/истрепа́ться
+
+
+
+
+
+
+------------------- from here ---------------------
+
+
+
+
+
+
+меша́ться r impf смеша́ться 1a 
 ежиться
 
 ==Russian==
