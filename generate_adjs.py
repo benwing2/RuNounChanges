@@ -183,9 +183,9 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
   parttext = ""
   syntext = ""
   anttext = ""
-  dertext = ""
+  dertext = None
   reltext = None
-  seetext = ""
+  seetext = None
   comptext = ""
   prontext = "* {{ru-IPA|%s}}\n" % term
   for synantrel in remainder:
@@ -259,6 +259,10 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
           u"|suffix=ся" if adjrefl else "")
       parttext += partdecltext
     else: # derived or related terms or see also
+      if ((sartype == "der" and dertext != None) or
+          (sartype == "rel" and reltext != None) or
+          (sartype == "see" and seetext != None)):
+        error("Multiple occurrences of '%s'" % sartype)
       if vals == "-":
         if sartype == "der":
           dertext = ""
@@ -300,6 +304,8 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
 
   if reltext == None:
     error("No related terms; should specify some or use rel:- to disable them")
+  dertext = dertext or ""
+  seetext = seetext or ""
 
   if pos == "n":
     maintext = """{{ru-noun+%s}}

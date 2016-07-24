@@ -154,9 +154,9 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
   alttext = ""
   syntext = ""
   anttext = ""
-  dertext = ""
+  dertext = None
   reltext = None
-  seetext = ""
+  seetext = None
   prontext = "* {{ru-IPA|%s}}\n" % verb
   notetext = ""
   defntext = None
@@ -208,6 +208,10 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
     elif sartype == "note":
       notetext = " {{i|%s}}" % vals
     else: # derived or related terms or see also
+      if ((sartype == "der" and dertext != None) or
+          (sartype == "rel" and reltext != None) or
+          (sartype == "see" and seetext != None)):
+        error("Multiple occurrences of '%s'" % sartype)
       if vals == "-":
         if sartype == "der":
           dertext = ""
@@ -281,6 +285,8 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
       defntext = "# {{rfdef|lang=ru}}\n"
   if reltext == None:
     error("No related terms; should specify some or use rel:- to disable them")
+  dertext = dertext or ""
+  seetext = seetext or ""
 
   msg("""%s
 
