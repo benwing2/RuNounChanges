@@ -9,17 +9,23 @@
 [skip] прозёвывать прозева́ть+-ывать impf прозева́ть 1a
 пови́згивать по-+визгнуть+alt2=ви́зг(нуть)+-ивать impf-intr повизжа́ть 1a def:to_[[squeal]]_for_awhile rel:визжа́ть/ви́згнуть,взвизг,визг,визгли́вый
 повизжа́ть по-+визжа́ть pf-intr пови́згивать 5b def:to_[[squeal]]_for_awhile rel:визжа́ть/ви́згнуть,взвизг,визг,визгли́вый
-раста́лкивать - impf растолка́ть,растолкну́ть 1a def:(c)to_[[shake]]_[[awake]];(c)_to_[[push]]_[[aside]]_([[everyone]])
+[already done] раста́лкивать - impf растолка́ть,растолкну́ть 1a def:(c)to_[[shake]]_[[awake]];(c)_to_[[push]]_[[aside]]_([[everyone]])
 
 ===Etymology===
 From {{affix|ru|растолка́ть|-ивать}} or {{affix|ru|растолкну́ть|-ивать}}.
 
-растолкну́ть рас-+толкну́ть pf раста́лкивать 3b+p def:(c)to_[[push]]_[[apart]]_once
-растолка́ть рас-+толка́ть pf раста́лкивать 1a+p def:(c)to_[[shake]]_[[awake]];(c)_to_[[push]]_[[aside]]_([[everyone]])
-заи́скивать за-+иска́ть+-ивать impf-intr ? 1a
-обезбо́ливать обезбо́лить+-ивать impf обезбо́лить 1a
-обезбо́лить ? pf обезбо́ливать 4a+p
-попы́хивать ? impf-intr ? 1a
+[skip] растолкну́ть рас-+толкну́ть pf раста́лкивать 3b+p def:(c)to_[[push]]_[[apart]]_once
+[already done] растолка́ть рас-+толка́ть pf раста́лкивать 1a+p def:(c)to_[[shake]]_[[awake]];(c)_to_[[push]]_[[aside]]_([[everyone]])
+заи́скивать за-+иска́ть+-ивать impf-intr - 1a def:to_[[curry_favor]]_with,to_[[ingratiate]]_oneself_with,to_[[flatter]],to_[[suck_up]]_to_{{i|+_{{m|ru|пе́ред}}}} der:заи́скивающий rel:иска́ть,иска́ние,иска́тель,иско́мый
+обезбо́ливать обезбо́лить+-ивать impf обезбо́лить 1a def:to_[[anesthetize]] der:обезбо́ливающий rel:безболе́зненный:безболе́зненно,боль:болево́й,боле́ть,больно́й:бо́льно,боле́знь:боле́зненный:боле́зненно:боле́зненность
+обезбо́лить о-+без-+боль+-ить pf обезбо́ливать 4a+p def:to_[[anesthetize]] der:обезбо́ливающий rel:безболе́зненный:безболе́зненно,боль:болево́й,боле́ть,больно́й:бо́льно,боле́знь:боле́зненный:боле́зненно:боле́зненность
+попы́хивать - impf-intr - 1a def:to_[[blow]]_[[smoke]]_{{i|occasionally}};to_[[puff]]_{{i|on_a_[[pipe]]}} rel:пыхте́ть,пыхте́ние
+
+===Etymology===
+Has the form and meaning of a diminutive verb, constructed of {{affix|ru|по-||alt2=-пых-|-ивать}}, apparently based on a no-longer-existent verb (compare {{m|ru|пыхте́ть||to [[puff]], to [[pant]]}}).
+
+[[Category:Russian diminutive verbs]]
+
 закова́ть за-+кова́ть pf зако́вывать 2b+p
 зако́вывать закова́ть+-ывать impf закова́ть 1a
 разжа́ловать раз-+жа́ловать pf ? 2a+p
