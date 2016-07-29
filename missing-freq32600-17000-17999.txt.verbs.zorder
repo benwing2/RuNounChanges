@@ -19,20 +19,21 @@ From {{affix|ru|растолка́ть|-ивать}} or {{affix|ru|растол�
 заи́скивать за-+иска́ть+-ивать impf-intr - 1a def:to_[[curry_favor]]_with,to_[[ingratiate]]_oneself_with,to_[[flatter]],to_[[suck_up]]_to_{{i|+_{{m|ru|пе́ред}}}} der:заи́скивающий rel:иска́ть,иска́ние,иска́тель,иско́мый
 обезбо́ливать обезбо́лить+-ивать impf обезбо́лить 1a def:to_[[anesthetize]] der:обезбо́ливающий rel:безболе́зненный:безболе́зненно,боль:болево́й,боле́ть,больно́й:бо́льно,боле́знь:боле́зненный:боле́зненно:боле́зненность
 обезбо́лить о-+без-+боль+-ить pf обезбо́ливать 4a+p def:to_[[anesthetize]] der:обезбо́ливающий rel:безболе́зненный:безболе́зненно,боль:болево́й,боле́ть,больно́й:бо́льно,боле́знь:боле́зненный:боле́зненно:боле́зненность
-попы́хивать - impf-intr - 1a def:to_[[blow]]_[[smoke]]_{{i|occasionally}};to_[[puff]]_{{i|on_a_[[pipe]]}} rel:пыхте́ть,пыхте́ние
+попы́хивать - impf-intr - 1a def:to_[[blow]]_[[smoke]]_{{i|occasionally}};to_[[puff]]_on_{{i|a_[[pipe]],[[cigar]],etc.;_+_{{glink|instrumental}}}} rel:пыхте́ть,пыхте́ние
 
 ===Etymology===
 Has the form and meaning of a diminutive verb, constructed of {{affix|ru|по-||alt2=-пых-|-ивать}}, apparently based on a no-longer-existent verb (compare {{m|ru|пыхте́ть||to [[puff]], to [[pant]]}}).
 
 [[Category:Russian diminutive verbs]]
 
-закова́ть за-+кова́ть pf зако́вывать 2b+p
-зако́вывать закова́ть+-ывать impf закова́ть 1a
-разжа́ловать раз-+жа́ловать pf ? 2a+p
-гази́ровать ? both ? 2a|гази́рова|ppp=газиро́ванный rel:дегази́ровать
-пританцо́вывать при-+танцова́ть+-ывать impf-intr ? 1a
-замига́ть за-+мига́ть pf-intr ? 1a
-исхуда́ть ? pf-intr ? 1a rel:захуда́ть,FIXME
+закова́ть за-+кова́ть pf зако́вывать 2b+p def:to_[[shackle]] rel:кова́ть/вы́ковать/подкова́ть,кова́ние,ко́ваный,ко́вка:ко́вкий
+зако́вывать закова́ть+-ывать impf закова́ть 1a def:to_[[shackle]] rel:кова́ть/вы́ковать/подкова́ть,кова́ние,ко́ваный,ко́вка:ко́вкий
+разжа́ловать раз-+жа́ловать pf - 2a+p def:to_[[demote]] der:разжа́лование
+[don't use] гази́ровать газ-+и́ровать both - 2a|гази́рова|ppp=газиро́ванный alt:газирова́ть rel:дегази́ровать,газ:га́зовый,газоме́р der:газиро́ванный def:to_[[carbonate]]
+[don't use] газирова́ть газ-+ирова́ть both - 2a+p|газирова́ def:altof:гази́ровать
+пританцо́вывать при-+танцова́ть+-ывать impf-intr - 1a def:(c)to_[[pretend]]_to_[[dance]] rel:танцева́ть,та́нец:танцева́льный,танцо́р,танцо́вщик:танцо́вщица
+замига́ть за-+мига́ть pf-intr мига́ть 1a def:to_[[begin]]_to_[[blink]];to_[[begin]]_to_[[wink]];to_[[begin]]_to_[[twinkle]]
+исхуда́ть ? pf-intr ? 1a rel:захуда́ть,FIXME def:to_become_[[emaciated]] der:исхуда́льный
 обежа́ть о-+бежа́ть pf обега́ть irreg-бежать|об|ppp=-
 
 [don't use] обе́гать о-+бе́гать pf обега́ть 1a+p def:[ве́сь_го́род]
