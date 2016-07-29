@@ -32,39 +32,97 @@ Has the form and meaning of a diminutive verb, constructed of {{affix|ru|по-||
 [don't use] гази́ровать газ-+и́ровать both - 2a|гази́рова|ppp=газиро́ванный alt:газирова́ть rel:дегази́ровать,газ:га́зовый,газоме́р der:газиро́ванный def:to_[[carbonate]]
 [don't use] газирова́ть газ-+ирова́ть both - 2a+p|газирова́ def:altof:гази́ровать
 пританцо́вывать при-+танцова́ть+-ывать impf-intr - 1a def:(c)to_[[pretend]]_to_[[dance]] rel:танцева́ть,та́нец:танцева́льный,танцо́р,танцо́вщик:танцо́вщица
-замига́ть за-+мига́ть pf-intr мига́ть 1a def:to_[[begin]]_to_[[blink]];to_[[begin]]_to_[[wink]];to_[[begin]]_to_[[twinkle]]
-исхуда́ть ? pf-intr ? 1a rel:захуда́ть,FIXME def:to_become_[[emaciated]] der:исхуда́льный
-обежа́ть о-+бежа́ть pf обега́ть irreg-бежать|об|ppp=-
+замига́ть за-+мига́ть pf-intr мига́ть 1a def:to_[[begin]]_to_[[blink]];to_[[begin]]_to_[[wink]];to_[[begin]]_to_[[twinkle]] rel:мига́ние,мига́лка,миг:ми́гом
+исхуда́ть ис-+худо́й+-а́ть pf-intr - 1a rel:захуда́ть,худо́й:худоба́,худе́ть/похуде́ть,худосо́чный:худоща́вый def:to_become_[[emaciated]] der:исхуда́льный
+обежа́ть о-+бежа́ть pf обега́ть irreg-бежать|об|ppp=- def:to_[[run]]_[[around]]_{{i|+_{{glink|accusative}}_or_{{m|ru|вокру́г}}}};to_[[run]]_[[past]]_{{i|+_{{m|ru|ми́мо}}}};(c)to_[[run]]_([[everywhere]]_or_[[many]]_[[places]]);(c)to_[[drop_by]]_([[everywhere]]_or_[[many]]_[[places]]) rel:бежа́ть/побежа́ть,бе́гать/побе́гать,бег,бего́м,бегле́ц:бегля́нка,бе́глый:бе́гло:бе́глость,беготня́,бе́гство,бе́женец:бе́женка
 
-[don't use] обе́гать о-+бе́гать pf обега́ть 1a+p def:[ве́сь_го́род]
-[don't use] обега́ть о-+бе́гать+-а́ть impf обежа́ть,обе́гать 1a
+[don't use] обе́гать о-+бе́гать pf обега́ть 1a+p def:(c)to_[[run]]_([[everywhere]]_or_[[many]]_[[places]]);(c)to_[[drop_by]]_([[everywhere]]_or_[[many]]_[[places]]) rel:-
+[don't use] обега́ть о-+бе́гать+-а́ть impf обежа́ть,обе́гать 1a def:- rel:бежа́ть/побежа́ть,бе́гать/побе́гать,бег,бего́м,бегле́ц:бегля́нка,бе́глый:бе́гло:бе́глость,беготня́,бе́гство,бе́женец:бе́женка
 
 [definition]
 
-# [бежать вокруг чего-л.; посещать много мест], {{g|pf}} — {{m|ru|обежа́ть}} or {{m|ru|обе́гать}}
-# [бежать, минуя что-л.], {{g|pf}} — {{m|ru|обежа́ть}}
-истерза́ть ис-+терза́ть pf терза́ть 1a+p
-ка́ркать ? impf-intr ? 1a
+# {{lb|ru|colloquial}} to [[run]] ([[everywhere]] or [[many]] [[places]]), {{g|pf}} — {{m|ru|обежа́ть}} or {{m|ru|обе́гать}}
+# {{lb|ru|colloquial}} to [[drop by]] ([[everywhere]] or [[many]] [[places]]), {{g|pf}} — {{m|ru|обежа́ть}} or {{m|ru|обе́гать}}
+# to [[run]] [[around]] {{i|+ {{glink|accusative}} or {{m|ru|вокру́г}}}}, {{g|pf}} — {{m|ru|обежа́ть}}
+# to [[run]] [[past]] {{i|+ {{m|ru|ми́мо}}}} {{gloss|to [[bypass]] while [[running]]}}, {{g|pf}} — {{m|ru|обежа́ть}}
+
+обегать
+
+==Russian==
+
+===Etymology 1===
+{{affix|ru|о-|бе́гать}}
+
+====Pronunciation====
+* {{ru-IPA|обе́гать}}
+
+====Verb====
+{{ru-verb|обе́гать|pf|impf=обега́ть}}
+
+# {{lb|ru|colloquial}} to [[run]] ([[everywhere]] or [[many]] [[places]])
+# {{lb|ru|colloquial}} to [[drop by]] ([[everywhere]] or [[many]] [[places]])
+
+=====Conjugation=====
+{{ru-conj|1a+p|pf|обе́га}}
+
+===Etymology 2===
+{{affix|ru|о-|бе́гать|-а́ть}}
+
+====Pronunciation====
+* {{ru-IPA|обега́ть}}
+
+====Verb====
+{{ru-verb|обега́ть|impf|pf=обежа́ть|pf2=обе́гать}}
+
+# to [[run]] [[around]] {{i|+ {{glink|accusative}} or {{m|ru|вокру́г}}}}, {{g|pf}} — {{m|ru|обежа́ть}}
+# to [[run]] [[past]] {{i|+ {{m|ru|ми́мо}}}} {{gloss|to [[bypass]] while [[running]]}}, {{g|pf}} — {{m|ru|обежа́ть}}
+# {{lb|ru|colloquial}} to [[run]] ([[everywhere]] or [[many]] [[places]]), {{g|pf}} — {{m|ru|обежа́ть}} or {{m|ru|обе́гать}}
+# {{lb|ru|colloquial}} to [[drop by]] ([[everywhere]] or [[many]] [[places]]), {{g|pf}} — {{m|ru|обежа́ть}} or {{m|ru|обе́гать}}
+
+=====Conjugation=====
+{{ru-conj|1a|impf|обега́}}
+
+===Related terms===
+* {{l|ru|бежа́ть|g=impf}}, {{l|ru|побежа́ть|g=pf}}
+* {{l|ru|бе́гать|g=impf}}, {{l|ru|побе́гать|g=pf}}
+* {{l|ru|бег}}
+* {{l|ru|бего́м}}
+* {{l|ru|бегле́ц}}, {{l|ru|бегля́нка}}
+* {{l|ru|бе́глый}}, {{l|ru|бе́гло}}, {{l|ru|бе́глость}}
+* {{l|ru|беготня́}}
+* {{l|ru|бе́гство}}
+* {{l|ru|бе́женец}}, {{l|ru|бе́женка}}
+
+[[ru:обегать]]
+
+истерза́ть ис-+терза́ть pf терза́ть 1a+p def:to_[[rip]]_to_[[shreds]],to_[[tear]]_to_[[pieces]];(f)to_[[torment]],to_[[afflict]] rel:терза́ться,терза́ние
+ка́ркать - impf-intr ка́ркнуть 1a der:ка́рканье rel:- def:to_[[caw]]
+
+===Etymology===
+Onomatopoeic.
 
 ====Derived terms====
+* {{l|ru|ка́ркнуть|g=pf}}
 * {{l|ru|зака́ркать|g=pf}}
 * {{l|ru|нака́ркать|g=pf}}
 * {{l|ru|пока́ркать|g=pf}}
 * {{l|ru|прока́ркать|g=pf}}
 * {{l|ru|раска́ркаться|g=pf}}
 
-хвора́ть ? impf-intr ? 1a der:захвора́ть,отхвора́ть,перехвора́ть,похвора́ть,прохвора́ть,расхва́рываться/расхора́ться
-опеча́тать о-+печа́тать pf опеча́тывать 1a+p
-опеча́тывать опеча́тать+-ывать impf опеча́тать 1a
-пы́хать ? impf-intr ? 6a
-накача́ть на-+кача́ть pf нака́чивать 1a+p
-нака́чивать накача́ть+-ивать impf накача́ть 1a
-замыча́ть за-+мыча́ть pf ? 5b
-поспеша́ть по-+спеши́ть+-а́ть impf-intr ? 1a
-оглуша́ть оглушить+-а́ть impf оглуши́ть 1a
+ка́ркнуть ка́ркать+-нуть pf-intr ка́ркать 3a def:to_[[caw]] rel:ка́рканье
+хвора́ть хво́рый+-а́ть impf-intr захвора́ть 1a der:захвора́ть,отхвора́ть,перехвора́ть,похвора́ть,прохвора́ть,расхва́рываться/расхора́ться def:(c)to_be_[[sick]],to_be_[[ill]] rel:хво́рый,хворь
+захвора́ть за-+хвора́ть pf-intr хвора́ть 1a def:(c)to_become_[[sick]],to_[[fall_ill]];(c)to_[[contract]],to_[[come_down_with]]_{{i|an_[[illness]]\;_+_{{glink|instrumental}}}} rel:хво́рый,хворь
+опеча́тать о-+печа́тать pf опеча́тывать 1a+p def:to_[[seal]],to_[[seal]]_[[up]] rel:печа́тать/напеча́тать,печа́таться/напеча́таться,печа́тание,печа́ть,печа́тный:печа́тно,печа́тник,печа́тка
+опеча́тывать опеча́тать+-ывать impf опеча́тать 1a def:to_[[seal]],to_[[seal]]_[[up]] rel:печа́тать/напеча́тать,печа́таться/напеча́таться,печа́тание,печа́ть,печа́тный:печа́тно,печа́тник,печа́тка
+пы́хать - impf-intr - 6a der:пыхну́ть def:(c)to_[[blaze]],to_[[burn]]_[[brightly]];(c)(f)to_[[project]],to_[[radiate]]_{{i|health,happiness,etc.;+_{{glink|instrumental}}}} rel:-
+накача́ть на-+кача́ть pf нака́чивать 1a+p def:to_[[pump]];to_[[inflate]] rel:кача́ть/качну́ть,кача́ние,кача́ться/качну́ться
+нака́чивать накача́ть+-ивать impf накача́ть 1a def:to_[[pump]];to_[[inflate]] rel:кача́ть/качну́ть,кача́ние,кача́ться/качну́ться
+замыча́ть за-+мыча́ть pf мыча́ть 5b def:to_[[start]]_[[mooing]];(c)to_[[start]]_[[mumbling]] rel:мыча́ние
+поспеша́ть по-+спеши́ть+-а́ть impf-intr - 1a def:(d)(or)(lc)to_[[hurry]],to_[[hasten]] rel:спеши́ть/поспеши́ть,спе́шный:спе́шно:спе́шность,спех:спе́шка
+оглуша́ть оглушить+-а́ть impf оглуши́ть 1a def:to_[[deafen]];to_[[stun]]_{{i|especially_with_a_heavy_blow}} rel:оглуши́тельный,глуши́ть/заглуши́ть,глуши́тель,глухо́й:глу́хо:глухота́,глуха́рь
 [already done] оглуши́ть 
-подде́ть под-+деть pf поддева́ть 15a+p|подде́
-поддева́ть подде́ть+-ва́ть impf подде́ть 1a
+подде́ть под-+деть pf поддева́ть 15a+p|подде́ def:(c)to_[[wear]]_[[under]],to_[[put_on]]_[[under]]_{{i|{{m|ru|под}}_+_{{glink|accusative}}}};to_[[snag]],to_[[hook]],to_[[catch]];to_[[lift]]_[[slightly]]_{{i|from_below}};(c)to_[[cheat]],to_[[trick]];(c)to_[[tease]],to_[[needle]] rel:поддёвка,дева́ть/деть,дева́ться/де́ться,дея́ние,де́ятель:де́ятельный:де́ятельность
+поддева́ть подде́ть+-ва́ть impf подде́ть 1a def:(c)to_[[wear]]_[[under]],to_[[put_on]]_[[under]]_{{i|{{m|ru|под}}_+_{{glink|accusative}}}};to_[[snag]],to_[[hook]],to_[[catch]];to_[[lift]]_[[slightly]]_{{i|from_below}};(c)to_[[cheat]],to_[[trick]];(c)to_[[tease]],to_[[needle]] rel:поддёвка,дева́ть/деть,дева́ться/де́ться,дея́ние,де́ятель:де́ятельный:де́ятельность
 дуде́ть ? impf-intr ? 5b|дуд|дуде́|pres_1sg=- der:подуде́ть,продуде́ть
 посерьезнеть
 
