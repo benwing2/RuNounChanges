@@ -2,8 +2,58 @@
 
 import re
 
+class Peeker:
+  __slots__ = ['lineiter', 'next_lines']
+  def __init__(self, lineiter):
+    self.lineiter = lineiter
+    self.next_lines = []
+
+  def peek_next_line(self, n):
+    while len(self.next_lines) < n + 1:
+      try:
+        self.next_lines.append(next(self.lineiter))
+      except StopIteration:
+        # print "peek_next_line(%s): return None" % n
+        return None
+    # print "peek_next_line(%s): return %s" % (n, self.next_lines[n])
+    return self.next_lines[n]
+
+  def get_next_line(self):
+    if len(self.next_lines) > 0:
+      retval = self.next_lines[0]
+      del self.next_lines[0]
+      # print "get_next_line(): return cached %s" % retval
+      return retval
+    try:
+      retval = next(self.lineiter)
+      # print "get_next_line(): return new %s" % retval
+      return retval
+    except StopIteration:
+      # print "get_next_line(): return None"
+      return None
+
+def generate_multiline_defn(peeker):
+  defnlines = []
+  lineind = 0
+  nextline = peeker.peek_next_line(0)
+  if nextline != None and not nextline.strip():
+    lineind = 1
+    nextline = peeker.peek_next_line(1)
+  nextline = peeker.peek_next_line(lineind)
+  if nextline != None and re.search(r"^\[(def|defn|definition)\]$", nextline.strip()):
+    for i in xrange(lineind + 1):
+      peeker.get_next_line()
+    while True:
+      line = peeker.get_next_line()
+      if not (line or "").strip():
+        break
+      defnlines.append(line.strip() + "\n")
+    return "".join(defnlines)
+  return None
+
 def generate_defn(defns):
   defnlines = []
+
   # the following regex uses a negative lookbehind so we split on a semicolon
   # but not on a backslashed semicolon, which we then replace with a regular
   # semicolon in the next line
@@ -24,6 +74,9 @@ def generate_defn(defns):
         elif defn.startswith("#"):
           labels.append("figurative")
           defn = re.sub(r"^#", "", defn)
+        elif defn.startswith("(or)"):
+          labels.append("or")
+          defn = re.sub(r"^\(or\)", "", defn)
         elif defn.startswith("(f)"):
           labels.append("figurative")
           defn = re.sub(r"^\(f\)", "", defn)

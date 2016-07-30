@@ -21,13 +21,17 @@ def check_stress(word):
     msg("Word %s missing an accent" % word)
     assert False
 
-for line in codecs.open(args.direcfile, "r", "utf-8"):
+peeker = generate_pos.Peeker(codecs.open(args.direcfile, "r", "utf-8"))
+while True:
+  line = peeker.get_next_line()
+  if line == None:
+    break
+  line = line.strip()
   def error(text):
     errmsg("ERROR: Processing line: %s" % line)
     errmsg("ERROR: %s" % text)
     assert False
 
-  line = line.strip()
   els = re.split(r"\s+", line)
   # Replace _ with space, but not in the conjugation, where param names
   # may well have an underscore in them; but allow \s to stand for a space in
@@ -278,6 +282,8 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
         else:
           seetext = derrelguts
 
+  if defntext == None:
+    defntext = generate_pos.generate_multiline_defn(peeker)
   if defntext == None:
     if args.reqdef:
       error("No definition; should specify one or use def:-")
