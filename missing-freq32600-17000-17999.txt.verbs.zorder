@@ -183,43 +183,19 @@ Onomatopoeic.
 густе́ть густо́й+-е́ть impf-intr загусте́ть,погусте́ть 1a der:загусте́ть,погусте́ть def:(in)to_[[thicken]];(io)to_become_[[denser]] rel:густо́й:гу́сто:густота́
 загусте́ть за-+густе́ть pf-intr густе́ть 1a def:(in)to_[[thicken]] rel:густо́й:гу́сто:густота́
 погусте́ть по-+густе́ть pf-intr густе́ть 1a def:(in)to_[[thicken]] rel:густо́й:гу́сто:густота́
-го́рбить ? impf сго́рбить 4a+p[(2)]
-
-====Derived terms====
-{{top2}}
-''imperfective''
-* {{l|ru|го́рбиться}}
-* (no equivalent)
-* (no equivalent)
-* (no equivalent)
-* (no equivalent)
-* (no equivalent)
-* (no equivalent)
-* (no equivalent)
-{{mid2}}
-''perfective''
-* (no equivalent)
-* {{l|ru|взго́рбить}}
-* {{l|ru|взго́рбиться}}
-* {{l|ru|изго́рбить}}
-* {{l|ru|изго́рбиться}}
-* {{l|ru|наго́рбиться}}
-* {{l|ru|сго́рбить}}
-* {{l|ru|сго́рбиться}}
-{{bottom2}}
-
-сго́рбить с-+го́рбить pf го́рбить 4a+p[(2)]
-груби́ть ? impf ? 4b+p
+[already done] го́рбить ? impf сго́рбить 4a+p[(2)]
+[already done] сго́рбить с-+го́рбить pf го́рбить 4a+p[(2)]
+груби́ть гру́бый+-и́ть impf нагруби́ть 4b+p rel:гру́бый:гру́бо:гру́бость,грубе́ть/огрубе́ть,грубия́н
 
 [definition]
-# {{lb|ru|intransitive}} [говорить грубости]
-# {{lb|ru|sports|intransitive}} [играть, нарушая правила поведения в игре]
-# {{lb|ru|transitive|colloquial}} [делать грубым]
+# {{lb|ru|intransitive|colloquial}} to [[insult]], to [[speak]] [[rudely]] to; to [[talk back]] to {{i|+ {{glink|dative}}}}
+# {{lb|ru|sports|intransitive|imperfective only}} to [[break]] the [[rules]] when [[playing]]
+# {{lb|ru|transitive|colloquial|imperfective only}} to [[roughen]]
 
 ====Synonyms====
-* {{sense|...}} {{l|ru|хами́ть}}, {{l|ru|грубиянить}}, {{l|ru|дерзи́ть}}
-* {{sense|...}} {{l|ru|фоли́ть}}
-* {{sense|...}} {{l|ru|огрубля́ть}}
+* {{sense|insult}} {{l|ru|хами́ть}}, {{l|ru|грубия́нить}}, {{l|ru|дерзи́ть}}
+* {{sense|break the rules when playing}} {{l|ru|фоли́ть}}
+* {{sense|roughen}} {{l|ru|огрубля́ть}}
 
 ====Derived terms====
 {{top2}}
@@ -236,30 +212,38 @@ Onomatopoeic.
 * {{l|ru|сгруби́ть}}
 {{bottom2}}
 
-проруби́ть про-+руби́ть pf проруба́ть 4c+p
-проруба́ть проруби́ть+-а́ть impf проруби́ть 1a
-подсади́ть под-+сади́ть pf подса́живать 4c+p
-подса́живать подсади́ть+-ивать impf подсади́ть 1a
-освежи́ть ? pf освежа́ть 4b+p rel:просвежа́ть/просвежи́ть
-развози́ть раз-+вози́ть impf развезти́ 4c+p
-развезти́ раз-+везти́ pf развози́ть 7b/b(9)+p|развезти́|развёз
-задыми́ть за-+дыми́ть pf ? 4b+p
+нагруби́ть на-+груби́ть pf-intr груби́ть 4b rel:гру́бый:гру́бо:гру́бость,грубе́ть/огрубе́ть,грубия́н
 
 [definition]
-# {{lb|ru|intransitive}} [начать дымить]
-# {{lb|ru|colloquial|intransitive}} [закурить]
-# {{lb|ru|transitive}} [заполнить, пропитать дымом]
-# {{lb|ru|transitive}} [покрыть дымной копотью]
+# {{lb|ru|intransitive|colloquial}} to [[insult]], to [[speak]] [[rudely]] to; to [[talk back]] to {{i|+ {{glink|dative}}}}
 
-изра́нить из-+ра́нить pf ра́нить 4a+p
-пьяни́ть ? impf ? 4b+p der:пьяня́ть/пьяни́ть
-обша́рить об-+ша́рить pf обша́ривать 4a+p
-обша́ривать обша́рить+-ивать impf обша́рить 1a
-заспо́рить за-+спо́рить pf-intr спо́рить 4a
-отве́сить от-+ве́сить pf отве́шивать 4a+p
-отве́шивать отве́сить+-ивать impf отве́сить 1a
-голоси́ть ? impf-intr ? 4b der:заголоси́ть,поголоси́ть,проголоси́ть
-заголоси́ть за-+голоси́ть pf-intr ? 4b
+проруби́ть про-+руби́ть pf проруба́ть 4c+p def:to_[[cut]]_[[through]]_{{i|with_an_[[axe]]}};to_[[cut]]_(a_[[passage]],[[swathe]],etc.)_[[through]]_[[trees]]
+проруба́ть проруби́ть+-а́ть impf проруби́ть 1a def:to_[[cut]]_[[through]];to_[[cut]]_(a_[[passage]],[[swathe]],etc.)_[[through]]_[[trees]] rel:руби́ть/поруби́ть,рубле́ние,ру́бленый,ру́бка,ру́бище,рубе́ц:рубцо́вый:ру́бчик:ру́бчатый,рубцева́ться/зарубцева́ться
+подсади́ть под-+сади́ть pf подса́живать 4c+p def:to_[[seat]]_{{i|{{m|ru|к}}_[[next_to]]}};to_[[plant]]_(more_of)_{{i|+_{{genitive}}}};to_[[help]]_(someone)_[[up]]_{{i|{{m|ru|в}}_+_{{glink|accusative}}_into,or_{{m|ru|на}}__+_{{glink|accusative}}_onto}} rel:сади́ть/сажа́ть|g=impf/посади́ть,сади́ться/сесть
+подса́живать подсади́ть+-ивать impf подсади́ть 1a def:to_[[seat]]_{{i|{{m|ru|к}}_[[next_to]]}};to_[[plant]]_(more_of)_{{i|+_{{genitive}}}};to_[[help]]_(someone)_[[up]]_{{i|{{m|ru|в}}_+_{{glink|accusative}} _into,or_{{m|ru|на}}__+_{{glink|accusative}}_onto}} rel:сади́ть/сажа́ть|g=impf/посади́ть,сади́ться/сесть der:поса́живаться/подсе́сть
+освежи́ть о-+све́жий+-и́ть pf освежа́ть 4b+p der:#ref,освеже́ние,освежи́тельный,освежа́ющий rel:освежа́ющий,све́жий:све́жесть,свеже́ть/посвеже́ть,просвежа́ть/просвежи́ть def:to_[[refresh]]_{{i|also_one's_[[memory]],[[knowledge]],etc.}};to_[[touch_up]]_([[colors]]_in_a_[[painting]])
+освежа́ть освежи́ть+-а́ть impf освежи́ть 1a der:#ref,освежа́ющий rel:освеже́ние,освежи́тельный,све́жий:све́жесть,свеже́ть/посвеже́ть,просвежа́ть/просвежи́ть,просвежа́ть/просвежи́ть def:to_[[refresh]]_{{i|also_one's_[[memory]],[[knowledge]],etc.}};to_[[touch_up]]_([[colors]]_in_a_[[painting]])
+[already done] развози́ть раз-+вози́ть impf развезти́ 4c+p 
+[already done] развезти́ раз-+везти́ pf развози́ть 7b/b(9)+p|развезти́|развёз
+задыми́ть за-+дыми́ть pf - 4b+p rel:дым:дымово́й:ды́мный,дыми́ть/надыми́ть,дыми́ться,ды́мка:дымо́к,дымохо́д
+
+[definition]
+# {{lb|ru|intransitive}} to begin to [[emit]] [[smoke]], {{g|pf}} — {{m|ru|дыми́ть}}
+# {{lb|ru|colloquial|intransitive}} to begin to [[smoke]] [[cigarettes]]
+# {{lb|ru|transitive}} to [[fill]] with [[smoke]]
+# {{lb|ru|transitive}} to [[cover]] with [[soot]]
+
+изра́нить из-+ра́нить pf ра́нить 4a+p def:to_[[injure]]_{{i|[[gravely]]_or_in_many_[[places]]}} rel:ране́ние,ра́неный,рани́мый
+пьяни́ть пьа́ный+-и́ть impf опьани́ть 4b+p der:опьяня́ть/опьяни́ть def:to_[[make]]_[[drunk]] rel:пья́ный:пьяне́ть/опьяне́ть,пья́нство:пья́нствовать,пья́ница,пья́нка,пью́щий syn:опьяня́ть
+опьяни́ть о-+пьяни́ть impf пьани́ть,опьяня́ть 4b+p der:опьяня́ть/опьяни́ть def:to_[[make]]_[[drunk]] rel:пья́ный:пьяне́ть/опьяне́ть,пья́нство:пья́нствовать,пья́ница,пья́нка,пью́щий
+опьяня́ть опьяни́ть+-я́ть impf опьяни́ть 1a syn:пьяни́ть def:to_[[make]]_[[drunk]] rel:пья́ный:пьяне́ть/опьяне́ть,пья́нство:пья́нствовать,пья́ница,пья́нка,пью́щий
+обша́рить об-+ша́рить pf обша́ривать 4a+p def:(c)to_[[ransack]];(c)to_[[rummage]]_through rel:ша́рить
+обша́ривать обша́рить+-ивать impf обша́рить 1a def:(c)to_[[ransack]];(c)to_[[rummage]]_through rel:ша́рить
+заспо́рить за-+спо́рить pf-intr спо́рить 4a def:to_[[begin]]_to_[argue]],to_get_into_an_[[argument]]_{{i|{{m|ru|с}}_with}} rel:спо́рить/поспо́рить,спор:спо́рный,спо́рщик
+отве́сить от-+ве́сить pf отве́шивать 4a+p def:to_[[weigh]]_[[out]];to_[[make]],to_[[take]]_(a_[[bow]]);ux:'''отве́сить'''_[[покло́н]]|to_[[bow]];(c)_to_[[give]],to_[[deal]]_(a_[[blow]]) rel:отве́с:отве́сный,ве́сить,весо́мый,вес,ве́шать/пове́сить,пове́шение,ве́шалка,ве́шание,висе́ть,ви́снуть,вися́чий,висю́лька
+отве́шивать отве́сить+-ивать impf отве́сить 1a def:to_[[weigh]]_[[out]];to_[[make]],to_[[take]]_(a_[[bow]]);ux:'''отве́сить'''_[[покло́н]]|to_[[bow]];(c)_to_[[give]],to_[[deal]]_(a_[[blow]]) rel:отве́с:отве́сный,ве́сить,весо́мый,вес,ве́шать/пове́сить,пове́шение,ве́шалка,ве́шание,висе́ть,ви́снуть,вися́чий,висю́лька
+голоси́ть го́лос+-и́ть impf-intr - 4b der:заголоси́ть,поголоси́ть,проголоси́ть def:(c)to_[[wail]] rel:го́лос:голосово́й,голоси́стый,голосова́ть/проголосова́ть,голосова́ние
+заголоси́ть за-+голоси́ть pf-intr голоси́ть 4b def:(c)to_[[begin]]_to_[[wail]] rel:го́лос:голосово́й,голоси́стый,голосова́ть/проголосова́ть,голосова́ние
 отхвати́ть от-+хвати́ть pf отхва́тывать 4c+p
 
 ===Alternative forms===
