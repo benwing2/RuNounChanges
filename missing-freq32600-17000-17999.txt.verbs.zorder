@@ -28,9 +28,59 @@ Has the form and meaning of a diminutive verb, constructed of {{affix|ru|по-||
 
 закова́ть за-+кова́ть pf зако́вывать 2b+p def:to_[[shackle]] rel:кова́ть/вы́ковать/подкова́ть,кова́ние,ко́ваный,ко́вка:ко́вкий
 зако́вывать закова́ть+-ывать impf закова́ть 1a def:to_[[shackle]] rel:кова́ть/вы́ковать/подкова́ть,кова́ние,ко́ваный,ко́вка:ко́вкий
-разжа́ловать раз-+жа́ловать pf - 2a+p def:to_[[demote]] der:разжа́лование
+разжа́ловать раз-+жа́ловать pf - 2a+p def:to_[[demote]] der:разжа́лование rel:жа́ловать/пожа́ловать,жа́ловаться/пожа́ловаться,жа́лованье,жа́лоба:жа́лобный,жа́лобщик
 [don't use] гази́ровать газ-+и́ровать both - 2a|гази́рова|ppp=газиро́ванный alt:газирова́ть rel:дегази́ровать,газ:га́зовый,газоме́р der:газиро́ванный def:to_[[carbonate]]
-[don't use] газирова́ть газ-+ирова́ть both - 2a+p|газирова́ def:altof:гази́ровать
+[don't use] газирова́ть газ-+ирова́ть both - 2a+p|газирова́ def:altof:гази́ровать rel:-
+
+==Russian==
+
+===Etymology 1===
+{{affix|ru|газ-|и́ровать}}
+
+====Alternative forms====
+* {{l|ru|газирова́ть}}
+
+====Pronunciation====
+* {{ru-IPA|гази́ровать}}
+
+====Verb====
+{{ru-verb|гази́ровать|both}}
+
+# to [[carbonate]]
+
+=====Conjugation=====
+''imperfective''
+{{ru-conj|2a|impf|гази́рова|ppp=газиро́ванный}}
+''perfective''
+{{ru-conj|2a|pf|гази́рова|ppp=газиро́ванный}}
+
+===Etymology 2===
+{{affix|ru|газ-|ирова́ть}}
+
+====Pronunciation====
+* {{ru-IPA|газирова́ть}}
+
+====Verb====
+{{ru-verb|газирова́ть|both}}
+
+# {{alternative form of|lang=ru|гази́ровать}}
+
+=====Conjugation=====
+''imperfective''
+{{ru-conj|2a+p|impf|газирова́}}
+''perfective''
+{{ru-conj|2a+p|pf|газирова́}}
+
+===Derived terms===
+* {{l|ru|газиро́ванный}}
+
+===Related terms===
+* {{l|ru|дегази́ровать}}
+* {{l|ru|газ}}, {{l|ru|га́зовый}}
+* {{l|ru|газоме́р}}
+
+[[ru:газировать]]
+
 пританцо́вывать при-+танцова́ть+-ывать impf-intr - 1a def:(c)to_[[pretend]]_to_[[dance]] rel:танцева́ть,та́нец:танцева́льный,танцо́р,танцо́вщик:танцо́вщица
 замига́ть за-+мига́ть pf-intr мига́ть 1a def:to_[[begin]]_to_[[blink]];to_[[begin]]_to_[[wink]];to_[[begin]]_to_[[twinkle]] rel:мига́ние,мига́лка,миг:ми́гом
 исхуда́ть ис-+худо́й+-а́ть pf-intr - 1a rel:захуда́ть,худо́й:худоба́,худе́ть/похуде́ть,худосо́чный:худоща́вый def:to_become_[[emaciated]] der:исхуда́льный
@@ -140,14 +190,14 @@ Onomatopoeic.
 {{ru-verb-alt-ё|посерьёзнеть|pf}}
 
 посерьёзнеть по-+серьёзнеть pf-intr серьёзнеть 1a def:(c)to_get_[[serious]],to_become_[[serious]] rel:серьёзный:серьёзно:серьёзность:несерьёзный,серьёз,серьёзничать
-рассвирепе́ть рас-+свирепе́ть pf-intr свирепе́ть 1a def:- rel:свире́пый:свире́пость,свире́пствовать
+рассвирепе́ть рас-+свирепе́ть pf-intr свирепе́ть 1a rel:свире́пый:свире́пость,свире́пствовать
 
 [definition]
 # to [[grow]] [[furious]], to [[begin]] to [[see red]]
 # to [[become]] [[fierce]], to become [[ferocious]], to become [[cruel]]
 
 захрипе́ть за-+хрипе́ть pf-intr хрипе́ть 5b def:(c)to_begin_to_[[wheeze]];(c)to_begin_to_[[speak]]_[[hoarsely]] rel:хрип,хри́пнуть,хри́плый:хрипота́:хрипотца́
-добре́ть ? impf-intr подобре́ть,раздобре́ть 1a der:подобре́ть,раздобре́ть rel:до́брый:добро́:доброта́,добро́м,добря́к,добро́тный,добросерде́чие:добросерде́чный
+добре́ть до́брый+-е́ть impf-intr подобре́ть,раздобре́ть 1a der:подобре́ть,раздобре́ть rel:до́брый:добро́:доброта́,добро́м,добря́к,добро́тный,добросерде́чие:добросерде́чный
 
 [defn]
 # to become [[kind]], {{g|pf}} — {{m|ru|подобре́ть}}
@@ -157,6 +207,53 @@ Onomatopoeic.
 раздобре́ть раз-+добре́ть impf-intr добре́ть 1a def:(c)to_[[gain]]_[[weight]],to_get_[[fat]] rel:до́брый:добро́:доброта́
 [don't use] сере́ть се́рый+-е́ть impf-intr посере́ть 1a der:сере́ться|g=impf,засере́ться|g=pf,посере́ть|g=pf def:to_become_[[gray]];(f)(c)to_become_[[gloomy]];(f)(c)to_[[fade]]_{{i|e.g._of_[[talent]]}},to_become_[[commonplace]];{{lb|ru|third_person_only|imperfective_only}}_to_[[appear]]_{{i|of_[[gray]]_things}} rel:се́рый:се́рость
 [don't use] се́реть - impf-intr - 5a def:(d)to_[[defecate]]_{{i|+_{{glink|instrumental}}}};(f)(d)to_[[harm]]_{{i|+_{{glink|dative}}}} rel:-
+
+
+==Russian==
+
+===Etymology 1===
+{{affix|ru|се́рый|-е́ть}}
+
+====Pronunciation====
+* {{ru-IPA|сере́ть}}
+
+====Verb====
+{{ru-verb|сере́ть|impf|pf=посере́ть}}
+
+# to become [[gray]]
+# {{lb|ru|figurative|colloquial}} to become [[gloomy]]
+# {{lb|ru|figurative|colloquial}} to [[fade]] {{i|e.g. of [[talent]]}}, to become [[commonplace]]
+# {{lb|ru|third person only|imperfective only}} to [[appear]] {{i|of [[gray]] things}}
+
+=====Conjugation=====
+{{ru-conj|1a|impf-intr|сере́}}
+
+=====Derived terms=====
+* {{l|ru|сере́ться|g=impf}}
+* {{l|ru|засере́ться|g=pf}}
+* {{l|ru|посере́ть|g=pf}}
+
+=====Related terms=====
+* {{l|ru|се́рый}}, {{l|ru|се́рость}}
+
+===Etymology 2===
+{{rfe|lang=ru}}
+
+====Pronunciation====
+* {{ru-IPA|се́реть}}
+
+====Verb====
+{{ru-verb|се́реть|impf}}
+
+# {{lb|ru|dated}} to [[defecate]] {{i|+ {{glink|instrumental}}}}
+# {{lb|ru|figurative|dated}} to [[harm]] {{i|+ {{glink|dative}}}}
+
+=====Conjugation=====
+{{ru-conj|5a|impf-intr|се́р|се́ре}}
+
+[[ru:сереть]]
+
+
 посере́ть по-+сере́ть pf-intr сере́ть 1a def:to_become_[[gray]];(f)(c)to_become_[[gloomy]];(f)(c)to_[[fade]]_{{i|e.g._of_[[talent]]}},to_become_[[commonplace]] rel:се́рый:се́рость
 вечере́ть ве́чер+-е́ть impf-intr - 1a der:завечере́ть,повечере́ть,свечере́ть,свечере́ться rel:ве́чер:вече́рний,в́ечером,вече́рня,вечери́нка,ве́черя
 
@@ -217,10 +314,10 @@ Onomatopoeic.
 [definition]
 # {{lb|ru|intransitive|colloquial}} to [[insult]], to [[speak]] [[rudely]] to; to [[talk back]] to {{i|+ {{glink|dative}}}}
 
-проруби́ть про-+руби́ть pf проруба́ть 4c+p def:to_[[cut]]_[[through]]_{{i|with_an_[[axe]]}};to_[[cut]]_(a_[[passage]],[[swathe]],etc.)_[[through]]_[[trees]]
+проруби́ть про-+руби́ть pf проруба́ть 4c+p def:to_[[cut]]_[[through]]_{{i|with_an_[[axe]]}};to_[[cut]]_(a_[[passage]],[[swathe]],etc.)_[[through]]_[[trees]] rel:руби́ть/поруби́ть,рубле́ние,ру́бленый,ру́бка,ру́бище,рубе́ц:рубцо́вый:ру́бчик:ру́бчатый,рубцева́ться/зарубцева́ться
 проруба́ть проруби́ть+-а́ть impf проруби́ть 1a def:to_[[cut]]_[[through]];to_[[cut]]_(a_[[passage]],[[swathe]],etc.)_[[through]]_[[trees]] rel:руби́ть/поруби́ть,рубле́ние,ру́бленый,ру́бка,ру́бище,рубе́ц:рубцо́вый:ру́бчик:ру́бчатый,рубцева́ться/зарубцева́ться
-подсади́ть под-+сади́ть pf подса́живать 4c+p def:to_[[seat]]_{{i|{{m|ru|к}}_[[next_to]]}};to_[[plant]]_(more_of)_{{i|+_{{genitive}}}};to_[[help]]_(someone)_[[up]]_{{i|{{m|ru|в}}_+_{{glink|accusative}}_into,or_{{m|ru|на}}__+_{{glink|accusative}}_onto}} rel:сади́ть/сажа́ть|g=impf/посади́ть,сади́ться/сесть
-подса́живать подсади́ть+-ивать impf подсади́ть 1a def:to_[[seat]]_{{i|{{m|ru|к}}_[[next_to]]}};to_[[plant]]_(more_of)_{{i|+_{{genitive}}}};to_[[help]]_(someone)_[[up]]_{{i|{{m|ru|в}}_+_{{glink|accusative}} _into,or_{{m|ru|на}}__+_{{glink|accusative}}_onto}} rel:сади́ть/сажа́ть|g=impf/посади́ть,сади́ться/сесть der:поса́живаться/подсе́сть
+подсади́ть под-+сади́ть pf подса́живать 4c+p def:to_[[seat]]_{{i|{{m|ru|к}}_[[next_to]]}};to_[[plant]]_(more_of)_{{i|+_{{genitive}}}};to_[[help]]_(someone)_[[up]]_{{i|{{m|ru|в}}_+_{{glink|accusative}}_into,or_{{m|ru|на}}_+_{{glink|accusative}}_onto}} rel:сади́ть/сажа́ть|g=impf/посади́ть,сади́ться/сесть
+подса́живать подсади́ть+-ивать impf подсади́ть 1a def:to_[[seat]]_{{i|{{m|ru|к}}_[[next_to]]}};to_[[plant]]_(more_of)_{{i|+_{{genitive}}}};to_[[help]]_(someone)_[[up]]_{{i|{{m|ru|в}}_+_{{glink|accusative}}_into,or_{{m|ru|на}}_+_{{glink|accusative}}_onto}} rel:сади́ть/сажа́ть|g=impf/посади́ть,сади́ться/сесть der:поса́живаться/подсе́сть
 освежи́ть о-+све́жий+-и́ть pf освежа́ть 4b+p der:#ref,освеже́ние,освежи́тельный,освежа́ющий rel:освежа́ющий,све́жий:све́жесть,свеже́ть/посвеже́ть,просвежа́ть/просвежи́ть def:to_[[refresh]]_{{i|also_one's_[[memory]],[[knowledge]],etc.}};to_[[touch_up]]_([[colors]]_in_a_[[painting]])
 освежа́ть освежи́ть+-а́ть impf освежи́ть 1a der:#ref,освежа́ющий rel:освеже́ние,освежи́тельный,све́жий:све́жесть,свеже́ть/посвеже́ть,просвежа́ть/просвежи́ть,просвежа́ть/просвежи́ть def:to_[[refresh]]_{{i|also_one's_[[memory]],[[knowledge]],etc.}};to_[[touch_up]]_([[colors]]_in_a_[[painting]])
 [already done] развози́ть раз-+вози́ть impf развезти́ 4c+p 
@@ -244,7 +341,7 @@ Onomatopoeic.
 отве́шивать отве́сить+-ивать impf отве́сить 1a def:to_[[weigh]]_[[out]];to_[[make]],to_[[take]]_(a_[[bow]]);ux:'''отве́сить'''_[[покло́н]]|to_[[bow]];(c)_to_[[give]],to_[[deal]]_(a_[[blow]]) rel:отве́с:отве́сный,ве́сить,весо́мый,вес,ве́шать/пове́сить,пове́шение,ве́шалка,ве́шание,висе́ть,ви́снуть,вися́чий,висю́лька
 голоси́ть го́лос+-и́ть impf-intr - 4b der:заголоси́ть,поголоси́ть,проголоси́ть def:(c)to_[[wail]] rel:го́лос:голосово́й,голоси́стый,голосова́ть/проголосова́ть,голосова́ние
 заголоси́ть за-+голоси́ть pf-intr голоси́ть 4b def:(c)to_[[begin]]_to_[[wail]] rel:го́лос:голосово́й,голоси́стый,голосова́ть/проголосова́ть,голосова́ние
-отхвати́ть от-+хвати́ть pf отхва́тывать 4c+p def:(c)to_[[chop_off]],to_[[cut_off]];(c)to_[[perform]]_(a_[[dance]])_[[dashingly]]
+отхвати́ть от-+хвати́ть pf отхва́тывать 4c+p def:(c)to_[[chop_off]],to_[[cut_off]];(c)to_[[perform]]_(a_[[dance]])_[[dashingly]] rel:хвати́ть:хвати́ться,хвата́ть,хва́тка:хва́ткий,хвата́тельный,хват
 отхва́тывать - impf отхвати́ть,отхвата́ть 1a rel:хвати́ть:хвати́ться,хвата́ть,хва́тка:хва́ткий,хвата́тельный,хват
 
 [defn]
@@ -255,6 +352,20 @@ Onomatopoeic.
 From {{affix|ru|отхвати́ть|-ывать}} or {{affix|ru|отхвата́ть|-ывать}}.
 
 отхвата́ть от-+хвата́ть pf отхва́тывать 1a+p def:(lc)to_[[cut_off]]_in_several_[[snips]] rel:хвати́ть:хвати́ться,хвата́ть,хва́тка:хва́ткий,хвата́тельный,хват
+
+
+
+
+
+
+------------- from here --------------
+
+
+
+
+
+
+
 прикати́ть при-+кати́ть pf прика́тывать 4c+p
 [don't use] прика́тывать прикати́ть+-ывать impf прикати́ть 1a
 [don't use] прика́тывать приката́ть+-ывать impf приката́ть 1a
