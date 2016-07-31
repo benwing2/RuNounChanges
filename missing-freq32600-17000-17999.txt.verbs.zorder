@@ -316,9 +316,9 @@ Onomatopoeic.
 
 проруби́ть про-+руби́ть pf проруба́ть 4c+p def:to_[[cut]]_[[through]]_{{i|with_an_[[axe]]}};to_[[cut]]_(a_[[passage]],[[swathe]],etc.)_[[through]]_[[trees]] rel:руби́ть/поруби́ть,рубле́ние,ру́бленый,ру́бка,ру́бище,рубе́ц:рубцо́вый:ру́бчик:ру́бчатый,рубцева́ться/зарубцева́ться
 проруба́ть проруби́ть+-а́ть impf проруби́ть 1a def:to_[[cut]]_[[through]];to_[[cut]]_(a_[[passage]],[[swathe]],etc.)_[[through]]_[[trees]] rel:руби́ть/поруби́ть,рубле́ние,ру́бленый,ру́бка,ру́бище,рубе́ц:рубцо́вый:ру́бчик:ру́бчатый,рубцева́ться/зарубцева́ться
-подсади́ть под-+сади́ть pf подса́живать 4c+p def:to_[[seat]]_{{i|{{m|ru|к}}_[[next_to]]}};to_[[plant]]_(more_of)_{{i|+_{{genitive}}}};to_[[help]]_(someone)_[[up]]_{{i|{{m|ru|в}}_+_{{glink|accusative}}_into,or_{{m|ru|на}}_+_{{glink|accusative}}_onto}} rel:сади́ть/сажа́ть|g=impf/посади́ть,сади́ться/сесть
-подса́живать подсади́ть+-ивать impf подсади́ть 1a def:to_[[seat]]_{{i|{{m|ru|к}}_[[next_to]]}};to_[[plant]]_(more_of)_{{i|+_{{genitive}}}};to_[[help]]_(someone)_[[up]]_{{i|{{m|ru|в}}_+_{{glink|accusative}}_into,or_{{m|ru|на}}_+_{{glink|accusative}}_onto}} rel:сади́ть/сажа́ть|g=impf/посади́ть,сади́ться/сесть der:поса́живаться/подсе́сть
-освежи́ть о-+све́жий+-и́ть pf освежа́ть 4b+p der:#ref,освеже́ние,освежи́тельный,освежа́ющий rel:освежа́ющий,све́жий:све́жесть,свеже́ть/посвеже́ть,просвежа́ть/просвежи́ть def:to_[[refresh]]_{{i|also_one's_[[memory]],[[knowledge]],etc.}};to_[[touch_up]]_([[colors]]_in_a_[[painting]])
+подсади́ть под-+сади́ть pf подса́живать 4c+p def:to_[[seat]]_{{i|{{m|ru|к}}_[[next_to]]}};to_[[plant]]_(more_of)_{{i|+_{{genitive}}}};to_[[help]]_(someone)_[[up]]_{{i|{{m|ru|в}}_+_{{glink|accusative}}_into,or_{{m|ru|на}}_+_{{glink|accusative}}_onto}} rel:подса́живаться/подсе́сть,сади́ть/сажа́ть|g=impf/посади́ть,сади́ться/сесть
+подса́живать подсади́ть+-ивать impf подсади́ть 1a def:to_[[seat]]_{{i|{{m|ru|к}}_[[next_to]]}};to_[[plant]]_(more_of)_{{i|+_{{genitive}}}};to_[[help]]_(someone)_[[up]]_{{i|{{m|ru|в}}_+_{{glink|accusative}}_into,or_{{m|ru|на}}_+_{{glink|accusative}}_onto}} rel:сади́ть/сажа́ть|g=impf/посади́ть,сади́ться/сесть der:подса́живаться/подсе́сть
+освежи́ть о-+све́жий+-и́ть pf освежа́ть 4b+p der:#ref,освеже́ние,освежи́тельный,освежа́ющий rel:све́жий:све́жесть,свеже́ть/посвеже́ть,просвежа́ть/просвежи́ть def:to_[[refresh]]_{{i|also_one's_[[memory]],[[knowledge]],etc.}};to_[[touch_up]]_([[colors]]_in_a_[[painting]])
 освежа́ть освежи́ть+-а́ть impf освежи́ть 1a der:#ref,освежа́ющий rel:освеже́ние,освежи́тельный,све́жий:све́жесть,свеже́ть/посвеже́ть,просвежа́ть/просвежи́ть,просвежа́ть/просвежи́ть def:to_[[refresh]]_{{i|also_one's_[[memory]],[[knowledge]],etc.}};to_[[touch_up]]_([[colors]]_in_a_[[painting]])
 [already done] развози́ть раз-+вози́ть impf развезти́ 4c+p 
 [already done] развезти́ раз-+везти́ pf развози́ть 7b/b(9)+p|развезти́|развёз
@@ -366,10 +366,57 @@ From {{affix|ru|отхвати́ть|-ывать}} or {{affix|ru|отхвата�
 
 
 
-прикати́ть при-+кати́ть pf прика́тывать 4c+p
-[don't use] прика́тывать прикати́ть+-ывать impf прикати́ть 1a
-[don't use] прика́тывать приката́ть+-ывать impf приката́ть 1a
-лохма́тить ? impf ? 4a+p
+прикати́ть при-+кати́ть pf прика́тывать 4c+p def:(tr)to_[[roll]]_{{i|somewhere}};(in)(c)to_[[arrive]],to_[[come]]_[[roll_in|rolling_in]] der:#ref rel:приката́ть,кати́ть/покати́ть,кати́ться/покати́ться,ката́ть/поката́ть/вы́катать,ката́ться/поката́ться,като́к,кату́шка,ката́лка
+[don't use] прика́тывать прикати́ть+-ывать impf прикати́ть 1a def:(tr)to_[[roll]]_{{i|somewhere}};(in)(c)to_[[arrive]],to_[[come]]_[[roll_in|rolling_in]] der:#ref rel:кати́ть/покати́ть,кати́ться/покати́ться,ката́ть/поката́ть/вы́катать,ката́ться/поката́ться,като́к,кату́шка,ката́лка
+[don't use] прика́тывать приката́ть+-ывать impf приката́ть 1a def:(lc)to_[[press]]_[[down]]_by_[[rolling]],to_[[roll]]_[[smooth]] rel:-
+
+
+
+==Russian==
+
+===Pronunciation===
+* {{ru-IPA|прика́тывать}}
+
+===Etymology 1===
+{{affix|ru|прикати́ть|-ывать}}
+
+====Verb====
+{{ru-verb|прика́тывать|impf|pf=прикати́ть}}
+
+# {{lb|ru|transitive}} to [[roll]] {{i|somewhere}}
+# {{lb|ru|intransitive|colloquial}} to [[arrive]], to [[come]] [[roll in|rolling in]]
+
+=====Conjugation=====
+{{ru-conj|1a|impf|прика́тыва}}
+
+=====Derived terms=====
+* {{l|ru|прика́тываться|g=impf}}, {{l|ru|прикати́ться|g=pf}}
+
+===Etymology 2===
+{{affix|ru|приката́ть|-ывать}}
+
+====Verb====
+{{ru-verb|прика́тывать|impf|pf=приката́ть}}
+
+# {{lb|ru|low|_|colloquial}} to [[press]] [[down]] by [[rolling]], to [[roll]] [[smooth]]
+
+=====Conjugation=====
+{{ru-conj|1a|impf|прика́тыва}}
+
+===Related terms===
+* {{l|ru|кати́ть|g=impf}}, {{l|ru|покати́ть|g=pf}}
+* {{l|ru|кати́ться|g=impf}}, {{l|ru|покати́ться|g=pf}}
+* {{l|ru|ката́ть|g=impf}}, {{l|ru|поката́ть|g=pf}}, {{l|ru|вы́катать|g=pf}}
+* {{l|ru|ката́ться|g=impf}}, {{l|ru|поката́ться|g=pf}}
+* {{l|ru|като́к}}
+* {{l|ru|кату́шка}}
+* {{l|ru|ката́лка}}
+
+[[ru:прикатывать]]
+
+
+приката́ть при-+ката́ть pf прика́тывать 1a+p def:(lc)to_[[press]]_[[down]]_by_[[rolling]],to_[[roll]]_[[smooth]] rel:прикати́ть,прика́тываться/прикати́ться,кати́ть/покати́ть,кати́ться/покати́ться,ката́ть/поката́ть/вы́катать,ката́ться/поката́ться,като́к,кату́шка,ката́лка
+лохма́тить лохма́тый+-ить impf взлохма́тить,разлохма́тить 4a+p def:(c)to_[[tousle]],to_[[dishevel]],to_[[ruffle]] rel:лохма́тый,лохмо́тья syn:взлохма́чивать
 
 ====Derived terms====
 {{top2}}
@@ -392,24 +439,24 @@ From {{affix|ru|отхвати́ть|-ывать}} or {{affix|ru|отхвата�
 * {{l|ru|разлохма́титься}}
 {{bottom2}}
 
-взлохма́тить вз-+лохма́тить pf взлохма́чивать 4a+p
-взлохма́чивать взлохма́тить+-ивать impf взлохма́тить 1a
-улучи́ть у-+лучи́ть pf улича́ть 4b+p
-улуча́ть улучи́ть+-а́ть impf улучи́ть 1a
-проучи́ть про-+учи́ть pf проу́чивать 4c+p
-проу́чивать проучи́ть+-ивать impf проучи́ть 1a
+взлохма́тить вз-+лохма́тить pf взлохма́чивать 4a+p def:(c)to_[[tousle]],to_[[dishevel]],to_[[ruffle]] der:#ref
+взлохма́чивать взлохма́тить+-ивать impf взлохма́тить 1a def:(c)to_[[tousle]],to_[[dishevel]],to_[[ruffle]] syn:лохма́тить der:#ref
+улучи́ть у-+лучи́ть pf улича́ть 4b+p def:to_[[find]]_(time);to_[[seize]]_(a_[[moment]]) rel:лучи́ть:лучи́ться,лу́чник,луч:лучево́й,лучи́стый
+улуча́ть улучи́ть+-а́ть impf улучи́ть 1a def:to_[[find]]_(time);to_[[seize]]_(a_[[moment]]) rel:лучи́ть:лучи́ться,лу́чник,луч:лучево́й,лучи́стый
+проучи́ть про-+учи́ть pf проу́чивать 4c+p def:(po)to_[[teach]]_{{i|for_some_time}};(c)to_[[teach_someone_a_lesson]] der:проучи́ться
+проу́чивать проучи́ть+-ивать impf проучи́ть 1a def:(c)to_[[teach_someone_a_lesson|teach_(someone)_a_lesson]]
 отучи́ть от-+учи́ть pf отуча́ть,оту́чивать 4c+p
 
 [definition]
-# [заставить отвыкнуть]
+# to [[force]] to [[break]] a [[habit]]
 # {{lb|ru|perfective only}} to [[finish]] [[teaching]], to [[finish]] [[learning]]
 
-оту́чивать отучи́ть+-ивать impf отучи́ть 1a alt:отуча́ть
-отуча́ть отучи́ть+-а́ть impf отучи́ть 1a alt:оту́чивать
-мельтеши́ть ? impf-intr ? 4b der:мельтеши́ться|g=impf,замельтеши́ть|g=pf,помельтеши́ть|g=pf
+оту́чивать отучи́ть+-ивать impf отучи́ть 1a def:altof:отуча́ть
+отуча́ть отучи́ть+-а́ть impf отучи́ть 1a alt:оту́чивать def:to_[[force]]_to_[[break]]_a_[[habit]]
+мельтеши́ть ? impf-intr ? 4b der:мельтеши́ться|g=impf,замельтеши́ть|g=pf,помельтеши́ть|g=pf,мельтеше́ние,мельтешня́ def:(c)to_[[flicker]];(c)to_[[flash]]_before_one's_[[eyes]] syn:*(flicker)мельтеши́ться;*(flash_before_one's_eyes)мелька́ть
 подтащи́ть под-+тащи́ть pf подта́скивать 4c+p def:to_[[drag]]_somewhere rel:подтаска́ть
 подтаска́ть под-+таска́ть pf подта́скивать 1a+p def:(lc)to_[[drag]]_somewhere_in_[[stages]] rel:подтащи́ть
-подта́скивать - impf подтащи́ть,подтаска́ть 1a def:-
+подта́скивать - impf подтащи́ть,подтаска́ть 1a
 
 ===Etymology===
 From {{affix|ru|подтащи́ть|alt1=подтаск-|-ивать}} or from {{affix|ru|подта́скивать|-ивать}}.
@@ -418,8 +465,8 @@ From {{affix|ru|подтащи́ть|alt1=подтаск-|-ивать}} or from 
 # to [[drag]] somewhere, {{g|pf}} — {{m|ru|подтащи́ть}}
 # {{lb|ru|low|_|colloquial}} to [[drag]] somewhere in [[stages]], {{g|pf}} — {{m|ru|подтаска́ть}}
 
-распоро́ть рас-+поро́ть pf поро́ть,распа́рывать 10c+p|распоро́|распо́р
-распа́рывать распоро́ть+-ывать impf распоро́ть 1a
+распоро́ть рас-+поро́ть pf поро́ть,распа́рывать 10c+p|распоро́|распо́р def:to_[[unstitch]],to_[[tear]]_at_the_[[seams]],{{g|pf}}_—_{{m|ru|поро́ть}}_or_{{m|ru|распа́рывать}};(c)to_[[rip]]_[[open]]_([[skin]],a_[[body_part]],etc.)_with_a_[[sharp]]_object,{{g|pf}}_—_only_{{m|ru|распа́рывать}}
+распа́рывать распоро́ть+-ывать impf распоро́ть 1a def:to_[[unstitch]],to_[[tear]]_at_the_[[seams]];(c)to_[[rip]]_[[open]]_([[skin]],a_[[body_part]],etc.)_with_a_[[sharp]]_object syn:*(unstitch)поро́ть
 крутану́ть ? pf ? 3b|крутан|ppp=- der:круану́ться
 ля́згнуть ? pf-intr ? 3a
 вспугну́ть вс-+пугну́ть pf вспу́гивать 3b+p
@@ -453,7 +500,8 @@ From {{affix|ru|подтащи́ть|alt1=подтаск-|-ивать}} or from 
 подёрнуть по-+дёрнуть pf-impers - 3a+p|подёр
 обстреля́ть об-+стреля́ть pf обстре́ливать 1a+p
 обстре́ливать обстреля́ть+-ивать impf обстреля́ть 1a
-щеголя́ть ? impf-intr ? 1a der:защеголя́ть,перещеголя́ть,пощеголя́ть
+щеголя́ть ? impf-intr щегольну́ть 1a der:щегольну́ть,защеголя́ть,перещеголя́ть,пощеголя́ть
+щегольну́ть ?щеголя́ть+-ну́ть pf-intr щеголя́ть 3b
 загуля́ть за-+гуля́ть pf-intr загу́ливать 1a
 загу́ливать загуля́ть+-ивать impf-intr загуля́ть 1a
 уте́чь у-+течь pf-intr утека́ть 8b|утёк|уте́чь
