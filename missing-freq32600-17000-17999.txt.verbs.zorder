@@ -481,7 +481,7 @@ From {{affix|ru|подтащи́ть|alt1=подтаск-|-ивать}} or from 
 ===Verb===
 {{ru-verb-alt-ё|ёкнуть|pf}}
 
-ёкнуть ёкать+-нуть pf-intr ёкать 3a
+ёкнуть ёкать+-нуть pf-intr ёкать 3a def:(c)to_[[skip_a_beat]]_{{i|of_the_heart}};(c)to_make_a_[[sound]]_like_a_[[hiccup]] rel:-
 [don't use]
 
 екать
@@ -491,8 +491,17 @@ From {{affix|ru|подтащи́ть|alt1=подтаск-|-ивать}} or from 
 ===Verb===
 {{ru-verb-alt-ё|ёкать|impf}}
 
-е́кать ? impf-intr ? 1a def:[о_типе_русского_произношения]
-ёкать ? impf-intr ёкнуть 1a def:[о_непроизвольных_звуках,_вздргивании]
+[don't use] е́кать е+-кать impf-intr е́кнуть 1a def:{{lb|ru|linguistics}}_to_pronounce_unstressed_''e''_as_such_rather_than_as_''i''_(as_characteristic_of_some_Central_and_Northern_Russian_dialects)\;_opposed_to_{{m|ru|и́кать}} der:е́канье syn:э́кать ant:и́кать,я́кать rel:-
+
+===See also===
+* {{l|ru|а́кать}}, {{l|ru|о́кать}}
+* {{pedialite|Vowel reduction in Russian}}
+
+ёкать - impf-intr ёкнуть 1a def:(c)to_[[skip_a_beat]]_{{i|of_the_heart}};(c)to_make_a_[[sound]]_like_a_[[hiccup]] rel:-
+
+===Etymology===
+Onomatopoeic (see also {{affix|ru|-кать}}).
+
 подернуть
 
 ==Russian==
@@ -500,22 +509,27 @@ From {{affix|ru|подтащи́ть|alt1=подтаск-|-ивать}} or from 
 ===Verb===
 {{ru-verb-alt-ё|подёрнуть|pf}}
 
-подёрнуть по-+дёрнуть pf-impers - 3a+p|подёр
-обстреля́ть об-+стреля́ть pf обстре́ливать 1a+p
-обстре́ливать обстреля́ть+-ивать impf обстреля́ть 1a
-щеголя́ть ? impf-intr щегольну́ть 1a der:щегольну́ть,защеголя́ть,перещеголя́ть,пощеголя́ть
-щегольну́ть ?щеголя́ть+-ну́ть pf-intr щеголя́ть 3b
-загуля́ть за-+гуля́ть pf-intr загу́ливать 1a
-загу́ливать загуля́ть+-ивать impf-intr загуля́ть 1a
-уте́чь у-+течь pf-intr утека́ть 8b|утёк|уте́чь
-утека́ть уте́чь+alt1=утек-+-а́ть impf-intr уте́чь 1a
-отси́живаться r impf отсиде́ться 1a rel:#ref
-отсиде́ться r pf отси́живаться 5b rel:#ref
-маски́роваться r impf ? 2a rel:#ref
-дорва́ться ? pf дорыва́ться 6°b/c'' def:[достичь]
-[don't use] дорыва́ться ? impf дорва́ться 1a
-[don't use] дорыва́ться ? impf доры́ться 1a
-доры́ться ? impf дорыва́ться 12a|доры́|доро́
+подёрнуть по-+дёрнуть pf - 3a+p def:{{lb|ru|often|impersonal}}_to_[[cover]],to_[[coat]]_{{i|with_a_[[thin]]_[[layer]]}};ux:[[река|реку́]]_'''подёрнуло'''_[[тонкий|то́нким]]_[[лёд|льдом]]|the_river_was_covered_with_thin_ice;ux:[[моро́з]]_'''подёрнул'''_[[река|реку́]]_[[тонкий|то́нким]]_[[слой|сло́ем]]_[[лёд|льда]]|the_frost_covered_the_river_with_a_thin_layer_of_ice;to_[[envelop]];ux:[[дым]]_'''подёрнул'''_[[дерево|дере́вья]]|smoke_enveloped_the_trees rel:дёргать/дёрнуть,дёргаться/дёрнуться,дёрганье:дёргание
+[already done] обстреля́ть об-+стреля́ть pf обстре́ливать 1a+p
+[already done] обстре́ливать обстреля́ть+-ивать impf обстреля́ть 1a
+щеголя́ть щёголь+-я́ть impf-intr щегольну́ть 1a der:щегольну́ть,защеголя́ть,перещеголя́ть,пощеголя́ть def:(io)to_[[dress]]_like_a_[[dandy]],to_[[wear]]_[[fancy]]_[[clothes]];(c)to_[[flaunt]]_{{i|+_{{glink|instrumental}}}};(c)to_[[sport]]_{{i|{{m|ru|в}}_+_{{glink|prepositional}}}} rel:щёголь:щегольско́й,щегольство́,щеголева́тый
+щегольну́ть ?щеголя́ть+-ну́ть pf-intr щеголя́ть 3b def:(c)to_[[flaunt]]_{{i|+_{{glink|instrumental}}}};(c)to_[[sport]]_{{i|{{m|ru|в}}_+_{{glink|prepositional}}}} rel:щёголь:щегольско́й,щегольство́,щеголева́тый
+загуля́ть за-+гуля́ть pf-intr загу́ливать 1a def:(lc)to_go_on_a_[[bender]],to_[[paint_the_town_red]],to_[[binge_drinking|binge-drink]] rel:загуля́ться,гуля́ть,гуля́нье,гуля́ка
+загу́ливать загуля́ть+-ивать impf-intr загуля́ть 1a def:(lc)to_go_on_a_[[bender]],to_[[paint_the_town_red]],to_[[binge_drinking|binge-drink]] rel:загуля́ться,гуля́ть,гуля́нье,гуля́ка
+уте́чь у-+течь pf-intr утека́ть 8b|утёк|уте́чь def:to_[[leak]],to_[[flow]]_[[away]],to_[[escape]]_{{i|of_liquid_or_gas}};to_[[fly_by]],to_[[pass]]_[[quickly]]_{{i|of_time}} rel:уте́чка,течь,тече́ние,теку́щий,теку́чий
+утека́ть уте́чь+alt1=утек-+-а́ть impf-intr уте́чь 1a def:to_[[leak]],to_[[flow]]_[[away]],to_[[escape]]_{{i|of_liquid_or_gas}};to_[[fly_by]],to_[[pass]]_[[quickly]]_{{i|of_time}} rel:уте́чка,течь,тече́ние,теку́щий,теку́чий
+отси́живаться r impf отсиде́ться 1a rel:#ref def:(c)to_[[hide]]_for_[[awhile]],to_[[take_cover]];(c)to_[[sit_out|sit_it_out]],to_not_[[participate]]
+отсиде́ться r pf отси́живаться 5b rel:#ref def:(c)to_[[hide]]_for_[[awhile]],to_[[take_cover]];(c)to_[[sit_out|sit_it_out]],to_not_[[participate]]
+маскирова́ться r impf замаскирова́ться 2a def:to_[[put_on]]_a_[[mask]];{{lb|ru|military}}_to_[[camouflage]]_oneself;to_[[dress_up]]_as_{{gloss|wear_a_costume}}_{{i|+_{{glink|instrumental}}}} rel:#ref,замаскиро́ванный,маскиро́вка:маскиро́вочный,ма́ска,демаски́ровать,маскара́д:маскара́дный
+замаскирова́ться r pf маскирова́ться,замаскиро́вываться 2a def:to_[[put_on]]_a_[[mask]];{{lb|ru|military}}_to_[[camouflage]]_oneself;to_[[dress_up]]_as_{{gloss|wear_a_costume}}_{{i|+_{{glink|instrumental}}}} rel:#ref,замаскиро́ванный,маскиро́вка:маскиро́вочный,ма́ска,демаски́ровать,маскара́д:маскара́дный
+дорва́ть до-+рвать pf дорыва́ть 6°b/c+p def:(c)to_[[wear_out]]_[[completely]]_([[shoes]],[[clothes]],etc.);to_[[finish]]_[[plucking]],to_[[pick]]_the_[[last]]_of_([[flowers]]) der:#ref,дорыва́ние rel:рвать/порва́ть/вы́рвать,рва́ться/порва́ться
+[don't use] дорыва́ть до-+-рыва́ть+t2=to_[[tear]] impf дорва́ть 1a def:(c)to_[[wear_out]]_[[completely]]_([[shoes]],[[clothes]],etc.);to_[[finish]]_[[plucking]],to_[[pick]]_the_[[last]]_of_([[flowers]]) der:#ref,дорыва́ние rel:рвать/порва́ть/вы́рвать,рва́ться/порва́ться
+[don't use] дорыва́ть до-+-рыва́ть+t2=to_[[dig]] impf доры́ть 1a def:to_[[finish]]_[[digging]] der:#ref rel:рыть/вы́рыть,рытьё,ры́твина,ров
+доры́ть до-+рыть impf дорыва́ть 12a+p|доры́|доро́ def:to_[[finish]]_[[digging]] der:#ref rel:рыть/вы́рыть,рытьё,ры́твина,ров
+дорва́ться r pf дорыва́ться 6°b/c'' def:(c)to_[[pounce]]_on,to_[[fall]]_[[greedily]]_on,to_[[throw]]_oneself_at_{{i|food,etc.}}_{{i|{{m|ru|до}}}};(c)to_[[cause]]_oneself_[[trouble]]_through_[[frivolous]]_[[behavior]];(lc)to_[[walk]]_[[up_to]]_in_[[rags]]_{{i|{{m|ru|до}}}} rel:#ref,рвать/порва́ть/вы́рвать,рва́ться/порва́ться
+[don't use] дорыва́ться r impf дорва́ться 1a def:(c)to_[[pounce]]_on,to_[[fall]]_[[greedily]]_on,to_[[throw]]_oneself_at_{{i|food,etc.}}_{{i|{{m|ru|до}}}};(c)to_[[cause]]_oneself_[[trouble]]_through_[[frivolous]]_[[behavior]];(lc)to_[[walk]]_[[up_to]]_in_[[rags]]_{{i|{{m|ru|до}}}} rel:#ref,рвать/порва́ть/вы́рвать,рва́ться/порва́ться
+[don't use] дорыва́ться r impf доры́ться 1a def:to_[[dig]]_to_the_point_of_[[finding]]_something_{{i|{{m|ru|до}}}} rel:#ref,рыть/вы́рыть,рытьё,ры́твина,ров
+доры́ться r impf дорыва́ться 12a|доры́|доро́ def:to_[[dig]]_to_the_point_of_[[finding]]_something_{{i|{{m|ru|до}}}} rel:#ref,рыть/вы́рыть,рытьё,ры́твина,ров
 прорезаться
 
 ==Russian==
@@ -532,7 +546,8 @@ From {{affix|ru|подтащи́ть|alt1=подтаск-|-ивать}} or from 
 ====Verb====
 {{ru-verb|прореза́ться|impf|pf=проре́заться}}
 
-# [FIXME]
+# {{lb|ru|intransitive}} to [[cut]] [[through]] {{i|of [[teeth]]}}
+#: {{ru-ux|[[у]] [[ребёнок|ребёнка]] '''прореза́ются''' [[зуб|зу́бы]]|the child is [[teethe|teething]]|inline=y}}
 # {{passive of|прореза́ть|lang=ru}}
 
 =====Conjugation=====
@@ -547,7 +562,8 @@ From {{affix|ru|подтащи́ть|alt1=подтаск-|-ивать}} or from 
 ====Verb====
 {{ru-verb|проре́заться|pf|impf=прореза́ться|impf2=проре́зываться}}
 
-# [FIXME]
+# {{lb|ru|intransitive}} to [[cut]] [[through]] {{i|of [[teeth]]}}
+#: {{ru-ux|[[у]] [[ребёнок|ребёнка]] '''проре́зались''' [[зуб|зу́бы]] [[на]] [[год]]|the child [[teethe|teethed]] for a [[year]]|inline=y}}
 # {{passive of|проре́зать|lang=ru}}
 
 =====Conjugation=====
@@ -555,33 +571,96 @@ From {{affix|ru|подтащи́ть|alt1=подтаск-|-ивать}} or from 
 
 ===Related terms===
 * {{l|ru|прореза́ть|g=impf}}, {{l|ru|проре́зывать|g=impf}}, {{l|ru|проре́зать|g=pf}}
-* FIXME
+* {{l|ru|ре́зать|g=impf}}, {{l|ru|разре́зать|g=pf}}, {{l|ru|заре́зать|g=pf}}, {{l|ru|сре́зать|g=pf}}
+* {{l|ru|ре́заться}}
+* {{l|ru|ре́заный}}
+* {{l|ru|ре́зание}}
+* {{l|ru|ре́зка}}
+* {{l|ru|ре́зкий}}, {{l|ru|ре́зко}}, {{l|ru|ре́зкость}}
+* {{l|ru|резно́й}}
+* {{l|ru|ре́зчик}}
+* {{l|ru|ре́зальщик}}
 
-смерка́ться ? impf-impers сме́ркнуться 1a
-сме́ркнуться ? pf-impers смерка́ться 3°a
-отыска́ться r pf оты́скиваться 6c rel:#ref
-оты́скиваться r impf отыска́ться 1a rel:#ref
+смерка́ться сме́ркнуться+-а́ть impf-impers сме́ркнуться 1a rel:ме́ркнуть/поме́ркнуть,мрак,мо́рок def:to_become_[[dark]]_{{i|referring_to_the_day}}
+сме́ркнуться с-+ме́ркнуть+-ся pf-impers смерка́ться 3°a rel:ме́ркнуть/поме́ркнуть,мрак,мо́рок def:to_become_[[dark]]_{{i|referring_to_the_day}}
+отыска́ться r pf оты́скиваться 6c rel:#ref,иска́ть,иска́ние,иска́тель,иско́мый def:to_be_[[found]],to_[[appear]],to_[[turn_up]]
+оты́скиваться r impf отыска́ться 1a rel:#ref,иска́ть,иска́ние,иска́тель,иско́мый def:to_be_[[found]],to_[[appear]],to_[[turn_up]]
 оклема́ться ? pf ? 1a
 вля́паться ? pf вля́пываться 1a
 вля́пываться ? impf вля́паться 1a
-смота́ться ? pf сма́тываться 1a
-сма́тываться ? impf смота́ться 1a
-чертыха́ться ? impf ? 1a ??der:зачертыха́ться
+смота́ть с-+мота́ть pf сма́тывать 1a+p der:#ref rel:мота́ть/мотну́ть def:to_[[wind]]_[[completely]],to_[[wind_up]]_(a_[[spool]]_of_[[rope]],a_[[fishing]]_[[line]],etc.);to_[[unwind]];(lc){{lb|ru|idiomatic}};ux:'''смота́ть'''_[[удочка|у́дочки]]|to_[[leave]],to_[[scram]],to_[[skedaddle]],to_[[vamoose]]
+сма́тывать смота́ть+-ывать impf смота́ть 1a der:#ref rel:мота́ть/мотну́ть
+смота́ться r pf сма́тываться 1a def:(lc)to_[[leave]],to_[[scram]],to_[[skedaddle]],to_[[vamoose]] rel:#ref,мота́ть/мотну́ть
+сма́тываться r impf смота́ться 1a def:(lc)to_[[leave]],to_[[scram]],to_[[skedaddle]],to_[[vamoose]] rel:#ref,мота́ть/мотну́ть
+чертыха́ться чёрт+-ыха́ть+-ся impf чертыхну́ться 1a der:зачертыха́ться def:(c)to_[[curse]],to_[[swear]],to_[[cuss]] rel:чёрт:чертёнок:чёртов,черто́вский:черто́вски,чертовщи́на
+чертыхну́ться чертыха́ться+-ну́ть pf чертыха́ться 3b def:(c)to_[[curse]],to_[[swear]],to_[[cuss]] rel:чёрт:чертёнок:чёртов,черто́вский:черто́вски,чертовщи́на
 [already done] отлуча́ться ? impf отлучи́ться 1a
 [already done] отлучи́ться ? pf отлуча́ться 4b
-угоща́ться r impf угости́ться 1a rel:#ref
-угости́ться r pf угоща́ться 4b rel:#ref
-припере́ться ? pf припира́ться 9b|припёр|припр
-припира́ться ? impf припере́ться 1a
-оска́литься r pf оска́ливаться 4a rel:#ref
-оска́ливаться r impf оска́литься 1a rel:#ref
+угоща́ться r impf угости́ться 1a rel:#ref,угоще́ние,rel:гости́ть,гость:гостево́й,гости́ница,гостеприи́мный:гостеприи́мство def:(c)to_[[partake]]_in,to_[[help]]_oneself_to_{{i|+_{{glink|instrumental}}}}
+угости́ться r pf угоща́ться 4b rel:#ref,угоще́ние,rel:гости́ть,гость:гостево́й,гости́ница,гостеприи́мный:гостеприи́мство def:(c)to_[[partake]]_in,to_[[help]]_oneself_to_{{i|+_{{glink|instrumental}}}}
+припере́ть при-+пере́ть pf припира́ть 9b+p|припёр|припр def:to_[[secure]]_(a_[[door]],etc.),to_[[close]]_[[tightly]]_so_it_can't_be_[[opened]];[[press]]_(something)_[[firmly]]_[[against]]_{{i|{{m|ru|к}}}};(c)to_[[set]]_[[ajar]]_(a_[[door]],[[window]],etc.);{{lb|ru|rude|low|\u|colloquial}}_to_[[carry]],to_[[take]];{{lb|ru|rude|low|\u|colloquial}}_to_[[come]] der:#ref,пере́ть/попере́ть/запере́ть
+припира́ть при-+-пира́ть impf припере́ть 1a def:to_[[secure]]_(a_[[door]],etc.),to_[[close]]_[[tightly]]_so_it_can't_be_[[opened]];[[press]]_(something)_[[firmly]]_[[against]]_{{i|{{m|ru|к}}}};(c)to_[[set]]_[[ajar]]_(a_[[door]],[[window]],etc.);{{lb|ru|rude|low|\u|colloquial}}_to_[[carry]],to_[[take]];{{lb|ru|rude|low|\u|colloquial}}_to_[[come]] der:#ref,пере́ть/попере́ть/запере́ть
+припере́ться r pf припира́ться 9b|припёр|припр rel:#ref,пере́ть/попере́ть/запере́ть def:{{lb|ru|rude|low|\u|colloquial}}_to_[[come]]_{{i|uninvited_or_inappropriately}}
+припира́ться r impf припере́ться 1a rel:#ref,пере́ть/попере́ть/запере́ть def:{{lb|ru|rude|low|\u|colloquial}}_to_[[come]]_{{i|uninvited_or_inappropriately}}
+оска́литься r pf оска́ливаться 4a rel:#ref,ска́лить def:to_[[bare_one's_teeth]]
+оска́ливаться r impf оска́литься 1a rel:#ref,ска́лить def:to_[[bare_one's_teeth]]
 [already done] ссутулиться
-накрени́ться ? pf накреня́ться 4b
-накреня́ться ? impf накрени́ться 1a
-прилепи́ться ? pf прилепля́ться 4c
-прилепля́ться ? impf прилепи́ться 1a
-скупи́ться r impf ? 4b ??der:поскупи́ться
-серебри́ться r impf ? 4b ??der:засеребри́ться
+крени́ть - impf накрени́ть 4b+p def:(tr)to_[[tilt]],to_[[tip]] rel:- syn:накреня́ть
+
+====Derived terms====
+{{top2}}
+''imperfective''
+* {{l|ru|крени́ться}}
+* {{l|ru|накреня́ть}}
+* {{l|ru|накреня́ться}}
+* (no equivalent)
+{{mid2}}
+''perfective''
+* (no equivalent)
+* {{l|ru|накрени́ть}}
+* {{l|ru|накрени́ться}}
+* {{l|ru|покрени́ться}}
+{{bottom2}}
+
+накрени́ть на-+крени́ть pf крени́ть,накреня́ть 4b+p def:{{lb|ru|also|impersonal|transitive}}_to_[[tilt]],to_[[tip]];ux:[[лодка|ло́дку]]_'''накрени́ло'''|the_[[boat]]_[[list|listed]] der:#ref rel:крени́ть:крени́ться
+накреня́ть накрени́ть+-я́ть impf накрени́ть 1a def:{{lb|ru|also|impersonal|transitive}}_to_[[tilt]],to_[[tip]];ux:[[лодка|ло́дку]]_'''накреня́ет'''|the_[[boat]]_is_[[list|listing]] syn:крени́ть der:#ref rel:крени́ть
+крени́ться r impf накрени́ться 4b def:(in)to_[[tilt]],to_[[tip]],to_[[list]] syn:некреня́ться rel:#ref
+накрени́ться r pf накреня́ться 4b def:(in)to_[[tilt]],to_[[tip]],to_[[list]] rel:#ref,крени́ть:крени́ться
+накреня́ться r impf накрени́ться 1a def:(in)to_[[tilt]],to_[[tip]],to_[[list]] syn:крени́ться rel:#ref,крени́ть:крени́ться
+прилепи́ть при-+лепи́ть pf прилепля́ть 4c+p der:#ref note:{{m|ru|к}} def:(tr)to_[[stick]]_to,to_[[attach]]_to;(c)to_[[give]]_(a_[[nickname]])_to rel:лепи́ть/вы́лепить/слепи́ть,лепи́ться,ле́пка,лепно́й
+прилепля́ть прилепи́ть+-я́ть impf прилепи́ть 1a der:#ref note:{{m|ru|к}} def:(tr)to_[[stick]]_to,to_[[attach]]_to;(c)to_[[give]]_(a_[[nickname]])_to rel:лепи́ть/вы́лепить/слепи́ть,лепи́ться,ле́пка,лепно́й
+прилепи́ться r pf прилепля́ться 4c rel:#ref,лепи́ть/вы́лепить/слепи́ть,лепи́ться,ле́пка,лепно́й def:(in)to_[[stick]]_to_{{i|{{m|ru|к}}}}
+прилепля́ться r impf прилепи́ться 1a rel:#ref,лепи́ть/вы́лепить/слепи́ть,лепи́ться,ле́пка,лепно́й def:(in)to_[[stick]]_to_{{i|{{m|ru|к}}}}
+скупи́ться скупо́й+-и́ть+-ся impf поскупи́ться 4b der:поскупи́ться rel:скупо́й:ску́по:ску́пость def:to_be_[[sparing]]_with,to_be_[[stingy]]_with,to_[[skimp]],to_[[scrimp]]_{{i|{{m|ru|на}}_+_{{glink|accusative}}_{{glink|plural}}}}
+поскупи́ться по-+скупи́ться pf скупи́ться 4b rel:скупо́й:ску́по:ску́пость def:to_be_[[sparing]]_with,to_be_[[stingy]]_with,to_[[skimp]],to_[[scrimp]]_{{i|{{m|ru|на}}_+_{{glink|accusative}}_{{glink|plural}}}}
+серебри́ть серебро́+-и́ть impf посеребри́ть 4b+p def:to_[[coat]]_with_[[silver]],to_[[silver-plate]] rel:серебро́:сере́бряный:серебри́стый,сере́бряник
+
+====Derived terms====
+{{top2}}
+''imperfective''
+* {{l|ru|серебри́ться}}
+* (no equivalent)
+* (no equivalent)
+* (no equivalent)
+* (no equivalent)
+* (no equivalent)
+* (no equivalent)
+* (no equivalent)
+{{mid2}}
+''perfective''
+* (no equivalent)
+* {{l|ru|вы́серебрить}}
+* {{l|ru|засеребри́ть}}
+* {{l|ru|засеребри́ться}}
+* {{l|ru|осеребри́ть}}
+* {{l|ru|подсеребри́ть}}
+* {{l|ru|посеребри́ть}}
+* {{l|ru|посеребри́ться}}
+{{bottom2}}
+
+посеребри́ть по-+серебри́ть pf серебри́ть 4b+p def:to_[[coat]]_with_[[silver]],to_[[silver-plate]] der:#ref rel:серебро́:сере́бряный:серебри́стый,сере́бряник
+серебри́ться r impf посеребри́ться 4b ??der:засеребри́ться rel:#ref,серебро́:сере́бряный:серебри́стый,сере́бряник def:to_[[become]]_[[silvery]]
+посеребри́ться r pf серебри́ться 4b def:to_[[become]]_[[silvery]] rel:#ref,серебро́:сере́бряный:серебри́стый,сере́бряник def:to_[[become]]_[[silvery]]
 пузыри́ться ? impf ? 4b alt:пузы́риться ??der:вспузыри́ться
 пузы́риться ? impf ? 4a def:altof:пузыри́ться ??der:вспузы́риться
 
