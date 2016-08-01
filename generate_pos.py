@@ -124,6 +124,9 @@ def generate_defn(defns):
         elif defn.startswith("(im)"):
           labels.append("impersonal")
           defn = re.sub(r"^\(im\)", "", defn)
+        elif defn.startswith("(pej)"):
+          labels.append("pejorative")
+          defn = re.sub(r"^\(pej\)", "", defn)
         else:
           break
       if labels:
