@@ -78,6 +78,23 @@ if args.forms == "all-verb":
       "past_m", "past_f", "past_n", "past_pl",
       "past_m_short", "past_f_short", "past_n_short", "past_pl_short"
   ]
+elif args.forms == "pres":
+  forms = [
+      "pres_1sg", "pres_2sg", "pres_3sg", "pres_1pl", "pres_2pl", "pres_3pl"
+  ]
+elif args.forms == "futr":
+  forms = [
+      "futr_1sg", "futr_2sg", "futr_3sg", "futr_1pl", "futr_2pl", "futr_3pl"
+  ]
+elif args.forms == "impr":
+  forms = [
+      "impr_sg", "impr_pl"
+  ]
+elif args.forms == "past":
+  forms = [
+      "past_m", "past_f", "past_n", "past_pl",
+      "past_m_short", "past_f_short", "past_n_short", "past_pl_short"
+  ]
 elif args.forms == "all-noun":
   forms = [
       "nom_sg", "gen_sg", "dat_sg", "acc_sg", "acc_sg_an", "acc_sg_in",
