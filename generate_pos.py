@@ -127,6 +127,9 @@ def generate_defn(defns):
         elif defn.startswith("(pej)"):
           labels.append("pejorative")
           defn = re.sub(r"^\(pej\)", "", defn)
+        elif defn.startswith("(vul)"):
+          labels.append("vulgar")
+          defn = re.sub(r"^\(vul\)", "", defn)
         else:
           break
       if labels:
