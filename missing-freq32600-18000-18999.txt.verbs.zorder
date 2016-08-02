@@ -1,25 +1,48 @@
-набрести́ на-+брести́ pf-intr набреда́ть 7b/b(9)|набрести́|набре́д
-набреда́ть набрести+alt1=набред-+-а́ть impf-intr 1a
-скрести́сь ? impf ? 7b/b|скрести́|скрёб
-долба́ть ? impf ? 1a+p der:раздолба́ть
-раздолба́ть раз-+долба́ть pf ? 1a+p
-заплева́ть за-+плева́ть pf заплёвывать 2b+p
-заплёвывать заплева́ть+-ывать impf заплева́ть 1a
-поплева́ть поплева́ть pf-intr ? 2b
-попа́хивать по-+па́хнуть+-ивать impf-intr ? 1a def:(c)dim:па́хнуть:to_[[smell]]_[[slightly]]_(of)
-слы́хивать слыха́ть+-ивать impf - 1a|слы́хива|ppp=-|iter=1 def:to_[[hear]]_{{i|repeatedly}},_{{glink|iterative}}_of_{{m|ru|слыха́ть}}_and_{{m|ru|слы́шать}}
-обню́хивать обню́хать+-ивать impf обню́хать 1a
-обню́хать об-+ню́хать pf обню́хивать 1a+p
-я́вствовать ? impf-intr ? 2a
-пья́нствовать ? impf-intr ? 2a der:запья́нствовать,попья́нствовать,пропья́нствовать
-расцелова́ть рас-+целова́ть pf расцело́вывать 2a+p
-расцело́вывать расцелова́ть+-ывать impf расцелова́ть 1a
-госпитализи́ровать ? both ? 2a+p
-продеклами́ровать про-+деклами́ровать pf деклами́ровать 2a+p
+набрести́ на-+брести́ pf-intr набреда́ть 7b/b(9)|набрести́|набре́д def:to_[[find]],to_[[come_across]]_{{i|{{m|ru|на}}_{{glink|accusative}}}};(f)(c)to_[[hit_upon]]_(an_[[idea]]))_{{i|{{m|ru|на}}_{{glink|accusative}}}};(im)(lc)to_[[gather]]_{{i|of_many_people}};ux:'''набрело́'''_[[мно́го]]_[[народ|наро́ду]]|a_[[large]]_[[crowd]]_[[gathered]] rel:брести́,броди́ть,бродя́чий,бродя́га:бродя́жничать,бродя́жничество
+
+====Usage notes====
+The imperfective {{m|ru|набреда́ть}} is rare.
+
+[skip] набреда́ть набрести+alt1=набред-+-а́ть impf-intr 1a
+скрести́сь r impf - 7b/b|скрести́|скрёб def:to_make_a_[[scratching]]_[[noise]]_{{i|of_a_[[small]]_[[animal]]}}
+
+[ask Anatoli etc. if all definitions of долбить apply to долбать]
+
+долба́ть - impf долбану́ть 1a+p der:раздолба́ть def:(lc)to_[[peck]],to_[[gouge]]_a_[[hole]]_in;(lc)to_[[repeat]]_[[constantly]];(lc)to_[[memorize]]_by_[[constantly]]_[[repeating]];(lc)to_[[use]]_[[drugs]];(lc)(vul)to_[[fuck]];(lc)to_[[destroy]]_by_using_[[sloppily]];(lc)(f)to_[[scold]],to_[[criticize]] rel:долби́ть/продолби́ть,долблёный,долбёж:долбёжка,долбёнка,долото́ der:до́лбаный
+долбану́ть долба́ть+-ану́ть pf долба́ть 3b|долбан|ppp=- def:(lc)to_[[peck]]_once,to_[[hammer]]_once;(lc)to_[[drink]] rel:долби́ть/продолби́ть,долблёный,долбёж:долбёжка,долбёнка,долото́ der:до́лбаный
+
+[[Category:Russian semelfactive verbs]]
+
+раздолба́ть раз-+долба́ть pf - 1a+p def:(lc)to_[[break]]_using_[[multiple]]_[[blows]];(lc)_to_[[destroy]]_by_using_[[sloppily]];(lc)to_[[scold]],to_[[criticize]] rel:долба́ть/долбану́ть,до́лбаный,долби́ть/продолби́ть,долблёный,долбёж:долбёжка,долбёнка,долото́
+заплева́ть за-+плева́ть pf заплёвывать 2b+p def:to_[[spit]]_on rel:плева́ть/плю́нуть,плево́к
+заплёвывать заплева́ть+-ывать impf заплева́ть 1a def:to_[[spit]]_on rel:плева́ть/плю́нуть,плево́к
+поплева́ть поплева́ть pf-intr - 2b def:(c)to_[[spit]]_[[several]]_times;(c)to_[[spit]]_for_[[awhile]] rel:плева́ть/плю́нуть,плево́к
+попа́хивать по-+па́хнуть+-ивать impf-intr - 1a def:(c)dim:па́хнуть:to_[[smell]]_[[slightly]]_(of) rel:па́хнуть,за́пах,паху́чий
+слы́хивать слыха́ть+-ивать impf - 1a|слы́хива|ppp=-|iter=1 def:to_[[hear]]_{{i|repeatedly}},_{{glink|iterative}}_of_{{m|ru|слыха́ть}}_and_{{m|ru|слы́шать}} rel:слыха́ть,слы́шать,слу́шать/послу́шать,слу́шаться/послу́шаться,слу́шатель,слу́шание,слух,слы́шный:слы́шно,слы́шимость
+обню́хивать обню́хать+-ивать impf обню́хать 1a def:to_[[sniff]]_around,to_[[sniff]]_on_all_[[sides]] rel:ню́хать/поню́хать,нюх:нюха́ч,ню́хательный
+обню́хать об-+ню́хать pf обню́хивать 1a+p def:to_[[sniff]]_around,to_[[sniff]]_on_all_[[sides]] rel:ню́хать/поню́хать,нюх:нюха́ч,ню́хательный
+я́вствовать - impf-intr - 2a def:(l)to_be_[[obvious]],to_be_[[clear]] rel:явственный,явь:я́вный,явля́ть/яви́ть,явля́ться/яви́ться,явле́ние,я́вка:я́вочный
+
+===Etymology===
+From {{affix|ru|явственный|я́вств(енный)|-овать}} or {{affix|ru|явь|-ствовать}}.
+
+пья́нствовать - impf-intr - 2a der:запья́нствовать,попья́нствовать,пропья́нствовать def:to_be_[[drunk]]_often rel:пья́ный,пья́нство,пьяне́ть/опьяне́ть,пьяни́ть/опьяни́ть,пья́ница,пья́нка,пью́щий
+
+===Etymology===
+From {{affix|ru|пья́ный|-ствовать}} or {{affix|ru|пя́нство|-овать}}.
+
+расцелова́ть рас-+целова́ть pf расцело́вывать 2a+p def:to_[[kiss]]_[[fervently]],to_[[kiss]]_[[over_and_over]],to_[[smother]]_with_[[kisses]] rel:целова́ть/поцелова́ть,целова́ться/поцелова́ться
+расцело́вывать расцелова́ть+-ывать impf расцелова́ть 1a def:to_[[kiss]]_[[fervently]],to_[[kiss]]_[[over_and_over]],to_[[smother]]_with_[[kisses]]
+госпитализи́ровать ?de:hospitalisieren+-овать both - 2a+p def:to_[[hospitalize]] rel:госпитализа́ция,го́спиталь:госпита́льный
+
+===Etymology===
+...; see also {{affix|ru|-и́ровать}}.
+
+продеклами́ровать про-+деклами́ровать pf деклами́ровать 2a+p def:to_[[declaim]],to_[[recite]] rel:деклама́ция:декламацио́нный,деклама́тор
 [doesn't seem to exist, only reflexive] здоровать
-буксова́ть ? impf-intr ? 2a der:забуксова́ть
-рапортова́ть ? impf-intr ? 2a der:рапортова́ться|g=impf|g2=pf,зарапортова́ться,отрапортова́ть
-отрапортова́ть от-+рапортова́ть pf ? 2a+p
+буксова́ть бу́кса+t1=[[metal]]_[[box]]_in_which_a_[[train]]_[[axle]]_[[rotates]]_and_into_which_[[oil]]_is_[[poured]]+-ова́ть impf-intr забуксова́ть 2a der:забуксова́ть def:to_[[skid]],to_[[spin]]_[[around]]_without_[[traction]]_{{i|of_a_[[car]]_or_its_[[wheels]]}};(c)(f)to_[[stall]] rel:бу́кса
+рапортова́ть fr:rapporter+-ова́ть impf-intr - 2a der:рапортова́ться|g=impf|g2=pf,зарапортова́ться,отрапортова́ть def:to_[[report]] rel:ра́порт
+отрапортова́ть от-+рапортова́ть pf рапортова́ть 2a+p def:to_[[report]] rel:ра́порт
 па́мятовать ? impf ? 2a+p der:запа́мятовать,опа́мятоваться
 запа́мятовать за-+па́мятовать pf ? 2a+p
 психова́ть ? impf-intr ? 2a
