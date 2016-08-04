@@ -307,8 +307,8 @@ From {{inh|ru|sla-pro|*glodati}}; cognate with {{cog|uk|глода́ти}}, {{co
 [already done] освежа́ть освежи́ть impf освежи́ть 1a syn:просвежа́ть der:#ref rel:све́жий,просвежа́ться/просвежи́ться,FIXME
 [already done] освежи́ть о-+све́жий+-и́ть pf освежа́ть 4b+p syn:просвежи́ть der:#ref rel:све́жий,просвежа́ться/просвежи́ться,FIXME
 полулежа́ть полу-+лежа́ть impf-intr - 5b|полулеж|полулежа́|pradp=полулёжа def:to_[[recline]] rel:лежа́ть,лежа́чий,лёжа,лежа́нка,ложи́ться/лечь,-лага́ть
-[not in dict] вма́зать в-+ма́зать pf вма́зывать 6a+p rel:ма́зать/пома́зать/вы́мазать/прома́зать,ма́заться/нама́заться,мазь,мазня́,мазу́т
-[not in dict] вма́зывать вма́зать+-ывать impf вма́зать 1a rel:ма́зать/пома́зать/вы́мазать/прома́зать,ма́заться/нама́заться,мазь,мазня́,мазу́т
+вма́зать в-+ма́зать pf вма́зывать 6a+p rel:ма́зать/пома́зать/вы́мазать/прома́зать,ма́заться/нама́заться,мазь,мазня́,мазу́т def:to_[[fix]]_with_[[cement]],[[mortar]],[[putty]],etc.;(lc)to_[[hit]],to_[[slap]]
+вма́зывать вма́зать+-ывать impf вма́зать 1a rel:ма́зать/пома́зать/вы́мазать/прома́зать,ма́заться/нама́заться,мазь,мазня́,мазу́т def:to_[[fix]]_with_[[cement]],[[mortar]],[[putty]],etc.;(lc)to_[[hit]],to_[[slap]]
 подполза́ть подползти́+-а́ть impf-intr подползти́ 1a def:to_[[crawl]]_under,to_[[creep]]_under_{{i|{{m|ru|под}}_+_{{glink|accusative}}}};to_[[crawl]]_[[up_to]],to_[[creep]]_[[up_to]]_{{i|{{m|ru|к}}}} rel:по́лзать,ползти́/поползти́,ползко́м,ползу́чий,ползу́н:ползуно́к
 подползти́ под-+ползти́ pf-intr подполза́ть 7b/b|подползти́|подпо́лз def:to_[[crawl]]_under,to_[[creep]]_under_{{i|{{m|ru|под}}_+_{{glink|accusative}}}};to_[[crawl]]_[[up_to]],to_[[creep]]_[[up_to]]_{{i|{{m|ru|к}}}} rel:по́лзать,ползти́/поползти́,ползко́м,ползу́чий,ползу́н:ползуно́к
 обвяза́ть об-+вяза́ть pf обвя́зывать 6c+p def:to_[[encircle]]_by_[[tying]],to_[[tie]]_around_{{i|+_{{glink|accusative}}_of_object_encircled_and_{{glink|instrumental}}_of_object_tied}};ux:'''обвяза́ть'''_[[де́рево]]_[[лента|ле́нтой]]|to_tie_a_[[ribbon]]_around_a_[[tree]] der:#ref rel:вяза́ть/связа́ть,вяза́ние,вя́заный,вяза́льный,вяза́нка,вя́зка
@@ -322,7 +322,7 @@ From {{inh|ru|sla-pro|*glodati}}; cognate with {{cog|uk|глода́ти}}, {{co
 ===Verb===
 {{ru-verb-alt-ё|защёлкать}}
 
-[not in dict] защёлкать за-+щёлкать pf ? 1a+p rel:защёлка,защёлкивать/защёлкнуть,щёлкать/щёлкнуть,щёлканье,щёлка:щелчо́к
+защёлкать за-+щёлкать pf щёлкать 1a+p rel:защёлка,защёлкивать/защёлкнуть,щёлкать/щёлкнуть,щёлканье,щель:щёлка:щелчо́к,щели́стый def:to_begin_to_[[crack]],[[snap]],[[click]],etc._{{i|+_{{glink|instrumental}}}}_{{gloss|to_begin_to_cause_to_make_such_a_sound}};(in)to_[[begin]]_to_[[click]]_{{gloss|to_begin_to_make_a_clicking_sound}};to_[[begin]]_to_[[flick]]_(someone);to_begin_to_[[warble]]_{{i|of_a_bird}}
 пощелкать
 
 ==Russian==
@@ -330,7 +330,7 @@ From {{inh|ru|sla-pro|*glodati}}; cognate with {{cog|uk|глода́ти}}, {{co
 ===Verb===
 {{ru-verb-alt-ё|пощёлкать}}
 
-[not in dict] пощёлкать по-+щёлкать pf ? 1a+p rel:щёлкать/щёлкнуть,щёлканье,щёлка:щелчо́к
+пощёлкать по-+щёлкать pf - 1a+p rel:щёлкать/щёлкнуть,щёлканье,щель:щёлка:щелчо́к,щели́стый def:to_[[crack]],[[snap]],[[click]],etc._for_awhile_{{i|+_{{glink|instrumental}}}}_{{gloss|to_begin_to_cause_to_make_such_a_sound}};to_[[crack]]_(nuts)_for_awhile;(c)to_[[smack]]_(someone)
 натаска́ть на-+таска́ть pf ната́скивать 1a+p rel:тащи́ть/потащи́ть/вы́тащить,таска́ть:таска́ться def:to_[[carry]]_or_[[drag]]_(an_[[amount]]_of_something,in_[[several]]_[[batches]]);(c)to_[[steal]]_(an_[[amount]]_of_something);to_[[store]]_(an_[[amount]]_of_something);to_[[train]]_(an_[[animal]]);(f)(c)to_[[teach]]_[[superficially]],to_[[coach]]_[[superficially]];(f)(c)to_[[gather]]_or_[[extract]]_from_[[several]]_[[sources]] syn:*(carry,_drag,_steal,_store)натащи́ть
 натащи́ть на-+тащи́ть pf ната́скивать 4c+p rel:тащи́ть/потащи́ть/вы́тащить,таска́ть:таска́ться def:(c)to_[[carry]]_or_[[drag]]_(an_[[amount]]_of_something,in_[[several]]_[[batches]]);(c)to_[[store]]_(an_[[amount]]_of_something);(c)to_[[steal]]_(an_[[amount]]_of_something);(c)to_[[pull_on]]_(an_[[article]]_of_[[clothing]]) syn:*(carry,_drag,_steal,_store)натаска́ть
 ната́скивать натаска́ть+-ивать impf натащи́ть,натаска́ть 1a rel:тащи́ть/потащи́ть/вы́тащить,таска́ть:таска́ться
@@ -450,8 +450,65 @@ From {{affix|ru|вы́ломать|-ывать}} or from {{affix|ru|вы́лом
 
 
 сло́пать с-+ло́пать pf ло́пать 1a+p rel:ло́паться/ло́пнуть def:(lc)to_[[devour]],to_[[gobble]]
-[not in dict] [don't use] пото́пать по-+то́пать pf-intr ? 1a
-[not in dict] [don't use] потопа́ть потону́ть+alt1=потоп-+-а́ть impf-intr потону́ть 1a rel:тону́ть/потону́ть/затону́ть/утону́ть,топи́ть/потопи́ть/утопи́ть,топи́ться/утопи́ться,пото́п,потопле́ние,топь:то́пкий
+[don't use] пото́пать по-+то́пать pf-intr пото́пывать 1a def:to_[[stamp]]_(one's_[[feet]])_{{i|+_{{glink|instrumental}}}};(po)(lc)(joc)to_[[leave]],to_[[go_away]] rel:то́пать/то́пнуть,топта́ть:топта́ние,топча́к,то́пот:топота́ть
+[don't use] потопа́ть потону́ть+alt1=потоп-+-а́ть impf-intr потону́ть 1a def:{{lb|ru|low|\u|colloquial|regional|or|dated}}_to_[[sink]]\;_to_[[drown]]\;_to_be_[[lost]] rel:тону́ть/потону́ть/затону́ть/утону́ть,топи́ть/потопи́ть/утопи́ть,топи́ться/утопи́ться,пото́п,потопле́ние,топь:то́пкий
+
+=====Synonyms=====
+* {{l|ru|тону́ть}} {{i|more common, standard register}}
+
+
+потопать
+
+==Russian==
+
+===Etymology 1===
+{{affix|ru|по-|то́пать}}
+
+====Pronunciation====
+* {{ru-IPA|пото́пать}}
+
+====Verb====
+{{ru-verb|пото́пать|pf|impf=пото́пывать}}
+
+# to [[stamp]] (one's [[feet]]) {{i|+ {{glink|instrumental}}}}
+# {{lb|ru|perfective only|low|_|colloquial|jocular}} to [[leave]], to [[go away]]
+
+=====Conjugation=====
+{{ru-conj|1a|pf-intr|пото́па}}
+
+=====Related terms=====
+* {{l|ru|то́пать|g=impf}}, {{l|ru|то́пнуть|g=pf}}
+* {{l|ru|топта́ть}}, {{l|ru|топта́ние}}
+* {{l|ru|топча́к}}
+* {{l|ru|то́пот}}, {{l|ru|топота́ть}}
+
+===Etymology 2===
+{{affix|ru|потону́ть|alt1=потоп-|-а́ть}}
+
+====Pronunciation====
+* {{ru-IPA|потопа́ть}}
+
+====Verb====
+{{ru-verb|потопа́ть|impf|pf=потону́ть}}
+
+# {{lb|ru|low|_|colloquial|regional|or|dated}} to [[sink]]; to [[drown]]; to be [[lost]]
+
+=====Conjugation=====
+{{ru-conj|1a|impf-intr|потопа́}}
+
+=====Synonyms=====
+* {{l|ru|тону́ть}} {{i|more common, standard register}}
+
+=====Related terms=====
+* {{l|ru|тону́ть|g=impf}}, {{l|ru|потону́ть|g=pf}}, {{l|ru|затону́ть|g=pf}}, {{l|ru|утону́ть|g=pf}}
+* {{l|ru|топи́ть|g=impf}}, {{l|ru|потопи́ть|g=pf}}, {{l|ru|утопи́ть|g=pf}}
+* {{l|ru|топи́ться|g=impf}}, {{l|ru|утопи́ться|g=pf}}
+* {{l|ru|пото́п}}
+* {{l|ru|потопле́ние}}
+* {{l|ru|топь}}, {{l|ru|то́пкий}}
+
+[[ru:потопать]]
+
 отодра́ть ото-+драть pf отдира́ть 6°b/c+p|отодр|отдер def:to_[[tear_off]] rel:драть,дра́ка,драчли́вый,драчу́н
 отдира́ть от-+-дира́ть impf отодра́ть 1a def:to_[[tear_off]] rel:драть,дра́ка,драчли́вый,драчу́н
 застира́ть за-+стира́ть pf засти́рывать 1a+p def:(c)to_[[wash_out]]_(a_[[stain]]);(c)to_[[destroy]]_by_[[washing]] rel:стира́ть/стере́ть,стира́ться,стира́льный:стира́льная_порошо́к,сти́рка
@@ -468,13 +525,13 @@ From {{affix|ru|вы́ломать|-ывать}} or from {{affix|ru|вы́лом
 
 вы́сосать вы́-+соса́ть pf выса́сывать 6°а def:to_[[suck]]_[[out]] rel:соса́ть,соса́ние,соса́тельный,со́ска,сосу́н:сосуно́к
 выса́сывать вы́сосать+-ывать impf вы́сосать 1a def:to_[[suck]]_[[out]] rel:соса́ть,соса́ние,соса́тельный,со́ска,сосу́н:сосуно́к
-[don't use] размета́ть размести+alt1=размет-+-а́ть impf размести́ 1a
-[don't use] размета́ть раз-+мета́ть pf размётывать 6c+pё def:[разбросать]
-размести́ раз-+мести́ pf размета́ть 7b/b(9)+p|размести́|размёт
-размётывать размета́ть+-ывать impf размета́ть 1a
+[don't use] размета́ть размести+alt1=размет-+-а́ть impf размести́ 1a def:to_[[sweep]]_[[clean]];to_[[sweep]]_[[away]] rel:мести́,метла́,метёлка
+[don't use] размета́ть раз-+мета́ть pf размётывать 6c+pё def:to_[[destroy]];to_[[scatter]];to_[[spread]]_[[apart]] rel:мета́ть/метну́ть,мета́ться/метну́ться,мета́ние:мета́тель:мета́тельный
+размести́ раз-+мести́ pf размета́ть 7b/b(9)+p|размести́|размёт def:to_[[sweep]]_[[clean]];to_[[sweep]]_[[away]] rel:мести́,метла́,метёлка
+размётывать размета́ть+-ывать impf размета́ть 1a def:to_[[destroy]];to_[[scatter]];to_[[spread]]_[[apart]] rel:мета́ть/метну́ть,мета́ться/метну́ться,мета́ние:мета́тель:мета́тельный
 [already done] размота́ть
-схлопота́ть с-+хлопота́ть pf ? 6c+p
-хва́стать ? impf-intr ? 1a der:нахва́стать,похва́стать,расхва́стать
+схлопота́ть с-+хлопота́ть pf - 6c+p def:(lc)to_[[procure]];(lc)to_get_(something_[[bad]]) rel:хло́поты,хлопотли́вый:хло́потный,хлопотня́,хлопоту́н:хлопоту́нья
+хва́стать - impf-intr похва́стать 1a der:хвастли́вый:хвастли́вость,хвасту́н:хвасту́нья,хвастовство́ def:altof:хва́статься
 
 ====Derived terms====
 {{top2}}
@@ -499,14 +556,22 @@ From {{affix|ru|вы́ломать|-ывать}} or from {{affix|ru|вы́лом
 * {{l|ru|расхва́статься}}
 {{bottom2}}
 
-поча́ть по-+-чать pf почина́ть 14b/c(1),c+p|поча́|почн
-почина́ть по-+-чина́ть impf поча́ть 1a
-и́ндеветь ? impf-intr ? 1a der:заи́ндеветь,обы́ндеветь
-заи́ндеветь за-+и́ндеветь pf-intr ? 1a
-возде́ть воз-+деть pf воздева́ть 15a|возде́
-воздева́ть возде́ть+-ва́ть impf возде́ть 1a
-загалде́ть за-+галде́ть pf-intr галде́ть 5b|загалд|загалде́|futr_1sg=-
-тверде́ть ? impf-intr ? 1a
+поча́ть по-+-чать pf почина́ть 14b/c(1),c+p|поча́|почн def:{{lb|ru|dated|or|regional}}_to_[[begin]];(lc)to_[[begin]]_to_[[consume]] rel:-чать
+
+====Synonyms====
+* {{sense|begin}} {{l|ru|нача́ть}} {{i|more common, standard register}}
+
+почина́ть по-+-чина́ть impf поча́ть 1a def:{{lb|ru|dated|or|regional}}_to_[[begin]];(lc)to_[[begin]]_to_[[consume]] rel:-чать
+
+====Synonyms====
+* {{sense|begin}} {{l|ru|начина́ть}} {{i|more common, standard register}}
+
+и́ндеветь - impf-intr заи́ндеветь 1a der:заи́ндеветь,обы́ндеветь def:to_become_[[covered]]_with_[[frost]] rel:и́ней
+заи́ндеветь за-+и́ндеветь pf-intr и́ндеветь 1a def:to_become_[[covered]]_with_[[frost]] rel:и́ней
+возде́ть воз-+деть pf воздева́ть 15a|возде́ def:(l)to_[[raise]]_(one's_[[hands]]) rel:дева́ть/деть,дева́ться/де́ться,дея́ние,де́ятель:де́ятельный:де́ятельность
+воздева́ть возде́ть+-ва́ть impf возде́ть 1a def:(l)to_[[raise]]_(one's_[[hands]]) rel:дева́ть/деть,дева́ться/де́ться,дея́ние,де́ятель:де́ятельный:де́ятельность
+загалде́ть за-+галде́ть pf-intr галде́ть 5b|загалд|загалде́|futr_1sg=- def:(c)to_[[begin]]_to_[[make]]_a_[[racket]]_{{gloss|a_lot_of_[[noise]]}} rel:галдёж
+тверде́ть твёрдый+-е́ть impf-intr затверде́ть 1a def:(in)to_[[harden]] der:затверде́ние,затверде́лый rel:твёрдый:твёрдо:твёрдость:твёрже,тверди́ть/затверди́ть/вы́твердить,тверды́ня
 
 ====Derived terms====
 {{top2}}
@@ -521,8 +586,8 @@ From {{affix|ru|вы́ломать|-ывать}} or from {{affix|ru|вы́лом
 * {{l|ru|потверде́ть}}
 {{bottom2}}
 
-затверде́ть за-+тверде́ть pf-intr затвердева́ть 1a
-затвердева́ть затверде́ть+-ва́ть impf-intr затверде́ть 1a
+затверде́ть за-+тверде́ть pf-intr тверде́ть,затвердева́ть 1a def:(in)to_[[harden]] der:затверде́ние,затверде́лый rel:твёрдый:твёрдо:твёрдость:твёрже,тверди́ть/затверди́ть/вы́твердить,тверды́ня
+затвердева́ть затверде́ть+-ва́ть impf-intr затверде́ть 1a def:(in)to_[[harden]] rel:затверде́ние,затверде́лый,твёрдый:твёрдо:твёрдость:твёрже,тверди́ть/затверди́ть/вы́твердить,тверды́ня
 поглазе́ть по-+глазе́ть pf-intr глазе́ть 1a
 кочене́ть ? impf-intr закочене́ть,окочене́ть 1a
 
