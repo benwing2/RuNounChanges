@@ -130,6 +130,12 @@ def generate_defn(defns):
         elif defn.startswith("(vul)"):
           labels.append("vulgar")
           defn = re.sub(r"^\(vul\)", "", defn)
+        elif defn.startswith("(reg)"):
+          labels.append("regional")
+          defn = re.sub(r"^\(reg\)", "", defn)
+        elif defn.startswith("(joc)"):
+          labels.append("jocular")
+          defn = re.sub(r"^\(joc\)", "", defn)
         else:
           break
       if labels:
