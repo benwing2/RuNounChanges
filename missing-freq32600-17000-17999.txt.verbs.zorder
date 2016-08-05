@@ -787,7 +787,7 @@ Onomatopoeic (see also {{affix|ru|-кать}}).
 прилепля́ться r impf прилепи́ться 1a rel:#ref,лепи́ть/вы́лепить/слепи́ть,лепи́ться,ле́пка,лепно́й def:(in)to_[[stick]]_to_{{i|{{m|ru|к}}}}
 скупи́ться скупо́й+-и́ть+-ся impf поскупи́ться 4b der:поскупи́ться rel:скупо́й:ску́по:ску́пость def:to_be_[[sparing]]_with,to_be_[[stingy]]_with,to_[[skimp]],to_[[scrimp]]_{{i|{{m|ru|на}}_+_{{glink|accusative}}_{{glink|plural}}}}
 поскупи́ться по-+скупи́ться pf скупи́ться 4b rel:скупо́й:ску́по:ску́пость def:to_be_[[sparing]]_with,to_be_[[stingy]]_with,to_[[skimp]],to_[[scrimp]]_{{i|{{m|ru|на}}_+_{{glink|accusative}}_{{glink|plural}}}}
-серебри́ть серебро́+-и́ть impf посеребри́ть 4b+p def:to_[[coat]]_with_[[silver]],to_[[silver-plate]] rel:серебре́ние,серебро́:сере́бряный:серебри́стый,сере́бряник
+серебри́ть серебро́+-и́ть impf посеребри́ть 4b+p def:to_[[coat]]_with_[[silver]],to_[[silver-plate]] der:серебре́ние,посеребрённый rel:серебро́:сере́бряный:серебри́стый,сере́бряник
 
 ====Derived terms====
 {{top2}}
@@ -812,9 +812,9 @@ Onomatopoeic (see also {{affix|ru|-кать}}).
 * {{l|ru|посеребри́ться}}
 {{bottom2}}
 
-посеребри́ть по-+серебри́ть pf серебри́ть 4b+p def:to_[[coat]]_with_[[silver]],to_[[silver-plate]] der:#ref rel:серебре́ние,серебро́:сере́бряный:серебри́стый,сере́бряник
-серебри́ться r impf посеребри́ться 4b rel:#ref,серебре́ние,серебро́:сере́бряный:серебри́стый,сере́бряник def:to_[[become]]_[[silvery]]
-посеребри́ться r pf серебри́ться 4b def:to_[[become]]_[[silvery]] rel:#ref,серебре́ние,серебро́:сере́бряный:серебри́стый,сере́бряник def:to_[[become]]_[[silvery]]
+посеребри́ть по-+серебри́ть pf серебри́ть 4b+p def:to_[[coat]]_with_[[silver]],to_[[silver-plate]] der:#ref,посеребрённый rel:серебре́ние,серебро́:сере́бряный:серебри́стый,сере́бряник
+серебри́ться r impf посеребри́ться 4b rel:#ref,серебре́ние,серебро́:сере́бряный:серебри́стый,сере́бряник,посеребрённый def:to_[[become]]_[[silvery]]
+посеребри́ться r pf серебри́ться 4b def:to_[[become]]_[[silvery]] rel:#ref,серебре́ние,серебро́:сере́бряный:серебри́стый,сере́бряник,посеребрённый def:to_[[become]]_[[silvery]]
 [don't use] пузыри́ться пузы́рь+-ить+-ся impf - 4b alt:пузы́риться der:вспузыри́ться rel:пузы́рь:пузырёк def:to_[[bubble]];(c)to_[[billow]]
 [don't use] пузы́риться пузы́рь+-и́ть+-ся impf - 4a def:altof:пузыри́ться der:вспузы́риться rel:пузы́рь:пузырёк
 
