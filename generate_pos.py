@@ -65,7 +65,7 @@ def generate_defn(defns):
       defnlines.append("# {{rfdef|lang=ru}}\n")
     elif defn.startswith("ux:"):
       defnlines.append("#: {{ru-ux|%s|inline=y}}\n" % (
-        re.sub("^ux:", "", defn)))
+        re.sub("^ux:", "", re.sub(r", *", ", ", defn))))
     else:
       labels = []
       prefix = ""
@@ -79,6 +79,9 @@ def generate_defn(defns):
         elif defn.startswith("(or)"):
           labels.append("or")
           defn = re.sub(r"^\(or\)", "", defn)
+        elif defn.startswith("(also)"):
+          labels.extend(["also", "_"])
+          defn = re.sub(r"^\(also\)", "", defn)
         elif defn.startswith("(f)"):
           labels.append("figurative")
           defn = re.sub(r"^\(f\)", "", defn)
@@ -154,6 +157,6 @@ def generate_defn(defns):
         assert len(gnparts) in [2]
         defnline = "{{given name|lang=ru|%s}}" % gnparts[1]
       else:
-        defnline = defn.replace(",", ", ")
+        defnline = re.sub(r", *", ", ", defn)
       defnlines.append("# %s%s\n" % (prefix, defnline))
   return "".join(defnlines)
