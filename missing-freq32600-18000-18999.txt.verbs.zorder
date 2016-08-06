@@ -1249,7 +1249,7 @@ From {{affix|ru|ку́пор|t1=[[corkscrew]]|-ить}}; {{m|ru|ку́пор}} i
 
 запороши́ть за-+пороши́ть pf запора́шивать 4b+p def:{{lb|ru|often|\u|impersonal}}_to_[[dust]],to_[[cover]]_[[lightly]],to_[[cover]]_with_a_[[thin]]_[[layer]]_{{i|of_[[snow]]_or_[[dust]]}};ux:[[дорога|доро́гу]]_'''запороши́ло'''_[[снег|сне́гом]]|the_[[road]]_was_[[covered]]_with_a_[[fine]]_[[layer]]_of_[[snow]];(c)to_[[begin]]_to_[[fall]]_[[lightly]]_{{i|of_[[snow]]}},{{g|impf}}_—_{{m|ru|пороши́ть}}
 запора́шивать запороши́ть+-ивать impf запороши́ть 1a def:{{lb|ru|often|\u|impersonal}}_to_[[dust]],to_[[cover]]_[[lightly]],to_[[cover]]_with_a_[[thin]]_[[layer]]_{{i|of_[[snow]]_or_[[dust]]}};ux:[[дорога|доро́гу]]_'''запора́шивает'''_[[снег|сне́гом]]|the_[[road]]_is_[[being]]_[[covered]]_with_a_[[fine]]_[[layer]]_of_[[snow]]
-плю́щить плюск+-ить impf сплю́щить 4a[(3)]+p def:to_[[flatten]]_by_means_of_[[pressure]] rel:плюск
+плю́щить плюск+-ить impf сплю́щить 4a[(3)]+p def:to_[[press]]_[[flat]],to_[[flatten]]_by_means_of_[[pressure]] rel:плюск,сплю́снутый syn:сплю́щивать
 
 ====Derived terms====
 {{top2}}
@@ -1263,28 +1263,47 @@ From {{affix|ru|ку́пор|t1=[[corkscrew]]|-ить}}; {{m|ru|ку́пор}} i
 * {{l|ru|расплю́щить}}, {{l|ru|расплю́снуть}}
 * {{l|ru|сплю́щить}}, {{l|ru|сплю́снуть}}
 {{bottom2}}
+* {{l|ru|сплю́щенный}}
 
-расплю́щить рас-+плю́щить pf расплю́щивать 4a[(3)]+p alt:расплю́снуть
-изъе́сть из-+есть pf изъеда́ть irreg-есть|изъ|ppp=изъе́денный
-изъеда́ть изъе́сть+alt1=изъе́д-+-а́ть impf изъе́сть 1a
+сплю́щить с-+плю́щить pf плю́щить,сплю́щивать 4a[(3)]+p alt:сплю́снуть def:to_[[press]]_[[flat]],to_[[flatten]]_by_means_of_[[pressure]] rel:плюск,сплю́снутый der:сплю́щиваться/сплю́щиться/сплю́снуться,сплю́щенный
+сплю́щивать сплю́щить+-ивать impf сплю́щить,сплю́снуть 1a def:to_[[press]]_[[flat]],to_[[flatten]]_by_means_of_[[pressure]] rel:плюск,сплю́щенный,сплю́снутый syn:плю́щить der:#ref
+расплю́щить рас-+плю́щить pf расплю́щивать 4a[(3)]+p alt:расплю́снуть rel:плюск,сплю́щенный,сплю́снутый def:to_[[flatten]],to_[[crush]] der:расплю́щиваться/расплю́щиться/расплю́снуться
+расплю́щивать расплю́щить+-ивать impf расплю́щить,расплю́снуть 1a def:to_[[flatten]],to_[[crush]] der:#ref rel:плюск,сплю́щенный,сплю́снутый
+изъе́сть из-+есть pf изъеда́ть irreg-есть|изъ|ppp=изъе́денный def:to_[[eat_away]],to_[[destroy]]_by_[[eating]]_{{i|e.g._of_moths,ants}};to_[[corrode]],to_[[eat]]_[[into]]_{{i|of_[[acid]]}} rel:есть/съесть/пое́сть,еда́,едо́к,е́дкий:е́дкость
+изъеда́ть изъе́сть+alt1=изъе́д-+-а́ть impf изъе́сть 1a def:to_[[eat_away]],to_[[destroy]]_by_[[eating]]_{{i|e.g._of_moths,ants}};to_[[corrode]],to_[[eat]]_[[into]]_{{i|of_[[acid]]}} rel:есть/съесть/пое́сть,еда́,едо́к,е́дкий:е́дкость
 садану́ть ? pf ? 3b|садан|ppp=-
 резану́ть ? pf ? 3b|резан|ppp=-
-смекну́ть ? pf смека́ть 3b|смекн|ppp=-
+смекну́ть смека́ть+-ну́ть pf смека́ть 3b|смекн|ppp=- rel:накема́ть/намекну́ть,невдомёк
+
+[defn]
+
+# {{lb|ru|colloquial|usually|_|intransitive}} to [[understand]], to [[get it]], to [[catch on]], to [[realize]]
+#: {{ru-ux|'''смекну́ть''' [[в]] [[что|чём]] [[де́ло]]|to [[get it]], to [[get the point]]|inline=y}}
 
 ====Usage notes====
 A rare and awkward past passive participle {{m|ru|смёкнутый}} exists.
 
-смека́ть смекнуть+alt1=смек(ну́ть)+-а́ть impf смекну́ть 1a
-вы́мокнуть вы́-+мо́кнуть pf-intr вымока́ть 3°a
-вымока́ть вымокнуть+alt1=вы́мок(нуть)+-а́ть impf-intr вы́мокнуть 1a
-спихну́ть с-+пихну́ть pf спи́хивать 3b+p
-спи́хивать спихнуть+alt1=спих(ну́ть)+-ивать impf спихну́ть 1a
-отпихнуть от-+пихну́ть pf отпи́хивать 3b+p
-отпи́хивать отпихнуть+alt1=отпих(ну́ть)+-ивать impf отпихну́ть 1a
-припу́хнуть при-+пу́хнуть pf-intr припуха́ть 3°a
-припуха́ть припухнуть+alt1=припу́х(нуть)+-а́ть impf-intr припу́хнуть 1a
-пря́нуть ? pf-intr ? 3a
-воспря́нуть вос-+пря́нуть pf-intr ? 3a
+смека́ть - impf смекну́ть 1a rel:накема́ть/намекну́ть,невдомёк
+
+===Etymology===
+Per Vasmer, from {{affix|ru|с-|мека́ть|t2=to [[understand]], to [[think]] {{i|dialectal}}}}, from {{der|ru|sla-pro|*mekati}}, derived from {{m|ru|ме́тить}} by analogy with {{m|ru|пуска́ть}}, {{m|ru|пусти́ть}}.
+
+[defn]
+
+# {{lb|ru|colloquial|usually|_|intransitive}} to [[understand]], to [[get it]], to [[catch on]], to [[realize]]
+#: {{ru-ux|'''смека́ть''' [[в]] [[что|чём]] [[де́ло]]|to [[get it]], to [[get the point]]|inline=y}}
+
+вы́мокнуть вы́-+мо́кнуть pf-intr вымока́ть 3°a def:to_get_[[soaked]],to_get_[[drenched]],to_get_very_[[wet]];(in)to_[[soak]],to_[[steep]]\;_to_be_[[retted]]_{{i|of_[[fibers]]}} rel:мо́кнуть,мо́крый:мокрота́,мокрова́тый,мочи́ть/намочи́ть/замочи́ть,мо́чка,мочёный,моча́
+вымока́ть вымокнуть+alt1=вы́мок(нуть)+-а́ть impf-intr вы́мокнуть 1a def:to_get_[[soaked]],to_get_[[drenched]],to_get_very_[[wet]];(in)to_[[soak]],to_[[steep]]\;_to_be_[[retted]]_{{i|of_[[fibers]]}} rel:мо́кнуть,мо́крый:мокрота́,мокрова́тый,мочи́ть/намочи́ть/замочи́ть,мо́чка,мочёный,моча́
+спихну́ть с-+пихну́ть pf спи́хивать 3b+p rel:пиха́ть/пихну́ть def:(c)to_[[shove]]_[[off]]_(e.g._a_[[boat]]_from_the_[[shore]]);(c)(also)(f)to_[[shove]]_[[together]],to_[[cause]]_to_[[collide]]_or_[[clash]];(lc)(f)to_[[kick_out]]\;_to_[[cause]]_to_[[resign]];(c)(f)to_[[get_rid_of]]_(something_[[bad]]);(c)to_[[get]]_(something)_[[over_and_done_with]]
+спи́хивать спихнуть+alt1=спих(ну́ть)+-ивать impf спихну́ть 1a rel:пиха́ть/пихну́ть def:(c)to_[[shove]]_[[off]]_(e.g._a_[[boat]]_from_the_[[shore]]);(c)(also)(f)to_[[shove]]_[[together]],to_[[cause]]_to_[[collide]]_or_[[clash]];(lc)(f)to_[[kick_out]]\;_to_[[cause]]_to_[[resign]];(c)(f)to_[[get_rid_of]]_(something_[[bad]]);(c)to_[[get]]_(something)_[[over_and_done_with]]
+отпихну́ть от-+пихну́ть pf отпи́хивать 3b+p rel:пиха́ть/пихну́ть def:(c)to_[[shove]]_[[away]],to_[[shove]]_[[off]]_(e.g._a_[[boat]]_from_the_[[shore]]);(c)to_[[shove]]_[[aside]];(c)(f)to_[[get_rid_of]]
+отпи́хивать отпихнуть+alt1=отпих(ну́ть)+-ивать impf отпихну́ть 1a rel:пиха́ть/пихну́ть def:(c)to_[[shove]]_[[away]],to_[[shove]]_[[off]]_(e.g._a_[[boat]]_from_the_[[shore]]);(c)to_[[shove]]_[[aside]];(c)(f)to_[[get_rid_of]]
+припу́хнуть при-+пу́хнуть pf-intr припуха́ть 3°a def:to_be_[[slightly]]_[[swollen]] rel:припу́хлый:припу́хлость,пу́хнуть/вспу́хнуть,пух,пу́хлый,пухово́й
+припуха́ть припухнуть+alt1=припу́х(нуть)+-а́ть impf-intr припу́хнуть 1a def:to_be_[[slightly]]_[[swollen]] rel:припу́хлый:припу́хлость,пу́хнуть/вспу́хнуть,пух,пу́хлый,пухово́й
+пря́дать - impf-intr пря́нуть 1a def:(d)(or)(reg)to_[[jump]] rel:-
+пря́нуть прядать+alt1=пря́(дать)+-нуть pf-intr пря́дать 3a def:(d)(or)(reg)to_[[jump]] rel:-
+воспря́нуть вос-+пря́нуть pf-intr - 3a def:(d)(l)to_[[jump]]_[[up]];(c)to_[[perk_up]],to_become_more_[[lively]];ux:'''воспря́нуть'''_[[дух|ду́хом]]|{{i|literary}}_to_[[perk_up]],_to_[[pluck_up]]
 
 ====Derived terms====
 {{top2}}
@@ -1297,22 +1316,22 @@ A rare and awkward past passive participle {{m|ru|смёкнутый}} exists.
 * {{l|ru|отпря́нуть}}
 {{bottom2}}
 
-подплы́ть под-+плыть pf-intr подплыва́ть 16b/c|подплы́
-подплыва́ть подплы́ть+-ва́ть impf-intr подплы́ть 1a
+подплы́ть под-+плыть pf-intr подплыва́ть 16b/c|подплы́ def:to_[[swim]]_or_[[sail]]_[[up_to]] rel:плыть/поплы́ть,пла́вать,пла́вание,плав,пла́вающий
+подплыва́ть подплы́ть+-ва́ть impf-intr подплы́ть 1a def:to_[[swim]]_or_[[sail]]_[[up_to]] rel:плыть/поплы́ть,пла́вать,пла́вание,плав,пла́вающий
 доплы́ть до-+плыть pf-intr доплыва́ть 16b/c|доплы́
 доплыва́ть доплы́ть+-ва́ть impf-intr доплы́ть 1a
 [already done] усыпля́ть усыпить
-слиня́ть с-+линя́ть pf-intr линя́ть 1a
-сверя́ть све́рить+-я́ть impf све́рить 1a
-све́рить с-+ве́рить pf сверя́ть 4a+p
-нале́чь на-+лечь pf-intr налега́ть irreg-лечь|на
-налега́ть нале́чь+alt1=нале́г-+-а́ть impf-intr нале́чь 1a
-заволо́чь за-+воло́чь pf завола́кивать 8b+p|заволо́к|заволо́чь
-завола́кивать заволо́чь+alt1=заволо́к-+-ивать impf заволо́чь 1a
-загиба́ться r impf загну́ться 1a
-загну́ться r pf загиба́ться 3b
-отря́хиваться r impf отряхну́ться 1a
-отряхну́ться r pf отря́хиваться 3b
+слиня́ть с-+линя́ть pf-intr линя́ть 1a def:(c)to_[[fade]] der:слиня́лый rel:линя́ть/полиня́ть/вы́линять,линя́лый,линю́чий,ли́нька
+сверя́ть све́рить+-я́ть impf све́рить 1a der:#ref rel:ве́рить/пове́рить,ве́ра,ве́рный:ве́рно:ве́рность,ве́ровать:ве́рование,вероя́тный:вероя́тно:вероя́тность def:to_[[compare]],to_[[check]],to_[[verify]]_(something_against_something_else)_{{i|{{glink|accusative}}_+_{{m|ru|с}}_+_{{glink|instrumental}}}}
+све́рить с-+ве́рить pf сверя́ть 4a+p der:#ref rel:ве́рить/пове́рить,ве́ра,ве́рный:ве́рно:ве́рность,ве́ровать:ве́рование,вероя́тный:вероя́тно:вероя́тность def:to_[[compare]],to_[[check]],to_[[verify]]_(something_against_something_else)_{{i|{{glink|accusative}}_+_{{m|ru|с}}_+_{{glink|instrumental}}}}
+[already done] нале́чь на-+лечь pf-intr налега́ть irreg-лечь|на
+[already done] налега́ть нале́чь+alt1=нале́г-+-а́ть impf-intr нале́чь 1a
+заволо́чь за-+воло́чь pf завола́кивать 8b+p|заволо́к|заволо́чь def:to_[[obscure]],to_[[cloud]]_(the_[[sun]],the_[[sky]],one's_[[eyes]]_with_[[tears]],etc.) rel:воло́чь:воло́чься,волочи́ть:волочи́ться,во́лок
+завола́кивать заволо́чь+alt1=заволо́к-+-ивать impf заволо́чь 1a def:to_[[obscure]],to_[[cloud]]_(the_[[sun]],the_[[sky]],one's_[[eyes]]_with_[[tears]],etc.) rel:воло́чь:воло́чься,волочи́ть:волочи́ться,во́лок
+загиба́ться r impf загну́ться 1a def:(in)to_[[curl_up]]\;_to_[[curl]]_[[down]]_{{i|of_the_[[edge]]_of_something}}:(in)to_[[bend]];(lc)to_[[kick_the_bucket]],to_[[bite_the_dust]],to_[[die]] rel:#ref,заги́б,гнуть/согну́ть,гну́ться/согну́ться,ги́бкий:ги́бкость
+загну́ться r pf загиба́ться 3b def:(in)to_[[curl_up]]\;_to_[[curl]]_[[down]]_{{i|of_the_[[edge]]_of_something}}:(in)to_[[bend]];(lc)to_[[kick_the_bucket]],to_[[bite_the_dust]],to_[[die]] rel:#ref,заги́б,гнуть/согну́ть,гну́ться/согну́ться,ги́бкий:ги́бкость
+отря́хиваться r impf отряхну́ться 1a def:to_[[shake_off]]_{{i|{{m|ru|от}}}};(f)(l)to_[[shake_off]],to_[[get_rid_of]],to_[[eliminate]]_(e.g._a_[[negative]]_[[feeling]])_{{i|{{m|ru|от}}}};to_[[spread]]_one's_[[feathers]]_or_[[fur]]_by_[[shaking]]_the_[[body]]_{{i|of_an_[[animal]]}} rel:трясти́/потрясти́/тряхну́ть,тря́ский:тря́ска
+отряхну́ться r pf отря́хиваться 3b def:to_[[shake_off]]_{{i|{{m|ru|от}}}};(f)(l)to_[[shake_off]],to_[[get_rid_of]],to_[[eliminate]]_(e.g._a_[[negative]]_[[feeling]])_{{i|{{m|ru|от}}}};to_[[spread]]_one's_[[feathers]]_or_[[fur]]_by_[[shaking]]_the_[[body]]_{{i|of_an_[[animal]]}} rel:трясти́/потрясти́/тряхну́ть,тря́ский:тря́ска
 залюбова́ться ? pf ? 2a
 отплевываться
 
