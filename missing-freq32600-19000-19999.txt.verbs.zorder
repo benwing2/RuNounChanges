@@ -43,9 +43,50 @@ The corresponding imperfective {{m|ru|прожида́ть}} is rare and colloqu
 продержа́ть про-+держа́ть pf - 5c+p def:to_[[keep]],to_[[hold]]_{{i|an_[[amount]]_of_[[time]]}};ux:[[он|Его́]]_'''продержа́ли'''_[[в]]_[[больница|больни́це]]_[[три]]_[[месяц|ме́сяца]].|He was kept in the hospital three months. der:#ref rel:держа́ть:держа́ться,держа́тель,держа́ва,держа́лка
 вы́лизать вы́-+лиза́ть pf выли́зывать 6a+p def:to_[[lick]]_[[clean]] rel:лиза́ть/лизну́ть,лиза́ние,лизоблю́д
 выли́зывать вы́лизать+-ывать impf вы́лизать 1a def:to_[[lick]]_[[clean]] rel:лиза́ть/лизну́ть,лиза́ние,лизоблю́д
-[don't use] напо́лзать на-+по́лзать pf ? 1a+p
-[don't use] наполза́ть наползти́+-а́ть impf-intr наползти́ 1a
-наползти́ на-+ползти́ pf-intr наполза́ть 7b/b|наползти́|напо́лз
+[don't use] напо́лзать на-+по́лзать pf - 1a+p def:(c)to_[[make]]_by_[[crawling]]_(e.g._[[holes]]_in_the_[[knees]]_of_one's_[[pants]]) rel:-
+[don't use] наполза́ть наползти́+-а́ть impf-intr наползти́ 1a def:(c)to_[[crawl]]_[[onto]]_{{i|{{m|ru|на}}_+_{{glink|accusative}}}} rel:по́лзать,ползти́/поползти́,ползко́м,ползу́чий,ползу́н:ползуно́к
+
+
+==Russian==
+
+===Etymology 1===
+{{affix|ru|наползти́|-а́ть}}
+
+====Pronunciation====
+* {{ru-IPA|наполза́ть}}
+
+====Verb====
+{{ru-verb|наполза́ть|impf|pf=наползти́}}
+
+# {{lb|ru|colloquial}} to [[crawl]] [[onto]] {{i|{{m|ru|на}} + {{glink|accusative}}}}
+
+=====Conjugation=====
+{{ru-conj|1a|impf-intr|наполза́}}
+
+===Etymology 2===
+{{affix|ru|на-|по́лзать}}
+
+====Pronunciation====
+* {{ru-IPA|напо́лзать}}
+
+====Verb====
+{{ru-verb|напо́лзать|pf}}
+
+# {{lb|ru|colloquial}} to [[make]] by [[crawling]] (e.g. [[holes]] in the [[knees]] of one's [[pants]])
+
+=====Conjugation=====
+{{ru-conj|1a+p|pf|напо́лза}}
+
+===Related terms===
+* {{l|ru|по́лзать}}
+* {{l|ru|ползти́|g=impf}}, {{l|ru|поползти́|g=pf}}
+* {{l|ru|ползко́м}}
+* {{l|ru|ползу́чий}}
+* {{l|ru|ползу́н}}, {{l|ru|ползуно́к}}
+
+[[ru:наползать]]
+
+наползти́ на-+ползти́ pf-intr наполза́ть 7b/b|наползти́|напо́лз def:(c)to_[[crawl]]_[[onto]]_{{i|{{m|ru|на}}_+_{{glink|accusative}}}} rel:по́лзать,ползти́/поползти́,ползко́м,ползу́чий,ползу́н:ползуно́к
 заерзать
 
 ==Russian==
@@ -53,8 +94,10 @@ The corresponding imperfective {{m|ru|прожида́ть}} is rare and colloqu
 ===Verb===
 {{ru-verb-alt-ё|заёрзать|pf}}
 
-заёрзать за-+ёрзать pf-intr ёрзать 1a
-цо́кать ? impf-intr ? 1a der:зацо́кать
+заёрзать за-+ёрзать pf-intr ёрзать 1a def:(c)to_[[begin]]_to_[[fidget]] rel:-
+[don't use] цо́кать - impf-intr цо́кнуть 1a der:зацо́кать,цо́кнуть,цо́канье def:FIXME
+[don't use] цо́кать - impf-intr - 1a der:цо́канье def:to_[[say]]_[[ц]]_in_place_of_[[ч]],_or_to_[[confuse]]_the_two_[[sounds]]
+цо́кнуть цо́кать+-нуть pf-intr цо́кать 3a
 кове́ркать ? impf ? 1a+p
 
 ====Derived terms====
