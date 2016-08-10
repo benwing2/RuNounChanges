@@ -85,8 +85,8 @@ while True:
       error("? in corresponding aspect-pair verb '%s'" % corverb)
     check_stress(corverb)
     corverbtext += "|%s%s=%s" % (
-        "impf" if headword_aspect == "pf" else "pf",
-        "" if corverbno == 1 else str(corverbno), corverb)
+        "impf" if headword_aspect == "pf" or corverb.startswith("*") else "pf",
+        "" if corverbno == 1 else str(corverbno), re.sub(r"^\*", "", corverb))
     corverbno += 1
   verbbase = re.sub(u"(ся|сь)$", "", verb)
   passivetext = ("# {{passive of|lang=ru|%s}}\n" % verbbase
@@ -233,26 +233,34 @@ while True:
             gender_arg = ("|g=impf|g2=pf" if headword_aspect == "both" else
                 "|g=" + headword_aspect)
             if "#ref" in derrel:
+              # * at the beginning of an aspect-paired verb forces
+              # imperfective; used with aspect "both"
+              corverb_impf_override = any(corverb for corverb in corverbs
+                  if corverb.startswith("*"))
               if isrefl:
                 refverb = re.sub(u"с[ья]$", "", verb) + gender_arg
                 correfverbs = []
                 for corverb in corverbs:
                   correfverbs.append("%s|g=%s" % (
-                    re.sub(u"с[ья]$", "", corverb),
-                    "impf" if headword_aspect == "pf" else "pf"))
+                    re.sub(u"с[ья]$", "", re.sub(r"^\*", "", corverb)),
+                    "impf" if headword_aspect == "pf" or
+                      corverb.startswith("*") else "pf"))
               else:
                 refverb = (re.search(u"и́?$", verb) and verb + u"сь" or
                     rulib.try_to_stress(verb) + u"ся") + gender_arg
                 correfverbs = []
                 for corverb in corverbs:
+                  impf_override = corverb.startswith("*")
+                  corverb = re.sub(r"^\*", "", corverb)
                   correfverbs.append("%s|g=%s" % (
                       (re.search(u"и́?$", corverb) and corverb + u"сь" or
                         rulib.try_to_stress(corverb) + u"ся"),
-                      "impf" if headword_aspect == "pf" else "pf"))
-              if headword_aspect == "impf":
-                refverbs = [refverb] + correfverbs
-              else:
+                      "impf" if headword_aspect == "pf" or impf_override
+                        else "pf"))
+              if headword_aspect == "pf" or corverb_impf_override:
                 refverbs = correfverbs + [refverb]
+              else:
+                refverbs = [refverb] + correfverbs
               derrel = re.sub("#ref", "/".join(refverbs), derrel)
 
             if "/" in derrel:
