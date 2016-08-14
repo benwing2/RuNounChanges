@@ -12,7 +12,7 @@ from blib import getparam, rmparam, msg, site
 import rulib as ru
 import runounlib as runoun
 
-def process_page(index, page, save, verbose):
+def process_page(index, page, save, verbose, lemmas):
   pagetitle = unicode(page.title())
   subpagetitle = re.sub("^.*:", "", pagetitle)
   def pagemsg(txt):
@@ -149,11 +149,6 @@ def process_page_section(index, page, section, verbose):
     if noun_old_template:
       pagemsg("Found old decl template: %s" % unicode(noun_old_template))
 
-  # FIXME!
-  if unicode(headword_template.name) == "ru-proper noun+":
-    pagemsg("WARNING: Skipping ru-proper noun+ for now")
-    return None
-
   orig_headword_template = unicode(headword_template)
   orig_noun_table_template = unicode(noun_table_template)
 
@@ -191,8 +186,51 @@ def process_page_section(index, page, section, verbose):
   if orig_noun_table_template != unicode(noun_table_template):
     ru_noun_table_cleaned = 1
 
+  modified_noun_table_template = blib.parse_text("{{ru-noun-table}}").filter_templates()[0]
+  for param in noun_table_template.params:
+    modified_noun_table_template.add(param.name, param.value)
+
+  # If proper noun and n is both then we need to add n=both because
+  # proper noun+ defaults to n=sg
+  if unicode(headword_template.name) == "ru-proper noun+":
+    generate_template = re.sub(r"^\{\{ru-noun-table", "{{ru-generate-noun-args",
+        unicode(noun_table_template))
+    generate_result = expand_text(generate_template)
+    if not generate_result:
+      pagemsg("WARNING: Error generating noun args, skipping")
+      return None
+    args = ru.split_generate_args(generate_result)
+
+    # If proper noun and n is both then we need to add n=both because
+    # proper noun+ defaults to n=sg
+    if args["n"] == "b" and not getparam(modified_noun_table_template, "n"):
+      pagemsg("Adding n=both to headword template")
+      modified_noun_table_template.add("n", "both")
+    # Correspondingly, if n is sg then we can usually remove n=sg;
+    # but we need to check that the number is actually sg with n=sg
+    # removed because of the possibility of plurale tantum lemmas
+    if args["n"] == "s":
+      generate_template_with_ndef = generate_template.replace("}}", "|ndef=sg}}")
+      generate_template_with_ndef = re.sub(r"\|n=s[^=|{}]*", "",
+          generate_template_with_ndef)
+      generate_result = expand_text(generate_template_with_ndef)
+      if not generate_result:
+        pagemsg("WARNING: Error generating noun args, skipping")
+        return None
+      ndef_args = ru.split_generate_args(generate_result)
+      if ndef_args["n"] == "s":
+        existing_n = getparam(headword_template, "n")
+        if existing_n and not re.search(r"^s", existing_n):
+          pagemsg("WARNING: Something wrong: Found n=%s, not singular" %
+              existing_n)
+        pagemsg("Removing n=sg from headword template")
+        rmparam(modified_noun_table_template, "n")
+      else:
+        pagemsg("WARNING: Unable to remove n= from headword template because n=%s" %
+            ndef_args["n"])
+
   new_headword_template = re.sub(r"^\{\{ru-noun-table", "{{ru-noun+",
-      unicode(noun_table_template))
+      unicode(modified_noun_table_template))
   existing_filtered_headword_template = unicode(filtered_headword_template)
   change_existing_headword = False
   if existing_filtered_headword_template != new_headword_template:
@@ -203,7 +241,7 @@ def process_page_section(index, page, section, verbose):
         for param in filtered_headword_template.params:
           noun_table_template.add(param.name, param.value)
         ru_noun_table_link_copied = 1
-        ru_noun_table_changed = 0
+        ru_noun_table_cleaned = 0
       else:
         pagemsg("WARNING: Existing headword template %s would be overwritten with %s but links would be erased, not doing it, check manually"
             % (existing_filtered_headword_template, new_headword_template))
@@ -213,24 +251,16 @@ def process_page_section(index, page, section, verbose):
           % (existing_filtered_headword_template, new_headword_template))
       change_existing_headword = True
 
-  if change_existing_headword:
+  if change_existing_headword and (not lemmas or pagetitle in lemmas):
     del headword_template.params[:]
-    for name, value in new_decl_params:
-      headword_template.add(name, value)
+    for param in modified_noun_table_template.params:
+      headword_template.add(param.name, param.value)
     blib.set_param_chain(headword_template, genders, "g", "g")
     blib.set_param_chain(headword_template, masculines, "m", "m")
     blib.set_param_chain(headword_template, feminines, "f", "f")
     if notrcat:
       headword_template.add("notrcat", notrcat)
     
-  #generate_template = re.sub(r"^\{\{ru-noun-table", "{{ru-generate-noun-args",
-  #    unicode(noun_table_template))
-  #generate_result = expand_text(generate_template)
-  #if not generate_result:
-  #  pagemsg("WARNING: Error generating noun args, skipping")
-  #  return None
-  #args = ru.split_generate_args(generate_result)
-
   #genders = runoun.check_old_noun_headword_forms(headword_template, args,
   #    subpagetitle, pagemsg)
   #if genders == None:
@@ -245,41 +275,10 @@ def process_page_section(index, page, section, verbose):
   #if params_to_preserve == None:
   #  return None
 
-  #if unicode(headword_template.name) == "ru-proper noun":
-  #  # If proper noun and n is both then we need to add n=both because
-  #  # proper noun+ defaults to n=sg
-  #  if args["n"] == "b" and not getparam(headword_template, "n"):
-  #    pagemsg("Adding n=both to headword tempate")
-  #    headword_template.add("n", "both")
-  #  # Correspondingly, if n is sg then we can usually remove n=sg;
-  #  # but we need to check that the number is actually sg with n=sg
-  #  # removed because of the possibility of plurale tantum lemmas
-  #  if args["n"] == "s":
-  #    generate_template_with_ndef = generate_template.replace("}}", "|ndef=sg}}")
-  #    generate_template_with_ndef = re.sub(r"\|n=s[^=|{}]*", "",
-  #        generate_template_with_ndef)
-  #    generate_result = expand_text(generate_template_with_ndef)
-  #    if not generate_result:
-  #      pagemsg("WARNING: Error generating noun args, skipping")
-  #      return None
-  #    ndef_args = ru.split_generate_args(generate_result)
-  #    if ndef_args["n"] == "s":
-  #      existing_n = getparam(headword_template, "n")
-  #      if existing_n and not re.search(r"^s", existing_n):
-  #        pagemsg("WARNING: Something wrong: Found n=%s, not singular" %
-  #            existing_n)
-  #      else:
-  #        pagemsg("Removing n=sg from headword tempate")
-  #        rmparam(headword_template, "n")
-  #    else:
-  #      pagemsg("WARNING: Unable to remove n= from headword template because n=%s" %
-  #          ndef_args["n"])
-
   new_noun_table_template = unicode(noun_table_template)
   if new_noun_table_template != orig_noun_table_template:
     pagemsg("Replacing noun table %s with %s" % (orig_noun_table_template,
       new_noun_table_template))
-    ru_noun_table_changed = 1
 
   new_headword_template = unicode(headword_template)
   if new_headword_template != orig_headword_template:
@@ -292,11 +291,28 @@ def process_page_section(index, page, section, verbose):
 
   return unicode(parsed), ru_noun_table_cleaned, ru_noun_table_link_copied, ru_noun_changed, ru_proper_noun_changed
 
-parser = blib.create_argparser("Convert ru-noun to ru-noun+, ru-proper noun to ru-proper noun+")
+parser = blib.create_argparser("Copy the declension in ru-noun-table to ru-noun+, preserving any m=, f=, g=, etc. in the latter.")
+parser.add_argument('--cats', default="nouns,proper nouns", help="Categories to do ('nouns', 'proper nouns' or 'nouns,proper nouns')")
+parser.add_argument('--lemma-file', help="File containing lemmas to copy declension of. Will remove extraneous params from ru-noun-table and copy links to ru-noun-table regardless of this.")
 args = parser.parse_args()
 start, end = blib.get_args(args.start, args.end)
 
-for template in ["Template:ru-noun+", "Template:ru-proper noun+"]:
+if args.lemma_file:
+  lemmas = set([x.strip() for x in codecs.open(args.lemma_file, "r", "utf-8")])
+else:
+  lemmas = None
+
+for cat in re.split(",", args.cats):
+  if cat == "nouns":
+    template = "Template:ru-noun+"
+  elif cat == "proper nouns":
+    template = "Template:ru-proper noun+"
+  else:
+    raise ValueError("Invalid value to --cats: %s" % cat)
   msg("Processing references to %s" % template)
-  for i, page in blib.references(template, start, end):
-    process_page(i, page, args.save, args.verbose)
+  if lemmas:
+    for i, page in blib.iter_items(lemmas, start, end):
+      process_page(i, pywikibot.Page(site, page), args.save, args.verbose, lemmas)
+  else:
+    for i, page in blib.references(template, start, end):
+      process_page(i, page, args.save, args.verbose, lemmas)
