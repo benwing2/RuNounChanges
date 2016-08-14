@@ -102,6 +102,16 @@ elif args.forms == "all-noun":
       "nom_pl", "gen_pl", "dat_pl", "acc_pl", "acc_pl_an", "acc_pl_in",
         "ins_pl", "pre_pl"
   ]
+elif args.forms == "sg":
+  forms = [
+      "nom_sg", "gen_sg", "dat_sg", "acc_sg", "acc_sg_an", "acc_sg_in",
+        "ins_sg", "pre_sg"
+  ]
+elif args.forms == "pl":
+  forms = [
+      "nom_pl", "gen_pl", "dat_pl", "acc_pl", "acc_pl_an", "acc_pl_in",
+        "ins_pl", "pre_pl"
+  ]
 else:
   forms = re.split(",", args.forms)
 for i, line in blib.iter_items(lines, start, end):
