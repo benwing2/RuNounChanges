@@ -396,22 +396,21 @@ def getEtymLanguageData():
     etym_languages_byCode[etyl["code"]] = etyl
     etym_languages_byCanonicalName[etyl["canonicalName"]] = etyl
 
-def try_repeatedly(fun, pagemsg, max_tries=10, sleep_time=5):
+def try_repeatedly(fun, pagemsg, operation="save", max_tries=10, sleep_time=5):
   num_tries = 0
   while True:
     try:
-      fun()
-      break
+      return fun()
     except KeyboardInterrupt as e:
       raise
     except Exception as e:
       #except (pywikibot.exceptions.Error, StandardError) as e:
-      pagemsg("WARNING: Error saving: %s" % unicode(e))
-      errmsg("WARNING: Error saving: %s" % unicode(e))
+      pagemsg("WARNING: Error when trying to %s: %s" % (operation, unicode(e)))
+      errmsg("WARNING: Error when trying to %s: %s" % (operation, unicode(e)))
       num_tries += 1
       if num_tries >= max_tries:
-        pagemsg("WARNING: Can't save!!!!!!!")
-        errmsg("WARNING: Can't save!!!!!!!")
+        pagemsg("WARNING: Can't %s!!!!!!!" % operation)
+        errmsg("WARNING: Can't %s!!!!!!!" % operation)
         raise
       errmsg("Sleeping for 5 seconds")
       time.sleep(sleep_time)
