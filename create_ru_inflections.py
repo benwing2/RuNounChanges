@@ -252,7 +252,7 @@
 # 70. (DONE) Warn when lemma or inflections have multiple stresses.
 # 71. BUG: Remove accent from monosyllabic transliterations (e.g. forms of
 #     бог|tr=box).
-# 72. Sometimes past passive participles have been borrowed from
+# 72. (DONE) Sometimes past passive participles have been borrowed from
 #     perfective to imperfective verbs (e.g. делать has сделанный as past
 #     passive participle). To deal with this, if the verb is imperfective,
 #     and it has one or more perfective verbs listed (that aren't the same
@@ -260,13 +260,19 @@
 #     verb's past passive participles to see whether any of the corresponding
 #     perfective verbs have the same word listed as a past passive participle,
 #     and if so, ignore the participle on the imperfective verb.
+# 73. (DONE) Don't create entries for words beginning with hyphens (e.g. verb
+#     forms of the suffix -бавить).
+# 74. (DONE) Wrap various places in try_repeatedly() to avoid crashing out
+#     with maxlag errors.
+# 75. (DONE) Support --lemmas-to-not-overwrite and write "not overwriting"
+#     msgs to stderr as well.
 
 import pywikibot, re, sys, codecs, argparse, time
 import traceback
 import unicodedata
 
 import blib
-from blib import getparam, rmparam, msg, site
+from blib import getparam, rmparam, msg, errmsg, site
 from collections import OrderedDict
 
 import rulib
@@ -342,6 +348,7 @@ manual_split_form_list = [
 # plural, insert the subsection after the lemma rather than creating a new
 # etymology section.
 allow_in_same_etym_section = [
+    (u"азы", u"аз"),
     (u"авиалинии", u"авиалиния"),
     (u"агулы", u"агул"),
     (u"бакенбарды", u"бакенбарда"),
@@ -382,6 +389,7 @@ allow_in_same_etym_section = [
     (u"ноты", u"нота"),
     (u"окрестности", u"окрестность"),
     (u"окружающие", u"окружающее"),
+    (u"осадки", u"осадок"),
     (u"отбросы", u"отброс"),
     (u"падонки", u"падонак"),
     (u"пики", u"пика"),
@@ -553,13 +561,18 @@ pages_already_erased = set()
 # the inflection codes of when an existing definition template (e.g.
 # "inflection of") is found with matching lemma. Entries are without accents.
 #
+# LEMMAS_TO_NOT_OVERWRITE is a list of lemma pages, which should in general
+# be the entire set of lemmas. Any non-lemma form that would overwrite the
+# Russian section will not do so if the form is one of these pages.
+# Entries are without accents.
+#
 # ALLOW_STRESS_MISMATCH_IN_DEFN is used when dealing with stress variants to
 # allow for stress mismatch when inserting a new subsection next to an
 # existing one, instead of creating a new etymology section.
 def create_inflection_entry(program_args, save, index, inflections, lemma,
     lemmatr, pos, infltype, lemmatype, headtemp, headtemp_param, deftemp,
     deftemp_param, gender, deftemp_needs_lang=True, entrytext=None,
-    is_lemma_template=None, lemmas_to_overwrite=[],
+    is_lemma_template=None, lemmas_to_overwrite=[], lemmas_to_not_overwrite=[],
     allow_stress_mismatch_in_defn=False):
 
   # Remove any links that may esp. appear in the lemma, since the
@@ -580,15 +593,18 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
   assert len(pagenames) == 1
   pagename = list(pagenames)[0]
 
-  def pagemsg(text, simple=False):
+  def pagemsg(text, simple=False, fun=msg):
     if simple:
-      msg("Page %s %s: %s" % (index, pagename, text))
+      fun("Page %s %s: %s" % (index, pagename, text))
     else:
-      msg("Page %s %s: %s: %s %s, %s %s%s" % (index, pagename, text, infltype,
+      fun("Page %s %s: %s: %s %s, %s %s%s" % (index, pagename, text, infltype,
         joined_infls_with_tr(), lemmatype, lemma, " (%s)" % lemmatr if lemmatr else ""))
   def pagemsg_if(doit, text, simple=False):
     if doit:
       pagemsg(text, simple=simple)
+  def errpagemsg(txt):
+    pagemsg(txt)
+    pagemsg(txt, fun=errmsg)
   def expand_text(tempcall):
     return blib.expand_text(tempcall, pagename, pagemsg, verbose)
 
@@ -824,13 +840,14 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
   notes = []
 
   try:
-    existing_text = page.text
+    existing_text = blib.try_repeatedly(lambda: page.text, pagemsg, "fetch page text")
   except pywikibot.exceptions.InvalidTitle as e:
     pagemsg("WARNING: Invalid title, skipping")
     traceback.print_exc(file=sys.stdout)
     return
 
-  if not page.exists():
+  if not blib.try_repeatedly(lambda: page.exists(), pagemsg,
+      "check page existence"):
     # Page doesn't exist. Create it.
     pagemsg("Creating page")
     comment = "Create page for Russian %s %s of %s, pos=%s" % (
@@ -878,7 +895,10 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
           if pagename in pages_already_erased:
             pagemsg("WARNING: Not overwriting page, already overwritten previously")
           elif "==Etymology 1==" in sections[i] and not program_args.overwrite_etymologies:
-            pagemsg("WARNING: Found ==Etymology 1== in page text, not overwriting, skipping form")
+            errpagemsg("WARNING: Found ==Etymology 1== in page text, not overwriting, skipping form")
+            return
+          elif pagename in lemmas_to_not_overwrite:
+            errpagemsg("WARNING: Page in --lemmas-to-not-overwrite, not overwriting, skipping form")
             return
           else:
             notes.append("overwrite section")
@@ -1769,7 +1789,8 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
   if page.text != existing_text:
     if save:
       pagemsg("Saving with comment = %s" % comment, simple=True)
-      page.save(comment=comment)
+      blib.try_repeatedly(lambda: page.save(comment=comment), pagemsg,
+          "save page")
     else:
       pagemsg("Would save with comment = %s" % comment, simple=True)
 
@@ -2135,6 +2156,11 @@ def split_forms_with_stress_variants(args, forms_desired, dicforms, pagemsg,
 # the inflection codes of when an existing definition template (e.g.
 # "inflection of") is found with matching lemma. Entries are without accents.
 #
+# LEMMAS_TO_NOT_OVERWRITE is a list of lemma pages, which should in general
+# be the entire set of lemmas. Any non-lemma form that would overwrite the
+# Russian section will not do so if the form is one of these pages.
+# Entries are without accents.
+#
 # SAVE is as in create_inflection_entry(). STARTFROM and UPTO, if not None,
 # delimit the range of pages to process (inclusive on both ends).
 #
@@ -2186,11 +2212,11 @@ def split_forms_with_stress_variants(args, forms_desired, dicforms, pagemsg,
 # separate run, which will not be considered as imperfective participles even
 # if found in an imperfective conjugation.
 def create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite,
-    program_args, save, startFrom, upTo, formspec, form_inflection_dict,
-    form_aliases, pos, headtemp, dicform_codes, expected_header,
-    expected_poses, skip_poses, is_inflection_template, create_form_generator,
-    is_lemma_template, get_gender=None, skip_inflections=None,
-    pppp_set=None):
+    lemmas_to_not_overwrite, program_args, save, startFrom, upTo, formspec,
+    form_inflection_dict, form_aliases, pos, headtemp, dicform_codes,
+    expected_header, expected_poses, skip_poses, is_inflection_template,
+    create_form_generator, is_lemma_template, get_gender=None,
+    skip_inflections=None, pppp_set=None):
 
   forms_desired = parse_form_spec(formspec, form_inflection_dict,
       form_aliases)
@@ -2229,8 +2255,14 @@ def create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite,
     pagetitle = unicode(page.title())
     def pagemsg(txt):
       msg("Page %s %s: %s" % (index, pagetitle, txt))
+    def errpagemsg(txt):
+      pagemsg(txt)
+      errmsg("Page %s %s: %s" % (index, pagetitle, txt))
     def expand_text(tempcall):
       return blib.expand_text(tempcall, pagetitle, pagemsg, verbose)
+    if pagetitle.startswith("-"):
+      pagemsg("Skipping suffix entry")
+      continue
     if pagetitle in skip_lemma_pages:
       pagemsg("WARNING: Skipping lemma because in skip_lemma_pages")
       continue
@@ -2474,6 +2506,7 @@ def create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite,
                       our_headtemp, "", deftemp, inflset,
                       inflset_gender, is_lemma_template=is_lemma_template,
                       lemmas_to_overwrite=lemmas_to_overwrite,
+                      lemmas_to_not_overwrite=lemmas_to_not_overwrite,
                       allow_stress_mismatch_in_defn=allow_stress_mismatch,
                       deftemp_needs_lang=deftemp_needs_lang)
 
@@ -2486,9 +2519,11 @@ def get_verb_gender(t, formname, args):
   return [gender]
 
 def create_verb_forms(save, startFrom, upTo, formspec, lemmas_to_process,
-    lemmas_no_jo, lemmas_to_overwrite, program_args, pppp_set):
+    lemmas_no_jo, lemmas_to_overwrite, lemmas_to_not_overwrite, program_args,
+    pppp_set):
   create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite,
-      program_args, save, startFrom, upTo, formspec, verb_form_inflection_dict,
+      lemmas_to_not_overwrite, program_args, save, startFrom, upTo, formspec,
+      verb_form_inflection_dict,
       # NOTE: 'head|ru|verb form' will be overridden with participles
       verb_form_aliases, "verb", "head|ru|verb form",
       "infinitive", "Conjugation", ["Verb", "Idiom"], [],
@@ -2508,10 +2543,11 @@ def get_adj_gender(t, formname, args):
     return []
 
 def create_adj_forms(save, startFrom, upTo, formspec, lemmas_to_process,
-    lemmas_no_jo, lemmas_to_overwrite, program_args):
+    lemmas_no_jo, lemmas_to_overwrite, lemmas_to_not_overwrite, program_args):
   create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite,
-      program_args, save, startFrom, upTo, formspec, adj_form_inflection_dict,
-      adj_form_aliases, "adjective", "head|ru|adjective form", "nom_m",
+      lemmas_to_not_overwrite, program_args, save, startFrom, upTo, formspec,
+      adj_form_inflection_dict, adj_form_aliases,
+      "adjective", "head|ru|adjective form", "nom_m",
       # Proper noun can occur because names are formatted using {{ru-decl-adj}}
       # with decl type 'proper'.
       "Declension", ["Adjective", "Participle", "Pronoun", "Proper noun"],
@@ -2528,10 +2564,10 @@ def get_noun_gender(t, formname, args):
   return get_noun_gender_from_args(args)
 
 def create_noun_forms(save, startFrom, upTo, formspec, lemmas_to_process,
-      lemmas_no_jo, lemmas_to_overwrite, program_args):
+      lemmas_no_jo, lemmas_to_overwrite, lemmas_to_not_overwrite, program_args):
   create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite,
-      program_args, save, startFrom, upTo, formspec, noun_form_inflection_dict,
-      noun_form_aliases, "noun", "ru-noun form",
+      lemmas_to_not_overwrite, program_args, save, startFrom, upTo, formspec,
+      noun_form_inflection_dict, noun_form_aliases, "noun", "ru-noun form",
       ["nom_sg", "nom_pl"], "Declension", ["Noun", "Proper noun"], [],
       lambda t:unicode(t.name) == "ru-noun-table",
       lambda t:re.sub(r"^\{\{ru-noun-table", "{{ru-generate-noun-args", unicode(t)),
@@ -2596,6 +2632,11 @@ pa.add_argument("--overwrite-lemmas",
 considered to have errors in them (e.g. due to the conjugation template having
 incorrect aspect) and thus should be overwritten. Entries are without
 accents.""")
+pa.add_argument("--lemmas-to-not-overwrite",
+    help=u"""File containing list of lemma pages, which should in general
+be the entire set of lemmas. Any non-lemma form that would overwrite the
+Russian section (--overwrite-page) will not do so if the form is one of
+these pages. Entries are without accents.""")
 pa.add_argument("--overwrite-page", action="store_true",
     help=u"""If specified, overwrite the entire existing page of inflections.
 Won't do this if it finds "Etymology N", unless --overwrite-etymologies is
@@ -2617,15 +2658,19 @@ if params.overwrite_lemmas:
   lemmas_to_overwrite = [x.strip() for x in codecs.open(params.overwrite_lemmas, "r", "utf-8")]
 else:
   lemmas_to_overwrite = []
+if params.lemmas_to_not_overwrite:
+  lemmas_to_not_overwrite = [x.strip() for x in codecs.open(params.lemmas_to_not_overwrite, "r", "utf-8")]
+else:
+  lemmas_to_not_overwrite = []
 if params.perfective_past_passive_participles:
   pppp_set = set(x.strip() for x in codecs.open(params.perfective_past_passive_participles, "r", "utf-8"))
 else:
   pppp_set = None
 if params.adj_form:
-  create_adj_forms(params.save, startFrom, upTo, params.adj_form, lemmas_to_process, params.lemmas_no_jo, lemmas_to_overwrite, params)
+  create_adj_forms(params.save, startFrom, upTo, params.adj_form, lemmas_to_process, params.lemmas_no_jo, lemmas_to_overwrite, lemmas_to_not_overwrite, params)
 if params.noun_form:
-  create_noun_forms(params.save, startFrom, upTo, params.noun_form, lemmas_to_process, params.lemmas_no_jo, lemmas_to_overwrite, params)
+  create_noun_forms(params.save, startFrom, upTo, params.noun_form, lemmas_to_process, params.lemmas_no_jo, lemmas_to_overwrite, lemmas_to_not_overwrite, params)
 if params.verb_form:
-  create_verb_forms(params.save, startFrom, upTo, params.verb_form, lemmas_to_process, params.lemmas_no_jo, lemmas_to_overwrite, params, pppp_set)
+  create_verb_forms(params.save, startFrom, upTo, params.verb_form, lemmas_to_process, params.lemmas_no_jo, lemmas_to_overwrite, lemmas_to_not_overwrite, params, pppp_set)
 
 blib.elapsed_time()
