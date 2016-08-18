@@ -18,7 +18,12 @@ def process_page(index, page, save, verbose):
   pagemsg("Processing")
 
   cons = u"[бцдфгчйклмнпрствшхзжщ]"
-  if not re.search(cons + u"[кц][оаяеыи]$", pagetitle) and not re.search(u"[ое][кц]$", pagetitle):
+  if (pagetitle.endswith(u"ство") or (
+      not re.search(cons + u"[кц][оаяеёыи]$", pagetitle) and
+      not re.search(cons + cons + u"[оаяеёыи]$", pagetitle) and
+      # not re.search(u"[оеё]" + cons + "$", pagetitle) and # but too many false positives
+      not re.search(u"[оеё][кц]$", pagetitle)
+     )):
     return
   text = unicode(page.text)
   parsed = blib.parse(page)
