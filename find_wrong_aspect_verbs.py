@@ -41,16 +41,16 @@ def process_page(index, page, fix, save, verbose):
         pagemsg("WARNING: Found aspect '?'")
       else:
         pagemsg("WARNING: Found bad aspect value '%s' in ru-verb" % aspect)
-    elif tname.startswith("ru-conj-") and tname != "ru-conj-verb-see":
-      aspect = re.sub("-.*", "", getparam(t, "1"))
+    elif tname == "ru-conj" and tname != "ru-conj-verb-see":
+      aspect = re.sub("-.*", "", getparam(t, "2"))
       if aspect not in ["pf", "impf"]:
-        pagemsg("WARNING: Found bad aspect value '%s' in ru-conj-*" %
-            getparam(t, "1"))
+        pagemsg("WARNING: Found bad aspect value '%s' in ru-conj" %
+            getparam(t, "2"))
       else:
         if not headword_aspects:
-          pagemsg("WARNING: No ru-verb preceding ru-conj-*: %s" % unicode(t))
+          pagemsg("WARNING: No ru-verb preceding ru-conj: %s" % unicode(t))
         elif aspect not in headword_aspects:
-          pagemsg("WARNING: ru-conj-* aspect %s not in ru-verb aspect %s" %
+          pagemsg("WARNING: ru-conj aspect %s not in ru-verb aspect %s" %
               (aspect, ",".join(headword_aspects)))
   if fix:
     if found_multiple_headwords:
@@ -63,11 +63,11 @@ def process_page(index, page, fix, save, verbose):
       for t in parsed.filter_templates():
         origt = unicode(t)
         tname = unicode(t.name)
-        if tname.startswith("ru-conj-") and tname != "ru-conj-verb-see":
+        if tname == "ru-conj" and tname != "ru-conj-verb-see":
 
-          param1 = getparam(t, "1")
+          param1 = getparam(t, "2")
           param1 = re.sub("^(pf|impf)((-.*)?)$", r"%s\2" % list(headword_aspects)[0], param1)
-          t.add("1", param1)
+          t.add("2", param1)
         newt = unicode(t)
         if origt != newt:
           pagemsg("Replaced %s with %s" % (origt, newt))
