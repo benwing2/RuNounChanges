@@ -1,7 +1,23 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+# Author: Originally CodeCat for MewBot; rewritten by Benwing
+
+#    blib.py is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 import pywikibot, mwparserfromhell, re, string, sys, codecs, urllib2, datetime, json, argparse, time
+from arabiclib import reorder_shadda
 from collections import Counter
 
 site = pywikibot.Site()
@@ -19,10 +35,19 @@ def remove_right_side_links(text):
   return text
 
 def msg(text):
-  print text.encode("utf-8")
+  #pywikibot.output(text.encode('utf-8'), toStdout = True)
+  print text.encode('utf-8')
+
+def msgn(text):
+  #pywikibot.output(text.encode('utf-8'), toStdout = True)
+  print text.encode('utf-8'),
 
 def errmsg(text):
-  print >>sys.stderr, text.encode("utf-8")
+  #pywikibot.output(text.encode('utf-8'))
+  print >> sys.stderr, text.encode('utf-8')
+
+def errmsgn(text):
+  print >> sys.stderr, text.encode('utf-8'),
 
 def parse_text(text):
   return mwparserfromhell.parser.Parser().parse(text, skip_style_tags=True)
@@ -36,9 +61,21 @@ def getparam(template, param):
   else:
     return ""
 
+def addparam(template, param, value, showkey=None, before=None):
+  if re.match("^[0-9]+", param):
+    template.add(param, value, preserve_spacing=False, showkey=showkey,
+        before=before)
+  else:
+    template.add(param, value, showkey=showkey, before=before)
+
 def rmparam(template, param):
   if template.has(param):
     template.remove(param)
+
+def getrmparam(template, param):
+  val = getparam(template, param)
+  rmparam(template, param)
+  return val
 
 def set_template_name(template, name, origname):
   if origname.endswith("\n"):
@@ -121,11 +158,11 @@ def sort_params(t):
     t.add(name, value)
 
 def display(page):
-  pywikibot.output(u'# [[{0}]]'.format(page.title()))
+  errmsg(u'# [[{0}]]'.format(page.title()))
 
 def dump(page):
   old = page.get(get_redirect=True)
-  pywikibot.output(u'Contents of [[{0}]]:\n{1}\n----------'.format(page.title(), old), toStdout = True)
+  msg(u'Contents of [[{0}]]:\n{1}\n----------'.format(page.title(), old))
 
 def expand_text(tempcall, pagetitle, pagemsg, verbose):
   if verbose:
@@ -141,69 +178,176 @@ def expand_text(tempcall, pagetitle, pagemsg, verbose):
     return False
   return result
 
-def do_edit(page, index, func=None, null=False, save=False):
+def do_edit(page, index, func=None, null=False, save=False, verbose=False):
+  title = unicode(page.title())
+  def pagemsg(text):
+    msg("Page %s %s: %s" % (index, title, text))
   while True:
     try:
       if func:
-        new, comment = func(page, index, parse_text(page.text))
-        
+        if verbose:
+          pagemsg("Begin processing")
+        new, comment = func(page, index, parse(page))
+
         if new:
           new = unicode(new)
-          
-          if page.text != new:
+
+          # Canonicalize shaddas when comparing pages so we don't do saves
+          # that only involve different shadda orders.
+          if reorder_shadda(page.text) != reorder_shadda(new):
+            if verbose:
+              pagemsg('Replacing <%s> with <%s>' % (page.text, new))
             page.text = new
             if save:
-              msg("%s %s: Saving with comment = %s" % (index, unicode(page.title()), comment))
+              pagemsg("Saving with comment = %s" % comment)
               page.save(comment = comment)
             else:
-              msg("%s %s: Would save with comment = %s" % (index, unicode(page.title()), comment))
+              pagemsg("Would save with comment = %s" % comment)
           elif null:
-            pywikibot.output(u'Purged page cache for [[{0}]]'.format(page.title()), toStdout = True)
+            pagemsg('Purged page cache')
             page.purge(forcelinkupdate = True)
           else:
-            pywikibot.output(u'Skipped [[{0}]]: no changes'.format(page.title()), toStdout = True)
+            pagemsg('Skipped, no changes')
         elif null:
-          pywikibot.output(u'Purged page cache for [[{0}]]'.format(page.title()), toStdout = True)
+          pagemsg('Purged page cache')
           page.purge(forcelinkupdate = True)
         else:
-          pywikibot.output(u'Skipped [[{0}]]: {1}'.format(page.title(), comment), toStdout = True)
+          pagemsg('Skipped: %s' % comment)
       else:
-        pywikibot.output(u'Purged page cache for [[{0}]]'.format(page.title()), toStdout = True)
+        pagemsg('Purged page cache')
         page.purge(forcelinkupdate = True)
     except (pywikibot.LockedPage, pywikibot.NoUsername):
-      pywikibot.output(u'Skipped [[{0}]], page is protected'.format(page.title()))
+      errmsg(u'Page %s %s: Skipped, page is protected' % (index, title))
     except urllib2.HTTPError as e:
       if e.code != 503:
         raise
     except:
-      pywikibot.output(u'Error on [[{0}]]'.format(page.title()))
+      errmsg(u'Page %s %s: Error' % (index, title))
       raise
-    
+
     break
+
+def do_process_text(pagetitle, pagetext, index, func=None, verbose=False):
+  def pagemsg(text):
+    msg("Page %s %s: %s" % (index, pagetitle, text))
+  while True:
+    try:
+      if func:
+        if verbose:
+          pagemsg("Begin processing")
+        new, comment = func(pagetitle, index, parse_text(pagetext))
+
+        if new:
+          new = unicode(new)
+
+          # Canonicalize shaddas when comparing pages so we don't do saves
+          # that only involve different shadda orders.
+          if reorder_shadda(pagetext) != reorder_shadda(new):
+            if verbose:
+              pagemsg('Replacing [[%s]] with [[%s]]' % (pagetext, new))
+            #if save:
+            #  pagemsg("Saving with comment = %s" % comment)
+            #  page.save(comment = comment)
+            #else:
+            pagemsg("Would save with comment = %s" % comment)
+          else:
+            pagemsg('Skipped, no changes')
+        else:
+          pagemsg('Skipped: %s' % comment)
+    except:
+      errmsg(u'Page %s %s: Error' % (index, pagetitle))
+      raise
+
+    break
+
+ignore_prefixes = ["User:", "Talk:",
+    "Wiktionary:Beer parlour", "Wiktionary:Translation requests",
+    "Wiktionary:Grease pit", "Wiktionary:Etymology scriptorium",
+    "Wiktionary:Information desk"]
+
+def iter_pages(pageiter, startsort = None, endsort = None, key = None):
+  i = 0
+  t = None
+  steps = 50
+
+  for current in pageiter:
+    i += 1
+
+    if startsort != None and isinstance(startsort, int) and i < startsort:
+      continue
+
+    if key:
+      keyval = key(current)
+      pagetitle = keyval
+    elif isinstance(current, basestring):
+      keyval = current
+      pagetitle = keyval
+    else:
+      keyval = current.title(withNamespace=False)
+      pagetitle = unicode(current.title())
+    if endsort != None:
+      if isinstance(endsort, int):
+        if i > endsort:
+          break
+      else:
+        if keyval >= endsort:
+          break
+
+    if not t and isinstance(endsort, int):
+      t = datetime.datetime.now()
+
+    # Ignore user pages, talk pages and certain Wiktionary pages
+    is_ignore_prefix = False
+    for ip in ignore_prefixes:
+      if pagetitle.startswith(ip):
+        is_ignore_prefix = True
+    if " talk:" in pagetitle:
+      is_ignore_prefix = True
+    if not is_ignore_prefix:
+      yield current, i
+
+    if i % steps == 0:
+      tdisp = ""
+
+      if isinstance(endsort, int):
+        told = t
+        t = datetime.datetime.now()
+        pagesleft = (endsort - i) / steps
+        tfuture = t + (t - told) * pagesleft
+        tdisp = ", est. " + tfuture.strftime("%X")
+
+      errmsg(str(i) + "/" + str(endsort) + tdisp)
+
 
 def references(page, startsort = None, endsort = None, namespaces = None, includelinks = False):
   if isinstance(page, basestring):
     page = pywikibot.Page(site, page)
-
-  for i, current in iter_items(page.getReferences(onlyTemplateInclusion = not includelinks, namespaces = namespaces), startsort, endsort):
+  pageiter = page.getReferences(onlyTemplateInclusion = not includelinks,
+      namespaces = namespaces)
+  for i, current in in iter_items(pageiter, startsort, endsort):
     yield i, current
 
 def cat_articles(page, startsort = None, endsort = None):
+  if type(page) is str:
+    page = page.decode("utf-8")
   if isinstance(page, basestring):
     page = pywikibot.Category(site, "Category:" + page)
-  
-  for i, current in iter_items(page.articles(startsort = startsort if not isinstance(startsort, int) else None), startsort, endsort):
+  pageiter = page.articles(startsort = startsort if not isinstance(startsort, int) else None)
+  for i, current in iter_items(pageiter, startsort, endsort):
     yield i, current
 
 def cat_subcats(page, startsort = None, endsort = None):
+  if type(page) is str:
+    page = page.decode("utf-8")
   if isinstance(page, basestring):
     page = pywikibot.Category(site, "Category:" + page)
-  
-  for i, current in iter_items(page.subcategories(startsort = startsort if not isinstance(startsort, int) else None), startsort, endsort):
+  pageiter = page.subcategories() #no startsort; startsort = startsort if not isinstance(startsort, int) else None)
+  for i, current in iter_items(pageiter, startsort, endsort):
     yield i, current
 
 def prefix(prefix, startsort = None, endsort = None, namespace = None):
-  for i, current in iter_items(site.prefixindex(prefix, namespace), startsort, endsort):
+  pageiter = site.prefixindex(prefix, namespace)
+  for i, current in iter_items(pageiter, startsort, endsort):
     yield i, current
 
 def stream(st, startsort = None, endsort = None):
@@ -217,7 +361,7 @@ def stream(st, startsort = None, endsort = None):
     if endsort != None and i > endsort:
       break
     
-    if type(name) == str:
+    if type(name) is str:
       name = str.decode(name, "utf-8")
     
     name = re.sub(ur"^[#*] *\[\[(.+)]]$", ur"\1", name, flags=re.UNICODE)
@@ -305,9 +449,36 @@ def create_argparser(desc):
   parser = argparse.ArgumentParser(description=desc)
   parser.add_argument('start', help="Starting page index", nargs="?")
   parser.add_argument('end', help="Ending page index", nargs="?")
-  parser.add_argument('--save', action="store_true", help="Save results")
-  parser.add_argument('--verbose', action="store_true", help="More verbose output")
+  parser.add_argument('-s', '--save', action="store_true", help="Save results")
+  parser.add_argument('-v', '--verbose', action="store_true", help="More verbose output")
   return parser
+
+def init_argparser(desc):
+  return create_argparser(desc)
+
+def get_args(args = sys.argv[1:]):
+  startsort = None
+  endsort = None
+
+  if len(args) >= 1:
+    startsort = args[0]
+  if len(args) >= 2:
+    endsort = args[1]
+  return parse_start_end(startsort, endsort)
+
+def parse_start_end(startsort, endsort):
+  if startsort != None:
+    try:
+      startsort = int(startsort)
+    except ValueError:
+      startsort = str.decode(startsort, "utf-8")
+  if endsort != None:
+    try:
+      endsort = int(endsort)
+    except ValueError:
+      endsort = str.decode(endsort, "utf-8")
+
+  return (startsort, endsort)
 
 def elapsed_time():
   endtime = time.time()
@@ -418,4 +589,365 @@ def try_repeatedly(fun, pagemsg, operation="save", max_tries=10, sleep_time=5):
         sleep_time += 40
       else:
         sleep_time *= 2
+
+# Process link-like templates, on pages from STARTFROM to (but not including)
+# UPTO, either page names or 0-based integers. Save changes if SAVE is true.
+# VERBOSE is passed to blib.do_edit and will (e.g.) show exact changes.
+# PROCESS_PARAM is the function called, which is called with five arguments:
+# The page, its index (an integer), the template on the page, the param in the
+# template containing the foreign text and the param containing the Latin
+# transliteration, or None if there is no such parameter. NOTE: The param may
+# be an array ["page title", PARAM] for a case where the param value should be
+# fetched from the page title and saved to PARAM. It should return a list of
+# changelog strings if changes were made, and something else otherwise
+# (e.g. False). Changelog strings for all templates will be joined together
+# using JOIN_ACTIONS; if not supplied, they will be separated by a semi-colon.
+#
+# LANG should be a short language code (e.g. 'ru', 'ar', 'grc'), and LONGLANG
+# the canonical language name (e.g. "Russian", "Arabic", "Ancient Greek").
+# CATTYPE is either 'vocab' (do lemmas and non-lemma pages for the language),
+# 'borrowed' (do pages for terms borrowed from the language), 'translation'
+# (do pages containing references to any of the 5 standard translation
+# templates), 'pagetext' (do the pages in PAGES_TO_DO, a list of (TITLE, TEXT)
+# entries); for doing off-line runs; nothing saved), or 'pages' (do the
+# pages in PAGES_TO_DO, a list of page titles).
+#
+# If SPLIT_TEMPLATES, then if the transliteration contains multiple entries
+# separated the regex in SPLIT_TEMPLATES with optional spaces on either end,
+# the template is split into multiple copies, each with one of the entries,
+# and the templates are comma-separated.
+#
+# If QUIET, don't output the list of processed templates at the end.
+def process_links(save, verbose, lang, longlang, cattype, startFrom, upTo,
+    process_param, join_actions=None, split_templates="[,]",
+    pages_to_do=[], quiet=False):
+  templates_changed = {}
+  templates_seen = {}
+
+  # Process the link-like templates on the page with the given title and text,
+  # calling PROCESSFN for each pair of foreign/Latin. Return a list of
+  # changelog actions.
+  def do_process_one_page_links(pagetitle, index, text, processfn):
+    def pagemsg(text):
+      msg("Page %s %s: %s" % (index, pagetitle, text))
+
+    actions = []
+    for template in text.filter_templates():
+      def getp(param):
+        return getparam(template, param)
+      tempname = unicode(template.name)
+      def doparam(param, trparam="tr", noadd=False):
+        if not getp(param):
+          return False
+        if not noadd:
+          templates_seen[tempname] = templates_seen.get(tempname, 0) + 1
+        result = processfn(pagetitle, index, template, param, trparam)
+        if result and isinstance(result, list):
+          actions.extend(result)
+          if not noadd:
+            templates_changed[tempname] = templates_changed.get(tempname, 0) + 1
+          return True
+        return False
+
+      did_template = False
+      if lang == "grc":
+        # Special-casing for Ancient Greek
+        did_template = True
+        def dogrcparam(trparam):
+          if getp("head"):
+            doparam("head", trparam)
+          else:
+            doparam(["page title", "head"], trparam)
+        if tempname in ["grc-noun-con"]:
+          dogrcparam("5")
+        elif tempname in ["grc-proper noun", "grc-noun"]:
+          dogrcparam("4")
+        elif tempname in ["grc-adj-1&2", "grc-adj-1&3", "grc-part-1&3"]:
+          dogrcparam("3")
+        elif tempname in ["grc-adj-2nd", "grc-adj-3rd", "grc-adj-2&3"]:
+          dogrcparam("2")
+        elif tempname in ["grc-num"]:
+          dogrcparam("1")
+        elif tempname in ["grc-verb"]:
+          dogrcparam("tr")
+        else:
+          did_template = False
+      elif lang == "ru":
+        # Special-casing for Russian
+        if tempname in ["ru-participle of", "ru-abbrev of", "ru-etym abbrev of",
+            "ru-acronym of", "ru-etym acronym of", "ru-initialism of",
+            "ru-etym initialism of", "ru-clipping of", "ru-etym clipping of",
+            "ru-pre-reform"]:
+          if getp("2"):
+            doparam("2")
+          else:
+            doparam("1")
+          did_template = True
+        elif tempname == "ru-xlit":
+          doparam("1", None)
+          did_template = True
+        elif tempname == "ru-ux":
+          doparam("1")
+          did_template = True
+
+      # Skip {{attention|ar|FOO}} or {{etyl|ar|FOO}} or {{audio|FOO|lang=ar}}
+      # or {{lb|ar|FOO}} or {{context|FOO|lang=ar}} or {{Babel-2|ar|FOO}}
+      # or various others, where FOO is not Arabic, and {{w|FOO|lang=ar}}
+      # or {{wikipedia|FOO|lang=ar}} or {{pedia|FOO|lang=ar}} etc., where
+      # FOO is Arabic but diacritics aren't stripped so shouldn't be added.
+      if (tempname in [
+        "attention",
+        "audio", "audio-IPA",
+        "catlangcode", "C", "catlangname",
+        "commonscat",
+        "etyl", "etym",
+        "gloss",
+        "label", "lb", "lbl", "context", "cx",
+        "non-gloss definition", "non-gloss", "non gloss", "n-g",
+        "qualifier", "qual", "i", "italbrac",
+        "rfe", "rfinfl",
+        "sense", "italbrac-colon",
+        "senseid",
+        "given name",
+        "+preo", "IPA", "phrasebook", "PIE root", "surname", "Q", "was fwotd",
+        # skip Wikipedia templates
+        "wikipedia", "w", "pedialite", "pedia"]
+        # More Wiki-etc. templates
+        or tempname.startswith("projectlink")
+        or tempname.startswith("PL:")
+        # Babel templates indicating language proficiency
+        or "Babel" in tempname):
+        pass
+      elif did_template:
+        pass
+      # Look for {{head|ar|...|head=<ARABIC>}}
+      elif tempname == "head":
+        if getp("1") == lang:
+          if getp("head"):
+            doparam("head")
+          else:
+            doparam(["page title", "head"])
+      # Look for {{t|ar|<PAGENAME>|alt=<ARABICTEXT>}}
+      elif tempname in ["t", "t+", "t-", "t+check", "t-check"]:
+        if getp("1") == lang:
+          if getp("alt"):
+            doparam("alt")
+          else:
+            doparam("2")
+      # Look for {{suffix|ar|<PAGENAME>|alt1=<ARABICTEXT>|<PAGENAME>|alt2=...}}
+      # or  {{suffix|ar|<ARABICTEXT>|<ARABICTEXT>|...}}
+      elif (tempname in ["suffix", "suffix2", "prefix", "confix", "affix",
+          "circumfix", "infix", "compound"]):
+        if getp("lang") == lang:
+          templates_seen[tempname] = templates_seen.get(tempname, 0) + 1
+          anychanged = False
+          # Don't just do cases up through where there's a numbered param
+          # because there may be holes.
+          for i in xrange(1, 11):
+            if getp("alt" + str(i)):
+              changed = doparam("alt" + str(i), "tr" + str(i), noadd=True)
+            else:
+              changed = doparam(str(i), "tr" + str(i), noadd=True)
+            anychanged = anychanged or changed
+          if anychanged:
+            templates_changed[tempname] = templates_changed.get(tempname, 0) + 1
+      elif tempname == "form of":
+        if getp("lang") == lang:
+          if getp("3"):
+            doparam("3")
+          else:
+            doparam("2")
+      # Templates where we don't check for alternative text because
+      # the following parameter is used for the translation.
+      elif tempname in ["ux", "lang"]:
+        if getp("1") == lang:
+          doparam("2")
+      elif tempname == "usex":
+        if getp("lang") == lang:
+          doparam("1")
+      elif tempname == "cardinalbox":
+        if getp("1") == lang:
+          pagemsg("WARNING: Encountered cardinalbox, check params carefully: %s"
+              % unicode(template))
+          # FUCKME: This is a complicated template, might be doing it wrong
+          doparam("5", None)
+          doparam("6", None)
+          for p in ["card", "ord", "adv", "mult", "dis", "coll", "frac",
+              "optx", "opt2x"]:
+            if getp(p + "alt"):
+              doparam(p + "alt", p + "tr")
+            else:
+              doparam(p, p + "tr")
+          if getp("alt"):
+            doparam("alt")
+          else:
+            doparam("wplink", None)
+      elif tempname in ["der2", "der3", "der4", "der5", "rel2", "rel3", "rel4",
+          "rel5", "hyp2", "hyp3", "hyp4", "hyp5"]:
+        if getp("lang") == lang:
+          i = 1
+          while getp(str(i)):
+            doparam(str(i), None)
+            i += 1
+      elif tempname == "elements":
+        if getp("lang") == lang:
+          doparam("2", None)
+          doparam("4", None)
+          doparam("next2", None)
+          doparam("prev2", None)
+      elif tempname in ["bor", "borrowing"] and getp("lang"):
+        if getp("1") == lang:
+          if getp("alt"):
+            doparam("alt")
+          elif getp("3"):
+            doparam("3")
+          else:
+            doparam("2")
+      elif tempname in ["der", "derived", "inh", "inherited", "bor", "borrowing"]:
+        if getp("2") == lang:
+          if getp("alt"):
+            doparam("alt")
+          elif getp("4"):
+            doparam("4")
+          else:
+            doparam("3")
+      # Look for any other template with lang as first argument
+      elif (#tempname in ["l", "link", "m", "mention"] and
+          # If "1" matches, don't do templates with a lang= as well,
+          # e.g. we don't want to do {{hyphenation|ru|men|lang=sh}} in
+          # Russian because it's actually lang sh.
+          getp("1") == lang and not getp("lang")):
+        # Look for:
+        #   {{m|ar|<PAGENAME>|<ARABICTEXT>}}
+        #   {{m|ar|<PAGENAME>|alt=<ARABICTEXT>}}
+        #   {{m|ar|<ARABICTEXT>}}
+        if getp("alt"):
+          doparam("alt")
+        elif getp("3"):
+          doparam("3")
+        elif tempname != "transliteration":
+          doparam("2")
+      # Look for any other template with "lang=ar" in it. But beware of
+      # {{borrowing|en|<ENGLISHTEXT>|lang=ar}}.
+      elif (#tempname in ["term", "plural of", "definite of", "feminine of", "diminutive of"] and
+          getp("lang") == lang):
+        # Look for:
+        #   {{term|lang=ar|<PAGENAME>|<ARABICTEXT>}}
+        #   {{term|lang=ar|<PAGENAME>|alt=<ARABICTEXT>}}
+        #   {{term|lang=ar|<ARABICTEXT>}}
+        if getp("alt"):
+          doparam("alt")
+        elif getp("2"):
+          doparam("2")
+        else:
+          doparam("1")
+    return actions
+
+  # Process the link-like templates on the given page with the given text.
+  # Returns the changed text along with a changelog message.
+  def process_one_page_links(pagetitle, index, text):
+    actions = []
+    newtext = [unicode(text)]
+
+    def pagemsg(text):
+      msg("Page %s %s: %s" % (index, pagetitle, text))
+
+    # First split up any templates with commas in the Latin
+    if split_templates:
+      def process_param_for_splitting(pagetitle, index, template, param, paramtr):
+        if isinstance(param, list):
+          fromparam, toparam = param
+        else:
+          fromparam = param
+        if fromparam == "page title":
+          foreign = pagetitle
+        else:
+          foreign = getparam(template, fromparam)
+        latin = getparam(template, paramtr)
+        if (re.search(split_templates, latin) and not
+            re.search(split_templates, foreign)):
+          trs = re.split("\\s*" + split_templates + "\\s*", latin)
+          oldtemp = unicode(template)
+          newtemps = []
+          for tr in trs:
+            addparam(template, paramtr, tr)
+            newtemps.append(unicode(template))
+          newtemp = ", ".join(newtemps)
+          old_newtext = newtext[0]
+          pagemsg("Splitting template %s into %s" % (oldtemp, newtemp))
+          new_newtext = old_newtext.replace(oldtemp, newtemp)
+          if old_newtext == new_newtext:
+            pagemsg("WARNING: Unable to locate old template when splitting trs on commas: %s"
+                % oldtemp)
+          elif len(new_newtext) - len(old_newtext) != len(newtemp) - len(oldtemp):
+            pagemsg("WARNING: Length mismatch when splitting template on tr commas, may have matched multiple templates: old=%s, new=%s" % (
+              oldtemp, newtemp))
+          newtext[0] = new_newtext
+          return ["split %s=%s" % (paramtr, latin)]
+        return []
+
+      actions += do_process_one_page_links(pagetitle, index, text,
+          process_param_for_splitting)
+      text = parse_text(newtext[0])
+
+    actions += do_process_one_page_links(pagetitle, index, text, process_param)
+    if not join_actions:
+      changelog = '; '.join(actions)
+    else:
+      changelog = join_actions(actions)
+    #if len(terms_processed) > 0:
+    pagemsg("Change log = %s" % changelog)
+    return text, changelog
+
+  def process_one_page_links_wrapper(page, index, text):
+    return process_one_page_links(unicode(page.title()), index, text)
+
+  if "," in cattype:
+    cattypes = cattype.split(",")
+  else:
+    cattypes = [cattype]
+  for cattype in cattypes:
+    if cattype in ["translation", "links"]:
+      if cattype == "translation":
+        templates = ["t", "t+", "t-", "t+check", "t-check"]
+      else:
+        templates = ["l", "m", "term", "link", "mention"]
+      for template in templates:
+        msg("Processing template %s" % template)
+        errmsg("Processing template %s" % template)
+        for page, index in references("Template:%s" % template, startFrom, upTo):
+          do_edit(page, index, process_one_page_links_wrapper, save=save,
+              verbose=verbose)
+    elif cattype == "pages":
+      for pagename, index in iter_pages(pages_to_do, startFrom, upTo):
+        page = pywikibot.Page(site, pagename)
+        do_edit(page, index, process_one_page_links_wrapper, save=save,
+            verbose=verbose)
+    elif cattype == "pagetext":
+      for current, index in iter_pages(pages_to_do, startFrom, upTo,
+          key=lambda x:x[0]):
+        pagetitle, pagetext = current
+        do_process_text(pagetitle, pagetext, index, process_one_page_links,
+            verbose=verbose)
+    else:
+      if cattype == "vocab":
+        cats = ["%s lemmas" % longlang, "%s non-lemma forms" % longlang]
+      elif cattype == "borrowed":
+        cats = [subcat for subcat, index in
+            cat_subcats("Terms derived from %s" % longlang)]
+      else:
+        raise ValueError("Category type '%s' should be 'vocab', 'borrowed', 'translation', 'links', 'pages' or 'pagetext'")
+      for cat in cats:
+        msg("Processing category %s" % unicode(cat))
+        errmsg("Processing category %s" % unicode(cat))
+        for page, index in cat_articles(cat, startFrom, upTo):
+          do_edit(page, index, process_one_page_links_wrapper, save=save,
+              verbose=verbose)
+  if not quiet:
+    msg("Templates seen:")
+    for template, count in sorted(templates_seen.items(), key=lambda x:-x[1]):
+      msg("  %s = %s" % (template, count))
+    msg("Templates processed:")
+    for template, count in sorted(templates_changed.items(), key=lambda x:-x[1]):
+      msg("  %s = %s" % (template, count))
 
