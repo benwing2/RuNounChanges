@@ -10,6 +10,7 @@
 #    with final -и or whatever in place of -е. Fix them.
 # 2. (DONE) Remove final ! and ? from page title when looking for final -е.
 # 3. (DONE) Recognize prepositions and nnp's
+# 4. Handle adding pos=imp to imperatives in -[дт]ься.
 
 import pywikibot, re, sys, codecs, argparse
 from collections import Counter
@@ -39,13 +40,16 @@ def process_page(index, page, save, verbose):
     return
 
   titlewords = re.split(u"([ ‿-]+)", re.sub("[!?]$", "", pagetitle))
-  saw_e = False
+  saw_e_or_imp_tsja = False
   for word in titlewords:
     if word.endswith(u"е") and not ru.is_monosyllabic(word):
-      saw_e = True
+      saw_e_or_imp_tsja = True
       break
-  if not saw_e:
-    pagemsg(u"No possible final unstressed -е in page title, skipping")
+    if re.search(u"[дт]ься$", word):
+      saw_e_or_imp_tsja = True
+      break
+  if not saw_e_or_imp_tsja:
+    pagemsg(u"No possible final unstressed -е or -[дт]ьса in page title, skipping")
     return
 
   if (" " in pagetitle or "-" in pagetitle) and not override_pos:
