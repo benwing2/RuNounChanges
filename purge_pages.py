@@ -10,7 +10,7 @@ parser = blib.create_argparser(u"Purge (null-save) pages in category or referenc
 parser.add_argument('--cat', help="Category to purge")
 parser.add_argument('--ref', help="References to purge")
 args = parser.parse_args()
-start, end = blib.get_args(args.start, args.end)
+start, end = blib.parse_start_end(args.start, args.end)
 
 pages = []
 if args.cat:

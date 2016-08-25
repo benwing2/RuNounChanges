@@ -18,7 +18,7 @@ import blib
 from blib import msg, getparam, addparam
 
 def search_iyya_noetym(startFrom, upTo):
-  for page, index in blib.cat_articles(u"Arabic nouns", startFrom, upTo):
+  for index, page in blib.cat_articles(u"Arabic nouns", startFrom, upTo):
     text = blib.parse(page)
     pagetitle = page.title()
     etym = False
@@ -34,6 +34,6 @@ def search_iyya_noetym(startFrom, upTo):
         msg("Page %s %s: Ends with -iyya, no appropriate etym template%s" % (
           index, pagetitle, " (has suffix template)" if suffix else ""))
 
-startFrom, upTo = blib.get_args()
+startFrom, upTo = blib.parse_args()
 
 search_iyya_noetym(startFrom, upTo)

@@ -38,7 +38,7 @@ def process_page(index, page):
 
 parser = blib.create_argparser("Find missing adjective headwords")
 args = parser.parse_args()
-start, end = blib.get_args(args.start, args.end)
+start, end = blib.parse_start_end(args.start, args.end)
 
 for cat in ["Russian adjectives", "Russian adjective forms", "Russian lemmas", "Russian non-lemma forms"]:
   msg("Processing category %s" % cat)

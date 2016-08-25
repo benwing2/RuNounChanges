@@ -56,7 +56,7 @@ def process_page(index, page, save, verbose):
 
 parser = blib.create_argparser(u"Remove informal comparatives from adjectives when regular comparative present")
 args = parser.parse_args()
-start, end = blib.get_args(args.start, args.end)
+start, end = blib.parse_start_end(args.start, args.end)
 
 for category in ["Russian adjectives"]:
   msg("Processing category: %s" % category)

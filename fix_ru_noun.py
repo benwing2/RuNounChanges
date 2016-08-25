@@ -304,7 +304,7 @@ def process_page_section(index, page, section, verbose):
 
 parser = blib.create_argparser("Convert ru-noun to ru-noun+, ru-proper noun to ru-proper noun+")
 args = parser.parse_args()
-start, end = blib.get_args(args.start, args.end)
+start, end = blib.parse_start_end(args.start, args.end)
 
 for template in ["Template:ru-noun", "Template:ru-proper noun"]:
   msg("Processing references to %s" % template)

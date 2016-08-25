@@ -46,7 +46,7 @@ def process_page(index, page, save, verbose):
 
 parser = blib.create_argparser(u"Convert 4th param to past_f")
 args = parser.parse_args()
-start, end = blib.get_args(args.start, args.end)
+start, end = blib.parse_start_end(args.start, args.end)
 
 for category in ["Pages with module errors"]:
   msg("Processing category: %s" % category)

@@ -106,7 +106,7 @@ parser.add_argument('--direcfile', help="File containing pages to fix and direct
 parser.add_argument('--delete-bad', action="store_true", help="Delete bad forms.")
 parser.add_argument('--fix-verbs', action="store_true", help="Fix verb conjugation.")
 args = parser.parse_args()
-start, end = blib.get_args(args.start, args.end)
+start, end = blib.parse_start_end(args.start, args.end)
 
 pagedirecs = []
 lines = [x.strip() for x in codecs.open(args.direcfile, "r", "utf-8")]

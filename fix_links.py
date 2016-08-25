@@ -281,7 +281,7 @@ if __name__ == "__main__":
   parser = blib.create_argparser("Replace raw links with templated links")
   parser.add_argument('--lang', help="Language code for language to do")
   args = parser.parse_args()
-  start, end = blib.get_args(args.start, args.end)
+  start, end = blib.parse_start_end(args.start, args.end)
 
   if not args.lang:
     raise ValueError("Language code must be specified")

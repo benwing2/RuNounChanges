@@ -29,7 +29,7 @@ def rewrite_one_page_ar_nisba(page, index, text):
   return text, "ar-nisba: head= -> 1="
 
 def rewrite_ar_nisba(save, verbose, startFrom, upTo):
-  for page, index in blib.references("Template:ar-nisba", startFrom, upTo):
+  for index, page in blib.references("Template:ar-nisba", startFrom, upTo):
     blib.do_edit(page, index, rewrite_one_page_ar_nisba, save=save, verbose=verbose)
 
 pa = blib.init_argparser("Rewrite ar-nisba, changing head= to 1=")

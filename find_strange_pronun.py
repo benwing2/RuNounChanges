@@ -71,7 +71,7 @@ parser.add_argument('--pagefile', help="File containing pages to fix.")
 parser.add_argument("--fix-star", action="store_true",
   help="Fix pronun lines missing * at beginning")
 args = parser.parse_args()
-start, end = blib.get_args(args.start, args.end)
+start, end = blib.parse_start_end(args.start, args.end)
 
 if args.pagefile:
   lines = [x.strip() for x in codecs.open(args.pagefile, "r", "utf-8")]

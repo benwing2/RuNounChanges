@@ -53,7 +53,7 @@ def process_page(index, page, save, verbose):
 
 parser = blib.create_argparser(u"Fix up class-6 no-iotation verbs")
 args = parser.parse_args()
-start, end = blib.get_args(args.start, args.end)
+start, end = blib.parse_start_end(args.start, args.end)
 
 for i, page in blib.cat_articles("Russian class 6 verbs", start, end):
   process_page(i, page, args.save, args.verbose)

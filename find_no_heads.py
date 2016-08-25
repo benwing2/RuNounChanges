@@ -77,7 +77,7 @@ def process_page(index, page, save, verbose):
 
 parser = blib.create_argparser(u"Find Russian terms without a proper headword line")
 args = parser.parse_args()
-start, end = blib.get_args(args.start, args.end)
+start, end = blib.parse_start_end(args.start, args.end)
 
 for category in ["Russian nouns", "Russian proper nouns", "Russian pronouns", "Russian determiners", "Russian adjectives", "Russian verbs", "Russian participles", "Russian adverbs", "Russian prepositions", "Russian conjunctions", "Russian interjections", "Russian idioms", "Russian phrases", "Russian abbreviations", "Russian acronyms", "Russian initialisms", "Russian noun forms", "Russian proper noun forms", "Russian pronoun forms", "Russian determiner forms", "Russian verb forms", "Russian adjective forms", "Russian participle forms"]:
   cat_head_count = {}

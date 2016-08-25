@@ -32,7 +32,7 @@ def rewrite_template_names(old, new, removelist, save, verbose,
 
     return text, '; '.join(actions)
 
-  for page, index in blib.references("Template:%s" % old, startFrom, upTo):
+  for index, page in blib.references("Template:%s" % old, startFrom, upTo):
     blib.do_edit(page, index, rewrite_one_page_template_names, save=save,
         verbose=verbose)
 

@@ -379,7 +379,7 @@ def canon_headwords(save, verbose, startFrom, upTo):
   #for page in blib.references(u"Template:tracking/ar-head/head", startFrom, upTo):
   #for page in blib.references("Template:ar-nisba", startFrom, upTo):
   for cat in [u"Arabic lemmas", u"Arabic non-lemma forms"]:
-    for page, index in blib.cat_articles(cat, startFrom, upTo):
+    for index, page in blib.cat_articles(cat, startFrom, upTo):
       blib.do_edit(page, index, process_page, save=save, verbose=verbose)
 
 # Canonicalize Arabic and Latin in link-like templates on pages from STARTFROM

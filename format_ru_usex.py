@@ -149,7 +149,7 @@ def process_page(index, page, save, verbose):
 parser = blib.create_argparser(u"Convert manually formatted Russian usage examples to ru-ux")
 parser.add_argument('--pagefile', help="File containing pages to fix.")
 args = parser.parse_args()
-start, end = blib.get_args(args.start, args.end)
+start, end = blib.parse_start_end(args.start, args.end)
 
 if args.pagefile:
   lines = [x.strip() for x in codecs.open(args.pagefile, "r", "utf-8")]

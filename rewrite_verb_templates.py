@@ -68,7 +68,7 @@ def rewrite_one_page_verb_headword(page, index, text):
 
 def rewrite_verb_headword(save, startFrom, upTo):
   for cat in [u"Arabic verbs"]:
-    for page, index in blib.cat_articles(cat, startFrom, upTo):
+    for index, page in blib.cat_articles(cat, startFrom, upTo):
       blib.do_edit(page, index, rewrite_one_page_verb_headword, save=save)
 
 def canonicalize_verb_form(save, startFrom, upTo, tempname, formarg):
@@ -100,7 +100,7 @@ def canonicalize_verb_form(save, startFrom, upTo, tempname, formarg):
       msg("Change log = %s" % changelog)
     return text, changelog
 
-  for page, index in blib.references("Template:%s" % tempname, startFrom, upTo):
+  for index, page in blib.references("Template:%s" % tempname, startFrom, upTo):
     blib.do_edit(page, index, canonicalize_one_page_verb_form, save=save)
 
 pa = blib.init_argparser("Rewrite form= to 1= in verb headword templates")

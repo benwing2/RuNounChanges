@@ -85,7 +85,7 @@ def rewrite_one_page_arz_headword(page, index, text):
 
 def rewrite_arz_headword(save, verbose, startFrom, upTo):
   for cat in [u"Egyptian Arabic adjectives", "Egyptian Arabic nouns"]:
-    for page, index in blib.cat_articles(cat, startFrom, upTo):
+    for index, page in blib.cat_articles(cat, startFrom, upTo):
       blib.do_edit(page, index, rewrite_one_page_arz_headword, save=save,
           verbose=verbose)
 

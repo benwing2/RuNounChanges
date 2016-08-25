@@ -91,7 +91,7 @@ def process_page(index, page, save, verbose, fixdirecs):
 parser = blib.create_argparser(u"Find Russian terms without a proper headword line")
 parser.add_argument('--fix-pagefile', help="File containing pages to fix.")
 args = parser.parse_args()
-start, end = blib.get_args(args.start, args.end)
+start, end = blib.parse_start_end(args.start, args.end)
 
 if args.fix_pagefile:
   fixdireclines = [

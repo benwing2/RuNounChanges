@@ -25,7 +25,7 @@ parser = blib.create_argparser(u"Find red links")
 parser.add_argument("--pagefile", help="File containing pages to check")
 parser.add_argument("--with-freq", help="Words come with frequencies and possibly occur multiple times.", action="store_true")
 args = parser.parse_args()
-start, end = blib.get_args(args.start, args.end)
+start, end = blib.parse_start_end(args.start, args.end)
 
 lemmas = set()
 msg("Reading Russian lemmas")

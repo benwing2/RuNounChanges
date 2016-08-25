@@ -295,7 +295,7 @@ parser = blib.create_argparser("Copy the declension in ru-noun-table to ru-noun+
 parser.add_argument('--cats', default="nouns,proper nouns", help="Categories to do ('nouns', 'proper nouns' or 'nouns,proper nouns')")
 parser.add_argument('--lemma-file', help="File containing lemmas to copy declension of. Will remove extraneous params from ru-noun-table and copy links to ru-noun-table regardless of this.")
 args = parser.parse_args()
-start, end = blib.get_args(args.start, args.end)
+start, end = blib.parse_start_end(args.start, args.end)
 
 if args.lemma_file:
   lemmas = set([x.strip() for x in codecs.open(args.lemma_file, "r", "utf-8")])

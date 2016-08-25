@@ -34,15 +34,15 @@ def rewrite_pages(refrom, reto, refs, cat, pages, pagefile, pagetitle_sub,
     return text, comment or "replace %s" % (", ".join("%s -> %s" % (f, t) for f, t in zipped_fromto))
 
   if pages:
-    pages = ((pywikibot.Page(blib.site, page), index) for page, index in blib.iter_pages(pages, startFrom, upTo))
+    pages = ((index, pywikibot.Page(blib.site, page) for index, page in blib.iter_pages(pages, startFrom, upTo))
   elif pagefile:
     lines = [x.strip() for x in codecs.open(pagefile, "r", "utf-8")]
-    pages = ((pywikibot.Page(blib.site, page), index) for page, index in blib.iter_pages(lines, startFrom, upTo))
+    pages = ((index, pywikibot.Page(blib.site, page)) for index, page in blib.iter_pages(lines, startFrom, upTo))
   elif refs:
     pages = blib.references(refs, startFrom, upTo, includelinks=True)
   else:
     pages = blib.cat_articles(cat, startFrom, upTo)
-  for page, index in pages:
+  for index, page in pages:
     pagetitle = unicode(page.title())
     if filter_pages and not re.search(filter_pages, pagetitle):
       blib.msg("Skipping %s because doesn't match --filter-pages regex %s" %

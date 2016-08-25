@@ -30,7 +30,7 @@ def process_page(index, page, save, verbose, do_noun):
 
 parser = blib.create_argparser("Remove redundant 'Russian nouns' category")
 args = parser.parse_args()
-start, end = blib.get_args(args.start, args.end)
+start, end = blib.parse_start_end(args.start, args.end)
 
 for template in ["ru-noun", "ru-noun+"]:
   temppage = "Template:" + template

@@ -407,7 +407,7 @@ def test_infer():
 parser = blib.create_argparser("Add pronunciation sections to Russian Wiktionary entries")
 parser.add_argument('--mockup', action="store_true", help="Use mocked-up test code")
 args = parser.parse_args()
-start, end = blib.get_args(args.start, args.end)
+start, end = blib.parse_start_end(args.start, args.end)
 mockup = args.mockup
 
 def ignore_page(page):

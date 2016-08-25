@@ -396,7 +396,7 @@ def process_page(index, page, save, verbose):
 parser = blib.create_argparser(u"Add pos= to final -е ru-IPA, fix use of phonetic -и/-я")
 parser.add_argument('--posfile', help="File containing parts of speech for pages, in the form of part of speech, space, page name, one per line")
 args = parser.parse_args()
-start, end = blib.get_args(args.start, args.end)
+start, end = blib.parse_start_end(args.start, args.end)
 
 if args.posfile:
   for line in codecs.open(args.posfile, "r", "utf-8"):

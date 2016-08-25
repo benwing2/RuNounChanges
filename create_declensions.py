@@ -608,7 +608,7 @@ def create_declension(page, index, save, pos, tempname, decltempname, sgnum,
 
 def create_declensions(save, pos, tempname, decltempname, sgnum,
     startFrom, upTo, removeparams, is_proper=False):
-  for page, index in blib.references("Template:%s" % tempname, startFrom, upTo):
+  for index, page in blib.references("Template:%s" % tempname, startFrom, upTo):
     create_declension(page, index, save, pos, tempname, decltempname, sgnum,
         removeparams, is_proper=is_proper)
 

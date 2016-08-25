@@ -128,7 +128,7 @@ def process_page(index, page, save, verbose):
 
 parser = blib.create_argparser("Use {{inh}} and {{bor}} where possible in Russian")
 args = parser.parse_args()
-start, end = blib.get_args(args.start, args.end)
+start, end = blib.parse_start_end(args.start, args.end)
 
 for cat in ["Russian lemmas", "Russian non-lemma forms"]:
   msg("Processing category %s" % cat)

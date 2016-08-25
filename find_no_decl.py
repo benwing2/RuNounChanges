@@ -28,7 +28,7 @@ def process_page(index, page):
 
 parser = blib.create_argparser("Find nouns without declension")
 args = parser.parse_args()
-start, end = blib.get_args(args.start, args.end)
+start, end = blib.parse_start_end(args.start, args.end)
 
 for pos in ["nouns", "proper nouns"]:
   tracking_page = "Template:tracking/ru-headword/space-in-headword/" + pos

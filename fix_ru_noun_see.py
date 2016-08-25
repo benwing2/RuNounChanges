@@ -97,7 +97,7 @@ def process_page(index, page, save, verbose):
 
 parser = blib.create_argparser("Convert ru-decl-noun-see into ru-noun-table decl template, taken from headword ru-(proper )noun+ template")
 args = parser.parse_args()
-start, end = blib.get_args(args.start, args.end)
+start, end = blib.parse_start_end(args.start, args.end)
 
 for index, page in blib.references("Template:ru-decl-noun-see", start, end):
   process_page(index, page, args.save, args.verbose)

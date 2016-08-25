@@ -209,7 +209,7 @@ def process_page(index, page, save, verbose, nowarn=False):
 
 parser = blib.create_argparser(u"Canonicalize various participle definition lines and fix headword and section header")
 args = parser.parse_args()
-start, end = blib.get_args(args.start, args.end)
+start, end = blib.parse_start_end(args.start, args.end)
 
 for category in ["Russian participles", "Russian present active participles", "Russian present passive participles", "Russian past active participles", "Russian past passive participles"]:
   msg("Processing category: %s" % category)

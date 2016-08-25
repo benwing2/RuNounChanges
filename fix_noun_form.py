@@ -126,7 +126,7 @@ def process_page(index, page, save, verbose):
 
 parser = blib.create_argparser(u"Canonicalize {{head|ru|noun form}} and {{ru-noun form}}")
 args = parser.parse_args()
-start, end = blib.get_args(args.start, args.end)
+start, end = blib.parse_start_end(args.start, args.end)
 
 for category in ["Russian noun forms"]:
   msg("Processing category: %s" % category)

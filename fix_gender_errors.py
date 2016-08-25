@@ -52,7 +52,7 @@ def process_page(index, page, save, verbose, genders):
 parser = blib.create_argparser("Fix gender errors introduced by fix_ru_noun.py")
 parser.add_argument('--pagefile', help="File containing pages and warnings to process")
 args = parser.parse_args()
-start, end = blib.get_args(args.start, args.end)
+start, end = blib.parse_start_end(args.start, args.end)
 
 # * Page 3574 [[коала]]: WARNING: Gender mismatch, existing=m-an,f-an, new=f-an
 lines = [x.strip() for x in codecs.open(args.pagefile, "r", "utf-8")]

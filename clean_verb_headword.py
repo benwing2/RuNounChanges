@@ -73,7 +73,7 @@ def clean_one_page_verb_headword(page, index, text):
 
 def clean_verb_headword(save, startFrom, upTo):
   for cat in [u"Arabic verbs"]:
-    for page, index in blib.cat_articles(cat, startFrom, upTo):
+    for index, page in blib.cat_articles(cat, startFrom, upTo):
       blib.do_edit(page, index, clean_one_page_verb_headword, save=save)
 
 pa = blib.init_argparser("Clean up verb headword templates")

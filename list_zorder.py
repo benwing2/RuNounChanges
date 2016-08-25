@@ -10,7 +10,7 @@ parser = blib.create_argparser(u"List pages in category or references in Zalizny
 parser.add_argument('--cat', help="Category to list")
 parser.add_argument('--ref', help="References to list")
 args = parser.parse_args()
-start, end = blib.get_args(args.start, args.end)
+start, end = blib.parse_start_end(args.start, args.end)
 
 pages = []
 if args.cat:

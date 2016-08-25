@@ -27,7 +27,7 @@ def process_page(index, page, save, verbose):
 
 parser = blib.create_argparser(u"Redirect ru-conj-* documentation pages")
 args = parser.parse_args()
-start, end = blib.get_args(args.start, args.end)
+start, end = blib.parse_start_end(args.start, args.end)
 
 types = ["7a", "7b", "8a", "8b", "9a", "9b", "10a", "10c", "11a", "11b",
     "12a", "12b", "13b", "14a", "14b", "14c", "15a", "16a", "16b",

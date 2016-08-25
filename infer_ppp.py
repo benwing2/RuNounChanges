@@ -199,7 +199,7 @@ def process_page(index, page, save, verbose):
 
 parser = blib.create_argparser(u"Infer the past passive participle variant from the actual PPP")
 args = parser.parse_args()
-start, end = blib.get_args(args.start, args.end)
+start, end = blib.parse_start_end(args.start, args.end)
 
 for category in ["Russian verbs"]:
   for i, page in blib.cat_articles(category, start, end):

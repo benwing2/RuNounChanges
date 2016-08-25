@@ -48,7 +48,7 @@ def process_page(index, page, save, verbose):
 parser = blib.create_argparser(u"Remove accents from 1= in {{wikipedia|...}}")
 parser.add_argument('--pagefile', help="File containing pages to fix.")
 args = parser.parse_args()
-start, end = blib.get_args(args.start, args.end)
+start, end = blib.parse_start_end(args.start, args.end)
 
 lines = [x.strip() for x in codecs.open(args.pagefile, "r", "utf-8")]
 for i, page in blib.iter_items(lines, start, end):

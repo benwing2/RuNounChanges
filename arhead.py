@@ -18,7 +18,7 @@ def fix(page, index, text):
  
   return text, "ar headword: head= > 1="
  
-startFrom, upTo = blib.get_args()
+startFrom, upTo = blib.parse_args()
  
-for page, index in blib.references(u"Template:tracking/ar-head/head", startFrom, upTo):
+for index, page in blib.references(u"Template:tracking/ar-head/head", startFrom, upTo):
   blib.do_edit(page, index, fix)

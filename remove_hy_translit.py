@@ -338,7 +338,7 @@ def remove_translit(params, startFrom, upTo):
     for cat in yield_cats("lemma,non-lemma"):
       msg("Retrieving pages from %s ..." % cat)
       errmsg("Retrieving pages from %s ..." % cat)
-      for page, index in blib.cat_articles(cat, None, None):
+      for index, page in blib.cat_articles(cat, None, None):
         yield page.title()
 
   if params.ignore_lemma_non_lemma:
@@ -349,7 +349,7 @@ def remove_translit(params, startFrom, upTo):
   for category in yield_cats():
     msg("Processing category %s ..." % category)
     errmsg("Processing category %s ..." % category)
-    for page, index in blib.cat_articles(category, startFrom, upTo):
+    for index, page in blib.cat_articles(category, startFrom, upTo):
       if page.title() not in pages_to_ignore:
         blib.do_edit(page, index, remove_translit_one_page, save=params.save,
             verbose=params.verbose)

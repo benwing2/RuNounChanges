@@ -152,7 +152,7 @@ def process_page(index, page, verbose):
 
 parser = blib.create_argparser(u"Find red links in multiword lemmas")
 args = parser.parse_args()
-start, end = blib.get_args(args.start, args.end)
+start, end = blib.parse_start_end(args.start, args.end)
 
 msg("Reading Russian lemmas")
 for i, page in blib.cat_articles("Russian lemmas", start, end):

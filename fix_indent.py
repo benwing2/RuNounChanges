@@ -64,7 +64,7 @@ parser = blib.create_argparser(u"Fix indentation of Pronunciation, Declension, C
 parser.add_argument("--pagefile",
     help="""List of pages to process.""")
 args = parser.parse_args()
-start, end = blib.get_args(args.start, args.end)
+start, end = blib.parse_start_end(args.start, args.end)
 
 if args.pagefile:
   lines = [x.strip() for x in codecs.open(args.pagefile, "r", "utf-8")]

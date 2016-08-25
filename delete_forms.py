@@ -67,7 +67,7 @@ parser = blib.create_argparser(u"Delete erroneously created forms")
 parser.add_argument("--declfile", help="File containing declensions to expand to get forms.")
 parser.add_argument("--forms", help="Form codes of forms to delete.")
 args = parser.parse_args()
-start, end = blib.get_args(args.start, args.end)
+start, end = blib.parse_start_end(args.start, args.end)
 
 lines = [x.strip() for x in codecs.open(args.declfile, "r", "utf-8")]
 if args.forms == "all-verb":

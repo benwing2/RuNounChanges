@@ -34,7 +34,7 @@ def process_page(index, page, save, verbose):
 
 parser = blib.create_argparser("Remove redundant audio-link categories")
 args = parser.parse_args()
-start, end = blib.get_args(args.start, args.end)
+start, end = blib.parse_start_end(args.start, args.end)
 
 for i, page in blib.cat_articles("Russian terms with audio links", start, end):
   process_page(i, page, args.save, args.verbose)

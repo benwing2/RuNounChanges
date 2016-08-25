@@ -47,7 +47,7 @@ def fix_smp(save, verbose, startFrom, upTo):
       msg("Page %s %s: Change log = %s" % (index, pagetitle, changelog))
       return text, changelog
 
-    for page, index in blib.references("Template:" + template, startFrom, upTo):
+    for index, page in blib.references("Template:" + template, startFrom, upTo):
       blib.do_edit(page, index, fix_one_page_smp, save=save,
           verbose=verbose)
 

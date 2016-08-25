@@ -9,7 +9,7 @@ from blib import getparam, rmparam, msg, site
 parser = blib.create_argparser(u"List pages, lemmas and/or non-lemmas")
 parser.add_argument('--cats', default="lemmas", help="Categories to do (can be comma-separated list)")
 args = parser.parse_args()
-start, end = blib.get_args(args.start, args.end)
+start, end = blib.parse_start_end(args.start, args.end)
 
 for cat in re.split(",", args.cats):
   cat = "Russian " + cat

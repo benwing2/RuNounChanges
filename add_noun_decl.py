@@ -962,7 +962,7 @@ def process_page(index, page, save, verbose):
 
 parser = blib.create_argparser("Convert ru-noun to ru-noun+, ru-proper noun to ru-proper noun+ for multiword nouns")
 pargs = parser.parse_args()
-start, end = blib.get_args(pargs.start, pargs.end)
+start, end = blib.parse_start_end(pargs.start, pargs.end)
 
 #for pos in ["proper nouns"]:
 for pos in ["nouns", "proper nouns"]:

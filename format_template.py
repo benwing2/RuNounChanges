@@ -171,7 +171,7 @@ def search_category_for_missing_form(form, pos, templates, save, startFrom,
       msg("WARNING: No replacements found for {{l|ar|%s}}" % pagetitle)
     return text, "Correct headword formatting for [[:Category:%s]]" % cat
 
-  for page, index in blib.cat_articles(cat, startFrom, upTo):
+  for index, page in blib.cat_articles(cat, startFrom, upTo):
     blib.do_edit(page, index, correct_one_page_headword_formatting, save=save)
 
 def correct_headword_formatting(save, startFrom, upTo):
@@ -222,7 +222,7 @@ def correct_one_page_link_formatting(page, index, text):
 
 def correct_link_formatting(save, startFrom, upTo):
   for cat in [u"Arabic lemmas", u"Arabic non-lemma forms"]:
-    for page, index in blib.cat_articles(cat, startFrom, upTo):
+    for index, page in blib.cat_articles(cat, startFrom, upTo):
       blib.do_edit(page, index, correct_one_page_link_formatting, save=save)
 
 pa = blib.init_argparser("Correct formatting of headword templates")

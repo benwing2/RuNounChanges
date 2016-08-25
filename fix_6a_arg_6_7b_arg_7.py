@@ -62,7 +62,7 @@ def process_page(index, page, save, verbose):
 
 parser = blib.create_argparser(u"Fix up class 6a arg 6 -> 4, class 7b arg 7 -> 6")
 args = parser.parse_args()
-start, end = blib.get_args(args.start, args.end)
+start, end = blib.parse_start_end(args.start, args.end)
 
 for vclass in ["6a", "7b"]:
   for i, page in blib.references("Template:tracking/ru-verb/conj-%s" % vclass, start, end):

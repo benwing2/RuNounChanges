@@ -101,7 +101,7 @@ def process_page(index, page, save, verbose):
 
 parser = blib.create_argparser("Fix uses of ru-adj11")
 args = parser.parse_args()
-start, end = blib.get_args(args.start, args.end)
+start, end = blib.parse_start_end(args.start, args.end)
 
 for temp in ["ru-adj11"]:
   msg("Processing references to Template:%s" % temp)

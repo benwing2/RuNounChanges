@@ -1646,7 +1646,7 @@ def create_inflection_entries(save, pos, tempname, param, startFrom, upTo,
   if type(tempname) is not list:
     tempname = [tempname]
   for cat in [u"Arabic %ss" % pos.lower()]:
-    for page, index in blib.cat_articles(cat, startFrom, upTo):
+    for index, page in blib.cat_articles(cat, startFrom, upTo):
       for template in blib.parse(page).filter_templates():
         if template.name in tempname:
           # Get first head and list of heads
@@ -1867,7 +1867,7 @@ def create_verbal_noun(save, index, vn, form, page, template, uncertain):
       "ar-verbal noun of", defparam, gender=gender and [gender] or [])
 
 def create_verbal_nouns(save, startFrom, upTo):
-  for page, index in blib.cat_articles("Arabic verbs", startFrom, upTo):
+  for index, page in blib.cat_articles("Arabic verbs", startFrom, upTo):
     for template in blib.parse(page).filter_templates():
       if template.name == "ar-conj":
         form = re.sub("-.*$", "", getparam(template, "1"))
@@ -1897,7 +1897,7 @@ def create_participle(save, index, part, page, template, actpass, apshort):
       "%s participle of" % actpass, "|lang=ar")
 
 def create_participles(save, startFrom, upTo):
-  for page, index in blib.cat_articles("Arabic verbs", startFrom, upTo):
+  for index, page in blib.cat_articles("Arabic verbs", startFrom, upTo):
     for template in blib.parse(page).filter_templates():
       if template.name == "ar-conj":
         passive = get_passive(page, template)
@@ -2078,7 +2078,7 @@ def parse_part_spec(partspec):
 # delimit the range of pages to process (inclusive on both ends).
 def create_verb_parts(save, startFrom, upTo, partspec):
   parts_desired = parse_part_spec(partspec)
-  for page, index in blib.cat_articles("Arabic verbs", startFrom, upTo):
+  for index, page in blib.cat_articles("Arabic verbs", startFrom, upTo):
     for template in blib.parse(page).filter_templates():
       if template.name == "ar-conj":
         passive = get_passive(page, template)

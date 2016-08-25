@@ -294,7 +294,7 @@ def process_page(index, page, save, verbose):
 if __name__ == "__main__":
   parser = blib.create_argparser("Fix old cite/quote/reference templates")
   args = parser.parse_args()
-  start, end = blib.get_args(args.start, args.end)
+  start, end = blib.parse_start_end(args.start, args.end)
 
   for template in replace_templates:
     msg("Processing references to Template:%s" % template)

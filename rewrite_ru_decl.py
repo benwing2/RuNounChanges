@@ -398,11 +398,11 @@ def rewrite_one_page_ru_decl_noun(page, index, text):
 
 def rewrite_ru_decl_noun(save, verbose, startFrom, upTo):
   for cat in [u"Russian nouns"]:
-    for page, index in blib.cat_articles(cat, startFrom, upTo):
+    for index, page in blib.cat_articles(cat, startFrom, upTo):
       blib.do_edit(page, index, rewrite_one_page_ru_decl_noun, save=save, verbose=verbose)
 def rewrite_ru_decl_adj(save, verbose, startFrom, upTo):
   for cat in [u"Russian adjectives"]:
-    for page, index in blib.cat_articles(cat, startFrom, upTo):
+    for index, page in blib.cat_articles(cat, startFrom, upTo):
       blib.do_edit(page, index, rewrite_one_page_ru_decl_adj, save=save, verbose=verbose)
 
 pa = blib.init_argparser("Rewrite Russian old declension templates")

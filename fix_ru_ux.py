@@ -52,7 +52,7 @@ def process_page(index, page, save, verbose):
 
 parser = blib.create_argparser(u"Remove adj= and shto= from ru-ux")
 args = parser.parse_args()
-start, end = blib.get_args(args.start, args.end)
+start, end = blib.parse_start_end(args.start, args.end)
 
 for i, page in blib.references("Template:ru-ux", start, end):
   process_page(i, page, args.save, args.verbose)

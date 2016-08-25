@@ -222,7 +222,7 @@ def process_page(index, page, save, verbose, fix_pages):
 parser = blib.create_argparser(u"Find Russian terms with bad past passive participles")
 parser.add_argument('--fix-pagefile', help="File containing pages to fix.")
 args = parser.parse_args()
-start, end = blib.get_args(args.start, args.end)
+start, end = blib.parse_start_end(args.start, args.end)
 
 if args.fix_pagefile:
   fixpages = [x.strip() for x in codecs.open(args.fix_pagefile, "r", "utf-8")]

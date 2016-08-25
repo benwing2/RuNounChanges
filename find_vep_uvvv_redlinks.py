@@ -41,7 +41,7 @@ def process_page(index, page, save, verbose):
 parser = blib.create_argparser(u"Find red links in pages in Category:R:vep:UVVV with red link")
 parser.add_argument("--pagefile", help="File containing pages to check")
 args = parser.parse_args()
-start, end = blib.get_args(args.start, args.end)
+start, end = blib.parse_start_end(args.start, args.end)
 
 for i, page in blib.cat_articles("R:vep:UVVV with red link", start, end):
   process_page(i, page, args.save, args.verbose)

@@ -324,7 +324,7 @@ def references(page, startsort = None, endsort = None, namespaces = None, includ
     page = pywikibot.Page(site, page)
   pageiter = page.getReferences(onlyTemplateInclusion = not includelinks,
       namespaces = namespaces)
-  for i, current in in iter_items(pageiter, startsort, endsort):
+  for i, current in iter_items(pageiter, startsort, endsort):
     yield i, current
 
 def cat_articles(page, startsort = None, endsort = None):
@@ -413,21 +413,6 @@ def iter_items(items, startsort = None, endsort = None, get_name = get_page_name
 
       pywikibot.output(str(i) + "/" + str(endsort) + tdisp)
 
-def get_args(startsort, endsort):
-  if startsort:
-    try:
-      startsort = int(startsort)
-    except ValueError:
-      startsort = str.decode(startsort, "utf-8")
-
-  if endsort:
-    try:
-      endsort = int(endsort)
-    except ValueError:
-      endsort = str.decode(endsort, "utf-8")
-
-  return (startsort, endsort)
-
 def group_notes(notes):
   # Group identical notes together and append the number of such identical
   # notes if > 1
@@ -456,7 +441,7 @@ def create_argparser(desc):
 def init_argparser(desc):
   return create_argparser(desc)
 
-def get_args(args = sys.argv[1:]):
+def parse_args(args = sys.argv[1:]):
   startsort = None
   endsort = None
 
@@ -915,7 +900,7 @@ def process_links(save, verbose, lang, longlang, cattype, startFrom, upTo,
       for template in templates:
         msg("Processing template %s" % template)
         errmsg("Processing template %s" % template)
-        for page, index in references("Template:%s" % template, startFrom, upTo):
+        for index, page in references("Template:%s" % template, startFrom, upTo):
           do_edit(page, index, process_one_page_links_wrapper, save=save,
               verbose=verbose)
     elif cattype == "pages":
@@ -940,7 +925,7 @@ def process_links(save, verbose, lang, longlang, cattype, startFrom, upTo,
       for cat in cats:
         msg("Processing category %s" % unicode(cat))
         errmsg("Processing category %s" % unicode(cat))
-        for page, index in cat_articles(cat, startFrom, upTo):
+        for index, page in cat_articles(cat, startFrom, upTo):
           do_edit(page, index, process_one_page_links_wrapper, save=save,
               verbose=verbose)
   if not quiet:

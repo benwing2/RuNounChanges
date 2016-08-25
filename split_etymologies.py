@@ -239,7 +239,7 @@ def split_one_page_etymologies(page, index, pagetext, verbose):
 def split_etymologies(save, verbose, startFrom, upTo):
   def split_page_etymologies(page, index, pagetext):
     return split_one_page_etymologies(page, index, pagetext, verbose)
-  for page, index in blib.cat_articles("Arabic lemmas", startFrom, upTo):
+  for index, page in blib.cat_articles("Arabic lemmas", startFrom, upTo):
     blib.do_edit(page, index, split_page_etymologies, save=save,
         verbose=verbose)
 

@@ -52,7 +52,7 @@ def process_page(index, page, save, verbose):
 
 parser = blib.create_argparser(u"Find Russian terms without a proper headword line")
 args = parser.parse_args()
-start, end = blib.get_args(args.start, args.end)
+start, end = blib.parse_start_end(args.start, args.end)
 
 for category in ["Russian verbs"]:
   for i, page in blib.cat_articles(category, start, end):

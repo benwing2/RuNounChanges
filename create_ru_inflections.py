@@ -2648,7 +2648,7 @@ pa.add_argument("--overwrite-etymologies", action="store_true",
 page of inflections even if "Etymology N". WARNING: Be careful!""")
 
 params = pa.parse_args()
-startFrom, upTo = blib.get_args(params.start, params.end)
+startFrom, upTo = blib.parse_start_end(params.start, params.end)
 
 if params.lemmafile:
   lemmas_to_process = [x.strip() for x in codecs.open(params.lemmafile, "r", "utf-8")]

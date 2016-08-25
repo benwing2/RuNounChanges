@@ -94,7 +94,7 @@ def process_page(index, page, direc, save, verbose):
 parser = blib.create_argparser(u"Fix up class-7b arguments")
 parser.add_argument('--direcfile', help="File containing pages to fix and directives.")
 args = parser.parse_args()
-start, end = blib.get_args(args.start, args.end)
+start, end = blib.parse_start_end(args.start, args.end)
 
 pagedirecs = []
 lines = [x.strip() for x in codecs.open(args.direcfile, "r", "utf-8")]

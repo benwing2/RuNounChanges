@@ -161,7 +161,7 @@ def rewrite_one_page_idafa(page, index, text):
 
 def rewrite_idafa(save, verbose, startFrom, upTo):
   for template in arabic_decl_templates:
-    for page, index in blib.references("Template:" + template, startFrom, upTo):
+    for index, page in blib.references("Template:" + template, startFrom, upTo):
       blib.do_edit(page, index, rewrite_one_page_idafa, save=save,
           verbose=verbose)
 

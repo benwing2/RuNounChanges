@@ -91,7 +91,7 @@ parser = blib.create_argparser(u"Find incorrect verb aspects")
 parser.add_argument('--pagefile', help="File containing pages to fix.")
 parser.add_argument('--fix', action="store_true", help="Fix errors by copying aspect from headword to conjugation")
 args = parser.parse_args()
-start, end = blib.get_args(args.start, args.end)
+start, end = blib.parse_start_end(args.start, args.end)
 
 if args.pagefile:
   lines = [x.strip() for x in codecs.open(args.pagefile, "r", "utf-8")]
