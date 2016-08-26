@@ -11,6 +11,9 @@
 # 2. (DONE) Remove final ! and ? from page title when looking for final -е.
 # 3. (DONE) Recognize prepositions and nnp's
 # 4. Handle adding pos=imp to imperatives in -[дт]ься.
+# 5. (DONE) Fix handling of adjectival non-lemmas.
+# 6. (DONE) Allow control of processing lemmas or non-lemmas.
+# 7. (MOSTLY DONE) Proper handling of multiword non-lemmas.
 
 import pywikibot, re, sys, codecs, argparse
 from collections import Counter
@@ -22,6 +25,159 @@ import rulib as ru
 import runounlib as runoun
 
 pages_pos = {}
+
+# Return True if ARG1 is an accent class or a set of accent classes separated
+# by commas.
+def arg1_is_stress(arg1):
+  if not arg1: return False
+  for arg in re.split(",", arg1):
+    if not re.search("^[a-f]'?'?$", arg):
+      return False
+  return True
+
+def split_words(pagename, capture_delims):
+  return re.split(u"([ ‿-]+)" if capture_delims else u"[ ‿-]+",
+      re.sub("[!?]$", "", pagename))
+
+# For the given multiword noun lemma and ru-noun-table declension template,
+# figure out whether each word is declined as a noun, adjective or invariable.
+def find_noun_word_types_of_decl(lemma, decl_template, pagemsg):
+
+  words = split_words(lemma, False)
+
+  if unicode(decl_template.name) == "ru-decl-adj":
+    per_word_types = []
+    for i in xrange(0, len(words) - 1):
+      per_word_types.append("inv")
+    per_word_types.append("a")
+    return per_word_types
+
+  # Split out the arg sets in the declension and check the
+  # lemma of each one, taking care to handle cases where there is no lemma
+  # (it would default to the page name).
+
+  highest_numbered_param = 0
+  for p in decl_template.params:
+    pname = unicode(p.name)
+    if re.search("^[0-9]+$", pname):
+      highest_numbered_param = max(highest_numbered_param, int(pname))
+
+  # Now gather the numbered arguments into arg sets, gather the arg sets into
+  # groups of arg sets (one group per word), and gather the info for all
+  # words. An arg set is a list of arguments describing a declension,
+  # e.g. ["b", u"поро́к", "*"]. There may be multiple arg sets per word;
+  # in particular, if a word has a compound declension consisting of two
+  # or more declensions separated by "or". Code taken from ru-noun.lua.
+  offset = 0
+  arg_sets = []
+  arg_set = []
+  per_word_info = []
+  for i in xrange(1, highest_numbered_param + 2):
+    end_arg_set = False
+    end_word = False
+    val = getparam(decl_template, str(i))
+    if i == highest_numbered_param + 1 or val in ["_", "-"] or re.search("^join:", val):
+      end_arg_set = True
+      end_word = True
+    elif val == "or":
+      end_arg_set = True
+
+    if end_arg_set:
+      arg_sets.append(arg_set)
+      arg_set = []
+      offset = i
+      if end_word:
+        per_word_info.append(arg_sets)
+        arg_sets = []
+    else:
+      # If the first argument isn't stress, that means all arguments
+      # have been shifted to the left one. We want to shift them
+      # back to the right one, so we change the offset so that we
+      # get the same effect of skipping a slot in the arg set.
+      if i - offset == 1 and not arg1_is_stress(val):
+        offset -= 1
+        arg_set.append("")
+      if i - offset > 4:
+        pagemsg("WARNING: Too many arguments for argument set: arg %s = %s" %
+            (i, (val or "(blank)")))
+      arg_set.append(val)
+
+  def get_per_word_info(words, per_word_info):
+    per_word_types = []
+    for word, arg_sets in zip(words, per_word_info):
+      word_types = set()
+      for arg_set in arg_sets:
+        pagemsg("arg_set: %s" % "|".join(arg_set))
+        if len(arg_set) < 3:
+          word_types.add("n")
+        elif "$" in arg_set[2]:
+          word_types.add("inv")
+        elif "+" in arg_set[2]:
+          word_types.add("a")
+        elif "manual" in arg_set[2]:
+          pagemsg("WARNING: Found manually-declined noun in lemma %s, skipping: decl = %s" %
+              (lemma, unicode(decl_template)))
+          return None
+        else:
+          word_types.add("n")
+      if len(word_types) > 1:
+        pagemsg("WARNING: Found multiple declension types %s for word %s in lemma %s, skipping: decl = %s" %
+            (",".join(word_types), word, lemma, unicode(decl_template)))
+        return None
+      per_word_types.append(list(word_types)[0])
+    return per_word_types
+
+  if len(words) != len(per_word_info):
+    if len(per_word_info) == 1:
+      pos = get_per_word_info(lemma, per_word_info)[0]
+      per_word_types = []
+      for i in xrange(0, len(words) - 1):
+        per_word_types.append("inv")
+      per_word_types.append(pos)
+      return per_word_types
+
+    pagemsg("WARNING: Lemma %s has %s words but %s words in declension, skipping: decl = %s" %
+        (lemma, len(words), len(per_word_info), unicode(decl_template)))
+    return None
+
+  return get_per_word_info(words, per_word_info)
+
+# For the given multiword noun lemma (possibly with accents), figure out
+# whether each word is declined as a noun, adjective or invariable.
+def find_noun_word_types(lemma, pagemsg):
+  declpage = pywikibot.Page(site, ru.remove_accents(lemma))
+
+  if not declpage.exists():
+    pagemsg("WARNING: Page doesn't exist when looking up declension, skipping")
+    return None
+
+  parsed = blib.parse_text(declpage.text)
+  decl_templates = []
+  for t in parsed.filter_templates():
+    tname = unicode(t.name)
+    if tname in ["ru-noun-table", "ru-decl-adj"]:
+      pagemsg("find_noun_word_types: Found decl template: %s" % unicode(t))
+      decl_templates.append(t)
+
+  if not decl_templates:
+    pagemsg("WARNING: Found no decl templates, skipping")
+    return None
+
+  per_word_types = find_noun_word_types_of_decl(lemma, decl_templates[0],
+      pagemsg)
+  if not per_word_types:
+    return None
+  for decl in decl_templates[1:]:
+    other_per_word_types = find_noun_word_types_of_decl(lemma, decl, pagemsg)
+    if not other_per_word_types:
+      return None
+    if other_per_word_types != per_word_types:
+      pagemsg("WARNING: Found word types %s for decl %s, not same as word types %s for decl %s on same page" %
+          (",".join(other_per_word_types), decl, ",".join(per_word_types),
+            decl_templates[0]))
+      return None
+
+  return per_word_types
 
 def process_page(index, page, save, verbose):
   pagetitle = unicode(page.title())
@@ -39,22 +195,19 @@ def process_page(index, page, save, verbose):
     pagemsg("WARNING: Colon in page title, skipping page")
     return
 
-  titlewords = re.split(u"([ ‿-]+)", re.sub("[!?]$", "", pagetitle))
-  saw_e_or_imp_tsja = False
+  titlewords = split_words(pagetitle, True)
+  saw_e = False
   for word in titlewords:
     if word.endswith(u"е") and not ru.is_monosyllabic(word):
-      saw_e_or_imp_tsja = True
+      saw_e = True
       break
-    if re.search(u"[дт]ься$", word):
-      saw_e_or_imp_tsja = True
-      break
-  if not saw_e_or_imp_tsja:
-    pagemsg(u"No possible final unstressed -е or -[дт]ьса in page title, skipping")
+  if not saw_e:
+    pagemsg(u"No possible final unstressed -е in page title, skipping")
     return
 
-  if (" " in pagetitle or "-" in pagetitle) and not override_pos:
-    pagemsg("WARNING: Space or hyphen in page title and probable final unstressed -e, not sure how to handle yet")
-    return
+  #if (" " in pagetitle or "-" in pagetitle) and not override_pos:
+  #  pagemsg(u"WARNING: Space or hyphen in page title and probable final unstressed -е, not sure how to handle yet")
+  #  return
 
   text = unicode(page.text)
   notes = []
@@ -138,6 +291,10 @@ def process_page(index, page, save, verbose):
           pos = override_pos
         else:
           pos = set()
+          is_lemma = set()
+          lemma = set()
+          saw_acc = False
+          saw_noun_form = False
           for t in parsed.filter_templates():
             def getp(param):
               return getparam(t, param)
@@ -149,6 +306,7 @@ def process_page(index, page, save, verbose):
               else:
                 pagemsg("Found declined noun: %s" % unicode(t))
                 pos.add("n")
+              is_lemma.add(True)
             elif tname in ["ru-noun+", "ru-proper noun+"]:
               for param in t.params:
                 if re.search("^[0-9]+$", unicode(param.name)) and "+" in unicode(param.value):
@@ -158,72 +316,112 @@ def process_page(index, page, save, verbose):
               else:
                 pagemsg("Found declined noun: %s" % unicode(t))
                 pos.add("n")
+              is_lemma.add(True)
             elif tname == "comparative of" and getp("lang") == "ru":
               pagemsg("Found comparative: %s" % unicode(t))
               pos.add("com")
+              is_lemma.add(False)
             elif tname == "ru-adv":
               pagemsg("Found adverb: %s" % unicode(t))
               pos.add("adv")
+              is_lemma.add(True)
             elif tname == "ru-adj":
               pagemsg("Found adjective: %s" % unicode(t))
               pos.add("a")
+              is_lemma.add(True)
+            elif tname == "ru-noun form":
+              pagemsg("Found noun form: %s" % unicode(t))
+              saw_noun_form = True
+              is_lemma.add(False)
             elif tname == "head" and getp("1") == "ru":
               if getp("2") == "verb form":
                 pagemsg("Found verb form: %s" % unicode(t))
                 pos.add("v")
+                is_lemma.add(False)
               elif getp("2") in ["adjective form", "participle form"]:
                 pagemsg("Found adjective form: %s" % unicode(t))
                 pos.add("a")
+                is_lemma.add(False)
+              elif getp("2") == "noun form":
+                pagemsg("Found noun form: %s" % unicode(t))
+                saw_noun_form = True
+                is_lemma.add(False)
               elif getp("2") == "pronoun form":
                 pagemsg("Found pronoun form: %s" % unicode(t))
                 pos.add("pro")
+                is_lemma.add(False)
               elif getp("2") == "preposition":
                 pagemsg("Found preposition: %s" % unicode(t))
                 pos.add("p")
+                is_lemma.add(True)
               elif getp("2") == "numeral":
                 pagemsg("Found numeral: %s" % unicode(t))
                 pos.add("num")
+                is_lemma.add(True)
               elif getp("2") == "pronoun":
                 pagemsg("Found pronoun: %s" % unicode(t))
                 pos.add("pro")
-            elif tname == "inflection of" and getp("lang") == "ru":
-              saw_nom = False
-              saw_p = False
+                is_lemma.add(True)
+            elif (tname == "inflection of" and saw_noun_form and
+                getp("lang") == "ru"):
+              is_lemma.add(False)
+              lemma.add(getp("1"))
+              inflection_groups = []
+              inflection_group = []
               for param in t.params:
+                if param.name in ["1", "2"]:
+                  continue
                 val = unicode(param.value)
-                if val in ["nom", "nominative"]:
-                  saw_nom = True
-                if val in ["p", "plural"]:
-                  saw_p = True
-                if saw_nom and saw_p:
+                if val == ";":
+                  if inflection_group:
+                    inflection_groups.append(inflection_group)
+                    inflection_group = []
+                else:
+                  inflection_group.append(val)
+              if inflection_group:
+                inflection_groups.append(inflection_group)
+              for igroup in inflection_groups:
+                igroup = set(igroup)
+                is_plural = not not ({"p", "plural"} & igroup)
+                if is_plural and ({"nom", "nominative"} & igroup):
                   pagemsg("Found nominative plural case inflection: %s" % unicode(t))
                   pos.add("nnp")
-                  saw_nom = False
-                  saw_p = False
-                if val == ';':
-                  # May have multiple inflections separated by semicolon;
-                  # reset flags if so
-                  saw_nom = False
-                  saw_p = False
-                if val in ["pre", "prep", "prepositional"]:
-                  pagemsg("Found prepositional case inflection: %s" % unicode(t))
+                elif {"acc", "accusative"} & igroup:
+                  # We use "n" for misc cases, but skip accusative for now,
+                  # adding "n" later if we haven't seen nnp to avoid problems
+                  # below with the check for multiple pos's (nom pl and acc pl
+                  # are frequently the same)
+                  saw_acc = True
+                elif not is_plural and (
+                    {"pre", "prep", "prepositional"} & igroup):
+                  pagemsg("Found prepositional singular case inflection: %s" % unicode(t))
                   pos.add("pre")
-                if val in ["dat", "dative"]:
-                  pagemsg("Found dative case inflection: %s" % unicode(t))
+                elif not is_plural and ({"dat", "dative"} & igroup):
+                  pagemsg("Found dative singular case inflection: %s" % unicode(t))
                   pos.add("dat")
-                if val in ["voc", "vocative"]:
+                elif not is_plural and ({"voc", "vocative"} & igroup):
                   pagemsg("Found vocative case inflection: %s" % unicode(t))
                   pos.add("voc")
+                else:
+                  pos.add("n")
             elif tname == "prepositional singular of" and getp("lang") == "ru":
-              pagemsg("Found prepositional case inflection: %s" % unicode(t))
+              pagemsg("Found prepositional singular case inflection: %s" % unicode(t))
               pos.add("pre")
+              is_lemma.add(False)
+              lemma.add(getp("1"))
             elif tname == "dative singular of" and getp("lang") == "ru":
-              pagemsg("Found dative case inflection: %s" % unicode(t))
+              pagemsg("Found dative singular case inflection: %s" % unicode(t))
               pos.add("dat")
+              is_lemma.add(False)
+              lemma.add(getp("1"))
             elif tname == "vocative singular of" and getp("lang") == "ru":
               pagemsg("Found vocative case inflection: %s" % unicode(t))
               pos.add("voc")
+              is_lemma.add(False)
+              lemma.add(getp("1"))
 
+          if saw_acc and "nnp" not in pos:
+            pos.add("n")
           if "dat" in pos and "pre" in pos:
             pagemsg("Removing pos=dat because pos=pre is found")
             pos.remove("dat")
@@ -245,6 +443,50 @@ def process_page(index, page, save, verbose):
                 ",".join(pos))
             continue
           pos = list(pos)[0]
+
+          # If multiword term or potential adjectival term, can't trust
+          # the part of speech coming from the above process
+          if (" " in pagetitle or "-" in pagetitle or re.search(u"[ыиео]́?е$", pagetitle)):
+            if not is_lemma:
+              pagemsg("WARNING: Can't determine whether lemma or not, skipping section")
+              continue
+            if len(is_lemma) > 1:
+              pagemsg("WARNING: Found both lemma and non-lemma parts of speech, skipping section")
+              continue
+            is_lemma = list(is_lemma)[0]
+            if (" " in pagetitle or "-" in pagetitle) and is_lemma:
+              pagemsg(u"WARNING: Space or hyphen in lemma page title and probable final unstressed -e, not sure how to handle yet, skipping section")
+              continue
+            if not lemma:
+              pagemsg("WARNING: Non-lemma form and can't determine lemma, skipping section")
+              continue
+            if len(lemma) > 1:
+              pagemsg("WARNING: Found inflections of multiple lemmas, skipping section: %s" %
+                  ",".join(lemma))
+              continue
+            lemma = list(lemma)[0]
+            word_types = find_noun_word_types(lemma, pagemsg)
+            if not word_types:
+              continue
+            words = split_words(pagetitle, False)
+            assert len(words) == len(word_types)
+            modified_word_types = []
+            need_to_continue = False
+            # FIXME: Should we be using phonetic version of lemma?
+            for word, ty in zip(words, word_types):
+              if (word.endswith(u"е") and not ru.is_monosyllabic(word) and
+                  ty == "inv"):
+                pagemsg(u"WARNING: In multiword lemma %s, found word %s ending in -е and marked as invariable, not sure what to do, skipping section" %
+                    (lemma, word))
+                need_to_continue = True
+                break
+              if ty == "n":
+                modified_word_types.append(pos)
+              else:
+                modified_word_types.append(ty)
+            if need_to_continue:
+              continue
+            pos = "/".join(modified_word_types)
 
         # Check whether there's a pronunciation with final -е for a given
         # word. There are some entries that have multiple pronunciations,
@@ -395,6 +637,7 @@ def process_page(index, page, save, verbose):
 
 parser = blib.create_argparser(u"Add pos= to final -е ru-IPA, fix use of phonetic -и/-я")
 parser.add_argument('--posfile', help="File containing parts of speech for pages, in the form of part of speech, space, page name, one per line")
+parser.add_argument('--cats', default="lemma,nonlemma", help="Categories to do (lemma, nonlemma or comma-separated list)")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
@@ -408,7 +651,16 @@ if args.posfile:
       pos, page = m.groups()
       pages_pos[page] = pos
 
-for category in ["Russian lemmas", "Russian non-lemma forms"]:
+categories = []
+for cattype in re.split(",", args.cats):
+  if cattype == "lemma":
+    categories.append("Russian lemmas")
+  elif cattype == "nonlemma":
+    categories.append("Russian non-lemma forms")
+  else:
+    raise RuntimeError("Invalid value %s, should be 'lemma' or 'nonlemma'" %
+        cattype)
+for category in categories:
   msg("Processing category: %s" % category)
   for i, page in blib.cat_articles(category, start, end):
     process_page(i, page, args.save, args.verbose)
