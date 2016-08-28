@@ -35,8 +35,12 @@ def arg1_is_stress(arg1):
       return False
   return True
 
+# Split page title or phonetic value into words the same way that ru-pron
+# does. Do not include ‿ in the split characters because the module doesn't
+# split on that symbol.
 def split_words(pagename, capture_delims):
-  return re.split(u"([ ‿-]+)" if capture_delims else u"[ ‿-]+",
+  pagename = re.sub(ur"\s*([,–—])\s*", r" \1 ", pagename)
+  return re.split(u"([ -]+)" if capture_delims else u"[ -]+",
       re.sub("[!?]$", "", pagename))
 
 # For the given multiword noun lemma and ru-noun-table declension template,
@@ -145,7 +149,7 @@ def find_noun_word_types_of_decl(lemma, decl_template, pagemsg):
 # For the given multiword noun lemma (possibly with accents), figure out
 # whether each word is declined as a noun, adjective or invariable.
 def find_noun_word_types(lemma, pagemsg):
-  declpage = pywikibot.Page(site, ru.remove_accents(lemma))
+  declpage = pywikibot.Page(site, lemma)
 
   if not declpage.exists():
     pagemsg("WARNING: Page doesn't exist when looking up declension, skipping")
@@ -249,10 +253,23 @@ def process_page(index, page, save, verbose):
                   (k//2, unicode(t)))
             else:
               phon = (getparam(t, "phon") or getparam(t, "1") or pagetitle).lower()
-              phonwords = re.split(u"([ ‿-]+)", phon)
+              phonwords = split_words(phon, True)
               if len(phonwords) != len(titlewords):
-                pagemsg("WARNING: #Words (%s) in phon=%s not same as #words (%s) in title, skipping phon" % (
+                pagemsg("WARNING: #Words (%s) in phon=%s not same as #words (%s) in title" % (
                     (len(phonwords)+1)//2, phon, (len(titlewords)+1)//2))
+                for i in xrange(0, len(phonwords), 2):
+                  phonword = phonwords[i]
+                  wordno = i//2 + 1
+                  if ru.is_monosyllabic(phonword):
+                    pagemsg("Skipping monosyllabic pronun %s (#%s) in section %s: %s" %
+                        (phonword, wordno, k//2, unicode(t)))
+                  elif not phonword.endswith(u"е"):
+                    pagemsg(u"Skipping pronun word %s (#%s) in section %s because doesn't end in -е" %
+                        (phonword, wordno, k//2))
+                  else:
+                    pagemsg("Found template that will be modified due to phonword %s (#%s) in section %s: %s" %
+                        (phonword, wordno, k//2, unicode(t)))
+                    subsections_with_ru_ipa_to_fix.add(k)
               else:
                 for i in xrange(0, len(phonwords), 2):
                   titleword = titlewords[i]
@@ -374,7 +391,7 @@ def process_page(index, page, save, verbose):
                 is_lemma.add(True)
             elif tname == "inflection of" and getp("lang") == "ru":
               is_lemma.add(False)
-              lemma.add(getp("1"))
+              lemma.add(ru.remove_accents(getp("1")))
               if saw_noun_form:
                 inflection_groups = []
                 inflection_group = []
@@ -408,6 +425,9 @@ def process_page(index, page, save, verbose):
                     pos.add("pre")
                   elif not is_plural and ({"dat", "dative"} & igroup):
                     pagemsg("Found dative singular case inflection: %s" % unicode(t))
+                    pos.add("dat")
+                  elif not is_plural and ({"loc", "locative"} & igroup):
+                    pagemsg("Found locative singular case inflection: %s" % unicode(t))
                     pos.add("dat")
                   elif not is_plural and ({"voc", "vocative"} & igroup):
                     pagemsg("Found vocative case inflection: %s" % unicode(t))
@@ -467,55 +487,70 @@ def process_page(index, page, save, verbose):
             if (" " in pagetitle or "-" in pagetitle) and is_lemma:
               pagemsg(u"WARNING: Space or hyphen in lemma page title and probable final unstressed -e, not sure how to handle yet, skipping section")
               continue
-            if not lemma:
-              pagemsg("WARNING: Non-lemma form and can't determine lemma, skipping section")
-              continue
-            if len(lemma) > 1:
-              pagemsg("WARNING: Found inflections of multiple lemmas, skipping section: %s" %
-                  ",".join(lemma))
-              continue
-            lemma = list(lemma)[0]
-            retval = find_noun_word_types(lemma, pagemsg)
-            if not retval:
-              continue
-            word_types, seen_pos_specs = retval
-            words = split_words(pagetitle, False)
-            assert len(words) == len(word_types)
-            modified_word_types = []
-            need_to_continue = False
-            # FIXME: Should we be using phonetic version of lemma?
-            for wordno, (word, ty) in enumerate(zip(words, word_types)):
-              if (word.endswith(u"е") and not ru.is_monosyllabic(word) and
-                  ty == "inv"):
-                if len(seen_pos_specs) > 1:
-                  pagemsg(u"WARNING: In multiword term %s, found word %s ending in -е and marked as invariable and lemma has ambiguous pos= params (%s), not sure what to do, skipping section" %
-                      (pagetitle, word, ",".join(seen_pos_specs)))
-                  need_to_continue = True
-                  break
-                elif not seen_pos_specs:
-                  pagemsg(u"WARNING: In multiword term %s, found word %s ending in -е and marked as invariable and lemma has no pos= params, not sure what to do, skipping section" %
-                      (pagetitle, word))
-                  need_to_continue = True
-                  break
-                else:
-                  seen_pos_spec = list(seen_pos_specs)[0]
-                  seen_poses = re.split("/", seen_pos_spec)
-                  if len(seen_poses) == 1:
-                    ty = seen_poses[0]
-                  elif len(words) != len(seen_poses):
-                    pagemsg(u"WARNING: In multiword term %s, found word %s ending in -е and marked as invariable and lemma param pos=%s has wrong number of parts of speech, not sure what to do, skipping section" %
-                        (pagetitle, word, seen_pos_spec))
-                    need_to_continue = True
-                    break
+            # If is_lemma, we are a single-word adjective and will be handled
+            # correctly by the above code
+            if not is_lemma:
+              if not lemma:
+                pagemsg("WARNING: Non-lemma form and can't determine lemma, skipping section")
+                continue
+              if len(lemma) > 1:
+                pagemsg("WARNING: Found inflections of multiple lemmas, skipping section: %s" %
+                    ",".join(lemma))
+                continue
+              lemma = list(lemma)[0]
+              retval = find_noun_word_types(lemma, pagemsg)
+              if not retval:
+                continue
+              word_types, seen_pos_specs = retval
+              words = split_words(pagetitle, False)
+              assert len(words) == len(word_types)
+              modified_word_types = []
+              need_to_continue = False
+              # FIXME: Should we be using phonetic version of lemma?
+              for wordno, (word, ty) in enumerate(zip(words, word_types)):
+                if word.endswith(u"е") and not ru.is_monosyllabic(word):
+                  if ty == "inv":
+                    if len(seen_pos_specs) > 1:
+                      pagemsg(u"WARNING: In multiword term %s, found word %s ending in -е and marked as invariable and lemma has ambiguous pos= params (%s), not sure what to do, skipping section" %
+                          (pagetitle, word, ",".join(seen_pos_specs)))
+                      need_to_continue = True
+                      break
+                    elif not seen_pos_specs:
+                      pagemsg(u"WARNING: In multiword term %s, found word %s ending in -е and marked as invariable and lemma has no pos= params, not sure what to do, skipping section" %
+                          (pagetitle, word))
+                      need_to_continue = True
+                      break
+                    else:
+                      seen_pos_spec = list(seen_pos_specs)[0]
+                      seen_poses = re.split("/", seen_pos_spec)
+                      if len(seen_poses) == 1:
+                        ty = seen_poses[0]
+                      elif len(words) != len(seen_poses):
+                        pagemsg(u"WARNING: In multiword term %s, found word %s ending in -е and marked as invariable and lemma param pos=%s has wrong number of parts of speech, not sure what to do, skipping section" %
+                            (pagetitle, word, seen_pos_spec))
+                        need_to_continue = True
+                        break
+                      else:
+                        ty = seen_poses[wordno]
+                        if not ty:
+                          pagemsg("WARNING: Something wrong with retrieved pos= value from lemma, has blank value")
+                          need_to_continue = True
+                          break
+                  if ty == "decln":
+                    modified_word_types.append(pos)
                   else:
-                    ty = seen_poses[wordno]
-              if ty == "decln":
-                modified_word_types.append(pos)
+                    modified_word_types.append(ty)
+                else:
+                  modified_word_types.append("")
+              if need_to_continue:
+                continue
+              non_blank_distinct_mwt = set(x for x in modified_word_types if x)
+              if len(non_blank_distinct_mwt) == 0:
+                pagemsg("WARNING: Something wrong, pos= would end up blank")
+              elif len(non_blank_distinct_mwt) == 1:
+                pos = list(non_blank_distinct_mwt)[0]
               else:
-                modified_word_types.append(ty)
-            if need_to_continue:
-              continue
-            pos = "/".join(modified_word_types)
+                pos = "/".join(modified_word_types)
 
         # Check whether there's a pronunciation with final -е for a given
         # word. There are some entries that have multiple pronunciations,
@@ -535,13 +570,10 @@ def process_page(index, page, save, verbose):
             if getparam(t, "pos"):
               pass # Already output msg
             else:
-              phonwords = re.split("([ -]+)", phon)
-              if len(phonwords) != len(titlewords):
-                pass # Already output message
-              else:
-                for i in xrange(0, len(phonwords), 2):
-                  if re.search(u"е$", phonwords[i]):
-                    saw_final_e[i] = True
+              phonwords = split_words(phon, True)
+              for i in xrange(0, len(phonwords), 2):
+                if re.search(u"е$", phonwords[i]):
+                  saw_final_e[i] = True
 
         # Now modify the templates.
         for t in parsed.filter_templates():
@@ -558,74 +590,74 @@ def process_page(index, page, save, verbose):
             if getparam(t, "pos"):
               pass # Already output msg
             else:
-              phonwords = re.split("([ -]+)", phon)
-              if len(phonwords) != len(titlewords):
-                pass # Already output message
-              else:
-                for i in xrange(0, len(phonwords), 2):
-                  titleword = titlewords[i]
-                  phonword = phonwords[i]
-                  lphonword = phonword.lower()
-                  wordno = i//2 + 1
+              phonwords = split_words(phon, True)
+              mismatched_phon_title = len(phonwords) != len(titlewords)
+              for i in xrange(0, len(phonwords), 2):
+                titleword = not mismatched_phon_title and titlewords[i]
+                phonword = phonwords[i]
+                lphonword = phonword.lower()
+                wordno = i//2 + 1
 
-                  if ru.is_monosyllabic(phonword):
-                    pass # Already output msg
-                  elif not titleword.endswith(u"е"):
-                    pass # Already output msg
-                  elif re.search(u"([еия]|цы|е̂|[кгхцшжщч]а)" + ru.DOTABOVE + "?$", lphonword):
-                    # Found a template to modify
-                    if re.search(u"е" + ru.DOTABOVE + "?$", lphonword):
-                      pass # No need to canonicalize
-                    else:
-                      if saw_final_e.get(i, False):
-                        pagemsg(u"WARNING: Found another pronunciation with final -е, skipping: phon=%s (word #%s)" % (
-                          phonword, wordno))
-                        continue
-                      if re.search(u"и" + ru.DOTABOVE + "?$", lphonword):
-                        pagemsg(u"phon=%s (word #%s) ends in -и, will modify to -е in section %s: %s" % (phonword, wordno, k//2, unicode(t)))
-                        notes.append(u"unstressed -и -> -е")
-                      elif re.search(u"е̂$", lphonword):
-                        # Make this a warning because we're not sure this is correct
-                        pagemsg(u"WARNING: phon=%s (word #%s) ends in -е̂, will modify to -е in section %s: %s" % (phonword, wordno, k//2, unicode(t)))
-                        notes.append(u"-е̂ -> -е")
-                      elif re.search(u"я" + ru.DOTABOVE + "?$", lphonword):
-                        pagemsg(u"phon=%s (word #%s) ends in -я, will modify to -е in section %s: %s" % (phonword, wordno, k//2, unicode(t)))
-                        notes.append(u"unstressed -я -> -е")
-                      elif re.search(u"цы" + ru.DOTABOVE + "?$", lphonword):
-                        pagemsg(u"phon=%s (word #%s) ends in ц + -ы, will modify to -е in section %s: %s" % (phonword, wordno, k//2, unicode(t)))
-                        notes.append(u"unstressed -ы after ц -> -е")
-                      elif re.search(u"[кгхцшжщч]а" + ru.DOTABOVE + "?$", lphonword):
-                        pagemsg(u"phon=%s (word #%s) ends in unpaired cons + -а, will modify to -е in section %s: %s" % (phonword, wordno, k//2, unicode(t)))
-                        notes.append(u"unstressed -а after unpaired cons -> -е")
-                      else:
-                        assert False, "Something wrong, strange ending, logic not correct: section %s, phon=%s (word #%s)" % (k//2, phonword, wordno)
-                      newphonword = re.sub(u"(?:[ияыа]|е̂)(" + ru.DOTABOVE + "?)$", ur"е\1", phonword)
-                      newphonword = re.sub(u"(?:[ИЯЫА]|Е̂)(" + ru.DOTABOVE + "?)$", ur"Е\1", newphonword)
-                      pagemsg("Modified phon=%s (word #%s) to %s in section %s: %s" % (
-                        phonword, wordno, newphonword, k//2, unicode(t)))
-                      phonwords[i] = newphonword
-                newphon = "".join(phonwords)
-                if newphon != phon:
-                  assert param != "pagetitle", u"Something wrong, page title should not have -и or similar that needs modification: section %s, phon=%s, newphon=%s" % (k//2, phon, newphon)
-                  if pos in ["voc", "inv", "pro"]:
-                    pagemsg(u"WARNING: pos=%s may be unstable or inconsistent in handling final -е, please check change of phon=%s to %s in section %s: %s" % (
-                      pos, phon, newphon, k//2, unicode(t)))
-                  pagemsg("Modified phon=%s to %s in section %s: %s" % (
-                    phon, newphon, k//2, unicode(t)))
-                  if pos == "none":
-                    pagemsg("WARNING: pos=none, should not occur, not modifying phon=%s to %s in section %s: %s" % (
-                      phon, newphon, k//2, unicode(t)))
+                if ru.is_monosyllabic(phonword):
+                  pass # Already output msg
+                elif mismatched_phon_title:
+                  pass # Can't canonicalize template
+                elif not titleword.endswith(u"е"):
+                  pass # Already output msg
+                elif re.search(u"([еия]|цы|е̂|[кгхцшжщч]а)" + ru.DOTABOVE + "?$", lphonword):
+                  # Found a template to modify
+                  if re.search(u"е" + ru.DOTABOVE + "?$", lphonword):
+                    pass # No need to canonicalize
                   else:
-                    t.add(param, newphon)
-
+                    if saw_final_e.get(i, False):
+                      pagemsg(u"WARNING: Found another pronunciation with final -е, skipping: phon=%s (word #%s)" % (
+                        phonword, wordno))
+                      continue
+                    if re.search(u"и" + ru.DOTABOVE + "?$", lphonword):
+                      pagemsg(u"phon=%s (word #%s) ends in -и, will modify to -е in section %s: %s" % (phonword, wordno, k//2, unicode(t)))
+                      notes.append(u"unstressed -и -> -е")
+                    elif re.search(u"е̂$", lphonword):
+                      # Make this a warning because we're not sure this is correct
+                      pagemsg(u"WARNING: phon=%s (word #%s) ends in -е̂, will modify to -е in section %s: %s" % (phonword, wordno, k//2, unicode(t)))
+                      notes.append(u"-е̂ -> -е")
+                    elif re.search(u"я" + ru.DOTABOVE + "?$", lphonword):
+                      pagemsg(u"phon=%s (word #%s) ends in -я, will modify to -е in section %s: %s" % (phonword, wordno, k//2, unicode(t)))
+                      notes.append(u"unstressed -я -> -е")
+                    elif re.search(u"цы" + ru.DOTABOVE + "?$", lphonword):
+                      pagemsg(u"phon=%s (word #%s) ends in ц + -ы, will modify to -е in section %s: %s" % (phonword, wordno, k//2, unicode(t)))
+                      notes.append(u"unstressed -ы after ц -> -е")
+                    elif re.search(u"[кгхцшжщч]а" + ru.DOTABOVE + "?$", lphonword):
+                      pagemsg(u"phon=%s (word #%s) ends in unpaired cons + -а, will modify to -е in section %s: %s" % (phonword, wordno, k//2, unicode(t)))
+                      notes.append(u"unstressed -а after unpaired cons -> -е")
+                    else:
+                      assert False, "Something wrong, strange ending, logic not correct: section %s, phon=%s (word #%s)" % (k//2, phonword, wordno)
+                    newphonword = re.sub(u"(?:[ияыа]|е̂)(" + ru.DOTABOVE + "?)$", ur"е\1", phonword)
+                    newphonword = re.sub(u"(?:[ИЯЫА]|Е̂)(" + ru.DOTABOVE + "?)$", ur"Е\1", newphonword)
+                    pagemsg("Modified phon=%s (word #%s) to %s in section %s: %s" % (
+                      phonword, wordno, newphonword, k//2, unicode(t)))
+                    phonwords[i] = newphonword
+              newphon = "".join(phonwords)
+              if newphon != phon:
+                assert param != "pagetitle", u"Something wrong, page title should not have -и or similar that needs modification: section %s, phon=%s, newphon=%s" % (k//2, phon, newphon)
+                if pos in ["voc", "inv", "pro"]:
+                  pagemsg(u"WARNING: pos=%s may be unstable or inconsistent in handling final -е, please check change of phon=%s to %s in section %s: %s" % (
+                    pos, phon, newphon, k//2, unicode(t)))
+                pagemsg("Modified phon=%s to %s in section %s: %s" % (
+                  phon, newphon, k//2, unicode(t)))
                 if pos == "none":
-                  pagemsg("WARNING: pos=none, should not occur, not setting pos= in section %s: %s" %
-                      (k//2, unicode(t)))
+                  pagemsg("WARNING: pos=none, should not occur, not modifying phon=%s to %s in section %s: %s" % (
+                    phon, newphon, k//2, unicode(t)))
                 else:
-                  t.add("pos", pos)
-                  notes.append("added pos=%s%s" % (pos, override_pos and " (override)" or ""))
-                  pagemsg("Replaced %s with %s in section %s%s" % (
-                    origt, unicode(t), k//2, override_pos and " (using override)" or ""))
+                  t.add(param, newphon)
+
+              if pos == "none":
+                pagemsg("WARNING: pos=none, should not occur, not setting pos= in section %s: %s" %
+                    (k//2, unicode(t)))
+              else:
+                t.add("pos", pos)
+                notes.append("added pos=%s%s" % (pos, override_pos and " (override)" or ""))
+                pagemsg("Replaced %s with %s in section %s%s" % (
+                  origt, unicode(t), k//2, override_pos and " (using override)" or ""))
         subsections[k] = unicode(parsed)
       sections[j] = "".join(subsections)
 
@@ -660,7 +692,8 @@ def process_page(index, page, save, verbose):
     if save:
       pagemsg("Saving with comment = %s" % comment)
       page.text = new_text
-      page.save(comment=comment)
+      blib.try_repeatedly(lambda: page.save(comment=comment), pagemsg,
+                    "save page")
     else:
       pagemsg("Would save with comment = %s" % comment)
 
@@ -672,7 +705,11 @@ start, end = blib.parse_start_end(args.start, args.end)
 
 if args.posfile:
   for line in codecs.open(args.posfile, "r", "utf-8"):
+    # Ignore comments and blank lines
+    line = re.sub("#.*$", "", line)
     line = line.strip()
+    if not line:
+      continue
     m = re.search(r"^(.*?) (.*)$", line)
     if not m:
       msg("WARNING: Can't parse line: %s" % line)
