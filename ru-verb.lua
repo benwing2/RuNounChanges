@@ -270,6 +270,35 @@ local all_verb_types = {
 	-- futr_2pl2: насыплете, насыпете
 	-- futr_3pl2: насыплют, насыпют
 
+-- List of all main verb forms. Short forms (those ending in "_short")
+-- must be listed after the corresponding non-short forms.
+local all_main_verb_forms = {
+	-- present tense
+	"pres_1sg", "pres_2sg", "pres_3sg", "pres_1pl", "pres_2pl", "pres_3pl",
+	-- future tense
+	"futr_1sg", "futr_2sg", "futr_3sg", "futr_1pl", "futr_2pl", "futr_3pl",
+	-- present-future tense. The conjugation functions generate the
+	-- "present-future" tense instead of either the present or future tense,
+	-- since the same forms are used in the present imperfect and future
+	-- perfect. These forms are later copied into the present or future in
+	-- finish_generating_forms().
+	"pres_futr_1sg", "pres_futr_2sg", "pres_futr_3sg", "pres_futr_1pl", "pres_futr_2pl", "pres_futr_3pl",
+	-- imperative
+	"impr_sg", "impr_pl",
+	-- past
+	"past_m", "past_f", "past_n", "past_pl",
+	"past_m_short", "past_f_short", "past_n_short", "past_pl_short",
+
+	-- active participles
+	"pres_actv_part", "past_actv_part",
+	-- passive participles
+	"pres_pasv_part", "past_pasv_part",
+	-- adverbial participles
+	"pres_adv_part", "past_adv_part", "past_adv_part_short",
+	-- infinitive
+	"infinitive"
+}
+
 -- List of all verb forms. Each element is a list, where the first element
 -- is the "main" form and the remainder are alternatives. The following
 -- *MUST* hold:
@@ -280,58 +309,19 @@ local all_verb_types = {
 -- 3. For each person, e.g. '2sg', there must be the same number of
 --    futr_PERSON, pres_PERSON and pres_futr_PERSON forms, and the alternative
 --    forms must be listed in the same order.
-local all_verb_forms = {
-	-- present tense
-	{"pres_1sg", "pres_1sg2", "pres_1sg3", "pres_1sg4"},
-	{"pres_2sg", "pres_2sg2", "pres_2sg3", "pres_2sg4"},
-	{"pres_3sg", "pres_3sg2", "pres_3sg3", "pres_3sg4"},
-	{"pres_1pl", "pres_1pl2", "pres_1pl3", "pres_1pl4"},
-	{"pres_2pl", "pres_2pl2", "pres_2pl3", "pres_2pl4"},
-	{"pres_3pl", "pres_3pl2", "pres_3pl3", "pres_3pl4"},
-	-- future tense
-	{"futr_1sg", "futr_1sg2", "futr_1sg3", "futr_1sg4"},
-	{"futr_2sg", "futr_2sg2", "futr_2sg3", "futr_2sg4"},
-	{"futr_3sg", "futr_3sg2", "futr_3sg3", "futr_3sg4"},
-	{"futr_1pl", "futr_1pl2", "futr_1pl3", "futr_1pl4"},
-	{"futr_2pl", "futr_2pl2", "futr_2pl3", "futr_2pl4"},
-	{"futr_3pl", "futr_3pl2", "futr_3pl3", "futr_3pl4"},
-	-- present-future tense. The conjugation functions generate the
-	-- "present-future" tense instead of either the present or future tense,
-	-- since the same forms are used in the present imperfect and future
-	-- perfect. These forms are later copied into the present or future in
-	-- finish_generating_forms().
-	{"pres_futr_1sg", "pres_futr_1sg2", "pres_futr_1sg3", "pres_futr_1sg4"},
-	{"pres_futr_2sg", "pres_futr_2sg2", "pres_futr_2sg3", "pres_futr_2sg4"},
-	{"pres_futr_3sg", "pres_futr_3sg2", "pres_futr_3sg3", "pres_futr_3sg4"},
-	{"pres_futr_1pl", "pres_futr_1pl2", "pres_futr_1pl3", "pres_futr_1pl4"},
-	{"pres_futr_2pl", "pres_futr_2pl2", "pres_futr_2pl3", "pres_futr_2pl4"},
-	{"pres_futr_3pl", "pres_futr_3pl2", "pres_futr_3pl3", "pres_futr_3pl4"},
-	-- imperative
-	{"impr_sg", "impr_sg2", "impr_sg3", "impr_sg4"},
-	{"impr_pl", "impr_pl2", "impr_pl3", "impr_pl4"},
-	-- past
-	{"past_m", "past_m2", "past_m3", "past_m4"},
-	{"past_f", "past_f2", "past_f3", "past_f4"},
-	{"past_n", "past_n2", "past_n3", "past_n4"},
-	{"past_pl", "past_pl2", "past_pl3", "past_pl4"},
-	{"past_m_short", "past_m_short2", "past_m_short3", "past_m_short4"},
-	{"past_f_short", "past_f_short2", "past_f_short3", "past_f_short4"},
-	{"past_n_short", "past_n_short2", "past_n_short3", "past_n_short4"},
-	{"past_pl_short", "past_pl_short2", "past_pl_short3", "past_pl_short4"},
+--
+-- FIXME!!! We should fix things so we no longer need to compute this table.
+local all_verb_forms = {}
 
-	-- active participles
-	{"pres_actv_part", "pres_actv_part2", "pres_actv_part3", "pres_actv_part4"},
-	{"past_actv_part", "past_actv_part2", "past_actv_part3", "past_actv_part4"},
-	-- passive participles
-	{"pres_pasv_part", "pres_pasv_part2", "pres_pasv_part3", "pres_pasv_part4"},
-	{"past_pasv_part", "past_pasv_part2", "past_pasv_part3", "past_pasv_part4"},
-	-- adverbial participles
-	{"pres_adv_part", "pres_adv_part2", "pres_adv_part3", "pres_adv_part4"},
-	{"past_adv_part", "past_adv_part2", "past_adv_part3", "past_adv_part4"},
-	{"past_adv_part_short", "past_adv_part_short2", "past_adv_part_short3", "past_adv_part_short4"},
-	-- infinitive
-	{"infinitive"},
-}
+-- Compile all_verb_forms
+for _, mainform in ipairs(all_main_verb_forms) do
+	local entry = {}
+	table.insert(entry, mainform)
+	for i=2,9 do
+		table.insert(entry, mainform .. i)
+	end
+	table.insert(all_verb_forms, entry)
+end
 
 local prop_aliases = {
 	pap="past_actv_part",
@@ -416,53 +406,106 @@ for _, prop in ipairs(non_form_props) do
 	table.insert(all_verb_props, {prop})
 end
 
--- Clone parent's args while also assigning nil to empty strings. Handle
--- aliases in the process. Extract and remove conjugation type from arg 1.
--- Return new arguments and extracted conjugation type.
-local function clone_args_handle_aliases(frame)
-	local args = {}
+-- Clone parent's args while also assigning nil to empty strings and splitting
+-- arg sets (numeric args separated by "or"), assigning named args to
+-- all all sets. Handle aliases in the process. Extract conjugation type
+-- from arg 1, assigning to '.conj_type' of the arg set. Return arg sets.
+local function split_args_handle_aliases(frame)
+	local args = frame.getParent().args
+	local arg_sets = {}
+	local arg_set = {}
+	local offset = 0
 	local conj_type = nil
-	for pname, param in pairs(frame:getParent().args) do
-		local argval = ine(param)
-		local mainprop, num = rmatch(pname, "^([a-z_]+)([0-9]*)$")
-		if not mainprop then
-			if pname == 1 and argval then
-				-- This complex spec matches matches 3°a, 3oa, 4a1a, 6c1a,
-				-- 1a6a, 6a1as13, 6a1as14, etc.
-				conj_type = rmatch(argval, "^([0-9]+[°o0-9abc]*[abc]s?1?[34]?)")
-				argval = rsub(argval, "^[0-9]+[°o0-9abc]*[abc]s?1?[34]?/?", "")
-				if not conj_type then
-					conj_type = rmatch(argval, "^(irreg%-[абцдефгчийклмнопярстувшхызёюжэщьъ%-]*)")
-					argval = rsub(argval, "^irreg%-[абцдефгчийклмнопярстувшхызёюжэщьъ%-]*/?", "")
+	-- Find maximum-numbered arg, allowing for holes
+	local max_arg = 0
+	for pname, param in pairs(args) do
+		if type(pname) == "number" and pname > max_arg then
+			max_arg = pname
+		end
+	end
+
+	-- Now gather the numbered arguments.
+	for i=1,(max_arg + 1) do
+		local end_arg_set = false
+		if i == max_arg + 1 or args[i] == "or" then
+			end_arg_set = true
+		end
+
+		if end_arg_set then
+			table.insert(arg_sets, arg_set)
+			arg_set = {}
+			offset = i
+		else
+			-- arg 2 of the first arg set is the verb type (trans/intrans,
+			-- reflexive, etc.); not present for other verb types so shift
+			-- the offset for args 2 and above of arg sets other than 1
+			-- to put them one arg up.
+			if i - offset == 2 and #arg_sets > 0 then
+				offset = offset - 1
+			end
+			arg_set[i - offset] = ine(args[i])
+		end
+	end
+
+	-- Insert named arguments into all arg sets, mapping aliases appropriately.
+	for pname, param in pairs(args) do
+		if type(pname) == "string" then
+			local argval = ine(param)
+			local mainprop, num = rmatch(pname, "^([a-z_]+)([0-9]*)$")
+			for i=1,#arg_sets do
+				if not mainprop then
+					arg_sets[i][pname] = argval
+				else
+					mainprop = prop_aliases[mainprop] or mainprop
+					arg_sets[i][mainprop .. num] = argval
 				end
 			end
-			args[pname] = argval
-		else
-			mainprop = prop_aliases[mainprop] or mainprop
-			args[mainprop .. num] = argval
 		end
 	end
-	if not conj_type then
-		local NAMESPACE = mw.title.getCurrentTitle().nsText
-		if NAMESPACE == "Template" then
-			conj_type = "1a"
+
+	-- Frob conjugation type.
+	for i=1,#arg_sets do
+		local arg1 = arg_sets[i][1]
+		local conj_type
+		if arg1 then
+			-- This complex spec matches matches 3°a, 3oa, 4a1a, 6c1a,
+			-- 1a6a, 6a1as13, 6a1as14, etc.
+			conj_type = rmatch(arg1, "^([0-9]+[°o0-9abc]*[abc]s?1?[34]?)")
+			arg1 = rsub(argval, "^[0-9]+[°o0-9abc]*[abc]s?1?[34]?/?", "")
+			if not conj_type then
+				conj_type = rmatch(arg1, "^(irreg%-[абцдефгчийклмнопярстувшхызёюжэщьъ%-]*)")
+				arg1 = rsub(arg1, "^irreg%-[абцдефгчийклмнопярстувшхызёюжэщьъ%-]*/?", "")
+			end
+			arg_sets[i][1] = arg1
 		else
-			error("Must specify argument 1 (conjugation type)")
+			local NAMESPACE = mw.title.getCurrentTitle().nsText
+			if NAMESPACE == "Template" and i == 1 then
+				conj_type = "1a"
+			else
+				error("Must specify argument 1 (conjugation type)")
+			end
 		end
-	end
-	return args, conj_type
+		arg_sets[i]["conj_type"] = conj_type
+	return arg_sets
 end
 
-function export.do_generate_forms(conj_type, args)
+function export.do_generate_forms(arg_sets, old_args)
+	-- FIXME: Glue code to work with previous version of Module:ru-verb.
+	-- Remove this and OLD_ARGS once we've installed the new module.
+	if old_args then
+		local new_arg_sets = {old_args}
+		new_arg_sets[1]["conj_type"] = arg_sets
+		arg_sets = new_arg_sets
+	end
+	local set1 = arg_sets[1]
 	-- Verb type, one of impf, pf, impf-intr, pf-intr, impf-refl, pf-refl.
 	-- Default to impf on the template page so that there is no script error.
-	local verb_type = getarg(args, 2, "impf", "Verb type (second parameter)")
+	local verb_type = getarg(set1, 2, "impf", "Verb type (second parameter)")
 	-- verbs may have reflexive ending stressed in the masculine singular: занялся́, начался́, etc.
-	local notes = get_arg_chain(args, "notes", "notes")
+	local notes = get_arg_chain(set1, "notes", "notes")
 
-	local forms, categories
-
-	track("conj-" .. conj_type) -- FIXME, convert to regular category
+	local forms = {}
+	local categories = {}
 
 	-- For compatibility
 	if verb_type == "pf-impers-refl" then
@@ -476,50 +519,35 @@ function export.do_generate_forms(conj_type, args)
 
 	local data = {}
 	data.verb_type = verb_type
-	data.conj_type = conj_type
-	data.internal_notes = {}
-	if rfind(conj_type, "^irreg") then
-		data.title = "irregular"
-	else
-		data.title = "class " .. conj_type
-	end
 
 	--impersonal
 	data.impers = rfind(verb_type, "impers")
 	data.intr = rfind(verb_type, "intr")
 	data.refl = rfind(verb_type, "refl")
 	data.perf = rfind(verb_type, "^pf")
-	data.iter = args["iter"]
-	data.nopres = args["nopres"]
-	data.nopast = args["nopast"]
-	data.nofutr = args["nofutr"]
-	data.noimpr = args["noimpr"]
+	data.iter = set1["iter"]
+	data.nopres = set1["nopres"]
+	data.nopast = set1["nopast"]
+	data.nofutr = set1["nofutr"]
+	data.noimpr = set1["noimpr"]
 	if data.iter and data.perf then
 		error("Iterative verbs must be imperfective")
 	end
 
-	-- FIXME, temporary tracking for places that need conversion to past stress
-	-- variant
-	if args["past_m2"] or args["past_m3"] or args["past_m4"] or
-		args["past_f"] or args["past_f2"] or args["past_f3"] or args["past_f4"] or
-		args["past_n"] or args["past_n2"] or args["past_n3"] or args["past_n4"] or
-		args["past_pl"] or args["past_pl2"] or args["past_pl3"] or args["past_pl4"] then
-		track("explicit-past")
-	end
-	if args["reflex_stress"] then
+	if set1["reflex_stress"] then
 		track("reflex-stress")
 	end
 
 	data.ppp_override = false
 	data.prpp_override = false
 	for _, form in ipairs(main_to_all_verb_forms["past_pasv_part"]) do
-		if args[form] then
+		if set1[form] then
 			data.ppp_override = true
 			break
 		end
 	end
 	for _, form in ipairs(main_to_all_verb_forms["pres_pasv_part"]) do
-		if args[form] then
+		if set1[form] then
 			data.prpp_override = true
 			break
 		end
@@ -532,22 +560,56 @@ function export.do_generate_forms(conj_type, args)
 		track("perfective-no-ppp")
 	end
 
-	if conjugations[conj_type] then
-		forms = conjugations[conj_type](args, data)
-	else
-		error("Unknown conjugation type '" .. conj_type .. "'")
+	data.internal_notes = {}
+	local titles = {}
+	for i=1,#arg_sets do
+		local args = arg_sets[i]
+		local conj_type = args.conj_type
+		track("conj-" .. conj_type) -- FIXME, convert to regular category
+		data.conj_type = conj_type
+		if rfind(conj_type, "^irreg") then
+			data.title = "irregular"
+		else
+			data.title = conj_type
+		end
+		if not conjugations[conj_type] then
+			error("Unknown conjugation type '" .. conj_type .. "'")
+		end
+
+		-- Call conjugation function. It will return a table of forms
+		-- as if it's the first arg set. If it is in fact the first
+		-- arg set, we just use the table directly (we may destructively
+		-- modify it if there are later arg sets, but this is OK because
+		-- no one else but us uses the table). Otherwise we need to
+		-- append the values from the table to those of the previous
+		-- arg sets.
+		local arg_set_forms = conjugations[conj_type](set1, data)
+		if i == 1 then
+			forms = arg_set_forms
+		else
+			for _, all_forms in pairs(main_to_all_verb_forms) do
+				for _, form in ipairs(all_forms) do
+					if arg_set_forms[form] then
+						append_to_arg_chain(forms, all_forms[1], all_forms[1],
+							arg_set_forms[form])
+					end
+				end
+			end
+		end
+		table.insert(titles, data.title)
+
+		local reflex_stress = args["reflex_stress"] or data.default_reflex_stress -- "ся́"
+
+		if rfind(conj_type, "^irreg") then
+			table.insert(categories, "Russian irregular verbs")
+		else
+			local class_num = rmatch(conj_type, "^([0-9]+)")
+			assert(class_num and class_num ~= "")
+			table.insert(categories, "Russian class " .. class_num .. " verbs")
+		end
 	end
 
-	local reflex_stress = args["reflex_stress"] or data.default_reflex_stress -- "ся́"
-
-	if rfind(conj_type, "^irreg") then
-		categories = {"Russian irregular verbs"}
-	else
-		local class_num = rmatch(conj_type, "^([0-9]+)")
-		assert(class_num and class_num ~= "")
-		categories = {"Russian class " .. class_num .. " verbs"}
-	end
-	data.title = data.title ..
+	data.title = "class " .. table.concat(titles, " // ") ..
 		(data.perf and " perfective" or " imperfective") ..
 		(data.refl and " reflexive" or data.intr and " intransitive" or " transitive") ..
 		(data.impers and " impersonal" or "") ..
@@ -560,31 +622,35 @@ function export.do_generate_forms(conj_type, args)
 		table.insert(categories, "Russian imperfective verbs")
 	end
 
-	handle_forms_and_overrides(args, forms, data)
+	handle_forms_and_overrides(set1, forms, data)
 
-	-- catch errors in verb arguments that lead to the infinitive not matching
-	-- page title, but only in the main namespace
-	local PAGENAME = mw.title.getCurrentTitle().text
+	-- Catch errors in verb arguments that lead to the infinitive not matching
+	-- page title, but only in the main namespace.
 	local NAMESPACE = mw.title.getCurrentTitle().nsText
-	local inf = forms.infinitive
-	if type(inf) == "table" then
-		inf = inf[1]
-	end
-	inf, _ = m_table_tools.get_notes(inf) -- remove any footnote symbols (e.g. грясти́)
-	local inf_noaccent = com.remove_accents(inf)
-	if inf ~= "-" then
-		if data.refl then
-			if rfind(inf_noaccent, "и$") then
-				inf_noaccent = inf_noaccent .. "сь"
-				inf = inf .. "сь"
-			else
-				inf_noaccent = inf_noaccent .. "ся"
-				inf = inf .. "ся"
+	if NAMESPACE == "" then
+		local PAGENAME = mw.title.getCurrentTitle().text
+		for _, form in pairs(main_to_all_verb_forms["infinitive"]) do
+			local inf = forms[form]
+			if type(inf) == "table" then
+				inf = inf[1]
 			end
-		end
-		if NAMESPACE == "" and inf_noaccent ~= PAGENAME then
-			error("Infinitive " .. inf .. " doesn't match pagename " ..
-				PAGENAME)
+			inf, _ = m_table_tools.separate_notes(inf) -- remove any footnote symbols (e.g. грясти́)
+			local inf_noaccent = com.remove_accents(inf)
+			if inf ~= "-" then
+				if data.refl then
+					if rfind(inf_noaccent, "и$") then
+						inf_noaccent = inf_noaccent .. "сь"
+						inf = inf .. "сь"
+					else
+						inf_noaccent = inf_noaccent .. "ся"
+						inf = inf .. "ся"
+					end
+				end
+				if inf_noaccent ~= PAGENAME then
+					error("Infinitive " .. inf .. " doesn't match pagename " ..
+						PAGENAME)
+				end
+			end
 		end
 	end
 
@@ -659,8 +725,8 @@ local function fetch_forms(forms)
 end
 
 function export.generate_forms(frame)
-	local args, conj_type = clone_args_handle_aliases(frame)
-	local forms, title, perf, intr, impers, categories, notes, internal_notes = export.do_generate_forms(conj_type, args)
+	local arg_sets = split_args_handle_aliases(frame)
+	local forms, title, perf, intr, impers, categories, notes, internal_notes = export.do_generate_forms(arg_sets)
 	return fetch_forms(forms)
 end
 
@@ -675,20 +741,20 @@ end
 -- The main entry point.
 -- This is the only function that can be invoked from a template.
 function export.show(frame)
-	local args, conj_type = clone_args_handle_aliases(frame)
+	local arg_sets = split_args_handle_aliases(frame)
 
-	local args_clone
+	local arg_sets_clone
 	if test_new_ru_verb_module then
-		-- args may be modified by do_generate_forms()
-		args_clone = mw.clone(args)
+		-- arg_sets may be modified by do_generate_forms()
+		arg_sets_clone = mw.clone(arg_sets)
 	end
 
-	local forms, title, perf, intr, impers, categories, notes, internal_notes = export.do_generate_forms(conj_type, args)
+	local forms, title, perf, intr, impers, categories, notes, internal_notes = export.do_generate_forms(arg_sets)
 
 	-- Test code to compare existing module to new one.
 	if test_new_ru_verb_module then
 		local m_new_ru_verb = require("Module:User:Benwing2/ru-verb")
-		local newforms, newtitle, newperf, newintr, newimpers, newcategories, newnotes, newinternal_notes = m_new_ru_verb.do_generate_forms(conj_type, args_clone)
+		local newforms, newtitle, newperf, newintr, newimpers, newcategories, newnotes, newinternal_notes = m_new_ru_verb.do_generate_forms(arg_sets_clone)
 		local vals = mw.clone(forms)
 		vals.title = title
 		vals.perf = perf
@@ -1553,7 +1619,7 @@ conjugations["3°a"] = function(args, data)
 	local forms = {}
 
 	-- (5), [(6)] or similar; imperative indicators
-	data.title = "class 3°a" -- in case it is "class 3oa"
+	data.title = "3°a" -- in case it is "3oa"
 	parse_variants(data, args[1], {"5", "6", "23", "и", "+p", "7", "ё"})
 	local stem = get_stressed_arg(args, 3)
 	local vowel_stem = is_vowel_stem(stem)
@@ -1676,7 +1742,7 @@ end
 conjugations["4a1a"] = function(args, data)
 	local forms = {}
 
-	data.title = "class 4a//1a"
+	data.title = "4a // 1a"
 	-- imperative variants, also щ, used for verbs like похитить (похи́щу) (4a),
 	-- защитить (защищу́) (4b), поглотить (поглощу́) (4c) with a different
 	-- iotation (т -> щ, not ч)
@@ -1853,11 +1919,11 @@ local function guts_of_6a(args, data, vclass)
 	-- remaining present forms, one or the other is slightly preferred (type
 	-- 6a for 6a1a, type 1a for 1a6a).
 	if vclass == "6a1as13" or vclass == "6a1as14" then
-		data.title = "class 6a//1a"
+		data.title = "6a // 1a"
 	elseif vclass == "1a6a" then
-		data.title = "class 1a//6a"
+		data.title = "1a // 6a"
 	elseif vclass == "6°a" then
-		data.title = "class 6°a" -- in case we used 6oa
+		data.title = "6°a" -- in case we used 6oa
 		-- if vclass is just 6a, data.title already set correctly
 	end
 	parse_variants(data, args[1], {"23", "и", "past", "+p", "7", "ё"})
@@ -2003,7 +2069,7 @@ local function guts_of_6b(args, data, vclass)
 	local forms = {}
 
 	if vclass == "6°b" then
-		data.title = "class 6°b" -- in case user specified 6ob
+		data.title = "6°b" -- in case user specified 6ob
 	end
 	parse_variants(data, args[1], {"past", "+p", "7", "ё"})
 	local stem = get_unstressed_arg(args, 3)
@@ -2079,9 +2145,9 @@ local function guts_of_6c(args, data, vclass)
 	-- both are equally preferred (we put the 6c forms first because Zaliznyak
 	-- lists 6c first).
 	if vclass == "6c1a" then
-		data.title = "class 6c//1a"
+		data.title = "6c // 1a"
 	elseif vclass == "6°c" then
-		data.title = "class 6°c" -- in case user used 6oc
+		data.title = "6°c" -- in case user used 6oc
 	end
 	
 	-- optional щ parameter for verbs like клеветать (клевещу́), past stress
@@ -2733,7 +2799,7 @@ conjugations["irreg-бежать"] = function(args, data)
 	local forms = {}
 
 	local prefix = args[3] or ""
-	data.title = prefix == "вы́" and "class 5a" or "class 5b"
+	data.title = prefix == "вы́" and "5a" or "5b"
 	parse_variants(data, args[1], {})
 	no_stray_args(args, 3)
 
@@ -2779,7 +2845,7 @@ conjugations["irreg-хотеть"] = function(args, data)
 	local forms = {}
 
 	local prefix = args[3] or ""
-	data.title = "class 5c'"
+	data.title = "5c'"
 	parse_variants(data, args[1], {})
 	no_stray_args(args, 3)
 
@@ -2900,7 +2966,7 @@ conjugations["irreg-сыпать"] = function(args, data)
 
 	--for this type, it's important to distinguish if it's reflexive for вы́сыпаться vs. вы́сыпать imperative
 	local prefix = args[3] or ""
-	data.title = "class 6a"
+	data.title = "6a"
 	parse_variants(data, args[1], {})
 	no_stray_args(args, 3)
 
@@ -2946,7 +3012,7 @@ conjugations["irreg-лгать"] = function(args, data)
 	local forms = {}
 
 	local prefix = args[3] or ""
-	data.title = "class 6°b/c"
+	data.title = "6°b/c"
 	parse_variants(data, args[1], {})
 	no_stray_args(args, 3)
 
@@ -2976,7 +3042,7 @@ conjugations["irreg-мочь"] = function(args, data)
 	local forms = {}
 
 	local prefix = args[3] or ""
-	data.title = "class 8c/b"
+	data.title = "8c/b"
 	parse_variants(data, args[1], {})
 	no_stray_args(args, 3)
 
@@ -3009,7 +3075,7 @@ conjugations["irreg-слать"] = function(args, data)
 	local forms = {}
 
 	local prefix = args[3] or ""
-	data.title = prefix == "вы́" and "class 6a" or "class 6b"
+	data.title = prefix == "вы́" and "6a" or "6b"
 	parse_variants(data, args[1], {})
 	no_stray_args(args, 3)
 
@@ -3156,7 +3222,7 @@ conjugations["irreg-минуть"] = function(args, data)
 	-- for the irregular verb "ми́нуть"
 	local forms = {}
 
-	data.title = "class 3c"
+	data.title = "3c"
 	parse_variants(data, args[1], {})
 	local stem = get_stressed_arg(args, 3)
 	local stem_noa = com.make_unstressed(stem)
@@ -3189,7 +3255,7 @@ conjugations["irreg-живописать-миновать"] = function(args, dat
 	-- for irregular verbs "живописа́ть" and "минова́ть", mixture of types 1 and 2
 	local forms = {}
 
-	data.title = "class 1a"
+	data.title = "1a"
 	parse_variants(data, args[1], {})
 	local inf_stem = get_stressed_arg(args, 3)
 	local pres_stem = get_stressed_arg(args, 4)
@@ -3219,7 +3285,7 @@ conjugations["irreg-лечь"] = function(args, data)
 	local forms = {}
 
 	local prefix = args[3] or ""
-	data.title = "class 8a/b"
+	data.title = "8a/b"
 	parse_variants(data, args[1], {})
 	no_stray_args(args, 3)
 
@@ -3308,10 +3374,10 @@ conjugations["irreg-стелить-стлать"] = function(args, data)
 	local infprefix = args[4] or ""
 	local presprefix = args[5] or infprefix
 	local stem = get_stressed_arg(args, 3)
-	data.title = ((prefix == "вы́" and stem == "стла") and "class 6a" or
-		stem == "стла́" and "class 6c" or
-		stem == (prefix == "вы́" and stem == "стели") and "class 4a" or
-		"class 4c")
+	data.title = ((prefix == "вы́" and stem == "стла") and "6a" or
+		stem == "стла́" and "6c" or
+		stem == (prefix == "вы́" and stem == "стели") and "4a" or
+		"4c")
 	parse_variants(data, args[1], {})
 	no_stray_args(args, 5)
 
@@ -3449,7 +3515,7 @@ conjugations["irreg-чтить"] = function(args, data)
 	local forms = {}
 
 	local prefix = args[3] or ""
-	data.title = "class 4b"
+	data.title = "4b"
 	parse_variants(data, args[1], {})
 	no_stray_args(args, 3)
 
@@ -3549,7 +3615,7 @@ conjugations["irreg-внимать"] = function(args, data)
 	local forms = {}
 
 	local prefix = args[3] or ""
-	data.title = "class 1a//6a"
+	data.title = "1a // 6a"
 	parse_variants(data, args[1], {})
 	no_stray_args(args, 3)
 
@@ -3577,7 +3643,7 @@ conjugations["irreg-внять"] = function(args, data)
 	local forms = {}
 
 	local prefix = args[3] or ""
-	data.title = "class 14c/c"
+	data.title = "14c/c"
 	parse_variants(data, args[1], {})
 	no_stray_args(args, 3)
 
@@ -3608,7 +3674,7 @@ conjugations["irreg-обязывать"] = function(args, data)
 	local forms = {}
 
 	local prefix = args[3] or ""
-	data.title = "class 1a"
+	data.title = "1a"
 	parse_variants(data, args[1], {})
 	no_stray_args(args, 3)
 
