@@ -56,6 +56,10 @@
 		   pltailall= or sgtailall=.
 		suffix: Add a suffix such as ся to all forms.
 		prefix: Add a prefix to all forms.
+		plhyp, plhypall, CASE_NUM_hyp, etc.: Same as pltail, pltailall,
+		   CASE_NUM_tal, etc. but specify that the marked forms are
+		   mostly hypothetical or rare/awkard. Generally you will want
+		   plhypall=y to mark the plural as hypothetical.
 
 	Per word named arguments:
 		All of the above named arguments have per-word variants, e.g.
@@ -360,12 +364,14 @@ local nom = require("Module:ru-nominal")
 local m_ru_adj = require("Module:ru-adjective")
 local m_ru_translit = require("Module:ru-translit")
 local strutils = require("Module:string utilities")
+local scriptutils = require("Module:script utilities")
 local m_table_tools = require("Module:table tools")
 local m_debug = require("Module:debug")
 
 local export = {}
 
 local lang = require("Module:languages").getByCode("ru")
+local Latn = require("Module:scripts").getByCode("Latn")
 
 local u = mw.ustring.char
 local rfind = mw.ustring.find
@@ -379,6 +385,8 @@ local ulen = mw.ustring.len
 local AC = u(0x0301) -- acute =  ́
 local CFLEX = u(0x0302) -- circumflex =  ̂
 local IRREGMARKER = "△"
+local HYPMARKER = "⟐"
+
 -- text class to check lowercase arg against to see if Latin text embedded in it
 local latin_text_class = "[a-zščžěáéíóúýàèìòùỳâêîôûŷạẹịọụỵȧėȯẏ]"
 
@@ -412,9 +420,12 @@ local function insert_if_not(foo, bar)
 end
 
 -- Fancy version of ine() (if-not-empty). Converts empty string to nil,
--- but also strips single or double quotes, to allow for embedded spaces.
+-- but also strips leading/trailing space and then single or double quotes,
+-- to allow for embedded spaces.
 local function ine(arg)
-	if not arg or arg == "" then return nil end
+	if not arg then return nil end
+	arg = rsub(arg, "^%s*(.-)%s*$", "%1")
+	if arg == "" then return nil end
 	local inside_quotes = rmatch(arg, '^"(.*)"$')
 	if inside_quotes then
 		return inside_quotes
@@ -435,18 +446,18 @@ end
 local function rutr_pairs_equal(term1, term2)
 	local ru1, tr1 = term1[1], term1[2]
 	local ru2, tr2 = term2[1], term2[2]
-	local ru1entry, ru1notes = m_table_tools.get_notes(m_links.remove_links(ru1))
-	local ru2entry, ru2notes = m_table_tools.get_notes(m_links.remove_links(ru2))
+	local ru1entry, ru1notes = m_table_tools.separate_notes(m_links.remove_links(ru1))
+	local ru2entry, ru2notes = m_table_tools.separate_notes(m_links.remove_links(ru2))
 	if ru1entry ~= ru2entry then
 		return false
 	end
 	local tr1entry, tr1notes
 	local tr2entry, tr2notes
 	if tr1 then
-		tr1entry, tr1notes = m_table_tools.get_notes(tr1)
+		tr1entry, tr1notes = m_table_tools.separate_notes(tr1)
 	end
 	if tr2 then
-		tr2entry, tr2notes = m_table_tools.get_notes(tr2)
+		tr2entry, tr2notes = m_table_tools.separate_notes(tr2)
 	end
 	if tr1entry == tr2entry then
 		return true
@@ -632,6 +643,10 @@ local function tracking_code(stress, orig_decl, decl, args, n, islast)
 		orig_decl = nil
 	end
 
+	if args.notes then
+		track("notes")
+	end
+	
 	local function all_pl_irreg()
 		track("irreg")
 		for _, case in ipairs(overridable_cases) do
@@ -818,7 +833,7 @@ local function categorize_and_init_heading(stress, decl, args, n, islast)
 		end
 		for _, x in ipairs(override) do
 			local ru, tr = x[1], x[2]
-			local entry, notes = m_table_tools.get_notes(ru)
+			local entry, notes = m_table_tools.separate_notes(ru)
 			entry = com.remove_accents(m_links.remove_links(entry))
 			if rlfind(entry, suffix .. "$") then
 				return true
@@ -1485,6 +1500,9 @@ generate_forms_1 = function(args, per_word_info)
 
 		-- Check for explicit allow-unaccented indication.
 		lemma, args.allow_unaccented = rsubb(lemma, "^%*", "")
+		if args.allow_unaccented then
+			track("allow-unaccented")
+		end
 
 		args.orig_lemma = lemma
 		lemma = m_links.remove_links(lemma)
@@ -1495,6 +1513,16 @@ generate_forms_1 = function(args, per_word_info)
 			decl = "$"
 		end
 		args.lemmatr = lemmatr
+
+		-- Treat suffixes without an accent, and suffixes with an accent on the
+		-- initial hyphen, as if they were preceded with a *, which overrides
+		-- all the logic that normally (a) normalizes the accent, and (b)
+		-- complains about multisyllabic words without an accent. Don't do this
+		-- if lemma is just -, which is used specially in manual declension
+		-- tables (e.g. сто, три).
+		if lemma ~= "-" and (rfind(lemma, "^%-́") or (com.is_unstressed(lemma) and rfind(lemma, "^%-"))) then
+			args.allow_unaccented = true
+		end
 
 		-- Convert lemma and decl arg into stem and canonicalized decl.
 		-- This will autodetect the declension from the lemma if an explicit
@@ -1860,7 +1888,7 @@ generate_forms_1 = function(args, per_word_info)
 		if args[case] then
 			for _, form in ipairs(args[case]) do
 				local ru, tr = form[1], form[2]
-				local ruentry, runotes = m_table_tools.get_notes(ru)
+				local ruentry, runotes = m_table_tools.separate_notes(ru)
 				ruentry = m_links.remove_links(ruentry)
 				if rfind(ulower(ruentry), latin_text_class) then
 					--error("Found Latin text " .. ruentry .. " in case " .. case) 
@@ -1958,19 +1986,22 @@ local function get_form(forms, preserve_links, raw)
 			insert_if_not(canon_forms, {ru, tr})
 		else
 			local ru, tr = form[1], form[2]
-			local ruentry, runotes = m_table_tools.get_notes(ru)
-			local trentry, trnotes
-			if tr then
-				trentry, trnotes = m_table_tools.get_notes(tr)
+			local ruentry, runotes = m_table_tools.separate_notes(ru)
+			-- Skip hypothetical forms (but include in the raw versions)
+			if not rfind(runotes, HYPMARKER) then
+				local trentry, trnotes
+				if tr then
+					trentry, trnotes = m_table_tools.separate_notes(tr)
+				end
+				if not preserve_links then
+					ruentry = m_links.remove_links(ruentry)
+				end
+				ruentry = rsub(ruentry, "|", "<!>")
+				if trentry then
+					trentry = rsub(trentry, "|", "<!>")
+				end
+				insert_if_not(canon_forms, {ruentry, trentry})
 			end
-			if not preserve_links then
-				ruentry = m_links.remove_links(ruentry)
-			end
-			ruentry = rsub(ruentry, "|", "<!>")
-			if trentry then
-				trentry = rsub(trentry, "|", "<!>")
-			end
-			insert_if_not(canon_forms, {ruentry, trentry})
 		end
 	end
 	return nom.concat_forms(canon_forms)
@@ -2016,8 +2047,11 @@ local function concat_case_args(args, do_all, raw)
 	local ins_text = {}
 	for _, case in ipairs(do_all and all_cases or overridable_cases) do
 		if case_will_be_displayed(args, case) then
-			table.insert(ins_text, case .. (raw and "_raw" or "") .. "=" ..
-				get_form(args[case], rfind(case, "_linked"), raw))
+			local forms = get_form(args[case], rfind(case, "_linked"), raw)
+			if forms ~= "" then
+				table.insert(ins_text, case .. (raw and "_raw" or "") .. "=" ..
+					forms)
+			end
 		end
 	end
 	return table.concat(ins_text, "|")
@@ -3937,15 +3971,6 @@ local attachers = {
 	["-"] = attach_unstressed,
 }
 
--- Return true if FORM is "close enough" to LEMMA that we can substitute the
--- linked form of the lemma. Currently this means exactly the same except that
--- we ignore acute and grave accent differences in monosyllables, and ignore
--- notes that may have been appended (e.g. the triangle marking irregularity).
-local function close_enough_to_lemma(form, lemma)
-	local entry, notes = m_table_tools.get_notes(form)
-	return entry == lemma or com.is_monosyllabic(entry) and com.is_monosyllabic(lemma) and
-		com.remove_accents(entry) == com.remove_accents(lemma)
-end
 
 do_stress_pattern = function(stress, args, decl, number, n, islast)
 	local f = {}
@@ -3967,9 +3992,19 @@ do_stress_pattern = function(stress, args, decl, number, n, islast)
 			if f[case] and (case == "nom_sg" or case == "nom_pl") then
 				local linked_forms = {}
 				for _, form in ipairs(f[case]) do
-					if close_enough_to_lemma(form[1], args.lemma_no_links) and
+					-- Return true if FORM is "close enough" to LEMMA that we can substitute the
+					-- linked form of the lemma. Currently this means exactly the same except that
+					-- we ignore acute and grave accent differences in monosyllables, and ignore
+					-- notes that may have been appended (e.g. the triangle marking irregularity).
+					local entry, notes = m_table_tools.separate_notes(form[1])
+					local lemma = args.lemma_no_links
+					local close_enough_to_lemma =
+						entry == lemma or (com.is_monosyllabic(entry) and
+							com.is_monosyllabic(lemma) and
+							com.remove_accents(entry) == com.remove_accents(lemma))
+					if close_enough_to_lemma and
 							rfind(args.orig_lemma, "%[%[") then
-						table.insert(linked_forms, {args.orig_lemma, args.lemmatr})
+						table.insert(linked_forms, {args.orig_lemma .. notes, args.lemmatr and args.lemmatr .. notes})
 					else
 						table.insert(linked_forms, form)
 					end
@@ -4114,7 +4149,7 @@ overridable_cases = {
 -- either a number for word-specific overrides, or an empty string for
 -- overall overrides.
 --
--- It will still be necessary to call m_table_tools.get_notes() to separate
+-- It will still be necessary to call m_table_tools.separate_notes() to separate
 -- off any trailing "notes" (asterisks, superscript numbers, etc.), and
 -- m_links.remove_links() to remove any links to get the raw override form.
 canonicalize_override = function(args, case, forms, n)
@@ -4139,12 +4174,18 @@ canonicalize_override = function(args, case, forms, n)
 	for _, val in ipairs(vals) do
 		local valru, valtr = nom.split_russian_tr(val)
 		valru = rsub(valru, "~~", ustem)
-		valru = rsub(valru, "~", stem)
+		valru = rsub(valru, "~", com.is_stressed(val) and ustem or stem)
+		if rfind(valru, "^%*") then
+			valru = rsub(valru, "^%*", "") .. HYPMARKER
+		end
 		if valtr then
 			tr = tr or nom.translit_no_links(stem)
 			utr = utr or nom.translit_no_links(ustem)
 			valtr = rsub(valtr, "~~", utr)
-			valtr = rsub(valtr, "~", tr)
+			valtr = rsub(valtr, "~", com.is_stressed(val) and utr or tr)
+			if rfind(valtr, "^%*") then
+				valtr = rsub(valtr, "^%*", "") .. HYPMARKER
+			end
 		end
 		table.insert(retvals, {valru, valtr})
 	end
@@ -4244,7 +4285,12 @@ local function process_overrides(args, f, n)
 				if case ~= "loc" and case ~= "par" and case ~= "voc" and
 						not args.manual and
 						not contains_rutr_pair(f[case], form) then
-					form = nom.concat_paired_russian_tr(form, {IRREGMARKER})
+					local formru, formnotes = m_table_tools.separate_notes(form[1])
+					if formru ~= "-" then
+						-- don't mark an override of - as irregular, even if
+						-- it has an attached footnote symbol
+						form = nom.concat_paired_russian_tr(form, {IRREGMARKER})
+					end
 				end
 				table.insert(new_overrides, form)
 			end
@@ -4286,9 +4332,7 @@ local function process_overrides(args, f, n)
 	end
 end
 
-handle_forms_and_overrides = function(args, n, islast)
-	local f = args.forms
-
+local function process_tail_args(args, f, n)
 	local function append_note_all(case, value)
 		value = nom.split_russian_tr(value, "dopair")
 		local function append1(case)
@@ -4328,37 +4372,47 @@ handle_forms_and_overrides = function(args, n, islast)
 		end
 	end
 
-	local function process_tail_args(n)
-		for _, case in ipairs(overridable_cases) do
-			if args[case .. "_tail" .. n] then
-				append_note_last(case, args[case .. "_tail" .. n])
+	local function handle_tail_hyp(suf)
+		local arg, val
+		for _, case in ipairs(all_cases) do
+			arg = args[case .. "_" .. suf .. n]
+			if arg then
+				append_note_last(case, suf == "hyp" and HYPMARKER or arg)
 			end
-			if args[case .. "_tailall" .. n] then
-				append_note_all(case, args[case .. "_tailall" .. n])
+			arg = args[case .. "_" .. suf .. "all" .. n]
+			if arg then
+				append_note_all(case, suf == "hyp" and HYPMARKER or arg)
 			end
 			if not rfind(case, "_pl") then
-				if args["sgtailall" .. n] then
-					append_note_all(case, args["sgtailall" .. n])
+				arg = args["sg" .. suf .. "all" .. n]
+				if arg then
+					append_note_all(case, suf == "hyp" and HYPMARKER or arg)
 				end
-				if args["sgtail" .. n] then
-					append_note_last(case, args["sgtail" .. n], ">1")
+				arg = args["sg" .. suf .. n]
+				if arg then
+					append_note_last(case, suf == "hyp" and HYPMARKER or arg, ">1")
 				end
 			else
-				if args["pltailall" .. n] then
-					append_note_all(case, args["pltailall" .. n])
+				arg = args["pl" .. suf .. "all" .. n]
+				if arg then
+					append_note_all(case, suf == "hyp" and HYPMARKER or arg)
 				end
-				if args["pltail" .. n] then
-					append_note_last(case, args["pltail" .. n], ">1")
+				arg = args["pl" .. suf .. n]
+				if arg then
+					append_note_last(case, suf == "hyp" and HYPMARKER or arg, ">1")
 				end
 			end
 		end
 	end
 
-	process_tail_args(n)
-	if islast then
-		process_tail_args("")
-	end
+	handle_tail_hyp("tail")
+	handle_tail_hyp("hyp")
+end
 
+handle_forms_and_overrides = function(args, n, islast)
+	local f = args.forms
+
+	process_tail_args(args, f, n)
 	process_overrides(args, f, n)
 
 	local an = args.thisa
@@ -4459,6 +4513,7 @@ handle_overall_forms_and_overrides = function(args)
 	local acc_sg_overridden = args.acc_sg
 	local acc_pl_overridden = args.acc_pl
 
+	process_tail_args(args, overall_forms, "")
 	process_overrides(args, overall_forms, "")
 
 	-- if IRREGMARKER is anywhere in text, remove all instances and put
@@ -4575,16 +4630,14 @@ local function show_form(forms, old, lemma)
 	-- title of the declension table.) (Actually, currently we don't
 	-- include the translit in the declension table title.)
 
-	if #forms == 1 and forms[1][1] == "-" then
-		return "&mdash;"
-	end
-
+	local is_missing = false
 	for _, form in ipairs(forms) do
 		local ru, tr = form[1], form[2]
-		local ruentry, runotes = m_table_tools.get_notes(ru)
+		local ruentry, runotes = m_table_tools.separate_notes(ru)
 		local trentry, trnotes
 		if tr then
-			trentry, trnotes = m_table_tools.get_notes(tr)
+			trentry, trnotes = m_table_tools.separate_notes(tr)
+			trnotes = rsub(trnotes, HYPMARKER, "")
 		end
 		if lemma and com.is_monosyllabic(ruentry) then
 			ruentry = com.remove_accents(ruentry)
@@ -4592,20 +4645,37 @@ local function show_form(forms, old, lemma)
 				trentry = com.remove_accents(trentry)
 			end
 		end
-		local ruspan, trspan
-		if old then
-			ruspan = m_links.full_link(com.remove_jo(ruentry), ruentry, lang, nil, nil, nil, {tr = "-"}, false) .. runotes
-		else
-			ruspan = m_links.full_link(ruentry, nil, lang, nil, nil, nil, {tr = "-"}, false) .. runotes
+		local ishyp = rfind(runotes, HYPMARKER)
+		if ishyp then
+			runotes = rsub(runotes, HYPMARKER, "")
 		end
+		runotes = m_table_tools.superscript_notes(runotes)
+		if trnotes then
+			trnotes = m_table_tools.superscript_notes(trnotes)
+		end
+		local ruspan, trspan
+		if ruentry == "-" and #forms == 1 then
+			ruspan = "&mdash;"
+			is_missing = true
+		elseif ishyp then
+			ruspan = m_links.full_link({lang = lang, term = nil, alt = ruentry, tr = "-"}, "hypothetical")
+		elseif old then
+			ruspan = m_links.full_link({lang = lang, term = com.remove_jo(ruentry), alt = ruentry, tr = "-"})
+		else
+			ruspan = m_links.full_link({lang = lang, term = ruentry, tr = "-"})
+		end
+		ruspan = ruspan .. runotes
 		if not trentry then
 			trentry = nom.translit_no_links(ruentry)
 		end
 		if not trnotes then
 			trnotes = nom.translit_no_links(runotes)
 		end
-		trspan = m_links.remove_links(trentry) .. trnotes
-		trspan = "<span style=\"color: #888\">" .. trspan .. "</span>"
+		trspan = m_links.remove_links(trentry)
+		if ishyp then
+			trspan = scriptutils.tag_text(trspan, lang, Latn, "hypothetical")
+		end
+		trspan = "<span style=\"color: #888\">" .. trspan .. trnotes .. "</span>"
 
 		if lemma then
 			-- insert_if_not(lemmavals, ruspan .. " (" .. trspan .. ")")
@@ -4620,8 +4690,12 @@ local function show_form(forms, old, lemma)
 		return table.concat(lemmavals, ", ")
 	else
 		local russian_span = table.concat(russianvals, ", ")
-		local latin_span = table.concat(latinvals, ", ")
-		return russian_span .. "<br />" .. latin_span
+		if is_missing then
+			return russian_span
+		else
+			local latin_span = table.concat(latinvals, ", ")
+			return russian_span .. "<br />" .. latin_span
+		end
 	end
 end
 
@@ -4790,7 +4864,7 @@ local function template_prelude(min_width)
 	return rsub([===[
 <div>
 <div class="NavFrame" style="display:inline-block; min-width:MINWIDTHem">
-<div class="NavHead" style="background:#eff7ff;">{title}<span style="font-weight:normal;">{after_title}</span></div>
+<div class="NavHead" style="background:#eff7ff;">{title}<span style="font-weight:normal;">{after_title}</span>&nbsp;</div>
 <div class="NavContent">
 {\op}| style="background:#F9F9F9; text-align:center; min-width:MINWIDTHem; width:100%;" class="inflection-table"
 |-

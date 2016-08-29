@@ -15,6 +15,7 @@ local lang = require("Module:languages").getByCode("ru")
 
 local strutils = require("Module:string utilities")
 local m_ru_translit = require("Module:ru-translit")
+local m_table_tools = require("Module:table tools")
 
 local u = mw.ustring.char
 local rfind = mw.ustring.find
@@ -103,7 +104,15 @@ end
 
 -- Apply Proto-Slavic iotation. This is the change that is affected by a
 -- Slavic -j- after a consonant.
-function export.iotation_new(stem, tr, shch)
+function export.iotation(stem, tr, shch)
+	local combine_tr = false
+	
+	-- so this can be called from a template	
+	if type(stem) == 'table' then
+		stem, tr, shch = ine(stem.args[1]), ine(stem.args[2]), ine(stem.args[3])
+		combine_tr = true
+	end
+	
 	stem = rsub(stem, "[сх]$", "ш")
 	stem = rsub(stem, "ск$", "щ")
 	stem = rsub(stem, "ст$", "щ")
@@ -138,7 +147,11 @@ function export.iotation_new(stem, tr, shch)
 		tr = rsub(tr, "([bvmpf])$", "%1l")
 	end
 
-	return stem, tr
+	if combine_tr then
+		return tr and stem .. "//" .. tr or stem
+	else
+		return stem, tr
+	end
 end
 
 -- Does a set of Cyrillic words in connected text need accents? We need to
@@ -584,58 +597,6 @@ function export.make_beginning_stressed(ru, tr)
 		export.j_correction(table.concat(trsyl, ""))
 end
 
--- Move the stress one syllable leftwards.
-function export.move_stress_leftward(ru, tr)
-	-- Always do things the "hard way" by splitting into syllables; more robust that
-	-- way.
-	rusyl, trsyl = export.split_syllables(ru, tr)
-	-- Find leftmost stressed syllable; first look for acute/diaresis only, then look
-	-- for ё/Ё, so we don't get confused by words with both ё and stress elsewhere.
-	local stress = 0
-	for i=1,#rusyl do
-		if rfind(rusyl[i], "[́̈]") then
-			stress = i
-			break
-		end
-	end
-	if stress == 0 then
-		for i=1,#rusyl do
-			if rfind(rusyl[i], "[ёЁ]") then
-				stress = i
-				break
-			end
-		end
-	end
-	-- Do nothing if leftmost syllable already stressed. Otherwise, do similar to
-	-- make_unstressed_once_at_beginning().
-	if stress > 1 then
-		-- (1) Destress existing-stressed syllable.
-		-- jo -> je in translit opposite ё but not elsewhere.
-		if trsyl and rfind(rusyl[stress], "[ёЁ]") then
-			trsyl[stress] = rsub(trsyl[stress], "[Oo]", {["O"] = "E", ["o"] = "e"})
-		end
-		rusyl[stress] = make_unstressed_once_at_beginning_ru(rusyl[stress])
-		-- the following should still work as it will affect accents only
-		if trsyl then
-			trsyl[stress] = make_unstressed_once_at_beginning_ru(trsyl[stress])
-		end
-		break
-		-- (2) Add an acute to one syllable to the left of both Russian and translit.
-		rusyl[stress - 1] = rsub(rusyl[stress - 1], "([" .. export.vowel_no_jo .. "])",
-			"%1" .. AC)
-		if trsyl then
-			trsyl[stress - 1] = rsub(trsyl[stress - 1], "([" .. export.tr_vowel .. "])",
-				"%1" .. AC)
-		end
-		-- If that caused an acute and grave next to each other, remove the grave
-		rusyl[stress - 1], trsyl[stress - 1] =
-			export.correct_grave_acute_clash(rusyl[stress - 1], trsyl[stress - 1])
-	end
-	-- Also need to apply j correction as otherwise we'll have je after cons
-	return table.concat(rusyl, ""),
-		trsyl and export.j_correction(table.concat(trsyl, "") or nil)
-end
-
 -- used for tracking and categorization
 trailing_letter_type = {
 	["ш"] = {"sibilant", "cons"},
@@ -700,7 +661,7 @@ function export.reduce_stem(stem, tr)
 	-- =p.reduce_stem("фе́ей", "fɛ́jej") -> фе́йй, fɛ́jj
 	-- =p.reduce_stem("феёй", p.decompose("fɛjój")) -> фейй, fɛjj
 
-	-- so this can be called from a template
+	-- so this can be called from a template	
 	if type(stem) == 'table' then
 		stem, tr = ine(stem.args[1]), ine(stem.args[2])
 		combine_tr = true
@@ -771,8 +732,8 @@ end
 -- NOTE: Translit must already be decomposed! See comment at top.
 function export.dereduce_stem(stem, tr, epenthetic_stress)
 	local combine_tr = false
-
-	-- so this can be called from a template
+	
+	-- so this can be called from a template	
 	if type(stem) == 'table' then
 		stem, tr, epenthetic_stress = ine(stem.args[1]), ine(stem.args[2]), ine(stem.args[3])
 		combine_tr = true
@@ -848,6 +809,14 @@ function export.dereduce_stem(stem, tr, epenthetic_stress)
 		end
 	end
 	return nil, nil
+end
+
+-- Parse an entry that potentially has final footnote symbols and initial *
+-- for a hypothetical entry into initial symbols, text and final symbols.
+function export.split_symbols(entry, do_subscript)
+	local prefentry, finalnotes = m_table_tools.separate_notes(entry)
+	local initnotes, text = rmatch(prefentry, "(%*?)(.*)$")
+	return initnotes, text, finalnotes
 end
 
 return export

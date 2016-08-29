@@ -17,7 +17,60 @@ function tests:check_pron(Cyrl, IPA, Cyrl_word, pos, gem)
 end
 
 function tests:test_pron()
-	self:check_pron("гёрлфрэнд", "ˈɡʲɵrlfrɨnt", nil, "n")
+	-- handling of стл -- in стлив but not elsewhere
+	self:check_pron("счастли́вый", "ɕːɪs⁽ʲ⁾ˈlʲivɨj")
+	self:check_pron("костля́вый", "kɐstˈlʲavɨj")
+	self:check_pron("истле́ть", "ɪstˈlʲetʲ")
+	-- optional palatalization of final -ся (currently only after л)
+	self:check_pron("роди́лся", "rɐˈdʲils⁽ʲ⁾ə")
+	self:check_pron("Зо́ся", "ˈzosʲə")
+	-- palatalization before consonants in imperative forms
+	self:check_pron("вы́сыпьте", "ˈvɨsɨp⁽ʲ⁾tʲe")
+	self:check_pron("рассы́пься", "rɐˈsːɨp⁽ʲ⁾sʲə")
+	self:check_pron("знако́мьтесь", "znɐˈkom⁽ʲ⁾tʲɪsʲ")
+	self:check_pron("ме́тьте", "ˈmʲetʲːe")
+	-- also should geminate even not directly after the stress
+	self:check_pron("вы́гладьте", "ˈvɨɡlətʲːe")
+	self:check_pron("отме́ться", "ɐtˈmʲetʲ͡sʲsʲə", nil, "imp")
+	self:check_pron("бро́сься", "ˈbrosʲːə")
+	self:check_pron("оби́дься", "ɐˈbʲitʲ͡sʲsʲə", nil, "imp")
+	-- unstressed а before final -е
+	self:check_pron("элева́торе", "ɨlʲɪˈvatərʲe", nil, "pre")
+	-- fronting after two a's or u's in successive syllables
+	self:check_pron("включа́ть", "fklʲʉˈt͡ɕætʲ")
+	self:check_pron("умоля́ющий", "ʊmɐˈlʲæjʉɕːɪj")
+	-- palatal assimilation in дм
+	self:check_pron("седми́ца", "sʲɪdʲˈmʲit͡sə")
+	-- tie bar in дн, тн
+	self:check_pron("сего́дня", "sʲɪˈvodʲ͡nʲa")
+	-- optional palatalization assimilation in тл, syllable division before cluster (Avanesov has a tie bar here)
+	self:check_pron("светле́ть", "s⁽ʲ⁾vʲɪˈt⁽ʲ⁾lʲetʲ")
+	-- optional palatalization assimilation in см
+	self:check_pron("сейсми́чный", "sʲɪjs⁽ʲ⁾ˈmʲit͡ɕnɨj")
+	-- optional palatalization assimilation in св
+	self:check_pron("сверло́", "s⁽ʲ⁾vʲɪrˈlo")
+	-- optional palatalization assimilation in сб
+	self:check_pron("сбива́ть", "z⁽ʲ⁾bʲɪˈvatʲ")
+	-- optional palatalization assimilation in ств, тв
+	self:check_pron("противобо́рстве", "prətʲɪvɐˈbors⁽ʲ⁾t⁽ʲ⁾vʲe", nil, "pre")
+	self:check_pron("рукоприкла́дстве", "rʊkəprʲɪˈklat͡st⁽ʲ⁾vʲe", nil, "pre")
+	self:check_pron("самоутвержде́ние", "səməʊt⁽ʲ⁾vʲɪrʐˈdʲenʲɪje", nil, "n")
+	-- optional palatalization assimilation in сдв, дв (?)
+	self:check_pron("сдвиг", "z⁽ʲ⁾d⁽ʲ⁾vʲik")
+	-- ч should be hard in чш
+	self:check_pron("лу́чший", "ˈlut͡ʂʂɨj")
+	-- as per talk re Тогане
+	self:check_pron("Зимба́бвэ", "zʲɪmˈbabvɛ", "Зимба́бве")
+	self:check_pron("То́го", "ˈtoɡə")
+	self:check_pron("того́", "tɐˈvo")
+	-- gemination should be optional
+	self:check_pron("нра̀вственно-эти́ческий", "ˌnrafstvʲɪn(ː)ə ɨˈtʲit͡ɕɪskʲɪj")
+	-- -ка- should be stressed
+	self:check_pron("эн-ка-вэ-дэ́", "ɛn ka vɛ ˈdɛ")
+	-- comma shouldn't interfere with destressing же
+	self:check_pron("то же, что", "ˈto‿ʐɨ | ʂto")
+	-- ё + э + no other vowels used to cause problems
+	self:check_pron("гёрлфрэнд", "ˈɡʲɵrlfrɨnt", "гёрлфренд")
 	-- [j] not optional in such positions
 	self:check_pron("в Япо́нии", "v‿jɪˈponʲɪɪ", nil, "n")
 	-- final -е
@@ -106,6 +159,10 @@ function tests:test_pron()
 	-- compare to ки́я, о ки́и
 	self:check_pron("каки́е-нибудь лека́рства", "kɐˈkʲiɪ‿nʲɪbʊtʲ lʲɪˈkarstvə", nil, "pro")
 	self:check_pron("си́ние воротнички́", "ˈsʲinʲɪɪ vərətʲnʲɪt͡ɕˈkʲi")
+	-- case involving multiple parts of speech
+	self:check_pron("Адриати́ческое мо́ре", "ɐdrʲɪɐˈtʲit͡ɕɪskəjə ˈmorʲe", nil, "a/n")
+	-- end of final -е
+
 	self:check_pron("компа̀кт-ди́ск", "kɐmˌpaɡd ˈdʲisk")
 	self:check_pron("воѐнно-морско́й", "vɐˌjenːə mɐrˈskoj")
 	self:check_pron("ра́нчо", "ˈranʲt͡ɕɵ")
@@ -320,7 +377,7 @@ function tests:test_pron()
 	self:check_pron("дождь", "doʂtʲ")
 	self:check_pron("дощ", "doɕː", "дождь")
 	self:check_pron("ночь", "not͡ɕ")
-	self:check_pron("смеёшься", "smʲɪˈjɵʂs⁽ʲ⁾ə")
+	self:check_pron("смеёшься", "smʲɪˈjɵʂsʲə")
 	self:check_pron("ничья́", "nʲɪˈt͡ɕja")
 	self:check_pron("аа́к", "ɐˈak")
 	self:check_pron("аа́м", "ɐˈam")

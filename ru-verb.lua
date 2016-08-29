@@ -2,7 +2,7 @@
 	This module contains functions for creating inflection tables for Russian
 	verbs.
 
-	Author: Atitarev, significantly rewritten by Benwing, earliest version by CodeCat
+	Author: Originally Atitarev, rewritten by Benwing, earliest version by CodeCat
 
 	NOTE: This module is partly converted to support manual translit, in the
 	form CYRILLIC//LATIN (i.e. with a // separating the Cyrillic and Latin
@@ -20,11 +20,6 @@
 	The code is careful only to generate manual translit when it's needed,
 	to avoid penalizing the majority of cases where manual transit isn't
 	needed.
-
-FIXME:
-
-1. (DONE) Find any current uses of pres_futr_* overrides and remove them,
-   converting to pres_ or futr_. Then make pres_futr_ overrides illegal.
 ]=]--
 
 local m_utilities = require("Module:utilities")
@@ -69,9 +64,21 @@ local function rsubb(term, foo, bar)
 	return retval, nsubs > 0
 end
 
--- ine() (if-not-empty)
+-- Fancy version of ine() (if-not-empty). Converts empty string to nil,
+-- but also strips leading/trailing space and then single or double quotes,
+-- to allow for embedded spaces.
 local function ine(arg)
-	if not arg or arg == "" then return nil end
+	if not arg then return nil end
+	arg = rsub(arg, "^%s*(.-)%s*$", "%1")
+	if arg == "" then return nil end
+	local inside_quotes = rmatch(arg, '^"(.*)"$')
+	if inside_quotes then
+		return inside_quotes
+	end
+	inside_quotes = rmatch(arg, "^'(.*)'$")
+	if inside_quotes then
+		return inside_quotes
+	end
 	return arg
 end
 
@@ -233,8 +240,11 @@ local handle_forms_and_overrides
 local finish_generating_forms
 local make_table
 
-local all_verb_types = {"pf", "pf-intr", "pf-refl", "pf-impers", "pf-impers-refl",
-	"impf", "impf-intr", "impf-refl", "impf-impers", "impf-impers-refl"}
+local all_verb_types = {
+	"pf", "pf-intr", "pf-refl",
+	"pf-impers", "pf-intr-impers", "pf-refl-impers",
+	"impf", "impf-intr", "impf-refl",
+	"impf-impers", "impf-intr-impers", "impf-refl-impers"}
 
 -- Examples of alternatives in use:
 	-- past_m2: со́здал/созда́л, пе́редал/переда́л, о́тдал/отда́л, при́нялся/принялся́
@@ -454,6 +464,12 @@ function export.do_generate_forms(conj_type, args)
 
 	track("conj-" .. conj_type) -- FIXME, convert to regular category
 
+	-- For compatibility
+	if verb_type == "pf-impers-refl" then
+		verb_type = "pf-refl-impers"
+	elseif verb_type == "impf-impers-refl" then
+		verb_type = "impf-refl-impers"
+	end
 	if not ut.contains(all_verb_types, verb_type) then
 		error("Invalid verb type " .. verb_type)
 	end
@@ -470,7 +486,7 @@ function export.do_generate_forms(conj_type, args)
 
 	--impersonal
 	data.impers = rfind(verb_type, "impers")
-	data.intr = data.impers or rfind(verb_type, "intr")
+	data.intr = rfind(verb_type, "intr")
 	data.refl = rfind(verb_type, "refl")
 	data.perf = rfind(verb_type, "^pf")
 	data.iter = args["iter"]
@@ -495,9 +511,16 @@ function export.do_generate_forms(conj_type, args)
 	end
 
 	data.ppp_override = false
+	data.prpp_override = false
 	for _, form in ipairs(main_to_all_verb_forms["past_pasv_part"]) do
 		if args[form] then
 			data.ppp_override = true
+			break
+		end
+	end
+	for _, form in ipairs(main_to_all_verb_forms["pres_pasv_part"]) do
+		if args[form] then
+			data.prpp_override = true
 			break
 		end
 	end
@@ -537,7 +560,7 @@ function export.do_generate_forms(conj_type, args)
 		table.insert(categories, "Russian imperfective verbs")
 	end
 
-	handle_forms_and_overrides(args, forms, data.perf)
+	handle_forms_and_overrides(args, forms, data)
 
 	-- catch errors in verb arguments that lead to the infinitive not matching
 	-- page title, but only in the main namespace
@@ -549,18 +572,20 @@ function export.do_generate_forms(conj_type, args)
 	end
 	inf, _ = m_table_tools.get_notes(inf) -- remove any footnote symbols (e.g. грясти́)
 	local inf_noaccent = com.remove_accents(inf)
-	if data.refl then
-		if rfind(inf_noaccent, "и$") then
-			inf_noaccent = inf_noaccent .. "сь"
-			inf = inf .. "сь"
-		else
-			inf_noaccent = inf_noaccent .. "ся"
-			inf = inf .. "ся"
+	if inf ~= "-" then
+		if data.refl then
+			if rfind(inf_noaccent, "и$") then
+				inf_noaccent = inf_noaccent .. "сь"
+				inf = inf .. "сь"
+			else
+				inf_noaccent = inf_noaccent .. "ся"
+				inf = inf .. "ся"
+			end
 		end
-	end
-	if NAMESPACE == "" and inf_noaccent ~= PAGENAME then
-		error("Infinitive " .. inf .. " doesn't match pagename " ..
-			PAGENAME)
+		if NAMESPACE == "" and inf_noaccent ~= PAGENAME then
+			error("Infinitive " .. inf .. " doesn't match pagename " ..
+				PAGENAME)
+		end
 	end
 
 	-- Reflexive/intransitive/transitive
@@ -1053,14 +1078,14 @@ local function set_past_by_stress(forms, past_stresses, prefix, prefixtr, base,
 			append_past(forms, prefixbase, prefixbasetr, pastml,
 				"ла́", "ло́", "ли́")
 		elseif past_stress == "b*" then
-			 if not rfind(data.verb_type, "refl") then
+			 if not data.refl then
 				error("Only reflexive verbs can take past stress variant " .. past_stress)
 			 end
 			-- See comment in type c''. We want to see whether we actually
 			-- added an argument, and if so, where.
 			local argset = append_to_arg_chain(forms, "past_m", "past_m",
 				combine(uprefixubase, uprefixubasetr, pastml))
-			if argset and not args[argset] and not rfind(data.verb_type, "impers") then
+			if argset and not args[argset] and not data.impers then
 				data.default_reflex_stress = "ся́"
 			end
 			append_past(forms, prefixbase, prefixbasetr, {}, "ла́", "ло́", "ли́")
@@ -1090,7 +1115,7 @@ local function set_past_by_stress(forms, past_stresses, prefix, prefixtr, base,
 			append_past(forms, prefixbase, prefixbasetr,
 				pastml, "ла́", {"ло", "ло́"}, "ли")
 		elseif past_stress == "c''" or past_stress == "c''-nd" or past_stress == "c''-bd" then
-			 if not rfind(data.verb_type, "refl") then
+			 if not data.refl then
 				error("Only reflexive verbs can take past stress variant " .. past_stress)
 			 end
 			-- c'' (-ся́ dated): all verbs in -да́ться; избы́ться, сбы́ться; all verbs in -кля́сться
@@ -1108,7 +1133,7 @@ local function set_past_by_stress(forms, past_stresses, prefix, prefixtr, base,
 			-- stress if the form with the note will be displayed (i.e. not
 			-- impersonal, and no override of this form). FIXME: We should
 			-- have a more general mechanism to check for this.
-			if not args[argset] and not rfind(data.verb_type, "impers") then
+			if not args[argset] and not data.impers then
 				ut.insert_if_not(data.internal_notes,
 					past_stress == "c''" and note_symbol .. " Dated." or
 					past_stress == "c''-bd" and note_symbol .. " Becoming dated." or nil)
@@ -1120,7 +1145,7 @@ local function set_past_by_stress(forms, past_stresses, prefix, prefixtr, base,
 			-- added an argument, and if so, where.
 			local argset = append_to_arg_chain(forms, "past_m", "past_m",
 				combine(uprefixubase, uprefixubasetr, pastml))
-			if argset and not args[argset] and not rfind(data.verb_type, "impers") then
+			if argset and not args[argset] and not data.impers then
 				data.default_reflex_stress = "ся́"
 			end
 			append_past(forms, prefixbase, prefixbasetr, {}, "ла́", "ло́", "ли́")
@@ -1332,14 +1357,10 @@ local function set_moving_ppp(forms, data)
 	end
 end
 
--- Set the past passive participle for those classes where it is derived
--- from the past tense masculine singular (9, 11, 12, 14, 15, 16). We need
--- to apply any relevant overrides.
-local function set_ppp_from_past_m(forms, args, data)
-	if not data.ppp then
-		return
-	end
-	for _, form in pairs(main_to_all_verb_forms["past_m"]) do
+-- Iterate over the values of a property (e.g. past_m, past_f), handling
+-- overrides properly. Call FN on each one, passing in RU and TR.
+local function iterate_over_prop(forms, args, prop, fn)
+	for _, form in pairs(main_to_all_verb_forms[prop]) do
 		local ru, tr
 		if args[form] then
 			local override = parse_and_stress_override(form, args[form])
@@ -1349,15 +1370,27 @@ local function set_ppp_from_past_m(forms, args, data)
 			ru, tr = extract_russian_tr(forms[form])
 		end
 		if ru and ru ~= "" and ru ~= "-" then
-			if rfind(ru, "л$") then
-				ru = rsub(ru, "л$", "")
-				if tr then
-					tr = rsub(tr, "l$", "")
-				end
-			end
-			append_ppp(forms, ru, tr, "тый")
+			fn(ru, tr)
 		end
 	end
+end
+
+-- Set the past passive participle for those classes where it is derived
+-- from the past tense masculine singular (9, 11, 12, 14, 15, 16). We need
+-- to apply any relevant overrides.
+local function set_ppp_from_past_m(forms, args, data)
+	if not data.ppp then
+		return
+	end
+	iterate_over_prop(forms, args, "past_m", function(ru, tr)
+		if rfind(ru, "л$") then
+			ru = rsub(ru, "л$", "")
+			if tr then
+				tr = rsub(tr, "l$", "")
+			end
+		end
+		append_ppp(forms, ru, tr, "тый")
+	end)		
 end
 
 -- Set the past passive participle for class-4 verbs.
@@ -1421,23 +1454,13 @@ local function set_class_7_8_ppp(forms, args, data)
 	-- Here we do the same rigmarole as in set_ppp_from_past_m(), to respect
 	-- any past_f overrides that might have been set. It's unlikely that
 	-- there is more than one possible form but we support it.
-	for _, form in pairs(main_to_all_verb_forms["past_f"]) do
-		local ru, tr
-		if args[form] then
-			local override = parse_and_stress_override(form, args[form])
-			ru, tr = extract_russian_tr(override)
+	iterate_over_prop(forms, args, "past_f", function(ru, tr)
+		for _, base in ipairs(sg3_bases) do
+			append_ppp(forms, base, nil,
+				-- check if past_f is ending-stressed
+				rfind(ru, AC .. "$") and "ённый" or "енный")
 		end
-		if (not ru or ru == "" or ru == "-") and forms[form] then
-			ru, tr = extract_russian_tr(forms[form])
-		end
-		if ru and ru ~= "" and ru ~= "-" then
-			for _, base in ipairs(sg3_bases) do
-				append_ppp(forms, base, nil,
-					-- check if past_f is ending-stressed
-					rfind(ru, AC .. "$") and "ённый" or "енный")
-			end
-		end
-	end
+	end)
 end
 
 --[=[
@@ -2280,7 +2303,7 @@ conjugations["9a"] = function(args, data)
 	forms["infinitive"] = stem .. "еть"
 
 	-- perfective only
-	append_participles(forms, stem, nil, "-", "-", "-", "евший", "евши", "ев")
+	append_participles(forms, stem, nil, "-", "-", "-", "ший", "ши", "ев")
 	present_e_a(forms, pres_stem)
 	set_imper(forms, pres_stem, nil, "и", "ите")
 	-- past_m doesn't end in л
@@ -2300,27 +2323,14 @@ conjugations["9b"] = function(args, data)
 	parse_variants(data, args[1], {"past", "+p"})
 	local stem = get_stressed_arg(args, 3)
 	local pres_stem = get_unstressed_arg(args, 4)
+	-- stem used for past active and adverbial participles; defaults to past_m
+	local past_part_stem = get_opt_stressed_arg(args, 5)
 	-- remove stress, replace ё with е
 	local stem_noa = com.make_unstressed(stem)
-	no_stray_args(args, 4)
+	no_stray_args(args, 5)
 	local prefix, _, base, _ = split_prefix(stem)
 
 	forms["infinitive"] = stem_noa .. "е́ть"
-
-	forms["pres_actv_part"] = pres_stem .. "у́щий"
-	-- default is blank
-	forms["pres_pasv_part"] = ""
-	forms["pres_adv_part"] = ""
-
-	forms["past_actv_part"] = stem .. "ший"
-
-	if impf then --тереть -> тёрши
-		forms["past_adv_part"] = stem .. "ши"
-		forms["past_adv_part_short"] = ""
-	else --растереть -> растере́вши, растере́в
-		forms["past_adv_part"] = stem_noa .. "е́вши"
-		forms["past_adv_part_short"] = stem_noa .. "е́в"
-	end
 
 	present_e_b(forms, pres_stem)
 	set_imper(forms, pres_stem, nil, "и́", "и́те")
@@ -2329,7 +2339,21 @@ conjugations["9b"] = function(args, data)
 	set_past_by_stress(forms, data.past_stress, prefix, nil, base, nil,
 		args, data, "no-pastml")
 	set_ppp_from_past_m(forms, args, data)
-
+	append_participles_2stem(forms, pres_stem, nil, stem, nil, "у́щий", {}, {},
+		-- impf: тереть -> тёрши
+		-- pf: растереть -> растёрши, растере́в
+		-- we handle (рас)тёрши down below because the stress depends on the
+		-- past_m: запереть -> за́пер, за́перши(й)
+		{}, {}, impf and {} or "е́в")
+	if past_part_stem then
+		for _, ppstem in ipairs(rsplit(past_part_stem, ",")) do
+			append_participles(forms, ppstem, nil, {}, {}, {}, "ший", "ши", {})
+		end
+	else
+		iterate_over_prop(forms, args, "past_m", function(ru, tr)
+			append_participles(forms, ru, tr, {}, {}, {}, "ший", "ши", {})
+		end)
+	end
 	return forms
 end
 
@@ -2783,11 +2807,9 @@ conjugations["irreg-дать"] = function(args, data)
 	local forms = {}
 
 	--for this type, it's important to distinguish if it's reflexive to set some stress patterns
-	local refl = rfind(data.verb_type, "refl")
-
 	local prefix = args[3] or ""
 	data.title = prefix == "вы́" and "irreg-a" or "irreg-b"
-	parse_variants(data, args[1], {"past"}, prefix == "вы́" and "a(1)" or refl and "c''" or "c'")
+	parse_variants(data, args[1], {"past"}, prefix == "вы́" and "a(1)" or data.refl and "c''" or "c'")
 	no_stray_args(args, 3)
 
 	forms["pres_pasv_part"] = ""
@@ -2876,6 +2898,7 @@ conjugations["irreg-сыпать"] = function(args, data)
 	-- irregular, only for verbs derived from сыпать
 	local forms = {}
 
+	--for this type, it's important to distinguish if it's reflexive for вы́сыпаться vs. вы́сыпать imperative
 	local prefix = args[3] or ""
 	data.title = "class 6a"
 	parse_variants(data, args[1], {})
@@ -2889,7 +2912,7 @@ conjugations["irreg-сыпать"] = function(args, data)
 		forms["past_adv_part"] = prefix .. "сыпавши"
 		forms["past_adv_part_short"] = prefix .. "сыпав"
 
-		set_imper(forms, prefix .. "сып", nil, {"и", "ь"}, "ьте")
+		set_imper(forms, prefix .. "сып", nil, data.refl and "ь" or {"и", "ь"}, "ьте")
 		present_je_a(forms, prefix .. "сыпл")
 		append_pres_futr(forms, prefix .. "сып", nil,
 			{}, "ешь", "ет", "ем", "ете", {})
@@ -3253,17 +3276,15 @@ conjugations["irreg-клясть"] = function(args, data)
 	local forms = {}
 
 	--for this type, it's important to distinguish if it's reflexive to set some stress patterns
-	local refl = rfind(data.verb_type, "refl")
-
 	local prefix = args[3] or ""
 	data.title = "irreg-b"
-	parse_variants(data, args[1], {"past"}, prefix == "вы́" and "a(1)" or refl and "c''" or "c")
+	parse_variants(data, args[1], {"past"}, prefix == "вы́" and "a(1)" or data.refl and "c''" or "c")
 	no_stray_args(args, 3)
 
 	forms["infinitive"] = prefix .. "кля́сть"
 
 	forms["past_actv_part"] = prefix .. "кля́вший"
-	forms["pres_pasv_part"] = prefix .. "кляну́щий"
+	forms["pres_pasv_part"] = prefix .. "кляни́мый"
 
 	forms["past_adv_part"] = prefix .. "кля́вши"
 	forms["past_adv_part_short"]  =prefix .. "кля́в"
@@ -3284,39 +3305,40 @@ conjugations["irreg-стелить-стлать"] = function(args, data)
 	-- irregular, only for verbs derived from стелить and стлать with the same stress pattern
 	local forms = {}
 
-	local prefix = args[4] or ""
+	local infprefix = args[4] or ""
+	local presprefix = args[5] or infprefix
 	local stem = get_stressed_arg(args, 3)
-	data.title = ((prefix == "вы́" and stem == "стлать") and "class 6a" or
-		stem == "стла́ть" and "class 6c" or
-		stem == (prefix == "вы́" and stem == "стелить") and "class 4a" or
+	data.title = ((prefix == "вы́" and stem == "стла") and "class 6a" or
+		stem == "стла́" and "class 6c" or
+		stem == (prefix == "вы́" and stem == "стели") and "class 4a" or
 		"class 4c")
 	parse_variants(data, args[1], {})
-	no_stray_args(args, 4)
+	no_stray_args(args, 5)
 
-	forms["infinitive"] = prefix .. stem .. "ть"
+	forms["infinitive"] = infprefix .. stem .. "ть"
 
-	forms["past_actv_part"] = prefix .. stem .. "вший"
-	forms["past_adv_part"] = prefix .. stem .. "вши"
-	forms["past_adv_part_short"] = prefix  .. stem .. "в"
+	forms["past_actv_part"] = infprefix .. stem .. "вший"
+	forms["past_adv_part"] = infprefix .. stem .. "вши"
+	forms["past_adv_part_short"] = infprefix  .. stem .. "в"
 
 	if prefix == "вы́" then
-		forms["pres_pasv_part"] = prefix .. "стелимый"
-		forms["pres_actv_part"] = prefix .. "стелющий"
-		forms["pres_adv_part"] = prefix .. "стеля"
+		forms["pres_pasv_part"] = presprefix .. "стелимый"
+		forms["pres_actv_part"] = presprefix .. "стелющий"
+		forms["pres_adv_part"] = presprefix .. "стеля"
 
-		forms["impr_sg"] = prefix .. "стели"
-		forms["impr_pl"] = prefix .. "стелите"
-		present_je_c(forms, prefix .. "стел")
+		forms["impr_sg"] = presprefix .. "стели"
+		forms["impr_pl"] = presprefix .. "стелите"
+		present_je_c(forms, presprefix .. "стел")
 	else
-		forms["pres_pasv_part"] = prefix .. "стели́мый"
-		forms["pres_actv_part"] = prefix .. "сте́лющий"
-		forms["pres_adv_part"] = prefix .. "стеля́"
+		forms["pres_pasv_part"] = presprefix .. "стели́мый"
+		forms["pres_actv_part"] = presprefix .. "сте́лющий"
+		forms["pres_adv_part"] = presprefix .. "стеля́"
 
-		forms["impr_sg"] = prefix .. "стели́"
-		forms["impr_pl"] = prefix .. "стели́те"
-		present_je_c(forms, prefix .. "сте́л")
+		forms["impr_sg"] = presprefix .. "стели́"
+		forms["impr_pl"] = presprefix .. "стели́те"
+		present_je_c(forms, presprefix .. "сте́л")
 	end
-	set_past(forms, prefix .. stem .. "л", nil, "", "а", "о", "и")
+	set_past(forms, infprefix .. stem .. "л", nil, "", "а", "о", "и")
 
 	return forms
 end
@@ -3326,11 +3348,9 @@ conjugations["irreg-быть"] = function(args, data)
 	local forms = {}
 
 	--for this type, it's important to distinguish if it's reflexive to set some stress patterns
-	local refl = rfind(data.verb_type, "refl")
-
 	local prefix = args[3] or ""
 	data.title = "irreg-a"
-	parse_variants(data, args[1], {"past"}, prefix == "вы́" and "a(1)" or refl and "c''" or "c")
+	parse_variants(data, args[1], {"past"}, prefix == "вы́" and "a(1)" or data.refl and "c''" or "c")
 	no_stray_args(args, 3)
 
 	forms["pres_pasv_part"] = ""
@@ -3819,8 +3839,8 @@ parse_and_stress_override = function(form, val)
 end
 
 -- Set up pres_* or futr_*; handle *sym/*tail/*tailall notes and overrides.
-handle_forms_and_overrides = function(args, forms, perf)
-	setup_pres_futr(forms, perf)
+handle_forms_and_overrides = function(args, forms, data)
+	setup_pres_futr(forms, data.perf)
 
 	local function append_value(forms, prop, value)
 		if forms[prop] and forms[prop] ~= "" and forms[prop] ~= "-" then
@@ -3955,6 +3975,14 @@ finish_generating_forms = function(forms, data)
 		clear_form("pres_pasv_part")
 		clear_form("past_pasv_part")
 	end
+	-- Impersonal verbs normally have no passive participles, but allow them
+	-- if there's specifically an override. We only do this for the present
+	-- passive participle because the past passive participle isn't inserted
+	-- by default, and we still want +p to work, which doesn't currently set
+	-- data.ppp_override.
+	if data.impers and not data.prpp_override then
+		clear_form("pres_pasv_part")
+	end		
 
 	if data.impers then
 		clear_form("pres_1sg")
@@ -3970,6 +3998,9 @@ finish_generating_forms = function(forms, data)
 		clear_form("past_m")
 		clear_form("past_f")
 		clear_form("past_pl")
+		clear_form("past_m_short")
+		clear_form("past_f_short")
+		clear_form("past_pl_short")
 		clear_form("pres_actv_part")
 		clear_form("past_actv_part")
 		clear_form("pres_adv_part")
@@ -4027,7 +4058,8 @@ end
 make_table = function(forms, title, perf, intr, impers, notes, internal_notes)
 	local inf, inf_tr = extract_russian_tr(forms["infinitive"])
 
-	local title = "Conjugation of <span lang=\"ru\" class=\"Cyrl\">''" .. inf .. "''</span>" .. (title and " (" .. title .. ")" or "")
+	local title = "Conjugation" .. (inf == "-" and "" or " of <span lang=\"ru\" class=\"Cyrl\">''" .. inf .. "''</span>") ..
+		(title and " (" .. title .. ")" or "")
 
 	local function add_links(ru, rusuf, runotes, tr, trnotes)
 		return "<span lang=\"ru\" class=\"Cyrl\">[[" .. com.remove_accents(ru) .. "#Russian|" .. ru .. "]]" .. rusuf .. runotes .. "</span><br/><span style=\"color: #888\">" .. tr .. trnotes .. "</span>"

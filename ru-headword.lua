@@ -1,6 +1,34 @@
 --[=[
-	This module implements the templates {{ru-noun}}, {{ru-adj}}, {{ru-adv}},
-	{{ru-noun+}}, etc.
+	This module implements the headword templates {{ru-noun}}, {{ru-adj}},
+	{{ru-adv}}, {{ru-noun+}}, etc. The main entry point is show(), which is
+	meant to be called from one of the above templates. However, {{ru-noun+}}
+	uses the entry point noun_plus(), and {{ru-noun-m}} (not currently used)
+	uses the entry point noun_multi(). When calling show(), the first parameter
+	of the #invoke call is the part of speech. Other parameters are taken from
+	the parent template call.
+	
+	The implementations for different types of headwords (different parts of
+	speech) are set in pos_functions[POS] for a given POS (part of speech).
+	The value is a 5-argument function of (ARGS, HEADS, GENDERS, INFLECTIONS,
+	CATEGORIES):
+	-- ARGS on entry is initialized to the parent template call's arguments,
+	   with blank arguments converted to nil. 
+	-- HEADS on entry is a list of the headwords, taken directly from arguments
+	   'head', 'head2', 'head3', ... (The transliterations found in 'tr',
+	   'tr2', etc. aren't currently passed in.)
+	-- GENDERS on entry is an empty list. On exit it should be the appropriate
+	   gender settings, and will be passed directly to full_headword() in
+	   [[Module:headword]]. See the documentation for that module for info on
+	   the format of this setting.
+	-- INFLECTIONS on entry is an empty list. On exit it should be the
+	   appropriate inflections to be displayed in the headword, and will be
+	   passed directly to full_headword() in [[Module:headword]]. See the
+	   documentation for that module for info on the format of this setting.
+	-- CATEGORIES on entry is a list of categories. There will be one category
+	   corresponding to the part of speech (e.g. [[Category:Russian adverbs]]),
+	   and possibly additional categories such as [[Category:Russian terms needing accents]]
+	   and [[Category:Russian terms with irregular pronunciations]]. On exit
+	   it may contain additional categories to place the page in.
 ]=]--
 
 local m_common = require("Module:ru-common")
@@ -10,17 +38,22 @@ local m_utilities = require("Module:utilities")
 local ut = require("Module:utils")
 local m_table_tools = require("Module:table tools")
 local m_debug = require("Module:debug")
+local m_ru_translit = require("Module:ru-translit")
 
 local export = {}
 local pos_functions = {}
 
 local lang = require("Module:languages").getByCode("ru")
 
+local IRREGMARKER = "△"
+local HYPMARKER = "⟐"
+local latin_text_class = "[a-zščžěáéíóúýàèìòùỳâêîôûŷạẹịọụỵȧėȯẏ]"
 -- Forward references
 local do_noun
 
 local rfind = mw.ustring.find
 local rsubn = mw.ustring.gsub
+local ulower = mw.ustring.lower
 
 local function ine(x) return x ~= "" and x; end
 
@@ -28,6 +61,13 @@ local function ine(x) return x ~= "" and x; end
 local function rsub(term, foo, bar)
 	local retval = rsubn(term, foo, bar)
 	return retval
+end
+
+-- version of rsubn() that returns a 2nd argument boolean indicating whether
+-- a substitution was made.
+local function rsubb(term, foo, bar)
+	local retval, nsubs = rsubn(term, foo, bar)
+	return retval, nsubs > 0
 end
 
 local function track(page)
@@ -66,13 +106,14 @@ end
 -- The main entry point.
 function export.show(frame)
 	local args = clone_args(frame)
-	PAGENAME = mw.title.getCurrentTitle().text
+	local PAGENAME = mw.title.getCurrentTitle().text
+	local NAMESPACE = mw.title.getCurrentTitle().nsText
 
 	local poscat = ine(frame.args[1]) or error("Part of speech has not been specified. Please pass parameter 1 to the module invocation.")
 
 	local genders = {}
 	local inflections = {}
-	local categories = {"Russian " .. poscat}
+	local categories
 	local tracking_categories = {}
 
 	-- Get the head parameters
@@ -81,9 +122,27 @@ function export.show(frame)
 	local head = args[1] or PAGENAME
 	local i = 2
 
+	if rfind(head, "^%-") then
+		-- If head begins with hyphen, remove it when indexing main category,
+		-- so that suffixes and combining forms don't all end up indexed under
+		-- a hyphen
+		categories = {"Russian " .. poscat .. "|" .. rsub(head, "^%-", "")}
+	else
+		categories = {"Russian " .. poscat}
+	end		
+
 	while head do
-		-- The following are for my bot script to fix up headwords to
-		-- use ru-noun+ or ru-proper noun+, and add declensions as needed
+		-- catch errors in arguments where headword doesn't match page title,
+		-- but only in the main namespace; for the moment, do only with tracking;
+		-- FIXME, duplicates tracking down below a bit, clean that stuff up
+		local head_noaccent = m_common.remove_accents(m_links.remove_links(head))
+		if NAMESPACE == "" and head_noaccent ~= PAGENAME then
+			track("bad-headword")
+			--error("Headword " .. head .. " doesn't match pagename " ..
+			--	PAGENAME)
+		end
+
+		-- The following are for bot scripts
 		if rfind(head, " ") then
 			track("space-in-headword/" .. poscat)
 		elseif rfind(head, ".%-.") then
@@ -95,6 +154,9 @@ function export.show(frame)
 			if not args.notrcat then
 				table.insert(categories, "Russian terms needing accents")
 			end
+		end
+		if rfind(ulower(head), latin_text_class) then
+			track("latin-text-in-headword")
 		end
 
 		table.insert(heads, head)
@@ -143,6 +205,10 @@ function export.show(frame)
 				table.insert(tracking_categories, "ru headword with tr/headword not pagename")
 			end
 		else
+			local orighead, transformed_head = m_ru_translit.apply_tr_fixes(head)
+			if orighead ~= transformed_head and not args.notrcat then
+				table.insert(categories, "Russian terms with irregular pronunciations")
+			end
 			tr = tr_gen
 		end
 		
@@ -178,24 +244,76 @@ local function noun_plus_or_multi(frame, multi)
 	-- if none, do inferred or explicit genders taken from declension;
 	-- clone because will get destructively modified by do_noun()
 	if #genders == 0 then
+		if args["g2"] or args["g3"] or args["g4"] then
+			error("Cannot specify g2=, g3= or g4= without g=")
+		end
 		genders = mw.clone(args.genders)
 	end
 	local inflections = {}
 	local categories = {"Russian " .. poscat}
+	local saw_note = false
 
-	local function remove_notes(list)
-		if not list then
+	-- Given a list of {RU, TR} pairs, where TR may be nil, separate off the
+	-- footnote symbols from RU and TR, link the remainder if it's not already
+	-- linked, and remove monosyllabic accents (but not from multiword
+	-- expressions).
+	local function prepare_entry(list, ishead)
+		if not list or #list == 0 then
 			return {{"-"}}
 		end
 		local newlist = {}
 		for _, x in ipairs(list) do
 			local ru, tr = x[1], x[2]
-			local ruentry, runotes = m_table_tools.get_notes(ru)
+			-- separate_notes() just returns the note, but get_notes() adds
+			-- <sup>...</sup>. We want the former for checking whether the
+			-- note is nonempty after removing IRREGMARKER (if we use the
+			-- latter we'll get <sup></sup> in the case of just IRREGMARKER),
+			-- but the latter when generating the inflectional form.
+			if not ishead and (rfind(ru, "[%[|%]]") or tr and rfind(tr, "[%[|%]]")) then
+				track("form-with-link")
+			end
+			local ruentry, runotes = m_table_tools.separate_notes(ru)
+			local sawhyp
+			runotes = rsub(runotes, IRREGMARKER, "") -- remove note of irregularity
+			runotes, sawhyp = rsubb(runotes, HYPMARKER, "")
+			if runotes ~= "" then
+				saw_note = true
+			end
+			runotes = m_table_tools.superscript_notes(runotes)
 			local trentry, trnotes
 			if tr then
-				trentry, trnotes = m_table_tools.get_notes(tr)
+				trentry, trnotes = m_table_tools.separate_notes(tr)
+				trnotes = rsub(trnotes, IRREGMARKER, "") -- remove note of irregularity
+				trnotes = m_table_tools.superscript_notes(trnotes)
 			end
-			table.insert(newlist, {ruentry, trentry})
+			if m_common.is_monosyllabic(ruentry) then
+				ruentry = m_common.remove_accents(ruentry)
+				if trentry then
+					trentry = m_common.remove_accents(trentry)
+				end
+			end
+			if sawhyp then
+				table.insert(newlist, {ruentry .. runotes .. HYPMARKER,
+					trentry and trentry .. trnotes .. HYPMARKER})
+			elseif ishead then
+				table.insert(newlist, {ruentry .. runotes, trentry and trentry .. trnotes})
+			else
+				local ruspan, trspan
+				if ruentry == "-" then
+					ruspan = "-"
+				elseif rfind(ruentry, "[%[|%]]") then
+					-- don't add links around a form that's already linked
+					ruspan = ruentry .. runotes
+				elseif old then
+					ruspan = "[[" .. com.remove_jo(ruentry) .. "|" .. ruentry .. "]]" .. runotes
+				else
+					ruspan = "[[" .. ruentry .. "]]" .. runotes
+				end
+				if trentry then
+					trspan = trentry .. trnotes
+				end
+				table.insert(newlist, {ruspan, trspan})
+			end
 		end
 		return newlist
 	end
@@ -209,15 +327,17 @@ local function noun_plus_or_multi(frame, multi)
 	end
 
 	local argsn = args.n or args.ndef
-	local heads, genitives, plurals
+	local heads, genitives, plurals, genpls
 	if argsn == "p" then
-		heads = remove_notes(args.nom_pl_linked)
-		genitives = remove_notes(args.gen_pl)
+		heads = prepare_entry(args.nom_pl_linked, "ishead")
+		genitives = prepare_entry(args.gen_pl)
 		plurals = {{"-"}}
+		genpls = {{"-"}}
 	else
-		heads = remove_notes(args.nom_sg_linked)
-		genitives = remove_notes(args.gen_sg)
-		plurals = argsn == "s" and {{"-"}} or remove_notes(args.nom_pl)
+		heads = prepare_entry(args.nom_sg_linked, "ishead")
+		genitives = prepare_entry(args.gen_sg)
+		plurals = argsn == "s" and {{"-"}} or prepare_entry(args.nom_pl)
+		genpls = argsn == "s" and {{"-"}} or prepare_entry(args.gen_pl)
 	end
 
 	local feminines = process_arg_chain(args, "f", "f") -- do feminines
@@ -227,6 +347,16 @@ local function noun_plus_or_multi(frame, multi)
 	local irregtr = false
 	for _, head in ipairs(heads) do
 		local ru, tr = head[1], head[2]
+
+		-- The following are for bot scripts
+		if rfind(ru, " ") then
+			track("space-in-headword/" .. poscat)
+		elseif rfind(ru, ".%-.") then
+			-- We only look for hyphens between characters so we don't
+			-- get tripped up by prefixes and suffixes
+			track("hyphen-no-space-in-headword/" .. poscat)
+		end
+
 		if not tr then
 			tr = lang:transliterate(m_links.remove_links(ru))
 		else
@@ -271,10 +401,22 @@ local function noun_plus_or_multi(frame, multi)
 	end
 	plurals = plurals_no_dups
 
-	do_noun(genders, inflections, categories, argsn == "s",
-		genitives, plurals, feminines, masculines)
+	-- Eliminate transliteration from genitive plurals and remove duplicates
+	-- (which may occur when there are two translits for a form)
+	genpls = remove_tr(genpls)
+	local genpls_no_dups = {}
+	for _, gpl in ipairs(genpls) do
+		ut.insert_if_not(genpls_no_dups, gpl)
+	end
+	genpls = genpls_no_dups
 
-	return m_headword.full_headword(lang, nil, heads, trs, genders, inflections, categories, nil)
+	do_noun(genders, inflections, categories, argsn == "s",
+		genitives, plurals, genpls, feminines, masculines, poscat == "proper nouns")
+
+	return m_headword.full_headword(lang, nil, heads, trs, genders, inflections, categories, nil) .. (
+		args.notes and saw_note and " " .. '<span class="ib-brac"><span class="qualifier-brac">(</span></span>' ..
+		'<span class="ib-content"><span class="qualifier-content">' .. args.notes ..
+		'</span></span><span class="ib-brac"><span class="qualifier-brac">)</span></span>' or "")
 end
 
 -- External entry point; implementation of {{ru-noun+}}.
@@ -292,23 +434,24 @@ pos_functions["proper nouns"] = function(args, heads, genders, inflections, cate
 end
 
 pos_functions["pronouns"] = function(args, heads, genders, inflections, categories)
-	pos_functions["nouns"](args, heads, genders, inflections, categories, false)
+	pos_functions["nouns"](args, heads, genders, inflections, categories)
 end
 
 -- Display additional inflection information for a noun
-pos_functions["nouns"] = function(args, heads, genders, inflections, categories, no_plural)
+pos_functions["nouns"] = function(args, heads, genders, inflections, categories, proper)
 	process_arg_chain(args, 2, "g", genders) -- do genders
 	local genitives = process_arg_chain(args, 3, "gen") -- do genitives
 	local plurals = process_arg_chain(args, 4, "pl") -- do plurals
+	local genpls = process_arg_chain(args, 5, "genpl") -- do genitive plurals
 	local feminines = process_arg_chain(args, "f", "f") -- do feminines
 	local masculines = process_arg_chain(args, "m", "m") -- do masculines
 
-	do_noun(genders, inflections, categories, no_plural,
-		genitives, plurals, feminines, masculines)
+	do_noun(genders, inflections, categories, proper,
+		genitives, plurals, genpls, feminines, masculines, proper)
 end
 
 do_noun = function(genders, inflections, categories, no_plural,
-	        genitives, plurals, feminines, masculines)
+	        genitives, plurals, genpls, feminines, masculines, proper)
 	if #genders == 0 then
 		if mw.title.getCurrentTitle().nsText ~= "Template" then
 			error("Gender must be specified")
@@ -409,21 +552,28 @@ do_noun = function(genders, inflections, categories, no_plural,
 		table.insert(categories, "Russian nouns with multiple genders")
 	end
 
+	local function add_forms(inflection, forms)
+		for i, form in ipairs(forms) do
+			if rfind(form, HYPMARKER) then
+				form = rsub(form, HYPMARKER, "")
+				table.insert(inflection, {term=form, hypothetical=true})
+			else
+				table.insert(inflection, form)
+			end
+
+			if m_common.needs_accents(form) then
+				table.insert(categories, "Russian noun inflections needing accents")
+			end
+		end
+	end
+
 	-- Add the genitive forms
 	if genitives[1] == "-" then
 		table.insert(inflections, {label = "[[Appendix:Glossary#indeclinable|indeclinable]]"})
 		table.insert(categories, "Russian indeclinable nouns")
 	elseif #genitives > 0 then
 		local gen_parts = {label = "genitive"}
-
-		for i, form in ipairs(genitives) do
-			table.insert(gen_parts, form)
-
-			if m_common.needs_accents(form) then
-				table.insert(categories, "Russian noun inflections needing accents")
-			end
-		end
-
+		add_forms(gen_parts, genitives)
 		table.insert(inflections, gen_parts)
 	end
 
@@ -434,131 +584,112 @@ do_noun = function(genders, inflections, categories, no_plural,
 	elseif plural_genders[genders[1]] then
 		table.insert(inflections, {label = "[[Appendix:Glossary#plurale tantum|plurale tantum]]"})
 	elseif plurals[1] == "-" then
-		table.insert(inflections, {label = "[[Appendix:Glossary#uncountable|uncountable]]"})
-		table.insert(categories, "Russian uncountable nouns")
+		if not proper then
+			table.insert(inflections, {label = "[[Appendix:Glossary#uncountable|uncountable]]"})
+			table.insert(categories, "Russian uncountable nouns")
+		end
 	elseif #plurals > 0 then
 		local pl_parts = {label = "nominative plural"}
 
-		for i, form in ipairs(plurals) do
-			table.insert(pl_parts, form)
-
-			if m_common.needs_accents(form) then
-				table.insert(categories, "Russian noun inflections needing accents")
-			end
-		end
-		if plural and not mw.title.new(plural).exists then
-				table.insert(categories, "Russian nouns with missing plurals")
-			end
-			if plural2 and not mw.title.new(plural2).exists then
-				table.insert(categories, "Russian nouns with missing plurals")
-			end
+		add_forms(pl_parts, plurals)
+		--This can't work currently because the forms in plurals are already
+		--linked with spans around them, superscripted notes, etc.
+		--for _, form in ipairs(plurals) do
+		--	if not rfind(form, HYPMARKER) and not mw.title.new(form).exists then
+		--		table.insert(categories, "Russian nouns with missing plurals")
+		--	end
+		--end
 
 		table.insert(inflections, pl_parts)
+	end
+
+	-- Add the genitive plural forms
+	if genitives[1] == "-" or plural_genders[genders[1]] or plurals[1] == "-" then
+		-- indeclinable, plurale tantum or uncountable; do nothing
+	elseif genpls[1] == "-" then
+		table.insert(inflections, {label = "genitive plural missing"})
+	elseif #genpls > 0 then
+		local genpl_parts = {label = "genitive plural"}
+		add_forms(genpl_parts, genpls)
+		table.insert(inflections, genpl_parts)
 	end
 
 	-- Add the feminine forms
 	if #feminines > 0 then
 		local f_parts = {label = "feminine"}
-
-		for i, form in ipairs(feminines) do
-			table.insert(f_parts, form)
-
-			if m_common.needs_accents(form) then
-				table.insert(categories, "Russian noun inflections needing accents")
-			end
-		end
-
+		add_forms(f_parts, feminines)
 		table.insert(inflections, f_parts)
 	end
 
 	-- Add the masculine forms
 	if #masculines > 0 then
 		local m_parts = {label = "masculine"}
-
-		for i, form in ipairs(masculines) do
-			table.insert(m_parts, form)
-
-			if m_common.needs_accents(form) then
-				table.insert(categories, "Russian noun inflections needing accents")
-			end
-		end
-
+		add_forms(m_parts, masculines)
 		table.insert(inflections, m_parts)
+	end
+end
+
+local function generate_informal_comp(comp)
+	if rfind(comp, "е́?е$") then
+		return rsub(comp, "(е́?)е$", "%1й")
+	else
+		return nil
+	end
+end
+
+local function generate_po_variant(comp)
+	if rfind(comp, "е$") or rfind(comp, "е́?й$") then
+		return "[[" .. comp .. "|(по)" .. comp .. "]]"
+	else
+		return comp
 	end
 end
 
 -- Display additional inflection information for an adjective
 pos_functions["adjectives"] = function(args, heads, genders, inflections, categories)
-	local comp = args[2]
-	local sup = args[3]
+	local comps = process_arg_chain(args, 2, "comp") -- do comparatives
+	local sups = process_arg_chain(args, 3, "sup") -- do superlatives
 
-	local comp2 = args.comp2
-	local comp3 = args.comp3
-	local sup2 = args.sup2
-	local sup3 = args.sup3
-
-	if comp then
+	if #comps > 0 then
 		local comp_parts = {label = "comparative"}
 
-		if comp == "peri" then
-			for _, head in ipairs(heads) do
-				table.insert(comp_parts, "[[бо́лее]] " .. head)
-			end
-		else
-			table.insert(comp_parts, comp)
+		for _, comp in ipairs(comps) do
+			if comp == "peri" then
+				for _, head in ipairs(heads) do
+					ut.insert_if_not(comp_parts, "[[бо́лее]] " .. head)
+				end
+			else
+				ut.insert_if_not(comp_parts, generate_po_variant(comp))
+				if not args["noinf"] then
+					local informal = generate_informal_comp(comp)
+					if informal then
+						ut.insert_if_not(comp_parts, generate_po_variant(informal))
+					end
+				end
 
-			if m_common.needs_accents(comp) then
-				table.insert(categories, "Russian adjective inflections needing accents")
-			end
-		end
-
-		if comp2 then
-			table.insert(comp_parts, comp2)
-
-			if m_common.needs_accents(comp2) then
-				table.insert(categories, "Russian adjective inflections needing accents")
-			end
-		end
-
-		if comp3 then
-			table.insert(comp_parts, comp3)
-
-			if m_common.needs_accents(comp3) then
-				table.insert(categories, "Russian adjective inflections needing accents")
+				if m_common.needs_accents(comp) then
+					table.insert(categories, "Russian adjective inflections needing accents")
+				end
 			end
 		end
 
 		table.insert(inflections, comp_parts)
 	end
 
-	if sup then
+	if #sups > 0 then
 		local sup_parts = {label = "superlative"}
 
-		if sup == "peri" then
-			for _, head in ipairs(heads) do
-				table.insert(sup_parts, "[[са́мый]] " .. head)
-			end
-		else
-			table.insert(sup_parts, sup)
+		for _, sup in ipairs(sups) do
+			if sup == "peri" then
+				for _, head in ipairs(heads) do
+					table.insert(sup_parts, "[[са́мый]] " .. head)
+				end
+			else
+				table.insert(sup_parts, sup)
 
-			if m_common.needs_accents(sup) then
-				table.insert(categories, "Russian adjective inflections needing accents")
-			end
-		end
-
-		if sup2 then
-			table.insert(sup_parts, sup2)
-
-			if m_common.needs_accents(sup2) then
-				table.insert(categories, "Russian adjective inflections needing accents")
-			end
-		end
-
-		if sup3 then
-			table.insert(sup_parts, sup3)
-
-			if m_common.needs_accents(sup3) then
-				table.insert(categories, "Russian adjective inflections needing accents")
+				if m_common.needs_accents(sup) then
+					table.insert(categories, "Russian adjective inflections needing accents")
+				end
 			end
 		end
 
@@ -568,12 +699,9 @@ end
 
 -- Display additional inflection information for an adverb
 pos_functions["adverbs"] = function(args, heads, genders, inflections, categories)
-	local comp = args[2]
+	local comps = process_arg_chain(args, 2, "comp") -- do comparatives
 
-	local comp2 = args.comp2
-	local comp3 = args.comp3
-
-	if comp then
+	if #comps > 0 then
 		local encoded_head = ""
 
 		if heads[1] ~= "" then
@@ -582,37 +710,32 @@ pos_functions["adverbs"] = function(args, heads, genders, inflections, categorie
 		end
 
 		local comp_parts = {label = "comparative", accel = "comparative-form-of" .. encoded_head}
-		table.insert(comp_parts, comp)
+		for _, comp in ipairs(comps) do
+			ut.insert_if_not(comp_parts, generate_po_variant(comp))
+			if not args["noinf"] then
+				local informal = generate_informal_comp(comp)
+				if informal then
+					ut.insert_if_not(comp_parts, generate_po_variant(informal))
+				end
+			end
 
-		if m_common.needs_accents(comp) then
-				table.insert(categories, "Russian adverb comparatives needing accents")
-		end
-
-		if comp2 then
-			table.insert(comp_parts, comp2)
- 
-			if m_common.needs_accents(comp2) then
-				table.insert(categories, "Russian adverb comparatives needing accents")
+			if m_common.needs_accents(comp) then
+					table.insert(categories, "Russian adverb comparatives needing accents")
 			end
 		end
 
-		if comp3 then
-			table.insert(comp_parts, comp3)
- 
-			if m_common.needs_accents(comp3) then
-				table.insert(categories, "Russian adverb comparatives needing accents")
-			end
-		end
- 
 		table.insert(inflections, comp_parts)
 	end
 end
 
--- Display additional inflection information for a verb
-pos_functions["verbs"] = function(args, heads, genders, inflections, categories)
+-- Display additional inflection information for a verb and verbal combining form
+local function do_verb(args, heads, genders, inflections, categories, pos)
+	local cform = pos == "verbal combining forms"
+	if cform then
+		table.insert(categories, "Russian verbs")
+	end
 	-- Aspect
-	local aspect = args[2]
-
+	local aspect = args[2] or mw.title.getCurrentTitle().nsText == "Template" and "?"
 	if aspect == "impf" then
 		table.insert(genders, "impf")
 		table.insert(categories, "Russian imperfective verbs")
@@ -625,11 +748,19 @@ pos_functions["verbs"] = function(args, heads, genders, inflections, categories)
 		table.insert(categories, "Russian imperfective verbs")
 		table.insert(categories, "Russian perfective verbs")
 		table.insert(categories, "Russian biaspectual verbs")
-	else
+	elseif aspect == "?" then
 		table.insert(genders, "?")
 		table.insert(categories, "Russian verbs needing aspect")
+	elseif not aspect then
+		error("Missing Russian verb aspect, should be 'pf', 'impf', 'both' or '?'")
+	else
+		error("Invalid Russian verb aspect '" .. aspect .. "', should be 'pf', 'impf', 'both' or '?'")
 	end
 
+	if pos == "verbal combining forms" then
+		table.insert(categories, "Russian verbal combining forms|" .. rsub(heads[1], "^%-", ""))
+	end
+	
 	-- Get the imperfective parameters
 	-- First get the impf= parameter. The remainder is named impf2=, impf3= etc.
 	local imperfectives = {}
@@ -656,6 +787,9 @@ pos_functions["verbs"] = function(args, heads, genders, inflections, categories)
 
 	-- Add the imperfective forms
 	if #imperfectives > 0 then
+		if aspect == "impf" then
+			error("Can't specify imperfective counterparts for an imperfective verb")
+		end
 		local impf_parts = {label = "imperfective"}
 
 		for i, form in ipairs(imperfectives) do
@@ -671,6 +805,9 @@ pos_functions["verbs"] = function(args, heads, genders, inflections, categories)
 
 	-- Add the perfective forms
 	if #perfectives > 0 then
+		if aspect == "pf" then
+			error("Can't specify perfective counterparts for a perfective verb")
+		end
 		local pf_parts = {label = "perfective"}
 
 		for i, form in ipairs(perfectives) do
@@ -683,6 +820,14 @@ pos_functions["verbs"] = function(args, heads, genders, inflections, categories)
 
 		table.insert(inflections, pf_parts)
 	end
+end
+
+pos_functions["verbs"] = function(args, heads, genders, inflections, categories)
+	do_verb(args, heads, genders, inflections, categories, "verbs")
+end
+
+pos_functions["verbal combining forms"] = function(args, heads, genders, inflections, categories)
+	do_verb(args, heads, genders, inflections, categories, "verbal combining forms")
 end
 
 return export

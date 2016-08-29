@@ -86,8 +86,9 @@ end
 -- grave characters), and the transformed text. If the two are different,
 -- {{ru-IPA}} should display a "phonetic respelling" notation. 
 -- NOADJ disables special-casing for adjectives in -го, while FORCEADJ forces
--- special-casing for adjectives and disables checking for exceptions
--- (e.g. много). NOSHTO disables special-casing for что and related words.
+-- special-casing for adjectives, including those in -аго (pre-reform spelling)
+-- and disables checking for exceptions (e.g. много, ого). NOSHTO disables
+-- special-casing for что and related words.
 function export.apply_tr_fixes(text, noadj, noshto, forceadj)
 	-- decompose composed grave characters before we convert Cyrillic е to
 	-- Latin e or je
@@ -99,18 +100,45 @@ function export.apply_tr_fixes(text, noadj, noshto, forceadj)
 		if not forceadj then
 			-- handle много
 			text = rsub(text, "%f[%a\204\129\204\128]([Мм]но[\204\129\204\128]?)го%f[^%a\204\129\204\128]", "%1" .. TEMP_G .. "о")
-			-- handle немного
-			text = rsub(text, "%f[%a\204\129\204\128]([Нн]емно[\204\129\204\128]?)го%f[^%a\204\129\204\128]", "%1" .. TEMP_G .. "о")
+			-- handle немного, намного
+			text = rsub(text, "%f[%a\204\129\204\128]([Нн][еа]мно[\204\129\204\128]?)го%f[^%a\204\129\204\128]", "%1" .. TEMP_G .. "о")
+			-- handle до́рого [short form of дорогой, adverb]
+			text = rsub(text, "%f[%a\204\129\204\128]([Дд]о[\204\129\204\128]?ро)го%f[^%a\204\129\204\128]", "%1" .. TEMP_G .. "о")
+			-- handle недо́рого [short form of недорогой, adverb]
+			text = rsub(text, "%f[%a\204\129\204\128]([Нн]едо[\204\129\204\128]?ро)го%f[^%a\204\129\204\128]", "%1" .. TEMP_G .. "о")
+			-- handle стро́го
+			text = rsub(text, "%f[%a\204\129\204\128]([Сс]тро[\204\129\204\128]?)го%f[^%a\204\129\204\128]", "%1" .. TEMP_G .. "о")
+			-- handle нестро́го
+			text = rsub(text, "%f[%a\204\129\204\128]([Нн]естро[\204\129\204\128]?)го%f[^%a\204\129\204\128]", "%1" .. TEMP_G .. "о")
+			-- handle убо́го
+			text = rsub(text, "%f[%a\204\129\204\128]([Уу]бо[\204\129\204\128]?)го%f[^%a\204\129\204\128]", "%1" .. TEMP_G .. "о")
+			-- handle поло́го
+			text = rsub(text, "%f[%a\204\129\204\128]([Пп]оло[\204\129\204\128]?)го%f[^%a\204\129\204\128]", "%1" .. TEMP_G .. "о")
+			-- handle длинноно́го
+			text = rsub(text, "%f[%a\204\129\204\128]([Дд]линноно[\204\129\204\128]?)го%f[^%a\204\129\204\128]", "%1" .. TEMP_G .. "о")
+			-- handle коротконо́го
+			text = rsub(text, "%f[%a\204\129\204\128]([Кк]оротконо[\204\129\204\128]?)го%f[^%a\204\129\204\128]", "%1" .. TEMP_G .. "о")
+			-- handle кривоно́го
+			text = rsub(text, "%f[%a\204\129\204\128]([Кк]ривоно[\204\129\204\128]?)го%f[^%a\204\129\204\128]", "%1" .. TEMP_G .. "о")
+			-- handle пе́го [short form of пе́гий "piebald"]
+			text = rsub(text, "%f[%a\204\129\204\128]([Пп]е[\204\129\204\128]?)го%f[^%a\204\129\204\128]", "%1" .. TEMP_G .. "о")
 			-- handle лого, сого, ого
 			text = rsub(text, "%f[%a\204\129\204\128]([лсЛС]?[Оо][\204\129\204\128]?)г(о[\204\129\204\128]?)%f[^%a\204\129\204\128]", "%1" .. TEMP_G .. "%2")
+			-- handle Того, То́го (but not того or Того́, which have /v/)
+			text = rsub(text, "%f[%a\204\129\204\128](То́?)го%f[^%a\204\129\204\128]", "%1" .. TEMP_G .. "о")
 			-- handle лего
 			text = rsub(text, "%f[%a\204\129\204\128]([Лл]е[\204\129\204\128]?)го%f[^%a\204\129\204\128]", "%1" .. TEMP_G .. "о")
+			-- handle игого, огого; note, we substitute TEMP_G for both г's
+			-- because otherwise the ого- at the beginning gets converted to ово
+			text = rsub(text, "%f[%a\204\129\204\128]([ИиОо])гог(о[\204\129\204\128]?)%f[^%a\204\129\204\128]", "%1" .. TEMP_G .. "о" .. TEMP_G .. "%2")
+			-- handle Диего
+			text = rsub(text, "%f[%a\204\129\204\128](Дие́?)го%f[^%a\204\129\204\128]", "%1" .. TEMP_G .. "о")
 		end
 		--handle genitive/accusative endings, which are spelled -ого/-его/-аго
 		-- (-ogo/-ego/-ago) but transliterated -ovo/-evo/-avo; only for adjectives
 		-- and pronouns, excluding words like много, ого (-аго occurs in
 		-- pre-reform spelling); \204\129 is an acute accent, \204\128 is a grave accent
-		local pattern = "([оеаОЕА][\204\129\204\128]?)([гГ])([оО][\204\129\204\128]?)"
+		local pattern = "([оеОЕ" .. (forceadj and "аА" or "") .. "][\204\129\204\128]?)([гГ])([оО][\204\129\204\128]?)"
 		local reflexive = "([сС][яЯ][\204\129\204\128]?)"
 		local v = {["г"] = "в", ["Г"] = "В"}
 		local repl = function(e, g, o, sja) return e .. v[g] .. o .. (sja or "") end
@@ -183,7 +211,9 @@ function export.tr_after_fixes(text, include_monosyllabic_jo_accent)
 		-- (like after a consonant)
 		text = rsub(text, "^(%-)([ЕеѢѣЭэ])", map_to_plain_e)
 		text = rsub(text, "(%s%-)([ЕеѢѣЭэ])", map_to_plain_e)
-		text = rsub(text, "(" .. consonants .. "'*)([ЕеѢѣЭэ])", map_to_plain_e)
+		-- don't get confused by single quote or parens between consonant and е;
+		-- e.g. Б'''ез''', американ(ец)
+		text = rsub(text, "(" .. consonants .. "['%(%)]*)([ЕеѢѣЭэ])", map_to_plain_e)
 
 		-- This is now the default
 		-- е after a vowel or at the beginning of a word becomes je, and э becomes e

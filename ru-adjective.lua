@@ -84,6 +84,9 @@ TODO:
    currently move the stress to the last syllable. Should we?
 5. FIXME: In decline(), we used to default acc_n to nom_n. Now we do that in
    handle_forms_and_overrides(). Verify that this is more correct.
+6. FIXME: Allow multiple heads, both to handle cases where two manual translits
+   exist (or rather, one automatic and one manual), and cases where two
+   stresses are possible, e.g. мину́вший or ми́нувший.
 ]=]--
 
 local m_utilities = require("Module:utilities")
@@ -136,8 +139,22 @@ local function track(page)
 	return true
 end
 
+-- Fancy version of ine() (if-not-empty). Converts empty string to nil,
+-- but also strips leading/trailing space and then single or double quotes,
+-- to allow for embedded spaces.
 local function ine(arg)
-	return arg ~= "" and arg or nil
+	if not arg then return nil end
+	arg = rsub(arg, "^%s*(.-)%s*$", "%1")
+	if arg == "" then return nil end
+	local inside_quotes = rmatch(arg, '^"(.*)"$')
+	if inside_quotes then
+		return inside_quotes
+	end
+	inside_quotes = rmatch(arg, "^'(.*)'$")
+	if inside_quotes then
+		return inside_quotes
+	end
+	return arg
 end
 
 -- Clone parent's args while also assigning nil to empty strings.
@@ -163,6 +180,8 @@ local internal_notes_genders = {}
 local internal_notes_genders_old = {}
 local short_declensions = {}
 local short_declensions_old = {}
+-- Formerly used for the ой-rare type, which has been removed; but keep
+-- the code around in case we need it later.
 local short_internal_notes_table = {}
 local short_internal_notes_table_old = {}
 local short_stress_patterns = {}
@@ -244,131 +263,176 @@ function export.do_generate_forms(args, old, manual)
 	local overall_short_forms_allowed
 	manual = manual or args[2] == "manual"
 	local decl_types = manual and "$" or args[2] or ""
-	for _, decl_type in ipairs(rsplit(decl_types, ",")) do
-		local lemma, lemmatr = nom.split_russian_tr(
-			manual and "-" or args[1] or SUBPAGENAME)
+	local lemmas = manual and "-" or args[1] or SUBPAGENAME
+	local short_classes
+	for _, lemma_and_tr in ipairs(rsplit(lemmas, ",")) do 
+		-- reset it for each lemma so we get the short classes of the last
+		-- lemma (doesn't really matter, as they should be the same for all
+		-- lemmas)
+		short_classes = {}
+		for _, decl_type in ipairs(rsplit(decl_types, ",")) do
+			local lemma, lemmatr = nom.split_russian_tr(lemma_and_tr)
 
-		-- Auto-detect actual decl type, and get short accent and overriding
-		-- short stem, if specified.
-		local stem, stemtr, short_accent, short_stem, short_stemtr
-		stem, stemtr, decl_type, short_accent, short_stem =
-			detect_stem_and_accent_type(lemma, lemmatr, decl_type)
-		if rfind(decl_type, "^[іи]й$") and rfind(stem, "[" .. com.velar .. com.sib .. "]$") then
-			decl_type = "ый"
-		end
-		if short_stem then
-			short_stem, short_stemtr = nom.split_russian_tr(short_stem)
-		end
-
-		stem, args.allow_unaccented = rsubb(stem, "^%*", "")
-		if not args.allow_unaccented and decl_type ~= "ой" and com.needs_accents(stem) then
-			error("Stem must have an accent in it: " .. stem)
-		end
-
-		-- Set stem and unstressed version. Also construct end-accented version
-		-- of stem if unstressed; needed for short forms of adjectives of
-		-- type -о́й. We do this here before doing the dereduction
-		-- transformation so that we don't end up stressing an unstressed
-		-- epenthetic vowel, and so that the previous syllable instead ends
-		-- up stressed (in type -о́й adjectives the stem won't have any stress).
-		-- Note that the closest equivalent in nouns is handled in
-		-- attach_unstressed(), which puts the stress onto the final syllable
-		-- if the stress pattern calls for ending stress in the genitive
-		-- plural. This works there because
-		-- (1) It won't stress an unstressed epenthetic vowel because the
-		--     cases where the epenthetic vowel is unstressed are precisely
-		--     those with stem stress in the gen pl, not ending stress;
-		-- (2) There isn't a need to stress the syllable preceding an
-		--     unstressed epenthetic vowel because that syllable should
-		--     already have stress, since we require that the base stem form
-		--     (parameter 2) have stress in it whenever any case form has
-		--     stem stress. This isn't the case here in type -о́й adjectives.
-		-- NOTE: FIXME: I can't actually quote any forms from Zaliznyak
-		-- (at least not from pages 58-60, where this is discussed) that
-		-- seem to require last-stem-syllable-stress, i.e. where the stem is
-		-- multisyllabic. The two examples given are both unusual: дорого́й
-		-- has stress on the initial syllable до́рог etc. and these forms are
-		-- marked with a triangle (indicating an apparent irregularity); and
-		-- голубо́й seems not to have a masculine singular short form, and it's
-		-- accent pattern b, so the remaining forms are all ending-stressed.
-		-- In fact it's possible that these examples don't exist: It appears
-		-- that all the multisyllabic adjectives in -о́й listed in the
-		-- dictionary have a marking next to them consisting of an X inside of
-		-- a square, which is glossed p. 69 to something I don't understand,
-		-- but may be saying that the masculine singular short form is
-		-- missing. If this is regular, we need to implement it.
-		args.stem, args.stemtr = stem, stemtr
-		args.ustem, args.ustemtr = com.make_unstressed_once(stem, stemtr)
-		local accented_stem, accented_stemtr = stem, stemtr
-		if not args.allow_unaccented then
-			if accented_stemtr and com.is_unstressed(accented_stem) ~= com.is_unstressed(accented_stemtr) then
-				error("Stem " .. accented_stem .. " and translit " .. accented_stemtr .. " must have same accent pattern")
+			-- Auto-detect actual decl type, and get short accent and overriding
+			-- short stem, if specified.
+			local stem, stemtr, short_accent, short_stem, short_stemtr
+			stem, stemtr, decl_type, short_accent, short_stem =
+				detect_stem_and_accent_type(lemma, lemmatr, decl_type)
+			if rfind(decl_type, "^[іи]й$") and rfind(stem, "[" .. com.velar .. com.sib .. "]$") then
+				decl_type = "ый"
 			end
-			if com.is_unstressed(accented_stem) then
-				accented_stem, accented_stemtr =
-					com.make_ending_stressed(accented_stem, accented_stemtr)
+			if short_accent then
+				ut.insert_if_not(short_classes, short_accent)
 			end
-		end
-
-		local short_forms_allowed = manual and true or decl_type == "ый" or
-			decl_type == "ой" or decl_type == (old and "ій" or "ий")
-		overall_short_forms_allowed = overall_short_forms_allowed or
-			short_forms_allowed
-		if not short_forms_allowed then
-			-- FIXME: We might want to allow this in case we have a
-			-- reducible short, mixed or proper possessive adjective. But
-			-- in that case we need to reduce rather than dereduce to get
-			-- the stem.
-			if short_accent or short_stem then
-				error("Cannot specify short accent or short stem with declension type " .. decl_type .. ", as short forms aren't allowed")
+			if short_stem then
+				short_stem, short_stemtr = nom.split_russian_tr(short_stem)
 			end
-			if args.short_m or args.short_f or args.short_n or args.short_p then
-				error("Cannot specify explicit short forms with declension type " .. decl_type .. ", as short forms aren't allowed")
+
+			stem, args.allow_unaccented = rsubb(stem, "^%*", "")
+			if args.allow_unaccented then
+				track("allow-unaccented")
 			end
-		end
+			-- Treat suffixes without an accent, and suffixes with an accent on
+			-- the initial hyphen, as if they were preceded with a *, which
+			-- overrides all the logic that normally (a) normalizes the accent,
+			-- and (b) complains about multisyllabic words without an accent.
+			-- Don't do this if lemma is just -, which is used specially in
+			-- manual declension tables.
+			if lemma ~= "-" and (rfind(lemma, "^%-́") or (com.is_unstressed(lemma) and rfind(lemma, "^%-"))) then
+				args.allow_unaccented = true
+			end
 
-		local orig_short_accent = short_accent
-		local short_decl_type
-		short_accent, short_decl_type = construct_bare_and_short_stem(args,
-			short_accent, short_stem, short_stemtr, accented_stem,
-			accented_stemtr, old, decl_type)
+			if not args.allow_unaccented and decl_type ~= "ой" and com.needs_accents(stem) then
+				error("Stem must have an accent in it: " .. stem)
+			end
 
-		args.categories = {}
+			-- Set stem and unstressed version. Also construct end-accented version
+			-- of stem if unstressed; needed for short forms of adjectives of
+			-- type -о́й. We do this here before doing the dereduction
+			-- transformation so that we don't end up stressing an unstressed
+			-- epenthetic vowel, and so that the previous syllable instead ends
+			-- up stressed (in type -о́й adjectives the stem won't have any stress).
+			-- Note that the closest equivalent in nouns is handled in
+			-- attach_unstressed(), which puts the stress onto the final syllable
+			-- if the stress pattern calls for ending stress in the genitive
+			-- plural. This works there because
+			-- (1) It won't stress an unstressed epenthetic vowel because the
+			--     cases where the epenthetic vowel is unstressed are precisely
+			--     those with stem stress in the gen pl, not ending stress;
+			-- (2) There isn't a need to stress the syllable preceding an
+			--     unstressed epenthetic vowel because that syllable should
+			--     already have stress, since we require that the base stem form
+			--     (parameter 2) have stress in it whenever any case form has
+			--     stem stress. This isn't the case here in type -о́й adjectives.
+			-- NOTE: FIXME: I can't actually quote any forms from Zaliznyak
+			-- (at least not from pages 58-60, where this is discussed) that
+			-- seem to require last-stem-syllable-stress, i.e. where the stem is
+			-- multisyllabic. The two examples given are both unusual: дорого́й
+			-- has stress on the initial syllable до́рог etc. and these forms are
+			-- marked with a triangle (indicating an apparent irregularity); and
+			-- голубо́й seems not to have a masculine singular short form, and it's
+			-- accent pattern b, so the remaining forms are all ending-stressed.
+			-- In fact it's possible that these examples don't exist: It appears
+			-- that all the multisyllabic adjectives in -о́й listed in the
+			-- dictionary have a marking next to them consisting of an X inside of
+			-- a square, which is glossed p. 69 to something I don't understand,
+			-- but may be saying that the masculine singular short form is
+			-- missing. If this is regular, we need to implement it.
+			args.stem, args.stemtr = stem, stemtr
+			args.ustem, args.ustemtr = com.make_unstressed_once(stem, stemtr)
+			local accented_stem, accented_stemtr = stem, stemtr
+			if not args.allow_unaccented then
+				if accented_stemtr and com.is_unstressed(accented_stem) ~= com.is_unstressed(accented_stemtr) then
+					error("Stem " .. accented_stem .. " and translit " .. accented_stemtr .. " must have same accent pattern")
+				end
+				if com.is_unstressed(accented_stem) then
+					accented_stem, accented_stemtr =
+						com.make_ending_stressed(accented_stem, accented_stemtr)
+				end
+			end
 
-		local decls = old and declensions_old or declensions
-		local short_decls = old and short_declensions_old or short_declensions
-		if not decls[decl_type] then
-			error("Unrecognized declension type " .. decl_type)
-		end
+			local short_forms_allowed = manual and true or decl_type == "ый" or
+				decl_type == "ой" or decl_type == (old and "ій" or "ий")
+			overall_short_forms_allowed = overall_short_forms_allowed or
+				short_forms_allowed
+			if not short_forms_allowed then
+				-- FIXME: We might want to allow this in case we have a
+				-- reducible short, mixed or proper possessive adjective. But
+				-- in that case we need to reduce rather than dereduce to get
+				-- the stem.
+				if short_accent or short_stem then
+					error("Cannot specify short accent or short stem with declension type " .. decl_type .. ", as short forms aren't allowed")
+				end
+				if args.short_m or args.short_f or args.short_n or args.short_p then
+					error("Cannot specify explicit short forms with declension type " .. decl_type .. ", as short forms aren't allowed")
+				end
+			end
 
-		if short_accent == "" then
-			error("Short accent type cannot be blank, should be omitted or given")
-		end
-		if short_accent and not short_stress_patterns[short_accent] then
-			error("Unrecognized short accent type " .. short_accent)
-		end
+			local orig_short_accent = short_accent
+			local short_decl_type
+			short_accent, short_decl_type = construct_bare_and_short_stem(args,
+				short_accent, short_stem, short_stemtr, accented_stem,
+				accented_stemtr, old, decl_type)
 
-		tracking_code(decl_type, args, orig_short_accent, short_accent,
-			short_stem, short_forms_allowed)
-		if not manual and enable_categories then
-			categorize(decl_type, args, orig_short_accent, short_accent,
-				short_stem)
-		end
+			args.categories = {}
 
-		decline(args, decls[decl_type], ut.contains({"ой", "stressed-short", "stressed-proper"}, decl_type))
-		if short_forms_allowed and short_accent then
-			decline_short(args, short_decls[short_decl_type],
-				short_stress_patterns[short_accent])
-		end
+			local decls = old and declensions_old or declensions
+			local short_decls = old and short_declensions_old or short_declensions
+			if not decls[decl_type] then
+				error("Unrecognized declension type " .. decl_type)
+			end
 
-		local intable = old and internal_notes_table_old or internal_notes_table
-		local shortintab = old and short_internal_notes_table_old or
-			short_internal_notes_table
-		local internal_note = intable[decl_type] or shortintab[short_decl_type]
-		if internal_note then
-			ut.insert_if_not(args.internal_notes, internal_note)
+			if short_accent == "" then
+				error("Short accent type cannot be blank, should be omitted or given")
+			end
+			if short_accent and not short_stress_patterns[short_accent] then
+				error("Unrecognized short accent type " .. short_accent)
+			end
+
+			tracking_code(decl_type, args, orig_short_accent, short_accent,
+				short_stem, short_forms_allowed)
+			if not manual and enable_categories then
+				categorize(decl_type, args, orig_short_accent, short_accent,
+					short_stem)
+			end
+
+			decline(args, decls[decl_type], ut.contains({"ой", "stressed-short", "stressed-proper"}, decl_type))
+			if short_forms_allowed and short_accent then
+				decline_short(args, short_decls[short_decl_type],
+					short_stress_patterns[short_accent])
+			end
+
+			local intable = old and internal_notes_table_old or internal_notes_table
+			local shortintab = old and short_internal_notes_table_old or
+				short_internal_notes_table
+			local internal_note = intable[decl_type] or shortintab[short_decl_type]
+			if internal_note then
+				ut.insert_if_not(args.internal_notes, internal_note)
+			end
 		end
 	end
+
+	local sct = table.concat(short_classes, ",") -- short class title
+	if sct == "" then
+		sct = "no short forms"
+	else
+		-- Convert e.g. a*,a(1) into a*[(1)], either finally or followed by
+		-- comma.
+		sct = rsub(sct, "([abc]'*)%*,%1%*?(%([12]%))$", "%1*[%2]")
+		sct = rsub(sct, "([abc]'*)%*,%1%*?(%([12]%)),", "%1*[%2],")
+		-- Same for a(1),a*.
+		sct = rsub(sct, "([abc]'*)%*?(%([12]%)),%1%*$", "%1*[%2]")
+		sct = rsub(sct, "([abc]'*)%*?(%([12]%)),%1%*,", "%1*[%2],")
+		-- Convert (1), (2) to ①, ②.
+		sct = rsub(sct, "%(1%)", "①")
+		sct = rsub(sct, "%(2%)", "②")
+		-- Add a * before ①, ②, consistent with Zaliznyak.
+		sct = rsub(sct, "([abc]'*)([①②])", "%1*%2")
+		-- Avoid c'' turning into c with italics.
+		sct = rsub(sct, "''", "&#39;&#39;")
+		sct = "short class " .. sct
+	end
+	args.short_class_title = sct
 
 	handle_forms_and_overrides(args, overall_short_forms_allowed)
 
@@ -376,16 +440,21 @@ function export.do_generate_forms(args, old, manual)
 	if test_new_ru_adjective_module then
 		local m_new_ru_adjective = require("Module:User:Benwing2/ru-adjective")
 		local newargs = m_new_ru_adjective.do_generate_forms(orig_args, old, manual)
+		local difdecl = false
 		for _, case in ipairs(old_cases) do
 			local arg = args[case]
 			local newarg = newargs[case]
 			if not ut.equals(arg, newarg) then
 				-- Uncomment this to display the particular case and
 				-- differing forms.
-				--error(case .. " " .. (arg and table.concat(arg, ",") or "nil") .. " || " .. (newarg and table.concat(newarg, ",") or "nil"))
+				--error(case .. " " .. (arg and nom.concat_forms(arg) or "nil") .. " || " .. (newarg and nom.concat_forms(newarg) or "nil"))
 				track("different-decl")
+				difdecl = true
 			end
 			break
+		end
+		if not difdecl then
+			track("same-decl")
 		end
 	end
 
@@ -937,11 +1006,6 @@ construct_bare_and_short_stem = function(args, short_accent, short_stem,
 			error("Unable to dereduce stem: " .. short_stem)
 		end
 		bare, baretr = add_bare_suffix(bare, baretr, old, decl, true)
-	-- Special case when there isn't a short masculine singular and
-	-- the other forms are rare.
-	elseif short_accent == "b" and decl == "ой" and not explicit_short_stem then
-		bare, baretr = nil, nil
-		short_decl = "ой-rare"
 	else
 		bare, baretr = short_stem, short_stemtr
 		if sc1 then
@@ -1225,9 +1289,6 @@ declensions_old["ой"] = {
 	["pre_f"] = "о́й",
 	["pre_p"] = "ы́хъ",
 }
-
-short_internal_notes_table["ой-rare"] = "<sup>1</sup> Rare."
-short_internal_notes_table_old["ой-rare"] = "<sup>1</sup> Rare."
 
 declensions_old["ьій"] = {
 	["nom_m"] = "ій",
@@ -1545,11 +1606,9 @@ end
 
 short_declensions["ый"] = { m="", f="а́", n="о́", p="ы́" }
 short_declensions["ой"] = short_declensions["ый"]
-short_declensions["ой-rare"] = { m="", f="а́1", n="о́1", p="ы́1" }
 short_declensions["ий"] = { m="ь", f="я́", n="е́", p="и́" }
 short_declensions_old["ый"] = { m="ъ", f="а́", n="о́", p="ы́" }
 short_declensions_old["ой"] = short_declensions_old["ый"]
-short_declensions_old["ой-rare"] = { m="ъ", f="а́1", n="о́1", p="ы́1" }
 short_declensions_old["ій"] = short_declensions["ий"]
 
 -- Short adjective stress patterns:
@@ -1590,8 +1649,8 @@ end
 --                             Create the table                         --
 --------------------------------------------------------------------------
 
-local title_temp = [=[Declension of <b lang="ru" class="Cyrl">{lemma}</b>]=]
-local old_title_temp = [=[Pre-reform declension of <b lang="ru" class="Cyrl">{lemma}</b>]=]
+local title_temp = [=[Declension of <b lang="ru" class="Cyrl">{lemma}</b> ({short_class_title})]=]
+local old_title_temp = [=[Pre-reform declension of <b lang="ru" class="Cyrl">{lemma}</b> ({short_class_title})]=]
 
 local template = nil
 local template_no_neuter = nil
@@ -1634,9 +1693,9 @@ local function show_form(forms, old, lemma)
 		ruentry = com.remove_monosyllabic_accents(ruentry)
 		local ruspan, trspan
 		if old then
-			ruspan = m_links.full_link(com.remove_jo(ruentry), ruentry, lang, nil, nil, nil, {tr = "-"}, false) .. runotes
+			ruspan = m_links.full_link({lang = lang, term = com.remove_jo(ruentry), alt = ruentry, tr = "-"}) .. runotes
 		else
-			ruspan = m_links.full_link(ruentry, nil, lang, nil, nil, nil, {tr = "-"}, false) .. runotes
+			ruspan = m_links.full_link({lang = lang, term = ruentry, tr = "-"}) .. runotes
 		end
 		if not trentry then
 			trentry = nom.translit_no_links(ruentry)

@@ -149,7 +149,7 @@ function export.combine_stem_and_suffix(stem, tr, suf, rules, old)
 	-- specially; do that now.
 	local is_adj = rfind(suf, "<adj>")
 	suf = rsub(suf, "<adj>", "")
-	local suftr = is_adj and m_ru_translit.tr_adj(suf)
+	local suftr = is_adj and m_ru_translit.tr_adj(suf, "include monosyllabic jo accent")
 	return export.concat_russian_tr(stem, tr, suf, suftr, "dopair"), suf
 end
 
