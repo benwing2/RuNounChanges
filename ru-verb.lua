@@ -428,13 +428,18 @@ end
 -- Clone parent's args while also assigning nil to empty strings and splitting
 -- arg sets (numeric args separated by "or"), assigning named args to
 -- all all sets. Handle aliases in the process. Extract conjugation type
--- from arg 1, assigning to '.conj_type' of the arg set. Return arg sets.
+-- from the first arg of the arg set (for the initial arg set, this will be
+-- arg 2 because arg 1 is the verb type), assigning to '.conj_type' of the
+-- arg set. Return arg sets.
 local function split_args_handle_aliases(frame)
 	local args = frame:getParent().args
 	local arg_sets = {}
 	local arg_set = {}
-	local offset = 0
-	local conj_type = nil
+	-- Verb type, e.g. impf, pf, impf-intr, pf-intr, impf-refl, pf-refl, etc.
+	-- Default to impf on the template page so that there is no script error.
+	local verb_type = getarg(args, 1, "impf", "Verb type (first parameter)")
+	local first_arg_set_arg = args[2]
+	local offset = 1
 	-- Find maximum-numbered arg, allowing for holes.
 	local max_arg = 0
 	for pname, param in pairs(args) do
@@ -443,8 +448,15 @@ local function split_args_handle_aliases(frame)
 		end
 	end
 
+	local switched_arg1_arg2 = false
+	if ut.contains(all_verb_types, args[2]) then
+		switched_arg1_arg2 = true
+		verb_type = args[2]
+		first_arg_set_arg = args[1]
+	end
+
 	-- Now gather the numbered arguments.
-	for i=1,(max_arg + 1) do
+	for i=2,(max_arg + 1) do
 		local end_arg_set = false
 		if i == max_arg + 1 or args[i] == "or" then
 			end_arg_set = true
@@ -455,14 +467,11 @@ local function split_args_handle_aliases(frame)
 			arg_set = {}
 			offset = i
 		else
-			-- arg 2 of the first arg set is the verb type (trans/intrans,
-			-- reflexive, etc.); not present for other verb types so shift
-			-- the offset for args 2 and above of arg sets other than 1
-			-- to put them one arg up.
-			if i - offset == 2 and #arg_sets > 0 then
-				offset = offset - 1
+			if i == 2 then
+				arg_set[i - offset] = ine(first_arg_set_arg)
+			else
+				arg_set[i - offset] = ine(args[i])
 			end
-			arg_set[i - offset] = ine(args[i])
 		end
 	end
 
@@ -506,15 +515,11 @@ local function split_args_handle_aliases(frame)
 		end
 		arg_sets[i]["conj_type"] = conj_type
 	end
-	return arg_sets
+	return arg_sets, verb_type
 end
 
-function export.do_generate_forms(arg_sets, old)
+function export.do_generate_forms(arg_sets, verb_type, old)
 	local set1 = arg_sets[1]
-	-- Verb type, one of impf, pf, impf-intr, pf-intr, impf-refl, pf-refl.
-	-- Default to impf on the template page so that there is no script error.
-	local verb_type = getarg(set1, 2, "impf", "Verb type (second parameter)")
-	-- verbs may have reflexive ending stressed in the masculine singular: занялся́, начался́, etc.
 	local notes = get_arg_chain(set1, "notes", "notes")
 
 	local forms = {}
@@ -734,9 +739,9 @@ local function fetch_forms(forms)
 end
 
 function export.generate_forms(frame)
-	local arg_sets = split_args_handle_aliases(frame)
+	local arg_sets, verb_type = split_args_handle_aliases(frame)
 	local old = frame.args["old"] or arg_sets[1]["old"]
-	local forms, title, perf, intr, impers, categories, notes, internal_notes = export.do_generate_forms(arg_sets, old)
+	local forms, title, perf, intr, impers, categories, notes, internal_notes = export.do_generate_forms(arg_sets, verb_type, old)
 	return fetch_forms(forms)
 end
 
@@ -751,7 +756,7 @@ end
 -- The main entry point.
 -- This is the only function that can be invoked from a template.
 function export.show(frame)
-	local arg_sets = split_args_handle_aliases(frame)
+	local arg_sets, verb_type = split_args_handle_aliases(frame)
 	local old = frame.args["old"] or arg_sets[1]["old"]
 
 	local arg_sets_clone
@@ -760,7 +765,7 @@ function export.show(frame)
 		arg_sets_clone = mw.clone(arg_sets)
 	end
 
-	local forms, title, perf, intr, impers, categories, notes, internal_notes = export.do_generate_forms(arg_sets, old)
+	local forms, title, perf, intr, impers, categories, notes, internal_notes = export.do_generate_forms(arg_sets, verb_type, old)
 
 	-- Test code to compare existing module to new one.
 	if test_new_ru_verb_module then
@@ -1556,8 +1561,8 @@ conjugations["1a"] = function(args, data)
 	local forms = {}
 
 	parse_variants(data, args[1], {"+p", "7", "ё"})
-	local stem, tr = nom.split_russian_tr(get_stressed_arg(args, 3))
-	no_stray_args(args, 3)
+	local stem, tr = nom.split_russian_tr(get_stressed_arg(args, 2))
+	no_stray_args(args, 2)
 
 	forms["infinitive"] = combine(stem, tr, "ть")
 	append_participles(forms, stem, tr, "ющий", "емый", "я", "вший", "вши", "в")
@@ -1572,8 +1577,8 @@ end
 local function guts_of_2(args, data)
 	local forms = {}
 
-	local inf_stem, inf_tr = nom.split_russian_tr(get_stressed_arg(args, 3))
-	no_stray_args(args, 3)
+	local inf_stem, inf_tr = nom.split_russian_tr(get_stressed_arg(args, 2))
+	no_stray_args(args, 2)
 	local pres_stem, pres_tr = inf_stem, inf_tr
 	local variants = args[1] or ""
 	parse_variants(data, variants, {"+p", "7"})
@@ -1640,9 +1645,9 @@ conjugations["3°a"] = function(args, data)
 	-- (5), [(6)] or similar; imperative indicators
 	data.title = "3°a" -- in case it is "3oa"
 	parse_variants(data, args[1], {"5", "6", "23", "и", "+p", "7", "ё"})
-	local stem = get_stressed_arg(args, 3)
+	local stem = get_stressed_arg(args, 2)
 	local vowel_stem = is_vowel_stem(stem)
-	no_stray_args(args, 3)
+	no_stray_args(args, 2)
 
 	forms["infinitive"] = stem .. "нуть"
 
@@ -1677,8 +1682,8 @@ conjugations["3a"] = function(args, data)
 	local forms = {}
 
 	parse_variants(data, args[1], {"23", "и", "+p", "7", "ё"})
-	local stem = get_stressed_arg(args, 3)
-	no_stray_args(args, 3)
+	local stem = get_stressed_arg(args, 2)
+	no_stray_args(args, 2)
 
 	forms["infinitive"] = stem .. "нуть"
 	append_participles(forms, stem, nil,
@@ -1708,8 +1713,8 @@ conjugations["3b"] = function(args, data)
 	local forms = {}
 
 	parse_variants(data, args[1], {"+p", "7", "ё"})
-	local stem = get_unstressed_arg(args, 3)
-	no_stray_args(args, 3)
+	local stem = get_unstressed_arg(args, 2)
+	no_stray_args(args, 2)
 
 	guts_of_3b_3c(forms, data, stem)
 	present_e_b(forms, stem)
@@ -1721,8 +1726,8 @@ conjugations["3c"] = function(args, data)
 	local forms = {}
 
 	parse_variants(data, args[1], {"+p", "7", "ё"})
-	local stem = get_stressed_arg(args, 3)
-	no_stray_args(args, 3)
+	local stem = get_stressed_arg(args, 2)
+	no_stray_args(args, 2)
 	-- remove accent for some forms
 	local stem_noa = com.remove_accents(stem)
 
@@ -1739,8 +1744,8 @@ conjugations["4a"] = function(args, data)
 	-- защитить (защищу́) (4b), поглотить (поглощу́) (4c) with a different
 	-- iotation (т -> щ, not ч)
 	parse_variants(data, args[1], {"23", "и", "щ", "past", "+p", "7", "жд"})
-	local stem, tr = nom.split_russian_tr(get_stressed_arg(args, 3))
-	no_stray_args(args, 3)
+	local stem, tr = nom.split_russian_tr(get_stressed_arg(args, 2))
+	no_stray_args(args, 2)
 
 	forms["infinitive"] = combine(stem, tr, "ить")
 
@@ -1766,10 +1771,10 @@ conjugations["4a1a"] = function(args, data)
 	-- защитить (защищу́) (4b), поглотить (поглощу́) (4c) with a different
 	-- iotation (т -> щ, not ч)
 	parse_variants(data, args[1], {"23", "и", "щ", "past", "+p", "7", "жд"})
-	local stem1, tr1 = nom.split_russian_tr(get_stressed_arg(args, 3))
+	local stem1, tr1 = nom.split_russian_tr(get_stressed_arg(args, 2))
 	local stem4 = rsub(stem1, "[ая]$", "")
 	local tr4 = tr1 and rsub(tr1, "j?a$", "")
-	no_stray_args(args, 3)
+	no_stray_args(args, 2)
 
 	forms["infinitive"] = combine(stem4, tr4, "ить")
 
@@ -1794,8 +1799,8 @@ conjugations["4b"] = function(args, data)
 	local forms = {}
 
 	parse_variants(data, args[1], {"щ", "past", "+p", "8", "жд"})
-	local stem, tr = nom.split_russian_tr(get_unstressed_arg(args, 3))
-	no_stray_args(args, 3)
+	local stem, tr = nom.split_russian_tr(get_unstressed_arg(args, 2))
+	no_stray_args(args, 2)
 
 	forms["infinitive"] = combine(stem, tr, "и́ть")
 
@@ -1818,8 +1823,8 @@ conjugations["4c"] = function(args, data)
 	local forms = {}
 
 	parse_variants(data, args[1], {"щ", "4", "past", "+p", "7", "жд"})
-	local stem, tr = nom.split_russian_tr(get_stressed_arg(args, 3))
-	no_stray_args(args, 3)
+	local stem, tr = nom.split_russian_tr(get_stressed_arg(args, 2))
+	no_stray_args(args, 2)
 
 	forms["infinitive"] = combine(stem, tr, "и́ть")
 
@@ -1858,17 +1863,17 @@ local function guts_of_5(args, data)
 	end
 	local stem, past_stem
 	if is5a then
-		stem = get_stressed_arg(args, 3)
+		stem = get_stressed_arg(args, 2)
 		-- обидеть, выстоять have different past tense and infinitive forms
-		past_stem = get_opt_stressed_arg(args, 4) or stem .. "е"
+		past_stem = get_opt_stressed_arg(args, 3) or stem .. "е"
 	elseif is5b then
-		stem = get_unstressed_arg(args, 3)
-		past_stem = get_stressed_arg(args, 4)
+		stem = get_unstressed_arg(args, 2)
+		past_stem = get_stressed_arg(args, 3)
 	else
-		stem = get_stressed_arg(args, 3)
-		past_stem = get_stressed_arg(args, 4)
+		stem = get_stressed_arg(args, 2)
+		past_stem = get_stressed_arg(args, 3)
 	end
-	no_stray_args(args, 4)
+	no_stray_args(args, 3)
 
 	forms["infinitive"] = past_stem .. "ть"
 
@@ -1946,14 +1951,14 @@ local function guts_of_6a(args, data, vclass)
 		-- if vclass is just 6a, data.title already set correctly
 	end
 	parse_variants(data, args[1], {"23", "и", "past", "+p", "7", "ё"})
-	local stem = get_stressed_arg(args, 3)
+	local stem = get_stressed_arg(args, 2)
 	local vowel_end_stem = is_vowel_stem(stem)
 	-- optional infinitive/past stem for verbs like колеба́ть
-	local inf_past_stem = get_opt_stressed_arg(args, 4) or
+	local inf_past_stem = get_opt_stressed_arg(args, 3) or
 		vowel_end_stem and stem .. "я" or stem .. "а"
 	-- irregular imperatives (сыпать - сыпь is moved to a separate function but the parameter may still be needed)
-	local impr_sg = get_opt_stressed_arg(args, 5)
-	no_stray_args(args, 5)
+	local impr_sg = get_opt_stressed_arg(args, 4)
+	no_stray_args(args, 4)
 	-- no iotation, e.g. вырвать - вы́рву
 	local no_iotation = vclass == "6°a"
 	-- вызвать - вы́зову (в́ызов)
@@ -2091,11 +2096,11 @@ local function guts_of_6b(args, data, vclass)
 		data.title = "6°b" -- in case user specified 6ob
 	end
 	parse_variants(data, args[1], {"past", "+p", "7", "ё"})
-	local stem = get_unstressed_arg(args, 3)
+	local stem = get_unstressed_arg(args, 2)
 	local vowel_end_stem = is_vowel_stem(stem)
 	-- звать - зов, драть - дер
-	local pres_stem = get_opt_unstressed_arg(args, 4) or stem
-	no_stray_args(args, 4)
+	local pres_stem = get_opt_unstressed_arg(args, 3) or stem
+	no_stray_args(args, 3)
 
 	-- no pres_pasv_part
 
@@ -2171,8 +2176,8 @@ local function guts_of_6c(args, data, vclass)
 
 	-- optional щ parameter for verbs like клеветать (клевещу́), past stress
 	parse_variants(data, args[1], {"щ", "past", "+p", "7", "ё"})
-	local stem = get_stressed_arg(args, 3)
-	no_stray_args(args, 3)
+	local stem = get_stressed_arg(args, 2)
+	no_stray_args(args, 2)
 	-- remove accent for some forms
 	local stem_noa = com.make_unstressed(stem)
 	-- iotate the stem
@@ -2277,11 +2282,11 @@ conjugations["7a"] = function(args, data)
 	local forms = {}
 
 	parse_variants(data, args[1], {"23", "и", "9","past", "+p"})
-	local full_inf = get_stressed_arg(args, 3)
-	local pres_stem = get_stressed_arg(args, 4)
-	local past_part_stem = get_opt_stressed_arg(args, 5)
-	local past_tense_stem = get_opt_stressed_arg(args, 6)
-	no_stray_args(args, 6)
+	local full_inf = get_stressed_arg(args, 2)
+	local pres_stem = get_stressed_arg(args, 3)
+	local past_part_stem = get_opt_stressed_arg(args, 4)
+	local past_tense_stem = get_opt_stressed_arg(args, 5)
+	no_stray_args(args, 5)
 
 	forms["infinitive"] = full_inf
 
@@ -2300,11 +2305,11 @@ conjugations["7b"] = function(args, data)
 	local forms = {}
 
 	parse_variants(data, args[1], {"9", "past", "+p"})
-	local full_inf = get_stressed_arg(args, 3)
-	local past_part_stem = get_opt_stressed_arg(args, 5)
-	local pres_stem = past_part_stem and get_unstressed_arg(args, 4) or get_stressed_arg(args, 4)
-	local past_tense_stem = get_opt_stressed_arg(args, 6)
-	no_stray_args(args, 6)
+	local full_inf = get_stressed_arg(args, 2)
+	local past_part_stem = get_opt_stressed_arg(args, 4)
+	local pres_stem = past_part_stem and get_unstressed_arg(args, 3) or get_stressed_arg(args, 3)
+	local past_tense_stem = get_opt_stressed_arg(args, 5)
+	no_stray_args(args, 5)
 
 	forms["infinitive"] = full_inf
 
@@ -2320,10 +2325,10 @@ conjugations["8a"] = function(args, data)
 	local forms = {}
 
 	parse_variants(data, args[1], {"past", "+p"})
-	local stem = get_stressed_arg(args, 3)
-	local full_inf = get_stressed_arg(args, 4)
-	local stressed_past_stem = args[5] and get_stressed_arg(args, 5) or stem
-	no_stray_args(args, 5)
+	local stem = get_stressed_arg(args, 2)
+	local full_inf = get_stressed_arg(args, 3)
+	local stressed_past_stem = args[4] and get_stressed_arg(args, 4) or stem
+	no_stray_args(args, 4)
 	forms["infinitive"] = full_inf
 
 	-- default for pres_pasv_part is blank
@@ -2351,11 +2356,11 @@ conjugations["8b"] = function(args, data)
 	local forms = {}
 
 	parse_variants(data, args[1], {"past", "+p"}, "b")
-	local stem = data.past_stress == "b" and args[5] and getarg(args, 3) or
-		get_stressed_arg(args, 3)
-	local full_inf = get_stressed_arg(args, 4)
-	local stressed_past_stem = args[5] and get_stressed_arg(args, 5) or stem
-	no_stray_args(args, 5)
+	local stem = data.past_stress == "b" and args[4] and getarg(args, 2) or
+		get_stressed_arg(args, 2)
+	local full_inf = get_stressed_arg(args, 3)
+	local stressed_past_stem = args[4] and get_stressed_arg(args, 4) or stem
+	no_stray_args(args, 4)
 	forms["infinitive"] = full_inf
 
 	-- default for pres_pasv_part is blank; влечь -> влеко́мый handled through
@@ -2383,9 +2388,9 @@ conjugations["9a"] = function(args, data)
 	local forms = {}
 
 	parse_variants(data, args[1], {"past", "+p"})
-	local stem = get_stressed_arg(args, 3)
-	local pres_stem = get_stressed_arg(args, 4)
-	no_stray_args(args, 4)
+	local stem = get_stressed_arg(args, 2)
+	local pres_stem = get_stressed_arg(args, 3)
+	no_stray_args(args, 3)
 	local prefix, _, base, _ = split_prefix(stem)
 
 	forms["infinitive"] = stem .. "еть"
@@ -2409,13 +2414,13 @@ conjugations["9b"] = function(args, data)
 	local impf = rfind(data.verb_type, "^impf")
 
 	parse_variants(data, args[1], {"past", "+p"})
-	local stem = get_stressed_arg(args, 3)
-	local pres_stem = get_unstressed_arg(args, 4)
+	local stem = get_stressed_arg(args, 2)
+	local pres_stem = get_unstressed_arg(args, 3)
 	-- stem used for past active and adverbial participles; defaults to past_m
-	local past_part_stem = get_opt_stressed_arg(args, 5)
+	local past_part_stem = get_opt_stressed_arg(args, 4)
 	-- remove stress, replace ё with е
 	local stem_noa = com.make_unstressed(stem)
-	no_stray_args(args, 5)
+	no_stray_args(args, 4)
 	local prefix, _, base, _ = split_prefix(stem)
 
 	forms["infinitive"] = stem_noa .. "е́ть"
@@ -2449,8 +2454,8 @@ conjugations["10a"] = function(args, data)
 	local forms = {}
 
 	parse_variants(data, args[1], {"+p", "7"})
-	local stem = get_stressed_arg(args, 3)
-	no_stray_args(args, 3)
+	local stem = get_stressed_arg(args, 2)
+	no_stray_args(args, 2)
 
 	forms["infinitive"] = stem .. "оть"
 
@@ -2468,10 +2473,10 @@ conjugations["10c"] = function(args, data)
 	local forms = {}
 
 	parse_variants(data, args[1], {"+p", "7"})
-	local inf_stem = get_stressed_arg(args, 3)
+	local inf_stem = get_stressed_arg(args, 2)
 	-- present tense stressed stem "моло́ть" - ме́лет
-	local pres_stem = get_stressed_arg(args, 4)
-	no_stray_args(args, 4)
+	local pres_stem = get_stressed_arg(args, 3)
+	no_stray_args(args, 3)
 	-- remove accent for some forms
 	local pres_stem_noa = com.remove_accents(pres_stem)
 
@@ -2492,8 +2497,8 @@ conjugations["11a"] = function(args, data)
 	local forms = {}
 
 	parse_variants(data, args[1], {"past", "+p"})
-	local stem = get_stressed_arg(args, 3)
-	no_stray_args(args, 3)
+	local stem = get_stressed_arg(args, 2)
+	no_stray_args(args, 2)
 	local prefix, _, base, _ = split_prefix(stem .. "и")
 
 	forms["infinitive"] = stem .. "ить"
@@ -2515,9 +2520,9 @@ conjugations["11b"] = function(args, data)
 	local forms = {}
 
 	parse_variants(data, args[1], {"past", "+p"})
-	local stem = get_unstressed_arg(args, 3)
-	local pres_stem = get_unstressed_arg(args, 4)
-	no_stray_args(args, 4)
+	local stem = get_unstressed_arg(args, 2)
+	local pres_stem = get_unstressed_arg(args, 3)
+	no_stray_args(args, 3)
 	local prefix, _, base, _ = split_prefix(stem .. "и́")
 
 	forms["infinitive"] = stem .. "и́ть"
@@ -2540,9 +2545,9 @@ conjugations["12a"] = function(args, data)
 	local forms = {}
 
 	parse_variants(data, args[1], {"past", "+p"})
-	local stem = get_stressed_arg(args, 3)
-	local pres_stem = get_stressed_arg(args, 4)
-	no_stray_args(args, 4)
+	local stem = get_stressed_arg(args, 2)
+	local pres_stem = get_stressed_arg(args, 3)
+	no_stray_args(args, 3)
 	local prefix, _, base, _ = split_prefix(stem)
 
 	forms["infinitive"] = stem .. "ть"
@@ -2570,9 +2575,9 @@ conjugations["12b"] = function(args, data)
 	local forms = {}
 
 	parse_variants(data, args[1], {"past", "+p"})
-	local stem = get_stressed_arg(args, 3)
-	local pres_stem = get_unstressed_arg(args, 4)
-	no_stray_args(args, 4)
+	local stem = get_stressed_arg(args, 2)
+	local pres_stem = get_unstressed_arg(args, 3)
+	no_stray_args(args, 3)
 	local prefix, _, base, _ = split_prefix(stem)
 
 	forms["infinitive"] = stem .. "ть"
@@ -2602,9 +2607,9 @@ conjugations["13b"] = function(args, data)
 	local forms = {}
 
 	parse_variants(data, args[1], {"+p"})
-	local stem = get_stressed_arg(args, 3)
-	local pres_stem = get_unstressed_arg(args, 4)
-	no_stray_args(args, 4)
+	local stem = get_stressed_arg(args, 2)
+	local pres_stem = get_unstressed_arg(args, 3)
+	no_stray_args(args, 3)
 
 	forms["infinitive"] = stem .. "ть"
 
@@ -2631,9 +2636,9 @@ conjugations["14a"] = function(args, data)
 	local forms = {}
 
 	parse_variants(data, args[1], {"past", "+p"})
-	local stem = get_stressed_arg(args, 3)
-	local pres_stem = get_stressed_arg(args, 4)
-	no_stray_args(args, 4)
+	local stem = get_stressed_arg(args, 2)
+	local pres_stem = get_stressed_arg(args, 3)
+	no_stray_args(args, 3)
 	local prefix, _, base, _ = split_prefix(stem)
 
 	forms["infinitive"] = stem .. "ть"
@@ -2659,9 +2664,9 @@ conjugations["14b"] = function(args, data)
 	local forms = {}
 
 	parse_variants(data, args[1], {"past", "+p"})
-	local stem = get_stressed_arg(args, 3)
-	local pres_stem = get_unstressed_arg(args, 4)
-	no_stray_args(args, 4)
+	local stem = get_stressed_arg(args, 2)
+	local pres_stem = get_unstressed_arg(args, 3)
+	no_stray_args(args, 3)
 	local prefix, _, base, _ = split_prefix(stem)
 
 	forms["infinitive"] = stem .. "ть"
@@ -2691,10 +2696,10 @@ conjugations["14c"] = function(args, data)
 	local forms = {}
 
 	parse_variants(data, args[1], {"past", "+p"})
-	local stem = get_stressed_arg(args, 3)
-	local pres_stem = get_stressed_arg(args, 4)
+	local stem = get_stressed_arg(args, 2)
+	local pres_stem = get_stressed_arg(args, 3)
 	local pres_stem_noa = com.make_unstressed(pres_stem)
-	no_stray_args(args, 4)
+	no_stray_args(args, 3)
 	local prefix, _, base, _ = split_prefix(stem)
 
 	forms["infinitive"] = stem .. "ть"
@@ -2726,8 +2731,8 @@ conjugations["15a"] = function(args, data)
 	local forms = {}
 
 	parse_variants(data, args[1], {"+p"})
-	local stem = get_stressed_arg(args, 3)
-	no_stray_args(args, 3)
+	local stem = get_stressed_arg(args, 2)
+	no_stray_args(args, 2)
 
 	forms["infinitive"] = stem .. "ть"
 
@@ -2753,9 +2758,9 @@ conjugations["16a"] = function(args, data)
 	local forms = {}
 
 	parse_variants(data, args[1], {"past", "+p"})
-	local stem = get_stressed_arg(args, 3)
+	local stem = get_stressed_arg(args, 2)
 	local stem_noa = com.make_unstressed(stem)
-	no_stray_args(args, 3)
+	no_stray_args(args, 2)
 	local prefix, _, base, _ = split_prefix(stem)
 
 	forms["infinitive"] = stem .. "ть"
@@ -2783,9 +2788,9 @@ conjugations["16b"] = function(args, data)
 	local forms = {}
 
 	parse_variants(data, args[1], {"past", "+p"})
-	local stem = get_stressed_arg(args, 3)
+	local stem = get_stressed_arg(args, 2)
 	local stem_noa = com.make_unstressed(stem)
-	no_stray_args(args, 3)
+	no_stray_args(args, 2)
 	local prefix, _, base, _ = split_prefix(stem)
 
 	forms["infinitive"] = stem .. "ть"
@@ -2814,10 +2819,10 @@ conjugations["irreg-бежать"] = function(args, data)
 	-- irregular, only for verbs derived from бежать with the same stress pattern
 	local forms = {}
 
-	local prefix = args[3] or ""
+	local prefix = args[2] or ""
 	data.title = prefix == "вы́" and "5a" or "5b"
 	parse_variants(data, args[1], {})
-	no_stray_args(args, 3)
+	no_stray_args(args, 2)
 
 	-- вы́бежать (perfective)
 	if prefix == "вы́" then
@@ -2860,10 +2865,10 @@ conjugations["irreg-хотеть"] = function(args, data)
 	-- irregular, only for verbs derived from хотеть with the same stress pattern
 	local forms = {}
 
-	local prefix = args[3] or ""
+	local prefix = args[2] or ""
 	data.title = "5c'"
 	parse_variants(data, args[1], {})
-	no_stray_args(args, 3)
+	no_stray_args(args, 2)
 
 	forms["infinitive"] = prefix .. "хоте́ть"
 
@@ -2889,10 +2894,10 @@ conjugations["irreg-дать"] = function(args, data)
 	local forms = {}
 
 	--for this type, it's important to distinguish if it's reflexive to set some stress patterns
-	local prefix = args[3] or ""
+	local prefix = args[2] or ""
 	data.title = prefix == "вы́" and "irreg-a" or "irreg-b"
 	parse_variants(data, args[1], {"past"}, prefix == "вы́" and "a(1)" or data.refl and "c''" or "c'")
-	no_stray_args(args, 3)
+	no_stray_args(args, 2)
 
 	-- no pres_pasv_part
 	-- no pres_adv_part
@@ -2934,10 +2939,10 @@ conjugations["irreg-есть"] = function(args, data)
 	-- irregular, only for verbs derived from есть
 	local forms = {}
 
-	local prefix = args[3] or ""
+	local prefix = args[2] or ""
 	data.title = prefix == "вы́" and "irreg-a" or "irreg-b"
 	parse_variants(data, args[1], {})
-	no_stray_args(args, 3)
+	no_stray_args(args, 2)
 
 	forms["infinitive"] = prefix .. "е́сть"
 
@@ -2980,10 +2985,10 @@ conjugations["irreg-сыпать"] = function(args, data)
 	local forms = {}
 
 	--for this type, it's important to distinguish if it's reflexive for вы́сыпаться vs. вы́сыпать imperative
-	local prefix = args[3] or ""
+	local prefix = args[2] or ""
 	data.title = "6a"
 	parse_variants(data, args[1], {})
-	no_stray_args(args, 3)
+	no_stray_args(args, 2)
 
 	-- вы́сыпать (perfective), not to confuse with высыпа́ть (1a, imperfective)
 	if prefix == "вы́" then
@@ -3026,10 +3031,10 @@ conjugations["irreg-лгать"] = function(args, data)
 	-- irregular, only for verbs derived from лгать with the same stress pattern
 	local forms = {}
 
-	local prefix = args[3] or ""
+	local prefix = args[2] or ""
 	data.title = "6°b/c"
 	parse_variants(data, args[1], {})
-	no_stray_args(args, 3)
+	no_stray_args(args, 2)
 
 	forms["infinitive"] = prefix .. "лга́ть"
 
@@ -3056,10 +3061,10 @@ conjugations["irreg-мочь"] = function(args, data)
 	-- irregular, only for verbs derived from мочь with the same stress pattern
 	local forms = {}
 
-	local prefix = args[3] or ""
+	local prefix = args[2] or ""
 	data.title = "8c/b"
 	parse_variants(data, args[1], {})
-	no_stray_args(args, 3)
+	no_stray_args(args, 2)
 
 	forms["infinitive"] = prefix .. "мо́чь"
 
@@ -3085,10 +3090,10 @@ conjugations["irreg-слать"] = function(args, data)
 	-- irregular, only for verbs derived from слать
 	local forms = {}
 
-	local prefix = args[3] or ""
+	local prefix = args[2] or ""
 	data.title = prefix == "вы́" and "6a" or "6b"
 	parse_variants(data, args[1], {})
-	no_stray_args(args, 3)
+	no_stray_args(args, 2)
 
 	-- вы́слать (perfective)
 	if prefix == "вы́" then
@@ -3130,10 +3135,10 @@ conjugations["irreg-идти"] = function(args, data)
 	-- irregular, only for verbs derived from идти, including прийти́ and в́ыйти
 	local forms = {}
 
-	local prefix = args[3] or ""
+	local prefix = args[2] or ""
 	data.title = prefix == "вы́" and "irreg-a" or "irreg-b/b"
 	parse_variants(data, args[1], {})
-	no_stray_args(args, 3)
+	no_stray_args(args, 2)
 
 	-- no pres_pasv_part
 
@@ -3187,10 +3192,10 @@ conjugations["irreg-ехать"] = function(args, data)
 	-- irregular, only for verbs derived from ехать
 	local forms = {}
 
-	local prefix = args[3] or ""
+	local prefix = args[2] or ""
 	data.title = "irreg-a"
 	parse_variants(data, args[1], {})
-	no_stray_args(args, 3)
+	no_stray_args(args, 2)
 
 	local pres_stem = prefix .. "е́д"
 	local past_stem = prefix .. "е́х"
@@ -3236,9 +3241,9 @@ conjugations["irreg-минуть"] = function(args, data)
 
 	data.title = "3c"
 	parse_variants(data, args[1], {})
-	local stem = get_stressed_arg(args, 3)
+	local stem = get_stressed_arg(args, 2)
 	local stem_noa = com.make_unstressed(stem)
-	no_stray_args(args, 3)
+	no_stray_args(args, 2)
 
 	forms["infinitive"] = stem .. "уть"
 
@@ -3267,9 +3272,9 @@ conjugations["irreg-живописать-миновать"] = function(args, dat
 
 	data.title = "1a"
 	parse_variants(data, args[1], {})
-	local inf_stem = get_stressed_arg(args, 3)
-	local pres_stem = get_stressed_arg(args, 4)
-	no_stray_args(args, 4)
+	local inf_stem = get_stressed_arg(args, 2)
+	local pres_stem = get_stressed_arg(args, 3)
+	no_stray_args(args, 3)
 
 	forms["infinitive"] = inf_stem .. "ть"
 
@@ -3294,10 +3299,10 @@ conjugations["irreg-лечь"] = function(args, data)
 	-- irregular, only for verbs derived from лечь with the same stress pattern
 	local forms = {}
 
-	local prefix = args[3] or ""
+	local prefix = args[2] or ""
 	data.title = "8a/b"
 	parse_variants(data, args[1], {})
-	no_stray_args(args, 3)
+	no_stray_args(args, 2)
 
 	forms["infinitive"] = prefix .. "ле́чь"
 
@@ -3319,10 +3324,10 @@ conjugations["irreg-зиждиться"] = function(args, data)
 	-- irregular, only for verbs derived from зиждиться with the same stress pattern
 	local forms = {}
 
-	local prefix = args[3] or ""
+	local prefix = args[2] or ""
 	data.title = "irreg-a"
 	parse_variants(data, args[1], {})
-	no_stray_args(args, 3)
+	no_stray_args(args, 2)
 
 	forms["infinitive"] = prefix .. "зи́ждить"
 
@@ -3347,10 +3352,10 @@ conjugations["irreg-клясть"] = function(args, data)
 	local forms = {}
 
 	--for this type, it's important to distinguish if it's reflexive to set some stress patterns
-	local prefix = args[3] or ""
+	local prefix = args[2] or ""
 	data.title = "irreg-b"
 	parse_variants(data, args[1], {"past"}, prefix == "вы́" and "a(1)" or data.refl and "c''" or "c")
-	no_stray_args(args, 3)
+	no_stray_args(args, 2)
 
 	forms["infinitive"] = prefix .. "кля́сть"
 
@@ -3376,15 +3381,15 @@ conjugations["irreg-стелить-стлать"] = function(args, data)
 	-- irregular, only for verbs derived from стелить and стлать with the same stress pattern
 	local forms = {}
 
-	local infprefix = args[4] or ""
-	local presprefix = args[5] or infprefix
-	local stem = get_stressed_arg(args, 3)
+	local infprefix = args[3] or ""
+	local presprefix = args[4] or infprefix
+	local stem = get_stressed_arg(args, 2)
 	data.title = ((prefix == "вы́" and stem == "стла") and "6a" or
 		stem == "стла́" and "6c" or
 		stem == (prefix == "вы́" and stem == "стели") and "4a" or
 		"4c")
 	parse_variants(data, args[1], {})
-	no_stray_args(args, 5)
+	no_stray_args(args, 4)
 
 	forms["infinitive"] = infprefix .. stem .. "ть"
 
@@ -3419,10 +3424,10 @@ conjugations["irreg-быть"] = function(args, data)
 	local forms = {}
 
 	--for this type, it's important to distinguish if it's reflexive to set some stress patterns
-	local prefix = args[3] or ""
+	local prefix = args[2] or ""
 	data.title = "irreg-a"
 	parse_variants(data, args[1], {"past"}, prefix == "вы́" and "a(1)" or data.refl and "c''" or "c")
-	no_stray_args(args, 3)
+	no_stray_args(args, 2)
 
 	-- no pres_pasv_part
 
@@ -3471,13 +3476,13 @@ conjugations["irreg-ссать-сцать"] = function(args, data)
 	-- irregular, only for verbs derived from ссать and сцать (both vulgar!)
 	local forms = {}
 
-	local prefix = args[5] or ""
+	local prefix = args[4] or ""
 	data.title = prefix == "вы́" and "irreg-a" or "irreg-b"
 	parse_variants(data, args[1], {})
-	local stem = get_stressed_arg(args, 3)
-	local pres_stem = get_unstressed_arg(args, 4)
+	local stem = get_stressed_arg(args, 2)
+	local pres_stem = get_unstressed_arg(args, 3)
 
-	no_stray_args(args, 5)
+	no_stray_args(args, 4)
 	-- if the prefix is stressed, remove stress from the stem
 	if com.is_stressed(prefix) then
 		stem = com.remove_accents(stem)
@@ -3518,10 +3523,10 @@ conjugations["irreg-чтить"] = function(args, data)
 	-- irregular, only for verbs derived from чтить
 	local forms = {}
 
-	local prefix = args[3] or ""
+	local prefix = args[2] or ""
 	data.title = "4b"
 	parse_variants(data, args[1], {})
-	no_stray_args(args, 3)
+	no_stray_args(args, 2)
 
 	forms["infinitive"] = prefix .. "чти́ть"
 
@@ -3549,10 +3554,10 @@ conjugations["irreg-шибить"] = function(args, data)
 	-- irregular, only for verbs in -шибить(ся)
 	local forms = {}
 
-	local prefix = args[3] or ""
+	local prefix = args[2] or ""
 	data.title = prefix == "вы́" and "irreg-a" or "irreg-b"
 	parse_variants(data, args[1], {})
-	no_stray_args(args, 3)
+	no_stray_args(args, 2)
 
 	-- no present participles
 	if com.is_stressed(prefix) then
@@ -3587,10 +3592,10 @@ conjugations["irreg-реветь"] = function(args, data)
 	-- irregular, only for verbs derived from "реветь"
 	local forms = {}
 
-	local prefix = args[3] or ""
+	local prefix = args[2] or ""
 	data.title = "irreg-b"
 	parse_variants(data, args[1], {})
-	no_stray_args(args, 3)
+	no_stray_args(args, 2)
 
 	forms["infinitive"] = prefix .. "реве́ть"
 
@@ -3616,10 +3621,10 @@ conjugations["irreg-внимать"] = function(args, data)
 	-- irregular, only for внимать
 	local forms = {}
 
-	local prefix = args[3] or ""
+	local prefix = args[2] or ""
 	data.title = "1a // 6a"
 	parse_variants(data, args[1], {})
-	no_stray_args(args, 3)
+	no_stray_args(args, 2)
 
 	forms["infinitive"] = prefix .. "внима́ть"
 
@@ -3644,10 +3649,10 @@ conjugations["irreg-внять"] = function(args, data)
 	-- irregular, only for внять
 	local forms = {}
 
-	local prefix = args[3] or ""
+	local prefix = args[2] or ""
 	data.title = "14c/c"
 	parse_variants(data, args[1], {})
-	no_stray_args(args, 3)
+	no_stray_args(args, 2)
 
 	forms["infinitive"] = prefix .. "вня́ть"
 
@@ -3675,10 +3680,10 @@ conjugations["irreg-обязывать"] = function(args, data)
 	-- irregular, only for the reflexive verb обязываться
 	local forms = {}
 
-	local prefix = args[3] or ""
+	local prefix = args[2] or ""
 	data.title = "1a"
 	parse_variants(data, args[1], {})
-	no_stray_args(args, 3)
+	no_stray_args(args, 2)
 
 	forms["infinitive"] = prefix .. "обя́зывать"
 
