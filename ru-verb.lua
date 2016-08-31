@@ -50,6 +50,7 @@ local rsplit = mw.text.split
 local usub = mw.ustring.sub
 
 local AC = u(0x0301) -- acute =  ́
+local DIA = u(0x0308) -- diaeresis =  ̈
 
 -- version of rsubn() that discards all but the first return value
 local function rsub(term, foo, bar)
@@ -83,7 +84,7 @@ local function ine(arg)
 end
 
 local function is_vowel_stem(stem)
-	return rfind(stem, "[" .. com.vowel .. AC .. "]$")
+	return rfind(stem, "[" .. com.vowel .. AC .. DIA .. "]$")
 end
 
 -- Return the next number to use as an internal note symbol, starting at 1.
@@ -252,6 +253,7 @@ local present_i_a
 local present_i_b
 local present_i_c
 local make_reflexive
+local make_pre_reform
 local parse_and_stress_override
 local handle_forms_and_overrides
 local finish_generating_forms
@@ -507,7 +509,7 @@ local function split_args_handle_aliases(frame)
 	return arg_sets
 end
 
-function export.do_generate_forms(arg_sets)
+function export.do_generate_forms(arg_sets, old)
 	local set1 = arg_sets[1]
 	-- Verb type, one of impf, pf, impf-intr, pf-intr, impf-refl, pf-refl.
 	-- Default to impf on the template page so that there is no script error.
@@ -544,6 +546,7 @@ function export.do_generate_forms(arg_sets)
 	if data.iter and data.perf then
 		error("Iterative verbs must be imperfective")
 	end
+	data.old = old
 
 	data.ppp_override = false
 	data.prpp_override = false
@@ -682,6 +685,10 @@ function export.do_generate_forms(arg_sets)
 		table.insert(categories, "Russian iterative verbs")
 	end
 
+	if data.old then
+		make_pre_reform(forms)
+	end
+
 	finish_generating_forms(forms, data)
 
 	return forms, data.title, data.perf, data.intr or data.refl, data.impers, categories, notes, data.internal_notes
@@ -734,7 +741,8 @@ end
 
 function export.generate_forms(frame)
 	local arg_sets = split_args_handle_aliases(frame)
-	local forms, title, perf, intr, impers, categories, notes, internal_notes = export.do_generate_forms(arg_sets)
+	local old = frame.args["old"] or arg_sets[1]["old"]
+	local forms, title, perf, intr, impers, categories, notes, internal_notes = export.do_generate_forms(arg_sets, old)
 	return fetch_forms(forms)
 end
 
@@ -750,6 +758,7 @@ end
 -- This is the only function that can be invoked from a template.
 function export.show(frame)
 	local arg_sets = split_args_handle_aliases(frame)
+	local old = frame.args["old"] or arg_sets[1]["old"]
 
 	local arg_sets_clone
 	if test_new_ru_verb_module then
@@ -757,12 +766,12 @@ function export.show(frame)
 		arg_sets_clone = mw.clone(arg_sets)
 	end
 
-	local forms, title, perf, intr, impers, categories, notes, internal_notes = export.do_generate_forms(arg_sets)
+	local forms, title, perf, intr, impers, categories, notes, internal_notes = export.do_generate_forms(arg_sets, old)
 
 	-- Test code to compare existing module to new one.
 	if test_new_ru_verb_module then
 		local m_new_ru_verb = require("Module:User:Benwing2/ru-verb")
-		local newforms, newtitle, newperf, newintr, newimpers, newcategories, newnotes, newinternal_notes = m_new_ru_verb.do_generate_forms(arg_sets_clone)
+		local newforms, newtitle, newperf, newintr, newimpers, newcategories, newnotes, newinternal_notes = m_new_ru_verb.do_generate_forms(arg_sets_clone, old)
 		local vals = mw.clone(forms)
 		vals.title = title
 		vals.perf = perf
@@ -805,7 +814,7 @@ function export.show(frame)
 		track(difconj and "different-conj" or "same-conj")
 	end
 
-	return make_table(forms, title, perf, intr, impers, notes, internal_notes) .. m_utilities.format_categories(categories, lang)
+	return make_table(forms, title, perf, intr, impers, notes, internal_notes, old) .. m_utilities.format_categories(categories, lang)
 end
 
 --[=[
@@ -1397,8 +1406,14 @@ local function set_moving_ppp(forms, data)
 		--   (за)тушева́ть ((за)тушёванный) and (за)клева́ть ((за)клёванный)
 		local subbed
 		stem, subbed = rsubb(stem, "е́", "ё") -- Cyrillic
+		if not subbed and data.old then
+			stem, subbed = rsub(stem, "ѣ́", "ѣ̈")
+		end
 		if not subbed then
-			error("No stressed е in stem " .. stem .. " to replace with ё when trying to create participle")
+			error("No stressed е" .. (data.old and " or ѣ" or "") ..
+				" in stem " .. stem ..
+				" to replace with ё" .. (data.old and " or ѣ̈" or "") ..
+				" when trying to create participle")
 		end
 		if tr then
 			tr, subbed = rsub(tr, "je" .. AC, "jo" .. AC) -- Latin
@@ -1466,7 +1481,7 @@ local function set_ppp_from_past_m(forms, args, data)
 			end
 		end
 		append_ppp(forms, ru, tr, "тый")
-	end)		
+	end)
 end
 
 -- Set the past passive participle for class-4 verbs.
@@ -2159,7 +2174,7 @@ local function guts_of_6c(args, data, vclass)
 	elseif vclass == "6°c" then
 		data.title = "6°c" -- in case user used 6oc
 	end
-	
+
 	-- optional щ parameter for verbs like клеветать (клевещу́), past stress
 	parse_variants(data, args[1], {"щ", "past", "+p", "7", "ё"})
 	local stem = get_stressed_arg(args, 3)
@@ -2236,8 +2251,11 @@ local function guts_of_7(args, data, forms, pres_stem,
 	if not past_tense_stem then
 		past_tense_stem = past_part_stem
 		if is7b then
-			past_tense_stem = rsub(past_tense_stem, "е́([^" .. com.vowel .. "]*)$",
-				"ё%1")
+			past_tense_stem = rsub(past_tense_stem,
+				"([еѣ])́([^" .. com.vowel .. "]*)$",
+				function(e, nonvowels)
+					return (e == "е" and "ё" or "ѣ̈") .. nonvowels
+				end)
 		end
 		past_tense_stem = rsub(past_tense_stem, "[дт]$", "")
 	end
@@ -3819,7 +3837,25 @@ make_reflexive = function(forms, reflex_stress)
 	end
 end
 
-local function setup_pres_futr(forms, perf)
+-- Convert verb forms to pre-reform style by adding ъ to consonant-final
+-- forms (excluding those ending in й and ь) and converting -ий to -ій and
+-- -ийся to -ійся
+make_pre_reform = function(forms)
+	for key, form in pairs(forms) do
+		local ru, tr = extract_russian_tr(form)
+		-- check for empty string, dashes and nil's
+		if ru and ru ~= "" and ru ~= "-" then
+			local ruentry, runotes = m_table_tools.separate_notes(ru)
+			if rfind(ruentry, "[бцдфгчклмнпрствшхзжщ]$") then
+				forms[key] = {ruentry .. "ъ" .. runotes, tr}
+			else
+				forms[key] = {rsub(rsub(ruentry, "ий$", "ій"), "ийся$", "ійся") .. runotes, tr}
+			end
+		end
+	end
+end
+
+local function setup_pres_futr(forms, perf, old)
 	-- Copy the main form FROMFORM to the main form TOFORM, and copy all
 	-- associated alternative forms.
 	local function copy_form(fromform, toform)
@@ -3849,19 +3885,20 @@ local function setup_pres_futr(forms, perf)
 		copy_form("pres_futr_3pl", "pres_3pl")
 	end
 
+	local futr_data = {
+		{"futr_1sg", "бу́ду", "búdu"},
+		{"futr_2sg", "бу́дешь", "búdešʹ"},
+		{"futr_3sg", "бу́дет" .. (old and "ъ" or ""), "búdet"},
+		{"futr_1pl", "бу́дем" .. (old and "ъ" or ""), "búdem"},
+		{"futr_2pl", "бу́дете", "búdete"},
+		{"futr_3pl", "бу́дут" .. (old and "ъ" or ""), "búdut"}
+	}
+
 	local function insert_future(inf, inf_tr)
-		append_to_arg_chain(forms, "futr_1sg", "futr_1sg",
-			{"бу́ду" .. inf, inf_tr and "búdu" .. inf_tr})
-		append_to_arg_chain(forms, "futr_2sg", "futr_2sg",
-			{"бу́дешь" .. inf, inf_tr and "búdešʹ" .. inf_tr})
-		append_to_arg_chain(forms, "futr_3sg", "futr_3sg",
-			{"бу́дет" .. inf, inf_tr and "búdet" .. inf_tr})
-		append_to_arg_chain(forms, "futr_1pl", "futr_1pl",
-			{"бу́дем" .. inf, inf_tr and "búdem" .. inf_tr})
-		append_to_arg_chain(forms, "futr_2pl", "futr_2pl",
-			{"бу́дете" .. inf, inf_tr and "búdete" .. inf_tr})
-		append_to_arg_chain(forms, "futr_3pl", "futr_3pl",
-			{"бу́дут" .. inf, inf_tr and "búdut" .. inf_tr})
+		for _, fut in ipairs(futr_data) do
+			append_to_arg_chain(forms, fut[1], fut[1],
+				{fut[2] .. inf, inf_tr and fut[3] .. inf_tr})
+		end
 	end
 
 	-- Insert future, if required (there may conceivably be multiple infitives).
@@ -3903,7 +3940,7 @@ end
 
 -- Set up pres_* or futr_*; handle *sym/*tail/*tailall notes and overrides.
 handle_forms_and_overrides = function(args, forms, data)
-	setup_pres_futr(forms, data.perf)
+	setup_pres_futr(forms, data.perf, data.old)
 
 	local function append_value(forms, prop, value)
 		if forms[prop] and forms[prop] ~= "" and forms[prop] ~= "-" then
@@ -4056,7 +4093,7 @@ finish_generating_forms = function(forms, data)
 	-- data.ppp_override.
 	if data.impers and not data.prpp_override then
 		clear_form("pres_pasv_part")
-	end		
+	end
 
 	if data.impers then
 		clear_form("pres_1sg")
@@ -4129,7 +4166,7 @@ finish_generating_forms = function(forms, data)
 end
 
 -- Make the table
-make_table = function(forms, title, perf, intr, impers, notes, internal_notes)
+make_table = function(forms, title, perf, intr, impers, notes, internal_notes, old)
 	local infinitives = {}
 	for _, form in pairs(main_to_all_verb_forms["infinitive"]) do
 		local infinitive = forms[form]
@@ -4140,8 +4177,8 @@ make_table = function(forms, title, perf, intr, impers, notes, internal_notes)
 			end
 		end
 	end
-	
-	local title = "Conjugation" .. (#infinitives == 0 and "" or
+
+	local title = (old and "Pre-reform conjugation" or "Conjugation") .. (#infinitives == 0 and "" or
 		" of <span lang=\"ru\" class=\"Cyrl\">''" .. table.concat(infinitives, ", ") .. "''</span>") ..
 		(title and " (" .. title .. ")" or "")
 
