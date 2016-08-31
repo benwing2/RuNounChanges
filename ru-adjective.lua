@@ -2,6 +2,8 @@
 	This module contains functions for creating inflection tables for Russian
 	adjectives.
 
+	Author: Benwing, rewritten from early version by Wikitiki89
+
 	Arguments:
 		1: lemma; nom sg, or just the stem if an explicit declension type is
 		   given in arg 2

@@ -2,6 +2,8 @@
 	This module contains functions for creating inflection tables for Russian
 	nouns.
 
+	Author: Benwing, rewritten from early version by Wikitiki89
+
 	Form of arguments: One of the following:
 		1. LEMMA|DECL|PLSTEM (all arguments optional)
 		2. ACCENT|LEMMA|DECL|PLSTEM (all arguments optional)
