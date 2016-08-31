@@ -520,12 +520,6 @@ function export.do_generate_forms(arg_sets, old)
 	local forms = {}
 	local categories = {}
 
-	-- For compatibility
-	if verb_type == "pf-impers-refl" then
-		verb_type = "pf-refl-impers"
-	elseif verb_type == "impf-impers-refl" then
-		verb_type = "impf-refl-impers"
-	end
 	if not ut.contains(all_verb_types, verb_type) then
 		error("Invalid verb type " .. verb_type)
 	end
