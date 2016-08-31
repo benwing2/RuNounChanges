@@ -765,12 +765,14 @@ function export.show(frame)
 		arg_sets_clone = mw.clone(arg_sets)
 	end
 
-	local forms, title, perf, intr, impers, categories, notes, internal_notes = export.do_generate_forms(arg_sets, verb_type, old)
+	local forms, title, perf, intr, impers, categories, notes, internal_notes =
+		export.do_generate_forms(arg_sets, verb_type, old)
 
 	-- Test code to compare existing module to new one.
 	if test_new_ru_verb_module then
 		local m_new_ru_verb = require("Module:User:Benwing2/ru-verb")
-		local newforms, newtitle, newperf, newintr, newimpers, newcategories, newnotes, newinternal_notes = m_new_ru_verb.do_generate_forms(arg_sets_clone, old)
+		local newforms, newtitle, newperf, newintr, newimpers, newcategories, newnotes, newinternal_notes =
+			m_new_ru_verb.do_generate_forms(arg_sets_clone, verb_type, old)
 		local vals = mw.clone(forms)
 		vals.title = title
 		vals.perf = perf
