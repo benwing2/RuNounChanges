@@ -22,7 +22,11 @@ def process_page(index, page, save, verbose):
   parsed = blib.parse(page)
   notes = []
   for t in parsed.filter_templates():
-    if unicode(t.name) in ["ru-conj-7a", "ru-conj-7b"]:
+    if (unicode(t.name) in ["ru-conj", "ru-conj-old"] and
+        getparam(t, "2") in ["7a", "7b"]):
+      if [x for x in t.params if unicode(x.value) == "or"]:
+        pagemsg("WARNING: Skipping multi-arg conjugation: %s" % unicode(t))
+        continue
       if t.has("past_adv_part_short") and getparam(t, "past_adv_part_short") == "":
         notes.append("set past_adv_part_short=-")
         origt = unicode(t)

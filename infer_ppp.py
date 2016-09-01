@@ -133,8 +133,11 @@ def process_page(index, page, save, verbose):
           manual_ppps.append(ppp)
       if not manual_ppps:
         continue
-      param1 = getparam(t, "1")
-      if "+p" in param1 or "(7)" in param1 or "(8)" in param1:
+      if [x for x in t.params if unicode(x.value) == "or"]:
+        pagemsg("WARNING: Skipping multi-arg conjugation: %s" % unicode(t))
+        continue
+      curvariant = getparam(t, "2")
+      if "+p" in curvariant or "(7)" in curvariant or "(8)" in curvariant:
         pagemsg("WARNING: Found both manual PPP and PPP variant, something wrong: %s" %
             unicode(t))
         continue
@@ -148,7 +151,7 @@ def process_page(index, page, save, verbose):
         variants_to_try.append(u"+pжд")
       notsamemsgs = []
       for variant in variants_to_try:
-        t2.add("1", param1 + variant)
+        t2.add("2", curvariant + variant)
         tempcall = re.sub(r"\{\{ru-conj", "{{ru-generate-verb-forms", unicode(t2))
         result = expand_text(tempcall)
         if not result:
@@ -169,7 +172,7 @@ def process_page(index, page, save, verbose):
               % ",".join(manual_ppps))
           for form in manual_ppp_forms:
             rmparam(t, form)
-          t.add("1", param1 + variant)
+          t.add("2", curvariant + variant)
           notes.append("replaced manual PPP's with variant %s" % variant)
           break
         else:

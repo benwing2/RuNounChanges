@@ -13,6 +13,9 @@ def process_page(index, page, direc, save, verbose):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
+  pagemsg("WARNING: Script no longer applies and would need fixing up")
+  return
+
   pagemsg("Processing")
 
   text = unicode(page.text)

@@ -15,6 +15,9 @@ def process_page(index, page, save, verbose):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
+  pagemsg("WARNING: Script no longer applies and would need fixing up")
+  return
+
   pagemsg("Processing")
   new_text = "#REDIRECT [[Module:ru-verb/documentation]]"
   comment = "redirect to [[Module:ru-verb/documentation]]"

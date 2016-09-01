@@ -48,10 +48,14 @@ def process_page(index, page, save, verbose, fixdirecs):
         for otheraspect in pfs + impfs:
           if verb[0:2] == otheraspect[0:2]:
             saw_paired_verb = True
-    if (unicode(t.name) in ["ru-conj"] and getparam(t, "2") == "impf" and
-        not saw_paired_verb):
-      if getparam(t, "ppp") or getparam(t, "past_pasv_part") or (
-          re.search(r"\+p|\[?\([78]\)\]?", getparam(t, "1"))):
+    if (unicode(t.name) in ["ru-conj", "ru-conj-old"] and
+        getparam(t, "1") == "impf" and not saw_paired_verb):
+      if getparam(t, "ppp") or getparam(t, "past_pasv_part"):
+        pass
+      elif [x for x in t.params if unicode(x.value) == "or"]:
+        pagemsg("WARNING: Skipping multi-arg conjugation: %s" % unicode(t))
+        pass
+      elif re.search(r"\+p|\[?\([78]\)\]?", getparam(t, "2"))):
         pass
       else:
         pagemsg("Apparent unpaired transitive imperfective without PPP")
@@ -60,7 +64,7 @@ def process_page(index, page, save, verbose, fixdirecs):
           assert direc in ["fixed", "paired", "intrans", "+p", "|ppp=-"]
           origt = unicode(t)
           if direc == "+p":
-            t.add("1", getparam(t, "1") + "+p")
+            t.add("2", getparam(t, "2") + "+p")
             notes.append("add missing past passive participle to transitive unpaired imperfective verb")
             pagemsg("Add missing PPP, replace %s with %s" % (origt, unicode(t)))
           elif direc == "|ppp=-":

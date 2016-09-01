@@ -148,12 +148,12 @@ while True:
     pfaspect = re.sub("^both", "pf", aspect)
     impfaspect = re.sub("^both", "impf", aspect)
     conjtext = """''imperfective''
-{{ru-conj|%s|%s%s|%s}}
+{{ru-conj|%s%s|%s|%s}}
 ''perfective''
-{{ru-conj|%s|%s%s|%s}}""" % (conj, impfaspect, reflsuf, conjargs,
-    conj, pfaspect, reflsuf, conjargs)
+{{ru-conj|%s%s|%s|%s}}""" % (impfaspect, reflsuf, conj, conjargs,
+    pfaspect, reflsuf, conj, conjargs)
   else:
-    conjtext = "{{ru-conj|%s|%s%s|%s}}" % (conj, aspect, reflsuf, conjargs)
+    conjtext = "{{ru-conj|%s%s|%s|%s}}" % (aspect, reflsuf, conj, conjargs)
 
   alttext = ""
   syntext = ""

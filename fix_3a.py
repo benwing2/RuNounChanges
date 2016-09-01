@@ -13,6 +13,9 @@ def process_page(index, page, direc, delete_bad, fix_verbs, save, verbose):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
+  pagemsg("WARNING: Script no longer applies and would need fixing up")
+  return
+
   def expand_text(tempcall):
     return blib.expand_text(tempcall, pagetitle, pagemsg, verbose)
 

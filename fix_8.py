@@ -20,8 +20,11 @@ def process_page(index, page, save, verbose):
   notes = []
   for t in parsed.filter_templates():
     origt = unicode(t)
-    param1 = getparam(t, "1")
-    if unicode(t.name) in ["ru-conj"] and re.search(r"^8[ab]", param1):
+    param2 = getparam(t, "2")
+    if unicode(t.name) in ["ru-conj"] and re.search(r"^8[ab]", param2):
+      if [x for x in t.params if unicode(x.value) == "or"]:
+        pagemsg("WARNING: Skipping multi-arg conjugation: %s" % unicode(t))
+        continue
       past_m = getparam(t, "past_m")
       if past_m:
         rmparam(t, "past_m")
@@ -29,7 +32,7 @@ def process_page(index, page, save, verbose):
         if stem == past_m:
           pagemsg("Stem %s and past_m same" % stem)
           notes.append("remove redundant past_m %s" % past_m)
-        elif (param1.startswith("8b") and not param1.startswith("8b/") and
+        elif (param2.startswith("8b") and not param2.startswith("8b/") and
             ru.make_unstressed(past_m) == stem):
           pagemsg("Class 8b/b and stem %s is unstressed version of past_m %s, replacing stem with past_m" % (
             stem, past_m))

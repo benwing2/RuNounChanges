@@ -88,38 +88,38 @@ def iotate(word):
 # Form the past passive participle from the verb type, infinitive and
 # other parts. For the moment we don't try to get the stress right,
 # and return a form without stress or ё.
-def form_ppp(verbtype, pagetitle, args):
-  def form_ppp_1(verbtype, pagetitle, args):
+def form_ppp(conjtype, pagetitle, args):
+  def form_ppp_1(conjtype, pagetitle, args):
     def first_entry(forms):
       forms = re.sub(",.*", "", forms)
       return re.sub("//.*", "", forms)
-    if not re.search("^[0-9]+", verbtype):
+    if not re.search("^[0-9]+", conjtype):
       return None
-    verbtype = int(re.sub("^([0-9]+).*", r"\1", verbtype))
+    conjtype = int(re.sub("^([0-9]+).*", r"\1", conjtype))
     if ((pagetitle.endswith(u"ать") or pagetitle.endswith(u"ять")) and
-        verbtype != 14):
+        conjtype != 14):
       return re.sub(u"ть$", u"нный", pagetitle)
-    if pagetitle.endswith(u"еть") and verbtype == 1:
+    if pagetitle.endswith(u"еть") and conjtype == 1:
       return re.sub(u"ть$", u"нный", pagetitle)
-    if verbtype in [4, 5]:
+    if conjtype in [4, 5]:
       sg1 = args["pres_1sg"] if "pres_1sg" in args else args["futr_1sg"]
       if not sg1 or sg1 == "-":
         return None
       sg1 = first_entry(sg1)
       assert re.search(u"[ую]́?$", sg1)
       return re.sub(u"[ую]́?$", u"енный", sg1)
-    if verbtype in [7, 8]:
+    if conjtype in [7, 8]:
       sg3 = args["pres_3sg"] if "pres_3sg" in args else args["futr_3sg"]
       sg3 = first_entry(sg3)
       assert re.search(u"[её]́?т$", sg3)
       return re.sub(u"[её]́?т$", u"енный", sg3)
-    if verbtype in [3, 10]:
+    if conjtype in [3, 10]:
       return re.sub(u"ть$", u"тый", pagetitle)
-    assert verbtype in [9, 11, 12, 14, 15, 16]
+    assert conjtype in [9, 11, 12, 14, 15, 16]
     pastm = first_entry(args["past_m"])
     return re.sub(u"л?$", u"тый", pastm)
 
-  retval = form_ppp_1(verbtype, pagetitle, args)
+  retval = form_ppp_1(conjtype, pagetitle, args)
   if retval:
     return rulib.make_unstressed(retval)
   else:
@@ -140,16 +140,25 @@ def process_page(index, page, save, verbose, fix_pages):
   notes = []
   for t in parsed.filter_templates():
     tname = unicode(t.name)
-    if tname == "ru-conj":
-      tempcall = re.sub(r"\{\{ru-conj", "{{ru-generate-verb-forms", unicode(t))
+    if tname in ["ru-conj", "ru-conj-old"]:
+      if [x for x in t.params if unicode(x.value) == "or"]:
+        pagemsg("WARNING: Skipping multi-arg conjugation: %s" % unicode(t))
+        continue
+      conjtype = getparam(t, "2")
+      if tname == "ru-conj":
+        tempcall = re.sub(r"\{\{ru-conj", "{{ru-generate-verb-forms", unicode(t))
+      else:
+        tempcall = re.sub(r"\{\{ru-conj-old", "{{ru-generate-verb-forms|old=y", unicode(t))
       result = expand_text(tempcall)
       if not result:
         pagemsg("WARNING: Error generating forms, skipping")
         continue
       args = rulib.split_generate_args(result)
-      if "past_pasv_part" in args:
+      for base in ["past_pasv_part", "ppp"]:
         forms_to_remove = []
-        for form in re.split(",", args["past_pasv_part"]):
+        if args[base] == "-":
+          continue
+        for form in re.split(",", args[base]):
           origform = form
           form = re.sub("//.*", "", form)
           fix_form = False
@@ -177,7 +186,7 @@ def process_page(index, page, save, verbose, fix_pages):
               warned = True
               fix_form = True
           if not warned:
-            correct_form = form_ppp(verbtype, pagetitle, args)
+            correct_form = form_ppp(conjtype, pagetitle, args)
             if correct_form and unstressed_form != correct_form:
               pagemsg("WARNING: Past passive participle not formed according to rule, probably wrong: found %s, expected %s"
                   % (unstressed_form, correct_form))
@@ -187,7 +196,7 @@ def process_page(index, page, save, verbose, fix_pages):
         if forms_to_remove and pagetitle in fix_pages:
           curvals = []
           for i in ["", "2", "3", "4", "5", "6", "7", "8", "9"]:
-            val = getparam(t, "past_pasv_part" + i)
+            val = getparam(t, base + i)
             if val:
               curvals.append(val)
           newvals = [x for x in curvals if x not in forms_to_remove]
@@ -197,10 +206,10 @@ def process_page(index, page, save, verbose, fix_pages):
           curindex = 1
           origt = unicode(t)
           for newval in newvals:
-            t.add("past_pasv_part" + ("" if curindex == 1 else str(curindex)), newval)
+            t.add(base + ("" if curindex == 1 else str(curindex)), newval)
             curindex += 1
           for i in xrange(curindex, 10):
-            rmparam(t, "past_pasv_part" + ("" if i == 1 else str(i)))
+            rmparam(t, base + ("" if i == 1 else str(i)))
           pagemsg("Replacing %s with %s" % (origt, unicode(t)))
           notes.append("removed bad past pasv part(s) %s"
               % ",".join(forms_to_remove))

@@ -20,10 +20,13 @@ def process_page(index, page, save, verbose):
   notes = []
   for t in parsed.filter_templates():
     origt = unicode(t)
-    if unicode(t.name) in ["ru-conj"]:
-      conjtype = getparam(t, "1")
+    if unicode(t.name) in ["ru-conj", "ru-conj-old"]:
+      conjtype = getparam(t, "2")
       if conjtype.startswith("3a"):
-        t.add("1", conjtype.replace("3a", "3olda"))
+        if [x for x in t.params if unicode(x.value) == "or"]:
+          pagemsg("WARNING: Skipping multi-arg conjugation: %s" % unicode(t))
+          continue
+        t.add("2", conjtype.replace("3a", "3olda"))
         notes.append("rename conj type 3a -> 3olda")
     newt = unicode(t)
     if origt != newt:

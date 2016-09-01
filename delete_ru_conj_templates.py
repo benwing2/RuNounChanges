@@ -12,6 +12,8 @@ parser = blib.create_argparser(u"Delete ru-conj-* templates and documentation pa
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
+msg("WARNING: Script no longer applies and would need fixing up")
+
 types = ["1a", "2a", "2b", "3oa", "3a", "3b", "3c", "4a", "4b", "4c", "5a",
     "5b", "5c", "6a", "6b", "6c",
     "7a", "7b", "8a", "8b", "9a", "9b", "10a", "10c", "11a", "11b",
