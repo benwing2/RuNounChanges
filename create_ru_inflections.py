@@ -31,10 +31,12 @@
 #    we should issue a warning when this happens.
 # 2a. (DONE) We need to check if there are multiple forms with the
 #    same Cyrillic but different translit, and combine the manual translits.
-# 3. When grouping participles with nouns/adjectives, don't do it if
+# 3. (DONE) When grouping participles with nouns/adjectives, don't do it if
 #    participle is adverbial.
-# 4. Need more special-casing of participles, e.g. head is 'participle',
-#    name of POS is "Participle", defn uses 'ru-participle of'.
+# 4. (DONE?) Need more special-casing of participles, e.g. head is 'participle',
+#    name of POS is "Participle", defn uses 'ru-participle of'. Also for
+#    adjectival participles, need to insert the declension, both in new
+#    entries and in existing entries missing a declension.
 # 5. (DONE) Need to group short adjectives with adverbs (cf. агресси́вно
 #    "aggressively" and also "aggressive (short n s)"). When doing this,
 #    may need to take into account manual translit (адеква́тно with
@@ -571,11 +573,17 @@ pages_already_erased = set()
 # ALLOW_STRESS_MISMATCH_IN_DEFN is used when dealing with stress variants to
 # allow for stress mismatch when inserting a new subsection next to an
 # existing one, instead of creating a new etymology section.
+#
+# PAST_F_END_STRESSED is used for determining the short-form type when
+# generating the declension of an adjectival participle (specifically, if
+# the past_f is end-stressed, participles in -тый have short-form type c,
+# and participles in -анный/-янный/-енный have short-form type c as a
+# dated alternant).
 def create_inflection_entry(program_args, save, index, inflections, lemma,
     lemmatr, pos, infltype, lemmatype, headtemp, headtemp_param, deftemp,
     deftemp_param, gender, deftemp_needs_lang=True, entrytext=None,
     is_lemma_template=None, lemmas_to_overwrite=[], lemmas_to_not_overwrite=[],
-    allow_stress_mismatch_in_defn=False):
+    allow_stress_mismatch_in_defn=False, past_f_end_stressed=False):
 
   # Remove any links that may esp. appear in the lemma, since the
   # accented version of the lemma as it appears in the lemma's headword
@@ -620,6 +628,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
 
   is_participle = "_part" in infltype
   is_adverbial_participle = "adv_part" in infltype
+  is_adjectival_participle = is_participle and not is_adverbial_participle
   is_adj_form = "adjective form" in infltype
   is_noun_form = "noun form" in infltype
   is_verb_form = "verb form" in infltype
@@ -827,13 +836,32 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
       lemma, "|tr=%s" % lemmatr if lemmatr else "",
       deftemp_param if isinstance(deftemp_param, basestring) else "||" + "|".join(deftemp_param))
 
-    # 5. Synthesize part of speech body and section text as a whole.
+    # 5. Synthesize declension template if needed.
+    if is_adjectival_participle:
+      ",".join("%s%s" % (infl, "//%s" % infltr if infltr else "")
+          for infl, infltr in inflections)
+      new_decl_template_parts = []
+      for infl, infltr in inflections:
+        new_decl_template_parts.append("{{ru-decl-adj|%s%s|%s}}\n" % (
+          infl, "//%s" % infltr if infltr else "",
+          ("|a(2),c(2)|shorttail=*|notes=* Dated." if past_f_end_stressed else "|a(2)") if re.search(u"(е|а́|а|я́|я)нный$", infl) else
+          "|b(2)" if infl.endswith(u"ённый") else
+          "|c" if infl.endswith(u"тый") and past_f_end_stressed else
+          "|a" if re.search(u"[мт]ый$", infl) else ""))
+      new_decl_template = "".join(new_decl_template_parts)
+      newdecl = "====Declension====\n" + new_decl_template
+      newdecll4 = "=====Declension=====\n" + new_decl_template
+    else:
+      newdecl = ""
+      newdecll4 = ""
+
+    # 6. Synthesize part of speech body and section text as a whole.
     newposbody = """%s
 
 # %s
 """ % (new_headword_template, new_defn_template)
-    newpos = "===%s===\n" % pos + newposbody
-    newposl4 = "====%s====\n" % pos + newposbody
+    newpos = "===%s===\n" % pos + newposbody + "\n" + newdecl
+    newposl4 = "====%s====\n" % pos + newposbody + "\n" + newdecll4
     entrytext = "\n" + newpos
     entrytextl4 = "\n" + newposl4
     newsection = "==Russian==\n" + entrytext
@@ -946,7 +974,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
         # Pass 3 = if got this far, check for ability to insert new defn
         #          into existing subsection adding a new gender
         #
-        # If we got through all three passes without breaking, we will
+        # If we got through all four passes without breaking, we will
         # proceed below to insert a new subsection, and possibly a whole
         # new etymology section or Russian-language section.
         #
@@ -1348,6 +1376,24 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                 need_outer_break = True
                 break
 
+              def insert_part_defn_if_needed():
+                if not is_adjectival_participle or "==Declension==" in subsections[j]:
+                  return False
+                if not subsections[j].endswith("\n"):
+                  subsections[j] = ensure_two_trailing_nl(subsections[j])
+                m = re.match("^(==+)", subsections[j])
+                indentlevel = len(m.group(1))
+
+                pagemsg("Inserting declension in existing entry: %s %s, %s %s" %
+                  (infltype, joined_infls, lemmatype, lemma))
+                if indentlevel == 3:
+                  subsections[j] += newdecl
+                else:
+                  assert(indentlevel == 4)
+                  subsections[j] += newdecll4
+                sections[i] = "".join(subsections)
+                return True
+
               # We found both templates and their heads matched; inflection
               # entry is already present.
               if (infl_headword_templates_for_already_present_entry and
@@ -1368,10 +1414,20 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                   for t, needs_update in defn_templates_for_already_present_entry:
                     if needs_update:
                       check_fix_defn_params(t, deftemp_param)
-                  # "Do nothing", but set a comment, in case we made a template
-                  # change like changing gender.
-                  comment = "Update params of existing entry: %s %s, %s %s" % (
+                  inserted = insert_part_defn_if_needed()
+                  if inserted:
+                    comment = "Insert declension in existing entry: %s %s, %s %s" % (
                       infltype, joined_infls, lemmatype, lemma)
+                  else:
+                    # "Do nothing", but set a comment, in case we made a
+                    # template change like changing gender (NOTE: in addition
+                    # to the comment, there are notes, which will reflect
+                    # any minor changes like changing gender, so if we've
+                    # taken a more major action like inserting a declension
+                    # above, we don't need to put "Updating params" in the
+                    # comment.)
+                    comment = "Update params of existing entry: %s %s, %s %s" % (
+                        infltype, joined_infls, lemmatype, lemma)
                   need_outer_break = True
                   break
 
@@ -1403,9 +1459,11 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                         r"^#", "# %s\n#" % new_defn_template,
                         subsections[j], 1, re.M)
                   sections[i] = ''.join(subsections)
+                  inserted = insert_part_defn_if_needed()
                   pagemsg("Insert existing defn with {{%s}} at beginning after any existing such defns" % (
                       deftemp))
-                  comment = "Insert existing defn with {{%s}} at beginning after any existing such defns: %s %s, %s %s" % (
+                  comment = "%s existing defn with {{%s}} at beginning after any existing such defns: %s %s, %s %s" % (
+                      "Insert declension in existing entry and insert" if inserted else "Insert",
                       deftemp, infltype, joined_infls, lemmatype, lemma)
                   need_outer_break = True
                   break
@@ -1479,7 +1537,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
 
           # If participle, try to find an existing noun or adjective with the
           # same headword to insert before. Insert before the first such one.
-          if is_participle and not is_adverbial_participle:
+          if is_adjectival_participle:
             insert_at = None
             for j in xrange(2, len(subsections), 2):
               if re.match("^===+(Noun|Adjective)===+", subsections[j - 1]):
@@ -2491,12 +2549,27 @@ def create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite,
                           break
                       if skip_locative:
                         continue
+                    past_f_end_stressed = False
                     if pos == "verb" and "part" in inflset:
                       inflset = tuple(x for x in inflset if x != "part")
                       header_pos = "Participle"
                       deftemp = "ru-participle of"
                       deftemp_needs_lang = False
                       our_headtemp = "head|ru|participle"
+                      if "past_f" in split_args:
+                        saw_end_stressed_past_f = False
+                        saw_non_end_stressed_past_f = False
+                        formvals = re.split(",", split_args["past_f"])
+                        for formval in formvals:
+                          formvalru, formvaltr = split_ru_tr(formval)
+                          if formvalru.endswith(AC):
+                            saw_end_stressed_past_f = True
+                          else:
+                            saw_non_end_stressed_past_f = True
+                        if saw_non_end_stressed_past_f and saw_end_stressed_past_f:
+                          pagemsg("WARNING: Saw both ending-stressed and non-ending-stressed past_f when determining short participle type: %s" %
+                              split_args["past_f"])
+                        past_f_end_stressed = saw_end_stressed_past_f
                     else:
                       header_pos = pos.capitalize()
                       deftemp = "inflection of"
@@ -2510,7 +2583,8 @@ def create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite,
                       lemmas_to_overwrite=lemmas_to_overwrite,
                       lemmas_to_not_overwrite=lemmas_to_not_overwrite,
                       allow_stress_mismatch_in_defn=allow_stress_mismatch,
-                      deftemp_needs_lang=deftemp_needs_lang)
+                      deftemp_needs_lang=deftemp_needs_lang,
+                      past_f_end_stressed=past_f_end_stressed)
 
 def skip_future_periphrastic(formname, ru, tr):
   return re.search(ur"^(бу́ду|бу́дешь|бу́дет|бу́дем|бу́дете|бу́дут) ", ru)
