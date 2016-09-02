@@ -456,6 +456,10 @@ def check_re_sub(pagemsg, action, refrom, reto, text, numsub=1, flags=0):
     pagemsg("WARNING: When %s, no substitution occurred" % action)
   return newtext
 
+# Make sure there is one trailing newline
+def ensure_one_trailing_nl(text):
+  return re.sub(r"\n*$", r"\n\n", text)
+
 # Make sure there are two trailing newlines
 def ensure_two_trailing_nl(text):
   return re.sub(r"\n*$", r"\n\n", text)
@@ -842,15 +846,15 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
           for infl, infltr in inflections)
       new_decl_template_parts = []
       for infl, infltr in inflections:
-        new_decl_template_parts.append("{{ru-decl-adj|%s%s|%s}}\n" % (
+        new_decl_template_parts.append("{{ru-decl-adj|%s%s%s}}\n" % (
           infl, "//%s" % infltr if infltr else "",
           ("|a(2),c(2)|shorttail=*|notes=* Dated." if past_f_end_stressed else "|a(2)") if re.search(u"(е|а́|а|я́|я)нный$", infl) else
           "|b(2)" if infl.endswith(u"ённый") else
           "|c" if infl.endswith(u"тый") and past_f_end_stressed else
           "|a" if re.search(u"[мт]ый$", infl) else ""))
       new_decl_template = "".join(new_decl_template_parts)
-      newdecl = "====Declension====\n" + new_decl_template
-      newdecll4 = "=====Declension=====\n" + new_decl_template
+      newdecl = "\n====Declension====\n" + new_decl_template
+      newdecll4 = "\n=====Declension=====\n" + new_decl_template
     else:
       newdecl = ""
       newdecll4 = ""
@@ -860,8 +864,8 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
 
 # %s
 """ % (new_headword_template, new_defn_template)
-    newpos = "===%s===\n" % pos + newposbody + "\n" + newdecl
-    newposl4 = "====%s====\n" % pos + newposbody + "\n" + newdecll4
+    newpos = "===%s===\n" % pos + newposbody + newdecl
+    newposl4 = "====%s====\n" % pos + newposbody + newdecll4
     entrytext = "\n" + newpos
     entrytextl4 = "\n" + newposl4
     newsection = "==Russian==\n" + entrytext
@@ -1376,21 +1380,40 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                 need_outer_break = True
                 break
 
-              def insert_part_defn_if_needed():
-                if not is_adjectival_participle or "==Declension==" in subsections[j]:
+              # Insert participle declension if not present and term is an
+              # adjectival participle.
+              def insert_part_decl_if_needed():
+                if not is_adjectival_participle:
                   return False
-                if not subsections[j].endswith("\n"):
-                  subsections[j] = ensure_two_trailing_nl(subsections[j])
-                m = re.match("^(==+)", subsections[j])
+
+                # Check if Declension subsection exists at a higher
+                # indent level.
+                m = re.match("^(==+)", subsections[j - 1])
                 indentlevel = len(m.group(1))
+
+                check_subsection = j + 1
+                while check_subsection < len(subsections):
+                  if (check_subsection % 2) == 0:
+                    check_subsection += 1
+                    continue
+                  m = re.match("^(==+)", subsections[check_subsection])
+                  newindent = len(m.group(1))
+                  if newindent <= indentlevel:
+                    break
+                  if "==Declension==" in subsections[check_subsection]:
+                    return False
+                  check_subsection += 1
+
+                if not subsections[j].endswith("\n"):
+                  subsections[j] = ensure_one_trailing_nl(subsections[j])
 
                 pagemsg("Inserting declension in existing entry: %s %s, %s %s" %
                   (infltype, joined_infls, lemmatype, lemma))
                 if indentlevel == 3:
-                  subsections[j] += newdecl
+                  subsections[j] += newdecl + "\n"
                 else:
                   assert(indentlevel == 4)
-                  subsections[j] += newdecll4
+                  subsections[j] += newdecll4 + "\n"
                 sections[i] = "".join(subsections)
                 return True
 
@@ -1414,7 +1437,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                   for t, needs_update in defn_templates_for_already_present_entry:
                     if needs_update:
                       check_fix_defn_params(t, deftemp_param)
-                  inserted = insert_part_defn_if_needed()
+                  inserted = insert_part_decl_if_needed()
                   if inserted:
                     comment = "Insert declension in existing entry: %s %s, %s %s" % (
                       infltype, joined_infls, lemmatype, lemma)
@@ -1459,7 +1482,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                         r"^#", "# %s\n#" % new_defn_template,
                         subsections[j], 1, re.M)
                   sections[i] = ''.join(subsections)
-                  inserted = insert_part_defn_if_needed()
+                  inserted = insert_part_decl_if_needed()
                   pagemsg("Insert existing defn with {{%s}} at beginning after any existing such defns" % (
                       deftemp))
                   comment = "%s existing defn with {{%s}} at beginning after any existing such defns: %s %s, %s %s" % (
@@ -2590,7 +2613,7 @@ def skip_future_periphrastic(formname, ru, tr):
   return re.search(ur"^(бу́ду|бу́дешь|бу́дет|бу́дем|бу́дете|бу́дут) ", ru)
 
 def get_verb_gender(t, formname, args):
-  gender = re.sub("-.*", "", getparam(t, "2"))
+  gender = re.sub("-.*", "", getparam(t, "1"))
   assert gender in ["pf", "impf"]
   return [gender]
 
