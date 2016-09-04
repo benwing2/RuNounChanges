@@ -127,13 +127,24 @@ local function rsubb(term, foo, bar)
 	return retval, nsubs > 0
 end
 
-local function insert_list_into_table(tab, list)
-	if type(list) ~= "table" then
-		list = {list}
+-- Insert a single form (consisting of {RUSSIAN, TR}) or a list of such
+-- forms into an existing list of such forms, adding NOTESYM (a string or nil)
+-- to the new forms if not nil. Return whether an insertion was performed.
+local function insert_forms_into_existing_forms(existing, newforms, notesym)
+	if type(newforms) ~= "table" then
+		newforms = {newforms}
 	end
-	for _, item in ipairs(list) do
-		ut.insert_if_not(tab, item)
+	local inserted = false
+	for _, item in ipairs(newforms) do
+		if not ut.contains(existing, item) then
+			if notesym then
+				item = nom.concat_paired_russian_tr(item, {notesym})
+			end
+	        table.insert(existing, item)
+			inserted = true
+	    end
 	end
+	return inserted
 end
 
 local function track(page)
@@ -287,13 +298,13 @@ function export.do_generate_forms(args, old, manual)
 
 			-- Auto-detect actual decl type, and get short accent and overriding
 			-- short stem, if specified.
-			local stem, stemtr, short_accent, short_stem, short_stemtr
-			stem, stemtr, decl_type, short_accent, short_stem =
+			local stem, stemtr, short_accent, short_stem, short_stemtr, dated
+			stem, stemtr, decl_type, short_accent, short_stem, dated =
 				detect_stem_and_accent_type(lemma, lemmatr, decl_type)
 			if rfind(decl_type, "^[іи]й$") and rfind(stem, "[" .. com.velar .. com.sib .. "]$") then
 				decl_type = "ый"
 			end
-			if short_accent then
+			if short_accent and not dated then
 				ut.insert_if_not(short_classes, short_accent)
 			end
 			if short_stem then
@@ -411,7 +422,7 @@ function export.do_generate_forms(args, old, manual)
 			decline(args, decls[decl_type], ut.contains({"ой", "stressed-short", "stressed-proper"}, decl_type))
 			if short_forms_allowed and short_accent then
 				decline_short(args, short_decls[short_decl_type],
-					short_stress_patterns[short_accent])
+					short_stress_patterns[short_accent], dated)
 			end
 
 			local intable = old and internal_notes_table_old or internal_notes_table
@@ -842,7 +853,8 @@ end
 -- SHORT_STEM is taken directly from the argument and will include any
 -- manual translit.
 detect_stem_and_accent_type = function(lemma, tr, decl)
-	if rfind(decl, "^[abc*(]") then
+	local dated = false
+	if rfind(decl, "^[abcd*(]") then
 		decl = ":" .. decl
 	end
 	splitvals = rsplit(decl, ":")
@@ -850,6 +862,13 @@ detect_stem_and_accent_type = function(lemma, tr, decl)
 		error("Should be at most three colon-separated parts of a declension spec: " .. decl)
 	end
 	decl, short_accent, short_stem = splitvals[1], splitvals[2], splitvals[3]
+	-- Check for dated variant of short accent
+	dated_short = short_accent and rmatch(short_accent, "^dated%-(.*)$")
+	if dated_short then
+		dated = true
+		short_accent = dated_short
+	end
+
 	decl = ine(decl)
 	-- Resolve aliases
 	if decl then
@@ -860,62 +879,74 @@ detect_stem_and_accent_type = function(lemma, tr, decl)
 	if short_stem and not short_accent then
 		error("With explicit short stem " .. short_stem .. ", must specify short accent")
 	end
-	if not decl or decl == "ь" then
-		local base, ending = rmatch(lemma, "^(.*)([ыиіо]́?й)$")
-		if base then
-			if ending == "ий" and decl == "ь" then
-				ending = "ьий"
-			elseif ending == "ій" and decl == "ь" then
-				ending = "ьій"
+	local base, ending
+	while true do
+		if not decl or decl == "ь" then
+			base, ending = rmatch(lemma, "^(.*)([ыиіо]́?й)$")
+			if base then
+				if ending == "ий" and decl == "ь" then
+					ending = "ьий"
+				elseif ending == "ій" and decl == "ь" then
+					ending = "ьій"
+				end
+				tr = nom.strip_tr_ending(tr, ending)
+				-- -ий/-ій will be converted to -ый after velars and sibilants
+				-- by the caller
+				decl = com.make_unstressed(ending)
+				break
+			else
+				-- It appears that short, mixed and proper adjectives are always
+				-- either of the -ов/ев/ёв or -ин/ын types. The former type is
+				-- always (or almost always?) short, while the latter can be
+				-- either; apparently mixed is the more "modern" type of
+				-- declension, and short is "older". However, both -ов/ев/ёв or
+				-- -ин/ын are of type "proper" (similar to "short") when
+				-- capitalized.
+				--
+				-- NOTE: Following regexp is accented
+				base = rmatch(lemma, "^([" .. com.uppercase .. "].*[иы]́н)ъ?$")
+				if base then
+					decl = "stressed-proper"
+					break
+				end
+				base = rmatch(lemma, "^([" .. com.uppercase .. "].*[еёо]́?в)ъ?$")
+				if not base then
+					-- Following regexp is not stressed
+					base = rmatch(lemma, "^([" .. com.uppercase .. "].*[иы]н)ъ?$")
+				end
+				if base then
+					decl = "proper"
+					break
+				end
+				base = rmatch(lemma, "^(.*[еёо]́?в)ъ?$")
+				if base then
+					decl = "short"
+					break
+				end
+				base = rmatch(lemma, "(.*[иы]́н)ъ?$") --accented
+				if base then
+					decl = "stressed-short"
+					break
+				end
+				base = rmatch(lemma, "(.*[иы]н)ъ?$") --unaccented
+				if base then
+					decl = "mixed"
+					break
+					-- error("With -ин/ын adjectives, must specify 'short' or 'mixed':" .. lemma)
+				end
+				error("Cannot determine stem type of adjective: " .. lemma)
 			end
-			-- -ий/-ій will be converted to -ый after velars and sibilants
-			-- by the caller
-			return base, nom.strip_tr_ending(tr, ending), com.make_unstressed(ending), short_accent, short_stem
+		elseif ut.contains({"short", "stressed-short", "mixed", "proper",
+			"stressed-proper"}, decl) then
+			base = rmatch(lemma, "^(.-)ъ?$")
+			assert(base)
+			break
 		else
-			-- It appears that short, mixed and proper adjectives are always
-			-- either of the -ов/ев/ёв or -ин/ын types. The former type is
-			-- always (or almost always?) short, while the latter can be
-			-- either; apparently mixed is the more "modern" type of
-			-- declension, and short is "older". However, both -ов/ев/ёв or
-			-- -ин/ын are of type "proper" (similar to "short") when
-			-- capitalized.
-			--
-			-- NOTE: Following regexp is accented
-			base = rmatch(lemma, "^([" .. com.uppercase .. "].*[иы]́н)ъ?$")
-			if base then
-				return base, tr, "stressed-proper", short_accent, short_stem
-			end
-			base = rmatch(lemma, "^([" .. com.uppercase .. "].*[еёо]́?в)ъ?$")
-			if not base then
-				-- Following regexp is not stressed
-				base = rmatch(lemma, "^([" .. com.uppercase .. "].*[иы]н)ъ?$")
-			end
-			if base then
-				return base, tr, "proper", short_accent, short_stem
-			end
-			base = rmatch(lemma, "^(.*[еёо]́?в)ъ?$")
-			if base then
-				return base, tr, "short", short_accent, short_stem
-			end
-			base = rmatch(lemma, "(.*[иы]́н)ъ?$") --accented
-			if base then
-				return base, tr, "stressed-short", short_accent, short_stem
-			end
-			base = rmatch(lemma, "(.*[иы]н)ъ?$") --unaccented
-			if base then
-				return base, tr, "mixed", short_accent, short_stem
-				-- error("With -ин/ын adjectives, must specify 'short' or 'mixed':" .. lemma)
-			end
-			error("Cannot determine stem type of adjective: " .. lemma)
+			base = lemma
+			break
 		end
-	elseif ut.contains({"short", "stressed-short", "mixed", "proper",
-		"stressed-proper"}, decl) then
-		local base = rmatch(lemma, "^(.-)ъ?$")
-		assert(base)
-		return base, tr, decl, short_accent, short_stem
-	else
-		return lemma, tr, decl, short_accent, short_stem
 	end
+	return base, tr, decl, short_accent, short_stem, dated
 end
 
 -- Add a possible suffix to the bare stem, according to the declension and
@@ -1506,7 +1537,7 @@ local function gen_form(args, decl, case, fun)
 	if not args.forms[case] then
 		args.forms[case] = {}
 	end
-	insert_list_into_table(args.forms[case],
+	insert_forms_into_existing_forms(args.forms[case],
 		attach_with(args, decl[case], fun, false))
 end
 
@@ -1636,12 +1667,16 @@ short_stress_patterns["c"] = { m="-", f="+", n="-", p="-" }
 short_stress_patterns["c'"] = { m="-", f="+", n="-", p="-+" }
 short_stress_patterns["c''"] = { m="-", f="+", n="-+", p="-+" }
 
-local function gen_short_form(args, decl, case, fun)
+local function gen_short_form(args, decl, case, fun, dated)
 	if not args.forms["short_" .. case] then
 		args.forms["short_" .. case] = {}
 	end
-	insert_list_into_table(args.forms["short_" .. case],
-		attach_with(args, decl[case], fun, true))
+	local inserted = insert_forms_into_existing_forms(
+		args.forms["short_" .. case], attach_with(args, decl[case], fun, true),
+		dated and "*" or nil)
+	if dated and inserted then
+		ut.insert_if_not(args.internal_notes, "<sup>*</sup> Dated.")
+	end
 end
 
 local attachers = {
@@ -1650,10 +1685,11 @@ local attachers = {
 	["-+"] = attach_both,
 }
 
-decline_short = function(args, decl, stress_pattern)
+decline_short = function(args, decl, stress_pattern, dated)
 	if stress_pattern then
 		for _, case in ipairs({"m", "f", "n", "p"}) do
-			gen_short_form(args, decl, case, attachers[stress_pattern[case]])
+			gen_short_form(args, decl, case, attachers[stress_pattern[case]],
+				dated)
 		end
 	end
 end
