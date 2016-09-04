@@ -274,6 +274,16 @@ function export.do_generate_forms(args, old, manual)
 		short_classes = {}
 		for _, decl_type in ipairs(rsplit(decl_types, ",")) do
 			local lemma, lemmatr = nom.split_russian_tr(lemma_and_tr)
+			-- if lemma ends with -ся, strip it and act as if suffix=ся given
+			-- (or rather, prepend ся to suffix)
+			local active_base = rmatch(lemma, "^(.*)ся$")
+			if active_base then
+				lemma = active_base
+				lemmatr = nom.strip_tr_ending(lemmatr, "ся")
+				args.real_suffix = nom.concat_paired_russian_tr({"ся"}, args.suffix)
+			else
+				args.real_suffix = args.suffix
+			end
 
 			-- Auto-detect actual decl type, and get short accent and overriding
 			-- short stem, if specified.
@@ -1482,7 +1492,8 @@ local function attach_with(args, suf, fun, short)
 				funval = {funval}
 			end
 			for _, x in ipairs(funval) do
-				table.insert(tbl, nom.concat_paired_russian_tr(x, args.suffix))
+				table.insert(tbl,
+					nom.concat_paired_russian_tr(x, args.real_suffix))
 			end
 			return tbl
 		else
