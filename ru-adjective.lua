@@ -854,7 +854,10 @@ end
 -- manual translit.
 detect_stem_and_accent_type = function(lemma, tr, decl)
 	local dated = false
-	if rfind(decl, "^[abcd*(]") then
+	-- If it looks like a short decl type, canonicalize. [abc] for types
+	-- a, b, c'', etc.; [d] for dated-*; [-] for - (no short forms); [*(] for
+	-- * and (1) and (2) modifiers, which might precede the letter.
+	if rfind(decl, "^[abcd*(-]") then
 		decl = ":" .. decl
 	end
 	splitvals = rsplit(decl, ":")
@@ -873,6 +876,9 @@ detect_stem_and_accent_type = function(lemma, tr, decl)
 	-- Resolve aliases
 	if decl then
 		decl = rsub(decl, "^ъ%-", "")
+	end
+	if short_accent == "-" then
+		short_accent = nil
 	end
 	short_accent = ine(short_accent)
 	short_stem = ine(short_stem)
