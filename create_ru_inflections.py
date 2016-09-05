@@ -297,6 +297,7 @@ skip_lemma_pages = [
 ]
 
 skip_form_pages = [
+    u"добытый" # has two variants which need to be split
 ]
 
 # Used to manually assign forms to lemmas when there are stress variants.
@@ -448,6 +449,26 @@ allow_defn_in_same_subsection = [
     (u"уголь", u"угль"),
     (u"умиление", u"умиленье"),
     (u"чёрт", u"чорт"),
+    # -стигнуть vs. -стичь
+    (u"достигнуть", u"достичь"),
+    (u"застигнуть", u"застичь"),
+    (u"настигнуть", u"настичь"),
+    (u"постигнуть", u"постичь"),
+    # Type 4a1a vs. type 1a: мерить
+    (u"измерить", u"измерять"),
+    (u"измериться", u"измеряться"),
+    (u"мерить", u"мерять"),
+    (u"обмерить", u"обмерять"),
+    (u"отмерить", u"отмерять"),
+    (u"примерить", u"примерять"),
+    (u"размерить", u"размерять"),
+    (u"смерить", u"смерять"),
+    # Type 4a1a vs. type 1a: мучить
+    (u"замучить", u"замучать"),
+    (u"замучиться", u"замучаться"),
+    (u"измучить", u"измучать"),
+    (u"мучить", u"мучать"),
+    (u"мучиться", u"мучаться"),
 ]
 
 def check_re_sub(pagemsg, action, refrom, reto, text, numsub=1, flags=0):
@@ -842,16 +863,33 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
 
     # 5. Synthesize declension template if needed.
     if is_adjectival_participle:
-      ",".join("%s%s" % (infl, "//%s" % infltr if infltr else "")
-          for infl, infltr in inflections)
       new_decl_template_parts = []
+      part_short_decls = []
       for infl, infltr in inflections:
-        new_decl_template_parts.append("{{ru-decl-adj|%s%s%s}}\n" % (
-          infl, "//%s" % infltr if infltr else "",
-          ("|a(2),c(2)|shorttail=*|notes=* Dated." if past_f_end_stressed else "|a(2)") if re.search(u"(е|а́|а|я́|я)нный$", infl) else
-          "|b(2)" if infl.endswith(u"ённый") else
-          "|c" if infl.endswith(u"тый") and past_f_end_stressed else
-          "|a" if re.search(u"[мт]ый$", infl) else ""))
+        part_short_decl = (
+          ("a(2),dated-c(2)" if past_f_end_stressed else "a(2)") if re.search(u"(е|а́|а|я́|я)нный$", infl) else
+          "b(2)" if infl.endswith(u"ённый") else
+          "c" if infl.endswith(u"тый") and past_f_end_stressed else
+          "a" if re.search(u"[мт]ый$", infl) else "-")
+        part_short_decls.append(part_short_decl)
+      # If all inflection variants have the same short declension class,
+      # we can combine into a single ru-decl-adj call; else we need to
+      # generate more than one. FIXME: In the latter case, we should maybe
+      # generate two POS sections.
+      if len(set(part_short_decls)) == 1:
+        if len(part_short_decls) > 1:
+          pagemsg("Combining multiple inflections %s into single ru-decl-adj" %
+              joined_infls_with_tr())
+        param1 = ",".join("%s%s" % (infl, "//%s" % infltr if infltr else "")
+          for infl, infltr in inflections)
+        new_decl_template_parts.append("{{ru-decl-adj|%s|%s}}\n" % (param1, part_short_decls[0]))
+      else:
+        if len(part_short_decls) > 1:
+          pagemsg("WARNING: Unable to combine multiple inflections %s into single ru-decl-adj because of differing short decls %s" %
+              joined_infls_with_tr(), " ".join(part_short_decls))
+        for part_short_decl, (infl, infltr) in zip(part_short_decl, inflections):
+          new_decl_template_parts.append("{{ru-decl-adj|%s%s|%s}}\n" % (
+            infl, "//%s" % infltr if infltr else "", part_short_decl))
       new_decl_template = "".join(new_decl_template_parts)
       newdecl = "\n====Declension====\n" + new_decl_template
       newdecll4 = "\n=====Declension=====\n" + new_decl_template
@@ -923,6 +961,17 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
         # Extract off trailing separator
         mm = re.match(r"^(.*?\n)(\n*--+\n*)$", sections[i], re.S)
         if mm:
+          # Note that this changes the number of sections, which is seemingly
+          # a problem because the for-loop above calculates the end point
+          # at the beginning of the loop, but is not actually a problem
+          # because we always break after processing the Russian section.
+          sections[i:i+1] = [mm.group(1), mm.group(2)]
+
+        # Split off categories at end
+        mm = re.match(r"^(.*?\n)(\n*(\[\[Category:[^\]]+\]\]\n*)*)$",
+            sections[i], re.S)
+        if mm:
+          # See comment above.
           sections[i:i+1] = [mm.group(1), mm.group(2)]
 
         if program_args.overwrite_page:
@@ -1381,7 +1430,9 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                 break
 
               # Insert participle declension if not present and term is an
-              # adjectival participle.
+              # adjectival participle. If declension already present, check
+              # whether it matches; if not, issue warning and/or correct it.
+              # Return true if inserted declension.
               def insert_part_decl_if_needed():
                 if not is_adjectival_participle:
                   return False
@@ -1401,6 +1452,46 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                   if newindent <= indentlevel:
                     break
                   if "==Declension==" in subsections[check_subsection]:
+                    # Found Declension subsection; check ru-decl-adj templates
+                    # in it to see if they match what we would insert
+                    decl_templates = []
+                    subsecparsed = blib.parse_text(subsections[check_subsection + 1])
+                    for t in subsecparsed.filter_templates():
+                      if unicode(t.name) == "ru-decl-adj":
+                        decl_templates.append(t)
+                    # If different numbers of existing vs. wanted decl
+                    # templates, exit with a warning
+                    if len(decl_templates) != len(new_decl_template_parts):
+                      pagemsg("WARNING: Found %s existing participial decl templates %s but want %s new decl templates %s" %
+                          (len(decl_templates),
+                          " ".join(unicode(t) for t in decl_templates),
+                          len(new_decl_template_parts),
+                          " ".join(new_decl_template_parts)))
+                      return False
+                    # Same number of existing vs. wanted decl templates;
+                    # see if they match, and if not, whether we can update
+                    # the short decl to make them match (we can convert from
+                    # a(2) to a(2),dated-c(2) and from empty to -)
+                    for k in xrange(len(decl_templates)):
+                      declt = decl_templates[k]
+                      newdeclt = blib.parse_text(new_decl_template_parts[k]).filter_templates()[0]
+                      if unicode(declt) != unicode(newdeclt):
+                        if getparam(declt, "1") == getparam(newdeclt, "1"):
+                          shortdecl = getparam(declt, "2")
+                          newshortdecl = getparam(newdeclt, "2")
+                          if (shortdecl == "a(2)" and newshortdecl == "a(2),dated-c(2)" or
+                              shortdecl == "" and newshortdecl == "-"):
+                            pagemsg("Updated participle short decl from %s to %s" %
+                                (shortdecl, newshortdecl))
+                            notes.append("updated participle short decl from %s to %s" %
+                                (shortdecl, newshortdecl))
+                            declt.add("2", newshortdecl)
+                            subsections[check_subsection + 1] = unicode(subsecparsed)
+                            sections[i] = "".join(subsections)
+                            continue
+                        pagemsg("WARNING: Existing decl %s and wanted decl %s differ and can't fix" %
+                          (unicode(declt), unicode(newdeclt)))
+
                     return False
                   check_subsection += 1
 
@@ -1558,8 +1649,9 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
             sections[i] = ''.join(subsections)
             return comment
 
-          # If participle, try to find an existing noun or adjective with the
-          # same headword to insert before. Insert before the first such one.
+          # If adjectival participle, try to find an existing noun or
+          # adjective with the same headword to insert before. Insert before
+          # the first such one.
           if is_adjectival_participle:
             insert_at = None
             for j in xrange(2, len(subsections), 2):
@@ -1567,12 +1659,30 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                 parsed = blib.parse_text(subsections[j])
                 for t in parsed.filter_templates():
                   if (unicode(t.name) in ["ru-adj", "ru-noun", "ru-proper noun", "ru-noun+", "ru-proper noun+"] and
-                      template_head_matches(t, inflections, "checking for existing noun with headword matching participle") and insert_at is None):
+                      template_head_matches(t, inflections, "checking for existing noun/adjective with headword matching adjectival participle") and insert_at is None):
                     insert_at = j - 1
 
             if insert_at is not None:
               comment = insert_new_text_before_section(insert_at,
                   "noun/adjective", "headword")
+              break
+
+          # If adverbial participle, try to find an existing adverb or
+          # preposition with the same headword to insert before. Insert before
+          # the first such one.
+          if is_adverbial_participle:
+            insert_at = None
+            for j in xrange(2, len(subsections), 2):
+              if re.match("^===+(Adverb|Preposition)===+", subsections[j - 1]):
+                parsed = blib.parse_text(subsections[j])
+                for t in parsed.filter_templates():
+                  if ((unicode(t.name) in ["ru-adv"] or unicode(t.name) == "head" and getparam(t, "1") == "ru" and getparam(t, "2") == "preposition") and
+                      template_head_matches(t, inflections, "checking for existing adverb/preposition with headword matching adverbial participle") and insert_at is None):
+                    insert_at = j - 1
+
+            if insert_at is not None:
+              comment = insert_new_text_before_section(insert_at,
+                  "adverb/preposition", "headword")
               break
 
           # If adjective form, try to find an existing participle form with
