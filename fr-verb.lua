@@ -18,6 +18,17 @@ end
 
 PAGENAME = PAGENAME or mw.title.getCurrentTitle().text
 
+-- Clone parent's args while also assigning nil to empty strings.
+local function clone_args(frame)
+	local args = {}
+	for pname, param in pairs(frame:getParent().args) do
+		if param == "" then args[pname] = nil
+		else args[pname] = param
+		end
+	end
+	return args
+end
+
 local etre = {
 	"aller",
 	"alterner",
@@ -1957,7 +1968,7 @@ local function auto(pagename)
 end
 
 function export.show(frame)
-	local args = frame:getParent().args
+	local args = clone_args(frame)
 	local stem = args[1] or ""
 	local typ = args[2] or ""
 	if typ == "" then typ = stem; stem = ""; end
@@ -1999,7 +2010,7 @@ function export.show(frame)
 		end
 	end
 	
-	if args.refl and args.refl ~= "" then data = m_core.refl(data) end
+	if args.refl then data = m_core.refl(data) end
 	
 	if etre[data.forms.inf] then
 		data.aux = "être"
@@ -2036,3 +2047,6 @@ function export.show(frame)
 end
 
 return export
+
+-- For Vim, so we get 4-space tabs
+-- vim: set ts=4 sw=4 noet:
