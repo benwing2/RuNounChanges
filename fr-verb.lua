@@ -3,12 +3,18 @@ local conj = {}
 local pron = {}
 local data = {}
 
+-- If enabled, compare this module with new version of module to make
+-- sure all conjugations and pronunciations are the same.
+local test_new_fr_verb_module = false
+
 local m_core = require("Module:fr-verb/core")
 local m_pron = require("Module:fr-verb/pron")
 local m_links = require("Module:links")
 local m_conj = require("Module:fr-conj")
 local m_fr_pron = require("Module:fr-pron")
 local lang = require("Module:languages").getByCode("fr")
+local ut = require("Module:utils")
+local m_debug = require("Module:debug")
 local IPA = function(str)
 	return require("Module:IPA").format_IPA(nil,str)
 end
@@ -18,16 +24,18 @@ end
 
 PAGENAME = PAGENAME or mw.title.getCurrentTitle().text
 
--- Clone parent's args while also assigning nil to empty strings.
-local function clone_args(frame)
-	local args = {}
-	for pname, param in pairs(frame:getParent().args) do
-		if param == "" then args[pname] = nil
-		else args[pname] = param
-		end
-	end
-	return args
-end
+local all_verb_props = {
+	"inf", "pp", "ppr",
+	"inf_nolink", "pp_nolink", "ppr_nolink",
+	"ind_p_1s", "ind_p_2s", "ind_p_3s", "ind_p_1p", "ind_p_2p", "ind_p_3p",
+	"ind_i_1s", "ind_i_2s", "ind_i_3s", "ind_i_1p", "ind_i_2p", "ind_i_3p",
+	"ind_ps_1s", "ind_ps_2s", "ind_ps_3s", "ind_ps_1p", "ind_ps_2p", "ind_ps_3p",
+	"ind_f_1s", "ind_f_2s", "ind_f_3s", "ind_f_1p", "ind_f_2p", "ind_f_3p",
+	"cond_p_1s", "cond_p_2s", "cond_p_3s", "cond_p_1p", "cond_p_2p", "cond_p_3p",
+	"sub_p_1s", "sub_p_2s", "sub_p_3s", "sub_p_1p", "sub_p_2p", "sub_p_3p",
+	"sub_pa_1s", "sub_pa_2s", "sub_pa_3s", "sub_pa_1p", "sub_pa_2p", "sub_pa_3p",
+	"imp_p_2s", "imp_p_1p", "imp_p_2p"
+}
 
 local etre = {
 	"aller",
@@ -88,6 +96,11 @@ end
 
 local function link(term, alt)
 	return m_links.full_link({lang = lang, term = term, alt = alt}, "term")
+end
+
+local function track(page)
+    m_debug.track("fr-verb/" .. page)
+    return true
 end
 
 conj["er"] = function()
@@ -1967,8 +1980,10 @@ local function auto(pagename)
 	return stem,typ
 end
 
-function export.show(frame)
-	local args = clone_args(frame)
+-- This is meant to be invoked by the module itself, or possibly by a
+-- different version of the module (for comparing changes to see whether
+-- they have an effect on conjugations or pronunciations).
+function export.do_generate_forms(args)
 	local stem = args[1] or ""
 	local typ = args[2] or ""
 	if typ == "" then typ = stem; stem = ""; end
@@ -2010,7 +2025,7 @@ function export.show(frame)
 		end
 	end
 	
-	if args.refl then data = m_core.refl(data) end
+	if args.refl and args.refl ~= "" then data = m_core.refl(data) end
 	
 	if etre[data.forms.inf] then
 		data.aux = "être"
@@ -2028,6 +2043,53 @@ function export.show(frame)
 	data.forms.ppr_nolink = data.forms.ppr_nolink or data.forms.ppr
 	data.forms.pp_nolink = data.forms.pp_nolink or data.forms.pp
 	
+	return data
+end
+
+-- The main entry point.
+-- This is the only function that can be invoked from a template.
+function export.show(frame)
+	local args = frame:getParent().args
+	local args_clone
+	if test_new_fr_verb_module then
+		-- clone in case export.do_generate_forms() modifies args
+		-- (I don't think it does currently)
+		args_clone = mw.clone(args)
+	end
+
+	local data = export.do_generate_forms(args)
+
+	-- Test code to compare existing module to new one.
+	if test_new_fr_verb_module then
+		local m_new_fr_verb = require("Module:User:Benwing2/fr-verb")
+		local newdata = m_new_fr_verb.do_generate_forms(args_clone)
+		local difconj = false
+		for arraytype = 1, 2 do
+			local arrayname = arraytype == 1 and "forms" or "prons"
+			local array = data[arrayname]
+			local newarray = newdata[arrayname]
+			for _, prop in ipairs(all_verb_props) do
+				local val = array[prop]
+				local newval = newarray[prop]
+				-- deal with possible impedance mismatch between plain string
+				-- and list
+				if type(val) == "string" then val = {val} end
+				if type(newval) == "string" then newval = {newval} end
+				if not ut.equals(val, newval) then
+					-- Uncomment this to display the particular case and
+					-- differing forms.
+					--error(arrayname .. "." .. prop .. " " .. (val and table.concat(val, ",") or "nil") .. " || " .. (newval and table.concat(newval, ",") or "nil"))
+					difconj = true
+					break
+				end
+			end
+			if difconj then
+				break
+			end
+		end
+		track(difconj and "different-conj" or "same-conj")
+	end
+
 	data = m_core.link(data)
 	
 	local category = ""
