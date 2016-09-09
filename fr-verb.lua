@@ -1,6 +1,13 @@
+-- Table of exported functions.
 local export = {}
+-- Table of conjugation functions. The keys are verbal suffixes (e.g. "ir",
+-- "iller") and the values are no-argument functions that apply to verbs whose
+-- infinitive contains that suffix, unless the verb also matches a conjugation
+-- corresponding to a longer suffix. The values take all info on the verb
+-- from 'data' (see below) and set properties of 'data' to indicate the
+-- verb forms and pronunciation.
 local conj = {}
-local pron = {}
+-- Table of data describing a given verb and its forms.
 local data = {}
 
 -- If enabled, compare this module with new version of module to make
@@ -39,8 +46,6 @@ end
 local function pron(str, combining)
 	return m_fr_pron.show(str, "v", nil, combining)
 end
-
-PAGENAME = PAGENAME or mw.title.getCurrentTitle().text
 
 local all_verb_props = {
 	"inf", "pp", "ppr",
@@ -151,6 +156,7 @@ end
 conj["er"] = function()
 	if data.stem == "all" then
 		data.stem = ""
+		data.pronstem = strip_ending(data.pron, "aller") or data.stem
 		conj["irreg-aller"]()
 		data.forms.inf = "aller"
 		
@@ -160,9 +166,8 @@ conj["er"] = function()
 	else
 		data = m_core.make_ind_p_e(data, "")
 		
-		local pronstem = strip_ending(data.pron, "er") or data.stem
-		local stem = pron(pronstem .. "e")
-		local stem2 = pron(pronstem .. "i")
+		local stem = pron(data.pronstem .. "e")
+		local stem2 = pron(data.pronstem .. "i")
 		
 		stem2 = rsub(stem2, ".$","")
 		
@@ -175,9 +180,8 @@ end
 conj["ier"] = function()
 	data = m_core.make_ind_p_e(data, "i")
 	
-	local pronstem = strip_ending(data.pron, "er") or data.stem .. "i"
-	local stem = pron(pronstem)
-	local stem2 = pron(pronstem .. "er")
+	local stem = pron(data.pronstem)
+	local stem2 = pron(data.pronstem .. "er")
 	local stem3 = stem .. "."
 	
 	stem2 = rsub(stem2,".$","")
@@ -196,9 +200,8 @@ end
 conj["iller"] = function()
 	data = m_core.make_ind_p_e(data, "ill")
 	
-	local pronstem = strip_ending(data.pron, "iller") or data.stem
-	local stem = pron(pronstem .. "ille")
-	local stem2 = pron(pronstem .. "iller")
+	local stem = pron(data.pronstem .. "ille")
+	local stem2 = pron(data.pronstem .. "iller")
 	
 	stem2 = rsub(stem2,".$","")
 	
@@ -210,8 +213,8 @@ end
 conj["uer"] = function()
 	data = m_core.make_ind_p_e(data, "u")
 	
-	local stem = pron((data.pronstem or data.stem) .. "ue")
-	local stem2 = pron((data.pronstem or data.stem) .. "uer")
+	local stem = pron(data.pronstem .. "ue")
+	local stem2 = pron(data.pronstem .. "uer")
 	
 	stem2 = rsub(stem2,".$","")
 	
@@ -230,7 +233,7 @@ end
 conj["éer"] = function()
 	data = m_core.make_ind_p_e(data, "é")
 	
-	local stem = pron((data.pronstem or data.stem) .. "é")
+	local stem = pron(data.pronstem .. "é")
 	
 	data = m_pron.er(data, stem, stem..".")
 	
@@ -249,8 +252,8 @@ conj["cer"] = function()
 	
 	data.notes = "This verb is part of a group of " .. link("-er") .. " verbs for which ‘c’ is softened to a ‘ç’ before the vowels ‘a’ and ‘o’."
 	
-	local stem = pron((data.pronstem or data.stem) .. "ce")
-	local stem2 = pron((data.pronstem or data.stem) .. "ci")
+	local stem = pron(data.pronstem .. "ce")
+	local stem2 = pron(data.pronstem .. "ci")
 	
 	stem2 = rsub(stem2,".$","")
 	
@@ -268,8 +271,8 @@ conj["ger"] = function()
 	data.notes = data.notes .. link(data.stem == "nei" and "bouger" or "neiger") .. " and "
 	data.notes = data.notes .. link(data.stem == "man" and "ranger" or "manger") .. "."
 	
-	local stem = pron((data.pronstem or data.stem) .. "ge")
-	local stem2 = pron((data.pronstem or data.stem) .. "gi")
+	local stem = pron(data.pronstem .. "ge")
+	local stem2 = pron(data.pronstem .. "gi")
 	
 	stem2 = rsub(stem2,".$","")
 	
@@ -281,7 +284,7 @@ end
 conj["ayer"] = function()
 	data = m_core.make_ind_p_e(data, "ay/ai", "ay", "ay")
 	
-	local root = pron((data.pronstem or data.stem) .. "a")
+	local root = pron(data.pronstem .. "a")
 	root = rsub(root,".$","")
 	
 	local stem = root .. "ɛ"
@@ -302,7 +305,7 @@ end
 conj["eyer"] = function()
 	data = m_core.make_ind_p_e(data, "ey")
 	
-	local root = pron((data.pronstem or data.stem) .. "i")
+	local root = pron(data.pronstem .. "i")
 	root = rsub(root,".$","")
 	
 	local stem = root .. "ɛj"
@@ -318,7 +321,7 @@ end
 conj["yer"] = function()
 	data = m_core.make_ind_p_e(data, "i", "y", "y")
 	
-	local stem = pron((data.pronstem or data.stem) .. "i")
+	local stem = pron(data.pronstem .. "i")
 	
 	data = m_pron.er(data, stem, stem..".j")
 	
@@ -332,8 +335,8 @@ conj["xxer"] = function(consonant)
 
 	data = m_core.make_ind_p_e(data, consonant..consonant, consonant, consonant)
 	
-	local root = pron((data.pronstem or data.stem) .. consonant .. consonant .. "e")
-	local root2 = pron((data.pronstem or data.stem) .. consonant .. "i")
+	local root = pron(data.pronstem .. consonant .. consonant .. "e")
+	local root2 = pron(data.pronstem .. consonant .. "i")
 	
 	root2 = rsub(root2,".$","")
 	
@@ -356,8 +359,8 @@ conj["e-er"] = function(consonant)
 	
 	data = m_core.make_ind_p_e(data, stem2, stem, stem)
 	
-	local root = pron((data.pronstem or data.stem) .. stem2 .. "e")
-	local root2 = pron((data.pronstem or data.stem) .. stem .. "i")
+	local root = pron(data.pronstem .. stem2 .. "e")
+	local root2 = pron(data.pronstem .. stem .. "i")
 	
 	root2 = rsub(root2,".$","")
 	
@@ -371,8 +374,8 @@ end
 conj["ecer"] = function()
 	data = m_core.make_ind_p_e(data, "èc", "eç", "ec")
 	
-	local root = pron((data.pronstem or data.stem) .. "èce")
-	local root2 = pron((data.pronstem or data.stem) .. "eci")
+	local root = pron(data.pronstem .. "èce")
+	local root2 = pron(data.pronstem .. "eci")
 	
 	root2 = rsub(root2,".$","")
 	
@@ -386,8 +389,8 @@ end
 conj["eger"] = function()
 	data = m_core.make_ind_p_e(data, "èg", "ege", "eg")
 	
-	local root = pron((data.pronstem or data.stem) .. "ège")
-	local root2 = pron((data.pronstem or data.stem) .. "egi")
+	local root = pron(data.pronstem .. "ège")
+	local root2 = pron(data.pronstem .. "egi")
 	
 	root2 = rsub(root2,".$","")
 	
@@ -424,8 +427,8 @@ conj["é-er"] = function(consonant)
 	data = m_core.make_ind_f(data, {stem2 .. "er", stem .. "er"})
 	
 	
-	local root = pron((data.pronstem or data.stem) .. stem2 .. "e")
-	local root2 = pron((data.pronstem or data.stem) .. stem .. "i")
+	local root = pron(data.pronstem .. stem2 .. "e")
+	local root2 = pron(data.pronstem .. stem .. "i")
 	
 	root2 = rsub(root2,".$","")
 	
@@ -445,8 +448,8 @@ conj["écer"] = function()
 	data = m_core.make_ind_p_e(data, "èc", "éç", "éc")
 	data = m_core.make_ind_f(data, {"écer", "ècer"})
 	
-	local root = pron((data.pronstem or data.stem) .. "èce")
-	local root2 = pron((data.pronstem or data.stem) .. "éci")
+	local root = pron(data.pronstem .. "èce")
+	local root2 = pron(data.pronstem .. "éci")
 	
 	root2 = rsub(root2,".$","")
 	
@@ -473,8 +476,8 @@ conj["éger"] = function()
 	data = m_core.make_ind_f(data, {"éger", "èger"})
 	
 	
-	local root = pron((data.pronstem or data.stem) .. "ège")
-	local root2 = pron((data.pronstem or data.stem) .. "égi")
+	local root = pron(data.pronstem .. "ège")
+	local root2 = pron(data.pronstem .. "égi")
 	
 	root2 = rsub(root2,".$","")
 	
@@ -486,9 +489,11 @@ conj["éger"] = function()
 end
 
 conj["ir"] = function()
-	local ending = usub(data.stem, -1, -1)
+	local ending
 	if ir_s[data.stem.."ir"] then
+		ending = usub(data.stem, -1, -1)
 		data.stem = usub(data.stem, 1, -2)
+		data.pronstem = strip_ending(data.pron, ending .. "ir") or data.stem
 		data = m_core.make_ind_p(data, "", ending)
 		data = m_core.make_ind_f(data, ending.."ir")
 		
@@ -519,12 +524,12 @@ conj["ir"] = function()
 	
 	local stem, stem2, stem3, stem4
 	if ir_s[data.stem..ending.."ir"] then
-		stem = pron((data.pronstem or data.stem), true)
+		stem = pron(data.pronstem, true)
 		stem2 = stem .. "." .. ending
 		stem3 = stem .. ending
 		stem4 = stem .. "." .. ending .. "i"
 	else
-		stem = pron((data.pronstem or data.stem) .. "i")
+		stem = pron(data.pronstem .. "i")
 		stem2 = stem .. ".s"
 		stem3 = stem .. "s"
 		stem4 = stem
@@ -541,7 +546,7 @@ conj["ïr"] = function()
 	data = m_core.make_ind_ps(data, "ï")
 	
 	local stem, stem2, stem3, stem4
-	stem = pron((data.pronstem or data.stem) .. "ï")
+	stem = pron(data.pronstem .. "ï")
 	stem2 = stem .. ".s"
 	stem3 = stem .. "s"
 	
@@ -562,10 +567,10 @@ conj["haïr"] = function()
 	data = m_core.make_ind_ps(data, "haï")
 	
 	local stem, stem2, stem3, stem4
-	stem = pron((data.pronstem or data.stem) .. "haï")
+	stem = pron(data.pronstem .. "haï")
 	stem2 = stem .. ".s"
 	stem3 = stem .. "s"
-	stem4 = pron((data.pronstem or data.stem) .. "hais")
+	stem4 = pron(data.pronstem .. "hais")
 	
 	data.prons.ppr = stem2 .. "ɑ̃"
 	data.prons.pp = stem
@@ -585,12 +590,12 @@ conj["ouïr"] = function()
 	data = m_core.make_ind_ps(data, "ouï")
 	data = m_core.make_ind_f(data, "ouïr/oir/orr")
 	
-	local stem11 = pron((data.pronstem or data.stem) .. "oui")
+	local stem11 = pron(data.pronstem .. "oui")
 	local stem12 = stem11 .. ".s"
 	local stem13 = stem11 .. "s"
-	local stem21 = pron((data.pronstem or data.stem) .. "oi")
-	local stem22 = pron((data.pronstem or data.stem) .. "ɔ") .. ".j"
-	local stem31 = pron((data.pronstem or data.stem) .. "ɔ")
+	local stem21 = pron(data.pronstem .. "oi")
+	local stem22 = pron(data.pronstem .. "ɔ") .. ".j"
+	local stem31 = pron(data.pronstem .. "ɔ")
 	
 	data = m_pron.ind_p(data, stem11.."/"..stem21, stem12.."/"..stem22, stem13.."/"..stem21)
 	data = m_pron.ind_ps(data, stem11)
@@ -609,13 +614,13 @@ conj["asseoir"] = function()
 	data = m_core.make_ind_ps(data, "assi")
 	data = m_core.make_ind_f(data, "assoir/assiér")
 
-	local stem11 = pron((data.pronstem or data.stem) .. "assoi")
+	local stem11 = pron(data.pronstem .. "assoi")
 	local stem12 = stem11 .. ".j"
 	local stem13 = stem11
-	local stem21 = pron((data.pronstem or data.stem) .. "assié")
-	local stem22 = pron((data.pronstem or data.stem) .. "assei") .. ".j"
-	local stem23 = pron((data.pronstem or data.stem) .. "asseye")
-	local stem31 = pron((data.pronstem or data.stem) .. "assi")
+	local stem21 = pron(data.pronstem .. "assié")
+	local stem22 = pron(data.pronstem .. "assei") .. ".j"
+	local stem23 = pron(data.pronstem .. "asseye")
+	local stem31 = pron(data.pronstem .. "assi")
 	
 	data = m_pron.ind_p(data, stem11.."/"..stem21, stem12.."/"..stem22, stem13.."/"..stem23)
 	data = m_pron.ind_ps(data,stem31)
@@ -630,9 +635,9 @@ conj["surseoir"] = function()
 	data = m_core.make_ind_p(data, "sursoi", "sursoy", "sursoi")
 	data = m_core.make_ind_ps(data, "sursi")
 	
-	local stem = pron((data.pronstem or data.stem) .. "sursoi")
+	local stem = pron(data.pronstem .. "sursoi")
 	local stem2 = stem .. ".j"
-	local stem3 = pron((data.pronstem or data.stem) .. "sursi")
+	local stem3 = pron(data.pronstem .. "sursi")
 	local stem4 = stem .. "."
 	
 	data = m_pron.ind_p(data, stem, stem2, stem)
@@ -684,7 +689,7 @@ conj["bouillir"] = function()
 	data = m_core.make_ind_p(data, "bou", "bouill")
 	data = m_core.make_ind_ps(data, "bouilli")
 	
-	local stem = pron((data.pronstem or data.stem) .. "bou", true)
+	local stem = pron(data.pronstem .. "bou", true)
 	local stem2 = stem .. ".j"
 	local stem3 = stem .. "j"
 	local stem4 = stem .. ".ji"
@@ -705,7 +710,7 @@ conj["enir"] = function()
 	data = m_core.make_ind_ps(data, "in")
 	data = m_core.make_ind_f(data, "iendr")
 	
-	local root = rsub(pron((data.pronstem or data.stem) .. "é"), "e$", "")
+	local root = rsub(pron(data.pronstem .. "é"), "e$", "")
 	
 	local stem = root .. "jɛ̃"
 	local stem2 = root .. "ə.n"
@@ -741,8 +746,8 @@ conj["rir"] = function()
 	data = m_core.make_ind_ps(data, "ri")
 	data = m_core.make_ind_f(data, "rir")
 	
-	local root = pron((data.pronstem or data.stem), true)
-	local root2 = rsub(pron((data.pronstem or data.stem).."a", true),"a$","")
+	local root = pron(data.pronstem, true)
+	local root2 = rsub(pron(data.pronstem.."a", true),"a$","")
 	
 	local stem = root .. "ʁ"
 	local stem2 = root2 .. "ʁ"
@@ -763,7 +768,7 @@ conj["quérir"] = function()
 	data = m_core.make_ind_ps(data, "qui")
 	data = m_core.make_ind_f(data, "querr")
 	
-	local root = rsub(pron((data.pronstem or data.stem) .. "qué"), "e$", "")
+	local root = rsub(pron(data.pronstem .. "qué"), "e$", "")
 	
 	local stem = root .. "jɛʁ"
 	local stem2 = root .. "e.ʁ"
@@ -780,7 +785,7 @@ conj["aillir"] = function()
 	data = m_core.make_ind_ps(data, "ailli")
 	data = m_core.make_ind_f(data, "aillir")
 	
-	local root = pron((data.pronstem or data.stem) .. "a")
+	local root = pron(data.pronstem .. "a")
 
 	local stem = root .. "j"
 	local stem2 = root .. ".j"
@@ -798,7 +803,7 @@ conj["chauvir"] = function()
 	data = m_core.make_ind_p(data, "chauvi", "chauv/chauviss")
 	data = m_core.make_ind_ps(data, "chauvi")
 
-	local root = pron((data.pronstem or data.stem) .. "chau")
+	local root = pron(data.pronstem .. "chau")
 	
 	local stem = root .. ".vi"
 	local stem2 = root .. ".v"
@@ -821,10 +826,10 @@ conj["choir"] = function()
 	data.forms.imp_p_1p = "—"
 	data.forms.imp_p_2p = "—"
 	
-	local stem = pron((data.pronstem or data.stem) .. "choi")
+	local stem = pron(data.pronstem .. "choi")
 	local stem2 = stem .. ".j"
-	local stem3 = pron((data.pronstem or data.stem) .. "chu")
-	local stem4 = pron((data.pronstem or data.stem) .. "chè")
+	local stem3 = pron(data.pronstem .. "chu")
+	local stem4 = pron(data.pronstem .. "chè")
 	
 	data = m_pron.ind_p(data, stem, stem2)
 	data = m_pron.ind_ps(data, stem3)
@@ -866,7 +871,7 @@ conj["cueillir"] = function()
 	data = m_core.make_ind_f(data, "cueiller")
 	data.forms.pp = "cueilli"
 	
-	local root = rsub(pron((data.pronstem or data.stem) .. "cueille"),"j$","")
+	local root = rsub(pron(data.pronstem .. "cueille"),"j$","")
 
 	local stem = root .. "j"
 	local stem2 = root .. ".j"
@@ -890,7 +895,7 @@ conj["courir"] = function()
 	data = m_core.make_ind_f(data, "courr")
 	data.forms.pp = "couru"
 	
-	local root = pron((data.pronstem or data.stem) .. "cou")
+	local root = pron(data.pronstem .. "cou")
 
 	local stem = root .. "ʁ"
 	local stem2 = root .. ".ʁ"
@@ -946,8 +951,8 @@ conj["fuir"] = function()
 	data = m_core.make_ind_p(data, "fui", "fuy", "fui")
 	data = m_core.make_ind_ps(data, "fui")
 	
-	local stem = pron((data.pronstem or data.stem) .. "fui")
-	local stem2 = pron((data.pronstem or data.stem) .. "fu") .. ".j"
+	local stem = pron(data.pronstem .. "fui")
+	local stem2 = pron(data.pronstem .. "fu") .. ".j"
 	
 	data.prons.pp = stem
 	
@@ -969,7 +974,7 @@ conj["gésir"] = function()
 	data.forms.imp_p_1p = "—"
 	data.forms.imp_p_2p = "—"
 	
-	local stem = pron((data.pronstem or data.stem) .. "gi")
+	local stem = pron(data.pronstem .. "gi")
 	local stem2 = stem .. ".z"
 	local stem3 = stem .. "z"
 	
@@ -983,9 +988,9 @@ conj["re"] = function()
 	data.forms.ind_p_3s = ""
 	data = m_core.make_ind_ps(data, "i")
 	
-	local stem = pron((data.pronstem or data.stem))
-	local stem2 = rsub(pron((data.pronstem or data.stem) .. "a"),"a$","")
-	local stem3 = pron((data.pronstem or data.stem), true)
+	local stem = pron(data.pronstem)
+	local stem2 = rsub(pron(data.pronstem .. "a"),"a$","")
+	local stem3 = pron(data.pronstem, true)
 	local stem4 = stem2 .. "i"
 	
 	data.prons.pp = stem2 .. "y"
@@ -1011,9 +1016,9 @@ conj["cre"] = function()
 	data.forms.ind_p_3s = "c"
 	data = m_core.make_ind_ps(data, "qui")
 	
-	local stem = pron((data.pronstem or data.stem) .. "c")
-	local stem2 = rsub(pron((data.pronstem or data.stem) .. "ca"),"a$","")
-	local stem3 = pron((data.pronstem or data.stem) .. "c", true)
+	local stem = pron(data.pronstem .. "c")
+	local stem2 = rsub(pron(data.pronstem .. "ca"),"a$","")
+	local stem3 = pron(data.pronstem .. "c", true)
 	local stem4 = stem2 .. "i"
 
 	data.prons.pp = stem2 .. "y"
@@ -1028,7 +1033,7 @@ conj["crire"] = function()
 	data = m_core.make_ind_ps(data, "crivi")
 	data.forms.pp = "crit"
 	
-	local stem = pron((data.pronstem or data.stem) .. "cri")
+	local stem = pron(data.pronstem .. "cri")
 	local stem2 = stem .. ".v"
 	local stem3 = stem .. "v"
 	local stem4 = stem .. ".vi"
@@ -1046,7 +1051,7 @@ conj["uire"] = function()
 	data = m_core.make_ind_p(data, "ui", "uis")
 	data = m_core.make_ind_ps(data, "uisi")
 	
-	local stem = pron((data.pronstem or data.stem) .. "ui")
+	local stem = pron(data.pronstem .. "ui")
 	local stem2 = stem .. ".z"
 	local stem3 = stem .. "z"
 	local stem4 = stem .. ".zi"
@@ -1066,10 +1071,10 @@ conj["aître"] = function()
 	data = m_core.make_ind_ps(data, "u")
 	data = m_core.make_ind_f(data, "aîtr")
 	
-	local stem = pron((data.pronstem or data.stem) .. "ais")
+	local stem = pron(data.pronstem .. "ais")
 	local stem2 = stem .. ".s"
 	local stem3 = stem .. "s"
-	local stem4 = pron((data.pronstem or data.stem) .. "u")
+	local stem4 = pron(data.pronstem .. "u")
 	
 	data = m_pron.ind_p(data, stem, stem2, stem3)
 	data = m_pron.ind_ps(data, stem4)
@@ -1083,10 +1088,10 @@ conj["aitre"] = function()
 	data = m_core.make_ind_ps(data, "u")
 	data = m_core.make_ind_f(data, "aitr")
 	
-	local stem = pron((data.pronstem or data.stem) .. "ais")
+	local stem = pron(data.pronstem .. "ais")
 	local stem2 = stem .. ".s"
 	local stem3 = stem .. "s"
-	local stem4 = pron((data.pronstem or data.stem) .. "u")
+	local stem4 = pron(data.pronstem .. "u")
 	
 	data = m_pron.ind_p(data, stem, stem2, stem3)
 	data = m_pron.ind_ps(data, stem4)
@@ -1100,10 +1105,10 @@ conj["oître"] = function()
 	data.forms.ind_p_3s = "oît"
 	data = m_core.make_ind_ps(data, "u")
 	
-	local stem = pron((data.pronstem or data.stem) .. "ais")
+	local stem = pron(data.pronstem .. "ais")
 	local stem2 = stem .. ".s"
 	local stem3 = stem .. "s"
-	local stem4 = pron((data.pronstem or data.stem) .. "u")
+	local stem4 = pron(data.pronstem .. "u")
 	
 	data = m_pron.ind_p(data, stem, stem2, stem3)
 	data = m_pron.ind_ps(data, stem4)
@@ -1117,8 +1122,8 @@ conj["indre"] = function()
 	data = m_core.make_ind_ps(data, "igni")
 	data = m_core.make_ind_f(data, "indr")
 	
-	local root = pron((data.pronstem or data.stem) .. "in")
-	local root2 = rsub(pron((data.pronstem or data.stem) .. "ine"), "n$", "")
+	local root = pron(data.pronstem .. "in")
+	local root2 = rsub(pron(data.pronstem .. "ine"), "n$", "")
 	
 	local stem = root
 	local stem2 = root2 .. ".ɲ"
@@ -1141,7 +1146,7 @@ conj["clure"] = function()
 		data.notes = "This verb is one of a few verbs in ''-clure'' where the past participle is in ''-us(e)'' instead of ''-u(e)''."
 	end
 	
-	local stem = pron((data.pronstem or data.stem) .. "clu")
+	local stem = pron(data.pronstem .. "clu")
 	local stem2 = stem .. "."
 	
 	data = m_pron.ind_p(data, stem, stem2)
@@ -1154,7 +1159,7 @@ conj["braire"] = function()
 	data = m_core.make_ind_p(data, "brai", "bray", "brai")
 	data = m_core.make_ind_ps_a(data, "bray")
 	
-	local stem = pron((data.pronstem or data.stem), true) .. "bʁɛ"
+	local stem = pron(data.pronstem, true) .. "bʁɛ"
 	data.prons.pp = stem
 	local stem2 = stem .. ".j"
 	local stem3 = stem .. "."
@@ -1175,10 +1180,10 @@ conj["clore"] = function()
 	data = m_core.make_ind_i(data, "—")
 	data = m_core.make_ind_ps(data, "—")
 	
-	local stem = pron((data.pronstem or data.stem) .. "clo")
+	local stem = pron(data.pronstem .. "clo")
 	local stem2 = stem .. ".z"
 	local stem3 = stem .. "z"
-	local stem4 = pron((data.pronstem or data.stem) .. "clɔ") .. "."
+	local stem4 = pron(data.pronstem .. "clɔ") .. "."
 	
 	data.prons.pp = stem
 	
@@ -1190,7 +1195,7 @@ conj["confire"] = function()
 	data = m_core.make_ind_p(data, "confi", "confis")
 	data = m_core.make_ind_ps(data, "confi")
 	
-	local stem = pron((data.pronstem or data.stem) .. "confi")
+	local stem = pron(data.pronstem .. "confi")
 	local stem2 = stem .. ".z"
 	local stem3 = stem .. "z"
 	local stem4 = stem .. "."
@@ -1215,7 +1220,7 @@ conj["coudre"] = function()
 	data.forms.ind_p_3s = "coud"
 	data = m_core.make_ind_ps(data, "cousi")
 	
-	local stem = pron((data.pronstem or data.stem) .. "cou",true)
+	local stem = pron(data.pronstem .. "cou",true)
 	local stem2 = stem .. ".z"
 	local stem3 = stem .. "z"
 	local stem4 = stem .. ".zi"
@@ -1232,9 +1237,9 @@ conj["croire"] = function()
 	data = m_core.make_ind_p(data, "croi", "croy", "croi")
 	data = m_core.make_ind_ps(data, "cru")
 	
-	local stem = pron((data.pronstem or data.stem) .. "croi")
+	local stem = pron(data.pronstem .. "croi")
 	local stem2 = stem .. ".j"
-	local stem3 = pron((data.pronstem or data.stem) .. "cru")
+	local stem3 = pron(data.pronstem .. "cru")
 	
 	data = m_pron.ind_ps(data, stem, stem2)
 	data = m_pron.ind_ps(data, stem3)
@@ -1255,10 +1260,10 @@ conj["croitre"] = function()
 		data = m_core.make_ind_ps(data, "cru")
 	end
 	
-	local stem = pron((data.pronstem or data.stem) .. "croi")
+	local stem = pron(data.pronstem .. "croi")
 	local stem2 = stem .. ".s"
 	local stem3 = stem .. "s"
-	local stem4 = pron((data.pronstem or data.stem) .. "cru")
+	local stem4 = pron(data.pronstem .. "cru")
 	local stem5 = stem .. ".t"
 	
 	data = m_pron.ind_p(data, stem, stem2, stem3)
@@ -1281,10 +1286,10 @@ conj["croître"] = function()
 	data.forms.ind_ps_2p = "crûtes"
 	data.forms.sub_pa_3s = "crût"
 	
-	local stem = pron((data.pronstem or data.stem) .. "croi")
+	local stem = pron(data.pronstem .. "croi")
 	local stem2 = stem .. ".s"
 	local stem3 = stem .. "s"
-	local stem4 = pron((data.pronstem or data.stem) .. "cru")
+	local stem4 = pron(data.pronstem .. "cru")
 	local stem5 = stem .. ".t"
 	
 	data = m_pron.ind_p(data, stem, stem2, stem3)
@@ -1298,7 +1303,7 @@ conj["foutre"] = function()
 	data = m_core.make_ind_p(data, "fou", "fout")
 	data = m_core.make_ind_ps(data, "fouti")
 	
-	local stem = pron((data.pronstem or data.stem) .. "fou")
+	local stem = pron(data.pronstem .. "fou")
 	local stem2 = stem .. ".t"
 	local stem3 = stem .. "t"
 	local stem4 = stem .. ".ti"
@@ -1317,7 +1322,7 @@ conj["soudre"] = function()
 	data = m_core.make_ind_ps(data, "solu")
 	data = m_core.make_sub_pa(data, "—")
 	
-	local root = rsub(pron((data.pronstem or data.stem) .. "sou"),"u$","")
+	local root = rsub(pron(data.pronstem .. "sou"),"u$","")
 
 	local stem = root .. "u"
 	local stem2 = root .. "ɔl.v"
@@ -1339,7 +1344,7 @@ conj["voir"] = function()
 	data = m_core.make_ind_ps(data, "vi")
 	data = m_core.make_ind_f(data, "verr")
 	
-	local root = rsub(pron((data.pronstem or data.stem) .. "vou"),"u$","")
+	local root = rsub(pron(data.pronstem .. "vou"),"u$","")
 
 	local stem = root .. "wa"
 	local stem2 = root .. "wa.j"
@@ -1358,7 +1363,7 @@ conj["cevoir"] = function()
 	data = m_core.make_ind_ps(data, "çu")
 	data = m_core.make_ind_f(data, "cevr")
 	
-	local root = rsub(pron((data.pronstem or data.stem) .. "ci"),"i$","")
+	local root = rsub(pron(data.pronstem .. "ci"),"i$","")
 
 	local stem = root .. "wa"
 	local stem2 = root .. "ə.v"
@@ -1387,7 +1392,7 @@ conj["battre"] = function()
 	data.forms.ind_p_3s = "bat"
 	data = m_core.make_ind_ps(data, "batti")
 	
-	local root = pron((data.pronstem or data.stem) .. "ba")
+	local root = pron(data.pronstem .. "ba")
 
 	local stem = root
 	local stem2 = root .. ".t"
@@ -1421,10 +1426,10 @@ conj["lire"] = function()
 	data = m_core.make_ind_p(data, "li", "lis")
 	data = m_core.make_ind_ps(data, "lu")
 	
-	local stem = data.pron((data.pronstem or data.stem) .. "li")
+	local stem = data.pron(data.pronstem .. "li")
 	local stem2 = stem .. ".z"
 	local stem3 = stem .. "z"
-	local stem4 = data.pron((data.pronstem or data.stem) .. "lu")
+	local stem4 = data.pron(data.pronstem .. "lu")
 	local stem5 = stem .. "."
 	
 	data = m_pron.ind_p(data, stem, stem2, stem3)
@@ -1439,7 +1444,7 @@ conj["luire"] = function()
 	data = m_core.make_sub_pa(data, "luisi")
 	data.forms.ind_ps_3s = "luit"
 	
-	local stem = pron((data.pronstem or data.stem) .. "lui")
+	local stem = pron(data.pronstem .. "lui")
 	local stem2 = stem .. ".z"
 	local stem3 = stem .. "z"
 	local stem4 = stem .. "/" .. stem2 .. "i"
@@ -1466,7 +1471,7 @@ conj["maudire"] = function()
 	data = m_core.make_ind_p("maudi", "maudiss")
 	data = m_core.make_ind_ps("maudi")
 	
-	local stem = pron((data.pronstem or data.stem) .. "maudi")
+	local stem = pron(data.pronstem .. "maudi")
 	local stem2 = stem .. ".s"
 	local stem3 = stem .. "s"
 	local stem4 = stem .. "."
@@ -1492,7 +1497,7 @@ conj["mettre"] = function()
 	data.forms.ind_p_3s = "met"
 	data = m_core.make_ind_ps(data, "mi")
 	
-	local root = rsub(pron((data.pronstem or data.stem) .. "ma"), "a$", "")
+	local root = rsub(pron(data.pronstem .. "ma"), "a$", "")
 
 	local stem = root .. "ɛ"
 	local stem2 = root .. "ɛ.t"
@@ -1510,7 +1515,7 @@ conj["moudre"] = function()
 	
 	data.forms.ind_p_3s = "moud"
 	
-	local stem = pron((data.pronstem or data.stem) .. "mou")
+	local stem = pron(data.pronstem .. "mou")
 	local stem2 = stem .. ".l"
 	local stem3 = stem .. "l"
 	local stem4 = stem .. ".ly"
@@ -1530,10 +1535,10 @@ conj["mouvoir"] = function()
 	data = m_core.make_ind_ps(data, "mu")
 	data = m_core.make_ind_f(data, "mouvr")
 	
-	local stem = pron((data.pronstem or data.stem) .. "meu")
-	local stem2 = pron((data.pronstem or data.stem) .. "mou") .. ".v"
-	local stem3 = pron((data.pronstem or data.stem) .. "meuve")
-	local stem4 = pron((data.pronstem or data.stem) .. "mu")
+	local stem = pron(data.pronstem .. "meu")
+	local stem2 = pron(data.pronstem .. "mou") .. ".v"
+	local stem3 = pron(data.pronstem .. "meuve")
+	local stem4 = pron(data.pronstem .. "mu")
 	
 	data = m_pron.ind_p(data, stem, stem2, stem3)
 	data = m_pron.ind_ps(data, stem4)
@@ -1547,7 +1552,7 @@ conj["paître"] = function()
 	data.forms.ind_p_3s = "paît"
 	data = m_core.make_ind_ps(data, "—")
 	
-	local stem = pron((data.pronstem or data.stem) .. "pais")
+	local stem = pron(data.pronstem .. "pais")
 	local stem2 = stem .. ".s"
 	local stem3 = stem .. "s"
 	local stem4 = stem .. ".t"
@@ -1562,7 +1567,7 @@ conj["paitre"] = function()
 	data = m_core.make_ind_p(data, "pai", "paiss")
 	data = m_core.make_ind_ps(data, "—")
 	
-	local stem = pron((data.pronstem or data.stem) .. "pais")
+	local stem = pron(data.pronstem .. "pais")
 	local stem2 = stem .. ".s"
 	local stem3 = stem .. "s"
 	local stem4 = stem .. ".t"
@@ -1626,7 +1631,7 @@ conj["pourvoir"] = function()
 	data = m_core.make_ind_ps(data, "pourvu")
 	data = m_core.make_ind_f(data, "pourvoir")
 	
-	local root = rsub(pron((data.pronstem or data.stem) .. "pourvou"),"u$","")
+	local root = rsub(pron(data.pronstem .. "pourvou"),"u$","")
 
 	local stem = root .. "wa"
 	local stem2 = root .. "wa.j"
@@ -1656,7 +1661,7 @@ conj["prendre"] = function()
 	data.forms.ind_p_3s = "prend"
 	data = m_core.make_ind_ps(data, "pri")
 	
-	local root = rsub(pron((data.pronstem or data.stem) .. "pra"), "a$", "")
+	local root = rsub(pron(data.pronstem .. "pra"), "a$", "")
 
 	local stem = root .. "ɑ̃"
 	local stem2 = root .. "ə.n"
@@ -1679,7 +1684,7 @@ conj["faire"] = function()
 	data = m_core.make_sub_p(data, "fass")
 	data = m_core.make_imp_p_ind(data)
 	
-	local root = rsub(pron((data.pronstem or data.stem) .. "fa"), "a$", "")
+	local root = rsub(pron(data.pronstem .. "fa"), "a$", "")
 
 	local stem = root .. "ɛ"
 	local stem2 = root .. "ə.z"
@@ -1704,7 +1709,7 @@ conj["boire"] = function()
 	data = m_core.make_ind_p(data, "boi", "buv", "boiv")
 	data = m_core.make_ind_ps(data, "bu")
 	
-	local root = rsub(pron((data.pronstem or data.stem) .. "bi"),"i$","")
+	local root = rsub(pron(data.pronstem .. "bi"),"i$","")
 
 	local stem = root .. "wa"
 	local stem2 = root .. "y.v"
@@ -1724,10 +1729,10 @@ conj["devoir"] = function()
 		data.forms.pp = "dû"
 	end
 	
-	local stem = pron((data.pronstem or data.stem) .. "doi")
-	local stem2 = pron((data.pronstem or data.stem) .. "de",true) .. ".v"
+	local stem = pron(data.pronstem .. "doi")
+	local stem2 = pron(data.pronstem .. "de",true) .. ".v"
 	local stem3 = stem .. "v"
-	local stem4 = pron((data.pronstem or data.stem) .. "du")
+	local stem4 = pron(data.pronstem .. "du")
 	
 	data = m_pron.ind_p(data, stem, stem2, stem3)
 	data = m_pron.ind_ps(data, stem4)
@@ -1749,7 +1754,7 @@ conj["avoir"] = function()
 	data.forms.sub_p_2p = "ayez"
 	data = m_core.make_imp_p_sub(data)
 	
-	local root = rsub(pron((data.pronstem or data.stem) .. "a"),"a$","")
+	local root = rsub(pron(data.pronstem .. "a"),"a$","")
 	
 	local stem = root .. "a"
 	local stem2 = root .. "a.v"
@@ -1796,9 +1801,9 @@ conj["être"] = function()
 	
 	data = m_core.make_imp_p_sub(data)
 	
-	local root_s = rsub(pron((data.pronstem or data.stem) .. "sa"),"sa$","")
-	local root_e = rsub(pron((data.pronstem or data.stem) .. "é"),"e$","")
-	local root_f = rsub(pron((data.pronstem or data.stem) .. "fa"),"fa$","")
+	local root_s = rsub(pron(data.pronstem .. "sa"),"sa$","")
+	local root_e = rsub(pron(data.pronstem .. "é"),"e$","")
+	local root_f = rsub(pron(data.pronstem .. "fa"),"fa$","")
 	
 	local stem = root_e .. "ɛ"
 	local stem2 = root_e .. "e.t"
@@ -1848,13 +1853,13 @@ conj["naître"] = function()
 	data.forms.ind_p_3s = "naît"
 	data = m_core.make_ind_ps(data, "naqui")
 	
-	local stem = pron((data.pronstem or data.stem) .. "nais")
+	local stem = pron(data.pronstem .. "nais")
 	local stem2 = stem .. ".s"
 	local stem3 = stem .. "s"
-	local stem4 = pron((data.pronstem or data.stem) .. "naquis")
+	local stem4 = pron(data.pronstem .. "naquis")
 	local stem5 = stem .. ".t"
 	
-	data.prons.pp = pron((data.pronstem or data.stem) .. "né")
+	data.prons.pp = pron(data.pronstem .. "né")
 	
 	data = m_pron.ind_p(data, stem, stem2, stem3)
 	data = m_pron.ind_ps(data, stem4)
@@ -1867,13 +1872,13 @@ conj["naitre"] = function()
 	data = m_core.make_ind_p(data, "nai", "naiss")
 	data = m_core.make_ind_ps(data, "naqui")
 	
-	local stem = pron((data.pronstem or data.stem) .. "nais")
+	local stem = pron(data.pronstem .. "nais")
 	local stem2 = stem .. ".s"
 	local stem3 = stem .. "s"
-	local stem4 = pron((data.pronstem or data.stem) .. "naquis")
+	local stem4 = pron(data.pronstem .. "naquis")
 	local stem5 = stem .. ".t"
 	
-	data.prons.pp = pron((data.pronstem or data.stem) .. "né")
+	data.prons.pp = pron(data.pronstem .. "né")
 	
 	data = m_pron.ind_p(data, stem, stem2, stem3)
 	data = m_pron.ind_ps(data, stem4)
@@ -1886,9 +1891,9 @@ conj["envoyer"] = function()
 	data = m_core.make_ind_p_e(data, "envoi", "envoy", "envoy")
 	data = m_core.make_ind_f(data, "enverr")
 	
-	local stem = pron((data.pronstem or data.stem) .. "envoi")
+	local stem = pron(data.pronstem .. "envoi")
 	local stem2 = stem .. ".j"
-	local stem3 = pron((data.pronstem or data.stem) .. "envè") .. "."
+	local stem3 = pron(data.pronstem .. "envè") .. "."
 	
 	data = m_pron.er(data, stem, stem2)
 	data = m_pron.ind_f(data, stem3)
@@ -1906,9 +1911,9 @@ conj["irreg-aller"] = function()
 	data = m_core.make_sub_p(data, "aill")
 	data = m_core.make_imp_p_ind(data)
 	
-	local stem = pron((data.pronstem or data.stem) .. "a")
-	local stem2 = pron((data.pronstem or data.stem) .. "i")
-	local stem3 = pron((data.pronstem or data.stem) .. "vé")
+	local stem = pron(data.pronstem .. "a")
+	local stem2 = pron(data.pronstem .. "i")
+	local stem3 = pron(data.pronstem .. "vé")
 	
 	stem3 = rsub(stem3, ".$", "")
 	
@@ -1928,7 +1933,7 @@ conj["dire"] = function()
 	data = m_core.make_ind_p(data, "di", "dis")
 	data = m_core.make_ind_ps(data, "di")
 	
-	local stem = pron((data.pronstem or data.stem) .. "di")
+	local stem = pron(data.pronstem .. "di")
 	local stem2 = stem .. ".z"
 	local stem3 = stem .. "z"
 	local stem4 = stem .. "."
@@ -1955,10 +1960,10 @@ conj["vivre"] = function()
 	data = m_core.make_ind_p(data, "vi", "viv")
 	data = m_core.make_ind_ps(data, "vécu")
 	
-	local stem = pron((data.pronstem or data.stem) .. "vi")
+	local stem = pron(data.pronstem .. "vi")
 	local stem2 = stem .. ".v"
 	local stem3 = stem .. "v"
-	local stem4 = pron((data.pronstem or data.stem) .. "vécu")
+	local stem4 = pron(data.pronstem .. "vécu")
 	
 	data = m_pron.ind_p(data, stem, stem2, stem3)
 	data = m_pron.ind_ps(data, stem4)
@@ -1972,43 +1977,74 @@ conj["mourir"] = function()
 	data = m_core.make_ind_ps(data, "mouru")
 	data = m_core.make_ind_f(data, "mourr")
 	
-	local stem = pron((data.pronstem or data.stem) .. "meur")
-	local stem2 = pron((data.pronstem or data.stem) .. "mou") .. ".ʁ"
-	local stem3 = pron((data.pronstem or data.stem) .. "mouru")
-	local stem4 = pron((data.pronstem or data.stem) .. "mou") .. "."
+	local stem = pron(data.pronstem .. "meur")
+	local stem2 = pron(data.pronstem .. "mou") .. ".ʁ"
+	local stem3 = pron(data.pronstem .. "mouru")
+	local stem4 = pron(data.pronstem .. "mou") .. "."
 	
-	data.prons.pp = pron((data.pronstem or data.stem) .. "mort")
+	data.prons.pp = pron(data.pronstem .. "mort")
 	
 	data = m_pron.ind_p(data, stem, stem2)
 	data = m_pron.ind_ps(data, stem3)
 	data = m_pron.ind_f(data, stem4)
 end
 
+local function call_conj(conjtyp, arg)
+	local ending = data.forms.inf
+	data.pronstem = strip_ending(data.pron, ending) or data.stem
+	conj[conjtyp](arg)
+end
+
+-- Conjugate the verb according to the TYPE, which is either explicitly
+-- specified by the caller of {{fr-conj-auto}} or derived automatically.
+-- NOTE FIXME: Currently, verbs of of type 'xxer' (i.e. 'appeler', 'jeter'
+-- and derivatives), of type 'e-er' (e.g. 'mener') and of type 'é-er' (e.g.
+-- 'céder', 'répéter') need to have their type explicitly specified and
+-- should be:
+-- * 'ler' for 'appeler' and derivatives
+-- * 'ter' for 'jeter' and derivatives
+-- * the last four letters for verbs of type 'e-er' and 'é-er', e.g.
+--
+-- appeler: {{fr-conj-auto|appe|ler}}
+-- mener: {{fr-conj-auto|m|ener}}
+-- répéter: {{fr-conj-auto|rép|éter}}
+--
+-- This isn't necessary for verbs in -ecer, -eger, -écer, -éger, and
+-- shouldn't be necessary for the other verbs either (FIXME). Also, verbs in
+-- -éyer look to be broken, missing a conj[] entry (FIXME).
 local function conjugate(typ)
 	data.forms.inf = typ
 	local future_stem = rsub(data.forms.inf, "e$", "")
 	data = m_core.make_ind_f(data, future_stem)
 	
 	if rfind(typ,"^[^aeéiou]er$") and typ ~= "cer" and typ ~= "ger"  and typ ~= "yer" then
-		conj["xxer"](rsub(typ,"er$",""))
+		call_conj("xxer", rsub(typ,"er$",""))
 	elseif rfind(typ,"^e[^aeiou]+er$") and typ ~= "ecer" and typ ~= "eger"  and typ ~= "eyer" then
-		conj["e-er"](rsub(typ,"^e(.+)er$","%1"))
+		call_conj("e-er", rsub(typ,"^e(.+)er$","%1"))
 	elseif rfind(data.stem .. typ,"é[^aàâeéèêiîoôuûäëïöü]+er$") and typ ~= "écer" and typ ~= "éger"  and typ ~= "éyer" then
 		local root = data.stem .. typ
 		data.stem = rsub(root,"é[^aàâeéèêiîoôuûäëïöü]+er$","")
 		data.forms.inf = rmatch(root,"(é[^aàâeéèêiîoôuûäëïöü]+er)$")
-		conj["é-er"](rsub(data.forms.inf,"^é(.+)er$","%1"))
+		call_conj("é-er", rsub(data.forms.inf,"^é(.+)er$","%1"))
 	elseif alias[typ] then
 		data.stem = data.stem .. rsub(typ, alias[typ], "")
 		data.forms.inf = alias[typ]
-		conj[alias[typ]]()
+		call_conj(alias[typ], nil)
 	elseif conj[typ] then
-		conj[typ]()
+		call_conj(typ, nil)
 	elseif typ ~= "" then
 		error('The type "' .. typ .. '" is not recognized')
 	end
 end
 
+-- Split the infinitive into "stem" and conjugation type, where the conjugation
+-- type is the longest suffix of the infinitive for which there's an entry
+-- in conj[], and stem is the preceding text. (As an exception, certain
+-- longer suffixes are mapped to the conjugation type of shorter suffixes
+-- using alias[]. An example is 'connaitre', which conjugates like '-aitre'
+-- verbs rather than like 'naitre' and its derivatives.) Note that for many
+-- irregular verbs, the "stem" is actually the prefix, or empty if the verb
+-- has no prefix.
 local function auto(pagename)
 	local stem = ""
 	local typ = pagename
@@ -2043,6 +2079,8 @@ function export.do_generate_forms(args)
 		prons = {}
 	}
 	
+	local PAGENAME = mw.title.getCurrentTitle().text
+
 	if stem .. typ == "" then
 		data.stem, typ = auto(PAGENAME)
 	elseif stem == "" and rfind(PAGENAME, typ, 1, true) and rfind(PAGENAME, typ, 1, true) == 1 and typ ~= PAGENAME then
@@ -2052,11 +2090,7 @@ function export.do_generate_forms(args)
 		data.stem, typ = auto(typ)
 	end
 	
-	if args["pronstem"] then
-		error("pronstem= not currently supported")
-	end
-	
-	data.pronstem = args["pronstem"]
+	data.pron = args.pron
 	
 	conjugate(typ)
 	
