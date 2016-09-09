@@ -98,6 +98,17 @@ local function link(term, alt)
 	return m_links.full_link({lang = lang, term = term, alt = alt}, "term")
 end
 
+-- Clone parent's args while also assigning nil to empty strings.
+local function clone_args(frame)
+	local args = {}
+	for pname, param in pairs(frame:getParent().args) do
+		if param == "" then args[pname] = nil
+		else args[pname] = param
+		end
+	end
+	return args
+end
+
 local function track(page)
     m_debug.track("fr-verb/" .. page)
     return true
@@ -2025,7 +2036,7 @@ function export.do_generate_forms(args)
 		end
 	end
 	
-	if args.refl and args.refl ~= "" then data = m_core.refl(data) end
+	if args.refl then data = m_core.refl(data) end
 	
 	if etre[data.forms.inf] then
 		data.aux = "être"
@@ -2049,7 +2060,7 @@ end
 -- The main entry point.
 -- This is the only function that can be invoked from a template.
 function export.show(frame)
-	local args = frame:getParent().args
+	local args = clone_args(frame)
 	local args_clone
 	if test_new_fr_verb_module then
 		-- clone in case export.do_generate_forms() modifies args
