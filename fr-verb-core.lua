@@ -7,7 +7,7 @@ local IPA = function(str)
 	return require("Module:IPA").format_IPA(nil,str)
 end
 
-local rsubn = rsub
+local rsubn = mw.ustring.gsub
 
 -- version of rsubn() that discards all but the first return value
 local function rsub(term, foo, bar)
