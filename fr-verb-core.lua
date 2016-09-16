@@ -7,6 +7,14 @@ local IPA = function(str)
 	return require("Module:IPA").format_IPA(nil,str)
 end
 
+local rsubn = mw.ustring.gsub
+
+-- version of rsubn() that discards all but the first return value
+local function rsub(term, foo, bar)
+	local retval = rsubn(term, foo, bar)
+	return retval
+end
+
 local function add(source,appendix)
 	if type(source) == "table" then
 		local ret = {}
@@ -219,89 +227,76 @@ end
 
 function export.refl(data)
 	data.refl = true
-	data.aux = "être"
+	data.aux = "s'être"
 	
 	for key,val in pairs(data.forms) do
-		if mw.ustring.match(key,"1s") then
-			if mw.ustring.match(val,"^[aeéêiouh]") then
-				data.forms[key] = "m'[[" .. val .. "]]"
-				if data.prons[key] then data.prons[key] = 'm' .. data.prons[key] end
-			else
-				data.forms[key] = "me [[" .. val .. "]]"
-				if data.prons[key] then data.prons[key] = 'mə.' .. data.prons[key] end
-			end
+		local pref_v, pref_c, pron_v, pron_c, imp, pron_imp, do_nolink
+		if key == "inf" or key == "ppr" then
+			pref_v, pref_c, pron_v, pron_c = "s'", "se ", "s", "sə."
+			do_nolink = true
+		elseif mw.ustring.match(key,"1s") then
+			pref_v, pref_c, pron_v, pron_c = "m'", "me ", "m", "mə."
 		elseif mw.ustring.match(key,"2s") then
-			if not mw.ustring.match(key,"imp") then
-				if mw.ustring.match(val,"^[aeéêiouh]") then
-					data.forms[key] = "t'[[" .. val .. "]]"
-					if data.prons[key] then data.prons[key] = 't' .. data.prons[key] end
-				else
-					data.forms[key] = "te [[" .. val .. "]]"
-					if data.prons[key] then data.prons[key] = 'tə.' .. data.prons[key] end
-				end
-			else
-				data.forms[key] = "[[" .. val .."]]-toi"
-				if data.prons[key] then data.prons[key] = data.prons[key] .. '.twa' end
-			end
-		elseif mw.ustring.match(key,"3s") then
-			if mw.ustring.match(val,"^[aeéêiouh]") then
-				data.forms[key] = "s'[[" .. val .. "]]"
-				if data.prons[key] then data.prons[key] = 's' .. data.prons[key] end
-			else
-				data.forms[key] = "se [[" .. val .. "]]"
-				if data.prons[key] then data.prons[key] = 'sə.' .. data.prons[key] end
-			end
+			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "t'", "te ", "t", "tə.", "toi", "twa"
+		elseif mw.ustring.match(key,"3[sp]") then
+			pref_v, pref_c, pron_v, pron_c = "s'", "se ", "s", "sə."
 		elseif mw.ustring.match(key,"1p") then
-			if not mw.ustring.match(key,"imp") then
-				if mw.ustring.match(val,"^[aeéêiouh]") then
-					data.forms[key] = "nous [[" .. val .. "]]"
-					if data.prons[key] then data.prons[key] = 'nu.z' .. data.prons[key] end
-				else
-					data.forms[key] = "nous [[" .. val .. "]]"
-					if data.prons[key] then data.prons[key] = 'nu.' .. data.prons[key] end
-				end
-				data.forms[key] = "nous [[" .. val .. "]]"
-			else
-				data.forms[key] = "[[" .. val .."]]-nous"
-				if data.prons[key] then data.prons[key] = data.prons[key] .. '.nu' end
-			end
+			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "nous ", "nous ", "nu.z", "nu.", "nous", "nu"
 		elseif mw.ustring.match(key,"2p") then
-			if not mw.ustring.match(key,"imp") then
-				if mw.ustring.match(val,"^[aeéêiouh]") then
-					data.forms[key] = "vous [[" .. val .. "]]"
-					if data.prons[key] then data.prons[key] = 'vu.z' .. data.prons[key] end
+			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "vous ", "vous ", "vu.z", "vu.", "vous", "vu"
+		end
+		if pref_v then
+			local pref, suf, pref_pron, suf_pron
+			local function get_pref_suf(v)
+				pref, suf, pref_pron, suf_pron = "", "", "", ""
+				if not mw.ustring.match(key,"imp") then
+					if mw.ustring.match(v,"^[aeéêiouhywjɑɛœø]") then
+						pref, pref_pron = pref_v, pron_v
+					else
+						pref, pref_pron = pref_c, pron_c
+					end
 				else
-					data.forms[key] = "vous [[" .. val .. "]]"
-					if data.prons[key] then data.prons[key] = 'vu.' .. data.prons[key] end
+					suf, suf_pron = "-" .. imp, "." .. pron_imp
 				end
-				data.forms[key] = "vous [[" .. val .. "]]"
-			else
-				data.forms[key] = "[[" .. val .."]]-vous"
-				if data.prons[key] then data.prons[key] = data.prons[key] .. '.vu' end
 			end
-		elseif mw.ustring.match(key,"3p") then
-			if mw.ustring.match(val,"^[aeéêiouh]") then
-				data.forms[key] = "s'[[" .. val .. "]]"
-				if data.prons[key] then data.prons[key] = 's' .. data.prons[key] end
+			if do_nolink then
+				if type(data.forms[key]) == "table" then
+					local newval = {}
+					for _, v in ipairs(data.forms[key]) do
+						get_pref_suf(v)
+						table.insert(newval, pref .. v .. suf)
+					end
+					data.forms[key .. '_nolink'] = newval
+				else
+					get_pref_suf(data.forms[key])
+					data.forms[key .. '_nolink'] = pref .. data.forms[key] .. suf
+				end
+			end
+			if type(val) == "table" then
+				local newval = {}
+				for _, v in ipairs(val) do
+					get_pref_suf(v)
+					table.insert(newval, rsub(pref .. "[[" .. v .. "]]" .. suf, "%.h", "h"))
+				end
+				data.forms[key] = newval
 			else
-				data.forms[key] = "se [[" .. val .. "]]"
-				if data.prons[key] then data.prons[key] = 'sə.' .. data.prons[key] end
+				get_pref_suf(val)
+				data.forms[key] = rsub(pref .. "[[" .. val .. "]]" .. suf, "%.h", "h")
+			end
+			if data.prons[key] then
+				if type(data.prons[key]) == "table" then
+					local newval = {}
+					for _, v in ipairs(data.prons[key]) do
+						get_pref_suf(v)
+						table.insert(newval, pref_pron .. v .. suf_pron)
+					end
+					data.prons[key] = newval
+				else
+					get_pref_suf(data.prons[key])
+					data.prons[key] = pref_pron .. data.prons[key] .. suf_pron
+				end
 			end
 		end
-		data.forms[key] = mw.ustring.gsub(data.forms[key], "%.h", "h")
-	end
-	
-	for _,key in ipairs({"inf","pp","ppr"}) do
-		if mw.ustring.match(data.forms[key],"^[aeéêiouh]") then
-			data.forms[key .. '_nolink'] = "s'" .. data.forms[key]
-			data.forms[key] = "s'[[" .. data.forms[key] .. "]]"
-			if data.prons[key] then data.prons[key] = 's' .. data.prons[key] end
-		else
-			data.forms[key .. '_nolink'] = "se " .. data.forms[key]
-			data.forms[key] = "se [[" .. data.forms[key] .. "]]"
-			if data.prons[key] then data.prons[key] = 'sə.' .. data.prons[key] end
-		end
-		data.forms[key] = mw.ustring.gsub(data.forms[key], "%.h", "h")
 	end
 	
 	return data
@@ -309,32 +304,39 @@ end
 
 function export.link(data)
 	for key,val in pairs(data.forms) do
-		if type(val) == "table" then
-			for i,form in ipairs(val) do
-				data.forms[key][i] = m_links.full_link({term = form, lang = lang})
-			end
-			
-			data.forms[key] = table.concat(data.forms[key]," or ")
-		else
-			if not mw.ustring.match(key,"nolink") and not mw.ustring.match(val,"—") then
-				data.forms[key] = m_links.full_link({term = val, lang = lang})
-			end
-			if mw.ustring.match(val,"—") then
-				data.forms[key] = "—"
-			end
+		if type(val) ~= "table" then
+			val = {val}
 		end
+		-- don't destructively modify data.forms[key][i] because it might
+		-- be shared among different keys
+		local newval = {}
+		for i,form in ipairs(val) do
+			local newform = form
+			if not mw.ustring.match(key,"nolink") and not mw.ustring.match(form,"—") then
+				newform = m_links.full_link({term = form, lang = lang})
+			end
+			if mw.ustring.match(form, "—") then
+				newform = "—"
+			end
+			table.insert(newval, newform)
+		end
+		data.forms[key] = table.concat(newval, " or ")
 	end
 	for key,val in pairs(data.prons) do
 		if not mw.ustring.match(key,"nolink") then
-			if type(val) == "table" then
-				for i,form in ipairs(val) do
-					data.prons[key][i] = IPA('/' .. data.prons[key][i] .. '/')
+			if type(val) ~= "table" then
+				val = {val}
+			end
+			-- don't destructively modify data.forms[key][i] because it might
+			-- be shared among different keys
+			local newprons = {}
+			for i,form in ipairs(val) do
+				if not mw.ustring.match(form,"—") then
+					table.insert(newprons, IPA('/' .. form .. '/'))
 				end
-				if data.forms[key] ~= "—" then
-					data.forms[key] = data.forms[key] .. '<br /><span style="color:#7F7F7F">' .. table.concat(data.prons[key]," or ") .. '</span>'
-				end
-			elseif not mw.ustring.match(val,"—") and data.forms[key] ~= "—" then
-				data.forms[key] = data.forms[key] .. '<br /><span style="color:#7F7F7F">' .. IPA('/' .. data.prons[key] .. '/') .. '</span>'
+			end
+			if #newprons > 0 and data.forms[key] ~= "—" then
+				data.forms[key] = data.forms[key] .. '<br /><span style="color:#7F7F7F">' .. table.concat(newprons, " or ") .. '</span>'
 			end
 		end
 	end
