@@ -7,7 +7,7 @@ local IPA = function(str)
 	return require("Module:IPA").format_IPA(nil,str)
 end
 
-local rsubn = mw.ustring.gsub
+local rsubn = rsub
 
 -- version of rsubn() that discards all but the first return value
 local function rsub(term, foo, bar)
@@ -122,7 +122,7 @@ function export.make_ind_ps_a(data, stem, stem2)
 end
 
 local function fix_circumflex(val)
-	return mw.ustring.gsub(val, "[aiïu]n?%^",{["a^"]="â", ["i^"]="î", ["ï^"]="ï", ["in^"]="în", ["u^"]="û"})
+	return rsub(val, "[aiïu]n?%^",{["a^"]="â", ["i^"]="î", ["ï^"]="ï", ["in^"]="în", ["u^"]="û"})
 end
 	
 function export.make_ind_ps(data, stem)
@@ -189,7 +189,7 @@ end
 
 function export.make_imp_p_ind(data)
 	data.forms.imp_p_2s = map(data.forms.ind_p_2s, function(form)
-		return mw.ustring.gsub(form, "([ae])s$", "%1")
+		return rsub(form, "([ae])s$", "%1")
 	end)
 	data.forms.imp_p_1p = data.forms.ind_p_1p
 	data.forms.imp_p_2p = data.forms.ind_p_2p
@@ -199,13 +199,13 @@ end
 
 function export.make_imp_p_ind_sub(data)
 	data.forms.imp_p_2s = map(data.forms.ind_p_2s, function(form)
-		return mw.ustring.gsub(form, "([ae])s$", "%1")
+		return rsub(form, "([ae])s$", "%1")
 	end)
 	data.forms.imp_p_1p = map(data.forms.sub_p_1p, function(form)
-		return mw.ustring.gsub(form, "ions$", "ons")
+		return rsub(form, "ions$", "ons")
 	end)
 	data.forms.imp_p_2p = map(data.forms.sub_p_2p, function(form)
-		return mw.ustring.gsub(form, "iez$", "ez")
+		return rsub(form, "iez$", "ez")
 	end)
 	
 	return data
@@ -213,13 +213,13 @@ end
 
 function export.make_imp_p_sub(data)
 	data.forms.imp_p_2s = map(data.forms.sub_p_2s, function(form)
-		return mw.ustring.gsub(form, "es$", "e")
+		return rsub(form, "es$", "e")
 	end)
 	data.forms.imp_p_1p = map(data.forms.sub_p_1p, function(form)
-		return mw.ustring.gsub(form, "ions$", "ons")
+		return rsub(form, "ions$", "ons")
 	end)
 	data.forms.imp_p_2p = map(data.forms.sub_p_2p, function(form)
-		return mw.ustring.gsub(form, "iez$", "ez")
+		return rsub(form, "iez$", "ez")
 	end)
 	
 	return data
@@ -260,41 +260,22 @@ function export.refl(data)
 				end
 			end
 			if do_nolink then
-				if type(data.forms[key]) == "table" then
-					local newval = {}
-					for _, v in ipairs(data.forms[key]) do
-						get_pref_suf(v)
-						table.insert(newval, pref .. v .. suf)
-					end
-					data.forms[key .. '_nolink'] = newval
-				else
-					get_pref_suf(data.forms[key])
-					data.forms[key .. '_nolink'] = pref .. data.forms[key] .. suf
-				end
+				get_pref_suf(data.forms[key])
+				data.forms[key .. '_nolink'] =
+					map(data.forms[key], function(val)
+						get_pref_suf(val)
+						return pref .. val .. suf
+					end)
 			end
-			if type(val) == "table" then
-				local newval = {}
-				for _, v in ipairs(val) do
-					get_pref_suf(v)
-					table.insert(newval, rsub(pref .. "[[" .. v .. "]]" .. suf, "%.h", "h"))
-				end
-				data.forms[key] = newval
-			else
-				get_pref_suf(val)
-				data.forms[key] = rsub(pref .. "[[" .. val .. "]]" .. suf, "%.h", "h")
-			end
+			data.forms[key] = map(val, function(v)
+				get_pref_suf(v)
+				return rsub(pref .. "[[" .. v .. "]]" .. suf, "%.h", "h")
+			end)
 			if data.prons[key] then
-				if type(data.prons[key]) == "table" then
-					local newval = {}
-					for _, v in ipairs(data.prons[key]) do
-						get_pref_suf(v)
-						table.insert(newval, pref_pron .. v .. suf_pron)
-					end
-					data.prons[key] = newval
-				else
-					get_pref_suf(data.prons[key])
-					data.prons[key] = pref_pron .. data.prons[key] .. suf_pron
-				end
+				data.prons[key] = map(data.prons[key], function(v)
+					get_pref_suf(v)
+					return pref_pron .. v .. suf_pron
+				end)
 			end
 		end
 	end
@@ -352,8 +333,8 @@ end
 function export.extract(data, args)
 	if args.inf then
 		data.forms.inf = args.inf
-		data = export.make_ind_f(data, mw.ustring.gsub(args.inf,"e$",""))
-		data = export.make_cond_p(data, mw.ustring.gsub(args.inf,"e$",""))
+		data = export.make_ind_f(data, rsub(args.inf,"e$",""))
+		data = export.make_cond_p(data, rsub(args.inf,"e$",""))
 	end
 	if args.pp then
 		data.forms.pp = args.pp
@@ -363,19 +344,19 @@ function export.extract(data, args)
 		end
 	end
 	for _,form in ipairs({"ind_p","ind_i","ind_ps","ind_f","cond_p","sub_p","sub_pa","imp_p"}) do
-		local dot_form = mw.ustring.gsub(form,"_",".")
+		local dot_form = rsub(form,"_",".")
 		if args[dot_form] then
 			if form == "ind_p" then
 				local stem = args[dot_form]
 				local stem2 = stem
 				local stem3 = stem
 				if mw.ustring.match(stem, "^[^/]+/[^/]+/[^/]+$") then
-					stem = mw.ustring.gsub(stem, "^([^/]+)/([^/]+)/([^/]+)$", "%1")
-					stem2 = mw.ustring.gsub(stem2, "^([^/]+)/([^/]+)/([^/]+)$", "%2")
-					stem3 = mw.ustring.gsub(stem3, "^([^/]+)/([^/]+)/([^/]+)$", "%3")
+					stem = rsub(stem, "^([^/]+)/([^/]+)/([^/]+)$", "%1")
+					stem2 = rsub(stem2, "^([^/]+)/([^/]+)/([^/]+)$", "%2")
+					stem3 = rsub(stem3, "^([^/]+)/([^/]+)/([^/]+)$", "%3")
 				elseif mw.ustring.match(stem, "^[^/]+/[^/]+$") then
-					stem = mw.ustring.gsub(stem, "^([^/]+)/([^/]+)$", "%1")
-					stem2 = mw.ustring.gsub(stem2, "^([^/]+)/([^/]+)$", "%2")
+					stem = rsub(stem, "^([^/]+)/([^/]+)$", "%1")
+					stem2 = rsub(stem2, "^([^/]+)/([^/]+)$", "%2")
 					stem3 = stem2
 				end
 				if args["ind.p_e"] then
@@ -391,7 +372,7 @@ function export.extract(data, args)
 				data = export.make_ind_i(data, args[dot_form])
 			elseif form == "ind_ps" then
 				if mw.ustring.match(args["ind.ps"], "a$") then
-					local stem = mw.ustring.gsub(args[dot_form],"a$","")
+					local stem = rsub(args[dot_form],"a$","")
 					data = export.make_ind_ps_a(data, stem)
 				else
 					data = export.make_ind_ps(data, args[dot_form])
@@ -405,8 +386,8 @@ function export.extract(data, args)
 				local stem = args[dot_form]
 				local stem2 = stem
 				if mw.ustring.match(stem, "^[^/]+/[^/]+$") then
-					stem = mw.ustring.gsub(stem, "^([^/]+)/([^/]+)$", "%1")
-					stem2 = mw.ustring.gsub(stem2, "^([^/]+)/([^/]+)$", "%2")
+					stem = rsub(stem, "^([^/]+)/([^/]+)$", "%1")
+					stem2 = rsub(stem2, "^([^/]+)/([^/]+)$", "%2")
 				end
 				data = export.make_sub_p(data, stem, stem2)
 			elseif form == "sub_pa" then
@@ -429,14 +410,9 @@ function export.extract(data, args)
 	data.forms.ppr = args.ppr or data.forms.ppr
 	if not data.forms.ppr then
 		if data.forms.ind_p_1p then
-			if type(data.forms.ind_p_1p) == "table" then
-				data.forms.ppr = {}
-				for i,val in ipairs(data.forms.ind_p_1p) do
-					data.forms.ppr[i] = mw.ustring.gsub(val,"ons$","ant")
-				end
-			else
-				data.forms.ppr = mw.ustring.gsub(data.forms.ind_p_1p,"ons$","ant")
-			end
+			data.forms.ppr = map(data.forms.ind_p_1p, function(val)
+				return rsub(val, "ons$", "ant")
+			end)
 		else
 			data.forms.ppr = ""
 		end
