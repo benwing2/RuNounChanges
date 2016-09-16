@@ -8,54 +8,54 @@ local IPA = function(str)
 end
 
 local function add(source,appendix)
+	if type(source) == "table" then
+		local ret = {}
+		for _, stem in ipairs(source) do
+			local stemret = add(stem, appendix)
+			if type(stemret) == "table" then
+				for _, sr in ipairs(stemret) do
+					table.insert(ret, sr)
+				end
+			else
+				table.insert(ret, stemret)
+			end
+		end
+		return ret
+	end
 	if mw.ustring.match(source,"/") then
 		source = mw.text.split(source,"/",plain)
 		for i,val in ipairs(source) do
 			source[i] = val..appendix
 		end
+		return source
 	else
 		return source..appendix
 	end
-	return source
+end
+
+local function map(seq, fun)
+	if type(seq) == "table" then
+		local ret = {}
+		for _, s in ipairs(seq) do
+			table.insert(ret, fun(s))
+		end
+		return ret
+	else
+		return fun(seq)
+	end
 end
 
 function export.make_ind_p_e(data, stem, stem2, stem3)
 	stem2 = stem2 or stem
 	stem3 = stem3 or stem
 	
-	if type(stem) == "table" then
-		data.forms.ind_p_1s = {}
-		data.forms.ind_p_2s = {}
-		data.forms.ind_p_3s = {}
-		data.forms.ind_p_3p = {}
-		for i,form in ipairs(stem) do
-			table.insert(data.forms.ind_p_1s, form .. "e")
-			table.insert(data.forms.ind_p_2s, form .. "es")
-			table.insert(data.forms.ind_p_3s, form .. "e")
-			table.insert(data.forms.ind_p_3p, form .. "ent")
-		end
-	else	
-		data.forms.ind_p_1s = add(stem,"e")
-		data.forms.ind_p_2s = add(stem,"es")
-		data.forms.ind_p_3s = add(stem,"e")
-		data.forms.ind_p_3p = add(stem,"ent")
-	end
-	if type(stem2) == "table" then
-		data.forms.ind_p_1p = {}
-		for i,form in ipairs(stem2) do
-			table.insert(data.forms.ind_p_1p, form .. "ons")
-		end
-	else	
-		data.forms.ind_p_1p = add(stem2,"ons")
-	end
-	if type(stem3) == "table" then
-		data.forms.ind_p_2p = {}
-		for i,form in ipairs(stem3) do
-			table.insert(data.forms.ind_p_2p, form .. "ez")
-		end
-	else	
-		data.forms.ind_p_2p = add(stem3,"ez")
-	end
+	data.forms.ind_p_1s = add(stem,"e")
+	data.forms.ind_p_2s = add(stem,"es")
+	data.forms.ind_p_3s = add(stem,"e")
+	data.forms.ind_p_3p = add(stem,"ent")
+	data.forms.ind_p_1p = add(stem2,"ons")
+	-- stem3 is used in -ger and -cer verbs
+	data.forms.ind_p_2p = add(stem3,"ez")
 	
 	data = export.make_ind_i(data, stem2, stem3)
 	data = export.make_ind_ps_a(data, stem2, stem3)
@@ -127,22 +127,8 @@ function export.make_ind_ps(data, stem)
 	data.forms.ind_ps_1s = add(stem,"s")
 	data.forms.ind_ps_2s = add(stem,"s")
 	data.forms.ind_ps_3s = add(stem,"t")
-	data.forms.ind_ps_1p = add(stem,"^mes")
-	if type(data.forms.ind_ps_1p) == "table" then
-		for i,val in ipairs(data.forms.ind_ps_1p) do
-			data.forms.ind_ps_1p[i] = fix_circumflex(val)
-		end
-	else
-		data.forms.ind_ps_1p = fix_circumflex(data.forms.ind_ps_1p)
-	end
-	data.forms.ind_ps_2p = add(stem,"^tes")
-	if type(data.forms.ind_ps_2p) == "table" then
-		for i,val in ipairs(data.forms.ind_ps_2p) do
-			data.forms.ind_ps_2p[i] = fix_circumflex(val)
-		end
-	else
-		data.forms.ind_ps_2p = fix_circumflex(data.forms.ind_ps_2p)
-	end
+	data.forms.ind_ps_1p = map(add(stem,"^mes"), fix_circumflex)
+	data.forms.ind_ps_2p = map(add(stem,"^tes"), fix_circumflex)
 	data.forms.ind_ps_3p = add(stem,"rent")
 	
 	data = export.make_sub_pa(data,stem)
@@ -153,29 +139,12 @@ function export.make_ind_ps(data, stem)
 end
 
 function export.make_ind_f(data, stem)
-	if type(stem) == "table" then
-		data.forms.ind_f_1s = {}
-		data.forms.ind_f_2s = {}
-		data.forms.ind_f_3s = {}
-		data.forms.ind_f_1p = {}
-		data.forms.ind_f_2p = {}
-		data.forms.ind_f_3p = {}
-		for i,form in ipairs(stem) do
-			table.insert(data.forms.ind_f_1s, form .. "ai")
-			table.insert(data.forms.ind_f_2s, form .. "as")
-			table.insert(data.forms.ind_f_3s, form .. "a")
-			table.insert(data.forms.ind_f_1p, form .. "ons")
-			table.insert(data.forms.ind_f_2p, form .. "ez")
-			table.insert(data.forms.ind_f_3p, form .. "ont")
-		end
-	else	
-		data.forms.ind_f_1s = add(stem,"ai")
-		data.forms.ind_f_2s = add(stem,"as")
-		data.forms.ind_f_3s = add(stem,"a")
-		data.forms.ind_f_1p = add(stem,"ons")
-		data.forms.ind_f_2p = add(stem,"ez")
-		data.forms.ind_f_3p = add(stem,"ont")
-	end
+	data.forms.ind_f_1s = add(stem,"ai")
+	data.forms.ind_f_2s = add(stem,"as")
+	data.forms.ind_f_3s = add(stem,"a")
+	data.forms.ind_f_1p = add(stem,"ons")
+	data.forms.ind_f_2p = add(stem,"ez")
+	data.forms.ind_f_3p = add(stem,"ont")
 	
 	data = export.make_cond_p(data, stem)
 	
@@ -183,63 +152,24 @@ function export.make_ind_f(data, stem)
 end
 
 function export.make_cond_p(data, stem)
-	if type(stem) == "table" then
-		data.forms.cond_p_1s = {}
-		data.forms.cond_p_2s = {}
-		data.forms.cond_p_3s = {}
-		data.forms.cond_p_1p = {}
-		data.forms.cond_p_2p = {}
-		data.forms.cond_p_3p = {}
-		for i,form in ipairs(stem) do
-			table.insert(data.forms.cond_p_1s, form .. "ais")
-			table.insert(data.forms.cond_p_2s, form .. "ais")
-			table.insert(data.forms.cond_p_3s, form .. "ait")
-			table.insert(data.forms.cond_p_1p, form .. "ions")
-			table.insert(data.forms.cond_p_2p, form .. "iez")
-			table.insert(data.forms.cond_p_3p, form .. "aient")
-		end
-	else
-		data.forms.cond_p_1s = add(stem,"ais")
-		data.forms.cond_p_2s = add(stem,"ais")
-		data.forms.cond_p_3s = add(stem,"ait")
-		data.forms.cond_p_1p = add(stem,"ions")
-		data.forms.cond_p_2p = add(stem,"iez")
-		data.forms.cond_p_3p = add(stem,"aient")
-	end
+	data.forms.cond_p_1s = add(stem,"ais")
+	data.forms.cond_p_2s = add(stem,"ais")
+	data.forms.cond_p_3s = add(stem,"ait")
+	data.forms.cond_p_1p = add(stem,"ions")
+	data.forms.cond_p_2p = add(stem,"iez")
+	data.forms.cond_p_3p = add(stem,"aient")
 	
 	return data
 end
 
 function export.make_sub_p(data, stem, stem2)
 	stem2 = stem2 or stem
-	if type(stem) == "table" then
-		data.forms.sub_p_1s = {}
-		data.forms.sub_p_2s = {}
-		data.forms.sub_p_3s = {}
-		data.forms.sub_p_3p = {}
-		for i,form in ipairs(stem) do
-			table.insert(data.forms.sub_p_1s, form .. "e")
-			table.insert(data.forms.sub_p_2s, form .. "es")
-			table.insert(data.forms.sub_p_3s, form .. "e")
-			table.insert(data.forms.sub_p_3p, form .. "ent")
-		end
-	else	
-		data.forms.sub_p_1s = add(stem,"e")
-		data.forms.sub_p_2s = add(stem,"es")
-		data.forms.sub_p_3s = add(stem,"e")
-		data.forms.sub_p_3p = add(stem,"ent")
-	end
-	if type(stem2) == "table" then
-		data.forms.sub_p_1p = {}
-		data.forms.sub_p_2p = {}
-		for i,form in ipairs(stem2) do
-			table.insert(data.forms.sub_p_1p, form .. "ions")
-			table.insert(data.forms.sub_p_2p, form .. "iez")
-		end
-	else	
-		data.forms.sub_p_1p = add(stem2,"ions")
-		data.forms.sub_p_2p = add(stem2,"iez")
-	end
+	data.forms.sub_p_1s = add(stem,"e")
+	data.forms.sub_p_2s = add(stem,"es")
+	data.forms.sub_p_3s = add(stem,"e")
+	data.forms.sub_p_3p = add(stem,"ent")
+	data.forms.sub_p_1p = add(stem2,"ions")
+	data.forms.sub_p_2p = add(stem2,"iez")
 
 	return data
 end
@@ -247,14 +177,7 @@ end
 function export.make_sub_pa(data, stem)
 	data.forms.sub_pa_1s = add(stem,"sse")
 	data.forms.sub_pa_2s = add(stem,"sses")
-	data.forms.sub_pa_3s = add(stem,"^t")
-	if type(data.forms.sub_pa_3s) == "table" then
-		for i,val in ipairs(data.forms.sub_pa_3s) do
-			data.forms.sub_pa_3s[i] = fix_circumflex(val)
-		end
-	else
-		data.forms.sub_pa_3s = fix_circumflex(data.forms.sub_pa_3s)
-	end
+	data.forms.sub_pa_3s = map(add(stem,"^t"), fix_circumflex)
 	data.forms.sub_pa_1p = add(stem,"ssions")
 	data.forms.sub_pa_2p = add(stem,"ssiez")
 	data.forms.sub_pa_3p = add(stem,"ssent")
@@ -263,15 +186,9 @@ function export.make_sub_pa(data, stem)
 end
 
 function export.make_imp_p_ind(data)
-	if type(data.forms.ind_p_2s) == "table" then
-		data.forms.imp_p_2s = {}
-		for i,form in pairs(data.forms.ind_p_2s) do
-			local formm = mw.ustring.gsub(form, "([ae])s$", "%1")
-			table.insert(data.forms.imp_p_2s, formm)
-		end
-	else
-		data.forms.imp_p_2s = mw.ustring.gsub(data.forms.ind_p_2s, "([ae])s$", "%1")
-	end
+	data.forms.imp_p_2s = map(data.forms.ind_p_2s, function(form)
+		return mw.ustring.gsub(form, "([ae])s$", "%1")
+	end)
 	data.forms.imp_p_1p = data.forms.ind_p_1p
 	data.forms.imp_p_2p = data.forms.ind_p_2p
 	
@@ -279,17 +196,29 @@ function export.make_imp_p_ind(data)
 end
 
 function export.make_imp_p_ind_sub(data)
-	data.forms.imp_p_2s = mw.ustring.gsub(data.forms.ind_p_2s, "([ae])s$", "$1")
-	data.forms.imp_p_1p = mw.ustring.gsub(data.forms.sub_p_1p, "ions$", "ons")
-	data.forms.imp_p_2p = mw.ustring.gsub(data.forms.sub_p_2p, "iez$", "ez")
+	data.forms.imp_p_2s = map(data.forms.ind_p_2s, function(form)
+		return mw.ustring.gsub(form, "([ae])s$", "%1")
+	end)
+	data.forms.imp_p_1p = map(data.forms.sub_p_1p, function(form)
+		return mw.ustring.gsub(form, "ions$", "ons")
+	end)
+	data.forms.imp_p_2p = map(data.forms.sub_p_2p, function(form)
+		return mw.ustring.gsub(form, "iez$", "ez")
+	end)
 	
 	return data
 end
 
 function export.make_imp_p_sub(data)
-	data.forms.imp_p_2s = mw.ustring.gsub(data.forms.sub_p_2s, "es$", "e")
-	data.forms.imp_p_1p = mw.ustring.gsub(data.forms.sub_p_1p, "ions$", "ons")
-	data.forms.imp_p_2p = mw.ustring.gsub(data.forms.sub_p_2p, "iez$", "ez")
+	data.forms.imp_p_2s = map(data.forms.sub_p_2s, function(form)
+		return mw.ustring.gsub(form, "es$", "e")
+	end)
+	data.forms.imp_p_1p = map(data.forms.sub_p_1p, function(form)
+		return mw.ustring.gsub(form, "ions$", "ons")
+	end)
+	data.forms.imp_p_2p = map(data.forms.sub_p_2p, function(form)
+		return mw.ustring.gsub(form, "iez$", "ez")
+	end)
 	
 	return data
 end
@@ -522,3 +451,6 @@ function export.extract(data, args)
 end
 
 return export
+
+-- For Vim, so we get 4-space tabs
+-- vim: set ts=4 sw=4 noet:
