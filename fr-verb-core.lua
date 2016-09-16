@@ -61,15 +61,8 @@ function export.make_ind_p_e(data, stem, stem2, stem3)
 	data = export.make_ind_ps_a(data, stem2, stem3)
 	data = export.make_sub_p(data, stem, stem3)
 	data = export.make_imp_p_ind(data)
-	
-	if type(stem) == "table" then
-		for i,form in ipairs(stem) do
-			stem[i] = form .. "er"
-		end
-	else
-		stem = add(stem,"er")
-	end
-	data = export.make_ind_f(data, stem)
+	data = export.make_ind_f(data, add(stem, "er"))
+	data.forms.ppr = add(stem2,"ant")
 	
 	return data
 end
@@ -87,6 +80,7 @@ function export.make_ind_p(data, stem, stem2, stem3)
 	data = export.make_ind_i(data, stem2)
 	data = export.make_sub_p(data, stem3, stem2)
 	data = export.make_imp_p_ind(data)
+	data.forms.ppr = add(stem2,"ant")
 	
 	return data
 end
