@@ -56,7 +56,7 @@ pron["ind_p"] = function(data, stem, stem2, stem3, stem4)
 	data.prons.imp_p_1p = add(stem2,"ɔ̃")
 	data.prons.imp_p_2p = add(stem2,"e")
 	
-	data.prons.ppr = data.prons.ppr or add(stem2,"ɑ̃")
+	data.prons.ppr = add(stem2,"ɑ̃")
 	
 	return data
 end
@@ -90,7 +90,7 @@ pron["ind_ps"] = function(data, stem)
 	
 	data = pron["sub_pa"](data,stem)
 	
-	data.prons.pp = data.prons.pp or add(stem,"")
+	data.prons.pp = add(stem,"")
 	
 	return data
 end
@@ -173,8 +173,8 @@ end
 --     contain a final /ʁj/).
 pron["er"] = function(data, stem_final, stem_nonfinal, stem_nonfinal_i, stem_fut, stem_fut_i)
 	stem_fut = stem_fut or add(stem_nonfinal, "ə.", "concat")
-	data.prons.ppr = data.prons.ppr or add(stem_nonfinal,"ɑ̃")
-	data.prons.pp = data.prons.pp or add(stem_nonfinal,"e")
+	data.prons.ppr = add(stem_nonfinal,"ɑ̃")
+	data.prons.pp = add(stem_nonfinal,"e")
 
 	data = pron.ind_p(data, stem_final, stem_nonfinal, stem_final, stem_nonfinal_i)
 	data = pron.ind_f(data, stem_fut, stem_fut_i)
