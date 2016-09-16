@@ -638,7 +638,10 @@ conj["asseoir"] = function()
 end
 
 conj["surseoir"] = function()
-	construct_non_er_conj("sursoi", "sursoy", "sursoi", "sursi", nil, "sursis")
+	construct_non_er_conj(data, "sursoi", "sursoy", "sursoi", "sursi", nil,
+		"sursis")
+	-- Pronunciation in future/cond as if written sursoir- not surseoir-
+	data = m_pron.ind_f(data, pron(data.pronstem .. "sursoir"))
 	data.category = "seoir"
 	data.typ = "irregular"
 end
@@ -1195,18 +1198,20 @@ conj["prendre"] = function()
 end
 
 conj["faire"] = function()
-	construct_non_er_conj("fai", "fais", "fais", "fi", "fer", "fait", "fass")
+	construct_non_er_conj(data, "fai", "fais", "fais", "fi", "fer", "fait",
+		"fass")
 	-- Need to override the present indicative 2p and 3p, and the
 	-- pronunciations of these forms as well as all forms in fais-.
 	data.forms.ind_p_2p = "faites"
 	data.forms.ind_p_3p = "font"
 	data.forms.imp_p_2p = "faites"
-	local root = rsub(pron(data.pronstem .. "fa"), "a$", "")
-	local stem2 = root .. "ə.z"
-	data = m_pron.ind_p(data, stem, stem2)
-	data.prons.ind_p_2p = root .. "ɛt"
-	data.prons.ind_p_3p = root .. "ɔ̃"
+	data.prons.ind_p_2p = pron(data.pronstem .. "faites")
 	data.prons.imp_p_2p = data.prons.ind_p_2p
+	data.prons.ind_p_3p = pron(data.pronstem .. "font")
+	data.prons.ind_p_1p = pron(data.pronstem .. "fesons")
+	data.prons.imp_p_1p = data.prons.ind_p_1p
+	data = m_pron.ind_p(data, strip_pron_ending(pron(data.pronstem .. "fesez"), "e"))
+	data.prons.ppr = pron(data.pronstem .. "fesant")
 end
 
 conj["boire"] = function()
