@@ -258,11 +258,11 @@ end
 -- céder (with stems 'céd' and 'cèd').
 local function construct_er_pron(data, pronstem, pronstem_final_fut)
 	pronstem_final_fut = pronstem_final_fut or pronstem
-	-- In pronstem_final_fut, convert é in the last syllable to è even if
+	-- In pronstem_final_fut, convert é+C in the last syllable to è even if
 	-- the caller didn't do it. This is principally useful with pron=
 	-- specifications, so that e.g. pron=blésser,blèsser works.
 	pronstem_final_fut = rsub(pronstem_final_fut,
-		"é(" .. written_cons_c .. "*)$", "è%1")
+		"é(" .. written_cons_c .. "+)$", "è%1")
 	pronstem_final_fut = rsub(pronstem_final_fut, "é([gq]u)$", "è%1")
 	local stem_final = pron(pronstem_final_fut .. "e")
 	local stem_nonfinal = strip_pron_ending(pron(pronstem .. "ez"), "e")
@@ -613,13 +613,13 @@ conj["ouïr"] = function()
 end
 
 conj["asseoir"] = function()
-	data.forms.pp = "assis"
 	data.notes = "The verb " .. link("asseoir") .. " (and its derivative " .. link("rasseoir") .. ") has 2 distinct conjugations."
 	
 	data = m_core.make_ind_p(data, "assoi/assied", "assoy/assey", "assoi/assey")
 	data.forms.ind_p_3s[2] = "assied"
 	data = m_core.make_ind_ps(data, "assi")
 	data = m_core.make_ind_f(data, "assoir/assiér")
+	data.forms.pp = "assis"
 
 	local stem11 = pron(data.pronstem .. "assoi")
 	local stem12 = stem11 .. ".j"
@@ -649,9 +649,6 @@ end
 conj["seoir"] = function()
 	data.notes = "This is a defective verb, only conjugated in the third person"
 	
-	data.forms.ppr = {"séant","seyant"}
-	data.forms.pp = "—"
-	
 	data = m_core.make_ind_p(data, "—")
 	data = m_core.make_ind_ps(data, "—")
 	data = m_core.make_ind_f(data, "—")
@@ -665,8 +662,8 @@ conj["seoir"] = function()
 	data.forms.cond_p_3p = "siéraient"
 	data.forms.sub_p_3s = "siée"
 	data.forms.sub_p_3p = "siéent"
-	
-	data.prons.ppr = {"se.ɑ̃","sɛ.jɑ̃"}
+	data.forms.ppr = {"séant","seyant"}
+	data.forms.pp = "—"
 	
 	data.prons.ind_p_3s = "sje"
 	data.prons.ind_p_3p = "sje"
@@ -678,6 +675,7 @@ conj["seoir"] = function()
 	data.prons.cond_p_3p = "sje.ʁɛ"
 	data.prons.sub_p_3s = "sje"
 	data.prons.sub_p_3p = "sje"
+	data.prons.ppr = {"se.ɑ̃","sɛ.jɑ̃"}
 	
 	data.category = "seoir"
 	data.typ = "irregular"
@@ -712,11 +710,10 @@ local function ouvrir_ffrir(rir_prefix)
 	data.notes = data.notes .. "future indicative, conditional, past historic, and imperfect subjunctive; "
 	data.notes = data.notes .. "and its past participle " .. link("{stem}ert") .. " is irregular."
 
-	data.forms.pp = "ert"
-	
 	data = m_core.make_ind_p_e(data, "r")
 	data = m_core.make_ind_ps(data, "ri")
 	data = m_core.make_ind_f(data, "rir")
+	data.forms.pp = "ert"
 	
 	local root = pron(data.pronstem .. "e")
 	local root2 = strip_pron_ending(pron(data.pronstem .. "a"), "a")
@@ -726,11 +723,10 @@ local function ouvrir_ffrir(rir_prefix)
 	local stem3 = root2 .. "ʁi"
 	local stem4 = root2 .. "ʁi."
 	
-	data.prons.pp = root2 .. "ɛʁ"
-	
 	data = m_pron.er(data, stem, stem2)
 	data = m_pron.ind_ps(data, stem3)
 	data = m_pron.ind_f(data, stem4)
+	data.prons.pp = root2 .. "ɛʁ"
 end
 
 conj["ouvrir"] = function()
@@ -816,8 +812,6 @@ conj["choir"] = function()
 		data = m_core.make_ind_f(data, "choir/cherr")
 	elseif data.stem == "é" then
 		data.notes = "This verb is defective and is only conjugated in the third-person."
-		data.forms.ppr = "chéant"
-		data.prons.ppr = "e.ʃe.jɑ̃"
 		data = m_core.make_ind_i(data, "choy")
 		data = m_core.make_ind_f(data, "choir")
 		data = m_pron.ind_f(data, stem .. ".")
@@ -828,6 +822,8 @@ conj["choir"] = function()
 		data.prons.ind_p_3s = {stem,stem4}
 		data.forms.ind_p_3p = {"choient","chettent"}
 		data.prons.ind_p_3p = {stem,stem4}
+		data.forms.ppr = "chéant"
+		data.prons.ppr = "e.ʃe.jɑ̃"
 	end
 end
 
@@ -845,11 +841,10 @@ conj["cueillir"] = function()
 	local stem3 = root .. ".ji"
 	local stem4 = root .. ".ji."
 	
-	data.prons.pp = stem3
-	
 	data = m_pron.er(data, stem, stem2)
 	data = m_pron.ind_ps(data, stem3)
 	data = m_pron.ind_f(data, stem4)
+	data.prons.pp = stem3
 end
 
 conj["courir"] = function()
@@ -882,6 +877,9 @@ conj["gésir"] = function()
 	data.notes = "This is a [[defective]] verb, and is only conjugated in the present and imperfect indicative."
 	construct_non_er_conj(data, "gi", "gis", "gis", "—", "—", "—", "—")
 	data.forms.ind_p_3s = "gît"
+	data.forms.imp_p_2s = "—"
+	data.forms.imp_p_1p = "—"
+	data.forms.imp_p_2p = "—"
 end
 
 conj["re"] = function()
@@ -967,41 +965,40 @@ conj["clure"] = function()
 end
 
 conj["braire"] = function()
-	data.forms.pp = "brait"
 	data = m_core.make_ind_p(data, "brai", "bray", "brai")
 	-- FIXME, is the following really correct?
 	data = m_core.make_ind_ps_a(data, "bray")
 	
 	local stem = pron(data.pronstem .. "brais")
-	data.prons.pp = stem
+	data.forms.pp = "brait"
+
 	local stem2 = stem .. ".j"
 	local stem3 = stem .. "."
 	
 	data = m_pron.ind_p(data, stem, stem2)
 	data = m_pron.ind_ps_a(data, stem2)
 	data = m_pron.ind_f(data, stem3)
+	data.prons.pp = stem
 end
 
 conj["clore"] = function()
 	data.notes = "This verb is not conjugated in certain tenses."
 	
-	data.forms.ppr = "closant"
-	data.forms.pp = "clos"
-	
 	data = m_core.make_ind_p(data, "clo", "clos")
 	data.forms.ind_p_3s = "clôt"
 	data = m_core.make_ind_i(data, "—")
 	data = m_core.make_ind_ps(data, "—")
+	data.forms.ppr = "closant"
+	data.forms.pp = "clos"
 	
 	local stem = pron(data.pronstem .. "clo")
 	local stem2 = stem .. ".z"
 	local stem3 = stem .. "z"
 	local stem4 = pron(data.pronstem .. "clɔ") .. "."
 	
-	data.prons.pp = stem
-	
 	data = m_pron.ind_p(data, stem, stem2, stem3)
 	data = m_pron.ind_f(data, stem4)
+	data.prons.pp = stem
 end
 
 conj["confire"] = function()
@@ -1099,11 +1096,11 @@ conj["lire"] = function()
 end
 
 conj["luire"] = function()
-	data.forms.pp = "lui"
 	data = m_core.make_ind_p(data, "lui", "luis")
 	data = m_core.make_ind_ps(data, "lui/luisi")
 	data = m_core.make_sub_pa(data, "luisi")
 	data.forms.ind_ps_3s = "luit"
+	data.forms.pp = "lui"
 	
 	local stem = pron(data.pronstem .. "lui")
 	local stem2 = stem .. ".z"
@@ -1111,14 +1108,12 @@ conj["luire"] = function()
 	local stem4 = stem .. "/" .. stem2 .. "i"
 	local stem5 = stem .. "."
 	
-	data.prons.pp = stem
-	
 	data = m_pron.ind_p(data, stem, stem2, stem3)
 	data = m_pron.ind_ps(data, stem4)
 	data = m_pron.sub_pa(data, stem2)
 	data = m_pron.ind_f(data, stem5)
-	
 	data.prons.ind_ps_3s = stem
+	data.prons.pp = stem
 end
 
 conj["maudire"] = function()
@@ -1210,7 +1205,7 @@ conj["faire"] = function()
 	data.prons.ind_p_3p = pron(data.pronstem .. "font")
 	data.prons.ind_p_1p = pron(data.pronstem .. "fesons")
 	data.prons.imp_p_1p = data.prons.ind_p_1p
-	data = m_pron.ind_p(data, strip_pron_ending(pron(data.pronstem .. "fesez"), "e"))
+	data = m_pron.ind_i(data, strip_pron_ending(pron(data.pronstem .. "fesez"), "e"))
 	data.prons.ppr = pron(data.pronstem .. "fesant")
 end
 
@@ -1226,8 +1221,6 @@ conj["devoir"] = function()
 end
 
 conj["avoir"] = function()
-	data.forms.ppr = "ayant"
-	
 	data = m_core.make_ind_p(data, "a", "av")
 	data.forms.ind_p_1s = "ai"
 	data.forms.ind_p_3s = "a"
@@ -1239,7 +1232,8 @@ conj["avoir"] = function()
 	data.forms.sub_p_1p = "ayons"
 	data.forms.sub_p_2p = "ayez"
 	data = m_core.make_imp_p_sub(data)
-	
+	data.forms.ppr = "ayant"
+
 	local root = rsub(pron(data.pronstem .. "a"),"a$","")
 	
 	local stem = root .. "a"
@@ -1248,8 +1242,6 @@ conj["avoir"] = function()
 	local stem4 = root .. "o."
 	local stem5 = root .. "ɛ"
 	local stem6 = root .. "ɛ."
-	
-	data.prons.ppr = stem6 .. "jɑ̃"
 	
 	data = m_pron.ind_p(data, stem, stem2)
 	data.prons.ind_p_1s = root .. "e"
@@ -1261,12 +1253,10 @@ conj["avoir"] = function()
 	data.prons.imp_p_2s = stem5
 	data.prons.imp_p_1p = stem6 .. "jɔ̃"
 	data.prons.imp_p_2p = stem6 .. "je"
+	data.prons.ppr = stem6 .. "jɑ̃"
 end
 
 conj["être"] = function()
-	data.forms.pp = "été"
-	data.forms.ppr = "étant"
-	
 	data.forms.ind_p_1s = "suis"
 	data.forms.ind_p_2s = "es"
 	data.forms.ind_p_3s = "est"
@@ -1286,6 +1276,8 @@ conj["être"] = function()
 	data.forms.sub_p_3p = "soient"
 	
 	data = m_core.make_imp_p_sub(data)
+	data.forms.pp = "été"
+	data.forms.ppr = "étant"
 	
 	local root_s = rsub(pron(data.pronstem .. "sa"),"sa$","")
 	local root_e = rsub(pron(data.pronstem .. "é"),"e$","")
@@ -1297,9 +1289,6 @@ conj["être"] = function()
 	local stem4 = root_s .. "sə."
 	local stem5 = root_s .. "swa"
 	local stem6 = root_s .. "swa."
-	
-	data.prons.ppr = stem2 .. "ɑ̃"
-	data.prons.pp = stem2 .. "e"
 	
 	data.prons.ind_p_1s = root_s .. "sɥi"
 	data.prons.ind_p_2s = stem
@@ -1315,6 +1304,8 @@ conj["être"] = function()
 	data.prons.imp_p_2s = stem5
 	data.prons.imp_p_1p = stem6 .. "jɔ̃"
 	data.prons.imp_p_2p = stem6 .. "je"
+	data.prons.ppr = stem2 .. "ɑ̃"
+	data.prons.pp = stem2 .. "e"
 end
 
 conj["estre"] = function()
@@ -1326,10 +1317,9 @@ conj["estre"] = function()
 		data.forms[key] = rsub(data.forms[key], "ai", "oi")
 	end
 	
-	data.forms.pp = "esté"
-	
 	data.forms.ind_ps_1p = "fumes"
 	data.forms.sub_pa_3s = "fust"
+	data.forms.pp = "esté"
 end
 
 conj["naitre"] = function()
@@ -1385,8 +1375,6 @@ conj["irreg-aller"] = function()
 end
 
 conj["dire"] = function()
-	data.forms.pp = "dit"
-	
 	construct_non_er_conj(data, "di", "dis", "dis", "di", nil, "dit")
 	
 	if data.stem == "" or data.stem == "re" then
