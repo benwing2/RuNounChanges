@@ -45,11 +45,15 @@ local function map(seq, fun)
 	if type(seq) == "table" then
 		local ret = {}
 		for _, s in ipairs(seq) do
-			table.insert(ret, fun(s))
+			-- store in separate var in case fun() has multiple retvals
+			local retval = fun(s)
+			table.insert(ret, retval)
 		end
 		return ret
 	else
-		return fun(seq)
+		-- store in separate var in case fun() has multiple retvals
+		local retval = fun(seq)
+		return retval
 	end
 end
 
@@ -223,6 +227,12 @@ function export.make_imp_p_sub(data)
 	end)
 
 	return data
+end
+
+function export.clear_imp(data)
+	data.forms.imp_p_2s = "—"
+	data.forms.imp_p_1p = "—"
+	data.forms.imp_p_2p = "—"
 end
 
 function export.refl(data)
