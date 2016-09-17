@@ -1,25 +1,43 @@
 local pron = {}
 
+local rsubn = mw.ustring.gsub
+
+-- version of rsubn() that discards all but the first return value
+local function rsub(term, foo, bar)
+	local retval = rsubn(term, foo, bar)
+	return retval
+end
+
 -- Combine stem pronunciation and suffix pronunciation. The stem can actually
--- consist of multiple stems separated by /, in which case the suffix will
--- be added to each stem separately and the return value will be a list of
--- pronunciations (unless CONCAT is true, in which case the return value will
--- be a string with separate pronunciations separated by /); otherwise the
--- return value will be a single string. The combination procedure mostly
--- just appends the two, but handles changing ".jj" to "j.j" (moving the
--- syllable boundary) and converting ".C[lʁ]j" to ".C[lʁ]i".
+-- consist of a table of stems or multiple stems separated by /, in both of
+-- which cases the suffix will be added to each stem separately and the return
+-- value will be a list of pronunciations; otherwise the return value will be
+-- a single string. The combination procedure mostly just appends the two,
+-- but handles changing ".jj" to "j.j" (moving the syllable boundary) and
+-- converting ".C[lʁ]j" to ".C[lʁ]i".
 local function add(source, appendix, concat)
+	if type(source) == "table" then
+		local ret = {}
+		for _, stem in ipairs(source) do
+			local stemret = add(stem, appendix)
+			if type(stemret) == "table" then
+				for _, sr in ipairs(stemret) do
+					table.insert(ret, sr)
+				end
+			else
+				table.insert(ret, stemret)
+			end
+		end
+		return ret
+	end
 	if mw.ustring.match(source,"/") then
 		source = mw.text.split(source,"/",true)
 		for i,val in ipairs(source) do
-			source[i] = mw.ustring.gsub(mw.ustring.gsub(val..appendix, "%.jj", "j.j"),"(%..[lʁ])(j[ɔe]̃?)","%1i.%2")
-		end
-		if concat then
-			source = table.concat(source, "/")
+			source[i] = rsub(rsub(val..appendix, "%.jj", "j.j"),"(%..[lʁ])(j[ɔe]̃?)","%1i.%2")
 		end
 		return source
 	else
-		return mw.ustring.gsub(mw.ustring.gsub(source..appendix, "%.jj", "j.j"),"(%..[lʁ])(j[ɔe]̃?)","%1i.%2")
+		return rsub(rsub(source..appendix, "%.jj", "j.j"),"(%..[lʁ])(j[ɔe]̃?)","%1i.%2")
 	end
 end
 
@@ -35,7 +53,7 @@ end
 --         defaults to STEM2).
 --
 -- The value of any of these stem arguments can actually consist of multiple
--- stems separated by a /; see add().
+-- stems in a table or separated by a /; see add().
 --
 -- Note that this will not override an already-existing value for the
 -- present participle, but will override all the rest.
@@ -129,7 +147,7 @@ end
 -- schwa needs to be inserted before the endings (e.g. 'montrer'). The stem
 -- passed in should not include the schwa and may be multipart (see add()).
 pron["future_with_schwa"] = function(data, stem)
-	return pron["ind_f"](data, add(stem,"ə.", "concat"))
+	return pron["ind_f"](data, add(stem,"ə."))
 end
 
 -- Construct the pronunciation of the present subjunctive given two stems
@@ -172,7 +190,7 @@ end
 --   STEM_FUT_I is used for 1p and 2p of the conditional (and should not
 --     contain a final /ʁj/).
 pron["er"] = function(data, stem_final, stem_nonfinal, stem_nonfinal_i, stem_fut, stem_fut_i)
-	stem_fut = stem_fut or add(stem_nonfinal, "ə.", "concat")
+	stem_fut = stem_fut or add(stem_nonfinal, "ə.")
 	data.prons.ppr = add(stem_nonfinal,"ɑ̃")
 	data.prons.pp = add(stem_nonfinal,"e")
 
@@ -193,7 +211,7 @@ pron["ind_ps_a"] = function(data, stem)
 	data.prons.ind_ps_2p = add(stem,"at")
 	data.prons.ind_ps_3p = add(stem,"ɛʁ")
 
-	data = pron.sub_pa(data, add(stem, "a", "concat"))
+	data = pron.sub_pa(data, add(stem, "a"))
 
 	return data
 end
