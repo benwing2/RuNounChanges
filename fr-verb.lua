@@ -761,12 +761,12 @@ end
 conj["chauvir"] = function()
 	data.notes = "The forms without -iss- are recommended by the [[w:Académie française|French Academy]], although their usage is not common."
 
-	construct_non_er_conj("chauvi", {"chauv", "chauviss"},
+	construct_non_er_conj(data, "chauvi", {"chauv", "chauviss"},
 		{"chauv", "chauviss"}, "chauvi")
 end
 
 conj["choir"] = function()
-	construct_non_er_conj("choi", "choy", "choi", "chu",
+	construct_non_er_conj(data, "choi", "choy", "choi", "chu",
 		data.stem == "é" and "choir" or {"choir", "cherr"})
 	m_core.clear_imp(data)
 	data.forms.ppr = "—"
@@ -1156,11 +1156,12 @@ end
 conj["faire"] = function()
 	construct_non_er_conj(data, "fai", "fais", "fais", "fi", "fer", "fait",
 		"fass")
-	-- Need to override the present indicative 2p and 3p, and the
-	-- pronunciations of these forms as well as all forms in fais-.
+	-- Need to override the present indicative 2p and 3p, the imperative 2p,
+	-- and the pronunciations of these forms as well as all forms in fais-.
 	setform(data, "ind_p_2p", "faites")
 	setform(data, "ind_p_3p", "font")
 	data.prons.ind_p_1p = dopron(data, "fesons")
+	data.imp_p_2p = "faites"
 	copy_ind_pron_to_imp(data)
 	data = m_pron.ind_i(data, strip_pron_ending(dopron(data, "fesez"), "e"))
 	data.prons.ppr = dopron(data, "fesant")
