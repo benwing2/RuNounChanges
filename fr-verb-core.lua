@@ -56,7 +56,7 @@ end
 function export.make_ind_p_e(data, stem, stem2, stem3)
 	stem2 = stem2 or stem
 	stem3 = stem3 or stem
-	
+
 	data.forms.ind_p_1s = add(stem,"e")
 	data.forms.ind_p_2s = add(stem,"es")
 	data.forms.ind_p_3s = add(stem,"e")
@@ -64,14 +64,14 @@ function export.make_ind_p_e(data, stem, stem2, stem3)
 	data.forms.ind_p_1p = add(stem2,"ons")
 	-- stem3 is used in -ger and -cer verbs
 	data.forms.ind_p_2p = add(stem3,"ez")
-	
+
 	data = export.make_ind_i(data, stem2, stem3)
 	data = export.make_ind_ps_a(data, stem2, stem3)
 	data = export.make_sub_p(data, stem, stem3)
 	data = export.make_imp_p_ind(data)
 	data = export.make_ind_f(data, add(stem, "er"))
 	data.forms.ppr = add(stem2,"ant")
-	
+
 	return data
 end
 
@@ -84,12 +84,12 @@ function export.make_ind_p(data, stem, stem2, stem3)
 	data.forms.ind_p_1p = add(stem2,"ons")
 	data.forms.ind_p_2p = add(stem2,"ez")
 	data.forms.ind_p_3p = add(stem3,"ent")
-	
+
 	data = export.make_ind_i(data, stem2)
 	data = export.make_sub_p(data, stem3, stem2)
 	data = export.make_imp_p_ind(data)
 	data.forms.ppr = add(stem2,"ant")
-	
+
 	return data
 end
 
@@ -101,7 +101,7 @@ function export.make_ind_i(data, stem, stem2)
 	data.forms.ind_i_1p = add(stem2,"ions")
 	data.forms.ind_i_2p = add(stem2,"iez")
 	data.forms.ind_i_3p = add(stem,"aient")
-	
+
 	return data
 end
 
@@ -113,18 +113,18 @@ function export.make_ind_ps_a(data, stem, stem2)
 	data.forms.ind_ps_1p = add(stem,"âmes")
 	data.forms.ind_ps_2p = add(stem,"âtes")
 	data.forms.ind_ps_3p = add(stem2,"èrent")
-	
+
 	data = export.make_sub_pa(data,add(stem,"a"))
-	
+
 	data.forms.pp = data.forms.pp or add(stem2,"é")
-	
+
 	return data
 end
 
 local function fix_circumflex(val)
 	return rsub(val, "[aiïu]n?%^",{["a^"]="â", ["i^"]="î", ["ï^"]="ï", ["in^"]="în", ["u^"]="û"})
 end
-	
+
 function export.make_ind_ps(data, stem)
 	data.forms.ind_ps_1s = add(stem,"s")
 	data.forms.ind_ps_2s = add(stem,"s")
@@ -132,11 +132,11 @@ function export.make_ind_ps(data, stem)
 	data.forms.ind_ps_1p = map(add(stem,"^mes"), fix_circumflex)
 	data.forms.ind_ps_2p = map(add(stem,"^tes"), fix_circumflex)
 	data.forms.ind_ps_3p = add(stem,"rent")
-	
+
 	data = export.make_sub_pa(data,stem)
-	
+
 	data.forms.pp = data.forms.pp or stem
-	
+
 	return data
 end
 
@@ -147,9 +147,9 @@ function export.make_ind_f(data, stem)
 	data.forms.ind_f_1p = add(stem,"ons")
 	data.forms.ind_f_2p = add(stem,"ez")
 	data.forms.ind_f_3p = add(stem,"ont")
-	
+
 	data = export.make_cond_p(data, stem)
-	
+
 	return data
 end
 
@@ -160,7 +160,7 @@ function export.make_cond_p(data, stem)
 	data.forms.cond_p_1p = add(stem,"ions")
 	data.forms.cond_p_2p = add(stem,"iez")
 	data.forms.cond_p_3p = add(stem,"aient")
-	
+
 	return data
 end
 
@@ -183,7 +183,7 @@ function export.make_sub_pa(data, stem)
 	data.forms.sub_pa_1p = add(stem,"ssions")
 	data.forms.sub_pa_2p = add(stem,"ssiez")
 	data.forms.sub_pa_3p = add(stem,"ssent")
-	
+
 	return data
 end
 
@@ -193,7 +193,7 @@ function export.make_imp_p_ind(data)
 	end)
 	data.forms.imp_p_1p = data.forms.ind_p_1p
 	data.forms.imp_p_2p = data.forms.ind_p_2p
-	
+
 	return data
 end
 
@@ -207,7 +207,7 @@ function export.make_imp_p_ind_sub(data)
 	data.forms.imp_p_2p = map(data.forms.sub_p_2p, function(form)
 		return rsub(form, "iez$", "ez")
 	end)
-	
+
 	return data
 end
 
@@ -221,14 +221,14 @@ function export.make_imp_p_sub(data)
 	data.forms.imp_p_2p = map(data.forms.sub_p_2p, function(form)
 		return rsub(form, "iez$", "ez")
 	end)
-	
+
 	return data
 end
 
 function export.refl(data)
 	data.refl = true
 	data.aux = "s'être"
-	
+
 	for key,val in pairs(data.forms) do
 		local pref_v, pref_c, pron_v, pron_c, imp, pron_imp, do_nolink
 		if key == "inf" or key == "ppr" then
@@ -279,7 +279,7 @@ function export.refl(data)
 			end
 		end
 	end
-	
+
 	return data
 end
 
@@ -321,7 +321,7 @@ function export.link(data)
 			end
 		end
 	end
-	
+
 	return data
 end
 
@@ -406,7 +406,7 @@ function export.extract(data, args)
 			data.forms[form .. "_" .. person] = args[dot_form .. "." .. person] or data.forms[form .. "_" .. person]
 		end
 	end
-	
+
 	data.forms.ppr = args.ppr or data.forms.ppr
 	if not data.forms.ppr then
 		if data.forms.ind_p_1p then
@@ -418,7 +418,7 @@ function export.extract(data, args)
 		end
 	end
 	data.forms.pp = args.pp or data.forms.pp
-	
+
 	return data
 end
 

@@ -48,16 +48,16 @@ pron["ind_p"] = function(data, stem, stem2, stem3, stem4)
 	data.prons.ind_p_1p = add(stem2,"ɔ̃")
 	data.prons.ind_p_2p = add(stem2,"e")
 	data.prons.ind_p_3p = add(stem3,"")
-	
+
 	data = pron["ind_i"](data, stem2, stem4)
 	data = pron["sub_p"](data, stem3, stem4)
-	
+
 	data.prons.imp_p_2s = add(stem,"")
 	data.prons.imp_p_1p = add(stem2,"ɔ̃")
 	data.prons.imp_p_2p = add(stem2,"e")
-	
+
 	data.prons.ppr = add(stem2,"ɑ̃")
-	
+
 	return data
 end
 
@@ -72,7 +72,7 @@ pron["ind_i"] = function(data, stem, stem2)
 	data.prons.ind_i_1p = add(stem2,"jɔ̃")
 	data.prons.ind_i_2p = add(stem2,"je")
 	data.prons.ind_i_3p = add(stem,"ɛ")
-	
+
 	return data
 end
 
@@ -87,11 +87,11 @@ pron["ind_ps"] = function(data, stem)
 	data.prons.ind_ps_1p = add(stem,"m")
 	data.prons.ind_ps_2p = add(stem,"t")
 	data.prons.ind_ps_3p = add(stem,"ʁ")
-	
+
 	data = pron["sub_pa"](data,stem)
-	
+
 	data.prons.pp = add(stem,"")
-	
+
 	return data
 end
 
@@ -105,9 +105,9 @@ pron["ind_f"] = function(data, stem, stem2)
 	data.prons.ind_f_1p = add(stem, "ʁɔ̃")
 	data.prons.ind_f_2p = add(stem, "ʁe")
 	data.prons.ind_f_3p = add(stem, "ʁɔ̃")
-	
+
 	data = pron["cond_p"](data, stem, stem2)
-	
+
 	return data
 end
 
@@ -121,7 +121,7 @@ pron["cond_p"] = function(data, stem, stem2)
 	data.prons.cond_p_1p = add(stem2,"ʁjɔ̃")
 	data.prons.cond_p_2p = add(stem2,"ʁje")
 	data.prons.cond_p_3p = add(stem,"ʁɛ")
-	
+
 	return data
 end
 
@@ -142,7 +142,7 @@ pron["sub_p"] = function(data, stem, stem2)
 	data.prons.sub_p_1p = add(stem2,"jɔ̃")
 	data.prons.sub_p_2p = add(stem2,"je")
 	data.prons.sub_p_3p = add(stem,"")
-	
+
 	return data
 end
 
@@ -155,7 +155,7 @@ pron["sub_pa"] = function(data, stem)
 	data.prons.sub_pa_1p = add(stem,".sjɔ̃")
 	data.prons.sub_pa_2p = add(stem,".sje")
 	data.prons.sub_pa_3p = add(stem,"s")
-	
+
 	return data
 end
 
@@ -192,10 +192,13 @@ pron["ind_ps_a"] = function(data, stem)
 	data.prons.ind_ps_1p = add(stem,"am")
 	data.prons.ind_ps_2p = add(stem,"at")
 	data.prons.ind_ps_3p = add(stem,"ɛʁ")
-	
+
 	data = pron.sub_pa(data, add(stem, "a", "concat"))
-	
+
 	return data
 end
 
 return pron
+
+-- For Vim, so we get 4-space tabs
+-- vim: set ts=4 sw=4 noet:
