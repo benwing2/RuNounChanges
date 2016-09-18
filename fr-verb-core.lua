@@ -48,11 +48,11 @@ function export.make_ind_p_e(data, stem, stem2, stem3)
 	-- stem3 is used in -ger and -cer verbs
 	data.forms.ind_p_2p = add(stem3,"ez")
 
-	data = export.make_ind_i(data, stem2, stem3)
-	data = export.make_ind_ps_a(data, stem2, stem3)
-	data = export.make_sub_p(data, stem, stem3)
-	data = export.make_imp_p_ind(data)
-	data = export.make_ind_f(data, add(stem, "er"))
+	export.make_ind_i(data, stem2, stem3)
+	export.make_ind_ps_a(data, stem2, stem3)
+	export.make_sub_p(data, stem, stem3)
+	export.make_imp_p_ind(data)
+	export.make_ind_f(data, add(stem, "er"))
 	data.forms.ppr = add(stem2,"ant")
 end
 
@@ -70,9 +70,9 @@ function export.make_ind_p(data, stem, stem2, stem3)
 	data.forms.ind_p_2p = add(stem2,"ez")
 	data.forms.ind_p_3p = add(stem3,"ent")
 
-	data = export.make_ind_i(data, stem2)
-	data = export.make_sub_p(data, stem3, stem2)
-	data = export.make_imp_p_ind(data)
+	export.make_ind_i(data, stem2)
+	export.make_sub_p(data, stem3, stem2)
+	export.make_imp_p_ind(data)
 	data.forms.ppr = add(stem2,"ant")
 end
 
@@ -95,7 +95,7 @@ function export.make_ind_ps_a(data, stem, stem2)
 	data.forms.ind_ps_2p = add(stem,"âtes")
 	data.forms.ind_ps_3p = add(stem2,"èrent")
 
-	data = export.make_sub_pa(data,add(stem,"a"))
+	export.make_sub_pa(data,add(stem,"a"))
 
 	data.forms.pp = data.forms.pp or add(stem2,"é")
 end
@@ -112,7 +112,7 @@ function export.make_ind_ps(data, stem)
 	data.forms.ind_ps_2p = map(add(stem,"^tes"), fix_circumflex)
 	data.forms.ind_ps_3p = add(stem,"rent")
 
-	data = export.make_sub_pa(data,stem)
+	export.make_sub_pa(data,stem)
 
 	data.forms.pp = data.forms.pp or stem
 end
@@ -125,7 +125,7 @@ function export.make_ind_f(data, stem)
 	data.forms.ind_f_2p = add(stem,"ez")
 	data.forms.ind_f_3p = add(stem,"ont")
 
-	data = export.make_cond_p(data, stem)
+	export.make_cond_p(data, stem)
 end
 
 function export.make_cond_p(data, stem)
@@ -298,14 +298,14 @@ end
 function export.extract(data, args)
 	if args.inf then
 		data.forms.inf = args.inf
-		data = export.make_ind_f(data, rsub(args.inf,"e$",""))
-		data = export.make_cond_p(data, rsub(args.inf,"e$",""))
+		export.make_ind_f(data, rsub(args.inf,"e$",""))
+		export.make_cond_p(data, rsub(args.inf,"e$",""))
 	end
 	if args.pp then
 		data.forms.pp = args.pp
 		if mw.ustring.match(args.pp, "[iu]$") then
-			data = export.make_ind_ps(data, args.pp)
-			data = export.make_sub_pa(data, args.pp)
+			export.make_ind_ps(data, args.pp)
+			export.make_sub_pa(data, args.pp)
 		end
 	end
 	for _,form in ipairs({"ind_p","ind_i","ind_ps","ind_f","cond_p","sub_p","sub_pa","imp_p"}) do
@@ -325,28 +325,28 @@ function export.extract(data, args)
 					stem3 = stem2
 				end
 				if args["ind.p_e"] then
-					data = export.make_ind_p_e(data, stem, stem2, stem3)
+					export.make_ind_p_e(data, stem, stem2, stem3)
 				else
-					data = export.make_ind_p(data, stem, stem2, stem3)
+					export.make_ind_p(data, stem, stem2, stem3)
 				end
 				for _,person in ipairs({"1s","2s","3s","1p","2p","3p"}) do
 					data.forms[form .. "_" .. person] = args[dot_form .. "." .. person] or data.forms[form .. "_" .. person]
 				end
-				data = export.make_imp_p_ind(data)
+				export.make_imp_p_ind(data)
 			elseif form == "ind_i" then
-				data = export.make_ind_i(data, args[dot_form])
+				export.make_ind_i(data, args[dot_form])
 			elseif form == "ind_ps" then
 				if mw.ustring.match(args["ind.ps"], "a$") then
 					local stem = rsub(args[dot_form],"a$","")
-					data = export.make_ind_ps_a(data, stem)
+					export.make_ind_ps_a(data, stem)
 				else
-					data = export.make_ind_ps(data, args[dot_form])
+					export.make_ind_ps(data, args[dot_form])
 				end
-				data = export.make_sub_pa(data, args[dot_form])
+				export.make_sub_pa(data, args[dot_form])
 			elseif form == "ind_f" then
-				data = export.make_ind_f(data, args[dot_form])
+				export.make_ind_f(data, args[dot_form])
 			elseif form == "cond_p" then
-				data = export.make_cond_p(data, args[dot_form])
+				export.make_cond_p(data, args[dot_form])
 			elseif form == "sub_p" then
 				local stem = args[dot_form]
 				local stem2 = stem
@@ -354,16 +354,16 @@ function export.extract(data, args)
 					stem = rsub(stem, "^([^/]+)/([^/]+)$", "%1")
 					stem2 = rsub(stem2, "^([^/]+)/([^/]+)$", "%2")
 				end
-				data = export.make_sub_p(data, stem, stem2)
+				export.make_sub_p(data, stem, stem2)
 			elseif form == "sub_pa" then
-				data = export.make_sub_pa(data, args[dot_form])
+				export.make_sub_pa(data, args[dot_form])
 			elseif form == "imp_p" then
 				if args[dot_form] == "sub" then
-					data = export.make_imp_p_sub(data)
+					export.make_imp_p_sub(data)
 				elseif args[dot_form] == "ind_sub" then
-					data = export.make_imp_p_ind_sub(data)
+					export.make_imp_p_ind_sub(data)
 				else
-					data = export.make_imp_p_ind(data)
+					export.make_imp_p_ind(data)
 				end
 			end
 		end

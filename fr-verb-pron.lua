@@ -63,8 +63,8 @@ pron["ind_p"] = function(data, stem, stem2, stem3, stem4)
 	data.prons.ind_p_2p = add(stem2,"e")
 	data.prons.ind_p_3p = add(stem3,"")
 
-	data = pron["ind_i"](data, stem2, stem4)
-	data = pron["sub_p"](data, stem3, stem4)
+	pron["ind_i"](data, stem2, stem4)
+	pron["sub_p"](data, stem3, stem4)
 
 	data.prons.imp_p_2s = add(stem,"")
 	data.prons.imp_p_1p = add(stem2,"ɔ̃")
@@ -98,7 +98,7 @@ pron["ind_ps"] = function(data, stem)
 	data.prons.ind_ps_2p = add(stem,"t")
 	data.prons.ind_ps_3p = add(stem,"ʁ")
 
-	data = pron["sub_pa"](data,stem)
+	pron["sub_pa"](data,stem)
 
 	data.prons.pp = add(stem,"")
 end
@@ -114,7 +114,7 @@ pron["ind_f"] = function(data, stem, stem2)
 	data.prons.ind_f_2p = add(stem, "ʁe")
 	data.prons.ind_f_3p = add(stem, "ʁɔ̃")
 
-	data = pron["cond_p"](data, stem, stem2)
+	pron["cond_p"](data, stem, stem2)
 end
 
 -- Construct the pronunciation of the conditional. The stem
@@ -169,9 +169,9 @@ pron["er"] = function(data, stem_final, stem_nonfinal, stem_nonfinal_i, stem_fut
 	data.prons.ppr = add(stem_nonfinal,"ɑ̃")
 	data.prons.pp = add(stem_nonfinal,"e")
 
-	data = pron.ind_p(data, stem_final, stem_nonfinal, stem_final, stem_nonfinal_i)
-	data = pron.ind_f(data, stem_fut, stem_fut_i)
-	data = pron.ind_ps_a(data, stem_nonfinal)
+	pron.ind_p(data, stem_final, stem_nonfinal, stem_final, stem_nonfinal_i)
+	pron.ind_f(data, stem_fut, stem_fut_i)
+	pron.ind_ps_a(data, stem_nonfinal)
 end
 
 -- Construct the pronunciation of the simple past and imperfect subjunctive
@@ -184,7 +184,7 @@ pron["ind_ps_a"] = function(data, stem)
 	data.prons.ind_ps_2p = add(stem,"at")
 	data.prons.ind_ps_3p = add(stem,"ɛʁ")
 
-	data = pron.sub_pa(data, add(stem, "a"))
+	pron.sub_pa(data, add(stem, "a"))
 end
 
 return pron

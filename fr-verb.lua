@@ -539,7 +539,7 @@ conj["yer"] = function(data)
 	data.category = "-yer"
 end
 
-conj["xxer"] = function(consonant)
+conj["xxer"] = function(data, consonant)
 	data.notes = "With the exception of " .. (stem == "appel" and "''appeler''" or link("appeler")) .. ", "
 	data.notes = data.notes .. (stem == "jet" and "''jeter''" or link("jeter")) .. " and their derived verbs, "
 	data.notes = data.notes .. "all verbs that used to double the consonants can also now be conjugated like " .. link("amener") .. "."
@@ -549,7 +549,7 @@ conj["xxer"] = function(consonant)
 	data.category = "-xxer"
 end
 
-conj["e-er"] = function(consonant)
+conj["e-er"] = function(data, consonant)
 	local stem = 'e' .. consonant
 	local stem2 = 'è' .. consonant
 
@@ -576,7 +576,7 @@ conj["eger"] = function(data)
 	data.category = "-e-er"
 end
 
-conj["é-er"] = function(consonant)
+conj["é-er"] = function(data, consonant)
 	local stem = 'é' .. consonant
 	local stem2 = 'è' .. consonant
 
@@ -1467,7 +1467,7 @@ end
 local function call_conj(data, conjtyp, arg)
 	local ending = data.forms.inf
 	data.pronstem = strip_respelling_ending(data.pron, ending) or data.stem
-	conj[conjtyp](arg)
+	conj[conjtyp](data, arg)
 end
 
 -- Conjugate the verb according to the TYPE, which is either explicitly
