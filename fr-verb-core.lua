@@ -7,6 +7,7 @@ local IPA = function(str)
 	return require("Module:IPA").format_IPA(nil,str)
 end
 
+local rmatch = mw.ustring.match
 local rsubn = mw.ustring.gsub
 
 -- version of rsubn() that discards all but the first return value
