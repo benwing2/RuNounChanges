@@ -343,6 +343,7 @@ local function construct_non_er_conj(data, pres_sg_stem, pres_12p_stem,
 		data = m_core.make_ind_p_e(data, pres_sg_stem)
 	else
 		data = m_core.make_ind_p(data, pres_sg_stem, pres_12p_stem, pres_3p_stem)
+	end
 	data = m_core.make_ind_ps(data, past_stem)
 	if not fut_stem then
 		fut_stem = rsub(data.forms.inf, "e$", "")
@@ -360,7 +361,7 @@ local function construct_non_er_conj(data, pres_sg_stem, pres_12p_stem,
 			local stem_final_pron = dopron(data, pres_sg_stem, "e")
 			local stem_nonfinal_pron = strip_pron_ending(dopron(data, pres_sg_stem, "ez"), "e")
 			local stem_nonfinal_i_pron = strip_pron_ending(dopron(data, pres_sg_stem, "iez"), "je")
-			data = m_pron.er(stem_final_pron, stem_nonfinal_pron,
+			data = m_pron.er(data, stem_final_pron, stem_nonfinal_pron,
 				stem_nonfinal_i_pron)
 		else
 			local pres_sg_stem_pron = map(pres_sg_stem, function(stem)
@@ -420,6 +421,7 @@ local function construct_non_er_conj_er_present(data, pres_stem, past_stem,
 	construct_non_er_conj(data, pres_stem, nil, nil, past_stem, fut_stem,
 	pp or past_stem, pres_subj_stem, pres_subj_nonfinal_stem, "er-present")
 end
+
 local function copy_ind_pron_to_imp(data)
 	data.prons.imp_p_2s = data.prons.ind_p_2s
 	data.prons.imp_p_1p = data.prons.ind_p_1p
@@ -747,14 +749,14 @@ local function ouvrir_ffrir(rir_prefix)
 	data.pronstem = data.pronstem .. rir_prefix
 	data.forms.inf = "rir"
 
-	data.notes = "This verb is conjugated like " .. link(data.stem == "ouv" and "couvrir" or "ouvrir"
+	data.notes = "This verb is conjugated like " .. link(data.stem == "ouv" and "couvrir" or "ouvrir")
 		.. " and " .. link(data.stem == "off" and "souffrir" or "offrir") .. ". "
 		.. "It is conjugated like a regular " .. link("-er") .. " verb in the present and imperfect indicative, present subjunctive, "
 		.. "imperative, and present participle; it is conjugated like a regular " .. link("-ir") .. " verb in the infinitive, "
 		.. "future indicative, conditional, past historic, and imperfect subjunctive; "
 		.. "and its past participle " .. link("{stem}ert") .. " is irregular."
 
-	construct_non_er_conj_er_present("r", "ri", nil, "ert")
+	construct_non_er_conj_er_present(data, "r", "ri", nil, "ert")
 end
 
 conj["ouvrir"] = function()
@@ -770,7 +772,7 @@ conj["quérir"] = function()
 end
 
 conj["aillir"] = function()
-	construct_non_er_conj_er_present("aill", "ailli", {"aillir", "ailler"})
+	construct_non_er_conj_er_present(data, "aill", "ailli", {"aillir", "ailler"})
 end
 
 conj["chauvir"] = function()
@@ -819,7 +821,7 @@ conj["choir"] = function()
 end
 
 conj["cueillir"] = function()
-	construct_non_er_conj_er_present("cueill", "cueilli", {"cueillir", "cueiller"})
+	construct_non_er_conj_er_present(data, "cueill", "cueilli", {"cueillir", "cueiller"})
 end
 
 conj["courir"] = function()
