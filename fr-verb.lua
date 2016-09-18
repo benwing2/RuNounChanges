@@ -695,6 +695,14 @@ conj["ouïr"] = function()
 
 	construct_non_er_conj(data, {"ouï", "oi"}, {"ouïss", "oy"},
 		{"ouïss", "oi"}, "ouï", {"ouïr", "oir", "orr"})
+	-- Need to override the pronunciations of all forms in oy-.
+	data.prons.ind_p_1p = dopron(data, {"ouïssons", "oillons"})
+	data.prons.ind_p_2p = dopron(data, {"ouïssez", "oillez"})
+	copy_ind_pron_to_imp(data)
+	data = m_pron.ind_i(data, strip_pron_ending(dopron(data, {"ouïssez", "oillez"}), "e"))
+	data = m_pron.sub_p(data, dopron(data, {"ouïsse", "oie"}), strip_pron_ending(
+		dopron(data, {"ouïssiez", "oilliez"}), "je"))
+	data.prons.ppr = dopron(data, {"ouïssant", "oillant"})
 	data.category = "ouïr"
 	data.typ = "irregular"
 end
