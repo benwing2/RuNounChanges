@@ -8,37 +8,33 @@ local function rsub(term, foo, bar)
 	return retval
 end
 
--- Combine stem pronunciation and suffix pronunciation. The stem can actually
--- consist of a table of stems or multiple stems separated by /, in both of
--- which cases the suffix will be added to each stem separately and the return
--- value will be a list of pronunciations; otherwise the return value will be
--- a single string. The combination procedure mostly just appends the two,
--- but handles changing ".jj" to "j.j" (moving the syllable boundary) and
--- converting ".C[lʁ]j" to ".C[lʁ]i".
-local function add(source, appendix, concat)
-	if type(source) == "table" then
+local function map(seq, fun)
+	if type(seq) == "table" then
 		local ret = {}
-		for _, stem in ipairs(source) do
-			local stemret = add(stem, appendix)
-			if type(stemret) == "table" then
-				for _, sr in ipairs(stemret) do
-					table.insert(ret, sr)
-				end
-			else
-				table.insert(ret, stemret)
-			end
+		for _, s in ipairs(seq) do
+			-- store in separate var in case fun() has multiple retvals
+			local retval = fun(s)
+			table.insert(ret, retval)
 		end
 		return ret
-	end
-	if mw.ustring.match(source,"/") then
-		source = mw.text.split(source,"/",true)
-		for i,val in ipairs(source) do
-			source[i] = rsub(rsub(val..appendix, "%.jj", "j.j"),"(%..[lʁ])(j[ɔe]̃?)","%1i.%2")
-		end
-		return source
 	else
-		return rsub(rsub(source..appendix, "%.jj", "j.j"),"(%..[lʁ])(j[ɔe]̃?)","%1i.%2")
+		-- store in separate var in case fun() has multiple retvals
+		local retval = fun(seq)
+		return retval
 	end
+end
+
+-- Combine stem pronunciation and suffix pronunciation. The stem can actually
+-- consist of a table of stems, in which case the suffix will be added to each
+-- stem separately and the return value will be a list of pronunciations;
+-- otherwise the return value will be a single string. The combination
+-- procedure mostly just appends the two, but handles changing ".jj" to "j.j"
+-- (moving the syllable boundary) and converting ".C[lʁ]j" to ".C[lʁ]i".
+local function add(source, appendix)
+	return map(source, function(s)
+		return rsub(rsub(s .. appendix, "%.jj", "j.j"),
+			"(%..[lʁ])(j[ɔe]̃?)", "%1i.%2")
+	end)
 end
 
 -- Construct the pronunciation of the entire present tense (indicative,
