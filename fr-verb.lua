@@ -544,6 +544,11 @@ conj["eyer"] = function(data)
 end
 
 conj["yer"] = function(data)
+	data.notes = "This verb is part of a large group of " .. link("-er")
+		.. " verbs that conjugate like "
+		.. link(data.stem == "no" and "employer" or "noyer") .. " or "
+		.. link(data.stem == "ennu" and "appuyer" or "ennuyer") .. ". These "
+		.. "verbs always replace the ‘y’ with an ‘i’ before a silent ‘e’."
 	m_core.make_ind_p_e(data, "i", "y", "y")
 
 	local stem = dopron(data, "i")
@@ -1002,6 +1007,11 @@ conj["oître"] = function(data)
 end
 
 conj["indre"] = function(data)
+	data.notes = "This verb is conjugated like "
+		.. link(data.stem == "pei" and "plaindre" or "peindre")
+		.. ". It uses the same endings as " .. link("rendre") .. " or "
+		.. link("vendre") .. ", but its ''-nd-'' becomes ''-gn-'' before a "
+		.. "vowel, and its past participle ends in ‘t’ instead of a vowel."
 	construct_non_er_conj(data, "in", "ign", "ign", "igni", nil, "int")
 end
 
@@ -1120,10 +1130,15 @@ conj["soudre"] = function(data)
 end
 
 conj["résoudre"] = function(data)
+	data.notes = "This verb also has a rare past participle "
+		.. link("résous") .. " (feminine " .. link("résoute") .. ")."
 	construct_non_er_conj(data, "résou", "résolv", "résolv", "résolu")
 end
 
 conj["voir"] = function(data)
+	data.notes = "Verbs derived from " .. link("voir") .. " form their "
+		.. "future and conditional forms using the root ''verr-'' instead of "
+		.. "the ''vr-'' or ''voir-'' of other verbs."
 	construct_non_er_conj(data, "voi", "voy", "voi", "vi", "verr", "vu")
 end
 
@@ -1213,7 +1228,12 @@ conj["paître"] = function(data)
 end
 
 conj["pleuvoir"] = function(data)
-	data.notes = "This is a [[defective]] verb, only conjugated in the [[third-person]]. The [[third-person plural]] forms are only used figuratively."
+	data.notes = "This is a [[defective]] verb, only conjugated in the "
+	if data.stem == "re" then
+		data.notes = data.notes .. "[[third-person]] singular."
+	else
+		data.notes = data.notes .. "[[third-person]]. The [[third-person plural]] forms are only used figuratively."
+	end
 
 	construct_non_er_conj(data, "pleu", "pleuv", "pleuv", "plu", "pleuvr")
 	if data.stem == "re" then
