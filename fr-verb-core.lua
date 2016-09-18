@@ -15,32 +15,6 @@ local function rsub(term, foo, bar)
 	return retval
 end
 
-local function add(source,appendix)
-	if type(source) == "table" then
-		local ret = {}
-		for _, stem in ipairs(source) do
-			local stemret = add(stem, appendix)
-			if type(stemret) == "table" then
-				for _, sr in ipairs(stemret) do
-					table.insert(ret, sr)
-				end
-			else
-				table.insert(ret, stemret)
-			end
-		end
-		return ret
-	end
-	if mw.ustring.match(source,"/") then
-		source = mw.text.split(source,"/",plain)
-		for i,val in ipairs(source) do
-			source[i] = val..appendix
-		end
-		return source
-	else
-		return source..appendix
-	end
-end
-
 local function map(seq, fun)
 	if type(seq) == "table" then
 		local ret = {}
@@ -55,6 +29,10 @@ local function map(seq, fun)
 		local retval = fun(seq)
 		return retval
 	end
+end
+
+local function add(source, appendix)
+	return map(source, function(s) return s .. appendix end)
 end
 
 function export.make_ind_p_e(data, stem, stem2, stem3)
@@ -84,6 +62,11 @@ function export.make_ind_p(data, stem, stem2, stem3)
 	stem3 = stem3 or stem2
 	data.forms.ind_p_1s = add(stem,"s")
 	data.forms.ind_p_2s = add(stem,"s")
+	-- add t unless stem ends in -t (e.g. met), -d (e.g. vend, assied) or
+	-- -c (e.g. vainc).
+	data.forms.ind_p_3s = map(stem, function(s)
+		return add(s, rmatch(s, "[tdc]$") and "" or "t")
+	end)
 	data.forms.ind_p_3s = add(stem,"t")
 	data.forms.ind_p_1p = add(stem2,"ons")
 	data.forms.ind_p_2p = add(stem2,"ez")
