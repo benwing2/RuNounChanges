@@ -54,8 +54,6 @@ function export.make_ind_p_e(data, stem, stem2, stem3)
 	data = export.make_imp_p_ind(data)
 	data = export.make_ind_f(data, add(stem, "er"))
 	data.forms.ppr = add(stem2,"ant")
-
-	return data
 end
 
 function export.make_ind_p(data, stem, stem2, stem3)
@@ -77,8 +75,6 @@ function export.make_ind_p(data, stem, stem2, stem3)
 	data = export.make_sub_p(data, stem3, stem2)
 	data = export.make_imp_p_ind(data)
 	data.forms.ppr = add(stem2,"ant")
-
-	return data
 end
 
 function export.make_ind_i(data, stem, stem2)
@@ -89,8 +85,6 @@ function export.make_ind_i(data, stem, stem2)
 	data.forms.ind_i_1p = add(stem2,"ions")
 	data.forms.ind_i_2p = add(stem2,"iez")
 	data.forms.ind_i_3p = add(stem,"aient")
-
-	return data
 end
 
 function export.make_ind_ps_a(data, stem, stem2)
@@ -105,8 +99,6 @@ function export.make_ind_ps_a(data, stem, stem2)
 	data = export.make_sub_pa(data,add(stem,"a"))
 
 	data.forms.pp = data.forms.pp or add(stem2,"é")
-
-	return data
 end
 
 local function fix_circumflex(val)
@@ -124,8 +116,6 @@ function export.make_ind_ps(data, stem)
 	data = export.make_sub_pa(data,stem)
 
 	data.forms.pp = data.forms.pp or stem
-
-	return data
 end
 
 function export.make_ind_f(data, stem)
@@ -137,8 +127,6 @@ function export.make_ind_f(data, stem)
 	data.forms.ind_f_3p = add(stem,"ont")
 
 	data = export.make_cond_p(data, stem)
-
-	return data
 end
 
 function export.make_cond_p(data, stem)
@@ -148,8 +136,6 @@ function export.make_cond_p(data, stem)
 	data.forms.cond_p_1p = add(stem,"ions")
 	data.forms.cond_p_2p = add(stem,"iez")
 	data.forms.cond_p_3p = add(stem,"aient")
-
-	return data
 end
 
 function export.make_sub_p(data, stem, stem2)
@@ -160,8 +146,6 @@ function export.make_sub_p(data, stem, stem2)
 	data.forms.sub_p_3p = add(stem,"ent")
 	data.forms.sub_p_1p = add(stem2,"ions")
 	data.forms.sub_p_2p = add(stem2,"iez")
-
-	return data
 end
 
 function export.make_sub_pa(data, stem)
@@ -171,8 +155,6 @@ function export.make_sub_pa(data, stem)
 	data.forms.sub_pa_1p = add(stem,"ssions")
 	data.forms.sub_pa_2p = add(stem,"ssiez")
 	data.forms.sub_pa_3p = add(stem,"ssent")
-
-	return data
 end
 
 function export.make_imp_p_ind(data)
@@ -181,8 +163,6 @@ function export.make_imp_p_ind(data)
 	end)
 	data.forms.imp_p_1p = data.forms.ind_p_1p
 	data.forms.imp_p_2p = data.forms.ind_p_2p
-
-	return data
 end
 
 function export.make_imp_p_ind_sub(data)
@@ -195,8 +175,6 @@ function export.make_imp_p_ind_sub(data)
 	data.forms.imp_p_2p = map(data.forms.sub_p_2p, function(form)
 		return rsub(form, "iez$", "ez")
 	end)
-
-	return data
 end
 
 function export.make_imp_p_sub(data)
@@ -209,8 +187,6 @@ function export.make_imp_p_sub(data)
 	data.forms.imp_p_2p = map(data.forms.sub_p_2p, function(form)
 		return rsub(form, "iez$", "ez")
 	end)
-
-	return data
 end
 
 function export.clear_imp(data)
@@ -273,8 +249,6 @@ function export.refl(data)
 			end
 		end
 	end
-
-	return data
 end
 
 function export.link(data)
@@ -315,8 +289,6 @@ function export.link(data)
 			end
 		end
 	end
-
-	return data
 end
 
 -- not sure if it's still used by something so I'm leaving a stub function instead of removing it entirely
@@ -412,8 +384,6 @@ function export.extract(data, args)
 		end
 	end
 	data.forms.pp = args.pp or data.forms.pp
-
-	return data
 end
 
 return export

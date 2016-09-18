@@ -57,8 +57,6 @@ local export = {}
 -- from 'data' (see below) and set properties of 'data' to indicate the
 -- verb forms and pronunciation.
 local conj = {}
--- Table of data describing a given verb and its forms.
-local data = {}
 
 -- If not false, compare this module with new version of module to make
 -- sure all conjugations and pronunciations are the same. If "error", issue
@@ -346,15 +344,15 @@ local function construct_non_er_conj(data, pres_sg_stem, pres_12p_stem,
 	pres_3p_stem, past_stem, fut_stem, pp, pres_subj_stem,
 	pres_subj_nonfinal_stem, er_present)
 	if er_present then
-		data = m_core.make_ind_p_e(data, pres_sg_stem)
+		m_core.make_ind_p_e(data, pres_sg_stem)
 	else
-		data = m_core.make_ind_p(data, pres_sg_stem, pres_12p_stem, pres_3p_stem)
+		m_core.make_ind_p(data, pres_sg_stem, pres_12p_stem, pres_3p_stem)
 	end
-	data = m_core.make_ind_ps(data, past_stem)
+	m_core.make_ind_ps(data, past_stem)
 	if not fut_stem then
 		fut_stem = rsub(data.forms.inf, "e$", "")
 	end
-	data = m_core.make_ind_f(data, fut_stem)
+	m_core.make_ind_f(data, fut_stem)
 
 	-- Most of the time it works to add 's' to produce the 1sg (it doesn't
 	-- always work to use the stem directly, cf. apparais vs. apparai). But
@@ -367,7 +365,7 @@ local function construct_non_er_conj(data, pres_sg_stem, pres_12p_stem,
 			local stem_final_pron = dopron(data, pres_sg_stem, "e")
 			local stem_nonfinal_pron = strip_pron_ending(dopron(data, pres_sg_stem, "ez"), "e")
 			local stem_nonfinal_i_pron = strip_pron_ending(dopron(data, pres_sg_stem, "iez"), "je")
-			data = m_pron.er(data, stem_final_pron, stem_nonfinal_pron,
+			m_pron.er(data, stem_final_pron, stem_nonfinal_pron,
 				stem_nonfinal_i_pron)
 		else
 			local pres_sg_stem_pron = map(pres_sg_stem, function(stem)
@@ -376,16 +374,16 @@ local function construct_non_er_conj(data, pres_sg_stem, pres_12p_stem,
 			local pres_12p_stem_pron = strip_pron_ending(dopron(data, pres_12p_stem, "ez"), "e")
 			local pres_3p_stem_pron = dopron(data, pres_3p_stem, "e")
 			local pre_j_stem_pron = strip_pron_ending(dopron(data, pres_12p_stem, "iez"), "je")
-			data = m_pron.ind_p(data, pres_sg_stem_pron, pres_12p_stem_pron, pres_3p_stem_pron, pre_j_stem_pron)
+			m_pron.ind_p(data, pres_sg_stem_pron, pres_12p_stem_pron, pres_3p_stem_pron, pre_j_stem_pron)
 		end
 	end
 	if past_stem ~= "—" then
 		local past_stem_pron = dopron(data, past_stem)
-		data = m_pron.ind_ps(data, past_stem_pron)
+		m_pron.ind_ps(data, past_stem_pron)
 	end
 	if fut_stem ~= "—" then
 		local fut_stem_pron = strip_pron_ending(dopron(data, fut_stem, "ez"), "ʁe")
-		data = m_pron.ind_f(data, fut_stem_pron)
+		m_pron.ind_f(data, fut_stem_pron)
 	end
 
 	if pp then
@@ -396,11 +394,11 @@ local function construct_non_er_conj(data, pres_sg_stem, pres_12p_stem,
 	end
 
 	if pres_subj_stem then
-		data = m_core.make_sub_p(data, pres_subj_stem)
+		m_core.make_sub_p(data, pres_subj_stem)
 		if pres_subj_stem ~= "—" then
 			local pres_subj_pron1 = dopron(data, pres_subj_stem, "e")
 			local pres_subj_pron2 = strip_pron_ending(dopron(data, pres_subj_nonfinal_stem or pres_subj_stem, "iez"), "je")
-			data = m_pron.sub_p(data, pres_subj_pron1, pres_subj_pron2)
+			m_pron.sub_p(data, pres_subj_pron1, pres_subj_pron2)
 		end
 	end
 end
@@ -456,33 +454,33 @@ local function only_third_verb(data)
 	end
 end
 
-conj["er"] = function()
+conj["er"] = function(data)
 	if data.stem == "all" then
 		data.stem = ""
 		data.pronstem = strip_respelling_ending(data.pron, "aller") or data.stem
-		conj["irreg-aller"]()
+		conj["irreg-aller"](data)
 		data.forms.inf = "aller"
 
 		data.category = "aller"
 
-		data.typ = "suppletive"
+		data.typ = {"suppletive"}
 	else
-		data = m_core.make_ind_p_e(data, "")
-		data = construct_er_pron(data, "")
+		m_core.make_ind_p_e(data, "")
+		construct_er_pron(data, "")
 		data.category = "-er"
 	end
 end
 
-conj["cer"] = function()
-	data = m_core.make_ind_p_e(data, "c", "ç")
+conj["cer"] = function(data)
+	m_core.make_ind_p_e(data, "c", "ç")
 
 	data.notes = "This verb is part of a group of " .. link("-er") .. " verbs for which ‘c’ is softened to a ‘ç’ before the vowels ‘a’ and ‘o’."
-	data = construct_er_pron(data, "c")
+	construct_er_pron(data, "c")
 	data.category = "-cer"
 end
 
-conj["ger"] = function()
-	data = m_core.make_ind_p_e(data, "g", "ge")
+conj["ger"] = function(data)
+	m_core.make_ind_p_e(data, "g", "ge")
 
 	data.notes = "This is a regular " .. link("-er") .. " verb, but the stem is written ''{stem}ge-'' before endings that begin with ''-a-'' or ''-o-'' "
 	data.notes = data.notes .. "(to indicate that the ''-g-'' is a “soft” " .. IPA("/ʒ/") .. " and not a “hard” " .. IPA("/ɡ/") .. "). "
@@ -490,12 +488,12 @@ conj["ger"] = function()
 	data.notes = data.notes .. link(data.stem == "nei" and "bouger" or "neiger") .. " and "
 	data.notes = data.notes .. link(data.stem == "man" and "ranger" or "manger") .. "."
 
-	data = construct_er_pron(data, "g")
+	construct_er_pron(data, "g")
 	data.category = "-ger"
 end
 
-conj["ayer"] = function()
-	data = m_core.make_ind_p_e(data, {"ay", "ai"}, "ay", "ay")
+conj["ayer"] = function(data)
+	m_core.make_ind_p_e(data, {"ay", "ai"}, "ay", "ay")
 
 	local root = dopron(data, "a")
 	root = rsub(root,".$","")
@@ -509,14 +507,14 @@ conj["ayer"] = function()
 	data.prons.ppr = stem3 .. "ɑ̃"
 	data.prons.pp = stem3 .. "e"
 
-	data = m_pron.er(data, {stem2, stem}, stem3)
-	data = m_pron.ind_f(data, {stem3 .. "ə.", stem5 .. "."})
+	m_pron.er(data, {stem2, stem}, stem3)
+	m_pron.ind_f(data, {stem3 .. "ə.", stem5 .. "."})
 
 	data.category = "-ayer"
 end
 
-conj["eyer"] = function()
-	data = m_core.make_ind_p_e(data, "ey")
+conj["eyer"] = function(data)
+	m_core.make_ind_p_e(data, "ey")
 
 	local root = dopron(data, "i")
 	root = rsub(root,".$","")
@@ -525,18 +523,18 @@ conj["eyer"] = function()
 	local stem2 = root .. "e.j"
 	local stem3 = root .. "ej"
 
-	data = m_pron.er(data, stem, stem2)
-	data = m_pron.ind_f(data, stem3 .. ".")
+	m_pron.er(data, stem, stem2)
+	m_pron.ind_f(data, stem3 .. ".")
 
 	data.category = "-eyer"
 end
 
-conj["yer"] = function()
-	data = m_core.make_ind_p_e(data, "i", "y", "y")
+conj["yer"] = function(data)
+	m_core.make_ind_p_e(data, "i", "y", "y")
 
 	local stem = dopron(data, "i")
 
-	data = m_pron.er(data, stem, stem..".j")
+	m_pron.er(data, stem, stem..".j")
 
 	data.category = "-yer"
 end
@@ -546,8 +544,8 @@ conj["xxer"] = function(consonant)
 	data.notes = data.notes .. (stem == "jet" and "''jeter''" or link("jeter")) .. " and their derived verbs, "
 	data.notes = data.notes .. "all verbs that used to double the consonants can also now be conjugated like " .. link("amener") .. "."
 
-	data = m_core.make_ind_p_e(data, consonant..consonant, consonant, consonant)
-	data = construct_er_pron(data, consonant, consonant .. consonant)
+	m_core.make_ind_p_e(data, consonant..consonant, consonant, consonant)
+	construct_er_pron(data, consonant, consonant .. consonant)
 	data.category = "-xxer"
 end
 
@@ -561,20 +559,20 @@ conj["e-er"] = function(consonant)
 	data.notes = data.notes .. "Other verbs conjugated this way include " .. link(stem == "lev" and "acheter" or "lever") .. " and " .. link(stem == "men" and "acheter" or "mener") .. ". "
 	data.notes = data.notes .. "Related but distinct conjugations include those of " .. link("appeler") .. " and " .. link("préférer") .. "."
 
-	data = m_core.make_ind_p_e(data, stem2, stem, stem)
-	data = construct_er_pron(data, stem, stem2)
+	m_core.make_ind_p_e(data, stem2, stem, stem)
+	construct_er_pron(data, stem, stem2)
 	data.category = "-e-er"
 end
 
-conj["ecer"] = function()
-	data = m_core.make_ind_p_e(data, "èc", "eç", "ec")
-	data = construct_er_pron(data, "ec", "èc")
+conj["ecer"] = function(data)
+	m_core.make_ind_p_e(data, "èc", "eç", "ec")
+	construct_er_pron(data, "ec", "èc")
 	data.category = "-e-er"
 end
 
-conj["eger"] = function()
-	data = m_core.make_ind_p_e(data, "èg", "ege", "eg")
-	data = construct_er_pron(data, "eg", "èg")
+conj["eger"] = function(data)
+	m_core.make_ind_p_e(data, "èg", "ege", "eg")
+	construct_er_pron(data, "eg", "èg")
 	data.category = "-e-er"
 end
 
@@ -600,25 +598,25 @@ conj["é-er"] = function(consonant)
 	data.notes = data.notes .. "(and also matching in this regard the conjugations of verbs like " .. link("lever") .. " and " .. link("jeter") .. "). "
 	data.notes = data.notes .. "Both spellings are in use today, and both are therefore given here."
 
-	data = m_core.make_ind_p_e(data, stem2, stem, stem)
-	data = m_core.make_ind_f(data, {stem2 .. "er", stem .. "er"})
-	data = construct_er_pron(data, stem, stem2)
+	m_core.make_ind_p_e(data, stem2, stem, stem)
+	m_core.make_ind_f(data, {stem2 .. "er", stem .. "er"})
+	construct_er_pron(data, stem, stem2)
 	data.category = "-é-er"
 end
 
-conj["écer"] = function()
+conj["écer"] = function(data)
 	data.notes = "This verb is conjugated like " .. link("rapiécer") .. ". It has both the spelling irregularities of other verbs in ''<span lang=\"fr\">-cer</span>'' "
 	data.notes = data.notes .. "(such as " .. link("pincer") .. ", where a silent ‘e’ is inserted before ‘a’ and ‘o’ endings (to indicate the " .. IPA("/s/") .. " sound), "
 	data.notes = data.notes .. "and the spelling and pronunciation irregularities of other verbs in ''<span lang=\"fr\">-é-er</span>'' (such as " .. link("céder") .. ", "
 	data.notes = data.notes .. "where the last stem vowel alternates between " .. IPA("/e/") .. " (written ‘é’) and " .. IPA("/ɛ/") .. " (written ‘è’)."
 
-	data = m_core.make_ind_p_e(data, "èc", "éç", "éc")
-	data = m_core.make_ind_f(data, {"écer", "ècer"})
-	data = construct_er_pron(data, "éc", "èc")
+	m_core.make_ind_p_e(data, "èc", "éç", "éc")
+	m_core.make_ind_f(data, {"écer", "ècer"})
+	construct_er_pron(data, "éc", "èc")
 	data.category = "-é-er"
 end
 
-conj["éger"] = function()
+conj["éger"] = function(data)
 	data.notes = "This verb is conjugated like "
 	if data.stem == "prot" then
 		data.notes = data.notes .. link("assiéger")
@@ -630,13 +628,13 @@ conj["éger"] = function()
 	data.notes = data.notes .. "and the spelling and pronunciation irregularities of other verbs in ''-é-er'' (such as " .. link("céder") .. "), "
 	data.notes = data.notes .. "where the last stem vowel alternates between " .. IPA("/e/") .. " (written ‘é’) and " .. IPA("/ɛ/") .. " (written ‘è’)."
 
-	data = m_core.make_ind_p_e(data, "èg", "ége", "ég")
-	data = m_core.make_ind_f(data, {"éger", "èger"})
-	data = construct_er_pron(data, "ég", "èg")
+	m_core.make_ind_p_e(data, "èg", "ége", "ég")
+	m_core.make_ind_f(data, {"éger", "èger"})
+	construct_er_pron(data, "ég", "èg")
 	data.category = "-é-er"
 end
 
-conj["ir-s"] = function()
+conj["ir-s"] = function(data)
 	local ending = usub(data.stem, -1, -1)
 	data.stem = usub(data.stem, 1, -2)
 	data.pronstem = strip_respelling_ending(data.pron, ending .. "ir") or data.stem
@@ -664,7 +662,7 @@ conj["ir-s"] = function()
 	data.category = "-ir"
 end
 
-conj["ir-reg"] = function()
+conj["ir-reg"] = function(data)
 	-- if ir-reg explicitly used in type argument (e.g. ressortir), inf will
 	-- be ir-reg by default with messed-up future
 	data.forms.inf = "ir"
@@ -672,20 +670,20 @@ conj["ir-reg"] = function()
 	data.category = "-ir"
 end
 
-conj["ir"] = function()
+conj["ir"] = function(data)
 	if ir_s[data.stem.."ir"] then
-		conj["ir-s"]()
+		conj["ir-s"](data)
 	else
-		conj["ir-reg"]()
+		conj["ir-reg"](data)
 	end
 end
 
-conj["ïr"] = function()
+conj["ïr"] = function(data)
 	construct_non_er_conj(data, "ï", "ïss", "ïss", "ï")
 	data.category = "-ïr"
 end
 
-conj["haïr"] = function()
+conj["haïr"] = function(data)
 	data.notes = "This verb is spelled as if conjugated like " .. link("finir") .. ", but has a [[diaeresis]] throughout its conjugation "
 	data.notes = data.notes .. "(including where the circumflex would normally be used) except in the singular indicative present, "
 	data.notes = data.notes .. "whose forms are pronounced " .. IPA("/ɛ/") .. " in Standard French instead of " .. IPA("/ai/") .. ", "
@@ -693,10 +691,10 @@ conj["haïr"] = function()
 
 	construct_non_er_conj(data, "hai", "haïss", "haïss", "haï")
 	data.category = "haïr"
-	data.typ = "irregular"
+	data.typ = {"irregular"}
 end
 
-conj["ouïr"] = function()
+conj["ouïr"] = function(data)
 	data.notes = "The forms beginning with ''oi-'', ''oy-'', or ''orr-'' are archaic."
 
 	construct_non_er_conj(data, {"ouï", "oi"}, {"ouïss", "oy"},
@@ -705,49 +703,49 @@ conj["ouïr"] = function()
 	data.prons.ind_p_1p = dopron(data, {"ouïssons", "oillons"})
 	data.prons.ind_p_2p = dopron(data, {"ouïssez", "oillez"})
 	copy_ind_pron_to_imp(data)
-	data = m_pron.ind_i(data, strip_pron_ending(dopron(data, {"ouïssez", "oillez"}), "e"))
-	data = m_pron.sub_p(data, dopron(data, {"ouïsse", "oie"}), strip_pron_ending(
+	m_pron.ind_i(data, strip_pron_ending(dopron(data, {"ouïssez", "oillez"}), "e"))
+	m_pron.sub_p(data, dopron(data, {"ouïsse", "oie"}), strip_pron_ending(
 		dopron(data, {"ouïssiez", "oilliez"}), "je"))
 	data.prons.ppr = dopron(data, {"ouïssant", "oillant"})
 	data.category = "ouïr"
-	data.typ = "irregular"
+	data.typ = {"irregular"}
 end
 
-conj["asseoir"] = function()
+conj["asseoir"] = function(data)
 	data.notes = "The verb " .. link("asseoir") .. " (and its derivative " .. link("rasseoir") .. ") has 2 distinct conjugations."
 
 	construct_non_er_conj(data, {"assoi", "assied"}, {"assoy", "assey"},
 		{"assoi", "assey"}, "assi", {"assoir", "assiér"}, "assis")
 	data.category = "seoir"
-	data.typ = "irregular"
+	data.typ = {"irregular"}
 end
 
-conj["surseoir"] = function()
+conj["surseoir"] = function(data)
 	construct_non_er_conj(data, "sursoi", "sursoy", "sursoi", "sursi", nil,
 		"sursis")
 	-- Pronunciation in future/cond as if written sursoir- not surseoir-
-	data = m_pron.ind_f(data, strip_pron_ending(dopron(data, "sursoirez"), "ʁe"))
+	m_pron.ind_f(data, strip_pron_ending(dopron(data, "sursoirez"), "ʁe"))
 	data.category = "seoir"
-	data.typ = "irregular"
+	data.typ = {"irregular"}
 end
 
-conj["seoir"] = function()
+conj["seoir"] = function(data)
 	data.notes = "This is a defective verb, only conjugated in the third person."
 
 	construct_non_er_conj(data, "sied", "sey", "sié", "—", "siér")
 	only_third_verb(data)
 	setform(data, "ppr", {"séant","seyant"})
 	data.category = "seoir"
-	data.typ = "irregular"
+	data.typ = {"irregular", "defective"}
 end
 
-conj["bouillir"] = function()
+conj["bouillir"] = function(data)
 	construct_non_er_conj(data, "bou", "bouill", "bouill", "bouilli")
 	data.category = "bouillir"
-	data.typ = "irregular"
+	data.typ = {"irregular"}
 end
 
-conj["enir"] = function()
+conj["enir"] = function(data)
 	construct_non_er_conj(data, "ien", "en", "ienn", "in", "iendr", "enu")
 
 	if usub(data.stem,-1) == "t" then
@@ -755,10 +753,10 @@ conj["enir"] = function()
 	else
 		data.category = "venir"
 	end
-	data.typ = "irregular"
+	data.typ = {"irregular"}
 end
 
-local function ouvrir_ffrir(rir_prefix)
+local function ouvrir_ffrir(data, rir_prefix)
 	data.stem = data.stem .. rir_prefix
 	data.pronstem = data.pronstem .. rir_prefix
 	data.forms.inf = "rir"
@@ -773,30 +771,30 @@ local function ouvrir_ffrir(rir_prefix)
 	construct_non_er_conj_er_present(data, "r", "ri", nil, "ert")
 end
 
-conj["ouvrir"] = function()
-	ouvrir_ffrir("ouv")
+conj["ouvrir"] = function(data)
+	ouvrir_ffrir(data, "ouv")
 end
 
-conj["ffrir"] = function()
-	ouvrir_ffrir("ff")
+conj["ffrir"] = function(data)
+	ouvrir_ffrir(data, "ff")
 end
 
-conj["quérir"] = function()
+conj["quérir"] = function(data)
 	construct_non_er_conj(data, "quier", "quér", "quièr", "qui", "querr", "quis")
 end
 
-conj["aillir"] = function()
+conj["aillir"] = function(data)
 	construct_non_er_conj_er_present(data, "aill", "ailli", {"aillir", "ailler"})
 end
 
-conj["chauvir"] = function()
+conj["chauvir"] = function(data)
 	data.notes = "The forms without -iss- are recommended by the [[w:Académie française|French Academy]], although their usage is not common."
 
 	construct_non_er_conj(data, "chauvi", {"chauv", "chauviss"},
 		{"chauv", "chauviss"}, "chauvi")
 end
 
-conj["choir"] = function()
+conj["choir"] = function(data)
 	construct_non_er_conj(data, "choi", "choy", "choi", "chu",
 		data.stem == "é" and "choir" or {"choir", "cherr"})
 	m_core.clear_imp(data)
@@ -806,25 +804,25 @@ conj["choir"] = function()
 		data.notes = "This is a [[defective]] verb, only conjugated in certain tenses."
 		-- FIXME! frwikt says 1p 2p of pres indic is rare, and likewise
 		-- all of the pres subj.
-		data = m_core.make_ind_i(data, "—")
+		m_core.make_ind_i(data, "—")
 		-- FIXME! frwikt says future in cherr- is archaic, and archaic
 		-- conditional forms in cherr- exist as well.
-		data = m_core.make_cond_p(data, "choir")
-		data = m_pron.cond_p(data, dopron(data, "choi"))
-		data = m_core.make_sub_p(data, "—")
+		m_core.make_cond_p(data, "choir")
+		m_pron.cond_p(data, dopron(data, "choi"))
+		m_core.make_sub_p(data, "—")
 		-- FIXME! frwikt does not say subjunctive past is missing other than
 		-- 3s.
-		data = m_core.make_sub_pa(data, "—")
+		m_core.make_sub_pa(data, "—")
 		data.forms.sub_pa_3s = "chût"
 	elseif data.stem == "dé" then
 		data.notes = "This verb is [[defective]] in that it is not conjugated in certain tenses. It has no indicative imperfect form, no imperative form and no present participle."
-		data = m_core.make_ind_i(data, "—")
+		m_core.make_ind_i(data, "—")
 		-- FIXME! frwikt does not indicate 'chet' as an alternative. Based on
 		-- échoir, we'd expect 'chettent' as alternative as well.
 		setform(data, "ind_p_3s", {"choit", "chet"})
 		-- FIXME! frwikt lists rare ppr déchoyant.
 	elseif data.stem == "é" then
-		data.notes = "This verb is defective and is only conjugated in the third-person."
+		data.notes = "This verb is [[defective]] and is only conjugated in the third-person."
 		only_third_verb(data)
 		setform(data, "ind_p_3s", {"choit", "chet"})
 		-- FIXME! frwikt gives both échettent and échéent as alternatives,
@@ -832,13 +830,14 @@ conj["choir"] = function()
 		setform(data, "ind_p_3p", {"choient", "chettent"})
 		setform(data, "ppr", "chéant")
 	end
+	data.type = {"irregular", "defective"}
 end
 
-conj["cueillir"] = function()
+conj["cueillir"] = function(data)
 	construct_non_er_conj_er_present(data, "cueill", "cueilli", {"cueillir", "cueiller"})
 end
 
-conj["courir"] = function()
+conj["courir"] = function(data)
 	data.notes = "This verb is conjugated like other regular " .. link("-ir") .. " verbs, "
 	data.notes = data.notes .. "except that in the conditional and future tenses an extra ‘r’ is added to the end of the stem "
 	data.notes = data.notes .. "and the past participle ends in ''-u''. All verb ending in ''-courir'' are conjugated this way."
@@ -846,37 +845,40 @@ conj["courir"] = function()
 	construct_non_er_conj(data, "cour", "cour", "cour", "couru", "courr")
 end
 
-conj["falloir"] = function()
+conj["falloir"] = function(data)
 	data.notes = "This verb is defective, only conjugated in the third-person singular."
 	construct_non_er_conj(data, "fau", "fall", "fall", "fallu", "faudr", nil,
 		"faill")
 	impersonal_verb(data)
+	data.type = {"irregular", "defective"}
 end
 
-conj["férir"] = function()
+conj["férir"] = function(data)
 	data.notes = "This verb is defective and is virtually never conjugated in Modern French, except in a few set phrases or as a mark of extreme archaism. "
 	data.notes = data.notes .. "Most of its uses stem from variations on " .. link("sans coup férir") .. "."
 
 	construct_non_er_conj(data, "—", "—", "—", "—", "—", "féru")
+	data.type = {"defective"}
 end
 
-conj["fuir"] = function()
+conj["fuir"] = function(data)
 	construct_non_er_conj(data, "fui", "fuy", "fui", "fui")
 end
 
-conj["gésir"] = function()
+conj["gésir"] = function(data)
 	data.notes = "This is a [[defective]] verb, and is only conjugated in the present and imperfect indicative."
 	construct_non_er_conj(data, "gi", "gis", "gis", "—", "—", "—", "—")
 	data.forms.ind_p_3s = "gît"
 	m_core.clear_imp(data)
+	data.type = {"defective"}
 end
 
-conj["re"] = function()
+conj["re"] = function(data)
 	construct_non_er_conj(data, "", "", "", "i", nil, "u")
 	data.forms.ind_p_3s = ""
 end
 
-conj["cre"] = function()
+conj["cre"] = function(data)
 	data.notes = "This verb "
 	if data.stem ~= "vain" then
 		data.notes = data.notes .. "is conjugated like " .. link("vaincre") .. ". That means it "
@@ -889,7 +891,7 @@ conj["cre"] = function()
 	construct_non_er_conj(data, "c", "qu", "qu", "qui", nil, "cu")
 end
 
-conj["pre"] = function()
+conj["pre"] = function(data)
 	data.notes = "This verb "
 	if data.stem ~= "rom" then
 		data.notes = data.notes .. "is conjugated like " .. link("rompre") .. ". That means it "
@@ -900,53 +902,53 @@ conj["pre"] = function()
 	construct_non_er_conj(data, "p", "p", "p", "pi", nil, "pu")
 end
 
-conj["crire"] = function()
+conj["crire"] = function(data)
 	construct_non_er_conj(data, "cri", "criv", "criv", "crivi", nil, "crit")
 end
 
-conj["rire"] = function()
+conj["rire"] = function(data)
 	construct_non_er_conj(data, "ri", "ri", "ri", "ri")
 end
 
-conj["uire"] = function()
+conj["uire"] = function(data)
 	construct_non_er_conj(data, "ui", "uis", "uis", "uisi", nil, "uit")
 end
 
-conj["aitre"] = function()
+conj["aitre"] = function(data)
 	data.notes = "This verb is one of a fairly small group of " .. link("-re") .. " verbs, that are all conjugated the same way. They are conjugated the same as the alternative spelling, which has a [[circumflex]] over the ‘i’, except that the circumflex is dropped here."
 
 	-- future stem must be nil here because we are called from conj["aître"]
 	construct_non_er_conj(data, "ai", "aiss", "aiss", "u", nil, "u")
 end
 
-conj["aître"] = function()
-	conj["aitre"]()
+conj["aître"] = function(data)
+	conj["aitre"](data)
 	data.notes = "This verb is one of a fairly small group of " .. link("-re") .. " verbs, that are all conjugated the same way. They are unlike other verb groups in that the ‘i’ is given a circumflex before a ‘t’."
 	data.forms.ind_p_3s = "aît"
 end
 
-conj["oître"] = function()
+conj["oître"] = function(data)
 	data.notes = "This verb is one of a fairly small group of " .. link("-re") .. " verbs, that are all conjugated the same way. They are unlike other verb groups in that the ‘i’ is given a circumflex before a ‘t’. This conjugation pattern is no longer in use and has been replaced by -aître."
 
-	data = m_core.make_ind_p(data, "oi", "oiss")
+	m_core.make_ind_p(data, "oi", "oiss")
 	data.forms.ind_p_3s = "oît"
-	data = m_core.make_ind_ps(data, "u")
+	m_core.make_ind_ps(data, "u")
 
 	local stem = dopron(data, "ais")
 	local stem2 = stem .. ".s"
 	local stem3 = stem .. "s"
 	local stem4 = dopron(data, "u")
 
-	data = m_pron.ind_p(data, stem, stem2, stem3)
-	data = m_pron.ind_ps(data, stem4)
-	data = m_pron.ind_f(data, stem .. ".t")
+	m_pron.ind_p(data, stem, stem2, stem3)
+	m_pron.ind_ps(data, stem4)
+	m_pron.ind_f(data, stem .. ".t")
 end
 
-conj["indre"] = function()
+conj["indre"] = function(data)
 	construct_non_er_conj(data, "in", "ign", "ign", "igni", nil, "int")
 end
 
-conj["clure"] = function()
+conj["clure"] = function(data)
 	local pp
 	if data.stem == "in" or data.stem == "trans" or data.stem == "oc" then
 		pp = "clus"
@@ -956,7 +958,7 @@ conj["clure"] = function()
 	construct_non_er_conj(data, "clu", "clu", "clu", "clu", nil, pp)
 end
 
-conj["raire"] = function() --braire, traire
+conj["raire"] = function(data) --braire, traire
 	data.notes = "This verb traditionally has no past historic or imperfect "
 		.. "subjunctive. They would be formed on a -{stem}ray- root: "
 		.. "*je {stem}rayis, *que nous {stem}rayissions etc. Forms using "
@@ -964,8 +966,8 @@ conj["raire"] = function() --braire, traire
 		.. "unavoidable need to use these forms.\n"
 		.. "The root -{stem}rais- was used instead of -{stem}ray- in the "
 		.. "18th century, and remains in Swiss and Savoy dialects."
-	data = m_core.make_ind_p(data, "rai", "ray", "rai")
-	data = m_core.make_ind_ps_a(data, "ray")
+	m_core.make_ind_p(data, "rai", "ray", "rai")
+	m_core.make_ind_ps_a(data, "ray")
 
 	local stem = dopron(data, "rais")
 	data.forms.pp = "rait"
@@ -973,19 +975,19 @@ conj["raire"] = function() --braire, traire
 	local stem2 = stem .. ".j"
 	local stem3 = stem .. "."
 
-	data = m_pron.ind_p(data, stem, stem2)
-	data = m_pron.ind_ps_a(data, stem2)
-	data = m_pron.ind_f(data, stem3)
+	m_pron.ind_p(data, stem, stem2)
+	m_pron.ind_ps_a(data, stem2)
+	m_pron.ind_f(data, stem3)
 	data.prons.pp = stem
 end
 
-conj["clore"] = function()
+conj["clore"] = function(data)
 	data.notes = "This verb is not conjugated in certain tenses."
 
-	data = m_core.make_ind_p(data, "clo", "clos")
+	m_core.make_ind_p(data, "clo", "clos")
 	data.forms.ind_p_3s = "clôt"
-	data = m_core.make_ind_i(data, "—")
-	data = m_core.make_ind_ps(data, "—")
+	m_core.make_ind_i(data, "—")
+	m_core.make_ind_ps(data, "—")
 	data.forms.ppr = "closant"
 	data.forms.pp = "clos"
 
@@ -994,16 +996,16 @@ conj["clore"] = function()
 	local stem3 = stem .. "z"
 	local stem4 = dopron(data, "clɔ") .. "."
 
-	data = m_pron.ind_p(data, stem, stem2, stem3)
-	data = m_pron.ind_f(data, stem4)
+	m_pron.ind_p(data, stem, stem2, stem3)
+	m_pron.ind_f(data, stem4)
 	data.prons.pp = stem
 end
 
-conj["fire"] = function() -- confire, suffire
+conj["fire"] = function(data) -- confire, suffire
 	construct_non_er_conj(data, "fi", "fis", "fis", "fi")
 end
 
-conj["coudre"] = function()
+conj["coudre"] = function(data)
 	data.notes = "This verb "
 	if data.stem ~= "" then
 		data.notes = data.notes .. "is conjugated like " .. link("coudre") .. ". That means it"
@@ -1015,11 +1017,11 @@ conj["coudre"] = function()
 	construct_non_er_conj(data, "coud", "cous", "cous", "cousi", nil, "cousu")
 end
 
-conj["croire"] = function()
+conj["croire"] = function(data)
 	construct_non_er_conj(data, "croi", "croy", "croi", "cru")
 end
 
-conj["croitre"] = function()
+conj["croitre"] = function(data)
 	if data.stem == "" then
 		data.notes = "This verb takes an especially irregular conjugation, taking circumflexes in many forms, so as to distinguish from the forms of the verb " .. link("croire") .. "."
 		construct_non_er_conj(data, "croî", "croiss", "croiss", "crû")
@@ -1034,7 +1036,7 @@ conj["croitre"] = function()
 	end
 end
 
-conj["croître"] = function()
+conj["croître"] = function(data)
 	if data.stem == "" then
 		data.notes = "This verb takes an especially irregular conjugation, taking circumflexes in many forms, so as to distinguish from the forms of the verb " .. link("croire") .. "."
 		construct_non_er_conj(data, "croî", "croiss", "croiss", "crû")
@@ -1050,34 +1052,34 @@ conj["croître"] = function()
 	data.forms.sub_pa_3s = "crût"
 end
 
-conj["foutre"] = function()
+conj["foutre"] = function(data)
 	construct_non_er_conj(data, "fou", "fout", "fout", "fouti", nil,
 		"foutu")
 end
 
-conj["soudre"] = function()
+conj["soudre"] = function(data)
 	construct_non_er_conj(data, "sou", "solv", "solv", "solu", nil, "sous")
-	data = m_core.make_sub_pa(data, "—")
+	m_core.make_sub_pa(data, "—")
 end
 
-conj["résoudre"] = function()
+conj["résoudre"] = function(data)
 	construct_non_er_conj(data, "résou", "résolv", "résolv", "résolu")
 end
 
-conj["voir"] = function()
+conj["voir"] = function(data)
 	construct_non_er_conj(data, "voi", "voy", "voi", "vi", "verr", "vu")
 end
 
-conj["prévoir"] = function()
+conj["prévoir"] = function(data)
 	construct_non_er_conj(data, "prévoi", "prévoy", "prévoi", "prévi", nil,
 		"prévu")
 end
 
-conj["cevoir"] = function()
+conj["cevoir"] = function(data)
 	construct_non_er_conj(data, "çoi", "cev", "çoiv", "çu", "cevr")
 end
 
-conj["battre"] = function()
+conj["battre"] = function(data)
 	if data.stem ~= "" then
 		data.notes = "This verb is conjugated like " .. link("battre") .. ". That means it "
 	else
@@ -1091,24 +1093,24 @@ conj["battre"] = function()
 	construct_non_er_conj(data, "bat", "batt", "batt", "batti", nil, "battu")
 end
 
-conj["circoncire"] = function()
+conj["circoncire"] = function(data)
 	construct_non_er_conj(data, "circonci", "circoncis", "circoncis",
 		"circonci", nil, "circoncis")
 end
 
-conj["lire"] = function()
+conj["lire"] = function(data)
 	construct_non_er_conj(data, "li", "lis", "lis", "lu")
 end
 
-conj["luire"] = function()
+conj["luire"] = function(data)
 	construct_non_er_conj(data, "lui", "luis", "luis", {"lui", "luisi"},
 		nil, "lui")
-	data = m_core.make_sub_pa(data, "luisi")
-	data = m_pron.sub_pa(data, dopron(data, "luisi"))
+	m_core.make_sub_pa(data, "luisi")
+	m_pron.sub_pa(data, dopron(data, "luisi"))
 	setform(data, "ind_ps_3s", "luit")
 end
 
-conj["maudire"] = function()
+conj["maudire"] = function(data)
 	data.notes = "This is ''almost'' a regular verb of the second conjugation, like " .. link("finir") .. ", " .. link("choisir") .. ", "
 	data.notes = data.notes .. "and most other verbs with infinitives ending in " .. link("-ir") .. ". Its only irregularities are in the past participle, "
 	data.notes = data.notes .. "which is " .. link("maudit","maudit(e)(s)") .. " rather than *''maudi(e)(s)'', and in the infinitive, "
@@ -1118,7 +1120,7 @@ conj["maudire"] = function()
 		nil, "maudit")
 end
 
-conj["mettre"] = function()
+conj["mettre"] = function(data)
 	if data.stem ~= "" then
 		data.notes = "This verb is conjugated like " .. link("mettre") .. ". That means it "
 	else
@@ -1131,28 +1133,28 @@ conj["mettre"] = function()
 	construct_non_er_conj(data, "met", "mett", "mett", "mi", nil, "mis")
 end
 
-conj["moudre"] = function()
+conj["moudre"] = function(data)
 	construct_non_er_conj(data, "moud", "moul", "moul", "moulu")
 end
 
-conj["mouvoir"] = function()
+conj["mouvoir"] = function(data)
 	construct_non_er_conj(data, "meu", "mouv", "meuv", "mu", "mouvr")
 	if data.stem == "" then
 		data.forms.pp = "mû"
 	end
 end
 
-conj["paitre"] = function()
+conj["paitre"] = function(data)
 	data.notes = "This verb is not conjugated in certain tenses."
 	construct_non_er_conj(data, "pai", "paiss", "paiss", "—")
 end
 
-conj["paître"] = function()
-	conj["paitre"]()
+conj["paître"] = function(data)
+	conj["paitre"](data)
 	data.forms.ind_p_3s = "paît"
 end
 
-conj["pleuvoir"] = function()
+conj["pleuvoir"] = function(data)
 	data.notes = "This is a [[defective]] verb, only conjugated in the [[third-person]]. The [[third-person plural]] forms are only used figuratively."
 
 	construct_non_er_conj(data, "pleu", "pleuv", "pleuv", "plu", "pleuvr")
@@ -1163,16 +1165,16 @@ conj["pleuvoir"] = function()
 	end
 	-- FIXME, check if this is correct
 	data.prons.ppr = "plø.vɑ̃"
-	data.typ = "irregular"
+	data.typ = {"irregular", "defective"}
 end
 
-conj["pourvoir"] = function()
+conj["pourvoir"] = function(data)
 	data.notes = "''Pourvoir'' and its derived verbs conjugate like " .. link("voir") .. ", except that their past historic indicative and imperfect subjunctive are in ''-vu-'' instead of ''-vi-''."
 
 	construct_non_er_conj(data, "pourvoi", "pourvoy", "pourvoi", "pourvu")
 end
 
-conj["prendre"] = function()
+conj["prendre"] = function(data)
 	if data.stem ~= "" then
 		data.notes = "This verb is conjugated on the model of " .. link("prendre") .. ". That means it is quite irregular, with the following patterns:\n"
 	else
@@ -1185,7 +1187,7 @@ conj["prendre"] = function()
 	construct_non_er_conj(data, "prend", "pren", "prenn", "pri", nil, "pris")
 end
 
-conj["faire"] = function()
+conj["faire"] = function(data)
 	construct_non_er_conj(data, "fai", "fais", "fais", "fi", "fer", "fait",
 		"fass")
 	-- Need to override the present indicative 2p and 3p, the imperative 2p,
@@ -1195,33 +1197,33 @@ conj["faire"] = function()
 	data.prons.ind_p_1p = dopron(data, "fesons")
 	data.forms.imp_p_2p = "faites"
 	copy_ind_pron_to_imp(data)
-	data = m_pron.ind_i(data, strip_pron_ending(dopron(data, "fesez"), "e"))
+	m_pron.ind_i(data, strip_pron_ending(dopron(data, "fesez"), "e"))
 	data.prons.ppr = dopron(data, "fesant")
 end
 
-conj["boire"] = function()
+conj["boire"] = function(data)
 	construct_non_er_conj(data, "boi", "buv", "boiv", "bu")
 end
 
-conj["devoir"] = function()
+conj["devoir"] = function(data)
 	construct_non_er_conj(data, "doi", "dev", "doiv", "du", "devr")
 	if data.stem == "" then
 		data.forms.pp = "dû"
 	end
 end
 
-conj["avoir"] = function()
-	data = m_core.make_ind_p(data, "a", "av")
+conj["avoir"] = function(data)
+	m_core.make_ind_p(data, "a", "av")
 	data.forms.ind_p_1s = "ai"
 	data.forms.ind_p_3s = "a"
 	data.forms.ind_p_3p = "ont"
-	data = m_core.make_ind_ps(data, "eu")
-	data = m_core.make_ind_f(data, "aur")
-	data = m_core.make_sub_p(data, "ai")
+	m_core.make_ind_ps(data, "eu")
+	m_core.make_ind_f(data, "aur")
+	m_core.make_sub_p(data, "ai")
 	data.forms.sub_p_3s = "ait"
 	data.forms.sub_p_1p = "ayons"
 	data.forms.sub_p_2p = "ayez"
-	data = m_core.make_imp_p_sub(data)
+	m_core.make_imp_p_sub(data)
 	data.forms.ppr = "ayant"
 
 	local root = rsub(dopron(data, "a"),"a$","")
@@ -1233,17 +1235,17 @@ conj["avoir"] = function()
 	local stem5 = root .. "ɛ"
 	local stem6 = root .. "ɛ."
 
-	data = m_pron.ind_p(data, stem, stem2)
+	m_pron.ind_p(data, stem, stem2)
 	data.prons.ind_p_1s = root .. "e"
 	data.prons.ind_p_3p = root .. "ɔ̃"
-	data = m_pron.ind_ps(data, stem3)
-	data = m_pron.ind_f(data, stem4)
-	data = m_pron.sub_p(data, stem5, stem6)
+	m_pron.ind_ps(data, stem3)
+	m_pron.ind_f(data, stem4)
+	m_pron.sub_p(data, stem5, stem6)
 	generate_imp_pron_from_forms(data)
 	data.prons.ppr = stem6 .. "jɑ̃"
 end
 
-conj["être"] = function()
+conj["être"] = function(data)
 	data.forms.ind_p_1s = "suis"
 	data.forms.ind_p_2s = "es"
 	data.forms.ind_p_3s = "est"
@@ -1251,9 +1253,9 @@ conj["être"] = function()
 	data.forms.ind_p_2p = "êtes"
 	data.forms.ind_p_3p = "sont"
 
-	data = m_core.make_ind_i(data, "ét")
-	data = m_core.make_ind_ps(data, "fu")
-	data = m_core.make_ind_f(data, "ser")
+	m_core.make_ind_i(data, "ét")
+	m_core.make_ind_ps(data, "fu")
+	m_core.make_ind_f(data, "ser")
 
 	data.forms.sub_p_1s = "sois"
 	data.forms.sub_p_2s = "sois"
@@ -1262,7 +1264,7 @@ conj["être"] = function()
 	data.forms.sub_p_2p = "soyez"
 	data.forms.sub_p_3p = "soient"
 
-	data = m_core.make_imp_p_sub(data)
+	m_core.make_imp_p_sub(data)
 	data.forms.pp = "été"
 	data.forms.ppr = "étant"
 
@@ -1283,10 +1285,10 @@ conj["être"] = function()
 	data.prons.ind_p_1p = root_s .. "sɔm"
 	data.prons.ind_p_2p = stem .. "t"
 	data.prons.ind_p_3p = root_s .. "sɔ̃"
-	data = m_pron.ind_i(data, stem2)
-	data = m_pron.ind_ps(data, stem3)
-	data = m_pron.ind_f(data, stem4)
-	data = m_pron.sub_p(data, stem5, stem6)
+	m_pron.ind_i(data, stem2)
+	m_pron.ind_ps(data, stem3)
+	m_pron.ind_f(data, stem4)
+	m_pron.sub_p(data, stem5, stem6)
 
 	data.prons.imp_p_2s = stem5
 	data.prons.imp_p_1p = stem6 .. "jɔ̃"
@@ -1295,8 +1297,8 @@ conj["être"] = function()
 	data.prons.pp = stem2 .. "e"
 end
 
-conj["estre"] = function()
-	conj["être"]()
+conj["estre"] = function(data)
+	conj["être"](data)
 
 	for key,val in pairs(data.forms) do
 		data.forms[key] = rsub(val, "[éê]", "es")
@@ -1309,51 +1311,51 @@ conj["estre"] = function()
 	data.forms.pp = "esté"
 end
 
-conj["naitre"] = function()
+conj["naitre"] = function(data)
 	-- future stem must be nil here because we are called from conj["naître"]
 	construct_non_er_conj(data, "nai", "naiss", "naiss", "naqui", nil, "né")
 end
 
-conj["naître"] = function()
-	conj["naitre"]()
+conj["naître"] = function(data)
+	conj["naitre"](data)
 	data.forms.ind_p_3s = "naît"
 end
 
-conj["envoyer"] = function()
+conj["envoyer"] = function(data)
 	data.notes = "This verb is is one a few verbs that conjugate like " .. link("noyer") .. ", except in the future and conditional, where they conjugate like " .. link("voir") .. "."
 
-	data = m_core.make_ind_p_e(data, "envoi", "envoy", "envoy")
-	data = m_core.make_ind_f(data, "enverr")
+	m_core.make_ind_p_e(data, "envoi", "envoy", "envoy")
+	m_core.make_ind_f(data, "enverr")
 
 	local stem = dopron(data, "envoi")
 	local stem2 = stem .. ".j"
 	local stem3 = dopron(data, "envè") .. "."
 
-	data = m_pron.er(data, stem, stem2)
-	data = m_pron.ind_f(data, stem3)
+	m_pron.er(data, stem, stem2)
+	m_pron.ind_f(data, stem3)
 end
 
-conj["irreg-aller"] = function()
+conj["irreg-aller"] = function(data)
 	data.notes = "The verb ''{stem}aller'' has a unique and highly irregular conjugation. The second-person singular imperative ''[[va]]'' additionally combines with ''[[y]]'' to form ''[[vas-y]]'' instead of the expected ''va-y''."
 
-	data = m_core.make_ind_p_e(data, "all")
+	m_core.make_ind_p_e(data, "all")
 	setform(data, "ind_p_1s", "vais")
 	setform(data, "ind_p_2s", "vas")
 	setform(data, "ind_p_3s", "va")
 	setform(data, "ind_p_3p", "vont")
-	data = m_core.make_ind_f(data, "ir")
-	data = m_core.make_sub_p(data, "aill")
+	m_core.make_ind_f(data, "ir")
+	m_core.make_sub_p(data, "aill")
 	setform(data, "imp_p_2s", "va")
 
 	local stem = dopron(data, "a")
 	local stem2 = dopron(data, "i")
 
-	data = m_pron.er(data, stem .. "l", stem .. ".l")
-	data = m_pron.ind_f(data, stem2)
-	data = m_pron.sub_p(data, stem .. "j", stem .. "j.")
+	m_pron.er(data, stem .. "l", stem .. ".l")
+	m_pron.ind_f(data, stem2)
+	m_pron.sub_p(data, stem .. "j", stem .. "j.")
 end
 
-conj["dire"] = function()
+conj["dire"] = function(data)
 	construct_non_er_conj(data, "di", "dis", "dis", "di", nil, "dit")
 
 	if data.stem == "" or data.stem == "re" then
@@ -1368,23 +1370,23 @@ conj["dire"] = function()
 	end
 end
 
-conj["vivre"] = function()
+conj["vivre"] = function(data)
 	construct_non_er_conj(data, "vi", "viv", "viv", "vécu")
 end
 
-conj["mourir"] = function()
+conj["mourir"] = function(data)
 	construct_non_er_conj(data, "meur", "mour", "meur", "mouru", "mourr",
 		"mort")
 end
 
-conj["savoir"] = function()
+conj["savoir"] = function(data)
 	construct_non_er_conj(data, "sai", "sav", "sav", "su", "saur", nil,
 		"sach")
 	m_core.make_imp_p_sub(data)
 	generate_imp_pron_from_forms(data)
 end
 
-conj["pouvoir"] = function()
+conj["pouvoir"] = function(data)
 	construct_non_er_conj(data, "peu", "pouv", "peuv", "pu", "pourr", nil,
 		"puiss")
 	data.prons.ind_p_1s = "peux"
@@ -1392,7 +1394,7 @@ conj["pouvoir"] = function()
 	m_core.clear_imp(data)
 end
 
-conj["ouloir"] = function() -- vouloir, revouloir, douloir
+conj["ouloir"] = function(data) -- vouloir, revouloir, douloir
 	construct_non_er_conj(data, "eu", "oul", "eul", "oulu", "oudr", nil,
 		"euill", "oul")
 	data.prons.ind_p_1s = "eux"
@@ -1402,34 +1404,36 @@ conj["ouloir"] = function() -- vouloir, revouloir, douloir
 	end
 end
 
-conj["bruire"] = function()
+conj["bruire"] = function(data)
 	construct_non_er_conj(data, "bruis", "bruiss", "bruiss", "brui")
 end
 
-conj["ensuivre"] = function()
+conj["ensuivre"] = function(data)
 	data.notes = "This verb is [[defective]], and is only used in the "
 		.. "infinitive and the third-person singular and plural forms."
 	construct_non_er_conj(data, "ensui", "ensuiv", "ensuiv", "ensuivi")
 	only_third_verb()
+	data.type = {"defective"}
 end
 
-conj["frire"] = function()
+conj["frire"] = function(data)
 	data.notes = "This verb is defective and it is not conjugated in certain"
 		.. " tenses and plural persons. Using " .. link("faire") ..
 		" '''frire''' is recommended."
 	construct_non_er_conj(data, "fris", "fris", "fris", "fri", nil, "frit")
 	-- clear subjunctive present and past
-	data = m_core.make_sub_pa(data, "—")
-	data = m_core.make_sub_p(data, "—")
+	m_core.make_sub_pa(data, "—")
+	m_core.make_sub_p(data, "—")
 	-- clear plural forms
 	for _, k in ipairs(all_verb_props) do
 		if rmatch(k, "[123]p") then
 			data.forms[k] = "—"
 		end
 	end
+	data.type = {"defective"}
 end
 
-conj["plaire"] = function()
+conj["plaire"] = function(data)
 	data.notes = link("plaire") .. " and its derived verbs conjugate like "
 		.. link("taire") .. ", except that the third person singular of the "
 		.. "present indicative may take a circumflex on the ‘i’."
@@ -1437,15 +1441,15 @@ conj["plaire"] = function()
 	data.prons.ind_p_3s = {"plaît", "plait"}
 end
 
-conj["suivre"] = function()
+conj["suivre"] = function(data)
 	construct_non_er_conj(data, "sui", "suiv", "suiv", "suivi")
 end
 
-conj["taire"] = function()
+conj["taire"] = function(data)
 	construct_non_er_conj(data, "tai", "tais", "tais", "tu")
 end
 
-conj["valoir"] = function()
+conj["valoir"] = function(data)
 	construct_non_er_conj(data, "vau", "val", "val", "valu", "vaudr", nil,
 		data.stem == "pré" and "val" or "vaill", "val")
 	data.prons.ind_p_1s = "vaux"
@@ -1453,14 +1457,14 @@ conj["valoir"] = function()
 	m_core.clear_imp(data)
 end
 
-conj["vêtir"] = function()
+conj["vêtir"] = function(data)
 	data.notes = "This is an irregular verb of the third conjugation. "
 		.. "Unlike regular -ir verbs, this conjugation does not include "
 		.. "the infix " .. link("-iss-") .. "."
 	construct_non_er_conj(data, "vêt", "vêt", "vêt", "vêti", nil, "vêtu")
 end
 
-local function call_conj(conjtyp, arg)
+local function call_conj(data, conjtyp, arg)
 	local ending = data.forms.inf
 	data.pronstem = strip_respelling_ending(data.pron, ending) or data.stem
 	conj[conjtyp](arg)
@@ -1481,31 +1485,31 @@ end
 -- This isn't necessary for verbs in ecer, -eger, -eyer, and shouldn't be
 -- necessary for the other verbs either (FIXME). Also, verbs in -éyer look
 -- to be broken, missing a conj[] entry (FIXME).
-local function conjugate(typ)
+local function conjugate(data, typ)
 	data.forms.inf = typ
 	local future_stem = rsub(data.forms.inf, "e$", "")
-	data = m_core.make_ind_f(data, future_stem)
+	m_core.make_ind_f(data, future_stem)
 
 	if rfind(typ,"^[^aeéiou]er$") and typ ~= "cer" and typ ~= "ger"  and typ ~= "yer" then
-		call_conj("xxer", rsub(typ,"er$",""))
+		call_conj(data, "xxer", rsub(typ,"er$",""))
 	elseif rfind(typ,"^e[^aeiou]+er$") and typ ~= "ecer" and typ ~= "eger"  and typ ~= "eyer" then
-		call_conj("e-er", rsub(typ,"^e(.+)er$","%1"))
+		call_conj(data, "e-er", rsub(typ,"^e(.+)er$","%1"))
 	elseif rfind(data.stem .. typ,"é" .. written_cons_c .. "+er$") and typ ~= "écer" and typ ~= "éger"  and typ ~= "éyer" then
 		local root = data.stem .. typ
 		data.stem = rsub(root, "é" .. written_cons_c .. "+er$", "")
 		data.forms.inf = rmatch(root, "(é" .. written_cons_c .. "+er)$")
-		call_conj("é-er", rsub(data.forms.inf,"^é(.+)er$","%1"))
+		call_conj(data, "é-er", rsub(data.forms.inf,"^é(.+)er$","%1"))
 	elseif rfind(data.stem .. typ,"é[gq]uer$") then --alléguer, disséquer, etc.
 		local root = data.stem .. typ
 		data.stem = rsub(root, "é[gq]uer$", "")
 		data.forms.inf = rmatch(root, "(é[gq]uer)$")
-		call_conj("é-er", rsub(data.forms.inf,"^é([gq]u)er$","%1"))
+		call_conj(data, "é-er", rsub(data.forms.inf,"^é([gq]u)er$","%1"))
 	elseif alias[typ] then
 		data.stem = data.stem .. rsub(typ, alias[typ], "")
 		data.forms.inf = alias[typ]
-		call_conj(alias[typ], nil)
+		call_conj(data, alias[typ], nil)
 	elseif conj[typ] then
-		call_conj(typ, nil)
+		call_conj(data, typ, nil)
 	elseif typ ~= "" then
 		error('The type "' .. typ .. '" is not recognized')
 	end
@@ -1560,6 +1564,7 @@ end
 -- different version of the module (for comparing changes to see whether
 -- they have an effect on conjugations or pronunciations).
 function export.do_generate_forms(args)
+	local data
 	local stem = args[1] or ""
 	local typ = args[2] or ""
 	local argspron = args.pron
@@ -1605,9 +1610,10 @@ function export.do_generate_forms(args)
 			aux = "avoir",
 			pron = pronarg,
 			forms = {},
-			prons = {}
+			prons = {},
+			typ = {}
 		}
-		conjugate(typ)
+		conjugate(data, typ)
 		if i == 1 then
 			all_forms = data.forms
 			all_prons = data.prons
@@ -1624,7 +1630,7 @@ function export.do_generate_forms(args)
 	-- iteration of the loop above. As it happens, this doesn't matter
 	-- because we iterate over pronunciations keeping the stem and conjugation
 	-- type the same, but might matter one day if we break this assumption.
-	data = m_core.extract(data, args)
+	m_core.extract(data, args)
 
 	if args.impers or args.onlythird then
 		if data.notes then
@@ -1662,7 +1668,7 @@ function export.do_generate_forms(args)
 	elseif args.refl then
 		data.refl = true
 	end
-	if data.refl then data = m_core.refl(data) end
+	if data.refl then m_core.refl(data) end
 
 	if etre[data.forms.inf] then
 		data.aux = "être"
@@ -1730,7 +1736,7 @@ function export.show(frame)
 		track(difconj and "different-conj" or "same-conj")
 	end
 
-	data = m_core.link(data)
+	m_core.link(data)
 
 	local category = ""
 	if data.aux == "être" then
@@ -1741,8 +1747,8 @@ function export.show(frame)
 	if data.category then
 		category = category .. "[[Category:French verbs with conjugation " .. data.category .. "]]"
 	end
-	if data.typ then
-		category = category .. "[[Category:French " .. data.typ .. " verbs]]"
+	for _, cat in ipairs(data.typ) do
+		category = category .. "[[Category:French " .. cat .. " verbs]]"
 	end
 
 	return m_conj.make_table(data) .. category

@@ -71,8 +71,6 @@ pron["ind_p"] = function(data, stem, stem2, stem3, stem4)
 	data.prons.imp_p_2p = add(stem2,"e")
 
 	data.prons.ppr = add(stem2,"ɑ̃")
-
-	return data
 end
 
 -- Construct the pronunciation of the imperfect indicative given STEM
@@ -86,8 +84,6 @@ pron["ind_i"] = function(data, stem, stem2)
 	data.prons.ind_i_1p = add(stem2,"jɔ̃")
 	data.prons.ind_i_2p = add(stem2,"je")
 	data.prons.ind_i_3p = add(stem,"ɛ")
-
-	return data
 end
 
 -- Construct the pronunciation of the simple past, imperfect subjunctive and
@@ -105,8 +101,6 @@ pron["ind_ps"] = function(data, stem)
 	data = pron["sub_pa"](data,stem)
 
 	data.prons.pp = add(stem,"")
-
-	return data
 end
 
 -- Construct the pronunciation of future and conditional. STEM is used for
@@ -121,8 +115,6 @@ pron["ind_f"] = function(data, stem, stem2)
 	data.prons.ind_f_3p = add(stem, "ʁɔ̃")
 
 	data = pron["cond_p"](data, stem, stem2)
-
-	return data
 end
 
 -- Construct the pronunciation of the conditional. The stem
@@ -135,15 +127,6 @@ pron["cond_p"] = function(data, stem, stem2)
 	data.prons.cond_p_1p = add(stem2,"ʁjɔ̃")
 	data.prons.cond_p_2p = add(stem2,"ʁje")
 	data.prons.cond_p_3p = add(stem,"ʁɛ")
-
-	return data
-end
-
--- Construct the pronunciation of future and conditional for verbs where a
--- schwa needs to be inserted before the endings (e.g. 'montrer'). The stem
--- passed in should not include the schwa and may be multipart (see add()).
-pron["future_with_schwa"] = function(data, stem)
-	return pron["ind_f"](data, add(stem,"ə."))
 end
 
 -- Construct the pronunciation of the present subjunctive given two stems
@@ -156,8 +139,6 @@ pron["sub_p"] = function(data, stem, stem2)
 	data.prons.sub_p_1p = add(stem2,"jɔ̃")
 	data.prons.sub_p_2p = add(stem2,"je")
 	data.prons.sub_p_3p = add(stem,"")
-
-	return data
 end
 
 -- Construct the pronunciation of the imperfect subjunctive given the stem
@@ -169,8 +150,6 @@ pron["sub_pa"] = function(data, stem)
 	data.prons.sub_pa_1p = add(stem,".sjɔ̃")
 	data.prons.sub_pa_2p = add(stem,".sje")
 	data.prons.sub_pa_3p = add(stem,"s")
-
-	return data
 end
 
 -- Construct the pronunciation of all verb parts for -er verbs given the
@@ -193,8 +172,6 @@ pron["er"] = function(data, stem_final, stem_nonfinal, stem_nonfinal_i, stem_fut
 	data = pron.ind_p(data, stem_final, stem_nonfinal, stem_final, stem_nonfinal_i)
 	data = pron.ind_f(data, stem_fut, stem_fut_i)
 	data = pron.ind_ps_a(data, stem_nonfinal)
-
-	return data
 end
 
 -- Construct the pronunciation of the simple past and imperfect subjunctive
@@ -208,8 +185,6 @@ pron["ind_ps_a"] = function(data, stem)
 	data.prons.ind_ps_3p = add(stem,"ɛʁ")
 
 	data = pron.sub_pa(data, add(stem, "a"))
-
-	return data
 end
 
 return pron
