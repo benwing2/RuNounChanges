@@ -60,8 +60,14 @@ local conj = {}
 -- Table of data describing a given verb and its forms.
 local data = {}
 
--- If enabled, compare this module with new version of module to make
--- sure all conjugations and pronunciations are the same.
+-- If not false, compare this module with new version of module to make
+-- sure all conjugations and pronunciations are the same. If "error", issue
+-- an error whenever they are different, with the contents of the error
+-- indicating the different forms; otherwise, use the tracking category
+-- [[Template:tracking/fr-verb/different-conj]] (see what links there to see
+-- the differing verbs; there's also [[Template:tracking/fr-verb/same-conj]]
+-- for the verbs that don't differ, which can be used to verify that all verbs
+-- have been processed, as it takes awhile for this to happen).
 local test_new_fr_verb_module = false
 
 local m_core = require("Module:fr-verb/core")
@@ -1698,6 +1704,7 @@ function export.show(frame)
 		local m_new_fr_verb = require("Module:User:Benwing2/fr-verb")
 		local newdata = m_new_fr_verb.do_generate_forms(args_clone)
 		local difconj = false
+		local difforms = {}
 		for arraytype = 1, 2 do
 			local arrayname = arraytype == 1 and "forms" or "prons"
 			local array = data[arrayname]
@@ -1710,16 +1717,15 @@ function export.show(frame)
 				if type(val) == "string" then val = {val} end
 				if type(newval) == "string" then newval = {newval} end
 				if not ut.equals(val, newval) then
-					-- Uncomment this to display the particular case and
-					-- differing forms.
-					--error(arrayname .. "." .. prop .. " " .. (val and table.concat(val, ",") or "nil") .. " || " .. (newval and table.concat(newval, ",") or "nil"))
+					if test_new_fr_verb_module == "error" then
+						table.insert(difforms, arrayname .. "." .. prop .. " " .. (val and table.concat(val, ",") or "nil") .. " || " .. (newval and table.concat(newval, ",") or "nil"))
+					end
 					difconj = true
-					break
 				end
 			end
-			if difconj then
-				break
-			end
+		end
+		if #difforms > 0 then
+			error(table.concat(difforms, "; "))
 		end
 		track(difconj and "different-conj" or "same-conj")
 	end
