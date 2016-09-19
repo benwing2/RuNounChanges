@@ -1558,38 +1558,25 @@ end
 
 -- Conjugate the verb according to the TYPE, which is either explicitly
 -- specified by the caller of {{fr-conj-auto}} or derived automatically.
--- NOTE FIXME: Currently, verbs of of type 'xxer' (i.e. 'appeler', 'jeter'
--- and derivatives) and of type 'e-er' (e.g. 'mener') need to have their type
--- explicitly specified should be:
+-- NOTE: Verbs of of type 'xxer' (i.e. 'appeler', 'jeter' and derivatives)
+-- need to have their type explicitly specified, e.g.:
 -- * 'ler' for 'appeler' and derivatives
 -- * 'ter' for 'jeter' and derivatives
--- * the last four letters for verbs of type 'e-er', e.g.
 --
 -- appeler: {{fr-conj-auto|appe|ler}}
--- mener: {{fr-conj-auto|m|ener}}
---
--- This isn't necessary for verbs in ecer, -eger, -eyer, and shouldn't be
--- necessary for the other verbs either (FIXME). Also, verbs in -éyer look
--- to be broken, missing a conj[] entry (FIXME).
 local function conjugate(data, typ)
 	data.forms.inf = typ
 	local future_stem = rsub(data.forms.inf, "e$", "")
 	m_core.make_ind_f(data, future_stem)
 
-	if rfind(typ,"^[^aeéiou]er$") and typ ~= "cer" and typ ~= "ger"  and typ ~= "yer" then
-		call_conj(data, "xxer", rsub(typ,"er$",""))
-	elseif rfind(typ,"^e[^aeiou]+er$") and typ ~= "ecer" and typ ~= "eger"  and typ ~= "eyer" then
-		call_conj(data, "e-er", rsub(typ,"^e(.+)er$","%1"))
-	elseif rfind(data.stem .. typ,"é" .. written_cons_c .. "+er$") and typ ~= "écer" and typ ~= "éger"  and typ ~= "éyer" then
-		local root = data.stem .. typ
-		data.stem = rsub(root, "é" .. written_cons_c .. "+er$", "")
-		data.forms.inf = rmatch(root, "(é" .. written_cons_c .. "+er)$")
-		call_conj(data, "é-er", rsub(data.forms.inf,"^é(.+)er$","%1"))
-	elseif rfind(data.stem .. typ,"é[gq]uer$") then --alléguer, disséquer, etc.
-		local root = data.stem .. typ
-		data.stem = rsub(root, "é[gq]uer$", "")
-		data.forms.inf = rmatch(root, "(é[gq]uer)$")
-		call_conj(data, "é-er", rsub(data.forms.inf,"^é([gq]u)er$","%1"))
+	if rfind(typ, "^" .. written_cons_c .. "er$") and typ ~= "cer" and typ ~= "ger"  and typ ~= "yer" then
+		call_conj(data, "xxer", rsub(typ, "er$", ""))
+	elseif rfind(typ, "^e" .. written_cons_c .. "+er$") and typ ~= "ecer" and typ ~= "eger" and typ ~= "eyer" then
+		call_conj(data, "e-er", rsub(typ, "^e(.+)er$", "%1"))
+	elseif rfind(typ, "é" .. written_cons_c .. "+er$") and typ ~= "écer" and typ ~= "éger"  and typ ~= "éyer" then
+		call_conj(data, "é-er", rsub(typ, "^é(.+)er$", "%1"))
+	elseif rfind(typ, "é[gq]uer$") then --alléguer, disséquer, etc.
+		call_conj(data, "é-er", rsub(typ, "^é([gq]u)er$", "%1"))
 	elseif alias[typ] then
 		data.stem = data.stem .. rsub(typ, alias[typ], "")
 		data.forms.inf = alias[typ]
@@ -1601,17 +1588,33 @@ local function conjugate(data, typ)
 	end
 end
 
--- Split the infinitive into "stem" and conjugation type, where the conjugation
--- type is the longest suffix of the infinitive for which there's an entry
--- in conj[], and stem is the preceding text. (As an exception, certain
--- longer suffixes are mapped to the conjugation type of shorter suffixes
--- using alias[]. An example is 'connaitre', which conjugates like '-aitre'
--- verbs rather than like 'naitre' and its derivatives.) Note that for many
--- irregular verbs, the "stem" is actually the prefix, or empty if the verb
--- has no prefix.
+-- Autodetect the conjugation type and extract the preceding stem. We have
+-- special handling for verbs in -éCer and -eCer for C = consonant. Otherwise,
+-- the conjugation type is the longest suffix of the infinitive for which
+-- there's an entry in conj[], and stem is the preceding text. (As an
+-- exception, certain longer suffixes are mapped to the conjugation type of
+-- shorter suffixes using alias[]. An example is 'connaitre', which conjugates
+-- like '-aitre' verbs rather than like 'naitre' and its derivatives.) Note
+-- that for many irregular verbs, the "stem" is actually the prefix, or empty
+-- if the verb has no prefix.
 local function auto(pagename)
 	local stem = ""
 	local typ = pagename
+	-- check for espérer, céder, etc.
+	stem, typ = rmatch(pagename, "^(.*)(é" .. written_cons_c .. "+er)$")
+	if stem then
+		return stem, typ
+	end
+	-- check for alléguer, disséquer, etc.
+	stem, typ = rmatch(pagename, "^(.*)(é[gq]uer)$")
+	if stem then
+		return stem, typ
+	end
+	-- check for acheter, etc.; also verbs like sevrer
+	stem, typ = rmatch(pagename, "^(.*)(e" .. written_cons_c .. "[lr]?er)$")
+	if stem then
+		return stem, typ
+	end
 	while typ ~= "" do
 		if conj[typ] then break end
 		if alias[typ] then
@@ -1662,11 +1665,6 @@ function export.do_generate_forms(args)
 	if stem == "" and typ == "" then
 		-- most common situation, {{fr-conj-auto}}
 		stem, typ = auto(PAGENAME)
-	elseif stem == "" and rfind(PAGENAME, typ, 1, true) == 1 and typ ~= PAGENAME then
-		track("type-case2")
-		-- FIXME: when does this happen?
-		stem = typ
-		typ = usub(PAGENAME, ulen(typ) + 1)
 	elseif stem == "" then
 		-- explicitly specified stem, e.g. {{fr-conj-auto|aimer}} in userspace
 		-- (NOTE: stem moved to typ above)
@@ -1790,6 +1788,47 @@ function export.do_generate_forms(args)
 	end
 
 	return data
+end
+
+function export.generate_forms(frame)
+	local args = clone_args(frame)
+	local data = export.do_generate_forms(args)
+	local retval = {}
+	for arraytype = 1, 2 do
+		local arrayname = arraytype == 1 and "forms" or "prons"
+		local array = data[arrayname]
+		for _, prop in ipairs(all_verb_props) do
+			local val = array[prop]
+			if type(val) == "string" then val = {val} end
+			local newval = {}
+			for _, form in ipairs(val) do
+				if not rmatch(form, "—") then
+					table.insert(newval, form)
+				end
+			end
+			-- Ignore pronunciation if dash present in form.
+			-- FIXME, we shouldn't generate the pronunciation at all in that
+			-- case, so we can support both dash and another form.
+			if arrayname == "prons" then
+				local val = data.forms[prop]
+				if type(val) == "string" then val = {val} end
+				local found_dash = false
+				for _, form in ipairs(val) do
+					if rmatch(form, "—") then
+						found_dash = true
+						break
+					end
+				end
+				if found_dash then
+					newval = {}
+				end
+			end
+			if #newval > 0 then
+				table.insert(retval, arrayname .. "." .. prop .. "=" .. table.concat(newval, ","))
+			end
+		end
+	end
+	return table.concat(retval, "|")
 end
 
 -- The main entry point.
