@@ -87,7 +87,10 @@ local uupper = mw.ustring.upper
 local usub = mw.ustring.sub
 local ulen = mw.ustring.len
 
-local written_cons_c = "[^aàâeéèêiîoôuûäëïöüÿ]"
+local written_vowel = "aàâeéèêiîoôuûäëïöüÿ"
+local written_cons_c = "[^%-" .. written_vowel .. "]"
+local written_cons_no_cgy_c = "[^%-cgy" .. written_vowel .. "]"
+local written_cons_no_cgyx_c = "[^%-cgyx" .. written_vowel .. "]"
 
 -- version of rsubn() that discards all but the first return value
 local function rsub(term, foo, bar)
@@ -559,25 +562,48 @@ conj["yer"] = function(data)
 	data.conjcat = "-yer"
 end
 
-conj["xxer"] = function(data, consonant)
-	data.notes = "With the exception of " .. (stem == "appel" and "''appeler''" or link("appeler")) .. ", "
-	data.notes = data.notes .. (stem == "jet" and "''jeter''" or link("jeter")) .. " and their derived verbs, "
+conj["xxer"] = function(data)
+	local newstem, consonant = rmatch(data.stem, "^(.*)e(" .. written_cons_c .. ")$")
+	if not consonant then
+		error("Stem '" .. data.stem .. "' should end with -e- + consonant")
+	end
+	data.forms.inf = "e" .. consonant .. "er" -- not xxer
+	local origstem = data.stem
+	data.stem = newstem
+	data.pronstem = strip_respelling_ending(data.pron, data.forms.inf) or data.stem
+
+	data.notes = "With the exception of " .. (origstem == "appel" and "''appeler''" or link("appeler")) .. ", "
+	data.notes = data.notes .. (origstem == "jet" and "''jeter''" or link("jeter")) .. " and their derived verbs, "
 	data.notes = data.notes .. "all verbs that used to double the consonants can also now be conjugated like " .. link("amener") .. "."
 
-	m_core.make_ind_p_e(data, consonant..consonant, consonant, consonant)
-	construct_er_pron(data, consonant, consonant .. consonant)
+	if rfind(origstem, "jet$") or rfind(origstem, "appel$") then
+		m_core.make_ind_p_e(data, "e" .. consonant .. consonant,
+			"e" .. consonant, "e" .. consonant)
+	else
+		m_core.make_ind_p_e(data, {"e" .. consonant .. consonant, "è" .. consonant},
+			"e" .. consonant, "e" .. consonant)
+	end
+	construct_er_pron(data, "e" .. consonant, "e" .. consonant .. consonant)
 	data.group = 1
 	data.conjcat = "-xxer"
 end
 
-conj["e-er"] = function(data, consonant)
+conj["e-er"] = function(data)
+	local newstem, consonant = rmatch(data.stem, "^(.*)e(" .. written_cons_c .. "+)$")
+	if not consonant then
+		error("Stem '" .. data.stem .. "' should end with -e- + one or more consonants")
+	end
 	local stem = 'e' .. consonant
 	local stem2 = 'è' .. consonant
+	data.forms.inf = stem .. "er" -- not e-er
+	local origstem = data.stem
+	data.stem = newstem
+	data.pronstem = strip_respelling_ending(data.pron, data.forms.inf) or data.stem
 
 	data.notes = "This verb is conjugated mostly like the regular " .. link("-er") .. " verbs (" .. link("parler") .. " and " .. link("chanter") .. " and so on), "
 	data.notes = data.notes .. "but the ''-e-'' " .. IPA("/ə/") .. " of the second-to-last syllable becomes ''-è-'' " .. IPA("/ɛ/") .. " when the next vowel is a silent or schwa ''-e-''. "
 	data.notes = data.notes .. "For example, in the third-person singular present indicative, we have ''il {stem}" .. stem2 .. "e'' rather than *''il {stem}" .. stem .. "e''. "
-	data.notes = data.notes .. "Other verbs conjugated this way include " .. link(stem == "lev" and "acheter" or "lever") .. " and " .. link(stem == "men" and "acheter" or "mener") .. ". "
+	data.notes = data.notes .. "Other verbs conjugated this way include " .. link(origstem == "lev" and "acheter" or "lever") .. " and " .. link(origstem == "men" and "acheter" or "mener") .. ". "
 	data.notes = data.notes .. "Related but distinct conjugations include those of " .. link("appeler") .. " and " .. link("préférer") .. "."
 
 	m_core.make_ind_p_e(data, stem2, stem, stem)
@@ -600,12 +626,23 @@ conj["eger"] = function(data)
 	data.conjcat = "-e-er"
 end
 
-conj["é-er"] = function(data, consonant)
+conj["é-er"] = function(data)
+	local newstem, consonant = rmatch(data.stem, "^(.*)é(" .. written_cons_c .. "+)$")
+	if not consonant then
+		newstem, consonant = rmatch(data.stem, "^(.*)é([gq]u)$")
+	end
+	if not consonant then
+		error("Stem '" .. data.stem .. "' should end with -e- + one or more consonants")
+	end
 	local stem = 'é' .. consonant
 	local stem2 = 'è' .. consonant
+	data.forms.inf = stem .. "er" -- not é-er
+	local origstem = data.stem
+	data.stem = newstem
+	data.pronstem = strip_respelling_ending(data.pron, data.forms.inf) or data.stem
 
 	data.notes = "This verb is conjugated like "
-	if data.stem .. stem == "céd" then
+	if origstem == "céd" then
 		data.notes = data.notes .. link("espérer")
 	else
 		data.notes = data.notes .. link("céder")
@@ -1550,10 +1587,9 @@ conj["vêtir"] = function(data)
 	construct_non_er_conj(data, "vêt", "vêt", "vêt", "vêti", nil, "vêtu")
 end
 
-local function call_conj(data, conjtyp, arg)
-	local ending = data.forms.inf
-	data.pronstem = strip_respelling_ending(data.pron, ending) or data.stem
-	conj[conjtyp](data, arg)
+local function call_conj(data, conjtyp, pronstem)
+	data.pronstem = pronstem or strip_respelling_ending(data.pron, data.forms.inf) or data.stem
+	conj[conjtyp](data)
 end
 
 -- Conjugate the verb according to the TYPE, which is either explicitly
@@ -1564,25 +1600,42 @@ end
 -- * 'ter' for 'jeter' and derivatives
 --
 -- appeler: {{fr-conj-auto|appe|ler}}
+-- jeter: {{fr-conj-auto|je|ter}}
 local function conjugate(data, typ)
 	data.forms.inf = typ
 	local future_stem = rsub(data.forms.inf, "e$", "")
 	m_core.make_ind_f(data, future_stem)
 
-	if rfind(typ, "^" .. written_cons_c .. "er$") and typ ~= "cer" and typ ~= "ger"  and typ ~= "yer" then
-		call_conj(data, "xxer", rsub(typ, "er$", ""))
-	elseif rfind(typ, "^e" .. written_cons_c .. "+er$") and typ ~= "ecer" and typ ~= "eger" and typ ~= "eyer" then
-		call_conj(data, "e-er", rsub(typ, "^e(.+)er$", "%1"))
-	elseif rfind(typ, "é" .. written_cons_c .. "+er$") and typ ~= "écer" and typ ~= "éger"  and typ ~= "éyer" then
-		call_conj(data, "é-er", rsub(typ, "^é(.+)er$", "%1"))
-	elseif rfind(typ, "é[gq]uer$") then --alléguer, disséquer, etc.
-		call_conj(data, "é-er", rsub(typ, "^é([gq]u)er$", "%1"))
-	elseif alias[typ] then
-		data.stem = data.stem .. rsub(typ, alias[typ], "")
+	local cons = rmatch(typ, "^(" .. written_cons_c .. ")er$")
+	if cons and typ ~= "cer" and typ ~= "ger"  and typ ~= "yer" then
+		data.stem = data.stem .. cons
+		call_conj(data, "xxer", strip_respelling_ending(data.pron, "er"))
+		return
+	end
+	local cons = rmatch(typ, "^e(" .. written_cons_c .. "+)er$")
+	if cons and typ ~= "ecer" and typ ~= "eger" and typ ~= "eyer" then
+		data.stem = data.stem .. "e" .. cons
+		call_conj(data, "e-er", strip_respelling_ending(data.pron, "er"))
+		return
+	end
+	local cons = rmatch(typ, "^é(" .. written_cons_c .. "+)er$")
+	if cons and typ ~= "écer" and typ ~= "éger"  and typ ~= "éyer" then
+		data.stem = data.stem .. "é" .. cons
+		call_conj(data, "é-er", strip_respelling_ending(data.pron, "er"))
+		return
+	end
+	local cons = rmatch(typ, "^é([gq]u)er$") -- alléguer, disséquer, etc.
+	if cons then
+		data.stem = data.stem .. "é" .. cons
+		call_conj(data, "é-er", strip_respelling_ending(data.pron, "er"))
+		return
+	end
+	if alias[typ] then
+		data.stem = data.stem .. rsub(typ, alias[typ] .. "$", "")
 		data.forms.inf = alias[typ]
-		call_conj(data, alias[typ], nil)
+		call_conj(data, alias[typ])
 	elseif conj[typ] then
-		call_conj(data, typ, nil)
+		call_conj(data, typ)
 	elseif typ ~= "" then
 		error('The type "' .. typ .. '" is not recognized')
 	end
@@ -1598,23 +1651,25 @@ end
 -- that for many irregular verbs, the "stem" is actually the prefix, or empty
 -- if the verb has no prefix.
 local function auto(pagename)
-	local stem = ""
-	local typ = pagename
-	-- check for espérer, céder, etc.
-	stem, typ = rmatch(pagename, "^(.*)(é" .. written_cons_c .. "+er)$")
+	local stem
+	-- check for espérer, céder, etc.; exclude -écer, -éger, -éyer
+	stem = rmatch(pagename, "^(.*é" .. written_cons_c .. "*" .. written_cons_no_cgy_c .. ")er$")
 	if stem then
-		return stem, typ
+		return stem, "é-er"
 	end
 	-- check for alléguer, disséquer, etc.
-	stem, typ = rmatch(pagename, "^(.*)(é[gq]uer)$")
+	stem = rmatch(pagename, "^(.*é[gq]u)er$")
 	if stem then
-		return stem, typ
+		return stem, "é-er"
 	end
-	-- check for acheter, etc.; also verbs like sevrer
-	stem, typ = rmatch(pagename, "^(.*)(e" .. written_cons_c .. "[lr]?er)$")
+	-- check for acheter, etc.; also verbs like sevrer; exclude -exer, -ecer,
+	-- -eger, -eyer
+	stem = rmatch(pagename, "^(.*e" .. written_cons_no_cgyx_c .. "[lr]?)er$")
 	if stem then
-		return stem, typ
+		return stem, "e-er"
 	end
+	stem = ""
+	local typ = pagename
 	while typ ~= "" do
 		if conj[typ] then break end
 		if alias[typ] then
@@ -1695,7 +1750,7 @@ function export.do_generate_forms(args)
 			pron = pronarg,
 			forms = {},
 			prons = {},
-			cat = {}
+			cat = {},
 			group = 3
 		}
 		conjugate(data, typ)
