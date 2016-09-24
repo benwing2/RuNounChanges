@@ -12,11 +12,106 @@ from blib import getparam, rmparam, msg, site
 import rulib as ru
 import runounlib as runoun
 
-templates_to_change = ["fr-conj-aillir", ...]
+templates_to_change = [
+"fr-conj-er",
+"fr-conj-ir",
+"fr-conj-re",
+"fr-conj-aillir",
+"fr-conj-aitre",
+u"fr-conj-aître",
+"fr-conj-aller",
+"fr-conj-avoir",
+"fr-conj-ayer",
+"fr-conj-boire",
+"fr-conj-bruire",
+"fr-conj-cer",
+"fr-conj-cevoir",
+"fr-conj-circoncire",
+"fr-conj-clure (es)",
+"fr-conj-clure (se)",
+"fr-conj-coudre",
+"fr-conj-courir",
+"fr-conj-cre",
+"fr-conj-crire",
+"fr-conj-croire",
+"fr-conj-croitre",
+u"fr-conj-croitre (décroitre)",
+"fr-conj-devoir",
+"fr-conj-confire",
+"fr-conj-dire",
+"fr-conj-dire (sez)",
+"fr-conj-douloir",
+"fr-conj-e-er",
+u"fr-conj-é-er",
+u"fr-conj-éger",
+"fr-conj-envoyer",
+"fr-conj-eoir",
+"fr-conj-estre",
+u"fr-conj-être",
+"fr-conj-xx-er",
+"fr-conj-chauvir",
+"fr-conj-faillir",
+"fr-conj-faire",
+"fr-conj-foutre",
+"fr-conj-frire",
+"fr-conj-fuir",
+"fr-conj-ger",
+u"fr-conj-gésir",
+u"fr-conj-haïr",
+"fr-conj-ir (e)",
+"fr-conj-ir (s)",
+"fr-conj-lire",
+"fr-conj-luire",
+"fr-conj-maudire",
+"fr-conj-mettre",
+"fr-conj-moudre",
+"fr-conj-mourir",
+"fr-conj-mouvoir",
+"fr-conj-mouvoir (u)",
+"fr-conj-naitre",
+u"fr-conj-naître",
+u"fr-conj-ouïr",
+u"fr-conj-oître",
+u"fr-conj-paître",
+"fr-conj-plaire",
+"fr-conj-pleuvoir",
+"fr-conj-pourvoir",
+"fr-conj-pouvoir",
+"fr-conj-pre",
+"fr-conj-prendre",
+u"fr-conj-prévoir",
+u"fr-conj-prévaloir",
+u"fr-conj-quérir",
+"fr-conj-re (gn)",
+"fr-conj-repleuvoir",
+"fr-conj-repouvoir",
+u"fr-conj-résoudre",
+"fr-conj-revouloir",
+"fr-conj-rir",
+"fr-conj-rire",
+"fr-conj-saillir",
+"fr-conj-savoir",
+"fr-conj-souvenir",
+"fr-conj-suffire",
+"fr-conj-ensuivre",
+"fr-conj-suivre",
+"fr-conj-taire",
+"fr-conj-tenir",
+"fr-conj-traire",
+"fr-conj-ttre",
+"fr-conj-uire",
+"fr-conj-valoir",
+"fr-conj-venir",
+u"fr-conj-vêtir",
+"fr-conj-vivre",
+"fr-conj-voir",
+"fr-conj-vouloir",
+"fr-conj-yer"
+]
 
 all_verb_props = [
   "inf", "pp", "ppr",
-  "inf_nolink", "pp_nolink", "ppr_nolink",
+  #"inf_nolink", "pp_nolink", "ppr_nolink",
   "ind_p_1s", "ind_p_2s", "ind_p_3s", "ind_p_1p", "ind_p_2p", "ind_p_3p",
   "ind_i_1s", "ind_i_2s", "ind_i_3s", "ind_i_1p", "ind_i_2p", "ind_i_3p",
   "ind_ps_1s", "ind_ps_2s", "ind_ps_3s", "ind_ps_1p", "ind_ps_2p", "ind_ps_3p",
@@ -29,7 +124,7 @@ all_verb_props = [
 
 cached_template_calls = {}
 
-def find_old_template_props(template, pagemsg):
+def find_old_template_props(template, pagemsg, verbose):
   name = unicode(template.name)
   if name in cached_template_calls:
     template_text = cached_template_calls[name]
@@ -40,39 +135,50 @@ def find_old_template_props(template, pagemsg):
       return None
     template_text = unicode(template_page.text)
     cached_template_calls[name] = template_text
+  if verbose:
+    pagemsg("Found template text: %s" % template_text)
   for t in blib.parse_text(template_text).filter_templates():
-    if unicode(t.name) == "fr-conj":
+    tname = unicode(t.name)
+    if tname == "fr-conj" or tname == "#invoke:fr-conj" and getparam(t, "1").strip() == "frconj":
       args = {}
+      tparams = [(unicode(param.name.strip()), unicode(param.value.strip())) for param in t.params]
+      tparamdict = dict(tparams)
       debug_args = []
-      for param in t.params:
-        pname = re.sub(r"\.", "_", unicode(param.name))
-        pval = unicode(param.value)
-        if pname in all_verb_props:
-          pval = re.sub(r"\{\{\{1\}\}\}", getparam(template, "1"))
-          debug_args.append("%s=%s" % (pname, pval))
+      for pname, pval in tparams:
+        canonpname = re.sub(r"\.", "_", pname)
+        if canonpname in all_verb_props:
+          pval = re.sub(r"\{\{\{1\|?\}\}\}", getparam(template, "1"), pval)
+          pval = re.sub(r"\{\{\{2\|?\}\}\}", getparam(template, "2"), pval)
+          pnamealt = pname + ".alt"
+          pvalalt = tparamdict.get(pnamealt, "")
+          pvalalt = re.sub(r"\{\{\{1\|?\}\}\}", getparam(template, "1"), pvalalt)
+          pvalalt = re.sub(r"\{\{\{2\|?\}\}\}", getparam(template, "2"), pvalalt)
+          if pvalalt:
+            pval = pval + "," + pvalalt
+          debug_args.append("%s=%s" % (canonpname, pval))
           if not re.search(r"—", pval):
-            args[pname] = pval
+            args[canonpname] = pval
       pagemsg("Found args: %s" % "|".join(debug_args))
       return args
   pagemsg("WARNING: Can't find {{fr-conj}} in template definition for %s" %
       unicode(template))
   return None
 
-def compare_conjugation(index, page, template, pagemsg, expand_text):
-  generate_result = expand_text("{{fr-generate-verb-args}}")
+def compare_conjugation(index, page, template, pagemsg, expand_text, verbose):
+  generate_result = expand_text("{{fr-generate-verb-forms}}")
   if not generate_result:
     return None
   args = {}
   for arg in re.split(r"\|", generate_result):
     name, value = re.split("=", arg)
     args[name] = re.sub("<!>", "|", value)
-  existing_args = find_old_template_props(template)
+  existing_args = find_old_template_props(template, pagemsg, verbose)
   if existing_args is None:
     return None
   difvals = []
   for prop in all_verb_props:
-    curval = existing_args.get(prop, "")
-    newval = args.get(prop, "")
+    curval = existing_args.get(prop, "").strip()
+    newval = args.get("forms." + prop, "").strip()
     if curval != newval:
       difvals.append((prop, (curval, newval)))
   return difvals
@@ -99,7 +205,7 @@ def process_page(index, page, save, verbose):
   for t in parsed.filter_templates():
     name = unicode(t.name)
     if name in templates_to_change:
-      difvals = compare_conjugation(index, page, t, pagemsg, expand_text)
+      difvals = compare_conjugation(index, page, t, pagemsg, expand_text, verbose)
       if difvals is None:
         pass
       elif difvals:
