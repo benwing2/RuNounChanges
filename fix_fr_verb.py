@@ -138,25 +138,33 @@ def find_old_template_props(template, pagemsg, verbose):
   if verbose:
     pagemsg("Found template text: %s" % template_text)
   for t in blib.parse_text(template_text).filter_templates():
-    tname = unicode(t.name)
+    tname = unicode(t.name).strip() # template name may have spaces
     if tname == "fr-conj" or tname == "#invoke:fr-conj" and getparam(t, "1").strip() == "frconj":
       args = {}
+      # Yuck. Template param names sometimes have spaces in them; must strip.
       tparams = [(unicode(param.name.strip()), unicode(param.value.strip())) for param in t.params]
       tparamdict = dict(tparams)
       debug_args = []
+      def sub_template(val):
+        val = re.sub(r"\{\{\{1\|?\}\}\}", getparam(template, "1"), val)
+        val = re.sub(r"\{\{\{2\|?\}\}\}", getparam(template, "2"), val)
+        val = re.sub(r"\{\{\{pp\|(.*?)\}\}\}", lambda m:getparam(template, "pp") or m.group(1), val)
+        return val
       for pname, pval in tparams:
         canonpname = re.sub(r"\.", "_", pname)
         if canonpname in all_verb_props:
-          pval = re.sub(r"\{\{\{1\|?\}\}\}", getparam(template, "1"), pval)
-          pval = re.sub(r"\{\{\{2\|?\}\}\}", getparam(template, "2"), pval)
+          pval = sub_template(pval)
           pnamealt = pname + ".alt"
           pvalalt = tparamdict.get(pnamealt, "")
-          pvalalt = re.sub(r"\{\{\{1\|?\}\}\}", getparam(template, "1"), pvalalt)
-          pvalalt = re.sub(r"\{\{\{2\|?\}\}\}", getparam(template, "2"), pvalalt)
-          if pvalalt:
-            pval = pval + "," + pvalalt
-          debug_args.append("%s=%s" % (canonpname, pval))
-          if not re.search(r"—", pval):
+          pvalalt = sub_template(pvalalt)
+          if pval in ["N/A", "-"]:
+            pval = ""
+          if pvalalt in ["N/A", "-"]:
+            pvalalt = ""
+          vals = [x for x in [pval, pvalalt] if x]
+          pval = ",".join(vals)
+          if pval and not re.search(r"—", pval):
+            debug_args.append("%s=%s" % (canonpname, pval))
             args[canonpname] = pval
       pagemsg("Found args: %s" % "|".join(debug_args))
       return args
@@ -179,8 +187,14 @@ def compare_conjugation(index, page, template, pagemsg, expand_text, verbose):
   for prop in all_verb_props:
     curval = existing_args.get(prop, "").strip()
     newval = args.get("forms." + prop, "").strip()
-    if curval != newval:
-      difvals.append((prop, (curval, newval)))
+    if curval == newval:
+      continue
+    elif "," in curval and "," in newval:
+      curvalset = set(re.split(",", curval))
+      newvalset = set(re.split(",", newval))
+      if curvalset == newvalset:
+        continue
+    difvals.append((prop, (curval, newval)))
   return difvals
 
 def process_page(index, page, save, verbose):
@@ -215,14 +229,36 @@ def process_page(index, page, save, verbose):
         pagemsg("WARNING: Different conjugation when changing template %s to {{fr-conj-auto}}: %s" %
             (unicode(t), "; ".join(difprops)))
       else:
+        aux = ""
+        for param in t.params:
+          pname = unicode(param.name)
+          pval = unicode(param.value)
+          if not pval.strip():
+            continue
+          if (pname not in ["1", "2", "3", "aux", "sort", "cat"] or
+              pname == "3" and pval not in ["avoir", u"être", u"avoir or être"]):
+            pagemsg("WARNING: Found extra param %s=%s in %s" %
+                (pname, pval, unicode(t)))
+          if pname == "aux" and pval != "avoir":
+            aux = pval
+            pagemsg("Found non-avoir auxiliary aux=%s in %s" % (
+              pval, unicode(t)))
+          auxpname = ("3" if name in ["fr-conj-e-er", "fr-conj-ir (s)"] else
+              "aux" if name in ["fr-conj-xx-er", u"fr-conj-é-er"] else "2")
+          if pname == auxpname and pval != "avoir":
+            aux = pval
+            pagemsg("Found non-avoir auxiliary %s=%s in %s" % (
+              pname, pval, unicode(t)))
         oldt = unicode(t)
         del t.params[:]
         t.name = "fr-conj-auto"
+        if aux:
+          t.add("aux", aux)
         newt = unicode(t)
         pagemsg("Replacing %s with %s" % (oldt, newt))
         notes.append("replaced {{%s}} with {{fr-conj-auto}}" % name)
 
-  newtext = unicode(page.text)
+  newtext = unicode(parsed)
   if newtext != text:
     assert notes
     comment = "; ".join(notes)
