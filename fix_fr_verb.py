@@ -9,9 +9,6 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, site
 
-import rulib as ru
-import runounlib as runoun
-
 templates_to_change = [
 "fr-conj-er",
 "fr-conj-ir",
@@ -109,6 +106,11 @@ u"fr-conj-vêtir",
 "fr-conj-yer"
 ]
 
+refl_templates_to_change = [
+    "fr-conj-er-refl-vowel",
+    "fr-conj-er-refl-cons"
+]
+
 all_verb_props = [
   "inf", "pp", "ppr",
   #"inf_nolink", "pp_nolink", "ppr_nolink",
@@ -172,8 +174,13 @@ def find_old_template_props(template, pagemsg, verbose):
       unicode(template))
   return None
 
-def compare_conjugation(index, page, template, pagemsg, expand_text, verbose):
-  generate_result = expand_text("{{fr-generate-verb-forms}}")
+def compare_conjugation(index, page, template, refl, pagemsg, expand_text,
+    verbose):
+  # Force reflexive templates to succeed since they don't use {{fr-conj}}
+  if unicode(template.name) in refl_templates_to_change:
+    return []
+  generate_result = expand_text("{{fr-generate-verb-forms%s}}" %
+      ("|refl=yes" if refl else ""))
   if not generate_result:
     return None
   args = {}
@@ -218,8 +225,9 @@ def process_page(index, page, save, verbose):
   parsed = blib.parse_text(text)
   for t in parsed.filter_templates():
     name = unicode(t.name)
-    if name in templates_to_change:
-      difvals = compare_conjugation(index, page, t, pagemsg, expand_text, verbose)
+    if name in templates_to_change or name in refl_templates_to_change:
+      refl = name in refl_templates_to_change
+      difvals = compare_conjugation(index, page, t, refl, pagemsg, expand_text, verbose)
       if difvals is None:
         pass
       elif difvals:
@@ -252,11 +260,13 @@ def process_page(index, page, save, verbose):
         oldt = unicode(t)
         del t.params[:]
         t.name = "fr-conj-auto"
+        if refl:
+          t.add("refl", "yes")
         if aux:
           t.add("aux", aux)
         newt = unicode(t)
         pagemsg("Replacing %s with %s" % (oldt, newt))
-        notes.append("replaced {{%s}} with {{fr-conj-auto}}" % name)
+        notes.append("replaced {{%s}} with %s" % (name, newt))
 
   newtext = unicode(parsed)
   if newtext != text:
