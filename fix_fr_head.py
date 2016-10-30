@@ -8,7 +8,7 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, site
 
-def process_page(index, page, save, verbose):
+def process_page(index, page, save, verbose, fix_missing_plurals):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -28,6 +28,7 @@ def process_page(index, page, save, verbose):
     name = unicode(t.name)
     if name == "head" and getparam(t, "1") == "fr":
       headtype = getparam(t, "2")
+      fixed_plural_warning = False
       if headtype == "noun":
         head = getparam(t, "head")
         g = getparam(t, "g")
@@ -50,6 +51,22 @@ def process_page(index, page, save, verbose):
         if not g:
           pagemsg("WARNING: No gender given in %s, skipping" % unicode(t))
           continue
+        found_feminine_noun = False
+        if g == "f" and not g2 and not plural:
+          for tt in parsed.filter_templates():
+            if (unicode(tt.name) == "feminine noun of" and
+                getparam(tt, "lang") == "fr"):
+              found_feminine_noun = True
+        if found_feminine_noun:
+          pagemsg("Found 'feminine noun of', assuming countable")
+        elif g not in ["m-p", "f-p"] and not plural:
+          if fix_missing_plurals:
+            pagemsg("WARNING: No plural given in %s, assuming default plural, PLEASE REVIEW"
+                % unicode(t))
+            fixed_plural_warning = True
+          else:
+            pagemsg("WARNING: No plural given in %s, skipping" % unicode(t))
+            continue
         rmparam(t, "4")
         rmparam(t, "3")
         rmparam(t, "2")
@@ -127,12 +144,14 @@ def process_page(index, page, save, verbose):
               unicode(t))
       elif headtype in ["adjective form", "verb form", "verb forms",
           "interjection", "preposition", "prefix", "prefixes",
-          "suffix", "suffixes", "proverb", "proverbs"]:
+          "suffix", "suffixes"]:
+        headtype_supports_g = headtype in [
+            "adjective form", "suffix", "suffixes"]
         head = getparam(t, "head")
         unrecognized_params = False
         for param in t.params:
           pname = unicode(param.name)
-          if pname in ["1", "2", "head", "sort"]:
+          if pname in ["1", "2", "head", "sort"] or headtype_supports_g and pname == "g":
             pass
           else:
             unrecognized_params = True
@@ -150,16 +169,16 @@ def process_page(index, page, save, verbose):
             "fr-intj" if headtype == "interjection" else
             "fr-prep" if headtype == "preposition" else
             "fr-prefix" if headtype in ["prefix", "prefixes"] else
-            "fr-suffix" if headtype in ["suffix", "suffixes"] else
-            "fr-proverb")
+            "fr-suffix" # if headtype in ["suffix", "suffixes"]
+            )
         if head:
           t.add("head", head)
 
       newt = unicode(t)
       if origt != newt:
         pagemsg("Replacing %s with %s" % (origt, newt))
-        notes.append("replaced {{head|fr|%s}} with {{%s}}" % (headtype,
-          unicode(t.name)))
+        notes.append("replaced {{head|fr|%s}} with {{%s}}%s" % (headtype,
+          unicode(t.name), " (NEEDS REVIEW)" if fixed_plural_warning else ""))
 
   newtext = unicode(parsed)
   if newtext != text:
@@ -168,15 +187,24 @@ def process_page(index, page, save, verbose):
     if save:
       pagemsg("Saving with comment = %s" % comment)
       page.text = newtext
-      page.save(comment=comment)
+      blib.try_repeatedly(lambda: page.save(comment=comment), pagemsg,
+                    "save page")
     else:
       pagemsg("Would save with comment = %s" % comment)
 
 parser = blib.create_argparser("Convert head|fr|* to fr-*")
+parser.add_argument("--fix-missing-plurals", action="store_true", help="Fix cases with missing plurals by just assuming the default plural.")
+parser.add_argument("--lemma-file",help="File containing lemmas to do.")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-for cat in ["French nouns", "French proper nouns", "French pronouns", "French determiners", "French adjectives", "French verbs", "French participles", "French adverbs", "French prepositions", "French conjunctions", "French interjections", "French idioms", "French phrases", "French abbreviations", "French acronyms", "French initialisms", "French noun forms", "French proper noun forms", "French pronoun forms", "French determiner forms", "French verb forms", "French adjective forms", "French participle forms", "French proverbs", "French prefixes", "French suffixes", "French diacritical marks", "French punctuation marks"]:
-  msg("Processing category: %s" % cat)
-  for i, page in blib.cat_articles(cat, start, end):
-    process_page(i, page, args.save, args.verbose)
+if args.lemma_file:
+  lines = [x.strip() for x in codecs.open(args.lemma_file, "r", "utf-8")]
+  for i, pagename in blib.iter_items(lines, start, end):
+    process_page(i, pywikibot.Page(site, pagename), args.save, args.verbose, args.fix_missing_plurals)
+else:
+  for cat in ["French nouns", "French proper nouns", "French pronouns", "French determiners", "French adjectives", "French verbs", "French participles", "French adverbs", "French prepositions", "French conjunctions", "French interjections", "French idioms", "French phrases", "French abbreviations", "French acronyms", "French initialisms", "French noun forms", "French proper noun forms", "French pronoun forms", "French determiner forms", "French verb forms", "French adjective forms", "French participle forms", "French proverbs", "French prefixes", "French suffixes", "French diacritical marks", "French punctuation marks"]:
+  #for cat in ["French adjective forms", "French participle forms", "French proverbs", "French prefixes", "French suffixes", "French diacritical marks", "French punctuation marks"]:
+    msg("Processing category: %s" % cat)
+    for i, page in blib.cat_articles(cat, start, end):
+      process_page(i, page, args.save, args.verbose, args.fix_missing_plurals)
