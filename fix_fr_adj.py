@@ -42,7 +42,10 @@ def process_page(index, page, save, verbose):
     if unicode(t.name) == "fr-adj":
       g = getparam(t, "1")
       if g and g != "mf":
-        pagemsg("WARNING: Strange value 1=%s: %s" % (g, unicode(t)))
+        pagemsg("WARNING: Strange value 1=%s, removing: %s" % (g, unicode(t)))
+        rmparam(t, "1")
+        notes.append("remove bogus 1=%s" % g)
+        g = None
       inv = getparam(t, "inv")
       if inv:
         if inv not in ["y", "yes", "1"]:
@@ -65,21 +68,18 @@ def process_page(index, page, save, verbose):
       expected_fem = (pagetitle if pagetitle.endswith("e")
           else pagetitle + "ne" if pagetitle.endswith("en")
           else re.sub("er$", u"ère", pagetitle) if pagetitle.endswith("er")
-          else pagetitle + "e")
-      if re.search("(el|on|et|eur|eux|if|c)$", pagetitle) and not getparam(t, "f"):
-        pagemsg("WARNING: Found suffix -el/-on/-et/-eur/-eux/-if/-c and no f=: %s" % unicode(t))
-      new_expected_fem = (pagetitle if pagetitle.endswith("e")
-          else pagetitle + "ne" if pagetitle.endswith("en")
-          else re.sub("er$", u"ère", pagetitle) if pagetitle.endswith("er")
           else pagetitle + "le" if pagetitle.endswith("el")
           else pagetitle + "ne" if pagetitle.endswith("on")
           else pagetitle + "te" if pagetitle.endswith("et")
+          else pagetitle + "e" if pagetitle.endswith("ieur")
           else re.sub("teur$", "trice", pagetitle) if pagetitle.endswith("teur")
           else re.sub("eur$", "euse", pagetitle) if pagetitle.endswith("eur")
           else re.sub("eux$", "euse", pagetitle) if pagetitle.endswith("eux")
           else re.sub("if$", "ive", pagetitle) if pagetitle.endswith("if")
           else re.sub("c$", "que", pagetitle) if pagetitle.endswith("c")
           else pagetitle + "e")
+      if re.search("(el|on|et|[^i]eur|eux|if|c)$", pagetitle) and not getparam(t, "f") and g != "mf":
+        pagemsg("WARNING: Found suffix -el/-on/-et/-[^i]eur/-eux/-if/-c and no f= or 1=mf: %s" % unicode(t))
       if getparam(t, "f") == expected_fem:
         rmparam(t, "f")
         notes.append("remove redundant f=")
@@ -127,10 +127,9 @@ def process_page(index, page, save, verbose):
       elif getparam(t, "p"):
         pagemsg("WARNING: Found unexpected p=%s: %s" % (getparam(t, "p"),
           unicode(t)))
-      f = getparam(t, "f")
-      if not re.search("[ -]", pagetitle) and (f and f != new_expected_fem or
+      if not re.search("[ -]", pagetitle) and (getparam(t, "f") or
           getparam(t, "mp") or getparam(t, "fp") or getparam(t, "p")):
-        pagemsg("Found explicit feminine or plural in single-word base form: %s"
+        pagemsg("Found remaining explicit feminine or plural in single-word base form: %s"
             % unicode(t))
     newt = unicode(t)
     if origt != newt:
