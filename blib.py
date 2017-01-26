@@ -604,8 +604,9 @@ def try_repeatedly(fun, pagemsg, operation="save", max_tries=10, sleep_time=5):
 # 'borrowed' (do pages for terms borrowed from the language), 'translation'
 # (do pages containing references to any of the 5 standard translation
 # templates), 'pagetext' (do the pages in PAGES_TO_DO, a list of (TITLE, TEXT)
-# entries); for doing off-line runs; nothing saved), or 'pages' (do the
-# pages in PAGES_TO_DO, a list of page titles).
+# entries); for doing off-line runs; nothing saved), 'pages' (do the
+# pages in PAGES_TO_DO, a list of page titles), or an arbitrary category name.
+# It can also be a comma-separated list of any of the above.
 #
 # If SPLIT_TEMPLATES, then if the transliteration contains multiple entries
 # separated the regex in SPLIT_TEMPLATES with optional spaces on either end,
@@ -931,7 +932,8 @@ def process_links(save, verbose, lang, longlang, cattype, startFrom, upTo,
         cats = [subcat for subcat, index in
             cat_subcats("Terms derived from %s" % longlang)]
       else:
-        raise ValueError("Category type '%s' should be 'vocab', 'borrowed', 'translation', 'links', 'pages' or 'pagetext'")
+        cats = [cattype]
+        #raise ValueError("Category type '%s' should be 'vocab', 'borrowed', 'translation', 'links', 'pages' or 'pagetext'")
       for cat in cats:
         msg("Processing category %s" % unicode(cat))
         errmsg("Processing category %s" % unicode(cat))

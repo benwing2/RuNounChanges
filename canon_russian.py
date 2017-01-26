@@ -23,7 +23,7 @@ from canon_foreign import canon_links
 pa = blib.init_argparser("Canonicalize Russian and translit")
 pa.add_argument("--cattype", default="borrowed",
     help="""Categories to examine ('vocab', 'borrowed', 'translation',
-'links', 'pagetext', 'pages' or comma-separated list)""")
+'links', 'pagetext', 'pages', an arbitrary category or comma-separated list)""")
 pa.add_argument("--page-file",
     help="""File containing "pages" to process when --cattype pagetext,
 or list of pages when --cattype pages""")
@@ -34,6 +34,7 @@ pages_to_do = []
 if params.page_file:
   for line in codecs.open(params.page_file, "r", encoding="utf-8"):
     line = line.strip()
+    # FIXME: We don't yet support a cattype list containing 'pages'
     if params.cattype == "pages":
       pages_to_do.append(line)
     else:
