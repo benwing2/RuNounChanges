@@ -1,12 +1,43 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+# This program replaces raw links of the form '[[foo]]' with templated links
+# of the form '{{l|ru|foo}}', and raw two-part links of the form '[[foo|bar]]'
+# with templated links of the form '{{l|ru|foo|bar}}', for various specified
+# languages. When converting two-part links to templated links it is smart
+# enough to recognize links of the form '[[foo#Russian|bar]]'', and smart
+# enough to recognize cases where 'bar' is just the accented form of 'foo'
+# and hence it can be converted to a one-part templated link. Links are only
+# converted if they occur on a line beginning with '*', and will be converted
+# to '{{m|ru|foo}}' rather than '{{l|ru|foo}}' in certain sections (e.g.
+# Usage Notes sections).
+#
+# The program also looks for transliteration following the raw link, e.g. in
+# the form '[[фоо]] (foo)'. It uses Levenshtein distance to check whether the
+# thing in parens is actually a reasonable-looking transliteration, and
+# ignores it if not. If so, it is converted to a |tr=foo param, or ignored
+# entirely if the language ignores manual translit.
+#
+# The program handles one Latin-script language (French), and in that case
+# is more careful to avoid converting raw links that are probably not to
+# French vocabulary words (e.g. to numbers or symbols).
+
 import pywikibot, re, sys, codecs, argparse
 
 import blib
 from blib import getparam, rmparam, msg, site
 
 import rulib as ru
+
+lbracket_sub = u"\ufff1"
+rbracket_sub = u"\ufff2"
+
+def rsub_repeatedly(fr, to, text):
+  while True:
+    newtext = re.sub(fr, to, text)
+    if newtext == text:
+      return text
+    text = newtext
 
 def hy_remove_accents(text):
   text = re.sub(u"[՞՜՛՟]", "", text)
@@ -35,7 +66,8 @@ def ar_remove_accents(text):
 
 # Each element is full language name, function to remove accents to normalize
 # an entry, character set range(s), and whether to ignore translit (info
-# from [[Module:links]], or "notranslit" if the language doesn't do
+# from [[Module:links]], or "latin" if the language uses the Latin script and
+# hence has no translit, or "notranslit" if the language doesn't do
 # auto-translit)
 languages = {
     'ru':["Russian", ru.remove_accents, u"Ѐ-џҊ-ԧꚀ-ꚗ", False],
@@ -50,6 +82,7 @@ languages = {
     'pa':["Punjabi", lambda x:x, u"\u0A01-\u0A75", "notranslit"],
     'he':["Hebrew", he_remove_accents, u"\u0590-\u05FF\uFB1D-\uFB4F", "notranslit"],
     'ar':["Arabic", ar_remove_accents, u"؀-ۿݐ-ݿࢠ-ࣿﭐ-﷽ﹰ-ﻼ", False],
+    'fr':["French", lambda x:x, u"\\- '’.0-9A-Za-z¡-\u036FḀ-ỿ", "latin"]
 }
 
 thislangname = None
@@ -115,15 +148,23 @@ def process_page(index, page, save, verbose):
           continue
 
         def sub_link(orig, text, translit, origtemplate):
+          if subsectitle in ["Usage notes", "Descendants", "References"] and this_ignore_translit == "latin":
+            pagemsg("Ignoring putative link in '%s', might be English or some other language: %s" % (subsectitle, orig))
+            return orig
           if re.search("[\[\]]", text):
             pagemsg("WARNING: Stray brackets in link, skipping: %s" % orig)
             return orig
-          if not re.search("[^ -~]", text):
-            pagemsg("No non-Latin characters in link, skipping: %s" % orig)
-            return orig
-          if not re.search("^[ -~%s]*$" % this_charset, text):
-            pagemsg("WARNING: Link contains non-Latin characters not in proper charset, skipping: %s" % orig)
-            return orig
+          if this_ignore_translit == "latin":
+            if not re.search("^[#|%s]+$" % this_charset, text):
+              pagemsg("WARNING: Link contains characters not in proper charset, skipping: %s" % orig)
+              return orig
+          else:
+            if not re.search("[^ -~]", text):
+              pagemsg("No non-Latin characters in link, skipping: %s" % orig)
+              return orig
+            if not re.search("^[ -~%s]*$" % this_charset, text):
+              pagemsg("WARNING: Link contains non-Latin characters not in proper charset, skipping: %s" % orig)
+              return orig
           parts = re.split(r"\|", text)
           if len(parts) > 2:
             pagemsg("WARNING: Too many parts in link, skipping: %s" % orig)
@@ -144,8 +185,11 @@ def process_page(index, page, save, verbose):
           if page:
             if this_remove_accents(accented) == page:
               page = None
+            elif re.search("[#:]", page):
+              pagemsg("WARNING: Found special chars # or : in left side of link, skipping: %s" % orig)
+              return orig
             else:
-              pagemsg("WARNING: %s page %s doesn't match accented %s" % (thislangname, page, accented))
+              pagemsg("WARNING: %s page %s doesn't match accented %s, converting to two-part link" % (thislangname, page, accented))
           translit_arg = ""
           post_translit_arg = ""
           if translit and this_ignore_translit == "notranslit":
@@ -199,6 +243,21 @@ def process_page(index, page, save, verbose):
             return "{{%s|%s|%s%s}}%s" % (template, langcode, accented,
                 translit_arg, post_translit_arg)
 
+        def obfuscate_brackets(text):
+          return text.replace("[", lbracket_sub).replace("]", rbracket_sub)
+
+        def unobfuscate_brackets(text):
+          return text.replace(lbracket_sub, "[").replace(rbracket_sub, "]")
+
+        def sub_raw_latin_link(m):
+          if m.group(1).count('(') != m.group(1).count(')'):
+            pagemsg("WARNING: Unbalanced parens preceding raw link: %s" %
+                unobfuscate_brackets(m.group(0)))
+            retsub = m.group(2)
+          else:
+            retsub = sub_link(m.group(2), m.group(3), None, None)
+          return m.group(1) + obfuscate_brackets(retsub)
+
         def sub_raw_link(m):
           return sub_link(m.group(0), m.group(1), m.group(2), None)
 
@@ -238,18 +297,23 @@ def process_page(index, page, save, verbose):
               for ll in xrange(0, len(split_line), 2):
                 subline = split_line[ll]
                 replaced = False
-                new_subline = re.sub(r"\[\[([^A-Za-z]*?)\]\](?: \(([^()|]*?)\))?", sub_raw_link, subline)
+                if this_ignore_translit == "latin":
+                  new_subline = unobfuscate_brackets(
+                      rsub_repeatedly(r"^(.*?)(\[\[(.*?)\]\])", sub_raw_latin_link, subline))
+                else:
+                  new_subline = re.sub(r"\[\[([^A-Za-z]*?)\]\](?: \(([^()|]*?)\))?", sub_raw_link, subline)
                 if new_subline != subline:
                   pagemsg("Replacing %s with %s in %s section" % (subline, new_subline, subsectitle))
                   subline = new_subline
                   replaced = True
-                # Only try subbing template links with what looks like a
-                # following translit
-                new_subline = re.sub(r"\{\{([lm])\|%s\|([^A-Za-z{}]*?)\}\}(?: \(([^()|]*?)\))" % thislangcode, sub_template_link, subline)
-                if new_subline != subline:
-                  pagemsg("Replacing %s with %s in %s section" % (subline, new_subline, subsectitle))
-                  subline = new_subline
-                  replaced = True
+                if this_ignore_translit !="latin":
+                  # Only try subbing template links with what looks like a
+                  # following translit
+                  new_subline = re.sub(r"\{\{([lm])\|%s\|([^A-Za-z{}]*?)\}\}(?: \(([^()|]*?)\))" % thislangcode, sub_template_link, subline)
+                  if new_subline != subline:
+                    pagemsg("Replacing %s with %s in %s section" % (subline, new_subline, subsectitle))
+                    subline = new_subline
+                    replaced = True
                 if replaced:
                   split_line[ll] = subline
                   lines[l] = "".join(split_line)
