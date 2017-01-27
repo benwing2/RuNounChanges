@@ -519,7 +519,7 @@ def find_russian_need_vowels(find_accents, cattype, direcfile, save,
       def pagemsg(text):
         msg("Page %s(%s) %s: %s" % (pagenum, index, pagetitle, text))
       def check_template_for_missing_accent(pagetitle, index, template,
-          ruparam, trparam):
+          templang, ruparam, trparam):
         def output_line(directive):
           msg("* %s[[%s]]%s %s: <nowiki>%s%s</nowiki>" % (pagenum, pagename,
               tempname, directive, unicode(template), rest))
@@ -533,7 +533,7 @@ def find_russian_need_vowels(find_accents, cattype, direcfile, save,
       if index % 100 == 0:
         output_stats(pagemsg)
   else:
-    def check_template_for_missing_accent(pagetitle, index, template,
+    def check_template_for_missing_accent(pagetitle, index, template, templang,
         ruparam, trparam):
       def pagemsg(text):
         msg("Page %s %s: %s" % (index, pagetitle, text))

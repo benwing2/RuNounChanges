@@ -390,7 +390,7 @@ def canon_headwords(save, verbose, startFrom, upTo):
 # should be a list of (PAGETITLE, PAGETEXT). If CATTYPE is 'pages', PAGES_TO_DO
 # should be a list of page titles, specifying the pages to do.
 def canon_links(save, verbose, cattype, startFrom, upTo, pages_to_do=[]):
-  def process_param(pagetitle, index, template, param, paramtr):
+  def process_param(pagetitle, index, template, tlang, param, paramtr):
     result = canon_param(pagetitle, index, template, param, paramtr,
         include_tempname_in_changelog=True)
     if getparam(template, "sc") == "Arab":

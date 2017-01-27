@@ -191,7 +191,7 @@ def vocalize_headwords(save, verbose, startFrom, upTo):
 # Show exact changes if VERBOSE is true. CATTYPE should be 'vocab', 'borrowed'
 # or 'translation', indicating which categories to examine.
 def vocalize_links(save, verbose, cattype, startFrom, upTo):
-  def process_param(pagetitle, index, template, param, paramtr):
+  def process_param(pagetitle, index, template, tlang, param, paramtr):
     result = vocalize_param(pagetitle, index, template, param, paramtr)
     if isinstance(result, basestring):
       result = ["%s (%s)" % (result, template.name)]
