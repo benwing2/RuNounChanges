@@ -62,7 +62,7 @@ def canon_param(pagetitle, index, template, tlang, param, paramtr,
     pagemsg("Removing redundant translit for %s.%s (%s)" % (
         tname, foreign, latin))
     if include_tempname_in_changelog:
-      paramtrname = "%s.%s" % (tname, paramtr)
+      paramtrname = "%s.%s.%s" % (tname, tlang, paramtr)
     else:
       paramtrname = paramtr
     pagemsg("Replaced %s with %s" % (oldtempl, unicode(template)))
@@ -140,15 +140,14 @@ def canon_links(save, verbose, cattype, lang, longlang,
       if scvalue == predicted_script:
         tname = unicode(template.name)
         if show_template and result == False:
-          msg("Page %s %s: %s.%s: Processing %s" % (index,
-            pagetitle, tname, "sc", unicode(template)))
-        msg("Page %s %s: %s.%s: Removing sc=%s" % (index,
-          pagetitle, tname, "sc", scvalue))
+          pagemsg("%s.%s.%s: Processing %s" % (
+            tname, tlang, "sc", unicode(template)))
+        pagemsg("%s.%s.%s: Removing sc=%s" % (
+          tname, tlang, "sc", scvalue))
         oldtempl = "%s" % unicode(template)
         template.remove("sc")
-        msg("Page %s %s: Replaced %s with %s" %
-            (index, pagetitle, oldtempl, unicode(template)))
-        newresult = ["remove %s.sc=%s" % (tname, scvalue)]
+        pagemsg("Replaced %s with %s" % (oldtempl, unicode(template)))
+        newresult = ["remove %s.%s.sc=%s" % (tname, tlang, scvalue)]
         if result != False:
           result = result + newresult
         else:
