@@ -24,6 +24,9 @@ RINGBELOW = u"\u0325"
 CEDILLA   = u"\u0327"
 OGONEK    = u"\u0328"
 
+skip_pages = [u"Reconstruction:Proto-Slavic/mělь",
+    u"Reconstruction:Proto-Slavic/pazъ"]
+
 def remove_slovene_accents(lemma):
   lemma = re.sub(u"[ÁÀÂȂȀ]", "A", lemma)
   lemma = re.sub(u"[áàâȃȁ]", "a", lemma)
@@ -84,13 +87,17 @@ def process_page(index, page, save, verbose):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
+  if pagetitle in skip_pages:
+    pagemsg("Skipping because in skip list")
+    return
+
   pagemsg("Processing")
 
   text = unicode(page.text)
   notes = []
   parsed = blib.parse(page)
   saw_sl_tonal = False
-  saw_sl_plain = False
+  saw_sl_plain = 0
   for t in parsed.filter_templates():
     # In case we already substituted multiple tonal variants, the first
     # one will have {{l|sl|...}} and we'll try to replace it again unless
@@ -99,9 +106,11 @@ def process_page(index, page, save, verbose):
       pagemsg("Already found %s, not replacing anything" % unicode(t))
       saw_sl_tonal = True
     if unicode(t.name) == "l" and getparam(t, "1") == "sl":
-      saw_sl_plain = True
+      saw_sl_plain += 1
   if saw_sl_plain and saw_sl_tonal:
     pagemsg("WARNING: Saw both {{l|sl|...}} and {{l/sl-tonal|...}}, needs fixing")
+  if saw_sl_plain > 1:
+    pagemsg("WARNING: Saw multiple {{l|sl|...}}, check if substitution is correct")
   if saw_sl_tonal:
     return
 
