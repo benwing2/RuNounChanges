@@ -836,3 +836,18 @@ missing-freq32600-1-12999.txt.adjs.zorder, part 1
 other cases [starting Jun 23 2016]
 
 * [[классный]] "class (of school) (attrib.); (colloq.) awesome, cool" no? [can't find examples]
+
+
+Entries in [[:Category:Russian adjectives interfixed with -тельн-]]:
+
+* [[безотлагательный]] "pressing, urgent" yes [see [https://books.google.com/books?id=wSwMAQAAMAAJ&q=%D0%B1%D0%B5%D0%B7%D0%BE%D1%82%D0%BB%D0%B0%D0%B3%D0%B0%D1%82%D0%B5%D0%BB%D0%B5%D0%BD&dq=%D0%B1%D0%B5%D0%B7%D0%BE%D1%82%D0%BB%D0%B0%D0%B3%D0%B0%D1%82%D0%B5%D0%BB%D0%B5%D0%BD&hl=en&sa=X&ved=0ahUKEwj4kbP7vrTTAhXrxVQKHZyDAWwQ6AEIJTAA]: И потому Собор не только необходим, но безотлагателен, ибо законодательство не бездействует в отношении Церкви и не может бездействовать, а между тем действие это ныне совершается дефектными, вредными для ...]
+* [[дательный]] "dative" no? [examples only in poetry]
+* [[дыхательный]] "respiratory" no? [can't find examples]
+* [[курительный]] "smoking" no? [can't find examples]
+* [[образательный]] "educational" yes [see [https://books.google.com/books?id=Jv-3CAAAQBAJ&pg=PA186&dq=%D0%BE%D0%B1%D1%80%D0%B0%D0%B7%D0%BE%D0%B2%D0%B0%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwiKi-7NzLTTAhWEwVQKHXZYDs44ChDoAQhKMAY]: Но «экскурсии по городу» тогда только будут поучительны и образовательны, когда мы поймем город]
+* [[оправдательный]] "justificatory, exculpatory" yes? [see [https://books.google.com/books?id=wzohAAAAMAAJ&q=%D0%BE%D0%BF%D1%80%D0%B0%D0%B2%D0%B4%D0%B0%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D1%8B&dq=%D0%BE%D0%BF%D1%80%D0%B0%D0%B2%D0%B4%D0%B0%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwiG8d-hz7TTAhXki1QKHa8zDJ44FBDoAQgiMAA]: Рассуждения старого солдата мудры и оправдательны, но куда вернее его же: «А кто на моем месте будет?»]
+* [[упоительный]] "enchanting" yes [see [https://books.google.com/books?id=kpj1AwAAQBAJ&pg=PT295&dq=%D1%83%D0%BF%D0%BE%D0%B8%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwiqzv_467TTAhUr5IMKHRHwBAM4HhDoAQgiMAA]: несколько звеньев из золота совершенных пропорций, соединенные в цепочку, могут быть столь же упоительны для глаз]
+
+Misc.
+
+* [[народный]] "popular" yes [see [https://books.google.com/books?id=a4B5BAAAQBAJ&pg=PT231&dq=%D0%BE%D0%BD%D0%B8+%D0%BD%D0%B0%D1%80%D0%BE%D0%B4%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwimrsHdh8TTAhWm7IMKHXKxDScQ6AEINDAC]: Конечно, оба они народны в том смысле, что продолжают дух русского народа в духе русской культуры, стремятся ...]
