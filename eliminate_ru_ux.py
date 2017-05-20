@@ -14,15 +14,13 @@ from blib import getparam, rmparam, msg, site
 import rulib as ru
 import runounlib as runoun
 
-def process_page(index, page, save, verbose):
+def process_page(page, index, parsed):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
   pagemsg("Processing")
 
-  text = unicode(page.text)
-  parsed = blib.parse(page)
   notes = []
   for t in parsed.filter_templates():
     if unicode(t.name) == "ru-ux":
@@ -38,7 +36,7 @@ def process_page(index, page, save, verbose):
           pname = unicode(param.name)
           pval = unicode(param.value)
           if pname == "inline":
-            if pval and pval not in ["0", "n", "no"]:
+            if pval and pval not in ["0", "n", "no", "false"]:
               tname = "uxi"
           elif re.search(r"^[0-9]+$", pname):
             # move numbered params up by one
@@ -48,31 +46,20 @@ def process_page(index, page, save, verbose):
           else:
             new_params.append((pname, param.value))
         del t.params[:]
-        t.add(tname)
-        t.add("ru")
+        t.name = tname
+        t.add("1", "ru")
         for pname, pval in new_params:
           t.add(pname, pval)
+        notes.append("Replace {{ru-ux}} with {{%s|ru}}" % tname)
       newt = unicode(t)
       if origt != newt:
         pagemsg("Replaced %s with %s" % (origt, newt))
 
-  new_text = unicode(parsed)
-
-  if new_text != text:
-    if verbose:
-      pagemsg("Replacing <%s> with <%s>" % (text, new_text))
-    assert notes
-    comment = "; ".join(notes)
-    if save:
-      pagemsg("Saving with comment = %s" % comment)
-      page.text = new_text
-      page.save(comment=comment)
-    else:
-      pagemsg("Would save with comment = %s" % comment)
+  return parsed, notes
 
 parser = blib.create_argparser(u"Convert {{ru-ux}} to {{ux|ru}} or {{uxi|ru}}")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
 for i, page in blib.references("Template:ru-ux", start, end):
-  process_page(i, page, args.save, args.verbose)
+  blib.do_edit(page, i, process_page, save=args.save, verbose=args.verbose)
