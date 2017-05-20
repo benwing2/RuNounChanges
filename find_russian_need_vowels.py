@@ -64,6 +64,10 @@
 #    меж, на, над, не, ни, об, от, по, под, пред, при, про, со, у. I don't
 #    think multisyllabic unstressed prepositions can steal accent from a
 #    following word; need to ask Anatoli/Wikitiki89 about this.
+# 15. FIXME! There may data loss in a case like
+#    {{lang|ru|{{l|ru|это|Это}} клёвее.}}, which may mistakenly get replaced
+#    with {{l|ru|это|Это}} (formerly found on the [[клёвее]] page). NEED TO
+#    CHECK WHETHER THIS ERROR STILL HAPPENS.
 
 import re, codecs
 
