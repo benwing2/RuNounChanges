@@ -32,17 +32,103 @@ pos_to_full_pos = {
 
 opt_arg_regex = r"^(also|syn|ant|der|rel|see|comp|pron|alt|part):(.*)"
 
-# Form for adjectives and nouns:
+# Form for adjectives, nouns and proper nouns:
 #
 # TERM ETYM DECL DEF ...
 #
-# where DECL can have ... to represent position of term in it (otherwise,
-# the declension is placed after the term, separated by a vertical bar).
-# (For adjectives, DECL is used for the short adjective declension.)
+# where ... is 0 or more additional specifications, each preceded by a
+# prefix suchas rel: (for related terms) or alt: (for alternative forms).
 #
-# Form for adverbs:
+# Form for other parts of speech is similar:
 #
 # TERM ETYM DEF ...
+#
+# If --pos is given, there should be an additional first column noting the
+# part of speech (n = noun, adj = adjective, adv = adverb, etc. see
+# pos_to_full_pos above).
+#
+# An underscore is replaced with a space in any field except for the
+# declension field, which can have underscores in it legitimately (e.g.
+# "a|short_m=-"). To indicate a space in the declension field, use \s,
+# and to indicate an underscore elsewhere, use \u.
+#
+# TERM is normally the term itself, but can consist of the form TERM//TRANSLIT
+# for explicitly-specified translit.
+#
+# DECL is the declension that follows the term in the declensional template,
+# and in the headword template of nouns. If it consists of -, no declension
+# specification is used. If it consists of --, the declension consists of
+# literal - (for adjectives, to indicate that no short forms exist). DECL
+# can have ... to represent position of term in it (otherwise, the declension
+# is placed after the term, separated by a vertical bar). For nouns, DECL
+# can contain |m=..., |f=... and/or |g=..., |g2=..., etc. to specify
+# masculine/feminine equivalents or genders, as are found in the headword
+# template; these will automatically be removed when creating the declension
+# template.
+#
+# ETYM normally consists of one or more parts separated by + symbols; the
+# parts go directly into parameters of {{affix}}. If the field consists of
+# -, the etym section will contain a request for etymology; if the field
+# is --, the etym section will be omitted (used for participles and such).
+# For substantivized adjectives, the etym section can begin with sm:, sf:
+# sn: or sp: for substantivized masculine, feminine, neuter or plural, and
+# the etym section will say "Substantivized [gender] of {{m|ru|TERM}}."
+# For borrowed terms, the field should be prefixed with a language code
+# followed by a colon, e.g. "fr:attitude". If what follows contains no + sign,
+# the etym section will use {{bor|ru|LANG|TERM}}; else {{affix|...}} will be
+# used; e.g. "fr:spectral+-ный" becomes {{affix|ru|spectral|-ный|lang1=fr}}.
+# The etym section can begin with ?, indicating that the etymology is
+# uncertain (it will be prefixed with "Perhaps from" or "Perhaps borrowed from"
+# as appropriate), or with <<, indicating an ultimate etymology (it will be
+# prefixed with "Ultimately from" or "Ultimately borrowed from" as
+# appropriate).
+#
+# DEF consists of one or more definitions, separated by semicolons; each
+# definition goes on its own line. The definition will be normally used
+# directly, except that underscores should be used in place of spaces and
+# a space will be added after any comma not followed by a space. Use \; to
+# indicate a literal semicolon. Each definition can begin with one or
+# labels, which are placed at the beginning of the definition using
+# {{lb|ru|...}}. The following are recognized:
+#
+# + = attributive
+# # = figurative
+# (f) = figurative
+# (or) = put the word "or" in the label
+# (also) = put the word "also" in the label
+# (d) = dated
+# (p) = poetic
+# (h) = historical
+# (n) = nonstandard
+# (lc) = low colloquial
+# (v) = vulgar
+# ! = colloquial
+# (c) = colloquial
+# (l) = literary
+# (tr) = transitive
+# (in) = intransitive
+# (io) = imperfective only
+# (po) = perfective only
+# (im) = impersonal
+# (pej) = pejorative
+# (vul) = vulgar
+# (reg) = regional
+# (joc) = jocular
+#
+# After any labels, the definition can consist of one of the following special
+# forms:
+#
+# 1. "altof:TERM" if it is an alternative form of another term
+# 2. "dim:TERM" or "dim:TERM:DEFN", for a diminutive form of another term,
+#    optionally followed by a definition (the definition is for the diminutive
+#    term, not the source term)
+#
+# In place of a normal definition, the definition can consist of a single
+# "-", in which case a request for definition is substituted, or begin with
+# "ux:", in which case the remainder of the line is a usage example and
+# is substituted into {{uxi|ru|...}}.
+#
+# (describe additional specs)
 
 for line in codecs.open(args.direcfile, "r", "utf-8"):
 
@@ -74,8 +160,8 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
       pos = "adj"
   # Replace _ with space, but not in the declension, where there may be
   # an underscore, e.g. a|short_m=-; but allow \s to stand for a space in
-  # the declension
-  els = [el.replace(r"\s", " ") if i == 2 and (pos in ["n", "pn", "adj"]) else el.replace("_", " ") for i, el in enumerate(els)]
+  # the declension, and \u for underscore elsewhere
+  els = [el.replace(r"\s", " ") if i == 2 and (pos in ["n", "pn", "adj"]) else el.replace("_", " ").replace(r"\u", "_") for i, el in enumerate(els)]
   if pos not in ["n", "pn", "adj"]:
     term, etym, defns = els[0], els[1], els[2]
     remainder = els[3:]
@@ -113,6 +199,9 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
       gender = {"m":"masculine", "f":"feminine", "n":"neuter", "p":"plural"}
       etymtext = "Substantivized %s of {{m|ru|%s}}." % (gender[m.group(1)],
           m.group(2))
+    elif etym.startswith("acr:"):
+      _, fullexpr, meaning = re.split(":", etym)
+      etymtext = "{{ru-etym acronym of|%s|%s}}" % (fullexpr, meaning)
     elif ":" in etym and "+" not in etym:
       prefix = ""
       if etym.startswith("?"):
@@ -152,6 +241,8 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
     decl = decl.replace("?", "") # eliminate uncertainty notations
     if decl == "-":
       hdecltext = declterm
+    elif decl == "--":
+      hdecltext = "%s|-" % declterm
     elif "..." in decl:
       hdecltext = decl.replace("...", declterm)
     else:
