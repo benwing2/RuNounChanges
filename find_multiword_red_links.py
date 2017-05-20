@@ -140,6 +140,20 @@ def process_page(index, page, verbose):
       else:
         arg_set.append(val)
 
+  def process_verb_headword(htemp):
+    # Look for either space-delimited words or bracket-delimited sections.
+    words = [x for num, x in
+        enumerate(re.split(r"([^\s\[\]]+|\[\[.*?\]\])", getparam(htemp, "1")))
+        if num % 2 == 1]
+    for word in words:
+      word = word.replace("#Russian", "")
+      word = rulib.remove_accents(blib.remove_right_side_links(word))
+      if "[" in word or "]" in word:
+        pagemsg("WARNING: Found stray bracket in word %s in %s" %
+            (word, unicode(htemp)))
+      else:
+        check_lemma(word)
+
   for t in parsed.filter_templates():
     tname = unicode(t.name)
     if tname == "ru-decl-noun-see":
@@ -147,6 +161,9 @@ def process_page(index, page, verbose):
     elif tname in ["ru-noun+", "ru-proper noun+"]:
       pagemsg("Found %s" % unicode(t))
       process_new_style_headword(t)
+    elif tname in ["ru-verb"]:
+      pagemsg("Found %s" % unicode(t))
+      process_verb_headword(t)
     elif tname in ["ru-noun", "ru-proper noun"]:
       pagemsg("WARNING: Skipping ru-noun or ru-proper noun, can't handle yet: %s" % unicode(t))
 
@@ -158,7 +175,7 @@ msg("Reading Russian lemmas")
 for i, page in blib.cat_articles("Russian lemmas", start, end):
   lemmas.add(unicode(page.title()))
 
-for pos in ["nouns", "proper nouns"]:
+for pos in ["nouns", "proper nouns", "verbs"]:
   tracking_page = "Template:tracking/ru-headword/space-in-headword/" + pos
   msg("PROCESSING REFERENCES TO: %s" % tracking_page)
   for index, page in blib.references(tracking_page, start, end):
