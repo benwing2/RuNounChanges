@@ -64,7 +64,7 @@ def generate_defn(defns):
     if defn == "-":
       defnlines.append("# {{rfdef|lang=ru}}\n")
     elif defn.startswith("ux:"):
-      defnlines.append("#: {{ru-ux|%s|inline=y}}\n" % (
+      defnlines.append("#: {{uxi|ru|%s}}\n" % (
         re.sub("^ux:", "", re.sub(r", *", ", ", defn))))
     else:
       labels = []
