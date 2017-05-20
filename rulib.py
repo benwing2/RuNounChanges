@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import re
+import unicodedata
 from collections import OrderedDict
 
 AC = u"\u0301" # acute =  ́
@@ -11,7 +12,8 @@ DOTABOVE = u"\u0307" # dot above =  ̇
 DOTBELOW = u"\u0323" # dot below =  ̣
 DI = u"\u0308" # diaeresis =  ̈
 DUBGR = u"\u030F" # double grave =  ̏
-accents = AC + GR + CFLEX + DOTABOVE + DOTBELOW + DI + DUBGR
+CARON = u"\u030C" # caron =  ̌
+accents = AC + GR + CFLEX + DOTABOVE + DOTBELOW + DI + DUBGR + CARON
 
 composed_grave_vowel = u"ѐЀѝЍ"
 vowel_no_jo = u"аеиоуяэыюіѣѵАЕИОУЯЭЫЮІѢѴ" + composed_grave_vowel #omit ёЁ
@@ -22,6 +24,7 @@ sib_c = sib + u"цЦ"
 cons = cons_except_sib_c + sib_c
 velar = u"кгхКГХ"
 uppercase = u"АЕИОУЯЭЫЁЮІѢѴБДФГЙКЛМНПРСТВХЗЬЪШЩЧЖЦ"
+tr_vowel = u"aeěɛiouyAEĚƐIOUY"
 
 # Does a phrase of connected text need accents? We need to split by word
 # and check each one.
@@ -81,6 +84,13 @@ def is_nonsyllabic(word):
 def is_monosyllabic(word):
   return not re.search("[" + vowel + "].*[" + vowel + "]", word)
 
+# Includes non-syllabic stems such as lʹd-
+def is_tr_monosyllabic(word):
+  if not word:
+    return False
+  return not re.search("[" + tr_vowel + "].*[" + tr_vowel + "]",
+      unicodedata.normalize("NFD", word))
+
 def ends_with_vowel(word):
   return re.search("[" + vowel + "][" + AC + GR + DI + "]?$", word)
 
@@ -97,15 +107,33 @@ deaccenter[AC] = "" # acute accent
 deaccenter[DI] = "" # diaeresis
 
 def remove_accents(word):
-  # remove acute, grave and diaeresis (but not affecting composed ёЁ)
+  # remove acute and grave
     return re.sub(u"([̀́̈ѐЀѝЍ])", lambda m: deaccenter[m.group(1)], word)
 
+def remove_tr_accents(word):
+  if not word:
+    return word
+  # remove acute and grave from translit
+  return unicodedata.normalize("NFC", re.sub(u"[̀́̈]", "",
+    unicodedata.normalize("NFD", word)))
+
 def remove_monosyllabic_accents(word):
-  # note: This doesn't affect ё or Ё, provided that the word is
-  # precomposed (which it normally is, as this is done automatically by
-  # MediaWiki upon saving)
+  # note: This doesn't affect diaeresis (composed or uncomposed) because
+  # it indicates a change in vowel quality, which still applies to
+  # monosyllabic words.
   if is_monosyllabic(word):
     return remove_accents(word)
+  else:
+    return word
+
+def remove_tr_monosyllabic_accents(word):
+  # note: This doesn't affect diaeresis (composed or uncomposed) because
+  # it indicates a change in vowel quality, which still applies to
+  # monosyllabic words.
+  if not word:
+    return word
+  if is_tr_monosyllabic(word):
+    return remove_tr_accents(word)
   else:
     return word
 
