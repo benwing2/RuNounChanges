@@ -167,7 +167,7 @@ def dump(page):
 def expand_text(tempcall, pagetitle, pagemsg, verbose):
   if verbose:
     pagemsg("Expanding text: %s" % tempcall)
-  result = site.expand_text(tempcall, title=pagetitle)
+  result = try_repeatedly(lambda: site.expand_text(tempcall, title=pagetitle), pagemsg, "expand text: %s" % tempcall)
   if verbose:
     pagemsg("Raw result is %s" % result)
   if result.startswith('<strong class="error">'):
@@ -189,12 +189,16 @@ def do_edit(page, index, func=None, null=False, save=False, verbose=False):
           pagemsg("Begin processing")
         new, comment = func(page, index, parse(page))
 
+        if type(comment) is list:
+          comment = "; ".join(group_notes(comment))
+
         if new:
           new = unicode(new)
 
           # Canonicalize shaddas when comparing pages so we don't do saves
           # that only involve different shadda orders.
           if reorder_shadda(page.text) != reorder_shadda(new):
+            assert comment
             if verbose:
               pagemsg('Replacing <%s> with <%s>' % (page.text, new))
             page.text = new
@@ -244,7 +248,7 @@ def do_process_text(pagetitle, pagetext, index, func=None, verbose=False):
           # that only involve different shadda orders.
           if reorder_shadda(pagetext) != reorder_shadda(new):
             if verbose:
-              pagemsg('Replacing [[%s]] with [[%s]]' % (pagetext, new))
+              pagemsg('Replacing <%s> with <%s>' % (pagetext, new))
             #if save:
             #  pagemsg("Saving with comment = %s" % comment)
             #  page.save(comment = comment)
@@ -569,6 +573,8 @@ def try_repeatedly(fun, pagemsg, operation="save", max_tries=10, sleep_time=5):
       return fun()
     except KeyboardInterrupt as e:
       raise
+    except pywikibot.exceptions.InvalidTitle as e:
+      raise
     except Exception as e:
       #except (pywikibot.exceptions.Error, StandardError) as e:
       pagemsg("WARNING: Error when trying to %s: %s" % (operation, unicode(e)))
@@ -578,7 +584,7 @@ def try_repeatedly(fun, pagemsg, operation="save", max_tries=10, sleep_time=5):
         pagemsg("WARNING: Can't %s!!!!!!!" % operation)
         errmsg("WARNING: Can't %s!!!!!!!" % operation)
         raise
-      errmsg("Sleeping for 5 seconds")
+      errmsg("Sleeping for %s seconds" % sleep_time)
       time.sleep(sleep_time)
       if sleep_time >= 40:
         sleep_time += 40
