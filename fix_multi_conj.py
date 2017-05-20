@@ -87,10 +87,10 @@ def process_page(index, page, save, verbose):
     params.extend(newparams)
     blib.set_param_chain(t1, params, "1", "")
     pagemsg("Combining verb conjugations %s and %s" % (
-      getparam(t1, "1"), getparam(t2, "1")))
+      getparam(t1, "2"), getparam(t2, "2")))
     pagemsg("Replaced %s with %s" % (m.group(0).replace("\n", r"\n"), unicode(t1)))
     notes.append("combined verb conjugations %s and %s" % (
-      getparam(t1, "1"), getparam(t2, "1")))
+      getparam(t1, "2"), getparam(t2, "2")))
     return unicode(t1)
 
   new_text = re.sub(r"(\{\{ru-conj\|[^{}]*\}\})\s*''or(.*?)''\s*(\{\{ru-conj\|[^{}]*\}\})",
