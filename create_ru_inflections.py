@@ -268,6 +268,23 @@
 #     with maxlag errors.
 # 75. (DONE) Support --lemmas-to-not-overwrite and write "not overwriting"
 #     msgs to stderr as well.
+# 76. (DONE) Remove accents from single-syllable manual translit, to handle бог
+#     (translit box).
+# 77. (ALREADY DONE) In "Found plurale tantum lemma" warning, output only if
+#     not already found in allow_in_same_etym_section.
+# 78. (DONE) When overwriting the page using --overwrite-page, preserve
+#     {{also|...}} notes at the top.
+# 79. Inserts "inanimate accusative plural" into трёпла of lemma трепло́ even
+#     though it's always inanimate, due presumably to hypothetical animate
+#     plural elsewhere on the page. Also doesn't note in change message that
+#     it's inserting inanimate acc pl rather than just acc pl. Similarly with
+#     со́пли pl. of сопля́.
+# 80. Inserts "inanimate acc pl" instead of just "acc pl" into кисы́ form of
+#     киса́; ки́сы pl of ки́са is animate. Similarly for попа́ gen. of поп "pope"
+#     vs по́па gen. of поп "pop (music, art)".
+# 81. Inserts "animate acc pl" instead of just "acc pl" into посла́ form of
+#     посо́л "ambassador", which is only animate; посо́л with genitive
+#     посо́ла "salting" is inanimate.
 
 import pywikibot, re, sys, codecs, argparse, time
 import traceback
@@ -294,6 +311,8 @@ skip_lemma_pages = [
     u"тысяча", # cardinal number (?)
     u"роженица", # 3 stress variants
     u"лицо, ищущее убежище", # can't properly handle comma in title
+    u"витамин B2", # can't handle < in form titles
+    u"ложное срабатывание", # will be deleted
 ]
 
 skip_form_pages = [
@@ -340,6 +359,24 @@ manual_split_form_list = [
     (u"^творог", u"творо́г"),
     (u"^тео́ри.*ха́оса", u"тео́рия ха́оса"),
     (u"^тео́ри.*хао́са", u"тео́рия хао́са"),
+    (u"^украи́нск", u"украи́нский"),
+    (u"^укра́инск", u"укра́инский"),
+    # verbs; need to split every one since we don't yet have automatic
+    # handling of them
+    (u"^гази́р", u"гази́ровать"),
+    (u"^газир", u"газирова́ть"),
+    (u"^запы́ха", u"запы́хаться"),
+    (u"^запыха́", u"запыха́ться"),
+    (u"^и́скр", u"и́скриться"),
+    (u"^искр", u"искри́ться"),
+    (u"^пузы́р", u"пуз́ыриться"),
+    (u"^пузыр", u"пузыри́ться"),
+    (u"^ржа́ве", u"ржа́веть"),
+    (u"^ржаве́", u"ржаве́ть"),
+    (u"^сгру́д", u"сгру́диться"),
+    (u"^сгруд", u"сгруди́ться"),
+    (u"^ю́ркн", u"ю́ркнуть"),
+    (u"^юркн", u"юркну́ть"),
 ]
 
 # These represent pairs of lemmas, typically where the first one is a plurale
@@ -356,6 +393,9 @@ allow_in_same_etym_section = [
     (u"азы", u"аз"),
     (u"авиалинии", u"авиалиния"),
     (u"агулы", u"агул"),
+    # the following is complicated because there are two амур etymologies,
+    # one of which is shared with амуры.
+    (u"амуры", u"амур"),
     (u"бакенбарды", u"бакенбарда"),
     (u"бега", u"бег"),
     (u"боеприпасы", u"боеприпас"),
@@ -368,11 +408,16 @@ allow_in_same_etym_section = [
     (u"войска", u"войско"),
     (u"волосы", u"волос"),
     (u"выборы", u"выбор"),
+    (u"выходные", u"выходной"),
+    (u"горелки", u"горелка"), # at least partly related
+    (u"деньги", u"деньга"),
     (u"домашние", u"домашний"),
     (u"доспехи", u"доспех"),
     (u"жабры", u"жабра"),
     (u"заморозки", u"зоморозок"),
+    (u"запчасти", u"запчасть"),
     (u"кавычки", u"кавычка"),
+    (u"кадры", u"кадр"),
     (u"капли", u"капля"),
     (u"карты", u"карта"),
     (u"коньки", u"конёк"),
@@ -398,12 +443,16 @@ allow_in_same_etym_section = [
     (u"отбросы", u"отброс"),
     (u"падонки", u"падонак"),
     (u"пики", u"пика"),
+    (u"подтяжки", u"подтяжка"),
+    (u"покои", u"покой"),
     (u"полдни", u"полдень"),
     (u"почести", u"почесть"),
+    (u"припасы", u"припас"),
     (u"права", u"право"),
     (u"правнучата", u"правнук"),
     (u"реалии", u"реалия"),
     (u"ребята", u"ребёнок"),
+    (u"сиги", u"сиг"),
     (u"слухи", u"слух"),
     (u"сопли", u"сопля"),
     # FIXME! This should be split into стих "verse" (goes with стихи),
@@ -419,6 +468,7 @@ allow_in_same_etym_section = [
     (u"шашки", u"шашка"),
     (u"шлёпанцы", u"шлёпанец"),
     (u"японцы", u"японец"),
+    (u"яства", u"яство"),
 ]
 
 # List of lemmas where we allow stress mismatches to go into the same etym
@@ -433,17 +483,24 @@ allow_stress_mismatch_list = [
 # nominative singular and the other doesn't; by convention, we list the one
 # with the epenthetic vowel first).
 allow_defn_in_same_subsection = [
+    (u"басня", u"баснь"),
     (u"бобёр", u"бобр"),
     (u"ветер", u"ветр"),
     (u"водоросель", u"водоросль"),
     (u"вылезти", u"вылезть"),
     (u"деревцо", u"деревце"),
+    (u"дитя", u"ребёнок"), # special-case with same plural
+    (u"жалование", u"жалованье"),
+    (u"купание", u"купанье"),
     (u"либеральничание", u"либеральничанье"),
     (u"мнение", u"мненье"),
     (u"нуль", u"ноль"),
     (u"огонь", u"огнь"),
     (u"остыть", u"остынуть"),
+    (u"подножие", u"подножье"),
     (u"простыть", u"простынуть"),
+    (u"свёкор", u"свёкр"),
+    (u"свёкла", u"свекла"),
     (u"собрание", u"собранье"),
     (u"судия", u"судья"),
     (u"уединение", u"уединенье"),
@@ -680,15 +737,16 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
 
   # Warn on multi-stressed words
   if rulib.is_multi_stressed(lemma):
-    pagemsg("WARNING: Lemma %s has multiple accents")
+    pagemsg("WARNING: Lemma %s has multiple accents" % lemma)
   for infl, infltr in inflections:
     if rulib.is_multi_stressed(infl):
-      pagemsg("WARNING: Inflection %s has multiple accents")
+      pagemsg("WARNING: Inflection %s has multiple accents" % infl)
 
   # Check whether parameter PARAM of template T matches VALUE.
   def compare_param(t, param, value, valuetr, issue_warnings=True,
       allow_stress_mismatch=False):
     value = rulib.remove_monosyllabic_accents(value)
+    valuetr = rulib.remove_tr_monosyllabic_accents(valuetr)
     paramval = rulib.remove_monosyllabic_accents(blib.remove_links(getparam(t, param)))
     if rulib.is_multi_stressed(paramval):
       pagemsg_if(issue_warnings, "WARNING: Param %s=%s has multiple accents: %s" % (
@@ -727,15 +785,12 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
       else:
         assert not valuetr, "Translit cannot be specified with a non-head parameter"
         return True
-      trparamval = getparam(t, trparam)
+      trparamval = rulib.remove_tr_monosyllabic_accents(getparam(t, trparam))
       if not valuetr and not trparamval:
         return True
-      # If allow stress mismatch, compare without accents; but need first
-      # to decompose each so rulib.remove_accents() successfully removes the
-      # accents
       if (allow_stress_mismatch and valuetr and trparamval and
-          rulib.remove_accents(unicodedata.normalize("NFD", valuetr)) ==
-          rulib.remove_accents(unicodedata.normalize("NFD", trparamval))):
+          rulib.remove_tr_accents(valuetr) ==
+          rulib.remove_tr_accents(trparamval)):
         return True
       if valuetr == trparamval:
         return True
@@ -987,7 +1042,9 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
           else:
             notes.append("overwrite section")
             pagemsg("WARNING: Overwriting entire Russian section")
-            sections[i] = ""
+            # Preserve {{also|...}}
+            sections[i] = re.sub(r"^((\s*\{\{also\|.*?\}\}\s*)?).*$", r"\1",
+                sections[i], 0, re.S)
             pages_already_erased.add(pagename)
 
         # When creating non-lemma forms, warn about matching lemma template
@@ -2509,7 +2566,8 @@ def create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite,
         pagemsg("create_forms: Found multiple dictionary forms: %s" % args[dicform_code])
       # Fetch dictionary forms, remove accents on monosyllables
       dicforms = [split_ru_tr(dicform) for dicform in dicforms]
-      dicforms = [(rulib.remove_monosyllabic_accents(dicru), dictr) for dicru, dictr in dicforms]
+      dicforms = [(rulib.remove_monosyllabic_accents(dicru),
+        rulib.remove_tr_monosyllabic_accents(dictr)) for dicru, dictr in dicforms]
       # Group dictionary forms by Russian, to group multiple translits
       dicforms = rulib.group_translits(dicforms, pagemsg, expand_text)
       dicforms_args_sets = split_forms_with_stress_variants(args, forms_desired,
@@ -2557,7 +2615,8 @@ def create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite,
                 pagemsg("create_forms: For form %s, found multiple page names %s" % (
                   formname, ",".join("%s" % formval_no_accents for formval_no_accents, inflections in formvals_by_pagename_items)))
               for formval_no_accents, inflections in formvals_by_pagename_items:
-                inflections = [(rulib.remove_monosyllabic_accents(infl), infltr) for infl, infltr in inflections]
+                inflections = [(rulib.remove_monosyllabic_accents(infl),
+                  rulib.remove_tr_monosyllabic_accents(infltr)) for infl, infltr in inflections]
                 inflections_printed = ",".join("%s%s" %
                     (infl, " (%s)" % infltr if infltr else "")
                     for infl, infltr in inflections)
