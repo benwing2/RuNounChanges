@@ -30,7 +30,7 @@ pos_to_full_pos = {
   "int": "Interjection"
 }
 
-opt_arg_regex = r"^(also|syn|ant|der|rel|see|comp|pron|alt|part):(.*)"
+opt_arg_regex = r"^(also|syn|ant|der|rel|see|comp|pron|alt|part|wiki):(.*)"
 
 # Form for adjectives, nouns and proper nouns:
 #
@@ -122,6 +122,14 @@ opt_arg_regex = r"^(also|syn|ant|der|rel|see|comp|pron|alt|part):(.*)"
 # 2. "dim:TERM" or "dim:TERM:DEFN", for a diminutive form of another term,
 #    optionally followed by a definition (the definition is for the diminutive
 #    term, not the source term)
+# 3. "aug:TERM" or "aug:TERM:DEFN", for an augmentative form of another term,
+#    optionally followed by a definition (the definition is for the
+#    augmentative term, not the source term)
+# 4. "gn:REMAINDER", for a given name; generates
+#    {{given name|lang=ru|REMAINDER}}.
+# 5. "altyo:TERM" or "altyo:TERM:REST", for non-ё forms of words properly
+#    spelled with ё. For nouns, REST needs to include the gender, e.g.
+#    "altyo:распространённость:f-in".
 #
 # In place of a normal definition, the definition can consist of a single
 # "-", in which case a request for definition is substituted, or begin with
@@ -158,6 +166,42 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
       pos = "n"
     else:
       pos = "adj"
+  if len(els) == 2 and els[1].startswith("altyo:"):
+    altyoparts = re.split(":", els[1])
+    assert len(altyoparts) in [2, 3]
+    pos_to_altyo = {
+      "n": u"ru-noun-alt-ё",
+      "pn": u"ru-proper noun-alt-ё",
+      "adj": u"ru-adj-alt-ё",
+      "v": u"ru-verb-alt-ё"
+    }
+    if pos in pos_to_altyo:
+      altyotemp = pos_to_altyo[pos]
+      if len(altyoparts) == 2:
+        yoline = "{{%s|%s}}" % (altyotemp, altyoparts[1])
+      else:
+        yoline = "{{%s|%s|%s}}" % (altyotemp, altyoparts[1],
+          altyoparts[2])
+    else:
+      assert pos in pos_to_full_pos
+      fullpos = pos_to_full_pos[pos]
+      if len(altyoparts) == 2:
+        yoline = u"{{ru-pos-alt-ё|%s|%s}}" % (fullpos, altyoparts[1])
+      else:
+        yoline = u"{{ru-pos-alt-ё|%s|%s|%s}}" % (fullpos, altyoparts[1],
+          altyoparts[2])
+    msg("""%s
+
+==Russian==
+
+===%s===
+%s
+
+
+""" % (rulib.remove_accents(altyoparts[1]).replace(u"ё", u"е"),
+      pos_to_full_pos[pos], yoline))
+    continue
+
   # Replace _ with space, but not in the declension, where there may be
   # an underscore, e.g. a|short_m=-; but allow \s to stand for a space in
   # the declension, and \u for underscore elsewhere
@@ -172,19 +216,10 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
     remainder = els[4:]
   translit = None
   declterm = term
-  adjrefl = False
   if "//" in term:
     term, translit = re.split("//", term)
   if pos == "adj":
-    if term.endswith(u"ся"):
-      adjrefl = True
-      if "//" in declterm:
-        msg("Can't handle reflexive adjectives with manual translit yet")
-        assert False
-      declterm = re.sub(u"ся$", "", term)
-      assert re.search(u"(ый|ий|о́й)$", declterm)
-    else:
-      assert re.search(u"(ый|ий|о́й)$", term)
+    assert re.search(u"(ый|ий|о́й)(ся)?$", term)
   trtext = translit and "|tr=" + translit or ""
   check_stress(term)
   if etym == "?":
@@ -201,7 +236,12 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
           m.group(2))
     elif etym.startswith("acr:"):
       _, fullexpr, meaning = re.split(":", etym)
-      etymtext = "{{ru-etym acronym of|%s|%s}}" % (fullexpr, meaning)
+      etymtext = "{{ru-etym acronym of|%s||%s}}." % (fullexpr, meaning)
+    elif etym.startswith("deverb:"):
+      _, sourceterm = re.split(":", etym)
+      etymtext = "Deverbal from {{m|ru|%s}}." % sourceterm
+    elif etym.startswith("raw:"):
+      etymtext = re.sub("^raw:", "", etym)
     elif ":" in etym and "+" not in etym:
       prefix = ""
       if etym.startswith("?"):
@@ -278,8 +318,11 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
   reltext = None
   seetext = None
   comptext = ""
+  wikitext = ""
   prontext = "* {{ru-IPA|%s}}\n" % term
   for synantrel in remainder:
+    if synantrel.startswith("#"):
+      break # ignore comments
     m = re.search(opt_arg_regex, synantrel)
     if not m:
       error("Element %s doesn't start with also:, syn:, ant:, der:, rel:, see:, comp:, pron:, alt: or part:" % synantrel)
@@ -345,10 +388,15 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
         partdecltext = ""
       else:
         partdecltext = """====Declension====
-{{ru-decl-adj|%s%s%s}}\n\n""" % (declterm,
-          "" if partshort == "-" else "|" + partshort,
-          u"|suffix=ся" if adjrefl else "")
+{{ru-decl-adj|%s%s}}\n\n""" % (declterm,
+          "" if partshort == "-" else "|" + partshort)
       parttext += partdecltext
+    elif sartype == "wiki":
+      _, link = re.split(":", vals)
+      if link:
+        wikitext = "{{wikipedia|lang=ru|%s}}\n" % link
+      else:
+        wikitext = "{{wikipedia|lang=ru}}\n"
     else: # derived or related terms or see also
       if ((sartype == "der" and dertext != None) or
           (sartype == "rel" and reltext != None) or
@@ -419,10 +467,9 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
 
 %s
 ====Declension====
-{{ru-decl-adj%s%s}}
+{{ru-decl-adj%s}}
 
-""" % (term, trtext, comptext, defntext, decltext,
-      u"|suffix=ся" if adjrefl else "")
+""" % (term, trtext, comptext, defntext, decltext)
   elif pos == "adv":
     maintext = """{{ru-adv|%s%s}}
 
@@ -449,8 +496,7 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
 %s%s===Pronunciation===
 %s
 %s===%s===
-%s%s%s%s%s%s[[ru:%s]]
-
+%s%s%s%s%s%s%s
 """ % (rulib.remove_accents(term), alsotext, alttext, etymtext, prontext,
-  parttext, pos_to_full_pos[pos], maintext, syntext, anttext, dertext,
-  reltext, seetext, rulib.remove_accents(term)))
+  parttext, pos_to_full_pos[pos], wikitext, maintext, syntext, anttext,
+  dertext, reltext, seetext))
