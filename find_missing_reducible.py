@@ -32,7 +32,7 @@ def process_page(index, page, save, verbose):
     if tname == "ru-noun-table" and "*" not in unicode(t):
       pagemsg("WARNING: Likely incorrectly-declined reducible: %s" % unicode(t))
 
-parser = blib.create_argparser(u"Find incorrect verb aspects")
+parser = blib.create_argparser(u"Find likely missing reducible * notation")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
