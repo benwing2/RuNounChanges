@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 
 import re
 
@@ -152,6 +153,12 @@ def generate_defn(defns):
         defnline = "{{diminutive of|lang=ru|%s}}" % dimparts[1]
         if len(dimparts) == 3:
           defnline = "%s: %s" % (defnline, dimparts[2])
+      elif defn.startswith("aug:"):
+        augparts = re.split(":", defn)
+        assert len(augparts) in [2, 3]
+        defnline = "{{augmentative of|lang=ru|%s}}" % augparts[1]
+        if len(augparts) == 3:
+          defnline = "%s: %s" % (defnline, augparts[2])
       elif defn.startswith("gn:"):
         gnparts = re.split(":", defn)
         assert len(gnparts) in [2]
