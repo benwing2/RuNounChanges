@@ -396,6 +396,7 @@ allow_in_same_etym_section = [
     # the following is complicated because there are two амур etymologies,
     # one of which is shared with амуры.
     (u"амуры", u"амур"),
+    (u"антресоли", "антресоль"),
     (u"бакенбарды", u"бакенбарда"),
     (u"бега", u"бег"),
     (u"боеприпасы", u"боеприпас"),
@@ -467,6 +468,7 @@ allow_in_same_etym_section = [
     (u"червы", u"черва"),
     (u"шашки", u"шашка"),
     (u"шлёпанцы", u"шлёпанец"),
+    (u"энергоресуры", u"энергоресурс"),
     (u"японцы", u"японец"),
     (u"яства", u"яство"),
 ]
