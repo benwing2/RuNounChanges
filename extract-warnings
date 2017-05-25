@@ -13,4 +13,6 @@ grep 'WARNING' "$@" | \
     -e 's/skipping: .*/skipping:/;' \
     -e 's/(decl lemma|same as proposed) \/\/.*/$1 \/\//;' \
     -e 's/noun form .*? /noun form /;' \
+    -e "s/but translit .*? doesn't match/but translit doesn't match/;" \
+    -e "s/Raw form .*? contains footnote/Raw form contains footnote/;" \
     |sort|uniq -c|sort -nr
