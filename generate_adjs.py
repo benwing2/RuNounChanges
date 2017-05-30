@@ -30,7 +30,7 @@ pos_to_full_pos = {
   "int": "Interjection"
 }
 
-opt_arg_regex = r"^(also|syn|ant|der|rel|see|comp|pron|alt|part|wiki):(.*)"
+opt_arg_regex = r"^(also|syn|ant|der|rel|see|comp|pron|alt|part|wiki|enwiki):(.*)"
 
 # Form for adjectives, nouns and proper nouns:
 #
@@ -138,8 +138,12 @@ opt_arg_regex = r"^(also|syn|ant|der|rel|see|comp|pron|alt|part|wiki):(.*)"
 #
 # (describe additional specs)
 
-for line in codecs.open(args.direcfile, "r", "utf-8"):
-
+peeker = generate_pos.Peeker(codecs.open(args.direcfile, "r", "utf-8"))
+while True:
+  line = peeker.get_next_line()
+  if line == None:
+    break
+  line = line.strip()
   def error(text):
     errmsg("ERROR: Processing line: %s" % line)
     errmsg("ERROR: %s" % text)
@@ -241,7 +245,7 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
       _, sourceterm = re.split(":", etym)
       etymtext = "Deverbal from {{m|ru|%s}}." % sourceterm
     elif etym.startswith("raw:"):
-      etymtext = re.sub("^raw:", "", etym)
+      etymtext = re.sub(", *", ", ", re.sub("^raw:", "", etym))
     elif ":" in etym and "+" not in etym:
       prefix = ""
       if etym.startswith("?"):
@@ -273,36 +277,41 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
       else:
         langtext = ""
       etymtext = "%s{{affix|ru|%s%s}}%s" % (prefix,
-          "|".join(re.split(r"\+", etym)), langtext, suffix)
+          "|".join(re.split(r"\+", re.sub(", *", ", ", etym))), langtext,
+          suffix)
     etymtext = "===Etymology===\n%s\n\n" % etymtext
 
   # Create declension
+  is_invar_gender = None
   if pos in ["n", "pn", "adj"]:
     decl = decl.replace("?", "") # eliminate uncertainty notations
-    if decl == "-":
-      hdecltext = declterm
-    elif decl == "--":
-      hdecltext = "%s|-" % declterm
-    elif "..." in decl:
-      hdecltext = decl.replace("...", declterm)
+    if decl.startswith("inv:"):
+      is_invar_gender = re.sub("^inv:", "", decl)
     else:
-      hdecltext = "%s|%s" % (declterm, decl)
-    # hdecltext is the declension as used in the headword template,
-    # decltext is the declension as used in the declension template
-    hdecltext = "|" + hdecltext
-    decltext = hdecltext
-    # Eliminate masculine/feminine equiv from actual decl
-    decltext = re.sub(r"\|[mf]=[^|]*?(\||$)", r"\1", decltext)
-    # Eliminate gender from actual decl
-    decltext = re.sub(r"\|g[0-9]*=[^|]*?(\||$)", r"\1", decltext)
-    # ru-proper noun+ defaults to n=sg but ru-decl-noun defaults to n=both.
-    # The specified declension is for ru-proper noun+ so convert it to work
-    # with ru-decl-noun by removing n=both or adding n=sg as necessary.
-    if pos == "pn":
-      if "|n=both" in hdecltext:
-        decltext = decltext.replace("|n=both", "")
-      elif "|n=" not in hdecltext:
-        decltext = decltext + "|n=sg"
+      if decl == "-":
+        hdecltext = declterm
+      elif decl == "--":
+        hdecltext = "%s|-" % declterm
+      elif "..." in decl:
+        hdecltext = decl.replace("...", declterm)
+      else:
+        hdecltext = "%s|%s" % (declterm, decl)
+      # hdecltext is the declension as used in the headword template,
+      # decltext is the declension as used in the declension template
+      hdecltext = "|" + hdecltext
+      decltext = hdecltext
+      # Eliminate masculine/feminine equiv from actual decl
+      decltext = re.sub(r"\|[mf]=[^|]*?(\||$)", r"\1", decltext)
+      # Eliminate gender from actual decl
+      decltext = re.sub(r"\|g[0-9]*=[^|]*?(\||$)", r"\1", decltext)
+      # ru-proper noun+ defaults to n=sg but ru-decl-noun defaults to n=both.
+      # The specified declension is for ru-proper noun+ so convert it to work
+      # with ru-decl-noun by removing n=both or adding n=sg as necessary.
+      if pos == "pn":
+        if "|n=both" in hdecltext:
+          decltext = decltext.replace("|n=both", "")
+        elif "|n=" not in hdecltext:
+          decltext = decltext + "|n=sg"
 
   # Create definition
   if re.search(opt_arg_regex, defns):
@@ -319,6 +328,7 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
   seetext = None
   comptext = ""
   wikitext = ""
+  enwikitext = ""
   prontext = "* {{ru-IPA|%s}}\n" % term
   for synantrel in remainder:
     if synantrel.startswith("#"):
@@ -335,7 +345,7 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
         sensetext = ""
         if synantgroup.startswith("*("):
           m = re.search(r"^\*\((.*?)\)(.*)$", synantgroup)
-          sensetext = "{{sense|%s}} " % m.group(1)
+          sensetext = "{{sense|%s}} " % re.sub(", *", ", ", m.group(1))
           synantgroup = m.group(2)
         elif synantgroup.startswith("*"):
           sensetext = "{{sense|FIXME}} "
@@ -392,11 +402,13 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
           "" if partshort == "-" else "|" + partshort)
       parttext += partdecltext
     elif sartype == "wiki":
-      _, link = re.split(":", vals)
-      if link:
-        wikitext = "{{wikipedia|lang=ru|%s}}\n" % link
+      if vals:
+        wikitext = "{{wikipedia|lang=ru|%s}}\n" % vals
       else:
         wikitext = "{{wikipedia|lang=ru}}\n"
+    elif sartype == "enwiki":
+      assert vals
+      enwikitext = "{{wikipedia|%s}}\n" % vals
     else: # derived or related terms or see also
       if ((sartype == "der" and dertext != None) or
           (sartype == "rel" and reltext != None) or
@@ -441,43 +453,69 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
         else:
           seetext = derrelguts
 
+  multidefntext = generate_pos.generate_multiline_defn(peeker)
+  if multidefntext:
+    if defns != "-" and defns != "--":
+      error("Inline and multiline definitions both specified")
+    else:
+      defntext = multidefntext
+
   if reltext == None:
     error("No related terms; should specify some or use rel:- to disable them")
   dertext = dertext or ""
   seetext = seetext or ""
 
-  if pos == "n":
-    maintext = """{{ru-noun+%s}}
+  if is_invar_gender:
+    if pos == "n":
+      maintext = """{{ru-noun|%s%s|%s|-}}
+
+%s
+""" % (term, trtext, is_invar_gender, defntext)
+    elif pos == "pn":
+      maintext = """{{ru-proper noun|%s%s|%s|-}}
+
+%s
+""" % (term, trtext, is_invar_gender, defntext)
+    elif pos == "adj":
+      maintext = """{{ru-adj|%s%s%s}} {{i|indeclinable}}
+
+%s
+""" % (term, trtext, comptext, defntext)
+    else:
+      error("Invalid part of speech for indeclinable")
+  else:
+    if pos == "n":
+      maintext = """{{ru-noun+%s}}
 
 %s
 ====Declension====
 {{ru-noun-table%s}}
 
 """ % (hdecltext, defntext, decltext)
-  elif pos == "pn":
-    maintext = """{{ru-proper noun+%s}}
+    elif pos == "pn":
+      maintext = """{{ru-proper noun+%s}}
 
 %s
 ====Declension====
 {{ru-noun-table%s}}
 
 """ % (hdecltext, defntext, decltext)
-  elif pos == "adj":
-    maintext = """{{ru-adj|%s%s%s}}
+    elif pos == "adj":
+      maintext = """{{ru-adj|%s%s%s}}
 
 %s
 ====Declension====
 {{ru-decl-adj%s}}
 
 """ % (term, trtext, comptext, defntext, decltext)
-  elif pos == "adv":
-    maintext = """{{ru-adv|%s%s}}
+    elif pos == "adv":
+      maintext = """{{ru-adv|%s%s}}
 
 %s
 """ % (term, trtext, defntext)
-  else:
-    full_pos = pos_to_full_pos[pos]
-    maintext = """{{head|ru|%s|head=%s%s}}
+    else:
+      full_pos = pos_to_full_pos[pos]
+      maintext = """{{head|ru|%s|head=%s%s}}
 
 %s
 """ % (full_pos, full_pos.lower(), term, trtext, defntext)
@@ -492,11 +530,11 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
   msg("""%s
 
 %s==Russian==
-
+%s%s
 %s%s===Pronunciation===
 %s
 %s===%s===
-%s%s%s%s%s%s%s
-""" % (rulib.remove_accents(term), alsotext, alttext, etymtext, prontext,
-  parttext, pos_to_full_pos[pos], wikitext, maintext, syntext, anttext,
-  dertext, reltext, seetext))
+%s%s%s%s%s%s
+""" % (rulib.remove_accents(term), alsotext, enwikitext, wikitext, alttext,
+  etymtext, prontext, parttext, pos_to_full_pos[pos], maintext, syntext,
+  anttext, dertext, reltext, seetext))
