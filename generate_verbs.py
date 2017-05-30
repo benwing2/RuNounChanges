@@ -47,31 +47,49 @@ while True:
     etymtext = "===Etymology===\n{{rfe|lang=ru}}\n\n"
   elif etym == "--":
     etymtext = ""
-  if etym == "-":
-    etymtext = "{{rfe|lang=ru}}"
   else:
-    prefix = ""
-    suffix = ""
-    if etym.startswith("?"):
-      prefix = "Perhaps from "
-      suffix = "."
-      etym = re.sub(r"^\?", "", etym)
-    elif etym.startswith("<<"):
-      prefix = "Ultimately from "
-      suffix = "."
-      etym = re.sub(r"^<<", "", etym)
-    if etym == "r":
-      assert isrefl
-      etymtext = re.sub(u"^(.*?)(ся|сь)$", r"{{affix|ru|\1|-\2}}", verb)
+    if etym.startswith("acr:"):
+      _, fullexpr, meaning = re.split(":", etym)
+      etymtext = "{{ru-etym acronym of|%s||%s}}." % (fullexpr, meaning)
+    elif etym.startswith("raw:"):
+      etymtext = re.sub(", *", ", ", re.sub("^raw:", "", etym))
+    elif ":" in etym and "+" not in etym:
+      prefix = ""
+      if etym.startswith("?"):
+        prefix = "Perhaps borrowed from "
+        etym = re.sub(r"^\?", "", etym)
+      elif etym.startswith("<<"):
+        prefix = "Ultimately borrowed from "
+        etym = re.sub(r"^<<", "", etym)
+      m = re.search(r"^([a-zA-Z.-]+):(.*)", etym)
+      if not m:
+        error("Bad etymology form: %s" % etym)
+      etymtext = "%s{{bor|ru|%s|%s%s}}." % (prefix, m.group(1), m.group(2),
+          prefix and "|notext=1" or "")
     else:
-      m = re.search(r"^([a-z-]+):(.*)", etym)
-      if m:
-        langtext = "|lang1=%s" % m.group(1)
-        etym = m.group(2)
+      prefix = ""
+      suffix = ""
+      if etym.startswith("?"):
+        prefix = "Perhaps from "
+        suffix = "."
+        etym = re.sub(r"^\?", "", etym)
+      elif etym.startswith("<<"):
+        prefix = "Ultimately from "
+        suffix = "."
+        etym = re.sub(r"^<<", "", etym)
+      if etym == "r":
+        assert isrefl
+        etymtext = re.sub(u"^(.*?)(ся|сь)$", r"{{affix|ru|\1|-\2}}", verb)
       else:
-        langtext = ""
-      etymtext = "%s{{affix|ru|%s%s}}%s" % (prefix,
-          "|".join(re.split(r"\+", etym)), langtext, suffix)
+        m = re.search(r"^([a-zA-Z.-]+):(.*)", etym)
+        if m:
+          langtext = "|lang1=%s" % m.group(1)
+          etym = m.group(2)
+        else:
+          langtext = ""
+        etymtext = "%s{{affix|ru|%s%s}}%s" % (prefix,
+            "|".join(re.split(r"\+", etym)), langtext, suffix)
+    etymtext = "===Etymology===\n%s\n\n" % etymtext
   headword_aspect = re.sub("-.*", "", aspect)
   assert headword_aspect in ["pf", "impf", "both"]
   if corverbs == "-":
@@ -306,10 +324,7 @@ while True:
 
 ==Russian==
 
-%s===Etymology===
-%s
-
-===Pronunciation===
+%s%s===Pronunciation===
 %s
 ===Verb===
 {{ru-verb|%s|%s%s}}%s
@@ -318,9 +333,8 @@ while True:
 ====Conjugation====
 %s
 
-%s%s%s%s%s[[ru:%s]]
-
+%s%s%s%s%s
 """ % (rulib.remove_accents(verb), alttext, etymtext, prontext,
   verb, headword_aspect, corverbtext, notetext,
   defntext, passivetext, conjtext, syntext, anttext, dertext,
-  reltext, seetext, rulib.remove_accents(verb)))
+  reltext, seetext))
