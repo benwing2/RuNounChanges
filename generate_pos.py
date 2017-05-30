@@ -140,6 +140,12 @@ def generate_defn(defns):
         elif defn.startswith("(joc)"):
           labels.append("jocular")
           defn = re.sub(r"^\(joc\)", "", defn)
+        elif defn.startswith("(an)"):
+          labels.append("animate")
+          defn = re.sub(r"^\(an\)", "", defn)
+        elif defn.startswith("(inan)"):
+          labels.append("inanimate")
+          defn = re.sub(r"^\(inan\)", "", defn)
         else:
           break
       if labels:
@@ -152,13 +158,13 @@ def generate_defn(defns):
         assert len(dimparts) in [2, 3]
         defnline = "{{diminutive of|lang=ru|%s}}" % dimparts[1]
         if len(dimparts) == 3:
-          defnline = "%s: %s" % (defnline, dimparts[2])
+          defnline = "%s: %s" % (defnline, re.sub(r", *", ", ", dimparts[2]))
       elif defn.startswith("aug:"):
         augparts = re.split(":", defn)
         assert len(augparts) in [2, 3]
         defnline = "{{augmentative of|lang=ru|%s}}" % augparts[1]
         if len(augparts) == 3:
-          defnline = "%s: %s" % (defnline, augparts[2])
+          defnline = "%s: %s" % (defnline, re.sub(r", *", ", ", augparts[2]))
       elif defn.startswith("gn:"):
         gnparts = re.split(":", defn)
         assert len(gnparts) in [2]
