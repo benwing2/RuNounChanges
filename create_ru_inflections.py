@@ -396,7 +396,7 @@ allow_in_same_etym_section = [
     # the following is complicated because there are two амур etymologies,
     # one of which is shared with амуры.
     (u"амуры", u"амур"),
-    (u"антресоли", "антресоль"),
+    (u"антресоли", u"антресоль"),
     (u"бакенбарды", u"бакенбарда"),
     (u"бега", u"бег"),
     (u"боеприпасы", u"боеприпас"),
@@ -468,7 +468,7 @@ allow_in_same_etym_section = [
     (u"червы", u"черва"),
     (u"шашки", u"шашка"),
     (u"шлёпанцы", u"шлёпанец"),
-    (u"энергоресуры", u"энергоресурс"),
+    (u"энергоресурсы", u"энергоресурс"),
     (u"японцы", u"японец"),
     (u"яства", u"яство"),
 ]
@@ -1042,6 +1042,25 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
             errpagemsg("WARNING: Page in --lemmas-to-not-overwrite, not overwriting, skipping form")
             return
           else:
+            parsed = blib.parse_text(sections[i])
+            found_lemma = []
+            for t in parsed.filter_templates():
+              tname = unicode(t.name)
+              if tname in ["ru-noun", "ru-noun+", "ru-proper noun",
+                  "ru-proper noun+", u"ru-noun-alt-ё", u"ru-proper noun-alt-ё",
+                  "ru-adj", u"ru-adj-alt-ё", "ru-verb", u"ru-verb-alt-ё",
+                  "ru-adv", "ru-phrase"] or (tname == "head" and
+                      getparam(t, "1") == "ru" and getparam(t, "2") in
+                      ["circumfix", "conjunction", "determiner", "interfix",
+                        "interjection", "letter", "numeral", "cardinal number",
+                        "particle", "predicative", "prefix", "preposition",
+                        "prepositional phrase", "pronoun"]):
+                found_lemma.append(getparam(t, "2") if tname == "head" else
+                    tname)
+            if found_lemma:
+              errpagemsg("WARNING: Page appears to have a lemma on it, not overwriting, skipping form: lemmas = %s"
+              % ",".join(found_lemma))
+              return
             notes.append("overwrite section")
             pagemsg("WARNING: Overwriting entire Russian section")
             # Preserve {{also|...}}
