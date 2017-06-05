@@ -54,6 +54,14 @@ def generate_multiline_defn(peeker):
     return "".join(defnlines)
   return None
 
+def generate_dimaugpej(defn, template):
+  parts = re.split(":", defn)
+  assert len(parts) in [2, 3]
+  defnline = "{{%s|lang=ru|%s}}" % (template, parts[1])
+  if len(parts) == 3:
+    defnline = "%s: %s" % (defnline, re.sub(r", *", ", ", parts[2]))
+  return defnline
+
 def generate_defn(defns):
   defnlines = []
 
@@ -154,17 +162,11 @@ def generate_defn(defns):
         defnline = "{{alternative form of|lang=ru|%s}}" % (
             re.sub("^altof:", "", defn))
       elif defn.startswith("dim:"):
-        dimparts = re.split(":", defn)
-        assert len(dimparts) in [2, 3]
-        defnline = "{{diminutive of|lang=ru|%s}}" % dimparts[1]
-        if len(dimparts) == 3:
-          defnline = "%s: %s" % (defnline, re.sub(r", *", ", ", dimparts[2]))
+        defnline = generate_dimaugpej(defn, "diminutive of")
       elif defn.startswith("aug:"):
-        augparts = re.split(":", defn)
-        assert len(augparts) in [2, 3]
-        defnline = "{{augmentative of|lang=ru|%s}}" % augparts[1]
-        if len(augparts) == 3:
-          defnline = "%s: %s" % (defnline, re.sub(r", *", ", ", augparts[2]))
+        defnline = generate_dimaugpej(defn, "augmentative of")
+      elif defn.startswith("pej:"):
+        defnline = generate_dimaugpej(defn, "pejorative of")
       elif defn.startswith("gn:"):
         gnparts = re.split(":", defn)
         assert len(gnparts) in [2]
