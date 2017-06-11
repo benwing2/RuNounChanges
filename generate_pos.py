@@ -57,7 +57,7 @@ def generate_multiline_defn(peeker):
 def generate_dimaugpej(defn, template):
   parts = re.split(":", defn)
   assert len(parts) in [2, 3]
-  defnline = "{{%s|lang=ru|%s}}" % (template, parts[1])
+  defnline = "{{%s|lang=ru|%s}}" % (template, re.sub(r", *", ", ", parts[1]))
   if len(parts) == 3:
     defnline = "%s: %s" % (defnline, re.sub(r", *", ", ", parts[2]))
   return defnline
