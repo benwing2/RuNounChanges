@@ -214,6 +214,8 @@ while True:
     term, etym, defns = els[0], els[1], els[2]
     remainder = els[3:]
   else:
+    if len(els) < 4:
+      error("Expected four fields, saw only %s" % len(els))
     term, etym, decl, defns = els[0], els[1], els[2], els[3]
     if decl.startswith("?"):
       error("Declension starts with ?, need to fix: %s" % decl)
@@ -244,6 +246,9 @@ while True:
     elif etym.startswith("deverb:"):
       _, sourceterm = re.split(":", etym)
       etymtext = "Deverbal from {{m|ru|%s}}." % sourceterm
+    elif etym.startswith("back:"):
+      _, sourceterm = re.split(":", etym)
+      etymtext = "{{back-form|lang=ru|%s}}." % sourceterm
     elif etym.startswith("raw:"):
       etymtext = re.sub(", *", ", ", re.sub("^raw:", "", etym))
     elif ":" in etym and "+" not in etym:

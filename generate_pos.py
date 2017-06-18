@@ -163,6 +163,10 @@ def generate_defn(defns):
             re.sub("^altof:", "", defn))
       elif defn.startswith("dim:"):
         defnline = generate_dimaugpej(defn, "diminutive of")
+      elif defn.startswith("end:"):
+        defnline = generate_dimaugpej(defn, "endearing form of")
+      elif defn.startswith("enddim:"):
+        defnline = generate_dimaugpej(defn, "endearing diminutive of")
       elif defn.startswith("aug:"):
         defnline = generate_dimaugpej(defn, "augmentative of")
       elif defn.startswith("pej:"):
