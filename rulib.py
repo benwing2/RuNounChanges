@@ -14,6 +14,7 @@ DI = u"\u0308" # diaeresis =  ̈
 DUBGR = u"\u030F" # double grave =  ̏
 CARON = u"\u030C" # caron =  ̌
 accents = AC + GR + CFLEX + DOTABOVE + DOTBELOW + DI + DUBGR + CARON
+stress_accents = AC + GR + CFLEX + DI + DUBGR
 
 composed_grave_vowel = u"ѐЀѝЍ"
 vowel_no_jo = u"аеиоуяэыюіѣѵАЕИОУЯЭЫЮІѢѴ" + composed_grave_vowel #omit ёЁ
@@ -51,11 +52,22 @@ def is_stressed(word):
   # diaeresis occurs in сѣ̈дла plural of сѣдло́
   return re.search(u"[́̈ёЁ]", word)
 
+def is_tr_stressed(word):
+  if not word:
+    return False
+  return re.search(u"[́̈]", unicodedata.normalize("NFD", word))
+
 def is_unstressed(word):
   return not is_stressed(word)
 
+def is_tr_unstressed(word):
+  return not is_tr_stressed(word)
+
 def is_unaccented(word):
-  return not re.search("[" + accents + u"ёЁѐЀѝЍ]", word)
+  return not re.search("[" + stress_accents + u"ёЁѐЀѝЍ]", word)
+
+def is_tr_unaccented(word):
+  return not re.search("[" + stress_accents + "]", unicodedata.normalize("NFD", word))
 
 def is_ending_stressed(word):
   return (re.search(u"[ёЁ][^" + vowel + "]*$", word) or
@@ -178,6 +190,15 @@ def make_beginning_stressed(word):
 def try_to_stress(word):
   if is_unaccented(word) and is_monosyllabic(word):
     return make_ending_stressed(word)
+  else:
+    return word
+
+def tr_try_to_stress(word):
+  if is_tr_unaccented(word) and is_tr_monosyllabic(word):
+    # FIXME, won't work, make_ending_stressed() needs to take both ru and tr, see Lua
+    #return make_tr_ending_stressed(word)
+    return unicodedata.normalize("NFC",
+        re.sub("([" + tr_vowel + "])([^" +  + "]*)$", ur"\1́\2", word))
   else:
     return word
 

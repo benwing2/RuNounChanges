@@ -37,8 +37,15 @@ while True:
   # may well have an underscore in them; but allow \s to stand for a space in
   # the conjugation, and \u to stand for an underscore elsewhere.
   els = [el.replace(r"\s", " ") if i == 4 else el.replace("_", " ").replace(r"\u", "_") for i, el in enumerate(els)]
+  if len(els) < 5:
+    error("Expected five fields, saw only %s" % len(els))
   verb, etym, aspect, corverbs, conj = els[0], els[1], els[2], els[3], els[4]
+  translit = None
+  declverb = verb
+  if "//" in verb:
+    verb, translit = re.split("//", verb)
   assert re.search(u"(ть(ся)?|ти́?(сь)?|чь(ся)?)$", verb)
+  trtext = translit and "|tr=" + translit or ""
   check_stress(verb)
   isrefl = re.search(u"(ся|сь)$", verb)
   if etym == "?":
@@ -107,54 +114,69 @@ while True:
         "" if corverbno == 1 else str(corverbno), re.sub(r"^\*", "", corverb))
     corverbno += 1
   verbbase = re.sub(u"(ся|сь)$", "", verb)
-  passivetext = ("# {{passive of|lang=ru|%s}}\n" % verbbase
-      if etym == "r" else "")
+  trverbbase = translit and re.sub(u"(sja|sʹ)$", "", translit)
+  passivetext = ("# {{passive of|lang=ru|%s%s}}\n" % (verbbase,
+    trverbbase and "|tr=%s" % trverbbase or "") if etym == "r" else "")
+  trverbbase = trverbbase and "//" + trverbbase or ""
 
   if "|" not in conj:
     if conj.startswith("6a") or conj.startswith(u"6°a") or conj.startswith("6oa"):
       assert re.search(u"[ая]ть$", verbbase)
+      assert not trverbbase
       conjargs = re.sub(u"[ая]ть$", "", verbbase)
     elif conj.startswith("6b") or conj.startswith(u"6°b") or conj.startswith("6ob"):
       assert rulib.is_monosyllabic(verbbase) or re.search(u"[ая]́ть$", verbbase)
+      assert not trverbbase
       conjargs = re.sub(u"[ая]́?ть$", "", verbbase)
     elif conj.startswith("6c") or conj.startswith(u"6°c") or conj.startswith("6oc"):
       assert rulib.is_monosyllabic(verbbase) or re.search(u"[ая]́ть$", verbbase)
       conjargs = rulib.make_ending_stressed(re.sub(u"[ая]́?ть$", "", verbbase))
     elif conj.startswith("5a"):
       assert re.search(u"[еая]ть$", verbbase)
+      assert not trverbbase
       conjargs = "%s|%s" % (re.sub(u"[еая]ть$", "", verbbase),
           rulib.try_to_stress(re.sub(u"ть$", "", verbbase)))
     elif conj.startswith("5b"):
       assert rulib.is_monosyllabic(verbbase) or re.search(u"[еая]́ть$", verbbase)
+      assert not trverbbase
       conjargs = "%s|%s" % (re.sub(u"[еая]́?ть$", "", verbbase),
           re.sub(u"ть$", "", verbbase))
     elif conj.startswith("5c"):
       assert rulib.is_monosyllabic(verbbase) or re.search(u"[еая]́ть$", verbbase)
+      assert not trverbbase
       conjargs = "%s|%s" % (rulib.make_ending_stressed(re.sub(u"[еая]́?ть$", "", verbbase)),
           rulib.try_to_stress(re.sub(u"ть$", "", verbbase)))
     elif conj.startswith("4a"):
       assert verbbase.endswith(u"ить")
-      conjargs = re.sub(u"ить", "", verbbase)
+      assert not trverbbase or trverbbase.endswith(u"itʹ")
+      conjargs = "%s%s" % (re.sub(u"ить$", "", verbbase), re.sub(u"itʹ$", "", trverbbase))
     elif conj.startswith("4b"):
       assert rulib.is_monosyllabic(verbbase) or verbbase.endswith(u"и́ть")
-      conjargs = re.sub(u"и́?ть", "", verbbase)
+      assert (not trverbbase or rulib.is_tr_monosyllabic(trverbbase) or trverbbase.endswith(u"ítʹ"))
+      conjargs = "%s%s" % (re.sub(u"и́?ть$", "", verbbase), re.sub(u"(i|í)tʹ$", "", trverbbase))
     elif conj.startswith("4c"):
       assert rulib.is_monosyllabic(verbbase) or verbbase.endswith(u"и́ть")
+      assert not trverbbase # FIXME! Need to fix make_ending_stressed to work with translit
       conjargs = rulib.make_ending_stressed(re.sub(u"и́?ть", "", verbbase))
     elif conj.startswith("3a") or conj.startswith(u"3°a") or conj.startswith("3oa"):
       assert verbbase.endswith(u"нуть")
+      assert not trverbbase
       conjargs = re.sub(u"нуть$", "", verbbase)
     elif conj.startswith("3b"):
       assert rulib.is_monosyllabic(verbbase) or verbbase.endswith(u"ну́ть")
+      assert not trverbbase
       conjargs = re.sub(u"у́?ть$", "", verbbase)
     elif conj.startswith("3c"):
       assert rulib.is_monosyllabic(verbbase) or verbbase.endswith(u"ну́ть")
+      assert not trverbbase
       conjargs = rulib.make_ending_stressed(re.sub(u"у́?ть", "", verbbase))
     elif conj.startswith("2a") or conj.startswith("2b"):
       assert re.search(u"ва́?ть$", verbbase)
-      conjargs = re.sub(u"ть$", "", verbbase)
+      assert not trverbbase or trverbbase.endswith(u"vatʹ") or trverbbase.endswith(u"vátʹ")
+      conjargs = "%s%s" % (re.sub(u"ть$", "", verbbase), re.sub(u"tʹ", "", trverbbase))
     elif conj.startswith("1a"):
-      conjargs = rulib.try_to_stress(re.sub(u"ть$", "", verbbase))
+      conjargs = "%s%s" % (rulib.try_to_stress(re.sub(u"ть$", "", verbbase)),
+        rulib.tr_try_to_stress(re.sub(u"tʹ", "", trverbbase)))
     else:
       msg("Unrecognized conjugation type and no arguments: %s" % conj)
       assert False
@@ -251,6 +273,7 @@ while True:
             gender_arg = ("|g=impf|g2=pf" if headword_aspect == "both" else
                 "|g=" + headword_aspect)
             if "#ref" in derrel:
+              assert not translit # FIXME, can't handle it yet
               # * at the beginning of an aspect-paired verb forces
               # imperfective; used with aspect "both"
               corverb_impf_override = any(corverb for corverb in corverbs
@@ -327,7 +350,7 @@ while True:
 %s%s===Pronunciation===
 %s
 ===Verb===
-{{ru-verb|%s|%s%s}}%s
+{{ru-verb|%s%s|%s%s}}%s
 
 %s%s
 ====Conjugation====
@@ -335,6 +358,6 @@ while True:
 
 %s%s%s%s%s
 """ % (rulib.remove_accents(verb), alttext, etymtext, prontext,
-  verb, headword_aspect, corverbtext, notetext,
+  verb, trtext, headword_aspect, corverbtext, notetext,
   defntext, passivetext, conjtext, syntext, anttext, dertext,
   reltext, seetext))
