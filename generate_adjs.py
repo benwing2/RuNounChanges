@@ -30,7 +30,7 @@ pos_to_full_pos = {
   "int": "Interjection"
 }
 
-opt_arg_regex = r"^(also|syn|ant|der|rel|see|comp|pron|alt|part|wiki|enwiki):(.*)"
+opt_arg_regex = r"^(also|syn|ant|der|rel|see|comp|pron|alt|part|wiki|enwiki|cat|tcat):(.*)"
 
 # Form for adjectives, nouns and proper nouns:
 #
@@ -248,7 +248,7 @@ while True:
       etymtext = "Deverbal from {{m|ru|%s}}." % sourceterm
     elif etym.startswith("back:"):
       _, sourceterm = re.split(":", etym)
-      etymtext = "{{back-form|lang=ru|%s}}." % sourceterm
+      etymtext = "{{back-form|lang=ru|%s}}" % sourceterm
     elif etym.startswith("raw:"):
       etymtext = re.sub(", *", ", ", re.sub("^raw:", "", etym))
     elif ":" in etym and "+" not in etym:
@@ -334,6 +334,7 @@ while True:
   comptext = ""
   wikitext = ""
   enwikitext = ""
+  cattext = ""
   prontext = "* {{ru-IPA|%s}}\n" % term
   for synantrel in remainder:
     if synantrel.startswith("#"):
@@ -414,6 +415,12 @@ while True:
     elif sartype == "enwiki":
       assert vals
       enwikitext = "{{wikipedia|%s}}\n" % vals
+    elif sartype == "cat":
+      assert vals
+      cattext += "".join("[[Category:Russian %s]]\n" % val for val in re.split(",", vals))
+    elif sartype == "tcat":
+      assert vals
+      cattext += "".join("[[Category:ru:%s]]\n" % val for val in re.split(",", vals))
     else: # derived or related terms or see also
       if ((sartype == "der" and dertext != None) or
           (sartype == "rel" and reltext != None) or
@@ -532,6 +539,11 @@ while True:
   if maintext and parttext and reltext:
     reltext = re.sub("^====Related terms====", "===Related terms===", reltext)
 
+  # If any categories, put an extra newline after them so they end with two
+  # newlines, as with other textual snippets
+  if cattext:
+    cattext += "\n"
+
   msg("""%s
 
 %s==Russian==
@@ -539,7 +551,7 @@ while True:
 %s%s===Pronunciation===
 %s
 %s===%s===
-%s%s%s%s%s%s
+%s%s%s%s%s%s%s
 """ % (rulib.remove_accents(term), alsotext, enwikitext, wikitext, alttext,
   etymtext, prontext, parttext, pos_to_full_pos[pos], maintext, syntext,
-  anttext, dertext, reltext, seetext))
+  anttext, dertext, reltext, seetext, cattext))
