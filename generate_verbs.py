@@ -117,7 +117,7 @@ while True:
   trverbbase = translit and re.sub(u"(sja|sʹ)$", "", translit)
   passivetext = ("# {{passive of|lang=ru|%s%s}}\n" % (verbbase,
     trverbbase and "|tr=%s" % trverbbase or "") if etym == "r" else "")
-  trverbbase = trverbbase and "//" + trverbbase or ""
+  trverbbase = trverbbase and "//" + trverbbase or u""
 
   if "|" not in conj:
     if conj.startswith("6a") or conj.startswith(u"6°a") or conj.startswith("6oa"):
