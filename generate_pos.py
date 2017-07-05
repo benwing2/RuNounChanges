@@ -62,6 +62,32 @@ def generate_dimaugpej(defn, template):
     defnline = "%s: %s" % (defnline, re.sub(r", *", ", ", parts[2]))
   return defnline
 
+known_labels = {
+  "or": "or",
+  "also": ["also", "_"],
+  "f": "figurative",
+  "d": "dated",
+  "p": "poetic",
+  "h": "historical",
+  "n": "nonstandard",
+  "lc": ["low", "_", "colloquial"],
+  "v": "vernacular",
+  "c": "colloquial",
+  "l": "literary",
+  "tr": "transitive",
+  "in": "intransitive",
+  "io": "imperfective only",
+  "po": "perfective only",
+  "im": "impersonal",
+  "pej": "pejorative",
+  "vul": "vulgar",
+  "reg": "regional",
+  "dia": "dialectal",
+  "joc": "jocular",
+  "an": "animate",
+  "inan": "inanimate",
+}
+
 def generate_defn(defns):
   defnlines = []
 
@@ -85,77 +111,25 @@ def generate_defn(defns):
         elif defn.startswith("#"):
           labels.append("figurative")
           defn = re.sub(r"^#", "", defn)
-        elif defn.startswith("(or)"):
-          labels.append("or")
-          defn = re.sub(r"^\(or\)", "", defn)
-        elif defn.startswith("(also)"):
-          labels.extend(["also", "_"])
-          defn = re.sub(r"^\(also\)", "", defn)
-        elif defn.startswith("(f)"):
-          labels.append("figurative")
-          defn = re.sub(r"^\(f\)", "", defn)
-        elif defn.startswith("(d)"):
-          labels.append("dated")
-          defn = re.sub(r"^\(d\)", "", defn)
-        elif defn.startswith("(p)"):
-          labels.append("poetic")
-          defn = re.sub(r"^\(p\)", "", defn)
-        elif defn.startswith("(h)"):
-          labels.append("historical")
-          defn = re.sub(r"^\(h\)", "", defn)
-        elif defn.startswith("(n)"):
-          labels.append("nonstandard")
-          defn = re.sub(r"^\(n\)", "", defn)
-        elif defn.startswith("(lc)"):
-          labels.extend(["low", "_", "colloquial"])
-          defn = re.sub(r"^\(lc\)", "", defn)
-        elif defn.startswith("(v)"):
-          labels.append("vernacular")
-          defn = re.sub(r"^\(v\)", "", defn)
         elif defn.startswith("!"):
           labels.append("colloquial")
           defn = re.sub(r"^!", "", defn)
-        elif defn.startswith("(c)"):
-          labels.append("colloquial")
-          defn = re.sub(r"^\(c\)", "", defn)
-        elif defn.startswith("(l)"):
-          labels.append("literary")
-          defn = re.sub(r"^\(l\)", "", defn)
-        elif defn.startswith("(tr)"):
-          labels.append("transitive")
-          defn = re.sub(r"^\(tr\)", "", defn)
-        elif defn.startswith("(in)"):
-          labels.append("intransitive")
-          defn = re.sub(r"^\(in\)", "", defn)
-        elif defn.startswith("(io)"):
-          labels.append("imperfective only")
-          defn = re.sub(r"^\(io\)", "", defn)
-        elif defn.startswith("(po)"):
-          labels.append("perfective only")
-          defn = re.sub(r"^\(po\)", "", defn)
-        elif defn.startswith("(im)"):
-          labels.append("impersonal")
-          defn = re.sub(r"^\(im\)", "", defn)
-        elif defn.startswith("(pej)"):
-          labels.append("pejorative")
-          defn = re.sub(r"^\(pej\)", "", defn)
-        elif defn.startswith("(vul)"):
-          labels.append("vulgar")
-          defn = re.sub(r"^\(vul\)", "", defn)
-        elif defn.startswith("(reg)"):
-          labels.append("regional")
-          defn = re.sub(r"^\(reg\)", "", defn)
-        elif defn.startswith("(joc)"):
-          labels.append("jocular")
-          defn = re.sub(r"^\(joc\)", "", defn)
-        elif defn.startswith("(an)"):
-          labels.append("animate")
-          defn = re.sub(r"^\(an\)", "", defn)
-        elif defn.startswith("(inan)"):
-          labels.append("inanimate")
-          defn = re.sub(r"^\(inan\)", "", defn)
         else:
-          break
+          m = re.search(r"^\((.*?)\)(.*)$", defn)
+          if m:
+            shortlab = m.group(1)
+            if shortlab in known_labels:
+              longlab = known_labels[shortlab]
+              if type(longlab) is list:
+                labels.extend(longlab)
+              else:
+                labels.append(longlab)
+            else:
+              labels.append(shortlab)
+            defn = m.group(2)
+          else:
+            defn = defn.replace(r"\(", "(").replace(r"\)", ")")
+            break
       if labels:
         prefix = "{{lb|ru|%s}} " % "|".join(labels)
       if defn.startswith("altof:"):
