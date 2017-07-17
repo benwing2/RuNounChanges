@@ -228,19 +228,38 @@ while True:
     assert re.search(u"(ый|ий|о́й)(ся)?$", term)
   trtext = translit and "|tr=" + translit or ""
   check_stress(term)
+
+  # Handle etymology
+  adjformtext = ""
   if etym == "?":
     error("Etymology consists of bare question mark")
   elif etym == "-":
     etymtext = "===Etymology===\n{{rfe|lang=ru}}\n\n"
   elif etym == "--":
     etymtext = ""
+  elif re.search(r"^(part|adj|partadj)([fnp]):", etym):
+    m = re.search(r"^(part|adj|partadj)([fnp]):(.*)", etym)
+    forms = {"f":["nom|f|s"], "n":["nom|n|s", "acc|n|s"], "p":["nom|p", "in|acc|p"]}
+    infleclines = ["# {{inflection of|lang=ru|%s||%s}}" %
+        (m.group(3), form) for form in forms[m.group(2)]]
+    if m.group(1) in ["adj", "partadj"]:
+      adjinfltext = """===Adjective===
+{{head|ru|adjective form|head=%s%s}}
+
+%s\n\n""" % (term, trtext, "\n".join(infleclines))
+    else:
+      adjinfltext = ""
+    if m.group(1) in ["part", "partadj"]:
+      partinfltext = """===Participle===
+{{head|ru|participle form|head=%s%s}}
+
+%s\n\n""" % (term, trtext, "\n".join(infleclines))
+    else:
+      partinfltext = ""
+    adjformtext = partinfltext + adjinfltext
+    etymtext = ""
   else:
-    m = re.search(r"^s([mfnp]):(.*)", etym)
-    if m:
-      gender = {"m":"masculine", "f":"feminine", "n":"neuter", "p":"plural"}
-      etymtext = "Substantivized %s of {{m|ru|%s}}." % (gender[m.group(1)],
-          m.group(2))
-    elif etym.startswith("acr:"):
+    if etym.startswith("acr:"):
       _, fullexpr, meaning = re.split(":", etym)
       etymtext = "{{ru-etym acronym of|%s||%s}}." % (fullexpr, meaning)
     elif etym.startswith("deverb:"):
@@ -420,7 +439,7 @@ while True:
       cattext += "".join("[[Category:Russian %s]]\n" % val for val in re.split(",", vals))
     elif sartype == "tcat":
       assert vals
-      cattext += "".join("[[Category:ru:%s]]\n" % val for val in re.split(",", vals))
+      cattext += "".join("{{C|ru|%s}}\n" % val for val in re.split(",", vals))
     else: # derived or related terms or see also
       if ((sartype == "der" and dertext != None) or
           (sartype == "rel" and reltext != None) or
@@ -550,8 +569,8 @@ while True:
 %s%s
 %s%s===Pronunciation===
 %s
-%s===%s===
+%s%s===%s===
 %s%s%s%s%s%s%s
 """ % (rulib.remove_accents(term), alsotext, enwikitext, wikitext, alttext,
-  etymtext, prontext, parttext, pos_to_full_pos[pos], maintext, syntext,
-  anttext, dertext, reltext, seetext, cattext))
+  etymtext, prontext, parttext, adjformtext, pos_to_full_pos[pos], maintext,
+  syntext, anttext, dertext, reltext, seetext, cattext))
