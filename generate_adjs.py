@@ -379,8 +379,11 @@ while True:
           sensetext = ""
         links = []
         for synant in re.split(",", synantgroup):
-          check_stress(synant)
-          links.append("{{l|ru|%s}}" % synant)
+          if "{" in synant:
+            links.append(synant)
+          else:
+            check_stress(synant)
+            links.append("{{l|ru|%s}}" % synant)
         lines.append("* %s%s\n" % (sensetext, ", ".join(links)))
       synantguts = "====%s====\n%s\n" % (
           "Synonyms" if sartype == "syn" else "Antonyms",
@@ -427,13 +430,15 @@ while True:
           "" if partshort == "-" else "|" + partshort)
       parttext += partdecltext
     elif sartype == "wiki":
-      if vals:
-        wikitext = "{{wikipedia|lang=ru|%s}}\n" % vals
-      else:
-        wikitext = "{{wikipedia|lang=ru}}\n"
+      for val in re.split(",", vals):
+        if val:
+          wikitext += "{{wikipedia|lang=ru|%s}}\n" % val
+        else:
+          wikitext += "{{wikipedia|lang=ru}}\n"
     elif sartype == "enwiki":
       assert vals
-      enwikitext = "{{wikipedia|%s}}\n" % vals
+      for val in re.split(",", vals):
+        enwikitext += "{{wikipedia|%s}}\n" % val
     elif sartype == "cat":
       assert vals
       cattext += "".join("[[Category:Russian %s]]\n" % val for val in re.split(",", vals))
