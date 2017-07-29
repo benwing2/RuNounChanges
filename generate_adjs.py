@@ -475,6 +475,8 @@ while True:
                   links.append("{{l|ru|%s}}" % pf)
                 else:
                   links.append("{{l|ru|%s|g=pf}}" % pf)
+            elif "{" in derrel:
+              links.append(derrel)
             else:
               check_stress(derrel)
               links.append("{{l|ru|%s}}" % derrel)
