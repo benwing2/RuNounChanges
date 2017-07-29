@@ -379,7 +379,7 @@ while True:
           sensetext = ""
         links = []
         for synant in re.split(",", synantgroup):
-          if "{" in synant:
+          if synant.startswith("{"):
             links.append(synant)
           else:
             check_stress(synant)
@@ -475,7 +475,7 @@ while True:
                   links.append("{{l|ru|%s}}" % pf)
                 else:
                   links.append("{{l|ru|%s|g=pf}}" % pf)
-            elif "{" in derrel:
+            elif derrel.startswith("{"):
               links.append(derrel)
             else:
               check_stress(derrel)
