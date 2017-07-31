@@ -59,12 +59,13 @@ opt_arg_regex = r"^(also|syn|ant|der|rel|see|comp|pron|alt|part|wiki|enwiki|cat|
 # and in the headword template of nouns. If it consists of -, no declension
 # specification is used. If it consists of --, the declension consists of
 # literal - (for adjectives, to indicate that no short forms exist). DECL
-# can have ... to represent position of term in it (otherwise, the declension
-# is placed after the term, separated by a vertical bar). For nouns, DECL
-# can contain |m=..., |f=... and/or |g=..., |g2=..., etc. to specify
-# masculine/feminine equivalents or genders, as are found in the headword
-# template; these will automatically be removed when creating the declension
-# template.
+# can have ... to represent position of term in it, or begin with ! to
+# indicate that what follows should be used literally as the declension
+# (otherwise, the declension is placed after the term, separated by a vertical
+# bar). For nouns, DECL can contain |m=..., |f=... and/or |g=..., |g2=..., etc.
+# to specify masculine/feminine equivalents or genders, as are found in the
+# headword template; these will automatically be removed when creating the
+# declension template.
 #
 # ETYM normally consists of one or more parts separated by + symbols; the
 # parts go directly into parameters of {{affix}}. If the field consists of
@@ -318,6 +319,8 @@ while True:
         hdecltext = "%s|-" % declterm
       elif "..." in decl:
         hdecltext = decl.replace("...", declterm)
+      elif decl.startswith("!"):
+        hdecltext = decl[1:]
       else:
         hdecltext = "%s|%s" % (declterm, decl)
       # hdecltext is the declension as used in the headword template,
@@ -345,6 +348,7 @@ while True:
   alsotext = ""
   alttext = ""
   parttext = ""
+  usagetext = ""
   syntext = ""
   anttext = ""
   dertext = None
@@ -445,6 +449,9 @@ while True:
     elif sartype == "tcat":
       assert vals
       cattext += "".join("{{C|ru|%s}}\n" % val for val in re.split(",", vals))
+    elif sartype == "usage":
+      assert vals
+      usagetext = re.sub(", *", ", ", vals)
     else: # derived or related terms or see also
       if ((sartype == "der" and dertext != None) or
           (sartype == "rel" and reltext != None) or
@@ -459,7 +466,9 @@ while True:
           seetext = ""
       else:
         lines = []
-        for derrelgroup in re.split(",", vals):
+        # don't split on \,
+        for derrelgroup in re.split(r"(?<![\\]),", vals):
+          derrelgroup = re.sub(r"\\,\s*", ", ", derrelgroup)
           links = []
           for derrel in re.split(":", derrelgroup):
             if "/" in derrel:
@@ -570,6 +579,9 @@ while True:
   if cattext:
     cattext += "\n"
 
+  if usagetext:
+    usagetext = "===Usage notes===\n%s\n\n" % usagetext
+
   msg("""%s
 
 %s==Russian==
@@ -577,7 +589,7 @@ while True:
 %s%s===Pronunciation===
 %s
 %s%s===%s===
-%s%s%s%s%s%s%s
+%s%s%s%s%s%s%s%s
 """ % (rulib.remove_accents(term), alsotext, enwikitext, wikitext, alttext,
   etymtext, prontext, parttext, adjformtext, pos_to_full_pos[pos], maintext,
-  syntext, anttext, dertext, reltext, seetext, cattext))
+  usagetext, syntext, anttext, dertext, reltext, seetext, cattext))
