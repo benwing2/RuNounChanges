@@ -30,7 +30,7 @@ pos_to_full_pos = {
   "int": "Interjection"
 }
 
-opt_arg_regex = r"^(also|syn|ant|der|rel|see|comp|pron|alt|part|wiki|enwiki|cat|tcat):(.*)"
+opt_arg_regex = r"^(also|syn|ant|der|rel|see|comp|pron|alt|part|wiki|enwiki|cat|tcat|usage):(.*)"
 
 # Form for adjectives, nouns and proper nouns:
 #
