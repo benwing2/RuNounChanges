@@ -204,8 +204,10 @@ while True:
   prontext = "* {{ru-IPA|%s}}\n" % verb
   notetext = ""
   defntext = None
+  wikitext = ""
+  enwikitext = ""
   for synantrel in els[5:]:
-    m = re.search(r"^(syn|ant|der|rel|see|pron|alt|def|note):(.*)", synantrel)
+    m = re.search(r"^(syn|ant|der|rel|see|pron|alt|def|note|wiki|enwiki):(.*)", synantrel)
     if not m:
       msg("Element %s doesn't start with syn:, ant:, der:, rel:, see:, pron:, alt:, def: or note:" % synantrel)
     assert m
@@ -251,6 +253,16 @@ while True:
       defntext = generate_pos.generate_defn(vals)
     elif sartype == "note":
       notetext = " {{i|%s}}" % vals
+    elif sartype == "wiki":
+      for val in re.split(",", vals):
+        if val:
+          wikitext += "{{wikipedia|lang=ru|%s}}\n" % val
+        else:
+          wikitext += "{{wikipedia|lang=ru}}\n"
+    elif sartype == "enwiki":
+      assert vals
+      for val in re.split(",", vals):
+        enwikitext += "{{wikipedia|%s}}\n" % val
     else: # derived or related terms or see also
       if ((sartype == "der" and dertext != None) or
           (sartype == "rel" and reltext != None) or
@@ -346,7 +358,7 @@ while True:
   msg("""%s
 
 ==Russian==
-
+%s%s
 %s%s===Pronunciation===
 %s
 ===Verb===
@@ -357,7 +369,7 @@ while True:
 %s
 
 %s%s%s%s%s
-""" % (rulib.remove_accents(verb), alttext, etymtext, prontext,
-  verb, trtext, headword_aspect, corverbtext, notetext,
+""" % (rulib.remove_accents(verb), enwikitext, wikitext, alttext, etymtext,
+  prontext, verb, trtext, headword_aspect, corverbtext, notetext,
   defntext, passivetext, conjtext, syntext, anttext, dertext,
   reltext, seetext))
