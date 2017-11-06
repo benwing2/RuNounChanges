@@ -953,3 +953,4 @@ Misc.
 * [[бактериальный]] "bacterial" no? [can't find examples]
 * [[ссыльный]] "in exile" no? [can't find examples]
 * [[брусчатый]] "made of beams, paved with paving stones" no? [can't find examples]
+* [[информативный]] "informative" yes [see [https://books.google.com/books?id=SINdBAAAQBAJ&pg=PA230&dq=%D0%B8%D0%BD%D1%84%D0%BE%D1%80%D0%BC%D0%B0%D1%82%D0%B8%D0%B2%D0%BD%D1%8B&hl=en&sa=X&ved=0ahUKEwi_2NKkzKjXAhVY6mMKHRfgBfcQ6AEIKTAA]: Нагрузочные пробы при обследовании больных с адренергически зависимыми нарушениями ритма, включающими мономорфную и полиморфную желудочковую тахикардию, могут быть информативны при оценке симптомов и ...]
