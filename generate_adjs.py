@@ -139,6 +139,12 @@ opt_arg_regex = r"^(also|syn|ant|der|rel|see|comp|pron|alt|part|wiki|enwiki|cat|
 #
 # (describe additional specs)
 
+# Split text on a separator, but not if separator is preceded by
+# a backslash, and remove such backslashes
+def do_split(sep, text):
+  elems = re.split(r"(?<![\\])%s" % sep, text)
+  return [re.sub(r"\\(%s)" % sep, r"\1", elem) for elem in elems]
+
 peeker = generate_pos.Peeker(codecs.open(args.direcfile, "r", "utf-8"))
 while True:
   line = peeker.get_next_line()
@@ -159,7 +165,7 @@ while True:
       error("Word %s missing an accent" % word)
 
   line = line.strip()
-  els = re.split(r"\s+", line)
+  els = do_split(r"\s+", line)
   if args.pos:
     pos = els[0]
     assert pos in pos_to_full_pos
@@ -172,7 +178,7 @@ while True:
     else:
       pos = "adj"
   if len(els) == 2 and els[1].startswith("altyo:"):
-    altyoparts = re.split(":", els[1])
+    altyoparts = do_split(":", els[1])
     assert len(altyoparts) in [2, 3]
     pos_to_altyo = {
       "n": u"ru-noun-alt-ё",
@@ -224,7 +230,7 @@ while True:
   translit = None
   declterm = term
   if "//" in term:
-    term, translit = re.split("//", term)
+    term, translit = do_split("//", term)
   if pos == "adj":
     assert re.search(u"(ый|ий|о́й)(ся)?$", term)
   trtext = translit and "|tr=" + translit or ""
@@ -261,29 +267,29 @@ while True:
     etymtext = ""
   else:
     if etym.startswith("acr:"):
-      _, fullexpr, meaning = re.split(":", etym)
+      _, fullexpr, meaning = do_split(":", etym)
       etymtext = "{{ru-etym acronym of|%s||%s}}." % (fullexpr, meaning)
     elif etym.startswith("deverb:"):
-      _, sourceterm = re.split(":", etym)
+      _, sourceterm = do_split(":", etym)
       etymtext = "Deverbal from {{m|ru|%s}}." % sourceterm
     elif etym.startswith("back:"):
-      _, sourceterm = re.split(":", etym)
+      _, sourceterm = do_split(":", etym)
       etymtext = "{{back-form|lang=ru|%s}}" % sourceterm
     elif etym.startswith("raw:"):
       etymtext = re.sub(", *", ", ", re.sub("^raw:", "", etym))
     elif ":" in etym and "+" not in etym:
-      prefix = ""
       if etym.startswith("?"):
         prefix = "Perhaps borrowed from "
         etym = re.sub(r"^\?", "", etym)
       elif etym.startswith("<<"):
         prefix = "Ultimately borrowed from "
         etym = re.sub(r"^<<", "", etym)
+      else:
+        prefix = "Borrowed from "
       m = re.search(r"^([a-zA-Z.-]+):(.*)", etym)
       if not m:
         error("Bad etymology form: %s" % etym)
-      etymtext = "%s{{bor|ru|%s|%s%s}}." % (prefix, m.group(1), m.group(2),
-          prefix and "|notext=1" or "")
+      etymtext = "%s{{bor|ru|%s|%s}}." % (prefix, m.group(1), m.group(2))
     else:
       prefix = ""
       suffix = ""
@@ -302,7 +308,7 @@ while True:
       else:
         langtext = ""
       etymtext = "%s{{affix|ru|%s%s}}%s" % (prefix,
-          "|".join(re.split(r"\+", re.sub(", *", ", ", etym))), langtext,
+          "|".join(do_split(r"\+", re.sub(", *", ", ", etym))), langtext,
           suffix)
     etymtext = "===Etymology===\n%s\n\n" % etymtext
 
@@ -370,7 +376,7 @@ while True:
       alsotext = "{{also|%s}}\n" % vals.replace(",", "|")
     elif sartype in ["syn", "ant"]:
       lines = []
-      for synantgroup in re.split(";", vals):
+      for synantgroup in do_split(";", vals):
         sensetext = ""
         if synantgroup.startswith("*("):
           m = re.search(r"^\*\((.*?)\)(.*)$", synantgroup)
@@ -382,7 +388,7 @@ while True:
         else:
           sensetext = ""
         links = []
-        for synant in re.split(",", synantgroup):
+        for synant in do_split(",", synantgroup):
           if synant.startswith("{"):
             links.append(synant)
           else:
@@ -398,7 +404,7 @@ while True:
         anttext = synantguts
     elif sartype == "comp":
       comptext = ""
-      for i, comp in enumerate(re.split(",", vals)):
+      for i, comp in enumerate(do_split(",", vals)):
         check_stress(comp)
         if i == 0:
           comptext += "|%s" % comp
@@ -407,20 +413,23 @@ while True:
     elif sartype == "pron":
       prontext = ""
       check_stress(vals)
-      for i, pron in enumerate(re.split(",", vals)):
+      for i, pron in enumerate(do_split(",", vals)):
         check_stress(pron)
         prontext += "* {{ru-IPA|%s}}\n" % pron
     elif sartype == "alt":
       lines = []
-      for altform in re.split(",", vals):
-        check_stress(altform)
-        lines.append("* {{l|ru|%s}}\n" % altform)
+      for altform in do_split(",", vals):
+        if altform.startswith("{"):
+          lines.append("* %s\n" % altform)
+        else:
+          check_stress(altform)
+          lines.append("* {{l|ru|%s}}\n" % altform)
       alttext = "===Alternative forms===\n%s\n" % "".join(lines)
     elif sartype == "part":
-      verbs, parttypes, partshort = re.split(":", vals)
+      verbs, parttypes, partshort = do_split(":", vals)
       infleclines = []
-      for verb in re.split(",", verbs):
-        for parttype in re.split(",", parttypes):
+      for verb in do_split(",", verbs):
+        for parttype in do_split(",", parttypes):
           infleclines.append("# {{ru-participle of|%s||%s}}" % (verb, parttype))
       parttext = """===Participle===
 {{head|ru|participle|head=%s%s}}
@@ -434,21 +443,21 @@ while True:
           "" if partshort == "-" else "|" + partshort)
       parttext += partdecltext
     elif sartype == "wiki":
-      for val in re.split(",", vals):
+      for val in do_split(",", vals):
         if val:
           wikitext += "{{wikipedia|lang=ru|%s}}\n" % val
         else:
           wikitext += "{{wikipedia|lang=ru}}\n"
     elif sartype == "enwiki":
       assert vals
-      for val in re.split(",", vals):
+      for val in do_split(",", vals):
         enwikitext += "{{wikipedia|%s}}\n" % val
     elif sartype == "cat":
       assert vals
-      cattext += "".join("[[Category:Russian %s]]\n" % val for val in re.split(",", vals))
+      cattext += "".join("[[Category:Russian %s]]\n" % val for val in do_split(",", vals))
     elif sartype == "tcat":
       assert vals
-      cattext += "".join("{{C|ru|%s}}\n" % val for val in re.split(",", vals))
+      cattext += "".join("{{C|ru|%s}}\n" % val for val in do_split(",", vals))
     elif sartype == "usage":
       assert vals
       usagetext = re.sub(", *", ", ", vals)
@@ -467,12 +476,12 @@ while True:
       else:
         lines = []
         # don't split on \,
-        for derrelgroup in re.split(r"(?<![\\]),", vals):
-          derrelgroup = re.sub(r"\\,\s*", ", ", derrelgroup)
+        for derrelgroup in do_split(",", vals):
+          derrelgroup = re.sub(r",\s*", ", ", derrelgroup)
           links = []
-          for derrel in re.split(":", derrelgroup):
+          for derrel in do_split(":", derrelgroup):
             if "/" in derrel:
-              impfpfverbs = re.split("/", derrel)
+              impfpfverbs = do_split("/", derrel)
               for impfpfverb in impfpfverbs:
                 check_stress(impfpfverb)
               if "|" in impfpfverbs[0]:

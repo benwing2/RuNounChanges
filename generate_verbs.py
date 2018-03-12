@@ -21,6 +21,12 @@ def check_stress(word):
     msg("Word %s missing an accent" % word)
     assert False
 
+# Split text on a separator, but not if separator is preceded by
+# a backslash, and remove such backslashes
+def do_split(sep, text):
+  elems = re.split(r"(?<![\\])%s" % sep, text)
+  return [re.sub(r"\\(%s)" % sep, r"\1", elem) for elem in elems]
+
 peeker = generate_pos.Peeker(codecs.open(args.direcfile, "r", "utf-8"))
 while True:
   line = peeker.get_next_line()
@@ -32,7 +38,7 @@ while True:
     errmsg("ERROR: %s" % text)
     assert False
 
-  els = re.split(r"\s+", line)
+  els = do_split(r"\s+", line)
   # Replace _ with space, but not in the conjugation, where param names
   # may well have an underscore in them; but allow \s to stand for a space in
   # the conjugation, and \u to stand for an underscore elsewhere.
@@ -43,7 +49,7 @@ while True:
   translit = None
   declverb = verb
   if "//" in verb:
-    verb, translit = re.split("//", verb)
+    verb, translit = do_split("//", verb)
   assert re.search(u"(ть(ся)?|ти́?(сь)?|чь(ся)?)$", verb)
   trtext = translit and "|tr=" + translit or ""
   check_stress(verb)
@@ -56,7 +62,7 @@ while True:
     etymtext = ""
   else:
     if etym.startswith("acr:"):
-      _, fullexpr, meaning = re.split(":", etym)
+      _, fullexpr, meaning = do_split(":", etym)
       etymtext = "{{ru-etym acronym of|%s||%s}}." % (fullexpr, meaning)
     elif etym.startswith("raw:"):
       etymtext = re.sub(", *", ", ", re.sub("^raw:", "", etym))
@@ -95,14 +101,14 @@ while True:
         else:
           langtext = ""
         etymtext = "%s{{affix|ru|%s%s}}%s" % (prefix,
-            "|".join(re.split(r"\+", etym)), langtext, suffix)
+            "|".join(do_split(r"\+", etym)), langtext, suffix)
     etymtext = "===Etymology===\n%s\n\n" % etymtext
   headword_aspect = re.sub("-.*", "", aspect)
   assert headword_aspect in ["pf", "impf", "both"]
   if corverbs == "-":
     corverbs = []
   else:
-    corverbs = re.split(",", corverbs)
+    corverbs = do_split(",", corverbs)
   corverbtext = ""
   corverbno = 1
   for corverb in corverbs:
@@ -214,7 +220,7 @@ while True:
     sartype, vals = m.groups()
     if sartype in ["syn", "ant"]:
       lines = []
-      for synantgroup in re.split(";", vals):
+      for synantgroup in do_split(";", vals):
         sensetext = ""
         if synantgroup.startswith("*("):
           m = re.search(r"^\*\((.*?)\)(.*)$", synantgroup)
@@ -226,9 +232,12 @@ while True:
         else:
           sensetext = ""
         links = []
-        for synant in re.split(",", synantgroup):
-          check_stress(synant)
-          links.append("{{l|ru|%s}}" % synant)
+        for synant in do_split(",", synantgroup):
+          if synant.startswith("{"):
+            links.append(synant)
+          else:
+            check_stress(synant)
+            links.append("{{l|ru|%s}}" % synant)
         lines.append("* %s%s\n" % (sensetext, ", ".join(links)))
       synantguts = "====%s====\n%s\n" % (
           "Synonyms" if sartype == "syn" else "Antonyms",
@@ -240,28 +249,31 @@ while True:
     elif sartype == "pron":
       prontext = ""
       check_stress(vals)
-      for i, pron in enumerate(re.split(",", vals)):
+      for i, pron in enumerate(do_split(",", vals)):
         check_stress(pron)
         prontext += "* {{ru-IPA|%s}}\n" % pron
     elif sartype == "alt":
       lines = []
-      for altform in re.split(",", vals):
-        check_stress(altform)
-        lines.append("* {{l|ru|%s}}\n" % altform)
+      for altform in do_split(",", vals):
+        if altform.startswith("{"):
+          lines.append("* %s\n" % altform)
+        else:
+          check_stress(altform)
+          lines.append("* {{l|ru|%s}}\n" % altform)
       alttext = "===Alternative forms===\n%s\n" % "".join(lines)
     elif sartype == "def":
       defntext = generate_pos.generate_defn(vals)
     elif sartype == "note":
       notetext = " {{i|%s}}" % vals
     elif sartype == "wiki":
-      for val in re.split(",", vals):
+      for val in do_split(",", vals):
         if val:
           wikitext += "{{wikipedia|lang=ru|%s}}\n" % val
         else:
           wikitext += "{{wikipedia|lang=ru}}\n"
     elif sartype == "enwiki":
       assert vals
-      for val in re.split(",", vals):
+      for val in do_split(",", vals):
         enwikitext += "{{wikipedia|%s}}\n" % val
     else: # derived or related terms or see also
       if ((sartype == "der" and dertext != None) or
@@ -277,9 +289,9 @@ while True:
           seetext = ""
       else:
         lines = []
-        for derrelgroup in re.split(",", vals):
+        for derrelgroup in do_split(",", vals):
           links = []
-          for derrel in re.split(":", derrelgroup):
+          for derrel in do_split(":", derrelgroup):
             # Handle #ref, which we replace with the corresponding reflexive
             # verb pair for non-reflexive verbs and vice-versa
             gender_arg = ("|g=impf|g2=pf" if headword_aspect == "both" else
@@ -317,7 +329,7 @@ while True:
               derrel = re.sub("#ref", "/".join(refverbs), derrel)
 
             if "/" in derrel:
-              impfpfverbs = re.split("/", derrel)
+              impfpfverbs = do_split("/", derrel)
               for impfpfverb in impfpfverbs:
                 check_stress(impfpfverb)
               if "|" in impfpfverbs[0]:
