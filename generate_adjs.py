@@ -30,7 +30,7 @@ pos_to_full_pos = {
   "int": "Interjection"
 }
 
-opt_arg_regex = r"^(also|syn|ant|der|rel|see|comp|pron|alt|part|wiki|enwiki|cat|tcat|usage):(.*)"
+opt_arg_regex = r"^(also|syn|ant|der|rel|see|comp|pron|alt|part|wiki|enwiki|cat|tcat|usage|file):(.*)"
 
 # Form for adjectives, nouns and proper nouns:
 #
@@ -364,6 +364,7 @@ while True:
   wikitext = ""
   enwikitext = ""
   cattext = ""
+  filetext = ""
   prontext = "* {{ru-IPA|%s}}\n" % term
   for synantrel in remainder:
     if synantrel.startswith("#"):
@@ -461,6 +462,9 @@ while True:
     elif sartype == "usage":
       assert vals
       usagetext = re.sub(", *", ", ", vals)
+    elif sartype == "file":
+      filename, text = do_split(":", vals)
+      filetext += "[[File:%s|thumb|%s]]\n" % (filename, text)
     else: # derived or related terms or see also
       if ((sartype == "der" and dertext != None) or
           (sartype == "rel" and reltext != None) or
@@ -594,11 +598,11 @@ while True:
   msg("""%s
 
 %s==Russian==
-%s%s
+%s%s%s
 %s%s===Pronunciation===
 %s
 %s%s===%s===
 %s%s%s%s%s%s%s%s
-""" % (rulib.remove_accents(term), alsotext, enwikitext, wikitext, alttext,
-  etymtext, prontext, parttext, adjformtext, pos_to_full_pos[pos], maintext,
-  usagetext, syntext, anttext, dertext, reltext, seetext, cattext))
+""" % (rulib.remove_accents(term), alsotext, enwikitext, wikitext, filetext,
+  alttext, etymtext, prontext, parttext, adjformtext, pos_to_full_pos[pos],
+  maintext, usagetext, syntext, anttext, dertext, reltext, seetext, cattext))

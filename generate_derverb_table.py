@@ -53,23 +53,28 @@ def render_groups(groups):
 {{mid2}}
 ''perfective''
 %s
-{{bottom2}}
+{{bottom}}
 """ % ("\n".join(impfs), "\n".join(pfs)))
 
-def combine_prefix(prefix, suffix):
+def paste_verb(prefix, suffix):
   if ru.is_stressed(prefix):
     verb = prefix + ru.make_unstressed(suffix)
   else:
     verb = prefix + suffix
-  verb = ru.remove_monosyllabic_accents(verb)
-  return "* {{l|ru|" + verb + "}}"
+  return ru.remove_monosyllabic_accents(verb)
+
+def combine_prefix(prefix, suffixes):
+  links = []
+  for suffix in suffixes:
+    links.append("{{l|ru|" + paste_verb(prefix, suffix) + "}}")
+  return "* " + ", ".join(links)
 # Each group is delineated by a line containing only a hyphen in the
 # directive file, and consists of a list of (pf, impf) pairs. Multiple tables
 # are delineated by a line containing two or more hyphens.
 groups = []
 group = []
-pfsuffix = None
-impfsuffix = None
+pfsuffixes = None
+impfsuffixes = None
 for line in codecs.open(args.direcfile, "r", "utf-8"):
   line = line.strip()
   if not line or line.startswith("#"):
@@ -82,60 +87,74 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
       render_groups(groups)
     groups = []
     group = []
-    pfsuffix = None
-    impfsuffix = None
+    pfsuffixes = None
+    impfsuffixes = None
   elif line == "-":
     if group:
       groups.append(group)
     group = []
   elif " " not in line:
-    group.append((combine_prefix(line, pfsuffix),
-        combine_prefix(ru.make_unstressed(line), impfsuffix)))
+    group.append((combine_prefix(line, pfsuffixes),
+        combine_prefix(ru.make_unstressed(line), impfsuffixes)))
   elif "!" in line:
     pf, impf = re.split(r"\s+", line)
     assert pf == "!" or impf == "!"
     if pf == "!":
-      group.append(("* (no equivalent)", combine_prefix(ru.make_unstressed(impf), impfsuffix)))
+      group.append(("* (no equivalent)", combine_prefix(ru.make_unstressed(impf), impfsuffixes)))
     else:
-      group.append((combine_prefix(pf, pfsuffix), "* (no equivalent)"))
+      group.append((combine_prefix(pf, pfsuffixes), "* (no equivalent)"))
   else:
     pf, impf = re.split(r"\s+", line)
     if pf.startswith("-") and impf.startswith("-"):
-      pfsuffix = re.sub("^-", "", pf)
-      impfsuffix = re.sub("^-", "", impf)
+      pfsuffixes = [re.sub("^-", "", x) for x in re.split(",", pf)]
+      impfsuffixes = [re.sub("^-", "", x) for x in re.split(",", impf)]
       continue
-    def do_line(direc, aspect):
+    def do_line(direc, aspect, suffixes):
       links = []
       if direc == "-":
         return "* (no equivalent)"
       else:
-        for verb in re.split(",", direc):
+        for index, verb in enumerate(re.split(",", direc)):
           gender = ""
           notes = []
-          while True:
-            if verb.startswith("+"):
-              gender = "|g=%s" % aspect
-              verb = re.sub(r"^\+", "", verb)
-            elif verb.startswith("(i)"):
-              notes.append("iterative")
-              verb = re.sub(r"^\(i\)", "", verb)
-            elif verb.startswith("(n)"):
-              notes.append("nonstandard")
-              verb = re.sub(r"^\(n\)", "", verb)
-            elif verb.startswith("(d)"):
-              notes.append("dated")
-              verb = re.sub(r"^\(d\)", "", verb)
+          if verb:
+            endbracket = False
+            if verb.endswith("]"):
+              endbracket = True
+              verb = verb[:-1]
+            if verb.endswith("-"):
+              verb = verb[:-1]
+              if aspect == "impf":
+                verb = ru.make_unstressed(verb)
+              verb = paste_verb(verb, suffixes[index])
+            while True:
+              if verb.startswith("+"):
+                gender = "|g=%s" % aspect
+                verb = re.sub(r"^\+", "", verb)
+              elif verb.startswith("(i)"):
+                notes.append("iterative")
+                verb = re.sub(r"^\(i\)", "", verb)
+              elif verb.startswith("(n)"):
+                notes.append("nonstandard")
+                verb = re.sub(r"^\(n\)", "", verb)
+              elif verb.startswith("(lc)"):
+                notes.append("low colloquial")
+                verb = re.sub(r"^\(lc\)", "", verb)
+              elif verb.startswith("(d)"):
+                notes.append("dated")
+                verb = re.sub(r"^\(d\)", "", verb)
+              else:
+                break
+            if verb.startswith("["):
+              verb = verb[1:]
+              assert endbracket
+              links.append("[{{l|ru|%s%s}}]%s" % (verb, gender,
+                notes and " {{i|%s}}" % ", ".join(notes) or ""))
             else:
-              break
-          m = re.search(r"^\[(.*)\]$", verb)
-          if m:
-            links.append("[{{l|ru|%s%s}}]%s" % (m.group(1), gender,
-              notes and " {{i|%s}}" % ", ".join(notes) or ""))
-          else:
-            links.append("{{l|ru|%s%s}}%s" % (verb, gender,
-              notes and " {{i|%s}}" % ", ".join(notes) or ""))
+              links.append("{{l|ru|%s%s}}%s" % (verb, gender,
+                notes and " {{i|%s}}" % ", ".join(notes) or ""))
         return "* " + ", ".join(links)
-    group.append((do_line(pf, "pf"), do_line(impf, "impf")))
+    group.append((do_line(pf, "pf", pfsuffixes), do_line(impf, "impf", impfsuffixes)))
 
 if group:
   groups.append(group)

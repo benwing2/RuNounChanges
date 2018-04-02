@@ -115,7 +115,7 @@ def generate_defn(defns):
           labels.append("colloquial")
           defn = re.sub(r"^!", "", defn)
         else:
-          m = re.search(r"^\((.*?)\)(.*)$", defn)
+          m = re.search(r"^\((.*?)\)([^ ].*)$", defn)
           if m:
             shortlab = m.group(1)
             if shortlab in known_labels:

@@ -1,0 +1,10852 @@
+поиграть
+
+==Russian==
+
+===Etymology===
+{{affix|ru|по-|игра́ть}}
+
+===Pronunciation===
+* {{ru-IPA|поигра́ть}}
+
+===Verb===
+{{ru-verb|поигра́ть|pf}}
+
+# to [[play]] {{i|for a while}}
+
+====Conjugation====
+{{ru-conj-1a|pf|поигра́|past_pasv_part=пои́гранный}}
+
+
+
+пра́здновать
+
+==Russian==
+
+===Etymology===
+Perhaps from {{affix|ru|пра́здный|-овать}}.
+
+===Pronunciation===
+* {{ru-IPA|пра́здновать}}
+
+===Verb===
+{{ru-verb|пра́здновать|impf|pf=отпра́здновать}}
+
+# to [[celebrate]]
+
+====Conjugation====
+{{ru-conj-2a|impf|пра́зднова}}
+
+
+
+отпраздновать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|от-|пра́здновать}}
+
+===Pronunciation===
+* {{ru-IPA|отпра́здновать}}
+
+===Verb===
+{{ru-verb|отпра́здновать|pf|impf=пра́здновать}}
+
+# to [[celebrate]]
+
+====Conjugation====
+{{ru-conj-2a|pf|отпра́зднова|past_pasv_part=отпра́зднованный}}
+
+
+
+==Russian==
+
+===Etymology===
+{{affix|ru|пре-|облада́ть}}
+
+===Pronunciation===
+* {{ru-IPA|преоблада́ть}}
+
+===Verb===
+{{ru-verb|преоблада́ть|impf}}
+
+# to [[prevail]] ({{m|ru|над}} over)
+# to [[predominate]], {{lb|ru|intransitive}} to [[dominate]]
+
+====Conjugation====
+{{ru-conj-1a|impf-intr|преоблада́ть}}
+
+
+пролететь
+
+==Russian==
+
+===Etymology===
+{{affix|ru|про-|лете́ть}}
+
+===Pronunciation===
+* {{ru-IPA|пролете́ть}}
+
+===Verb===
+{{ru-verb|пролете́ть|pf|impf=пролета́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj-5b|pf|пролет|пролете́|past_pasv_part=-}}
+
+
+пролетать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|про-|лета́ть}}
+
+===Pronunciation===
+* {{ru-IPA|пролета́ть}}
+
+===Verb===
+{{ru-verb|пролета́ть|impf|pf=пролете́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj-1a|impf|пролета́}}
+
+
+наплевать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|на-|плева́ть}}
+
+===Pronunciation===
+* {{ru-IPA|наплева́ть}}
+
+===Verb===
+{{ru-verb|наплева́ть|pf|past_pasv_part=наплёванный}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj-2b|pf|наплева́}}
+
+
+
+познать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|по-|знать}}
+
+===Pronunciation===
+* {{ru-IPA|позна́ть}}
+
+===Verb===
+{{ru-verb|позна́ть|pf|impf=познава́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj-1a|pf|позна́|past_pasv_part=по́знанный}}
+
+
+
+интегрировать
+
+==Russian==
+
+===Etymology===
+{{bor|ru|de|integrieren}} + {{affix|ru|-овать}}
+
+===Pronunciation===
+* {{ru-IPA|phon=интэгри́ровать}}
+
+===Verb===
+{{ru-verb|интегри́ровать|both}}
+
+# to [[integrate]]
+# {{lb|ru|mathematics}} to [[integrate]] 
+
+====Conjugation====
+''imperfective''
+{{ru-conj-2a|impf|интегри́рова|past_pasv_part=интегри́рованный}}
+''perfective''
+{{ru-conj-2a|pf|интегри́рова|past_pasv_part=интегри́рованный}}
+
+
+
+опросить
+
+==Russian==
+
+===Etymology===
+{{affix|ru|о-|проси́ть}}
+
+===Pronunciation===
+* {{ru-IPA|опроси́ть}}
+
+===Verb===
+{{ru-verb|опроси́ть|pf|impf=опра́шивать}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj-4c|pf|опрос|past_pasv_part=опро́шенный}}
+
+
+опрашивать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|опроси́ть|-ивать}}
+
+===Pronunciation===
+* {{ru-IPA|опра́шивать}}
+
+===Verb===
+{{ru-verb|опра́шивать|impf|pf=опроси́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj-1a|impf|опра́шива}}
+
+
+
+срезать
+
+==Russian==
+
+===Etymology 1===
+{{affix|ru|с-|ре́зать}}
+
+====Pronunciation====
+* {{ru-IPA|сре́зать}}
+
+====Verb====
+{{ru-verb|сре́зать|pf|impf=среза́ть}}
+
+# {{rfdef|lang=ru}}
+
+=====Conjugation=====
+{{ru-conj-6a|pf|ре́з|ь|past_pasv_part=сре́занный}}
+
+==Russian==
+
+===Etymology 2===
+{{affix|ru|сре́зать|-а́ть}}
+
+====Pronunciation====
+* {{ru-IPA|среза́ть}}
+
+====Verb====
+{{ru-verb|среза́ть|impf|pf=сре́зать}}
+
+# {{rfdef|lang=ru}}
+
+=====Conjugation=====
+{{ru-conj-1a|impf|среза́}}
+
+вовлечь
+
+==Russian==
+
+===Etymology===
+{{affix|ru|во-|влечь}}
+
+===Pronunciation===
+* {{ru-IPA|вовле́чь}}
+
+===Verb===
+{{ru-verb|вовле́чь|pf|impf=вовлека́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj-8b|pf|вовлек|вовле́чь|past_m=вовлёк|past_pasv_part=вовлечённый}}
+
+
+вовлекать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|[[вовле́чь|вовлек-]]|-а́ть}}
+
+===Pronunciation===
+* {{ru-IPA|вовлека́ть}}
+
+===Verb===
+{{ru-verb|вовлека́ть|impf|pf=вовлечь}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj-1a|impf|вовлека́}}
+
+
+отмахнуться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|отмахну́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|отмахну́ться}}
+
+===Verb===
+{{ru-verb|отмахну́ться|pf|impf=отма́хиваться}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|отмахну́ть|lang=ru}}
+
+====Conjugation====
+{{ru-conj-3b|pf-refl|отмахн}}
+
+отмахиваться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|отма́хивать|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|отма́хиваться}}
+
+===Verb===
+{{ru-verb|отма́хиваться|impf|pf=отмахну́ться}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|отма́хивать|lang=ru}}
+
+====Conjugation====
+{{ru-conj-1a|impf-refl|отма́хива}}
+
+отмахнуть
+
+==Russian==
+
+===Etymology===
+{{affix|ru|от-|махну́ть}}
+
+===Pronunciation===
+* {{ru-IPA|отмахну́ть}}
+
+===Verb===
+{{ru-verb|отмахну́ть|pf|impf=отма́хивать}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj-3b|pf|отмахн|past_pasv_part=отмахну́тый}}
+
+отмахать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|от-|маха́ть}}
+
+===Pronunciation===
+* {{ru-IPA|отмаха́ть}}
+
+===Verb===
+{{ru-verb|отмаха́ть|pf|impf=отма́хивать}}
+
+# {{rfdef|lang=ru}} [дать сигнал флагом; кончить махать]
+
+====Conjugation====
+{{ru-conj-6c|pf|отма́х|past_pasv_part=отма́ханный}} ''or''
+{{ru-conj-1a|pf|отмаха́|past_pasv_part=отма́ханный|futrtailall=*|notes=* Colloquial; type-6 forms preferred.}}
+
+===Verb===
+{{ru-verb|отмаха́ть|pf|impf=отма́хивать}}
+
+# {{rfdef|lang=ru}} [много пройти; много сделать]
+
+====Conjugation====
+{{ru-conj-1a|pf|отмаха́|past_pasv_part=отма́ханный}}
+
+
+привестись
+
+==Russian==
+
+===Etymology===
+{{affix|ru|привести́|-сь}}
+
+===Pronunciation===
+* {{ru-IPA|привести́сь}}
+
+===Verb===
+{{ru-verb|привести́сь|pf|impf=приводи́ться}}
+
+# {{lb|ru|impersonal}} to [[happen]] to (+ dative and infinitive)
+#: {{ru-ux|[[я|мне]] '''привело́сь''' [[быть]] [[там]]|I happened to be there}}
+# {{lb|ru|impersonal}} to have the [[occasion]] to (+ dative and infinitive)
+# {{passive of|lang=ru|привести́ь}}
+
+====Conjugation====
+''impersonal''
+{{ru-conj-7b|pf-impers-refl|привести́|привед|приве́д|past_adv_part=приве́дши|past_adv_part_short=-|past_m=привёл|past_f=привела́|past_n=привело́|past_pl=привели́}}
+''passive''
+{{ru-conj-7b|pf-refl|привести́|привед|приве́д|past_adv_part=приве́дши|past_adv_part_short=-|past_m=привёл|past_f=привела́|past_n=привело́|past_pl=привели́}}
+
+====Related terms====
+* {{l|ru|приведе́ние}}
+* {{l|ru|при́вод}}, {{l|ru|приво́д}}
+
+
+загореться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|загоре́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|загоре́ться}}
+
+===Verb===
+{{ru-verb|загоре́ться|pf|impf=загора́ться}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|lang=ru|загоре́ть}}
+
+====Conjugation====
+{{ru-conj-5b|pf-refl|загор|загоре́}}
+
+====Related terms====
+* {{l|ru|загоре́лый}}
+
+загораться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|загора́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|загора́ться}}
+
+===Verb===
+{{ru-verb|загора́ться|impf|pf=загоре́ться}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|загора́ть|lang=ru}}
+
+====Conjugation====
+{{ru-conj-1a|impf-refl|загора́}}
+
+
+значиться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|зна́чить|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|зна́читься}}
+
+===Verb===
+{{ru-verb|зна́читься|impf}}
+
+# to be [[mentioned]], to [[appear]]
+# to be [[listed]], to be [[registered]]
+# {{passive of|lang=ru|зна́чить}}
+
+====Conjugation====
+{{ru-conj-4a|impf-refl|зна́ч}}
+
+
+позаботиться
+
+
+таиться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|таи́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|таи́ться}}
+
+===Verb===
+{{ru-verb|таи́ться|impf}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|lang=ru|таи́ть}}, {{g|pf}} — {{m|ru|утаи́ться}}, {{m|ru|затаи́ться}}
+
+====Conjugation====
+{{ru-conj-4b|impf-refl|та}}
+
+
+удариться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|уда́рить|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|уда́риться}}
+
+===Verb===
+{{ru-verb|уда́риться|pf|impf=ударя́ться}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|lang=ru|уда́рить}}
+
+====Conjugation====
+{{ru-conj-4a|pf-refl|уда́р}}
+
+
+ударяться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|ударя́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|ударя́ться}}
+
+===Verb===
+{{ru-verb|ударя́ться|impf|pf=уда́риться}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|ударя́ть|lang=ru}}
+
+====Conjugation====
+{{ru-conj-1a|impf-refl|ударя́}}
+
+
+устремиться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|устреми́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|устреми́ться}}
+
+===Verb===
+{{ru-verb|устреми́ться|pf|impf=устремля́ться}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|lang=ru|устреми́ть}}
+
+====Conjugation====
+{{ru-conj-4b|pf-refl|устрем}}
+
+
+устремляться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|устремля́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|устремля́ться}}
+
+===Verb===
+{{ru-verb|устремля́ться|impf|pf=устреми́ться}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|устремля́ть|lang=ru}}
+
+====Conjugation====
+{{ru-conj-1a|impf-refl|устремля́}}
+
+устремить
+
+==Russian==
+
+===Etymology===
+{{affix|ru|у-|стреми́ть}}
+
+===Pronunciation===
+* {{ru-IPA|устреми́ть}}
+
+===Verb===
+{{ru-verb|устреми́ть|pf|impf=устремля́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj-4b|pf|устрем|past_pasv_part=устремлённый}}
+
+
+копить
+
+==Russian==
+
+===Etymology===
+{{rfe|lang=ru}}
+
+===Pronunciation===
+* {{ru-IPA|копи́ть}}
+
+===Verb===
+{{ru-verb|копи́ть|impf|pf=накопи́ть}}
+
+# {{lb|ru|transitive}} to [[accumulate]], to [[gather]]
+# {{lb|ru|figurative}} to [[save up]]
+#: {{ru-ux|'''копи́ть''' [[си́лы]]|to save one's strength|inline=y}}
+# to [[hide]], to [[conceal]] (feelings, knowledge, etc.)
+
+====Conjugation====
+{{ru-conj-4c|impf|ко́п|past_pasv_part=ко́пленный}}
+
+====Synonyms====
+* {{sense|accumulate}} {{l|ru|нака́пливать}}, {{l|ru|накопля́ть}}, {{l|ru|аккумули́ровать}}, {{l|ru|собира́ть}}, {{l|ru|сберега́ть}}
+# {{sense|hide}} {{l|ru|скрыва́ть}}, {{l|ru|таи́ть}}
+
+
+копиться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|копи́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|копи́ться}}
+
+===Verb===
+{{ru-verb|копи́ться|impf|pf=накопи́ться}}
+
+# {{lb|ru|intransitive}} to [[accumulate]], to [[gather]]
+# {{passive of|lang=ru|копи́ть}}
+
+====Conjugation====
+{{ru-conj-4c|impf-refl|ко́п}}
+
+====Synonyms====
+* {{sense|accumulate}} {{l|ru|нака́пливаться}}, {{l|ru|накопля́ться}}, {{l|ru|аккумули́роваться}}, {{l|ru|собира́ться}}, {{l|ru|сберега́ться}}
+
+
+накопить
+
+==Russian==
+
+===Etymology===
+{{affix|ru|на-|копи́ть}}
+
+===Pronunciation===
+* {{ru-IPA|накопи́ть}}
+
+===Verb===
+{{ru-verb|накопи́ть|pf|impf=нака́пливать|impf2=накопля́ть|impf3=копи́ть}}
+
+# {{lb|ru|transitive}} to [[accumulate]], to [[gather]]
+# to [[stockpile]]
+# {{lb|ru|figurative}} to [[save up]]
+#: {{ru-ux|'''накопи́ть''' [[си́лы]]|to save one's strength|inline=y}}
+# {{lb|ru|transitive}} to [[accumulate]], to [[gather]]
+# to [[hide]], to [[conceal]] (feelings, knowledge, etc.)
+
+====Conjugation====
+{{ru-conj-4c|pf|нако́п|past_pasv_part=нако́пленный}}
+
+
+накопиться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|накопи́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|накопи́ться}}
+
+===Verb===
+{{ru-verb|накопи́ться|pf|impf=нака́пливаться|impf2=накопля́ться|impf3=копи́ться}}
+
+# {{lb|ru|intransitive}} to [[accumulate]], to [[gather]], to [[amass]]
+# {{passive of|lang=ru|накопи́ть}}
+
+====Conjugation====
+{{ru-conj-4c|pf-refl|нако́п}}
+
+
+накапливать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|накопи́ть|-ивать}}
+
+===Pronunciation===
+* {{ru-IPA|нака́пливать}}
+
+===Verb===
+{{ru-verb|нака́пливать|impf|pf=накопи́ть}}
+
+# {{lb|ru|transitive}} to [[accumulate]], to [[gather]], to [[amass]]
+# to [[stockpile]]
+
+====Conjugation====
+{{ru-conj-1a|impf|нака́плива}}
+
+====Synonyms====
+* {{l|ru|накопля́ть}}
+* {{sense|accumulate}} {{l|ru|копи́ть}}, {{l|ru|аккумули́ровать}}, {{l|ru|собира́ть}}, {{l|ru|сберега́ть}}
+
+
+накапливаться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|нака́пливать|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|нака́пливаться}}
+
+===Verb===
+{{ru-verb|нака́пливаться|impf|pf=накопи́ться}}
+
+# {{lb|ru|intransitive}} to [[accumulate]], to [[gather]], to [[amass]]
+# {{passive of|нака́пливать|lang=ru}}
+
+====Conjugation====
+{{ru-conj-1a|impf-refl|нака́плива}}
+
+====Synonyms====
+* {{l|ru|накопля́ться}}, {{l|ru|копи́ться}}
+
+
+накоплять
+
+==Russian==
+
+===Etymology===
+{{affix|ru|накопи́ть|-я́ть}}
+
+===Pronunciation===
+* {{ru-IPA|накопля́ть}}
+
+===Verb===
+{{ru-verb|накопля́ть|impf|pf=накопи́ть}}
+
+# {{lb|ru|transitive}} to [[accumulate]], to [[gather]], to [[amass]]
+# to [[stockpile]]
+
+====Conjugation====
+{{ru-conj-1a|impf|накопля́}}
+
+====Synonyms====
+* {{l|ru|нака́пливать}}
+* {{sense|accumulate}} {{l|ru|копи́ть}}, {{l|ru|аккумули́ровать}}, {{l|ru|собира́ть}}, {{l|ru|сберега́ть}}
+
+
+накопляться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|накопля́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|накопля́ться}}
+
+===Verb===
+{{ru-verb|накопля́ться|impf|pf=накопи́ться}}
+
+# {{lb|ru|intransitive}} to [[accumulate]], to [[gather]], to [[amass]]
+# {{passive of|накопля́ть|lang=ru}}
+
+====Conjugation====
+{{ru-conj-1a|impf-refl|накопля́}}
+
+====Synonyms====
+* {{l|ru|нака́пливаться}}, {{l|ru|копи́ться}}
+
+
+проститься
+
+==Russian==
+
+===Etymology===
+{{affix|ru|прости́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|прости́ться}}
+
+===Verb===
+{{ru-verb|прости́ться|pf|impf=проща́ться}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|lang=ru|прости́ть}}
+
+====Conjugation====
+{{ru-conj-4b|pf-refl|прост}}
+
+
+проща́ться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|проща́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|проща́ться}}
+
+===Verb===
+{{ru-verb|проща́ться|impf|pf=прости́ться}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|проща́ть|lang=ru}}
+
+====Conjugation====
+{{ru-conj-1a|impf-refl|проща́}}
+
+
+
+
+стыдиться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|стыди́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|стыди́ться}}
+
+===Verb===
+{{ru-verb|стыди́ться|impf|pf=постыди́ться|pf2=застыди́ться}}
+
+# to be [[ashamed]] of/to (+ infinitive)
+#: {{ru-ux|'''стыди́сь'''!|[[for shame]]!|inline=y}}
+#: {{ru-ux|[[здесь]] [[никто|нечего́]] '''стыди́ть'''|it's nothing to be ashamed of|inline=y}}
+# {{passive of|lang=ru|стыди́ть}}
+
+====Conjugation====
+{{ru-conj-4b|impf-refl|стыд}}
+
+постыдиться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|постыди́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|постыди́ться}}
+
+===Verb===
+{{ru-verb|постыди́ться|pf|impf=стыди́ться}}
+
+# to be [[ashamed]] of/to (+ infinitive)
+#: {{ru-ux|[[здесь]] [[никто|нечего́]] '''постыди́ть'''|it's nothing to be ashamed of|inline=y}}
+# {{passive of|lang=ru|постыди́ть}}
+
+====Conjugation====
+{{ru-conj-4b|pf-refl|постыд}}
+
+
+застыдиться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|застыди́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|застыди́ться}}
+
+===Verb===
+{{ru-verb|застыди́ться|pf|impf=стыди́ться}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|lang=ru|застыди́ть}}
+
+====Conjugation====
+{{ru-conj-4b|pf-refl|застыд}}
+
+
+веселиться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|весели́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|весели́ться}}
+
+===Verb===
+{{ru-verb|весели́ться|impf|pf=повесели́ться|pf2=развесели́ться}}
+
+# to [[have fun]], to [[rejoice]]
+# {{passive of|lang=ru|весели́ть}}
+
+====Conjugation====
+{{ru-conj-4b|impf-refl|весел}}
+
+====Synonyms====
+* {{sense|have fun}} {{l|ru|радоваться}}, {{l|ru|развлекаться}}
+
+
+повеселиться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|повесели́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|повесели́ться}}
+
+===Verb===
+{{ru-verb|повесели́ться|pf|impf=весели́ться}}
+
+# to start to [[have fun]]
+# {{passive of|lang=ru|повесели́ть}}
+
+====Conjugation====
+{{ru-conj-4b|pf-refl|повесел}}
+
+развеселиться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|развесели́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|развесели́ться}}
+
+===Verb===
+{{ru-verb|развесели́ться|pf}}
+
+# to [[cheer up]], to become [[cheerful]]
+# {{passive of|lang=ru|развесели́ть}}
+
+====Conjugation====
+{{ru-conj-4b|pf-refl|развесел}}
+
+
+раствориться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|раствори́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|раствори́ться}}
+
+===Verb===
+{{ru-verb|раствори́ться|pf|impf=растворя́ться}}
+
+# {{lb|ru|intransitive}} to [[dissolve]]
+# {{lb|ru|intransitive}} to [[open]] {{i|of doors, flaps, etc.}}
+# {{passive of|lang=ru|раствори́ть}}
+
+====Conjugation====
+{{ru-conj-4b|pf-refl|раствор}}
+
+растворяться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|растворя́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|растворя́ться}}
+
+===Verb===
+{{ru-verb|растворя́ться|impf|pf=раствори́ться}}
+
+# {{lb|ru|intransitive}} to [[dissolve]]
+# {{lb|ru|intransitive}} to [[open]] {{i|of doors, flaps, etc.}}
+# {{passive of|растворя́ть|lang=ru}}
+
+====Conjugation====
+{{ru-conj-1a|impf-refl|растворя́}}
+
+оживиться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|оживи́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|оживи́ться}}
+
+===Verb===
+{{ru-verb|оживи́ться|pf|impf=оживля́ться}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|lang=ru|оживи́ть}}
+
+====Conjugation====
+{{ru-conj-4b|pf-refl|ожив}}
+
+оживля́ться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|оживля́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|оживля́ться}}
+
+===Verb===
+{{ru-verb|оживля́ться|impf|pf=оживи́ться}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|оживля́ть|lang=ru}}
+
+====Conjugation====
+{{ru-conj-1a|impf-refl|оживля́}}
+
+оживлять
+
+==Russian==
+
+===Etymology===
+{{affix|ru|оживи́ть|-я́ть}}
+
+===Pronunciation===
+* {{ru-IPA|оживля́ть}}
+
+===Verb===
+{{ru-verb|оживля́ть|impf|pf=оживи́ть}}
+
+# to [[bring]] back to [[life]]
+# {{lbl|ru|figurative}} to [[revive]], bring back (of something that has been [[lost]] or [[forgotten]])
+# {{lbl|ru|figurative}} to [[imbue]] physical or emotional energy (ex. into a [[person]], a [[street]])
+# {{lbl|ru|figurative}} to improve the [[appearance]] (ex. of a [[building]])
+
+====Conjugation====
+{{ru-conj-1a|impf|оживля́}}
+
+подружиться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|подружи́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|подружи́ться}}
+
+===Verb===
+{{ru-verb|подружи́ться|pf}}
+
+# to make [[friends]] with, to [[establish]] a [[friendly]] [[relationship]] with
+# {{passive of|lang=ru|подружи́ть}}
+
+====Conjugation====
+{{ru-conj-4c|pf-refl|подру́ж}}
+
+
+
+
+
+
+
+
+передвигаться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|передвига́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|передвига́ться}}
+
+===Verb===
+{{ru-verb|передвига́ться|impf|pf=передви́нуться}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|передвига́ть|lang=ru}}
+
+====Conjugation====
+{{ru-conj-1a|impf-refl|передвига́}}
+
+
+передвинуться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|передви́нуть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|передви́нуться}}
+
+===Verb===
+{{ru-verb|передви́нуться|pf|impf=передвига́ться}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|передви́нуть|lang=ru}}
+
+====Conjugation====
+{{ru-conj-3a|pf-refl|передви́|1|1|нь}}
+
+
+передвигать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|[[передвинуть|передви́г-]]|-а́ть}}
+
+===Pronunciation===
+* {{ru-IPA|передвига́ть}}
+
+===Verb===
+{{ru-verb|передвига́ть|impf|pf=передви́нуть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj-1a|impf|передвига́}}
+
+
+передвинуть
+
+==Russian==
+
+===Etymology===
+{{affix|ru|пере-|дви́нуть}}
+
+===Pronunciation===
+* {{ru-IPA|передви́нуть}}
+
+===Verb===
+{{ru-verb|передви́нуть|pf|impf=передвига́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj-3a|pf|передви́|1|1|нь}}
+
+пониматься
+
+==Russian==
+
+===Etymology===
+{{affix|ru|понима́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|понима́ться}}
+
+===Verb===
+{{ru-verb|понима́ться|impf|pf=поня́ться}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|понима́ть|lang=ru}}
+
+====Conjugation====
+{{ru-conj-1a|impf-refl|понима́}}
+
+поняться [is c'' correct?]
+
+==Russian==
+
+===Etymology===
+{{affix|ru|поня́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|поня́ться}}
+
+===Verb===
+{{ru-verb|поня́ться|pf|impf=понима́ться}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|поня́ть|lang=ru}}
+
+====Conjugation====
+{{ru-conj-14b|pf-refl|поня́|пойм|c''}}
+
+посмеиваться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|посмея́ться|-ивать}}
+
+===Pronunciation===
+* {{ru-IPA|посме́иваться}}
+
+===Verb===
+{{ru-verb|посме́иваться|impf|pf=поня́ться}}
+
+# to [[chuckle]]
+# to [[laugh]], to [[poke fun]] ({{m|ru|над}} at)
+
+====Conjugation====
+{{ru-conj-1a|impf-refl|посме́ива}}
+
+спасаться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|спаса́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|спаса́ться}}
+
+===Verb===
+{{ru-verb|спаса́ться|impf|pf=спасти́сь}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|спаса́ть|lang=ru}}
+
+====Conjugation====
+{{ru-conj-1a|impf-refl|спаса́}}
+
+спастись
+
+==Russian==
+
+===Etymology===
+{{affix|ru|спасти́|-сь}}
+
+===Pronunciation===
+* {{ru-IPA|спасти́сь}}
+
+===Verb===
+{{ru-verb|спасти́сь|pf|impf=спаса́ться}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|спасти́|lang=ru}}
+
+====Conjugation====
+{{ru-conj-7b|pf-refl|спасти́|спас|спа́с|past_m=спа́с|past_f=спасла́|past_n=спасло́|past_pl=спасли́|past_actv_part=спа́сший|past_adv_part=спа́сши|past_adv_part_short=-}}
+
+====Related terms====
+* {{l|ru|спаса́тель}}
+* {{l|ru|спасательный}}
+* {{l|ru|спасе́ние}}
+* {{l|ru|спаси́тель}}
+* {{l|ru|спасительный}}
+
+перемещаться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|перемеща́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|перемеща́ться}}
+
+===Verb===
+{{ru-verb|перемеща́ться|impf|pf=перемести́ться}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|перемеща́ть|lang=ru}}
+
+====Conjugation====
+{{ru-conj-1a|impf-refl|перемеща́}}
+
+переместиться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|перемести́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|перемести́ться}}
+
+===Verb===
+{{ru-verb|перемести́ть|pf|impf=перемеща́ться}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|перемести́ть|lang=ru}}
+
+====Conjugation====
+{{ru-conj-4b|pf-refl|перемест}}
+
+
+опустеть
+
+==Russian==
+
+===Etymology===
+{{affix|ru|о-|пусте́ть}}
+
+===Pronunciation===
+* {{ru-IPA|опусте́ть}}
+
+===Verb===
+{{ru-verb|опусте́ть|pf|impf=пусте́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj-1a|pf-intr|опусте́}}
+
+
+
+пустеть
+
+==Russian==
+
+===Etymology===
+{{rfe|lang=ru}}
+
+===Pronunciation===
+* {{ru-IPA|пусте́ть}}
+
+===Verb===
+{{ru-verb|пусте́ть|impf|pf=опусте́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj-1a|impf-intr|пусте́}}
+
+устоять
+
+==Russian==
+
+===Etymology===
+{{affix|ru|у-|стоя́ть}}
+
+===Pronunciation===
+* {{ru-IPA|устоя́ть}}
+
+===Verb===
+{{ru-verb|устоя́ть|pf|impf=уста́ивать}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj-5b|pf-intr|усто|устоя́|imprtailall=*|notes=* Theoretical.}}
+
+устаивать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|устоя́ть|-ивать}}
+
+===Pronunciation===
+* {{ru-IPA|уста́ивать}}
+
+===Verb===
+{{ru-verb|уста́ивать|impf|pf=устоя́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj-1a|impf|уста́ива}}
+
+обновить
+
+==Russian==
+
+===Etymology===
+{{affix|ru|об-|-нови́ть}}
+
+===Pronunciation===
+* {{ru-IPA|обнови́ть}}
+
+===Verb===
+{{ru-verb|обнови́ть|pf|impf=обновля́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj-4b|pf|обнов|past_pasv_part=обновлённый}}
+
+обновлять
+
+==Russian==
+
+===Etymology===
+{{affix|ru|обнови́ть|-я́ть}}
+
+===Pronunciation===
+* {{ru-IPA|обновля́ть}}
+
+===Verb===
+{{ru-verb|обновля́ть|impf|pf=обнови́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj-1a|impf|обновля́}}
+
+окрасить
+
+==Russian==
+
+===Etymology===
+{{affix|ru|о-|кра́сить}}
+
+===Pronunciation===
+* {{ru-IPA|окра́сить}}
+
+===Verb===
+{{ru-verb|окра́сить|pf|impf=окра́шивать}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj-4а|pf|окра́с|past_pasv_part=окра́шенный}}
+
+окрашивать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|окра́сить|-ивать}}
+
+===Pronunciation===
+* {{ru-IPA|окра́шивать}}
+
+===Verb===
+{{ru-verb|окра́шивать|impf|pf=окра́сить}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj-1a|impf|окра́шива}}
+
+отключить
+
+==Russian==
+
+===Etymology===
+{{affix|ru|от-|ключи́ть}}
+
+===Pronunciation===
+* {{ru-IPA|отключи́ть}}
+
+===Verb===
+{{ru-verb|отключи́ть|pf|impf=отключа́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj-4b|pf|отключ|past_pasv_part=отключённый}}
+
+
+отключать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|отключи́ть|-а́ть}}
+
+===Pronunciation===
+* {{ru-IPA|отключа́ть}}
+
+===Verb===
+{{ru-verb|отключа́ть|impf|pf=отключи́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj-1a|impf|отключа́}}
+
+
+предотвратить
+
+==Russian==
+
+===Etymology===
+{{affix|ru|пред-|отврати́ть}}
+
+===Pronunciation===
+* {{ru-IPA|предотврати́ть}}
+
+===Verb===
+{{ru-verb|предотврати́ть|pf|impf=предотвраща́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj-4b|pf|предотврат|щ|past_pasv_part=предотвращённый}}
+
+
+предотвращать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|предотврати́ть|-а́ть}}
+
+===Pronunciation===
+* {{ru-IPA|предотвраща́ть}}
+
+===Verb===
+{{ru-verb|предотвраща́ть|impf|pf=предотврати́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj-1a|impf|предотвраща́}}
+
+выговорить
+
+==Russian==
+
+===Etymology===
+{{affix|ru|вы́-|говори́ть}}
+
+===Pronunciation===
+* {{ru-IPA|вы́говорить}}
+
+===Verb===
+{{ru-verb|вы́говорить|pf|impf=выгова́ривать}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj-4a|pf|вы́говор|past_pasv_part=вы́говоренный}}
+
+
+
+выговаривать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|вы́говорить|-ивать}}
+
+===Pronunciation===
+* {{ru-IPA|выгова́ривать}}
+
+===Verb===
+{{ru-verb|выгова́ривать|impf|pf=вы́говорить}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj-1a|impf|выгова́рива}}
+
+
+кружить
+
+==Russian==
+
+===Etymology===
+{{rfe|lang=ru}}
+
+===Pronunciation===
+* {{ru-IPA|кружи́ть}}
+
+===Verb===
+{{ru-verb|кружи́ть|impf|pf=закружи́ть|pf2=окружи́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj-4c|impf|кру́ж|past_pasv_part=кру́женный}} ''or''
+{{ru-conj-4b|impf|круж|past_pasv_part=кру́женный}}
+
+закружить
+
+==Russian==
+
+===Etymology===
+{{rfe|lang=ru}}
+
+===Pronunciation===
+* {{ru-IPA|кружи́ть}}
+
+===Verb===
+{{ru-verb|закружи́ть|pf|impf=кружи́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj-4c|impf|закру́ж|past_pasv_part=закру́женный}} ''or''
+{{ru-conj-4b|impf|закруж|past_pasv_part=закружённый}}
+
+затрагивать
+
+==Russian==
+
+===Alternative forms===
+* {{l|ru|затро́гивать}} {{i|dated}}
+
+===Etymology===
+{{affix|ru|[[затронуть|затро́г-]]|-ивать}}
+
+===Pronunciation===
+* {{ru-IPA|затра́гивать}}
+
+===Verb===
+{{ru-verb|затра́гивать|impf|pf=затро́нуть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj-1a|impf|затра́гива}}
+
+затро́гивать
+
+==Russian==
+
+===Alternative forms===
+* {{l|ru|затра́гивать}} {{i|modern equivalent}}
+
+===Etymology===
+{{affix|ru|[[затронуть|затро́г-]]|-ивать}}
+
+===Pronunciation===
+* {{ru-IPA|затро́гивать}}
+
+===Verb===
+{{ru-verb|затро́гивать|impf|pf=затро́нуть}}
+
+# {{lb|ru|dated}} {{alternative form of|lang=ru|затра́гивать}}
+
+====Conjugation====
+{{ru-conj-1a|impf|затро́гива}}
+
+затронуть
+
+==Russian==
+
+===Etymology===
+{{affix|ru|за-|тро́нуть}}
+
+===Pronunciation===
+* {{ru-IPA|затро́нуть}}
+
+===Verb===
+{{ru-verb|затро́нуть|pf|impf=затра́гивать|impf2=затро́гивать}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj-3a|pf|затро́|1|1|нь|past_pasv_part=затро́нутый}}
+
+
+обработать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|об-|рабо́тать}}
+
+===Pronunciation===
+* {{ru-IPA|обрабо́тать}}
+
+===Verb===
+{{ru-verb|обрабо́тать|pf|impf=обраба́тывать}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj-1a|pf|обрабо́та|past_pasv_part=обрабо́танный}}
+
+обрабатывать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|обрабо́тать|-ывать}}
+
+===Pronunciation===
+* {{ru-IPA|обраба́тывать}}
+
+===Verb===
+{{ru-verb|обраба́тывать|impf|pf=обрабо́тать}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj-1a|impf|обраба́тыва}}
+
+
+ревновать [need a usage example]
+
+==Russian==
+
+===Etymology===
+{{affix|ru|[[ревность|ревн-]]|-ова́ть}}
+
+===Pronunciation===
+* {{ru-IPA|ревнова́ть}}
+
+===Verb===
+{{ru-verb|ревнова́ть|impf}}
+
+# to be [[jealous]] of
+# {{lb|ru|dated|intransitive}} to [[envy]]
+#: {{ru-ux|'''ревнова́ть''' [[слава|сла́ве]] [[свой|своего́]] [[друг|дру́га]]|to envy one's friend's fame|inline=y}}
+
+====Conjugation====
+{{ru-conj-2a|impf|ревнова́|past_pasv_part=ревно́ванный}}
+
+====Derived terms====
+{{top2}}
+''imperfective''
+* (no equivalent)
+* (no equivalent)
+* (no equivalent)
+* (no equivalent)
+* (no equivalent)
+* {{l|ru|соревнова́ть}}
+{{mid2}}
+''perfective''
+* {{l|ru|взревнова́ть}}
+* {{l|ru|возревнова́ть}}
+* {{l|ru|заревнова́ть}}
+* {{l|ru|поревнова́ть}}
+* {{l|ru|приревнова́ть}}
+* (no equivalent)
+{{bottom2}}
+
+
+задействовать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|за-|де́йствовать}}
+
+===Pronunciation===
+* {{ru-IPA|заде́йствовать}}
+
+===Verb===
+{{ru-verb|заде́йствовать|pf}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj-2a|pf|заде́йствова|past_pasv_part=заде́йствованный}}
+
+взаимодействовать [does this have secondary stress?]
+
+==Russian==
+
+===Etymology===
+{{affix|ru|взаимо-|де́йствовать}}
+
+===Pronunciation===
+* {{ru-IPA|взаимоде́йствовать}}
+
+===Verb===
+{{ru-verb|взаимоде́йствовать|impf|pf=провзаимоде́йствовать}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj-2a|impf-intr|взаимоде́йствова}}
+
+
+провзаимодействовать [does this have secondary stress?]
+
+==Russian==
+
+===Etymology===
+{{affix|ru|про-|взаимоде́йствовать}}
+
+===Pronunciation===
+* {{ru-IPA|провзаимоде́йствовать}}
+
+===Verb===
+{{ru-verb|провзаимоде́йствовать|pf|impf=провзаимоде́йствовать}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj-2a|pf|провзаимоде́йствова|past_pasv_part=провзаимоде́йствованный}}
+
+
+
+пересекать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|пересе́чь|-а́ть}}
+
+===Pronunciation===
+* {{ru-IPA|пересека́ть}}
+
+===Verb===
+{{ru-verb|пересека́ть|impf|pf=пересе́чь}}
+
+# to [[intersect]]
+# to [[pierce]] into objects that are arranged in a line
+# to [[move]] across in a transverse direction
+#: {{ux|ru|'''пересека́ть''' [[граница|грани́цу]]|to cross the border|inline=y}}
+# to [[move]] through any space vigorously
+# {{lb|ru|colloquial}} to [[divide]] into many parts
+
+====Conjugation====
+{{ru-conj-1a|impf|пересека́}}
+
+
+перепутать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|пере-|пу́тать}}
+
+===Pronunciation===
+* {{ru-IPA|перепу́тать}}
+
+===Verb===
+{{ru-verb|перепу́тать|pf|impf=перепу́тывать}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj-1a|pf|перепу́та|past_pasv_part=перепу́танный}}
+
+перепутывать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|перепу́тать|-ывать}}
+
+===Pronunciation===
+* {{ru-IPA|перепу́тывать}}
+
+===Verb===
+{{ru-verb|перепу́тывать|impf|pf=перепу́тать}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj-1a|impf|перепу́тыва}}
+
+
+
+предусматриваться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|предусма́тривать|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|предусма́триваться}}
+
+===Verb===
+{{ru-verb|предусма́триваться|impf|pf=предусмотре́ться}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|lang=ru|предусма́тривать}}
+
+====Conjugation====
+{{ru-conj-1a|impf-refl|предусма́трива}}
+
+
+предусмотреться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|предусмотре́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|предусмотре́ться}}
+
+===Verb===
+{{ru-verb|предусмотре́ться|pf|impf=предусма́триваться}}
+
+# {{passive of|lang=ru|предусмотре́ть}}
+
+====Conjugation====
+{{ru-conj-5c|pf-refl|предусмо́тр|предусмотре́}}
+
+====Related terms====
+* {{l|ru|предусмотре́ние}}
+* {{l|ru|предусмотри́тельный}}
+
+
+
+прогнозировать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|прогно́з|-и́ровать}}
+
+===Pronunciation===
+* {{ru-IPA|прогнози́ровать}}
+
+===Verb===
+{{ru-verb|прогнози́ровать|impf|pf=спрогнози́ровать}}
+
+# to [[predict]], to [[prognosticate]]
+
+====Conjugation====
+{{ru-conj-2a|impf|прогнози́рова|past_pasv_part=прогнози́рованный}}
+
+
+спрогнозировать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|с-|прогнози́ровать}}
+
+===Pronunciation===
+* {{ru-IPA|спрогнози́ровать}}
+
+===Verb===
+{{ru-verb|спрогнози́ровать|pf|impf=прогнози́ровать}}
+
+# to [[predict]], to [[prognosticate]]
+
+====Conjugation====
+{{ru-conj-2a|pf|спрогнози́рова|past_pasv_part=спрогнози́рованный}}
+
+
+------------- from here -------------
+
+скинуть
+
+==Russian==
+
+===Etymology===
+{{affix|ru|с-|ки́нуть}}
+
+===Pronunciation===
+* {{ru-IPA|ски́нуть}}
+
+===Verb===
+{{ru-verb|ски́нуть|pf|impf=ски́дывать}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj-3a|pf|ски́|1|1|нь|past_pasv_part=ски́нутый}}
+
+скидывать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|[[скинуть|скид-]]|-ывать}}
+
+===Pronunciation===
+* {{ru-IPA|ски́дывать}}
+
+===Verb===
+{{ru-verb|ски́дывать|impf|pf=ски́нуть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj-1a|impf|ски́дыва}}
+
+уткнуть
+
+==Russian==
+
+===Etymology===
+{{affix|ru|у-|ткнуть}}
+
+===Pronunciation===
+* {{ru-IPA|уткну́ть}}
+
+===Verb===
+{{ru-verb|уткну́ть|pf|impf=утыка́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj-3b|pf|уткн|past_pasv_part=уткну́тый}}
+
+
+утыкать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|у-|ты́кать|-а́ть}}
+
+===Pronunciation===
+* {{ru-IPA|утыка́ть}}
+
+===Verb===
+{{ru-verb|утыка́ть|impf|pf=уткну́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj-1a|impf|утыка́}}
+
+уткнуться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|уткну́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|уткну́ться}}
+
+===Verb===
+{{ru-verb|уткну́ться|pf|impf=утыка́ться}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|lang=ru|уткну́ть}}
+
+====Conjugation====
+{{ru-conj-3b|pf-refl|уткн}}
+
+
+утыкаться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|утыка́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|утыка́ться}}
+
+===Verb===
+{{ru-verb|утыка́ться|impf|pf=уткну́ться}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|lang=ru|утыка́ть}}
+
+====Conjugation====
+{{ru-conj-1a|impf-refl|утыка́}}
+
+захлопнуть
+
+==Russian==
+
+===Etymology===
+{{affix|ru|за-|хло́пнуть}}
+
+===Pronunciation===
+* {{ru-IPA|захло́пнуть}}
+
+===Verb===
+{{ru-verb|захло́пнуть|pf|impf=захло́пывать}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj-3a|pf|захло́п|1|1|ни|past_pasv_part=захло́пнутый}}
+
+захлопывать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|захло́пнуть|-ывать}}
+
+===Pronunciation===
+* {{ru-IPA|захло́пывать}}
+
+===Verb===
+{{ru-verb|захло́пывать|impf|pf=захло́пнуть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj-1a|impf|захло́пыва}}
+
+окликнуть
+
+==Russian==
+
+===Etymology===
+{{affix|ru|о-|кли́кнуть}}
+
+===Pronunciation===
+* {{ru-IPA|окли́кнуть}}
+
+===Verb===
+{{ru-verb|окли́кнуть|pf|impf=оклика́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj-3a|pf|окли́к|1|1|ни|past_pasv_part=окли́кнутый}}
+
+окликать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|окли́кнуть|-а́ть}}
+
+===Pronunciation===
+* {{ru-IPA|оклика́ть}}
+
+===Verb===
+{{ru-verb|оклика́ть|impf|pf=окли́кнуть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj-1a|impf|оклика́}}
+
+
+дохнуть
+
+==Russian==
+
+===Etymology 1===
+
+====Pronunciation====
+* {{ru-IPA|до́хнуть}}
+
+====Verb====
+{{ru-verb|до́хнуть|impf|pf=сдо́хнуть|pf2=издо́хнуть|pf3=подо́хнуть}}
+
+# {{rfdef|lang=ru}}
+
+=====Conjugation=====
+{{ru-conj-3оa|impf-intr|до́х|[(5)(6)]}}
+
+===Etymology 2===
+
+====Pronunciation====
+* {{ru-IPA|дохну́ть}}
+
+====Verb====
+{{ru-verb|дохну́ть|pf|impf=ды́хать}}
+
+# {{rfdef|lang=ru}}
+
+=====Conjugation=====
+{{ru-conj-3b|pf-intr|дохн}}
+
+выдохнуть
+
+==Russian==
+
+===Etymology===
+{{affix|ru|вы́-|дохну́ть}}
+
+===Pronunciation===
+* {{ru-IPA|вы́дохнуть}}
+
+===Verb===
+{{ru-verb|вы́дохнуть|pf|impf=выдыха́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj-3a|pf|вы́дох|1|1|ни|past_pasv_part=вы́дохнутый}}
+
+выдыхать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|вы-|ды́хать|-а́ть}}
+
+===Pronunciation===
+* {{ru-IPA|выдыха́ть}}
+
+===Verb===
+{{ru-verb|выдыха́ть|impf|pf=вы́дохнуть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj-1a|impf|выдыха́}}
+
+откинуться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|отки́нуть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|отки́нуться}}
+
+===Verb===
+{{ru-verb|отки́нуться|pf|impf=отки́дываться}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|lang=ru|отки́нуть}}
+
+====Conjugation====
+{{ru-conj-3a|pf-refl|отки́|1|1|нь}}
+
+откидываться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|отки́дывать|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|отки́дываться}}
+
+===Verb===
+{{ru-verb|отки́дываться|impf|pf=отки́нуться}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|lang=ru|отки́дывать}}
+
+====Conjugation====
+{{ru-conj-1a|impf-refl|отки́дыва}}
+
+прики́нуть
+
+==Russian==
+
+===Etymology===
+{{affix|ru|при-|ки́нуть}}
+
+===Pronunciation===
+* {{ru-IPA|прики́нуть}}
+
+===Verb===
+{{ru-verb|прики́нуть|pf|impf=прики́дывать}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj-3a|pf|прики́|1|1|нь|past_pasv_part=прики́нутый}}
+
+прики́дывать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|прики́нуть|-ывать}}
+
+===Pronunciation===
+* {{ru-IPA|прики́дывать}}
+
+===Verb===
+{{ru-verb|прики́дывать|impf|pf=прики́нуть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj-1a|impf|прики́дыва}}
+
+улечься
+
+==Russian==
+
+===Etymology===
+{{affix|ru|у-|лечь|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|уле́чься}}
+
+===Verb===
+{{ru-verb|уле́чься|pf|impf=укла́дываться}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj-irreg-лечь|pf-refl|у}}
+
+потечь
+
+==Russian==
+
+===Etymology===
+{{affix|ru|по-|течь}}
+
+===Pronunciation===
+* {{ru-IPA|поте́чь}}
+
+===Verb===
+{{ru-verb|поте́чь|pf|impf=течь}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj-8b|pf-intr|потек|поте́чь|past_m=потёк}}
+
+------------- from here -------------
+
+закусить
+
+==Russian==
+
+===Etymology===
+{{affix|ru|за-|-куси́ть}}
+
+===Pronunciation===
+* {{ru-IPA|закуси́ть}}
+
+===Verb===
+{{ru-verb|закуси́ть|pf|impf=заку́сывать}}
+
+# {{rfdef|lang=ru}} [3 defns]
+
+====Conjugation====
+{{ru-conj-4c|pf|заку́с|ppp=заку́шенный}}
+
+
+закусывать
+
+
+==Russian==
+
+===Etymology===
+{{affix|ru|закуси́ть|-ывать}}
+
+===Pronunciation===
+* {{ru-IPA|заку́сывать}}
+
+===Verb===
+{{ru-verb|заку́сывать|impf|pf=закуси́ть}}
+
+# {{rfdef|lang=ru}} [3 defns]
+
+====Conjugation====
+{{ru-conj-1a|impf|заку́сыва}}
+
+
+
+соорудить
+
+==Russian==
+
+===Etymology===
+{{rfe|lang=ru}}
+
+===Pronunciation===
+* {{ru-IPA|сооруди́ть}}
+
+===Verb===
+{{ru-verb|сооруди́ть|pf|impf=сооружа́ть}}
+
+# to [[build]], to [[construct]], to [[erect]]
+
+====Conjugation====
+{{ru-conj-4b|pf|сооруд|ppp=сооружённый}}
+
+сооружать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|сооруди́ть|-а́ть}}
+
+===Pronunciation===
+* {{ru-IPA|сооружа́ть}}
+
+===Verb===
+{{ru-verb|сооружа́ть|impf|pf=сооруди́ть}}
+
+# to [[build]], to [[construct]], to [[erect]]
+
+====Conjugation====
+{{ru-conj-1a|impf|сооружа́}}
+
+
+возмутить
+
+==Russian==
+
+===Etymology===
+{{affix|ru|воз-|мути́ть}}
+
+===Pronunciation===
+* {{ru-IPA|возмути́ть}}
+
+===Verb===
+{{ru-verb|возмути́ть|pf|impf=возмуща́ть}}
+
+# to [[outrage]], to [[anger]], to make [[indignant]], to [[trouble]]
+
+====Conjugation====
+{{ru-conj-4b|pf|возмут|щ|ppp=возмущённый}}
+
+возмущать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|возмути́ть|-а́ть}}
+
+===Pronunciation===
+* {{ru-IPA|возмуща́ть}}
+
+===Verb===
+{{ru-verb|возмуща́ть|impf|pf=возмути́ть}}
+
+# to [[outrage]], to [[anger]], to make [[indignant]], to [[trouble]]
+
+====Conjugation====
+{{ru-conj-1a|impf|возмуща́}}
+
+
+проложить
+
+==Russian==
+
+===Etymology===
+{{affix|ru|про-|ложи́ть}}
+
+===Pronunciation===
+* {{ru-IPA|проложи́ть}}
+
+===Verb===
+{{ru-verb|проложи́ть|pf|impf=прокла́дывать}}
+
+# {{rfdef|lang=ru}} [3 defs]
+
+====Conjugation====
+{{ru-conj-4c|pf|проло́ж|ppp=проло́женный}}
+
+
+прокладывать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|про|[[класть|клад-]]|-ывать}}; forms in {{lang|ru|-кла́дывать}} are used as the imperfectives corresponding to perfectives in {{lang|ru|-ложи́ть}}, and {{m|ru|класть}} is the imperfective corresponding to {{m|ru|положи́ть}}.
+
+===Pronunciation===
+* {{ru-IPA|прокла́дывать}}
+
+===Verb===
+{{ru-verb|прокла́дывать|impf|pf=проложи́ть}}
+
+# {{rfdef|lang=ru}} [3 defs]
+
+====Conjugation====
+{{ru-conj-1a|impf|прокла́дыва}}
+
+
+
+распустить
+
+==Russian==
+
+===Etymology===
+{{affix|ru|рас-|пусти́ть}}
+
+===Pronunciation===
+* {{ru-IPA|распусти́ть}}
+
+===Verb===
+{{ru-verb|распусти́ть|pf|impf=распуска́ть}}
+
+# {{rfdef|lang=ru}} [8 defns]
+
+====Conjugation====
+{{ru-conj-4c|pf|распу́ст|ppp=распу́щенный}}
+
+
+распускать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|рас-|пуска́ть}}
+
+===Pronunciation===
+* {{ru-IPA|распуска́ть}}
+
+===Verb===
+{{ru-verb|распуска́ть|impf|pf=распусти́ть}}
+
+# {{rfdef|lang=ru}} [8 defns]
+
+====Conjugation====
+{{ru-conj-1a|impf|распуска́}}
+
+
+
+
+угостить
+
+==Russian==
+
+===Etymology===
+{{affix|ru|у-|гости́ть}}
+
+===Pronunciation===
+* {{ru-IPA|угости́ть}}
+
+===Verb===
+{{ru-verb|угости́ть|pf|impf=угоща́ть}}
+
+# to [[treat]] (someone to something), to [[entertain]] (someone)
+#: {{ru-ux|'''угости́ть''' [[кто-нибудь|кого́-нибудь]] [[обед|обе́дом]]|to treat someone to dinner}}
+
+====Conjugation====
+{{ru-conj-4b|pf|угост|ppp=угощённый}}
+
+
+угощать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|угости́ть|-а́ть}}
+
+===Pronunciation===
+* {{ru-IPA|угоща́ть}}
+
+===Verb===
+{{ru-verb|угоща́ть|impf|pf=угости́ть}}
+
+# to [[treat]] (someone to something), to [[entertain]] (someone)
+#: {{ru-ux|'''угоща́ть''' [[кто-нибудь|кого́-нибудь]] [[обед|обе́дом]]|to treat someone to dinner}}
+
+====Conjugation====
+{{ru-conj-1a|impf|угоща́}}
+
+
+
+выдавить
+
+==Russian==
+
+===Etymology===
+{{affix|ru|вы́-|дави́ть}}
+
+===Pronunciation===
+* {{ru-IPA|вы́давить}}
+
+===Verb===
+{{ru-verb|вы́давить|pf|impf=выда́вливать}}
+
+# {{rfdef|lang=ru}} [3 defs]
+
+====Conjugation====
+{{ru-conj-4a|pf|вы́дав|ppp=вы́давленный}}
+
+
+
+выдавливать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|вы́давить|-ивать}}
+
+===Pronunciation===
+* {{ru-IPA|выда́вливать}}
+
+===Verb===
+{{ru-verb|выда́вливать|impf|pf=вы́давить}}
+
+# {{rfdef|lang=ru}} [3 defs]
+
+====Conjugation====
+{{ru-conj-1a|impf|выда́влива}}
+
+
+учредить
+
+==Russian==
+
+===Etymology===
+{{rfdef|lang=ru}}
+
+===Pronunciation===
+* {{ru-IPA|учреди́ть}}
+
+===Verb===
+{{ru-verb|учреди́ть|pf|impf=учрежда́ть}}
+
+# to [[establish]], to [[found]], to [[institute]]
+
+====Conjugation====
+{{ru-conj-4b|pf|учред|ppp=учреждённый}}
+
+
+учреждать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|учреди́ть|-а́ть}}
+
+===Pronunciation===
+* {{ru-IPA|учрежда́ть}}
+
+===Verb===
+{{ru-verb|учрежда́ть|impf|pf=учреди́ть}}
+
+# to [[establish]], to [[found]], to [[institute]]
+
+====Conjugation====
+{{ru-conj-1a|impf|учрежда́}}
+
+
+
+------------- from here -------------
+
+
+
+
+экономить
+
+==Russian==
+
+===Etymology===
+{{affix|ru|эконо́мия|-ить}}
+
+===Pronunciation===
+* {{ru-IPA|эконо́мить}}
+
+===Verb===
+{{ru-verb|эконо́мить|impf|pf=сэконо́мить}}
+
+# to [[save]]
+#: {{ru-ux|'''эконо́мить''' [[вре́мя]]|to save time}}
+#: {{ru-ux|'''эконо́мить''' на [[что-нибудь|чём-нибудь]]|to save on something, to spend less on something}}
+# to [[economize]] {{i|imperfective only}}
+
+====Conjugation====
+{{ru-conj|4a+p|impf|эконо́м}}
+
+
+
+сэкономить
+
+==Russian==
+
+===Etymology===
+{{affix|ru|с-|эконо́мить}}
+
+===Pronunciation===
+* {{ru-IPA|сэконо́мить}}
+
+===Verb===
+{{ru-verb|сэконо́мить|pf|impf=эконо́мить}}
+
+# to [[save]]
+#: {{ru-ux|'''сэконо́мить''' [[вре́мя]]|to save time|inline=y}}
+#: {{ru-ux|'''сэконо́мить''' на [[что-нибудь|чём-нибудь]]|to save on something, to spend less on something|inline=y}}
+
+====Conjugation====
+{{ru-conj|4a+p|pf|сэконо́м}}
+
+
+
+
+ухватить
+
+==Russian==
+
+===Etymology===
+{{affix|ru|у-|хвати́ть}}
+
+===Pronunciation===
+* {{ru-IPA|ухвати́ть}}
+
+===Verb===
+{{ru-verb|ухвати́ть|pf|impf=ухва́тывать}}
+
+# {{rfdef|lang=ru}} [3 defns]
+
+====Conjugation====
+{{ru-conj|4c|pf|ухва́т|ppp=ухва́ченный}}
+
+
+ухватывать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|ухвати́ть|-ывать}}
+
+===Pronunciation===
+* {{ru-IPA|ухва́тывать}}
+
+===Verb===
+{{ru-verb|ухва́тывать|impf|pf=ухвати́ть}}
+
+# {{rfdef|lang=ru}} [3 defns]
+
+====Conjugation====
+{{ru-conj|1a|impf|ухва́тыва}}
+
+
+повалить
+
+==Russian==
+
+===Etymology===
+
+===Pronunciation===
+* {{ru-IPA|повали́ть}}
+
+===Verb===
+{{ru-verb|pf|impf=вали́ть}}
+
+# to [[bring down]], to [[topple]], to [[overthrow]]
+
+====Conjugation====
+{{ru-conj|4c+p|pf|пова́л}}
+
+===Verb===
+{{ru-verb|pf}}
+
+# {{lb|ru|colloquial}} {{rfdef|lang=ru}} [2-3 defs; начать идти или падать массой]
+
+====Conjugation====
+{{ru-conj|4b|pf-intr|повал}} ''or''
+{{ru-conj|4c|pf-intr|пова́л}}
+
+
+изволить
+
+==Russian==
+
+===Etymology===
+{{affix|ru|из-|во́ля|-ить}}
+
+===Pronunciation===
+* {{ru-IPA|изво́лить}}
+
+===Verb===
+{{ru-verb|изво́лить|impf}}
+
+# {{lb|ru|dated}} to [[desire]], to [[wish]]
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj-4a|impf-intr|изво́л}}
+
+
+------------- from here -------------
+
+прославить
+
+==Russian==
+
+===Etymology===
+{{affix|ru|про-|сла́вить}}
+
+===Pronunciation===
+* {{ru-IPA|просла́вить}}
+
+===Verb===
+{{ru-verb|просла́вить|pf|impf=прославля́ть|impf2=просла́вливать}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|4a+p|pf|просла́в}}
+
+прославлять
+
+==Russian==
+
+===Alternative forms===
+* {{l|ru|просла́вливать}}
+
+===Etymology===
+{{affix|ru|просла́вить|-я́ть}}
+
+===Pronunciation===
+* {{ru-IPA|прославля́ть}}
+
+===Verb===
+{{ru-verb|прославля́ть|impf|pf=просла́вить}}
+
+# {{rfdef|lang=ru}} [2 defs]
+
+====Conjugation====
+{{ru-conj|1a|impf|прославля́}}
+
+прославливать
+
+==Russian==
+
+===Alternative forms===
+* {{l|ru|прославля́ть}}
+
+===Etymology===
+{{affix|ru|просла́вить|-ивать}}
+
+===Pronunciation===
+* {{ru-IPA|просла́вливать}}
+
+===Verb===
+{{ru-verb|просла́вливать|impf|pf=просла́вить}}
+
+# {{rfdef|lang=ru}} [2 defs]
+
+====Conjugation====
+{{ru-conj|1a|impf|просла́влива}}
+
+совместить
+
+==Russian==
+
+===Etymology===
+{{affix|ru|сов-|мести́ть}}
+
+===Pronunciation===
+* {{ru-IPA|совмести́ть}}
+
+===Verb===
+{{ru-verb|совмести́ть|pf|impf=совмеща́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|4b+p|pf|совмест}}
+
+совмещать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|совмести́ть|-я́ть}}
+
+===Pronunciation===
+* {{ru-IPA|совмеща́ть}}
+
+===Verb===
+{{ru-verb|совмеща́ть|impf|pf=совмести́ть}}
+
+# {{rfdef|lang=ru}} [2 defs]
+
+====Conjugation====
+{{ru-conj|1a|impf|совмеща́}}
+
+разгромить
+
+==Russian==
+
+===Etymology===
+{{affix|ru|раз-|громи́ть}}
+
+===Pronunciation===
+* {{ru-IPA|разгроми́ть}}
+
+===Verb===
+{{ru-verb|разгроми́ть|pf|impf=громи́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|4b[(8)]|pf|разгром}}
+
+обследовать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|об-|сле́довать}}
+
+===Pronunciation===
+* {{ru-IPA|обсле́довать}}
+
+===Verb===
+{{ru-verb|обсле́довать|both}}
+
+# {{rfdef|lang=ru}} [2 defs]
+
+====Conjugation====
+''imperfective''
+{{ru-conj|2a+p|impf|обсле́дова}}
+''perfective''
+{{ru-conj|2a+p|pf|обсле́дова}}
+
+====Related terms====
+* {{l|ru|обсле́дование}}
+
+скомандовать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|с-|кома́ндовать}}
+
+===Pronunciation===
+* {{ru-IPA|скома́ндовать}}
+
+===Verb===
+{{ru-verb|скома́ндовать|pf}}
+
+# to [[command]], to [[order]]
+
+====Conjugation====
+{{ru-conj|2a+p|pf|скома́ндова}}
+
+нащупать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|на-|щу́пать}}
+
+===Pronunciation===
+* {{ru-IPA|нащу́пать}}
+
+===Verb===
+{{ru-verb|нащу́пать|pf|impf=нащу́пывать}}
+
+# {{rfdef|lang=ru}} [4 defs]
+
+====Conjugation====
+{{ru-conj|1a+p|pf|нащу́па}}
+
+нащупывать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|нащу́пать|-ывать}}
+
+===Pronunciation===
+* {{ru-IPA|нащу́пывать}}
+
+===Verb===
+{{ru-verb|нащу́пывать|impf|pf=нащу́пать}}
+
+# {{rfdef|lang=ru}} [4 defs]
+
+====Conjugation====
+{{ru-conj|1a|impf|нащу́пыва}}
+
+свисать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|сви́снуть|-а́ть}}
+
+===Pronunciation===
+* {{ru-IPA|свиса́ть}}
+
+===Verb===
+{{ru-verb|свиса́ть|impf|pf=сви́снуть}}
+
+# to [[droop]], to [[hang down]], to [[dangle]]
+# to [[slouch]]
+
+====Conjugation====
+{{ru-conj|1a|impf-intr|свиса́}}
+
+свиснуть
+
+==Russian==
+
+===Etymology===
+{{affix|ru|с-|ви́снуть}}
+
+===Pronunciation===
+* {{ru-IPA|сви́снуть}}
+
+===Verb===
+{{ru-verb|сви́снуть|pf|impf=свиса́ть}}
+
+# to [[droop]], to [[hang down]], to [[dangle]]
+# to [[slouch]]
+
+====Conjugation====
+{{ru-conj|3°a|pf-intr|сви́с}}
+
+------------- from here -------------
+
+блеснуть
+
+==Russian==
+
+===Etymology===
+{{rfe|lang=ru}}
+
+===Pronunciation===
+* {{ru-IPA|блесну́ть}}
+
+===Verb===
+{{ru-verb|блесну́ть|pf|impf=блесте́ть}}
+
+# {{rfdef|lang=ru}} [3 defs]
+
+====Conjugation====
+{{ru-conj|3b|pf-intr|блес}}
+
+====Related terms====
+* {{l|ru|блеск}}
+* {{l|ru|блёстки}}
+* {{l|ru|блестя́щий}}
+* {{l|ru|блестя́ще}}
+
+блестеть
+
+==Russian==
+
+===Etymology===
+{{rfe|lang=ru}}
+
+===Pronunciation===
+* {{ru-IPA|блесну́ть}}
+
+===Verb===
+{{ru-verb|блесну́ть|pf|impf=блесте́ть}}
+
+# {{rfdef|lang=ru}} [3 defs]
+
+====Conjugation====
+{{ru-conj|3b|pf-intr|блес}}
+
+====Related terms====
+* {{l|ru|блеск}}
+* {{l|ru|блёстки}}
+* {{l|ru|блестя́щий}}
+* {{l|ru|блестя́ще}}
+
+
+умолкнуть
+
+==Russian==
+
+===Etymology===
+{{affix|ru|у-|мо́лкнуть}}
+
+===Pronunciation===
+* {{ru-IPA|умо́лкнуть}}
+
+===Verb===
+{{ru-verb|умо́лкнуть|pf|impf=умолка́ть}}
+
+# {{rfdef|lang=ru}} [2 defs]
+
+====Conjugation====
+{{ru-conj|3°a[(6)]|pf-intr|умо́лк}}
+
+====Related terms====
+* {{l|ru|у́молк}}
+* {{l|ru|ума́лчивать|g=impf}}, {{l|ru|умолча́ть|g=pf}}
+* {{l|ru|умолча́ние}}
+
+умолкать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|умо́лкнуть|-а́ть}}
+
+===Pronunciation===
+* {{ru-IPA|умолка́ть}}
+
+===Verb===
+{{ru-verb|умолка́ть|impf|pf=умо́лкнуть}}
+
+# {{rfdef|lang=ru}} [2 defs]
+
+====Conjugation====
+{{ru-conj|1a|impf-intr|умолка́}}
+
+скользнуть
+
+==Russian==
+
+===Etymology===
+{{rfdef|lang=ru}}
+
+===Pronunciation===
+* {{ru-IPA|скользну́ть}}
+
+===Verb===
+{{ru-verb|скользну́ть|pf|impf=скользи́ть}}
+
+# {{rfdef|lang=ru}} [5 defs]
+
+====Conjugation====
+{{ru-conj|3b|pf-intr|скользн}}
+
+====Related terms====
+* {{l|ru|скольже́ние}}
+* {{l|ru|ско́льзкий}}
+* {{l|ru|ско́льзко}}
+* {{l|ru|скользя́щий}}
+
+скользить
+
+==Russian==
+
+===Etymology===
+{{rfdef|lang=ru}}
+
+===Pronunciation===
+* {{ru-IPA|скользи́ть}}
+
+===Verb===
+{{ru-verb|скользи́ть|impf|pf=скользну́ть}}
+
+# {{rfdef|lang=ru}} [3 defs]
+
+====Conjugation====
+{{ru-conj|4b|impf-intr|скольз}}
+
+====Related terms====
+* {{l|ru|скольже́ние}}
+* {{l|ru|ско́льзкий}}
+* {{l|ru|ско́льзко}}
+* {{l|ru|скользя́щий}}
+
+
+накинуть
+
+==Russian==
+
+===Etymology===
+{{affix|ru|на-|ки́нуть}}
+
+===Pronunciation===
+* {{ru-IPA|наки́нуть}}
+
+===Verb===
+{{ru-verb|наки́нуть|pf|impf=наки́дывать}}
+
+# {{rfdef|lang=ru}} [2 defs]
+
+====Conjugation====
+{{ru-conj|3a+p|pf|наки́|1|1|нь}}
+
+====Derived terms====
+* {{l|ru|наки́дываться|g=impf}}, {{l|ru|наки́нуться|g=pf}}
+
+====Related terms====
+* {{l|ru|наки́дка}}
+
+накидывать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|[[наки́нуть|наки́д-]]|-ывать}}
+
+===Pronunciation===
+* {{ru-IPA|наки́дывать}}
+
+===Verb===
+{{ru-verb|наки́дывать|impf|pf=наки́нуть}}
+
+# {{rfdef|lang=ru}} [2 defs]
+
+====Conjugation====
+{{ru-conj|1a|impf|наки́дыва}}
+
+------------- from here -------------
+
+воскреснуть
+
+==Russian==
+
+===Etymology===
+Compare {{m|ru|воскреси́ть||to [[resurrect]]}}.
+
+===Pronunciation===
+* {{ru-IPA|воскре́снуть}}
+
+===Verb===
+{{ru-verb|воскре́снуть|pf|impf=воскреса́ть}}
+
+# {{rfdef|lang=ru}} [2 defs]
+
+====Conjugation====
+{{ru-conj|3°a[(6)]|pf-intr|воскре́с}}
+
+====Related terms====
+* {{l|ru|воскреша́ть|g=pf}}, {{l|ru|воскреси́ть|g=pf}}
+* {{l|ru|воскресе́ние}}
+* {{l|ru|воскресе́нье}}
+* {{l|ru|воскре́сный}}
+
+воскресать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|воскре́снуть|-а́ть}}
+
+===Pronunciation===
+* {{ru-IPA|воскреса́ть}}
+
+===Verb===
+{{ru-verb|воскреса́ть|impf|pf=воскре́снуть}}
+
+# {{rfdef|lang=ru}} [2 defs]
+
+====Conjugation====
+{{ru-conj|1a|impf-intr|воскреса́}}
+
+====Related terms====
+* {{l|ru|воскреша́ть|g=pf}}, {{l|ru|воскреси́ть|g=pf}}
+* {{l|ru|воскресе́ние}}
+* {{l|ru|воскресе́нье}}
+* {{l|ru|воскре́сный}}
+
+выкрикнуть
+
+==Russian==
+
+===Etymology===
+{{affix|ru|вы́-|кри́кнуть}}
+
+===Pronunciation===
+* {{ru-IPA|вы́крикнуть}}
+
+===Verb===
+{{ru-verb|вы́крикнуть|pf|impf=выкри́кивать}}
+
+# {{rfdef|lang=ru}} [2 defs]
+
+====Conjugation====
+{{ru-conj|3a+p|pf|вы́крик|1|1}}
+
+====Related terms====
+* {{l|ru|вы́крик}}
+
+выкрикивать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|вы́крикнуть|-ивать}}
+
+===Pronunciation===
+* {{ru-IPA|выкри́кивать}}
+
+===Verb===
+{{ru-verb|выкри́кивать|impf|pf=вы́крикнуть}}
+
+# {{rfdef|lang=ru}} [2 defs]
+
+====Conjugation====
+{{ru-conj|1a|impf|выкри́кива}}
+
+====Related terms====
+* {{l|ru|вы́крик}}
+
+воскресить
+
+==Russian==
+
+===Etymology===
+{{affix|ru|воскре́снуть|-и́ть}}
+
+===Pronunciation===
+* {{ru-IPA|воскреси́ть}}
+
+===Verb===
+{{ru-verb|воскреси́ть|pf|impf=воскреша́ть}}
+
+# {{rfdef|lang=ru}} [4 defs]
+
+====Conjugation====
+{{ru-conj|4b+p|pf|воскрес}}
+
+====Related terms====
+* {{l|ru|воскреса́ть|g=pf}}, {{l|ru|воскре́снуть|g=pf}}
+* {{l|ru|воскресе́ние}}
+* {{l|ru|воскресе́нье}}
+* {{l|ru|воскре́сный}}
+
+воскреша́ть
+
+==Russian==
+
+===Etymology===
+{{affix|ru|воскреси́ть|-а́ть}}
+
+===Pronunciation===
+* {{ru-IPA|воскреша́ть}}
+
+===Verb===
+{{ru-verb|воскреша́ть|impf|pf=воскреси́ть}}
+
+# {{rfdef|lang=ru}} [4 defs]
+
+====Conjugation====
+{{ru-conj|1a|impf|воскреша́}}
+
+====Related terms====
+* {{l|ru|воскреса́ть|g=pf}}, {{l|ru|воскре́снуть|g=pf}}
+* {{l|ru|воскресе́ние}}
+* {{l|ru|воскресе́нье}}
+* {{l|ru|воскре́сный}}
+
+------------- from here -------------
+
+вывернуть
+
+==Russian==
+
+===Etymology===
+{{affix|ru|вы́-|верну́ть}}
+
+===Pronunciation===
+* {{ru-IPA|вы́вернуть}}
+
+===Verb===
+{{ru-verb|вы́вернуть|pf|impf=вывёртывать|impf2=вывора́чивать}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|3a+p|pf|вы́вер}}
+
+===Synonyms===
+* {{sense|twist, turn inside out}} {{l|ru|вы́воротить}}
+
+====Derived terms====
+* {{l|ru|вывёртываться|g=impf}}, {{l|ru|вы́вернуться|g=pf}}
+
+====Related terms====
+* {{l|ru|вы́верт}}
+
+выворотить
+
+==Russian==
+
+===Etymology===
+{{affix|ru|вы́-|вороти́ть}}
+
+===Pronunciation===
+* {{ru-IPA|вы́воротить}}
+
+===Verb===
+{{ru-verb|вы́воротить|pf|impf=вывора́чивать}}
+
+# {{rfdef|lang=ru}} [3 defs]
+
+====Conjugation====
+{{ru-conj|4a+p|pf|вы́ворот}}
+
+====Synonyms====
+* {{sense|twist, turn inside out}} {{l|ru|вы́вернуть}}
+
+выворачивать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|вы́воротить|-ивать}}
+
+===Pronunciation===
+* {{ru-IPA|вывора́чивать}}
+
+===Verb===
+{{ru-verb|вывора́чивать|impf|pf=вы́воротить}}
+
+# {{rfdef|lang=ru}} [3 defs]
+
+====Conjugation====
+{{ru-conj|1a|impf|вывора́чива}}
+
+====Synonyms====
+* {{sense|twist, turn inside out}} {{l|ru|вывёртывать}}
+
+вывёртывать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|[[вы́вернуть|вы́верт-]]|-ывать}}
+
+===Pronunciation===
+* {{ru-IPA|вывёртывать}}
+
+===Verb===
+{{ru-verb|вывёртывать|impf|pf=вы́вернуть}}
+
+# {{rfdef|lang=ru}} [3 defs]
+
+====Conjugation====
+{{ru-conj|1a|impf|вывёртыва}}
+
+====Synonyms====
+* {{sense|twist, turn inside out}} {{l|ru|вывора́чивать}}
+
+вывертывать
+
+==Russian==
+
+===Verb===
+{{ru-verb-alt-ё|вывёртывать}}
+
+рявкнуть
+
+==Russian==
+
+===Etymology===
+{{rfe|lang=ru}}
+
+===Pronunciation===
+* {{ru-IPA|ря́вкнуть}}
+
+===Verb===
+{{ru-verb|ря́вкнуть|pf|impf=ря́вкать}}
+
+# to [[bellow]], to [[roar]]
+
+====Conjugation====
+{{ru-conj|3a|pf-intr|ря́вк}}
+
+рявкать
+
+==Russian==
+
+===Etymology===
+{{rfe|lang=ru}}
+
+===Pronunciation===
+* {{ru-IPA|ря́вкать}}
+
+===Verb===
+{{ru-verb|ря́вкать|impf|pf=ря́вкнуть}}
+
+# to [[bellow]], to [[roar]]
+
+====Conjugation====
+{{ru-conj|1a|impf-intr|ря́вка}}
+
+грянуть
+
+==Russian==
+
+===Etymology===
+{{rfe|lang=ru}}
+
+===Pronunciation===
+* {{ru-IPA|гря́нуть}}
+
+===Verb===
+{{ru-verb|гря́нуть|pf}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|3a|pf-intr|гря́}}
+
+закинуть
+
+==Russian==
+
+===Etymology===
+{{affix|ru|за-|ки́нуть}}
+
+===Pronunciation===
+* {{ru-IPA|заки́нуть}}
+
+===Verb===
+{{ru-verb|заки́нуть|pf|impf=заки́дывать}}
+
+# {{rfdef|lang=ru}} [5 defs]
+
+====Conjugation====
+{{ru-conj|3a+p|pf|заки́}}
+
+закидывать
+
+==Russian==
+
+===Pronunciation===
+* {{ru-IPA|заки́дывать}}
+
+===Etymology 1===
+{{affix|ru|[[заки́нуть|наки́д-]]|-ывать}}
+
+====Verb====
+{{ru-verb|заки́дывать|impf|pf=заки́нуть}}
+
+# {{rfdef|lang=ru}} [5 defs]
+
+=====Conjugation=====
+{{ru-conj|1a|impf|заки́дыва}}
+
+===Etymology 2===
+{{affix|ru|закида́ть|-ывать}}
+
+====Verb====
+{{ru-verb|заки́дывать|impf|pf=закида́ть}}
+
+# {{rfdef|lang=ru}} [3 defs]
+
+=====Conjugation=====
+{{ru-conj|1a|impf|заки́дыва}}
+
+закидать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|за-|кида́ть}}
+
+===Pronunciation===
+* {{ru-IPA|закида́ть}}
+
+===Verb===
+{{ru-verb|закида́ть|pf|impf=заки́дывать}}
+
+# {{rfdef|lang=ru}} [3 defs]
+
+====Conjugation====
+{{ru-conj|1a+p|pf|закида́}}
+
+выдернуть
+
+==Russian==
+
+===Etymology===
+{{affix|ru|вы́-|дёрнуть}}
+
+===Pronunciation===
+* {{ru-IPA|вы́дернуть}}
+
+===Verb===
+{{ru-verb|вы́дернуть|pf|impf=выдёргивать}}
+
+# to [[pull out]]
+
+====Conjugation====
+{{ru-conj|3a+p|pf|вы́дер}}
+
+выдёргивать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|[[вы́дернуть|вы́дерг-]]|-ивать}}
+
+===Pronunciation===
+* {{ru-IPA|выдёргивать}}
+
+===Verb===
+{{ru-verb|выдёргивать|impf|pf=вы́дернуть}}
+
+# to [[pull out]]
+
+====Conjugation====
+{{ru-conj|1a|impf|выдёргива}}
+
+выдергивать
+
+==Russian==
+
+===Verb===
+{{ru-verb-alt-ё|выдёргивать}}
+
+опровергнуть
+
+==Russian==
+
+===Etymology===
+{{affix|ru|опро-|-ве́ргнуть}}
+
+===Pronunciation===
+* {{ru-IPA|опрове́ргнуть}}
+
+===Verb===
+{{ru-verb|опрове́ргнуть|pf|impf=опроверга́ть}}
+
+# {{rfdef|lang=ru}} [2 defs]
+
+====Conjugation====
+{{ru-conj|3°a[(5)(6)]+p|pf|опрове́рг}}
+
+опровергать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|опрове́ргнуть|-а́ть}}
+
+===Pronunciation===
+* {{ru-IPA|опроверга́ть}}
+
+===Verb===
+{{ru-verb|опроверга́ть|impf|pf=опрове́ргнут}}
+
+# {{rfdef|lang=ru}} [2 defs]
+
+====Conjugation====
+{{ru-conj|1a|impf|опроверга́}}
+
+перевернуться
+
+==Russian==
+
+===Alternative forms===
+* {{l|ru|перевороти́ться}} {{i|colloquial}}
+
+===Etymology===
+{{affix|ru|переверну́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|переверну́ться}}
+
+===Verb===
+{{ru-verb|переверну́ться|pf|impf=перевёртываться|impf2=перевора́чиваться}}
+
+# {{rfdef|lang=ru}} [3 defs]
+# {{passive of|lang=ru|переверну́ть}}
+
+====Conjugation====
+{{ru-conj|3b|pf|переверн}}
+
+====Related terms====
+* {{l|ru|перевёртывание}}
+* {{l|ru|переверте́ть}}
+
+переворотиться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|перевороти́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|перевороти́ться}}
+
+===Verb===
+{{ru-verb|перевороти́ться|pf|impf=перевора́чиваться}}
+
+# {{lb|ru|colloquial}} {{alternative form of|переверну́ться}}
+# {{passive of|lang=ru|перевороти́ть}}
+
+====Conjugation====
+{{ru-conj|4c-refl|pf|переворо́т}}
+
+переворачиваться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|перевора́чивать|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|перевора́чиваться}}
+
+===Verb===
+{{ru-verb|перевора́чиваться|impf|pf=перевороти́ться}}
+
+# {{alternative form of|lang=ru|перевёртываться}}
+# {{passive of|lang=ru|перевора́чивать}}
+
+====Conjugation====
+{{ru-conj|1a|impf-refl|перевора́чива}}
+
+перевёртываться
+
+==Russian==
+
+===Alternative forms===
+* {{l|ru|перевора́чиваться}}
+
+===Etymology===
+{{affix|ru|перевёртывать|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|перевёртываться}}
+
+===Verb===
+{{ru-verb|перевёртываться|impf|pf=переверну́ться}}
+
+# {{rfdef|lang=ru}} [3 defs]
+# {{passive of|lang=ru|перевёртывать}}
+
+====Conjugation====
+{{ru-conj|1a|impf-refl|перевёртыва}}
+
+====Related terms====
+* {{l|ru|перевёртывание}}
+* {{l|ru|переверте́ть}}
+
+перевертываться
+
+==Russian==
+
+===Verb===
+{{ru-verb-alt-ё|перевёртываться}}
+
+дёрнуться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|дёрнуть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|дёрнуться}}
+
+===Verb===
+{{ru-verb|дёрнуться|pf|impf=дёргаться}}
+
+# {{rfdef|lang=ru}} [4 defs]
+# {{passive of|lang=ru|дёрнуть}}
+
+====Conjugation====
+{{ru-conj|3а|pf-refl|дёр}}
+
+дёргаться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|дёргать|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|дёргаться}}
+
+===Verb===
+{{ru-verb|дёргаться|impf|pf=дёрнуться}}
+
+# {{rfdef|lang=ru}} [2 defs]
+# {{passive of|lang=ru|дёргать}}
+
+====Conjugation====
+{{ru-conj|1a|impf-refl|дёрга}}
+
+дергаться
+
+==Russian==
+
+===Verb===
+{{ru-verb-alt-ё|дёргаться|impf}}
+
+дернуться
+
+==Russian==
+
+===Verb===
+{{ru-verb-alt-ё|дёрнуться|pf}}
+
+------------- from here -------------
+
+надвигаться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|надвига́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|надвига́ться}}
+
+===Verb===
+{{ru-verb|надвига́ться|impf|pf=надви́нутся}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|надвига́ть|lang=ru}}
+
+====Conjugation====
+{{ru-conj|1a|impf-refl|надвига́}}
+
+====Synonyms====
+* {{sense|FIXME#1}} {{l|ru|наполза́ть}}, {{l|ru|находи́ть}}
+* {{sense|FIXME#2}} {{l|ru|подступа́ть}}
+* {{sense|FIXME#3}} {{l|ru|приближа́ться}}, {{l|ru|наступа́ть}}
+
+====Antonyms====
+* {{sense|FIXME#1}} {{l|ru|сдвига́ться}}, {{l|ru|отодвига́ться}}
+* {{sense|FIXME#2}} {{l|ru|отодвига́ться}}
+
+====Related terms====
+* {{l|ru|надвига́ющийся}}
+
+надвинуться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|надви́нуть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|надви́нуться}}
+
+===Verb===
+{{ru-verb|надви́нуться|impf|pf=надвига́ться}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|надви́нуть|lang=ru}}
+
+====Conjugation====
+{{ru-conj|3a|pf-refl|надви́}}
+
+====Synonyms====
+* {{sense|FIXME#1}} {{l|ru|наползти́}}, {{l|ru|найти́}}
+* {{sense|FIXME#2}} {{l|ru|подступи́ть}}
+* {{sense|FIXME#3}} {{l|ru|прибли́зиться}}, {{l|ru|наступи́ть}}
+
+====Antonyms====
+* {{sense|FIXME#1}} {{l|ru|сдви́нуться}}, {{l|ru|отодви́нуться}}
+* {{sense|FIXME#2}} {{l|ru|отодви́нуться}}
+
+====Related terms====
+* {{l|ru|надвига́ющийся}}
+
+напрячься
+
+==Russian==
+
+===Etymology===
+{{affix|ru|напря́чь|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|напря́чься}}
+
+===Verb===
+{{ru-verb|напря́чься|pf|impf=напряга́ться}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|напря́чь|lang=ru}}
+
+====Conjugation====
+{{ru-conj|8b|pf-refl|напряг|напря́чь|past_m=напря́г}}
+
+====Synonyms====
+* {{sense|FIXME#1}} {{l|ru|напру́житься}}
+
+====Antonyms====
+* {{sense|FIXME#1, FIXME#2}} {{l|ru|рассла́биться}}
+
+====Related terms====
+* {{l|ru|напяже́ние}}
+* {{l|ru|напряжённый}}
+* {{l|ru|напряжённо}}
+* {{l|ru|напряжённость}}
+
+
+напрягаться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|напряга́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|напряга́ться}}
+
+===Verb===
+{{ru-verb|напряга́ться|impf|pf=напря́чься}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|напряга́ть|lang=ru}}
+
+====Conjugation====
+{{ru-conj-1a|impf-refl|напряга́}}
+
+====Synonyms====
+* {{sense|FIXME#1}} {{l|ru|напру́живаться}}
+
+====Antonyms====
+* {{sense|FIXME#1, FIXME#2}} {{l|ru|расслабля́ться}}
+
+====Related terms====
+* {{l|ru|напяже́ние}}
+* {{l|ru|напряжённый}}
+* {{l|ru|напряжённо}}
+* {{l|ru|напряжённость}}
+
+
+посоветоваться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|посове́товать|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|посове́товаться}}
+
+===Verb===
+{{ru-verb|посове́товаться|pf|pf=сове́товаться}}
+
+# to [[consult]]
+# {{rfdef|lang=ru}}
+# {{passive of|посове́товать|lang=ru}}
+
+====Conjugation====
+{{ru-conj-2a|pf-refl|посове́това}}
+
+====Synonyms====
+* {{sense|FIXME#1}} {{l|ru|проконсульти́роваться}}
+
+====Related terms====
+* {{l|ru|сове́т}}
+* {{l|ru|сове́тник}}
+* {{l|ru|сове́тчик}}
+
+советоваться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|сове́товать|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|сове́товаться}}
+
+===Verb===
+{{ru-verb|сове́товаться|impf|pf=посове́товаться}}
+
+# to [[consult]]
+# {{rfdef|lang=ru}}
+# {{passive of|сове́товать|lang=ru}}
+
+====Conjugation====
+{{ru-conj-2a|pf-refl|сове́това}}
+
+====Synonyms====
+* {{sense|FIXME#1}} {{l|ru|консульти́роваться}}
+* {{sense|FIXME#2}} {{l|ru|совеща́ться}}
+
+====Related terms====
+* {{l|ru|сове́т}}
+* {{l|ru|сове́тник}}
+* {{l|ru|сове́тчик}}
+
+специализироваться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|специализи́ровать|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|специализи́роваться}}
+
+===Verb===
+{{ru-verb|специализи́роваться|both}}
+
+# to [[specialize]] in ({{m|ru|в}} + {{glink|prepositional}} or {{m|ru|по}})
+# {{passive of|специализи́ровать|lang=ru}}
+
+====Conjugation====
+''imperfective''
+{{ru-conj|2a|impf-refl|специализи́рова}}
+''perfective''
+{{ru-conj|2a|pf-refl|специализи́рова}}
+
+------------- from here -------------
+
+топтаться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|топта́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|топта́ться}}
+
+===Verb===
+{{ru-verb|топта́ться|impf}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|lang=ru|топта́ть}}
+
+====Conjugation====
+{{ru-conj|6c|impf-refl|то́пт}}
+
+====Synonyms====
+* {{sense|sense#1}} {{l|ru|переминаться}}
+* {{sense|sense#2}} {{l|ru|отираться}}, {{l|ru|тере́ться}}
+
+------------- from here -------------
+
+==Russian==
+
+===Etymology===
+{{rfe|lang=ru}}
+
+===Pronunciation===
+* {{ru-IPA|топта́ть}}
+
+===Verb===
+{{ru-verb|топта́ть|impf}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|6c|impf|то́пт|ppp=-}}
+
+====Synonyms====
+* {{sense|sense#2}} {{l|ru|ута́птывать}}
+* {{sense|sense#3}} {{l|ru|раста́птывать}}
+
+====Related terms====
+* {{l|ru|топота́ть}}, {{l|ru|то́пот}}
+* {{l|ru|топта́ние}}
+* {{l|ru|топта́ние на ме́сте}}
+* {{l|ru|топча́к}}
+
+------------- from here -------------
+
+запрещаться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|запреща́ть|-ся}}
+
+===Pronunciation=== 
+* {{ru-IPA|запреща́ться}}
+
+===Verb===
+{{ru-verb|запреща́ться|impf|pf=запрети́ться}}
+
+# {{lb|ru|imperfective only}} to be [[prohibited]], to be [[forbidden]], to be [[banned]]
+# {{passive of|lang=ru|запреща́ть}}
+
+====Conjugation====
+{{ru-conj|1a|impf-refl|запреща́}}
+
+====Antonyms====
+* {{l|ru|позволя́ться}}, {{l|ru|разреша́ться}}
+
+====Related terms====
+* {{l|ru|запре́т}}
+* {{l|ru|запре́тный}}
+* {{l|ru|запреще́ние}}
+
+запретиться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|запрети́ть|-ся}}
+
+===Pronunciation=== 
+* {{ru-IPA|запрети́ться}}
+
+===Verb===
+{{ru-verb|запрети́ться|pf|impf=запреща́ться}}
+
+# to be [[subject]] to a [[ban]]
+# {{passive of|lang=ru|запрети́ть}}
+
+====Conjugation====
+{{ru-conj|4bщ|pf-refl|запрет}}
+
+====Antonyms====
+* {{l|ru|позво́литься}}, {{l|ru|разреши́ться}}
+
+====Related terms====
+* {{l|ru|запре́т}}
+* {{l|ru|запре́тный}}
+* {{l|ru|запреще́ние}}
+
+навалиться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|навали́ть|-ся}}
+
+===Pronunciation=== 
+* {{ru-IPA|навали́ться}}
+
+===Verb===
+{{ru-verb|навали́ться|pf|impf=нава́ливаться}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|lang=ru|навали́ть}}
+
+====Conjugation====
+{{ru-conj|4c|pf-refl|нава́л}}
+
+====Synonyms====
+* {{sense|lean}} {{l|ru|нале́чь}}
+
+====Related terms====
+* {{l|ru|нава́лом}}
+
+наваливаться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|нава́ливать|-ся}}
+
+===Pronunciation=== 
+* {{ru-IPA|нава́ливаться}}
+
+===Verb===
+{{ru-verb|нава́ливаться|pf|impf=навали́ться}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|lang=ru|нава́ливать}}
+
+====Conjugation====
+{{ru-conj|1a|pf-refl|нава́лива}}
+
+====Synonyms====
+* {{sense|lean}} {{l|ru|налега́ть}}
+
+====Related terms====
+* {{l|ru|нава́лом}}
+
+навалить
+
+==Russian==
+
+===Etymology===
+{{affix|ru|на-|вали́ть}}
+
+===Pronunciation=== 
+* {{ru-IPA|навали́ть}}
+
+===Verb===
+{{ru-verb|навали́ть|pf|impf=нава́ливать}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|4c+p|pf|нава́л}}
+
+====Derived terms====
+* {{l|ru|нава́ливаться|g=impf}}, {{l|ru|навали́ться|g=pf}}
+
+====Related terms====
+* {{l|ru|нава́лом}}
+
+наваливать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|навали́ть|-ивать}}
+
+===Pronunciation=== 
+* {{ru-IPA|нава́ливать}}
+
+===Verb===
+{{ru-verb|нава́ливать|pf|impf=навали́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|1a|pf|нава́лива}}
+
+====Derived terms====
+* {{l|ru|нава́ливаться|g=impf}}, {{l|ru|навали́ться|g=pf}}
+
+====Related terms====
+* {{l|ru|нава́лом}}
+
+------------- from here -------------
+
+перекрыть
+
+==Russian==
+
+===Etymology===
+{{affix|ru|пере-|крыть}}
+
+===Pronunciation===
+* {{ru-IPA|перекры́ть}}
+
+===Verb===
+{{ru-verb|перекры́ть|pf|impf=перекрыва́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|12a+p|pf|перекры́|перекро́}}
+
+перекрывать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|перекры́ть|-вать}}
+
+===Pronunciation===
+* {{ru-IPA|перекрыва́ть}}
+
+===Verb===
+{{ru-verb|перекрыва́ть|impf|pf=перекры́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|1a|impf|перекрыва́}}
+
+
+потереть
+
+==Russian==
+
+===Etymology===
+{{affix|ru|по-|тере́ть}}
+
+===Pronunciation===
+* {{ru-IPA|потере́ть}}
+
+===Verb===
+{{ru-verb|потере́ть|pf|impf=тере́ть}}
+
+# to [[rub]]
+
+====Conjugation====
+{{ru-conj|9b+p|pf|потёр|потр}}
+
+
+сулить
+
+==Russian==
+
+===Etymology===
+{{rfe|lang=ru}}
+
+===Pronunciation===
+* {{ru-IPA|сули́ть}}
+
+===Verb===
+{{ru-verb|сули́ть|impf|pf=посули́ть}}
+
+# {{lb|ru|literary|or|dated}} to [[promise]]
+# {{lb|ru|imperfective only}} to [[foreshadow]], to [[portend]], to [[bode]]
+# {{lb|ru|imperfective only}} to [[predict]], to [[prophesy]]
+
+====Conjugation====
+{{ru-conj|4b+p|impf|сул}}
+
+====Synonyms====
+* {{l|ru|обеща́ть}}
+* {{l|ru|предвеща́ть}}, {{l|ru|обеща́ть}}
+* {{l|ru|предска́зывать}}, {{l|ru|проро́чить}}
+
+посули́ть
+
+==Russian==
+
+===Etymology===
+{{affix|ru|по-|сули́ть}}
+
+===Pronunciation===
+* {{ru-IPA|посули́ть}}
+
+===Verb===
+{{ru-verb|посули́ть|pf|impf=сули́ть}}
+
+# {{lb|ru|literary|or|dated}} to [[promise]]
+
+====Conjugation====
+{{ru-conj|4b+p|pf|посул}}
+
+------------- from here -------------
+
+раскрыться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|раскры́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|раскры́ться}}
+
+===Verb===
+{{ru-verb|раскры́ться|pf|impf=раскрыва́ться}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|lang=ru|раскры́ть}}
+
+====Conjugation====
+{{ru-conj|12a|pf-refl|раскры́|раскро́}}
+
+====Synonyms====
+* {{sense|sense#1}} {{l|ru|откры́ться}}, {{l|ru|отвори́ться}}
+
+====Antonyms====
+* {{sense|sense#1}} {{l|ru|закры́ться}}
+
+====Related terms====
+* {{l|ru|раскры́тие}}
+
+раскрываться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|раскрыва́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|раскрыва́ться}}
+
+===Verb===
+{{ru-verb|раскрыва́ться|impf|pf=раскры́ться}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|lang=ru|раскрыва́ть}}
+
+====Conjugation====
+{{ru-conj|1a|impf-refl|раскрыва́}}
+
+====Synonyms====
+* {{sense|sense#1}} {{l|ru|открыва́ться}}, {{l|ru|отворя́ться}}
+
+====Antonyms====
+* {{sense|sense#1}} {{l|ru|закрыва́ться}}
+
+====Related terms====
+* {{l|ru|раскры́тие}}
+
+------------- from here -------------
+
+читаться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|чита́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|чита́ться}}
+
+===Verb===
+{{ru-verb|чита́ться|impf|pf=прочита́ться|pf2=почита́ться|pf3=проче́сться}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|lang=ru|чита́ть}}
+
+====Conjugation====
+{{ru-conj|1a|impf-refl|чита́}}
+
+====Related terms====
+* ''See {{m|ru|чита́ть}} for related terms.''
+
+водиться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|води́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|вводи́ться}}
+
+===Verb===
+{{ru-verb|вводи́ться|impf|pf=ввести́сь}}
+
+# {{passive of|lang=ru|вводи́ть}}
+
+====Conjugation====
+{{ru-conj|4c-refl|impf|вво́д}}
+
+====Related terms====
+* ''See also {{m|ru|вводи́ть}} and {{m|ru|води́ть}}.''
+* {{l|ru|введе́ние}}
+* {{l|ru|ввод}}
+* {{l|ru|вво́дный}}
+
+ввестись
+
+==Russian==
+
+===Pronunciation===
+* {{ru-IPA|ввести́сь}}
+* Homophones: {{l|ru|ввезти́сь}}
+
+===Verb===
+{{ru-verb|ввести́сь|pf|impf=вводи́ться}}
+
+# {{passive of|lang=ru|ввести́}}
+
+====Conjugation====
+{{ru-conj|7b/b(9)+p|pf-refl|ввести́|вве́д}}
+
+====Related terms====
+* ''See also {{m|ru|ввести́}} and {{m|ru|вести́}}.''
+* {{l|ru|введе́ние}}
+* {{l|ru|ввод}}
+* {{l|ru|вво́дный}}
+
+зацепиться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|зацепи́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|зацепи́ться}}
+
+===Verb===
+{{ru-verb|зацепи́ться|pf|impf=зацепля́ться|impf2=цепля́ться}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|lang=ru|зацепи́ть}}
+
+====Conjugation====
+{{ru-conj|4c|pf-refl|заце́п}}
+
+зацепляться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|зацепля́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|зацепля́ть}}
+
+===Verb===
+{{ru-verb|зацепля́ться|impf|pf=зацепи́ться}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|lang=ru|зацепля́ть}}
+
+====Conjugation====
+{{ru-conj|1a|impf-refl|зацепля́}}
+
+
+вериться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|ве́рить|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|ве́риться}}
+
+===Verb===
+{{ru-verb|ве́риться|impf|pf=пове́риться}}
+
+# {{lb|ru|impersonal|imperfective only}} to be [[believed]]
+#: {{ru-ux|[[не]] '''ве́рится'''|it is not to be believed|inline=y}}
+# {{lb|ru|impersonal|imperfective only}} to [[believe]] (+ {{glink|dative}})
+#: {{ru-ux|[[я|мне]] [[не]] '''ве́рится'''|it is not to be believed|inline=y}}
+# {{passive of|lang=ru|ве́рить}}
+
+====Conjugation====
+{{ru-conj|4a|impf-refl|ве́р}}
+
+====Related terms====
+* {{l|ru|ве́ра}}
+* {{l|ru|ве́рный}}, {{l|ru|ве́рно}}, {{l|ru|верне́е}}
+* {{l|ru|ве́рность}}
+* {{l|ru|вери́тельный}}
+
+повериться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|пове́рить|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|пове́риться}}
+
+===Verb===
+{{ru-verb|пове́риться|pf|impf=ве́риться}}
+
+# {{passive of|lang=ru|пове́рить}}
+
+====Conjugation====
+{{ru-conj|4a|pf-refl|пове́р}}
+
+====Related terms====
+* {{l|ru|пове́ренный}}
+
+------------- from here -------------
+
+застраховать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|за-|страхова́ть}}
+
+===Pronunciation===
+* {{ru-IPA|застрахова́ть}}
+
+===Verb===
+{{ru-verb|застрахова́ть|pf|impf=страхова́ть|impf2=застрахо́вывать}}
+
+# to [[insure]] {{gloss|to provide for compensation if some risk occurs}}
+# to [[guard]] against
+# to [[stand by]] (in sports)
+
+====Conjugation====
+{{ru-conj|2a+p|pf|застрахова́}}
+
+====Derived terms====
+* {{l|ru|страхова́ться|g=impf}}, {{l|ru|застрахо́вываться|g=impf}}, {{l|ru|застрахова́ться|g=pf}}
+
+застраховывать
+
+===Etymology===
+{{affix|ru|застрахова́ть|-ывать}}
+
+===Pronunciation===
+* {{ru-IPA|застрахо́вывать}}
+
+===Verb===
+{{ru-verb|застрахо́вывать|impf|pf=застрахова́ть}}
+
+# to [[insure]] {{gloss|to provide for compensation if some risk occurs}}
+
+====Conjugation====
+{{ru-conj|1a|impf|застрахо́выва}}
+
+====Derived terms====
+* {{l|ru|застрахо́вываться|g=impf}}, {{l|ru|застрахова́ться|g=pf}}
+
+------------- from here -------------
+
+===Etymology===
+{{affix|ru|по-|темне́ть}}
+
+===Pronunciation===
+* {{ru-IPA|потемне́ть}}
+
+===Verb===
+{{ru-verb|потемне́ть|pf|impf=темне́ть}}
+
+# to [[darken]], to get dark
+#: {{ux|ru|[[у|У]] [[я|меня́]] '''потемне́ло''' [[в]] [[глаз|глаза́х]].|Everything went dark before my eyes.}}
+
+====Conjugation====
+{{ru-conj|1a|pf-intr|потемне́}}
+
+====Related terms====
+* {{l|ru|потёмки}}
+* {{l|ru|потемне́ние}}
+
+------------- from here -------------
+
+===Etymology===
+{{affix|ru|вс-|плыть}}
+
+===Pronunciation===
+* {{ru-IPA}}
+
+===Verb===
+{{ru-verb|всплыть|pf|impf=всплыва́ть}}
+
+# to [[rise]] to the [[surface]], to [[surface]]
+# {{lb|ru|figurative}} to [[appear]], to [[pop up]], to [[emerge]]
+
+====Conjugation====
+{{ru-conj|16b/c|pf-intr|всплы́}}
+
+====Synonyms====
+# {{sense|appear}} {{l|ru|обнару́житься}}, {{l|ru|появи́ться}}
+
+всплывать
+
+===Etymology===
+{{affix|ru|всплыть|-ва́ть}}
+
+===Pronunciation===
+* {{ru-IPA|всплыва́ть}}
+
+===Verb===
+{{ru-verb|всплыва́ть|impf|pf=всплыть}}
+
+# to [[rise]] to the [[surface]], to [[surface]]
+# {{lb|ru|figurative}} to [[appear]], to [[pop up]], to [[emerge]]
+
+====Conjugation====
+{{ru-conj|1a|impf-intr|всплыва́}}
+
+====Synonyms====
+# {{sense|appear}} {{l|ru|обнару́живаться}}, {{l|ru|появля́ться}}
+
+запечатлеть
+
+===Etymology===
+{{affix|ru|за-|-печатле́ть}}
+
+===Pronunciation===
+* {{ru-IPA|запечатле́ть}}
+
+===Verb===
+{{ru-verb|запечатле́ть|pf|impf=запечатлева́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|1a+p|pf|запечатле́}}
+
+====Derived terms====
+* {{l|ru|запечатлева́ться|g=impf}}, {{l|ru|запечатле́ться|g=pf}}
+
+запечатлевать
+
+===Etymology===
+{{affix|ru|запечатле́ть|-вать}}
+
+===Pronunciation===
+* {{ru-IPA|запечатлева́ть}}
+
+===Verb===
+{{ru-verb|запечатлева́ть|impf|pf=запечатле́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|1a|impf|запечатлева́}}
+
+====Derived terms====
+* {{l|ru|запечатлева́ться|g=impf}}, {{l|ru|запечатле́ться|g=pf}}
+
+обрадовать
+
+===Etymology===
+{{affix|ru|об-|ра́довать}}
+
+===Pronunciation===
+* {{ru-IPA|обра́довать}}
+
+===Verb===
+{{ru-verb|обра́довать|pf|impf=ра́довать}}
+
+# to [[gladden]], to [[please]], to [[bring joy]] to
+
+====Conjugation====
+{{ru-conj|2a+p|pf|обра́дова}}
+
+====Derived terms====
+* {{l|ru|ра́доваться|g=impf}}, {{l|ru|обра́доваться|g=pf}}
+
+радовать
+
+===Etymology===
+{{affix|ru|рад|-овать}}
+
+===Pronunciation===
+* {{ru-IPA|ра́довать}}
+
+===Verb===
+{{ru-verb|ра́довать|impf|pf=обра́довать}}
+
+# to [[gladden]], to [[please]], to [[bring joy]] to
+
+====Conjugation====
+{{ru-conj|2a+p|impf|ра́дова}}
+
+====Derived terms====
+* {{l|ru|ра́доваться|g=impf}}, {{l|ru|обра́доваться|g=pf}}
+
+====Related terms====
+* {{l|ru|рад}}
+* {{l|ru|ра́дость}}, {{l|ru|ра́достный}}, {{l|ru|ра́достно}}
+
+расслышать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|рас-|слы́шать}}
+
+===Pronunciation===
+* {{ru-IPA|расслы́шать}}
+
+===Verb===
+{{ru-verb|расслы́шать|pf|impf=расслы́шивать}} {{i|imperfective rare}}
+
+# to [[hear]] [[successfully]], to [[catch]]
+#: {{ru-ux|[[я]] [[не]] '''расслы́шал''' [[э́то]]|I didn't catch that}}
+
+====Conjugation====
+{{ru-conj|5a+p|pf|расслы́ш|расслы́ша|impr_sg=-|impr_pl=-}}
+
+вопить
+
+===Etymology===
+{{rfe|lang=ru}}
+
+===Pronunciation===
+* {{ru-IPA|вопи́ть}}
+
+===Verb===
+{{ru-verb|вопи́ть|pf|impf=завопи́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|4b|pf-intr|воп}}
+
+====Synonyms====
+* {{sense|cry, shout}} {{l|ru|вопия́ть}}, {{l|ru|ора́ть}}, {{l|ru|выть}}, {{l|ru|реве́ть}}
+
+====Related terms====
+* {{l|ru|вопль}}
+* {{l|ru|вопию́щий}}
+
+завопить
+
+==Russian==
+
+===Etymology===
+{{affix|ru|за-|вопи́ть}}
+
+===Pronunciation===
+* {{ru-IPA|завопи́ть}}
+
+===Verb===
+{{ru-verb|завопи́ть|impf|pf=вопи́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|4b|pf-intr|завоп}}
+
+------------- from here -------------
+
+листать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|лист|-а́ть}}
+
+===Pronunciation===
+* {{ru-IPA|листа́ть}}
+
+===Verb===
+{{ru-verb|листа́ть|impf}}
+
+# {{lb|ru|colloquial}} to [[leaf through]], to [[flip]] through (a [[book]], [[manuscript]], etc.)
+# {{lb|ru|colloquial}} to [[skim]], to [[browse]] (a [[book]], [[manuscript]], etc.)
+
+====Conjugation====
+{{ru-conj|1a+p|impf|листа́}}
+
+====Related terms====
+* {{l|ru|лист}}
+* {{l|ru|листо́вка}}
+* {{l|ru|листо́к}}
+* {{l|ru|листово́й}}
+
+потрогать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|по-|трога́ть}}
+
+===Pronunciation===
+* {{ru-IPA|потрога́ть}}
+
+===Verb===
+{{ru-verb|потрога́ть|pf|impf=трога́ть}}
+
+# to [[touch]]
+#: {{ru-ux|'''потрога́ть''' [[палец|па́льцем]]|to [[finger]]|inline=y}}
+
+====Conjugation====
+{{ru-conj|1a+p|pf|потрога́}}
+
+обвести
+
+==Russian==
+
+===Etymology===
+{{affix|ru|об-|вести́}}
+
+===Pronunciation===
+* {{ru-IPA|обвести́}}
+
+===Verb===
+{{ru-verb|обвести́|pf|impf=обводи́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|7b/b(9)+p|pf|обвести́|обве́д}}
+
+====Derived terms====
+* {{l|ru|обвести́ вокру́г па́льца||to [[hoodwink]], to [[cheat]], to [[dupe]]}}
+* {{l|ru|обвести́ взгля́дом||to [[scan]], to [[cast]] one's [[eye]]s over}}
+* {{l|ru|обвести́ глаза́ми||to [[scan]], to [[cast]] one's [[eye]]s over}}
+
+====Related terms====
+* {{l|ru|води́ть|g=impf}}, {{l|ru|вести́|g=pf}}
+
+
+обводить
+
+==Russian==
+
+===Etymology===
+{{affix|ru|об-|води́ть}}
+
+===Pronunciation===
+* {{ru-IPA|обводи́ть}}
+
+===Verb===
+{{ru-verb|обводи́ть|impf|pf=обвести́}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|4c|обводи́ть}}
+
+====Derived terms====
+* {{l|ru|обводи́ть вокру́г па́льца||to [[hoodwink]], to [[cheat]], to [[dupe]]}}
+* {{l|ru|обводи́ть взгля́дом||to [[scan]], to [[cast]] one's [[eye]]s over}}
+* {{l|ru|обводи́ть глаза́ми||to [[scan]], to [[cast]] one's [[eye]]s over}}
+
+====Related terms====
+* {{l|ru|води́ть|g=impf}}, {{l|ru|вести́|g=pf}}
+
+обводить вокруг пальца
+
+==Russian==
+
+===Etymology===
+Literally, to "lead around one's finger"; cf. [[wrap around one's little finger]].
+
+===Pronunciation===
+* {{ru-IPA|обводи́ть вокру́г па́льца}}
+
+===Verb===
+{{ru-verb|[[обводи́ть]] [[вокру́г]] [[палец|па́льца]]|impf|pf=обвести́ вокру́г па́льца}}
+
+# to [[hoodwink]], to [[cheat]], to [[dupe]], to [[swindle]]
+#: {{ru-ux|[[он]] '''обво́дит''' [[я|меня́]] '''вокру́г''' '''па́льца'''|he is [[hoodwink]]ing me}}
+
+====Conjugation====
+{{ru-conj-verb-see|обводи́ть}}
+
+
+обвести вокруг пальца
+
+==Russian==
+
+===Etymology===
+Literally, to "lead around one's finger"; cf. [[wrap around one's little finger]].
+
+===Pronunciation===
+* {{ru-IPA|обвести́ вокру́г па́льца}}
+
+===Verb===
+{{ru-verb|[[обвести́]] [[вокру́г]] [[палец|па́льца]]|pf|impf=обводи́ть вокру́г па́льца}}
+
+# to [[hoodwink]], to [[cheat]], to [[dupe]], to [[swindle]]
+#: {{ru-ux|[[он]] '''обвёл''' [[я|меня́]] '''вокру́г''' '''па́льца'''|he [[hoodwink]]ed me}}
+
+====Conjugation====
+{{ru-conj-verb-see|обвести́}}
+
+
+
+обводить взглядом
+
+==Russian==
+
+===Etymology===
+Literally, to "surround with a glance".
+
+===Pronunciation===
+* {{ru-IPA|обводи́ть взгля́дом}}}
+
+===Verb===
+{{ru-verb|[[обводи́ть]] [[взляд|взгля́дом]]|impf|pf=обвести́ взгля́дом}}
+
+# to [[scan]], to [[cast]] one's [[eyes]] over
+#: {{ru-ux|'''обводи́ть''' [[горизо́нт]] '''взгля́дом'''|to [[scan]] the [[horizon]]}}
+
+====Conjugation====
+{{ru-conj-verb-see|обводи́ть}}
+
+
+обвести взглядом
+
+==Russian==
+
+===Etymology===
+Literally, to "surround with a glance".
+
+===Pronunciation===
+* {{ru-IPA|обвести́ взгля́дом}}
+
+===Verb===
+{{ru-verb|[[обвести́]] [[взляд|взгля́дом]]|pf|impf=обводи́ть взгля́дом}}
+
+# to [[scan]], to [[cast]] one's [[eyes]] over
+#: {{ru-ux|'''обвести́''' [[горизо́нт]] '''взгля́дом'''|to [[scan]] the [[horizon]]}}
+
+====Conjugation====
+{{ru-conj-verb-see|обвести́}}
+
+
+обводить глазами
+
+==Russian==
+
+===Etymology===
+Literally, to "surround with the eyes".
+
+===Pronunciation===
+* {{ru-IPA|обводи́ть глаза́ми}}
+
+===Verb===
+{{ru-verb|[[обводи́ть]] [[глаз|глаза́ми]]|impf|pf=обвести́ глаза́ми}}
+
+# to [[scan]], to [[cast]] one's [[eyes]] over
+#: {{ru-ux|'''обводи́ть''' [[горизо́нт]] '''глаза́ми'''|to [[scan]] the [[horizon]]}}
+
+====Conjugation====
+{{ru-conj-verb-see|обводи́ть}}
+
+
+обвести глазами
+
+==Russian==
+
+===Etymology===
+Literally, to "surround with the eyes".
+
+===Pronunciation===
+* {{ru-IPA|обвести́ глаза́ми}}
+
+===Verb===
+{{ru-verb|[[обвести́]] [[глаз|глаза́ми]]|pf|impf=обводи́ть глаза́ми}}
+
+# to [[scan]], to [[cast]] one's [[eyes]] over
+#: {{ru-ux|'''обвести́''' [[горизо́нт]] '''глаза́ми'''|to [[scan]] the [[horizon]]}}
+
+====Conjugation====
+{{ru-conj-verb-see|обвести́}}
+
+
+переписать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|пере-|писа́ть}}
+
+===Pronunciation===
+* {{ru-IPA|переписа́ть}}
+
+===Verb===
+{{ru-verb|переписа́ть|pf|impf=перепи́сывать}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|6c+p|pf|перепи́с}}
+
+====Derived terms====
+* {{l|ru|перепи́сываться}}
+
+====Related terms====
+* {{l|ru|пе́репись}}
+* {{l|ru|перепи́ска}}
+* {{l|ru|перепи́счик}}
+
+переписывать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|переписа́ть|-ывать}}
+
+===Pronunciation===
+* {{ru-IPA|перепи́сывать}}
+
+===Verb===
+{{ru-verb|перепи́сывать|impf|pf=переписа́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|1a|impf|перепи́сыва}}
+
+====Derived terms====
+* {{l|ru|перепи́сываться}}
+
+====Related terms====
+* {{l|ru|пе́репись}}
+* {{l|ru|перепи́ска}}
+* {{l|ru|перепи́счик}}
+
+------------- from here -------------
+
+поблёскивать
+
+==Russian==
+
+===Alternative forms===
+* {{l|ru|побле́скивать}}
+
+===Etymology===
+From {{affix|ru|по-|[[блестеть|блеск–]]|-ивать}}. Apparently formed from an underlying root {{lang|ru|блеск-}} of {{m|ru|блесте́ть}}; compare {{m|ru|блеск|brilliance, luster}}.
+
+===Pronunciation===
+* {{ru-IPA}}
+
+===Verb===
+{{ru-verb|поблёскивать|impf}}
+
+# to [[gleam]]
+
+====Conjugation====
+{{ru-conj|1a|impf-intr|поблёскива}}
+
+====Synonyms====
+* {{l|ru|взбле́скивать}}
+
+====Related terms====
+* {{l|ru|блесте́ть}}
+* {{l|ru|блиста́ть}}
+* {{l|ru|блеск}}
+
+поблескивать
+
+==Russian==
+
+===Etymology 1===
+From {{affix|ru|по-|[[блестеть|блеск–]]|-ивать}}. Apparently formed from an underlying root {{lang|ru|блеск-}} of {{m|ru|блесте́ть}}; compare {{m|ru|блеск|brilliance, luster}}.
+
+====Pronunciation====
+* {{ru-IPA|побле́скивать}}
+
+====Verb====
+{{ru-verb|побле́скивать|impf}}
+
+# {{alternative form of|lang=ru|поблёскивать}}
+
+=====Conjugation=====
+{{ru-conj|1a|impf-intr|побле́скива}}
+
+=====Related terms=====
+* {{l|ru|блесте́ть}}
+* {{l|ru|блиста́ть}}
+* {{l|ru|блеск}}
+
+===Etymology 2===
+
+====Verb====
+{{ru-verb-alt-ё|поблёскивать|impf}}
+
+торжествовать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|торжество́|-овать}}
+
+===Pronunciation===
+* {{ru-IPA|торжествова́ть}}
+
+===Verb===
+{{ru-verb|торжествова́ть|impf}}
+
+# {{lb|ru|dated}} to [[celebrate]]
+#: {{ru-ux|'''торжествова́ть''' [[победа|побе́ду]] [[над]]|to celebrate [[victory]] over|inline=y}}
+# {{lb|ru|colloquial}} to [[triumph]] over
+#: {{ru-ux|'''торжествова́ть''' [[над]] [[враг|врагом]]|to [[triumph]] over the enemy|inline=y}}
+
+====Conjugation====
+{{ru-conj|2a+p|impf|торжествова́}}
+
+====Related terms====
+* {{l|ru|торжество́}}
+* {{l|ru|торже́ственный}}
+* {{l|ru|торже́ственно}}
+* {{l|ru|торже́ственность}}
+
+повидать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|по-|вида́ть}}
+
+===Pronunciation===
+* {{ru-IPA|повида́ть}}
+
+===Verb===
+{{ru-verb|повида́ть|pf|impf=вида́ть}}
+
+# {{lb|ru|colloquial}} to [[see]]
+# {{lb|ru|colloquial}} to [[visit]]
+
+====Conjugation====
+{{ru-conj|1a+p|pf|повида́}}
+
+====Synonyms====
+* {{sense|see}} {{l|ru|повида́ться}}
+* {{sense|visit}} {{l|ru|повида́ться}}, {{l|ru|навести́ть}}, {{l|ru|прове́дать}}
+
+====Derived terms====
+* {{l|ru|повида́ться}}
+
+====Related terms====
+* {{l|ru|вид}}
+* {{l|ru|ви́деть}}
+
+------------- from here -------------
+
+порадовать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|по-|ра́довать}}
+
+===Pronunciation===
+* {{ru-IPA|пора́довать}}
+
+===Verb===
+{{ru-verb|пора́довать|pf|impf=ра́довать}}
+
+# to [[gladden]], to [[please]], to [[rejoice]], to [[make]] [[happy]]
+
+====Conjugation====
+{{ru-conj|2a+p|pf|пора́дова}}
+
+====Synonyms====
+* {{l|ru|обра́довать}}
+
+====Antonyms====
+* {{l|ru|огорчи́ть}}, {{l|ru|расстро́ить}}
+
+====Derived terms====
+* {{l|ru|пора́доваться}}
+
+====Related terms====
+* {{l|ru|рад}}
+* {{l|ru|ра́дость}}
+
+похлопать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|по-|хло́пать}}
+
+===Pronunciation===
+* {{ru-IPA|похло́пать}}
+
+===Verb===
+{{ru-verb|похло́пать|pf}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|1a+p|pf|похло́пать}}
+
+====Derived terms====
+* {{l|ru|похло́пывать}}
+
+развязать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|раз-|вяза́ть}}
+
+===Pronunciation===
+* {{ru-IPA|развяза́ть}}
+
+===Verb===
+{{ru-verb|развяза́ть|pf|impf=развя́зывать}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|6c+p|pf|развя́з}}
+
+====Derived terms====
+* {{l|ru|развя́зываться|g=impf}}, {{l|ru|развяза́ться|g=pf}}
+
+====Related terms====
+* {{l|ru|развя́зка}}
+* {{l|ru|развя́зный}}
+
+развязывать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|развяза́ть|-ывать}}
+
+===Pronunciation===
+* {{ru-IPA|развя́зывать}}
+
+===Verb===
+{{ru-verb|развя́зывать|impf|pf=развяза́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|1a|impf|развя́зыва}}
+
+====Derived terms====
+* {{l|ru|развя́зываться|g=impf}}, {{l|ru|развяза́ться|g=pf}}
+
+====Related terms====
+* {{l|ru|развя́зка}}
+* {{l|ru|развя́зный}}
+
+разочаровать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|раз-|очарова́ть}}
+
+===Pronunciation===
+* {{ru-IPA|разочарова́ть}}
+
+===Verb===
+{{ru-verb|разочарова́ть|pf|impf=разочаро́вывать}}
+
+# to [[disappoint]], to [[disenchant]]
+
+====Conjugation====
+{{ru-conj|2a+p|pf|разочарова́}}
+
+====Derived terms====
+* {{l|ru|разочаро́вываться|g=impf}}, {{l|ru|разочарова́ться|g=pf}}
+* {{l|ru|разочарова́ние}}
+* {{l|ru|разочаро́ванный}}
+
+разочаровывать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|разочарова́ть|-ывать}}
+
+===Pronunciation===
+* {{ru-IPA|разочаро́вывать}}
+
+===Verb===
+{{ru-verb|разочаро́вывать|impf|pf=разочарова́ть}}
+
+# to [[disappoint]], to [[disenchant]]
+
+====Conjugation====
+{{ru-conj|1a|impf|разочаро́выва}}
+
+====Derived terms====
+* {{l|ru|разочаро́вываться|g=impf}}, {{l|ru|разочарова́ться|g=pf}}
+
+====Related terms====
+* {{l|ru|разочарова́ние}}
+* {{l|ru|разочаро́ванный}}
+
+сворачивать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|свороти́ть|-ивать}}
+
+===Pronunciation===
+* {{ru-IPA|свора́чивать}}
+
+===Verb===
+{{ru-verb|свора́чивать|impf|pf=сверну́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|1a|impf|свора́чивать}}
+
+====Derived terms====
+* {{l|ru|свёртываться|g=impf}}, {{l|ru|свора́чиваться|g=impf}}, {{l|ru|сверну́ться|g=pf}}
+
+===Verb===
+{{ru-verb|свора́чивать|impf|pf=свороти́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|1a|impf|свора́чивать}}
+
+===Related terms===
+* {{l|ru|свёрток}}
+* {{l|ru|свёртывание}}
+* {{l|ru|свёртывать}}
+
+своротить
+
+==Russian==
+
+===Etymology===
+{{affix|ru|с-|вороти́ть}}
+
+===Pronunciation===
+* {{ru-IPA|свороти́ть}}
+
+===Verb===
+{{ru-verb|свороти́ть|pf|impf=свора́чивать}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|4c+p|pf|своро́т}}
+
+===Related terms===
+* {{l|ru|свёрток}}
+* {{l|ru|свёртывание}}
+* {{l|ru|свёртывать}}
+* {{l|ru|свёртываться|g=impf}}, {{l|ru|свора́чиваться|g=impf}}, {{l|ru|сверну́ться|g=pf}}
+
+трепетать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|тре́пет|-а́ть}}
+
+===Pronunciation===
+* {{ru-IPA|трепета́ть}}
+
+===Verb===
+{{ru-verb|трепета́ть|impf}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|6cщ|impf-intr|трепе́т}}
+
+====Synonyms====
+* {{sense|shake}} {{l|ru|дрожа́ть}}
+* {{sense|tremble}} {{l|ru|содрога́ться}}, {{l|ru|страши́ться}}, {{l|ru|ужаса́ться}}
+
+====Derived terms====
+* {{l|ru|трепета́ние}}
+
+====Related terms====
+* {{l|ru|тре́пет}}
+* {{l|ru|тре́петный}}
+* {{l|ru|тре́петно}}
+* {{l|ru|трепыха́ть}}, {{l|ru|трепыха́ться}}
+
+фигурировать
+
+==Russian==
+
+===Etymology===
+Possibly {{der|ru|de|figurieren}} + {{affix|ru|-овать}}; or from {{affix|ru|фигу́ра|-и́ровать}}.
+
+===Pronunciation===
+* {{ru-IPA|фигури́ровать}}
+
+===Verb===
+{{ru-verb|фигури́ровать|impf}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|2a|impf-intr|фигури́рова}}
+
+====Related terms====
+* {{l|ru|фигу́ра}}
+* {{l|ru|фигу́рка}}
+* {{l|ru|фигу́рный}}
+
+дразнить
+
+==Russian==
+
+===Etymology===
+{{rfe|lang=ru}}
+
+===Pronunciation===
+* {{ru-IPA|дразни́ть}}
+
+===Verb===
+{{ru-verb|дразни́ть|impf|pf=подразни́ть|pf2=раздразни́ть}}
+
+# to [[tease]]
+# to [[whet]] (appetite), to [[stimulate]] (curiosity)
+
+====Conjugation====
+{{ru-conj|4c[(4)](7)|impf|дра́зн}}
+
+подразнить
+
+==Russian==
+
+===Etymology===
+{{affix|ru|по-|дразни́ть}}
+
+===Pronunciation===
+* {{ru-IPA|подразни́ть}}
+
+===Verb===
+{{ru-verb|подразни́ть|pf|impf=дразни́ть}}
+
+# to [[tease]]
+# to [[whet]] (appetite), to [[stimulate]] (curiosity)
+
+====Conjugation====
+{{ru-conj|4c(7)|pf|подра́зн}}
+
+разразнить
+
+==Russian==
+
+===Etymology===
+{{affix|ru|раз-|дразни́ть}}
+
+===Pronunciation===
+* {{ru-IPA|разразни́ть}}
+
+===Verb===
+{{ru-verb|разразни́ть|pf|impf=дразни́ть|impf2=раздра́знивать}}
+
+# to [[tease]]
+# to [[whet]] (appetite), to [[stimulate]] (curiosity)
+
+====Conjugation====
+{{ru-conj|4c(7)|pf|раздра́зн}}
+
+====Related terms====
+* {{l|ru|раздража́ть|g=impf}}, {{l|ru|раздражи́ть|g=pf}}
+* {{l|ru|раздраже́ние}}
+* {{l|ru|раздражённый}}
+
+разразнивать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|раздразни́ть|-ивать}}
+
+===Pronunciation===
+* {{ru-IPA|разра́знивать}}
+
+===Verb===
+{{ru-verb|разра́знивать|impf|pf=разразни́ть}}
+
+# to [[tease]]
+# to [[whet]] (appetite), to [[stimulate]] (curiosity)
+
+====Conjugation====
+{{ru-conj|4c(7)|pf|раздра́зн}}
+
+====Related terms====
+* {{l|ru|раздража́ть|g=impf}}, {{l|ru|раздражи́ть|g=pf}}
+* {{l|ru|раздраже́ние}}
+* {{l|ru|раздражённый}}
+
+напевать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|напе́ть|-ва́ть}}
+
+===Pronunciation===
+* {{ru-IPA|напева́ть}}
+
+===Verb===
+{{ru-verb|напева́ть|impf|pf=напе́ть}}
+
+{{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|1a|impf|напева́}}
+
+====Related terms====
+* {{l|ru|напе́в}}
+* {{l|ru|напе́вный}}
+
+напеть
+
+==Russian==
+
+===Etymology===
+{{affix|ru|на-|пе́ть}}
+
+===Pronunciation===
+* {{ru-IPA|напе́ть}}
+
+===Verb===
+{{ru-verb|напе́ть|pf|impf=напева́ть}}
+
+{{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|12b+p|pf|напе́|напо}}
+
+====Related terms====
+* {{l|ru|напе́в}}
+* {{l|ru|напе́вный}}
+
+растаять
+
+==Russian==
+
+===Etymology===
+{{affix|ru|рас-|та́ять}}
+
+===Pronunciation===
+* {{ru-IPA|раста́ять}}
+
+===Verb===
+{{ru-verb|раста́ять|pf|impf=та́ять}}
+
+# to [[melt]], [[thaw]]
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|6a|impf-intr|раста́}}
+
+====Related terms====
+* {{l|ru|та́лый}}
+* {{l|ru|та́яние|g=n}}
+
+
+топать
+
+==Russian==
+
+===Etymology===
+{{rfe|lang=ru}}; compare {{m|ru|то́пнуть}}.
+
+===Pronunciation===
+* {{ru-IPA|то́пать}}
+
+===Verb===
+{{ru-verb|то́пать|impf|pf=то́пнуть}}
+
+# to [[stomp]], to [[stamp]] one's [[foot]]
+
+====Conjugation====
+{{ru-conj|1a|impf-intr|то́па}}
+
+====Synonyms====
+* {{l|ru|топота́ть}}
+
+====Related terms====
+* {{l|ru|то́пот}}
+* {{l|ru|топта́ть}}
+* {{l|ru|топта́ние}}
+* {{l|ru|топча́к}}
+
+топнуть
+
+==Russian==
+
+===Etymology===
+{{affix|ru|то́пать|-нуть}}
+
+===Pronunciation===
+* {{ru-IPA|то́пнуть}}
+
+===Verb===
+{{ru-verb|то́пнуть|pf|impf=то́пать}}
+
+# to [[stomp]], to [[stamp]] one's [[foot]]
+
+====Conjugation====
+{{ru-conj|3a|pf-intr|то́п}}
+
+====Related terms====
+* {{l|ru|то́пот}}
+* {{l|ru|топта́ть}}
+* {{l|ru|топта́ние}}
+* {{l|ru|топча́к}}
+
+белеть
+
+==Russian==
+
+===Etymology===
+{{affix|ru|бе́лый|-е́ть}}
+
+===Pronunciation===
+* {{ru-IPA|беле́ть}}
+
+===Verb===
+{{ru-verb|беле́ть|impf|pf=побеле́ть}}
+
+# to [[turn]] [[white]], {{lb|ru|intransitive}} to [[whiten]]
+# {{lb|ru|colloquial}} to [[turn]] [[gray]]
+# {{lb|ru|colloquial}} to become [[brighter]]
+# {{lb|ru|colloquial|impersonal}} to [[dawn]]
+# {{lb|ru|imperfective only}} to [[gleam]], to be [[visible]] {{i|of something white}}
+
+====Conjugation====
+{{ru-conj|1a|impf-intr|беле́}}
+
+====Synonyms====
+* {{sense|turn white}} {{l|ru|бледне́ть}}
+* {{sense|turn gray}} {{l|ru|седе́ть}}
+* {{sense|become brighter}} {{l|ru|светле́ть}}
+* {{sense|dawn}} {{l|ru|рассвета́ть}}, {{l|ru|света́ть}}
+
+====Related terms====
+* {{l|ru|бе́лый}}
+* {{l|ru|бели́ть}}
+* {{l|ru|бели́ла}}
+* {{l|ru|белёсый}}
+* {{l|ru|белова́тый}}
+* {{l|ru|бело́к}}
+
+побелеть
+
+==Russian==
+
+===Etymology===
+{{affix|ru|по-|беле́ть}}
+
+===Pronunciation===
+* {{ru-IPA|побеле́ть}}
+
+===Verb===
+{{ru-verb|побеле́ть|pf|impf=беле́ть}}
+
+# to [[turn]] [[white]], {{lb|ru|intransitive}} to [[whiten]]
+# {{lb|ru|colloquial}} to [[turn]] [[gray]]
+# {{lb|ru|colloquial}} to become [[brighter]]
+# {{lb|ru|colloquial|impersonal}} to [[dawn]]
+
+====Conjugation====
+{{ru-conj|1a|pf-intr|побеле́}}
+
+====Synonyms====
+* {{sense|turn white}} {{l|ru|побледне́ть}}
+* {{sense|turn gray}} {{l|ru|поседе́ть}}
+* {{sense|become brighter}} {{l|ru|посветле́ть}}
+* {{sense|dawn}} {{l|ru|рассвести́}}, {{l|ru|свести́}}
+
+====Related terms====
+* {{l|ru|бе́лый}}
+* {{l|ru|бели́ть}}
+* {{l|ru|бели́ла}}
+* {{l|ru|белёсый}}
+* {{l|ru|белова́тый}}
+* {{l|ru|бело́к}}
+
+
+влететь
+
+==Russian==
+
+===Etymology===
+{{affix|ru|в-|лете́ть}}
+
+===Pronunciation===
+* {{ru-IPA|влете́ть}}
+
+===Verb===
+{{ru-verb|влете́ть|pf|impf=влета́ть}}
+
+# to [[fly]] into
+# {{lb|ru|colloquial}} to [[run]] into {{gloss|to enter while running}}, to [[burst]] into
+# {{lb|ru|colloquial|impersonal}} to get into [[trouble]]
+#: {{ru-ux|[[он|ему́]] '''влете́ло'''|he got into trouble, he is in trouble|inline=y}}
+
+====Conjugation====
+{{ru-conj|5b|pf-intr|влет|влете́}}
+
+====Synonyms====
+* {{sense|run into}} {{l|ru|вбежа́ть}}
+* {{sense|get into trouble}} {{l|ru|доста́ться}}, {{l|ru|попа́сть}}, {{l|ru|нагоре́ть}}
+
+====Antonyms====
+* {{sense|fly into}} {{l|ru|вы́лететь}}
+* {{sense|run into}} {{l|ru|вы́лететь}}
+
+
+влетать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|в-|лета́ть}}
+
+===Pronunciation===
+* {{ru-IPA|влета́ть}}
+
+===Verb===
+{{ru-verb|влета́ть|impf|pf=влете́ть}}
+
+# to [[fly]] into
+# {{lb|ru|colloquial}} to [[run]] into {{gloss|to enter while running}}, to [[burst]] into
+# {{lb|ru|colloquial|impersonal}} to get into [[trouble]]
+#: {{ru-ux|[[он|ему́]] '''влета́ет'''|he is getting into trouble|inline=y}}
+
+====Conjugation====
+{{ru-conj|1a|impf-intr|влета́}}
+
+====Synonyms====
+* {{sense|run into}} {{l|ru|вбега́ть}}
+* {{sense|get into trouble}} {{l|ru|достава́ться}}, {{l|ru|попада́ть}}, {{l|ru|нагора́ть}}
+
+====Antonyms====
+* {{sense|fly into}} {{l|ru|вы́летать}}
+* {{sense|run into}} {{l|ru|вы́летать}}
+
+
+внедрить
+
+==Russian==
+
+===Etymology===
+{{affix|ru|в-|не́дра|-и́ть}}
+
+===Pronunciation===
+* {{ru-IPA|внедри́ть}}
+
+===Verb===
+{{ru-verb|внедри́ть|pf|impf=внедря́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|4b+p|pf|внедр}}
+
+====Derived terms====
+* {{l|ru|внедре́ние}}
+
+====Related terms====
+* {{l|ru|не́дра}}
+
+внедрять
+
+==Russian==
+
+===Etymology===
+{{affix|ru|внедри́ть|-я́ть}}
+
+===Pronunciation===
+* {{ru-IPA|внедря́ть}}
+
+===Verb===
+{{ru-verb|внедря́ть|impf|pf=внедри́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|1a|impf|внедря́}}
+
+====Related terms====
+* {{l|ru|не́дра}}
+* {{l|ru|внедре́ние}}
+
+
+налететь
+
+==Russian==
+
+===Etymology===
+{{affix|ru|на-|лете́ть}}
+
+===Pronunciation===
+* {{ru-IPA|налете́ть}}
+
+===Verb===
+{{ru-verb|налете́ть|pf|impf=налета́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|5b|pf-intr|налет|налете́}}
+
+налетать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|на-|лета́ть}}
+
+===Pronunciation===
+* {{ru-IPA|налета́ть}}
+
+===Verb===
+{{ru-verb|налета́ть|impf|pf=налете́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|1a|impf-intr|налета́}}
+
+===Verb===
+{{ru-verb|налета́ть|pf}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|1a+pё|pf|налета́}}
+
+навязывать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|навяза́ть|-ывать}}
+
+===Pronunciation===
+* {{ru-IPA|навя́зывать}}
+
+===Verb===
+{{ru-verb|навя́зывать|impf|pf=навяза́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|1a|impf|навя́зыва}}
+
+====Synonyms====
+* {{sense|attach}} {{l|ru|привя́зывать}}
+* {{sense|force}} {{l|ru|впа́ривать}}
+
+====Derived terms====
+* {{l|ru|навя́зываться}}, {{l|ru|навяза́ться}}
+
+навязать
+
+==Russian==
+
+===Pronunciation===
+* {{ru-IPA|навяза́ть}}
+
+===Etymology 1===
+{{affix|ru|навя́знуть|-а́ть}}
+
+====Verb====
+{{ru-verb|навяза́ть|impf|pf=навя́знуть}}
+
+# {{rfdef|lang=ru}}
+
+=====Conjugation=====
+{{ru-conj|1a|impf|навяза́}}
+
+===Etymology 2===
+{{affix|ru|на-|вяза́ть}}
+
+====Verb====
+{{ru-verb|навяза́ть|pf|impf=вяза́ть|impf2=навя́зывать}}
+
+# {{rfdef|lang=ru}}
+
+=====Conjugation=====
+{{ru-conj|1a+p|pf|навяза́}}
+
+=====Synonyms=====
+* {{sense|attach}} {{l|ru|привяза́ть}}
+* {{sense|knit}} {{l|ru|понавяза́ть}}
+
+=====Antonyms=====
+* {{sense|attach}} {{l|ru|отвяза́ть}}
+* {{sense|knit}} {{l|ru|распути́ть}}
+
+навязнуть
+
+==Russian==
+
+===Etymology===
+{{affix|ru|на-|вя́знуть}}
+
+===Pronunciation===
+* {{ru-IPA|навя́знуть}}
+
+===Verb===
+{{ru-verb|навя́знуть|pf|impf=навяза́ть}}
+
+# to get [[stuck]], {{lb|ru|intransitive}} to [[stick]]
+#: {{ru-ux|'''навя́знуть''' [[у]] [[кто-нибудь|кого́-нибудь]] [[в]] [[зуб|зуба́х]]|to [[bore]] someone [[to death]]}}
+
+====Conjugation====
+{{ru-conj|3°a|pf|навя́з}}
+
+
+одержать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|о-|держа́ть}}
+
+===Pronunciation===
+* {{ru-IPA|одержа́ть}}
+
+===Verb===
+{{ru-verb|одержа́ть|pf|impf=оде́рживать}}
+
+# to [[win]], to [[gain]]
+#: {{ru-ux|[[одержа́ть верх|'''одержа́ть''' верх]] над [[кто-нибудь|кем-нибудь]]|to [[prevail]] over someone|inline=y}}
+#: {{ru-ux|'''одержа́ть''' [[побе́ду]] над [[кто-нибудь|кем-нибудь]]|to win a [[victory]] over someone|inline=y}}
+
+====Conjugation====
+{{ru-conj|5c+p|pf|оде́рж|одержа́}}
+
+одерживать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|одержа́ть|-ивать}}
+
+===Pronunciation===
+* {{ru-IPA|оде́рживать}}
+
+===Verb===
+{{ru-verb|оде́рживать|impf|pf=одержа́ть}}
+
+# to [[win]], to [[gain]]
+#: {{ru-ux|[[оде́рживать верх|'''оде́рживать''' верх]] над [[кто-нибудь|кем-нибудь]]|to [[prevail]] over someone|inline=y}}
+#: {{ru-ux|'''оде́рживать''' [[побе́ду]] над [[кто-нибудь|кем-нибудь]]|to win a [[victory]] over someone|inline=y}}
+
+====Conjugation====
+{{ru-conj|1a|pf|оде́ржива}}
+
+
+регламентировать
+
+==Russian==
+
+===Etymology===
+Probably {{affix|ru|регла́мент|-и́ровать}}.
+
+===Pronunciation===
+* {{ru-IPA|регламенти́ровать}}
+
+===Verb===
+{{ru-verb|регламенти́ровать|both}}
+
+# to [[regulate]]
+
+====Conjugation====
+''imperfective''
+{{ru-conj|2a|impf|регламенти́рова}}
+''perfective''
+{{ru-conj|2a|pf|регламенти́рова}}
+
+
+допрашивать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|допроси́ть|-ивать}}
+
+===Pronunciation===
+* {{ru-IPA|допра́шивать}}
+
+===Verb===
+{{ru-verb|допра́шивать|impf|pf=допроси́ть}}
+
+# to [[interrogate]]
+#: {{ru-ux|'''допра́шивать''' [[с]] [[пристрастие|пристра́стием]]|{{i|dated}} to [[torture]]; {{i|jocular}} to [[question]] in [[detail]]}}
+
+====Conjugation====
+{{ru-conj|1a|impf|допра́шива}}
+
+допросить
+
+==Russian==
+
+===Etymology===
+{{affix|ru|до-|проси́ть}}
+
+===Pronunciation===
+* {{ru-IPA|допроси́ть}}
+
+===Verb===
+{{ru-verb|допроси́ть|pf|impf=допра́шивать}}
+
+# to [[interrogate]]
+#: {{ru-ux|'''допроси́ть''' [[с]] [[пристрастие|пристра́стием]]|{{i|dated}} to [[torture]]; {{i|jocular}} to [[question]] in [[detail]]}}
+
+====Conjugation====
+{{ru-conj|4c+p|pf|допро́с}}
+
+одержать верх
+
+==Russian==
+
+===Etymology===
+Literally "to gain the top part"; compare "[[gain]] the [[upper hand]]".
+
+===Pronunciation===
+* {{ru-IPA|одержа́ть ве́рх}}
+
+===Verb===
+{{ru-verb|одержа́ть ве́рх|pf|impf=оде́рживать ве́рх}}
+
+# to [[defeat]], to [[prevail]] over
+#: {{ru-ux|'''одержа́ть верх''' над [[кто-нибудь|кем-нибудь]]|to [[prevail]] over someone, to [[defeat]] someone|inline=y}}
+# to [[overcome]]
+
+====Conjugation====
+{{ru-conj-verb-see|одержа́ть}}
+
+====Synonyms====
+* {{sense|defeat}} {{l|ru|победи́ть}}, {{l|ru|поборо́ть}}, {{l|ru|одержа́ть побе́ду}}
+* {{sense|overcome}} {{l|ru|преодоле́ть}}, {{l|ru|превозмо́чь}}
+
+одерживать верх
+
+==Russian==
+
+===Etymology===
+Literally "to gain the top part"; compare "[[gain]] the [[upper hand]]".
+
+===Pronunciation===
+* {{ru-IPA|оде́рживать ве́рх}}
+
+===Verb===
+{{ru-verb|оде́рживать ве́рх|impf|pf=одержа́ть ве́рх}}
+
+# to [[defeat]], to [[prevail]] over
+#: {{ru-ux|'''оде́рживать верх''' над [[кто-нибудь|кем-нибудь]]|to [[prevail]] over someone, to [[defeat]] someone|inline=y}}
+# to [[overcome]]
+
+====Conjugation====
+{{ru-conj-verb-see|оде́рживать}}
+
+====Synonyms====
+* {{sense|defeat}} {{l|ru|побежда́ть}}, {{l|ru|поба́рывать}}, {{l|ru|оде́рживать побе́ду}}
+* {{sense|overcome}} {{l|ru|преодолева́ть}}, {{l|ru|превозмога́ть}}
+
+------------- from here -------------
+
+именоваться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|именова́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|именова́ться}}
+
+===Verb===
+{{ru-verb|именова́ться|impf|pf=наименова́ться}}
+
+# {{lb|ru|imperfective only}} to be [[call]]ed
+# {{passive of|lang=ru|име́новать}}
+
+====Conjugation====
+{{ru-conj|2a|impf-refl|именова́}}
+
+====Related terms====
+* {{l|ru|и́мя}}
+* {{l|ru|имено́ванный}}
+* {{l|ru|имени́ны}}
+* {{l|ru|и́менно}}
+* {{l|ru|наименова́ние}}
+
+продвигаться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|продвига́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|продвига́ться}}
+
+===Verb===
+{{ru-verb|продвига́ться|impf|pf=продви́нуться}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|lang=ru|продвига́ть}}
+
+====Conjugation====
+{{ru-conj|1a|impf-refl|продвига́}}
+
+====Related terms====
+* {{l|ru|продвиже́ние}}
+
+продвинуть
+
+==Russian==
+
+===Etymology===
+{{affix|ru|продви́нуть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|продви́нуться}}
+
+===Verb===
+{{ru-verb|продви́нуться|pf|impf=продвига́ться}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|lang=ru|продви́нуть}}
+
+====Conjugation====
+{{ru-conj|3a+p|pf-refl|продви́}}
+
+====Related terms====
+* {{l|ru|продвиже́ние}}
+
+вписываться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|впи́сывать|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|впи́сываться}}
+
+===Verb===
+{{ru-verb|впи́сываться|impf|pf=вписа́ться}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|lang=ru|впи́сывать}}
+
+====Conjugation====
+{{ru-conj|1a-refl|impf|впи́сыва}}
+
+=====Related terms=====
+* {{l|ru|писа́ть|g=impf}}
+
+вписаться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|вписа́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|вписа́ться}}
+
+===Verb===
+{{ru-verb|вписа́ться|pf|impf=впи́сываться}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|lang=ru|вписа́ть}}
+
+====Conjugation====
+{{ru-conj|6c|pf-refl|впи́с}}
+
+=====Related terms=====
+* {{l|ru|писа́ть|g=impf}}
+
+
+усомниться
+
+===Etymology===
+{{affix|ru|у-|сомне́ние|alt2=сомн-|-и́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|усомни́ться}}
+
+===Verb===
+{{ru-verb|усомни́ться|pf}}
+
+# to [[doubt]], to [[feel]] [[doubt]] about ({{m|ru|в}} + {{glink|prepositional}})
+
+====Conjugation====
+{{ru-conj|4b|pf-refl|усомн}}
+
+====Synonyms====
+* {{l|ru|засомнева́ться}}, {{l|ru|поколеба́ться}}, {{l|ru|[[поста́вить]] [[под]] [[сомне́ние]]}}, {{l|ru|[[поста́вить]] [[под]] [[вопро́с]]}}
+
+====Related terms====
+* {{l|ru|сомне́ние}}
+* {{l|ru|сомнева́ться}}
+* {{l|ru|сомни́тельный}}
+* {{l|ru|сомни́тельно}}
+
+подтверждаться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|подтвержда́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|подтвержда́ться|gem=y}}
+
+===Verb===
+{{ru-verb|подтвержда́ться|impf|pf=подтверди́ться}}
+
+# to [[prove]] [[true]], to be [[confirmed]]
+# {{passive of|lang=ru|подтвержда́ть}}
+
+====Conjugation====
+{{ru-conj|1a|impf-refl|подтвержда́}}
+
+====Related terms====
+* {{l|ru|подтвержде́ние|g=n}}
+
+подтвердиться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|подтверди́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|подтверди́ться|gem=y}}
+
+===Verb===
+{{ru-verb|подтверди́ться|pf|impf=подтвержда́ться}}
+
+# to [[prove]] [[true]], to be [[confirmed]]
+# {{passive of|lang=ru|подтверди́ть}}
+
+====Conjugation====
+{{ru-conj|4b|pf-refl|подтверд}}
+
+====Related terms====
+* {{l|ru|подтвержде́ние|g=n}}
+
+
+ухватиться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|ухвати́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|ухвати́ться}}
+
+===Verb===
+{{ru-verb|ухвати́ться|pf|impf=ухва́тываться}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|lang=ru|ухвати́ть}}
+
+====Conjugation====
+{{ru-conj|4c|pf-refl|ухва́т}}
+
+====Related terms====
+* {{l|ru|ухва́т}}, {{l|ru|ухва́тка}}
+
+ухватываться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|ухва́тывать|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|ухва́тываться}}
+
+===Verb===
+{{ru-verb|ухва́тываться|impf|pf=ухвати́ться}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|lang=ru|ухва́тывать}}
+
+====Conjugation====
+{{ru-conj|1a|impf-refl|ухва́тыва}}
+
+====Related terms====
+* {{l|ru|ухва́т}}, {{l|ru|ухва́тка}}
+
+посыпаться
+
+==Russian==
+
+===Etymology 1===
+{{affix|ru|посыпа́ть|-ся}}
+
+====Pronunciation====
+* {{ru-IPA|посыпа́ться}}
+
+====Verb====
+{{ru-verb|посыпа́ться|impf|pf=посы́паться}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|lang=ru|посыпа́ть}}
+
+=====Conjugation=====
+{{ru-conj|1a|impf-refl|посыпа́}}
+
+===Etymology 2===
+{{affix|ru|посы́пать|-ся}}
+
+====Pronunciation====
+* {{ru-IPA|посы́паться}}
+
+====Verb====
+{{ru-verb|посы́паться|pf|impf=сы́паться|impf2=посыпа́ться}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|lang=ru|посы́пать}}
+
+=====Conjugation=====
+{{ru-conj|irreg-сыпать|pf-refl|по}}
+
+===Related terms===
+* {{l|ru|посыпа́ние|g=n}}
+
+расхохотаться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|рас-|хохота́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|расхохота́ться}}
+
+===Verb===
+{{ru-verb|расхохота́ться|pf}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|6c|pf-refl|расхохо́т}}
+
+=====Related terms=====
+* {{l|ru|хо́хот}}
+* {{l|ru|хохота́ть|g=impf}}
+* {{l|ru|хохоту́н}}
+
+
+сыпаться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|сы́пать|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|сы́паться}}
+
+===Verb===
+{{ru-verb|сы́паться|impf|pf=насы́паться|pf2=посы́паться}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|lang=ru|сы́пать}}
+
+====Conjugation====
+{{ru-conj|irreg-сыпать|impf-refl}}
+
+====Related terms====
+* {{l|ru|сыпу́чий}}
+
+освобождаться
+
+------------- from here -------------
+
+разместиться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|размести́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|размести́ться}}
+
+===Verb===
+{{ru-verb|размести́ться|pf|impf=размеща́ться}}
+
+# to [[take a seat|take seats]]
+# to be [[quartered]], to be [[housed]], to be [[accommodated]]
+# {{passive of|lang=ru|размести́ть}}
+
+====Conjugation====
+{{ru-conj|4b|pf-refl|размест}}
+
+====Related terms====
+* {{l|ru|размеще́ние}}
+
+размещаться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|размеща́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|размеща́ться}}
+
+===Verb===
+{{ru-verb|размеща́ться|impf|pf=размести́ться}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|lang=ru|размеща́ть}}
+
+====Conjugation====
+{{ru-conj|1a-refl|impf|размеща́}}
+
+====Related terms====
+* {{l|ru|размеще́ние}}
+
+описаться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|описа́ть|-ся}}
+
+====Pronunciation====
+* {{ru-IPA|описа́ться}}
+
+===Verb===
+{{ru-verb|описа́ться|pf|impf=опи́сываться}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|lang=ru|описа́ть}}
+
+====Conjugation====
+{{ru-conj|6c-refl|pf|опи́с}}
+
+описываться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|опи́сывать|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|опи́сываться}}
+
+===Verb===
+{{ru-verb|опи́сываться|impf|pf=описа́ться}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|lang=ru|опи́сывать}}
+
+====Conjugation====
+{{ru-conj|1a|impf-refl|опи́сыва}}
+
+потеряться
+
+------------- from here -------------
+
+переменить
+
+==Russian==
+
+===Etymology===
+{{affix|ru|пере-|мени́ть}}
+
+===Pronunciation===
+* {{ru-IPA|перемени́ть}}
+
+===Verb===
+{{ru-verb|перемени́ть|pf|impf=переменя́ть}}
+
+# {{lb|ru|transitive}} to [[change]]
+
+====Conjugation====
+{{ru-conj|4c(7)|pf|переме́н}}
+
+====Derived terms====
+* {{l|ru|переменя́ть|g=impf}}, {{l|ru|перемени́ть|g=pf}}
+
+====Related terms====
+* {{l|ru|переме́на}}
+* {{l|ru|переме́нный}}
+* {{l|ru|переме́нчивый}}
+
+переменять
+
+==Russian==
+
+===Etymology===
+{{affix|ru|перемени́ть|-я́ть}}
+
+===Pronunciation===
+* {{ru-IPA|переменя́ть}}
+
+===Verb===
+{{ru-verb|переменя́ть|impf|pf=перемени́ть}}
+
+# {{lb|ru|transitive}} to [[change]]
+
+====Conjugation====
+{{ru-conj|1a|impf|переменя́}}
+
+====Derived terms====
+* {{l|ru|переменя́ть|g=impf}}, {{l|ru|перемени́ть|g=pf}}
+
+====Related terms====
+* {{l|ru|переме́на}}
+* {{l|ru|переме́нный}}
+* {{l|ru|переме́нчивый}}
+
+перемениться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|перемени́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|перемени́ться}}
+
+===Verb===
+{{ru-verb|перемени́ться|pf|impf=переменя́ться}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|lang=ru|перемени́ть}}
+
+====Conjugation====
+{{ru-conj|4c|pf-refl|переме́н}}
+
+====Related terms====
+* {{l|ru|переме́на}}
+* {{l|ru|переме́нный}}
+* {{l|ru|переме́нчивый}}
+
+
+переменяться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|переменя́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|переменя́ться}}
+
+===Verb===
+{{ru-verb|переменя́ться|impf|pf=перемени́ться}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|lang=ru|переменя́ть}}
+
+====Conjugation====
+{{ru-conj|1a|impf-refl|переменя́}}
+
+====Related terms====
+* {{l|ru|переме́на}}
+* {{l|ru|переме́нный}}
+* {{l|ru|переме́нчивый}}
+
+обмениваться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|обме́нивать|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|обме́ниваться}}
+
+===Verb===
+{{ru-verb|обме́ниваться|impf|pf=обменя́ться}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|lang=ru|обме́нивать}}
+
+====Conjugation====
+{{ru-conj|1a|impf-refl|обме́нива}}
+
+====Related terms====
+* {{l|ru|обме́н}}
+* {{l|ru|обме́нный}}
+
+обменяться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|обменя́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|обменя́ться}}
+
+===Verb===
+{{ru-verb|обменя́ться|pf|impf=обме́ниваться}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|lang=ru|обменя́ть}}
+
+====Conjugation====
+{{ru-conj|1a|pf-refl|обменя́}}
+
+====Related terms====
+* {{l|ru|обме́н}}
+* {{l|ru|обме́нный}}
+
+объявиться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|объяви́ться}}
+
+===Pronunciation===
+* {{ru-IPA|объяви́ться}}
+
+===Verb===
+{{ru-verb|объяви́ться|pf|impf=объявля́ться}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|lang=ru|объяви́ть}}
+
+====Conjugation====
+{{ru-conj|4c|pf-refl|объя́в}}
+
+====Related terms====
+* {{l|ru|объявле́ние}}
+
+объявляться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|объявля́ться}}
+
+===Pronunciation===
+* {{ru-IPA|объявля́ться}}
+
+===Verb===
+{{ru-verb|объявля́ться|impf|pf=объяви́ться}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|lang=ru|объявля́ть}}
+
+====Conjugation====
+{{ru-conj|1a|impf-refl|объявля́}}
+
+====Related terms====
+* {{l|ru|объявле́ние|g=n}}
+
+------------- from here -------------
+
+умудрить
+
+==Russian==
+
+===Etymology===
+{{affix|ru|у-|мудрый|alt2=мудр-|-и́ть}}
+
+===Pronunciation===
+* {{ru-IPA|умудри́ть}}
+
+===Verb===
+{{ru-verb|умудри́ть|pf|impf=умудря́ть}}
+
+# to make [[wise]], to make [[wiser]]
+
+====Conjugation====
+{{ru-conj|4b+p|pf|умудр}}
+
+====Derived terms====
+* {{l|ru|умудря́ться|g=impf}}, {{l|ru|умудри́ться|g=pf}}
+
+====Related terms====
+* {{l|ru|му́дрый}}
+* {{l|ru|му́дрость}}
+* {{l|ru|мудри́ть}}
+
+умудрять
+
+==Russian==
+
+===Etymology===
+{{affix|ru|умудри́ть|-я́ть}}
+
+===Pronunciation===
+* {{ru-IPA|умудря́ть}}
+
+===Verb===
+{{ru-verb|умудря́ть|impf|pf=умудри́ть}}
+
+# to make [[wise]], to make [[wiser]]
+
+====Conjugation====
+{{ru-conj|1a|impf|умудря́}}
+
+====Derived terms====
+* {{l|ru|умудря́ться|g=impf}}, {{l|ru|умудри́ться|g=pf}}
+
+====Related terms====
+* {{l|ru|му́дрый}}
+* {{l|ru|му́дрость}}
+* {{l|ru|мудри́ть}}
+
+умудриться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|умудри́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|умудри́ться}}
+
+===Verb===
+{{ru-verb|умудри́ться|pf|impf=умудря́ться}}
+
+# to become [[wiser]]
+# {{lb|ru|colloquial}} to [[manage]] to (+ {{glink|infinitive}})
+# {{passive of|lang=ru|умудри́ть}}
+
+====Conjugation====
+{{ru-conj|4b|pf-refl|умудр}}
+
+====Related terms====
+* {{l|ru|му́дрый}}
+* {{l|ru|му́дрость}}
+* {{l|ru|мудри́ть}}
+
+
+умудряться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|умудря́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|умудря́ться}}
+
+===Verb===
+{{ru-verb|умудря́ться|impf|pf=умудри́ться}}
+
+# to become [[wiser]]
+# {{lb|ru|colloquial}} to [[manage]] to (+ {{glink|infinitive}})
+# {{passive of|lang=ru|умудря́ть}}
+
+====Conjugation====
+{{ru-conj|1a|impf-refl|умудря́}}
+
+====Related terms====
+* {{l|ru|му́дрый}}
+* {{l|ru|му́дрость}}
+* {{l|ru|мудри́ть}}
+
+разразиться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|разрази́ть|-ся}}, or directly from {{affix|ru|раз-|рази́ть|-ся}}.
+
+===Pronunciation===
+* {{ru-IPA|разрази́ться}}
+
+===Verb===
+{{ru-verb|разрази́ться|pf|impf=разража́ться}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|lang=ru|разрази́ть}}
+
+====Conjugation====
+{{ru-conj|4b|pf-refl|разраз}}
+
+====Related terms====
+* {{l|ru|рази́ть}}
+* {{l|ru|рази́тельный}}
+
+разражаться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|разрази́ться|-а́ть}}
+
+===Pronunciation===
+* {{ru-IPA|разража́ться}}
+
+===Verb===
+{{ru-verb|разража́ться|impf|pf=разрази́ться}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|lang=ru|разража́ть}}
+
+====Conjugation====
+{{ru-conj|1a|impf-refl|разража́}}
+
+====Related terms====
+* {{l|ru|рази́ть}}
+* {{l|ru|рази́тельный}}
+
+насторожить
+
+==Russian==
+
+===Etymology===
+{{affix|ru|на-|сторожи́ть}}
+
+===Pronunciation===
+* {{ru-IPA|насторожи́ть}}
+
+===Verb===
+{{ru-verb|насторожи́ть|pf|impf=прищу́ривать}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|4b+p|pf|насторож}}
+
+====Derived terms====
+* {{l|ru|прищу́риваться|g=impf}}, {{l|ru|насторожи́ться|g=pf}}
+
+====Related terms====
+* {{l|ru|насторо́женный}}, {{l|ru|насторожённый}}
+* {{l|ru|насторо́женно}}, {{l|ru|насторожённо}}
+* {{l|ru|насторо́женность}}, {{l|ru|насторожённость}}
+* {{l|ru|настороже́}}
+* {{l|ru|сто́рож}}
+* {{l|ru|сторожи́ть}}
+
+настораживать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|насторожи́ть|-я́ть}}
+
+===Pronunciation===
+* {{ru-IPA|настора́живать}}
+
+===Verb===
+{{ru-verb|настора́живать|impf|pf=насторожи́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|1a|impf|настора́жива}}
+
+====Derived terms====
+* {{l|ru|настора́живаться|g=impf}}, {{l|ru|насторожи́ться|g=pf}}
+
+====Related terms====
+* {{l|ru|насторо́женный}}, {{l|ru|насторожённый}}
+* {{l|ru|насторо́женно}}, {{l|ru|насторожённо}}
+* {{l|ru|насторо́женность}}, {{l|ru|насторожённость}}
+* {{l|ru|настороже́}}
+* {{l|ru|сто́рож}}
+* {{l|ru|сторожи́ть}}
+
+насторожиться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|насторожи́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|насторожи́ться}}
+
+===Verb===
+{{ru-verb|насторожи́ться|pf|impf=настора́живаться}}
+
+# to [[prick up one's ears]], to [[pay attention]] to
+# {{passive of|lang=ru|насторожи́ть}}
+
+====Conjugation====
+{{ru-conj|4b|pf-refl|насторож}}
+
+====Related terms====
+* {{l|ru|насторо́женный}}, {{l|ru|насторожённый}}
+* {{l|ru|насторо́женно}}, {{l|ru|насторожённо}}
+* {{l|ru|насторо́женность}}, {{l|ru|насторожённость}}
+* {{l|ru|настороже́}}
+* {{l|ru|сто́рож}}
+* {{l|ru|сторожи́ть}}
+
+
+настораживаться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|настора́живать|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|настора́живаться}}
+
+===Verb===
+{{ru-verb|настора́живаться|impf|pf=насторожи́ться}}
+
+# to [[prick up one's ears]], to [[pay attention]] to
+# {{passive of|lang=ru|настора́живать}}
+
+====Conjugation====
+{{ru-conj|1a|impf-refl|настора́жива}}
+
+====Related terms====
+* {{l|ru|насторо́женный}}, {{l|ru|насторожённый}}
+* {{l|ru|насторо́женно}}, {{l|ru|насторожённо}}
+* {{l|ru|насторо́женность}}, {{l|ru|насторожённость}}
+* {{l|ru|настороже́}}
+* {{l|ru|сто́рож}}
+* {{l|ru|сторожи́ть}}
+
+------------- from here -------------
+
+выпуститься
+
+==Russian==
+
+===Etymology===
+{{affix|ru|вы́пустить|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|вы́пуститься}}
+
+===Verb===
+{{ru-verb|вы́пуститься|pf|impf=выпуска́ться}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|lang=ru|вы́пустить}}
+
+====Conjugation====
+{{ru-conj|4a|pf-refl|вы́пуст}}
+
+====Synonyms====
+* {{sense|be put out?}} {{l|ru|выста́виться}}
+* {{sense|be produced}} {{l|ru|произвести́сь}}, {{l|ru|вырабо́таться}}
+* {{sense|be published}} {{l|ru|изда́ться}}, {{l|ru|опубликова́ться}}, {{l|ru|напеча́таться}}
+
+====Related terms====
+* {{l|ru|вы́пуск}}
+* {{l|ru|выпуска́ние}}
+* {{l|ru|выпускно́й}}
+
+выпускаться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|выпуска́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|выпуска́ться}}
+
+===Verb===
+{{ru-verb|выпуска́ться|impf|pf=вы́пуститься}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|lang=ru|выпуска́ть}}
+
+====Conjugation====
+{{ru-conj|1a|impf-refl|выпуска́}}
+
+====Synonyms====
+* {{sense|be put out?}} {{l|ru|выставля́ться}}
+* {{sense|be produced}} {{l|ru|производи́ться}}, {{l|ru|выраба́тываться}}
+* {{sense|be published}} {{l|ru|издава́ться}}, {{l|ru|публикова́ться}}, {{l|ru|печа́таться}}
+
+====Related terms====
+* {{l|ru|вы́пуск}}
+* {{l|ru|выпуска́ние}}
+* {{l|ru|выпускно́й}}
+
+изумить
+
+==Russian==
+
+===Etymology===
+{{affix|ru|из-|ум|-и́ть}}
+
+===Pronunciation===
+* {{ru-IPA|изуми́ть}}
+
+===Verb===
+{{ru-verb|изуми́ть|pf|impf=изумля́ть}}
+
+# to [[amaze]], to [[astonish]], to [[surprise]]
+
+====Conjugation====
+{{ru-conj|4b+p|pf|изум}}
+
+====Derived terms====
+* {{l|ru|изумля́ться|g=impf}}, {{l|ru|изуми́ться|g=pf}}
+* {{l|ru|изумле́ние}}
+* {{l|ru|изумлённый}}
+* {{l|ru|изуми́тельный}}
+* {{l|ru|изуми́тельно}}
+
+изумлять
+
+==Russian==
+
+===Etymology===
+{{affix|ru|изуми́ть|-я́ть}}
+
+===Pronunciation===
+* {{ru-IPA|изумля́ть}}
+
+===Verb===
+{{ru-verb|изумля́ть|impf|pf=изуми́ть}}
+
+# to [[amaze]], to [[astonish]], to [[surprise]]
+
+====Conjugation====
+{{ru-conj|1a|impf|изумля́}}
+
+====Derived terms====
+* {{l|ru|изумля́ться|g=impf}}, {{l|ru|изуми́ться|g=pf}}
+
+====Derived terms====
+* {{l|ru|изумля́ть|g=impf}}, {{l|ru|изуми́ть|g=pf}}
+* {{l|ru|изумле́ние}}
+* {{l|ru|изумлённый}}
+* {{l|ru|изуми́тельный}}
+* {{l|ru|изуми́тельно}}
+
+изумиться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|изуми́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|изуми́ться}}
+
+===Verb===
+{{ru-verb|изуми́ться|pf|impf=изумля́ться}}
+
+# to be [[amazed]], to be [[astonished]], to be [[surprised]], to [[marvel]] (at)
+# {{passive of|lang=ru|изуми́ть}}
+
+====Conjugation====
+{{ru-conj|4b|pf-refl|изум}}
+
+====Related terms====
+* {{l|ru|изумля́ть|g=impf}}, {{l|ru|изуми́ть|g=pf}}
+* {{l|ru|изумле́ние}}
+* {{l|ru|изумлённый}}
+* {{l|ru|изуми́тельный}}
+* {{l|ru|изуми́тельно}}
+
+
+изумляться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|изумля́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|изумля́ться}}
+
+===Verb===
+{{ru-verb|изумля́ться|impf|pf=изуми́ться}}
+
+# to be [[amazed]], to be [[astonished]], to be [[surprised]], to [[marvel]] (at)
+# {{passive of|lang=ru|изумля́ть}}
+
+====Conjugation====
+{{ru-conj|1a|impf-refl|изумля́}}
+
+====Related terms====
+* {{l|ru|изумля́ть|g=impf}}, {{l|ru|изуми́ть|g=pf}}
+* {{l|ru|изумле́ние}}
+* {{l|ru|изумлённый}}
+* {{l|ru|изуми́тельный}}
+* {{l|ru|изуми́тельно}}
+
+
+раскачиваться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|раска́чивать|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|раска́чиваться}}
+
+===Verb===
+{{ru-verb|раска́чиваться|impf|pf=раскача́ться}}
+
+# {{lb|ru|intransitive}} to [[swing]], to [[rock]]
+# {{rfdef|lang=ru}}
+# {{passive of|lang=ru|раска́чивать}}
+
+====Conjugation====
+{{ru-conj|1a|impf-refl|раска́чива}}
+
+====Synonyms====
+* {{sense|swing, rock}} {{l|ru|кача́ться}}
+
+====Related terms====
+* {{l|ru|раската́ть|g=impf}}, {{l|ru|раска́тывать|g=impf}}, {{l|ru|раскати́ть|g=pf}}
+* {{l|ru|раската́ться|g=impf}}, {{l|ru|раска́тываться|g=impf}}, {{l|ru|раскати́ться|g=pf}}
+* {{l|ru|раска́тистый}}
+* {{l|ru|кача́ть|g=impf}}, {{l|ru|качну́ть|g=pf}}
+* {{l|ru|кача́ться|g=impf}}, {{l|ru|качну́ться|g=pf}}
+
+раскачаться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|раскача́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|раскача́ться}}
+
+===Verb===
+{{ru-verb|раскача́ть|pf|impf=раска́чиваться}}
+
+# {{lb|ru|intransitive}} to [[swing]], to [[rock]]
+# {{rfdef|lang=ru}}
+# {{passive of|lang=ru|раскача́ть}}
+
+====Conjugation====
+{{ru-conj|1a|impf-refl|раскача́}}
+
+====Synonyms====
+* {{sense|swing, rock}} {{l|ru|качну́ться}}
+
+====Related terms====
+* {{l|ru|раската́ть|g=impf}}, {{l|ru|раска́тывать|g=impf}}, {{l|ru|раскати́ть|g=pf}}
+* {{l|ru|раската́ться|g=impf}}, {{l|ru|раска́тываться|g=impf}}, {{l|ru|раскати́ться|g=pf}}
+* {{l|ru|раска́тистый}}
+* {{l|ru|кача́ть|g=impf}}, {{l|ru|качну́ть|g=pf}}
+* {{l|ru|кача́ться|g=impf}}, {{l|ru|качну́ться|g=pf}}
+
+раскачивать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|раскача́ть|-ивать}}
+
+===Pronunciation===
+* {{ru-IPA|раска́чивать}}
+
+===Verb===
+{{ru-verb|раска́чивать|impf|pf=раскача́ть}}
+
+# {{lb|ru|transitive}} to [[swing]], to [[rock]]
+# to [[undermine]]
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|1a|impf|раска́чива}}
+
+====Synonyms====
+* {{sense|swing, rock}} {{l|ru|кача́ть}}
+* {{sense|undermine}} {{l|ru|расша́тывать}}
+
+====Related terms====
+* {{l|ru|раската́ть|g=impf}}, {{l|ru|раска́тывать|g=impf}}, {{l|ru|раскати́ть|g=pf}}
+* {{l|ru|раската́ться|g=impf}}, {{l|ru|раска́тываться|g=impf}}, {{l|ru|раскати́ться|g=pf}}
+* {{l|ru|раска́тистый}}
+* {{l|ru|кача́ть|g=impf}}, {{l|ru|качну́ть|g=pf}}
+* {{l|ru|кача́ться|g=impf}}, {{l|ru|качну́ться|g=pf}}
+
+раскачать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|рас-|кача́ть}}
+
+===Pronunciation===
+* {{ru-IPA|раскача́ть}}
+
+===Verb===
+{{ru-verb|раскача́ть|pf|impf=раска́чивать}}
+
+# {{lb|ru|transitive}} to [[swing]], to [[rock]]
+# to [[undermine]]
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|1a+p|pf|раскача́}}
+
+====Synonyms====
+* {{sense|swing, rock}} {{l|ru|качну́ть}}
+* {{sense|undermine}} {{l|ru|расшата́ть}}
+
+====Related terms====
+* {{l|ru|раската́ть|g=impf}}, {{l|ru|раска́тывать|g=impf}}, {{l|ru|раскати́ть|g=pf}}
+* {{l|ru|раската́ться|g=impf}}, {{l|ru|раска́тываться|g=impf}}, {{l|ru|раскати́ться|g=pf}}
+* {{l|ru|раска́тистый}}
+* {{l|ru|кача́ть|g=impf}}, {{l|ru|качну́ть|g=pf}}
+* {{l|ru|кача́ться|g=impf}}, {{l|ru|качну́ться|g=pf}}
+
+прищурить
+
+==Russian==
+
+===Etymology===
+{{affix|ru|при-|щу́рить}}
+
+===Pronunciation===
+* {{ru-IPA|прищу́рить}}
+
+===Verb===
+{{ru-verb|прищу́рить|pf|impf=прищу́ривать}}
+
+# to [[cause]] to [[squint]]
+#: {{ru-ux|'''прищу́рить''' [[глаз|глаза́]]|to [[squint]]|inline=y}}
+
+====Conjugation====
+{{ru-conj|4a+p|pf|прищу́р}}
+
+====Synonyms====
+* {{l|ru|сощу́рить|g=pf}}
+
+====Derived terms====
+* {{l|ru|прищу́риваться|g=impf}}, {{l|ru|прищу́риться|g=pf}}
+
+прищуривать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|прищу́рить|-ивать}}
+
+===Pronunciation===
+* {{ru-IPA|прищу́ривать}}
+
+===Verb===
+{{ru-verb|прищу́ривать|impf|pf=прищу́рить}}
+
+# to [[cause]] to [[squint]]
+#: {{ru-ux|'''прищу́ривать''' [[глаз|глаза́]]|to [[squint]]|inline=y}}
+
+====Conjugation====
+{{ru-conj|1a|impf|прищу́рива}}
+
+====Synonyms====
+* {{l|ru|щу́рить|g=impf}}
+
+====Derived terms====
+* {{l|ru|прищу́риваться|g=impf}}, {{l|ru|прищу́риться|g=pf}}
+
+прищуриться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|прищу́рить|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|прищу́риться}}
+
+===Verb===
+{{ru-verb|прищу́риться|pf|impf=прищу́риваться}}
+
+# to [[squint]]
+# {{passive of|lang=ru|прищу́рить}}
+
+====Conjugation====
+{{ru-conj|4a|pf-refl|прищу́р}}
+
+====Synonyms====
+* {{l|ru|сощу́риться|g=pf}}
+
+прищуриваться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|прищу́ривать|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|прищу́риваться}}
+
+===Verb===
+{{ru-verb|прищу́риваться|impf|pf=прищу́риться}}
+
+# to [[squint]]
+# {{passive of|lang=ru|прищу́ривать}}
+
+====Conjugation====
+{{ru-conj|1a|impf-refl|прищу́рива}}
+
+====Synonyms====
+* {{l|ru|щу́риться|g=impf}}
+
+------------- from here -------------
+
+побояться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|по-|боя́ться}}
+
+===Pronunciation===
+* {{ru-IPA|побоя́ться}}
+
+===Verb===
+{{ru-verb|побоя́ться|pf}}
+
+# to [[fear]], to be [[afraid]] {{qualifier|with {{glink|genitive}} or {{glink|infinitive}}}}
+
+====Conjugation====
+{{ru-conj|5b|impf-refl|побо|побоя́}}
+
+====Synonyms====
+* {{l|ru|забоя́ться}}
+
+
+тренироваться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|трени́ровать|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|трени́роваться}}
+
+===Verb===
+{{ru-verb|трени́роваться|impf|pf=натрени́роваться}}
+
+# {{lb|ru|intransitive}} to [[train]]
+# {{passive of|lang=ru|трени́ровать}}
+
+====Conjugation====
+{{ru-conj|2a|impf-refl|трени́рова}}
+
+натренироваться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|натрени́ровать|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|натрени́роваться}}
+
+===Verb===
+{{ru-verb|натрени́роваться|pf|impf=трени́роваться}}
+
+# {{lb|ru|intransitive}} to [[train]]
+# {{passive of|lang=ru|натрени́ровать}}
+
+====Conjugation====
+{{ru-conj|2a|impf-refl|натрени́рова}}
+
+
+тренировать
+
+==Russian==
+
+===Etymology===
+Ultimately from {{der|ru|en|train}} + {{affix|ru|-и́ровать}}.
+
+===Pronunciation===
+* {{ru-IPA|трени́ровать}}
+
+===Verb===
+{{ru-verb|трени́ровать|impf|pf=натрени́ровать}}
+
+# {{lb|ru|transitive}} to [[train]], to [[coach]]
+
+====Conjugation====
+{{ru-conj|2a+p|impf|трени́рова}}
+
+натренировать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|на-|трени́ровать}}
+
+===Pronunciation===
+* {{ru-IPA|натрени́ровать}}
+
+===Verb===
+{{ru-verb|натрени́ровать|pf|impf=трени́ровать}}
+
+# {{lb|ru|transitive}} to [[train]], to [[coach]]
+
+====Conjugation====
+{{ru-conj|2a+p|pf|натрени́рова}}
+
+------------- from here -------------
+
+осмыслить
+
+==Russian==
+
+===Etymology===
+{{affix|ru|o-|с-|мы́слить}}; or perhaps {{affix|ru|o-|смы́слить}}.
+
+===Pronunciation===
+* {{ru-IPA|осмы́слить}}
+
+===Verb===
+{{ru-verb|осмы́слить|pf|impf=осмы́сливать|impf2=осмысля́ть}}
+
+# to [[comprehend]], to [[grasp]]
+# {{lb|ru|philosophy}} to [[analyze]], to [[interpret]]
+
+====Conjugation====
+{{ru-conj|4a+p|pf|осмы́сл}}
+
+====Derived terms====
+* {{l|ru|осмысле́ние}}
+* {{l|ru|осмы́сленный}}
+
+осмысливать
+
+==Russian==
+
+===Alternative forms===
+* {{l|ru|осмысля́ть}}
+
+===Etymology===
+{{affix|ru|осмы́слить|-ивать}}
+
+===Pronunciation===
+* {{ru-IPA|осмы́сливать}}
+
+===Verb===
+{{ru-verb|осмы́сливать|impf|pf=осмы́слить}}
+
+# to [[comprehend]], to [[grasp]]
+# {{lb|ru|philosophy}} to [[analyze]], to [[interpret]]
+
+====Conjugation====
+{{ru-conj|1a|impf|осмы́слива}}
+
+====Related terms====
+* {{l|ru|осмысле́ние}}
+* {{l|ru|осмы́сленный}}
+
+осмыслять
+
+==Russian==
+
+===Alternative forms===
+* {{l|ru|осмы́сливать}}
+
+===Etymology===
+{{affix|ru|осмы́слить|-я́ть}}
+
+===Pronunciation===
+* {{ru-IPA|осмысля́ть}}
+
+===Verb===
+{{ru-verb|осмысля́ть|impf|pf=осмы́слить}}
+
+# to [[comprehend]], to [[grasp]]
+# {{lb|ru|philosophy}} to [[analyze]], to [[interpret]]
+
+====Conjugation====
+{{ru-conj|1a|impf|осмысля́}}
+
+====Related terms====
+* {{l|ru|осмысле́ние}}
+* {{l|ru|осмы́сленный}}
+
+приставить
+
+==Russian==
+
+===Etymology===
+{{affix|ru|o-|с-|мы́слить}}; or perhaps {{affix|ru|o-|смы́слить}}.
+
+===Pronunciation===
+* {{ru-IPA|приста́вить}}
+
+===Verb===
+{{ru-verb|приста́вить|pf|impf=приста́вивать|impf2=приставля́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|4a+p|pf|приста́в}}
+
+====Derived terms====
+* {{l|ru|приставле́ние}}
+
+приставлять
+
+==Russian==
+
+===Etymology===
+{{affix|ru|приста́вить|-я́ть}}
+
+===Pronunciation===
+* {{ru-IPA|приставля́ть}}
+
+===Verb===
+{{ru-verb|приставля́ть|impf|pf=приста́вить}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|1a|impf|приставля́}}
+
+====Related terms====
+* {{l|ru|приставле́ние}}
+
+------------- from here -------------
+
+зазвонить
+
+==Russian==
+
+===Etymology===
+{{affix|ru|за-|звони́ть}}
+
+===Pronunciation===
+* {{ru-IPA|зазвони́ть}}
+
+===Verb===
+{{ru-verb|зазвони́ть|pf}}
+
+# to [[start]] [[ringing]]
+# to [[start]] [[calling]] {{gloss|on the telephone}}
+
+====Conjugation====
+{{ru-conj|4b|pf-intr|зазвон}}
+
+====Related terms====
+* {{l|ru|звони́ть}}
+* {{l|ru|звон}}
+* {{l|ru|звоно́к}}
+* {{l|ru|зво́нкий}}
+* {{l|ru|звона́рь}}
+* {{l|ru|зво́нница}}
+
+проскочить
+
+==Russian==
+
+===Etymology===
+{{affix|ru|про-|скочи́ть}}
+
+===Pronunciation===
+* {{ru-IPA|проскочи́ть}}
+
+===Verb===
+{{ru-verb|проскочи́ть|pf|impf=проска́кивать}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|4c+p|pf|проско́ч}}
+
+====Synonyms====
+* {{sense|race past}} {{l|ru|промча́ться}}
+* {{sense|skip, miss}} {{l|ru|пропусти́ть}}
+
+====Related terms====
+* {{l|ru|проскака́ть}}
+
+проскакивать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|проскочи́ть|-ивать}}
+
+===Pronunciation===
+* {{ru-IPA|проска́кивать}}
+
+===Verb===
+{{ru-verb|проска́кивать|impf|pf=проскочи́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|1a|impf|проска́кива}}
+
+====Synonyms====
+* {{sense|race past}} {{l|ru|мча́ться}}
+* {{sense|skip, miss}} {{l|ru|пропуска́ть}}
+
+====Related terms====
+* {{l|ru|проскака́ть}}
+
+просмотреть
+
+==Russian==
+
+===Etymology===
+{{affix|ru|про-|смотре́ть}}
+
+===Pronunciation===
+* {{ru-IPA|просмотре́ть}}
+
+===Verb===
+{{ru-verb|просмотре́ть|pf|impf=просма́тривать}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|5c+p|pf|просмо́тр|просмотре́}}
+
+====Synonyms====
+* {{sense|FIXME}} {{l|ru|прогляде́ть}}
+* {{sense|FIXME}} {{l|ru|прогляде́ть}}, {{l|пропусти́ть}}, {{l|упусти́ть}}, {{l|проморга́ть}}, {{l|прошля́пить}}
+
+====Related terms====
+* {{l|ru|просмо́тр}}
+* {{l|ru|просма́триваться}}
+* {{l|ru|смотре́ть}}
+
+просматривать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|просмотре́ть|-ивать}}
+
+===Pronunciation===
+* {{ru-IPA|просма́тривать}}
+
+===Verb===
+{{ru-verb|просма́тривать|impf|pf=просмотре́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|1a|impf|просма́трива}}
+
+====Synonyms====
+* {{sense|FIXME}} {{l|пропуска́ть}}, {{l|упуска́ть}}, {{l|прома́ргивать}}
+
+====Derived terms====
+* {{l|ru|просма́триваться}}
+
+====Related terms====
+* {{l|ru|просмо́тр}}
+* {{l|ru|смотре́ть}}
+
+замедлить
+
+==Russian==
+
+===Etymology===
+{{affix|ru|за-|ме́длить}}
+
+===Pronunciation===
+* {{ru-IPA|заме́длить}}
+
+===Verb===
+{{ru-verb|заме́длить|pf|impf=замедля́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|4a+p|pf|заме́дл}}
+
+====Antonyms====
+* {{sense|FIXME}} {{l|ru|уско́рить}}
+
+====Related terms====
+* {{l|ru|замедле́ние}}
+* {{l|ru|заме́дленный}}
+* {{l|ru|заме́дленного де́йствия||{{i|attributive}} [[delayed]]-[[action]]}}
+
+замедлять
+
+==Russian==
+
+===Etymology===
+{{affix|ru|заме́длить|-я́ть}}
+
+===Pronunciation===
+* {{ru-IPA|замедля́ть}}
+
+===Verb===
+{{ru-verb|замедля́ть|impf|pf=заме́длить}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|1a|impf|замедля́ть}}
+
+====Antonyms====
+* {{sense|FIXME}} {{l|ru|ускоря́ть}}
+
+====Derived terms====
+* {{l|ru|замедле́ние}}
+* {{l|ru|заме́дленный}}
+* {{l|ru|заме́дленного де́йствия||{{i|attributive}} [[delayed]]-[[action]]}}
+
+вывозить
+
+==Russian==
+
+===Etymology 1===
+From {{affix|ru|вы́-|вози́ть}}; by rule, {{lang|ru|вы́-}} attracts the stress in perfective but not imperfective verbs.
+
+====Pronunciation====
+* {{ru-IPA|вывози́ть}}
+
+====Verb====
+{{ru-verb|вывози́ть|impf|pf=вы́везти}}
+
+# to [[take out]] (by vehicle), to [[remove]]
+#: {{ru-ux|[[вывози́ть на тачке]]|ref=&#32;''literally'' "to cart away in a wheelbarrow"|{{i|pejorative}} {{rfdef|lang=ru}}|inline=y}}
+# to [[deliver]]
+#: {{ru-ux|[[вывози́ть в свет]]|ref=&#32;''literally'' "to deliver into the light"|{{i|dated or high-style}} to [[introduce]] (young girls) to the [[community]]|inline=y}}
+# to [[export]]
+# to [[bring back]]
+# {{lb|ru|colloquial}} to [[rescue]], to [[save]]
+
+=====Conjugation=====
+{{ru-conj|4c|impf|выво́з}}
+
+=====Synonyms=====
+* {{sense|export}} {{l|ru|экспорти́ровать}}
+* {{sense|rescue}} {{l|ru|выруча́ть}}
+
+=====Related terms=====
+* {{l|ru|вы́воз}}
+* {{l|ru|вы́возка}}
+* {{l|ru|вывозно́й}}
+
+=====Derived terms=====
+* {{l|ru|вывози́ться}}
+
+===Etymology 2===
+See {{m|ru|вы́возить}} above.
+
+====Pronunciation====
+* {{ru-IPA|вы́возить}}
+
+====Verb====
+{{ru-verb|вы́возить|pf}}
+
+# {{rfdef|lang=ru}}
+
+=====Conjugation=====
+{{ru-conj|4a+p|pf|вы́воз}}
+
+=====Synonyms=====
+* {{l|ru|вы́пачкать}}, {{l|ru|вы́мазать}}, {{i|colloquial}} {{l|ru|извозюкать}}
+
+обнажить
+
+==Russian==
+
+===Etymology===
+{{rfe|lang=ru}}
+
+===Pronunciation===
+* {{ru-IPA|обнажи́ть}}
+
+===Verb===
+{{ru-verb|обнажи́ть|pf|impf=обнажа́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|4b+p|pf|обнаж}}
+
+====Synonyms====
+* {{sense|bare, expose}} {{l|ru|оголи́ть}}
+
+====Derived terms====
+* {{l|ru|обнажённый}}
+* {{l|ru|обнажённость}}
+* {{l|ru|обнаже́ние}}
+* {{l|ru|обнажа́ться|g=pf}}, {{l|ru|обнажи́ться|g=pf}}
+
+====Related terms====
+* {{l|ru|обнаженно}}
+* {{l|ru|обнажёнка}}
+
+обнажать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|обнажи́ть|-а́ть}}
+
+===Pronunciation===
+* {{ru-IPA|обнажа́ть}}
+
+===Verb===
+{{ru-verb|обнажа́ть|impf|pf=обнажи́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|1a|impf|обнажа́}}
+
+====Synonyms====
+* {{sense|bare, expose}} {{l|ru|оголя́ть}}
+
+====Derived terms====
+* {{l|ru|обнажа́ться|g=pf}}, {{l|ru|обнажи́ться|g=pf}}
+
+====Related terms====
+* {{l|ru|обнажённый}}
+* {{l|ru|обнажённость}}
+* {{l|ru|обнаже́ние}}
+* {{l|ru|обнаженно}}
+* {{l|ru|обнажёнка}}
+
+очертить
+
+==Russian==
+
+===Etymology===
+{{affix|ru|о-|черти́ть}}
+
+===Pronunciation===
+* {{ru-IPA|очерти́ть}}
+
+===Verb===
+{{ru-verb|очерти́ть|pf|impf=оче́рчивать}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|4c+p|pf|оче́рт}}
+
+====Synonyms====
+* {{sense|draw a line around}} {{l|ru|обвести́}}
+
+====Related terms====
+* {{l|ru|очерта́ние}}
+* {{l|ru|черта́}}
+* {{l|ru|черти́ть}}
+* {{l|ru|чёрточка}}
+* {{l|ru|черче́ние}}
+* {{l|ru|чертёж}}
+* {{l|ru|чертёжник}}
+* {{l|ru|чертёжный}}
+
+очерчивать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|очерти́ть|-ивать}}
+
+===Pronunciation===
+* {{ru-IPA|оче́рчивать}}
+
+===Verb===
+{{ru-verb|оче́рчивать|impf|pf=очерти́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|1a|impf|оче́рчива}}
+
+====Synonyms====
+* {{sense|draw a line around}} {{l|ru|обводи́ть}}
+
+====Related terms====
+* {{l|ru|очерта́ние}}
+* {{l|ru|черта́}}
+* {{l|ru|черти́ть}}
+* {{l|ru|чёрточка}}
+* {{l|ru|черче́ние}}
+* {{l|ru|чертёж}}
+* {{l|ru|чертёжник}}
+* {{l|ru|чертёжный}}
+
+
+пропеть
+
+==Russian==
+
+===Etymology===
+{{affix|ru|про-|петь}}
+
+===Pronunciation===
+* {{ru-IPA|пропе́ть}}
+
+===Verb===
+{{ru-verb|пропе́ть|pf|impf=петь}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|12b+p|pf|пропе́|пропо}}
+
+====Related terms====
+* {{l|ru|пе́сня}}
+* {{l|ru|певе́ц}}
+* {{l|ru|певи́ца}}
+
+хрустеть
+
+==Russian==
+
+===Etymology===
+{{affix|ru|хру́стнуть|-еть}}
+
+===Pronunciation===
+* {{ru-IPA|хрусте́ть}}
+
+===Verb===
+{{ru-verb|хрусте́ть|pf|impf=хру́стнуть}}
+
+# to [[crunch]]
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|5b|impf-intr|хруст|хрусте́}}
+
+====Derived terms====
+* {{l|ru|хрустя́щий}}
+
+====Related terms====
+* {{l|ru|хруст}}
+
+хрустнуть
+
+==Russian==
+
+===Etymology===
+{{rfe|lang=ru}}
+
+===Pronunciation===
+* {{ru-IPA|хру́стнуть}}
+
+===Verb===
+{{ru-verb|хру́стнуть|pf|impf=хрусте́ть}}
+
+# to [[crunch]]
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|3a|pf-intr|хру́ст}}
+
+====Related terms====
+* {{l|ru|хруст}}
+* {{l|ru|хрустя́щий}}
+
+маячить
+
+==Russian==
+
+===Etymology===
+Apparently from {{affix|ru|мая́к|t1=[[lighthouse]]|-ить}}.
+
+===Pronunciation===
+* {{ru-IPA|мая́чить}}
+
+===Verb===
+{{ru-verb|мая́чить|pf}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|4a|impf-intr|мая́ч}}
+
+====Synonyms====
+* {{sense|FIXME}} {{l|ru|пока́зываться}}, {{l|ru|мельтеши́ть}}
+* {{sense|FIXME}} {{l|ru|мелька́ть}}
+* {{sense|FIXME}} {{l|ru|надоеда́ть}}
+* {{sense|FIXME}} {{l|ru|предви́деться}}, {{l|ru|ожида́ться}}
+
+====Related terms====
+* {{l|ru|мая́к}}
+
+побрести
+
+==Russian==
+
+===Etymology===
+{{affix|ru|по-|брести́}}
+
+===Pronunciation===
+* {{ru-IPA|побрести́}}
+
+===Verb===
+{{ru-verb|побрести́|pf|impf=брести́}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|7b/b(9)|impf-intr|побрести́|побре́д}}
+
+====Synonyms====
+* {{sense|FIXME}} {{l|ru|заковылять}}, {{l|ru|поплести́сь}}, {{l|ru|потащиться}}
+
+====Related terms====
+* {{l|ru|поброди́ть}}
+* {{l|ru|броди́ть}}
+* {{l|ru|бродя́га}}
+
+торопить
+
+==Russian==
+
+===Etymology===
+{{rfe|lang=ru}}
+
+===Pronunciation===
+* {{ru-IPA|торопи́ть}}
+
+===Verb===
+{{ru-verb|торопи́ть|impf|pf=поторопи́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|4c+p|impf|торо́п}}
+
+====Synonyms====
+* {{sense|FIXME}} {{l|ru|подгоня́ть}}
+* {{sense|FIXME}} {{l|ru|приближа́ть}}
+
+====Antonyms====
+* {{sense|FIXME}} {{l|ru|сде́рживать}}
+* {{sense|FIXME}} {{l|ru|остана́вливать}}
+* {{sense|FIXME}} {{l|ru|тормози́ть}}
+
+====Derived terms====
+* {{l|ru|торопи́ться|g=impf}}, {{l|ru|поторопи́ться|g=pf}}
+
+====Related terms====
+* {{l|ru|торопли́вый}}, {{l|ru|торопли́во}}, {{l|ru|торопли́вность}}
+
+поторопить
+
+==Russian==
+
+===Etymology===
+{{affix|ru|по-|торопи́ть}}
+
+===Pronunciation===
+* {{ru-IPA|поторопи́ть}}
+
+===Verb===
+{{ru-verb|поторопи́ть|pf|impf=торопи́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|4c+p|pf|поторо́п}}
+
+====Synonyms====
+* {{sense|FIXME}} {{l|ru|подогна́ть}}
+* {{sense|FIXME}} {{l|ru|прибли́зить}}
+
+====Antonyms====
+* {{sense|FIXME}} {{l|ru|сдержа́ть}}
+* {{sense|FIXME}} {{l|ru|останови́ть}}
+* {{sense|FIXME}} {{l|ru|затормози́ть}}
+
+====Derived terms====
+* {{l|ru|торопи́ться|g=impf}}, {{l|ru|поторопи́ться|g=pf}}
+
+====Related terms====
+* {{l|ru|торопли́вый}}, {{l|ru|торопли́во}}, {{l|ru|торопли́вность}}
+
+ошеломить
+
+==Russian==
+
+===Etymology===
+{{affix|ru|о-|шеломи́ть}}
+
+===Pronunciation===
+* {{ru-IPA|ошеломи́ть}}
+
+===Verb===
+{{ru-verb|ошеломи́ть|pf|impf=ошеломля́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|4b+p|pf|ошелом}}
+
+====Synonyms====
+* {{sense|FIXME}} {{l|ru|порази́ть}}, {{l|ru|обескура́жить}}, {{l|ru|огоро́шить}}
+
+====Derived terms====
+* {{l|ru|ошеломи́тельный}}
+
+====Related terms====
+* {{l|ru|шеломи́ть}}
+
+ошеломлять
+
+==Russian==
+
+===Etymology===
+{{affix|ru|ошеломи́ть|-я́ть}}
+
+===Pronunciation===
+* {{ru-IPA|ошеломля́ть}}
+
+===Verb===
+{{ru-verb|ошеломля́ть|impf|pf=ошеломи́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|1a|impf|ошеломля́}}
+
+====Synonyms====
+* {{sense|FIXME}} {{l|ru|поража́ть}}, {{l|ru|обескура́живать}}, {{l|ru|огора́шивать}}
+
+====Related terms====
+* {{l|ru|ошеломи́тельный}}
+* {{l|ru|шеломи́ть}}
+
+
+стихнуть
+
+==Russian==
+
+===Etymology===
+{{affix|ru|с-|ти́хнуть}}
+
+===Pronunciation===
+* {{ru-IPA|сти́хнуть}}
+
+===Verb===
+{{ru-verb|сти́хнуть|pf|intr=стиха́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|3°a[(6)]|pf-intr|сти́х}}
+
+====Synonyms====
+* {{l|ru|успоко́иться}}, {{l|ru|переста́ть}}, {{l|ru|присмире́ть}}, {{l|ru|смо́лкнуть}}, {{l|ru|уня́ться}}, {{l|ru|уле́чься}}, {{l|ru|ослабе́ть}}, {{l|ru|зати́хнуть}}, {{l|ru|ути́хнуть}}, {{l|ru|приути́хнуть}}, {{l|ru|угомони́ться}}
+
+====Antonyms====
+* {{sense|of the wind}} {{l|ru|покрепча́ть}}
+
+====Derived terms====
+* {{l|ru|пости́хнуть}}
+
+стихать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|сти́хнуть|-а́ть}}
+
+===Pronunciation===
+* {{ru-IPA|стиха́ть}}
+
+===Verb===
+{{ru-verb|стиха́ть|impf|pf=сти́хнуть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|1a|impf-intr|стиха́}}
+
+====Synonyms====
+* {{l|ru|успока́иваться}}, {{l|ru|перестава́ть}}, {{l|ru|смолка́ть}}, {{l|ru|унима́ться}}, {{l|ru|ослабева́ть}}, {{l|ru|ти́хнуть}}, {{l|ru|затиха́ть}}, {{l|ru|утиха́ть}}, {{l|ru|приутиха́ть}}, {{l|ru|угомоня́ться}}
+
+====Antonyms====
+* {{sense|of the wind}} {{l|ru|крепча́ть}}
+
+====Related terms====
+* {{l|ru|ти́хий}}
+* {{l|ru|ти́хо}}
+* {{l|ru|тишина́}}
+* {{l|ru|тишь}}
+
+вынырнуть
+
+==Russian==
+
+===Etymology===
+{{affix|ru|вы-|нырну́ть}}
+
+===Pronunciation===
+* {{ru-IPA|вы́нырнуть}}
+
+===Verb===
+{{ru-verb|вы́нырнуть|pf|impf=выны́ривать}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|3a|pf-intr|вы́ныр}}
+
+====Related terms====
+* {{l|ru|ныря́ть|g=impf}}, {{l|ru|нырну́ть|g=pf}}
+* {{l|ru|ныро́к}}
+* {{l|ru|ныря́льщик}}
+
+выныривать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|вы́нырнуть|-ивать}}
+
+===Pronunciation===
+* {{ru-IPA|выны́ривать}}
+
+===Verb===
+{{ru-verb|выны́ривать|impf|pf=вы́нырнуть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|1a|impf-intr|выны́рива}}
+
+====Related terms====
+* {{l|ru|ныря́ть|g=impf}}, {{l|ru|нырну́ть|g=pf}}
+* {{l|ru|ныро́к}}
+* {{l|ru|ныря́льщик}}
+
+затормозить
+
+==Russian==
+
+===Etymology===
+{{affix|ru|за-|тормози́ть}}
+
+===Pronunciation===
+* {{ru-IPA|затормози́ть}}
+
+===Verb===
+{{ru-verb|затормози́ть|pf|impf=заторма́живать|impf2=тормози́ть}}
+
+# to [[brake]]
+# to [[hinder]], to [[impede]], to [[slow down]]
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|4b[(8)]|pf|затормоз}}
+
+====Derived terms====
+* {{l|ru|затормо́женность}}
+
+====Related terms====
+* {{l|ru|то́рмоз}}
+* {{l|ru|торможе́ние}}
+* {{l|ru|тормозно́й}}
+
+затормаживать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|затормози́ть|-ивать}}
+
+===Pronunciation===
+* {{ru-IPA|заторма́живать}}
+
+===Verb===
+{{ru-verb|заторма́живать|impf|pf=затормози́ть}}
+
+# to [[brake]]
+# to [[hinder]], to [[impede]], to [[slow down]]
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|1a|impf|заторма́живать}}
+
+====Related terms====
+* {{l|ru|затормо́женность}}
+* {{l|ru|то́рмоз}}
+* {{l|ru|торможе́ние}}
+* {{l|ru|тормозно́й}}
+
+напрочь
+
+==Russian==
+
+===Etymology===
+{{affix|ru|на-|прочь}}
+
+===Pronunciation===
+* {{ru-IPA|на́прочь}}
+
+===Adverb===
+{{ru-adv|на́прочь}}
+
+# {{rfdef|lang=ru}}
+
+====Synonyms====
+* {{l|ru|по́лностью}}, {{l|ru|совсе́м}}
+
+====Related terms====
+* {{l|ru|прочь}}
+* {{l|ru|про́чий}}
+
+треснуть
+
+==Russian==
+
+===Etymology===
+{{rfe|lang=ru}}
+
+===Pronunciation===
+* {{ru-IPA|тре́снуть}}
+
+===Verb===
+{{ru-verb|тре́снуть|pf|impf=треща́ть|impf2=тре́скаться}}
+
+# {{rfdef|lang=ru}} [intransitive]
+
+====Conjugation====
+{{ru-conj|3a|pf-intr|тре́с}}
+
+===Verb===
+{{ru-verb|тре́снуть|pf}}
+
+# {{rfdef|lang=ru}} [transitive]
+
+====Conjugation====
+{{ru-conj|3a+p|pf|тре́с}}
+
+====Derived terms====
+* {{l|ru|тре́снутый}}
+* {{l|ru|тре́снуться}}
+
+===Related terms===
+* {{l|ru|треск}}
+* {{l|ru|трескотня́}}
+* {{l|ru|треску́чий}}
+
+трещать
+
+==Russian==
+
+===Etymology===
+From {{affix|ru|тре́снуть|alt1=треск-|-а́ть}}. The same root appears in the approximate synonym {{m|ru|тре́скаться}}.
+
+===Pronunciation===
+* {{ru-IPA|треща́ть}}
+
+===Verb===
+{{ru-verb|треща́ть|impf|pf=тре́снуть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|1a|impf-intr|треща́}}
+
+===Related terms===
+* {{l|ru|треск}}
+* {{l|ru|трескотня́}}
+* {{l|ru|треску́чий}}
+* {{l|ru|тре́снутый}}
+* {{l|ru|тре́снуться}}
+
+трескаться
+
+==Russian==
+
+===Etymology===
+Perhaps from {{affix|ru|тре́скать|-ся}}, or from {{affix|ru|треск|-ать|-ся}}. The same root appears in {{m|ru|тре́снуть}} and {{m|ru|треща́ть}}.
+
+===Pronunciation===
+* {{ru-IPA|тре́скаться}}
+
+===Verb===
+{{ru-verb|тре́скаться|impf|pf=потре́скаться|pf2=тре́снуть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|1a|impf-refl|тре́ска}}
+
+===Related terms===
+* {{l|ru|треск}}
+* {{l|ru|трескотня́}}
+* {{l|ru|треску́чий}}
+* {{l|ru|тре́снутый}}
+* {{l|ru|тре́снуться}}
+
+
+встревожить
+
+==Russian==
+
+===Etymology===
+{{affix|ru|вс-|трево́жить}}
+
+===Pronunciation===
+* {{ru-IPA|встрево́жить}}
+
+===Verb===
+{{ru-verb|встрево́жить|pf|impf=трево́жить|impf2=встрево́живать}}
+
+# to [[disturb]]
+# to [[worry]], [[trouble]], [[harass]]
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|4а+p|pf|встрево́ж}}
+
+====Derived terms====
+* {{l|ru|встрево́женный}}
+* {{l|ru|встрево́женность}}
+* {{l|ru|встрево́живаться|g=impf}}, {{l|ru|встрево́житься|g=pf}}
+
+====Related terms====
+* {{l|ru|трево́га|g=f}}
+* {{l|ru|трево́жный}}
+
+встревоживать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|встрево́жить|-ивать}}
+
+===Pronunciation===
+* {{ru-IPA|встрево́живать}}
+
+===Verb===
+{{ru-verb|встрево́живать|impf|pf=встрево́жить}}
+
+# to [[disturb]]
+# to [[worry]], [[trouble]], [[harass]]
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|1a|impf|встрево́жива}}
+
+====Derived terms====
+* {{l|ru|встрево́живаться|g=impf}}, {{l|ru|встрево́житься|g=pf}}
+
+====Related terms====
+* {{l|ru|встрево́женный}}
+* {{l|ru|встрево́женность}}
+* {{l|ru|трево́га|g=f}}
+* {{l|ru|трево́жить}}
+* {{l|ru|трево́жный}}
+
+перевезти
+
+==Russian==
+
+===Etymology===
+{{affix|ru|пере-|везти́}}
+
+===Pronunciation===
+* {{ru-IPA|перевезти́}}
+
+===Verb===
+{{ru-verb|перевезти́|pf|impf=перевози́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|7b/b(9)+p|pf|перевезти́|перевёз}}
+
+====Related terms====
+* {{l|ru|перево́з}}
+* {{l|ru|перево́зка}}
+* {{l|ru|перево́зочный}}
+* {{l|ru|перево́зчик}}
+
+перевозить
+
+==Russian==
+
+===Etymology===
+{{affix|ru|пере-|вози́ть}}
+
+===Pronunciation===
+* {{ru-IPA|перевози́ть}}
+
+===Verb===
+{{ru-verb|перевози́ть|impf|pf=перевезти́}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|4c|impf|перево́з}}
+
+====Related terms====
+* {{l|ru|перево́з}}
+* {{l|ru|перево́зка}}
+* {{l|ru|перево́зочный}}
+* {{l|ru|перево́зчик}}
+
+===Verb===
+{{ru-verb|перевози́ть|pf}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|4c+p|pf|перево́з}}
+
+
+подпрыгнуть
+
+==Russian==
+
+===Etymology===
+{{affix|ru|под-|пры́гнуть}}
+
+===Pronunciation===
+* {{ru-IPA|подпры́гнуть}}
+
+===Verb===
+{{ru-verb|подпры́гнуть|pf|impf=подпры́гивать}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|3a|pf-intr|подпры́г}}
+
+====Related terms====
+* {{l|ru|пры́гать|g=impf}}, {{l|ru|пры́гнуть|g=pf}}
+* {{l|ru|пры́гание}}, {{l|ru|пры́ганье}}
+* {{l|ru|прыгу́н}}
+* {{l|ru|прыжо́к}}
+
+подпрыгивать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|подпры́гнуть|-ивать}}
+
+===Pronunciation===
+* {{ru-IPA|подпры́гивать}}
+
+===Verb===
+{{ru-verb|подпры́гивать|impf|pf=подпры́гнуть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|1a|impf|подпры́гива}}
+
+====Related terms====
+* {{l|ru|пры́гать|g=impf}}, {{l|ru|пры́гнуть|g=pf}}
+* {{l|ru|пры́гание}}, {{l|ru|пры́ганье}}
+* {{l|ru|прыгу́н}}
+* {{l|ru|прыжо́к}}
+
+
+скосить
+
+==Russian==
+
+===Etymology===
+{{affix|ru|с-|коси́ть}}
+
+===Pronunciation===
+* {{ru-IPA|скоси́ть}}
+
+===Verb===
+{{ru-verb|скоси́ть|pf|impf=коси́ть|impf2=ска́шивать}}
+
+# {{rfdef|lang=ru}} [о косьбе]
+
+====Conjugation====
+{{ru-conj|4c+p|pf|ско́с}}
+
+====Related terms====
+* {{l|ru|коса́}}
+* {{l|ru|коса́рь}}
+* {{l|ru|косе́ц}}
+* {{l|ru|коси́лка}}
+
+===Verb===
+{{ru-verb|скоси́ть|pf|impf=коси́ть|impf2=ска́шивать}}
+
+# {{rfdef|lang=ru}} [направить вкось]
+
+====Conjugation====
+{{ru-conj|4b(3)+p|pf|скос}}
+
+====Related terms====
+* {{l|ru|скос}}
+* {{l|ru|коси́ться|g=impf}}, {{l|ru|покоси́ться|g=pf}}
+* {{l|ru|ко́свенный}}, {{l|ru|ко́свенно}}
+
+скашивать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|скоси́ть|-ивать}}
+
+===Pronunciation===
+* {{ru-IPA|ска́шивать}}
+
+===Verb===
+{{ru-verb|ска́шивать|impf|pf=скоси́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|1a|impf|ска́шива}}
+
+====Related terms====
+* {{l|ru|скос}}
+* {{l|ru|коси́ться|g=impf}}, {{l|ru|покоси́ться|g=pf}}
+* {{l|ru|ко́свенный}}, {{l|ru|ко́свенно}}
+* {{l|ru|коса́}}
+* {{l|ru|коса́рь}}
+* {{l|ru|косе́ц}}
+* {{l|ru|коси́лка}}
+
+
+тряхнуть
+
+==Russian==
+
+===Etymology===
+{{rfe|lang=ru}}
+
+===Pronunciation===
+* {{ru-IPA|тряхну́ть}}
+
+===Verb===
+{{ru-verb|тряхну́ть|pf|impf=трясти́}}
+
+# {{lb|ru|transitive|or|intransitive}} to [[shake]] (once)
+
+====Conjugation====
+{{ru-conj|3b|pf|трях|ppp=-}}
+
+====Related terms====
+* {{l|ru|тря́ска}}
+* {{l|ru|тря́ский}}
+* {{l|ru|трясогу́зка}}
+* {{l|ru|трясти́сь}}
+
+[[Category:Russian semelfactive verbs]]
+
+фыркнуть
+
+==Russian==
+
+===Etymology===
+{{rfe|lang=ru}}
+
+===Pronunciation===
+* {{ru-IPA|фы́ркнуть}}
+
+===Verb===
+{{ru-verb|фы́ркнуть|pf|impf=фы́ркать}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|3a|pf-intr|фы́рк}}
+
+====Related terms====
+* {{l|ru|фы́рканье}}
+
+фыркать
+
+==Russian==
+
+===Etymology===
+{{rfe|lang=ru}}; from the same root as {{m|ru|фы́ркнуть}}.
+
+===Pronunciation===
+* {{ru-IPA|фы́ркать}}
+
+===Verb===
+{{ru-verb|фы́ркать|impf|pf=фы́ркнуть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|1a|impf|фы́рка}}
+
+====Derived terms====
+* {{l|ru|фы́рканье}}
+
+подвесить
+
+==Russian==
+
+===Etymology===
+{{affix|ru|под-|ве́сить}}
+
+===Pronunciation===
+* {{ru-IPA|подве́сить}}
+
+===Verb===
+{{ru-verb|подве́сить|pf|impf=подве́шивать}}
+
+# {{rfdef|lang=ru}}
+# {{ru-ux|[[в]] '''подве́шенном''' [[состояние|состоя́нии]]|in [[limbo]]}}
+
+====Conjugation====
+{{ru-conj|4а+p|pf|подве́с}}
+
+====Related terms====
+* {{l|ru|подвесно́й}}
+* {{l|ru|подве́ска}}
+* {{l|ru|подвесочный}}
+* {{l|ru|вес}}
+* {{l|ru|ве́сить}}
+* {{l|ru|ве́шать}}
+
+подвешивать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|подве́сить|-ивать}}
+
+===Pronunciation===
+* {{ru-IPA|подве́шивать}}
+
+===Verb===
+{{ru-verb|подве́шивать|impf|pf=подве́сить}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|1a|impf|подве́шива}}
+
+====Derived terms====
+* {{l|ru|подве́шивание}}
+
+====Related terms====
+* {{l|ru|подвесно́й}}
+* {{l|ru|подве́ска}}
+* {{l|ru|подвесочный}}
+* {{l|ru|вес}}
+* {{l|ru|ве́сить}}
+* {{l|ru|ве́шать}}
+
+сломить
+
+==Russian==
+
+===Etymology===
+{{affix|ru|с-|ломи́ть}}
+
+===Pronunciation===
+* {{ru-IPA|сломи́ть}}
+
+===Verb===
+{{ru-verb|сломи́ть|pf|impf=сла́мывать}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|4c+p|pf|сло́м}}
+
+====Usage notes====
+* A present adverbial participle {{lang|ru|сломя́}} appears in the expression {{m|ru|сломя́ го́лову}} (see derived terms below).
+
+====Derived terms====
+* {{l|ru|сломи́ться|g=pf}}
+* {{l|ru|сломя́ го́лову||[[headlong]], [[like mad]]}}
+
+====Related terms====
+* {{l|ru|слом}}
+* {{l|ru|сло́мный}}
+* {{l|ru|ломи́ть}}
+* {{l|ru|ломи́ться}}
+* {{l|ru|лома́ть|g=impf}}, {{l|ru|слома́ть|g=pf}}
+* {{l|ru|лома́ться|g=impf}}, {{l|ru|слома́ться|g=pf}}
+* {{l|ru|ло́мка}}
+* {{l|ru|ло́мкий}}, {{l|ru|ло́мкость}}
+
+сламывать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|сломи́ть|-ивать}}
+
+===Pronunciation===
+* {{ru-IPA|сла́мывать}}
+
+===Verb===
+{{ru-verb|сла́мывать|impf|pf=сломи́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|1a|impf|сла́мыва}}
+
+====Derived terms====
+* {{l|ru|сла́мывание}}
+
+====Related terms====
+* {{l|ru|слом}}
+* {{l|ru|сло́мный}}
+* {{l|ru|сломи́ться|g=pf}}
+* {{l|ru|сломя́ го́лову||[[headlong]], [[like mad]]}}
+* {{l|ru|ломи́ть}}
+* {{l|ru|ломи́ться}}
+* {{l|ru|лома́ть|g=impf}}, {{l|ru|слома́ть|g=pf}}
+* {{l|ru|лома́ться|g=impf}}, {{l|ru|слома́ться|g=pf}}
+* {{l|ru|ло́мка}}
+* {{l|ru|ло́мкий}}, {{l|ru|ло́мкость}}
+
+
+договорить
+
+==Russian==
+
+===Etymology===
+{{affix|ru|до-|говори́ть}}
+
+===Pronunciation===
+* {{ru-IPA|договори́ть}}
+
+===Verb===
+{{ru-verb|договори́ть|pf|impf=догова́ривать}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|4b+p|pf|договор}}
+
+====Derived terms====
+* {{l|ru|догова́риваться|g=impf}}, {{l|ru|договори́ться|g=pf}}
+
+====Related terms====
+* {{l|ru|догово́р}}, {{l|ru|до́говор}}
+* {{l|ru|договорённость}}
+* {{l|ru|догово́рный}}
+
+договаривать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|договори́ть|-ивать}}
+
+===Pronunciation===
+* {{ru-IPA|догова́ривать}}
+
+===Verb===
+{{ru-verb|догова́ривать|impf|pf=договори́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|1a|impf|догова́рива}}
+
+====Derived terms====
+* {{l|ru|догова́риваться|g=impf}}, {{l|ru|договори́ться|g=pf}}
+
+====Related terms====
+* {{l|ru|догово́р}}, {{l|ru|до́говор}}
+* {{l|ru|договорённость}}
+* {{l|ru|догово́рный}}
+
+
+подрасти
+
+==Russian==
+
+===Etymology===
+{{affix|ru|под-|расти́}}
+
+===Pronunciation===
+* {{ru-IPA|подрасти́}}
+
+===Verb===
+{{ru-verb|подрасти́|pf|impf=подраста́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|7b/b|pf-intr|подрасти́|подраст|подро́с}}
+
+====Synonyms====
+* {{l|ru|вы́расти}}
+
+====Antonyms====
+* {{l|ru|уме́ньшиться}}
+
+====Related terms====
+* {{l|ru|расти́|g=impf}}, {{l|ru|вы́расти|g=pf}}
+* {{l|ru|расти́ть|g=impf}}, {{l|ru|вы́растить|g=pf}}
+* {{l|ru|расте́ние}}
+* {{l|ru|растениево́дство}}
+
+подрастать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|подрасти́|-а́ть}}
+
+===Pronunciation===
+* {{ru-IPA|подраста́ть}}
+
+===Verb===
+{{ru-verb|подраста́ть|impf|pf=подрасти́}}
+
+# {{rfdef|lang=ru}}
+#: {{ru-ux|'''подраста́ющее''' [[поколе́ние]]|upcoming [[generation]]|inline=y}}
+
+====Conjugation====
+{{ru-conj|1a|impf|подраста́}}
+
+====Synonyms====
+* {{l|ru|расти́}}
+
+====Antonyms====
+* {{l|ru|уменьша́ться}}
+
+====Related terms====
+* {{l|ru|расти́|g=impf}}, {{l|ru|вы́расти|g=pf}}
+* {{l|ru|расти́ть|g=impf}}, {{l|ru|вы́растить|g=pf}}
+* {{l|ru|расте́ние}}
+* {{l|ru|растениево́дство}}
+
+
+насытить
+
+==Russian==
+
+===Etymology===
+From {{affix|ru|на-|-сы́тить}}. Not directly from {{m|ru|сыти́ть||to [[satisfy]], to [[saturate]]}} because of the differing stress pattern and iotation ({{m|ru|сычу́}} but {{m|ru|насы́щу}}).
+
+===Pronunciation===
+* {{ru-IPA|насы́тить}}
+
+===Verb===
+{{ru-verb|насы́тить|pf|impf=насыща́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|4a+pщ|pf|насы́т}}
+
+====Related terms====
+* {{l|ru|насыще́ние}}
+* {{l|ru|насы́щенный}}
+
+насыщать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|насы́тить|-а́ть}}
+
+===Pronunciation===
+* {{ru-IPA|насыща́ть}}
+
+===Verb===
+{{ru-verb|насыща́ть|impf|pf=насы́тить}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|1a|impf|насыща́}}
+
+====Derived terms====
+* {{l|ru|насыще́ние}}
+* {{l|ru|насы́щенный}}
+
+
+переложить
+
+==Russian==
+
+===Etymology===
+{{affix|ru|пере-|ложи́ть}}
+
+===Pronunciation===
+* {{ru-IPA|переложи́ть}}
+
+===Verb===
+{{ru-verb|переложи́ть|pf|impf=перелага́ть|impf2=перекла́дывать}}
+
+# {{rfdef|lang=ru}} [перевести на другой язык], {{g|impf}} — {{m|ru|перелага́ть}}
+# {{rfdef|lang=ru}} [изложить в иной форме], {{g|impf}} — {{m|ru|перелага́ть}}
+# {{rfdef|lang=ru}} [возложить на другого: ответственность], {{g|impf}} — {{m|ru|перекла́дывать}}, {{m|ru|перелага́ть}}
+# {{rfdef|lang=ru}} [other meanings], {{g|impf}} — {{m|ru|перекла́дывать}}
+
+====Conjugation====
+{{ru-conj|4c+p|pf|перело́ж}}
+
+====Derived terms====
+* {{l|ru|переложе́ние}}
+
+====Related terms====
+* {{l|ru|положи́ть}}
+* {{l|ru|ложи́ться}}, {{l|ru|лечь}}
+* {{l|ru|ло́же}}
+
+перелагать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|пере-|-лага́ть}}
+
+===Pronunciation===
+* {{ru-IPA|перелага́ть}}
+
+===Verb===
+{{ru-verb|перелага́ть|impf|pf=переложи́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|1a|impf|перелага́}}
+
+====Related terms====
+* {{l|ru|положи́ть}}
+* {{l|ru|ложи́ться}}, {{l|ru|лечь}}
+* {{l|ru|ло́же}}
+
+перекладывать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|пере-|-кла́дывать}}
+
+===Pronunciation===
+* {{ru-IPA|перекла́дывать}}
+
+===Verb===
+{{ru-verb|перекла́дывать|impf|pf=переложи́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|1a|impf|перекла́дыва}}
+
+====Related terms====
+* {{l|ru|класть}}
+
+утопить
+
+==Russian==
+
+===Etymology===
+{{affix|ru|у-|топи́ть}}
+
+===Pronunciation===
+* {{ru-IPA|утопи́ть}}
+
+===Verb===
+{{ru-verb|утопи́ть|pf|impf=топи́ть|impf2=ута́пливать}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|4c+p|pf|уто́п}}
+
+====Synonyms====
+* {{sense|FIXME}} {{l|ru|потопи́ть}}
+* {{sense|FIXME}}  {{l|ru|спря́тать}}, {{l|ru|скрыть}}
+* {{sense|FIXME}}  {{l|ru|заглуши́ть}}, {{l|ru|подави́ть}}
+* {{sense|FIXME}}  {{l|ru|топи́ть}}, {{l|ru|оклевета́ть}}, {{l|ru|погуби́ть}}, {{l|ru|докона́ть}}
+* {{sense|FIXME}}  {{l|ru|заби́ть}}, {{l|ru|завинти́ть}}
+
+====Derived terms====
+* {{l|ru|топи́ться|g=impf}}, {{l|ru|утопи́ться|g=pf}}
+
+====Related terms====
+* {{l|ru|утопа́ть|g=impf}}, {{l|ru|утону́ть|g=pf}}
+
+утапливать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|утопи́ть|-ивать}}
+
+===Pronunciation===
+* {{ru-IPA|ута́пливать}}
+
+===Verb===
+{{ru-verb|ута́пливать|impf|pf=утопи́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|1a|impf|ута́плива}}
+
+====Synonyms====
+* {{sense|FIXME}} {{l|ru|пря́тать}}, {{l|ru|скрыва́ть}}
+* {{sense|FIXME}} {{l|ru|глуши́ть}}, {{l|ru|дави́ть}}, {{l|ru|подавля́ть}}
+* {{sense|FIXME}} {{l|ru|губи́ть}}, {{l|ru|дока́нывать}}
+* {{sense|FIXME}} {{l|ru|забива́ть}}, {{l|ru|зави́нчивать}}
+
+====Related terms====
+* {{l|ru|топи́ть}}
+* {{l|ru|топи́ться|g=impf}}, {{l|ru|утопи́ться|g=pf}}
+* {{l|ru|утопа́ть|g=impf}}, {{l|ru|утону́ть|g=pf}}
+
+
+взмахнуть
+
+==Russian==
+
+===Etymology===
+{{affix|ru|вз-|махну́ть}}
+
+===Pronunciation===
+* {{ru-IPA|взмахну́ть}}
+
+===Verb===
+{{ru-verb|взмахну́ть|pf|impf=взма́хивать}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|3b|pf-intr|взмах}}
+
+====Synonyms====
+* {{l|ru|махну́ть}}
+
+====Derived terms====
+* {{l|ru|взма́хиваться|g=impf}}, {{l|ru|взмахну́ться|g=pf}}
+
+====Related terms====
+* {{l|ru|взмах}}
+* {{l|ru|маха́ть|g=impf}}
+
+взмахивать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|взмахну́ть|-ивать}}
+
+===Pronunciation===
+* {{ru-IPA|взма́хивать}}
+
+===Verb===
+{{ru-verb|взма́хивать|impf|pf=взмахну́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|1a|impf|взма́хива}}
+
+====Synonyms====
+* {{l|ru|маха́ть}}
+
+====Derived terms====
+* {{l|ru|взма́хиваться|g=impf}}, {{l|ru|взмахну́ться|g=pf}}
+* {{l|ru|взма́хивание}}
+
+====Related terms====
+* {{l|ru|взмах}}
+* {{l|ru|махну́ть|g=pf}}
+
+------------- from here -------------
+
+
+парализова́ть both - 2a+p
+
+==Russian==
+
+===Etymology===
+{{rfe|lang=ru}}
+
+===Pronunciation===
+* {{ru-IPA|парализова́ть}}
+
+===Verb===
+{{ru-verb|парализова́ть|both}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+''imperfective''
+{{ru-conj|2a+p|impf|парализова́}}
+''perfective''
+{{ru-conj|2a+p|pf|парализова́}}
+
+====Related terms====
+* {{l|ru|парали́тик}}
+* {{l|ru|парали́ч}}
+* {{l|ru|парали́чный}}
+
+изоли́ровать
+
+==Russian==
+
+===Etymology===
+{{rfe|lang=ru}}
+
+===Pronunciation===
+* {{ru-IPA|изоли́ровать}}
+
+===Verb===
+{{ru-verb|изоли́ровать|both}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+''imperfective''
+{{ru-conj|2a+p|impf|изоли́рова}}
+''perfective''
+{{ru-conj|2a+p|pf|изоли́рова}}
+
+====Related terms====
+* {{l|ru|изоли́рованный}}, {{l|ru|изоли́рованно}}
+* {{l|ru|изоля́тор}}
+* {{l|ru|изоляциони́зм}}
+* {{l|ru|изоляцио́нный}}
+* {{l|ru|изоля́ция}}
+
+ликова́ть impf-intr поликова́ть? 2a
+
+==Russian==
+
+===Etymology===
+{{rfe|lang=ru}}
+
+===Pronunciation===
+* {{ru-IPA|ликова́ть}}
+
+===Verb===
+{{ru-verb|ликова́ть|impf}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|2a|impf-intr|ликова́}}
+
+====Derived terms====
+* {{l|ru|ликова́ние}}
+* {{l|ru|возликова́ть}}
+* {{l|ru|поликова́ть}}
+
+наде́лать на-+де́лать pf наде́лывать 1a+p der:понаде́лать rel:де́лать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|на-|де́лать}}
+
+===Pronunciation===
+* {{ru-IPA|наде́лать}}
+
+===Verb===
+{{ru-verb|наде́лать|pf|impf=наде́лывать}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|1a+p|pf|наде́ла}}
+
+====Derived terms====
+* {{l|ru|понаде́лать}}
+
+====Related terms====
+* {{l|ru|де́лать}}
+
+
+наде́лывать наде́лать+-ывать impf наде́лать 1a+p
+
+==Russian==
+
+===Etymology===
+{{affix|ru|наде́лать|-ывать}}
+
+===Pronunciation===
+* {{ru-IPA|наде́лывать}}
+
+===Verb===
+{{ru-verb|наде́лывать|impf|pf=наде́лать}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|1a+p|impf|наде́лыва}}
+
+====Related terms====
+* {{l|ru|понаде́лать}}
+* {{l|ru|де́лать}}
+
+приостанови́ть
+
+==Russian==
+
+===Etymology===
+{{affix|ru|при-|останови́ть}}
+
+===Pronunciation===
+* {{ru-IPA|приостанови́ть}}
+
+===Verb===
+{{ru-verb|приостанови́ть|pf|impf=приостана́вливать}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|4c|pf|приостано́в}}
+
+====Derived terms====
+* {{l|ru|приостана́вливаться|g=impf}}, {{l|ru|приостанови́ться|g=pf}}
+* {{l|ru|приостановле́ние}}
+
+====Related terms====
+* {{l|ru|приостано́вка}}
+* {{l|ru|остана́вливать|g=impf}}, {{l|ru|останови́ть|g=pf}}
+* {{l|ru|остана́вливаться|g=impf}}, {{l|ru|останови́ться|g=pf}}
+
+заигра́ть за-+игра́ть pf заи́грывать 1a+p
+
+==Russian==
+
+===Etymology===
+{{affix|ru|за-|игра́ть}}
+
+===Pronunciation===
+* {{ru-IPA|заигра́ть}}
+
+===Verb===
+{{ru-verb|заигра́ть|pf|impf=заи́грывать}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|1a+p|pf|заигра́}}
+
+====Derived terms====
+* {{l|ru|заи́грывание}}
+
+====Related terms====
+* {{l|ru|игра́ть|g=impf}}, {{l|ru|сыгра́ть|g=pf}}
+* {{l|ru|игра́}}
+* {{l|ru|иго́рный}}
+* {{l|ru|игра́льный}}
+* {{l|ru|игри́вый}}
+* {{l|ru|игрово́й}}
+
+заи́грывать заигра́ть+-ывать impf заигра́ть 1a
+
+==Russian==
+
+===Etymology===
+{{affix|ru|заигра́ть|-ывать}}
+
+===Pronunciation===
+* {{ru-IPA|заи́грывать}}
+
+===Verb===
+{{ru-verb|заи́грывать|impf|pf=заигра́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|1a|impf|заи́грыва}}
+
+====Derived terms====
+* {{l|ru|заи́грывание}}
+
+====Related terms====
+* {{l|ru|игра́ть|g=impf}}, {{l|ru|сыгра́ть|g=pf}}
+* {{l|ru|игра́}}
+* {{l|ru|иго́рный}}
+* {{l|ru|игра́льный}}
+* {{l|ru|игри́вый}}
+* {{l|ru|игрово́й}}
+
+зашага́ть за-+шага́ть pf-intr - 1a
+
+==Russian==
+
+===Etymology===
+{{affix|ru|за-|шага́ть}}
+
+===Pronunciation===
+* {{ru-IPA|зашага́ть}}
+
+===Verb===
+{{ru-verb|зашага́ть|pf}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|1a|pf-intr|зашага́}}
+
+====Related terms====
+* {{l|ru|шага́ть|g=impf}}, {{l|ru|шагну́ть|g=pf}}
+* {{l|ru|шаг}}
+* {{l|ru|ша́гом}}
+
+
+поджать под+жать pf поджима́ть 14b|FIXME
+
+==Russian==
+
+===Pronunciation===
+* {{ru-IPA|поджа́ть}}
+
+===Etymology 1===
+{{affix|ru|под-|жать|t2=to [[press]], to [[squeeze]]}}
+
+====Verb====
+{{ru-verb|поджа́ть|pf|impf=поджима́ть}}
+
+# {{rfdef|lang=ru}}
+
+=====Conjugation=====
+{{ru-conj|14b+p|pf|поджа́|поджм}}
+
+===Etymology 2===
+{{affix|ru|под-|жать|t2=to [[reap]]}}
+
+====Verb====
+{{ru-verb|поджа́ть|pf|impf=поджина́ть}}
+
+# {{rfdef|lang=ru}}
+
+=====Conjugation=====
+{{ru-conj|14b+p|pf|поджа́|поджн}}
+
+поджима́ть под-+-жима́ть impf поджа́ть 1a
+
+==Russian==
+
+===Etymology===
+{{affix|ru|под-|-жима́ть}}
+
+===Pronunciation===
+* {{ru-IPA|поджима́ть}}
+
+===Verb===
+{{ru-verb|поджима́ть|impf|pf=поджа́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|1a|impf|поджима́}}
+
+
+поджина́ть под-+-жина́ть impf поджа́ть 1a
+
+
+==Russian==
+
+===Etymology===
+{{affix|ru|под-|-жина́ть}}
+
+===Pronunciation===
+* {{ru-IPA|поджина́ть}}
+
+===Verb===
+{{ru-verb|поджина́ть|impf|pf=поджа́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|1a|impf|поджина́}}
+
+
+придержа́ть при-+держа́ть pf приде́рживать 5+p FIXME
+
+==Russian==
+
+===Etymology===
+{{affix|ru|при-|держа́ть}}
+
+===Pronunciation===
+* {{ru-IPA|придержа́ть}}
+
+===Verb===
+{{ru-verb|придержа́ть|pf|impf=приде́рживать}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|5c+p|pf|де́рж|держа́}}
+
+====Related terms====
+* {{l|ru|держа́ть}}
+* {{l|ru|держа́ться}}
+* {{l|ru|держа́тель}}
+
+приде́рживать придержа́ть+-ивать impf придержа́ть 1a
+
+==Russian==
+
+===Etymology===
+{{affix|ru|придержа́ть|-ивать}}
+
+===Pronunciation===
+* {{ru-IPA|приде́рживать}}
+
+===Verb===
+{{ru-verb|приде́рживать|impf|pf=придержа́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|1a|impf|приде́ржива}}
+
+====Related terms====
+* {{l|ru|держа́ть}}
+* {{l|ru|держа́ться}}
+* {{l|ru|держа́тель}}
+
+
+перечи́тывать перечита́ть+-ывать impf перечита́ть,перече́сть 1a
+
+==Russian==
+
+===Etymology===
+{{affix|ru|перечита́ть|-ывать}}
+
+===Pronunciation===
+* {{ru-IPA|перечи́тывать}}
+
+===Verb===
+{{ru-verb|перечи́тывать|impf|pf=перечита́ть|pf2=перече́сть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|1a|impf|перечи́тыва}}
+
+===Related terms===
+* {{l|ru|пе́речень}}
+* {{l|ru|чита́ть}}
+* {{l|ru|чита́тель}}
+
+
+перечита́ть пере-+чита́ть pf перечи́тывать 1a+p
+
+==Russian==
+
+===Etymology===
+{{affix|ru|пере-|чита́ть}}
+
+===Pronunciation===
+* {{ru-IPA|перечита́ть}}
+
+===Verb===
+{{ru-verb|перечита́ть|pf|impf=перечи́тывать}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|1a+p|pf|перечита́}}
+
+===Related terms===
+* {{l|ru|пе́речень}}
+* {{l|ru|чита́ть}}
+* {{l|ru|чита́тель}}
+
+перече́сть пере-+честь
+
+==Russian==
+
+===Etymology===
+{{affix|ru|пере-|че́сть}}
+
+===Pronunciation===
+* {{ru-IPA|перече́сть}}
+
+===Verb===
+{{ru-verb|перече́сть|pf|impf=пересчи́тывать}}
+
+# {{rfdef|lang=ru}} [пересчитать, перечислить]
+
+====Conjugation====
+{{ru-conj|7b/b(9)+p|pf|перече́сть|перечт|перечёт|пере́ч|past_m=перечёл|past_actv_part=-|past_adv_part=перечтя́}}
+
+====Synonyms====
+* {{sense|FIXME}} {{l|ru|пересчита́ть}}
+* {{sense|FIXME}} {{l|ru|перечи́слить}}
+
+===Verb===
+{{ru-verb|перече́сть|pf|impf=перечи́тывать}}
+
+# {{rfdef|lang=ru}} [прочесть заново]
+
+====Conjugation====
+{{ru-conj|7b/b(9)+p|pf|перече́сть|перечт|перечёт|пере́ч|past_m=перечёл|past_actv_part=-|past_adv_part=перечтя́}}
+
+====Synonyms====
+* {{l|ru|перечита́ть}}
+
+===Related terms===
+* {{l|ru|пе́речень}}
+* {{l|ru|честь}}
+* {{l|ru|чита́ть}}
+* {{l|ru|чита́тель}}
+
+пропита́ть про-+пита́ть pf пропи́тывать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|про-|пита́ть}}
+
+===Pronunciation===
+* {{ru-IPA|пропита́ть}}
+
+===Verb===
+{{ru-verb|пропита́ть|pf|impf=пита́ть|impf2=пропи́тывать}}
+
+# {{rfdef|lang=ru}} [прокормить]
+
+====Conjugation====
+{{ru-conj|1a+p|pf|пропита́}}
+
+====Synonyms====
+* {{l|ru|прокормить}}?
+
+===Verb===
+{{ru-verb|пропита́ть|pf|impf=пропи́тывать}}
+
+# {{rfdef|lang=ru}} [смочить насквозь etc.]
+
+====Conjugation====
+{{ru-conj|1a+p|pf|пропита́}}
+
+===Derived terms===
+* {{l|ru|пропита́ние}}
+* {{l|ru|пропи́тываться|g=impf}}, {{l|ru|пропита́ться}}
+
+пропи́тывать пропита́ть+-ывать impf пропита́ть 1a
+
+==Russian==
+
+===Etymology===
+{{affix|ru|пропита́ть|-ывать}}
+
+===Pronunciation===
+* {{ru-IPA|пропи́тывать}}
+
+===Verb===
+{{ru-verb|пропи́тывать|impf|pf=пропита́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|1a|impf|пропи́тыва}}
+
+====Derived terms====
+* {{l|ru|пропи́тываться|g=impf}}, {{l|ru|пропита́ться}}
+
+====Related terms====
+* {{l|ru|пропита́ние}}
+
+
+пустова́ть
+
+==Russian==
+
+===Etymology===
+{{affix|ru|пусто́й|-ова́ть}}
+
+===Pronunciation===
+* {{ru-IPA|пустова́ть}}
+
+===Verb===
+{{ru-verb|пустова́ть|impf}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|2a|impf-intr|пустова́}}
+
+====Related terms====
+* {{l|ru|пусто́й}}
+* {{l|ru|пу́сто}}
+* {{l|ru|пустота́}}
+* {{l|ru|пусте́ть|g=impf}}, {{l|ru|опусте́ть|g=pf}}
+* {{l|ru|пустоголо́вый}}
+* {{l|ru|пустозво́н}}
+* {{l|ru|пустоте́лый}}
+* {{l|ru|пустопоро́жный}}
+* {{l|ru|пустоме́ля}}
+* {{l|ru|пустосло́в}}, {{l|ru|пустосло́вить}}
+* {{l|ru|пустоцве́т}}
+* {{l|ru|пу́стошь}}
+* {{l|ru|пусты́ня}}, {{l|ru|пусты́нный}}
+* {{l|ru|пустя́к}}, {{l|ru|пустяко́вый}}
+
+инициировать
+
+==Russian==
+
+===Etymology===
+Perhaps from {{der|ru|de|initiieren}} + {{affix|ru|-овать}}; see also {{affix|ru|-и́ровать}}.
+
+===Pronunciation===
+* {{ru-IPA|иниции́ровать}}
+
+===Verb===
+{{ru-verb|иниции́ровать|both}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+''imperfective''
+{{ru-conj|2a+p|impf|иниции́рова}}
+''perfective''
+{{ru-conj|2a+p|pf|иниции́рова}}
+
+====Related terms====
+* {{l|ru|инициа́л}}
+* {{l|ru|инициати́ва}}
+* {{l|ru|инициа́тор}}
+
+домини́ровать
+
+==Russian==
+
+===Pronunciation===
+* {{ru-IPA|домини́ровать}}
+
+===Etymology 1===
+Perhaps from {{der|ru|de|dominieren}} + {{affix|ru|-овать}}; see also {{affix|ru|-и́ровать}}.
+
+====Verb====
+{{ru-verb|домини́ровать|impf}}
+
+# {{rfdef|lang=ru}}
+
+=====Conjugation=====
+{{ru-conj|2a|impf-intr|домини́рова}}
+
+=====Derived terms=====
+* {{l|ru|домини́рующий}}
+
+=====Related terms=====
+* {{l|ru|домина́нта}}
+* {{l|ru|доминио́н}}
+
+===Etymology 2===
+{{affix|ru|до-|мини́ровать}}
+
+====Verb====
+{{ru-verb|домини́ровать|pf|impf=мини́ровать}}
+
+# {{rfdef|lang=ru}}
+
+=====Conjugation=====
+{{ru-conj|2a|pf|домини́рова}}
+
+=====Related terms=====
+* {{l|ru|мини́ровать}}
+* {{l|ru|ми́на}}
+* {{l|ru|минёр}}
+
+прониза́ть
+
+==Russian==
+
+===Etymology===
+{{affix|ru|про-|низа́ть}}
+
+===Pronunciation===
+* {{ru-IPA|прониза́ть}}
+
+===Verb===
+{{ru-verb|прониза́ть|pf|impf=прони́зывать}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|6c+p|pf|прони́з}}
+
+====Derived terms====
+* {{l|ru|прони́зывающий}}
+
+====Related terms====
+* {{l|ru|пронза́ть|g=impf}}, {{l|ru|пронзи́ть|g=pf}}
+* {{l|ru|пронзи́тельный}}
+
+прони́зывать прониза́ть+-ывать impf прониза́ть 1a
+
+==Russian==
+
+===Etymology===
+{{affix|ru|прониза́ть|-ывать}}
+
+===Pronunciation===
+* {{ru-IPA|прони́зывать}}
+
+===Verb===
+{{ru-verb|прони́зывать|impf|pf=прониза́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|1a|impf|прони́зыва}}
+
+====Derived terms====
+* {{l|ru|прони́зывающий}}
+
+====Related terms====
+* {{l|ru|пронза́ть|g=impf}}, {{l|ru|пронзи́ть|g=pf}}
+* {{l|ru|пронзи́тельный}}
+
+
+замета́ть
+
+==Russian==
+
+===Pronunciation===
+* {{ru-IPA|замета́ть}}
+
+===Etymology 1===
+{{affix|ru|за-|мета́ть|t2=to [[throw]], to [[cast]]}}
+
+====Verb====
+{{ru-verb|замета́ть|impf|pf=замести́}}
+
+# {{rfdef|lang=ru}}
+
+=====Conjugation=====
+{{ru-conj|1a|impf|замета́}}
+
+=====Synonyms=====
+* {{sense|FIXME}} {{l|ru|засыпа́ть}}, {{l|ru|заноси́ть}}?
+* {{sense|FIXME}} {{l|ru|заде́рживать}}, {{l|ru|забира́ть}}, {{l|ru|аресто́вывать}}
+
+===Etymology 2===
+{{affix|ru|за-|мета́ть|t2=to [[baste]]}}
+
+====Verb====
+{{ru-verb|замета́ть|pf|impf=замётывать}}
+
+# {{rfdef|lang=ru}} [зашить]
+
+=====Conjugation=====
+{{ru-conj|1a+pё|pf|замета́}}
+
+=====Synonyms=====
+* {{sense|FIXME}} {{l|ru|заши́ть}}?
+
+===Etymology 3===
+{{affix|ru|за-|мета́ть|t2=to [[throw]], to [[cast]]}}
+
+====Verb====
+{{ru-verb|замета́ть|pf|impf=замётывать}}
+
+# {{rfdef|lang=ru}} [забросать]
+
+=====Conjugation=====
+{{ru-conj|6c+pё|pf|заме́т}}
+
+=====Synonyms=====
+* {{l|ru|закида́ть}}, {{l|ru|заброса́ть}}?
+
+=====Derived terms=====
+* {{l|ru|замета́ться}}
+
+===Etymology 4===
+{{affix|ru|за-|мета́ть|t2=to [[throw]], to [[cast]]}}
+
+====Verb====
+{{ru-verb|замета́ть|pf|impf=мета́ть}}
+
+# {{rfdef|lang=ru}} {{lb|ru|colloquial}} [начать метать]
+
+=====Conjugation=====
+{{ru-conj|6c+pё|pf|заме́т}}
+
+замести
+
+==Russian==
+
+===Etymology===
+{{affix|ru|за-|мести́}}
+
+===Pronunciation===
+* {{ru-IPA|замести́}}
+
+===Verb===
+{{ru-verb|замести́|pf|impf=замета́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|7b/b(9)+p|pf|замести́|замёт}}
+
+====Synonyms====
+* {{sense|FIXME}} {{l|ru|засы́пать}}, {{l|ru|занести́}}?
+* {{sense|FIXME}} {{l|ru|задержа́ть}}, {{l|ru|забра́ть}}, {{l|ru|арестова́ть}}
+
+
+замётывать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|замета́ть|-ывать}}
+
+===Pronunciation===
+* {{ru-IPA|замётывать}}
+
+===Verb===
+{{ru-verb|замётывать|impf|pf=замета́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|1a|impf|замётыва}}
+
+====Synonyms====
+* {{sense|FIXME}} {{l|ru|зашива́ть}}
+* {{sense|FIXME}} {{l|ru|заки́дывать}}, {{l|ru|забра́сывать}}?
+
+испове́довать
+
+==Russian==
+
+===Etymology===
+{{rfe|lang=ru}}
+
+===Pronunciation===
+* {{ru-IPA|испове́довать}}
+
+===Verb===
+{{ru-verb|испове́довать|both|pf2=испове́дать}}
+
+# {{rfdef|lang=ru}} [подвергнуть исповеди; высказать: задушевные мысли]
+
+====Conjugation====
+''imperfective''
+{{ru-conj|2a|impf|испове́дова}}
+''perfective''
+{{ru-conj|2a+p|pf|испове́дова}}
+
+===Verb===
+{{ru-verb|испове́довать|impf|pf=?}}
+
+# {{rfdef|lang=ru}} [открыто следовать — учению, религии]
+
+====Conjugation====
+{{ru-conj|2a+p|impf|испове́дова}}
+
+===Related terms===
+* {{l|ru|и́споведь}}
+* {{l|ru|испове́дник}}
+* {{l|ru|исповеда́льня}}
+* {{l|ru|испове́дание}}
+* {{l|ru|запове́довать}}, {{l|ru|пропове́довать}}
+* {{l|ru|пове́дать}}
+* {{l|ru|поведе́ние}}
+
+поже́ртвовать pf же́ртвовать? 2a
+
+==Russian==
+
+===Etymology===
+{{affix|ru|по-|же́ртвовать}}
+
+===Pronunciation===
+* {{ru-IPA|поже́ртвовать}}
+
+===Verb===
+{{ru-verb|поже́ртвовать|pf|impf=же́ртвовать}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|2a+p|pf|поже́ртвова}}
+
+====Derived terms====
+* {{l|ru|поже́ртвование}}
+* {{l|ru|же́ртвоваться|g=impf}}, {{l|ru|поже́ртвоваться|g=pf}}
+
+====Related terms====
+* {{l|ru|же́ртвование}}
+* {{l|ru|же́ртвователь}}, {{l|ru|же́ртвовательница}}
+* {{l|ru|же́ртва}}
+* {{l|ru|же́ртвенник}}
+* {{l|ru|же́ртвенный}}, {{l|ru|же́ртвенность}}
+* {{l|ru|жертвоприноше́ние}}
+
+жертвовать
+
+==Russian==
+
+===Etymology===
+{{rfe|lang=ru}}
+
+===Pronunciation===
+* {{ru-IPA|же́ртвовать}}
+
+===Verb===
+{{ru-verb|же́ртвовать|impf|pf=поже́ртвовать}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|2a+p|impf|же́ртвова}}
+
+====Derived terms====
+* {{l|ru|же́ртвование}}
+* {{l|ru|же́ртвователь}}, {{l|ru|же́ртвовательница}}
+* {{l|ru|же́ртвоваться|g=impf}}, {{l|ru|поже́ртвоваться|g=pf}}
+
+====Related terms====
+* {{l|ru|же́ртва}}
+* {{l|ru|же́ртвенник}}
+* {{l|ru|же́ртвенный}}, {{l|ru|же́ртвенность}}
+* {{l|ru|жертвоприноше́ние}}
+
+прокричать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|про-|крича́ть}}
+
+===Pronunciation===
+* {{ru-IPA|прокрича́ть}}
+
+===Verb===
+{{ru-verb|прокрича́ть|pf}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|5b|pf|прокрич|прокрича́|ppp=-}}
+
+====Related terms====
+* {{l|ru|крича́ть}}
+
+пропове́довать
+
+==Russian==
+
+===Etymology===
+Possibly {{affix|ru|пропове́дать|-овать}}.
+
+===Pronunciation===
+* {{ru-IPA|пропове́довать}}
+
+===Verb===
+{{ru-verb|пропове́довать|impf|pf=пропове́дать}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|2a|impf|пропове́дова}}
+
+====Related terms====
+* {{l|ru|про́поведь}}
+* {{l|ru|пропове́дник}}
+
+пропове́дать про-+пове́дать pf пропове́довать 1a+p
+
+
+==Russian==
+
+===Etymology===
+{{affix|ru|про-|пове́дать}}
+
+===Pronunciation===
+* {{ru-IPA|пропове́дать}}
+
+===Verb===
+{{ru-verb|пропове́дать|pf|impf=пропове́довать}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|1a+p|pf|пропове́да}}
+
+====Related terms====
+* {{l|ru|про́поведь}}
+* {{l|ru|пропове́дник}}
+
+разгада́ть раз-+гада́ть pf разга́дывать 1a+p
+
+==Russian==
+
+===Etymology===
+{{affix|ru|раз-|гада́ть}}
+
+===Pronunciation===
+* {{ru-IPA|разгада́ть}}
+
+===Verb===
+{{ru-verb|разгада́ть|pf|impf=разга́дывать}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|1a+p|pf|разгада́}}
+
+====Related terms====
+* {{l|ru|разга́дка}}
+
+
+разга́дывать разгада́ть+-ывать impf разгада́ть 1a
+
+==Russian==
+
+===Etymology===
+{{affix|ru|разгада́ть|-ывать}}
+
+===Pronunciation===
+* {{ru-IPA|разга́дывать}}
+
+===Verb===
+{{ru-verb|разга́дывать|impf|pf=разгада́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|1a|impf|разга́дыва}}
+
+====Related terms====
+* {{l|ru|разга́дка}}
+
+воспроизводить
+
+==Russian==
+
+===Etymology===
+{{affix|ru|вос-|производи́ть}}
+
+===Pronunciation===
+* {{ru-IPA|воспроизводи́ть}}
+
+===Verb===
+{{ru-verb|воспроизводи́ть|impf|pf=воспроизвести́}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|4c|impf|воспроизво́д}}
+
+====Derived terms====
+* {{l|ru|воспроизвoди́тель}}, {{l|ru|воспроизводи́тельница}}
+* {{l|ru|воспроизвoди́тельный}}
+* {{l|ru|воспроизводи́ться|g=impf}}, {{l|ru|воспроизвести́сь|g=pf}}
+* {{l|ru|воспроизводи́мость}}
+
+====Related terms====
+* {{l|ru|воспроизво́дство}}
+* {{l|ru|воспроизведе́ние}}
+
+воспроизвести
+
+==Russian==
+
+===Etymology===
+{{affix|ru|вос-|произвести́}}
+
+===Pronunciation===
+* {{ru-IPA|воспроизвести́}}
+
+===Verb===
+{{ru-verb|воспроизвести́|pf|impf=воспроизводи́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|7b/b(9)+p|pf|произвести́|произве́д}}
+
+====Derived terms====
+* {{l|ru|воспроизведе́ние}}
+* {{l|ru|воспроизводи́ться|g=impf}}, {{l|ru|воспроизвести́сь|g=pf}}
+
+====Related terms====
+* {{l|ru|воспроизво́дство}}
+* {{l|ru|воспроизвoди́тель}}, {{l|ru|воспроизводи́тельница}}
+* {{l|ru|воспроизвoди́тельный}}
+* {{l|ru|воспроизводи́мость}}
+
+
+прибра́ть
+
+==Russian==
+
+===Etymology===
+{{affix|ru|при-|брать}}
+
+===Pronunciation===
+* {{ru-IPA|прибра́ть}}
+
+===Verb===
+{{ru-verb|прибра́ть|pf|impf=прибира́ть}}
+
+# {{rfdef|lang=ru}}
+#: {{ru-ux|прибра́ть [[в]] [[рука|рука́м]]|FIXME|inline=y}}
+
+====Conjugation====
+{{ru-conj|6b/c+p|pf|прибр|прибер}}
+
+====Derived terms====
+* {{l|ru|прибира́ться|g=impf}}, {{l|ru|прибра́ться|g=pf}}
+
+====Related terms====
+* {{l|ru|брать}}
+* {{l|ru|прибира́ние}}
+
+прибира́ть при-+-бира́ть impf прибра́ть 1a
+
+==Russian==
+
+===Etymology===
+{{affix|ru|при-|-бира́ть}}
+
+===Pronunciation===
+* {{ru-IPA|прибира́ть}}
+
+===Verb===
+{{ru-verb|прибира́ть|impf|pf=прибра́ть}}
+
+# {{rfdef|lang=ru}}
+#: {{ru-ux|'''прибира́ть''' [[в]] [[рука|рука́м]]|FIXME|inline=y}}
+
+====Conjugation====
+{{ru-conj|1a|impf|прибира́}}
+
+====Derived terms====
+* {{l|ru|прибира́ться|g=impf}}, {{l|ru|прибра́ться|g=pf}}
+* {{l|ru|прибира́ние}}
+
+====Related terms====
+* {{l|ru|брать}}
+
+задрожа́ть
+
+==Russian==
+
+===Etymology===
+{{affix|ru|за-|дрожа́ть}}
+
+===Pronunciation===
+* {{ru-IPA|задрожа́ть}}
+
+===Verb===
+{{ru-verb|задрожа́ть|pf|impf=дрожа́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|5b|pf-intr|задрож|задрожа́}}
+
+====Related terms====
+* {{l|ru|задро́гнуть}}
+* {{l|ru|дрожа́ть|g=impf}}, {{l|ru|дро́гнуть|g=pf}}
+* {{l|ru|дрожа́ние}}
+* {{l|ru|дрожь}}
+
+продиктова́ть pf ? 2a
+
+==Russian==
+
+===Etymology===
+{{rfe|lang=ru}}
+
+===Pronunciation===
+* {{ru-IPA|продиктова́ть}}
+
+===Verb===
+{{ru-verb|продиктова́ть|pf|impf=диктова́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|2a+p|pf|продиктова́}}
+
+====Related terms====
+* {{l|ru|дикто́вка}}
+* {{l|ru|дикта́нт}}
+* {{l|ru|ди́ктор}}
+* {{l|ru|ди́кция}}
+
+замахать
+
+
+==Russian==
+
+===Etymology===
+{{affix|ru|за-|маха́ть}}
+
+===Pronunciation===
+* {{ru-IPA|замаха́ть}}
+
+===Verb===
+{{ru-verb|замаха́ть|pf|impf=зама́хивать}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|6c+p|pf|зама́х}} ''or''
+{{ru-conj|1a+p|pf|замаха́|futrtailall=*|notes=* Colloquial; type-6 forms preferred.}}
+
+====Derived terms====
+* {{l|ru|зама́хиваться|g=impf}}, {{l|ru|замахну́ться|g=pf}}
+* {{l|ru|зама́хивание}}
+
+====Related terms====
+* {{l|ru|зама́х}}
+
+замахивать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|замаха́ть|-ивать}}
+
+===Pronunciation===
+* {{ru-IPA|зама́хивать}}
+
+===Verb===
+{{ru-verb|зама́хивать|impf|pf=замаха́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|1a|impf|зама́хива}}
+
+====Derived terms====
+* {{l|ru|зама́хиваться|g=impf}}, {{l|ru|замахну́ться|g=pf}}
+* {{l|ru|зама́хивание}}
+
+====Related terms====
+* {{l|ru|зама́х}}
+
+
+подорва́ть
+
+==Russian==
+
+===Etymology===
+{{affix|ru|подо-|рвать}}
+
+===Pronunciation===
+* {{ru-IPA|подорва́ть}}
+
+===Verb===
+{{ru-verb|подорва́ть|pf|impf=родрыва́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|6b/c+p|pf|подорв}}
+
+====Related terms====
+* {{l|ru|подры́в}}
+* {{l|ru|подрывни́к}}
+* {{l|ru|подрывно́й}}
+
+подрывать под-+-рыва́ть
+
+==Russian==
+
+===Etymology===
+{{affix|ru|под|-рыва́ть}}
+
+===Pronunciation===
+* {{ru-IPA|подрыва́ть}}
+
+===Verb===
+{{ru-verb|подрыва́ть|impf|pf=подорва́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|1a|impf|подрыва́}}
+
+====Related terms====
+* {{l|ru|подры́в}}
+* {{l|ru|подрывни́к}}
+* {{l|ru|подрывно́й}}
+
+
+поми́ловать pf ми́ловать? 2a
+
+==Russian==
+
+===Etymology===
+{{affix|ru|по-|ми́ловать}}
+
+===Pronunciation===
+* {{ru-IPA|поми́ловать}}
+
+===Verb===
+{{ru-verb|поми́ловать|pf|impf=ми́ловать?}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|2a+p|pf|поми́лова}}
+
+====Related terms====
+* {{l|ru|}}
+* {{l|ru|}}
+* {{l|ru|}}
+* {{l|ru|}}
+* {{l|ru|}}
+
+ми́ловать impf 2a+p
+
+==Russian==
+
+===Etymology 1===
+{{rfe|lang=ru}}
+
+====Pronunciation====
+* {{ru-IPA|ми́ловать}}
+
+====Verb====
+{{ru-verb|ми́ловать|impf|pf=поми́ловать}}
+
+# {{rfdef|lang=ru}} [прощать вину]
+
+=====Conjugation=====
+{{ru-conj|2a+p|impf|ми́лова}}
+
+=====Derived terms=====
+* {{l|ru|поми́ловать}}
+
+=====Related terms=====
+* {{l|ru|}}
+* {{l|ru|}}
+* {{l|ru|}}
+* {{l|ru|}}
+* {{l|ru|}}
+
+===Etymology 2===
+{{rfe|lang=ru}}
+
+====Pronunciation====
+* {{ru-IPA|милова́ть}}
+
+====Verb====
+{{ru-verb|милова́ть|impf}}
+
+# {{rfdef|lang=ru}} [ласкать]
+
+=====Conjugation=====
+{{ru-conj|2a+p|impf|милова́}}
+
+=====Synonyms=====
+* {{l|ru|ласкать}}?
+
+=====Related terms=====
+* {{l|ru|}}
+* {{l|ru|}}
+* {{l|ru|}}
+* {{l|ru|}}
+* {{l|ru|}}
+
+
+дарова́ть both - 2a+p
+
+==Russian==
+
+===Etymology===
+{{rfe|lang=ru}}
+
+===Pronunciation===
+* {{ru-IPA|дарова́ть}}
+
+===Verb===
+{{ru-verb|дарова́ть|both}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+''imperfective''
+{{ru-conj|2a+p|impf|дарова́}}
+''perfective''
+{{ru-conj|2a+p|pf|дарова́}}
+
+====Related terms====
+* {{l|ru|}}
+* {{l|ru|}}
+* {{l|ru|}}
+* {{l|ru|}}
+* {{l|ru|}}
+
+застона́ть
+
+==Russian==
+
+===Pronunciation===
+* {{ru-IPA|застона́ть}}
+
+===Verb===
+{{ru-verb|застона́ть|pf|impf=стона́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|6c|impf-intr|засто́н|no_iotation=1}} ''or (colloquial or dated)'' {{ru-conj|1a|impf-intr|застона́}}
+
+====Related terms====
+* {{l|ru|стон|g=m}}
+
+имити́ровать impf ? 2a+p
+
+==Russian==
+
+===Etymology===
+{{rfe|lang=ru}}
+
+===Pronunciation===
+* {{ru-IPA|имити́ровать}}
+
+===Verb===
+{{ru-verb|имити́ровать|impf|pf=сымити́ровать}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|2a+p|impf|имити́рова}}
+
+====Related terms====
+* {{l|ru|}}
+* {{l|ru|}}
+* {{l|ru|}}
+* {{l|ru|}}
+* {{l|ru|}}
+
+сымитировать
+
+==Russian==
+
+===Etymology===
+{{affix|ru|с-|имити́ровать}}
+
+===Pronunciation===
+* {{ru-IPA|сымити́ровать}}
+
+===Verb===
+{{ru-verb|сымити́ровать|pf|impf=имити́ровать}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|2a+p|impf|сымити́рова}}
+
+====Related terms====
+* {{l|ru|}}
+* {{l|ru|}}
+* {{l|ru|}}
+* {{l|ru|}}
+* {{l|ru|}}
+
+------------- from here -------------
+
+осме́литься - pf осме́ливаться 4a
+осме́ливаться - impf осме́литься 1a
+прислони́ться r pf прислоня́ться 4b
+
+==Russian==
+
+===Etymology===
+{{affix|ru|прислони́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|прислони́ться}}
+
+===Verb===
+{{ru-verb|прислони́ться|pf|impf=прислоня́ться}}
+
+# to [[lean]] against
+# {{passive of|lang=ru|прислони́ть}}
+
+====Conjugation====
+{{ru-conj|4b|pf-refl|прислон}} ''or''
+{{ru-conj|4c|pf-refl|присло́н}}
+
+====Related terms====
+* {{l|ru|заслоня́ться|g=impf}}, {{l|ru|заслони́ться|g=pf}}
+* {{l|ru|отслоня́ться|g=impf}}, {{l|ru|отслони́ться|g=pf}}
+
+прислонить
+
+==Russian==
+
+===Etymology===
+{{affix|ru|при-|-слони́ть}}
+
+===Pronunciation===
+* {{ru-IPA|прислони́ть}}
+
+===Verb===
+{{ru-verb|прислони́ть|pf|impf=прислоня́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|4b+p|pf|прислон}} ''or''
+{{ru-conj|4c(7)|pf|присло́н}}
+
+====Derived terms====
+* {{l|ru|прислоня́ться|g=impf}}, {{l|ru|прислони́ться|g=pf}}
+
+====Related terms====
+* {{l|ru|заслоня́ть|g=impf}}, {{l|ru|заслони́ть|g=pf}}
+* {{l|ru|отслоня́ть|g=impf}}, {{l|ru|отслони́ть|g=pf}}
+
+прислоня́ть
+
+==Russian==
+
+===Etymology===
+{{affix|ru|прислони́ть|-я́ть}}
+
+===Pronunciation===
+* {{ru-IPA|прислоня́ть}}
+
+===Verb===
+{{ru-verb|прислоня́ть|impf|pf=прислони́ть}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|1a|impf|прислоня́}}
+
+====Derived terms====
+* {{l|ru|прислоня́ться|g=impf}}, {{l|ru|прислони́ться|g=pf}}
+
+====Related terms====
+* {{l|ru|заслоня́ть|g=impf}}, {{l|ru|заслони́ть|g=pf}}
+* {{l|ru|отслоня́ть|g=impf}}, {{l|ru|отслони́ть|g=pf}}
+
+
+уделя́ться r impf удели́ться 1a
+удели́ться r pf уделя́ться 4b rel:уделя́ть/удели́ть,уде́льный,уде́л
+разбежа́ться раз-+бежа́ть+-ся pf разбега́ться irreg-бежать|раз
+разбега́ться раз-+бега́ть+-ся impf разбежа́ться 
+
+==Russian==
+
+===Etymology 1===
+{{affix|ru|раз-|бе́гать|-а́ть|-ся}}
+
+====Pronunciation====
+* {{ru-IPA|разбега́ться}}
+
+====Verb====
+{{ru-verb|разбега́ться|impf|pf=разбежа́ться}}
+
+# {{rfdef|lang=ru}}
+
+=====Conjugation=====
+{{ru-conj|1a|impf-refl|разбега́}}
+
+===Etymology 2===
+{{affix|ru|раз-|бе́гать|-ся}}
+
+====Pronunciation====
+* {{ru-IPA|разбе́гаться}}
+
+====Verb====
+{{ru-verb|разбе́гаться|pf}}
+
+# {{lb|ru|colloquial}} to start [[running]] [[strenously]]
+# {{lb|ru|colloquial}} to start [[running]] and not [[stop]]
+
+=====Conjugation=====
+{{ru-conj|1a|pf-refl|разбе́га}}
+
+
+
+ви́ться r impf 11b/c''|в|в - syn:*кружи́ться 
+вслу́шиваться вслу́шаться+-ивать impf вслу́шаться 1a
+вслу́шаться в-+слу́шать+-ся pf вслу́шиваться 1a
+зажму́риться r pf зажму́риваться 4a
+зажму́риваться r impf зажму́риться 1a
+нака́зываться r impf наказа́ться 1a
+наказа́ться r pf нака́зываться 6c|нака́з
+пока́зываться r impf показа́ться 1a
+показа́ться r pf пока́зываться 6c|пока́з
+попра́виться r pf поправля́ться 4a
+поправля́ться r impf попра́виться 1a
+намеча́ться r impf наме́титься 1a
+наме́титься r pf намеча́ться 4a
+обзавести́сь об-+завести́сь pf обзаводи́ться 7b/b(9)|обзавести́|обзаве́д
+обзаводи́ться об-+заводи́ться impf обзавести́сь 4c
+прокати́ться r pf прока́тываться 4c
+прока́тываться r impf прокати́ться 1a
+ухмыльну́ться ?ухмылья́ться+-нуть pf ухмыля́ться 3b|ухмыльн syn:усмехну́ться rel:ухмы́лка,ухмылочка
+ухмыля́ться - impf ухмыльну́ться 1a syn:усмеха́ться rel:ухмы́лка,ухмылочка
+метну́ться r pf мета́ться 3b|метн syn:бро́ситься,ки́нуться
+мета́ться r impf метну́ться 6c|ме́т syn:*бе́гать,суети́ться;*воро́чаться
+назнача́ться r impf назна́читься 1a
+назна́читься r pf назнача́ться 4a
+потребля́ть потреби́ть+-я́ть impf потреби́ть 1а syn:*испо́льзовать;*есть,ку́шать;*пить rel:потреби́тель,потреби́тельница,потреби́тельский
+потреби́ть - pf потребля́ть 4b der:потреби́тель,потреби́тельница,потреби́тельский
+продержа́ться r pf ? 5c|проде́рж|продержа́
+разозли́ться r pf зли́ться 4b syn:рассерди́ться,разъяри́ться
+ру́шиться r impf ру́хнуть,разруши́ться 4a der:нару́шиться,обру́шиться,пору́шиться,разру́шиться
+сдви́нуться r pf сдвига́ться 3a
+сдвига́ться r impf сдви́нуться 1a
+предназнача́ться r impf предназна́читься 1a rel:предназначе́ние,предназна́ченный,предназна́ченность
+предназна́читься r pf предназнача́ться 4a rel:предназначе́ние,предназна́ченный,предназна́ченность
+просма́триваться r impf просмотре́ться 1a rel:просма́тривание
+просмотре́ться r pf просма́триваться 5c|просмо́тр|просмотре́ rel:просмо́тр,просмо́тровый,просмотро́вая,просма́тривание
+встрепену́ться ? pf ? 3b syn:*вздро́гнуть;*оживи́ться
+вы́ругаться r pf ? 1a syn:вы́браниться,ругну́ться
+сверши́ться r pf сверша́ться 4b
+сверша́ться r impf сверши́ться 1a
+сла́виться r impf просла́виться 4a der:осла́виться,просла́виться,рассла́виться,тщесла́виться
+смеша́ться r pf сме́шиваться 1a syn:*перепу́таться;*смути́ться
+сме́шиваться r impf смеша́ться 1a syn:*переме́шиваться;*перепу́тываться;*смуща́ться ant:*сепари́роваться
+затаи́ться r pf зата́иваться 4b
+зата́иваться r impf затаи́ться 1a
+насчи́тываться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|насчи́тывать|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|нащи́тываться}}
+
+===Verb===
+{{ru-verb|насчи́тываться|impf|pf=насчита́ться}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|lang=ru|насчи́тывать}}
+
+====Conjugation====
+{{ru-conj|1a|impf-refl|насчи́тыва}}
+
+====Related terms====
+* {{l|ru|насчи́тывать|g=impf}}, {{l|ru|насчита́ть|g=pf}}
+* {{l|ru|насчёт}}
+* {{l|ru|счита́ть|g=impf}}, {{l|ru|сосчита́ть|g=pf}}
+* {{l|ru|счёт}}, {{l|ru|счёты}}
+* {{l|ru|счётный}}
+* {{l|ru|счётчик}}
+* {{l|ru|счетово́д}}
+* {{l|ru|счи́танный}}
+* {{l|ru|счи́тывание}}
+
+[[ru:насчитываться]]
+
+насчита́ться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|насчита́ть|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|нащита́ться}}
+
+===Verb===
+{{ru-verb|насчита́ться|pf|impf=насчи́тываться}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|lang=ru|насчита́ться}}
+
+====Conjugation====
+{{ru-conj|1a|pf-refl|насчита́}}
+
+====Related terms====
+* {{l|ru|насчи́тывать|g=impf}}, {{l|ru|насчита́ть|g=pf}}
+* {{l|ru|насчёт}}
+* {{l|ru|счита́ть|g=impf}}, {{l|ru|сосчита́ть|g=pf}}
+* {{l|ru|счёт}}, {{l|ru|счёты}}
+* {{l|ru|счётный}}
+* {{l|ru|счётчик}}
+* {{l|ru|счетово́д}}
+* {{l|ru|счи́танный}}
+* {{l|ru|счи́тывание}}
+
+[[ru:насчитаться]]
+
+
+перелива́ться r impf 1a перели́ться
+перели́ться r pf 11b/c''|перел|перел
+присма́триваться r impf присмотре́ться 1a rel:присма́тривание,присмо́тр
+присмотре́ться r pf присма́триваться 5c|присмо́тр|присмотре́ rel:присмо́тр,присма́тривание syn:*осво́иться,изучи́ть,сориенти́роваться
+прогу́ливаться r impf прогуля́ться 1a
+прогуля́ться r pf прогу́ливаться 1a
+житься
+
+==Russian==
+
+===Etymology===
+{{affix|ru|жить|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|жи́ться}}
+
+===Verb===
+{{ru-verb|жи́ться|impf}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+{{ru-conj|16b/c''|impf-impers-refl|жи́}}
+
+====Related terms====
+* {{l|ru|житьё}}
+* {{l|ru|жи́тель}}, {{l|ru|жи́тельство}}
+* {{l|ru|жизнь}}
+* {{l|ru|жи́зненный}}, {{l|ru|жи́зненно}}, {{l|ru|жи́зненность}}
+* {{l|ru|живо́й}}, {{l|ru|жи́во}}, {{l|ru|жи́вость}}
+* {{l|ru|жи́вность}}
+* {{l|ru|жи́вчик}}
+* {{l|ru|живо́тный}}, {{l|ru|живо́тное}}, {{l|ru|животново́дство}}
+* {{l|ru|живу́чий}}, {{l|ru|живу́честь}}
+* {{l|ru|жило́й}}
+* {{l|ru|жильё}}
+* {{l|ru|жили́щний}}, {{l|ru|жили́ще}}
+* {{l|ru|жиле́ц}}
+
+обуча́ться r impf обучи́ться 1a
+обучи́ться r pf обуча́ться 4c
+томи́ться r impf - 4b der:затоми́ться,истоми́ться,переутоми́ться,притоми́ться,протоми́ться,утоми́ться
+шевельну́ться r pf шевели́ться 3b syn:*пошевельну́ться;*пробуди́ться;*возни́кнуть,появи́ться
+шевели́ться
+
+==Russian==
+
+===Etymology===
+{{affix|ru|жить|-ся}}
+
+===Pronunciation===
+* {{ru-IPA|шевели́ться}}
+
+===Verb===
+{{ru-verb|шевели́ться|impf|pf=пошевели́ться|pf2=шевельну́ться}}
+
+# {{rfdef|lang=ru}}
+# {{passive of|lang=ru|шевели́ться}}
+
+====Conjugation====
+{{ru-conj|4b|impf-refl|шевел}} ''or''
+{{ru-conj|4c|impf-refl|шеве́л}}
+
+====Synonyms====
+* {{sense|FIXME}} {{l|ru|пробужда́ться}}
+* {{sense|FIXME}} {{l|ru|возника́ть}}, {{l|ru|появля́ться}}
+
+====Related terms====
+* {{l|ru|шевели́ть|g=impf}}, {{l|ru|пошевели́ть|g=pf}}, {{l|ru|шевельну́ть|g=pf}}
+
+[[ru:шевелиться]]
+
+
+доводи́ться r impf довести́сь 4c
+завести́сь за-+вести́сь pf заводи́ться 7b/b(9)|завести́|заве́д
+заводи́ться за-+води́ться impf завести́сь 4c
+повали́ться r pf вали́ться,пова́ливаться 4c
+повинова́ться
+
+==Russian==
+
+===Etymology===
+{{rfe|lang=ru}}
+
+===Pronunciation===
+* {{ru-IPA|повинова́ться}}
+
+===Verb===
+{{ru-verb|повинова́ться|both}}
+
+# {{rfdef|lang=ru}}
+
+====Conjugation====
+''imperfective''
+{{ru-conj|2a|impf-refl|повинова́}}
+''perfective''
+{{ru-conj|2a|pf-refl|повинова́}}
+
+====Related terms====
+* {{l|ru|повинове́ние}}
+
+поко́иться r impf - 4a
+выстра́иваться r impf вы́строиться 1a
+вы́строиться r pf выстра́иваться 4a(2)

@@ -12,15 +12,6 @@ parser.add_argument('--reqdef', help="Require a definition.", action="store_true
 parser.add_argument('--direcfile', help="File containing directives.")
 args = parser.parse_args()
 
-def check_stress(word):
-  word = re.sub(r"|.*", "", word)
-  if word.startswith("-") or word.endswith("-"):
-    # Allow unstressed prefix (e.g. разо-) and unstressed suffix (e.g. -овать)
-    return
-  if rulib.needs_accents(word):
-    msg("Word %s missing an accent" % word)
-    assert False
-
 # Split text on a separator, but not if separator is preceded by
 # a backslash, and remove such backslashes
 def do_split(sep, text):
@@ -37,6 +28,14 @@ while True:
     errmsg("ERROR: Processing line: %s" % line)
     errmsg("ERROR: %s" % text)
     assert False
+
+  def check_stress(word):
+    word = re.sub(r"|.*", "", word)
+    if word.startswith("-") or word.endswith("-"):
+      # Allow unstressed prefix (e.g. разо-) and unstressed suffix (e.g. -овать)
+      return
+    if rulib.needs_accents(word, split_dash=True):
+      error("Word %s missing an accent" % word)
 
   els = do_split(r"\s+", line)
   # Replace _ with space, but not in the conjugation, where param names
@@ -184,8 +183,7 @@ while True:
       conjargs = "%s%s" % (rulib.try_to_stress(re.sub(u"ть$", "", verbbase)),
         rulib.tr_try_to_stress(re.sub(u"tʹ", "", trverbbase)))
     else:
-      msg("Unrecognized conjugation type and no arguments: %s" % conj)
-      assert False
+      error("Unrecognized conjugation type and no arguments: %s" % conj)
   else:
     conjargs = re.sub(r"^.*?\|", "", conj)
     conj = re.sub(r"\|.*$", "", conj)
@@ -215,8 +213,7 @@ while True:
   for synantrel in els[5:]:
     m = re.search(r"^(syn|ant|der|rel|see|pron|alt|def|note|wiki|enwiki):(.*)", synantrel)
     if not m:
-      msg("Element %s doesn't start with syn:, ant:, der:, rel:, see:, pron:, alt:, def: or note:" % synantrel)
-    assert m
+      error("Element %s doesn't start with syn:, ant:, der:, rel:, see:, pron:, alt:, def: or note:" % synantrel)
     sartype, vals = m.groups()
     if sartype in ["syn", "ant"]:
       lines = []
