@@ -293,17 +293,20 @@ while True:
     else:
       prefix = ""
       suffix = ""
+      notext = ""
       if etym.startswith("?"):
         prefix = "Perhaps from "
         suffix = "."
+        notext = "|notext=1"
         etym = re.sub(r"^\?", "", etym)
       elif etym.startswith("<<"):
         prefix = "Ultimately from "
         suffix = "."
+        notext = "|notext=1"
         etym = re.sub(r"^<<", "", etym)
       m = re.search(r"^([a-zA-Z.-]+):(.*)", etym)
       if m:
-        langtext = "|lang1=%s" % m.group(1)
+        langtext = "|lang1=%s" % m.group(1) + notext
         etym = m.group(2)
       else:
         langtext = ""

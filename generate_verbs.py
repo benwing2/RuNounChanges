@@ -81,13 +81,16 @@ while True:
     else:
       prefix = ""
       suffix = ""
+      notext = ""
       if etym.startswith("?"):
         prefix = "Perhaps from "
         suffix = "."
+        notext = "|notext=1"
         etym = re.sub(r"^\?", "", etym)
       elif etym.startswith("<<"):
         prefix = "Ultimately from "
         suffix = "."
+        notext = "|notext=1"
         etym = re.sub(r"^<<", "", etym)
       if etym == "r":
         assert isrefl
@@ -95,7 +98,7 @@ while True:
       else:
         m = re.search(r"^([a-zA-Z.-]+):(.*)", etym)
         if m:
-          langtext = "|lang1=%s" % m.group(1)
+          langtext = "|lang1=%s" % m.group(1) + notext
           etym = m.group(2)
         else:
           langtext = ""
@@ -211,6 +214,8 @@ while True:
   wikitext = ""
   enwikitext = ""
   for synantrel in els[5:]:
+    if synantrel.startswith("#"):
+      break # ignore comments
     m = re.search(r"^(syn|ant|der|rel|see|pron|alt|def|note|wiki|enwiki):(.*)", synantrel)
     if not m:
       error("Element %s doesn't start with syn:, ant:, der:, rel:, see:, pron:, alt:, def: or note:" % synantrel)
