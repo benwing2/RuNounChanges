@@ -63,34 +63,34 @@ while True:
     if etym.startswith("acr:"):
       _, fullexpr, meaning = do_split(":", etym)
       etymtext = "{{ru-etym acronym of|%s||%s}}." % (fullexpr, meaning)
+    elif etym.startswith("back:"):
+      _, sourceterm = do_split(":", etym)
+      etymtext = "{{back-form|lang=ru|%s}}" % sourceterm
     elif etym.startswith("raw:"):
       etymtext = re.sub(", *", ", ", re.sub("^raw:", "", etym))
     elif ":" in etym and "+" not in etym:
-      prefix = ""
       if etym.startswith("?"):
         prefix = "Perhaps borrowed from "
         etym = re.sub(r"^\?", "", etym)
       elif etym.startswith("<<"):
         prefix = "Ultimately borrowed from "
         etym = re.sub(r"^<<", "", etym)
+      else:
+        prefix = "Borrowed from "
       m = re.search(r"^([a-zA-Z.-]+):(.*)", etym)
       if not m:
         error("Bad etymology form: %s" % etym)
-      etymtext = "%s{{bor|ru|%s|%s%s}}." % (prefix, m.group(1), m.group(2),
-          prefix and "|notext=1" or "")
+      etymtext = "%s{{bor|ru|%s|%s}}." % (prefix, m.group(1), m.group(2))
     else:
       prefix = ""
       suffix = ""
-      notext = ""
       if etym.startswith("?"):
         prefix = "Perhaps from "
         suffix = "."
-        notext = "|notext=1"
         etym = re.sub(r"^\?", "", etym)
       elif etym.startswith("<<"):
         prefix = "Ultimately from "
         suffix = "."
-        notext = "|notext=1"
         etym = re.sub(r"^<<", "", etym)
       if etym == "r":
         assert isrefl
@@ -98,7 +98,7 @@ while True:
       else:
         m = re.search(r"^([a-zA-Z.-]+):(.*)", etym)
         if m:
-          langtext = "|lang1=%s" % m.group(1) + notext
+          langtext = "|lang1=%s" % m.group(1)
           etym = m.group(2)
         else:
           langtext = ""
@@ -266,6 +266,8 @@ while True:
     elif sartype == "def":
       defntext = generate_pos.generate_defn(vals)
     elif sartype == "note":
+      vals = re.sub(r"\[\[(.*?)\]\]", r"{{m|ru|\1}}", vals)
+      vals = re.sub(r"g\((.*?)\)", r"{{glossary|\1}}", vals)
       notetext = " {{i|%s}}" % vals
     elif sartype == "wiki":
       for val in do_split(",", vals):
