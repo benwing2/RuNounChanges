@@ -38,6 +38,23 @@ while True:
       error("Word %s missing an accent" % word)
 
   els = do_split(r"\s+", line)
+
+  if len(els) == 2 and els[1].startswith("altyo:"):
+    altyoparts = do_split(":", els[1])
+    if len(altyoparts) != 3:
+      error("Expected verb and aspect with altyo:")
+    yoline = u"{{ru-verb-alt-ё|%s|%s}}" % (altyoparts[1], altyoparts[2])
+    msg("""%s
+
+==Russian==
+
+===Verb===
+%s
+
+
+""" % (rulib.remove_accents(altyoparts[1]).replace(u"ё", u"е"), yoline))
+    continue
+
   # Replace _ with space, but not in the conjugation, where param names
   # may well have an underscore in them; but allow \s to stand for a space in
   # the conjugation, and \u to stand for an underscore elsewhere.
