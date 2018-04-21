@@ -284,6 +284,7 @@ while True:
       defntext = generate_pos.generate_defn(vals)
     elif sartype == "note":
       vals = re.sub(r"\[\[(.*?)\]\]", r"{{m|ru|\1}}", vals)
+      vals = re.sub(r"\(\((.*?)\)\)", r"{{m|ru|\1}}", vals)
       vals = re.sub(r"g\((.*?)\)", r"{{glossary|\1}}", vals)
       notetext = " {{i|%s}}" % vals
     elif sartype == "wiki":

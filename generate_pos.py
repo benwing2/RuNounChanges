@@ -151,5 +151,7 @@ def generate_defn(defns):
         defnline = "{{given name|lang=ru|%s}}" % gnparts[1]
       else:
         defnline = re.sub(r", *", ", ", defn)
+      defnline = re.sub(r"\(\((.*?)\)\)", r"{{m|ru|\1}}", defnline)
+      defnline = re.sub(r"g\((.*?)\)", r"{{glossary|\1}}", defnline)
       defnlines.append("# %s%s\n" % (prefix, defnline))
   return "".join(defnlines)
