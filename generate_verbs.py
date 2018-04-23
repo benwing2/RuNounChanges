@@ -208,18 +208,22 @@ while True:
     conjargs = re.sub(r"^.*?\|", "", conj)
     conj = re.sub(r"\|.*$", "", conj)
   reflsuf = "-refl" if isrefl else ""
+  # Reflexive needs to come before impersonal
+  def order_aspect(aspect):
+    return aspect.replace("-impers-refl", "-refl-impers", aspect)
   if aspect.startswith("both"):
     pfaspect = re.sub("^both", "pf", aspect)
     impfaspect = re.sub("^both", "impf", aspect)
     conjtext = """''imperfective''
-{{ru-conj|%s%s|%s|%s}}
+{{ru-conj|%s|%s|%s}}
 ''perfective''
-{{ru-conj|%s%s|%s|%s}}""" % (impfaspect, reflsuf, conj, conjargs,
-    pfaspect, reflsuf, conj, conjargs)
+{{ru-conj|%s|%s|%s}}""" % (order_aspect(impfaspect + reflsuf), conj, conjargs,
+    order_aspect(pfaspect + reflsuf), conj, conjargs)
   else:
-    conjtext = "{{ru-conj|%s%s|%s|%s}}" % (aspect, reflsuf, conj, conjargs)
+    conjtext = "{{ru-conj|%s|%s|%s}}" % (order_aspect(aspect + reflsuf), conj, conjargs)
 
   alttext = ""
+  usagetext = ""
   syntext = ""
   anttext = ""
   dertext = None
@@ -233,7 +237,7 @@ while True:
   for synantrel in els[5:]:
     if synantrel.startswith("#"):
       break # ignore comments
-    m = re.search(r"^(syn|ant|der|rel|see|pron|alt|def|note|wiki|enwiki):(.*)", synantrel)
+    m = re.search(r"^(syn|ant|der|rel|see|pron|alt|def|note|wiki|enwiki|usage):(.*)", synantrel)
     if not m:
       error("Element %s doesn't start with syn:, ant:, der:, rel:, see:, pron:, alt:, def: or note:" % synantrel)
     sartype, vals = m.groups()
@@ -297,6 +301,9 @@ while True:
       assert vals
       for val in do_split(",", vals):
         enwikitext += "{{wikipedia|%s}}\n" % val
+    elif sartype == "usage":
+      assert vals
+      usagetext = re.sub(", *", ", ", vals)
     else: # derived or related terms or see also
       if ((sartype == "der" and dertext != None) or
           (sartype == "rel" and reltext != None) or
@@ -389,6 +396,9 @@ while True:
   dertext = dertext or ""
   seetext = seetext or ""
 
+  if usagetext:
+    usagetext = "====Usage notes====\n%s\n\n" % usagetext
+
   msg("""%s
 
 ==Russian==
@@ -402,8 +412,8 @@ while True:
 ====Conjugation====
 %s
 
-%s%s%s%s%s
+%s%s%s%s%s%s
 """ % (rulib.remove_accents(verb), enwikitext, wikitext, alttext, etymtext,
   prontext, verb, trtext, headword_aspect, corverbtext, notetext,
-  defntext, passivetext, conjtext, syntext, anttext, dertext,
+  defntext, passivetext, conjtext, usagetext, syntext, anttext, dertext,
   reltext, seetext))
