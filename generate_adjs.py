@@ -406,7 +406,18 @@ while True:
     elif sartype == "comp":
       comptext = ""
       for i, comp in enumerate(do_split(",", vals)):
-        check_stress(comp)
+        if comp == "+":
+          basicdecl = re.sub(r"\|.*", "", decl)
+          if "(2)" in basicdecl:
+            error("Can't have comp:+ with (2) in decl")
+          basicdecl = basicdecl.replace("*", "")
+          basicdecl = basicdecl.replace("(1)", "")
+          basicdecl = set([re.sub(":.*", "", x) for x in re.split(",", basicdecl)])
+          if len(basicdecl) > 1:
+            error("Can't have comp:+ with multiple decls (yet?)")
+            comp = basicdecl + "+"
+        elif "+" not in comp:
+          check_stress(comp)
         if i == 0:
           comptext += "|%s" % comp
         else:
