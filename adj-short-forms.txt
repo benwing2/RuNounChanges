@@ -1029,3 +1029,11 @@ May 2 2018
 May 5 2018
 
 * [[перисто-слоистый]] "cirrostratus" no? [can't find examples]
+
+May 6 2018
+
+* [[настоящий]] "fake,artificial" yes [see [https://books.google.com/books?id=KvahCgAAQBAJ&pg=PT76&dq=%22%D0%BD%D0%B5%D0%BD%D0%B0%D1%81%D1%82%D0%BE%D1%8F%D1%89%D0%B8%22&hl=en&sa=X&ved=0ahUKEwiMnvuP5vLaAhUCyoMKHZEjClgQ6AEIJzAA]: Его воспоминания о прошлой жизни так же фальшивы и ненастоящи, как старые бумажные куклы его сестры.]
+* [[мотострелковый]] "motorized rifle (attrib.)" no [can't find examples]
+* [[замшевый]] "suede, suedelike" yes [see [https://books.google.com/books?id=9gtFAAAAMAAJ&q=%22%D0%B7%D0%B0%D0%BC%D1%88%D0%B5%D0%B2%D1%8B%22&dq=%22%D0%B7%D0%B0%D0%BC%D1%88%D0%B5%D0%B2%D1%8B%22&hl=en&sa=X&ved=0ahUKEwiC_8-w5_LaAhVK44MKHXsHANg4MhDoAQg2MAI]: В Москве уже на подступах зима, крыши домов, наверно, по утрам замшевы от инея.] [see [https://books.google.com/books?id=gnlgAAAAMAAJ&q=%22%D0%B7%D0%B0%D0%BC%D1%88%D0%B5%D0%B2%D1%8B%22&dq=%22%D0%B7%D0%B0%D0%BC%D1%88%D0%B5%D0%B2%D1%8B%22&hl=en&sa=X&ved=0ahUKEwiP58Lv5_LaAhUByoMKHRVtA0Y4PBDoAQg1MAI]: И сосны, освежеванные заживо, так замшевы, так жалобны, так замкнуты, закутаны с чужого - на плеча сплеча весь гардероб — доходен рост!]
+* [[поселковый]] "village, settlement (attrib.)" no [can't find examples]
+* [[шариковый]] "small ball, bead (attrib.)" no [can't find examples]
