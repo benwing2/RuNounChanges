@@ -27,7 +27,9 @@ pos_to_full_pos = {
   "pred": "Predicative",
   "prep": "Preposition",
   "conj": "Conjunction",
-  "int": "Interjection"
+  "int": "Interjection",
+  # supported only for altyo:
+  "part": "Participle",
 }
 
 opt_arg_regex = r"^(also|syn|ant|der|rel|see|comp|pron|alt|part|wiki|enwiki|cat|tcat|usage|file):(.*)"
@@ -151,6 +153,7 @@ while True:
   if line == None:
     break
   line = line.strip()
+
   def error(text):
     errmsg("ERROR: Processing line: %s" % line)
     errmsg("ERROR: %s" % text)
@@ -164,7 +167,9 @@ while True:
     if rulib.needs_accents(word, split_dash=True):
       error("Word %s missing an accent" % word)
 
-  line = line.strip()
+  # Skip lines consisting entirely of comments
+  if line.startswith("#"):
+    continue
   els = do_split(r"\s+", line)
   if args.pos:
     pos = els[0]
@@ -197,10 +202,9 @@ while True:
       assert pos in pos_to_full_pos
       fullpos = pos_to_full_pos[pos]
       if len(altyoparts) == 2:
-        yoline = u"{{ru-pos-alt-ё|%s|%s}}" % (fullpos, altyoparts[1])
+        yoline = u"{{ru-pos-alt-ё|%s|%s}}" % (altyoparts[1], fullpos.lower())
       else:
-        yoline = u"{{ru-pos-alt-ё|%s|%s|%s}}" % (fullpos, altyoparts[1],
-          altyoparts[2])
+        error("With misc. part of speech, gender/aspect not supported")
     msg("""%s
 
 ==Russian==
@@ -232,7 +236,7 @@ while True:
   if "//" in term:
     term, translit = do_split("//", term)
   if pos == "adj":
-    assert re.search(u"(ый|ий|о́й)(ся)?$", term)
+    assert re.search(u"(ый|ий|о́й)(ся)?|[оеё]́?в|и́?н$", term)
   trtext = translit and "|tr=" + translit or ""
   check_stress(term)
 
@@ -379,8 +383,8 @@ while True:
       lines = []
       for synantgroup in do_split(";", vals):
         sensetext = ""
-        if synantgroup.startswith("*("):
-          m = re.search(r"^\*\((.*?)\)(.*)$", synantgroup)
+        if synantgroup.startswith("*(") or synantgroup.startswith("("):
+          m = re.search(r"^\*?\((.*?)\)(.*)$", synantgroup)
           sensetext = "{{sense|%s}} " % re.sub(", *", ", ", m.group(1))
           synantgroup = m.group(2)
         elif synantgroup.startswith("*"):
@@ -408,14 +412,16 @@ while True:
       for i, comp in enumerate(do_split(",", vals)):
         if comp == "+":
           basicdecl = re.sub(r"\|.*", "", decl)
-          if "(2)" in basicdecl:
-            error("Can't have comp:+ with (2) in decl")
+          if "b(2)" in basicdecl:
+            error("Can't have comp:+ with b(2) in decl")
           basicdecl = basicdecl.replace("*", "")
           basicdecl = basicdecl.replace("(1)", "")
+          basicdecl = basicdecl.replace("(2)", "")
           basicdecl = set([re.sub(":.*", "", x) for x in re.split(",", basicdecl)])
           if len(basicdecl) > 1:
             error("Can't have comp:+ with multiple decls (yet?)")
-            comp = basicdecl + "+"
+            if basicdecl != "a":
+              comp = "+" + basicdecl
         elif "+" not in comp:
           check_stress(comp)
         if i == 0:

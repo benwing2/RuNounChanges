@@ -24,6 +24,7 @@ while True:
   if line == None:
     break
   line = line.strip()
+
   def error(text):
     errmsg("ERROR: Processing line: %s" % line)
     errmsg("ERROR: %s" % text)
@@ -37,6 +38,9 @@ while True:
     if rulib.needs_accents(word, split_dash=True):
       error("Word %s missing an accent" % word)
 
+  # Skip lines consisting entirely of comments
+  if line.startswith("#"):
+    continue
   els = do_split(r"\s+", line)
 
   if len(els) == 2 and els[1].startswith("altyo:"):
@@ -210,7 +214,7 @@ while True:
   reflsuf = "-refl" if isrefl else ""
   # Reflexive needs to come before impersonal
   def order_aspect(aspect):
-    return aspect.replace("-impers-refl", "-refl-impers", aspect)
+    return aspect.replace("-impers-refl", "-refl-impers")
   if aspect.startswith("both"):
     pfaspect = re.sub("^both", "pf", aspect)
     impfaspect = re.sub("^both", "impf", aspect)
@@ -245,8 +249,8 @@ while True:
       lines = []
       for synantgroup in do_split(";", vals):
         sensetext = ""
-        if synantgroup.startswith("*("):
-          m = re.search(r"^\*\((.*?)\)(.*)$", synantgroup)
+        if synantgroup.startswith("*(") or synantgroup.startswith("("):
+          m = re.search(r"^\*?\((.*?)\)(.*)$", synantgroup)
           sensetext = "{{sense|%s}} " % m.group(1)
           synantgroup = m.group(2)
         elif synantgroup.startswith("*"):
