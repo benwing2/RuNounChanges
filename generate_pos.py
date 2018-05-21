@@ -54,10 +54,12 @@ def generate_multiline_defn(peeker):
     return "".join(defnlines)
   return None
 
-def generate_dimaugpej(defn, template):
+def generate_dimaugpej(defn, template, pos):
   parts = re.split(":", defn)
   assert len(parts) in [2, 3]
-  defnline = "{{%s|lang=ru|%s}}" % (template, re.sub(r", *", ", ", parts[1]))
+  defnline = "{{%s|lang=ru|%s%s}}" % (template,
+    "" if pos == "noun" else "|pos=%ss".format(pos),
+    re.sub(r", *", ", ", parts[1]))
   if len(parts) == 3:
     defnline = "%s: %s" % (defnline, re.sub(r", *", ", ", parts[2]))
   return defnline
@@ -88,7 +90,7 @@ known_labels = {
   "inan": "inanimate",
 }
 
-def generate_defn(defns):
+def generate_defn(defns, pos):
   defnlines = []
 
   # the following regex uses a negative lookbehind so we split on a semicolon
@@ -136,15 +138,15 @@ def generate_defn(defns):
         defnline = "{{alternative form of|lang=ru|%s}}" % (
             re.sub("^altof:", "", defn))
       elif defn.startswith("dim:"):
-        defnline = generate_dimaugpej(defn, "diminutive of")
+        defnline = generate_dimaugpej(defn, "diminutive of", pos)
       elif defn.startswith("end:"):
-        defnline = generate_dimaugpej(defn, "endearing form of")
+        defnline = generate_dimaugpej(defn, "endearing form of", pos)
       elif defn.startswith("enddim:"):
-        defnline = generate_dimaugpej(defn, "endearing diminutive of")
+        defnline = generate_dimaugpej(defn, "endearing diminutive of", pos)
       elif defn.startswith("aug:"):
-        defnline = generate_dimaugpej(defn, "augmentative of")
+        defnline = generate_dimaugpej(defn, "augmentative of", pos)
       elif defn.startswith("pej:"):
-        defnline = generate_dimaugpej(defn, "pejorative of")
+        defnline = generate_dimaugpej(defn, "pejorative of", pos)
       elif defn.startswith("gn:"):
         gnparts = re.split(":", defn)
         assert len(gnparts) in [2]
