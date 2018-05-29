@@ -22,6 +22,7 @@ pos_to_full_pos = {
   "n": "Noun",
   "pn": "Proper noun",
   "adj": "Adjective",
+  "adjform": "Adjective form",
   "adv": "Adverb",
   "pcl": "Particle",
   "pred": "Predicative",
