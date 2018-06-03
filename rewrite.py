@@ -34,7 +34,7 @@ def rewrite_pages(refrom, reto, refs, cat, pages, pagefile, pagetitle_sub,
     return text, comment or "replace %s" % (", ".join("%s -> %s" % (f, t) for f, t in zipped_fromto))
 
   if pages:
-    pages = ((index, pywikibot.Page(blib.site, page) for index, page in blib.iter_pages(pages, startFrom, upTo))
+    pages = ((index, pywikibot.Page(blib.site, page)) for index, page in blib.iter_pages(pages, startFrom, upTo))
   elif pagefile:
     lines = [x.strip() for x in codecs.open(pagefile, "r", "utf-8")]
     pages = ((index, pywikibot.Page(blib.site, page)) for index, page in blib.iter_pages(lines, startFrom, upTo))
