@@ -587,10 +587,10 @@ while True:
 
 """ % (term, trtext, comptext, defntext, decltext)
     elif pos == "adv":
-      maintext = """{{ru-adv|%s%s}}
+      maintext = """{{ru-adv|%s%s%s}}
 
 %s
-""" % (term, trtext, defntext)
+""" % (term, trtext, comptext, defntext)
     else:
       full_pos = pos_to_full_pos[pos]
       maintext = """{{head|ru|%s|head=%s%s}}
