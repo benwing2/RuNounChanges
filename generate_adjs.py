@@ -596,7 +596,7 @@ while True:
       maintext = """{{head|ru|%s|head=%s%s}}
 
 %s
-""" % (full_pos, full_pos.lower(), term, trtext, defntext)
+""" % (full_pos.lower(), term, trtext, defntext)
 
   if defns == "--":
     maintext = ""
