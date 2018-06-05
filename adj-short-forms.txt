@@ -174,7 +174,7 @@ missing-misc-non-lemmas
 
 missing-11000-11999.adjs.zorder, part 1
 
-* [[десятилетний]] "ten-year; ten-year-old" no?
+* [[десятилетний]] "ten-year; ten-year-old" yes [see [https://books.google.com/books?id=1jRJDwAAQBAJ&pg=PT4&dq=%22%D1%88%D0%B5%D1%81%D1%82%D0%BD%D0%B0%D0%B4%D1%86%D0%B0%D1%82%D0%B8%D0%BB%D0%B5%D1%82%D0%B5%D0%BD%22&hl=en&sa=X&ved=0ahUKEwi42NC117nbAhVnhq0KHX9VCpUQ6AEIMzAB]: ... отошел в вечное блаженство; чад по нем не осталось, но остались братья его – царевичи Иван и Петр Алексеевичи. Царевич Иван шестнадцатилетен, но одержим скорбью и слаб здоровьем, царевич же Петр десятилетен.]
 * [[малолетний]] "juvenile, underage" yes? [hard to find examples]
 * [[трёхлетний]] "three-year; three-year-old" no?
 * [[любящий]] "loving" yes? [see [https://books.google.com/books?id=l-E9AQAAMAAJ&pg=PA77&dq=%D0%BB%D1%8E%D0%B1%D1%8F%D1%89%D0%B8&hl=en&sa=X&ved=0ahUKEwjV_IHq59_MAhVD5qYKHTrfCi0Q6AEIWzAJ]: Увы! они были такъ молоды, Такъ Прекрасны. Такъ одиноки,любящи и беззащитны!]
@@ -328,7 +328,7 @@ missing-12000-12999.adjs.zorder, part N - adverbs
 missing-13000-13999.adjs.zorder, part 1
 
 * [[потусторонний]] "otherworldly" yes: see [https://books.google.com/books?id=4chsBwAAQBAJ&pg=PT209&dq=%D0%BF%D0%BE%D1%82%D1%83%D1%81%D1%82%D0%BE%D1%80%D0%BE%D0%BD%D0%BD%D0%B8&hl=en&sa=X&ved=0ahUKEwjJqJbCt-rMAhWGNz4KHTjCAdoQ6AEIHTAA]: Женщины (возможно, за исключением Оли Бешенковской) были замечательно высокомерны, надменны, потусторонни.]
-* [[двадцатилетний]] "twenty-year" no? [can't find examples]
+* [[двадцатилетний]] "twenty-year" yes [see [https://books.google.com/books?id=xZ4cAAAAIAAJ&q=%22%D0%B4%D0%B2%D0%B0%D0%B4%D1%86%D0%B0%D1%82%D0%B8%D0%BB%D0%B5%D1%82%D0%B5%D0%BD%22&dq=%22%D0%B4%D0%B2%D0%B0%D0%B4%D1%86%D0%B0%D1%82%D0%B8%D0%BB%D0%B5%D1%82%D0%B5%D0%BD%22&hl=en&sa=X&ved=0ahUKEwjBqPib1bnbAhUJYK0KHbkLB9IQ6AEITDAF]: Один из них, Ященко, недавно из пехотного училища, — долог, красив, двадцатилетен, с ухмылкой на скуластом лице и развинченными движениями. На многоверстном этапе от реки, где попали в плен, он почти на себе тащил ...]
 * [[угрожающий]] "threatening" yes: see [https://books.google.com/books?id=xnfqAAAAMAAJ&q=%D1%83%D0%B3%D1%80%D0%BE%D0%B6%D0%B0%D1%8E%D1%89&dq=%D1%83%D0%B3%D1%80%D0%BE%D0%B6%D0%B0%D1%8E%D1%89&hl=en&sa=X&ved=0ahUKEwjFupL8serMAhUG_R4KHZRfDP4Q6AEINTAD]: Взгляд был не угрожающ, но настойчив, требовал ответного труда мысли]
 * [[умирающий]] "dying" no? [hard to find examples]
 * [[вопиющий]] "outrageous" yes: [see [https://books.google.com/books?id=iXHJAAAAQBAJ&pg=PT277&dq=%D0%B2%D0%BE%D0%BF%D0%B8%D1%8E%D1%89&hl=en&sa=X&ved=0ahUKEwjcmZrJserMAhXHKh4KHTBWA8o4ChDoAQhMMAk]: Поступок Рыкуна был настолько вопиющ, настолько провокационен, что его последствия могли стать просто катастрофическими]
@@ -373,7 +373,7 @@ missing-13000-13999.adjs.zorder, part 1
 
 missing-14000-14999.adjs.zorder, part 1
 
-* [[тридцатилетний]] "thirty-year" no? [can't find examples]
+* [[тридцатилетний]] "thirty-year" yes [see [https://books.google.com/books?id=LyQOAQAAMAAJ&q=%22%D1%82%D1%80%D0%B8%D0%B4%D1%86%D0%B0%D1%82%D0%B8%D0%BB%D0%B5%D1%82%D0%B5%D0%BD%22&dq=%22%D1%82%D1%80%D0%B8%D0%B4%D1%86%D0%B0%D1%82%D0%B8%D0%BB%D0%B5%D1%82%D0%B5%D0%BD%22&hl=en&sa=X&ved=0ahUKEwiF8eP717nbAhWDna0KHWexAKAQ6AEIMzAB]: Был он откуда-то из провинции, выехал в составе огромной семьи через Польшу лет двенадцать назад, был не женат, тридцатилетен, где-то нехотя работал, помогая себе жить песней из старого фильма: "Не кочегары мы, ...]
 * [[столетний]] "hundred-year" no? [can't find examples]
 * [[плавучий]] "floating, buoyant" yes? [see [https://books.google.com/books?id=3YSeAAAAQBAJ&pg=PT282&dq=%D0%BF%D0%BB%D0%B0%D0%B2%D1%83%D1%87&hl=en&sa=X&ved=0ahUKEwjf3vnRte_MAhVEVh4KHdQsDfA4ChDoAQhWMAk]: Там есть деревья тысячи пород, дающие плоды с чудесным вкусом, есть животные, что не боятся человека, есть острова, подобные коралловым, но наш коралл плавуч, и ветры кружат эти острова по океану, словно огромные ...] [see [https://books.google.com/books?id=yMBLAAAAMAAJ&q=%D0%BF%D0%BB%D0%B0%D0%B2%D1%83%D1%87%D0%B8&dq=%D0%BF%D0%BB%D0%B0%D0%B2%D1%83%D1%87%D0%B8&hl=en&sa=X&ved=0ahUKEwiQ5L2Utu_MAhXPsh4KHfoFAF8Q6AEIMzAD]: При высокой скорости течения (опыты VI и VII) пестрятки были более плавучи, чем ранее (II, III и IV).]
 * [[захватывающий]] "thrilling, exciting" yes? [see [https://books.google.com/books?id=Tba5CgAAQBAJ&pg=PT34&dq=%D0%B7%D0%B0%D1%85%D0%B2%D0%B0%D1%82%D1%8B%D0%B2%D0%B0%D1%8E%D1%89%D0%B8&hl=en&sa=X&ved=0ahUKEwjMxuy_tu_MAhXFVh4KHRHXAFAQ6AEIIjAB]: так захватывающи были словесные образы, воздвигаемые между развалинами и котлованом.]
