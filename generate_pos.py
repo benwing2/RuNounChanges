@@ -58,8 +58,8 @@ def generate_dimaugpej(defn, template, pos):
   parts = re.split(":", defn)
   assert len(parts) in [2, 3]
   defnline = "{{%s|lang=ru|%s%s}}" % (template,
-    "" if pos == "noun" else "|pos=%ss".format(pos),
-    re.sub(r", *", ", ", parts[1]))
+    re.sub(r", *", ", ", parts[1]),
+    "" if pos == "noun" else "|pos=%ss" % pos)
   if len(parts) == 3:
     defnline = "%s: %s" % (defnline, re.sub(r", *", ", ", parts[2]))
   return defnline
