@@ -26,15 +26,6 @@ import runounlib as runoun
 
 pages_pos = {}
 
-# Return True if ARG1 is an accent class or a set of accent classes separated
-# by commas.
-def arg1_is_stress(arg1):
-  if not arg1: return False
-  for arg in re.split(",", arg1):
-    if not re.search("^[a-f]'?'?$", arg):
-      return False
-  return True
-
 # Split page title or phonetic value into words the same way that ru-pron
 # does. Do not include ‿ in the split characters because the module doesn't
 # split on that symbol.
@@ -60,51 +51,7 @@ def find_noun_word_types_of_decl(lemma, decl_template, pagemsg):
   # lemma of each one, taking care to handle cases where there is no lemma
   # (it would default to the page name).
 
-  highest_numbered_param = 0
-  for p in decl_template.params:
-    pname = unicode(p.name)
-    if re.search("^[0-9]+$", pname):
-      highest_numbered_param = max(highest_numbered_param, int(pname))
-
-  # Now gather the numbered arguments into arg sets, gather the arg sets into
-  # groups of arg sets (one group per word), and gather the info for all
-  # words. An arg set is a list of arguments describing a declension,
-  # e.g. ["b", u"поро́к", "*"]. There may be multiple arg sets per word;
-  # in particular, if a word has a compound declension consisting of two
-  # or more declensions separated by "or". Code taken from ru-noun.lua.
-  offset = 0
-  arg_sets = []
-  arg_set = []
-  per_word_info = []
-  for i in xrange(1, highest_numbered_param + 2):
-    end_arg_set = False
-    end_word = False
-    val = getparam(decl_template, str(i))
-    if i == highest_numbered_param + 1 or val in ["_", "-"] or re.search("^join:", val):
-      end_arg_set = True
-      end_word = True
-    elif val == "or":
-      end_arg_set = True
-
-    if end_arg_set:
-      arg_sets.append(arg_set)
-      arg_set = []
-      offset = i
-      if end_word:
-        per_word_info.append(arg_sets)
-        arg_sets = []
-    else:
-      # If the first argument isn't stress, that means all arguments
-      # have been shifted to the left one. We want to shift them
-      # back to the right one, so we change the offset so that we
-      # get the same effect of skipping a slot in the arg set.
-      if i - offset == 1 and not arg1_is_stress(val):
-        offset -= 1
-        arg_set.append("")
-      if i - offset > 4:
-        pagemsg("WARNING: Too many arguments for argument set: arg %s = %s" %
-            (i, (val or "(blank)")))
-      arg_set.append(val)
+  per_word_info = runoun.split_noun_decl_arg_sets(decl_template, pagemsg)
 
   def get_per_word_info(words, per_word_info):
     per_word_types = []

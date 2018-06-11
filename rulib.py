@@ -73,12 +73,15 @@ def is_ending_stressed(word):
   return (re.search(u"[ёЁ][^" + vowel + "]*$", word) or
     re.search("[" + vowel + u"][́̈][^" + vowel + "]*$", word))
 
-# True if any word in text has two or more stresses
+# True if any word in text has two or more stresses; don't count words like
+# платёжеспосо́бность or трёхле́тний, where the first ё isn't accented
 def is_multi_stressed(text):
-  text = re.sub(u"[ёЁ]", u"е́", text)
+  text = re.sub(u"[ёЁ]", u"е" + DI, text)
   words = re.split(r"[\s-]", text)
   for word in words:
-    if re.search("[" + vowel + u"][́̈].*[" + vowel + u"][́̈]", word):
+    # Look for true accent (not diaeresis) + any another accent, in the
+    # same word
+    if re.search("[" + vowel + u"][́].*[" + vowel + u"][́̈]", word):
       return True
   return False
 
