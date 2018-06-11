@@ -285,6 +285,11 @@
 # 81. Inserts "animate acc pl" instead of just "acc pl" into посла́ form of
 #     посо́л "ambassador", which is only animate; посо́л with genitive
 #     посо́ла "salting" is inanimate.
+# 82. Don't warn on known singular/plurale tantum cases either in
+#     allow_in_same_etym_section or not_in_same_etym_section.
+# 83. (DONE) Properly handle participles with multiple translits.
+# 84. (DONE) Properly handle ===Alternative forms=== before etymology
+#     when moving from one to multiple etymologies.
 
 import pywikibot, re, sys, codecs, argparse, time
 import traceback
@@ -315,8 +320,15 @@ skip_lemma_pages = [
     u"ложное срабатывание", # will be deleted
 ]
 
+# Skip non-lemma forms if specified here. Format is (FORM, LEMMA) for the
+# form and corresponding lemma.
 skip_form_pages = [
-    u"добытый" # has two variants which need to be split
+    (u"добытый", u"добыть"), # has two variants which need to be split
+    (u"бабки", u"бабка"), # etymologically split, wrongly adds an-acc-pl
+    (u"посла", u"посол"), # wrongly adds an-acc-sg
+    (u"попа", u"поп"), # wrongly adds an-acc-sg
+    (u"кисы", u"киса"), # wrongly adds in-acc-pl
+    (u"трёпла", u"трепло"), # wrongly adds in-acc-pl
 ]
 
 # Used to manually assign forms to lemmas when there are stress variants.
@@ -324,6 +336,8 @@ skip_form_pages = [
 # that should match the form, and LEMMA is the corresponding lemma with
 # accents.
 manual_split_form_list = [
+    (u"^аппара́тн.*обеспе́чен", u"аппара́тное обеспе́чение"),
+    (u"^аппара́тн.*обеспече́н", u"аппара́тное обеспече́ние"),
     (u"^бондар", u"бонда́рь"),
     (u"^грабар", u"граба́рь"),
     (u"^договор", u"до́говор"),
@@ -369,12 +383,16 @@ manual_split_form_list = [
     (u"^запыха́", u"запыха́ться"),
     (u"^и́скр", u"и́скриться"),
     (u"^искр", u"искри́ться"),
-    (u"^пузы́р", u"пуз́ыриться"),
+    (u"^норми́р", u"норми́ровать"),
+    (u"^нормир", u"нормирова́ть"),
+    (u"^прину́[жд]", u"прину́дить"),
+    (u"^прину[жд]", u"принуди́ть"),
+    (u"^пузы́р", u"пузы́риться"),
     (u"^пузыр", u"пузыри́ться"),
     (u"^ржа́ве", u"ржа́веть"),
     (u"^ржаве́", u"ржаве́ть"),
-    (u"^сгру́д", u"сгру́диться"),
-    (u"^сгруд", u"сгруди́ться"),
+    (u"^сгру́[жд]", u"сгру́диться"),
+    (u"^сгру[жд]", u"сгруди́ться"),
     (u"^ю́ркн", u"ю́ркнуть"),
     (u"^юркн", u"юркну́ть"),
 ]
@@ -390,9 +408,9 @@ manual_split_form_list = [
 # plural, insert the subsection after the lemma rather than creating a new
 # etymology section.
 allow_in_same_etym_section = [
-    (u"азы", u"аз"),
     (u"авиалинии", u"авиалиния"),
     (u"агулы", u"агул"),
+    (u"азы", u"аз"),
     # the following is complicated because there are two амур etymologies,
     # one of which is shared with амуры.
     (u"амуры", u"амур"),
@@ -401,10 +419,11 @@ allow_in_same_etym_section = [
     (u"бега", u"бег"),
     (u"боеприпасы", u"боеприпас"),
     (u"бразды", u"бразда"),
+    (u"брусья", u"брус"),
     (u"брюхоногие", u"брюхоногий"),
     (u"бубны", u"бубна"),
-    (u"внутренности", u"внутренность"),
     (u"внучата", u"внук"),
+    (u"внутренности", u"внутренность"),
     (u"вожжи", u"вожжа"),
     (u"войска", u"войско"),
     (u"волосы", u"волос"),
@@ -431,6 +450,7 @@ allow_in_same_etym_section = [
     (u"люди", u"человек"),
     (u"лыжи", u"лыжа"),
     (u"мозги", u"мозг"),
+    (u"морепродукты", u"морепродукт"),
     (u"мостки", u"мосток"),
     (u"мурашки", u"мурашка"),
     (u"нарты", u"нарта"),
@@ -450,14 +470,20 @@ allow_in_same_etym_section = [
     (u"покои", u"покой"),
     (u"полдни", u"полдень"),
     (u"почести", u"почесть"),
-    (u"припасы", u"припас"),
-    (u"права", u"право"),
     (u"правнучата", u"правнук"),
+    (u"права", u"право"),
+    (u"припасы", u"припас"),
     (u"реалии", u"реалия"),
     (u"ребята", u"ребёнок"),
+    (u"роды", u"род"),
+    (u"секундочку", u"секундочка"),
     (u"сиги", u"сиг"),
+    (u"сласти", u"сласть"),
     (u"слухи", u"слух"),
+    (u"слюнки", u"слюнка"),
+    (u"слюни", u"слюна"),
     (u"сопли", u"сопля"),
+    (u"соты", u"сота"),
     # FIXME! This should be split into стих "verse" (goes with стихи),
     # стих "mood" (does not go)
     (u"стихи", u"стих"),
@@ -473,6 +499,34 @@ allow_in_same_etym_section = [
     (u"энергоресурсы", u"энергоресурс"),
     (u"японцы", u"японец"),
     (u"яства", u"яство"),
+]
+
+# These represent pairs of lemmas, typically where the first one is a plurale
+# tantum and the second one is an unrelated singular with overlapping forms.
+# This is the opposite of allow_in_same_etym_section and is used to avoid
+# warnings about these pairs.
+not_in_same_etym_section = [
+    (u"асы", u"ас"),
+    (u"бабки", u"бабка"),
+    (u"бачки", u"бачок"),
+    (u"вьетнамки", u"вьетнамка"),
+    (u"городки", u"городок"),
+    (u"духи", u"дух"),
+    (u"дыбы", u"дыба"),
+    (u"кеды", u"кед"),
+    (u"клещи", u"клещ"),
+    (u"козлы", u"козёл"),
+    (u"латы", u"лат"),
+    (u"нары", u"нар"),
+    (u"нарды", u"нард"),
+    (u"отходы", u"отход"),
+    (u"очки", u"очко"),
+    (u"плавки", u"плавка"),
+    (u"сланцы", u"сланец"),
+    (u"трусы", u"трус"),
+    (u"цыпочки", u"цыпочка"),
+    (u"чари", u"чара"),
+    (u"черви", u"червь"),
 ]
 
 # List of lemmas where we allow stress mismatches to go into the same etym
@@ -493,6 +547,7 @@ allow_defn_in_same_subsection = [
     (u"водоросель", u"водоросль"),
     (u"вылезти", u"вылезть"),
     (u"деревцо", u"деревце"),
+    (u"дыхание", u"дыханье"),
     (u"дитя", u"ребёнок"), # special-case with same plural
     (u"жалование", u"жалованье"),
     (u"купание", u"купанье"),
@@ -503,17 +558,24 @@ allow_defn_in_same_subsection = [
     (u"мать", u"матерь"),
     (u"мнение", u"мненье"),
     (u"нуль", u"ноль"),
+    (u"обличие", u"обличье"),
     (u"огонь", u"огнь"),
     (u"остыть", u"остынуть"),
+    (u"плавание", u"плаванье"),
     (u"подножие", u"подножье"),
+    (u"пол-литра", u"поллитра"),
     (u"простыть", u"простынуть"),
+    (u"прощение", u"прощенье"),
+    (u"рождение", u"рожденье"),
     (u"свёкор", u"свёкр"),
     (u"свёкла", u"свекла"),
     (u"собрание", u"собранье"),
+    (u"соление", u"соленье"),
     (u"судия", u"судья"),
     (u"уединение", u"уединенье"),
     (u"уголь", u"угль"),
     (u"умиление", u"умиленье"),
+    (u"учение", u"ученье"),
     (u"чёрт", u"чорт"),
     # -стигнуть vs. -стичь
     (u"достигнуть", u"достичь"),
@@ -709,9 +771,11 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
   def expand_text(tempcall):
     return blib.expand_text(tempcall, pagename, pagemsg, verbose)
 
-  if pagename in skip_form_pages:
-    pagemsg("WARNING: Skipping form because in skip_form_pages")
-    return
+  for (skip_form, skip_lemma) in skip_form_pages:
+    if skip_form == pagename and skip_lemma == rulib.remove_accents(lemma):
+      pagemsg("WARNING: Skipping form because in skip_form_pages for lemma %s"
+          % skip_lemma)
+      return
 
   # Remove any redundant manual translit
   lemma, lemmatr = check_for_redundant_translit(lemma, lemmatr, pagemsg, expand_text)
@@ -936,6 +1000,21 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
           "c" if infl.endswith(u"тый") and past_f_end_stressed else
           "a" if re.search(u"[мт]ый$", infl) else "-")
         part_short_decls.append(part_short_decl)
+
+      # Combine inflection and its translit the way that it's expected in
+      # {{ru-decl-adj}}. In particular, we need to have cases like
+      # infl=аннекси́рующий, infltr=annɛksírujuščij, anneksírujuščij, which
+      # needs to be converted to аннекси́рующий//annɛksírujuščij,аннекси́рующий.
+      def combine_adj_infl_and_tr(infl, infltr):
+        decls = []
+        for onetr in re.split(", *", infltr or ""):
+          ru, tr = check_for_redundant_translit(infl, onetr, pagemsg, expand_text)
+          if tr:
+            decls += ["%s//%s" % (ru, tr)]
+          else:
+            decls += [ru]
+        return ",".join(decls)
+
       # If all inflection variants have the same short declension class,
       # we can combine into a single ru-decl-adj call; else we need to
       # generate more than one. FIXME: In the latter case, we should maybe
@@ -944,7 +1023,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
         if len(part_short_decls) > 1:
           pagemsg("Combining multiple inflections %s into single ru-decl-adj" %
               joined_infls_with_tr())
-        param1 = ",".join("%s%s" % (infl, "//%s" % infltr if infltr else "")
+        param1 = ",".join(combine_adj_infl_and_tr(infl, infltr)
           for infl, infltr in inflections)
         new_decl_template_parts.append("{{ru-decl-adj|%s|%s}}\n" % (param1, part_short_decls[0]))
       else:
@@ -952,8 +1031,8 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
           pagemsg("WARNING: Unable to combine multiple inflections %s into single ru-decl-adj because of differing short decls %s" %
               joined_infls_with_tr(), " ".join(part_short_decls))
         for part_short_decl, (infl, infltr) in zip(part_short_decl, inflections):
-          new_decl_template_parts.append("{{ru-decl-adj|%s%s|%s}}\n" % (
-            infl, "//%s" % infltr if infltr else "", part_short_decl))
+          new_decl_template_parts.append("{{ru-decl-adj|%s|%s}}\n" % (
+            combine_adj_infl_and_tr(infl, infltr), part_short_decl))
       new_decl_template = "".join(new_decl_template_parts)
       newdecl = "\n====Declension====\n" + new_decl_template
       newdecll4 = "\n=====Declension=====\n" + new_decl_template
@@ -1991,6 +2070,23 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
             pagemsg("Wrapping existing text in \"Etymology 1\" and adding \"Etymology 2\"")
             comment = "Wrap existing Russian section in Etymology 1, append entry (Etymology 2) for %s %s of %s, pos=%s" % (
                 infltype, joined_infls, lemma, pos)
+
+            for j in xrange(2, len(subsections), 2):
+              if re.match("^===+Etymology===+\n", subsections[j - 1]):
+                pagemsg("Found Etymology section at position %s-%s" % (
+                    j - 1, j))
+                # Found etymology section; if there is a preceding section
+                # such as Alternative forms, put the etymology section above
+                # it.
+                if j > 2:
+                  pagemsg("Found Etymology section at position %s-%s, below other sections, moving up" % (
+                    j - 1, j))
+                  etymtext = subsections[j - 1:j + 1]
+                  del subsections[j - 1:j + 1]
+                  subsections[1:1] = etymtext
+                  sections[i] = "".join(subsections)
+                break
+
             # Wrap existing text in "Etymology 1" and increase the indent level
             # by one of all headers
             sections[i] = re.sub("^\n*==Russian==\n+", "", sections[i])
