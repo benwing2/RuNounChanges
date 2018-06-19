@@ -245,3 +245,20 @@ June 7 2018
 * [[двухлитровый]] "two-liter (attrib.)" no [can't find examples]
 * [[трёхлитровый]] "three-liter (attrib.)" no [can't find examples]
 * [[фоновый]] "background (attrib.)" no [can't find examples]
+
+June 17 2018
+
+* [[гитарный]] "guitar (attrib.)" yes? rare? [see [https://books.google.co.cr/books?id=UBsmAQAAIAAJ&q=%22%D0%B3%D0%B8%D1%82%D0%B0%D1%80%D0%BD%D0%B5%D0%B5%22&dq=%22%D0%B3%D0%B8%D1%82%D0%B0%D1%80%D0%BD%D0%B5%D0%B5%22&hl=en&sa=X&ved=0ahUKEwiPypmc3tvbAhXSk1kKHVl_AjQQ6AEIJTAA]: Из этого в то же время не следует, что чем богаче материал, тем «гитарнее» может быть фактура (у Чайковского в первых проведениях кантиленных тем изложение, как правило, самое скромное, но тем богаче они развиваются ...]
+
+June 18 2018
+
+* [[говорливый]] "talkative, chatty" yes [see [https://books.google.co.cr/books?id=INi3IxFYdtkC&pg=PA109&dq=%22%D0%B3%D0%BE%D0%B2%D0%BE%D1%80%D0%BB%D0%B8%D0%B2%D0%B5%D0%B5%22&hl=en&sa=X&ved=0ahUKEwjcu6C9sd7bAhWE61MKHX10C2IQ6AEIJTAA]: А еще он становился все говорливее и говорливее, его было невозможно остановить, прервать. Это был поток. — О арабские скакуны! — почти пел-декламировал Иосиф, запихивая в пластиковый мешок лохмотья Ванькиных ...]
+* [[хромовый]] "chrome (attrib.); box-calf (attrib.)" no [can't find examples]
+* [[титановый]] "titanium (attrib.); boiler (attrib.)" no [can't find examples]
+* [[черноглазый]] "having dark brown eyes" no [can't find examples]
+* [[богослужебный]] "liturgical" no [can't find examples]
+* [[потребный]] "necessary" yes [see [https://books.google.co.cr/books?id=uctHAQAAIAAJ&q=%22%D0%BF%D0%BE%D1%82%D1%80%D0%B5%D0%B1%D0%BD%D0%B5%D0%B5%22&dq=%22%D0%BF%D0%BE%D1%82%D1%80%D0%B5%D0%B1%D0%BD%D0%B5%D0%B5%22&hl=en&sa=X&ved=0ahUKEwjw5ZCFuN7bAhVK11MKHd7jBdsQ6AEIJTAA]: В другой комедии («Ядовитый») говорится: «Потребно в порядке содержимое оружие, а в порядке содержимые законы еще потребнее. Потребен ум военачальникам; а градоначальникам еще потребнее...». Последние комедии ...]
+* [[репродуктивный]] "reproductive" yes [see [https://books.google.co.cr/books?id=MQHpqOfZOWwC&pg=PT231&dq=%22%D1%80%D0%B5%D0%BF%D1%80%D0%BE%D0%B4%D1%83%D0%BA%D1%82%D0%B8%D0%B2%D0%BD%D0%B5%D0%B5%22&hl=en&sa=X&ved=0ahUKEwior4OcuN7bAhWMuVMKHVpxDUwQ6AEIJTAA]: В доказательство своей правоты приводила результаты исследований НИИ Реабилитации женщинводителей имени Валерии Новодворской. Где говорилось, что женщины умнее, талантливее, сексуальнее, репродуктивнее ...]
+* [[углеродный]] "carbon (attrib.)" no [can't find examples]
+* [[слёзный]] "tearful; plaintive" yes [see [https://books.google.co.cr/books?id=ZAcKAQAAIAAJ&q=%22%D1%81%D0%BB%D0%B5%D0%B7%D0%BD%D0%B5%D0%B5%22&dq=%22%D1%81%D0%BB%D0%B5%D0%B7%D0%BD%D0%B5%D0%B5%22&hl=en&sa=X&ved=0ahUKEwjFmtChut7bAhVRuFMKHb_zCnoQ6AEIVjAH]: Орас слезнее, нервнее его. Орас сам афиша, живая декорация, воплощенная ложь. Вечный актер, он ежеминутно позирует; у него есть идеальный Орас, за которого он хочет прослыть и которого он представляет для всех ...]
+* [[пчелиный]] "bee (attrib.)" no [can't find examples]

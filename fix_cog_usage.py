@@ -63,7 +63,7 @@ def process_page(index, page, save, verbose):
     if re.match("^===*Etymology( [0-9]+)?=*==", sections[i]):
       text = sections[i]
       while True:
-        new_text = re.sub(r"(^|[;:,.] +|\()((?:[Cc]ognate +(?:with +|of +)|[Cc]ognates +include +|[Cc]ompare +(?:with +|to +)?)(?:the +)?)((?:\{\{cog\|[A-Za-z0-9.-]+\|(?:[^{}]|\{\{[^{}]*?\}\})*\}\},? *(?:(?:and|or) +)?)*)([A-Z][A-Za-z]+(?: [A-Za-z]+)*?|\{\{etyl\|[A-Za-z0-9.-]+\|-\}\})( +\{\{(?:[ml]|term)\|)([A-Za-z0-9.-]+)(\|)",
+        new_text = re.sub(r"(^|[;:,.] +|\()((?:[Cc]ognate +(?:with +|of +|to +)|[Cc]ognates +include +|[Cc]ompare +(?:with +|to +)?)(?:the +)?)((?:\{\{cog\|[A-Za-z0-9.-]+\|(?:[^{}]|\{\{[^{}]*?\}\})*\}\},? *(?:(?:and|or) +)?)*)([A-Z][A-Za-z]+(?: [A-Za-z]+)*?|\{\{etyl\|[A-Za-z0-9.-]+\|-\}\})( +\{\{(?:[ml]|term)\|)([A-Za-z0-9.-]+)(\|)",
           replace_with_cog, text, 0, re.M)
         if new_text == text:
           break
