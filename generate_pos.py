@@ -144,7 +144,7 @@ def generate_defn(defns, pos):
       elif defn.startswith("enddim:"):
         defnline = generate_dimaugpej(defn, "endearing diminutive of", pos)
       elif defn.startswith("aug:"):
-        defnline = generate_dimaugpej(defn, "augmentative of", pos)
+        defnline = generate_dimaugpej(defn, "augmentative of|nocap=1", pos)
       elif defn.startswith("pej:"):
         defnline = generate_dimaugpej(defn, "pejorative of", pos)
       elif defn.startswith("gn:"):

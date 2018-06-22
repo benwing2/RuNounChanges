@@ -290,13 +290,15 @@
 # 83. (DONE) Properly handle participles with multiple translits.
 # 84. (DONE) Properly handle ===Alternative forms=== before etymology
 #     when moving from one to multiple etymologies.
+# 85. (DONE) Handle newlines in template names.
+# 86. (DONE EXCEPT один, два AND COMPOUNDS) Support generating inflections for cardinal/collective numerals.
 
 import pywikibot, re, sys, codecs, argparse, time
 import traceback
 import unicodedata
 
 import blib
-from blib import getparam, rmparam, msg, errmsg, site
+from blib import getparam, rmparam, tname, pname, msg, errmsg, site
 from collections import OrderedDict
 
 import rulib
@@ -880,7 +882,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
     all_match = True
     left_over_heads = False
 
-    if unicode(t.name) in ["ru-noun+", "ru-proper noun+"]:
+    if tname(t) in ["ru-noun+", "ru-proper noun+"]:
       lemmaarg = rulib.fetch_noun_lemma(t, expand_text)
       if lemmaarg is None:
         pagemsg_if(issue_warnings, "WARNING: Error generating noun forms when %s" % purpose)
@@ -903,7 +905,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
     else:
       # Get list of head params
       headparams = set()
-      headparams.add("head" if unicode(t.name) == "head" else "1")
+      headparams.add("head" if tname(t) == "head" else "1")
       i = 1
       while True:
         i += 1
@@ -1130,18 +1132,18 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
             parsed = blib.parse_text(sections[i])
             found_lemma = []
             for t in parsed.filter_templates():
-              tname = unicode(t.name)
-              if tname in ["ru-noun", "ru-noun+", "ru-proper noun",
+              tnam = tname(t)
+              if tnam in ["ru-noun", "ru-noun+", "ru-proper noun",
                   "ru-proper noun+", u"ru-noun-alt-ё", u"ru-proper noun-alt-ё",
                   "ru-adj", u"ru-adj-alt-ё", "ru-verb", u"ru-verb-alt-ё",
-                  "ru-adv", "ru-phrase"] or (tname == "head" and
+                  "ru-adv", "ru-phrase"] or (tnam == "head" and
                       getparam(t, "1") == "ru" and getparam(t, "2") in
                       ["circumfix", "conjunction", "determiner", "interfix",
                         "interjection", "letter", "numeral", "cardinal number",
                         "particle", "predicative", "prefix", "preposition",
                         "prepositional phrase", "pronoun"]):
-                found_lemma.append(getparam(t, "2") if tname == "head" else
-                    tname)
+                found_lemma.append(getparam(t, "2") if tnam == "head" else
+                    tnam)
             if found_lemma:
               errpagemsg("WARNING: Page appears to have a lemma on it, not overwriting, skipping form: lemmas = %s"
               % ",".join(found_lemma))
@@ -1161,10 +1163,10 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
               if template_head_matches(t, inflections, "checking for lemma"):
                 pagemsg("WARNING: Creating non-lemma form and found matching lemma template: %s" % unicode(t))
               if is_noun_form:
-                tname = unicode(t.name)
-                if tname in ["ru-noun", "ru-proper noun"] and any([re.search(r"\bp\b", x) for x in blib.fetch_param_chain(t, "2", "g")]):
+                tnam = tname(t)
+                if tnam in ["ru-noun", "ru-proper noun"] and any([re.search(r"\bp\b", x) for x in blib.fetch_param_chain(t, "2", "g")]):
                   found_plurale_tantum_lemma = True
-                elif tname in ["ru-noun+", "ru-proper noun+"]:
+                elif tnam in ["ru-noun+", "ru-proper noun+"]:
                   args = rulib.fetch_noun_args(t, expand_text)
                   if args is None:
                     pagemsg("WARNING: Error expanding template when checking for plurale tantum nouns: %s" %
@@ -1434,7 +1436,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                 tr = getparam(t, "tr")
                 non_numbered_params = []
                 for param in t.params:
-                  pname = unicode(param.name)
+                  pname = pname(param)
                   if not re.search(r"^[0-9]+$", pname) and pname not in ["lang", "tr"]:
                     non_numbered_params.append((pname, param.value))
                 # Erase all params.
@@ -1464,7 +1466,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
               def compare_inflections(t, infls, issue_warnings=True):
                 infl_params = []
                 for param in t.params:
-                  name = unicode(param.name)
+                  name = pname(param)
                   value = unicode(param.value)
                   if name not in ["1", "2"] and re.search("^[0-9]+$", name) and value:
                     infl_params.append(value)
@@ -1494,9 +1496,9 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
               # 'head|ru|verb form').
               def template_name(t):
                 if headtemp_is_head:
-                  return "|".join([unicode(t.name), getparam(t, "1"), getparam(t, "2")])
+                  return "|".join([tname(t), getparam(t, "1"), getparam(t, "2")])
                 else:
-                  return unicode(t.name)
+                  return tname(t)
 
               # When checking to see if entry (headword and definition) already
               # present, allow extra heads, so e.g. when checking for 2nd pl
@@ -1548,7 +1550,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
               defn_templates_for_already_present_entry = []
               defn_templates_for_inserting_in_same_section = []
               for t in parsed.filter_templates():
-                if (unicode(t.name) == deftemp and
+                if (tname(t) == deftemp and
                     compare_param(t, "1", lemma, lemmatr,
                       issue_warnings=issue_warnings) and
                     (not deftemp_needs_lang or
@@ -1567,7 +1569,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                 # Also see if the definition template matches a closely-related
                 # lemma where we allow the two to share the same headword
                 # (e.g. огонь and alternative form огнь)
-                elif (unicode(t.name) == deftemp and
+                elif (tname(t) == deftemp and
                     check_for_closely_related_lemma(getparam(t, "1"), lemma,
                       issue_warnings=issue_warnings) and
                     (not deftemp_needs_lang or
@@ -1577,7 +1579,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
 
               singular_in_existing_defn_templates = False
               for t in parsed.filter_templates():
-                if (unicode(t.name) == deftemp and
+                if (tname(t) == deftemp and
                     (not deftemp_needs_lang or
                       compare_param(t, "lang", "ru", None,
                         issue_warnings=issue_warnings))):
@@ -1621,7 +1623,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                     decl_templates = []
                     subsecparsed = blib.parse_text(subsections[check_subsection + 1])
                     for t in subsecparsed.filter_templates():
-                      if unicode(t.name) == "ru-decl-adj":
+                      if tname(t) == "ru-decl-adj":
                         decl_templates.append(t)
                     # If different numbers of existing vs. wanted decl
                     # templates, exit with a warning
@@ -1822,7 +1824,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
               if re.match("^===+(Noun|Adjective)===+", subsections[j - 1]):
                 parsed = blib.parse_text(subsections[j])
                 for t in parsed.filter_templates():
-                  if (unicode(t.name) in ["ru-adj", "ru-noun", "ru-proper noun", "ru-noun+", "ru-proper noun+"] and
+                  if (tname(t) in ["ru-adj", "ru-noun", "ru-proper noun", "ru-noun+", "ru-proper noun+"] and
                       template_head_matches(t, inflections, "checking for existing noun/adjective with headword matching adjectival participle") and insert_at is None):
                     insert_at = j - 1
 
@@ -1840,7 +1842,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
               if re.match("^===+(Adverb|Preposition)===+", subsections[j - 1]):
                 parsed = blib.parse_text(subsections[j])
                 for t in parsed.filter_templates():
-                  if ((unicode(t.name) in ["ru-adv"] or unicode(t.name) == "head" and getparam(t, "1") == "ru" and getparam(t, "2") == "preposition") and
+                  if ((tname(t) in ["ru-adv"] or tname(t) == "head" and getparam(t, "1") == "ru" and getparam(t, "2") == "preposition") and
                       template_head_matches(t, inflections, "checking for existing adverb/preposition with headword matching adverbial participle") and insert_at is None):
                     insert_at = j - 1
 
@@ -1860,7 +1862,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
               if re.match("^===+Participle===+", subsections[j - 1]):
                 parsed = blib.parse_text(subsections[j])
                 for t in parsed.filter_templates():
-                  if (unicode(t.name) == "head" and getparam(t, "1") == "ru" and
+                  if (tname(t) == "head" and getparam(t, "1") == "ru" and
                       getparam(t, "2") == "participle form" and
                       template_head_matches(t, inflections, "checking for existing participle with headword matching adjective")):
                     insert_at = j + 1
@@ -1868,13 +1870,13 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                 if re.match("^===+Adverb===+", subsections[j - 1]):
                   parsed = blib.parse_text(subsections[j])
                   for t in parsed.filter_templates():
-                    if (unicode(t.name) in ["ru-adv"] and
+                    if (tname(t) in ["ru-adv"] and
                         template_head_matches(t, inflections, "checking for existing adverb with headword matching short adjective")):
                       insert_at = j + 1
                 elif re.match("^===+Predicative===+", subsections[j - 1]):
                   parsed = blib.parse_text(subsections[j])
                   for t in parsed.filter_templates():
-                    if (unicode(t.name) == "head" and getparam(t, "1") == "ru" and
+                    if (tname(t) == "head" and getparam(t, "1") == "ru" and
                         getparam(t, "2") == "predicative" and
                         template_head_matches(t, inflections, "checking for existing predicative with headword matching short adjective")):
                       insert_at = j + 1
@@ -1906,7 +1908,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
           def matching_defn_templates(parsed, allow_stress_mismatch=False,
               check_for_sg_pl_pairs=False):
             return [t for t in parsed.filter_templates()
-                if unicode(t.name) == deftemp and
+                if tname(t) == deftemp and
                 (compare_param(t, "1", lemma, lemmatr,
                   allow_stress_mismatch=allow_stress_mismatch) or
                   check_for_sg_pl_pairs and check_for_matching_sg_pl_pair(
@@ -1925,7 +1927,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                 parsed = blib.parse_text(subsections[j])
                 defn_templates = matching_defn_templates(parsed)
                 for t in parsed.filter_templates():
-                  if (unicode(t.name) in ["ru-noun form"] and
+                  if (tname(t) in ["ru-noun form"] and
                       template_head_matches(t, inflections, "checking for existing noun form with headword and defn matching adj form") and
                       defn_templates and
                       insert_at is None):
@@ -1947,7 +1949,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                 parsed = blib.parse_text(subsections[j])
                 defn_templates = matching_defn_templates(parsed)
                 for t in parsed.filter_templates():
-                  if (unicode(t.name) == "head" and getparam(t, "1") == "ru" and
+                  if (tname(t) == "head" and getparam(t, "1") == "ru" and
                       getparam(t, "2") == "adjective form" and
                       template_head_matches(t, inflections, "checking for existing adj form with headword and defn matching noun form") and
                       defn_templates):
@@ -1968,7 +1970,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
               if re.match("^===+Noun===+", subsections[j - 1]):
                 parsed = blib.parse_text(subsections[j])
                 for t in parsed.filter_templates():
-                  if unicode(t.name) in ["ru-noun+", "ru-proper noun+"]:
+                  if tname(t) in ["ru-noun+", "ru-proper noun+"]:
                     otherlemmaarg = rulib.fetch_noun_lemma(t, expand_text)
                     if otherlemmaarg is None:
                       pagemsg("WARNING: Error generating noun forms when %s" % purpose)
@@ -1978,7 +1980,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                         if check_for_matching_sg_pl_pair(otherlemma, lemma,
                             first_only=True):
                           insert_at = j + 1
-                  elif unicode(t.name) in ["ru-noun", "ru-proper noun"]:
+                  elif tname(t) in ["ru-noun", "ru-proper noun"]:
                     otherlemmas = blib.fetch_param_chain(t, "1", "head")
                     for otherlemma in otherlemmas:
                       if check_for_matching_sg_pl_pair(otherlemma, lemma,
@@ -2022,7 +2024,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                 # First check for plural in a defn template
                 plural_in_existing_defn_templates = False
                 for t in parsed.filter_templates():
-                  if (unicode(t.name) == deftemp and
+                  if (tname(t) == deftemp and
                       (not deftemp_needs_lang or
                         compare_param(t, "lang", "ru", None))):
                     for paramno in xrange(1, 20):
@@ -2033,7 +2035,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                 # (the latter is necessary because plurale tantum forms don't
                 # have "p" in the defn template)
                 for t in parsed.filter_templates():
-                  if (unicode(t.name) in ["ru-noun form"] and
+                  if (tname(t) in ["ru-noun form"] and
                       template_head_matches(t, inflections, "checking for plural noun form") and (
                         plural_in_existing_defn_templates or
                         any([re.search(r"\bp\b", y) for y in blib.fetch_param_chain(t, "2", "g")]))):
@@ -2334,15 +2336,15 @@ def get_headword_noun_gender(section, pagemsg, expand_text):
   parsed = blib.parse_text(section)
   genders_seen = None
   for t in parsed.filter_templates():
-    tname = unicode(t.name)
+    tnam = tname(t)
     new_genders = None
     # Skip indeclinable nouns, to avoid issues with proper names like
     # Альцгеймер, which have two headwords, a declined masculine one
     # followed by an indeclinable feminine one, and a masculine inflection
     # table.
-    if tname in ["ru-noun", "ru-proper noun"] and getparam(t, "3") != "-":
+    if tnam in ["ru-noun", "ru-proper noun"] and getparam(t, "3") != "-":
       new_genders = blib.fetch_param_chain(t, "2", "g")
-    elif tname in ["ru-noun+", "ru-proper noun+"]:
+    elif tnam in ["ru-noun+", "ru-proper noun+"]:
       new_genders = blib.fetch_param_chain(t, "g", "g")
       if not new_genders:
         args = rulib.fetch_noun_args(t, expand_text)
@@ -2561,10 +2563,11 @@ def split_forms_with_stress_variants(args, forms_desired, dicforms, pagemsg,
 # level indentation is wrong. SKIP_POSES is a list of parts of speech to skip
 # the inflections of (e.g. ["Participle", "Pronoun"] for adjectives).
 # IS_INFLECTION_TEMPLATE is a function that is passed one argument, a template,
-# and should indicate if it's an inflection template. CREATE_FORM_GENERATOR
-# is a function that's passed one argument, an inflection template, and should
-# return a template (a string) that can be expanded to yield a set of forms,
-# identified by form codes.
+# and should indicate if it's an inflection template. GENERATE_FORMS
+# is a function that's passed two arguments, an inflection template and
+# an 'expand_text' function, and should return an expansion of the template
+# into a string identifying the set of forms, of the form
+# 'FORMCODE1=VALUE1|FORMCODE2=VALUE2|...'.
 #
 # IS_LEMMA_TEMPLATE is a function that is passed one argument, a template,
 # and should indicate if it's a lemma template (e.g. 'ru-adj' for adjectives).
@@ -2589,7 +2592,7 @@ def create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite,
     lemmas_to_not_overwrite, program_args, save, startFrom, upTo, formspec,
     form_inflection_dict, form_aliases, pos, headtemp, dicform_codes,
     expected_header, expected_poses, skip_poses, is_inflection_template,
-    create_form_generator, is_lemma_template, get_gender=None,
+    generate_forms, is_lemma_template, get_gender=None,
     skip_inflections=None, pppp_set=None):
 
   forms_desired = parse_form_spec(formspec, form_inflection_dict,
@@ -2669,8 +2672,8 @@ def create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite,
         multiple_noun_animacies = True
         pagemsg("Found multiple animacies for noun")
 
-    for t, headword_gender in inflection_templates:
-      result = expand_text(create_form_generator(t))
+    for infltemp, headword_gender in inflection_templates:
+      result = generate_forms(infltemp, expand_text)
       if not result:
         pagemsg("WARNING: Error generating %s forms, skipping" % pos)
         continue
@@ -2713,7 +2716,7 @@ def create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite,
                 if split_args[formname] != raw_form:
                   pagemsg("WARNING: Raw form %s=%s contains footnote symbol (notes=%s)" % (
                     formname, split_args[formname + "_raw"],
-                    t.has("notes") and "<%s>" % getparam(t, "notes") or "NO NOTES"))
+                    infltemp.has("notes") and "<%s>" % getparam(infltemp, "notes") or "NO NOTES"))
 
               # Group inflections by unaccented Russian, so we process
               # multiple accent variants together
@@ -2755,7 +2758,7 @@ def create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite,
 
                   if type(inflsets) is not list:
                     inflsets = [inflsets]
-                  form_gender = headword_gender or (get_gender(t, formname, split_args) if get_gender else [])
+                  form_gender = headword_gender or (get_gender(infltemp, formname, split_args) if get_gender else [])
                   # This isn't agreed upon; probably masculine is better
                   #if pos == "noun":
                   #  # Nouns with plural in -ята, -ата are neuter in the plural
@@ -2839,6 +2842,11 @@ def create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite,
                     # inflection codes.
                     if pos == "noun" and dicform_code == "nom_pl":
                       inflset = tuple(x for x in inflset if x != "p")
+                    # For numerals, don't include "singular" or "plural"
+                    # in inflection codes when the numerals don't vary
+                    # according to number.
+                    if pos == "numeral" and numeral_is_tantum(infltemp, dicform_code):
+                      inflset = tuple(x for x in inflset if x not in ["s", "p"])
                     # Frob the locative of nouns, removing в, на, в/на, на/в,
                     # and variants with во.
                     if pos == "noun" and formname == "loc":
@@ -2919,9 +2927,9 @@ def create_verb_forms(save, startFrom, upTo, formspec, lemmas_to_process,
       # NOTE: 'head|ru|verb form' will be overridden with participles
       verb_form_aliases, "verb", "head|ru|verb form",
       "infinitive", "Conjugation", ["Verb", "Idiom"], [],
-      lambda t:unicode(t.name) == "ru-conj",
-      lambda t:re.sub(r"^\{\{ru-conj", "{{ru-generate-verb-forms", unicode(t)),
-      lambda t:unicode(t.name) == "ru-verb",
+      lambda t:tname(t) == "ru-conj",
+      lambda t, expand_text: expand_text(re.sub(r"^\{\{ru-conj", "{{ru-generate-verb-forms", unicode(t))),
+      lambda t:tname(t) == "ru-verb",
       get_gender=get_verb_gender,
       skip_inflections=skip_future_periphrastic,
       pppp_set=pppp_set)
@@ -2944,9 +2952,9 @@ def create_adj_forms(save, startFrom, upTo, formspec, lemmas_to_process,
       # with decl type 'proper'.
       "Declension", ["Adjective", "Participle", "Pronoun", "Proper noun"],
       ["Participle", "Pronoun", "Proper noun"],
-      lambda t:unicode(t.name) == "ru-decl-adj",
-      lambda t:re.sub(r"^\{\{ru-decl-adj", "{{ru-generate-adj-forms", unicode(t)),
-      lambda t:unicode(t.name) == "ru-adj",
+      lambda t:tname(t) == "ru-decl-adj",
+      lambda t, expand_text: expand_text(re.sub(r"^\{\{ru-decl-adj", "{{ru-generate-adj-forms", unicode(t))),
+      lambda t:tname(t) == "ru-adj",
       #get_gender=get_adj_gender
       )
 
@@ -2961,10 +2969,72 @@ def create_noun_forms(save, startFrom, upTo, formspec, lemmas_to_process,
       lemmas_to_not_overwrite, program_args, save, startFrom, upTo, formspec,
       noun_form_inflection_dict, noun_form_aliases, "noun", "ru-noun form",
       ["nom_sg", "nom_pl"], "Declension", ["Noun", "Proper noun"], [],
-      lambda t:unicode(t.name) == "ru-noun-table",
-      lambda t:re.sub(r"^\{\{ru-noun-table", "{{ru-generate-noun-args", unicode(t)),
-      lambda t:unicode(t.name) in ["ru-noun", "ru-proper noun", "ru-noun+", "ru-proper noun+"],
+      lambda t:tname(t) == "ru-noun-table",
+      lambda t, expand_text: expand_text(re.sub(r"^\{\{ru-noun-table", "{{ru-generate-noun-args", unicode(t))),
+      lambda t:tname(t) in ["ru-noun", "ru-proper noun", "ru-noun+", "ru-proper noun+"],
       get_gender=get_noun_gender)
+
+def numeral_is_tantum(t, dicform_code):
+  # If true, we should remove "singular" or "plural" from the inflection.
+  # This applies to numerals that don't vary by number, so that it's not
+  # obvious whether to classify them as singular or plural. It doesn't
+  # apply to тысяча, миллион, etc. which have both singular and plural
+  # forms.
+  if tname(t) == "ru-noun-table":
+    return dicform_code == "nom_pl" or getparam(t, "n")[0:1] in ["s", "p"]
+  return tname(t) in ["ru-decl-noun-unc", "ru-decl-noun-pl"]
+
+def generate_numeral_forms(t, expand_text):
+  if tname(t) == "ru-noun-table":
+    temp_to_expand = unicode(t)
+  elif tname(t) == "ru-decl-noun":
+    temp_to_expand = "{{ru-noun-table|a|%s|manual|a=%s|nom_sg=%s|nom_pl=%s|gen_sg=%s|gen_pl=%s|dat_sg=%s|dat_pl=%s|acc_sg=%s|acc_pl=%s|ins_sg=%s|ins_pl=%s|pre_sg=%s|pre_pl=%s|loc=%s|voc=%s|notes=%s}}" % (
+      getparam(t, "1"),
+      getparam(t, "a") or "bi",
+      getparam(t, "1"),
+      getparam(t, "2"),
+      getparam(t, "3"),
+      getparam(t, "4"),
+      getparam(t, "5"),
+      getparam(t, "6"),
+      getparam(t, "7"),
+      getparam(t, "8"),
+      getparam(t, "9"),
+      getparam(t, "10"),
+      # Get rid of preposition 'о' in the prepositional case if it exists
+      re.sub(u"^о ", "", getparam(t, "11")),
+      re.sub(u"^о ", "", getparam(t, "12")),
+      getparam(t, "13"),
+      getparam(t, "14"),
+      getparam(t, "notes")
+    )
+  else:
+    assert tname(t) in ["ru-decl-noun-unc", "ru-decl-noun-pl"]
+    temp_to_expand = "{{ru-noun-table|a|%s|manual|a=%s|n=sg|nom_sg=%s|gen_sg=%s|dat_sg=%s|acc_sg=%s|ins_sg=%s|pre_sg=%s|loc=%s|voc=%s}}" % (
+      getparam(t, "1"),
+      getparam(t, "a") or "bi",
+      getparam(t, "1"),
+      getparam(t, "2"),
+      getparam(t, "3"),
+      getparam(t, "4"),
+      getparam(t, "5"),
+      # Get rid of preposition 'о' in the prepositional case if it exists
+      re.sub(u"^о ", "", getparam(t, "6")),
+      getparam(t, "7"),
+      getparam(t, "8")
+    )
+  return expand_text(re.sub(r"^\{\{ru-noun-table", "{{ru-generate-noun-args",
+    temp_to_expand))
+
+def create_numeral_forms(save, startFrom, upTo, formspec, lemmas_to_process,
+      lemmas_no_jo, lemmas_to_overwrite, lemmas_to_not_overwrite, program_args):
+  create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite,
+      lemmas_to_not_overwrite, program_args, save, startFrom, upTo, formspec,
+      noun_form_inflection_dict, noun_form_aliases, "numeral", "head|ru|numeral form",
+      ["nom_sg", "nom_pl"], "Declension", ["Numeral"], [],
+      lambda t:tname(t) in ["ru-noun-table", "ru-decl-noun", "ru-decl-noun-unc", "ru-decl-noun-pl"],
+      generate_numeral_forms,
+      lambda t:tname(t) == "head" and getparam(t, "1") == "ru" and getparam(t, "2") == "numeral")
 
 
 pa = blib.create_argparser("Create Russian inflection entries")
@@ -3036,6 +3106,8 @@ given. WARNING: Be careful!""")
 pa.add_argument("--overwrite-etymologies", action="store_true",
     help=u"""If specified and --overwrite-page, overwrite the entire existing
 page of inflections even if "Etymology N". WARNING: Be careful!""")
+pa.add_argument("--numeral", action="store_true",
+    help=u"""If specified, create numeral forms instead of noun forms.""")
 
 params = pa.parse_args()
 startFrom, upTo = blib.parse_start_end(params.start, params.end)
@@ -3061,7 +3133,11 @@ else:
 if params.adj_form:
   create_adj_forms(params.save, startFrom, upTo, params.adj_form, lemmas_to_process, params.lemmas_no_jo, lemmas_to_overwrite, lemmas_to_not_overwrite, params)
 if params.noun_form:
-  create_noun_forms(params.save, startFrom, upTo, params.noun_form, lemmas_to_process, params.lemmas_no_jo, lemmas_to_overwrite, lemmas_to_not_overwrite, params)
+  if params.numeral:
+    function_to_call = create_numeral_forms
+  else:
+    function_to_call = create_noun_forms
+  function_to_call(params.save, startFrom, upTo, params.noun_form, lemmas_to_process, params.lemmas_no_jo, lemmas_to_overwrite, lemmas_to_not_overwrite, params)
 if params.verb_form:
   create_verb_forms(params.save, startFrom, upTo, params.verb_form, lemmas_to_process, params.lemmas_no_jo, lemmas_to_overwrite, lemmas_to_not_overwrite, params, pppp_set)
 

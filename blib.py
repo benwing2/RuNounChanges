@@ -77,6 +77,12 @@ def getrmparam(template, param):
   rmparam(template, param)
   return val
 
+def tname(template):
+  return unicode(template.name).strip()
+
+def pname(param):
+  return unicode(param.name).strip()
+
 def set_template_name(template, name, origname):
   if origname.endswith("\n"):
     template.name = name + "\n"
