@@ -383,10 +383,14 @@ manual_split_form_list = [
     (u"^газир", u"газирова́ть"),
     (u"^запы́ха", u"запы́хаться"),
     (u"^запыха́", u"запыха́ться"),
+    (u"^заржа́ве", u"заржа́веть"),
+    (u"^заржаве́", u"заржаве́ть"),
     (u"^и́скр", u"и́скриться"),
     (u"^искр", u"искри́ться"),
     (u"^норми́р", u"норми́ровать"),
     (u"^нормир", u"нормирова́ть"),
+    (u"^опорожн", u"опорожни́ть"),
+    (u"^опоро́жн", u"опоро́жнить"),
     (u"^прину́[жд]", u"прину́дить"),
     (u"^прину[жд]", u"принуди́ть"),
     (u"^пузы́р", u"пузы́риться"),
@@ -1436,9 +1440,9 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                 tr = getparam(t, "tr")
                 non_numbered_params = []
                 for param in t.params:
-                  pname = pname(param)
-                  if not re.search(r"^[0-9]+$", pname) and pname not in ["lang", "tr"]:
-                    non_numbered_params.append((pname, param.value))
+                  pnam = pname(param)
+                  if not re.search(r"^[0-9]+$", pnam) and pnam not in ["lang", "tr"]:
+                    non_numbered_params.append((pnam, param.value))
                 # Erase all params.
                 del t.params[:]
                 # Put back lang, param 1, param 2, tr, then the replacements
@@ -2205,6 +2209,7 @@ adj_form_inflection_list = [
   ["nom_n", ("nom", "n", "s")],
   ["nom_p", [("nom", "p"), ("in", "acc", "p")]],
   ["nom_mp", ("nom", "m", "p")],
+  ["nom_fp", [("nom", "f", "p"), ("in", "acc", "f", "p")]],
   ["gen_m", [("gen", "m", "s"), ("an", "acc", "m", "s"), ("gen", "n", "s")]],
   ["gen_f", ("gen", "f", "s")],
   ["gen_p", [("gen", "p"), ("an", "acc", "p")]],
@@ -2228,7 +2233,7 @@ adj_form_inflection_list = [
 adj_form_inflection_dict = dict(adj_form_inflection_list)
 adj_form_aliases = {
     "all":[x for x, y in adj_form_inflection_list],
-    "long":["nom_m", "nom_n", "nom_f", "nom_p", "nom_mp",
+    "long":["nom_m", "nom_n", "nom_f", "nom_p", "nom_mp", "nom_fp",
       "gen_m", "gen_f", "gen_p", "dat_m", "dat_f", "dat_p",
       "acc_f", "acc_n", "ins_m", "ins_f", "ins_p", "pre_m", "pre_f", "pre_p"],
     "short":["short_m", "short_n", "short_f", "short_p"]
@@ -2958,6 +2963,19 @@ def create_adj_forms(save, startFrom, upTo, formspec, lemmas_to_process,
       #get_gender=get_adj_gender
       )
 
+def create_numeral_adj_forms(save, startFrom, upTo, formspec, lemmas_to_process,
+      lemmas_no_jo, lemmas_to_overwrite, lemmas_to_not_overwrite, program_args):
+  create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite,
+      lemmas_to_not_overwrite, program_args, save, startFrom, upTo, formspec,
+      adj_form_inflection_dict, adj_form_aliases,
+      "numeral", "head|ru|numeral form", ["nom_m", "nom_mp"],
+      "Declension", ["Numeral"], [],
+      lambda t:tname(t) == "ru-decl-adj",
+      lambda t, expand_text: expand_text(re.sub(r"^\{\{ru-decl-adj", "{{ru-generate-adj-forms", unicode(t))),
+      lambda t:tname(t) == "head" and getparam(t, "1") == "ru" and getparam(t, "2") == "numeral"
+      #get_gender=get_adj_gender
+      )
+
 # WARNING: This isn't used unless the noun is in ignore_headword_gender;
 # see get_headword_noun_gender().
 def get_noun_gender(t, formname, args):
@@ -2978,8 +2996,10 @@ def numeral_is_tantum(t, dicform_code):
   # If true, we should remove "singular" or "plural" from the inflection.
   # This applies to numerals that don't vary by number, so that it's not
   # obvious whether to classify them as singular or plural. It doesn't
-  # apply to тысяча, миллион, etc. which have both singular and plural
+  # apply to один, тысяча, миллион, etc. which have both singular and plural
   # forms.
+  if tname(t) == "ru-decl-adj":
+    return dicform_code == "nom_mp"
   if tname(t) == "ru-noun-table":
     return dicform_code == "nom_pl" or getparam(t, "n")[0:1] in ["s", "p"]
   return tname(t) in ["ru-decl-noun-unc", "ru-decl-noun-pl"]
@@ -3026,7 +3046,7 @@ def generate_numeral_forms(t, expand_text):
   return expand_text(re.sub(r"^\{\{ru-noun-table", "{{ru-generate-noun-args",
     temp_to_expand))
 
-def create_numeral_forms(save, startFrom, upTo, formspec, lemmas_to_process,
+def create_numeral_noun_forms(save, startFrom, upTo, formspec, lemmas_to_process,
       lemmas_no_jo, lemmas_to_overwrite, lemmas_to_not_overwrite, program_args):
   create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite,
       lemmas_to_not_overwrite, program_args, save, startFrom, upTo, formspec,
@@ -3131,12 +3151,10 @@ if params.perfective_past_passive_participles:
 else:
   pppp_set = None
 if params.adj_form:
-  create_adj_forms(params.save, startFrom, upTo, params.adj_form, lemmas_to_process, params.lemmas_no_jo, lemmas_to_overwrite, lemmas_to_not_overwrite, params)
+  function_to_call = create_numeral_adj_forms if params.numeral else create_adj_forms
+  function_to_call(params.save, startFrom, upTo, params.adj_form, lemmas_to_process, params.lemmas_no_jo, lemmas_to_overwrite, lemmas_to_not_overwrite, params)
 if params.noun_form:
-  if params.numeral:
-    function_to_call = create_numeral_forms
-  else:
-    function_to_call = create_noun_forms
+  function_to_call = create_numeral_noun_forms if params.numeral else create_noun_forms
   function_to_call(params.save, startFrom, upTo, params.noun_form, lemmas_to_process, params.lemmas_no_jo, lemmas_to_overwrite, lemmas_to_not_overwrite, params)
 if params.verb_form:
   create_verb_forms(params.save, startFrom, upTo, params.verb_form, lemmas_to_process, params.lemmas_no_jo, lemmas_to_overwrite, lemmas_to_not_overwrite, params, pppp_set)
