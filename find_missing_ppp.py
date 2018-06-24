@@ -45,7 +45,7 @@ def process_page(index, page, save, verbose, fixdirecs):
     if unicode(t.name) == "ru-verb":
       saw_paired_verb = False
       if getparam(t, "2") in ["impf", "both"]:
-        verb = getparam(t, "1")
+        verb = getparam(t, "1") or pagetitle
         pfs = blib.fetch_param_chain(t, "pf", "pf")
         impfs = blib.fetch_param_chain(t, "impf", "impf")
         for otheraspect in pfs + impfs:
@@ -58,7 +58,7 @@ def process_page(index, page, save, verbose, fixdirecs):
       elif [x for x in t.params if unicode(x.value) == "or"]:
         pagemsg("WARNING: Skipping multi-arg conjugation: %s" % unicode(t))
         pass
-      elif re.search(r"\+p|\[?\([78]\)\]?", getparam(t, "2"))):
+      elif re.search(r"\+p|\[?\([78]\)\]?", getparam(t, "2")):
         pass
       else:
         pagemsg("Apparent unpaired transitive imperfective without PPP")

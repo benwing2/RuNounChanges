@@ -27,7 +27,7 @@ def process_page(index, page, fix, save, verbose):
   found_multiple_headwords = False
   for t in parsed.filter_templates():
     tname = unicode(t.name)
-    if tname == "ru-verb":
+    if tname in ["ru-verb", "ru-verb-cform"]:
       if headword_aspects:
         found_multiple_headwords = True
       headword_aspects = set()

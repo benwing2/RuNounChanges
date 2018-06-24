@@ -28,7 +28,7 @@ lemmas = set()
 for line in codecs.open(args.direcfile, "r", "utf-8"):
   line = line.strip()
   if "Would save with comment" in line:
-    m = re.search("Would save with comment.* (?:of|dictionary form) (.*?)(,| after| \(add| \(modify|$)", line)
+    m = re.search("Would save with comment.* (?:of|dictionary form) (.*?)(,| after| before| \(add| \(modify| \(update|$)", line)
     if not m:
       errmsg("WARNING: Unable to parse line: %s" % line)
     else:
