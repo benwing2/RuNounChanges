@@ -21,7 +21,7 @@
 		   first argument set (i.e. first set of arguments separated
 		   by "or"), defaults to page name; in later sets, defaults to lemma
 		   of previous set. A plural form can be given, and causes argument
-		   n= to default to n=p (plurale tantum). Normally, an accent is
+		   n= to default to n=p (plural only). Normally, an accent is
 		   required if multisyllabic, and unaccented monosyllables with
 		   automatically be stressed; prefix with * to override both behaviors.
 		DECL: Declension field. Normally omitted to autodetect based on the
@@ -48,6 +48,8 @@
 		   the plural as a whole (e.g. it's mostly hypothetical, rare and
 		   awkward, etc.).
 		sgtail, sgtailall: Same as pltail=, pltailall= but for the singular.
+		obltail, obltailall: Same as pltail=, pltailall= but for oblique cases
+		   (not the nominative or accusative).
 		CASE_NUM_tail: Attach the argument to the end of the last form
 		   (whether there's one or more than one) for the particular
 		   case/number combination. Note that this doesn't work quite like
@@ -356,6 +358,9 @@ TODO:
 42. [[груз 200]] doesn't work. Interprets 200 as a footnote symbol.
 43. When converting е -> ё not after cons and with translit, we should
    convert e -> o to avoid double j. (DONE)
+44. FIXME: In ро́вня/ровня́, similarly with неровня, marks genitive plural
+   ровня́ as irregular even though it isn't. (NOT OUR ERROR; THE DECLENSIONS
+   OF THESE NOUNS MARKED THE ENDING-STRESSED VARIANTS WITH (2).)
 ]=]--
 
 local m_utilities = require("Module:utilities")
@@ -541,7 +546,7 @@ local internal_notes_table = {}
 -- be created for the suffix.
 --
 -- 'alt_nom_pl' indicates that the declension has an alternative nominative
--- plural (corresponding to Zaliznyak's special case 1; cf. special case 2
+-- plural (corresponding to Zaliznyak's special case 1; compare special case 2
 -- for alternative genitive plural). 'irregpl' indicates that the entire
 -- plural is irregular.
 --
@@ -938,7 +943,7 @@ local function categorize_and_init_heading(stress, decl, args, n, islast)
 	if sgsuffix then
 		assert(#sgsuffix == 1) -- If this ever fails, then implement a loop
 		sgsuffix = com.remove_accents(sgsuffix[1])
-		-- If we are a plurale tantum or if nom_sg is overridden and has
+		-- If we are plural only or if nom_sg is overridden and has
 		-- an unusual suffix, then don't create category for sg suffix
 		if args.thisn == "p" or not override_matches_suffix(args, "nom_sg", n, sgsuffix) or islast and not override_matches_suffix(args, "nom_sg", "", sgsuffix) then
 			sgsuffix = nil
@@ -2871,7 +2876,7 @@ end
 --    plural-form lemmas (this is primarily used in conjunction with template
 --    ru-noun+, to explicitly specify the gender; for the actual declension,
 --    it doesn't much matter what singular gender we pick since we're a
---    plurale tantum)
+--    plural only)
 -- 5. A gender plus short/mixed/proper/ь (e.g. +f-mixed), again with the gender
 --    used only for detecting the singular of plural-form short/mixed lemmas
 -- 6. An actual declension, possibly including a slash declension
@@ -4404,6 +4409,16 @@ local function process_tail_args(args, f, n)
 					append_note_last(case, suf == "hyp" and HYPMARKER or arg, ">1")
 				end
 			end
+			if not rfind(case, "nom_") and not rfind(case, "acc_") then
+				arg = args["obl" .. suf .. "all" .. n]
+				if arg then
+					append_note_all(case, suf == "hyp" and HYPMARKER or arg)
+				end
+				arg = args["obl" .. suf .. n]
+				if arg then
+					append_note_last(case, suf == "hyp" and HYPMARKER or arg, ">1")
+				end
+			end				
 		end
 	end
 
@@ -4458,7 +4473,7 @@ handle_forms_and_overrides = function(args, n, islast)
 	f.loc = f.loc or f.pre_sg
 	f.par = f.par or f.gen_sg
 	f.voc = f.voc or f.nom_sg
-	-- Set these in case we have a plurale tantum, in which case the
+	-- Set these in case we have plural only, in which case the
 	-- singular will also get set to these same values in case we are
 	-- a plural-only word in a singular-only expression. NOTE: It's actually
 	-- unnecessary to do "f.loc_pl = f.loc_pl or f.pre_pl" as f.loc_pl should
@@ -4472,7 +4487,7 @@ handle_forms_and_overrides = function(args, n, islast)
 	-- and vice-versa. This is important so that things work in multi-word
 	-- expressions that combine different number restrictions (e.g.
 	-- singular-only with singular/plural or singular-only with plural-only,
-	-- cf. "St. Vincent and the Grenadines" [Сент-Винсент и Гренадины]).
+	-- compare "St. Vincent and the Grenadines" [Сент-Винсент и Гренадины]).
 	if nu == "s" then
 		f.nom_pl_linked = f.nom_sg_linked
 		f.nom_pl = f.nom_sg
@@ -4662,7 +4677,7 @@ local function show_form(forms, old, lemma)
 		elseif ishyp then
 			ruspan = m_links.full_link({lang = lang, term = nil, alt = ruentry, tr = "-"}, "hypothetical")
 		elseif old then
-			ruspan = m_links.full_link({lang = lang, term = com.remove_jo(ruentry), alt = ruentry, tr = "-"})
+			ruspan = m_links.full_link({lang = lang, term = com.remove_jo(ruentry), alt = not ruentry:find("[[", 1, true) and ruentry, tr = "-"})
 		else
 			ruspan = m_links.full_link({lang = lang, term = ruentry, tr = "-"})
 		end
@@ -4677,7 +4692,7 @@ local function show_form(forms, old, lemma)
 		if ishyp then
 			trspan = scriptutils.tag_text(trspan, lang, Latn, "hypothetical")
 		end
-		trspan = "<span style=\"color: #888\">" .. trspan .. trnotes .. "</span>"
+		trspan = scriptutils.tag_translit(trspan .. trnotes, lang, "default", ' style="color: #888"')
 
 		if lemma then
 			-- insert_if_not(lemmavals, ruspan .. " (" .. trspan .. ")")

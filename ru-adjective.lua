@@ -19,6 +19,7 @@
 		shorttailall: Same as shorttail= but applies to all short forms even
 		   if there's only one
 		CASE_NUMGEN_tail: Like shorttailall but only for a specific form
+		nofull: Short forms only
 
 	Case abbreviations:
 		nom: nominative
@@ -89,6 +90,11 @@ TODO:
 6. FIXME: Allow multiple heads, both to handle cases where two manual translits
    exist (or rather, one automatic and one manual), and cases where two
    stresses are possible, e.g. мину́вший or ми́нувший.
+7. FIXME: Add code to generate the regular comparative. The rules are as
+   follows: If the stem doesn't end in к г х, add -ee with no stress change
+   if the short form is type a, else add -е́е (including type a'). If the stem
+   ends in к г х, turn the last consonant into ч ж ш, add -е, and place the
+   stress on the syllable preceding the ending. (E.g. дорого́й -> доро́же)
 ]=]--
 
 local m_utilities = require("Module:utilities")
@@ -206,24 +212,26 @@ local long_cases = {
 	"acc_f", "acc_n",
 	"ins_m", "ins_f", "ins_p",
 	"pre_m", "pre_f", "pre_p",
+	-- extra old long cases
+	"nom_mp",
+	-- extra dva cases
+	"nom_fp",
+	-- extra oba cases
+	"gen_mp", "gen_fp",
+	"dat_mp", "dat_fp",
+	"ins_mp", "ins_fp",
+	"pre_mp", "pre_fp",
 }
-
--- Populate old_cases from cases
-local old_long_cases = mw.clone(long_cases)
-table.insert(old_long_cases, "nom_mp")
 
 -- Short cases and corresponding numbered arguments
 local short_cases = {
 	"short_m", "short_n", "short_f", "short_p"
 }
 
--- Combine long and short cases
-local cases = mw.clone(long_cases)
-local old_cases = mw.clone(old_long_cases)
-
+-- Create master list of all possible cases (actually case/number/gender pairs)
+local all_cases = mw.clone(long_cases)
 for _, case in ipairs(short_cases) do
-	table.insert(cases, case)
-	table.insert(old_cases, case)
+	ut.insert_if_not(all_cases, case)
 end
 
 -- If enabled, compare this module with new version of module to make
@@ -277,12 +285,16 @@ function export.do_generate_forms(args, old, manual)
 	manual = manual or args[2] == "manual"
 	local decl_types = manual and "$" or args[2] or ""
 	local lemmas = manual and "-" or args[1] or SUBPAGENAME
-	local short_classes
+	local normal_short_classes, rare_short_classes, dated_short_classes
+	local saw_no_short
 	for _, lemma_and_tr in ipairs(rsplit(lemmas, ",")) do 
-		-- reset it for each lemma so we get the short classes of the last
+		-- reset these for each lemma so we get the short classes of the last
 		-- lemma (doesn't really matter, as they should be the same for all
 		-- lemmas)
-		short_classes = {}
+		normal_short_classes = {}
+		rare_short_classes = {}
+		dated_short_classes = {}
+		saw_no_short = false
 		for _, decl_type in ipairs(rsplit(decl_types, ",")) do
 			local lemma, lemmatr = nom.split_russian_tr(lemma_and_tr)
 			-- if lemma ends with -ся, strip it and act as if suffix=ся given
@@ -291,21 +303,32 @@ function export.do_generate_forms(args, old, manual)
 			if active_base then
 				lemma = active_base
 				lemmatr = nom.strip_tr_ending(lemmatr, "ся")
+				args.refl = true
 				args.real_suffix = nom.concat_paired_russian_tr({"ся"}, args.suffix)
 			else
+				args.refl = false
 				args.real_suffix = args.suffix
 			end
 
 			-- Auto-detect actual decl type, and get short accent and overriding
 			-- short stem, if specified.
-			local stem, stemtr, short_accent, short_stem, short_stemtr, dated
-			stem, stemtr, decl_type, short_accent, short_stem, dated =
-				detect_stem_and_accent_type(lemma, lemmatr, decl_type)
+			local stem, stemtr, short_accent, short_stem, short_stemtr, datedrare
+			stem, stemtr, decl_type, short_accent, short_stem, datedrare =
+				detect_stem_and_accent_type(lemma, lemmatr, decl_type, args)
 			if rfind(decl_type, "^[іи]й$") and rfind(stem, "[" .. com.velar .. com.sib .. "]$") then
 				decl_type = "ый"
 			end
-			if short_accent and not dated then
-				ut.insert_if_not(short_classes, short_accent)
+			if datedrare == "none" then
+				saw_no_short = true
+			end
+			if short_accent then
+				if datedrare == "dated" then
+					ut.insert_if_not(dated_short_classes, short_accent)
+				elseif datedrare == "rare" then
+					ut.insert_if_not(rare_short_classes, short_accent)
+				else
+					ut.insert_if_not(normal_short_classes, short_accent)
+				end
 			end
 			if short_stem then
 				short_stem, short_stemtr = nom.split_russian_tr(short_stem)
@@ -325,8 +348,14 @@ function export.do_generate_forms(args, old, manual)
 				args.allow_unaccented = true
 			end
 
-			if not args.allow_unaccented and decl_type ~= "ой" and com.needs_accents(stem) then
-				error("Stem must have an accent in it: " .. stem)
+			if not args.allow_unaccented and com.needs_accents(lemma) then
+				-- Technically we don't need accents in -ой adjectives (which are
+				-- always ending-stressed) and in -ый adjectives with a monosyllabic
+				-- stem, such as полный (which are always stem-stressed), but it's
+				-- better to enforce accents in all multisyllabic words, for
+				-- consistency with nouns and verbs. Note that we still don't
+				-- require an accent in monosyllabic adjectives such as злой.
+				error("Lemma must have an accent in it: " .. lemma)
 			end
 
 			-- Set stem and unstressed version. Also construct end-accented version
@@ -413,7 +442,7 @@ function export.do_generate_forms(args, old, manual)
 			end
 
 			tracking_code(decl_type, args, orig_short_accent, short_accent,
-				short_stem, short_forms_allowed)
+				short_stem, datedrare, short_forms_allowed)
 			if not manual and enable_categories then
 				categorize(decl_type, args, orig_short_accent, short_accent,
 					short_stem)
@@ -422,7 +451,7 @@ function export.do_generate_forms(args, old, manual)
 			decline(args, decls[decl_type], ut.contains({"ой", "stressed-short", "stressed-proper"}, decl_type))
 			if short_forms_allowed and short_accent then
 				decline_short(args, short_decls[short_decl_type],
-					short_stress_patterns[short_accent], dated)
+					short_stress_patterns[short_accent], datedrare)
 			end
 
 			local intable = old and internal_notes_table_old or internal_notes_table
@@ -435,10 +464,12 @@ function export.do_generate_forms(args, old, manual)
 		end
 	end
 
-	local sct = table.concat(short_classes, ",") -- short class title
-	if sct == "" then
-		sct = "no short forms"
-	else
+	local short_class_titles = {}
+	local function make_short_class_title(short_classes, datedrare)
+		local sct = table.concat(short_classes, ",") -- short class title
+		if sct == "" then
+			return
+		end
 		-- Convert e.g. a*,a(1) into a*[(1)], either finally or followed by
 		-- comma.
 		sct = rsub(sct, "([abc]'*)%*,%1%*?(%([12]%))$", "%1*[%2]")
@@ -453,9 +484,26 @@ function export.do_generate_forms(args, old, manual)
 		sct = rsub(sct, "([abc]'*)([①②])", "%1*%2")
 		-- Avoid c'' turning into c with italics.
 		sct = rsub(sct, "''", "&#39;&#39;")
-		sct = "short class " .. sct
+		if datedrare then
+			sct = datedrare .. " short class " .. sct
+		else
+			sct = "short class " .. sct
+		end
+		table.insert(short_class_titles, sct)
 	end
-	args.short_class_title = sct
+
+	make_short_class_title(normal_short_classes, nil)
+	make_short_class_title(rare_short_classes, "rare")
+	make_short_class_title(dated_short_classes, "dated")
+	if #short_class_titles == 0 then
+		if saw_no_short then
+			args.short_class_title = "no short forms"
+		else
+			args.short_class_title = "unknown short forms"
+		end
+	else
+		args.short_class_title = table.concat(short_class_titles, " / ")
+	end
 
 	handle_forms_and_overrides(args, overall_short_forms_allowed)
 
@@ -464,7 +512,7 @@ function export.do_generate_forms(args, old, manual)
 		local m_new_ru_adjective = require("Module:User:Benwing2/ru-adjective")
 		local newargs = m_new_ru_adjective.do_generate_forms(orig_args, old, manual)
 		local difdecl = false
-		for _, case in ipairs(old_cases) do
+		for _, case in ipairs(all_cases) do
 			local arg = args[case]
 			local newarg = newargs[case]
 			if not ut.equals(arg, newarg) then
@@ -574,7 +622,7 @@ function export.generate_forms(frame)
 	local args = clone_args(frame)
 	local args = export.do_generate_forms(args, false)
 	local ins_text = {}
-	for _, case in ipairs(old_cases) do
+	for _, case in ipairs(all_cases) do
 		if args[case] then
 			table.insert(ins_text, case .. "=" .. get_form(args[case]))
 		end
@@ -589,7 +637,7 @@ function export.generate_form(frame)
 		error("Must specify desired form using form=")
 	end
 	local form = args.form
-	if not ut.contains(old_cases, form) then
+	if not ut.contains(all_cases, form) then
 		error("Unrecognized form " .. form)
 	end
 	local args = export.do_generate_forms(args, false)
@@ -605,7 +653,7 @@ end
 --------------------------------------------------------------------------
 
 tracking_code = function(decl_class, args, orig_short_accent, short_accent,
-	short_stem, short_forms_allowed)
+	short_stem, datedrare, short_forms_allowed)
 	local hint_types = com.get_stem_trailing_letter_type(args.stem)
 	local function dotrack(prefix)
 		if prefix ~= "" then
@@ -638,12 +686,23 @@ tracking_code = function(decl_class, args, orig_short_accent, short_accent,
 	end
 	if short_accent then
 		dotrack("short-accent/" .. short_accent)
+		if datedrare == "dated" then
+			dotrack("short-accent-dated")
+			dotrack("short-accent-dated/" .. short_accent)
+		elseif datedrare == "rare" then
+			dotrack("short-accent-rare")
+			dotrack("short-accent-rare/" .. short_accent)
+		end
+	elseif datedrare == "none" then
+		dotrack("short-accent/none")
+	else
+		dotrack("short-accent/unknown")
 	end
 	if short_stem then
 		dotrack("explicit-short-stem")
 		dotrack("explicit-short-stem/" .. short_accent)
 	end
-	for _, case in ipairs(old_cases) do
+	for _, case in ipairs(all_cases) do
 		if args[case] then
 			track("irreg/" .. case)
 			-- questionable use: dotrack("irreg/" .. case)
@@ -742,7 +801,7 @@ categorize = function(decl_type, args, orig_short_accent, short_accent,
 		end
 		insert_cat("~ with reducible stem")
 	end
-	for _, case in ipairs(old_cases) do
+	for _, case in ipairs(all_cases) do
 		if args[case] then
 			local engcase = rsub(case, "^([a-z]*)", {
 				nom="nominative", gen="genitive", dat="dative",
@@ -852,24 +911,33 @@ end
 -- stem of short adjective, nil if same as long stem). The return value of
 -- SHORT_STEM is taken directly from the argument and will include any
 -- manual translit.
-detect_stem_and_accent_type = function(lemma, tr, decl)
-	local dated = false
+detect_stem_and_accent_type = function(lemma, tr, decl, args)
+	local datedrare = false
 	-- If it looks like a short decl type, canonicalize. [abc] for types
-	-- a, b, c'', etc.; [d] for dated-*; [-] for - (no short forms); [*(] for
-	-- * and (1) and (2) modifiers, which might precede the letter.
-	if rfind(decl, "^[abcd*(-]") then
+	-- a, b, c'', etc.; [d] for dated-*; [r] for rare-*;
+	-- [-] for - (no short forms); [*(] for * and (1) and (2) modifiers,
+	-- which might precede the letter.
+	if rfind(decl, "^[abcdr*(-]") then
 		decl = ":" .. decl
 	end
 	splitvals = rsplit(decl, ":")
 	if #splitvals > 3 then
 		error("Should be at most three colon-separated parts of a declension spec: " .. decl)
 	end
+	local short_accent, short_stem
 	decl, short_accent, short_stem = splitvals[1], splitvals[2], splitvals[3]
 	-- Check for dated variant of short accent
-	dated_short = short_accent and rmatch(short_accent, "^dated%-(.*)$")
+	local dated_short = short_accent and rmatch(short_accent, "^dated%-(.*)$")
 	if dated_short then
-		dated = true
+		datedrare = "dated"
 		short_accent = dated_short
+	else
+		-- Check for rare variant of short accent
+		local rare_short = short_accent and rmatch(short_accent, "^rare%-(.*)$")
+		if rare_short then
+			datedrare = "rare"
+			short_accent = rare_short
+		end
 	end
 
 	decl = ine(decl)
@@ -879,6 +947,7 @@ detect_stem_and_accent_type = function(lemma, tr, decl)
 	end
 	if short_accent == "-" then
 		short_accent = nil
+		datedrare = "none"
 	end
 	short_accent = ine(short_accent)
 	short_stem = ine(short_stem)
@@ -886,6 +955,9 @@ detect_stem_and_accent_type = function(lemma, tr, decl)
 		error("With explicit short stem " .. short_stem .. ", must specify short accent")
 	end
 	local base, ending
+	-- The while loop appears to function solely as a way of allowing a
+	-- jump to the end of the loop with a 'break' statement. I don't think
+	-- the loop is ever run more than once.
 	while true do
 		if not decl or decl == "ь" then
 			base, ending = rmatch(lemma, "^(.*)([ыиіо]́?й)$")
@@ -952,7 +1024,10 @@ detect_stem_and_accent_type = function(lemma, tr, decl)
 			break
 		end
 	end
-	return base, tr, decl, short_accent, short_stem, dated
+	if not datedrare and (args.refl or not (decl == "ый" or decl == "ий" and not rfind(base, "[цс]к$"))) then
+		datedrare = "none"
+	end
+	return base, tr, decl, short_accent, short_stem, datedrare
 end
 
 -- Add a possible suffix to the bare stem, according to the declension and
@@ -1216,9 +1291,9 @@ declensions["mixed"] = {
 	["pre_p"] = "ых",
 }
 
-internal_notes_table["mixed"] = "<sup>2</sup> Dated."
+internal_notes_table["mixed"] = "<sup>2</sup> Obsolete."
 internal_notes_genders["mixed"] = {"m"}
-internal_notes_table_old["mixed"] = "<sup>2</sup> Dated."
+internal_notes_table_old["mixed"] = "<sup>2</sup> Obsolete."
 internal_notes_genders_old["mixed"] = {"m"}
 
 declensions["proper"] = {
@@ -1549,7 +1624,7 @@ end
 
 decline = function(args, decl, stressed)
 	local attacher = stressed and attach_stressed or attach_unstressed
-	for _, case in ipairs(args.old and old_long_cases or long_cases) do
+	for _, case in ipairs(long_cases) do
 		gen_form(args, decl, case, attacher)
 	end
 end
@@ -1605,7 +1680,7 @@ handle_forms_and_overrides = function(args, short_forms_allowed)
 		end
 	end
 
-	for _, case in ipairs(args.old and old_long_cases or long_cases) do
+	for _, case in ipairs(long_cases) do
 		if args[case .. "_tail"] then
 			append_note_last(case, args[case .. "_tail"])
 		end
@@ -1637,7 +1712,7 @@ handle_forms_and_overrides = function(args, short_forms_allowed)
 
 	-- Convert an empty list to nil, so that an mdash is inserted. This happens,
 	-- for example, with words like голубой where args.bare is set to nil.
-	for _, case in ipairs(args.old and old_cases or cases) do
+	for _, case in ipairs(all_cases) do
 		if args[case] and #args[case] == 0 then
 			args[case] = nil
 		end
@@ -1673,15 +1748,17 @@ short_stress_patterns["c"] = { m="-", f="+", n="-", p="-" }
 short_stress_patterns["c'"] = { m="-", f="+", n="-", p="-+" }
 short_stress_patterns["c''"] = { m="-", f="+", n="-+", p="-+" }
 
-local function gen_short_form(args, decl, case, fun, dated)
+local function gen_short_form(args, decl, case, fun, datedrare)
 	if not args.forms["short_" .. case] then
 		args.forms["short_" .. case] = {}
 	end
 	local inserted = insert_forms_into_existing_forms(
 		args.forms["short_" .. case], attach_with(args, decl[case], fun, true),
-		dated and "*" or nil)
-	if dated and inserted then
+		(datedrare == "dated" and datedrare == "rare") and "*" or nil)
+	if datedrare == "dated" and inserted then
 		ut.insert_if_not(args.internal_notes, "<sup>*</sup> Dated.")
+	elseif datedrare == "rare" and inserted then
+		ut.insert_if_not(args.internal_notes, "<sup>*</sup> Rare.")
 	end
 end
 
@@ -1706,15 +1783,25 @@ end
 
 local title_temp = [=[Declension of <b lang="ru" class="Cyrl">{lemma}</b> ({short_class_title})]=]
 local old_title_temp = [=[Pre-reform declension of <b lang="ru" class="Cyrl">{lemma}</b> ({short_class_title})]=]
+local title_temp_no_short_msg = [=[Declension of <b lang="ru" class="Cyrl">{lemma}</b>]=]
 
 local template = nil
+local full_clause = nil
 local template_no_neuter = nil
+local full_clause_no_neuter = nil
 local proper_name_template = nil
+local proper_name_full_clause = nil
 local template_mp = nil
+local full_clause_mp = nil
 local template_mp_no_neuter = nil
+local full_clause_mp_no_neuter = nil
+local short_clause_separator = nil
 local short_clause = nil
+local short_clause_no_neuter_separator = nil
 local short_clause_no_neuter = nil
+local short_clause_mp_separator = nil
 local short_clause_mp = nil
+local short_clause_mp_no_neuter_separator = nil
 local short_clause_mp_no_neuter = nil
 local internal_notes_template = nil
 local notes_template = nil
@@ -1759,7 +1846,7 @@ local function show_form(forms, old, lemma)
 			trnotes = nom.translit_no_links(runotes)
 		end
 		trspan = m_links.remove_links(trentry) .. trnotes
-		trspan = "<span style=\"color: #888\">" .. trspan .. "</span>"
+		trspan = require("Module:script utilities").tag_translit(trspan, lang, "default", " style=\"color: #888;\"")
 
 		if lemma then
 			-- insert_if_not(lemmavals, ruspan .. " (" .. trspan .. ")")
@@ -1781,10 +1868,12 @@ end
 
 -- Make the table
 make_table = function(args)
-	args.lemma = m_links.remove_links(show_form(args.nom_m, args.old, true))
-	args.title = args.title or strutils.format(args.old and old_title_temp or title_temp, args)
+	args.lemma = m_links.remove_links(show_form((args.oba or args.dva) and args.nom_mp or
+		args.nofull and args.short_m or args.nom_m, args.old, true))
+	args.title = args.title or strutils.format((args.oba or args.dva) and title_temp_no_short_msg or
+		args.old and old_title_temp or title_temp, args)
 
-	for _, case in ipairs(args.old and old_cases or cases) do
+	for _, case in ipairs(all_cases) do
 		if args[case] then
 			args[case] = show_form(args[case], args.old, false)
 		else
@@ -1792,16 +1881,25 @@ make_table = function(args)
 		end
 	end
 
-	local temp = not args.nom_n and proper_name_template or args.noneuter and template_no_neuter or template
+	local temp = args.oba and template_oba or args.dva and template_dva or
+		not args.nom_n and proper_name_template or
+		args.noneuter and template_no_neuter or template
+	local fullc = args.oba and full_clause_oba or args.dva and full_clause_dva or
+		not args.nom_n and proper_name_full_clause or
+		args.noneuter and full_clause_no_neuter or full_clause
 
 	if args.old then
 		if args.nom_mp then
 			temp = args.noneuter and template_mp_no_neuter or template_mp
+			fullc = args.noneuter and full_clause_mp_no_neuter or full_clause_mp
 			if args.short_m or args.short_n or args.short_f or args.short_p then
 				args.short_m = args.short_m or "&mdash;"
 				args.short_n = args.short_n or "&mdash;"
 				args.short_f = args.short_f or "&mdash;"
 				args.short_p = args.short_p or "&mdash;"
+				args.shortsep = not args.nofull and (
+					args.noneuter and short_clause_mp_no_neuter_separator or short_clause_mp_separator
+				) or ""
 				args.short_clause = strutils.format(args.noneuter and short_clause_mp_no_neuter or short_clause_mp, args)
 			else
 				args.short_clause = ""
@@ -1815,10 +1913,19 @@ make_table = function(args)
 			args.short_n = args.short_n or "&mdash;"
 			args.short_f = args.short_f or "&mdash;"
 			args.short_p = args.short_p or "&mdash;"
+			args.shortsep = not args.nofull and (
+				args.noneuter and short_clause_no_neuter_separator or short_clause_separator
+			) or ""
 			args.short_clause = strutils.format(args.noneuter and short_clause_no_neuter or short_clause, args)
 		else
 			args.short_clause = ""
 		end
+	end
+
+	if not args.nofull then
+		args.full_clause = strutils.format(fullc, args)
+	else
+		args.full_clause = ""
 	end
 
 	args.internal_notes = table.concat(args.internal_notes, "<br />")
@@ -1829,43 +1936,59 @@ make_table = function(args)
 end
 
 -- Used for new-style templates
-short_clause = [===[
-
+short_clause_separator = [===[
 ! style="height:0.2em;background:#d9ebff" colspan="6" |
 |-
-! style="background:#eff7ff" colspan="2" | short form
+]===]
+
+-- Used for new-style templates
+short_clause = [===[
+
+{shortsep}! style="background:#eff7ff" colspan="2" | short form
 | {short_m}
 | {short_n}
 | {short_f}
 | {short_p}]===]
 
 -- Used for new-style templates
-short_clause_no_neuter = [===[
-
+short_clause_no_neuter_separator = [===[
 ! style="height:0.2em;background:#d9ebff" colspan="5" |
 |-
-! style="background:#eff7ff" colspan="2" | short form
+]===]
+
+-- Used for new-style templates
+short_clause_no_neuter = [===[
+
+{shortsep}! style="background:#eff7ff" colspan="2" | short form
 | {short_m}
 | {short_f}
 | {short_p}]===]
 
 -- Used for old-style templates
-short_clause_mp = [===[
-
+short_clause_mp_separator = [===[
 ! style="height:0.2em;background:#d9ebff" colspan="7" |
 |-
-! style="background:#eff7ff" colspan="2" | short form
+]===]
+
+-- Used for old-style templates
+short_clause_mp = [===[
+
+{shortsep}! style="background:#eff7ff" colspan="2" | short form
 | {short_m}
 | {short_n}
 | {short_f}
 | colspan="2" | {short_p}]===]
 
 -- Used for old-style templates
-short_clause_mp_no_neuter = [===[
-
+short_clause_mp_no_neuter_separator = [===[
 ! style="height:0.2em;background:#d9ebff" colspan="6" |
 |-
-! style="background:#eff7ff" colspan="2" | short form
+]===]
+
+-- Used for old-style templates
+short_clause_mp_no_neuter = [===[
+
+{shortsep}! style="background:#eff7ff" colspan="2" | short form
 | {short_m}
 | {short_f}
 | colspan="2" | {short_p}]===]
@@ -1894,7 +2017,7 @@ local function template_prelude(min_width)
 end
 
 local function template_postlude()
-	return [===[|-{short_clause}
+	return [===[{full_clause}|-{short_clause}
 |{\cl}{internal_notes_clause}{notes_clause}</div></div></div>]===]
 end
 
@@ -1905,6 +2028,10 @@ template = template_prelude() .. [===[
 ! style="background:#d9ebff" | neuter
 ! style="background:#d9ebff" | feminine
 ! style="background:#d9ebff" | plural
+]===] .. template_postlude()
+
+-- Used for both new-style and old-style templates
+full_clause = [===[
 |-
 ! style="background:#eff7ff" colspan="2" | nominative
 | {nom_m}
@@ -1942,7 +2069,7 @@ template = template_prelude() .. [===[
 | colspan="2" | {pre_m}
 | {pre_f}
 | {pre_p}
-]===] .. template_postlude()
+]===]
 
 -- Used for both new-style and old-style templates
 template_no_neuter = template_prelude("55") .. [===[
@@ -1950,6 +2077,10 @@ template_no_neuter = template_prelude("55") .. [===[
 ! style="background:#d9ebff" | masculine
 ! style="background:#d9ebff" | feminine
 ! style="background:#d9ebff" | plural
+]===] .. template_postlude()
+
+-- Used for both new-style and old-style templates
+full_clause_no_neuter = [===[
 |-
 ! style="background:#eff7ff" colspan="2" | nominative
 | {nom_m}
@@ -1985,7 +2116,7 @@ template_no_neuter = template_prelude("55") .. [===[
 | {pre_m}
 | {pre_f}
 | {pre_p}
-]===] .. template_postlude()
+]===]
 
 -- Used for both new-style and old-style templates
 proper_name_template = template_prelude("55") .. [===[
@@ -1993,6 +2124,10 @@ proper_name_template = template_prelude("55") .. [===[
 ! style="background:#d9ebff" | masculine
 ! style="background:#d9ebff" | feminine
 ! style="background:#d9ebff" | plural
+]===] .. template_postlude()
+
+-- Used for both new-style and old-style templates
+proper_name_full_clause = [===[
 |-
 ! style="background:#eff7ff" colspan="2" | nominative
 | {nom_m}
@@ -2023,7 +2158,7 @@ proper_name_template = template_prelude("55") .. [===[
 | {pre_m}
 | {pre_f}
 | {pre_p}
-]===] .. template_postlude()
+]===]
 
 -- Used for old-style templates
 template_mp = template_prelude() .. [===[
@@ -2033,6 +2168,10 @@ template_mp = template_prelude() .. [===[
 ! style="background:#d9ebff" | feminine
 ! style="background:#d9ebff" | m. plural
 ! style="background:#d9ebff" | n./f. plural
+]===] .. template_postlude()
+
+-- Used for old-style templates
+full_clause_mp = [===[
 |-
 ! style="background:#eff7ff" colspan="2" | nominative
 | {nom_m}
@@ -2072,7 +2211,7 @@ template_mp = template_prelude() .. [===[
 | colspan="2" | {pre_m}
 | {pre_f}
 | colspan="2" | {pre_p}
-]===] .. template_postlude()
+]===]
 
 -- Used for old-style templates
 template_mp_no_neuter = template_prelude("60") .. [===[
@@ -2081,6 +2220,10 @@ template_mp_no_neuter = template_prelude("60") .. [===[
 ! style="background:#d9ebff" | feminine
 ! style="background:#d9ebff" | m. plural
 ! style="background:#d9ebff" | n./f. plural
+]===] .. template_postlude()
+
+-- Used for old-style templates
+full_clause_mp_no_neuter = [===[
 |-
 ! style="background:#eff7ff" colspan="2" | nominative
 | {nom_m}
@@ -2118,7 +2261,153 @@ template_mp_no_neuter = template_prelude("60") .. [===[
 | {pre_m}
 | {pre_f}
 | colspan="2" | {pre_p}
+]===]
+
+-- Used for old-style templates
+template_mp = template_prelude() .. [===[
+! style="width:20%;background:#d9ebff" colspan="2" |
+! style="background:#d9ebff" | masculine
+! style="background:#d9ebff" | neuter
+! style="background:#d9ebff" | feminine
+! style="background:#d9ebff" | m. plural
+! style="background:#d9ebff" | n./f. plural
 ]===] .. template_postlude()
+
+-- Used for old-style templates
+full_clause_mp = [===[
+|-
+! style="background:#eff7ff" colspan="2" | nominative
+| {nom_m}
+| {nom_n}
+| {nom_f}
+| {nom_mp}
+| {nom_p}
+|-
+! style="background:#eff7ff" colspan="2" | genitive
+| colspan="2" | {gen_m}
+| {gen_f}
+| colspan="2" | {gen_p}
+|-
+! style="background:#eff7ff" colspan="2" | dative
+| colspan="2" | {dat_m}
+| {dat_f}
+| colspan="2" | {dat_p}
+|-
+! style="background:#eff7ff" rowspan="2" | accusative
+! style="background:#eff7ff" | animate
+| {gen_m}
+| rowspan="2" | {acc_n}
+| rowspan="2" | {acc_f}
+| colspan="2" | {gen_p}
+|-
+! style="background:#eff7ff" | inanimate
+| {nom_m}
+| {nom_mp}
+| {nom_p}
+|-
+! style="background:#eff7ff" colspan="2" | instrumental
+| colspan="2" | {ins_m}
+| {ins_f}
+| colspan="2" | {ins_p}
+|-
+! style="background:#eff7ff" colspan="2" | prepositional
+| colspan="2" | {pre_m}
+| {pre_f}
+| colspan="2" | {pre_p}
+]===]
+
+-- Used for два and compounds
+template_dva = template_prelude("55") .. [===[
+! style="width:20%;background:#d9ebff" colspan="2" |
+! style="background:#d9ebff" | masculine/neuter
+! style="background:#d9ebff" | feminine
+]===] .. template_postlude()
+
+-- Used for both new-style and old-style templates
+full_clause_dva = [===[
+|-
+! style="background:#eff7ff" colspan="2" | nominative
+| {nom_mp}
+| {nom_fp}
+|-
+! style="background:#eff7ff" colspan="2" | genitive
+| colspan="2" | {gen_p}
+|-
+! style="background:#eff7ff" colspan="2" | dative
+| colspan="2" | {dat_p}
+|-
+! style="background:#eff7ff" rowspan="2" | accusative
+! style="background:#eff7ff" | animate
+| colspan="2" | {gen_p}
+|-
+! style="background:#eff7ff" | inanimate
+| {nom_mp}
+| {nom_fp}
+|-
+! style="background:#eff7ff" colspan="2" | instrumental
+| colspan="2" | {ins_p}
+|-
+! style="background:#eff7ff" colspan="2" | prepositional
+| colspan="2" | {pre_p}
+]===]
+
+-- Used for два and compounds
+template_oba = template_prelude() .. [===[
+! style="width:20%;background:#d9ebff" colspan="2" |
+! style="background:#d9ebff" | masculine
+! style="background:#d9ebff" | neuter
+! style="background:#d9ebff" | feminine
+! style="background:#d9ebff" | m./n. plural
+! style="background:#d9ebff" | f. plural
+]===] .. template_postlude()
+
+-- Used for both new-style and old-style templates
+full_clause_oba = [===[
+|-
+! style="background:#eff7ff" colspan="2" | nominative
+| {nom_m}
+| {nom_n}
+| {nom_f}
+| {nom_mp}
+| {nom_fp}
+|-
+! style="background:#eff7ff" colspan="2" | genitive
+| colspan="2" | {gen_m}
+| {gen_f}
+| {gen_mp}
+| {gen_fp}
+|-
+! style="background:#eff7ff" colspan="2" | dative
+| colspan="2" | {dat_m}
+| {dat_f}
+| {dat_mp}
+| {dat_fp}
+|-
+! style="background:#eff7ff" rowspan="2" | accusative
+! style="background:#eff7ff" | animate
+| {gen_m}
+| rowspan="2" | {acc_n}
+| rowspan="2" | {acc_f}
+| {gen_mp}
+| {gen_fp}
+|-
+! style="background:#eff7ff" | inanimate
+| {nom_m}
+| {nom_mp}
+| {nom_fp}
+|-
+! style="background:#eff7ff" colspan="2" | instrumental
+| colspan="2" | {ins_m}
+| {ins_f}
+| {ins_mp}
+| {ins_fp}
+|-
+! style="background:#eff7ff" colspan="2" | prepositional
+| colspan="2" | {pre_m}
+| {pre_f}
+| {pre_mp}
+| {pre_fp}
+]===]
 
 return export
 
