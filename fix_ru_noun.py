@@ -123,10 +123,7 @@ def process_page_section(index, page, section, verbose):
   if len(noun_old_templates) > 1:
     pagemsg("WARNING: Found multiple ru-noun-old templates, skipping")
     return None
-  if len(noun_table_templates) < 1:
-    if noun_old_templates:
-      pagemsg("WARNING: No ru-noun-table templates but found ru-noun-old template(s): %s" %
-          ", ".join(unicode(x) for x in noun_old_templates))
+  if not noun_table_templates and not noun_old_templates:
     return unicode(parsed), 0, 0, 0, []
 
   for t in parsed.filter_templates():
@@ -146,8 +143,11 @@ def process_page_section(index, page, section, verbose):
   if len(headword_templates) < 1:
     return unicode(parsed), 0, 0, 0, []
 
-  noun_table_template = noun_table_templates[0]
+  noun_table_template = noun_table_templates[0] if len(noun_table_templates) == 1 else None
   noun_old_template = noun_old_templates[0] if len(noun_old_templates) == 1 else None
+  if noun_old_template and not noun_table_template:
+    noun_table_template = noun_old_template
+    noun_old_template = None
   headword_template = headword_templates[0]
   frobbed_manual_translit = []
   decl_templates = [x for x in [noun_table_template, noun_old_template] if x]
@@ -235,8 +235,9 @@ def process_page_section(index, page, section, verbose):
         pagemsg("Replacing decl %s with %s" % (orig_decl_template,
           unicode(decl_template)))
 
-  generate_template = re.sub(r"^\{\{ru-noun-table", "{{ru-generate-noun-args",
-      unicode(noun_table_template))
+  generate_template = re.sub(r"^\{\{ru-noun-old", "{{ru-generate-noun-args|old=1",
+    re.sub(r"^\{\{ru-noun-table", "{{ru-generate-noun-args",
+      unicode(noun_table_template)))
   generate_result = expand_text(generate_template)
   if not generate_result:
     pagemsg("WARNING: Error generating noun args, skipping")
@@ -297,6 +298,8 @@ def process_page_section(index, page, section, verbose):
   else:
     headword_template.name = "ru-proper noun+"
     ru_proper_noun_changed = 1
+  if unicode(noun_table_template).startswith("{{ru-noun-old"):
+    headword_template.add("old", "1")
 
   pagemsg("Replacing headword %s with %s" % (orig_headword_template, unicode(headword_template)))
 
@@ -306,7 +309,8 @@ parser = blib.create_argparser("Convert ru-noun to ru-noun+, ru-proper noun to r
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-for template in ["Template:ru-noun", "Template:ru-proper noun"]:
+#for template in ["Template:ru-noun", "Template:ru-proper noun"]:
+for template in ["Template:tracking/ru-headword/bad-ru-noun"]:
   msg("Processing references to %s" % template)
   for i, page in blib.references(template, start, end):
     process_page(i, page, args.save, args.verbose)
