@@ -316,7 +316,6 @@ ignore_headword_gender = [
 ]
 
 skip_lemma_pages = [
-    u"тысяча", # cardinal number (?)
     u"роженица", # 3 stress variants
     u"лицо, ищущее убежище", # can't properly handle comma in title
     u"витамин B2", # can't handle < in form titles
