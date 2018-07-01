@@ -221,7 +221,11 @@ def split_generate_args(tempresult):
   args = {}
   for arg in re.split(r"\|", tempresult):
     name, value = re.split("=", arg)
-    args[name] = re.sub("<!>", "|", value)
+    value = re.sub("<!>", "|", value)
+    # With manually specified declensions, we get back "-" for unspecified
+    # forms, which need to be omitted; otherwise they're automatically omitted.
+    if value != "-":
+      args[name] = value
   return args
 
 # Given an ru-noun+ or ru-proper noun+ template, fetch the arguments

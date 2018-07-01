@@ -292,6 +292,7 @@
 #     when moving from one to multiple etymologies.
 # 85. (DONE) Handle newlines in template names.
 # 86. (DONE EXCEPT один, два AND COMPOUNDS) Support generating inflections for cardinal/collective numerals.
+# 87. (DONE) Support один, два, оба and compounds.
 
 import pywikibot, re, sys, codecs, argparse, time
 import traceback
@@ -2203,36 +2204,67 @@ def parse_form_spec(formspec, infl_dict, aliases):
     infls.append((form, infl_dict[form]))
   return infls
 
-adj_form_inflection_list = [
-  ["nom_m", [("nom", "m", "s"), ("in", "acc", "m", "s")]],
-  ["nom_f", ("nom", "f", "s")],
-  ["nom_n", ("nom", "n", "s")],
-  ["nom_p", [("nom", "p"), ("in", "acc", "p")]],
-  ["nom_mp", ("nom", "m", "p")],
-  ["nom_fp", [("nom", "f", "p"), ("in", "acc", "f", "p")]],
-  ["gen_m", [("gen", "m", "s"), ("an", "acc", "m", "s"), ("gen", "n", "s")]],
-  ["gen_f", ("gen", "f", "s")],
-  ["gen_p", [("gen", "p"), ("an", "acc", "p")]],
-  ["dat_m", [("dat", "m", "s"), ("dat", "n", "s")]],
-  ["dat_f", ("dat", "f", "s")],
-  ["dat_p", ("dat", "p")],
-  ["acc_f", ("acc", "f", "s")],
-  ["acc_n", ("acc", "n", "s")],
-  ["ins_m", [("ins", "m", "s"), ("ins", "n", "s")]],
-  ["ins_f", ("ins", "f", "s")],
-  ["ins_p", ("ins", "p")],
-  ["pre_m", [("pre", "m", "s"), ("pre", "n", "s")]],
-  ["pre_f", ("pre", "f", "s")],
-  ["pre_p", ("pre", "p")],
-  ["short_m", ("short", "m", "s")],
-  ["short_f", ("short", "f", "s")],
-  ["short_n", ("short", "n", "s")],
-  ["short_p", ("short", "p")]
-]
+def adj_form_inflection_list(old, dva, oba):
+  return [
+    # used with all variants
+    ["nom_m", [("nom", "m", "s"), ("in", "acc", "m", "s")]],
+    ["nom_f", ("nom", "f", "s")],
+    ["nom_n", ("nom", "n", "s")],
+    # not used with два, оба and compounds; applies to all genders normally
+    # but only feminine and neuter with old=1
+    ["nom_p",
+      [("nom", "f", "p"), ("nom", "n", "p"), ("in", "acc", "f", "p"),
+        ("in", "acc", "n", "p")] if old
+      else [("nom", "p"), ("in", "acc", "p")]],
+    # only used with old=1 or два, оба and compounds; applies to the
+    # masculine and neuter if два, оба or compounds, but only
+    # masculine if old=1
+    ["nom_mp",
+      [("nom", "m", "p"), ("nom", "n", "p"), ("in", "acc", "m", "p"),
+        ("in", "acc", "n", "p")] if dva or oba
+      else [("nom", "m", "p"), ("in", "acc", "m", "p")]],
+    # only used with два, оба and compounds
+    ["nom_fp", [("nom", "f", "p"), ("in", "acc", "f", "p")]],
+    # the remaining singulars and non-gendered plurals used with all variants
+    ["gen_m", [("gen", "m", "s"), ("an", "acc", "m", "s"), ("gen", "n", "s")]],
+    ["gen_f", ("gen", "f", "s")],
+    ["gen_p", [("gen", "p"), ("an", "acc", "p")]],
+    ["dat_m", [("dat", "m", "s"), ("dat", "n", "s")]],
+    ["dat_f", ("dat", "f", "s")],
+    ["dat_p", ("dat", "p")],
+    ["acc_f", ("acc", "f", "s")],
+    ["acc_n", ("acc", "n", "s")],
+    ["ins_m", [("ins", "m", "s"), ("ins", "n", "s")]],
+    ["ins_f", ("ins", "f", "s")],
+    ["ins_p", ("ins", "p")],
+    ["pre_m", [("pre", "m", "s"), ("pre", "n", "s")]],
+    ["pre_f", ("pre", "f", "s")],
+    ["pre_p", ("pre", "p")],
+    # the remaining gendered plurals are only used with оба
+    ["gen_mp", [("gen", "m", "p"), ("gen", "n", "p"), ("an", "acc", "m", "p"),
+      ("an", "acc", "n", "p")]],
+    ["gen_fp", [("gen", "f", "p"), ("an", "acc", "f", "p")]],
+    ["dat_mp", [("dat", "m", "p"), ("dat", "n", "p")]],
+    ["dat_fp", ("dat", "f", "p")],
+    ["ins_mp", [("ins", "m", "p"), ("ins", "n", "p")]],
+    ["ins_fp", ("ins", "f", "p")],
+    ["pre_mp", [("pre", "m", "p"), ("pre", "n", "p")]],
+    ["pre_fp", ("pre", "f", "p")],
+    # short forms
+    ["short_m", ("short", "m", "s")],
+    ["short_f", ("short", "f", "s")],
+    ["short_n", ("short", "n", "s")],
+    ["short_p", ("short", "p")]
+  ]
 
-adj_form_inflection_dict = dict(adj_form_inflection_list)
+def adj_form_inflection_dict(infltemp):
+  return dict(adj_form_inflection_list(
+    getparam(infltemp, "old"),
+    getparam(infltemp, "dva"),
+    getparam(infltemp, "oba")))
+
 adj_form_aliases = {
-    "all":[x for x, y in adj_form_inflection_list],
+    "all":[x for x, y in adj_form_inflection_list(False, False, False)],
     "long":["nom_m", "nom_n", "nom_f", "nom_p", "nom_mp", "nom_fp",
       "gen_m", "gen_f", "gen_p", "dat_m", "dat_f", "dat_p",
       "acc_f", "acc_n", "ins_m", "ins_f", "ins_p", "pre_m", "pre_f", "pre_p"],
@@ -2261,7 +2293,9 @@ noun_form_inflection_list = [
   ["pre_pl", ("pre", "p")],
 ]
 
-noun_form_inflection_dict = dict(noun_form_inflection_list)
+def noun_form_inflection_dict(infltemp):
+  return dict(noun_form_inflection_list)
+
 noun_form_aliases = {
     "all":[x for x, y in noun_form_inflection_list],
     "sg":["nom_sg", "gen_sg", "dat_sg", "acc_sg", "acc_sg_an", "acc_sg_in",
@@ -2310,7 +2344,9 @@ verb_form_inflection_list = [
   # infinitive
   ["infinitive", ("infinitive")]
 ]
-verb_form_inflection_dict = dict(verb_form_inflection_list)
+def verb_form_inflection_dict(infltemp):
+  return dict(verb_form_inflection_list)
+
 verb_form_aliases = {
     "all":[x for x, y in verb_form_inflection_list],
     "pres":["pres_1sg", "pres_2sg", "pres_3sg", "pres_1pl", "pres_2pl", "pres_3pl"],
@@ -2546,7 +2582,8 @@ def split_forms_with_stress_variants(args, forms_desired, dicforms, pagemsg,
 # delimit the range of pages to process (inclusive on both ends).
 #
 # FORMSPEC specifies the form(s) to do, a comma-separated list of form codes,
-# possibly including aliases (e.g. 'all'). FORM_INFLECTION_DICT is a dictionary
+# possibly including aliases (e.g. 'all'). GENERATE_INFLECTION_DICT is a
+# function of one argument (the inflection template) that returns a dictionary
 # mapping possible form codes to a tuple of the corresponding inflection codes
 # in {{inflection of|...}}, or a list of such tuples; see 'parse_form_spec'.
 # FORM_ALIASES is a dictionary mapping aliases to form codes.
@@ -2595,13 +2632,11 @@ def split_forms_with_stress_variants(args, forms_desired, dicforms, pagemsg,
 # if found in an imperfective conjugation.
 def create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite,
     lemmas_to_not_overwrite, program_args, save, startFrom, upTo, formspec,
-    form_inflection_dict, form_aliases, pos, headtemp, dicform_codes,
+    generate_inflection_dict, form_aliases, pos, headtemp, dicform_codes,
     expected_header, expected_poses, skip_poses, is_inflection_template,
     generate_forms, is_lemma_template, get_gender=None,
     skip_inflections=None, pppp_set=None):
 
-  forms_desired = parse_form_spec(formspec, form_inflection_dict,
-      form_aliases)
   if type(dicform_codes) is not list:
     dicform_codes = [dicform_codes]
 
@@ -2695,6 +2730,8 @@ def create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite,
       dicforms = re.split(",", args[dicform_code])
       if len(dicforms) > 1:
         pagemsg("create_forms: Found multiple dictionary forms: %s" % args[dicform_code])
+      forms_desired = parse_form_spec(formspec, generate_inflection_dict(infltemp),
+        form_aliases)
       # Fetch dictionary forms, remove accents on monosyllables
       dicforms = [split_ru_tr(dicform) for dicform in dicforms]
       dicforms = [(rulib.remove_monosyllabic_accents(dicru),
@@ -2963,6 +3000,14 @@ def create_adj_forms(save, startFrom, upTo, formspec, lemmas_to_process,
       #get_gender=get_adj_gender
       )
 
+def generate_numeral_adj_forms(t, expand_text):
+  if tname(t) == "ru-decl-adj":
+    return expand_text(re.sub(r"^\{\{ru-decl-adj", "{{ru-generate-adj-forms", unicode(t)))
+  else:
+    assert tname(t) in ["ru-adj-table", "ru-adj-table-unc"]
+    return re.sub(r"^\{\{ru-adj-table(?:-unc)?\|(.*)\}\}$", r"\1",
+      re.sub(r"\s*([{}|=])\s*", r"\1", unicode(t)))
+
 def create_numeral_adj_forms(save, startFrom, upTo, formspec, lemmas_to_process,
       lemmas_no_jo, lemmas_to_overwrite, lemmas_to_not_overwrite, program_args):
   create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite,
@@ -2970,8 +3015,8 @@ def create_numeral_adj_forms(save, startFrom, upTo, formspec, lemmas_to_process,
       adj_form_inflection_dict, adj_form_aliases,
       "numeral", "head|ru|numeral form", ["nom_m", "nom_mp"],
       "Declension", ["Numeral"], [],
-      lambda t:tname(t) == "ru-decl-adj",
-      lambda t, expand_text: expand_text(re.sub(r"^\{\{ru-decl-adj", "{{ru-generate-adj-forms", unicode(t))),
+      lambda t:tname(t) in ["ru-decl-adj", "ru-adj-table", "ru-adj-table-unc"],
+      generate_numeral_adj_forms,
       lambda t:tname(t) == "head" and getparam(t, "1") == "ru" and getparam(t, "2") == "numeral"
       #get_gender=get_adj_gender
       )
@@ -3002,9 +3047,9 @@ def numeral_is_tantum(t, dicform_code):
     return dicform_code == "nom_mp"
   if tname(t) == "ru-noun-table":
     return dicform_code == "nom_pl" or getparam(t, "n")[0:1] in ["s", "p"]
-  return tname(t) in ["ru-decl-noun-unc", "ru-decl-noun-pl"]
+  return tname(t) in ["ru-decl-noun-unc", "ru-decl-noun-pl", "ru-adj-table-unc"]
 
-def generate_numeral_forms(t, expand_text):
+def generate_numeral_noun_forms(t, expand_text):
   if tname(t) == "ru-noun-table":
     temp_to_expand = unicode(t)
   elif tname(t) == "ru-decl-noun":
@@ -3053,7 +3098,7 @@ def create_numeral_noun_forms(save, startFrom, upTo, formspec, lemmas_to_process
       noun_form_inflection_dict, noun_form_aliases, "numeral", "head|ru|numeral form",
       ["nom_sg", "nom_pl"], "Declension", ["Numeral"], [],
       lambda t:tname(t) in ["ru-noun-table", "ru-decl-noun", "ru-decl-noun-unc", "ru-decl-noun-pl"],
-      generate_numeral_forms,
+      generate_numeral_noun_forms,
       lambda t:tname(t) == "head" and getparam(t, "1") == "ru" and getparam(t, "2") == "numeral")
 
 
