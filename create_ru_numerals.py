@@ -96,18 +96,33 @@ english_cardinals = {
   90: "ninety"
 }
 
+# Make sure there are two trailing newlines
+def ensure_two_trailing_nl(text):
+  return re.sub(r"\n*$", r"\n\n", text)
+
 def combine(tens, ones):
   if type(tens) is not list:
     tens = [tens]
   if type(ones) is not list:
     ones = [ones]
   vals = []
-  for ten in tens:
-    for one in ones:
+  # The first clause below ensures that we get only two entries for the
+  # instrumental of 88 (во́семьдесят во́семь) instead of four. The second
+  # clause typically applies when one of the two words has a single
+  # possibility and the other has two.
+  if len(tens) == len(ones):
+    for ten, one in zip(tens, ones):
       if one:
         vals.append("%s %s" % (ten, one))
       else:
         vals.append(ten)
+  else:
+    for ten in tens:
+      for one in ones:
+        if one:
+          vals.append("%s %s" % (ten, one))
+        else:
+          vals.append(ten)
   return ",".join(vals)
 
 def ru_num(num):
@@ -291,11 +306,11 @@ def generate_usage(num):
     oins = "/".join(oins)
 
   if ones in [2, 3, 4]:
-    return u"""* '''{tnom} {onom_m}''' in the nominative and accusative case governs the genitive singular of the noun, although modifying adjectives are in the genitive plural. (Unlike with bare {{{{m|ru|{onom_m}}}}}, there is no animate/inanimate distinction.)
+    return u"""* '''{tnom} {onom_m}''' in the nominative and accusative case governs the genitive singular of the noun, although modifying adjectives are in the genitive plural (or alternatively and preferably, for feminine nouns, in the nominative plural). Unlike with bare {{{{m|ru|{onom_m}}}}}, there is no animate/inanimate distinction.
 :* {{{{uxi|ru|[[здесь|Здесь]] '''{tnom} {onom_m}''' [[русский|ру́сских]] [[мальчик|ма́льчика]].|Here are '''{eng}''' Russian boys.}}}}
-:* {{{{uxi|ru|[[здесь|Здесь]] '''{tnom} {onom_f}''' [[большой|больши́х]] [[книга|кни́ги]].|Here are '''{eng}''' large books.}}}}
+:* {{{{uxi|ru|[[здесь|Здесь]] '''{tnom} {onom_f}''' [[большой|больши́е]]/[[большой|больши́х]] [[книга|кни́ги]].|Here are '''{eng}''' large books.}}}}
 :* {{{{uxi|ru|[[я|Я]] [[видеть|ви́жу]] '''{tacc} {onom_m}''' [[русский|ру́сских]] [[мальчик|ма́льчика]].|I see '''{eng}''' Russian boys.}}}}
-:* {{{{uxi|ru|[[я|Я]] [[видеть|ви́жу]] '''{tacc} {onom_f}''' [[большой|больши́х]] [[книга|кни́ги]].|I see '''{eng}''' large books.}}}}
+:* {{{{uxi|ru|[[я|Я]] [[видеть|ви́жу]] '''{tacc} {onom_f}''' [[большой|больши́е]]/[[большой|больши́х]] [[книга|кни́ги]].|I see '''{eng}''' large books.}}}}
 * '''{tnom} {onom_m}''' in other cases governs the appropriate plural case of the noun, with adjectives agreeing appropriately.
 :* {{{{uxi|ru|[[учи́тель]] '''{tgen} {ogen}''' [[русский|ру́сских]] [[мальчик|ма́льчиков]]|the teacher of the '''{eng}''' Russian boys}}}}
 :* {{{{uxi|ru|[[с]] '''{tins} {oins}''' [[русский|ру́сскими]] [[мальчик|ма́льчиками]]|with '''{eng}''' Russian boys}}}}
@@ -343,7 +358,8 @@ def generate_page(num):
 ====Coordinate terms====
 {{ru-cardinals}}
 
-[[Category:Russian cardinal numbers]]""" % (
+[[Category:Russian cardinal numbers]]
+""" % (
     prevnum, num, nextnum, ru_num(prevnum), ru_num(nextnum),
     "%s %s" % (cardinal_tens[tens], ordinals[ones]), ru_num(num),
     generate_pron(num),
@@ -353,7 +369,156 @@ def generate_page(num):
     generate_decl(num)
 )
 
+def process_page(index, num, save, verbose, params):
+  comment = None
+  notes = []
+
+  lemma = ru_num(num)
+  pagetitle = rulib.remove_accents(lemma)
+  newtext = generate_page(num)
+
+  def pagemsg(txt, fun=msg):
+    fun("Page %s %s: %s" % (index, pagetitle, txt))
+  def errpagemsg(txt):
+    pagemsg(txt)
+    pagemsg(txt, fun=errmsg)
+
+  # Prepare to create page
+  pagemsg("Creating entry")
+  page = pywikibot.Page(site, pagetitle)
+
+  try:
+    existing_text = blib.try_repeatedly(lambda: page.text, pagemsg, "fetch page text")
+  except pywikibot.exceptions.InvalidTitle as e:
+    pagemsg("WARNING: Invalid title, skipping")
+    traceback.print_exc(file=sys.stdout)
+    return
+
+  if not blib.try_repeatedly(lambda: page.exists(), pagemsg,
+      "check page existence"):
+    # Page doesn't exist. Create it.
+    pagemsg("Creating page")
+    comment = "Create page for Russian numeral %s (%s)" % (
+        lemma, num)
+    page.text = newtext
+    if verbose:
+      pagemsg("New text is [[%s]]" % page.text)
+  else: # Page does exist
+    pagetext = existing_text
+
+    # Split into sections
+    splitsections = re.split("(^==[^=\n]+==\n)", pagetext, 0, re.M)
+    # Extract off pagehead and recombine section headers with following text
+    pagehead = splitsections[0]
+    sections = []
+    for i in xrange(1, len(splitsections)):
+      if (i % 2) == 1:
+        sections.append("")
+      sections[-1] += splitsections[i]
+
+    # Go through each section in turn, looking for existing Russian section
+    for i in xrange(len(sections)):
+      m = re.match("^==([^=\n]+)==$", sections[i], re.M)
+      if not m:
+        pagemsg("Can't find language name in text: [[%s]]" % (sections[i]))
+      elif m.group(1) == "Russian":
+        # Extract off trailing separator
+        mm = re.match(r"^(.*?\n)(\n*--+\n*)$", sections[i], re.S)
+        if mm:
+          # Note that this changes the number of sections, which is seemingly
+          # a problem because the for-loop above calculates the end point
+          # at the beginning of the loop, but is not actually a problem
+          # because we always break after processing the Russian section.
+          sections[i:i+1] = [mm.group(1), mm.group(2)]
+
+        if params.overwrite_page:
+          if "==Etymology 1==" in sections[i] and not params.overwrite_etymologies:
+            errpagemsg("WARNING: Found ==Etymology 1== in page text, not overwriting, skipping form")
+            return
+          else:
+            pagemsg("WARNING: Overwriting entire Russian section")
+            comment = "Create Russian section for numeral %s (%s)" % (
+              lemma, num)
+            sections[i] = newtext
+            notes.append("overwrite section")
+            break
+        else:
+          errpagemsg("WARNING: Not overwriting existing Russian section")
+          return
+      elif m.group(1) > "Russian":
+        pagemsg("Exists; inserting before %s section" % (m.group(1)))
+        comment = "Create Russian section and entry for numeral %s (%s); insert before %s section" % (
+            lemma, num, m.group(1))
+        sections[i:i] = [newtext, "\n----\n\n"]
+        break
+
+    else: # else of for loop over sections, i.e. no break out of loop
+      pagemsg("Exists; adding section to end")
+      comment = "Create Russian section and entry for numeral %s (%s); append at end" % (
+          lemma, num)
+
+      if sections:
+        sections[-1] = ensure_two_trailing_nl(sections[-1])
+        sections += ["----\n\n", newsection]
+      else:
+        if not params.overwrite_page:
+          notes.append("formerly empty")
+        if pagehead.lower().startswith("#redirect"):
+          pagemsg("WARNING: Page is redirect, overwriting")
+          notes.append("overwrite redirect")
+          pagehead = re.sub(r"#redirect *\[\[(.*?)\]\] *(<!--.*?--> *)*\n*",
+              r"{{also|\1}}\n", pagehead, 0, re.I)
+        elif not params.overwrite_page:
+          pagemsg("WARNING: No language sections in current page")
+        sections += [newsection]
+
+    # End of loop over sections in existing page; rejoin sections
+    newtext = pagehead + ''.join(sections)
+
+    if page.text != newtext:
+      assert comment or notes
+
+    # Eliminate sequences of 3 or more newlines, which may come from
+    # ensure_two_trailing_nl(). Add comment if none, in case of existing page
+    # with extra newlines.
+    newnewtext = re.sub(r"\n\n\n+", r"\n\n", newtext)
+    if newnewtext != newtext and not comment and not notes:
+      notes = ["eliminate sequences of 3 or more newlines"]
+    newtext = newnewtext
+
+    if page.text == newtext:
+      pagemsg("No change in text")
+    elif verbose:
+      pagemsg("Replacing <%s> with <%s>" % (page.text, newtext))
+    else:
+      pagemsg("Text has changed")
+    page.text = newtext
+
+  # Executed whether creating new page or modifying existing page.
+  # Check for changed text and save if so.
+  notestext = '; '.join(notes)
+  if notestext:
+    if comment:
+      comment += " (%s)" % notestext
+    else:
+      comment = notestext
+  if page.text != existing_text:
+    if save:
+      pagemsg("Saving with comment = %s" % comment)
+      blib.try_repeatedly(lambda: page.save(comment=comment), pagemsg,
+          "save page")
+    else:
+      pagemsg("Would save with comment = %s" % comment)
+
 pa = blib.init_argparser("Save numbers to Wiktionary")
+pa.add_argument("--offline", help="Operate offline, outputting text of new pages", action="store_true")
+pa.add_argument("--overwrite-page", action="store_true",
+    help=u"""If specified, overwrite the entire existing page of inflections.
+Won't do this if it finds "Etymology N", unless --overwrite-etymologies is
+given. WARNING: Be careful!""")
+pa.add_argument("--overwrite-etymologies", action="store_true",
+    help=u"""If specified and --overwrite-page, overwrite the entire existing
+page of inflections even if "Etymology N". WARNING: Be careful!""")
 
 params = pa.parse_args()
 startFrom, upTo = blib.parse_start_end(params.start, params.end)
@@ -366,7 +531,10 @@ def iter_numerals():
 pages = iter_numerals()
 for current, index in blib.iter_pages(pages, startFrom, upTo,
     key=lambda x:str(x)):
-  print "========== Text for #%s: ==========" % current
-  print ""
-  print generate_page(current).encode('utf-8')
-  print ""
+  if params.offline:
+    print "========== Text for #%s: ==========" % current
+    print ""
+    print generate_page(current).encode('utf-8')
+    print ""
+  else:
+    process_page(index, current, params.save, params.verbose, params)
