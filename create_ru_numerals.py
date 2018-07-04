@@ -298,7 +298,10 @@ def generate_usage(num):
 :* {{{{uxi|ru|[[я|Я]] [[видеть|ви́жу]] '''{tacc} одни́''' [[большой|больши́е]] [[но́жницы]].|I see '''{eng}''' large scissors.}}}}
 :* {{{{uxi|ru|[[владе́лец]] '''{tgen} одни́х''' [[большой|больши́х]] [[ножницы|но́жниц]]|the owner of the '''{eng}''' large scissors}}}}
 :* {{{{uxi|ru|[[с]] '''{tins} одни́ми''' [[большой|больши́ми]] [[ножницы|но́жницами]]|with '''{eng}''' large scissors}}}}
-:* {{{{uxi|ru|[[говорить|Говорю́]] [[о]] '''{tpre} одни́х''' [[русский|больши́х]] [[ножницы|но́жницах]].|I am speaking about '''{eng}''' large scissors.}}}}""".format(
+:* {{{{uxi|ru|[[говорить|Говорю́]] [[о]] '''{tpre} одни́х''' [[большой|больши́х]] [[ножницы|но́жницах]].|I am speaking about '''{eng}''' large scissors.}}}}
+* As a distributive number with {{{{m|ru|по}}}}, '''{tnom} оди́н''' and an associated noun are both in the dative case (singular unless the noun is a plurale tantum).
+:* {{{{uxi|ru|[[я|Я]] [[дать|дал]] [[они|им]] [[по]] '''{tdat} одному́''' [[рубль|рублю́]].|I gave them '''{eng}''' rubles each.}}}}
+:* {{{{uxi|ru|[[я|Я]] [[послать|посла́л]] [[они|им]] [[по]] '''{tdat} одно́й''' [[книга|кни́ге]].|I sent them '''{eng}''' books each.}}}}""".format(
       tnom=tnom, tgen=tgen, tdat=tdat, tacc=tacc, tins=tins, tpre=tpre,
       eng=en_num(num))
   onom_m, onom_f, ogen, odat, oins, opre = cardinal_one_decls[ones]
@@ -314,7 +317,11 @@ def generate_usage(num):
 * '''{tnom} {onom_m}''' in other cases governs the appropriate plural case of the noun, with adjectives agreeing appropriately.
 :* {{{{uxi|ru|[[учи́тель]] '''{tgen} {ogen}''' [[русский|ру́сских]] [[мальчик|ма́льчиков]]|the teacher of the '''{eng}''' Russian boys}}}}
 :* {{{{uxi|ru|[[с]] '''{tins} {oins}''' [[русский|ру́сскими]] [[мальчик|ма́льчиками]]|with '''{eng}''' Russian boys}}}}
-:* {{{{uxi|ru|[[говорить|Говорю́]] [[о]] '''{tpre} {opre}''' [[русский|ру́сских]] [[мальчик|ма́льчиках]].|I am speaking about '''{eng}''' Russian boys.}}}}""".format(
+:* {{{{uxi|ru|[[говорить|Говорю́]] [[о]] '''{tpre} {opre}''' [[русский|ру́сских]] [[мальчик|ма́льчиках]].|I am speaking about '''{eng}''' Russian boys.}}}}
+* As a distributive number with {{{{m|ru|по}}}}, '''{tnom} {onom_m}''' is in the accusative case (always inanimate even if it governs an animate noun), and an associated noun is in the genitive singular (as expected).
+:* {{{{uxi|ru|[[я|Я]] [[дать|дал]] [[они|им]] [[по]] '''{tnom} {onom_m}''' [[рубль|рубля́]].|I gave them '''{eng}''' rubles each.}}}}
+:* {{{{uxi|ru|[[я|Я]] [[послать|посла́л]] [[они|им]] [[по]] '''{tnom} {onom_f}''' [[книга|кни́ги]].|I sent them '''{eng}''' books each.}}}}
+:* {{{{uxi|ru|[[я|Я]] [[представить|предста́вил]] [[мой|мои́м]] [[брат|бра́тьям]] [[по]] '''{tnom} {onom_m}''' [[человек|челове́ка]].|I introduced '''{eng}''' people each to my brothers.}}}}""".format(
       tnom=tnom, tgen=tgen, tdat=tdat, tacc=tacc, tins=tins, tpre=tpre,
       onom_m=onom_m, onom_f=onom_f, ogen=ogen, odat=odat, oins=oins, opre=opre,
       eng=en_num(num))
@@ -327,7 +334,10 @@ def generate_usage(num):
 * '''{tnom} {onom_m}''' in other cases governs the appropriate plural case of the noun.
 :* {{{{uxi|ru|[[учи́тель]] '''{tgen} {ogen}''' [[русский|ру́сских]] [[мальчик|ма́льчиков]]|the teacher of the '''{eng}''' Russian boys}}}}
 :* {{{{uxi|ru|[[с]] '''{tins} {oins}''' [[русский|ру́сскими]] [[мальчик|ма́льчиками]]|with '''{eng}''' Russian boys}}}}
-:* {{{{uxi|ru|[[говорить|Говорю́]] [[о]] '''{tpre} {opre}''' [[русский|ру́сских]] [[мальчик|ма́льчиках]].|I am speaking about '''{eng}''' Russian boys.}}}}""".format(
+:* {{{{uxi|ru|[[говорить|Говорю́]] [[о]] '''{tpre} {opre}''' [[русский|ру́сских]] [[мальчик|ма́льчиках]].|I am speaking about '''{eng}''' Russian boys.}}}}
+* As a distributive number with {{{{m|ru|по}}}}, '''{tnom} {onom_m}''' is in the accusative case, and an associated noun is in the genitive plural (as expected).
+:* {{{{uxi|ru|[[я|Я]] [[дать|дал]] [[они|им]] [[по]] '''{tnom} {onom_m}''' [[рубль|рубле́й]].|I gave them '''{eng}''' rubles each.}}}}
+:* {{{{uxi|ru|[[я|Я]] [[послать|посла́л]] [[они|им]] [[по]] '''{tnom} {onom_f}''' [[книга|кни́г]].|I sent them '''{eng}''' books each.}}}}""".format(
       tnom=tnom, tgen=tgen, tdat=tdat, tacc=tacc, tins=tins, tpre=tpre,
       onom_m=onom_m, onom_f=onom_f, ogen=ogen, odat=odat, oins=oins, opre=opre,
       eng=en_num(num))
@@ -519,6 +529,8 @@ given. WARNING: Be careful!""")
 pa.add_argument("--overwrite-etymologies", action="store_true",
     help=u"""If specified and --overwrite-page, overwrite the entire existing
 page of inflections even if "Etymology N". WARNING: Be careful!""")
+pa.add_argument("--numerals",
+    help=u"""Comma-separated list of numerals to process.""")
 
 params = pa.parse_args()
 startFrom, upTo = blib.parse_start_end(params.start, params.end)
@@ -528,7 +540,10 @@ def iter_numerals():
     for one in sorted(cardinal_ones.keys())[1:]: # Skip 0
         yield ten + one
 
-pages = iter_numerals()
+if params.numerals:
+  pages = [int(x) for x in re.split(",", params.numerals)]
+else:
+  pages = iter_numerals()
 for current, index in blib.iter_pages(pages, startFrom, upTo,
     key=lambda x:str(x)):
   if params.offline:
