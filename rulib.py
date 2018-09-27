@@ -13,7 +13,16 @@ DOTBELOW = u"\u0323" # dot below =  ̣
 DI = u"\u0308" # diaeresis =  ̈
 DUBGR = u"\u030F" # double grave =  ̏
 CARON = u"\u030C" # caron =  ̌
-accents = AC + GR + CFLEX + DOTABOVE + DOTBELOW + DI + DUBGR + CARON
+# non-primary accents (i.e. excluding acute) that indicate pronunciation
+# (not counting diaeresis, which indicates a completely different vowel,
+# and caron, which is used in translit as ě to indicate the yat vowel)
+non_primary_pron_accents = GR + CFLEX + DOTABOVE + DOTBELOW + DUBGR
+# accents that indicate pronunciation (not counting diaresis, which indicates
+# a completely different vowel)
+pron_accents = AC + non_primary_pron_accents
+# all accents
+accents = pron_accents + DI + CARON
+# accents indicating stress (primary or otherwise)
 stress_accents = AC + GR + CFLEX + DI + DUBGR
 
 composed_grave_vowel = u"ѐЀѝЍ"
@@ -122,14 +131,15 @@ deaccenter[AC] = "" # acute accent
 deaccenter[DI] = "" # diaeresis
 
 def remove_accents(word):
-  # remove acute and grave
-    return re.sub(u"([̀́̈ѐЀѝЍ])", lambda m: deaccenter[m.group(1)], word)
+  # remove pronunciation accents (not diaeresis)
+  return re.sub("([" + pron_accents + u"ѐЀѝЍ])",
+    lambda m: deaccenter[m.group(1)], word)
 
 def remove_tr_accents(word):
+  # remove pronunciation accents from translit (not diaeresis)
   if not word:
     return word
-  # remove acute and grave from translit
-  return unicodedata.normalize("NFC", re.sub(u"[̀́̈]", "",
+  return unicodedata.normalize("NFC", re.sub(u"[" + pron_accents + "]", "",
     unicodedata.normalize("NFD", word)))
 
 def remove_monosyllabic_accents(word):
@@ -138,8 +148,7 @@ def remove_monosyllabic_accents(word):
   # monosyllabic words.
   if is_monosyllabic(word):
     return remove_accents(word)
-  else:
-    return word
+  return word
 
 def remove_tr_monosyllabic_accents(word):
   # note: This doesn't affect diaeresis (composed or uncomposed) because
@@ -149,8 +158,20 @@ def remove_tr_monosyllabic_accents(word):
     return word
   if is_tr_monosyllabic(word):
     return remove_tr_accents(word)
-  else:
+  return word
+
+def remove_non_primary_accents(word):
+  # remove all pronunciation accents except acute
+  return re.sub("([" + non_primary_pron_accents + u"ѐЀѝЍ])",
+    lambda m: deaccenter[m.group(1)], word)
+
+def remove_tr_non_primary_accents(word):
+  # remove all pronunciation accents except acute from translit
+  if not word:
     return word
+  return unicodedata.normalize("NFC", re.sub(u"[" + non_primary_pron_accents + "]", "",
+    unicodedata.normalize("NFD", word)))
+
 
 destresser = deaccenter.copy()
 destresser[u"ё"] = u"е"

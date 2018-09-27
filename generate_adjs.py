@@ -3,7 +3,7 @@
 
 import re, sys, codecs, argparse
 
-from blib import msg, errmsg
+from blib import msg, errmsg, remove_links
 import rulib
 import generate_pos
 
@@ -233,9 +233,19 @@ while True:
       error("Declension starts with ?, need to fix: %s" % decl)
     remainder = els[4:]
   translit = None
-  declterm = term
   if "//" in term:
     term, translit = do_split("//", term)
+  # The original term may have translit, links and/or secondary/tertiary accents.
+  # For pronunciation purposes, we remove the translit and links but keep the
+  # secondary/tertiary accents. For declension purposes, we remove the
+  # secondary/tertiary accents but keep the translit and links. For headword
+  # purposes (other than ru-noun+), we remove everything (but still leave
+  # primary accents).
+  pronterm = remove_links(term) # FIXME: Reverse-translit translit if present
+  term = rulib.remove_non_primary_accents(term)
+  translit = rulib.remove_tr_non_primary_accents(translit)
+  declterm = "%s//%s" % (term, translit) if translit else term
+  term = remove_links(term)
   if pos == "adj":
     assert re.search(u"(ый|ий|о́й)(ся)?|[оеё]́?в|и́?н$", term)
   trtext = translit and "|tr=" + translit or ""
@@ -370,7 +380,7 @@ while True:
   enwikitext = ""
   cattext = ""
   filetext = ""
-  prontext = "* {{ru-IPA|%s}}\n" % term
+  prontext = "* {{ru-IPA|%s}}\n" % pronterm
   for synantrel in remainder:
     if synantrel.startswith("#"):
       break # ignore comments
