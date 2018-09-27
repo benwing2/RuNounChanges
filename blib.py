@@ -83,7 +83,9 @@ def tname(template):
 def pname(param):
   return unicode(param.name).strip()
 
-def set_template_name(template, name, origname):
+def set_template_name(template, name, origname=None):
+  if not origname:
+    origname = template.name
   if origname.endswith("\n"):
     template.name = name + "\n"
   else:
