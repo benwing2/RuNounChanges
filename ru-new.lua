@@ -238,12 +238,165 @@ local function do_split(text, sep)
 	return retvals
 end	
 
-local function handle_synant(arg)
+local function handle_synant(arg, satype)
 	local lines = {}
 	for _, synantgroup in ipairs(do_split(arg, ";")) do
-		if 
-		
-	
+		local sensetext = ""
+		tag, words = rmatch(synantgroup, "^%*?%((.-)%)(.*)$")
+		if tag then
+			sensetext = "{{sense|" .. tag .. "}} "
+		else
+			words = rmatch(synantgroup, "^%*(.*)$")
+			if words then
+				sensetext = "{{sense|FIXME}} "
+			else
+				sensetext = ""
+				words = synantgroup
+			end
+		end
+		local links = {}
+		for _, synant in ipairs(do_split(words, ",")) do
+			-- FIXME, won't work easily due to difficulty in inserting literal
+			-- braces into templates
+			if rfind(synant, "^%{") then
+				table.insert(links, synant)
+			else
+				check_stress(synant)
+				table.insert(links, "{{l|ru|" .. synant .. "}}")
+			end
+		end
+		table.insert(lines, "* " .. sensetext .. table.concat(links, ", ") .. "\n")
+	end
+	return "====" .. (satype == "syn" and "Synonyms" or "Antonyms") .. "====\n" ..
+		table.concat(lines, "") .. "\n"
+end
+
+local function handle_pron(arg)
+	local lines = {}
+	check_stress(arg)
+	for _, pron in ipairs(do_split(arg, ",")) do
+		check_stress(pron)
+		table.insert(lines, "* {{ru-IPA|" .. pron .. "}}\n")
+	end
+	return table.concat(lines, "")
+end
+
+local function handle_alt(arg)
+	local lines = {}
+	for _, altform in ipairs(do_split(",", vals)) do
+		if rfind(altform, "^%{") then
+			table.insert(lines, "* " .. altform .. "\n")
+		else
+			check_stress(altform)
+			table.insert(lines, "* {{l|ru|" .. altform .. "}}\n")
+		end
+	end
+	return "====Alternative forms====\n" .. table.concat(lines, "") .. "\n"
+end
+
+local function handle_note(arg)
+	arg = rsub(arg, "%[%[(.-)%]%]", "{{m|ru|%1}}")
+	arg = rsub(arg, "%(%((.-)%)%)", "{{m|ru|%1}}")
+	arg = rsub(arg, "g%((.-)%)", "{{glossary|%1}}")
+	return " {{i|" .. arg .. "}}"
+end
+
+local function handle_wiki(arg)
+	local lines = {}
+	for _, val in ipairs(do_split(arg, ",")) do
+		if val ~= "-" then
+			table.insert(lines, "{{wikipedia|lang=ru|" .. val .. "}}\n")
+		else
+			table.insert(lines, "{{wikipedia|lang=ru}}\n")
+		end
+	end
+	return table.concat(lines, "")
+end
+
+local function handle_enwiki(arg)
+	local lines = {}
+	for _, val in ipairs(do_split(arg, ",")) do
+		table.insert(lines, "{{wikipedia|" .. val .. "}}\n")
+	end
+	return table.concat(lines, "")
+end			
+
+local function handle_derrelsee(arg, drstype, data)
+	if arg == "-" then
+		return ""
+	end
+	local lines = {}
+	for _, derrelgroup in ipairs(do_split(vals, ",")) do
+		local links = {}
+		for _, derrel in ipairs(do_split(derrelgroup, ":")) do
+			-- Handle #ref, which we replace with the corresponding reflexive
+			-- verb pair for non-reflexive verbs and vice-versa
+			local gender_arg = data.headword_aspect == "both" and "|g=impf|g2=pf" or
+				"|g=" .. data.headword_aspect
+			if rfind(derrel, "#ref") then
+				if data.translit then
+					-- FIXME
+					error("Unable yet to handle translit with #ref")
+				end
+				-- * at the beginning of an aspect-paired verb forces
+				-- imperfective; used with aspect "both"
+				local corverb_impf_override = false
+				for _, corverb in ipairs(data.corverbs) do
+					if rfind(corverb, "^%*") then
+						corverb_impf_override = true
+						break
+					end
+				end
+				local refverb
+				local correfverbs = {}
+				if data.isrefl:
+					refverb = rsub(data.verb, "с[ья]$", "") .. gender_arg
+					for _, corverb in ipairs(data.corverbs) do
+						local corverb_base = rsub(rsub(corverb, "%^*", ""), "с[ья]$", "")
+						local corverb_aspect = (data.headword_aspect == "pf" or rfind(corverb, "^%*")) and
+							"impf" or "pf"
+						table.insert(correfverbs, corverb_base .. "|g=" .. corverb_aspect)
+					end
+				else
+					refverb = rfind(data.verb, "и́?$") and data.verb .. "сь" or
+						com.try_to_stress(data.verb) .. "ся" .. gender_arg
+					for _, corverb in ipairs(data.corverbs) do
+						local impf_override = rfind(corverb, "^%*")
+						corverb = rsub(corverb, "^%*", "")
+						local corverb_base = rfind(corverb, "и́?$") and corverb .. "сь" or
+							com.try_to_stress(data.verb) .. "ся"
+						local corverb_aspect = (data.headword_aspect == "pf" or impf_override) and
+							"impf" or "pf"
+						table.insert(correfverbs, corverb_base .. "|g=" .. corverb_aspect)
+					end
+				end
+				if data.headword_aspect == "pf" or corverb_impf_override then
+					table.insert(correfverbs, refverb)
+				else
+					table.insert(correfverbs, 0, refverb)
+				end
+				derrel = rsub(derrel, "#ref", table.concat(correfverbs, "/"))
+			end
+
+			if rfind(derrel, "/") then
+				local impfpfverbs = do_split(derrel, "/")
+				for index, impfpfverb in ipairs(impfpfverbs) do
+					check_stress(impfpfverb)
+					local aspect = index == 1 and "impf" or "pf"
+					if rfind(impfpfverb, "|") then
+						table.insert(links, "{{l|ru|" .. impfpfverb .. "}}")
+					else
+						table.insert(links, "{{l|ru|" .. impfpfverb .. "|g=" .. aspect .. "}}")
+					end
+				end
+			else
+				check_stress(derrel)
+				table.insert(links, "{{l|ru|" .. derrel .. "}})
+			end
+		table.insert(lines, "* " .. table.concat(links, ", ") .. "\n")
+	end
+	local header = drstype == "der" and "Derived terms" or drstype == "rel" and "Related terms" or "See also"
+	return "====" .. header .. "====\n" .. table.concat(lines, "") .. "\n"
 
 local function generate_verb_args(conj_args, verbbase, trverbbase)
 	if #conj_args == 1 then
