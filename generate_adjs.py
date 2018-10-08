@@ -247,7 +247,7 @@ while True:
   declterm = "%s//%s" % (term, translit) if translit else term
   term = remove_links(term)
   if pos == "adj":
-    assert re.search(u"(ый|ий|о́й)(ся)?|[оеё]́?в|и́?н$", term)
+    assert re.search(u"((ый|ий|о́й)(ся)?|[оеё]́?в|и́?н)$", term)
   trtext = translit and "|tr=" + translit or ""
   check_stress(term)
 
