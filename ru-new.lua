@@ -264,19 +264,40 @@ local function handle_etym(arg, data)
 	elseif arg == "--"
 		return ""
 	end
+
 	local adjformtext = ""
-	local adjpos
+	local adjpos, adjg, etym
 	if rfind(arg, "^part[fnp]:") then
 		adjpos = "part"
-		adjg, etym = rmatch(arg, "^part([fnp])(.*)$", arg)
+		adjg, etym = rmatch(arg, "^part([fnp]):(.*)$", arg)
 	elseif rfind(arg, "^adj[fnp]:") then
 		adjpos = "adj"
-		adjg, etym = rmatch(arg, "^adj([fnp])(.*)$", arg)
+		adjg, etym = rmatch(arg, "^adj([fnp]):(.*)$", arg)
 	elseif rfind(arg, "^partadj[fnp]:") then
 		adjpos = "partadj"
-		adjg, etym = rmatch(arg, "^partadj([fnp])(.*)$", arg)
+		adjg, etym = rmatch(arg, "^partadj([fnp]):(.*)$", arg)
 	end
-
+	local forms = {
+		f={"nom|f|s"},
+		n={"nom|n|s", "acc|n|s"},
+		p={"nom|p", "in|acc|p"},
+	}
+	local adjinfltext = ""
+	local partinfltext = ""
+	if adjpos then
+		local infleclines = {}
+		for _, form in ipairs(forms[adjg]) do
+			table.insert(infleclines, "# {{inflection of|lang=ru|" .. etym .. "||" .. form .. "}}")
+		end
+		if adjpos == "adj" or adjpos == "partadj" then
+			adjinfltext = "===Adjective===\n{{head|ru|adjective form|head=" .. data.term .. data.trtext ..
+				"}}\n\n" .. table.concat(infleclines, "\n") .. "\n\n"
+		end
+		if adjpos == "part" or adjpos == "partadj" then
+			partinfltext = [fill in]
+		end
+	end
+	
 
 	[fill in]
 
