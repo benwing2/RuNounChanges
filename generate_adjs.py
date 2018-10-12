@@ -237,15 +237,16 @@ while True:
     term, translit = do_split("//", term)
   # The original term may have translit, links and/or secondary/tertiary accents.
   # For pronunciation purposes, we remove the translit and links but keep the
-  # secondary/tertiary accents. For declension purposes, we remove the
-  # secondary/tertiary accents but keep the translit and links. For headword
+  # secondary/tertiary accents. For headword purposes, we remove the
+  # secondary/tertiary accents but keep the translit and links. For declension
   # purposes (other than ru-noun+), we remove everything (but still leave
   # primary accents).
   pronterm = remove_links(term) # FIXME: Reverse-translit translit if present
   term = rulib.remove_non_primary_accents(term)
   translit = rulib.remove_tr_non_primary_accents(translit)
-  declterm = "%s//%s" % (term, translit) if translit else term
+  headterm = term
   term = remove_links(term)
+  declterm = "%s//%s" % (term, translit) if translit else term
   if pos == "adj":
     assert re.search(u"((ый|ий|о́й)(ся)?|[оеё]́?в|и́?н)$", term)
   trtext = translit and "|tr=" + translit or ""
@@ -268,14 +269,14 @@ while True:
       adjinfltext = """===Adjective===
 {{head|ru|adjective form|head=%s%s}}
 
-%s\n\n""" % (term, trtext, "\n".join(infleclines))
+%s\n\n""" % (headterm, trtext, "\n".join(infleclines))
     else:
       adjinfltext = ""
     if m.group(1) in ["part", "partadj"]:
       partinfltext = """===Participle===
 {{head|ru|participle form|head=%s%s}}
 
-%s\n\n""" % (term, trtext, "\n".join(infleclines))
+%s\n\n""" % (headterm, trtext, "\n".join(infleclines))
     else:
       partinfltext = ""
     adjformtext = partinfltext + adjinfltext
@@ -463,7 +464,7 @@ while True:
       parttext = """===Participle===
 {{head|ru|participle|head=%s%s}}
 
-%s\n\n""" % (term, trtext, "\n".join(infleclines))
+%s\n\n""" % (headterm, trtext, "\n".join(infleclines))
       if "adv" in parttype:
         partdecltext = ""
       else:
@@ -558,17 +559,17 @@ while True:
       maintext = """{{ru-noun|%s%s|%s|-}}
 
 %s
-""" % (term, trtext, is_invar_gender, defntext)
+""" % (headterm, trtext, is_invar_gender, defntext)
     elif pos == "pn":
       maintext = """{{ru-proper noun|%s%s|%s|-}}
 
 %s
-""" % (term, trtext, is_invar_gender, defntext)
+""" % (headterm, trtext, is_invar_gender, defntext)
     elif pos == "adj":
       maintext = """{{ru-adj|%s%s%s}} {{i|indeclinable}}
 
 %s
-""" % (term, trtext, comptext, defntext)
+""" % (headterm, trtext, comptext, defntext)
     else:
       error("Invalid part of speech for indeclinable")
   else:
@@ -595,18 +596,18 @@ while True:
 ====Declension====
 {{ru-decl-adj%s}}
 
-""" % (term, trtext, comptext, defntext, decltext)
+""" % (headterm, trtext, comptext, defntext, decltext)
     elif pos == "adv":
       maintext = """{{ru-adv|%s%s%s}}
 
 %s
-""" % (term, trtext, comptext, defntext)
+""" % (headterm, trtext, comptext, defntext)
     else:
       full_pos = pos_to_full_pos[pos]
       maintext = """{{head|ru|%s|head=%s%s}}
 
 %s
-""" % (full_pos.lower(), term, trtext, defntext)
+""" % (full_pos.lower(), headterm, trtext, defntext)
 
   if defns == "--":
     maintext = ""
