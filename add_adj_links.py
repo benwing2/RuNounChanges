@@ -15,11 +15,21 @@ def process_page(index, page, save, verbose):
 
   pagemsg("Processing")
 
+  if "-" not in pagetitle:
+    pagemsg("Skipping, no dash in title")
+    return
+
   text = unicode(page.text)
   parsed = blib.parse(page)
   notes = []
   for t in parsed.filter_templates():
     origt = unicode(t)
+
+    if unicode(t.name) in ["ru-IPA"]:
+      pron = getparam(t, "1") or getparam(t, "phon")
+      if not re.search(u"[̀ѐЀѝЍ]", pron):
+        pagemsg("WARNING: No secondary accent in pron %s" % pron)
+
     if unicode(t.name) in ["ru-adj"]:
       head = getparam(t, "1")
       if head and "[[" not in head:
