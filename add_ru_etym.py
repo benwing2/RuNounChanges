@@ -177,7 +177,7 @@ def process_line(index, line, save, verbose):
 
       sections[i] = "".join(subsections)
       newtext = "".join(sections)
-      notes.append("add Etymology section")
+      notes.append("add Etymology section to Russian lemma")
       break
   else:
     pagemsg("WARNING: Can't find Russian section, skipping")
