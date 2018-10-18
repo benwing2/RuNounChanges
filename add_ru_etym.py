@@ -16,7 +16,7 @@
 
 import pywikibot, re, sys, codecs, argparse, time
 import blib
-from blib import site, msg, group_notes, iter_items
+from blib import site, msg, errmsg, group_notes, iter_items
 import rulib
 
 # Split text on a separator, but not if separator is preceded by

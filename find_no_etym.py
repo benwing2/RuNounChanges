@@ -8,6 +8,41 @@ from blib import getparam, rmparam, msg, site
 
 import rulib as ru
 
+def is_transitive_verb(pagename, pagemsg):
+  page = pywikibot.Page(site, pagename)
+  if not blib.try_repeatedly(lambda: page.exists(), pagemsg,
+      "check page existence"):
+    pagemsg("Page %s doesn't exist, not a transitive verb" % pagename)
+    return False
+
+  pagetext = unicode(page.text)
+
+  # Split into sections
+  splitsections = re.split("(^==[^=\n]+==\n)", pagetext, 0, re.M)
+  # Extract off pagehead and recombine section headers with following text
+  pagehead = splitsections[0]
+  sections = []
+  for i in xrange(1, len(splitsections)):
+    if (i % 2) == 1:
+      sections.append("")
+    sections[-1] += splitsections[i]
+
+  # Go through each section in turn, looking for existing Russian section
+  for i in xrange(len(sections)):
+    m = re.match("^==([^=\n]+)==$", sections[i], re.M)
+    if not m:
+      pagemsg("Can't find language name in text: [[%s]]" % (sections[i]))
+    elif m.group(1) == "Russian":
+      parsed = blib.parse_text(sections[i])
+      for t in parsed.filter_templates():
+        if unicode(t.name) == "ru-verb":
+          if getparam(t, "2") in ["impf", "pf", "both"]:
+            pagemsg("Saw transitive verb: %s" % unicode(t))
+            return True
+          pagemsg("Saw intransitive verb: %s" % unicode(t))
+
+  return False
+
 def process_page(index, page, lemmas):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
@@ -38,9 +73,13 @@ def process_page(index, page, lemmas):
       parsed = blib.parse_text(sections[i])
       saw_verb = False
       saw_passive = False
+      saw_bad_passive = False
       for t in parsed.filter_templates():
         if unicode(t.name) in ["passive of", "passive form of"]:
           saw_passive = True
+      if not saw_passive and ("passive of" in sections[i] or
+        "passive form of" in sections[i]):
+        saw_bad_passive = True
       for t in parsed.filter_templates():
         if unicode(t.name) == "ru-verb":
           saw_verb = True
@@ -48,11 +87,17 @@ def process_page(index, page, lemmas):
           printed_msg = False
           heads = blib.fetch_param_chain(t, "1", "head") or [pagetitle]
           refl = heads[0].endswith(u"ся") or heads[0].endswith(u"сь")
-          if refl and saw_passive:
+          if refl:
             m = re.search(u"^(.*)(с[яь])$", heads[0])
             assert m
-            msg("%s %s+-%s no-etym active-passive" % (",".join(heads), m.group(1), m.group(2)))
-            continue
+            transverb_no_passive = (False if (saw_passive or saw_bad_passive)
+              else is_transitive_verb(ru.remove_accents(m.group(1)), pagemsg))
+            if (saw_passive or saw_bad_passive or transverb_no_passive):
+              msg("%s %s+-%s no-etym active-passive%s%s" % (
+                ",".join(heads), m.group(1), m.group(2),
+                saw_bad_passive and " (saw-bad-passive)" or "",
+                transverb_no_passive and " (missing-passive-decl)" or ""))
+              continue
           if getparam(t, "2").startswith("impf"):
             pfs = blib.fetch_param_chain(t, "pf", "pf")
             for otheraspect in pfs:
@@ -102,10 +147,19 @@ def process_page(index, page, lemmas):
 parser = blib.create_argparser("Find terms without declension")
 parser.add_argument('--cats', default="Russian lemmas", help="Categories to do (can be comma-separated list)")
 parser.add_argument('--refs', help="References to do (can be comma-separated list)")
+parser.add_argument('--lemmafile', help="File of lemmas to process. May have accents.")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-if args.refs:
+if args.lemmafile:
+  lemmas = []
+  if args.cats == "Russian verbs":
+    for i, page in blib.cat_articles(args.cats):
+      lemmas.append(page.title())
+  for i, pagename in blib.iter_items([ru.remove_accents(x.strip()) for x in codecs.open(args.lemmafile, "r", "utf-8")]):
+    page = pywikibot.Page(site, pagename)
+    process_page(i, page, lemmas)
+elif args.refs:
   for ref in re.split(",", args.refs):
     msg("Processing references to: %s" % ref)
     for i, page in blib.references(ref, start, end):
