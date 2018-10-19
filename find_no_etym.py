@@ -43,7 +43,7 @@ def is_transitive_verb(pagename, pagemsg):
 
   return False
 
-def process_page(index, page, lemmas):
+def process_page(index, page, do_verbs, lemmas):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -71,6 +71,14 @@ def process_page(index, page, lemmas):
       if "==Etymology" in sections[i]:
         return
       parsed = blib.parse_text(sections[i])
+      for t in parsed.filter_templates():
+        if unicode(t.name) in [u"ru-noun-alt-ё", u"ru-proper noun-alt-ё",
+            u"ru-adj-alt-ё", u"ru-verb-alt-ё", u"ru-pos-alt-ё"]:
+          pagemsg(u"Skipping page with alt-ё redirect: %s" % unicode(t))
+          return
+      if not do_verbs:
+        msg("%s no-etym" % pagetitle)
+        return
       saw_verb = False
       saw_passive = False
       saw_bad_passive = False
@@ -148,6 +156,7 @@ parser = blib.create_argparser("Find terms without declension")
 parser.add_argument('--cats', default="Russian lemmas", help="Categories to do (can be comma-separated list)")
 parser.add_argument('--refs', help="References to do (can be comma-separated list)")
 parser.add_argument('--lemmafile', help="File of lemmas to process. May have accents.")
+parser.add_argument('--do-verbs', action="store_true", help="Try to find etymologies of verbs")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
@@ -158,12 +167,12 @@ if args.lemmafile:
       lemmas.append(page.title())
   for i, pagename in blib.iter_items([ru.remove_accents(x.strip()) for x in codecs.open(args.lemmafile, "r", "utf-8")]):
     page = pywikibot.Page(site, pagename)
-    process_page(i, page, lemmas)
+    process_page(i, page, args.do_verbs, lemmas)
 elif args.refs:
   for ref in re.split(",", args.refs):
     msg("Processing references to: %s" % ref)
     for i, page in blib.references(ref, start, end):
-      process_page(i, page, [])
+      process_page(i, page, args.do_verbs, [])
 else:
   for cat in re.split(",", args.cats):
     msg("Processing category: %s" % cat)
@@ -172,4 +181,4 @@ else:
       for i, page in blib.cat_articles(cat):
         lemmas.append(page.title())
     for i, page in blib.cat_articles(cat, start, end):
-      process_page(i, page, lemmas)
+      process_page(i, page, args.do_verbs, lemmas)

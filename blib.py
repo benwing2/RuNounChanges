@@ -983,3 +983,31 @@ def process_links(save, verbose, lang, longlang, cattype, startFrom, upTo,
     for template, count in sorted(templates_changed.items(), key=lambda x:-x[1]):
       msg("  %s = %s" % (template, count))
 
+def find_lang_section(pagename, lang, pagemsg):
+  page = pywikibot.Page(site, pagename)
+  if not try_repeatedly(lambda: page.exists(), pagemsg,
+      "check page existence"):
+    pagemsg("Page %s doesn't exist" % pagename)
+    return False
+
+  pagetext = unicode(page.text)
+
+  # Split into sections
+  splitsections = re.split("(^==[^=\n]+==\n)", pagetext, 0, re.M)
+  # Extract off pagehead and recombine section headers with following text
+  pagehead = splitsections[0]
+  sections = []
+  for i in xrange(1, len(splitsections)):
+    if (i % 2) == 1:
+      sections.append("")
+    sections[-1] += splitsections[i]
+
+  # Go through each section in turn, looking for existing language section
+  for i in xrange(len(sections)):
+    m = re.match("^==([^=\n]+)==$", sections[i], re.M)
+    if not m:
+      pagemsg("Can't find language name in text: [[%s]]" % (sections[i]))
+    elif m.group(1) == lang:
+      return sections[i]
+
+  return None

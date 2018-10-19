@@ -85,37 +85,8 @@ def iotate(word):
     return [re.sub(u"к$", u"ч", word)]
   return [word]
 
-def find_russian_section(pagename, pagemsg):
-  page = pywikibot.Page(site, pagename)
-  if not blib.try_repeatedly(lambda: page.exists(), pagemsg,
-      "check page existence"):
-    pagemsg("Page %s doesn't exist, not a transitive verb" % pagename)
-    return False
-
-  pagetext = unicode(page.text)
-
-  # Split into sections
-  splitsections = re.split("(^==[^=\n]+==\n)", pagetext, 0, re.M)
-  # Extract off pagehead and recombine section headers with following text
-  pagehead = splitsections[0]
-  sections = []
-  for i in xrange(1, len(splitsections)):
-    if (i % 2) == 1:
-      sections.append("")
-    sections[-1] += splitsections[i]
-
-  # Go through each section in turn, looking for existing Russian section
-  for i in xrange(len(sections)):
-    m = re.match("^==([^=\n]+)==$", sections[i], re.M)
-    if not m:
-      pagemsg("Can't find language name in text: [[%s]]" % (sections[i]))
-    elif m.group(1) == "Russian":
-      return sections[i]
-
-  return None
-
 def find_noun(pagename, pagemsg, expand_text):
-  section = find_russian_section(pagename, pagemsg)
+  section = blib.find_lang_section(pagename, "Russian", pagemsg)
   if not section:
     return None
   if "==Etymology" in section:
@@ -144,7 +115,7 @@ def find_noun(pagename, pagemsg, expand_text):
   return nouns[0]
 
 def find_adj(pagename, pagemsg, expand_text):
-  section = find_russian_section(pagename, pagemsg)
+  section = blib.find_lang_section(pagename, "Russian", pagemsg)
   if not section:
     return None
   if "==Etymology" in section:
@@ -198,8 +169,12 @@ def form_ppp(conjtype, pagetitle, args):
       assert re.search(u"[её]́?т$", sg3)
       return re.sub(u"[её]́?т$", u"енный", sg3)
     if conjtype in [3, 10]:
+      if pagetitle.endswith(u"чь"):
+        return re.sub(u"чь", u"гнутый", pagetitle)
       return re.sub(u"ть$", u"тый", pagetitle)
     assert conjtype in [9, 11, 12, 14, 15, 16]
+    if "past_m" not in args: # occurs with e.g. impersonal verbs e.g. спереть
+      return None
     pastm = first_entry(args["past_m"])
     return re.sub(u"л?$", u"тый", pastm)
 
@@ -225,7 +200,6 @@ def process_page(index, page, save, verbose, nouns, adjectives):
 
   text = unicode(page.text)
   parsed = blib.parse(page)
-  notes = []
   for t in parsed.filter_templates():
     tname = unicode(t.name)
     if tname == "ru-conj":
@@ -233,18 +207,21 @@ def process_page(index, page, save, verbose, nouns, adjectives):
         pagemsg("WARNING: Skipping multi-arg conjugation: %s" % unicode(t))
         continue
       conjtype = getparam(t, "2")
-      if tname == "ru-conj":
-        tempcall = re.sub(r"\{\{ru-conj", "{{ru-generate-verb-forms", unicode(t))
-      else:
-        tempcall = re.sub(r"\{\{ru-conj-old", "{{ru-generate-verb-forms|old=y", unicode(t))
+      tempcall = re.sub(r"\{\{ru-conj", "{{ru-generate-verb-forms", unicode(t))
       result = expand_text(tempcall)
       if not result:
         pagemsg("WARNING: Error generating forms, skipping")
         continue
       args = rulib.split_generate_args(result)
+      if "infinitive" not in args: # e.g. обнимать
+        pagemsg("WARNING: No infinitive")
+        continue
       infinitive = args["infinitive"]
       if "," in infinitive:
         pagemsg("WARNING: Infinitive has multiple forms: %s" % infinitive)
+        continue
+      if "//" in infinitive:
+        pagemsg("WARNING: Infinitive has translit: %s" % infinitive)
         continue
       ppp = form_ppp(conjtype, pagetitle, args)
       if not ppp:
@@ -272,8 +249,11 @@ def process_page(index, page, save, verbose, nouns, adjectives):
         suffix_start = m.group(1)
         verbal_noun_suffix = suffix_start + u"ние"
         verbal_adj_suffix = suffix_start + u"тельный"
+      agent_noun = re.sub(u"ный$", "", verbal_adj)
+      agent_noun_suffix = re.sub(u"ный$", "", verbal_adj_suffix)
       stressed_verbal_noun_suffix = re.sub(u"^([аяеи])", ur"\1́", verbal_noun_suffix)
       stressed_verbal_adj_suffix = re.sub(u"^([аяеи])", ur"\1́", verbal_adj_suffix)
+      stressed_agent_noun_suffix = re.sub(u"ный$", "", stressed_verbal_adj_suffix)
       if conjtype.startswith("7"):
         stem = getparam(t, "4")
         if infinitive.endswith(u"ть"):
@@ -284,7 +264,7 @@ def process_page(index, page, save, verbose, nouns, adjectives):
       elif conjtype.startswith("8"):
         stem = rulib.remove_accents(infinitive) + "+alt1=" + getparam(t, "3").replace(u"ё", u"е́") + "-"
       else:
-        stem = infinitive
+        stem = rulib.remove_monosyllabic_accents(infinitive)
 
       if verbal_noun in nouns:
         stressed_noun = find_noun(verbal_noun, pagemsg, expand_text)
@@ -299,6 +279,13 @@ def process_page(index, page, save, verbose, nouns, adjectives):
             suffix = verbal_noun_suffix
           msg("%s %s+-%s no-etym verbal-noun" % (verbal_noun, stem, suffix))
 
+      if agent_noun in nouns:
+        stressed_noun = find_noun(agent_noun, pagemsg, expand_text)
+        if stressed_noun == -1:
+          pagemsg("Would add etym for %s but already has one" % agent_noun)
+        else:
+          msg(u"%s %s+-тель no-etym agent-noun" % (agent_noun, stem))
+
       if verbal_adj in adjectives:
         stressed_adj = find_adj(verbal_adj, pagemsg, expand_text)
         if stressed_adj == -1:
@@ -306,8 +293,7 @@ def process_page(index, page, save, verbose, nouns, adjectives):
         else:
           msg(u"%s %s+-тельный no-etym verbal-adj" % (verbal_adj, stem))
 
-parser = blib.create_argparser(u"Find Russian terms with bad past passive participles")
-parser.add_argument('--fix-pagefile', help="File containing pages to fix.")
+parser = blib.create_argparser(u"Find etymologies for verbal nouns in -ние and verbal adjectives in -тельный")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
