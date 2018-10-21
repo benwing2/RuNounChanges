@@ -56,6 +56,10 @@ def process_line(index, line, save, verbose):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
+  def errpagemsg(txt):
+    msg("Page %s %s: %s" % (index, pagetitle, txt))
+    errmsg("Page %s %s: %s" % (index, pagetitle, txt))
+
   # Handle etymology
   adjformtext = ""
   if etym == "?":
@@ -164,7 +168,7 @@ def process_line(index, line, save, verbose):
       pagemsg("Can't find language name in text: [[%s]]" % (sections[i]))
     elif m.group(1) == "Russian":
       if "==Etymology==" in sections[i] or "==Etymology 1==" in sections[i]:
-        pagemsg("WARNING: Already found etymology, skipping")
+        errpagemsg("WARNING: Already found etymology, skipping")
         return
 
       subsections = re.split("(^===+[^=\n]+===+\n)", sections[i], 0, re.M)
@@ -180,7 +184,7 @@ def process_line(index, line, save, verbose):
       notes.append("add Etymology section to Russian lemma")
       break
   else:
-    pagemsg("WARNING: Can't find Russian section, skipping")
+    errpagemsg("WARNING: Can't find Russian section, skipping")
     return
 
   if newtext != pagetext:

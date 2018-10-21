@@ -370,7 +370,7 @@ while True:
   alsotext = ""
   alttext = ""
   parttext = ""
-  usagetext = ""
+  usagelines = []
   syntext = ""
   anttext = ""
   dertext = None
@@ -490,7 +490,10 @@ while True:
       cattext += "".join("{{C|ru|%s}}\n" % val for val in do_split(",", vals))
     elif sartype == "usage":
       assert vals
-      usagetext = re.sub(", *", ", ", vals)
+      usageline = re.sub(", *", ", ", vals)
+      if not usageline.startswith("*"):
+        usageline = "* " + usageline
+      usagelines.append(usageline)
     elif sartype == "file":
       filename, text = do_split(":", vals)
       filetext += "[[File:%s|thumb|%s]]\n" % (filename, text)
@@ -621,8 +624,7 @@ while True:
   if cattext:
     cattext += "\n"
 
-  if usagetext:
-    usagetext = "===Usage notes===\n%s\n\n" % usagetext
+  usagetext = "===Usage notes===\n%s\n\n" % "\n".join(usagelines) if usagelines else ""
 
   msg("""%s
 
