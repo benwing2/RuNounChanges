@@ -42,6 +42,11 @@ def process_line(index, line, save, verbose):
   # Skip lines consisting entirely of comments
   if line.startswith("#"):
     return
+  if line.startswith("!"):
+    override_etym = True
+    line = line[1:]
+  else:
+    override_etym = False
   els = do_split(r"\s+", line)
 
   # Replace _ with space and \u
@@ -134,7 +139,8 @@ def process_line(index, line, save, verbose):
       etymtext = "%s{{affix|ru|%s%s}}%s" % (prefix,
           "|".join(do_split(r"\+", re.sub(", *", ", ", etym))), langtext,
           suffix)
-    etymtext = "===Etymology===\n%s\n\n" % etymtext
+    etymbody = etymtext + "\n\n"
+    etymtext = "===Etymology===\n" + etymbody
 
   if not etymtext:
     pagemsg("No etymology text, skipping")
@@ -167,6 +173,22 @@ def process_line(index, line, save, verbose):
     if not m:
       pagemsg("Can't find language name in text: [[%s]]" % (sections[i]))
     elif m.group(1) == "Russian":
+      if override_etym:
+        subsections = re.split("(^===+[^=\n]+===+\n)", sections[i], 0, re.M)
+
+        replaced_etym = False
+        for j in xrange(2, len(subsections), 2):
+          if "==Etymology==" in subsections[j - 1] or "==Etymology 1==" in subsections[j - 1]:
+            subsections[j] = etymbody
+            replaced_etym = True
+            break
+
+        if replaced_etym:
+          sections[i] = "".join(subsections)
+          newtext = "".join(sections)
+          notes.append("replace Etymology section in Russian lemma")
+          break
+
       if "==Etymology==" in sections[i] or "==Etymology 1==" in sections[i]:
         errpagemsg("WARNING: Already found etymology, skipping")
         return
