@@ -990,8 +990,18 @@ def find_lang_section(pagename, lang, pagemsg):
     pagemsg("Page %s doesn't exist" % pagename)
     return False
 
+def find_lang_section(pagename, lang, pagemsg):
+  page = pywikibot.Page(site, pagename)
+  if not try_repeatedly(lambda: page.exists(), pagemsg,
+      "check page existence"):
+    pagemsg("Page %s doesn't exist" % pagename)
+    return False
+
   pagetext = unicode(page.text)
 
+  return find_lang_section_from_text(pagetext, lang, pagemsg)
+
+def find_lang_section_from_text(pagetext, lang, pagemsg):
   # Split into sections
   splitsections = re.split("(^==[^=\n]+==\n)", pagetext, 0, re.M)
   # Extract off pagehead and recombine section headers with following text
