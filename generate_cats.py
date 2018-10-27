@@ -184,7 +184,7 @@ if donouns:
       create_cat("~ with irregular %s %s" % (c, n),
           ["irregcase", "%s %s" % (c, n)])
 
-  create_cat("invariable ~", ["stemgender"])
+  # create_cat("indeclinable ~", ["stemgender"])
   for gender in genders:
     for stem_type in stem_types:
       if gender == "masculine" and stem_type == "3rd-declension":
@@ -223,11 +223,11 @@ short_adj_stress_patterns = [
 
 adj_patterns = [
     ("hard-stem", "stem-stressed", u"-ый", u"-ая", u"-ое", u"-ые"),
-    ("soft-stem", "stem-stressed", u"-ий", u"-яя", u"-ее", u"-ие"),
+    ("soft-stem", "-", u"-ий", u"-яя", u"-ее", u"-ие"),
     ("velar-stem", "stem-stressed", u"-ий", u"-ая", u"-ое", u"-ие"),
     ("sibilant-stem", "stem-stressed", u"-ий", u"-ая", u"-ее", u"-ие"),
     (u"ц-stem", "stem-stressed", u"-ый", u"-ая", u"-ее", u"-ые"),
-    ("vowel-stem", "stem-stressed", u"-ий", u"-яя", u"-ее", u"-ие"),
+    ("vowel-stem", "-", u"-ий", u"-яя", u"-ее", u"-ие"),
     ("hard-stem", "ending-stressed", u"-о́й", u"-а́я", u"-о́е", u"-ы́е"),
     ("velar-stem", "ending-stressed", u"-о́й", u"-а́я", u"-о́е", u"-и́е"),
     ("sibilant-stem", "ending-stressed", u"-о́й", u"-а́я", u"-о́е", u"-и́е"),
@@ -235,7 +235,6 @@ adj_patterns = [
     ("long", "possessive", u"-ий", u"-ья", u"-ье", u"-ьи"),
     ("mixed", "possessive", u"a consonant (-ъ old style)", u"-а", u"-о", u"-ы"),
     ("short", "possessive", u"a consonant (-ъ old style)", u"-а", u"-о", u"-ы"),
-    ("proper", "possessive", u"a consonant (-ъ old style)", u"-а", u"-о", u"-ы"),
 ]
 
 if doadjs:
@@ -244,3 +243,17 @@ if doadjs:
 
   for stem, stress, m, f, n, p in adj_patterns:
     create_adj_cat("%s %s ~" % (stem, stress), ["adj", m, f, n, p])
+
+  # Additional adjectival categories to create:
+  #
+  # Russian adjectives with irregular short masculine singular
+  # Russian adjectives with irregular [etc.]
+  # Russian ending-stressed adjectives
+  # Russian adjectives with short forms
+  # Russian adjectives with missing short forms
+  # Russian adjectives with irregular short stem
+  # Russian adjectives with reducible short stem
+  # Russian adjectives with Zaliznyak short form special case 1
+  # Russian adjectives with Zaliznyak short form special case 2
+  # Russian proper-name adjectives
+  # Russian short-form-only adjectives
