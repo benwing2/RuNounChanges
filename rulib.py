@@ -226,6 +226,60 @@ def tr_try_to_stress(word):
   else:
     return word
 
+def reduce_stem(stem):
+    m = re.search(u"^(.*)([оОеЕёЁ])́?([" + cons + "]+)$", stem)
+    if not m:
+      return None
+    pre, letter, post = m.groups()
+    if letter in u"оО":
+      if post in u"йЙ":
+        return None # FIXME, is this correct?
+      letter = ""
+    else:
+      is_upper = post in uppercase
+      if re.search("[" + vowel + u"]́?$", pre):
+        letter = is_upper and u"Й" or u"й"
+      elif post in u"йЙ":
+        letter = is_upper and u"Ь" or u"ь"
+        post = ""
+      elif ((post in velar and pre in cons_except_sib_c) or
+          (post not in u"йЙ" + velar and pre in u"лЛ")):
+        letter = is_upper and u"Ь" or u"ь"
+      else:
+        letter = ""
+    stem = pre + letter + post
+    return stem
+
+def dereduce_stem(stem, epenthetic_stress):
+  if epenthetic_stress:
+    stem = make_unstressed_once(stem)
+  m = re.search("^(.*)([" + cons + "])([" + cons + "])$", stem)
+  if not m:
+    return None
+  pre, letter, post = m.groups()
+  is_upper = post in uppercase
+  if letter in u"ьйЬЙ":
+    letter = ""
+    if post in u"цЦ" or not epenthetic_stress:
+      epvowel = is_upper and u"Е" or u"е"
+    else:
+      epvowel = is_upper and u"Ё" or u"ё"
+  elif letter in cons_except_sib_c and post in velar or letter in velar:
+    epvowel = is_upper and u"О" or u"о"
+  elif post in u"цЦ":
+    epvowel = is_upper and u"Е" or u"е"
+  elif epenthetic_stress:
+    if letter in sib:
+      epvowel = is_upper and u"О́" or u"о́"
+    else:
+      epvowel = is_upper and u"Ё" or u"ё"
+  else:
+    epvowel = is_upper and u"Е" or u"е"
+  stem = pre + letter + epvowel + post
+  if epenthetic_stress:
+    stem = make_ending_stressed(stem)
+  return stem
+
 def add_soft_sign(stem):
   if re.search("[" + vowel + "]$", stem):
     return stem + u"й"
