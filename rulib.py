@@ -3,6 +3,7 @@
 
 import re
 import unicodedata
+import blib
 from collections import OrderedDict
 
 AC = u"\u0301" # acute =  ́
@@ -367,3 +368,36 @@ def group_translits(formvals, pagemsg, expand_text):
           (russian, joined_manual_translits))
       formvals.append((russian, joined_manual_translits))
   return formvals
+
+def check_for_obsolete_terms(text, pagemsg):
+  parsed = blib.parse_text(text)
+  for t in parsed.filter_templates():
+    tname = unicode(t.name)
+    if tname in [u"ru-adj-alt-ё", u"ru-noun-alt-ё", u"ru-verb-alt-ё",
+        u"ru-pos-alt-ё"]:
+      pagemsg(u"Skipping alt-ё term")
+      return True
+
+    if tname in ["ru-adj-old", "ru-noun-old", "ru-conj-old", "ru-pre-reform"]:
+      pagemsg(u"Skipping obsolete-spelling term")
+      return True
+  return False
+
+def find_defns(text):
+  lines = text.split("\n")
+  defns = []
+  for line in lines:
+    if not line.startswith('#'):
+      continue
+    if line.startswith('#:') or line.startswith('#*'):
+      line = re.sub('^#[*:]+ *', '', line)
+      line = re.sub(r'\{\{uxi?\|ru\|((?:[^{}]|\{\{.*?\}\})+)\}\}', r'ux:\1', line)
+    else:
+      line = re.sub('^# *', '', line)
+    def convert_to_parens(m):
+      labels = m.group(1).split('|')
+      return ''.join('(%s)' % label for label in labels)
+    line = re.sub(r'\{\{lb\|ru\|(.*?)\}\} *', convert_to_parens, line)
+    line = line.replace(';', r'\;')
+    defns.append(line)
+  return defns

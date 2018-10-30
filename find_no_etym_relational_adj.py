@@ -19,7 +19,7 @@
 import pywikibot, re, sys, codecs, argparse
 
 import blib
-from blib import getparam, rmparam, msg, site
+from blib import getparam, rmparam, msg, errmsg, site, tname
 
 import rulib
 
@@ -36,10 +36,18 @@ def first_palatalization(term):
       return re.sub(ending + "$", converted, term)
   return term
 
+def add_if_not(lst, item):
+  if item not in lst:
+    lst.append(item)
+
 def process_page(index, page, save, verbose, adjs):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
+
+  def errpagemsg(txt):
+    msg("Page %s %s: %s" % (index, pagetitle, txt))
+    errmsg("Page %s %s: %s" % (index, pagetitle, txt))
 
   def expand_text(tempcall):
     return blib.expand_text(tempcall, pagetitle, pagemsg, verbose)
@@ -109,10 +117,90 @@ def process_page(index, page, save, verbose, adjs):
       else:
         possible.append((stem_to_try + u"овый", u"-овый"))
         possible.append((stem_to_try + u"овой", u"-овой"))
+
+  would_output = False
   for possible_adj, suffix in possible:
     if possible_adj in adjs:
-      msg("%s %s+%s no-etym possible-relational" %
-        (possible_adj, pagetitle, suffix))
+      would_output = True
+  if not would_output:
+    return
+
+  text = unicode(page.text)
+
+  if rulib.check_for_obsolete_terms(text, pagemsg):
+    return
+
+  noun_lemmas = []
+
+  for possible_adj, suffix in possible:
+    if possible_adj in adjs:
+      adj_section = blib.find_lang_section(possible_adj, "Russian", pagemsg)
+      if not adj_section:
+        errpagemsg("WARNING: Couldn't find Russian section for adjective %s" %
+            possible_adj)
+        continue
+      if "==Etymology" in adj_section:
+        pagemsg("Skipping adjective %s because it already has an etmology" %
+          possible_adj)
+        continue
+      adj_defns = rulib.find_defns(adj_section)
+      if not adj_defns:
+        errpagemsg("WARNING: Could find definitions for adjective %s" %
+            possible_adj)
+        continue
+
+      adj_lemmas = []
+      adj_parsed = blib.parse_text(adj_section)
+      for t in adj_parsed.filter_templates():
+        if tname(t) == "ru-adj":
+          for lemma in blib.fetch_param_chain(t, "1", "head", possible_adj):
+            add_if_not(adj_lemmas, lemma)
+
+      if not adj_lemmas:
+        errpagemsg("WARNING: No adjective lemmas for %s" % possible_adj)
+        return
+
+      if not noun_lemmas:
+        noun_parsed = blib.parse_text(text)
+        for t in noun_parsed.filter_templates():
+          if tname(t) in ["ru-noun+", "ru-proper noun+"]:
+            lemmaarg = rulib.fetch_noun_lemma(t, expand_text)
+            if lemmaarg is None:
+              errpagemsg("WARNING: Error generating noun forms: %s" % unicode(t))
+              return
+            else:
+              for lemma in re.split(",", lemmaarg):
+                add_if_not(noun_lemmas, lemma)
+          elif tname(t) in ["ru-noun", "ru-proper noun"]:
+            for lemma in blib.fetch_param_chain(t, "1", "head", pagetitle):
+              add_if_not(noun_lemmas, lemma)
+
+        if not noun_lemmas:
+          errpagemsg("WARNING: No noun lemmas")
+          return
+
+        warnings = []
+        if len(noun_lemmas) > 1:
+          warnings.append("multiple-lemmas")
+        if any("//" in lemma for lemma in noun_lemmas):
+          warnings.append("translit-in-lemma")
+
+        noun_section = blib.find_lang_section_from_text(text, "Russian", pagemsg)
+        if not noun_section:
+          errpagemsg("WARNING: Couldn't find Russian section for noun")
+          return
+
+        noun_defns = rulib.find_defns(noun_section)
+        if not noun_defns:
+          errpagemsg("WARNING: Couldn't find definitions for noun")
+          return
+
+      def concat_defns(defns):
+        return ";".join(defns).replace("_", r"\u").replace(" ", "_")
+      msg("%s %s+%s%s no-etym possible-relational %s %s" %
+        (",".join(adj_lemmas), ",".join(noun_lemmas), suffix,
+          " WARNING:%s" % ",".join(warnings) if warnings else "",
+          concat_defns(noun_defns), concat_defns(adj_defns)))
 
 parser = blib.create_argparser(u"Find etymologies for relational adjectives in -ный, -ной, -овый, -евый, -овой, -евой")
 args = parser.parse_args()
