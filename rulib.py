@@ -369,17 +369,13 @@ def group_translits(formvals, pagemsg, expand_text):
       formvals.append((russian, joined_manual_translits))
   return formvals
 
-def check_for_obsolete_terms(text, pagemsg):
+def check_for_alt_yo_terms(text, pagemsg):
   parsed = blib.parse_text(text)
   for t in parsed.filter_templates():
     tname = unicode(t.name)
     if tname in [u"ru-adj-alt-ё", u"ru-noun-alt-ё", u"ru-verb-alt-ё",
         u"ru-pos-alt-ё"]:
       pagemsg(u"Skipping alt-ё term")
-      return True
-
-    if tname in ["ru-adj-old", "ru-noun-old", "ru-conj-old", "ru-pre-reform"]:
-      pagemsg(u"Skipping obsolete-spelling term")
       return True
   return False
 
