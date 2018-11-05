@@ -244,7 +244,7 @@ def reduce_stem(stem):
         letter = is_upper and u"Ь" or u"ь"
         post = ""
       elif ((post in velar and pre in cons_except_sib_c) or
-          (post not in u"йЙ" + velar and pre in u"лЛ")):
+          (post not in u"йЙ" + velar and re.search(u"[лЛ]$", pre))):
         letter = is_upper and u"Ь" or u"ь"
       else:
         letter = ""

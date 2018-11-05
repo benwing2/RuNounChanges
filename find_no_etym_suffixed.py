@@ -256,13 +256,23 @@ def process_page(index, page, save, verbose, all_derived_lemmas):
 
 parser = blib.create_argparser(u"Find etymologies for adjectives and nouns with common suffixes")
 parser.add_argument("--nouns", action='store_true', help="Do derivatives of nouns instead of adjectives")
+parser.add_argument("--base-lemmafile", help="File containing base lemmas")
+parser.add_argument("--derived-lemmafile", help="File containing derived lemmas")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
 derived_lemmas = []
-for i, page in blib.cat_articles("Russian nouns" if args.nouns else "Russian adjectives"):
-  derived_lemmas.append(page.title())
+if args.derived_lemmafile:
+  derived_lemmas = [rulib.remove_accents(x.strip()) for x in codecs.open(args.derived_lemmafile, "r", "utf-8")]
+else:
+  for i, page in blib.cat_articles("Russian nouns" if args.nouns else "Russian adjectives"):
+    derived_lemmas.append(page.title())
 
-for category in ["Russian proper nouns", "Russian nouns", "Russian verbs"]:
-  for i, page in blib.cat_articles(category, start, end):
+if args.base_lemmafile:
+  for i, pagename in blib.iter_items([rulib.remove_accents(x.strip()) for x in codecs.open(args.base_lemmafile, "r", "utf-8")]):
+    page = pywikibot.Page(site, pagename)
     process_page(i, page, args.save, args.verbose, derived_lemmas)
+else:
+  for category in ["Russian proper nouns", "Russian nouns", "Russian verbs"]:
+    for i, page in blib.cat_articles(category, start, end):
+      process_page(i, page, args.save, args.verbose, derived_lemmas)
