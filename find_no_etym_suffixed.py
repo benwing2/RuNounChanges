@@ -81,6 +81,7 @@ def process_page(index, page, save, verbose, all_derived_lemmas):
     (u"ить", True),
     (u"нуть", False),
     (u"ия", True),
+    (u"ие", True),
     (u"я", True),
     (u"е", True),
     (u"ь", True),
