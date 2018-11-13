@@ -373,8 +373,8 @@ def check_for_alt_yo_terms(text, pagemsg):
   parsed = blib.parse_text(text)
   for t in parsed.filter_templates():
     tname = unicode(t.name)
-    if tname in [u"ru-adj-alt-ё", u"ru-noun-alt-ё", u"ru-verb-alt-ё",
-        u"ru-pos-alt-ё"]:
+    if tname in [u"ru-adj-alt-ё", u"ru-noun-alt-ё", u"ru-proper noun-alt-ё",
+        u"ru-verb-alt-ё", u"ru-pos-alt-ё"]:
       pagemsg(u"Skipping alt-ё term")
       return True
   return False

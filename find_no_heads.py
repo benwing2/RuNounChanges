@@ -31,7 +31,7 @@ ru_special_head_templates = ["ru-noun+", "ru-proper noun+", u"ru-noun-alt-ё",
   u"ru-proper noun-alt-ё", u"ru-adj-alt-ё", u"ru-verb-alt-ё", u"ru-pos-alt-ё"]
 ru_head_templates = ru_normal_head_templates + ru_special_head_templates
 ru_heads_to_warn_about = ["abbreviation", "acronym", "initialism", "idiom",
-    "phrase", "adverb", "adjective", "verb" "noun", "proper noun"]
+    "phrase", "adverb", "adjective", "verb", "noun", "proper noun"]
 
 overall_head_count = {}
 cat_head_count = {}

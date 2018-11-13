@@ -160,7 +160,7 @@ def process_page(index, page, save, verbose, adverbs, all_derived_lemmas):
       append_possible(stem_to_try, u"ек")
       append_possible(stem_to_try, u"ёк")
       append_possible(stem_to_try, u"ец")
-  # If derived adverbs, try -о, -е
+  # If derived adverbs, try -о, -е, -и
   if adverbs:
     for stem, palatal in stems:
       stems_to_try = []
@@ -168,6 +168,7 @@ def process_page(index, page, save, verbose, adverbs, all_derived_lemmas):
     for stem_to_try in stems_to_try:
       append_possible(stem_to_try, u"о")
       append_possible(stem_to_try, u"е")
+      append_possible(stem_to_try, u"и")
 
   would_output = False
   for possible_derived, suffix in possible:
