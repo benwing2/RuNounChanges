@@ -25,7 +25,7 @@ def do_split(sep, text):
   elems = re.split(r"(?<![\\])%s" % sep, text)
   return [re.sub(r"\\(%s)" % sep, r"\1", elem) for elem in elems]
 
-def process_line(index, line, save, verbose):
+def process_line(index, line, add_passive_of, save, verbose):
   def error(text):
     errmsg("ERROR: Processing line: %s" % line)
     errmsg("ERROR: %s" % text)
@@ -53,7 +53,8 @@ def process_line(index, line, save, verbose):
   els = [el.replace("_", " ").replace(r"\u", "_") for el in els]
   if len(els) != 2:
     error("Expected two fields, saw %s" % len(els))
-  term = rulib.remove_accents(els[0])
+  accented_term = els[0]
+  term = rulib.remove_accents(accented_term)
   etym = els[1]
 
   pagetitle = term
@@ -200,8 +201,14 @@ def process_line(index, line, save, verbose):
         insert_before += 2
 
       subsections[insert_before] = etymtext + subsections[insert_before]
-
       sections[i] = "".join(subsections)
+      if add_passive_of:
+        active_term = rulib.remove_monosyllabic_accents(
+          re.sub(u"с[яь]$", "", accented_term))
+        sections[i] = re.sub(r"(^(#.*\n)+)",
+          r"\1# {{passive of|lang=ru|%s}}\n" % active_term,
+          sections[i], 1, re.M)
+
       newtext = "".join(sections)
       notes.append("add Etymology section to Russian lemma")
       break
@@ -224,10 +231,12 @@ def process_line(index, line, save, verbose):
 if __name__ == "__main__":
   parser = blib.create_argparser("Fix params in RQ:Wodehouse Offing templates")
   parser.add_argument('--direcfile', help="File containing directives.")
+  parser.add_argument('--add-passive-of', action='store_true',
+      help="Add {{passive of|lang=ru|...}} to defn.")
   args = parser.parse_args()
   start, end = blib.parse_start_end(args.start, args.end)
 
   lines = codecs.open(args.direcfile, "r", "utf-8")
   for i, line in iter_items(lines, start, end):
     line = line.strip()
-    process_line(i, line, args.save, args.verbose)
+    process_line(i, line, args.add_passive_of, args.save, args.verbose)
