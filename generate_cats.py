@@ -7,7 +7,8 @@ import pywikibot
 dosave = True
 overwrite = False
 donouns = False
-doadjs = True
+doadjs = False
+doverbs = True
 
 stress_patterns = ["a", "b", "b'", "c", "d", "d'", "e", "f", "f'", "f''"]
 genders = ["masculine", "feminine", "neuter"]
@@ -154,8 +155,11 @@ site = pywikibot.Site()
 def msg(text):
   print text.encode('utf-8')
 
-def create_cat(cat, args, adj=False):
-  if adj:
+def create_cat(cat, args, adj=False, verb=False):
+  if verb:
+    cat = "Category:Russian " + cat.replace("~", "verbs")
+    text = "{{ruverbcatboiler}}"
+  elif adj:
     cat = "Category:Russian " + cat.replace("~", "adjectives")
     text = "{{ruadjcatboiler|%s}}" % "|".join(args)
   else:
@@ -268,3 +272,13 @@ if doadjs:
   # Russian adjectives with Zaliznyak short form special case 2
   # Russian proper-name adjectives
   # Russian short-form-only adjectives
+
+if doverbs:
+  for subclass in ["1a", "2a", "2b", "3a", u"3°a", "3b", "3c",
+      "4a", "4b", "4c", "5a", "5b", "5c",
+      "6a", u"6°a", "6b", u"6°b", "6c", u"6°c",
+      "7a", "7b", "8a", "8b", "9a", "9b", "10a", "10c",
+      "11a", "11b", "12a", "12b", "13a", "14a", "14b", "14c",
+      "15a", "16a", "16b"
+  ]:
+    create_cat("class %s ~" % subclass, [], verb=True)
