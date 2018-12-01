@@ -1,7 +1,17 @@
 --[[
+
+Author: Benwing; some very early work by CodeCat and Atitarev
+
 This module holds some commonly used functions for the Russian language.
-It's generally for use from other modules, not #invoke, although it can
-be invoked from a template using export.main().
+It's generally for use from other modules, not #invoke, although some functions
+can be invoked from a template (export.iotation(), export.reduce_stem(),
+export.dereduce_stem() -- this was actually added to support calling from a
+bot script rather than from a user template). There's also export.main(),
+which supposedly can be used to invoke most functions in this module from a
+template, but it may or may not work. There may also be issues when invoking
+such functions from templates when transliteration is present, due to the
+need for the transliteration to be decomposed, as mentioned below (all strings
+from Wiktionary pages are normally in composed form).
 
 NOTE NOTE NOTE: All functions assume that transliteration (but not Russian)
 has had its acute and grave accents decomposed using export.decompose().
@@ -33,6 +43,9 @@ local BREVE = u(0x0306) -- breve  ̆
 local DIA = u(0x0308) -- diaeresis =  ̈
 local CARON = u(0x030C) -- caron  ̌
 
+local PSEUDOVOWEL = u(0xFFF1) -- pseudovowel placeholder
+local PSEUDOCONS = u(0xFFF2) -- pseudoconsonant placeholder
+
 -- any accent
 export.accent = AC .. GR .. DIA .. BREVE .. CARON
 -- regex for any optional accent(s)
@@ -40,20 +53,20 @@ export.opt_accent = "[" .. export.accent .. "]*"
 -- any composed Cyrillic vowel with grave accent
 export.composed_grave_vowel = "ѐЀѝЍ"
 -- any Cyrillic vowel except ёЁ
-export.vowel_no_jo = "аеиоуяэыюіѣѵАЕИОУЯЭЫЮІѢѴ" .. export.composed_grave_vowel
+export.vowel_no_jo = "аеиоуяэыюіѣѵАЕИОУЯЭЫЮІѢѴ" .. PSEUDOVOWEL .. export.composed_grave_vowel
 -- any Cyrillic vowel, including ёЁ
 export.vowel = export.vowel_no_jo .. "ёЁ"
 -- any vowel in transliteration
-export.tr_vowel = "aeěɛiouyAEĚƐIOUY"
+export.tr_vowel = "aeěɛiouyAEĚƐIOUY" .. PSEUDOVOWEL
 -- any consonant in transliteration, omitting soft/hard sign
-export.tr_cons_no_sign = "bcčdfghjklmnpqrsštvwxzžBCČDFGHJKLMNPQRSŠTVWXZŽ"
+export.tr_cons_no_sign = "bcčdfghjklmnpqrsštvwxzžBCČDFGHJKLMNPQRSŠTVWXZŽ" .. PSEUDOCONS
 -- any consonant in transliteration, including soft/hard sign
 export.tr_cons = export.tr_cons_no_sign .. "ʹʺ"
 -- regex for any consonant in transliteration, including soft/hard sign,
 -- optionally followed by any accent
 export.tr_cons_acc_re = "[" .. export.tr_cons .. "]" .. export.opt_accent
 -- any Cyrillic consonant except sibilants and ц
-export.cons_except_sib_c = "бдфгйклмнпрствхзьъБДФГЙКЛМНПРСТВХЗЬЪ"
+export.cons_except_sib_c = "бдфгйклмнпрствхзьъБДФГЙКЛМНПРСТВХЗЬЪ" .. PSEUDOCONS
 -- Cyrillic sibilant consonants
 export.sib = "шщчжШЩЧЖ"
 -- Cyrillic sibilant consonants and ц
@@ -159,8 +172,9 @@ end
 function export.needs_accents(text)
 	local function word_needs_accents(word)
 		-- A word needs accents if it is unstressed and contains more than
-		-- one vowel
-		return export.is_unstressed(word) and not export.is_monosyllabic(word)
+		-- one vowel, unless it's a prefix or suffix
+		return not rfind(word, "^%-") and not rfind(word, "%-$") and
+			export.is_unstressed(word) and not export.is_monosyllabic(word)
 	end
 	local words = rsplit(text, "%s")
 	for _, word in ipairs(words) do
@@ -310,10 +324,12 @@ end
 
 -- Remove acute and grave accents in monosyllabic words; don't affect
 -- diaeresis (composed or uncomposed) because it indicates a change in vowel
--- quality, which still applies to monosyllabic words.
+-- quality, which still applies to monosyllabic words. Don't change suffixes,
+-- where a "monosyllabic" stress is still significant (e.g. -ча́т short
+-- masculine of -ча́тый, vs. -́чат short masculine of -́чатый).
 -- NOTE: Translit must already be decomposed! See comment at top.
 function export.remove_monosyllabic_accents(word, tr)
-	if export.is_monosyllabic(word) then
+	if export.is_monosyllabic(word) and not rfind(word, "^%-") then
 		return export.remove_accents(word, tr)
 	else
 		return word, tr

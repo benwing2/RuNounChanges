@@ -103,7 +103,7 @@
 		Or one of the following for adjectival nouns:
 			+
 			+ь
-			+$
+			$
 			+short, +mixed or +proper
 			+DECLTYPE
 		GENDER if present is m, f, n or 3f; for regular nouns, required if the
@@ -124,11 +124,8 @@
 			used for *animate* augmentative masculine neuter-form nouns in
 			-ище). Variants -ишко and -ище must be given with with special
 			case (1).
-		$ and +$ are for invariable nouns. They are principally useful in
-			multiword expressions where some of the words are invariable.
-			The only difference between the two is that +$ is for adjectival
-			nouns in the genitive case, and will transliterate the ending
-			-го(ся) as -vo(sja).
+		$ is indeclinable words. It is principally useful in multiword
+			expressions where some of the words are indeclinable.
 		DECLTYPE is an explicit declension type. Normally you shouldn't use
 			this, and should instead let the declension type be autodetected
 			based on the ending, supplying the appropriate hint if needed
@@ -139,7 +136,7 @@
 			Possibilities for regular nouns are (blank) or # for hard-consonant
 			declension, а, я, о, е or ё, е́, й, ья, ье or ьё, ь-m, ь-f,
 			ин, ёнок or онок or енок, ёночек or оночек or еночек, мя,
-			-а or #-а, ь-я, й-я, о-и or о-ы, -ья or #-ья, $ (invariable).
+			-а or #-а, ь-я, й-я, о-и or о-ы, -ья or #-ья, $ (indeclinable).
 			Old-style (pre-reform) declensions use ъ instead of (blank), ъ-а
 			instead of -а, ъ-ья instead of -ья, and инъ, ёнокъ/онокъ/енокъ,
 			ёночекъ/оночекъ/еночекъ instead of the same without terminating ъ.
@@ -158,10 +155,10 @@
 			a specific declension type, as with regular nouns you need to
 			omit the ending from the lemma field and supply just the stem.
 			Possibilities are +ый, +ое, +ая, +ій, +ее, +яя, +ой, +о́е, +а́я,
-			+ьій, +ье, +ья, +$ (invariable but transliterated adjectivally),
-			+-short or +#-short (masc), +о-short, +о-stressed-short or +о́-short
-			+а-short, +а-stressed-short or +а́-short, and similar for -mixed
-			and -proper (except there aren't any stressed mixed declensions).
+			+ьій, +ье, +ья, +-short or +#-short (masc), +о-short,
+			+о-stressed-short or +о́-short,	+а-short, +а-stressed-short or
+			+а́-short, and similar for -mixed and -proper (except there aren't
+			any	stressed mixed declensions).
 		DECLTYPE/DECLTYPE is used for nouns with one declension in the
 			singular and a different one in the plural, for cases that
 			PLVARIANT and special case (1) below don't cover.
@@ -233,7 +230,7 @@ TODO:
    be masculine or feminine, -а/я should be neuter except that -ія can be
    feminine or neuter due to old-style adjectival pluralia tantum nouns,
    anything else can be any gender.)
-6b. FIXME: Recognize invariable nouns and indicate as indeclinable. Probably
+6b. FIXME: Recognize indeclinable nouns and indicate as indeclinable. Probably
    should work by checking the case forms to see if they're the same.
 9. FIXME: Change stress-pattern detection and overriding to happen inside of
    looping over the two parts of a slash decl. Requires that the loop over
@@ -255,8 +252,8 @@ TODO:
    -- Setting n=pl when auto-detecting a plural lemma. How does that interact
       with multi-word stuff? (DONE)
    -- compute_heading() -- what to do with multiple words? I assume we should
-      display info on the first noun (non-invariable, non-adjectival), and
-	  on the first adjectival otherwise, and finally on an invariable (DONE)
+      display info on the first noun (non-indeclinable, non-adjectival), and
+	  on the first adjectival word otherwise, and finally on an indeclinable word (DONE)
    -- args.genders -- it should presumably come from the same word as is used
       in compute_heading(); but we should allow the overall gender to be
 	  overridden, at least in ru-noun+ (DONE)
@@ -287,7 +284,7 @@ TODO:
 14. In multiple-words branch, fix ru-decl-noun-multi so it recognizes
    things like *, (1), (2) and ; without the need for a separator. Consider
    using semicolon as a separator, since we already use it to separate ё
-   from a previous declension. Maybe use $ or ~ for an invariable word; don't
+   from a previous declension. Maybe use $ or ~ for an indeclinable word; don't
    use semicolon. [IMPLEMENTED. NEED TO TEST.]
 16. [Consider having ru-noun+ treat par= as a second genitive in
    the headword, as is done with край] [WON'T DO]
@@ -536,7 +533,7 @@ local internal_notes_table = {}
 -- category is constructed only if 'irregpl' or 'alt_nom_pl' or 'suffix'
 -- is true or if the declension class is a slash class.
 --
--- 'decl' is "1st", "2nd", "3rd" or "invariable"; 'hard' is "hard", "soft"
+-- 'decl' is "1st", "2nd", "3rd" or "indeclinable"; 'hard' is "hard", "soft"
 -- or "none"; 'g' is "m", "f", "n" or "none"; these are all traditional
 -- declension categories.
 --
@@ -608,7 +605,7 @@ local trailing_letter_type
 -- If enabled, compare this module with new version of module to make
 -- sure all declensions are the same. Eventually consider removing this;
 -- but useful as new code is created.
-local test_new_ru_noun_module = false
+local test_new_ru_noun_module = true
 
 -- Forward functions
 
@@ -875,9 +872,9 @@ local function categorize_and_init_heading(stress, decl, args, n, islast)
 		args.stem .. (sgdc.stem_suffix or ""))
 
 	-- insert English version of Zaliznyak stem type
-	if sgdc.decl == "invariable" then
-		insert_cat("invariable ~")
-		insert_if_not(h.stemetc, "invar")
+	if sgdc.decl == "indeclinable" then
+		insert_cat("indeclinable ~")
+		insert_if_not(h.stemetc, "indecl")
 	else
 		local stem_type =
 			sgdc.decl == "3rd" and "3rd-declension" or
@@ -999,8 +996,8 @@ local function compute_heading(args)
 	local h = args.heading_info
 	table.insert(headings, args.a == "a" and "anim" or args.a == "i" and
 		"inan" or "bian")
-	table.insert(headings, args.n == "s" and "sg-only" or args.n == "p" and
-		"pl-only" or nil)
+	table.insert(headings, args.nonumber and "uncountable" or
+		args.n == "s" and "sg-only" or args.n == "p" and "pl-only" or nil)
 	if #h.gender > 0 then
 		table.insert(headings, table.concat(h.gender, "/") .. "-form")
 	end
@@ -1033,17 +1030,17 @@ local function compute_overall_heading_categories_and_genders(args)
 	local hinfo = args.per_word_heading_info
 	local index = 0
 
-	-- First try for non-adjectival, non-invariable
+	-- First try for non-adjectival, non-indeclinable
 	for i=1,#hinfo do
-		if not ut.contains(hinfo[i].stemetc, "invar") and not ut.contains(hinfo[i].adjectival, "yes") then
+		if not ut.contains(hinfo[i].stemetc, "indecl") and not ut.contains(hinfo[i].adjectival, "yes") then
 			index = i
 			break
 		end
 	end
 	if index == 0 then
-		-- Then just non-invariable
+		-- Then just non-indeclinable
 		for i=1,#hinfo do
-			if not ut.contains(hinfo[i].stemetc, "invar") then
+			if not ut.contains(hinfo[i].stemetc, "indecl") then
 				index = i
 				break
 			end
@@ -1255,8 +1252,7 @@ function export.do_generate_forms_multi(args, old)
 	--   LEMMADECL (for a noun with non-empty decl spec beginning with a
 	--      *, left paren or semicolon),
 	--   LEMMA^DECL (for a noun with non-empty decl spec),
-	--   LEMMA$ (for an invariable word)
-	--   LEMMA+$ (for an invariable adjectival word, i.e. -го transliterated as -vo)
+	--   LEMMA$ (for an indeclinable word)
 	--   LEMMA+ (for an adjective with auto-detected decl class)
 	--   LEMMA+DECL (for an adjective with explicit decl class)
 	-- Sets of parameters for the same word are separated by the word "or".
@@ -1308,11 +1304,11 @@ function export.do_generate_forms_multi(args, old)
 				arg_set[2] = vals[1]
 				arg_set[4] = vals[2]
 			end
-			-- recognize invariable
-			local inv_stem, inv_type = rmatch(arg_set[2], "^(.-)(%+?%$)$")
-			if inv_stem then
-				arg_set[2] = inv_stem
-				arg_set[3] = inv_type
+			-- recognize indeclinable
+			local indecl_stem = rmatch(arg_set[2], "^(.-)%$$")
+			if indecl_stem then
+				arg_set[2] = indecl_stem
+				arg_set[3] = "$"
 			else
 				-- recognize adjective
 				local adj_stem, adj_type = rmatch(arg_set[2], "^(.*)(%+.*)$")
@@ -1374,13 +1370,17 @@ generate_forms_1 = function(args, per_word_info)
 		return nil
 	end
 
-	local function verify_number_value(val)
+	local function verify_number_value(val, allow_none)
 		if not val then return nil end
 		local short = usub(val, 1, 1)
-		if short == "s" or short == "p" or short == "b" then
+		if short == "s" or short == "p" or short == "b" or (allow_none and short == "n" or false) then
 			return short
 		end
-		error("Number value " .. val .. " should be empty or start with 's' (singular), 'p' (plural), or 'b' (both)")
+		if allow_none then
+			error("Number value " .. val .. " should be empty or start with 's' (singular), 'p' (plural), 'b' (both) or 'n' (none)")
+		else
+			error("Number value " .. val .. " should be empty or start with 's' (singular), 'p' (plural), or 'b' (both)")
+		end
 		return nil
 	end
 
@@ -1399,7 +1399,12 @@ generate_forms_1 = function(args, per_word_info)
 	-- change it to plural-only later on if it was unspecified (this happens if
 	-- an individual word's lemma is plural), and to determine whether it was
 	-- unspecified, we need the original value before defaulting.
-	args.n = verify_number_value(args.n)
+	args.n = verify_number_value(args.n, "allow none")
+	-- treat n=none like n=sg but set a flag so "singular" isn't displayed
+	if args.n == "n" then
+		args.n = "s"
+		args.nonumber = true
+	end
 	args.ndef = verify_number_value(args.ndef)
 	args.orign = args.n
 	args.n = args.n or args.ndef
@@ -1514,11 +1519,6 @@ generate_forms_1 = function(args, per_word_info)
 		args.orig_lemma = lemma
 		lemma = m_links.remove_links(lemma)
 		args.lemma_no_links = lemma
-		if decl == "+$" then
-			track("invadj")
-			lemmatr = lemmatr or com.decompose(m_ru_translit.tr_adj(lemma, "include monosyllabic jo accent"))
-			decl = "$"
-		end
 		args.lemmatr = lemmatr
 
 		-- Treat suffixes without an accent, and suffixes with an accent on the
@@ -2303,11 +2303,11 @@ function export.catboiler(frame)
 		maintext = stem_gender_text .. accent_text
 		insert_category(cats, "~ by stem type, gender and accent pattern|" .. get_sort_key(), pos)
 	elseif args[1] == "stemgender" then
-		if rfind(SUBPAGENAME, "invariable") then
-			maintext = "invariable (indeclinable) ~, which normally have the same form for all cases and numbers."
-			pos = rmatch(SUBPAGENAME, "^Russian invariable (.*)s$")
+		if rfind(SUBPAGENAME, "indeclinable") then
+			maintext = "indeclinable ~, which normally have the same form for all cases and numbers."
+			pos = rmatch(SUBPAGENAME, "^Russian indeclinable (.*)s$")
 			if not pos then
-				error("Invalid category name, should be e.g. \"Russian invariable nouns\"")
+				error("Invalid category name, should be e.g. \"Russian indeclinable nouns\"")
 			end
 		else
 			local stem, gender
@@ -3604,10 +3604,10 @@ declensions_old["мя"] = {
 declensions_old_cat["мя"] = { decl="3rd", hard="soft", g="n", cant_reduce=true }
 
 --------------------------------------------------------------------------
---                              Invariable                              --
+--                             Indeclinable                             --
 --------------------------------------------------------------------------
 
--- Invariable declension; no endings.
+-- Indeclinable declension; no endings.
 declensions_old["$"] = {
 	["nom_sg"] = "",
 	["gen_sg"] = "",
@@ -3622,7 +3622,7 @@ declensions_old["$"] = {
 	["ins_pl"] = "",
 	["pre_pl"] = "",
 }
-declensions_old_cat["$"] = { decl="invariable", hard="none", g="none" }
+declensions_old_cat["$"] = { decl="indeclinable", hard="none", g="none" }
 
 --------------------------------------------------------------------------
 --                              Adjectival                              --
@@ -4786,7 +4786,7 @@ end
 make_table = function(args)
 	local data = {}
 	data.after_title = " " .. args.heading
-	data.number = numbers[args.n]
+	data.number = args.nonumber and "" or numbers[args.n]
 
 	data.lemma = show_form(args[args.n == "p" and "nom_pl_linked" or "nom_sg_linked"], args.old, "lemma")
 	data.title = args.title or strutils.format(args.old and old_title_temp or title_temp, data)

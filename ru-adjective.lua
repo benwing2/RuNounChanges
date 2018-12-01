@@ -35,8 +35,13 @@
 		n: neuter singular
 		f: feminine singular
 		p: plural
-		mp: masculine plural (old-style tables only)
+		mp: masculine plural (old-style and special numeral tables only)
+		fp: masculine plural (special numeral tables only)
 
+	Animacy abbreviations:
+		an: animate
+		in: inanimate
+		
 	Declension-type argument (arg 2):
 		Form is DECLSPEC or DECLSPEC,DECLSPEC,... where DECLSPEC is
 		one of the following:
@@ -52,10 +57,10 @@
 			the endings. Alternatively, it can be an explicit declension type,
 			in which case the lemma field needs to be replaced with the bare
 			stem; the following are the possibilities:
-			ый ий ой ьий short mixed (new-style)
+			ый ий ой ьий short mixed manual (new-style)
 			ый ій ьій short stressed-short mixed proper stressed-proper
 				ъ-short ъ-stressed-short ъ-mixed ъ-proper ъ-stressed-proper
-				(old-style, where ъ-* is a synonym for *, for any *)
+				manual (old-style, where ъ-* is a synonym for *, for any *)
 		SHORTACCENT is one of a a' b b' c c' c'' to auto-generate the
 		    short forms with the specified accent pattern (following
 			Zaliznyak); if omitted, no short forms will be auto-generated.
@@ -190,7 +195,7 @@ end
 -- 'enable_categories' is a special hack for testing, which disables all
 -- category insertion if false. Delete this as soon as we've verified the
 -- working of the category code and created all the necessary categories.
-local enable_categories = false
+local enable_categories = true
 local declensions = {}
 local declensions_old = {}
 local internal_notes_table = {}
@@ -209,18 +214,22 @@ local long_cases = {
 	"nom_m", "nom_n", "nom_f", "nom_p",
 	"gen_m", "gen_f", "gen_p",
 	"dat_m", "dat_f", "dat_p",
-	"acc_f", "acc_n",
+	"acc_m_an", "acc_m_in", "acc_p_an", "acc_p_in",	"acc_f", "acc_n",
 	"ins_m", "ins_f", "ins_p",
 	"pre_m", "pre_f", "pre_p",
 	-- extra old long cases
 	"nom_mp",
+	"acc_mp_an", "acc_mp_in",
 	-- extra dva cases
 	"nom_fp",
+	"acc_fp_an", "acc_fp_in",
 	-- extra oba cases
 	"gen_mp", "gen_fp",
 	"dat_mp", "dat_fp",
 	"ins_mp", "ins_fp",
 	"pre_mp", "pre_fp",
+	-- extra cases for compounds of два
+	"acc_mp", "acc_fp",
 }
 
 -- Short cases and corresponding numbered arguments
@@ -270,6 +279,7 @@ function export.do_generate_forms(args, old, manual)
 	
     local SUBPAGENAME = mw.title.getCurrentTitle().subpageText
 	args.forms = {}
+	args.categories = {}
 	old = old or args.old
 	args.old = old
 	args.suffix = nom.split_russian_tr(args.suffix or "", "dopair")
@@ -283,6 +293,7 @@ function export.do_generate_forms(args, old, manual)
 
 	local overall_short_forms_allowed
 	manual = manual or args[2] == "manual"
+	args.manual = manual
 	local decl_types = manual and "$" or args[2] or ""
 	local lemmas = manual and "-" or args[1] or SUBPAGENAME
 	local normal_short_classes, rare_short_classes, dated_short_classes
@@ -321,13 +332,22 @@ function export.do_generate_forms(args, old, manual)
 			if datedrare == "none" then
 				saw_no_short = true
 			end
+			local short_title
 			if short_accent then
+				short_title = short_accent
+			elseif ut.contains({"proper", "stressed-proper"}, decl_type) then
+				short_title = "surname"
+			elseif ut.contains({"ьій", "ьий", "short", "stressed-short", "mixed"},
+				decl_type) then
+				short_title = "possessive"
+			end
+			if short_title then	
 				if datedrare == "dated" then
-					ut.insert_if_not(dated_short_classes, short_accent)
+					ut.insert_if_not(dated_short_classes, short_title)
 				elseif datedrare == "rare" then
-					ut.insert_if_not(rare_short_classes, short_accent)
+					ut.insert_if_not(rare_short_classes, short_title)
 				else
-					ut.insert_if_not(normal_short_classes, short_accent)
+					ut.insert_if_not(normal_short_classes, short_title)
 				end
 			end
 			if short_stem then
@@ -426,8 +446,6 @@ function export.do_generate_forms(args, old, manual)
 				short_accent, short_stem, short_stemtr, accented_stem,
 				accented_stemtr, old, decl_type)
 
-			args.categories = {}
-
 			local decls = old and declensions_old or declensions
 			local short_decls = old and short_declensions_old or short_declensions
 			if not decls[decl_type] then
@@ -470,24 +488,25 @@ function export.do_generate_forms(args, old, manual)
 		if sct == "" then
 			return
 		end
-		-- Convert e.g. a*,a(1) into a*[(1)], either finally or followed by
-		-- comma.
-		sct = rsub(sct, "([abc]'*)%*,%1%*?(%([12]%))$", "%1*[%2]")
-		sct = rsub(sct, "([abc]'*)%*,%1%*?(%([12]%)),", "%1*[%2],")
-		-- Same for a(1),a*.
-		sct = rsub(sct, "([abc]'*)%*?(%([12]%)),%1%*$", "%1*[%2]")
-		sct = rsub(sct, "([abc]'*)%*?(%([12]%)),%1%*,", "%1*[%2],")
-		-- Convert (1), (2) to ①, ②.
-		sct = rsub(sct, "%(1%)", "①")
-		sct = rsub(sct, "%(2%)", "②")
-		-- Add a * before ①, ②, consistent with Zaliznyak.
-		sct = rsub(sct, "([abc]'*)([①②])", "%1*%2")
-		-- Avoid c'' turning into c with italics.
-		sct = rsub(sct, "''", "&#39;&#39;")
-		if datedrare then
-			sct = datedrare .. " short class " .. sct
-		else
+		if not ut.contains({"surname", "possessive"}, sct) then
+			-- Convert e.g. a*,a(1) into a*[(1)], either finally or followed by
+			-- comma.
+			sct = rsub(sct, "([abc]'*)%*,%1%*?(%([12]%))$", "%1*[%2]")
+			sct = rsub(sct, "([abc]'*)%*,%1%*?(%([12]%)),", "%1*[%2],")
+			-- Same for a(1),a*.
+			sct = rsub(sct, "([abc]'*)%*?(%([12]%)),%1%*$", "%1*[%2]")
+			sct = rsub(sct, "([abc]'*)%*?(%([12]%)),%1%*,", "%1*[%2],")
+			-- Convert (1), (2) to ①, ②.
+			sct = rsub(sct, "%(1%)", "①")
+			sct = rsub(sct, "%(2%)", "②")
+			-- Add a * before ①, ②, consistent with Zaliznyak.
+			sct = rsub(sct, "([abc]'*)([①②])", "%1*%2")
+			-- Avoid c'' turning into c with italics.
+			sct = rsub(sct, "''", "&#39;&#39;")
 			sct = "short class " .. sct
+		end
+		if datedrare then
+			sct = datedrare .. " " .. sct
 		end
 		table.insert(short_class_titles, sct)
 	end
@@ -733,14 +752,14 @@ categorize = function(decl_type, args, orig_short_accent, short_accent,
 
 	if ut.contains({"ьій", "ьий"}, decl_type) then
 		insert_cat("long possessive ~")
-	elseif ut.contains({"short", "stressed-short"}) then
+	elseif ut.contains({"short", "stressed-short"}, decl_type) then
 		insert_cat("short possessive ~")
-	elseif ut.contains({"mixed"}) then
+	elseif ut.contains({"mixed"}, decl_type) then
 		insert_cat("mixed possessive ~")
-	elseif ut.contains({"proper", "stressed-proper"}) then
+	elseif ut.contains({"proper", "stressed-proper"}, decl_type) then
 		insert_cat("proper-name ~")
 	elseif decl_type == "$" then
-		insert_cat("invariable ~")
+		insert_cat("indeclinable ~")
 	else
 		local hint_types = com.get_stem_trailing_letter_type(args.stem)
 	-- insert English version of Zaliznyak stem type
@@ -752,19 +771,19 @@ categorize = function(decl_type, args, orig_short_accent, short_accent,
 			ut.contains(hint_types, "vowel") and "vowel-stem" or
 			ut.contains(hint_types, "soft-cons") and "vowel-stem" or
 			ut.contains(hint_types, "palatal") and "vowel-stem" or
-			decl_class == "ий" and "soft-stem" or
+			decl_type == "ий" and "soft-stem" or
 			"hard-stem"
 		if stem_type == "soft-stem" or stem_type == "vowel-stem" then
 			insert_cat(stem_type .. " ~")
 		else
-			insert_cat(stem_type .. " " .. (decl_class == "ой" and "ending-stressed" or "stem-stressed") .. " ~")
+			insert_cat(stem_type .. " " .. (decl_type == "ой" and "ending-stressed" or "stem-stressed") .. " ~")
 		end
 	end
 	if decl_type == "ой" then
 		insert_cat("ending-stressed ~")
 	end
 
-	local short_forms_allowed = ut.contains({"ый", "ой", "ій", "ий"})
+	local short_forms_allowed = ut.contains({"ый", "ой", "ій", "ий"}, decl_type)
 	if short_forms_allowed then
 		local override_m = args.short_m
 		local override_f = args.short_f
@@ -799,10 +818,9 @@ categorize = function(decl_type, args, orig_short_accent, short_accent,
 		if short_stem and short_stem ~= args.stem then
 			insert_cat("~ with irregular short stem")
 		end
-		insert_cat("~ with reducible stem")
 	end
 	for _, case in ipairs(all_cases) do
-		if args[case] then
+		if args[case] and args[case] ~= "-" then
 			local engcase = rsub(case, "^([a-z]*)", {
 				nom="nominative", gen="genitive", dat="dative",
 				acc="accusative", ins="instrumental", pre="prepositional",
@@ -816,9 +834,10 @@ categorize = function(decl_type, args, orig_short_accent, short_accent,
 			insert_cat("~ with irregular " .. engcase)
 		end
 	end
-	-- FIXME: Eventually we want to treat the presence of args 3/4/5/6
-	-- as irregular, but not till we've converted everything we can to
-	-- use the normal short-accent patterns.
+	
+	if args.nofull then
+		insert_cat("short-form-only ~")
+	end
 end
 
 local stem_expl = {
@@ -848,11 +867,15 @@ function export.catboiler(frame)
 
 	local cats = {}
 
-	local maintext
+	local maintext, misctext
 	if args[1] == "adj" then
 		local stem, stress = rmatch(SUBPAGENAME, "^Russian ([^ ]*) ([^ *]*)-stressed adjectives")
 		if not stem then
 			stem, stress = rmatch(SUBPAGENAME, "^Russian ([^ ]*) (possessive) adjectives")
+		end
+		if not stem then
+			stem = rmatch(SUBPAGENAME, "^Russian ([^ ]*) adjectives")
+			stress = ""
 		end
 		if not stem then
 			error("Invalid category name, should be e.g. \"Russian velar-stem ending-stressed adjectives\"")
@@ -880,22 +903,45 @@ function export.catboiler(frame)
 		end
 
 		maintext = stem .. posstext .. " ~, " .. endingtext .. stemtext .. " " .. stresstext
-		insert_category(cats, "~ by stem type and stress")
+		insert_category(cats, "~ by stem type and stress|" .. stem .. " " .. stress)
 	elseif args[1] == "shortaccent" then
 		local shortaccent = rmatch(SUBPAGENAME, "^Russian adjectives with short accent pattern ([^ ]*)")
 		if not shortaccent then
 			error("Invalid category name, should be e.g. \"Russian adjectives with short accent pattern c\"")
 		end
-		maintext = "~ with short accent pattern " .. shortaccent .. ", with " .. args[2] .. "."
-		insert_category(cats, "~ by short accent pattern")
+		maintext = "~ with short accent pattern " .. rsub(shortaccent, "'", "&#39;") .. ", with " .. args[2] .. "."
+		insert_category(cats, "~ by short accent pattern|" .. shortaccent)
+	elseif args[1] == "irreg" then
+		local irregularity = rmatch(SUBPAGENAME, "^Russian adjectives with irregular (.*)")
+		if not irregularity then
+			error("Invalid category name, should be e.g. \"Russian adjectives with irregular nominative masculine singular\"")
+		end
+		maintext = "~ with irregular " .. irregularity .. " (possibly along with other cases)."
+		insert_category(cats, "~ by irregularity|" .. irregularity)
+	elseif args[1] == "misc" then
+		misctext = args[2]
+		local sort_key = rmatch(SUBPAGENAME, "^Russian adjectives with (.*)")
+		if not sort_key then
+			sort_key = rmatch(SUBPAGENAME, "^Russian adjectives by (.*)")
+		end
+		if not sort_key then
+			sort_key = rmatch(SUBPAGENAME, "^Russian adjectives (.*)")
+		end
+		if not sort_key then
+			sort_key = rmatch(SUBPAGENAME, "^Russian (.*)")
+		end
+		if not sort_key then
+			error("Invalid category name, should begin with \"Russian\": " .. SUBPAGENAME)
+		end
+		insert_category(cats, "~|" .. sort_key)
 	else
 		error("Unknown ruadjcatboiler type " .. (args[1] or "(empty)"))
 	end
 
-	return "This category contains Russian " .. rsub(maintext, "~", "adjectives")
+	return (misctext or "This category contains Russian " .. rsub(maintext, "~", "adjectives"))
 		.. "\n" ..
 		mw.getCurrentFrame():expandTemplate{title="ru-categoryTOC", args={}}
-		.. m_utilities.format_categories(cats, lang)
+		.. m_utilities.format_categories(cats, lang, nil, nil, "force")
 end
 
 --------------------------------------------------------------------------
@@ -1036,7 +1082,7 @@ end
 -- to situations where we don't want the suffix added, e.g. бескра́йний with
 -- dereduced nom sg бескра́ен without expected -ь.
 local function add_bare_suffix(bare, baretr, old, decl, dereduced)
-	if old and decl ~= "ій" then
+	if old and decl ~= "ій" and decl ~= "$" then
 		return bare .. "ъ", baretr
 	elseif decl == "ий" or decl == "ій" then
 		-- This next special case is mentioned in Zaliznyak's 1980 grammatical
@@ -1346,6 +1392,20 @@ declensions["$"] = {
 	["pre_m"] = "",
 	["pre_f"] = "",
 	["pre_p"] = "",
+	-- for old-style templates, два, оба, compounds of два
+	["nom_mp"] = "",
+	["nom_fp"] = "",
+	["gen_mp"] = "",
+	["gen_fp"] = "",
+	["dat_mp"] = "",
+	["dat_fp"] = "",
+	-- don't do this; instead we default them to nom_mp, nom_fp
+	-- ["acc_mp"] = "",
+	-- ["acc_fp"] = "",
+	["ins_mp"] = "",
+	["ins_fp"] = "",
+	["pre_mp"] = "",
+	["pre_fp"] = "",
 }
 
 declensions_old["ый"] = {
@@ -1718,10 +1778,52 @@ handle_forms_and_overrides = function(args, short_forms_allowed)
 		end
 	end
 
-	-- default acc_n to nom_n; applies chiefly in the invariable declension
+	-- default acc_n to nom_n; applies chiefly in the indeclinable declension
 	-- (used with manual declension tables)
 	if not args.acc_n then
 		args.acc_n = args.nom_n
+	end
+
+	-- default inanimate/animate accusative variants as appropriate; this is
+	-- almost always correct, but not with e.g. два́дцать оди́н, where the
+	-- masculine animate accusative два́дцать одного́ differs from both the
+	-- masculine nominative два́дцать оди́н and the masculine genitive
+	-- двадцати́ одного́.
+	if not args.acc_m_an then
+		args.acc_m_an = args.gen_m
+	end
+	if not args.acc_m_in then
+		args.acc_m_in = args.nom_m
+	end
+	-- Compounds of два do not have animacy; everything else does.
+	-- Only copy either the with-animacy or without-animacy variants to avoid
+	-- having both forms in {{ru-generate-adj-forms}}.
+	if args.special ~= "cdva" then
+		if not args.acc_p_an then
+			args.acc_p_an = args.gen_p
+		end
+		if not args.acc_p_in then
+			args.acc_p_in = args.nom_p
+		end
+		if not args.acc_mp_an then
+			args.acc_mp_an = args.gen_mp
+		end
+		if not args.acc_mp_in then
+			args.acc_mp_in = args.nom_mp
+		end
+		if not args.acc_fp_an then
+			args.acc_fp_an = args.gen_fp
+		end
+		if not args.acc_fp_in then
+			args.acc_fp_in = args.nom_fp
+		end
+	else
+		if not args.acc_mp then
+			args.acc_mp = args.nom_mp
+		end
+		if not args.acc_fp then
+			args.acc_fp = args.nom_fp
+		end
 	end
 end
 
@@ -1784,6 +1886,7 @@ end
 local title_temp = [=[Declension of <b lang="ru" class="Cyrl">{lemma}</b> ({short_class_title})]=]
 local old_title_temp = [=[Pre-reform declension of <b lang="ru" class="Cyrl">{lemma}</b> ({short_class_title})]=]
 local title_temp_no_short_msg = [=[Declension of <b lang="ru" class="Cyrl">{lemma}</b>]=]
+local old_title_temp_no_short_msg = [=[Pre-reform declension of <b lang="ru" class="Cyrl">{lemma}</b>]=]
 
 local template = nil
 local full_clause = nil
@@ -1868,10 +1971,16 @@ end
 
 -- Make the table
 make_table = function(args)
-	args.lemma = m_links.remove_links(show_form((args.oba or args.dva) and args.nom_mp or
+	args.lemma = m_links.remove_links(show_form(args.special and args.nom_mp or
 		args.nofull and args.short_m or args.nom_m, args.old, true))
-	args.title = args.title or strutils.format((args.oba or args.dva) and title_temp_no_short_msg or
-		args.old and old_title_temp or title_temp, args)
+	args.title = args.title or strutils.format(
+		(args.special or args.manual) and args.old and old_title_temp_no_short_msg or
+		(args.special or args.manual) and title_temp_no_short_msg or
+		args.old and old_title_temp or
+		title_temp,
+		args)
+
+	local has_nom_mp = args.nom_mp and not (#args.nom_mp == 1 and args.nom_mp[1][1] == "-")
 
 	for _, case in ipairs(all_cases) do
 		if args[case] then
@@ -1881,17 +1990,24 @@ make_table = function(args)
 		end
 	end
 
-	local temp = args.oba and template_oba or args.dva and template_dva or
+	local temp = args.special == "oba" and template_oba or
+		(args.special == "dva" or args.special == "cdva") and template_dva or
 		not args.nom_n and proper_name_template or
-		args.noneuter and template_no_neuter or template
-	local fullc = args.oba and full_clause_oba or args.dva and full_clause_dva or
+		args.noneuter and args.old and has_nom_mp and template_mp_no_neuter or
+		args.noneuter and template_no_neuter or
+		args.old and has_nom_mp and template_mp or
+		template
+	local fullc = args.special == "oba" and full_clause_oba or
+		args.special == "dva" and full_clause_dva or
+		args.special == "cdva" and full_clause_compound_dva or
 		not args.nom_n and proper_name_full_clause or
-		args.noneuter and full_clause_no_neuter or full_clause
+		args.noneuter and args.old and has_nom_mp and full_clause_mp_no_neuter or
+		args.noneuter and full_clause_no_neuter or
+		args.old and has_nom_mp and full_clause_mp or
+		full_clause
 
 	if args.old then
-		if args.nom_mp then
-			temp = args.noneuter and template_mp_no_neuter or template_mp
-			fullc = args.noneuter and full_clause_mp_no_neuter or full_clause_mp
+		if has_nom_mp then
 			if args.short_m or args.short_n or args.short_f or args.short_p then
 				args.short_m = args.short_m or "&mdash;"
 				args.short_n = args.short_n or "&mdash;"
@@ -2051,14 +2167,14 @@ full_clause = [===[
 |-
 ! style="background:#eff7ff" rowspan="2" | accusative
 ! style="background:#eff7ff" | animate
-| {gen_m}
+| {acc_m_an}
 | rowspan="2" | {acc_n}
 | rowspan="2" | {acc_f}
-| {gen_p}
+| {acc_p_an}
 |-
 ! style="background:#eff7ff" | inanimate
-| {nom_m}
-| {nom_p}
+| {acc_m_in}
+| {acc_p_in}
 |-
 ! style="background:#eff7ff" colspan="2" | instrumental
 | colspan="2" | {ins_m}
@@ -2099,13 +2215,13 @@ full_clause_no_neuter = [===[
 |-
 ! style="background:#eff7ff" rowspan="2" | accusative
 ! style="background:#eff7ff" | animate
-| {gen_m}
+| {acc_m_an}
 | rowspan="2" | {acc_f}
-| {gen_p}
+| {acc_p_an}
 |-
 ! style="background:#eff7ff" | inanimate
-| {nom_m}
-| {nom_p}
+| {acc_m_in}
+| {acc_p_in}
 |-
 ! style="background:#eff7ff" colspan="2" | instrumental
 | {ins_m}
@@ -2145,9 +2261,9 @@ proper_name_full_clause = [===[
 | {dat_p}
 |-
 ! style="background:#eff7ff" colspan="2" | accusative
-| {gen_m}
+| {acc_m_an}
 | {acc_f}
-| {gen_p}
+| {acc_p_an}
 |-
 ! style="background:#eff7ff" colspan="2" | instrumental
 | {ins_m}
@@ -2192,15 +2308,15 @@ full_clause_mp = [===[
 |-
 ! style="background:#eff7ff" rowspan="2" | accusative
 ! style="background:#eff7ff" | animate
-| {gen_m}
+| {acc_m_an}
 | rowspan="2" | {acc_n}
 | rowspan="2" | {acc_f}
-| colspan="2" | {gen_p}
+| colspan="2" | {acc_p_an}
 |-
 ! style="background:#eff7ff" | inanimate
-| {nom_m}
-| {nom_mp}
-| {nom_p}
+| {acc_m_in}
+| {acc_mp_in}
+| {acc_p_in}
 |-
 ! style="background:#eff7ff" colspan="2" | instrumental
 | colspan="2" | {ins_m}
@@ -2243,14 +2359,14 @@ full_clause_mp_no_neuter = [===[
 |-
 ! style="background:#eff7ff" rowspan="2" | accusative
 ! style="background:#eff7ff" | animate
-| {gen_m}
+| {acc_m_an}
 | rowspan="2" | {acc_f}
-| colspan="2" | {gen_p}
+| colspan="2" | {acc_p_an}
 |-
 ! style="background:#eff7ff" | inanimate
-| {nom_m}
-| {nom_mp}
-| {nom_p}
+| {acc_m_in}
+| {acc_mp_in}
+| {acc_p_in}
 |-
 ! style="background:#eff7ff" colspan="2" | instrumental
 | {ins_m}
@@ -2263,59 +2379,6 @@ full_clause_mp_no_neuter = [===[
 | colspan="2" | {pre_p}
 ]===]
 
--- Used for old-style templates
-template_mp = template_prelude() .. [===[
-! style="width:20%;background:#d9ebff" colspan="2" |
-! style="background:#d9ebff" | masculine
-! style="background:#d9ebff" | neuter
-! style="background:#d9ebff" | feminine
-! style="background:#d9ebff" | m. plural
-! style="background:#d9ebff" | n./f. plural
-]===] .. template_postlude()
-
--- Used for old-style templates
-full_clause_mp = [===[
-|-
-! style="background:#eff7ff" colspan="2" | nominative
-| {nom_m}
-| {nom_n}
-| {nom_f}
-| {nom_mp}
-| {nom_p}
-|-
-! style="background:#eff7ff" colspan="2" | genitive
-| colspan="2" | {gen_m}
-| {gen_f}
-| colspan="2" | {gen_p}
-|-
-! style="background:#eff7ff" colspan="2" | dative
-| colspan="2" | {dat_m}
-| {dat_f}
-| colspan="2" | {dat_p}
-|-
-! style="background:#eff7ff" rowspan="2" | accusative
-! style="background:#eff7ff" | animate
-| {gen_m}
-| rowspan="2" | {acc_n}
-| rowspan="2" | {acc_f}
-| colspan="2" | {gen_p}
-|-
-! style="background:#eff7ff" | inanimate
-| {nom_m}
-| {nom_mp}
-| {nom_p}
-|-
-! style="background:#eff7ff" colspan="2" | instrumental
-| colspan="2" | {ins_m}
-| {ins_f}
-| colspan="2" | {ins_p}
-|-
-! style="background:#eff7ff" colspan="2" | prepositional
-| colspan="2" | {pre_m}
-| {pre_f}
-| colspan="2" | {pre_p}
-]===]
-
 -- Used for два and compounds
 template_dva = template_prelude("55") .. [===[
 ! style="width:20%;background:#d9ebff" colspan="2" |
@@ -2323,7 +2386,8 @@ template_dva = template_prelude("55") .. [===[
 ! style="background:#d9ebff" | feminine
 ]===] .. template_postlude()
 
--- Used for both new-style and old-style templates
+-- Used for both new-style and old-style templates of два (only for два itself,
+-- which has an animacy distinction; not for compounds)
 full_clause_dva = [===[
 |-
 ! style="background:#eff7ff" colspan="2" | nominative
@@ -2338,11 +2402,11 @@ full_clause_dva = [===[
 |-
 ! style="background:#eff7ff" rowspan="2" | accusative
 ! style="background:#eff7ff" | animate
-| colspan="2" | {gen_p}
+| colspan="2" | {acc_p_an}
 |-
 ! style="background:#eff7ff" | inanimate
-| {nom_mp}
-| {nom_fp}
+| {acc_mp_in}
+| {acc_fp_in}
 |-
 ! style="background:#eff7ff" colspan="2" | instrumental
 | colspan="2" | {ins_p}
@@ -2351,7 +2415,31 @@ full_clause_dva = [===[
 | colspan="2" | {pre_p}
 ]===]
 
--- Used for два and compounds
+-- Used for both new-style and old-style templates of compounds of два
+full_clause_compound_dva = [===[
+|-
+! style="background:#eff7ff" colspan="2" | nominative
+| {nom_mp}
+| {nom_fp}
+|-
+! style="background:#eff7ff" colspan="2" | genitive
+| colspan="2" | {gen_p}
+|-
+! style="background:#eff7ff" colspan="2" | dative
+| colspan="2" | {dat_p}
+|-
+! style="background:#eff7ff" colspan="2" | accusative
+| {acc_mp}
+| {acc_fp}
+|-
+! style="background:#eff7ff" colspan="2" | instrumental
+| colspan="2" | {ins_p}
+|-
+! style="background:#eff7ff" colspan="2" | prepositional
+| colspan="2" | {pre_p}
+]===]
+
+-- Used for оба
 template_oba = template_prelude() .. [===[
 ! style="width:20%;background:#d9ebff" colspan="2" |
 ! style="background:#d9ebff" | masculine
@@ -2361,7 +2449,7 @@ template_oba = template_prelude() .. [===[
 ! style="background:#d9ebff" | f. plural
 ]===] .. template_postlude()
 
--- Used for both new-style and old-style templates
+-- Used for both new-style and old-style templates of оба
 full_clause_oba = [===[
 |-
 ! style="background:#eff7ff" colspan="2" | nominative
@@ -2385,16 +2473,16 @@ full_clause_oba = [===[
 |-
 ! style="background:#eff7ff" rowspan="2" | accusative
 ! style="background:#eff7ff" | animate
-| {gen_m}
+| {acc_m_an}
 | rowspan="2" | {acc_n}
 | rowspan="2" | {acc_f}
-| {gen_mp}
-| {gen_fp}
+| {acc_mp_an}
+| {acc_fp_an}
 |-
 ! style="background:#eff7ff" | inanimate
-| {nom_m}
-| {nom_mp}
-| {nom_fp}
+| {acc_m_in}
+| {acc_mp_in}
+| {acc_fp_in}
 |-
 ! style="background:#eff7ff" colspan="2" | instrumental
 | colspan="2" | {ins_m}
