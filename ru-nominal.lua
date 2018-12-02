@@ -123,8 +123,9 @@ end
 function export.strip_ending(ru, tr, ending)
 	local strippedru = rsub(ru, ending .. "$", "")
 	if strippedru == ru then
-		error("Argument " .. ru .. "doesn't end with expected ending " .. ending)
+		error("Argument " .. ru .. " doesn't end with expected ending " .. ending)
 	end
+	ru = strippedru
 	tr = export.strip_tr_ending(tr, ending)
 	return ru, tr
 end

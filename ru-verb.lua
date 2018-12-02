@@ -187,7 +187,8 @@ end
 
 local function get_stressed_arg(args, arg, default, paramdesc)
 	local retval = getarg(args, arg, default, paramdesc)
-	if not com.is_nonsyllabic(retval) and not com.is_stressed(retval) then
+	-- don't consider suffixes
+	if not rfind(retval, "^%-") and not com.is_nonsyllabic(retval) and not com.is_stressed(retval) then
 		error("Argument value " .. retval .. " (parameter " .. arg .. ") must be stressed")
 	end
 	return retval
@@ -635,8 +636,13 @@ function export.do_generate_forms(arg_sets, verb_type, old)
 		end
 
 		-- Determine whether new-style or old-style arguments
-		local inf, tr = nom.split_russian_tr(getarg(args, 2))
-		if data.refl then
+		local inf, tr
+		if args[2] then
+			inf, tr = nom.split_russian_tr(args[2])
+		end
+		if not inf then
+			data.oldargs = true
+		elseif data.refl then
 			if rfind(inf, "[тч]ься$") then
 				inf = rsub(inf, "ся$", "")
 				tr = nom.strip_tr_ending(tr, "ся")
@@ -646,6 +652,10 @@ function export.do_generate_forms(arg_sets, verb_type, old)
 				inf = rsub(inf, "сь$", "")
 				tr = nom.strip_tr_ending(tr, "сь")
 				data.oldargs = false
+			elseif not rfind(conj_type, "^7") and rfind(inf, "[тч]ь$") then
+				-- old-style class 7 verbs will have the non-reflexive infinitive
+				-- in args[2], e.g. кра́сться
+				error("Reflexive infinitive " .. inf .. " is missing -ся ending")
 			else
 				data.oldargs = true
 			end
@@ -661,10 +671,10 @@ function export.do_generate_forms(arg_sets, verb_type, old)
 		end
 		if data.oldargs then
 			-- Convert old to new arguments
-			if not rfind(conjtype, "^[124]") then
+			if not rfind(conj_type, "^[124]") then
 				assert(not tr)
 			end
-			if conjtype == "1a" or conjtype == "2a" or conjtype == "2b" then
+			if conj_type == "1a" or conj_type == "2a" or conj_type == "2b" then
 				if not args[2] then -- handle Template: space
 					inf = nil
 				else
@@ -673,30 +683,30 @@ function export.do_generate_forms(arg_sets, verb_type, old)
 						tr = tr .. "tʹ"
 					end
 				end
-			elseif conjtype == "3a" or conjtype == "3°a" then
+			elseif conj_type == "3a" or conj_type == "3°a" then
 				inf = inf .. "нуть"
-			elseif conjtype == "3b" or conjtype == "3c" then
+			elseif conj_type == "3b" or conj_type == "3c" then
 				inf = inf .. "у́ть"
-			elseif conjtype == "4a" then
+			elseif conj_type == "4a" then
 				inf = inf .. "ить"
 				if tr then
 					tr = tr .. "itʹ"
 				end
-			elseif conjtype == "4b" or conjtype == "4c" then
+			elseif conj_type == "4b" or conj_type == "4c" then
 				inf, tr = com.make_unstressed(inf, tr)
 				inf = inf .. "и́ть"
 				if tr then
 					-- tr is decomposed, keep it that way
 					tr = tr .. "i" .. AC .. "tʹ"
 				end
-			elseif conjtype == "4a1a" then
+			elseif conj_type == "4a1a" then
 				inf = rsub(inf, "[ая]$", "")
 				inf = inf .. "ить"
 				if tr then
 					tr = rsub(tr, "j?a$", "")
 					tr = tr .. "itʹ"
 				end
-			elseif conjtype == "5a" then
+			elseif conj_type == "5a" then
 				if args[3] then
 					inf = args[3] .. "ть"
 				else
@@ -709,7 +719,7 @@ function export.do_generate_forms(arg_sets, verb_type, old)
 					args[3] = args[2]
 				end
 				args[2] = inf
-			elseif conjtype == "5b" then
+			elseif conj_type == "5b" then
 				inf = args[3] .. "ть"
 				local normal_pres_stem = rsub(inf, "[еая]́ть$", "")
 				if normal_pres_stem == args[2] then
@@ -717,7 +727,7 @@ function export.do_generate_forms(arg_sets, verb_type, old)
 				else
 					args[3] = args[2]
 				end
-			elseif conjtype == "5c" then
+			elseif conj_type == "5c" then
 				inf = args[3] .. "ть"
 				local normal_pres_stem = com.make_ending_stressed(
 					rsub(inf, "[еая]́ть$", "")
@@ -727,7 +737,7 @@ function export.do_generate_forms(arg_sets, verb_type, old)
 				else
 					args[3] = args[2]
 				end
-			elseif rfind(conjtype, "6°?a") or conjtype == "1a6a" then
+			elseif rfind(conj_type, "^6°?a") or conj_type == "1a6a" then
 				assert(not args[4])
 				if args[3] then
 					inf = args[3] .. "ть"
@@ -745,110 +755,118 @@ function export.do_generate_forms(arg_sets, verb_type, old)
 					args[3] = args["pres_stem"]
 					args["pres_stem"] = nil
 				end
-			elseif rfind(conjtype, "6°?b") then
+			elseif rfind(conj_type, "^6°?b") then
 				if is_vowel_stem(inf) then
 					inf = inf .. "я́ть"
 				else
 					inf = inf .. "а́ть"
 				end
 				-- args[3] (present stem) remains
-			elseif rfind(conjtype, "6°?c") then
+			elseif rfind(conj_type, "^6°?c") then
 				inf = com.make_unstressed(inf) .. "а́ть"
-			elseif conjtype == "7a" or conjtype == "7b" then
+			elseif conj_type == "7a" or conj_type == "7b" then
 				-- nothing needed to do
-			elseif conjtype == "8a" or conjtype == "8b" then
+			elseif conj_type == "8a" or conj_type == "8b" then
 				inf = args[3]
 				args[3] = args[2]
-			elseif conjtype == "9a" then
+			elseif conj_type == "9a" then
 				inf = inf .. "еть"
 				-- args[3] (present stem) remains
-			elseif conjtype == "9b" then
+			elseif conj_type == "9b" then
 				inf = com.make_unstressed(inf) .. "е́ть"
 				-- args[3] (present stem) remains
 				-- args[4] (optional past participle stem) remains
-			elseif conjtype == "10a" then
+			elseif conj_type == "10a" then
 				inf = inf .. "оть"
-			elseif conjtype == "10c" then
-				inf = inf .. "о́ть"
+			elseif conj_type == "10c" then
+				inf = inf .. "ть"
 				if com.make_unstressed_once(args[3]) == rsub(args[2], "о́$", "") then
 					args[3] = nil
 				end
-			elseif conjtype == "11a" then
+			elseif conj_type == "11a" then
 				inf = inf .. "ить"
-			elseif conjtype == "11b" then
+			elseif conj_type == "11b" then
 				inf = inf .. "и́ть"
 				if args[3] == args[2] then
 					args[3] = nil
 				end
-			elseif conjtype == "12a" then
+			elseif conj_type == "12a" then
 				inf = inf .. "ть"
 				if args[3] == args[2] then
 					args[3] = nil
 				end
-			elseif conjtype == "12b" then
+			elseif conj_type == "12b" then
 				inf = inf .. "ть"
 				if com.make_ending_stressed(args[3]) == args[2] then
 					args[3] = nil
 				end
-			elseif conjtype == "13b" then
+			elseif conj_type == "13b" then
 				inf = inf .. "ть"
 				assert(rsub(inf, "ва́ть$", "") == args[3])
 				args[3] = nil
-			elseif conjtype == "14a" or conjtype == "14b" or conjtype == "14c" then
+			elseif conj_type == "14a" or conj_type == "14b" or conj_type == "14c" then
 				inf = inf .. "ть"
 				-- args[3] (present stem) remains
-			elseif conjtype == "15a" or conjtype == "16a" or conjtype == "16b" then
+			elseif conj_type == "15a" or conj_type == "16a" or conj_type == "16b" then
 				inf = inf .. "ть"
-			elseif conjtype == "irreg-минуть" then
+			elseif conj_type == "irreg-минуть" then
 				inf = "мину́ть"
-			elseif conjtype == "irreg-живописать-миновать" then
+			elseif conj_type == "irreg-живописать-миновать" then
 				inf = inf .. "ть"
 				args[3] = nil
-			elseif conjtype == "irreg-слыхать-видать" then
+			elseif conj_type == "irreg-слыхать-видать" then
 				inf = inf .. "ть"
-			elseif conjtype == "irreg-стелить-стлать" then
+			elseif conj_type == "irreg-стелить-стлать" then
 				inf = (args[3] or "") .. inf .. "ть"
 				args[3] = nil
 				args[4] = nil
-			elseif conjtype == "irreg-ссать-сцать" then
-				assert(args[4] == rsub(inf, "а́$", ""))
-				inf = (args[3] or "") .. inf .. "ть"
+			elseif conj_type == "irreg-ссать-сцать" then
+				assert(args[3] == rsub(inf, "а́$", ""))
+				inf = (args[4] or "") .. inf .. "ть"
 				args[3] = nil
 				args[4] = nil
-			elseif conjtype == "irreg-сыпать" or conjtype == "irreg-ехать" or
-				conjtype == "irreg-ѣхать" then
-				local infstem = rsub(conjtype, "^irreg%-", "")
+			elseif conj_type == "irreg-сыпать" or conj_type == "irreg-ехать" or
+				conj_type == "irreg-ѣхать" then
+				local infstem = rsub(conj_type, "^irreg%-", "")
 				if args[2] ~= "вы́" then
 					infstem = com.make_beginning_stressed(infstem)
 				end
 				inf = (args[2] or "") .. infstem
-			elseif conjtype == "irreg-обязывать" then
+			elseif conj_type == "irreg-обязывать" then
 				if args[2] == "вы́" then
 					inf = "вы́обязывать"
 				else
 					inf = (args[2] or "") .. "обя́зывать"
 				end
-			elseif conjtype == "irreg-зиждиться" then
+			elseif conj_type == "irreg-зиждиться" then
 				if args[2] == "вы́" then
 					inf = "вы́зиждить"
 				else
 					inf = (args[2] or "") .. "зи́ждить"
 				end
-			elseif rfind(conjtype, "^irreg%-") then
-				local infstem = rsub(conjtype, "^irreg%-", "")
+			elseif conj_type == "irreg-идти" then
+				if not args[2] then
+					inf = "идти́"
+				elseif args[2] == "вы́" then
+					inf = "вы́йти"
+				else
+					inf = args[2] .. "йти́"
+				end
+			elseif rfind(conj_type, "^irreg%-") then
+				local infstem = rsub(conj_type, "^irreg%-", "")
 				if args[2] ~= "вы́" then
 					infstem = com.make_ending_stressed(infstem)
 				end
 				inf = (args[2] or "") .. infstem
 			else
-				error("Unknown conjugation type " .. conjtype)
+				error("Unknown conjugation type " .. conj_type)
 			end
-			if inf then
-				if tr then
-					args[2] = inf .. "//" .. tr
-				else
-					args[2] = inf
-				end
+		end
+		if inf then
+			if tr then
+				args[2] = inf .. "//" .. tr
+			else
+				args[2] = inf
 			end
 		end
 
@@ -2143,7 +2161,7 @@ conjugations["3b"] = function(args, data)
 	local forms = {}
 
 	parse_variants(data, args[1], {"+p", "7", "ё"})
-	local stem = nom.strip_ending(get_unstressed_arg(args, 2), nil, "ну́ть")
+	local stem = nom.strip_ending(get_stressed_arg(args, 2), nil, "у́ть")
 	no_stray_args(args, 2)
 
 	guts_of_3b_3c(forms, data, stem)
@@ -2156,7 +2174,7 @@ conjugations["3c"] = function(args, data)
 	local forms = {}
 
 	parse_variants(data, args[1], {"+p", "7", "ё"})
-	local stem = nom.strip_ending(get_stressed_arg(args, 2), nil, "ну́ть")
+	local stem = nom.strip_ending(get_stressed_arg(args, 2), nil, "у́ть")
 	no_stray_args(args, 2)
 	-- remove accent for some forms
 	local stem_noa = com.remove_accents(stem)
@@ -2208,11 +2226,11 @@ conjugations["4a1a"] = function(args, data)
 	local hushing = rfind(stem4, "[шщжч]$")
 	local stem1, tr1
 	if hushing then
-		stem1 = stem1 .. "а"
-		tr1 = tr1 .. "a"
+		stem1 = stem4 .. "а"
+		tr1 = tr4 and tr4 .. "a"
 	else
-		stem1 = stem1 .. "я"
-		tr1 = tr1 .. "ja"
+		stem1 = stem4 .. "я"
+		tr1 = tr4 and tr4 .. "ja"
 	end
 	no_stray_args(args, 2)
 
@@ -2238,7 +2256,7 @@ conjugations["4b"] = function(args, data)
 	local forms = {}
 
 	parse_variants(data, args[1], {"щ", "past", "+p", "8", "жд"})
-	local stem, tr = nom.split_russian_tr(get_unstressed_arg(args, 2))
+	local stem, tr = nom.split_russian_tr(get_stressed_arg(args, 2))
 	stem, tr = nom.strip_ending(stem, tr, "и́ть")
 	no_stray_args(args, 2)
 
@@ -2305,7 +2323,7 @@ local function guts_of_5(args, data)
 	end
 	local inf = get_stressed_arg(args, 2)
 	local past_stem = nom.strip_ending(inf, nil, "ть")
-	local stem = is5b and get_opt_unstressed_arg(args, 3) or get_opt_stressed_arg(arg, 3)
+	local stem = is5b and get_opt_unstressed_arg(args, 3) or get_opt_stressed_arg(args, 3)
 	if not stem then
 		stem = rmatch(past_stem, "^(.*)[еая]́?$")
 		if not stem then
@@ -2969,7 +2987,7 @@ conjugations["11b"] = function(args, data)
 	local forms = {}
 
 	parse_variants(data, args[1], {"past", "+p"})
-	local stem = nom.strip_ending(get_unstressed_arg(args, 2), nil, "и́ть")
+	local stem = nom.strip_ending(get_stressed_arg(args, 2), nil, "и́ть")
 	local pres_stem = get_opt_unstressed_arg(args, 3) or stem
 	no_stray_args(args, 3)
 	local prefix, _, base, _ = split_monosyllabic_main_verb(stem .. "и́")
@@ -3589,8 +3607,6 @@ conjugations["irreg-живописать-миновать"] = function(args, dat
 		rfind(inf_stem, "ова́$") and rsub(inf_stem, "ова́$", "у́") or
 		rfind(inf_stem, "а́$") and rsub(inf_stem, "а́$", "у́")
 		or error("Unexpected infinitive " .. inf)
-
-	local pres_stem = get_stressed_arg(args, 3)
 	no_stray_args(args, 2)
 
 	forms["infinitive"] = inf_stem .. "ть"
@@ -3760,15 +3776,16 @@ conjugations["irreg-ссать-сцать"] = function(args, data)
 	data.title = com.is_stressed(prefix) and "irreg-a" or "irreg-b"
 	parse_variants(data, args[1], {})
 	stem = nom.strip_ending(stem, nil, "ть")
+	local pres_stem = rsub(stem, "а́?$", "")
 	no_stray_args(args, 2)
 
 	forms["infinitive"] = stem .. "ть"
 	-- no pres_pasv_part
 	-- no pres_adv_part
-	append_participles(forms, stem, nil, "у́щий", "-", "-",
+	append_participles(forms, pres_stem, nil, "у́щий", "-", "-",
 		"а́вший", "а́вши", "а́в")
-	append_imper(forms, stem, nil, "ы́", "ы́те")
-	append_pres_futr(forms, stem, nil,
+	append_imper(forms, pres_stem, nil, "ы́", "ы́те")
+	append_pres_futr(forms, pres_stem, nil,
 		"у́", "ы́шь", "ы́т", "ы́м", "ы́те", "у́т")
 	set_past(forms, stem .. "л", nil, "", "а", "о", "и")
 	prepend_prefix(forms, prefix)
