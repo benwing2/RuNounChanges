@@ -147,7 +147,7 @@ def remove_monosyllabic_accents(word):
   # note: This doesn't affect diaeresis (composed or uncomposed) because
   # it indicates a change in vowel quality, which still applies to
   # monosyllabic words.
-  if is_monosyllabic(word):
+  if is_monosyllabic(word) and not word.startswith("-"):
     return remove_accents(word)
   return word
 
@@ -157,7 +157,7 @@ def remove_tr_monosyllabic_accents(word):
   # monosyllabic words.
   if not word:
     return word
-  if is_tr_monosyllabic(word):
+  if is_tr_monosyllabic(word) and not word.startswith("-"):
     return remove_tr_accents(word)
   return word
 
@@ -292,6 +292,18 @@ def add_hard_neuter(stem):
     return stem + u"е"
   else:
     return stem + u"о"
+
+def split_russian_tr(arg):
+  if "//" in arg:
+    return re.split("//", arg)
+  else:
+    return arg, None
+
+def paste_russian_tr(ru, tr):
+  if tr:
+    return "%s//%s" % (ru, tr)
+  else:
+    return ru
 
 def split_generate_args(tempresult):
   args = {}

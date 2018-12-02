@@ -1,0 +1,390 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import pywikibot, re, sys, codecs, argparse, copy
+
+import blib
+from blib import getparam, rmparam, tname, msg, errmsg, site
+
+import rulib as ru
+
+def is_vowel_stem(stem):
+  return re.search("[" + ru.vowel + ru.AC + ru.DI + "]$", stem)
+
+def split_ru_conj_args(t):
+  verb_type = getparam(t, "1")
+  max_arg = 1
+  arg_sets = []
+  arg_set = []
+  for i in range(2, 30):
+    if getparam(t, str(i)):
+      max_arg = i
+  # Gather the numbered arguments
+  for i in range(2, max_arg + 2):
+    end_arg_set = False
+    if i == max_arg + 1 or getparam(t, str(i)) == "or":
+      end_arg_set = True
+    if end_arg_set:
+      # So we can access higher members without array-out-of-bounds errors
+      arg_set.extend([""] * 30)
+      arg_sets.append(arg_set)
+      arg_set = []
+    else:
+      arg_set.append(getparam(t, str(i)))
+  return verb_type, arg_sets
+
+def paste_arg_sets(arg_sets, t, verb_type, rm_pres_stem, as_string,
+    change_only=False):
+  args = []
+  if as_string:
+    args.append(verb_type)
+  else:
+    args.append(("1", verb_type))
+  next_numbered_param = 2
+  for arg_set_no, arg_set in enumerate(arg_sets):
+    max_arg = -1
+    for i in range(len(arg_set)):
+      if arg_set[i]:
+        max_arg = i
+    for i in range(max_arg + 1):
+      if arg_set_no > 0 and i == 0:
+        if as_string:
+          args.append("or")
+        else:
+          args.append((str(next_numbered_param), "or"))
+        next_numbered_param += 1
+      if as_string:
+        args.append(arg_set[i])
+      else:
+        args.append((str(next_numbered_param), arg_set[i]))
+      next_numbered_param += 1
+  for param in t.params:
+    pname = unicode(param.name)
+    pvalue = unicode(param.value)
+    if re.search("^[0-9]+$", pname):
+      doadd = False
+    elif change_only:
+      doadd = pname == "pres_stem"
+    else:
+      doadd = not rm_pres_stem or pname != "pres_stem"
+    if doadd:
+      if as_string:
+        args.append("%s=%s" % (unicode(param.name), unicode(param.value)))
+      else:
+        args.append((unicode(param.name), unicode(param.value)))
+  return args
+
+def process_page(index, page, save, verbose):
+  pagetitle = unicode(page.title())
+  def pagemsg(txt):
+    msg("Page %s %s: %s" % (index, pagetitle, txt))
+  def errpagemsg(txt):
+    msg("Page %s %s: %s" % (index, pagetitle, txt))
+    errmsg("Page %s %s: %s" % (index, pagetitle, txt))
+
+  pagemsg("Processing")
+
+  def expand_text(tempcall):
+    return blib.expand_text(tempcall, pagetitle, pagemsg, verbose)
+
+  text = unicode(page.text)
+  parsed = blib.parse(page)
+  notes = []
+  for t in parsed.filter_templates():
+    origt = unicode(t)
+    if unicode(t.name) in ["ru-conj"]:
+      verb_type, arg_sets = split_ru_conj_args(t)
+      refl = "refl" in verb_type
+      orig_arg_sets = copy.deepcopy(arg_sets)
+      rm_pres_stem = False
+
+      ##### First, modify arg_sets according to normalized params
+
+      for arg_set in arg_sets:
+        # This complex spec matches matches 3°a, 3oa, 4a1a, 6c1a,
+        # 1a6a, 6a1as13, 6a1as14, etc.
+        m = re.search(u"^([0-9]+[°o0-9abc]*[abc]s?1?[34]?)", arg_set[0])
+        if not m:
+          m = re.search(u"^(irreg-[абцдеѣфгчийклмнопярстувшхызёюжэщьъ%-]*)", arg_set[0])
+          if not m:
+            error("Unrecognized conjugation type: %s" % arg_set[0])
+        conj_type = m.group(1).replace("o", u"°")
+        inf, tr = ru.split_russian_tr(arg_set[1])
+        if refl:
+          new_style = re.search(u"([тч]ься|ти́?сь)$", inf)
+        else:
+          new_style = re.search(u"ти́?$" if conj_type.startswith("7") else u"[тч]ь$", inf)
+        if new_style:
+          arg_set[1] = ru.paste_russian_tr(ru.remove_monosyllabic_accents(inf),
+            ru.remove_tr_monosyllabic_accents(tr))
+        else:
+          if not re.search("^[124]", conj_type):
+            assert not tr
+          if conj_type in ["1a", "2a", "2b"]:
+            inf += u"ть"
+            if tr:
+              tr += u"tʹ"
+          elif conj_type in ["3a", u"3°a"]:
+            inf += u"нуть"
+          elif conj_type in ["3b", u"3c"]:
+            inf += u"у́ть"
+          elif conj_type == "4a":
+            inf += u"ить"
+            if tr:
+              tr += u"itʹ"
+          elif conj_type in ["4b", "4c"]:
+            # FIXME! Don't have make_unstressed for inf + tr implemented yet.
+            # inf, tr = ru.make_unstressed(inf, tr)
+            # If the word has no ё in it, we can just remove accents.
+            # There should be no ё in 4b and 4c verbs.
+            assert not re.search(u"[ёЁ]", inf)
+            inf = ru.remove_accents(inf) + u"и́ть"
+            if tr:
+              tr = ru.remove_tr_accents(tr) + u"ítʹ"
+          elif conj_type == "4a1a":
+            inf = re.sub(u"[ая]$", "", inf) + u"ить"
+            if tr:
+              tr = re.sub("j?a$", "", tr) + u"itʹ"
+          elif conj_type == "5a":
+            inf = arg_set[2] + u"ть" if arg_set[2] else arg_set[1] + u"еть"
+            normal_pres_stem = re.sub(u"[еая]ть$", "", inf)
+            if normal_pres_stem == arg_set[1]:
+              arg_set[2] = ""
+            else:
+              arg_set[2] = arg_set[1]
+          elif conj_type == "5b":
+            inf = arg_set[2] + u"ть"
+            normal_pres_stem = re.sub(u"[еая]́ть$", "", inf)
+            if normal_pres_stem == arg_set[1]:
+              arg_set[2] = ""
+            else:
+              arg_set[2] = arg_set[1]
+          elif conj_type == "5c":
+            inf = arg_set[2] + u"ть"
+            normal_pres_stem = ru.make_ending_stressed(
+              re.sub(u"[еая]́ть$", "", inf))
+            if normal_pres_stem == arg_set[1]:
+              arg_set[2] = ""
+            else:
+              arg_set[2] = arg_set[1]
+          elif re.search(u"^6°?a", conj_type) or conj_type == "1a6a":
+            assert not arg_set[3]
+            if arg_set[2]:
+              inf = arg_set[2] + u"ть"
+              arg_set[2] = ""
+              normal_pres_stem = ru.make_ending_stressed(
+                re.sub(u"а́ть$", "", inf))
+              assert arg_set[1] == normal_pres_stem
+            elif is_vowel_stem(inf):
+              inf += u"ять"
+            else:
+              inf += u"ать"
+            if getparam(t, "pres_stem"):
+              arg_set[2] = getparam(t, "pres_stem")
+              rm_pres_stem = True
+          elif re.search(u"^6°?b", conj_type):
+            if is_vowel_stem(inf):
+              inf += u"я́ть"
+            else:
+              inf += u"а́ть"
+            # arg_set[2] (present stem) remains
+          elif re.search(u"^6°?c", conj_type):
+            inf = ru.make_unstressed_once(inf) + u"а́ть"
+          elif conj_type in ["7a", "7b"]:
+            pass # nothing needed to do
+          elif conj_type in ["8a", "8b"]:
+            inf = arg_set[2]
+            arg_set[2] = arg_set[1]
+          elif conj_type == "9a":
+            inf += u"еть"
+            # arg_set[2] (present stem) remains
+          elif conj_type == "9b":
+            inf = ru.make_unstressed_once(inf) + u"е́ть"
+            # arg_set[2] (present stem) remains
+            # arg_set[3] (optional past participle stem) remains
+          elif conj_type == "10a":
+            inf += u"оть"
+          elif conj_type == "10c":
+            inf += u"ть"
+            if ru.make_unstressed_once(arg_set[2]) == re.sub(u"о́$", "", arg_set[1]):
+              arg_set[2] = ""
+          elif conj_type == "11a":
+            inf += u"ить"
+          elif conj_type == "11b":
+            inf += u"и́ть"
+            if arg_set[2] == arg_set[1]:
+              arg_set[2] = ""
+          elif conj_type == "12a":
+            inf += u"ть"
+            if arg_set[2] == arg_set[1]:
+              arg_set[2] = ""
+          elif conj_type == "12b":
+            inf += u"ть"
+            if ru.make_ending_stressed(arg_set[2]) == arg_set[1]:
+              arg_set[2] = ""
+          elif conj_type == "13b":
+            inf += u"ть"
+            assert re.sub(u"ва́ть$", "", inf) == arg_set[2]
+            arg_set[2] = ""
+          elif conj_type in ["14a", "14b", "14c"]:
+            inf += u"ть"
+            # arg_set[2] (present stem) remains
+          elif conj_type in ["15a", "16a", "16b"]:
+            inf += u"ть"
+          elif conj_type == u"irreg-минуть":
+            inf = u"мину́ть"
+          elif conj_type == u"irreg-живописать-миновать":
+            inf += u"ть"
+            arg_set[2] = ""
+          elif conj_type == u"irreg-слыхать-видать":
+            inf += u"ть"
+          elif conj_type == u"irreg-стелить-стлать":
+            inf = arg_set[2] + inf + u"ть"
+            arg_set[2] = ""
+            arg_set[3] = ""
+          elif conj_type == u"irreg-ссать-сцать":
+            assert arg_set[2] == re.sub(u"а́$", "", inf)
+            inf = arg_set[3] + inf + u"ть"
+            arg_set[2] = ""
+            arg_set[3] = ""
+          elif conj_type in [u"irreg-сыпать", u"irreg-ехать", u"irreg-ѣхать"]:
+            infstem = re.sub("^irreg-", "", conj_type)
+            if arg_set[1] != u"вы́":
+              infstem = ru.make_beginning_stressed(infstem)
+            inf = arg_set[1] + infstem
+          elif conj_type == u"irreg-обязывать":
+            if arg_set[1] == u"вы́":
+              inf = u"вы́обязывать"
+            else:
+              inf = arg_set[1] + u"обя́зывать"
+          elif conj_type == u"irreg-зиждиться":
+            if arg_set[1] == u"вы́":
+              inf = u"вы́зиждить"
+            else:
+              inf = arg_set[1] + u"зи́ждить"
+          elif conj_type == u"irreg-идти":
+            if not arg_set[1]:
+              inf = u"идти́"
+            elif arg_set[1] == u"вы́":
+              inf = u"вы́йти"
+            else:
+              inf = arg_set[1] + u"йти́"
+          elif re.search("^irreg-", conj_type):
+            infstem = re.sub("^irreg-", "", conj_type)
+            if arg_set[1] != u"вы́":
+              infstem = ru.make_ending_stressed(infstem)
+            inf = arg_set[1] + infstem
+          else:
+            error("Unknown conjugation type " + conj_type)
+          if inf:
+            if refl:
+              if re.search(u"[тч]ь$", inf):
+                inf += u"ся"
+                if tr:
+                  tr += "sja"
+              else:
+                assert re.search(u"и́?$", inf)
+                inf += u"сь"
+                if tr:
+                  tr += u"sʹ"
+            arg_set[1] = ru.paste_russian_tr(ru.remove_monosyllabic_accents(inf),
+             ru.remove_tr_monosyllabic_accents(tr))
+
+      ##### If something changed ...
+
+      if orig_arg_sets != arg_sets or rm_pres_stem:
+
+        ##### ... compare the forms generated by the original and new
+        ##### arguments and make sure they're the same.
+
+        # 1. Generate and expand the appropriate call to
+        #    {{ru-generate-verb-forms}} for the original arguments.
+
+        orig_args = paste_arg_sets(orig_arg_sets, t, verb_type,
+          rm_pres_stem=False, as_string=True)
+        orig_tempcall = "{{ru-generate-verb-forms|%s}}" % "|".join(orig_args)
+        orig_result = expand_text(orig_tempcall)
+        if not orig_result:
+          errpagemsg("WARNING: Error expanding original template %s" % orig_tempcall)
+          continue
+        orig_forms = ru.split_generate_args(orig_result)
+
+        # 2. Generate and expand the appropriate call to
+        #    {{ru-generate-verb-forms}} for the new arguments.
+
+        new_args = paste_arg_sets(arg_sets, t, verb_type,
+          rm_pres_stem, as_string=True)
+        new_tempcall = "{{ru-generate-verb-forms|%s}}" % "|".join(new_args)
+        new_result = expand_text(new_tempcall)
+        if not new_result:
+          errpagemsg("WARNING: Error expanding new template %s" % new_tempcall)
+          continue
+        new_forms = ru.split_generate_args(new_result)
+
+        # 3. Compare each form and accumulate a list of mismatches.
+
+        all_keys = set(orig_forms.keys()) | set(new_forms.keys())
+        def sort_numbers_first(key):
+          if re.search("^[0-9]+$", key):
+            return "%05d" % int(key)
+          return key
+        all_keys = sorted(list(all_keys), key=sort_numbers_first)
+        mismatches = []
+        for key in all_keys:
+          origval = orig_forms.get(key, "<<missing>>")
+          newval = new_forms.get(key, "<<missing>>")
+          if origval != newval:
+            mismatches.append("%s: old=%s new=%s" % (key, origval, newval))
+
+        # 4. If mismatches, output them and don't change anything.
+
+        if mismatches:
+          errpagemsg("WARNING: Mismatch comparing old %s to new %s: %s" % (
+            orig_tempcall, new_tempcall, " || ".join(mismatches)))
+          continue
+
+        # 5. If no mismatches, modify the template to contain the new args.
+
+        new_params = paste_arg_sets(arg_sets, t, verb_type, rm_pres_stem,
+          as_string=False)
+        del t.params[:]
+        for name, value in new_params:
+          t.add(name, value)
+
+        # 6. Build up the save comment.
+
+        orig_changed_params = paste_arg_sets(orig_arg_sets, t, verb_type,
+          rm_pres_stem=False, as_string=True, change_only=True)
+        new_changed_params = paste_arg_sets(arg_sets, t, verb_type,
+          rm_pres_stem, as_string=True, change_only=True)
+        notes.append("ru-conj: normalized %s to %s" % (
+          "|".join(orig_changed_params), "|".join(new_changed_params)))
+
+      newt = unicode(t)
+      if origt != newt:
+        pagemsg("Replaced %s with %s" % (origt, newt))
+
+  ##### If page changed, maybe save it.
+
+  new_text = unicode(parsed)
+
+  if new_text != text:
+    if verbose:
+      pagemsg("Replacing <%s> with <%s>" % (text, new_text))
+    assert notes
+    comment = "; ".join(notes)
+    if save:
+      pagemsg("Saving with comment = %s" % comment)
+      page.text = new_text
+      page.save(comment=comment)
+    else:
+      pagemsg("Would save with comment = %s" % comment)
+
+parser = blib.create_argparser(u"Fix up verb conjugations to use the infinitive")
+args = parser.parse_args()
+start, end = blib.parse_start_end(args.start, args.end)
+
+for category in ["Russian verbs"]:
+  msg("Processing category: %s" % category)
+  for i, page in blib.cat_articles(category, start, end):
+    process_page(i, page, args.save, args.verbose)
