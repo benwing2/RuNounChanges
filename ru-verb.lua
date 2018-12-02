@@ -634,6 +634,224 @@ function export.do_generate_forms(arg_sets, verb_type, old)
 			error("Unknown conjugation type '" .. conj_type .. "'")
 		end
 
+		-- Determine whether new-style or old-style arguments
+		local inf, tr = nom.split_russian_tr(getarg(args, 2))
+		if data.refl then
+			if rfind(inf, "[тч]ься$") then
+				inf = rsub(inf, "ся$", "")
+				tr = nom.strip_tr_ending(tr, "ся")
+				data.oldargs = false
+			elseif rfind(inf, "ти́?сь$") then
+				-- 7a (вы́вестись) or 7b (вести́сь)
+				inf = rsub(inf, "сь$", "")
+				tr = nom.strip_tr_ending(tr, "сь")
+				data.oldargs = false
+			else
+				data.oldargs = true
+			end
+		else
+			if rfind(inf, "[тч]ь$") then
+				data.oldargs = false
+			else
+				-- class-7 verbs in -ти already have the full infinitive
+				-- in args[2] and the present inf in args[3], and so we
+				-- ignore data.oldargs
+				data.oldargs = true
+			end
+		end
+		if data.oldargs then
+			-- Convert old to new arguments
+			if not rfind(conjtype, "^[124]") then
+				assert(not tr)
+			end
+			if conjtype == "1a" or conjtype == "2a" or conjtype == "2b" then
+				if not args[2] then -- handle Template: space
+					inf = nil
+				else
+					inf = inf .. "ть"
+					if tr then
+						tr = tr .. "tʹ"
+					end
+				end
+			elseif conjtype == "3a" or conjtype == "3°a" then
+				inf = inf .. "нуть"
+			elseif conjtype == "3b" or conjtype == "3c" then
+				inf = inf .. "у́ть"
+			elseif conjtype == "4a" then
+				inf = inf .. "ить"
+				if tr then
+					tr = tr .. "itʹ"
+				end
+			elseif conjtype == "4b" or conjtype == "4c" then
+				inf, tr = com.make_unstressed(inf, tr)
+				inf = inf .. "и́ть"
+				if tr then
+					-- tr is decomposed, keep it that way
+					tr = tr .. "i" .. AC .. "tʹ"
+				end
+			elseif conjtype == "4a1a" then
+				inf = rsub(inf, "[ая]$", "")
+				inf = inf .. "ить"
+				if tr then
+					tr = rsub(tr, "j?a$", "")
+					tr = tr .. "itʹ"
+				end
+			elseif conjtype == "5a" then
+				if args[3] then
+					inf = args[3] .. "ть"
+				else
+					inf = args[2] .. "еть"
+				end
+				local normal_pres_stem = rsub(inf, "[еая]ть$", "")
+				if normal_pres_stem == args[2] then
+					args[3] = nil
+				else
+					args[3] = args[2]
+				end
+				args[2] = inf
+			elseif conjtype == "5b" then
+				inf = args[3] .. "ть"
+				local normal_pres_stem = rsub(inf, "[еая]́ть$", "")
+				if normal_pres_stem == args[2] then
+					args[3] = nil
+				else
+					args[3] = args[2]
+				end
+			elseif conjtype == "5c" then
+				inf = args[3] .. "ть"
+				local normal_pres_stem = com.make_ending_stressed(
+					rsub(inf, "[еая]́ть$", "")
+				)
+				if normal_pres_stem == args[2] then
+					args[3] = nil
+				else
+					args[3] = args[2]
+				end
+			elseif rfind(conjtype, "6°?a") or conjtype == "1a6a" then
+				assert(not args[4])
+				if args[3] then
+					inf = args[3] .. "ть"
+					args[3] = nil
+					local normal_pres_stem = com.make_ending_stressed(
+						rsub(inf, "а́ть$", "")
+					)
+					assert(args[2] == normal_pres_stem)
+				elseif is_vowel_stem(inf) then
+					inf = inf .. "ять"
+				else
+					inf = inf .. "ать"
+				end
+				if args["pres_stem"] then
+					args[3] = args["pres_stem"]
+					args["pres_stem"] = nil
+				end
+			elseif rfind(conjtype, "6°?b") then
+				if is_vowel_stem(inf) then
+					inf = inf .. "я́ть"
+				else
+					inf = inf .. "а́ть"
+				end
+				-- args[3] (present stem) remains
+			elseif rfind(conjtype, "6°?c") then
+				inf = com.make_unstressed(inf) .. "а́ть"
+			elseif conjtype == "7a" or conjtype == "7b" then
+				-- nothing needed to do
+			elseif conjtype == "8a" or conjtype == "8b" then
+				inf = args[3]
+				args[3] = args[2]
+			elseif conjtype == "9a" then
+				inf = inf .. "еть"
+				-- args[3] (present stem) remains
+			elseif conjtype == "9b" then
+				inf = com.make_unstressed(inf) .. "е́ть"
+				-- args[3] (present stem) remains
+				-- args[4] (optional past participle stem) remains
+			elseif conjtype == "10a" then
+				inf = inf .. "оть"
+			elseif conjtype == "10c" then
+				inf = inf .. "о́ть"
+				if com.make_unstressed_once(args[3]) == rsub(args[2], "о́$", "") then
+					args[3] = nil
+				end
+			elseif conjtype == "11a" then
+				inf = inf .. "ить"
+			elseif conjtype == "11b" then
+				inf = inf .. "и́ть"
+				if args[3] == args[2] then
+					args[3] = nil
+				end
+			elseif conjtype == "12a" then
+				inf = inf .. "ть"
+				if args[3] == args[2] then
+					args[3] = nil
+				end
+			elseif conjtype == "12b" then
+				inf = inf .. "ть"
+				if com.make_ending_stressed(args[3]) == args[2] then
+					args[3] = nil
+				end
+			elseif conjtype == "13b" then
+				inf = inf .. "ть"
+				assert(rsub(inf, "ва́ть$", "") == args[3])
+				args[3] = nil
+			elseif conjtype == "14a" or conjtype == "14b" or conjtype == "14c" then
+				inf = inf .. "ть"
+				-- args[3] (present stem) remains
+			elseif conjtype == "15a" or conjtype == "16a" or conjtype == "16b" then
+				inf = inf .. "ть"
+			elseif conjtype == "irreg-минуть" then
+				inf = "мину́ть"
+			elseif conjtype == "irreg-живописать-миновать" then
+				inf = inf .. "ть"
+				args[3] = nil
+			elseif conjtype == "irreg-слыхать-видать" then
+				inf = inf .. "ть"
+			elseif conjtype == "irreg-стелить-стлать" then
+				inf = (args[3] or "") .. inf .. "ть"
+				args[3] = nil
+				args[4] = nil
+			elseif conjtype == "irreg-ссать-сцать" then
+				assert(args[4] == rsub(inf, "а́$", ""))
+				inf = (args[3] or "") .. inf .. "ть"
+				args[3] = nil
+				args[4] = nil
+			elseif conjtype == "irreg-сыпать" or conjtype == "irreg-ехать" or
+				conjtype == "irreg-ѣхать" then
+				local infstem = rsub(conjtype, "^irreg%-", "")
+				if args[2] ~= "вы́" then
+					infstem = com.make_beginning_stressed(infstem)
+				end
+				inf = (args[2] or "") .. infstem
+			elseif conjtype == "irreg-обязывать" then
+				if args[2] == "вы́" then
+					inf = "вы́обязывать"
+				else
+					inf = (args[2] or "") .. "обя́зывать"
+				end
+			elseif conjtype == "irreg-зиждиться" then
+				if args[2] == "вы́" then
+					inf = "вы́зиждить"
+				else
+					inf = (args[2] or "") .. "зи́ждить"
+				end
+			elseif rfind(conjtype, "^irreg%-") then
+				local infstem = rsub(conjtype, "^irreg%-", "")
+				if args[2] ~= "вы́" then
+					infstem = com.make_ending_stressed(infstem)
+				end
+				inf = (args[2] or "") .. infstem
+			else
+				error("Unknown conjugation type " .. conjtype)
+			end
+			if inf then
+				if tr then
+					args[2] = inf .. "//" .. tr
+				else
+					args[2] = inf
+				end
+			end
+		end
+
 		-- Call conjugation function. It will return a table of forms
 		-- as if it's the first arg set. If it is in fact the first
 		-- arg set, we just use the table directly (we may destructively
@@ -722,7 +940,7 @@ function export.do_generate_forms(arg_sets, verb_type, old)
 			end
 		end
 	end
-	
+
 	-- Catch errors in verb arguments that lead to the infinitive not matching
 	-- page title, but only in the main namespace.
 	local NAMESPACE = mw.title.getCurrentTitle().nsText
@@ -928,20 +1146,20 @@ function export.catboiler(frame)
 		table.insert(cats, "Russian verbs by class and accent pattern|" .. cls .. pattern)
 		table.insert(cats, "Russian class " .. cls .. " verbs|" .. pattern)
 		text = "This category contains Russian class " .. cls .. " verbs of " ..
-		    "accent pattern " .. pattern .. (
-		    variant == "" and "" or " and variant " .. variant) .. ". " .. (
-		    pattern == "a" and "With this pattern, all forms are stem-stressed."
-		    or pattern == "b" and "With this pattern, all forms are ending-stressed."
-		    or "With this pattern, the first singular present indicative and all forms " ..
-		    "outside of the present indicative are ending-stressed, while the remaining " ..
-		    "forms of the present indicative are stem-stressed.").. (
-		    variant == "" and "" or
-		    cls == "3" and " The variant code indicates that the -н of the stem " ..
-		    "is missing in most non-present-tense forms." or
-		    " The variant code indicates that the present tense is not " ..
-		    "[[Appendix:Glossary#iotation|iotated]]. (In most verbs of this class, " ..
-		    "the present tense is iotated, e.g. иска́ть with present tense " ..
-		    "ищу́, и́щешь, и́щет, etc.)")
+			"accent pattern " .. pattern .. (
+			variant == "" and "" or " and variant " .. variant) .. ". " .. (
+			pattern == "a" and "With this pattern, all forms are stem-stressed."
+			or pattern == "b" and "With this pattern, all forms are ending-stressed."
+			or "With this pattern, the first singular present indicative and all forms " ..
+			"outside of the present indicative are ending-stressed, while the remaining " ..
+			"forms of the present indicative are stem-stressed.").. (
+			variant == "" and "" or
+			cls == "3" and " The variant code indicates that the -н of the stem " ..
+			"is missing in most non-present-tense forms." or
+			" The variant code indicates that the present tense is not " ..
+			"[[Appendix:Glossary#iotation|iotated]]. (In most verbs of this class, " ..
+			"the present tense is iotated, e.g. иска́ть with present tense " ..
+			"ищу́, и́щешь, и́щет, etc.)")
 	end
 
 	return text	.. "\n" ..
@@ -1328,9 +1546,9 @@ local function set_past_by_stress(forms, past_stresses, prefix, prefixtr, base,
 			append_past(forms, prefixbase, prefixbasetr, pastml,
 				"ла́", "ло́", "ли́")
 		elseif past_stress == "b*" then
-			 if not data.refl then
+			if not data.refl then
 				error("Only reflexive verbs can take past stress variant " .. past_stress)
-			 end
+			end
 			-- See comment in type c''. We want to see whether we actually
 			-- added an argument, and if so, where.
 			local argset = append_to_arg_chain(forms, "past_m", "past_m",
@@ -1365,9 +1583,9 @@ local function set_past_by_stress(forms, past_stresses, prefix, prefixtr, base,
 			append_past(forms, prefixbase, prefixbasetr,
 				pastml, "ла́", {"ло", "ло́"}, "ли")
 		elseif past_stress == "c''" or past_stress == "c''-nd" or past_stress == "c''-bd" then
-			 if not data.refl then
+			if not data.refl then
 				error("Only reflexive verbs can take past stress variant " .. past_stress)
-			 end
+			end
 			-- c'' (-ся́ dated): all verbs in -да́ться; избы́ться, сбы́ться; all verbs in -кля́сться
 			-- c''-nd (-ся́ not dated): various verbs in -ня́ться per Zaliznyak
 			-- c''-bd (-ся́ becoming dated): various verbs in -ня́ться per ruwikt
@@ -1407,7 +1625,9 @@ local function set_past_by_stress(forms, past_stresses, prefix, prefixtr, base,
 	end
 end
 
-local function split_prefix(ru, tr)
+local function split_monosyllabic_main_verb(ru, tr)
+	-- NOTE: This assumes a single-syllable main verb, but a possibly
+	-- multisyllabic prefix (пере-, переиз-, воссоз-, повы́-, etc.)
 	local rusyl, trsyl = com.split_syllables(ru, tr)
 	local last_ru = rusyl[#rusyl]
 	local last_tr = trsyl and trsyl[#trsyl]
@@ -1419,6 +1639,41 @@ local function split_prefix(ru, tr)
 		trsyl = table.concat(trsyl, "")
 	end
 	return prefix_ru, prefix_tr, last_ru, last_tr
+end
+
+local function split_known_main_verb(arg, mains)
+	-- Given an argument (which may be RUSSIAN//TR), split the prefix from
+	-- the main verb, which should be one of the verbs in MAINS (which can be
+	-- a -- single verb or a list of verbs, but in either case all verbs
+	-- need to be stressed). This correctly handles stressed and unstressed
+	-- prefixes.
+	local stem, tr = nom.split_russian_tr(arg)
+	if type(mains) ~= "table" then
+		mains = {mains}
+	end
+	for _, main in ipairs(mains) do
+		assert(com.is_stressed(main))
+		if rfind(stem, main .. "$") then
+			stem, tr = nom.strip_ending(stem, tr, main)
+			if com.is_stressed(stem) then
+				error("Two stresses in " .. arg)
+			end
+			return stem, tr, main, nil
+		end
+		main = com.make_unstressed_once(main)
+		if rfind(stem, main .. "$") then
+			stem, tr = nom.strip_ending(stem, tr, main)
+			if com.is_unstressed(stem) then
+				error("No stresses in " .. arg)
+			end
+			return stem, tr, main, nil
+		end
+	end
+	if #mains == 1 then
+		error("Argument " .. arg .. " doesn't end in " .. mains[1])
+	else
+		error("Argument " .. arg .. " doesn't end in any of " .. table.concat(mains, ","))
+	end
 end
 
 local function append_imper_by_variant(forms, stem, tr, variant, verbclass, note)
@@ -1737,6 +1992,7 @@ conjugations["1a"] = function(args, data)
 
 	parse_variants(data, args[1], {"+p", "7", "ё"})
 	local stem, tr = nom.split_russian_tr(get_stressed_arg(args, 2))
+	stem, tr = nom.strip_ending(stem, tr, "ть")
 	no_stray_args(args, 2)
 
 	forms["infinitive"] = combine(stem, tr, "ть")
@@ -1753,7 +2009,9 @@ local function guts_of_2(args, data)
 	local forms = {}
 
 	local inf_stem, inf_tr = nom.split_russian_tr(get_stressed_arg(args, 2))
+	inf_stem, inf_tr = nom.strip_ending(inf_stem, inf_tr, "ть")
 	no_stray_args(args, 2)
+
 	local pres_stem, pres_tr = inf_stem, inf_tr
 	local variants = args[1] or ""
 	parse_variants(data, variants, {"+p", "7"})
@@ -1819,7 +2077,7 @@ conjugations["3°a"] = function(args, data)
 
 	-- (5), [(6)] or similar; imperative indicators
 	parse_variants(data, args[1], {"5", "6", "23", "и", "+p", "7", "ё"})
-	local stem = get_stressed_arg(args, 2)
+	local stem = nom.strip_ending(get_stressed_arg(args, 2), nil, "нуть")
 	local vowel_stem = is_vowel_stem(stem)
 	no_stray_args(args, 2)
 
@@ -1854,7 +2112,7 @@ conjugations["3a"] = function(args, data)
 	local forms = {}
 
 	parse_variants(data, args[1], {"23", "и", "+p", "7", "ё"})
-	local stem = get_stressed_arg(args, 2)
+	local stem = nom.strip_ending(get_stressed_arg(args, 2), nil, "нуть")
 	no_stray_args(args, 2)
 
 	forms["infinitive"] = stem .. "нуть"
@@ -1885,7 +2143,7 @@ conjugations["3b"] = function(args, data)
 	local forms = {}
 
 	parse_variants(data, args[1], {"+p", "7", "ё"})
-	local stem = get_unstressed_arg(args, 2)
+	local stem = nom.strip_ending(get_unstressed_arg(args, 2), nil, "ну́ть")
 	no_stray_args(args, 2)
 
 	guts_of_3b_3c(forms, data, stem)
@@ -1898,7 +2156,7 @@ conjugations["3c"] = function(args, data)
 	local forms = {}
 
 	parse_variants(data, args[1], {"+p", "7", "ё"})
-	local stem = get_stressed_arg(args, 2)
+	local stem = nom.strip_ending(get_stressed_arg(args, 2), nil, "ну́ть")
 	no_stray_args(args, 2)
 	-- remove accent for some forms
 	local stem_noa = com.remove_accents(stem)
@@ -1917,6 +2175,7 @@ conjugations["4a"] = function(args, data)
 	-- iotation (т -> щ, not ч)
 	parse_variants(data, args[1], {"23", "и", "щ", "past", "+p", "7", "жд"})
 	local stem, tr = nom.split_russian_tr(get_stressed_arg(args, 2))
+	stem, tr = nom.strip_ending(stem, tr, "ить")
 	no_stray_args(args, 2)
 
 	forms["infinitive"] = combine(stem, tr, "ить")
@@ -1944,15 +2203,22 @@ conjugations["4a1a"] = function(args, data)
 	-- защитить (защищу́) (4b), поглотить (поглощу́) (4c) with a different
 	-- iotation (т -> щ, not ч)
 	parse_variants(data, args[1], {"23", "и", "щ", "past", "+p", "7", "жд"})
-	local stem1, tr1 = nom.split_russian_tr(get_stressed_arg(args, 2))
-	local stem4 = rsub(stem1, "[ая]$", "")
-	local tr4 = tr1 and rsub(tr1, "j?a$", "")
+	local stem4, tr4 = nom.split_russian_tr(get_stressed_arg(args, 2))
+	stem4, tr4 = nom.strip_ending(stem4, tr4, "ить")
+	local hushing = rfind(stem4, "[шщжч]$")
+	local stem1, tr1
+	if hushing then
+		stem1 = stem1 .. "а"
+		tr1 = tr1 .. "a"
+	else
+		stem1 = stem1 .. "я"
+		tr1 = tr1 .. "ja"
+	end
 	no_stray_args(args, 2)
 
 	forms["infinitive"] = combine(stem4, tr4, "ить")
 
 	-- Verbs ending in a hushing consonant do not get j-vowels in the endings.
-	local hushing = rfind(stem4, "[шщжч]$")
 	append_participles(forms, stem4, tr4, hushing and "ащий" or "ящий",
 		"awkward-имый", hushing and "а" or "я", "ивший", "ивши", "ив")
 	append_participles(forms, stem1, tr1, "ющий", "емый", "я", {}, {}, {})
@@ -1973,6 +2239,7 @@ conjugations["4b"] = function(args, data)
 
 	parse_variants(data, args[1], {"щ", "past", "+p", "8", "жд"})
 	local stem, tr = nom.split_russian_tr(get_unstressed_arg(args, 2))
+	stem, tr = nom.strip_ending(stem, tr, "и́ть")
 	no_stray_args(args, 2)
 
 	forms["infinitive"] = combine(stem, tr, "и́ть")
@@ -1985,7 +2252,7 @@ conjugations["4b"] = function(args, data)
 	present_i_b(forms, stem, tr, data.shch)
 	set_imper(forms, stem, tr, "и́", "и́те")
 	-- set prefix to "" as past stem may vary in length and no (1) variants
-	local stem_noa, tr_noa = com.make_unstressed_once(stem ,tr)
+	local stem_noa, tr_noa = com.make_unstressed_once(stem, tr)
 	set_past_by_stress(forms, data.past_stress, "", nil, stem_noa .. "и́",
 		tr_noa and tr_noa .. "i" .. AC, args, data)
 
@@ -1997,6 +2264,8 @@ conjugations["4c"] = function(args, data)
 
 	parse_variants(data, args[1], {"щ", "4", "past", "+p", "7", "жд"})
 	local stem, tr = nom.split_russian_tr(get_stressed_arg(args, 2))
+	stem, tr = nom.strip_ending(stem, tr, "и́ть")
+	stem, tr = com.make_ending_stressed(stem, tr)
 	no_stray_args(args, 2)
 
 	forms["infinitive"] = combine(stem, tr, "и́ть")
@@ -2012,7 +2281,7 @@ conjugations["4c"] = function(args, data)
 	set_class_4_ppp(forms, data, stem, tr)
 	present_i_c(forms, stem, tr, data.shch)
 	set_imper(forms, stem, tr, "и́", "и́те")
-	local stem_noa, tr_noa = com.make_unstressed_once(stem ,tr)
+	local stem_noa, tr_noa = com.make_unstressed_once(stem, tr)
 	set_past_by_stress(forms, data.past_stress, "", nil, stem_noa .. "и́",
 		tr_noa and tr_noa .. "i" .. AC, args, data)
 
@@ -2034,18 +2303,19 @@ local function guts_of_5(args, data)
 	else
 		parse_variants(data, args[1], {"23", "и", "past", "+p", "7", "ё", "4"})
 	end
-	local stem, past_stem
-	if is5a then
-		stem = get_stressed_arg(args, 2)
-		-- обидеть, выстоять have different past tense and infinitive forms
-		past_stem = get_opt_stressed_arg(args, 3) or stem .. "е"
-	elseif is5b then
-		stem = get_unstressed_arg(args, 2)
-		past_stem = get_stressed_arg(args, 3)
-	else
-		stem = get_stressed_arg(args, 2)
-		past_stem = get_stressed_arg(args, 3)
+	local inf = get_stressed_arg(args, 2)
+	local past_stem = nom.strip_ending(inf, nil, "ть")
+	local stem = is5b and get_opt_unstressed_arg(args, 3) or get_opt_stressed_arg(arg, 3)
+	if not stem then
+		stem = rmatch(past_stem, "^(.*)[еая]́?$")
+		if not stem then
+			error("Argument " .. inf .. " doesn't end in еть, ать or ять")
+		end
+		if not is5a and not is5b then
+			stem = com.make_ending_stressed(stem)
+		end
 	end
+
 	no_stray_args(args, 3)
 
 	forms["infinitive"] = past_stem .. "ть"
@@ -2123,18 +2393,22 @@ local function guts_of_6a(args, data, vclass)
 		data.cat_conj_types = {"1a", "6a"}
 	end
 	parse_variants(data, args[1], {"23", "и", "past", "+p", "7", "ё"})
-	local stem = get_stressed_arg(args, 2)
-	local vowel_end_stem = is_vowel_stem(stem)
-	-- optional infinitive/past stem for verbs like колеба́ть
-	local inf_past_stem = get_opt_stressed_arg(args, 3) or
-		vowel_end_stem and stem .. "я" or stem .. "а"
-	-- irregular imperatives (сыпать - сыпь is moved to a separate function but the parameter may still be needed)
-	local impr_sg = get_opt_stressed_arg(args, 4)
-	no_stray_args(args, 4)
+	local inf = get_stressed_arg(args, 2)
+	local inf_past_stem = nom.strip_ending(inf, nil, "ть")
+	local stem = rmatch(inf_past_stem, "^(.*)[ая]́?$")
+	if not stem then
+		error("Argument " .. inf .. " doesn't end in ать or ять")
+	end
+	if com.is_unstressed(stem) then
+		-- колыха́ть, колеба́ть, etc.
+		stem = com.make_ending_stressed(stem)
+	end
+	-- вызвать - вы́зову (в́ызов)
+	local pres_stem = get_opt_stressed_arg(args, 3) or stem
+	no_stray_args(args, 3)
+
 	-- no iotation, e.g. вырвать - вы́рву
 	local no_iotation = vclass == "6°a"
-	-- вызвать - вы́зову (в́ызов)
-	local pres_stem = get_opt_stressed_arg(args, "pres_stem") or stem
 	-- replace consonants for 1st person singular present/future
 	local iotated_stem = no_iotation and pres_stem or com.iotation(pres_stem)
 
@@ -2147,7 +2421,7 @@ local function guts_of_6a(args, data, vclass)
 	-- pres_pasv_part is normal if infinitive ends in -ять, nonexistent except
 	-- with certain lexical exceptions (колеба́ть, колыха́ть, глаго́лать,
 	-- дви́гать with exceptional form дви́жимый) if infinitive ends in -ать
-	local prpp_status = rfind(inf_past_stem, "я́?$") and "" or "none-" 
+	local prpp_status = rfind(inf_past_stem, "я́?$") and "" or "none-"
 	if vclass == "6a" or vclass == "6°a" or vclass == "6a1as13" then
 		append_participles_2stem(forms, iotated_stem, nil, inf_past_stem, nil,
 			hushing and "ущий" or "ющий", prpp_status .. "емый", hushing and "а" or "я",
@@ -2209,13 +2483,8 @@ local function guts_of_6a(args, data, vclass)
 	end
 	local function class_6_impr()
 		local dated_note = (vclass == "6a1as14" or vclass == "1a6a") and "*" or ""
-		if impr_sg then
-			-- irreg impr_sg: сыпать  - сыпь, сыпьте
-			append_imper(forms, impr_sg, nil, "" .. dated_note, "те" .. dated_note)
-		else
-			append_imper_by_variant(forms, iotated_stem, nil, data.imper_variant,
-				"6a", dated_note)
-		end
+		append_imper_by_variant(forms, iotated_stem, nil, data.imper_variant,
+			"6a", dated_note)
 	end
 	if vclass == "6a1as14" or vclass == "1a6a" then
 		class_1_impr()
@@ -2265,11 +2534,15 @@ local function guts_of_6b(args, data, vclass)
 	local forms = {}
 
 	parse_variants(data, args[1], {"past", "+p", "7", "ё"})
-	local stem = get_unstressed_arg(args, 2)
-	local vowel_end_stem = is_vowel_stem(stem)
+	local inf = get_stressed_arg(args, 2)
+	local stem = rmatch(inf, "^(.*)[ая]́ть$")
+	if not stem then
+		error("Argument " .. inf .. " doesn't end in ать or ять")
+	end
 	-- звать - зов, драть - дер
 	local pres_stem = get_opt_unstressed_arg(args, 3) or stem
 	no_stray_args(args, 3)
+	local vowel_end_stem = is_vowel_stem(stem)
 
 	-- no pres_pasv_part
 
@@ -2340,7 +2613,8 @@ local function guts_of_6c(args, data, vclass)
 
 	-- optional щ parameter for verbs like клеветать (клевещу́), past stress
 	parse_variants(data, args[1], {"щ", "past", "+p", "7", "ё"})
-	local stem = get_stressed_arg(args, 2)
+	local stem = nom.strip_ending(get_stressed_arg(args, 2), nil, "а́ть")
+	stem = com.make_ending_stressed(stem)
 	no_stray_args(args, 2)
 	-- remove accent for some forms
 	local stem_noa = com.make_unstressed(stem)
@@ -2500,9 +2774,9 @@ conjugations["8a"] = function(args, data)
 	local forms = {}
 
 	parse_variants(data, args[1], {"past", "+p"})
-	local stem = get_stressed_arg(args, 2)
-	local full_inf = get_stressed_arg(args, 3)
-	local stressed_past_stem = args[4] and get_stressed_arg(args, 4) or stem
+	local full_inf = get_stressed_arg(args, 2)
+	local stem = get_stressed_arg(args, 3)
+	local stressed_past_stem = get_opt_stressed_arg(args, 4) or stem
 	no_stray_args(args, 4)
 	forms["infinitive"] = full_inf
 
@@ -2531,9 +2805,9 @@ conjugations["8b"] = function(args, data)
 	local forms = {}
 
 	parse_variants(data, args[1], {"past", "+p"}, "b")
-	local stem = data.past_stress == "b" and args[4] and getarg(args, 2) or
-		get_stressed_arg(args, 2)
-	local full_inf = get_stressed_arg(args, 3)
+	local full_inf = get_stressed_arg(args, 2)
+	local stem = data.past_stress == "b" and args[4] and getarg(args, 3) or
+		get_stressed_arg(args, 3)
 	local stressed_past_stem = args[4] and get_stressed_arg(args, 4) or stem
 	no_stray_args(args, 4)
 	forms["infinitive"] = full_inf
@@ -2563,10 +2837,10 @@ conjugations["9a"] = function(args, data)
 	local forms = {}
 
 	parse_variants(data, args[1], {"past", "+p"})
-	local stem = get_stressed_arg(args, 2)
+	local stem = nom.strip_ending(get_stressed_arg(args, 2), nil, "еть")
 	local pres_stem = get_stressed_arg(args, 3)
 	no_stray_args(args, 3)
-	local prefix, _, base, _ = split_prefix(stem)
+	local prefix, _, base, _ = split_monosyllabic_main_verb(stem)
 
 	forms["infinitive"] = stem .. "еть"
 
@@ -2589,14 +2863,13 @@ conjugations["9b"] = function(args, data)
 	local impf = rfind(data.verb_type, "^impf")
 
 	parse_variants(data, args[1], {"past", "+p"})
-	local stem = get_stressed_arg(args, 2)
+	local stem_noa = nom.strip_ending(get_stressed_arg(args, 2), nil, "е́ть")
+	local stem = rsub(stem_noa, "(.*)е", "%1ё")
 	local pres_stem = get_unstressed_arg(args, 3)
 	-- stem used for past active and adverbial participles; defaults to past_m
 	local past_part_stem = get_opt_stressed_arg(args, 4)
-	-- remove stress, replace ё with е
-	local stem_noa = com.make_unstressed(stem)
 	no_stray_args(args, 4)
-	local prefix, _, base, _ = split_prefix(stem)
+	local prefix, _, base, _ = split_monosyllabic_main_verb(stem)
 
 	forms["infinitive"] = stem_noa .. "е́ть"
 
@@ -2629,7 +2902,7 @@ conjugations["10a"] = function(args, data)
 	local forms = {}
 
 	parse_variants(data, args[1], {"+p", "7"})
-	local stem = get_stressed_arg(args, 2)
+	local stem = nom.strip_ending(get_stressed_arg(args, 2), nil, "оть")
 	no_stray_args(args, 2)
 
 	forms["infinitive"] = stem .. "оть"
@@ -2648,9 +2921,10 @@ conjugations["10c"] = function(args, data)
 	local forms = {}
 
 	parse_variants(data, args[1], {"+p", "7"})
-	local inf_stem = get_stressed_arg(args, 2)
+	local inf_stem = nom.strip_ending(get_stressed_arg(args, 2), nil, "ть")
 	-- present tense stressed stem "моло́ть" - ме́лет
-	local pres_stem = get_stressed_arg(args, 3)
+	local pres_stem = get_opt_stressed_arg(args, 3) or
+		com.make_ending_stressed(nom.strip_ending(inf_stem, nil, "о́"))
 	no_stray_args(args, 3)
 	-- remove accent for some forms
 	local pres_stem_noa = com.remove_accents(pres_stem)
@@ -2672,9 +2946,9 @@ conjugations["11a"] = function(args, data)
 	local forms = {}
 
 	parse_variants(data, args[1], {"past", "+p"})
-	local stem = get_stressed_arg(args, 2)
+	local stem = nom.strip_ending(get_stressed_arg(args, 2), nil, "ить")
 	no_stray_args(args, 2)
-	local prefix, _, base, _ = split_prefix(stem .. "и")
+	local prefix, _, base, _ = split_monosyllabic_main_verb(stem .. "и")
 
 	forms["infinitive"] = stem .. "ить"
 
@@ -2695,10 +2969,10 @@ conjugations["11b"] = function(args, data)
 	local forms = {}
 
 	parse_variants(data, args[1], {"past", "+p"})
-	local stem = get_unstressed_arg(args, 2)
-	local pres_stem = get_unstressed_arg(args, 3)
+	local stem = nom.strip_ending(get_unstressed_arg(args, 2), nil, "и́ть")
+	local pres_stem = get_opt_unstressed_arg(args, 3) or stem
 	no_stray_args(args, 3)
-	local prefix, _, base, _ = split_prefix(stem .. "и́")
+	local prefix, _, base, _ = split_monosyllabic_main_verb(stem .. "и́")
 
 	forms["infinitive"] = stem .. "и́ть"
 
@@ -2720,10 +2994,10 @@ conjugations["12a"] = function(args, data)
 	local forms = {}
 
 	parse_variants(data, args[1], {"past", "+p"})
-	local stem = get_stressed_arg(args, 2)
-	local pres_stem = get_stressed_arg(args, 3)
+	local stem = nom.strip_ending(get_stressed_arg(args, 2), nil, "ть")
+	local pres_stem = get_opt_stressed_arg(args, 3) or stem
 	no_stray_args(args, 3)
-	local prefix, _, base, _ = split_prefix(stem)
+	local prefix, _, base, _ = split_monosyllabic_main_verb(stem)
 
 	forms["infinitive"] = stem .. "ть"
 
@@ -2744,10 +3018,11 @@ conjugations["12b"] = function(args, data)
 	local forms = {}
 
 	parse_variants(data, args[1], {"past", "+p"})
-	local stem = get_stressed_arg(args, 2)
-	local pres_stem = get_unstressed_arg(args, 3)
+	local stem = nom.strip_ending(get_stressed_arg(args, 2), nil, "ть")
+	local pres_stem = get_opt_unstressed_arg(args, 3) or
+		com.make_unstressed_once(stem)
 	no_stray_args(args, 3)
-	local prefix, _, base, _ = split_prefix(stem)
+	local prefix, _, base, _ = split_monosyllabic_main_verb(stem)
 
 	forms["infinitive"] = stem .. "ть"
 
@@ -2771,9 +3046,9 @@ conjugations["13b"] = function(args, data)
 	local forms = {}
 
 	parse_variants(data, args[1], {"+p"})
-	local stem = get_stressed_arg(args, 2)
-	local pres_stem = get_unstressed_arg(args, 3)
-	no_stray_args(args, 3)
+	local stem = nom.strip_ending(get_stressed_arg(args, 2), nil, "ть")
+	local pres_stem = nom.strip_ending(stem, nil, "ва́")
+	no_stray_args(args, 2)
 
 	forms["infinitive"] = stem .. "ть"
 
@@ -2802,10 +3077,10 @@ conjugations["14a"] = function(args, data)
 	local forms = {}
 
 	parse_variants(data, args[1], {"past", "+p"})
-	local stem = get_stressed_arg(args, 2)
+	local stem = nom.strip_ending(get_stressed_arg(args, 2), nil, "ть")
 	local pres_stem = get_stressed_arg(args, 3)
 	no_stray_args(args, 3)
-	local prefix, _, base, _ = split_prefix(stem)
+	local prefix, _, base, _ = split_monosyllabic_main_verb(stem)
 
 	forms["infinitive"] = stem .. "ть"
 
@@ -2827,10 +3102,10 @@ conjugations["14b"] = function(args, data)
 	local forms = {}
 
 	parse_variants(data, args[1], {"past", "+p"})
-	local stem = get_stressed_arg(args, 2)
+	local stem = nom.strip_ending(get_stressed_arg(args, 2), nil, "ть")
 	local pres_stem = get_unstressed_arg(args, 3)
 	no_stray_args(args, 3)
-	local prefix, _, base, _ = split_prefix(stem)
+	local prefix, _, base, _ = split_monosyllabic_main_verb(stem)
 
 	forms["infinitive"] = stem .. "ть"
 
@@ -2853,11 +3128,11 @@ conjugations["14c"] = function(args, data)
 	local forms = {}
 
 	parse_variants(data, args[1], {"past", "+p"})
-	local stem = get_stressed_arg(args, 2)
+	local stem = nom.strip_ending(get_stressed_arg(args, 2), nil, "ть")
 	local pres_stem = get_stressed_arg(args, 3)
 	local pres_stem_noa = com.make_unstressed(pres_stem)
 	no_stray_args(args, 3)
-	local prefix, _, base, _ = split_prefix(stem)
+	local prefix, _, base, _ = split_monosyllabic_main_verb(stem)
 
 	forms["infinitive"] = stem .. "ть"
 
@@ -2882,7 +3157,7 @@ conjugations["15a"] = function(args, data)
 	local forms = {}
 
 	parse_variants(data, args[1], {"+p"})
-	local stem = get_stressed_arg(args, 2)
+	local stem = nom.strip_ending(get_stressed_arg(args, 2), nil, "ть")
 	no_stray_args(args, 2)
 
 	forms["infinitive"] = stem .. "ть"
@@ -2905,9 +3180,9 @@ conjugations["16a"] = function(args, data)
 	local forms = {}
 
 	parse_variants(data, args[1], {"past", "+p"})
-	local stem = get_stressed_arg(args, 2)
+	local stem = nom.strip_ending(get_stressed_arg(args, 2), nil, "ть")
 	no_stray_args(args, 2)
-	local prefix, _, base, _ = split_prefix(stem)
+	local prefix, _, base, _ = split_monosyllabic_main_verb(stem)
 
 	forms["infinitive"] = stem .. "ть"
 
@@ -2930,10 +3205,10 @@ conjugations["16b"] = function(args, data)
 	local forms = {}
 
 	parse_variants(data, args[1], {"past", "+p"})
-	local stem = get_stressed_arg(args, 2)
+	local stem = nom.strip_ending(get_stressed_arg(args, 2), nil, "ть")
 	local stem_noa = com.make_unstressed(stem)
 	no_stray_args(args, 2)
-	local prefix, _, base, _ = split_prefix(stem)
+	local prefix, _, base, _ = split_monosyllabic_main_verb(stem)
 
 	forms["infinitive"] = stem .. "ть"
 	-- no pres_pasv_part
@@ -2955,8 +3230,9 @@ conjugations["irreg-бежать"] = function(args, data)
 	-- irregular, only for verbs derived from бежать with the same stress pattern
 	local forms = {}
 
-	local prefix = args[2] or ""
-	data.title = prefix == "вы́" and "5a" or "5b"
+	local prefix = split_known_main_verb(get_stressed_arg(args, 2),
+		{"бежа́ть", "бѣжа́ть"})
+	data.title = com.is_stressed(prefix) and "5a" or "5b"
 	parse_variants(data, args[1], {})
 	no_stray_args(args, 2)
 
@@ -2982,7 +3258,8 @@ conjugations["irreg-хотеть"] = function(args, data)
 	-- irregular, only for verbs derived from хотеть with the same stress pattern
 	local forms = {}
 
-	local prefix = args[2] or ""
+	local prefix = split_known_main_verb(get_stressed_arg(args, 2),
+		{"хоте́ть", "хотѣ́ть"})
 	data.title = "5c'"
 	data.cat_conj_types = {"5c"} -- no class for 5c', no point in creating for just this verb
 	parse_variants(data, args[1], {})
@@ -3010,9 +3287,9 @@ conjugations["irreg-дать"] = function(args, data)
 	local forms = {}
 
 	--for this type, it's important to distinguish if it's reflexive to set some stress patterns
-	local prefix = args[2] or ""
-	data.title = prefix == "вы́" and "irreg-a" or "irreg-b"
-	parse_variants(data, args[1], {"past"}, prefix == "вы́" and "a(1)" or data.refl and "c''" or "c'")
+	local prefix = split_known_main_verb(get_stressed_arg(args, 2), "да́ть")
+	data.title = com.is_stressed(prefix) and "irreg-a" or "irreg-b"
+	parse_variants(data, args[1], {"past"}, com.is_stressed(prefix) and "a(1)" or data.refl and "c''" or "c'")
 	no_stray_args(args, 2)
 
 	forms["infinitive"] = "да́ть"
@@ -3034,8 +3311,9 @@ conjugations["irreg-есть"] = function(args, data)
 	-- irregular, only for verbs derived from есть
 	local forms = {}
 
-	local prefix = args[2] or ""
-	data.title = prefix == "вы́" and "irreg-a" or "irreg-b"
+	local prefix = split_known_main_verb(get_stressed_arg(args, 2),
+		{"е́сть", "ѣ́сть"})
+	data.title = com.is_stressed(prefix) and "irreg-a" or "irreg-b"
 	parse_variants(data, args[1], {})
 	no_stray_args(args, 2)
 
@@ -3061,13 +3339,13 @@ conjugations["irreg-сыпать"] = function(args, data)
 	local forms = {}
 
 	--for this type, it's important to distinguish if it's reflexive for вы́сыпаться vs. вы́сыпать imperative
-	local prefix = args[2] or ""
+	local prefix = split_known_main_verb(get_stressed_arg(args, 2), "сы́пать")
 	data.title = "6a"
 	parse_variants(data, args[1], {})
 	no_stray_args(args, 2)
 
 	-- вы́сыпать (perfective), not to confuse with высыпа́ть (1a, imperfective)
-	if prefix == "вы́" then
+	if com.is_stressed(prefix) then
 		forms["infinitive"] = prefix .. "сыпать"
 
 		-- perfective only
@@ -3098,7 +3376,7 @@ conjugations["irreg-лгать"] = function(args, data)
 	-- irregular, only for verbs derived from лгать with the same stress pattern
 	local forms = {}
 
-	local prefix = args[2] or ""
+	local prefix = split_known_main_verb(get_stressed_arg(args, 2), "лга́ть")
 	data.title = "6°b/c"
 	parse_variants(data, args[1], {})
 	no_stray_args(args, 2)
@@ -3124,7 +3402,7 @@ conjugations["irreg-мочь"] = function(args, data)
 	-- irregular, only for verbs derived from мочь with the same stress pattern
 	local forms = {}
 
-	local prefix = args[2] or ""
+	local prefix = split_known_main_verb(get_stressed_arg(args, 2), "мо́чь")
 	data.title = "8c/b"
 	parse_variants(data, args[1], {})
 	no_stray_args(args, 2)
@@ -3150,8 +3428,8 @@ conjugations["irreg-слать"] = function(args, data)
 	-- irregular, only for verbs derived from слать
 	local forms = {}
 
-	local prefix = args[2] or ""
-	data.title = prefix == "вы́" and "6a" or "6b"
+	local prefix = split_known_main_verb(get_stressed_arg(args, 2), "сла́ть")
+	data.title = com.is_stressed(prefix) and "6a" or "6b"
 	parse_variants(data, args[1], {})
 	no_stray_args(args, 2)
 
@@ -3172,21 +3450,22 @@ conjugations["irreg-идти"] = function(args, data)
 	-- irregular, only for verbs derived from идти, including прийти́ and в́ыйти
 	local forms = {}
 
-	local prefix = args[2] or ""
-	data.title = prefix == "вы́" and "irreg-a" or "irreg-b/b"
+	local prefix = args[2] == "идти́" and "" or
+		split_known_main_verb(get_stressed_arg(args, 2), "йти́")
+	data.title = com.is_stressed(prefix) and "irreg-a" or "irreg-b/b"
 	parse_variants(data, args[1], {})
 	no_stray_args(args, 2)
 
 	-- no pres_pasv_part
 
-	if prefix == "вы́" then
+	if com.is_stressed(prefix) then -- вы́
 		forms["infinitive"] = prefix .. "йти"
 		forms["impr_sg"] = prefix .. "йди"
 		forms["impr_pl"] = prefix .. "йдите"
 		present_e_a(forms, prefix .. "йд")
 		forms["past_adv_part"] = prefix .. "шедши"
 		forms["past_adv_part_short"] = prefix .. "йдя"
-	elseif prefix == "при" then
+	elseif rfind(prefix, "и$") then -- при
 		forms["infinitive"] = prefix .. "йти́"
 		forms["impr_sg"] = prefix .. "ди́"
 		forms["impr_pl"] = prefix .. "ди́те"
@@ -3214,7 +3493,7 @@ conjugations["irreg-идти"] = function(args, data)
 	end
 
 	-- вы́йти (perfective)
-	if prefix == "вы́" then
+	if com.is_stressed(prefix) then
 		forms["past_actv_part"] = prefix .. "шедший"
 		set_past(forms, prefix, nil, "шел", "шла", "шло", "шли")
 	else
@@ -3230,7 +3509,8 @@ conjugations["irreg-ехать"] = function(args, data)
 	local forms = {}
 	local old = data.old
 
-	local prefix = args[2] or ""
+	local prefix = split_known_main_verb(get_stressed_arg(args, 2),
+		{"е́хать", "ѣ́хать"})
 	data.title = "irreg-a"
 	parse_variants(data, args[1], {})
 	no_stray_args(args, 2)
@@ -3253,8 +3533,8 @@ conjugations["irreg-ехать"] = function(args, data)
 	if prefix == "" then
 		append_imper(forms, "по" .. impstem, nil, "", "те")
 		append_imper(forms, impstem, nil, "", "те")
-	elseif prefix == "вы́" then
-		append_imper(forms, "вы" .. impstem, nil, "", "те")
+	elseif com.is_stressed(prefix) then
+		append_imper(forms, com.make_unstressed_once(prefix) .. impstem, nil, "", "те")
 	else
 		append_imper(forms, prefix .. impstem, nil, "", "те")
 	end
@@ -3268,19 +3548,18 @@ conjugations["irreg-минуть"] = function(args, data)
 	-- for the irregular verb "мину́ть"
 	local forms = {}
 
+	local prefix = split_known_main_verb(get_stressed_arg(args, 2), "мину́ть")
 	data.title = "3c"
 	parse_variants(data, args[1], {})
-	local stem = get_stressed_arg(args, 2)
-	local stem_noa = com.make_unstressed(stem)
 	no_stray_args(args, 2)
 
-	forms["infinitive"] = stem_noa .. "у́ть"
+	forms["infinitive"] = "мину́ть"
 
 	-- no pres_pasv_part
 	-- no pres_adv_part
-	append_participles(forms, stem, nil,
+	append_participles(forms, "ми́н", nil,
 		"у́щий", "-", "-", "у́вший", "у́вши", "у́в")
-	present_e_c(forms, stem)
+	present_e_c(forms, "ми́н")
 	forms["pres_futr_1sg"] = "-" -- no futr 1sg
 
 	-- no imperative
@@ -3288,10 +3567,12 @@ conjugations["irreg-минуть"] = function(args, data)
 	-- two possible variants, one with root-only stress, the other with
 	-- either root or suffix stress.
 	if args["root_past_stress"] then
-		set_past(forms, stem, nil, "ул", "ула", "уло", "ули")
+		set_past(forms, "ми́н", nil, "ул", "ула", "уло", "ули")
 	else
-		set_past(forms, stem, nil, {"у́л", "ул"}, {"у́ла", "ула"}, {"у́ло", "уло"}, {"у́ли", "ули"})
+		set_past(forms, "ми́н", nil, {"у́л", "ул"}, {"у́ла", "ула"}, {"у́ло", "уло"}, {"у́ли", "ули"})
 	end
+
+	prepend_prefix(forms, prefix)
 
 	return forms
 end
@@ -3300,11 +3581,17 @@ conjugations["irreg-живописать-миновать"] = function(args, dat
 	-- for irregular verbs "живописа́ть" and "минова́ть", mixture of types 1 and 2
 	local forms = {}
 
+	local inf = get_stressed_arg(args, 2)
 	data.title = "1a"
 	parse_variants(data, args[1], {})
-	local inf_stem = get_stressed_arg(args, 2)
+	local inf_stem = nom.strip_ending(inf, nil, "ть")
+	local pres_stem =
+		rfind(inf_stem, "ова́$") and rsub(inf_stem, "ова́$", "у́") or
+		rfind(inf_stem, "а́$") and rsub(inf_stem, "а́$", "у́")
+		or error("Unexpected infinitive " .. inf)
+
 	local pres_stem = get_stressed_arg(args, 3)
-	no_stray_args(args, 3)
+	no_stray_args(args, 2)
 
 	forms["infinitive"] = inf_stem .. "ть"
 
@@ -3325,14 +3612,14 @@ conjugations["irreg-лечь"] = function(args, data)
 	-- irregular, only for verbs derived from лечь with the same stress pattern
 	local forms = {}
 
-	local prefix = args[2] or ""
+	local prefix = split_known_main_verb(get_stressed_arg(args, 2), "ле́чь")
 	data.title = "8a/b"
 	parse_variants(data, args[1], {})
 	no_stray_args(args, 2)
 
 	forms["infinitive"] = prefix .. "ле́чь"
 
-	-- no pres parts (FIXME, what about pres_act_part?)
+	-- no pres parts because always perfective
 	-- no past_adv_part_short
 	append_participles(forms, prefix .. "лёг", nil,
 		"-", "-", "-", "ший", "ши", "-")
@@ -3350,7 +3637,7 @@ conjugations["irreg-зиждиться"] = function(args, data)
 	-- irregular, only for verbs derived from зиждиться with the same stress pattern
 	local forms = {}
 
-	local prefix = args[2] or ""
+	local prefix = split_known_main_verb(get_stressed_arg(args, 2), "зи́ждить")
 	data.title = "irreg-a"
 	parse_variants(data, args[1], {})
 	no_stray_args(args, 2)
@@ -3375,9 +3662,9 @@ conjugations["irreg-клясть"] = function(args, data)
 	local forms = {}
 
 	--for this type, it's important to distinguish if it's reflexive to set some stress patterns
-	local prefix = args[2] or ""
+	local prefix = split_known_main_verb(get_stressed_arg(args, 2), "кля́сть")
 	data.title = "irreg-b"
-	parse_variants(data, args[1], {"past"}, prefix == "вы́" and "a(1)" or data.refl and "c''" or "c")
+	parse_variants(data, args[1], {"past"}, com.is_stressed(prefix) and "a(1)" or data.refl and "c''" or "c")
 	no_stray_args(args, 2)
 
 	forms["infinitive"] = prefix .. "кля́сть"
@@ -3397,19 +3684,20 @@ conjugations["irreg-стелить-стлать"] = function(args, data)
 	-- irregular, only for verbs derived from стелить and стлать with the same stress pattern
 	local forms = {}
 
-	local infprefix = args[3] or ""
-	local presprefix = args[4] or infprefix
-	local stem = get_stressed_arg(args, 2)
-	data.title = ((prefix == "вы́" and stem == "стла") and "6a" or
+	local infprefix, _, stem = split_known_main_verb(get_stressed_arg(args, 2),
+		{"стели́ть", "стла́ть"})
+	stem = nom.strip_ending(stem, nil, "ть")
+	local presprefix = infprefix == "рас" and "разо" or infprefix
+	data.title = ((com.is_stressed(infprefix) and stem == "стла") and "6a" or
 		stem == "стла́" and "6c" or
-		stem == (prefix == "вы́" and stem == "стели") and "4a" or
+		stem == (com.is_stressed(infprefix) and stem == "стели") and "4a" or
 		"4c")
 	parse_variants(data, args[1], {})
-	no_stray_args(args, 4)
+	no_stray_args(args, 2)
 
 	forms["infinitive"] = infprefix .. stem .. "ть"
 
-	if prefix == "вы́" then
+	if com.is_stressed(infprefix) then
 		append_participles_2stem(forms, presprefix .. "стел", nil, infprefix .. stem, nil,
 			"ющий", "имый", "я", "вший", "вши", "в")
 
@@ -3434,9 +3722,9 @@ conjugations["irreg-быть"] = function(args, data)
 	local forms = {}
 
 	--for this type, it's important to distinguish if it's reflexive to set some stress patterns
-	local prefix = args[2] or ""
+	local prefix = split_known_main_verb(get_stressed_arg(args, 2), "бы́ть")
 	data.title = "irreg-a"
-	parse_variants(data, args[1], {"past"}, prefix == "вы́" and "a(1)" or data.refl and "c''" or "c")
+	parse_variants(data, args[1], {"past"}, com.is_stressed(prefix) and "a(1)" or data.refl and "c''" or "c")
 	no_stray_args(args, 2)
 
 	forms["infinitive"] = "бы́ть"
@@ -3467,21 +3755,20 @@ conjugations["irreg-ссать-сцать"] = function(args, data)
 	-- irregular, only for verbs derived from ссать and сцать (both vulgar!)
 	local forms = {}
 
-	local prefix = args[4] or ""
-	data.title = prefix == "вы́" and "irreg-a" or "irreg-b"
+	local prefix, _, stem = split_known_main_verb(get_stressed_arg(args, 2),
+		{"сса́ть", "сца́ть"})
+	data.title = com.is_stressed(prefix) and "irreg-a" or "irreg-b"
 	parse_variants(data, args[1], {})
-	local stem = get_stressed_arg(args, 2)
-	local pres_stem = get_unstressed_arg(args, 3)
-
-	no_stray_args(args, 4)
+	stem = nom.strip_ending(stem, nil, "ть")
+	no_stray_args(args, 2)
 
 	forms["infinitive"] = stem .. "ть"
 	-- no pres_pasv_part
 	-- no pres_adv_part
-	append_participles(forms, pres_stem, nil, "у́щий", "-", "-",
+	append_participles(forms, stem, nil, "у́щий", "-", "-",
 		"а́вший", "а́вши", "а́в")
-	append_imper(forms, pres_stem, nil, "ы́", "ы́те")
-	append_pres_futr(forms, pres_stem, nil,
+	append_imper(forms, stem, nil, "ы́", "ы́те")
+	append_pres_futr(forms, stem, nil,
 		"у́", "ы́шь", "ы́т", "ы́м", "ы́те", "у́т")
 	set_past(forms, stem .. "л", nil, "", "а", "о", "и")
 	prepend_prefix(forms, prefix)
@@ -3493,7 +3780,7 @@ conjugations["irreg-чтить"] = function(args, data)
 	-- irregular, only for verbs derived from чтить
 	local forms = {}
 
-	local prefix = args[2] or ""
+	local prefix = split_known_main_verb(get_stressed_arg(args, 2), "чти́ть")
 	data.title = "4b"
 	parse_variants(data, args[1], {})
 	no_stray_args(args, 2)
@@ -3518,8 +3805,8 @@ conjugations["irreg-шибить"] = function(args, data)
 	-- irregular, only for verbs in -шибить(ся)
 	local forms = {}
 
-	local prefix = args[2] or ""
-	data.title = prefix == "вы́" and "irreg-a" or "irreg-b"
+	local prefix = split_known_main_verb(get_stressed_arg(args, 2), "шиби́ть")
+	data.title = com.is_stressed(prefix) and "irreg-a" or "irreg-b"
 	parse_variants(data, args[1], {})
 	no_stray_args(args, 2)
 
@@ -3552,7 +3839,7 @@ conjugations["irreg-реветь"] = function(args, data)
 	-- irregular, only for verbs derived from "реветь"
 	local forms = {}
 
-	local prefix = args[2] or ""
+	local prefix = split_known_main_verb(get_stressed_arg(args, 2), "реве́ть")
 	data.title = "irreg-b"
 	parse_variants(data, args[1], {})
 	no_stray_args(args, 2)
@@ -3576,7 +3863,7 @@ conjugations["irreg-имать"] = function(args, data)
 	-- conjugated in the 18th century, отъимать)
 	local forms = {}
 
-	local prefix = args[2] or ""
+	local prefix = split_known_main_verb(get_stressed_arg(args, 2), "има́ть")
 	data.title = "1a // 6a"
 	data.cat_conj_types = {"1a", "6a"}
 	parse_variants(data, args[1], {})
@@ -3606,7 +3893,7 @@ conjugations["irreg-внять"] = function(args, data)
 	-- irregular, only for внять
 	local forms = {}
 
-	local prefix = args[2] or ""
+	local prefix = split_known_main_verb(get_stressed_arg(args, 2), "вня́ть")
 	data.title = "14c/c"
 	parse_variants(data, args[1], {})
 	no_stray_args(args, 2)
@@ -3632,7 +3919,7 @@ conjugations["irreg-обязывать"] = function(args, data)
 	-- irregular, only for the reflexive verb обязываться
 	local forms = {}
 
-	local prefix = args[2] or ""
+	local prefix = split_known_main_verb(get_stressed_arg(args, 2), "обя́зывать")
 	data.title = "1a"
 	parse_variants(data, args[1], {})
 	no_stray_args(args, 2)

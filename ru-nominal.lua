@@ -120,6 +120,15 @@ function export.concat_forms(forms)
 	return table.concat(joined_rutr, ",")
 end
 
+function export.strip_ending(ru, tr, ending)
+	local strippedru = rsub(ru, ending .. "$", "")
+	if strippedru == ru then
+		error("Argument " .. ru .. "doesn't end with expected ending " .. ending)
+	end
+	tr = export.strip_tr_ending(tr, ending)
+	return ru, tr
+end
+
 function export.strip_tr_ending(tr, ending)
 	if not tr then return nil end
 	local endingtr = rsub(export.translit_no_links(ending), "^([Jj])", "%1?")
