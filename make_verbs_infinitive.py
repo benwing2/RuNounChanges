@@ -11,16 +11,17 @@ import rulib as ru
 def is_vowel_stem(stem):
   return re.search("[" + ru.vowel + ru.AC + ru.DI + "]$", stem)
 
-def split_ru_conj_args(t):
-  verb_type = getparam(t, "1")
+def split_ru_conj_args(t, is_temp):
+  first_param = 2 if is_temp else 1
+  verb_type = getparam(t, str(first_param))
   max_arg = 1
   arg_sets = []
   arg_set = []
-  for i in range(2, 30):
+  for i in range(first_param + 1, 30):
     if getparam(t, str(i)):
       max_arg = i
   # Gather the numbered arguments
-  for i in range(2, max_arg + 2):
+  for i in range(first_param + 1, max_arg + 2):
     end_arg_set = False
     if i == max_arg + 1 or getparam(t, str(i)) == "or":
       end_arg_set = True
@@ -34,13 +35,14 @@ def split_ru_conj_args(t):
   return verb_type, arg_sets
 
 def paste_arg_sets(arg_sets, t, verb_type, rm_pres_stem, as_string,
-    change_only=False):
+    change_only=False, is_temp=False):
+  first_param = 2 if is_temp else 1
   args = []
   if as_string:
     args.append(verb_type)
   else:
-    args.append(("1", verb_type))
-  next_numbered_param = 2
+    args.append((str(first_param), verb_type))
+  next_numbered_param = first_param + 1
   for arg_set_no, arg_set in enumerate(arg_sets):
     max_arg = -1
     for i in range(len(arg_set)):
@@ -92,8 +94,8 @@ def process_page(index, page, save, verbose):
   notes = []
   for t in parsed.filter_templates():
     origt = unicode(t)
-    if unicode(t.name) in ["ru-conj"]:
-      verb_type, arg_sets = split_ru_conj_args(t)
+    if tname(t) in ["ru-conj", "ru-conj-old"] or tname(t) == "temp" and getparam(t, "1") == "ru-conj":
+      verb_type, arg_sets = split_ru_conj_args(t, tname(t) == "temp")
       refl = "refl" in verb_type
       orig_arg_sets = copy.deepcopy(arg_sets)
       rm_pres_stem = False
@@ -346,8 +348,10 @@ def process_page(index, page, save, verbose):
         # 5. If no mismatches, modify the template to contain the new args.
 
         new_params = paste_arg_sets(arg_sets, t, verb_type, rm_pres_stem,
-          as_string=False)
+          as_string=False, is_temp=tname(t) == "temp")
         del t.params[:]
+        if tname(t) == "temp":
+          t.add("1", "ru-conj")
         for name, value in new_params:
           t.add(name, value)
 
@@ -384,6 +388,8 @@ parser = blib.create_argparser(u"Fix up verb conjugations to use the infinitive"
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
+process_page(1, pywikibot.Page(site, "Module:ru-verb/documentation"),
+  args.save, args.verbose)
 for category in ["Russian verbs"]:
   msg("Processing category: %s" % category)
   for i, page in blib.cat_articles(category, start, end):
