@@ -146,85 +146,21 @@ while True:
   trverbbase = translit and re.sub(u"(sja|sʹ)$", "", translit)
   passivetext = ("# {{passive of|lang=ru|%s%s}}\n" % (verbbase,
     trverbbase and "|tr=%s" % trverbbase or "") if etym == "r" else "")
-  trverbbase = trverbbase and "//" + trverbbase or u""
 
   if "|" not in conj:
-    if conj.startswith("6a") or conj.startswith(u"6°a") or conj.startswith("6oa"):
-      assert re.search(u"[ая]ть$", verbbase)
-      assert not trverbbase
-      conjargs = re.sub(u"[ая]ть$", "", verbbase)
-    elif conj.startswith("6b") or conj.startswith(u"6°b") or conj.startswith("6ob"):
-      assert rulib.is_monosyllabic(verbbase) or re.search(u"[ая]́ть$", verbbase)
-      assert not trverbbase
-      conjargs = re.sub(u"[ая]́?ть$", "", verbbase)
-    elif conj.startswith("6c") or conj.startswith(u"6°c") or conj.startswith("6oc"):
-      assert rulib.is_monosyllabic(verbbase) or re.search(u"[ая]́ть$", verbbase)
-      conjargs = rulib.make_ending_stressed(re.sub(u"[ая]́?ть$", "", verbbase))
-    elif conj.startswith("5a"):
-      assert re.search(u"[еая]ть$", verbbase)
-      assert not trverbbase
-      conjargs = "%s|%s" % (re.sub(u"[еая]ть$", "", verbbase),
-          rulib.try_to_stress(re.sub(u"ть$", "", verbbase)))
-    elif conj.startswith("5b"):
-      assert rulib.is_monosyllabic(verbbase) or re.search(u"[еая]́ть$", verbbase)
-      assert not trverbbase
-      conjargs = "%s|%s" % (re.sub(u"[еая]́?ть$", "", verbbase),
-          re.sub(u"ть$", "", verbbase))
-    elif conj.startswith("5c"):
-      assert rulib.is_monosyllabic(verbbase) or re.search(u"[еая]́ть$", verbbase)
-      assert not trverbbase
-      conjargs = "%s|%s" % (rulib.make_ending_stressed(re.sub(u"[еая]́?ть$", "", verbbase)),
-          rulib.try_to_stress(re.sub(u"ть$", "", verbbase)))
-    elif conj.startswith("4a"):
-      assert verbbase.endswith(u"ить")
-      assert not trverbbase or trverbbase.endswith(u"itʹ")
-      conjargs = "%s%s" % (re.sub(u"ить$", "", verbbase), re.sub(u"itʹ$", "", trverbbase))
-    elif conj.startswith("4b"):
-      assert rulib.is_monosyllabic(verbbase) or verbbase.endswith(u"и́ть")
-      assert (not trverbbase or rulib.is_tr_monosyllabic(trverbbase) or trverbbase.endswith(u"ítʹ"))
-      conjargs = "%s%s" % (re.sub(u"и́?ть$", "", verbbase), re.sub(u"(i|í)tʹ$", "", trverbbase))
-    elif conj.startswith("4c"):
-      assert rulib.is_monosyllabic(verbbase) or verbbase.endswith(u"и́ть")
-      assert not trverbbase # FIXME! Need to fix make_ending_stressed to work with translit
-      conjargs = rulib.make_ending_stressed(re.sub(u"и́?ть", "", verbbase))
-    elif conj.startswith("3a") or conj.startswith(u"3°a") or conj.startswith("3oa"):
-      assert verbbase.endswith(u"нуть")
-      assert not trverbbase
-      conjargs = re.sub(u"нуть$", "", verbbase)
-    elif conj.startswith("3b"):
-      assert rulib.is_monosyllabic(verbbase) or verbbase.endswith(u"ну́ть")
-      assert not trverbbase
-      conjargs = re.sub(u"у́?ть$", "", verbbase)
-    elif conj.startswith("3c"):
-      assert rulib.is_monosyllabic(verbbase) or verbbase.endswith(u"ну́ть")
-      assert not trverbbase
-      conjargs = rulib.make_ending_stressed(re.sub(u"у́?ть", "", verbbase))
-    elif conj.startswith("2a") or conj.startswith("2b"):
-      assert re.search(u"ва́?ть$", verbbase)
-      assert not trverbbase or trverbbase.endswith(u"vatʹ") or trverbbase.endswith(u"vátʹ")
-      conjargs = "%s%s" % (re.sub(u"ть$", "", verbbase), re.sub(u"tʹ", "", trverbbase))
-    elif conj.startswith("1a"):
-      conjargs = "%s%s" % (rulib.try_to_stress(re.sub(u"ть$", "", verbbase)),
-        rulib.tr_try_to_stress(re.sub(u"tʹ", "", trverbbase)))
-    else:
-      error("Unrecognized conjugation type and no arguments: %s" % conj)
+    conjargs = "%s%s" % (verb, "//" + translit if translit else "")
   else:
     conjargs = re.sub(r"^.*?\|", "", conj)
     conj = re.sub(r"\|.*$", "", conj)
-  reflsuf = "-refl" if isrefl else ""
-  # Reflexive needs to come before impersonal
-  def order_aspect(aspect):
-    return aspect.replace("-impers-refl", "-refl-impers")
   if aspect.startswith("both"):
     pfaspect = re.sub("^both", "pf", aspect)
     impfaspect = re.sub("^both", "impf", aspect)
     conjtext = """''imperfective''
 {{ru-conj|%s|%s|%s}}
 ''perfective''
-{{ru-conj|%s|%s|%s}}""" % (order_aspect(impfaspect + reflsuf), conj, conjargs,
-    order_aspect(pfaspect + reflsuf), conj, conjargs)
+{{ru-conj|%s|%s|%s}}""" % (impfaspect, conj, conjargs, pfaspect, conj, conjargs)
   else:
-    conjtext = "{{ru-conj|%s|%s|%s}}" % (order_aspect(aspect + reflsuf), conj, conjargs)
+    conjtext = "{{ru-conj|%s|%s|%s}}" % (aspect, conj, conjargs)
 
   alttext = ""
   usagetext = ""
