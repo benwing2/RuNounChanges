@@ -265,9 +265,7 @@ end
 local present_e_a
 local present_e_b
 local present_e_c
-local present_je_a
-local present_je_b
-local present_je_c
+local present_je
 local present_i
 local make_reflexive
 local make_pre_reform
@@ -1811,7 +1809,7 @@ conjugations["1a"] = function(args, data)
 	forms["infinitive"] = combine(stem, tr, "ть")
 	append_participles(forms, stem, tr, "ющий", "емый", "я", "вший", "вши", "в")
 	set_moving_ppp(forms, data)
-	present_je_a(forms, stem, tr)
+	present_je(forms, stem, tr, "a")
 	append_imper(forms, stem, tr, "й", "йте")
 	set_past(forms, stem, tr, "л", "ла", "ло", "ли")
 
@@ -1864,11 +1862,11 @@ local function guts_of_2(args, data)
 	if data.conj_type == "2a" then
 		append_participles_2stem(forms, pres_stem, pres_tr, inf_stem, inf_tr,
 			"ющий", "емый", "я", "вший", "вши", "в")
-		present_je_a(forms, pres_stem, pres_tr)
+		present_je(forms, pres_stem, pres_tr, "a")
 	else
 		append_participles_2stem(forms, pres_stem, pres_tr, inf_stem, inf_tr,
 			"ю́щий", "-", "я́", "вший", "вши", "в")
-		present_je_b(forms, pres_stem, pres_tr)
+		present_je(forms, pres_stem, pres_tr, "b")
 	end
 	set_moving_ppp(forms, data)
 	append_imper(forms, pres_stem, pres_tr, "й", "йте")
@@ -2039,7 +2037,7 @@ conjugations["4a1a"] = function(args, data)
 	append_participles(forms, stem1, tr1, "ющий", "емый", "я", {}, {}, {})
 	set_class_4_ppp(forms, data, stem4, tr4)
 	present_i(forms, stem4, tr4, "a", data.shch)
-	present_je_a(forms, stem1, tr1)
+	present_je(forms, stem1, tr1, "a", data.shch)
 	append_imper_by_variant(forms, stem4, tr4, data.imper_variant, "4a")
 	append_imper(forms, stem1, tr1, "й", "йте")
 	-- set prefix to "" as past stem may vary in length and no (1) variants
@@ -2265,24 +2263,24 @@ local function guts_of_6a(args, data, vclass)
 		if no_iotation then
 			present_e_a(forms, pres_stem)
 		else
-			present_je_a(forms, pres_stem)
+			present_je(forms, pres_stem, nil, "a")
 		end
 	end
 	if vclass == "6a" or vclass == "6°a" then
 		class_6_present()
 	elseif vclass == "1a6a" then
 		-- Do type 1a forms
-		present_je_a(forms, inf_past_stem)
+		present_je(forms, inf_past_stem, nil, "a")
 		class_6_present()
 	elseif vclass == "6a1as14" then
 		class_6_present()
 		-- Do type 1a forms
-		present_je_a(forms, inf_past_stem)
+		present_je(forms, inf_past_stem, nil, "a")
 	else
 		-- 6a1as13
 		class_6_present()
 		-- Do type 1a forms
-		present_je_a(forms, inf_past_stem, nil, "*")
+		present_je(forms, inf_past_stem, nil, "a", nil, "*")
 	end
 
 	-- Imperative forms; if 1a6a or 6a1as14, type 6a forms are dated;
@@ -2359,7 +2357,7 @@ local function guts_of_6b(args, data, vclass)
 	if no_iotation then
 		present_e_b(forms, pres_stem)
 	else
-		present_je_b(forms, pres_stem)
+		present_je(forms, pres_stem, nil, "b")
 	end
 
 	local impr_end = vowel_end_stem and "́й" -- accent on the preceding vowel
@@ -2451,11 +2449,11 @@ local function guts_of_6c(args, data, vclass)
 	if no_iotation then
 		present_e_c(forms, pres_stem)
 	else
-		present_je_c(forms, pres_stem, nil, data.shch)
+		present_je(forms, pres_stem, nil, "c", data.shch)
 	end
 	append_imper(forms, iotated_stem, nil, "и́", "и́те")
 	if vclass == "6c1a" then
-		present_je_a(forms, stem1a, nil, "*")
+		present_je(forms, stem1a, nil, "a", nil, "*")
 		append_imper(forms, stem1a, nil, "й", "йте")
 	end
 
@@ -2711,7 +2709,7 @@ conjugations["10a"] = function(args, data)
 	-- These verbs are perfective-only, no present participles
 	append_participles(forms, stem, nil, "-", "-", "-", "овший", "овши", "ов")
 	set_moving_ppp(forms, data)
-	present_je_a(forms, stem)
+	present_je(forms, stem, nil, "a")
 	append_imper(forms, stem, nil, "и", "ите")
 	set_past(forms, stem .. "ол", nil, "", "а", "о", "и")
 
@@ -2736,7 +2734,7 @@ conjugations["10c"] = function(args, data)
 	append_participles_2stem(forms, pres_stem, nil, inf_stem, nil,
 		"ющий", "-", "я́", "вший", "вши", "в")
 	set_moving_ppp(forms, data)
-	present_je_c(forms, pres_stem, nil)
+	present_je(forms, pres_stem, nil, "c")
 	append_imper(forms, pres_stem_noa, nil, "и́", "и́те")
 	set_past(forms, inf_stem .. "л", nil, "", "а", "о", "и")
 
@@ -2754,7 +2752,7 @@ conjugations["11a"] = function(args, data)
 	forms["infinitive"] = stem .. "ить"
 	-- perfective only
 	append_participles(forms, stem, nil, "-", "-", "-", "ивший", "ивши", "ив")
-	present_je_a(forms, stem .. "ь")
+	present_je(forms, stem .. "ь", nil, "a")
 	append_imper(forms, stem .. "ей", nil, "", "те")
 	set_past_by_stress(forms, data.past_stress, prefix, nil, base, nil,
 		args, data)
@@ -2776,7 +2774,7 @@ conjugations["11b"] = function(args, data)
 
 	append_participles_2stem(forms, pres_stem, nil, stem, nil,
 		"ью́щий", "-", "ья́", "и́вший", "и́вши", "и́в")
-	present_je_b(forms, pres_stem .. "ь")
+	present_je(forms, pres_stem .. "ь", nil, "b")
 	forms["impr_sg"] = stem .. "е́й"
 	forms["impr_pl"] = stem .. "е́йте"
 
@@ -2801,7 +2799,7 @@ conjugations["12a"] = function(args, data)
 
 	append_participles_2stem(forms, pres_stem, nil, stem, nil,
 		"ющий", "емый", "я", "вший", "вши", "в")
-	present_je_a(forms, pres_stem)
+	present_je(forms, pres_stem, nil, "a")
 	forms["impr_sg"] = pres_stem .. "й"
 	forms["impr_pl"] = pres_stem .. "йте"
 
@@ -2827,7 +2825,7 @@ conjugations["12b"] = function(args, data)
 	-- no pres_pasv_part
 	append_participles_2stem(forms, pres_stem, nil, stem, nil,
 		"ю́щий", "-", "я́", "вший", "вши", "в")
-	present_je_b(forms, pres_stem)
+	present_je(forms, pres_stem, nil, "b")
 	-- the preceding vowel is stressed
 	forms["impr_sg"] = pres_stem .. "́й"
 	forms["impr_pl"] = pres_stem .. "́йте"
@@ -2861,7 +2859,7 @@ conjugations["13b"] = function(args, data)
 	forms["past_adv_part"] = stem .. "вши"
 	forms["past_adv_part_short"] = stem .. "в"
 	set_moving_ppp(forms, data)
-	present_je_b(forms, pres_stem)
+	present_je(forms, pres_stem, nil, "b")
 	forms["impr_sg"] = stem .. "й"
 	forms["impr_pl"] = stem .. "йте"
 
@@ -3177,7 +3175,7 @@ conjugations["irreg-сыпать"] = function(args, data)
 	append_imper(forms, "сы́п", nil,
 		-- вы́сыпать (but not вы́сыпаться) has two imperative singulars
 		com.is_stressed(prefix) and not data.refl and {"и", "ь"} or "ь", "ьте")
-	present_je_a(forms, "сы́пл")
+	present_je(forms, "сы́пл", nil, "a")
 	append_pres_futr(forms, "сы́п", nil,
 		{}, "ешь", "ет", "ем", "ете", {})
 	set_past(forms, "сы́пал", nil, "", "а", "о", "и")
@@ -3374,7 +3372,7 @@ conjugations["irreg-живописать-миновать"] = function(args, dat
 	append_participles_2stem(forms, pres_stem, nil, inf_stem, nil,
 		"ющий", "-", "я", "вший", "вши", "в")
 	set_moving_ppp(forms, data)
-	present_je_a(forms, pres_stem)
+	present_je(forms, pres_stem, nil, "a")
 	append_imper(forms, pres_stem .. "й", nil, "", "те")
 	set_past(forms, inf_stem .. "л", nil, "", "а", "о", "и")
 
@@ -3485,7 +3483,7 @@ conjugations["irreg-зыбить"] = function(args, data)
 	append_participles(forms, "зы́б", nil,
 		"лющий", "лемый", "ля", "ивший", "ивши", "ив")
 	append_imper(forms, "зы́бли", nil, "", "те")
-	present_je_a(forms, "зы́б")
+	present_je(forms, "зы́б", nil, "a")
 	set_past(forms, "зы́бил", nil, "", "а", "о", "и")
 	prepend_prefix(forms, prefix)
 
@@ -3529,7 +3527,7 @@ conjugations["irreg-стелить"] = function(args, data)
 		"ющий", "и́мый", "я́", "и́вший", "и́вши", "и́в")
 	set_class_4_ppp(forms, data, "сте́л", nil, data.title)
 	append_imper(forms, "стели́", nil, "", "те")
-	present_je_c(forms, "сте́л")
+	present_je(forms, "сте́л", nil, "c")
 	set_past(forms, "стели́л", nil, "", "а", "о", "и")
 	prepend_prefix(forms, prefix)
 
@@ -3697,10 +3695,10 @@ conjugations["irreg-имать"] = function(args, data)
 	end
 	append_imper(forms, "", nil, {"е́мли", "емли́", "има́й"},
 		{"е́млите", "емли́те", "има́йте"})
-	present_je_a(forms, "е́мл")
+	present_je(forms, "е́мл", nil, "a")
 	-- Both вне́млю and внемлю́ are possible
 	append_pres_futr(forms, "емл", nil, "ю́", {}, {}, {}, {}, {})
-	present_je_a(forms, "има́")
+	present_je(forms, "има́", nil, "a")
 	set_past(forms, "има́л", nil, "", "а", "о", "и")
 	prepend_prefix(forms, prefix)
 
@@ -3746,8 +3744,8 @@ conjugations["irreg-обязывать"] = function(args, data)
 		{"ывающий", "у́ющий"}, {"ываемый", "у́емый"}, {"ывая", "у́я"}, "вший", "вши", "в")
 	append_imper(forms, "обя́зывай", nil, "", "те")
 	append_imper(forms, "обязу́й", nil, "", "те")
-	present_je_a(forms, "обя́зыва")
-	present_je_a(forms, "обязу́")
+	present_je(forms, "обя́зыва", nil, "a")
+	present_je(forms, "обязу́", nil, "a")
 	set_past(forms, "обя́зывал", nil, "", "а", "о", "и")
 	prepend_prefix(forms, prefix)
 
@@ -3771,49 +3769,39 @@ present_e_c = function(forms, stem, tr)
 	append_pres_futr(forms, stem, tr, "у́", "ешь", "ет", "ем", "ете", "ут")
 end
 
--- Present forms with -e-, with j-vowels.
-present_je_a = function(forms, stem, tr, note)
-	local iotated_stem, iotated_tr = com.iotation(stem, tr)
-
-	local hushing = rfind(iotated_stem, "[шщжч]$")
-	note = note or ""
-	append_pres_futr(forms, iotated_stem, iotated_tr,
-		hushing and "у" .. note or "ю" .. note, "ешь" .. note, "ет" .. note,
-		"ем" .. note, "ете" .. note,
-		hushing and "ут" .. note or "ют" .. note)
-end
-
-present_je_b = function(forms, stem, tr)
-	-- iotate the stem
-	local iotated_stem, iotated_tr = com.iotation(stem, tr)
-
-	-- Verbs ending in a hushing consonant do not get j-vowels in the endings.
-	local hushing = rfind(iotated_stem, "[шщжч]$")
-	append_pres_futr(forms, iotated_stem, iotated_tr,
-		hushing and "у́" or "ю́", "ёшь", "ёт", "ём", "ёте",
-		hushing and "у́т" or "ю́т")
-end
-
-present_je_c = function(forms, stem, tr, shch)
-	-- shch - iotate final т as щ, not ч
-
-	-- iotate the stem
+-- Present forms with -e- and iotated stem. ABC = "a", "b" or "c", indicating
+-- the accent pattern. If SHCH is set, iotate final т as щ, not ч. If NOTE
+-- is given, add it to each form.
+present_je = function(forms, stem, tr, abc, shch, note)
 	local iotated_stem, iotated_tr = com.iotation(stem, tr, shch)
 
+	assert(abc == "a" or abc == "b" or abc == "c")
+	note = note or ""
 	-- Verbs ending in a hushing consonant do not get j-vowels in the endings.
 	local hushing = rfind(iotated_stem, "[шщжч]$") -- or no_iotation
+	local ending_1sg =
+		hushing and (abc == "a" and "у" or "у́") or
+		not hushing and (abc == "a" and "ю" or "ю́")
+	ending_1sg = ending_1sg .. note
+	if abc == "b" then
+		append_pres_futr(forms, iotated_stem, iotated_tr,
+			{}, "ёшь" .. note, "ёт" .. note, "ём" .. note, "ёте" .. note,
+			(hushing and "у́т" or "ю́т") .. note)
+	else
+		append_pres_futr(forms, iotated_stem, iotated_tr,
+			{}, "ешь" .. note, "ет" .. note, "ем" .. note, "ете" .. note,
+			(hushing and "ут" or "ют") .. note)
+	end
 	append_pres_futr(forms, iotated_stem, iotated_tr,
-		hushing and "у́" or "ю́", "ешь", "ет", "ем", "ете",
-		hushing and "ут" or "ют")
+		ending_1sg, {}, {}, {}, {}, {})
 end
 
--- Present forms with -i-.
+-- Present forms with -i- (and iotated stem in the 1sg). ABC = "a", "b" or "c",
+-- indicating the accent pattern. If SHCH is set, iotate final т as щ, not ч.
 present_i = function(forms, stem, tr, abc, shch)
-	-- shch - iotate final т as щ, not ч
-
-	-- iotate the stem
 	local iotated_stem, iotated_tr = com.iotation(stem, tr, shch)
 
+	assert(abc == "a" or abc == "b" or abc == "c")
 	-- Verbs ending in a hushing consonant do not get j-vowels in the endings.
 	local iotated_hushing = rfind(iotated_stem, "[шщжч]$")
 	local hushing = rfind(stem, "[шщжч]$")
