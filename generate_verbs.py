@@ -181,6 +181,8 @@ while True:
     if not m:
       error("Element %s doesn't start with syn:, ant:, der:, rel:, see:, pron:, alt:, def: or note:" % synantrel)
     sartype, vals = m.groups()
+    if re.search(r"(syn|ant|der|rel|see|pron|alt|def|note|wiki|enwiki|usage):", vals):
+      error("Saw stray prefix inside of text: %s" % synantrel)
     if sartype in ["syn", "ant"]:
       lines = []
       for synantgroup in do_split(";", vals):
