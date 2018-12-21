@@ -2595,19 +2595,93 @@ conjugations["6c1a"] = function(args, data)
 	return guts_of_6c(args, data, "6c1a")
 end
 
-local function guts_of_7(args, data, forms, pres_stems, past_stem)
+local function class_7a_stem_to_infinitives(stem)
+	local infin
+	-- map вы́раст to вы́расти
+	if rfind(stem, "ст$") then
+		infin = stem .. "и"
+	-- map вы́нес to вы́нести, вы́вез to вы́везти
+	elseif rfind(stem, "[сз]$") then
+		infin = stem .. "ти"
+	else
+		-- map вы́греб to вы́грести, вы́вед to вывести, вы́мет to вы́мести
+		infin = rsub(stem, "[бдт]$", "сти")
+	end
+	return {infin, rsub(infin, "и$", "ь")}
+end
+
+local function class_7b_stem_to_infinitives(stem)
+	local infins = class_7a_stem_to_infinitives(rsub(stem, "ё", "е"))
+	local ending_stressed = {}
+	for _, infin in ipairs(infins) do
+		-- assign to a variable to discard second argument
+		local ending_stressed_infin = com.make_ending_stressed(infin)
+		table.insert(ending_stressed, ending_stressed_infin)
+	end
+	return ending_stressed
+end
+
+local function guts_of_7(args, data, forms, full_inf, pres_stem, past_stem)
+	local pres_stems = rsplit(pres_stem, ",")
 	if #pres_stems > 1 then
 		if not past_stem then
 			error("If multiple present stems specified in class 7, past stem must be explicitly given")
 		end
 	end
+	local pres_notes = {}
 	local is7b = data.conj_type == "7b"
-	if not past_stem then
-		past_stem = pres_stems[1]
-		if is7b and data.past_stress ~= "b" then
-			past_stem = rsub(past_stem, "[дт]$", "")
+
+	forms["infinitive"] = full_inf
+
+	for i, pres_stem in ipairs(pres_stems) do
+		local regular_infins
+		if is7b then
+			regular_infins = class_7b_stem_to_infinitives(pres_stem)
+		else
+			regular_infins = class_7a_stem_to_infinitives(pres_stem)
+		end
+		--error(table.concat(regular_infins, ","))
+		local pres_note = not ut.contains(regular_infins, full_inf) and IRREG or ""
+		table.insert(pres_notes, pres_note)
+
+		if is7b then
+			present_e_b(forms, pres_stem, nil, pres_note)
+			append_imper(forms, pres_stem, nil, "и́", "и́те", pres_note)
+		else
+			present_e_a(forms, pres_stem, nil, pres_note)
+			append_imper_by_variant(forms, pres_stem, nil, data.imper_variant, "7a", pres_note)
 		end
 	end
+
+	-- Compute all the default past stems based on the present stems.
+	-- The actual past stem, if not specified, comes from the first default
+	-- past stem. We then compare the past stem against all default past stems;
+	-- if any match, the past stem is irregular according as to whether the
+	-- corresponding present stem is irregular. If not matches, the past stem
+	-- is irregular.
+	local default_past_stems = {}
+	for i, pres_stem in ipairs(pres_stems) do
+		local default_past_stem = pres_stem
+		-- вести́ -> ве́дший, вы́вести -> вы́ведший (similarly for мести́ etc.),
+		-- but красть -> кра́вший, вы́красть -> вы́кравший (similarly for класть, пасть, сесть).
+		-- This is documented on page 85 of Zaliznyak; see especially footnote 2.
+		if rfind(full_inf, "сть$") then
+			default_past_stem = rsub(default_past_stem, "[дт]$", "")
+		end
+		if com.is_unstressed(default_past_stem) then
+			default_past_stem = com.make_ending_stressed(default_past_stem)
+		end
+		table.insert(default_past_stems, default_past_stem)
+	end
+	local past_note
+	past_stem = past_stem or default_past_stems[1]
+	for i, default_past_stem in ipairs(default_past_stems) do
+		if past_stem == default_past_stem then
+			past_note = pres_notes[i]
+			break
+		end
+	end
+	past_note = past_note or IRREG
 	local past_tense_stem = past_stem
 	if is7b then
 		past_tense_stem = rsub(past_tense_stem,
@@ -2620,12 +2694,12 @@ local function guts_of_7(args, data, forms, pres_stems, past_stem)
 	local vowel_pp = is_vowel_stem(past_stem)
 	local pap = vowel_pp and "вши" or "ши"
 	local var9_note_symbol = next_note_symbol(data)
-	for _, pres_stem in ipairs(pres_stems) do
+	for i, pres_stem in ipairs(pres_stems) do
 		append_participles_2stem(forms, pres_stem, nil, past_stem, nil,
 			is7b and "у́щий" or "ущий", "-", is7b and "я́" or "я",
 			vowel_pp and "вший" or "ший",
 			data.var9 and {is7b and "я́" or "я", pap .. var9_note_symbol} or pap,
-			vowel_pp and not data.var9 and "в" or "-")
+			vowel_pp and not data.var9 and "в" or "-", pres_notes[i], past_note)
 	end
 	if data.var9 then
 		ut.insert_if_not(data.internal_notes, var9_note_symbol .. " Dated.")
@@ -2634,7 +2708,7 @@ local function guts_of_7(args, data, forms, pres_stems, past_stem)
 	set_past_by_stress(forms, data.past_stress, "", nil, past_tense_stem, nil,
 		args, data,
 		-- 0 ending if the past stem ends in a consonant
-		not is_vowel_stem(past_tense_stem) and "no-pastml")
+		not is_vowel_stem(past_tense_stem) and "no-pastml", past_note)
 	-- set PPP; must be done after both present 3sg and past fem have been set
 	set_class_7_8_ppp(forms, args, data)
 end
@@ -2648,16 +2722,8 @@ conjugations["7a"] = function(args, data)
 	local past_stem = get_opt_stressed_arg(args, 4)
 	no_stray_args(args, 4)
 
-	forms["infinitive"] = full_inf
-
-	local pres_stems = rsplit(pres_stem, ",")
-	for _, pres_stem in ipairs(pres_stems) do
-		present_e_a(forms, pres_stem)
-		append_imper_by_variant(forms, pres_stem, nil, data.imper_variant, "7a")
-	end
-
 	-- лезть - ле́зши - non-existent past_actv_part handled through general mechanism
-	guts_of_7(args, data, forms, pres_stems, past_stem)
+	guts_of_7(args, data, forms, full_inf, pres_stem, past_stem)
 
 	return forms
 end
@@ -2671,15 +2737,7 @@ conjugations["7b"] = function(args, data)
 	local pres_stem = past_stem and get_unstressed_arg(args, 3) or get_stressed_arg(args, 3)
 	no_stray_args(args, 4)
 
-	forms["infinitive"] = full_inf
-
-	local pres_stems = rsplit(pres_stem, ",")
-	for _, pres_stem in ipairs(pres_stems) do
-		present_e_b(forms, pres_stem)
-		append_imper(forms, pres_stem, nil, "и́", "и́те")
-	end
-
-	guts_of_7(args, data, forms, pres_stems, past_stem)
+	guts_of_7(args, data, forms, full_inf, pres_stem, past_stem)
 
 	return forms
 end
@@ -2911,17 +2969,18 @@ conjugations["11b"] = function(args, data)
 	local pres_stem = get_opt_unstressed_arg(args, 3)
 	no_stray_args(args, 3)
 	local prefix, _, base, _ = split_monosyllabic_main_verb(stem .. "и́", nil, "single_cons_base")
-	pres_stem = pres_stem or
+	local default_pres_stem =
 		data.star and construct_long_prefix_variant(prefix) .. rsub(base, "и́$", "") or
 		stem
+	pres_stem = pres_stem or default_pres_stem
+	local pres_note = pres_stem ~= default_pres_stem and IRREG
 
 	forms["infinitive"] = stem .. "и́ть"
 
 	append_participles_2stem(forms, pres_stem, nil, stem, nil,
-		"ью́щий", "-", "ья́", "и́вший", "и́вши", "и́в")
-	present_je(forms, pres_stem .. "ь", nil, "b")
-	forms["impr_sg"] = stem .. "е́й"
-	forms["impr_pl"] = stem .. "е́йте"
+		"ью́щий", "-", "ья́", "и́вший", "и́вши", "и́в", pres_note)
+	present_je(forms, pres_stem .. "ь", nil, "b", nil, pres_note)
+	append_imper(forms, stem .. "е́й", nil, "", "те")
 
 	-- e.g. пила́, лила́
 	set_past_by_stress(forms, data.past_stress, prefix, nil, base, nil,
@@ -2939,14 +2998,14 @@ conjugations["12a"] = function(args, data)
 	local pres_stem = get_opt_stressed_arg(args, 3) or stem
 	no_stray_args(args, 3)
 	local prefix, _, base, _ = split_monosyllabic_main_verb(stem)
+	local pres_note = pres_stem ~= stem and IRREG
 
 	forms["infinitive"] = stem .. "ть"
 
 	append_participles_2stem(forms, pres_stem, nil, stem, nil,
 		"ющий", "емый", "я", "вший", "вши", "в")
-	present_je(forms, pres_stem, nil, "a")
-	forms["impr_sg"] = pres_stem .. "й"
-	forms["impr_pl"] = pres_stem .. "йте"
+	present_je(forms, pres_stem, nil, "a", nil, pres_note)
+	append_imper(forms, pres_stem .. "й", nil, "", "те", pres_note)
 
 	set_past_by_stress(forms, data.past_stress, prefix, nil, base, nil,
 		args, data)
@@ -2960,20 +3019,20 @@ conjugations["12b"] = function(args, data)
 
 	parse_variants(data, args[1], {"past", "+p"})
 	local stem = nom.strip_ending(get_stressed_arg(args, 2), nil, "ть")
-	local pres_stem = get_opt_unstressed_arg(args, 3) or
-		com.make_unstressed_once(stem)
+	local default_pres_stem = com.make_unstressed_once(stem)
+	local pres_stem = get_opt_unstressed_arg(args, 3) or default_pres_stem
 	no_stray_args(args, 3)
 	local prefix, _, base, _ = split_monosyllabic_main_verb(stem)
+	local pres_note = pres_stem ~= default_pres_stem and IRREG
 
 	forms["infinitive"] = stem .. "ть"
 
 	-- no pres_pasv_part
 	append_participles_2stem(forms, pres_stem, nil, stem, nil,
-		"ю́щий", "-", "я́", "вший", "вши", "в")
-	present_je(forms, pres_stem, nil, "b")
+		"ю́щий", "-", "я́", "вший", "вши", "в", pres_note)
+	present_je(forms, pres_stem, nil, "b", nil, pres_note)
 	-- the preceding vowel is stressed
-	forms["impr_sg"] = pres_stem .. "́й"
-	forms["impr_pl"] = pres_stem .. "́йте"
+	append_imper(forms, pres_stem .. "́й", nil, "", "те", pres_note)
 
 	-- e.g. гнила́ but пе́ла
 	set_past_by_stress(forms, data.past_stress, prefix, nil, base, nil,
@@ -3195,10 +3254,10 @@ conjugations["irreg-бежать"] = function(args, data)
 
 	forms["infinitive"] = "бежа́ть"
 	append_participles_2stem(forms, "бег", nil, "бежа́", nil,
-		"у́щий", "-", "-", "вший", "вши", "в")
-	append_imper(forms, "беги́", nil, "", "те")
+		"у́щий", "-", "-", "вший", "вши", "в", IRREG)
+	append_imper(forms, "беги́", nil, "", "те", IRREG)
 	append_pres_futr(forms, "бе", nil,
-		"гу́", "жи́шь", "жи́т", "жи́м", "жи́те", "гу́т")
+		"гу́" .. IRREG, "жи́шь", "жи́т", "жи́м", "жи́те", "гу́т" .. IRREG)
 	set_past(forms, "бежа́л", nil, "", "а", "о", "и")
 	if data.old then
 		rsub_forms(forms, "^бе", "бѣ")
@@ -3225,10 +3284,10 @@ conjugations["irreg-хотеть"] = function(args, data)
 
 	forms["infinitive"] = "хоте́ть"
 	append_participles_2stem(forms, "хот", nil, "хоте́", nil,
-		"я́щий", "-", "я́",	"вший", "вши", "в")
+		"я́щий", "-", "я́", "вший", "вши", "в")
 	append_imper(forms, "хоти́", nil, "", "те")
 	append_pres_futr(forms, "", nil,
-		"хочу́", "хо́чешь", "хо́чет", "хоти́м", "хоти́те", "хотя́т")
+		"хочу́", "хо́чешь" .. IRREG, "хо́чет" .. IRREG, "хоти́м", "хоти́те", "хотя́т")
 	set_past(forms, "хоте́л", nil, "", "а", "о", "и")
 	if data.old then
 		rsub_forms(forms, "^хоте", "хотѣ")
@@ -3257,15 +3316,15 @@ conjugations["irreg-дать"] = function(args, data)
 		"да́вший", "да́вши", "да́в")
 	append_imper(forms, "да́й", nil, "", "те")
 	append_pres_futr(forms, "", nil,
-		"да́м", "да́шь", "да́ст", "дади́м", "дади́те", "даду́т")
+		"да́м", "да́шь", "да́ст", "дади́м", "дади́те", "даду́т", IRREG)
 	prepend_prefix(forms, prefix)
 	set_past_by_stress(forms, data.past_stress, prefix, nil, "да́", nil,
 		args, data)
 	if data.ppp then
 		if prefix == "пере" then
-			set_ppp(forms, "", nil, "пе́реданный")
+			set_ppp(forms, "", nil, "пе́реданный" .. IRREG)
 		elseif prefix == "раз" then
-			set_ppp(forms, "", nil, "ро́зданный")
+			set_ppp(forms, "", nil, "ро́зданный" .. IRREG)
 		else
 			set_moving_ppp(forms, data)
 		end
@@ -3569,23 +3628,23 @@ conjugations["irreg-честь"] = function(args, data)
 	-- no pres_pasv_part
 
 	forms["infinitive"] = "че́сть"
-	append_imper(forms, "чти́", nil, "", "те")
+	append_imper(forms, "чти́", nil, "", "те", IRREG)
 	present_e_b(forms, "чт")
 	if prefix == "" then
 		append_participles(forms, "", nil,
-			"чту́щий", "-", "чтя́", "чти́вший", "чти́вши", "чти́в")
+			"чту́щий", "-", "чтя́", "чти́вший", "чти́вши", "чти́в", IRREG)
 	elseif com.is_stressed(prefix) then
 		append_participles(forms, "", nil,
-			"-", "-", "-", "-", "чтя́", "-")
+			"-", "-", "-", "-", "чтя́", "-", IRREG)
 	else
 		append_participles(forms, "", nil,
-			"-", "-", "-", "-", {"чтя́", "чётши*"}, "-")
+			"-", "-", "-", "-", {"чтя́" .. IRREG, "чётши*"}, "-")
 		ut.insert_if_not(data.internal_notes, "* Dated.")
 	end
 	if data.ppp then
-		set_ppp(forms, "", nil, "чтённый")
+		set_ppp(forms, "", nil, "чтённый", IRREG)
 	end
-	set_past(forms, "", nil, "чёл", "чла́", "чло́", "чли́")
+	set_past(forms, "", nil, "чёл", "чла́" .. IRREG, "чло́" .. IRREG, "чли́" .. IRREG)
 	prepend_prefix(forms, prefix, pre_two_cons_prefix)
 	return forms
 end
