@@ -103,6 +103,9 @@ def generate_defn(defns, pos):
     elif defn.startswith("ux:"):
       defnlines.append("#: {{uxi|ru|%s}}\n" % (
         re.sub("^ux:", "", re.sub(r", *", ", ", defn))))
+    elif defn.startswith("uxx:"):
+      defnlines.append("#: {{ux|ru|%s}}\n" % (
+        re.sub("^uxx:", "", re.sub(r", *", ", ", defn))))
     else:
       labels = []
       prefix = ""
