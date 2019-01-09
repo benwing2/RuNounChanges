@@ -73,7 +73,7 @@ def process_page(index, page, save, verbose):
     else:
       pagemsg("Would save with comment = %s" % comment)
 
-parser = blib.create_argparser(u"Convert class-7 past overrides to past stress pattern")
+parser = blib.create_argparser(u"Rewrite class 7 verbs to correspond to module changes")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
