@@ -19,7 +19,7 @@ import re, sys, codecs, argparse
 from blib import msg, errmsg
 import rulib
 
-parser = argparse.ArgumentParser(description="Generate adjective stubs.")
+parser = argparse.ArgumentParser(description="Find lemmas which would have forms saved.")
 parser.add_argument('--direcfile', help="File containing directives.")
 args = parser.parse_args()
 
