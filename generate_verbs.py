@@ -174,14 +174,16 @@ while True:
   defntext = None
   wikitext = ""
   enwikitext = ""
+  cattext = ""
   for synantrel in els[5:]:
     if synantrel.startswith("#"):
       break # ignore comments
-    m = re.search(r"^(syn|ant|der|rel|see|pron|alt|def|note|wiki|enwiki|usage):(.*)", synantrel)
+    regex = "(syn|ant|der|rel|see|pron|alt|def|note|wiki|enwiki|usage|cat|tcat):"
+    m = re.search(r"^%s(.*)" % regex, synantrel)
     if not m:
-      error("Element %s doesn't start with syn:, ant:, der:, rel:, see:, pron:, alt:, def: or note:" % synantrel)
+      error("Element %s doesn't start with syn:, ant:, der:, rel:, see:, pron:, alt:, def:, note:, wiki:, enwiki:, usage:, cat: or tcat:" % synantrel)
     sartype, vals = m.groups()
-    if re.search(r"(syn|ant|der|rel|see|pron|alt|def|note|wiki|enwiki|usage):", vals):
+    if re.search(regex, vals):
       error("Saw stray prefix inside of text: %s" % synantrel)
     if sartype in ["syn", "ant"]:
       lines = []
@@ -244,6 +246,12 @@ while True:
       assert vals
       for val in do_split(",", vals):
         enwikitext += "{{wikipedia|%s}}\n" % val
+    elif sartype == "cat":
+      assert vals
+      cattext += "".join("[[Category:Russian %s]]\n" % val for val in do_split(",", vals))
+    elif sartype == "tcat":
+      assert vals
+      cattext += "".join("{{C|ru|%s}}\n" % val for val in do_split(",", vals))
     elif sartype == "usage":
       assert vals
       usagetext = re.sub(", *", ", ", vals)
@@ -339,6 +347,11 @@ while True:
   dertext = dertext or ""
   seetext = seetext or ""
 
+  # If any categories, put an extra newline after them so they end with two
+  # newlines, as with other textual snippets
+  if cattext:
+    cattext += "\n"
+
   if usagetext:
     usagetext = "====Usage notes====\n%s\n\n" % usagetext
 
@@ -355,8 +368,8 @@ while True:
 ====Conjugation====
 %s
 
-%s%s%s%s%s%s
+%s%s%s%s%s%s%s
 """ % (rulib.remove_accents(verb), enwikitext, wikitext, alttext, etymtext,
   prontext, verb, trtext, headword_aspect, corverbtext, notetext,
   defntext, passivetext, conjtext, usagetext, syntext, anttext, dertext,
-  reltext, seetext))
+  reltext, seetext, cattext))
