@@ -78,6 +78,9 @@ import rulib as ru
 site = pywikibot.Site()
 semi_verbose = False # Set by --semi-verbose or --verbose
 
+AC = u"\u0301" # acute =  ́
+GR = u"\u0300" # grave =  ̀
+
 # List of accentless multisyllabic words. FIXME: We include было because of
 # the expression не́ было, but we should maybe check for this expression
 # rather than never accenting было.
@@ -86,6 +89,14 @@ accentless_multisyllable = [u"либо", u"нибудь", u"надо", u"обо"
 
 ru_head_templates = ["ru-noun", "ru-proper noun", "ru-verb", "ru-adj", "ru-adv",
   "ru-phrase", "ru-noun form"]
+
+monosyllabic_prepositions = [u"без", u"близ", u"во", u"да", u"до", u"за",
+    u"из", u"ко", u"меж", u"на", u"над", u"не", u"ни", u"о", u"об", u"от",
+    u"по", u"под", u"пред", u"при", u"про", u"со", u"у"]
+
+monosyllabic_accented_prepositions = [
+    prep + AC for prep in monosyllabic_prepositions
+]
 
 # List of heads found during lookup of a page. Value is None if the page
 # doesn't exist. Value is the string "redirect" if page is a redirect.
@@ -138,7 +149,7 @@ def find_accented_2(term, termtr, verbose, pagemsg):
   if "<" in term or ">" in term:
     pagemsg("Can't handle stray < or >: %s" % term)
     return term, termtr
-  if u"\u0301" in term or u"ё" in term:
+  if AC in term or u"ё" in term:
     pagemsg(u"Term has accent or ё, not looking up accents: %s" % term)
     return term, termtr
   if ru.is_monosyllabic(term):
@@ -290,10 +301,17 @@ def find_accented_split_words(term, termtr, words, trwords, verbose, pagemsg,
     for i in xrange(len(words)):
       word = words[i]
       trword = trwords[i] if trwords else ""
+      # If it's a word (not a separator), look it up.
       if i % 2 == 0:
-        # If it's a word (not a separator), look it up.
-        ru, tr = find_accented(word, trword, verbose, pagemsg, expand_text,
-            origt)
+        if i > 0 and words[i - 2] in monosyllabic_accented_prepositions:
+          # If it's a word and preceded by a stressed monosyllabic
+          # preposition (e.g. до́ смерти), leave it alone.
+          ru = word
+          tr = trword
+        else:
+          # Otherwise, actually look it up.
+          ru, tr = find_accented(word, trword, verbose, pagemsg, expand_text,
+              origt)
         if tr and "," in tr:
           chopped_tr = re.sub(",.*", "", tr)
           pagemsg("WARNING: Comma in translit <%s>, chopping off text after the comma to <%s>" % (
@@ -439,7 +457,7 @@ def join_changelog_notes(notes):
 def check_need_accent(text):
   for word in re.split(" +", text):
     word = blib.remove_links(word)
-    if u"\u0301" in word or u"ё" in word:
+    if AC in word or u"ё" in word:
       continue
     if not ru.is_monosyllabic(word):
       return True
