@@ -63,11 +63,19 @@ def paste_verb(prefix, suffix):
     verb = prefix + suffix
   return ru.remove_monosyllabic_accents(verb)
 
-def combine_prefix(prefix, suffixes):
+def combine_prefix(prefix, suffixes, aspect):
+  # If the prefix starts with +, include the aspect. See лететь.der for
+  # a good example.
+  add_aspect = False
+  if prefix.startswith("+"):
+    add_aspect = True
+    prefix = prefix[1:]
   links = []
   for suffix in suffixes:
-    links.append("{{l|ru|" + paste_verb(prefix, suffix) + "}}")
+    links.append("{{l|ru|" + paste_verb(prefix, suffix) +
+        ("|g=%s" % aspect if add_aspect else "") + "}}")
   return "* " + ", ".join(links)
+
 # Each group is delineated by a line containing only a hyphen in the
 # directive file, and consists of a list of (pf, impf) pairs. Multiple tables
 # are delineated by a line containing two or more hyphens.
@@ -94,16 +102,35 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
       groups.append(group)
     group = []
   elif " " not in line:
-    group.append((combine_prefix(line, pfsuffixes),
-        combine_prefix(ru.make_unstressed(line), impfsuffixes)))
+    # A single prefix; combine with previous suffixes.
+    # If it starts with a + (indicating include the apsect), that applies
+    # only to the perfective verb. See лететь.der for good examples.
+    group.append((combine_prefix(line, pfsuffixes, "pf"),
+        combine_prefix(ru.make_unstressed(line).replace("+", ""), impfsuffixes, "impf")))
+  elif re.search(r" \+$", line):
+    # Something like "об +" or "+об +". This indicates that the imperfective
+    # (and maybe the perfective) should include the aspect. See лететь.der
+    # for good examples.
+    pf, impf = re.split(r"\s+", line)
+    assert impf == "+"
+    group.append((combine_prefix(pf, pfsuffixes, "pf"),
+        combine_prefix("+" + ru.make_unstressed(pf), impfsuffixes, "impf")))
   elif "!" in line:
+    # Something like "об !" or "+об !" or "! об" or "! +об". This indicates
+    # that one of the two is missing and the other should combine with
+    # previous suffixes, maybe with the aspect included (see лететь.der for
+    # good examples of this).
     pf, impf = re.split(r"\s+", line)
     assert pf == "!" or impf == "!"
     if pf == "!":
-      group.append(("* (no equivalent)", combine_prefix(ru.make_unstressed(impf), impfsuffixes)))
+      group.append(("* (no equivalent)", combine_prefix(ru.make_unstressed(impf), impfsuffixes, "impf")))
     else:
-      group.append((combine_prefix(pf, pfsuffixes), "* (no equivalent)"))
+      group.append((combine_prefix(pf, pfsuffixes, "pf"), "* (no equivalent)"))
   else:
+    # Something like "обмени́ть,обменя́ть обме́нивать" or "+переменя́ться -".
+    # We directly include the perfective and imperfective verb(s), where
+    # a lone "-" means to not include it, and a prefixed "+" means to
+    # include the aspect.
     pf, impf = re.split(r"\s+", line)
     if pf.startswith("-") and impf.startswith("-"):
       pfsuffixes = [re.sub("^-", "", x) for x in re.split(",", pf)]
