@@ -178,12 +178,14 @@ while True:
   for synantrel in els[5:]:
     if synantrel.startswith("#"):
       break # ignore comments
-    regex = "(syn|ant|der|rel|see|pron|alt|def|note|wiki|enwiki|usage|cat|tcat):"
-    m = re.search(r"^%s(.*)" % regex, synantrel)
+    alternation_no_syn_ant = "der|rel|see|pron|alt|def|note|wiki|enwiki|usage|cat|tcat"
+    prefix_regex = "(syn|ant|%s):" % alternation_no_syn_ant
+    prefix_regex_no_syn_ant = "(%s):" % alternation_no_syn_ant
+    m = re.search(r"^%s(.*)" % prefix_regex, synantrel)
     if not m:
       error("Element %s doesn't start with syn:, ant:, der:, rel:, see:, pron:, alt:, def:, note:, wiki:, enwiki:, usage:, cat: or tcat:" % synantrel)
     sartype, vals = m.groups()
-    if re.search(regex, vals):
+    if re.search(prefix_regex_no_syn_ant if sartype == "def" else prefix_regex, vals):
       error("Saw stray prefix inside of text: %s" % synantrel)
     if sartype in ["syn", "ant"]:
       lines = []
