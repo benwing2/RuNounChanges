@@ -112,6 +112,12 @@ def generate_defn(defns, pos):
     elif defn.startswith("ant:"):
       defnlines.append("#: {{ant|ru|%s}}\n" % (
         re.sub("^ant:", "", re.sub(r", *", "|", defn))))
+    elif defn.startswith("pf:"):
+      defnlines.append("#: {{pf|ru|%s}}\n" % (
+        re.sub("^pf:", "", re.sub(r", *", "|", defn))))
+    elif defn.startswith("impf:"):
+      defnlines.append("#: {{impf|ru|%s}}\n" % (
+        re.sub("^impf:", "", re.sub(r", *", "|", defn))))
     else:
       labels = []
       prefix = ""
