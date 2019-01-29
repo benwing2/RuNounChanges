@@ -29,7 +29,7 @@
 #    can handle e.g. the multiword linked expressions in 24195 стан, such
 #    as [[нотный стан]] and [[передвижной полевой стан]].
 # 3. (DONE) Handle single-word two-part links [[FOO|BAR]].
-# 4. Consider implementing support for [[FOO BAR]] [[BAZ]]. To do this
+# 4. (DONE?) Consider implementing support for [[FOO BAR]] [[BAZ]]. To do this
 #    we need to keep [[FOO BAR]] together when word-splitting. We can
 #    do this by splitting on the expression we want to keep together,
 #    with a capturing split, something like "(\[\[.*?\]\]|[^ ,.!?\-]+)".
@@ -58,9 +58,9 @@
 # 13. (DONE) When fetching the result of ru-noun+, if there are multiple
 #    lemmas, combine the ones with the same Russian by separating the translits
 #    with a comma. Occurs e.g. in 6810 динамика with {{l|ru|термодинамика}}.
-# 14. If we repeat this script, we should handle words that occur directly
-#    after a stressed monosyllabic preposition and not auto-acent them.
-#    The list of such prepositions is без, близ, во, да, до, за, из, ко,
+# 14. (DONE) If we repeat this script, we should handle words that occur
+#    directly after a stressed monosyllabic preposition and not auto-accent
+#    them. The list of such prepositions is без, близ, во, да, до, за, из, ко,
 #    меж, на, над, не, ни, об, от, по, под, пред, при, про, со, у. I don't
 #    think multisyllabic unstressed prepositions can steal accent from a
 #    following word; need to ask Anatoli/Wikitiki89 about this.
@@ -68,6 +68,14 @@
 #    {{lang|ru|{{l|ru|это|Это}} клёвее.}}, which may mistakenly get replaced
 #    with {{l|ru|это|Это}} (formerly found on the [[клёвее]] page). NEED TO
 #    CHECK WHETHER THIS ERROR STILL HAPPENS.
+# 16. (DONE) Add links of the form [[LEMMA|FORM]] and '''FORM'''.
+# 17. (DONE) Add links also for adjectives where we don't generate pages for
+#     the non-lemma forms.
+# 18. Don't auto-accent templates inside of a #* line.
+# 19. Use subst= in ux/uxi/quote/usex.
+# 20. Avoid creating excessive translit with genitive adj forms in -ого/-его.
+#     See абы #305 for an example.
+# 21. Consider handling capitalized forms at beginning of line.
 
 import re, codecs
 
@@ -537,24 +545,6 @@ def bracket_term_with_lemma(term, lemma, pagetitle):
 # Look up a term (and associated manual translit) and try to add accents.
 # The basic algorithm is that we first look up the whole term and then
 # split on words and recursively look up each word individually.
-# We are currently able to handle some bracketed expressions but not all:
-#
-# (1) If we're passed in [[FOO]] or [[FOO BAR]], we handle it as a special
-#     case by recursively looking up the text inside the link.
-# (2) If we're passed in [[FOO|BAR]] or [[FOO BAR|BAZ BAT]], we handle it as
-#     another special case by recursively looking up the text on the right
-#     side of the vertical bar.
-# (3) If we're passed in [[FOO]] [[BAR]], [[FOO]] [[BAR|BAZ]] or
-#     [[FOO|BAR]] [[BAZ|BAT]], special cases (1) and (2) won't apply. We then
-#     will reject it (i.e. leave it unchanged) during the first lookup but
-#     then succeed during the recursive (word-split) version, because we
-#     will recursively be able to handle the individual parts by cases
-#     (1) and (2).
-# (4) If we're passed in [[FOO BAR]] [[BAZ]], or any other expression with
-#     a space inside of a link that isn't the entire term, we can't currently
-#     handle it. Word splitting will leave unbalanced "words" [[FOO and BAR]],
-#     which we will trigger a rejection of the whole expression (i.e. it will
-#     be left unchanged).
 def find_accented_1(term, termtr, verbose, pagetitle, pagemsg, expand_text,
     origt, add_brackets):
   # (1) Handle plain [[FOO]] or [[FOO BAR]].
@@ -599,13 +589,13 @@ def find_accented_1(term, termtr, verbose, pagetitle, pagemsg, expand_text,
     inner_add_brackets = add_brackets
     if lemma:
       inner_add_brackets = False
-    words = re.split(r"('''.*?'''|''[^'\n]*?''|\[\[.*?\]\]|[^ ,.?!]+)", term)
-    trwords = (re.split(r"('''.*?'''|''[^'\n]*?''|\[\[.*?\]\]|[^ ,.?!]+)", termtr)
+    words = re.split(r"('''.*?'''|\[\[.*?\]\]|[^ ,.?!]+)", term)
+    trwords = (re.split(r"('''.*?'''|\[\[.*?\]\]|[^ ,.?!]+)", termtr)
       if termtr else [])
     if trwords and len(words) != len(trwords):
       pagemsg("WARNING: %s Cyrillic words but different number %s translit words: %s//%s" % (len(words), len(trwords), term, termtr))
     elif (len(words) == 3 and not words[0] and not words[2] and
-        words[1][0] not in "'[]"):
+        not words[1].startswith("[") and not words[1].startswith("'''")):
       # Just a single word, not surrounded by brackets or '''...''' or ''...''.
       if term.startswith("-") or term.endswith("-"):
         # Don't separate a prefix or suffix into component parts; might
@@ -619,8 +609,7 @@ def find_accented_1(term, termtr, verbose, pagetitle, pagemsg, expand_text,
         if trwords and len(words) != len(trwords):
           pagemsg("WARNING: %s Cyrillic words but different number %s translit words: %s//%s" % (len(words), len(trwords), term, termtr))
           pass
-        elif (len(words) == 3 and not words[0] and not words[2] and
-            words[1][0] not in "'[]"):
+        elif len(words) == 3 and not words[0] and not words[2]:
           # Only one word, and we already looked it up; don't duplicate work
           # or get stuck in infinite loop.
           pass
