@@ -360,11 +360,18 @@ def lookup_term_for_accents(term, termtr, verbose, pagemsg):
       expand_text)
     if adj_cache_result is not None and adj_cache_result != "redirect":
       _, _, _, this_adj_forms = adj_cache_result
-      for adj_form in this_adj_forms:
-        adj_form_ru, adj_form_tr = split_ru_tr(adj_form)
-        if ru.remove_accents(adj_form_ru) == pagename:
-          heads.add((adj_form_ru, adj_form_tr))
-          inflections_of.add(adj_lemma)
+      for adj_form_one_or_more in this_adj_forms:
+        # Each "form" is actually one or more forms separated by commas.
+        # In some cases we have e.g. ла́зерная,ла́зерная//lázɛrnaja, which
+        # we want to convert to ru="ла́зерная", tr="lázernaja, lázɛrnaja".
+        split_adj_forms = re.split(",", adj_form_one_or_more)
+        split_adj_forms = [split_ru_tr(adj_form) for adj_form in split_adj_forms]
+        # Group lemmas by Russian, to group multiple translits
+        split_adj_forms = ru.group_translits(split_adj_forms, pagemsg, expand_text)
+        for adj_form_ru, adj_form_tr in split_adj_forms:
+          if ru.remove_accents(adj_form_ru) == pagename:
+            heads.add((adj_form_ru, adj_form_tr))
+            inflections_of.add(adj_lemma)
 
   # We have the heads
   cached_msg = " (cached)" if cached else ""
