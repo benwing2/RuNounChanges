@@ -85,6 +85,8 @@
 # 27. (DONE) Add support for overriding lemma/inflection lookup for certain
 #     common words where lookup fails due to lemma + non-lemma on same page
 #     (e.g. бы́ло, как, пять).
+# 28. (DONE) If already accented, use that to filter heads, e.g. 4370 валить
+#     with ку́чу (noun only, not кучу́ verb).
 
 import re, codecs
 
@@ -244,12 +246,15 @@ def get_adj_form_lemmas(form):
 # (page is a redirect) or a tuple as follows:
 #   (HEADS, SAW_LEMMA, INFLECTIONS_OF, ADJ_FORMS)
 #
-# (1) HEADS is all heads found on the page (each of which is (RU, TR)),
+# (1) HEADS is a set of all heads found on the page, each of which is
+#     (RU, TR, IS_LEMMA),
 # (2) SAW_LEMMA is True if we saw any lemma templates on the page (not
 #     including e.g. {{ru-noun form}} or {{head|ru|verb form}})
-# (3) INFLECTIONS_OF is all lemmas of which this entry is an inflection,
-# (4) ADJ_FORMS is all adjective forms of any adjective lemmas found on the
-#     page (each of which is (RU, TR)).
+# (3) INFLECTIONS_OF is a set of (HEADS, LEMMA) for each lemma of which this
+#     entry is an inflection, listing the heads in the same subsection as the
+#     {{inflection of|...}} call. HEADS is a set exactly like (1) above.
+# (4) ADJ_FORMS is a set of all adjective forms of any adjective lemmas found
+#     on the page (each of which is (RU, TR)).
 def fetch_page_from_cache(pagename, pagemsg):
   if semi_verbose:
     pagemsg("fetch_page_from_cache: Finding heads on page %s" % pagename)
@@ -263,9 +268,10 @@ def fetch_page_from_cache(pagename, pagemsg):
   if pagename in manually_specified_inflections:
     accented, lemma = manually_specified_inflections[pagename]
     if lemma is True:
-      return False, ({(accented, "")}, True, set(), set())
+      return False, ({(accented, "", True)}, set(), set())
     else:
-      return False, ({(accented, "")}, False, {lemma}, set())
+      return False, ({(accented, "", False)},
+          {(frozenset({(accented, "", False)}), lemma)}, set())
 
   global num_cache_lookups
   num_cache_lookups += 1
@@ -305,60 +311,73 @@ def fetch_page_from_cache(pagename, pagemsg):
 
     # Page exists and is not a redirect, find the info
     heads = set()
-    def add(val, tr):
-      val_to_add = blib.remove_links(val)
-      if val_to_add:
-        heads.add((val_to_add, tr))
-    saw_lemma = False
     inflections_of = set()
     adj_forms = set()
-    for t in blib.parse(page).filter_templates():
-      tname = unicode(t.name)
-      check_addl_heads = False
-      if tname in ru_head_templates:
-        if tname in ru_lemma_templates:
-          saw_lemma = True
-        check_addl_heads = True
-        if getparam(t, "1"):
-          add(getparam(t, "1"), getparam(t, "tr"))
-        elif getparam(t, "head"):
-          add(getparam(t, "head"), getparam(t, "tr"))
-        else:
-          add(pagename, "")
-      elif tname == "head" and getparam(t, "1") == "ru":
-        if getparam(t, "2") in ru_lemma_poses:
-          saw_lemma = True
-        check_addl_heads = True
-        if getparam(t, "head"):
-          add(getparam(t, "head"), getparam(t, "tr"))
-        else:
-          add(pagename, "")
-      elif tname in ["ru-noun+", "ru-proper noun+"]:
-        saw_lemma = True
-        lemma = rulib.fetch_noun_lemma(t, expand_text)
-        lemmas = re.split(",", lemma)
-        lemmas = [split_ru_tr(lemma, pagemsg) for lemma in lemmas]
-        # Group lemmas by Russian, to group multiple translits
-        lemmas = rulib.group_translits(lemmas, pagemsg, semi_verbose)
-        for val, tr in lemmas:
-          add(val, tr)
-      elif tname == "inflection of" and getparam(t, "lang") == "ru":
-        inflections_of.add(normalize_text(getparam(t, "1")))
-      if check_addl_heads:
-        for i in xrange(2, 10):
-          headn = getparam(t, "head" + str(i))
-          if headn:
-            add(headn, getparam(t, "tr" + str(i)))
-      elif tname == "ru-decl-adj":
-        result = expand_text(re.sub(r"^\{\{ru-decl-adj", "{{ru-generate-adj-forms", unicode(t)))
-        if not result:
-          pagemsg("WARNING: fetch_page_from_cache: Error expanding template %s" % unicode(t))
-        else:
-          args = rulib.split_generate_args(result)
-          for value in args.itervalues():
-            adj_forms.add(value)
 
-    cacheval = (heads, saw_lemma, inflections_of, adj_forms)
+    foundrussian = False
+    sections = re.split("(^==[^=]*==\n)", unicode(page.text), 0, re.M)
+
+    for j in xrange(2, len(sections), 2):
+      if sections[j-1] == "==Russian==\n":
+        if foundrussian:
+          pagemsg("WARNING: fetch_page_from_cache: Found multiple Russian sections")
+          break
+        foundrussian = True
+
+        subsections = re.split("(^===+[^=\n]+===+\n)", sections[j], 0, re.M)
+        for k in xrange(2, len(subsections), 2):
+          parsed = blib.parse_text(subsections[k])
+          this_heads = set()
+          def add(val, tr, is_lemma):
+            val_to_add = blib.remove_links(val)
+            this_heads.add((val_to_add, tr, is_lemma))
+          for t in parsed.filter_templates():
+            tname = unicode(t.name)
+            check_addl_heads = False
+            if tname in ru_head_templates:
+              is_lemma = tname in ru_lemma_templates
+              check_addl_heads = True
+              if getparam(t, "1"):
+                add(getparam(t, "1"), getparam(t, "tr"), is_lemma)
+              elif getparam(t, "head"):
+                add(getparam(t, "head"), getparam(t, "tr"), is_lemma)
+              else:
+                add(pagename, "", is_lemma)
+            elif tname == "head" and getparam(t, "1") == "ru":
+              is_lemma = getparam(t, "2") in ru_lemma_poses
+              check_addl_heads = True
+              if getparam(t, "head"):
+                add(getparam(t, "head"), getparam(t, "tr"), is_lemma)
+              else:
+                add(pagename, "", is_lemma)
+            elif tname in ["ru-noun+", "ru-proper noun+"]:
+              is_lemma = True
+              lemma = rulib.fetch_noun_lemma(t, expand_text)
+              lemmas = re.split(",", lemma)
+              lemmas = [split_ru_tr(lemma, pagemsg) for lemma in lemmas]
+              # Group lemmas by Russian, to group multiple translits
+              lemmas = rulib.group_translits(lemmas, pagemsg, semi_verbose)
+              for val, tr in lemmas:
+                add(val, tr, is_lemma)
+            elif tname == "inflection of" and getparam(t, "lang") == "ru":
+              inflections_of.add((frozenset(this_heads),
+                normalize_text(getparam(t, "1"))))
+            if check_addl_heads:
+              for i in xrange(2, 10):
+                headn = getparam(t, "head" + str(i))
+                if headn:
+                  add(headn, getparam(t, "tr" + str(i)), is_lemma)
+            elif tname == "ru-decl-adj":
+              result = expand_text(re.sub(r"^\{\{ru-decl-adj", "{{ru-generate-adj-forms", unicode(t)))
+              if not result:
+                pagemsg("WARNING: fetch_page_from_cache: Error expanding template %s" % unicode(t))
+              else:
+                args = rulib.split_generate_args(result)
+                for value in args.itervalues():
+                  adj_forms.add(value)
+          heads.update(this_heads)
+
+    cacheval = (heads, inflections_of, adj_forms)
     if not global_disable_cache:
       accented_cache[pagename] = cacheval
     return False, cacheval
@@ -424,18 +443,17 @@ def lookup_term_for_accents(term, termtr, verbose, pagemsg, expect_cap):
     cached, cache_result = fetch_page_from_cache(pagename, pagemsg)
     if cache_result is None or cache_result == "redirect":
       heads = set()
-      saw_lemma = False
       inflections_of = set()
       adj_forms = set()
     else:
-      heads, saw_lemma, inflections_of, adj_forms = cache_result
+      heads, inflections_of, adj_forms = cache_result
 
     # Look up any adjectives of which the page may be a form
     adj_lemmas = get_adj_form_lemmas(pagename)
     for adj_lemma in adj_lemmas:
       adj_cached, adj_cache_result = fetch_page_from_cache(adj_lemma, pagemsg)
       if adj_cache_result is not None and adj_cache_result != "redirect":
-        _, _, _, this_adj_forms = adj_cache_result
+        _, _, this_adj_forms = adj_cache_result
         for adj_form_one_or_more in this_adj_forms:
           # Each "form" is actually one or more forms separated by commas.
           # In some cases we have e.g. ла́зерная,ла́зерная//lázɛrnaja, which
@@ -446,10 +464,30 @@ def lookup_term_for_accents(term, termtr, verbose, pagemsg, expect_cap):
           split_adj_forms = rulib.group_translits(split_adj_forms, pagemsg, semi_verbose)
           for adj_form_ru, adj_form_tr in split_adj_forms:
             if rulib.remove_accents(adj_form_ru) == pagename:
-              heads.add((adj_form_ru, adj_form_tr))
-              inflections_of.add(adj_lemma)
+              this_head_entry = (adj_form_ru, adj_form_tr, False)
+              heads.add(this_head_entry)
+              inflections_of.add((frozenset({this_head_entry}), adj_lemma))
+          # FIXME! If has accents, check that accents match adj form.
+          # This is tricky in the context of capitalization.
 
     # We have the heads
+    # First, filter heads and inflections to match an accented term, if
+    # supplied.
+    if AC in term or u"ё" in term:
+      heads = set((ru, tr, is_lemma) for ru, tr, is_lemma in heads if ru == term)
+      inflections_of = set((heads, lemma) for heads, lemma in inflections_of if
+          any(ru == term for ru, tr, is_lemma in heads))
+    saw_lemma = any(is_lemma for ru, tr, is_lemma in heads)
+
+    def stringize_heads(heads):
+      return ",".join("%s%s%s" % (
+        ru, "//%s" % tr if tr else "", "[lemma]" if is_lemma else "")
+        for ru, tr, is_lemma in heads)
+
+    def stringize_inflections_of(inflections_of):
+      return "; ".join("%s:%s" % (stringize_heads(heads), lemma)
+          for heads, lemma in inflections_of)
+
     cached_msg = " (cached)" if cached else ""
     if len(heads) == 0:
       if cache_result is not None and cache_result != "redirect":
@@ -458,9 +496,9 @@ def lookup_term_for_accents(term, termtr, verbose, pagemsg, expect_cap):
       # the non-capitalized equivalent.
       continue
     if len(heads) > 1:
-      pagemsg("WARNING: lookup_term_for_accents: Found multiple heads for %s%s: %s" % (pagename, cached_msg, ",".join("%s%s" % (ru, "//%s" % tr if tr else "") for ru, tr in heads)))
+      pagemsg("WARNING: lookup_term_for_accents: Found multiple heads for %s%s: %s" % (pagename, cached_msg, stringize_heads(heads)))
       return term, termtr, None
-    newterm, newtr = list(heads)[0]
+    newterm, newtr, is_lemma = list(heads)[0]
     if pagename != real_pagename:
       # We were asked to consider a capitalized word, decided to look up the
       # non-capitalized equivalent and found a match. We need to transfer the
@@ -509,7 +547,7 @@ def lookup_term_for_accents(term, termtr, verbose, pagemsg, expect_cap):
       newtr = termtr
     if len(inflections_of) == 1 and not saw_lemma:
       # Not a lemma and inflection of one lemma
-      lemma = list(inflections_of)[0]
+      _, lemma = list(inflections_of)[0]
       return newterm, newtr, lemma
     elif len(inflections_of) == 0 and saw_lemma:
       # A lemma and not a non-lemma form
@@ -520,21 +558,20 @@ def lookup_term_for_accents(term, termtr, verbose, pagemsg, expect_cap):
         return newterm, newtr, pagename
       else:
         return newterm, newtr, True
+
     # Else, either (a) both lemma and non-lemma, (b) non-lemma of multiple
     # lemmas, or (c) neither lemma nor non-lemma.
     if len(inflections_of) > 0 and saw_lemma:
       # (a) both lemma and non-lemma.
       pagemsg("WARNING: lookup_term_for_accents: Found lemma and inflections of one or more lemmas for %s%s: head(s) %s, lemma(s) of which this term is an inflection %s" % (
-        pagename, cached_msg,
-        ",".join("%s%s" % (ru, "//%s" % tr if tr else "") for ru, tr in heads),
-        ",".join(inflections_of)))
+        pagename, cached_msg, stringize_heads(heads),
+        stringize_inflections_of(inflections_of)))
       return newterm, newtr, None
     elif len(inflections_of) > 1:
       # (b) both lemma and non-lemma.
       pagemsg("WARNING: lookup_term_for_accents: Found inflections of multiple lemmas for %s%s: head(s) %s, lemmas of which this term is an inflection %s" % (
-        pagename, cached_msg,
-        ",".join("%s%s" % (ru, "//%s" % tr if tr else "") for ru, tr in heads),
-        ",".join(inflections_of)))
+        pagename, cached_msg, stringize_heads(heads),
+        stringize_inflections_of(inflections_of)))
     else:
       # (c) neither lemma nor non-lemma.
       pass
