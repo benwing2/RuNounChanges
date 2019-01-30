@@ -72,7 +72,7 @@
 # 17. (DONE) Add links also for adjectives where we don't generate pages for
 #     the non-lemma forms.
 # 18. (DONE) Don't auto-accent templates inside of a #* line.
-# 19. Use subst= in ux/uxi/quote/usex.
+# 19. (DONE) Use subst= in ux/uxi/quote/usex.
 # 20. (DONE) Avoid creating excessive translit with genitive adj forms in
 #     -ого/-его. See 305 абы for an example.
 # 21. (DONE) Handle capitalized forms at beginning of line.
@@ -91,6 +91,7 @@ import re, codecs
 import blib, pywikibot
 from blib import msg, getparam, addparam
 import rulib
+import ru_reverse_translit
 
 site = pywikibot.Site()
 semi_verbose = False # Set by --semi-verbose or --verbose
@@ -109,7 +110,8 @@ ru_lemma_poses = ["circumfix", "conjunction", "determiner", "interfix",
   "interjection", "letter", "numeral", "cardinal number", "particle",
   "predicative", "prefix", "preposition", "prepositional phrase", "pronoun"]
 # FIXME! List all the quote-* and cite-* templates
-link_expandable_templates = ["ux", "uxi", "quote"]
+link_expandable_templates = ["ux", "uxi", "quote", "usex"]
+templates_with_subst = link_expandable_templates
 
 monosyllabic_prepositions = [u"без", u"близ", u"во", u"да", u"до", u"за",
     u"из", u"ко", u"меж", u"на", u"над", u"не", u"ни", u"о", u"об", u"от",
@@ -546,11 +548,12 @@ def lookup_term_for_accents(term, termtr, verbose, pagemsg, expect_cap):
 # alternating separators in the even-numbered words, find accents for each
 # individual word and then rejoin the result.
 def find_accented_split_words(term, termtr, words, trwords, verbose, pagetitle,
-    pagemsg, origt, add_brackets, expect_cap):
+    pagemsg, template, add_brackets, expect_cap):
   newterm = term
   newtr = termtr
   # Check for unbalanced brackets.
   unbalanced = False
+  substs = []
   for i in xrange(1, len(words), 2):
     word = words[i]
     if word.count("[") != word.count("]"):
@@ -586,7 +589,8 @@ def find_accented_split_words(term, termtr, words, trwords, verbose, pagetitle,
           # FIXME! Bracket term as necessary.
         else:
           # Otherwise, actually look it up.
-          ru, tr = find_accented(word, trword, verbose, pagetitle, pagemsg,
+          ru, tr, this_substs = find_accented(word, trword, verbose, pagetitle,
+            pagemsg, template, add_brackets,
             # We expect the first char to be capitalized if either
             # (1) We expect the first char of the entire word sequence to
             #     be capitalized and we're processing the first word, or
@@ -595,7 +599,7 @@ def find_accented_split_words(term, termtr, words, trwords, verbose, pagetitle,
             #     that isn't a single-capital-letter word (this extra
             #     condition is to handle e.g. "П. И. Чайковский", where the
             #     capitalized word is should not be looked up lowercase).
-            origt, add_brackets, expect_cap and i == 1 or (
+            expect_cap and i == 1 or (
               (words[i - 1].endswith(". ") or words[i - 1].endswith(".  ")) and
               not (i >= 2 and len(words[i - 2]) == 1 and words[i - 2].isupper())
             ))
@@ -608,6 +612,16 @@ def find_accented_split_words(term, termtr, words, trwords, verbose, pagetitle,
         newtrwords.append(tr)
         # If we saw a manual translit word, note it (see above).
         if tr:
+          if this_substs:
+            for this_subst in this_substs:
+              if this_subst not in substs:
+                substs.append(this_subst)
+          else:
+            bare_ru = blib.remove_links(ru)
+            newsubst = "%s//%s" % (bare_ru,
+              ru_reverse_translit.reverse_translit(tr, cyrillic=bare_ru))
+            if newsubst not in substs:
+              substs.append(newsubst)
           sawtr = True
       else:
         # Else, a separator or blank word. Just copy it. If it has
@@ -625,7 +639,7 @@ def find_accented_split_words(term, termtr, words, trwords, verbose, pagetitle,
         newtrwords.append(trword or word)
         if trword and word != trword:
           pagemsg("WARNING: find_accented_split_words: Separator <%s> at index %s has manual translit <%s> that's different from it: %s" % (
-            word, i, trword, origt))
+            word, i, trword, unicode(template)))
           sawtr = True
     if sawtr:
       newertrwords = []
@@ -648,7 +662,7 @@ def find_accented_split_words(term, termtr, words, trwords, verbose, pagetitle,
     else:
       newterm = "".join(newwords)
       newtr = ""
-  return newterm, newtr
+  return newterm, newtr, substs
 
 def bracket_term_with_lemma(term, lemma, pagetitle):
   if lemma is True:
@@ -670,7 +684,7 @@ def bracket_term_with_lemma(term, lemma, pagetitle):
 # Look up a term (and associated manual translit) and try to add accents.
 # The basic algorithm is that we first look up the whole term and then
 # split on words and recursively look up each word individually.
-def find_accented_1(term, termtr, verbose, pagetitle, pagemsg, origt,
+def find_accented_1(term, termtr, verbose, pagetitle, pagemsg, template,
     add_brackets, expect_cap):
   # (1) Handle plain [[FOO]] or [[FOO BAR]].
   m = re.search(r"^\[\[([^\[\]\|]*)\]\]$", term)
@@ -680,36 +694,37 @@ def find_accented_1(term, termtr, verbose, pagetitle, pagemsg, origt,
     # whole clause. Then we check if the returned term is bracketed, and
     # return it whole if so; otherwise, remove any surrounding boldface
     # and bracket.
-    newterm, newtr = find_accented(m.group(1), termtr, verbose, pagetitle,
-      pagemsg, origt, "outer", expect_cap)
+    newterm, newtr, substs = find_accented(m.group(1), termtr, verbose,
+      pagetitle, pagemsg, template, "outer", expect_cap)
     if re.search(r"^\[\[([^\[\]]*)\]\]$", newterm):
       # If term is already bracketed, just return it.
       if "|" in newterm:
         pagemsg("WARNING: find_accented_1: Already bracketed term %s referencing non-lemma, replacing with lemma reference %s" %
           (term, newterm))
-      return newterm, newtr
+      return newterm, newtr, substs
     m = re.search(r"^'''(.*)'''$", newterm)
     if m:
-      return "[[%s]]" % m.groups(1), newtr
-    return "[[%s]]" % newterm, newtr
+      return "[[%s]]" % m.groups(1), newtr, substs
+    return "[[%s]]" % newterm, newtr, substs
 
   # (2) Handle [[FOO|BAR]] or [[FOO BAR|BAZ BAT]].
   m = re.search(r"^\[\[([^\[\]\|]*)\|([^\[\]\|]*)\]\]$", term)
   if m:
-    newterm, newtr = find_accented(m.group(2), termtr, verbose, pagetitle,
-      pagemsg, origt, False, expect_cap)
-    return "[[%s|%s]]" % (m.group(1), newterm), newtr
+    newterm, newtr, substs = find_accented(m.group(2), termtr, verbose,
+      pagetitle, pagemsg, template, False, expect_cap)
+    return "[[%s|%s]]" % (m.group(1), newterm), newtr, substs
 
   # (3) Handle '''FOO''' or '''FOO BAR'''.
   m = re.search(r"^'''([^'\n]+)'''$", term)
   if m:
-    newterm, newtr = find_accented(m.group(1), termtr, verbose, pagetitle,
-      pagemsg, origt, False, expect_cap)
-    return "'''%s'''" % newterm, newtr
+    newterm, newtr, substs = find_accented(m.group(1), termtr, verbose,
+      pagetitle, pagemsg, template, False, expect_cap)
+    return "'''%s'''" % newterm, newtr, substs
 
   # (4) Otherwise, look up the whole term.
   newterm, newtr, lemma = lookup_term_for_accents(term, termtr, verbose,
     pagemsg, expect_cap)
+  substs = []
 
   # (5) If we couldn't match the whole term, split into individual words
   #     and try looking up each one.
@@ -745,29 +760,32 @@ def find_accented_1(term, termtr, verbose, pagetitle, pagemsg, origt,
           # or get stuck in infinite loop.
           pass
         else:
-          newterm, newtr = find_accented_split_words(term, termtr, words,
-            trwords, verbose, pagetitle, pagemsg, origt, inner_add_brackets,
-            expect_cap)
+          newterm, newtr, substs = find_accented_split_words(term, termtr,
+            words, trwords, verbose, pagetitle, pagemsg, template,
+            inner_add_brackets, expect_cap)
     else:
-      newterm, newtr = find_accented_split_words(term, termtr, words, trwords,
-        verbose, pagetitle, pagemsg, origt, inner_add_brackets, expect_cap)
+      newterm, newtr, substs = find_accented_split_words(term, termtr, words,
+        trwords, verbose, pagetitle, pagemsg, template, inner_add_brackets,
+        expect_cap)
 
   if add_brackets:
     newterm = bracket_term_with_lemma(newterm, lemma, pagetitle)
 
-  return newterm, newtr
+  return newterm, newtr, substs
 
 # Outer wrapper, equivalent to find_accented_1() except outputs extra
 # log messages if --semi-verbose.
-def find_accented(term, termtr, verbose, pagetitle, pagemsg, origt,
+def find_accented(term, termtr, verbose, pagetitle, pagemsg, template,
     add_brackets, expect_cap):
   if semi_verbose:
     pagemsg("find_accented: Call with term %s%s" % (term, "//%s" % termtr if termtr else ""))
-  term, termtr = find_accented_1(term, termtr, verbose, pagetitle, pagemsg,
-    origt, add_brackets, expect_cap)
+  term, termtr, substs = find_accented_1(term, termtr, verbose, pagetitle,
+    pagemsg, template, add_brackets, expect_cap)
   if semi_verbose:
-    pagemsg("find_accented: Return %s%s" % (term, "//%s" % termtr if termtr else ""))
-  return term, termtr
+    pagemsg("find_accented: Return %s%s%s" % (
+      term, "//%s" % termtr if termtr else "",
+      ", substs=" + ",".join(substs) if substs else ""))
+  return term, termtr, substs
 
 def join_changelog_notes(notes):
   accented_words = []
@@ -810,8 +828,9 @@ def process_template(pagetitle, index, pagetext, template, ruparam, trparam,
   valtr = getparam(template, trparam) if trparam else ""
   changed = False
   if find_accents:
-    newval, newtr = find_accented(val, valtr, verbose, pagetitle, pagemsg,
-      origt, unicode(template.name) in link_expandable_templates, True)
+    newval, newtr, substs = find_accented(val, valtr, verbose, pagetitle,
+      pagemsg, template, unicode(template.name) in link_expandable_templates,
+      True)
     if newval != val or newtr != valtr:
       if normalize_text(newval) != normalize_text(val):
         pagemsg("WARNING: process_template: Accented page %s changed from %s in more than just accents/links/boldface, not changing" % (newval, val))
@@ -822,9 +841,30 @@ def process_template(pagetitle, index, pagetext, template, ruparam, trparam,
           if not trparam:
             pagemsg("WARNING: process_template: Unable to change translit to %s because no translit param available (Cyrillic param %s): %s" %
                 (newtr, saveparam, origt))
-          elif unicode(template.name) in ["ru-ux"]:
-            pagemsg("WARNING: process_template: Not changing or adding translit param %s=%s to ru-ux: origt=%s" % (
-              trparam, newtr, origt))
+          elif unicode(template.name) in templates_with_subst and not valtr:
+            if substs:
+              cursubst_param = getparam(template, "subst")
+              if cursubst_param:
+                cursubsts = re.split(",", cursubst_param)
+                normalized_substs = [
+                    cursubst if "//" in cursubst else
+                    cursubst.replace("/", "//") for cursubst in cursubsts]
+                for subst in substs:
+                  if subst not in normalized_substs:
+                    normalized_substs.append(subst)
+                new_subst_param = ",".join(normalized_substs)
+                pagemsg("NOTE: process_template: Combined existing subst=%s with new subst=%s to form subst=%s: origt=%s" % (
+                  cursubst_param, ",".join(substs), new_subst_param, origt))
+              else:
+                normalized_substs = substs
+                new_subst_param = ",".join(normalized_substs)
+                pagemsg("NOTE: process_template: Added subst=%s to origt=%s" % (
+                  new_subst_param, origt))
+              addparam(template, "subst", new_subst_param)
+            else:
+              pagemsg("NOTE: process_template: Added translit param %s=%s to template: origt=%s" %
+                  (trparam, newtr, origt))
+              addparam(template, trparam, newtr)
           else:
             if valtr and valtr != newtr:
               pagemsg("WARNING: process_template: Changed translit param %s from %s to %s: origt=%s" %

@@ -37,8 +37,8 @@ latin_to_russian_tab_2_char = {
 }
 
 # FIXME! Doesn't work with ɣ, which gets included in this character set
-non_consonants = "[" + rulib.vowel + ur"ЪЬъьʹʺ\W]"
-consonants = "[^" + rulib.vowel + ur"ЪЬъьʹʺ\W]"
+non_consonants = "[" + rulib.vowel + rulib.tr_vowel + ur"ЪЬъьʹʺ\W]"
+consonants = "[^" + rulib.vowel + rulib.tr_vowel + ur"ЪЬъьʹʺ\W]"
 
 AC = u"\u0301"
 GR = u"\u0300"
@@ -69,7 +69,7 @@ def error(text):
 # Reverse transliterate. Corresponding Cyrillic can be passed in and will be
 # used to attempt to reverse transliterate -vo to -го.
 def reverse_translit(text, cyrillic=None):
-  text = rulib.decompose(text)
+  text = rulib.decompose_acute_grave(text)
   # Not necessary, hard sign should already be present:
   # Need to add hard sign between consonant and j
   # text = rsub(text, "(" + consonants + ")j", ur"\1ʺj")

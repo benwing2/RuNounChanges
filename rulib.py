@@ -27,7 +27,7 @@ accents = pron_accents + DI + CARON
 stress_accents = AC + GR + CFLEX + DI + DUBGR
 
 composed_grave_vowel = u"ѐЀѝЍ"
-vowel_no_jo = u"аеиоуяэыюіѣѵАЕИОУЯЭЫЮІѢѴ" + composed_grave_vowel #omit ёЁ
+vowel_no_jo = u"аеиоуяэыюіѣѵүАЕИОУЯЭЫЮІѢѴҮ" + composed_grave_vowel #omit ёЁ
 vowel = vowel_no_jo + u"ёЁ"
 cons_except_sib_c = u"бдфгйклмнпрствхзьъБДФГЙКЛМНПРСТВХЗЬЪ"
 sib = u"шщчжШЩЧЖ"
@@ -41,7 +41,7 @@ def decompose_acute_grave(text):
   # Decompose sequences of character + acute or grave, but compose all other
   # accented sequences, e.g. Latin č and ě, Cyrillic ё and й.
   # (1) Decompose entirely.
-  decomposed = unicodedata.normalize("NFD", text)
+  decomposed = unicodedata.normalize("NFD", unicode(text))
   # (2) Split into text sections separated by acutes and graves.
   split = re.split("([%s%s])" % (AC, GR), decomposed)
   # (3) Recompose each section.
