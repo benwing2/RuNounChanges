@@ -195,7 +195,7 @@ def process_headwords(save, verbose, startFrom, upTo):
 # CATTYPE should be 'vocab', 'borrowed' or 'translation', indicating which
 # categories to examine.
 def process_links(save, verbose, cattype, startFrom, upTo):
-  def do_process_param(pagetitle, index, template, templang, param, paramtr):
+  def do_process_param(pagetitle, index, pagetext, template, templang, param, paramtr):
     result = process_param(pagetitle, index, template, param, paramtr,
         include_tempname_in_changelog=True)
     if getparam(template, "sc") == "Arab":

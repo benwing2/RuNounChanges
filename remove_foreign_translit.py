@@ -118,7 +118,7 @@ def sort_group_changelogs(actions):
 # 'borrowed'.
 def canon_links(save, verbose, cattype, lang, longlang,
     startFrom, upTo, pages_to_do=[]):
-  def process_param(pagetitle, index, template, tlang, param, paramtr):
+  def process_param(pagetitle, index, pagetext, template, tlang, param, paramtr):
     def pagemsg(txt):
       msg("Page %s %s: %s" % (index, pagetitle, txt))
 

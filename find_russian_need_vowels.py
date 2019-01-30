@@ -71,17 +71,26 @@
 # 16. (DONE) Add links of the form [[LEMMA|FORM]] and '''FORM'''.
 # 17. (DONE) Add links also for adjectives where we don't generate pages for
 #     the non-lemma forms.
-# 18. Don't auto-accent templates inside of a #* line.
+# 18. (DONE) Don't auto-accent templates inside of a #* line.
 # 19. Use subst= in ux/uxi/quote/usex.
-# 20. Avoid creating excessive translit with genitive adj forms in -ого/-его.
-#     See абы #305 for an example.
-# 21. Consider handling capitalized forms at beginning of line.
+# 20. (DONE) Avoid creating excessive translit with genitive adj forms in
+#     -ого/-его. See 305 абы for an example.
+# 21. (DONE) Handle capitalized forms at beginning of line.
+# 22. (DONE) Treat single-letter words as lowercase equivalents even when
+#     capitalized, to avoid them being treated as letters.
+# 23. (DONE) In 2297 баланс, is inserting '''...''' inside of brackets.
+# 24. (DONE) Don't include parens or stray brackets in words.
+# 25. Don't include sequences of two '' in words.
+# 26. (DONE) Add support for short forms of adjectives (esp. participles).
+# 27. (DONE) Add support for overriding lemma/inflection lookup for certain
+#     common words where lookup fails due to lemma + non-lemma on same page
+#     (e.g. бы́ло, как, пять).
 
 import re, codecs
 
 import blib, pywikibot
 from blib import msg, getparam, addparam
-import rulib as ru
+import rulib
 
 site = pywikibot.Site()
 semi_verbose = False # Set by --semi-verbose or --verbose
@@ -110,6 +119,18 @@ monosyllabic_accented_prepositions = [
     prep + AC for prep in monosyllabic_prepositions
 ]
 
+single_letter_words = [u"я", u"в", u"с", u"к", u"о", u"а", u"у", u"и"]
+
+manually_specified_inflections = {
+  # Also a particle meaning "nearly"
+  u"было": [u"бы́ло", u"быть"],
+  # Also genitive plural of ка́ка
+  u"как": [u"как", True],
+  # Also 2nd singular imperative of пя́тить
+  u"пять": [u"пять", True],
+}
+
+
 # Information found during lookup of a page. Value is None if the page
 # doesn't exist. Value is the string "redirect" if page is a redirect.
 # Otherwise, value is a tuple (HEADS, SAW_LEMMA, INFLECTIONS_OF, ADJ_FORMS);
@@ -127,12 +148,21 @@ def output_stats(pagemsg):
     num_cache_lookups, num_cache_hits,
     float(num_cache_hits)*100/num_cache_lookups if num_cache_lookups else 0.0))
 
-def split_ru_tr(form):
+def split_ru_tr(form, pagemsg):
   if "//" in form:
     rutr = re.split("//", form)
     assert len(rutr) == 2
     ru, tr = rutr
-    return (ru, tr)
+    # Check to see if manual translit is same as auto-translit; if so,
+    # don't specify manual translit. This is important especially in the
+    # output of {{ru-generate-adj-forms}}, which includes entries likes
+    # gen_m=а́йнского//ájnskovo even though the normal auto-translit of
+    # а́йнского is ájnskovo.
+    autotr = rulib.xlit_text(ru, pagemsg, semi_verbose)
+    if tr == autotr:
+      return (ru, "")
+    else:
+      return (ru, tr)
   else:
     return (form, "")
 
@@ -147,40 +177,61 @@ adj_endings_first_letter = {
   u"ю": ["soft"],
 }
 
+def check_need_accent(text):
+  for word in re.split(" +", text):
+    word = blib.remove_links(word)
+    if AC in word or u"ё" in word:
+      continue
+    if not rulib.is_monosyllabic(word):
+      return True
+  return False
+
+def normalize_text(text):
+  return rulib.remove_accents(blib.remove_links(text)).replace("'''", "")
+
 # For a possible adjective form, return the lemmas that it might belong to.
 def get_adj_form_lemmas(form):
   if re.search(u"(ое|ее|ая|яя|ые|ие|ой|ей|ых|их|ым|им|ую|юю|ою|ею|ом|ем)$", form):
-    base = form[:-2]
+    bases = [form[:-2]]
     types = adj_endings_first_letter[form[-2]]
   elif re.search(u"(ого|его|ому|ему|ыми|ими)$", form):
-    base = form[:-3]
+    bases = [form[:-3]]
     types = adj_endings_first_letter[form[-3]]
+  # For the moment, only do short participles, not all short adjectives.
+  elif re.search(u"[ёеая]н$", form):
+    bases = [form, form + u"н"]
+    types = ["hard", "soft"]
+  elif re.search(u"[еая]н[аоы]$", form):
+    bases = [form[:-1], form[:-1] + u"н"]
+    types = ["hard"]
   else:
     return []
-  if not base:
-    return []
   lemmas = []
-  if base[-1] == u"ц":
-    if "ts" in types:
-      lemmas.append(base + u"ый")
-      if not form.endswith(u"ой"):
+  for base in bases:
+    if not base:
+      continue
+    if base[-1] == u"ц":
+      if "ts" in types:
+        lemmas.append(base + u"ый")
+        if not form.endswith(u"ой"):
+          lemmas.append(base + u"ой")
+    elif base[-1] in u"шжчщ":
+      if "sib-unacc" in types:
+        lemmas.append(base + u"ий")
+      if "sib-acc" in types and not form.endswith(u"ой"):
         lemmas.append(base + u"ой")
-  elif base[-1] in u"шжчщ":
-    if "sib-unacc" in types:
-      lemmas.append(base + u"ий")
-    if "sib-acc" in types and not form.endswith(u"ой"):
-      lemmas.append(base + u"ой")
-  elif base[-1] in u"кгх":
-    if "velar" in types:
-      lemmas.append(base + u"ий")
-      if not form.endswith(u"ой"):
-        lemmas.append(base + u"ой")
-  elif "hard" in types:
-    lemmas.append(base + u"ый")
-    if not form.endswith(u"ой"):
-      lemmas.append(base + u"ой")
-  elif "soft" in types:
-    lemmas.append(base + u"ий")
+    elif base[-1] in u"кгх":
+      if "velar" in types:
+        lemmas.append(base + u"ий")
+        if not form.endswith(u"ой"):
+          lemmas.append(base + u"ой")
+    else:
+      if "hard" in types:
+        lemmas.append(base + u"ый")
+        if not form.endswith(u"ой"):
+          lemmas.append(base + u"ой")
+      if "soft" in types:
+        lemmas.append(base + u"ий")
     # no end-accented soft adjectives
   return lemmas
 
@@ -197,11 +248,23 @@ def get_adj_form_lemmas(form):
 # (3) INFLECTIONS_OF is all lemmas of which this entry is an inflection,
 # (4) ADJ_FORMS is all adjective forms of any adjective lemmas found on the
 #     page (each of which is (RU, TR)).
-def fetch_page_from_cache(pagename, pagemsg, expand_text):
+def fetch_page_from_cache(pagename, pagemsg):
   if semi_verbose:
-    pagemsg("find_accented: Finding heads on page %s" % pagename)
+    pagemsg("fetch_page_from_cache: Finding heads on page %s" % pagename)
 
-  cached_redirect = False
+  # Use our own expand_text() rather than passing it from the caller,
+  # which may have a different value for PAGENAME; the proper value is
+  # important in expanding certain templates e.g. ru-generate-adj-forms.
+  def expand_text(tempcall):
+    return blib.expand_text(tempcall, pagename, pagemsg, semi_verbose)
+
+  if pagename in manually_specified_inflections:
+    accented, lemma = manually_specified_inflections[pagename]
+    if lemma is True:
+      return False, ({(accented, "")}, True, set(), set())
+    else:
+      return False, ({(accented, "")}, False, {lemma}, set())
+
   global num_cache_lookups
   num_cache_lookups += 1
   if pagename in accented_cache:
@@ -210,10 +273,10 @@ def fetch_page_from_cache(pagename, pagemsg, expand_text):
     result = accented_cache[pagename]
     if result is None:
       if semi_verbose:
-        pagemsg("find_accented: Page %s doesn't exist (cached)" % pagename)
+        pagemsg("fetch_page_from_cache: Page %s doesn't exist (cached)" % pagename)
     elif result == "redirect":
       if semi_verbose:
-        pagemsg("find_accented: Page %s is redirect (cached)" % pagename)
+        pagemsg("fetch_page_from_cache: Page %s is redirect (cached)" % pagename)
     return True, result
   else:
     cached = False
@@ -221,12 +284,12 @@ def fetch_page_from_cache(pagename, pagemsg, expand_text):
     try:
       if not page.exists():
         if semi_verbose:
-          pagemsg("find_accented: Page %s doesn't exist" % pagename)
+          pagemsg("fetch_page_from_cache: Page %s doesn't exist" % pagename)
         if not global_disable_cache:
           accented_cache[pagename] = None
         return False, None
     except Exception as e:
-      pagemsg("WARNING: Error checking page existence: %s" % unicode(e))
+      pagemsg("WARNING: fetch_page_from_cache: Error checking page existence: %s" % unicode(e))
       if not global_disable_cache:
         accented_cache[pagename] = None
       return False, None
@@ -235,7 +298,7 @@ def fetch_page_from_cache(pagename, pagemsg, expand_text):
     if re.match("#redirect", page.text, re.I):
       if not global_disable_cache:
         accented_cache[pagename] = "redirect"
-      pagemsg("find_accented: Page %s is redirect" % pagename)
+      pagemsg("fetch_page_from_cache: Page %s is redirect" % pagename)
       return False, "redirect"
 
     # Page exists and is not a redirect, find the info
@@ -270,15 +333,15 @@ def fetch_page_from_cache(pagename, pagemsg, expand_text):
           add(pagename, "")
       elif tname in ["ru-noun+", "ru-proper noun+"]:
         saw_lemma = True
-        lemma = ru.fetch_noun_lemma(t, expand_text)
+        lemma = rulib.fetch_noun_lemma(t, expand_text)
         lemmas = re.split(",", lemma)
-        lemmas = [split_ru_tr(lemma) for lemma in lemmas]
+        lemmas = [split_ru_tr(lemma, pagemsg) for lemma in lemmas]
         # Group lemmas by Russian, to group multiple translits
-        lemmas = ru.group_translits(lemmas, pagemsg, expand_text)
+        lemmas = rulib.group_translits(lemmas, pagemsg, semi_verbose)
         for val, tr in lemmas:
           add(val, tr)
       elif tname == "inflection of" and getparam(t, "lang") == "ru":
-        inflections_of.add(getparam(t, "1"))
+        inflections_of.add(normalize_text(getparam(t, "1")))
       if check_addl_heads:
         for i in xrange(2, 10):
           headn = getparam(t, "head" + str(i))
@@ -287,9 +350,9 @@ def fetch_page_from_cache(pagename, pagemsg, expand_text):
       elif tname == "ru-decl-adj":
         result = expand_text(re.sub(r"^\{\{ru-decl-adj", "{{ru-generate-adj-forms", unicode(t)))
         if not result:
-          pagemsg("WARNING: Error expanding template %s" % unicode(t))
+          pagemsg("WARNING: fetch_page_from_cache: Error expanding template %s" % unicode(t))
         else:
-          args = ru.split_generate_args(result)
+          args = rulib.split_generate_args(result)
           for value in args.itervalues():
             adj_forms.add(value)
 
@@ -309,130 +372,181 @@ def fetch_page_from_cache(pagename, pagemsg, expand_text):
 # The return value is (newterm, newterm_tr, lemma) where missing
 # transliteration should be returned as "", and LEMMA should be None is no
 # lemma is available or True if the term itself is a lemma, else a string.
-def lookup_term_for_accents(term, termtr, verbose, pagemsg):
+def lookup_term_for_accents(term, termtr, verbose, pagemsg, expect_cap):
+  if not term:
+    pagemsg("WARNING: lookup_term_for_accents: Passed in blank term, shouldn't happen")
+    return term, termtr, None
   if term in accentless_multisyllable:
-    pagemsg("Not accenting unaccented multisyllabic particle %s" % term)
+    pagemsg("lookup_term_for_accents: Not accenting unaccented multisyllabic particle %s" % term)
     if term in accentless_multisyllable_lemma:
       return term, termtr, True
     else:
       return term, termtr, None
-  # This can happen if e.g. we're passed "[[FOO|BAR]] BAZ"; we will reject it,
-  # but it will then be word-split and handled correctly ("[[FOO|BAR]]" is
-  # special-cased in find_accented_1()).
   if "|" in term:
-    #pagemsg("Can't handle links with vertical bars: %s" % term)
+    pagemsg("lookup_term_for_accents: Can't handle links with vertical bars: %s" % term)
     return term, termtr, None
-  # This can happen if e.g. we're passed "[[FOO]] [[BAR]]"; we will reject it,
-  # but it will then be word-split and handled correctly ("[[FOO]]" is
-  # special-cased in find_accented_1()).
   if "[" in term or "]" in term:
-    #pagemsg("Can't handle stray bracket in %s" % term)
+    pagemsg("lookup_term_for_accents: Can't handle stray bracket in %s" % term)
     return term, termtr, None
   if "<" in term or ">" in term:
-    pagemsg("Can't handle stray < or >: %s" % term)
+    pagemsg("lookup_term_for_accents: Can't handle stray < or >: %s" % term)
     return term, termtr, None
 
   already_accented = False
 
   if AC in term or u"ё" in term:
     already_accented = True
-    pagemsg(u"Term has accent or ё, not replacing accents: %s" % term)
-  if ru.is_monosyllabic(term):
+    pagemsg(u"lookup_term_for_accents: Term has accent or ё, not replacing accents: %s" % term)
+  if rulib.is_monosyllabic(term):
     already_accented = True
-    pagemsg("Term is monosyllabic, no need for accents: %s" % term)
+    pagemsg("lookup_term_for_accents: Term is monosyllabic, no need for accents: %s" % term)
 
-  pagename = ru.remove_accents(term)
-  # We can't use expand_text() from find_accented_1() because it has a
-  # different value for PAGENAME, and the proper value is important in
-  # expanding ru-noun+ and ru-proper noun+.
-  def expand_text(tempcall):
-    return blib.expand_text(tempcall, pagename, pagemsg, semi_verbose)
+  real_pagename = rulib.remove_accents(term)
+  decapitalized_pagename = real_pagename[0].lower() + real_pagename[1:]
+  if decapitalized_pagename in single_letter_words:
+    if real_pagename == decapitalized_pagename:
+      return term, termtr, True
+    else:
+      return term, termtr, decapitalized_pagename
 
-  # Look up the page
-  if semi_verbose:
-    pagemsg("find_accented: Finding heads on page %s" % pagename)
-
-  cached, cache_result = fetch_page_from_cache(pagename, pagemsg, expand_text)
-  if cache_result is None or cache_result == "redirect":
-    heads = set()
-    saw_lemma = False
-    inflections_of = set()
-    adj_forms = set()
+  if expect_cap:
+    pagenames_to_consider = [real_pagename, decapitalized_pagename]
   else:
-    heads, saw_lemma, inflections_of, adj_forms = cache_result
+    pagenames_to_consider = [real_pagename]
 
-  # Look up any adjectives of which the page may be a form
-  adj_lemmas = get_adj_form_lemmas(pagename)
-  for adj_lemma in adj_lemmas:
-    adj_cached, adj_cache_result = fetch_page_from_cache(adj_lemma, pagemsg,
-      expand_text)
-    if adj_cache_result is not None and adj_cache_result != "redirect":
-      _, _, _, this_adj_forms = adj_cache_result
-      for adj_form_one_or_more in this_adj_forms:
-        # Each "form" is actually one or more forms separated by commas.
-        # In some cases we have e.g. ла́зерная,ла́зерная//lázɛrnaja, which
-        # we want to convert to ru="ла́зерная", tr="lázernaja, lázɛrnaja".
-        split_adj_forms = re.split(",", adj_form_one_or_more)
-        split_adj_forms = [split_ru_tr(adj_form) for adj_form in split_adj_forms]
-        # Group lemmas by Russian, to group multiple translits
-        split_adj_forms = ru.group_translits(split_adj_forms, pagemsg, expand_text)
-        for adj_form_ru, adj_form_tr in split_adj_forms:
-          if ru.remove_accents(adj_form_ru) == pagename:
-            heads.add((adj_form_ru, adj_form_tr))
-            inflections_of.add(adj_lemma)
+  for pagename in pagenames_to_consider:
+    # Look up the page
+    if semi_verbose:
+      pagemsg("lookup_term_for_accents: Finding heads on page %s" % pagename)
 
-  # We have the heads
-  cached_msg = " (cached)" if cached else ""
-  if len(heads) == 0:
-    if cache_result is not None and cache_result != "redirect":
-      pagemsg("WARNING: Can't find any heads: %s%s" % (pagename, cached_msg))
-    return term, termtr, None
-  if len(heads) > 1:
-    pagemsg("WARNING: Found multiple heads for %s%s: %s" % (pagename, cached_msg, ",".join("%s%s" % (ru, "//%s" % tr if tr else "") for ru, tr in heads)))
-    return term, termtr, None
-  newterm, newtr = list(heads)[0]
-  if semi_verbose:
-    pagemsg("find_accented: Found head %s%s%s" % (newterm, "//%s" % newtr if newtr else "", cached_msg))
-  if re.search("[!?]$", newterm) and not re.search("[!?]$", term):
-    newterm_wo_punc = re.sub("[!?]$", "", newterm)
-    if ru.remove_accents(newterm_wo_punc) == ru.remove_accents(term):
-      pagemsg("Removing punctuation from %s when matching against %s" % (
-        newterm, term))
-      newterm = newterm_wo_punc
-  if ru.remove_accents(newterm) != ru.remove_accents(term):
-    pagemsg("WARNING: Accented term %s differs from %s in more than just accents%s" % (
-      newterm, term, cached_msg))
+    cached, cache_result = fetch_page_from_cache(pagename, pagemsg)
+    if cache_result is None or cache_result == "redirect":
+      heads = set()
+      saw_lemma = False
+      inflections_of = set()
+      adj_forms = set()
+    else:
+      heads, saw_lemma, inflections_of, adj_forms = cache_result
 
-  if already_accented:
-    newterm = term
-    newtr = termtr
-  if len(inflections_of) == 1 and not saw_lemma:
-    # Not a lemma and inflection of one lemma
-    lemma = list(inflections_of)[0]
-    return newterm, newtr, lemma
-  elif len(inflections_of) == 0 and saw_lemma:
-    # A lemma and not a non-lemma form
-    return newterm, newtr, True
-  # Else, either (a) both lemma and non-lemma, (b) non-lemma of multiple
-  # lemmas, or (c) neither lemma nor non-lemma.
-  if len(inflections_of) > 0 and saw_lemma:
-    pagemsg("WARNING: Found lemma and inflections of one or more lemmas for %s%s: head(s) %s, lemma(s) of which this term is an inflection %s" % (
-      pagename, cached_msg,
-      ",".join("%s%s" % (ru, "//%s" % tr if tr else "") for ru, tr in heads),
-      ",".join(inflections_of)))
-  elif len(inflections_of) > 1:
-    pagemsg("WARNING: Found inflections of multiple lemmas for %s%s: head(s) %s, lemmas of which this term is an inflection %s" % (
-      pagename, cached_msg,
-      ",".join("%s%s" % (ru, "//%s" % tr if tr else "") for ru, tr in heads),
-      ",".join(inflections_of)))
-  return newterm, newtr, None
+    # Look up any adjectives of which the page may be a form
+    adj_lemmas = get_adj_form_lemmas(pagename)
+    for adj_lemma in adj_lemmas:
+      adj_cached, adj_cache_result = fetch_page_from_cache(adj_lemma, pagemsg)
+      if adj_cache_result is not None and adj_cache_result != "redirect":
+        _, _, _, this_adj_forms = adj_cache_result
+        for adj_form_one_or_more in this_adj_forms:
+          # Each "form" is actually one or more forms separated by commas.
+          # In some cases we have e.g. ла́зерная,ла́зерная//lázɛrnaja, which
+          # we want to convert to ru="ла́зерная", tr="lázernaja, lázɛrnaja".
+          split_adj_forms = re.split(",", adj_form_one_or_more)
+          split_adj_forms = [split_ru_tr(adj_form, pagemsg) for adj_form in split_adj_forms]
+          # Group lemmas by Russian, to group multiple translits.
+          split_adj_forms = rulib.group_translits(split_adj_forms, pagemsg, semi_verbose)
+          for adj_form_ru, adj_form_tr in split_adj_forms:
+            if rulib.remove_accents(adj_form_ru) == pagename:
+              heads.add((adj_form_ru, adj_form_tr))
+              inflections_of.add(adj_lemma)
+
+    # We have the heads
+    cached_msg = " (cached)" if cached else ""
+    if len(heads) == 0:
+      if cache_result is not None and cache_result != "redirect":
+        pagemsg("WARNING: lookup_term_for_accents: Can't find any heads: %s%s" % (pagename, cached_msg))
+      # We might have a sentence-initial capitalized word, continue checking
+      # the non-capitalized equivalent.
+      continue
+    if len(heads) > 1:
+      pagemsg("WARNING: lookup_term_for_accents: Found multiple heads for %s%s: %s" % (pagename, cached_msg, ",".join("%s%s" % (ru, "//%s" % tr if tr else "") for ru, tr in heads)))
+      return term, termtr, None
+    newterm, newtr = list(heads)[0]
+    if pagename != real_pagename:
+      # We were asked to consider a capitalized word, decided to look up the
+      # non-capitalized equivalent and found a match. We need to transfer the
+      # accents and translit to the capitalized equivalent.
+      if not newterm:
+        pagemsg("WARNING: Something wrong! Found blank head when looking up %s" % pagename)
+        return term, termtr, None
+      # Make sure acutes and graves are decomposed. This is already the case
+      # except for grave ѐЀѝЍ (which shouldn't normally occur anyway, so this
+      # whole rigmarole might not be needed). That way, we can safely take
+      # the first (capitalized) letter of the real pagename and add the
+      # remainder of the looked-up term.
+      newterm = rulib.decompose_acute_grave(newterm)
+      real_pagename_decomposed = rulib.decompose_acute_grave(real_pagename)
+      newterm = rulib.recompose(real_pagename_decomposed[0] + newterm[1:])
+      if newtr:
+        # Do the same decompose/recompose rigmarole as above, but it's more
+        # necessary (because acute/grave over Latin latters is normally
+        # composed), and trickier because of я ё ю -> ja jo ju.
+        newtr = rulib.decompose_acute_grave(newtr)
+        real_pagename_first_letter_translit = rulib.xlit_text(
+            real_pagename_decomposed[0], pagemsg, semi_verbose)
+        if not real_pagename_first_letter_translit:
+          pagemsg("WARNING: Error from translit of %s" % real_pagename_decomposed[0])
+          return term, termtr, None
+        # A single Russian character might translit to 1 or 2 Latin chars,
+        # so make sure to take chop off the same number of Latin chars from
+        # the left side of the lowercased accented translit.
+        newtr = rulib.recompose(real_pagename_first_letter_translit +
+          newtr[len(real_pagename_first_letter_translit):])
+
+    if semi_verbose:
+      pagemsg("lookup_term_for_accents: Found head %s%s%s" % (newterm, "//%s" % newtr if newtr else "", cached_msg))
+    if re.search("[!?]$", newterm) and not re.search("[!?]$", term):
+      newterm_wo_punc = re.sub("[!?]$", "", newterm)
+      if rulib.remove_accents(newterm_wo_punc) == rulib.remove_accents(term):
+        pagemsg("lookup_term_for_accents: Removing punctuation from %s when matching against %s" % (
+          newterm, term))
+        newterm = newterm_wo_punc
+    if rulib.remove_accents(newterm) != rulib.remove_accents(term):
+      pagemsg("WARNING: lookup_term_for_accents: Accented term %s differs from %s in more than just accents%s" % (
+        newterm, term, cached_msg))
+
+    if already_accented:
+      newterm = term
+      newtr = termtr
+    if len(inflections_of) == 1 and not saw_lemma:
+      # Not a lemma and inflection of one lemma
+      lemma = list(inflections_of)[0]
+      return newterm, newtr, lemma
+    elif len(inflections_of) == 0 and saw_lemma:
+      # A lemma and not a non-lemma form
+      if pagename != real_pagename:
+        # real_pagename is uppercase and pagename (the lemma we looked up)
+        # is lowercase, hence not the same as the returned accented term,
+        # and a two-part bracket like [[ты|Ты]] is necessary.
+        return newterm, newtr, pagename
+      else:
+        return newterm, newtr, True
+    # Else, either (a) both lemma and non-lemma, (b) non-lemma of multiple
+    # lemmas, or (c) neither lemma nor non-lemma.
+    if len(inflections_of) > 0 and saw_lemma:
+      # (a) both lemma and non-lemma.
+      pagemsg("WARNING: lookup_term_for_accents: Found lemma and inflections of one or more lemmas for %s%s: head(s) %s, lemma(s) of which this term is an inflection %s" % (
+        pagename, cached_msg,
+        ",".join("%s%s" % (ru, "//%s" % tr if tr else "") for ru, tr in heads),
+        ",".join(inflections_of)))
+      return newterm, newtr, None
+    elif len(inflections_of) > 1:
+      # (b) both lemma and non-lemma.
+      pagemsg("WARNING: lookup_term_for_accents: Found inflections of multiple lemmas for %s%s: head(s) %s, lemmas of which this term is an inflection %s" % (
+        pagename, cached_msg,
+        ",".join("%s%s" % (ru, "//%s" % tr if tr else "") for ru, tr in heads),
+        ",".join(inflections_of)))
+    else:
+      # (c) neither lemma nor non-lemma.
+      pass
+    return newterm, newtr, None
+
+  # We couldn't find any existing pages with heads.
+  return term, termtr, None
 
 # After the words in TERM with translit TERMTR have been split into words
 # WORDS and TRWORDS (which should be an empty list if TERMTR is empty), with
 # alternating separators in the even-numbered words, find accents for each
 # individual word and then rejoin the result.
 def find_accented_split_words(term, termtr, words, trwords, verbose, pagetitle,
-    pagemsg, expand_text, origt, add_brackets):
+    pagemsg, origt, add_brackets, expect_cap):
   newterm = term
   newtr = termtr
   # Check for unbalanced brackets.
@@ -440,7 +554,7 @@ def find_accented_split_words(term, termtr, words, trwords, verbose, pagetitle,
   for i in xrange(1, len(words), 2):
     word = words[i]
     if word.count("[") != word.count("]"):
-      pagemsg("WARNING: Unbalanced brackets in word #%s %s: %s" %
+      pagemsg("WARNING: find_accented_split_words: Unbalanced brackets in word #%s %s: %s" %
           (i//2, word, "".join(words)))
       unbalanced = True
       break
@@ -465,7 +579,7 @@ def find_accented_split_words(term, termtr, words, trwords, verbose, pagetitle,
         if i > 1 and words[i - 2] in monosyllabic_accented_prepositions:
           # If it's a word and preceded by a stressed monosyllabic
           # preposition (e.g. до́ смерти), leave it alone.
-          pagemsg("Not accenting term %s%s preceded by accented preposition %s" %
+          pagemsg("find_accented_split_words: Not accenting term %s%s preceded by accented preposition %s" %
               (word, "//" + trword if trword else "", words[i - 2]))
           ru = word
           tr = trword
@@ -473,10 +587,21 @@ def find_accented_split_words(term, termtr, words, trwords, verbose, pagetitle,
         else:
           # Otherwise, actually look it up.
           ru, tr = find_accented(word, trword, verbose, pagetitle, pagemsg,
-            expand_text, origt, add_brackets)
+            # We expect the first char to be capitalized if either
+            # (1) We expect the first char of the entire word sequence to
+            #     be capitalized and we're processing the first word, or
+            # (2) Preceding the word is a sequence of non-word chars ending
+            #     in a period plus a space or two spaces, and what precedes
+            #     that isn't a single-capital-letter word (this extra
+            #     condition is to handle e.g. "П. И. Чайковский", where the
+            #     capitalized word is should not be looked up lowercase).
+            origt, add_brackets, expect_cap and i == 1 or (
+              (words[i - 1].endswith(". ") or words[i - 1].endswith(".  ")) and
+              not (i >= 2 and len(words[i - 2]) == 1 and words[i - 2].isupper())
+            ))
         if tr and "," in tr:
           chopped_tr = re.sub(",.*", "", tr)
-          pagemsg("WARNING: Comma in translit <%s>, chopping off text after the comma to <%s>" % (
+          pagemsg("WARNING: find_accented_split_words: Comma in translit <%s>, chopping off text after the comma to <%s>" % (
             tr, chopped_tr))
           tr = chopped_tr
         newwords.append(ru)
@@ -499,7 +624,7 @@ def find_accented_split_words(term, termtr, words, trwords, verbose, pagetitle,
         newwords.append(word)
         newtrwords.append(trword or word)
         if trword and word != trword:
-          pagemsg("WARNING: Separator <%s> at index %s has manual translit <%s> that's different from it: %s" % (
+          pagemsg("WARNING: find_accented_split_words: Separator <%s> at index %s has manual translit <%s> that's different from it: %s" % (
             word, i, trword, origt))
           sawtr = True
     if sawtr:
@@ -511,10 +636,10 @@ def find_accented_split_words(term, termtr, words, trwords, verbose, pagetitle,
         elif not ru:
           tr = ""
         else:
-          tr = expand_text("{{xlit|ru|%s}}" % ru)
+          tr = rulib.xlit_text(ru, pagemsg, semi_verbose)
           if not tr:
             got_error = True
-            pagemsg("WARNING: Got error during transliteration")
+            pagemsg("WARNING: find_accented_split_words: Got error during transliteration")
             break
         newertrwords.append(tr)
       if not got_error:
@@ -527,7 +652,7 @@ def find_accented_split_words(term, termtr, words, trwords, verbose, pagetitle,
 
 def bracket_term_with_lemma(term, lemma, pagetitle):
   if lemma is True:
-    if ru.remove_accents(term) == pagetitle:
+    if rulib.remove_accents(term) == pagetitle:
       return "'''%s'''" % term
     else:
       return "[[%s]]" % term
@@ -537,7 +662,7 @@ def bracket_term_with_lemma(term, lemma, pagetitle):
     else:
       return "[[%s|%s]]" % (lemma, term)
   else:
-    if ru.remove_accents(term) == pagetitle:
+    if rulib.remove_accents(term) == pagetitle:
       return "'''%s'''" % term
     else:
       return term
@@ -545,58 +670,64 @@ def bracket_term_with_lemma(term, lemma, pagetitle):
 # Look up a term (and associated manual translit) and try to add accents.
 # The basic algorithm is that we first look up the whole term and then
 # split on words and recursively look up each word individually.
-def find_accented_1(term, termtr, verbose, pagetitle, pagemsg, expand_text,
-    origt, add_brackets):
+def find_accented_1(term, termtr, verbose, pagetitle, pagemsg, origt,
+    add_brackets, expect_cap):
   # (1) Handle plain [[FOO]] or [[FOO BAR]].
   m = re.search(r"^\[\[([^\[\]\|]*)\]\]$", term)
   if m:
+    # We want to convert [[FOO]] to [[BAZ|FOO]] if necessary (i.e. it's
+    # a non-lemma). Do this by requesting bracketing, but only of the
+    # whole clause. Then we check if the returned term is bracketed, and
+    # return it whole if so; otherwise, remove any surrounding boldface
+    # and bracket.
     newterm, newtr = find_accented(m.group(1), termtr, verbose, pagetitle,
-      pagemsg, expand_text, origt, add_brackets)
-    if "[" not in newterm:
-      return "[[%s]]" % newterm, newtr
+      pagemsg, origt, "outer", expect_cap)
     if re.search(r"^\[\[([^\[\]]*)\]\]$", newterm):
-      # If entire term is already bracketed, just return it.
+      # If term is already bracketed, just return it.
       if "|" in newterm:
-        pagemsg("WARNING: Already bracketed term %s referencing non-lemma, replacing with lemma reference %s" %
+        pagemsg("WARNING: find_accented_1: Already bracketed term %s referencing non-lemma, replacing with lemma reference %s" %
           (term, newterm))
       return newterm, newtr
-    # Interior words in term were bracketed; remove the bracketed links.
-    return "[[%s]]" % blib.remove_links(newterm), newtr
+    m = re.search(r"^'''(.*)'''$", newterm)
+    if m:
+      return "[[%s]]" % m.groups(1), newtr
+    return "[[%s]]" % newterm, newtr
 
   # (2) Handle [[FOO|BAR]] or [[FOO BAR|BAZ BAT]].
   m = re.search(r"^\[\[([^\[\]\|]*)\|([^\[\]\|]*)\]\]$", term)
   if m:
     newterm, newtr = find_accented(m.group(2), termtr, verbose, pagetitle,
-      pagemsg, expand_text, origt, False)
+      pagemsg, origt, False, expect_cap)
     return "[[%s|%s]]" % (m.group(1), newterm), newtr
 
   # (3) Handle '''FOO''' or '''FOO BAR'''.
   m = re.search(r"^'''([^'\n]+)'''$", term)
   if m:
     newterm, newtr = find_accented(m.group(1), termtr, verbose, pagetitle,
-      pagemsg, expand_text, origt, False)
+      pagemsg, origt, False, expect_cap)
     return "'''%s'''" % newterm, newtr
 
   # (4) Otherwise, look up the whole term.
   newterm, newtr, lemma = lookup_term_for_accents(term, termtr, verbose,
-    pagemsg)
+    pagemsg, expect_cap)
 
   # (5) If we couldn't match the whole term, split into individual words
   #     and try looking up each one.
   if newterm == term and newtr == termtr:
     # If the whole term is/has a lemma, don't add brackets to inner terms
-    # because we will bracket the whole term.
-    inner_add_brackets = add_brackets
-    if lemma:
-      inner_add_brackets = False
-    words = re.split(r"('''.*?'''|\[\[.*?\]\]|[^ ,.?!]+)", term)
-    trwords = (re.split(r"('''.*?'''|\[\[.*?\]\]|[^ ,.?!]+)", termtr)
+    # because we will bracket the whole term. Also don't add brackets to
+    # inner terms if explicitly requested to only bracket the entire term
+    # (used when processing bare [[FOO]] or [[FOO BAR]], which we will
+    # convert to [[BAZ|FOO]] or [[BAZ BAT|FOO BAR]] if necessary).
+    inner_add_brackets = (
+        False if lemma or add_brackets == "outer" else add_brackets)
+    words = re.split(r"('''.*?'''|\[\[.*?\]\]|[^()\[\] ,.?!]+)", term)
+    trwords = (re.split(r"('''.*?'''|\[\[.*?\]\]|[^()\[\] ,.?!]+)", termtr)
       if termtr else [])
     if trwords and len(words) != len(trwords):
-      pagemsg("WARNING: %s Cyrillic words but different number %s translit words: %s//%s" % (len(words), len(trwords), term, termtr))
-    elif (len(words) == 3 and not words[0] and not words[2] and
-        not words[1].startswith("[") and not words[1].startswith("'''")):
-      # Just a single word, not surrounded by brackets or '''...''' or ''...''.
+      pagemsg("WARNING: find_accented_1: %s Cyrillic words but different number %s translit words: %s//%s" % (len(words), len(trwords), term, termtr))
+    elif len(words) == 3 and not words[0] and not words[2]:
+      # Just a single word.
       if term.startswith("-") or term.endswith("-"):
         # Don't separate a prefix or suffix into component parts; might
         # not be the same word.
@@ -607,7 +738,7 @@ def find_accented_1(term, termtr, verbose, pagetitle, pagemsg, expand_text,
         words = re.split(r"([^-]+)", term)
         trwords = re.split(r"([^-]+)", termtr) if termtr else []
         if trwords and len(words) != len(trwords):
-          pagemsg("WARNING: %s Cyrillic words but different number %s translit words: %s//%s" % (len(words), len(trwords), term, termtr))
+          pagemsg("WARNING: find_accented_1: %s Cyrillic words but different number %s translit words: %s//%s" % (len(words), len(trwords), term, termtr))
           pass
         elif len(words) == 3 and not words[0] and not words[2]:
           # Only one word, and we already looked it up; don't duplicate work
@@ -615,11 +746,11 @@ def find_accented_1(term, termtr, verbose, pagetitle, pagemsg, expand_text,
           pass
         else:
           newterm, newtr = find_accented_split_words(term, termtr, words,
-            trwords, verbose, pagetitle, pagemsg, expand_text, origt,
-            inner_add_brackets)
+            trwords, verbose, pagetitle, pagemsg, origt, inner_add_brackets,
+            expect_cap)
     else:
       newterm, newtr = find_accented_split_words(term, termtr, words, trwords,
-        verbose, pagetitle, pagemsg, expand_text, origt, inner_add_brackets)
+        verbose, pagetitle, pagemsg, origt, inner_add_brackets, expect_cap)
 
   if add_brackets:
     newterm = bracket_term_with_lemma(newterm, lemma, pagetitle)
@@ -628,12 +759,12 @@ def find_accented_1(term, termtr, verbose, pagetitle, pagemsg, expand_text,
 
 # Outer wrapper, equivalent to find_accented_1() except outputs extra
 # log messages if --semi-verbose.
-def find_accented(term, termtr, verbose, pagetitle, pagemsg, expand_text,
-  origt, add_brackets):
+def find_accented(term, termtr, verbose, pagetitle, pagemsg, origt,
+    add_brackets, expect_cap):
   if semi_verbose:
     pagemsg("find_accented: Call with term %s%s" % (term, "//%s" % termtr if termtr else ""))
   term, termtr = find_accented_1(term, termtr, verbose, pagetitle, pagemsg,
-    expand_text, origt, add_brackets)
+    origt, add_brackets, expect_cap)
   if semi_verbose:
     pagemsg("find_accented: Return %s%s" % (term, "//%s" % termtr if termtr else ""))
   return term, termtr
@@ -648,37 +779,28 @@ def join_changelog_notes(notes):
     else:
       other_notes.append(note)
   if accented_words:
-    notes = ["auto-accent %s" % ",".join(accented_words)]
+    notes = ["auto-accent %s" % "; ".join(accented_words)]
   else:
     notes = []
   notes.extend(other_notes)
   return "; ".join(notes)
 
-def check_need_accent(text):
-  for word in re.split(" +", text):
-    word = blib.remove_links(word)
-    if AC in word or u"ё" in word:
-      continue
-    if not ru.is_monosyllabic(word):
-      return True
-  return False
-
-def normalize_text(text):
-  return ru.remove_accents(blib.remove_links(text)).replace("'''", "")
-
-def process_template(pagetitle, index, template, ruparam, trparam, output_line,
-    find_accents, verbose):
+def process_template(pagetitle, index, pagetext, template, ruparam, trparam,
+    output_line, find_accents, accent_hidden, verbose):
   origt = unicode(template)
   saveparam = ruparam
   def pagemsg(text):
     msg("Page %s %s: %s" % (index, pagetitle, text))
-  def expand_text(tempcall):
-    return blib.expand_text(tempcall, pagetitle, pagemsg, semi_verbose)
   if semi_verbose:
-    pagemsg("Processing template: %s" % unicode(template))
+    pagemsg("process_template: Processing template: %s" % origt)
   if unicode(template.name) == "head":
     # Skip {{head}}. We don't want to mess with headwords.
     return False
+  if not accent_hidden and re.search("^#\*:* *%s" % re.escape(origt),
+      unicode(pagetext), re.M):
+    if semi_verbose:
+      pagemsg("process_template: Skipping template because hidden by #*: %s" % origt)
+      return False
   if isinstance(ruparam, list):
     ruparam, saveparam = ruparam
   if ruparam == "page title":
@@ -689,30 +811,30 @@ def process_template(pagetitle, index, template, ruparam, trparam, output_line,
   changed = False
   if find_accents:
     newval, newtr = find_accented(val, valtr, verbose, pagetitle, pagemsg,
-      expand_text, origt, unicode(template.name) in link_expandable_templates)
+      origt, unicode(template.name) in link_expandable_templates, True)
     if newval != val or newtr != valtr:
       if normalize_text(newval) != normalize_text(val):
-        pagemsg("WARNING: Accented page %s changed from %s in more than just accents/links/boldface, not changing" % (newval, val))
+        pagemsg("WARNING: process_template: Accented page %s changed from %s in more than just accents/links/boldface, not changing" % (newval, val))
       else:
         changed = True
         addparam(template, saveparam, newval)
         if newtr:
           if not trparam:
-            pagemsg("WARNING: Unable to change translit to %s because no translit param available (Cyrillic param %s): %s" %
+            pagemsg("WARNING: process_template: Unable to change translit to %s because no translit param available (Cyrillic param %s): %s" %
                 (newtr, saveparam, origt))
           elif unicode(template.name) in ["ru-ux"]:
-            pagemsg("WARNING: Not changing or adding translit param %s=%s to ru-ux: origt=%s" % (
+            pagemsg("WARNING: process_template: Not changing or adding translit param %s=%s to ru-ux: origt=%s" % (
               trparam, newtr, origt))
           else:
             if valtr and valtr != newtr:
-              pagemsg("WARNING: Changed translit param %s from %s to %s: origt=%s" %
+              pagemsg("WARNING: process_template: Changed translit param %s from %s to %s: origt=%s" %
                   (trparam, valtr, newtr, origt))
             if not valtr:
-              pagemsg("NOTE: Added translit param %s=%s to template: origt=%s" %
+              pagemsg("NOTE: process_template: Added translit param %s=%s to template: origt=%s" %
                   (trparam, newtr, origt))
             addparam(template, trparam, newtr)
         elif valtr:
-          pagemsg("WARNING: Template has translit %s but lookup result has none, leaving translit alone: origt=%s" %
+          pagemsg("WARNING: process_template: Template has translit %s but lookup result has none, leaving translit alone: origt=%s" %
               (valtr, origt))
         if check_need_accent(newval):
           output_line("Need accents (changed)")
@@ -721,11 +843,11 @@ def process_template(pagetitle, index, template, ruparam, trparam, output_line,
   if not changed and check_need_accent(val):
     output_line("Need accents")
   if changed:
-    pagemsg("Replaced %s with %s" % (origt, unicode(template)))
+    pagemsg("process_template: Replaced %s with %s" % (origt, unicode(template)))
   return ["auto-accent %s%s" % (newval, "//%s" % newtr if newtr else "")] if changed else False
 
-def find_russian_need_vowels(find_accents, cattype, direcfile, save,
-    verbose, startFrom, upTo):
+def find_russian_need_vowels(find_accents, accent_hidden, cattype, direcfile,
+    save, verbose, startFrom, upTo):
   if direcfile:
     processing_lines = []
     for line in codecs.open(direcfile, "r", encoding="utf-8"):
@@ -743,13 +865,13 @@ def find_russian_need_vowels(find_accents, cattype, direcfile, save,
 
       def pagemsg(text):
         msg("Page %s(%s) %s: %s" % (pagenum, index, pagetitle, text))
-      def check_template_for_missing_accent(pagetitle, index, template,
-          templang, ruparam, trparam):
+      def check_template_for_missing_accent(pagetitle, index, pagetext,
+          template, templang, ruparam, trparam):
         def output_line(directive):
           msg("* %s[[%s]]%s %s: <nowiki>%s%s</nowiki>" % (pagenum, pagename,
               tempname, directive, unicode(template), rest))
-        return process_template(pagetitle, index, template, ruparam, trparam,
-            output_line, find_accents, verbose)
+        return process_template(pagetitle, index, pagetext, template, ruparam,
+            trparam, output_line, find_accents, accent_hidden, verbose)
 
       blib.process_links(save, verbose, "ru", "Russian", "pagetext", None,
           None, check_template_for_missing_accent,
@@ -758,14 +880,14 @@ def find_russian_need_vowels(find_accents, cattype, direcfile, save,
       if index % 100 == 0:
         output_stats(pagemsg)
   else:
-    def check_template_for_missing_accent(pagetitle, index, template, templang,
-        ruparam, trparam):
+    def check_template_for_missing_accent(pagetitle, index, pagetext, template,
+        templang, ruparam, trparam):
       def pagemsg(text):
         msg("Page %s %s: %s" % (index, pagetitle, text))
       def output_line(directive):
         pagemsg("%s: %s" % (directive, unicode(template)))
-      result = process_template(pagetitle, index, template, ruparam, trparam,
-          output_line, find_accents, verbose)
+      result = process_template(pagetitle, index, pagetext, template, ruparam,
+          trparam, output_line, find_accents, accent_hidden, verbose)
       if index % 100 == 0:
         output_stats(pagemsg)
       return result
@@ -783,6 +905,8 @@ pa.add_argument("--semi-verbose", action="store_true",
     help="More info but not as much as --verbose")
 pa.add_argument("--find-accents", action="store_true",
     help="Look up the accents in existing pages")
+pa.add_argument("--accent-hidden", action="store_true",
+    help="Also add accents and brackets to hidden qutoes")
 pa.add_argument("--no-cache", action="store_true",
     help="Disable caching head lookup results")
 
@@ -791,7 +915,7 @@ semi_verbose = params.semi_verbose or params.verbose
 global_disable_cache = params.no_cache
 startFrom, upTo = blib.parse_start_end(params.start, params.end)
 
-find_russian_need_vowels(params.find_accents, params.cattype,
-    params.file, params.save, params.verbose, startFrom, upTo)
+find_russian_need_vowels(params.find_accents, params.accent_hidden,
+    params.cattype, params.file, params.save, params.verbose, startFrom, upTo)
 
 blib.elapsed_time()

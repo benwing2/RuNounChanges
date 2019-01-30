@@ -37,6 +37,27 @@ velar = u"кгхКГХ"
 uppercase = u"АЕИОУЯЭЫЁЮІѢѴБДФГЙКЛМНПРСТВХЗЬЪШЩЧЖЦ"
 tr_vowel = u"aeěɛiouyAEĚƐIOUY"
 
+def decompose_acute_grave(text):
+  # Decompose sequences of character + acute or grave, but compose all other
+  # accented sequences, e.g. Latin č and ě, Cyrillic ё and й.
+  # (1) Decompose entirely.
+  decomposed = unicodedata.normalize("NFD", text)
+  # (2) Split into text sections separated by acutes and graves.
+  split = re.split("([%s%s])" % (AC, GR), decomposed)
+  # (3) Recompose each section.
+  recomposed = [unicodedata.normalize("NFC", part) for part in split]
+  # (4) Paste sections together.
+  return "".join(recomposed)
+
+def recompose(text):
+  return unicodedata.normalize("NFC", text)
+
+def xlit_text(text, pagemsg, verbose=False):
+  def expand_text(tempcall):
+    # The page name doesn't matter when we call {{xlit}}.
+    return blib.expand_text(tempcall, "foo bar", pagemsg, verbose)
+  return expand_text("{{xlit|ru|%s}}" % text)
+
 # Does a phrase of connected text need accents? We need to split by word
 # and check each one.
 def needs_accents(text, split_dash=False):
@@ -350,7 +371,7 @@ def fetch_noun_lemma(t, expand_text):
 # as missing), group by RUSSIAN to handle cases where multiple translits are
 # possible, generate any missing translits and join by commas. Return the list
 # of form values, in the same order except with multiple translits combined.
-def group_translits(formvals, pagemsg, expand_text):
+def group_translits(formvals, pagemsg, verbose=False):
   # Group formvals by Russian, to group multiple translits
   formvals_by_russian = OrderedDict()
   for formvalru, formvaltr in formvals:
@@ -370,7 +391,7 @@ def group_translits(formvals, pagemsg, expand_text):
         if translit:
           manual_translits.append(translit)
         else:
-          translit = expand_text("{{xlit|ru|%s}}" % russian)
+          translit = xlit_text(russian, pagemsg, verbose)
           if not translit:
             pagemsg("WARNING: Error generating translit for %s" % russian)
           else:

@@ -603,15 +603,15 @@ def try_repeatedly(fun, pagemsg, operation="save", max_tries=10, sleep_time=5):
 # on pages from STARTFROM to (but not including) UPTO, either page names or
 # 0-based integers. Save changes if SAVE is true. VERBOSE is passed to
 # blib.do_edit and will (e.g.) show exact changes. PROCESS_PARAM is the
-# function called, which is called with six arguments: The page, its index
-# (an integer), the template on the page, the language code of the template,
-# the param in the template containing the foreign text and the param
-# containing the Latin transliteration, or None if there is no such parameter.
-# NOTE: The param may be an array ["page title", PARAM] for a case where the
-# param value should be fetched from the page title and saved to PARAM. The
-# function should return a list of changelog strings if changes were made,
-# and something else otherwise (e.g. False). Changelog strings for all
-# templates will be joined together using JOIN_ACTIONS; if not supplied,
+# function called, which is called with seven arguments: The page, its index
+# (an integer), the page text, the template on the page, the language code of
+# the template, the param in the template containing the foreign text and the
+# param containing the Latin transliteration, or None if there is no such
+# parameter. NOTE: The param may be an array ["page title", PARAM] for a case
+# where the param value should be fetched from the page title and saved to
+# PARAM. The function should return a list of changelog strings if changes
+# were made, and something else otherwise (e.g. False). Changelog strings for
+# all templates will be joined together using JOIN_ACTIONS; if not supplied,
 # they will be separated by a semi-colon.
 #
 # LANG should be a short language code (e.g. 'ru', 'ar', 'grc') or list of
@@ -645,12 +645,12 @@ def process_links(save, verbose, lang, longlang, cattype, startFrom, upTo,
   # Process the link-like templates on the page with the given title and text,
   # calling PROCESSFN for each pair of foreign/Latin. Return a list of
   # changelog actions.
-  def do_process_one_page_links(pagetitle, index, text, processfn):
+  def do_process_one_page_links(pagetitle, index, pagetext, processfn):
     def pagemsg(text):
       msg("Page %s %s: %s" % (index, pagetitle, text))
 
     actions = []
-    for template in text.filter_templates():
+    for template in pagetext.filter_templates():
       def getp(param):
         return getparam(template, param)
       tempname = unicode(template.name)
@@ -659,7 +659,7 @@ def process_links(save, verbose, lang, longlang, cattype, startFrom, upTo,
           return False
         if not noadd:
           templates_seen[tempname] = templates_seen.get(tempname, 0) + 1
-        result = processfn(pagetitle, index, template, tlang, param, trparam)
+        result = processfn(pagetitle, index, pagetext, template, tlang, param, trparam)
         if result and isinstance(result, list):
           actions.extend(result)
           if not noadd:

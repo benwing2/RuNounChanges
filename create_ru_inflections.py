@@ -2795,7 +2795,7 @@ def create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite,
       dicforms = [(rulib.remove_monosyllabic_accents(dicru),
         rulib.remove_tr_monosyllabic_accents(dictr)) for dicru, dictr in dicforms]
       # Group dictionary forms by Russian, to group multiple translits
-      dicforms = rulib.group_translits(dicforms, pagemsg, expand_text)
+      dicforms = rulib.group_translits(dicforms, pagemsg, verbose)
       dicforms_args_sets = split_forms_with_stress_variants(args, forms_desired,
           dicforms, pagemsg, expand_text)
       # If multiple stress variants, allow stress mismatch when comparing
@@ -2854,7 +2854,7 @@ def create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite,
                     pagemsg("create_forms: For pagename %s, found multiple inflections %s" % (
                       formval_no_accents, inflections_printed))
                   # Group inflections by Russian, to group multiple translits
-                  inflections = rulib.group_translits(inflections, pagemsg, expand_text)
+                  inflections = rulib.group_translits(inflections, pagemsg, verbose)
 
                   if type(inflsets) is not list:
                     inflsets = [inflsets]

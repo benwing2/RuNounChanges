@@ -239,7 +239,7 @@ def canon_links(save, verbose, cattype, lang, longlang, script,
     translit_module, startFrom, upTo, pages_to_do=[]):
   if not isinstance(script, list):
     script = [script]
-  def process_param(pagetitle, index, template, templang, param, paramtr):
+  def process_param(pagetitle, index, pagetext, template, templang, param, paramtr):
     result = canon_param(pagetitle, index, template, param, paramtr,
         translit_module, include_tempname_in_changelog=True)
     scvalue = getparam(template, "sc")
