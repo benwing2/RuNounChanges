@@ -87,6 +87,9 @@
 #     (e.g. бы́ло, как, пять).
 # 28. (DONE) If already accented, use that to filter heads, e.g. 4370 валить
 #     with ку́чу (noun only, not кучу́ verb).
+# 29. If subst= already present, don't augment it in ux/uxi/usex/quote;
+#     or check if existing subst= handles all translit, and only augment if
+#     not.
 
 import re, codecs
 
@@ -190,8 +193,28 @@ def check_need_accent(text):
       return True
   return False
 
+def terms_match(ru1, ru2):
+  # Return whether two Russian terms match. We allow a mismatch in
+  # accents for monosyllabic words, otherwise the words must match
+  # exactly including accents.
+  words1 = re.split(" +", ru1)
+  words2 = re.split(" +", ru2)
+  if len(words1) != len(words2):
+    return False
+  for word1, word2 in zip(words1, words2):
+    if rulib.is_monosyllabic(word1):
+      if rulib.remove_accents(word1) != rulib.remove_accents(word2):
+        return False
+    else:
+      if word1 != word2:
+        return False
+  return True
+
 def normalize_text(text):
   return rulib.remove_accents(blib.remove_links(text)).replace("'''", "")
+
+def remove_monosyllabic_accents(ru, tr):
+  return rulib.remove_monosyllabic_accents(ru), rulib.remove_tr_monosyllabic_accents(tr)
 
 # For a possible adjective form, return the lemmas that it might belong to.
 def get_adj_form_lemmas(form):
@@ -206,7 +229,8 @@ def get_adj_form_lemmas(form):
     bases = [form, form + u"н"]
     types = ["hard", "soft"]
   elif re.search(u"[еая]н[аоы]$", form):
-    bases = [form[:-1], form[:-1] + u"н"]
+    base = re.sub(u"ен$", u"ён", form[:-1])
+    bases = [base, base + u"н"]
     types = ["hard"]
   else:
     return []
@@ -244,16 +268,14 @@ def get_adj_form_lemmas(form):
 # (CACHED, INFO), where CACHED indicates whether the returned info was
 # cached and INFO is either None (page doesn't exist), "redirect"
 # (page is a redirect) or a tuple as follows:
-#   (HEADS, SAW_LEMMA, INFLECTIONS_OF, ADJ_FORMS)
+#   (HEADS, INFLECTIONS_OF, ADJ_FORMS)
 #
 # (1) HEADS is a set of all heads found on the page, each of which is
 #     (RU, TR, IS_LEMMA),
-# (2) SAW_LEMMA is True if we saw any lemma templates on the page (not
-#     including e.g. {{ru-noun form}} or {{head|ru|verb form}})
-# (3) INFLECTIONS_OF is a set of (HEADS, LEMMA) for each lemma of which this
+# (2) INFLECTIONS_OF is a set of (HEADS, LEMMA) for each lemma of which this
 #     entry is an inflection, listing the heads in the same subsection as the
 #     {{inflection of|...}} call. HEADS is a set exactly like (1) above.
-# (4) ADJ_FORMS is a set of all adjective forms of any adjective lemmas found
+# (3) ADJ_FORMS is a set of all adjective forms of any adjective lemmas found
 #     on the page (each of which is (RU, TR)).
 def fetch_page_from_cache(pagename, pagemsg):
   if semi_verbose:
@@ -330,6 +352,9 @@ def fetch_page_from_cache(pagename, pagemsg):
           this_heads = set()
           def add(val, tr, is_lemma):
             val_to_add = blib.remove_links(val)
+            # Remove monosyllabic accents to correctly handle the case of
+            # рад, which has some heads with an accent and some without.
+            val_to_add, tr = remove_monosyllabic_accents(val_to_add, tr)
             this_heads.add((val_to_add, tr, is_lemma))
           for t in parsed.filter_templates():
             tname = unicode(t.name)
@@ -436,6 +461,11 @@ def lookup_term_for_accents(term, termtr, verbose, pagemsg, expect_cap):
     pagenames_to_consider = [real_pagename]
 
   for pagename in pagenames_to_consider:
+    if pagename == real_pagename:
+      maybe_decap_term = term
+    else:
+      maybe_decap_term = term[0].lower() + term[1:]
+
     # Look up the page
     if semi_verbose:
       pagemsg("lookup_term_for_accents: Finding heads on page %s" % pagename)
@@ -473,10 +503,11 @@ def lookup_term_for_accents(term, termtr, verbose, pagemsg, expect_cap):
     # We have the heads
     # First, filter heads and inflections to match an accented term, if
     # supplied.
-    if AC in term or u"ё" in term:
-      heads = set((ru, tr, is_lemma) for ru, tr, is_lemma in heads if ru == term)
-      inflections_of = set((heads, lemma) for heads, lemma in inflections_of if
-          any(ru == term for ru, tr, is_lemma in heads))
+    if AC in maybe_decap_term or u"ё" in maybe_decap_term:
+      heads = set((ru, tr, is_lemma) for ru, tr, is_lemma in heads
+          if terms_match(ru, maybe_decap_term))
+      inflections_of = set((heads, lemma) for heads, lemma in inflections_of
+          if any(terms_match(ru, maybe_decap_term) for ru, tr, is_lemma in heads))
     saw_lemma = any(is_lemma for ru, tr, is_lemma in heads)
 
     def stringize_heads(heads):
@@ -495,10 +526,28 @@ def lookup_term_for_accents(term, termtr, verbose, pagemsg, expect_cap):
       # We might have a sentence-initial capitalized word, continue checking
       # the non-capitalized equivalent.
       continue
+
+    # This is a signal in the case of multiple heads that are the same except
+    # some are lemmas and some are non-lemmas. In this case we need to return
+    # None as the lemma but otherwise proceed as normal.
+    need_none_lemma = False
+
     if len(heads) > 1:
-      pagemsg("WARNING: lookup_term_for_accents: Found multiple heads for %s%s: %s" % (pagename, cached_msg, stringize_heads(heads)))
-      return term, termtr, None
-    newterm, newtr, is_lemma = list(heads)[0]
+      # If multiple heads, check again but this time ignore the is_lemma flag.
+      # We may have a case like восьмо́й, both a lemma and an inflection of
+      # восьма́я. In this case we can still accent but not add brackets.
+      heads_ignoring_lemma = set((ru, tr) for ru, tr, is_lemma in heads)
+      if len(heads_ignoring_lemma) == 1:
+        pagemsg("lookup_term_for_accents: Found multiple heads for %s%s but all match except some are lemmas and some non-lemmas: %s" % (
+          pagename, cached_msg, stringize_heads(heads)))
+        newterm, newtr = list(heads_ignoring_lemma)[0]
+        need_none_lemma = True
+      else:
+        pagemsg("WARNING: lookup_term_for_accents: Found multiple heads for %s%s: %s" % (pagename, cached_msg, stringize_heads(heads)))
+        return term, termtr, None
+    else:
+      newterm, newtr, is_lemma = list(heads)[0]
+
     if pagename != real_pagename:
       # We were asked to consider a capitalized word, decided to look up the
       # non-capitalized equivalent and found a match. We need to transfer the
@@ -545,6 +594,10 @@ def lookup_term_for_accents(term, termtr, verbose, pagemsg, expect_cap):
     if already_accented:
       newterm = term
       newtr = termtr
+
+    if need_none_lemma:
+      return newterm, newtr, None
+
     if len(inflections_of) == 1 and not saw_lemma:
       # Not a lemma and inflection of one lemma
       _, lemma = list(inflections_of)[0]
@@ -649,16 +702,19 @@ def find_accented_split_words(term, termtr, words, trwords, verbose, pagetitle,
         newtrwords.append(tr)
         # If we saw a manual translit word, note it (see above).
         if tr:
-          if this_substs:
-            for this_subst in this_substs:
-              if this_subst not in substs:
-                substs.append(this_subst)
-          else:
-            bare_ru = blib.remove_links(ru)
-            newsubst = "%s//%s" % (bare_ru,
-              ru_reverse_translit.reverse_translit(tr, cyrillic=bare_ru))
-            if newsubst not in substs:
-              substs.append(newsubst)
+          if not trwords:
+            if this_substs:
+              for this_subst in this_substs:
+                if this_subst not in substs:
+                  substs.append(this_subst)
+            else:
+              bare_ru = blib.remove_links(ru)
+              subst_ru = ru_reverse_translit.reverse_translit(tr,
+                  cyrillic=bare_ru)
+              if bare_ru != subst_ru:
+                newsubst = "%s//%s" % (bare_ru, subst_ru)
+                if newsubst not in substs:
+                  substs.append(newsubst)
           sawtr = True
       else:
         # Else, a separator or blank word. Just copy it. If it has
@@ -701,22 +757,16 @@ def find_accented_split_words(term, termtr, words, trwords, verbose, pagetitle,
       newtr = ""
   return newterm, newtr, substs
 
-def bracket_term_with_lemma(term, lemma, pagetitle):
+def bracket_term_with_lemma(term, tr, lemma, pagetitle):
+  if ((lemma is True or not lemma) and rulib.remove_accents(term) == pagetitle
+      or lemma == pagetitle):
+    return "'''%s'''" % term, tr and "'''%s'''" % tr or ""
   if lemma is True:
-    if rulib.remove_accents(term) == pagetitle:
-      return "'''%s'''" % term
-    else:
-      return "[[%s]]" % term
+    return "[[%s]]" % term, tr
   elif lemma:
-    if lemma == pagetitle:
-      return "'''%s'''" % term
-    else:
-      return "[[%s|%s]]" % (lemma, term)
+    return "[[%s|%s]]" % (lemma, term), tr
   else:
-    if rulib.remove_accents(term) == pagetitle:
-      return "'''%s'''" % term
-    else:
-      return term
+    return term, tr
 
 # Look up a term (and associated manual translit) and try to add accents.
 # The basic algorithm is that we first look up the whole term and then
@@ -773,8 +823,9 @@ def find_accented_1(term, termtr, verbose, pagetitle, pagemsg, template,
     # convert to [[BAZ|FOO]] or [[BAZ BAT|FOO BAR]] if necessary).
     inner_add_brackets = (
         False if lemma or add_brackets == "outer" else add_brackets)
-    words = re.split(r"('''.*?'''|\[\[.*?\]\]|[^()\[\] ,.?!]+)", term)
-    trwords = (re.split(r"('''.*?'''|\[\[.*?\]\]|[^()\[\] ,.?!]+)", termtr)
+    split_regex = r"('''.*?'''|\[\[.*?\]\]|[^()\[\] ,.?!:\"]+)"
+    words = re.split(split_regex, term)
+    trwords = (re.split(split_regex, termtr)
       if termtr else [])
     if trwords and len(words) != len(trwords):
       pagemsg("WARNING: find_accented_1: %s Cyrillic words but different number %s translit words: %s//%s" % (len(words), len(trwords), term, termtr))
@@ -806,7 +857,7 @@ def find_accented_1(term, termtr, verbose, pagetitle, pagemsg, template,
         expect_cap)
 
   if add_brackets:
-    newterm = bracket_term_with_lemma(newterm, lemma, pagetitle)
+    newterm, newtr = bracket_term_with_lemma(newterm, newtr, lemma, pagetitle)
 
   return newterm, newtr, substs
 
