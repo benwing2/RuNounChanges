@@ -3042,6 +3042,14 @@ def get_adj_gender(t, formname, args):
   else:
     return []
 
+def generate_adj_forms(t, expand_text):
+  if tname(t) == "ru-decl-adj":
+    return expand_text(re.sub(r"^\{\{ru-decl-adj", "{{ru-generate-adj-forms", unicode(t)))
+  else:
+    assert tname(t) == "ru-decl-adj-irreg"
+    return expand_text(re.sub(r"^\{\{ru-decl-adj-irreg\s*\|", r"{{ru-generate-adj-forms|-|manual|",
+      unicode(t)))
+
 def create_adj_forms(save, startFrom, upTo, formspec, lemmas_to_process,
     lemmas_no_jo, lemmas_to_overwrite, lemmas_to_not_overwrite, program_args):
   create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite,
@@ -3052,19 +3060,11 @@ def create_adj_forms(save, startFrom, upTo, formspec, lemmas_to_process,
       # with decl type 'proper'.
       "Declension", ["Adjective", "Participle", "Pronoun", "Proper noun"],
       ["Participle", "Pronoun", "Proper noun"],
-      lambda t:tname(t) == "ru-decl-adj",
-      lambda t, expand_text: expand_text(re.sub(r"^\{\{ru-decl-adj", "{{ru-generate-adj-forms", unicode(t))),
+      lambda t:tname(t) in ["ru-decl-adj", "ru-decl-adj-irreg"],
+      generate_adj_forms,
       lambda t:tname(t) == "ru-adj",
       #get_gender=get_adj_gender
       )
-
-def generate_numeral_adj_forms(t, expand_text):
-  if tname(t) == "ru-decl-adj":
-    return expand_text(re.sub(r"^\{\{ru-decl-adj", "{{ru-generate-adj-forms", unicode(t)))
-  else:
-    assert tname(t) == "ru-adj-table"
-    return expand_text(re.sub(r"^\{\{ru-adj-table\s*\|", r"{{ru-generate-adj-forms|-|manual|",
-      unicode(t)))
 
 def create_numeral_adj_forms(save, startFrom, upTo, formspec, lemmas_to_process,
       lemmas_no_jo, lemmas_to_overwrite, lemmas_to_not_overwrite, program_args):
@@ -3073,9 +3073,22 @@ def create_numeral_adj_forms(save, startFrom, upTo, formspec, lemmas_to_process,
       adj_form_inflection_dict, adj_form_aliases,
       "numeral", "head|ru|numeral form", ["nom_m", "nom_mp"],
       "Declension", ["Numeral"], [],
-      lambda t:tname(t) in ["ru-decl-adj", "ru-adj-table"],
-      generate_numeral_adj_forms,
+      lambda t:tname(t) in ["ru-decl-adj", "ru-decl-adj-irreg"],
+      generate_adj_forms,
       lambda t:tname(t) == "head" and getparam(t, "1") == "ru" and getparam(t, "2") == "numeral"
+      #get_gender=get_adj_gender
+      )
+
+def create_pronoun_adj_forms(save, startFrom, upTo, formspec, lemmas_to_process,
+      lemmas_no_jo, lemmas_to_overwrite, lemmas_to_not_overwrite, program_args):
+  create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite,
+      lemmas_to_not_overwrite, program_args, save, startFrom, upTo, formspec,
+      adj_form_inflection_dict, adj_form_aliases,
+      "pronoun", "head|ru|pronoun form", ["nom_m", "nom_mp"],
+      "Declension", ["Pronoun"], [],
+      lambda t:tname(t) in ["ru-decl-adj", "ru-decl-adj-irreg"],
+      generate_adj_forms,
+      lambda t:tname(t) == "head" and getparam(t, "1") == "ru" and getparam(t, "2") == "pronoun"
       #get_gender=get_adj_gender
       )
 
@@ -3230,7 +3243,9 @@ pa.add_argument("--overwrite-etymologies", action="store_true",
     help=u"""If specified and --overwrite-page, overwrite the entire existing
 page of inflections even if "Etymology N". WARNING: Be careful!""")
 pa.add_argument("--numeral", action="store_true",
-    help=u"""If specified, create numeral forms instead of noun forms.""")
+    help=u"""If specified, create numeral forms instead of noun/adj forms.""")
+pa.add_argument("--pronoun", action="store_true",
+    help=u"""If specified, create pronoun forms instead of noun/adj forms.""")
 
 params = pa.parse_args()
 startFrom, upTo = blib.parse_start_end(params.start, params.end)
@@ -3254,7 +3269,9 @@ if params.perfective_past_passive_participles:
 else:
   pppp_set = None
 if params.adj_form:
-  function_to_call = create_numeral_adj_forms if params.numeral else create_adj_forms
+  function_to_call = (create_pronoun_adj_forms if params.pronoun
+      else create_numeral_adj_forms if params.numeral
+      else create_adj_forms)
   function_to_call(params.save, startFrom, upTo, params.adj_form, lemmas_to_process, params.lemmas_no_jo, lemmas_to_overwrite, lemmas_to_not_overwrite, params)
 if params.noun_form:
   function_to_call = create_numeral_noun_forms if params.numeral else create_noun_forms
