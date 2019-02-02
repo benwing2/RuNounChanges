@@ -90,6 +90,7 @@
 # 29. If subst= already present, don't augment it in ux/uxi/usex/quote;
 #     or check if existing subst= handles all translit, and only augment if
 #     not.
+# 30. (DONE) Instead of chopping off stuff after comma, replace with slash.
 
 import re, codecs
 
@@ -111,9 +112,10 @@ accentless_multisyllable = [u"либо", u"нибудь"] + accentless_multisyll
 ru_lemma_templates = ["ru-noun", "ru-proper noun", "ru-verb", "ru-adj",
   "ru-adv", "ru-phrase"]
 ru_head_templates = ru_lemma_templates + ["ru-noun form"]
-ru_lemma_poses = ["circumfix", "conjunction", "determiner", "interfix",
-  "interjection", "letter", "numeral", "cardinal number", "particle",
-  "predicative", "prefix", "preposition", "prepositional phrase", "pronoun"]
+ru_lemma_poses = ["adjective", "adverb", "circumfix", "conjunction",
+  "determiner", "interfix", "interjection", "letter", "noun", "numeral",
+  "cardinal number", "particle", "phrase", "predicative", "prefix",
+  "preposition", "prepositional phrase", "pronoun", "proper noun", "verb"]
 # FIXME! List all the quote-* and cite-* templates
 link_expandable_templates = ["ux", "uxi", "quote", "usex"]
 templates_with_subst = link_expandable_templates
@@ -133,8 +135,55 @@ manually_specified_inflections = {
   u"было": [u"бы́ло", u"быть"],
   # Also genitive plural of ка́ка
   u"как": [u"как", True],
+  # Also genitive plural of та́ка
+  u"так": [u"так", True],
+  # Also 2nd singular imperative of тереть
+  u"три": [u"три", True],
   # Also 2nd singular imperative of пя́тить
   u"пять": [u"пять", True],
+  # Also dated present adverbial participle of длить
+  u"для": [u"для", True],
+  # Also listed as inflection of быть
+  u"нет": [u"нет", True],
+  # Also an interjection
+  u"это": [u"э́то", u"этот"],
+  # Abbrevations of -либо
+  u"кто-л": [u"кто́-либо", True],
+  u"кого-л": [u"кого́-либо", u"кто-либо"],
+  u"кому-л": [u"кому́-либо", u"кто-либо"],
+  u"кем-л": [u"ке́м-либо", u"кто-либо"],
+  u"ком-л": [u"ко́м-либо", u"кто-либо"],
+  u"что-л": [u"что́-либо", True],
+  u"чего-л": [u"чего́-либо", u"что-либо"],
+  u"чему-л": [u"чему́-либо", u"что-либо"],
+  u"чем-л": [u"че́м-либо", u"что-либо"],
+  u"чём-л": [u"чём-либо", u"что-либо"],
+  u"чей-л": [u"че́й-либо", True],
+  u"чьё-л": [u"чьё-либо", u"чеи-либо"],
+  u"чья-л": [u"чья́-либо", u"чеи-либо"],
+  u"чьи-л": [u"чьи́-либо", u"чеи-либо"],
+  u"чьего-л": [u"чьего́-либо", u"чеи-либо"],
+  u"чьей-л": [u"чье́й-либо", u"чеи-либо"],
+  u"чьих-л": [u"чьи́х-либо", u"чеи-либо"],
+  u"чьему-л": [u"чьему́-либо", u"чеи-либо"],
+  u"чьим-л": [u"чьи́м-либо", u"чеи-либо"],
+  u"чью-л": [u"чью́-либо", u"чеи-либо"],
+  u"чьею-л": [u"чье́ю-либо", u"чеи-либо"],
+  u"чьими-л": [u"чьи́ми-либо", u"чеи-либо"],
+  u"чьём-л": [u"чьём-либо", u"чеи-либо"],
+  u"куда-л": [u"куда́-либо", True],
+  u"какой-л": [u"како́й-либо", True],
+  u"какое-л": [u"како́е-либо", u"какой-либо"],
+  u"какая-л": [u"кака́я-либо", u"какой-либо"],
+  u"какие-л": [u"каки́е-либо", u"какой-либо"],
+  u"какого-л": [u"како́го-либо", u"какой-либо"],
+  u"каких-л": [u"каки́х-либо", u"какой-либо"],
+  u"какому-л": [u"како́му-либо", u"какой-либо"],
+  u"каким-л": [u"каки́м-либо", u"какой-либо"],
+  u"какую-л": [u"каку́ю-либо", u"какой-либо"],
+  u"какою-л": [u"како́ю-либо", u"какой-либо"],
+  u"какими-л": [u"каки́ми-либо", u"какой-либо"],
+  u"каком-л": [u"како́м-либо", u"какой-либо"],
 }
 
 
@@ -218,7 +267,16 @@ def remove_monosyllabic_accents(ru, tr):
 
 # For a possible adjective form, return the lemmas that it might belong to.
 def get_adj_form_lemmas(form):
-  if re.search(u"(ое|ее|ая|яя|ые|ие|ой|ей|ых|их|ым|им|ую|юю|ою|ею|ом|ем)$", form):
+  if re.search(u"(ье|ья|ьи|ью)$", form):
+    bases = [form[:-2]]
+    types = ["poss"]
+  elif re.search(u"(ьей|ьих|ьим|ьею|ьем)$", form):
+    bases = [form[:-3]]
+    types = ["poss"]
+  elif re.search(u"(ьего|ьему|ьими)$", form):
+    bases = [form[:-4]]
+    types = ["poss"]
+  elif re.search(u"(ое|ее|ая|яя|ые|ие|ой|ей|ых|их|ым|им|ую|юю|ою|ею|ом|ем)$", form):
     bases = [form[:-2]]
     types = adj_endings_first_letter[form[-2]]
   elif re.search(u"(ого|его|ому|ему|ыми|ими)$", form):
@@ -229,8 +287,17 @@ def get_adj_form_lemmas(form):
     bases = [form, form + u"н"]
     types = ["hard", "soft"]
   elif re.search(u"[еая]н[аоы]$", form):
-    base = re.sub(u"ен$", u"ён", form[:-1])
-    bases = [base, base + u"н"]
+    base1 = form[:-1]
+    base2 = re.sub(u"ен$", u"ён", base1)
+    bases = [base1, base1 + u"н"]
+    if base2 != base1:
+      bases.extend([base2, base2 + u"н"])
+    types = ["hard"]
+  elif re.search(u"[еи]м$", form):
+    bases = form
+    types = ["hard"]
+  elif re.search(u"[еи]м[аоы]$", form):
+    bases = [form[:-1]]
     types = ["hard"]
   else:
     return []
@@ -238,7 +305,9 @@ def get_adj_form_lemmas(form):
   for base in bases:
     if not base:
       continue
-    if base[-1] == u"ц":
+    if "poss" in types:
+      lemmas.append(base + u"ий")
+    elif base[-1] == u"ц":
       if "ts" in types:
         lemmas.append(base + u"ый")
         if not form.endswith(u"ой"):
@@ -387,6 +456,9 @@ def fetch_page_from_cache(pagename, pagemsg):
             elif tname == "inflection of" and getparam(t, "lang") == "ru":
               inflections_of.add((frozenset(this_heads),
                 normalize_text(getparam(t, "1"))))
+            elif tname == "ru-participle of":
+              inflections_of.add((frozenset(this_heads),
+                normalize_text(getparam(t, "1"))))
             if check_addl_heads:
               for i in xrange(2, 10):
                 headn = getparam(t, "head" + str(i))
@@ -395,12 +467,18 @@ def fetch_page_from_cache(pagename, pagemsg):
             elif tname == "ru-decl-adj":
               result = expand_text(re.sub(r"^\{\{ru-decl-adj", "{{ru-generate-adj-forms", unicode(t)))
               if not result:
-                pagemsg("WARNING: fetch_page_from_cache: Error expanding template %s" % unicode(t))
+                pagemsg("WARNING: fetch_page_from_cache: Error expanding template %s, page %s" %
+                  (unicode(t), pagename))
               else:
                 args = rulib.split_generate_args(result)
                 for value in args.itervalues():
                   adj_forms.add(value)
           heads.update(this_heads)
+
+    if foundrussian:
+      saw_lemma = any(is_lemma for ru, tr, is_lemma in heads)
+      if not saw_lemma and not inflections_of:
+        pagemsg("WARNING: fetch_page_from_cache: Found no lemmas or inflections of lemmas for %s" % pagename)
 
     cacheval = (heads, inflections_of, adj_forms)
     if not global_disable_cache:
@@ -593,7 +671,12 @@ def lookup_term_for_accents(term, termtr, verbose, pagemsg, expect_cap):
 
     if already_accented:
       newterm = term
-      newtr = termtr
+      # The term might already be accented but fail to include an irregular
+      # translit.
+      if newtr and termtr:
+        pagemsg("WARNING: Existing translit %s//%s and new translit %s//%s don't agree, not changing translit%s" % (
+          term, termtr, newterm, newtr, cached_msg))
+      newtr = termtr or newtr
 
     if need_none_lemma:
       return newterm, newtr, None
@@ -685,19 +768,19 @@ def find_accented_split_words(term, termtr, words, trwords, verbose, pagetitle,
             # (1) We expect the first char of the entire word sequence to
             #     be capitalized and we're processing the first word, or
             # (2) Preceding the word is a sequence of non-word chars ending
-            #     in a period plus a space or two spaces, and what precedes
-            #     that isn't a single-capital-letter word (this extra
-            #     condition is to handle e.g. "П. И. Чайковский", where the
-            #     capitalized word is should not be looked up lowercase).
+            #     in a period/slash/exclamation point plus a space or two
+            #     spaces or is /> (the end of an HTML tag, possibly <br/>),
+            #     and what precedes that isn't a single-capital-letter word
+            #     (this extra condition is to handle e.g. "П. И. Чайковский",
+            #     where the capitalized word is should not be looked up
+            #     lowercase).
             expect_cap and i == 1 or (
-              (words[i - 1].endswith(". ") or words[i - 1].endswith(".  ")) and
+              re.search(u"(/>|“|\"|[/.…!:—}]  ?)$", words[i - 1]) and
               not (i >= 2 and len(words[i - 2]) == 1 and words[i - 2].isupper())
             ))
-        if tr and "," in tr:
-          chopped_tr = re.sub(",.*", "", tr)
-          pagemsg("WARNING: find_accented_split_words: Comma in translit <%s>, chopping off text after the comma to <%s>" % (
-            tr, chopped_tr))
-          tr = chopped_tr
+        if "," in tr:
+          pagemsg("find_accented_split_words: Comma in translit <%s>, replacing with slash" % tr)
+          tr = re.sub(", *", "/", tr)
         newwords.append(ru)
         newtrwords.append(tr)
         # If we saw a manual translit word, note it (see above).
@@ -823,7 +906,7 @@ def find_accented_1(term, termtr, verbose, pagetitle, pagemsg, template,
     # convert to [[BAZ|FOO]] or [[BAZ BAT|FOO BAR]] if necessary).
     inner_add_brackets = (
         False if lemma or add_brackets == "outer" else add_brackets)
-    split_regex = r"('''.*?'''|\[\[.*?\]\]|[^()\[\] ,.?!:\"]+)"
+    split_regex = ur"('''.*?'''|\[\[.*?\]\]|[^()\[\]{} —,.…?!:;/\"«»“”<>]+)"
     words = re.split(split_regex, term)
     trwords = (re.split(split_regex, termtr)
       if termtr else [])
@@ -872,7 +955,7 @@ def find_accented(term, termtr, verbose, pagetitle, pagemsg, template,
   if semi_verbose:
     pagemsg("find_accented: Return %s%s%s" % (
       term, "//%s" % termtr if termtr else "",
-      ", substs=" + ",".join(substs) if substs else ""))
+      ", subst=" + ",".join(substs) if substs else ""))
   return term, termtr, substs
 
 def join_changelog_notes(notes):
@@ -921,58 +1004,60 @@ def process_template(pagetitle, index, pagetext, template, ruparam, trparam,
       True)
     if newval != val or newtr != valtr:
       if normalize_text(newval) != normalize_text(val):
-        pagemsg("WARNING: process_template: Accented page %s changed from %s in more than just accents/links/boldface, not changing" % (newval, val))
-      else:
-        changed = True
-        addparam(template, saveparam, newval)
-        if newtr:
-          if not trparam:
-            pagemsg("WARNING: process_template: Unable to change translit to %s because no translit param available (Cyrillic param %s): %s" %
-                (newtr, saveparam, origt))
-          elif unicode(template.name) in templates_with_subst and not valtr:
-            if substs:
-              cursubst_param = getparam(template, "subst")
-              if cursubst_param:
-                cursubsts = re.split(",", cursubst_param)
-                normalized_substs = [
-                    cursubst if "//" in cursubst else
-                    cursubst.replace("/", "//") for cursubst in cursubsts]
-                for subst in substs:
-                  if subst not in normalized_substs:
-                    normalized_substs.append(subst)
-                new_subst_param = ",".join(normalized_substs)
-                pagemsg("NOTE: process_template: Combined existing subst=%s with new subst=%s to form subst=%s: origt=%s" % (
-                  cursubst_param, ",".join(substs), new_subst_param, origt))
-              else:
-                normalized_substs = substs
-                new_subst_param = ",".join(normalized_substs)
-                pagemsg("NOTE: process_template: Added subst=%s to origt=%s" % (
-                  new_subst_param, origt))
-              addparam(template, "subst", new_subst_param)
+        pagemsg("WARNING: process_template: Accented page %s changed from %s in more than just accents/links/boldface" % (newval, val))
+        # Formerly we refused to change anything but now we are normalizing
+        # e.g. кого-л to кого́-либо
+      changed = True
+      addparam(template, saveparam, newval)
+      if newtr:
+        if not trparam:
+          pagemsg("WARNING: process_template: Unable to change translit to %s because no translit param available (Cyrillic param %s): %s" %
+              (newtr, saveparam, origt))
+        elif unicode(template.name) in templates_with_subst and not valtr:
+          if substs:
+            cursubst_param = getparam(template, "subst")
+            if cursubst_param:
+              cursubsts = re.split(",", cursubst_param)
+              normalized_substs = [
+                  cursubst if "//" in cursubst else
+                  cursubst.replace("/", "//") for cursubst in cursubsts]
+              for subst in substs:
+                if subst not in normalized_substs:
+                  normalized_substs.append(subst)
+              new_subst_param = ",".join(normalized_substs)
+              pagemsg("NOTE: process_template: Combined existing subst=%s with new subst=%s to form subst=%s: origt=%s" % (
+                cursubst_param, ",".join(substs), new_subst_param, origt))
             else:
-              pagemsg("NOTE: process_template: Added translit param %s=%s to template: origt=%s" %
-                  (trparam, newtr, origt))
-              addparam(template, trparam, newtr)
+              normalized_substs = substs
+              new_subst_param = ",".join(normalized_substs)
+              pagemsg("NOTE: process_template: Added subst=%s to origt=%s" % (
+                new_subst_param, origt))
+            addparam(template, "subst", new_subst_param)
           else:
-            if valtr and valtr != newtr:
-              pagemsg("WARNING: process_template: Changed translit param %s from %s to %s: origt=%s" %
-                  (trparam, valtr, newtr, origt))
-            if not valtr:
-              pagemsg("NOTE: process_template: Added translit param %s=%s to template: origt=%s" %
-                  (trparam, newtr, origt))
+            pagemsg("NOTE: process_template: Added translit param %s=%s to template: origt=%s" %
+                (trparam, newtr, origt))
             addparam(template, trparam, newtr)
-        elif valtr:
-          pagemsg("WARNING: process_template: Template has translit %s but lookup result has none, leaving translit alone: origt=%s" %
-              (valtr, origt))
-        if check_need_accent(newval):
-          output_line("Need accents (changed)")
         else:
-          output_line("Found accents")
+          if valtr and valtr != newtr:
+            pagemsg("WARNING: process_template: Changed translit param %s from %s to %s: origt=%s" %
+                (trparam, valtr, newtr, origt))
+          if not valtr:
+            pagemsg("NOTE: process_template: Added translit param %s=%s to template: origt=%s" %
+                (trparam, newtr, origt))
+          addparam(template, trparam, newtr)
+      elif valtr:
+        pagemsg("WARNING: process_template: Template has translit %s but lookup result has none, leaving translit alone: origt=%s" %
+            (valtr, origt))
+      if check_need_accent(newval):
+        output_line("Need accents (changed)")
+      else:
+        output_line("Found accents")
   if not changed and check_need_accent(val):
     output_line("Need accents")
   if changed:
     pagemsg("process_template: Replaced %s with %s" % (origt, unicode(template)))
-  return ["auto-accent %s%s" % (newval, "//%s" % newtr if newtr else "")] if changed else False
+  return ["auto-accent %s%s%s" % (newval, "//%s" % newtr if newtr else "",
+    ", subst=" + ",".join(substs) if substs else "")] if changed else False
 
 def find_russian_need_vowels(find_accents, accent_hidden, cattype, direcfile,
     save, verbose, startFrom, upTo):
