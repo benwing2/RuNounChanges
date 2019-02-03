@@ -14,12 +14,55 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Despite its name, this is actually a script to auto-accent Russian text
-# by looking up unaccented multisyllabic words in the dictionary and fetching
-# the accented headwords, and if there's only one, using it in place of the
-# original unaccented word. We're somewhat smarter than this, e.g. we first
-# try looking up the whole phrase before partitioning it into individual
-# words.
+# Despite its name, this is actually a script to add accents, links and
+# boldface to Russian text inside of templates like {{l|ru|...}}, {{m|ru|...}},
+# {{ux|ru|...}}, etc. This is done by looking up words in the dictionary
+# and adding information if it's unambiguous (e.g. we don't add accents to a
+# term if it has multiple possible accentuations, and we don't add links to a
+# term if it corresponds to multiple possible lemmas). We're actually somewhat
+# smarter than this, e.g. we first try looking up the whole phrase, then
+# partition into linked blocks of words and individual non-linked words and
+# look them up, and then break up linked blocks of words into single words and
+# look them up, and finally break individual words on hyphens and look up the
+# components.
+#
+# Note:
+#
+# (1) Only acute accents are added (grave accents should not be present
+#     in headwords, links, or anywhere else except pronunciations).
+# (2) Links are of the form [[TERM]] if the term is a lemma, otherwise
+#     [[LEMMA|TERM]], where in both cases TERM should have accents but LEMMA
+#     not. Links are only added to templates that contain example text (e.g.
+#     not including {{l}} or {{m}}, which are themselves links to a page
+#     consisting of the entire text), and only to templates that allow such
+#     links (which is most templates with a language parameter, but doesn't
+#     include {{w}} or {{wikipedia}}).
+# (3) Boldface consists of the form '''TERM''', and is used in place of a
+#     link if the link would be to the page itself on which the term occurs.
+#
+# GENERAL COMMENTS ON THE CODE:
+#
+# (1) We use a cache to avoid multiple page lookups of the same term, because
+#     page lookups are expensive (the server only allows about 6 of them per
+#     second). This results in dramatic speedups; the overall hit rate for
+#     the entire run is > 87%.
+# (2) Numerous functions take and/or return params TERM (Cyrillic text
+#     referring to a term looked up or to be looked up) and corresponding
+#     manual transliteration TERMTR. TERMTR is a non-blank string only if
+#     the term has an irregular transliteration (e.g. bártɛr for ба́ртер),
+#     and is otherwise a blank string, i.e. "".
+# (3) Numerous functions take a param PAGEMSG, which is a single-argument
+#     function that outputs a message to stdout, prefixed by the index and
+#     name of the page on which the term occurs, in a form like this:
+#
+#     Page 72 абажур: find_accented: Call with term дежу́рный
+#
+#     The PAGEMSG function itself adds the text up through the first colon
+#     and following space. The calling function should generally include its
+#     name in the message, as in the example above, output by find_accented().
+#     Many messages are output only if --semi-verbose or --verbose is
+#     specified, and some functions accordingly take a VERBOSE parameter
+#     (FIXME, convert to a global variable, as with 'semi_verbose').
 #
 # FIXME:
 #
@@ -107,30 +150,41 @@ semi_verbose = False # Set by --semi-verbose or --verbose
 AC = u"\u0301" # acute =  ́
 GR = u"\u0300" # grave =  ̀
 
-# List of accentless multisyllabic words.
+# List of accentless multisyllabic words that are lemmas.
 accentless_multisyllable_lemma = [u"надо", u"обо", u"ото",
   u"перед", u"передо", u"подо", u"предо", u"через"]
+# List of all accentless multisyllabic words.
 accentless_multisyllable = [u"либо", u"нибудь"] + accentless_multisyllable_lemma
+# List of Russian templates referring to lemmas.
 ru_lemma_templates = ["ru-noun", "ru-proper noun", "ru-verb", "ru-adj",
   "ru-adv", "ru-phrase", "ru-proverb"]
+# List of Russian templates referring to heads of any sort.
 ru_head_templates = ru_lemma_templates + ["ru-noun form", "ru-comparative"]
+# List of parts of speech referring to Russian lemmas (for use with
+# {{head|ru|...}}).
 ru_lemma_poses = ["adjective", "adverb", "circumfix", "conjunction",
   "determiner", "idiom", "interfix", "interjection", "letter", "noun",
   "numeral", "cardinal number", "particle", "phrase", "predicative",
   "prefix", "preposition", "prepositional phrase", "pronoun", "proper noun",
   "proverb", "suffix", "verb"]
-# FIXME! List all the quote-* and cite-* templates
-link_expandable_templates = ["ux", "uxi", "quote", "usex"]
-templates_with_subst = link_expandable_templates
-
+# List of templates with a subst= parameter that can be used in place of
+# manual transliteration.
+templates_with_subst = ["ux", "uxi", "quote", "usex",
+  "quote-book", "quote-hansard", "quote-journal", "quote-newsgroup",
+  "quote-song", "quote-us-patent", "quote-video", "quote-web",
+  "quote-wikipedia"]
+# List of templates for which we can add bracketed links to terms.
+link_expandable_templates = templates_with_subst + ["lang"]
+# List of monosyllabic prepositions.
 monosyllabic_prepositions = [u"без", u"близ", u"во", u"да", u"до", u"за",
     u"из", u"ко", u"меж", u"на", u"над", u"не", u"ни", u"о", u"об", u"от",
     u"по", u"под", u"пред", u"при", u"про", u"со", u"у"]
-
+# Derived list of accented equivalents of above, for use with expressions
+# like до́ смерти, where the word following an accented monosyllabic
+# preposition should remain unaccented.
 monosyllabic_accented_prepositions = [
     prep + AC for prep in monosyllabic_prepositions
 ]
-
 # For these words, ignore the capitalized variant even when the word is
 # capitalized, because we almost always want the lowercase equivalent.
 # This applies to all the common single-letter words that may appear at the
@@ -140,6 +194,14 @@ monosyllabic_accented_prepositions = [
 ignore_capitalized_variant_words = [u"я", u"в", u"с", u"к", u"о", u"а", u"у", u"и",
   u"вы", u"по"]
 
+# Terms where we manually specify the corresponding lemma and accented form,
+# ignoring certain infrequent alternative uses that rarely apply but would
+# prevent link expansion. The key is the unaccented term, while the value
+# is a two-element list [ACCENTED_FORM, LEMMA], where ACCENTED_FORM is the
+# equivalent accented form that we replace the term with (this can also be
+# used to expand abbreviations, like кто-л -> кто́-либо), and LEMMA is the
+# unaccented lemma that this term belongs to, or True if the term is itself
+# a lemma.
 manually_specified_inflections = {
   # Also a particle meaning "nearly"
   u"было": [u"бы́ло", u"быть"],
@@ -196,16 +258,22 @@ manually_specified_inflections = {
   u"каком-л": [u"како́м-либо", u"какой-либо"],
 }
 
-
-# Information found during lookup of a page. Value is None if the page
-# doesn't exist. Value is the string "redirect" if page is a redirect.
-# Otherwise, value is a tuple (HEADS, SAW_LEMMA, INFLECTIONS_OF, ADJ_FORMS);
-# see fetch_page_from_cache().
+# Cache of information found during page lookup of a term, to avoid duplicative
+# page lookups (which are expensive as the server only allows about 6 of them
+# per second). Value is None if the page doesn't exist. Value is the string
+# "redirect" if page is a redirect. Otherwise, value is a tuple (HEADS,
+# SAW_LEMMA, INFLECTIONS_OF, ADJ_FORMS); see fetch_page_from_cache().
+#
+# Every 100 pages we output stats on cache size, #lookups and hit rate; see
+# output_stats(). The hit rate is around # 40% near the beginning but increases
+# over time, reaching > 87% at the end.
 accented_cache = {}
 num_cache_lookups = 0
 num_cache_hits = 0
 global_disable_cache = False
 
+# Output stats on cache size, #lookups and hit rate. (The hit rate is around
+# 40% near the beginning but increases over time, reaching > 87% at the end.)
 def output_stats(pagemsg):
   if global_disable_cache:
     return
@@ -214,6 +282,10 @@ def output_stats(pagemsg):
     num_cache_lookups, num_cache_hits,
     float(num_cache_hits)*100/num_cache_lookups if num_cache_lookups else 0.0))
 
+# Split a form with optional translit appended (which may be either a bare
+# Cyrillic term or something of the form CYRILLIC//TR), returning the
+# Cyrillic and translit (which will be a blank string if not specified or if
+# redundant).
 def split_ru_tr(form, pagemsg):
   if "//" in form:
     rutr = re.split("//", form)
@@ -232,17 +304,50 @@ def split_ru_tr(form, pagemsg):
   else:
     return (form, "")
 
+# List of possible stem categories of adjectives where the first letter of
+# the ending is as specified. For example, the entry for u"ы" means that any
+# ending found that starts in ы (e.g. -ый, -ым, -ыми, -ых) can occur only in
+# hard-stem adjectives or ц-stem adjectives. This is used to derive the
+# corresponding lemma, in this case by adding -ий if the stem ends in ц and
+# -ый otherwise. The possible categories are:
+#
+# "hard": Hard-stem adjective ending in -ый or -ой where the last stem
+#         consonant is not a velar, hushing sound or ц.
+# "soft": Soft-stem adjective ending in -ий where the last stem consonant is
+#         not a velar, hushing sound or ц.
+# "velar": Velar-stem adjective ending in -ий where the last stem consonant is
+#          a velar (к, г or х).
+# "hush-unacc": Hushing-stem unaccented-ending adjective ending in -ий where
+#               the last stem consonant is a hushing consonant (ш, ж, ч or щ).
+# "hush-acc": Hushing-stem accented-ending adjective ending in -ой where
+#             the last stem consonant is a hushing consonant (ш, ж, ч or щ).
+# "ts": Ц-stem adjective ending in -ий or -ой where the last stem consonant
+#       is ц.
+# "poss": Possessive-stem adjective ending in -ий where the last stem consonant
+#         can be anything (handled specially, and identified specially by an
+#         ending beginning with -ь).
+#
+# Note that there is also special handling for short forms of participles in
+# -нный and -мый. Otherwise we don't currently recognize short adjective forms,
+# because (a) the most common adjectives already have short non-lemma forms
+# created, and (b) it would greatly increase the number of lookups as we'd
+# have to do adjective lookup for essentially every term (since any term ending
+# in a consonant or in -а, -я, -о, -е, -ы or -и can potentially be a short
+# form of an adjective).
 adj_endings_first_letter = {
-  u"о": ["hard", "sib-acc", "velar"],
-  u"е": ["soft", "sib-unacc", "ts"],
-  u"а": ["hard", "velar", "sib-acc", "sib-unacc", "ts"],
+  u"о": ["hard", "hush-acc", "velar"],
+  u"е": ["soft", "hush-unacc", "ts"],
+  u"а": ["hard", "velar", "hush-acc", "hush-unacc", "ts"],
   u"я": ["soft"],
   u"ы": ["hard", "ts"],
-  u"и": ["soft", "velar", "sib-acc", "sib-unacc"],
-  u"у": ["hard", "velar", "sib-acc", "sib-unacc", "ts"],
+  u"и": ["soft", "velar", "hush-acc", "hush-unacc"],
+  u"у": ["hard", "velar", "hush-acc", "hush-unacc", "ts"],
   u"ю": ["soft"],
 }
 
+# Check if a piece of text is missing one or more accents. The algorithm is
+# to split on words and check for multisyllabic words that lack both an
+# acute accent and a ё.
 def check_need_accent(text):
   for word in re.split(" +", text):
     word = blib.remove_links(word)
@@ -252,10 +357,10 @@ def check_need_accent(text):
       return True
   return False
 
+# Return whether two Russian terms (which may be multi-word) match. We allow
+# a mismatch in accents for monosyllabic words, otherwise the words must match
+# exactly including accents.
 def terms_match(ru1, ru2):
-  # Return whether two Russian terms match. We allow a mismatch in
-  # accents for monosyllabic words, otherwise the words must match
-  # exactly including accents.
   words1 = re.split(" +", ru1)
   words2 = re.split(" +", ru2)
   if len(words1) != len(words2):
@@ -269,9 +374,14 @@ def terms_match(ru1, ru2):
         return False
   return True
 
+# Normalize a piece of text by removing accents, links and boldface.
 def normalize_text(text):
   return rulib.remove_accents(blib.remove_links(text)).replace("'''", "")
 
+# Given Cyrillic and translit, remove any accents if the text consists of a
+# single monosyllabic word. We don't remove accents where there are multiple
+# words, because of cases like ни́ за што and до́ смерти where the accent is
+# important.
 def remove_monosyllabic_accents(ru, tr):
   return rulib.remove_monosyllabic_accents(ru), rulib.remove_tr_monosyllabic_accents(tr)
 
@@ -295,13 +405,13 @@ def get_adj_form_lemmas(form):
   # For the moment, only do short participles, not all short adjectives.
   elif re.search(u"[ёеая]н$", form):
     bases = [form, form + u"н"]
-    types = ["hard", "soft"]
+    types = ["hard"]
   elif re.search(u"[еая]н[аоы]$", form):
     base1 = form[:-1]
     base2 = re.sub(u"ен$", u"ён", base1)
-    bases = [base1, base1 + u"н"]
+    bases = [base1 + u"н"]
     if base2 != base1:
-      bases.extend([base2, base2 + u"н"])
+      bases.extend([base2 + u"н"])
     types = ["hard"]
   elif re.search(u"[еи]м$", form):
     bases = form
@@ -323,9 +433,9 @@ def get_adj_form_lemmas(form):
         if not form.endswith(u"ой"):
           lemmas.append(base + u"ой")
     elif base[-1] in u"шжчщ":
-      if "sib-unacc" in types:
+      if "hush-unacc" in types:
         lemmas.append(base + u"ий")
-      if "sib-acc" in types and not form.endswith(u"ой"):
+      if "hush-acc" in types and not form.endswith(u"ой"):
         lemmas.append(base + u"ой")
     elif base[-1] in u"кгх":
       if "velar" in types:
@@ -497,27 +607,58 @@ def fetch_page_from_cache(pagename, pagemsg):
       accented_cache[pagename] = cacheval
     return False, cacheval
 
-# Look up a single term (which may be multi-word). If the page exists, retrieve
-# and return the headword(s) and lemma(s) (the term may itself be a lemma, or
-# it may be the non-lemma form of some lemma). If there are any problems,
-# return the term unchanged. A problem is any of the following:
+# Look up a single term (which may be multi-word), consisting of a Cyrillic
+# TERM and corresponding manual translit TERMTR (which will be a blank string
+# if there is no manual translit). If the page exists, retrieve and return the
+# headword(s) and lemma(s) (the term may itself be a lemma, or it may be the
+# non-lemma form of some lemma). If there are any problems, return the term
+# unchanged. A problem is any of the following:
+#
 # -- page doesn't exist or is a redirect
 # -- multiple distinct headwords
 # -- multiple distinct lemmas
 # -- term is both a lemma and non-lemma
-# The return value is (newterm, newterm_tr, lemma) where missing
-# transliteration should be returned as "", and LEMMA should be None is no
-# lemma is available or True if the term itself is a lemma, else a string.
+#
+# The return value is (NEWTERM, NEWTERM_TR, LEMMA) where missing
+# transliteration is returned as "", and LEMMA is None if no lemma is available
+# or True if the term itself is a lemma, else a string.
+#
+# The argument are TERM and TERMTR as described above; VERBOSE and PAGEMSG
+# as described in the comments at the top of the file; and EXPECT_CAP.
+#
+# EXPECT_CAP is True if we expect the first letter of the term to be
+# capitalized even if the term is properly lowercase. If this is the case, and
+# the term is capitalized and can't be found, we look up the lowercase
+# equivalent of the term. For example, if the term is Время and EXPECT_CAP is
+# True, we will first look up Время (which doesn't exist) and then время (which
+# does exist as a lemma with accentuation вре́мя), and we will return Вре́мя as
+# the accented term and время as the lemma, with the result that the bare term
+# Время will be replaced with [[время|Вре́мя]]. Note also that we special-case
+# a few common words where the capitalized equivalent is also a term but is
+# rare, and we don't want that capitalized term to be used. Examples are
+# single-word terms such as я, и, о, etc. (the corresponding capitalized term
+# is a letter term) as well as вы (Вы is an alternative-case form) and по
+# (По is a river in Italy and an English surname Poe). In such cases, we ignore
+# the capitalized variant; otherwise, for example, the frequent occurrences of
+# Я and Вы at the beginning of a sentence would be wrongly linked as [[Я]] and
+# [[Вы]] instead of the correct [[я|Я]] and [[вы|Вы]].
 def lookup_term_for_accents(term, termtr, verbose, pagemsg, expect_cap):
+  # Blank terms should never happen; if they do, they will cause errors in
+  # the capitalization frobbing below, so special-case them.
   if not term:
     pagemsg("WARNING: lookup_term_for_accents: Passed in blank term, shouldn't happen")
     return term, termtr, None
+
+  # Special-case accentless multisyllables; don't try adding an accent.
   if term in accentless_multisyllable:
     pagemsg("lookup_term_for_accents: Not accenting unaccented multisyllabic particle %s" % term)
     if term in accentless_multisyllable_lemma:
       return term, termtr, True
     else:
       return term, termtr, None
+
+  # Skip terms with links or HTML in them. The caller will then split on
+  # words and linked blocks and call us again on the individual components.
   if "|" in term:
     pagemsg("lookup_term_for_accents: Can't handle links with vertical bars: %s" % term)
     return term, termtr, None
@@ -528,6 +669,10 @@ def lookup_term_for_accents(term, termtr, verbose, pagemsg, expect_cap):
     pagemsg("lookup_term_for_accents: Can't handle stray < or >: %s" % term)
     return term, termtr, None
 
+  # Check for special-case capitalized words like Я and По, which we always
+  # treat as capitalized variants of properly lowercase words, ignoring the
+  # fact that the capitalized term it itself a lemma, as described in the
+  # comment to this function.
   real_pagename = rulib.remove_accents(term)
   decapitalized_pagename = real_pagename[0].lower() + real_pagename[1:]
   if decapitalized_pagename in ignore_capitalized_variant_words:
@@ -536,18 +681,22 @@ def lookup_term_for_accents(term, termtr, verbose, pagemsg, expect_cap):
     else:
       return term, termtr, decapitalized_pagename
 
+  # Pages to consider: If EXPECT_CAP, both the pagename (i.e. the term minus
+  # any accents) and its lowercase equivalent, otherwise just the pagename.
+  # See the comment to this function.
   if expect_cap:
     pagenames_to_consider = [real_pagename, decapitalized_pagename]
   else:
     pagenames_to_consider = [real_pagename]
 
+  # Loop over pages to consider (see preceding comment).
   for pagename in pagenames_to_consider:
     if pagename == real_pagename:
       maybe_decap_term = term
     else:
       maybe_decap_term = term[0].lower() + term[1:]
 
-    # Look up the page
+    # First look up the page.
     if semi_verbose:
       pagemsg("lookup_term_for_accents: Finding heads on page %s" % pagename)
 
@@ -559,7 +708,19 @@ def lookup_term_for_accents(term, termtr, verbose, pagemsg, expect_cap):
     else:
       heads, inflections_of, adj_forms = cache_result
 
-    # Look up any adjectives of which the page may be a form
+    # Then look up any adjectives of which the page may be a form. We do this
+    # specially because we currently create pages for non-lemma forms of
+    # nouns, verbs, pronouns and numerals, but not for non-short forms of
+    # regular adjectives: This would blow up the number of non-lemma pages
+    # even more than currently, and in general, non-short adjective forms
+    # are relatively easy to recognize and convert to the corresponding lemma
+    # (because the endings are relatively long and are usually unambiguous,
+    # e.g. -ых is only an adjective ending and any form ending in -ых is
+    # probably an adjective form), while this is less the case for nouns and
+    # verbs (as well as short adjective forms), due to (a) the shortness of
+    # the endings, (b) the complexities of accentuation and inflection, and
+    # (c) the frequent homophony between inflections of different lemmas and
+    # between lemmas and non-lemam forms.
     adj_lemmas = get_adj_form_lemmas(pagename)
     for adj_lemma in adj_lemmas:
       adj_cached, adj_cache_result = fetch_page_from_cache(adj_lemma, pagemsg)
@@ -581,14 +742,23 @@ def lookup_term_for_accents(term, termtr, verbose, pagemsg, expect_cap):
           # FIXME! If has accents, check that accents match adj form.
           # This is tricky in the context of capitalization.
 
-    # We have the heads
-    # First, filter heads and inflections to match an accented term, if
-    # supplied.
+    # ------- At this point we have the heads and lemmas of the term. -------
+
+    # First, if the term was already accented, filter heads and inflections
+    # to only those with the same accentuation. The accent is often enough
+    # to disambiguate lemmas from non-lemmas and forms of different lemmas.
     if AC in maybe_decap_term or u"ё" in maybe_decap_term:
       heads = set((ru, tr, is_lemma) for ru, tr, is_lemma in heads
           if terms_match(ru, maybe_decap_term))
-      inflections_of = set((heads, lemma) for heads, lemma in inflections_of
-          if any(terms_match(ru, maybe_decap_term) for ru, tr, is_lemma in heads))
+      new_inflections_of = set()
+      for h, l in inflections_of:
+        h = frozenset((ru, tr, is_lemma) for ru, tr, is_lemma in h
+            if terms_match(ru, maybe_decap_term))
+        if h:
+          new_inflections_of.add((h, l))
+      inflections_of = new_inflections_of
+
+    # Check if the term might be a lemma.
     saw_lemma = any(is_lemma for ru, tr, is_lemma in heads)
 
     def stringize_heads(heads):
@@ -604,16 +774,20 @@ def lookup_term_for_accents(term, termtr, verbose, pagemsg, expect_cap):
       " (cached)" if cached is True else
       " (manual override)" if cached == "manual-override" else
       "")
+
     if len(heads) == 0:
+      # We couldn't find any headword templates. If the page exists and isn't
+      # a redirect, this shouldn't normally happen, so issue a warning.
       if cache_result is not None and cache_result != "redirect":
         pagemsg("WARNING: lookup_term_for_accents: Can't find any heads: %s%s" % (pagename, cached_msg))
-      # We might have a sentence-initial capitalized word, continue checking
+      # We might have a sentence-initial capitalized word; continue checking
       # the non-capitalized equivalent.
       continue
 
     # This is a signal in the case of multiple heads that are the same except
     # some are lemmas and some are non-lemmas. In this case we need to return
-    # None as the lemma but otherwise proceed as normal.
+    # None as the lemma but otherwise proceed as normal, esp. in handling
+    # capitalized vs. non-capitalized variants.
     need_none_lemma = False
 
     if len(heads) > 1:
@@ -639,11 +813,17 @@ def lookup_term_for_accents(term, termtr, verbose, pagemsg, expect_cap):
       if not newterm:
         pagemsg("WARNING: Something wrong! Found blank head when looking up %s" % pagename)
         return term, termtr, None
-      # Make sure acutes and graves are decomposed. This is already the case
-      # except for grave ѐЀѝЍ (which shouldn't normally occur anyway, so this
-      # whole rigmarole might not be needed). That way, we can safely take
-      # the first (capitalized) letter of the real pagename and add the
-      # remainder of the looked-up term.
+      # In order to combine the accents on the canonical lowercase term with
+      # the capitalized unaccented term we actually have, we need to combine
+      # the first letter of the capitalized term with the remainder of the
+      # canonical lowercase term. To do this correctly, we need to first
+      # decompose composed accented characters (i.e. where a single Unicode
+      # character consists of both a letter and an accent), then combine,
+      # then recompose. (In practice, this isn't really necessary for Cyrillic,
+      # because the only precomposed accented Cyrillic Unicode characters that
+      # might cause problems are grave ѐЀѝЍ, which shouldn't normally occur
+      # anyway; but it's definitely needed for Latin translit, because all
+      # simple vowels have precomposed acute-accented variants.)
       newterm = rulib.decompose_acute_grave(newterm)
       real_pagename_decomposed = rulib.decompose_acute_grave(real_pagename)
       newterm = rulib.recompose(real_pagename_decomposed[0] + newterm[1:])
@@ -665,6 +845,10 @@ def lookup_term_for_accents(term, termtr, verbose, pagemsg, expect_cap):
 
     if semi_verbose:
       pagemsg("lookup_term_for_accents: Found head %s%s%s" % (newterm, "//%s" % newtr if newtr else "", cached_msg))
+
+    # In some cases, the accented headword ends in a ? or ! that isn't
+    # present in the page title. If the term we want to accent doesn't end
+    # in ? or ! but the accented headword does, chop off the ? or !.
     if re.search("[!?]$", newterm) and not re.search("[!?]$", term):
       newterm_wo_punc = re.sub("[!?]$", "", newterm)
       if rulib.remove_accents(newterm_wo_punc) == rulib.remove_accents(term):
@@ -672,9 +856,23 @@ def lookup_term_for_accents(term, termtr, verbose, pagemsg, expect_cap):
           newterm, term))
         newterm = newterm_wo_punc
 
+    # Signal to return the passed-in term rather than the accented equivalent
+    # we looked up. We do this, for example, if the term is already accented,
+    # because the already-present accentuation might be correct and the
+    # looked-up accentuation wrong. For example, a term might be in either
+    # accent class a or b but the dictionary entry lists only class a (this
+    # used to be the case, e.g., for блокпост). In such a case, if we're passed
+    # in блокпосты́, we would look it up and wrongly conclude that the accented
+    # form should be блокпо́сты. To guard against this, we don't change
+    # already-accented words, but we still look them up to find the lemma so
+    # we can bracket the term appropriately.
     keep_existing = False
 
     if rulib.remove_accents(newterm) != rulib.remove_accents(term):
+      # Occasionally, the headword term differs from the page title in more
+      # than just accents. This occurs most commonly in the manual-override
+      # entries such as кому-л -> кому́-либо, so don't warn in that case, but
+      # otherwise do so.
       if cached != "manual-override":
         pagemsg("WARNING: lookup_term_for_accents: Accented term %s differs from %s in more than just accents%s" % (
           newterm, term, cached_msg))
@@ -701,6 +899,7 @@ def lookup_term_for_accents(term, termtr, verbose, pagemsg, expect_cap):
       newtr = termtr or newtr
 
     if need_none_lemma:
+      # See comment above about this flag.
       return newterm, newtr, None
 
     if len(inflections_of) == 1 and not saw_lemma:
@@ -869,6 +1068,14 @@ def find_accented_split_words(term, termtr, words, trwords, verbose, pagetitle,
       newtr = ""
   return newterm, newtr, substs
 
+# Add either a bracketed link or boldface to a term, depending on whether
+# the page it occurs on is the same as the term's lemma. The arguments are
+# TERM and manual translit TR (a blank string if no manual translit is needed);
+# the term's LEMMA (which is True if the term is itself a lemma, and None if
+# no lemma can be identified, e.g. because the term is both a lemma and a
+# non-lemma form of some other lemma, or because the term is a non-lemma form
+# of multiple lemmas); and PAGETITLE, the unaccented title of the page on
+# which the term occurs.
 def bracket_term_with_lemma(term, tr, lemma, pagetitle):
   if ((lemma is True or not lemma) and rulib.remove_accents(term) == pagetitle
       or lemma == pagetitle):
@@ -1008,6 +1215,7 @@ def find_accented(term, termtr, verbose, pagetitle, pagemsg, template,
       ", subst=" + ",".join(substs) if substs else ""))
   return term, termtr, substs
 
+# Group "auto-accent foo" msgs.
 def join_changelog_notes(notes):
   accented_words = []
   other_notes = []
@@ -1024,6 +1232,7 @@ def join_changelog_notes(notes):
   notes.extend(other_notes)
   return "; ".join(notes)
 
+# Apply a subst= param to Cyrillic text.
 def apply_substs(ru, substs, pagemsg):
   substs = re.split(",", substs)
   for subst in substs:
@@ -1036,11 +1245,17 @@ def apply_substs(ru, substs, pagemsg):
       pagemsg("WARNING: Bad subst %s" % subst)
     else:
       fro, to = split_subst
+      # Our (feeble) attempt at mapping Lua regexes to Python ones.
+      # Doesn't much matter because Lua regexes rarely occur in subst=
+      # expressions.
       fro = re.sub("%(.)", r"\\\1", fro)
       to = re.sub("%(.)", r"\\\1", to)
       ru = re.sub(fro, to, ru)
   return ru
 
+# Process a template, optionally adding accents/links/boldface (if
+# FIND_ACCENTS is True) and replacing the appropriate param and translit
+# param.
 def process_template(pagetitle, index, pagetext, template, ruparam, trparam,
     output_line, find_accents, accent_hidden, verbose):
   origt = unicode(template)
@@ -1146,6 +1361,7 @@ def process_template(pagetitle, index, pagetext, template, ruparam, trparam,
   return ["auto-accent %s%s%s" % (newval, "//%s" % newtr if newtr else "",
     ", subst=" + ",".join(substs) if substs else "")] if changed else False
 
+# Main function to implement the whole script.
 def find_russian_need_vowels(find_accents, accent_hidden, cattype, direcfile,
     save, verbose, startFrom, upTo):
   if direcfile:
