@@ -781,10 +781,14 @@ def process_links(save, verbose, lang, longlang, cattype, startFrom, upTo,
             doparam("2", tlang)
       # Templates where we don't check for alternative text because
       # the following parameter is used for the translation.
-      elif tempname in ["ux", "usex", "uxi", "quote", "lang"]:
+      elif tempname in ["ux", "usex", "uxi", "quote"]:
         tlang = getp("1")
         if tlang in lang:
           doparam("2", tlang)
+      elif tempname == "lang":
+        tlang = getp("1")
+        if tlang in lang:
+          doparam("2", tlang, None)
       elif tempname == "cardinalbox":
         tlang = getp("1")
         if tlang in lang:
@@ -803,6 +807,13 @@ def process_links(save, verbose, lang, longlang, cattype, startFrom, upTo,
             doparam("alt", tlang)
           else:
             doparam("wplink", tlang, None)
+      elif tempname in ["quote-book", "quote-hansard", "quote-journal",
+          "quote-newsgroup", "quote-song", "quote-us-patent", "quote-video",
+          "quote-web", "quote-wikipedia"]:
+        tlang = getp("lang") or getp("language")
+        if tlang in lang:
+          if getp("passage"):
+            doparam("passage", tlang, "transliteration")
       elif tempname in ["der2", "der3", "der4", "der5", "rel2", "rel3", "rel4",
           "rel5", "hyp2", "hyp3", "hyp4", "hyp5"]:
         tlang = getp("lang")
