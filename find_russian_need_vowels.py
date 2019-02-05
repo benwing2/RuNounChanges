@@ -135,7 +135,9 @@
 #     not.
 # 30. (DONE) Instead of chopping off stuff after comma, replace with slash.
 # 31. (DONE) Бог has subst='''Бог'''/Бох.
-# 32. Normalize forms lacking ё if page has ru-adj-alt-ё or similar.
+# 32. (WON'T DO) Normalize forms lacking ё if page has ru-adj-alt-ё or similar.
+# 33. Don't auto-accent cases like alt1=галер(е́я) on page галёрка, where
+#     we would try to convert it to гале́р(е́я).
 
 import re, codecs
 
@@ -174,7 +176,8 @@ templates_with_subst = ["ux", "uxi", "quote", "usex",
   "quote-song", "quote-us-patent", "quote-video", "quote-web",
   "quote-wikipedia"]
 # List of templates for which we can add bracketed links to terms.
-link_expandable_templates = templates_with_subst + ["lang"]
+# FIXME: Add support for subst= to Q at least.
+link_expandable_templates = templates_with_subst + ["lang", "Q"]
 # List of monosyllabic prepositions.
 monosyllabic_prepositions = [u"без", u"близ", u"во", u"да", u"до", u"за",
     u"из", u"ко", u"меж", u"на", u"над", u"не", u"ни", u"о", u"об", u"от",
@@ -973,7 +976,7 @@ def find_accented_split_words(term, termtr, words, trwords, verbose, pagetitle,
       trword = trwords[i] if trwords else ""
       # If it's a non-blank word (not a separator), look it up.
       if word and i % 2 == 1:
-        if i > 1 and words[i - 2] in monosyllabic_accented_prepositions:
+        if i > 1 and blib.remove_links(words[i - 2]) in monosyllabic_accented_prepositions:
           # If it's a word and preceded by a stressed monosyllabic
           # preposition (e.g. до́ смерти), leave it alone.
           pagemsg("find_accented_split_words: Not accenting term %s%s preceded by accented preposition %s" %
@@ -1077,8 +1080,7 @@ def find_accented_split_words(term, termtr, words, trwords, verbose, pagetitle,
 # of multiple lemmas); and PAGETITLE, the unaccented title of the page on
 # which the term occurs.
 def bracket_term_with_lemma(term, tr, lemma, pagetitle):
-  if ((lemma is True or not lemma) and rulib.remove_accents(term) == pagetitle
-      or lemma == pagetitle):
+  if rulib.remove_accents(term) == pagetitle or lemma == pagetitle:
     return "'''%s'''" % term, tr and "'''%s'''" % tr or ""
   if lemma is True:
     return "[[%s]]" % term, tr
