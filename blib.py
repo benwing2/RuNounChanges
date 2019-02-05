@@ -727,7 +727,9 @@ def process_links(save, verbose, lang, longlang, cattype, startFrom, upTo,
         "sense", "italbrac-colon",
         "senseid",
         "given name",
-        "+preo", "IPA", "phrasebook", "PIE root", "surname", "Q", "was fwotd",
+        "+preo", "IPA", "phrasebook", "PIE root", "surname",
+        "topics", "c",
+        "was fwotd",
         # skip Wikipedia templates
         "wikipedia", "w", "pedialite", "pedia"]
         # More Wiki-etc. templates
@@ -756,19 +758,42 @@ def process_links(save, verbose, lang, longlang, cattype, startFrom, upTo,
             doparam("2", tlang)
       # Look for {{suffix|ar|<PAGENAME>|alt1=<ARABICTEXT>|<PAGENAME>|alt2=...}}
       # or  {{suffix|ar|<ARABICTEXT>|<ARABICTEXT>|...}}
-      elif (tempname in ["suffix", "suffix2", "prefix", "confix", "affix",
-          "circumfix", "infix", "compound"]):
+      elif (tempname in ["suffix", "suf", "prefix", "pre", "affix", "af",
+          "confix", "con",
+          "circumfix", "infix", "compound", "com",
+          "prefixusex", "suffixusex",
+          "synonyms", "syn", "antonyms", "ant", "hypernyms", "hyper",
+          "hyponyms", "hypo", "meronyms", "holonyms", "troponyms",
+          "coordinate terms", "perfectives", "pf", "imperfectives", "impf",
+          "homophones", "hmp"]):
+        if tempname in ["suffix", "suf", "infix"]:
+          params = [1]
+        elif tempname in ["prefix", "pre", "circumfix"]:
+          params = [2]
+        elif tempname in ["confix", "con"]:
+          if getp("3"):
+            params = [2]
+          else:
+            params = []
+        elif tempname in ["prefixusex", "suffixusex"]:
+          params = [1, 2]
+        else:
+          params = range(1, 11)
         tlang = getp("lang")
+        offset = 0
+        if not tlang:
+          tlang = getp("1")
+          offset = 1
         if tlang in lang:
           templates_seen[tempname] = templates_seen.get(tempname, 0) + 1
           anychanged = False
           # Don't just do cases up through where there's a numbered param
           # because there may be holes.
-          for i in xrange(1, 11):
+          for i in params:
             if getp("alt" + str(i)):
               changed = doparam("alt" + str(i), tlang, "tr" + str(i), noadd=True)
             else:
-              changed = doparam(str(i), tlang, "tr" + str(i), noadd=True)
+              changed = doparam(str(i + offset), tlang, "tr" + str(i), noadd=True)
             anychanged = anychanged or changed
           if anychanged:
             templates_changed[tempname] = templates_changed.get(tempname, 0) + 1
@@ -785,6 +810,10 @@ def process_links(save, verbose, lang, longlang, cattype, startFrom, upTo,
         tlang = getp("1")
         if tlang in lang:
           doparam("2", tlang)
+      elif tempname == "Q":
+        tlang = getp("1")
+        if tlang in lang:
+          doparam("quote", tlang)
       elif tempname == "lang":
         tlang = getp("1")
         if tlang in lang:
@@ -812,8 +841,9 @@ def process_links(save, verbose, lang, longlang, cattype, startFrom, upTo,
           "quote-web", "quote-wikipedia"]:
         tlang = getp("lang") or getp("language")
         if tlang in lang:
-          if getp("passage"):
-            doparam("passage", tlang, "transliteration")
+          if getp("passage") or getp("text"):
+            doparam("passage" if getp("passage") else "text", tlang,
+              "transliteration" if getp("transliteration") else "tr")
       elif tempname in ["der2", "der3", "der4", "der5", "rel2", "rel3", "rel4",
           "rel5", "hyp2", "hyp3", "hyp4", "hyp5"]:
         tlang = getp("lang")
@@ -838,7 +868,8 @@ def process_links(save, verbose, lang, longlang, cattype, startFrom, upTo,
             doparam("3", tlang)
           else:
             doparam("2", tlang)
-      elif tempname in ["der", "derived", "inh", "inherited", "bor", "borrowing"]:
+      elif tempname in ["der", "derived", "inh", "inherited", "bor", "borrowing",
+          "calque", "cal", "calq", "clq", "loan translation"]:
         tlang = getp("2")
         if tlang in lang:
           if getp("alt"):
