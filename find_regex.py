@@ -52,9 +52,20 @@ def process_page(regex, index, page, filter_pages, verbose):
         return
       foundrussian = True
 
-      if re.search(regex, sections[j]):
+      if re.search(regex, sections[j], re.M):
         pagemsg("Found match for regex: %s" % regex)
+        if verbose:
+          sectiontext = sections[j]
+          if not sectiontext.endswith("\n"):
+            sectiontext += "\n"
+          pagemsg("-------- begin text ---------\n%s-------- end text --------" % sectiontext)
+
       return
+
+def yield_pages_in_cats(cats, startFrom, upTo):
+  for cat in cats:
+    for index, page in blib.cat_articles(cat, startFrom, upTo):
+      yield index, page
 
 def search_pages(regex, refs, cat, pages, pagefile, filter_pages, verbose,
     startFrom, upTo):
@@ -66,20 +77,20 @@ def search_pages(regex, refs, cat, pages, pagefile, filter_pages, verbose,
   elif refs:
     pages = blib.references(refs, startFrom, upTo, includelinks=True)
   else:
-    pages = blib.cat_articles(cat, startFrom, upTo)
+    pages = yield_pages_in_cats(cat.split(","), startFrom, upTo)
   for index, page in pages:
     process_page(regex, index, page, filter_pages, verbose)
 
 pa = blib.init_argparser("Search on pages")
-pa.add_argument("-e", "--regex", help="Regular expression to search for",
+pa.add_argument("-e", "--regex", help="Regular expression to search for.",
     required=True)
 pa.add_argument("-r", "--references", "--refs",
-    help="Do pages with references to this page")
+    help="Do pages with references to this page.")
 pa.add_argument("-c", "--category", "--cat",
-    help="Do pages in this category")
+    help="List of categories to search, comma-separated.")
 pa.add_argument('--filter-pages', help="Regex to use to filter page names.")
-pa.add_argument('--pages', help="List of pages to fix, comma-separated.")
-pa.add_argument('--pagefile', help="File containing pages to fix.")
+pa.add_argument('--pages', help="List of pages to search, comma-separated.")
+pa.add_argument('--pagefile', help="File containing pages to search.")
 params = pa.parse_args()
 startFrom, upTo = blib.parse_start_end(params.start, params.end)
 
