@@ -653,7 +653,7 @@ def process_links(save, verbose, lang, longlang, cattype, startFrom, upTo,
     for template in pagetext.filter_templates():
       def getp(param):
         return getparam(template, param)
-      tempname = unicode(template.name)
+      tempname = unicode(template.name).strip()
       def doparam(param, tlang, trparam="tr", noadd=False):
         if not getp(param):
           return False
@@ -716,22 +716,26 @@ def process_links(save, verbose, lang, longlang, cattype, startFrom, upTo,
       if (tempname in [
         "attention",
         "audio", "audio-IPA",
-        "catlangcode", "C", "catlangname",
+        "catlangcode", "C", "catlangname", "cln",
         "commonscat",
         "etyl", "etym",
         "gloss",
+        "hyphenation", "hyph",
         "label", "lb", "lbl", "context", "cx",
+        "term-label", "tlb",
         "non-gloss definition", "non-gloss", "non gloss", "n-g",
+        "place",
         "qualifier", "qual", "i", "italbrac",
         "rfe", "rfinfl",
         "sense", "italbrac-colon",
         "senseid",
         "given name",
-        "+preo", "IPA", "phrasebook", "PIE root", "surname",
+        "+preo", "phrasebook", "PIE root", "surname",
+        "IPA", "IPAchar", "ru-IPA",
         "topics", "c",
         "was fwotd",
         # skip Wikipedia templates
-        "wikipedia", "w", "pedialite", "pedia"]
+        "wikipedia", "w", "pedialite", "pedia", "wp"]
         # More Wiki-etc. templates
         or tempname.startswith("projectlink")
         or tempname.startswith("PL:")
@@ -818,11 +822,11 @@ def process_links(save, verbose, lang, longlang, cattype, startFrom, upTo,
         tlang = getp("1")
         if tlang in lang:
           doparam("2", tlang, None)
-      elif tempname == "cardinalbox":
+      elif tempname in ["cardinalbox", "ordinalbox"]:
         tlang = getp("1")
         if tlang in lang:
-          pagemsg("WARNING: Encountered cardinalbox, check params carefully: %s"
-              % unicode(template))
+          pagemsg("WARNING: Encountered %s, check params carefully: %s"
+              % (tempname, unicode(template)))
           # FUCKME: This is a complicated template, might be doing it wrong
           doparam("5", tlang, None)
           doparam("6", tlang, None)
@@ -844,6 +848,18 @@ def process_links(save, verbose, lang, longlang, cattype, startFrom, upTo,
           if getp("passage") or getp("text"):
             doparam("passage" if getp("passage") else "text", tlang,
               "transliteration" if getp("transliteration") else "tr")
+      elif tempname == "alter":
+        tlang = getp("1")
+        if tlang in lang:
+          i = 1
+          while True:
+            if getp("alt" + str(i)):
+              doparam("alt" + str(i), tlang, "tr" + str(i))
+            elif getp(str(i + 1)):
+              doparam(str(i + 1), tlang, "tr" + str(i))
+            else:
+              break
+            i += 1
       elif tempname in ["der2", "der3", "der4", "der5", "rel2", "rel3", "rel4",
           "rel5", "hyp2", "hyp3", "hyp4", "hyp5"]:
         tlang = getp("lang")
