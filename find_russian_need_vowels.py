@@ -178,6 +178,12 @@ templates_with_subst = ["ux", "uxi", "quote", "usex",
 # List of templates for which we can add bracketed links to terms.
 # FIXME: Add support for subst= to Q at least.
 link_expandable_templates = templates_with_subst + ["lang", "Q"]
+# Non-Russian-specified templates speciying inflections of a lemma.
+inflection_templates = ["inflection of", "comparative of", "superlative of"]
+# Alt-ё templates for specifying terms spelled with е in place of ё.
+alt_yo_templates = [u"ru-noun-alt-ё", u"ru-verb-alt-ё", u"ru-adj-alt-ё",
+  u"ru-proper noun-alt-ё", u"ru-pos-alt-ё"]
+
 # List of monosyllabic prepositions.
 monosyllabic_prepositions = [u"без", u"близ", u"во", u"да", u"до", u"за",
     u"из", u"ко", u"меж", u"на", u"над", u"не", u"ни", u"о", u"об", u"от",
@@ -260,6 +266,13 @@ manually_specified_inflections = {
   u"какими-л": [u"каки́ми-либо", u"какой-либо"],
   u"каком-л": [u"како́м-либо", u"какой-либо"],
 }
+
+# Regex range of Cyrillic characters.
+cyrillic_char_range = u"Ѐ-џҊ-ԧꚀ-ꚗ"
+# Regex for a word ending in a possibly-accented Cyrillic char.
+ends_in_cyrillic_re = r"[%s][" % cyrillic_char_range + AC + GR + "]?$"
+# Regex for a word beginning in a Cyrillic char.
+begins_in_cyrillic_re = r"^[%s]" % cyrillic_char_range
 
 # Cache of information found during page lookup of a term, to avoid duplicative
 # page lookups (which are expensive as the server only allows about 6 of them
@@ -577,11 +590,8 @@ def fetch_page_from_cache(pagename, pagemsg):
               lemmas = rulib.group_translits(lemmas, pagemsg, semi_verbose)
               for val, tr in lemmas:
                 add(val, tr, is_lemma)
-            elif (tname in ["inflection of", "comparative of", "superlative of"]
-                and getparam(t, "lang") == "ru"):
-              inflections_of.add((frozenset(this_heads),
-                normalize_text(getparam(t, "1"))))
-            elif tname == "ru-participle of":
+            elif (tname == "ru-participle of" or
+                tname in inflection_templates and getparam(t, "lang") == "ru"):
               inflections_of.add((frozenset(this_heads),
                 normalize_text(getparam(t, "1"))))
             if check_addl_heads:
@@ -603,7 +613,24 @@ def fetch_page_from_cache(pagename, pagemsg):
     if foundrussian:
       saw_lemma = any(is_lemma for ru, tr, is_lemma in heads)
       if not saw_lemma and not inflections_of:
-        pagemsg("WARNING: fetch_page_from_cache: Found no lemmas or inflections of lemmas for %s" % pagename)
+        # If no lemmas or inflections found, check for alt-ё templates.
+        # If the term is a non-ё variant of a single term with ё, look up
+        # and return the heads and inflections on that page.
+        parsed = blib.parse_text(unicode(page.text))
+        yo_pages = set()
+        for t in parsed.filter_templates():
+          if unicode(t.name) in alt_yo_templates:
+            yo_pages.add(getparam(t, "1"))
+        if len(yo_pages) > 1:
+          pagemsg(u"WARNING: fetch_page_from_cache: Found multiple alt-ё templates for different lemmas: %s" %
+            ",".join(yo_pages))
+        elif len(yo_pages) == 0:
+          pagemsg("WARNING: fetch_page_from_cache: Found no lemmas or inflections of lemmas for %s" % pagename)
+        else:
+          yoful_page = list(yo_pages)[0]
+          pagemsg("fetch_page_from_cache: Redirecting from %s to %s" %
+            (pagename, yoful_page))
+          return fetch_page_from_cache(yoful_page, pagemsg)
 
     cacheval = (heads, inflections_of, adj_forms)
     if not global_disable_cache:
@@ -876,7 +903,12 @@ def lookup_term_for_accents(term, termtr, verbose, pagemsg, expect_cap):
       # than just accents. This occurs most commonly in the manual-override
       # entries such as кому-л -> кому́-либо, so don't warn in that case, but
       # otherwise do so.
-      if cached != "manual-override":
+      if u"ё" in newterm and (rulib.remove_accents(newterm.replace(u"ё", u"е")) ==
+          rulib.remove_accents(term)):
+        # Allow mismatch in ё vs. е because we handle ru-*-alt-ё templates
+        # in fetch_page_from_cache.
+        pass
+      elif cached != "manual-override":
         pagemsg("WARNING: lookup_term_for_accents: Accented term %s differs from %s in more than just accents%s" % (
           newterm, term, cached_msg))
       if "&#" in newterm:
@@ -976,7 +1008,7 @@ def find_accented_split_words(term, termtr, words, trwords, verbose, pagetitle,
       trword = trwords[i] if trwords else ""
       # If it's a non-blank word (not a separator), look it up.
       if word and i % 2 == 1:
-        if i > 1 and blib.remove_links(words[i - 2]) in monosyllabic_accented_prepositions:
+        if i >= 2 and blib.remove_links(words[i - 2]) in monosyllabic_accented_prepositions:
           # If it's a word and preceded by a stressed monosyllabic
           # preposition (e.g. до́ смерти), leave it alone.
           pagemsg("find_accented_split_words: Not accenting term %s%s preceded by accented preposition %s" %
@@ -984,6 +1016,26 @@ def find_accented_split_words(term, termtr, words, trwords, verbose, pagetitle,
           ru = word
           tr = trword
           # FIXME! Bracket term as necessary.
+        elif (i >= 2 and words[i - 1] in ["(", ")", "[", "]"] and
+            re.search(ends_in_cyrillic_re, words[i - 2])):
+          # If it's a word and followed by paren/bracket + Cyrillic (with no
+          # spaces) or preceded likewise, don't auto-accent it because we're
+          # likely dealing with a case like галер(ея) on page галёрка, which
+          # should be accented as галере́я but in which case we would otherwise
+          # accent гале́р and ея́ as words.
+          pagemsg("find_accented_split_words: Not accenting partial-word term %s%s in %s%s%s" %
+              (word, "//" + trword if trword else "", words[i - 2],
+               words[i - 1], word))
+          ru = word
+          tr = trword
+        elif (i <= len(words) - 3 and words[i + 1] in ["(", ")", "[", "]"] and
+            re.search(begins_in_cyrillic_re, words[i + 2])):
+          # See preceding case.
+          pagemsg("find_accented_split_words: Not accenting partial-word term %s%s in %s%s%s" %
+              (word, "//" + trword if trword else "", word, words[i + 1],
+               words[i + 2]))
+          ru = word
+          tr = trword
         else:
           # Otherwise, actually look it up.
           ru, tr, this_substs = find_accented(word, trword, verbose, pagetitle,
@@ -1165,7 +1217,7 @@ def find_accented_1(term, termtr, verbose, pagetitle, pagemsg, template,
     # convert to [[BAZ|FOO]] or [[BAZ BAT|FOO BAR]] if necessary).
     inner_add_brackets = (
         False if lemma or add_brackets == "outer" else add_brackets)
-    split_regex = ur"('''.*?'''|\[\[.*?\]\]|[^()\[\]{} —,.…?!:;/\"«»“”<>]+)"
+    split_regex = ur"('''.*?'''|\[\[.*?\]\]|[^()\[\]{} —,.…?!:;/\"«»„“”<>]+)"
     words = re.split(split_regex, term)
     trwords = (re.split(split_regex, termtr)
       if termtr else [])
