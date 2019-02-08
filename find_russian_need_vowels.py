@@ -158,8 +158,8 @@ accentless_multisyllable_lemma = [u"надо", u"обо", u"ото",
 # List of all accentless multisyllabic words.
 accentless_multisyllable = [u"либо", u"нибудь"] + accentless_multisyllable_lemma
 # List of Russian templates referring to lemmas.
-ru_lemma_templates = ["ru-noun", "ru-proper noun", "ru-verb", "ru-adj",
-  "ru-adv", "ru-phrase", "ru-proverb"]
+ru_lemma_templates = ["ru-noun", "ru-proper noun", "ru-verb", "ru-verb-cform",
+  "ru-adj", "ru-adv", "ru-phrase", "ru-proverb", "ru-diacritical mark"]
 # List of Russian templates referring to heads of any sort.
 ru_head_templates = ru_lemma_templates + ["ru-noun form", "ru-comparative"]
 # List of parts of speech referring to Russian lemmas (for use with
@@ -177,7 +177,7 @@ templates_with_subst = ["ux", "uxi", "quote", "usex",
   "quote-wikipedia"]
 # List of templates for which we can add bracketed links to terms.
 # FIXME: Add support for subst= to Q at least.
-link_expandable_templates = templates_with_subst + ["lang", "Q"]
+link_expandable_templates = templates_with_subst + ["Q"]
 # Non-Russian-specified templates speciying inflections of a lemma.
 inflection_templates = ["inflection of", "comparative of", "superlative of"]
 # Alt-ё templates for specifying terms spelled with е in place of ё.
@@ -267,6 +267,11 @@ manually_specified_inflections = {
   u"каком-л": [u"како́м-либо", u"какой-либо"],
 }
 
+terms_to_ignore = {
+  u"бела" # On page белый, we have old short genitive бе́ла; if we don't ignore
+          # the page, we get a translit from the term бел
+}
+
 # Regex range of Cyrillic characters.
 cyrillic_char_range = u"Ѐ-џҊ-ԧꚀ-ꚗ"
 # Regex for a word ending in a possibly-accented Cyrillic char.
@@ -277,7 +282,8 @@ begins_in_cyrillic_re = r"^[%s]" % cyrillic_char_range
 # Cache of information found during page lookup of a term, to avoid duplicative
 # page lookups (which are expensive as the server only allows about 6 of them
 # per second). Value is None if the page doesn't exist. Value is the string
-# "redirect" if page is a redirect. Otherwise, value is a tuple (HEADS,
+# "redirect" if page is a redirect. Value is the string "no-russian" if page
+# has only non-Russian sections. Otherwise, value is a tuple (HEADS,
 # SAW_LEMMA, INFLECTIONS_OF, ADJ_FORMS); see fetch_page_from_cache().
 #
 # Every 100 pages we output stats on cache size, #lookups and hit rate; see
@@ -473,7 +479,8 @@ def get_adj_form_lemmas(form):
 # (CACHED, INFO), where CACHED is either False (we looked up the value on the
 # page), True (it was already cached), or "manual-override" (the value comes
 # from manually_specified_inflections), and INFO is either None (page doesn't
-# exist), "redirect" (page is a redirect) or a tuple as follows:
+# exist), "redirect" (page is a redirect), "no-russian" (page isn't a redirect
+# but has no Russian section) or a tuple as follows:
 #   (HEADS, INFLECTIONS_OF, ADJ_FORMS)
 #
 # (1) HEADS is a set of all heads found on the page, each of which is
@@ -492,6 +499,10 @@ def fetch_page_from_cache(pagename, pagemsg):
   # important in expanding certain templates e.g. ru-generate-adj-forms.
   def expand_text(tempcall):
     return blib.expand_text(tempcall, pagename, pagemsg, semi_verbose)
+
+  if pagename in terms_to_ignore:
+    pagemsg("fetch_page_from_cache: Ignoring term because in terms_to_ignore: %s" % pagename)
+    return "manual-override", None
 
   if pagename in manually_specified_inflections:
     accented, lemma = manually_specified_inflections[pagename]
@@ -513,7 +524,15 @@ def fetch_page_from_cache(pagename, pagemsg):
     elif result == "redirect":
       if semi_verbose:
         pagemsg("fetch_page_from_cache: Page %s is redirect (cached)" % pagename)
+    elif result == "no-russian":
+      if semi_verbose:
+        pagemsg("fetch_page_from_cache: Page %s has no Russian section (cached)" % pagename)
     return True, result
+  elif "\n" in pagename:
+      pagemsg("WARNING: fetch_page_from_cache: Bad pagename (has newline in it): %s" % pagename)
+      if not global_disable_cache:
+        accented_cache[pagename] = None
+      return False, None
   else:
     cached = False
     page = pywikibot.Page(site, pagename)
@@ -610,27 +629,33 @@ def fetch_page_from_cache(pagename, pagemsg):
                   adj_forms.add(value)
           heads.update(this_heads)
 
-    if foundrussian:
-      saw_lemma = any(is_lemma for ru, tr, is_lemma in heads)
-      if not saw_lemma and not inflections_of:
-        # If no lemmas or inflections found, check for alt-ё templates.
-        # If the term is a non-ё variant of a single term with ё, look up
-        # and return the heads and inflections on that page.
-        parsed = blib.parse_text(unicode(page.text))
-        yo_pages = set()
-        for t in parsed.filter_templates():
-          if unicode(t.name) in alt_yo_templates:
-            yo_pages.add(getparam(t, "1"))
-        if len(yo_pages) > 1:
-          pagemsg(u"WARNING: fetch_page_from_cache: Found multiple alt-ё templates for different lemmas: %s" %
-            ",".join(yo_pages))
-        elif len(yo_pages) == 0:
-          pagemsg("WARNING: fetch_page_from_cache: Found no lemmas or inflections of lemmas for %s" % pagename)
-        else:
-          yoful_page = list(yo_pages)[0]
-          pagemsg("fetch_page_from_cache: Redirecting from %s to %s" %
-            (pagename, yoful_page))
-          return fetch_page_from_cache(yoful_page, pagemsg)
+    # Page exists, is it a redirect?
+    if not foundrussian:
+      if not global_disable_cache:
+        accented_cache[pagename] = "no-russian"
+      pagemsg("fetch_page_from_cache: Page %s has no Russian section" % pagename)
+      return False, "no-russian"
+
+    saw_lemma = any(is_lemma for ru, tr, is_lemma in heads)
+    if not saw_lemma and not inflections_of:
+      # If no lemmas or inflections found, check for alt-ё templates.
+      # If the term is a non-ё variant of a single term with ё, look up
+      # and return the heads and inflections on that page.
+      parsed = blib.parse_text(unicode(page.text))
+      yo_pages = set()
+      for t in parsed.filter_templates():
+        if unicode(t.name) in alt_yo_templates:
+          yo_pages.add(getparam(t, "1"))
+      if len(yo_pages) > 1:
+        pagemsg(u"WARNING: fetch_page_from_cache: Found multiple alt-ё templates for different lemmas: %s" %
+          ",".join(yo_pages))
+      elif len(yo_pages) == 0:
+        pagemsg("WARNING: fetch_page_from_cache: Found no lemmas or inflections of lemmas for %s" % pagename)
+      else:
+        yoful_page = list(yo_pages)[0]
+        pagemsg("fetch_page_from_cache: Redirecting from %s to %s" %
+          (pagename, yoful_page))
+        return fetch_page_from_cache(yoful_page, pagemsg)
 
     cacheval = (heads, inflections_of, adj_forms)
     if not global_disable_cache:
@@ -731,7 +756,7 @@ def lookup_term_for_accents(term, termtr, verbose, pagemsg, expect_cap):
       pagemsg("lookup_term_for_accents: Finding heads on page %s" % pagename)
 
     cached, cache_result = fetch_page_from_cache(pagename, pagemsg)
-    if cache_result is None or cache_result == "redirect":
+    if cache_result is None or cache_result in ["redirect", "no-russian"]:
       heads = set()
       inflections_of = set()
       adj_forms = set()
@@ -754,7 +779,8 @@ def lookup_term_for_accents(term, termtr, verbose, pagemsg, expect_cap):
     adj_lemmas = get_adj_form_lemmas(pagename)
     for adj_lemma in adj_lemmas:
       adj_cached, adj_cache_result = fetch_page_from_cache(adj_lemma, pagemsg)
-      if adj_cache_result is not None and adj_cache_result != "redirect":
+      if adj_cache_result is not None and (
+          adj_cache_result not in ["redirect", "no-russian"]):
         _, _, this_adj_forms = adj_cache_result
         for adj_form_one_or_more in this_adj_forms:
           # Each "form" is actually one or more forms separated by commas.
@@ -777,7 +803,7 @@ def lookup_term_for_accents(term, termtr, verbose, pagemsg, expect_cap):
     # First, if the term was already accented, filter heads and inflections
     # to only those with the same accentuation. The accent is often enough
     # to disambiguate lemmas from non-lemmas and forms of different lemmas.
-    if AC in maybe_decap_term or u"ё" in maybe_decap_term:
+    if AC in maybe_decap_term: # don't check for ё in case of multiword exprs.
       heads = set((ru, tr, is_lemma) for ru, tr, is_lemma in heads
           if terms_match(ru, maybe_decap_term))
       new_inflections_of = set()
@@ -808,7 +834,8 @@ def lookup_term_for_accents(term, termtr, verbose, pagemsg, expect_cap):
     if len(heads) == 0:
       # We couldn't find any headword templates. If the page exists and isn't
       # a redirect, this shouldn't normally happen, so issue a warning.
-      if cache_result is not None and cache_result != "redirect":
+      if cache_result is not None and (
+          cache_result not in ["redirect", "no-russian"]):
         pagemsg("WARNING: lookup_term_for_accents: Can't find any heads: %s%s" % (pagename, cached_msg))
       # We might have a sentence-initial capitalized word; continue checking
       # the non-capitalized equivalent.
@@ -1182,7 +1209,7 @@ def find_accented_1(term, termtr, verbose, pagetitle, pagemsg, template,
       pagetitle, pagemsg, template, False, expect_cap)
     newlemma = re.sub("#Russian$", "", m.group(1))
     if rulib.remove_accents(newterm) == newlemma:
-      pagemsg("Redundant vertical-bar bracket, simplifying: %s" % term)
+      pagemsg("find_accented_1: Redundant vertical-bar bracket, simplifying: %s" % term)
       return "[[%s]]" % newterm, newtr, substs
     else:
       return "[[%s|%s]]" % (newlemma, newterm), newtr, substs
@@ -1202,7 +1229,13 @@ def find_accented_1(term, termtr, verbose, pagetitle, pagemsg, template,
       pagetitle, pagemsg, template, False, expect_cap)
     return "'''%s'''" % newterm, newtr and "'''%s'''" % newtr or "", substs
 
-  # (4) Otherwise, look up the whole term.
+  # (4) Check for and ignore template as entire string (filter_templates()
+  #     will recursively process the template).
+  if re.search(r"^\{\{.*\}\}$", term):
+    pagemsg("find_accented_1: Ignoring template call embedded in argument: %s" % term)
+    return term, termtr, []
+
+  # (5) Otherwise, look up the whole term.
   newterm, newtr, lemma = lookup_term_for_accents(term, termtr, verbose,
     pagemsg, expect_cap)
   substs = []
@@ -1217,7 +1250,7 @@ def find_accented_1(term, termtr, verbose, pagetitle, pagemsg, template,
     # convert to [[BAZ|FOO]] or [[BAZ BAT|FOO BAR]] if necessary).
     inner_add_brackets = (
         False if lemma or add_brackets == "outer" else add_brackets)
-    split_regex = ur"('''.*?'''|\[\[.*?\]\]|[^()\[\]{} —,.…?!:;/\"«»„“”<>]+)"
+    split_regex = ur"('''.*?'''|\[\[.*?\]\]|[^()\[\]{} \n—,.…?!:;/\"«»„“”<>]+)"
     words = re.split(split_regex, term)
     trwords = (re.split(split_regex, termtr)
       if termtr else [])
