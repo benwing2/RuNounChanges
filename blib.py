@@ -339,13 +339,24 @@ def references(page, startsort = None, endsort = None, namespaces = None, includ
   for i, current in iter_items(pageiter, startsort, endsort):
     yield i, current
 
+def raw_cat_articles(page, startsort):
+  if type(page) is list:
+    for cat in page:
+      if isinstance(cat, basestring):
+        msg("Processing category %s" % unicode(cat))
+        errmsg("Processing category %s" % unicode(cat))
+      for article in raw_cat_articles(cat, startsort):
+        yield article
+  else:
+    if type(page) is str:
+      page = page.decode("utf-8")
+    if isinstance(page, basestring):
+      page = pywikibot.Category(site, "Category:" + page)
+    for article in page.articles(startsort = startsort if not isinstance(startsort, int) else None):
+      yield article
+
 def cat_articles(page, startsort = None, endsort = None):
-  if type(page) is str:
-    page = page.decode("utf-8")
-  if isinstance(page, basestring):
-    page = pywikibot.Category(site, "Category:" + page)
-  pageiter = page.articles(startsort = startsort if not isinstance(startsort, int) else None)
-  for i, current in iter_items(pageiter, startsort, endsort):
+  for i, current in iter_items(raw_cat_articles(page, startsort), startsort, endsort):
     yield i, current
 
 def cat_subcats(page, startsort = None, endsort = None):
@@ -714,7 +725,7 @@ def process_links(save, verbose, lang, longlang, cattype, startFrom, upTo,
       # or {{wikipedia|FOO|lang=ar}} or {{pedia|FOO|lang=ar}} etc., where
       # FOO is Arabic but diacritics aren't stripped so shouldn't be added.
       if (tempname in [
-        "attention",
+        "attention", "attn",
         "audio", "audio-IPA",
         "catlangcode", "C", "catlangname", "cln",
         "commonscat",
@@ -726,7 +737,7 @@ def process_links(save, verbose, lang, longlang, cattype, startFrom, upTo,
         "non-gloss definition", "non-gloss", "non gloss", "n-g",
         "place",
         "qualifier", "qual", "i", "italbrac",
-        "rfe", "rfinfl",
+        "rfe", "rfinfl", "rfc",
         "sense", "italbrac-colon",
         "senseid",
         "given name",
@@ -735,7 +746,7 @@ def process_links(save, verbose, lang, longlang, cattype, startFrom, upTo,
         "topics", "c",
         "was fwotd",
         # skip Wikipedia templates
-        "wikipedia", "w", "pedialite", "pedia", "wp"]
+        "pedialite", "pedia"]
         # More Wiki-etc. templates
         or tempname.startswith("projectlink")
         or tempname.startswith("PL:")
@@ -794,6 +805,8 @@ def process_links(save, verbose, lang, longlang, cattype, startFrom, upTo,
           # Don't just do cases up through where there's a numbered param
           # because there may be holes.
           for i in params:
+            if getp("lang" + str(i)):
+              continue
             if getp("alt" + str(i)):
               changed = doparam("alt" + str(i), tlang, "tr" + str(i), noadd=True)
             else:
@@ -821,6 +834,12 @@ def process_links(save, verbose, lang, longlang, cattype, startFrom, upTo,
       elif tempname == "lang":
         tlang = getp("1")
         if tlang in lang:
+          doparam("2", tlang, None)
+      elif tempname in ["w", "wikipedia", "wp"]:
+        tlang = getp("lang")
+        if tlang in lang and getp("2"):
+          # Can't replace param 1 (page linked to), but it's OK to frob the
+          # display text
           doparam("2", tlang, None)
       elif tempname in ["cardinalbox", "ordinalbox"]:
         tlang = getp("1")
@@ -1023,12 +1042,9 @@ def process_links(save, verbose, lang, longlang, cattype, startFrom, upTo,
       else:
         cats = [cattype]
         #raise ValueError("Category type '%s' should be 'vocab', 'borrowed', 'translation', 'links', 'pages' or 'pagetext'")
-      for cat in cats:
-        msg("Processing category %s" % unicode(cat))
-        errmsg("Processing category %s" % unicode(cat))
-        for index, page in cat_articles(cat, startFrom, upTo):
-          do_edit(page, index, process_one_page_links_wrapper, save=save,
-              verbose=verbose)
+      for index, page in cat_articles(cats, startFrom, upTo):
+        do_edit(page, index, process_one_page_links_wrapper, save=save,
+            verbose=verbose)
   if not quiet:
     msg("Templates seen:")
     for template, count in sorted(templates_seen.items(), key=lambda x:-x[1]):
