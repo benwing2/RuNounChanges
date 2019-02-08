@@ -6902,8 +6902,8 @@ Literally "to gain the top part"; compare "[[gain]] the [[upper hand]]".
 {{ru-conj|4a|pf-refl|вы́пуст}}
 
 ====Synonyms====
-* {{sense|be put out?}} {{l|ru|выста́виться}}
-* {{sense|be produced}} {{l|ru|произвести́сь}}, {{l|ru|вырабо́таться}}
+* {{sense|be put out?}} {{l|ru|вы́ставиться}}
+* {{sense|be produced}} {{l|ru|произвести́сь}}, {{l|ru|вы́работаться}}
 * {{sense|be published}} {{l|ru|изда́ться}}, {{l|ru|опубликова́ться}}, {{l|ru|напеча́таться}}
 
 ====Related terms====
