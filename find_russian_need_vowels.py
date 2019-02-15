@@ -218,6 +218,8 @@ manually_specified_inflections = {
   u"как": [u"как", True],
   # Also genitive plural of та́ка
   u"так": [u"так", True],
+  # Also genitive plural of ту́та
+  u"тут": [u"тут", True],
   # Also 2nd singular imperative of тереть
   u"три": [u"три", True],
   # Also 2nd singular imperative of пя́тить
@@ -268,8 +270,11 @@ manually_specified_inflections = {
 }
 
 terms_to_ignore = {
-  u"бела" # On page белый, we have old short genitive бе́ла; if we don't ignore
-          # the page, we get a translit from the term бел
+  u"бела", # On page белый, we have old short genitive бе́ла; if we don't ignore
+           # the page, we get a translit from the term бел
+  u"белу", # On page свет, we have old short dative бе́лу; if we don't ignore
+           # the page, we get a translit from the term бел
+  u"и.о.", # Otherwise we get и.о́.
 }
 
 # Regex range of Cyrillic characters.
