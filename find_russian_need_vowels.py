@@ -1075,15 +1075,15 @@ def find_accented_split_words(term, termtr, words, trwords, verbose, pagetitle,
             # We expect the first char to be capitalized if either
             # (1) We expect the first char of the entire word sequence to
             #     be capitalized and we're processing the first word, or
-            # (2) Preceding the word is a sequence of non-word chars ending
-            #     in a period/slash/exclamation point plus a space or two
-            #     spaces or is /> (the end of an HTML tag, possibly <br/>),
+            # (2) Preceding the word is a sequence of non-word chars ending in
+            #     a period/slash/exclamation point plus a space or two spaces
+            #     or is > (the end of an HTML tag, possibly <br/> or <br>),
             #     and what precedes that isn't a single-capital-letter word
             #     (this extra condition is to handle e.g. "П. И. Чайковский",
             #     where the capitalized word is should not be looked up
             #     lowercase).
             expect_cap and i == 1 or (
-              re.search(u"(/>|“|\"|[/.…!:—}]  ?)$", words[i - 1]) and
+              re.search(u"(> *|“|\"|[/.…!:—}]  ?)$", words[i - 1]) and
               not (i >= 2 and len(words[i - 2]) == 1 and words[i - 2].isupper())
             ))
         if "," in tr:
@@ -1255,7 +1255,7 @@ def find_accented_1(term, termtr, verbose, pagetitle, pagemsg, template,
     # convert to [[BAZ|FOO]] or [[BAZ BAT|FOO BAR]] if necessary).
     inner_add_brackets = (
         False if lemma or add_brackets == "outer" else add_brackets)
-    split_regex = ur"('''.*?'''|\[\[.*?\]\]|[^()\[\]{} \n—,.…?!:;/\"«»„“”<>]+)"
+    split_regex = ur"('''.*?'''|\[\[.*?\]\]|[^()\[\]{} \u00A0\n—,.…?!:;/\"«»„“”<>]+)"
     words = re.split(split_regex, term)
     trwords = (re.split(split_regex, termtr)
       if termtr else [])
