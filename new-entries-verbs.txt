@@ -4741,19 +4741,19 @@ Compare {{m|ru|воскреси́ть||to [[resurrect]]}}.
 ==Russian==
 
 ===Etymology===
-{{affix|ru|по-|трога́ть}}
+{{affix|ru|по-|тро́гать}}
 
 ===Pronunciation===
-* {{ru-IPA|потрога́ть}}
+* {{ru-IPA|потро́гать}}
 
 ===Verb===
-{{ru-verb|потрога́ть|pf|impf=трога́ть}}
+{{ru-verb|потро́гать|pf|impf=тро́гать}}
 
 # to [[touch]]
-#: {{ru-ux|'''потрога́ть''' [[палец|па́льцем]]|to [[finger]]|inline=y}}
+#: {{ru-ux|'''потро́гать''' [[палец|па́льцем]]|to [[finger]]|inline=y}}
 
 ====Conjugation====
-{{ru-conj|1a+p|pf|потрога́}}
+{{ru-conj|1a+p|pf|потро́га}}
 
 обвести
 
