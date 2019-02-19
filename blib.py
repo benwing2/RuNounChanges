@@ -190,6 +190,9 @@ def do_edit(page, index, func=None, null=False, save=False, verbose=False):
   title = unicode(page.title())
   def pagemsg(text):
     msg("Page %s %s: %s" % (index, title, text))
+  def errpagemsg(txt):
+    msg("Page %s %s: %s" % (index, title, txt))
+    errmsg("Page %s %s: %s" % (index, title, txt))
   while True:
     try:
       if func:
@@ -229,12 +232,14 @@ def do_edit(page, index, func=None, null=False, save=False, verbose=False):
         pagemsg('Purged page cache')
         page.purge(forcelinkupdate = True)
     except (pywikibot.LockedPage, pywikibot.NoUsername):
-      errmsg(u'Page %s %s: Skipped, page is protected' % (index, title))
+      errpagemsg(u'Page %s %s: WARNING: Skipped, page is protected' % (index, title))
+    except pywikibot.exceptions.PageSaveRelatedError as e:
+      errpagemsg(u'Page %s %s: WARNING: Skipped, unable to save (abuse filter?): %s' % (index, title, e))
     except urllib2.HTTPError as e:
       if e.code != 503:
         raise
     except:
-      errmsg(u'Page %s %s: Error' % (index, title))
+      errpagemsg(u'Page %s %s: WARNING: Error' % (index, title))
       raise
 
     break
