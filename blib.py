@@ -846,6 +846,12 @@ def process_links(save, verbose, lang, longlang, cattype, startFrom, upTo,
           # Can't replace param 1 (page linked to), but it's OK to frob the
           # display text
           doparam("2", tlang, None)
+      elif tempname in ["w2"]:
+        tlang = getp("1")
+        if tlang in lang and getp("3"):
+          # Can't replace param 2 (page linked to), but it's OK to frob the
+          # display text
+          doparam("3", tlang, "tr")
       elif tempname in ["cardinalbox", "ordinalbox"]:
         tlang = getp("1")
         if tlang in lang:
