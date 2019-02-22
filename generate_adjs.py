@@ -95,7 +95,7 @@ opt_arg_regex = r"^(also|syn|ant|der|rel|see|comp|pron|alt|part|wiki|enwiki|cat|
 # labels, which are placed at the beginning of the definition using
 # {{lb|ru|...}}. The following are recognized:
 #
-# + = attributive
+# + = relational
 # # = figurative
 # (f) = figurative
 # (or) = put the word "or" in the label

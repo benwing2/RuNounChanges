@@ -123,7 +123,7 @@ def generate_defn(defns, pos):
       prefix = ""
       while True:
         if defn.startswith("+"):
-          labels.append("attributive")
+          labels.append("relational")
           defn = re.sub(r"^\+", "", defn)
         elif defn.startswith("#"):
           labels.append("figurative")
