@@ -59,28 +59,103 @@ def process_page(index, page, save, verbose):
 
         def add_to_to_defn(m):
           defn = m.group(1)
-          mm = re.search(r"^((?:(?:''.*?''|\{\{.*?\}\}|\(.*?\)) *)* *)(.*?)((?:(?:''.*?''|\{\{.*?\}\}|\(.*?\)) *)* *)$", defn)
-          if not mm:
-            pagemsg("WARNING: Something wrong, can't parse defn line: %s" % defn)
-          else:
-            prefdefn, maindefn, sufdefn = mm.groups()
-            if maindefn:
-              indiv_defns = re.split(", *", maindefn)
-              indiv_defns = ["to " + x if not x.startswith("to ") else x for x in indiv_defns]
-              maindefn = ", ".join(indiv_defns)
-              newdefn = prefdefn + maindefn + sufdefn
-              if newdefn != defn:
-                pagemsg("Replacing defn <%s> with <%s>" % (defn, newdefn))
-                defn = newdefn
-          return "^# " + defn + "\n"
+          # First split into "sections" where a section is either a sequence
+          # {{...}}, ''...'', (...), [[...]], [...], or an individual char.
+          # Allow one level of nested {{...}} inside of {{...}}.
+          secs = re.split(r"(''.*?''|\{\{(?:\{\{.*?\}\}|.)*?\}\}|\(.*?\)|\[\[.*?\]\]|\[.*?\]|.)", defn)
+          # Remove blank sections.
+          secs = [sec for sec in secs if sec]
+          # Now regroup into "segments" where a segment is either a multi-char
+          # section as defined above, or a run of consecutive single-char
+          # sections, except that a single-char section consisting of a comma
+          # or semicolon or colon is a divider between groups of segments.
+          grouped_segments = []
+          grouped_segments_sep = []
+          segments = []
+          segment = []
+          for sec in secs:
+            if sec in [",", ";", ":"]:
+              if segment:
+                segments.append("".join(segment))
+                segment = []
+              if segments:
+                grouped_segments.append(segments)
+                grouped_segments_sep.append(sec)
+                segments = []
+            elif (sec.startswith("''") or sec.startswith("{{") or
+                (sec.startswith("(") and sec.endswith(")")) or
+                sec.startswith("[[") or
+                (sec.startswith("[") and sec.endswith("]"))):
+              if segment:
+                segments.append("".join(segment))
+                segment = []
+              segments.append(sec)
+            else:
+              segment.append(sec)
+          if segment:
+            segments.append("".join(segment))
+            segment = []
+          if segments:
+            grouped_segments.append(segments)
+            grouped_segments_sep.append("")
+            segments = []
 
-        newtext = re.sub("^# (.*)\n", add_to_to_defn, newtext, 0, re.M)
+          # Now go through segment groups (where each segment group, as
+          # defined above, is a run of segments with a comma separating
+          # segment groups), and insert a "to " in the segment group if
+          # it's not already present.
+          for grouped_segment in grouped_segments:
+            i = 0
+            # First skip past any segments consisting of blanks, ''...''
+            # sequences, {{...}} sequences, (...) sequences and [...]
+            # sequences (but not [[...]] sequences).
+            while i < len(grouped_segment):
+              if re.search("^ *$", grouped_segment[i]):
+                i += 1
+                continue
+              if re.search("^''.*''$", grouped_segment[i]):
+                i += 1
+                continue
+              if re.search(r"^\{\{.*\}\}$", grouped_segment[i]):
+                i += 1
+                continue
+              if re.search(r"^\(.*\)$", grouped_segment[i]):
+                i += 1
+                continue
+              if re.search(r"^\[[^\[].*\]$", grouped_segment[i]):
+                i += 1
+                continue
+              break
+            # If the first word of the next segment is "to" or "etc" or "e.g."
+            # or ends in "-ing" preceded by a vowel (excluding "fling", "sing",
+            # "take wing", etc.), don't insert "to ", otherwise do.
+            if i < len(grouped_segment) and (
+                not re.search("^ *to ", grouped_segment[i]) and
+                not re.search(r"^ *etc\b", grouped_segment[i]) and
+                not re.search(r"^ *e\.g\.", grouped_segment[i]) and
+                not re.search(r"^\[\[[^ ]*?[a-z]*[aeiouy][a-z]*ing\]\]$", grouped_segment[i]) and
+                not re.search(r"^ *[a-z]*[aeiouy][a-z]*ing\b", grouped_segment[i])):
+              grouped_segment[i] = re.sub("^( *)", r"\1to ", grouped_segment[i])
+
+          # Rejoin segments and segment groups.
+          newdefn = "".join(
+            "".join(grouped_segment) + sep for grouped_segment, sep in
+            zip(grouped_segments, grouped_segments_sep))
+
+          if newdefn != defn:
+            pagemsg("Replacing defn <%s> with <%s>" % (defn, newdefn))
+            defn = newdefn
+
+          return "# " + defn + "\n"
+
+        subsections[k] = re.sub("^# (.*)\n", add_to_to_defn, subsections[k], 0, re.M)
 
       sections[j] = "".join(subsections)
 
   newtext = "".join(sections)
 
   if newtext != text:
+    notes.append("add 'to' to verbal definitions")
     if verbose:
       pagemsg("Replacing <%s> with <%s>" % (text, newtext))
     assert notes

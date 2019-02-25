@@ -280,7 +280,17 @@ def do_process_text(pagetitle, pagetext, index, func=None, verbose=False):
 ignore_prefixes = ["User:", "Talk:",
     "Wiktionary:Beer parlour", "Wiktionary:Translation requests",
     "Wiktionary:Grease pit", "Wiktionary:Etymology scriptorium",
-    "Wiktionary:Information desk"]
+    "Wiktionary:Information desk", "Wiktionary:Tea room"]
+
+def page_should_be_ignored(pagetitle):
+  # Ignore user pages, talk pages and certain Wiktionary pages
+  is_ignore_prefix = False
+  for ip in ignore_prefixes:
+    if pagetitle.startswith(ip):
+      return True
+  if " talk:" in pagetitle:
+    return True
+  return False
 
 def iter_pages(pageiter, startsort = None, endsort = None, key = None):
   i = 0
@@ -314,13 +324,7 @@ def iter_pages(pageiter, startsort = None, endsort = None, key = None):
       t = datetime.datetime.now()
 
     # Ignore user pages, talk pages and certain Wiktionary pages
-    is_ignore_prefix = False
-    for ip in ignore_prefixes:
-      if pagetitle.startswith(ip):
-        is_ignore_prefix = True
-    if " talk:" in pagetitle:
-      is_ignore_prefix = True
-    if not is_ignore_prefix:
+    if not page_should_be_ignored(pagetitle):
       yield current, i
 
     if i % steps == 0:

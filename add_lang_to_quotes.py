@@ -8,9 +8,9 @@ from blib import getparam, rmparam, msg, site, tname
 
 borrowed_langs = {}
 
-quote_templates = ["quote-book", "quote-hansard", "quote-journal",
-  "quote-newsgroup", "quote-song", "quote-us-patent", "quote-video",
-  "quote-web", "quote-wikipedia",
+quote_templates = ["quote-av", "quote-book", "quote-hansard",
+  "quote-journal", "quote-newsgroup", "quote-song", "quote-us-patent",
+  "quote-video", "quote-web", "quote-wikipedia",
   # aliases
   "quote-news", "quote-magazine",
   # misc garbage
@@ -23,6 +23,69 @@ def process_page(page, index, parsed):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
+  if blib.page_should_be_ignored(pagetitle):
+    pagemsg("Skipping ignored page")
+    return None, ""
+      
+  def hack_templates(parsed, langname, subsectitle, langnamecode=None,
+      is_citation=False):
+    if langname not in blib.languages_byCanonicalName:
+      if not is_citation:
+        langnamecode = None
+    else:
+      langnamecode = blib.languages_byCanonicalName[langname]["code"]
+
+    for t in parsed.filter_templates():
+      origt = unicode(t)
+      tn = tname(t)
+      if tn in ["citation", "citations"] and is_citation:
+        langnamecode = getparam(t, "lang")
+      elif tn in quote_templates:
+        if getparam(t, "lang"):
+          continue
+        lang = getparam(t, "language")
+        if lang:
+          notes.append("Convert language=%s to lang=%s in %s" % (lang, lang, tn))
+        else:
+          if subsectitle.startswith("Etymology") or subsectitle.startswith("Pronunciation"):
+            pagemsg("WARNING: Found template in %s section for language %s, might be different language, skipping: %s" % (
+              subsectitle, langname, origt))
+            continue
+          if not langnamecode:
+            pagemsg("WARNING: Unrecognized language %s, unable to add language to %s" % (langname, tn))
+            continue
+          if langnamecode == "en" and (getparam(t, "translation") or getparam(t, "t")):
+            pagemsg("WARNING: Translation section in putative English quote, skipping: %s" % origt)
+            continue
+          if langnamecode == "mul":
+            notes.append("infer lang=en for %s in Translingual section and add termlang=mul" % tn)
+          else:
+            notes.append("infer lang=%s for %s based on section it's in" % (langnamecode, tn))
+        rmparam(t, "language")
+        # Fetch all params.
+        params = []
+        for param in t.params:
+          pname = unicode(param.name)
+          params.append((pname, param.value, param.showkey))
+        # Erase all params.
+        del t.params[:]
+        if langnamecode == "mul":
+          termlang = langnamecode
+          langnamecode = "en"
+        else:
+          termlang = None
+        # Put lang parameter.
+        newline = "\n" if "\n" in unicode(t.name) else ""
+        t.add("lang", langnamecode + newline, preserve_spacing=False)
+        if termlang:
+          t.add("termlang", termlang + newline, preserve_spacing=False)
+        # Put remaining parameters in order.
+        for name, value, showkey in params:
+          t.add(name, value, showkey=showkey, preserve_spacing=False)
+        pagemsg("Replaced <%s> with <%s>" % (origt, unicode(t)))
+
+    return langnamecode
+
   pagemsg("Processing")
 
   text = unicode(page.text)
@@ -30,65 +93,34 @@ def process_page(page, index, parsed):
 
   sections = re.split("(^==[^=]*==\n)", text, 0, re.M)
 
-  for j in xrange(2, len(sections), 2):
-    m = re.search("^==(.*)==\n$", sections[j - 1])
-    assert m
-    langname = m.group(1)
-    subsections = re.split("(^==.*==\n)", sections[j], 0, re.M)
-    for k in xrange(2, len(subsections), 2):
-      m = re.search("^===*([^=]*)=*==\n$", subsections[k - 1])
+  if not pagetitle.startswith("Citations"):
+    for j in xrange(2, len(sections), 2):
+      m = re.search("^==(.*)==\n$", sections[j - 1])
       assert m
-      subsectitle = m.group(1)
-      parsed = blib.parse_text(subsections[k])
-      for t in parsed.filter_templates():
-        origt = unicode(t)
-        tn = tname(t)
-        if tn in quote_templates:
-          if getparam(t, "lang"):
-            continue
-          lang = getparam(t, "language")
-          if lang:
-            notes.append("Convert language=%s to lang=%s in %s" % (lang, lang, tn))
-          else:
-            if subsectitle.startswith("Etymology") or subsectitle.startswith("Pronunciation"):
-              pagemsg("WARNING: Found template in %s section for language %s, might be different language, skipping: %s" % (
-                subsectitle, langname, origt))
-              continue
-            if langname not in blib.languages_byCanonicalName:
-              pagemsg("WARNING: Unrecognized language %s, unable to add language to %s" % (langname, tn))
-              continue
-            lang = blib.languages_byCanonicalName[langname]["code"]
-            if lang == "en" and (getparam(t, "translation") or getparam(t, "t")):
-              pagemsg("WARNING: Translation section in putative English quote, skipping: %s" % origt)
-              continue
-            if lang == "mul":
-              notes.append("Infer lang=en for %s in Translingual section and add nocat=1" % tn)
-            else:
-              notes.append("Infer lang=%s for %s based on section it's in" % (lang, tn))
-          rmparam(t, "language")
-          # Fetch all params.
-          params = []
-          for param in t.params:
-            pname = unicode(param.name)
-            params.append((pname, param.value, param.showkey))
-          # Erase all params.
-          del t.params[:]
-          if lang == "mul":
-            nocat = True
-            lang = "en"
-          else:
-            nocat = False
-          # Put lang parameter.
-          newline = "\n" if "\n" in unicode(t.name) else ""
-          t.add("lang", lang + newline, preserve_spacing=False)
-          if nocat:
-            t.add("nocat", "1" + newline, preserve_spacing=False)
-          # Put remaining parameters in order.
-          for name, value, showkey in params:
-            t.add(name, value, showkey=showkey, preserve_spacing=False)
-          pagemsg("Replaced <%s> with <%s>" % (origt, unicode(t)))
-      subsections[k] = unicode(parsed)
-    sections[j] = "".join(subsections)
+      langname = m.group(1)
+      subsections = re.split("(^==.*==\n)", sections[j], 0, re.M)
+      for k in xrange(2, len(subsections), 2):
+        m = re.search("^===*(.*?)=*==\n$", subsections[k - 1])
+        assert m
+        subsectitle = m.group(1)
+        parsed = blib.parse_text(subsections[k])
+        hack_templates(parsed, langname, subsectitle)
+        subsections[k] = unicode(parsed)
+      sections[j] = "".join(subsections)
+  else:
+    # Citation section?
+    langnamecode = None
+    for j in xrange(0, len(sections), 2):
+      if j == 0:
+        langname = "Unknown"
+      else:
+        m = re.search("^==(.*)==\n$", sections[j - 1])
+        assert m
+        langname = m.group(1)
+      parsed = blib.parse_text(sections[j])
+      langnamecode = hack_templates(parsed, langname, "Unknown",
+          langnamecode=langnamecode, is_citation=True)
+      sections[j] = unicode(parsed)
 
   newtext = "".join(sections)
   return newtext, notes
@@ -97,7 +129,7 @@ parser = blib.create_argparser("Add language to quote-* templates, based on the 
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-for cat in ["Undetermined terms with quotations"]:
+for cat in ["Undetermined terms with quotations", "Quotations with missing lang parameter"]:
   msg("Processing category %s" % cat)
   for i, page in blib.cat_articles(cat, start, end):
     blib.do_edit(page, i, process_page, save=args.save, verbose=args.verbose)
