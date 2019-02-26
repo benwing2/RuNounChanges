@@ -121,7 +121,7 @@ def form_ppp(conjtype, pagetitle, args):
 
   retval = form_ppp_1(conjtype, pagetitle, args)
   if retval:
-    return rulib.make_unstressed(retval)
+    return rulib.make_unstressed_ru(retval)
   else:
     return None
 
@@ -165,8 +165,8 @@ def process_page(index, page, save, verbose, fix_pages):
           if not re.search(ur"([аяеё]́?нный|тый)$", form):
             pagemsg("WARNING: Past passive participle doesn't end correctly: %s" % form)
             fix_form = True
-          unstressed_page = rulib.make_unstressed(pagetitle)
-          unstressed_form = rulib.make_unstressed(form)
+          unstressed_page = rulib.make_unstressed_ru(pagetitle)
+          unstressed_form = rulib.make_unstressed_ru(form)
           warned = False
           if unstressed_form[0] != unstressed_page[0]:
             pagemsg("WARNING: Past passive participle doesn't begin with same letter, probably for wrong aspect: %s"

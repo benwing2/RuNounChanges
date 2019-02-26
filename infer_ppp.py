@@ -103,7 +103,7 @@ def form_ppp(verbtype, pagetitle, args):
 
   retval = form_ppp_1(verbtype, pagetitle, args)
   if retval:
-    return rulib.make_unstressed(retval)
+    return rulib.make_unstressed_ru(retval)
   else:
     return None
 

@@ -4,7 +4,7 @@
 import re, sys, codecs, argparse
 
 from blib import msg
-import rulib as ru
+import rulib
 
 parser = argparse.ArgumentParser(description="Generate derived-verb tables.")
 parser.add_argument('--direcfile', help="File containing directives.")
@@ -30,8 +30,8 @@ def render_groups(groups):
     # First compare ignoring accents, so that влить goes before вли́ться,
     # then compare with accents so e.g. рассы́пать and рассыпа́ть are ordered
     # consistently.
-    retval = compare_aspect_pair(ru.remove_accents(xpf), ru.remove_accents(ximpf),
-      ru.remove_accents(ypf), ru.remove_accents(yimpf))
+    retval = compare_aspect_pair(rulib.remove_accents(xpf), rulib.remove_accents(ximpf),
+      rulib.remove_accents(ypf), rulib.remove_accents(yimpf))
     if retval == 0:
       return compare_aspect_pair(xpf, ximpf, ypf, yimpf)
     else:
@@ -57,11 +57,11 @@ def render_groups(groups):
 """ % ("\n".join(impfs), "\n".join(pfs)))
 
 def paste_verb(prefix, suffix):
-  if ru.is_stressed(prefix):
-    verb = prefix + ru.make_unstressed(suffix)
+  if rulib.is_stressed(prefix):
+    verb = prefix + rulib.make_unstressed_ru(suffix)
   else:
     verb = prefix + suffix
-  return ru.remove_monosyllabic_accents(verb)
+  return rulib.remove_monosyllabic_accents(verb)
 
 def combine_prefix(prefix, suffixes, aspect):
   # If the prefix starts with +, include the aspect. See лететь.der for
@@ -106,7 +106,7 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
     # If it starts with a + (indicating include the apsect), that applies
     # only to the perfective verb. See лететь.der for good examples.
     group.append((combine_prefix(line, pfsuffixes, "pf"),
-        combine_prefix(ru.make_unstressed(line).replace("+", ""), impfsuffixes, "impf")))
+        combine_prefix(rulib.make_unstressed_ru(line).replace("+", ""), impfsuffixes, "impf")))
   elif re.search(r" \+$", line):
     # Something like "об +" or "+об +". This indicates that the imperfective
     # (and maybe the perfective) should include the aspect. See лететь.der
@@ -114,7 +114,7 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
     pf, impf = re.split(r"\s+", line)
     assert impf == "+"
     group.append((combine_prefix(pf, pfsuffixes, "pf"),
-        combine_prefix("+" + ru.make_unstressed(pf), impfsuffixes, "impf")))
+        combine_prefix("+" + rulib.make_unstressed_ru(pf), impfsuffixes, "impf")))
   elif "!" in line:
     # Something like "об !" or "+об !" or "! об" or "! +об". This indicates
     # that one of the two is missing and the other should combine with
@@ -123,7 +123,7 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
     pf, impf = re.split(r"\s+", line)
     assert pf == "!" or impf == "!"
     if pf == "!":
-      group.append(("* (no equivalent)", combine_prefix(ru.make_unstressed(impf), impfsuffixes, "impf")))
+      group.append(("* (no equivalent)", combine_prefix(rulib.make_unstressed_ru(impf), impfsuffixes, "impf")))
     else:
       group.append((combine_prefix(pf, pfsuffixes, "pf"), "* (no equivalent)"))
   else:
@@ -152,7 +152,7 @@ for line in codecs.open(args.direcfile, "r", "utf-8"):
             if verb.endswith("-"):
               verb = verb[:-1]
               if aspect == "impf":
-                verb = ru.make_unstressed(verb)
+                verb = rulib.make_unstressed_ru(verb)
               verb = paste_verb(verb, suffixes[index])
             while True:
               if verb.startswith("+"):

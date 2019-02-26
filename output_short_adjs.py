@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import argparse, codecs
-import rulib as ru
+import rulib
 from collections import OrderedDict
 
 parser = argparse.ArgumentParser(description="Output short adjectives in Wiktionary, ordered by frequency.")
@@ -13,7 +13,7 @@ parser.add_argument("--wiktionary-short-adjs",
 Should be accented and with ё.""")
 args = parser.parse_args()
 
-short_adjs = OrderedDict((ru.make_unstressed(x.strip()), True) for x in codecs.open(args.wiktionary_short_adjs, "r", "utf-8"))
+short_adjs = OrderedDict((rulib.make_unstressed_ru(x.strip()), True) for x in codecs.open(args.wiktionary_short_adjs, "r", "utf-8"))
 for line in codecs.open(args.freq_adjs, "r", "utf-8"):
   line = line.strip()
   if line in short_adjs:

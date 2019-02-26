@@ -2708,7 +2708,7 @@ def create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite,
     unaccented_lemmas = {}
     for index, page in blib.cat_articles("Russian %ss" % pos):
       pagetitle = unicode(page.title())
-      unaccented_title = rulib.make_unstressed(pagetitle)
+      unaccented_title = rulib.make_unstressed_ru(pagetitle)
       if unaccented_title in lemmas_to_process_set:
         if unaccented_title in unaccented_lemmas:
           unaccented_lemmas[unaccented_title].append(pagetitle)

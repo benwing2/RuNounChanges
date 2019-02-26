@@ -6,7 +6,7 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, site
 
-import rulib as ru
+import rulib
 
 def process_page(index, page, save, verbose):
   pagetitle = unicode(page.title())
@@ -31,7 +31,7 @@ def process_page(index, page, save, verbose):
       past_n = getparam(t, "past_n")
       past_pl = getparam(t, "past_pl")
       if past_m or past_f or past_n or past_pl:
-        upast_stem = ru.make_unstressed(past_stem)
+        upast_stem = rulib.make_unstressed_ru(past_stem)
         expected_past_m = past_stem + (u"л" if vowel_end else "")
         expected_past_f = upast_stem + u"ла́"
         expected_past_n = upast_stem + u"ло́"

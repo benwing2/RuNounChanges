@@ -6,7 +6,7 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, site
 
-import rulib as ru
+import rulib
 
 def process_page(index, page, save, verbose):
   pagetitle = unicode(page.title())
@@ -23,7 +23,7 @@ def process_page(index, page, save, verbose):
     if unicode(t.name) in ["ru-conj", "ru-conj-old"]:
       assert not getparam(t, "4")
       inf = getparam(t, "3")
-      inf = ru.make_unstressed(inf)
+      inf = rulib.make_unstressed_ru(inf)
       inf = re.sub(u"нуть((ся)?)$", ur"ну́ть\1", inf)
       t.add("3", inf)
       notes.append("Remove stray accent from 3c infinitive")

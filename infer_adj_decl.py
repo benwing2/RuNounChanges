@@ -110,7 +110,7 @@ def detect_stem(stem, decl):
     if not m:
       return stem, decl
     stem = m.group(1)
-    decl = make_unstressed_once(m.group(2))
+    decl = make_unstressed_once_ru(m.group(2))
     if re.search("[" + velar + sib + "]$", stem):
       decl = u"ый"
     return stem, decl
@@ -124,7 +124,7 @@ def combine_stem(stem, decl):
       decl = u"ий"
     return stem + decl, ""
   if decl == u"ой":
-    return make_unstressed_once(stem) + u"о́й", ""
+    return make_unstressed_once_ru(stem) + u"о́й", ""
   if decl == u"ьий":
     return stem + u"ий", u"ь"
   return stem, decl
@@ -238,10 +238,10 @@ def infer_decl(t, pagemsg):
   elif is_stressed(pstem):
     short_stem = pstem
   else:
-    if make_unstressed_once(fstem) == make_unstressed_once(mstem):
+    if make_unstressed_once_ru(fstem) == make_unstressed_once_ru(mstem):
       short_stem = mstem
   if is_unstressed(stem):
-    stem = make_ending_stressed(stem)
+    stem = make_ending_stressed_ru(stem)
   short_stem = try_to_stress(short_stem)
   if stem == short_stem:
     short_stem = ""
@@ -258,7 +258,7 @@ def infer_decl(t, pagemsg):
       pagemsg("Found special (1): short stem %s, masculine stem %s" % (
         real_short_stem, mstem))
       specials = ["(1)"]
-    elif make_unstressed_once(stem) == mstem:
+    elif make_unstressed_once_ru(stem) == mstem:
       # Can happen with monosyllabic masculines
       pass
     elif not m:

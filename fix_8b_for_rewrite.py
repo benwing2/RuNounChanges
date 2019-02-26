@@ -6,7 +6,7 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, errmsg, site
 
-import rulib as ru
+import rulib
 
 def process_page(index, page, save, verbose):
   pagetitle = unicode(page.title())
@@ -37,7 +37,7 @@ def process_page(index, page, save, verbose):
       pap2 = getparam(t, "pap2") or getparam(t, "past_adv_part2")
       if pap2:
         errmsg("WARNING: Has pap2=%s" % pap2)
-      param4 = ru.make_unstressed(param4)
+      param4 = rulib.make_unstressed_ru(param4)
       # Fetch non-numbered params.
       non_numbered_params = []
       for param in t.params:

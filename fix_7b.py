@@ -6,7 +6,7 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, site
 
-import rulib as ru
+import rulib
 
 def process_page(index, page, direc, save, verbose):
   pagetitle = unicode(page.title())
@@ -49,11 +49,11 @@ def process_page(index, page, direc, save, verbose):
         if not yo:
           pagemsg(u"Something wrong, е-stem present and no ё directive")
         if npp:
-          presstem = ru.make_ending_stressed(presstem)
+          presstem = rulib.make_ending_stressed_ru(presstem)
         else:
           presstem = re.sub(u"е́?([^аэыоуяеиёю]*)$", ur"ё\1", presstem)
       else:
-        presstem = ru.make_ending_stressed(presstem)
+        presstem = rulib.make_ending_stressed_ru(presstem)
       pap = getparam(t, "past_actv_part")
       pred_pap = presstem + u"ший"
       if direc not in ["b", "b(9)"] and re.search(u"[дт]$", presstem):

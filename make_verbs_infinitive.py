@@ -6,10 +6,10 @@ import pywikibot, re, sys, codecs, argparse, copy
 import blib
 from blib import getparam, rmparam, tname, msg, errmsg, site
 
-import rulib as ru
+import rulib
 
 def is_vowel_stem(stem):
-  return re.search("[" + ru.vowel + ru.AC + ru.DI + "]$", stem)
+  return re.search("[" + rulib.vowel + rulib.AC + rulib.DI + "]$", stem)
 
 def split_ru_conj_args(t, is_temp):
   first_param = 2 if is_temp else 1
@@ -113,7 +113,7 @@ def process_page(index, page, save, verbose):
             errpagemsg("Unrecognized conjugation type: %s" % arg_set[0])
             continue
         conj_type = m.group(1).replace("o", u"°")
-        inf, tr = ru.split_russian_tr(arg_set[1])
+        inf, tr = rulib.split_russian_tr(arg_set[1])
         if refl:
           new_style = re.search(u"([тч]ься|ти́?сь)$", inf)
         else:
@@ -121,8 +121,8 @@ def process_page(index, page, save, verbose):
         if new_style:
           if arg_set[0].startswith("irreg-"):
             arg_set[0] = re.sub("^irreg-.*?(/.*|$)", r"irreg\1", arg_set[0])
-          arg_set[1] = ru.paste_russian_tr(ru.remove_monosyllabic_accents(inf),
-            ru.remove_tr_monosyllabic_accents(tr))
+          arg_set[1] = rulib.paste_russian_tr(rulib.remove_monosyllabic_accents(inf),
+            rulib.remove_tr_monosyllabic_accents(tr))
         else:
           if not re.search("^[124]", conj_type):
             assert not tr
@@ -139,14 +139,10 @@ def process_page(index, page, save, verbose):
             if tr:
               tr += u"itʹ"
           elif conj_type in ["4b", "4c"]:
-            # FIXME! Don't have make_unstressed for inf + tr implemented yet.
-            # inf, tr = ru.make_unstressed(inf, tr)
-            # If the word has no ё in it, we can just remove accents.
-            # There should be no ё in 4b and 4c verbs.
-            assert not re.search(u"[ёЁ]", inf)
-            inf = ru.remove_accents(inf) + u"и́ть"
+            inf, tr = rulib.make_unstressed(inf, rulib.decompose(tr))
+            inf += u"ить"
             if tr:
-              tr = ru.remove_tr_accents(tr) + u"ítʹ"
+              tr += u"ítʹ"
           elif conj_type == "4a1a":
             inf = re.sub(u"[ая]$", "", inf) + u"ить"
             if tr:
@@ -167,7 +163,7 @@ def process_page(index, page, save, verbose):
               arg_set[2] = arg_set[1]
           elif conj_type == "5c":
             inf = arg_set[2] + u"ть"
-            normal_pres_stem = ru.make_ending_stressed(
+            normal_pres_stem = rulib.make_ending_stressed_ru(
               re.sub(u"[еая]́ть$", "", inf))
             if normal_pres_stem == arg_set[1]:
               arg_set[2] = ""
@@ -178,7 +174,7 @@ def process_page(index, page, save, verbose):
             if arg_set[2]:
               inf = arg_set[2] + u"ть"
               arg_set[2] = ""
-              normal_pres_stem = ru.make_ending_stressed(
+              normal_pres_stem = rulib.make_ending_stressed_ru(
                 re.sub(u"а́ть$", "", inf))
               assert arg_set[1] == normal_pres_stem
             elif is_vowel_stem(inf):
@@ -195,7 +191,7 @@ def process_page(index, page, save, verbose):
               inf += u"а́ть"
             # arg_set[2] (present stem) remains
           elif re.search(u"^6°?c", conj_type):
-            inf = ru.make_unstressed_once(inf) + u"а́ть"
+            inf = rulib.make_unstressed_once_ru(inf) + u"а́ть"
           elif conj_type in ["7a", "7b"]:
             pass # nothing needed to do
           elif conj_type in ["8a", "8b"]:
@@ -205,14 +201,14 @@ def process_page(index, page, save, verbose):
             inf += u"еть"
             # arg_set[2] (present stem) remains
           elif conj_type == "9b":
-            inf = ru.make_unstressed_once(inf) + u"е́ть"
+            inf = rulib.make_unstressed_once_ru(inf) + u"е́ть"
             # arg_set[2] (present stem) remains
             # arg_set[3] (optional past participle stem) remains
           elif conj_type == "10a":
             inf += u"оть"
           elif conj_type == "10c":
             inf += u"ть"
-            if ru.make_unstressed_once(arg_set[2]) == re.sub(u"о́$", "", arg_set[1]):
+            if rulib.make_unstressed_once_ru(arg_set[2]) == re.sub(u"о́$", "", arg_set[1]):
               arg_set[2] = ""
           elif conj_type == "11a":
             inf += u"ить"
@@ -226,7 +222,7 @@ def process_page(index, page, save, verbose):
               arg_set[2] = ""
           elif conj_type == "12b":
             inf += u"ть"
-            if ru.make_ending_stressed(arg_set[2]) == arg_set[1]:
+            if rulib.make_ending_stressed_ru(arg_set[2]) == arg_set[1]:
               arg_set[2] = ""
           elif conj_type == "13b":
             inf += u"ть"
@@ -256,7 +252,7 @@ def process_page(index, page, save, verbose):
           elif conj_type in [u"irreg-сыпать", u"irreg-ехать", u"irreg-ѣхать"]:
             infstem = re.sub("^irreg-", "", conj_type)
             if arg_set[1] != u"вы́":
-              infstem = ru.make_beginning_stressed(infstem)
+              infstem = rulib.make_beginning_stressed_ru(infstem)
             inf = arg_set[1] + infstem
           elif conj_type == u"irreg-обязывать":
             if arg_set[1] == u"вы́":
@@ -278,7 +274,7 @@ def process_page(index, page, save, verbose):
           elif re.search("^irreg-", conj_type):
             infstem = re.sub("^irreg-", "", conj_type)
             if arg_set[1] != u"вы́":
-              infstem = ru.make_ending_stressed(infstem)
+              infstem = rulib.make_ending_stressed_ru(infstem)
             inf = arg_set[1] + infstem
           else:
             error("Unknown conjugation type " + conj_type)
@@ -293,8 +289,8 @@ def process_page(index, page, save, verbose):
                 inf += u"сь"
                 if tr:
                   tr += u"sʹ"
-            arg_set[1] = ru.paste_russian_tr(ru.remove_monosyllabic_accents(inf),
-             ru.remove_tr_monosyllabic_accents(tr))
+            arg_set[1] = rulib.paste_russian_tr(rulib.remove_monosyllabic_accents(inf),
+             rulib.remove_tr_monosyllabic_accents(tr))
 
       ##### If something changed ...
 
@@ -315,7 +311,7 @@ def process_page(index, page, save, verbose):
           if not orig_result:
             errpagemsg("WARNING: Error expanding original template %s" % orig_tempcall)
             continue
-          orig_forms = ru.split_generate_args(orig_result)
+          orig_forms = rulib.split_generate_args(orig_result)
 
           # 2. Generate and expand the appropriate call to
           #    {{ru-generate-verb-forms}} for the new arguments.
@@ -328,7 +324,7 @@ def process_page(index, page, save, verbose):
           if not new_result:
             errpagemsg("WARNING: Error expanding new template %s" % new_tempcall)
             continue
-          new_forms = ru.split_generate_args(new_result)
+          new_forms = rulib.split_generate_args(new_result)
 
           # 3. Compare each form and accumulate a list of mismatches.
 

@@ -180,7 +180,7 @@ def form_ppp(conjtype, pagetitle, args):
 
   retval = form_ppp_1(conjtype, pagetitle, args)
   if retval:
-    return rulib.make_unstressed(retval)
+    return rulib.make_unstressed_ru(retval)
   else:
     return None
 
@@ -259,7 +259,7 @@ def process_page(index, page, save, verbose, nouns, adjectives):
         if infinitive.endswith(u"ть"):
           stem = stem.replace(u"ё", u"е́")
         else:
-          stem = rulib.make_unstressed(stem)
+          stem = rulib.make_unstressed_ru(stem)
         stem = rulib.remove_accents(infinitive) + "+alt1=" + stem + "-"
       elif conjtype.startswith("8"):
         stem = rulib.remove_accents(infinitive) + "+alt1=" + getparam(t, "3").replace(u"ё", u"е́") + "-"

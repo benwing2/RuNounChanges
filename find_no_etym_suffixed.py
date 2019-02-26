@@ -256,8 +256,8 @@ def process_page(index, page, save, verbose, adverbs, all_derived_lemmas):
         return ";".join(defns).replace("_", r"\u").replace(" ", "_")
 
       suffixes_with_stress = []
-      for suf in [suffix, rulib.make_beginning_stressed(suffix),
-          rulib.make_ending_stressed(suffix)]:
+      for suf in [suffix, rulib.make_beginning_stressed_ru(suffix),
+          rulib.make_ending_stressed_ru(suffix)]:
         for derived_lemma in derived_lemmas:
           if derived_lemma.endswith(suf):
             add_if_not(suffixes_with_stress, suf)

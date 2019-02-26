@@ -6,7 +6,7 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, site
 
-import rulib as ru
+import rulib
 
 def process_page(index, page, save, verbose):
   pagetitle = unicode(page.title())
@@ -33,7 +33,7 @@ def process_page(index, page, save, verbose):
           pagemsg("Stem %s and past_m same" % stem)
           notes.append("remove redundant past_m %s" % past_m)
         elif (param2.startswith("8b") and not param2.startswith("8b/") and
-            ru.make_unstressed(past_m) == stem):
+            rulib.make_unstressed_ru(past_m) == stem):
           pagemsg("Class 8b/b and stem %s is unstressed version of past_m %s, replacing stem with past_m" % (
             stem, past_m))
           t.add("3", past_m)

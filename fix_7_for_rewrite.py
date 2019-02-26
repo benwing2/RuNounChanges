@@ -6,7 +6,7 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, errmsg, site
 
-import rulib as ru
+import rulib
 
 def process_page(index, page, save, verbose):
   pagetitle = unicode(page.title())
@@ -33,7 +33,7 @@ def process_page(index, page, save, verbose):
         if re.search(u"[еѣ]сти́(сь)?$", param3) and u"ё" not in param4 and u"ѣ̈" not in param4:
           assert not param5
           param5 = u"ёе"
-        param4 = ru.make_unstressed(param4)
+        param4 = rulib.make_unstressed_ru(param4)
       if re.search(u"(л[еѣ]́?зть|с[еѣ]́?сть|обокра́сть)(ся)?$", param3):
         param5 = ""
       # Fetch non-numbered params.
