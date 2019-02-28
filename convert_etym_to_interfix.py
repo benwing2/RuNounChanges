@@ -11,6 +11,8 @@ from blib import getparam, rmparam, msg, site, tname
 import rulib
 import ruheadlib
 
+etym_change = False
+
 def stringize_heads(heads):
   return ",".join("%s%s%s" % (
     ru, "//%s" % tr if tr else "", "[lemma]" if is_lemma else "")
@@ -54,6 +56,8 @@ def process_page(page, index, parsed):
   found_affix = False
   notes = []
 
+  text = unicode(page.text)
+
   for t in parsed.filter_templates():
     origt = unicode(t)
     tn = tname(t)
@@ -85,12 +89,24 @@ def process_page(page, index, parsed):
     if tn in ["affix", "af"]:
       if getparam(t, "1") != "ru":
         continue
+      m = re.search(r"\n(.*?%s.*?)\n" % re.escape(origt), text)
+      if not m:
+        pagemsg("WARNING: Something wrong, can't find template in text: %s" % origt)
+        continue
+      line = m.group(1)
+
+      def warning(textmsg):
+        if etym_change:
+          pagemsg("WARNING: %s: /// %s /// %s" % (textmsg, line, line))
+        else:
+          pagemsg("WARNING: %s: %s" % (textmsg, origt))
+
       found_affix = True
       alt1 = getparam(t, "alt1")
       if alt1 and re.search(u"[ое]-$", alt1):
         tr1 = getparam(t, "tr1")
         if tr1:
-          pagemsg("WARNING: Found alt1= and tr1=, not sure what to do: %s" % origt)
+          warning("Found alt1= and tr1=, not sure what to do")
           continue
         term = getparam(t, "2")
         term, termtr = find_stress(term, pagemsg)
@@ -126,7 +142,7 @@ def process_page(page, index, parsed):
           if unicode(param.value) in [u"-о-", u"-е-"]:
             for param2 in t.params:
               if unicode(param2.name) == "alt1":
-                pagemsg("WARNING: Has both interfix and alt1= in affix template: %s" % origt)
+                warning("Has both interfix and alt1= in affix template")
                 break
             else:
               pagemsg("Already has interfix in affix template: %s" % origt)
@@ -137,7 +153,7 @@ def process_page(page, index, parsed):
           elif " " in pagetitle:
             pagemsg("No interfix but pagetitle '%s' has space, probably OK: %s" % (pagetitle, origt))
           else:
-            pagemsg("WARNING: No interfix and no alt1= alternative: %s" % origt)
+            warning("No interfix and no alt1= alternative")
 
   if not found_affix:
     pagemsg("WARNING: No affix template")
@@ -145,8 +161,11 @@ def process_page(page, index, parsed):
   return unicode(parsed), notes
 
 parser = blib.create_argparser('Convert use of alt1= in etyms to proper use of interfixes')
+parser.add_argument('--etym-change', action="store_true",
+    help="If specified, output warning lines in a format that they can be edited and the changes uploaded.")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
+etym_change = args.etym_change
 
 for category in ["Russian compound words"]:
   msg("Processing category: %s" % category)
