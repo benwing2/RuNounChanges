@@ -21,18 +21,29 @@ from blib import msg, getparam, addparam
 
 site = pywikibot.Site()
 
+max_truncate_len = 80
+
+def truncate(text):
+  if len(text) < max_truncate_len:
+    return text
+  return text[0:max_truncate_len] + "..."
+
 def push_manual_changes(save, verbose, direcfile, annotation, startFrom, upTo):
   template_changes = []
   for line in codecs.open(direcfile, "r", encoding="utf-8"):
     line = line.strip()
+    repl_on_right = False
     m = re.match(r"^Page [^ ]+ (.*?): .*?: (\{\{.*?\}\}) <- \{\{.*?\}\} \((\{\{.*?\}\})\)$",
         line)
     if not m:
       m = re.match(r"^\* (?:Page [^ ]+ )?\[\[(.*?)\]\]: .*?: <nowiki>(\{\{.*?\}\}) <- \{\{.*?\}\} \((\{\{.*?\}\})\)</nowiki>.*$",
           line)
-      if not m:
-        msg("WARNING: Unable to parse line: [%s]" % line)
-        continue
+    if not m:
+      m = re.match(r"^(?:Page [^ ]+ )(.*?): .* /// (.*?) /// (.*?)$", line)
+      repl_on_right = True
+    if not m:
+      msg("WARNING: Unable to parse line: [%s]" % line)
+      continue
     if m.group(2) != m.group(3):
       # If the current template is the same as the current template of the
       # previous entry, ignore the previous entry; otherwise we won't be
@@ -43,7 +54,11 @@ def push_manual_changes(save, verbose, direcfile, annotation, startFrom, upTo):
       if len(template_changes) > 0 and template_changes[-1][2] == m.group(3):
         msg("Ignoring change for pagename %s, %s -> %s" % template_changes[-1])
         template_changes.pop()
-      template_changes.append(m.groups())
+      if repl_on_right:
+        pagename, curr, repl = m.groups()
+        template_changes.append((pagename, repl, curr))
+      else:
+        template_changes.append(m.groups())
 
   for current, index in blib.iter_pages(template_changes, startFrom, upTo,
       # key is the page name
@@ -88,8 +103,8 @@ def push_manual_changes(save, verbose, direcfile, annotation, startFrom, upTo):
             pagemsg("WARNING: Something wrong, length mismatch during replacement: Expected length change=%s, actual=%s, ratio=%.2f, curr=%s, repl=%s"
                 % (repl_curr_diff, newtext_text_diff, ratio, curr_template,
                   repl_template))
-        changelog = "Replaced %s with %s (%s)" % (curr_template, repl_template,
-            annotation)
+        changelog = "Replaced <%s> with <%s> (%s)" % (truncate(curr_template),
+            truncate(repl_template), annotation)
         pagemsg("Change log = %s" % changelog)
       return newtext, changelog
 
