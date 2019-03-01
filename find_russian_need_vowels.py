@@ -136,8 +136,32 @@
 # 30. (DONE) Instead of chopping off stuff after comma, replace with slash.
 # 31. (DONE) Бог has subst='''Бог'''/Бох.
 # 32. (WON'T DO) Normalize forms lacking ё if page has ru-adj-alt-ё or similar.
-# 33. Don't auto-accent cases like alt1=галер(е́я) on page галёрка, where
+# 33. (DONE) Don't auto-accent cases like alt1=галер(е́я) on page галёрка, where
 #     we would try to convert it to гале́р(е́я).
+# 34. Implement auto-accenting of pre-reform spellings.
+
+# Implementing auto-accenting of pre-reform spellings:
+#
+# If we encounter a word that looks pre-reform, either because it ends in -ъ,
+# or has ѣ or і or ѳ or ѵ in it, or has раз/роз/из/воз directly followed by an
+# unvoiced obstruent, we can programmatically generate the corresponding modern
+# spelling, look that up for accents and lemma, and try to slide the old letters
+# back in. The way to do that with the accents is to count how many vowels from
+# the left the accent is on, and put it on the same-nth vowel in the pre-reform
+# spelling. This assumes that the number of vowels is the same between pre-reform
+# and corresponding modern spelling; we should check this. The way to put the
+# old letters back in the lemma is to find the maximum prefix (ignoring accent marks)
+# that matches between the lemma and the modern-spelled form, and take the
+# corresponding number of letters from the pre-reform spelling of the form and put
+# them at the beginning of the lemma. Then make any systemic adjustments at the end
+# (convert и + vowel (including й) to і; add ъ onto the end of words that end in a
+# consonant that isn't ь, ъ or й; convert -еть in verbs to -ѣть; may have to
+# special-case some lemmas; convert -ее in comparatives [but apparently not in neuter
+# singulars] to -ѣе). There will need to be some special-casing here and there; we
+# might be able to short-circuit this by creating the appropriate inflected forms
+# in a few cases, e.g. сѣсть, лѣзть. We'll have to do some additional work in the
+# code that infers adjective forms, since -аго/-яго is a possible genitive, and some
+# of the endings have an extra -ъ on them, and there's an extra fem/neut plural -ыя/-ія.
 
 import re, codecs
 
