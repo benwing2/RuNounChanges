@@ -21,7 +21,7 @@ import rulib
 
 # Split text on a separator, but not if separator is preceded by
 # a backslash, and remove such backslashes
-def do_split(sep, text):
+def do_split(sep, text, maxsplit=0):
   elems = re.split(r"(?<![\\])%s" % sep, text)
   return [re.sub(r"\\(%s)" % sep, r"\1", elem) for elem in elems]
 
@@ -47,8 +47,13 @@ def process_line(index, line, add_passive_of, save, verbose):
     line = line[1:]
   else:
     override_etym = False
-  els = do_split(r"\s+", line)
-
+  # If the second element (the etymology) begins with raw:, allow spaces in the remainder to be
+  # included as part of the second element.
+  els = do_split(r"\s+", line, 1)
+  if len(els) != 2:
+    error("Expected two fields, saw %s" % len(els))
+  if not els[1].startswith("raw:"):
+    els = do_split(r"\s+", line)
   # Replace _ with space and \u
   els = [el.replace("_", " ").replace(r"\u", "_") for el in els]
   if len(els) != 2:
