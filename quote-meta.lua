@@ -1,7 +1,75 @@
+--[=[
+	This module contains functions to implement quote-* templates.
+
+	Author: Benwing2; conversion into Lua of {{quote-meta/source}} template,
+	written by Sgconlaw with some help from Erutuon and Benwing2.
+
+	You should replace a call to {{quote-meta/source|...}} with
+	{{#invoke:quote-meta|quote_meta_source_t|...}}, except that you only
+	need to pass in arguments that aren't direct pass-throughs. For example,
+	{{quote-book}} invoked {{quote-meta/source}} like this:
+	
+	{{quote-meta/source
+    | last           = {{{last|}}}
+    | first          = {{{first|}}}
+    | author         = {{{author|{{{2|}}}}}}
+    | authorlink     = {{{authorlink|}}}
+    | last2          = {{{last2|}}}
+    | first2         = {{{first2|}}}
+    | author2        = {{{author2|}}}
+    | authorlink2    = {{{authorlink2|}}}
+	...
+    | author5        = {{{author5|}}}
+    | authorlink5    = {{{authorlink5|}}}
+    | coauthors      = {{{coauthors|}}}
+    | quotee         = {{{quotee|}}}
+    | quoted_in      = {{{quoted_in|}}}
+    | chapter        = {{{chapter|{{{entry|}}}}}}
+    | chapterurl     = {{{chapterurl|{{{entryurl|}}}}}}
+    | trans-chapter  = {{{trans-chapter|{{{trans-entry|}}}}}}
+    | translator     = {{{trans|{{{translator|{{{translators|}}}}}}}}}
+    | editor         = {{{editor|}}}
+    | editors        = {{{editors|}}}
+    ...
+    }}
+    
+    This can be reduced to a call to the module like this:
+    
+	{{#invoke:quote-meta|quote_meta_source_t
+    | author         = {{{author|{{{2|}}}}}}
+    | chapter        = {{{chapter|{{{entry|}}}}}}
+    | chapterurl     = {{{chapterurl|{{{entryurl|}}}}}}
+    | trans-chapter  = {{{trans-chapter|{{{trans-entry|}}}}}}
+    | translator     = {{{trans|{{{translator|{{{translators|}}}}}}}}}
+    ...
+    }}
+
+	None of the arguments that are simple passthroughs need to be passed in,
+	because the quote_meta_source_t() function reads both the arguments
+	passed to it *and* the arguments passed to the parent template, with the
+	former overriding the latter.
+
+	The module code should work like the template code, except that in a few
+	situations I fixed apparent bugs in the template code in the process of
+	porting.
+]=]
+
 local export = {}
 
 local m_time = require("Module:time")
-local m_italic = require("Module:italics")
+local m_italics = require("Module:italics")
+local m_languages = require("Module:languages")
+local m_utilities = require("Module:utilities")
+
+local rsubn = mw.ustring.gsub
+local rmatch = mw.ustring.match
+local rsplit = mw.text.split
+
+-- version of rsubn() that discards all but the first return value
+local function rsub(term, foo, bar)
+	local retval = rsubn(term, foo, bar)
+	return retval
+end
 
 local function maintenance_line(text)
 	return "<span class=\"maintenance-line\" style=\"color: #777777;\">(" .. text .. ")</span>"
@@ -17,13 +85,72 @@ local function issn(text)
 		require("Module:check isxn").check_issn(text, "&nbsp;<span class=\"error\" style=\"font-size:88%\">Invalid&nbsp;ISSN</span>[[Category:Pages with ISSN errors]]")
 end
 
-local function format_date(frame, text)
-	return text -- FIXME!
+local function format_date(text)
+	return mw.getCurrentFrame():callParserFunction{name="#formatdate", args=text}
 end
 
-function export.quote_meta(args)
+local function format_langs(langs)
+	local langcodes = rsplit(langs, ",")
+	local langnames = {}
+	for _, langcode in ipairs(langcodes) do
+		local lang = m_languages.getByCode(langcode) or m_languages.err(langcode, 1)
+		table.insert(langnames, lang:getCanonicalName())
+	end
+	if #langnames == 1 then
+		return langnames[1]
+	elseif #langnames == 2 then
+		return langnames[1] .. " and " .. langnames[2]
+	else
+		local retval = {}
+		for i, langname in ipairs(langnames) do
+			table.insert(retval, langname)
+			if i <= #langnames - 2 then
+				table.insert(retval, ", ")
+			elseif i == #langnames - 1 then
+				table.insert(retval, "<span class=\"serial-comma\">,</span><span class=\"serial-and\"> and</span> ")
+			end
+		end
+		return table.concat(retval, "")
+	end
+end
+
+-- Fancy version of ine() (if-not-empty). Converts empty string to nil,
+-- but also strips leading/trailing space and then single or double quotes,
+-- to allow for embedded spaces.
+-- FIXME! Copied directly from ru-noun. Move to utility package.
+local function ine(arg)
+	if not arg then return nil end
+	arg = rsub(arg, "^%s*(.-)%s*$", "%1")
+	if arg == "" then return nil end
+	local inside_quotes = rmatch(arg, '^"(.*)"$')
+	if inside_quotes then
+		return inside_quotes
+	end
+	inside_quotes = rmatch(arg, "^'(.*)'$")
+	if inside_quotes then
+		return inside_quotes
+	end
+	return arg
+end
+
+-- Clone frame's and parent's args while also assigning nil to empty strings.
+local function clone_args(frame)
+	local args = {}
+	for pname, param in pairs(frame:getParent().args) do
+		args[pname] = ine(param)
+	end
+	for pname, param in pairs(frame.args) do
+		args[pname] = ine(param)
+	end
+	return args
+end
+
+-- Implementation of {{quote-meta/source}}.
+function export.quote_meta_source(args)
 	local output = {}
-	local function add(output, text)
+	-- Add text to the output. The text goes into a list, and we concatenate
+	-- all the list components together at the end.
+	local function add(text)
 		table.insert(output, text)
 	end
 	if args.brackets == "on" then
@@ -41,6 +168,11 @@ function export.quote_meta(args)
 	if args.author or args.last then
 		for i=1,5 do
 			local suf = i == 1 and "" or i
+			-- Return the argument named PARAM, possibly with a suffix added
+			-- (e.g. 2 for author2, 3 for last3). The suffix is either ""
+			-- (an empty string) for the first set of params (author, last,
+			-- first, etc.) or a number for further sets of params (author2,
+			-- last2, first2, etc.).
 			local function a(param)
 				return args[param .. suf]
 			end
@@ -91,7 +223,18 @@ function export.quote_meta(args)
 		return args["2ndauthor"] or args["2ndlast"] or args.translator2 or args.editor2 or args.title2
 	end
 
+	-- This handles everything after displaying the author, starting with the
+	-- chapter and ending with page, column and then other=. It is currently
+	-- called twice: Once to handle the main portion of the citation, and once
+	-- to handle a "newversion" citation. SUF is either "" for the main portion
+	-- or a number (currently only 2) for a "newversion" citation. In a few
+	-- places we conditionalize on SUF to take actions depending on its value.
 	local function postauthor(suf)
+		-- Return the argument named PARAM, possibly with a suffix added
+		-- (e.g. 2 for chapter2). The suffix is either "" (an empty string)
+		-- for the first set of params (chapter, title, translator, etc.)
+		-- or a number for further sets of params (chapter2, title2,
+		-- translator2, etc.).
 		local function a(param)
 			return args[param .. suf]
 		end
@@ -104,7 +247,7 @@ function export.quote_meta(args)
 				else
 					add(a("chapter"))
 				end
-			elseif require("Module:roman numbers").roman_to_arabic(a("chapter"), true) then
+			elseif require("Module:roman numerals").roman_to_arabic(a("chapter"), true) then
 				-- Roman chapter number
 				add(" chapter ")
 				local uchapter = mw.ustring.upper(a("chapter"))
@@ -176,20 +319,25 @@ function export.quote_meta(args)
 			add(", number " .. a("issue"))
 		end
 
+		-- This function handles the display of annotations like "(in French)"
+		-- or "(in German; quote in Nauruan)". It takes two params PRETEXT and
+		-- POSTTEXT to display before and after the annotation, respectively.
+		-- (These are used to insert the surrounding parens, commas, etc.
+		-- They are necessary because e.g. if |lang=en and |worklang= is missing,
+		-- no annotation and hence no pre-text or post-text is displayed.)
 		local function langhandler(pretext, posttext)
 			if a("worklang") then
-				add(pretext .. "in " .. format_langs(a("worklang")))
-				if a("lang") then
-					add("&#59; quote in " .. format_langs(a("lang")))
-				end
-				add(posttext)
+				return pretext .. "in " .. format_langs(a("worklang")) .. (
+					a("lang") and "&#59; quote in " .. format_langs(a("lang")) or "")
+					.. posttext
 			elseif a("lang") then
 				if a("lang") ~= "en" then
-					add(pretext .. " in " .. format_langs(a("lang")) .. posttext)
+					return pretext .. "in " .. format_langs(a("lang")) .. posttext
 				end
 			elseif suf == "" then
-				add(pretext .. maintenance_line("Please specify the language of the quote") .. posttext)
+				return pretext .. maintenance_line("Please specify the language of the quote") .. posttext
 			end
+			return ""
 		end
 
 		if a("genre") then
@@ -283,9 +431,9 @@ function export.quote_meta(args)
 			add(", <small>" .. a("id") .. "</small>")
 		end
 		if a("archiveurl") then
-			add(", archived from [" .. a("url") .. " the original] on ")
+			add(", archived from [" .. a("archiveurl") .. " the original] on ")
 			if a("archivedate") then
-				add(format_date(frame, a("archivedate")))
+				add(format_date(a("archivedate")))
 			else
 				add(maintenance_line("Please provide the date"))
 			end
@@ -293,7 +441,7 @@ function export.quote_meta(args)
 		if a("accessdate") then
 			--Otherwise do not display here, as already used as a fallback for missing date= or year= earlier.
 			if a("date") or a("nodate") or a("year") then
-				add(", retrieved " .. format_date(frame, a("accessdate")))
+				add(", retrieved " .. format_date(a("accessdate")))
 			end
 		end
 		if a("laysummary") then
@@ -303,10 +451,10 @@ function export.quote_meta(args)
 			end
 		end
 		if a("laydate") then
-			add(" (" .. format_date(frame, a("laydate")) .. ")")
+			add(" (" .. format_date(a("laydate")) .. ")")
 		end
 		if a("section") then
-			add(", " .. (a("sectionurl") and "[" .. a("sectionurl") .. " " .. a("section") .. "]" or a("section"))
+			add(", " .. (a("sectionurl") and "[" .. a("sectionurl") .. " " .. a("section") .. "]" or a("section")))
 		end
 		if a("line") then
 			add(", line " .. a("line"))
@@ -316,9 +464,9 @@ function export.quote_meta(args)
 		if a("page") or a("pages") then
 			local function page_or_pages()
 				if a("pages") then
-					add("pages " .. a("pages"))
+					return "pages " .. a("pages")
 				else
-					add("page " .. a("page"))
+					return "page " .. a("page")
 				end
 			end
 			add(", " .. (a("pageurl") and "[" .. a("pageurl") .. " " .. page_or_pages() .. "]" or page_or_pages()))
@@ -326,9 +474,9 @@ function export.quote_meta(args)
 		if a("column") or a("columns") then
 			local function column_or_columns()
 				if a("columns") then
-					add("columns " .. a("columns"))
+					return "columns " .. a("columns")
 				else
-					add("column " .. a("column"))
+					return "column " .. a("column")
 				end
 			end
 			add(", " .. (a("columnurl") and "[" .. a("columnurl") .. " " .. column_or_columns() .. "]" or column_or_columns()))
@@ -338,8 +486,10 @@ function export.quote_meta(args)
 		end
 	end
 
+	-- display all the text that comes after the author, for the main portion.
 	postauthor("")
 
+	-- If there's a "newversion" section, add the new-version text.
 	if has_newversion() then
 		--Test for new version of work.
 		add("&#59; ") -- semicolon
@@ -354,6 +504,7 @@ function export.quote_meta(args)
 		end
 	end
 
+	-- Add the author(s).
 	if args["2ndauthor"] or args["2ndlast"] then
 		add(" ")
 		if args["2ndauthorlink"] then
@@ -370,14 +521,70 @@ function export.quote_meta(args)
 		if args["2ndauthorlink"] then
 			add("]]")
 		end
+		-- FIXME, we need a better way of handling commas.
+		if args.chapter2 or args.mainauthor2 or args.translator2 or args.editor2 or args.editors2 or args.title2 then
+			add(", ")
+		end
 	end
 
+	-- display all the text that comes after the author, for the "newversion"
+	-- section.
 	postauthor(2)
 
 	add(":")
 
-{{#if:{{{nocat|}}}||{{catlangname|{{#invoke:usex/templates|first_lang|{{#if:{{{termlang|}}}|{{{termlang|}}}|{{#if:{{{lang|}}}|{{{lang|}}}|und}}}}}}|terms with quotations}}
-}}</includeonly><noinclude>{{documentation}}</noinclude>
+	-- Concatenate output portions to form output text.
+	local output_text = table.concat(output)
+
+	-- Remainder of code handles adding categories. We add one or more of the
+	-- following categories:
+	--
+	-- 1. [[Category:LANG terms with quotations]], based on the first language
+	--    code in termlang= or lang=. Not added to non-main-namespace pages
+	--    except for Reconstruction: and Appendix:. Not added if lang= is
+	--    missing or nocat= is given.
+	-- 2. [[Category:Quotations with missing lang parameter]], if lang= isn't
+	--    specified. Added to some non-main-namespace pages, but not talk pages,
+	--    user pages, or Wiktionary discussion pages (e.g. Grease Pit, Tea Room,
+	--    Beer Parlour).
+	-- 3. [[Category:Quotations using nocat parameter]], if nocat= is given.
+	--    Added to the same pages as for [[Category:Quotations with missing lang parameter]].
+	
+	local tracking_categories = {}
+	local categories = {}
+	local NAMESPACE = mw.title.getCurrentTitle().nsText
+
+	local langcode = args.termlang or args.lang or "und"
+	langcode = rsplit(langcode, ",")[1]
+	local lang = m_languages.getByCode(langcode)
+	if not lang and NAMESPACE ~= "Template" then
+		error("The language code \"" .. langcode .. "\" is not valid.")
+	end
+
+	if args.lang then
+		if args.nocat then
+			table.insert(tracking_categories, "Quotations using nocat parameter")
+		elseif lang then
+			table.insert(categories, lang:getCanonicalName() .. " terms with quotations")
+		end
+	else
+		table.insert(tracking_categories, "Quotations with missing lang parameter")
+	end
+
+	local FULLPAGENAME = mw.title.getCurrentTitle().fullText
+	return output_text .. (not lang and "" or
+		m_utilities.format_categories(categories, lang) ..
+		m_utilities.format_categories(tracking_categories, lang, nil, nil,
+			not require("Module:usex/templates").page_should_be_ignored(FULLPAGENAME)))
+end
+
+-- External interface, meant to be called from a template.
+function export.quote_meta_source_t(frame)
+	local args = clone_args(frame)
+	return export.quote_meta_source(args)
+end
+
+return export
 
 -- For Vim, so we get 4-space tabs
 -- vim: set ts=4 sw=4 noet:
