@@ -344,6 +344,10 @@ def process_page(index, page, save, verbose):
 if __name__ == "__main__":
   parser = blib.create_argparser("Replace raw links with templated links")
   parser.add_argument('--lang', help="Language code for language to do")
+  parser.add_argument("--lemmafile",
+      help=u"""List of lemmas to process, without accents.""")
+  parser.add_argument("--lemmas",
+      help=u"""Comma-separated list of lemmas to process.""")
   args = parser.parse_args()
   start, end = blib.parse_start_end(args.start, args.end)
 
@@ -355,8 +359,19 @@ if __name__ == "__main__":
   thislangname, this_remove_accents, this_charset, this_ignore_translit = (
       languages[thislangcode])
 
-  for category in ["%s lemmas" % thislangname, "%s non-lemma forms" % thislangname]:
-    msg("Processing category: %s" % category)
-    for i, page in blib.cat_articles(category, start, end):
-      msg("Page %s %s: Processing" % (i, unicode(page.title())))
-      process_page(i, page, args.save, args.verbose)
+  if args.lemmafile:
+    lemmas_to_process = [x.strip() for x in codecs.open(args.lemmafile, "r", "utf-8")]
+  elif args.lemmas:
+    lemmas_to_process = re.split(",", args.lemmas.decode("utf-8"))
+  else:
+    lemmas_to_process = []
+
+  if lemmas_to_process:
+    pages_to_process = ((index, pywikibot.Page(site, page)) for index, page in
+        blib.iter_items(lemmas_to_process, start, end))
+  else:
+    pages_to_process = blib.cat_articles(
+        ["%s lemmas" % thislangname, "%s non-lemma forms" % thislangname], start, end)
+  for i, page in pages_to_process:
+    msg("Page %s %s: Processing" % (i, unicode(page.title())))
+    process_page(i, page, args.save, args.verbose)
