@@ -36,6 +36,8 @@ def process_page(index, page):
       pagemsg("Skipping participle")
       return
 
+  msg("%s no-etym" % pagetitle)
+
 parser = blib.create_argparser("Find terms without etymology")
 parser.add_argument('--cats', default="Russian lemmas", help="Categories to do (can be comma-separated list)")
 parser.add_argument('--refs', help="References to do (can be comma-separated list)")
