@@ -3,7 +3,7 @@
 
 import re
 import unicodedata
-#import blib
+import blib
 from collections import OrderedDict
 
 AC = u"\u0301" # acute =  ́
