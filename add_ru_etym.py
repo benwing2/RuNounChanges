@@ -22,7 +22,7 @@ import rulib
 # Split text on a separator, but not if separator is preceded by
 # a backslash, and remove such backslashes
 def do_split(sep, text, maxsplit=0):
-  elems = re.split(r"(?<![\\])%s" % sep, text)
+  elems = re.split(r"(?<![\\])%s" % sep, text, maxsplit)
   return [re.sub(r"\\(%s)" % sep, r"\1", elem) for elem in elems]
 
 def process_line(index, line, add_passive_of, save, verbose):
@@ -192,7 +192,7 @@ def process_line(index, line, add_passive_of, save, verbose):
         if replaced_etym:
           sections[i] = "".join(subsections)
           newtext = "".join(sections)
-          notes.append("replace Etymology section in Russian lemma")
+          notes.append("replace Etymology section in Russian lemma with manually specified etymology")
           break
 
       if "==Etymology==" in sections[i] or "==Etymology 1==" in sections[i]:
@@ -215,7 +215,7 @@ def process_line(index, line, add_passive_of, save, verbose):
           sections[i], 1, re.M)
 
       newtext = "".join(sections)
-      notes.append("add Etymology section to Russian lemma")
+      notes.append("add (manually specified) Etymology section to Russian lemma")
       break
   else:
     errpagemsg("WARNING: Can't find Russian section, skipping")
