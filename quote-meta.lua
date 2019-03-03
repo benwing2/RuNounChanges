@@ -549,6 +549,12 @@ function export.quote_meta_source(args)
 	--    Beer Parlour).
 	-- 3. [[Category:Quotations using nocat parameter]], if nocat= is given.
 	--    Added to the same pages as for [[Category:Quotations with missing lang parameter]].
+	-- 4. [[Category:Quotations using archiveurl without archivedate]],
+	--    if archiveurl= is specified but not archivedate=. Added to the same
+	--    pages as for [[Category:Quotations with missing lang parameter]].
+	-- 5. [[Category:Quotation templates using both date and year]], if both
+	--    date= and year= are specified. Added to the same pages as for
+	--    [[Category:Quotations with missing lang parameter]].
 	
 	local tracking_categories = {}
 	local categories = {}
@@ -561,14 +567,21 @@ function export.quote_meta_source(args)
 		error("The language code \"" .. langcode .. "\" is not valid.")
 	end
 
+	if args.nocat then
+		table.insert(tracking_categories, "Quotations using nocat parameter")
+	end
 	if args.lang then
-		if args.nocat then
-			table.insert(tracking_categories, "Quotations using nocat parameter")
-		elseif lang then
+		if lang and not args.nocat then
 			table.insert(categories, lang:getCanonicalName() .. " terms with quotations")
 		end
 	else
 		table.insert(tracking_categories, "Quotations with missing lang parameter")
+	end
+	if args.archiveurl and not args.archivedate then
+		table.insert(tracking_categories, "Quotations using archiveurl without archivedate")
+	end
+	if args.date and args.year then
+		table.insert(tracking_categories, "Quotation templates using both date and year")
 	end
 
 	local FULLPAGENAME = mw.title.getCurrentTitle().fullText
