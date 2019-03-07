@@ -348,6 +348,12 @@ def references(page, startsort = None, endsort = None, namespaces = None, includ
   for i, current in iter_items(pageiter, startsort, endsort):
     yield i, current
 
+def get_contributions(user, startsort=None, endsort=None, max=None, ns=None):
+  """Get contributions for a given user."""
+  itemiter = site.usercontribs(user=user, namespaces=ns, total=max)
+  for i, current in iter_items(itemiter, startsort, endsort, get_name=lambda item: item['title']):
+    yield i, current
+
 def raw_cat_articles(page, startsort):
   if type(page) is list:
     for cat in page:
@@ -410,7 +416,7 @@ def get_page_name(page):
   #return unicode(page.title(withNamespace=False))
   return unicode(page.title())
 
-def iter_items(items, startsort = None, endsort = None, get_name = get_page_name):
+def iter_items(items, startsort=None, endsort=None, get_name=get_page_name):
   i = 0
   t = None
   steps = 50
@@ -424,7 +430,7 @@ def iter_items(items, startsort = None, endsort = None, get_name = get_page_name
       if isinstance(startsort, int):
         if i < startsort:
           should_skip = True
-      elif get_page_name(current) < startsort:
+      elif get_name(current) < startsort:
         should_skip = True
       if should_skip:
         if i % skipsteps == 0:
@@ -435,7 +441,7 @@ def iter_items(items, startsort = None, endsort = None, get_name = get_page_name
       if isinstance(endsort, int):
         if i > endsort:
           break
-      elif get_page_name(current) > endsort:
+      elif get_name(current) > endsort:
         break
 
     if isinstance(endsort, int) and not t:

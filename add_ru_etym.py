@@ -25,7 +25,7 @@ def do_split(sep, text, maxsplit=0):
   elems = re.split(r"(?<![\\])%s" % sep, text, maxsplit)
   return [re.sub(r"\\(%s)" % sep, r"\1", elem) for elem in elems]
 
-def process_line(index, line, add_passive_of, save, verbose):
+def process_line(index, line, add_passive_of, override_etym, save, verbose):
   def error(text):
     errmsg("ERROR: Processing line: %s" % line)
     errmsg("ERROR: %s" % text)
@@ -45,8 +45,6 @@ def process_line(index, line, add_passive_of, save, verbose):
   if line.startswith("!"):
     override_etym = True
     line = line[1:]
-  else:
-    override_etym = False
   # If the second element (the etymology) begins with raw:, allow spaces in the remainder to be
   # included as part of the second element.
   els = do_split(r"\s+", line, 1)
@@ -214,7 +212,7 @@ def process_line(index, line, add_passive_of, save, verbose):
           r"\1# {{passive of|lang=ru|%s}}\n" % active_term,
           sections[i], 1, re.M)
 
-      newtext = "".join(sections)
+      newtext = pagehead + "".join(sections)
       notes.append("add (manually specified) Etymology section to Russian lemma")
       break
   else:
@@ -238,10 +236,12 @@ if __name__ == "__main__":
   parser.add_argument('--direcfile', help="File containing directives.")
   parser.add_argument('--add-passive-of', action='store_true',
       help="Add {{passive of|lang=ru|...}} to defn.")
+  parser.add_argument('--override-etym', action='store_true',
+      help="Automatically override any existing etymologies.")
   args = parser.parse_args()
   start, end = blib.parse_start_end(args.start, args.end)
 
   lines = codecs.open(args.direcfile, "r", "utf-8")
   for i, line in iter_items(lines, start, end):
     line = line.strip()
-    process_line(i, line, args.add_passive_of, args.save, args.verbose)
+    process_line(i, line, args.add_passive_of, args.override_etym, args.save, args.verbose)

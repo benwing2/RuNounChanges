@@ -4,7 +4,7 @@
 import pywikibot, re, sys, codecs, argparse
 
 import blib
-from blib import getparam, rmparam, msg, site
+from blib import getparam, rmparam, msg, errmsg, site
 
 import rulib
 
