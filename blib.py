@@ -18,7 +18,7 @@
 
 import pywikibot, mwparserfromhell, re, string, sys, codecs, urllib2, datetime, json, argparse, time
 from arabiclib import reorder_shadda
-from collections import Counter
+from collections import defaultdict
 
 site = pywikibot.Site()
 
@@ -462,17 +462,25 @@ def iter_items(items, startsort=None, endsort=None, get_name=get_page_name):
       pywikibot.output(str(i) + "/" + str(endsort) + tdisp)
 
 def group_notes(notes):
-  # Group identical notes together and append the number of such identical
-  # notes if > 1
-  # 1. Count items in notes[] and return a key-value list in descending order
-  notescount = Counter(notes).most_common()
-  # 2. Recreate notes
-  def fmt_key_val(key, val):
-    if val == 1:
-      return "%s" % key
+  if isinstance(notes, basestring):
+    return [notes]
+  notes_count = {}
+  uniq_notes = []
+  # Preserve ordering of notes but combine duplicate notes with previous notes,
+  # maintaining a count.
+  for note in notes:
+    if note in notes_count:
+      notes_count[note] += 1
     else:
-      return "%s (%s)" % (key, val)
-  notes = [fmt_key_val(x, y) for x, y in notescount]
+      notes_count[note] = 1
+      uniq_notes.append(note)
+  def fmt_note(note):
+    count = notes_count[note]
+    if count == 1:
+      return "%s" % note
+    else:
+      return "%s (%s)" % (note, count)
+  notes = [fmt_note(note) for note in uniq_notes]
   return notes
 
 starttime = time.time()
