@@ -17,13 +17,17 @@ from blib import getparam, rmparam, msg, site, tname
 #  "reduplication", "reduplicated",
 #  "univerbation"
 #]
+#templates_to_move_lang = [
+#  "pre", "prefix",
+#  "suf", "suffix",
+#  "con", "confix",
+#  "com", "compound",
+#  "infix",
+#  "circumfix"
+#]
 templates_to_move_lang = [
-  "pre", "prefix",
-  "suf", "suffix",
-  "con", "confix",
-  "com", "compound",
-  "infix",
-  "circumfix"
+  "onomatopoeic", "Onomatopoeic", "onom",
+  "unknown", "unk", "unk.",
 ]
 
 rename_templates = {
@@ -34,7 +38,9 @@ rename_templates = {
   "etymtwin": "doublet",
   "doublet of": "doublet",
   "metanalysis": "rebracketing",
-  "reduplicated": "reduplication"
+  "reduplicated": "reduplication",
+  "Onomatopoeic": "onomatopoeic",
+  "unk.": "unk",
 }
 
 def process_page(page, index, parsed):

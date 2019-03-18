@@ -23,12 +23,7 @@ hyphens = {
   "ar": u"ـ",
   "fa": u"ـ",
   "he": u"־",
-  "ja": u"",
-  "ko": u"",
-  "lo": u"",
-  "th": u"",
   "yi": u"־",
-  "zh": u"",
 }
 
 def process_page(page, index, parsed):
@@ -73,8 +68,8 @@ def process_page(page, index, parsed):
       return hyphens.get(partlang, "-")
 
     def make_suffix(paramno):
-      hyph = get_hyphen(paramno)
-      def make_suffix_1(param):
+      langhyph = get_hyphen(paramno)
+      def make_suffix_1(param, hyph):
         val = getparam(t, param)
         if val and not val.startswith(hyph) and not val.startswith("*" + hyph):
           if val.startswith("*"):
@@ -82,23 +77,27 @@ def process_page(page, index, parsed):
           else:
             val = hyph + val
           t.add(param, val)
-      make_suffix_1(str(paramno))
-      make_suffix_1("alt%s" % (paramno - 1))
+      make_suffix_1(str(paramno), langhyph)
+      make_suffix_1("alt%s" % (paramno - 1), langhyph)
+      make_suffix_1("tr%s" % (paramno - 1), "-")
+      make_suffix_1("ts%s" % (paramno - 1), "-")
 
     def make_prefix(paramno):
-      hyph = get_hyphen(paramno)
-      def make_prefix_1(param):
+      langhyph = get_hyphen(paramno)
+      def make_prefix_1(param, hyph):
         val = getparam(t, param)
         if val and not val.endswith(hyph):
           val = val + hyph
           t.add(param, val)
-      make_prefix_1(str(paramno))
-      make_prefix_1("alt%s" % (paramno - 1))
+      make_prefix_1(str(paramno), langhyph)
+      make_prefix_1("alt%s" % (paramno - 1), langhyph)
+      make_prefix_1("tr%s" % (paramno - 1), "-")
+      make_prefix_1("ts%s" % (paramno - 1), "-")
 
     def make_non_affix(paramno):
       hyph = get_hyphen(paramno)
       val = getparam(t, str(paramno))
-      if val and (val.startswith(hyph) or val.startswith("*" + hyph) or val.endswith(hyph)):
+      if not val or val.startswith(hyph) or val.startswith("*" + hyph) or val.endswith(hyph):
         val = "^" + val
         t.add(str(paramno), val)
 
@@ -108,21 +107,27 @@ def process_page(page, index, parsed):
         make_suffix(i)
 
     if tn in prefix_templates:
-      for i in range(30, 2, -1):
-        if (getparam(t, str(i)) or getparam(t, "alt%s" % (i - 1)) or
-            getparam(t, "tr%s" % (i - 1)) or getparam(t, "ts%s" % (i - 1))):
-          make_non_affix(i)
-          break
-      for j in range(2, i):
-        make_prefix(j)
+      if (not getparam(t, "3") and not getparam(t, "alt2") and not getparam(t, "tr2") and
+          not getparam(t, "ts2")):
+        # If only a prefix, make the next term into a bare ^ for compatibility.
+        make_prefix(2)
+        make_non_affix(3)
+      else:
+        for i in range(30, 2, -1):
+          if (getparam(t, str(i)) or getparam(t, "alt%s" % (i - 1)) or
+              getparam(t, "tr%s" % (i - 1)) or getparam(t, "ts%s" % (i - 1))):
+            make_non_affix(i)
+            break
+        for j in range(2, i):
+          make_prefix(j)
 
     if tn in confix_templates:
-      make_prefix(1)
-      if (getparam(t, "3") or getparam(t, "alt2") or getparam(t, "tr2") or getparam(t, "ts2")):
-        make_non_affix(2)
-        make_suffix(3)
+      make_prefix(2)
+      if (getparam(t, "4") or getparam(t, "alt3") or getparam(t, "tr3") or getparam(t, "ts3")):
+        make_non_affix(3)
+        make_suffix(4)
       else:
-        make_suffix(2)
+        make_suffix(3)
 
     if tn in abbreviated_templates_to_convert:
       blib.set_template_name(t, "af")
