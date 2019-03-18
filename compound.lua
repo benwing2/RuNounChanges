@@ -124,9 +124,9 @@ local function get_affix_type(lang, sc, part)
 
 	-- Remove an asterisk if the morpheme is reconstructed and add it in the end.
 	local reconstructed = ""
-	if part:find("^*") then 
+	if part:find("^%*") then 
 		reconstructed = "*"
-		part = part:gsub("^*", "")
+		part = part:gsub("^%*", "")
 	end
 
 	local affix_type = nil
@@ -594,16 +594,16 @@ function export.make_affix(term, lang, sc, affix_type)
 	local thyph = get_template_hyphen(lang, sc)
 	local dhyph = get_display_hyphen(lang, sc)
 	
+	-- Remove an asterisk if the morpheme is reconstructed and add it in the end.
+	local reconstructed = ""
+	if term:find("^%*") then 
+		reconstructed = "*"
+		term = term:gsub("^%*", "")
+	end
+	
 	local begins_with_hyphen = usub(term, 1, 1) == thyph
 	local ends_with_hyphen = usub(term, -1) == thyph
 
-	-- Remove an asterisk if the morpheme is reconstructed and add it in the end.
-	local reconstructed = ""
-	if term:find("^*") then 
-		reconstructed = "*"
-		term = term:gsub("^*", "")
-	end
-	
 	if affix_type == "suffix" then
 		if thyph == dhyph and begins_with_hyphen then
 			-- leave term alone
