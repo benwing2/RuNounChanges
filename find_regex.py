@@ -22,7 +22,8 @@ import pywikibot
 import blib
 from blib import getparam, rmparam, msg, site
 
-def process_page(regex, index, page, filter_pages, verbose):
+def process_page(regex, index, page, filter_pages, verbose,
+    include_non_mainspace, russian_only):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -30,7 +31,7 @@ def process_page(regex, index, page, filter_pages, verbose):
   if verbose:
     pagemsg("Processing")
 
-  if ":" in pagetitle and verbose:
+  if not include_non_mainspace and ":" in pagetitle:
     pagemsg("WARNING: Colon in page title, skipping page")
     return
 
@@ -40,27 +41,29 @@ def process_page(regex, index, page, filter_pages, verbose):
     return
 
   text = unicode(page.text)
-  notes = []
 
-  foundrussian = False
-  sections = re.split("(^==[^=]*==\n)", text, 0, re.M)
+  if not russian_only:
+    text_to_search = text
+  else:
+    text_to_search = None
+    foundrussian = False
+    sections = re.split("(^==[^=]*==\n)", text, 0, re.M)
 
-  for j in xrange(2, len(sections), 2):
-    if sections[j-1] == "==Russian==\n":
-      if foundrussian:
-        pagemsg("WARNING: Found multiple Russian sections, skipping page")
-        return
-      foundrussian = True
+    for j in xrange(2, len(sections), 2):
+      if sections[j-1] == "==Russian==\n":
+        if foundrussian:
+          pagemsg("WARNING: Found multiple Russian sections, skipping page")
+          return
+        foundrussian = True
+        text_to_search = sections[j]
+        break
 
-      if re.search(regex, sections[j], re.M):
-        pagemsg("Found match for regex: %s" % regex)
-        if verbose:
-          sectiontext = sections[j]
-          if not sectiontext.endswith("\n"):
-            sectiontext += "\n"
-          pagemsg("-------- begin text ---------\n%s-------- end text --------" % sectiontext)
-
-      return
+  if text_to_search and re.search(regex, text_to_search, re.M):
+    pagemsg("Found match for regex: %s" % regex)
+    if verbose:
+      if not text_to_search.endswith("\n"):
+        text_to_search += "\n"
+      pagemsg("-------- begin text ---------\n%s-------- end text --------" % text_to_search)
 
 def yield_pages_in_cats(cats, startFrom, upTo):
   for cat in cats:
@@ -68,18 +71,19 @@ def yield_pages_in_cats(cats, startFrom, upTo):
       yield index, page
 
 def search_pages(regex, refs, cat, pages, pagefile, filter_pages, verbose,
-    startFrom, upTo):
+    startFrom, upTo, include_non_mainspace, russian_only):
   if pages:
-    pages = ((index, pywikibot.Page(blib.site, page)) for index, page in blib.iter_pages(pages, startFrom, upTo))
+    pages = ((index, pywikibot.Page(blib.site, page)) for page, index in blib.iter_pages(pages, startFrom, upTo))
   elif pagefile:
     lines = [x.strip() for x in codecs.open(pagefile, "r", "utf-8")]
-    pages = ((index, pywikibot.Page(blib.site, page)) for index, page in blib.iter_pages(lines, startFrom, upTo))
+    pages = ((index, pywikibot.Page(blib.site, page)) for page, index in blib.iter_pages(lines, startFrom, upTo))
   elif refs:
     pages = blib.references(refs, startFrom, upTo, includelinks=True)
   else:
     pages = yield_pages_in_cats(cat.split(","), startFrom, upTo)
   for index, page in pages:
-    process_page(regex, index, page, filter_pages, verbose)
+    process_page(regex, index, page, filter_pages, verbose,
+        include_non_mainspace, russian_only)
 
 pa = blib.init_argparser("Search on pages")
 pa.add_argument("-e", "--regex", help="Regular expression to search for.",
@@ -91,6 +95,8 @@ pa.add_argument("-c", "--category", "--cat",
 pa.add_argument('--filter-pages', help="Regex to use to filter page names.")
 pa.add_argument('--pages', help="List of pages to search, comma-separated.")
 pa.add_argument('--pagefile', help="File containing pages to search.")
+pa.add_argument('--include-non-mainspace', help="Don't skip non-mainspace pages.", action='store_true')
+pa.add_argument('--russian-only', help="Only search the Russian section.", action='store_true')
 params = pa.parse_args()
 startFrom, upTo = blib.parse_start_end(params.start, params.end)
 
@@ -104,4 +110,5 @@ pages = params.pages and re.split(",", params.pages.decode("utf-8"))
 filter_pages = params.filter_pages and params.filter_pages.decode("utf-8")
 
 search_pages(regex, references, category, pages, params.pagefile,
-    filter_pages, params.verbose, startFrom, upTo)
+    filter_pages, params.verbose, startFrom, upTo,
+    params.include_non_mainspace, params.russian_only)
