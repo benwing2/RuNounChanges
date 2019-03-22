@@ -28,9 +28,15 @@ def process_page(page, index, parsed):
       if getparam(t, "pos2"):
         pagemsg("Has pos2: %s" % unicode(t))
         continue
-      if getparam(t, "3") or getparam(t, "4") or getparam(t, "5") or getparam(t, "6"):
-        pagemsg("Has more than two suffixes: %s" % unicode(t))
+      if (getparam(t, "3") or getparam(t, "4") or getparam(t, "5") or getparam(t, "6")) and not getparam(t, "nocat"):
+        pagemsg("Has more than one suffix and not nocat=: %s" % unicode(t))
         continue
+      for i in range(1, 11):
+        trnum = getparam(t, "tr%s" % i)
+        if trnum:
+          notes.append("move tr%s to t%s in {{hu-suffix}}" % (i, i))
+          t.add("t%s" % i, trnum, before="tr%s" % i)
+          rmparam(t, "tr%s" % i)
       for i in range(1, 11):
         tnum = getparam(t, "t%s" % i)
         if tnum and re.search(" (marker|suffix|ending|vowel|plural)$", tnum):
@@ -43,7 +49,7 @@ def process_page(page, index, parsed):
           suf = "-" + suf
           t.add(str(i), suf)
       base = getparam(t, "1")
-      if not base or base.startswith("-") or base.endswith("-"):
+      if not base or not getparam(t, "nocat") and (base.startswith("-") or base.endswith("-")):
         base = "^" + base
         t.add("1", base, before="2")
       pos = getparam(t, "pos")
