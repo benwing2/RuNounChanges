@@ -340,11 +340,11 @@ def iter_pages(pageiter, startsort = None, endsort = None, key = None):
       errmsg(str(i) + "/" + str(endsort) + tdisp)
 
 
-def references(page, startsort = None, endsort = None, namespaces = None, includelinks = False):
+def references(page, startsort = None, endsort = None, namespaces = None, only_template_inclusion = True, filter_redirects = False):
   if isinstance(page, basestring):
     page = pywikibot.Page(site, page)
-  pageiter = page.getReferences(onlyTemplateInclusion = not includelinks,
-      namespaces = namespaces)
+  pageiter = page.getReferences(only_template_inclusion = only_template_inclusion,
+      namespaces = namespaces, filter_redirects = filter_redirects)
   for i, current in iter_items(pageiter, startsort, endsort):
     yield i, current
 
