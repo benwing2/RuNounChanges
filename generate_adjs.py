@@ -18,7 +18,7 @@ parser.add_argument('--noun', action="store_true",
 args = parser.parse_args()
 
 pos_to_full_pos = {
-  # The first four are special-cased
+  # The first three are special-cased
   "n": "Noun",
   "pn": "Proper noun",
   "adj": "Adjective",
