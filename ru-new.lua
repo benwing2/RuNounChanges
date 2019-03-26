@@ -38,9 +38,8 @@
 	If verb:
 		4: verb aspect and transitivity
 		5: paired aspectual verb
-		6,...: conjugation; note that if only one argument is given and it specifies classes
-		1 through 6, the appropriate remaining arguments will automatically be generated
-		based on the lemma
+		6,...: conjugation; if only one argument is given, the infinitive will
+		automatically be added as the second argument
 
 	If noun:
 		4,5,...: declension
@@ -167,70 +166,6 @@ local function process_arg_chain(args, first, pref, list)
     return list
 end
 
--------------------- Global declension/case/etc. variables -------------------
-
--- 'enable_categories' is a special hack for testing, which disables all
--- category insertion if false. Delete this as soon as we've verified the
--- working of the category code and created all the necessary categories.
-local enable_categories = false
-local declensions = {}
-local declensions_old = {}
-local internal_notes_table = {}
-local internal_notes_table_old = {}
-local internal_notes_genders = {}
-local internal_notes_genders_old = {}
-local short_declensions = {}
-local short_declensions_old = {}
--- Formerly used for the ой-rare type, which has been removed; but keep
--- the code around in case we need it later.
-local short_internal_notes_table = {}
-local short_internal_notes_table_old = {}
-local short_stress_patterns = {}
-
-local long_cases = {
-	"nom_m", "nom_n", "nom_f", "nom_p",
-	"gen_m", "gen_f", "gen_p",
-	"dat_m", "dat_f", "dat_p",
-	"acc_f", "acc_n",
-	"ins_m", "ins_f", "ins_p",
-	"pre_m", "pre_f", "pre_p",
-	-- extra old long cases
-	"nom_mp",
-	-- extra dva cases
-	"nom_fp",
-	-- extra oba cases
-	"gen_mp", "gen_fp",
-	"dat_mp", "dat_fp",
-	"ins_mp", "ins_fp",
-	"pre_mp", "pre_fp",
-}
-
--- Short cases and corresponding numbered arguments
-local short_cases = {
-	"short_m", "short_n", "short_f", "short_p"
-}
-
--- Create master list of all possible cases (actually case/number/gender pairs)
-local all_cases = mw.clone(long_cases)
-for _, case in ipairs(short_cases) do
-	ut.insert_if_not(all_cases, case)
-end
-
--- If enabled, compare this module with new version of module to make
--- sure all declensions are the same.
-local test_new_ru_adjective_module = false
-
--- Forward references to functions
-local tracking_code
-local categorize
-local detect_stem_and_accent_type
-local construct_bare_and_short_stem
-local decline
-local canonicalize_override
-local handle_forms_and_overrides
-local decline_short
-local make_table
-
 --------------------------------------------------------------------------
 --                               Main code                              --
 --------------------------------------------------------------------------
@@ -261,7 +196,7 @@ local function handle_etym(arg, data)
 	end
 	if arg == "-" then
 		return "===Etymology===\n{{rfe|lang=ru}}\n\n"
-	elseif arg == "--"
+	elseif arg == "--" then
 		return ""
 	end
 
@@ -360,29 +295,29 @@ local function handle_etym(arg, data)
 end
 
 local known_labels = {
-	or="or",
-	also={"also", "_"},
-	f="figurative",
-	d="dated",
-	p="poetic",
-	h="historical",
-	n="nonstandard",
-	lc={"low", "_", "colloquial"},
-	v="vernacular",
-	c="colloquial",
-	l="literary",
-	tr="transitive',
-	in="intransitive",
-	io="imperfective only",
-	po="perfective only",
-	im="impersonal",
-	pej="pejorative",
-	vul="vulgar",
-	reg="regional",
-	dia="dialectal",
-	joc="jocular",
-	an="animate",
-	inan="inanimate",
+	["or"]="or",
+	["also"]={"also", "_"},
+	["f"]="figurative",
+	["d"]="dated",
+	["p"]="poetic",
+	["h"]="historical",
+	["n"]="nonstandard",
+	["lc"]={"low", "_", "colloquial"},
+	["v"]="vernacular",
+	["c"]="colloquial",
+	["l"]="literary",
+	["tr"]="transitive",
+	["in"]="intransitive",
+	["io"]="imperfective only",
+	["po"]="perfective only",
+	["im"]="impersonal",
+	["pej"]="pejorative",
+	["vul"]="vulgar",
+	["reg"]="regional",
+	["dia"]="dialectal",
+	["joc"]="jocular",
+	["an"]="animate",
+	["inan"]="inanimate",
 }
 
 local handle_defn(arg, pos)
@@ -639,7 +574,7 @@ local function handle_derrelsee(arg, drstype, data)
 					end
 				else
 					check_stress(derrel)
-					table.insert(links, "{{l|ru|" .. derrel .. "}})
+					table.insert(links, "{{l|ru|" .. derrel .. "}}")
 				end
 			end
 		end
@@ -649,126 +584,29 @@ local function handle_derrelsee(arg, drstype, data)
 	return "====" .. header .. "====\n" .. table.concat(lines, "") .. "\n"
 end
 
-local function generate_verb_args(conj_args, verbbase, trverbbase)
-	if #conj_args == 1 then
-		local conj = conj_args[1]
-		local origverbbase = verbbase
-		local origtrverbbase = trverbbase
-		local check_and_chop(regex, trregex)
-			if not rfind(verbbase, regex) then
-				error("Type " .. conj .. " verb " .. verbbase .. " doesn't end as expected, should match regex " .. regex)
-			end
-			verbbase = rsub(verbbase, regex, "")
-			if trverbbase then
-				if not trregex then
-					error("For type " .. conj .. "verbs, manual translit not allowed")
-				elseif not rfind(trverbbase, trregex) then
-					error("Type " .. conj .. " verb " .. verbbase .. " doesn't end as expected, should match regex " .. trregex)
-				end
-				trverbbase = rsub(trverbbase, trregex, "")
-			end
-		end
-			
-		if rfind(conj, "^6[°o]?a") then
-			check_and_chop("[ая]ть$")
-			args = {verbbase}
-		elseif rfind(conj, "^6[°o]?b") then
-			if com.is_monosyllabic(verbbase) then
-				check_and_chop("[ая]́?ть$")
-			else
-				check_and_chop("[ая]́ть$")
-			end
-			args = {verbbase}
-		elseif rfind(conj, "^6[°o]?c") then
-			if com.is_monosyllabic(verbbase) then
-				check_and_chop("[ая]́?ть$")
-			else
-				check_and_chop("[ая]́ть$")
-			end
-			args = {com.make_ending_stressed(verbbase)}
-		elseif rfind(conj, "^5a") then
-			check_and_chop("[еая]ть$")
-			args = {verbbase, com.try_to_stress(rsub(origverbbase, "ть$", ""))}
-		elseif rfind(conj, "^5b") then
-			if com.is_monosyllabic(verbbase) then
-				check_and_chop("[еая]́?ть$")
-			else
-				check_and_chop("[еая]́ть$")
-			end
-			args = {verbbase, rsub(origverbbase, "ть$", "")}
-		elseif rfind(conj, "^5c") then
-			if com.is_monosyllabic(verbbase) then
-				check_and_chop("[еая]́?ть$")
-			else
-				check_and_chop("[еая]́ть$")
-			end
-			args = {com.make_ending_stressed(verbbase), com.try_to_stress(rsub(origverbbase, "ть$", ""))}
-		elseif rfind(conj, "^4a") then
-			check_and_chop("ить$", "itʹ$")
-			args = {verbbase .. (trverbbase and "//" .. trverbbase or "")}
-		elseif rfind(conj, "^4b") then
-			check_and_chop("ить$", "itʹ$")
-			if com.is_monosyllabic(verbbase) then
-				check_and_chop("и́?ть$", "i" .. AC .. "?tʹ$")
-			else
-				check_and_chop("и́ть$", "i" .. AC .. "tʹ$")
-			end
-			args = {verbbase .. (trverbbase and "//" .. trverbbase or "")}
-		elseif rfind(conj, "^4c") then
-			check_and_chop("ить$", "itʹ$")
-			if com.is_monosyllabic(verbbase) then
-				check_and_chop("и́?ть$", "i" .. AC .. "?tʹ$")
-			else
-				check_and_chop("и́ть$", "i" .. AC .. "tʹ$")
-			end
-			verbbase, trverbbase = com.make_ending_stressed(verbbase, trverbbase)
-			args = {verbbase .. (trverbbase and "//" .. trverbbase or "")}
-		elseif rfind(conj, "^3[°o]?a") then
-			check_and_chop("нуть$")
-			args = {verbbase}
-		elseif rfind(conj, "^3b") then
-			if com.is_monosyllabic(verbbase) then
-				check_and_chop("ну́?ть$")
-			else
-				check_and_chop("ну́ть$")
-			end
-			args = {verbbase .. "н"}
-		elseif rfind(conj, "^3c") then
-			if com.is_monosyllabic(verbbase) then
-				check_and_chop("ну́?ть$")
-			else
-				check_and_chop("ну́ть$")
-			end
-			args = {com.make_ending_stressed(verbbase) .. "н"}
-		elseif rfind(conj, "^2[ab]") then
-			-- check and chop only for checking, then restore original
-			check_and_chop("ва́?ть$", "va" .. AC .. "?tʹ$")
-			verbbase, trverbbase = origverbbase, origtrverbbase
-			check_and_chop("ть$", "tʹ$")
-			args = {verbbase .. (trverbbase and "//" .. trverbbase or "")}
-		elseif rfind(conj, "^1a") then
-			check_and_chop("ть$", "tʹ$")
-			args = {verbbase .. (trverbbase and "//" .. trverbbase or "")}
-		else
-			error("Unrecognized conjugation type and no arguments: " .. conj)
-		end
-		table.insert(args, 1, conj)
-		return args
-	end
-	return conj_args
-end			
+local function base_params()
+	return {
+		[1] = {required = true},
+		[2] = {required = true},
+		[3] = {},
+	}
+end
 
 local function do_verb(args)
+	local params = base_params()
+	params[4] = {required = true}
+	params[5] = {}
+	params[6] = {required = true, list = true}
+	
+	args = require("Module:parameters").process(args, params)
+	
 	subs = {}
 	local data = {}
 	data.verb = args[2]
 	data.defn = args[3]
 	data.aspect = args[4]
 	data.corverbs = args[5]
-	data.conj = {}
-	for i = 6, 20 do
-		table.insert(data.conj, args[i])
-	end
+	data.conj = args[6]
 	data.translit = nil
 	if rfind(data.verb, "//") then
 		local bases = rsplit(data.verb, "//")
@@ -810,27 +648,24 @@ local function do_verb(args)
 	subs.passive = args.e == "r" and "# {{passive of|lang=ru|" .. data.verbbase ..
 		(data.trverbbase and "|tr=" .. data.trverbbase or "") .. "}}\n" or ""
 
-	data.reflsuf = data.isrefl and "-refl" or ""
-	local function order_aspect(aspect)
-		return rsub(aspect, "-impers-refl", "-refl-impers")
+	if #data.conj == 1 then
+		data.conjstr = data.conj[1] .. "|" .. data.verb .. (data.translit and "//" .. data.translit or "")
+	else
+		data.conjstr = table.concat(data.conj, "|")
 	end
-	data.conjargs = generate_verb_args(data.conj, data.verbbase, data.trverbbase)
-	data.conjstr = table.concat(data.conjargs, "|")
 	if rfind(data.aspect, "^both") then
-		local pfaspect = rsub(data.aspect, "^both", "pf")
-		local impfaspect = rsub(aspect, "^both", "impf")
 		local subsub = {
-			impfaspect = order_aspect(impfaspect .. data.reflsuf),
-			pfaspect = order_aspect(pfaspect .. data.reflsuf),
+			impfaspect = rsub(aspect, "^both", "impf"),
+			pfaspect = rsub(data.aspect, "^both", "pf"),
 			conj = data.conjstr,
 		}
 		sub.conj = strutils.format([===[
 ''imperfective''
-{\op}{\op}ru-conj|{pfaspect}{conj}{\cl}{\cl}
+{\op}{\op}ru-conj|{pfaspect}|{conj}{\cl}{\cl}
 ''perfective''
-{\op}{\op}ru-conj|{impfaspect}{conj}{\cl}{\cl}]===], subsub)
+{\op}{\op}ru-conj|{impfaspect}|{conj}{\cl}{\cl}]===], subsub)
 	else
-		sub.conj = "{{ru-conj|" .. order_aspect(data.aspect .. data.reflsuf) .. "|" .. data.conjstr .. "}}"
+		sub.conj = "{{ru-conj|" .. data.aspect .. "|" .. data.conjstr .. "}}"
 	end
 
 	sub.etym = handle_etym(args.e, data)
@@ -866,15 +701,38 @@ local function do_verb(args)
 {syn}{ant}{der}{rel}{see}
 ]===], subs)
 
-local function do_non_verb(args, pos)
+pos_to_full_pos = {
+  -- The first three are special-cased
+  v = "Verb",
+  n = "Noun",
+  pn = "Proper noun",
+  adj = "Adjective",
+  adjform = "Adjective form",
+  adv = "Adverb",
+  pcl = "Particle",
+  pred = "Predicative",
+  prep = "Preposition",
+  conj = "Conjunction",
+  int = "Interjection",
+  # supported only for altyo:
+  part = "Participle",
+}
+
+local function do_non_verb(args)
+	local params = base_params()
+    if args[1] == "n" or args[1] == "pn" then
+		params[4] = {required = true, list = true}
+	elseif args[1] == "adj" then
+		params[4] = {required = true}
+	end
+	
+	args = require("Module:parameters").process(args, params)
+	
 	subs = {}
 	local data = {}
 	data.term = args[2]
 	data.defn = args[3]
-	data.decl = {}
-	for i = 4, 20 do
-		table.insert(data.decl, args[i])
-	end
+	data.decl = args[4]
 	data.translit = nil
 	if rfind(data.term, "//") then
 		local bases = rsplit(data.term, "//")
@@ -1009,15 +867,12 @@ local function do_non_verb(args, pos)
 
 -- The main entry point.
 function export.new(frame)
-	local args = clone_args(frame)
-	if pos == "verb" then
+	local args = frame:getParent().args
+    local pos = args[1]
+	if pos == "v" then
 		return do_verb(args)
-	elseif pos == "noun" then
-		return do_noun(args)
-	elseif pos == "adj" then
-		return do_adj(args)
-	else
-		return do_misc_pos(args, pos)
+    else
+		return do_non_verb(args)
 	end
 end
 
