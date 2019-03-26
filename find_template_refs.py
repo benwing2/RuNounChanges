@@ -15,12 +15,20 @@ def process_page(page, index):
   pagemsg("Found one")
 
 parser = blib.create_argparser("Find templates transcluding a given page")
-parser.add_argument("--refs",
+parser.add_argument("--pages",
     help=u"""Comma-separated list of pages to check.""")
+parser.add_argument("--pagefile",
+    help=u"""Comma-separated list of pages to check.""")
+parser.add_argument("--redirects-only",
+    help=u"""Only output redirects.""", action='store_true')
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-for ref in args.refs.split(","):
-  msg("Processing references to %s" % ref)
-  for i, page in blib.references(ref, start, end):
-    process_page(page, i)
+if args.pages:
+  pages = args.pages.split(",")
+else:
+  pages = [x.strip() for x in codecs.open(args.pagefile, "r", "utf-8")]
+  for page in pages:
+    msg("Processing references to %s" % page)
+    for i, page in blib.references(page, start, end, namespaces=["Template"], only_template_inclusion=False, filter_redirects=args.redirects_only):
+      process_page(page, i)
