@@ -1,0 +1,39 @@
+abbreviation of,abb,abbreviation,ao
+clipping of,clipped form of,clip
+eclipsis of,eclipsed
+eggcorn of,eggcorn
+initialism of,io
+lenition of,lenited
+misspelling of,common misspelling of,misspell
+rare form of,rareform
+rare spelling of,rarespell,rarspell
+short for,short form of,short of,shortfor
+standard spelling of,standspell
+superseded spelling of,deprecated spelling of,superseded form of
+alternative case form of,alternative capitalisation of,alternative capitalization of,altcaps,altcase
+alternative form of,alternate form of,alt form,altform,alt form of,alt-form
+alternative spelling of,alternate spelling of,altspelling,altspell,alt-sp,alt spell of
+attributive form of,attributive of
+comparative of,comparative form of
+e-form of,definite and plural of
+ellipsis of,anapodoton of,ellipse of
+female form of,fem form
+feminine singular past participle of,feminine past participle of
+honorific alternative case form of,honoraltcaps
+inflection of,conjugation of
+men's speech form of,men's form of
+neuter singular of,neuter of
+neuter singular past participle of,neuter past participle of
+obsolete spelling of,obssp,obs-sp
+passive of,passive form of
+passive past tense of,past passive of,passive past of
+past participle of,past participle
+past tense of,past of
+plural definite of,definite plural of
+plural indefinite of,indefinite plural of
+plural of,plural form of
+present tense of,present of
+singular definite of,definite singular of
+substantivisation of,substantivization of
+superlative of,superlative form of
+synonym of,alternative term for,altname,synonym,alternative name of,synof,syn-of,syn of
