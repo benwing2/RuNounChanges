@@ -1,11 +1,17 @@
-abessive plural of:infldoc,decl
-abessive singular of:infldoc,decl
-abstract noun of:infldoc,withcap,withfrom,grammar
-accusative of:infldoc,decl
-accusative plural of:infldoc,decl
-accusative singular of:infldoc,decl
+abessive plural of:infldoc,decl,exlang=qu
+abessive singular of:infldoc,decl,exlang=qu
+abstract noun of:infldoc,withcap,withfrom,grammar,cat=abstract nouns,exlang=th
+accusative of:
+{{form of/infldoc|form=form|exlang=la|exlang2=grc|exlang3=ru|addlintrotext=This template should be used when there is no singular/plural distinction, or this distinction is irrelevant. For accusative singular forms, use {{temp|accusative singular of}}.}}
+<includeonly>
+[[Category:Form-of templates]]
+[[Category:Declension form-of templates]]
+</includeonly>
+-------- end text --------
+accusative plural of:infldoc,decl,exlang=la;grc;ru
+accusative singular of:infldoc,decl,exlang=la;grc;ru
 active participle of:
-{{form of/infldoc}}
+{{form of/infldoc|exlang=ar}}
 ===See also===
 * {{temp|passive participle of}}
 * {{temp|present participle of}}
@@ -14,7 +20,7 @@ active participle of:
 [[Category:Conjugation form-of templates]]
 </includeonly>
 -------- end text --------
-agent noun of:infldoc,ofdesc=[[Appendix:Glossary#agent noun|agent noun]] of,cat=agent nouns,grammar
+agent noun of:infldoc,sgdesc=the [[Appendix:Glossary#agent noun|agent noun]],cat=agent nouns,grammar
 alternative case form of:
 {{form of/fulldoc|shortcut=Template:altcaps|shortcut2=Template:alternative capitalisation of|shortcut3=Template:alternative capitalization of|withcap=1|withfrom=1|addlintrotext=This template is to be used for synonyms that differ only in case (capitalization). Broader differences are covered by {{temp|alternative form of}}.}}
 <includeonly>
@@ -26,44 +32,41 @@ alternative plural of:
 Use this template to show the simple definition for an entry that is the plural inflection of the alternative spelling of a primary entry. (It is preferable to use this template to create a simple alternative-spelling plural article such as [[kilometres]] rather than a redirect: the simple article can later be expanded with the alternative's specifics, such as etymology or quotations.)
 
 ==Parameters==
-''Positional (unnamed) parameters:''
-* {{docparam|1|'''required'''}} the [[WT:LANGCODE|language code]]
-* {{docparam|2|'''required'''}} The singular form of the entry for which this is a plural term (i.e., the singular form of the alternative spelling).
-* {{docparam|3|'''required'''}} The plural form of which this is itself an alternative spelling.
-''Named parameter:''
+; {{docparam|1|'''(required)'''}}
+: The [[WT:LANGCODE|language code]] of the primary entry term linked to (which this page is an alternative plural of). See [[Wiktionary:Languages]]. <small>The parameter {{para|lang}} is a deprecated synonym; please do not use. If this is used, all numbered parameters move down by one.</small>
+; {{docparam|2|'''(required)'''}}
+: The singular form of the entry for which this is a plural term (i.e., the singular form of the alternative spelling).
+; {{docparam|3|'''(required)'''}}
+: The plural form of which this is itself an alternative spelling.
 
-==Example==
-<tt><nowiki># {{alternative plural of|en|kilometre|kilometers}}</nowiki></tt>
-
-will yield:
-# {{alternative plural of|en|kilometre|kilometers}}
+==Examples==
+On {{m|en|kilometers}}:
+ <pre># {{alternative plural of|en|kilometer|kilometres}}</pre>gives
+# {{alternative plural of|en|kilometer|kilometres}}
 <includeonly>
 [[Category:Form-of templates]]
 [[Category:Grammar form-of templates]]
 </includeonly>
+-------- end text --------
 alternative reconstruction of:
-{{form of/fulldoc|addlintrotext=This template is is used to indicate a different reconstruction of a reconstructed lemma, similarly to {{temp|alternative form of}}.
+{{form of/fulldoc|exlang=ine-pro|addlintrotext=This template is is used to indicate a different reconstruction of a reconstructed lemma, similarly to {{temp|alternative form of}}.}}
 <includeonly>
 [[Category:Form-of templates]]
 </includeonly>
 -------- end text --------
 alternative spelling of:
-{{form of/introdoc|shortcut=Template:alternate spelling of|shortcut2=Template:altspelling|addlintrotext=Spelling is the way words are formed with letters. For other alternatives, use {{temp|alternative case form of}} or {{temp|alternative form of}}.
+{{form of/fulldoc|withcap=1|withfrom=1|shortcut=Template:alternate spelling of|shortcut2=Template:altspelling|addlintrotext=Spelling is the way words are formed with letters. For other alternatives, use {{temp|alternative case form of}} or {{temp|alternative form of}}.
 
 It is preferable to use this template to create a simple alternative-spelling article such as [[second guess]] rather than a redirect: the simple article can later be expanded with the alternative's specifics, such as etymology or quotations.}}
-
-{{form of/usagedoc|withdot=1|withcap=1|withfrom=1}}
 The intention of the parameters {{docparam|from}}, {{docparam|from2}}, etc. is to indicate regions where the spelling is used as the primary spelling in that region (as for ''kilometre'' and ''kilometer'', but not when the spelling is only an alternative regional spelling: for that use a [[Module:labels/data/regional|regional context label]] followed by {{tnull|alternative spelling of|...}}). The regions used should be names of [[Module:labels/data/regional|regional context labels]] or, if no appropriate label exists, plain text.
 
 ===Examples===
-On the page "[[second guess]]":
-<pre>
-# {{alternative spelling of|en|second-guess}}</pre>gives
+On {{m|en|second guess}}:
+ <pre># {{alternative spelling of|en|second-guess}}</pre>gives
 # {{alternative spelling of|en|second-guess}}
 
-On the page "[[kilometer]]":
-<pre>
-# {{alternative spelling of|en|kilometre|from=US|from2=Canada}}</pre>gives
+On {{m|en|kilometer}}:
+ <pre># {{alternative spelling of|en|kilometre|from=US|from2=Canada}}</pre>gives
 # {{alternative spelling of|en|kilometre|from=US|from2=Canada}}
 
 ==See also==
@@ -132,15 +135,25 @@ On the page "[[kilometer]]":
 	"format": "inline"
 }
 </templatedata>
-alternative typography of:fulldoc,pldesc=alternative typographies
-ancient form of:fulldoc,cat=ancient forms
-aphetic form of:
-{{form of/fulldoc|pldesc=[[Appendix:Glossary#aphetic|aphetic]] forms|cat=aphetic forms}}
+-------- end text --------
+alternative typography of:
+{{form of/fulldoc|pldesc=alternative typographies|exlang=la}}
 
 ===Examples===
-On the page "[[voler]]":
-<pre>
-# {{aphetic form of|it|volere}}</pre>gives
+On {{ncog|la|pœnæ}}:
+ <pre># {{alternative typography of|la|poenae}}</pre>gives
+# {{alternative typography of|la|poenae}}
+<includeonly>
+[[Category:Form-of templates]]
+</includeonly>
+-------- end text --------
+ancient form of:fulldoc,cat=ancient forms,exlang=ja
+aphetic form of:
+{{form of/fulldoc|withcap=1|pldesc=[[Appendix:Glossary#aphetic|aphetic]] forms|cat=aphetic forms|exlang=it}}
+
+===Examples===
+On {{ncog|it|voler}}:
+ <pre># {{aphetic form of|it|volere}}</pre>gives
 # {{aphetic form of|it|volere}}
 
 ==See also==
@@ -154,15 +167,15 @@ On the page "[[voler]]":
 </includeonly>
 -------- end text --------
 apocopic form of:
-{{form of/fulldoc|pldesc=[[Appendix:Glossary#apocopic|apocopic]] forms|cat=apocopic forms}}
+{{form of/fulldoc|withcap=1|pldesc=[[Appendix:Glossary#apocopic|apocopic]] forms|cat=apocopic forms|exlang=it}}
 
 ===Examples===
-On the page "[[voler]]":
-<pre>
-# {{apocopic form of|it|volere}}</pre>gives
+On {{ncog|it|voler}}:
+ <pre># {{apocopic form of|it|volere}}</pre>gives
 # {{apocopic form of|it|volere}}
 
 ==See also==
+* {{temp|aphetic form of}}
 * {{temp|syncopic form of}}
 <includeonly>
 [[Category:Form-of templates]]
@@ -171,80 +184,88 @@ On the page "[[voler]]":
 [[fr:Modèle:apocope]]
 </includeonly>
 -------- end text --------
-associative plural of:infldoc,decl
-associative singular of:infldoc,decl
-attributive form of:infldoc,grammar
+associative plural of:infldoc,decl,exlang=qu
+associative singular of:infldoc,decl,exlang=qu
+attributive form of:
+{{form of/fulldoc}}
+
+===Examples===
+On {{ncog|en|puff-pastry}}:
+ <pre># {{attributive form of|en|puff pastry}}</pre>gives
+# {{attributive form of|en|puff pastry}}
+<includeonly>
+[[Category:Form-of templates]]
+</includeonly>
+-------- end text --------
 augmentative of:
 {{form of/fulldoc|withcap=1|exlang=pt|addlintrotext=The template normally also categorizes the page into the proper language-specific subcategory of [[:Category:Augmentative nouns by language]] (e.g. [[:Category:Portuguese augmentative nouns]]). However, you can override the part of speech used in the category with the {{para|POS}} parameter; e.g. specifying {{para|POS|adjective}} for a Portuguese term will categorize the page into [[:Category:Portuguese augmentative adjectives]].}}
 <includeonly>
 [[Category:Form-of templates]]
 [[Category:Grammar form-of templates]]
 </includeonly>
-broad form of:infldoc,grammar,withfrom
-causative of:infldoc,grammar,cat=causative verbs
+-------- end text --------
+broad form of:infldoc,grammar,withfrom,exlang=ga;sga
+causative of:infldoc,grammar,form=form,cat=causative verbs,exlang=hy;mn
 combining form of:
 {{fulldoc|pldesc=[[combining form]]s|cat=combining forms|exlang=eu}}
 
 ===Examples===
-With the required parameters only:
- <var>{{temp|combining form of|eu|erle}}</var>
-: {{combining form of|eu|erle}}
+On {{ncog|eu|erla-}} (a combining form of the Basque word meaning "bee"):
+ <pre># {{combining form of|eu|erle}}</pre>gives
+# {{combining form of|eu|erle}}
 
-With the optional fourth parameter, "gloss or short translation":
- <var>{{temp|combining form of|eu|erle||bee}}</var>
-: {{combining form of|eu|erle||bee}}
-
-This example is used at the Basque entry {{l|eu|erla-}}, a combining form of the Basque word meaning "bee".
+On the same page:
+ <pre># {{combining form of|eu|erle||bee}}</pre>gives
+# {{combining form of|eu|erle||bee}}
 <includeonly> 
 [[Category:Form-of templates]]
 [[Category:Grammar form-of templates]]
 </includeonly>
-comitative plural of:infldoc,decl
-comitative singular of:infldoc,decl
+-------- end text --------
+comitative plural of:infldoc,decl,exlang=qu
+comitative singular of:infldoc,decl,exlang=qu
 comparative of:
-{{form of/infldoc|ofdesc=[[Appendix:Glossary#comparative|comparative]] degree of|addlintrotext=The template normally also categorizes the page into the proper language-specific subcategory of [[:Category:Comparative adjectives by language]] (e.g. [[:Category:English comparative adjectives]]). However, you can override the part of speech used in the category with the {{para|POS}} parameter; e.g. specifying {{para|POS|adverb}} for an English term will categorize the page into [[:Category:English comparative adverbs]].}}
+{{form of/infldoc|sgdesc=the [[Appendix:Glossary#comparative|comparative]] degree|addlintrotext=The template normally also categorizes the page into the proper language-specific subcategory of [[:Category:Comparative adjectives by language]] (e.g. [[:Category:English comparative adjectives]]). However, you can override the part of speech used in the category with the {{para|POS}} parameter; e.g. specifying {{para|POS|adverb}} for an English term will categorize the page into [[:Category:English comparative adverbs]].}}
 ===Examples===
-E.g. on the page "[[groter]]":
-:<code>===Adjective===</code>
-:<code><nowiki>{{head|nl|comparative adjectives}}</nowiki></code>
+On {{ncog|nl|groter}}:
+ <pre># {{comparative of|nl|groot}}</pre>gives
+# {{comparative of|nl|groot}}
 
-:<code># <nowiki>{{</nowiki>comparative of|nl|groot}}</code>
-
-:<h3>Adjective</h3>
-:{{head|nl|comparative adjectives}}
-
-:# {{comparative of|nl|groot}}
-
-E.g. on the page "[[vaker#Adverb]]":
-::<code><nowiki>{{comparative of|nl|vaak|POS=adverb}}</nowiki></code>
-::which places the article [[vaker]] in [[:Category:Dutch comparative adverbs]].
+On {{ncog|nl|vaker}}:
+ <pre># {{comparative of|nl|vaak}}</pre>gives
+# {{comparative of|nl|vaak}}
+and places the article [[vaker]] in [[:Category:Dutch comparative adverbs]].
 <includeonly>
 [[Category:Form-of templates]]
 [[Category:Grammar form-of templates]]
 </includeonly>
-comparative plural of:infldoc,decl
-comparative singular of:infldoc,decl
-dative dual of:infldoc,decl
-dative of:infldoc,decl
-dative plural definite of:infldoc,decl
-dative plural indefinite of:infldoc,decl
-dative plural of:infldoc,decl
-dative singular of:infldoc,decl
-definite of:infldoc,decl
-distributive plural of:infldoc,decl
-distributive singular of:infldoc,decl
-dual of:infldoc,decl
-e-form of:infldoc,ofdesc={{l|en|plural}} and {{l|en|definite}} {{l|en|si
-ngular}} {{l|en|attributive}} of,decl
+-------- end text --------
+comparative plural of:infldoc,decl,exlang=qu
+comparative singular of:infldoc,decl,exlang=qu
+dative dual of:infldoc,form=form,decl,exlang=dsb
+dative of:
+{{form of/infldoc|form=form|exlang=la|exlang2=grc|exlang3=ru|addlintrotext=This template should be used when there is no singular/plural distinction, or this distinction is irrelevant. For dative singular forms, use {{temp|dative singular of}}.}}
+<includeonly>
+[[Category:Form-of templates]]
+[[Category:Declension form-of templates]]
+</includeonly>
+-------- end text --------
+dative plural definite of:infldoc,form=form,decl,exlang=non
+dative plural indefinite of:infldoc,form=form,decl,exlang=non
+dative plural of:infldoc,decl,exlang=la;grc;ru
+dative singular of:infldoc,decl,exlang=la;grc;ru
+definite of:infldoc,sgdesc=the definite form,decl,form=form,exlang=nb
+distributive plural of:infldoc,decl,exlang=qu
+distributive singular of:infldoc,decl,exlang=qu
+dual of:infldoc,decl,form=form,exlang=acw;iu
+e-form of:infldoc,sgdesc=the {{l|en|plural}} and {{l|en|definite}} {{l|en|singular}} {{l|en|attributive}},decl,exlang=da
 early form of:fulldoc,exlang=la
 elative of:
-{{form of/infldoc|ofdesc=[[Appendix:Glossary#elative|elative]] degree of|exlang=ar|addl
-introtext=This template does not currently place the page into any category; that is done by the headword template, e.g. {{temp|ar-elative}}.}}
+{{form of/infldoc|sgdesc=the [[Appendix:Glossary#elative|elative]] degree|exlang=ar|addlintrotext=This template does not currently place the page into any category; that is done by the headword template, e.g. {{temp|ar-elative}}.}}
 
 ===Examples===
-E.g. for the ''Arabic'' word  {{m|ar|أَكْبَر}} (elative of the adjective {{m|ar|كَبِير}}):
-<pre>
-# {{elative of|ar|كَبِير}}</pre>gives
+On {{ncog|ar|أَكْبَر}} (elative of the adjective {{m|ar|كَبِير}}):
+ <pre>{{elative of|ar|كَبِير}}</pre>gives
 # {{elative of|ar|كَبِير}}
 <includeonly>
 [[Category:Form-of templates]]
@@ -258,15 +279,15 @@ ellipsis of:
 </includeonly>
 -------- end text --------
 equative of:
-{{form of/infldoc|ofdesc=[[equative]] form of|addlintrotext=The template normally also categorizes the page into the proper language-specific subcategory of [[:Category:Adjective equative forms by language]] (e.g. [[:Category:English adjective equative forms]]). However, you can override the part of speech used in the category with the {{para|POS}} parameter; e.g. specifying {{para|POS|adverb}} for an English term will categorize the page into [[:Category:English adverb equative forms]].}}
+{{form of/infldoc|sgdesc=the [[equative]] form|exlang=cy|addlintrotext=The template normally also categorizes the page into the proper language-specific subcategory of [[:Category:Adjective equative forms by language]] (e.g. [[:Category:English adjective equative forms]]). However, you can override the part of speech used in the category with the {{para|POS}} parameter; e.g. specifying {{para|POS|adverb}} for an English term will categorize the page into [[:Category:English adverb equative forms]].}}
 <includeonly>
 [[Category:Form-of templates]]
 [[Category:Grammar form-of templates]]
 </includeonly>
 -------- end text --------
-exclusive plural of:infldoc,decl
-exclusive singular of:infldoc,decl
-feminine noun of:infldoc,ofdesc=feminine equivalent of,grammar
+exclusive plural of:infldoc,decl,exlang=qu
+exclusive singular of:infldoc,decl,exlang=qu
+feminine noun of:infldoc,sgdesc=the feminine equivalent,grammar
 feminine of:
 {{form of/infldoc|form=form|addlintrotext=This template should be used when there is no singular/plural distinction, or this distinction is irrelevant. For feminine singular forms, use {{temp|feminine singular of}}.}}
 <includeonly>
@@ -275,20 +296,19 @@ feminine of:
 </includeonly>
 -------- end text --------
 feminine plural of:
-{{form of/infldoc}}
+{{form of/infldoc|exlang=es|exlang2=fr}}
 ===Examples===
-E.g., on Spanish "[[buenas]]":
-<pre>
-# {{feminine plural of|es|bueno}}</pre>gives
+On {{ncog|es|buenas}}:
+ <pre>{{feminine plural of|es|bueno}}</pre>gives
 # {{feminine plural of|es|bueno}}
 <includeonly>
 [[Category:Form-of templates]]
 [[Category:Declension form-of templates]]
 </includeonly>
 -------- end text --------
-feminine plural past participle of:infldoc,form=form,conj,cat=past participle forms
-feminine singular of:infldoc,decl
-feminine singular past participle of:infldoc,form=form,conj,cat=past participle forms
+feminine plural past participle of:infldoc,form=form,conj,cat=past participle forms,exlang=es;fr
+feminine singular of:infldoc,decl,exlang=es;fr
+feminine singular past participle of:infldoc,form=form,conj,cat=past participle forms,exlang=es;fr
 form of:
 {{documentation subpage}}
 This is the most general of the [[:Category:Form-of templates|form-of templates]], which use [[Module:form of/templates]]. It can be used to apply the correct styling of the definition line to any description as the first parameter.
@@ -298,16 +318,16 @@ Use this template for forms that don't fit the mold. For instance, the zeroeth-p
 ==Parameters==
 This template takes the same general parameters as {{temp|m}}, and it uses the same post-processing on the parameters. This includes script detection, removing diacritics, processing embedded links, and so on.
 
-; {{docparam|1|''required''}}
-: The [[Wiktionary:Languages|language code]] of the desired target link.
-; {{docparam|2|''required''}}
+; {{docparam|1|'''(required)'''}}
+: The [[WT:LANGCODE|language code]] of the term linked to (which this page is a form of). See [[Wiktionary:Languages]]. <small>The parameter {{para|lang}} is a deprecated synonym; please do not use. If this is used, all numbered parameters move down by one.</small>
+; {{docparam|2|'''(required)'''}}
 : The definition to display, without the "of" at the end.
-; {{docparam|3|''required''}}
+; {{docparam|3|'''(required)'''}}
 : The term to be linked to.
 ; {{docparam|4}}
 : Alternate text to display as the link title, if different from the term.
 ; {{docparam|t}} or {{docparam|5}}
-: A gloss or short translation of the word.
+: A gloss or short translation of the word. <small>The parameter {{para|gloss}} is a deprecated synonym; please do not use.</small>
 ; {{docparam|tr}}
 : Transliteration for non-Latin-script words, if different from the automatically-generated one.
 ; {{docparam|ts}}
@@ -318,7 +338,6 @@ This template takes the same general parameters as {{temp|m}}, and it uses the s
 : Script code to use, if script detection does not work.
 
 ==Examples==
-
 {{temp|form of|en|<var>alternative form</var>|<var>word</var>}}
 : {{form of|en|alternative form|word}}
 
@@ -330,35 +349,40 @@ This template takes the same general parameters as {{temp|m}}, and it uses the s
 </includeonly>
 -------- end text --------
 frequentative of:fulldoc,pldesc=frequentative variants,cat=frequentative verbs,grammar,exlang=hil
-future participle of:infldoc,conj
-genitive of:infldoc,decl
-genitive plural definite of:infldoc,decl
-genitive plural indefinite of:infldoc,decl
-genitive plural of:infldoc,decl
-genitive singular definite of:infldoc,decl
-genitive singular indefinite of:infldoc,decl
-genitive singular of:infldoc,decl
+future participle of:infldoc,conj,exlang=qu
+genitive of:
+{{form of/infldoc|form=form|exlang=la|exlang2=grc|exlang3=ru|addlintrotext=This template should be used when there is no singular/plural distinction, or this distinction is irrelevant. For genitive singular forms, use {{temp|genitive singular of}}.}}
+<includeonly>
+[[Category:Form-of templates]]
+[[Category:Declension form-of templates]]
+</includeonly>
+-------- end text --------
+genitive plural definite of:infldoc,form=form,decl,exlang=non
+genitive plural indefinite of:infldoc,form=form,decl,exlang=non
+genitive plural of:infldoc,decl,exlang=la;grc;ru
+genitive singular definite of:infldoc,form=form,decl,exlang=non
+genitive singular indefinite of:infldoc,form=form,decl,exlang=non
+genitive singular of:infldoc,decl,exlang=la;grc;ru
 gerund of:
-{{from of/infldoc|cat=gerunds|addlintrotext=This template should be used for entries that are gerunds but NOT present participles.}}
+{{from of/infldoc|cat=gerunds|addlintrotext=This template should be used for entries that are gerunds but NOT present participles.|exlang=it}}
 ===Examples===
-E.g. on Italian "[[accelerando]]":
-<pre>
-# {{gerund of|it|accelerare}}</pre>gives
+On {{ncog|it|accelerando}}:
+ <pre>{{gerund of|it|accelerare}}</pre>gives
 # {{gerund of|it|accelerare}}
 <includeonly>
 [[Category:Form-of templates]]
 [[Category:Conjugation form-of templates]]
 </includeonly>
 -------- end text --------
-harmonic variant of:fulldoc,exlang=mn
+harmonic variant of:fulldoc,exlang=mn,grammar
 honorific alternative case form of:
 {{form of/fulldoc|pldesc=honorific alternative [[letter case|letter-case]] forms|cat=honorific forms|addlintrotext=This template is intended to be specifically used when referring to [[God]] or sometimes another important figure who is understood from context.}}
 <includeonly>
 [[Category:Form-of templates]]
 </includeonly>
 -------- end text --------
-imperative of:infldoc,conj
-imperfective form of:fulldoc,deprec=1,cat=imperfective verbs,grammar
+imperative of:infldoc,form=form,conj,exlang=es
+imperfective form of:fulldoc,cat=imperfective verbs,grammar,exlang=cs;sh
 inflected form of:
 {{documentation subpage}}
 This template should not be used. Use {{temp|inflection of}} instead.
@@ -374,19 +398,19 @@ This template is used to create definition lines for inflected (non-lemma) forms
 This template takes the same general parameters as {{temp|l}} and {{temp|m}}, and it uses the same post-processing on the parameters. This includes script detection, removing diacritics, processing embedded links, and so on.
 
 ==Parameters==
-; {{docparam|1|''required''}}
-: The [[Wiktionary:Languages|language code]] of the term.
-; {{docparam|2|''required''}}
-: The lemma form of the term that this is a form of. This is used to create a link.
+; {{docparam|1|'''(required)'''}}
+: The [[WT:LANGCODE|language code]] of the lemma linked to (which this page is an inflection of). See [[Wiktionary:Languages]]. <small>The parameter {{para|lang}} is a deprecated synonym; please do not use. If this is used, all numbered parameters move down by one.</small>
+; {{docparam|2|'''(required)'''}}
+: The lemma form of the term that this is an inflection of. This is used to create a link.
 ; {{docparam|3}}
 : The alternative display form of the lemma. This works like the third parameter of {{temp|l}} and {{temp|m}}.
-; {{docparam|4|''required''}}, {{docparam|5}} ... etc.
+; {{docparam|4|'''(required)'''}}, {{docparam|5}} ... etc.
 : One or more grammar tags to show. These give the definition by describing the relevant grammatical properties of this inflected form. A grammar tag can be any text; the tags are shown separated by spaces.
 : Certain tags are recognised as shortcuts and are automatically expanded. For example, <code>1</code> is automatically expanded to "first-person", while <code>p</code> becomes "plural". For a full list of recognised shortcuts, see [[Module:form of/data]].
 ; <code>{{!}};</code>
 : Separing two inflections of the same word.
 ; {{docparam|t}}
-: A gloss or short translation of the word.
+: A gloss or short translation of the word. <small>The parameter {{para|gloss}} is a deprecated synonym; please do not use.</small>
 ; {{docparam|tr}}
 : Transliteration for non-Latin-script words, if different from the automatically-generated one.
 ; {{docparam|ts}}
@@ -641,14 +665,15 @@ Other items (such as "atelic") may be used as needed, but should be spelled out 
 | || {{l|vro|Islandi}} || {{temp|inflection of|vro|Island'||acc|s|;|gen|s}}
 |}
 <includeonly>
+[[Category:Form-of templates|*]]
 [[Category:Grammar form-of templates|*]]
 </includeonly>
 -------- end text --------
 iterative of:fulldoc,pldesc=iterative variants,cat=iterative verbs,grammar,exlang=ru
 late form of:fulldoc,exlang=la
-masculine animate plural past participle of:infldoc,form=form,conj,cat=past participle forms
-masculine inanimate plural past participle of:infldoc,form=form,conj,cat=past participle forms
-masculine noun of:infldoc,ofdesc=masculine equivalent of,grammar
+masculine animate plural past participle of:infldoc,form=form,conj,cat=past participle forms,exlang=cs
+masculine inanimate plural past participle of:infldoc,form=form,conj,cat=past participle forms,exlang=cs
+masculine noun of:infldoc,sgdesc=the masculine equivalent,grammar,exlang=ar
 masculine of:
 {{form of/infldoc|form=form|addlintrotext=This template should be used when there is no singular/plural distinction, or this distinction is irrelevant. For masculine singular forms, use {{temp|masculine singular of}}.}}
 <includeonly>
@@ -657,26 +682,25 @@ masculine of:
 </includeonly>
 -------- end text --------
 masculine plural of:
-{{form of/infldoc}}
+{{form of/infldoc|exlang=es|exlang2=fr}}
 ===Examples===
-E.g., on Spanish "[[buenos]]":
-<pre>
-# {{masculine plural of|es|bueno}}</pre>gives
+On {{ncog|es|buenos}}:
+ <pre>{{masculine plural of|es|bueno}}</pre>gives
 # {{masculine plural of|es|bueno}}
 <includeonly>
 [[Category:Form-of templates]]
 [[Category:Declension form-of templates]]
 </includeonly>
 -------- end text --------
-masculine plural past participle of:infldoc,form=form,conj,cat=past participle forms
-masculine singular past participle of:infldoc,form=form,conj,cat=past participle forms
-medieval spelling of:fulldoc,cat=medieval spellings
-men's speech form of:fulldoc,pldesc=[[Appendix:Glossary#men's speech|men's speech]] forms,cat=men's speech terms,exlang=kpj/documentation
+masculine plural past participle of:infldoc,form=form,conj,cat=past participle forms,exlang=es;fr
+masculine singular past participle of:infldoc,form=form,conj,cat=past participle forms,exlang=es;fr
+medieval spelling of:fulldoc,cat=medieval spellings,exlang=it;la
+men's speech form of:fulldoc,pldesc=[[Appendix:Glossary#men's speech|men's speech]] forms,cat=men's speech terms,exlang=kpj
 misconstruction of:
 {{form of/fulldoc|withcap=1|cat=misconstructions|pldesc={{l|en|misconstruction}}s (as in misspellings)}}
 ===Examples===
-E.g., on "[[copywritten]]":
-<pre># {{misconstruction of|en|copyrighted}}</pre>gives
+On {{m|en|copywritten}}:
+ <pre># {{misconstruction of|en|copyrighted}}</pre>gives
 # {{misconstruction of|en|copyrighted}}
 
 ==See also==
@@ -685,518 +709,178 @@ E.g., on "[[copywritten]]":
 [[Category:Form-of templates]]
 </includeonly>
 -------- end text --------
-monotonic form of:
-{{form of/fulldoc|
+el-monotonic form of:
+{{form of/fulldoc|withcap=1|lang=el|primaryentrytext=of [[Katharevousa]] terms}}
+===Examples===
+On {{ncog|el|αλώπηξ}}:
+ <pre># {{el-monotonic form of|ἀλώπηξ}}</pre>gives
+# {{el-monotonic form of|ἀλώπηξ}}
 
-For use with monotonic forms of Katharevousa terms (e.g. [[αλώπηξ]])
-* <code><nowiki>{{monotonic form of|ἀλώπηξ}}</nowiki></code> 
-*: &rarr; {{monotonic form of|ἀλώπηξ|lang=el}} 
-
-===See also===
-Also see {{temp|polytonic form of}} which subsumes lemma to [[:Category:Polytonic Greek]]<br>
-Related templates:
-* {{temp|poly}} helps writing {{poly}}
-* {{temp|monotonic}} helps writing {{monotonic}}
-* The {{temp|mono}} template is used for 'monospace' formatting.
+==See also==
+* {{temp|polytonic form of}}, which subsumes the lemma to [[:Category:Polytonic Greek]]
+* {{temp|poly}}, which helps writing {{poly}}
+* {{temp|monotonic}}, which helps writing {{monotonic}} ({{temp|mono}} is used for 'monospace' formatting)
 <includeonly>
 [[Category:Form-of templates]]
 [[Category:Greek templates]]
 </includeonly>
 -------- end text --------
-Page 84 Template:negative of/documentation: Processing
-Page 84 Template:negative of/documentation: Found match for regex: .
-Page 84 Template:negative of/documentation: -------- begin text ---------
-{{documentation subpage}}
-{{documentation needed}}<!-- Replace this with a short description of the purpose of the template, and how to use it. -->
-<includeonly>
-[[Category:Grammar form-of templates]]
-</includeonly>
--------- end text --------
-Page 85 Template:neuter plural of/documentation: Processing
-Page 85 Template:neuter plural of/documentation: Found match for regex: .
-Page 85 Template:neuter plural of/documentation: -------- begin text ---------
-{{documentation subpage}}
-{{documentation needed}}<!-- Replace this with a short description of the purpose of the template, and how to use it. -->
-<includeonly>
-[[Category:Declension form-of templates]]
-</includeonly>
--------- end text --------
-Page 86 Template:neuter plural past participle of/documentation: Processing
-Page 86 Template:neuter plural past participle of/documentation: Found match for regex: .
-Page 86 Template:neuter plural past participle of/documentation: -------- begin text ---------
-{{documentation subpage}}
-{{documentation needed}}<!-- Replace this with a short description of the purpose of the template, and how to use it. -->
-<includeonly>
-[[Category:Conjugation form-of templates]]
-</includeonly>
--------- end text --------
-Page 87 Template:neuter singular of/documentation: Processing
-Page 87 Template:neuter singular of/documentation: Found match for regex: .
-Page 87 Template:neuter singular of/documentation: -------- begin text ---------
-{{documentation subpage}}
-{{documentation needed}}<!-- Replace this with a short description of the purpose of the template, and how to use it. -->
-<includeonly>
-[[Category:Declension form-of templates]]
-</includeonly>
--------- end text --------
-Page 88 Template:neuter singular past participle of/documentation: Processing
-Page 88 Template:neuter singular past participle of/documentation: Found match for regex: .
-Page 88 Template:neuter singular past participle of/documentation: -------- begin text ---------
-{{documentation subpage}}
-{{documentation needed}}<!-- Replace this with a short description of the purpose of the template, and how to use it. -->
-<includeonly>
-[[Category:Conjugation form-of templates]]
-</includeonly>
--------- end text --------
-Page 89 Template:nominalization of/documentation: Processing
-Page 89 Template:nominalization of/documentation: Found match for regex: .
-Page 89 Template:nominalization of/documentation: -------- begin text ---------
-{{documentation subpage}}
-{{documentation needed}}<!-- Replace this with a short description of the purpose of the template, and how to use it. -->
-<includeonly>
-[[Category:Grammar form-of templates]]
-</includeonly>
--------- end text --------
-Page 90 Template:nominative plural of/documentation: Processing
-Page 90 Template:nominative plural of/documentation: Found match for regex: .
-Page 90 Template:nominative plural of/documentation: -------- begin text ---------
-{{documentation subpage}}
-{{documentation needed}}<!-- Replace this with a short description of the purpose of the template, and how to use it. -->
-<includeonly>
-[[Category:Declension form-of templates]]
-</includeonly>
--------- end text --------
-Page 91 Template:nominative singular of/documentation: Processing
-Page 91 Template:nominative singular of/documentation: Found match for regex: .
-Page 91 Template:nominative singular of/documentation: -------- begin text ---------
-{{documentation subpage}}
-{{documentation needed}}<!-- Replace this with a short description of the purpose of the template, and how to use it. -->
-<includeonly>
-[[Category:Declension form-of templates]]
--------- end text --------
-Page 92 Template:nuqtaless form of/documentation: Processing
-Page 93 Template:oblique plural of/documentation: Processing
-Page 93 Template:oblique plural of/documentation: Found match for regex: .
-Page 93 Template:oblique plural of/documentation: -------- begin text ---------
-{{documentation subpage}}
-{{documentation needed}}<!-- Replace this with a short description of the purpose of the template, and how to use it. -->
-<includeonly>
-[[Category:Declension form-of templates]]
-</includeonly>
--------- end text --------
-Page 94 Template:oblique singular of/documentation: Processing
-Page 94 Template:oblique singular of/documentation: Found match for regex: .
-Page 94 Template:oblique singular of/documentation: -------- begin text ---------
-{{documentation subpage}}
-{{documentation needed}}<!-- Replace this with a short description of the purpose of the template, and how to use it. -->
-<includeonly>
-[[Category:Declension form-of templates]]
-</includeonly>
--------- end text --------
-Page 95 Template:obsolete spelling of/documentation: Processing
-Page 95 Template:obsolete spelling of/documentation: Found match for regex: .
-Page 95 Template:obsolete spelling of/documentation: -------- begin text ---------
-{{documentation subpage}}
-{{documentation needed}}<!-- Replace this with a short description of the purpose of the template, and how to use it. -->
+negative of:infldoc,form=form,grammar,exlang=az;mn
+neuter plural of:infldoc,decl,exlang=nn
+neuter plural past participle of:infldoc,form=form,conj,cat=past participle forms,exlang=cs
+neuter singular of:infldoc,decl,exlang=nn
+neuter singular past participle of:infldoc,form=form,conj,cat=past participle forms,exlang=cs
+nominalization of:fulldoc,grammar,exlang=de
+nominative plural of:infldoc,decl,exlang=la;grc;ru
+nominative singular of:infldoc,decl,exlang=sa;ae
+nuqtaless form of:infldoc,grammar,exlang=hi
+oblique plural of:infldoc,decl,exlang=pa;non
+oblique singular of:infldoc,decl,exlang=pa;non
+obsolete spelling of:fulldoc,withcap,cat=obsolete forms
+obsolete typography of:fulldoc,cat=obsolete forms
+participle of:fulldoc,conj,cat=participles,exlang=sq
+passive of:infldoc,form=form,conj,cat=verb passive forms,exlang=ru
+passive participle of:
+{{form of/infldoc|lang=ar}}
+==See also===
+* {{temp|present passive participle of}}
+* {{temp|past active participle of}}
+* {{temp|past passive participle of}}
 <includeonly>
 [[Category:Form-of templates]]
+[[Category:Conjugation form-of templates]]
 </includeonly>
 -------- end text --------
-Page 96 Template:obsolete typography of/documentation: Processing
-Page 96 Template:obsolete typography of/documentation: Found match for regex: .
-Page 96 Template:obsolete typography of/documentation: -------- begin text ---------
-{{documentation subpage}}
-{{documentation needed}}<!-- Replace this with a short description of the purpose of the template, and how to use it. -->
+passive past tense of:infldoc,conj,exlang=da
+past active participle of:infldoc,conj,exlang=pl,cat=past active participles
+past participle of:
+{{form of/infldoc|cat=past participles|addlintrotext=&#32;
+
+'''Special note for English''': This template should only be used when the template {{temp|en-past of}} ("simple past tense and past participle of") cannot be used.}}
+===Examples===
+On {{m|en|woven}}:
+ <pre># {{past participle of|en|weave}}</pre>gives
+# {{past participle of|en|weave}}
 <includeonly>
 [[Category:Form-of templates]]
-</includeonly>
--------- end text --------
-Page 97 Template:participle of/documentation: Processing
-Page 97 Template:participle of/documentation: Found match for regex: .
-Page 97 Template:participle of/documentation: -------- begin text ---------
-{{documentation subpage}}
-{{documentation needed}}<!-- Replace this with a short description of the purpose of the template, and how to use it. -->
-<includeonly>
 [[Category:Conjugation form-of templates]]
 </includeonly>
 -------- end text --------
-Page 98 Template:passive of/documentation: Processing
-Page 98 Template:passive of/documentation: Found match for regex: .
-Page 98 Template:passive of/documentation: -------- begin text ---------
-{{documentation subpage}}
-{{documentation needed}}<!-- Replace this with a short description of the purpose of the template, and how to use it. -->
+past passive participle of:infldoc,conj,exlang=dsb,cat=past passive participles
+past tense of:
+{{form of/infldoc|exlang=da|exlang2=gd|addlintrotext=Please do not use this template for English; use {{temp|en-past of}} instead.}}
 <includeonly>
+[[Category:Form-of templates]]
 [[Category:Conjugation form-of templates]]
 </includeonly>
 -------- end text --------
-Page 99 Template:passive participle of/documentation: Processing
-Page 99 Template:passive participle of/documentation: Found match for regex: .
-Page 99 Template:passive participle of/documentation: -------- begin text ---------
-{{documentation subpage}}
-Use this template to show the simple definition for an entry that is the passive participle inflection of a primary entry. See also [[Template:present passive participle of]] and [[Template:past passive participle of]].
-
-==Usage==
-For most entries, use in the definition line:
- <nowiki># {{passive participle of|(term)|lang=xx}}</nowiki>
-
-==Parameters==
-
-; <code>1=</code>
-: The lemma to link to. For Arabic, this should include vowel diacritics.
-; <code>lang=</code>
-: The language code, see [[Wiktionary:Languages]]. Defaults to "en" for English (but encouraged even then).
-; <code>2=</code>
-: The anchor text to show. Normally unnecessary, and derived from the lemma.
-; <code>3=</code> or <code>gloss=</code>
-: Gloss (short definition).
-; <code>tr=</code>
-: Transliteration. Only for non-Latin text and even then often unnecessary, in the case of languages with auto-transliteration.
-<includeonly>
-[[Category:Conjugation form-of templates]]
-
-</includeonly>
--------- end text --------
-Page 100 Template:passive past tense of/documentation: Processing
-Page 101 Template:past active participle of/documentation: Processing
-Page 101 Template:past active participle of/documentation: Found match for regex: .
-Page 101 Template:past active participle of/documentation: -------- begin text ---------
-{{documentation subpage}}
-{{documentation needed}}<!-- Replace this with a short description of the purpose of the template, and how to use it. -->
-<includeonly>
-[[Category:Conjugation form-of templates]]
-</includeonly>
--------- end text --------
-Page 102 Template:past participle of/documentation: Processing
-Page 102 Template:past participle of/documentation: Found match for regex: .
-Page 102 Template:past participle of/documentation: -------- begin text ---------
-{{documentation subpage}}
-Use this template to show the simple definition for an entry that is the past participle of a primary entry.
-
-'''Special note for English''': This template should only be used when the template {{temp|en-past of}} ("simple past tense and past participle of") cannot be used.
-
-==Usage==
-It is used in the definition line:
- <nowiki># {{past participle of|(word)|lang=en}}</nowiki>
-E.g., on "[[woven]]":
-:<code>===Verb===</code>
-:<code># <nowiki>{{</nowiki>past participle of|weave|lang=en}}</code>
-:<h3>Verb</h3>
-:# {{past participle of|weave|lang=en}}
-
-Note that users can customize how the output of this template displays by modifying their monobook.css files. See [[:Category:Form-of templates|“Form of” templates]] for details.
-
-==Parameters==
-This template is not language specific, and can be used for all languages. The <code>lang=</code> parameter sets the language of the word in question, and applies the appropriate language and script codes. It also adds the entry to the categories of that language, and creates a link to that language's section on the target page.
-
-: <code>lang</code> = used to specify the language code (i.e. ''en'' for English).
-
-An example:
-
-For the ''English'' word  ''[[woven]]'' (past participle of ''[[weave]]''):
-
-:<code><nowiki>{{past participle of|weave|lang=en}}</nowiki></code>
-
-This would place the article ''[[woven]]'' in [[:Category:English past participles]]
-<includeonly>
-[[Category:Conjugation form-of templates]]
-</includeonly>
--------- end text --------
-Page 103 Template:past passive participle of/documentation: Processing
-Page 103 Template:past passive participle of/documentation: Found match for regex: .
-Page 103 Template:past passive participle of/documentation: -------- begin text ---------
-{{documentation subpage}}
-{{documentation needed}}<!-- Replace this with a short description of the purpose of the template, and how to use it. -->
-<includeonly>
-[[Category:Conjugation form-of templates]]
-</includeonly>
--------- end text --------
-Page 104 Template:past tense of/documentation: Processing
-Page 104 Template:past tense of/documentation: Found match for regex: .
-Page 104 Template:past tense of/documentation: -------- begin text ---------
-{{documentation subpage}}
-This template displays definitions for past tense forms. Please do not use this template for English, use [[Template:en-past of]] instead.
-<includeonly>
-[[Category:Conjugation form-of templates]]
-</includeonly>
--------- end text --------
-Page 105 Template:paucal of/documentation: Processing
-Page 106 Template:pejorative of/documentation: Processing
-Page 107 Template:perfect participle of/documentation: Processing
-Page 107 Template:perfect participle of/documentation: Found match for regex: .
-Page 107 Template:perfect participle of/documentation: -------- begin text ---------
-{{documentation subpage}}
-{{documentation needed}}<!-- Replace this with a short description of the purpose of the template, and how to use it. -->
-
-<includeonly>
-[[Category:Conjugation form-of templates]]
-</includeonly>
--------- end text --------
-Page 108 Template:perfective form of/documentation: Processing
-Page 108 Template:perfective form of/documentation: Found match for regex: .
-Page 108 Template:perfective form of/documentation: -------- begin text ---------
-{{documentation subpage}}
-{{documentation needed}}<!-- Replace this with a short description of the purpose of the template, and how to use it. -->
-<includeonly>
-[[Category:Grammar form-of templates]]
-</includeonly>
--------- end text --------
-Page 109 Template:plural definite of/documentation: Processing
-Page 109 Template:plural definite of/documentation: Found match for regex: .
-Page 109 Template:plural definite of/documentation: -------- begin text ---------
-{{documentation subpage}}
-{{documentation needed}}<!-- Replace this with a short description of the purpose of the template, and how to use it. -->
-<includeonly>
-[[Category:Declension form-of templates]]
-</includeonly>
--------- end text --------
-Page 110 Template:plural indefinite of/documentation: Processing
-Page 110 Template:plural indefinite of/documentation: Found match for regex: .
-Page 110 Template:plural indefinite of/documentation: -------- begin text ---------
-{{documentation subpage}}
-{{documentation needed}}<!-- Replace this with a short description of the purpose of the template, and how to use it. -->
-<includeonly>
-[[Category:Declension form-of templates]]
-</includeonly>
--------- end text --------
-Page 111 Template:plural of/documentation: Processing
-Page 111 Template:plural of/documentation: Found match for regex: .
-Page 111 Template:plural of/documentation: -------- begin text ---------
-{{documentation subpage}}
-Use this template to show the simple definition for an entry that is the plural inflection of a primary entry.
-
-==Usage==
-For most plural entries, use in the definition line. For example, on the page for the word '''cats''':
- <nowiki>
-==English==
-
-===Noun===
-{{head|en|noun plural form}}
-
+paucal of:infldoc,sgdesc=the paucal plural form,decl,exlang=ar
+pejorative of:fulldoc,form=form,withcap,cat=derogatory forms,exlang=ru
+perfect participle of:infldoc,cat=perfect participles,conj,exlang=la;hi
+perfective form of:infldoc,cat=perfective verbs,grammar,exlang=cs
+plural definite of:infldoc,form=form,decl,exlang=da
+plural indefinite of:infldoc,form=form,decl,exlang=da
+plural of:
+{{form of/infldoc|form=form}}
+===Examples===
+On {{m|en|cats}}:
+ <pre># {{plural of|en|cat}}</pre>gives
 # {{plural of|en|cat}}
-</nowiki>
-
-==Parameters==
-; <code>1=</code>
-: The language code, see [[Wiktionary:Languages]].
 <includeonly>
+[[Category:Form-of templates]]
 [[Category:Declension form-of templates]]
 
 [[af:Sjabloon:meervoud]]
 [[fa:الگو:جمع واژه]]
 </includeonly>
 -------- end text --------
-Page 112 Template:present active participle of/documentation: Processing
-Page 112 Template:present active participle of/documentation: Found match for regex: .
-Page 112 Template:present active participle of/documentation: -------- begin text ---------
-{{documentation subpage}}
-{{documentation needed}}<!-- Replace this with a short description of the purpose of the template, and how to use it. -->
+present active participle of:infldoc,conj,exlang=la;et,cat=present active participles
+present participle of:infldoc,conj,cat=present participles
+present tense of:infldoc,conj
+reflexive of:
+{{form of/infldoc|form=form|cat=reflexive verbs|exlang=es}}
+===Examples===
+On {{ncog|es|lavarse}}:
+ <pre># {{reflexive of|es|lavar}}</pre>gives
+# {{reflexive of|es|lavar}}
 <includeonly>
-[[Category:Conjugation form-of templates]]
--------- end text --------
-Page 113 Template:present participle of/documentation: Processing
-Page 113 Template:present participle of/documentation: Found match for regex: .
-Page 113 Template:present participle of/documentation: -------- begin text ---------
-{{documentation subpage}}
-{{documentation needed}}<!-- Replace this with a short description of the purpose of the template, and how to use it. -->
-<includeonly>
+[[Category:Form-of templates]]
 [[Category:Conjugation form-of templates]]
 </includeonly>
 -------- end text --------
-Page 114 Template:present tense of/documentation: Processing
-Page 114 Template:present tense of/documentation: Found match for regex: .
-Page 114 Template:present tense of/documentation: -------- begin text ---------
-{{documentation subpage}}
-{{documentation needed}}<!-- Replace this with a short description of the purpose of the template, and how to use it. -->
-<includeonly>
-[[Category:Conjugation form-of templates]]
-</includeonly>
--------- end text --------
-Page 115 Template:reflexive of/documentation: Processing
-Page 115 Template:reflexive of/documentation: Found match for regex: .
-Page 115 Template:reflexive of/documentation: -------- begin text ---------
-{{documentation subpage}}
-<!-- PLEASE ADD CATEGORIES AND INTERWIKIS AT THE BOTTOM OF THIS PAGE -->
-Use this template to show the simple definition for an entry that is the reflexive form of a primary entry.
-
-For most reflexive entries, use in the definition line:
- <nowiki># {{reflexive of|lemma}}
-# {{reflexive of|lemma|alternative display form|lang=language code}}</nowiki>
-
-==Parameters==
-The first parameter is required.  It is the lemma (usually the plain infinitive) to which to link.
-
-The second parameter is optional.  It is the alternate display form of the lemma, often used to link to a language-specific section of the target entry.  For example, on {{m|es|lavarse}}:
- <nowiki>===Verb===
-{{head|es|verb forms}}
-
-# {{reflexive of|lavar|lang=es}}</nowiki>
-:<big>'''Verb'''</big>
-:{{head|es|verb forms|head=lavarse}}
-:
-:# {{reflexive of|lavar|lang=es}}
-
-==Customization==
-Note that users can customize how the output of this template displays by modifying their monobook.css files. See [[:Category:Form-of templates|“Form of” templates]] for details.
-
-<includeonly>
-<!-- CATEGORIES AND INTERWIKIS HERE, THANKS -->
-[[Category:Conjugation form-of templates]]
-</includeonly>
--------- end text --------
-Page 116 Template:rfform/documentation: Processing
-Page 117 Template:second-person singular of/documentation: Processing
-Page 118 Template:second-person singular past of/documentation: Processing
-Page 118 Template:second-person singular past of/documentation: Found match for regex: .
-Page 118 Template:second-person singular past of/documentation: -------- begin text ---------
-{{documentation subpage}}
-{{documentation needed}}<!-- Replace this with a short description of the purpose of the template, and how to use it. -->
-<includeonly>
-[[Category:Conjugation form-of templates]]
-</includeonly>
--------- end text --------
-Page 119 Template:singular definite of/documentation: Processing
-Page 119 Template:singular definite of/documentation: Found match for regex: .
-Page 119 Template:singular definite of/documentation: -------- begin text ---------
-{{documentation subpage}}
-{{documentation needed}}<!-- Replace this with a short description of the purpose of the template, and how to use it. -->
-<includeonly>
-[[Category:Declension form-of templates]]
-</includeonly>
--------- end text --------
-Page 120 Template:singular of/documentation: Processing
-Page 120 Template:singular of/documentation: Found match for regex: .
-Page 120 Template:singular of/documentation: -------- begin text ---------
-{{documentation subpage}}
-{{documentation needed}}
-<includeonly>
-[[Category:Declension form-of templates]]
-</includeonly>
--------- end text --------
-Page 121 Template:singulative of/documentation: Processing
-Page 121 Template:singulative of/documentation: Found match for regex: .
-Page 121 Template:singulative of/documentation: -------- begin text ---------
-{{documentation subpage}}
-{{documentation needed}}
-<includeonly>
-[[Category:Declension form-of templates]]
-</includeonly>
--------- end text --------
-Page 122 Template:slender form of/documentation: Processing
-Page 123 Template:spelling of/documentation: Processing
-Page 123 Template:spelling of/documentation: Found match for regex: .
-Page 123 Template:spelling of/documentation: -------- begin text ---------
-{{documentation subpage}}
-{{documentation needed}}<!-- Replace this with a short description of the purpose of the template, and how to use it. -->
+rfform:
+{{form of/infldoc|sgdesc=an unspecified form|addlintrotext='''NOTE''': This should not normally be used. Instead, specify the particular form in question using {{temp|form of}} or one of the more specific templates listed in [[:Category:Form-of templates]].}}
 <includeonly>
 [[Category:Form-of templates]]
 </includeonly>
 -------- end text --------
-Page 124 Template:substantivisation of/documentation: Processing
-Page 124 Template:substantivisation of/documentation: Found match for regex: .
-Page 124 Template:substantivisation of/documentation: -------- begin text ---------
+second-person singular of:infldoc,form=form,conj
+second-person singular past of:infldoc,form=form,conj,cat=second-person singular past tense forms
+singular definite of:infldoc,form=form,decl,exlang=da
+singular of:infldoc,form=form,decl
+singulative of:infldoc,form=form,decl,exlang=ar
+slender form of:infldoc,withfrom,grammar,exlang=ga
+spelling of:
 {{documentation subpage}}
-{{documentation needed}}<!-- Replace this with a short description of the purpose of the template, and how to use it. -->
+{{form of/introdoc|pldesc=variant spellings of any sort}}
+
+==Parameters==
+This template takes the same general parameters as {{temp|m}}, and it uses the same post-processing on the parameters. This includes script detection, removing diacritics, processing embedded links, and so on.
+
+; {{docparam|1|'''(required)'''}}
+: The [[WT:LANGCODE|language code]] of the primary entry term linked to (which this page is a variant spelling of). See [[Wiktionary:Languages]]. <small>The parameter <code>|lang=</code> is a deprecated synonym; please do not use. If this is used, all numbered parameters move down by one.</small>
+; {{docparam|2|'''(required)'''}}
+: The type of spelling (e.g. "obsolete", "alternative", "British standard", etc.).
+; {{docparam|3|'''(required)'''}}
+: The term to be linked to.
+; {{docparam|t}}
+: A gloss or short translation of the word.
 <includeonly>
 [[Category:Form-of templates]]
 </includeonly>
 -------- end text --------
-Page 125 Template:superlative attributive of/documentation: Processing
-Page 126 Template:superlative of/documentation: Processing
-Page 126 Template:superlative of/documentation: Found match for regex: .
-Page 126 Template:superlative of/documentation: -------- begin text ---------
-{{documentation subpage}}
-Use this template to show the simple definition for an entry that is the superlative inflection of a primary entry.
+substantivisation of:fulldoc,pldesc=[[Appendix:Glossary#substantive|substantivisation]]s,cat=substantive forms,exlang=ru;de
+superlative attributive of:infldoc,sgdesc=the [[superlative]] [[attributive]] form,grammar,exlang=da
+superlative of:
+{{form of/infldoc|sgdesc=the [[Appendix:Glossary#superlative|superlative]] degree|addlintrotext=The template normally also categorizes the page into the proper language-specific subcategory of [[:Category:Superlative adjectives by language]] (e.g. [[:Category:English superlative adjectives]]). However, you can override the part of speech used in the category with the {{para|POS}} parameter; e.g. specifying {{para|POS|adverb}} for an English term will categorize the page into [[:Category:English superlative adverbs]].}}
+===Examples===
+On {{ncog|nl|grootst}}:
+ <pre># {{comparative of|nl|groot}}</pre>gives
+# {{comparative of|nl|groot}}
 
-Use in the definition line:
- <nowiki># {{superlative of|(language)|(word)}}</nowiki>
-E.g., on "[[grootst]]":
-:<code>===Adjective===</code>
-:<code>{{head|nl|superlative adjectives}}</code>
-
-:<code># <nowiki>{{</nowiki>superlative of|nl|groot}}</code>
-
-:<h3>Adjective</h3>
-:{{head|nl|superlative adjectives}}
-
-:# {{superlative of|nl|groot}}
-
-Note that users can customize how the output of this template displays by modifying their monobook.css files. See [[:Category:Form-of templates|“Form of” templates]] for details.
-
-==Parameters==
-If used with the ''POS'' parameter the relevant category can be changed.
-
-For the ''Dutch'' word  ''[[vaakst]]'' (superlative of the adverb ''[[vaak]]''):
-
-:<code><nowiki>{{superlative of|nl|vaak|POS=adverb}}</nowiki></code>
-
-Places the article dowiest in [[:Category:Dutch superlative adverbs]]
+On {{m|nl|vaakst}}:
+ <pre># {{comparative of|nl|vaak|POS=adverb}}</pre>gives
+# {{comparative of|nl|vaak|POS=adverb}}
+and places the article [[vaakst]] in [[:Category:Dutch superlative adverbs]].
 <includeonly>
+[[Category:Form-of templates]]
 [[Category:Grammar form-of templates]]
 </includeonly>
 -------- end text --------
-Page 127 Template:superlative predicative of/documentation: Processing
-Page 127 Template:superlative predicative of/documentation: Found match for regex: .
-Page 127 Template:superlative predicative of/documentation: -------- begin text ---------
-{{documentation subpage}}
-{{documentation needed}}<!-- Replace this with a short description of the purpose of the template, and how to use it. -->
+superlative predicative of:infldoc,sgdesc=the [[superlative]] [[predicative]] form,grammar
+supine of:infldoc,form=form,conj,exlang=fo;dsb
+syncopic form of:
+{{form of/fulldoc|withcap=1|pldesc=[[Appendix:Glossary#syncopic|syncopic]] forms|cat=syncopic forms|exlang=es|exlang2=it}}
 
+===Examples===
+On {{ncog|es|seor}}:
+ <pre># {syncopic form of|es|señor}}</pre>gives
+{syncopic form of|es|señor}}
+
+==See also==
+* {{temp|aphetic form of}}
+* {{temp|apocopic form of}}
 <includeonly>
-[[Category:Uncategorized templates]]<!-- replace this category with the category of your choice -->
-</includeonly>
--------- end text --------
-Page 128 Template:supine of/documentation: Processing
-Page 128 Template:supine of/documentation: Found match for regex: .
-Page 128 Template:supine of/documentation: -------- begin text ---------
-{{documentation subpage}}
-{{documentation needed}}<!-- Replace this with a short description of the purpose of the template, and how to use it. -->
-<includeonly>
-[[Category:Conjugation form-of templates]]
--------- end text --------
-Page 129 Template:syncopic form of/documentation: Processing
-Page 129 Template:syncopic form of/documentation: Found match for regex: .
-Page 129 Template:syncopic form of/documentation: -------- begin text ---------
-{{documentation subpage}}
-<!-- PLEASE ADD CATEGORIES AND INTERWIKIS AT THE BOTTOM OF THIS PAGE -->
-===Usage===
-Use this template to show the simple definition for an entry that is the [[syncopic]] form of a primary entry.
-
-Use this template in the definition line:
- <nowiki># {{syncopic form of| }}</nowiki>
-E.g., on "[[seor]]":
-:<code>===Noun===</code>
-:<code>{<nowiki/>{infl|es|syncopic form}}</code>
-:<code># {<nowiki/>{syncopic form of|es|señor}}</code>
-:'''seor'''
-:# {{syncopic form of|es|señor}}
-
-===Parameters===
-This template is not language specific, but, if used with the ''lang'' parameter the relevant category can be applied to the article in which the template is included.
-
-: <code>1</code> = used to specify the language code (i.e. ''en'' for English, ''it'' for Italian)
-
-===Customization===
-Readers can customize how the output of this template displays by using [[WT:PREFS]] or by modifying their style sheet as described in [[WT:CUSTOM#“Form of” definitions]].
-
-===See also===
-* [[:Category:Grammar form-of templates]]
-* [[Template:apocopic form of]]
-<includeonly>
+[[Category:Form-of templates]]
 [[Category:Grammar form-of templates]]
-
 </includeonly>
 -------- end text --------
-Page 130 Template:synonym of/documentation: Processing
-Page 130 Template:synonym of/documentation: Found match for regex: .
-Page 130 Template:synonym of/documentation: -------- begin text ---------
-{{documentation subpage}}
-==Usage==
-From [[job centre]]:
-
-:<nowiki># {{lb|business|UK|lang=en}} {{synonym of|job center|lang=en}}</nowiki>
-
-<br>'''generates:'''<br><br>
-
-# {{lb|en|business|UK}} {{synonym of|job center|lang=en}}
+synonym of:
+{{form of/fulldoc|withcap=1}}
+===Examples===
+On {{m|en|job centre}}:
+ <pre># {{lb|en|business|UK}} {{synonym of|en|job center}}</pre>gives
+# {{lb|en|business|UK}} {{synonym of|en|job center}}
 
 ==See also==
 * {{section link|Wiktionary:Semantic relations#Synonymy}}
@@ -1204,45 +888,8 @@ From [[job centre]]:
 [[Category:Form-of templates]]
 </includeonly>
 -------- end text --------
-Page 131 Template:terminative plural of/documentation: Processing
-Page 131 Template:terminative plural of/documentation: Found match for regex: .
-Page 131 Template:terminative plural of/documentation: -------- begin text ---------
-{{documentation subpage}}
-{{documentation needed}}<!-- Replace this with a short description of the purpose of the template, and how to use it. -->
-<includeonly>
-[[Category:Form-of templates]]
--------- end text --------
-Page 132 Template:terminative singular of/documentation: Processing
-Page 132 Template:terminative singular of/documentation: Found match for regex: .
-Page 132 Template:terminative singular of/documentation: -------- begin text ---------
-{{documentation subpage}}
-{{documentation needed}}<!-- Replace this with a short description of the purpose of the template, and how to use it. -->
-<includeonly>
-[[Category:Form-of templates]]
--------- end text --------
-Page 133 Template:verbal noun of/documentation: Processing
-Page 133 Template:verbal noun of/documentation: Found match for regex: .
-Page 133 Template:verbal noun of/documentation: -------- begin text ---------
-{{documentation subpage}}
-{{documentation needed}}<!-- Replace this with a short description of the purpose of the template, and how to use it. -->
-<includeonly>
-[[Category:Conjugation form-of templates]]
-</includeonly>
--------- end text --------
-Page 134 Template:vocative plural of/documentation: Processing
-Page 134 Template:vocative plural of/documentation: Found match for regex: .
-Page 134 Template:vocative plural of/documentation: -------- begin text ---------
-{{documentation subpage}}
-{{documentation needed}}<!-- Replace this with a short description of the purpose of the template, and how to use it. -->
-<includeonly>
-[[Category:Declension form-of templates]]
-</includeonly>
--------- end text --------
-Page 135 Template:vocative singular of/documentation: Processing
-Page 135 Template:vocative singular of/documentation: Found match for regex: .
-Page 135 Template:vocative singular of/documentation: -------- begin text ---------
-{{documentation subpage}}
-{{documentation needed}}<!-- Replace this with a short description of the purpose of the template, and how to use it. -->
-<includeonly>
-[[Category:Declension form-of templates]]
--------- end text --------
+terminative plural of:infldoc,decl,exlang=qu
+terminative singular of:infldoc,decl,exlang=qu
+verbal noun of:fulldoc,cat=verbal nouns,conj,exlang=ar
+vocative plural of:infldoc,decl,exlang=la;grc;ga
+vocative singular of:infldoc,decl,exlang=la;grc;bg
