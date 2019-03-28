@@ -111,14 +111,14 @@ def fetch_param_chain(t, first, pref, firstdefault=""):
     i += 1
   return ret
 
-def append_param_to_chain(t, val, firstparam, parampref):
+def append_param_to_chain(t, val, firstparam, parampref, before=None):
   paramno = 0
   while True:
     paramno += 1
     next_param = firstparam if paramno == 1 else "%s%s" % (
         parampref, paramno)
     if not getparam(t, next_param):
-      t.add(next_param, val)
+      t.add(next_param, val, before=before)
       return next_param
 
 def remove_param_chain(t, firstparam, parampref):
@@ -134,13 +134,13 @@ def remove_param_chain(t, firstparam, parampref):
     else:
       return changed
 
-def set_param_chain(t, values, firstparam, parampref):
+def set_param_chain(t, values, firstparam, parampref, before=None):
   paramno = 0
   for val in values:
     paramno += 1
     next_param = firstparam if paramno == 1 else "%s%s" % (
         parampref, paramno)
-    t.add(next_param, val)
+    t.add(next_param, val, before=before)
   while True:
     paramno += 1
     next_param = firstparam if paramno == 1 else "%s%s" % (
