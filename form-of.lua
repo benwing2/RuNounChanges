@@ -14,6 +14,17 @@ function export.format_t(text, terminfo)
 end
 
 
+
+function export.format_form_of(text, terminfo)
+	return
+		"<span class='form-of-definition use-with-mention'>" .. text .. (text == "" and "" or " ") ..
+		"<span class='form-of-definition-link mention'>" ..
+		m_links.full_link(terminfo, "term", false) ..
+		"</span>" ..
+		"</span>"
+end
+
+
 function export.form_of_t(frame)
 	local iparams = {
 		[1] = {required = true},
@@ -278,6 +289,11 @@ function export.tagged_inflections(tags, terminfo)
 		else
 			tag = m_data.shortcuts[tag] or tag
 			local data = m_data.tags[tag]
+	
+			-- If the tag has a special display form, use it
+			if data and data.display then
+				tag = data.display
+			end
 			
 			-- If there is a nonempty glossary index, then show a link to it
 			if data and data.glossary then
@@ -293,12 +309,12 @@ function export.tagged_inflections(tags, terminfo)
 	end
 	
 	if #inflections == 1 then
-		return export.format_t(inflections[1] .. " of", terminfo)
+		return export.format_form_of(inflections[1] .. " of", terminfo)
 	else
 		return
-			"<span class='form-of-definition'>inflection of " ..
-			"<span class='form-of-definition-link'>" .. m_links.full_link(terminfo, "term", false) .. "</span>" ..
-			":</span>\n## <span class='form-of-definition'>" .. table.concat(inflections, "</span>\n## <span class='form-of-definition'>") .. "</span>"
+			"<span class='form-of-definition use-with-mention'>inflection of " ..
+			"<span class='form-of-definition-link mention'>" .. m_links.full_link(terminfo, "term", false) .. "</span>" ..
+			":</span>\n## <span class='form-of-definition use-with-mention'>" .. table.concat(inflections, "</span>\n## <span class='form-of-definition use-with-mention'>") .. "</span>"
 	end
 end
 
