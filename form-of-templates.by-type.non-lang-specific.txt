@@ -1,0 +1,144 @@
+Template:abbreviation of,cap,dot,cat=abbreviations
+Template:abstract noun of,cap,from,cat=abstract nouns
+Template:accusative of
+Template:accusative plural of
+Template:accusative singular of
+Template:acronym of,cap,dot,cat=acronyms
+Template:active participle of
+Template:agent noun of,cat=agent nouns
+Template:alternative case form of,cap
+Template:alternative form of,cap,from
+Template:alternative plural of
+Template:alternative reconstruction of
+Template:alternative spelling of,cap,from
+Template:alternative typography of
+Template:aphetic form of,cap,cat=aphetic forms
+Template:apocopic form of,cat=apocopic forms
+Template:archaic form of,cap,dot,cat=archaic forms
+Template:archaic spelling of,cap,dot,cat=archaic forms
+Template:aspirate mutation of,cap,dot,cat=aspirate-mutation forms
+Template:attributive form of
+Template:augmentative of,cap,POS,cat=augmentative {{{POS|noun}}}s
+Template:broad form of,from
+Template:causative of,cat=causative verbs
+Template:clipping of,cap,dot,cat=clippings
+Template:combining form of,cat=combining forms
+Template:comparative of,POS,cat=comparative {{{POS|adjective}}}s
+Template:contraction of,cap,dot,cat=contractions
+Template:dated form of,cap,dot,cat=dated forms
+Template:dated spelling of,cap,dot,cat=dated forms
+Template:dative of
+Template:dative plural of
+Template:dative singular of
+Template:definite of
+Template:deliberate misspelling of,cap,dot,cat=misspellings
+Template:dual of
+Template:eclipsis of,cap,dot,cat=eclipsed forms
+Template:eggcorn of,cap,dot,cat=eggcorns
+Template:elative of
+Template:ellipsis of,cap,cat=ellipses
+Template:elongated form of,cap,dot,cat=elongated forms
+Template:equative of,POS,cat={{{POS|adjective}}} equative forms
+Template:euphemistic form of,cap,dot,cat=euphemisms
+Template:euphemistic spelling of,cap,dot,cat=euphemisms
+Template:feminine noun of
+Template:feminine of
+Template:feminine plural of
+Template:feminine plural past participle of,cat=past participle forms
+Template:feminine singular of
+Template:feminine singular past participle of,cat=past participle forms
+Template:form of
+Template:former name of,cap,dot
+Template:frequentative of,cat=frequentative verbs
+Template:future participle of
+Template:genitive of
+Template:genitive plural definite of
+Template:genitive plural indefinite of
+Template:genitive plural of
+Template:genitive singular definite of
+Template:genitive singular indefinite of
+Template:genitive singular of
+Template:gerund of,cat=gerunds
+Template:hard mutation of,cap,dot,cat=hard-mutation forms
+Template:harmonic variant of
+Template:honorific alternative case form of,cap
+Template:imperative of
+Template:imperfective form of,cat=imperfective verbs
+Template:inflected form of
+Template:inflection of
+Template:informal form of,cap,dot,cat=informal forms
+Template:informal spelling of,cap,dot,cat=informal forms
+Template:initialism of,cap,dot,cat=initialisms
+Template:iterative of,cat=iterative verbs
+Template:lenition of,cap,dot,cat=lenited forms
+Template:masculine noun of
+Template:masculine of
+Template:masculine plural of
+Template:masculine plural past participle of,cat=past participle forms
+Template:medieval spelling of,cat=medieval spellings
+Template:men's speech form of,cat=men's speech terms
+Template:misconstruction of,cap,cat=misconstructions
+Template:misromanization of,cap,dot,cat=misromanizations
+Template:misspelling of,cap,dot,cat=misspellings
+Template:mixed mutation of,cap,dot,cat=mixed-mutation forms
+Template:nasal mutation of,cap,dot,cat=nasal-mutation forms
+Template:negative of
+Template:neuter plural of
+Template:neuter singular of
+Template:neuter singular past participle of,cat=past participle forms
+Template:nomen sacrum form of,cap,dot,cat=nomina sacra
+Template:nominalization of,cat=nominalized adjectives
+Template:nominative plural of
+Template:nominative singular of
+Template:nonstandard form of,cap,dot,cat=nonstandard forms
+Template:nonstandard spelling of,cap,dot,cat=nonstandard forms
+Template:nuqtaless form of
+Template:obsolete form of,cap,dot,cat=obsolete forms
+Template:obsolete spelling of,cap,cat=obsolete forms
+Template:obsolete typography of,cat=obsolete forms
+Template:official form of,cap,dot,cat=official forms
+Template:participle of,cat=participles
+Template:passive of,cat=verb passive forms
+Template:passive participle of
+Template:passive past tense of
+Template:past active participle of,cat=past active participles
+Template:past participle form of,cat=past participle forms
+Template:past participle of,cat=past participles
+Template:past passive participle of,cat=past passive participles
+Template:past tense of
+Template:pejorative of,cap,cat=derogatory terms
+Template:perfect participle of,cat=perfect participles
+Template:perfective form of,cat=perfective verbs
+Template:plural definite of
+Template:plural indefinite of
+Template:plural of
+Template:present active participle of,cat=present active participles
+Template:present participle of,cat=present participles
+Template:present tense of
+Template:rare form of,cap,dot,cat=rare forms
+Template:rare spelling of,cap,dot,cat=rare forms
+Template:reflexive of,cat=reflexive verbs
+Template:rfform
+Template:second-person singular past of,cat=second-person singular past tense forms
+Template:short for,cap,dot,cat=short forms
+Template:singular definite of
+Template:singular of
+Template:singulative of
+Template:slender form of,from
+Template:soft mutation of,cap,dot,cat=soft-mutation forms
+Template:spelling of,cat={{#if:{{{lang|}}}|{{{1}}} forms|{{{2}}} forms}}
+Template:standard form of,cap,dot
+Template:standard spelling of,cap,dot
+Template:substantivisation of,cat=substantive forms
+Template:superlative attributive of
+Template:superlative of,POS,cat=superlative {{{POS|adjective}}}s
+Template:superlative predicative of
+Template:superseded spelling of,cap,dot,cat=superseded forms
+Template:supine of
+Template:syncopic form of,cat=syncopic forms
+Template:synonym of,cap
+Template:uncommon form of,cap,dot,cat=uncommon forms
+Template:uncommon spelling of,cap,dot,cat=uncommon forms
+Template:verbal noun of,cat=verbal nouns
+Template:vocative plural of
+Template:vocative singular of
