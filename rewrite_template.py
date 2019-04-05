@@ -20,7 +20,7 @@ import blib
 from blib import getparam, rmparam, msg, site, tname
 
 def rewrite_pages(template, new_name, params_to_remove, params_to_rename,
-    startFrom, upTo, save, verbose):
+    pages, filters, startFrom, upTo, save, verbose):
   def process_page(page, index, parsed):
     pagetitle = unicode(page.title())
     def pagemsg(txt):
@@ -33,6 +33,22 @@ def rewrite_pages(template, new_name, params_to_remove, params_to_rename,
       origt = unicode(t)
       tn = tname(t)
       if tn == template:
+        for filt in filters:
+          m = re.search("^(.*)=(.*)$", filt)
+          if m:
+            if getparam(t, m.group(1)) != m.group(2):
+              pagemsg("Skipping %s because filter %s doesn't match" %
+                origt, filt)
+            continue
+          else:
+            m = re.search("^(.*)~(.*)$", filt)
+            if m:
+              if not re.search(m.group(2), getparam(t, m.group(1))):
+                pagemsg("Skipping %s because filter %s doesn't match" %
+                  origt, filt)
+              continue
+            else:
+              raise ValueError("Unrecognized filter %s" % filt)
         for old_param, new_param in params_to_rename:
           if t.has(old_param):
             t.add(new_param, getparam(t, old_param), before=old_param)
@@ -51,8 +67,13 @@ def rewrite_pages(template, new_name, params_to_remove, params_to_rename,
 
     return unicode(parsed), notes
 
-  for index, page in blib.references("Template:%s" % template, startFrom, upTo):
-    blib.do_edit(page, index, process_page, save=args.save, verbose=args.verbose)
+  if pages:
+    for i, page in blib.iter_items(pages, startFrom, upTo):
+      blib.do_edit(pywikibot.Page(site, page), i, process_page, save=args.save,
+          verbose=args.verbose)
+  else:
+    for index, page in blib.references("Template:%s" % template, startFrom, upTo):
+      blib.do_edit(page, index, process_page, save=args.save, verbose=args.verbose)
 
 pa = blib.init_argparser("Rewrite templates, possibly renaming params or the template itself, or removing params")
 pa.add_argument("-t", "--template", help="Name of template", required=True)
@@ -63,6 +84,9 @@ pa.add_argument("--from", help="Old name of param, can be specified multiple tim
     metavar="FROM", dest="from_", action="append")
 pa.add_argument("--to", help="New name of param, can be specified multiple times",
     action="append")
+pa.add_argument("--filter", help="Only take action on templates matching the filter, which should be either PARAM=VALUE meaning the parameter must have the given value, or PARAM~REGEXP meaning the parameter must match the given regular expression (unanchored). Can be specified multiple times and all must match.",
+    action="append")
+pa.add_argument("--pagefile", help="List of pages to process.")
 args = pa.parse_args()
 startFrom, upTo = blib.parse_start_end(args.start, args.end)
 
@@ -71,11 +95,17 @@ new_name = args.new_name and args.new_name.decode("utf-8")
 from_ = [x.decode("utf-8") for x in args.from_] if args.from_ else []
 to = [x.decode("utf-8") for x in args.to] if args.to else []
 params_to_remove = [x.decode("utf-8") for x in args.remove] if args.remove else []
+filters = [x.decode("utf-8") for x in args.filter] if args.filter else []
 
 if len(from_) != len(to):
   raise ValueError("Same number of --from and --to arguments must be specified")
 
 params_to_rename = zip(from_, to)
 
-rewrite_pages(template, new_name, params_to_remove, params_to_rename, 
-    startFrom, upTo, args.save, args.verbose)
+if args.pagefile:
+  pages = [x.rstrip('\n') for x in codecs.open(args.pagefile, "r", "utf-8")]
+else:
+  pages = None
+
+rewrite_pages(template, new_name, params_to_remove, params_to_rename,
+    pages, filters, startFrom, upTo, args.save, args.verbose)
