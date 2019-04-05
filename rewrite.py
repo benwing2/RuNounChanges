@@ -39,7 +39,7 @@ def rewrite_pages(refrom, reto, refs, cat, pages, pagefile, pagetitle_sub,
     lines = [x.strip() for x in codecs.open(pagefile, "r", "utf-8")]
     pages = ((index, pywikibot.Page(blib.site, page)) for index, page in blib.iter_pages(lines, startFrom, upTo))
   elif refs:
-    pages = blib.references(refs, startFrom, upTo, includelinks=True)
+    pages = blib.references(refs, startFrom, upTo, only_template_inclusion=False)
   else:
     pages = blib.cat_articles(cat, startFrom, upTo)
   for index, page in pages:
