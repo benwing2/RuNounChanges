@@ -28,15 +28,19 @@ def process_page(page, index, parsed):
   for t in parsed.filter_templates():
     origt = unicode(t)
     tn = tname(t)
+    if tn == "#invoke:form of/templates" and getparam(t, "1") == "template_tags":
+      t.add("1", "tagged_form_of_t")
+      notes.append("Rewrite {{#invoke:form of/templates|template_tags}} with {{#invoke:form of/templates|tagged_form_of_t}}")
     if tn == "#invoke:form of" and getparam(t, "1") in ["form_of_t", "alt_form_of_t"]:
-      ignorelist = blib.fetch_param_chain(t, "ignorelist")
+      ignorelist = blib.fetch_param_chain(t, "ignorelist", "ignorelist")
       if ignorelist:
-        ignore = blib.fetch_param_chain(t, "ignore")
+        ignore = blib.fetch_param_chain(t, "ignore", "ignore")
         for il in ignorelist:
           ignore.append(il + ":list")
         blib.set_param_chain(t, ignore, "ignore", "ignore", before="ignorelist")
         blib.remove_param_chain(t, "ignorelist", "ignorelist")
       blib.set_template_name(t, "#invoke:form of/templates")
+      notes.append("Rewrite {{#invoke:form of|%s}} with {{#invoke:form of/templates|form_of_t}}"  % getparam(t, "1"))
     if tn == "#invoke:form of" and getparam(t, "1") == "alt_form_of_t":
       t.add("2", getparam(t, "text"), before="text")
       rmparam(t, "text")
@@ -59,6 +63,6 @@ parser = blib.create_argparser("Convert form_of_t and alt_form_of_t invocations 
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-for template in blib.iter_items(templates_to_process, start, end):
+for i, template in blib.iter_items(templates_to_process, start, end):
   page = pywikibot.Page(site, "Template:%s" % template)
   blib.do_edit(page, i, process_page, save=args.save, verbose=args.verbose)
