@@ -1465,10 +1465,13 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
               def check_fix_defn_params(t, infls):
                 # Following code mostly copied from fix_verb_form.py
                 origt = unicode(t)
-                # Fetch param 1 and param 2, and non-numbered params.
-                param1 = getparam(t, "1")
-                param2 = getparam(t, "2")
+                # Fetch lemma and alt params, and non-numbered params.
                 lang = getparam(t, "lang")
+                lang_in_1 = deftemp_needs_lang and not lang
+                if lang_in_1:
+                  lang = getparam(t, "1")
+                lemmaparam = getparam(t, "2" if lang_in_1 else "1")
+                altparam = getparam(t, "3" if lang_in_1 else "2")
                 tr = getparam(t, "tr")
                 non_numbered_params = []
                 for param in t.params:
@@ -1477,16 +1480,18 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                     non_numbered_params.append((pnam, param.value))
                 # Erase all params.
                 del t.params[:]
-                # Put back lang, param 1, param 2, tr, then the replacements
-                # for the higher numbered params, then the non-numbered params.
+                # Put back lang, lemma param, alt param, tr, then the
+                # replacements for the higher numbered params, then the
+                # non-numbered params. Use new-style params (lang in 1)
+                # even if params were old-style (lang in lang=).
                 if lang:
-                  t.add("lang", lang)
-                t.add("1", param1)
-                t.add("2", param2)
+                  t.add("1", lang)
+                t.add("2" if lang else "1", lemmaparam)
+                t.add("3" if lang else "2", altparam)
                 if tr:
                   t.add("tr", tr)
                 for paramno, param in enumerate(infls):
-                  t.add(str(paramno+3), param)
+                  t.add(str(paramno+(4 if lang else 3)), param)
                 for name, value in non_numbered_params:
                   t.add(name, value)
                 newt = unicode(t)
