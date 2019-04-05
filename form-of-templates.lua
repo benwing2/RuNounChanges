@@ -1,111 +1,104 @@
 local export = {}
 
+local m_form_of = require("Module:form of")
 local rfind = mw.ustring.find
 local rmatch = mw.ustring.match
 local rsplit = mw.text.split
 
---[=[
-Function that implements specific form-of tags that refer to a non-lemma inflection,
-such as {{genitive plural of}}.
-
-Invocation params:
-
-1=, 2=, ... (required):
-	One or more inflection tags describing the inflection in question.
-lang=:
-	Default language code for language-specific templates. If specified, the term
-	param moves down to 1= and no language code needs to be specified. (Currently
-	it can still be specified using template param lang=, and overrides the default
-	language code, but this may change.)
-sc=:
-	Default script code for language-specific templates. The script code can still be
-	overridden using template param sc=.
-cat=, cat2=, ...:
-	Categories to place the page into. The language name will automatically be prepended.
-	Note that there is also a template param cat= to specify categories at the template
-	level. use of nocat= disables categorization of categories specified using invocation
-	param cat=, but not using template param cat=.
-]=]--
-function export.template_tags(frame)
-	local iparams = {
-		[1] = {list = true, required = true},
-		["lang"] = {},
-		["sc"] = {},
-		["cat"] = {list = true},
-	}
-	
-	local iargs = require("Module:parameters").process(frame.args, iparams)
-
-	local compat = iargs["lang"] or frame:getParent().args["lang"]
-	local offset = compat and 0 or 1
-
-	local params = {
-		-- Numbered params
-		[compat and "lang" or 1] = {required = not iargs["lang"]},
-		[1 + offset] = {required = true},
-		[2 + offset] = {},
-		[3 + offset] = {alias_of = "t"},
-
-		-- Named params not controlling link display		
-		["nodot"] = {type = "boolean"},  -- does nothing right now, but used in existing entries
-		["cat"] = {list = true},
-		["sort"] = {},
-
-		-- Named params controlling link display
-		["t"] = {},
-		["gloss"] = {alias_of = "t"},
-		["sc"] = {},
-		["tr"] = {},
-		["ts"] = {},
-		["pos"] = {},
-		["g"] = {list = true},
-		["id"] = {},
-		["lit"] = {},
-	}
-	
-	if next(iargs["cat"]) then
-		params["nocat"] = {type = "boolean"}
-	end
-	
-	local args = require("Module:parameters").process(frame:getParent().args, params)
-	
-	local lang = iargs["lang"] or args[compat and "lang" or 1] or "und"
-	local sc = args["sc"] or iargs["sc"]
-	
-	lang = require("Module:languages").getByCode(lang) or require("Module:languages").err(lang, "lang")
-	sc = (sc and (require("Module:scripts").getByCode(sc) or error("The script code \"" .. sc .. "\" is not valid.")) or nil)
-
-	local categories = {}
-	
-	if #iargs[1] == 1 and iargs[1][1] == "f" then
-		require("Module:debug").track("feminine of/" .. lang:getCode())
-	end
-	
-	local ret = require("Module:form of").tagged_inflections(iargs[1],
-		{lang = lang, sc = sc, term = args[1 + offset] or "term", alt = args[2 + offset],
-		 id = args["id"], lit = args["lit"], gloss = args["t"], pos = args["pos"],
-		 genders = args["g"], tr = args["tr"], ts = args["ts"]})
-	
-	if not args["nocat"] then
-		for _, cat in ipairs(iargs["cat"]) do
-			table.insert(categories, lang:getCanonicalName() .. " " .. cat)
-		end
-	end
-	for _, cat in ipairs(args["cat"]) do
-		table.insert(categories, lang:getCanonicalName() .. " " .. cat)
-	end
-
-	-- some pre-existing tracking code we should probably delete
-	if next(iargs["cat"]) then
-		if args["nocat"] then
-			require("Module:debug").track("form of/" .. table.concat(iargs[1], "-") .. "/nocat")
-		else
-			require("Module:debug").track("form of/" .. table.concat(iargs[1], "-") .. "/cat")
-		end
-	end
-	
-	return ret .. require("Module:utilities").format_categories(categories, lang, args["sort"])
+local function track(template, page)
+	require("Module:debug").track("form-of/" .. template .. "/" .. page)
 end
+
+local function process_parent_args(template, parent_args, params, defaults, ignorespecs, ignored_params)
+	if #defaults > 0 or #ignorespecs > 0 then
+		local new_parent_args = {}
+		for _, default in ipairs(defaults) do
+			local defparam, defval = rmatch(default, "^(.-)=(.*)$")
+			if not defparam then
+				error("Bad default spec " .. default)
+			end
+			new_parent_args[defparam] = defval
+		end
+	
+		local params_to_ignore = {}
+		local numbered_list_params_to_ignore = {}
+		local named_list_params_to_ignore = {}
+
+		local 
+
+		for _, ignorespec in ipairs(ignorespecs) do
+			for _, ignore in rsplit(ignorespec, ",") do
+				param = rmatch(ignore, "^(.*):list$")
+				if param then
+					if rfind(param, "^[0-9]+$") then
+						table.insert(numbered_list_params_to_ignore, tonumber(param))
+					else
+						table.insert(named_list_params_to_ignore, "^" .. param .. "[0-9]*$")
+					end
+				else
+					if rfind(ignore, "^[0-9]+$") then
+						ignore = tonumber(ignore)
+					end
+					params_to_ignore[ignore] = true
+				end
+			end
+		end
+
+		for k, v in ipairs(parent_args) do
+			if params_to_ignore[k] then
+				continue
+			end
+			local ignore_me = false
+			if type(k) == "number" then
+				for _, lparam in ipairs(numbered_list_params_to_ignore) do
+					if k >= lparam then
+						ignore_me = true
+						break
+					end
+				end
+			else
+				local ignore_me = false
+				for _, lparam in ipairs(named_list_params_to_ignore) do
+					if rfind(k, lparam) then
+						ignore_me = true
+						break
+					end
+				end
+			end
+			if ignore_me then
+				continue
+			end
+			new_parent_args[k] = v
+		end
+
+	local args = require("Module:parameters").process(parent_args, params)
+
+	-- temporary tracking for valid but unused arguments not in ignore=
+	if ignored_params then
+		for unused_arg, _ in pairs(ignored_params) do
+			if parent_args[unused_arg] then
+				track(template, "unused")
+				track(template, "unused/" .. unused_arg)
+			end
+		end
+	end
+
+	return args
+end
+
+local function split_inflection_tags(tagspecs, split_regex)
+	if not split_regex then
+		return tagspecs
+	end
+	local inflection_tags = {}
+	for _, tagspec in ipairs(tagspecs) do
+		for _, tag in ipairs(rsplit(tagspec, split_regex)) do
+			table.insert(inflection_tags, tag)
+		end
+	end
+	return inflection_tags
+end
+
 
 --[=[
 Function that implements {{form of}} and the various more specific form-of templates.
@@ -116,9 +109,7 @@ Invocation params:
 	Text to display before the link.
 term_param=:
 	Numbered param holding the term linked to. Other numbered params come after.
-	Defaults to 2. Note that the language code is always in param 1=. This param
-	will automatically be adjusted down by one if lang= is used to encode the language 
-	code.
+	Defaults to 1 if invocation or template param lang= is present, otherwise 2.
 lang=:
 	Default language code for language-specific templates. If specified, the term
 	param moves down to 1= and no language code needs to be specified. (Currently
@@ -142,6 +133,10 @@ ignore=, ignore2=, ...:
 	(the param is a list parameter), ':required' (the param is required), and
 	':type=TYPE' (specify the type of the param, e.g. "boolean" or "number").
 	For example, to accept and ignore a from= list-type parameter, use '|ignore=from:list'.
+def=, def2=, ...:
+	One or more default values to supply for template args. For example, specifying
+	'|def=tr=-' causes the default for template param '|tr=' to be '-'. Actual template
+	params override these defaults.
 withcap=:
 	Capitalize the first character of the text preceding the link, unless template param
 	nocap= is given.
@@ -155,12 +150,13 @@ noprimaryentrycat=:
 function export.form_of_t(frame)
 	local iparams = {
 		[1] = {required = true},
-		["term_param"] = {type = "number", default = 2},
+		["term_param"] = {type = "number"},
 		["lang"] = {},
 		["sc"] = {},
 		["id"] = {},
 		["cat"] = {list = true},
 		["ignore"] = {list = true},
+		["def"] = {list = true},
 		["withcap"] = {type = "boolean"},
 		["withdot"] = {type = "boolean"},
 		["noprimaryentrycat"] = {},
@@ -174,18 +170,14 @@ function export.form_of_t(frame)
 	local categories = {}
 
 	local compat = iargs["lang"] or parent_args["lang"]
-	local offset = compat and -1 or 0
-
-	local function track(page)
-		require("Module:debug").track("form-of/form-of-t/" .. page)
-	end
+	term_param = term_param or compat and 1 or 2
 
 	local params = {
 		-- Numbered params
 		[compat and "lang" or 1] = {required = not iargs["lang"]},
-		[term_param + offset] = {},
-		[term_param + offset + 1] = {},
-		[term_param + offset + 2] = {alias_of = "t"},
+		[term_param] = {},
+		[term_param + 1] = {},
+		[term_param + 2] = {alias_of = "t"},
 		
 		-- Named params not controlling link display		
 		-- For now, we always allow this even when withcap=1 is not given
@@ -196,7 +188,6 @@ function export.form_of_t(frame)
 		-- invocation args. Before doing that, need to remove all uses of
 		-- nodot= in other circumstances.
 		["nodot"] = {type = "boolean"},
-		["notext"] = {type = "boolean"},
 		["sort"] = {},
 
 		-- Named params controlling link display
@@ -224,48 +215,16 @@ function export.form_of_t(frame)
 		ignored_params["nodot"] = true
 	end
 
-	for _, ignore in ipairs(iargs["ignore"]) do
-		local paramname = nil
-		for i, ignorespec in ipairs(rsplit(ignore, ":")) do
-			if i == 1 then
-				paramname = ignorespec
-				if rfind(paramname, "^[0-9]+$") then
-					paramname = tonumber(paramname)
-				end
-				params[paramname] = {}
-				ignored_params[paramname] = nil
-			elseif ignorespec == "required" then
-				params[paramname]["required"] = true
-			elseif ignorespec == "list" then
-				params[paramname]["list"] = true
-			else
-				local paramtype = rmatch(ignorespec, "^type=(.*)$")
-				if paramtype then
-					params[paramname]["type"] = paramtype
-				else
-					error("Unrecognized ignore spec: " .. ignorespec)
-				end
-			end
-		end
-	end
+	local args = process_parent_args("form-of-t", parent_args, params, iargs["def"],
+		iargs["ignore"], ignored_params)
 	
-	local args = require("Module:parameters").process(parent_args, params)
-
-	-- temporary tracking for valid but unused arguments not in ignore=
-	for unused_arg, _ in pairs(ignored_params) do
-		if parent_args[unused_arg] then
-			track("unused")
-			track("unused/" .. unused_arg)
-		end
-	end
-
-	local text = args["notext"] and "" or iargs[1]
+	local text = iargs[1]
 	if iargs["withcap"] and not args["nocap"] then
-		text = mw.ustring.upper(mw.ustring.sub(text, 1, 1)) .. mw.ustring.sub(text, 2)
+		text = m_form_of.ucfirst(text)
 	end
 
-	local term = args[term_param + offset]
-	local alt = args[term_param + offset + 1]
+	local term = args[term_param]
+	local alt = args[term_param + 1]
 
 	if not term and not alt and not args["tr"] and not args["ts"] then
 		if mw.title.getCurrentTitle().nsText == "Template" then
@@ -279,8 +238,10 @@ function export.form_of_t(frame)
 	local sc = args["sc"] or iargs["sc"]
 	local id = args["id"] or iargs["id"]
 	
-	lang = require("Module:languages").getByCode(lang) or require("Module:languages").err(lang, "lang")
-	sc = (sc and (require("Module:scripts").getByCode(sc) or error("The script code \"" .. sc .. "\" is not valid.")) or nil)
+	lang = require("Module:languages").getByCode(lang) or
+		require("Module:languages").err(lang, compat and "lang" or 1)
+	sc = (sc and (require("Module:scripts").getByCode(sc) or
+		error("The script code \"" .. sc .. "\" is not valid.")) or nil)
 
 	-- Determine categories for the page, including tracking categories
 
@@ -299,14 +260,13 @@ function export.form_of_t(frame)
 	-- maybe add tracking category if primary entry doesn't exist (this is an
 	-- expensive call so we don't do it by default)
 	if iargs["noprimaryentrycat"] and term and mw.title.getCurrentTitle().nsText == ""
-		-- FIXME, use the right call
-		and not mw.title.getCurrentTitle().exists then
+		and not mw.title.new(term).exists then
 		table.insert(categories, lang:getCanonicalName() .. " " .. iargs["noprimaryentrycat"])
 	end
 		
 	-- Format the link, preceding text and categories
 
-	return require("Module:form of").format_form_of(text,
+	return m_form_of.format_form_of(text,
 		{
 			lang = lang,
 			sc = sc,
@@ -320,16 +280,24 @@ function export.form_of_t(frame)
 			genders = args["g"],
 			lit = args["lit"],
 		}
-	) .. (args["nodot"] and "" or args["dot"] or iargs["withdot"] and "." or "") require("Module:utilities").format_categories(categories, lang, args["sort"])
+	) .. (args["nodot"] and "" or args["dot"] or iargs["withdot"] and "." or "")
+	.. require("Module:utilities").format_categories(categories, lang, args["sort"])
 end
 
 --[=[
-Function that implements {{inflection of}} and certain semi-specific variants, such as
-{{past participle form of}}.
+Function that implements form-of templates that are defined by specific tagged
+inflections (typically a template referring to a non-lemma inflection,
+such as {{genitive plural of}}). It is equivalent to {{inflection of}} with
+pre-specified inflection tags. See also inflection_of_t below, which is intended
+for templates with user-specified inflection tags.
 
 Invocation params:
 
-1=:
+1=, 2=, ... (required):
+	One or more inflection tags describing the inflection in question.
+term_param=:
+	Numbered param holding the term linked to. Other numbered params come after.
+	Defaults to 1 if invocation or template param lang= is present, otherwise 2.
 lang=:
 	Default language code for language-specific templates. If specified, the term
 	param moves down to 1= and no language code needs to be specified. (Currently
@@ -343,46 +311,64 @@ cat=, cat2=, ...:
 	Note that there is also a template param cat= to specify categories at the template
 	level. use of nocat= disables categorization of categories specified using invocation
 	param cat=, but not using template param cat=.
-preinfl=, preinfl2=, ...:
-	Extra inflection tags to automatically prepend to the tags specified by the template.
-postinfl=, postinfl2=, ...:
-	Extra inflection tags to automatically append to the tags specified by the template. Used for example by {{past participle form of}} to add the tags 'of the|past|p'
-	onto the template-specified tags, which indicate which past participle form the
-	page refers to.
+ignore=, ignore2=, ...:
+	One or more template params to silently accept and ignore. Useful e.g. when the
+	template takes additional parameters such as from= or POS=. The value is a parameter
+	name, optionally followed by one or more specs. Possible specs are ':list'
+	(the param is a list parameter), ':required' (the param is required), and
+	':type=TYPE' (specify the type of the param, e.g. "boolean" or "number").
+	For example, to accept and ignore a from= list-type parameter, use '|ignore=from:list'.
+def=, def2=, ...:
+	One or more default values to supply for template args. For example, specifying
+	'|def=tr=-' causes the default for template param '|tr=' to be '-'. Actual template
+	params override these defaults.
+withcap=:
+	Capitalize the first character of the text preceding the link, unless template param
+	nocap= is given.
+withdot=:
+	Add a final period after the link, unless template param nodot= is given to suppress
+	the period, or dot= is given to specify an alternative punctuation character.
+split_tags=:
+	If specified, character to split specified inflection tags on. This allows
+	multiple tags to be included in a single argument, simplifying template code.
 ]=]--
-function export.inflection_of_t(frame)
+function export.tagged_form_of_t(frame)
 	local iparams = {
+		[1] = {list = true, required = true},
+		["term_param"] = {type = "number"},
 		["lang"] = {},
 		["sc"] = {},
 		["cat"] = {list = true},
-		["preinfl"] = {list = true},
-		["postinfl"] = {list = true},
+		["ignore"] = {list = true},
+		["def"] = {list = true},
+		["split_tags"] = {},
 	}
-
+	
 	local iargs = require("Module:parameters").process(frame.args, iparams)
 	local parent_args = frame:getParent().args
 
+	local term_param = iargs["term_param"]
+
+	local categories = {}
+	
 	local compat = iargs["lang"] or parent_args["lang"]
-	local offset = compat and 0 or 1
+	term_param = term_param or compat and 1 or 2
 
 	local params = {
 		-- Numbered params
 		[compat and "lang" or 1] = {required = not iargs["lang"]},
-		[1 + offset] = {required = true},
-		[2 + offset] = {},
-		[3 + offset] = {list = true, required = true},
-		
+		[term_param] = {},
+		[term_param + 1] = {},
+		[term_param + 2] = {alias_of = "t"},
+
 		-- Named params not controlling link display		
-		-- FIXME! The following should not be allowed. Before doing that, need to
-		remove all uses of nocap=.
+		-- For now, we always allow this even when withcap=1 is not given
+		-- because many templates process nocap= manually.
 		["nocap"] = {type = "boolean"},
-		-- FIXME! The following should only be available when cat= is specified
-		-- in the invocation args. Before doing that, need to remove all uses of
-		-- nocat= in other circumstances.
-		["nocat"] = {type = "boolean"},
 		["cat"] = {list = true},
-		-- FIXME! The following should not be allowed. Before doing that, need to
-		remove all uses of nodot=.
+		-- FIXME! The following should only be available when withdot=1 in
+		-- invocation args. Before doing that, need to remove all uses of
+		-- nodot= in other circumstances.
 		["nodot"] = {type = "boolean"},
 		["sort"] = {},
 
@@ -398,17 +384,212 @@ function export.inflection_of_t(frame)
 		["lit"] = {},
 	}
 	
-	local args = require("Module:parameters").process(frame:getParent().args, params)
+	if next(iargs["cat"]) then
+		params["nocat"] = {type = "boolean"}
+	end
+	
+	if iargs["withdot"] then
+		params["dot"] = {}
+	end
+
+	local ignored_params = {}
+	if not iargs["withdot"] then
+		ignored_params["nodot"] = true
+	end
+
+	local args = process_parent_args("tagged-form-of-t", parent_args,
+		params, iargs["def"], iargs["ignore"], ignored_params)
+	
+	local term = args[term_param]
+	local alt = args[term_param + 1]
+
+	if not term and not alt and not args["tr"] and not args["ts"] then
+		if mw.title.getCurrentTitle().nsText == "Template" then
+			term = "term"
+		else
+			error("No linked-to term specified; either specify term, alt, translit or transcription")
+		end
+	end
+	
+	local lang = iargs["lang"] or args[compat and "lang" or 1] or "und"
+	local sc = args["sc"] or iargs["sc"]
+	
+	lang = require("Module:languages").getByCode(lang) or
+		require("Module:languages").err(lang, compat and "lang" or 1)
+	sc = (sc and (require("Module:scripts").getByCode(sc) or
+		error("The script code \"" .. sc .. "\" is not valid.")) or nil)
+
+	-- FIXME! Remove this tracking code. Not clear what it's doing here.
+	if #iargs[1] == 1 and iargs[1][1] == "f" then
+		require("Module:debug").track("feminine of/" .. lang:getCode())
+	end
+	
+	if not args["nocat"] then
+		for _, cat in ipairs(iargs["cat"]) do
+			table.insert(categories, lang:getCanonicalName() .. " " .. cat)
+		end
+	end
+	for _, cat in ipairs(args["cat"]) do
+		table.insert(categories, lang:getCanonicalName() .. " " .. cat)
+	end
+
+	-- some pre-existing tracking code we should probably delete
+	if next(iargs["cat"]) then
+		if args["nocat"] then
+			require("Module:debug").track("form of/" .. table.concat(iargs[1], "-") .. "/nocat")
+		else
+			require("Module:debug").track("form of/" .. table.concat(iargs[1], "-") .. "/cat")
+		end
+	end
+
+	return m_form_of.tagged_inflections(
+		split_inflection_tags(iargs[1], iargs["split_tags"]),
+		{
+			lang = lang,
+			sc = sc,
+			term = term,
+			alt = alt,
+			id = args["id"],
+			lit = args["lit"],
+			gloss = args["t"],
+			pos = args["pos"],
+			genders = args["g"],
+			tr = args["tr"],
+			ts = args["ts"],
+		}, iargs["withcap"] and not args["nocap"]
+	) .. (args["nodot"] and "" or args["dot"] or iargs["withdot"] and "." or "")
+	.. require("Module:utilities").format_categories(categories, lang, args["sort"])
+end
+
+--[=[
+Function that implements {{inflection of}} and certain semi-specific variants, such as
+{{past participle form of}}.
+
+Invocation params:
+
+term_param=:
+	Numbered param holding the term linked to. Other numbered params come after.
+	Defaults to 1 if invocation or template param lang= is present, otherwise 2.
+lang=:
+	Default language code for language-specific templates. If specified, the term
+	param moves down to 1= and no language code needs to be specified. (Currently
+	it can still be specified using template param lang=, and overrides the default
+	language code, but this may change.)
+sc=:
+	Default script code for language-specific templates. The script code can still be
+	overridden using template param sc=.
+cat=, cat2=, ...:
+	Categories to place the page into. The language name will automatically be prepended.
+	Note that there is also a template param cat= to specify categories at the template
+	level. use of nocat= disables categorization of categories specified using invocation
+	param cat=, but not using template param cat=.
+ignore=, ignore2=, ...:
+	One or more template params to silently accept and ignore. Useful e.g. when the
+	template takes additional parameters such as from= or POS=. The value is a parameter
+	name, optionally followed by one or more specs. Possible specs are ':list'
+	(the param is a list parameter), ':required' (the param is required), and
+	':type=TYPE' (specify the type of the param, e.g. "boolean" or "number").
+	For example, to accept and ignore a from= list-type parameter, use '|ignore=from:list'.
+def=, def2=, ...:
+	One or more default values to supply for template args. For example, specifying
+	'|def=tr=-' causes the default for template param '|tr=' to be '-'. Actual template
+	params override these defaults.
+preinfl=, preinfl2=, ...:
+	Extra inflection tags to automatically prepend to the tags specified by the template.
+postinfl=, postinfl2=, ...:
+	Extra inflection tags to automatically append to the tags specified by the template. Used for example by {{past participle form of}} to add the tags 'of the|past|p'
+	onto the template-specified tags, which indicate which past participle form the
+	page refers to.
+split_tags=:
+	If specified, character on which to split inflection tags specified by
+	prefinfl= and postinfl=. This allows ultiple tags to be included in a single
+	argument, simplifying template code.
+]=]--
+function export.inflection_of_t(frame)
+	local iparams = {
+		["term_param"] = {type = "number"},
+		["lang"] = {},
+		["sc"] = {},
+		["cat"] = {list = true},
+		["ignore"] = {list = true},
+		["def"] = {list = true},
+		["preinfl"] = {list = true},
+		["postinfl"] = {list = true},
+		["split_tags"] = {},
+	}
+
+	local iargs = require("Module:parameters").process(frame.args, iparams)
+	local parent_args = frame:getParent().args
+
+	local term_param = iargs["term_param"]
+	
+	local categories = {}
+
+	local compat = iargs["lang"] or parent_args["lang"]
+	term_param = term_param or compat and 1 or 2
+
+	local params = {
+		-- Numbered params
+		[compat and "lang" or 1] = {required = not iargs["lang"]},
+		[term_param] = {},
+		[term_param + 1] = {},
+		[term_param + 2] = {list = true, required = true},
+		
+		-- Named params not controlling link display		
+		-- FIXME! The following should not be allowed. Before doing that, need to
+		-- remove all uses of nocap=.
+		["nocap"] = {type = "boolean"},
+		-- FIXME! The following should only be available when cat= is specified
+		-- in the invocation args. Before doing that, need to remove all uses of
+		-- nocat= in other circumstances.
+		["nocat"] = {type = "boolean"},
+		["cat"] = {list = true},
+		-- FIXME! The following should not be allowed. Before doing that, need to
+		-- remove all uses of nodot=.
+		["nodot"] = {type = "boolean"},
+		["sort"] = {},
+
+		-- Named params controlling link display
+		["t"] = {},
+		["gloss"] = {alias_of = "t"},
+		["sc"] = {},
+		["tr"] = {},
+		["ts"] = {},
+		["pos"] = {},
+		["g"] = {list = true},
+		["id"] = {},
+		["lit"] = {},
+	}
+	
+	local ignored_params = {
+		["nocap"] = true,
+		["nodot"] = true,
+	}
+	if not next(iargs["cat"]) then
+		ignored_params["nocat"] = true
+	end
+
+	local args = process_parent_args("inflection-of-t", parent_args,
+		params, iargs["def"], iargs["ignore"], ignored_params)
+	
+	local term = args[term_param]
+	local alt = args[term_param + 1]
+
+	if not term and not alt and not args["tr"] and not args["ts"] then
+		if mw.title.getCurrentTitle().nsText == "Template" then
+			term = "term"
+		else
+			error("No linked-to term specified; either specify term, alt, translit or transcription")
+		end
+	end
 	
 	local lang = args[compat and "lang" or 1] or iargs["lang"] or "und"
 	local sc = args["sc"] or iargs["sc"]
 	
 	lang = require("Module:languages").getByCode(lang) or
-		require("Module:languages").err(lang, "lang")
+		require("Module:languages").err(lang, compat and "lang" or 1)
 	sc = (sc and (require("Module:scripts").getByCode(sc) or
 		error("The script code \"" .. sc .. "\" is not valid.")) or nil)
-
-	local categories = {}
 
 	if not args["nocat"] then
 		for _, cat in ipairs(iargs["cat"]) do
@@ -421,27 +602,27 @@ function export.inflection_of_t(frame)
 
 	local infls
 	if not next(iargs["preinfl"]) and not next(iargs["postinfl"]) then
-		infls = args[3 + offset]
+		infls = args[term_param + 2]
 	else
 		infls = {}
-		for _, infl in ipairs(iargs["preinfl"]) do
+		for _, infl in ipairs(split_inflection_tags(iargs["preinfl"], iargs["split_tags"])) do
 			table.insert(infls, infl)
 		end
-		for _, infl in ipairs(args[3 + offset]) do
+		for _, infl in ipairs(args[term_param + 2]) do
 			table.insert(infls, infl)
 		end
-		for _, infl in ipairs(iargs["postinfl"]) do
+		for _, infl in ipairs(split_inflection_tags(iargs["postinfl"], iargs["split_tags"])) do
 			table.insert(infls, infl)
 		end
 	end
 	
-	return require("Module:form of").tagged_inflections(
+	return m_form_of.tagged_inflections(
 		infls,
 		{
 			lang = lang,
 			sc = sc,
-			term = args[1 + offset] or "term",
-			alt = args[2 + offset],
+			term = term,
+			alt = alt,
 			id = args["id"],
 			lit = args["lit"],
 			gloss = args["t"],
@@ -454,3 +635,6 @@ function export.inflection_of_t(frame)
 end
 
 return export
+
+-- For Vim, so we get 4-space tabs
+-- vim: set ts=4 sw=4 noet:

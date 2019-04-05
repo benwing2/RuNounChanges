@@ -1,9 +1,32 @@
 local m_links = require("Module:links")
+local m_table = require("Module:table")
 local m_data = mw.loadData("Module:form of/data")
+local rsplit = mw.text.split
 
 local export = {}
 
+-- FIXME! Move to a utility module.
 
+function export.ucfirst(text)
+	local function doucfirst(text)
+		-- Actual function to uppercase first letter.
+		return mw.ustring.upper(mw.ustring.sub(text, 1, 1)) .. mw.ustring.sub(text, 2)
+	end
+	-- If there's a link at the beginning, uppercase the first letter of the
+	-- link text. First handle two-part link, then one-part link.
+	local link, linktext, remainder = rmatch(text, "^%[%[(.-)|(.-)%]%](.*)$")
+	if link then
+		return "[[" .. link .. "|" .. doucfirst(linktext) .. "]]" .. remainder
+	end
+	local linktext, remainder = rmatch(text, "^%[%[(.-)%]%](.*)$")
+	if linktext then
+		return "[[" .. linktext .. "|" .. doucfirst(linktext) .. "]]" .. remainder
+	end
+	return doucfirst(text)
+end
+
+
+-- Older version of format_form_of. DELETE ME.
 function export.format_t(text, terminfo)
 	return
 		"<span class='form-of-definition'>" .. text .. " " ..
@@ -18,13 +41,14 @@ end
 function export.format_form_of(text, terminfo)
 	return
 		"<span class='form-of-definition use-with-mention'>" .. text .. (text == "" and "" or " ") ..
-		"<span class='form-of-definition-link mention'>" ..
+		"<span class='form-of-definition-link'>" ..
 		m_links.full_link(terminfo, "term", false) ..
 		"</span>" ..
 		"</span>"
 end
 
 
+-- Better version ported to [[Module:form of/templates]]. DELETE ME.
 function export.form_of_t(frame)
 	local iparams = {
 		[1] = {required = true},
@@ -125,7 +149,7 @@ function export.form_of_t(frame)
 		table.insert(categories, "Forms linking to themselves")
 	end
 
-	return export.format_t(text,
+	return export.format_form_of(text,
 		{
 			lang = lang,
 			sc = sc,
@@ -142,6 +166,7 @@ function export.form_of_t(frame)
 end
 
 
+-- Will be subsumed by format_form_of. DELETE ME.
 function export.alt_format_t(lang, text, terminfo, dot, categories, sort_key)
 	return
 		"<span class='use-with-mention'>" .. text .. " " ..
@@ -152,7 +177,9 @@ function export.alt_format_t(lang, text, terminfo, dot, categories, sort_key)
 end
 
 
--- This replaces {{deftempboiler}}. Some templates use form_of_t in
+-- Will be subsumed by form_of_t in [[Module:form of/templates]]. DELETE ME.
+--
+-- (This replaces {{deftempboiler}}. Some templates use form_of_t in
 -- [[Module:form of]], while others used to use {{deftempboiler}}, with no
 -- obvious pattern. Yet a few others were manually implemented in template
 -- code. Note that form_of_t exists in both [[Module:form of]] and
@@ -160,7 +187,7 @@ end
 -- used by {{form of}} and the former by more specific templates, e.g.
 -- {{obsolete spelling of}}. Note also that {{deftempboiler}} and form_of_t in
 -- [[Module:form of]] differed signicantly in that e.g. the former by default
--- added a final period (replicated here), which the latter doesn't do.
+-- added a final period (replicated here), which the latter doesn't do.)
 function export.alt_form_of_t(frame)
 	local iparams = {
 		["lang"] = {},
@@ -265,42 +292,53 @@ function export.alt_form_of_t(frame)
 	)
 end
 
+local function normalize_tag(tag)
+	if m_data.shortcuts[tag] then
+	elseif m_data.tags[tag] then
+	else
+		require("Module:debug").track{
+			"inflection of/unknown",
+			"inflection of/unknown/" .. tag:gsub("%[", "("):gsub("%]", ")"):gsub("|", "!")
+		}
+	end
 
-function export.tagged_inflections(tags, terminfo)
+	tag = m_data.shortcuts[tag] or tag
+	local data = m_data.tags[tag]
+
+	-- If the tag has a special display form, use it
+	if data and data.display then
+		tag = data.display
+	end
+
+	-- If there is a nonempty glossary index, then show a link to it
+	if data and data.glossary then
+		tag = "[[Appendix:Glossary#" .. mw.uri.anchorEncode(data.glossary) .. "|" .. tag .. "]]"
+	end
+	return tag
+end
+
+function export.tagged_inflections(tags, terminfo, capfirst)
 	local cur_infl = {}
 	local inflections = {}
 	
-	for i, tag in ipairs(tags) do
-		if m_data.shortcuts[tag] then
-		elseif m_data.tags[tag] then
-		else
-			require("Module:debug").track{
-				"inflection of/unknown",
-				"inflection of/unknown/" .. tag:gsub("%[", "("):gsub("%]", ")"):gsub("|", "!")
-			}
-		end
-		
-		if tag == ";" then
+	for i, tagspec in ipairs(tags) do
+		if tagspec == ";" then
 			if #cur_infl > 0 then
 				table.insert(inflections, table.concat(cur_infl, " "))
 			end
 			
 			cur_infl = {}
 		else
-			tag = m_data.shortcuts[tag] or tag
-			local data = m_data.tags[tag]
-	
-			-- If the tag has a special display form, use it
-			if data and data.display then
-				tag = data.display
+			local split_tags = rsplit(tagspec, "/", true)
+			if #split_tags == 1 then
+				table.insert(cur_infl, normalize_tag(split_tags))
+			else
+				local normalized_tags = {}
+				for _, tag in ipairs(split_tags) do
+					table.insert(normalized_tags, normalize_tag(tag))
+				end
+				table.insert(cur_infl, m_table.serialCommaJoin(normalized_tags))
 			end
-			
-			-- If there is a nonempty glossary index, then show a link to it
-			if data and data.glossary then
-				tag = "[[Appendix:Glossary#" .. mw.uri.anchorEncode(data.glossary) .. "|" .. tag .. "]]"
-			end
-			
-			table.insert(cur_infl, tag)
 		end
 	end
 	
@@ -309,10 +347,13 @@ function export.tagged_inflections(tags, terminfo)
 	end
 	
 	if #inflections == 1 then
-		return export.format_form_of(inflections[1] .. " of", terminfo)
+		return export.format_form_of(
+			(capfirst and ucfirst(inflections[1]) or inflections[1]) .. " of", terminfo
+		)
 	else
+		local inflection_of = capfirst and "Inflection of" or "inflection of"
 		return
-			"<span class='form-of-definition use-with-mention'>inflection of " ..
+			"<span class='form-of-definition use-with-mention'>" .. inflection_of .. " " ..
 			"<span class='form-of-definition-link mention'>" .. m_links.full_link(terminfo, "term", false) .. "</span>" ..
 			":</span>\n## <span class='form-of-definition use-with-mention'>" .. table.concat(inflections, "</span>\n## <span class='form-of-definition use-with-mention'>") .. "</span>"
 	end
