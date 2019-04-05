@@ -564,7 +564,8 @@ def getData():
 def getLanguageData():
   global languages, languages_byCode, languages_byCanonicalName
   
-  languages = json.loads(site.expand_text("{{#invoke:User:MewBot|getLanguageData}}"))
+  jsondata = site.expand_text("{{#invoke:User:MewBot|getLanguageData}}")
+  languages = json.loads(jsondata)
   languages_byCode = {}
   languages_byCanonicalName = {}
   
