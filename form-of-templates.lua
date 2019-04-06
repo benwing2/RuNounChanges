@@ -100,6 +100,99 @@ local function split_inflection_tags(tagspecs, split_regex)
 end
 
 
+local function add_link_params(params, term_param, no_numbered_gloss)
+	-- Numbered params controlling link display
+	params[term_param] = {}
+	params[term_param + 1] = {}
+	if not no_numbered_gloss then
+		params[term_param + 2] = {alias_of = "t"}
+	end
+	
+	-- Named params controlling link display
+	params["t"] = {}
+	params["gloss"] = {alias_of = "t"}
+	params["sc"] = {}
+	params["tr"] = {}
+	params["ts"] = {}
+	params["pos"] = {}
+	params["g"] = {list = true}
+	params["id"] = {}
+	params["lit"] = {}
+end
+
+
+local function get_terminfo_and_categories(iargs, args, term_param, compat)
+	local lang = args[compat and "lang" or 1] or iargs["lang"] or "und"
+	lang = require("Module:languages").getByCode(lang) or
+		require("Module:languages").err(lang, compat and "lang" or 1)
+
+	-- Determine categories for the page, including tracking categories
+
+	local categories = {}
+
+	if not args["nocat"] then
+		for _, cat in ipairs(iargs["cat"]) do
+			table.insert(categories, lang:getCanonicalName() .. " " .. cat)
+		end
+	end
+	for _, cat in ipairs(args["cat"]) do
+		table.insert(categories, lang:getCanonicalName() .. " " .. cat)
+	end
+		
+	-- Format the link, preceding text and categories
+
+	local terminfo
+
+	if iargs["nolink"] then
+		terminfo = nil
+	elseif iargs["linktext"] then
+		terminfo = iargs["linktext"]
+	else
+		local term = args[term_param]
+
+		if not term and not args[term_param + 1] and not args["tr"] and not args["ts"] then
+			if mw.title.getCurrentTitle().nsText == "Template" then
+				term = "term"
+			else
+				error("No linked-to term specified; either specify term, alt, translit or transcription")
+			end
+		end
+		
+		-- add tracking category if term is same as page title
+		if term and mw.title.getCurrentTitle().text == lang:makeEntryName(term) then
+			table.insert(categories, "Forms linking to themselves")
+		end
+		-- maybe add tracking category if primary entry doesn't exist (this is an
+		-- expensive call so we don't do it by default)
+		if iargs["noprimaryentrycat"] and term and mw.title.getCurrentTitle().nsText == ""
+			and not mw.title.new(term).exists then
+			table.insert(categories, lang:getCanonicalName() .. " " .. iargs["noprimaryentrycat"])
+		end
+
+		local sc = args["sc"] or iargs["sc"]
+		
+		sc = (sc and (require("Module:scripts").getByCode(sc) or
+			error("The script code \"" .. sc .. "\" is not valid.")) or nil)
+
+		terminfo = {
+			lang = lang,
+			sc = sc,
+			term = term,
+			alt = args[term_param + 1],
+			id = args["id"],
+			gloss = args["t"],
+			tr = args["tr"],
+			ts = args["ts"],
+			pos = args["pos"],
+			genders = args["g"],
+			lit = args["lit"],
+		}
+	end
+	
+	return lang, terminfo, categories
+end
+
+
 --[=[
 Function that implements {{form of}} and the various more specific form-of templates.
 
@@ -153,12 +246,13 @@ function export.form_of_t(frame)
 		["term_param"] = {type = "number"},
 		["lang"] = {},
 		["sc"] = {},
-		["id"] = {},
 		["cat"] = {list = true},
 		["ignore"] = {list = true},
 		["def"] = {list = true},
 		["withcap"] = {type = "boolean"},
 		["withdot"] = {type = "boolean"},
+		["nolink"] = {type = "boolean"},
+		["linktext"] = {},
 		["noprimaryentrycat"] = {},
 	}
 	
@@ -167,17 +261,12 @@ function export.form_of_t(frame)
 
 	local term_param = iargs["term_param"]
 	
-	local categories = {}
-
 	local compat = iargs["lang"] or parent_args["lang"]
 	term_param = term_param or compat and 1 or 2
 
 	local params = {
 		-- Numbered params
 		[compat and "lang" or 1] = {required = not iargs["lang"]},
-		[term_param] = {},
-		[term_param + 1] = {},
-		[term_param + 2] = {alias_of = "t"},
 		
 		-- Named params not controlling link display		
 		-- For now, we always allow this even when withcap=1 is not given
@@ -189,18 +278,11 @@ function export.form_of_t(frame)
 		-- nodot= in other circumstances.
 		["nodot"] = {type = "boolean"},
 		["sort"] = {},
-
-		-- Named params controlling link display
-		["t"] = {},
-		["gloss"] = {alias_of = "t"},
-		["sc"] = {},
-		["tr"] = {},
-		["ts"] = {},
-		["pos"] = {},
-		["g"] = {list = true},
-		["id"] = {},
-		["lit"] = {},
 	}
+
+	if not iargs["nolink"] and not iargs["linktext"] then
+		add_link_params(params, term_param)
+	end
 
 	if next(iargs["cat"]) then
 		params["nocat"] = {type = "boolean"}
@@ -223,65 +305,11 @@ function export.form_of_t(frame)
 		text = m_form_of.ucfirst(text)
 	end
 
-	local term = args[term_param]
-	local alt = args[term_param + 1]
+	local lang, terminfo, categories = get_terminfo_and_categories(iargs, args, term_param, compat)
 
-	if not term and not alt and not args["tr"] and not args["ts"] then
-		if mw.title.getCurrentTitle().nsText == "Template" then
-			term = "term"
-		else
-			error("No linked-to term specified; either specify term, alt, translit or transcription")
-		end
-	end
-	
-	local lang = args[compat and "lang" or 1] or iargs["lang"] or "und"
-	local sc = args["sc"] or iargs["sc"]
-	local id = args["id"] or iargs["id"]
-	
-	lang = require("Module:languages").getByCode(lang) or
-		require("Module:languages").err(lang, compat and "lang" or 1)
-	sc = (sc and (require("Module:scripts").getByCode(sc) or
-		error("The script code \"" .. sc .. "\" is not valid.")) or nil)
-
-	-- Determine categories for the page, including tracking categories
-
-	if not args["nocat"] then
-		for _, cat in ipairs(iargs["cat"]) do
-			table.insert(categories, lang:getCanonicalName() .. " " .. cat)
-		end
-	end
-	for _, cat in ipairs(args["cat"]) do
-		table.insert(categories, lang:getCanonicalName() .. " " .. cat)
-	end
-	-- add tracking category if term is same as page title
-	if term and mw.title.getCurrentTitle().text == lang:makeEntryName(term) then
-		table.insert(categories, "Forms linking to themselves")
-	end
-	-- maybe add tracking category if primary entry doesn't exist (this is an
-	-- expensive call so we don't do it by default)
-	if iargs["noprimaryentrycat"] and term and mw.title.getCurrentTitle().nsText == ""
-		and not mw.title.new(term).exists then
-		table.insert(categories, lang:getCanonicalName() .. " " .. iargs["noprimaryentrycat"])
-	end
-		
-	-- Format the link, preceding text and categories
-
-	return m_form_of.format_form_of(text,
-		{
-			lang = lang,
-			sc = sc,
-			term = term,
-			alt = alt,
-			id = id,
-			gloss = args["t"],
-			tr = args["tr"],
-			ts = args["ts"],
-			pos = args["pos"],
-			genders = args["g"],
-			lit = args["lit"],
-		}
-	) .. (args["nodot"] and "" or args["dot"] or iargs["withdot"] and "." or "")
-	.. require("Module:utilities").format_categories(categories, lang, args["sort"])
+	return m_form_of.format_form_of(text, terminfo) .. (
+		args["nodot"] and "" or args["dot"] or iargs["withdot"] and "." or ""
+	) .. require("Module:utilities").format_categories(categories, lang, args["sort"])
 end
 
 --[=[
@@ -341,6 +369,11 @@ function export.tagged_form_of_t(frame)
 		["cat"] = {list = true},
 		["ignore"] = {list = true},
 		["def"] = {list = true},
+		["withcap"] = {type = "boolean"},
+		["withdot"] = {type = "boolean"},
+		["nolink"] = {type = "boolean"},
+		["linktext"] = {},
+		["noprimaryentrycat"] = {},
 		["split_tags"] = {},
 	}
 	
@@ -349,17 +382,12 @@ function export.tagged_form_of_t(frame)
 
 	local term_param = iargs["term_param"]
 
-	local categories = {}
-	
 	local compat = iargs["lang"] or parent_args["lang"]
 	term_param = term_param or compat and 1 or 2
 
 	local params = {
 		-- Numbered params
 		[compat and "lang" or 1] = {required = not iargs["lang"]},
-		[term_param] = {},
-		[term_param + 1] = {},
-		[term_param + 2] = {alias_of = "t"},
 
 		-- Named params not controlling link display		
 		-- For now, we always allow this even when withcap=1 is not given
@@ -371,19 +399,12 @@ function export.tagged_form_of_t(frame)
 		-- nodot= in other circumstances.
 		["nodot"] = {type = "boolean"},
 		["sort"] = {},
-
-		-- Named params controlling link display
-		["t"] = {},
-		["gloss"] = {alias_of = "t"},
-		["sc"] = {},
-		["tr"] = {},
-		["ts"] = {},
-		["pos"] = {},
-		["g"] = {list = true},
-		["id"] = {},
-		["lit"] = {},
 	}
 	
+	if not iargs["nolink"] and not iargs["linktext"] then
+		add_link_params(params, term_param)
+	end
+
 	if next(iargs["cat"]) then
 		params["nocat"] = {type = "boolean"}
 	end
@@ -400,63 +421,11 @@ function export.tagged_form_of_t(frame)
 	local args = process_parent_args("tagged-form-of-t", parent_args,
 		params, iargs["def"], iargs["ignore"], ignored_params)
 	
-	local term = args[term_param]
-	local alt = args[term_param + 1]
-
-	if not term and not alt and not args["tr"] and not args["ts"] then
-		if mw.title.getCurrentTitle().nsText == "Template" then
-			term = "term"
-		else
-			error("No linked-to term specified; either specify term, alt, translit or transcription")
-		end
-	end
-	
-	local lang = iargs["lang"] or args[compat and "lang" or 1] or "und"
-	local sc = args["sc"] or iargs["sc"]
-	
-	lang = require("Module:languages").getByCode(lang) or
-		require("Module:languages").err(lang, compat and "lang" or 1)
-	sc = (sc and (require("Module:scripts").getByCode(sc) or
-		error("The script code \"" .. sc .. "\" is not valid.")) or nil)
-
-	-- FIXME! Remove this tracking code. Not clear what it's doing here.
-	if #iargs[1] == 1 and iargs[1][1] == "f" then
-		require("Module:debug").track("feminine of/" .. lang:getCode())
-	end
-	
-	if not args["nocat"] then
-		for _, cat in ipairs(iargs["cat"]) do
-			table.insert(categories, lang:getCanonicalName() .. " " .. cat)
-		end
-	end
-	for _, cat in ipairs(args["cat"]) do
-		table.insert(categories, lang:getCanonicalName() .. " " .. cat)
-	end
-
-	-- some pre-existing tracking code we should probably delete
-	if next(iargs["cat"]) then
-		if args["nocat"] then
-			require("Module:debug").track("form of/" .. table.concat(iargs[1], "-") .. "/nocat")
-		else
-			require("Module:debug").track("form of/" .. table.concat(iargs[1], "-") .. "/cat")
-		end
-	end
+	local lang, terminfo, categories = get_terminfo_and_categories(iargs, args, term_param, compat)
 
 	return m_form_of.tagged_inflections(
-		split_inflection_tags(iargs[1], iargs["split_tags"]),
-		{
-			lang = lang,
-			sc = sc,
-			term = term,
-			alt = alt,
-			id = args["id"],
-			lit = args["lit"],
-			gloss = args["t"],
-			pos = args["pos"],
-			genders = args["g"],
-			tr = args["tr"],
-			ts = args["ts"],
-		}, iargs["withcap"] and not args["nocap"]
+		split_inflection_tags(iargs[1], iargs["split_tags"]), terminfo,
+		iargs["withcap"] and not args["nocap"]
 	) .. (args["nodot"] and "" or args["dot"] or iargs["withdot"] and "." or "")
 	.. require("Module:utilities").format_categories(categories, lang, args["sort"])
 end
@@ -513,6 +482,10 @@ function export.inflection_of_t(frame)
 		["cat"] = {list = true},
 		["ignore"] = {list = true},
 		["def"] = {list = true},
+		["withcap"] = {type = "boolean"},
+		["withdot"] = {type = "boolean"},
+		["nolink"] = {type = "boolean"},
+		["linktext"] = {},
 		["preinfl"] = {list = true},
 		["postinfl"] = {list = true},
 		["split_tags"] = {},
@@ -523,44 +496,34 @@ function export.inflection_of_t(frame)
 
 	local term_param = iargs["term_param"]
 	
-	local categories = {}
-
 	local compat = iargs["lang"] or parent_args["lang"]
 	term_param = term_param or compat and 1 or 2
 
 	local params = {
 		-- Numbered params
 		[compat and "lang" or 1] = {required = not iargs["lang"]},
-		[term_param] = {},
-		[term_param + 1] = {},
 		[term_param + 2] = {list = true, required = true},
 		
 		-- Named params not controlling link display		
-		-- FIXME! The following should not be allowed. Before doing that, need to
-		-- remove all uses of nocap=.
+		-- For now, we always allow this even when withcap=1 is not given
+		-- because many templates process nocap= manually.
 		["nocap"] = {type = "boolean"},
 		-- FIXME! The following should only be available when cat= is specified
 		-- in the invocation args. Before doing that, need to remove all uses of
 		-- nocat= in other circumstances.
 		["nocat"] = {type = "boolean"},
 		["cat"] = {list = true},
-		-- FIXME! The following should not be allowed. Before doing that, need to
-		-- remove all uses of nodot=.
+		-- FIXME! The following should only be available when withdot=1 in
+		-- invocation args. Before doing that, need to remove all uses of
+		-- nodot= in other circumstances.
 		["nodot"] = {type = "boolean"},
 		["sort"] = {},
-
-		-- Named params controlling link display
-		["t"] = {},
-		["gloss"] = {alias_of = "t"},
-		["sc"] = {},
-		["tr"] = {},
-		["ts"] = {},
-		["pos"] = {},
-		["g"] = {list = true},
-		["id"] = {},
-		["lit"] = {},
 	}
 	
+	if not iargs["nolink"] and not iargs["linktext"] then
+		add_link_params(params, term_param, "no-numbered-gloss")
+	end
+
 	local ignored_params = {
 		["nocap"] = true,
 		["nodot"] = true,
@@ -572,34 +535,6 @@ function export.inflection_of_t(frame)
 	local args = process_parent_args("inflection-of-t", parent_args,
 		params, iargs["def"], iargs["ignore"], ignored_params)
 	
-	local term = args[term_param]
-	local alt = args[term_param + 1]
-
-	if not term and not alt and not args["tr"] and not args["ts"] then
-		if mw.title.getCurrentTitle().nsText == "Template" then
-			term = "term"
-		else
-			error("No linked-to term specified; either specify term, alt, translit or transcription")
-		end
-	end
-	
-	local lang = args[compat and "lang" or 1] or iargs["lang"] or "und"
-	local sc = args["sc"] or iargs["sc"]
-	
-	lang = require("Module:languages").getByCode(lang) or
-		require("Module:languages").err(lang, compat and "lang" or 1)
-	sc = (sc and (require("Module:scripts").getByCode(sc) or
-		error("The script code \"" .. sc .. "\" is not valid.")) or nil)
-
-	if not args["nocat"] then
-		for _, cat in ipairs(iargs["cat"]) do
-			table.insert(categories, lang:getCanonicalName() .. " " .. cat)
-		end
-	end
-	for _, cat in ipairs(args["cat"]) do
-		table.insert(categories, lang:getCanonicalName() .. " " .. cat)
-	end
-
 	local infls
 	if not next(iargs["preinfl"]) and not next(iargs["postinfl"]) then
 		infls = args[term_param + 2]
@@ -615,23 +550,13 @@ function export.inflection_of_t(frame)
 			table.insert(infls, infl)
 		end
 	end
+
+	local lang, terminfo, categories = get_terminfo_and_categories(iargs, args, term_param, compat)
 	
-	return m_form_of.tagged_inflections(
-		infls,
-		{
-			lang = lang,
-			sc = sc,
-			term = term,
-			alt = alt,
-			id = args["id"],
-			lit = args["lit"],
-			gloss = args["t"],
-			pos = args["pos"],
-			genders = args["g"],
-			tr = args["tr"],
-			ts = args["ts"],
-		}
-	) .. require("Module:utilities").format_categories(categories, lang, args["sort"])
+	return m_form_of.tagged_inflections(infls, terminfo,
+		iargs["withcap"] and not args["nocap"]
+	) .. (args["nodot"] and "" or args["dot"] or iargs["withdot"] and "." or "")
+	.. require("Module:utilities").format_categories(categories, lang, args["sort"])
 end
 
 return export
