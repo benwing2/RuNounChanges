@@ -374,12 +374,12 @@ def cat_articles(page, startsort = None, endsort = None):
   for i, current in iter_items(raw_cat_articles(page, startsort), startsort, endsort):
     yield i, current
 
-def cat_subcats(page, startsort = None, endsort = None):
+def cat_subcats(page, startsort=None, endsort=None, recurse=False):
   if type(page) is str:
     page = page.decode("utf-8")
   if isinstance(page, basestring):
     page = pywikibot.Category(site, "Category:" + page)
-  pageiter = page.subcategories() #no startsort; startsort = startsort if not isinstance(startsort, int) else None)
+  pageiter = page.subcategories(recurse=recurse) #no startsort; startsort = startsort if not isinstance(startsort, int) else None)
   for i, current in iter_items(pageiter, startsort, endsort):
     yield i, current
 
