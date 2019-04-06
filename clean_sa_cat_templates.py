@@ -20,7 +20,7 @@ templates = [
   "sa-pra2s",
 ]
 
-def process_page(page, index, parsed):
+def process_page(page, index, parsed, remove_manual_cats=False):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -36,18 +36,41 @@ def process_page(page, index, parsed):
       notes.append("remove unneeded category template {{%s}}" % t)
       text = newtext
 
+  newtext = re.sub(r"\n*\[\[Category:Sanskrit(.*?)[_ ]verb[_ ](.*?)forms([_ ].*?)?\]\]", "", text)
+  if newtext != text:
+    notes.append("remove unneeded manual category spec(s)")
+    text = newtext
+
   return text, notes
 
 parser = blib.create_argparser("Remove unnecessary {{sa-*}} category templates")
 parser.add_argument("--delete-templates", action="store_true")
+parser.add_argument("--remove-manual-cats", action="store_true")
+parser.add_argument("--delete-verb-subcats", action="store_true")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-if args.delete_templates:
+if args.remove_manual_cats:
+  for i, catpage in blib.cat_subcats("Sanskrit verb forms", recurse=True):
+    msg("In category %s:" % unicode(catpage.title()))
+    for j, page in blib.cat_articles(catpage, start, end):
+      msg("Page %s" % unicode(page.title()))
+      blib.do_edit(page, j,
+        lambda p, index, parsed: process_page(p, index, parsed, remove_manual_cats=True),
+        save=args.save, verbose=args.verbose)
+elif args.delete_verb_subcats:
+  for i, catpage in blib.cat_subcats("Sanskrit verb forms", recurse=True):
+    msg("In category %s:" % unicode(catpage.title()))
+    if catpage.isEmptyCategory():
+      msg("Category %s is empty, deleting" % unicode(catpage.title()))
+      if args.save:
+        catpage.delete("Remove empty, unnecessary verb-form category")
+elif args.delete_templates:
   for template in templates:
     msg("Deleting Template:%s" % template)
-    page = pywikibot.Page(site, "Template:%s" % template)
-    page.delete("Remove unnecessary {{sa-*}} category templates")
+    if args.save:
+      page = pywikibot.Page(site, "Template:%s" % template)
+      page.delete("Remove unnecessary {{sa-*}} category templates")
 else:
   for template in templates:
     msg("Processing references to Template:%s" % template)
