@@ -10,7 +10,7 @@ language_specific_alt_form_of_templates = [
   "fr-post-1990",
   "fr-pre-1990",
   "hy-reformed",
-  "jbo-rafsi of", "rafsi of",
+  "jbo-rafsi of",
   "morse code abbreviation",
   "morse code for",
   "morse code prosign",
@@ -137,6 +137,14 @@ language_specific_form_of_templates = [
   "za-sawndip form of",
 ]
 
+language_specific_manual_form_of_templates = [
+  "han tu form of",
+  "ja-form of",
+  "jyutping reading of",
+  "pinyin reading of",
+  "praenominal abbreviation of",
+]
+
 form_of_templates = [
   "abstract noun of",
   "accusative of",
@@ -168,6 +176,7 @@ form_of_templates = [
   "dual of",
   "elative of",
   "ellipsis of",
+  "endearing form of",
   "equative of",
   "feminine noun of",
   "feminine of",
@@ -231,6 +240,7 @@ form_of_templates = [
   "present tense of",
   "reflexive of",
   "rfform",
+  "romanization of",
   "second-person singular past of",
   "singular definite of",
   "singular of",
@@ -249,7 +259,6 @@ form_of_templates = [
   "vocative singular of",
 ]
 
-manual_templates = [
-  "ja-form of",
-  "jyutping reading of",
+misc_definition_line_templates = [
+  "native or resident of",
 ]
