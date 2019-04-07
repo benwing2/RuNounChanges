@@ -22,15 +22,15 @@ def process_page(page, index, template, params, negate):
     tn = tname(t)
     if tn == template:
       for tparam in t.params:
-        pname = unicode(param.name).strip()
+        pname = unicode(tparam.name).strip()
         if negate:
           if pname not in paramset:
             pagemsg("Found %s template with unrecognized param %s: %s" %
-                (template, param, unicode(t)))
+                (template, tparam, unicode(t)))
         else:
           if pname in paramset:
             pagemsg("Found %s template with %s param: %s" %
-                (template, param, unicode(t)))
+                (template, tparam, unicode(t)))
 
 parser = blib.create_argparser("Find templates with specified params")
 parser.add_argument("--templates",
