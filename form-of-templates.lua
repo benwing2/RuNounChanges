@@ -5,11 +5,30 @@ local rfind = mw.ustring.find
 local rmatch = mw.ustring.match
 local rsplit = mw.text.split
 
+-- Add tracking category for PAGE when called from TEMPLATE. The tracking category
+-- linked to is [[Template:tracking/form-of/TEMPLATE/PAGE]].
 local function track(template, page)
 	require("Module:debug").track("form-of/" .. template .. "/" .. page)
 end
 
-local function process_parent_args(template, parent_args, params, defaults, ignorespecs, ignored_params)
+
+--[=[
+Process parent arguments. This is similar to the following:
+	require("Module:parameters").process(parent_args, params)
+but in addition it does the following:
+(1) Supplies default values for unspecified parent arguments as specified in
+	DEFAULTS, which consist of specs of the form "ARG=VALUE". These are
+	added to the parent arguments prior to processing, so boolean and number
+	parameters will process the value appropriately.
+(2) Removes parent arguments specified in IGNORESPECS, which consist either
+	of bare argument names to remove, or list-argument names to remove of the
+	form "ARG:list".
+(3) Tracks the use of any parent arguments specified in TRACKED_PARAMS, which
+	is a set-type table where the keys are arguments as they exist after
+	processing (hence numeric arguments should be numbers, not strings)
+	and the values should be boolean true.
+]=]--
+local function process_parent_args(template, parent_args, params, defaults, ignorespecs, tracked_params)
 	if #defaults > 0 or #ignorespecs > 0 then
 		local new_parent_args = {}
 		for _, default in ipairs(defaults) do
@@ -70,15 +89,18 @@ local function process_parent_args(template, parent_args, params, defaults, igno
 			end
 			new_parent_args[k] = v
 		end
+		parent_args = new_parent_args
+	end
 
 	local args = require("Module:parameters").process(parent_args, params)
 
-	-- temporary tracking for valid but unused arguments not in ignore=
-	if ignored_params then
-		for unused_arg, _ in pairs(ignored_params) do
-			if parent_args[unused_arg] then
-				track(template, "unused")
-				track(template, "unused/" .. unused_arg)
+	-- Tracking for certain user-specified params. This is generally used for
+	-- parameters that we accept but ignore, so that we can eventually remove
+	-- all uses of these params and stop accepting them.
+	if tracked_params then
+		for tracked_param, _ in pairs(tracked_params) do
+			if parent_args[tracked_param] then
+				track(template, "arg/" .. tracked_param)
 			end
 		end
 	end
@@ -86,6 +108,9 @@ local function process_parent_args(template, parent_args, params, defaults, igno
 	return args
 end
 
+
+-- Split TAGSPECS (inflection tag specifications) on SPLIT_REGEX, which
+-- may be nil for no splitting.
 local function split_inflection_tags(tagspecs, split_regex)
 	if not split_regex then
 		return tagspecs
@@ -100,6 +125,10 @@ local function split_inflection_tags(tagspecs, split_regex)
 end
 
 
+-- Modify PARAMS in-place by adding parameters that control the link to the
+-- main entry. TERM_PARAM is the number of the param specifying the main
+-- entry itself; TERM_PARAM + 1 will be the display text, and TERM_PARAM + 2
+-- will be the gloss, unless NO_NUMBERED_GLOSS is given.
 local function add_link_params(params, term_param, no_numbered_gloss)
 	-- Numbered params controlling link display
 	params[term_param] = {}
@@ -121,6 +150,16 @@ local function add_link_params(params, term_param, no_numbered_gloss)
 end
 
 
+-- Given processed invocation arguments IARGS and processed parent arguments
+-- ARGS, as well as TERM_PARAM (the parent argument specifying the main
+-- entry) and COMPAT (true if the language code is found in args["lang"]
+-- instead of args[1]), return LANG, TERMINFO, CATEGORIES, where
+-- * LANG is the language code;
+-- * TERMINFO is the terminfo structure specifying the main entry, as
+--   passed to full_link in Module:links;
+-- * CATEGORIES is the categories to add the page to.
+--
+-- This is a subfunction of construct_form_of_text().
 local function get_terminfo_and_categories(iargs, args, term_param, compat)
 	local lang = args[compat and "lang" or 1] or iargs["lang"] or "und"
 	lang = require("Module:languages").getByCode(lang) or
@@ -193,8 +232,28 @@ local function get_terminfo_and_categories(iargs, args, term_param, compat)
 end
 
 
+-- Construct and return the full definition line for a form-of-type template
+-- invocation, given processed invocation arguments IARGS, processed parent
+-- arguments ARGS, TERM_PARAM (the parent argument specifying the main entry),
+-- COMPAT (true if the language code is found in args["lang"] instead of
+-- args[1]), and DO_FORM_OF, which is a function of one argument (the
+-- terminfo structure ultimately passed to full_link in Module:links) that
+-- should return the actual definition-line text, minus any terminating
+-- period/dot. The terminating period/dot will be added as appropriate, as
+-- well as formatted categories to add the page to.
+local function construct_form_of_text(iargs, args, term_param, compat, do_form_of)
+	local lang, terminfo, categories = get_terminfo_and_categories(iargs, args, term_param, compat)
+
+	return do_form_of(terminfo) .. (
+		args["nodot"] and "" or args["dot"] or iargs["withdot"] and "." or ""
+	) .. require("Module:utilities").format_categories(categories, lang, args["sort"])
+end
+
+
 --[=[
-Function that implements {{form of}} and the various more specific form-of templates.
+Function that implements {{form of}} and the various more specific form-of
+templates (but not {{inflection of}} or templates that take tagged inflection
+parameters).
 
 Invocation params:
 
@@ -204,38 +263,50 @@ term_param=:
 	Numbered param holding the term linked to. Other numbered params come after.
 	Defaults to 1 if invocation or template param lang= is present, otherwise 2.
 lang=:
-	Default language code for language-specific templates. If specified, the term
-	param moves down to 1= and no language code needs to be specified. (Currently
-	it can still be specified using template param lang=, and overrides the default
-	language code, but this may change.)
+	Default language code for language-specific templates. If specified, no
+	language code needs to be specified, and if specified it needs to be set
+	using lang=, not 1=.
 sc=:
-	Default script code for language-specific templates. The script code can still be
-	overridden using template param sc=.
-id=:
-	Default value of template param id=, which can still be specified. This param may
-	be removed in the future, perhaps in favor of a more general default-value param.
+	Default script code for language-specific templates. The script code can
+	still be overridden using template param sc=.
 cat=, cat2=, ...:
-	Categories to place the page into. The language name will automatically be prepended.
-	Note that there is also a template param cat= to specify categories at the template
-	level. use of nocat= disables categorization of categories specified using invocation
-	param cat=, but not using template param cat=.
+	Categories to place the page into. The language name will automatically be
+	prepended. Note that there is also a template param cat= to specify
+	categories at the template level. Use of nocat= disables categorization of
+	categories specified using invocation param cat=, but not using template
+	param cat=.
 ignore=, ignore2=, ...:
-	One or more template params to silently accept and ignore. Useful e.g. when the
-	template takes additional parameters such as from= or POS=. The value is a parameter
-	name, optionally followed by one or more specs. Possible specs are ':list'
-	(the param is a list parameter), ':required' (the param is required), and
-	':type=TYPE' (specify the type of the param, e.g. "boolean" or "number").
-	For example, to accept and ignore a from= list-type parameter, use '|ignore=from:list'.
+	One or more template params to silently accept and ignore. Useful e.g. when
+	the template takes additional parameters such as from= or POS=. Each value
+	is a comma-separated list of either bare parameter names or specifications
+	of the form "PARAM:list" to specify that the parameter is a list parameter.
 def=, def2=, ...:
-	One or more default values to supply for template args. For example, specifying
-	'|def=tr=-' causes the default for template param '|tr=' to be '-'. Actual template
-	params override these defaults.
+	One or more default values to supply for template args. For example,
+	specifying '|def=tr=-' causes the default for template param '|tr=' to be
+	'-'. Actual template params override these defaults.
 withcap=:
-	Capitalize the first character of the text preceding the link, unless template param
-	nocap= is given.
+	Capitalize the first character of the text preceding the link, unless
+	template param nocap= is given.
 withdot=:
-	Add a final period after the link, unless template param nodot= is given to suppress
-	the period, or dot= is given to specify an alternative punctuation character.
+	Add a final period after the link, unless template param nodot= is given
+	to suppress the period, or dot= is given to specify an alternative
+	punctuation character.
+nolink=:
+	Suppress the display of the link. If specified, none of the template
+	params that control the link (TERM_PARAM, TERM_PARAM + 1, TERM_PARAM + 2,
+	t=, gloss=, sc=, tr=, ts=, pos=, g=, id=, lit=) will be available.
+	If the calling template uses any of these parameters, they must be
+	ignored using ignore=.
+linktext=:
+	Override the display of the link with the specified text. This is useful
+	if a custom template is available to format the link (e.g. in Hebrew,
+	Chinese and Japanese). If specified, none of the template params that
+	control the link (TERM_PARAM, TERM_PARAM + 1, TERM_PARAM + 2, t=, gloss=,
+	sc=, tr=, ts=, pos=, g=, id=, lit=) will be available. If the calling
+	template uses any of these parameters, they must be ignored using ignore=.
+posttext=:
+	Additional text to display directly after the formatted link, before any
+	terminating period/dot and inside of "<span class='use-with-mention'>".
 noprimaryentrycat=:
 	Category to add the page to if the primary entry linked to doesn't exist.
 	The language name will automatically be prepended.
@@ -253,6 +324,7 @@ function export.form_of_t(frame)
 		["withdot"] = {type = "boolean"},
 		["nolink"] = {type = "boolean"},
 		["linktext"] = {},
+		["posttext"] = {},
 		["noprimaryentrycat"] = {},
 	}
 	
@@ -269,15 +341,16 @@ function export.form_of_t(frame)
 		[compat and "lang" or 1] = {required = not iargs["lang"]},
 		
 		-- Named params not controlling link display		
-		-- For now, we always allow this even when withcap=1 is not given
-		-- because many templates process nocap= manually.
-		["nocap"] = {type = "boolean"},
 		["cat"] = {list = true},
+		["sort"] = {},
+		-- FIXME! The following should only be available when withcap=1 in
+		-- invocation args. Before doing that, need to remove all uses of
+		-- nocap= in other circumstances.
+		["nocap"] = {type = "boolean"},
 		-- FIXME! The following should only be available when withdot=1 in
 		-- invocation args. Before doing that, need to remove all uses of
 		-- nodot= in other circumstances.
 		["nodot"] = {type = "boolean"},
-		["sort"] = {},
 	}
 
 	if not iargs["nolink"] and not iargs["linktext"] then
@@ -293,6 +366,9 @@ function export.form_of_t(frame)
 	end
 
 	local ignored_params = {}
+	if not iargs["withcap"] then
+		ignored_params["nocap"] = true
+	end
 	if not iargs["withdot"] then
 		ignored_params["nodot"] = true
 	end
@@ -305,64 +381,51 @@ function export.form_of_t(frame)
 		text = m_form_of.ucfirst(text)
 	end
 
-	local lang, terminfo, categories = get_terminfo_and_categories(iargs, args, term_param, compat)
-
-	return m_form_of.format_form_of(text, terminfo) .. (
-		args["nodot"] and "" or args["dot"] or iargs["withdot"] and "." or ""
-	) .. require("Module:utilities").format_categories(categories, lang, args["sort"])
+	return construct_form_of_text(iargs, args, term_param, compat,
+		function(terminfo)
+			return m_form_of.format_form_of(text, terminfo, iargs["posttext"])
+		end
+	)
 end
 
 --[=[
 Function that implements form-of templates that are defined by specific tagged
 inflections (typically a template referring to a non-lemma inflection,
-such as {{genitive plural of}}). It is equivalent to {{inflection of}} with
-pre-specified inflection tags. See also inflection_of_t below, which is intended
-for templates with user-specified inflection tags.
+such as {{genitive plural of}}). This works exactly like form_of_t() except
+that the "form of" text displayed before the link is based off of a
+pre-specified set of inflection tags (which will be appropriately linked to
+the glossary) instead of arbitrary text. From the user's perspective, there
+is no difference between templates implemented using form_of_t() and
+tagged_form_of_t(); they accept exactly the same parameters and work the same.
+See also inflection_of_t() below, which is intended for templates with
+user-specified inflection tags.
 
 Invocation params:
 
 1=, 2=, ... (required):
 	One or more inflection tags describing the inflection in question.
-term_param=:
-	Numbered param holding the term linked to. Other numbered params come after.
-	Defaults to 1 if invocation or template param lang= is present, otherwise 2.
-lang=:
-	Default language code for language-specific templates. If specified, the term
-	param moves down to 1= and no language code needs to be specified. (Currently
-	it can still be specified using template param lang=, and overrides the default
-	language code, but this may change.)
-sc=:
-	Default script code for language-specific templates. The script code can still be
-	overridden using template param sc=.
-cat=, cat2=, ...:
-	Categories to place the page into. The language name will automatically be prepended.
-	Note that there is also a template param cat= to specify categories at the template
-	level. use of nocat= disables categorization of categories specified using invocation
-	param cat=, but not using template param cat=.
-ignore=, ignore2=, ...:
-	One or more template params to silently accept and ignore. Useful e.g. when the
-	template takes additional parameters such as from= or POS=. The value is a parameter
-	name, optionally followed by one or more specs. Possible specs are ':list'
-	(the param is a list parameter), ':required' (the param is required), and
-	':type=TYPE' (specify the type of the param, e.g. "boolean" or "number").
-	For example, to accept and ignore a from= list-type parameter, use '|ignore=from:list'.
-def=, def2=, ...:
-	One or more default values to supply for template args. For example, specifying
-	'|def=tr=-' causes the default for template param '|tr=' to be '-'. Actual template
-	params override these defaults.
-withcap=:
-	Capitalize the first character of the text preceding the link, unless template param
-	nocap= is given.
-withdot=:
-	Add a final period after the link, unless template param nodot= is given to suppress
-	the period, or dot= is given to specify an alternative punctuation character.
 split_tags=:
 	If specified, character to split specified inflection tags on. This allows
-	multiple tags to be included in a single argument, simplifying template code.
+	multiple tags to be included in a single argument, simplifying template
+	code.
+term_param=:
+lang=:
+sc=:
+cat=, cat2=, ...:
+ignore=, ignore2=, ...:
+def=, def2=, ...:
+withcap=:
+withdot=:
+nolink=:
+linktext=:
+posttext=:
+noprimaryentrycat=:
+	All of these are the same as in form_of_t().
 ]=]--
 function export.tagged_form_of_t(frame)
 	local iparams = {
 		[1] = {list = true, required = true},
+		["split_tags"] = {},
 		["term_param"] = {type = "number"},
 		["lang"] = {},
 		["sc"] = {},
@@ -373,8 +436,8 @@ function export.tagged_form_of_t(frame)
 		["withdot"] = {type = "boolean"},
 		["nolink"] = {type = "boolean"},
 		["linktext"] = {},
+		["posttext"] = {},
 		["noprimaryentrycat"] = {},
-		["split_tags"] = {},
 	}
 	
 	local iargs = require("Module:parameters").process(frame.args, iparams)
@@ -390,15 +453,16 @@ function export.tagged_form_of_t(frame)
 		[compat and "lang" or 1] = {required = not iargs["lang"]},
 
 		-- Named params not controlling link display		
-		-- For now, we always allow this even when withcap=1 is not given
-		-- because many templates process nocap= manually.
-		["nocap"] = {type = "boolean"},
 		["cat"] = {list = true},
+		["sort"] = {},
+		-- FIXME! The following should only be available when withcap=1 in
+		-- invocation args. Before doing that, need to remove all uses of
+		-- nocap= in other circumstances.
+		["nocap"] = {type = "boolean"},
 		-- FIXME! The following should only be available when withdot=1 in
 		-- invocation args. Before doing that, need to remove all uses of
 		-- nodot= in other circumstances.
 		["nodot"] = {type = "boolean"},
-		["sort"] = {},
 	}
 	
 	if not iargs["nolink"] and not iargs["linktext"] then
@@ -414,6 +478,9 @@ function export.tagged_form_of_t(frame)
 	end
 
 	local ignored_params = {}
+	if not iargs["withcap"] then
+		ignored_params["nocap"] = true
+	end
 	if not iargs["withdot"] then
 		ignored_params["nodot"] = true
 	end
@@ -421,61 +488,63 @@ function export.tagged_form_of_t(frame)
 	local args = process_parent_args("tagged-form-of-t", parent_args,
 		params, iargs["def"], iargs["ignore"], ignored_params)
 	
-	local lang, terminfo, categories = get_terminfo_and_categories(iargs, args, term_param, compat)
-
-	return m_form_of.tagged_inflections(
-		split_inflection_tags(iargs[1], iargs["split_tags"]), terminfo,
-		iargs["withcap"] and not args["nocap"]
-	) .. (args["nodot"] and "" or args["dot"] or iargs["withdot"] and "." or "")
-	.. require("Module:utilities").format_categories(categories, lang, args["sort"])
+	return construct_form_of_text(iargs, args, term_param, compat,
+		function(terminfo)
+			return m_form_of.tagged_inflections(
+				split_inflection_tags(iargs[1], iargs["split_tags"]), terminfo,
+				iargs["withcap"] and not args["nocap"], iargs["posttext"]
+			)
+		end
+	)
 end
 
 --[=[
-Function that implements {{inflection of}} and certain semi-specific variants, such as
-{{past participle form of}}.
+Function that implements {{inflection of}} and certain semi-specific variants,
+such as {{participle of}} and {{past participle form of}}. This function is
+intended for templates that allow the user to specify a set of inflection tags.
+It works similarly to form_of_t() and tagged_form_of_t() except that the
+calling convention for the calling template is
+	{{TEMPLATE|LANG|MAIN_ENTRY_LINK|MAIN_ENTRY_DISPLAY_TEXT|TAG|TAG|...}}
+instead of 
+	{{TEMPLATE|LANG|MAIN_ENTRY_LINK|MAIN_ENTRY_DISPLAY_TEXT|GLOSS}}
+Note that there isn't a numbered parameter for the gloss, but it can still
+be specified using t= or gloss=.
 
 Invocation params:
 
-term_param=:
-	Numbered param holding the term linked to. Other numbered params come after.
-	Defaults to 1 if invocation or template param lang= is present, otherwise 2.
-lang=:
-	Default language code for language-specific templates. If specified, the term
-	param moves down to 1= and no language code needs to be specified. (Currently
-	it can still be specified using template param lang=, and overrides the default
-	language code, but this may change.)
-sc=:
-	Default script code for language-specific templates. The script code can still be
-	overridden using template param sc=.
-cat=, cat2=, ...:
-	Categories to place the page into. The language name will automatically be prepended.
-	Note that there is also a template param cat= to specify categories at the template
-	level. use of nocat= disables categorization of categories specified using invocation
-	param cat=, but not using template param cat=.
-ignore=, ignore2=, ...:
-	One or more template params to silently accept and ignore. Useful e.g. when the
-	template takes additional parameters such as from= or POS=. The value is a parameter
-	name, optionally followed by one or more specs. Possible specs are ':list'
-	(the param is a list parameter), ':required' (the param is required), and
-	':type=TYPE' (specify the type of the param, e.g. "boolean" or "number").
-	For example, to accept and ignore a from= list-type parameter, use '|ignore=from:list'.
-def=, def2=, ...:
-	One or more default values to supply for template args. For example, specifying
-	'|def=tr=-' causes the default for template param '|tr=' to be '-'. Actual template
-	params override these defaults.
 preinfl=, preinfl2=, ...:
-	Extra inflection tags to automatically prepend to the tags specified by the template.
+	Extra inflection tags to automatically prepend to the tags specified by
+	the template.
 postinfl=, postinfl2=, ...:
-	Extra inflection tags to automatically append to the tags specified by the template. Used for example by {{past participle form of}} to add the tags 'of the|past|p'
-	onto the template-specified tags, which indicate which past participle form the
-	page refers to.
+	Extra inflection tags to automatically append to the tags specified by the
+	template. Used for example by {{past participle form of}} to add the tags
+	'of the|past|p' onto the user-specified tags, which indicate which past
+	participle form the page refers to.
 split_tags=:
-	If specified, character on which to split inflection tags specified by
-	prefinfl= and postinfl=. This allows ultiple tags to be included in a single
-	argument, simplifying template code.
+	If specified, character to split specified inflection tags on. This allows
+	multiple tags to be included in a single argument, simplifying template
+	code. Note that this applies *ONLY* to inflection tags specified in the
+	invocation arguments using preinfl= or postinfl=, not to user-specified
+	inflection tags.
+term_param=:
+lang=:
+sc=:
+cat=, cat2=, ...:
+ignore=, ignore2=, ...:
+def=, def2=, ...:
+withcap=:
+withdot=:
+nolink=:
+linktext=:
+posttext=:
+noprimaryentrycat=:
+	All of these are the same as in form_of_t().
 ]=]--
 function export.inflection_of_t(frame)
 	local iparams = {
+		["preinfl"] = {list = true},
+		["postinfl"] = {list = true},
+		["split_tags"] = {},
 		["term_param"] = {type = "number"},
 		["lang"] = {},
 		["sc"] = {},
@@ -486,9 +555,8 @@ function export.inflection_of_t(frame)
 		["withdot"] = {type = "boolean"},
 		["nolink"] = {type = "boolean"},
 		["linktext"] = {},
-		["preinfl"] = {list = true},
-		["postinfl"] = {list = true},
-		["split_tags"] = {},
+		["posttext"] = {},
+		["noprimaryentrycat"] = {},
 	}
 
 	local iargs = require("Module:parameters").process(frame.args, iparams)
@@ -505,29 +573,33 @@ function export.inflection_of_t(frame)
 		[term_param + 2] = {list = true, required = true},
 		
 		-- Named params not controlling link display		
-		-- For now, we always allow this even when withcap=1 is not given
-		-- because many templates process nocap= manually.
-		["nocap"] = {type = "boolean"},
-		-- FIXME! The following should only be available when cat= is specified
-		-- in the invocation args. Before doing that, need to remove all uses of
-		-- nocat= in other circumstances.
-		["nocat"] = {type = "boolean"},
 		["cat"] = {list = true},
+		["sort"] = {},
+		-- FIXME! The following should only be available when withcap=1 in
+		-- invocation args. Before doing that, need to remove all uses of
+		-- nocap= in other circumstances.
+		["nocap"] = {type = "boolean"},
 		-- FIXME! The following should only be available when withdot=1 in
 		-- invocation args. Before doing that, need to remove all uses of
 		-- nodot= in other circumstances.
 		["nodot"] = {type = "boolean"},
-		["sort"] = {},
+		-- FIXME! The following should only be available when cat= is specified
+		-- in the invocation args. Before doing that, need to remove all uses
+		-- of nocat= in other circumstances.
+		["nocat"] = {type = "boolean"},
 	}
 	
 	if not iargs["nolink"] and not iargs["linktext"] then
 		add_link_params(params, term_param, "no-numbered-gloss")
 	end
 
-	local ignored_params = {
-		["nocap"] = true,
-		["nodot"] = true,
-	}
+	local ignored_params = {}
+	if not iargs["withcap"] then
+		ignored_params["nocap"] = true
+	end
+	if not iargs["withdot"] then
+		ignored_params["nodot"] = true
+	end
 	if not next(iargs["cat"]) then
 		ignored_params["nocat"] = true
 	end
@@ -551,12 +623,14 @@ function export.inflection_of_t(frame)
 		end
 	end
 
-	local lang, terminfo, categories = get_terminfo_and_categories(iargs, args, term_param, compat)
-	
-	return m_form_of.tagged_inflections(infls, terminfo,
-		iargs["withcap"] and not args["nocap"]
-	) .. (args["nodot"] and "" or args["dot"] or iargs["withdot"] and "." or "")
-	.. require("Module:utilities").format_categories(categories, lang, args["sort"])
+	return construct_form_of_text(iargs, args, term_param, compat,
+		function(terminfo)
+			return m_form_of.tagged_inflections(
+				infls, terminfo,
+				iargs["withcap"] and not args["nocap"], iargs["posttext"]
+			)
+		end
+	)
 end
 
 return export

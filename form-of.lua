@@ -26,7 +26,7 @@ function export.ucfirst(text)
 end
 
 
-function export.format_form_of(text, terminfo)
+function export.format_form_of(text, terminfo, posttext)
 	local parts = {}
 	table.insert(parts, "<span class='form-of-definition use-with-mention'>")
 	table.insert(parts, text)
@@ -41,6 +41,9 @@ function export.format_form_of(text, terminfo)
 			table.insert(parts, m_links.full_link(terminfo, "term", false))
 		end
 		table.insert(parts, "</span>")
+	end
+	if posttext then
+		table.insert(parts, posttext)
 	end
 	table.insert(parts, "</span>")
 	return table.concat(parts)
@@ -72,7 +75,7 @@ local function normalize_tag(tag)
 	return tag
 end
 
-function export.tagged_inflections(tags, terminfo, capfirst)
+function export.tagged_inflections(tags, terminfo, capfirst, posttext)
 	local cur_infl = {}
 	local inflections = {}
 	
@@ -103,14 +106,17 @@ function export.tagged_inflections(tags, terminfo, capfirst)
 	
 	if #inflections == 1 then
 		return export.format_form_of(
-			(capfirst and ucfirst(inflections[1]) or inflections[1]) .. " of", terminfo
+			(capfirst and ucfirst(inflections[1]) or inflections[1]) ..
+			(terminfo and " of" or ""),
+			terminfo, posttext
 		)
 	else
-		local inflection_of = capfirst and "Inflection of" or "inflection of"
-		return
-			"<span class='form-of-definition use-with-mention'>" .. inflection_of .. " " ..
-			"<span class='form-of-definition-link mention'>" .. m_links.full_link(terminfo, "term", false) .. "</span>" ..
-			":</span>\n## <span class='form-of-definition use-with-mention'>" .. table.concat(inflections, "</span>\n## <span class='form-of-definition use-with-mention'>") .. "</span>"
+		local link = return export.format_form_of(
+			(capfirst and "Inflection" or "inflection") ..
+			(terminfo and " of" or ""),
+			terminfo, (posttext or "") .. ":"
+		)
+		return link .."\n## <span class='form-of-definition use-with-mention'>" .. table.concat(inflections, "</span>\n## <span class='form-of-definition use-with-mention'>") .. "</span>"
 	end
 end
 
