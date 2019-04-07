@@ -2116,7 +2116,24 @@ Page 137 Template:he-form of noun: -------- begin text ---------
 Page 138 Template:he-form of prep: Processing
 Page 138 Template:he-form of prep: Found match for regex: .
 Page 138 Template:he-form of prep: -------- begin text ---------
-<onlyinclude><span class="use-with-mention">{{{{{cap|lc}}}:F}}orm of {{he-lemma|1={{{1}}}|wv={{{wv|}}}|dwv={{{dwv|}}}|tr={{{tr|}}}}} including {{#switch:{{{p}}}|1=[[Appendix:Glossary#first_person|first-person]]|2=[[Appendix:Glossary#second_person|second-person]]|3=[[Appendix:Glossary#third_person|third-person]]}} {{#switch:{{{g}}}|m=[[Appendix:Glossary#gender|masculine]]|f=[[Appendix:Glossary#gender|feminine]]}} {{#switch:{{{n}}}|s=[[Appendix:Glossary#singular_number|singular]]|p=[[Appendix:Glossary#plural_number|plural]]}} [[personal pronoun]] as [[Appendix:Glossary#object|object]]{{#if:{{{defective|}}}|, defective spelling}}{{#if:{{{excessive|}}}|, excessive spelling}}{{{.|}}}</span>{{#ifeq:{{NAMESPACE}}|{{{ns|}}}|[[Category:Hebrew preposition forms]]{{#if:{{{1|}}}||{{attention|he|no main form|id=heformofprep1}}}}{{#if:{{{tr|}}}||{{#ifeq:{{{1|}}}|{{PAGENAME}}||[[Category:Hebrew terms needing transliteration]]}}}}{{#switch:{{{p|}}}{{{g|}}}{{{n|}}}|1s|1p|2ms|2mp|2fs|2fp|3ms|3mp|3fs|3fp=|#default={{attention|he|bad person gender number combo|id=heformofpreppgn}}}}}}</onlyinclude>{{documentation}}
+{{#invoke:form of/templates|form_of_t|form of|withcap=1|lang=he<!--
+-->|ignore=1,wv,dwv,tr,p,g,n,defective,excessive<!--
+-->|linktext={{he-lemma|1={{{1}}}|wv={{{wv|}}}|dwv={{{dwv|}}}|tr={{{tr|}}}}}<!--
+-->|posttext=&#32;including {{#invoke:form of/templates|tagged_form_of_t|lang=he<!--
+  -->|{{{p|}}}|{{{g|}}}|{{{n|}}}|[[personal pronoun]] as [[Appendix:Glossary#object|object]]<!--
+  -->|nolink=1<!--
+  -->}}<!--
+  -->{{#if:{{{defective|}}}|, defective spelling}}<!--
+  -->{{#if:{{{excessive|}}}|, excessive spelling}}<!--
+-->|cat=preposition forms<!--
+-->|cat2={{#if:{{{tr|}}}||{{#ifeq:{{{1|}}}|{{PAGENAME}}||terms needing transliteration}}<!--
+-->}}<!--
+
+errors:
+
+-->{{#switch:{{{p|}}}{{{g|}}}{{{n|}}}|1s|1p|2ms|2mp|2fs|2fp|3ms|3mp|3fs|3fp=|#default={{error|person gender number combo p={{{p|}}}/g={{{g|}}}/n={{{n|}}} not ok in template}}}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
 -------- end text --------
 he-verb form of:
 {{#invoke:form of/templates|tagged_form_of_t|withcap=1|lang=he<!--
