@@ -193,7 +193,14 @@ function export.show_affixes(lang, sc, parts, pos, sort_key, nocat)
 		local affix_type, display_term = get_affix_type(part_lang, part_sc, part.term)
 		
 		-- Make a link for the part
-		table.insert(parts_formatted, link_term(part, display_term, lang, sc, sort_key))
+		if display_term == "" then
+			-- If a bare ^ was specified, then insert a blank string. A + will still
+			-- appear next to it. This lets us directly convert things such as
+			-- {{suffix|mul||idae}} to {{affix|mul|^|-idae}}.
+			table.insert(parts_formatted, "")
+		else
+			table.insert(parts_formatted, link_term(part, display_term, lang, sc, sort_key))
+		end
 		
 		if affix_type then
 			-- Make a sort key
@@ -330,14 +337,16 @@ end
 
 
 local function track_wrong_affix_type(template, part, lang, sc, expected_affix_type, part_name)
-	local affix_type = get_affix_type(part.lang or lang, part.sc or sc, part.term)
-	if affix_type ~= expected_affix_type then
-		require("Module:debug").track{
-			template,
-			template .. "/" .. part_name,
-			template .. "/" .. part_name .. "/" .. (affix_type or "none"),
-			template .. "/" .. part_name .. "/" .. (affix_type or "none") .. "/lang/" .. lang:getCode()
-		}
+	if part then
+		local affix_type = get_affix_type(part.lang or lang, part.sc or sc, part.term)
+		if affix_type ~= expected_affix_type then
+			require("Module:debug").track{
+				template,
+				template .. "/" .. part_name,
+				template .. "/" .. part_name .. "/" .. (affix_type or "none"),
+				template .. "/" .. part_name .. "/" .. (affix_type or "none") .. "/lang/" .. lang:getCode()
+			}
+		end
 	end
 end
 
@@ -405,20 +414,25 @@ function export.show_confix(lang, sc, prefix, base, suffix, pos, sort_key, nocat
 	
 	-- Make links out of all the parts
 	local parts_formatted = {}
-	local prefix_sort_base = (suffix.lang or lang):makeEntryName(suffix.term)
+	local prefix_sort_base
+	if suffix.term then
+		prefix_sort_base = (suffix.lang or lang):makeEntryName(suffix.term)
+	end
 	local prefix_categories = {}
 	local suffix_categories = {}
 	
 	table.insert(parts_formatted, link_term(prefix, prefix.term, lang, sc, sort_key))
-	insert_affix_category(categories, lang, pos, "prefix", prefix)
+	insert_affix_category(prefix_categories, lang, pos, "prefix", prefix)
 	
 	if base then
-		prefix_sort_base = (base.lang or lang):makeEntryName(base.term)
+		if base.term then
+			prefix_sort_base = (base.lang or lang):makeEntryName(base.term)
+		end
 		table.insert(parts_formatted, link_term(base, base.term, lang, sc, sort_key))
 	end
 	
 	table.insert(parts_formatted, link_term(suffix, suffix.term, lang, sc, sort_key))
-	insert_affix_category(categories, lang, pos, "suffix", suffix)
+	insert_affix_category(suffix_categories, lang, pos, "suffix", suffix)
 	
 	return table.concat(parts_formatted, " +&lrm; ") .. (nocat and "" or m_utilities.format_categories(prefix_categories, lang, sort_key, prefix_sort_base) .. m_utilities.format_categories(suffix_categories, lang, sort_key))
 end
@@ -462,9 +476,9 @@ function export.show_prefixes(lang, sc, prefixes, base, pos, sort_key, nocat)
 	for i, prefix in ipairs(prefixes) do
 		track_wrong_affix_type("prefix", prefix, lang, sc, "prefix", "prefix")
 	end
-	
+
 	track_wrong_affix_type("prefix", base, lang, sc, nil, "base")
-	
+
 	-- Make links out of all the parts
 	local parts_formatted = {}
 	local first_sort_base = nil
@@ -505,10 +519,8 @@ function export.show_suffixes(lang, sc, base, suffixes, pos, sort_key, nocat)
 		make_part_affix(suffix, lang, sc, "suffix")
 	end
 	
-	if base then
-		track_wrong_affix_type("suffix", base, lang, sc, nil, "base")
-	end
-	
+	track_wrong_affix_type("suffix", base, lang, sc, nil, "base")
+
 	for i, suffix in ipairs(suffixes) do
 		track_wrong_affix_type("suffix", suffix, lang, sc, "suffix", "suffix")
 	end
