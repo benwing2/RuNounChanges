@@ -2018,13 +2018,11 @@ Page 132 Template:he-Vav-perfect of: -------- begin text ---------
 
 --><noinclude>{{documentation}}</noinclude>
 -------- end text --------
-# check for param . and move outside template
 he-cohortative of:
 {{#invoke:call|call|he-verb form of|{{{1|}}}|coho|(prefix conjugation)}}<!--
 
 --><noinclude>{{documentation}}</noinclude>
 -------- end text --------
-# check for param . and move outside template
 # see whether demo= is actually used
 he-defective spelling of:
 {{#invoke:form of/templates|form_of_t|defective spelling of|withcap=1<!--
@@ -2036,7 +2034,6 @@ he-defective spelling of:
 
 --><noinclude>{{documentation}}</noinclude>
 -------- end text --------
-# check for param . and move outside template
 # see whether demo= is actually used
 he-excessive spelling of:
 {{#invoke:form of/templates|form_of_t|excessive spelling of|withcap=1<!--
@@ -2053,13 +2050,14 @@ Page 136 Template:he-form of adj: Found match for regex: .
 Page 136 Template:he-form of adj: -------- begin text ---------
 {{#invoke:form of/templates|tagged_form_of_t|withcap=1|lang=he<!--
 
--->|{{#switch:{{{g|<noinclude>m</noinclude>}}}|m=m|f=f|#default={{error|Unrecognized gender {{{g}}}}}}}<!--
+-->|{{{g|<noinclude>m</noinclude>}}}<!--
 -->|cat={{#ifeq:{{{g|}}}|f|adjective feminine forms}}<!--
 
--->|{{#switch:{{{n|<noinclude>p</noinclude>}}}|s=s|p=p|#default={{error|Unrecognized number {{{n}}}}}}}<!--
+-->|{{{n|<noinclude>p</noinclude>}}}<!--
 -->|cat2={{#ifeq:{{{n|}}}|p|adjective plural forms}}<!--
 
--->{{#switch:{{#if:{{{s|}}}|{{{s}}}|i}}|d=def|i=indef|c=cons|#default={{error|Unrecognized state {{{s}}}}}}}<!--
+-->|{{#switch:{{#if:{{{s|}}}|{{{s}}}|i}}|d=def|i=indef|c=cons}}<!--
+-->|form<!--
 -->|cat3={{#switch:{{#if:{{{s|}}}|{{{s}}}|i}}|d=adjective definite forms|i=adjective indefinite forms|c=adjective construct forms}}<!--
 
 -->|linktext={{he-lemma|1={{{1}}}|wv={{{wv|}}}|dwv={{{dwv|}}}|tr={{{tr|}}}}}<!--
@@ -2068,23 +2066,34 @@ Page 136 Template:he-form of adj: -------- begin text ---------
 -->|cat5={{#if:{{{tr|}}}||{{#ifeq:{{{1|}}}|{{PAGENAME}}||terms needing transliteration}}<!--
 -->}}<!--
 
+errors:
+
+--><includeonly><!--
+-->{{#switch:{{{g|}}}{{{n|}}}|ms|fs|mp|fp=|#default={{error|gender number combo g={{{g|}}}/n={{{n|}}} not ok in template}}}}<!--
+-->{{#switch:{{{s|}}}||d|i|c=|#default={{error|state s={{{s|}}} not ok in template}}}}<!--
+--></includeonly><!--
+
 --><noinclude>{{documentation}}</noinclude>
 -------- end text --------
 Page 137 Template:he-form of noun: Processing
 Page 137 Template:he-form of noun: Found match for regex: .
 Page 137 Template:he-form of noun: -------- begin text ---------
-<onlyinclude><!--
- --><span class="use-with-mention"><!--
-  -->{{#switch:{{{n|<noinclude>p</noinclude>}}}|s=[[Appendix:Glossary#singular_number|{{{{{cap|lc}}}first:singular}}]]&#32;|d=[[Appendix:Glossary#dual_number|{{{{{cap|lc}}}first:dual}}]]&#32;{{catlangname|he|noun dual forms}}|p=[[Appendix:Glossary#plural_number|{{{{{cap|lc}}}first:plural}}]]&#32;{{catlangname|he|noun plural forms}}}}<!--
-  -->{{#switch:{{{s|<noinclude>c</noinclude>}}}|d=[[Appendix:Glossary#definite|{{#if:{{{n|}}}|definite|{{{{{cap|lc}}}first:definite}}}}]]&#32;{{catlangname|he|noun definite forms}}|i=[[Appendix:Glossary#indefinite|{{#if:{{{n|}}}|indefinite|{{{{{cap|lc}}}first:indefinite}}}}]]&#32;{{catlangname|he|noun indefinite forms}}|c=[[Appendix:Glossary#construct_state|{{#if:{{{n|}}}|construct|{{{{{cap|lc}}}first:construct}}}}]]&#32;{{catlangname|he|noun construct forms}}}}<!--
-   -->{{#if:{{{n|}}}{{{s|}}}|form|{{{{{cap|lc}}}first:form}}}} of&#32;<!--
-  -->{{he-lemma|1={{{1}}}|wv={{{wv|}}}|dwv={{{dwv|}}}|tr={{{tr|}}}}}&lrm;<!--
-  -->{{#if:{{{pp|}}}{{{pg|}}}{{{pn|}}}|<!--
-    -->&#32;with&#32;<!--
-    -->{{#switch:{{{pp|}}}|1=[[Appendix:Glossary#first_person|first-person]]&#32;|2=[[Appendix:Glossary#second_person|second-person]]&#32;|3=[[Appendix:Glossary#third_person|third-person]]&#32;}}<!--
-    -->{{#switch:{{{pg|}}}|m=[[Appendix:Glossary#gender|masculine]]&#32;|f=[[Appendix:Glossary#gender|feminine]]&#32;}}<!--
-    -->{{#switch:{{{pn|}}}|s=[[Appendix:Glossary#singular_number|singular]]&#32;|p=[[Appendix:Glossary#plural_number|plural]]&#32;}}<!--
-    -->personal pronoun as possessor<!--
+{{#invoke:form of/templates|tagged_form_of_t|withcap=1|lang=he<!--
+-->|ignore=1,wv,dwv,tr,n,s,pp,pg,pn,proper,pausal,defective,excessive,locative<!--
+
+-->|{{{n|<noinclude>p</noinclude>}}}<!--
+-->|cat={{#switch:{{{n|}}}|d=noun dual forms|p=noun plural forms}}<!--
+
+-->|{{#switch:{{{s|<noinclude>c</noinclude>}}}|d=def|i=indef|c=cons}}<!--
+-->|form<!--
+-->|cat2={{#switch:{{{s|}}}|d=noun definite forms|i=noun indefinite forms|c=noun construct forms}}<!--
+
+-->|linktext={{he-lemma|1={{{1}}}|wv={{{wv|}}}|dwv={{{dwv|}}}|tr={{{tr|}}}}}&lrm;<!--
+-->|posttext={{#if:{{{pp|}}}{{{pg|}}}{{{pn|}}}|&#32;with <!--
+  -->{{#invoke:form of/templates|tagged_form_of_t|lang=he<!--
+  -->|ignore=1,wv,dwv,tr,n,s,pp,pg,pn,proper,pausal,defective,excessive,locative<!--
+  -->|{{{pp|}}}|{{{pg|}}}|{{{pn|}}}|[[personal pronoun]] as possessor<!--
+  -->|nolink=1<!--
   -->}}<!--
   -->{{#if:{{{locative|}}}|<!--
     -->{{#if:{{{pp|}}}{{{pg|}}}{{{pn|}}}|&#32;and}}<!--
@@ -2093,25 +2102,36 @@ Page 137 Template:he-form of noun: -------- begin text ---------
   -->{{#if:{{{pausal|}}}|, {{he-pausal}}}}<!--
   -->{{#if:{{{defective|}}}|, defective spelling}}<!--
   -->{{#if:{{{excessive|}}}|, excessive spelling}}<!--
-  -->{{{.|<noinclude>.</noinclude>}}}<!--
- --></span><!--
- -->{{#ifeq:{{NAMESPACE}}|{{{ns|}}}|<!--
-  -->{{#if:{{{proper|}}}|[[Category:Hebrew proper noun forms]]|[[Category:Hebrew noun forms]]}}<!--
-  -->{{#if:{{{defective|}}}|[[Category:Hebrew defective spellings]]}}<!--
-  -->{{#if:{{{excessive|}}}|[[Category:Hebrew excessive spellings]]}}<!--
-  -->{{#if:{{{1|}}}||{{attention|he|this template's first unnamed parameter should be the noun's lemma form (its singular indefinite form)}}}}<!--
-  -->{{#if:{{{tr|}}}||{{#ifeq:{{{1|}}}|{{PAGENAME}}||[[Category:Hebrew terms needing transliteration]]}}}}<!--
-  -->{{#switch:{{{n|}}}{{{proper|}}}|s{{{proper|}}}|d{{{proper|}}}|p{{{proper|}}}|{{{proper}}}=|#default={{attention|1=he|2=this template requires n=s (singular) or n=d (dual) or n=p (plural)}}}}<!--
-  -->{{#switch:{{{s|}}}.{{{pp|}}}.{{{pg|}}}.{{{pn|}}}<!--
-    -->|d...|i...|-...=<!--
-    -->|c...|.1..s|.1..p|.2.m.s|.2.f.s|.2.m.p|.2.f.p|.3.m.s|.3.f.s|.3.m.p|.3.f.p=<!--
-      -->{{#ifeq:{{{n|}}}|d|{{attention|1=he|2=this template requires, when n=d (dual), that either s=d (definite) or s=i (indefinite). Hebrew does not have dual construct forms and dual pronominal forms.}}}}<!--
-    -->|#default={{#if:{{{proper|}}}||{{attention|1=he|2=this template requires either: s=d (definite) or s=i (indefinite) or s=c (construct); or else: pp=1/2/3 and pg=m/f and pn=s/p, except that pg=m/f should be omitted if pp=1; but not both}}}}<!--
-  -->}}<!--
- -->}}<!--
---></onlyinclude>
+-->|cat3={{#if:{{{proper|}}}|proper noun forms|noun forms}}<!--
+-->|cat4={{#if:{{{tr|}}}||{{#ifeq:{{{1|}}}|{{PAGENAME}}||terms needing transliteration}}<!--
+-->|cat5={{#if:{{{defective|}}}|defective spellings}}<!--
+-->|cat6={{#if:{{{excessive|}}}|excessive spellings}}<!--
+-->}}<!--
 
-{{documentation}}
+error if bad arguments:
+
+--><includeonly><!--
+
+First check the number.
+
+-->{{#switch:{{{n|}}}{{{proper|}}}|s{{{proper|}}}|d{{{proper|}}}|p{{{proper|}}}|{{{proper}}}=|#default={{error|this template requires n=s (singular) or n=d (dual) or n=p (plural)}}}}<!--
+
+Then check remaining params.
+
+-->{{#switch:{{{s|}}}.{{{pp|}}}.{{{pg|}}}.{{{pn|}}}<!--
+  -->|d...|i...|-...=<!--
+  -->|c...|.1..s|.1..p|.2.m.s|.2.f.s|.2.m.p|.2.f.p|.3.m.s|.3.f.s|.3.m.p|.3.f.p=<!--
+    -->{{#ifeq:{{{n|}}}|d|{{error|This template requires, when n=d (dual), that either s=d (definite) or s=i (indefinite). Hebrew does not have dual construct forms and dual pronominal forms.}}}}<!--
+  -->|#default={{#if:{{{proper|}}}||{{error|This template requires either: s=d (definite) or s=i (indefinite) or s=c (construct); or else: pp=1/2/3 and pg=m/f and pn=s/p, except that pg=m/f should be omitted if pp=1; but not both}}}}<!--
+-->}}<!--
+
+Next check for missing main entry.
+
+-->{{#switch:{{{1|}}}||{{error|this template's first unnamed parameter should be the noun's lemma form (its singular indefinite form)}}}}<!--
+
+--></includeonly><!--
+
+--><noinclude>{{documentation}}</noinclude>
 -------- end text --------
 Page 138 Template:he-form of prep: Processing
 Page 138 Template:he-form of prep: Found match for regex: .
@@ -2120,6 +2140,7 @@ Page 138 Template:he-form of prep: -------- begin text ---------
 -->|ignore=1,wv,dwv,tr,p,g,n,defective,excessive<!--
 -->|linktext={{he-lemma|1={{{1}}}|wv={{{wv|}}}|dwv={{{dwv|}}}|tr={{{tr|}}}}}<!--
 -->|posttext=&#32;including {{#invoke:form of/templates|tagged_form_of_t|lang=he<!--
+  -->|ignore=1,wv,dwv,tr,p,g,n,defective,excessive<!--
   -->|{{{p|}}}|{{{g|}}}|{{{n|}}}|[[personal pronoun]] as [[Appendix:Glossary#object|object]]<!--
   -->|nolink=1<!--
   -->}}<!--
@@ -2131,13 +2152,15 @@ Page 138 Template:he-form of prep: -------- begin text ---------
 
 errors:
 
+--><includeonly><!--
 -->{{#switch:{{{p|}}}{{{g|}}}{{{n|}}}|1s|1p|2ms|2mp|2fs|2fp|3ms|3mp|3fs|3fp=|#default={{error|person gender number combo p={{{p|}}}/g={{{g|}}}/n={{{n|}}} not ok in template}}}}<!--
+--></includeonly><!--
 
 --><noinclude>{{documentation}}</noinclude>
 -------- end text --------
 he-verb form of:
-{{#invoke:form of/templates|tagged_form_of_t|withcap=1|lang=he<!--
--->|ignore=1,2,3,4,wv,dwv,tr,p,g,n,op,og,on,defective,excessive<!--
+{{#invoke:form of/templates|tagged_form_of_t|withcap=1|lang=he|split_tags=,<!--
+-->|ignore=1,2,wv,dwv,tr,p,g,n,op,og,on,defective,excessive<!--
 
 person/gender/number:
 
@@ -2145,32 +2168,65 @@ person/gender/number:
 
 remaining text:
 
--->|{{{2|}}}|{{{3|}}}|{{{4|}}}<!--
+-->|{{#switch:{{{2|}}}<!--
+  -->|past=past,(suffix conjugation)<!--
+  -->|pres=pres,part,and,pres,tense<!--
+  -->|fut|futr=futr,(prefix conjugation)<!--
+  -->|imp|impv=impv<!--
+  -->|juss=juss,(prefix conjugation)<!--
+  -->|coho=coho,(prefix conjugation)<!--
+  -->|vavp=[[w:Waw-consecutive|''vav''-consecutive]],perf,(hence [[Appendix:Glossary#future_tense|future tense]])<!--
+  -->|vavi=[[w:Waw-consecutive|''vav''-consecutive]],impf,(hence [[Appendix:Glossary#past_tense|past tense]])<!--
+
 -->|linktext={{he-lemma|1={{{1}}}|wv={{{wv|}}}|dwv={{{dwv|}}}|tr={{{tr|}}}}}<!--
 
 categories:
 
 -->|cat=verb forms<!--
 -->|cat2={{#if:{{{tr|}}}||{{#ifeq:{{{1|}}}|{{PAGENAME}}||terms needing transliteration}}}}<!--
--->}}<!--
 
 object:
 
--->{{#if:{{{op|}}}{{{og|}}}{{{on|}}}|, with a <!--
-  -->{{#invoke:form of/templates|tagged_form_of_t|lang=he|nolink=1<!--
-    -->|ignore=1,2,3,4,wv,dwv,tr,p,g,n,op,og,on,defective,excessive<!--
-    -->|{{{op|}}}|{{{og|}}}|{{{on|}}}<!--
-  -->}} pronoun suffixed as direct object<!--
--->}}<!--
+-->|posttext=<!--
+  -->{{#if:{{{op|}}}{{{og|}}}{{{on|}}}|, with a <!--
+    -->{{#invoke:form of/templates|tagged_form_of_t|lang=he|nolink=1<!--
+      -->|ignore=1,2,3,4,wv,dwv,tr,p,g,n,op,og,on,defective,excessive<!--
+      -->|{{{op|}}}|{{{og|}}}|{{{on|}}}<!--
+    -->}} pronoun suffixed as direct object<!--
+  -->}}<!--
 
--->{{#if:{{{defective|}}}|, defective spelling}}<!--
--->{{#if:{{{excessive|}}}|, excessive spelling}}<!--
+  -->{{#if:{{{defective|}}}|, defective spelling}}<!--
+  -->{{#if:{{{excessive|}}}|, excessive spelling}}<!--
+
+-->}}<!--
 
 error if bad arguments:
 
--->{{#switch:{{{p|}}}{{{g|}}}{{{n|}}}|1s|1p|2ms|2mp|2fs|2fp|3ms|3mp|3fs|3fp=|#default={{error|person gender number combo p={{{p|}}}/g={{{g|}}}/n={{{n|}}} not ok in template}}}}<!--
+--><includeonly><!--
+
+First check for person/number/gender. If present or imperative, only number and
+gender should be present, otherwise all three should be present, but no gender
+in the first person.
+
+-->{{#switch:{{{2|}}}<!--
+  -->|pres|imp|impv={{#switch:{{{p|}}}{{{g|}}}{{{n|}}}|ms|mp|fs|fp=|#default={{error|gender number combo p={{{p|}}}/g={{{g|}}}/n={{{n|}}} not ok in template}}<!--
+  -->|#default={{#switch:{{{p|}}}{{{g|}}}{{{n|}}}|1s|1p|2ms|2mp|2fs|2fp|3ms|3mp|3fs|3fp=|#default={{error|person gender number combo p={{{p|}}}/g={{{g|}}}/n={{{n|}}} not ok in template}}<!--
+-->}}<!--
+
+Next check the object person/number/gender, which should be missing or the same
+as the subject person/number/gender combinations of past, future, etc.
+
 -->{{#switch:{{{op|}}}{{{og|}}}{{{on|}}}||1s|1p|2ms|2mp|2fs|2fp|3ms|3mp|3fs|3fp=|#default={{error|person gender number combination op={{{op|}}}/og={{{og|}}}/on={{{on|}}} of direct object not ok in template}}}}<!--
--->{{#switch:{{{1|}}}||{{error|no main form provider in template}}}}<!--
+
+Next check for missing main entry.
+
+-->{{#switch:{{{1|}}}||{{error|no main entry in template}}}}<!--
+
+Finally check for bad tense/aspect/mood.
+
+-->{{#switch:{{{2|}}}|past|pres|fut|futr|imp|impv|juss|coho|vavp|vavi=|#default={{error|verb conjugation 2={{{2|}}} not ok in template}}}}<!--
+
+--></includeonly><!--
 
 --><noinclude>{{documentation}}</noinclude>
 -------- end text --------
@@ -2180,44 +2236,8 @@ he-future of:
 
 --><noinclude>{{documentation}}</noinclude>
 -------- end text --------
-Page 140 Template:he-imperative of: Processing
-Page 140 Template:he-imperative of: Found match for regex: .
-Page 140 Template:he-imperative of: -------- begin text ---------
-{{#invoke:form of/templates|tagged_form_of_t|withcap=1|lang=he<!--
--->|ignore=1,wv,dwv,tr,g,n,op,og,on,defective,excessive<!--
-
-gender/number:
-
--->|{{{g|}}}|{{{n|}}}<!--
-
-remaining text:
-
--->|impv<!--
--->|linktext={{he-lemma|1={{{1}}}|wv={{{wv|}}}|dwv={{{dwv|}}}|tr={{{tr|}}}}}<!--
-
-categories:
-
--->|cat=verb forms<!--
--->|cat2={{#if:{{{tr|}}}||{{#ifeq:{{{1|}}}|{{PAGENAME}}||terms needing transliteration}}}}<!--
--->}}<!--
-
-object:
-
--->{{#if:{{{op|}}}{{{og|}}}{{{on|}}}|, with a <!--
-  -->{{#invoke:form of/templates|tagged_form_of_t|lang=he|nolink=1<!--
-    -->|ignore=1,wv,dwv,tr,g,n,op,og,on,defective,excessive<!--
-    -->|{{{op|}}}|{{{og|}}}|{{{on|}}}<!--
-  -->}} pronoun suffixed as direct object<!--
--->}}<!--
-
--->{{#if:{{{defective|}}}|, defective spelling}}<!--
--->{{#if:{{{excessive|}}}|, excessive spelling}}<!--
-
-error if bad arguments:
-
--->{{#switch:{{{g|}}}{{{n|}}}|ms|fs|mp|fp=|#default={{error|gender number combo g={{{g|}}}/n={{{n|}}} not ok in template}}}}<!--
--->{{#switch:{{{op|}}}{{{og|}}}{{{on|}}}||1s|1p|2ms|2mp|2fs|2fp|3ms|3mp|3fs|3fp=|#default={{error|person gender number combination op={{{op|}}}/og={{{og|}}}/on={{{on|}}} of direct object not ok in template}}}}<!--
--->{{#switch:{{{1|}}}||{{error|no main form provider in template}}}}<!--
+he-imperative of:
+{{#invoke:call|call|he-verb form of|{{{1|}}}|impv}}<!--
 
 --><noinclude>{{documentation}}</noinclude>
 -------- end text --------
@@ -2229,19 +2249,20 @@ Page 141 Template:he-infinitive of: -------- begin text ---------
 -->|{{#switch:{{{1}}}|to=to-infinitive|bare=bare infinitive (infinitive construct or gerund)|abs=infinitive absolute|infinitive}}}} of}}<!--
 -->|linktext={{he-lemma|1={{{2}}}|wv={{{wv|}}}|dwv={{{dwv|}}}|tr={{{tr|}}}}}<!--
 -->|cat=verb forms|cat2=infinitives<!--
+-->|posttext=<!--
+  -->{{#if:{{{defective|}}}|, defective spelling}}<!--
+  -->{{#if:{{{excessive|}}}|, excessive spelling}}<!--
 -->}}<!--
-
--->{{#if:{{{defective|}}}|, defective spelling}}<!--
--->{{#if:{{{excessive|}}}|, excessive spelling}}<!--
 
 errors:
 
+--><includeonly><!--
 -->{{#if:{{{2|}}}||{{error|this template's second unnamed parameter should be the verb's lemma form (its third-person masculine singular past tense/perfect aspect/suffix conjugation)}}}}<!--
 -->{{#switch:{{{1}}}|to|bare|abs=|#default={{error|this template requires its first parameter to be 'to' (for a to-infinitive), 'bare' (for a bare infinitive/infinitive construct/gerund), or 'abs' (for an infinitive absolute)}}}}<!--
+--></includeonly><!--
 
 --><noinclude>{{documentation}}</noinclude>
 -------- end text --------
-# check for param . and move outside template
 # see whether ns= is actually used
 he-jussive of:
 {{#invoke:call|call|he-verb form of|{{{1|}}}|juss|(prefix conjugation)}}<!--
@@ -2253,37 +2274,18 @@ he-past of:
 
 --><noinclude>{{documentation}}</noinclude>
 -------- end text --------
-Page 144 Template:he-present of: Processing
-Page 144 Template:he-present of: Found match for regex: .
-Page 144 Template:he-present of: -------- begin text ---------
-{{invoke:form of/templates|tagged_form_of_t|withcap=1|lang=he<!--
--->|ignore=1,g,n,wv,dwv,tr,excessive,defective<!--
--->|{{{g|}}}|{{{n|}}}<!--
--->|pres|part|and|pres|tense<!--
--->|linktext={{he-lemma|1={{{1}}}|wv={{{wv|}}}|dwv={{{dwv|}}}|tr={{{tr|}}}}}<!--
--->|cat=verb forms<!--
--->}}<!--
-
--->{{#if:{{{defective|}}}|, defective spelling}}<!--
--->{{#if:{{{excessive|}}}|, excessive spelling}}<!--
-
-error if bad arguments:
-
--->{{#switch:{{{g|}}}{{{n|}}}|ms|fs|mp|fp=|#default={{error|gender number combo g={{{g|}}}/n={{{n|}}} not ok in template}}}}<!--
--->{{#switch:{{{1|}}}||{{error|no main form provider in template}}}}<!--
+he-present of:
+he-imperative of:
+{{#invoke:call|call|he-verb form of|{{{1|}}}|pres|part|and|pres|tense}}<!--
 
 --><noinclude>{{documentation}}</noinclude>
 -------- end text --------
-Page 145 Template:he-vav-imperfect of: Processing
-Page 145 Template:he-vav-imperfect of: Found match for regex: .
-Page 145 Template:he-vav-imperfect of: -------- begin text ---------
+he-vav-imperfect of:
 {{#invoke:call|call|he-verb form of|{{{1|}}}|[[w:Waw-consecutive|''vav''-consecutive]]|impf|(hence [[Appendix:Glossary#past_tense|past tense]])}}<!--
 
 -->}}<noinclude>{{documentation}}</noinclude>
 -------- end text --------
-Page 146 Template:he-vav-perfect of: Processing
-Page 146 Template:he-vav-perfect of: Found match for regex: .
-Page 146 Template:he-vav-perfect of: -------- begin text ---------
+he-vav-perfect of:
 {{#invoke:call|call|he-verb form of|{{{1|}}}|[[w:Waw-consecutive|''vav''-consecutive]]|perf|(hence [[Appendix:Glossary#future_tense|future tense]])}}<!--
 
 -->}}<noinclude>{{documentation}}</noinclude>
