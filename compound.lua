@@ -3,27 +3,78 @@ local m_utilities = require("Module:utilities")
 
 local export = {}
 
+local u = mw.ustring.char
 local rsub = mw.ustring.gsub
 local usub = mw.ustring.sub
 local ulen = mw.ustring.len
 local rfind = mw.ustring.find
 local rmatch = mw.ustring.match
 
--- FIXME: should be script-based
--- But we can't do that unless we do script detection before linking.
+local ZWNJ = u(0x200C)
+
+-- Per-script hyphens. Script detection is normally done when linking,
+-- but we need to do it earlier. However, under most circumstances we
+-- don't need to do script detection. Specifically, we only need to do
+-- script detection for a given language if
+--
+-- (a) the language has multiple scripts; and
+-- (b) at least one of those scripts is listed below.
+local arab_hyphens = "ـ" .. ZWNJ
 local hyphens = {
-	["ar"] = "ـ",
-	["fa"] = "ـ",
-	["he"] = "־",
-	["yi"] = "־",
+	["Arab"] = arab_hyphens,
+	-- WTF? Why are there a zillion language-specific variants of the
+	-- Arabic script?
+	["fa-Arab"] = arab_hyphens,
+	["kk-Arab"] = arab_hyphens,
+	["ks-Arab"] = arab_hyphens,
+	["ku-Arab"] = arab_hyphens,
+	["ms-Arab"] = arab_hyphens,
+	["mzn-Arab"] = arab_hyphens,
+	["ota-Arab"] = arab_hyphens,
+	["pa-Arab"] = arab_hyphens,
+	["ps-Arab"] = arab_hyphens,
+	["sd-Arab"] = arab_hyphens,
+	["tt-Arab"] = arab_hyphens,
+	["ug-Arab"] = arab_hyphens,
+	["ur-Arab"] = arab_hyphens,
+	["Hebr"] = "־",
+	-- FIXME! What about the following right-to-left scripts?
+	-- Adlm (Adlam)
+	-- Armi (Imperial Aramaic)
+	-- Avst (Avestan)
+	-- Cprt (Cypriot)
+	-- Khar (Kharoshthi)
+	-- Mand (Mandaic/Mandaean)
+	-- Mani (Manichaean)
+	-- Mend (Mende/Mende Kikakui)
+	-- Narb (Old North Arabian)
+	-- Nbat (Nabataean/Nabatean)
+	-- Nkoo (N'Ko)
+	-- Orkh (Orkhon runes)
+	-- Phli (Inscriptional Pahlavi)
+	-- Phlp (Psalter Pahlavi)
+	-- Phlv (Book Pahlavi)
+	-- Phnx (Phoenician)
+	-- Prti (Inscriptional Parthian)
+	-- Rohg (Hanifi Rohingya)
+	-- Samr (Samaritan)
+	-- Sarb (Old South Arabian)
+	-- Sogd (Sogdian)
+	-- Sogo (Old Sogdian)
+	-- Syrc (Syriac)
+	-- Thaa (Thaana)
 }
 
+-- Scripts for which there is no displayed hyphen. See below.
 local no_displayed_hyphens = {
-	["ja"] = true,
-	["ko"] = true,
-	["lo"] = true,
-	["th"] = true,
-	["zh"] = true,
+	["Hani"] = true,
+	-- The following two are mixtures of several scripts. Hopefully
+	-- the specs here are correct!
+	["Jpan"] = true,
+	["Kore"] = true,
+	["Laoo"] = true,
+	["Nshu"] = true,
+	["Thai"] = true,
 }
 
 local function pluralize(pos)
@@ -74,32 +125,49 @@ end
 -- are different, but the code below is written generally enough to handle
 -- arbitrary display hyphens.
 
--- Get the single character that signals an affix in template params.
-local function get_template_hyphen(lang, sc)
-	--The script will be "Latn" for transliterations.
-	if sc and sc:getCode() == "Latn" then
-		return "-"
+-- Get
+-- (a) the single character that signals an affix in template params;
+-- (b) the string (possibly empty) that signals an affix in displayed
+--     and linked terms. This differs from the template hyphen in various
+--     East Asian languages, where the parameters to {{affix}} will still
+--     contain a hyphen to signal an affix, but the affix will be displayed
+--     and linked without such a hyphen.
+-- TEXT is the text of the affix, which may be necessary for script detection.
+-- LANG is the language of the affix.
+-- SC is the script of the affix, or nil. If unspecified, and the language
+--   has multiple scripts, and at least one of those scripts has a non-default
+--   hyphen or has the no_displayed_hyphens[] property set, we do script
+--   detection to figure out the proper script of the text, and then retrieve
+--   the hyphen for that script.
+local function get_template_and_display_hyphens(text, lang, sc)
+	if sc then
+		sc = sc:getCode()
 	else
-		return hyphens[lang:getCode()] or "-"
+		local possible_scripts = lang:getScriptCodes()
+		if #possible_scripts == 0 then
+			-- This shouldn't happen; if the language has no script codes,
+			-- the list {"None"} should be returned.
+			error("Something is majorly wrong! Language has no script codes.")
+		end
+		if #possible_scripts == 1 then
+			sc = possible_scripts[1]
+		else
+			local may_have_nondefault_hyphen = false
+			for _, script in ipairs(possible_scripts) do
+				if hyphens[script] or no_displayed_hyphens[script] then
+					may_have_nondefault_hyphen = true
+					break
+				end
+			end
+			if not may_have_nondefault_hyphen then
+				return "-", "-"
+			end
+			sc = require("Module:scripts").findBestScript(text, lang):getCode()
+		end
 	end
-end
-
--- Get the string (possibly empty) that signals an affix in displayed
--- and linked terms. This differs from get_template_hyphen() in various
--- East Asian languages, where the parameters to {{affix}} will still
--- contain a hyphen to signal an affix, but the affix will be displayed
--- and linked without such a hyphen.
-local function get_display_hyphen(lang, sc)
-	--The script will be "Latn" for transliterations.
-	if sc and sc:getCode() == "Latn" then
-		return "-"
-	end
-	local langcode = lang:getCode()
-	if no_displayed_hyphens[langcode] then
-		return ""
-	else
-		return hyphens[langcode] or "-"
-	end
+	local template_hyphen = hyphens[sc] or "-"
+	local display_hyphen = no_displayed_hyphens[sc] and "" or template_hyphen
+	return template_hyphen, display_hyphen
 end
 
 -- Find the type of affix ("prefix", "infix", "suffix", "circumfix" or nil
@@ -112,8 +180,7 @@ local function get_affix_type(lang, sc, part)
 		return nil, nil
 	end
 	
-	local thyph = get_template_hyphen(lang, sc)
-	local dhyph = get_display_hyphen(lang, sc)
+	local thyph, dhyph = get_template_and_display_hyphens(part, lang, sc)
 	local hyphen_space_hyphen = thyph .. " " .. thyph
 
 	if part:find("^%^") then
@@ -603,8 +670,7 @@ function export.make_affix(term, lang, sc, affix_type)
 		affix_type = "infix"
 	end
 	
-	local thyph = get_template_hyphen(lang, sc)
-	local dhyph = get_display_hyphen(lang, sc)
+	local thyph, dhyph = get_template_and_display_hyphens(term, lang, sc)
 	
 	-- Remove an asterisk if the morpheme is reconstructed and add it in the end.
 	local reconstructed = ""
