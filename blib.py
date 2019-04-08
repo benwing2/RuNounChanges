@@ -49,6 +49,14 @@ def errmsg(text):
 def errmsgn(text):
   print >> sys.stderr, text.encode('utf-8'),
 
+def errandmsg(text):
+  msg(text)
+  errmsg(text)
+
+def errmsgn(text):
+  msgn(text)
+  errmsgn(text)
+
 def parse_text(text):
   return mwparserfromhell.parser.Parser().parse(text, skip_style_tags=True)
 
