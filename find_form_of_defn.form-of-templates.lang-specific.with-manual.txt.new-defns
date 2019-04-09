@@ -2177,6 +2177,7 @@ remaining text:
   -->|coho=coho,(prefix conjugation)<!--
   -->|vavp=[[w:Waw-consecutive|''vav''-consecutive]],perf,(hence [[Appendix:Glossary#future_tense|future tense]])<!--
   -->|vavi=[[w:Waw-consecutive|''vav''-consecutive]],impf,(hence [[Appendix:Glossary#past_tense|past tense]])<!--
+-->}}<!--
 
 -->|linktext={{he-lemma|1={{{1}}}|wv={{{wv|}}}|dwv={{{dwv|}}}|tr={{{tr|}}}}}<!--
 
@@ -2209,8 +2210,8 @@ gender should be present, otherwise all three should be present, but no gender
 in the first person.
 
 -->{{#switch:{{{2|}}}<!--
-  -->|pres|imp|impv={{#switch:{{{p|}}}{{{g|}}}{{{n|}}}|ms|mp|fs|fp=|#default={{error|gender number combo p={{{p|}}}/g={{{g|}}}/n={{{n|}}} not ok in template}}<!--
-  -->|#default={{#switch:{{{p|}}}{{{g|}}}{{{n|}}}|1s|1p|2ms|2mp|2fs|2fp|3ms|3mp|3fs|3fp=|#default={{error|person gender number combo p={{{p|}}}/g={{{g|}}}/n={{{n|}}} not ok in template}}<!--
+  -->|pres|imp|impv={{#switch:{{{p|}}}{{{g|}}}{{{n|}}}|ms|mp|fs|fp=|#default={{error|gender number combo p={{{p|}}}/g={{{g|}}}/n={{{n|}}} not ok in template}}}}<!--
+  -->|#default={{#switch:{{{p|}}}{{{g|}}}{{{n|}}}|1s|1p|2ms|2mp|2fs|2fp|3ms|3mp|3fs|3fp=|#default={{error|person gender number combo p={{{p|}}}/g={{{g|}}}/n={{{n|}}} not ok in template}}}}<!--
 -->}}<!--
 
 Next check the object person/number/gender, which should be missing or the same
@@ -2220,7 +2221,7 @@ as the subject person/number/gender combinations of past, future, etc.
 
 Next check for missing main entry.
 
--->{{#switch:{{{1|}}}||{{error|no main entry in template}}}}<!--
+-->{{#if:{{{1|}}}||{{error|no main entry in template}}}}<!--
 
 Finally check for bad tense/aspect/mood.
 
