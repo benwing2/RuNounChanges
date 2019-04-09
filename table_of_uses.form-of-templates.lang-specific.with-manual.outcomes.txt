@@ -1,0 +1,778 @@
+Beginning at Mon Apr  1 13:47:41 2019
+{|class="wikitable"
+! Aliased template !! Canonical template !! #Uses !! Suggested disposition
+|-
+| '''[[Template:Cretan dialect form of]]''' || '''[[Template:Cretan dialect form of]]''' || 9 || || Rename to {{temp|el-Cretan dialect form of}}
+|-
+| [[Template:cretan dialect form of]] || [[Template:Cretan dialect form of]] || 8 || || Replace with {{temp|el-Cretan dialect form of}}
+|-
+| '''[[Template:Cypriot dialect form of]]''' || '''[[Template:Cypriot dialect form of]]''' || 7 || || Rename to {{temp|el-Cypriot dialect form of}}
+|-
+| '''[[Template:European Portuguese form of]]''' || '''[[Template:European Portuguese form of]]''' || 0 || || Delete
+|-
+| '''[[Template:Italiot dialect form of]]''' || '''[[Template:Italiot dialect form of]]''' || 52 || Rename to {{temp|el-Italiot dialect form of}}
+|-
+| '''[[Template:Katharevousa form of]]''' || '''[[Template:Katharevousa form of]]''' || 137 || || Rename to {{temp|el-Katharevousa form of}}
+|-
+| '''[[Template:Maniot dialect form of]]''' || '''[[Template:Maniot dialect form of]]''' || 4 || || Rename to {{temp|el-Maniot dialect form of}}
+|-
+| '''[[Template:Pontian dialect form of]]''' || '''[[Template:Pontian dialect form of]]''' || 2 || || Rename to {{temp|el-Pontian dialect form of}}
+|-
+| '''[[Template:ar-instance noun of]]''' || '''[[Template:ar-instance noun of]]''' || 20 || || Keep
+|-
+| '''[[Template:ar-verbal noun of]]''' || '''[[Template:ar-verbal noun of]]''' || 3005 || Replaceable with {{temp|verbal noun of}} except when {{para|form}} or {{para|uncertain}} specified || Keep 
+|-
+| '''[[Template:be-Taraškievica]]''' || '''[[Template:be-Taraškievica]]''' || 4 || || Rename to {{temp|be-Taraškievica spelling of}}
+|-
+| '''[[Template:bg-adj form of]]''' || '''[[Template:bg-adj form of]]''' || 208 || Keep
+|-
+| '''[[Template:bg-adjective extended of]]''' || '''[[Template:bg-adjective extended of]]''' || 5 || Displays "masculine extended (vocative) form of" and categorizes into "adjective vocative forms" || Replace with {{temp|bg-adj form of|masculine|extended|adj={{{1}}}}}
+|-
+| '''[[Template:bg-adjective feminine definite of]]''' || '''[[Template:bg-adjective feminine definite of]]''' || 0 || Unused || Delete
+|-
+| '''[[Template:bg-adjective feminine indefinite of]]''' || '''[[Template:bg-adjective feminine indefinite of]]''' || 0 || Unused || Delete
+|-
+| '''[[Template:bg-adjective masculine definite object of]]''' || '''[[Template:bg-adjective masculine definite object of]]''' || 0 || Unused || Delete
+|-
+| '''[[Template:bg-adjective masculine definite subject of]]''' || '''[[Template:bg-adjective masculine definite subject of]]''' || 0 || Unused || Delete
+|-
+| '''[[Template:bg-adjective neuter definite of]]''' || '''[[Template:bg-adjective neuter definite of]]''' || 0 || Unused || Delete
+|-
+| '''[[Template:bg-adjective neuter indefinite of]]''' || '''[[Template:bg-adjective neuter indefinite of]]''' || 1 || Replaceable with {{temp|inflection of|bg|...|adj|n|indef}} except categorizes into "adjective neuter forms" || Replace with {{temp|bg-adj form of|neuter|indefinite|adj={{{1}}}}}
+|-
+| '''[[Template:bg-adjective plural definite of]]''' || '''[[Template:bg-adjective plural definite of]]''' || 0 || Unused || Delete
+|-
+| '''[[Template:bg-adjective plural indefinite of]]''' || '''[[Template:bg-adjective plural indefinite of]]''' || 0 || Unused || Delete
+|-
+| '''[[Template:bg-noun form of]]''' || '''[[Template:bg-noun form of]]''' || 228 || Keep
+|-
+| '''[[Template:bg-plural count of]]''' || '''[[Template:bg-plural count of]]''' || 4 || Replacable with {{temp|inflection of|bg|...|p|count}} || Replace with {{temp|bg-noun form of|count|noun={{{1}}}}}
+|-
+| '''[[Template:bg-pre-reform]]''' || '''[[Template:bg-pre-reform]]''' || 28 || Keep
+|-
+| '''[[Template:bg-singular definite object form of]]''' || '''[[Template:bg-singular definite object form of]]''' || 4 || Replaceable with {{temp|inflection of|bg|...|s|def|object form}} || Replace with {{temp|bg-noun-form|singular|definite|object|noun={{{1}}}}}
+|-
+| '''[[Template:bg-singular definite subject form of]]''' || '''[[Template:bg-singular definite subject form of]]''' || 3 || Replaceable with {{temp|inflection of|bg|...|s|def|subject form}} || Replace with {{temp|bg-noun-form|singular|definite|subject|noun={{{1}}}}}
+|-
+| '''[[Template:bg-verb form of]]''' || '''[[Template:bg-verb form of]]''' || 30114 || Keep
+|-
+| '''[[Template:blk-past of]]''' || '''[[Template:blk-past of]]''' || 1 || Displays "past tense of" and categorizes into 'verb simple past forms' and 'past participles' || Keep?
+|-
+| '''[[Template:br-noun-mutation of]]''' || '''[[Template:br-noun-mutation of]]''' || 23 || Displays "Mutated form of" or "Mutated plural form of" and categorizes into "mutated nouns" or "mutated proper nouns" || Rename to {{temp|br-noun mutation of}}
+|-
+| [[Template:br-noun-mutated]] || [[Template:br-noun-mutation of]] || 23 || Rename to {{temp|br-noun mutation of}}
+|-
+| '''[[Template:br-noun-plural]]''' || '''[[Template:br-noun-plural]]''' || 166 || Replaceable with {{temp|plural of|br}} except categorizes into "noun plural forms" || Rename to {{temp|br-noun plural of}} (or supersede?)
+|-
+| '''[[Template:ca-adj form of]]''' || '''[[Template:ca-adj form of]]''' || 11 || Replaceable with {{temp|inflection of|ca}} except categorizes into "adjective forms" (should be handled by headword) and maybe into "adjective feminine forms", "adjective plural forms", "adjective augmentative forms", "adjective diminutive forms", "adjective comparative forms" and/or "adjective superlative forms" || Keep?
+|-
+| '''[[Template:ca-form of]]''' || '''[[Template:ca-form of]]''' || 154 || Replaceable with {{temp|inflection of|ca}} and/or {{temp|alternative form of}} or {{temp|alternative spelling of}} except when {{para|val}} is specified || Replace and convert {{para|val}} into {{temp|ca-val}} when present
+|-
+| '''[[Template:ca-verb form of]]''' || '''[[Template:ca-verb form of]]''' || 78127 || Replaceable with {{temp|inflection of}}, {{temp|present participle of}} and/or {{temp|past participle of}}; categorizes into one of "verb forms" (should be handled by headword), "present participle forms" (handled by {{temp|past participle of}}) or "past participle forms" (handled by {{temp|past participle of}}) || Keep for now; consider replacing and deprecating in the future
+|-
+| '''[[Template:caret notation of]]''' || '''[[Template:caret notation of]]''' || 27 || || Keep
+|-
+| '''[[Template:ceb-superseded spelling of]]''' || '''[[Template:ceb-superseded spelling of]]''' || 3 || || Keep
+|-
+| '''[[Template:chm-inflection of]]''' || '''[[Template:chm-inflection of]]''' || 281 || Replaceable with {{temp|inflection of}}; categorizes into one of "adjective forms", "numeral forms", "verb forms", "participle forms", "pronoun forms" or "noun forms", all of which should be handled by the headword || Replace
+|-
+| '''[[Template:cmn-erhua form of]]''' || '''[[Template:cmn-erhua form of]]''' || 377 || || Keep
+|-
+| [[Template:erhua form of]] || [[Template:cmn-erhua form of]] || 0 || Delete
+|-
+| [[Template:erhua form]] || [[Template:cmn-erhua form of]] || 0 || Delete
+|-
+| [[Template:zh-erhua form of]] || [[Template:cmn-erhua form of]] || 375 || Replace with {{temp|cmn-erhua form of}}
+|-
+| '''[[Template:cu-Glag spelling of]]''' || '''[[Template:cu-Glag spelling of]]''' || 2 || || Keep
+|-
+| '''[[Template:cu-form of]]''' || '''[[Template:cu-form of]]''' || 10 || Replaceable with {{temp|inflection of|cu|...}}; no categorization || Replace
+|-
+| '''[[Template:da-pl-genitive]]''' || '''[[Template:da-pl-genitive]]''' || 23 || Replaceable with {{temp|inflection of|da|...|g}}; no categorization || Replace
+|-
+| '''[[Template:de-du contraction]]''' || '''[[Template:de-du contraction]]''' || 2 || Replaceable with {{temp|contraction of|de|<nowiki>{{{1|}}}</nowiki> [[du]]}}; no categorization || Replace
+|-
+| '''[[Template:de-form-adj]]''' || '''[[Template:de-form-adj]]''' || 241 || Replaceable with {{temp|inflection of|de|...}} but categorizes into "adjective comparative forms" or "adjective superlative forms" in some cases || Eventually supersede
+|-
+| '''[[Template:de-form-noun]]''' || '''[[Template:de-form-noun]]''' || 297 || Replaceable with {{temp|inflection of|de|...}}; no categorization || Replace
+|-
+| '''[[Template:de-inflected form of]]''' || '''[[Template:de-inflected form of]]''' || 46669 || Displays "inflected form of" || Deprecate me eventually!!!
+|-
+| '''[[Template:de-umlautless spelling of]]''' || '''[[Template:de-umlautless spelling of]]''' || 10 || || Keep
+|-
+| '''[[Template:de-verb form of]]''' || '''[[Template:de-verb form of]]''' || 54761 || Replaceable with {{temp|inflection of}}, {{temp|present participle of}} and/or {{temp|past participle of}}; categorizes into one of "verb forms" (should be handled by headword) and maybe either "present participle forms" (handled by {{temp|present participle of}}) or "past participle forms" (handled by {{temp|past participle of}}) || Keep for now; consider replacing and deprecating in the future
+|-
+| '''[[Template:de-zu-infinitive of]]''' || '''[[Template:de-zu-infinitive of]]''' || 125 || Displays "zu-infinitive of" || Keep
+|-
+| '''[[Template:egy-alternative transliteration of]]''' || '''[[Template:egy-alternative transliteration of]]''' || 431 || Displays "alternative transliteration of" with Ancient-Egyptian-specific link; categorizes into "alternative transliterations" || Keep
+|-
+| [[Template:egy-alt]] || [[Template:egy-alternative transliteration of]] || 431 || Rename to {{temp|egy-alt trans of}}
+|-
+| '''[[Template:egy-verb form of]]''' || '''[[Template:egy-verb form of]]''' || 27 || Replaceable with {{temp|inflection of}} but categorizes into "verb forms" and possibly "infinitives", "relative forms", "nominal forms" and/or "participles" || Keep for now
+|-
+| '''[[Template:el-form-of-adv]]''' || '''[[Template:el-form-of-adv]]''' || 13 || If deg=comp, replaceable with {{temp|comparative of|el|...|POS=adverb}}, otherwise deg=sup and replaceable with {{temp|inflection of|el|...|asupd}}; no categorization || Replace
+|-
+| '''[[Template:el-form-of-nounadj]]''' || '''[[Template:el-form-of-nounadj]]''' || 31472 || Replaceable with {{temp|inflection of}} except categorizes into "dative forms" if dative (?!) || Keep for now due to #uses, consider replacing and deprecating eventually
+|-
+| [[Template:el-form-of-pronoun]] || [[Template:el-form-of-nounadj]] || 10 || Replace with {{temp|el-form-of-nounadj}}
+|-
+| '''[[Template:el-form-of-verb]]''' || '''[[Template:el-form-of-verb]]''' || 4657 || Replaceable with {{temp|inflection of}} but may categorize into "verb past tense forms" or "verb nonfinite forms" || Rename to {{temp|el-verb form of}}
+|-
+| [[Template:el-verb form of]] || [[Template:el-form-of-verb]] || 228 || Keep for now
+|-
+| '''[[Template:el-monotonic form of]]''' || '''[[Template:el-monotonic form of]]''' || 3 || || Keep
+|-
+| '''[[Template:el-participle of]]''' || '''[[Template:el-participle of]]''' || 107 || Replaceable with {{temp|inflection of}}; no categorization || Replace
+|-
+| '''[[Template:el-polytonic form of]]''' || '''[[Template:el-polytonic form of]]''' || 56 || || Keep
+|-
+| '''[[Template:en-archaic second-person singular of]]''' || '''[[Template:en-archaic second-person singular of]]''' || 1858 || || Keep
+|-
+| '''[[Template:en-archaic third-person singular of]]''' || '''[[Template:en-archaic third-person singular of]]''' || 1510 || || Keep
+|-
+| '''[[Template:en-comparative of]]''' || '''[[Template:en-comparative of]]''' || 2270 || Displays "comparative form of FOO: more FOO" || Keep
+|-
+| '''[[Template:en-ing form of]]''' || '''[[Template:en-ing form of]]''' || 0 || || Consider deleting (see existing discussion)
+|-
+| '''[[Template:en-irregular plural of]]''' || '''[[Template:en-irregular plural of]]''' || 386 || Replaceable with {{temp|plural of}} but categorizes into "irregular plurals" || Keep
+|-
+| '''[[Template:en-past of]]''' || '''[[Template:en-past of]]''' || 28674 || || Keep
+|-
+| '''[[Template:en-simple past of]]''' || '''[[Template:en-simple past of]]''' || 1043 || || Keep
+|-
+| '''[[Template:en-superlative of]]''' || '''[[Template:en-superlative of]]''' || 2473 || || Keep
+|-
+| '''[[Template:en-third-person singular of]]''' || '''[[Template:en-third-person singular of]]''' || 26938 || Replaceable with {{temp|inflection of}} but categorizes into "third-person singular forms" || Keep
+|-
+| [[Template:en-third person singular of]] || [[Template:en-third-person singular of]] || 119 || || Replace with {{temp|en-third-person singular of}}
+|-
+| '''[[Template:enm-first-person singular of]]''' || '''[[Template:enm-first-person singular of]]''' || 2 || || Keep?
+|-
+| '''[[Template:enm-first/third-person singular past of]]''' || '''[[Template:enm-first/third-person singular past of]]''' || 3 || || Keep?
+|-
+| '''[[Template:enm-inflected form of]]''' || '''[[Template:enm-inflected form of]]''' || 34 || Displays "inflected form of" || Deprecate me!!!!!!
+|-
+| '''[[Template:enm-plural of]]''' || '''[[Template:enm-plural of]]''' || 6 || ?
+|-
+| '''[[Template:enm-plural past of]]''' || '''[[Template:enm-plural past of]]''' || 2 || Keep?
+|-
+| '''[[Template:enm-plural subjunctive of]]''' || '''[[Template:enm-plural subjunctive of]]''' || 1 || Keep?
+|-
+| '''[[Template:enm-plural subjunctive past of]]''' || '''[[Template:enm-plural subjunctive past of]]''' || 1 || Keep?
+|-
+| '''[[Template:enm-second-person singular of]]''' || '''[[Template:enm-second-person singular of]]''' || 4 || Keep?
+|-
+| '''[[Template:enm-second-person singular past of]]''' || '''[[Template:enm-second-person singular past of]]''' || 3 || Keep?
+|-
+| '''[[Template:enm-singular subjunctive of]]''' || '''[[Template:enm-singular subjunctive of]]''' || 2 || Keep?
+|-
+| '''[[Template:enm-singular subjunctive past of]]''' || '''[[Template:enm-singular subjunctive past of]]''' || 2 || Keep?
+|-
+| '''[[Template:enm-third-person singular of]]''' || '''[[Template:enm-third-person singular of]]''' || 9 || Keep?
+|-
+| '''[[Template:eo-form of]]''' || '''[[Template:eo-form of]]''' || 99087 || Keep
+|-
+| [[Template:eo-form-of]] || [[Template:eo-form of]] || 0 || Delete
+|-
+| '''[[Template:es-compound of]]''' || '''[[Template:es-compound of]]''' || 114260 || Keep
+|-
+| '''[[Template:es-note-noun-mf]]''' || '''[[Template:es-note-noun-mf]]''' || 37 || ?
+|-
+| '''[[Template:es-verb form of]]''' || '''[[Template:es-verb form of]]''' || 441797 || ?
+|-
+| '''[[Template:es-verb form of/adverbial]]''' || '''[[Template:es-verb form of/adverbial]]''' || 63389 || ?
+|-
+| '''[[Template:es-verb form of/conditional]]''' || '''[[Template:es-verb form of/conditional]]''' || 7605 || ?
+|-
+| '''[[Template:es-verb form of/imperative]]''' || '''[[Template:es-verb form of/imperative]]''' || 52570 || ?
+|-
+| '''[[Template:es-verb form of/indicative]]''' || '''[[Template:es-verb form of/indicative]]''' || 185363 || ?
+|-
+| '''[[Template:es-verb form of/participle]]''' || '''[[Template:es-verb form of/participle]]''' || 24242 || ?
+|-
+| '''[[Template:es-verb form of/subjunctive]]''' || '''[[Template:es-verb form of/subjunctive]]''' || 144641 || ?
+|-
+| '''[[Template:es-verb form of/subtense-name]]''' || '''[[Template:es-verb form of/subtense-name]]''' || 337507 || ?
+|-
+| '''[[Template:es-verb form of/subtense-pronoun]]''' || '''[[Template:es-verb form of/subtense-pronoun]]''' || 337508 || ?
+|-
+| '''[[Template:et-nom form of]]''' || '''[[Template:et-nom form of]]''' || 539 || Replaceable with {{temp|inflection of|et}}; no categorization || Replace
+|-
+| '''[[Template:et-participle of]]''' || '''[[Template:et-participle of]]''' || 13 || Replaceable with {{temp|inflection of|et}}; categorizes into "participles", which should be handled by headword || Replace
+|-
+| '''[[Template:et-verb form of]]''' || '''[[Template:et-verb form of]]''' || 85 || Replaceable with  {{temp|inflection of|et}} unless m=ptc in which case replaceable with {{temp|present participle of|et}} or {{temp|past participle of|et}}; categorizes into one of "present participles" (handled by {{temp|present participle of}}), "past participles" (handled by {{temp|past participle of}}) or "verb forms" (handled by headword) || Replace
+|-
+| '''[[Template:fa-adj form of]]''' || '''[[Template:fa-adj form of]]''' || 319 || Replaceable with {{temp|comparative of|fa|...}} or {{temp|superlative of|fa|...}}; categorizes the same as those templates || Replace
+|-
+| [[Template:fa-adj-form]] || [[Template:fa-adj form of]] || 311 || (see previous) || Replace as above
+|-
+| '''[[Template:fa-form-verb]]''' || '''[[Template:fa-form-verb]]''' || 153 || Replaceable with {{temp|inflection of}}; no categorization || Replace
+|-
+| '''[[Template:ff-fuc-form of]]''' || '''[[Template:ff-fuc-form of]]''' || 0 || Unused || Delete
+|-
+| '''[[Template:fi-form of]]''' || '''[[Template:fi-form of]]''' || 53498 || Replaceable with {{temp|inflection of}} except when {{para|suffix}}, {{para|suffix2}} or {{para|suffix3}} specified, in which case extra text is added; no categorization || Keep for now due to #uses
+|-
+| '''[[Template:fi-infinitive of]]''' || '''[[Template:fi-infinitive of]]''' || 2981 || Replaceable with {{temp|inflection of}} except when {{para|suffix}} specified, in which case extra text is added; categorizes into one of "{long first,{active,passive} {second,third},fourth,fifth} infinitives" || Keep
+|-
+| '''[[Template:fi-participle of]]''' || '''[[Template:fi-participle of]]''' || 4984 || Replaceable with {{temp|inflection of}} except when {{para|suffix}} specified, in which case extra text is added; no categorization || Keep for now due to #uses
+|-
+| '''[[Template:fi-verb form of]]''' || '''[[Template:fi-verb form of]]''' || 6022 || Replaceable with {{temp|inflection of}}; no categorization || Keep for now due to #uses, or replace and deprecate
+|-
+| '''[[Template:fr-post-1990]]''' || '''[[Template:fr-post-1990]]''' || 5 || || Keep
+|-
+| '''[[Template:fr-pre-1990]]''' || '''[[Template:fr-pre-1990]]''' || 0 || || Keep
+|-
+| '''[[Template:ga-emphatic of]]''' || '''[[Template:ga-emphatic of]]''' || 12 || ?
+|-
+| '''[[Template:ga-lenition of]]''' || '''[[Template:ga-lenition of]]''' || 834 || ?
+|-
+| '''[[Template:gl-verb form of]]''' || '''[[Template:gl-verb form of]]''' || 598 || ?
+|-
+| '''[[Template:gl-verb form of/conditional]]''' || '''[[Template:gl-verb form of/conditional]]''' || 0 || ?
+|-
+| '''[[Template:gl-verb form of/error]]''' || '''[[Template:gl-verb form of/error]]''' || 0 || ?
+|-
+| '''[[Template:gl-verb form of/imperative]]''' || '''[[Template:gl-verb form of/imperative]]''' || 0 || ?
+|-
+| '''[[Template:gl-verb form of/indicative]]''' || '''[[Template:gl-verb form of/indicative]]''' || 0 || ?
+|-
+| '''[[Template:gl-verb form of/participle]]''' || '''[[Template:gl-verb form of/participle]]''' || 0 || ?
+|-
+| '''[[Template:gl-verb form of/subjunctive]]''' || '''[[Template:gl-verb form of/subjunctive]]''' || 0 || ?
+|-
+| '''[[Template:gl-verb form of/subtense-name]]''' || '''[[Template:gl-verb form of/subtense-name]]''' || 0 || ?
+|-
+| '''[[Template:gl-verb form of/subtense-pronoun]]''' || '''[[Template:gl-verb form of/subtense-pronoun]]''' || 0 || ?
+|-
+| '''[[Template:gmq-bot-verb-form-sup]]''' || '''[[Template:gmq-bot-verb-form-sup]]''' || 1 || ?
+|-
+| '''[[Template:got-compound of]]''' || '''[[Template:got-compound of]]''' || 3 || ?
+|-
+| '''[[Template:got-nom form of]]''' || '''[[Template:got-nom form of]]''' || 2935 || ?
+|-
+| '''[[Template:got-verb form of]]''' || '''[[Template:got-verb form of]]''' || 2038 || ?
+|-
+| '''[[Template:han tu form of]]''' || '''[[Template:han tu form of]]''' || 1553 || Rename to {{temp|vi-han tu form of}} and deprecate
+|-
+| [[Template:vi-def]] || [[Template:han tu form of]] || 0 || Delete
+|-
+| [[Template:vi-hantu form of]] || [[Template:han tu form of]] || 0 || Delete
+|-
+| '''[[Template:he-Cohortative of]]''' || '''[[Template:he-Cohortative of]]''' || 8 || Rename to {{temp|he-verb form of|{{{1}}}|coho}} with auto-uppercasing behavior; currently set by cap=uc
+|-
+| '''[[Template:he-Defective spelling of]]''' || '''[[Template:he-Defective spelling of]]''' || 332 || Rename to {{temp|he-defective spelling of}} with auto-uppercasing behavior; currently set by cap=uc
+|-
+| '''[[Template:he-Excessive spelling of]]''' || '''[[Template:he-Excessive spelling of]]''' || 36 || Rename to {{temp|he-excessive spelling of}} with auto-uppercasing behavior; currently set by cap=uc
+|-
+| '''[[Template:he-Form of adj]]''' || '''[[Template:he-Form of adj]]''' || 91 || Rename to {{temp|he-adj form of}} with auto-uppercasing behavior; currently set by cap=uc
+|-
+| '''[[Template:he-Form of noun]]''' || '''[[Template:he-Form of noun]]''' || 510 || Rename to {{temp|he-noun form of}} with auto-uppercasing behavior; currently set by cap=uc
+|-
+| '''[[Template:he-Form of prep]]''' || '''[[Template:he-Form of prep]]''' || 65 || Rename to {{temp|he-prep form of}} with auto-uppercasing behavior; currently set by cap=uc
+|-
+| [[Template:he-Form of sing cons]] || [[Template:he-form of sing cons]] || 13 || Rename to {{temp|he-noun form of|n=s}} with auto-uppercasing behavior; currently set by cap=uc
+|-
+| '''[[Template:he-Future of]]''' || '''[[Template:he-Future of]]''' || 63 || Rename to {{temp|he-verb form of|{{{1}}}|futr}} with auto-uppercasing behavior; currently set by cap=uc
+|-
+| '''[[Template:he-Imperative of]]''' || '''[[Template:he-Imperative of]]''' || 46 || Rename to {{temp|he-verb form of|{{{1}}}|imp}} with auto-uppercasing behavior; currently set by g=<uppercase>
+|-
+| '''[[Template:he-Infinitive of]]''' || '''[[Template:he-Infinitive of]]''' || 86 || Rename to {{temp|he-infinitive of}} with auto-uppercasing behavior; currently set by cap=uc
+|-
+| '''[[Template:he-Jussive of]]''' || '''[[Template:he-Jussive of]]''' || 5 || Rename to {{temp|he-verb form of|{{{1}}}|juss}} with auto-uppercasing behavior; currently set by cap=uc
+|-
+| '''[[Template:he-Past of]]''' || '''[[Template:he-Past of]]''' || 76 || Rename to {{temp|he-verb form of|{{{1}}}|past}} with auto-uppercasing behavior; currently set by cap=uc
+|-
+| '''[[Template:he-Present of]]''' || '''[[Template:he-Present of]]''' || 148 || Rename to {{temp|he-verb form of|{{{1}}}|pres}} with auto-uppercasing behavior; currently set by g=<uppercase>
+|-
+| '''[[Template:he-Vav-imperfect of]]''' || '''[[Template:he-Vav-imperfect of]]''' || 34 || Rename to {{temp|he-verb form of|{{{1}}}|vavi}} with auto-uppercasing behavior; currently set by cap=uc
+|-
+| [[Template:he-Vav imperfect of]] || [[Template:he-Vav-imperfect of]] || 25 || Rename to {{temp|he-verb form of|{{{1}}}|vavi}} with auto-uppercasing behavior; currently set by cap=uc
+|-
+| '''[[Template:he-Vav-perfect of]]''' || '''[[Template:he-Vav-perfect of]]''' || 25 || Rename to {{temp|he-verb form of|{{{1}}}|vavp}} with auto-uppercasing behavior; currently set by cap=uc
+|-
+| [[Template:he-Vav perfect of]] || [[Template:he-Vav-perfect of]] || 19 || Rename to {{temp|he-verb form of|{{{1}}}|vavp}} with auto-uppercasing behavior; currently set by cap=uc
+|-
+| '''[[Template:he-cohortative of]]''' || '''[[Template:he-cohortative of]]''' || 8 || Rename to {{temp|he-verb form of|{{{1}}}|coho|nocap=1}}
+|-
+| '''[[Template:he-defective spelling of]]''' || '''[[Template:he-defective spelling of]]''' || 420 || Rename to {{temp|he-defective spelling of|nocap=1}}
+|-
+| '''[[Template:he-excessive spelling of]]''' || '''[[Template:he-excessive spelling of]]''' || 43 || Rename to {{temp|he-excessive spelling of|nocap=1}}
+|-
+| '''[[Template:he-form of adj]]''' || '''[[Template:he-form of adj]]''' || 109 || Rename to {{temp|he-adj form of|nocap=1}}
+|-
+| '''[[Template:he-form of noun]]''' || '''[[Template:he-form of noun]]''' || 561 || Rename to {{temp|he-noun form of|nocap=1}}
+|-
+| '''[[Template:he-form of sing cons]]''' || '''[[Template:he-form of sing cons]]''' || 3 || Rename to {{temp|he-noun form of|n=s|nocap=1}}
+|-
+| '''[[Template:he-form of prep]]''' || '''[[Template:he-form of prep]]''' || 68 || Rename to {{temp|he-prep form of|nocap=1}}
+|-
+| '''[[Template:he-future of]]''' || '''[[Template:he-future of]]''' || 96 || Rename to {{temp|he-verb form of|{{{1}}}|futr|nocap=1}}
+|-
+| '''[[Template:he-imperative of]]''' || '''[[Template:he-imperative of]]''' || 51 || Rename to {{temp|he-verb form of|{{{1}}}|imp|nocap=1}}
+|-
+| '''[[Template:he-infinitive of]]''' || '''[[Template:he-infinitive of]]''' || 93 || Rename to {{temp|he-infinitive of|nocap=1}}
+|-
+| '''[[Template:he-jussive of]]''' || '''[[Template:he-jussive of]]''' || 6 || Rename to {{temp|he-verb form of|{{{1}}}|juss|nocap=1}}
+|-
+| '''[[Template:he-past of]]''' || '''[[Template:he-past of]]''' || 96 || Rename to {{temp|he-verb form of|{{{1}}}|past|nocap=1}}
+|-
+| '''[[Template:he-present of]]''' || '''[[Template:he-present of]]''' || 178 || Rename to {{temp|he-verb form of|{{{1}}}|pres|nocap=1}}
+|-
+| '''[[Template:he-vav-imperfect of]]''' || '''[[Template:he-vav-imperfect of]]''' || 66 || Rename to {{temp|he-verb form of|{{{1}}}|vavi|nocap=1}}
+|-
+| [[Template:he-vav imperfect of]] || [[Template:he-vav-imperfect of]] || 20 || Rename to {{temp|he-verb form of|{{{1}}}|vavi|nocap=1}}
+|-
+| '''[[Template:he-vav-perfect of]]''' || '''[[Template:he-vav-perfect of]]''' || 27 || Rename to {{temp|he-verb form of|{{{1}}}|vavp|nocap=1}}
+|-
+| [[Template:he-vav perfect of]] || [[Template:he-vav-perfect of]] || 1 || Rename to {{temp|he-verb form of|{{{1}}}|vavp|nocap=1}}
+|-
+| '''[[Template:hi-form-adj]]''' || '''[[Template:hi-form-adj]]''' || 34 || Rename to {{temp|hi-adj form of}}
+|-
+| '''[[Template:hi-form-adj-verb]]''' || '''[[Template:hi-form-adj-verb]]''' || 45 || Rename to {{temp|hi-adj verb form of}}
+|-
+| '''[[Template:hi-form-noun]]''' || '''[[Template:hi-form-noun]]''' || 107 || Rename to {{temp|hi-noun form of}}
+|-
+| '''[[Template:hi-form-verb]]''' || '''[[Template:hi-form-verb]]''' || 48 || Rename to {{temp|hi-verb form of}}
+|-
+| '''[[Template:hit-broad transcription of]]''' || '''[[Template:hit-broad transcription of]]''' || 19 || Keep
+|-
+| '''[[Template:hit-transliteration of]]''' || '''[[Template:hit-transliteration of]]''' || 109 || Keep
+|-
+| '''[[Template:hu-exaggerated of]]''' || '''[[Template:hu-exaggerated of]]''' || 470 || Keep
+|-
+| '''[[Template:hu-inflection of]]''' || '''[[Template:hu-inflection of]]''' || 9786 || ?
+|-
+| '''[[Template:hu-participle]]''' || '''[[Template:hu-participle]]''' || 994 || ?
+|-
+| '''[[Template:hy-form-noun]]''' || '''[[Template:hy-form-noun]]''' || 504 || Rename to {{temp|he-noun form of of}}
+|-
+| '''[[Template:hy-reformed]]''' || '''[[Template:hy-reformed]]''' || 1 || ?
+|-
+| '''[[Template:hy-traditional]]''' || '''[[Template:hy-traditional]]''' || 33 || ?
+|-
+| '''[[Template:ia-form of]]''' || '''[[Template:ia-form of]]''' || 718 || ?
+|-
+| '''[[Template:ie-past and pp of]]''' || '''[[Template:ie-past and pp of]]''' || 4 || ?
+|-
+| '''[[Template:io-form of]]''' || '''[[Template:io-form of]]''' || 10116 || ?
+|-
+| '''[[Template:is-conjugation of]]''' || '''[[Template:is-conjugation of]]''' || 312 || ?
+|-
+| '''[[Template:is-inflection of]]''' || '''[[Template:is-inflection of]]''' || 2260 || ?
+|-
+| '''[[Template:it-adj form of]]''' || '''[[Template:it-adj form of]]''' || 3564 || ?
+|-
+| '''[[Template:iu-spel]]''' || '''[[Template:iu-spel]]''' || 123 || ?
+|-
+| '''[[Template:ja-form of]]''' || '''[[Template:ja-form of]]''' || 0 || Delete
+|-
+| '''[[Template:ja-new/r]]''' || '''[[Template:ja-new/r]]''' || 0 || Delete
+|-
+| [[Template:jaro]] || [[Template:ja-new/r]] || 0 || Delete
+|-
+| '''[[Template:ja-past of verb]]''' || '''[[Template:ja-past of verb]]''' || 3 || ?
+|-
+| '''[[Template:ja-romaji]]''' || '''[[Template:ja-romaji]]''' || 16459 || ?
+|-
+| '''[[Template:ja-te form of verb]]''' || '''[[Template:ja-te form of verb]]''' || 5 || ?
+|-
+| '''[[Template:ja-verb form of]]''' || '''[[Template:ja-verb form of]]''' || 93 || ?
+|-
+| '''[[Template:jbo-rafsi of]]''' || '''[[Template:jbo-rafsi of]]''' || 1526 || keep
+|-
+| [[Template:rafsi of]] || [[Template:jbo-rafsi of]] || 0 || Delete
+|-
+| '''[[Template:jyutping reading of]]''' || '''[[Template:jyutping reading of]]''' || 1614 || Rename to {{temp|yue-jyutping reading of}} and deprecate
+|-
+| '''[[Template:ka-verb-form-of]]''' || '''[[Template:ka-verb-form-of]]''' || 116 || Rename to {{temp|ka-verb form of}}
+|-
+| '''[[Template:ka-verbal for]]''' || '''[[Template:ka-verbal for]]''' || 178 || Replace with {{temp|verbal noun of|ka}}
+|-
+| [[Template:ka-verbal of]] || [[Template:ka-verbal for]] || 35 || Replace with {{temp|verbal noun of|ka}}
+|-
+| '''[[Template:ko-hanja form of]]''' || '''[[Template:ko-hanja form of]]''' || 4029 || Keep
+|-
+| [[Template:hanja form of]] || [[Template:ko-hanja form of]] || 4003 || Replace with {{temp|ko-hanja form of}} and deprecate
+|-
+| '''[[Template:ko-mixed form of]]''' || '''[[Template:ko-mixed form of]]''' || 7 || Keep
+|-
+| '''[[Template:ku-verb form of]]''' || '''[[Template:ku-verb form of]]''' || 3067 || Replace with appropriate {{temp|inflection of|ku}} or {{temp|present participle of|ku}} or {{temp|past participle of|ku}} and deprecate
+|-
+| '''[[Template:kyūjitai spelling of]]''' || '''[[Template:kyūjitai spelling of]]''' || 573 || Rename to {{temp|ja-kyujitai spelling of}}
+|-
+| [[Template:kyujitai spelling of]] || [[Template:kyūjitai spelling of]] || 419 || Rename to {{temp|ja-kyujitai spelling of}}
+|-
+| [[Template:kyujitai of]] || [[Template:kyūjitai spelling of]] || 66 || Rename to {{temp|ja-kyujitai spelling of}}
+|-
+| [[Template:kyujitai]] || [[Template:kyūjitai spelling of]] || 29 || Rename to {{temp|ja-kyu sp}}
+|-
+| [[Template:kyu]] || [[Template:kyūjitai spelling of]] || 41 || Rename to {{temp|ja-kyu sp}}
+|-
+| '''[[Template:lb-inflected form of]]''' || '''[[Template:lb-inflected form of]]''' || 64 || 
+|-
+| '''[[Template:liv-conjugation of]]''' || '''[[Template:liv-conjugation of]]''' || 186 || ?
+|-
+| '''[[Template:liv-inflection of]]''' || '''[[Template:liv-inflection of]]''' || 2099 || Replace with {{temp|inflection of|liv}} and deprecate
+|-
+| '''[[Template:liv-participle of]]''' || '''[[Template:liv-participle of]]''' || 61 || ?
+|-
+| '''[[Template:lt-būdinys]]''' || '''[[Template:lt-būdinys]]''' || 184 || ?
+|-
+| [[Template:lt-budinys]] || [[Template:lt-būdinys]] || 2 || ?
+|-
+| '''[[Template:lt-dalyvis-1]]''' || '''[[Template:lt-dalyvis-1]]''' || 1085 || ?
+|-
+| [[Template:lt-dalyvis]] || [[Template:lt-dalyvis-1]] || 1013 || ?
+|-
+| '''[[Template:lt-dalyvis-2]]''' || '''[[Template:lt-dalyvis-2]]''' || 118 || ?
+|-
+| '''[[Template:lt-form-adj]]''' || '''[[Template:lt-form-adj]]''' || 5985 || Rename to {{temp|lt-adj form of}} and deprecate
+|-
+| '''[[Template:lt-form-adj-is]]''' || '''[[Template:lt-form-adj-is]]''' || 19 || ?
+|-
+| '''[[Template:lt-form-noun]]''' || '''[[Template:lt-form-noun]]''' || 2664 || Replace with {{temp|inflection of|lt}} and deprecate
+|-
+| '''[[Template:lt-form-part]]''' || '''[[Template:lt-form-part]]''' || 3967 || Rename to {{temp|lt-part form of}} and deprecate
+|-
+| '''[[Template:lt-form-pronoun]]''' || '''[[Template:lt-form-pronoun]]''' || 51 || Rename to {{temp|lt-pron form of}}
+|-
+| '''[[Template:lt-form-verb]]''' || '''[[Template:lt-form-verb]]''' || 3781 || Rename to {{temp|lt-verb form of}} and deprecate
+|-
+| '''[[Template:lt-padalyvis]]''' || '''[[Template:lt-padalyvis]]''' || 466 || ?
+|-
+| '''[[Template:lt-pusdalyvis]]''' || '''[[Template:lt-pusdalyvis]]''' || 117 || ?
+|-
+| '''[[Template:lv-adv form of]]''' || '''[[Template:lv-adv form of]]''' || 2761 || Keep
+|-
+| '''[[Template:lv-comparative of]]''' || '''[[Template:lv-comparative of]]''' || 1234 || ?
+|-
+| '''[[Template:lv-definite of]]''' || '''[[Template:lv-definite of]]''' || 689 || Replace with {{temp|inflection of|lv|...|def}}
+|-
+| '''[[Template:lv-inflection of]]''' || '''[[Template:lv-inflection of]]''' || 106703 || ?
+|-
+| '''[[Template:lv-negative of]]''' || '''[[Template:lv-negative of]]''' || 254 || ?
+|-
+| '''[[Template:lv-participle of]]''' || '''[[Template:lv-participle of]]''' || 5163 || ?
+|-
+| '''[[Template:lv-reflexive of]]''' || '''[[Template:lv-reflexive of]]''' || 32 || Replace with {{temp|reflexive of|lv}}
+|-
+| '''[[Template:lv-superlative of]]''' || '''[[Template:lv-superlative of]]''' || 619 || ?
+|-
+| '''[[Template:lv-verbal noun of]]''' || '''[[Template:lv-verbal noun of]]''' || 496 || Replace with {{temp|verbal noun of|lv}}
+|-
+| '''[[Template:mn-verb form of]]''' || '''[[Template:mn-verb form of]]''' || 63 || ?
+|-
+| '''[[Template:morse code abbreviation]]''' || '''[[Template:morse code abbreviation]]''' || 1 || ?
+|-
+| '''[[Template:morse code for]]''' || '''[[Template:morse code for]]''' || 79 || ?
+|-
+| '''[[Template:morse code prosign]]''' || '''[[Template:morse code prosign]]''' || 1 || ?
+|-
+| '''[[Template:mr-form-adj]]''' || '''[[Template:mr-form-adj]]''' || 2 || Rename to {{temp|mr-adj form of}}
+|-
+| '''[[Template:mt-prep-form]]''' || '''[[Template:mt-prep-form]]''' || 7 || Rename to {{temp|mt-prep form of}}
+|-
+| '''[[Template:my-ICT of]]''' || '''[[Template:my-ICT of]]''' || 7 || ?
+|-
+| '''[[Template:nb-noun-form-def-gen]]''' || '''[[Template:nb-noun-form-def-gen]]''' || 2 || Replace with {{temp|inflection of|nb|...|def|g|s}}
+|-
+| '''[[Template:nb-noun-form-def-gen-pl]]''' || '''[[Template:nb-noun-form-def-gen-pl]]''' || 2 || Replace with {{temp|inflection of|nb|...|def|g|p}}
+|-
+| '''[[Template:nb-noun-form-indef-gen-pl]]''' || '''[[Template:nb-noun-form-indef-gen-pl]]''' || 2 || Replace with {{temp|inflection of|nb|...|indef|g|p}}
+|-
+| '''[[Template:nb-noun-form-indef-pl]]''' || '''[[Template:nb-noun-form-indef-pl]]''' || 0 || Delete
+|-
+| '''[[Template:nl-adj form of]]''' || '''[[Template:nl-adj form of]]''' || 4559 || ?
+|-
+| '''[[Template:nl-noun form of]]''' || '''[[Template:nl-noun form of]]''' || 27823 || ?
+|-
+| '''[[Template:nl-pronadv of]]''' || '''[[Template:nl-pronadv of]]''' || 144 || ?
+|-
+| '''[[Template:nl-verb form of]]''' || '''[[Template:nl-verb form of]]''' || 30619 || ?
+|-
+| '''[[Template:no-noun-form-def]]''' || '''[[Template:no-noun-form-def]]''' || 0 || Delete
+|-
+| '''[[Template:no-noun-form-def-pl]]''' || '''[[Template:no-noun-form-def-pl]]''' || 0 || Delete
+|-
+| '''[[Template:ofs-nom form of]]''' || '''[[Template:ofs-nom form of]]''' || 5 || ?
+|-
+| '''[[Template:osx-nom form of]]''' || '''[[Template:osx-nom form of]]''' || 22 || ?
+|-
+| '''[[Template:pi-sc]]''' || '''[[Template:pi-sc]]''' || 785 || ?
+|-
+| '''[[Template:pinyin reading of]]''' || '''[[Template:pinyin reading of]]''' || 39925 || Rename to {{temp|cmn-pinyin reading of}} and deprecate (? lots of uses)
+|-
+| [[Template:cmn-def]] || [[Template:pinyin reading of]] || 0 || Delete
+|-
+| [[Template:pinyin form of]] || [[Template:pinyin reading of]] || 0 || Delete
+|-
+| [[Template:pinread]] || [[Template:pinyin reading of]] || 35 || Rename to {{temp|cmn-pin read}}
+|-
+| [[Template:pinof]] || [[Template:pinyin reading of]] || 6 || Rename to {{temp|cmn-pin read}}
+|-
+| '''[[Template:pt-adj form of]]''' || '''[[Template:pt-adj form of]]''' || 15416 || Keep
+|-
+| '''[[Template:pt-adv form of]]''' || '''[[Template:pt-adv form of]]''' || 11 || Keep
+|-
+| '''[[Template:pt-apocopic-verb]]''' || '''[[Template:pt-apocopic-verb]]''' || 54 || ?
+|-
+| '''[[Template:pt-article form of]]''' || '''[[Template:pt-article form of]]''' || 6 || Keep
+|-
+| '''[[Template:pt-cardinal form of]]''' || '''[[Template:pt-cardinal form of]]''' || 10 || Keep
+|-
+| '''[[Template:pt-noun form of]]''' || '''[[Template:pt-noun form of]]''' || 1517 || Keep
+|-
+| '''[[Template:pt-obsolete-differential-accent]]''' || '''[[Template:pt-obsolete-differential-accent]]''' || 65 || Keep
+|-
+| '''[[Template:pt-obsolete-hellenism]]''' || '''[[Template:pt-obsolete-hellenism]]''' || 247 || Keep
+|-
+| '''[[Template:pt-obsolete-sc]]''' || '''[[Template:pt-obsolete-sc]]''' || 0 || Keep
+|-
+| '''[[Template:pt-obsolete-secondary-stress]]''' || '''[[Template:pt-obsolete-secondary-stress]]''' || 5 || Keep
+|-
+| '''[[Template:pt-obsolete-silent-letter-1911]]''' || '''[[Template:pt-obsolete-silent-letter-1911]]''' || 38 || Keep
+|-
+| '''[[Template:pt-obsolete-éia]]''' || '''[[Template:pt-obsolete-éia]]''' || 68 || Keep
+|-
+| '''[[Template:pt-obsolete-ôo]]''' || '''[[Template:pt-obsolete-ôo]]''' || 1 || Keep
+|-
+| '''[[Template:pt-obsolete-ü]]''' || '''[[Template:pt-obsolete-ü]]''' || 43 || Keep
+|-
+| '''[[Template:pt-ordinal form]]''' || '''[[Template:pt-ordinal form]]''' || 153 || ?
+|-
+| [[Template:pt-ordinal def]] || [[Template:pt-ordinal form]] || 3 || ?
+|-
+| '''[[Template:pt-pron def]]''' || '''[[Template:pt-pron def]]''' || 24 || ?
+|-
+| '''[[Template:pt-pronoun-with-l]]''' || '''[[Template:pt-pronoun-with-l]]''' || 4 || ?
+|-
+| '''[[Template:pt-pronoun-with-n]]''' || '''[[Template:pt-pronoun-with-n]]''' || 4 || ?
+|-
+| '''[[Template:pt-superseded-hyphen]]''' || '''[[Template:pt-superseded-hyphen]]''' || 5 || Keep
+|-
+| '''[[Template:pt-superseded-paroxytone]]''' || '''[[Template:pt-superseded-paroxytone]]''' || 50 || Keep
+|-
+| '''[[Template:pt-superseded-silent-letter-1990]]''' || '''[[Template:pt-superseded-silent-letter-1990]]''' || 68 || Keep
+|-
+| '''[[Template:pt-verb form of]]''' || '''[[Template:pt-verb form of]]''' || 29193 || ?
+|-
+| [[Template:pt-verb-form of]] || [[Template:pt-verb form of]] || 0 || Delete
+|-
+| '''[[Template:ro-Cyrillic of]]''' || '''[[Template:ro-Cyrillic of]]''' || 37 || ?
+|-
+| '''[[Template:ro-adj-form of]]''' || '''[[Template:ro-adj-form of]]''' || 906 || Rename to {{temp|ro-adj form of}}
+|-
+| [[Template:ro-form-adj]] || [[Template:ro-adj-form of]] || 5 || Rename to {{temp|ro-adj form of}}
+|-
+| '''[[Template:ro-form-noun]]''' || '''[[Template:ro-form-noun]]''' || 584 || Rename to {{temp|ro-noun form of}}
+|-
+| '''[[Template:ro-form-verb]]''' || '''[[Template:ro-form-verb]]''' || 2129 || Rename to {{temp|ro-verb form of}} and deprecate
+|-
+| '''[[Template:ro-superseded spelling of]]''' || '''[[Template:ro-superseded spelling of]]''' || 16 || ?
+|-
+| '''[[Template:roa-opt-noun plural of]]''' || '''[[Template:roa-opt-noun plural of]]''' || 2 || ?
+|-
+| '''[[Template:ru-abbrev of]]''' || '''[[Template:ru-abbrev of]]''' || 87 || ?
+|-
+| '''[[Template:ru-acronym of]]''' || '''[[Template:ru-acronym of]]''' || 35 || ?
+|-
+| '''[[Template:ru-alt-ё]]''' || '''[[Template:ru-alt-ё]]''' || 698 || ?
+|-
+| '''[[Template:ru-clipping of]]''' || '''[[Template:ru-clipping of]]''' || 2 || ?
+|-
+| '''[[Template:ru-initialism of]]''' || '''[[Template:ru-initialism of]]''' || 96 || ?
+|-
+| '''[[Template:ru-participle of]]''' || '''[[Template:ru-participle of]]''' || 47321 || ?
+|-
+| '''[[Template:ru-pre-reform]]''' || '''[[Template:ru-pre-reform]]''' || 330 || ?
+|-
+| '''[[Template:sa-desiderative of]]''' || '''[[Template:sa-desiderative of]]''' || 5 || ?
+|-
+| [[Template:desiderative of]] || [[Template:sa-desiderative of]] || 0 || Delete
+|-
+| [[Template:sa-desi]] || [[Template:sa-desiderative of]] || 5 || Rename to {{temp|sa-desiderative of}}
+|-
+| '''[[Template:sa-frequentative of]]''' || '''[[Template:sa-frequentative of]]''' || 2 || ?
+|-
+| [[Template:sa-inten]] || [[Template:sa-frequentative of]] || 0 || Delete
+|-
+| [[Template:sa-freq]] || [[Template:sa-frequentative of]] || 2 || Rename to {{temp|sa-frequentative of}}
+|-
+| '''[[Template:sa-root form of]]''' || '''[[Template:sa-root form of]]''' || 1 || ?
+|-
+| '''[[Template:sce-verb form of]]''' || '''[[Template:sce-verb form of]]''' || 1 || ?
+|-
+| '''[[Template:sco-past of]]''' || '''[[Template:sco-past of]]''' || 78 || ?
+|-
+| '''[[Template:sco-simple past of]]''' || '''[[Template:sco-simple past of]]''' || 17 || ?
+|-
+| '''[[Template:sco-third-person singular of]]''' || '''[[Template:sco-third-person singular of]]''' || 91 || ?
+|-
+| '''[[Template:sga-verbnec of]]''' || '''[[Template:sga-verbnec of]]''' || 5 || ?
+|-
+| '''[[Template:sh-form-noun]]''' || '''[[Template:sh-form-noun]]''' || 65 || Replace with appropriate {{temp|inflection of|sl}}
+|-
+| '''[[Template:sh-verb form of]]''' || '''[[Template:sh-verb form of]]''' || 98 || Replace with appropriate {{temp|inflection of|sl}}
+|-
+| [[Template:sh-form-verb]] || [[Template:sh-verb form of]] || 34 || Replace with appropriate {{temp|inflection of|sh}}
+|-
+| [[Template:sh-verb-form of]] || [[Template:sh-verb form of]] || 0 || Delete
+|-
+| [[Template:sh-verb-form-of]] || [[Template:sh-verb form of]] || 0 || Delete
+|-
+| '''[[Template:sino-vietnamese reading of]]''' || '''[[Template:sino-vietnamese reading of]]''' || 7 || ?
+|-
+| '''[[Template:sl-form-adj]]''' || '''[[Template:sl-form-adj]]''' || 48 || Replace with appropriate {{temp|inflection of|sl}}
+|-
+| '''[[Template:sl-form-noun]]''' || '''[[Template:sl-form-noun]]''' || 137 || Replace with appropriate {{temp|inflection of|sl}}
+|-
+| '''[[Template:sl-form-verb]]''' || '''[[Template:sl-form-verb]]''' || 112 || Replace with appropriate {{temp|inflection of|sl}}
+|-
+| [[Template:sl-verb form of]] || [[Template:sl-form-verb]] || 1 || Replace with {{temp|inflection of|sl}}
+|-
+| '''[[Template:sl-participle of]]''' || '''[[Template:sl-participle of]]''' || 8 || Keep? Replace with {{temp|inflection of|sl}}? It categorizes into [[:CAT:Slovene participles]] or [[:CAT:Slovene verbal nouns]] but the headword may handle this
+|-
+| '''[[Template:sv-adj-form-abs-def]]''' || '''[[Template:sv-adj-form-abs-def]]''' || 3 || ?
+|-
+| '''[[Template:sv-adj-form-abs-def+pl]]''' || '''[[Template:sv-adj-form-abs-def+pl]]''' || 2072 || ?
+|-
+| '''[[Template:sv-adj-form-abs-def-m]]''' || '''[[Template:sv-adj-form-abs-def-m]]''' || 1274 || ?
+|-
+| '''[[Template:sv-adj-form-abs-indef-n]]''' || '''[[Template:sv-adj-form-abs-indef-n]]''' || 1630 || ?
+|-
+| '''[[Template:sv-adj-form-abs-pl]]''' || '''[[Template:sv-adj-form-abs-pl]]''' || 6 || ?
+|-
+| '''[[Template:sv-adj-form-comp]]''' || '''[[Template:sv-adj-form-comp]]''' || 724 || ?
+|-
+| '''[[Template:sv-adj-form-comp-pl]]''' || '''[[Template:sv-adj-form-comp-pl]]''' || 1 || ?
+|-
+| '''[[Template:sv-adj-form-sup-attr]]''' || '''[[Template:sv-adj-form-sup-attr]]''' || 486 || ?
+|-
+| '''[[Template:sv-adj-form-sup-attr-m]]''' || '''[[Template:sv-adj-form-sup-attr-m]]''' || 14 || ?
+|-
+| '''[[Template:sv-adj-form-sup-pred]]''' || '''[[Template:sv-adj-form-sup-pred]]''' || 509 || ?
+|-
+| '''[[Template:sv-adj-form-sup-pred-pl]]''' || '''[[Template:sv-adj-form-sup-pred-pl]]''' || 1 || ?
+|-
+| '''[[Template:sv-adv-form-comp]]''' || '''[[Template:sv-adv-form-comp]]''' || 11 || ?
+|-
+| '''[[Template:sv-adv-form-sup]]''' || '''[[Template:sv-adv-form-sup]]''' || 7 || ?
+|-
+| '''[[Template:sv-noun-form-adj]]''' || '''[[Template:sv-noun-form-adj]]''' || 1 || ?
+|-
+| '''[[Template:sv-noun-form-def]]''' || '''[[Template:sv-noun-form-def]]''' || 10063 || ?
+|-
+| '''[[Template:sv-noun-form-def-gen]]''' || '''[[Template:sv-noun-form-def-gen]]''' || 8327 || ?
+|-
+| '''[[Template:sv-noun-form-def-gen-pl]]''' || '''[[Template:sv-noun-form-def-gen-pl]]''' || 6928 || ?
+|-
+| '''[[Template:sv-noun-form-def-pl]]''' || '''[[Template:sv-noun-form-def-pl]]''' || 7574 || ?
+|-
+| '''[[Template:sv-noun-form-indef-gen]]''' || '''[[Template:sv-noun-form-indef-gen]]''' || 7680 || ?
+|-
+| '''[[Template:sv-noun-form-indef-gen-pl]]''' || '''[[Template:sv-noun-form-indef-gen-pl]]''' || 6869 || ?
+|-
+| '''[[Template:sv-noun-form-indef-pl]]''' || '''[[Template:sv-noun-form-indef-pl]]''' || 7430 || ?
+|-
+| '''[[Template:sv-proper-noun-gen]]''' || '''[[Template:sv-proper-noun-gen]]''' || 198 || ?
+|-
+| '''[[Template:sv-verb-form-imp]]''' || '''[[Template:sv-verb-form-imp]]''' || 567 || ?
+|-
+| '''[[Template:sv-verb-form-inf-pass]]''' || '''[[Template:sv-verb-form-inf-pass]]''' || 1641 || ?
+|-
+| '''[[Template:sv-verb-form-past]]''' || '''[[Template:sv-verb-form-past]]''' || 2567 || ?
+|-
+| '''[[Template:sv-verb-form-past-pass]]''' || '''[[Template:sv-verb-form-past-pass]]''' || 1631 || ?
+|-
+| '''[[Template:sv-verb-form-pastpart]]''' || '''[[Template:sv-verb-form-pastpart]]''' || 1814 || ?
+|-
+| '''[[Template:sv-verb-form-pre]]''' || '''[[Template:sv-verb-form-pre]]''' || 2687 || ?
+|-
+| '''[[Template:sv-verb-form-pre-pass]]''' || '''[[Template:sv-verb-form-pre-pass]]''' || 2067 || ?
+|-
+| '''[[Template:sv-verb-form-prepart]]''' || '''[[Template:sv-verb-form-prepart]]''' || 2028 || ?
+|-
+| '''[[Template:sv-verb-form-pres-pass]]''' || '''[[Template:sv-verb-form-pres-pass]]''' || 0 || Delete
+|-
+| '''[[Template:sv-verb-form-subjunctive]]''' || '''[[Template:sv-verb-form-subjunctive]]''' || 14 || ?
+|-
+| '''[[Template:sv-verb-form-sup]]''' || '''[[Template:sv-verb-form-sup]]''' || 2187 || ?
+|-
+| '''[[Template:sv-verb-form-sup-pass]]''' || '''[[Template:sv-verb-form-sup-pass]]''' || 1680 || ?
+|-
+| '''[[Template:tg-adj form of]]''' || '''[[Template:tg-adj form of]]''' || 28 || Replace with {{comparative of|tg|...}} or {{superlative of|tg|...}}
+|-
+| [[Template:tg-adj-form]] || [[Template:tg-adj form of]] || 28 || Replace with {{comparative of|tg|...}} or {{superlative of|tg|...}}
+|-
+| '''[[Template:tg-form-verb]]''' || '''[[Template:tg-form-verb]]''' || 1 || Rename to {{temp|tg-verb form of}}
+|-
+| '''[[Template:tl-verb form of]]''' || '''[[Template:tl-verb form of]]''' || 40 || ?
+|-
+| '''[[Template:tr-copulative form of]]''' || '''[[Template:tr-copulative form of]]''' || 2 || ?
+|-
+| '''[[Template:tr-inflection of]]''' || '''[[Template:tr-inflection of]]''' || 22 || ?
+|-
+| '''[[Template:tr-possessive form of]]''' || '''[[Template:tr-possessive form of]]''' || 35 || ?
+|-
+| '''[[Template:ug-uly of]]''' || '''[[Template:ug-uly of]]''' || 14 || ?
+|-
+| '''[[Template:ug-uyy of]]''' || '''[[Template:ug-uyy of]]''' || 8 || ?
+|-
+| '''[[Template:uk-pre-reform]]''' || '''[[Template:uk-pre-reform]]''' || 5 || ?
+|-
+| '''[[Template:ur-form-adj]]''' || '''[[Template:ur-form-adj]]''' || 2 || ?
+|-
+| '''[[Template:ur-form-noun]]''' || '''[[Template:ur-form-noun]]''' || 25 || Rename to {{temp|ur-noun form of}}
+|-
+| '''[[Template:ur-form-verb]]''' || '''[[Template:ur-form-verb]]''' || 1 || Rename to {{temp|ur-verb form of}}
+|-
+| '''[[Template:vi-Nom form of]]''' || '''[[Template:vi-Nom form of]]''' || 90 || Keep
+|-
+| [[Template:Nom form of]] || [[Template:vi-Nom form of]] || 89 || Rename to {{temp|vi-Nom form of}}
+|-
+| [[Template:nomof]] || [[Template:vi-Nom form of]] || 1 || Rename to {{temp|vi-Nom form of}}
+|-
+| '''[[Template:yi-alternatively pointed form of]]''' || '''[[Template:yi-alternatively pointed form of]]''' || 1 || ?
+|-
+| '''[[Template:yi-inflected form of]]''' || '''[[Template:yi-inflected form of]]''' || 119 || ?
+|-
+| '''[[Template:yi-phonetic spelling of]]''' || '''[[Template:yi-phonetic spelling of]]''' || 7 || ?
+|-
+| '''[[Template:yi-unpointed form of]]''' || '''[[Template:yi-unpointed form of]]''' || 108 || ?
+|-
+| '''[[Template:za-sawndip form of]]''' || '''[[Template:za-sawndip form of]]''' || 106 || ?
+|-
+| '''[[Template:zh-alt-form]]''' || '''[[Template:zh-alt-form]]''' || 1462 || Rename to {{temp|zh-alt form}} and deprecate
+|-
+| '''[[Template:zh-altname]]''' || '''[[Template:zh-altname]]''' || 728 || Rename to {{temp|zh-alt name}}
+|-
+| [[Template:zh-alt-name]] || [[Template:zh-altname]] || 505 || Rename to {{temp|zh-alt name}}
+|-
+| '''[[Template:zh-altterm]]''' || '''[[Template:zh-altterm]]''' || 83 || Rename to {{temp|zh-alt term}}
+|-
+| [[Template:zh-alt-term]] || [[Template:zh-altterm]] || 54 || Rename to {{temp|zh-alt term}}
+|-
+| '''[[Template:zh-misspelling of]]''' || '''[[Template:zh-misspelling of]]''' || 12 || Keep
+|-
+| [[Template:zh-misspelling]] || [[Template:zh-misspelling of]] || 12 || Rename to {{temp|zh-misspelling of}}
+|-
+| '''[[Template:zh-old-name]]''' || '''[[Template:zh-old-name]]''' || 13 || Rename to {{temp|zh-old name of}}
+|-
+| '''[[Template:zh-only used in]]''' || '''[[Template:zh-only used in]]''' || 1210 || Keep
+|-
+| [[Template:zh-only]] || [[Template:zh-only used in]] || 1138 || Keep
+|-
+| '''[[Template:zh-original]]''' || '''[[Template:zh-original]]''' || 81 || Rename to {{temp|zh-original form of}}
+|-
+| '''[[Template:zh-short]]''' || '''[[Template:zh-short]]''' || 869 || Rename to {{temp|zh-short for}}
+|-
+| [[Template:zh-abbrev]] || [[Template:zh-short]] || 86 || Rename to {{temp|zh-short for}}
+|-
+| '''[[Template:zh-subst-char]]''' || '''[[Template:zh-subst-char]]''' || 2 || Rename to {{temp|zh-substitute character for}}
+|-
+| '''[[Template:zh-synonym of]]''' || '''[[Template:zh-synonym of]]''' || 439 || Keep
+|-
+| [[Template:zh-synonym]] || [[Template:zh-synonym of]] || 428 || Rename to {{temp|zh-synonym of}}
+|-
+| '''[[Template:zu-combining stem of]]''' || '''[[Template:zu-combining stem of]]''' || 17 || Keep?
+|}
