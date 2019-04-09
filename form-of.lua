@@ -1,6 +1,8 @@
 local m_links = require("Module:links")
 local m_table = require("Module:table")
 local m_data = mw.loadData("Module:form of/data")
+
+local rmatch = mw.ustring.match
 local rsplit = mw.text.split
 
 local export = {}
@@ -89,7 +91,7 @@ function export.tagged_inflections(tags, terminfo, capfirst, posttext)
 		else
 			local split_tags = rsplit(tagspec, "/", true)
 			if #split_tags == 1 then
-				table.insert(cur_infl, normalize_tag(split_tags))
+				table.insert(cur_infl, normalize_tag(split_tags[1]))
 			else
 				local normalized_tags = {}
 				for _, tag in ipairs(split_tags) do
@@ -106,12 +108,12 @@ function export.tagged_inflections(tags, terminfo, capfirst, posttext)
 	
 	if #inflections == 1 then
 		return export.format_form_of(
-			(capfirst and ucfirst(inflections[1]) or inflections[1]) ..
+			(capfirst and export.ucfirst(inflections[1]) or inflections[1]) ..
 			(terminfo and " of" or ""),
 			terminfo, posttext
 		)
 	else
-		local link = return export.format_form_of(
+		local link = export.format_form_of(
 			(capfirst and "Inflection" or "inflection") ..
 			(terminfo and " of" or ""),
 			terminfo, (posttext or "") .. ":"

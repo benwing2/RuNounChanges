@@ -1,6 +1,6 @@
 local export = {}
 
-local m_form_of = require("Module:form of")
+local m_form_of = require("Module:User:Benwing2/form of")
 local rfind = mw.ustring.find
 local rmatch = mw.ustring.match
 local rsplit = mw.text.split
@@ -43,16 +43,15 @@ local function process_parent_args(template, parent_args, params, defaults, igno
 		local numbered_list_params_to_ignore = {}
 		local named_list_params_to_ignore = {}
 
-		local 
-
 		for _, ignorespec in ipairs(ignorespecs) do
-			for _, ignore in rsplit(ignorespec, ",") do
-				param = rmatch(ignore, "^(.*):list$")
+			for _, ignore in ipairs(rsplit(ignorespec, ",")) do
+				local param = rmatch(ignore, "^(.*):list$")
 				if param then
 					if rfind(param, "^[0-9]+$") then
 						table.insert(numbered_list_params_to_ignore, tonumber(param))
 					else
-						table.insert(named_list_params_to_ignore, "^" .. param .. "[0-9]*$")
+						table.insert(named_list_params_to_ignore,
+							"^" .. require("Module:utilities").pattern_escape(param) .. "[0-9]*$")
 					end
 				else
 					if rfind(ignore, "^[0-9]+$") then
@@ -63,31 +62,28 @@ local function process_parent_args(template, parent_args, params, defaults, igno
 			end
 		end
 
-		for k, v in ipairs(parent_args) do
-			if params_to_ignore[k] then
-				continue
-			end
-			local ignore_me = false
-			if type(k) == "number" then
-				for _, lparam in ipairs(numbered_list_params_to_ignore) do
-					if k >= lparam then
-						ignore_me = true
-						break
-					end
-				end
-			else
+		for k, v in pairs(parent_args) do
+			if not params_to_ignore[k] then
 				local ignore_me = false
-				for _, lparam in ipairs(named_list_params_to_ignore) do
-					if rfind(k, lparam) then
-						ignore_me = true
-						break
+				if type(k) == "number" then
+					for _, lparam in ipairs(numbered_list_params_to_ignore) do
+						if k >= lparam then
+							ignore_me = true
+							break
+						end
+					end
+				else
+					for _, lparam in ipairs(named_list_params_to_ignore) do
+						if rfind(k, lparam) then
+							ignore_me = true
+							break
+						end
 					end
 				end
+				if not ignore_me then
+					new_parent_args[k] = v
+				end
 			end
-			if ignore_me then
-				continue
-			end
-			new_parent_args[k] = v
 		end
 		parent_args = new_parent_args
 	end
