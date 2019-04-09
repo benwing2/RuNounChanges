@@ -20,7 +20,7 @@ import blib
 from blib import getparam, rmparam, msg, site, tname
 
 def rewrite_pages(template, new_name, params_to_remove, params_to_rename,
-    pages, filters, startFrom, upTo, save, verbose):
+    pages, filters, comment, startFrom, upTo, save, verbose):
   def process_page(page, index, parsed):
     pagetitle = unicode(page.title())
     def pagemsg(txt):
@@ -65,7 +65,7 @@ def rewrite_pages(template, new_name, params_to_remove, params_to_rename,
       if unicode(t) != origt:
         pagemsg("Replaced <%s> with <%s>" % (origt, unicode(t)))
 
-    return unicode(parsed), notes
+    return unicode(parsed), comment or notes
 
   if pages:
     for i, page in blib.iter_items(pages, startFrom, upTo):
@@ -87,6 +87,7 @@ pa.add_argument("--to", help="New name of param, can be specified multiple times
 pa.add_argument("--filter", help="Only take action on templates matching the filter, which should be either PARAM=VALUE meaning the parameter must have the given value, or PARAM~REGEXP meaning the parameter must match the given regular expression (unanchored). Can be specified multiple times and all must match.",
     action="append")
 pa.add_argument("--pagefile", help="List of pages to process.")
+pa.add_argument("-c", "--comment", help="Comment to use in place of auto-generated ones.")
 args = pa.parse_args()
 startFrom, upTo = blib.parse_start_end(args.start, args.end)
 
@@ -108,4 +109,4 @@ else:
   pages = None
 
 rewrite_pages(template, new_name, params_to_remove, params_to_rename,
-    pages, filters, startFrom, upTo, args.save, args.verbose)
+    pages, filters, args.comment, startFrom, upTo, args.save, args.verbose)
