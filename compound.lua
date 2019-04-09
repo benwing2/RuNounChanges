@@ -10,33 +10,71 @@ local ulen = mw.ustring.len
 local rfind = mw.ustring.find
 local rmatch = mw.ustring.match
 
-local ZWNJ = u(0x200C)
-
--- Per-script hyphens. Script detection is normally done when linking,
--- but we need to do it earlier. However, under most circumstances we
--- don't need to do script detection. Specifically, we only need to do
--- script detection for a given language if
+-- ABOUT TEMPLATE AND DISPLAY HYPHENS:
 --
--- (a) the language has multiple scripts; and
--- (b) at least one of those scripts is listed below.
-local arab_hyphens = "ـ" .. ZWNJ
-local hyphens = {
-	["Arab"] = arab_hyphens,
+-- The "template hyphen" is the per-script hyphen character that is used in
+-- template calls to indicate that a term is an affix. This is always a single
+-- Unicode char, but there may be multiple possible hyphens for a given script.
+-- Normally this is just the regular hyphen character "-", but for some
+-- non-Latin-script languages (currently only right-to-left languages), it
+-- is different.
+--
+-- The "display hyphen" is the string (which might be an empty string) that
+-- is added onto a term as displayed (and linked), to indicate that a term
+-- is an affix. Currently this is always either the same as the template
+-- hyphen or an empty string, but the code below is written generally enough
+-- to handle arbitrary display hyphens. Specifically:
+--
+-- (1) For East Asian languages, the display hyphen is always blank.
+-- (2) For Arabic-script languages, either tatweel (ـ) or ZWNJ (zero-width
+--     non-joiner) are allowed as template hyphens, where ZWNJ is supported
+--     primarily for Farsi, because some suffixes have non-joining behavior.
+--     The display hyphen corresponding to tatweel is also tatweel, but the
+--     display hyphen corresponding to ZWNJ is blank (tatweel is also the
+--     default display hyphen, for calls to {{prefix}}/{{suffix}}/etc. that
+--     don't include an explicit hyphen).
+
+-- List of all Arabic scripts.
+local arab_scripts = {
+	"Arab",
 	-- WTF? Why are there a zillion language-specific variants of the
 	-- Arabic script?
-	["fa-Arab"] = arab_hyphens,
-	["kk-Arab"] = arab_hyphens,
-	["ks-Arab"] = arab_hyphens,
-	["ku-Arab"] = arab_hyphens,
-	["ms-Arab"] = arab_hyphens,
-	["mzn-Arab"] = arab_hyphens,
-	["ota-Arab"] = arab_hyphens,
-	["pa-Arab"] = arab_hyphens,
-	["ps-Arab"] = arab_hyphens,
-	["sd-Arab"] = arab_hyphens,
-	["tt-Arab"] = arab_hyphens,
-	["ug-Arab"] = arab_hyphens,
-	["ur-Arab"] = arab_hyphens,
+	"fa-Arab",
+	"kk-Arab",
+	"ks-Arab",
+	"ku-Arab",
+	"ms-Arab",
+	"mzn-Arab",
+	"ota-Arab",
+	"pa-Arab",
+	"ps-Arab",
+	"sd-Arab",
+	"tt-Arab",
+	"ug-Arab",
+	"ur-Arab",
+}
+
+-- Per-script template hyphens. The template hyphen is what appears in the
+-- {{affix}}/{{prefix}}/{{suffix}}/etc. template (in the wikicode). See below.
+--
+-- The value below is a string consisting of one or more hyphen characters.
+-- If there is more than one character, a non-default function must be
+-- specified for the script in display_hyphens[] so the correct display
+-- hyphen will be specified when no template hyphen is given (in {{suffix}}/
+-- {{prefix}}/etc.).
+--
+-- Script detection is normally done when linking, but we need to do it
+-- earlier. However, under most circumstances we don't need to do script
+-- detection. Specifically, we only need to do script detection for a given
+-- language if
+--
+-- (a) the language has multiple scripts; and
+-- (b) at least one of those scripts is listed below or in display_hyphens.
+
+local ZWNJ = u(0x200C) -- zero-width non-joiner
+local arab_hyphens = "ـ" .. ZWNJ
+local template_hyphens = {
+	-- Arabic scripts get added below
 	["Hebr"] = "־",
 	-- FIXME! What about the following right-to-left scripts?
 	-- Adlm (Adlam)
@@ -64,18 +102,51 @@ local hyphens = {
 	-- Syrc (Syriac)
 	-- Thaa (Thaana)
 }
+for _, script in ipairs(arab_scripts) do
+	template_hyphens[script] = arab_hyphens
+end
 
--- Scripts for which there is no displayed hyphen. See below.
-local no_displayed_hyphens = {
-	["Hani"] = true,
+-- Default display-hyphen funct
+local function default_display_hyphen(script, hyph)
+	if not hyph then
+		return template_hyphens[script] or "-"
+	end
+	return hyph
+end
+
+local function no_display_hyphen(script, hyph)
+	return ""
+end
+
+local function arab_get_display_hyphen(script, hyph)
+	if not hyph then
+		return "ـ" -- tatweel
+	elseif hyph == ZWNJ then
+		return ""
+	else
+		return hyph
+	end
+end
+
+-- Per-script function to return the correct display hyphen given the
+-- script and template hyphen. The function should also handle the case
+-- where the passed-in template hyphen is nil, corresponding to the
+-- situation in {{prefix}}/{{suffix}}/etc. where no template hyphen is
+-- specified.
+local display_hyphens = {
+	-- Arabic scripts get added below
+	["Hani"] = no_display_hyphen,
 	-- The following two are mixtures of several scripts. Hopefully
 	-- the specs here are correct!
-	["Jpan"] = true,
-	["Kore"] = true,
-	["Laoo"] = true,
-	["Nshu"] = true,
-	["Thai"] = true,
+	["Jpan"] = no_display_hyphen,
+	["Kore"] = no_display_hyphen,
+	["Laoo"] = no_display_hyphen,
+	["Nshu"] = no_display_hyphen,
+	["Thai"] = no_display_hyphen,
 }
+for _, script in ipairs(arab_scripts) do
+	display_hyphens[script] = arab_get_display_hyphen
+end
 
 local function pluralize(pos)
 	if pos ~= "nouns" and usub(pos, -5) ~= "verbs" and usub(pos, -4) ~= "ives" then
@@ -108,40 +179,16 @@ local function link_term(terminfo, display_term, lang, sc, sort_key)
 	return result
 end
 
--- ABOUT TEMPLATE AND DISPLAY HYPHENS:
---
--- The "template hyphen" is the hyphen character (always a single Unicode char)
--- that is used in template calls to indicate that a term is an affix.
--- Normally this is just the regular hyphen character "-", but for some
--- non-Latin-script languages (currently only right-to-left languages), it
--- is different.
---
--- The "display hyphen" is the string (which might be an empty string) that
--- is added onto a term as displayed (and linked), to indicate that a term
--- is an affix. It is different for East Asian languages, which use a regular
--- hyphen in calls to {{affix}} and such to indicate an affix, but which
--- don't include any visible hyphen in the displayed and linked terms.
--- Currently this is the only situation where template and display hyphens
--- are different, but the code below is written generally enough to handle
--- arbitrary display hyphens.
-
--- Get
--- (a) the single character that signals an affix in template params;
--- (b) the string (possibly empty) that signals an affix in displayed
---     and linked terms. This differs from the template hyphen in various
---     East Asian languages, where the parameters to {{affix}} will still
---     contain a hyphen to signal an affix, but the affix will be displayed
---     and linked without such a hyphen.
--- TEXT is the text of the affix, which may be necessary for script detection.
--- LANG is the language of the affix.
--- SC is the script of the affix, or nil. If unspecified, and the language
---   has multiple scripts, and at least one of those scripts has a non-default
---   hyphen or has the no_displayed_hyphens[] property set, we do script
---   detection to figure out the proper script of the text, and then retrieve
---   the hyphen for that script.
+-- Figure out the appropriate script for the given affix and language (unless
+-- the script is explicitly passed in), and return the values of
+-- template_hyphens[] and display_hyphens[] for that script, substituting
+-- default values as appropriate. Three values are returned:
+--	DETECTED_SCRIPT, TEMPLATE_HYPHEN, DISPLAY_HYPHEN
 local function get_template_and_display_hyphens(text, lang, sc)
+	local scode
+	-- 1. If the script is explicitly passed in, use it.
 	if sc then
-		sc = sc:getCode()
+		scode = sc:getCode()
 	else
 		local possible_scripts = lang:getScriptCodes()
 		if #possible_scripts == 0 then
@@ -150,37 +197,47 @@ local function get_template_and_display_hyphens(text, lang, sc)
 			error("Something is majorly wrong! Language has no script codes.")
 		end
 		if #possible_scripts == 1 then
-			sc = possible_scripts[1]
+			-- 2. If the language has only one possible script, use it.
+			scode = possible_scripts[1]
 		else
+			-- 3. Check if any of the possible scripts for the language have
+			--    non-default values for template_hyphens[] or
+			--    display_hyphens[]. If so, we need to do script detection on
+			--    the text. If not, just use "Latn", which may not be
+			--    technically correct but produces the right results because
+			--    Latn has all default values for template_hyphens[] and
+			--    display_hyphens[].
 			local may_have_nondefault_hyphen = false
 			for _, script in ipairs(possible_scripts) do
-				if hyphens[script] or no_displayed_hyphens[script] then
+				if template_hyphens[script] or display_hyphens[script] then
 					may_have_nondefault_hyphen = true
 					break
 				end
 			end
 			if not may_have_nondefault_hyphen then
-				return "-", "-"
+				scode = "Latn"
+			else
+				scode = require("Module:scripts").findBestScript(text, lang):getCode()
 			end
-			sc = require("Module:scripts").findBestScript(text, lang):getCode()
 		end
 	end
-	local template_hyphen = hyphens[sc] or "-"
-	local display_hyphen = no_displayed_hyphens[sc] and "" or template_hyphen
-	return template_hyphen, display_hyphen
+	local template_hyphen = template_hyphens[scode] or "-"
+	local display_hyphen = display_hyphens[scode] or default_display_hyphen
+	return scode, template_hyphen, display_hyphen
 end
 
 -- Find the type of affix ("prefix", "infix", "suffix", "circumfix" or nil
 -- for non-affix). Return the affix type and the displayed/linked equivalent
 -- of the part (normally the same as the part but will be different for some
 -- East Asian languages that use a regular hyphen as an affix-signaling
--- hyphen but have no displayed hyphen).
+-- hyphen but have no display hyphen).
 local function get_affix_type(lang, sc, part)
 	if not part then
 		return nil, nil
 	end
 	
-	local thyph, dhyph = get_template_and_display_hyphens(part, lang, sc)
+	local scode, thyph, dhyph = get_template_and_display_hyphens(part, lang, sc)
+	thyph = "([" .. thyph .. "])"
 	local hyphen_space_hyphen = thyph .. " " .. thyph
 
 	if part:find("^%^") then
@@ -198,26 +255,31 @@ local function get_affix_type(lang, sc, part)
 
 	local affix_type = nil
 
-	local begins_with_hyphen = usub(part, 1, 1) == thyph
-	local ends_with_hyphen = usub(part, -1) == thyph
-	if rfind(part, hyphen_space_hyphen, 1, true) then
+	local beginning_hyphen = rmatch(part, "^" .. thyph .. ".*$")
+	local ending_hyphen = rmatch(part, "^.*" .. thyph .. "$")
+	local beginning_dhyph = dhyph(scode, beginning_hyphen)
+	local ending_dhyph = dhyph(scode, ending_hyphen)
+
+	if rfind(part, hyphen_space_hyphen) then
 		affix_type = "circumfix"
-	elseif begins_with_hyphen and ends_with_hyphen then
+		-- FIXME! Change to display hyphens?
+	elseif beginning_hyphen and ending_hyphen then
 		affix_type = "infix"
 		-- Don't do anything if the part is a single hyphen.
 		-- This is probably correct.
-		if thyph ~= dhyph and ulen(part) > 1 then
-			part = dhyph .. rsub(part, "^.(.-).$", "%1") .. dhyph
+		if (beginning_hyphen ~= beginning_dhyph or
+			ending_hyphen ~= ending_dhyph) and ulen(part) > 1 then
+			part = beginning_dhyph .. rsub(part, "^.(.-).$", "%1") .. ending_dhyph
 		end
-	elseif ends_with_hyphen then
+	elseif ending_hyphen then
 		affix_type = "prefix"
-		if thyph ~= dhyph then
-			part = rsub(part, "^(.-).$", "%1") .. dhyph
+		if ending_hyphen ~= ending_dhyph then
+			part = rsub(part, "^(.-).$", "%1") .. ending_dhyph
 		end
-	elseif begins_with_hyphen then
+	elseif beginning_hyphen then
 		affix_type = "suffix"
-		if thyph ~= dhyph then
-			part = dhyph .. usub(part, 2)
+		if beginning_hyphen ~= beginning_dhyph then
+			part = beginning_dhyph .. usub(part, 2)
 		end
 	end
 
@@ -284,11 +346,11 @@ function export.show_affixes(lang, sc, parts, pos, sort_key, nocat)
 			
 			if affix_type == "infix" then affix_type = "interfix" end
 			
-			if part.pos and rmatch(part.pos, "patronym") then
+			if part.pos and rfind(part.pos, "patronym") then
 				table.insert(categories_formatted, m_utilities.format_categories({lang:getCanonicalName() .. " patronymics"}, lang, part_sort, part_sort_base))
 			end
 			
-			if pos ~= "words" and part.pos and rmatch(part.pos, "diminutive") then
+			if pos ~= "words" and part.pos and rfind(part.pos, "diminutive") then
 				table.insert(categories_formatted, m_utilities.format_categories({lang:getCanonicalName() .. " diminutive " .. pos}, lang, part_sort, part_sort_base))
 			end
 			
@@ -611,7 +673,7 @@ function export.show_suffixes(lang, sc, base, suffixes, pos, sort_key, nocat)
 			insert_affix_category(categories, lang, pos, "suffix", suffix)
 		end
 		
-		if suffix.pos and rmatch(suffix.pos, "patronym") then
+		if suffix.pos and rfind(suffix.pos, "patronym") then
 			table.insert(categories, lang:getCanonicalName() .. " patronymics")
 		end
 	end
@@ -670,7 +732,8 @@ function export.make_affix(term, lang, sc, affix_type)
 		affix_type = "infix"
 	end
 	
-	local thyph, dhyph = get_template_and_display_hyphens(term, lang, sc)
+	local scode, thyph, dhyph = get_template_and_display_hyphens(term, lang, sc)
+	thyph = "([" .. thyph .. "])"
 	
 	-- Remove an asterisk if the morpheme is reconstructed and add it in the end.
 	local reconstructed = ""
@@ -679,32 +742,36 @@ function export.make_affix(term, lang, sc, affix_type)
 		term = term:gsub("^%*", "")
 	end
 	
-	local begins_with_hyphen = usub(term, 1, 1) == thyph
-	local ends_with_hyphen = usub(term, -1) == thyph
+	local beginning_hyphen = rmatch(term, "^" .. thyph .. ".*$")
+	local ending_hyphen = rmatch(term, "^.*" .. thyph .. "$")
+	local beginning_dhyph = dhyph(scode, beginning_hyphen)
+	local ending_dhyph = dhyph(scode, ending_hyphen)
 
 	if affix_type == "suffix" then
-		if thyph == dhyph and begins_with_hyphen then
+		if beginning_hyphen and beginning_hyphen == beginning_dhyph then
 			-- leave term alone
 		else
-			local term_no_hyphen = begins_with_hyphen and usub(term, 2) or term
-			term = dhyph .. term_no_hyphen
+			local term_no_hyphen = beginning_hyphen and usub(term, 2) or term
+			term = beginning_dhyph .. term_no_hyphen
 		end
 	elseif affix_type == "prefix" then
-		if thyph == dhyph and ends_with_hyphen then
+		if ending_hyphen and ending_hyphen == ending_dhyph then
 			-- leave term alone
 		else
-			local term_no_hyphen = ends_with_hyphen and rsub(term, "^(.-).$", "%1") or term
-			term = term_no_hyphen .. dhyph
+			local term_no_hyphen = ending_hyphen and rsub(term, "^(.-).$", "%1") or term
+			term = term_no_hyphen .. ending_dhyph
 		end
 	elseif affix_type == "infix" then
-		if thyph == dhyph and begins_with_hyphen and ends_with_hyphen then
+		if (beginning_hyphen and ending_hyphen and
+			beginning_hyphen == beginning_dhyph and
+			ending_hyphen == ending_dhyph) then
 			-- leave term alone
-		elseif term == thyph then
+		elseif term == beginning_hyphen or term == ending_hyphen then
 			-- term is a single hyphen; should probably leave alone
 		else
-			local term_no_hyphen = begins_with_hyphen and usub(term, 2) or term
-			term_no_hyphen = ends_with_hyphen and rsub(term_no_hyphen, "^(.-).$", "%1") or term_no_hyphen
-			term = dhyph .. term_no_hyphen .. dhyph
+			local term_no_hyphen = beginning_hyphen and usub(term, 2) or term
+			term_no_hyphen = ending_hyphen and rsub(term_no_hyphen, "^(.-).$", "%1") or term_no_hyphen
+			term = beginning_dhyph .. term_no_hyphen .. ending_dhyph
 		end
 	else
 		error("Internal error: Bad affix type " .. affix_type)
