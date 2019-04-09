@@ -6,44 +6,50 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, errandmsg, site, tname
 
-all_he_form_of_templates = [
-  "he-Cohortative of",
-  "he-Defective spelling of",
-  "he-Excessive spelling of",
-  "he-Form of adj",
-  "he-Form of noun",
-  "he-Form of prep",
-  "he-Form of sing cons",
-  "he-Future of",
-  "he-Imperative of",
-  "he-Infinitive of",
-  "he-Jussive of",
-  "he-Past of",
-  "he-Present of",
-  "he-Vav-imperfect of",
-  "he-Vav imperfect of",
-  "he-Vav-perfect of",
-  "he-Vav perfect of",
-  "he-cohortative of",
-  "he-defective spelling of",
-  "he-excessive spelling of",
-  "he-form of adj",
-  "he-form of noun",
-  "he-form of sing cons",
-  "he-form of prep",
-  "he-future of",
-  "he-imperative of",
-  "he-infinitive of",
-  "he-jussive of",
-  "he-past of",
-  "he-present of",
-  "he-vav-imperfect of",
-  "he-vav imperfect of",
-  "he-vav-perfect of",
-  "he-vav perfect of",
+# Tuple of (ORIGTEMPLATE, NEWNAME, ADD_NOCAP). NEWNAME is special-cased
+# for he-verb form of and he-noun form of.
+all_he_form_of_template_specs = [
+  ("he-Cohortative of", "he-verb form of|coho", False),
+  ("he-Defective spelling of", "he-defective spelling of", False),
+  ("he-Excessive spelling of", "he-excessive spelling of", False),
+  ("he-Form of adj", "he-adj form of", False),
+  ("he-Form of noun", "he-noun form of", False),
+  ("he-Form of prep", "he-prep form of", False),
+  ("he-Form of sing cons", "he-noun form of|n=s", False),
+  ("he-Future of", "he-verb form of|fut", False),
+  ("he-Imperative of", "he-verb form of|imp", False),
+  ("he-Infinitive of", "he-infinitive of", False),
+  ("he-Jussive of", "he-verb form of|juss", False),
+  ("he-Past of", "he-verb form of|past", False),
+  ("he-Present of", "he-verb form of|pres", False),
+  ("he-Vav-imperfect of", "he-verb form of|vavi", False),
+  ("he-Vav imperfect of", "he-verb form of|vavi", False),
+  ("he-Vav-perfect of", "he-verb form of|vavp", False),
+  ("he-Vav perfect of", "he-verb form of|vavp", False),
+  ("he-Cohortative of", "he-verb form of|coho", True),
+  ("he-defective spelling of", "he-defective spelling of", True),
+  ("he-excessive spelling of", "he-excessive spelling of", True),
+  ("he-form of adj", "he-adj form of", True),
+  ("he-form of noun", "he-noun form of", True),
+  ("he-form of prep", "he-prep form of", True),
+  ("he-form of sing cons", "he-noun form of|n=s", True),
+  ("he-future of", "he-verb form of|fut", True),
+  ("he-imperative of", "he-verb form of|imp", True),
+  ("he-infinitive of", "he-infinitive of", True),
+  ("he-jussive of", "he-verb form of|juss", True),
+  ("he-past of", "he-verb form of|past", True),
+  ("he-present of", "he-verb form of|pres", True),
+  ("he-vav-imperfect of", "he-verb form of|vavi", True),
+  ("he-vav imperfect of", "he-verb form of|vavi", True),
+  ("he-vav-perfect of", "he-verb form of|vavp", True),
+  ("he-vav perfect of", "he-verb form of|vavp", True),
 ]
+all_he_form_of_template_map = {
+  x[0]: (x[1], x[2]) for x in all_he_form_of_template_specs
+}
+all_he_form_of_templates = [x[0] for x in all_he_form_of_template_specs]
 
-def process_page(page, index, parsed, move_dot):
+def process_page(page, index, parsed, move_dot, rename):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -90,10 +96,58 @@ def process_page(page, index, parsed, move_dot):
       text = newtext
       notes.append("move .= outside of {{he-*}} template")
 
+  if rename:
+    parsed = blib.parse_text(text)
+    for t in parsed.filter_templates():
+      origt = unicode(t)
+      tn = tname(t)
+      if tn in all_he_form_of_template_map:
+        newname, add_nocap = all_he_form_of_template_map[tn]
+        newspecs = None
+        if "|" in newname:
+          newname, newspecs = newname.split("|")
+        blib.set_template_name(t, newname)
+        # Fetch all params.
+        params = []
+        old_1 = getparam(t, "1")
+        for param in t.params:
+          pname = unicode(param.name)
+          if pname.strip() in ["1", "lang", "sc"]:
+            continue
+          if pname.strip() in ["2", "3", "4"]:
+            errandmsg("WARNING: Found %s= in %s" % (pname.strip(), origt))
+          params.append((pname, param.value, param.showkey))
+        # Erase all params.
+        del t.params[:]
+        # Put back basic params
+        t.add("1", old_1)
+        if newname == "he-verb form of":
+          assert newspecs
+          t.add("2", newspecs)
+          notes.append("rename {{%s}} to {{%s|{{{1}}}|%s}}" %
+              (tn, newname, newspecs))
+        elif newname == "he-noun form of" and newspecs:
+          newparam, newval = newspecs.split("=")
+          t.add(newparam, newval)
+          notes.append("rename {{%s}} to {{%s|{{{1}}}|%s=%s}}" %
+              (tn, newname, newparam, newval))
+        else:
+          notes.append("rename {{%s}} to {{%s}}" % (tn, newname))
+        # Put remaining parameters in order.
+        for name, value, showkey in params:
+          t.add(name, value, showkey=showkey, preserve_spacing=False)
+
+      if unicode(t) != origt:
+        pagemsg("Replaced <%s> with <%s>" % (origt, unicode(t)))
+
+    text = unicode(parsed)
+
   return text, notes
 
 parser = blib.create_argparser("Clean up {{he-*}} templates")
 parser.add_argument('--move-dot', help="Move .= outside of template",
+    action="store_true")
+parser.add_argument('--rename', help="Rename templates",
     action="store_true")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
@@ -102,6 +156,6 @@ for template in all_he_form_of_templates:
   for i, page in blib.references("Template:%s" % template, start, end):
     blib.do_edit(page, i,
       lambda page, index, parsed:
-        process_page(page, index, parsed, args.move_dot),
+        process_page(page, index, parsed, args.move_dot, args.rename),
       save=args.save, verbose=args.verbose
     )
