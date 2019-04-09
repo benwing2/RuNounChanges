@@ -38,7 +38,8 @@ parser.add_argument("--templates",
 parser.add_argument("--params",
     help=u"""Comma-separated list of params to check for.""")
 parser.add_argument("--negate",
-    help=u"""Check if any params NOT in '--params' are present.""")
+    help=u"""Check if any params NOT in '--params' are present.""",
+    action="store_true")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
