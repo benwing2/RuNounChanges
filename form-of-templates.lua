@@ -1,6 +1,6 @@
 local export = {}
 
-local m_form_of = require("Module:User:Benwing2/form of")
+local m_form_of = require("Module:form of")
 local rfind = mw.ustring.find
 local rmatch = mw.ustring.match
 local rsplit = mw.text.split
@@ -338,6 +338,7 @@ function export.form_of_t(frame)
 		
 		-- Named params not controlling link display		
 		["cat"] = {list = true},
+		["notext"] = {type = "boolean"},
 		["sort"] = {},
 		-- FIXME! The following should only be available when withcap=1 in
 		-- invocation args. Before doing that, need to remove all uses of
@@ -372,7 +373,7 @@ function export.form_of_t(frame)
 	local args = process_parent_args("form-of-t", parent_args, params, iargs["def"],
 		iargs["ignore"], ignored_params)
 	
-	local text = iargs[1]
+	local text = args["notext"] and "" or iargs[1]
 	if iargs["withcap"] and not args["nocap"] then
 		text = m_form_of.ucfirst(text)
 	end
@@ -450,6 +451,7 @@ function export.tagged_form_of_t(frame)
 
 		-- Named params not controlling link display		
 		["cat"] = {list = true},
+		["notext"] = {type = "boolean"},
 		["sort"] = {},
 		-- FIXME! The following should only be available when withcap=1 in
 		-- invocation args. Before doing that, need to remove all uses of
@@ -488,7 +490,8 @@ function export.tagged_form_of_t(frame)
 		function(terminfo)
 			return m_form_of.tagged_inflections(
 				split_inflection_tags(iargs[1], iargs["split_tags"]), terminfo,
-				iargs["withcap"] and not args["nocap"], iargs["posttext"]
+				args["notext"], iargs["withcap"] and not args["nocap"],
+				iargs["posttext"]
 			)
 		end
 	)
@@ -570,6 +573,7 @@ function export.inflection_of_t(frame)
 		
 		-- Named params not controlling link display		
 		["cat"] = {list = true},
+		["notext"] = {type = "boolean"},
 		["sort"] = {},
 		-- FIXME! The following should only be available when withcap=1 in
 		-- invocation args. Before doing that, need to remove all uses of
@@ -622,7 +626,7 @@ function export.inflection_of_t(frame)
 	return construct_form_of_text(iargs, args, term_param, compat,
 		function(terminfo)
 			return m_form_of.tagged_inflections(
-				infls, terminfo,
+				infls, terminfo, args["notext"],
 				iargs["withcap"] and not args["nocap"], iargs["posttext"]
 			)
 		end

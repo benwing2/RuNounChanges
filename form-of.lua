@@ -15,14 +15,11 @@ function export.ucfirst(text)
 		return mw.ustring.upper(mw.ustring.sub(text, 1, 1)) .. mw.ustring.sub(text, 2)
 	end
 	-- If there's a link at the beginning, uppercase the first letter of the
-	-- link text. First handle two-part link, then one-part link.
-	local link, linktext, remainder = rmatch(text, "^%[%[(.-)|(.-)%]%](.*)$")
+	-- link text. This pattern matches both piped and unpiped links.
+	-- If the link is not piped, the second capture (linktext) will be empty.
+	local link, linktext, remainder = rmatch(text, "^%[%[([^|%]]+)%|?(.-)%]%](.*)$")
 	if link then
-		return "[[" .. link .. "|" .. doucfirst(linktext) .. "]]" .. remainder
-	end
-	local linktext, remainder = rmatch(text, "^%[%[(.-)%]%](.*)$")
-	if linktext then
-		return "[[" .. linktext .. "|" .. doucfirst(linktext) .. "]]" .. remainder
+		return "[[" .. link .. "|" .. doucfirst(linktext ~= "" and linktext or link) .. "]]" .. remainder
 	end
 	return doucfirst(text)
 end
@@ -77,7 +74,7 @@ local function normalize_tag(tag)
 	return tag
 end
 
-function export.tagged_inflections(tags, terminfo, capfirst, posttext)
+function export.tagged_inflections(tags, terminfo, notext, capfirst, posttext)
 	local cur_infl = {}
 	local inflections = {}
 	
@@ -89,7 +86,7 @@ function export.tagged_inflections(tags, terminfo, capfirst, posttext)
 			
 			cur_infl = {}
 		else
-			local split_tags = rsplit(tagspec, "/", true)
+			local split_tags = rsplit(tagspec, "//", true)
 			if #split_tags == 1 then
 				table.insert(cur_infl, normalize_tag(split_tags[1]))
 			else
@@ -108,14 +105,14 @@ function export.tagged_inflections(tags, terminfo, capfirst, posttext)
 	
 	if #inflections == 1 then
 		return export.format_form_of(
-			(capfirst and export.ucfirst(inflections[1]) or inflections[1]) ..
-			(terminfo and " of" or ""),
+			notext and "" or ((capfirst and export.ucfirst(inflections[1]) or inflections[1]) ..
+				(terminfo and " of" or "")),
 			terminfo, posttext
 		)
 	else
 		local link = export.format_form_of(
-			(capfirst and "Inflection" or "inflection") ..
-			(terminfo and " of" or ""),
+			notext and "" or ((capfirst and "Inflection" or "inflection") ..
+				(terminfo and " of" or "")),
 			terminfo, (posttext or "") .. ":"
 		)
 		return link .."\n## <span class='form-of-definition use-with-mention'>" .. table.concat(inflections, "</span>\n## <span class='form-of-definition use-with-mention'>") .. "</span>"
