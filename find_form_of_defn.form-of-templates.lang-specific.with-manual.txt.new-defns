@@ -2063,7 +2063,7 @@ Page 136 Template:he-form of adj: -------- begin text ---------
 -->|linktext={{he-lemma|1={{{1}}}|wv={{{wv|}}}|dwv={{{dwv|}}}|tr={{{tr|}}}}}<!--
 -->|ignore=1,wv,dwv,tr,g,n,s<!--
 -->|cat4=adjective forms<!--
--->|cat5={{#if:{{{tr|}}}||{{#ifeq:{{{1|}}}|{{PAGENAME}}||terms needing transliteration}}<!--
+-->|cat5={{#if:{{{tr|}}}||{{#ifeq:{{{1|}}}|{{PAGENAME}}||terms needing transliteration}}}}<!--
 -->}}<!--
 
 errors:
@@ -2852,7 +2852,10 @@ Page 194 Template:lt-form-part: -------- begin text ---------
 Page 195 Template:lt-form-pronoun: Processing
 Page 195 Template:lt-form-pronoun: Found match for regex: .
 Page 195 Template:lt-form-pronoun: -------- begin text ---------
-<includeonly><span class="use-with-mention">{{#if:{{{class|}}}|{{#switch:{{{class|}}}|determiner=([[use]]d as a [[determiner]])|?}}}} {{#if:{{{1|}}}|({{#switch:{{{1}}}|1s=[[first-person]] [[singular]]|1d=[[first-person]] [[dual]]|1p=[[first-person]] [[plural]]|2s=[[second-person]] [[singular]]|2d=[[second-person]] [[dual]]|2p=[[second-person]] [[plural]]|3s=[[third-person]] [[singular]]|3d=[[third-person]] [[dual]]|3p=[[third-person]] [[plural]]|?}})}} {{#if:{{{4|}}}|{{#switch:{{{4}}}|ms=[[masculine]] [[singular]]|mp=[[masculine]] [[plural]]|fs=[[feminine]] [[singular]]|fp=[[feminine]] [[plural]]|?}}}} {{#if:{{{2|}}}|{{#switch:{{{2}}}|n|nom=[[nominative]]|g|gen=[[genitive]]|d|dat=[[dative]]|a|acc=[[accusative]]|i|ins=[[instrumental]]|l|loc=[[locative]]|?}}}} form of <span class="mention">'''{{l|lt|{{{3}}}}}'''</span>.</span>[[Category:Lithuanian pronoun forms]]</includeonly><noinclude>[[Category:Lithuanian form-of templates|Pronoun]][[Category:Lithuanian pronoun forms|*]]</noinclude>
+{{#invoke:form of/templates|tagged_form_of_t|lang=lt|withdot=1|split_tags=,<!--
+-->|term_param=3|ignore=1,2,4,class|cat=pronoun forms<!--
+-->|{{#if:{{{class|}}}|{{#switch:{{{class|}}}|determiner=([[use]]d as a [[determiner]])|?}}}}<!--
+-->{{#if:{{{1|}}}|{{#switch:{{{1}}}|1s=[[first-person]] [[singular]]|1d=[[first-person]] [[dual]]|1p=[[first-person]] [[plural]]|2s=[[second-person]] [[singular]]|2d=[[second-person]] [[dual]]|2p=[[second-person]] [[plural]]|3s=[[third-person]] [[singular]]|3d=[[third-person]] [[dual]]|3p=[[third-person]] [[plural]]|?}})}} {{#if:{{{4|}}}|{{#switch:{{{4}}}|ms=[[masculine]] [[singular]]|mp=[[masculine]] [[plural]]|fs=[[feminine]] [[singular]]|fp=[[feminine]] [[plural]]|?}}}} {{#if:{{{2|}}}|{{#switch:{{{2}}}|n|nom=[[nominative]]|g|gen=[[genitive]]|d|dat=[[dative]]|a|acc=[[accusative]]|i|ins=[[instrumental]]|l|loc=[[locative]]|?}}}} form of <span class="mention">'''{{l|lt|{{{3}}}}}'''</span>.</span>[[Category:Lithuanian pronoun forms]]</includeonly><noinclude>[[Category:Lithuanian form-of templates|Pronoun]][[Category:Lithuanian pronoun forms|*]]</noinclude>
 -------- end text --------
 Page 196 Template:lt-form-verb: Processing
 Page 196 Template:lt-form-verb: Found match for regex: .
@@ -3880,7 +3883,7 @@ sl-form-adj:
     -->|aa={{#ifeq:{{{1}}}|m|an,acc}}<!--
     -->|#default=?
   -->}}<!--
-  -->|term_param=4|ignore=1,2|ignore3=3}}<!--
+  -->|term_param=4|ignore=1,2,3}}<!--
 
 --><noinclude>{{documentation}}[[Category:Slovene form-of templates]]</noinclude>
 -------- end text --------
@@ -3900,24 +3903,26 @@ sl-form-noun:
 --><noinclude>{{documentation}}[[Category:Slovene form-of templates]]</noinclude>
 -------- end text --------
 sl-form-verb:
-{{#invoke:form of/templates|tagged_form_of_t|lang=sl|split_tags=,<!--
-  -->|{{#switch:{{{1|}}}<!--
-    -->|1s=1,s<!--
-    -->|2s=2,s<!--
-    -->|3s=3,s<!--
-    -->|1d=1,d<!--
-    -->|2d=2,d<!--
-    -->|3d=3,d<!--
-    -->|1p=1,p<!--
-    -->|2p=2,p<!--
-    -->|3p=3,p<!--
-    -->|?}}<!--
-  -->|{{#switch:{{{2|}}}<!--
-    -->|pres|present=pres<!--
-    -->|fut|future=fut<!--
-    -->|imp|imperative=imp<!--
-    -->|?}}<!--
-  -->|term_param=3|ignore=1,2|cat=verb forms}}.<!--
+{{#invoke:form of/templates|tagged_form_of_t|lang=sl|withdot=1|split_tags=,<!--
+-->|term_param=3|ignore=1,2|cat=verb forms<!--
+-->|{{#switch:{{{1|}}}<!--
+  -->|1s=1,s<!--
+  -->|2s=2,s<!--
+  -->|3s=3,s<!--
+  -->|1d=1,d<!--
+  -->|2d=2,d<!--
+  -->|3d=3,d<!--
+  -->|1p=1,p<!--
+  -->|2p=2,p<!--
+  -->|3p=3,p<!--
+  -->|#default=<includeonly>{{error|Unrecognized person-number arg {{{1}}}}}</includeonly><noinclude>{{{1}}}</noinclude><!--
+  -->}}<!--
+-->|{{#switch:{{{2|}}}<!--
+  -->|pres|present=pres<!--
+  -->|fut|future=fut<!--
+  -->|imp|imperative=imp<!--
+  -->|#default=<includeonly>{{error|Unrecognized tense arg {{{2}}}}}</includeonly><noinclude>{{{2}}}</noinclude><!--
+-->}}<!--
 
 --><noinclude>{{documentation}}[[Category:Slovene form-of templates]]</noinclude>
 -------- end text --------
@@ -4291,12 +4296,6 @@ Page 324 Template:sv-verb-form-sup-pass: -------- begin text ---------
 </noinclude><span class='use-with-mention'>supine passive of <span class='mention'>{{l|sv|{{{1}}}}}</span>.</span>
 <includeonly>[[Category:Swedish verb forms]]</includeonly>
 -------- end text --------
-# t-prothesis of: Not lang-specific, add to general list
-t-prothesis of:
-{{#invoke:form of/templates|form_of_t|[[t-prothesis|t-prothesized]] form of|cat=t-prothesized forms}}<!--
-
---><noinclude>{{documentation}}</noinclude>
--------- end text --------
 # tg-adj form of: deprecate in favor of {{comparative of}}, {{superlative of}}
 tg-adj form of:
 {{{{#switch:{{{1}}}|c=comparative|s=superlative}} of|lang=tg|{{{2|}}}|{{{3|}}}|tr={{{tr|}}}}}<!--
@@ -4304,69 +4303,64 @@ tg-adj form of:
 --><noinclude>{{documentation}}</noinclude>
 -------- end text --------
 tg-form-verb:
-{{#invoke:form of/templates|form_of_t|lang=tg|{{#if:{{{1|}}}|{{#switch:{{{1}}}<!--
-  -->|man|imp-man=[[ман]] [[first-person]] [[singular]] [[imperative]]<!--
-  -->|tu|imp-tu=[[ту]] [[second-person]] [[singular]] [[imperative]]<!--
-  -->|vay|imp-vay=[[вай]] [[third-person]] [[singular]] [[imperative]]<!--
-  -->|mo|imp-mo=[[мо]] [[first-person]] [[plural]] [[imperative]]<!--
-  -->|šumo|imp-šumo=[[шумо]] [[second-person]] [[plural]] [[imperative]]<!--
-  -->|onho|imp-onho=[[онҳo]] [[third-person]] [[plural]] [[imperative]]<!--
+{{#invoke:form of/templates|tagged_form_of_t|lang=tg|withdot=1|sc=Cyrl<!--
+-->|term_param=2|split_tags=,<!--
+-->|{{#switch:{{{1}}}<!--
+  -->|man|imp-man=[[ман]],1,s,imp<!--
+  -->|tu|imp-tu=[[ту]],2,s,imp<!--
+  -->|vay|imp-vay=[[вай]],3,s,imp<!--
+  -->|mo|imp-mo=[[мо]],1,p,imp<!--
+  -->|šumo|imp-šumo=[[шумо]],2,p,imp<!--
+  -->|onho|imp-onho=[[онҳo]],3,p,imp<!--
   -->|r=[[root]]<!--
-  -->|prstem=[[present]] [[stem]]<!--
-  -->|pstem=[[past]] [[stem]]<!--
-  -->|?}}}}<!--
-
--->&nbsp;form of|term_param=2|sc=Cyrl|withdot=1}}<!--
+  -->|prstem=pres,[[stem]]<!--
+  -->|pstem=past,[[stem]]<!--
+  -->|#default=<includeonly>{{error|Unrecognized form {{{1}}}}}</includeonly><noinclude>{{{1}}}</noinclude>
+  -->}}<!--
+-->|form<!--
+-->}}
 
 --><noinclude>{{documentation}}[[Category:Tajik form-of templates|Verb]][[Category:Tajik verb forms|*]]</noinclude>
 -------- end text --------
+# FIXME! Check if complete/progressive/contemplative aspects are recognized
 tl-verb form of:
-{{form of|tl|<!--
--->{{#switch:{{{2}}}<!--
-    -->|comp=Complete aspect<!--
-    -->|prog=Progressive aspect<!--
-    -->|cont=Contemplative aspect<!--
+{{#invoke:form of/templates|tagged_form_of_t|lang=tl|withcap=1|withdot=1<!--
+-->|ignore=2|cat=verb forms<!--
+-->|{{#switch:{{{2}}}<!--
+  -->|comp=complete<!--
+  -->|prog=progressive<!--
+  -->|cont=contemplative<!--
+  -->}}<!--
+-->|aspect<!--
 -->}}<!--
--->|{{{1|}}}|cat=verb forms}}.<!--
 
 --><noinclude>{{documentation}}</noinclude>
 -------- end text --------
 Page 329 Template:tr-copulative form of: Processing
 Page 329 Template:tr-copulative form of: Found match for regex: .
 Page 329 Template:tr-copulative form of: -------- begin text ---------
-<span class='use-with-mention'><!--
--->the word <!--
+{{#invoke:form of/templates|form_of_t|lang=tr|the word<!--
+-->|ignore=2<!--
+-->|posttext=&#32;+ the [[copula|copulative]] suffix {{m|tr|-{{{2}}}}} <span class='mention-gloss-paren'>(</span><span class='mention-gloss-double-quote'>“</span><!--
+  -->{{#switch:{{{2}}}<!--
+  -->|im|ım|üm|um|yim|yım|yüm|yum=I am<!--
+  -->|sin|sın|sün|sun=you (singular) are<!--
+  -->|dir|dır|dür|dur|tir|tır|tür|tur=he/she/it is<!--
+  -->|iz|ız|üz|uz|yiz|yız|yüz|yuz=we are<!--
+  -->|siniz|sınız|sünüz|sunuz=you (plural) are<!--
+  -->|dirler|dırlar|dürler|durlar|tirler|tırlar|türler|turlar=they are<!--
 
---><span class='mention' lang="tr"><!--
--->[[{{{1}}}#Turkish|{{{1}}}]]<!--
---></span><!--
+  -->|dim|dım|düm|dum|tim|tım|tüm|tum|ydim|ydım|ydüm|ydum=I was<!--
+  -->|din|dın|dün|dun|tin|tın|tün|tun|ydin|ydın|ydün|ydun=you (singular) were<!--
+  -->|di|dı|dü|du|ti|tı|tü|tu|ydi|ydı|ydü|ydu=he/she/it was<!--
+  -->|dik|dık|dük|duk|tik|tık|tük|tuk|ydik|ydık|ydük|yduk=we were<!--
+  -->|diniz|dınız|dünüz|dunuz|tiniz|tınız|tünüz|tunuz|ydiniz|ydınız|ydünüz|ydunuz=you (plural) were<!--
+  -->|diler|dılar|düler|dular|tiler|tılar|tüler|tular|ydiler|ydılar|ydüler|ydular=they were<!--
+  -->}}<!--
 
---> + the [[copula|copulative]] suffix <!--
+  --><span class='mention-gloss-double-quote'>”</span><span class='mention-gloss-paren'>)</span><!--
 
---><span class='mention' lang="tr"><!--
--->[[-{{{2}}}#Turkish|-{{{2}}}]]<!--
---></span><!--
-
---> <span class='mention-gloss-paren'>(</span><span class='mention-gloss-double-quote'>“</span><!--
--->{{#switch:{{{2}}}<!--
--->|im|ım|üm|um|yim|yım|yüm|yum=I am<!--
--->|sin|sın|sün|sun=you (singular) are<!--
--->|dir|dır|dür|dur|tir|tır|tür|tur=he/she/it is<!--
--->|iz|ız|üz|uz|yiz|yız|yüz|yuz=we are<!--
--->|siniz|sınız|sünüz|sunuz=you (plural) are<!--
--->|dirler|dırlar|dürler|durlar|tirler|tırlar|türler|turlar=they are<!--
-
--->|dim|dım|düm|dum|tim|tım|tüm|tum|ydim|ydım|ydüm|ydum=I was<!--
--->|din|dın|dün|dun|tin|tın|tün|tun|ydin|ydın|ydün|ydun=you (singular) were<!--
--->|di|dı|dü|du|ti|tı|tü|tu|ydi|ydı|ydü|ydu=he/she/it was<!--
--->|dik|dık|dük|duk|tik|tık|tük|tuk|ydik|ydık|ydük|yduk=we were<!--
--->|diniz|dınız|dünüz|dunuz|tiniz|tınız|tünüz|tunuz|ydiniz|ydınız|ydünüz|ydunuz=you (plural) were<!--
--->|diler|dılar|düler|dular|tiler|tılar|tüler|tular|ydiler|ydılar|ydüler|ydular=they were<!--
 -->}}<!--
-
---><span class='mention-gloss-double-quote'>”</span><span class='mention-gloss-paren'>)</span><!--
-
---></span><!--
 
 --><noinclude>{{documentation}}</noinclude>
 -------- end text --------
@@ -4376,30 +4370,22 @@ tr-inflection of:
 --><noinclude>{{documentation}}[[Category:Turkish form-of templates]]</noinclude>
 -------- end text --------
 tr-possessive form of:
-{{form of|tr|{{#switch:{{{2}}}<!--
--->|1s=first-person singular (“my”)<!--
--->|2s=second-person singular (“your”)<!--
--->|3s=third-person singular (“his/her/its”)<!--
--->|1p=first-person plural (“our”)<!--
--->|2p=second-person plural (“your”)<!--
--->|3p=third-person plural (“their”)<!--
--->|#default=<includeonly>{{#invoke:debug|error|Form missing}}</includeonly><noinclude>{{{2}}}</noinclude><!--
+{{#invoke:form of/templates|tagged_form_of_t|withdot=1|lang=tr|split_tags=,<!--
+-->|ignore=2,3<!--
+-->|{{#switch:{{{2}}}<!--
+  -->|1s=1,s|2s=2,s|3s=3,s|1p=1,p|2p=2,p|3p=3,p<!--
+  -->|#default=<noinclude>{{{2}}}</noinclude><!--
+-->|possessive form<!--
+-->|posttext=&#32;in the {{#invoke:form of/templates|tagged_form_of_t|lang=tr<!--
+  -->|nolink=1|ignore=2,3<!--
+  -->|{{{3}}}<!--
+  -->}} case<!--
 -->}}<!--
---> possessive form|{{{1|}}}}}<!--
 
---> in the <!--
--->{{#switch:{{{3}}}<!--
--->|nom=nominative<!--
--->|acc=accusative<!--
--->|dat=dative<!--
--->|loc=locative<!--
--->|abl=ablative<!--
--->|gen=genitive<!--
--->|#default=<includeonly>{{#invoke:debug|error|Case missing}}</includeonly><noinclude>{{{3}}}</noinclude><!--
--->}}<!--
---> case.<!--
-
---></span><!--
+--><includeonly><!--
+-->{{#switch:{{{2}}}|1s|2s|3s|1p|2p|3p=|#default={{error|person-number {{{2}}} not ok}}}}<!--
+-->{{#switch:{{{3}}}|nom|acc|dat|loc|abl|gen=|#default={{error|case {{{3}}} not ok}}}}<!--
+--></includeonly><!--
 
 --><noinclude>{{documentation}}</noinclude>
 -------- end text --------
@@ -4515,10 +4501,23 @@ zh-old-name:
 
 --><noinclude>{{documentation}}</noinclude>
 -------- end text --------
-Page 351 Template:zh-only used in: Processing
-Page 351 Template:zh-only used in: Found match for regex: .
-Page 351 Template:zh-only used in: -------- begin text ---------
-<span class='use-with-mention'>{{#if:{{{notonly|}}}|{{#if:{{{nocap|}}}|u|U}}sed|{{#if:{{{nocap|}}}|o|O}}nly used}} in</span> {{#if:{{{tr|}}}|{{zh-l|1={{{1|<noinclude>term</noinclude>}}}|tr={{{tr|}}}|gloss={{{2|}}}}}|{{zh-l|1={{{1|<noinclude>term</noinclude>}}}|2={{{2|}}}}}}}{{#if:{{{3|}}}|<span class='use-with-mention'>&nbsp;and</span> {{zh-l|1={{{3|<noinclude>term</noinclude>}}}|2={{{4|}}}}}}}{{#if:{{{short|}}}|<span class='use-with-mention'>; also used as its short form</span>{{#if:{{{nocat|}}}||[[Category:Chinese short forms]]}}|}}{{{dot|.}}}<noinclude>{{documentation}}</noinclude>
+zh-only used in:
+{{#invoke:form of/templates|form_of_t|withcap=1|withdot=1|lang=zh<!--
+-->|ignore=notonly,short,1,2,3,4,tr<!--
+-->|{{#if:{{{notonly|}}}|used|only used}} in<!--
+-->|linktext=<!--
+  -->{{#if:{{{tr|}}}<!--
+    -->|{{zh-l|1={{{1|<noinclude>term</noinclude>}}}|tr={{{tr|}}}|gloss={{{2|}}}}}<!--
+    -->|{{zh-l|1={{{1|<noinclude>term</noinclude>}}}|2={{{2|}}}}}<!--
+  -->}}<!--
+  -->{{#if:{{{3|}}}<!--
+    -->|&nbsp;and {{zh-l|1={{{3|<noinclude>term</noinclude>}}}|2={{{4|}}}}}<!--
+  -->}}<!--
+-->|posttext={{#if:{{{short|}}}|; also used as its short form<!--
+-->|cat={{#if:{{{short|}}}|short forms}}<!--
+-->}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
 -------- end text --------
 zh-original:
 {{#invoke:call|call|zh-form of|formtext=original form of}}<!--
