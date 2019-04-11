@@ -257,7 +257,6 @@ Beginning at Mon Apr  1 13:47:41 2019
 | [[Template:vi-def]] || [[Template:han tu form of]] || 0 || Delete
 |-
 | [[Template:vi-hantu form of]] || [[Template:han tu form of]] || 0 || Delete
-|-
 | '''[[Template:he-Cohortative of]]''' || '''[[Template:he-Cohortative of]]''' || 8 || Rename to {{temp|he-verb form of|{{{1}}}|coho}} with auto-uppercasing behavior; currently set by cap=uc
 |-
 | '''[[Template:he-Defective spelling of]]''' || '''[[Template:he-Defective spelling of]]''' || 332 || Rename to {{temp|he-defective spelling of}} with auto-uppercasing behavior; currently set by cap=uc
@@ -538,9 +537,9 @@ Beginning at Mon Apr  1 13:47:41 2019
 |-
 | '''[[Template:pt-obsolete-ü]]''' || '''[[Template:pt-obsolete-ü]]''' || 43 || Keep
 |-
-| '''[[Template:pt-ordinal form]]''' || '''[[Template:pt-ordinal form]]''' || 153 || ?
+| '''[[Template:pt-ordinal form]]''' || '''[[Template:pt-ordinal form]]''' || 153 || Rename to {{temp|pt-ordinal form of}}
 |-
-| [[Template:pt-ordinal def]] || [[Template:pt-ordinal form]] || 3 || ?
+| [[Template:pt-ordinal def]] || [[Template:pt-ordinal form]] || 3 || Rename to {{temp|pt-ordinal form of}}
 |-
 | '''[[Template:pt-pron def]]''' || '''[[Template:pt-pron def]]''' || 24 || ?
 |-
@@ -610,9 +609,9 @@ Beginning at Mon Apr  1 13:47:41 2019
 |-
 | '''[[Template:sga-verbnec of]]''' || '''[[Template:sga-verbnec of]]''' || 5 || ?
 |-
-| '''[[Template:sh-form-noun]]''' || '''[[Template:sh-form-noun]]''' || 65 || Replace with appropriate {{temp|inflection of|sl}}
+| '''[[Template:sh-form-noun]]''' || '''[[Template:sh-form-noun]]''' || 65 || Replace with appropriate {{temp|inflection of|sh}}
 |-
-| '''[[Template:sh-verb form of]]''' || '''[[Template:sh-verb form of]]''' || 98 || Replace with appropriate {{temp|inflection of|sl}}
+| '''[[Template:sh-verb form of]]''' || '''[[Template:sh-verb form of]]''' || 98 || Replace with appropriate {{temp|inflection of|sh}}
 |-
 | [[Template:sh-form-verb]] || [[Template:sh-verb form of]] || 34 || Replace with appropriate {{temp|inflection of|sh}}
 |-
