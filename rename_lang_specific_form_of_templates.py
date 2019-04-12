@@ -387,6 +387,58 @@ templates_to_rename_specs = [
 
   ("fa-adj-form", "fa-adj form of"),
 
+  # NOTE: Has automatic, non-controllable final period that we're ignoring.
+  # Doesn't have initial caps.
+  ("hi-form-adj", (
+    "inflection of",
+    ("comment", "rename {{__TEMPNAME__}} to {{inflection of|hi|...}}"),
+    ("error-if", ("present-except", ["1", "2", "3"])),
+    ("set", "1", [
+      "hi",
+      ("copy", "3"),
+      "",
+      ("lookup", "1", {
+        "d": "dir",
+        # FIXME: In [[Module:form of/data]], add "indir" = "indirect case",
+        # I think same as "oblique case"
+        "i": "indir",
+        "o": "indir",
+        "v": "vocative",
+      }),
+      ("lookup", "2", {
+        "ms": ["m", "s"],
+        "mp": ["m", "p"],
+        "fs": ["f", "s"],
+        "fp": ["f", "p"],
+      }),
+    ]),
+  )),
+
+  # NOTE: Has automatic, non-controllable final period that we're ignoring.
+  # Doesn't have initial caps.
+  ("hi-form-noun", (
+    "inflection of",
+    ("comment", "rename {{__TEMPNAME__}} to {{inflection of|hi|...}}"),
+    ("error-if", ("present-except", ["1", "2", "3"])),
+    ("set", "1", [
+      "hi",
+      ("copy", "3"),
+      "",
+      ("lookup", "1", {
+        "d": "dir",
+        # FIXME: In [[Module:form of/data]], add "indir" = "indirect case",
+        # I think same as "oblique case"
+        "i": "indir",
+        "o": "indir",
+        "v": "vocative",
+      }),
+      ("lookup", "2", {
+        "s": "s",
+        "p": "p",
+      }),
+    ]),
+  )),
+
   ("is-conjugation of", (
     "inflection of",
     ("comment", "rename {{__TEMPNAME__}} to {{inflection of|is|...}}"),
@@ -430,6 +482,36 @@ templates_to_rename_specs = [
 
   ("ka-verbal of", "ka-verbal for"),
 
+  ("liv-conjugation of", (
+    "inflection of",
+    ("comment", "rename {{__TEMPNAME__}} to {{inflection of|liv|...}}"),
+    ("error-if", ("present-except", ["1", "2", "3", "4"])),
+    ("set", "1", [
+      "liv",
+      ("copy", "4"),
+      "",
+      ("lookup", "1", {
+        "1st": "1",
+        "2nd": "2",
+        "3rd": "3",
+      }),
+      ("lookup", "2", {
+        "sg": "s",
+        "pl": "p",
+      }),
+      ("lookup", "3", {
+        "pr": ["pres", "ind"],
+        "p": ["past", "ind"],
+        "n": ["neg"],
+        "i": ["imp"],
+        "in": ["imp", "neg"],
+        "c": ["cond"],
+        "j": ["juss"],
+        "q": ["quot"],
+      }),
+    ]),
+  )),
+
   ("liv-inflection of", (
     "inflection of",
     ("comment", "rename {{__TEMPNAME__}} to {{inflection of|liv|...}}"),
@@ -455,6 +537,39 @@ templates_to_rename_specs = [
       ("lookup", "1", {
         "sg": "s",
         "pl": "p",
+      }),
+    ]),
+  )),
+
+  ("liv-participle of", (
+    "inflection of",
+    ("comment", "rename {{__TEMPNAME__}} to {{inflection of|liv|...}}"),
+    ("error-if", ("present-except", ["1", "2", "3", "4", "5"])),
+    ("set", "1", [
+      "liv",
+      ("copy", "4"),
+      "",
+      ("lookup", "1", {
+        "pr": "present",
+        "p": "past",
+        "": [],
+      }),
+      ("lookup", "2", {
+        "a": "act",
+        "pa": "pass",
+        "": [],
+      }),
+      ("lookup", "3", {
+        "part": "part",
+        "g": "ger",
+        "s": "sup",
+        "sa": ["sup", "abe"],
+        "d": ["deb"],
+      }),
+      ("lookup", "5", {
+        "sg": "s",
+        "pl": "p",
+        "": [],
       }),
     ]),
   )),
