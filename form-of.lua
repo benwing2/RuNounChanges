@@ -1,6 +1,7 @@
 local m_links = require("Module:links")
 local m_table = require("Module:table")
 local m_data = mw.loadData("Module:form of/data")
+local m_cats = mw.loadData("Module:form of/cats")
 
 local rmatch = mw.ustring.match
 local rsplit = mw.text.split
@@ -81,7 +82,7 @@ local function get_tag_display_form(tag)
 end
 
 
-function export.fetch_categories(lang, tags, POS)
+function export.fetch_lang_categories(lang, tags, terminfo, POS)
 	local categories = {}
 
 	local normalized_tags = {}
@@ -89,11 +90,20 @@ function export.fetch_categories(lang, tags, POS)
 		table.insert(normalized_tags, normalize_tag(tag))
 	end
 
+	local function make_function_table()
+		return {
+			lang=lang,
+			tags=normalized_tags,
+			term=term,
+			p=POS
+		}
+
 	local function check_condition(spec)
 		if type(spec) == "boolean" then
 			return spec
-		end
-		if type(spec) ~= "table" then
+		elseif type(spec) == "function" then
+			return spec(make_function_table())
+		elseif type(spec) ~= "table" then
 			error("Wrong type of condition " .. spec .. ": " .. type(spec))
 		end
 		local predicate = spec[1]
@@ -141,38 +151,42 @@ function export.fetch_categories(lang, tags, POS)
 		elseif type(spec) == "string" then
 			table.insert(categories, lang:getCanonicalName() .. " " .. spec)
 			return true
-		elseif type(spec) == "table" then
-			local predicate = spec[1]
-			if predicate == "multi" then
-				for i = 2, #spec do
-					process_spec(spec[i])
-				end
-				return true
-			elseif predicate == "cond" then
-				for i = 2, #spec do
-					if process_spec(spec[i]) then
-						return true
-					end
-				end
-				return false
-			else
-				local condval, ifspec = check_condition(spec)
-				if condval then
-					process_spec(spec[ifspec])
+		elseif type(spec) == "function" then
+			return process_spec(spec(make_function_table()))
+		elseif type(spec) ~= "table" then
+			error("Wrong type of specification " .. spec .. ": " .. type(spec))
+		end
+		local predicate = spec[1]
+		if predicate == "multi" then
+			for i = 2, #spec do
+				process_spec(spec[i])
+			end
+			return true
+		elseif predicate == "cond" then
+			for i = 2, #spec do
+				if process_spec(spec[i]) then
 					return true
-				else
-					process_spec(spec[ifspec + 1])
-					return false
 				end
 			end
-		elseif type(spec) == "function" then
-			error("Functions not implemented yet, FIXME!")
+			return false
 		else
-			error("Wrong type of condition " .. spec .. ": " .. type(spec))
+			local condval, ifspec = check_condition(spec)
+			if condval then
+				process_spec(spec[ifspec])
+				return true
+			else
+				process_spec(spec[ifspec + 1])
+				return false
+			end
 		end
 	end
 
-	local langspecs = 
+	local langspecs = m_cats[lang:getCode()]
+	if langspecs then
+	for i = 1, #langspecs do
+		process_spec(langspecs[i])
+	end
+	return categories
 end
 
 

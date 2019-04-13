@@ -153,7 +153,10 @@ end
 -- * LANG is the language code;
 -- * TERMINFO is the terminfo structure specifying the main entry, as
 --   passed to full_link in Module:links;
--- * CATEGORIES is the categories to add the page to.
+-- * CATEGORIES is the categories to add the page to (consisting of any
+--   categories specified in the invocation or parent args and any tracking
+--   categories, but not any additional lang-specific categories that may be
+--   added by {{inflection of}} or similar templates).
 --
 -- This is a subfunction of construct_form_of_text().
 local function get_terminfo_and_categories(iargs, args, term_param, compat)
@@ -232,15 +235,36 @@ end
 -- invocation, given processed invocation arguments IARGS, processed parent
 -- arguments ARGS, TERM_PARAM (the parent argument specifying the main entry),
 -- COMPAT (true if the language code is found in args["lang"] instead of
--- args[1]), and DO_FORM_OF, which is a function of one argument (the
--- terminfo structure ultimately passed to full_link in Module:links) that
--- should return the actual definition-line text, minus any terminating
--- period/dot. The terminating period/dot will be added as appropriate, as
--- well as formatted categories to add the page to.
+-- args[1]), and DO_FORM_OF, which is a function that returns the actual
+-- definition-line text and any language-specific categories. The terminating
+-- period/dot will be added as appropriate, the language-specific categories
+-- will be added to any categories requested by the invocation or parent args,
+-- and then whole thing will be appropriately formatted.
+--
+-- DO_FORM_OF takes two arguments:
+--
+-- (1) The object describing the language;
+-- (2) the terminfo object. Normally, this is a table of the form ultimately
+--     passed to full_link in [[Module:links]] (which, among other things, also
+--     includes the language object inside of it), but if the invocation argument
+--     linktext= is given, it will be a string consisting of that text, and if
+--     the invocation argument nolink= is given, it will be nil.
+--
+-- DO_FORM_OF should return two arguments:
+--
+-- (1) The actual definition-line text, marked up appropriately with
+--     <span>...</span> but without any terminating period/dot.
+-- (2) Any extra categories to add the page to (other than those that can be
+--     derived from parameters specified to the invocation or parent arguments,
+--     which will automatically be added to the page).
 local function construct_form_of_text(iargs, args, term_param, compat, do_form_of)
 	local lang, terminfo, categories = get_terminfo_and_categories(iargs, args, term_param, compat)
 
-	return do_form_of(terminfo) .. (
+	local form_of_text, lang_cats = do_form_of(lang, terminfo)
+	for _, cat in ipairs(lang_cats) do
+		table.insert(categories, cat)
+	end
+	return form_of_text .. (
 		args["nodot"] and "" or args["dot"] or iargs["withdot"] and "." or ""
 	) .. require("Module:utilities").format_categories(categories, lang, args["sort"])
 end
@@ -385,6 +409,30 @@ function export.form_of_t(frame)
 	)
 end
 
+
+-- Construct and return the full definition line for a form-of-type template
+-- invocation that is based on inflection tags. This is a wrapper around
+-- construct_form_of_text() and takes the following arguments:, processed
+-- invocation arguments IARGS, processed parent arguments ARGS, TERM_PARAM
+-- (the parent argument specifying the main entry), COMPAT (true if the language
+-- code is found in args["lang"] instead of args[1]), and TAGS, the list of
+-- (non-canonicalized) inflection tags. It returns that actual definition-line
+-- text including terminating period/full-stop, formatted categories, etc. and
+-- should be directly returned as the template function's return value.
+local function construct_tagged_form_of_text(iargs, args, term_param, compat, tags)
+	return construct_form_of_text(iargs, args, term_param, compat,
+		function(lang, terminfo)
+			local lang_cats =
+				args["nocat"] and {} or m_form_of.fetch_lang_categories(lang, tags, terminfo, args["p"])
+			return m_form_of.tagged_inflections(
+				tags, terminfo, args["notext"],
+				iargs["withcap"] and not args["nocap"], iargs["posttext"]
+			), lang_cats
+		end
+	)
+end
+
+
 --[=[
 Function that implements form-of templates that are defined by specific tagged
 inflections (typically a template referring to a non-lemma inflection,
@@ -451,6 +499,10 @@ function export.tagged_form_of_t(frame)
 
 		-- Named params not controlling link display		
 		["cat"] = {list = true},
+		-- Always included because lang-specific categories may be added
+		["nocat"] = {type = "boolean"},
+		["p"] = {},
+		["POS"] = {alias_of = "p"},
 		["notext"] = {type = "boolean"},
 		["sort"] = {},
 		-- FIXME! The following should only be available when withcap=1 in
@@ -467,10 +519,6 @@ function export.tagged_form_of_t(frame)
 		add_link_params(params, term_param)
 	end
 
-	if next(iargs["cat"]) then
-		params["nocat"] = {type = "boolean"}
-	end
-	
 	if iargs["withdot"] then
 		params["dot"] = {}
 	end
@@ -486,15 +534,8 @@ function export.tagged_form_of_t(frame)
 	local args = process_parent_args("tagged-form-of-t", parent_args,
 		params, iargs["def"], iargs["ignore"], ignored_params)
 	
-	return construct_form_of_text(iargs, args, term_param, compat,
-		function(terminfo)
-			return m_form_of.tagged_inflections(
-				split_inflection_tags(iargs[1], iargs["split_tags"]), terminfo,
-				args["notext"], iargs["withcap"] and not args["nocap"],
-				iargs["posttext"]
-			)
-		end
-	)
+	return construct_tagged_form_of_text(iargs, args, term_param, compat,
+		split_inflection_tags(iargs[1], iargs["split_tags"]))
 end
 
 --[=[
@@ -573,6 +614,10 @@ function export.inflection_of_t(frame)
 		
 		-- Named params not controlling link display		
 		["cat"] = {list = true},
+		-- Always included because lang-specific categories may be added
+		["nocat"] = {type = "boolean"},
+		["p"] = {},
+		["POS"] = {alias_of = "p"},
 		["notext"] = {type = "boolean"},
 		["sort"] = {},
 		-- FIXME! The following should only be available when withcap=1 in
@@ -583,10 +628,6 @@ function export.inflection_of_t(frame)
 		-- invocation args. Before doing that, need to remove all uses of
 		-- nodot= in other circumstances.
 		["nodot"] = {type = "boolean"},
-		-- FIXME! The following should only be available when cat= is specified
-		-- in the invocation args. Before doing that, need to remove all uses
-		-- of nocat= in other circumstances.
-		["nocat"] = {type = "boolean"},
 	}
 	
 	if not iargs["nolink"] and not iargs["linktext"] then
@@ -599,9 +640,6 @@ function export.inflection_of_t(frame)
 	end
 	if not iargs["withdot"] then
 		ignored_params["nodot"] = true
-	end
-	if not next(iargs["cat"]) then
-		ignored_params["nocat"] = true
 	end
 
 	local args = process_parent_args("inflection-of-t", parent_args,
@@ -623,14 +661,7 @@ function export.inflection_of_t(frame)
 		end
 	end
 
-	return construct_form_of_text(iargs, args, term_param, compat,
-		function(terminfo)
-			return m_form_of.tagged_inflections(
-				infls, terminfo, args["notext"],
-				iargs["withcap"] and not args["nocap"], iargs["posttext"]
-			)
-		end
-	)
+	return construct_tagged_form_of_text(iargs, args, term_param, compat, infls)
 end
 
 return export

@@ -61,13 +61,15 @@ A specification is one of:
 	If CONDITION does *NOT* apply, SPEC will be applied, otherwise ELSESPEC
 	will be applied if present. CONDITION is one of:
 
-	{"has", TAG}
-	{"hasall", TAGS}
-	{"hasany", TAGS}
-	{"POS=", VALUE}
-	{"not", CONDITION}
-	{"and", CONDITION1, CONDITION2}
-	{"or", CONDITION1, CONDITION2}
+	-- {"has", TAG}
+	-- {"hasall", TAGS}
+	-- {"hasany", TAGS}
+	-- {"POS=", VALUE}
+	-- {"not", CONDITION}
+	-- {"and", CONDITION1, CONDITION2}
+	-- {"or", CONDITION1, CONDITION2}
+	-- A Lua function, which is passed a single argument (see (10) below) and
+	   should return true or false
 
 	That is, conditions are similar to if-else SPECS but without any
 	specifications given.
@@ -214,6 +216,11 @@ cats["es"] = {
 
 cats["et"] = {
 	{"has", "part", "participles"},
+}
+
+cats["ku"] = {
+	{"hasall", {"pres", "part"}, "present participles"},
+	{"hasall", {"past", "part"}, "past participles"},
 }
 
 cats["liv"] = {
