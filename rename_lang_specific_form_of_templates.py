@@ -7,91 +7,205 @@ import blib
 from blib import getparam, rmparam, msg, errandmsg, site, tname
 
 
+# STILL TO DO:
+# bg-verb form of (30114)
+# ca-verb form of (78127)
+# de-verb form of (? has 5=t -> "subordinate clause form") (54761)
+# egy-verb form of (? lots of Egyptian-specific tags) (27)
+# el-form-of-nounadj/el-form-of-pronoun (31472)
+# el-form-of-verb (4657)
+# en-simple-past-of (? other en-* form-of templates can't be generalized) (1043)
+# en-third-person singular of (? other en-* form-of templates can't be generalized) (26938)
+# eo-form of (? takes actual ending, generates tags from it, would be a radical shift) (99087)
+# es-verb form of (? very complicated; takes a region param that can/should be moved out) (441797)
+# fa-form-verb (153)
+# ff-fuc-form of (0, DELETE)
+# fi-verb form of (6022)
+# gl-verb form of (? very complicated) (598)
+# gmq-bot-verb-form-sup (1)
+# got-nom form of (? has posttext= if comp-of=, sup-of=, presptc-of= or pastptc-of=) (2935)
+# got-verb form of (2038)
+# hi-form-adj-verb (45)
+# hi-form-verb (48)
+# hu-inflection of (9786)
+# hu-participle (994)
+# hy-form-noun (504)
+# ia-form of (? takes actual ending, generates tags from it, would be a radical shift) (718)
+# io-form of (? takes actual ending, generates tags from it, would be a radical shift) (10116)
+# it-adj form of (3564)
+# ja-past of verb (3)
+# ja-verb form of (? takes Japanese params, some in Hiragana, would be a radical shift) (93)
+# ka-verb-form-of (? has links to [[Appendix:Georgian verbs]]; has stuff describing object pronouns, which maybe should be posttext) (116)
+# ku-verb form of (3067)
+# lt-būdinys/lt-budinys (? would need language-specific tag for būdinys) (184)
+# lt-dalyvis-1/lt-dalyvis (? would need language-specific tag for dalyvis) (1085)
+# lt-dalyvis-2 (? would need language-specific tag for dalyvis-2) (118)
+# lt-form-pronoun (? if class=determiner, has text "([[use]]d as a [[determiner]])") (51)
+# lt-padalyvis (? would need language-specific tag for padalyvis) (466)
+# lt-pusdalyvis (? would need language-specific tag for pusdalyvis) (117)
+# lv-adv form of (2761)
+# lv-inflection of (106703)
+# lv-participle of (? might need lang-specific tags for "(object-of-perception form)", "(invariable form)", "(variable form)" (5163)
+# mn-verb form of (? maybe? uses a module) (63)
+# nb-noun-form-indef-pl (0, DELETE)
+# nl-adj form of (? would need lang-specific tag for "Predicative/adverbial form", has posttext= if comp-of= or sup-of=) (4559)
+# nn-verb-form of (? maybe? uses a module) (???)
+# no-noun-form-def (0, DELETE)
+# no-noun-form-def-pl (0, DELETE)
+# pt-article form of (? says "of article ..." before link; might not be necessary) (6)
+# pt-noun form of (1517)
+# pt-ordinal form/pt-ordinal def (? would be a radical shift) (153)
+# pt-pron def (? not only a form-of template) (24)
+# pt-verb-form-of (? maybe? uses a module) (???)
+# pt-verb form of (? very complicated; takes a region param that can/should be moved out) (29193)
+# ru-participle of (47321)
+# sce-verb form of (? maybe? uses a module) (1)
+# sco-simple-past-of (? 'sco-past of' is hard to generalize) (17)
+# sco-third-person singular of (? 'sco-past of' is hard to generalize) (91)
+# sv-adj-form-abs-def (3)
+# sv-adj-form-abs-def+pl (2072)
+# sv-adj-form-abs-def-m (1274)
+# sv-adj-form-abs-indef-n (1630)
+# sv-adj-form-abs-pl (6)
+# sv-adj-form-comp (724)
+# sv-adj-form-comp-pl (1)
+# sv-adj-form-sup-attr (486)
+# sv-adj-form-sup-attr-m (14)
+# sv-adj-form-sup-pred (509)
+# sv-adj-form-sup-pred-pl (1)
+# sv-adv-form-comp (11)
+# sv-adv-form-sup (7)
+# sv-noun-form-adj (1)
+# sv-noun-form-def (10063)
+# sv-noun-form-def-gen (8327)
+# sv-noun-form-def-gen-pl (6928)
+# sv-noun-form-def-pl (? if 'obsoleted by=', displays extra 'Obsolete form of' pre-text, maybe should go into separate template) (7574)
+# sv-noun-form-indef-gen (7680)
+# sv-noun-form-indef-gen-pl (6869)
+# sv-noun-form-indef-pl (7430)
+# sv-proper-noun-gen (198)
+# sv-verb-form-imp (? if 'plural of=', displays extra 'Obsolete plural form of' pre-text, maybe should go into separate template) (567)
+# sv-verb-form-inf-pass (1641)
+# sv-verb-form-past (? if 'plural of=', displays extra 'Obsolete plural form of' pre-text, maybe should go into separate template) (2567)
+# sv-verb-form-past-pass (? if 'plural of=', displays extra 'Obsolete plural form of' pre-text, maybe should go into separate template) (1631)
+# sv-verb-form-pastpart (1814)
+# sv-verb-form-pre (? if 'plural of=', displays extra 'Obsolete plural form of' pre-text, maybe should go into separate template) (2687)
+# sv-verb-form-pre-pass (2067)
+# sv-verb-form-prepart (2028)
+# sv-verb-form-pres-pass (0, DELETE)
+# sv-verb-form-subjunctive (14)
+# sv-verb-form-sup (2187)
+# sv-verb-form-sup-pass (1680)
+# sw-adj form of (? might be tough) (???)
+# tg-form-verb (1)
+# tr-inflection of (22)
+# tr-possessive form of (? includes posttext) (35)
+# ur-form-verb (1)
+
 class BadTemplateValue(Exception):
   pass
 
-def sl_check_1_is_m(t, pagemsg, should_return):
-  if getparam(t, "1") == "m":
-    return should_return
-  else:
-    raise BadTemplateValue("Expected 1=m with output of %s" %
-      "|".join(should_return)
-    )
-
-def fa_tg_adj_form_of(t, pagemsg, lang):
-  param1 = getparam(t, "1")
-  if param1 == "c":
-    template_name = "comparative of"
-  elif param1 == "s":
-    template_name = "superlative of"
-  else:
-    raise BadTemplateValue("Unrecognized param 1=%s" % param1)
-  return (
-    template_name,
-    ("error-if", ("present-except", ["1", "2", "3", "tr"])),
+bg_specs = [
+  ("bg-adj form of", (
+    "Inflection of",
+    ("error-if", ("present-except", ["1", "2", "3", "adj"])),
     ("set", "1", [
-      lang,
-      ("copy", "2"),
-      ("copy", "3"),
+      "bg",
+      ("copy", "adj"),
+      "",
+      ("lookup", "3", {
+        "subject": "subje",
+        "object": "obj",
+        "": [],
+      }),
+      ("lookup", "1", {
+        "masculine": ["m", "s"],
+        "feminine": ["f", "s"],
+        "neuter": ["n", "s"],
+        "plural": ["p"],
+      }),
+      ("lookup", "2", {
+        "extended": "extended",
+        "indefinite": "indef",
+        "definite": "def",
+      }),
     ]),
-    ("copy", "tr"),
-    ("comment", "rename {{%s}} to {{%s|%s}}" % (tname(t), template_name, lang)),
-  )
+    ("set", "POS", "a"),
+  )),
 
-# NOTE: Has automatic, non-controllable final period that we're ignoring.
-# Doesn't have initial caps. Categorizes into 'noun forms', which should be
-# handled by the headword.
-def ro_form_noun(t, pagemsg):
-  number_table = {
-    "s": "s",
-    "p": "p",
-  })
-  case_table = {
-    "n": "nom",
-    "a": "acc",
-    "g": "gen",
-    "d": "dat",
-    "v": "voc",
-    "na": "nom//acc",
-    "an": "nom//acc",
-    "gd": "gen//dat",
-    "dg": "gen//dat",
-    "nagd": "nom//acc//gen//dat",
-    "nadg": "nom//acc//gen//dat",
-  })
+  ("bg-noun form of", (
+    "Inflection of",
+    ("error-if", ("present-except", ["1", "2", "3", "noun"])),
+    ("set", "1", [
+      "bg",
+      ("copy", "adj"),
+      "",
+      ("lookup", "3", {
+        "subject": "subje",
+        "object": "obj",
+        "": [],
+      }),
+      ("lookup", "1", {
+        "singular": ["s"],
+        "plural": ["p"],
+        "count": ["count"],
+        "vocative": ["voc"],
+      }),
+      ("lookup", "2", {
+        "indefinite": "indef",
+        "definite": "def",
+        "vocative": "voc",
+        "": [],
+      }),
+    ]),
+    ("set", "POS", "n"),
+  )),
+]
 
-  if getparam(t, "1") in ["i", "d", ""]:
-    return (
-      "inflection of",
-      ("comment", "rename {{__TEMPNAME__}} to {{inflection of|ro|...}}"),
-      ("error-if", ("present-except", ["1", "2", "3", "4"])),
-      ("set", "1", [
-        "ro",
-        ("copy", "4"),
-        "",
-        ("lookup", "1", {
-          "i": "indef",
-          "d": "def",
-          "": [],
-        }),
-        ("lookup", "2", number_table),
-        ("lookup", "3", case_table),
-      ]),
-    )
-  else:
-    return (
-      "inflection of",
-      ("comment", "rename {{__TEMPNAME__}} to {{inflection of|ro|...}}"),
-      ("error-if", ("present-except", ["1", "2", "3"])),
-      ("set", "1", [
-        "ro",
-        ("copy", "3"),
-        "",
-        "def",
-        ("lookup", "1", number_table),
-        ("lookup", "2", case_table),
-      ]),
-    )
+br_specs = [
+  # NOTE: Has automatic, non-controllable initial caps that we're ignoring.
+  ("br-noun-plural", (
+    "inflection of",
+    ("error-if", ("present-except", ["1", "2"])),
+    ("set", "1", [
+      "br",
+      ("copy", "1"),
+      ("copy", "2"),
+      "p",
+    ]),
+    ("set", "POS", "n"),
+  )),
+]
+
+ca_specs = [
+  ("ca-adj form of", (
+    "Inflection of",
+    ("error-if", ("present-except", ["1", "2", "3", "4", "nocap", "nodot"])),
+    ("set", "1", [
+      "ca",
+      ("copy", "1"),
+      "",
+      ("lookup", "4", {
+        "aug": "aug",
+        "dim": "dim",
+        "comp": "comd",
+        "super": "supd",
+        "": [],
+      }),
+      ("lookup", "2", {
+        "m": "m",
+        "f": "f",
+      }),
+      ("lookup", "3", {
+        "sg": "s",
+        "pl": "p",
+      }),
+    ]),
+    ("set", "POS", "a"),
+    ("copy", "nocap"),
+    ("copy", "nodot"),
+  )),
+]
 
 chm_grammar_table = {
   "nom": "nom",
@@ -138,10 +252,11 @@ chm_grammar_table = {
 # This should be handled by the headword, but we should check.
 chm_inflection_of = (
   "inflection of",
-  ("comment", "rename {{__TEMPNAME__}} to {{inflection of|chm|...}}"),
   ("error-if", ("present-except", ["1", "2", "3", "4", "5", "6"])),
   ("set", "1", [
     "chm",
+    ("copy", "1"),
+    "",
     ("lookup", "2", {
       "1s": [],
       "2s": [],
@@ -151,49 +266,30 @@ chm_inflection_of = (
       "3p": [],
       "0": [],
       True: "non-possessed"
-    }
+    }),
     ("lookup", "2", chm_grammar_table),
     ("lookup", "3", chm_grammar_table),
     ("lookup", "4", chm_grammar_table),
     ("lookup", "5", chm_grammar_table),
-    ("copy", "2"),
-    ("copy", "3"),
-    ("lookup", "1", {
-      "ns": ["nom", "s"],
-      "sn": ["nom", "s"],
-      "np": ["nom", "p"],
-      "pn": ["nom", "p"],
-      "gs": ["gen", "s"],
-      "sg": ["gen", "s"],
-      "gp": ["gen", "p"],
-      "pg": ["gen", "p"],
-      "ds": ["dat", "s"],
-      "sd": ["dat", "s"],
-      "dp": ["dat", "p"],
-      "pd": ["dat", "p"],
-      "as": ["acc", "s"],
-      "sa": ["acc", "s"],
-      "ap": ["acc", "p"],
-      "pa": ["acc", "p"],
-    }),
   ]),
-)),
+)
 
-templates_to_rename_specs = [
+chm_specs = [
   ("chm-inflection of", chm_inflection_of),
+]
 
+cu_specs = [
   # NOTE: Has automatic, non-controllable initial caps and final period; we
   # should consider ignoring that. Only 10 uses. Categorizes into
   # '{{{type}}} forms', which should be handled by the headword; in actual
   # use, type is always 'noun'.
   ("cu-form of", (
     "Inflection of",
-    ("comment", "rename {{__TEMPNAME__}} to {{Inflection of|cu|...}}"),
     ("error-if", ("present-except", ["1", "type", "case", "pl", "sc"])),
     ("set", "1", [
       "cu",
       ("copy", "1"),
-      ""
+      "",
       ("lookup", "case", {
         "nominative": "nom",
         "accusative": "acc",
@@ -210,17 +306,20 @@ templates_to_rename_specs = [
       }),
     ]),
   )),
+]
 
+da_specs = [
   ("da-pl-genitive", (
     "genitive of",
-    ("comment", "rename {{__TEMPNAME__}} to {{genitive of|da|...}}"),
     ("error-if", ("present-except", ["1"])),
     ("set", "1", [
       "da",
       ("copy", "1"),
     ])
   )),
+]
 
+de_specs = [
   # NOTE: Has automatic, non-controllable initial caps that we're ignoring.
   # Only 2 uses.
   ("de-du contraction", (
@@ -233,10 +332,87 @@ templates_to_rename_specs = [
     ]),
   )),
 
+  # NOTE: Has automatic, non-controllable final period that we're ignoring.
+  # Doesn't have initial caps.
+  ("de-form-adj", (
+    "inflection of",
+    ("error-if", ("present-except", ["deg", "1", "2", "3", "4", "nocat", "sort"])),
+    ("set", "1", [
+      "de",
+      ("lookup", "1", {
+        "pc": [
+          ("copy", "2"),
+          "",
+          ["pred", "comd"],
+        ],
+        "ps": [
+          ("copy", "2"),
+          "",
+          ["pred", "supd"],
+        ],
+        True: [
+          ("copy", "4"),
+          "",
+          ("lookup", "deg", {
+            "c": "comd",
+            "s": "supd",
+            "": [],
+          }),
+          ("lookup", "1", {
+            "s": "str",
+            "str": "str",
+            "strong": "str",
+            "w": "wk",
+            "weak": "wk",
+            "m": "mix",
+            "mix": "mix",
+            "mixed": "mix",
+            "sm": "str//mix",
+            "ms": "str//mix",
+            "smw": "str//mix//wk",
+            "swm": "str//mix//wk",
+            "msw": "str//mix//wk",
+            "mws": "str//mix//wk",
+            "wsm": "str//mix//wk",
+            "wms": "str//mix//wk",
+            "mw": "mix//wk",
+            "wm": "mix//wk",
+          }),
+          ("lookup", "2", {
+            "m": ["m", "s"],
+            "masculine": ["m", "s"],
+            "f": ["f", "s"],
+            "feminine": ["f", "s"],
+            "n": ["n", "s"],
+            "neuter": ["n", "s"],
+            "p": "p",
+            "pl": "p",
+            "plural": "p",
+          }),
+          ("lookup", "3", {
+            "n": "nom",
+            "nom": "nom",
+            "nominative": "nom",
+            "g": "gen",
+            "gen": "gen",
+            "genitive": "gen",
+            "d": "dat",
+            "dat": "dat",
+            "dative": "dat",
+            "a": "acc",
+            "acc": "acc",
+            "accusative": "acc",
+          }),
+        }),
+      ],
+    ]),
+    ("copy", "nocat"),
+    ("copy", "sort"),
+  )),
+
   ("de-form-noun", (
     "inflection of",
-    ("comment", "rename {{__TEMPNAME__}} to {{inflection of|de|...}}"),
-    ("error-if", ("present-except", ["1", "2", "3"])),
+    ("error-if", ("present-except", ["1", "2", "3", "sort"])),
     ("set", "1", [
       "de",
       ("copy", "2"),
@@ -260,8 +436,11 @@ templates_to_rename_specs = [
         "pa": ["acc", "p"],
       }),
     ]),
+    ("copy", "sort"),
   )),
+]
 
+el_specs = [
   ("el-form-of-adv", (
     lambda t, pagemsg:
       ("comparative of",
@@ -295,13 +474,12 @@ templates_to_rename_specs = [
 
   ("el-participle of", (
     "Inflection of",
-    ("comment", "rename {{__TEMPNAME__}} to {{Inflection of|el|...}}"),
     ("error-if", ("present-except", ["1", "2", "gloss", "t", "nodot"])),
     ("set", "1", [
       "el",
       ("copy", "1"),
       "",
-      ("lookup", "1", {
+      ("lookup", "2", {
         "present": ["pres", "part"],
         "pres": ["pres", "part"],
         "perfect": ["perf", "part"],
@@ -313,12 +491,87 @@ templates_to_rename_specs = [
     ("copy", "gloss", "t"),
     ("copy", "t"),
     ("copy", "nodot"),
-    ]),
   )),
+]
 
+def enm_verb_form(parts):
+  return (
+    "inflection of",
+    ("error-if", ("present-except", ["1", "2"])),
+    ("set", "1", [
+      "enm",
+      ("copy", "1"),
+      ("copy", "2"),
+      parts,
+    ])
+  )
+
+enm_specs = [
+  # NOTE: All of these have automatic, non-controllable initial cap that
+  # we're ignoring. Doesn't have final period. There are <= 9 uses of each
+  # template.
+  ("enm-first-person singular of",
+      enm_verb_form(["1", "s", "pres", "ind"])),
+  ("enm-first/third-person singular past of",
+      # FIXME: In [[Module:form of/data]], add:
+      # 13 = [[Appendix:Glossary#first person|first]] and [[Appendix:Glossary#third person|third person]]
+      enm_verb_form(["13", "s", "past", "ind"])),
+  ("enm-plural of",
+      enm_verb_form(["p", "pres", "ind"])),
+  ("enm-plural past of",
+      enm_verb_form(["p", "past", "ind"])),
+  ("enm-plural subjunctive of",
+      enm_verb_form(["p", "pres", "sub"])),
+  ("enm-plural subjunctive past of",
+      enm_verb_form(["p", "sub", "past"])),
+  ("enm-second-person singular of",
+      enm_verb_form(["2", "s", "pres", "ind"])),
+  ("enm-second-person singular past of",
+      enm_verb_form(["2", "s", "past", "ind"])),
+  ("enm-singular subjunctive of",
+      enm_verb_form(["s", "pres", "sub"])),
+  ("enm-singular subjunctive past of",
+      enm_verb_form(["s", "sub", "past"])),
+  ("enm-third-person singular of",
+      enm_verb_form(["3", "s", "pres", "ind"])),
+]
+
+es_specs = [
+  ("es-adj form of", (
+    "Inflection of",
+    ("error-if", ("present-except", ["1", "2", "3", "4", "nocap", "nodot"])),
+    ("set", "1", [
+      "pt",
+      ("copy", "1"),
+      "",
+      ("lookup", "4", {
+        "aug": "aug",
+        "dim": "dim",
+        "comp": "comd",
+        "super": "supd",
+        "": [],
+      }),
+      ("lookup", "2", {
+        "m": "m",
+        "f": "f",
+        # FIXME! Consider enabling mf == m//f in [[Module:form of/data]]
+        "m-f": "m//f",
+        "mf": "m//f",
+      }),
+      ("lookup", "3", {
+        "sg": "s",
+        "pl": "p",
+      }),
+    ]),
+    ("set", "POS", "a"),
+    ("copy", "nocap"),
+    ("copy", "nodot"),
+  )),
+]
+
+et_specs = [
   ("et-nom form of", (
     "Inflection of",
-    ("comment", "rename {{__TEMPNAME__}} to {{Inflection of|et}}"),
     ("error-if", ("present-except", ["1", "c", "n"])),
     ("set", "1", [
       "et",
@@ -347,11 +600,30 @@ templates_to_rename_specs = [
     ]),
   )),
 
+  ("et-participle of", (
+    "Inflection of",
+    ("error-if", ("present-except", ["1", "t", "nocap", "nodot"])),
+    ("set", "1", [
+      "et",
+      ("copy", "1"),
+      "",
+      ("lookup", "t", {
+        "pres", ["pres", "act", "part"],
+        "pres_actv", ["pres", "act", "part"],
+        "pres_pasv", ["pres", "pass", "part"],
+        "past", ["past", "act", "part"],
+        "past_actv", ["past", "act", "part"],
+        "past_pasv", ["past", "pass", "part"],
+      }),
+    ]),
+    ("copy", "nocap"),
+    ("copy", "nodot"),
+  )),
+
   ("et-verb form of", (
     # The template code supports m=ptc and categorizes specially, but
     # it never occurs.
     "Inflection of",
-    ("comment", "rename {{__TEMPNAME__}} to {{Inflection of|et}}"),
     ("error-if", ("present-except", ["1", "p", "m", "t"])),
     ("set", "1", [
       "et",
@@ -382,16 +654,38 @@ templates_to_rename_specs = [
       }),
     ]),
   )),
+]
 
+def fa_tg_adj_form_of(t, pagemsg, lang):
+  param1 = getparam(t, "1")
+  if param1 == "c":
+    template_name = "comparative of"
+  elif param1 == "s":
+    template_name = "superlative of"
+  else:
+    raise BadTemplateValue("Unrecognized param 1=%s" % param1)
+  return (
+    template_name,
+    ("error-if", ("present-except", ["1", "2", "3", "tr"])),
+    ("set", "1", [
+      lang,
+      ("copy", "2"),
+      ("copy", "3"),
+    ]),
+    ("copy", "tr"),
+  )
+
+fa_specs = [
   ("fa-adj form of", lambda t, pagemsg: fa_tg_adj_form_of(t, pagemsg, "fa")),
 
   ("fa-adj-form", "fa-adj form of"),
+]
 
+hi_specs = [
   # NOTE: Has automatic, non-controllable final period that we're ignoring.
   # Doesn't have initial caps.
   ("hi-form-adj", (
     "inflection of",
-    ("comment", "rename {{__TEMPNAME__}} to {{inflection of|hi|...}}"),
     ("error-if", ("present-except", ["1", "2", "3"])),
     ("set", "1", [
       "hi",
@@ -418,7 +712,6 @@ templates_to_rename_specs = [
   # Doesn't have initial caps.
   ("hi-form-noun", (
     "inflection of",
-    ("comment", "rename {{__TEMPNAME__}} to {{inflection of|hi|...}}"),
     ("error-if", ("present-except", ["1", "2", "3"])),
     ("set", "1", [
       "hi",
@@ -438,10 +731,11 @@ templates_to_rename_specs = [
       }),
     ]),
   )),
+]
 
+is_specs = [
   ("is-conjugation of", (
     "inflection of",
-    ("comment", "rename {{__TEMPNAME__}} to {{inflection of|is|...}}"),
     ("error-if", ("present-except", ["1", "2", "3", "4", "5", "6"])),
     ("set", "1", [
       "is",
@@ -457,7 +751,6 @@ templates_to_rename_specs = [
 
   ("is-inflection of", (
     "inflection of",
-    ("comment", "rename {{__TEMPNAME__}} to {{inflection of|is|...}}"),
     ("error-if", ("present-except", ["1", "2", "3", "4", "5"])),
     ("set", "1", [
       "is",
@@ -469,10 +762,11 @@ templates_to_rename_specs = [
       ("copy", "5"),
     ]),
   )),
+]
 
+ka_specs = [
   ("ka-verbal for", (
     "verbal noun of",
-    ("comment", "rename {{__TEMPNAME__}} to {{verbal noun of|ka}}"),
     ("error-if", ("present-except", ["1"])),
     ("set", "1", [
       "ka",
@@ -481,10 +775,11 @@ templates_to_rename_specs = [
   )),
 
   ("ka-verbal of", "ka-verbal for"),
+]
 
+liv_specs = [
   ("liv-conjugation of", (
     "inflection of",
-    ("comment", "rename {{__TEMPNAME__}} to {{inflection of|liv|...}}"),
     ("error-if", ("present-except", ["1", "2", "3", "4"])),
     ("set", "1", [
       "liv",
@@ -514,7 +809,6 @@ templates_to_rename_specs = [
 
   ("liv-inflection of", (
     "inflection of",
-    ("comment", "rename {{__TEMPNAME__}} to {{inflection of|liv|...}}"),
     ("error-if", ("present-except", ["1", "2", "3"])),
     ("set", "1", [
       "liv",
@@ -543,7 +837,6 @@ templates_to_rename_specs = [
 
   ("liv-participle of", (
     "inflection of",
-    ("comment", "rename {{__TEMPNAME__}} to {{inflection of|liv|...}}"),
     ("error-if", ("present-except", ["1", "2", "3", "4", "5"])),
     ("set", "1", [
       "liv",
@@ -573,10 +866,99 @@ templates_to_rename_specs = [
       }),
     ]),
   )),
+]
 
+lt_adj_gender_number_table = {
+  "m": ["m", "s"],
+  "ms": ["m", "s"],
+  "f": ["f", "s"],
+  "fs": ["f", "s"],
+  "n": ["n"],
+  "mp": ["m", "p"],
+  "mpl": ["m", "p"],
+  "fp": ["f", "p"],
+  "fpl": ["f", "p"],
+}
+
+lt_adj_case_table = {
+  "n": "nom",
+  "nom": "nom",
+  "nominative": "nom",
+  "g": "gen",
+  "gen": "gen",
+  "genitive": "gen",
+  "d": "dat",
+  "dat": "dat",
+  "dative": "dat",
+  "a": "acc",
+  "acc": "acc",
+  "accusative": "acc",
+  "i": "ins",
+  "inst": "ins",
+  "instrumental": "ins",
+  "l": "loc",
+  "loc": "loc",
+  "locative": "loc",
+  "v": "voc",
+  "voc": "voc",
+  "vocative": "voc",
+}
+
+lt_specs = [
+  # NOTE: Has automatic, non-controllable final period that we're ignoring.
+  # Doesn't have initial caps. Categorizes into 'adjective forms', which
+  # should be handled by the headword, or 'pronominal adjective forms' if
+  # "pron" in tags, which maybe should be handled by headword (FIXME).
+  ("lt-form-adj", (
+    "inflection of",
+    ("error-if", ("present-except", ["pro", "1", "2", "3", "4"])),
+    ("set", "1", [
+      "lt",
+      ("copy", "4"),
+      "",
+      ("lookup", "pro", {
+        "+": "pron",
+        "y": "pron",
+        "yes": "pron",
+        "": [],
+      }),
+      ("lookup", "1", {
+        "a": "posd",
+        "abs": "posd",
+        "p": "posd",
+        "pos": "posd",
+        "c": "comd",
+        "com": "comd",
+        "comp": "comd",
+        "s": "supd",
+        "sup": "supd",
+        "": [],
+      }),
+      ("lookup", "2", lt_adj_gender_number_table),
+      ("lookup", "3", lt_adj_case_table),
+    ]),
+  )),
+
+  # NOTE: Has automatic, non-controllable final period that we're ignoring.
+  # Doesn't have initial caps. Categorizes into 'adjective forms', which
+  # should be handled by the headword.
+  ("lt-form-adj-is", (
+    "inflection of",
+    ("error-if", ("present-except", ["1", "2", "3"])),
+    ("set", "1", [
+      "lt",
+      ("copy", "3"),
+      "",
+      ("lookup", "1", lt_adj_gender_number_table),
+      ("lookup", "2", lt_adj_case_table),
+    ]),
+  )),
+
+  # NOTE: Has automatic, non-controllable final period that we're ignoring.
+  # Doesn't have initial caps. Categorizes into 'noun forms', which
+  # should be handled by the headword.
   ("lt-form-noun", (
     "inflection of",
-    ("comment", "rename {{__TEMPNAME__}} to {{inflection of|lt|...}}"),
     ("error-if", ("present-except", ["1", "2", "3"])),
     ("set", "1", [
       "lt",
@@ -605,13 +987,106 @@ templates_to_rename_specs = [
     ]),
   )),
 
-  # FIXME: Add [[Module:form of/cat]], where for lv,
-  # categorizes into 'negative verb forms' if 'neg' in tags;
-  # should probably canonicalize the abbreviations before calling
-  # code to find category
+  # NOTE: Has automatic, non-controllable final period that we're ignoring.
+  # Doesn't have initial caps. FIXME: Categorizes into
+  # 'dalyvis participle forms', or (if pro= is given)
+  # 'pronominal dalyvis participle forms'.
+  ("lt-form-part", (
+    "inflection of",
+    ("error-if", ("present-except", ["pro", "1", "2", "3"])),
+    ("set", "1", [
+      "lt",
+      ("copy", "3"),
+      "",
+      ("lookup", "pro", {
+        "+": "pron",
+        "y": "pron",
+        "yes": "pron",
+        "": [],
+      }),
+      ("lookup", "1", lt_adj_gender_number_table),
+      ("lookup", "2", lt_adj_case_table),
+      ("set", "POS", "part"),
+    ]),
+  )),
+
+  # NOTE: Has automatic, non-controllable final period that we're ignoring.
+  # Doesn't have initial caps. Categorizes into 'verb forms', which
+  # should be handled by the headword.
+  ("lt-form-verb", (
+    "inflection of",
+    ("error-if", ("present-except", ["1", "2", "3", "4"])),
+    ("set", "1", [
+      "lt",
+      ("copy", "3"),
+      "",
+      ("lookup", "1", {
+        "1s": ["1", "s"],
+        "1p": ["1", "p"],
+        "2s": ["2", "s"],
+        "2p": ["2", "p"],
+        "3s": ["3", "s"],
+        "3p": ["3", "p"],
+      }),
+      ("lookup", "2", {
+        "pres": "pres",
+        "present": "pres",
+        "past": "past",
+        "pastf": ["freq", "past"],
+        "fpast": ["freq", "past"],
+        "fut": "fut",
+        "future": "fut",
+        "sub": "sub",
+        "subjunctive": "sub",
+        "imp": "imp",
+        "impr": "imp",
+        "imperative": "imp",
+      }),
+      ("lookup", "4", {
+        "ref": "refl",
+        "reflexive": "refl",
+        "refshort": ["refl", "short"],
+        "reflexive shortened": ["refl", "short"],
+      }),
+    ]),
+  )),
+]
+
+lv_specs = [
+  ("lv-comparative of", (
+    "inflection of",
+    ("error-if", ("present-except", ["1", "2", "3"])),
+    ("set", "1", [
+      "lv",
+      ("copy", "1"),
+      "",
+      ("lookup", "2", {
+        "def": "def",
+        "": "indef"
+      })
+      "comd",
+    ]),
+    ("set", "POS",
+      ("lookup", "3", {
+        "vpart": "part",
+        "": [],
+      })
+    ),
+  )),
+
+  ("lv-definite of", (
+    "inflection of",
+    ("error-if", ("present-except", ["1"])),
+    ("set", "1", [
+      "lv",
+      ("copy", "1"),
+      "",
+      "def",
+    ]),
+  )),
+
   ("lv-negative of", (
     "inflection of",
-    ("comment", "rename {{__TEMPNAME__}} to {{inflection of|lv|...}}"),
     ("error-if", ("present-except", ["1"])),
     ("set", "1", [
       "lv",
@@ -623,29 +1098,45 @@ templates_to_rename_specs = [
 
   ("lv-reflexive of", (
     "reflexive of",
-    ("comment", "rename {{__TEMPNAME__}} to {{reflexive of|lv|...}}"),
     ("error-if", ("present-except", ["1"])),
     ("set", "1", [
       "lv",
       ("copy", "1"),
     ]),
+  )),
+
+  ("lv-superlative of", (
+    "inflection of",
+    ("error-if", ("present-except", ["1", "2"])),
+    ("set", "1", [
+      "lv",
+      ("copy", "1"),
+      "",
+      "supd",
+    ]),
+    ("set", "POS",
+      ("lookup", "2", {
+        "vpart": "part",
+        "": [],
+      })
+    ),
   )),
 
   ("lv-verbal noun of", (
     "reflexive of",
-    ("comment", "rename {{__TEMPNAME__}} to {{verbal noun of|lv|...}}"),
     ("error-if", ("present-except", ["1"])),
     ("set", "1", [
       "lv",
       ("copy", "1"),
     ]),
   )),
+]
 
+mr_specs = [
   # NOTE: Has automatic, non-controllable final period that we're ignoring.
   # Doesn't have initial caps.
   ("mr-form-adj", (
     "inflection of",
-    ("comment", "rename {{__TEMPNAME__}} to {{inflection of|mr|...}}"),
     ("error-if", ("present-except", ["1", "2", "3"])),
     ("set", "1", [
       "mr",
@@ -669,10 +1160,11 @@ templates_to_rename_specs = [
       }),
     ]),
   )),
+]
 
+mt_specs = [
   ("mt-prep-form", (
     "inflection of",
-    ("comment", "rename {{__TEMPNAME__}} to {{inflection of|mt|...}}"),
     ("error-if", ("present-except", ["1", "2"])),
     ("set", "1", [
       "mt",
@@ -689,10 +1181,11 @@ templates_to_rename_specs = [
       }),
     ]),
   )),
+]
 
+nb_specs = [
   ("nb-noun-form-def-gen", (
     "inflection of",
-    ("comment", "rename {{__TEMPNAME__}} to {{inflection of|nb|...}}"),
     ("error-if", ("present-except", ["1"])),
     ("set", "1", [
       "nb",
@@ -705,7 +1198,6 @@ templates_to_rename_specs = [
 
   ("nb-noun-form-def-gen-pl", (
     "inflection of",
-    ("comment", "rename {{__TEMPNAME__}} to {{inflection of|nb|...}}"),
     ("error-if", ("present-except", ["1"])),
     ("set", "1", [
       "nb",
@@ -719,7 +1211,6 @@ templates_to_rename_specs = [
 
   ("nb-noun-form-indef-gen-pl", (
     "inflection of",
-    ("comment", "rename {{__TEMPNAME__}} to {{inflection of|nb|...}}"),
     ("error-if", ("present-except", ["1"])),
     ("set", "1", [
       "nb",
@@ -730,12 +1221,13 @@ templates_to_rename_specs = [
       "p",
     ]),
   )),
+]
 
+ofs_specs = [
   # NOTE: Capitalizes initial letter, we are ignoring that and ignoring
   # nocap=. Only 5 uses.
   ("ofs-nom form of", (
     "inflection of",
-    ("comment", "rename {{__TEMPNAME__}} to {{inflection of|ofs|...}}"),
     ("error-if", ("present-except", ["1", "2", "c", "n", "g", "w", "nocap"])),
     ("set", "1", [
       "ofs",
@@ -769,12 +1261,13 @@ templates_to_rename_specs = [
       }),
     ]),
   )),
+]
 
+osx_specs = [
   # NOTE: Capitalizes initial letter, we are ignoring that and ignoring
   # nocap=. Only 22 uses.
   ("osx-nom form of", (
     "inflection of",
-    ("comment", "rename {{__TEMPNAME__}} to {{inflection of|osx|...}}"),
     ("error-if", ("present-except", ["1", "2", "c", "n", "g", "w", "nocap"])),
     ("set", "1", [
       "osx",
@@ -807,12 +1300,44 @@ templates_to_rename_specs = [
       }),
     ]),
   )),
+]
+
+pt_specs = [
+  ("pt-adj form of", (
+    "Inflection of",
+    ("error-if", ("present-except", ["1", "2", "3", "4", "nocap", "nodot"])),
+    ("set", "1", [
+      "pt",
+      ("copy", "1"),
+      "",
+      ("lookup", "4", {
+        "aug": "aug",
+        "dim": "dim",
+        "comp": "comd",
+        "super": "supd",
+        "": [],
+      }),
+      ("lookup", "2", {
+        "m": "m",
+        "f": "f",
+        # FIXME! Consider enabling mf == m//f in [[Module:form of/data]]
+        "m-f": "m//f",
+        "mf": "m//f",
+      }),
+      ("lookup", "3", {
+        "sg": "s",
+        "pl": "p",
+      }),
+    ]),
+    ("set", "POS", "a"),
+    ("copy", "nocap"),
+    ("copy", "nodot"),
+  )),
 
   # NOTE: Capitalizes initial letter, we are ignoring that and ignoring
-  # nocap=. Only 11 uses.
+  # nocap=. Doesn't have final period. Only 11 uses.
   ("pt-adv form of", (
     "inflection of",
-    ("comment", "rename {{__TEMPNAME__}} to {{inflection of|pt|...}}"),
     ("error-if", ("present-except", ["1", "2", "nocap"])),
     ("set", "1", [
       "pt",
@@ -827,21 +1352,74 @@ templates_to_rename_specs = [
   )),
 
   # NOTE: Capitalizes initial letter, we are ignoring that and ignoring
-  # nocap=. Only 11 uses.
+  # nocap=. Only 10 uses.
   ("pt-cardinal form of", (
     "feminine of",
-    ("comment", "rename {{__TEMPNAME__}} to {{feminine of|pt|...}}"),
     ("error-if", ("present-except", ["1"])),
     ("set", "1", [
       "pt",
       ("copy", "1"),
     ]),
   )),
+]
 
+# NOTE: Has automatic, non-controllable final period that we're ignoring.
+# Doesn't have initial caps. Categorizes into 'noun forms', which should be
+# handled by the headword.
+def ro_form_noun(t, pagemsg):
+  number_table = {
+    "s": "s",
+    "p": "p",
+  }
+  case_table = {
+    "n": "nom",
+    "a": "acc",
+    "g": "gen",
+    "d": "dat",
+    "v": "voc",
+    "na": "nom//acc",
+    "an": "nom//acc",
+    "gd": "gen//dat",
+    "dg": "gen//dat",
+    "nagd": "nom//acc//gen//dat",
+    "nadg": "nom//acc//gen//dat",
+  }
+
+  if getparam(t, "1") in ["i", "d", ""]:
+    return (
+      "inflection of",
+      ("error-if", ("present-except", ["1", "2", "3", "4"])),
+      ("set", "1", [
+        "ro",
+        ("copy", "4"),
+        "",
+        ("lookup", "1", {
+          "i": "indef",
+          "d": "def",
+          "": [],
+        }),
+        ("lookup", "2", number_table),
+        ("lookup", "3", case_table),
+      ]),
+    )
+  else:
+    return (
+      "inflection of",
+      ("error-if", ("present-except", ["1", "2", "3"])),
+      ("set", "1", [
+        "ro",
+        ("copy", "3"),
+        "",
+        "def",
+        ("lookup", "1", number_table),
+        ("lookup", "2", case_table),
+      ]),
+    )
+
+ro_specs = [
   ("ro-adj-form of", (
     # Categorizes into 'adjective forms', should be handled by headword
     "inflection of",
-    ("comment", "rename {{__TEMPNAME__}} to {{inflection of|ro|...}}"),
     ("error-if", ("present-except", ["def", "1", "2", "3"])),
     ("set", "1", [
       "ro",
@@ -896,7 +1474,6 @@ templates_to_rename_specs = [
     # Doesn't have initial caps. Categorizes into 'verb forms', which should be
     # handled by the headword.
     "inflection of",
-    ("comment", "rename {{__TEMPNAME__}} to {{inflection of|ro|...}}"),
     ("error-if", ("present-except", ["1", "2", "3"])),
     ("set", "1", [
       "ro",
@@ -941,20 +1518,24 @@ templates_to_rename_specs = [
       }),
     ]),
   )),
+]
 
+roa_opt_specs = [
   ("roa-opt-noun plural of", (
     "Plural of",
-    ("comment", "rename {{__TEMPNAME__}} to {{Plural of|roa-opt|...}}"),
     ("error-if", ("present-except", ["1"])),
     ("set", "1", [
       "roa-opt",
       ("copy", "1"),
     ]),
   )),
+]
 
+sh_specs = [
+  # NOTE: Categorizes into "noun forms", but this should be handled by
+  # the headword.
   ("sh-form-noun", (
     "inflection of",
-    ("comment", "rename {{__TEMPNAME__}} to {{inflection of|sh|...}}"),
     ("error-if", ("present-except", ["1", "2", "3"])),
     ("set", "1", [
       "sh",
@@ -983,6 +1564,10 @@ templates_to_rename_specs = [
     ]),
   )),
 
+  # NOTE: Categorizes into "proper noun forms", but this should be handled by
+  # the headword. Otherwise identical to {{sh-form-noun}}.
+  ("sh-form-proper-noun", "sh-form-noun"),
+
   ("sh-verb form of", (
     lambda t, pagemsg:
       ("verbal noun of",
@@ -995,7 +1580,6 @@ templates_to_rename_specs = [
         ])
       ) if getparam(t, "1") == "vn" else
       ("inflection of",
-        ("comment", "rename {{__TEMPNAME__}} to {{inflection of|sh|...}}"),
         ("error-if", ("present-except", ["1", "2", "3"])),
         ("set", "1", [
           "sh",
@@ -1032,10 +1616,19 @@ templates_to_rename_specs = [
   ("sh-verb-form of", "sh-verb form of"),
 
   ("sh-verb-form-of", "sh-verb form of"),
+]
 
+def sl_check_1_is_m(t, pagemsg, should_return):
+  if getparam(t, "1") == "m":
+    return should_return
+  else:
+    raise BadTemplateValue("Expected 1=m with output of %s" %
+      "|".join(should_return)
+    )
+
+sl_specs = [
   ("sl-form-adj", (
     "inflection of",
-    ("comment", "rename {{__TEMPNAME__}} to {{inflection of|sl|...}}"),
     ("error-if", ("present-except", ["1", "2", "3", "4"])),
     ("set", "1", [
       "sl",
@@ -1071,7 +1664,6 @@ templates_to_rename_specs = [
 
   ("sl-form-noun", (
     "inflection of",
-    ("comment", "rename {{__TEMPNAME__}} to {{inflection of|sl|...}}"),
     ("error-if", ("present-except", ["1", "2", "3"])),
     ("set", "1", [
       "sl",
@@ -1101,7 +1693,6 @@ templates_to_rename_specs = [
 
   ("sl-form-verb", (
     "inflection of",
-    ("comment", "rename {{__TEMPNAME__}} to {{inflection of|sl|...}}"),
     ("error-if", ("present-except", ["1", "2", "3"])),
     ("set", "1", [
       "sl",
@@ -1139,7 +1730,6 @@ templates_to_rename_specs = [
   # Doesn't have initial caps.
   ("sl-participle of", (
     "inflection of",
-    ("comment", "rename {{__TEMPNAME__}} to {{inflection of|sl|...}}"),
     ("error-if", ("present-except", ["1", "2"])),
     ("set", "1", [
       "sl",
@@ -1157,24 +1747,27 @@ templates_to_rename_specs = [
   )),
 
   ("sl-verb form of", "sl-form-verb"),
+]
 
+tg_specs = [
   ("tg-adj form of", lambda t, pagemsg: fa_tg_adj_form_of(t, pagemsg, "tg")),
 
   ("tg-adj-form", "tg-adj form of"),
+]
 
+tl_specs = [
   # NOTE: Has automatic, non-controllable initial caps and final period that
   # we're ignoring. Categorizes into 'verb forms', which should be
   # handled by the headword.
   ("tl-verb form of", (
     "inflection of",
-    ("comment", "rename {{__TEMPNAME__}} to {{inflection of|tl|...}}"),
     ("error-if", ("present-except", ["1", "2"])),
     ("set", "1", [
       "tl",
       ("copy", "1"),
       "",
       ("lookup", "2", {
-        # FIXME: In [[Module:form of/data]], add
+        # FIXME: In [[Module:form of/data]], add (or maybe as lang-specific)
         # "compl" = "complete aspect"
         # "rcompl" = "recently complete aspect"
         # "contem" = "contemplative aspect"
@@ -1184,12 +1777,13 @@ templates_to_rename_specs = [
       }),
     ]),
   )),
+]
 
+ur_specs = [
   # NOTE: Has automatic, non-controllable final period that we're ignoring.
   # Doesn't have initial caps.
   ("ur-form-adj", (
     "inflection of",
-    ("comment", "rename {{__TEMPNAME__}} to {{inflection of|ur|...}}"),
     ("error-if", ("present-except", ["1", "2", "3"])),
     ("set", "1", [
       "ur",
@@ -1216,7 +1810,6 @@ templates_to_rename_specs = [
   # Doesn't have initial caps.
   ("ur-form-noun", (
     "inflection of",
-    ("comment", "rename {{__TEMPNAME__}} to {{inflection of|ur|...}}"),
     ("error-if", ("present-except", ["1", "2", "3"])),
     ("set", "1", [
       "ur",
@@ -1237,6 +1830,41 @@ templates_to_rename_specs = [
     ]),
   )),
 ]
+
+templates_to_rename_specs = (
+  bg_specs +
+  br_specs +
+  ca_specs +
+  chm_specs +
+  cu_specs +
+  da_specs +
+  de_specs +
+  el_specs +
+  enm_specs +
+  es_specs +
+  et_specs +
+  fa_specs +
+  hi_specs +
+  is_specs +
+  ka_specs +
+  liv_specs +
+  lt_specs +
+  lv_specs +
+  mr_specs +
+  mt_specs +
+  nb_specs +
+  ofs_specs +
+  osx_specs +
+  pt_specs +
+  ro_specs +
+  roa_opt_specs +
+  sh_specs +
+  sl_specs +
+  tg_specs +
+  tl_specs +
+  ur_specs +
+  []
+)
 
 templates_to_rename_map = {}
 for template, spec in templates_to_rename_specs:
@@ -1283,10 +1911,10 @@ def expand_spec(spec, t, pagemsg):
     return expand_spec(spec(t, pagemsg), t, pagemsg)
   assert type(spec) is tuple
   assert len(spec) >= 1
+  oldname = tname(t)
   newname = spec[0]
   expanded_specs = []
-  comment = "rename {{%s}} to {{%s}} with appropriate param changes" % (
-      tname(t), newname)
+  comment = None
   for subspec in spec[1:]:
     assert len(subspec) >= 1
 
@@ -1463,10 +2091,25 @@ def expand_spec(spec, t, pagemsg):
       _, comment = subspec
       comment = expand_set_value(comment, t, pagemsg)
       assert(isinstance(comment, basestring))
-      comment = comment.replace("__TEMPNAME__", tname(t)).replace("__NEWNAME__", newname)
+      comment = comment.replace("__TEMPNAME__", oldname).replace("__NEWNAME__", newname)
 
     else:
       assert False, "Unrecognized directive: %s" % subspec[0]
+
+  if not comment:
+    # If the old template is prefixed with the first param of the replacement,
+    # it is probably a language code and we're replacing a language-specific
+    # template with a general template; in that case, include the language code
+    # in the comment.
+    for spec in expanded_specs:
+      if spec[0] == "1" and tn.startswith(spec[1] + "-"):
+        comment = "rename {{%s}} to {{%s|%s}} with appropriate param changes" % (
+            oldname, newname, spec[1])
+        break
+
+  if not comment:
+    comment = "rename {{%s}} to {{%s}} with appropriate param changes" % (
+        oldname, newname)
 
   return newname, expanded_specs, comment
 
