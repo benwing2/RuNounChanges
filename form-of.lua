@@ -59,7 +59,13 @@ local function normalize_tag(tag)
 		}
 	end
 
-	tag = m_data.shortcuts[tag] or tag
+	return m_data.shortcuts[tag] or tag
+end
+
+
+local function get_tag_display_form(tag)
+	tag = normalize_tag(tag)
+
 	local data = m_data.tags[tag]
 
 	-- If the tag has a special display form, use it
@@ -73,6 +79,102 @@ local function normalize_tag(tag)
 	end
 	return tag
 end
+
+
+function export.fetch_categories(lang, tags, POS)
+	local categories = {}
+
+	local normalized_tags = {}
+	for _, tag in ipairs(tags) do
+		table.insert(normalized_tags, normalize_tag(tag))
+	end
+
+	local function check_condition(spec)
+		if type(spec) == "boolean" then
+			return spec
+		end
+		if type(spec) ~= "table" then
+			error("Wrong type of condition " .. spec .. ": " .. type(spec))
+		end
+		local predicate = spec[1]
+		if predicate == "has" then
+			return m_table.contains(normalized_tags, normalize_tag(spec[2])), 3
+		elseif predicate == "hasall" then
+			for _, tag in ipairs(spec[2]) do
+				if not m_table.contains(normalized_tags, normalize_tag(tag)) then
+					return false, 3
+				end
+			end
+			return true, 3
+		elseif predicate == "hasany" then
+			for _, tag in ipairs(spec[2]) do
+				if m_table.contains(normalized_tags, normalize_tag(tag)) then
+					return true, 3
+				end
+			end
+			return false, 3
+		elseif predicate == "POS=" then
+			return POS == spec[2], 3
+		elseif predicate == "not" then
+			local condval = check_condition(spec[2])
+			return not condval, 3
+		elseif predicate == "and" then
+			local condval = check_condition(spec[2])
+			if condval then
+				condval = check_condition(spec[3])
+			end
+			return condval, 4
+		elseif predicate == "or" then
+			local condval = check_condition(spec[2])
+			if not condval then
+				condval = check_condition(spec[3])
+			end
+			return condval, 4
+		else
+			error("Unrecognized predicate: " .. predicate)
+		end
+	end
+
+	local function process_spec(spec)
+		if not spec then
+			return false
+		elseif type(spec) == "string" then
+			table.insert(categories, lang:getCanonicalName() .. " " .. spec)
+			return true
+		elseif type(spec) == "table" then
+			local predicate = spec[1]
+			if predicate == "multi" then
+				for i = 2, #spec do
+					process_spec(spec[i])
+				end
+				return true
+			elseif predicate == "cond" then
+				for i = 2, #spec do
+					if process_spec(spec[i]) then
+						return true
+					end
+				end
+				return false
+			else
+				local condval, ifspec = check_condition(spec)
+				if condval then
+					process_spec(spec[ifspec])
+					return true
+				else
+					process_spec(spec[ifspec + 1])
+					return false
+				end
+			end
+		elseif type(spec) == "function" then
+			error("Functions not implemented yet, FIXME!")
+		else
+			error("Wrong type of condition " .. spec .. ": " .. type(spec))
+		end
+	end
+
+	local langspecs = 
+end
+
 
 function export.tagged_inflections(tags, terminfo, notext, capfirst, posttext)
 	local cur_infl = {}
@@ -88,13 +190,13 @@ function export.tagged_inflections(tags, terminfo, notext, capfirst, posttext)
 		else
 			local split_tags = rsplit(tagspec, "//", true)
 			if #split_tags == 1 then
-				table.insert(cur_infl, normalize_tag(split_tags[1]))
+				table.insert(cur_infl, get_tag_display_form(split_tags[1]))
 			else
-				local normalized_tags = {}
+				local displayed_tags = {}
 				for _, tag in ipairs(split_tags) do
-					table.insert(normalized_tags, normalize_tag(tag))
+					table.insert(displayed_tags, get_tag_display_form(tag))
 				end
-				table.insert(cur_infl, m_table.serialCommaJoin(normalized_tags))
+				table.insert(cur_infl, m_table.serialCommaJoin(displayed_tags))
 			end
 		end
 	end
