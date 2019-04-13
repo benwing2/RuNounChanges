@@ -2,22 +2,6 @@ Beginning at Mon Apr  1 13:47:41 2019
 {|class="wikitable"
 ! Aliased template !! Canonical template !! #Uses !! Suggested disposition
 |-
-| '''[[Template:Cretan dialect form of]]''' || '''[[Template:Cretan dialect form of]]''' || 9 || || Rename to {{temp|el-Cretan dialect form of}}
-|-
-| [[Template:cretan dialect form of]] || [[Template:Cretan dialect form of]] || 8 || || Replace with {{temp|el-Cretan dialect form of}}
-|-
-| '''[[Template:Cypriot dialect form of]]''' || '''[[Template:Cypriot dialect form of]]''' || 7 || || Rename to {{temp|el-Cypriot dialect form of}}
-|-
-| '''[[Template:European Portuguese form of]]''' || '''[[Template:European Portuguese form of]]''' || 0 || || Delete
-|-
-| '''[[Template:Italiot dialect form of]]''' || '''[[Template:Italiot dialect form of]]''' || 52 || Rename to {{temp|el-Italiot dialect form of}}
-|-
-| '''[[Template:Katharevousa form of]]''' || '''[[Template:Katharevousa form of]]''' || 137 || || Rename to {{temp|el-Katharevousa form of}}
-|-
-| '''[[Template:Maniot dialect form of]]''' || '''[[Template:Maniot dialect form of]]''' || 4 || || Rename to {{temp|el-Maniot dialect form of}}
-|-
-| '''[[Template:Pontian dialect form of]]''' || '''[[Template:Pontian dialect form of]]''' || 2 || || Rename to {{temp|el-Pontian dialect form of}}
-|-
 | '''[[Template:ar-instance noun of]]''' || '''[[Template:ar-instance noun of]]''' || 20 || || Keep
 |-
 | '''[[Template:ar-verbal noun of]]''' || '''[[Template:ar-verbal noun of]]''' || 3005 || Replaceable with {{temp|verbal noun of}} except when {{para|form}} or {{para|uncertain}} specified || Keep 
@@ -343,7 +327,7 @@ Beginning at Mon Apr  1 13:47:41 2019
 |-
 | '''[[Template:hu-participle]]''' || '''[[Template:hu-participle]]''' || 994 || ?
 |-
-| '''[[Template:hy-form-noun]]''' || '''[[Template:hy-form-noun]]''' || 504 || Rename to {{temp|he-noun form of of}}
+| '''[[Template:hy-form-noun]]''' || '''[[Template:hy-form-noun]]''' || 504 || Rename to {{temp|hy-noun form of}}
 |-
 | '''[[Template:hy-reformed]]''' || '''[[Template:hy-reformed]]''' || 1 || ?
 |-
