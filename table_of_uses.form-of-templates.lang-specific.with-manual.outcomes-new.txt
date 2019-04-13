@@ -47,7 +47,7 @@
 |-
 | '''[[Template:da-pl-genitive]]''' || '''[[Template:da-pl-genitive]]''' || 23 || Yes || No || Replace
 |-
-| '''[[Template:de-du contraction]]''' || '''[[Template:de-du contraction]]''' || 2 || Yes || No || Replace
+| '''[[Template:de-du contraction]]''' || '''[[Template:de-du contraction]]''' || 2 || Yes with {{temp|contraction of|de|[[{{{1}}} [[du]]}} || No || Replace
 |-
 | '''[[Template:de-form-adj]]''' || '''[[Template:de-form-adj]]''' || 241 || Yes || Yes || Replace
 |-
@@ -323,7 +323,7 @@
 |-
 | '''[[Template:ko-root of]]''' || '''[[Template:ko-root of]]''' || 9 || No || No || Keep
 |-
-| '''[[Template:ku-verb form of]]''' || '''[[Template:ku-verb form of]]''' || 3067 || Yes || No || Replace and deprecate
+| '''[[Template:ku-verb form of]]''' || '''[[Template:ku-verb form of]]''' || 3067 || Yes || Yes || Replace and deprecate
 |-
 | '''[[Template:la-praenominal abbreviation of]]''' || '''[[Template:la-praenominal abbreviation of]]''' || 13 || No || Yes || Keep
 |-
@@ -445,7 +445,7 @@
 |-
 | '''[[Template:pt-adv form of]]''' || '''[[Template:pt-adv form of]]''' || 11 || Yes || No || Replace
 |-
-| '''[[Template:pt-apocopic-verb]]''' || '''[[Template:pt-apocopic-verb]]''' || 54 || No || No || Replace with {{temp|pt-apocopic verb form of}}
+| '''[[Template:pt-apocopic-verb]]''' || '''[[Template:pt-apocopic-verb]]''' || 54 || No || No || Rename to {{temp|pt-apocopic verb form of}}
 |-
 | '''[[Template:pt-article form of]]''' || '''[[Template:pt-article form of]]''' || 6 || Yes || No || Replace
 |-
