@@ -158,13 +158,17 @@ function export.fetch_lang_categories(lang, tags, terminfo, POS)
 		end
 		local predicate = spec[1]
 		if predicate == "multi" then
-			for i = 2, #spec do
-				process_spec(spec[i])
+			-- WARNING! #spec doesn't work for objects loaded from loadData()
+			for i, sp in ipairs(spec) do
+				if i > 1 then
+					process_spec(sp)
+				end
 			end
 			return true
 		elseif predicate == "cond" then
-			for i = 2, #spec do
-				if process_spec(spec[i]) then
+			-- WARNING! #spec doesn't work for objects loaded from loadData()
+			for i, sp in ipairs(spec) do
+				if i > 1 and process_spec(sp) then
 					return true
 				end
 			end
@@ -183,8 +187,8 @@ function export.fetch_lang_categories(lang, tags, terminfo, POS)
 
 	local langspecs = m_cats[lang:getCode()]
 	if langspecs then
-	for i = 1, #langspecs do
-		process_spec(langspecs[i])
+	for _, spec in ipairs(langspecs) do
+		process_spec(spec)
 	end
 	return categories
 end
