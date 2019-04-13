@@ -57,70 +57,6 @@ local function fetch_script(sc)
 end
 
 
-local function get_part(template, args, offset, i)
-	offset = offset or 0
-	
-	local term = if_not_empty(args[i + offset])
-	local alt = if_not_empty(args["alt" .. i])
-	local id = if_not_empty(args["id" .. i])
-	local lang = if_not_empty(args["lang" .. i])
-	local sc = fetch_script(args["sc" .. i])
-	
-	local tr = if_not_empty(args["tr" .. i])
-	local ts = if_not_empty(args["ts" .. i])
-	local gloss = if_not_empty(args["t" .. i]) or if_not_empty(args["gloss" .. i])
-	local pos = if_not_empty(args["pos" .. i])
-	local lit = if_not_empty(args["lit" .. i])
-	local q = if_not_empty(args["q" .. i])
-	local g = if_not_empty(args["g" .. i])
-
-	if lang then
-		lang =
-			m_languages.getByCode(lang) or
-			require("Module:etymology languages").getByCode(lang) or
-			m_languages.err(lang, "lang" .. i)
-	end
-	
-	if not (term or alt or tr or ts) then
-		require("Module:debug").track(template .. "/no term or alt or tr")
-		return nil
-	else
-		return { term = term, alt = alt, id = id, lang = lang, sc = sc, tr = tr,
-			ts = ts, gloss = gloss, pos = pos, lit = lit, q = q,
-			genders = g and rsplit(g, ",") or {}
-		}
-	end
-end
-
-
-local function get_parts(template, args, offset, i)
-	local parts = {}
-	local start_index = i or 1
-
-	-- Temporary tracking code for bare arguments of which numeric variants
-	-- are recognized, but where the bare argument shouldn't occur.
-	-- Eventually, this should be converted to use [[Module:parameters]] and
-	-- the unrecognized arguments removed.
-	local no_bare_args = {"tr", "ts", "alt", "id", "gloss", "t", "lit"}
-	for _, bare_arg in ipairs(no_bare_args) do
-		if args[bare_arg] then
-			m_debug.track{
-				template .. "/bare-" .. bare_arg,
-				template .. "/bare-arg"
-			}
-			mw.log("bare arg in {{" .. template .. "}} was ignored: |" .. bare_arg .. "=" .. tostring(args[bare_arg]))
-		end
-	end
-	
-	for index = start_index, require("Module:table").maxIndex(args) do
-		local part = get_part(template, args, offset, index)
-		
-		parts[index - start_index + 1] = part
-	end
-	
-	return parts
-end
-
 local function parse_args(args, allow_compat, hack_params)
 	local compat = args["lang"]
 	if compat and not allow_compat then
@@ -227,7 +163,7 @@ function export.affix(frame)
 	
 	-- There must be at least one part to display. If there are gaps, a term
 	-- request will be shown.
-	if #parts == 0 then
+	if not next(parts) then
 		if mw.title.getCurrentTitle().nsText == "Template" then
 			parts = { {term = "prefix-"}, {term = "base"}, {term = "-suffix"} }
 		else
@@ -240,13 +176,13 @@ end
 
 
 function export.compound(frame)
-	local args, terms, lang, sc = parse_args(frame:getParent().args, "allow compat")
+	local args, terms, lang, sc = parse_args(frame:getParent().args)
 
 	local parts = get_parsed_parts("compound", args, terms)
 	
 	-- There must be at least one part to display. If there are gaps, a term
 	-- request will be shown.
-	if #parts == 0 then
+	if not next(parts) then
 		if mw.title.getCurrentTitle().nsText == "Template" then
 			parts = { {term = "first"}, {term = "second"} }
 		else
@@ -261,6 +197,7 @@ end
 function export.compound_like(frame)
 	local function hack_params(params)
 		params["pos"] = nil
+		params["nocap"] = {type = "boolean"}
 		params["notext"] = {type = "boolean"}
 	end
 
@@ -275,7 +212,7 @@ function export.compound_like(frame)
 
 	local parts = get_parsed_parts(template, args, terms)
 
-	if #parts == 0 then
+	if not next(parts) then
 		if mw.title.getCurrentTitle().nsText == "Template" then
 			parts = { {term = "first"}, {term = "second"} }
 		end
@@ -286,7 +223,7 @@ end
 
 
 function export.interfix_compound(frame)
-	local args, terms, lang, sc = parse_args(frame:getParent().args, "allow compat")
+	local args, terms, lang, sc = parse_args(frame:getParent().args)
 
 	local parts = get_parsed_parts("interfix-compound", args, terms)
 	local base1 = parts[1]
@@ -309,7 +246,7 @@ end
 
 
 function export.circumfix(frame)
-	local args, terms, lang, sc = parse_args(frame:getParent().args, "allow compat")
+	local args, terms, lang, sc = parse_args(frame:getParent().args)
 
 	local parts = get_parsed_parts("circumfix", args, terms)
 	local prefix = parts[1]
@@ -332,7 +269,7 @@ end
 
 
 function export.confix(frame)
-	local args, terms, lang, sc = parse_args(frame:getParent().args, "allow compat")
+	local args, terms, lang, sc = parse_args(frame:getParent().args)
 
 	local parts = get_parsed_parts("confix", args, terms)
 	local prefix = parts[1]
@@ -354,7 +291,7 @@ end
 
 
 function export.infix(frame)
-	local args, terms, lang, sc = parse_args(frame:getParent().args, "allow compat")
+	local args, terms, lang, sc = parse_args(frame:getParent().args)
 
 	local parts = get_parsed_parts("infix", args, terms)
 	local base = parts[1]
@@ -375,7 +312,7 @@ end
 
 
 function export.prefix(frame)
-	local args, terms, lang, sc = parse_args(frame:getParent().args, "allow compat")
+	local args, terms, lang, sc = parse_args(frame:getParent().args)
 
 	local prefixes = get_parsed_parts("prefix", args, terms)
 	local base = nil
@@ -400,7 +337,7 @@ end
 
 
 function export.suffix(frame)
-	local args, terms, lang, sc = parse_args(frame:getParent().args, "allow compat")
+	local args, terms, lang, sc = parse_args(frame:getParent().args)
 
 	local base = get_parsed_part("suffix", args, terms, 1)
 	local suffixes = get_parsed_parts("suffix", args, terms, 2)

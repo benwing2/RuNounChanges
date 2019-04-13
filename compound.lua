@@ -72,7 +72,7 @@ local arab_scripts = {
 -- (b) at least one of those scripts is listed below or in display_hyphens.
 
 local ZWNJ = u(0x200C) -- zero-width non-joiner
-local arab_hyphens = "ـ" .. ZWNJ
+local arab_hyphens = "ـ" .. ZWNJ .. "-"
 local template_hyphens = {
 	-- Arabic scripts get added below
 	["Hebr"] = "־",
@@ -190,11 +190,15 @@ local function get_template_and_display_hyphens(text, lang, sc)
 	if sc then
 		scode = sc:getCode()
 	else
-		local possible_scripts = lang:getScriptCodes()
+		lang = require("Module:languages").getNonEtymological(lang)
+		-- If we don't call shallowClone here, #possible_scripts always == 0.
+		-- Something weird to do with the metatable that's set on the table,
+		-- coming from loadData.
+		local possible_scripts = require("Module:table").shallowClone(lang:getScriptCodes())
 		if #possible_scripts == 0 then
 			-- This shouldn't happen; if the language has no script codes,
 			-- the list {"None"} should be returned.
-			error("Something is majorly wrong! Language has no script codes.")
+			error("Something is majorly wrong! Language " .. lang:getCanonicalName() .. " has no script codes.")
 		end
 		if #possible_scripts == 1 then
 			-- 2. If the language has only one possible script, use it.
