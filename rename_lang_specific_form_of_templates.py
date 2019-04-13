@@ -32,7 +32,6 @@ from blib import getparam, rmparam, msg, errandmsg, site, tname
 # ja-past of verb (3)
 # ja-verb form of (? takes Japanese params, some in Hiragana, would be a radical shift) (93)
 # ka-verb-form-of (? has links to [[Appendix:Georgian verbs]]; has stuff describing object pronouns, which maybe should be posttext) (116)
-# ku-verb form of (3067)
 # lt-būdinys/lt-budinys (? would need language-specific tag for būdinys) (184)
 # lt-dalyvis-1/lt-dalyvis (? would need language-specific tag for dalyvis) (1085)
 # lt-dalyvis-2 (? would need language-specific tag for dalyvis-2) (118)
@@ -93,10 +92,8 @@ from blib import getparam, rmparam, msg, errandmsg, site, tname
 # sv-verb-form-sup (2187)
 # sv-verb-form-sup-pass (1680)
 # sw-adj form of (? might be tough) (???)
-# tg-form-verb (1)
 # tr-inflection of (22)
 # tr-possessive form of (? includes posttext) (35)
-# ur-form-verb (1)
 
 class BadTemplateValue(Exception):
   pass
@@ -456,8 +453,8 @@ de_specs = [
             "acc": "acc",
             "accusative": "acc",
           }),
-        }),
-      ],
+        ]
+      }),
     ]),
     ("copy", "nocat"),
     ("copy", "sort"),
@@ -661,12 +658,12 @@ et_specs = [
       ("copy", "1"),
       "",
       ("lookup", "t", {
-        "pres", ["pres", "act", "part"],
-        "pres_actv", ["pres", "act", "part"],
-        "pres_pasv", ["pres", "pass", "part"],
-        "past", ["past", "act", "part"],
-        "past_actv", ["past", "act", "part"],
-        "past_pasv", ["past", "pass", "part"],
+        "pres": ["pres", "act", "part"],
+        "pres_actv": ["pres", "act", "part"],
+        "pres_pasv": ["pres", "pass", "part"],
+        "past": ["past", "act", "part"],
+        "past_actv": ["past", "act", "part"],
+        "past_pasv": ["past", "pass", "part"],
       }),
     ]),
     ("copy", "nocap"),
@@ -1000,29 +997,48 @@ ka_specs = [
 ku_specs = [
   ("ku-verb form of", (
     "inflection of",
-    ("error-if", ("present-except", ["1", "2", "3", "4"])),
+    ("error-if", ("present-except", ["1", "2", "3"])),
     ("set", "1", [
       "ku",
-      ("copy", "4"),
+      ("copy", "1"),
       "",
-      ("lookup", "1", {
-        "1st": "1",
-        "2nd": "2",
-        "3rd": "3",
-      }),
       ("lookup", "2", {
-        "sg": "s",
-        "pl": "p",
-      }),
-      ("lookup", "3", {
-        "pr": ["pres", "ind"],
-        "p": ["past", "ind"],
-        "n": ["neg"],
-        "i": ["imp"],
-        "in": ["imp", "neg"],
-        "c": ["cond"],
-        "j": ["juss"],
-        "q": ["quot"],
+        "pr": ["pres", "part"],
+        "pp": ["past", "part"],
+        True: [
+          ("lookup", "2", {
+            "1": "1",
+            "2": "2",
+            "3": "3",
+          }),
+          ("lookup", "3", {
+            "s": "s",
+            "p": "p",
+          }),
+          ("lookup", "4", {
+            "g": "pres",
+            "ng": ["neg", "pres"],
+            "v": ["pret"],
+            "nv": ["neg", "pret"],
+            "k1": ["sub", "I"],
+            "ps": ["past", "prog"],
+            "fp": ["fut", "perf"],
+            "nfp": ["neg", "fut", "perf"],
+            "nfs": ["neg", "fut"],
+            "i": ["imp"],
+            "nim": ["neg", "imp"],
+            "fs": "fut",
+            "pps": ["pres", "perf", "sub"],
+            "spres": ["spres", "sub"],
+            "plups": ["plup", "sub"],
+            "pp": ["pres", "perf"],
+            "npp": ["neg", "pres", "perf"],
+            "p": ["plup"],
+            "np": ["neg", "plup"],
+            "cond1": ["cond", "I"],
+            "cond2": ["cond", "II"],
+          }),
+        ],
       }),
     ]),
   )),
@@ -1314,7 +1330,7 @@ lv_specs = [
       ("lookup", "2", {
         "def": "def",
         "": "indef"
-      })
+      }),
       "comd",
     ]),
     ("set", "POS",
@@ -2079,6 +2095,7 @@ templates_to_rename_specs = (
   ie_specs +
   is_specs +
   ka_specs +
+  ku_specs +
   liv_specs +
   lt_specs +
   lv_specs +
@@ -2335,7 +2352,7 @@ def expand_spec(spec, t, pagemsg):
     # template with a general template; in that case, include the language code
     # in the comment.
     for spec in expanded_specs:
-      if spec[0] == "1" and tn.startswith(spec[1] + "-"):
+      if spec[0] == "1" and oldname.startswith(spec[1] + "-"):
         comment = "rename {{%s}} to {{%s|%s}} with appropriate param changes" % (
             oldname, newname, spec[1])
         break
