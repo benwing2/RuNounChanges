@@ -18,18 +18,14 @@ from blib import getparam, rmparam, msg, errandmsg, site, tname
 # en-third-person singular of (? other en-* form-of templates can't be generalized) (26938)
 # eo-form of (? takes actual ending, generates tags from it, would be a radical shift) (99087)
 # es-verb form of (? very complicated; takes a region param that can/should be moved out) (441797)
-# fa-form-verb (153)
 # ff-fuc-form of (0, DELETE)
 # fi-verb form of (6022)
 # gl-verb form of (? very complicated) (598)
 # gmq-bot-verb-form-sup (1)
 # got-nom form of (? has posttext= if comp-of=, sup-of=, presptc-of= or pastptc-of=) (2935)
 # got-verb form of (2038)
-# hi-form-adj-verb (45)
-# hi-form-verb (48)
 # hu-inflection of (9786)
 # hu-participle (994)
-# hy-form-noun (504)
 # ia-form of (? takes actual ending, generates tags from it, would be a radical shift) (718)
 # io-form of (? takes actual ending, generates tags from it, would be a radical shift) (10116)
 # it-adj form of (3564)
@@ -104,6 +100,63 @@ from blib import getparam, rmparam, msg, errandmsg, site, tname
 
 class BadTemplateValue(Exception):
   pass
+
+templates_to_actually_do = {
+  "cu-form of",
+  "da-pl-genitive",
+  "de-du contraction",
+  "de-form-noun",
+  "el-form-of-adv",
+  "el-participle of",
+  "et-nom form of",
+  "fa-form-verb",
+  "gmq-bot-verb-form-sup",
+  "hi-form-adj",
+  "hi-form-adj-verb",
+  "hi-form-noun",
+  "hy-form-noun",
+  "ie-past and pp of",
+  "is-conjugation of",
+  "is-inflection of",
+  "ka-verbal for",
+  "ka-verbal of",
+  "ku-verb form of",
+  "liv-inflection of",
+  "lt-form-adj-is",
+  "lt-form-noun",
+  "lt-form-verb",
+  "lv-definite of",
+  "lv-verbal noun of",
+  "mr-form-adj",
+  "mt-prep-form",
+  "nb-noun-form-def-gen",
+  "nb-noun-form-def-gen-pl",
+  "nb-noun-form-indef-gen-pl",
+  "ofs-nom form of",
+  "osx-nom form of",
+  "pt-adv form of",
+  "pt-article form of",
+  "pt-cardinal form of",
+  "pt-ordinal form",
+  "pt-ordinal def",
+  "ro-adj-form of",
+  "ro-form-adj",
+  "ro-form-noun",
+  "ro-form-verb",
+  "roa-opt-noun plural of",
+  "sh-form-noun",
+  "sh-form-proper-noun",
+  "sh-verb form of",
+  "sh-form-verb",
+  "sl-form-adj",
+  "sl-form-noun",
+  "sl-form-verb",
+  "sl-verb form of",
+  "tg-form-verb",
+  "ur-form-adj",
+  "ur-form-noun",
+  "ur-form-verb",
+}
 
 bg_specs = [
   ("bg-adj form of", (
@@ -679,56 +732,223 @@ fa_specs = [
   ("fa-adj form of", lambda t, pagemsg: fa_tg_adj_form_of(t, pagemsg, "fa")),
 
   ("fa-adj-form", "fa-adj form of"),
-]
 
-hi_specs = [
-  # NOTE: Has automatic, non-controllable final period that we're ignoring.
-  # Doesn't have initial caps.
-  ("hi-form-adj", (
+  ("fa-form-verb", (
     "inflection of",
-    ("error-if", ("present-except", ["1", "2", "3"])),
+    ("error-if", ("present-except", ["1", "2"])),
     ("set", "1", [
-      "hi",
-      ("copy", "3"),
+      "fa",
+      ("copy", "2"),
       "",
       ("lookup", "1", {
-        "d": "dir",
-        # FIXME: In [[Module:form of/data]], add "indir" = "indirect case",
-        # I think same as "oblique case"
-        "i": "indir",
-        "o": "indir",
-        "v": "vocative",
-      }),
-      ("lookup", "2", {
-        "ms": ["m", "s"],
-        "mp": ["m", "p"],
-        "fs": ["f", "s"],
-        "fp": ["f", "p"],
+        "man": ["1", "s", "imp"],
+        "imp-man": ["1", "s", "imp"],
+        "to": ["2", "s", "imp"],
+        "imp-to": ["2", "s", "imp"],
+        "u": ["3", "s", "imp"],
+        "imp-u": ["3", "s", "imp"],
+        u"mâ": ["1", "p", "imp"],
+        u"imp-mâ": ["1", "p", "imp"],
+        u"šomâ": ["2", "p", "imp"],
+        u"imp-šomâ": ["2", "p", "imp"],
+        u"ânhâ": ["3", "p", "imp"],
+        u"imp-ânhâ": ["3", "p", "imp"],
+        # FIXME: In [[Module:form of/data]], add "root" and "stem"
+        "r": ["root"],
+        "prstem": ["pres", "stem"],
+        "pstem": ["past", "stem"],
       }),
     ]),
   )),
+]
 
+gmq_bot_specs = [
   # NOTE: Has automatic, non-controllable final period that we're ignoring.
   # Doesn't have initial caps.
-  ("hi-form-noun", (
-    "inflection of",
-    ("error-if", ("present-except", ["1", "2", "3"])),
+  ("gmq-bot-verb-form-sup", (
+    "supine of",
+    ("error-if", ("present-except", ["1"])),
     ("set", "1", [
-      "hi",
-      ("copy", "3"),
+      "gmq-bot",
+      ("copy", "1"),
+    ]),
+  )),
+]
+
+def hi_ur_specs(lang):
+  return [
+    # NOTE: Has automatic, non-controllable final period that we're ignoring.
+    # Doesn't have initial caps.
+    ("%s-form-adj" % lang, (
+      "inflection of",
+      ("error-if", ("present-except", ["1", "2", "3"])),
+      ("set", "1", [
+        lang,
+        ("copy", "3"),
+        "",
+        ("lookup", "1", {
+          "d": "dir",
+          # FIXME: In [[Module:form of/data]], add "indir" = "indirect case",
+          # I think same as "oblique case"
+          "i": "indir",
+          "o": "indir",
+          "v": "vocative",
+        }),
+        ("lookup", "2", {
+          "ms": ["m", "s"],
+          "mp": ["m", "p"],
+          "fs": ["f", "s"],
+          "fp": ["f", "p"],
+        }),
+      ]),
+    )),
+
+    # NOTE: Has automatic, non-controllable final period that we're ignoring.
+    # Doesn't have initial caps.
+    ("%s-form-adj-verb" % lang, (
+      "inflection of",
+      ("error-if", ("present-except", ["1", "2", "3"])),
+      ("set", "1", [
+        lang,
+        ("copy", "3"),
+        "",
+        ("lookup", "1", {
+          # FIXME: In [[Module:form of/data]], add
+          #  "hab" = "habitual" (aspect),
+          #  "cont" = "continuous" (aspect) (same as progressive?)
+          "h": "hab",
+          "p": "pfv",
+          "c": ["cont", "part"],
+        }),
+        ("lookup", "2", {
+          "ms": ["m", "s"],
+          "mp": ["m", "p"],
+          "fs": ["f", "s"],
+          "fp": ["f", "p"],
+        }),
+      ]),
+      ["adj", "form"],
+    )),
+
+    # NOTE: Has automatic, non-controllable final period that we're ignoring.
+    # Doesn't have initial caps.
+    ("%s-form-noun" % lang, (
+      "inflection of",
+      ("error-if", ("present-except", ["1", "2", "3"])),
+      ("set", "1", [
+        lang,
+        ("copy", "3"),
+        "",
+        ("lookup", "1", {
+          "d": "dir",
+          # FIXME: In [[Module:form of/data]], add "indir" = "indirect case",
+          # I think same as "oblique case"
+          "i": "indir",
+          "o": "indir",
+          "v": "vocative",
+        }),
+        ("lookup", "2", {
+          "s": "s",
+          "p": "p",
+        }),
+      ]),
+    )),
+
+    # NOTE: Has automatic, non-controllable final period that we're ignoring.
+    # Doesn't have initial caps.
+    ("%s-form-verb" % lang, (
+      "inflection of",
+      ("error-if", ("present-except", ["1", "2"])),
+      ("set", "1", [
+        lang,
+        ("copy", "2"),
+        "",
+        ("lookup", "1", {
+          "tu": ["intim", "2", "s", "imp"],
+          "imp-tu": ["intim", "2", "s", "imp"],
+          "tum": ["fam", "2", "imp"],
+          "imp-tum": ["fam", "2", "imp"],
+          "ap": ["pol", "2", "imp"],
+          "imp-ap": ["pol", "2", "imp"],
+          "r": ["root"],
+          "i": ["obl", "inf"],
+          "o": ["obl", "inf"],
+          "c": ["conj"],
+          "a": ["agpro"],
+          "p": ["agpro"],
+        }),
+      ]),
+    )),
+  ]
+
+hi_specs = hi_ur_specs("hi")
+
+hy_specs = [
+  ("hy-form-noun", (
+    "inflection of",
+    ("error-if", ("present-except", ["1", "2", "3", "4", "5", "6", "tr"])),
+    ("set", "1", [
+      "hy",
+      ("copy", "4"),
+    ]),
+    ("copy", "tr"),
+    ("set", "3", [
       "",
       ("lookup", "1", {
-        "d": "dir",
-        # FIXME: In [[Module:form of/data]], add "indir" = "indirect case",
-        # I think same as "oblique case"
-        "i": "indir",
-        "o": "indir",
-        "v": "vocative",
+        "n": "nom",
+        "nom": "nom",
+        "a": "acc",
+        "ac": "acc",
+        "acc": "acc",
+        "g": "gen",
+        "gen": "gen",
+        "d": "dat",
+        "dat": "dat",
+        "ab": "abl",
+        "abl": "abl",
+        "i": "ins",
+        "ins": "ins",
+        "l": "loc",
+        "loc": "loc",
       }),
       ("lookup", "2", {
         "s": "s",
+        "sg": "s",
         "p": "p",
+        "pl": "p",
       }),
+      ("lookup", "3", {
+        "d": "def",
+        "def": "def",
+      }),
+      ("lookup", "5", {
+        "1": ["1", "poss"],
+        "2": ["2", "poss"],
+        "": [],
+      }),
+      ("lookup", "6", {
+        "n": "nomz",
+        "nom": "nomz",
+        "": [],
+      }),
+      lambda t, pagemsg:
+        "form" if getparam(t, "5") in ["1", "2"] or getparam(t, "6") in ["n", "nom"] else [],
+    ]),
+  )),
+]
+
+ie_specs = [
+  ("ie-past and pp of", (
+    "inflection of",
+    ("error-if", ("present-except", ["1"])),
+    ("set", "1", [
+      "ie",
+      ("copy", "1"),
+      "",
+      "past",
+      "and",
+      "past",
+      "part",
     ]),
   )),
 ]
@@ -775,6 +995,37 @@ ka_specs = [
   )),
 
   ("ka-verbal of", "ka-verbal for"),
+]
+
+ku_specs = [
+  ("ku-verb form of", (
+    "inflection of",
+    ("error-if", ("present-except", ["1", "2", "3", "4"])),
+    ("set", "1", [
+      "ku",
+      ("copy", "4"),
+      "",
+      ("lookup", "1", {
+        "1st": "1",
+        "2nd": "2",
+        "3rd": "3",
+      }),
+      ("lookup", "2", {
+        "sg": "s",
+        "pl": "p",
+      }),
+      ("lookup", "3", {
+        "pr": ["pres", "ind"],
+        "p": ["past", "ind"],
+        "n": ["neg"],
+        "i": ["imp"],
+        "in": ["imp", "neg"],
+        "c": ["cond"],
+        "j": ["juss"],
+        "q": ["quot"],
+      }),
+    ]),
+  )),
 ]
 
 liv_specs = [
@@ -1753,6 +2004,34 @@ tg_specs = [
   ("tg-adj form of", lambda t, pagemsg: fa_tg_adj_form_of(t, pagemsg, "tg")),
 
   ("tg-adj-form", "tg-adj form of"),
+
+  ("tg-form-verb", (
+    "inflection of",
+    ("error-if", ("present-except", ["1", "2"])),
+    ("set", "1", [
+      "fa",
+      ("copy", "2"),
+      "",
+      ("lookup", "1", {
+        "man": ["1", "s", "imp"],
+        "imp-man": ["1", "s", "imp"],
+        "tu": ["2", "s", "imp"],
+        "imp-tu": ["2", "s", "imp"],
+        "vay": ["3", "s", "imp"],
+        "imp-vay": ["3", "s", "imp"],
+        "mo": ["1", "p", "imp"],
+        "imp-mo": ["1", "p", "imp"],
+        u"šomo": ["2", "p", "imp"],
+        u"imp-šomo": ["2", "p", "imp"],
+        "onho": ["3", "p", "imp"],
+        "imp-onho": ["3", "p", "imp"],
+        # FIXME: In [[Module:form of/data]], add "root" and "stem"
+        "r": ["root"],
+        "prstem": ["pres", "stem"],
+        "pstem": ["past", "stem"],
+      }),
+    ]),
+  )),
 ]
 
 tl_specs = [
@@ -1779,57 +2058,7 @@ tl_specs = [
   )),
 ]
 
-ur_specs = [
-  # NOTE: Has automatic, non-controllable final period that we're ignoring.
-  # Doesn't have initial caps.
-  ("ur-form-adj", (
-    "inflection of",
-    ("error-if", ("present-except", ["1", "2", "3"])),
-    ("set", "1", [
-      "ur",
-      ("copy", "3"),
-      "",
-      ("lookup", "1", {
-        "d": "dir",
-        # FIXME: In [[Module:form of/data]], add "indir" = "indirect case",
-        # I think same as "oblique case"
-        "i": "indir",
-        "o": "indir",
-        "v": "vocative",
-      }),
-      ("lookup", "2", {
-        "ms": ["m", "s"],
-        "mp": ["m", "p"],
-        "fs": ["f", "s"],
-        "fp": ["f", "p"],
-      }),
-    ]),
-  )),
-
-  # NOTE: Has automatic, non-controllable final period that we're ignoring.
-  # Doesn't have initial caps.
-  ("ur-form-noun", (
-    "inflection of",
-    ("error-if", ("present-except", ["1", "2", "3"])),
-    ("set", "1", [
-      "ur",
-      ("copy", "3"),
-      "",
-      ("lookup", "1", {
-        "d": "dir",
-        # FIXME: In [[Module:form of/data]], add "indir" = "indirect case",
-        # I think same as "oblique case"
-        "i": "indir",
-        "o": "indir",
-        "v": "vocative",
-      }),
-      ("lookup", "2", {
-        "s": "s",
-        "p": "p",
-      }),
-    ]),
-  )),
-]
+ur_specs = hi_ur_specs("ur")
 
 templates_to_rename_specs = (
   bg_specs +
@@ -1844,7 +2073,10 @@ templates_to_rename_specs = (
   es_specs +
   et_specs +
   fa_specs +
+  gmq_bot_specs +
   hi_specs +
+  hy_specs +
+  ie_specs +
   is_specs +
   ka_specs +
   liv_specs +
@@ -1868,10 +2100,11 @@ templates_to_rename_specs = (
 
 templates_to_rename_map = {}
 for template, spec in templates_to_rename_specs:
-  if isinstance(spec, basestring):
-    templates_to_rename_map[template] = templates_to_rename_map[spec]
-  else:
-    templates_to_rename_map[template] = spec
+  if not templates_to_actually_do or template in templates_to_actually_do:
+    if isinstance(spec, basestring):
+      templates_to_rename_map[template] = templates_to_rename_map[spec]
+    else:
+      templates_to_rename_map[template] = spec
 
 def flatten_list(value):
   return [y for x in value for y in (x if type(x) is list else [x])]
@@ -2154,5 +2387,6 @@ args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
 for template, spec in templates_to_rename_specs:
-  for i, page in blib.references("Template:%s" % template, start, end):
-    blib.do_edit(page, i, process_page, save=args.save, verbose=args.verbose)
+  if not templates_to_actually_do or template in templates_to_actually_do:
+    for i, page in blib.references("Template:%s" % template, start, end):
+      blib.do_edit(page, i, process_page, save=args.save, verbose=args.verbose)
