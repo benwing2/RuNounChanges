@@ -188,7 +188,7 @@ bg_specs = [
         "definite": "def",
       }),
     ]),
-    ("set", "POS", "a"),
+    ("set", "p", "a"),
   )),
 
   ("bg-noun form of", (
@@ -196,7 +196,7 @@ bg_specs = [
     ("error-if", ("present-except", ["1", "2", "3", "noun"])),
     ("set", "1", [
       "bg",
-      ("copy", "adj"),
+      ("copy", "noun"),
       "",
       ("lookup", "3", {
         "subject": "subje",
@@ -216,7 +216,7 @@ bg_specs = [
         "": [],
       }),
     ]),
-    ("set", "POS", "n"),
+    ("set", "p", "n"),
   )),
 ]
 
@@ -231,7 +231,7 @@ br_specs = [
       ("copy", "2"),
       "p",
     ]),
-    ("set", "POS", "n"),
+    ("set", "p", "n"),
   )),
 ]
 
@@ -265,7 +265,7 @@ def romance_adj_form_of(lang):
         "pl": "p",
       }),
     ]),
-    ("set", "POS", "a"),
+    ("set", "p", "a"),
     ("copy", "nocap"),
     ("copy", "nodot"),
   )
@@ -517,7 +517,8 @@ el_specs = [
           ("copy", "1"),
           ("copy", "alt"),
           ("copy", "gloss"),
-        ])
+        ]),
+        ("set", "POS", "adverb"),
       ) if getparam(t, "deg") == "comp" else
       ("inflection of",
         ("comment", "rename {{__TEMPNAME__|deg=sup}} to {{inflection of|el|...|asupd}}"),
@@ -609,7 +610,9 @@ es_specs = [
 et_specs = [
   ("et-nom form of", (
     "Inflection of",
-    ("error-if", ("present-except", ["1", "c", "n"])),
+    # pos= is commonly present but ignored by the template. But it
+    # contains useful information so we convert it to p=.
+    ("error-if", ("present-except", ["1", "c", "n", "pos"])),
     ("set", "1", [
       "et",
       ("copy", "1"),
@@ -635,6 +638,7 @@ et_specs = [
         "pl": "p",
       }),
     ]),
+    ("copy", "pos", "p"),
   )),
 
   ("et-participle of", (
@@ -817,7 +821,8 @@ def hi_ur_specs(lang):
           # I think same as "oblique case"
           "i": "indir",
           "o": "indir",
-          "v": "vocative",
+          "v": "voc",
+          "": [],
         }),
         ("lookup", "2", {
           "ms": ["m", "s"],
@@ -859,7 +864,8 @@ def hi_ur_specs(lang):
     # Doesn't have initial caps.
     ("%s-form-noun" % lang, (
       "inflection of",
-      ("error-if", ("present-except", ["1", "2", "3"])),
+      # lang= occurs at least once, and is ignored.
+      ("error-if", ("present-except", ["1", "2", "3", "lang"])),
       ("set", "1", [
         lang,
         ("copy", "3"),
@@ -1067,7 +1073,8 @@ ie_specs = [
 is_specs = [
   ("is-conjugation of", (
     "inflection of",
-    ("error-if", ("present-except", ["1", "2", "3", "4", "5", "6"])),
+    # lang= occurs at least once, and is ignored.
+    ("error-if", ("present-except", ["1", "2", "3", "4", "5", "6", "7", "lang"])),
     ("set", "1", [
       "is",
       ("copy", "1"),
@@ -1077,12 +1084,16 @@ is_specs = [
       ("copy", "4"),
       ("copy", "5"),
       ("copy", "6"),
+      # The template code only looks up through 6 but some templates go
+      # through 7.
+      ("copy", "7"),
     ]),
   )),
 
   ("is-inflection of", (
     "inflection of",
-    ("error-if", ("present-except", ["1", "2", "3", "4", "5"])),
+    # lang= occurs at least once, and is ignored.
+    ("error-if", ("present-except", ["1", "2", "3", "4", "5", "6", "lang"])),
     ("set", "1", [
       "is",
       ("copy", "1"),
@@ -1092,6 +1103,12 @@ is_specs = [
       ("copy", "4"),
       ("copy", "5"),
     ]),
+    ("set", "p",
+      ("lookup", "6", {
+        "proper": "pn",
+        "": [],
+      }),
+    ),
   )),
 ]
 
@@ -1102,7 +1119,8 @@ it_specs = [
 ka_specs = [
   ("ka-verbal for", (
     "verbal noun of",
-    ("error-if", ("present-except", ["1"])),
+    # lang= occurs at least once, and is ignored.
+    ("error-if", ("present-except", ["1", "lang"])),
     ("set", "1", [
       "ka",
       ("copy", "1"),
@@ -1194,7 +1212,10 @@ liv_specs = [
 
   ("liv-inflection of", (
     "inflection of",
-    ("error-if", ("present-except", ["1", "2", "3"])),
+    # 4 is ignored by the template but specifies the part of speech
+    # and used to be used for categorization. We preserve it as it
+    # might be useful in the future.
+    ("error-if", ("present-except", ["1", "2", "3", "4"])),
     ("set", "1", [
       "liv",
       ("copy", "3"),
@@ -1218,6 +1239,7 @@ liv_specs = [
         "pl": "p",
       }),
     ]),
+    ("copy", "4", "p"),
   )),
 
   ("liv-participle of", (
@@ -1368,6 +1390,7 @@ lt_specs = [
       ("lookup", "2", {
         "s": "s",
         "p": "p",
+        "": [],
       }),
     ]),
   )),
@@ -1391,7 +1414,7 @@ lt_specs = [
       }),
       ("lookup", "1", lt_adj_gender_number_table),
       ("lookup", "2", lt_adj_case_table),
-      ("set", "POS", "part"),
+      ("set", "p", "part"),
     ]),
   )),
 
@@ -1451,7 +1474,7 @@ lv_specs = [
       }),
       "comd",
     ]),
-    ("set", "POS",
+    ("set", "p",
       ("lookup", "3", {
         "vpart": "part",
         "": [],
@@ -1499,7 +1522,7 @@ lv_specs = [
       "",
       "supd",
     ]),
-    ("set", "POS",
+    ("set", "p",
       ("lookup", "2", {
         "vpart": "part",
         "": [],
@@ -1534,6 +1557,7 @@ mr_specs = [
         "i": "indir",
         "o": "indir",
         "v": "vocative",
+        "": [],
       }),
       ("lookup", "2", {
         "ms": ["m", "s"],
@@ -1629,6 +1653,7 @@ ofs_specs = [
       ("lookup", "n", {
         "sg": "s",
         "pl": "p",
+        "": [],
       }),
       ("lookup", "g", {
         "m": "m",
@@ -1643,6 +1668,7 @@ ofs_specs = [
       ("lookup", "w", {
         "w": "wk",
         "s": "str",
+        "": [],
       }),
     ]),
   )),
@@ -1741,11 +1767,11 @@ pt_specs = [
           "pl": "p",
         }),
       ]),
-      ("set", "POS", "n"),
+      ("set", "p", "n"),
       ("copy", "nocap"),
       ("copy", "nodot"),
     )
-  )
+  ),
 
   ("pt-ordinal form", (
     "Inflection of",
@@ -1867,6 +1893,7 @@ ro_specs = [
         "v": "voc",
         "voc": "voc",
         "vocative": "voc",
+        "": [],
       }),
     ]),
   )),
@@ -1978,7 +2005,8 @@ sh_specs = [
     lambda t, pagemsg:
       ("verbal noun of",
         ("comment", "rename {{__TEMPNAME__|vn}} to {{verbal noun of|sh}}"),
-        ("error-if", ("present-except", ["1", "2", "3"])),
+        # ignore sc=Cyrl.
+        ("error-if", ("present-except", ["1", "2", "3", "sc"])),
         ("error-if", ("neq", "2", "")),
         ("set", "1", [
           "sh",
@@ -1986,11 +2014,11 @@ sh_specs = [
         ])
       ) if getparam(t, "1") == "vn" else
       ("inflection of",
-        ("error-if", ("present-except", ["1", "2", "3"])),
+        ("error-if", ("present-except", ["1", "2", "3", "4"])),
         ("set", "1", [
           "sh",
           ("copy", "3"),
-          "",
+          ("copy", "4"),
           ("lookup", "1", {
             "1s": ["1", "s"],
             "2s": ["2", "s"],
