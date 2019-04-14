@@ -397,7 +397,7 @@
 |-
 | '''[[Template:mt-prep-form]]''' || '''[[Template:mt-prep-form]]''' || 7 || Yes || No || Replace
 |-
-| '''[[Template:my-ICT of]]''' || '''[[Template:my-ICT of]]''' || 7 || No || Yes || Replace
+| '''[[Template:my-ICT of]]''' || '''[[Template:my-ICT of]]''' || 7 || No || Yes || Keep
 |-
 | '''[[Template:nb-noun-form-def-gen]]''' || '''[[Template:nb-noun-form-def-gen]]''' || 2 || Yes || No || Replace
 |-
@@ -583,7 +583,7 @@
 |-
 | '''[[Template:sv-adv-form-sup]]''' || '''[[Template:sv-adv-form-sup]]''' || 7 || Yes || No || Replace
 |-
-| '''[[Template:sv-noun-form-adj]]''' || '''[[Template:sv-noun-form-adj]]''' || 1 || Yes || No || Replace
+| '''[[Template:sv-noun-form-adj]]''' || '''[[Template:sv-noun-form-adj]]''' || 1 || No? || No || Delete; no actual uses
 |-
 | '''[[Template:sv-noun-form-def]]''' || '''[[Template:sv-noun-form-def]]''' || 10063 || Yes || No || Replace and deprecate (or keep for now due to #uses?)
 |-
