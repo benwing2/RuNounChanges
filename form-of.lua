@@ -50,7 +50,7 @@ function export.format_form_of(text, terminfo, posttext)
 end
 
 
-local function normalize_tag(tag)
+local function normalize_single_tag(tag)
 	if m_data.shortcuts[tag] then
 	elseif m_data.tags[tag] then
 	else
@@ -64,21 +64,61 @@ local function normalize_tag(tag)
 end
 
 
-local function get_tag_display_form(tag)
-	tag = normalize_tag(tag)
+local function normalize_tag(tag, return_split)
+	-- Check for a shortcut before splitting because some shortcuts map to multiple //-separated tags,
+	-- e.g. 123 -> 1//2//3.
+	tag = m_data.shortcuts[tag] or tag
+	local split_tags = rsplit(tag, "//", true)
+	if #split_tags == 1 then
+		return normalize_single_tag(split_tags[1])
+	end
+	local normtags = {}
+	for _, single_tag in ipairs(split_tags) do
+		table.insert(normtags, normalize_single_tag(single_tag))
+	end
+	if return_split then
+		return normtags
+	else
+		return table.concat(normtags, "//")
+	end
+end
 
-	local data = m_data.tags[tag]
+
+local function get_single_tag_display_form(normtag)
+	local data = m_data.tags[normtag]
 
 	-- If the tag has a special display form, use it
 	if data and data.display then
-		tag = data.display
+		normtag = data.display
 	end
 
 	-- If there is a nonempty glossary index, then show a link to it
 	if data and data.glossary then
-		tag = "[[Appendix:Glossary#" .. mw.uri.anchorEncode(data.glossary) .. "|" .. tag .. "]]"
+		normtag = "[[Appendix:Glossary#" .. mw.uri.anchorEncode(data.glossary) .. "|" .. tag .. "]]"
 	end
-	return tag
+	return normtag
+end
+
+
+local function get_tag_display_form(tag)
+	local tags = normalize_tag(tag, "return split")
+	if type(tags) == "string" then
+		return get_single_tag_display_form(tags)
+	end
+	-- We have multiple tags. See if there's a display handler to
+	-- display them specially.
+	for _, handler in ipairs(m_data.display_handlers) do
+		local displayval = handler(tags)
+		if displayval then
+			return displayval
+		end
+	end
+	-- If not, just join them using serialCommaJoin.
+	local displayed_tags = {}
+	for _, tag in ipairs(tags) do
+		table.insert(displayed_tags, get_single_tag_display_form(tag))
+	end
+	return m_table.serialCommaJoin(displayed_tags)
 end
 
 
