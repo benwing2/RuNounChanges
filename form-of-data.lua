@@ -1,6 +1,40 @@
-local tags = {}
+--[=[
 
--- Person
+This module lists all of the recognized inflection tags, along with their shortcut aliases,
+the corresponding entry in [[Appendix:Glossary]], and the corresponding wikidata entry.
+
+TAGS is a table where keys are the canonical form of an inflection tag and the corresponding
+values are tables describing the tags, consisting of the following keys:
+	- tag_type: Type of the tag ("person", "number", "gender", "case", "animacy",
+				"tense-aspect", "mood", "voice", etc.).
+	- glossary: Anchor in [[Appendix:Glossary]] describing the inflection tag. May be missing.
+	- shortcuts: List of shortcuts, i.e. aliases for the inflection tag. May be missing.
+	- display: If specified, consists of text to display in the definition line, in lieu of
+			   the canonical form of the inflection tag. If there is a glossary entry, the
+			   displayed text forms the right side of the two-part glossary link.
+	- wikidata: Wikidata identifier (see wikidata.org) for the concept most closely
+				describing this tag.
+
+SHORTCUTS is a table mapping shortcut aliases to canonical inflection tag names. It can also
+map to a multipart tag, which may itself contain shortcut aliases; e.g. the key "mf" maps
+to "m//f", which will in turn be expanded into the multipart tag {"masculine", "feminine"},
+which will display as (approximately)
+	"[[Appendix:Glossary#gender|masculine]] and [[Appendix:Glossary#gender|feminine]]"
+Normally, SHORTCUTS is automatically constructed from the `shortcuts` key in the entries in
+TAGS, but it needs to be manually augmented with multipart aliases.
+
+DISPLAY_HANDLERS is a list of one or more functions that provide special handling for
+multipart tags. Each function takes a single argument (the multipart tag), and should either
+return the formatted display text or nil to check the next handler. If no handlers apply,
+there is a default handler that appropriately formats most multipart tags.
+]=]
+
+local tags = {}
+local shortcuts = {}
+local display_handlers = {}
+
+----------------------- Person -----------------------
+
 tags["first-person"] = {
 	tag_type = "person",
 	glossary = "first person",
@@ -28,18 +62,48 @@ tags["impersonal"] = {
 	shortcuts = {"impers"},
 }
 
--- Number
+table.insert(display_handlers,
+	-- Display handler to clean up display of multiple persons by omitting redundant "person"
+	-- in all but the last element. For example, the tag "123" maps to "1//2//3", which in
+	-- turn gets displayed as (approximately) "first-, second- and third-person" (with
+	-- appropriate glossary links, and appropriate spans marking the serial comma).
+	function(tags)
+		local els = {}
+		local numtags = #tags
+		for i, tag in ipairs(tags) do
+			local suffix = i == numtags and "-person]]" or "-]]"
+			if tag == "first-person" then
+				table.insert(els, "[[Appendix:Glossary#first person|first" .. suffix)
+			elseif tag == "second-person" then
+				table.insert(els, "[[Appendix:Glossary#second person|second" .. suffix)
+			elseif tag == "third-person" then
+				table.insert(els, "[[Appendix:Glossary#third person|third" .. suffix)
+			else
+				return nil
+			end
+		end
+		require("Module:table").serialCommaJoin(els)
+	end
+)
+
+shortcuts["12"] = "1//2"
+shortcuts["13"] = "1//3"
+shortcuts["23"] = "2//3"
+shortcuts["123"] = "1//2//3"
+
+----------------------- Number -----------------------
+
 tags["singular"] = {
 	tag_type = "number",
 	glossary = "singular number",
-	shortcuts = {"s"},
+	shortcuts = {"s", "sg"},
 	wikidata = "Q110786",
 }
 
 tags["dual"] = {
 	tag_type = "number",
 	glossary = "dual number",
-	shortcuts = {"d"},
+	shortcuts = {"d", "du"},
 	wikidata = "Q110022",
 }
 
@@ -66,7 +130,7 @@ tags["distributive paucal"] = {
 tags["plural"] = {
 	tag_type = "number",
 	glossary = "plural number",
-	shortcuts = {"p"},
+	shortcuts = {"p", "pl"},
 	wikidata = "Q146786",
 }
 
@@ -84,7 +148,9 @@ tags["collective"] = {
 	wikidata = "Q694268",
 }
 
--- Gender
+
+----------------------- Gender -----------------------
+
 tags["masculine"] = {
 	tag_type = "gender",
 	glossary = "gender",
@@ -125,7 +191,15 @@ tags["nonvirile"] = {
 	shortcuts = {"nv"},
 }
 
--- Animacy (may be useful sometimes for [[Module:object usage]].)
+shortcuts["mf"] = "m//f"
+shortcuts["mn"] = "m//n"
+shortcuts["fn"] = "f//n"
+shortcuts["mfn"] = "m//f//n"
+
+----------------------- Animacy -----------------------
+
+-- (may be useful sometimes for [[Module:object usage]].)
+
 tags["animate"] = {
 	tag_type = "animacy",
 	glossary = "animate",
@@ -145,7 +219,9 @@ tags["personal"] = {
 	shortcuts = {"pr"},
 }
 
--- Tense/aspect
+
+----------------------- Tense/aspect -----------------------
+
 tags["present"] = {
 	tag_type = "tense-aspect",
 	glossary = "present tense",
@@ -156,6 +232,15 @@ tags["present"] = {
 tags["past"] = {
 	tag_type = "tense-aspect",
 	glossary = "past tense",
+	wikidata = "Q1994301",
+}
+
+tags["simple past"] = {
+	tag_type = "tense-aspect",
+	glossary = "past tense",
+	shortcuts = {"spast"},
+	-- Same as past. Wikipedia considers them the same thing, but
+	-- we want to allow users to choose their own terminology.
 	wikidata = "Q1994301",
 }
 
@@ -180,6 +265,22 @@ tags["progressive"] = {
 	wikidata = "Q56653945",
 }
 
+tags["habitual"] = {
+	tag_type = "tense-aspect",
+	--glossary = "habitual",
+	shortcuts = {"hab"},
+	--FIXME!
+	--wikidata = "Q56653945",
+}
+
+tags["continuous"] = {
+	tag_type = "tense-aspect",
+	--glossary = "continuous",
+	shortcuts = {"cont"},
+	--FIXME!
+	--wikidata = "Q56653945",
+}
+
 tags["preterite"] = {
 	tag_type = "tense-aspect",
 	shortcuts = {"pret"},
@@ -190,6 +291,15 @@ tags["perfect"] = {
 	tag_type = "tense-aspect",
 	glossary = "perfect",
 	shortcuts = {"perf"},
+	wikidata = "Q625420",
+}
+
+tags["simple perfect"] = {
+	tag_type = "tense-aspect",
+	glossary = "perfect",
+	shortcuts = {"sperf"},
+	-- Same as past. Wikipedia considers them the same thing, but
+	-- we want to allow users to choose their own terminology.
 	wikidata = "Q625420",
 }
 
@@ -237,17 +347,32 @@ tags["perfective"] = {
 	wikidata = "Q1424306",
 }
 
+tags["frequentative"] = {
+	tag_type = "class",
+	--glossary = "frequentative",
+	shortcuts = {"freq"},
+	wikidata = "Q467562",
+}
+
 tags["iterative"] = {
 	tag_type = "tense-aspect",
 	shortcuts = {"iter"},
 	wikidata = "Q2866772",
 }
 
--- Mood
+-- Type of participle in Hindi; also called agentive or agentive-prospective
+tags["prospective"] = {
+	tag_type = "tense-aspect",
+	shortcuts = {"pros"},
+}
+
+
+----------------------- Mood -----------------------
+
 tags["imperative"] = {
 	tag_type = "mood",
 	glossary = "imperative mood",
-	shortcuts = {"imp", "impr"},
+	shortcuts = {"imp", "impr", "impv"},
 	wikidata = "Q22716",
 }
 
@@ -279,6 +404,13 @@ tags["optative"] = {
 	wikidata = "Q527205",
 }
 
+tags["desiderative"] = {
+	tag_type = "mood",
+	--glossary = "desiderative",
+	shortcuts = {"des", "desid"},
+	wikidata = "Q1200631",
+}
+
 tags["potential"] = {
 	tag_type = "mood",
 	shortcuts = {"potn"},
@@ -297,6 +429,11 @@ tags["cohortative"] = {
 	shortcuts = {"coho", "cohort"},
 }
 
+tags["energetic"] = {
+	tag_type = "mood",
+	shortcuts = {"ener"},
+}
+
 tags["volitive"] = {
 	tag_type = "mood",
 	shortcuts = {"voli"},
@@ -311,7 +448,9 @@ tags["quotative"] = {
 	wikidata = "Q7272884",
 }
 
--- Voice
+
+----------------------- Voice -----------------------
+
 tags["active"] = {
 	tag_type = "voice",
 	glossary = "active voice",
@@ -339,7 +478,9 @@ tags["mediopassive"] = {
 	wikidata = "Q1601545",
 }
 
--- Non-finite
+
+----------------------- Non-finite -----------------------
+
 tags["infinitive"] = {
 	tag_type = "non-finite",
 	shortcuts = {"inf"},
@@ -351,6 +492,13 @@ tags["participle"] = {
 	glossary = "participle",
 	shortcuts = {"part", "ptcp"},
 	wikidata = "Q814722",
+}
+
+tags["gerund"] = {
+	tag_type = "non-finite",
+	glossary = "gerund",
+	shortcuts = {"ger"},
+	wikidata = "Q1923028",
 }
 
 tags["converb"] = {
@@ -382,7 +530,16 @@ tags["supine"] = {
 	wikidata = "Q548470",
 }
 
--- Cases
+-- FIXME! Should this be a mood?
+tags["debitive"] = {
+	tag_type = "non-finite",
+	shortcuts = {"deb"},
+	wikidata = "Q17119041",
+}
+
+
+----------------------- Case -----------------------
+
 tags["abessive"] = {
 	tag_type = "case",
 	shortcuts = {"abe"},
@@ -538,6 +695,15 @@ tags["illative"] = {
 	wikidata = "Q474668",
 }
 
+tags["indirect"] = {
+	tag_type = "case",
+	--glossary = "indirect case",
+	shortcuts = {"indir"},
+	-- Same as oblique. Wikipedia considers them the same thing, but
+	-- we want to allow users to choose their own terminology.
+	wikidata = "Q1233197",
+}
+
 tags["inessive"] = {
 	tag_type = "case",
 	shortcuts = {"ine"},
@@ -588,7 +754,9 @@ tags["objective"] = {
 	tag_type = "case",
 	glossary = "objective case",
 	shortcuts = {"obj"},
-	wikidata = "Q1233197",  -- Same as oblique. Wikipedia considers them the same thing, but we want to allow users to choose their own terminology.
+	-- Same as oblique. Wikipedia considers them the same thing, but
+	-- we want to allow users to choose their own terminology.
+	wikidata = "Q1233197",
 }
 
 tags["oblique"] = {
@@ -623,6 +791,15 @@ tags["sociative"] = {
 	glossary = "sociative case",
 	shortcuts = {"soc"},
 	wikidata = "Q3773161",
+}
+
+tags["subjective"] = {
+	tag_type = "case",
+	glossary = "subjective case",
+	shortcuts = {"sje", "subje"},
+	-- Same as nominative. Wikipedia considers them the same thing, but
+	-- we want to allow users to choose their own terminology.
+	wikidata = "Q131105",
 }
 
 tags["sublative"] = {
@@ -662,7 +839,9 @@ tags["vocative"] = {
 	wikidata = "Q185077",
 }
 
--- State
+
+----------------------- State -----------------------
+
 tags["construct"] = {
 	tag_type = "state",
 	glossary = "construct state",
@@ -695,7 +874,17 @@ tags["predicative"] = {
 	shortcuts = {"pred"},
 }
 
--- Degrees of comparison
+
+----------------------- Degrees of comparison -----------------------
+
+tags["positive degree"] = {
+	tag_type = "comparison",
+	glossary = "positive",
+	shortcuts = {"posd", "positive"},
+	--FIXME!
+	--wikidata = "Q14169499",
+}
+
 tags["comparative degree"] = {
 	tag_type = "comparison",
 	glossary = "comparative",
@@ -708,6 +897,22 @@ tags["superlative degree"] = {
 	glossary = "superlative",
 	shortcuts = {"supd", "superlative"},
 	wikidata = "Q1817208",
+}
+
+tags["absolute superlative degree"] = {
+	tag_type = "comparison",
+	--glossary = "absolute superlative",
+	shortcuts = {"asupd", "absolute superlative"},
+	--FIXME!
+	--wikidata = "Q1817208",
+}
+
+tags["relative superlative degree"] = {
+	tag_type = "comparison",
+	--glossary = "relative superlative",
+	shortcuts = {"rsupd", "relative superlative"},
+	--FIXME!
+	--wikidata = "Q1817208",
 }
 
 tags["elative degree"] = {
@@ -723,17 +928,143 @@ tags["equative degree"] = {
 	wikidata = "Q5384239",
 }
 
--- Sound changes
+
+----------------------- Levels of politness -----------------------
+
+tags["intimate"] = {
+	tag_type = "politeness",
+	--glossary = "intimate",
+	shortcuts = {"intim"},
+}
+
+tags["familiar"] = {
+	tag_type = "politeness",
+	--glossary = "familiar",
+	shortcuts = {"fam"},
+}
+
+tags["polite"] = {
+	tag_type = "politeness",
+	--glossary = "polite",
+	shortcuts = {"pol"},
+}
+
+
+----------------------- Inflection classes -----------------------
+
+tags["strong"] = {
+	tag_type = "class",
+	--glossary = "strong",
+	shortcuts = {"str"},
+	wikidata = "Q3481903",
+}
+
+tags["weak"] = {
+	tag_type = "class",
+	--glossary = "weak",
+	shortcuts = {"wk"},
+	wikidata = "Q7977953",
+}
+
+tags["mixed"] = {
+	tag_type = "class",
+	--glossary = "mixed",
+	shortcuts = {"mix"},
+}
+
+tags["pronominal"] = {
+	tag_type = "class",
+	--glossary = "pronominal",
+	shortcuts = {"pron"},
+	-- the following is for "pronominal attribute", existing only in the Romanian Wikipedia
+	wikidata = "Q12721180",
+}
+
+
+----------------------- Sound changes -----------------------
+
 tags["contracted"] = {
 	tag_type = "sound change",
 }
 
--- Other tags
+
+----------------------- Misc grammar -----------------------
+
+tags["reflexive"] = {
+	tag_type = "class",
+	glossary = "reflexive",
+	shortcuts = {"refl"},
+	-- the following is for "reflexive verb"
+	wikidata = "Q13475484",
+}
+
+tags["possessive suffix"] = {
+	tag_type = "grammar",
+	--glossary = "possessive suffix",
+	display = "possessed",
+	shortcuts = {"possuf", "possessed"},
+	wikidata = "Q804020",
+}
+
+tags["nominalized"] = {
+	tag_type = "grammar",
+	--glossary = "nominalized",
+	shortcuts = {"nomz"},
+	wikidata = "Q1500667", -- entry for "nominalisation"
+	--wikidata = "Q4683152", -- Also possible: entry for "nominalized adjective"
+}
+
+-- Occurs in Hindi as a type of participle used to conjoin two clauses
+tags["conjunctive"] = {
+	tag_type = "grammar",
+	--glossary = "conjunctive",
+	shortcuts = {"conj"},
+}
+
+tags["augmentative"] = {
+	tag_type = "grammar",
+	--glossary = "augmentative",
+	shortcuts = {"aug"},
+	wikidata = "Q1358239",
+}
+
+tags["diminutive"] = {
+	tag_type = "grammar",
+	--glossary = "diminutive",
+	shortcuts = {"dim"},
+	wikidata = "Q108709",
+}
+
+tags["pejorative"] = {
+	tag_type = "grammar",
+	--glossary = "pejorative",
+	shortcuts = {"pej"},
+	wikidata = "Q2067740", -- entry for "pejorative suffix"
+	--wikidata = "Q545779", -- Also possible: entry for "pejorative"
+}
+
+tags["causative"] = {
+	tag_type = "class",
+	--glossary = "causative",
+	shortcuts = {"caus"},
+	-- the following is for "causative verb"
+	wikidata = "Q56677011",
+}
+
+tags["intensive"] = {
+	tag_type = "class",
+	--glossary = "intensive",
+	shortcuts = {"inten"},
+	-- the following is for "intensive word form"
+	wikidata = "Q10965321",
+}
+
+
+----------------------- Other tags -----------------------
+
 tags["and"] = {
 	tag_type = "other",
 }
-
-local shortcuts = {}
 
 -- Create the shortcuts list
 for name, data in pairs(tags) do
@@ -751,4 +1082,7 @@ for name, data in pairs(tags) do
 	end
 end
 
-return {tags = tags, shortcuts = shortcuts}
+return {tags = tags, shortcuts = shortcuts, display_handlers = display_handlers}
+
+-- For Vim, so we get 4-space tabs
+-- vim: set ts=4 sw=4 noet:
