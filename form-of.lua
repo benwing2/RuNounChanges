@@ -84,6 +84,21 @@ local function normalize_tag(tag, return_split)
 end
 
 
+local function normalize_tags(tags, return_split)
+	local ntags = {}
+	for _, tag in ipairs(tags) do
+		tag = m_data.shortcuts[tag] or tag
+		if type(tag) == "table" then
+			for _, t in ipairs(tag) do
+				table.insert(ntags, normalize_tag(t, return_split))
+			end
+		else
+			table.insert(ntags, normalize_tag(tag, return_split))
+		end
+	end
+	return ntags
+end
+
 local function get_single_tag_display_form(normtag)
 	local data = m_data.tags[normtag]
 
@@ -246,16 +261,17 @@ function export.tagged_inflections(tags, terminfo, notext, capfirst, posttext)
 			
 			cur_infl = {}
 		else
-			local split_tags = rsplit(tagspec, "//", true)
-			if #split_tags == 1 then
-				table.insert(cur_infl, get_tag_display_form(split_tags[1]))
-			else
-				local displayed_tags = {}
-				for _, tag in ipairs(split_tags) do
-					table.insert(displayed_tags, get_tag_display_form(tag))
-				end
-				table.insert(cur_infl, m_table.serialCommaJoin(displayed_tags))
+			local to_insert = get_tag_display_form(tagspec)
+			-- Here we special-case various sorts of punctuation.
+			-- No space to the right of a comma, rparen or slash;
+			-- no space to the left of an lparen or slash.
+			-- FIXME: Make this into a property of the data entry.
+			if (#cur_infl > 0 and cur_infl[#cur_infl] ~= "(" and
+				cur_infl[#cur_infl] ~= "/" and to_insert ~= "," and
+				to_insert ~= ")" and to_insert ~= "/") then
+				table.insert(cur_infl, " ")
 			end
+			table.insert(cur_infl, to_insert)
 		end
 	end
 	

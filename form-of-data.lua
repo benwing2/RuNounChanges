@@ -148,6 +148,16 @@ tags["collective"] = {
 	wikidata = "Q694268",
 }
 
+shortcuts["1s"] = {"1", "s"}
+shortcuts["2s"] = {"2", "s"}
+shortcuts["3s"] = {"3", "s"}
+shortcuts["1d"] = {"1", "d"}
+shortcuts["2d"] = {"2", "d"}
+shortcuts["3d"] = {"3", "d"}
+shortcuts["1p"] = {"1", "p"}
+shortcuts["2p"] = {"2", "p"}
+shortcuts["3p"] = {"3", "p"}
+
 
 ----------------------- Gender -----------------------
 
@@ -1006,6 +1016,18 @@ tags["possessive suffix"] = {
 	wikidata = "Q804020",
 }
 
+tags["singular possession"] = {
+	tag_type = "grammar",
+	--glossary = "singular possession",
+	shortcuts = {"spos"},
+}
+
+tags["plural possession"] = {
+	tag_type = "grammar",
+	--glossary = "plural possession",
+	shortcuts = {"ppos"},
+}
+
 tags["nominalized"] = {
 	tag_type = "grammar",
 	--glossary = "nominalized",
@@ -1066,7 +1088,27 @@ tags["and"] = {
 	tag_type = "other",
 }
 
--- Create the shortcuts list
+-- The next four are special-cased in tagged_inflections to avoid
+-- inserting certain sorts of spaces so they appear correct.
+tags[","] = {
+	tag_type = "other",
+}
+
+tags["/"] = {
+	tag_type = "other",
+}
+
+tags["("] = {
+	tag_type = "other",
+}
+
+tags[")"] = {
+	tag_type = "other",
+}
+
+
+----------------------- Create the shortcuts list -----------------------
+
 for name, data in pairs(tags) do
 	if data.shortcuts then
 		for _, shortcut in ipairs(data.shortcuts) do
