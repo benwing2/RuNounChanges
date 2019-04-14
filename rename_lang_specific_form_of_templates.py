@@ -21,20 +21,18 @@ from blib import getparam, rmparam, msg, errandmsg, site, tname
 # ff-fuc-form of (0, DELETE)
 # fi-verb form of (6022)
 # gl-verb form of (? very complicated) (598)
-# gmq-bot-verb-form-sup (1)
 # got-nom form of (? has posttext= if comp-of=, sup-of=, presptc-of= or pastptc-of=) (2935)
-# got-verb form of (2038)
 # hu-inflection of (9786)
 # hu-participle (994)
 # ia-form of (? takes actual ending, generates tags from it, would be a radical shift) (718)
 # io-form of (? takes actual ending, generates tags from it, would be a radical shift) (10116)
-# it-adj form of (3564)
 # ja-past of verb (3)
+# ja-te form of verb (5)
 # ja-verb form of (? takes Japanese params, some in Hiragana, would be a radical shift) (93)
 # ka-verb-form-of (? has links to [[Appendix:Georgian verbs]]; has stuff describing object pronouns, which maybe should be posttext) (116)
 # lt-būdinys/lt-budinys (? would need language-specific tag for būdinys) (184)
-# lt-dalyvis-1/lt-dalyvis (? would need language-specific tag for dalyvis) (1085)
-# lt-dalyvis-2 (? would need language-specific tag for dalyvis-2) (118)
+# lt-dalyvis-1/lt-dalyvis (1085)
+# lt-dalyvis-2 (118)
 # lt-form-pronoun (? if class=determiner, has text "([[use]]d as a [[determiner]])") (51)
 # lt-padalyvis (? would need language-specific tag for padalyvis) (466)
 # lt-pusdalyvis (? would need language-specific tag for pusdalyvis) (117)
@@ -155,6 +153,20 @@ templates_to_actually_do = {
   "ur-form-verb",
 }
 
+art_blk_specs = [
+  ("blk-past of", (
+    "inflection of",
+    ("comment", "rename {{__TEMPNAME__}} to {{inflection of|art-blk}} with appropriate param changes"),
+    ("error-if", ("present-except", ["1"])),
+    ("set", "1", [
+      "art-blk",
+      ("copy", "1"),
+      "",
+      "past",
+    ]),
+  )),
+]
+
 bg_specs = [
   ("bg-adj form of", (
     "Inflection of",
@@ -227,12 +239,15 @@ br_specs = [
   )),
 ]
 
-ca_specs = [
-  ("ca-adj form of", (
+def romance_adj_form_of(lang):
+  # This works for ca, es, it and pt. Romanian has its own template and French
+  # uses {{masculine singular of}}, {{feminine singular of}}, etc.
+  # Not all languages accept m-f or mf, but it doesn't hurt to accept them.
+  return (
     "Inflection of",
     ("error-if", ("present-except", ["1", "2", "3", "4", "nocap", "nodot"])),
     ("set", "1", [
-      "ca",
+      lang,
       ("copy", "1"),
       "",
       ("lookup", "4", {
@@ -245,6 +260,9 @@ ca_specs = [
       ("lookup", "2", {
         "m": "m",
         "f": "f",
+        # FIXME! Consider enabling mf == m//f in [[Module:form of/data]]
+        "m-f": "m//f",
+        "mf": "m//f",
       }),
       ("lookup", "3", {
         "sg": "s",
@@ -254,7 +272,10 @@ ca_specs = [
     ("set", "POS", "a"),
     ("copy", "nocap"),
     ("copy", "nodot"),
-  )),
+  )
+
+ca_specs = [
+  ("ca-adj form of", romance_adj_form_of("ca")),
 ]
 
 chm_grammar_table = {
@@ -587,36 +608,7 @@ enm_specs = [
 ]
 
 es_specs = [
-  ("es-adj form of", (
-    "Inflection of",
-    ("error-if", ("present-except", ["1", "2", "3", "4", "nocap", "nodot"])),
-    ("set", "1", [
-      "pt",
-      ("copy", "1"),
-      "",
-      ("lookup", "4", {
-        "aug": "aug",
-        "dim": "dim",
-        "comp": "comd",
-        "super": "supd",
-        "": [],
-      }),
-      ("lookup", "2", {
-        "m": "m",
-        "f": "f",
-        # FIXME! Consider enabling mf == m//f in [[Module:form of/data]]
-        "m-f": "m//f",
-        "mf": "m//f",
-      }),
-      ("lookup", "3", {
-        "sg": "s",
-        "pl": "p",
-      }),
-    ]),
-    ("set", "POS", "a"),
-    ("copy", "nocap"),
-    ("copy", "nodot"),
-  )),
+  ("es-adj form of", romance_adj_form_of("es")),
 ]
 
 et_specs = [
@@ -772,6 +764,47 @@ gmq_bot_specs = [
   )),
 ]
 
+got_specs = [
+  ("got-verb form of", (
+    "Inflection of",
+    ("error-if", ("present-except", ["1", "p", "n", "t", "v", "m", "nocap", "nodot"])),
+    ("set", "1", [
+      "got",
+      ("copy", "1"),
+      "",
+      ("lookup", "p", {
+        "1": "1",
+        "2": "2",
+        "3": "3",
+        "13": "13",
+        "123": "123",
+      }),
+      ("lookup", "n", {
+        "sg": "s",
+        "du": "d",
+        "pl": "p",
+      }),
+      ("lookup", "t", {
+        "pres": "pres",
+        "past": "past",
+      }),
+      ("lookup", "v", {
+        "actv": "act",
+        "pasv": "pass",
+      }),
+      ("lookup", "m", {
+        "ind": "ind",
+        "sub": "sub",
+        "imp": "imp",
+        "ptc": "part",
+        "indimp": "ind//imp",
+      }),
+    ]),
+    ("copy", "nocap"),
+    ("copy", "nodot"),
+  )),
+]
+
 def hi_ur_specs(lang):
   return [
     # NOTE: Has automatic, non-controllable final period that we're ignoring.
@@ -871,14 +904,68 @@ def hi_ur_specs(lang):
           "i": ["obl", "inf"],
           "o": ["obl", "inf"],
           "c": ["conj"],
-          "a": ["agpro"],
-          "p": ["agpro"],
+          "a": ["pros"],
+          "p": ["pros"],
         }),
       ]),
     )),
   ]
 
 hi_specs = hi_ur_specs("hi")
+
+hu_specs = [
+  ("hy-form-noun", (
+    "inflection of",
+    ("error-if", ("present-except", ["1", "2", "3", "4", "5", "6", "tr"])),
+    ("set", "1", [
+      "hy",
+      ("copy", "4"),
+    ]),
+    ("copy", "tr"),
+    ("set", "3", [
+      "",
+      ("lookup", "1", {
+        "n": "nom",
+        "nom": "nom",
+        "a": "acc",
+        "ac": "acc",
+        "acc": "acc",
+        "g": "gen",
+        "gen": "gen",
+        "d": "dat",
+        "dat": "dat",
+        "ab": "abl",
+        "abl": "abl",
+        "i": "ins",
+        "ins": "ins",
+        "l": "loc",
+        "loc": "loc",
+      }),
+      ("lookup", "2", {
+        "s": "s",
+        "sg": "s",
+        "p": "p",
+        "pl": "p",
+      }),
+      ("lookup", "3", {
+        "d": "def",
+        "def": "def",
+      }),
+      ("lookup", "5", {
+        "1": ["1", "possuf"],
+        "2": ["2", "possuf"],
+        "": [],
+      }),
+      ("lookup", "6", {
+        "n": "nomz",
+        "nom": "nomz",
+        "": [],
+      }),
+      lambda t, pagemsg:
+        "form" if getparam(t, "5") in ["1", "2"] or getparam(t, "6") in ["n", "nom"] else [],
+    ]),
+  )),
+]
 
 hy_specs = [
   ("hy-form-noun", (
@@ -979,6 +1066,10 @@ is_specs = [
       ("copy", "5"),
     ]),
   )),
+]
+
+it_specs = [
+  ("it-adj form of", romance_adj_form_of("it")),
 ]
 
 ka_specs = [
@@ -1570,36 +1661,7 @@ osx_specs = [
 ]
 
 pt_specs = [
-  ("pt-adj form of", (
-    "Inflection of",
-    ("error-if", ("present-except", ["1", "2", "3", "4", "nocap", "nodot"])),
-    ("set", "1", [
-      "pt",
-      ("copy", "1"),
-      "",
-      ("lookup", "4", {
-        "aug": "aug",
-        "dim": "dim",
-        "comp": "comd",
-        "super": "supd",
-        "": [],
-      }),
-      ("lookup", "2", {
-        "m": "m",
-        "f": "f",
-        # FIXME! Consider enabling mf == m//f in [[Module:form of/data]]
-        "m-f": "m//f",
-        "mf": "m//f",
-      }),
-      ("lookup", "3", {
-        "sg": "s",
-        "pl": "p",
-      }),
-    ]),
-    ("set", "POS", "a"),
-    ("copy", "nocap"),
-    ("copy", "nodot"),
-  )),
+  ("pt-adj form of", romance_adj_form_of("pt")),
 
   # NOTE: Capitalizes initial letter, we are ignoring that and ignoring
   # nocap=. Doesn't have final period. Only 11 uses.
@@ -2016,6 +2078,71 @@ sl_specs = [
   ("sl-verb form of", "sl-form-verb"),
 ]
 
+def sv_form(parts):
+  return (
+    "inflection of",
+    ("error-if", ("present-except", ["1", "2"])),
+    ("set", "1", [
+      "sv",
+      ("copy", "1"),
+      ("copy", "2"),
+      parts,
+    ])
+  )
+
+sv_specs = [
+  ("sv-adj-form-abs-def", sv_form(["def"])),
+  ("sv-adj-form-abs-def+pl", sv_form(["s", "def", "and", "p"])),
+  ("sv-adj-form-abs-def-m", sv_form(["def", "natm"])),
+  ("sv-adj-form-abs-indef-n", sv_form(["indef", "n"])),
+  ("sv-adj-form-abs-pl", sv_form(["p"])),
+  ("sv-adj-form-comp", sv_form(["comd"])),
+  ("sv-adj-form-comp-pl", sv_form(["comd", "p"])),
+  ("sv-adj-form-sup-attr", sv_form(["sup", "attr"])),
+  ("sv-adj-form-sup-attr-m", sv_form(["sup", "attr", "s", "m"])),
+  ("sv-adj-form-sup-pred", sv_form(["sup", "pred"])),
+  ("sv-adj-form-sup-pred-pl", sv_form(["sup", "pred", "p"])),
+  ("sv-adv-form-comp", (
+    "comparative of",
+    ("error-if", ("present-except", ["1"])),
+    ("set", "1", [
+      "sv",
+      ("copy", "1"),
+    ]),
+    ("set", "POS", "adverb"),
+  )),
+  ("sv-adv-form-sup", (
+    "superlative of",
+    ("error-if", ("present-except", ["1"])),
+    ("set", "1", [
+      "sv",
+      ("copy", "1"),
+    ]),
+    ("set", "POS", "adverb"),
+  )),
+# sv-noun-form-adj (1)
+# sv-noun-form-def (10063)
+# sv-noun-form-def-gen (8327)
+# sv-noun-form-def-gen-pl (6928)
+# sv-noun-form-def-pl (? if 'obsoleted by=', displays extra 'Obsolete form of' pre-text, maybe should go into separate template) (7574)
+# sv-noun-form-indef-gen (7680)
+# sv-noun-form-indef-gen-pl (6869)
+# sv-noun-form-indef-pl (7430)
+# sv-proper-noun-gen (198)
+# sv-verb-form-imp (? if 'plural of=', displays extra 'Obsolete plural form of' pre-text, maybe should go into separate template) (567)
+# sv-verb-form-inf-pass (1641)
+# sv-verb-form-past (? if 'plural of=', displays extra 'Obsolete plural form of' pre-text, maybe should go into separate template) (2567)
+# sv-verb-form-past-pass (? if 'plural of=', displays extra 'Obsolete plural form of' pre-text, maybe should go into separate template) (1631)
+# sv-verb-form-pastpart (1814)
+# sv-verb-form-pre (? if 'plural of=', displays extra 'Obsolete plural form of' pre-text, maybe should go into separate template) (2687)
+# sv-verb-form-pre-pass (2067)
+# sv-verb-form-prepart (2028)
+# sv-verb-form-pres-pass (0, DELETE)
+# sv-verb-form-subjunctive (14)
+# sv-verb-form-sup (2187)
+# sv-verb-form-sup-pass (1680)
+]
+
 tg_specs = [
   ("tg-adj form of", lambda t, pagemsg: fa_tg_adj_form_of(t, pagemsg, "tg")),
 
@@ -2077,6 +2204,7 @@ tl_specs = [
 ur_specs = hi_ur_specs("ur")
 
 templates_to_rename_specs = (
+  art_blk_specs +
   bg_specs +
   br_specs +
   ca_specs +
@@ -2090,10 +2218,13 @@ templates_to_rename_specs = (
   et_specs +
   fa_specs +
   gmq_bot_specs +
+  got_specs +
   hi_specs +
+  hu_specs +
   hy_specs +
   ie_specs +
   is_specs +
+  it_specs +
   ka_specs +
   ku_specs +
   liv_specs +
@@ -2109,6 +2240,7 @@ templates_to_rename_specs = (
   roa_opt_specs +
   sh_specs +
   sl_specs +
+  sv_specs +
   tg_specs +
   tl_specs +
   ur_specs +
