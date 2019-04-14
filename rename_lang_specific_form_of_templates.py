@@ -22,8 +22,6 @@ from blib import getparam, rmparam, msg, errandmsg, site, tname
 # fi-verb form of (6022)
 # gl-verb form of (? very complicated) (598)
 # got-nom form of (? has posttext= if comp-of=, sup-of=, presptc-of= or pastptc-of=) (2935)
-# hu-inflection of (9786)
-# hu-participle (994)
 # ia-form of (? takes actual ending, generates tags from it, would be a radical shift) (718)
 # io-form of (? takes actual ending, generates tags from it, would be a radical shift) (10116)
 # ja-past of verb (3)
@@ -46,7 +44,6 @@ from blib import getparam, rmparam, msg, errandmsg, site, tname
 # no-noun-form-def (0, DELETE)
 # no-noun-form-def-pl (0, DELETE)
 # pt-article form of (? says "of article ..." before link; might not be necessary) (6)
-# pt-noun form of (1517)
 # pt-ordinal form/pt-ordinal def (? would be a radical shift) (153)
 # pt-pron def (? not only a form-of template) (24)
 # pt-verb-form-of (? maybe? uses a module) (???)
@@ -90,7 +87,6 @@ from blib import getparam, rmparam, msg, errandmsg, site, tname
 # sv-verb-form-sup (2187)
 # sv-verb-form-sup-pass (1680)
 # sw-adj form of (? might be tough) (???)
-# tr-inflection of (22)
 # tr-possessive form of (? includes posttext) (35)
 
 class BadTemplateValue(Exception):
@@ -312,41 +308,40 @@ chm_grammar_table = {
   "": [],
 }
 
-# NOTE: If 2!=nom, categorizes into one of:
-# -- 6==adj -> adjective forms
-# -- 6==num -> numeral forms
-# -- 6==v -> verb forms
-# -- 6==vpart -> participle forms
-# -- 6==pro -> pronoun forms
-# -- 6==proper -> proper noun forms
-# -- 6==<anything else> -> noun forms
-# This should be handled by the headword, but we should check.
-chm_inflection_of = (
-  "inflection of",
-  ("error-if", ("present-except", ["1", "2", "3", "4", "5", "6"])),
-  ("set", "1", [
-    "chm",
-    ("copy", "1"),
-    "",
-    ("lookup", "2", {
-      "1s": [],
-      "2s": [],
-      "3s": [],
-      "1p": [],
-      "2p": [],
-      "3p": [],
-      "0": [],
-      True: "non-possessed"
-    }),
-    ("lookup", "2", chm_grammar_table),
-    ("lookup", "3", chm_grammar_table),
-    ("lookup", "4", chm_grammar_table),
-    ("lookup", "5", chm_grammar_table),
-  ]),
-)
 
 chm_specs = [
-  ("chm-inflection of", chm_inflection_of),
+  # NOTE: If 2!=nom, categorizes into one of:
+  # -- 6==adj -> adjective forms
+  # -- 6==num -> numeral forms
+  # -- 6==v -> verb forms
+  # -- 6==vpart -> participle forms
+  # -- 6==pro -> pronoun forms
+  # -- 6==proper -> proper noun forms
+  # -- 6==<anything else> -> noun forms
+  # This should be handled by the headword, but we should check.
+  ("chm-inflection of", (
+    "inflection of",
+    ("error-if", ("present-except", ["1", "2", "3", "4", "5", "6"])),
+    ("set", "1", [
+      "chm",
+      ("copy", "1"),
+      "",
+      ("lookup", "2", {
+        "1s": [],
+        "2s": [],
+        "3s": [],
+        "1p": [],
+        "2p": [],
+        "3p": [],
+        "0": [],
+        True: "non-possessed"
+      }),
+      ("lookup", "2", chm_grammar_table),
+      ("lookup", "3", chm_grammar_table),
+      ("lookup", "4", chm_grammar_table),
+      ("lookup", "5", chm_grammar_table),
+    ]),
+  )),
 ]
 
 cu_specs = [
@@ -913,56 +908,88 @@ def hi_ur_specs(lang):
 
 hi_specs = hi_ur_specs("hi")
 
+hu_grammar_table = {
+  "s": "s",
+  "p": "p",
+  "nom": "nom",
+  "acc": "acc",
+  "dat": "dat",
+  "ins": "ins",
+  "cfin": "cfin",
+  "tran": "tran",
+  "term": "term",
+  "temp": "temp",
+  "efor": "efor",
+  "emod": "emod",
+  "ine": "ine",
+  "sup": "spe",
+  "spe": "spe",
+  "ade": "ade",
+  "ill": "ill",
+  "sub": "sbl",
+  "sbl": "sbl",
+  "all": "all",
+  "ela": "ela",
+  "del": "del",
+  "abl": "abl",
+  "pos": "poss",
+  "1s": ["1s", ",", "spos"],
+  "2s": ["2s", ",", "spos"],
+  "3s": ["3s", ",", "spos"],
+  "4s": ["1p", ",", "spos"],
+  "5s": ["2p", ",", "spos"],
+  "6s": ["3p", ",", "spos"],
+  "1p": ["1s", ",", "ppos"],
+  "2p": ["2s", ",", "ppos"],
+  "3p": ["3s", ",", "ppos"],
+  "4p": ["1p", ",", "ppos"],
+  "5p": ["2p", ",", "ppos"],
+  "6p": ["3p", ",", "ppos"],
+  "1": "1",
+  "2": "2",
+  "3": "3",
+  "": [],
+}
+
 hu_specs = [
-  ("hy-form-noun", (
+  ("hu-inflection of", (
     "inflection of",
-    ("error-if", ("present-except", ["1", "2", "3", "4", "5", "6", "tr"])),
+    # Currently ignores both nocat= and pos=
+    ("error-if", ("present-except", ["1", "2", "3", "tr", "nocat", "pos"])),
     ("set", "1", [
-      "hy",
-      ("copy", "4"),
+      "hu",
+      ("copy", "1"),
     ]),
     ("copy", "tr"),
     ("set", "3", [
       "",
-      ("lookup", "1", {
-        "n": "nom",
-        "nom": "nom",
-        "a": "acc",
-        "ac": "acc",
-        "acc": "acc",
-        "g": "gen",
-        "gen": "gen",
-        "d": "dat",
-        "dat": "dat",
-        "ab": "abl",
-        "abl": "abl",
-        "i": "ins",
-        "ins": "ins",
-        "l": "loc",
-        "loc": "loc",
-      }),
+      ("lookup", "2", hu_grammar_table),
+      ("lookup", "3", hu_grammar_table),
+    ]),
+  )),
+
+  ("hu-participle", (
+    "inflection of",
+    ("error-if", ("present-except", ["1", "2"])),
+    ("set", "1", [
+      "hu",
+      ("copy", "1"),
+      "",
       ("lookup", "2", {
-        "s": "s",
-        "sg": "s",
-        "p": "p",
-        "pl": "p",
+        "t": "past",
+        "tt": "past",
+        "ott": "past",
+        "ett": "past",
+        u"ött": "past",
+        u"ó": "pres",
+        u"ő": "pres",
+        u"andó": "fut",
+        u"endő": "pres",
+        "va": "adv",
+        "ve": "adv",
+        u"ván": "adv",
+        u"vén": "adv",
       }),
-      ("lookup", "3", {
-        "d": "def",
-        "def": "def",
-      }),
-      ("lookup", "5", {
-        "1": ["1", "possuf"],
-        "2": ["2", "possuf"],
-        "": [],
-      }),
-      ("lookup", "6", {
-        "n": "nomz",
-        "nom": "nomz",
-        "": [],
-      }),
-      lambda t, pagemsg:
-        "form" if getparam(t, "5") in ["1", "2"] or getparam(t, "6") in ["n", "nom"] else [],
     ]),
   )),
 ]
@@ -1690,6 +1717,56 @@ pt_specs = [
       ("copy", "1"),
     ]),
   )),
+
+  ("pt-noun form of", (
+      "Inflection of",
+      ("error-if", ("present-except", ["1", "2", "3", "4", "nocap", "nodot"])),
+      ("set", "1", [
+        "pt",
+        ("copy", "1"),
+        "",
+        ("lookup", "4", {
+          "aug": "aug",
+          "dim": "dim",
+          "": [],
+        }),
+        ("lookup", "2", {
+          "m": "m",
+          "f": "f",
+          "onlym": [],
+          "onlyf": [],
+        }),
+        ("lookup", "3", {
+          "sg": "s",
+          "pl": "p",
+        }),
+      ]),
+      ("set", "POS", "n"),
+      ("copy", "nocap"),
+      ("copy", "nodot"),
+    )
+  )
+
+  ("pt-ordinal form", (
+    "Inflection of",
+    ("error-if", ("present-except", ["1", "2"])),
+    ("set", "1", [
+      "pt",
+      lambda t, pagemsg:
+        getparam(t, "1") + ("o" if getparam(t, "2") in ["a", "os", "as"] else u"º"),
+      "",
+      ("lookup", "2", {
+        "a": ["f", "s"],
+        "os": ["m", "p"],
+        "as": ["f", "p"],
+        u"ª": ["f", "s"],
+        u"ºs": ["m", "p"],
+        u"ªs": ["f", "p"],
+      }),
+    ]),
+  )),
+
+  ("pt-ordinal def", "pt-ordinal form"),
 ]
 
 # NOTE: Has automatic, non-controllable final period that we're ignoring.
@@ -2201,6 +2278,51 @@ tl_specs = [
   )),
 ]
 
+tr_grammar_table = {
+  "s": "s",
+  "p": "p",
+  "nom": "nom",
+  "acc": "acc",
+  "dat": "dat",
+  "abl": "abl",
+  "pos": "poss",
+  "1s": ["1s", ",", "spos"],
+  "2s": ["2s", ",", "spos"],
+  "3s": ["3s", ",", "spos"],
+  "4s": ["1p", ",", "spos"],
+  "5s": ["2p", ",", "spos"],
+  "6s": ["3p", ",", "spos"],
+  "1p": ["1s", ",", "ppos"],
+  "2p": ["2s", ",", "ppos"],
+  "3p": ["3s", ",", "ppos"],
+  "4p": ["1p", ",", "ppos"],
+  "5p": ["2p", ",", "ppos"],
+  "6p": ["3p", ",", "ppos"],
+  "1": "1",
+  "2": "2",
+  "3": "3",
+  "aor": "aor",
+  "cond": "cond",
+  "pres": "pres",
+  "def": "def",
+  "inf": "inf",
+  "": [],
+}
+
+tr_specs = [
+  ("tr-inflection of", (
+    "inflection of",
+    ("error-if", ("present-except", ["1", "2", "3"])),
+    ("set", "1", [
+      "tr",
+      ("copy", "1"),
+      "",
+      ("lookup", "2", tr_grammar_table),
+      ("lookup", "3", tr_grammar_table),
+    ]),
+  )),
+]
+
 ur_specs = hi_ur_specs("ur")
 
 templates_to_rename_specs = (
@@ -2243,6 +2365,7 @@ templates_to_rename_specs = (
   sv_specs +
   tg_specs +
   tl_specs +
+  tr_specs +
   ur_specs +
   []
 )

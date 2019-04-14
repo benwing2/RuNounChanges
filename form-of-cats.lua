@@ -230,6 +230,13 @@ cats["got"] = {
 	{"hasall", {"past", "part"}, "past participles"},
 }
 
+cats["hu"] = {
+	{"hasall", {"past", "part"}, "past participles"},
+	{"hasall", {"pres", "part"}, "present participles"},
+	{"hasall", {"fut", "part"}, "future participles"},
+	{"hasall", {"adv", "part"}, "adverbial participles"},
+}
+
 cats["it"] = {
 	romance_adjective_categorization
 }
@@ -299,13 +306,21 @@ cats["lv"] = {
 	},
 }
 
+cats["pt"] = {
+	romance_adjective_categorization,
+	{"POS=", "n",
+		{"multi",
+			{"has", "f", "noun feminine forms"},
+			{"has", "p", "noun plural forms"},
+			{"has", "aug", "noun augmentative forms"},
+			{"has", "dim", "noun diminutive forms"},
+		}
+	},
+}
+
 cats["sl"] = {
 	{"has", "part", "participles"},
 	{"hasany", {"sup", "ger"}, "verbal nouns"},
-}
-
-cats["pt"] = {
-	romance_adjective_categorization
 }
 
 return cats
