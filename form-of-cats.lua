@@ -89,7 +89,7 @@ A specification is one of:
 	 specification (a string naming a category, a list of any of the formats
 	 described above, or even another function). In the table, the following
 	 keys are present:
-	 
+
 	 "lang": the structure describing the language (usually the first
 	         parameter);
 	 "tags": the list of tags (canonicalized to their full forms);
@@ -134,6 +134,12 @@ that, if POS= isn't specified, or has a value other than "part" or
 
 --]=]
 
+cats["art-blk"] = {
+	{"has", "past",
+		{"multi", "verb simple past forms", "past participles"},
+	}
+}
+
 cats["bg"] = {
 	{"POS=", "a",
 		{"multi",
@@ -167,7 +173,8 @@ cats["br"] = {
 	},
 }
 
-local ca_es_pt_adjective_categorization = 
+-- Applies to ca, es, it, pt
+local romance_adjective_categorization =
 	{"POS=", "a",
 		{"multi",
 			{"has", "f", "adjective feminine forms"},
@@ -180,7 +187,7 @@ local ca_es_pt_adjective_categorization =
 	}
 
 cats["ca"] = {
-	ca_es_pt_adjective_categorization
+	romance_adjective_categorization
 }
 
 cats["de"] = {
@@ -211,11 +218,20 @@ cats["enm"] = {
 }
 
 cats["es"] = {
-	ca_es_pt_adjective_categorization
+	romance_adjective_categorization
 }
 
 cats["et"] = {
 	{"has", "part", "participles"},
+}
+
+cats["got"] = {
+	{"hasall", {"pres", "part"}, "present participles"},
+	{"hasall", {"past", "part"}, "past participles"},
+}
+
+cats["it"] = {
+	romance_adjective_categorization
 }
 
 cats["ku"] = {
@@ -289,7 +305,7 @@ cats["sl"] = {
 }
 
 cats["pt"] = {
-	ca_es_pt_adjective_categorization
+	romance_adjective_categorization
 }
 
 return cats
