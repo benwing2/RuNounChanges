@@ -1,0 +1,73 @@
+<noinclude>{{documentation}}</noinclude>
+<div class="NavFrame" style="width:{{#if:{{{width|}}}|{{{width|}}}|60}}em">
+<div class="NavHead" align=center>declension of {{PAGENAME}}</div>
+<div class="NavContent">
+{| style="width:{{#if:{{{width|}}}|{{{width|}}}|60}}em; background:#FFFFFF;" class="prettytable inflection-table"
+|-
+!style="background:#DEDEDE" colspan=5|singular
+|-
+!&nbsp;
+!masculine animate
+!masculine inanimate
+!feminine
+!neuter
+|-
+!nominative
+|colspan=2 align=center|{{l-self|sk|accel-form=nom{{!}}m{{!}}s|{{{1}}}{{{nom_m}}}}}
+|{{l-self|sk|accel-form=nom{{!}}f{{!}}s|{{{1}}}{{{nom_f}}}}}
+|{{l-self|sk|accel-form=nom{{!}}n{{!}}s|{{{1}}}{{{nom_n}}}}}
+|-
+!genitive
+|colspan=2 align=center|{{l-self|sk|accel-form=gen{{!}}m{{!}}s|{{{1}}}{{{gen_m}}}}}
+|{{l-self|sk|accel-form=gen{{!}}f{{!}}s|{{{1}}}{{{gen_f}}}}}
+|{{l-self|sk|accel-form=gen{{!}}n{{!}}s|{{{1}}}{{{gen_m}}}}}
+|-
+!dative
+|colspan=2 align=center|{{l-self|sk|accel-form=dat{{!}}m{{!}}s|{{{1}}}{{{dat_m}}}}}
+|{{l-self|sk|accel-form=dat{{!}}f{{!}}s|{{{1}}}{{{dat_f}}}}}
+|{{l-self|sk|accel-form=dat{{!}}n{{!}}s|{{{1}}}{{{dat_m}}}}}
+|-
+!accusative
+|{{l-self|sk|accel-form=an{{!}}acc{{!}}m{{!}}s|{{{1}}}{{{gen_m}}}}}
+|{{l-self|sk|accel-form=in{{!}}acc{{!}}m{{!}}s|{{{1}}}{{{nom_m}}}}}
+|{{l-self|sk|accel-form=acc{{!}}f{{!}}s|{{{1}}}{{{acc_f}}}}}
+|{{l-self|sk|accel-form=acc{{!}}n{{!}}s|{{{1}}}{{{nom_n}}}}}
+|-
+!locative
+|colspan=2 align=center|{{l-self|sk|accel-form=loc{{!}}m{{!}}s|{{#if:{{{stem2|}}}|{{{stem2}}}|{{{1}}}{{{loc_m}}}}}}}
+|{{l-self|sk|accel-form=loc{{!}}f{{!}}s|{{{1}}}{{{loc_f}}}}}
+|{{l-self|sk|accel-form=loc{{!}}n{{!}}s|{{#if:{{{stem2|}}}|{{{stem2}}}|{{{1}}}{{{loc_m}}}}}}}
+|-
+!instrumental
+|colspan=2 align=center|{{l-self|sk|accel-form=ins{{!}}m{{!}}s|{{{1}}}{{{ins_m}}}}}
+|{{l-self|sk|accel-form=ins{{!}}f{{!}}s|{{#if:{{{stem2|}}}|{{{stem2}}}|{{{1}}}{{{ins_f}}}}}}}
+|{{l-self|sk|accel-form=ins{{!}}n{{!}}s|{{{1}}}{{{ins_m}}}}}
+|-
+!style="background:#DEDEDE" colspan=5|plural
+|-
+!&nbsp;
+!masculine animate
+!masculine inanimate
+!feminine
+!neuter
+|-
+!nominative
+|{{l-self|sk|accel-form=an{{!}}nom{{!}}m{{!}}p|{{{1}}}{{{nom_mp_an}}}}}
+|colspan=3 align=center|{{l-self|sk|accel-form=in{{!}}nom{{!}}m{{!}}p;nom{{!}}fn{{!}}p|{{{1}}}{{{nom_p}}}}}
+|-
+!genitive
+|colspan=4 align=center|{{l-self|sk|accel-form=gen{{!}}p|{{{1}}}{{{gen_p}}}}}
+|-
+!dative
+|colspan=4 align=center|{{l-self|sk|accel-form=dat{{!}}p|{{{1}}}{{{dat_p}}}}}
+|-
+!accusative
+|{{l-self|sk|accel-form=an{{!}}acc{{!}}m{{!}}p|{{{1}}}{{{gen_p}}}}}
+|colspan=3 align=center|{{l-self|sk|accel-form=in{{!}}acc{{!}}m{{!}}p;acc{{!}}fn{{!}}p|{{{1}}}{{{nom_p}}}}}
+|-
+!locative
+|colspan=4 align=center|{{l-self|sk|accel-form=loc{{!}}p|{{{1}}}{{{loc_p}}}}}
+|-
+!instrumental
+|colspan=4 align=center|{{l-self|sk|accel-form=ins{{!}}p|{{{1}}}{{{ins_p}}}}}
+|}</div></div>
