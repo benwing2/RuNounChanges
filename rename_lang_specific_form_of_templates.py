@@ -307,10 +307,13 @@ def romance_adj_form_of(lang):
   # Not all languages accept m-f or mf, but it doesn't hurt to accept them.
   return (
     "Adj form of",
-    ("error-if", ("present-except", ["1", "2", "3", "4", "nocap", "nodot"])),
+    ("error-if", ("present-except", ["1", "2", "3", "4", "t", "nocap", "nodot"])),
     ("set", "1", [
       lang,
       ("copy", "1"),
+    ]),
+    ("copy", "t"), # occurs, although ignored by template
+    ("set", "3", [
       "",
       ("lookup", "4", {
         "aug": "aug",
@@ -398,6 +401,7 @@ chm_specs = [
         "2p": [],
         "3p": [],
         "0": [],
+        # FIXME, may need tag abbrev for this
         True: "non-possessed"
       }),
       ("lookup", "2", chm_grammar_table),
@@ -466,7 +470,9 @@ de_specs = [
   # Doesn't have initial caps.
   ("de-form-adj", (
     "inflection of",
-    ("error-if", ("present-except", ["deg", "1", "2", "3", "4", "nocat", "sort"])),
+    # lang= occurs at least once, and is ignored.
+    ("error-if", ("present-except", ["deg", "1", "2", "3", "4", "nocat",
+      "sort", "lang"])),
     ("set", "1", [
       "de",
       ("lookup", "1", {
@@ -507,6 +513,7 @@ de_specs = [
             "wms": "str//mix//wk",
             "mw": "mix//wk",
             "wm": "mix//wk",
+            "": [], # occurs when all apply; FIXME should we enumerate this explicitly?
           }),
           ("lookup", "2", {
             "m": ["m", "s"],
@@ -518,6 +525,7 @@ de_specs = [
             "p": "p",
             "pl": "p",
             "plural": "p",
+            "": [], # occurs when all apply; FIXME should we enumerate this explicitly?
           }),
           ("lookup", "3", {
             "n": "nom",
@@ -629,13 +637,15 @@ el_specs = [
 def enm_verb_form(parts):
   return (
     "inflection of",
-    ("error-if", ("present-except", ["1", "2"])),
+    ("error-if", ("present-except", ["1", "2", "t", "id"])),
     ("set", "1", [
       "enm",
       ("copy", "1"),
       ("copy", "2"),
       parts,
-    ])
+    ]),
+    ("copy", "t"), # occurs although ignored by template
+    ("copy", "id"), # occurs although ignored by template
   )
 
 enm_specs = [
@@ -836,6 +846,7 @@ fi_specs = [
         "p": "p",
         "pasv": "pass",
         "pass": "pass",
+        "": [], # especially in conjunction with connegative
       }),
       ("lookup", "tm", {
         "pres": ["pres", "ind"],
@@ -874,6 +885,9 @@ got_specs = [
     ("set", "1", [
       "got",
       ("copy", "1"),
+    ]),
+    ("copy", "tr"), # ignored by template but occurs
+    ("set", "3", [
       "",
       ("lookup", "p", {
         "1": "1",
@@ -881,19 +895,27 @@ got_specs = [
         "3": "3",
         "13": "13",
         "123": "123",
+        "": [], # especially when m=ptc?
       }),
       ("lookup", "n", {
         "sg": "s",
+        "s": "s", # error per template, but occurs
         "du": "d",
         "pl": "p",
+        "p": "p", # error per template, but occurs
+        "": [], # especially when m=ptc?
       }),
       ("lookup", "t", {
         "pres": "pres",
         "past": "past",
+        "": [], # especially when m=imp?
       }),
       ("lookup", "v", {
         "actv": "act",
+        "act": "act", # error per template, but occurs
         "pasv": "pass",
+        "pass": "pass", # error per template, but occurs
+        "": [], # especially when t=past?
       }),
       ("lookup", "m", {
         "ind": "ind",
@@ -1057,8 +1079,8 @@ hu_grammar_table = {
 hu_specs = [
   ("hu-inflection of", (
     "inflection of",
-    # Currently ignores both nocat= and pos=
-    ("error-if", ("present-except", ["1", "2", "3", "tr", "nocat", "pos"])),
+    # Template currently ignores both nocat= and pos=
+    ("error-if", ("present-except", ["1", "2", "3", "4", "tr", "nocat", "pos"])),
     ("set", "1", [
       "hu",
       ("copy", "1"),
@@ -1068,7 +1090,12 @@ hu_specs = [
       "",
       ("lookup", "2", hu_grammar_table),
       ("lookup", "3", hu_grammar_table),
+      # 4= not allowed by template but occurs
+      ("lookup", "4", hu_grammar_table),
     ]),
+    # copy these just in case they're needed later
+    ("copy", "nocat"),
+    ("copy", "pos", "p"),
   )),
 
   ("hu-participle", (
@@ -1597,7 +1624,7 @@ lv_grammar_table = {
   "acc": "acc",
   "dat": "dat",
   "gen": "gen",
-  "abl": "abl",
+  "ins": "ins",
   "voc": "voc",
   "loc": "loc",
   "1st": "1",
@@ -1605,6 +1632,7 @@ lv_grammar_table = {
   "3rd": "3",
   "prs": "pres",
   "pst": "past",
+  "past": "past",
   "fut": "fut",
   "ind": "ind",
   "imp": "imp",
@@ -1651,7 +1679,8 @@ lv_specs = [
 
   ("lv-inflection of", (
     "inflection of",
-    ("error-if", ("present-except", ["1", "2", "3", "4", "5", "6"])),
+    # lang= occurs at least once, and is ignored.
+    ("error-if", ("present-except", ["1", "2", "3", "4", "5", "6", "lang"])),
     ("set", "1", [
       "lv",
       ("copy", "1"),
@@ -1669,7 +1698,7 @@ lv_specs = [
         "v": "v",
         "vpart": "part",
         "pro": "pro",
-        True: "n",
+        True: [],
       }),
     ),
   )),
@@ -2853,6 +2882,11 @@ def process_page(page, index, parsed):
 
   pagemsg("Processing")
   notes = []
+
+  if ":" in pagetitle and not re.search(
+      "^(Citations|Appendix|Reconstruction|Transwiki|Talk|Wiktionary|[A-Za-z]+ talk):", pagetitle):
+    pagemsg("WARNING: Colon in page title and not a recognized namespace to include, skipping page")
+    return None, None
 
   for t in parsed.filter_templates():
     origt = unicode(t)
