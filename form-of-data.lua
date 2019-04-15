@@ -1,37 +1,60 @@
 --[=[
 
-This module lists all of the recognized inflection tags, along with their shortcut aliases,
-the corresponding entry in [[Appendix:Glossary]], and the corresponding wikidata entry.
+This module lists all of the recognized inflection tags, along with their
+shortcut aliases, the corresponding entry in [[Appendix:Glossary]], and the
+corresponding wikidata entry.
 
-TAGS is a table where keys are the canonical form of an inflection tag and the corresponding
-values are tables describing the tags, consisting of the following keys:
-	- tag_type: Type of the tag ("person", "number", "gender", "case", "animacy",
-				"tense-aspect", "mood", "voice", etc.).
-	- glossary: Anchor in [[Appendix:Glossary]] describing the inflection tag. May be missing.
-	- shortcuts: List of shortcuts, i.e. aliases for the inflection tag. May be missing.
-	- display: If specified, consists of text to display in the definition line, in lieu of
-			   the canonical form of the inflection tag. If there is a glossary entry, the
-			   displayed text forms the right side of the two-part glossary link.
-	- wikidata: Wikidata identifier (see wikidata.org) for the concept most closely
-				describing this tag.
+TAGS is a table where keys are the canonical form of an inflection tag and the
+corresponding values are tables describing the tags, consisting of the
+following keys:
+	- tag_type: Type of the tag ("person", "number", "gender", "case",
+				"animacy", "tense-aspect", "mood", "voice-valence", etc.).
+	- glossary: Anchor in [[Appendix:Glossary]] describing the inflection tag.
+				May be missing.
+	- shortcuts: List of shortcuts, i.e. aliases for the inflection tag. May be
+				 missing.
+	- display: If specified, consists of text to display in the definition line,
+			   in lieu of the canonical form of the inflection tag. If there is
+			   a glossary entry, the displayed text forms the right side of the
+			   two-part glossary link.
+	- wikidata: Wikidata identifier (see wikidata.org) for the concept most
+				closely describing this tag.
 
-SHORTCUTS is a table mapping shortcut aliases to canonical inflection tag names. It can also
-map to a multipart tag, which may itself contain shortcut aliases; e.g. the key "mf" maps
-to "m//f", which will in turn be expanded into the multipart tag {"masculine", "feminine"},
-which will display as (approximately)
+SHORTCUTS is a table mapping shortcut aliases to canonical inflection tag names.
+Shortcuts are of one of three types:
+(1) A simple alias of a tag. These do not need to be entered explicitly into
+	the table; code at the end of the module automatically fills in these
+	entries based on the information in TAGS.
+(2) An alias to a multipart tag. For example, the alias "mf" maps to the
+	multipart tag "m//f", which will in turn be expanded into the canonical
+	multipart tag {"masculine", "feminine"}, which will display as
+	(approximately)
 	"[[Appendix:Glossary#gender|masculine]] and [[Appendix:Glossary#gender|feminine]]"
-Normally, SHORTCUTS is automatically constructed from the `shortcuts` key in the entries in
-TAGS, but it needs to be manually augmented with multipart aliases.
+	The number of such aliases should be liminted, and should cover only the
+	most common combinations.
 
-DISPLAY_HANDLERS is a list of one or more functions that provide special handling for
-multipart tags. Each function takes a single argument (the multipart tag), and should either
-return the formatted display text or nil to check the next handler. If no handlers apply,
-there is a default handler that appropriately formats most multipart tags.
+	Normally, multipart tags are displayed using serialCommaJoin() in
+	[[Module:table]] to appropriately join the display form of the individual
+	tags using commas and/or "and". However, some multipart tags are displayed
+	specially; see DISPLAY_HANDLERS below. Note that aliases to multipart
+	tags can themselves contain simple aliases in them.
+(3) An alias to a list of multiple tags (which may themselves be simple or
+	multipart aliases). Specifying the alias is exactly equivalent to
+	specifying the tags in the list in order, one after another. An example is
+	"1s", which maps to the list {"1", "s"}. The number of such aliases should
+	be limited, and should cover only the most common combinations.
+
+DISPLAY_HANDLERS is a list of one or more functions that provide special
+handling for multipart tags. Each function takes a single argument (the
+multipart tag), and should either return the formatted display text or nil to
+check the next handler. If no handlers apply, there is a default handler that
+appropriately formats most multipart tags.
 ]=]
 
 local tags = {}
 local shortcuts = {}
 local display_handlers = {}
+
 
 ----------------------- Person -----------------------
 
@@ -90,6 +113,7 @@ shortcuts["12"] = "1//2"
 shortcuts["13"] = "1//3"
 shortcuts["23"] = "2//3"
 shortcuts["123"] = "1//2//3"
+
 
 ----------------------- Number -----------------------
 
@@ -168,11 +192,24 @@ tags["masculine"] = {
 	wikidata = "Q499327",
 }
 
+-- This is useful e.g. in Swedish.
+tags["natural masculine"] = {
+	tag_type = "gender",
+	glossary = "gender",
+	shortcuts = {"natm"},
+}
+
 tags["feminine"] = {
 	tag_type = "gender",
 	glossary = "gender",
 	shortcuts = {"f"},
 	wikidata = "Q1775415",
+}
+
+tags["natural feminine"] = {
+	tag_type = "gender",
+	glossary = "gender",
+	shortcuts = {"natf"},
 }
 
 tags["neuter"] = {
@@ -206,6 +243,7 @@ shortcuts["mn"] = "m//n"
 shortcuts["fn"] = "f//n"
 shortcuts["mfn"] = "m//f//n"
 
+
 ----------------------- Animacy -----------------------
 
 -- (may be useful sometimes for [[Module:object usage]].)
@@ -236,6 +274,14 @@ tags["present"] = {
 	tag_type = "tense-aspect",
 	glossary = "present tense",
 	shortcuts = {"pres"},
+	wikidata = "Q192613",
+}
+
+tags["simple present"] = {
+	tag_type = "tense-aspect",
+	glossary = "present tense",
+	shortcuts = {"spres"},
+	-- Same as present.
 	wikidata = "Q192613",
 }
 
@@ -358,7 +404,7 @@ tags["perfective"] = {
 }
 
 tags["frequentative"] = {
-	tag_type = "class",
+	tag_type = "tense-aspect",
 	--glossary = "frequentative",
 	shortcuts = {"freq"},
 	wikidata = "Q467562",
@@ -374,6 +420,26 @@ tags["iterative"] = {
 tags["prospective"] = {
 	tag_type = "tense-aspect",
 	shortcuts = {"pros"},
+}
+
+-- Aspect in Tagalog
+tags["contemplative"] = {
+	tag_type = "tense-aspect",
+	shortcuts = {"contem"},
+}
+
+-- Aspect in Tagalog; presumably similar to the perfect tense/aspect but
+-- not necessarily similar enough to use the same Wikidata ID
+tags["complete"] = {
+	tag_type = "tense-aspect",
+	shortcuts = {"compl"},
+}
+
+-- Aspect in Tagalog; presumably similar to the perfect tense/aspect but
+-- not necessarily similar enough to use the same Wikidata ID
+tags["recently complete"] = {
+	tag_type = "tense-aspect",
+	shortcuts = {"rcompl"},
 }
 
 
@@ -414,13 +480,6 @@ tags["optative"] = {
 	wikidata = "Q527205",
 }
 
-tags["desiderative"] = {
-	tag_type = "mood",
-	--glossary = "desiderative",
-	shortcuts = {"des", "desid"},
-	wikidata = "Q1200631",
-}
-
 tags["potential"] = {
 	tag_type = "mood",
 	shortcuts = {"potn"},
@@ -450,42 +509,98 @@ tags["volitive"] = {
 	wikidata = "Q10716592",
 }
 
+-- It's not clear that this is exactly a mood, but I'm not sure where
+-- else to group it
+tags["desiderative"] = {
+	tag_type = "mood",
+	--glossary = "desiderative",
+	shortcuts = {"des", "desid"},
+	wikidata = "Q1200631",
+}
+
+-- It's not clear that this is exactly a mood, but I'm not sure where
+-- else to group it
+tags["intensive"] = {
+	tag_type = "mood",
+	--glossary = "intensive",
+	shortcuts = {"inten"},
+	-- the following is for "intensive word form"
+	wikidata = "Q10965321",
+}
+
 -- Exists at least in Estonian
 tags["quotative"] = {
 	tag_type = "mood",
-	glossary = "quotative mood",
+	--glossary = "quotative mood",
 	shortcuts = {"quot"},
 	wikidata = "Q7272884",
+}
+
+tags["inferential"] = {
+	tag_type = "mood",
+	--glossary = "inferential mood",
+	shortcuts = {"infer", "infr"},
+	wikidata = "Q3332616",
+}
+
+tags["renarrative"] = {
+	tag_type = "mood",
+	--glossary = "renarrative mood",
+	shortcuts = {"renarr"},
+	-- same as inferential mood; "renarrative" is used in Balkan languages,
+	-- inferential in Turkish etc. Called "oblique mood" in Estonian
+	-- per Wikipedia.
+	wikidata = "Q3332616",
 }
 
 
 ----------------------- Voice -----------------------
 
+-- This tag type combines what is normally called "voice" (active, passive,
+-- middle, mediopassive) with other tags that aren't normally called
+-- voice but are similar in that they control the valence/valency (number
+-- and structure of the arguments of a verb).
 tags["active"] = {
-	tag_type = "voice",
+	tag_type = "voice-valence",
 	glossary = "active voice",
 	shortcuts = {"act", "actv"},
 	wikidata = "Q1317831",
 }
 
 tags["middle"] = {
-	tag_type = "voice",
+	tag_type = "voice-valence",
 	glossary = "middle voice",
 	shortcuts = {"mid", "midl"},
 }
 
 tags["passive"] = {
-	tag_type = "voice",
+	tag_type = "voice-valence",
 	glossary = "passive voice",
 	shortcuts = {"pass", "pasv"},
 	wikidata = "Q1194697",
 }
 
 tags["mediopassive"] = {
-	tag_type = "voice",
+	tag_type = "voice-valence",
 	glossary = "mediopassive",
 	shortcuts = {"mp", "mpsv"},
 	wikidata = "Q1601545",
+}
+
+tags["reflexive"] = {
+	tag_type = "voice-valence",
+	glossary = "reflexive",
+	shortcuts = {"refl"},
+	-- the following is for "reflexive verb"
+	wikidata = "Q13475484",
+}
+
+tags["causative"] = {
+	tag_type = "voice-valence",
+	--glossary = "causative",
+	shortcuts = {"caus"},
+	-- the following is for "causative verb"
+	wikidata = "Q56677011",
 }
 
 
@@ -502,6 +617,13 @@ tags["participle"] = {
 	glossary = "participle",
 	shortcuts = {"part", "ptcp"},
 	wikidata = "Q814722",
+}
+
+tags["verbal noun"] = {
+	tag_type = "non-finite",
+	glossary = "verbal noun",
+	shortcuts = {"vnoun"},
+	wikidata = "Q1350145",
 }
 
 tags["gerund"] = {
@@ -960,6 +1082,27 @@ tags["polite"] = {
 }
 
 
+----------------------- Deixis -----------------------
+
+tags["proximal"] = {
+	tag_type = "deixis",
+	--glossary = "proximal",
+	shortcuts = {"prox"},
+}
+
+tags["medial"] = {
+	tag_type = "deixis",
+	--glossary = "medial",
+	shortcuts = {"med"},
+}
+
+tags["distal"] = {
+	tag_type = "deixis",
+	--glossary = "distal",
+	shortcuts = {"dist"},
+}
+
+
 ----------------------- Inflection classes -----------------------
 
 tags["strong"] = {
@@ -991,6 +1134,35 @@ tags["pronominal"] = {
 }
 
 
+----------------------- Attitude -----------------------
+
+-- This is a vague tag type grouping augmentative, diminutive and pejorative,
+-- which generally indicate the speaker's attitude towards the object in
+-- question (as well as often indicating size).
+
+tags["augmentative"] = {
+	tag_type = "attitude",
+	--glossary = "augmentative",
+	shortcuts = {"aug"},
+	wikidata = "Q1358239",
+}
+
+tags["diminutive"] = {
+	tag_type = "attitude",
+	--glossary = "diminutive",
+	shortcuts = {"dim"},
+	wikidata = "Q108709",
+}
+
+tags["pejorative"] = {
+	tag_type = "attitude",
+	--glossary = "pejorative",
+	shortcuts = {"pej"},
+	wikidata = "Q2067740", -- entry for "pejorative suffix"
+	--wikidata = "Q545779", -- Also possible: entry for "pejorative"
+}
+
+
 ----------------------- Sound changes -----------------------
 
 tags["contracted"] = {
@@ -999,14 +1171,6 @@ tags["contracted"] = {
 
 
 ----------------------- Misc grammar -----------------------
-
-tags["reflexive"] = {
-	tag_type = "class",
-	glossary = "reflexive",
-	shortcuts = {"refl"},
-	-- the following is for "reflexive verb"
-	wikidata = "Q13475484",
-}
 
 tags["possessive suffix"] = {
 	tag_type = "grammar",
@@ -1036,49 +1200,12 @@ tags["nominalized"] = {
 	--wikidata = "Q4683152", -- Also possible: entry for "nominalized adjective"
 }
 
--- Occurs in Hindi as a type of participle used to conjoin two clauses
+-- Occurs in Hindi as a type of participle used to conjoin two clauses;
+-- similarly occurs in Japanese as the "te-form"
 tags["conjunctive"] = {
 	tag_type = "grammar",
 	--glossary = "conjunctive",
 	shortcuts = {"conj"},
-}
-
-tags["augmentative"] = {
-	tag_type = "grammar",
-	--glossary = "augmentative",
-	shortcuts = {"aug"},
-	wikidata = "Q1358239",
-}
-
-tags["diminutive"] = {
-	tag_type = "grammar",
-	--glossary = "diminutive",
-	shortcuts = {"dim"},
-	wikidata = "Q108709",
-}
-
-tags["pejorative"] = {
-	tag_type = "grammar",
-	--glossary = "pejorative",
-	shortcuts = {"pej"},
-	wikidata = "Q2067740", -- entry for "pejorative suffix"
-	--wikidata = "Q545779", -- Also possible: entry for "pejorative"
-}
-
-tags["causative"] = {
-	tag_type = "class",
-	--glossary = "causative",
-	shortcuts = {"caus"},
-	-- the following is for "causative verb"
-	wikidata = "Q56677011",
-}
-
-tags["intensive"] = {
-	tag_type = "class",
-	--glossary = "intensive",
-	shortcuts = {"inten"},
-	-- the following is for "intensive word form"
-	wikidata = "Q10965321",
 }
 
 
