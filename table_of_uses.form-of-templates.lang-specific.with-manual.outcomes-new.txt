@@ -351,7 +351,7 @@
 | '''[[Template:lt-dalyvis-2]]''' || '''[[Template:lt-dalyvis-2]]''' || 118 || No || Yes; the word "dalyvis" is not necessary and
  not used in Wikipedia; just use "necessity" || Yes || No || Replace
 |-
-| '''[[Template:lt-form-adj]]''' || '''[[Template:lt-form-adj]]''' || 5985 || Yes || Yes? || No || Replace and deprecate, or keep due to #uses?
+| '''[[Template:lt-form-adj]]''' || '''[[Template:lt-form-adj]]''' || 5985 || Yes || Yes || No || Replace and deprecate, or keep due to #uses?
 |-
 | '''[[Template:lt-form-adj-is]]''' || '''[[Template:lt-form-adj-is]]''' || 19 || Yes || No || No || Replace
 |-
