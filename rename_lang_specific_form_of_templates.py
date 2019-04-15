@@ -251,6 +251,7 @@ bg_specs = [
             "present": "pres",
             "aorist": "aor",
             "imperfect": "impf",
+            "": [], # can occur when mood=imperative
           }),
           ("lookup", "mood", {
             "indicative": "ind",
@@ -262,6 +263,7 @@ bg_specs = [
           ("lookup", "f", {
             "subject form": "subje",
             "object form": "obj",
+            "": [], # can occur esp. with non-masculine participles
           }),
           ("lookup", "g", {
             "masculine": "m",
@@ -272,6 +274,7 @@ bg_specs = [
           ("lookup", "d", {
             "indefinite": "indef",
             "definite": "def",
+            "": [],
           }),
           ("lookup", "part", {
             "present active participle": ["pres", "act", "part"],
