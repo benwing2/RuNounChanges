@@ -199,6 +199,8 @@
 |-
 | '''[[Template:fr-pre-1990]]''' || '''[[Template:fr-pre-1990]]''' || 0 || No || Yes || Keep as potentially useful?
 |-
+| '''[[Template:fy-pronadv of]]''' || '''[[Template:fy-pronadv of]]''' || 1 || No || No || Keep
+|-
 | '''[[Template:ga-emphatic of]]''' || '''[[Template:ga-emphatic of]]''' || 12 || No || Yes || Keep
 |-
 | '''[[Template:ga-lenition of]]''' || '''[[Template:ga-lenition of]]''' || 835 || Yes unless {{para|2|ts}}, which is rare || Yes || Replace with {{temp|lenition of}}, and when {{para|2|ts}}, add {{temp|ga-len-ts}}
@@ -242,6 +244,8 @@
 | '''[[Template:he-defective spelling of]]''' || '''[[Template:he-defective spelling of]]''' || 420 || No || Yes || Keep
 |-
 | '''[[Template:he-excessive spelling of]]''' || '''[[Template:he-excessive spelling of]]''' || 42 || No || Yes || Keep
+|-
+| '''[[Template:he-infinitive of]]''' || '''[[Template:he-infinitive of]]''' || 92 || No || Yes || Keep
 |-
 | '''[[Template:he-noun form of]]''' || '''[[Template:he-noun form of]]''' || 554 || No || Yes || Keep
 |-
@@ -546,6 +550,10 @@
 | [[Template:sh-form-verb]] || [[Template:sh-verb form of]] || 34 || Yes || No || Replace
 |-
 | '''[[Template:sino-vietnamese reading of]]''' || '''[[Template:sino-vietnamese reading of]]''' || 7 || No || Yes || Rename to {{temp|vi-sino-vietnamese reading of}}
+|-
+| '''[[Template:sk-adj-form]]''' || '''[[Template:sk-adj-form]]''' || 0 || Yes || ? || Delete, unused, but first need to fix [[Module:accel/sk]]
+|-
+| '''[[Template:sk-adj-form-poss]]''' || '''[[Template:sk-adj-form-poss]]''' || 0 || Yes || ? || Delete, unused, but first need to fix [[Module:accel/sk]]
 |-
 | '''[[Template:sl-form-adj]]''' || '''[[Template:sl-form-adj]]''' || 49 || Yes || No || Replace
 |-
