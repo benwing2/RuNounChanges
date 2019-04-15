@@ -897,7 +897,7 @@ tags["nominative"] = {
 tags["objective"] = {
 	tag_type = "case",
 	glossary = "objective case",
-	shortcuts = {"obj"},
+	shortcuts = {"obj", "object"},
 	-- Same as oblique.
 	wikidata = "Q1233197",
 }
@@ -939,7 +939,7 @@ tags["sociative"] = {
 tags["subjective"] = {
 	tag_type = "case",
 	glossary = "subjective case",
-	shortcuts = {"sje", "subje"},
+	shortcuts = {"sje", "subje", "subject"},
 	-- Same as nominative.
 	wikidata = "Q131105",
 }
