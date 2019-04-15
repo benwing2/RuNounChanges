@@ -326,7 +326,19 @@ cats["lt"] = {
 			"pronominal dalyvis participle forms",
 			"dalyvis participle forms",
 		}
-	}
+	},
+	{"pos=", "a",
+		{"has", "pron",
+			{"cond",
+				{"has", "comd", "comparative pronominal adjective forms"},
+				{"has", "supd", "superlative pronominal adjective forms"},
+			},
+			{"cond",
+				{"has", "comd", "comparative adjective forms"},
+				{"has", "supd", "superlative adjective forms"},
+			},
+		}
+	},
 }
 
 cats["lv"] = {
@@ -359,6 +371,23 @@ cats["pt"] = {
 			{"has", "p", "noun plural forms"},
 			{"has", "aug", "noun augmentative forms"},
 			{"has", "dim", "noun diminutive forms"},
+		}
+	},
+}
+
+cats["ru"] = {
+	{"has", "part",
+		{"multi",
+			"participles",
+			"verb forms",
+			{"cond",
+				{"hasall", {"pres", "act"}, "present active participles"},
+				{"hasall", {"pres", "pass"}, "present passive participles"},
+				{"hasall", {"pres", "adv"}, "present adverbial participles"},
+				{"hasall", {"past", "act"}, "past active participles"},
+				{"hasall", {"past", "pass"}, "past passive participles"},
+				{"hasall", {"past", "adv"}, "past adverbial participles"},
+			},
 		}
 	},
 }
