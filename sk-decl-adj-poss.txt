@@ -1,72 +1,24 @@
-<div class="NavFrame" style="width:{{{width|60}}}em">
-<div class="NavHead" align=center>declension of {{PAGENAME}}</div>
-<div class="NavContent">
-{| style="width:{{{width|60}}}em; background:#FFFFFF;" class="prettytable inflection-table"
-|-
-!style="background:#DEDEDE" colspan=5|singular
-|-
-!&nbsp;
-!masculine animate
-!masculine inanimate
-!feminine
-!neuter
-|-
-!nominative
-|colspan=2 align=center|{{l-self|sk|accel-form=adj-poss|{{{1}}}{{{2}}}}}
-|{{l-self|sk|accel-form=adj-poss|{{{1}}}{{{2}}}a}}
-|{{l-self|sk|accel-form=adj-poss|{{{1}}}{{{2}}}o}}
-|-
-!genitive
-|colspan=2 align=center|{{l-self|sk|accel-form=adj-poss|{{{1}}}{{{2}}}ho}}
-|{{l-self|sk|accel-form=adj-poss|{{{1}}}{{{2}}}ej}}
-|{{l-self|sk|accel-form=adj-poss|{{{1}}}{{{2}}}ho}}
-|-
-!dative
-|colspan=2 align=center|{{l-self|sk|accel-form=adj-poss|{{{1}}}{{{2}}}mu}}
-|{{l-self|sk|accel-form=adj-poss|{{{1}}}{{{2}}}ej}}
-|{{l-self|sk|accel-form=adj-poss|{{{1}}}{{{2}}}mu}}
-|-
-!accusative
-|{{l-self|sk|accel-form=adj-poss|{{{1}}}{{{2}}}ho}}
-|{{l-self|sk|accel-form=adj-poss|{{{1}}}{{{2}}}}}
-|{{l-self|sk|accel-form=adj-poss|{{{1}}}{{{2}}}u}}
-|{{l-self|sk|accel-form=adj-poss|{{{1}}}{{{2}}}o}}
-|-
-!locative
-|colspan=2 align=center|{{l-self|sk|accel-form=adj-poss|{{{1}}}{{{2}}}om}}
-|{{l-self|sk|accel-form=adj-poss|{{{1}}}{{{2}}}ej}}
-|{{l-self|sk|accel-form=adj-poss|{{{1}}}{{{2}}}om}}
-|-
-!instrumental
-|colspan=2 align=center|{{l-self|sk|accel-form=adj-poss|{{{1}}}{{{2}}}ým}}
-|{{l-self|sk|accel-form=adj-poss|{{{1}}}{{{2}}}ou}}
-|{{l-self|sk|accel-form=adj-poss|{{{1}}}{{{2}}}ým}}
-|-
-!style="background:#DEDEDE" colspan=5|plural
-|-
-!&nbsp;
-!masculine animate
-!masculine inanimate
-!feminine
-!neuter
-|-
-!nominative
-|{{l-self|sk|accel-form=adj-poss|{{{1}}}{{{2}}}i}}
-|colspan=3 align=center|{{l-self|sk|accel-form=adj-poss|{{{1}}}{{{2}}}e}}
-|-
-!genitive
-|colspan=4 align=center|{{l-self|sk|accel-form=adj-poss|{{{1}}}{{{2}}}ých}}
-|-
-!dative
-|colspan=4 align=center|{{l-self|sk|accel-form=adj-poss|{{{1}}}{{{2}}}ým}}
-|-
-!accusative
-|{{l-self|sk|accel-form=adj-poss|{{{1}}}{{{2}}}ých}}
-|colspan=3 align=center|{{l-self|sk|accel-form=adj-poss|{{{1}}}{{{2}}}e}}
-|-
-!locative
-|colspan=4 align=center|{{l-self|sk|accel-form=adj-poss|{{{1}}}{{{2}}}ých}}
-|-
-!instrumental
-|colspan=4 align=center|{{l-self|sk|accel-form=adj-poss|{{{1}}}{{{2}}}ými}}
-|}</div></div><noinclude>{{documentation}}</noinclude>
+{{sk-decl-adj-base<!--
+-->|width={{{width|}}}<!--
+-->|{{{1}}}<!--
+-->|nom_m={{{2}}}<!--
+-->|nom_f={{{2}}}a<!--
+-->|nom_n={{{2}}}o<!--
+-->|gen_m={{{2}}}ho<!--
+-->|gen_f={{{2}}}ej<!--
+-->|dat_m={{{2}}}mu<!--
+-->|dat_f={{{2}}}ej<!--
+-->|acc_f={{{2}}}u<!--
+-->|loc_m={{{2}}}om<!--
+-->|loc_f={{{2}}}ej<!--
+-->|ins_m={{{2}}}ým<!--
+-->|ins_f={{{2}}}ou<!--
+-->|nom_mp_an={{{2}}}i<!--
+-->|nom_p={{{2}}}e<!--
+-->|gen_p={{{2}}}ých<!--
+-->|dat_p={{{2}}}ým<!--
+-->|loc_p={{{2}}}ých<!--
+-->|ins_p={{{2}}}ými<!--
+-->}}<!--
+
+--><noinclude>{{documentation}}</noinclude>

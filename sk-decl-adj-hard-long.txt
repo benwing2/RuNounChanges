@@ -13,7 +13,7 @@
 -->|loc_f=ej<!--
 -->|ins_m=ým<!--
 -->|ins_f=ou<!--
--->|an_nom_mp=í<!--
+-->|nom_mp_an=í<!--
 -->|nom_p=é<!--
 -->|gen_p=ých<!--
 -->|dat_p=ým<!--

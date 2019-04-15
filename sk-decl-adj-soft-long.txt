@@ -14,7 +14,7 @@
 -->|loc_f=ej<!--
 -->|ins_m=ím<!--
 -->|ins_f=ou<!--
--->|an_nom_mp=í<!--
+-->|nom_mp_an=í<!--
 -->|nom_p=ie<!--
 -->|gen_p=ích<!--
 -->|dat_p=ím<!--

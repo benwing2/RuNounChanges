@@ -53,7 +53,7 @@
 |-
 !nominative
 |{{l-self|sk|accel-form=an{{!}}nom{{!}}m{{!}}p|{{{1}}}{{{nom_mp_an}}}}}
-|colspan=3 align=center|{{l-self|sk|accel-form=in{{!}}nom{{!}}m{{!}}p;nom{{!}}fn{{!}}p|{{{1}}}{{{nom_p}}}}}
+|colspan=3 align=center|{{l-self|sk|accel-form=in{{!}}nom{{!}}m{{!}}p{{!}};{{!}}nom{{!}}f{{!}}and{{!}}n{{!}}p|{{{1}}}{{{nom_p}}}}}
 |-
 !genitive
 |colspan=4 align=center|{{l-self|sk|accel-form=gen{{!}}p|{{{1}}}{{{gen_p}}}}}
@@ -63,7 +63,7 @@
 |-
 !accusative
 |{{l-self|sk|accel-form=an{{!}}acc{{!}}m{{!}}p|{{{1}}}{{{gen_p}}}}}
-|colspan=3 align=center|{{l-self|sk|accel-form=in{{!}}acc{{!}}m{{!}}p;acc{{!}}fn{{!}}p|{{{1}}}{{{nom_p}}}}}
+|colspan=3 align=center|{{l-self|sk|accel-form=in{{!}}acc{{!}}m{{!}}p{{!}};{{!}}acc{{!}}f{{!}}and{{!}}n{{!}}p|{{{1}}}{{{nom_p}}}}}
 |-
 !locative
 |colspan=4 align=center|{{l-self|sk|accel-form=loc{{!}}p|{{{1}}}{{{loc_p}}}}}
