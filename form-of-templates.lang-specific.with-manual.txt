@@ -89,6 +89,7 @@ Template:fi-participle of
 Template:fi-verb form of
 Template:fr-post-1990
 Template:fr-pre-1990
+Template:fy-pronadv of
 Template:ga-emphatic of
 Template:ga-lenition of
 Template:gl-verb form of
@@ -110,6 +111,7 @@ Template:han tu form of
 Template:he-adj form of
 Template:he-defective spelling of
 Template:he-excessive spelling of
+Template:he-infinitive of
 Template:he-noun form of
 Template:he-prep form of
 Template:he-verb form of
@@ -134,8 +136,8 @@ Template:it-adj form of
 Template:iu-spel
 Template:ja-form of
 Template:ja-kyujitai spelling of
-Template:ja-romanization of
 Template:ja-past of verb
+Template:ja-romanization of
 Template:ja-te form of verb
 Template:ja-verb form of
 Template:jbo-rafsi of
@@ -220,8 +222,8 @@ Template:pt-pronoun-with-n
 Template:pt-superseded-hyphen
 Template:pt-superseded-paroxytone
 Template:pt-superseded-silent-letter-1990
-Template:pt-verb-form-of
 Template:pt-verb form of
+Template:pt-verb-form-of
 Template:ro-Cyrillic of
 Template:ro-adj-form of
 Template:ro-form-noun
@@ -247,6 +249,8 @@ Template:sh-form-noun
 Template:sh-form-proper-noun
 Template:sh-verb form of
 Template:sino-vietnamese reading of
+Template:sk-adj-form
+Template:sk-adj-form-poss
 Template:sl-form-adj
 Template:sl-form-noun
 Template:sl-form-verb
