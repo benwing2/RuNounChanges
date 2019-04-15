@@ -2,11 +2,13 @@
 # -*- coding: utf-8 -*-
 
 import pywikibot, re, sys, codecs, argparse
+from collections import defaultdict
 
 import blib
 from blib import getparam, rmparam, msg, site, tname
 
-def process_page(page, index, template, paramspecs, negate):
+def process_page(page, index, template, paramspecs, negate, countparams,
+    counted_param_values):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -21,17 +23,26 @@ def process_page(page, index, template, paramspecs, negate):
   for t in parsed.filter_templates():
     tn = tname(t)
     if tn == template:
-      if not paramspecs:
+      if not paramspecs and not countparams:
         pagemsg("Found %s template: %s" % (template, unicode(t)))
       else:
+        seen_params = set()
         for tparam in t.params:
           pname = unicode(tparam.name).strip()
           pvalue = unicode(tparam.value).strip()
+          seen_params.add(pname)
+          if pname in countparams or "*" in countparams:
+            if pname not in counted_param_values:
+              counted_param_values[pname] = defaultdict(int)
+            if pvalue not in counted_param_values[pname]:
+              pagemsg("Found new value %s=%s for %s template: %s" %
+                  (pname, pvalue, template, unicode(t)))
+            counted_param_values[pname][pvalue] += 1
           if negate:
             if pname not in paramset:
               pagemsg("Found %s template with unrecognized param %s=%s: %s" %
                   (template, pname, pvalue, unicode(t)))
-          else:
+          elif paramspecs:
             for spec in paramspecs:
               found = False
               if type(spec) is tuple:
@@ -44,6 +55,16 @@ def process_page(page, index, template, paramspecs, negate):
               if found:
                 pagemsg("Found %s template with %s=%s: %s" %
                     (template, pname, pvalue, unicode(t)))
+        # Also track occurrences of params in countparams not occurring
+        if countparams:
+          for countparam in countparams:
+            if countparam != "*" and countparam not in seen_params:
+              if countparam not in counted_param_values:
+                counted_param_values[countparam] = defaultdict(int)
+              if None not in counted_param_values[countparam]:
+                pagemsg("Found new value %s=(unseen) for %s template: %s" %
+                    (countparam, template, unicode(t)))
+              counted_param_values[countparam][None] += 1
 
 parser = blib.create_argparser("Find templates with specified params")
 parser.add_argument("--templates",
@@ -54,6 +75,8 @@ Normally, will output a template if it has any of the specified parameters.
 Can be of the form PARAM=VALUE to only find cases where the parameter has a
 specific value, or PARAM!=VALUE to only find cases where the parameter doesn't
 have a specific value. If omitted, output all templates.""")
+parser.add_argument("--count",
+    help=u"""Comma-separated list of params to count values of. If '*', count all params.""")
 parser.add_argument("--negate",
     help=u"""Check if any params NOT in '--params' are present.""",
     action="store_true")
@@ -87,7 +110,23 @@ if args.negate:
     if type(paramspec) is tuple:
       raise ValueError("When --negate is given, PARAM=VALUE and PARAM!=VALUE specs not currently supported")
 
+countparams = re.split(",", args.count) if args.count else []
+
 for template in templates:
   msg("Processing references to Template:%s" % template)
+  counted_param_values = {}
   for i, page in blib.references("Template:%s" % template, start, end):
-    process_page(page, i, template, paramspecs, args.negate)
+    process_page(page, i, template, paramspecs, args.negate,
+        countparams, counted_param_values)
+  if "*" in countparams:
+    countparams = sorted(list(counted_param_values.keys()))
+  for countparam in countparams:
+    if countparam in counted_param_values:
+      msg("For template %s, param %s, saw the following values:" %
+        (template, countparam))
+      for pname, count in sorted(
+        counted_param_values[countparam].iteritems(), key=lambda x:-x[1]
+      ):
+        msg("%s = %s" % ("(unseen)" if pname is None else pname, count))
+    else:
+      msg("For template %s, param %s never seen" % (template, countparam))
