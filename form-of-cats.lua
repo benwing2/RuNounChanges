@@ -38,25 +38,35 @@ A specification is one of:
 	Similar to {"has", ...} but activates if any of the tags in TAGS
 	(a list) are present among the user-supplied tags.
 
-(4) A list {"POS=", VALUE, SPEC} or {"POS=", TAGS, SPEC, ELSESPEC}:
+(4) A list {"pos=", VALUE, SPEC} or {"pos=", VALUE, SPEC, ELSESPEC}:
 
-	Similar to {"has", ...} but activates if the value supplied for the POS=
-	parameter is the specified value (which can be either the full form or
-	any abbreviation).
+	Similar to {"has", ...} but activates if the value supplied for the p=
+	or POS= parameters is the specified value (which can be either the full
+	form or any abbreviation).
 
-(5) A list {"cond", SPEC1, SPEC2, ...}:
+(5) A list {"posany", VALUES, SPEC} or {"posany", VALUES, SPEC, ELSESPEC}:
+
+	Similar to {"pos=", ...} but activates if the value supplied for the p=
+	or POS= parameters is any of the specified values (which can be either
+	the full forms or any abbreviation).
+
+(6) A list {"posexists", SPEC} or {"posexists", SPEC, ELSESPEC}:
+
+	Activates if any value was specified for the p= or POS= parameters.
+
+(7) A list {"cond", SPEC1, SPEC2, ...}:
 
 	If SPEC1 applies, it will be applied; otherwise, if SPEC2 applies, it
 	will be applied; etc. This stops processing specifications as soon as it
 	finds one that applies.
 
-(6) A list {"multi", SPEC1, SPEC2, ...}:
+(8) A list {"multi", SPEC1, SPEC2, ...}:
 
 	If SPEC1 applies, it will be applied; in addition, if SPEC2 applies, it
 	will also be applied; etc. Unlike {"cond", ...}, this continues
 	processing specifications even if a previous one has applied.
 
-(7) A list {"not", CONDITION, SPEC} or {"not", CONDITION, SPEC, ELSESPEC}:
+(9) A list {"not", CONDITION, SPEC} or {"not", CONDITION, SPEC, ELSESPEC}:
 
 	If CONDITION does *NOT* apply, SPEC will be applied, otherwise ELSESPEC
 	will be applied if present. CONDITION is one of:
@@ -64,7 +74,7 @@ A specification is one of:
 	-- {"has", TAG}
 	-- {"hasall", TAGS}
 	-- {"hasany", TAGS}
-	-- {"POS=", VALUE}
+	-- {"pos=", VALUE}
 	-- {"not", CONDITION}
 	-- {"and", CONDITION1, CONDITION2}
 	-- {"or", CONDITION1, CONDITION2}
@@ -74,18 +84,18 @@ A specification is one of:
 	That is, conditions are similar to if-else SPECS but without any
 	specifications given.
 
-(8) A list {"and", CONDITION1, CONDITION2, SPEC} or {"and", CONDITION1, CONDITION2, SPEC, ELSESPEC}:
+(10) A list {"and", CONDITION1, CONDITION2, SPEC} or {"and", CONDITION1, CONDITION2, SPEC, ELSESPEC}:
 
 	If CONDITION1 and CONDITION2 both apply, SPEC will be applied, otherwise
 	ELSESPEC will be applied if present. CONDITION is as above for "not".
 
-(9) A list {"or", CONDITION1, CONDITION2, SPEC} or {"or", CONDITION1, CONDITION2, SPEC, ELSESPEC}:
+(11) A list {"or", CONDITION1, CONDITION2, SPEC} or {"or", CONDITION1, CONDITION2, SPEC, ELSESPEC}:
 
-	If either CONDITION1 or CONDITION2 apply, SPEC will be applied, otherwise
-	ELSESPEC will be applied if present. CONDITION is as above for "not".
+	 If either CONDITION1 or CONDITION2 apply, SPEC will be applied, otherwise
+	 ELSESPEC will be applied if present. CONDITION is as above for "not".
 
-(10) A Lua function, which is passed a single argument, a table containing the
-     parameters given to the template call, and which should return a
+(12) A Lua function, which is passed a single argument, a table containing the
+	 parameters given to the template call, and which should return a
 	 specification (a string naming a category, a list of any of the formats
 	 described above, or even another function). In the table, the following
 	 keys are present:
@@ -115,7 +125,7 @@ the page will be categorized into [[:Category:Estonian participles]].
 Another example:
 
 cats["lt"] = {
-	{"POS=", "part",
+	{"pos=", "part",
 		{"has", "pron",
 			"pronominal dalyvis participle forms",
 			"dalyvis participle forms",
@@ -123,14 +133,14 @@ cats["lt"] = {
 	}
 }
 
-This says that, for language code "lt" (Lithuanian), if the "POS=" parameter
+This says that, for language code "lt" (Lithuanian), if the "p=" parameter
 was given with the value "part" (or "participle", the equivalent full form),
 then if the "pron" tag is present (or the equivalent full form "pronominal"),
 categorize into [[:Category:Lithuanian pronominal dalyvis participle forms]],
 else categorize into [["Category:Lithuanian dalyvis participle forms]]. Note
-that, if POS= isn't specified, or has a value other than "part" or
+that, if p= isn't specified, or has a value other than "part" or
 "participle", no categories will be added to the page, because there is no
-"else" specification associated with the "POS=" specification.
+"else" specification associated with the "pos=" specification.
 
 --]=]
 
@@ -141,7 +151,7 @@ cats["art-blk"] = {
 }
 
 cats["bg"] = {
-	{"POS=", "a",
+	{"pos=", "a",
 		{"multi",
 			{"has", "m", "adjective masculine forms"},
 			{"has", "f", "adjective feminine forms"},
@@ -152,7 +162,7 @@ cats["bg"] = {
 			{"has", "indef", "adjective indefinite forms"},
 		}
 	},
-	{"POS=", "n",
+	{"pos=", "n",
 		{"multi",
 			{"has", "indef", "noun indefinite forms"},
 			{"has", "def", "noun definite forms"},
@@ -163,19 +173,45 @@ cats["bg"] = {
 			{"has", "p", "noun plural forms"},
 		}
 	},
-	-- FIXME! Need categorization for participle forms, but need to know
-	-- value of {{{part}}} in {{bg-verb form of}}
+	{"cond",
+		{"hasall", {"adv", "part"}, "adverbial participles"},
+		{"has", "part",
+			-- If this is a lemma participle form, categorize appropriately
+			-- for the type of participle, otherwise put into
+			-- "participle forms". We determine a lemma if all of the
+			-- following apply:
+			-- (1) either is masculine, or no gender listed; and
+			-- (2) either is indefinite, or no definiteness listed; and
+			-- (3) not listed as either subjective or objective form.
+			{"and",
+				{"or", {"has", "m"}, {"not", {"hasany", {"f", "n", "p"}}}},
+				{"and",
+					{"or", {"has", "indef"}, {"not", {"has", "def"}}}
+					{"not", {"hasany", {"subje", "obj"}}}
+				},
+				{"cond",
+					{"hasall", {"pres", "act"}, "present active participles"},
+					{"hasall", {"past", "pass"}, "past passive participles"},
+					{"hasall", {"past", "act", "aor"}, "past active aorist participles"},
+					{"hasall", {"past", "act", "impf"}, "past active imperfect participles"},
+				},
+				-- FIXME: "participle forms" probably not necessary,
+				-- should be handled by headword
+				"participle forms"
+			}
+		}
+	},
 }
 
 cats["br"] = {
-	{"POS=", "n",
+	{"pos=", "n",
 		{"has", "p", "noun plural forms"}
 	},
 }
 
 -- Applies to ca, es, it, pt
 local romance_adjective_categorization =
-	{"POS=", "a",
+	{"pos=", "a",
 		{"multi",
 			{"has", "f", "adjective feminine forms"},
 			{"has", "p", "adjective plural forms"},
@@ -191,7 +227,7 @@ cats["ca"] = {
 }
 
 cats["de"] = {
-	{"POS=", "adv",
+	{"pos=", "adv",
 		{"multi",
 			{"has", "comd", "adverb comparative forms"},
 			{"has", "supd", "adverb superlative forms"},
@@ -241,6 +277,15 @@ cats["it"] = {
 	romance_adjective_categorization
 }
 
+cats["ja"] = {
+	{"pos=", "v",
+		{"multi",
+			{"has", "past", "past tense verb forms"},
+			{"has", "conj", "conjunctive verb forms"},
+		}
+	},
+}
+
 cats["ku"] = {
 	{"hasall", {"pres", "part"}, "present participles"},
 	{"hasall", {"past", "part"}, "past participles"},
@@ -276,7 +321,7 @@ cats["liv"] = {
 }
 
 cats["lt"] = {
-	{"POS=", "part",
+	{"pos=", "part",
 		{"has", "pron",
 			"pronominal dalyvis participle forms",
 			"dalyvis participle forms",
@@ -287,7 +332,7 @@ cats["lt"] = {
 cats["lv"] = {
 	{"has", "neg", "negative verb forms"},
 	{"has", "comd",
-		{"POS=", "part",
+		{"pos=", "part",
 			{"has", "def",
 				"definite comparative participles",
 				"comparative participles"
@@ -299,7 +344,7 @@ cats["lv"] = {
 		}
 	},
 	{"has", "supd",
-		{"POS=", "part",
+		{"pos=", "part",
 			"superlative participles"
 			"superlative adjectives",
 		}
@@ -308,7 +353,7 @@ cats["lv"] = {
 
 cats["pt"] = {
 	romance_adjective_categorization,
-	{"POS=", "n",
+	{"pos=", "n",
 		{"multi",
 			{"has", "f", "noun feminine forms"},
 			{"has", "p", "noun plural forms"},
