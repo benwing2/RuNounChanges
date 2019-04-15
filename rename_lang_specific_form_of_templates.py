@@ -602,7 +602,7 @@ el_specs = [
 
   ("el-participle of", (
     "Inflection of",
-    ("error-if", ("present-except", ["1", "2", "gloss", "t", "nodot", "nocap"])),
+    ("error-if", ("present-except", ["1", "2", "gloss", "t", "tr", "nodot", "nocap"])),
     ("set", "1", [
       "el",
       ("copy", "1"),
@@ -1143,6 +1143,7 @@ hy_specs = [
       ("lookup", "3", {
         "d": "def",
         "def": "def",
+        "i": [], # occurs in a few forms despite docs
         "": [],
       }),
       ("lookup", "5", {
@@ -1497,7 +1498,8 @@ lt_specs = [
   # should be handled by the headword.
   ("lt-form-noun", (
     "inflection of",
-    ("error-if", ("present-except", ["1", "2", "3"])),
+    # lang= occurs at least once, and is ignored.
+    ("error-if", ("present-except", ["1", "2", "3", "lang"])),
     ("set", "1", [
       "lt",
       ("copy", "3"),
@@ -1553,7 +1555,8 @@ lt_specs = [
   # should be handled by the headword.
   ("lt-form-verb", (
     "inflection of",
-    ("error-if", ("present-except", ["1", "2", "3", "4"])),
+    # lang= occurs at least once, and is ignored.
+    ("error-if", ("present-except", ["1", "2", "3", "4", "lang"])),
     ("set", "1", [
       "lt",
       ("copy", "3"),
@@ -1679,7 +1682,7 @@ lv_specs = [
       }),
     ),
   )),
-]
+
   ("lv-negative of", (
     "inflection of",
     ("error-if", ("present-except", ["1"])),
@@ -1849,6 +1852,7 @@ ofs_specs = [
         "mf": "m//f",
         "mn": "m//n",
         "mfn": "m//f//n",
+        "": [],
       }),
       # FIXME: In [[Module:form of/data]], add "wk" = "weak", "str" = "strong";
       # these are tag_type="inflection" or "class" I think
@@ -2008,7 +2012,8 @@ def ro_form_noun(t, pagemsg):
   if getparam(t, "1") in ["i", "d", ""]:
     return (
       "inflection of",
-      ("error-if", ("present-except", ["1", "2", "3", "4"])),
+      # lang= occurs at least once, and is ignored.
+      ("error-if", ("present-except", ["1", "2", "3", "4", "lang"])),
       ("set", "1", [
         "ro",
         ("copy", "4"),
@@ -2025,7 +2030,9 @@ def ro_form_noun(t, pagemsg):
   else:
     return (
       "inflection of",
-      ("error-if", ("present-except", ["1", "2", "3"])),
+      # lang= occurs at least once, and is ignored.
+      # def=y occurs a few times and is ignored; already definite.
+      ("error-if", ("present-except", ["1", "2", "3", "lang", "def"])),
       ("set", "1", [
         "ro",
         ("copy", "3"),
@@ -2135,6 +2142,7 @@ ro_specs = [
         "subjunctive": ["pres", "sub"],
         # FIXME: In [[Module:form of/data]], add impv=imperative
         "impr": ["imp"],
+        "imp": ["imp"], # a bug, but we can handle it; occurs once
         "imperative": ["imp"],
       }),
     ]),
@@ -2157,7 +2165,8 @@ sh_specs = [
   # the headword.
   ("sh-form-noun", (
     "inflection of",
-    ("error-if", ("present-except", ["1", "2", "3"])),
+    # ignore sc=Cyrl.
+    ("error-if", ("present-except", ["1", "2", "3", "sc"])),
     ("set", "1", [
       "sh",
       ("copy", "3"),
@@ -2628,7 +2637,7 @@ def expand_set_value(value, t, pagemsg):
   elif direc == "lookup":
     check(len(value) == 3, "wrong length %s of value %s, != 3" %
         (len(value), value))
-    lookval = getparam(t, value[1])
+    lookval = getparam(t, value[1]).strip()
     table = value[2]
     check(type(table) is dict, "wrong type %s of %s, not dict" % (type(table), table))
     if lookval in table:
