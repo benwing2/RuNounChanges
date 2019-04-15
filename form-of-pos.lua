@@ -19,6 +19,7 @@ local pos_tags = {
 	["part"] = "participle",
 	["pcl"] = "particle",
 	["pn"] = "proper noun",
+	["proper"] = "proper noun",
 	["postp"] = "postposition",
 	["pre"] = "preposition",
 	["prep"] = "preposition",
