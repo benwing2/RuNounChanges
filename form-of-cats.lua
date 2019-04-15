@@ -239,6 +239,15 @@ cats["de"] = {
 	},
 }
 
+cats["el"] = {
+	{"pos=", "v",
+		{"cond",
+			{"hasall", {"1", "s", "past"}, "verb past tense forms"},
+			{"has", "nonfinite", "verb nonfinite forms"},
+		},
+	},
+}
+
 cats["enm"] = {
 	{"hasall", {"1", "s", "pres", "ind"}, "first-person singular forms"},
 	{"hasall", {"2", "s", "pres", "ind"}, "second-person singular forms"},

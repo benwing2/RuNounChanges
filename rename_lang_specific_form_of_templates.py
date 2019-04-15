@@ -13,7 +13,6 @@ from blib import getparam, rmparam, msg, errandmsg, site, tname
 # de-verb form of (? has 5=t -> "subordinate clause form") (54761)
 # egy-verb form of (? lots of Egyptian-specific tags) (27)
 # el-form-of-nounadj/el-form-of-pronoun (31472)
-# el-form-of-verb (4657)
 # en-simple-past-of (? other en-* form-of templates can't be generalized) (1043)
 # en-third-person singular of (? other en-* form-of templates can't be generalized) (26938)
 # eo-form of (? takes actual ending, generates tags from it, would be a radical shift) (99087)
@@ -43,46 +42,18 @@ from blib import getparam, rmparam, msg, errandmsg, site, tname
 # pt-pron def (? not only a form-of template) (24)
 # pt-verb-form-of (? maybe? uses a module) (94585)
 # pt-verb form of (? very complicated; takes a region param that can/should be moved out) (29193)
-# ru-participle of (47321)
 # sce-verb form of (? maybe? uses a module) (1)
 # sco-simple-past-of (? 'sco-past of' is hard to generalize) (17)
 # sco-third-person singular of (? 'sco-past of' is hard to generalize) (91)
 # sk-adj-form (0, DELETE)
 # sk-adj-form-poss (0, DELETE)
-# sv-adj-form-abs-def (3)
-# sv-adj-form-abs-def+pl (2072)
-# sv-adj-form-abs-def-m (1274)
-# sv-adj-form-abs-indef-n (1630)
-# sv-adj-form-abs-pl (6)
-# sv-adj-form-comp (724)
-# sv-adj-form-comp-pl (1)
-# sv-adj-form-sup-attr (486)
-# sv-adj-form-sup-attr-m (14)
-# sv-adj-form-sup-pred (509)
-# sv-adj-form-sup-pred-pl (1)
-# sv-adv-form-comp (11)
-# sv-adv-form-sup (7)
 # sv-noun-form-adj (1)
-# sv-noun-form-def (10063)
-# sv-noun-form-def-gen (8327)
-# sv-noun-form-def-gen-pl (6928)
 # sv-noun-form-def-pl (? if 'obsoleted by=', displays extra 'Obsolete form of' pre-text, maybe should go into separate template) (7574)
-# sv-noun-form-indef-gen (7680)
-# sv-noun-form-indef-gen-pl (6869)
-# sv-noun-form-indef-pl (7430)
-# sv-proper-noun-gen (198)
 # sv-verb-form-imp (? if 'plural of=', displays extra 'Obsolete plural form of' pre-text, maybe should go into separate template) (567)
-# sv-verb-form-inf-pass (1641)
 # sv-verb-form-past (? if 'plural of=', displays extra 'Obsolete plural form of' pre-text, maybe should go into separate template) (2567)
 # sv-verb-form-past-pass (? if 'plural of=', displays extra 'Obsolete plural form of' pre-text, maybe should go into separate template) (1631)
-# sv-verb-form-pastpart (1814)
 # sv-verb-form-pre (? if 'plural of=', displays extra 'Obsolete plural form of' pre-text, maybe should go into separate template) (2687)
-# sv-verb-form-pre-pass (2067)
-# sv-verb-form-prepart (2028)
 # sv-verb-form-pres-pass (0, DELETE)
-# sv-verb-form-subjunctive (14)
-# sv-verb-form-sup (2187)
-# sv-verb-form-sup-pass (1680)
 # sw-adj form of (? might be tough) (291)
 # tr-possessive form of (? includes posttext) (35)
 
@@ -606,6 +577,71 @@ el_specs = [
         ]),
         ("copy", "gloss", "t"),
       )
+  )),
+
+  ("el-form-of-verb", (
+    "Verb form of",
+    ("error-if", ("present-except", ["1", "nonfinite", "voice", "pers",
+      # We ignore active= and ta=. They are used in posttext that says
+      # "passive of {{m|el|{{{active}}}|t={{{ta|}}}}}". This isn't easy
+      # to do in the general {{Verb form of}} template, isn't how other
+      # non-lemma forms are formatted and is of questionable value.
+      "tense", "mood", "t", "active", "ta"])),
+    ("set", "1", [
+      "el",
+      ("copy", "1"),
+      "",
+      ("lookup", "nonfinite", {
+        True: ("lookup", "voice", {
+          "act": ["act", "nonfin", "form"],
+          "active": ["act", "nonfin", "form"],
+          "pass": ["pass", "nonfin", "form"],
+          "passive": ["pass", "nonfin", "form"],
+        }),
+        "": [
+          ("lookup", "pers", {
+            "1s": "1s",
+            "2s": "2s",
+            "3s": "3s",
+            "1p": "1p",
+            "2p": "2p",
+            "3p": "3p",
+          }),
+          ("lookup", "tense", {
+            "pres": "pres",
+            "past": "spast",
+            "imperfect": "impf",
+            "imperf": "impf",
+            "impf": "impf",
+            "imp": "impf",
+            "future": ["pfv", "fut"],
+            "fut": ["pfv", "fut"],
+            "future-cont": ["impfv", "fut"],
+            "fut-c": ["impfv", "fut"],
+            "fut_c": ["impfv", "fut"],
+            "dependent": "dep",
+            "dep": "dep",
+          }),
+          ("lookup", "mood", {
+            "imptv": "imp",
+            "imptv-i": ["impfv", "imp"],
+            "imptv-p": ["pfv", "imp"],
+            "imptv-is": ["s", "impfv", "imp"],
+            "imptv-ip": ["p", "impfv", "imp"],
+            "imptv-ps": ["s", "pfv", "imp"],
+            "imptv-pp": ["p", "pfv", "imp"],
+            "ind": "ind",
+            "subj": "sub",
+            "sub": "sub",
+          }),
+          ("lookup", "voice", {
+            "pass": "pass",
+            "act": "act",
+          }),
+        ]
+      }),
+    ]),
+    ("copy", "t"),
   )),
 
   ("el-participle of", (
@@ -1957,10 +1993,13 @@ pt_specs = [
 
   ("pt-noun form of", (
       "noun form of",
-      ("error-if", ("present-except", ["1", "2", "3", "4", "nocap", "nodot"])),
+      ("error-if", ("present-except", ["1", "2", "3", "4", "t", "nocap", "nodot"])),
       ("set", "1", [
         "pt",
         ("copy", "1"),
+      ]),
+      ("copy", "t"), # ignored by template but sometimes present
+      ("set", "3", [
         "",
         ("lookup", "4", {
           "aug": "aug",
@@ -1970,6 +2009,8 @@ pt_specs = [
         ("lookup", "2", {
           "m": "m",
           "f": "f",
+          "mf": "mf", # not accepted by template but present
+          "m-f": "mf", # not accepted by template but present
           "onlym": [],
           "onlyf": [],
         }),
@@ -2419,9 +2460,9 @@ sl_specs = [
   ("sl-verb form of", "sl-form-verb"),
 ]
 
-def sv_adj_form(parts):
+def sv_form(template, parts):
   return (
-    "adj form of",
+    template,
     ("error-if", ("present-except", ["1", "2"])),
     ("set", "1", [
       "sv",
@@ -2431,18 +2472,25 @@ def sv_adj_form(parts):
     ])
   )
 
+def sv_adj_form(parts):
+  return sv_form("adj form of", parts)
+def sv_noun_form(parts):
+  return sv_form("noun form of", parts)
+def sv_verb_form(parts):
+  return sv_form("verb form of", parts)
+
 sv_specs = [
-  ("sv-adj-form-abs-def", sv_form(["def"])),
-  ("sv-adj-form-abs-def+pl", sv_form(["s", "def", "and", "p"])),
-  ("sv-adj-form-abs-def-m", sv_form(["def", "natm"])),
-  ("sv-adj-form-abs-indef-n", sv_form(["indef", "n"])),
-  ("sv-adj-form-abs-pl", sv_form(["p"])),
-  ("sv-adj-form-comp", sv_form(["comd"])),
-  ("sv-adj-form-comp-pl", sv_form(["comd", "p"])),
-  ("sv-adj-form-sup-attr", sv_form(["sup", "attr"])),
-  ("sv-adj-form-sup-attr-m", sv_form(["sup", "attr", "s", "m"])),
-  ("sv-adj-form-sup-pred", sv_form(["sup", "pred"])),
-  ("sv-adj-form-sup-pred-pl", sv_form(["sup", "pred", "p"])),
+  ("sv-adj-form-abs-def", sv_adj_form(["def"])),
+  ("sv-adj-form-abs-def+pl", sv_adj_form(["s", "def", "and", "p"])),
+  ("sv-adj-form-abs-def-m", sv_adj_form(["def", "natm"])),
+  ("sv-adj-form-abs-indef-n", sv_adj_form(["indef", "n"])),
+  ("sv-adj-form-abs-pl", sv_adj_form(["p"])),
+  ("sv-adj-form-comp", sv_adj_form(["comd"])),
+  ("sv-adj-form-comp-pl", sv_adj_form(["comd", "p"])),
+  ("sv-adj-form-sup-attr", sv_adj_form(["sup", "attr"])),
+  ("sv-adj-form-sup-attr-m", sv_adj_form(["sup", "attr", "s", "m"])),
+  ("sv-adj-form-sup-pred", sv_adj_form(["sup", "pred"])),
+  ("sv-adj-form-sup-pred-pl", sv_adj_form(["sup", "pred", "p"])),
   ("sv-adv-form-comp", (
     "comparative of",
     ("error-if", ("present-except", ["1"])),
@@ -2462,26 +2510,35 @@ sv_specs = [
     ("set", "POS", "adverb"),
   )),
 # sv-noun-form-adj (1)
-# sv-noun-form-def (10063)
-# sv-noun-form-def-gen (8327)
-# sv-noun-form-def-gen-pl (6928)
+  ("sv-noun-form-def", sv_noun_form(["def", "sg"])),
+  ("sv-noun-form-def-gen", sv_noun_form(["def", "gen", "sg"])),
+  ("sv-noun-form-def-gen-pl", sv_noun_form(["def", "gen", "pl"])),
 # sv-noun-form-def-pl (? if 'obsoleted by=', displays extra 'Obsolete form of' pre-text, maybe should go into separate template) (7574)
-# sv-noun-form-indef-gen (7680)
-# sv-noun-form-indef-gen-pl (6869)
-# sv-noun-form-indef-pl (7430)
-# sv-proper-noun-gen (198)
+  ("sv-noun-form-indef-gen", sv_noun_form(["indef", "gen", "sg"])),
+  ("sv-noun-form-indef-gen-pl", sv_noun_form(["indef", "gen", "pl"])),
+  ("sv-noun-form-indef-pl", sv_noun_form(["indef", "pl"])),
+  ("sv-proper-noun-gen", (
+    "inflection of",
+    ("error-if", ("present-except", ["1", "2"])),
+    ("set", "1", [
+      "sv",
+      ("copy", "1"),
+      ("copy", "2"),
+      "gen",
+    ]),
+    ("set", "p", "pn"),
+  )),
 # sv-verb-form-imp (? if 'plural of=', displays extra 'Obsolete plural form of' pre-text, maybe should go into separate template) (567)
-# sv-verb-form-inf-pass (1641)
+  ("sv-verb-form-inf-pass", sv_verb_form(["inf", "pass"])),
 # sv-verb-form-past (? if 'plural of=', displays extra 'Obsolete plural form of' pre-text, maybe should go into separate template) (2567)
 # sv-verb-form-past-pass (? if 'plural of=', displays extra 'Obsolete plural form of' pre-text, maybe should go into separate template) (1631)
-# sv-verb-form-pastpart (1814)
+  ("sv-verb-form-inf-pass", sv_verb_form(["past", "part"])),
 # sv-verb-form-pre (? if 'plural of=', displays extra 'Obsolete plural form of' pre-text, maybe should go into separate template) (2687)
-# sv-verb-form-pre-pass (2067)
-# sv-verb-form-prepart (2028)
-# sv-verb-form-pres-pass (0, DELETE)
-# sv-verb-form-subjunctive (14)
-# sv-verb-form-sup (2187)
-# sv-verb-form-sup-pass (1680)
+  ("sv-verb-form-pre-pass", sv_verb_form(["pres", "pass"])),
+  ("sv-verb-form-prepart", sv_verb_form(["pres", "part"])),
+  ("sv-verb-form-subjunctive", sv_verb_form(["sub"])),
+  ("sv-verb-form-sup", sv_verb_form(["sup"])),
+  ("sv-verb-form-sup-pass", sv_verb_form(["sup", "pass"])),
 ]
 
 tg_specs = [
@@ -2524,7 +2581,8 @@ tl_specs = [
   # handled by the headword.
   ("tl-verb form of", (
     "verb form of",
-    ("error-if", ("present-except", ["1", "2"])),
+    # most uses have |nocat=1; ignore since there's no categorization
+    ("error-if", ("present-except", ["1", "2", "nocat"])),
     ("set", "1", [
       "tl",
       ("copy", "1"),
@@ -2962,5 +3020,6 @@ templates_to_do = templates_to_actually_do
 if not templates_to_do:
   templates_to_do = [template for template, spec in templates_to_rename_specs]
 for template in templates_to_do:
+  errandmsg("Processing references to Template:%s" % template)
   for i, page in blib.references("Template:%s" % template, start, end):
     blib.do_edit(page, i, process_page, save=args.save, verbose=args.verbose)
