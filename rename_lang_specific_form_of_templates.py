@@ -2746,16 +2746,20 @@ templates_to_rename_specs = (
   []
 )
 
-if not templates_to_actually_do:
-  templates_to_actually_do = [template for template, spec in templates_to_rename_specs]
-
 templates_to_rename_map = {}
-for template, spec in templates_to_rename_specs:
-  if template in templates_to_actually_do:
-    if isinstance(spec, basestring):
-      templates_to_rename_map[template] = templates_to_rename_map[spec]
-    else:
-      templates_to_rename_map[template] = spec
+
+def initialize_templates_to_rename_map(do_all):
+  global templates_to_actually_do
+  if do_all:
+    templates_to_actually_do = [template for template, spec in templates_to_rename_specs]
+
+  for template, spec in templates_to_rename_specs:
+    if template in templates_to_actually_do:
+      if isinstance(spec, basestring):
+        templates_to_rename_map[template] = templates_to_rename_map[spec]
+      else:
+        templates_to_rename_map[template] = spec
+
 
 def flatten_list(value):
   return [y for x in value for y in (x if type(x) is list else [x])]
@@ -3068,13 +3072,13 @@ def process_page(page, index, parsed):
   return unicode(parsed), notes
 
 parser = blib.create_argparser("Rename various lang-specific form-of templates to more general variants")
+parser.add_argument('--do-all', help="Do all templates instead of default list",
+    action="store_true")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-templates_to_do = templates_to_actually_do
-if not templates_to_do:
-  templates_to_do = [template for template, spec in templates_to_rename_specs]
-for template in templates_to_do:
+initialize_templates_to_rename_map(args.do_all)
+for template in templates_to_actually_do:
   errandmsg("Processing references to Template:%s" % template)
   for i, page in blib.references("Template:%s" % template, start, end):
     blib.do_edit(page, i, process_page, save=args.save, verbose=args.verbose)
