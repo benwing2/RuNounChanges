@@ -49,6 +49,19 @@ handling for multipart tags. Each function takes a single argument (the
 multipart tag), and should either return the formatted display text or nil to
 check the next handler. If no handlers apply, there is a default handler that
 appropriately formats most multipart tags.
+
+
+NOTE: In some cases below, multiple tags point to the same wikidata,
+because Wikipedia considers them synonyms. Examples are indirect case vs.
+objective case vs. oblique case, and inferential mood vs. renarrative mood.
+We do this because (a) we want to allow users to choose their own terminology,
+(b) we want to be able to use the terminology most common for the language
+in question, (c) terms considered synonyms may or may not actually be
+synonyms, as different languages may use the terms differently. For example,
+although the Wikipedia page on [[w:Inferential mood]] claims that
+inferential and renarrative moods are the same, the page on
+[[w:Bulgarian_verbs#Evidentials]] claims that Bulgarian has both, and that
+they are not the same.
 ]=]
 
 local tags = {}
@@ -86,10 +99,11 @@ tags["impersonal"] = {
 }
 
 table.insert(display_handlers,
-	-- Display handler to clean up display of multiple persons by omitting redundant "person"
-	-- in all but the last element. For example, the tag "123" maps to "1//2//3", which in
-	-- turn gets displayed as (approximately) "first-, second- and third-person" (with
-	-- appropriate glossary links, and appropriate spans marking the serial comma).
+	-- Display handler to clean up display of multiple persons by omitting
+	-- redundant "person" in all but the last element. For example, the tag
+	-- "123" maps to "1//2//3", which in turn gets displayed as (approximately)
+	-- "first-, second- and third-person" (with appropriate glossary links, and
+	-- appropriate spans marking the serial comma).
 	function(tags)
 		local els = {}
 		local numtags = #tags
@@ -295,8 +309,7 @@ tags["simple past"] = {
 	tag_type = "tense-aspect",
 	glossary = "past tense",
 	shortcuts = {"spast"},
-	-- Same as past. Wikipedia considers them the same thing, but
-	-- we want to allow users to choose their own terminology.
+	-- Same as past.
 	wikidata = "Q1994301",
 }
 
@@ -325,16 +338,14 @@ tags["habitual"] = {
 	tag_type = "tense-aspect",
 	--glossary = "habitual",
 	shortcuts = {"hab"},
-	--FIXME!
-	--wikidata = "Q56653945",
+	wikidata = "Q5636904",
 }
 
 tags["continuous"] = {
 	tag_type = "tense-aspect",
 	--glossary = "continuous",
 	shortcuts = {"cont"},
-	--FIXME!
-	--wikidata = "Q56653945",
+	wikidata = "Q12721117",
 }
 
 tags["preterite"] = {
@@ -354,8 +365,7 @@ tags["simple perfect"] = {
 	tag_type = "tense-aspect",
 	glossary = "perfect",
 	shortcuts = {"sperf"},
-	-- Same as past. Wikipedia considers them the same thing, but
-	-- we want to allow users to choose their own terminology.
+	-- Same as perfect.
 	wikidata = "Q625420",
 }
 
@@ -540,6 +550,9 @@ tags["inferential"] = {
 	tag_type = "mood",
 	--glossary = "inferential mood",
 	shortcuts = {"infer", "infr"},
+	-- Per [[w:Inferential mood]], also called "renarrative mood" or
+	-- (in Estonian) "oblique mood" (but "renarrative mood" may be different,
+	-- see its entry).
 	wikidata = "Q3332616",
 }
 
@@ -547,9 +560,9 @@ tags["renarrative"] = {
 	tag_type = "mood",
 	--glossary = "renarrative mood",
 	shortcuts = {"renarr"},
-	-- same as inferential mood; "renarrative" is used in Balkan languages,
-	-- inferential in Turkish etc. Called "oblique mood" in Estonian
-	-- per Wikipedia.
+	-- Per [[w:Inferential mood]], renarrative and inferential mood are the
+	-- same; but per [[w:Bulgarian verbs#Evidentials]], they are different,
+	-- and Bulgarian has both.
 	wikidata = "Q3332616",
 }
 
@@ -831,8 +844,7 @@ tags["indirect"] = {
 	tag_type = "case",
 	--glossary = "indirect case",
 	shortcuts = {"indir"},
-	-- Same as oblique. Wikipedia considers them the same thing, but
-	-- we want to allow users to choose their own terminology.
+	-- Same as oblique.
 	wikidata = "Q1233197",
 }
 
@@ -886,8 +898,7 @@ tags["objective"] = {
 	tag_type = "case",
 	glossary = "objective case",
 	shortcuts = {"obj"},
-	-- Same as oblique. Wikipedia considers them the same thing, but
-	-- we want to allow users to choose their own terminology.
+	-- Same as oblique.
 	wikidata = "Q1233197",
 }
 
@@ -929,8 +940,7 @@ tags["subjective"] = {
 	tag_type = "case",
 	glossary = "subjective case",
 	shortcuts = {"sje", "subje"},
-	-- Same as nominative. Wikipedia considers them the same thing, but
-	-- we want to allow users to choose their own terminology.
+	-- Same as nominative.
 	wikidata = "Q131105",
 }
 
@@ -1013,8 +1023,9 @@ tags["positive degree"] = {
 	tag_type = "comparison",
 	glossary = "positive",
 	shortcuts = {"posd", "positive"},
-	--FIXME!
-	--wikidata = "Q14169499",
+	-- Doesn't exist in English; only in Czech, Estonian, Finnish and
+	-- various Nordic languages.
+	wikidata = "Q3482678",
 }
 
 tags["comparative degree"] = {
@@ -1035,16 +1046,12 @@ tags["absolute superlative degree"] = {
 	tag_type = "comparison",
 	--glossary = "absolute superlative",
 	shortcuts = {"asupd", "absolute superlative"},
-	--FIXME!
-	--wikidata = "Q1817208",
 }
 
 tags["relative superlative degree"] = {
 	tag_type = "comparison",
 	--glossary = "relative superlative",
 	shortcuts = {"rsupd", "relative superlative"},
-	--FIXME!
-	--wikidata = "Q1817208",
 }
 
 tags["elative degree"] = {
@@ -1206,6 +1213,16 @@ tags["conjunctive"] = {
 	tag_type = "grammar",
 	--glossary = "conjunctive",
 	shortcuts = {"conj"},
+}
+
+tags["root"] = {
+	tag_type = "grammar",
+	wikidata = "Q111029",
+}
+
+tags["stem"] = {
+	tag_type = "grammar",
+	wikidata = "Q210523",
 }
 
 
