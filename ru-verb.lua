@@ -202,12 +202,17 @@ local function getarg(args, arg, default, paramdesc, not_off_by_1)
 	return args[arg] or (NAMESPACE == "Template" and default) or error(paramdesc .. " has not been provided")
 end
 
+local function check_stressed_arg(val, arg)
+	-- don't consider suffixes
+	if not rfind(val, "^%-") and not com.is_nonsyllabic(val) and not com.is_stressed(val) then
+		error("Argument value " .. val .. " (parameter " .. get_true_arg(arg) .. ") must be stressed")
+	end
+	return val
+end
+
 local function get_stressed_arg(args, arg, default, paramdesc)
 	local retval = getarg(args, arg, default, paramdesc)
-	-- don't consider suffixes
-	if not rfind(retval, "^%-") and not com.is_nonsyllabic(retval) and not com.is_stressed(retval) then
-		error("Argument value " .. retval .. " (parameter " .. get_true_arg(arg) .. ") must be stressed")
-	end
+	check_stressed_arg(retval, arg)
 	return retval
 end
 
@@ -215,11 +220,16 @@ local function get_opt_stressed_arg(args, arg)
 	return args[arg] and get_stressed_arg(args, arg) or nil
 end
 
+local function check_unstressed_arg(val, arg)
+	if com.is_stressed(val) then
+		error("Argument value " .. val .. " (parameter " .. get_true_arg(arg) .. ") should not be stressed")
+	end
+	return val
+end
+
 local function get_unstressed_arg(args, arg, default, paramdesc)
 	local retval = getarg(args, arg, default, paramdesc)
-	if com.is_stressed(retval) then
-		error("Argument value " .. retval .. " (parameter " .. get_true_arg(arg) .. ") should not be stressed")
-	end
+	check_unstressed_arg(retval, arg)
 	return retval
 end
 
@@ -416,6 +426,12 @@ local impr_verb_forms = {"impr_sg", "impr_pl"}
 local part_verb_forms = {"pres_actv_part", "past_actv_part",
 	"pres_pasv_part", "past_pasv_part",
 	"pres_adv_part", "past_adv_part", "past_adv_part_short"}
+-- List of the main verb forms for present participles.
+local pres_part_verb_forms = {"pres_actv_part", "pres_pasv_part",
+	"pres_adv_part"}
+-- List of the main verb forms for past participles.
+local past_part_verb_forms = {"past_actv_part", "past_pasv_part",
+	"past_adv_part", "past_adv_part_short"}
 
 -- Compile main_to_all_verb_forms.
 for _, proplist in ipairs(all_verb_forms) do
@@ -660,6 +676,9 @@ function export.do_generate_forms(arg_sets, verb_type, old)
 			end
 		end
 
+		if data.refl and data.intr then
+			error("Can't specify -intr with reflexive verbs")
+		end
 		if data.has_ppp or data.has_prpp then
 			if data.refl then
 				error("Can't specify has_ppp=y or has_prpp=y with reflexive verbs")
@@ -1361,8 +1380,15 @@ local function parse_variants(data, variants, allowed)
 		data.title = rsub(data.title, "^([0-9]+°?)", "%1*")
 	end
 	-- If there's an override of past_pasv_part, generate the normal participle
-	-- so we can determine whether the override is irregular.
-	data.ppp = data.ppp or data.main_ppp_override and "+p"
+	-- so we can determine whether the override is irregular. But set a flag
+	-- so we erase any automatically generated past passive participles that
+	-- aren't overridden. This happens for example in обнять, where there are
+	-- two automatically generated past passive participles but a single
+	-- ppp=о́внятый override.
+	if not data.ppp and data.main_ppp_override then
+		data.ppp = "+p"
+		data.ppp_auto_generated = true
+	end
 end
 
 local function set_past_by_stress(forms, past_stresses, prefix, prefixtr, base,
@@ -1660,12 +1686,12 @@ local function iotated_ppp(data, stem, tr)
 	local iotated_stem, iotated_tr
 	if data.zhd then
 		local subbed
-		iotated_stem, subbed = rsubb(stem, "д$", "жд")
+		iotated_stem, subbed = rsubb(stem, "з?д$", "жд")
 		if not subbed then
 			error("Variant -жд- specified but stem " .. stem .. " doesn't end in -д")
 		end
 		if tr then
-			iotated_tr, subbed = rsubb(tr, "d$", "žd")
+			iotated_tr, subbed = rsubb(tr, "z?d$", "žd")
 			if not subbed then
 				error("Variant -жд- specified but translit " .. tr .. " doesn't end in -d")
 			end
@@ -1710,7 +1736,7 @@ local function set_moving_ppp(forms, data)
 	end
 	local ending_vowel = usub(ending, 1, 1)
 	local ppptype = data.ppp
-	if com.is_nonsyllabic(stem) and not rfind(stem, "^%-") then
+	if com.is_nonsyllabic(stem) then
 		-- e.g. 3b гну́ть (гну́тый); but not -нуть (type 3a, as a suffix)
 		ppptype = "(7)"
 	end
@@ -2084,6 +2110,7 @@ local function guts_of_3b_3c(args, data, vclass)
 	if data.conj_type == "3b" then
 		present_e_b(forms, stem, tr)
 	else
+		stem, tr = com.make_ending_stressed(stem, tr)
 		present_e_c(forms, stem, tr)
 	end
 	
@@ -2595,111 +2622,117 @@ conjugations["6c1a"] = function(args, data)
 	return guts_of_6c(args, data, "6c1a")
 end
 
-local function class_7a_stem_to_infinitives(stem)
-	local infin
-	-- map вы́раст to вы́расти
-	if rfind(stem, "ст$") then
-		infin = stem .. "и"
-	-- map вы́нес to вы́нести, вы́вез to вы́везти
-	elseif rfind(stem, "[сз]$") then
-		infin = stem .. "ти"
-	else
-		-- map вы́греб to вы́грести, вы́вед to вывести, вы́мет to вы́мести
-		infin = rsub(stem, "[бдт]$", "сти")
-	end
-	return {infin, rsub(infin, "и$", "ь")}
+local function convert_last_e_to_yo(form)
+	return rsub(form,
+		"([еѣ])́?([^" .. com.vowel .. "]*)$",
+		function(e, nonvowels)
+			return (e == "е" and "ё" or "ѣ̈") .. nonvowels
+		end)
 end
 
-local function class_7b_stem_to_infinitives(stem)
-	local infins = class_7a_stem_to_infinitives(rsub(stem, "ё", "е"))
-	local ending_stressed = {}
-	for _, infin in ipairs(infins) do
-		-- assign to a variable to discard second argument
-		local ending_stressed_infin = com.make_ending_stressed(infin)
-		table.insert(ending_stressed, ending_stressed_infin)
-	end
-	return ending_stressed
-end
-
-local function guts_of_7(args, data, forms, full_inf, pres_stem, past_stem)
-	local pres_stems = rsplit(pres_stem, ",")
-	if #pres_stems > 1 then
-		if not past_stem then
-			error("If multiple present stems specified in class 7, past stem must be explicitly given")
-		end
-	end
-	local pres_notes = {}
+local function guts_of_7(args, data, forms)
 	local is7b = data.conj_type == "7b"
+
+	local full_inf = get_stressed_arg(args, 2)
+	local pres_stems = is7b and get_unstressed_arg(args, 3) or get_stressed_arg(args, 3)
+	pres_stems = rsplit(pres_stems, ",")
+	local past_stem
+	if past_stem ~= "ёе" then
+		past_stem = get_opt_stressed_arg(args, 4)
+	end
+	local past_stem_vowel_alt = past_stem == "ёе"
+	if past_stem_vowel_alt then
+		past_stem = nil
+	end
+	no_stray_args(args, 4)
 
 	forms["infinitive"] = full_inf
 
-	for i, pres_stem in ipairs(pres_stems) do
-		local regular_infins
-		if is7b then
-			regular_infins = class_7b_stem_to_infinitives(pres_stem)
-		else
-			regular_infins = class_7a_stem_to_infinitives(pres_stem)
+	-- Construct the default past and present stem by a combination of
+	-- infinitive and present final consonant.
+	-- (1) Deduce the final consonant.
+	local final_cons
+	for _, pres_stem in ipairs(pres_stems) do
+		-- Final cons is -ст if pres stem ends in vowel + ст, else
+		-- single final cons [дтсзбп] (no actual examples of final п).
+		-- Note that final -з can occur after a consonant (e.g. ползти́).
+		local this_final_cons = rmatch(pres_stem,
+			"[" .. com.vowel .. "]" .. AC .. "?(ст)$")
+		if not this_final_cons then
+			this_final_cons = rmatch(pres_stem,	"([дтсзбп])$")
 		end
-		--error(table.concat(regular_infins, ","))
-		local pres_note = not ut.contains(regular_infins, full_inf) and IRREG or ""
-		table.insert(pres_notes, pres_note)
+		if not this_final_cons then
+			error("Unable to determine final consonant from present stem " .. pres_stem)
+		end
+		if final_cons and this_final_cons ~= final_cons then
+			error("Present stems with conflicting final consonants specified: " ..
+				table.concat(pres_stems, ","))
+		end
+		final_cons = this_final_cons
+	end
+	-- (2) Find the infinitive minus the termination.
+	local prefix = rmatch(full_inf, "^(.*)[сз]т[иь]" .. AC .."?$")
+	if not prefix then
+		error("Strange infinitive " .. full_inf .. "in class 7")
+	end
+	-- (3) Combine infinitive with final consonant.
+	local default_pres_stem = prefix .. final_cons
+	if is7b then
+		default_pres_stem = com.make_unstressed(default_pres_stem)
+	end
+	local default_past_stem = default_pres_stem
+	if com.is_unstressed(default_past_stem) then
+		default_past_stem = com.make_ending_stressed(default_past_stem)
+	end
+	-- (4) Past stems ending in -д and -т when the infinitive ends in -сть (but not -сти or -сти́)
+	--     lose this consonant (page 85 of Zaliznyak, see also footnote 2 on that page).
+	if rfind(full_inf, "сть$") then
+		default_past_stem = rsub(default_past_stem, "[дт]$", "")
+	end
+	-- (5) If 7b and the past stem wasn't originally specified as ёе, the past stem gets
+	-- ё in place of е.
+	if is7b and not past_stem_vowel_alt then
+		default_past_stem = convert_last_e_to_yo(default_past_stem)
+	end
 
+	for _, pres_stem in ipairs(pres_stems) do
+		local pres_note = pres_stem ~= default_pres_stem and IRREG
 		if is7b then
 			present_e_b(forms, pres_stem, nil, pres_note)
 			append_imper(forms, pres_stem, nil, "и́", "и́те", pres_note)
 		else
 			present_e_a(forms, pres_stem, nil, pres_note)
-			append_imper_by_variant(forms, pres_stem, nil, data.imper_variant, "7a", pres_note)
+			append_imper_by_variant(forms, pres_stem, nil, data.imper_variant,
+				"7a", pres_note)
 		end
 	end
 
-	-- Compute all the default past stems based on the present stems.
-	-- The actual past stem, if not specified, comes from the first default
-	-- past stem. We then compare the past stem against all default past stems;
-	-- if any match, the past stem is irregular according as to whether the
-	-- corresponding present stem is irregular. If not matches, the past stem
-	-- is irregular.
-	local default_past_stems = {}
-	for i, pres_stem in ipairs(pres_stems) do
-		local default_past_stem = pres_stem
-		-- вести́ -> ве́дший, вы́вести -> вы́ведший (similarly for мести́ etc.),
-		-- but красть -> кра́вший, вы́красть -> вы́кравший (similarly for класть, пасть, сесть).
-		-- This is documented on page 85 of Zaliznyak; see especially footnote 2.
-		if rfind(full_inf, "сть$") then
-			default_past_stem = rsub(default_past_stem, "[дт]$", "")
-		end
-		if com.is_unstressed(default_past_stem) then
-			default_past_stem = com.make_ending_stressed(default_past_stem)
-		end
-		table.insert(default_past_stems, default_past_stem)
+	-- Construct the past stem if not specified. Note that we then derive a separate
+	-- past-tense stem from this stem, and this stem as such ends up applying only
+	-- to the past active and adverbial participles.
+	if not past_stem then
+		past_stem = default_past_stem
 	end
-	local past_note
-	past_stem = past_stem or default_past_stems[1]
-	for i, default_past_stem in ipairs(default_past_stems) do
-		if past_stem == default_past_stem then
-			past_note = pres_notes[i]
-			break
-		end
-	end
-	past_note = past_note or IRREG
+	local past_note = past_stem ~= default_past_stem and IRREG
+
+	-- Derive the past tense stem from the past stem derived above. This has ё instead of е
+	-- in 7b verbs; it also loses д and т in all cases, when the past stem derived above only loses
+	-- these consonants in some cases.
 	local past_tense_stem = past_stem
 	if is7b then
-		past_tense_stem = rsub(past_tense_stem,
-			"([еѣ])́([^" .. com.vowel .. "]*)$",
-			function(e, nonvowels)
-				return (e == "е" and "ё" or "ѣ̈") .. nonvowels
-			end)
+		past_tense_stem = convert_last_e_to_yo(past_tense_stem)
 	end
 	past_tense_stem = rsub(past_tense_stem, "[дт]$", "")
+
 	local vowel_pp = is_vowel_stem(past_stem)
 	local pap = vowel_pp and "вши" or "ши"
 	local var9_note_symbol = next_note_symbol(data)
-	for i, pres_stem in ipairs(pres_stems) do
+	for _, pres_stem in ipairs(pres_stems) do
 		append_participles_2stem(forms, pres_stem, nil, past_stem, nil,
 			is7b and "у́щий" or "ущий", "-", is7b and "я́" or "я",
 			vowel_pp and "вший" or "ший",
 			data.var9 and {is7b and "я́" or "я", pap .. var9_note_symbol} or pap,
-			vowel_pp and not data.var9 and "в" or "-", pres_notes[i], past_note)
+			vowel_pp and not data.var9 and "в" or "-", pres_note, past_note)
 	end
 	if data.var9 then
 		ut.insert_if_not(data.internal_notes, var9_note_symbol .. " Dated.")
@@ -2717,13 +2750,9 @@ conjugations["7a"] = function(args, data)
 	local forms = {}
 
 	parse_variants(data, args[1], {"23", "и", "9","past", "+p"})
-	local full_inf = get_stressed_arg(args, 2)
-	local pres_stem = get_stressed_arg(args, 3)
-	local past_stem = get_opt_stressed_arg(args, 4)
-	no_stray_args(args, 4)
 
 	-- лезть - ле́зши - non-existent past_actv_part handled through general mechanism
-	guts_of_7(args, data, forms, full_inf, pres_stem, past_stem)
+	guts_of_7(args, data, forms)
 
 	return forms
 end
@@ -2732,12 +2761,8 @@ conjugations["7b"] = function(args, data)
 	local forms = {}
 
 	parse_variants(data, args[1], {"9", "past", "+p"})
-	local full_inf = get_stressed_arg(args, 2)
-	local past_stem = get_opt_stressed_arg(args, 4)
-	local pres_stem = past_stem and get_unstressed_arg(args, 3) or get_stressed_arg(args, 3)
-	no_stray_args(args, 4)
 
-	guts_of_7(args, data, forms, full_inf, pres_stem, past_stem)
+	guts_of_7(args, data, forms)
 
 	return forms
 end
@@ -2750,7 +2775,7 @@ end
 local function class_8b_stem_to_infinitive(stem)
 	-- map e.g. отвлёк back to отвле́чь
 	-- map e.g. зажёг back to заже́чь
-	return com.make_ending_stressed(rsub(rsub(stem, "ё", "е"), "[гк]$", "чь"))
+	return com.make_ending_stressed(rsub(rsub(rsub(stem, "ё", "е"), "ѣ̈", "ѣ"), "[гк]$", "чь"))
 end
 
 conjugations["8a"] = function(args, data)
@@ -2791,29 +2816,50 @@ conjugations["8b"] = function(args, data)
 
 	parse_variants(data, args[1], {"past", "+p"})
 	local full_inf = get_stressed_arg(args, 2)
-	local stem = data.past_stress == "b" and args[4] and getarg(args, 3) or
-		get_stressed_arg(args, 3)
-	local stressed_past_stem = args[4] and get_stressed_arg(args, 4) or stem
+	local stem = get_unstressed_arg(args, 3)
+	local stressed_past_stems = rsplit(args[4] or "ё", ",")
+	for _, stressed_past_stem in ipairs(stressed_past_stems) do
+		if stressed_past_stem ~= "е" then
+			check_stressed_arg(stressed_past_stem, 4)
+		end
+	end
 	no_stray_args(args, 4)
 	forms["infinitive"] = full_inf
 	local pres_note = class_8b_stem_to_infinitive(stem) ~= full_inf and IRREG
-	local stressed_past_note =
-		class_8b_stem_to_infinitive(stressed_past_stem) ~= full_inf and IRREG
-
-	-- default for pres_pasv_part is blank; влечь -> влеко́мый handled through
-	-- general override mechanism
-	append_participles_2stem(forms, stem, nil, stressed_past_stem, nil,
-		"у́щий", "-", "-", "ший", "ши", "-", pres_note, stressed_past_note)
 
 	local iotated_stem = com.iotation(stem)
-
 	append_pres_futr(forms, iotated_stem, nil, {}, "ёшь", "ёт", "ём", "ёте", {}, pres_note)
 	append_pres_futr(forms, stem, nil, "у́", {}, {}, {}, {}, "у́т", pres_note)
 	append_imper(forms, stem, nil, "и́", "и́те", pres_note)
 	-- set prefix to "" as stem may vary in length and no (1) variants
-	set_past_by_stress(forms, data.past_stress, "", nil, stem, nil, args, data,
-		"no-pastml", pres_note)
-	forms["past_m"] = stressed_past_stem .. (stressed_past_note or "")
+	set_past_by_stress(forms, data.past_stress, "", nil,
+		com.make_ending_stressed(stem), nil, args, data, "no-pastml", pres_note)
+	forms["past_m"] = nil
+
+	for _, stressed_past_stem in ipairs(stressed_past_stems) do
+		local pastm_stem, past_part_stem
+		if stressed_past_stem == "е" then
+			past_part_stem = com.make_ending_stressed(stem)
+			pastm_stem = past_part_stem
+		elseif stressed_past_stem == "ё" then
+			past_part_stem = convert_last_e_to_yo(com.make_ending_stressed(stem))
+			pastm_stem = past_part_stem
+		elseif stressed_past_stem == "ёе" then
+			past_part_stem = com.make_ending_stressed(stem)
+			pastm_stem = convert_last_e_to_yo(past_part_stem)
+		else
+			pastm_stem = stressed_past_stem
+			past_part_stem = stressed_past_stem
+		end
+	
+		local past_note =
+			class_8b_stem_to_infinitive(pastm_stem) ~= full_inf and IRREG
+		-- default for pres_pasv_part is blank; влечь -> влеко́мый handled through
+		-- general override mechanism
+		append_participles_2stem(forms, stem, nil, past_part_stem, nil,
+			"у́щий", "-", "-", "ший", "ши", "-", pres_note, past_note)
+		append_form(forms, "past_m", pastm_stem, nil, "", past_note)
+	end
 
 	-- set PPP; must be done after both present 3sg and past fem have been set
 	set_class_7_8_ppp(forms, args, data)
@@ -2995,15 +3041,17 @@ conjugations["12a"] = function(args, data)
 
 	parse_variants(data, args[1], {"past", "+p"})
 	local stem = nom.strip_ending(get_stressed_arg(args, 2), nil, "ть")
-	local pres_stem = get_opt_stressed_arg(args, 3) or stem
+	local pres_stem = get_opt_stressed_arg(args, 3)
 	no_stray_args(args, 3)
+	local default_pres_stem = stem
+	pres_stem = pres_stem or default_pres_stem
+	local pres_note = pres_stem ~= default_pres_stem and IRREG
 	local prefix, _, base, _ = split_monosyllabic_main_verb(stem)
-	local pres_note = pres_stem ~= stem and IRREG
 
 	forms["infinitive"] = stem .. "ть"
 
 	append_participles_2stem(forms, pres_stem, nil, stem, nil,
-		"ющий", "емый", "я", "вший", "вши", "в")
+		"ющий", "емый", "я", "вший", "вши", "в", pres_note)
 	present_je(forms, pres_stem, nil, "a", nil, pres_note)
 	append_imper(forms, pres_stem .. "й", nil, "", "те", pres_note)
 
@@ -3019,11 +3067,12 @@ conjugations["12b"] = function(args, data)
 
 	parse_variants(data, args[1], {"past", "+p"})
 	local stem = nom.strip_ending(get_stressed_arg(args, 2), nil, "ть")
-	local default_pres_stem = com.make_unstressed_once(stem)
-	local pres_stem = get_opt_unstressed_arg(args, 3) or default_pres_stem
+	local pres_stem = get_opt_unstressed_arg(args, 3)
 	no_stray_args(args, 3)
-	local prefix, _, base, _ = split_monosyllabic_main_verb(stem)
+	local default_pres_stem = com.make_unstressed_once(stem)
+	pres_stem = pres_stem or default_pres_stem
 	local pres_note = pres_stem ~= default_pres_stem and IRREG
+	local prefix, _, base, _ = split_monosyllabic_main_verb(stem)
 
 	forms["infinitive"] = stem .. "ть"
 
@@ -3231,7 +3280,7 @@ conjugations["irreg"] = function(args, data)
 		-- честь must go before есть
 		{"бежа́ть", "бѣжа́ть", "хоте́ть", "хотѣ́ть", "да́ть", "че́сть",
 			"е́сть", "ѣ́сть", "сы́пать", "лга́ть", "мо́чь", "идти́", "йти́",
-			"е́хать", "ѣ́хать", "мину́ть", "живописа́ть", "минова́ть", "ле́чь",
+			"е́хать", "ѣ́хать", "мину́ть", "живописа́ть", "ле́чь",
 			"зи́ждить", "зы́бить", "кля́сть", "стели́ть", "бы́ть", "сса́ть", "сца́ть",
 			"чти́ть", "шиби́ть", "реве́ть", "има́ть", "вня́ть", "обя́зывать"})
 	main = com.make_unstressed_once(main)
@@ -3257,7 +3306,7 @@ conjugations["irreg-бежать"] = function(args, data)
 		"у́щий", "-", "-", "вший", "вши", "в", IRREG)
 	append_imper(forms, "беги́", nil, "", "те", IRREG)
 	append_pres_futr(forms, "бе", nil,
-		"гу́" .. IRREG, "жи́шь", "жи́т", "жи́м", "жи́те", "гу́т" .. IRREG)
+		"гу́" .. IRREG, "жи́шь", "жи́т", "жи́м", "жи́те", "гу́т" .. IRREG)                  
 	set_past(forms, "бежа́л", nil, "", "а", "о", "и")
 	if data.old then
 		rsub_forms(forms, "^бе", "бѣ")
@@ -3284,7 +3333,7 @@ conjugations["irreg-хотеть"] = function(args, data)
 
 	forms["infinitive"] = "хоте́ть"
 	append_participles_2stem(forms, "хот", nil, "хоте́", nil,
-		"я́щий", "-", "я́", "вший", "вши", "в")
+		"я́щий", "-", "я́",	"вший", "вши", "в")
 	append_imper(forms, "хоти́", nil, "", "те")
 	append_pres_futr(forms, "", nil,
 		"хочу́", "хо́чешь" .. IRREG, "хо́чет" .. IRREG, "хоти́м", "хоти́те", "хотя́т")
@@ -3316,15 +3365,15 @@ conjugations["irreg-дать"] = function(args, data)
 		"да́вший", "да́вши", "да́в")
 	append_imper(forms, "да́й", nil, "", "те")
 	append_pres_futr(forms, "", nil,
-		"да́м", "да́шь", "да́ст", "дади́м", "дади́те", "даду́т", IRREG)
+		"да́м", "да́шь", "да́ст", "дади́м", "дади́те", "даду́т")
 	prepend_prefix(forms, prefix)
 	set_past_by_stress(forms, data.past_stress, prefix, nil, "да́", nil,
 		args, data)
 	if data.ppp then
 		if prefix == "пере" then
-			set_ppp(forms, "", nil, "пе́реданный" .. IRREG)
+			set_ppp(forms, "", nil, "пе́реданный")
 		elseif prefix == "раз" then
-			set_ppp(forms, "", nil, "ро́зданный" .. IRREG)
+			set_ppp(forms, "", nil, "ро́зданный")
 		else
 			set_moving_ppp(forms, data)
 		end
@@ -3375,13 +3424,13 @@ conjugations["irreg-сыпать"] = function(args, data)
 
 	forms["infinitive"] = "сы́пать"
 	append_participles(forms, "сы́п", nil,
-		"лющий", "лемый", {"ля", "я"}, "авший", "авши", "ав")
+		"лющий", "лемый", {"ля", "я" .. IRREG}, "авший", "авши", "ав")
 	append_imper(forms, "сы́п", nil,
 		-- вы́сыпать (but not вы́сыпаться) has two imperative singulars
-		com.is_stressed(prefix) and not data.refl and {"и", "ь"} or "ь", "ьте")
+		com.is_stressed(prefix) and not data.refl and {"и", "ь"} or "ь", "ьте", IRREG)
 	present_je(forms, "сы́пл", nil, "a")
 	append_pres_futr(forms, "сы́п", nil,
-		{}, "ешь", "ет", "ем", "ете", {})
+		{}, "ешь", "ет", "ем", "ете", {}, IRREG)
 	set_past(forms, "сы́пал", nil, "", "а", "о", "и")
 	prepend_prefix(forms, prefix)
 	set_moving_ppp(forms, data)
@@ -3405,7 +3454,7 @@ conjugations["irreg-лгать"] = function(args, data)
 		"у́щий", "-", "-", "а́вший", "а́вши", "а́в")
 	append_imper(forms, "лги́", nil, "", "те")
 	append_pres_futr(forms, "", nil,
-		"лгу́", "лжёшь", "лжёт", "лжём", "лжёте", "лгу́т")
+		"лгу́", "лжёшь" .. IRREG, "лжёт" .. IRREG, "лжём" .. IRREG, "лжёте" .. IRREG, "лгу́т")
 	set_past(forms, "лга́л", nil, "", "а́", "о", "и")
 	prepend_prefix(forms, prefix)
 	set_moving_ppp(forms, data)
@@ -3546,45 +3595,39 @@ conjugations["irreg-минуть"] = function(args, data)
 	-- no imperative
 	-- two possible variants, one with root-only stress, the other with
 	-- either root or suffix stress.
-	if args["root_past_stress"] then
-		set_past(forms, "ми́н", nil, "ул", "ула", "уло", "ули")
-	else
-		set_past(forms, "ми́н", nil, {"у́л", "ул"}, {"у́ла", "ула"}, {"у́ло", "уло"}, {"у́ли", "ули"})
+	if not args["root_past_stress"] then
+		append_past(forms, "мину́л", nil, "", "а", "о", "и")
 	end
+	append_past(forms, "ми́нул", nil, "", "а", "о", "и", IRREG)
 	prepend_prefix(forms, prefix)
 	set_moving_ppp(forms, data)
 
 	return forms
 end
 
-conjugations["irreg-живописать-миновать"] = function(args, data)
-	-- for irregular verbs "живописа́ть" and "минова́ть", mixture of types 1 and 2
+conjugations["irreg-живописать"] = function(args, data)
+	-- for irregular verb "живописа́ть", mixture of types 1 and 2
 	local forms = {}
 
 	local inf = get_stressed_arg(args, 2)
 	data.title = "1a"
 	parse_variants(data, args[1], {"+p"})
 	local inf_stem = nom.strip_ending(inf, nil, "ть")
-	local pres_stem =
-		rfind(inf_stem, "ова́$") and rsub(inf_stem, "ова́$", "у́") or
-		rfind(inf_stem, "а́$") and rsub(inf_stem, "а́$", "у́")
+	local pres_stem = rfind(inf_stem, "а́$") and rsub(inf_stem, "а́$", "у́")
 		or error("Unexpected infinitive " .. inf)
 	no_stray_args(args, 2)
 
 	forms["infinitive"] = inf_stem .. "ть"
 	-- no pres_pasv_part
 	append_participles_2stem(forms, pres_stem, nil, inf_stem, nil,
-		"ющий", "-", "я", "вший", "вши", "в")
+		"ющий", "-", "я", "вший", "вши", "в", IRREG)
 	set_moving_ppp(forms, data)
-	present_je(forms, pres_stem, nil, "a")
-	append_imper(forms, pres_stem .. "й", nil, "", "те")
+	present_je(forms, pres_stem, nil, "a", nil, IRREG)
+	append_imper(forms, pres_stem .. "й", nil, "", "те", IRREG)
 	set_past(forms, inf_stem .. "л", nil, "", "а", "о", "и")
 
 	return forms
 end
-
-conjugations["irreg-живописать"] = conjugations["irreg-живописать-миновать"]
-conjugations["irreg-миновать"] = conjugations["irreg-живописать-миновать"]
 
 conjugations["irreg-лечь"] = function(args, data)
 	-- irregular, only for verbs derived from лечь with the same stress pattern
@@ -3601,9 +3644,9 @@ conjugations["irreg-лечь"] = function(args, data)
 	-- no past_adv_part_short
 	append_participles(forms, "лёг", nil,
 		"-", "-", "-", "ший", "ши", "-")
-	append_imper(forms, "ля́г", nil, "", "те")
+	append_imper(forms, "ля́г", nil, "", "те", IRREG)
 	append_pres_futr(forms, "ля́", nil,
-		"гу", "жешь", "жет", "жем", "жете", "гут")
+		"гу", "жешь", "жет", "жем", "жете", "гут", IRREG)
 	set_past(forms, "", nil, "лёг", "легла́", "легло́", "легли́")
 	prepend_prefix(forms, prefix)
 
@@ -3629,7 +3672,7 @@ conjugations["irreg-честь"] = function(args, data)
 
 	forms["infinitive"] = "че́сть"
 	append_imper(forms, "чти́", nil, "", "те", IRREG)
-	present_e_b(forms, "чт")
+	present_e_b(forms, "чт", nil, IRREG)
 	if prefix == "" then
 		append_participles(forms, "", nil,
 			"чту́щий", "-", "чтя́", "чти́вший", "чти́вши", "чти́в", IRREG)
@@ -3642,28 +3685,28 @@ conjugations["irreg-честь"] = function(args, data)
 		ut.insert_if_not(data.internal_notes, "* Dated.")
 	end
 	if data.ppp then
-		set_ppp(forms, "", nil, "чтённый", IRREG)
+		set_ppp(forms, "", nil, "чтённый" .. IRREG)
 	end
 	set_past(forms, "", nil, "чёл", "чла́" .. IRREG, "чло́" .. IRREG, "чли́" .. IRREG)
 	prepend_prefix(forms, prefix, pre_two_cons_prefix)
 	return forms
 end
 
-conjugations["irreg-зиждиться"] = function(args, data)
-	-- irregular, only for verbs derived from зиждиться with the same stress pattern
+conjugations["irreg-зиждить"] = function(args, data)
+	-- irregular, only for verbs derived from зиждить(ся) with the same stress pattern
 	local forms = {}
 
 	local prefix = split_known_main_verb(get_stressed_arg(args, 2), "зи́ждить")
 	data.title = "irreg-a"
-	-- no past passive participles of any verbs of this type (because reflexive)
-	parse_variants(data, args[1], {})
+	parse_variants(data, args[1], {"+p"})
 	no_stray_args(args, 2)
 
 	forms["infinitive"] = "зи́ждить"
-	-- no pres_pasv_part
-	-- no past_adv_part_short
 	append_participles(forms, "зи́жд", nil,
-		"ущий", "-", "я", "ивший", "ивши", "-")
+		"ущий", "емый", "я", "ивший", "ивши", "ив")
+	if data.ppp then
+		set_ppp(forms, "зи́жд", nil, "енный")
+	end
 	append_imper(forms, "зи́жди", nil, "", "те")
 	present_e_a(forms, "зи́жд")
 	set_past(forms, "зи́ждил", nil, "", "а", "о", "и")
@@ -3671,8 +3714,6 @@ conjugations["irreg-зиждиться"] = function(args, data)
 
 	return forms
 end
-
-conjugations["irreg-зиждить"] = conjugations["irreg-зиждиться"]
 
 conjugations["irreg-зыбить"] = function(args, data)
 	-- irregular, only for verbs derived from зыбить
@@ -3729,10 +3770,11 @@ conjugations["irreg-стелить"] = function(args, data)
 
 	forms["infinitive"] = "стели́ть"
 	append_participles(forms, "сте́л", nil,
-		"ющий", "и́мый", "я́", "и́вший", "и́вши", "и́в")
+		"ющий" .. IRREG, "и́мый", "я́", "и́вший", "и́вши", "и́в")
 	set_class_4_ppp(forms, data, "сте́л", nil, data.title)
 	append_imper(forms, "стели́", nil, "", "те")
-	present_je(forms, "сте́л", nil, "c")
+	append_pres_futr(forms, "сте́л", nil, "ю́", {}, {}, {}, {}, {})
+	append_pres_futr(forms, "сте́л", nil, {}, "ешь", "ет", "ем", "ете", "ют", IRREG)
 	set_past(forms, "стели́л", nil, "", "а", "о", "и")
 	prepend_prefix(forms, prefix)
 
@@ -3758,8 +3800,9 @@ conjugations["irreg-быть"] = function(args, data)
 
 	-- only for "бы́ть", some forms are archaic
 	if forms["infinitive"] == "бы́ть" then
+		append_pres_futr(forms, "", nil, "есть", "есть", "есть", "есть", "есть", "есть")
 		append_pres_futr(forms, "", nil,
-			"есмь", "еси́", "есть", "есмы́", "е́сте", "суть")
+			"есмь", "еси́", {}, "есмы́", "е́сте", "суть")
 	elseif com.is_stressed(prefix) then
 		-- if the prefix is stressed, e.g. "вы́быть"
 		present_e_a(forms, prefix .. "буд")
@@ -3815,13 +3858,13 @@ conjugations["irreg-чтить"] = function(args, data)
 
 	forms["infinitive"] = "чти́ть"
 	append_participles_2stem(forms, "чт", nil, "чти́", nil,
-		{"я́щий", "у́щий"}, "и́мый", "я́", "вший", "вши", "в")
+		{"я́щий", "у́щий" .. IRREG}, "и́мый", "я́", "вший", "вши", "в")
 	if data.ppp then
 		set_ppp(forms, "чт", nil, "ённый")
 	end
 	append_imper(forms, "чти́", nil, "", "те")
 	append_pres_futr(forms, "чт", nil,
-		"у́", "и́шь", "и́т", "и́м", "и́те", {"я́т", "у́т"})
+		"у́" .. IRREG, "и́шь", "и́т", "и́м", "и́те", {"я́т", "у́т" .. IRREG})
 	set_past(forms, "чти́л", nil, "", "а", "о", "и")
 	prepend_prefix(forms, prefix)
 
@@ -4239,64 +4282,37 @@ handle_forms_and_overrides = function(args, forms, data)
 		end
 	end
 
-	if args["pasttail"] then
-		for _, prop in ipairs(past_verb_forms) do
-			append_note_last(forms, main_to_all_verb_forms[prop], args["pasttail"], ">1")
+	-- Now handle pasttail, pasttailall, prestail, prestailall, etc.
+
+	-- Table listing tail-arg prefix and corresponding verb forms.
+	local tailargs = {
+		{"past", past_verb_forms},
+		{"pres", pres_verb_forms},
+		{"futr", futr_verb_forms},
+		{"impr", impr_verb_forms},
+		{"part", part_verb_forms},
+		{"prespart", pres_part_verb_forms},
+		{"pastpart", past_part_verb_forms},
+		{"", all_main_verb_forms}
+	}
+	
+	for _, tailspec in ipairs(tailargs) do
+		tailforms = tailspec[2]
+		-- Handle the ...tail variants.
+		tailarg = tailspec[1] .. "tail"
+		if args[tailarg] then
+			track(tailarg)
+			for _, prop in ipairs(tailforms) do
+				append_note_last(forms, main_to_all_verb_forms[prop], args[tailarg], ">1")
+			end
 		end
-	end
-	if args["pasttailall"] then
-		for _, prop in ipairs(past_verb_forms) do
-			append_note_all(forms, main_to_all_verb_forms[prop], args["pasttailall"])
-		end
-	end
-	if args["prestail"] then
-		for _, prop in ipairs(pres_verb_forms) do
-			append_note_last(forms, main_to_all_verb_forms[prop], args["prestail"], ">1")
-		end
-	end
-	if args["prestailall"] then
-		for _, prop in ipairs(pres_verb_forms) do
-			append_note_all(forms, main_to_all_verb_forms[prop], args["prestailall"])
-		end
-	end
-	if args["futrtail"] then
-		for _, prop in ipairs(futr_verb_forms) do
-			append_note_last(forms, main_to_all_verb_forms[prop], args["futrtail"], ">1")
-		end
-	end
-	if args["futrtailall"] then
-		for _, prop in ipairs(futr_verb_forms) do
-			append_note_all(forms, main_to_all_verb_forms[prop], args["futrtailall"])
-		end
-	end
-	if args["imprtail"] then
-		for _, prop in ipairs(impr_verb_forms) do
-			append_note_last(forms, main_to_all_verb_forms[prop], args["imprtail"], ">1")
-		end
-	end
-	if args["imprtailall"] then
-		for _, prop in ipairs(impr_verb_forms) do
-			append_note_all(forms, main_to_all_verb_forms[prop], args["imprtailall"])
-		end
-	end
-	if args["parttail"] then
-		for _, prop in ipairs(part_verb_forms) do
-			append_note_last(forms, main_to_all_verb_forms[prop], args["parttail"], ">1")
-		end
-	end
-	if args["parttailall"] then
-		for _, prop in ipairs(part_verb_forms) do
-			append_note_all(forms, main_to_all_verb_forms[prop], args["parttailall"])
-		end
-	end
-	if args["tail"] then
-		for _, prop in ipairs(all_main_verb_forms) do
-			append_note_last(forms, main_to_all_verb_forms[prop], args["tail"], ">1")
-		end
-	end
-	if args["tailall"] then
-		for _, prop in ipairs(all_main_verb_forms) do
-			append_note_all(forms, main_to_all_verb_forms[prop], args["tailall"])
+		-- Handle the ...tailall variants.
+		tailallarg = tailspec[1] .. "tailall"
+		if args[tailallarg] then
+			track(tailallarg)
+			for _, prop in ipairs(tailforms) do
+				append_note_all(forms, main_to_all_verb_forms[prop], args[tailallarg])
+			end
 		end
 	end
 
@@ -4313,8 +4329,16 @@ handle_forms_and_overrides = function(args, forms, data)
 		end
 		for _, form in ipairs(all_forms) do
 			i = i + 1
-			if args[form] then
-				forms[form] = parse_and_stress_override(form, args[form],
+			-- If we auto-generated the past passive participle in order to
+			-- check for irregular overrides, make sure to erase any such
+			-- participles that weren't overridden. This happens for example
+			-- in обнять, where there are two automatically generated past
+			-- passive participles but a single ppp=о́внятый override.
+			local override = args[form] or (
+				data.ppp_auto_generated and rfind(form, "^past_pasv_part") and "-"
+			)
+			if override then
+				forms[form] = parse_and_stress_override(form, override,
 					forms[form], orig_forms)
 			elseif i == 1 then
 				forms[form] = forms[form] or ""

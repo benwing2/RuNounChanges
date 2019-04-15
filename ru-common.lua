@@ -215,9 +215,11 @@ function export.is_beginning_stressed(word)
 		rfind(word, "^[^" .. export.vowel .. "]*[" .. export.vowel .. "]́")
 end
 
--- True if Cyrillic word has no vowel
+-- True if Cyrillic word has no vowel. Don't treat suffixes as nonsyllabic
+-- even if they have no vowel, as they are generally added onto words with
+-- vowels.
 function export.is_nonsyllabic(word)
-	return not rfind(word, "[" .. export.vowel .. "]")
+	return not rfind(word, "^%-") and not rfind(word, "[" .. export.vowel .. "]")
 end
 
 -- True if Cyrillic word has no more than one vowel; includes non-syllabic
@@ -379,6 +381,31 @@ function export.split_syllables(ru, tr)
 	return rusyllables, trsyllables
 end
 
+-- Split Russian word and transliteration into hyphen-separated components.
+-- Rejoining with table.concat(..., "-") will recover the original word.
+-- If the original word ends in a hyphen, that hyphen gets included with the
+-- preceding component (this is the only case when an individual component has
+-- a hyphen in it).
+function export.split_hyphens(ru, tr)
+	local rucomponents = rsplit(ru, "%-")
+	if rucomponents[#rucomponents] == "" and #rucomponents > 1 then
+		rucomponents[#rucomponents - 1] = rucomponents[#rucomponents - 1] .. "-"
+		table.remove(rucomponents)
+	end
+	local trcomponents
+	if tr then
+		trcomponents = rsplit(tr, "%-")
+		if trcomponents[#trcomponents] == "" and #trcomponents > 1 then
+			trcomponents[#trcomponents - 1] = trcomponents[#trcomponents - 1] .. "-"
+			table.remove(trcomponents)
+		end
+		if #rucomponents ~= #trcomponents then
+			error("Russian " .. ru .. " doesn't have same number of hyphenated components as translit " .. tr)
+		end
+	end
+	return rucomponents, trcomponents
+end
+
 -- Apply j correction, converting je to e after consonants, jo to o after
 -- a sibilant, ju to u after hard sibilant.
 -- NOTE: Translit must already be decomposed! See comment at top.
@@ -448,10 +475,29 @@ local function make_unstressed_once_ru(word)
 	return rsub(word, "([́̈ёЁ])([^́̈ёЁ]*)$", function(x, rest) return destresser[x] .. rest; end, 1)
 end
 
+local function map_last_hyphenated_component(fn, ru, tr)
+	if rfind(ru, "%-") then
+		-- If there is a hyphen, do it the hard way by splitting into
+		-- individual components and doing the last one. Otherwise we just do
+		-- the whole string.
+		local rucomponents, trcomponents = export.split_hyphens(ru, tr)
+		local lastru, lasttr = fn(rucomponents[#rucomponents],
+			trcomponents and trcomponents[#trcomponents] or nil)
+		rucomponents[#rucomponents] = lastru
+		ru = table.concat(rucomponents, "-")
+		if trcomponents then
+			trcomponents[#trcomponents] = lasttr
+			tr = table.concat(trcomponents, "-")
+		end
+		return ru, tr
+	end
+	return fn(ru, tr)
+end
+
 -- Make last stressed syllable (acute or diaeresis) unstressed; leave
--- graves alone; if NOCONCAT, return individual syllables.
+-- unstressed; leave graves alone; if NOCONCAT, return individual syllables.
 -- NOTE: Translit must already be decomposed! See comment at top.
-function export.make_unstressed_once(ru, tr, noconcat)
+local function make_unstressed_once_after_hyphen_split(ru, tr, noconcat)
 	if not tr then
 		return make_unstressed_once_ru(ru), nil
 	end
@@ -476,6 +522,16 @@ function export.make_unstressed_once(ru, tr, noconcat)
 	-- Also need to apply j correction as otherwise we'll have je after cons
 	return table.concat(rusyl, ""),
 		export.j_correction(table.concat(trsyl, ""))
+end
+
+-- Make last stressed syllable (acute or diaeresis) to the right of any hyphen
+-- unstressed (unless the hyphen is word-final); leave graves alone. We don't
+-- destress a syllable to the left of a hyphen unless the hyphen is word-final
+-- (i.e. a prefix). Otherwise e.g. the accents in the first part of words like
+-- ко́е-како́й and а́льфа-лу́ч won't remain.
+-- NOTE: Translit must already be decomposed! See comment at top.
+function export.make_unstressed_once(ru, tr)
+	return map_last_hyphenated_component(make_unstressed_once_after_hyphen_split, ru, tr)
 end
 
 local function make_unstressed_once_at_beginning_ru(word)
@@ -546,7 +602,7 @@ end
 -- syllable. Leave grave accents alone except in the last syllable.
 -- If final syllable already has primary stress, do nothing.
 -- NOTE: Translit must already be decomposed! See comment at top.
-function export.make_ending_stressed(ru, tr)
+local function make_ending_stressed_after_hyphen_split(ru, tr)
 	if not tr then
 		return make_ending_stressed_ru(ru), nil
 	end
@@ -556,7 +612,7 @@ function export.make_ending_stressed(ru, tr)
 	end
 	-- Destress the last stressed syllable; pass in "noconcat" so we get
 	-- the individual syllables back
-	rusyl, trsyl = export.make_unstressed_once(ru, tr, "noconcat")
+	rusyl, trsyl = make_unstressed_once_after_hyphen_split(ru, tr, "noconcat")
 	-- Add an acute to the last syllable of both Russian and translit
 	rusyl[#rusyl] = rsub(rusyl[#rusyl], "([" .. export.vowel_no_jo .. "])",
 		"%1" .. AC)
@@ -569,6 +625,16 @@ function export.make_ending_stressed(ru, tr)
 	-- we short-circuited it and made it return lists of syllables
 	return table.concat(rusyl, ""),
 		export.j_correction(table.concat(trsyl, ""))
+end
+
+-- Remove the last primary stress from the portion of the word to the right of
+-- any hyphen (unless the hyphen is word-final) and put it on the final
+-- syllable. Leave grave accents alone except in the last syllable. If final
+-- syllable already has primary stress, do nothing. (See make_unstressed_once()
+-- for why we don't affect stresses to the left of a hyphen.)
+-- NOTE: Translit must already be decomposed! See comment at top.
+function export.make_ending_stressed(ru, tr)
+	return map_last_hyphenated_component(make_ending_stressed_after_hyphen_split, ru, tr)
 end
 
 local function make_beginning_stressed_ru(word)

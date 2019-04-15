@@ -170,6 +170,24 @@ FIXME:
     be passed in.
 51. (DONE) pos=X/Y and gem=X/Y should require same number of elements as actual
     words rather than counting phonetically-joined words.
+52. (DONE) Should treat suffixes as beginning with a palatalizable pseudo-
+    consonant, so e.g. initial -е is indicated as palatalization of the
+    preceding consonant rather than being preceding by [j], and initial -а is
+    rendered as [ə] not [ɐ].
+53. (DONE) Should treat prefixes as followed by a pseudoconsonant that doesn't
+    trigger voicing or devoicing of preceding consonants.
+54. (DONE) Don't add ‿ after prefixes like из-.
+55. Suffix -ёр is rendered as unstressed rather than stressed; probably because
+    the transliteration doesn't preserve the stress mark.
+56. (DONE) -дцат- should be pronounced as if -дцыт-.
+57. (DONE) вь (and other palatalized labials) + /j/ should have optional
+    patalization.
+58. (DONE) Convert unstressed initial э- into и-.
+59. (DONE) Implement automatic generation of secondary [ʑː] pronunciation for
+    зж/жж except as prefix boundaries; add zhpal= to override this.
+60. (DONE) When checking for prefix boundaries, check all listed prefixes +
+    those prefixes preceded by по-, не- or непо- (cf. поссо́рить, порассужда́ть,
+    нерассуди́тельный, etc.).
 ]]
 
 local ut = require("Module:utils")
@@ -187,6 +205,8 @@ local ulower = mw.ustring.lower
 local uupper = mw.ustring.upper
 local usub = mw.ustring.sub
 local ulen = mw.ustring.len
+
+local remove_grave_accents_from_phonetic_respelling = true -- Anatoli's desired value
 
 -- version of rsubn() that discards all but the first return value
 local function rsub(term, foo, bar)
@@ -232,7 +252,9 @@ local CFLEX = u(0x0302) -- circumflex =  ̂
 local DUBGR = u(0x030F) -- double grave =  ̏
 local DOTABOVE = u(0x0307) -- dot above =  ̇
 local DOTBELOW = u(0x0323) -- dot below =  ̣
-local TEMPCFLEX = u(0xFFF1) -- placeholder to be converted to a circumflex
+local PSEUDOCONS = u(0xFFF2) -- pseudoconsonant added to the beginning of suffixes and end of prefixes
+local TEMPCFLEX = u(0xFFF3) -- placeholder to be converted to a circumflex
+local TEMPSUB = u(0xFFF4) -- miscellaneous temporary placeholder
 
 local vow = 'aeiouyɛəäạëöü'
 local ipa_vow = vow .. 'ɐɪʊɨæɵʉ'
@@ -265,10 +287,13 @@ local translit_conv = {
 }
 
 local translit_conv_j = {
-	['cʲ'] = 'tʲ͡sʲ',
-	['ĵʲ'] = 'dʲ͡zʲ'
+	['cʲ'] = 't͡sʲ',
+	['ĵʲ'] = 'd͡zʲ'
 }
 
+-- Table of allophones. Each entry is a list of three values:
+-- (1) the stressed value; (2) the value immediately before primary or
+-- secondary stress; (3) the value elsewhere.
 local allophones = {
 	['a'] = { 'a', 'ɐ', 'ə' },
 	['e'] = { 'e', 'ɪ', 'ɪ' },
@@ -323,34 +348,38 @@ local fronting = {
 -- gemination and other changes. The second element is the original spelling,
 -- so that we don't overmatch and get cases like Поттер. We check for these
 -- prefixes at the beginning of words and also preceded by ne-, po- and nepo-.
+-- The third element should be true if the prefix produces [žž] when assimilated
+-- to a following ж, otherwise omitted. We use this as part of the
+-- implementation of automatic ӂӂ pronunciation, which shouldn't happen at
+-- prefix boundaries.
 local geminate_pref = {
 	--'abː', --'adː',
-	{'be[szšž]ː', 'be[sz]'},
+	{'be[szšž]ː', 'be[sz]', true},
 	--'braomː',
 	{'[vf]ː', 'v'},
-	{'vo[szšž]ː', 'vo[sz]'},
-	{'i[szšž]ː', 'i[sz]'},
+	{'vo[szšž]ː', 'vo[sz]', true},
+	{'i[szšž]ː', 'i[sz]', true},
 	--'^inː',
 	{'kontrː', 'kontr'},
 	{'superː', 'super'},
-	{'tran[szšž]ː', 'trans'},
+	{'tran[szšž]ː', 'trans', true},
 	{'na[tdcč]ː', 'nad'},
-	{'ni[szšž]ː', 'ni[sz]'},
+	{'ni[szšž]ː', 'ni[sz]', true},
 	{'o[tdcč]ː', 'ot'}, --'^omː',
 	{'o[bp]ː', 'ob'},
-	{'obe[szšž]ː', 'obe[sz]'},
+	{'obe[szšž]ː', 'obe[sz]', true},
     {'po[tdcč]ː', 'pod'},
 	{'pre[tdcč]ː', 'pred'}, --'^paszː', '^pozː',
-	{'ra[szšž]ː', 'ra[sz]'},
-	{'[szšž]ː', '[szšž]'}, -- ž on right for жжёт etc., ш on left for США
-	{'me[žš]ː', 'mež'},
-	{'če?re[szšž]ː', 'če?re[sz]'},
+	{'ra[szšž]ː', 'ra[sz]', true},
+	{'[szšž]ː', '[sz]', true},
+	{'me[žš]ː', 'mež', true},
+	{'če?re[szšž]ː', 'če?re[sz]', true},
 	-- certain double prefixes involving ra[zs]-
-	{'predra[szšž]ː', 'predra[sz]'},
-	{'bezra[szšž]ː', 'bezra[sz]'},
-	{'nara[szšž]ː', 'nara[sz]'},
-	{'vra[szšž]ː', 'vra[sz]'},
-	{'dora[szšž]ː', 'dora[sz]'},
+	{'predra[szšž]ː', 'predra[sz]', true},
+	{'bezra[szšž]ː', 'bezra[sz]', true},
+	{'nara[szšž]ː', 'nara[sz]', true},
+	{'vra[szšž]ː', 'vra[sz]', true},
+	{'dora[szšž]ː', 'dora[sz]', true},
 	-- '^sverxː', '^subː', '^tröxː', '^četyröxː',
 }
 
@@ -359,6 +388,13 @@ local function ot_pod_sz(pre, sz)
 	return pre .. sztab[sz]
 end
 
+-- Ad-hoc phonetic substitutions to apply. Each entry is a two-element list,
+-- the two arguments to 'rsub()'. These are applied in order, and are
+-- carefully ordered to work correctly; don't reorder them unless you know
+-- what you're doing. This is called fairly early on, after transliterating,
+-- splitting on words, adding ⁀ at the beginning and end of all words, and
+-- applying a few other changes. It mostly implements various sorts of
+-- assimilations.
 local phonetic_subs = {
 	{'h', 'ɣ'},
 
@@ -367,6 +403,16 @@ local phonetic_subs = {
 	-- the following group is ordered before changes that affect ts
 	{'n[dt]sk', 'n(t)sk'},
 	{'s[dt]sk', 'sck'},
+	-- -дцат- (in numerals) has optionally-geminated дц; if unstressed,
+	-- pronounced as -дцыт-
+	{'dca(' .. accents .. '?)t', function(accent)
+		if accent == '' then
+			return 'c(c)yt'
+		else
+			return 'c(c)a' .. accent .. 't'
+		end
+	end
+	},
 
 	-- Add / before цз, чж sequences (Chinese words) and assimilate чж
 	{'cz', '/cz'},
@@ -414,8 +460,6 @@ local phonetic_subs = {
 	-- misc. changes for assimilation of [dtsz] + sibilants and affricates
 	{'[sz][dt]c', 'sc'},
 	{'([rn])[dt]([cč])', '%1%2'},
-	-- -дцат- (in numerals) has optionally-geminated дц
-	{'dca(' .. accents .. '?)t', 'c(c)a%1t'},
 	-- дц, тц, дч, тч + vowel always remain geminated, so mark this with ˑ;
 	-- if not followed by a vowel, as in e.g. путч, use normal gemination
 	-- (it will normally be degeminated)
@@ -458,8 +502,17 @@ local phonetic_subs = {
 	{'lnc', 'nc'},
 	{'[sz]t(li' .. accents .. '?v)', 's%1'},
 	{'[sz]tn', 'sn'},
-	
-	 -- backing of /i/ after hard consonants in close juncture
+
+	-- initial unstressed э -> и; should precede backing of /i/ in close juncture	
+	{'⁀ɛ([^' .. acc .. '])', '⁀i%1'},
+	-- unstressed э after a vowel -> и; repeated to handle the unlikely case
+	-- where two ээ occur in a row; FIXME, this is a type of ikanye, and we
+	-- mostly implement ikanye later on using the chart in 'allophones', so
+	-- it would be nice to merge these two cases, but I can't think of an
+	-- obvious way to do it
+	{'(' .. vowels .. accents .. '?)ɛ([^' .. acc .. '])', '%1i%2'},
+	{'(' .. vowels .. accents .. '?)ɛ([^' .. acc .. '])', '%1i%2'},
+	-- backing of /i/ after hard consonants in close juncture
 	{'([mnpbtdkgfvszxɣrlšžcĵĉĝ])⁀‿⁀i', '%1⁀‿⁀y'},
 }
 
@@ -588,49 +641,80 @@ end
 -- remove accents that we don't want to appear in the phonetic respelling
 function phon_respelling(text, remove_grave)
 	text = rsub(text, '[' .. CFLEX .. DUBGR .. DOTABOVE .. DOTBELOW .. '‿]', '')
-	-- Remove grave accents from annotations but not from phonetic respelling
+	-- Remove grave accents from annotations but maybe not from phonetic respelling
 	if remove_grave then
 		text = com.remove_grave_accents(text)
 	end
 	return text
 end
 
+-- Direct implementation of {{ru-IPA}}.
 function export.ru_IPA(frame)
 	local args = clone_args(frame)
-	local text = args.phon or args[1] or mw.title.getCurrentTitle().text
+	local text = args[1] or args.phon or mw.title.getCurrentTitle().text
 	local origtext, transformed_text = m_ru_translit.apply_tr_fixes(text,
 		args.noadj, args.noshto)
-	local maintext = export.ipa(transformed_text, args.adj, args.gem, args.bracket or "y", args.pos, "transformed")
+	local pronunciations = export.ipa(transformed_text, args.adj, args.gem,
+		args.bracket or "y", args.pos, args.zhpal, "transformed")
+	local maintext
 	if args.raw then
-		return maintext
+		return table.concat(pronunciations, ", ")
 	else
 		local anntext = (args.ann == "y" and "'''" .. phon_respelling(text, "remove grave") .. "''':&#32;" or
 			args.ann and "'''" .. args.ann .. "''':&#32;" or
 			"")
 		local lang = require("Module:languages").getByCode("ru")
-		maintext = require("Module:IPA").format_IPA_full(lang, {{pron = maintext}})
-		local respelling_text = (args.phon and "&nbsp;(''phonetic respelling'': " .. phon_respelling(args.phon) .. ")" or
-			origtext ~= transformed_text and "&nbsp;(''phonetic respelling'': " .. phon_respelling(transformed_text) .. ")" or
-			"")
+		
+		for i, pronunciation in ipairs(pronunciations) do
+			pronunciations[i] = { pron = pronunciation }
+		end
+		
+		maintext = require("Module:IPA").format_IPA_full(lang, pronunciations)
+		
+		local respelling
+		
+		if args.phon then
+			respelling = args.phon
+		elseif origtext ~= transformed_text then
+			respelling = transformed_text
+		end
+		
+		local respelling_text = ""
+		
+		if respelling then
+			respelling = phon_respelling(respelling, remove_grave_accents_from_phonetic_respelling)
+			respelling_text = respelling and "&nbsp;(''phonetic respelling'': " .. require("Module:script utilities").tag_text(respelling, lang) .. ")"
+		end
+		
 		return anntext .. maintext .. respelling_text
 	end
 end
 
+-- Forward function declarations
+local ru_ipa_main
+
 -- Return the actual IPA corresponding to Cyrillic text. ADJ, GEN, BRACKET
--- and POS are as in [[Template:ru-IPA]]. If IS_TRANFORMED is true, the text
--- has already been passed through m_ru_translit.apply_tr_fixes(); otherwise,
--- this will be done.
-function export.ipa(text, adj, gem, bracket, pos, is_transformed)
+-- POS and ZHPAL are as in [[Template:ru-IPA]]. If IS_TRANFORMED is true, the
+-- text has already been passed through m_ru_translit.apply_tr_fixes();
+-- otherwise, this will be done. Note that the return value is a list of one or
+-- more valid pronunciations.
+function export.ipa(text, adj, gem, bracket, pos, zhpal, is_transformed)
 	local new_module_result
 	-- Test code to compare existing module to new one.
 	if test_new_ru_pron_module then
 		local m_new_ru_pron = require("Module:User:Benwing2/ru-pron")
 		new_module_result = m_new_ru_pron.ipa(text, adj, gem, bracket, pos,
-			is_transformed)
+			zhpal, is_transformed)
 	end
 
 	if type(text) == 'table' then
-		text, adj, gem, bracket, pos = (ine(text.args.phon) or ine(text.args[1])), ine(text.args.adj), ine(text.args.gem), ine(text.args.bracket), ine(text.args.pos)
+		text, adj, gem, bracket, pos, zhpal =
+			(ine(text.args.phon) or ine(text.args[1])),
+			ine(text.args.adj),
+			ine(text.args.gem),
+			ine(text.args.bracket),
+			ine(text.args.pos),
+			ine(text.args.zhpal)
 		if not text then
 			text = mw.title.getCurrentTitle().text
 		end
@@ -827,7 +911,11 @@ function export.ipa(text, adj, gem, bracket, pos, is_transformed)
 		if (i % 2) == 1 and word[i] ~= "" then
 			real_word_index = real_word_index + 1
 		end
-		if i < #word - 1 and (accentless['pre'][word[i]] or accentless['prespace'][word[i]] and word[i+1] == " ") then
+		if i < #word - 1 and (accentless['pre'][word[i]] or accentless['prespace'][word[i]] and word[i+1] == " ") and
+			-- don't add ‿ onto the end of a prefix; a prefix is a word followed by a hyphen that is in turn
+			-- followed by a space or end of terms; note that ends of terms after a hyphen are marked by a blank
+			-- string due to the way capturing_split() works
+			not (word[i+1] == "-" and (word[i+2] == " " or word[i+2] == "" and i == #word - 2)) then
 			word[i+1] = '‿'
 			if type(gem) == "table" then
 				table.remove(gem, real_word_index)
@@ -854,8 +942,15 @@ function export.ipa(text, adj, gem, bracket, pos, is_transformed)
 	end
 
 	-- rejoin words, convert hyphens to spaces and eliminate stray spaces
-	-- resulting from this
+	-- resulting from this; but convert hyphens at the beginning of suffixes
+	-- to a pseudoconsonant, so we treat vowels at the beginning of suffixes
+	-- as if they are followed by a consonant, not word-initial. Similarly
+	-- convert hyphens at the end of prefixes to a pseudoconsonant.
 	text = table.concat(word, "")
+	text = rsub(text, '^%-', PSEUDOCONS)
+	text = rsub(text, '%s%-', ' ' .. PSEUDOCONS)
+	text = rsub(text, '%-$', PSEUDOCONS)
+	text = rsub(text, '%-%s', PSEUDOCONS .. ' ')
 	text = rsub(text, '[%-%s]+', ' ')
 	text = rsub(text, '^ ', '')
 	text = rsub(text, ' $', '')
@@ -868,9 +963,101 @@ function export.ipa(text, adj, gem, bracket, pos, is_transformed)
 	text = '⁀' .. text .. '⁀'
 	text = rsub(text, '‿', '⁀‿⁀')
 
+	-- At this point, the spelling has been normalized (see the comment to
+	-- ru_ipa_main() below). Now we need to handle any pronunciation-spelling
+	-- variants (particularly, handling зж and жж, which have both
+	-- non-palatalized and palatalized variants except at prefix boundaries)
+	-- and convert each variant to IPA.
+
+	local alltext
+
+	-- If zž or žž occur not at a prefix boundary, then generate two variants,
+	-- the first with non-palatal [ʐː] and the second with [ʑː] (potentially
+	-- with nearby vowels affected appropriately for the palatalization
+	-- difference). But don't do this if zhpal=n.
+	if zhpal == 'n' or not rfind(text, 'ž') then
+		-- speed up the majority of cases where ž doesn't occur
+		alltext = {text}
+	else
+		-- First, go through and mark all prefix boundaries where a ž directly 
+		-- follows the prefix by inserting a ˑ between prefix and ž. This
+		-- prevents us from generating the [ʑː] variant (notated internally as
+		-- ӂӂ). Don't do this if zhpal=y, which defeats this check.
+		if zhpal ~= 'y' then
+			for _, gempref in ipairs(geminate_pref) do
+				local origspell = gempref[2]
+				local is_zh = gempref[3]
+				if is_zh then
+					-- allow all vowels to have accents following them
+					origspell = rsub(origspell, vowels_c, '%1' .. accents .. '?')
+					text = rsub(text, '(⁀' .. origspell .. ')ž', '%1ˑž')
+					text = rsub(text, '(⁀po' .. origspell .. ')ž', '%1ˑž')
+					text = rsub(text, '(⁀ne' .. origspell .. ')ž', '%1ˑž')
+					text = rsub(text, '(⁀nepo' .. origspell .. ')ž', '%1ˑž')
+				end
+			end
+		end
+		-- Then, if zž or žž are present (which will exclude prefix boundaries
+		-- because a ˑ marker will intervene), generate the two possibilities,
+		-- else generate only one.
+		local alltext1
+		if rfind(text, '[zž]ž') then
+			alltext1 = {text, rsub(text, '[zž]ž', 'ӂӂ')}
+		else
+			alltext1 = {text}
+		end
+		-- Finally, remove the ˑ marker.
+		alltext = {}
+		for _, text in ipairs(alltext1) do
+			table.insert(alltext, rsub(text, 'ˑ', ''))
+		end
+	end
+
+	-- Now generate the pronunciation(s) for each of the spelling variants
+	-- we generate above. (In some cases there are multiple pronunciation
+	-- variants generated, e.g. in the sequence palatalized consonant + a/u +
+	-- optionally palatalized consonant.)
+	local allpron = {}
+	for _, text in ipairs(alltext) do
+		local thispron = ru_ipa_main(text, adj, gem, bracket, pos)
+		for _, pron in ipairs(thispron) do
+			table.insert(allpron, pron)
+		end
+	end
+
+	-- Handle test_new_ru_pron_module if specified (tracking for changed
+	-- pronunciations).
+	if test_new_ru_pron_module then
+		local string_version = table.concat(allpron, ", ")
+		if new_module_result ~= string_version then
+			--error(string_version .. " || " .. new_module_result)
+			track("different-pron")
+		else
+			track("same-pron")
+		end
+	end
+
+	return allpron
+end
+
+-- Convert normalized spelling into actual pronunciation. Return value is a
+-- list of one or more valid pronunciations. "Normalized" means that various
+-- normalization transformations have been applied, e.g.
+-- (1) text is transliterated and accents decomposed;
+-- (2) ‿ is added where appropriate to join clitics to normally-stressed words;
+-- (3) ⁀ is added at the beginning and end of all words;
+-- (4) primary or tertiary stress may have been added to single-syllable words
+--     as appropriate;
+-- (5) punctuation is removed and replaced with spaces and/or IPA foot
+--     boundaries;
+-- (6) etc.
+-- Note that normalization does *not* implement assimilations, conversion of
+-- vowels or consonants to their IPA equivalents, or other intra-word changes.
+ru_ipa_main = function(text, adj, gem, bracket, pos)
 	-- save original word spelling before respellings, (de)voicing changes,
 	-- geminate changes, etc. for implementation of geminate_pref
 	local orig_word = rsplit(text, " ", true)
+	local word
 
 	-- insert or remove /j/ before [aou] so that palatal versions of these
 	-- vowels are always preceded by /j/ and non-palatal versions never are
@@ -991,17 +1178,24 @@ function export.ipa(text, adj, gem, bracket, pos, is_transformed)
 		-- certain sequences at the beginning of a word, but make sure that
 		-- the original spelling is appropriate as well (see comment above
 		-- for geminate_pref).
-		if rfind(pron, 'ː') then
+		if rfind(pron, 'ː') then -- optimize by only doing when gemination present
 			local orig_pron = orig_word[i]
 			local deac = rsub(pron, accents, '')
 			local orig_deac = rsub(orig_pron, accents, '')
+			-- the following two are optimizations to reduce the number of regex
+			-- checks in the majority of cases with words not beginning with ne-
+			-- or po-.
+			local is_ne = rfind(orig_deac, '⁀ne')
+			local is_po = rfind(orig_deac, '⁀po')
 			for _, gempref in ipairs(geminate_pref) do
 				local newspell = gempref[1]
 				local oldspell = gempref[2]
 				-- FIXME! The rsub below will be incorrect if there is
 				-- gemination in a joined preposition or particle
 				if rfind(orig_deac, '⁀' .. oldspell) and rfind(deac, '⁀' .. newspell) or
-					rfind(orig_deac, '⁀ne' .. oldspell) and rfind(deac, '⁀ne' .. newspell) then
+					is_po and rfind(orig_deac, '⁀po' .. oldspell) and rfind(deac, '⁀po' .. newspell) or
+					is_ne and rfind(orig_deac, '⁀ne' .. oldspell) and rfind(deac, '⁀ne' .. newspell) or
+					is_ne and rfind(orig_deac, '⁀nepo' .. oldspell) and rfind(deac, '⁀nepo' .. newspell) then
 					pron = rsub(pron, '(⁀[^‿⁀ː]*)ː', '%1ˑ')
 				end
 			end
@@ -1039,11 +1233,13 @@ function export.ipa(text, adj, gem, bracket, pos, is_transformed)
 			pron = rsub_repeatedly(pron, '(' .. stress_accents .. '.-' .. vowels .. accents .. '?n)ː(' .. vowels .. ')', '%1(ː)%2')
 			-- 3. remaining ž and n between vowels
 			pron = rsub_repeatedly(pron, '(' .. vowels .. accents .. '?[žn])ː(' .. vowels .. ')', '%1ˑ%2')
-			-- 4. ssk (and zsk, already normalized) immediately after the stress
+			-- 4. ž word initially before vowels (жжение, жжём, etc.)
+			pron = rsub_repeatedly(pron, '(⁀ž)ː(' .. vowels .. ')', '%1ˑ%2')
+			-- 5. ssk (and zsk, already normalized) immediately after the stress
 			pron = rsub(pron, '(' .. vowels .. stress_accents .. '[^' .. vow .. ']*s)ː(k)', '%1ˑ%2')
-			-- 5. eliminate remaining gemination, except for ɕː and ӂː
+			-- 6. eliminate remaining gemination, except for ɕː and ӂː
 			pron = rsub(pron, '([^ɕӂ%(%)])ː', '%1')
-			-- 6. convert special gemination symbol ˑ to regular gemination
+			-- 7. convert special gemination symbol ˑ to regular gemination
 			pron = rsub(pron, 'ˑ', 'ː')
 		end
 
@@ -1056,7 +1252,7 @@ function export.ipa(text, adj, gem, bracket, pos, is_transformed)
 		pron = rsub(pron, '%(ʹ%)', '⁽ʲ⁾')
 		-- 4. assimilative palatalization of consonants when followed by
 		--    front vowels or soft sign
-		pron = rsub(pron, '([mnpbtdkgfvszxɣrl])([ː()]*[eiäạëöüʹ])', '%1ʲ%2')
+		pron = rsub(pron, '([mnpbtdkgfvszxɣrl' .. PSEUDOCONS ..'])([ː()]*[eiäạëöüʹ])', '%1ʲ%2')
 		pron = rsub(pron, '([cĵ])([ː()]*[äạöüʹ])', '%1ʲ%2')
 		-- 5. remove hard and soft signs
 		pron = rsub(pron, "[ʹʺ]", "")
@@ -1089,6 +1285,8 @@ function export.ipa(text, adj, gem, bracket, pos, is_transformed)
 			end
 		end
 		if new_final_e_code then
+			-- as requested by Atitarev, final unstressed -ɛ should be unreduced
+			pron = rsub(pron, 'ɛ⁀', 'ɛ' .. TEMPCFLEX .. '⁀')
 			-- handle substitutions in two parts, one for vowel+j+e sequences
 			-- and the other for cons+e sequences
 			pron = rsub(pron, vowels_c .. '(' .. accents .. '?j)ë⁀', function(v, ac)
@@ -1220,13 +1418,16 @@ function export.ipa(text, adj, gem, bracket, pos, is_transformed)
 
 		pron = table.concat(syl_conv, "")
 
-		-- Optional (j) before ɪ, which is always unstressed
-		pron = rsub(pron, "⁀jɪ", "⁀(j)ɪ")
+		-- Optional (j) before ɪ, which is always unstressed; not following
+		-- consonant across a joined word boundary
+		pron = rsub(pron, '([^' .. ipa_vow .. ']⁀‿⁀)jɪ', '%1' .. TEMPSUB .. 'ɪ')
+		pron = rsub(pron, '⁀jɪ', '⁀(j)ɪ')
 		pron = rsub(pron, '([' .. ipa_vow .. '])jɪ', "%1(j)ɪ")
+		pron = rsub(pron, TEMPSUB, 'j')
 
 		--consonant assimilative palatalization of tn/dn/sn/zn, depending on
 		--whether [rl] precedes
-		pron = rsub(pron, '([rl]?)([ˈˌ]?[dtsz])([ˈˌ]?nʲ)', function(a, b, c)
+		pron = rsub(pron, '([rl]?)([ː()ˈˌ]*[dtsz])([ː()ˈˌ]*nʲ)', function(a, b, c)
 			if a == '' then
 				return a .. b .. 'ʲ' .. c
 			else
@@ -1235,7 +1436,7 @@ function export.ipa(text, adj, gem, bracket, pos, is_transformed)
 
 		--consonant assimilative palatalization of st/zd, depending on
 		--whether [rl] precedes
-		pron = rsub(pron, '([rl]?)([ˈˌ]?[sz])([ˈˌ]?[td]ʲ)', function(a, b, c)
+		pron = rsub(pron, '([rl]?)([ˈˌ]?[sz])([ː()ˈˌ]*[td]ʲ)', function(a, b, c)
 			if a == '' then
 				return a .. b .. 'ʲ' .. c
 			else
@@ -1243,7 +1444,7 @@ function export.ipa(text, adj, gem, bracket, pos, is_transformed)
 			end end)
 
 		--general consonant assimilative palatalization
-		pron = rsub_repeatedly(pron, '([szntdpbmfcĵx])([ˈˌ]?)([szntdpbmfcĵlk]ʲ)', function(a, b, c)
+		pron = rsub_repeatedly(pron, '([szntdpbmfcĵx])([ː()ˈˌ]*)([szntdpbmfcĵlk]ʲ)', function(a, b, c)
 			if cons_assim_palatal['compulsory'][a..c] then
 				return a .. 'ʲ' .. b .. c
 			elseif cons_assim_palatal['optional'][a..c] then
@@ -1253,17 +1454,20 @@ function export.ipa(text, adj, gem, bracket, pos, is_transformed)
 			end end)
 
 		-- further assimilation before alveolopalatals
-		pron = rsub(pron, 'n([ˈˌ]?)([čǰɕӂ])', 'nʲ%1%2')
+		pron = rsub(pron, 'n([ː()ˈˌ]*)([čǰɕӂ])', 'nʲ%1%2')
 
 		-- optional palatal assimilation of вп, вб only word-initially
-		pron = rsub(pron, '⁀([ˈˌ]?[fv])([ˈˌ]?[pb]ʲ)', '⁀%1⁽ʲ⁾%2')
+		pron = rsub(pron, '⁀([ː()ˈˌ]*[fv])([ː()ˈˌ]*[pb]ʲ)', '⁀%1⁽ʲ⁾%2')
 
 		-- optional palatal assimilation of бв but not in обв-
-		pron = rsub(pron, 'b([ˈˌ]?vʲ)', 'b⁽ʲ⁾%1')
+		pron = rsub(pron, 'b([ː()ˈˌ]*vʲ)', 'b⁽ʲ⁾%1')
 		if rfind(word[i], '⁀o' .. accents .. '?bv') then
 			-- ə in case of a word with a preceding preposition
-			pron = rsub(pron, '⁀([ˈˌ]?[ɐəo][ˈˌ]?)b⁽ʲ⁾([ˈˌ]?vʲ)', '⁀%1b%2')
+			pron = rsub(pron, '⁀([ː()ˈˌ]*[ɐəo][ː()ˈˌ]*)b⁽ʲ⁾([ː()ˈˌ]*vʲ)', '⁀%1b%2')
 		end
+
+		-- palatalized labials before /j/ should be optionally palatalized
+		pron = rsub(pron, '([mpbfv])ʲ([ːˈˌ]*j)', '%1⁽ʲ⁾%2')
 
 		-- Word-final -лся (normally in past verb forms) should have optional
 		-- palatalization. Need to rewrite as -лсьа to defeat this.
@@ -1299,32 +1503,37 @@ function export.ipa(text, adj, gem, bracket, pos, is_transformed)
 		local opt_hard = rsub(text, '(ʲ[ː()]*)([auʊ])([ˈˌ]?.)⁽ʲ⁾', '%1%2%3')
 		local opt_soft = rsub(text, '(ʲ[ː()]*)([auʊ])([ˈˌ]?.)⁽ʲ⁾', function(a, b, c)
 			return a .. fronting[b] .. c .. 'ʲ' end)
-		text = opt_hard .. ', ' .. opt_soft
+		text = { opt_hard, opt_soft }
+	else
+		text = { text }
 	end
-	-- 5. Undo addition of soft symbol to inherently soft consonants.
-	text = rsub(text, '([čǰɕӂj])ʲ', '%1')
-
-	-- convert special symbols to IPA
-	text = rsub(text, '[cĵ]ʲ', translit_conv_j)
-	text = rsub(text, '[cčgĉĝĵǰšžɕӂ]', translit_conv)
-
-	-- Assimilation involving hiatus of ɐ and ə
-	text = rsub(text, 'ə([‿⁀]*)[ɐə]', 'ɐ%1ɐ')
-
-	-- eliminate ⁀ symbol at word boundaries
-	-- eliminate _ symbol that prevents assimilations
-	text = rsub(text, '[⁀_]', '')
-
-	if test_new_ru_pron_module then
-		if new_module_result ~= text then
-			--error(text .. " || " .. new_module_result)
-			track("different-pron")
-		else
-			track("same-pron")
-		end
+	
+	for i, pronunciation in ipairs(text) do
+		-- 5. Undo addition of soft symbol to inherently soft consonants.
+		pronunciation = rsub(pronunciation, '([čǰɕӂj])ʲ', '%1')
+	
+		-- convert special symbols to IPA
+		pronunciation = rsub(pronunciation, '[cĵ]ʲ', translit_conv_j)
+		pronunciation = rsub(pronunciation, '[cčgĉĝĵǰšžɕӂ]', translit_conv)
+	
+		-- Assimilation involving hiatus of ɐ and ə
+		pronunciation = rsub(pronunciation, 'ə([‿⁀]*)[ɐə]', 'ɐ%1ɐ')
+	
+		-- eliminate ⁀ symbol at word boundaries
+		-- eliminate _ symbol that prevents assimilations
+		-- eliminate pseudoconsonant at beginning of suffixes or end of prefixes
+		text[i] = rsub(pronunciation, '[⁀_' .. PSEUDOCONS ..']', '')
 	end
 
 	return text
+end
+
+-- Return the actual IPA corresponding to Cyrillic text as a single string.
+-- This is a wrapper around export.ipa(), which returns a list; if that
+-- function returns more than one item, they are separated by ", ".
+function export.ipa_string(text, adj, gem, bracket, pos, zhpal, is_transformed)
+	local ipa_list = export.ipa(text, adj, gem, bracket, pos, zhpal, is_transformed)
+	return table.concat(ipa_list, ", ")
 end
 
 return export

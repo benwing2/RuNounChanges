@@ -116,6 +116,12 @@ local function process_arg_chain(args, first, pref, list)
 	return list
 end
 
+local function make_qualifier_text(text)
+	return '<span class="ib-brac"><span class="qualifier-brac">(</span></span>' ..
+		'<span class="ib-content"><span class="qualifier-content">' .. text ..
+		'</span></span><span class="ib-brac"><span class="qualifier-brac">)</span></span>'
+end
+
 -- The main entry point.
 function export.show(frame)
 	local args = clone_args(frame)
@@ -124,7 +130,8 @@ function export.show(frame)
 	
 	local poscat = ine(frame.args[1]) or error("Part of speech has not been specified. Please pass parameter 1 to the module invocation.")
 	
-	local data = {lang = lang, pos_category = poscat, categories = {}, heads = {}, translits = {}, genders = {}, inflections = {}}
+	local data = {lang = lang, pos_category = poscat, categories = {}, heads = {},
+		translits = {}, genders = {}, inflections = {}, noposcat = args.noposcat}
 	local tracking_categories = {}
 
 	-- Get the head parameters
@@ -136,30 +143,31 @@ function export.show(frame)
 		-- catch errors in arguments where headword doesn't match page title,
 		-- but only in the main namespace; for the moment, do only with tracking;
 		-- FIXME, duplicates tracking down below a bit, clean that stuff up
-		local head_noaccent = m_common.remove_accents(m_links.remove_links(head))
+		local head_no_links = m_links.remove_links(head)
+		local head_noaccent = m_common.remove_accents(head_no_links)
 		if NAMESPACE == "" and head_noaccent ~= PAGENAME then
 			track("bad-headword")
 			--error("Headword " .. head .. " doesn't match pagename " ..
 			--	PAGENAME)
 		end
-		
+
 		-- The following are for bot scripts
-		if rfind(head, " ") then
+		if rfind(head_no_links, " ") then
 			track("space-in-headword/" .. poscat)
-		elseif rfind(head, ".%-.") then
+		elseif rfind(head_no_links, ".%-.") then
 			-- We only look for hyphens between characters so we don't
 			-- get tripped up by prefixes and suffixes
 			track("hyphen-no-space-in-headword/" .. poscat)
 		end
-		if m_common.needs_accents(head) then
-			if not args.notrcat then
+		if m_common.needs_accents(head_no_links) then
+			if not args.noacccat then
 				table.insert(data.categories, "Russian terms needing accents")
 			end
 		end
-		if rfind(ulower(head), latin_text_class) then
+		if rfind(ulower(head_no_links), latin_text_class) then
 			track("latin-text-in-headword")
 		end
-		if rfind(head, "ьо") then
+		if rfind(head_no_links, "ьо") then
 			track("ьо")
 		end
 		
@@ -222,7 +230,7 @@ function export.show(frame)
 		pos_functions[poscat](args, data)
 	end
 
-	return m_headword.full_headword(data) ..
+	return m_headword.full_headword(data) .. (data.extra_text or "") ..
 		m_utilities.format_categories(tracking_categories, lang, nil)
 end
 
@@ -243,7 +251,8 @@ local function noun_plus_or_multi(frame, multi)
 		args = m_noun.do_generate_forms(args, old)
 	end
 	
-	local data = {lang = lang, pos_category = poscat, categories = {}, heads = {}, translits = {}, genders = {}, inflections = {}}
+	local data = {lang = lang, pos_category = poscat, categories = {}, heads = {},
+		translits = {}, genders = {}, inflections = {}}
 	
 	-- do explicit genders using g=, g2=, etc.
 	data.genders = process_arg_chain(args, "g", "g", data.genders)
@@ -414,13 +423,19 @@ local function noun_plus_or_multi(frame, multi)
 	end
 	genpls = genpls_no_dups
 	
-	do_noun(data, argsn == "s",
+	do_noun(data, args, argsn == "s",
 		genitives, plurals, genpls, feminines, masculines, poscat == "proper nouns")
+
+	local notes = process_arg_chain(args, "notes", "notes")
+	local notes_segments = {}
+	if saw_note then
+		for _, note in ipairs(notes) do
+			table.insert(notes_segments, " " .. make_qualifier_text(note))
+		end
+	end
+	local notes_text = table.concat(notes_segments, "")
 	
-	return m_headword.full_headword(data) .. (
-		args.notes and saw_note and " " .. '<span class="ib-brac"><span class="qualifier-brac">(</span></span>' ..
-		'<span class="ib-content"><span class="qualifier-content">' .. args.notes ..
-		'</span></span><span class="ib-brac"><span class="qualifier-brac">)</span></span>' or "")
+	return m_headword.full_headword(data) .. (data.extra_text or "") .. notes_text
 end
 
 -- External entry point; implementation of {{ru-noun+}}.
@@ -449,12 +464,19 @@ pos_functions["nouns"] = function(args, data, proper)
 	local genpls = process_arg_chain(args, 5, "genpl") -- do genitive plurals
 	local feminines = process_arg_chain(args, "f", "f") -- do feminines
 	local masculines = process_arg_chain(args, "m", "m") -- do masculines
+	if not args.altyo and not args.manual and args[3] ~= "-" and
+		mw.title.getCurrentTitle().nsText == "" and
+		not args.unknown_decl and not args.unknown_stress and
+		not args.unknown_pattern and not args.unknown_gender and
+		not args.unknown_animacy then
+		error("{{ru-noun}} can now only be used with indeclinable and manually-declined nouns; use {{ru-noun+}} instead")
+	end
 
-	do_noun(data, proper,
+	do_noun(data, args, proper,
 		genitives, plurals, genpls, feminines, masculines, proper)
 end
 
-do_noun = function(data, no_plural,
+do_noun = function(data, args, no_plural,
 			genitives, plurals, genpls, feminines, masculines, proper)
 	if #data.genders == 0 then
 		if mw.title.getCurrentTitle().nsText ~= "Template" then
@@ -631,6 +653,31 @@ do_noun = function(data, no_plural,
 		add_forms(m_parts, masculines)
 		table.insert(data.inflections, m_parts)
 	end
+	
+	local extra_notes = {}
+	if args.unknown_decl then
+		track("unknown-decl")
+		table.insert(extra_notes, "unknown declension")
+	end
+	if args.unknown_stress then
+		track("unknown-stress")
+		table.insert(extra_notes, "unknown stress")
+	end
+	if args.unknown_pattern then
+		track("unknown-pattern")
+		table.insert(extra_notes, "unknown accent pattern")
+	end
+	if args.unknown_gender then
+		track("unknown-gender")
+		table.insert(extra_notes, "unknown gender")
+	end
+	if args.unknown_animacy then
+		track("unknown-animacy")
+		table.insert(extra_notes, "unknown animacy")
+	end
+	if #extra_notes > 0 then
+		data.extra_text = " " .. make_qualifier_text(table.concat(extra_notes, ", "))
+	end
 end
 
 local function generate_informal_comp(comp)
@@ -681,6 +728,9 @@ local function generate_comparative(heads, trs, compspec)
 	local comps = {}
 	if not rfind(compspec, "^%+") then
 		error("Compspec '" .. compspec .. "' must begin with + in this function")
+	end
+	if compspec ~= "+" and not rfind(compspec, "^%+[abc]'*$") then
+		error("Compsec '" .. compspec .. "' has illegal format, should be e.g. + or +c''")
 	end
 	compspec = rsub(compspec, "^%+", "")
 	for i, head in ipairs(heads) do
@@ -853,19 +903,23 @@ pos_functions["adjectives"] = function(args, data)
 
 		table.insert(data.inflections, sup_parts)
 	end
+
+	if args.indecl then	
+		table.insert(data.inflections, {label = "indeclinable"})
+		table.insert(data.categories, "Russian indeclinable adjectives")
+	end
 end
 
 -- Display additional inflection information for an adverb
 pos_functions["adverbs"] = function(args, data)
 	local comps = process_arg_chain(args, 2, "comp") -- do comparatives
 
-	local encoded_head = ""
-	if data.heads[1] ~= "" then
-		-- This is decoded again by [[WT:ACCEL]].
-		encoded_head = " origin-" .. data.heads[1]:gsub("%%", "."):gsub(" ", "_")
+	local encoded_head = data.heads[1]
+	if encoded_head == "" then
+		encoded_head = nil
 	end
 
-	handle_comparatives(data, comps, "adverb comparatives", args["noinf"], "comparative-form-of" .. encoded_head)
+	handle_comparatives(data, comps, "adverb comparatives", args["noinf"], {form = "comparative", lemma = encoded_head})
 end
 
 -- Display additional inflection information for a verb and verbal combining form

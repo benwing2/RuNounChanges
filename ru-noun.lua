@@ -388,6 +388,7 @@ local ulen = mw.ustring.len
 
 local AC = u(0x0301) -- acute =  ́
 local CFLEX = u(0x0302) -- circumflex =  ̂
+local PSEUDOCONS = u(0xFFF2) -- pseudoconsonant placeholder, matching ru-common
 local IRREGMARKER = "△"
 local HYPMARKER = "⟐"
 
@@ -439,6 +440,24 @@ local function ine(arg)
 		return inside_quotes
 	end
 	return arg
+end
+
+-- FIXME: Move to utils
+-- Iterate over a chain of parameters, FIRST then PREF2, PREF3, ...,
+-- inserting into LIST (newly created if omitted). Return LIST.
+local function get_arg_chain(args, first, pref, list)
+	if not list then
+		list = {}
+	end
+	local val = args[first]
+	local i = 2
+
+	while val do
+		table.insert(list, val)
+		val = args[pref .. i]
+		i = i + 1
+	end
+	return list
 end
 
 -- synthesize a frame so that exported functions meant to be called from
@@ -605,7 +624,7 @@ local trailing_letter_type
 -- If enabled, compare this module with new version of module to make
 -- sure all declensions are the same. Eventually consider removing this;
 -- but useful as new code is created.
-local test_new_ru_noun_module = true
+local test_new_ru_noun_module = false
 
 -- Forward functions
 
@@ -1451,12 +1470,6 @@ generate_forms_1 = function(args, per_word_info)
 		insert_category(args.categories, cat, args.pos)
 	end
 	args.internal_notes = {}
-	-- Superscript footnote marker at beginning of note, similarly to what's
-	-- done at end of forms.
-	if args.notes then
-		local notes, entry = m_table_tools.get_initial_notes(args.notes)
-		args.notes = notes .. entry
-	end
 	local decl_sufs = old and declensions_old or declensions
 	local decl_cats = old and declensions_old_cat or declensions_cat
 	local intable = old and internal_notes_table_old or internal_notes_table
@@ -1506,6 +1519,20 @@ generate_forms_1 = function(args, per_word_info)
 		default_lemma = lemma
 		local lemmatr
 		lemma, lemmatr = nom.split_russian_tr(lemma)
+
+		-- If we're conjugating a suffix, insert a pseudoconsonant at the beginning
+		-- of all forms, so they get conjugated as if ending in a consonant.
+		-- We remove the pseudoconsonant later.
+		local is_suffix = rfind(lemma, "^%-")
+		args.any_suffix = args.any_suffix or is_suffix
+		local asif_prefix = args["asif_prefix" .. n] or args.asif_prefix or is_suffix and PSEUDOCONS
+		if asif_prefix then
+			lemma = rsub(lemma, "^%-", "-" .. asif_prefix)
+			if lemmatr then
+				lemmatr = rsub(lemmatr, "^%-", "-" .. com.translit(asif_prefix))
+			end
+		end
+		
 
 		args.thisa = args["a" .. n] or args.a
 		args.thisn = args["n" .. n] or args.n
@@ -1855,6 +1882,7 @@ generate_forms_1 = function(args, per_word_info)
 		args.categories = {}
 		args.genders = {}
 		args.this_any_non_nil = {}
+		args.any_suffix = false
 
 		if #arg_sets > 1 then
 			track("multiple-arg-sets")
@@ -1885,6 +1913,35 @@ generate_forms_1 = function(args, per_word_info)
 		table.insert(args.per_word_genders, args.genders)
 
 		handle_forms_and_overrides(args, n, islast)
+
+		if args.any_suffix then
+			-- If we're conjugating a suffix, remove the pseudoconsonant or asif_prefix
+			-- that we previously inserted at the beginning.
+			local asif_prefix = args["asif_prefix" .. n] or args.asif_prefix or PSEUDOCONS
+			local asif_prefix_tr = com.translit(asif_prefix)
+
+			for _, case in ipairs(all_cases) do
+				if args.forms[case] then
+					local newforms = {}
+					for _, form in ipairs(args.forms[case]) do
+						local formru = form[1]
+						local formtr = form[2]
+						formru = rsub(formru, "^%-" .. asif_prefix, "-")
+						if formtr then
+							formtr = rsub(formtr, "^%-" .. asif_prefix_tr, "-")
+						end
+						if formru == "-" then
+							-- if no ending, insert "(no suffix)".
+							table.insert(newforms, {"(no suffix)"})
+						else
+							table.insert(newforms, {formru, formtr})
+						end
+					end
+					args.forms[case] = newforms
+				end
+			end
+		end
+
 		table.insert(args.per_word_info, {args.forms, joiner})
 	end
 
@@ -4840,11 +4897,21 @@ make_table = function(args)
 	data.loc_clause = args.any_overridden.loc and strutils.format(locative, data) or ""
 	data.voc_clause = args.any_overridden.voc and strutils.format(vocative, data) or ""
 
-	data.notes = args.notes
-	data.notes_clause = data.notes and strutils.format(notes_template, data) or ""
-
-	data.internal_notes = table.concat(args.internal_notes, "<br />")
-	data.internal_notes_clause = #data.internal_notes > 0 and strutils.format(internal_notes_template, data) or ""
+	local notes = get_arg_chain(args, "notes", "notes")
+	local all_notes = {}
+	for _, note in ipairs(args.internal_notes) do
+		-- Superscript footnote marker at beginning of note, similarly to what's
+		-- done at end of forms.
+		local symbol, entry = m_table_tools.get_initial_notes(note)
+		table.insert(all_notes, symbol .. entry)
+	end
+	for _, note in ipairs(notes) do
+		-- Here too.
+		local symbol, entry = m_table_tools.get_initial_notes(note)
+		table.insert(all_notes, symbol .. entry)
+	end
+	data.notes = table.concat(all_notes, "<br />")
+	data.notes_clause = data.notes ~= "" and strutils.format(notes_template, data) or ""
 
 	return strutils.format(templates[temp], data)
 end
@@ -4874,8 +4941,6 @@ notes_template = [===[
 </div></div>
 ]===]
 
-internal_notes_template = rsub(notes_template, "notes", "internal_notes")
-
 local function template_prelude(min_width)
 	min_width = min_width or "70"
 	return rsub([===[
@@ -4890,7 +4955,7 @@ end
 
 local function template_postlude()
 	return [===[|-{par_clause}{loc_clause}{voc_clause}
-|{\cl}{internal_notes_clause}{notes_clause}</div></div></div>]===]
+|{\cl}{notes_clause}</div></div></div>]===]
 end
 
 templates["full"] = template_prelude("45") .. [===[
