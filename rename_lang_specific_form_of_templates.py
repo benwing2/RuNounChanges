@@ -218,7 +218,7 @@ bg_specs = [
   )),
 
   ("bg-verb form of", (
-    "Inflection of",
+    "Verb form of",
     ("error-if", ("present-except", ["verb", "part", "g", "f", "d", "person", "number", "tense", "mood"])),
     ("set", "1", [
       "bg",
@@ -469,7 +469,7 @@ de_specs = [
   # NOTE: Has automatic, non-controllable final period that we're ignoring.
   # Doesn't have initial caps.
   ("de-form-adj", (
-    "inflection of",
+    "adj form of",
     # lang= occurs at least once, and is ignored.
     ("error-if", ("present-except", ["deg", "1", "2", "3", "4", "nocat",
       "sort", "lang"])),
@@ -549,7 +549,7 @@ de_specs = [
   )),
 
   ("de-form-noun", (
-    "inflection of",
+    "noun form of",
     ("error-if", ("present-except", ["1", "2", "3", "sort"])),
     ("set", "1", [
       "de",
@@ -636,7 +636,7 @@ el_specs = [
 
 def enm_verb_form(parts):
   return (
-    "inflection of",
+    "verb form of",
     ("error-if", ("present-except", ["1", "2", "t", "id"])),
     ("set", "1", [
       "enm",
@@ -797,7 +797,7 @@ fa_specs = [
   ("fa-adj-form", "fa-adj form of"),
 
   ("fa-form-verb", (
-    "inflection of",
+    "verb form of",
     # t= is ignored by template but sometimes contains useful info.
     ("error-if", ("present-except", ["1", "2", "t"])),
     ("set", "1", [
@@ -830,7 +830,7 @@ fa_specs = [
 fi_specs = [
   ("fi-verb form of", (
     # The template code ignores nocat=.
-    "Inflection of",
+    "verb form of",
     ("error-if", ("present-except", ["1", "pn", "tm", "c", "nocap", "nodot", "nocat"])),
     ("set", "1", [
       "fi",
@@ -880,7 +880,7 @@ gmq_bot_specs = [
 
 got_specs = [
   ("got-verb form of", (
-    "Inflection of",
+    "Verb form of",
     ("error-if", ("present-except", ["1", "p", "n", "t", "v", "m", "nocap", "nodot"])),
     ("set", "1", [
       "got",
@@ -935,7 +935,7 @@ def hi_ur_specs(lang):
     # NOTE: Has automatic, non-controllable final period that we're ignoring.
     # Doesn't have initial caps.
     ("%s-form-adj" % lang, (
-      "inflection of",
+      "adj form of",
       ("error-if", ("present-except", ["1", "2", "3"])),
       ("set", "1", [
         lang,
@@ -984,7 +984,7 @@ def hi_ur_specs(lang):
     # NOTE: Has automatic, non-controllable final period that we're ignoring.
     # Doesn't have initial caps.
     ("%s-form-noun" % lang, (
-      "inflection of",
+      "noun form of",
       # lang= occurs at least once, and is ignored.
       ("error-if", ("present-except", ["1", "2", "3", "lang"])),
       ("set", "1", [
@@ -1007,7 +1007,7 @@ def hi_ur_specs(lang):
     # NOTE: Has automatic, non-controllable final period that we're ignoring.
     # Doesn't have initial caps.
     ("%s-form-verb" % lang, (
-      "inflection of",
+      "verb form of",
       ("error-if", ("present-except", ["1", "2"])),
       ("set", "1", [
         lang,
@@ -1120,13 +1120,14 @@ hu_specs = [
         u"ván": "adv",
         u"vén": "adv",
       }),
+      "part",
     ]),
   )),
 ]
 
 hy_specs = [
   ("hy-form-noun", (
-    "inflection of",
+    "noun form of",
     ("error-if", ("present-except", ["1", "2", "3", "4", "5", "6", "tr"])),
     ("set", "1", [
       "hy",
@@ -1182,7 +1183,7 @@ hy_specs = [
 
 ie_specs = [
   ("ie-past and pp of", (
-    "inflection of",
+    "verb form of",
     ("error-if", ("present-except", ["1"])),
     ("set", "1", [
       "ie",
@@ -1198,7 +1199,7 @@ ie_specs = [
 
 is_specs = [
   ("is-conjugation of", (
-    "inflection of",
+    "verb form of",
     # lang= occurs at least once, and is ignored.
     ("error-if", ("present-except", ["1", "2", "3", "4", "5", "6", "7", "lang"])),
     ("set", "1", [
@@ -1262,6 +1263,7 @@ ja_specs = [
       "",
       "conj",
     ]),
+    ("copy", "sort"),
   )),
 ]
 
@@ -1281,7 +1283,7 @@ ka_specs = [
 
 ku_specs = [
   ("ku-verb form of", (
-    "inflection of",
+    "verb form of",
     ("error-if", ("present-except", ["1", "2", "3", "4"])),
     ("set", "1", [
       "ku",
@@ -1331,7 +1333,7 @@ ku_specs = [
 
 liv_specs = [
   ("liv-conjugation of", (
-    "inflection of",
+    "verb form of",
     ("error-if", ("present-except", ["1", "2", "3", "4"])),
     ("set", "1", [
       "liv",
@@ -1459,15 +1461,14 @@ lt_adj_case_table = {
   "v": "voc",
   "voc": "voc",
   "vocative": "voc",
+  "": [], # can occur when 1= is given
 }
 
 lt_specs = [
   # NOTE: Has automatic, non-controllable final period that we're ignoring.
-  # Doesn't have initial caps. Categorizes into 'adjective forms', which
-  # should be handled by the headword, or 'pronominal adjective forms' if
-  # "pron" in tags, which maybe should be handled by headword (FIXME).
+  # Doesn't have initial caps.
   ("lt-form-adj", (
-    "inflection of",
+    "adj form of",
     ("error-if", ("present-except", ["pro", "1", "2", "3", "4"])),
     ("set", "1", [
       "lt",
@@ -1500,7 +1501,7 @@ lt_specs = [
   # Doesn't have initial caps. Categorizes into 'adjective forms', which
   # should be handled by the headword.
   ("lt-form-adj-is", (
-    "inflection of",
+    "adj form of",
     ("error-if", ("present-except", ["1", "2", "3"])),
     ("set", "1", [
       "lt",
@@ -1515,7 +1516,7 @@ lt_specs = [
   # Doesn't have initial caps. Categorizes into 'noun forms', which
   # should be handled by the headword.
   ("lt-form-noun", (
-    "inflection of",
+    "noun form of",
     # lang= occurs at least once, and is ignored.
     ("error-if", ("present-except", ["1", "2", "3", "lang"])),
     ("set", "1", [
@@ -1551,7 +1552,7 @@ lt_specs = [
   # 'dalyvis participle forms', or (if pro= is given)
   # 'pronominal dalyvis participle forms'.
   ("lt-form-part", (
-    "part form of",
+    "inflection of",
     ("error-if", ("present-except", ["pro", "1", "2", "3"])),
     ("set", "1", [
       "lt",
@@ -1566,13 +1567,14 @@ lt_specs = [
       ("lookup", "1", lt_adj_gender_number_table),
       ("lookup", "2", lt_adj_case_table),
     ]),
+    ("set", "p", "part"),
   )),
 
   # NOTE: Has automatic, non-controllable final period that we're ignoring.
   # Doesn't have initial caps. Categorizes into 'verb forms', which
   # should be handled by the headword.
   ("lt-form-verb", (
-    "inflection of",
+    "verb form of",
     # lang= occurs at least once, and is ignored.
     ("error-if", ("present-except", ["1", "2", "3", "4", "lang"])),
     ("set", "1", [
@@ -1741,7 +1743,7 @@ lv_specs = [
   )),
 
   ("lv-verbal noun of", (
-    "reflexive of",
+    "verbal noun of",
     ("error-if", ("present-except", ["1"])),
     ("set", "1", [
       "lv",
@@ -1754,7 +1756,7 @@ mr_specs = [
   # NOTE: Has automatic, non-controllable final period that we're ignoring.
   # Doesn't have initial caps.
   ("mr-form-adj", (
-    "inflection of",
+    "adj form of",
     ("error-if", ("present-except", ["1", "2", "3"])),
     ("set", "1", [
       "mr",
@@ -1802,7 +1804,7 @@ mt_specs = [
 
 nb_specs = [
   ("nb-noun-form-def-gen", (
-    "inflection of",
+    "noun form of",
     ("error-if", ("present-except", ["1"])),
     ("set", "1", [
       "nb",
@@ -1814,7 +1816,7 @@ nb_specs = [
   )),
 
   ("nb-noun-form-def-gen-pl", (
-    "inflection of",
+    "noun form of",
     ("error-if", ("present-except", ["1"])),
     ("set", "1", [
       "nb",
@@ -1827,7 +1829,7 @@ nb_specs = [
   )),
 
   ("nb-noun-form-indef-gen-pl", (
-    "inflection of",
+    "noun form of",
     ("error-if", ("present-except", ["1"])),
     ("set", "1", [
       "nb",
@@ -1844,7 +1846,7 @@ ofs_specs = [
   # NOTE: Capitalizes initial letter, we are ignoring that and ignoring
   # nocap=. Only 5 uses.
   ("ofs-nom form of", (
-    "inflection of",
+    "noun form of",
     ("error-if", ("present-except", ["1", "2", "c", "n", "g", "w", "nocap"])),
     ("set", "1", [
       "ofs",
@@ -2027,7 +2029,7 @@ def ro_form_noun(t, pagemsg):
 
   if getparam(t, "1") in ["i", "d", ""]:
     return (
-      "inflection of",
+      "noun form of",
       # lang= occurs at least once, and is ignored.
       ("error-if", ("present-except", ["1", "2", "3", "4", "lang"])),
       ("set", "1", [
@@ -2045,7 +2047,7 @@ def ro_form_noun(t, pagemsg):
     )
   else:
     return (
-      "inflection of",
+      "noun form of",
       # lang= occurs at least once, and is ignored.
       # def=y occurs a few times and is ignored; already definite.
       ("error-if", ("present-except", ["1", "2", "3", "lang", "def"])),
@@ -2062,7 +2064,7 @@ def ro_form_noun(t, pagemsg):
 ro_specs = [
   ("ro-adj-form of", (
     # Categorizes into 'adjective forms', should be handled by headword
-    "inflection of",
+    "adj form of",
     ("error-if", ("present-except", ["def", "1", "2", "3"])),
     ("set", "1", [
       "ro",
@@ -2117,7 +2119,7 @@ ro_specs = [
     # NOTE: Has automatic, non-controllable final period that we're ignoring.
     # Doesn't have initial caps. Categorizes into 'verb forms', which should be
     # handled by the headword.
-    "inflection of",
+    "verb form of",
     ("error-if", ("present-except", ["1", "2", "3"])),
     ("set", "1", [
       "ro",
@@ -2167,11 +2169,40 @@ roa_opt_specs = [
   )),
 ]
 
+# FIXME: There should be a directive saying: append to the list,
+# starting at the lowest nonexistent element.
+def ru_get_nonblank_tags(t, pagemsg):
+  tags = []
+  for param in ["3", "4", "5", "6"]:
+    val = getparam(t, param)
+    if val:
+      tags.append(val)
+  tags.append("part")
+  return tags
+
+ru_specs = [
+  ("ru-participle of", (
+    "inflection of",
+    ("error-if", ("present-except", ["1", "2", "3", "4", "5", "6", "tr",
+      "gloss", "pos", "nocat"])),
+    ("set", "1", [
+      "ru",
+      ("copy", "1"),
+      ("copy", "2"),
+    ]),
+    ("copy", "tr"),
+    ("set", "4", ru_get_nonblank_tags),
+    ("copy", "gloss", "t"),
+    ("copy", "pos"),
+    ("copy", "nocat"),
+  )),
+]
+
 sh_specs = [
   # NOTE: Categorizes into "noun forms", but this should be handled by
   # the headword.
   ("sh-form-noun", (
-    "inflection of",
+    "noun form of",
     # ignore sc=Cyrl.
     ("error-if", ("present-except", ["1", "2", "3", "sc"])),
     ("set", "1", [
@@ -2217,7 +2248,7 @@ sh_specs = [
           ("copy", "3")
         ])
       ) if getparam(t, "1") == "vn" else
-      ("inflection of",
+      ("verb form of",
         # ignore sc=Cyrl.
         ("error-if", ("present-except", ["1", "2", "3", "4", "sc"])),
         ("set", "1", [
@@ -2267,7 +2298,7 @@ def sl_check_1_is_m(t, pagemsg, should_return):
 
 sl_specs = [
   ("sl-form-adj", (
-    "inflection of",
+    "adj form of",
     ("error-if", ("present-except", ["1", "2", "3", "4"])),
     ("set", "1", [
       "sl",
@@ -2302,7 +2333,7 @@ sl_specs = [
   )),
 
   ("sl-form-noun", (
-    "inflection of",
+    "noun form of",
     ("error-if", ("present-except", ["1", "2", "3"])),
     ("set", "1", [
       "sl",
@@ -2331,7 +2362,7 @@ sl_specs = [
   )),
 
   ("sl-form-verb", (
-    "inflection of",
+    "verb form of",
     ("error-if", ("present-except", ["1", "2", "3"])),
     ("set", "1", [
       "sl",
@@ -2388,9 +2419,9 @@ sl_specs = [
   ("sl-verb form of", "sl-form-verb"),
 ]
 
-def sv_form(parts):
+def sv_adj_form(parts):
   return (
-    "inflection of",
+    "adj form of",
     ("error-if", ("present-except", ["1", "2"])),
     ("set", "1", [
       "sv",
@@ -2459,7 +2490,7 @@ tg_specs = [
   ("tg-adj-form", "tg-adj form of"),
 
   ("tg-form-verb", (
-    "inflection of",
+    "verb form of",
     ("error-if", ("present-except", ["1", "2"])),
     ("set", "1", [
       "fa",
@@ -2492,7 +2523,7 @@ tl_specs = [
   # we're ignoring. Categorizes into 'verb forms', which should be
   # handled by the headword.
   ("tl-verb form of", (
-    "inflection of",
+    "verb form of",
     ("error-if", ("present-except", ["1", "2"])),
     ("set", "1", [
       "tl",
@@ -2591,6 +2622,7 @@ templates_to_rename_specs = (
   pt_specs +
   ro_specs +
   roa_opt_specs +
+  ru_specs +
   sh_specs +
   sl_specs +
   sv_specs +
