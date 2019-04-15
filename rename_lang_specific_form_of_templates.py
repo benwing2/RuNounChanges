@@ -32,22 +32,23 @@ from blib import getparam, rmparam, msg, errandmsg, site, tname
 # lt-padalyvis (? would need language-specific tag for padalyvis) (466)
 # lt-pusdalyvis (? would need language-specific tag for pusdalyvis) (117)
 # lv-adv form of (2761)
-# lv-inflection of (106703)
 # lv-participle of (? might need lang-specific tags for "(object-of-perception form)", "(invariable form)", "(variable form)" (5163)
 # mn-verb form of (? maybe? uses a module) (63)
 # nb-noun-form-indef-pl (0, DELETE)
 # nl-adj form of (? would need lang-specific tag for "Predicative/adverbial form", has posttext= if comp-of= or sup-of=) (4559)
-# nn-verb-form of (? maybe? uses a module) (???)
+# nn-verb-form of (? maybe? uses a module) (1046)
 # no-noun-form-def (0, DELETE)
 # no-noun-form-def-pl (0, DELETE)
 # pt-article form of (? says "of article ..." before link; might not be necessary) (6)
 # pt-pron def (? not only a form-of template) (24)
-# pt-verb-form-of (? maybe? uses a module) (???)
+# pt-verb-form-of (? maybe? uses a module) (94585)
 # pt-verb form of (? very complicated; takes a region param that can/should be moved out) (29193)
 # ru-participle of (47321)
 # sce-verb form of (? maybe? uses a module) (1)
 # sco-simple-past-of (? 'sco-past of' is hard to generalize) (17)
 # sco-third-person singular of (? 'sco-past of' is hard to generalize) (91)
+# sk-adj-form (0, DELETE)
+# sk-adj-form-poss (0, DELETE)
 # sv-adj-form-abs-def (3)
 # sv-adj-form-abs-def+pl (2072)
 # sv-adj-form-abs-def-m (1274)
@@ -82,7 +83,7 @@ from blib import getparam, rmparam, msg, errandmsg, site, tname
 # sv-verb-form-subjunctive (14)
 # sv-verb-form-sup (2187)
 # sv-verb-form-sup-pass (1680)
-# sw-adj form of (? might be tough) (???)
+# sw-adj form of (? might be tough) (291)
 # tr-possessive form of (? includes posttext) (35)
 
 class BadTemplateValue(Exception):
@@ -318,9 +319,8 @@ def romance_adj_form_of(lang):
       ("lookup", "2", {
         "m": "m",
         "f": "f",
-        # FIXME! Consider enabling mf == m//f in [[Module:form of/data]]
-        "m-f": "m//f",
-        "mf": "m//f",
+        "m-f": "mf",
+        "mf": "mf",
       }),
       ("lookup", "3", {
         "sg": "s",
@@ -350,10 +350,10 @@ chm_grammar_table = {
   "2nd": "2",
   "3rd": "3",
   "1s": "1s",
-  "1p": "1p",
   "2s": "2s",
-  "2p": "2p",
   "3s": "3s",
+  "1p": "1p",
+  "2p": "2p",
   "3p": "3p",
   "0": [],
   "s": "s",
@@ -591,9 +591,6 @@ el_specs = [
           # FIXME: In [[Module:form of/templates]], add alt= alias for numbered
           # display form
           ("copy", "alt"),
-          # FIXME: In [[Module:form of/data]], add
-          # "asupd" = "absolute superlative degree"
-          # "rsupd" = "relative superlative degree"
           "asupd",
         ]),
         ("copy", "gloss", "t"),
@@ -645,8 +642,6 @@ enm_specs = [
   ("enm-first-person singular of",
       enm_verb_form(["1", "s", "pres", "ind"])),
   ("enm-first/third-person singular past of",
-      # FIXME: In [[Module:form of/data]], add:
-      # 13 = [[Appendix:Glossary#first person|first]] and [[Appendix:Glossary#third person|third person]]
       enm_verb_form(["13", "s", "past", "ind"])),
   ("enm-plural of",
       enm_verb_form(["p", "pres", "ind"])),
@@ -738,12 +733,12 @@ et_specs = [
       ("copy", "1"),
       "",
       ("lookup", "p", {
-        "1s": ["1", "s"],
-        "2s": ["2", "s"],
-        "3s": ["3", "s"],
-        "1p": ["1", "p"],
-        "2p": ["2", "p"],
-        "3p": ["3", "p"],
+        "1s": "1s",
+        "2s": "2s",
+        "3s": "3s",
+        "1p": "1p",
+        "2p": "2p",
+        "3p": "3p",
         "pass": "pass",
         "": [],
       }),
@@ -923,8 +918,6 @@ def hi_ur_specs(lang):
         "",
         ("lookup", "1", {
           "d": "dir",
-          # FIXME: In [[Module:form of/data]], add "indir" = "indirect case",
-          # I think same as "oblique case"
           "i": "indir",
           "o": "indir",
           "v": "voc",
@@ -949,9 +942,6 @@ def hi_ur_specs(lang):
         ("copy", "3"),
         "",
         ("lookup", "1", {
-          # FIXME: In [[Module:form of/data]], add
-          #  "hab" = "habitual" (aspect),
-          #  "cont" = "continuous" (aspect) (same as progressive?)
           "h": "hab",
           "p": "pfv",
           "c": ["cont", "part"],
@@ -978,8 +968,6 @@ def hi_ur_specs(lang):
         "",
         ("lookup", "1", {
           "d": "dir",
-          # FIXME: In [[Module:form of/data]], add "indir" = "indirect case",
-          # I think same as "oblique case"
           "i": "indir",
           "o": "indir",
           "v": "voc",
@@ -1562,12 +1550,12 @@ lt_specs = [
       ("copy", "3"),
       "",
       ("lookup", "1", {
-        "1s": ["1", "s"],
-        "1p": ["1", "p"],
-        "2s": ["2", "s"],
-        "2p": ["2", "p"],
-        "3s": ["3", "s"],
-        "3p": ["3", "p"],
+        "1s": "1s",
+        "2s": "2s",
+        "3s": "3s",
+        "1p": "1p",
+        "2p": "2p",
+        "3p": "3p",
       }),
       ("lookup", "2", {
         "pres": "pres",
@@ -1742,8 +1730,6 @@ mr_specs = [
       "",
       ("lookup", "1", {
         "d": "dir",
-        # FIXME: In [[Module:form of/data]], add "indir" = "indirect case",
-        # I think same as "oblique case"
         "i": "indir",
         "o": "indir",
         "v": "voc",
@@ -1854,8 +1840,6 @@ ofs_specs = [
         "mfn": "m//f//n",
         "": [],
       }),
-      # FIXME: In [[Module:form of/data]], add "wk" = "weak", "str" = "strong";
-      # these are tag_type="inflection" or "class" I think
       ("lookup", "w", {
         "w": "wk",
         "s": "str",
@@ -2108,26 +2092,18 @@ ro_specs = [
       ("copy", "3"),
       "",
       ("lookup", "1", {
-        # FIXME: In [[Module:form of/data]], consider adding common
-        # combinations, specifically 1s/2s/3s, 1d/2d/3d, 1p/2p/3p
-        # FIXME: In [[Module:form of/data]], add:
-        # 12 = [[Appendix:Glossary#first person|first]] and [[Appendix:Glossary#second person|second person]]
-        # 13 = [[Appendix:Glossary#first person|first]] and [[Appendix:Glossary#third person|third person]]
-        # 123 = [[Appendix:Glossary#first person|first]], [[Appendix:Glossary#second person|second]] and [[Appendix:Glossary#third person|third person]] (with appropriate spans for serial commas, and fix ucfirst() to handle those spans)
-        "1s": ["1", "s"],
-        "2s": ["2", "s"],
-        "3s": ["3", "s"],
-        "1p": ["1", "p"],
-        "2p": ["2", "p"],
-        "3p": ["3", "p"],
+        "1s": "1s",
+        "2s": "2s",
+        "3s": "3s",
+        "1p": "1p",
+        "2p": "2p",
+        "3p": "3p",
       }),
       ("lookup", "2", {
         "pres": ["pres", "ind"],
         "present": ["pres", "ind"],
         "impf": ["impf", "ind"],
         "imperfect": ["impf", "ind"],
-        # FIXME: In [[Module:form of/data]], add sperf=simple perfect,
-        # spast=simple past
         "perf": ["sperf", "ind"],
         "perfect": ["sperf", "ind"],
         "pret": ["sperf", "ind"],
@@ -2140,7 +2116,6 @@ ro_specs = [
         "sub": ["pres", "sub"],
         "subj": ["pres", "sub"],
         "subjunctive": ["pres", "sub"],
-        # FIXME: In [[Module:form of/data]], add impv=imperative
         "impr": ["imp"],
         "imp": ["imp"], # a bug, but we can handle it; occurs once
         "imperative": ["imp"],
@@ -2218,12 +2193,12 @@ sh_specs = [
           ("copy", "3"),
           ("copy", "4"),
           ("lookup", "1", {
-            "1s": ["1", "s"],
-            "2s": ["2", "s"],
-            "3s": ["3", "s"],
-            "1p": ["1", "s"],
-            "2p": ["2", "p"],
-            "3p": ["3", "p"],
+            "1s": "1s",
+            "2s": "2s",
+            "3s": "3s",
+            "1p": "1p",
+            "2p": "2p",
+            "3p": "3p",
           }),
           ("lookup", "2", {
             "pres": "pres",
@@ -2331,15 +2306,15 @@ sl_specs = [
       ("copy", "3"),
       "",
       ("lookup", "1", {
-        "1s": ["1", "s"],
-        "2s": ["2", "s"],
-        "3s": ["3", "s"],
-        "1d": ["1", "d"],
-        "2d": ["2", "d"],
-        "3d": ["3", "d"],
-        "1p": ["1", "s"],
-        "2p": ["2", "p"],
-        "3p": ["3", "p"],
+        "1s": "1s",
+        "2s": "2s",
+        "3s": "3s",
+        "1d": "1d",
+        "2d": "2d",
+        "3d": "3d",
+        "1p": "1p",
+        "2p": "2p",
+        "3p": "3p",
       }),
       ("lookup", "2", {
         "pres": "pres",
@@ -2492,10 +2467,6 @@ tl_specs = [
       ("copy", "1"),
       "",
       ("lookup", "2", {
-        # FIXME: In [[Module:form of/data]], add (or maybe as lang-specific)
-        # "compl" = "complete aspect"
-        # "rcompl" = "recently complete aspect"
-        # "contem" = "contemplative aspect"
         "comp": ["compl", "asp"],
         "prog": ["prog", "asp"],
         "cont": ["contem", "asp"],
