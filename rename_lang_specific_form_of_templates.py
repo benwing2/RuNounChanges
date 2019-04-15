@@ -969,7 +969,9 @@ gmq_bot_specs = [
 got_specs = [
   ("got-verb form of", (
     "Verb form of",
-    ("error-if", ("present-except", ["1", "p", "n", "t", "v", "m", "nocap", "nodot"])),
+    # lang= occurs at least once, and is ignored.
+    ("error-if", ("present-except", ["1", "p", "n", "t", "tr", "v", "m",
+      "nocap", "nodot", "lang"])),
     ("set", "1", [
       "got",
       ("copy", "1"),
@@ -1007,6 +1009,7 @@ got_specs = [
       }),
       ("lookup", "m", {
         "ind": "ind",
+        "indc": "ind", # error per template, but occurs
         "sub": "sub",
         "imp": "imp",
         "ptc": "part",
