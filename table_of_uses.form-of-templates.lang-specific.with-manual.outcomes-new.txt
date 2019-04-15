@@ -551,10 +551,6 @@
 |-
 | '''[[Template:sino-vietnamese reading of]]''' || '''[[Template:sino-vietnamese reading of]]''' || 7 || No || Yes || No || Rename to {{temp|vi-sino-vietnamese reading of}}
 |-
-| '''[[Template:sk-adj-form]]''' || '''[[Template:sk-adj-form]]''' || 0 || Yes || ? || Yes || Delete, unused, but first need to fix [[Module:accel/sk]]
-|-
-| '''[[Template:sk-adj-form-poss]]''' || '''[[Template:sk-adj-form-poss]]''' || 0 || Yes || ? || Yes || Delete, unused, but first need to fix [[Module:accel/sk]]
-|-
 | '''[[Template:sl-form-adj]]''' || '''[[Template:sl-form-adj]]''' || 49 || Yes || No || No || Replace
 |-
 | '''[[Template:sl-form-noun]]''' || '''[[Template:sl-form-noun]]''' || 137 || Yes || No || No || Replace
