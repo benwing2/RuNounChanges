@@ -2,13 +2,13 @@
 # -*- coding: utf-8 -*-
 
 import pywikibot, re, sys, codecs, argparse
+import traceback, pprint
 
 import blib
 from blib import getparam, rmparam, msg, errandmsg, site, tname
 
 
 # STILL TO DO:
-# bg-verb form of (30114)
 # ca-verb form of (78127)
 # de-verb form of (? has 5=t -> "subordinate clause form") (54761)
 # egy-verb form of (? lots of Egyptian-specific tags) (27)
@@ -19,13 +19,10 @@ from blib import getparam, rmparam, msg, errandmsg, site, tname
 # eo-form of (? takes actual ending, generates tags from it, would be a radical shift) (99087)
 # es-verb form of (? very complicated; takes a region param that can/should be moved out) (441797)
 # ff-fuc-form of (0, DELETE)
-# fi-verb form of (6022)
 # gl-verb form of (? very complicated) (598)
 # got-nom form of (? has posttext= if comp-of=, sup-of=, presptc-of= or pastptc-of=) (2935)
 # ia-form of (? takes actual ending, generates tags from it, would be a radical shift) (718)
 # io-form of (? takes actual ending, generates tags from it, would be a radical shift) (10116)
-# ja-past of verb (3)
-# ja-te form of verb (5)
 # ja-verb form of (? takes Japanese params, some in Hiragana, would be a radical shift) (93)
 # ka-verb-form-of (? has links to [[Appendix:Georgian verbs]]; has stuff describing object pronouns, which maybe should be posttext) (116)
 # lt-būdinys/lt-budinys (? would need language-specific tag for būdinys) (184)
@@ -44,7 +41,6 @@ from blib import getparam, rmparam, msg, errandmsg, site, tname
 # no-noun-form-def (0, DELETE)
 # no-noun-form-def-pl (0, DELETE)
 # pt-article form of (? says "of article ..." before link; might not be necessary) (6)
-# pt-ordinal form/pt-ordinal def (? would be a radical shift) (153)
 # pt-pron def (? not only a form-of template) (24)
 # pt-verb-form-of (? maybe? uses a module) (???)
 # pt-verb form of (? very complicated; takes a region param that can/should be moved out) (29193)
@@ -92,7 +88,10 @@ from blib import getparam, rmparam, msg, errandmsg, site, tname
 class BadTemplateValue(Exception):
   pass
 
-templates_to_actually_do = {
+class BadRewriteSpec(Exception):
+  pass
+
+templates_to_actually_do = [
   "cu-form of",
   "da-pl-genitive",
   "de-du contraction",
@@ -147,7 +146,7 @@ templates_to_actually_do = {
   "ur-form-adj",
   "ur-form-noun",
   "ur-form-verb",
-}
+]
 
 art_blk_specs = [
   ("blk-past of", (
@@ -165,7 +164,7 @@ art_blk_specs = [
 
 bg_specs = [
   ("bg-adj form of", (
-    "Inflection of",
+    "Adj form of",
     ("error-if", ("present-except", ["1", "2", "3", "adj"])),
     ("set", "1", [
       "bg",
@@ -188,11 +187,10 @@ bg_specs = [
         "definite": "def",
       }),
     ]),
-    ("set", "p", "a"),
   )),
 
   ("bg-noun form of", (
-    "Inflection of",
+    "Noun form of",
     ("error-if", ("present-except", ["1", "2", "3", "noun"])),
     ("set", "1", [
       "bg",
@@ -216,14 +214,79 @@ bg_specs = [
         "": [],
       }),
     ]),
-    ("set", "p", "n"),
+  )),
+
+  ("bg-verb form of", (
+    "Inflection of",
+    ("error-if", ("present-except", ["verb", "part", "g", "f", "d", "person", "number", "tense", "mood"])),
+    ("set", "1", [
+      "bg",
+      ("copy", "verb"),
+      "",
+      ("lookup", "part", {
+        "adverbial participle": ["adv", "part"],
+        "verbal noun": [
+          ("lookup", "g", {
+            "singular": "s",
+            "plural": "p",
+          }),
+          ("lookup", "d", {
+            "indefinite": "indef",
+            "definite": "def",
+          }),
+          "vnoun"
+        ],
+        "": [
+          ("lookup", "person", {
+            "first": "1",
+            "second": "2",
+            "third": "3",
+          }),
+          ("lookup", "number", {
+            "singular": "s",
+            "plural": "p",
+          }),
+          ("lookup", "tense", {
+            "present": "pres",
+            "aorist": "aor",
+            "imperfect": "impf",
+          }),
+          ("lookup", "mood", {
+            "indicative": "ind",
+            "imperative": "imp",
+            "renarrative": "renarr",
+          }),
+        ],
+        True: [
+          ("lookup", "f", {
+            "subject form": "subje",
+            "object form": "obj",
+          }),
+          ("lookup", "g", {
+            "masculine": "m",
+            "feminine": "f",
+            "neuter": "n",
+            "plural": "p",
+          }),
+          ("lookup", "d", {
+            "indefinite": "indef",
+            "definite": "def",
+          }),
+          ("lookup", "part", {
+            "present active participle": ["pres", "act", "part"],
+            "past passive participle": ["past", "pass", "part"],
+            "past active aorist participle": ["past", "act", "aor", "part"],
+            "past active imperfect participle": ["past", "act", "impf", "part"],
+          }),
+        ],
+      }),
+    ]),
   )),
 ]
 
 br_specs = [
-  # NOTE: Has automatic, non-controllable initial caps that we're ignoring.
   ("br-noun-plural", (
-    "inflection of",
+    "Noun form of",
     ("error-if", ("present-except", ["1", "2"])),
     ("set", "1", [
       "br",
@@ -231,7 +294,6 @@ br_specs = [
       ("copy", "2"),
       "p",
     ]),
-    ("set", "p", "n"),
   )),
 ]
 
@@ -240,7 +302,7 @@ def romance_adj_form_of(lang):
   # uses {{masculine singular of}}, {{feminine singular of}}, etc.
   # Not all languages accept m-f or mf, but it doesn't hurt to accept them.
   return (
-    "Inflection of",
+    "Adj form of",
     ("error-if", ("present-except", ["1", "2", "3", "4", "nocap", "nodot"])),
     ("set", "1", [
       lang,
@@ -265,7 +327,6 @@ def romance_adj_form_of(lang):
         "pl": "p",
       }),
     ]),
-    ("set", "p", "a"),
     ("copy", "nocap"),
     ("copy", "nodot"),
   )
@@ -288,12 +349,12 @@ chm_grammar_table = {
   "1st": "1",
   "2nd": "2",
   "3rd": "3",
-  "1s": ["1", "s"],
-  "1p": ["1", "p"],
-  "2s": ["2", "s"],
-  "2p": ["2", "p"],
-  "3s": ["3", "s"],
-  "3p": ["3", "p"],
+  "1s": "1s",
+  "1p": "1p",
+  "2s": "2s",
+  "2p": "2p",
+  "3s": "3s",
+  "3p": "3p",
   "0": [],
   "s": "s",
   "p": "p",
@@ -541,10 +602,13 @@ el_specs = [
 
   ("el-participle of", (
     "Inflection of",
-    ("error-if", ("present-except", ["1", "2", "gloss", "t", "nodot"])),
+    ("error-if", ("present-except", ["1", "2", "gloss", "t", "nodot", "nocap"])),
     ("set", "1", [
       "el",
       ("copy", "1"),
+    ]),
+    ("copy", "tr"),
+    ("set", "3", [
       "",
       ("lookup", "2", {
         "present": ["pres", "part"],
@@ -558,6 +622,7 @@ el_specs = [
     ("copy", "gloss", "t"),
     ("copy", "t"),
     ("copy", "nodot"),
+    ("copy", "nocap"),
   )),
 ]
 
@@ -612,7 +677,7 @@ et_specs = [
     "Inflection of",
     # pos= is commonly present but ignored by the template. But it
     # contains useful information so we convert it to p=.
-    ("error-if", ("present-except", ["1", "c", "n", "pos"])),
+    ("error-if", ("present-except", ["1", "c", "n", "pos", "nocap", "nodot"])),
     ("set", "1", [
       "et",
       ("copy", "1"),
@@ -639,6 +704,8 @@ et_specs = [
       }),
     ]),
     ("copy", "pos", "p"),
+    ("copy", "nocap"),
+    ("copy", "nodot"),
   )),
 
   ("et-participle of", (
@@ -723,7 +790,8 @@ fa_specs = [
 
   ("fa-form-verb", (
     "inflection of",
-    ("error-if", ("present-except", ["1", "2"])),
+    # t= is ignored by template but sometimes contains useful info.
+    ("error-if", ("present-except", ["1", "2", "t"])),
     ("set", "1", [
       "fa",
       ("copy", "2"),
@@ -747,6 +815,44 @@ fa_specs = [
         "pstem": ["past", "stem"],
       }),
     ]),
+    ("copy", "t"),
+  )),
+]
+
+fi_specs = [
+  ("fi-verb form of", (
+    # The template code ignores nocat=.
+    "Inflection of",
+    ("error-if", ("present-except", ["1", "pn", "tm", "c", "nocap", "nodot", "nocat"])),
+    ("set", "1", [
+      "fi",
+      ("copy", "1"),
+      "",
+      ("lookup", "pn", {
+        "1s": "1s",
+        "2s": "2s",
+        "3s": "3s",
+        "1p": "1p",
+        "2p": "2p",
+        "3p": "3p",
+        "p": "p",
+        "pasv": "pass",
+        "pass": "pass",
+      }),
+      ("lookup", "tm", {
+        "pres": ["pres", "ind"],
+        "past": ["past", "ind"],
+        "cond": "cond",
+        "impr": "imp",
+        "potn": "potn",
+      }),
+      ("lookup", "c", {
+        "": [],
+        True: "conn",
+      }),
+    ]),
+    ("copy", "nocap"),
+    ("copy", "nodot"),
   )),
 ]
 
@@ -856,8 +962,8 @@ def hi_ur_specs(lang):
           "fs": ["f", "s"],
           "fp": ["f", "p"],
         }),
+        ["adj", "form"],
       ]),
-      ["adj", "form"],
     )),
 
     # NOTE: Has automatic, non-controllable final period that we're ignoring.
@@ -876,7 +982,7 @@ def hi_ur_specs(lang):
           # I think same as "oblique case"
           "i": "indir",
           "o": "indir",
-          "v": "vocative",
+          "v": "voc",
         }),
         ("lookup", "2", {
           "s": "s",
@@ -1037,6 +1143,7 @@ hy_specs = [
       ("lookup", "3", {
         "d": "def",
         "def": "def",
+        "": [],
       }),
       ("lookup", "5", {
         "1": ["1", "poss"],
@@ -1116,6 +1223,29 @@ it_specs = [
   ("it-adj form of", romance_adj_form_of("it")),
 ]
 
+ja_specs = [
+  ("ja-past of verb", (
+    "verb form of",
+    ("error-if", ("present-except", ["1"])),
+    ("set", "1", [
+      "ja",
+      ("copy", "1"),
+      "",
+      "past",
+    ]),
+  )),
+  ("ja-te form of verb", (
+    "verb form of",
+    ("error-if", ("present-except", ["1"])),
+    ("set", "1", [
+      "ja",
+      ("copy", "1"),
+      "",
+      "conj",
+    ]),
+  )),
+]
+
 ka_specs = [
   ("ka-verbal for", (
     "verbal noun of",
@@ -1133,7 +1263,7 @@ ka_specs = [
 ku_specs = [
   ("ku-verb form of", (
     "inflection of",
-    ("error-if", ("present-except", ["1", "2", "3"])),
+    ("error-if", ("present-except", ["1", "2", "3", "4"])),
     ("set", "1", [
       "ku",
       ("copy", "1"),
@@ -1237,6 +1367,7 @@ liv_specs = [
       ("lookup", "1", {
         "sg": "s",
         "pl": "p",
+        "": [],
       }),
     ]),
     ("copy", "4", "p"),
@@ -1400,7 +1531,7 @@ lt_specs = [
   # 'dalyvis participle forms', or (if pro= is given)
   # 'pronominal dalyvis participle forms'.
   ("lt-form-part", (
-    "inflection of",
+    "part form of",
     ("error-if", ("present-except", ["pro", "1", "2", "3"])),
     ("set", "1", [
       "lt",
@@ -1414,7 +1545,6 @@ lt_specs = [
       }),
       ("lookup", "1", lt_adj_gender_number_table),
       ("lookup", "2", lt_adj_case_table),
-      ("set", "p", "part"),
     ]),
   )),
 
@@ -1455,10 +1585,42 @@ lt_specs = [
         "reflexive": "refl",
         "refshort": ["refl", "short"],
         "reflexive shortened": ["refl", "short"],
+        "": [],
       }),
     ]),
   )),
 ]
+
+lv_grammar_table = {
+  "m": "m",
+  "f": "f",
+  "s": "s",
+  "p": "p",
+  "d": "d",
+  "prx": "prox",
+  "dst": "dist",
+  "nom": "nom",
+  "acc": "acc",
+  "dat": "dat",
+  "gen": "gen",
+  "abl": "abl",
+  "voc": "voc",
+  "loc": "loc",
+  "1st": "1",
+  "2nd": "2",
+  "3rd": "3",
+  "prs": "pres",
+  "pst": "past",
+  "fut": "fut",
+  "ind": "ind",
+  "imp": "imp",
+  "deb": "deb",
+  "cnj": "conj",
+  "cnd": "cond",
+  "psv": "pass",
+  "act": "act",
+  "": [],
+}
 
 lv_specs = [
   ("lv-comparative of", (
@@ -1493,6 +1655,31 @@ lv_specs = [
     ]),
   )),
 
+  ("lv-inflection of", (
+    "inflection of",
+    ("error-if", ("present-except", ["1", "2", "3", "4", "5", "6"])),
+    ("set", "1", [
+      "lv",
+      ("copy", "1"),
+      "",
+      ("lookup", "2", lv_grammar_table),
+      ("lookup", "3", lv_grammar_table),
+      ("lookup", "4", lv_grammar_table),
+      ("lookup", "5", lv_grammar_table),
+    ]),
+    ("set", "p",
+      ("lookup", "6", {
+        "proper": "pn",
+        "adj": "adj",
+        "num": "num",
+        "v": "v",
+        "vpart": "part",
+        "pro": "pro",
+        True: "n",
+      }),
+    ),
+  )),
+]
   ("lv-negative of", (
     "inflection of",
     ("error-if", ("present-except", ["1"])),
@@ -1556,7 +1743,7 @@ mr_specs = [
         # I think same as "oblique case"
         "i": "indir",
         "o": "indir",
-        "v": "vocative",
+        "v": "voc",
         "": [],
       }),
       ("lookup", "2", {
@@ -1704,10 +1891,12 @@ osx_specs = [
         "mf": "m//f",
         "mn": "m//n",
         "mfn": "m//f//n",
+        "": [],
       }),
       ("lookup", "w", {
         "w": "wk",
         "s": "str",
+        "": [],
       }),
     ]),
   )),
@@ -1745,7 +1934,7 @@ pt_specs = [
   )),
 
   ("pt-noun form of", (
-      "Inflection of",
+      "noun form of",
       ("error-if", ("present-except", ["1", "2", "3", "4", "nocap", "nodot"])),
       ("set", "1", [
         "pt",
@@ -1767,7 +1956,6 @@ pt_specs = [
           "pl": "p",
         }),
       ]),
-      ("set", "p", "n"),
       ("copy", "nocap"),
       ("copy", "nodot"),
     )
@@ -2014,7 +2202,8 @@ sh_specs = [
         ])
       ) if getparam(t, "1") == "vn" else
       ("inflection of",
-        ("error-if", ("present-except", ["1", "2", "3", "4"])),
+        # ignore sc=Cyrl.
+        ("error-if", ("present-except", ["1", "2", "3", "4", "sc"])),
         ("set", "1", [
           "sh",
           ("copy", "3"),
@@ -2367,6 +2556,7 @@ templates_to_rename_specs = (
   es_specs +
   et_specs +
   fa_specs +
+  fi_specs +
   gmq_bot_specs +
   got_specs +
   hi_specs +
@@ -2375,6 +2565,7 @@ templates_to_rename_specs = (
   ie_specs +
   is_specs +
   it_specs +
+  ja_specs +
   ka_specs +
   ku_specs +
   liv_specs +
@@ -2398,9 +2589,12 @@ templates_to_rename_specs = (
   []
 )
 
+if not templates_to_actually_do:
+  templates_to_actually_do = [template for template, spec in templates_to_rename_specs]
+
 templates_to_rename_map = {}
 for template, spec in templates_to_rename_specs:
-  if not templates_to_actually_do or template in templates_to_actually_do:
+  if template in templates_to_actually_do:
     if isinstance(spec, basestring):
       templates_to_rename_map[template] = templates_to_rename_map[spec]
     else:
@@ -2410,26 +2604,33 @@ def flatten_list(value):
   return [y for x in value for y in (x if type(x) is list else [x])]
 
 def expand_set_value(value, t, pagemsg):
+  def check(cond, err):
+    if not cond:
+      raise BadRewriteSpec("Error expanding set value for template %s: %s; value=%s" %
+          (unicode(t), err, value))
   if callable(value):
     return expand_set_value(value(t, pagemsg), t, pagemsg)
   if isinstance(value, basestring):
     return value
   if isinstance(value, list):
     return flatten_list([expand_set_value(x, t, pagemsg) for x in value])
-  assert(isinstance(value, tuple))
-  assert(len(value) >= 1)
+  check(isinstance(value, tuple),
+      "wrong type %s of %s, not tuple" % (type(value), value))
+  check(len(value) >= 1, "empty value")
   direc = value[0]
   if direc == "copy":
-    assert len(value) == 2
+    check(len(value) == 2, "wrong length %s of value %s, != 2" %
+        (len(value), value))
     if t.has(value[1]):
       return getparam(t, value[1])
     else:
       return None
   elif direc == "lookup":
-    assert len(value) == 3
+    check(len(value) == 3, "wrong length %s of value %s, != 3" %
+        (len(value), value))
     lookval = getparam(t, value[1])
     table = value[2]
-    assert type(table) is dict
+    check(type(table) is dict, "wrong type %s of %s, not dict" % (type(table), table))
     if lookval in table:
       return expand_set_value(table[lookval], t, pagemsg)
     elif True in table:
@@ -2437,26 +2638,31 @@ def expand_set_value(value, t, pagemsg):
     else:
       raise BadTemplateValue("Unrecognized value %s=%s" % (value[1], lookval))
   else:
-    assert False, "Unrecognized directive %s" % direc
+    check(False, "Unrecognized directive %s" % direc)
 
 def expand_spec(spec, t, pagemsg):
+  def check(cond, err):
+    if not cond:
+      raise BadRewriteSpec("Error expanding spec for template %s: %s; spec=%s" %
+          (unicode(t), err, spec))
   if callable(spec):
     return expand_spec(spec(t, pagemsg), t, pagemsg)
-  assert type(spec) is tuple
-  assert len(spec) >= 1
+  check(type(spec) is tuple, "wrong type %s of %s, not tuple" % (type(spec), spec))
+  check(len(spec) >= 1, "empty spec")
   oldname = tname(t)
   newname = spec[0]
   expanded_specs = []
   comment = None
   for subspec in spec[1:]:
-    assert len(subspec) >= 1
-
+    check(len(subspec) >= 1, "empty subspec")
     if subspec[0] == "error-if":
-      assert len(subspec) == 2
-      assert len(subspec[1]) >= 1
+      check(len(subspec) == 2, "wrong length %s of subspec %s, != 2" %
+          (len(subspec), subspec))
+      check(len(subspec[1]) >= 1, "empty subspec[1]")
       errtype = subspec[1][0]
       if errtype == "present-except":
-        assert len(subspec[1]) == 2
+        check(len(subspec[1]) == 2, "wrong length %s of subspec[1] %s, != 2" %
+            (len(subspec[1]), subspec[1]))
         allowed_params = set(subspec[1][1])
         for param in t.params:
           pname = unicode(param.name).strip()
@@ -2464,30 +2670,34 @@ def expand_spec(spec, t, pagemsg):
             raise BadTemplateValue(
                 "Disallowed param %s=%s" % (pname, getparam(t, pname)))
       elif errtype == "eq":
-        assert len(subspec[1]) == 3
+        check(len(subspec[1]) == 3, "wrong length %s of subspec[1] %s, != 3" %
+            (len(subspec[1]), subspec[1]))
         if getparam(t, subspec[1][1]) == subspec[1][2]:
           raise BadTemplateValue(
             "Disallowed value: %s=%s" % (subspec[1][1], subspec[1][2]))
       elif errtype == "neq":
-        assert len(subspec[1]) == 3
+        check(len(subspec[1]) == 3, "wrong length %s of subspec[1] %s, != 3" %
+            (len(subspec[1]), subspec[1]))
         if getparam(t, subspec[1][1]) != subspec[1][2]:
           raise BadTemplateValue(
             "Disallowed value: %s=%s, expected %s" % (
               subspec[1][1], getparam(t, subspec[1][1]), subspec[1][2]))
       else:
-        assert False, "Unrecognized error-if subtype: %s" % errtype
+        check(False, "Unrecognized error-if subtype: %s" % errtype)
 
     elif subspec[0] == "set":
-      assert len(subspec) == 3
+      check(len(subspec) == 3, "wrong length %s of subspec %s, != 3" %
+          (len(subspec), subspec))
       _, param, newval = subspec
-      assert(isinstance(param, basestring))
+      check(isinstance(param, basestring),
+          "wrong type %s of %s, not basestring" % (type(param), param))
       newval = expand_set_value(newval, t, pagemsg)
       if newval is None:
         pass
       elif isinstance(newval, basestring):
         expanded_specs.append((param, newval))
       else:
-        assert(type(newval) is list)
+        check(type(newval) is list, "wrong type %s of %s, not list" % (type(newval), newval))
         while len(newval) > 0 and newval[-1] is None:
           del newval[-1]
         if re.search("^[0-9]+$", param):
@@ -2504,7 +2714,8 @@ def expand_spec(spec, t, pagemsg):
             index += 1
 
     elif subspec[0] == "copy":
-      assert len(subspec) in [2, 3]
+      check(len(subspec) in [2, 3], "wrong length %s of subspec %s, not in [2, 3]" %
+          (len(subspec), subspec))
       fromparam = subspec[1]
       if len(subspec) == 2:
         toparam = fromparam
@@ -2514,7 +2725,8 @@ def expand_spec(spec, t, pagemsg):
         expanded_specs.append((toparam, getparam(t, fromparam)))
 
     elif subspec[0] == "copylist":
-      assert len(subspec) in [2, 3]
+      check(len(subspec) in [2, 3], "wrong length %s of subspec %s, not in [2, 3]" %
+          (len(subspec), subspec))
       fromparam = subspec[1]
       if len(subspec) == 2:
         toparam = fromparam
@@ -2567,7 +2779,7 @@ def expand_spec(spec, t, pagemsg):
         if pbase == frombase and (not pind and fromfirstblank or
             pind and int(pind) >= fromind):
           fromoffset = (int(pind) if pind else 1) - fromind
-          assert(fromoffset >= 0)
+          check(fromoffset >= 0, "negative offset %s of fromoffset" % fromoffset)
           actual_toind = toind + fromoffset
           # Normally, if we're processing the first from-parameter and
           # the first to-parameter has no index, store the value of the
@@ -2582,7 +2794,8 @@ def expand_spec(spec, t, pagemsg):
           expanded_specs.append((actual_toparam, unicode(param.value)))
 
     elif subspec[0] == "copyallbut":
-      assert len(subspec) == 2
+      check(len(subspec) == 2, "wrong length %s of subspec %s, != 2" %
+          (len(subspec), subspec))
       exclude_params = subspec[1]
 
       # Go through all the existing parameters, excluding any that are
@@ -2601,10 +2814,12 @@ def expand_spec(spec, t, pagemsg):
               excludeme = True
               break
           else:
-            assert type(ename) is tuple
-            assert len(ename) == 2
-            assert ename[0] == "list"
-            assert isinstance(ename[1], basestring)
+            check(type(ename) is tuple, "wrong type %s of %s, not tuple" % (type(ename), ename))
+            check(len(ename) == 2, "wrong length %s of ename %s, != 2" %
+                (len(ename), ename))
+            check(ename[0] == "list", 'ename[0] should == "list" but == %s' % ename[0])
+            check(isinstance(ename[1], basestring),
+                "wrong type %s of %s, not basestring" % (type(ename[1]), ename[1]))
             m = re.search("^(.*?)([0-9]*)$", ename)
             ebase, eind = m.groups()
             if not eind:
@@ -2620,14 +2835,16 @@ def expand_spec(spec, t, pagemsg):
             (unicode(param.name), unicode(param.value), unicode(param.showkey)))
 
     elif subspec[0] == "comment":
-      assert len(subspec) == 2
+      check(len(subspec) == 2, "wrong length %s of subspec %s, != 2" %
+          (len(subspec), subspec))
       _, comment = subspec
       comment = expand_set_value(comment, t, pagemsg)
-      assert(isinstance(comment, basestring))
+      check(isinstance(comment, basestring),
+          "wrong type %s of %s, not basestring" % (type(comment), comment))
       comment = comment.replace("__TEMPNAME__", oldname).replace("__NEWNAME__", newname)
 
     else:
-      assert False, "Unrecognized directive: %s" % subspec[0]
+      check(False, "Unrecognized directive: %s" % subspec[0])
 
   if not comment:
     # If the old template is prefixed with the first param of the replacement,
@@ -2664,6 +2881,12 @@ def process_page(page, index, parsed):
       except BadTemplateValue as e:
         pagemsg("WARNING: %s: %s" % (unicode(e.message), origt))
         continue
+      except BadRewriteSpec as e:
+        errandmsg("INTERNAL ERROR: %s: Processing template %s" % (unicode(e.message), origt))
+        pagemsg("Spec being processed:")
+        pprint.pprint(template_spec)
+        traceback.print_exc()
+        continue
       blib.set_template_name(t, new_name)
       # Erase all params.
       del t.params[:]
@@ -2686,7 +2909,9 @@ parser = blib.create_argparser("Rename various lang-specific form-of templates t
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-for template, spec in templates_to_rename_specs:
-  if not templates_to_actually_do or template in templates_to_actually_do:
-    for i, page in blib.references("Template:%s" % template, start, end):
-      blib.do_edit(page, i, process_page, save=args.save, verbose=args.verbose)
+templates_to_do = templates_to_actually_do
+if not templates_to_do:
+  templates_to_do = [template for template, spec in templates_to_rename_specs]
+for template in templates_to_do:
+  for i, page in blib.references("Template:%s" % template, start, end):
+    blib.do_edit(page, i, process_page, save=args.save, verbose=args.verbose)
