@@ -240,6 +240,7 @@ cats["de"] = {
 }
 
 cats["el"] = {
+	{"has", "dat", "dative forms"},
 	{"pos=", "v",
 		{"cond",
 			{"hasall", {"1", "s", "past"}, "verb past tense forms"},

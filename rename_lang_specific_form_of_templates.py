@@ -579,6 +579,58 @@ el_specs = [
       )
   )),
 
+  ("el-form-of-nounadj", (
+    "Inflection of",
+    ("error-if", ("present-except", ["1", "c", "n", "g", "d", "t", "nodot"])),
+    ("set", "1", [
+      "ofs",
+      ("copy", "1"),
+    ]),
+    ("copy", "t"),
+    ("set", "3", [
+      "",
+      ("lookup", "c", {
+        "nom": "nom",
+        "n": "nom",
+        "acc": "acc",
+        "a": "acc",
+        "gen": "gen",
+        "g": "gen",
+        "voc": "voc",
+        "v": "voc",
+        "dat": "dat",
+        "av": "acc//voc",
+        "ga": "gen//acc",
+        "gav": "gen//acc//voc",
+        "na": "nom//acc",
+        "nav": "nom//acc//voc",
+        "nv": "nom//voc",
+      }),
+      ("lookup", "n", {
+        "s": "s",
+        "p": "p",
+      }),
+      ("lookup", "g", {
+        "m": "m",
+        "f": "f",
+        "n": "n",
+        "mf": "mf",
+        "mn": "mn",
+        "fn": "fn",
+        "mfn": "mfn",
+      }),
+      ("lookup", "d", {
+        "c": "comd",
+        "rs": "rsupd",
+        "as": "asupd",
+        "": [],
+      }),
+    ]),
+    ("copy", "nodot"),
+  )),
+
+  ("el-form-of-pronoun", "el-form-of-nounadj"),
+
   ("el-form-of-verb", (
     "Verb form of",
     ("error-if", ("present-except", ["1", "nonfinite", "voice", "pers",
