@@ -625,6 +625,12 @@ tags["infinitive"] = {
 	wikidata = "Q179230",
 }
 
+-- A form found in Portuguese and Galician
+tags["personal infinitive"] = {
+	tag_type = "non-finite",
+	shortcuts = {"pinf"},
+}
+
 tags["participle"] = {
 	tag_type = "non-finite",
 	glossary = "participle",
@@ -644,6 +650,16 @@ tags["gerund"] = {
 	glossary = "gerund",
 	shortcuts = {"ger"},
 	wikidata = "Q1923028",
+}
+
+-- Latin etc.
+tags["gerundive"] = {
+	tag_type = "non-finite",
+	glossary = "gerund",
+	shortcuts = {"gerv"},
+	-- Wikidata claims this is a grammatical mood, which is
+	-- not really correct
+	wikidata = "Q731298",
 }
 
 tags["converb"] = {
@@ -673,6 +689,14 @@ tags["supine"] = {
 	glossary = "supine",
 	shortcuts = {"sup"},
 	wikidata = "Q548470",
+}
+
+-- Occurs in Hindi as a type of participle used to conjoin two clauses;
+-- similarly occurs in Japanese as the "te-form"
+tags["conjunctive"] = {
+	tag_type = "non-finite",
+	--glossary = "conjunctive",
+	shortcuts = {"conj"},
 }
 
 -- FIXME! Should this be a mood?
@@ -1203,16 +1227,14 @@ tags["nominalized"] = {
 	tag_type = "grammar",
 	--glossary = "nominalized",
 	shortcuts = {"nomz"},
-	wikidata = "Q1500667", -- entry for "nominalisation"
-	--wikidata = "Q4683152", -- Also possible: entry for "nominalized adjective"
+	wikidata = "Q4683152", -- entry for "nominalized adjective"
 }
 
--- Occurs in Hindi as a type of participle used to conjoin two clauses;
--- similarly occurs in Japanese as the "te-form"
-tags["conjunctive"] = {
+tags["nominalization"] = {
 	tag_type = "grammar",
-	--glossary = "conjunctive",
-	shortcuts = {"conj"},
+	--glossary = "nominalization",
+	shortcuts = {"nomzn"},
+	wikidata = "Q1500667",
 }
 
 tags["root"] = {
@@ -1225,6 +1247,23 @@ tags["stem"] = {
 	wikidata = "Q210523",
 }
 
+tags["dependent"] = {
+	tag_type = "grammar",
+	shortcuts = {"dep"},
+	wikidata = "Q1122094", -- entry for "dependent clause"
+}
+
+tags["independent"] = {
+	tag_type = "grammar",
+	shortcuts = {"indep"},
+	wikidata = "Q1419215", -- entry for "independent clause"
+}
+
+tags["nonfinite"] = {
+	tag_type = "grammar",
+	shortcuts = {"nonfin"},
+	wikidata = "Q1050494", -- entry for "non-finite verb"
+}
 
 ----------------------- Other tags -----------------------
 
