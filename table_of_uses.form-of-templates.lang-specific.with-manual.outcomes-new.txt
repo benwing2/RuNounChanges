@@ -539,7 +539,7 @@
 |-
 | '''[[Template:sco-third-person singular of]]''' || '''[[Template:sco-third-person singular of]]''' || 91 || Yes || Yes || No || Replace
 |-
-| '''[[Template:sga-verbnec of]]''' || '''[[Template:sga-verbnec of]]''' || 5 || No? || No || No || Keep?
+| '''[[Template:sga-verbnec of]]''' || '''[[Template:sga-verbnec of]]''' || 5 || Yes || No || No || Replace
 |-
 | '''[[Template:sh-form-noun]]''' || '''[[Template:sh-form-noun]]''' || 65 || Yes || No || No || Replace
 |-
