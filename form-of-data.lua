@@ -662,6 +662,44 @@ tags["gerundive"] = {
 	wikidata = "Q731298",
 }
 
+-- Lithuanian etc.
+tags["participle of necessity"] = {
+	tag_type = "non-finite",
+	--glossary = "participle of necessity",
+	shortcuts = {"partnec"},
+	wikidata = "Q731298", -- gerundive
+}
+
+-- Old Irish etc.
+tags["verbal of necessity"] = {
+	tag_type = "non-finite",
+	--glossary = "verbal of necessity",
+	shortcuts = {"verbnec"},
+	wikidata = "Q731298", -- gerundive
+}
+
+-- Lithuanian-specific adverbial participle type; native term normally
+-- used in English
+tags["būdinys"] = {
+	tag_type = "non-finite",
+	--glossary = "budinys"
+	shortcuts = {"budinys"},
+}
+
+-- Lithuanian-specific adverbial participle type; native term normally
+-- used in English
+tags["padalyvis"] = {
+	tag_type = "non-finite",
+	--glossary = "padalyvis"
+}
+
+-- Lithuanian-specific adverbial participle type; native term normally
+-- used in English
+tags["pusdalyvis"] = {
+	tag_type = "non-finite",
+	--glossary = "pusdalyvis"
+}
+
 tags["converb"] = {
 	tag_type = "non-finite",
 	wikidata = "Q149761",
