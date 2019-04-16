@@ -9,10 +9,8 @@ from blib import getparam, rmparam, msg, errandmsg, site, tname
 
 
 # STILL TO DO:
-# ca-verb form of (78127)
 # de-verb form of (? has 5=t -> "subordinate clause form") (54761)
 # egy-verb form of (? lots of Egyptian-specific tags) (27)
-# el-form-of-nounadj/el-form-of-pronoun (31472)
 # en-simple-past-of (? other en-* form-of templates can't be generalized) (1043)
 # en-third-person singular of (? other en-* form-of templates can't be generalized) (26938)
 # eo-form of (? takes actual ending, generates tags from it, would be a radical shift) (99087)
@@ -24,12 +22,6 @@ from blib import getparam, rmparam, msg, errandmsg, site, tname
 # io-form of (? takes actual ending, generates tags from it, would be a radical shift) (10116)
 # ja-verb form of (? takes Japanese params, some in Hiragana, would be a radical shift) (93)
 # ka-verb-form-of (? has links to [[Appendix:Georgian verbs]]; has stuff describing object pronouns, which maybe should be posttext) (116)
-# lt-būdinys/lt-budinys (? would need language-specific tag for būdinys) (184)
-# lt-dalyvis-1/lt-dalyvis (1085)
-# lt-dalyvis-2 (118)
-# lt-form-pronoun (? if class=determiner, has text "([[use]]d as a [[determiner]])") (51)
-# lt-padalyvis (? would need language-specific tag for padalyvis) (466)
-# lt-pusdalyvis (? would need language-specific tag for pusdalyvis) (117)
 # lv-adv form of (2761)
 # lv-participle of (? might need lang-specific tags for "(object-of-perception form)", "(invariable form)", "(variable form)" (5163)
 # mn-verb form of (? maybe? uses a module) (63)
@@ -43,10 +35,6 @@ from blib import getparam, rmparam, msg, errandmsg, site, tname
 # pt-verb-form-of (? maybe? uses a module) (94585)
 # pt-verb form of (? very complicated; takes a region param that can/should be moved out) (29193)
 # sce-verb form of (? maybe? uses a module) (1)
-# sco-simple-past-of (? 'sco-past of' is hard to generalize) (17)
-# sco-third-person singular of (? 'sco-past of' is hard to generalize) (91)
-# sk-adj-form (0, DELETE)
-# sk-adj-form-poss (0, DELETE)
 # sv-noun-form-adj (1)
 # sv-noun-form-def-pl (? if 'obsoleted by=', displays extra 'Obsolete form of' pre-text, maybe should go into separate template) (7574)
 # sv-verb-form-imp (? if 'plural of=', displays extra 'Obsolete plural form of' pre-text, maybe should go into separate template) (567)
@@ -310,6 +298,58 @@ def romance_adj_form_of(lang):
 
 ca_specs = [
   ("ca-adj form of", romance_adj_form_of("ca")),
+
+  ("ca-verb form of", (
+    "Verb form of",
+    ("error-if", ("present-except", ["1", "p", "n", "g", "t", "m", "nocap", "nodot"])),
+    ("set", "1", [
+      "ca",
+      ("copy", "1"),
+      "",
+      ("lookup", "p", {
+        "1": "1",
+        "2": "2",
+        "3": "3",
+        "": [], # may be mising if m=ptc
+      }),
+      ("lookup", "n", {
+        "sg": "s",
+        "pl": "p",
+        "": [], # may be mising if m=ptc
+      }),
+      # Template ignores g= but it's extremely common with past participle forms
+      ("lookup", "g", {
+        "m": ["m", "s"],
+        "ms": ["m", "s"],
+        "f": ["f", "s"],
+        "fs": ["f", "s"],
+        "n": ["n", "s"],
+        "ns": ["n", "s"],
+        "mp": ["m", "p"],
+        "mpl": ["m", "p"],
+        "fp": ["f", "p"],
+        "fpl": ["f", "p"],
+        "np": ["n", "p"],
+        "npl": ["n", "p"],
+        "": [],
+      }),
+      ("lookup", "t", {
+        "pres": "pres",
+        "past": "past",
+        "impf": "impf",
+        "pret": "pret",
+        "futr": "fut",
+        "": [], # may be mising if m=impr
+      }),
+      ("lookup", "m", {
+        "ind": "ind",
+        "sub": "sub",
+        "impr": "imp",
+        "cond": "cond",
+        "ptc": "part",
+      }),
+    ]),
+  )),
 ]
 
 chm_grammar_table = {
@@ -618,6 +658,7 @@ el_specs = [
         "mn": "mn",
         "fn": "fn",
         "mfn": "mfn",
+        "": [], # doesn't apply when dealing with a noun
       }),
       ("lookup", "d", {
         "c": "comd",
@@ -658,6 +699,7 @@ el_specs = [
             "1p": "1p",
             "2p": "2p",
             "3p": "3p",
+            "": [], # person frequently left out when 1s passive
           }),
           ("lookup", "tense", {
             "pres": "pres",
@@ -673,6 +715,7 @@ el_specs = [
             "fut_c": ["impfv", "fut"],
             "dependent": "dep",
             "dep": "dep",
+            "": [], # tense frequently left out when mood is imperative
           }),
           ("lookup", "mood", {
             "imptv": "imp",
@@ -685,10 +728,12 @@ el_specs = [
             "ind": "ind",
             "subj": "sub",
             "sub": "sub",
+            "": [], # mood frequently left out when tense=past
           }),
           ("lookup", "voice", {
             "pass": "pass",
             "act": "act",
+            "": [], # voice frequently left out (when active?)
           }),
         ]
       }),
@@ -905,7 +950,6 @@ fa_specs = [
         u"imp-šomâ": ["2", "p", "imp"],
         u"ânhâ": ["3", "p", "imp"],
         u"imp-ânhâ": ["3", "p", "imp"],
-        # FIXME: In [[Module:form of/data]], add "root" and "stem"
         "r": ["root"],
         "prstem": ["pres", "stem"],
         "pstem": ["past", "stem"],
@@ -1347,7 +1391,7 @@ ja_specs = [
   )),
   ("ja-te form of verb", (
     "verb form of",
-    ("error-if", ("present-except", ["1"])),
+    ("error-if", ("present-except", ["1", "sort"])),
     ("set", "1", [
       "ja",
       ("copy", "1"),
@@ -1558,6 +1602,66 @@ lt_adj_case_table = {
 lt_specs = [
   # NOTE: Has automatic, non-controllable final period that we're ignoring.
   # Doesn't have initial caps.
+  (u"lt-būdinys", (
+    "inflection of",
+    ("error-if", ("present-except", ["1"])),
+    ("set", "1", [
+      "lt",
+      ("copy", "1"),
+      "",
+      ["adv", "budinys", "part"],
+    ]),
+  )),
+
+  ("lt-budinys", u"lt-būdinys"),
+
+  # NOTE: Has automatic, non-controllable final period that we're ignoring.
+  # Doesn't have initial caps.
+  ("lt-dalyvis-1", (
+    "inflection of",
+    ("error-if", ("present-except", ["1", "2", "3"])),
+    ("set", "1", [
+      "lt",
+      ("copy", "3"),
+      "",
+      ("lookup", "1", {
+        "pres": "pres",
+        "present": "pres",
+        "past": "past",
+        "pastf": ["freq", "past"],
+        "fpast": ["freq", "past"],
+        "fut": "fut",
+        "future": "fut",
+      }),
+      ("lookup", "2", {
+        "a": "act",
+        "act": "act",
+        "active": "active",
+        "p": "pass",
+        "pass": "pass",
+        "passive": "pass",
+      }),
+      "part",
+    ]),
+  )),
+
+  ("lt-dalyvis", "lt-dalyvis-1"),
+
+  # NOTE: Has automatic, non-controllable final period that we're ignoring.
+  # Doesn't have initial caps.
+  ("lt-dalyvis-2", (
+    "inflection of",
+    ("error-if", ("present-except", ["1"])),
+    ("set", "1", [
+      "lt",
+      ("copy", "1"),
+      "",
+      "partnec",
+    ]),
+  )),
+
+  # NOTE: Has automatic, non-controllable final period that we're ignoring.
+  # Doesn't have initial caps.
   ("lt-form-adj", (
     "adj form of",
     ("error-if", ("present-except", ["pro", "1", "2", "3", "4"])),
@@ -1639,9 +1743,54 @@ lt_specs = [
   )),
 
   # NOTE: Has automatic, non-controllable final period that we're ignoring.
-  # Doesn't have initial caps. FIXME: Categorizes into
-  # 'dalyvis participle forms', or (if pro= is given)
-  # 'pronominal dalyvis participle forms'.
+  # Doesn't have initial caps. Categorizes into 'pronoun forms', which
+  # should be handled by the headword.
+  ("lt-form-pronoun", (
+    "inflection of",
+    # template handles class= and displays pre-text, but it never occurs
+    ("error-if", ("present-except", ["1", "2", "3", "4"])),
+    ("set", "1", [
+      "lt",
+      ("copy", "3"),
+      "",
+      ("lookup", "1", {
+        "1s": "1s",
+        "2s": "2s",
+        "3s": "3s",
+        "1d": "1d",
+        "2d": "2d",
+        "3d": "3d",
+        "1p": "1p",
+        "2p": "2p",
+        "3p": "3p",
+        "": [],
+      }),
+      ("lookup", "4", {
+        "ms": ["m", "s"],
+        "fs": ["f", "s"],
+        "mp": ["m", "p"],
+        "fp": ["f", "p"],
+        "": [],
+      }),
+      ("lookup", "2", {
+        "n": "nom",
+        "nom": "nom",
+        "g": "gen",
+        "gen": "gen",
+        "d": "dat",
+        "dat": "dat",
+        "a": "acc",
+        "acc": "acc",
+        "l": "loc",
+        "loc": "loc",
+        "i": "ins",
+        "ins": "ins",
+      }),
+    ]),
+  )),
+
+  # NOTE: Has automatic, non-controllable final period that we're ignoring.
+  # Doesn't have initial caps.
   ("lt-form-part", (
     "inflection of",
     ("error-if", ("present-except", ["pro", "1", "2", "3"])),
@@ -1701,6 +1850,41 @@ lt_specs = [
         "reflexive shortened": ["refl", "short"],
         "": [],
       }),
+    ]),
+  )),
+
+  # NOTE: Has automatic, non-controllable final period that we're ignoring.
+  # Doesn't have initial caps.
+  ("lt-padalyvis", (
+    "inflection of",
+    ("error-if", ("present-except", ["1", "2"])),
+    ("set", "1", [
+      "lt",
+      ("copy", "2"),
+      "",
+      ("lookup", "1", {
+        "pres": "pres",
+        "present": "pres",
+        "past": "past",
+        "pastf": ["freq", "past"],
+        "fpast": ["freq", "past"],
+        "fut": "fut",
+        "future": "fut",
+      }),
+      ["adv", "padalyvis", "part"],
+    ]),
+  )),
+
+  # NOTE: Has automatic, non-controllable final period that we're ignoring.
+  # Doesn't have initial caps.
+  ("lt-pusdalyvis", (
+    "inflection of",
+    ("error-if", ("present-except", ["1"])),
+    ("set", "1", [
+      "lt",
+      ("copy", "1"),
+      "",
+      ["adv", "pusdalyvis", "part"],
     ]),
   )),
 ]
@@ -2294,6 +2478,43 @@ ru_specs = [
   )),
 ]
 
+sco_specs = [
+  ("sco-simple past of", (
+    "verb form of",
+    ("error-if", ("present-except", ["1", "2"])),
+    ("set", "1", [
+      "sco",
+      ("copy", "1"),
+      ("copy", "2"),
+      "spast"
+    ]),
+  )),
+
+  ("sco-third-person singular of", (
+    "verb form of",
+    ("error-if", ("present-except", ["1", "2"])),
+    ("set", "1", [
+      "sco",
+      ("copy", "1"),
+      ("copy", "2"),
+      ["3s", "spres", "ind"],
+    ]),
+  )),
+]
+
+sga_specs = [
+  ("sga-verbnec of", (
+    "inflection of",
+    ("error-if", ("present-except", ["1"])),
+    ("set", "1", [
+      "sga",
+      ("copy", "1"),
+      "",
+      "verbnec"
+    ]),
+  )),
+]
+
 sh_specs = [
   # NOTE: Categorizes into "noun forms", but this should be handled by
   # the headword.
@@ -2621,7 +2842,6 @@ tg_specs = [
         u"imp-šomo": ["2", "p", "imp"],
         "onho": ["3", "p", "imp"],
         "imp-onho": ["3", "p", "imp"],
-        # FIXME: In [[Module:form of/data]], add "root" and "stem"
         "r": ["root"],
         "prstem": ["pres", "stem"],
         "pstem": ["past", "stem"],
@@ -2736,6 +2956,8 @@ templates_to_rename_specs = (
   ro_specs +
   roa_opt_specs +
   ru_specs +
+  sco_specs +
+  sga_specs +
   sh_specs +
   sl_specs +
   sv_specs +
@@ -3032,9 +3254,8 @@ def process_page(page, index, parsed):
   pagemsg("Processing")
   notes = []
 
-  if ":" in pagetitle and not re.search(
-      "^(Citations|Appendix|Reconstruction|Transwiki|Talk|Wiktionary|[A-Za-z]+ talk):", pagetitle):
-    pagemsg("WARNING: Colon in page title and not a recognized namespace to include, skipping page")
+  if re.search("^(User|Template|Module|MediaWiki):", pagetitle):
+    pagemsg("WARNING: Page in a blacklisted namespace, skipping")
     return None, None
 
   for t in parsed.filter_templates():

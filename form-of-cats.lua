@@ -223,7 +223,16 @@ local romance_adjective_categorization =
 	}
 
 cats["ca"] = {
-	romance_adjective_categorization
+	romance_adjective_categorization,
+	{"has", "part",
+		{"cond",
+			-- FIXME, not clear if we need all of these conditions;
+			-- may partly be handled by headword
+			{"hasany", {"f", "p"}, "participle forms"},
+			{"has", "pres", "present participles"},
+			{"has", "past", "past participles"},
+		}
+	},
 }
 
 cats["de"] = {
@@ -332,9 +341,22 @@ cats["liv"] = {
 
 cats["lt"] = {
 	{"pos=", "part",
-		{"has", "pron",
-			"pronominal dalyvis participle forms",
-			"dalyvis participle forms",
+		{"cond",
+			-- Three types of adverbial participles.
+			{"has", "budinys", "būdinys participles"},
+			{"has", "padalyvis", "padalyvis participles"},
+			{"has", "pusdalyvis", "pusdalyvis participles"},
+			-- If it's a non-adverbial participle, it's a dalyvis = regular
+			-- adjectival participle. It's a participle per se if it has
+			-- no case, number or gender listed.
+			{"not", {"hasany", {
+				"nom", "gen", "dat", "acc", "ins", "loc", "voc",
+				"m", "f", "s", "p"
+			}}, "dalyvis participles"},
+			-- Otherwise, it's a participle form, pronominal if "pron"
+			-- is present, else non-pronominal.
+			{"has", "pron", "pronominal dalyvis participle forms"},
+			"dalyvis participle forms"
 		}
 	},
 	{"pos=", "a",
@@ -402,9 +424,22 @@ cats["ru"] = {
 	},
 }
 
+cats["sco"] = {
+	{"has", "spast", "verb simple past forms"},
+	{"or",
+		{"hasall", {"3", "s", "pres", "ind"}},
+		{"hasall", {"3", "s", "spres", "ind"}},
+		"third-person singular forms",
+	},
+}
+
 cats["sl"] = {
 	{"has", "part", "participles"},
 	{"hasany", {"sup", "ger"}, "verbal nouns"},
+}
+
+cats["sv"] = {
+	{"hasall", {"past", "part"}, "past participles"},
 }
 
 return cats
