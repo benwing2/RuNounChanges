@@ -1126,3 +1126,26 @@ def find_lang_section_from_text(pagetext, lang, pagemsg):
       return sections[i]
 
   return None
+
+def replace_in_text(text, curr, repl, pagemsg):
+    found_curr = curr in text
+    if not found_curr:
+      pagemsg("WARNING: Unable to locate current text: %s" % curr)
+      return text, False
+    found_repl = repl in text
+    if found_repl:
+      pagemsg("WARNING: Already found replacement text: %s" % repl)
+      return text, False
+    newtext = text.replace(curr, repl)
+    newtext_text_diff = len(newtext) - len(text)
+    repl_curr_diff = len(repl) - len(curr)
+    ratio = float(newtext_text_diff) / repl_curr_diff
+    if ratio == int(ratio):
+      if int(ratio) > 1:
+        pagemsg("WARNING: Replaced %s occurrences of curr=%s with repl=%s"
+            % (int(ratio), curr, repl))
+    else:
+      pagemsg("WARNING: Something wrong, length mismatch during replacement: Expected length change=%s, actual=%s, ratio=%.2f, curr=%s, repl=%s"
+          % (repl_curr_diff, newtext_text_diff, ratio, curr, repl))
+    text = newtext
+    return text, True
