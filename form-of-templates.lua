@@ -403,8 +403,8 @@ function export.form_of_t(frame)
 	end
 
 	return construct_form_of_text(iargs, args, term_param, compat,
-		function(terminfo)
-			return m_form_of.format_form_of(text, terminfo, iargs["posttext"])
+		function(lang, terminfo)
+			return m_form_of.format_form_of(text, terminfo, iargs["posttext"]), {}
 		end
 	)
 end

@@ -3,6 +3,7 @@ local m_table = require("Module:table")
 local m_pos = mw.loadData("Module:form of/pos")
 local m_data = mw.loadData("Module:form of/data")
 local m_cats = mw.loadData("Module:form of/cats")
+local m_functions = require("Module:form of/functions")
 
 local rmatch = mw.ustring.match
 local rsplit = mw.text.split
@@ -116,7 +117,7 @@ local function get_single_tag_display_form(normtag)
 
 	-- If there is a nonempty glossary index, then show a link to it
 	if data and data.glossary then
-		normtag = "[[Appendix:Glossary#" .. mw.uri.anchorEncode(data.glossary) .. "|" .. tag .. "]]"
+		normtag = "[[Appendix:Glossary#" .. mw.uri.anchorEncode(data.glossary) .. "|" .. normtag .. "]]"
 	end
 	return normtag
 end
@@ -128,7 +129,7 @@ local function get_tag_display_form(normtag)
 	end
 	-- We have multiple tags. See if there's a display handler to
 	-- display them specially.
-	for _, handler in ipairs(m_data.display_handlers) do
+	for _, handler in ipairs(m_functions.display_handlers) do
 		local displayval = handler(normtag)
 		if displayval then
 			return displayval
@@ -156,12 +157,11 @@ function export.fetch_lang_categories(lang, tags, terminfo, POS)
 			term=term,
 			p=POS
 		}
+	end
 
 	local function check_condition(spec)
 		if type(spec) == "boolean" then
 			return spec
-		elseif type(spec) == "function" then
-			return spec(make_function_table())
 		elseif type(spec) ~= "table" then
 			error("Wrong type of condition " .. spec .. ": " .. type(spec))
 		end
@@ -206,6 +206,12 @@ function export.fetch_lang_categories(lang, tags, terminfo, POS)
 				condval = check_condition(spec[3])
 			end
 			return condval, 4
+		elseif predication == "call" then
+			local fn = m_functions.cat_functions[spec[2]]
+			if not fn then
+				error("No condition function named '" .. spec[2] .. "'")
+			end
+			return fn(make_function_table()), 3
 		else
 			error("Unrecognized predicate: " .. predicate)
 		end
@@ -217,8 +223,6 @@ function export.fetch_lang_categories(lang, tags, terminfo, POS)
 		elseif type(spec) == "string" then
 			table.insert(categories, lang:getCanonicalName() .. " " .. spec)
 			return true
-		elseif type(spec) == "function" then
-			return process_spec(spec(make_function_table()))
 		elseif type(spec) ~= "table" then
 			error("Wrong type of specification " .. spec .. ": " .. type(spec))
 		end
@@ -239,6 +243,12 @@ function export.fetch_lang_categories(lang, tags, terminfo, POS)
 				end
 			end
 			return false
+		elseif predicate == "call" then
+			local fn = m_functions.cat_functions[spec[2]]
+			if not fn then
+				error("No spec function named '" .. spec[2] .. "'")
+			end
+			return process_spec(fn(make_function_table()))
 		else
 			local condval, ifspec = check_condition(spec)
 			if condval then
@@ -253,8 +263,9 @@ function export.fetch_lang_categories(lang, tags, terminfo, POS)
 
 	local langspecs = m_cats[lang:getCode()]
 	if langspecs then
-	for _, spec in ipairs(langspecs) do
-		process_spec(spec)
+		for _, spec in ipairs(langspecs) do
+			process_spec(spec)
+		end
 	end
 	return categories
 end

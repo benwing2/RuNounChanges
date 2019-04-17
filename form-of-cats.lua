@@ -78,8 +78,9 @@ A specification is one of:
 	-- {"not", CONDITION}
 	-- {"and", CONDITION1, CONDITION2}
 	-- {"or", CONDITION1, CONDITION2}
-	-- A Lua function, which is passed a single argument (see (10) below) and
-	   should return true or false
+	-- {"call", FUNCTION} where FUNCTION is a string naming a function listed
+	   in cat_functions in [[Module:form of/functions]], which is passed a
+	   single argument (see (10) below) and should return true or false.
 
 	That is, conditions are similar to if-else SPECS but without any
 	specifications given.
@@ -94,11 +95,13 @@ A specification is one of:
 	 If either CONDITION1 or CONDITION2 apply, SPEC will be applied, otherwise
 	 ELSESPEC will be applied if present. CONDITION is as above for "not".
 
-(12) A Lua function, which is passed a single argument, a table containing the
-	 parameters given to the template call, and which should return a
-	 specification (a string naming a category, a list of any of the formats
-	 described above, or even another function). In the table, the following
-	 keys are present:
+(12) A list {"call", FUNCTION}:
+
+	 FUNCTION is the name of a function listed in cat_functions in
+	 [[Module:form of/functions]], which is passed a single argument, a table
+	 containing the parameters given to the template call, and which should
+	 return a specification (a string naming a category, a list of any of the
+	 formats described above). In the table, the following keys are present:
 
 	 "lang": the structure describing the language (usually the first
 	         parameter);
@@ -186,8 +189,8 @@ cats["bg"] = {
 			{"and",
 				{"or", {"has", "m"}, {"not", {"hasany", {"f", "n", "p"}}}},
 				{"and",
-					{"or", {"has", "indef"}, {"not", {"has", "def"}}}
-					{"not", {"hasany", {"subje", "obj"}}}
+					{"or", {"has", "indef"}, {"not", {"has", "def"}}},
+					{"not", {"hasany", {"subje", "obj"}}},
 				},
 				{"cond",
 					{"hasall", {"pres", "act"}, "present active participles"},
@@ -389,7 +392,7 @@ cats["lv"] = {
 	},
 	{"has", "supd",
 		{"pos=", "part",
-			"superlative participles"
+			"superlative participles",
 			"superlative adjectives",
 		}
 	},

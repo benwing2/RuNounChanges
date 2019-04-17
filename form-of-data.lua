@@ -44,12 +44,6 @@ Shortcuts are of one of three types:
 	"1s", which maps to the list {"1", "s"}. The number of such aliases should
 	be limited, and should cover only the most common combinations.
 
-DISPLAY_HANDLERS is a list of one or more functions that provide special
-handling for multipart tags. Each function takes a single argument (the
-multipart tag), and should either return the formatted display text or nil to
-check the next handler. If no handlers apply, there is a default handler that
-appropriately formats most multipart tags.
-
 
 NOTE: In some cases below, multiple tags point to the same wikidata,
 because Wikipedia considers them synonyms. Examples are indirect case vs.
@@ -66,7 +60,6 @@ they are not the same.
 
 local tags = {}
 local shortcuts = {}
-local display_handlers = {}
 
 
 ----------------------- Person -----------------------
@@ -97,31 +90,6 @@ tags["impersonal"] = {
 	glossary = "impersonal",
 	shortcuts = {"impers"},
 }
-
-table.insert(display_handlers,
-	-- Display handler to clean up display of multiple persons by omitting
-	-- redundant "person" in all but the last element. For example, the tag
-	-- "123" maps to "1//2//3", which in turn gets displayed as (approximately)
-	-- "first-, second- and third-person" (with appropriate glossary links, and
-	-- appropriate spans marking the serial comma).
-	function(tags)
-		local els = {}
-		local numtags = #tags
-		for i, tag in ipairs(tags) do
-			local suffix = i == numtags and "-person]]" or "-]]"
-			if tag == "first-person" then
-				table.insert(els, "[[Appendix:Glossary#first person|first" .. suffix)
-			elseif tag == "second-person" then
-				table.insert(els, "[[Appendix:Glossary#second person|second" .. suffix)
-			elseif tag == "third-person" then
-				table.insert(els, "[[Appendix:Glossary#third person|third" .. suffix)
-			else
-				return nil
-			end
-		end
-		require("Module:table").serialCommaJoin(els)
-	end
-)
 
 shortcuts["12"] = "1//2"
 shortcuts["13"] = "1//3"
@@ -1156,19 +1124,19 @@ tags["polite"] = {
 tags["proximal"] = {
 	tag_type = "deixis",
 	--glossary = "proximal",
-	shortcuts = {"prox"},
+	shortcuts = {"prox", "prxl"},
 }
 
 tags["medial"] = {
 	tag_type = "deixis",
 	--glossary = "medial",
-	shortcuts = {"med"},
+	shortcuts = {"medl"},
 }
 
 tags["distal"] = {
 	tag_type = "deixis",
 	--glossary = "distal",
-	shortcuts = {"dist"},
+	shortcuts = {"dstl"},
 }
 
 
