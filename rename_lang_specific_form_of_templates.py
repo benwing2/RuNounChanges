@@ -7,6 +7,7 @@ import traceback, pprint
 import blib
 from blib import getparam, rmparam, msg, errandmsg, site, tname
 
+from misc_templates_to_rewrite import misc_templates_to_rewrite
 
 # STILL TO DO:
 # de-verb form of (? has 5=t -> "subordinate clause form") (54761)
@@ -649,6 +650,7 @@ el_specs = [
       ("lookup", "n", {
         "s": "s",
         "p": "p",
+        "": [], # occurs with numbers
       }),
       ("lookup", "g", {
         "m": "m",
@@ -679,7 +681,7 @@ el_specs = [
       # "passive of {{m|el|{{{active}}}|t={{{ta|}}}}}". This isn't easy
       # to do in the general {{Verb form of}} template, isn't how other
       # non-lemma forms are formatted and is of questionable value.
-      "tense", "mood", "t", "active", "ta"])),
+      "tense", "mood", "t", "active", "ta", "nodot"])),
     ("set", "1", [
       "el",
       ("copy", "1"),
@@ -703,6 +705,7 @@ el_specs = [
           }),
           ("lookup", "tense", {
             "pres": "pres",
+            "present": "pres",
             "past": "spast",
             "imperfect": "impf",
             "imperf": "impf",
@@ -739,6 +742,7 @@ el_specs = [
       }),
     ]),
     ("copy", "t"),
+    ("copy", "nodot"),
   )),
 
   ("el-participle of", (
@@ -1896,7 +1900,7 @@ lv_grammar_table = {
   "p": "p",
   "d": "d",
   "prx": "prox",
-  "dst": "dist",
+  "dst": "dstl",
   "nom": "nom",
   "acc": "acc",
   "dat": "dat",
@@ -2463,8 +2467,9 @@ def ru_get_nonblank_tags(t, pagemsg):
 ru_specs = [
   ("ru-participle of", (
     "inflection of",
+    # lang= occurs at least once, and is ignored.
     ("error-if", ("present-except", ["1", "2", "3", "4", "5", "6", "tr",
-      "gloss", "pos", "nocat"])),
+      "gloss", "pos", "nocat", "lang"])),
     ("set", "1", [
       "ru",
       ("copy", "1"),
@@ -2492,7 +2497,8 @@ sco_specs = [
 
   ("sco-third-person singular of", (
     "verb form of",
-    ("error-if", ("present-except", ["1", "2"])),
+    # lang= occurs at least once, and is ignored.
+    ("error-if", ("present-except", ["1", "2", "lang"])),
     ("set", "1", [
       "sco",
       ("copy", "1"),
@@ -2965,15 +2971,18 @@ templates_to_rename_specs = (
   tl_specs +
   tr_specs +
   ur_specs +
+  misc_templates_to_rewrite +
   []
 )
 
 templates_to_rename_map = {}
 
-def initialize_templates_to_rename_map(do_all):
+def initialize_templates_to_rename_map(do_all, do_specified):
   global templates_to_actually_do
   if do_all:
     templates_to_actually_do = [template for template, spec in templates_to_rename_specs]
+  if do_specified:
+    templates_to_actually_do = re.split(",", do_specified)
 
   for template, spec in templates_to_rename_specs:
     if template in templates_to_actually_do:
@@ -3295,10 +3304,11 @@ def process_page(page, index, parsed):
 parser = blib.create_argparser("Rename various lang-specific form-of templates to more general variants")
 parser.add_argument('--do-all', help="Do all templates instead of default list",
     action="store_true")
+parser.add_argument('--do-specified', help="Do specified comma-separated templates instead of default list")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-initialize_templates_to_rename_map(args.do_all)
+initialize_templates_to_rename_map(args.do_all, args.do_specified)
 for template in templates_to_actually_do:
   errandmsg("Processing references to Template:%s" % template)
   for i, page in blib.references("Template:%s" % template, start, end):
