@@ -117,7 +117,13 @@ local function get_single_tag_display_form(normtag)
 
 	-- If there is a nonempty glossary index, then show a link to it
 	if data and data.glossary then
-		normtag = "[[Appendix:Glossary#" .. mw.uri.anchorEncode(data.glossary) .. "|" .. normtag .. "]]"
+		if data.glossary_type == "wikt" then
+			normtag = "[[" .. data.glossary .. "|" .. normtag .. "]]"
+		elseif data.glossary_type == "wp" then
+			normtag = "[[w:" .. data.glossary .. "|" .. normtag .. "]]"
+		else
+			normtag = "[[Appendix:Glossary#" .. mw.uri.anchorEncode(data.glossary) .. "|" .. normtag .. "]]"
+		end
 	end
 	return normtag
 end
@@ -182,15 +188,17 @@ function export.fetch_lang_categories(lang, tags, terminfo, POS)
 				end
 			end
 			return false, 3
-		elseif predicate == "POS=" then
+		elseif predicate == "p=" then
 			return POS == normalize_pos(spec[2]), 3
-		elseif predicate == "POSany" then
+		elseif predicate == "pany" then
 			for _, specpos in ipairs(spec[2]) do
 				if POS == normalize_pos(specpos) then
 					return true, 3
 				end
 			end
 			return false, 3
+		elseif predicate == "pexists" then
+			return POS ~= nil, 2
 		elseif predicate == "not" then
 			local condval = check_condition(spec[2])
 			return not condval, 3

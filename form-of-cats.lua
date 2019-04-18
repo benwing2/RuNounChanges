@@ -38,19 +38,19 @@ A specification is one of:
 	Similar to {"has", ...} but activates if any of the tags in TAGS
 	(a list) are present among the user-supplied tags.
 
-(4) A list {"pos=", VALUE, SPEC} or {"pos=", VALUE, SPEC, ELSESPEC}:
+(4) A list {"p=", VALUE, SPEC} or {"p=", VALUE, SPEC, ELSESPEC}:
 
 	Similar to {"has", ...} but activates if the value supplied for the p=
 	or POS= parameters is the specified value (which can be either the full
 	form or any abbreviation).
 
-(5) A list {"posany", VALUES, SPEC} or {"posany", VALUES, SPEC, ELSESPEC}:
+(5) A list {"pany", VALUES, SPEC} or {"pany", VALUES, SPEC, ELSESPEC}:
 
-	Similar to {"pos=", ...} but activates if the value supplied for the p=
+	Similar to {"p=", ...} but activates if the value supplied for the p=
 	or POS= parameters is any of the specified values (which can be either
 	the full forms or any abbreviation).
 
-(6) A list {"posexists", SPEC} or {"posexists", SPEC, ELSESPEC}:
+(6) A list {"pexists", SPEC} or {"pexists", SPEC, ELSESPEC}:
 
 	Activates if any value was specified for the p= or POS= parameters.
 
@@ -74,7 +74,9 @@ A specification is one of:
 	-- {"has", TAG}
 	-- {"hasall", TAGS}
 	-- {"hasany", TAGS}
-	-- {"pos=", VALUE}
+	-- {"p=", VALUE}
+	-- {"pany", VALUES}
+	-- {"pexists"}
 	-- {"not", CONDITION}
 	-- {"and", CONDITION1, CONDITION2}
 	-- {"or", CONDITION1, CONDITION2}
@@ -128,7 +130,7 @@ the page will be categorized into [[:Category:Estonian participles]].
 Another example:
 
 cats["lt"] = {
-	{"pos=", "part",
+	{"p=", "part",
 		{"has", "pron",
 			"pronominal dalyvis participle forms",
 			"dalyvis participle forms",
@@ -143,7 +145,7 @@ categorize into [[:Category:Lithuanian pronominal dalyvis participle forms]],
 else categorize into [["Category:Lithuanian dalyvis participle forms]]. Note
 that, if p= isn't specified, or has a value other than "part" or
 "participle", no categories will be added to the page, because there is no
-"else" specification associated with the "pos=" specification.
+"else" specification associated with the "p=" specification.
 
 --]=]
 
@@ -154,7 +156,7 @@ cats["art-blk"] = {
 }
 
 cats["bg"] = {
-	{"pos=", "a",
+	{"p=", "a",
 		{"multi",
 			{"has", "m", "adjective masculine forms"},
 			{"has", "f", "adjective feminine forms"},
@@ -165,7 +167,7 @@ cats["bg"] = {
 			{"has", "indef", "adjective indefinite forms"},
 		}
 	},
-	{"pos=", "n",
+	{"p=", "n",
 		{"multi",
 			{"has", "indef", "noun indefinite forms"},
 			{"has", "def", "noun definite forms"},
@@ -190,7 +192,7 @@ cats["bg"] = {
 				{"or", {"has", "m"}, {"not", {"hasany", {"f", "n", "p"}}}},
 				{"and",
 					{"or", {"has", "indef"}, {"not", {"has", "def"}}},
-					{"not", {"hasany", {"subje", "obj"}}},
+					{"not", {"hasany", {"sbjv", "objv"}}},
 				},
 				{"cond",
 					{"hasall", {"pres", "act"}, "present active participles"},
@@ -207,14 +209,14 @@ cats["bg"] = {
 }
 
 cats["br"] = {
-	{"pos=", "n",
+	{"p=", "n",
 		{"has", "p", "noun plural forms"}
 	},
 }
 
 -- Applies to ca, es, it, pt
 local romance_adjective_categorization =
-	{"pos=", "a",
+	{"p=", "a",
 		{"multi",
 			{"has", "f", "adjective feminine forms"},
 			{"has", "p", "adjective plural forms"},
@@ -239,7 +241,7 @@ cats["ca"] = {
 }
 
 cats["de"] = {
-	{"pos=", "adv",
+	{"p=", "adv",
 		{"multi",
 			{"has", "comd", "adverb comparative forms"},
 			{"has", "supd", "adverb superlative forms"},
@@ -253,7 +255,7 @@ cats["de"] = {
 
 cats["el"] = {
 	{"has", "dat", "dative forms"},
-	{"pos=", "v",
+	{"p=", "v",
 		{"cond",
 			{"hasall", {"1", "s", "past"}, "verb past tense forms"},
 			{"has", "nonfinite", "verb nonfinite forms"},
@@ -300,7 +302,7 @@ cats["it"] = {
 }
 
 cats["ja"] = {
-	{"pos=", "v",
+	{"p=", "v",
 		{"multi",
 			{"has", "past", "past tense verb forms"},
 			{"has", "conj", "conjunctive verb forms"},
@@ -343,7 +345,7 @@ cats["liv"] = {
 }
 
 cats["lt"] = {
-	{"pos=", "part",
+	{"p=", "part",
 		{"cond",
 			-- Three types of adverbial participles.
 			{"has", "budinys", "būdinys participles"},
@@ -362,7 +364,7 @@ cats["lt"] = {
 			"dalyvis participle forms"
 		}
 	},
-	{"pos=", "a",
+	{"p=", "a",
 		{"has", "pron",
 			{"cond",
 				{"has", "comd", "comparative pronominal adjective forms"},
@@ -379,7 +381,7 @@ cats["lt"] = {
 cats["lv"] = {
 	{"has", "neg", "negative verb forms"},
 	{"has", "comd",
-		{"pos=", "part",
+		{"p=", "part",
 			{"has", "def",
 				"definite comparative participles",
 				"comparative participles"
@@ -391,7 +393,7 @@ cats["lv"] = {
 		}
 	},
 	{"has", "supd",
-		{"pos=", "part",
+		{"p=", "part",
 			"superlative participles",
 			"superlative adjectives",
 		}
@@ -400,7 +402,7 @@ cats["lv"] = {
 
 cats["pt"] = {
 	romance_adjective_categorization,
-	{"pos=", "n",
+	{"p=", "n",
 		{"multi",
 			{"has", "f", "noun feminine forms"},
 			{"has", "p", "noun plural forms"},
