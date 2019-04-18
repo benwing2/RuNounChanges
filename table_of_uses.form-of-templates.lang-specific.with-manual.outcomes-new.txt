@@ -521,15 +521,15 @@
 |-
 | '''[[Template:ru-pre-reform]]''' || '''[[Template:ru-pre-reform]]''' || 330 || No || Yes || No || Keep
 |-
-| '''[[Template:sa-desiderative of]]''' || '''[[Template:sa-desiderative of]]''' || 5 || Maybe? || Yes || No || Keep
+| '''[[Template:sa-desiderative of]]''' || '''[[Template:sa-desiderative of]]''' || 5 || Yes || Yes || No || Replace
 |-
-| [[Template:sa-desi]] || [[Template:sa-desiderative of]] || 5 || No || Yes || No || Rename to {{temp|sa-desiderative of}}
+| [[Template:sa-desi]] || [[Template:sa-desiderative of]] || 5 || Yes || Yes || No || Replace
 |-
-| '''[[Template:sa-frequentative of]]''' || '''[[Template:sa-frequentative of]]''' || 2 || Yes but verbosely || Yes || No || Keep
+| '''[[Template:sa-frequentative of]]''' || '''[[Template:sa-frequentative of]]''' || 2 || Yes || Yes || No || Replace
 |-
-| [[Template:sa-freq]] || [[Template:sa-frequentative of]] || 2 || No || Rename to {{temp|sa-frequentative of}}
+| [[Template:sa-freq]] || [[Template:sa-frequentative of]] || 2 || Yes || Yes || No || Replace
 |-
-| '''[[Template:sa-root form of]]''' || '''[[Template:sa-root form of]]''' || 1 || No || Yes || No || Keep
+| '''[[Template:sa-root form of]]''' || '''[[Template:sa-root form of]]''' || 1 || Yes || Yes || No || Keep
 |-
 | '''[[Template:sce-verb form of]]''' || '''[[Template:sce-verb form of]]''' || 1 || Not easily, but form might autodetectable; consider writing a form autodetector based on the ending || Yes || No || Keep
 |-

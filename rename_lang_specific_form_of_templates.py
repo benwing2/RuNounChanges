@@ -28,7 +28,6 @@ from misc_templates_to_rewrite import misc_templates_to_rewrite
 # pt-verb-form-of (? maybe? uses a module) (94585)
 # pt-verb form of (? very complicated; takes a region param that can/should be moved out) (29193)
 # sce-verb form of (? maybe? uses a module) (1)
-# sv-noun-form-adj (1)
 # sw-adj form of (? might be tough) (291)
 # tr-possessive form of (? includes posttext) (35)
 
@@ -97,8 +96,8 @@ templates_to_actually_do = [
 
 art_blk_specs = [
   ("blk-past of", (
-    "inflection of",
-    ("comment", "rename {{__TEMPNAME__}} to {{inflection of|art-blk}} with appropriate param changes"),
+    "verb form of",
+    ("comment", "rename {{__TEMPNAME__}} to {{verb form of|art-blk}} with appropriate param changes"),
     ("error-if", ("present-except", ["1"])),
     ("set", "1", [
       "art-blk",
@@ -255,6 +254,7 @@ def romance_adj_form_of(lang):
   # This works for ca, es, it and pt. Romanian has its own template and French
   # uses {{masculine singular of}}, {{feminine singular of}}, etc.
   # Not all languages accept m-f or mf, but it doesn't hurt to accept them.
+  # Has default initial caps and final period (controllable by nocap/nodot).
   return (
     "Adj form of",
     ("error-if", ("present-except", ["1", "2", "3", "4", "t", "nocap", "nodot"])),
@@ -579,6 +579,7 @@ de_specs = [
     ("copy", "sort"),
   )),
 
+  # NOTE: Has automatic, non-controllable initial caps and final period.
   ("de-verb form of", (
     "Verb form of",
     ("error-if", ("present-except", ["1", "2", "3", "4", "5"])),
@@ -623,6 +624,7 @@ de_specs = [
 
 el_specs = [
   # NOTE: Has automatic, non-controllable initial caps that we're ignoring.
+  # No final period.
   ("el-form-of-adv", (
     lambda t, pagemsg:
       ("comparative of",
@@ -648,10 +650,13 @@ el_specs = [
           ("copy", "alt"),
           "asupd",
         ]),
+        ("set", "p", "adv"),
         ("copy", "gloss", "t"),
       )
   )),
 
+  # NOTE: Has automatic, non-controllable initial caps and controllable
+  # final period (using nodot).
   ("el-form-of-nounadj", (
     "Inflection of",
     ("error-if", ("present-except", ["1", "c", "n", "g", "d", "t", "nodot"])),
@@ -706,6 +711,8 @@ el_specs = [
 
   ("el-form-of-pronoun", "el-form-of-nounadj"),
 
+  # NOTE: Has automatic, non-controllable initial caps and controllable
+  # final period (using nodot).
   ("el-form-of-verb", (
     "Verb form of",
     ("error-if", ("present-except", ["1", "nonfinite", "voice", "pers",
@@ -777,6 +784,8 @@ el_specs = [
     ("copy", "nodot"),
   )),
 
+  # NOTE: Has automatic, non-controllable initial caps and controllable
+  # final period (using nodot).
   ("el-participle of", (
     "Inflection of",
     ("error-if", ("present-except", ["1", "2", "gloss", "t", "tr", "nodot", "nocap"])),
@@ -815,6 +824,8 @@ en_specs = [
     ]),
   )),
 
+  # NOTE: Has automatic, non-controllable initial caps that we're ignoring.
+  # Doesn't have final period.
   ("en-third-person singular of", (
     "verb form of",
     # lang= occurs at least once, and is ignored.
@@ -875,6 +886,7 @@ es_specs = [
 ]
 
 et_specs = [
+  # Has default initial caps and final period (controllable by nocap/nodot).
   ("et-nom form of", (
     "Inflection of",
     # pos= is commonly present but ignored by the template. But it
@@ -910,6 +922,7 @@ et_specs = [
     ("copy", "nodot"),
   )),
 
+  # Has default initial caps and final period (controllable by nocap/nodot).
   ("et-participle of", (
     "Inflection of",
     ("error-if", ("present-except", ["1", "t", "nocap", "nodot"])),
@@ -930,10 +943,11 @@ et_specs = [
     ("copy", "nodot"),
   )),
 
+  # Has default initial caps and final period (controllable by nocap/nodot).
   ("et-verb form of", (
     # The template code supports m=ptc and categorizes specially, but
     # it never occurs.
-    "Inflection of",
+    "Verb form of",
     ("error-if", ("present-except", ["1", "p", "m", "t"])),
     ("set", "1", [
       "et",
@@ -990,6 +1004,8 @@ fa_specs = [
 
   ("fa-adj-form", "fa-adj form of"),
 
+  # Has automatic, non-controllable final period that we're ignoring.
+  # Doesn't have initial caps.
   ("fa-form-verb", (
     "verb form of",
     # t= is ignored by template but sometimes contains useful info.
@@ -1021,9 +1037,10 @@ fa_specs = [
 ]
 
 fi_specs = [
+  # Has default initial caps and final period (controllable by nocap/nodot).
   ("fi-verb form of", (
     # The template code ignores nocat=.
-    "verb form of",
+    "Verb form of",
     ("error-if", ("present-except", ["1", "pn", "tm", "c", "nocap", "nodot", "nocat"])),
     ("set", "1", [
       "fi",
@@ -1072,6 +1089,7 @@ gmq_bot_specs = [
 ]
 
 got_specs = [
+  # Has default initial caps and final period (controllable by nocap/nodot).
   ("got-verb form of", (
     "Verb form of",
     # lang= occurs at least once, and is ignored.
@@ -1387,7 +1405,7 @@ ie_specs = [
       "",
       "past",
       "and",
-      "past",
+      "pass",
       "part",
     ]),
   )),
@@ -1464,6 +1482,8 @@ ja_specs = [
 ]
 
 ka_specs = [
+  # NOTE: Has automatic, non-controllable initial caps that we're ignoring.
+  # Doesn't have final period.
   ("ka-verbal for", (
     "verbal noun of",
     # lang= occurs at least once, and is ignored.
@@ -1478,6 +1498,7 @@ ka_specs = [
 ]
 
 ku_specs = [
+  # NOTE: Has automatic, non-controllable initial caps and final period.
   ("ku-verb form of", (
     "Verb form of",
     ("error-if", ("present-except", ["1", "2", "3", "4"])),
@@ -1804,6 +1825,27 @@ lt_specs = [
   )),
 
   # NOTE: Has automatic, non-controllable final period that we're ignoring.
+  # Doesn't have initial caps.
+  ("lt-form-part", (
+    "inflection of",
+    ("error-if", ("present-except", ["pro", "1", "2", "3"])),
+    ("set", "1", [
+      "lt",
+      ("copy", "3"),
+      "",
+      ("lookup", "pro", {
+        "+": "pron",
+        "y": "pron",
+        "yes": "pron",
+        "": [],
+      }),
+      ("lookup", "1", lt_adj_gender_number_table),
+      ("lookup", "2", lt_adj_case_table),
+    ]),
+    ("set", "p", "part"),
+  )),
+
+  # NOTE: Has automatic, non-controllable final period that we're ignoring.
   # Doesn't have initial caps. Categorizes into 'pronoun forms', which
   # should be handled by the headword.
   ("lt-form-pronoun", (
@@ -1848,27 +1890,6 @@ lt_specs = [
         "ins": "ins",
       }),
     ]),
-  )),
-
-  # NOTE: Has automatic, non-controllable final period that we're ignoring.
-  # Doesn't have initial caps.
-  ("lt-form-part", (
-    "inflection of",
-    ("error-if", ("present-except", ["pro", "1", "2", "3"])),
-    ("set", "1", [
-      "lt",
-      ("copy", "3"),
-      "",
-      ("lookup", "pro", {
-        "+": "pron",
-        "y": "pron",
-        "yes": "pron",
-        "": [],
-      }),
-      ("lookup", "1", lt_adj_gender_number_table),
-      ("lookup", "2", lt_adj_case_table),
-    ]),
-    ("set", "p", "part"),
   )),
 
   # NOTE: Has automatic, non-controllable final period that we're ignoring.
@@ -2118,6 +2139,8 @@ mr_specs = [
 ]
 
 mt_specs = [
+  # NOTE: Has automatic, non-controllable final period that we're ignoring.
+  # Doesn't have initial caps.
   ("mt-prep-form", (
     "inflection of",
     ("error-if", ("present-except", ["1", "2"])),
@@ -2135,6 +2158,7 @@ mt_specs = [
         "3p": ["3", "p"],
       }),
     ]),
+    ("set", "p", "pre"),
   )),
 ]
 
@@ -2179,8 +2203,8 @@ nb_specs = [
 ]
 
 ofs_specs = [
-  # NOTE: Capitalizes initial letter, we are ignoring that and ignoring
-  # nocap=. Only 5 uses.
+  # NOTE: Has default initial caps (controllable through nocap) that we
+  # are ignoring. Doesn't have final period. Only 5 uses.
   ("ofs-nom form of", (
     "noun form of",
     ("error-if", ("present-except", ["1", "2", "c", "n", "g", "w", "nocap"])),
@@ -2220,8 +2244,8 @@ ofs_specs = [
 ]
 
 osx_specs = [
-  # NOTE: Capitalizes initial letter, we are ignoring that and ignoring
-  # nocap=. Only 22 uses.
+  # NOTE: Has default initial caps (controllable through nocap) that we
+  # are ignoring. Doesn't have final period. Only 22 uses.
   ("osx-nom form of", (
     "inflection of",
     ("error-if", ("present-except", ["1", "2", "c", "n", "g", "w", "nocap"])),
@@ -2263,8 +2287,8 @@ osx_specs = [
 pt_specs = [
   ("pt-adj form of", romance_adj_form_of("pt")),
 
-  # NOTE: Capitalizes initial letter, we are ignoring that and ignoring
-  # nocap=. Doesn't have final period. Only 11 uses.
+  # NOTE: Has default initial caps (controllable through nocap) that we
+  # are ignoring. Doesn't have final period. Only 11 uses.
   ("pt-adv form of", (
     "inflection of",
     ("error-if", ("present-except", ["1", "2", "nocap"])),
@@ -2278,10 +2302,9 @@ pt_specs = [
         "sup": "supd",
       }),
     ]),
+    ("set", "p", "adv"),
   )),
 
-  # NOTE: Capitalizes initial letter, we are ignoring that and ignoring
-  # nocap=. Doesn't have final period. Only 11 uses.
   ("pt-article form of", (
     "Inflection of",
     ("error-if", ("present-except", ["1", "2", "3", "nocap", "nodot"])),
@@ -2300,10 +2323,9 @@ pt_specs = [
     ]),
     ("copy", "nocap"),
     ("copy", "nodot"),
+    ("set", "p", "art"),
   )),
 
-  # NOTE: Capitalizes initial letter, we are ignoring that and ignoring
-  # nocap=. Only 10 uses.
   ("pt-cardinal form of", (
     "feminine of",
     ("error-if", ("present-except", ["1"])),
@@ -2311,41 +2333,43 @@ pt_specs = [
       "pt",
       ("copy", "1"),
     ]),
+    ("set", "p", "cnum"),
   )),
 
+  # Has default initial caps and final period (controllable by nocap/nodot).
   ("pt-noun form of", (
-      "noun form of",
-      ("error-if", ("present-except", ["1", "2", "3", "4", "t", "nocap", "nodot"])),
-      ("set", "1", [
-        "pt",
-        ("copy", "1"),
-      ]),
-      ("copy", "t"), # ignored by template but sometimes present
-      ("set", "3", [
-        "",
-        ("lookup", "4", {
-          "aug": "aug",
-          "dim": "dim",
-          "": [],
-        }),
-        ("lookup", "2", {
-          "m": "m",
-          "f": "f",
-          "mf": "mf", # not accepted by template but present
-          "m-f": "mf", # not accepted by template but present
-          "onlym": [],
-          "onlyf": [],
-        }),
-        ("lookup", "3", {
-          "sg": "s",
-          "pl": "p",
-        }),
-      ]),
-      ("copy", "nocap"),
-      ("copy", "nodot"),
-    )
-  ),
+    "Noun form of",
+    ("error-if", ("present-except", ["1", "2", "3", "4", "t", "nocap", "nodot"])),
+    ("set", "1", [
+      "pt",
+      ("copy", "1"),
+    ]),
+    ("copy", "t"), # ignored by template but sometimes present
+    ("set", "3", [
+      "",
+      ("lookup", "4", {
+        "aug": "aug",
+        "dim": "dim",
+        "": [],
+      }),
+      ("lookup", "2", {
+        "m": "m",
+        "f": "f",
+        "mf": "mf", # not accepted by template but present
+        "m-f": "mf", # not accepted by template but present
+        "onlym": [],
+        "onlyf": [],
+      }),
+      ("lookup", "3", {
+        "sg": "s",
+        "pl": "p",
+      }),
+    ]),
+    ("copy", "nocap"),
+    ("copy", "nodot"),
+  )),
 
+  # NOTE: Has automatic, non-controllable initial caps and final period.
   ("pt-ordinal form", (
     "Inflection of",
     ("error-if", ("present-except", ["1", "2"])),
@@ -2363,6 +2387,7 @@ pt_specs = [
         u"ªs": ["f", "p"],
       }),
     ]),
+    ("set", "p", "onum"),
   )),
 
   ("pt-ordinal def", "pt-ordinal form"),
@@ -2522,13 +2547,16 @@ ro_specs = [
 ]
 
 roa_opt_specs = [
+  # Has default initial caps and final period (controllable by nocap/nodot).
   ("roa-opt-noun plural of", (
     "Plural of",
-    ("error-if", ("present-except", ["1"])),
+    ("error-if", ("present-except", ["1", "nocap", "nodot"])),
     ("set", "1", [
       "roa-opt",
       ("copy", "1"),
     ]),
+    ("copy", "nocap"),
+    ("copy", "nodot"),
   )),
 ]
 
@@ -2560,6 +2588,46 @@ ru_specs = [
     ("copy", "pos"),
     ("copy", "nocat"),
   )),
+]
+
+sa_specs = [
+  ("sa-desiderative of", (
+    "verb form of",
+    ("error-if", ("present-except", ["1"])),
+    ("set", "1", [
+      "sa",
+      ("copy", "1"),
+      "",
+      "desid"
+    ]),
+  )),
+
+  ("sa-desi", "sa-desiderative of"),
+
+  ("sa-frequentative of", (
+    "verb form of",
+    ("error-if", ("present-except", ["1"])),
+    ("set", "1", [
+      "sa",
+      ("copy", "1"),
+      "",
+      ["freq//inten"],
+    ]),
+  )),
+
+  ("sa-freq", "sa-frequentative of"),
+
+  ("sa-root form of", (
+    "inflection of",
+    ("error-if", ("present-except", ["1"])),
+    ("set", "1", [
+      "sa",
+      ("copy", "1"),
+      "",
+      ["root"],
+    ]),
+  )),
+
 ]
 
 sco_specs = [
@@ -2638,6 +2706,8 @@ sh_specs = [
   # the headword. Otherwise identical to {{sh-form-noun}}.
   ("sh-form-proper-noun", "sh-form-noun"),
 
+  # NOTE: Has automatic, non-controllable final period that we're ignoring.
+  # Doesn't have initial caps.
   ("sh-verb form of", (
     lambda t, pagemsg:
       ("verbal noun of",
@@ -2734,6 +2804,8 @@ sl_specs = [
     ]),
   )),
 
+  # NOTE: Has automatic, non-controllable final period that we're ignoring.
+  # Doesn't have initial caps.
   ("sl-form-noun", (
     "noun form of",
     ("error-if", ("present-except", ["1", "2", "3"])),
@@ -2763,6 +2835,8 @@ sl_specs = [
     ]),
   )),
 
+  # NOTE: Has automatic, non-controllable final period that we're ignoring.
+  # Doesn't have initial caps.
   ("sl-form-verb", (
     "verb form of",
     ("error-if", ("present-except", ["1", "2", "3"])),
@@ -2841,6 +2915,9 @@ def sv_verb_form(parts):
   return sv_form("verb form of", parts)
 
 sv_specs = [
+  # NOTE: All of the following adjective, adverb and verb forms have automatic,
+  # non-controllable final periods that we're ignoring. Don't have initial
+  # caps. No final period for the noun forms.
   ("sv-adj-form-abs-def", sv_adj_form(["def"])),
   ("sv-adj-form-abs-def+pl", sv_adj_form(["s", "def", "and", "p"])),
   ("sv-adj-form-abs-def-m", sv_adj_form(["def", "natm"])),
@@ -2870,7 +2947,7 @@ sv_specs = [
     ]),
     ("set", "POS", "adverb"),
   )),
-# sv-noun-form-adj (1)
+  ("sv-noun-form-adj", sv_noun_form(["nomzn"]),
   ("sv-noun-form-def", sv_noun_form(["def", "sg"])),
   ("sv-noun-form-def-gen", sv_noun_form(["def", "gen", "sg"])),
   ("sv-noun-form-def-gen-pl", sv_noun_form(["def", "gen", "pl"])),
@@ -2891,11 +2968,19 @@ sv_specs = [
   )),
   ("sv-verb-form-imp", sv_verb_form(["imp"])),
   ("sv-verb-form-inf-pass", sv_verb_form(["inf", "pass"])),
+  # Contrary to what we said above, this one in particular has the final
+  # period controllable by |dot=, which can override it. Pretty sure it
+  # never occurs.
   ("sv-verb-form-past", sv_verb_form(["past"])),
   ("sv-verb-form-past-pass", sv_verb_form(["past", "pass"])),
-  ("sv-verb-form-inf-pass", sv_verb_form(["past", "part"])),
+  # Contrary to what we said above, this one in particular also has the final
+  # period controllable by |dot=, which can override it. Pretty sure it
+  # never occurs.
+  ("sv-verb-form-pastpart", sv_verb_form(["past", "part"])),
   ("sv-verb-form-pre", sv_verb_form(["pres"])),
   ("sv-verb-form-pre-pass", sv_verb_form(["pres", "pass"])),
+  # Contrary to what we said above, this one in particular doesn't have a
+  # final period.
   ("sv-verb-form-prepart", sv_verb_form(["pres", "part"])),
   ("sv-verb-form-subjunctive", sv_verb_form(["sub"])),
   ("sv-verb-form-sup", sv_verb_form(["sup"])),
@@ -2907,6 +2992,8 @@ tg_specs = [
 
   ("tg-adj-form", "tg-adj form of"),
 
+  # NOTE: Has automatic, non-controllable final period that we're ignoring.
+  # Doesn't have initial caps.
   ("tg-form-verb", (
     "verb form of",
     ("error-if", ("present-except", ["1", "2"])),
@@ -2936,11 +3023,10 @@ tg_specs = [
 ]
 
 tl_specs = [
-  # NOTE: Has automatic, non-controllable initial caps and final period that
-  # we're ignoring. Categorizes into 'verb forms', which should be
-  # handled by the headword.
+  # NOTE: Has automatic, non-controllable initial caps and final period.
+  # Categorizes into 'verb forms', which should be handled by the headword.
   ("tl-verb form of", (
-    "verb form of",
+    "Verb form of",
     # most uses have |nocat=1; ignore since there's no categorization
     ("error-if", ("present-except", ["1", "2", "nocat"])),
     ("set", "1", [
@@ -3042,6 +3128,7 @@ templates_to_rename_specs = (
   ro_specs +
   roa_opt_specs +
   ru_specs +
+  sa_specs +
   sco_specs +
   sga_specs +
   sh_specs +

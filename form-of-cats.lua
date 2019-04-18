@@ -429,6 +429,22 @@ cats["ru"] = {
 	},
 }
 
+cats["sa"] = {
+	{"has", "desid",
+		{"multi",
+			"desiderative verbs",
+			"verbs derived from primitive verbs"
+		},
+	},
+	{"has", "freq",
+		{"multi",
+			"frequentative verbs",
+			"verbs derived from primitive verbs"
+		},
+	},
+	{"has", "root", "root forms"},
+}
+
 cats["sco"] = {
 	{"has", "spast", "verb simple past forms"},
 	{"or",
