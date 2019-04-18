@@ -5,8 +5,8 @@ local rfind = mw.ustring.find
 local rmatch = mw.ustring.match
 local rsplit = mw.text.split
 
--- Add tracking category for PAGE when called from TEMPLATE. The tracking category
--- linked to is [[Template:tracking/form-of/TEMPLATE/PAGE]].
+-- Add tracking category for PAGE when called from TEMPLATE. The tracking
+-- category linked to is [[Template:tracking/form-of/TEMPLATE/PAGE]].
 local function track(template, page)
 	require("Module:debug").track("form-of/" .. template .. "/" .. page)
 end
