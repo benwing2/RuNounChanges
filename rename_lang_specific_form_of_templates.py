@@ -10,13 +10,9 @@ from blib import getparam, rmparam, msg, errandmsg, site, tname
 from misc_templates_to_rewrite import misc_templates_to_rewrite
 
 # STILL TO DO:
-# de-verb form of (? has 5=t -> "subordinate clause form") (54761)
 # egy-verb form of (? lots of Egyptian-specific tags) (27)
-# en-simple-past-of (? other en-* form-of templates can't be generalized) (1043)
-# en-third-person singular of (? other en-* form-of templates can't be generalized) (26938)
 # eo-form of (? takes actual ending, generates tags from it, would be a radical shift) (99087)
 # es-verb form of (? very complicated; takes a region param that can/should be moved out) (441797)
-# ff-fuc-form of (0, DELETE)
 # gl-verb form of (? very complicated) (598)
 # got-nom form of (? has posttext= if comp-of=, sup-of=, presptc-of= or pastptc-of=) (2935)
 # ia-form of (? takes actual ending, generates tags from it, would be a radical shift) (718)
@@ -26,23 +22,13 @@ from misc_templates_to_rewrite import misc_templates_to_rewrite
 # lv-adv form of (2761)
 # lv-participle of (? might need lang-specific tags for "(object-of-perception form)", "(invariable form)", "(variable form)" (5163)
 # mn-verb form of (? maybe? uses a module) (63)
-# nb-noun-form-indef-pl (0, DELETE)
 # nl-adj form of (? would need lang-specific tag for "Predicative/adverbial form", has posttext= if comp-of= or sup-of=) (4559)
 # nn-verb-form of (? maybe? uses a module) (1046)
-# no-noun-form-def (0, DELETE)
-# no-noun-form-def-pl (0, DELETE)
-# pt-article form of (? says "of article ..." before link; might not be necessary) (6)
 # pt-pron def (? not only a form-of template) (24)
 # pt-verb-form-of (? maybe? uses a module) (94585)
 # pt-verb form of (? very complicated; takes a region param that can/should be moved out) (29193)
 # sce-verb form of (? maybe? uses a module) (1)
 # sv-noun-form-adj (1)
-# sv-noun-form-def-pl (? if 'obsoleted by=', displays extra 'Obsolete form of' pre-text, maybe should go into separate template) (7574)
-# sv-verb-form-imp (? if 'plural of=', displays extra 'Obsolete plural form of' pre-text, maybe should go into separate template) (567)
-# sv-verb-form-past (? if 'plural of=', displays extra 'Obsolete plural form of' pre-text, maybe should go into separate template) (2567)
-# sv-verb-form-past-pass (? if 'plural of=', displays extra 'Obsolete plural form of' pre-text, maybe should go into separate template) (1631)
-# sv-verb-form-pre (? if 'plural of=', displays extra 'Obsolete plural form of' pre-text, maybe should go into separate template) (2687)
-# sv-verb-form-pres-pass (0, DELETE)
 # sw-adj form of (? might be tough) (291)
 # tr-possessive form of (? includes posttext) (35)
 
@@ -124,6 +110,7 @@ art_blk_specs = [
 ]
 
 bg_specs = [
+  # NOTE: Has automatic, non-controllable initial caps and final period.
   ("bg-adj form of", (
     "Adj form of",
     ("error-if", ("present-except", ["1", "2", "3", "adj"])),
@@ -132,8 +119,8 @@ bg_specs = [
       ("copy", "adj"),
       "",
       ("lookup", "3", {
-        "subject": "subje",
-        "object": "obj",
+        "subject": "sbjv",
+        "object": "objv",
         "": [],
       }),
       ("lookup", "1", {
@@ -150,6 +137,7 @@ bg_specs = [
     ]),
   )),
 
+  # NOTE: Has automatic, non-controllable initial caps and final period.
   ("bg-noun form of", (
     "Noun form of",
     ("error-if", ("present-except", ["1", "2", "3", "noun"])),
@@ -158,8 +146,8 @@ bg_specs = [
       ("copy", "noun"),
       "",
       ("lookup", "3", {
-        "subject": "subje",
-        "object": "obj",
+        "subject": "sbjv",
+        "object": "objv",
         "": [],
       }),
       ("lookup", "1", {
@@ -177,6 +165,7 @@ bg_specs = [
     ]),
   )),
 
+  # NOTE: Has automatic, non-controllable initial caps and final period.
   ("bg-verb form of", (
     "Verb form of",
     ("error-if", ("present-except", ["verb", "part", "g", "f", "d", "person", "number", "tense", "mood"])),
@@ -221,8 +210,8 @@ bg_specs = [
         ],
         True: [
           ("lookup", "f", {
-            "subject form": "subje",
-            "object form": "obj",
+            "subject form": "sbjv",
+            "object form": "objv",
             "": [], # can occur esp. with non-masculine participles
           }),
           ("lookup", "g", {
@@ -249,6 +238,7 @@ bg_specs = [
 ]
 
 br_specs = [
+  # NOTE: Has automatic, non-controllable initial caps and final period.
   ("br-noun-plural", (
     "Noun form of",
     ("error-if", ("present-except", ["1", "2"])),
@@ -301,7 +291,7 @@ ca_specs = [
   ("ca-adj form of", romance_adj_form_of("ca")),
 
   ("ca-verb form of", (
-    "Verb form of",
+    "verb form of",
     ("error-if", ("present-except", ["1", "p", "n", "g", "t", "m", "nocap", "nodot"])),
     ("set", "1", [
       "ca",
@@ -397,7 +387,8 @@ chm_specs = [
   # -- 6==pro -> pronoun forms
   # -- 6==proper -> proper noun forms
   # -- 6==<anything else> -> noun forms
-  # This should be handled by the headword, but we should check.
+  # This should be handled by the headword. In practice, it seems this
+  # template is only ever used for noun forms.
   ("chm-inflection of", (
     "inflection of",
     ("error-if", ("present-except", ["1", "2", "3", "4", "5", "6"])),
@@ -425,10 +416,9 @@ chm_specs = [
 ]
 
 cu_specs = [
-  # NOTE: Has automatic, non-controllable initial caps and final period; we
-  # should consider ignoring that. Only 10 uses. Categorizes into
-  # '{{{type}}} forms', which should be handled by the headword; in actual
-  # use, type is always 'noun'.
+  # NOTE: Has automatic, non-controllable initial caps and final period.
+  # Only 10 uses. Categorizes into '{{{type}}} forms', which should be
+  # handled by the headword; in actual use, type is always 'noun'.
   ("cu-form of", (
     "Inflection of",
     ("error-if", ("present-except", ["1", "type", "case", "pl", "sc"])),
@@ -588,9 +578,51 @@ de_specs = [
     ]),
     ("copy", "sort"),
   )),
+
+  ("de-verb form of", (
+    "Verb form of",
+    ("error-if", ("present-except", ["1", "2", "3", "4", "5"])),
+    ("set", "1", [
+      "de",
+      ("copy", "1"),
+      "",
+      ("lookup", "2", {
+        "pr": ["pres", "part"],
+        "pp": ["past", "part"],
+        True: [
+          ("lookup", "2", {
+            "1": "1",
+            "2": "2",
+            "3": "3",
+            "i": "imp",
+          }),
+          ("lookup", "3", {
+            "s": "s",
+            "p": "p",
+          }),
+          ("lookup", "2", {
+            "i": ("lookup", "4", {
+              "": [],
+            }),
+            True: ("lookup", "4", {
+              "g": "pres",
+              "v": ["pret"],
+              "k1": ["sub", "I"],
+              "k2": ["sub", "II"],
+            }),
+          }),
+          ("lookup", "5", {
+            "": [],
+            True: ["dep", "form"],
+          }),
+        ],
+      }),
+    ]),
+  )),
 ]
 
 el_specs = [
+  # NOTE: Has automatic, non-controllable initial caps that we're ignoring.
   ("el-form-of-adv", (
     lambda t, pagemsg:
       ("comparative of",
@@ -768,6 +800,31 @@ el_specs = [
     ("copy", "t"),
     ("copy", "nodot"),
     ("copy", "nocap"),
+  )),
+]
+
+en_specs = [
+  ("en-simple past of", (
+    "verb form of",
+    ("error-if", ("present-except", ["1", "2"])),
+    ("set", "1", [
+      "en",
+      ("copy", "1"),
+      ("copy", "2"),
+      "spast"
+    ]),
+  )),
+
+  ("en-third-person singular of", (
+    "verb form of",
+    # lang= occurs at least once, and is ignored.
+    ("error-if", ("present-except", ["1", "2", "lang"])),
+    ("set", "1", [
+      "en",
+      ("copy", "1"),
+      ("copy", "2"),
+      ["3s", "spres", "ind"],
+    ]),
   )),
 ]
 
@@ -1422,7 +1479,7 @@ ka_specs = [
 
 ku_specs = [
   ("ku-verb form of", (
-    "verb form of",
+    "Verb form of",
     ("error-if", ("present-except", ["1", "2", "3", "4"])),
     ("set", "1", [
       "ku",
@@ -2224,6 +2281,28 @@ pt_specs = [
   )),
 
   # NOTE: Capitalizes initial letter, we are ignoring that and ignoring
+  # nocap=. Doesn't have final period. Only 11 uses.
+  ("pt-article form of", (
+    "Inflection of",
+    ("error-if", ("present-except", ["1", "2", "3", "nocap", "nodot"])),
+    ("set", "1", [
+      "pt",
+      ("copy", "1"),
+      "",
+      ("lookup", "2", {
+        "m": "m",
+        "f": "f",
+      }),
+      ("lookup", "3", {
+        "sg": "s",
+        "pl": "p",
+      }),
+    ]),
+    ("copy", "nocap"),
+    ("copy", "nodot"),
+  )),
+
+  # NOTE: Capitalizes initial letter, we are ignoring that and ignoring
   # nocap=. Only 10 uses.
   ("pt-cardinal form of", (
     "feminine of",
@@ -2795,7 +2874,7 @@ sv_specs = [
   ("sv-noun-form-def", sv_noun_form(["def", "sg"])),
   ("sv-noun-form-def-gen", sv_noun_form(["def", "gen", "sg"])),
   ("sv-noun-form-def-gen-pl", sv_noun_form(["def", "gen", "pl"])),
-# sv-noun-form-def-pl (? if 'obsoleted by=', displays extra 'Obsolete form of' pre-text, maybe should go into separate template) (7574)
+  ("sv-noun-form-def-pl", sv_noun_form(["def", "pl"])),
   ("sv-noun-form-indef-gen", sv_noun_form(["indef", "gen", "sg"])),
   ("sv-noun-form-indef-gen-pl", sv_noun_form(["indef", "gen", "pl"])),
   ("sv-noun-form-indef-pl", sv_noun_form(["indef", "pl"])),
@@ -2810,12 +2889,12 @@ sv_specs = [
     ]),
     ("set", "p", "pn"),
   )),
-# sv-verb-form-imp (? if 'plural of=', displays extra 'Obsolete plural form of' pre-text, maybe should go into separate template) (567)
+  ("sv-verb-form-imp", sv_verb_form(["imp"])),
   ("sv-verb-form-inf-pass", sv_verb_form(["inf", "pass"])),
-# sv-verb-form-past (? if 'plural of=', displays extra 'Obsolete plural form of' pre-text, maybe should go into separate template) (2567)
-# sv-verb-form-past-pass (? if 'plural of=', displays extra 'Obsolete plural form of' pre-text, maybe should go into separate template) (1631)
+  ("sv-verb-form-past", sv_verb_form(["past"])),
+  ("sv-verb-form-past-pass", sv_verb_form(["past", "pass"])),
   ("sv-verb-form-inf-pass", sv_verb_form(["past", "part"])),
-# sv-verb-form-pre (? if 'plural of=', displays extra 'Obsolete plural form of' pre-text, maybe should go into separate template) (2687)
+  ("sv-verb-form-pre", sv_verb_form(["pres"])),
   ("sv-verb-form-pre-pass", sv_verb_form(["pres", "pass"])),
   ("sv-verb-form-prepart", sv_verb_form(["pres", "part"])),
   ("sv-verb-form-subjunctive", sv_verb_form(["sub"])),
@@ -2934,6 +3013,7 @@ templates_to_rename_specs = (
   da_specs +
   de_specs +
   el_specs +
+  en_specs +
   enm_specs +
   es_specs +
   et_specs +
