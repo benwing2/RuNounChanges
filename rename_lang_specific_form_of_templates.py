@@ -2947,7 +2947,6 @@ sv_specs = [
     ]),
     ("set", "POS", "adverb"),
   )),
-  ("sv-noun-form-adj", sv_noun_form(["nomzn"]),
   ("sv-noun-form-def", sv_noun_form(["def", "sg"])),
   ("sv-noun-form-def-gen", sv_noun_form(["def", "gen", "sg"])),
   ("sv-noun-form-def-gen-pl", sv_noun_form(["def", "gen", "pl"])),

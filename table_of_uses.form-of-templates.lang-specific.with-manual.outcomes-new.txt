@@ -185,8 +185,6 @@
 |-
 | '''[[Template:fa-form-verb]]''' || '''[[Template:fa-form-verb]]''' || 153 || Yes || No || No || Replace
 |-
-| '''[[Template:ff-fuc-form of]]''' || '''[[Template:ff-fuc-form of]]''' || 0 || Yes || No || No || Delete, unused
-|-
 | '''[[Template:fi-form of]]''' || '''[[Template:fi-form of]]''' || 54262 || No || No || Yes || Keep
 |-
 | '''[[Template:fi-infinitive of]]''' || '''[[Template:fi-infinitive of]]''' || 2987 || No || Yes || No || Keep
@@ -290,8 +288,6 @@
 | '''[[Template:it-adj form of]]''' || '''[[Template:it-adj form of]]''' || 3612 || Yes || Yes || No || Replace and deprecate
 |-
 | '''[[Template:iu-spel]]''' || '''[[Template:iu-spel]]''' || 123 || No || No || No || Keep
-|-
-| '''[[Template:ja-form of]]''' || '''[[Template:ja-form of]]''' || 0 || No || Yes || No || Delete, unused
 |-
 | '''[[Template:ja-kyujitai spelling of]]''' || '''[[Template:ja-kyujitai spelling of]]''' || 586 || No || Yes || No || Keep
 |-
@@ -409,8 +405,6 @@
 |-
 | '''[[Template:nb-noun-form-indef-gen-pl]]''' || '''[[Template:nb-noun-form-indef-gen-pl]]''' || 2 || Yes || No || No || Replace
 |-
-| '''[[Template:nb-noun-form-indef-pl]]''' || '''[[Template:nb-noun-form-indef-pl]]''' || 0 || Yes || Yes || No || Delete, unused
-|-
 | '''[[Template:nl-adj form of]]''' || '''[[Template:nl-adj form of]]''' || 4559 || No; needs some language-specific tags, has language-specific glossary links, has post-text when {{para|comp-of}} or {{para|sup-of}} || No || No || Keep
 |-
 | '''[[Template:nl-noun form of]]''' || '''[[Template:nl-noun form of]]''' || 27827 || Yes || Yes || No || Keep for now due to #uses
@@ -421,17 +415,9 @@
 |-
 | '''[[Template:nn-verb-form of]]''' || '''[[Template:nn-verb-form of]]''' || 1046 || No due to special params and special handling of lemma || No || No || Rename to {{nn-verb form of}} and deprecate; also, uses [[Module:nn-verb-form of]], which needs serious rewriting
 |-
-| '''[[Template:nn-verb-form-imp]]''' || '''[[Template:nn-verb-form-imp]]''' || 0 || No due to special handling of lemma and {{para|br}} ("bracket form" post-text) || No || No || Delete, unused
-|-
-| '''[[Template:nn-verb-form-past]]''' || '''[[Template:nn-verb-form-past]]''' || 0 || No due to special handling of lemma and {{para|br}} ("bracket form" post-text) || No || No || Delete, unused
-|-
 | '''[[Template:nn-verb-form-pastpart]]''' || '''[[Template:nn-verb-form-pastpart]]''' || 2 || No due to special handling of lemma and {{para|br}} ("bracket form" post-text) || No || No || Replace with {{nn-verb form of}} and add support to module for {{para|br}}
 |-
 | '''[[Template:nn-verb-form-pre]]''' || '''[[Template:nn-verb-form-pre]]''' || 3 || No due to special handling of lemma and {{para|br}} ("bracket form" post-text) || No || No || Replace with {{nn-verb form of}} and add support to module for {{para|br}}
-|-
-| '''[[Template:no-noun-form-def]]''' || '''[[Template:no-noun-form-def]]''' || 0 || Yes || No || No || Delete, unused
-|-
-| '''[[Template:no-noun-form-def-pl]]''' || '''[[Template:no-noun-form-def-pl]]''' || 0 || Yes || No || No || Delete, unused
 |-
 | '''[[Template:ofs-nom form of]]''' || '''[[Template:ofs-nom form of]]''' || 5 || Yes || No || No || Replace
 |-
@@ -587,8 +573,6 @@
 |-
 | '''[[Template:sv-adv-form-sup]]''' || '''[[Template:sv-adv-form-sup]]''' || 7 || Yes || No || Yes || Replace
 |-
-| '''[[Template:sv-noun-form-adj]]''' || '''[[Template:sv-noun-form-adj]]''' || 1 || No? || No || No || Delete; no actual uses
-|-
 | '''[[Template:sv-noun-form-def]]''' || '''[[Template:sv-noun-form-def]]''' || 10063 || Yes || No || No || Replace and deprecate (or keep for now due to #uses?)
 |-
 | '''[[Template:sv-noun-form-def-gen]]''' || '''[[Template:sv-noun-form-def-gen]]''' || 8327 || Yes || No || No || Replace and deprecate
@@ -620,8 +604,6 @@
 | '''[[Template:sv-verb-form-pre-pass]]''' || '''[[Template:sv-verb-form-pre-pass]]''' || 2067 || Yes || No || No || Replace and deprecate
 |-
 | '''[[Template:sv-verb-form-prepart]]''' || '''[[Template:sv-verb-form-prepart]]''' || 2028 || Yes || No || No || Replace and deprecate
-|-
-| '''[[Template:sv-verb-form-pres-pass]]''' || '''[[Template:sv-verb-form-pres-pass]]''' || 0 || Yes || No || No || Delete, unused
 |-
 | '''[[Template:sv-verb-form-subjunctive]]''' || '''[[Template:sv-verb-form-subjunctive]]''' || 14 || Yes || No || No || Replace
 |-
@@ -712,6 +694,4 @@
 | [[Template:zh-synonym]] || [[Template:zh-synonym of]] || 431 || No || No || No || Rename to {{temp|zh-synonym of}}
 |-
 | '''[[Template:zu-combining stem of]]''' || '''[[Template:zu-combining stem of]]''' || 17 || No || No || No ||  Keep
-|-
-| '''[[Template:zu-verb inf of]]''' || '''[[Template:zu-verb inf of]]''' || 0 || No || No || No || Delete, unused
 |}
