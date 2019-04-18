@@ -52,30 +52,59 @@ function export.format_form_of(text, terminfo, posttext)
 end
 
 
-local function normalize_single_tag(tag)
-	if m_data.shortcuts[tag] then
-	elseif m_data.tags[tag] then
-	else
-		require("Module:debug").track{
-			"inflection of/unknown",
-			"inflection of/unknown/" .. tag:gsub("%[", "("):gsub("%]", ")"):gsub("|", "!")
-		}
-	end
-
-	return m_data.shortcuts[tag] or tag
+-- Add tracking category for PAGE when called from {{inflection of}} or
+-- similar TEMPLATE. The tracking category linked to is
+-- [[Template:tracking/inflection of/PAGE]].
+local function infl_track(page)
+	require("Module:debug").track("inflection of/" ..
+		-- avoid including links in pages (may cause error)
+		page:gsub("%[", "("):gsub("%]", ")"):gsub("|", "!"))
 end
 
 
+-- Normalize a single tag, which should not be a list or multipart tag.
+local function normalize_single_tag(tag)
+	local normalized = m_data.shortcuts[tag] or tag
+	if normalized ~= tag then
+		tag = normalized
+		-- Track the expansion if it's not the same as the raw tag.
+		infl_track("tag/" .. tag)
+	end
+	if not m_data.tags[tag] then
+		-- If after all expansions and normalizations we don't recognize
+		-- the canonical tag, track it.
+		infl_track("unknown")
+		infl_track("unknown/" .. tag)
+	end
+	return tag
+end
+
+
+-- Normalize a single tag, which should not be a list tag but may be a
+-- multipart tag. If RECOMBINE_TAGS isn't given, the return value may be a
+-- list (in the case of multipart tags); otherwise, it will always be a
+-- string, and multipart tags will be represented as canonical-form tags
+-- joined by "//".
 local function normalize_tag(tag, recombine_multitags)
-	-- Check for a shortcut before splitting because some shortcuts map to
-	-- multiple //-separated tags, e.g. 123 -> 1//2//3.
-	tag = m_data.shortcuts[tag] or tag
+	-- Check for a shortcut before splitting. (I think the only case this
+	-- should apply to is when a list tag expands to a multipart tag.)
+	local expanded_tag = m_data.shortcuts[tag] or tag
+	if type(expanded_tag) ~= "string" then
+		error("List tags should already have been expanded: " .. tag)
+	end
+	if expanded_tag ~= tag then
+		tag = expanded_tag
+		-- Track the expansion if it's not the same as the raw tag.
+		infl_track("tag/" .. tag)
+	end
 	local split_tags = rsplit(tag, "//", true)
 	if #split_tags == 1 then
 		return normalize_single_tag(split_tags[1])
 	end
 	local normtags = {}
 	for _, single_tag in ipairs(split_tags) do
+		-- If the tag was a multipart tag, track each of individual raw tags.
+		infl_track("tag/" .. single_tag)
 		table.insert(normtags, normalize_single_tag(single_tag))
 	end
 	if recombine_multitags then
@@ -86,12 +115,48 @@ local function normalize_tag(tag, recombine_multitags)
 end
 
 
+-- Normalize a list of tags into a list of canonical-form tags (which
+-- may be larger due to the possibility of list tags). If RECOMBINE_TAGS
+-- isn't given, the return list may itself contains lists; in particular,
+-- multipart tags will be represented as lists. If RECOMBINE_TAGS is given,
+-- they will be represented as canonical-form tags joined by "//".
 local function normalize_tags(tags, recombine_multitags)
+	-- We track usage of shortcuts, normalized forms and (in the case of
+	-- multipart tags or list tags) intermediate forms. For example,
+	-- if the tags 1s|mn|gen|indefinite are passed in, we track the following:
+	-- [[Template:tracking/inflection of/tag/1s]]
+	-- [[Template:tracking/inflection of/tag/1]]
+	-- [[Template:tracking/inflection of/tag/s]]
+	-- [[Template:tracking/inflection of/tag/first-person]]
+	-- [[Template:tracking/inflection of/tag/singular]]
+	-- [[Template:tracking/inflection of/tag/mn]]
+	-- [[Template:tracking/inflection of/tag/m//n]]
+	-- [[Template:tracking/inflection of/tag/m]]
+	-- [[Template:tracking/inflection of/tag/n]]
+	-- [[Template:tracking/inflection of/tag/masculine]]
+	-- [[Template:tracking/inflection of/tag/neuter]]
+	-- [[Template:tracking/inflection of/tag/gen]]
+	-- [[Template:tracking/inflection of/tag/genitive]]
+	-- [[Template:tracking/inflection of/tag/indefinite]]
 	local ntags = {}
 	for _, tag in ipairs(tags) do
-		tag = m_data.shortcuts[tag] or tag
+		-- Track the raw tag.
+		infl_track("tag/" .. tag)
+		-- Expand the tag, which may generate a new tag (either a
+		-- fully canonicalized tag, a multipart tag, or a list of tags).
+		local expanded_tag = m_data.shortcuts[tag] or tag
+		if expanded_tag ~= tag then
+			tag = expanded_tag
+			-- Track the expansion if it's not the same as the raw tag.
+			if type(tag) == "string" then
+				infl_track("tag/" .. tag)
+			end
+		end
 		if type(tag) == "table" then
 			for _, t in ipairs(tag) do
+				-- If the tag expands to a list of raw tags, track each of
+				-- those.
+				infl_track("tag/" .. t)
 				table.insert(ntags, normalize_tag(t, recombine_multitags))
 			end
 		else
