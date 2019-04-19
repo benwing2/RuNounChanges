@@ -117,114 +117,168 @@ templates_to_actually_do = [
 #    automatic, very occasionally controllable) and initial
 #    caps; our replacement doesn't have either.
 templates_by_cap_and_period = [
-  ("blk-past of", "lcnodot"),
-  ("bg-adj form of", "ucdot"),
-  ("bg-noun form of", "ucdot"),
-  ("bg-verb form of", "ucdot"),
-  ("br-noun-plural", "ucdot"),
-  ("ca-adj form of", "ucdot"),
-  ("ca-verb form of", "lcnodot"),
-  ("chm-inflection of", "lcnodot"),
-  ("cu-form of", "ignoreducdot"), # Verified
-  ("da-pl-genitive", "lcnodot"),
-  ("de-du contraction", "ignoreduc"), # Verified
-  ("de-form-adj", "ignoreddot"),
-  ("de-form-noun", "lcnodot"),
-  ("de-verb form of", "ucdot"),
-  ("el-form-of-adv", "ignoreduc"), # Verified
-  ("el-form-of-nounadj", "ucdot"),
-  ("el-form-of-pronoun", "ucdot"),
-  ("el-form-of-verb", "ucdot"),
+  ("blk-past of", "lcnodot", False),
+  ("bg-adj form of", "ignoreducdot", "verified"),
+  ("bg-noun form of", "ignoreducdot", "verified"),
+  ("bg-verb form of", "ucdot", False), # First 3000 verified
+  ("br-noun-plural", "ignoreducdot", "verified"),
+  ("ca-adj form of", "ignoreducdot", "verified"),
+  ("ca-form of", "lcnodot", False),
+  ("ca-verb form of", "lcnodot", False),
+  ("chm-inflection of", "lcnodot", False),
+  ("cu-form of", "ignoreducdot", "verified"),
+  ("da-pl-genitive", "lcnodot", False),
+  ("de-du contraction", "ignoreduc", "verified"),
+  ("de-form-adj", "ignoreddot", "verified"),
+  ("de-form-noun", "lcnodot", False),
+  # The following instances need to be fixed up:
+  # Page 1091 abarbeitet: WARNING: Found form-of template with post-text: # {{de-verb form of|abarbeiten|3|s|g}} Used in side clauses where usually separable prefixes do not separate
+  ("de-verb form of", "ucdot", False), # First 3000 verified
+  ("el-form-of-adv", "ignoreduc", "verified"),
+  # The following instances need to be fixed up:
+  # (all instances with a final period)
+  # Page 105 ον: WARNING: Found form-of template with post-text: # {{lb|el|dated}} {{el-form-of-nounadj|ων|g=n|n=s|c=nav}} “being”
+  # Page 109 αδελφών: WARNING: Found form-of template with post-text: # {{el-form-of-nounadj|αδελφός|c=gen|n=p}} {{g|m}}
+  # Page 109 αδελφών: WARNING: Found form-of template with post-text: # {{el-form-of-nounadj|αδελφή|c=gen|n=p}} {{g|f}}
+  # Page 968 αγγουριών: WARNING: Found form-of template with pre-text and post-text: # {{qualifier|neuter}} {{el-form-of-nounadj|αγγούρι|c=gen|n=p|nodot=1}} [[cucumber]].
+  # Page 968 αγγουριών: WARNING: Found form-of template with pre-text and post-text: # {{qualifier|feminine}} {{el-form-of-nounadj|αγγουριά|c=gen|n=p|nodot=1}} [[cucumber]] [[plant]].
+  ("el-form-of-nounadj", "ignoreducdot", "verified"),
+  ("el-form-of-pronoun", "ignoreducdot", "verified"),
+  # The following instances need to be fixed up:
+  # Page 302 κόλλησα: WARNING: Found form-of template with post-text: # {{el-form-of-verb|κολλώ|pers=1s|tense=past}} "I glued"
+  # Page 375 ήπια: WARNING: Found form-of template with post-text: # {{el-form-of-verb|πίνω|pers=1s|tense=past}} "I drank"
+  # Page 497 ψόφησα: WARNING: Found form-of template with post-text: # {{el-form-of-verb|ψοφάω|pers=1s|tense=past|nodot=1}}- '''[[ψοφώ]]'''.
+  # Page 501 μπορεί: WARNING: Found form-of template not on definition line: {{el-form-of-verb|μπορώ|pers=3s|tense=pres}}
+  # Page 1297 ψόφησες: WARNING: Found form-of template with post-text: # {{el-form-of-verb|ψοφάω|pers=2s|tense=past|nodot=1}}- '''[[ψοφώ]]'''.
+  # Page 1298 ψόφησε: WARNING: Found form-of template with post-text: # {{el-form-of-verb|ψοφάω|pers=3s|tense=past|nodot=1}}- '''[[ψοφώ]]'''.
+  # Page 1298 ψόφησε: WARNING: Found form-of template with post-text: # {{el-form-of-verb|ψοφάω|pers=2s|tense=past|mood=imptv|nodot=1}}- '''[[ψοφώ]]'''.
+  # Page 1299 ψοφήσαμε: WARNING: Found form-of template with post-text: # {{el-form-of-verb|ψοφάω|pers=1p|tense=past|nodot=1}}- '''[[ψοφώ]]'''.
+  # Page 1300 ψοφήσατε: WARNING: Found form-of template with post-text: # {{el-form-of-verb|ψοφάω|pers=2p|tense=past|nodot=1}}- '''[[ψοφώ]]'''.
+  # Page 1301 ψόφησαν: WARNING: Found form-of template with post-text: # {{el-form-of-verb|ψοφάω|pers=3p|tense=past|nodot=1}}- '''[[ψοφώ]]'''.
+  # Page 1317 έβλαψα: WARNING: Found form-of template with post-text: # {{el-form-of-verb|βλάπτω|pers=1s|tense=past}} & '''[[βλάφτω#Greek|βλάφτω]]''' (''<U+200E>vláfto<U+200E>'')
+  # Page 1389 αδικήθηκα: WARNING: Found form-of template with post-text: # {{el-form-of-verb|αδικούμαι|pers=1s|tense=past}} ''or'' '''[[αδικιέμαι]]'''
+  # Page 1751 χαίρετε: WARNING: Found form-of template with post-text: # {{el-form-of-verb|χαίρω|pers=2p|mood=imptv-i}}: (''literally'': "rejoice, be glad") 
+  # Page 1786 ασκήθηκα: WARNING: Found form-of template with post-text: # {{el-form-of-verb|ασκούμαι|pers=1s|tense=past}} ''passive of'' '''[[ασκώ]]'''
+  # Page 1978 αποκλείεται: WARNING: Found form-of template with post-text: # {{el-form-of-verb|αποκλείομαι|pers=3s|tense=present|active=αποκλείω}} "He/she/it is blocked, excluded"
+  # Page 2057 κρεμιέμαι: WARNING: Found form-of template with post-text: # {{el-form-of-verb|κρεμώ|voice=pass}} ''and'' '''[[κρεμάω]]''': "I am hung, I hung"
+  # Page 2114 έχεσα: WARNING: Found form-of template with post-text: # {{el-form-of-verb|χέζω|pers=1s|tense=past}} ''Translation'': I [[shat]].
+  # Page 2265 αγαπιόμαστε: WARNING: Found form-of template with post-text: # {{el-form-of-verb|αγαπιέμαι|pers=1p|tense=present}} we are [[loved]], we [[love]] [[one another]]
+  # Page 2339 κτίζομαι: WARNING: Found form-of template with post-text: # {{el-form-of-verb|κτίζω|voice=pass|nodot=1}}, {{alternative form of|χτίζομαι|lang=el}}.
+  # Page 2457 αποκλείστηκα: WARNING: Found form-of template with post-text: # {{el-form-of-verb|αποκλείομαι|pers=1s|tense=past|active=αποκλείω}} "I was blocked, excluded"
+  # Page 2482 εκλέγομαι: WARNING: Found form-of template with post-text: # {{el-form-of-verb|εκλέγω|voice=pass}} "I am elected"
+  # Page 2528 συζητήθηκα: WARNING: Found form-of template with post-text: # {{el-form-of-verb|συζητιέμαι|pers=1s|tense=past|nodot=1}}''or'' {{l|el|συζητούμαι}}
+  # Page 2756 κολλήθηκα: WARNING: Found form-of template with post-text: # {{el-form-of-verb|κολλιέμαι|pers=1s|tense=past}} "I was glued"
+  # Page 2931 πείσω: WARNING: Found form-of template with pre-text and post-text: # ''[[Appendix:Glossary#active voice|active]]'' {{el-form-of-verb|πείθω|pers=1s|tense=dep}}: "persuade"
+  # Page 2977 απασχολήθηκα: WARNING: Found form-of template with post-text: # {{el-form-of-verb|απασχολούμαι|pers=1s|tense=past}} ''or'' '''[[απασχολιέμαι]]'''
+  ("el-form-of-verb", "ignoreducdot", "verified"),
   # Most cases of 'el-participle of' use nodot=1; check whether can
   # get away without dot.
-  ("el-participle of", "ucdot"),
-  ("en-simple past of", "lcnodot"),
-  ("en-third-person singular of", "ignoreduc"),
-  ("enm-first-person singular of", "ignoreduc"),
-  ("enm-first/third-person singular past of", "ignoreduc"),
-  ("enm-plural of", "ignoreduc"),
-  ("enm-plural past of", "ignoreduc"),
-  ("enm-plural subjunctive of", "ignoreduc"),
-  ("enm-plural subjunctive past of", "ignoreduc"),
-  ("enm-second-person singular of", "ignoreduc"),
-  ("enm-second-person singular past of", "ignoreduc"),
-  ("enm-singular subjunctive of", "ignoreduc"),
-  ("enm-singular subjunctive past of", "ignoreduc"),
-  ("enm-third-person singular of", "ignoreduc"),
-  ("es-adj form of", "ucdot"),
-  # 'et-nom form of' has one instance of post-text, with |nodot=yeah
-  ("et-nom form of", "ignoreducdot"), # Verified
-  ("et-participle of", "ucdot"),
-  ("et-verb form of", "ucdot"),
-  ("fa-adj form of", "lcnodot"),
-  ("fa-adj-form", "lcnodot"),
-  ("fa-form-verb", "ignoreddot"), # Verified
-  ("fi-verb form of", "ucdot"),
-  ("gmq-bot-verb-form-sup", "ignoreddot"),
-  ("got-verb form of", "ucdot"),
+  ("el-participle of", "ucdot", False), # FIXME
+  ("en-simple past of", "lcnodot", False),
+  # The following instances need to be fixed up:
+  # [etc]; need to review carefully; have a script remove final periods
+  ("en-third-person singular of", "ignoreduc", False), # FIXME
+  ("enm-first-person singular of", "ignoreduc", "verified"),
+  ("enm-first/third-person singular past of", "ignoreduc", "verified"),
+  ("enm-plural of", "ignoreduc", "verified"),
+  ("enm-plural past of", "ignoreduc", "verified"),
+  ("enm-plural subjunctive of", "ignoreduc", "verified"),
+  ("enm-plural subjunctive past of", "ignoreduc", "verified"),
+  ("enm-second-person singular of", "ignoreduc", "verified"),
+  ("enm-second-person singular past of", "ignoreduc", "verified"),
+  ("enm-singular subjunctive of", "ignoreduc", "verified"),
+  ("enm-singular subjunctive past of", "ignoreduc", "verified"),
+  ("enm-third-person singular of", "ignoreduc", "verified"),
+  # The following instances need to be fixed up:
+  # Page 172 gordos: WARNING: Found form-of template with post-text: # {{es-adj form of|gordo|m|pl|nodot=y}}, [[fat]].
+  ("es-adj form of", "ucdot", False), # First 3000 verified
+  ("et-nom form of", "ignoreducdot", "verified"),
+  ("et-participle of", "ignoreducdot", "verified"),
+  ("et-verb form of", "ignoreducdot", "verified"),
+  ("fa-adj form of", "lcnodot", False),
+  ("fa-adj-form", "lcnodot", False),
+  ("fa-form-verb", "ignoreddot", "verified"),
+  # The following instances need to be fixed up:
+  # Page 84 onhan: WARNING: Found form-of template with post-text: # {{fi-verb form of|pn=3s|tm=pres|olla|nodot=1}} + suffix {{m|fi|-han}}.
+  ("fi-verb form of", "ucdot", False), # First 3000 verified
+  ("gmq-bot-verb-form-sup", "ignoreddot", "verified"),
+  # The following instances need to be fixed up:
+  # Page 944 𐌺𐌿𐌽𐌸𐍃: WARNING: Found form-of template with pre-text: # [[known]]. {{got-verb form of|𐌺𐌿𐌽𐌽𐌰𐌽|t=past|m=ptc}}
+  ("got-verb form of", "ignoreducdot", "verified"),
   # The following instances need to be fixed up:
   # Page 18 तेरी: WARNING: Found form-of template with post-text: # {{hi-form-adj||fs|तेरा}} {{hi-form-adj||fp|तेरा}}
   # Page 19 तेरे: WARNING: Found form-of template with post-text: # {{hi-form-adj|i|ms|तेरा}} {{hi-form-adj|v|ms|तेरा}} {{hi-form-adj||mp|तेरा}}
-  ("hi-form-adj", "ignoreddot"), # Verified
-  ("hi-form-adj-verb", "ignoreddot"), # Verified
-  ("hi-form-noun", "ignoreddot"), # Verified
-  ("hi-form-verb", "ignoreddot"),
-  ("hu-inflection of", "lcnodot"),
-  ("hu-participle", "lcnodot"),
-  ("hy-form-noun", "lcnodot"),
-  ("ie-past and pp of", "lcnodot"),
-  ("is-conjugation of", "lcnodot"),
-  ("is-inflection of", "lcnodot"),
-  ("it-adj form of", "ucdot"),
-  ("ja-past of verb", "lcnodot"),
-  ("ja-te form of verb", "lcnodot"),
-  ("ka-verbal for", "ignoreduc"), # Verified
-  ("ka-verbal of", "ignoreduc"), # Verified
-  ("ku-verb form of", "ignoreducdot"), # Verified
-  ("liv-conjugation of", "lcnodot"),
-  ("liv-inflection of", "lcnodot"),
-  ("liv-participle of", "lcnodot"),
-  (u"lt-būdinys", "ignoreddot"),
-  ("lt-budinys", "ignoreddot"),
-  ("lt-dalyvis-1", "ignoreddot"),
-  ("lt-dalyvis", "ignoreddot"),
-  ("lt-dalyvis-2", "ignoreddot"),
-  ("lt-form-adj", "ignoreddot"), # Verified
-  ("lt-form-adj-is", "ignoreddot"),
-  ("lt-form-noun", "ignoreddot"), # Verified
-  ("lt-form-part", "ignoreddot"),
-  ("lt-form-pronoun", "ignoreddot"),
-  ("lt-form-verb", "ignoreddot"), # Verified
-  ("lt-padalyvis", "ignoreddot"),
-  ("lt-pusdalyvis", "ignoreddot"),
-  ("lv-comparative of", "lcnodot"),
-  ("lv-definite of", "lcnodot"),
-  ("lv-inflection of", "lcnodot"),
-  ("lv-negative of", "lcnodot"),
-  ("lv-reflexive of", "lcnodot"),
-  ("lv-superlative of", "lcnodot"),
-  ("lv-verbal noun of", "lcnodot"),
-  ("mr-form-adj", "ignoreddot"), # Verified
-  ("mt-prep-form", "ignoreddot"), # Verified
-  ("nb-noun-form-def-gen", "lcnodot"),
-  ("nb-noun-form-def-gen-pl", "lcnodot"),
-  ("nb-noun-form-indef-gen-pl", "lcnodot"),
-  ("ofs-nom form of", "ignoreduc"), # Verified
-  ("osx-nom form of", "ignoreduc"), # Verified
-  ("pt-adj form of", "ucdot"),
-  ("pt-adv form of", "ignoreduc"), # Verified
-  ("pt-article form of", "ignoreducdot"), # Verified
-  ("pt-cardinal form of", "lcnodot"),
-  ("pt-noun form of", "ucdot"),
-  # The following instance needs to be fixed up:
+  ("hi-form-adj", "ignoreddot", "verified"),
+  ("hi-form-adj-verb", "ignoreddot", "verified"),
+  ("hi-form-noun", "ignoreddot", "verified"),
+  ("hi-form-verb", "ignoreddot", "verified"),
+  ("hu-inflection of", "lcnodot", False),
+  ("hu-participle", "lcnodot", False),
+  ("hy-form-noun", "lcnodot", False),
+  ("ie-past and pp of", "lcnodot", False),
+  ("is-conjugation of", "lcnodot", False),
+  ("is-inflection of", "lcnodot", False),
+  ("it-adj form of", "ucdot", False), # First 3000 verified
+  ("ja-past of verb", "lcnodot", False),
+  ("ja-te form of verb", "lcnodot", False),
+  ("ka-verbal for", "ignoreduc", "verified"),
+  ("ka-verbal of", "ignoreduc", "verified"),
+  ("ku-verb form of", "ignoreducdot", "verified"),
+  ("liv-conjugation of", "lcnodot", False),
+  ("liv-inflection of", "lcnodot", False),
+  ("liv-participle of", "lcnodot", False),
+  (u"lt-būdinys", "ignoreddot", "verified"),
+  ("lt-budinys", "ignoreddot", "verified"),
+  # The following instances need to be fixed up:
+  # Page 3 sapnuojąs: WARNING: Found form-of template with post-text: # {{lt-dalyvis-1|pres|a|sapnuoti}} [[dreaming]]
+  # Page 4 sapnuojantis: WARNING: Found form-of template with post-text: # {{lt-dalyvis-1|pres|a|sapnuoti}} [[dreaming]]
+  # Page 22 kalbantis: WARNING: Found form-of template with post-text: # {{lt-dalyvis-1|pres|a|kalbėti}} [[speaking]]
+  # Page 23 kalbąs: WARNING: Found form-of template with post-text: # {{lt-dalyvis-1|pres|a|kalbėti}} [[speaking]]
+  ("lt-dalyvis-1", "ignoreddot", "verified"),
+  ("lt-dalyvis", "ignoreddot", "verified"),
+  ("lt-dalyvis-2", "ignoreddot", "verified"),
+  ("lt-form-adj", "ignoreddot", "verified"),
+  ("lt-form-adj-is", "ignoreddot", "verified"),
+  ("lt-form-noun", "ignoreddot", "verified"),
+  ("lt-form-part", "ignoreddot", False), # First 3000 verified
+  ("lt-form-pronoun", "ignoreddot", "verified"),
+  ("lt-form-verb", "ignoreddot", "verified"),
+  ("lt-padalyvis", "ignoreddot", "verified"),
+  ("lt-pusdalyvis", "ignoreddot", "verified"),
+  ("lv-comparative of", "lcnodot", False),
+  ("lv-definite of", "lcnodot", False),
+  ("lv-inflection of", "lcnodot", False),
+  ("lv-negative of", "lcnodot", False),
+  ("lv-reflexive of", "lcnodot", False),
+  ("lv-superlative of", "lcnodot", False),
+  ("lv-verbal noun of", "lcnodot", False),
+  ("mr-form-adj", "ignoreddot", "verified"),
+  ("mt-prep-form", "ignoreddot", "verified"),
+  ("nb-noun-form-def-gen", "lcnodot", False),
+  ("nb-noun-form-def-gen-pl", "lcnodot", False),
+  ("nb-noun-form-indef-gen-pl", "lcnodot", False),
+  ("ofs-nom form of", "ignoreduc", "verified"),
+  ("osx-nom form of", "ignoreduc", "verified"),
+  # The following instances need to be fixed up:
+  # Page 202 conversa: WARNING: Found form-of template with post-text: # {{pt-adj form of|converso|f|sg}}.
+  ("pt-adj form of", "ucdot", False), # First 3000 verified
+  ("pt-adv form of", "ignoreduc", "verified"),
+  ("pt-article form of", "ignoreducdot", "verified"),
+  ("pt-cardinal form of", "lcnodot", False),
+  # The following instances need to be fixed up:
+  # Page 70 conversa: WARNING: Found form-of template with post-text: # {{pt-noun form of|converso|f|sg}}.
+  # Page 1493 galícia: WARNING: Found form-of template with post-text: # {{pt-noun form of|galício|f|sg|nodot=1}} ([[Galician]]).
+  ("pt-noun form of", "ignoreducdot", "verified"),
+  # The following instances need to be fixed up:
   # Page 53 3ª: WARNING: Found form-of template with post-text: # {{pt-ordinal form|3|ª}} {{abbreviation of|terceira|lang=pt}}
-  ("pt-ordinal form", "ignoreducdot"), # Verified
-  ("pt-ordinal def", "ignoreducdot"), # Verified
-  ("ro-adj-form of", "lcnodot"),
-  ("ro-form-adj", "lcnodot"),
-  ("ro-form-noun", "ignoreddot"),
-  # WARNING: Lots of pages need a colon after the template, and the following
-  # needs further fixing:
+  ("pt-ordinal form", "ignoreducdot", "verified"),
+  ("pt-ordinal def", "ignoreducdot", "verified"),
+  ("ro-adj-form of", "lcnodot", False),
+  ("ro-form-adj", "lcnodot", False),
+  # WARNING: All non-line-final templates need a colon after them (a lot).
+  ("ro-form-noun", "ignoreddot", "verified"),
+  # WARNING: All non-line-final templates need a colon after them (a lot);
+  # in addition, the following instances need to be fixed up:
   # Page 164 ești: WARNING: Found form-of template with post-text: # {{ro-form-verb|2s|pres|fi}} You [[are]].
   # Page 252 futeam: WARNING: Found form-of template with post-text: # {{ro-form-verb|1p|impf|fute}}we were [[fucking]]
   # Page 369 urăsc: WARNING: Found form-of template with post-text: # {{ro-form-verb|1s|pres|urî}} Ex.: I [[hate]]
@@ -232,75 +286,119 @@ templates_by_cap_and_period = [
   # Page 370 urăști: WARNING: Found form-of template with post-text: # {{ro-form-verb|2s|pres|urî}} Ex.: you [[hate]]
   # Page 371 urăște: WARNING: Found form-of template with post-text: # {{ro-form-verb|3s|pres|urî}} Ex.: he/she [[hates]]
   # Page 372 urâm: WARNING: Found form-of template with post-text: # {{ro-form-verb|1p|pres|urî}} Ex.: we [[hate]]
-  ("ro-form-verb", "ignoreddot"), # Verified
-  ("roa-opt-noun plural of", "ucdot"),
-  ("ru-participle of", "lcnodot"),
-  ("sa-desiderative of", "lcnodot"),
-  ("sa-desi", "lcnodot"),
-  ("sa-frequentative of", "lcnodot"),
-  ("sa-freq", "lcnodot"),
-  ("sa-root form of", "lcnodot"),
-  ("sco-simple past of", "lcnodot"),
-  ("sco-third-person singular of", "lcnodot"),
-  ("sga-verbnec of", "lcnodot"),
-  ("sh-form-noun", "lcnodot"),
-  ("sh-form-proper-noun", "lcnodot"),
-  ("sh-verb form of", "ignoreddot"), # Verified
+  ("ro-form-verb", "ignoreddot", "verified"),
+  ("roa-opt-noun plural of", "ignoreducdot", "verified"),
+  ("ru-participle of", "lcnodot", False),
+  ("sa-desiderative of", "lcnodot", False),
+  ("sa-desi", "lcnodot", False),
+  ("sa-frequentative of", "lcnodot", False),
+  ("sa-freq", "lcnodot", False),
+  ("sa-root form of", "lcnodot", False),
+  ("sco-simple past of", "lcnodot", False),
+  ("sco-third-person singular of", "lcnodot", False),
+  ("sga-verbnec of", "lcnodot", False),
+  ("sh-form-noun", "lcnodot", False),
+  ("sh-form-proper-noun", "lcnodot", False),
+  ("sh-verb form of", "ignoreddot", "verified"),
   # WARNING: Lots of pages have ''negative'' pretext that could be included
   # in the template, e.g.:
   # Page 10 neću: WARNING: Found form-of template with pre-text: # ''negative'' {{sh-form-verb|1s|pres|hteti}}
-  ("sh-form-verb", "ignoreddot"), # Verified
-  ("sh-verb-form of", "ignoreddot"),
-  ("sh-verb-form-of", "ignoreddot"),
-  ("sl-form-adj", "lcnodot"),
-  ("sl-form-noun", "ignoreddot"),
-  ("sl-form-verb", "ignoreddot"), # Verified
-  ("sl-participle of", "ignoreddot"),
-  ("sl-verb form of", "ignoreddot"), # Verified
-  ("sv-adj-form-abs-def", "ignoreddot"),
-  ("sv-adj-form-abs-def+pl", "ignoreddot"),
-  ("sv-adj-form-abs-def-m", "ignoreddot"),
-  ("sv-adj-form-abs-indef-n", "ignoreddot"),
-  ("sv-adj-form-abs-pl", "ignoreddot"),
-  ("sv-adj-form-comp", "ignoreddot"),
-  ("sv-adj-form-comp-pl", "ignoreddot"),
-  ("sv-adj-form-sup-attr", "ignoreddot"),
-  ("sv-adj-form-sup-attr-m", "ignoreddot"),
-  ("sv-adj-form-sup-pred", "ignoreddot"),
-  ("sv-adj-form-sup-pred-pl", "ignoreddot"),
-  ("sv-adv-form-comp", "ignoreddot"),
-  ("sv-adv-form-sup", "ignoreddot"),
-  ("sv-noun-form-def", "lcnodot"),
-  ("sv-noun-form-def-gen", "lcnodot"),
-  ("sv-noun-form-def-gen-pl", "lcnodot"),
-  ("sv-noun-form-def-pl", "lcnodot"),
-  ("sv-noun-form-indef-gen", "lcnodot"),
-  ("sv-noun-form-indef-gen-pl", "lcnodot"),
-  ("sv-noun-form-indef-pl", "lcnodot"),
-  ("sv-proper-noun-gen", "lcnodot"),
-  ("sv-verb-form-imp", "ignoreddot"),
-  ("sv-verb-form-inf-pass", "ignoreddot"),
-  ("sv-verb-form-past", "ignoreddot"),
-  ("sv-verb-form-past-pass", "ignoreddot"),
-  ("sv-verb-form-pastpart", "ignoreddot"),
-  ("sv-verb-form-pre", "ignoreddot"),
-  ("sv-verb-form-pre-pass", "ignoreddot"),
-  ("sv-verb-form-prepart", "lcnodot"),
-  ("sv-verb-form-subjunctive", "ignoreddot"),
-  ("sv-verb-form-sup", "ignoreddot"),
-  ("sv-verb-form-sup-pass", "ignoreddot"),
-  ("tg-adj form of", "lcnodot"),
-  ("tg-adj-form", "lcnodot"),
-  ("tg-form-verb", "ignoreddot"), # Verified
-  ("tl-verb form of", "ucdot"),
-  ("tr-inflection of", "lcnodot"),
-  ("ur-form-adj", "ignoreddot"), # Verified
-  ("ur-form-adj-verb", "ignoreddot"),
-  ("ur-form-noun", "ignoreddot"), # Verified
-  ("ur-form-verb", "ignoreddot"), # Verified
+  ("sh-form-verb", "ignoreddot", "verified"),
+  ("sh-verb-form of", "ignoreddot", "verified"),
+  ("sh-verb-form-of", "ignoreddot", "verified"),
+  ("sl-form-adj", "lcnodot", False),
+  ("sl-form-noun", "ignoreddot", "verified"),
+  ("sl-form-verb", "ignoreddot", "verified"),
+  ("sl-participle of", "ignoreddot", "verified"),
+  ("sl-verb form of", "ignoreddot", "verified"),
+  ("sv-adj-form-abs-def", "ignoreddot", "verified"),
+  ("sv-adj-form-abs-def+pl", "ignoreddot", "verified"),
+  # The following instances need to be fixed up:
+  # Page 144 ledes: WARNING: Found form-of template with pre-text: # ''genitive'' {{sv-adj-form-abs-def-m|led}}
+  ("sv-adj-form-abs-def-m", "ignoreddot", "verified"),
+  ("sv-adj-form-abs-indef-n", "ignoreddot", "verified"),
+  ("sv-adj-form-abs-pl", "ignoreddot", "verified"),
+  ("sv-adj-form-comp", "ignoreddot", "verified"),
+  ("sv-adj-form-comp-pl", "ignoreddot", "verified"),
+  ("sv-adj-form-sup-attr", "ignoreddot", "verified"),
+  ("sv-adj-form-sup-attr-m", "ignoreddot", "verified"),
+  ("sv-adj-form-sup-pred", "ignoreddot", "verified"),
+  ("sv-adj-form-sup-pred-pl", "ignoreddot", "verified"),
+  ("sv-adv-form-comp", "ignoreddot", "verified"),
+  # The following instances need to be fixed up:
+  # Page 1 mest: WARNING: Found form-of template with post-text: # {{sv-adv-form-sup|mycket}} [[most]]
+  # Page 1 mest: WARNING: Found form-of template with post-text: # {{sv-adv-form-sup|många}} [[most]]
+  ("sv-adv-form-sup", "ignoreddot", "verified"),
+  ("sv-noun-form-def", "lcnodot", False),
+  ("sv-noun-form-def-gen", "lcnodot", False),
+  ("sv-noun-form-def-gen-pl", "lcnodot", False),
+  ("sv-noun-form-def-pl", "lcnodot", False),
+  ("sv-noun-form-indef-gen", "lcnodot", False),
+  ("sv-noun-form-indef-gen-pl", "lcnodot", False),
+  ("sv-noun-form-indef-pl", "lcnodot", False),
+  ("sv-proper-noun-gen", "lcnodot", False),
+  # The following instances need to be fixed up:
+  # All cases with "2nd person only." etc. post-text along with 'plural of=', e.g.:
+  # Page 12 given: WARNING: Found form-of template with post-text: # {{sv-verb-form-imp|ge|plural of=ge}} 2nd person only.
+  # Page 83 varen: WARNING: Found form-of template with post-text: # {{sv-verb-form-imp|vara|plural of=var}} 2nd person only
+  # Page 164 låtom: WARNING: Found form-of template with post-text: # {{sv-verb-form-imp|låta|plural of=låt}} 1st person only.
+  # Also:
+  # Page 41 lek: WARNING: Found form-of template with post-text: # {{sv-verb-form-imp|leka}} free play
+  # Page 47 gack: WARNING: Found form-of template with pre-text: # {{lb|sv|obsolete}} singular {{sv-verb-form-imp|gå}}
+  ("sv-verb-form-imp", "ignoreddot", "verified"),
+  ("sv-verb-form-inf-pass", "ignoreddot", "verified"),
+  # The following instances need to be fixed up:
+  # All cases with "2nd person only." etc. post-text along with 'plural of=', e.g.:
+  # Page 158 voren: WARNING: Found form-of template with post-text: # {{sv-verb-form-past|vara|plural of=var}} 2nd person only.
+  # Page 689 skullen: WARNING: Found form-of template with post-text: # {{sv-verb-form-past|ska|plural of=skulle}} 2nd person only
+  # Also:
+  # Page 204 erhöllo: WARNING: Found form-of template with post-text: # {{sv-verb-form-past|erhålla|plural of=erhöll}} (A more common synonym is [[fick]].)
+  # Page 2567 drefvo: WARNING: Found form-of template with post-text: # {{sv-verb-form-past|drifva|plural of=dref|dot=}}, {{spelling of|sv|proscribed|driva}}.
+  ("sv-verb-form-past", "ignoreddot", "verified"),
+  ("sv-verb-form-past-pass", "ignoreddot", "verified"),
+  # FIXME: Many of the following uses are in the etymology section and need
+  # lots of cleanup.
+  ("sv-verb-form-pastpart", "ignoreddot", False),
+  # The following instances need to be fixed up:
+  # All cases with "2nd person only." etc. post-text along with 'plural of=', e.g.:
+  # Page 5 given: WARNING: Found form-of template with post-text: # {{sv-verb-form-pre|ge|plural of=ger}} 2nd person only.
+  # Page 14 kunnen: WARNING: Found form-of template with post-text: # {{sv-verb-form-pre|kunna|plural of=kan}} 2nd person only
+  # Page 220 ären: WARNING: Found form-of template with post-text: # {{sv-verb-form-pre|vara|plural of=är}} 2nd person (you) only.
+  # Page 327 sjungom: WARNING: Found form-of template with post-text: # {{sv-verb-form-pre|sjunga|plural of=sjunger}} 1st person only.
+  # Also:
+  # Page 41 giver: WARNING: Found form-of template with post-text: # {{sv-verb-form-pre|giva}} commonly contracted to ''[[ger]]'', based on ''[[ge]]''
+  # Page 356 förbliver: WARNING: Found form-of template with post-text: # {{sv-verb-form-pre|förbliva}} commonly contracted to [[förblir]]
+  ("sv-verb-form-pre", "ignoreddot", "verified"),
+  ("sv-verb-form-pre-pass", "ignoreddot", "verified"),
+  ("sv-verb-form-prepart", "lcnodot", False),
+  # The following instances need to be fixed up:
+  # Page 2 ginge: WARNING: Found form-of template with pre-text: # {{lb|sv|dated}} ''past tense'' {{sv-verb-form-subjunctive|gå}}
+  # Page 3 leve: WARNING: Found form-of template with post-text: # {{sv-verb-form-subjunctive|leva}} Used to express one's wish that someone or something may live long, mostly at celebration ceremonies, primarily birthday celebrations.
+  # Page 4 finge: WARNING: Found form-of template with pre-text: #{{lb|sv|dated}} ''past tense'' {{sv-verb-form-subjunctive|få}}
+  # Page 6 vare: WARNING: Found form-of template with pre-text: # [[be]], ''present tense'' {{sv-verb-form-subjunctive|vara}}
+  # Page 13 bekomme: WARNING: Found form-of template with pre-text: # ''present tense'' {{sv-verb-form-subjunctive|bekomma}}
+  ("sv-verb-form-subjunctive", "ignoreddot", "verified"),
+  # The following instances need to be fixed up:
+  # Page 181 givit: WARNING: Found form-of template with post-text: # {{sv-verb-form-sup|giva}} see also ''[[gett]]''
+  ("sv-verb-form-sup", "ignoreddot", "verified"),
+  ("sv-verb-form-sup-pass", "ignoreddot", "verified"),
+  ("tg-adj form of", "lcnodot", False),
+  ("tg-adj-form", "lcnodot", False),
+  ("tg-form-verb", "ignoreddot", "verified"),
+  ("tl-verb form of", "ignoreducdot", "verified"),
+  ("tr-inflection of", "lcnodot", False),
+  ("ur-form-adj", "ignoreddot", "verified"),
+  ("ur-form-adj-verb", "ignoreddot", "verified"),
+  ("ur-form-noun", "ignoreddot", "verified"),
+  ("ur-form-verb", "ignoreddot", "verified"),
 ]
 
-templates_by_cap_and_period_map = dict(templates_by_cap_and_period)
+templates_by_cap_and_period_map = {
+  template:spec for template, spec, verified in templates_by_cap_and_period
+}
+verified_templates_by_cap_and_period = {
+  template for template, spec, verified in templates_by_cap_and_period if verified
+}
 
 art_blk_specs = [
   ("blk-past of", (
@@ -318,8 +416,9 @@ art_blk_specs = [
 
 bg_specs = [
   # NOTE: Has automatic, non-controllable initial caps and final period.
+  # Both ignored.
   ("bg-adj form of", (
-    "Adj form of",
+    "adj form of",
     ("error-if", ("present-except", ["1", "2", "3", "adj"])),
     ("set", "1", [
       "bg",
@@ -345,8 +444,9 @@ bg_specs = [
   )),
 
   # NOTE: Has automatic, non-controllable initial caps and final period.
+  # Both ignored.
   ("bg-noun form of", (
-    "Noun form of",
+    "noun form of",
     ("error-if", ("present-except", ["1", "2", "3", "noun"])),
     ("set", "1", [
       "bg",
@@ -446,8 +546,9 @@ bg_specs = [
 
 br_specs = [
   # NOTE: Has automatic, non-controllable initial caps and final period.
+  # Both ignored.
   ("br-noun-plural", (
-    "Noun form of",
+    "noun form of",
     ("error-if", ("present-except", ["1", "2"])),
     ("set", "1", [
       "br",
@@ -458,42 +559,74 @@ br_specs = [
   )),
 ]
 
-def romance_adj_form_of(lang):
+def romance_adj_form_of(lang, lcnodot=False):
   # This works for ca, es, it and pt. Romanian has its own template and French
   # uses {{masculine singular of}}, {{feminine singular of}}, etc.
   # Not all languages accept m-f or mf, but it doesn't hurt to accept them.
   # Has default initial caps and final period (controllable by nocap/nodot).
-  return (
-    "Adj form of",
-    ("error-if", ("present-except", ["1", "2", "3", "4", "t", "nocap", "nodot"])),
-    ("set", "1", [
-      lang,
-      ("copy", "1"),
-    ]),
-    ("copy", "t"), # occurs, although ignored by template
-    ("set", "3", [
-      "",
-      ("lookup", "4", {
-        "aug": "aug",
-        "dim": "dim",
-        "comp": "comd",
-        "super": "supd",
-        "": [],
-      }),
-      ("lookup", "2", {
-        "m": "m",
-        "f": "f",
-        "m-f": "mf",
-        "mf": "mf",
-      }),
-      ("lookup", "3", {
-        "sg": "s",
-        "pl": "p",
-      }),
-    ]),
-    ("copy", "nocap"),
-    ("copy", "nodot"),
-  )
+  # Both ignored for ca.
+  if lcnodot:
+    return (
+      "adj form of",
+      ("error-if", ("present-except", ["1", "2", "3", "4", "t", "nocap", "nodot"])),
+      ("set", "1", [
+        lang,
+        ("copy", "1"),
+      ]),
+      ("copy", "t"), # occurs, although ignored by template
+      ("set", "3", [
+        "",
+        ("lookup", "4", {
+          "aug": "aug",
+          "dim": "dim",
+          "comp": "comd",
+          "super": "supd",
+          "": [],
+        }),
+        ("lookup", "2", {
+          "m": "m",
+          "f": "f",
+          "m-f": "mf",
+          "mf": "mf",
+        }),
+        ("lookup", "3", {
+          "sg": "s",
+          "pl": "p",
+        }),
+      ]),
+    )
+  else:
+    return (
+      "Adj form of",
+      ("error-if", ("present-except", ["1", "2", "3", "4", "t", "nocap", "nodot"])),
+      ("set", "1", [
+        lang,
+        ("copy", "1"),
+      ]),
+      ("copy", "t"), # occurs, although ignored by template
+      ("set", "3", [
+        "",
+        ("lookup", "4", {
+          "aug": "aug",
+          "dim": "dim",
+          "comp": "comd",
+          "super": "supd",
+          "": [],
+        }),
+        ("lookup", "2", {
+          "m": "m",
+          "f": "f",
+          "m-f": "mf",
+          "mf": "mf",
+        }),
+        ("lookup", "3", {
+          "sg": "s",
+          "pl": "p",
+        }),
+      ]),
+      ("copy", "nocap"),
+      ("copy", "nodot"),
+    )
 
 def ca_form_of(t, pagemsg):
   if getparam(t, "1") in ["alt form", "alt sp", "alt spel", "alt spell"]:
@@ -536,7 +669,7 @@ def ca_form_of(t, pagemsg):
     )
 
 ca_specs = [
-  ("ca-adj form of", romance_adj_form_of("ca")),
+  ("ca-adj form of", romance_adj_form_of("ca", lcnodot=True)),
 
   ("ca-form of", ca_form_of),
 
@@ -903,9 +1036,9 @@ el_specs = [
   )),
 
   # NOTE: Has automatic, non-controllable initial caps and controllable
-  # final period (using nodot).
+  # final period (using nodot). Both ignored.
   ("el-form-of-nounadj", (
-    "Inflection of",
+    "inflection of",
     ("error-if", ("present-except", ["1", "c", "n", "g", "d", "t", "nodot"])),
     ("set", "1", [
       "ofs",
@@ -953,20 +1086,20 @@ el_specs = [
         "": [],
       }),
     ]),
-    ("copy", "nodot"),
   )),
 
   ("el-form-of-pronoun", "el-form-of-nounadj"),
 
   # NOTE: Has automatic, non-controllable initial caps and controllable
-  # final period (using nodot).
+  # final period (using nodot). Both ignored.
   ("el-form-of-verb", (
-    "Verb form of",
+    "verb form of",
     ("error-if", ("present-except", ["1", "nonfinite", "voice", "pers",
       # We ignore active= and ta=. They are used in posttext that says
       # "passive of {{m|el|{{{active}}}|t={{{ta|}}}}}". This isn't easy
-      # to do in the general {{Verb form of}} template, isn't how other
+      # to do in the general {{verb form of}} template, isn't how other
       # non-lemma forms are formatted and is of questionable value.
+      # FIXME: Consider moving outside of template.
       "tense", "mood", "t", "active", "ta", "nodot"])),
     ("set", "1", [
       "el",
@@ -1028,7 +1161,6 @@ el_specs = [
       }),
     ]),
     ("copy", "t"),
-    ("copy", "nodot"),
   )),
 
   # NOTE: Has automatic, non-controllable initial caps and controllable
@@ -1171,6 +1303,7 @@ et_specs = [
   )),
 
   # Has default initial caps and final period (controllable by nocap/nodot).
+  # Both ignored.
   ("et-participle of", (
     "participle of",
     ("error-if", ("present-except", ["1", "t", "nocap", "nodot"])),
@@ -1187,16 +1320,15 @@ et_specs = [
         "past_pasv": ["past", "pass"],
       }),
     ]),
-    ("copy", "nocap"),
-    ("copy", "nodot"),
   )),
 
   # Has default initial caps and final period (controllable by nocap/nodot).
+  # Both ignored.
   ("et-verb form of", (
     # The template code supports m=ptc and categorizes specially, but
     # it never occurs.
-    "Verb form of",
-    ("error-if", ("present-except", ["1", "p", "m", "t"])),
+    "verb form of",
+    ("error-if", ("present-except", ["1", "p", "m", "t", "nocap", "nodot"])),
     ("set", "1", [
       "et",
       ("copy", "1"),
@@ -1338,8 +1470,9 @@ gmq_bot_specs = [
 
 got_specs = [
   # Has default initial caps and final period (controllable by nocap/nodot).
+  # Both ignored.
   ("got-verb form of", (
-    "Verb form of",
+    "verb form of",
     # lang= occurs at least once, and is ignored.
     ("error-if", ("present-except", ["1", "p", "n", "t", "tr", "v", "m",
       "nocap", "nodot", "lang"])),
@@ -1387,8 +1520,6 @@ got_specs = [
         "indimp": "ind//imp",
       }),
     ]),
-    ("copy", "nocap"),
-    ("copy", "nodot"),
   )),
 ]
 
@@ -2589,8 +2720,9 @@ pt_specs = [
   )),
 
   # Has default initial caps and final period (controllable by nocap/nodot).
+  # Both ignored.
   ("pt-noun form of", (
-    "Noun form of",
+    "noun form of",
     ("error-if", ("present-except", ["1", "2", "3", "4", "t", "nocap", "nodot"])),
     ("set", "1", [
       "pt",
@@ -2617,8 +2749,6 @@ pt_specs = [
         "pl": "p",
       }),
     ]),
-    ("copy", "nocap"),
-    ("copy", "nodot"),
   )),
 
   # NOTE: Has automatic, non-controllable initial caps and final period.
@@ -2801,15 +2931,14 @@ ro_specs = [
 
 roa_opt_specs = [
   # Has default initial caps and final period (controllable by nocap/nodot).
+  # Both ignored.
   ("roa-opt-noun plural of", (
-    "Plural of",
+    "plural of",
     ("error-if", ("present-except", ["1", "nocap", "nodot"])),
     ("set", "1", [
       "roa-opt",
       ("copy", "1"),
     ]),
-    ("copy", "nocap"),
-    ("copy", "nodot"),
   )),
 ]
 
@@ -3270,9 +3399,10 @@ tg_specs = [
 
 tl_specs = [
   # NOTE: Has automatic, non-controllable initial caps and final period.
-  # Categorizes into 'verb forms', which should be handled by the headword.
+  # Both ignored. Categorizes into 'verb forms', which should be handled
+  # by the headword.
   ("tl-verb form of", (
-    "Verb form of",
+    "verb form of",
     # most uses have |nocat=1; ignore since there's no categorization
     ("error-if", ("present-except", ["1", "2", "nocat"])),
     ("set", "1", [
@@ -3782,7 +3912,7 @@ def process_page_for_check_ignore(page, index, template, ignore_type):
         posttext = m.group(2)
         if not pretext.startswith("#"):
           pagemsg("WARNING: Found form-of template not on definition line: %s" % m.group(0))
-        has_pretext = not re.search(r"^[#:]*\s*(\{\{lb\|[^}]*?\}\}\s*)?$", pretext)
+        has_pretext = not re.search(r"^[#:]*\s*(\{\{(?:lb|label|sense|senseid|tlb)\|[^}]*?\}\}\s*)?$", pretext)
         has_posttext = posttext != ""
         if has_pretext and has_posttext:
           pagemsg("WARNING: Found form-of template with pre-text and post-text: %s" % m.group(0))
@@ -3812,6 +3942,8 @@ if args.check_ignores:
     if template not in templates_by_cap_and_period_map:
       errandmsg("WARNING: Template:%s not in templates_by_cap_and_period_map, not sure its ignoring behavior, skipping" %
           template)
+    elif template in verified_templates_by_cap_and_period:
+      errandmsg("Skipping already-verified Template:%s" % template)
     else:
       ignore_type = templates_by_cap_and_period_map[template]
       if ignore_type not in ["lcnodot", "ucdot"] or (
