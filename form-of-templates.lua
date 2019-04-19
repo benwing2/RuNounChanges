@@ -1,6 +1,7 @@
 local export = {}
 
 local m_form_of = require("Module:form of")
+local m_form_of_pos = require("Module:form of/pos")
 local rfind = mw.ustring.find
 local rmatch = mw.ustring.match
 local rsplit = mw.text.split
@@ -128,12 +129,13 @@ end
 local function add_link_params(params, term_param, no_numbered_gloss)
 	-- Numbered params controlling link display
 	params[term_param] = {}
-	params[term_param + 1] = {}
+	params[term_param + 1] = {alias_of = "alt"}
 	if not no_numbered_gloss then
 		params[term_param + 2] = {alias_of = "t"}
 	end
 	
 	-- Named params controlling link display
+	params["alt"] = {}
 	params["t"] = {}
 	params["gloss"] = {alias_of = "t"}
 	params["sc"] = {}
@@ -188,7 +190,7 @@ local function get_terminfo_and_categories(iargs, args, term_param, compat)
 	else
 		local term = args[term_param]
 
-		if not term and not args[term_param + 1] and not args["tr"] and not args["ts"] then
+		if not term and not args["alt"] and not args["tr"] and not args["ts"] then
 			if mw.title.getCurrentTitle().nsText == "Template" then
 				term = "term"
 			else
@@ -216,7 +218,7 @@ local function get_terminfo_and_categories(iargs, args, term_param, compat)
 			lang = lang,
 			sc = sc,
 			term = term,
-			alt = args[term_param + 1],
+			alt = args["alt"],
 			id = args["id"],
 			gloss = args["t"],
 			tr = args["tr"],
@@ -662,6 +664,24 @@ function export.inflection_of_t(frame)
 	end
 
 	return construct_tagged_form_of_text(iargs, args, term_param, compat, infls)
+end
+
+--[=[
+Normalize a part-of-speech tag given a possible abbreviation
+(passed in as 1= of the invocation args). If the abbreviation
+isn't recognized, the original POS tag is returned. If no POS
+tag is passed in, return the value of invocation arg default=.
+]=]--
+function export.normalize_pos(frame)
+	local iparams = {
+		[1] = {},
+		["default"] = {},
+	}
+	local iargs = require("Module:parameters").process(frame.args, iparams)
+	if not iargs[1] and not iargs["default"] then
+		error("Either 1= or default= must be given in the invocation args")
+	end
+	return m_form_of_pos[iargs[1]] or iargs[1] or iargs["default"]
 end
 
 return export
