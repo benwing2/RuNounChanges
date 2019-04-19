@@ -5,10 +5,17 @@ local m_data = mw.loadData("Module:form of/data")
 local m_cats = mw.loadData("Module:form of/cats")
 local m_functions = require("Module:form of/functions")
 
+local rsubn = mw.ustring.gsub
 local rmatch = mw.ustring.match
 local rsplit = mw.text.split
 
 local export = {}
+
+-- version of rsubn() that discards all but the first return value
+local function rsub(term, foo, bar)
+	local retval = rsubn(term, foo, bar)
+	return retval
+end
 
 -- FIXME! Move to a utility module.
 
@@ -63,14 +70,16 @@ end
 
 
 -- Normalize a single tag, which should not be a list or multipart tag.
-local function normalize_single_tag(tag)
+local function normalize_single_tag(tag, do_track)
 	local normalized = m_data.shortcuts[tag] or tag
 	if normalized ~= tag then
 		tag = normalized
-		-- Track the expansion if it's not the same as the raw tag.
-		infl_track("tag/" .. tag)
+		if do_track then
+			-- Track the expansion if it's not the same as the raw tag.
+			infl_track("tag/" .. tag)
+		end
 	end
-	if not m_data.tags[tag] then
+	if not m_data.tags[tag] and do_track then
 		-- If after all expansions and normalizations we don't recognize
 		-- the canonical tag, track it.
 		infl_track("unknown")
@@ -85,7 +94,7 @@ end
 -- list (in the case of multipart tags); otherwise, it will always be a
 -- string, and multipart tags will be represented as canonical-form tags
 -- joined by "//".
-local function normalize_tag(tag, recombine_multitags)
+local function normalize_tag(tag, recombine_multitags, do_track)
 	-- Check for a shortcut before splitting. (I think the only case this
 	-- should apply to is when a list tag expands to a multipart tag.)
 	local expanded_tag = m_data.shortcuts[tag] or tag
@@ -94,18 +103,22 @@ local function normalize_tag(tag, recombine_multitags)
 	end
 	if expanded_tag ~= tag then
 		tag = expanded_tag
-		-- Track the expansion if it's not the same as the raw tag.
-		infl_track("tag/" .. tag)
+		if do_track then
+			-- Track the expansion if it's not the same as the raw tag.
+			infl_track("tag/" .. tag)
+		end
 	end
 	local split_tags = rsplit(tag, "//", true)
 	if #split_tags == 1 then
-		return normalize_single_tag(split_tags[1])
+		return normalize_single_tag(split_tags[1], do_track)
 	end
 	local normtags = {}
 	for _, single_tag in ipairs(split_tags) do
-		-- If the tag was a multipart tag, track each of individual raw tags.
-		infl_track("tag/" .. single_tag)
-		table.insert(normtags, normalize_single_tag(single_tag))
+		if do_track then
+			-- If the tag was a multipart tag, track each of individual raw tags.
+			infl_track("tag/" .. single_tag)
+		end
+		table.insert(normtags, normalize_single_tag(single_tag, do_track))
 	end
 	if recombine_multitags then
 		return table.concat(normtags, "//")
@@ -120,7 +133,7 @@ end
 -- isn't given, the return list may itself contains lists; in particular,
 -- multipart tags will be represented as lists. If RECOMBINE_TAGS is given,
 -- they will be represented as canonical-form tags joined by "//".
-local function normalize_tags(tags, recombine_multitags)
+local function normalize_tags(tags, recombine_multitags, do_track)
 	-- We track usage of shortcuts, normalized forms and (in the case of
 	-- multipart tags or list tags) intermediate forms. For example,
 	-- if the tags 1s|mn|gen|indefinite are passed in, we track the following:
@@ -140,27 +153,33 @@ local function normalize_tags(tags, recombine_multitags)
 	-- [[Template:tracking/inflection of/tag/indefinite]]
 	local ntags = {}
 	for _, tag in ipairs(tags) do
-		-- Track the raw tag.
-		infl_track("tag/" .. tag)
+		if do_track then
+			-- Track the raw tag.
+			infl_track("tag/" .. tag)
+		end
 		-- Expand the tag, which may generate a new tag (either a
 		-- fully canonicalized tag, a multipart tag, or a list of tags).
 		local expanded_tag = m_data.shortcuts[tag] or tag
 		if expanded_tag ~= tag then
 			tag = expanded_tag
 			-- Track the expansion if it's not the same as the raw tag.
-			if type(tag) == "string" then
+			if do_track and type(tag) == "string" then
 				infl_track("tag/" .. tag)
 			end
 		end
 		if type(tag) == "table" then
 			for _, t in ipairs(tag) do
-				-- If the tag expands to a list of raw tags, track each of
-				-- those.
-				infl_track("tag/" .. t)
-				table.insert(ntags, normalize_tag(t, recombine_multitags))
+				if do_track then
+					-- If the tag expands to a list of raw tags, track each of
+					-- those.
+					infl_track("tag/" .. t)
+				end
+				table.insert(ntags, normalize_tag(t, recombine_multitags,
+					do_track))
 			end
 		else
-			table.insert(ntags, normalize_tag(tag, recombine_multitags))
+			table.insert(ntags, normalize_tag(tag, recombine_multitags,
+				do_track))
 		end
 	end
 	return ntags
@@ -256,7 +275,6 @@ function export.fetch_lang_categories(lang, tags, terminfo, POS)
 		elseif predicate == "tags=" then
 			local normalized_spec_tags = normalize_tags(spec[2],
 				"recombine multitags")
-			-- FIXME! What is correct name of function?
 			return m_table.deepEqualsList(normalized_tags, normalized_spec_tags), 3
 		elseif predicate == "p=" then
 			return POS == normalize_pos(spec[2]), 3
@@ -299,13 +317,11 @@ function export.fetch_lang_categories(lang, tags, terminfo, POS)
 		if not spec then
 			return false
 		elseif type(spec) == "string" then
-			-- FIXME, call correct functions
-			if spec:find("<<p>>") then
-				if not POS then
-					error("Category spec " .. spec .. " requires a value for p= or POS= but none was provided")
-				end
-				spec = spec:gsub("<<p>>", POS)
-			end
+			-- Substitute POS request with user-specified part of speech
+			-- or default
+			spec = rsub(spec, "<<p=(.-)>>", function(default)
+				return POS or normalize_pos(default)
+			end)
 			table.insert(categories, lang:getCanonicalName() .. " " .. spec)
 			return true
 		elseif type(spec) ~= "table" then
@@ -368,7 +384,7 @@ function export.tagged_inflections(tags, terminfo, notext, capfirst, posttext)
 	local cur_infl = {}
 	local inflections = {}
 
-	local ntags = normalize_tags(tags)
+	local ntags = normalize_tags(tags, nil, "do-track")
 
 	for i, tagspec in ipairs(ntags) do
 		if tagspec == ";" then
