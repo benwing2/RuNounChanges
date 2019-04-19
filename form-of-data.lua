@@ -625,8 +625,24 @@ tags["passive"] = {
 tags["mediopassive"] = {
 	tag_type = "voice-valence",
 	glossary = "mediopassive",
-	shortcuts = {"mp", "mpass", "mpsv"},
+	shortcuts = {"mp", "mpass", "mpasv", "mpsv"},
 	wikidata = "Q1601545",
+}
+
+tags["antipassive"] = {
+	tag_type = "voice-valence",
+	glossary = "antipassive voice",
+	glossary_type = "wp",
+	shortcuts = {"apass", "apasv", "apsv"},
+	wikidata = "Q287232",
+}
+
+tags["applicative"] = {
+	tag_type = "voice-valence",
+	glossary = "applicative voice",
+	glossary_type = "wp",
+	shortcuts = {"appl"},
+	wikidata = "Q621634",
 }
 
 tags["reflexive"] = {
@@ -637,40 +653,41 @@ tags["reflexive"] = {
 	wikidata = "Q13475484",
 }
 
+tags["reciprocal"] = {
+	tag_type = "voice-valence",
+	glossary = "reciprocal (grammar)",
+	glossary_type = "wp",
+	shortcuts = {"recp", "recip"},
+	wikidata = "Q1964083",
+}
+
 tags["transitive"] = {
 	tag_type = "voice-valence",
-	-- FIXME
 	glossary = "transitive verb",
-	glossary_type = "wp",
 	shortcuts = {"tr", "vt"},
-	-- FIXME
-	-- wikidata = "Q13475484",
+	-- the following is for "transitive verb"
+	-- wikidata = "Q1774805",
 }
 
 tags["intransitive"] = {
 	tag_type = "voice-valence",
-	-- FIXME
 	glossary = "intransitive verb",
-	glossary_type = "wp",
 	shortcuts = {"intr", "vi"},
-	-- FIXME
-	-- wikidata = "Q13475484",
+	-- the following is for "intransitive verb"
+	-- wikidata = "Q1166153",
 }
 
 tags["ditransitive"] = {
 	tag_type = "voice-valence",
-	-- FIXME
 	glossary = "ditransitive verb",
-	glossary_type = "wp",
 	shortcuts = {"ditr"},
-	-- FIXME
-	-- wikidata = "Q13475484",
+	-- the following is for "ditransitive verb"
+	-- wikidata = "Q2328313",
 }
 
 tags["causative"] = {
 	tag_type = "voice-valence",
 	glossary = "causative",
-	glossary_type = "wp",
 	shortcuts = {"caus"},
 	-- the following is for "causative verb"
 	wikidata = "Q56677011",
@@ -681,14 +698,15 @@ tags["causative"] = {
 
 tags["infinitive"] = {
 	tag_type = "non-finite",
-	-- FIXME glossary
+	glossary = "infinitive",
 	shortcuts = {"inf"},
 	wikidata = "Q179230",
 }
 
 -- A form found in Portuguese and Galician
 tags["personal infinitive"] = {
-	-- FIXME glossary
+	glossary = "Portuguese verb conjugation",
+	glossary_type = "wp",
 	tag_type = "non-finite",
 	shortcuts = {"pinf"},
 }
@@ -794,15 +812,17 @@ tags["supine"] = {
 -- similarly occurs in Japanese as the "te-form"
 tags["conjunctive"] = {
 	tag_type = "non-finite",
-	-- FIXME glossary
-	--glossary = "conjunctive",
+	-- FIXME! No good link for "conjunctive"; another possibility is "converb"
+	glossary = "serial verb construction",
+	glossary_type = "wp",
 	shortcuts = {"conj"},
 }
 
 -- FIXME! Should this be a mood?
 tags["debitive"] = {
 	tag_type = "non-finite",
-	-- FIXME glossary
+	glossary = "debitive",
+	glossary_type = "wp",
 	shortcuts = {"deb"},
 	wikidata = "Q17119041",
 }
@@ -878,6 +898,14 @@ tags["associative"] = {
 	wikidata = "Q15948746",
 }
 
+tags["benefactive"] = {
+	tag_type = "case",
+	glossary = "benefactive case",
+	glossary_type = "wp",
+	shortcuts = {"ben", "bene"},
+	wikidata = "Q664905",
+}
+
 tags["causal"] = {
 	tag_type = "case",
 	glossary = "causal case",
@@ -937,8 +965,9 @@ tags["direct"] = {
 
 tags["distributive"] = {
 	tag_type = "case",
-	-- FIXME glossary
-	shortcuts = {"dis", "dist"},
+	glossary = "distributive case",
+	glossary_type = "wp",
+	shortcuts = {"dis", "dist", "distr"},
 	wikidata = "Q492457",
 }
 
@@ -1388,12 +1417,12 @@ tags["diminutive"] = {
 
 tags["endearing"] = {
 	tag_type = "attitude",
-	-- FIXME!
-	-- glossary = "endearing",
+	-- FIXME! No good glossary entry for this; the entry for "hypocoristic"
+	-- refers specifically to proper names.
+	glossary = "hypocoristic",
 	glossary_type = "wp",
 	shortcuts = {"end"},
-	-- FIXME!
-	-- wikidata = "Q108709",
+	wikidata = "Q1130279", -- entry for "hypocorism"
 }
 
 tags["pejorative"] = {
@@ -1537,62 +1566,80 @@ tags["stem"] = {
 
 tags["prefix"] = {
 	tag_type = "grammar",
-	-- FIXME
 	glossary = "prefix",
-	glossary_type = "wp",
 	shortcuts = {"pref"}, -- pre = prepositional
-	-- FIXME
-	--wikidata = "Q111029",
+	wikidata = "Q134830",
 }
 
 tags["prefixal"] = {
 	tag_type = "grammar",
-	-- FIXME
-	glossary = "prefix",
-	glossary_type = "wp",
+	glossary = "prefixal",
+	glossary_type = "wikt",
 	shortcuts = {"prefl"}, -- pre = prepositional
-	-- FIXME
-	--wikidata = "Q111029",
+	wikidata = "Q134830",
 }
 
 tags["suffix"] = {
 	tag_type = "grammar",
-	-- FIXME
 	glossary = "suffix",
-	glossary_type = "wp",
 	shortcuts = {"suf", "suff"},
-	-- FIXME
-	--wikidata = "Q111029",
+	wikidata = "Q102047",
 }
 
 tags["suffixal"] = {
 	tag_type = "grammar",
-	-- FIXME
-	glossary = "suffix",
-	glossary_type = "wp",
+	glossary = "suffixal",
+	glossary_type = "wikt",
 	shortcuts = {"sufl", "suffl"},
-	-- FIXME
-	--wikidata = "Q111029",
+	wikidata = "Q102047",
 }
 
 tags["affix"] = {
 	tag_type = "grammar",
-	-- FIXME
 	glossary = "affix",
 	glossary_type = "wp",
 	shortcuts = {"af"}, -- aff = affirmative
-	-- FIXME
-	--wikidata = "Q111029",
+	wikidata = "Q62155",
 }
 
 tags["affixal"] = {
 	tag_type = "grammar",
-	-- FIXME
-	glossary = "affix",
-	glossary_type = "wp",
+	glossary = "affixal",
+	glossary_type = "wikt",
 	shortcuts = {"afl"}, -- aff = affirmative
-	-- FIXME
-	--wikidata = "Q111029",
+	wikidata = "Q62155",
+}
+
+tags["circumfix"] = {
+	tag_type = "grammar",
+	glossary = "circumfix",
+	glossary_type = "wp",
+	shortcuts = {"circ", "cirf", "circf"},
+	wikidata = "Q124939",
+}
+
+tags["circumfixal"] = {
+	tag_type = "grammar",
+	glossary = "circumfixal",
+	glossary_type = "wikt",
+	shortcuts = {"circl", "cirfl", "circfl"},
+	wikidata = "Q124939",
+}
+
+tags["infix"] = {
+	tag_type = "grammar",
+	glossary = "infix",
+	glossary_type = "wp",
+	shortcuts = {"infx"},
+	wikidata = "Q201322",
+}
+
+tags["infixal"] = {
+	tag_type = "grammar",
+	glossary = "infixal",
+	glossary_type = "wikt",
+	shortcuts = {"infxl"},
+	wikidata = "Q201322",
 }
 
 tags["dependent"] = {
