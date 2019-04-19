@@ -1,0 +1,1197 @@
+Beginning at Sat Mar 30 01:00:01 2019
+Page 1 Template:abbreviation of: Processing
+Page 1 Template:abbreviation of: Found match for regex: .
+Page 1 Template:abbreviation of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|abbreviation of|cat=abbreviations|withcap=1|withdot=1}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 2 Template:abstract noun of: Processing
+Page 2 Template:abstract noun of: Found match for regex: .
+Page 2 Template:abstract noun of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|{{#invoke:labels/templates|show_from|default=abstract}} noun of|withcap=1|ignore=from:list|cat=abstract nouns}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 3 Template:accusative of: Processing
+Page 3 Template:accusative of: Found match for regex: .
+Page 3 Template:accusative of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|acc}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 4 Template:accusative plural of: Processing
+Page 4 Template:accusative plural of: Found match for regex: .
+Page 4 Template:accusative plural of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|acc|p}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 5 Template:accusative singular of: Processing
+Page 5 Template:accusative singular of: Found match for regex: .
+Page 5 Template:accusative singular of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|acc|s}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 6 Template:acronym of: Processing
+Page 6 Template:acronym of: Found match for regex: .
+Page 6 Template:acronym of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|acronym of|cat=acronyms|withcap=1|withdot=1}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 7 Template:active participle of: Processing
+Page 7 Template:active participle of: Found match for regex: .
+Page 7 Template:active participle of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|act|part}}<!--
+
+Internally we categorize into "LANG active participles".
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 8 Template:agent noun of: Processing
+Page 8 Template:agent noun of: Found match for regex: .
+Page 8 Template:agent noun of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|[[Appendix:Glossary#agent noun|agent noun]] of|cat=agent nouns}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 9 Template:alternative case form of: Processing
+Page 9 Template:alternative case form of: Found match for regex: .
+Page 9 Template:alternative case form of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|alternative {{glossary|letter case|letter-case}} form of|withcap=1}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 10 Template:alternative form of: Processing
+Page 10 Template:alternative form of: Found match for regex: .
+Page 10 Template:alternative form of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|{{#invoke:labels/templates|show_from|default=alternative}} form of|withcap=1|ignore=from:list}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 11 Template:alternative plural of: Processing
+Page 11 Template:alternative plural of: Found match for regex: .
+Page 11 Template:alternative plural of: -------- begin text ---------
+<includeonly>{{#if:{{{lang|}}}|{{plural of|{{{lang|}}}|{{{1}}}}} ({{alternative form of|{{{lang|}}}|{{{2}}}|nocap=1}})|{{plural of|{{{1|}}}|{{{2}}}}} ({{alternative form of|{{{1|}}}|{{{3}}}|nocap=1}})}}.</includeonly><!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 12 Template:alternative reconstruction of: Processing
+Page 12 Template:alternative reconstruction of: Found match for regex: .
+Page 12 Template:alternative reconstruction of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|alternative|reconstruction}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 13 Template:alternative spelling of: Processing
+Page 13 Template:alternative spelling of: Found match for regex: .
+Page 13 Template:alternative spelling of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|{{#invoke:labels/templates|show_from|default=alternative}} spelling of|withcap=1|ignore=from:list}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 14 Template:alternative typography of: Processing
+Page 14 Template:alternative typography of: Found match for regex: .
+Page 14 Template:alternative typography of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|alternative typography of}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 15 Template:aphetic form of: Processing
+Page 15 Template:aphetic form of: Found match for regex: .
+Page 15 Template:aphetic form of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|[[Appendix:Glossary#aphetic|aphetic]] form of|withcap=1|cat=aphetic forms}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 16 Template:apocopic form of: Processing
+Page 16 Template:apocopic form of: Found match for regex: .
+Page 16 Template:apocopic form of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|[[Appendix:Glossary#apocopic|apocopic]] form of|withcap=1|cat=apocopic forms}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 17 Template:archaic form of: Processing
+Page 17 Template:archaic form of: Found match for regex: .
+Page 17 Template:archaic form of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|archaic form of|cat=archaic forms|withcap=1|withdot=1}}<!--
+
+--><noinclude>{{documentation}}[[Category:Form-of templates]]</noinclude>
+-------- end text --------
+Page 18 Template:archaic spelling of: Processing
+Page 18 Template:archaic spelling of: Found match for regex: .
+Page 18 Template:archaic spelling of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|archaic spelling of|cat=archaic forms|withcap=1|withdot=1}}<!--
+
+--><noinclude>{{documentation}}[[Category:Form-of templates]]</noinclude>
+-------- end text --------
+Page 19 Template:aspirate mutation of: Processing
+Page 19 Template:aspirate mutation of: Found match for regex: .
+Page 19 Template:aspirate mutation of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|aspirate mutation of|cat=aspirate-mutation forms|withcap=1|withdot=1}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 20 Template:attributive form of: Processing
+Page 20 Template:attributive form of: Found match for regex: .
+Page 20 Template:attributive form of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|attr|form}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 21 Template:augmentative of: Processing
+Page 21 Template:augmentative of: Found match for regex: .
+Page 21 Template:augmentative of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|aug|withcap=1|def=p=n}}<!--
+
+We specify a default of p=n because internally we categorize into
+"LANG augmentative <<p>>s".
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 22 Template:broad form of: Processing
+Page 22 Template:broad form of: Found match for regex: .
+Page 22 Template:broad form of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|{{#invoke:labels/templates|show_from|default=broad}} form of|ignore=from:list}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 23 Template:causative of: Processing
+Page 23 Template:causative of: Found match for regex: .
+Page 23 Template:causative of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|caus|def=p=v}}<!--
+
+We specify a default of p=v because internally we categorize into
+"LANG causative <<p>>s".
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 24 Template:clipping of: Processing
+Page 24 Template:clipping of: Found match for regex: .
+Page 24 Template:clipping of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|clipping of|cat=clippings|withcap=1|withdot=1}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 25 Template:combining form of: Processing
+Page 25 Template:combining form of: Found match for regex: .
+Page 25 Template:combining form of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|[[combining form]] of|cat=combining forms}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 26 Template:comparative of: Processing
+Page 26 Template:comparative of: Found match for regex: .
+Page 26 Template:comparative of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|comd|def=p=a}}<!--
+
+We specify a default of p=a because internally we categorize into
+"LANG comparative <<p>>s".
+
+--><includeonly><!--
+-->{{#if:{{{nocat|}}}|[[Category:comparative of/nocat]]|[[Category:comparative 
+of/without nocat]]}}<!--
+-->{{#ifeq:{{#if:{{{lang|}}}|{{{lang}}}|{{{1|}}}}}|en|[[Category:Comparative of lang=en]]}}<!--
+--></includeonly><!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 000 Template:construed with: Processing
+Page 000 Template:construed with: Found match for regex: .
+Page 000 Template:construed with: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|construed with}}<!--
+
+--><noinclude>[[Category:Definition templates]]</noinclude>
+-------- end text --------
+Page 27 Template:contraction of: Processing
+Page 27 Template:contraction of: Found match for regex: .
+Page 27 Template:contraction of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|contraction of|cat=contractions|withcap=1|withdot=1}}<!--
+
+--><noinclude>{{documentation}}[[Category:Form-of templates]]</noinclude>
+-------- end text --------
+Page 28 Template:dated form of: Processing
+Page 28 Template:dated form of: Found match for regex: .
+Page 28 Template:dated form of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|dated form of|cat=dated forms|withcap=1|withdot=1}}<!--
+
+--><noinclude>{{documentation}}[[Category:Form-of templates]]</noinclude>
+-------- end text --------
+Page 29 Template:dated spelling of: Processing
+Page 29 Template:dated spelling of: Found match for regex: .
+Page 29 Template:dated spelling of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|dated spelling of|cat=dated forms|withcap=1|withdot=1}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 30 Template:dative of: Processing
+Page 30 Template:dative of: Found match for regex: .
+Page 30 Template:dative of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|dat}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 31 Template:dative plural of: Processing
+Page 31 Template:dative plural of: Found match for regex: .
+Page 31 Template:dative plural of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|dat|p}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 32 Template:dative singular of: Processing
+Page 32 Template:dative singular of: Found match for regex: .
+Page 32 Template:dative singular of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|dat|s}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 33 Template:definite of: Processing
+Page 33 Template:definite of: Found match for regex: .
+Page 33 Template:definite of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|def|s}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 34 Template:deliberate misspelling of: Processing
+Page 34 Template:deliberate misspelling of: Found match for regex: .
+Page 34 Template:deliberate misspelling of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|deliberate misspelling of|cat=misspellings|withcap=1|withdot=1}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 000 Template:diminutive of: Processing
+Page 000 Template:diminutive of: Found match for regex: .
+Page 000 Template:diminutive of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|dim|def=p=n}}<!--
+
+We specify a default of p=n because internally we categorize into
+"LANG diminutive <<p>>s".
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 000 Template:diminutive plural of: Processing
+Page 000 Template:diminutive plural of: Found match for regex: .
+Page 000 Template:diminutive plural of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|dim|p|def=p=n}}<!--
+
+We specify a default of p=n because internally we might categorize
+(used to categorize at least) into "LANG diminutive <<p>>s".
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 35 Template:dual of: Processing
+Page 35 Template:dual of: Found match for regex: .
+Page 35 Template:dual of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|d}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 36 Template:eclipsis of: Processing
+Page 36 Template:eclipsis of: Found match for regex: .
+Page 36 Template:eclipsis of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|eclipsed form of|cat=eclipsed forms|withcap=1|withdot=1}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 37 Template:eggcorn of: Processing
+Page 37 Template:eggcorn of: Found match for regex: .
+Page 37 Template:eggcorn of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|[[eggcorn]] of|cat=eggcorns|withcap=1|withdot=1}}<!--
+
+--><noinclude>{{documentation}}[[Category:Form-of templates]]</noinclude>
+-------- end text --------
+Page 38 Template:elative of: Processing
+Page 38 Template:elative of: Found match for regex: .
+Page 38 Template:elative of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|elad}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 39 Template:ellipsis of: Processing
+Page 39 Template:ellipsis of: Found match for regex: .
+Page 39 Template:ellipsis of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|{{#invoke:labels/templates|show_from|default={{glossary|ellipsis}} of}}|withcap=1|ignore=from:list|cat=ellipses}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 40 Template:elongated form of: Processing
+Page 40 Template:elongated form of: Found match for regex: .
+Page 40 Template:elongated form of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|[[Appendix:Glossary#elongated|elongated]] form of|cat=elongated forms|withcap=1|withdot=1}}<!--
+
+--><noinclude>{{documentation}}[[Category:Form-of templates]]</noinclude>
+-------- end text --------
+Page 000 Template:endearing form of: Processing
+Page 000 Template:endearing form of: Found match for regex: .
+Page 000 Template:endearing form of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|end|form|def=p=n}}<!--
+
+We specify a default of p=n because internally we categorize into
+"LANG endearing <<p>>s".
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 41 Template:equative of: Processing
+Page 41 Template:equative of: Found match for regex: .
+Page 41 Template:equative of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|equd|def=p=a}}<!--
+
+We specify a default of p=a because internally we categorize into
+"LANG <<p>> equative forms".
+
+--><includeonly><!--
+-->{{#ifeq:{{#if:{{{lang|}}}|{{{lang}}}|{{{1|}}}}}|en|[[Category:Equative of lang=en]]}}<!--
+--></includeonly><!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 42 Template:euphemistic form of: Processing
+Page 42 Template:euphemistic form of: Found match for regex: .
+Page 42 Template:euphemistic form of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|euphemistic form of|cat=euphemisms|withcap=1|withdot=1}}<!--
+
+--><noinclude>{{documentation}}[[Category:Form-of templates]]</noinclude>
+-------- end text --------
+Page 43 Template:euphemistic spelling of: Processing
+Page 43 Template:euphemistic spelling of: Found match for regex: .
+Page 43 Template:euphemistic spelling of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|euphemistic spelling of|cat=euphemisms|withcap=1|withdot=1}}<!--
+
+--><noinclude>{{documentation}}[[Category:Form-of templates]]</noinclude>
+-------- end text --------
+Page 000 Template:eye dialect of: Processing
+Page 000 Template:eye dialect of: Found match for regex: .
+Page 000 Template:eye dialect of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|[[eye dialect]] spelling of|withcap=1|ignore=from:list,nodot,dot|cat=eye dialect}}<!--
+
+-->{{#if:{{{from|}}}<!--
+-->|<!--
+  --><span class='use-with-mention'>, representing <!--
+  
+  -->{{#ifexist:Template:accent:{{{from}}}<!--
+  -->|<!--
+    -->{{accent:{{{from}}}}}<!--
+  -->|<!--
+    -->{{#invoke:labels/templates|show_from}}<!--
+  -->}}<!--
+  
+  --> {{#invoke:languages/templates|getByCode|{{#if:{{{lang|}}}|{{{lang|}}}|{{{1|en}}}}}|getCanonicalName}}<!--
+  --></span><!--
+-->}}<!--
+
+-->{{#if:{{{dot|}}}|{{{dot|}}}|{{#if:{{{nodot|}}}||.}}}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 44 Template:feminine noun of: Processing
+Page 44 Template:feminine noun of: Found match for regex: .
+Page 44 Template:feminine noun of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|f|equivalent}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 45 Template:feminine of: Processing
+Page 45 Template:feminine of: Found match for regex: .
+Page 45 Template:feminine of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|f}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 46 Template:feminine plural of: Processing
+Page 46 Template:feminine plural of: Found match for regex: .
+Page 46 Template:feminine plural of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|f|p}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 47 Template:feminine plural past participle of: Processing
+Page 47 Template:feminine plural past participle of: Found match for regex: .
+Page 47 Template:feminine plural past participle of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|f|p|of the|past|part|cat=past participle forms}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 48 Template:feminine singular of: Processing
+Page 48 Template:feminine singular of: Found match for regex: .
+Page 48 Template:feminine singular of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|f|s}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 49 Template:feminine singular past participle of: Processing
+Page 49 Template:feminine singular past participle of: Found match for regex: .
+Page 49 Template:feminine singular past participle of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|f|s|of the|past|part|cat=past participle forms}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 50 Template:form of: Processing
+Page 50 Template:form of: Found match for regex: .
+Page 50 Template:form of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|{{#if:{{{lang|}}}|{{#if:{{{1|}}}|{{{1|}}}|form}} of|{{#if:{{{2|}}}|{{{2|}}}|form}} of}}|term_param={{#if:{{{lang|}}}|2|3}}|ignore={{#if:{{{lang|}}}|1|2}}}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 51 Template:former name of: Processing
+Page 51 Template:former name of: Found match for regex: .
+Page 51 Template:former name of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|former name of|withcap=1|withdot=1}}<!--
+
+--><noinclude>{{documentation}}[[Category:Form-of templates]]</noinclude>
+-------- end text --------
+Page 52 Template:frequentative of: Processing
+Page 52 Template:frequentative of: Found match for regex: .
+Page 52 Template:frequentative of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|freq|def=p=v}}<!--
+
+We specify a default of p=v because internally we categorize into
+"LANG frequentative <<p>>s".
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 53 Template:future participle of: Processing
+Page 53 Template:future participle of: Found match for regex: .
+Page 53 Template:future participle of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|fut|part}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 54 Template:genitive of: Processing
+Page 54 Template:genitive of: Found match for regex: .
+Page 54 Template:genitive of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|gen}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 55 Template:genitive plural definite of: Processing
+Page 55 Template:genitive plural definite of: Found match for regex: .
+Page 55 Template:genitive plural definite of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|gen|p|def}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 56 Template:genitive plural indefinite of: Processing
+Page 56 Template:genitive plural indefinite of: Found match for regex: .
+Page 56 Template:genitive plural indefinite of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|gen|p|indef}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 57 Template:genitive plural of: Processing
+Page 57 Template:genitive plural of: Found match for regex: .
+Page 57 Template:genitive plural of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|gen|p}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 58 Template:genitive singular definite of: Processing
+Page 58 Template:genitive singular definite of: Found match for regex: .
+Page 58 Template:genitive singular definite of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|gen|s|def}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 59 Template:genitive singular indefinite of: Processing
+Page 59 Template:genitive singular indefinite of: Found match for regex: .
+Page 59 Template:genitive singular indefinite of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|gen|s|indef}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 60 Template:genitive singular of: Processing
+Page 60 Template:genitive singular of: Found match for regex: .
+Page 60 Template:genitive singular of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|gen|s}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 61 Template:gerund of: Processing
+Page 61 Template:gerund of: Found match for regex: .
+Page 61 Template:gerund of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|ger}}<!--
+
+Internally we categorize into "LANG gerunds".
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 000 Template:h-prothesis of: Processing
+Page 000 Template:h-prothesis of: Found match for regex: .
+Page 000 Template:h-prothesis of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|[[h-prothesis|h-prothesized]] form of|cat=h-prothesized forms}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 62 Template:hard mutation of: Processing
+Page 62 Template:hard mutation of: Found match for regex: .
+Page 62 Template:hard mutation of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|hard mutation of|cat=hard-mutation forms|withcap=1|withdot=1}}<!--
+
+--><noinclude>{{documentation}}[[Category:Form-of templates]]</noinclude>
+-------- end text --------
+Page 63 Template:harmonic variant of: Processing
+Page 63 Template:harmonic variant of: Found match for regex: .
+Page 63 Template:harmonic variant of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|harmonic variant of}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 64 Template:honorific alternative case form of: Processing
+Page 64 Template:honorific alternative case form of: Found match for regex: .
+Page 64 Template:honorific alternative case form of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|withcap=1|honorific alternative [[letter case|letter-case]] form of}}'', sometimes used when referring to [[God]] or another important figure who is understood from context.''<includeonly>[[Category:English honorific forms]]</includeonly><!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 65 Template:imperative of: Processing
+Page 65 Template:imperative of: Found match for regex: .
+Page 65 Template:imperative of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|impr}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 66 Template:imperfective form of: Processing
+Page 66 Template:imperfective form of: Found match for regex: .
+Page 66 Template:imperfective form of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|impfv|form|def=p=v}}<!--
+
+We specify a default of p=v because internally we categorize into
+"LANG imperfective <<p>>s".
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 67 Template:inflected form of: Processing
+Page 67 Template:inflected form of: Found match for regex: .
+Page 67 Template:inflected form of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|inflected form of}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 68 Template:inflection of: Processing
+Page 68 Template:inflection of: Found match for regex: .
+Page 68 Template:inflection of: -------- begin text ---------
+{{#invoke:form of/templates|inflection_of_t}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 69 Template:informal form of: Processing
+Page 69 Template:informal form of: Found match for regex: .
+Page 69 Template:informal form of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|informal form of|cat=informal forms|withcap=1|withdot=1}}<!--
+
+--><noinclude>{{documentation}}[[Category:Form-of templates]]</noinclude>
+-------- end text --------
+Page 70 Template:informal spelling of: Processing
+Page 70 Template:informal spelling of: Found match for regex: .
+Page 70 Template:informal spelling of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|informal spelling of|cat=informal forms|withcap=1|withdot=1}}<!--
+
+--><noinclude>{{documentation}}[[Category:Form-of templates]]</noinclude>
+-------- end text --------
+Page 71 Template:initialism of: Processing
+Page 71 Template:initialism of: Found match for regex: .
+Page 71 Template:initialism of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|initialism of|cat=initialisms|withcap=1|withdot=1}}<!--
+
+--><noinclude>{{documentation}}[[Category:Form-of templates]]</noinclude>
+-------- end text --------
+Page 72 Template:iterative of: Processing
+Page 72 Template:iterative of: Found match for regex: .
+Page 72 Template:iterative of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|iter|def=p=v}}<!--
+
+We specify a default of p=v because internally we categorize into
+"LANG iterative <<p>>s".
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 73 Template:lenition of: Processing
+Page 73 Template:lenition of: Found match for regex: .
+Page 73 Template:lenition of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|lenited form of|cat=lenited forms|withcap=1|withdot=1}}<!--
+
+--><noinclude>{{documentation}}[[Category:Form-of templates]]</noinclude>
+-------- end text --------
+Page 74 Template:masculine noun of: Processing
+Page 74 Template:masculine noun of: Found match for regex: .
+Page 74 Template:masculine noun of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|m|equivalent}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 75 Template:masculine of: Processing
+Page 75 Template:masculine of: Found match for regex: .
+Page 75 Template:masculine of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|m}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 76 Template:masculine plural of: Processing
+Page 76 Template:masculine plural of: Found match for regex: .
+Page 76 Template:masculine plural of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|m|p}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 77 Template:masculine plural past participle of: Processing
+Page 77 Template:masculine plural past participle of: Found match for regex: .
+Page 77 Template:masculine plural past participle of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|m|p|of the|past|part|cat=past participle forms}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 78 Template:medieval spelling of: Processing
+Page 78 Template:medieval spelling of: Found match for regex: .
+Page 78 Template:medieval spelling of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|medieval spelling of|cat=medieval spellings}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 79 Template:men's speech form of: Processing
+Page 79 Template:men's speech form of: Found match for regex: .
+Page 79 Template:men's speech form of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|[[Appendix:Glossary#men's speech|men's speech]] form of|cat=men's speech terms}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 80 Template:misconstruction of: Processing
+Page 80 Template:misconstruction of: Found match for regex: .
+Page 80 Template:misconstruction of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|misconstruction of|withcap=1|cat=misconstructions}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 81 Template:misromanization of: Processing
+Page 81 Template:misromanization of: Found match for regex: .
+Page 81 Template:misromanization of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|misromanization of|cat=misromanizations|withcap=1|withdot=1}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 82 Template:misspelling of: Processing
+Page 82 Template:misspelling of: Found match for regex: .
+Page 82 Template:misspelling of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|misspelling of|cat=misspellings|withcap=1|withdot=1}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 83 Template:mixed mutation of: Processing
+Page 83 Template:mixed mutation of: Found match for regex: .
+Page 83 Template:mixed mutation of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|mixed mutation of|cat=mixed-mutation forms|withcap=1|withdot=1}}<!--
+
+--><noinclude>{{documentation}}[[Category:Form-of templates]]</noinclude>
+-------- end text --------
+Page 84 Template:nasal mutation of: Processing
+Page 84 Template:nasal mutation of: Found match for regex: .
+Page 84 Template:nasal mutation of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|nasal mutation of|cat=nasal-mutation forms|withcap=1|withdot=1}}<!--
+
+--><noinclude>{{documentation}}[[Category:Form-of templates]]</noinclude>
+-------- end text --------
+Page 85 Template:negative of: Processing
+Page 85 Template:negative of: Found match for regex: .
+Page 85 Template:negative of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|neg|form}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 86 Template:neuter plural of: Processing
+Page 86 Template:neuter plural of: Found match for regex: .
+Page 86 Template:neuter plural of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|n|p}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 87 Template:neuter singular of: Processing
+Page 87 Template:neuter singular of: Found match for regex: .
+Page 87 Template:neuter singular of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|n|s}}<!--
+
+--><noinclude>{{shortcut|Template:neuter of}}{{documentation}}</noinclude>
+-------- end text --------
+Page 88 Template:neuter singular past participle of: Processing
+Page 88 Template:neuter singular past participle of: Found match for regex: .
+Page 88 Template:neuter singular past participle of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|n|s|of the|past|part|cat=past participle forms}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 89 Template:nomen sacrum form of: Processing
+Page 89 Template:nomen sacrum form of: Found match for regex: .
+Page 89 Template:nomen sacrum form of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|{{l|en|nomen sacrum|''{{#if:{{{nocap|}}}|n|N}}omen sacrum''}} form of|cat=nomina sacra|withcap=1|withdot=1}}<!--
+
+--><noinclude>{{documentation}}[[Category:Form-of templates]]</noinclude>
+-------- end text --------
+Page 90 Template:nominalization of: Processing
+Page 90 Template:nominalization of: Found match for regex: .
+Page 90 Template:nominalization of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|nomzn}}<!--
+
+Internally we categorize into "LANG nominalized adjectives".
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 91 Template:nominative plural of: Processing
+Page 91 Template:nominative plural of: Found match for regex: .
+Page 91 Template:nominative plural of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|nom|p}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 92 Template:nominative singular of: Processing
+Page 92 Template:nominative singular of: Found match for regex: .
+Page 92 Template:nominative singular of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|nom|s}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 93 Template:nonstandard form of: Processing
+Page 93 Template:nonstandard form of: Found match for regex: .
+Page 93 Template:nonstandard form of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|nonstandard form of|cat=nonstandard forms|withcap=1|withdot=1}}<!--
+
+--><noinclude>{{documentation}}[[Category:Form-of templates]]</noinclude>
+-------- end text --------
+Page 94 Template:nonstandard spelling of: Processing
+Page 94 Template:nonstandard spelling of: Found match for regex: .
+Page 94 Template:nonstandard spelling of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|nonstandard spelling of|cat=nonstandard forms|withcap=1|withdot=1}}<!--
+
+--><noinclude>{{documentation}}[[Category:Form-of templates]]</noinclude>
+-------- end text --------
+Page 95 Template:nuqtaless form of: Processing
+Page 95 Template:nuqtaless form of: Found match for regex: .
+Page 95 Template:nuqtaless form of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|nuqtaless form of}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 96 Template:obsolete form of: Processing
+Page 96 Template:obsolete form of: Found match for regex: .
+Page 96 Template:obsolete form of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|obsolete form of|cat=obsolete forms|withcap=1|withdot=1}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 97 Template:obsolete spelling of: Processing
+Page 97 Template:obsolete spelling of: Found match for regex: .
+Page 97 Template:obsolete spelling of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|obsolete spelling of|withcap=1|cat=obsolete forms}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 98 Template:obsolete typography of: Processing
+Page 98 Template:obsolete typography of: Found match for regex: .
+Page 98 Template:obsolete typography of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|obsolete typography of|cat=obsolete forms}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 99 Template:official form of: Processing
+Page 99 Template:official form of: Found match for regex: .
+Page 99 Template:official form of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|official form of|cat=official forms|withcap=1|withdot=1}}<!--
+
+--><noinclude>{{documentation}}[[Category:Form-of templates]]</noinclude>
+-------- end text --------
+Page 100 Template:participle of: Processing
+Page 100 Template:participle of: Found match for regex: .
+Page 100 Template:participle of: -------- begin text ---------
+{{#invoke:form of/templates|inflection_of_t|postinfl=part|withcap=1|withdot=1|cat=participles}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 101 Template:passive of: Processing
+Page 101 Template:passive of: Found match for regex: .
+Page 101 Template:passive of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|pass|def=p=v}}<!--
+
+We specify a default of p=v because internally we categorize into
+"LANG <<p>> passive forms".
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 102 Template:passive participle of: Processing
+Page 102 Template:passive participle of: Found match for regex: .
+Page 102 Template:passive participle of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|pass|part}}<!--
+
+Internally we categorize into "LANG passive participles".
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 103 Template:passive past tense of: Processing
+Page 103 Template:passive past tense of: Found match for regex: .
+Page 103 Template:passive past tense of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|pass|past}}<!--
+-------- end text --------
+Page 104 Template:past active participle of: Processing
+Page 104 Template:past active participle of: Found match for regex: .
+Page 104 Template:past active participle of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|past|act|part}}<!--
+
+Internally we categorize into "LANG past active participles".
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 105 Template:past participle form of: Processing
+Page 105 Template:past participle form of: Found match for regex: .
+Page 105 Template:past participle form of: -------- begin text ---------
+{{#invoke:form of/templates|inflection_of_t|cat=past participle forms|postinfl=of the|postinfl2=past|postinfl3=part}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 106 Template:past participle of: Processing
+Page 106 Template:past participle of: Found match for regex: .
+Page 106 Template:past participle of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|past|part}}<!--
+
+Internally we categorize into "LANG past participles".
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 107 Template:past passive participle of: Processing
+Page 107 Template:past passive participle of: Found match for regex: .
+Page 107 Template:past passive participle of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|past|pass|part}}<!--
+
+Internally we categorize into "LANG past passive participles".
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 108 Template:past tense of: Processing
+Page 108 Template:past tense of: Found match for regex: .
+Page 108 Template:past tense of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|past|tense}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 109 Template:pejorative of: Processing
+Page 109 Template:pejorative of: Found match for regex: .
+Page 109 Template:pejorative of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|pej|withcap=1}}<!--
+
+Internally we categorize into "LANG derogatory terms".
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 110 Template:perfect participle of: Processing
+Page 110 Template:perfect participle of: Found match for regex: .
+Page 110 Template:perfect participle of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|perf|part}}<!--
+
+Internally we categorize into "LANG perfect participles".
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 111 Template:perfective form of: Processing
+Page 111 Template:perfective form of: Found match for regex: .
+Page 111 Template:perfective form of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|pfv|form|def=p=v}}<!--
+
+We specify a default of p=v because internally we categorize into
+"LANG perfective <<p>>s".
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 112 Template:plural definite of: Processing
+Page 112 Template:plural definite of: Found match for regex: .
+Page 112 Template:plural definite of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|p|def}}<!--
+
+--><noinclude>{{documentation}}<!--
+
+-->{{#ifeq:{{#invoke:string|sub|{{PAGENAME}}|-3|-1}}|ene|[[Category:Needs fixing]]}}</noinclude>
+-------- end text --------
+Page 113 Template:plural indefinite of: Processing
+Page 113 Template:plural indefinite of: Found match for regex: .
+Page 113 Template:plural indefinite of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|p|indef}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 114 Template:plural of: Processing
+Page 114 Template:plural of: Found match for regex: .
+Page 114 Template:plural of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|p}}<!--
+
+-->{{#ifexist:{{#if:{{{lang|}}}|{{#invoke:languages/templates|makeEntryName|{{{lang}}}|{{{1|}}}}}|{{#invoke:languages/templates|makeEntryName|{{{1|}}}|{{{2|}}}}}}}||[[Category:Plurals with a red link for singular]]}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 115 Template:present active participle of: Processing
+Page 115 Template:present active participle of: Found match for regex: .
+Page 115 Template:present active participle of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|pres|act|part}}<!--
+
+Internally we categorize into "LANG present active participles".
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 116 Template:present participle of: Processing
+Page 116 Template:present participle of: Found match for regex: .
+Page 116 Template:present participle of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|pres|part}}<!--
+
+Internally we categorize into "LANG present participles".
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 117 Template:present tense of: Processing
+Page 117 Template:present tense of: Found match for regex: .
+Page 117 Template:present tense of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|pres}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 000 Template:pronunciation spelling of: Processing
+Page 000 Template:pronunciation spelling of: Found match for regex: .
+Page 000 Template:pronunciation spelling of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|[[pronunciation spelling]] of|withcap=1|ignore=from:list,nodot,dot|cat=pronunciation spellings}}<!--
+
+-->{{#if:{{{from|}}}<!--
+-->|<!--
+  --><span class='use-with-mention'>, representing <!--
+  
+  -->{{#ifexist:Template:accent:{{{from}}}<!--
+  -->|<!--
+    -->{{accent:{{{from}}}}}<!--
+  -->|<!--
+    -->{{#invoke:labels/templates|show_from}}<!--
+  -->}}<!--
+  
+  --> {{#invoke:languages/templates|getByCode|{{#if:{{{lang|}}}|{{{lang|}}}|{{{1|en}}}}}|getCanonicalName}}<!--
+  --></span><!--
+-->}}<!--
+
+-->{{#if:{{{dot|}}}|{{{dot|}}}|{{#if:{{{nodot|}}}||.}}}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 000 Template:pronunciation variant of: Processing
+Page 000 Template:pronunciation variant of: Found match for regex: .
+Page 000 Template:pronunciation variant of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|pronunciation variant of|withcap=1|ignore=from:list,nodot,dot|cat=pronunciation variants}}<!--
+
+-->{{#if:{{{from|}}}<!--
+-->|<!--
+  --><span class='use-with-mention'>, representing <!--
+  
+  -->{{#ifexist:Template:accent:{{{from}}}<!--
+  -->|<!--
+    -->{{accent:{{{from}}}}}<!--
+  -->|<!--
+    -->{{#invoke:labels/templates|show_from}}<!--
+  -->}}<!--
+  
+  --> {{#invoke:languages/templates|getByCode|{{#if:{{{lang|}}}|{{{lang|}}}|{{{1|en}}}}}|getCanonicalName}}<!--
+  --></span><!--
+-->}}<!--
+
+-->{{#if:{{{dot|}}}|{{{dot|}}}|{{#if:{{{nodot|}}}||.}}}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 118 Template:rare form of: Processing
+Page 118 Template:rare form of: Found match for regex: .
+Page 118 Template:rare form of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|rare form of|cat=rare forms|withcap=1|withdot=1}}<!--
+
+--><noinclude>{{documentation}}[[Category:Form-of templates]]</noinclude>
+-------- end text --------
+Page 119 Template:rare spelling of: Processing
+Page 119 Template:rare spelling of: Found match for regex: .
+Page 119 Template:rare spelling of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|rare spelling of|cat=rare forms|withcap=1|withdot=1}}<!--
+
+--><noinclude>{{documentation}}[[Category:Form-of templates]]</noinclude>
+-------- end text --------
+Page 120 Template:reflexive of: Processing
+Page 120 Template:reflexive of: Found match for regex: .
+Page 120 Template:reflexive of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|refl|def=p=v}}<!--
+
+We specify a default of p=v because internally we categorize into
+"LANG reflexive <<p>>s".
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 121 Template:rfform: Processing
+Page 121 Template:rfform: Found match for regex: .
+Page 121 Template:rfform: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|a form of}} <sup>(''please '''specify''' which form!'')</sup><!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 000 Template:romanization of: Processing
+Page 000 Template:romanization of: Found match for regex: .
+Page 000 Template:romanization of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|romanization of|withcap=1|def=tr=-|noprimaryentrycat=romanizations without a main entry}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 123 Template:short for: Processing
+Page 123 Template:short for: Found match for regex: .
+Page 123 Template:short for: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|short for|cat=short forms|withcap=1|withdot=1}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 124 Template:singular definite of: Processing
+Page 124 Template:singular definite of: Found match for regex: .
+Page 124 Template:singular definite of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|s|def}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 125 Template:singular of: Processing
+Page 125 Template:singular of: Found match for regex: .
+Page 125 Template:singular of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|s}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 126 Template:singulative of: Processing
+Page 126 Template:singulative of: Found match for regex: .
+Page 126 Template:singulative of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|sgl}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 127 Template:slender form of: Processing
+Page 127 Template:slender form of: Found match for regex: .
+Page 127 Template:slender form of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|{{#invoke:labels/templates|show_from|default=slender}} form of|ignore=from:list}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 128 Template:soft mutation of: Processing
+Page 128 Template:soft mutation of: Found match for regex: .
+Page 128 Template:soft mutation of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|soft mutation of|cat=soft-mutation forms|withcap=1|withdot=1}}<!--
+
+--><noinclude>{{documentation}}[[Category:Form-of templates]]</noinclude>
+-------- end text --------
+Page 129 Template:spelling of: Processing
+Page 129 Template:spelling of: Found match for regex: .
+Page 129 Template:spelling of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|{{#if:{{{lang|}}}|{{{1}}} spelling of|{{{2}}} spelling of}}|term_param={{#if:{{{lang|}}}|2|3}}|ignore={{#if:{{{lang|}}}|1|2}}|cat={{#if:{{{lang|}}}|{{{1}}} forms|{{{2}}} forms}}}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 130 Template:standard form of: Processing
+Page 130 Template:standard form of: Found match for regex: .
+Page 130 Template:standard form of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|ignore=from:list|{{#invoke:labels/templates|show_from}} standard form of|withcap=1|withdot=1}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 131 Template:standard spelling of: Processing
+Page 131 Template:standard spelling of: Found match for regex: .
+Page 131 Template:standard spelling of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|ignore=from:list|{{#invoke:labels/templates|show_from}} standard spelling of|withcap=1|withdot=1}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 133 Template:superlative attributive of: Processing
+Page 133 Template:superlative attributive of: Found match for regex: .
+Page 133 Template:superlative attributive of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|supd|(when used {{l|en|attributive|attributively}})}}
+-------- end text --------
+Page 134 Template:superlative of: Processing
+Page 134 Template:superlative of: Found match for regex: .
+Page 134 Template:superlative of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|supd|def=p=a}}<!--
+
+We specify a default of p=a because internally we categorize into
+"LANG superlative <<p>>s".
+
+--><includeonly><!--
+-->{{#if:{{{nocat|}}}|[[Category:superlative of/nocat]]|[[Category:superlative of/without nocat]]}}<!--
+-->{{#ifeq:{{#if:{{{lang|}}}|{{{lang}}}|{{{1|}}}}}|en|[[Category:Superlative of lang=en]]}}<!--
+--></includeonly><!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 135 Template:superlative predicative of: Processing
+Page 135 Template:superlative predicative of: Found match for regex: .
+Page 135 Template:superlative predicative of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|{{l|en|superlative}} (when used {{l|en|predicative|predicatively}})}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 136 Template:superseded spelling of: Processing
+Page 136 Template:superseded spelling of: Found match for regex: .
+Page 136 Template:superseded spelling of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|[[Appendix:Glossary#superseded|superseded spelling]] of|cat=superseded forms|withcap=1|withdot=1}}<!--
+
+--><noinclude>{{documentation}}[[Category:Form-of templates]]</noinclude>
+-------- end text --------
+Page 137 Template:supine of: Processing
+Page 137 Template:supine of: Found match for regex: .
+Page 137 Template:supine of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|supine}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 138 Template:syncopic form of: Processing
+Page 138 Template:syncopic form of: Found match for regex: .
+Page 138 Template:syncopic form of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|[[Appendix:Glossary#syncopic|syncopic]] form of|withcap=1|cat=syncopic forms}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 139 Template:synonym of: Processing
+Page 139 Template:synonym of: Found match for regex: .
+Page 139 Template:synonym of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|synonym of|withcap=1}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 000 Template:t-prothesis of: Processing
+Page 000 Template:t-prothesis of: Found match for regex: .
+Page 000 Template:t-prothesis of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|[[t-prothesis|t-prothesized]] form of|cat=t-prothesized forms}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 140 Template:uncommon form of: Processing
+Page 140 Template:uncommon form of: Found match for regex: .
+Page 140 Template:uncommon form of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|uncommon form of|cat=uncommon forms|withcap=1|withdot=1}}<!--
+
+--><noinclude>{{documentation}}[[Category:Form-of templates]]</noinclude>
+-------- end text --------
+Page 141 Template:uncommon spelling of: Processing
+Page 141 Template:uncommon spelling of: Found match for regex: .
+Page 141 Template:uncommon spelling of: -------- begin text ---------
+{{#invoke:form of/templates|form_of_t|uncommon spelling of|cat=uncommon forms|withcap=1|withdot=1}}<!--
+
+--><noinclude>{{documentation}}[[Category:Form-of templates]]</noinclude>
+-------- end text --------
+Page 142 Template:verbal noun of: Processing
+Page 142 Template:verbal noun of: Found match for regex: .
+Page 142 Template:verbal noun of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|vnoun}}<!--
+
+Internally we categorize into "LANG verbal nouns".
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 143 Template:vocative plural of: Processing
+Page 143 Template:vocative plural of: Found match for regex: .
+Page 143 Template:vocative plural of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|voc|p}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
+Page 144 Template:vocative singular of: Processing
+Page 144 Template:vocative singular of: Found match for regex: .
+Page 144 Template:vocative singular of: -------- begin text ---------
+{{#invoke:form of/templates|tagged_form_of_t|voc|s}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+-------- end text --------
