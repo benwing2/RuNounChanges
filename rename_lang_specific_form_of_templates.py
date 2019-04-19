@@ -84,8 +84,6 @@ templates_to_actually_do = [
   "sh-form-proper-noun",
   "sh-verb form of",
   "sh-form-verb",
-  "sh-verb-form of",
-  "sh-verb-form-of",
   "sl-form-adj",
   "sl-form-noun",
   "sl-form-verb",
@@ -307,8 +305,6 @@ templates_by_cap_and_period = [
   # in the template, e.g.:
   # Page 10 neću: WARNING: Found form-of template with pre-text: # ''negative'' {{sh-form-verb|1s|pres|hteti}}
   ("sh-form-verb", "ignoreddot", "verified"),
-  ("sh-verb-form of", "ignoreddot", "verified"),
-  ("sh-verb-form-of", "ignoreddot", "verified"),
   ("sl-form-adj", "lcnodot", False),
   ("sl-form-noun", "ignoreddot", "verified"),
   ("sl-form-verb", "ignoreddot", "verified"),
@@ -391,7 +387,6 @@ templates_by_cap_and_period = [
   ("tl-verb form of", "ignoreducdot", "verified"),
   ("tr-inflection of", "lcnodot", False),
   ("ur-form-adj", "ignoreddot", "verified"),
-  ("ur-form-adj-verb", "ignoreddot", "verified"),
   ("ur-form-noun", "ignoreddot", "verified"),
   ("ur-form-verb", "ignoreddot", "verified"),
 ]
@@ -3304,11 +3299,9 @@ sv_specs = [
   ("sv-adj-form-abs-indef-n", sv_adj_form(["indef", "n"])),
   ("sv-adj-form-abs-pl", sv_adj_form(["p"])),
   ("sv-adj-form-comp", sv_adj_form(["comd"])),
-  ("sv-adj-form-comp-pl", sv_adj_form(["comd", "p"])),
   ("sv-adj-form-sup-attr", sv_adj_form(["sup", "attr"])),
   ("sv-adj-form-sup-attr-m", sv_adj_form(["sup", "attr", "s", "m"])),
   ("sv-adj-form-sup-pred", sv_adj_form(["sup", "pred"])),
-  ("sv-adj-form-sup-pred-pl", sv_adj_form(["sup", "pred", "p"])),
   ("sv-adv-form-comp", (
     "comparative of",
     ("error-if", ("present-except", ["1"])),

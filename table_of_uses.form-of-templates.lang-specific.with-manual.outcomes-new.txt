@@ -557,15 +557,11 @@
 |-
 | '''[[Template:sv-adj-form-comp]]''' || '''[[Template:sv-adj-form-comp]]''' || 724 || Yes || No || Yes || Replace
 |-
-| '''[[Template:sv-adj-form-comp-pl]]''' || '''[[Template:sv-adj-form-comp-pl]]''' || 1 || Yes || No || No || Replace
-|-
 | '''[[Template:sv-adj-form-sup-attr]]''' || '''[[Template:sv-adj-form-sup-attr]]''' || 486 || Yes || No || Yes || Replace
 |-
 | '''[[Template:sv-adj-form-sup-attr-m]]''' || '''[[Template:sv-adj-form-sup-attr-m]]''' || 14 || Yes || No || Yes || Replace
 |-
 | '''[[Template:sv-adj-form-sup-pred]]''' || '''[[Template:sv-adj-form-sup-pred]]''' || 509 || Yes || No || Yes || Replace
-|-
-| '''[[Template:sv-adj-form-sup-pred-pl]]''' || '''[[Template:sv-adj-form-sup-pred-pl]]''' || 1 || Yes || No || No || Replace
 |-
 | '''[[Template:sv-adv-form-comp]]''' || '''[[Template:sv-adv-form-comp]]''' || 11 || Yes || No || Yes || Replace
 |-
