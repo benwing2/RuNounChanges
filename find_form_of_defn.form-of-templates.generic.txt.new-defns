@@ -144,10 +144,9 @@ Page 20 Template:attributive form of: -------- begin text ---------
 Page 21 Template:augmentative of: Processing
 Page 21 Template:augmentative of: Found match for regex: .
 Page 21 Template:augmentative of: -------- begin text ---------
-{{#invoke:form of/templates|tagged_form_of_t|aug|withcap=1|def=p=n}}<!--
+{{#invoke:form of/templates|tagged_form_of_t|aug|withcap=1}}<!--
 
-We specify a default of p=n because internally we categorize into
-"LANG augmentative <<p>>s".
+Internally we categorize into "LANG augmentative <<p=n>>s".
 
 --><noinclude>{{documentation}}</noinclude>
 -------- end text --------
@@ -161,10 +160,9 @@ Page 22 Template:broad form of: -------- begin text ---------
 Page 23 Template:causative of: Processing
 Page 23 Template:causative of: Found match for regex: .
 Page 23 Template:causative of: -------- begin text ---------
-{{#invoke:form of/templates|tagged_form_of_t|caus|def=p=v}}<!--
+{{#invoke:form of/templates|tagged_form_of_t|caus}}<!--
 
-We specify a default of p=v because internally we categorize into
-"LANG causative <<p>>s".
+Internally we categorize into "LANG causative <<p=v>>s".
 
 --><noinclude>{{documentation}}</noinclude>
 -------- end text --------
@@ -185,10 +183,9 @@ Page 25 Template:combining form of: -------- begin text ---------
 Page 26 Template:comparative of: Processing
 Page 26 Template:comparative of: Found match for regex: .
 Page 26 Template:comparative of: -------- begin text ---------
-{{#invoke:form of/templates|tagged_form_of_t|comd|def=p=a}}<!--
+{{#invoke:form of/templates|tagged_form_of_t|comd}}<!--
 
-We specify a default of p=a because internally we categorize into
-"LANG comparative <<p>>s".
+Internally we categorize into "LANG comparative <<p=a>>s".
 
 --><includeonly><!--
 -->{{#if:{{{nocat|}}}|[[Category:comparative of/nocat]]|[[Category:comparative 
@@ -264,20 +261,16 @@ Page 34 Template:deliberate misspelling of: -------- begin text ---------
 Page 000 Template:diminutive of: Processing
 Page 000 Template:diminutive of: Found match for regex: .
 Page 000 Template:diminutive of: -------- begin text ---------
-{{#invoke:form of/templates|tagged_form_of_t|dim|def=p=n}}<!--
+{{#invoke:form of/templates|tagged_form_of_t|dim}}<!--
 
-We specify a default of p=n because internally we categorize into
-"LANG diminutive <<p>>s".
+Internally we categorize into "LANG diminutive <<p=n>>s".
 
 --><noinclude>{{documentation}}</noinclude>
 -------- end text --------
 Page 000 Template:diminutive plural of: Processing
 Page 000 Template:diminutive plural of: Found match for regex: .
 Page 000 Template:diminutive plural of: -------- begin text ---------
-{{#invoke:form of/templates|tagged_form_of_t|dim|p|def=p=n}}<!--
-
-We specify a default of p=n because internally we might categorize
-(used to categorize at least) into "LANG diminutive <<p>>s".
+{{#invoke:form of/templates|tagged_form_of_t|dim|p}}<!--
 
 --><noinclude>{{documentation}}</noinclude>
 -------- end text --------
@@ -326,20 +319,18 @@ Page 40 Template:elongated form of: -------- begin text ---------
 Page 000 Template:endearing form of: Processing
 Page 000 Template:endearing form of: Found match for regex: .
 Page 000 Template:endearing form of: -------- begin text ---------
-{{#invoke:form of/templates|tagged_form_of_t|end|form|def=p=n}}<!--
+{{#invoke:form of/templates|tagged_form_of_t|end|form}}<!--
 
-We specify a default of p=n because internally we categorize into
-"LANG endearing <<p>>s".
+Internally we categorize into "LANG endearing <<p=n>>s".
 
 --><noinclude>{{documentation}}</noinclude>
 -------- end text --------
 Page 41 Template:equative of: Processing
 Page 41 Template:equative of: Found match for regex: .
 Page 41 Template:equative of: -------- begin text ---------
-{{#invoke:form of/templates|tagged_form_of_t|equd|def=p=a}}<!--
+{{#invoke:form of/templates|tagged_form_of_t|equd}}<!--
 
-We specify a default of p=a because internally we categorize into
-"LANG <<p>> equative forms".
+Internally we categorize into "LANG <<p=a>> equative forms".
 
 --><includeonly><!--
 -->{{#ifeq:{{#if:{{{lang|}}}|{{{lang}}}|{{{1|}}}}}|en|[[Category:Equative of lang=en]]}}<!--
@@ -444,10 +435,9 @@ Page 51 Template:former name of: -------- begin text ---------
 Page 52 Template:frequentative of: Processing
 Page 52 Template:frequentative of: Found match for regex: .
 Page 52 Template:frequentative of: -------- begin text ---------
-{{#invoke:form of/templates|tagged_form_of_t|freq|def=p=v}}<!--
+{{#invoke:form of/templates|tagged_form_of_t|freq}}<!--
 
-We specify a default of p=v because internally we categorize into
-"LANG frequentative <<p>>s".
+Internally we categorize into "LANG frequentative <<p=v>>s".
 
 --><noinclude>{{documentation}}</noinclude>
 -------- end text --------
@@ -554,10 +544,9 @@ Page 65 Template:imperative of: -------- begin text ---------
 Page 66 Template:imperfective form of: Processing
 Page 66 Template:imperfective form of: Found match for regex: .
 Page 66 Template:imperfective form of: -------- begin text ---------
-{{#invoke:form of/templates|tagged_form_of_t|impfv|form|def=p=v}}<!--
+{{#invoke:form of/templates|tagged_form_of_t|impfv|form}}<!--
 
-We specify a default of p=v because internally we categorize into
-"LANG imperfective <<p>>s".
+Internally we categorize into "LANG imperfective <<p=v>>s".
 
 --><noinclude>{{documentation}}</noinclude>
 -------- end text --------
@@ -599,10 +588,9 @@ Page 71 Template:initialism of: -------- begin text ---------
 Page 72 Template:iterative of: Processing
 Page 72 Template:iterative of: Found match for regex: .
 Page 72 Template:iterative of: -------- begin text ---------
-{{#invoke:form of/templates|tagged_form_of_t|iter|def=p=v}}<!--
+{{#invoke:form of/templates|tagged_form_of_t|iter}}<!--
 
-We specify a default of p=v because internally we categorize into
-"LANG iterative <<p>>s".
+Internally we categorize into "LANG iterative <<p=v>>s".
 
 --><noinclude>{{documentation}}</noinclude>
 -------- end text --------
@@ -807,10 +795,9 @@ Page 100 Template:participle of: -------- begin text ---------
 Page 101 Template:passive of: Processing
 Page 101 Template:passive of: Found match for regex: .
 Page 101 Template:passive of: -------- begin text ---------
-{{#invoke:form of/templates|tagged_form_of_t|pass|def=p=v}}<!--
+{{#invoke:form of/templates|tagged_form_of_t|pass}}<!--
 
-We specify a default of p=v because internally we categorize into
-"LANG <<p>> passive forms".
+Internally we categorize into "LANG <<p=v>> passive forms".
 
 --><noinclude>{{documentation}}</noinclude>
 -------- end text --------
@@ -890,10 +877,9 @@ Internally we categorize into "LANG perfect participles".
 Page 111 Template:perfective form of: Processing
 Page 111 Template:perfective form of: Found match for regex: .
 Page 111 Template:perfective form of: -------- begin text ---------
-{{#invoke:form of/templates|tagged_form_of_t|pfv|form|def=p=v}}<!--
+{{#invoke:form of/templates|tagged_form_of_t|pfv|form}}<!--
 
-We specify a default of p=v because internally we categorize into
-"LANG perfective <<p>>s".
+Internally we categorize into "LANG perfective <<p=v>>s".
 
 --><noinclude>{{documentation}}</noinclude>
 -------- end text --------
@@ -1012,10 +998,9 @@ Page 119 Template:rare spelling of: -------- begin text ---------
 Page 120 Template:reflexive of: Processing
 Page 120 Template:reflexive of: Found match for regex: .
 Page 120 Template:reflexive of: -------- begin text ---------
-{{#invoke:form of/templates|tagged_form_of_t|refl|def=p=v}}<!--
+{{#invoke:form of/templates|tagged_form_of_t|refl}}<!--
 
-We specify a default of p=v because internally we categorize into
-"LANG reflexive <<p>>s".
+Internally we categorize into "LANG reflexive <<p=v>>s".
 
 --><noinclude>{{documentation}}</noinclude>
 -------- end text --------
@@ -1104,10 +1089,9 @@ Page 133 Template:superlative attributive of: -------- begin text ---------
 Page 134 Template:superlative of: Processing
 Page 134 Template:superlative of: Found match for regex: .
 Page 134 Template:superlative of: -------- begin text ---------
-{{#invoke:form of/templates|tagged_form_of_t|supd|def=p=a}}<!--
+{{#invoke:form of/templates|tagged_form_of_t|supd}}<!--
 
-We specify a default of p=a because internally we categorize into
-"LANG superlative <<p>>s".
+Internally we categorize into "LANG superlative <<p=a>>s".
 
 --><includeonly><!--
 -->{{#if:{{{nocat|}}}|[[Category:superlative of/nocat]]|[[Category:superlative of/without nocat]]}}<!--
