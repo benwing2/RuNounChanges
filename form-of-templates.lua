@@ -384,23 +384,24 @@ function export.form_of_t(frame)
 		params["nocat"] = {type = "boolean"}
 	end
 
+	local ignored_params = {}
+
 	if iargs["withdot"] then
 		params["dot"] = {}
+	else
+		ignored_params["nodot"] = true
 	end
 
-	local ignored_params = {}
 	if not iargs["withcap"] then
+		params["cap"] = {type = "boolean"}
 		ignored_params["nocap"] = true
-	end
-	if not iargs["withdot"] then
-		ignored_params["nodot"] = true
 	end
 
 	local args = process_parent_args("form-of-t", parent_args, params, iargs["def"],
 		iargs["ignore"], ignored_params)
 	
 	local text = args["notext"] and "" or iargs[1]
-	if iargs["withcap"] and not args["nocap"] then
+	if args["cap"] or iargs["withcap"] and not args["nocap"] then
 		text = m_form_of.ucfirst(text)
 	end
 
@@ -428,7 +429,7 @@ local function construct_tagged_form_of_text(iargs, args, term_param, compat, ta
 				args["nocat"] and {} or m_form_of.fetch_lang_categories(lang, tags, terminfo, args["p"])
 			return m_form_of.tagged_inflections(
 				tags, terminfo, args["notext"],
-				iargs["withcap"] and not args["nocap"], iargs["posttext"]
+				args["cap"] or iargs["withcap"] and not args["nocap"], iargs["posttext"]
 			), lang_cats
 		end
 	)
@@ -521,16 +522,17 @@ function export.tagged_form_of_t(frame)
 		add_link_params(params, term_param)
 	end
 
+	local ignored_params = {}
+
 	if iargs["withdot"] then
 		params["dot"] = {}
+	else
+		ignored_params["nodot"] = true
 	end
 
-	local ignored_params = {}
 	if not iargs["withcap"] then
+		params["cap"] = {type = "boolean"}
 		ignored_params["nocap"] = true
-	end
-	if not iargs["withdot"] then
-		ignored_params["nodot"] = true
 	end
 
 	local args = process_parent_args("tagged-form-of-t", parent_args,
@@ -637,11 +639,16 @@ function export.inflection_of_t(frame)
 	end
 
 	local ignored_params = {}
-	if not iargs["withcap"] then
-		ignored_params["nocap"] = true
-	end
-	if not iargs["withdot"] then
+
+	if iargs["withdot"] then
+		params["dot"] = {}
+	else
 		ignored_params["nodot"] = true
+	end
+
+	if not iargs["withcap"] then
+		params["cap"] = {type = "boolean"}
+		ignored_params["nocap"] = true
 	end
 
 	local args = process_parent_args("inflection-of-t", parent_args,
