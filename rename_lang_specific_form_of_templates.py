@@ -135,7 +135,30 @@ templates_by_cap_and_period = [
   # The following instances need to be fixed up:
   # Page 1091 abarbeitet: WARNING: Found form-of template with post-text: # {{de-verb form of|abarbeiten|3|s|g}} Used in side clauses where usually separable prefixes do not separate
   # Page 8835 geschmolzen: WARNING: Found form-of template with post-text: # {{de-verb form of|schmelzen|pp}} - [[melted]]
-  ("de-verb form of", "ucdot", False), # First 3000 verified
+  # Page 36459 frägst: WARNING: Found form-of template with pre-text: # ({{de-verb form of|fragen|2|s|g}}
+  # Page 41308 wend ab: WARNING: Found form-of template with post-text: # {{de-verb form of|abwenden|3|p|v}}# {{de-verb form of|abwenden|2|p|v}}# {{de-verb form of|abwenden|i|s}}
+  # Page 41318 wandtest an: WARNING: Found form-of template with pre-text: # {{de-verb form of|anwenden|3|s|v}}# {{de-verb form of|anwenden|2|s|v}}
+  # Page 41320 wandtet an: WARNING: Found form-of template with pre-text: # {{de-verb form of|anwenden|3|p|v}}# {{de-verb form of|anwenden|2|p|v}}
+  # Page 41321 wend an: WARNING: Found form-of template with post-text: # {{de-verb form of|anwenden|3|p|v}}# {{de-verb form of|anwenden|2|p|v}}# {{de-verb form of|anwenden|i|s}}
+  # Page 41331 wandtest auf: WARNING: Found form-of template with post-text: # {{de-verb form of|aufwenden|3|s|v}}# {{de-verb form of|aufwenden|2|s|v}}
+  # Page 41333 wandtet auf: WARNING: Found form-of template with post-text: # {{de-verb form of|aufwenden|3|p|v}}# {{de-verb form of|aufwenden|2|p|v}}
+  # Page 41334 wend auf: WARNING: Found form-of template with post-text: # {{de-verb form of|aufwenden|3|p|v}}# {{de-verb form of|aufwenden|2|p|v}}# {{de-verb form of|aufwenden|i|s}}
+  # Page 41344 wandtest ein: WARNING: Found form-of template with post-text: # {{de-verb form of|einwenden|3|s|v}}# {{de-verb form of|einwenden|2|s|v}}
+  # Page 41346 wandtet ein: WARNING: Found form-of template with post-text: # {{de-verb form of|einwenden|3|p|v}}# {{de-verb form of|einwenden|2|p|v}}
+  # Page 41347 wend ein: WARNING: Found form-of template with post-text: # {{de-verb form of|einwenden|3|p|v}}# {{de-verb form of|einwenden|2|p|v}}# {{de-verb form of|einwenden|i|s}}
+  # Page 41357 wandtest zurück: WARNING: Found form-of template with post-text: # {{de-verb form of|zurückwenden|3|s|v}}# {{de-verb form of|zurückwenden|2|s|v}}
+  # Page 41359 wandtet zurück: WARNING: Found form-of template with post-text: # {{de-verb form of|zurückwenden|3|p|v}}# {{de-verb form of|zurückwenden|2|p|v}}
+  # Page 41360 wend zurück: WARNING: Found form-of template with post-text: # {{de-verb form of|zurückwenden|3|p|v}}# {{de-verb form of|zurückwenden|2|p|v}}# {{de-verb form of|zurückwenden|i|s}}
+  # Page 46685 biß: WARNING: Found form-of template with post-text: # {{de-verb form of|beißen|1|s|v}} {{de-superseded spelling of|biss|used=pre-1996}}
+  # Page 46685 biß: WARNING: Found form-of template with post-text: # {{de-verb form of|beißen|3|s|v}} {{de-superseded spelling of|biss|used=pre-1996}}
+  # Page 53520 solst: WARNING: Found form-of template with post-text: # {{de-verb form of|sollen|2|s|g|nodot=1}} {{obsolete form of|sollst|lang=de}} {{defdate|at least since the second half of the 18th century}}
+  # Page 54327 wandtest um: WARNING: Found form-of template with post-text: # {{de-verb form of|umwenden|3|s|v}}# {{de-verb form of|umwenden|2|s|v}}
+  # Page 54329 wandtet um: WARNING: Found form-of template with post-text: # {{de-verb form of|umwenden|3|p|v}}# {{de-verb form of|umwenden|2|p|v}}
+  # Page 54330 wend um: WARNING: Found form-of template with post-text: # {{de-verb form of|umwenden|3|p|v}}# {{de-verb form of|umwenden|2|p|v}}# {{de-verb form of|umwenden|i|s}}
+  # Page 54340 wandtest zu: WARNING: Found form-of template with post-text: # {{de-verb form of|zuwenden|3|s|v}}# {{de-verb form of|zuwenden|2|s|v}}
+  # Page 54342 wandtet zu: WARNING: Found form-of template with post-text: # {{de-verb form of|zuwenden|3|p|v}}# {{de-verb form of|zuwenden|2|p|v}}
+  # Page 54343 wend zu: WARNING: Found form-of template with post-text: # {{de-verb form of|zuwenden|3|p|v}}# {{de-verb form of|zuwenden|2|p|v}}# {{de-verb form of|zuwenden|i|s}}
+  ("de-verb form of", "ignoreucdot", "verified"), # All 54,762 verified
   ("el-form-of-adv", "ignoreduc", "verified"),
   # The following instances need to be fixed up:
   # (all instances with a final period, which needs to be removed)
@@ -144,7 +167,99 @@ templates_by_cap_and_period = [
   # Page 109 αδελφών: WARNING: Found form-of template with post-text: # {{el-form-of-nounadj|αδελφή|c=gen|n=p}} {{g|f}}
   # Page 968 αγγουριών: WARNING: Found form-of template with pre-text and post-text: # {{qualifier|neuter}} {{el-form-of-nounadj|αγγούρι|c=gen|n=p|nodot=1}} [[cucumber]].
   # Page 968 αγγουριών: WARNING: Found form-of template with pre-text and post-text: # {{qualifier|feminine}} {{el-form-of-nounadj|αγγουριά|c=gen|n=p|nodot=1}} [[cucumber]] [[plant]].
-  ("el-form-of-nounadj", "ignoreducdot", "verified"),
+  # Page 4120 μετρητών: WARNING: Found form-of template with pre-text and post-text: # {{qf|neuter}} {{el-form-of-nounadj|μετρητά|c=gen|n=p|nodot=1}} [[cash]]
+  # Page 4120 μετρητών: WARNING: Found form-of template with pre-text and post-text: # {{qf|masculine}} {{el-form-of-nounadj|μετρητής|c=gen|n=p|nodot=1}} [[meter]]
+  # Page 5363 σαρκοφάγου: WARNING: Found form-of template with post-text: # {{el-form-of-nounadj|σαρκοφάγος|c=gen|n=s|nodot=1}} {{sense|feminine}} [[sarcophagus]]
+  # Page 5363 σαρκοφάγου: WARNING: Found form-of template with post-text: # {{el-form-of-nounadj|σαρκοφάγος|c=gen|n=s|nodot=1}} {{sense|common gender}} [[carnivore]]
+  # Page 5363 σαρκοφάγου: WARNING: Found form-of template with post-text: # {{el-form-of-nounadj|σαρκοφάγος|c=gen|n=s|nodot=1}} {{sense|feminine}} [[sarcophagus]]
+  # Page 5363 σαρκοφάγου: WARNING: Found form-of template with post-text: # {{el-form-of-nounadj|σαρκοφάγος|c=gen|n=s|nodot=1}} {{sense|common gender}} [[carnivore]]
+  # Page 5364 σαρκοφάγων: WARNING: Found form-of template with post-text: # {{el-form-of-nounadj|σαρκοφάγος|c=gen|n=p|nodot=1}} {{sense|feminine}} [[sarcophagus]]
+  # Page 5364 σαρκοφάγων: WARNING: Found form-of template with post-text: # {{el-form-of-nounadj|σαρκοφάγος|c=gen|n=p|nodot=1}} {{sense|common gender}} [[carnivore]]
+  # Page 5364 σαρκοφάγων: WARNING: Found form-of template with post-text: # {{el-form-of-nounadj|σαρκοφάγος|c=gen|n=p|nodot=1}} {{sense|feminine}} [[sarcophagus]]
+  # Page 5364 σαρκοφάγων: WARNING: Found form-of template with post-text: # {{el-form-of-nounadj|σαρκοφάγος|c=gen|n=p|nodot=1}} {{sense|common gender}} [[carnivore]]
+  # Page 5365 σαρκοφάγοι: WARNING: Found form-of template with post-text: # {{el-form-of-nounadj|σαρκοφάγος|c=nom|n=p|nodot=1}} {{sense|feminine}} [[sarcophagus]]
+  # Page 5365 σαρκοφάγοι: WARNING: Found form-of template with post-text: # {{el-form-of-nounadj|σαρκοφάγος|c=nom|n=p|nodot=1}} {{sense|common gender}} [[carnivore]]
+  # Page 5365 σαρκοφάγοι: WARNING: Found form-of template with post-text: # {{el-form-of-nounadj|σαρκοφάγος|c=voc|n=p|nodot=1}} {{sense|feminine}} [[sarcophagus]]
+  # Page 5365 σαρκοφάγοι: WARNING: Found form-of template with post-text: # {{el-form-of-nounadj|σαρκοφάγος|c=voc|n=p|nodot=1}} {{sense|common gender}} [[carnivore]]
+  # Page 5365 σαρκοφάγοι: WARNING: Found form-of template with post-text: # {{el-form-of-nounadj|σαρκοφάγος|c=nom|n=p|nodot=1}} {{sense|feminine}} [[sarcophagus]]
+  # Page 5365 σαρκοφάγοι: WARNING: Found form-of template with post-text: # {{el-form-of-nounadj|σαρκοφάγος|c=nom|n=p|nodot=1}} {{sense|common gender}} [[carnivore]]
+  # Page 5365 σαρκοφάγοι: WARNING: Found form-of template with post-text: # {{el-form-of-nounadj|σαρκοφάγος|c=voc|n=p|nodot=1}} {{sense|feminine}} [[sarcophagus]]
+  # Page 5365 σαρκοφάγοι: WARNING: Found form-of template with post-text: # {{el-form-of-nounadj|σαρκοφάγος|c=voc|n=p|nodot=1}} {{sense|common gender}} [[carnivore]]
+  # Page 5366 σαρκοφάγους: WARNING: Found form-of template with post-text: # {{el-form-of-nounadj|σαρκοφάγος|c=acc|n=p|nodot=1}} {{sense|feminine}} [[sarcophagus]]
+  # Page 5366 σαρκοφάγους: WARNING: Found form-of template with post-text: # {{el-form-of-nounadj|σαρκοφάγος|c=acc|n=p|nodot=1}} {{sense|common gender}} [[carnivore]]
+  # Page 5366 σαρκοφάγους: WARNING: Found form-of template with post-text: # {{el-form-of-nounadj|σαρκοφάγος|c=acc|n=p|nodot=1}} {{sense|feminine}} [[sarcophagus]]
+  # Page 5366 σαρκοφάγους: WARNING: Found form-of template with post-text: # {{el-form-of-nounadj|σαρκοφάγος|c=acc|n=p|nodot=1}} {{sense|common gender}} [[carnivore]]
+  # Page 5367 σαρκοφάγο: WARNING: Found form-of template with post-text: # {{el-form-of-nounadj|σαρκοφάγος|c=acc|n=s|nodot=1}} {{sense|feminine}} [[sarcophagus]]
+  # Page 5367 σαρκοφάγο: WARNING: Found form-of template with post-text: # {{el-form-of-nounadj|σαρκοφάγος|c=acc|n=s|nodot=1}} {{sense|common gender}} [[carnivore]]
+  # Page 5367 σαρκοφάγο: WARNING: Found form-of template with post-text: # {{el-form-of-nounadj|σαρκοφάγος|c=acc|n=s|nodot=1}} {{sense|feminine}} [[sarcophagus]]
+  # Page 5367 σαρκοφάγο: WARNING: Found form-of template with post-text: # {{el-form-of-nounadj|σαρκοφάγος|c=acc|n=s|nodot=1}} {{sense|common gender}} [[carnivore]]
+  # Page 5368 σαρκοφάγε: WARNING: Found form-of template with post-text: # {{el-form-of-nounadj|σαρκοφάγος|c=voc|n=s|nodot=1}} {{sense|feminine}} [[sarcophagus]]
+  # Page 5368 σαρκοφάγε: WARNING: Found form-of template with post-text: # {{el-form-of-nounadj|σαρκοφάγος|c=voc|n=s|nodot=1}} {{sense|common gender}} [[carnivore]]
+  # Page 5368 σαρκοφάγε: WARNING: Found form-of template with post-text: # {{el-form-of-nounadj|σαρκοφάγος|c=voc|n=s|nodot=1}} {{sense|feminine}} [[sarcophagus]]
+  # Page 5368 σαρκοφάγε: WARNING: Found form-of template with post-text: # {{el-form-of-nounadj|σαρκοφάγος|c=voc|n=s|nodot=1}} {{sense|common gender}} [[carnivore]]
+  # Page 5585 πατατάκια: WARNING: Found form-of template with post-text: # {{el-form-of-nounadj|πατατάκι|c=nom|n=p|nodot=1}}, [[potato]] [[crisps]]{{qualifier|UK}}, [[potato]] [[chips]] {{qualifier|US}}.
+  # Page 11518 άγια: WARNING: Found form-of template not on definition line: * {{el-form-of-nounadj|άγιο|n=p|c=nav}}
+  # Page 12237 πεζά γράμματα: WARNING: Found form-of template with post-text: # {{el-form-of-nounadj|πεζό γράμμα|n=p|nodot=1}} [[small]] or [[lowercase]] [[letters]]
+  # Page 12238 μικρά γράμματα: WARNING: Found form-of template with post-text: # {{el-form-of-nounadj|μικρό γράμμα|n=p|nodot=1}} [[small]] or [[lowercase]] [[letters]]
+  # Page 12239 κεφαλαία γράμματα: WARNING: Found form-of template with post-text: # {{el-form-of-nounadj|κεφαλαίο γράμμα|n=p|nodot=1}} [[capital]] or [[uppercase]] [[letters]]
+  # Page 12674 φφ.: WARNING: Found form-of template with post-text: # {{el-form-of-nounadj|φ.|n=p|nodot=1}} [[pages]], [[sheets]]
+  # Page 13173 αγίας: WARNING: Found form-of template not on definition line: * {{el-form-of-nounadj|άγιος|g=f|n=s|c=g}}
+  # Page 13173 αγίας: WARNING: Found form-of template not on definition line: * {{el-form-of-nounadj|αγία|n=s|c=g}}
+  # Page 13660 αγυιοπαίδου: WARNING: Found form-of template with pre-text: # {{q|masculine}} {{misconstruction of|lang=el|αγυιόπαιδος}} {{el-form-of-nounadj|αγυιόπαις|n=s|c=g}}
+  # Page 13660 αγυιοπαίδου: WARNING: Found form-of template with pre-text: # {{q|neuter}} {{misconstruction of|lang=el|αγυιόπαιδου}} {{el-form-of-nounadj|αγυιόπαιδο|n=s|c=g}}
+  # Page 16175 Ἀθήναις: WARNING: Found form-of template with post-text: # {{lb|el|Katharevousa}} {{el-form-of-nounadj|Αθήναι|c=dat|n=p}} {{el-polytonic form of|nocap=1|Αθήναις}}
+  # Page 16624 γενικότερα: WARNING: Found form-of template not on definition line: {{el-form-of-nounadj|γενικός|d=c|c=nav|g=n|n=p}}
+  # Page 17497 ἀρετῆς: WARNING: Found form-of template with pre-text: # {{el-polytonic form of|αρετή}} {{el-form-of-nounadj|ἀρετή|n=s|c=g}}
+  # Page 18220 άγιες: WARNING: Found form-of template not on definition line: * {{el-form-of-nounadj|αγία|n=p|c=nav}}
+  # Page 22393 γάϊδαρε: WARNING: Found form-of template with pre-text: # {{misspelling of|γάιδαρε|lang=el}} {{el-form-of-nounadj|γάιδαρος|c=voc|n=s}}
+  # Page 22394 γάϊδαρο: WARNING: Found form-of template with pre-text: # {{misspelling of|γάιδαρο|lang=el}} {{el-form-of-nounadj|γάιδαρος|c=acc|n=s}}
+  # Page 22395 γάϊδαροι: WARNING: Found form-of template with pre-text: # {{misspelling of|γάιδαροι|lang=el}} {{el-form-of-nounadj|γάιδαρος|c=nv|n=p}}
+  # Page 24219 ακουομέτρου: WARNING: Found form-of template with pre-text: # {{misconstruction of|lang=el|ακοομέτρου}} {{el-form-of-nounadj|ακοόμετρο|n=s|c=g}}
+  # Page 24220 ακουομέτρων: WARNING: Found form-of template with pre-text: # {{misconstruction of|lang=el|ακοομέτρων}}  {{el-form-of-nounadj|ακοόμετρο|n=p|c=g}}
+  # Page 24221 ακουόμετρα: WARNING: Found form-of template with pre-text: # {{misconstruction of|lang=el|ακοόμετρα}}  {{el-form-of-nounadj|ακοόμετρο|c=nav|n=p}}
+  # Page 24222 ακουογραμμάτων: WARNING: Found form-of template with pre-text: # {{misconstruction of|lang=el|ακοογραμμάτων}}  {{el-form-of-nounadj|ακοόγραμμα|c=gen|n=p}}
+  # Page 24223 ακουογράμματα: WARNING: Found form-of template with pre-text: # {{misconstruction of|lang=el|ακοογράμματα}}  {{el-form-of-nounadj|ακοόγραμμα|c=nav|n=p}}
+  # Page 24224 ακουογράμματος: WARNING: Found form-of template with pre-text: # {{misconstruction of|lang=el|ακοογράμματος}} {{el-form-of-nounadj|ακοόγραμμα|c=gen|n=s}}
+  # Page 24225 ακουομέτρησης: WARNING: Found form-of template with pre-text: # {{misconstruction of|lang=el|ακοομέτρησης}} {{el-form-of-nounadj|ακοομέτρηση|c=gen|n=s}}
+  # Page 24227 ακουομετρήσεως: WARNING: Found form-of template with pre-text: # {{misconstruction of|lang=el|ακοομετρήσεως}} {{el-form-of-nounadj|ακοομέτρηση|c=gen|n=s}}
+  # Page 24229 ακουομετρήσεων: WARNING: Found form-of template with pre-text: # {{misconstruction of|lang=el|ακοομετρήσεων}} {{el-form-of-nounadj|ακοομέτρηση|c=gen|n=p}}
+  # Page 24231 ακουομετρήσεις: WARNING: Found form-of template with pre-text: # {{misconstruction of|lang=el|ακοομετρήσεις}} {{el-form-of-nounadj|ακοομέτρηση|c=nav|n=p}}
+  # Page 24236 ακουομετρών: WARNING: Found form-of template with pre-text: # {{misconstruction of|lang=el|ακοομετρών}}  {{el-form-of-nounadj|ακοομέτρης|c=gen|n=p}}
+  # Page 24237 ακουομέτρες: WARNING: Found form-of template with pre-text: # {{misconstruction of|lang=el|ακοομέτρες}} {{el-form-of-nounadj|ακοομέτρης|c=nav|n=p}}
+  # Page 24238 ακουομέτρη: WARNING: Found form-of template with pre-text: # {{misconstruction of|lang=el|ακοομέτρη}} {{el-form-of-nounadj|ακοομέτρης|c=gav|n=s}}
+  # Page 24239 ακουομετρίας: WARNING: Found form-of template with pre-text: # {{misconstruction of|lang=el|ακοομετρίας}} {{el-form-of-nounadj|ακοομετρία|c=gen|n=s}}
+  # Page 25215 ζα: WARNING: Found form-of template with post-text: # {{lb|el|vernacular}} {{el-form-of-nounadj|ζώο|c=nom|n=p}} {{alternative form of|ζώα||lang=el}} {{qualifier|[[animal]]s}}
+  # Page 27176 ους: WARNING: Found form-of template with pre-text: # {{q|monotonic spelling of}} {{m|grc|οὕς|t=them}} {{el-form-of-nounadj|ὅς|g=m|c=acc|n=p}}
+  # Page 27822 ηγουμένες: WARNING: Found form-of template with pre-text: # {{form of|Incorrectly accented form|ηγούμενες|lang=el}}: {{el-form-of-nounadj|ηγουμένη|n=p|c=nav}}
+  # Page 28418 τούτοις: WARNING: Found form-of template with pre-text: # {{q|learned, dated, [[Katharevousa]]}} ''[[dative]]''{{el-form-of-nounadj|τούτος|g=mn|c=d|n=s}}
+  # Page 28683 ηλικιωμένη: WARNING: Found form-of template not on definition line: * {{el-form-of-nounadj|ηλικιωμένος|g=f|n=s|c=nav}}
+  # Page 29501 μπουγάζι: WARNING: Found form-of template not on definition line: : {{el-form-of-nounadj|μπουγάζι|n=s|c=nav}}
+  # Page 29629 ευσεβέστατα: WARNING: Found form-of template with post-text: # {{el-form-of-nounadj|ευσεβής|d=as|g=n|n=p|c=nav}} ''Of adjective'' [[ευσεβής]]
+  # Page 29633 Αγία: WARNING: Found form-of template not on definition line: * {{el-form-of-nounadj|Άγιος|g=f|n=s|c=nav}}
+  # Page 29634 Άγιο: WARNING: Found form-of template not on definition line: * {{el-form-of-nounadj|Άγιος|g=n|n=s|c=nav}}
+  # Page 29635 Αγίου: WARNING: Found form-of template not on definition line: * {{el-form-of-nounadj|Άγιος|g=mn|n=s|c=g}}
+  # Page 29636 Άγιε: WARNING: Found form-of template not on definition line: * {{el-form-of-nounadj|Άγιος|g=m|n=s|c=v}}
+  # Page 29637 Αγίας: WARNING: Found form-of template not on definition line: * {{el-form-of-nounadj|Άγιος|g=f|n=s|c=g}}
+  # Page 29638 Άγιοι: WARNING: Found form-of template not on definition line: * {{el-form-of-nounadj|Άγιος|g=m|n=p|c=nv}}
+  # Page 29639 Αγίων: WARNING: Found form-of template not on definition line: * {{el-form-of-nounadj|Άγιος|g=mnf|n=p|c=g}}
+  # Page 29640 Αγίους: WARNING: Found form-of template not on definition line: * {{el-form-of-nounadj|Άγιος|g=m|n=p|c=a}}
+  # Page 29641 Άγιες: WARNING: Found form-of template not on definition line: * {{el-form-of-nounadj|Άγιος|g=f|n=p|c=nav}}
+  # Page 29642 Άγια: WARNING: Found form-of template not on definition line: * {{el-form-of-nounadj|Άγιος|g=n|n=p|c=nav}}
+  # Page 29697 Κωσταντίνας: WARNING: Found form-of template with pre-text and post-text: # {{alternative form of|lang=el|Κωνσταντίνας}}, {{el-form-of-nounadj|Κωνσταντίνα|n=s|c=g}} [[Constantina]] pronounced without nu (ν)
+  # Page 29698 Κωσταντίνου: WARNING: Found form-of template with pre-text and post-text: # {{alternative form of|lang=el|Κωνσταντίνου}}, {{el-form-of-nounadj|Κωνσταντίνος|n=s|c=g}} [[Constantine]] pronounced without nu (ν)
+  # Page 29699 Κωσταντίνο: WARNING: Found form-of template with pre-text and post-text: # {{alternative form of|lang=el|Κωνσταντίνο}}, {{el-form-of-nounadj|Κωνσταντίνος|n=s|c=a}} [[Constantine]] pronounced without nu (ν)
+  # Page 29700 Κωσταντίνε: WARNING: Found form-of template with pre-text and post-text: # {{alternative form of|lang=el|Κωνσταντίνε}}, {{el-form-of-nounadj|Κωνσταντίνος|n=s|c=v}} [[Constantine]] pronounced without nu (ν)
+  # Page 29884 σοφότερου: WARNING: Found form-of template with post-text: # {{el-form-of-nounadj|σοφότερος|g=mn|n=s|c=g}}, {{comparative of|lang=el|σοφός}}
+  # Page 29946 ἀρχαΐζουσα: WARNING: Found form-of template with pre-text: # {{el-polytonic form of|αρχαΐζουσα}} - {{el-form-of-nounadj|ἀρχαΐζων|g=f|n=s|c=nav}}
+  # Page 29947 ἀττικίζων: WARNING: Found form-of template with pre-text: # {{el-polytonic form of|αττικίζων}} - {{el-form-of-nounadj|ἀττῐκῐ́ζων|g=n|n=s|c=nav}}
+  # Page 29948 ἀττικίζουσα: WARNING: Found form-of template with pre-text: # {{el-polytonic form of|αττικίζουσα}} - {{el-form-of-nounadj|ἀττικίζων|g=f|n=s|c=nav}}
+  # Page 29949 ἀττικίζον: WARNING: Found form-of template with pre-text: # {{el-polytonic form of|αττικίζον}} - {{el-form-of-nounadj|ἀττικίζων|g=n|n=s|c=nav}}
+  # Page 29950 κοινολέκτου: WARNING: Found form-of template with post-text: # {{el-form-of-nounadj|κοινόλεκτος|n=s|c=g}} [[της]] κοινολέκτου
+  # Page 29951 κοινόλεκτο: WARNING: Found form-of template with post-text: # {{el-form-of-nounadj|κοινόλεκτος|n=s|c=a}} [[την]] κοινολέκτο
+  # Page 29964 καλομοίρα: WARNING: Found form-of template not on definition line: * {{el-form-of-nounadj|καλομοίρης|g=f|n=s|c=nav}}
+  # Page 31196 σοφιών: WARNING: Found form-of template with post-text: # {{lb|el|uncommon}} {{el-form-of-nounadj|σοφία|n=p|c=g}} chiefly found in compounds ({{m|el|φιλοσοφιών}})
+  # Page 31463 ἤπια: WARNING: Found form-of template with pre-text: # {{el-polytonic form of|ήπια}}. {{el-form-of-nounadj|ήπιος|g=n|c=nav|n=p}}
+  ("el-form-of-nounadj", "ignoreducdot", "verified"), # All 31,580 verified
   ("el-form-of-pronoun", "ignoreducdot", "verified"),
   # The following instances need to be fixed up:
   # Page 302 κόλλησα: WARNING: Found form-of template with post-text: # {{el-form-of-verb|κολλώ|pers=1s|tense=past}} "I glued"
@@ -172,10 +287,85 @@ templates_by_cap_and_period = [
   # Page 2756 κολλήθηκα: WARNING: Found form-of template with post-text: # {{el-form-of-verb|κολλιέμαι|pers=1s|tense=past}} "I was glued"
   # Page 2931 πείσω: WARNING: Found form-of template with pre-text and post-text: # ''[[Appendix:Glossary#active voice|active]]'' {{el-form-of-verb|πείθω|pers=1s|tense=dep}}: "persuade"
   # Page 2977 απασχολήθηκα: WARNING: Found form-of template with post-text: # {{el-form-of-verb|απασχολούμαι|pers=1s|tense=past}} ''or'' '''[[απασχολιέμαι]]'''
-  ("el-form-of-verb", "ignoreducdot", "verified"),
-  # Most cases of 'el-participle of' use nodot=1; check whether can
-  # get away without dot.
-  ("el-participle of", "ucdot", False), # FIXME
+  # Page 3642 πειράζει: WARNING: Found form-of template with post-text: # {{el-form-of-verb|πειράζω|pers=3s|tense=present}} "He/she/it bothers, teases"
+  # Page 3737 πονεί: WARNING: Found form-of template with post-text: # {{lb|el|colloquial}} {{el-form-of-verb|πονάω|pers=3s|tense=pres}}: "He/She/It hurts"
+  # Page 3738 πονάει: WARNING: Found form-of template with post-text: # {{el-form-of-verb|πονάω|pers=3s|tense=pres}}: "He/She/It hurts"
+  # Page 4007 βλάφθηκα: WARNING: Found form-of template with post-text: # {{lb|el|formal}} {{el-form-of-verb|βλάπτομαι|pers=1s|tense=past}}, ''passive of'' '''{{l|el|βλάπτω|tr=-}}'''
+  # Page 4008 βλάφτει: WARNING: Found form-of template with post-text: # {{lb|el|colloquial}} {{el-form-of-verb|βλάφτω|pers=3s|tense=pres}}: "He/She/It damages"
+  # Page 4008 βλάφτει: WARNING: Found form-of template with pre-text and post-text: # {{l|el|θα}} '''{{PAGENAME}}''' {{el-form-of-verb|βλάφτω|pers=3s|tense=fut-c|tr=-}}: "He/She/It will be damaging"
+  # Page 4008 βλάφτει: WARNING: Found form-of template with pre-text and post-text: # {{l|el|να}} '''{{PAGENAME}}''' {{el-form-of-verb|βλάφτω|pers=3s|mood=subj|tr=-}}: ''That he/she/it damages"
+  # Page 4035 σείστηκα: WARNING: Found form-of template with post-text: # {{el-form-of-verb|σείομαι|pers=1s|tense=past|active=σείω}} "I was shaken"
+  # Page 4168 ψηφίζομαι: WARNING: Found form-of template with post-text: # {{el-form-of-verb|ψηφίζω|pers=1s|mood=ind|tense=pres|voice=pass|nodot=1}} "I am voted"
+  # Page 4169 ψηφίστηκα: WARNING: Found form-of template with post-text: # {{el-form-of-verb|ψηφίζομαι|pers=1s|mood=ind|tense=past|active=ψηφίζω}} "I was voted, elected"
+  # Page 4171 ψηφίζουμε: WARNING: Found form-of template with post-text: # {{el-form-of-verb|ψηφίζω|pers=1p|mood=ind|tense=pres|voice=act}} "we vote"
+  # Page 4228 γραδάρισα: WARNING: Found form-of template with post-text: # {{el-form-of-verb|γραδάρω|pers=1s|tense=past}}.
+  # Page 4234 χαίρε: WARNING: Found form-of template with post-text: # {{el-form-of-verb|χαίρω|pers=2s|mood=imptv-i}}: (''literally'': "rejoice, be glad") 
+  # Page 4355 ἐξετέλεσα: WARNING: Found form-of template with pre-text: # {{lb|el|learned|formal|nocat=1}} {{el-polytonic form of|εξετέλεσα}} {{el-form-of-verb|εκτελώ|pers=1s|tense=past}}
+  # Page 4356 εκτελέστηκα: WARNING: Found form-of template with post-text: # {{el-form-of-verb|εκτελούμαι|pers=1s|tense=past}} ''passive of'' '''{{m|el|εκτελώ|tr=-}}'''
+  # Page 4357 εκτελέσθηκα: WARNING: Found form-of template with post-text: # {{lb|el|formal|nocat=1}} {{el-form-of-verb|εκτελούμαι|pers=1s|tense=past}} ''passive of'' '''{{m|el|εκτελώ|tr=-}}'''
+  # Page 4358 εξετελέσθην: WARNING: Found form-of template with post-text: # {{lb|el|archaic|learned|nocat=1}} {{el-form-of-verb|εκτελούμαι|pers=1s|tense=past}} ''passive of'' '''{{m|el|εκτελώ|tr=-}}'''
+  # Page 4359 ἐξετελέσθην: WARNING: Found form-of template with pre-text: # {{lb|el|learned|formal|nocat=1}} {{el-polytonic form of|εξετελέσθην}} {{el-form-of-verb|εκτελούμαι|pers=1s|tense=past}}
+  # Page 4378 αποκλείετε: WARNING: Found form-of template with post-text: # {{el-form-of-verb|αποκλείω|pers=2p|tense=present|mood=ind}} "You<sup>plural</sup> block, exclude"
+  # Page 4378 αποκλείετε: WARNING: Found form-of template with post-text: # {{el-form-of-verb|αποκλείω|pers=2p|tense=present|mood=imptv}} "block!, exclude!"
+  # Page 4381 περικλείστηκα: WARNING: Found form-of template with post-text: # {{el-form-of-verb|περικλείομαι|pers=1s|tense=past|active=περικλείω}} "I was surrounded"
+  # Page 4385 εγκλείστηκα: WARNING: Found form-of template with post-text: # {{el-form-of-verb|εγκλείομαι|pers=1s|tense=past|active=εγκλείω}} "I was confined"
+  # Page 4389 εσωκλείστηκα: WARNING: Found form-of template with post-text: # {{el-form-of-verb|εσωκλείομαι|pers=1s|tense=past|active=εσωκλείω}} "I was enclosed"
+  # Page 4393 εμπερικλείστηκα: WARNING: Found form-of template with post-text: # {{el-form-of-verb|εμπερικλείομαι|pers=1s|tense=past|active=εμπερικλείω}} "I was contained"
+  # Page 4404 επισείστηκα: WARNING: Found form-of template with post-text: # {{el-form-of-verb|επισείομαι|pers=1s|tense=past|active=επισείω}} "I was brandished as a threat"
+  # Page 4405 συγκρούστηκα: WARNING: Found form-of template with post-text: # {{el-form-of-verb|συγκρούομαι|pers=1s|tense=past}} "I collided"
+  # Page 4409 κρούστηκα: WARNING: Found form-of template with post-text: # {{el-form-of-verb|κρούομαι|pers=1s|tense=past|active=κρούω}} "I was struck"
+  # Page 4410 ἐκρούσθην: WARNING: Found form-of template with post-text: # {{el-form-of-verb|κρούομαι|pers=1s|tense=past|active=κρούω}} "I was struck"
+  # Page 4417 ανακρούστηκα: WARNING: Found form-of template with post-text: # {{el-form-of-verb|ανακρούομαι|pers=1s|tense=past|active=ανακρούω}} "I was performed" {{q|of musical piece}}
+  # Page 4420 αντικρούστηκα: WARNING: Found form-of template with post-text: # {{el-form-of-verb|αντικρούομαι|pers=1s|tense=past|active=αντικρούω}} "I was rebutted"
+  # Page 4446 εξυπακούεται: WARNING: Found form-of template not on definition line: {{el-form-of-verb|εξυπακούομαι|pers=3s|tense=present|nodot=1}} a verb which is in use only as {{glossary|impersonal}} in 3rd persons. From {{af|el|εξ-|υπακούω|tr1=-|tr2=-|t1=in|t2=obey}}. A {{cal|el|fr|[[être]] [[sous-entendu]]|nocap=1}}.<ref>{{R:DSMG}}</ref> The [[Hellenistic#English|Hellenistic]] [[Koine#English|Koine]] verbal adjective {{m|grc|ἐξυπᾰκουστέον}} had the sense "must be understood, must understand a word".
+  # Page 4446 εξυπακούεται: WARNING: Found form-of template with post-text: {{el-form-of-verb|εξυπακούομαι|pers=3s|tense=present|nodot=1}} a verb which is in use only as {{glossary|impersonal}} in 3rd persons. From {{af|el|εξ-|υπακούω|tr1=-|tr2=-|t1=in|t2=obey}}. A {{cal|el|fr|[[être]] [[sous-entendu]]|nocap=1}}.<ref>{{R:DSMG}}</ref> The [[Hellenistic#English|Hellenistic]] [[Koine#English|Koine]] verbal adjective {{m|grc|ἐξυπᾰκουστέον}} had the sense "must be understood, must understand a word".
+  # Page 4447 εξυπακούονται: WARNING: Found form-of template with post-text: # {{el-form-of-verb|εξυπακούεται|pers=1p|tense=present}} "they are [[imply|implied]], [[understood]]"
+  # Page 4448 εξυπακουόταν: WARNING: Found form-of template with post-text: # {{el-form-of-verb|εξυπακούεται|pers=1s|tense=imperfect}} "He/she/it was [[imply|implied]], [[understood]]"
+  # Page 4449 εξυπακούονταν: WARNING: Found form-of template with post-text: # {{el-form-of-verb|εξυπακούεται|pers=1p|tense=imperfect}} "they were [[imply|implied]], [[understood]]"
+  # Page 4458 καθείλκυσα: WARNING: Found form-of template with post-text: # {{el-form-of-verb|καθελκύω|pers=1s|tense=past|nodot=1}} ''and'' '''[[καθέλκω#Greek|καθέλκω]]'''
+  # Page 4466 προσελκύστηκα: WARNING: Found form-of template with post-text: # {{el-form-of-verb|προσελκύομαι|pers=1s|tense=past|active=προσελκύω}} "I was attracted"
+  # Page 4467 προσελκύσθηκα: WARNING: Found form-of template with post-text: # {{el-form-of-verb|προσελκύομαι|pers=1s|tense=past|active=προσελκύω}} "I was attracted"
+  # Page 4470 φωτογραφήθηκα: WARNING: Found form-of template with pre-text: # ''alternative'' {{el-form-of-verb|φωτογραφίζομαι|pers=1s|tense=past|active=φωτογραφίζω}}
+  # Page 4477 αεροφωτογραφήθηκα: WARNING: Found form-of template with pre-text: # ''alternative'' {{el-form-of-verb|αεροφωτογραφίζομαι|pers=1s|tense=past|active=αεροφωτογραφίζω}}
+  # Page 4489 συγκρούσθηκα: WARNING: Found form-of template with post-text: # {{lb|el|formal|nocat=1}} {{el-form-of-verb|συγκρούομαι|pers=1s|tense=past}} "I collided"
+  # Page 4490 κρούσθηκα: WARNING: Found form-of template with post-text: # {{lb|el|formal|nocat=1}} {{el-form-of-verb|κρούομαι|pers=1s|tense=past|active=κρούω}} "I was struck"
+  # Page 4492 αντικρούσθηκα: WARNING: Found form-of template with post-text: # {{lb|el|formal|rare|nocat=1}} {{el-form-of-verb|αντικρούομαι|pers=1s|tense=past|active=αντικρούω}} "I was rebutted"
+  # Page 4494 αποκλείσθηκα: WARNING: Found form-of template with post-text: # {{lb|el|formal|rare|nocat=1}} {{el-form-of-verb|αποκλείομαι|pers=1s|tense=past|active=αποκλείω}} "I was blocked, excluded"
+  # Page 4498 εγκλείσθηκα: WARNING: Found form-of template with post-text: # {{lb|el|formal|rare|nocat=1}} {{el-form-of-verb|εγκλείομαι|pers=1s|tense=past|active=εγκλείω}} "I was confined"
+  # Page 4499 περικλείσθηκα: WARNING: Found form-of template with post-text: # {{lb|el|formal|nocat=1}} {{el-form-of-verb|περικλείομαι|pers=1s|tense=past|active=περικλείω}} "I was surrounded"
+  # Page 4541 απόλυσα: WARNING: Found form-of template with post-text: # {{el-form-of-verb|απολύω|pers=1s|tense=past}} Used in phrase
+  # Page 4555 κώλυσα: WARNING: Found form-of template with post-text: #  {{el-form-of-verb|κωλύω|pers=1s|tense=past}} "I hindered"
+  # Page 4588 ἐνέγραψα: WARNING: Found form-of template with pre-text: # ''[[polytonic#English|polytonic]] script of'' '''[[ενέγραψα]]''', {{el-form-of-verb|εγγράφω|pers=1s|tense=past}}
+  # Page 4591 ἐνεγράφην: WARNING: Found form-of template with pre-text and post-text: # {{lb|el|Katharevousa}} ''{{poly}}'' {{el-form-of-verb|εγγράφω|pers=1s|tense=past}} ''{{monotonic}}''   '''[[ενεγράφην]]'''
+  # Page 4620 ἤγγισα: WARNING: Found form-of template with pre-text: # ''[[polytonic#English|polytonic]] script of'' '''[[ήγγισα]]''', {{el-form-of-verb|εγγίζω|pers=1s|tense=past}}
+  # Page 4650 χαράζει: WARNING: Found form-of template with post-text: # {{el-form-of-verb|χαράζω|pers=3s|tense=present}} "He/she/it cuves"
+  # Page 4671 συλλέγομαι: WARNING: Found form-of template with post-text: # {{el-form-of-verb|εκλέγω|voice=pass}} "I am chosen"
+  # Page 4714 αξίζει: WARNING: Found form-of template with post-text: # {{el-form-of-verb|αξίζω|pers=3s|tense=present}} "he/she/it costs; he/she/it is worthy"
+  ("el-form-of-verb", "ignoreducdot", "verified"), # All 4,783 verified
+  # The following instances need to be fixed up:
+  # Page 80 λύνομαι: WARNING: Found form-of template not on definition line: * {{el-verb form of|λύνω|pers=1s|tense=pres|mood=ind|voice=pass}}
+  # Page 86 έλυσα: WARNING: Found form-of template with post-text: # {{el-verb form of|λύνω|pers=1s|tense=past|mood=ind|voice=act}} ''and of'' {{l|el|λύω}}
+  # Page 87 άρχομαι: WARNING: Found form-of template not on definition line: * {{el-verb form of|άρχω|pers=1s|mood=ind|tense=pres|voice=pass}}
+  # Page 90 είμεθα: WARNING: Found form-of template with pre-text and post-text: #: ({{el-verb form of|είμαι|pers=1p|tense=pres}}: "we are")
+  # Page 98 άκουσες: WARNING: Found form-of template with post-text: # {{el-verb form of|ακούω|pers=2s|tense=past}} "You listened, you heard"
+  # Page 114 ήμεθα: WARNING: Found form-of template with pre-text and post-text: #: ({{el-verb form of|είμαι|pers=1p|tense=imperf}}: "we were")
+  # Page 183 λύουμε: WARNING: Found form-of template with pre-text: # {{lb|el|formal|nocat=1}} {{alternative form of|lang=el|λύομεν}} {{el-verb form of|λύω|pers=1p|mood=ind|tense=pres|voice=act}}
+  # Page 185 ψηφίζομε: WARNING: Found form-of template with post-text: # {{lb|el|formal|nocat=1}} {{el-verb form of|ψηφίζω|pers=1p|mood=ind|tense=pres|voice=act}} "we vote"
+  # Page 194 κυνηγήθηκα: WARNING: Found form-of template with post-text: # {{el-verb form of|κυνηγιέμαι|pers=1s|tense=past|mood=ind|voice=pass|nodot=1}} ''of active'' {{l|el|κυνηγάω|tr=-}} & {{l|el|κυνηγώ|tr=-}}
+  # Page 205 ακούσθηκα: WARNING: Found form-of template with post-text: # {{lb|el|formal}}  {{el-verb form of|ακούομαι|pers=1s|tense=past|nodot=1}} ''and of'' [[ακούγομαι]]
+  # Page 206 ακούσθηκε: WARNING: Found form-of template with post-text: # {{lb|el|formal}} {{el-verb form of|ακούομαι|pers=3s|tense=past|nodot=1}} ''and of'' [[ακούγομαι]]
+  # Page 208 πουδραρίστηκα: WARNING: Found form-of template with post-text: # {{el-verb form of|πουδράρομαι|pers=1s|tense=past}} ''passive of'' {{l|el|πουδράρω}}
+  # Page 209 τρελαθεί: WARNING: Found form-of template with post-text: # {{el-verb form of|τρελαίνομαι|nonfinite=1}}, ''passive of'' '''[[τρελαίνω]]'''
+  # Page 215 προσευχήθηκα: WARNING: Found form-of template with post-text: # {{el-verb form of|προσεύχομαι|pers=1s|mood=ind|tense=past|voice=}} "I prayed"
+  # Page 217 ευχήθηκα: WARNING: Found form-of template with post-text: # {{el-verb form of|εύχομαι|pers=1s|mood=ind|tense=past|voice=}} "I wished"
+  # Page 218 αντευχήθηκα: WARNING: Found form-of template with post-text: # {{el-verb form of|αντεύχομαι|pers=1s|mood=ind|tense=past|voice=}} "I wished back"
+  # Page 219 απευχήθηκα: WARNING: Found form-of template with post-text: # {{el-verb form of|απεύχομαι|pers=1s|mood=ind|tense=past|voice=}} "I wished away"
+  # Page 220 τρελάθηκα: WARNING: Found form-of template with post-text: # {{el-verb form of|τρελαίνομαι|pers=1s|tense=past}} ''passive of'' {{l|el|τρελαίνω}}
+  # Page 228 στάζει: WARNING: Found form-of template with post-text: # {{el-verb form of|στάζω|pers=3s|tense=pres|voice=act}} "He/she/it [[drip]]s"
+  ("el-verb form of", "ignoreducdot", "verified"),
+  # NOTE: The following isn't strictly true; we convert nocap= to cap=
+  # with reversed semantics rather than ignoring the capitalization.
+  ("el-participle of", "ignoreduc", "verified"),
   ("en-simple past of", "lcnodot", False),
   # The following instances need to be fixed up:
   # (all instances with a final period, which needs to be removed)
@@ -184,8 +374,36 @@ templates_by_cap_and_period = [
   # Page 275 hasta: WARNING: Found form-of template with post-text: # {{lb|en|colloquial}} {{en-third-person singular of|hafta}}: {{contraction of|has to|lang=en}}; is required to.
   # Page 287 ranks: WARNING: Found form-of template with post-text: # {{en-third-person singular of|rank}}''
   # Page 2003 shields: WARNING: Found form-of template with post-text: # {{en-third-person singular of|shield}}. Protects.
-  # [etc]
-  ("en-third-person singular of", "ignoreduc", False), # FIXME
+  # Page 4676 stage whispers: WARNING: Found form-of template with post-text: # {{en-third-person singular of|stage whisper}} {{alternative spelling of|stage-whispers|lang=en}}
+  # Page 4884 decapitates: WARNING: Found form-of template with post-text: # {{en-third-person singular of|decapitate}}''
+  # Page 4924 projectile-vomits: WARNING: Found form-of template with post-text: # {{en-third-person singular of|projectile-vomit}} {{alternative spelling of|projectile vomits|lang=en}}
+  # Page 8049 gasses: WARNING: Found form-of template with pre-text: # {{alternative spelling of|gases|lang=en}}. {{en-third-person singular of|gas}}
+  # Page 8080 dramatises: WARNING: Found form-of template with post-text: # {{en-third-person singular of|dramatise}}, an alternative spelling of {{m|en|dramatize}}.
+  # Page 8847 smooshes: WARNING: Found form-of template with post-text: # {{en-third-person singular of|smoosh}}, alternative spelling of '''[[smush]]'''.
+  # Page 8861 rip saws: WARNING: Found form-of template with post-text: # {{en-third-person singular of|rip saw}} {{alternative spelling of|ripsaws|lang=en}}
+  # Page 10716 hathe: WARNING: Found form-of template with post-text: # {{lb|en|archaic}} {{en-third-person singular of|have}} {{alternative spelling of|hath|lang=en}}
+  # Page 11664 sinuates: WARNING: Found form-of template with post-text: # {{en-third-person singular of|sinuate}}''
+  # Page 12223 Timonises: WARNING: Found form-of template with pre-text: # {{alternative spelling of|Timonizes|lang=en}} {{en-third-person singular of|Timonise}}
+  # Page 17011 carrols: WARNING: Found form-of template with post-text: # {{en-third
+  # -person singular of|carrol}} ({{alternative form of|carols|nocap=yes|lang=en}}).
+  # Page 19329 expells: WARNING: Found form-of template with post-text: # {{en-third-person singular of|expell}}, # {{obsolete spelling of|expels|lang=en}}
+  # Page 20748 o'erloads: WARNING: Found form-of template with post-text: # {{lb|en|archaic}} {{en-third-person singular of|o'erload}}. {{contraction of|overloads|lang=en}}
+  # Page 22044 sgraffitoes: WARNING: Found form-of template with post-text: # {{en-third-person singular of|sgraffito}} ({{alternative form of|sgraffitos|lang=en|nocap=1}})
+  # Page 22886 feaks: WARNING: Found form-of template with post-text: # {{en-third-person singular of|feak}} ({{alternative form of|feagues|nocap=yes|lang=en}}).
+  # Page 22944 rat finks: WARNING: Found form-of template with post-text: # {{en-third-person singular of|rat fink}} ({{alternative form of|ratfinks|nocap=yes|lang=en}}).
+  # Page 23354 runs roughshod over: WARNING: Found form-of template with post-text: # {{en-third-person singular of|run roughshod over}} ({{alternative form of|rides roughshod over|nocap=yes|lang=en}}).
+  # Page 23461 knocks one down with a feather: WARNING: Found form-of template with post-text: # {{en-third-person singular of|knock one down with a feather}} ({{alternative form of|knocks one over with a feather|nocap=yes|lang=en}}).
+  # Page 23838 danicizes: WARNING: Found form-of template with post-text: # {{en-third-person singular of|danicize}}. ({{alternative case form of|Danicizes|lang=en}}.)
+  # Page 23846 wig-wags: WARNING: Found form-of template with post-text: # {{en-third-person singular of|wig-wag}} ({{alternative form of|[[wigwags#Verb|wigwags]]|nocap=yes|lang=en}}).
+  # Page 24123 carrolls: WARNING: Found form-of template with post-text: # {{en-third-person singular of|carroll}} ({{alternative form of|carols|nocap=yes|lang=en}}).
+  # Page 24194 disenvowels: WARNING: Found form-of template with post-text: # {{en-third-person singular of|disenvowel}} ({{alternative form of|disemvowels|nocap=yes|lang=en}}).
+  # Page 24272 rat-finks: WARNING: Found form-of template with post-text: # {{en-third-person singular of|rat-fink}} ({{alternative form of|ratfinks|nocap=yes|lang=en}}).
+  # Page 24818 geo-fences: WARNING: Found form-of template with post-text: # {{en-third-person singular of|geo-fence}} ({{alternative form of|geofences|nocap=yes|lang=en}}).
+  # Page 26142 acquites: WARNING: Found form-of template with post-text: # {{en-third-person singular of|acquite}} ({{obsolete spelling of|acquits|lang=en}}.)
+  ("en-third-person singular of", "ignoreduc", "verified"), # All 26,993 verified
+  # The following instances need to be fixed up:
+  # Page 99 dast: WARNING: Found form-of template with pre-text and post-text: # {{lb|en|US|dialect}} [[dares|Dares]]; {{en-third person singular of|dare|lang=en}}.
+  ("en-third person singular of", "ignoreduc", "verified"),
   ("enm-first-person singular of", "ignoreduc", "verified"),
   ("enm-first/third-person singular past of", "ignoreduc", "verified"),
   ("enm-plural of", "ignoreduc", "verified"),
@@ -199,7 +417,7 @@ templates_by_cap_and_period = [
   ("enm-third-person singular of", "ignoreduc", "verified"),
   # The following instances need to be fixed up:
   # Page 172 gordos: WARNING: Found form-of template with post-text: # {{es-adj form of|gordo|m|pl|nodot=y}}, [[fat]].
-  ("es-adj form of", "ucdot", False), # First 3000 verified
+  ("es-adj form of", "ignoreducdot", "verified"), # All 8,521 verified
   ("et-nom form of", "ignoreducdot", "verified"),
   ("et-participle of", "ignoreducdot", "verified"),
   ("et-verb form of", "ignoreducdot", "verified"),
@@ -207,8 +425,8 @@ templates_by_cap_and_period = [
   ("fa-adj-form", "lcnodot", False),
   ("fa-form-verb", "ignoreddot", "verified"),
   # The following instances need to be fixed up:
-  # Page 84 onhan: WARNING: Found form-of template with post-text: # {{fi-verb form of|pn=3s|tm=pres|olla|nodot=1}} + suffix {{m|fi|-han}}.
-  ("fi-verb form of", "ucdot", False), # First 3000 verified
+  # (all instances with a final period, which needs to be removed)
+  ("fi-verb form of", "ignoreducdot", "verified"), # All 6,022 verified
   ("gmq-bot-verb-form-sup", "ignoreddot", "verified"),
   # The following instances need to be fixed up:
   # Page 944 𐌺𐌿𐌽𐌸𐍃: WARNING: Found form-of template with pre-text: # [[known]]. {{got-verb form of|𐌺𐌿𐌽𐌽𐌰𐌽|t=past|m=ptc}}
@@ -226,7 +444,7 @@ templates_by_cap_and_period = [
   ("ie-past and pp of", "lcnodot", False),
   ("is-conjugation of", "lcnodot", False),
   ("is-inflection of", "lcnodot", False),
-  ("it-adj form of", "ucdot", False), # First 3000 verified
+  ("it-adj form of", "ignoreducdot", "verified"), # All 3,633 verified
   ("ja-past of verb", "lcnodot", False),
   ("ja-te form of verb", "lcnodot", False),
   ("ka-verbal for", "ignoreduc", "verified"),
@@ -248,7 +466,7 @@ templates_by_cap_and_period = [
   ("lt-form-adj", "ignoreddot", "verified"),
   ("lt-form-adj-is", "ignoreddot", "verified"),
   ("lt-form-noun", "ignoreddot", "verified"),
-  ("lt-form-part", "ignoreddot", False), # First 3000 verified
+  ("lt-form-part", "ignoreddot", "verified"), # All 3,967 verified
   ("lt-form-pronoun", "ignoreddot", "verified"),
   ("lt-form-verb", "ignoreddot", "verified"),
   ("lt-padalyvis", "ignoreddot", "verified"),
@@ -269,7 +487,7 @@ templates_by_cap_and_period = [
   ("osx-nom form of", "ignoreduc", "verified"),
   # The following instances need to be fixed up:
   # Page 202 conversa: WARNING: Found form-of template with post-text: # {{pt-adj form of|converso|f|sg}}.
-  ("pt-adj form of", "ucdot", False), # First 3000 verified
+  ("pt-adj form of", "ignoreducdot", "verified"), # All 15,486 verified
   ("pt-adv form of", "ignoreduc", "verified"),
   ("pt-article form of", "ignoreducdot", "verified"),
   ("pt-cardinal form of", "lcnodot", False),
@@ -565,74 +783,41 @@ br_specs = [
   )),
 ]
 
-def romance_adj_form_of(lang, lcnodot=False):
+def romance_adj_form_of(lang):
   # This works for ca, es, it and pt. Romanian has its own template and French
   # uses {{masculine singular of}}, {{feminine singular of}}, etc.
   # Not all languages accept m-f or mf, but it doesn't hurt to accept them.
   # Has default initial caps and final period (controllable by nocap/nodot).
-  # Both ignored for ca.
-  if lcnodot:
-    return (
-      "adj form of",
-      ("error-if", ("present-except", ["1", "2", "3", "4", "t", "nocap", "nodot"])),
-      ("set", "1", [
-        lang,
-        ("copy", "1"),
-      ]),
-      ("copy", "t"), # occurs, although ignored by template
-      ("set", "3", [
-        "",
-        ("lookup", "4", {
-          "aug": "aug",
-          "dim": "dim",
-          "comp": "comd",
-          "super": "supd",
-          "": [],
-        }),
-        ("lookup", "2", {
-          "m": "m",
-          "f": "f",
-          "m-f": "mf",
-          "mf": "mf",
-        }),
-        ("lookup", "3", {
-          "sg": "s",
-          "pl": "p",
-        }),
-      ]),
-    )
-  else:
-    return (
-      "Adj form of",
-      ("error-if", ("present-except", ["1", "2", "3", "4", "t", "nocap", "nodot"])),
-      ("set", "1", [
-        lang,
-        ("copy", "1"),
-      ]),
-      ("copy", "t"), # occurs, although ignored by template
-      ("set", "3", [
-        "",
-        ("lookup", "4", {
-          "aug": "aug",
-          "dim": "dim",
-          "comp": "comd",
-          "super": "supd",
-          "": [],
-        }),
-        ("lookup", "2", {
-          "m": "m",
-          "f": "f",
-          "m-f": "mf",
-          "mf": "mf",
-        }),
-        ("lookup", "3", {
-          "sg": "s",
-          "pl": "p",
-        }),
-      ]),
-      ("copy", "nocap"),
-      ("copy", "nodot"),
-    )
+  # Both ignored.
+  return (
+    "adj form of",
+    ("error-if", ("present-except", ["1", "2", "3", "4", "t", "nocap", "nodot"])),
+    ("set", "1", [
+      lang,
+      ("copy", "1"),
+    ]),
+    ("copy", "t"), # occurs, although ignored by template
+    ("set", "3", [
+      "",
+      ("lookup", "4", {
+        "aug": "aug",
+        "dim": "dim",
+        "comp": "comd",
+        "super": "supd",
+        "": [],
+      }),
+      ("lookup", "2", {
+        "m": "m",
+        "f": "f",
+        "m-f": "mf",
+        "mf": "mf",
+      }),
+      ("lookup", "3", {
+        "sg": "s",
+        "pl": "p",
+      }),
+    ]),
+  )
 
 def ca_form_of(t, pagemsg):
   if getparam(t, "1") in ["alt form", "alt sp", "alt spel", "alt spell"]:
@@ -642,17 +827,20 @@ def ca_form_of(t, pagemsg):
       template = "alt sp"
     return (
       template,
-      ("error-if", ("present-except", ["1", "2", "3"])), # doesn't include val= or val2=
+      # nocap= ignored; doesn't include val= or val2=
+      ("error-if", ("present-except", ["1", "2", "3", "nocap", "sort"])),
       ("set", "1", [
         "ca",
         ("copy", "2"),
         ("copy", "3"),
       ]),
+      ("copy", "sort"),
     )
   else:
     return (
       "inflection of",
-      ("error-if", ("present-except", ["1", "2", "3"])), # doesn't include val= or val2=
+      # nocap= ignored; doesn't include val= or val2=
+      ("error-if", ("present-except", ["1", "2", "3", "nocap", "sort"])),
       ("set", "1", [
         "ca",
         ("copy", "2"),
@@ -672,10 +860,11 @@ def ca_form_of(t, pagemsg):
           "masculine": ["m", "s"],
         }),
       ]),
+      ("copy", "sort"),
     )
 
 ca_specs = [
-  ("ca-adj form of", romance_adj_form_of("ca", lcnodot=True)),
+  ("ca-adj form of", romance_adj_form_of("ca")),
 
   ("ca-form of", ca_form_of),
 
@@ -968,8 +1157,9 @@ de_specs = [
   )),
 
   # NOTE: Has automatic, non-controllable initial caps and final period.
+  # Both ignored.
   ("de-verb form of", (
-    "Verb form of",
+    "verb form of",
     ("error-if", ("present-except", ["1", "2", "3", "4", "5"])),
     ("set", "1", [
       "de",
@@ -1101,12 +1291,7 @@ el_specs = [
   ("el-form-of-verb", (
     "verb form of",
     ("error-if", ("present-except", ["1", "nonfinite", "voice", "pers",
-      # We ignore active= and ta=. They are used in posttext that says
-      # "passive of {{m|el|{{{active}}}|t={{{ta|}}}}}". This isn't easy
-      # to do in the general {{verb form of}} template, isn't how other
-      # non-lemma forms are formatted and is of questionable value.
-      # FIXME: Consider moving outside of template.
-      "tense", "mood", "t", "active", "ta", "nodot"])),
+      "tense", "mood", "t", "nodot"])),
     ("set", "1", [
       "el",
       ("copy", "1"),
@@ -1170,10 +1355,11 @@ el_specs = [
   )),
 
   # NOTE: Has automatic, non-controllable initial caps and controllable
-  # final period (using nodot).
+  # final period (using nodot) which we will rewrite, moving the final period
+  # outside of the template.
   ("el-participle of", (
-    "Participle of",
-    ("error-if", ("present-except", ["1", "2", "gloss", "t", "tr", "nodot", "nocap"])),
+    "participle of",
+    ("error-if", ("present-except", ["1", "2", "gloss", "t", "tr", "nocap"])),
     ("set", "1", [
       "el",
       ("copy", "1"),
@@ -1192,9 +1378,15 @@ el_specs = [
     ]),
     ("copy", "gloss", "t"),
     ("copy", "t"),
-    ("copy", "nodot"),
-    ("copy", "nocap"),
+    ("set", "cap",
+      ("lookup", "nocap", {
+        "": "1",
+        True: [],
+      }),
+    ),
   )),
+
+  ("el-verb form of", "el-form-of-verb"),
 ]
 
 en_specs = [
@@ -1222,6 +1414,8 @@ en_specs = [
       ["3s", "spres", "ind"],
     ]),
   )),
+
+  ("en-third person singular of", "en-third-person singular of"),
 ]
 
 def enm_verb_form(parts):
@@ -1424,9 +1618,10 @@ fa_specs = [
 
 fi_specs = [
   # Has default initial caps and final period (controllable by nocap/nodot).
+  # Both ignored.
   ("fi-verb form of", (
     # The template code ignores nocat=.
-    "Verb form of",
+    "verb form of",
     ("error-if", ("present-except", ["1", "pn", "tm", "c", "nocap", "nodot", "nocat"])),
     ("set", "1", [
       "fi",
@@ -1456,8 +1651,6 @@ fi_specs = [
         True: "conn",
       }),
     ]),
-    ("copy", "nocap"),
-    ("copy", "nodot"),
   )),
 ]
 
@@ -3524,17 +3717,17 @@ templates_to_rename_specs = (
 
 def rewrite_to_foo_form_of(t, pagemsg, comment):
   tn = tname(t)
-  if tn in ["inflection of", "Inflection of"]:
+  if tn == "inflection of":
     pos = getparam(t, "p")
     if pos in ["n", "noun"]:
       rmparam(t, "p")
-      blib.set_template_name("noun form of" if tn == "inflection of" else "Noun form of")
+      blib.set_template_name("noun form of")
     elif pos in ["a", "adj", "adjective"]:
       rmparam(t, "p")
-      blib.set_template_name("adj form of" if tn == "inflection of" else "Adj form of")
+      blib.set_template_name("adj form of")
     elif pos in ["v", "verb"]:
       rmparam(t, "p")
-      blib.set_template_name("verb form of" if tn == "inflection of" else "Verb form of")
+      blib.set_template_name("verb form of")
   newtn = tname(t)
   if newtn != tn:
     comment = re.sub(r"(to|with \{\{)%s([|\}])" % tn, r"\1%s\2" % newtn, comment)
@@ -3542,7 +3735,7 @@ def rewrite_to_foo_form_of(t, pagemsg, comment):
 
 def rewrite_to_participle_of(t, pagemsg, comment):
   tn = tname(t)
-  if tn in ["inflection of", "Inflection of"]:
+  if tn == "inflection of":
     max_numbered = 0
     for param in t.params:
       pname = unicode(param.name).strip()
@@ -3550,7 +3743,7 @@ def rewrite_to_participle_of(t, pagemsg, comment):
         max_numbered = int(pname)
     if getparam(t, str(max_numbered)) == "part":
       rmparam(t, "part")
-      blib.set_template_name("participle of" if tn == "inflection of" else "Participle of")
+      blib.set_template_name("participle of")
   newtn = tname(t)
   if newtn != tn:
     comment = re.sub(r"(to|with \{\{)%s([|\}])" % tn, r"\1%s\2" % newtn, comment)
@@ -3561,18 +3754,18 @@ post_rewrite_hooks = [rewrite_to_foo_form_of, rewrite_to_participle_of]
 templates_to_rename_map = {}
 
 def initialize_templates_to_rename_map(do_all, do_specified):
-  global templates_to_actually_do
+  global templates_to_actually_do, templates_to_actually_do_set
   if do_all:
     templates_to_actually_do = [template for template, spec in templates_to_rename_specs]
   if do_specified:
     templates_to_actually_do = re.split(",", do_specified)
+  templates_to_actually_do_set = set(templates_to_actually_do)
 
   for template, spec in templates_to_rename_specs:
-    if template in templates_to_actually_do:
-      if isinstance(spec, basestring):
-        templates_to_rename_map[template] = templates_to_rename_map[spec]
-      else:
-        templates_to_rename_map[template] = spec
+    if isinstance(spec, basestring):
+      templates_to_rename_map[template] = templates_to_rename_map[spec]
+    else:
+      templates_to_rename_map[template] = spec
 
 
 def flatten_list(value):
@@ -3853,7 +4046,7 @@ def process_page(page, index, parsed):
   for t in parsed.filter_templates():
     origt = unicode(t)
     tn = tname(t)
-    if tn in templates_to_rename_map:
+    if tn in templates_to_actually_do_set:
       template_spec = templates_to_rename_map[tn]
       try:
         new_name, new_params, comment = expand_spec(template_spec, t, pagemsg)
@@ -3916,7 +4109,7 @@ def process_page_for_check_ignore(page, index, template, ignore_type):
         posttext = m.group(2)
         if not pretext.startswith("#"):
           pagemsg("WARNING: Found form-of template not on definition line: %s" % m.group(0))
-        has_pretext = not re.search(r"^[#:]*\s*(\{\{(?:lb|label|sense|senseid|tlb)\|[^}]*?\}\}\s*)?$", pretext)
+        has_pretext = not re.search(r"^[#:]*\s*(\{\{(?:lb|label|sense|senseid|tlb|q|qualifier|qf)\|[^}]*?\}\}\s*)?$", pretext)
         has_posttext = posttext != ""
         if has_pretext and has_posttext:
           pagemsg("WARNING: Found form-of template with pre-text and post-text: %s" % m.group(0))
