@@ -84,6 +84,8 @@ templates_to_actually_do = [
   "sh-form-proper-noun",
   "sh-verb form of",
   "sh-form-verb",
+  "sh-verb-form of",
+  "sh-verb-form-of",
   "sl-form-adj",
   "sl-form-noun",
   "sl-form-verb",
@@ -93,6 +95,212 @@ templates_to_actually_do = [
   "ur-form-noun",
   "ur-form-verb",
 ]
+
+# List of templates and their behavior w.r.t. initial caps
+# final period. One of the following:
+#
+# 1. "lcnodot": Original template doesn't have initial caps
+#    or final period; nor does the replacement.
+# 2. "ucdot": Original template has initial caps and final
+#    period (possibly controllable, mostly not); our
+#    replacement also has initial caps and final period,
+#    controllable.
+# 3. "ignoreduc": Original template has initial caps (usually
+#    automatic, very occasionally controllable) but no final
+#    period; our replacement doesn't have initial caps. Need
+#    to verify that this works.
+# 4. "ignoreddot": Original template has final period (usually
+#    automatic, very occasionally controllable) but no initial
+#    caps; our replacement doesn't have final period. Need
+#    to verify that this works.
+# 5. "ignoreducdot": Original template has final period (usually
+#    automatic, very occasionally controllable) and initial
+#    caps; our replacement doesn't have either.
+templates_by_cap_and_period = [
+  ("blk-past of", "lcnodot"),
+  ("bg-adj form of", "ucdot"),
+  ("bg-noun form of", "ucdot"),
+  ("bg-verb form of", "ucdot"),
+  ("br-noun-plural", "ucdot"),
+  ("ca-adj form of", "ucdot"),
+  ("ca-verb form of", "lcnodot"),
+  ("chm-inflection of", "lcnodot"),
+  ("cu-form of", "ignoreducdot"), # Verified
+  ("da-pl-genitive", "lcnodot"),
+  ("de-du contraction", "ignoreduc"), # Verified
+  ("de-form-adj", "ignoreddot"),
+  ("de-form-noun", "lcnodot"),
+  ("de-verb form of", "ucdot"),
+  ("el-form-of-adv", "ignoreduc"), # Verified
+  ("el-form-of-nounadj", "ucdot"),
+  ("el-form-of-pronoun", "ucdot"),
+  ("el-form-of-verb", "ucdot"),
+  # Most cases of 'el-participle of' use nodot=1; check whether can
+  # get away without dot.
+  ("el-participle of", "ucdot"),
+  ("en-simple past of", "lcnodot"),
+  ("en-third-person singular of", "ignoreduc"),
+  ("enm-first-person singular of", "ignoreduc"),
+  ("enm-first/third-person singular past of", "ignoreduc"),
+  ("enm-plural of", "ignoreduc"),
+  ("enm-plural past of", "ignoreduc"),
+  ("enm-plural subjunctive of", "ignoreduc"),
+  ("enm-plural subjunctive past of", "ignoreduc"),
+  ("enm-second-person singular of", "ignoreduc"),
+  ("enm-second-person singular past of", "ignoreduc"),
+  ("enm-singular subjunctive of", "ignoreduc"),
+  ("enm-singular subjunctive past of", "ignoreduc"),
+  ("enm-third-person singular of", "ignoreduc"),
+  ("es-adj form of", "ucdot"),
+  # 'et-nom form of' has one instance of post-text, with |nodot=yeah
+  ("et-nom form of", "ignoreducdot"), # Verified
+  ("et-participle of", "ucdot"),
+  ("et-verb form of", "ucdot"),
+  ("fa-adj form of", "lcnodot"),
+  ("fa-adj-form", "lcnodot"),
+  ("fa-form-verb", "ignoreddot"), # Verified
+  ("fi-verb form of", "ucdot"),
+  ("gmq-bot-verb-form-sup", "ignoreddot"),
+  ("got-verb form of", "ucdot"),
+  # The following instances need to be fixed up:
+  # Page 18 तेरी: WARNING: Found form-of template with post-text: # {{hi-form-adj||fs|तेरा}} {{hi-form-adj||fp|तेरा}}
+  # Page 19 तेरे: WARNING: Found form-of template with post-text: # {{hi-form-adj|i|ms|तेरा}} {{hi-form-adj|v|ms|तेरा}} {{hi-form-adj||mp|तेरा}}
+  ("hi-form-adj", "ignoreddot"), # Verified
+  ("hi-form-adj-verb", "ignoreddot"), # Verified
+  ("hi-form-noun", "ignoreddot"), # Verified
+  ("hi-form-verb", "ignoreddot"),
+  ("hu-inflection of", "lcnodot"),
+  ("hu-participle", "lcnodot"),
+  ("hy-form-noun", "lcnodot"),
+  ("ie-past and pp of", "lcnodot"),
+  ("is-conjugation of", "lcnodot"),
+  ("is-inflection of", "lcnodot"),
+  ("it-adj form of", "ucdot"),
+  ("ja-past of verb", "lcnodot"),
+  ("ja-te form of verb", "lcnodot"),
+  ("ka-verbal for", "ignoreduc"), # Verified
+  ("ka-verbal of", "ignoreduc"), # Verified
+  ("ku-verb form of", "ignoreducdot"), # Verified
+  ("liv-conjugation of", "lcnodot"),
+  ("liv-inflection of", "lcnodot"),
+  ("liv-participle of", "lcnodot"),
+  (u"lt-būdinys", "ignoreddot"),
+  ("lt-budinys", "ignoreddot"),
+  ("lt-dalyvis-1", "ignoreddot"),
+  ("lt-dalyvis", "ignoreddot"),
+  ("lt-dalyvis-2", "ignoreddot"),
+  ("lt-form-adj", "ignoreddot"), # Verified
+  ("lt-form-adj-is", "ignoreddot"),
+  ("lt-form-noun", "ignoreddot"), # Verified
+  ("lt-form-part", "ignoreddot"),
+  ("lt-form-pronoun", "ignoreddot"),
+  ("lt-form-verb", "ignoreddot"), # Verified
+  ("lt-padalyvis", "ignoreddot"),
+  ("lt-pusdalyvis", "ignoreddot"),
+  ("lv-comparative of", "lcnodot"),
+  ("lv-definite of", "lcnodot"),
+  ("lv-inflection of", "lcnodot"),
+  ("lv-negative of", "lcnodot"),
+  ("lv-reflexive of", "lcnodot"),
+  ("lv-superlative of", "lcnodot"),
+  ("lv-verbal noun of", "lcnodot"),
+  ("mr-form-adj", "ignoreddot"), # Verified
+  ("mt-prep-form", "ignoreddot"), # Verified
+  ("nb-noun-form-def-gen", "lcnodot"),
+  ("nb-noun-form-def-gen-pl", "lcnodot"),
+  ("nb-noun-form-indef-gen-pl", "lcnodot"),
+  ("ofs-nom form of", "ignoreduc"), # Verified
+  ("osx-nom form of", "ignoreduc"), # Verified
+  ("pt-adj form of", "ucdot"),
+  ("pt-adv form of", "ignoreduc"), # Verified
+  ("pt-article form of", "ignoreducdot"), # Verified
+  ("pt-cardinal form of", "lcnodot"),
+  ("pt-noun form of", "ucdot"),
+  # The following instance needs to be fixed up:
+  # Page 53 3ª: WARNING: Found form-of template with post-text: # {{pt-ordinal form|3|ª}} {{abbreviation of|terceira|lang=pt}}
+  ("pt-ordinal form", "ignoreducdot"), # Verified
+  ("pt-ordinal def", "ignoreducdot"), # Verified
+  ("ro-adj-form of", "lcnodot"),
+  ("ro-form-adj", "lcnodot"),
+  ("ro-form-noun", "ignoreddot"),
+  # WARNING: Lots of pages need a colon after the template, and the following
+  # needs further fixing:
+  # Page 164 ești: WARNING: Found form-of template with post-text: # {{ro-form-verb|2s|pres|fi}} You [[are]].
+  # Page 252 futeam: WARNING: Found form-of template with post-text: # {{ro-form-verb|1p|impf|fute}}we were [[fucking]]
+  # Page 369 urăsc: WARNING: Found form-of template with post-text: # {{ro-form-verb|1s|pres|urî}} Ex.: I [[hate]]
+  # Page 369 urăsc: WARNING: Found form-of template with post-text: # {{ro-form-verb|3p|pres|urî}} Ex.: they [[hate]]
+  # Page 370 urăști: WARNING: Found form-of template with post-text: # {{ro-form-verb|2s|pres|urî}} Ex.: you [[hate]]
+  # Page 371 urăște: WARNING: Found form-of template with post-text: # {{ro-form-verb|3s|pres|urî}} Ex.: he/she [[hates]]
+  # Page 372 urâm: WARNING: Found form-of template with post-text: # {{ro-form-verb|1p|pres|urî}} Ex.: we [[hate]]
+  ("ro-form-verb", "ignoreddot"), # Verified
+  ("roa-opt-noun plural of", "ucdot"),
+  ("ru-participle of", "lcnodot"),
+  ("sa-desiderative of", "lcnodot"),
+  ("sa-desi", "lcnodot"),
+  ("sa-frequentative of", "lcnodot"),
+  ("sa-freq", "lcnodot"),
+  ("sa-root form of", "lcnodot"),
+  ("sco-simple past of", "lcnodot"),
+  ("sco-third-person singular of", "lcnodot"),
+  ("sga-verbnec of", "lcnodot"),
+  ("sh-form-noun", "lcnodot"),
+  ("sh-form-proper-noun", "lcnodot"),
+  ("sh-verb form of", "ignoreddot"), # Verified
+  # WARNING: Lots of pages have ''negative'' pretext that could be included
+  # in the template, e.g.:
+  # Page 10 neću: WARNING: Found form-of template with pre-text: # ''negative'' {{sh-form-verb|1s|pres|hteti}}
+  ("sh-form-verb", "ignoreddot"), # Verified
+  ("sh-verb-form of", "ignoreddot"),
+  ("sh-verb-form-of", "ignoreddot"),
+  ("sl-form-adj", "lcnodot"),
+  ("sl-form-noun", "ignoreddot"),
+  ("sl-form-verb", "ignoreddot"), # Verified
+  ("sl-participle of", "ignoreddot"),
+  ("sl-verb form of", "ignoreddot"), # Verified
+  ("sv-adj-form-abs-def", "ignoreddot"),
+  ("sv-adj-form-abs-def+pl", "ignoreddot"),
+  ("sv-adj-form-abs-def-m", "ignoreddot"),
+  ("sv-adj-form-abs-indef-n", "ignoreddot"),
+  ("sv-adj-form-abs-pl", "ignoreddot"),
+  ("sv-adj-form-comp", "ignoreddot"),
+  ("sv-adj-form-comp-pl", "ignoreddot"),
+  ("sv-adj-form-sup-attr", "ignoreddot"),
+  ("sv-adj-form-sup-attr-m", "ignoreddot"),
+  ("sv-adj-form-sup-pred", "ignoreddot"),
+  ("sv-adj-form-sup-pred-pl", "ignoreddot"),
+  ("sv-adv-form-comp", "ignoreddot"),
+  ("sv-adv-form-sup", "ignoreddot"),
+  ("sv-noun-form-def", "lcnodot"),
+  ("sv-noun-form-def-gen", "lcnodot"),
+  ("sv-noun-form-def-gen-pl", "lcnodot"),
+  ("sv-noun-form-def-pl", "lcnodot"),
+  ("sv-noun-form-indef-gen", "lcnodot"),
+  ("sv-noun-form-indef-gen-pl", "lcnodot"),
+  ("sv-noun-form-indef-pl", "lcnodot"),
+  ("sv-proper-noun-gen", "lcnodot"),
+  ("sv-verb-form-imp", "ignoreddot"),
+  ("sv-verb-form-inf-pass", "ignoreddot"),
+  ("sv-verb-form-past", "ignoreddot"),
+  ("sv-verb-form-past-pass", "ignoreddot"),
+  ("sv-verb-form-pastpart", "ignoreddot"),
+  ("sv-verb-form-pre", "ignoreddot"),
+  ("sv-verb-form-pre-pass", "ignoreddot"),
+  ("sv-verb-form-prepart", "lcnodot"),
+  ("sv-verb-form-subjunctive", "ignoreddot"),
+  ("sv-verb-form-sup", "ignoreddot"),
+  ("sv-verb-form-sup-pass", "ignoreddot"),
+  ("tg-adj form of", "lcnodot"),
+  ("tg-adj-form", "lcnodot"),
+  ("tg-form-verb", "ignoreddot"), # Verified
+  ("tl-verb form of", "ucdot"),
+  ("tr-inflection of", "lcnodot"),
+  ("ur-form-adj", "ignoreddot"), # Verified
+  ("ur-form-adj-verb", "ignoreddot"),
+  ("ur-form-noun", "ignoreddot"), # Verified
+  ("ur-form-verb", "ignoreddot"), # Verified
+]
+
+templates_by_cap_and_period_map = dict(templates_by_cap_and_period)
 
 art_blk_specs = [
   ("blk-past of", (
@@ -287,8 +495,50 @@ def romance_adj_form_of(lang):
     ("copy", "nodot"),
   )
 
+def ca_form_of(t, pagemsg):
+  if getparam(t, "1") in ["alt form", "alt sp", "alt spel", "alt spell"]:
+    if getparam(t, "1") == "alt form":
+      template = "alt form"
+    else:
+      template = "alt sp"
+    return (
+      template,
+      ("error-if", ("present-except", ["1", "2", "3"])), # doesn't include val= or val2=
+      ("set", "1", [
+        "ca",
+        ("copy", "2"),
+        ("copy", "3"),
+      ]),
+    )
+  else:
+    return (
+      "inflection of",
+      ("error-if", ("present-except", ["1", "2", "3"])), # doesn't include val= or val2=
+      ("set", "1", [
+        "ca",
+        ("copy", "2"),
+        ("copy", "3"),
+        ("lookup", "1", {
+          "f": "f",
+          "fem": "f",
+          "feminine": "f",
+          "fp": ["f", "p"],
+          "fpl": ["f", "p"],
+          "fplural": ["f", "p"],
+          "mp": ["m", "p"],
+          "mpl": ["m", "p"],
+          "mplural": ["m", "p"],
+          "m": ["m", "s"],
+          "masc": ["m", "s"],
+          "masculine": ["m", "s"],
+        }),
+      ]),
+    )
+
 ca_specs = [
   ("ca-adj form of", romance_adj_form_of("ca")),
+
+  ("ca-form of", ca_form_of),
 
   ("ca-verb form of", (
     "verb form of",
@@ -366,7 +616,7 @@ chm_grammar_table = {
   "0": [],
   "s": "s",
   "p": "p",
-  "pos": "possessed",
+  "pos": "possd",
   "prs": "pres",
   "pst": "past",
   "fut": "fut",
@@ -390,7 +640,7 @@ chm_specs = [
   # This should be handled by the headword. In practice, it seems this
   # template is only ever used for noun forms.
   ("chm-inflection of", (
-    "inflection of",
+    "noun form of",
     ("error-if", ("present-except", ["1", "2", "3", "4", "5", "6"])),
     ("set", "1", [
       "chm",
@@ -404,8 +654,7 @@ chm_specs = [
         "2p": [],
         "3p": [],
         "0": [],
-        # FIXME, may need tag abbrev for this
-        True: "non-possessed"
+        True: "npossd",
       }),
       ("lookup", "2", chm_grammar_table),
       ("lookup", "3", chm_grammar_table),
@@ -417,10 +666,10 @@ chm_specs = [
 
 cu_specs = [
   # NOTE: Has automatic, non-controllable initial caps and final period.
-  # Only 10 uses. Categorizes into '{{{type}}} forms', which should be
-  # handled by the headword; in actual use, type is always 'noun'.
+  # Both ignored. Only 10 uses. Categorizes into '{{{type}}} forms', which
+  # should be handled by the headword; in actual use, type is always 'noun'.
   ("cu-form of", (
-    "Inflection of",
+    "noun form of",
     ("error-if", ("present-except", ["1", "type", "case", "pl", "sc"])),
     ("set", "1", [
       "cu",
@@ -645,8 +894,6 @@ el_specs = [
         ("set", "1", [
           "el",
           ("copy", "1"),
-          # FIXME: In [[Module:form of/templates]], add alt= alias for numbered
-          # display form
           ("copy", "alt"),
           "asupd",
         ]),
@@ -787,7 +1034,7 @@ el_specs = [
   # NOTE: Has automatic, non-controllable initial caps and controllable
   # final period (using nodot).
   ("el-participle of", (
-    "Inflection of",
+    "Participle of",
     ("error-if", ("present-except", ["1", "2", "gloss", "t", "tr", "nodot", "nocap"])),
     ("set", "1", [
       "el",
@@ -797,12 +1044,12 @@ el_specs = [
     ("set", "3", [
       "",
       ("lookup", "2", {
-        "present": ["pres", "part"],
-        "pres": ["pres", "part"],
-        "perfect": ["perf", "part"],
-        "perf": ["perf", "part"],
-        "passive perfect": ["pass", "perf", "part"],
-        "pass-perf": ["pass", "perf", "part"],
+        "present": ["pres"],
+        "pres": ["pres"],
+        "perfect": ["perf"],
+        "perf": ["perf"],
+        "passive perfect": ["pass", "perf"],
+        "pass-perf": ["pass", "perf"],
       }),
     ]),
     ("copy", "gloss", "t"),
@@ -887,10 +1134,13 @@ es_specs = [
 
 et_specs = [
   # Has default initial caps and final period (controllable by nocap/nodot).
+  # Both ignored.
   ("et-nom form of", (
-    "Inflection of",
+    # May be rewritten later to 'noun form of', etc.
+    "inflection of",
     # pos= is commonly present but ignored by the template. But it
-    # contains useful information so we convert it to p=.
+    # contains useful information so we convert it to p=, which will also
+    # help with rewriting.
     ("error-if", ("present-except", ["1", "c", "n", "pos", "nocap", "nodot"])),
     ("set", "1", [
       "et",
@@ -918,25 +1168,23 @@ et_specs = [
       }),
     ]),
     ("copy", "pos", "p"),
-    ("copy", "nocap"),
-    ("copy", "nodot"),
   )),
 
   # Has default initial caps and final period (controllable by nocap/nodot).
   ("et-participle of", (
-    "Inflection of",
+    "participle of",
     ("error-if", ("present-except", ["1", "t", "nocap", "nodot"])),
     ("set", "1", [
       "et",
       ("copy", "1"),
       "",
       ("lookup", "t", {
-        "pres": ["pres", "act", "part"],
-        "pres_actv": ["pres", "act", "part"],
-        "pres_pasv": ["pres", "pass", "part"],
-        "past": ["past", "act", "part"],
-        "past_actv": ["past", "act", "part"],
-        "past_pasv": ["past", "pass", "part"],
+        "pres": ["pres", "act"],
+        "pres_actv": ["pres", "act"],
+        "pres_pasv": ["pres", "pass"],
+        "past": ["past", "act"],
+        "past_actv": ["past", "act"],
+        "past_pasv": ["past", "pass"],
       }),
     ]),
     ("copy", "nocap"),
@@ -1174,7 +1422,7 @@ def hi_ur_specs(lang):
     # NOTE: Has automatic, non-controllable final period that we're ignoring.
     # Doesn't have initial caps.
     ("%s-form-adj-verb" % lang, (
-      "inflection of",
+      "verb form of",
       ("error-if", ("present-except", ["1", "2", "3"])),
       ("set", "1", [
         lang,
@@ -1292,6 +1540,7 @@ hu_grammar_table = {
 
 hu_specs = [
   ("hu-inflection of", (
+    # May be rewritten later to 'noun form of', etc.
     "inflection of",
     # Template currently ignores both nocat= and pos=
     ("error-if", ("present-except", ["1", "2", "3", "4", "tr", "nocat", "pos"])),
@@ -1307,13 +1556,14 @@ hu_specs = [
       # 4= not allowed by template but occurs
       ("lookup", "4", hu_grammar_table),
     ]),
-    # copy these just in case they're needed later
+    # copy these just in case they're needed later, and p= will help with
+    # rewriting
     ("copy", "nocat"),
     ("copy", "pos", "p"),
   )),
 
   ("hu-participle", (
-    "inflection of",
+    "participle of",
     ("error-if", ("present-except", ["1", "2"])),
     ("set", "1", [
       "hu",
@@ -1334,7 +1584,6 @@ hu_specs = [
         u"ván": "adv",
         u"vén": "adv",
       }),
-      "part",
     ]),
   )),
 ]
@@ -1499,8 +1748,9 @@ ka_specs = [
 
 ku_specs = [
   # NOTE: Has automatic, non-controllable initial caps and final period.
+  # Both ignored.
   ("ku-verb form of", (
-    "Verb form of",
+    "verb form of",
     ("error-if", ("present-except", ["1", "2", "3", "4"])),
     ("set", "1", [
       "ku",
@@ -1582,7 +1832,7 @@ liv_specs = [
     "inflection of",
     # 4 is ignored by the template but specifies the part of speech
     # and used to be used for categorization. We preserve it as it
-    # might be useful in the future.
+    # might be useful in the future and it helps with rewriting.
     ("error-if", ("present-except", ["1", "2", "3", "4"])),
     ("set", "1", [
       "liv",
@@ -1612,6 +1862,7 @@ liv_specs = [
   )),
 
   ("liv-participle of", (
+    # May be rewritten later to 'participle of'.
     "inflection of",
     ("error-if", ("present-except", ["1", "2", "3", "4", "5"])),
     ("set", "1", [
@@ -1685,13 +1936,13 @@ lt_specs = [
   # NOTE: Has automatic, non-controllable final period that we're ignoring.
   # Doesn't have initial caps.
   (u"lt-būdinys", (
-    "inflection of",
+    "participle of",
     ("error-if", ("present-except", ["1"])),
     ("set", "1", [
       "lt",
       ("copy", "1"),
       "",
-      ["adv", "budinys", "part"],
+      ["adv", "budinys"],
     ]),
   )),
 
@@ -1700,7 +1951,7 @@ lt_specs = [
   # NOTE: Has automatic, non-controllable final period that we're ignoring.
   # Doesn't have initial caps.
   ("lt-dalyvis-1", (
-    "inflection of",
+    "participle of",
     ("error-if", ("present-except", ["1", "2", "3"])),
     ("set", "1", [
       "lt",
@@ -1723,7 +1974,6 @@ lt_specs = [
         "pass": "pass",
         "passive": "pass",
       }),
-      "part",
     ]),
   )),
 
@@ -1890,6 +2140,7 @@ lt_specs = [
         "ins": "ins",
       }),
     ]),
+    ("set", "p", "pron"),
   )),
 
   # NOTE: Has automatic, non-controllable final period that we're ignoring.
@@ -1938,7 +2189,7 @@ lt_specs = [
   # NOTE: Has automatic, non-controllable final period that we're ignoring.
   # Doesn't have initial caps.
   ("lt-padalyvis", (
-    "inflection of",
+    "participle of",
     ("error-if", ("present-except", ["1", "2"])),
     ("set", "1", [
       "lt",
@@ -1953,20 +2204,20 @@ lt_specs = [
         "fut": "fut",
         "future": "fut",
       }),
-      ["adv", "padalyvis", "part"],
+      ["adv", "padalyvis"],
     ]),
   )),
 
   # NOTE: Has automatic, non-controllable final period that we're ignoring.
   # Doesn't have initial caps.
   ("lt-pusdalyvis", (
-    "inflection of",
+    "participle of",
     ("error-if", ("present-except", ["1"])),
     ("set", "1", [
       "lt",
       ("copy", "1"),
       "",
-      ["adv", "pusdalyvis", "part"],
+      ["adv", "pusdalyvis"],
     ]),
   )),
 ]
@@ -2037,6 +2288,7 @@ lv_specs = [
   )),
 
   ("lv-inflection of", (
+    # May be rewritten later to 'noun form of', etc.
     "inflection of",
     # lang= occurs at least once, and is ignored.
     ("error-if", ("present-except", ["1", "2", "3", "4", "5", "6", "lang"])),
@@ -2305,8 +2557,10 @@ pt_specs = [
     ("set", "p", "adv"),
   )),
 
+  # Has default initial caps and final period (controllable by nocap/nodot).
+  # Both ignored.
   ("pt-article form of", (
-    "Inflection of",
+    "inflection of",
     ("error-if", ("present-except", ["1", "2", "3", "nocap", "nodot"])),
     ("set", "1", [
       "pt",
@@ -2321,8 +2575,6 @@ pt_specs = [
         "pl": "p",
       }),
     ]),
-    ("copy", "nocap"),
-    ("copy", "nodot"),
     ("set", "p", "art"),
   )),
 
@@ -2370,8 +2622,9 @@ pt_specs = [
   )),
 
   # NOTE: Has automatic, non-controllable initial caps and final period.
+  # Both ignored.
   ("pt-ordinal form", (
-    "Inflection of",
+    "inflection of",
     ("error-if", ("present-except", ["1", "2"])),
     ("set", "1", [
       "pt",
@@ -2568,12 +2821,11 @@ def ru_get_nonblank_tags(t, pagemsg):
     val = getparam(t, param)
     if val:
       tags.append(val)
-  tags.append("part")
   return tags
 
 ru_specs = [
   ("ru-participle of", (
-    "inflection of",
+    "participle of",
     # lang= occurs at least once, and is ignored.
     ("error-if", ("present-except", ["1", "2", "3", "4", "5", "6", "tr",
       "gloss", "pos", "nocat", "lang"])),
@@ -2866,15 +3118,10 @@ sl_specs = [
     ]),
   )),
 
-  # FIXME: Add [[Module:form of/cat]], where for sl,
-  # categorizes into 'participles' if 'part' in tags,
-  # categorizes into 'verbal nouns' if 'sup' or 'ger' in tags;
-  # should probably canonicalize the abbreviations before calling
-  # code to find category
-
   # NOTE: Has automatic, non-controllable final period that we're ignoring.
   # Doesn't have initial caps.
   ("sl-participle of", (
+    # May be rewritten later to 'participle of', etc.
     "inflection of",
     ("error-if", ("present-except", ["1", "2"])),
     ("set", "1", [
@@ -3140,6 +3387,42 @@ templates_to_rename_specs = (
   misc_templates_to_rewrite +
   []
 )
+
+def rewrite_to_foo_form_of(t, pagemsg, comment):
+  tn = tname(t)
+  if tn in ["inflection of", "Inflection of"]:
+    pos = getparam(t, "p")
+    if pos in ["n", "noun"]:
+      rmparam(t, "p")
+      blib.set_template_name("noun form of" if tn == "inflection of" else "Noun form of")
+    elif pos in ["a", "adj", "adjective"]:
+      rmparam(t, "p")
+      blib.set_template_name("adj form of" if tn == "inflection of" else "Adj form of")
+    elif pos in ["v", "verb"]:
+      rmparam(t, "p")
+      blib.set_template_name("verb form of" if tn == "inflection of" else "Verb form of")
+  newtn = tname(t)
+  if newtn != tn:
+    comment = re.sub(r"(to|with \{\{)%s([|\}])" % tn, r"\1%s\2" % newtn, comment)
+  return t, comment
+
+def rewrite_to_participle_of(t, pagemsg, comment):
+  tn = tname(t)
+  if tn in ["inflection of", "Inflection of"]:
+    max_numbered = 0
+    for param in t.params:
+      pname = unicode(param.name).strip()
+      if re.search("^[0-9]$", pname) and int(pname) > max_numbered:
+        max_numbered = int(pname)
+    if getparam(t, str(max_numbered)) == "part":
+      rmparam(t, "part")
+      blib.set_template_name("participle of" if tn == "inflection of" else "Participle of")
+  newtn = tname(t)
+  if newtn != tn:
+    comment = re.sub(r"(to|with \{\{)%s([|\}])" % tn, r"\1%s\2" % newtn, comment)
+  return t, comment
+
+post_rewrite_hooks = [rewrite_to_foo_form_of, rewrite_to_participle_of]
 
 templates_to_rename_map = {}
 
@@ -3460,6 +3743,11 @@ def process_page(page, index, parsed):
         else:
           pname, pval, showkey = param
           t.add(pname, pval, showkey=showkey, spreserve_spacing=False)
+
+      # Now apply post-rewrite hooks
+      for hook in post_rewrite_hooks:
+        t, comment = hook(t, pagemsg, comment)
+
       notes.append(comment)
 
     if unicode(t) != origt:
@@ -3467,15 +3755,76 @@ def process_page(page, index, parsed):
 
   return unicode(parsed), notes
 
+def process_page_for_check_ignore(page, index, template, ignore_type):
+  pagetitle = unicode(page.title())
+  def pagemsg(txt):
+    msg("Page %s %s: %s" % (index, pagetitle, txt))
+  def errandpagemsg(txt):
+    errandmsg("Page %s %s: %s" % (index, pagetitle, txt))
+
+  pagemsg("Processing")
+
+  if re.search("^(User|Template|Module|MediaWiki):", pagetitle):
+    pagemsg("WARNING: Page in a blacklisted namespace, skipping")
+    return None, None
+
+  text = unicode(page.text)
+
+  parsed = blib.parse_text(text)
+
+  for t in parsed.filter_templates():
+    tn = tname(t)
+    if tn == template:
+      foundit = False
+      for m in re.finditer(r"^(.*?)%s(.*?)$" % re.escape(unicode(t)), text, re.M):
+        foundit = True
+        pretext = m.group(1)
+        posttext = m.group(2)
+        if not pretext.startswith("#"):
+          pagemsg("WARNING: Found form-of template not on definition line: %s" % m.group(0))
+        has_pretext = not re.search(r"^[#:]*\s*(\{\{lb\|[^}]*?\}\}\s*)?$", pretext)
+        has_posttext = posttext != ""
+        if has_pretext and has_posttext:
+          pagemsg("WARNING: Found form-of template with pre-text and post-text: %s" % m.group(0))
+        elif has_pretext:
+          pagemsg("WARNING: Found form-of template with pre-text: %s" % m.group(0))
+        elif has_posttext:
+          pagemsg("WARNING: Found form-of template with post-text: %s" % m.group(0))
+      if not foundit:
+        errandpagemsg("WARNING: Couldn't find form-of template on page: %s" % unicode(t))
+
 parser = blib.create_argparser("Rename various lang-specific form-of templates to more general variants")
 parser.add_argument('--do-all', help="Do all templates instead of default list",
     action="store_true")
 parser.add_argument('--do-specified', help="Do specified comma-separated templates instead of default list")
+parser.add_argument('--check-ignores', help="Check whether there may be problems ignoring intial cap or final dot", action="store_true")
+parser.add_argument('--check-ignores-include-ucdot', help="Whether checking ignore issues, include type 'ucdot' to see whether it can be converted to 'lcnodot'", action="store_true")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
 initialize_templates_to_rename_map(args.do_all, args.do_specified)
-for template in templates_to_actually_do:
-  errandmsg("Processing references to Template:%s" % template)
-  for i, page in blib.references("Template:%s" % template, start, end):
-    blib.do_edit(page, i, process_page, save=args.save, verbose=args.verbose)
+if args.check_ignores:
+  for template in templates_to_actually_do:
+    if template not in templates_by_cap_and_period_map:
+      errandmsg("WARNING: The following template is not in templates_by_cap_and_period_map, and will be skipped: Template:%s" %
+          template)
+  for template in templates_to_actually_do:
+    if template not in templates_by_cap_and_period_map:
+      errandmsg("WARNING: Template:%s not in templates_by_cap_and_period_map, not sure its ignoring behavior, skipping" %
+          template)
+    else:
+      ignore_type = templates_by_cap_and_period_map[template]
+      if ignore_type not in ["lcnodot", "ucdot"] or (
+        ignore_type == "ucdot" and args.check_ignores_include_ucdot
+      ):
+        errandmsg("Processing references to Template:%s [ignore_type=%s]" %
+            (template, ignore_type))
+        for i, page in blib.references("Template:%s" % template, start, end):
+          process_page_for_check_ignore(page, i, template,
+              ignore_type)
+
+else:
+  for template in templates_to_actually_do:
+    errandmsg("Processing references to Template:%s" % template)
+    for i, page in blib.references("Template:%s" % template, start, end):
+      blib.do_edit(page, i, process_page, save=args.save, verbose=args.verbose)
