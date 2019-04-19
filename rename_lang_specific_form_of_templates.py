@@ -120,7 +120,10 @@ templates_by_cap_and_period = [
   ("blk-past of", "lcnodot", False),
   ("bg-adj form of", "ignoreducdot", "verified"),
   ("bg-noun form of", "ignoreducdot", "verified"),
-  ("bg-verb form of", "ucdot", False), # First 3000 verified
+  # The following instances need to be fixed up:
+  # Page 30113 нямало: WARNING: Found form-of template with pre-text: # ''[[neuter]]'' {{bg-verb form of|person=third|number=singular|tense=imperfect|mood=renarrative|verb=нямам}}
+  # Page 30113 нямало: WARNING: Found form-of template with pre-text: # ''[[neuter]]'' {{bg-verb form of|person=third|number=singular|tense=aorist|mood=renarrative|verb=нямам}}
+  ("bg-verb form of", "ignoreducdot", "verified"), # (all 30,114)
   ("br-noun-plural", "ignoreducdot", "verified"),
   ("ca-adj form of", "ignoreducdot", "verified"),
   ("ca-form of", "lcnodot", False),
@@ -473,8 +476,9 @@ bg_specs = [
   )),
 
   # NOTE: Has automatic, non-controllable initial caps and final period.
+  # Both ignored.
   ("bg-verb form of", (
-    "Verb form of",
+    "verb form of",
     ("error-if", ("present-except", ["verb", "part", "g", "f", "d", "person", "number", "tense", "mood"])),
     ("set", "1", [
       "bg",
