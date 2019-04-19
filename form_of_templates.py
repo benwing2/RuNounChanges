@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from blib import msg
+
 language_specific_alt_form_of_templates = [
   u"be-Taraškievica",
   "bg-pre-reform",
@@ -247,3 +249,7 @@ form_of_template_map = dict(form_of_templates)
 misc_definition_line_templates = [
   "native or resident of",
 ]
+
+if __name__ == "__main__":
+  for template, spec in form_of_templates:
+    msg("Template:%s" % template)
