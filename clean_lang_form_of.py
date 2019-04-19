@@ -25,13 +25,29 @@ nl_templates_with_comp_of_sup_of = [
   "nl-adj form of",
 ]
 
-all_templates = (
-  sv_templates_with_plural_of +
-  sv_templates_with_obsoleted_by +
-  ca_templates_with_val +
-  nl_templates_with_comp_of_sup_of +
-  []
-)
+el_templates_with_active = [
+  "el-form-of-verb",
+  "el-verb form of",
+]
+
+# WARNING! Not idempotent.
+el_templates_to_move_dot = [
+  "el-participle of",
+]
+
+def init_all_templates(move_dot):
+  global all_templates
+
+  all_templates = (
+    sv_templates_with_plural_of +
+    sv_templates_with_obsoleted_by +
+    ca_templates_with_val +
+    nl_templates_with_comp_of_sup_of +
+    el_templates_with_active +
+    (el_templates_to_move_dot if move_dot else []) +
+    []
+  )
+
 
 def process_page(page, index, parsed):
   pagetitle = unicode(page.title())
@@ -53,7 +69,7 @@ def process_page(page, index, parsed):
   for t in parsed.filter_templates():
     tn = tname(t)
 
-    if tn in sv_templates_with_plural_of:
+    if tn in sv_templates_with_plural_of and tn in all_templates:
       plural_of = getparam(t, "plural of")
       if plural_of:
         origt = unicode(t)
@@ -61,7 +77,7 @@ def process_page(page, index, parsed):
         newt = "{{sv-obs pl|%s}}, %s" % (plural_of, unicode(t))
         templates_to_replace.append((origt, newt, "move plural of= in {{%s}} to {{sv-obs pl}} outside of template" % tn))
 
-    if tn in sv_templates_with_obsoleted_by:
+    if tn in sv_templates_with_obsoleted_by and tn in all_templates:
       obsoleted_by = getparam(t, "obsoleted by")
       if obsoleted_by:
         origt = unicode(t)
@@ -69,7 +85,7 @@ def process_page(page, index, parsed):
         newt = "{{sv-obs by|%s}}, %s" % (obsoleted_by, unicode(t))
         templates_to_replace.append((origt, newt, "move plural of= in {{%s}} to {{sv-obs by}} outside of template" % tn))
 
-    if tn in ca_templates_with_val:
+    if tn in ca_templates_with_val and tn in all_templates:
       val = getparam(t, "val")
       val2 = getparam(t, "val2")
       if val:
@@ -79,7 +95,7 @@ def process_page(page, index, parsed):
         newt = "%s ({{ca-val|%s%s}})" % (unicode(t), val, "|" + val2 if val2 else "")
         templates_to_replace.append((origt, newt, "move val= in {{%s}} to {{ca-val}} outside of template" % tn))
 
-    if tn in nl_templates_with_comp_of_sup_of:
+    if tn in nl_templates_with_comp_of_sup_of and tn in all_templates:
       comp_of = getparam(t, "comp-of")
       sup_of = getparam(t, "sup-of")
       if comp_of:
@@ -93,6 +109,26 @@ def process_page(page, index, parsed):
         newt = "%s%s%s" % (unicode(t), comp_of, sup_of)
         templates_to_replace.append((origt, newt, "move comp-of=/sup-of== in {{%s}} to {{nc comp of}}/{{nc sup of}} outside of template" % tn))
 
+    if tn in el_templates_with_active and tn in all_templates:
+      active = getparam(t, "active")
+      ta = getparam(t, "ta")
+      if active:
+        origt = unicode(t)
+        rmparam(t, "active")
+        rmparam(t, "ta")
+        newt = "%s, {{nc pass of|el|%s%s}}" % (unicode(t), active, "|t=" + ta if ta else "")
+        templates_to_replace.append((origt, newt, "move active= in {{%s}} to {{nc pass of}} outside of template" % tn))
+
+    if tn in el_templates_to_move_dot and tn in all_templates:
+      origt = unicode(t)
+      nodot = getparam(t, "nodot")
+      rmparam(t, "nodot") # in case it's blank
+      if nodot:
+        templates_to_replace.append((origt, unicode(t), "remove nodot= from {{%s}}, with changed semantics" % tn))
+      else:
+        newt = "%s." % unicode(t)
+        templates_to_replace.append((origt, newt, "add explicit final period to {{%s}} when nodot= not specified, due to change in semantics" % tn))
+
   for curr_template, repl_template, note in templates_to_replace:
     text, replaced = blib.replace_in_text(text, curr_template, repl_template, pagemsg)
     if replaced:
@@ -101,8 +137,12 @@ def process_page(page, index, parsed):
   return text, notes
 
 parser = blib.create_argparser("Clean up various form-of templates needing text moved outside of template into separate template")
+parser.add_argument('--move-dot', help="Move .= outside of template",
+    action="store_true")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
+
+init_all_templates(args.move_dot)
 
 for template in all_templates:
   errandmsg("Processing references to Template:%s" % template)
