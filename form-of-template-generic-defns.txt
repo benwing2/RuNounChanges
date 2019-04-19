@@ -36,3 +36,13 @@ Verb form of:
 Infl of:
 #REDIRECT [[Template:Inflection of]]
 ----------- end text -----------
+participle of:
+{{#invoke:form of/templates|inflection_of_t|postinfl=part}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+----------- end text -----------
+Participle of:
+{{#invoke:form of/templates|inflection_of_t|postinfl=part|withcap=1|withdot=1}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+----------- end text -----------
