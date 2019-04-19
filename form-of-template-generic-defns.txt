@@ -1,3 +1,18 @@
+nc comp of:
+{{#invoke:form of/templates|tagged_inflection_of_t|comd|def=nocat=1}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+----------- end text -----------
+nc sup of:
+{{#invoke:form of/templates|tagged_inflection_of_t|supd|def=nocat=1}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+----------- end text -----------
+nc pass of:
+{{#invoke:form of/templates|tagged_inflection_of_t|pass|def=nocat=1}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+----------- end text -----------
 adj form of:
 {{#invoke:form of/templates|inflection_of_t|def=p=a}}<!--
 
@@ -13,36 +28,8 @@ verb form of:
 
 --><noinclude>{{documentation}}</noinclude>
 ----------- end text -----------
-Inflection of:
-{{#invoke:form of/templates|inflection_of_t|withcap=1|withdot=1}}<!--
-
---><noinclude>{{documentation}}</noinclude>
------------ end text -----------
-Adj form of:
-{{#invoke:form of/templates|inflection_of_t|def=p=a|withcap=1|withdot=1}}<!--
-
---><noinclude>{{documentation}}</noinclude>
------------ end text -----------
-Noun form of:
-{{#invoke:form of/templates|inflection_of_t|def=p=n|withcap=1|withdot=1}}<!--
-
---><noinclude>{{documentation}}</noinclude>
------------ end text -----------
-Verb form of:
-{{#invoke:form of/templates|inflection_of_t|def=p=v|withcap=1|withdot=1}}<!--
-
---><noinclude>{{documentation}}</noinclude>
------------ end text -----------
-Infl of:
-#REDIRECT [[Template:Inflection of]]
------------ end text -----------
 participle of:
 {{#invoke:form of/templates|inflection_of_t|postinfl=part}}<!--
-
---><noinclude>{{documentation}}</noinclude>
------------ end text -----------
-Participle of:
-{{#invoke:form of/templates|inflection_of_t|postinfl=part|withcap=1|withdot=1}}<!--
 
 --><noinclude>{{documentation}}</noinclude>
 ----------- end text -----------
