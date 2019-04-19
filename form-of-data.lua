@@ -445,7 +445,7 @@ tags["prospective"] = {
 -- Aspect in Tagalog
 tags["contemplative"] = {
 	tag_type = "tense-aspect",
-	glossary = "Tagalog grammar#Aspect"
+	glossary = "Tagalog grammar#Aspect",
 	glossary_type = "wp",
 	shortcuts = {"contem"},
 }
@@ -454,7 +454,7 @@ tags["contemplative"] = {
 -- not necessarily similar enough to use the same Wikidata ID
 tags["complete"] = {
 	tag_type = "tense-aspect",
-	glossary = "Tagalog grammar#Aspect"
+	glossary = "Tagalog grammar#Aspect",
 	glossary_type = "wp",
 	shortcuts = {"compl"},
 }
@@ -463,7 +463,7 @@ tags["complete"] = {
 -- not necessarily similar enough to use the same Wikidata ID
 tags["recently complete"] = {
 	tag_type = "tense-aspect",
-	glossary = "Tagalog grammar#Aspect"
+	glossary = "Tagalog grammar#Aspect",
 	glossary_type = "wp",
 	shortcuts = {"rcompl"},
 }
@@ -1456,7 +1456,7 @@ tags["adjectival"] = {
 tags["adverbial"] = {
 	tag_type = "grammar",
 	glossary = "adverbial",
-	shortcuts = {"adj"},
+	shortcuts = {"adv"},
 }
 
 tags["affirmative"] = {
@@ -1485,7 +1485,7 @@ tags["possessed"] = {
 	tag_type = "grammar",
 	glossary = "possessive affix",
 	glossary_type = "wp",
-	shortcuts = {"possd", "possed"} -- posd = positive degree
+	shortcuts = {"possd", "possed"}, -- posd = positive degree
 	wikidata = "Q804020", -- for possessive affix
 }
 
@@ -1493,7 +1493,7 @@ tags["non-possessed"] = {
 	tag_type = "grammar",
 	glossary = "possessive affix",
 	glossary_type = "wp",
-	shortcuts = {"npossd", "npossed", "nonpossessed"}
+	shortcuts = {"npossd", "npossed", "nonpossessed"},
 }
 
 tags["possessive affix"] = {
@@ -1760,7 +1760,7 @@ for name, data in pairs(tags) do
 	end
 end
 
-return {tags = tags, shortcuts = shortcuts, display_handlers = display_handlers}
+return {tags = tags, shortcuts = shortcuts}
 
 -- For Vim, so we get 4-space tabs
 -- vim: set ts=4 sw=4 noet:
