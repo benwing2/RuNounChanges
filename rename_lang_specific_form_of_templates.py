@@ -134,10 +134,11 @@ templates_by_cap_and_period = [
   ("de-form-noun", "lcnodot", False),
   # The following instances need to be fixed up:
   # Page 1091 abarbeitet: WARNING: Found form-of template with post-text: # {{de-verb form of|abarbeiten|3|s|g}} Used in side clauses where usually separable prefixes do not separate
+  # Page 8835 geschmolzen: WARNING: Found form-of template with post-text: # {{de-verb form of|schmelzen|pp}} - [[melted]]
   ("de-verb form of", "ucdot", False), # First 3000 verified
   ("el-form-of-adv", "ignoreduc", "verified"),
   # The following instances need to be fixed up:
-  # (all instances with a final period)
+  # (all instances with a final period, which needs to be removed)
   # Page 105 ον: WARNING: Found form-of template with post-text: # {{lb|el|dated}} {{el-form-of-nounadj|ων|g=n|n=s|c=nav}} “being”
   # Page 109 αδελφών: WARNING: Found form-of template with post-text: # {{el-form-of-nounadj|αδελφός|c=gen|n=p}} {{g|m}}
   # Page 109 αδελφών: WARNING: Found form-of template with post-text: # {{el-form-of-nounadj|αδελφή|c=gen|n=p}} {{g|f}}
@@ -177,7 +178,13 @@ templates_by_cap_and_period = [
   ("el-participle of", "ucdot", False), # FIXME
   ("en-simple past of", "lcnodot", False),
   # The following instances need to be fixed up:
-  # [etc]; need to review carefully; have a script remove final periods
+  # (all instances with a final period, which needs to be removed)
+  # Page 193 authors: WARNING: Found form-of template with post-text: # {{en-third-person singular of|author}}''
+  # Page 221 there is: WARNING: Found form-of template with post-text: # {{en-third-person singular of|there be}}. {{n-g|Used to indicate the existence of something physical or abstract in a particular place. see also {{m|en|there are}}.}}
+  # Page 275 hasta: WARNING: Found form-of template with post-text: # {{lb|en|colloquial}} {{en-third-person singular of|hafta}}: {{contraction of|has to|lang=en}}; is required to.
+  # Page 287 ranks: WARNING: Found form-of template with post-text: # {{en-third-person singular of|rank}}''
+  # Page 2003 shields: WARNING: Found form-of template with post-text: # {{en-third-person singular of|shield}}. Protects.
+  # [etc]
   ("en-third-person singular of", "ignoreduc", False), # FIXME
   ("enm-first-person singular of", "ignoreduc", "verified"),
   ("enm-first/third-person singular past of", "ignoreduc", "verified"),
