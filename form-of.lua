@@ -253,6 +253,11 @@ function export.fetch_lang_categories(lang, tags, terminfo, POS)
 				end
 			end
 			return false, 3
+		elseif predicate == "tags=" then
+			local normalized_spec_tags = normalize_tags(spec[2],
+				"recombine multitags")
+			-- FIXME! What is correct name of function?
+			return m_table.deepEqualsList(normalized_tags, normalized_spec_tags), 3
 		elseif predicate == "p=" then
 			return POS == normalize_pos(spec[2]), 3
 		elseif predicate == "pany" then
@@ -294,6 +299,13 @@ function export.fetch_lang_categories(lang, tags, terminfo, POS)
 		if not spec then
 			return false
 		elseif type(spec) == "string" then
+			-- FIXME, call correct functions
+			if spec:find("<<p>>") then
+				if not POS then
+					error("Category spec " .. spec .. " requires a value for p= or POS= but none was provided")
+				end
+				spec = spec:gsub("<<p>>", POS)
+			end
 			table.insert(categories, lang:getCanonicalName() .. " " .. spec)
 			return true
 		elseif type(spec) ~= "table" then
@@ -340,6 +352,14 @@ function export.fetch_lang_categories(lang, tags, terminfo, POS)
 			process_spec(spec)
 		end
 	end
+	if lang:getCode() ~= "und" then
+		local langspecs = m_cats["und"]
+		if langspecs then
+			for _, spec in ipairs(langspecs) do
+				process_spec(spec)
+			end
+		end
+	end
 	return categories
 end
 
@@ -353,19 +373,30 @@ function export.tagged_inflections(tags, terminfo, notext, capfirst, posttext)
 	for i, tagspec in ipairs(ntags) do
 		if tagspec == ";" then
 			if #cur_infl > 0 then
-				table.insert(inflections, table.concat(cur_infl, " "))
+				table.insert(inflections, table.concat(cur_infl))
 			end
 
 			cur_infl = {}
 		else
 			local to_insert = get_tag_display_form(tagspec)
-			-- Here we special-case various sorts of punctuation.
-			-- No space to the right of a comma, rparen or slash;
-			-- no space to the left of an lparen or slash.
-			-- FIXME: Make this into a property of the data entry.
-			if (#cur_infl > 0 and cur_infl[#cur_infl] ~= "(" and
-				cur_infl[#cur_infl] ~= "/" and to_insert ~= "," and
-				to_insert ~= ")" and to_insert ~= "/") then
+			-- Maybe insert a space before inserting the display form
+			-- of the tag. We insert a space if
+			-- (a) we're not the first tag; and
+			-- (b) the tag we're about to insert doesn't have the
+			--     "no_space_on_left" property; and
+			-- (c) the preceding tag doesn't have the "no_space_on_right"
+			--     property.
+			-- NOTE: We depend here on the fact that all tags with either
+			-- of the above proprties set have the same display form as
+			-- canonical form. This is currently the case, but might not
+			-- be in the future; if so, we need to track the canonical
+			-- form of each tag (including the previous one) as well as
+			-- the display form.
+			if (#cur_infl > 0 and
+				(not m_data.tags[cur_infl[#cur_infl]] or
+				 not m_data.tags[cur_infl[#cur_infl]].no_space_on_right) and
+				(not m_data.tags[to_insert] or
+				 not m_data.tags[to_insert].no_space_on_left)) then
 				table.insert(cur_infl, " ")
 			end
 			table.insert(cur_infl, to_insert)
@@ -373,7 +404,7 @@ function export.tagged_inflections(tags, terminfo, notext, capfirst, posttext)
 	end
 
 	if #cur_infl > 0 then
-		table.insert(inflections, table.concat(cur_infl, " "))
+		table.insert(inflections, table.concat(cur_infl))
 	end
 
 	if #inflections == 1 then

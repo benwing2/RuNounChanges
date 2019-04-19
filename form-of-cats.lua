@@ -2,16 +2,18 @@ local cats = {}
 
 --[=[
 
-This contains categorization specs for specific languages. The particular
-categories listed are listed without the preceding canonical language name,
-which will automatically be prepended.
+This contains categorization specs for specific languages and for all languages.
+The particular categories listed are listed without the preceding canonical
+language name, which will automatically be prepended, and the text "<<p>>"
+in a category will be replaced with the user-specified part of speech.
 
-The value of an entry in the cats[] table is a list of specifications.
-Each specification indicates the conditions under which a given category
-is applied. Each specification is processed independently; if multiple
-specifications apply, all the resulting categories will be added to the page.
-(This is equivalent to wrapping the specifications in a {"multi", ...} clause;
-see below.)
+The value of an entry in the cats[] table is a list of specifications to apply
+to inflections in a specific language (except that the entry for "und" applies
+to all languages). Each specification indicates the conditions under which a
+given category is applied. Each specification is processed independently; if
+multiple specifications apply, all the resulting categories will be added to
+the page. (This is equivalent to wrapping the specifications in a
+{"multi", ...} clause; see below.)
 
 A specification is one of:
 
@@ -38,66 +40,75 @@ A specification is one of:
 	Similar to {"has", ...} but activates if any of the tags in TAGS
 	(a list) are present among the user-supplied tags.
 
-(4) A list {"p=", VALUE, SPEC} or {"p=", VALUE, SPEC, ELSESPEC}:
+(4) A list {"tags=", TAGS, SPEC} or {"tags=", TAGS, SPEC, ELSESPEC}:
+
+	Similar to {"hasall", ...} but activates only if the
+	user-supplied tags exactly match the tags in TAGS, including
+	the order. (But, as above, any tag abbreviation can be given
+	in TAGS, and will match any equivalent abbreviation or full
+	form.)
+
+(5) A list {"p=", VALUE, SPEC} or {"p=", VALUE, SPEC, ELSESPEC}:
 
 	Similar to {"has", ...} but activates if the value supplied for the p=
 	or POS= parameters is the specified value (which can be either the full
 	form or any abbreviation).
 
-(5) A list {"pany", VALUES, SPEC} or {"pany", VALUES, SPEC, ELSESPEC}:
+(6) A list {"pany", VALUES, SPEC} or {"pany", VALUES, SPEC, ELSESPEC}:
 
 	Similar to {"p=", ...} but activates if the value supplied for the p=
 	or POS= parameters is any of the specified values (which can be either
 	the full forms or any abbreviation).
 
-(6) A list {"pexists", SPEC} or {"pexists", SPEC, ELSESPEC}:
+(7) A list {"pexists", SPEC} or {"pexists", SPEC, ELSESPEC}:
 
 	Activates if any value was specified for the p= or POS= parameters.
 
-(7) A list {"cond", SPEC1, SPEC2, ...}:
+(8) A list {"cond", SPEC1, SPEC2, ...}:
 
 	If SPEC1 applies, it will be applied; otherwise, if SPEC2 applies, it
 	will be applied; etc. This stops processing specifications as soon as it
 	finds one that applies.
 
-(8) A list {"multi", SPEC1, SPEC2, ...}:
+(9) A list {"multi", SPEC1, SPEC2, ...}:
 
 	If SPEC1 applies, it will be applied; in addition, if SPEC2 applies, it
 	will also be applied; etc. Unlike {"cond", ...}, this continues
 	processing specifications even if a previous one has applied.
 
-(9) A list {"not", CONDITION, SPEC} or {"not", CONDITION, SPEC, ELSESPEC}:
+(10) A list {"not", CONDITION, SPEC} or {"not", CONDITION, SPEC, ELSESPEC}:
 
-	If CONDITION does *NOT* apply, SPEC will be applied, otherwise ELSESPEC
-	will be applied if present. CONDITION is one of:
+	 If CONDITION does *NOT* apply, SPEC will be applied, otherwise ELSESPEC
+	 will be applied if present. CONDITION is one of:
 
-	-- {"has", TAG}
-	-- {"hasall", TAGS}
-	-- {"hasany", TAGS}
-	-- {"p=", VALUE}
-	-- {"pany", VALUES}
-	-- {"pexists"}
-	-- {"not", CONDITION}
-	-- {"and", CONDITION1, CONDITION2}
-	-- {"or", CONDITION1, CONDITION2}
-	-- {"call", FUNCTION} where FUNCTION is a string naming a function listed
-	   in cat_functions in [[Module:form of/functions]], which is passed a
-	   single argument (see (10) below) and should return true or false.
+	 -- {"has", TAG}
+	 -- {"hasall", TAGS}
+	 -- {"hasany", TAGS}
+	 -- {"tags=", TAGS},
+	 -- {"p=", VALUE}
+	 -- {"pany", VALUES}
+	 -- {"pexists"}
+	 -- {"not", CONDITION}
+	 -- {"and", CONDITION1, CONDITION2}
+	 -- {"or", CONDITION1, CONDITION2}
+	 -- {"call", FUNCTION} where FUNCTION is a string naming a function listed
+	    in cat_functions in [[Module:form of/functions]], which is passed a
+	    single argument (see (10) below) and should return true or false.
 
-	That is, conditions are similar to if-else SPECS but without any
-	specifications given.
+	 That is, conditions are similar to if-else SPECS but without any
+	 specifications given.
 
-(10) A list {"and", CONDITION1, CONDITION2, SPEC} or {"and", CONDITION1, CONDITION2, SPEC, ELSESPEC}:
+(11) A list {"and", CONDITION1, CONDITION2, SPEC} or {"and", CONDITION1, CONDITION2, SPEC, ELSESPEC}:
 
-	If CONDITION1 and CONDITION2 both apply, SPEC will be applied, otherwise
-	ELSESPEC will be applied if present. CONDITION is as above for "not".
+	 If CONDITION1 and CONDITION2 both apply, SPEC will be applied, otherwise
+	 ELSESPEC will be applied if present. CONDITION is as above for "not".
 
-(11) A list {"or", CONDITION1, CONDITION2, SPEC} or {"or", CONDITION1, CONDITION2, SPEC, ELSESPEC}:
+(12) A list {"or", CONDITION1, CONDITION2, SPEC} or {"or", CONDITION1, CONDITION2, SPEC, ELSESPEC}:
 
 	 If either CONDITION1 or CONDITION2 apply, SPEC will be applied, otherwise
 	 ELSESPEC will be applied if present. CONDITION is as above for "not".
 
-(12) A list {"call", FUNCTION}:
+(13) A list {"call", FUNCTION}:
 
 	 FUNCTION is the name of a function listed in cat_functions in
 	 [[Module:form of/functions]], which is passed a single argument, a table
@@ -148,6 +159,45 @@ that, if p= isn't specified, or has a value other than "part" or
 "else" specification associated with the "p=" specification.
 
 --]=]
+
+-- First, the language-independent categories; be careful here not to
+-- overcategorize. In practice we achieve this using tags=; we should
+-- probably be smarter. But we don't e.g. want to categorize a page
+-- into "present participles" if it has the tags f|s|pres|part, which
+-- is a participle form rather than a participle itself.
+--
+-- We include the categorization here rather than in e.g. {{augmentative of}}
+-- because we want the categorization to also apply when e.g. an augmentative
+-- is specified using {{inflection of|LANG|...|aug}} rather than
+-- {{augmentative of|LANG}}.
+cats["und"] = {
+	{"tags=", {"aug"}, "augmentative <<p>>s"},
+	{"tags=", {"dim"}, "diminutive <<p>>s"},
+	{"or", {"tags=", {"end"}},
+		{"or", {"tags=", {"end", "form"}}, {"tags=", {"end", "dim"}}},
+		"endearing <<p>>s"},
+	{"tags=", {"pej"}, "derogatory terms"},
+	{"tags=", {"comd"}, "comparative <<p>>s"},
+	{"tags=", {"supd"}, "superlative <<p>>s"},
+	{"tags=", {"equd"}, "<<p>> equative forms"},
+	{"tags=", {"caus"}, "causative <<p>>s"},
+	{"tags=", {"freq"}, "frequentative <<p>>s"},
+	{"tags=", {"iter"}, "iterative <<p>>s"},
+	{"tags=", {"refl"}, "reflexive <<p>>s"},
+	{"or", {"tags=", {"impfv"}}, {"tags=", {"impfv", "form"}}, "imperfective <<p>>s"},
+	{"or", {"tags=", {"pfv"}}, {"tags=", {"pfv", "form"}}, "perfective <<p>>s"},
+	{"tags=", {"nomzn"}, "nominalized adjectives"},
+	{"tags=", {"ger"}, "gerunds"},
+	{"tags=", {"vnoun"}, "verbal nouns"},
+	{"tags=", {"pass"}, "<<p>> passive forms"},
+	{"tags=", {"past", "act", "part"}, "past active participles"},
+	{"tags=", {"past", "pass", "part"}, "past passive participles"},
+	{"tags=", {"past", "part"}, "past participles"},
+	{"tags=", {"pres", "act", "part"}, "present active participles"},
+	{"tags=", {"pres", "pass", "part"}, "present passive participles"},
+	{"tags=", {"pres", "part"}, "present participles"},
+	{"tags=", {"perf", "part"}, "perfect participles"},
+}
 
 cats["art-blk"] = {
 	{"has", "past",

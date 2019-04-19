@@ -126,7 +126,8 @@ tags["dual"] = {
 tags["trial"] = {
 	tag_type = "number",
 	glossary = "trial number",
-	shortcuts = {"tr"},
+	-- FIXME, find if there are any uses of 'tr' and rename to 'tri'
+	shortcuts = {"tri"},
 	wikidata = "Q2142560",
 }
 
@@ -636,6 +637,36 @@ tags["reflexive"] = {
 	wikidata = "Q13475484",
 }
 
+tags["transitive"] = {
+	tag_type = "voice-valence",
+	-- FIXME
+	glossary = "transitive verb",
+	glossary_type = "wp",
+	shortcuts = {"tr", "vt"},
+	-- FIXME
+	-- wikidata = "Q13475484",
+}
+
+tags["intransitive"] = {
+	tag_type = "voice-valence",
+	-- FIXME
+	glossary = "intransitive verb",
+	glossary_type = "wp",
+	shortcuts = {"intr", "vi"},
+	-- FIXME
+	-- wikidata = "Q13475484",
+}
+
+tags["ditransitive"] = {
+	tag_type = "voice-valence",
+	-- FIXME
+	glossary = "ditransitive verb",
+	glossary_type = "wp",
+	shortcuts = {"ditr"},
+	-- FIXME
+	-- wikidata = "Q13475484",
+}
+
 tags["causative"] = {
 	tag_type = "voice-valence",
 	glossary = "causative",
@@ -650,12 +681,14 @@ tags["causative"] = {
 
 tags["infinitive"] = {
 	tag_type = "non-finite",
+	-- FIXME glossary
 	shortcuts = {"inf"},
 	wikidata = "Q179230",
 }
 
 -- A form found in Portuguese and Galician
 tags["personal infinitive"] = {
+	-- FIXME glossary
 	tag_type = "non-finite",
 	shortcuts = {"pinf"},
 }
@@ -761,6 +794,7 @@ tags["supine"] = {
 -- similarly occurs in Japanese as the "te-form"
 tags["conjunctive"] = {
 	tag_type = "non-finite",
+	-- FIXME glossary
 	--glossary = "conjunctive",
 	shortcuts = {"conj"},
 }
@@ -768,6 +802,7 @@ tags["conjunctive"] = {
 -- FIXME! Should this be a mood?
 tags["debitive"] = {
 	tag_type = "non-finite",
+	-- FIXME glossary
 	shortcuts = {"deb"},
 	wikidata = "Q17119041",
 }
@@ -902,6 +937,7 @@ tags["direct"] = {
 
 tags["distributive"] = {
 	tag_type = "case",
+	-- FIXME glossary
 	shortcuts = {"dis", "dist"},
 	wikidata = "Q492457",
 }
@@ -1350,6 +1386,16 @@ tags["diminutive"] = {
 	wikidata = "Q108709",
 }
 
+tags["endearing"] = {
+	tag_type = "attitude",
+	-- FIXME!
+	-- glossary = "endearing",
+	glossary_type = "wp",
+	shortcuts = {"end"},
+	-- FIXME!
+	-- wikidata = "Q108709",
+}
+
 tags["pejorative"] = {
 	tag_type = "attitude",
 	glossary = "pejorative suffix",
@@ -1384,14 +1430,6 @@ tags["adverbial"] = {
 	shortcuts = {"adj"},
 }
 
-tags["possessive"] = {
-	tag_type = "non-finite",
-	glossary = "possessive",
-	glossary_type = "wp",
-	shortcuts = {"poss"},
-	wikidata = "Q2105891",
-}
-
 tags["affirmative"] = {
 	tag_type = "grammar",
 	glossary = "affirmation and negation",
@@ -1406,23 +1444,63 @@ tags["negative"] = {
 	shortcuts = {"neg"},
 }
 
+tags["possessive"] = {
+	tag_type = "non-finite",
+	glossary = "possessive",
+	glossary_type = "wp",
+	shortcuts = {"poss"},
+	wikidata = "Q2105891",
+}
+
+tags["possessed"] = {
+	tag_type = "grammar",
+	glossary = "possessive affix",
+	glossary_type = "wp",
+	shortcuts = {"possd", "possed"} -- posd = positive degree
+	wikidata = "Q804020", -- for possessive affix
+}
+
+tags["non-possessed"] = {
+	tag_type = "grammar",
+	glossary = "possessive affix",
+	glossary_type = "wp",
+	shortcuts = {"npossd", "npossed", "nonpossessed"}
+}
+
 tags["possessive affix"] = {
 	tag_type = "grammar",
 	glossary = "possessive affix",
 	glossary_type = "wp",
-	display = "possessed",
-	shortcuts = {"possuf", "posaf", "possessed"},
+	shortcuts = {"posaf", "possaf"},
+	wikidata = "Q804020",
+}
+
+tags["possessive suffix"] = {
+	tag_type = "grammar",
+	glossary = "possessive affix",
+	glossary_type = "wp",
+	shortcuts = {"possuf"},
+	wikidata = "Q804020",
+}
+
+tags["possessive prefix"] = {
+	tag_type = "grammar",
+	glossary = "possessive affix",
+	glossary_type = "wp",
+	shortcuts = {"pospref", "posspref"},
 	wikidata = "Q804020",
 }
 
 tags["singular possession"] = {
 	tag_type = "grammar",
+	-- FIXME glossary
 	--glossary = "singular possession",
 	shortcuts = {"spos"},
 }
 
 tags["plural possession"] = {
 	tag_type = "grammar",
+	-- FIXME glossary
 	--glossary = "plural possession",
 	shortcuts = {"ppos"},
 }
@@ -1455,6 +1533,66 @@ tags["stem"] = {
 	glossary = "word stem",
 	glossary_type = "wp",
 	wikidata = "Q210523",
+}
+
+tags["prefix"] = {
+	tag_type = "grammar",
+	-- FIXME
+	glossary = "prefix",
+	glossary_type = "wp",
+	shortcuts = {"pref"}, -- pre = prepositional
+	-- FIXME
+	--wikidata = "Q111029",
+}
+
+tags["prefixal"] = {
+	tag_type = "grammar",
+	-- FIXME
+	glossary = "prefix",
+	glossary_type = "wp",
+	shortcuts = {"prefl"}, -- pre = prepositional
+	-- FIXME
+	--wikidata = "Q111029",
+}
+
+tags["suffix"] = {
+	tag_type = "grammar",
+	-- FIXME
+	glossary = "suffix",
+	glossary_type = "wp",
+	shortcuts = {"suf", "suff"},
+	-- FIXME
+	--wikidata = "Q111029",
+}
+
+tags["suffixal"] = {
+	tag_type = "grammar",
+	-- FIXME
+	glossary = "suffix",
+	glossary_type = "wp",
+	shortcuts = {"sufl", "suffl"},
+	-- FIXME
+	--wikidata = "Q111029",
+}
+
+tags["affix"] = {
+	tag_type = "grammar",
+	-- FIXME
+	glossary = "affix",
+	glossary_type = "wp",
+	shortcuts = {"af"}, -- aff = affirmative
+	-- FIXME
+	--wikidata = "Q111029",
+}
+
+tags["affixal"] = {
+	tag_type = "grammar",
+	-- FIXME
+	glossary = "affix",
+	glossary_type = "wp",
+	shortcuts = {"afl"}, -- aff = affirmative
+	-- FIXME
+	--wikidata = "Q111029",
 }
 
 tags["dependent"] = {
@@ -1494,26 +1632,67 @@ tags["nonfinite"] = {
 
 ----------------------- Other tags -----------------------
 
+-- This consists of non-content words like "and" as well as
+-- punctuation characters. If the punctuation characters appear
+-- by themselves as tags, we special-case the handling of
+-- surrounding spaces so the output looks correct.
+
 tags["and"] = {
 	tag_type = "other",
 }
 
--- The next four are special-cased in tagged_inflections to avoid
--- inserting certain sorts of spaces so they appear correct.
 tags[","] = {
 	tag_type = "other",
+	no_space_on_left = true,
+}
+
+tags[":"] = {
+	tag_type = "other",
+	no_space_on_left = true,
 }
 
 tags["/"] = {
 	tag_type = "other",
+	no_space_on_left = true,
+	no_space_on_right = true,
 }
 
 tags["("] = {
 	tag_type = "other",
+	no_space_on_right = true,
 }
 
 tags[")"] = {
 	tag_type = "other",
+	no_space_on_left = true,
+}
+
+tags["["] = {
+	tag_type = "other",
+	no_space_on_right = true,
+}
+
+tags["]"] = {
+	tag_type = "other",
+	no_space_on_left = true,
+}
+
+tags["-"] = { -- regular hyphen-minus
+	tag_type = "other",
+	no_space_on_left = true,
+	no_space_on_right = true,
+}
+
+tags["–"] = { -- Unicode en-dash
+	tag_type = "other",
+	no_space_on_left = true,
+	no_space_on_right = true,
+}
+
+tags["—"] = { -- Unicode em-dash
+	tag_type = "other",
+	no_space_on_left = true,
+	no_space_on_right = true,
 }
 
 
