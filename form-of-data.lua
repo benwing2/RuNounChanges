@@ -1520,18 +1520,16 @@ tags["possessive prefix"] = {
 	wikidata = "Q804020",
 }
 
-tags["singular possession"] = {
+tags["single-possession"] = {
 	tag_type = "grammar",
 	-- FIXME glossary
-	--glossary = "singular possession",
 	shortcuts = {"spos"},
 }
 
-tags["plural possession"] = {
+tags["multiple-possession"] = {
 	tag_type = "grammar",
 	-- FIXME glossary
-	--glossary = "plural possession",
-	shortcuts = {"ppos"},
+	shortcuts = {"mpos"},
 }
 
 tags["nominalized"] = {
@@ -1675,6 +1673,13 @@ tags["nonfinite"] = {
 	glossary = "nonfinite",
 	shortcuts = {"nonfin"},
 	wikidata = "Q1050494", -- entry for "non-finite verb"
+}
+
+tags["aspect"] = {
+	tag_type = "grammar",
+	glossary = "aspect",
+	shortcuts = {"asp"},
+	wikidata = "Q208084",
 }
 
 ----------------------- Other tags -----------------------
