@@ -640,6 +640,7 @@ art_blk_specs = [
 bg_specs = [
   # NOTE: Has automatic, non-controllable initial caps and final period.
   # Both ignored.
+  # NOTE: Original template sets tr=-. We don't do that.
   ("bg-adj form of", (
     "adj form of",
     ("error-if", ("present-except", ["1", "2", "3", "adj"])),
@@ -668,6 +669,7 @@ bg_specs = [
 
   # NOTE: Has automatic, non-controllable initial caps and final period.
   # Both ignored.
+  # NOTE: Original template sets tr=-. We don't do that.
   ("bg-noun form of", (
     "noun form of",
     ("error-if", ("present-except", ["1", "2", "3", "noun"])),
@@ -1050,6 +1052,7 @@ de_specs = [
   ("de-form-adj", (
     "adj form of",
     # lang= occurs at least once, and is ignored.
+    # Ignore nocat; seems to occur in all entries.
     ("error-if", ("present-except", ["deg", "1", "2", "3", "4", "nocat",
       "sort", "lang"])),
     ("set", "1", [
@@ -1123,7 +1126,6 @@ de_specs = [
         ]
       }),
     ]),
-    ("copy", "nocat"),
     ("copy", "sort"),
   )),
 
@@ -1237,7 +1239,7 @@ el_specs = [
     "inflection of",
     ("error-if", ("present-except", ["1", "c", "n", "g", "d", "t", "nodot"])),
     ("set", "1", [
-      "ofs",
+      "el",
       ("copy", "1"),
     ]),
     ("copy", "t"),
@@ -1437,7 +1439,7 @@ enm_specs = [
   # we're ignoring. Doesn't have final period. There are <= 9 uses of each
   # template.
   ("enm-first-person singular of",
-      enm_verb_form(["1", "s", "pres", "ind"])),
+      enm_verb_form(["1s", "pres", "ind"])),
   ("enm-first/third-person singular past of",
       enm_verb_form(["13", "s", "past", "ind"])),
   ("enm-plural of",
@@ -1447,17 +1449,17 @@ enm_specs = [
   ("enm-plural subjunctive of",
       enm_verb_form(["p", "pres", "sub"])),
   ("enm-plural subjunctive past of",
-      enm_verb_form(["p", "sub", "past"])),
+      enm_verb_form(["p", "past", "sub"])),
   ("enm-second-person singular of",
-      enm_verb_form(["2", "s", "pres", "ind"])),
+      enm_verb_form(["2s", "pres", "ind"])),
   ("enm-second-person singular past of",
-      enm_verb_form(["2", "s", "past", "ind"])),
+      enm_verb_form(["2s", "past", "ind"])),
   ("enm-singular subjunctive of",
       enm_verb_form(["s", "pres", "sub"])),
   ("enm-singular subjunctive past of",
-      enm_verb_form(["s", "sub", "past"])),
+      enm_verb_form(["s", "past", "sub"])),
   ("enm-third-person singular of",
-      enm_verb_form(["3", "s", "pres", "ind"])),
+      enm_verb_form(["3s", "pres", "ind"])),
 ]
 
 es_specs = [
@@ -1499,7 +1501,14 @@ et_specs = [
         "pl": "p",
       }),
     ]),
-    ("copy", "pos", "p"),
+    ("set", "p",
+      ("lookup", "pos", {
+        "noun": "n",
+        "pronoun": "pro",
+        "adj": "a",
+        "numeral": "num",
+      }),
+    ),
   )),
 
   # Has default initial caps and final period (controllable by nocap/nodot).
@@ -1595,21 +1604,21 @@ fa_specs = [
       ("copy", "2"),
       "",
       ("lookup", "1", {
-        "man": ["1", "s", "imp"],
-        "imp-man": ["1", "s", "imp"],
-        "to": ["2", "s", "imp"],
-        "imp-to": ["2", "s", "imp"],
-        "u": ["3", "s", "imp"],
-        "imp-u": ["3", "s", "imp"],
-        u"mâ": ["1", "p", "imp"],
-        u"imp-mâ": ["1", "p", "imp"],
-        u"šomâ": ["2", "p", "imp"],
-        u"imp-šomâ": ["2", "p", "imp"],
-        u"ânhâ": ["3", "p", "imp"],
-        u"imp-ânhâ": ["3", "p", "imp"],
-        "r": ["root"],
-        "prstem": ["pres", "stem"],
-        "pstem": ["past", "stem"],
+        "man": ["1s", "imp"],
+        "imp-man": ["1s", "imp"],
+        "to": ["2s", "imp"],
+        "imp-to": ["2s", "imp"],
+        "u": ["3s", "imp"],
+        "imp-u": ["3s", "imp"],
+        u"mâ": ["1p", "imp"],
+        u"imp-mâ": ["1p", "imp"],
+        u"šomâ": ["2p", "imp"],
+        u"imp-šomâ": ["2p", "imp"],
+        u"ânhâ": ["3p", "imp"],
+        u"imp-ânhâ": ["3p", "imp"],
+        "r": ["root", "form"],
+        "prstem": ["pres", "stem", "form"],
+        "pstem": ["past", "stem", "form"],
       }),
     ]),
     ("copy", "t"),
@@ -1806,16 +1815,16 @@ def hi_ur_specs(lang):
         ("copy", "2"),
         "",
         ("lookup", "1", {
-          "tu": ["intim", "2", "s", "imp"],
-          "imp-tu": ["intim", "2", "s", "imp"],
+          "tu": ["intim", "2s", "imp"],
+          "imp-tu": ["intim", "2s", "imp"],
           "tum": ["fam", "2", "imp"],
           "imp-tum": ["fam", "2", "imp"],
           "ap": ["pol", "2", "imp"],
           "imp-ap": ["pol", "2", "imp"],
-          "r": ["root"],
+          "r": ["root", "form"],
           "i": ["obl", "inf"],
           "o": ["obl", "inf"],
-          "c": ["conj"],
+          "c": ["conj", "form"],
           "a": ["pros"],
           "p": ["pros"],
         }),
@@ -1850,18 +1859,18 @@ hu_grammar_table = {
   "del": "del",
   "abl": "abl",
   "pos": "poss",
-  "1s": ["1s", ",", "spos"],
-  "2s": ["2s", ",", "spos"],
-  "3s": ["3s", ",", "spos"],
-  "4s": ["1p", ",", "spos"],
-  "5s": ["2p", ",", "spos"],
-  "6s": ["3p", ",", "spos"],
-  "1p": ["1s", ",", "ppos"],
-  "2p": ["2s", ",", "ppos"],
-  "3p": ["3s", ",", "ppos"],
-  "4p": ["1p", ",", "ppos"],
-  "5p": ["2p", ",", "ppos"],
-  "6p": ["3p", ",", "ppos"],
+  "1s": ["1s", "spos"],
+  "2s": ["2s", "spos"],
+  "3s": ["3s", "spos"],
+  "4s": ["1p", "spos"],
+  "5s": ["2p", "spos"],
+  "6s": ["3p", "spos"],
+  "1p": ["1s", "mpos"],
+  "2p": ["2s", "mpos"],
+  "3p": ["3s", "mpos"],
+  "4p": ["1p", "mpos"],
+  "5p": ["2p", "mpos"],
+  "6p": ["3p", "mpos"],
   "1": "1",
   "2": "2",
   "3": "3",
@@ -1908,7 +1917,7 @@ hu_specs = [
         u"ó": "pres",
         u"ő": "pres",
         u"andó": "fut",
-        u"endő": "pres",
+        u"endő": "fut",
         "va": "adv",
         "ve": "adv",
         u"ván": "adv",
@@ -1969,7 +1978,7 @@ hy_specs = [
         "": [],
       }),
       lambda t, pagemsg:
-        "form" if getparam(t, "5") in ["1", "2"] or getparam(t, "6") in ["n", "nom"] else [],
+        "form" if getparam(t, "6") in ["n", "nom"] else [],
     ]),
   )),
 ]
@@ -2047,6 +2056,7 @@ ja_specs = [
       "past",
     ]),
   )),
+
   ("ja-te form of verb", (
     "verb form of",
     ("error-if", ("present-except", ["1", "sort"])),
@@ -2054,7 +2064,7 @@ ja_specs = [
       "ja",
       ("copy", "1"),
       "",
-      "conj",
+      ["conj", "form"],
     ]),
     ("copy", "sort"),
   )),
@@ -2299,7 +2309,7 @@ lt_specs = [
       ("lookup", "2", {
         "a": "act",
         "act": "act",
-        "active": "active",
+        "active": "act",
         "p": "pass",
         "pass": "pass",
         "passive": "pass",
@@ -2338,10 +2348,10 @@ lt_specs = [
         "": [],
       }),
       ("lookup", "1", {
-        "a": "posd",
-        "abs": "posd",
-        "p": "posd",
-        "pos": "posd",
+        "a": [], # positive degree
+        "abs": [], # positive degree
+        "p": [], # positive degree
+        "pos": [], # positive degree
         "c": "comd",
         "com": "comd",
         "comp": "comd",
@@ -2665,20 +2675,24 @@ lv_specs = [
   )),
 
   ("lv-superlative of", (
-    "inflection of",
-    ("error-if", ("present-except", ["1", "2"])),
-    ("set", "1", [
-      "lv",
-      ("copy", "1"),
-      "",
-      "supd",
-    ]),
-    ("set", "p",
-      ("lookup", "2", {
-        "vpart": "part",
-        "": [],
-      })
-    ),
+    lambda t, pagemsg: (
+      "inflection of",
+      ("error-if", ("present-except", ["1", "2"])),
+      ("set", "1", [
+        "lv",
+        ("copy", "1"),
+        "",
+        "supd",
+      ]),
+      ("set", "p", "part"),
+    ) if getparam(t, "2") == "vpart" else (
+      "superlative of",
+      ("error-if", ("present-except", ["1"])),
+      ("set", "1", [
+        "lv",
+        ("copy", "1"),
+      ]),
+    )
   )),
 
   ("lv-verbal noun of", (
@@ -2731,13 +2745,13 @@ mt_specs = [
       ("copy", "2"),
       "",
       ("lookup", "1", {
-        "1s": ["1", "s"],
-        "2s": ["1", "s"],
+        "1s": ["1s"],
+        "2s": ["2s"],
         "3sm": ["3", "m", "s"],
         "3sf": ["3", "f", "s"],
-        "1p": ["1", "p"],
-        "2p": ["2", "p"],
-        "3p": ["3", "p"],
+        "1p": ["1p"],
+        "2p": ["2p"],
+        "3p": ["3p"],
       }),
     ]),
     ("set", "p", "pre"),
@@ -2811,9 +2825,9 @@ ofs_specs = [
         "m": "m",
         "f": "f",
         "n": "n",
-        "mf": "m//f",
-        "mn": "m//n",
-        "mfn": "m//f//n",
+        "mf": "mf",
+        "mn": "mn",
+        "mfn": "mfn",
         "": [],
       }),
       ("lookup", "w", {
@@ -2852,9 +2866,9 @@ osx_specs = [
         "m": "m",
         "f": "f",
         "n": "n",
-        "mf": "m//f",
-        "mn": "m//n",
-        "mfn": "m//f//n",
+        "mf": "mf",
+        "mn": "mn",
+        "mfn": "mfn",
         "": [],
       }),
       ("lookup", "w", {
@@ -2872,19 +2886,31 @@ pt_specs = [
   # NOTE: Has default initial caps (controllable through nocap) that we
   # are ignoring. Doesn't have final period. Only 11 uses.
   ("pt-adv form of", (
-    "inflection of",
-    ("error-if", ("present-except", ["1", "2", "nocap"])),
-    ("set", "1", [
-      "pt",
-      ("copy", "1"),
-      "",
-      ("lookup", "2", {
-        "f": "f",
-        "comp": "comd",
-        "sup": "supd",
-      }),
-    ]),
-    ("set", "p", "adv"),
+    lambda t, pagemsg: (
+      "comparative of",
+      ("error-if", ("present-except", ["1", "2", "nocap"])),
+      ("set", "1", [
+        "pt",
+        ("copy", "1"),
+      ]),
+      ("set", "p", "adv"),
+    ) if getparam(t, "2") == "comp" else (
+      "superlative of",
+      ("error-if", ("present-except", ["1", "2", "nocap"])),
+      ("set", "1", [
+        "pt",
+        ("copy", "1"),
+      ]),
+      ("set", "p", "adv"),
+    ) if getparam(t, "2") == "sup" else (
+      "feminine of",
+      ("error-if", ("present-except", ["1", "2", "nocap"])),
+      ("set", "1", [
+        "pt",
+        ("copy", "1"),
+      ]),
+      ("set", "p", "adv"),
+    )
   )),
 
   # Has default initial caps and final period (controllable by nocap/nodot).
@@ -3132,11 +3158,13 @@ roa_opt_specs = [
   # Has default initial caps and final period (controllable by nocap/nodot).
   # Both ignored.
   ("roa-opt-noun plural of", (
-    "plural of",
+    "noun form of",
     ("error-if", ("present-except", ["1", "nocap", "nodot"])),
     ("set", "1", [
       "roa-opt",
       ("copy", "1"),
+      "",
+      "p",
     ]),
   )),
 ]
@@ -3204,7 +3232,7 @@ sa_specs = [
       "sa",
       ("copy", "1"),
       "",
-      ["root"],
+      ["root", "form"],
     ]),
   )),
 
@@ -3248,6 +3276,23 @@ sga_specs = [
   )),
 ]
 
+sh_case_map = {
+  "n": "nom",
+  "nom": "nom",
+  "g": "gen",
+  "gen": "gen",
+  "d": "dat",
+  "dat": "dat",
+  "a": "acc",
+  "acc": "acc",
+  "v": "voc",
+  "voc": "voc",
+  "l": "loc",
+  "loc": "loc",
+  "i": "ins",
+  "ins": "ins",
+}
+
 sh_specs = [
   # NOTE: Categorizes into "noun forms", but this should be handled by
   # the headword.
@@ -3259,22 +3304,7 @@ sh_specs = [
       "sh",
       ("copy", "3"),
       "",
-      ("lookup", "1", {
-        "n": "nom",
-        "nom": "nom",
-        "g": "gen",
-        "gen": "gen",
-        "d": "dat",
-        "dat": "dat",
-        "a": "acc",
-        "acc": "acc",
-        "v": "voc",
-        "voc": "voc",
-        "l": "loc",
-        "loc": "loc",
-        "i": "ins",
-        "ins": "ins",
-      }),
+      ("lookup", "1", sh_case_map),
       ("lookup", "2", {
         "s": "s",
         "p": "p",
@@ -3284,7 +3314,22 @@ sh_specs = [
 
   # NOTE: Categorizes into "proper noun forms", but this should be handled by
   # the headword. Otherwise identical to {{sh-form-noun}}.
-  ("sh-form-proper-noun", "sh-form-noun"),
+  ("sh-form-proper-noun", (
+    "inflection of",
+    # ignore sc=Cyrl.
+    ("error-if", ("present-except", ["1", "2", "3", "sc"])),
+    ("set", "1", [
+      "sh",
+      ("copy", "3"),
+      "",
+      ("lookup", "1", sh_case_map),
+      ("lookup", "2", {
+        "s": "s",
+        "p": "p",
+      }),
+    ]),
+    ("set", "p", "pn"),
+  )),
 
   # NOTE: Has automatic, non-controllable final period that we're ignoring.
   # Doesn't have initial caps.
@@ -3498,10 +3543,17 @@ sv_specs = [
   ("sv-adj-form-abs-def-m", sv_adj_form(["def", "natm"])),
   ("sv-adj-form-abs-indef-n", sv_adj_form(["indef", "n"])),
   ("sv-adj-form-abs-pl", sv_adj_form(["p"])),
-  ("sv-adj-form-comp", sv_adj_form(["comd"])),
-  ("sv-adj-form-sup-attr", sv_adj_form(["sup", "attr"])),
-  ("sv-adj-form-sup-attr-m", sv_adj_form(["sup", "attr", "s", "m"])),
-  ("sv-adj-form-sup-pred", sv_adj_form(["sup", "pred"])),
+  ("sv-adj-form-comp", (
+    "comparative of",
+    ("error-if", ("present-except", ["1"])),
+    ("set", "1", [
+      "sv",
+      ("copy", "1"),
+    ]),
+  )),
+  ("sv-adj-form-sup-attr", sv_adj_form(["supd", "attr"])),
+  ("sv-adj-form-sup-attr-m", sv_adj_form(["supd", "attr", "s", "m"])),
+  ("sv-adj-form-sup-pred", sv_adj_form(["supd", "pred"])),
   ("sv-adv-form-comp", (
     "comparative of",
     ("error-if", ("present-except", ["1"])),
@@ -3520,13 +3572,13 @@ sv_specs = [
     ]),
     ("set", "POS", "adverb"),
   )),
-  ("sv-noun-form-def", sv_noun_form(["def", "sg"])),
-  ("sv-noun-form-def-gen", sv_noun_form(["def", "gen", "sg"])),
-  ("sv-noun-form-def-gen-pl", sv_noun_form(["def", "gen", "pl"])),
-  ("sv-noun-form-def-pl", sv_noun_form(["def", "pl"])),
-  ("sv-noun-form-indef-gen", sv_noun_form(["indef", "gen", "sg"])),
-  ("sv-noun-form-indef-gen-pl", sv_noun_form(["indef", "gen", "pl"])),
-  ("sv-noun-form-indef-pl", sv_noun_form(["indef", "pl"])),
+  ("sv-noun-form-def", sv_noun_form(["def", "s"])),
+  ("sv-noun-form-def-gen", sv_noun_form(["def", "gen", "s"])),
+  ("sv-noun-form-def-gen-pl", sv_noun_form(["def", "gen", "p"])),
+  ("sv-noun-form-def-pl", sv_noun_form(["def", "p"])),
+  ("sv-noun-form-indef-gen", sv_noun_form(["indef", "gen", "s"])),
+  ("sv-noun-form-indef-gen-pl", sv_noun_form(["indef", "gen", "p"])),
+  ("sv-noun-form-indef-pl", sv_noun_form(["indef", "p"])),
   ("sv-proper-noun-gen", (
     "inflection of",
     ("error-if", ("present-except", ["1", "2"])),
@@ -3574,21 +3626,21 @@ tg_specs = [
       ("copy", "2"),
       "",
       ("lookup", "1", {
-        "man": ["1", "s", "imp"],
-        "imp-man": ["1", "s", "imp"],
-        "tu": ["2", "s", "imp"],
-        "imp-tu": ["2", "s", "imp"],
-        "vay": ["3", "s", "imp"],
-        "imp-vay": ["3", "s", "imp"],
-        "mo": ["1", "p", "imp"],
-        "imp-mo": ["1", "p", "imp"],
-        u"šomo": ["2", "p", "imp"],
-        u"imp-šomo": ["2", "p", "imp"],
-        "onho": ["3", "p", "imp"],
-        "imp-onho": ["3", "p", "imp"],
-        "r": ["root"],
-        "prstem": ["pres", "stem"],
-        "pstem": ["past", "stem"],
+        "man": ["1s", "imp"],
+        "imp-man": ["1s", "imp"],
+        "tu": ["2s", "imp"],
+        "imp-tu": ["2s", "imp"],
+        "vay": ["3s", "imp"],
+        "imp-vay": ["3s", "imp"],
+        "mo": ["1p", "imp"],
+        "imp-mo": ["1p", "imp"],
+        u"šomo": ["2p", "imp"],
+        u"imp-šomo": ["2p", "imp"],
+        "onho": ["3p", "imp"],
+        "imp-onho": ["3p", "imp"],
+        "r": ["root", "form"],
+        "prstem": ["pres", "stem", "form"],
+        "pstem": ["past", "stem", "form"],
       }),
     ]),
   )),
@@ -3623,18 +3675,18 @@ tr_grammar_table = {
   "dat": "dat",
   "abl": "abl",
   "pos": "poss",
-  "1s": ["1s", ",", "spos"],
-  "2s": ["2s", ",", "spos"],
-  "3s": ["3s", ",", "spos"],
-  "4s": ["1p", ",", "spos"],
-  "5s": ["2p", ",", "spos"],
-  "6s": ["3p", ",", "spos"],
-  "1p": ["1s", ",", "ppos"],
-  "2p": ["2s", ",", "ppos"],
-  "3p": ["3s", ",", "ppos"],
-  "4p": ["1p", ",", "ppos"],
-  "5p": ["2p", ",", "ppos"],
-  "6p": ["3p", ",", "ppos"],
+  "1s": ["1s", "spos"],
+  "2s": ["2s", "spos"],
+  "3s": ["3s", "spos"],
+  "4s": ["1p", "spos"],
+  "5s": ["2p", "spos"],
+  "6s": ["3p", "spos"],
+  "1p": ["1s", "mpos"],
+  "2p": ["2s", "mpos"],
+  "3p": ["3s", "mpos"],
+  "4p": ["1p", "mpos"],
+  "5p": ["2p", "mpos"],
+  "6p": ["3p", "mpos"],
   "1": "1",
   "2": "2",
   "3": "3",
@@ -3654,8 +3706,12 @@ tr_specs = [
       "tr",
       ("copy", "1"),
       "",
-      ("lookup", "2", tr_grammar_table),
-      ("lookup", "3", tr_grammar_table),
+      ("lookup", "2", {
+        "pos": [
+          ("lookup", "3", tr_grammar_table),
+          "poss",
+        ],
+      }),
     ]),
   )),
 ]
@@ -3716,40 +3772,97 @@ templates_to_rename_specs = (
 )
 
 def rewrite_to_foo_form_of(t, pagemsg, comment):
+  origt = unicode(t)
   tn = tname(t)
   if tn == "inflection of":
     pos = getparam(t, "p")
     if pos in ["n", "noun"]:
       rmparam(t, "p")
-      blib.set_template_name("noun form of")
+      blib.set_template_name(t, "noun form of")
     elif pos in ["a", "adj", "adjective"]:
       rmparam(t, "p")
-      blib.set_template_name("adj form of")
+      blib.set_template_name(t, "adj form of")
     elif pos in ["v", "verb"]:
       rmparam(t, "p")
-      blib.set_template_name("verb form of")
+      blib.set_template_name(t, "verb form of")
   newtn = tname(t)
   if newtn != tn:
     comment = re.sub(r"(to|with \{\{)%s([|\}])" % tn, r"\1%s\2" % newtn, comment)
+  if unicode(t) != origt:
+    pagemsg("rewrite_to_foo_form_of: Replaced %s with %s" %
+      (origt, unicode(t)))
+
   return t, comment
 
 def rewrite_to_participle_of(t, pagemsg, comment):
+  origt = unicode(t)
   tn = tname(t)
-  if tn == "inflection of":
+  if tn in ["inflection of", "verb form of"]:
     max_numbered = 0
     for param in t.params:
       pname = unicode(param.name).strip()
       if re.search("^[0-9]$", pname) and int(pname) > max_numbered:
         max_numbered = int(pname)
     if getparam(t, str(max_numbered)) == "part":
-      rmparam(t, "part")
-      blib.set_template_name("participle of")
+      rmparam(t, str(max_numbered))
+      blib.set_template_name(t, "participle of")
   newtn = tname(t)
   if newtn != tn:
     comment = re.sub(r"(to|with \{\{)%s([|\}])" % tn, r"\1%s\2" % newtn, comment)
+
+  if unicode(t) != origt:
+    pagemsg("rewrite_to_participle_of: Replaced %s with %s" %
+      (origt, unicode(t)))
+
   return t, comment
 
-post_rewrite_hooks = [rewrite_to_foo_form_of, rewrite_to_participle_of]
+def rewrite_person_number_of(t, pagemsg, comment):
+  origt = unicode(t)
+  tn = tname(t)
+  if tn in ["inflection of", "verb form of", "noun form of", "adj form of",
+      "participle of"]:
+    first_rewrite_param = None
+    first_rewrite_val = None
+    for param in t.params:
+      pname = unicode(param.name).strip()
+      if re.search("^[0-9]$", pname) and int(pname) > 1:
+        pval = getparam(t, pname)
+        prevval = getparam(t, str(int(pname) - 1))
+        if pval in ["s", "d", "p"] and prevval in ["1", "2", "3"]:
+          first_rewrite_param = int(pname) - 1
+          first_rewrite_val = prevval + pval
+          break
+    if first_rewrite_param:
+      # Fetch all params.
+      params = []
+      for param in t.params:
+        pname = unicode(param.name).strip()
+        if re.search("^[0-9]$", pname):
+          if int(pname) < first_rewrite_param:
+            params.append((unicode(param.name), param.value, param.showkey))
+          elif int(pname) == first_rewrite_param:
+            params.append((unicode(param.name), first_rewrite_val, param.showkey))
+          elif int(pname) >= first_rewrite_param + 2:
+            params.append((str(int(pname) - 1), param.value, param.showkey))
+        else:
+          params.append((unicode(param.name), param.value, param.showkey))
+      # Erase all params.
+      del t.params[:]
+      # Put back new params
+      for pname, pval, showkey in params:
+        t.add(pname, pval, showkey=showkey, preserve_spacing=False)
+
+  if unicode(t) != origt:
+    pagemsg("rewrite_person_number_of: Replaced %s with %s" %
+      (origt, unicode(t)))
+
+  return t, comment
+
+post_rewrite_hooks = [
+  rewrite_to_foo_form_of,
+  rewrite_to_participle_of,
+  rewrite_person_number_of,
+]
 
 templates_to_rename_map = {}
 
@@ -4069,7 +4182,7 @@ def process_page(page, index, parsed):
           t.add(pname, pval, preserve_spacing=False)
         else:
           pname, pval, showkey = param
-          t.add(pname, pval, showkey=showkey, spreserve_spacing=False)
+          t.add(pname, pval, showkey=showkey, preserve_spacing=False)
 
       # Now apply post-rewrite hooks
       for hook in post_rewrite_hooks:
