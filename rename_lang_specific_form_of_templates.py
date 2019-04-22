@@ -648,6 +648,13 @@ bg_specs = [
       "bg",
       ("copy", "adj"),
       "",
+      # Template has order 3, 1, 2 but putting def/indef first makes
+      # more sense.
+      ("lookup", "2", {
+        "extended": "extended",
+        "indefinite": "indef",
+        "definite": "def",
+      }),
       ("lookup", "3", {
         "subject": "sbjv",
         "object": "objv",
@@ -658,11 +665,6 @@ bg_specs = [
         "feminine": ["f", "s"],
         "neuter": ["n", "s"],
         "plural": ["p"],
-      }),
-      ("lookup", "2", {
-        "extended": "extended",
-        "indefinite": "indef",
-        "definite": "def",
       }),
     ]),
   )),
@@ -677,6 +679,15 @@ bg_specs = [
       "bg",
       ("copy", "noun"),
       "",
+      # Template has order 3, 1, 2 but putting indef/def first makes
+      # more sense. Note that if "vocative" occurs in 1=, it always
+      # occurs alone.
+      ("lookup", "2", {
+        "indefinite": "indef",
+        "definite": "def",
+        "vocative": "voc",
+        "": [],
+      }),
       ("lookup", "3", {
         "subject": "sbjv",
         "object": "objv",
@@ -685,14 +696,8 @@ bg_specs = [
       ("lookup", "1", {
         "singular": ["s"],
         "plural": ["p"],
-        "count": ["count"],
+        "count": ["count", "form"],
         "vocative": ["voc"],
-      }),
-      ("lookup", "2", {
-        "indefinite": "indef",
-        "definite": "def",
-        "vocative": "voc",
-        "": [],
       }),
     ]),
   )),
@@ -709,13 +714,15 @@ bg_specs = [
       ("lookup", "part", {
         "adverbial participle": ["adv", "part"],
         "verbal noun": [
-          ("lookup", "g", {
-            "singular": "s",
-            "plural": "p",
-          }),
+          # Template has the order g, d but putting def/indef first makes
+          # more sense.
           ("lookup", "d", {
             "indefinite": "indef",
             "definite": "def",
+          }),
+          ("lookup", "g", {
+            "singular": "s",
+            "plural": "p",
           }),
           "vnoun"
         ],
@@ -742,21 +749,24 @@ bg_specs = [
           }),
         ],
         True: [
+          # Template has order f, g, d but putting def/indef first makes
+          # more sense.
+          ("lookup", "d", {
+            "indefinite": "indef",
+            "definite": "def",
+            "": [],
+          }),
           ("lookup", "f", {
             "subject form": "sbjv",
             "object form": "objv",
             "": [], # can occur esp. with non-masculine participles
           }),
           ("lookup", "g", {
-            "masculine": "m",
-            "feminine": "f",
-            "neuter": "n",
+            # Template doesn't include "singular" here.
+            "masculine": ["m", "s"],
+            "feminine": ["f", "s"],
+            "neuter": ["n", "s"],
             "plural": "p",
-          }),
-          ("lookup", "d", {
-            "indefinite": "indef",
-            "definite": "def",
-            "": [],
           }),
           ("lookup", "part", {
             "present active participle": ["pres", "act", "part"],
@@ -976,16 +986,8 @@ chm_specs = [
       "chm",
       ("copy", "1"),
       "",
-      ("lookup", "2", {
-        "1s": [],
-        "2s": [],
-        "3s": [],
-        "1p": [],
-        "2p": [],
-        "3p": [],
-        "0": [],
-        True: "npossd",
-      }),
+      # Original template inserts "non-possessed" whenever not a
+      # possessive form.
       ("lookup", "2", chm_grammar_table),
       ("lookup", "3", chm_grammar_table),
       ("lookup", "4", chm_grammar_table),
@@ -1071,11 +1073,7 @@ de_specs = [
         True: [
           ("copy", "4"),
           "",
-          ("lookup", "deg", {
-            "c": "comd",
-            "s": "supd",
-            "": [],
-          }),
+          # Template has the order deg, 1, 2, 3.
           ("lookup", "1", {
             "s": "str",
             "str": "str",
@@ -1097,18 +1095,6 @@ de_specs = [
             "wm": "mix//wk",
             "": [], # occurs when all apply; FIXME should we enumerate this explicitly?
           }),
-          ("lookup", "2", {
-            "m": ["m", "s"],
-            "masculine": ["m", "s"],
-            "f": ["f", "s"],
-            "feminine": ["f", "s"],
-            "n": ["n", "s"],
-            "neuter": ["n", "s"],
-            "p": "p",
-            "pl": "p",
-            "plural": "p",
-            "": [], # occurs when all apply; FIXME should we enumerate this explicitly?
-          }),
           ("lookup", "3", {
             "n": "nom",
             "nom": "nom",
@@ -1122,6 +1108,23 @@ de_specs = [
             "a": "acc",
             "acc": "acc",
             "accusative": "acc",
+          }),
+          ("lookup", "2", {
+            "m": ["m", "s"],
+            "masculine": ["m", "s"],
+            "f": ["f", "s"],
+            "feminine": ["f", "s"],
+            "n": ["n", "s"],
+            "neuter": ["n", "s"],
+            "p": "p",
+            "pl": "p",
+            "plural": "p",
+            "": [], # occurs when all apply; FIXME should we enumerate this explicitly?
+          }),
+          ("lookup", "deg", {
+            "c": "comd",
+            "s": "supd",
+            "": [],
           }),
         ]
       }),
@@ -1171,30 +1174,36 @@ de_specs = [
         "pr": ["pres", "part"],
         "pp": ["past", "part"],
         True: [
+          # Template has the order 2, 3, 4, 5. We reorder to consistently
+          # use the order person, number, dependent, tense/mood.
+          # FIXME: Verify this works.
           ("lookup", "2", {
             "1": "1",
             "2": "2",
             "3": "3",
-            "i": "imp",
+            "i": [],
           }),
           ("lookup", "3", {
             "s": "s",
             "p": "p",
           }),
+          ("lookup", "5", {
+            "": [],
+            True: ["dep"],
+          }),
           ("lookup", "2", {
-            "i": ("lookup", "4", {
-              "": [],
-            }),
+            "i": [
+              "imp",
+              ("lookup", "4", {
+                "": [],
+              }),
+            ],
             True: ("lookup", "4", {
               "g": "pres",
               "v": ["pret"],
               "k1": ["sub", "I"],
               "k2": ["sub", "II"],
             }),
-          }),
-          ("lookup", "5", {
-            "": [],
-            True: ["dep", "form"],
           }),
         ],
       }),
@@ -1228,8 +1237,8 @@ el_specs = [
           ("copy", "alt"),
           "asupd",
         ]),
-        ("set", "p", "adv"),
         ("copy", "gloss", "t"),
+        ("set", "p", "adv"),
       )
   )),
 
@@ -1262,11 +1271,7 @@ el_specs = [
         "nav": "nom//acc//voc",
         "nv": "nom//voc",
       }),
-      ("lookup", "n", {
-        "s": "s",
-        "p": "p",
-        "": [], # occurs with numbers
-      }),
+      # Template has n= before g=.
       ("lookup", "g", {
         "m": "m",
         "f": "f",
@@ -1276,6 +1281,11 @@ el_specs = [
         "fn": "fn",
         "mfn": "mfn",
         "": [], # doesn't apply when dealing with a noun
+      }),
+      ("lookup", "n", {
+        "s": "s",
+        "p": "p",
+        "": [], # occurs with numbers
       }),
       ("lookup", "d", {
         "c": "comd",
@@ -1292,6 +1302,7 @@ el_specs = [
   # final period (using nodot). Both ignored.
   ("el-form-of-verb", (
     "verb form of",
+    # active= and ta= need to be removed prior to renaming this template.
     ("error-if", ("present-except", ["1", "nonfinite", "voice", "pers",
       "tense", "mood", "t", "nodot"])),
     ("set", "1", [
@@ -1332,6 +1343,12 @@ el_specs = [
             "dep": "dep",
             "": [], # tense frequently left out when mood is imperative
           }),
+          # Template has mood before voice.
+          ("lookup", "voice", {
+            "pass": "pass",
+            "act": "act",
+            "": [], # voice frequently left out (when active?)
+          }),
           ("lookup", "mood", {
             "imptv": "imp",
             "imptv-i": ["impfv", "imp"],
@@ -1344,11 +1361,6 @@ el_specs = [
             "subj": "sub",
             "sub": "sub",
             "": [], # mood frequently left out when tense=past
-          }),
-          ("lookup", "voice", {
-            "pass": "pass",
-            "act": "act",
-            "": [], # voice frequently left out (when active?)
           }),
         ]
       }),
@@ -1549,6 +1561,7 @@ et_specs = [
         "1p": "1p",
         "2p": "2p",
         "3p": "3p",
+        # We should reorder p=pass later but it never occurs.
         "pass": "pass",
         "": [],
       }),
@@ -1636,6 +1649,9 @@ fi_specs = [
       "fi",
       ("copy", "1"),
       "",
+      # Template has the order pn, tm. We intersperse them to maintain the
+      # consistent order person, number, tense, voice, mood.
+      # FIXME: Verify this works.
       ("lookup", "pn", {
         "1s": "1s",
         "2s": "2s",
@@ -1644,13 +1660,32 @@ fi_specs = [
         "2p": "2p",
         "3p": "3p",
         "p": "p",
+        "pasv": [],
+        "pass": [],
+        "": [], # especially in conjunction with connegative
+      }),
+      ("lookup", "tm", {
+        "pres": ["pres"],
+        "past": ["past"],
+        "cond": [],
+        "impr": [],
+        "potn": [],
+      }),
+      ("lookup", "pn", {
+        "1s": [],
+        "2s": [],
+        "3s": [],
+        "1p": [],
+        "2p": [],
+        "3p": [],
+        "p": [],
         "pasv": "pass",
         "pass": "pass",
         "": [], # especially in conjunction with connegative
       }),
       ("lookup", "tm", {
-        "pres": ["pres", "ind"],
-        "past": ["past", "ind"],
+        "pres": "ind",
+        "past": "ind",
         "cond": "cond",
         "impr": "imp",
         "potn": "potn",
@@ -1744,8 +1779,8 @@ def hi_ur_specs(lang):
         "",
         ("lookup", "1", {
           "d": "dir",
-          "i": "indir",
-          "o": "indir",
+          "i": "obl",
+          "o": "obl",
           "v": "voc",
           "": [],
         }),
@@ -1767,16 +1802,17 @@ def hi_ur_specs(lang):
         lang,
         ("copy", "3"),
         "",
-        ("lookup", "1", {
-          "h": "hab",
-          "p": "pfv",
-          "c": ["cont", "part"],
-        }),
+        # Template has the order 1, 2.
         ("lookup", "2", {
           "ms": ["m", "s"],
           "mp": ["m", "p"],
           "fs": ["f", "s"],
           "fp": ["f", "p"],
+        }),
+        ("lookup", "1", {
+          "h": "hab",
+          "p": "pfv",
+          "c": ["cont", "part"],
         }),
         ["adj", "form"],
       ]),
@@ -1794,8 +1830,8 @@ def hi_ur_specs(lang):
         "",
         ("lookup", "1", {
           "d": "dir",
-          "i": "indir",
-          "o": "indir",
+          "i": "obl",
+          "o": "obl",
           "v": "voc",
         }),
         ("lookup", "2", {
@@ -1938,6 +1974,13 @@ hy_specs = [
     ("copy", "tr"),
     ("set", "3", [
       "",
+      # Template has order 1, 2, 3, 5 but putting "def" first makes more sense.
+      ("lookup", "3", {
+        "d": "def",
+        "def": "def",
+        "i": [], # occurs in a few forms despite docs
+        "": [],
+      }),
       ("lookup", "1", {
         "n": "nom",
         "nom": "nom",
@@ -1961,24 +2004,16 @@ hy_specs = [
         "p": "p",
         "pl": "p",
       }),
-      ("lookup", "3", {
-        "d": "def",
-        "def": "def",
-        "i": [], # occurs in a few forms despite docs
-        "": [],
-      }),
       ("lookup", "5", {
         "1": ["1", "poss"],
         "2": ["2", "poss"],
         "": [],
       }),
       ("lookup", "6", {
-        "n": "nomz",
-        "nom": "nomz",
+        "n": ["nomz", "form"],
+        "nom": ["nomz", "form"],
         "": [],
       }),
-      lambda t, pagemsg:
-        "form" if getparam(t, "6") in ["n", "nom"] else [],
     ]),
   )),
 ]
@@ -2160,7 +2195,8 @@ liv_specs = [
         "p": ["past", "ind"],
         "n": ["neg"],
         "i": ["imp"],
-        "in": ["imp", "neg"],
+        # Template says imperative negative.
+        "in": ["neg", "imp"],
         "c": ["cond"],
         "j": ["juss"],
         "q": ["quot"],
@@ -2178,6 +2214,7 @@ liv_specs = [
       "liv",
       ("copy", "3"),
       "",
+      # Template has 1 first but it "nom pl" makes more sense than "pl nom".
       ("lookup", "2", {
         "n": "nom",
         "g": "gen",
@@ -2209,6 +2246,13 @@ liv_specs = [
       "liv",
       ("copy", "4"),
       "",
+      # Template has the order 1, 2, 3, 5 but it makes more sense to put
+      # sg/pl first.
+      ("lookup", "5", {
+        "sg": "s",
+        "pl": "p",
+        "": [],
+      }),
       ("lookup", "1", {
         "pr": "present",
         "p": "past",
@@ -2225,11 +2269,6 @@ liv_specs = [
         "s": "sup",
         "sa": ["sup", "abe"],
         "d": ["deb"],
-      }),
-      ("lookup", "5", {
-        "sg": "s",
-        "pl": "p",
-        "": [],
       }),
     ]),
   )),
@@ -2282,6 +2321,7 @@ lt_specs = [
       "lt",
       ("copy", "1"),
       "",
+      # Template says '"manner of action" būdinys participle of'.
       ["adv", "budinys"],
     ]),
   )),
@@ -2314,6 +2354,8 @@ lt_specs = [
         "pass": "pass",
         "passive": "pass",
       }),
+      # Template says "dalyvis participle of" but we don't include the
+      # word "dalyvis" as these are just regular participles.
     ]),
   )),
 
@@ -2328,6 +2370,8 @@ lt_specs = [
       "lt",
       ("copy", "1"),
       "",
+      # Template says "dalyvis participle of necessity of" but we don't
+      # include the word "dalyvis" as these are just regular participles.
       "partnec",
     ]),
   )),
@@ -2348,6 +2392,7 @@ lt_specs = [
         "": [],
       }),
       ("lookup", "1", {
+        # Template includes "positive" explicitly but
         "a": [], # positive degree
         "abs": [], # positive degree
         "p": [], # positive degree
@@ -2359,8 +2404,9 @@ lt_specs = [
         "sup": "supd",
         "": [],
       }),
-      ("lookup", "2", lt_adj_gender_number_table),
+      # Template has the order 2, 3.
       ("lookup", "3", lt_adj_case_table),
+      ("lookup", "2", lt_adj_gender_number_table),
     ]),
   )),
 
@@ -2374,8 +2420,9 @@ lt_specs = [
       "lt",
       ("copy", "3"),
       "",
-      ("lookup", "1", lt_adj_gender_number_table),
+      # Template has the order 1, 2.
       ("lookup", "2", lt_adj_case_table),
+      ("lookup", "1", lt_adj_gender_number_table),
     ]),
   )),
 
@@ -2429,8 +2476,9 @@ lt_specs = [
         "yes": "pron",
         "": [],
       }),
-      ("lookup", "1", lt_adj_gender_number_table),
+      # Template has the order 1, 2.
       ("lookup", "2", lt_adj_case_table),
+      ("lookup", "1", lt_adj_gender_number_table),
     ]),
     ("set", "p", "part"),
   )),
@@ -2440,12 +2488,13 @@ lt_specs = [
   # should be handled by the headword.
   ("lt-form-pronoun", (
     "inflection of",
-    # template handles class= and displays pre-text, but it never occurs
+    # Template handles class= and displays pre-text, but it never occurs.
     ("error-if", ("present-except", ["1", "2", "3", "4"])),
     ("set", "1", [
       "lt",
       ("copy", "3"),
       "",
+      # Template has the order 1, 4, 2.
       ("lookup", "1", {
         "1s": "1s",
         "2s": "2s",
@@ -2456,13 +2505,6 @@ lt_specs = [
         "1p": "1p",
         "2p": "2p",
         "3p": "3p",
-        "": [],
-      }),
-      ("lookup", "4", {
-        "ms": ["m", "s"],
-        "fs": ["f", "s"],
-        "mp": ["m", "p"],
-        "fp": ["f", "p"],
         "": [],
       }),
       ("lookup", "2", {
@@ -2478,6 +2520,13 @@ lt_specs = [
         "loc": "loc",
         "i": "ins",
         "ins": "ins",
+      }),
+      ("lookup", "4", {
+        "ms": ["m", "s"],
+        "fs": ["f", "s"],
+        "mp": ["m", "p"],
+        "fp": ["f", "p"],
+        "": [],
       }),
     ]),
     ("set", "p", "pron"),
@@ -2519,8 +2568,8 @@ lt_specs = [
       ("lookup", "4", {
         "ref": "refl",
         "reflexive": "refl",
-        "refshort": ["refl", "short"],
-        "reflexive shortened": ["refl", "short"],
+        "refshort": ["refl", "short", "form"],
+        "reflexive shortened": ["refl", "short", "form"],
         "": [],
       }),
     ]),
@@ -2649,7 +2698,7 @@ lv_specs = [
         "v": "v",
         "vpart": "part",
         "pro": "pro",
-        True: [],
+        "": [],
       }),
     ),
   )),
@@ -2675,24 +2724,18 @@ lv_specs = [
   )),
 
   ("lv-superlative of", (
-    lambda t, pagemsg: (
-      "inflection of",
-      ("error-if", ("present-except", ["1", "2"])),
-      ("set", "1", [
-        "lv",
-        ("copy", "1"),
-        "",
-        "supd",
-      ]),
-      ("set", "p", "part"),
-    ) if getparam(t, "2") == "vpart" else (
-      "superlative of",
-      ("error-if", ("present-except", ["1"])),
-      ("set", "1", [
-        "lv",
-        ("copy", "1"),
-      ]),
-    )
+    "superlative of",
+    ("error-if", ("present-except", ["1", "2"])),
+    ("set", "1", [
+      "lv",
+      ("copy", "1"),
+    ]),
+    ("set", "p",
+      ("lookup", "2", {
+        "vpart": "part",
+        "": [],
+      })
+    ),
   )),
 
   ("lv-verbal noun of", (
@@ -2766,8 +2809,7 @@ nb_specs = [
       "nb",
       ("copy", "1"),
       "",
-      "def",
-      "gen",
+      ["def", "gen", "s"],
     ]),
   )),
 
@@ -2778,9 +2820,7 @@ nb_specs = [
       "nb",
       ("copy", "1"),
       "",
-      "def",
-      "gen",
-      "p",
+      ["def", "gen", "p"],
     ]),
   )),
 
@@ -2791,9 +2831,7 @@ nb_specs = [
       "nb",
       ("copy", "1"),
       "",
-      "indef",
-      "gen",
-      "p",
+      ["indef", "gen", "p"],
     ]),
   )),
 ]
@@ -2808,6 +2846,13 @@ ofs_specs = [
       "ofs",
       ("copy", "1"),
       ("copy", "2"),
+      # Template has the order c, n, g, w but the order w, c, g, n makes
+      # more sense.
+      ("lookup", "w", {
+        "w": "wk",
+        "s": "str",
+        "": [],
+      }),
       ("lookup", "c", {
         "nom": "nom",
         "nomacc": "nom//acc",
@@ -2815,11 +2860,6 @@ ofs_specs = [
         "gen": "gen",
         "dat": "dat",
         "accdat": "acc//dat",
-      }),
-      ("lookup", "n", {
-        "sg": "s",
-        "pl": "p",
-        "": [],
       }),
       ("lookup", "g", {
         "m": "m",
@@ -2830,9 +2870,9 @@ ofs_specs = [
         "mfn": "mfn",
         "": [],
       }),
-      ("lookup", "w", {
-        "w": "wk",
-        "s": "str",
+      ("lookup", "n", {
+        "sg": "s",
+        "pl": "p",
         "": [],
       }),
     ]),
@@ -2849,6 +2889,13 @@ osx_specs = [
       "osx",
       ("copy", "1"),
       ("copy", "2"),
+      # Template has the order c, n, g, w but the order w, c, g, n makes
+      # more sense.
+      ("lookup", "w", {
+        "w": "wk",
+        "s": "str",
+        "": [],
+      }),
       ("lookup", "c", {
         "nom": "nom",
         "nomacc": "nom//acc",
@@ -2857,10 +2904,6 @@ osx_specs = [
         "dat": "dat",
         "accdat": "acc//dat",
         "ins": "ins",
-      }),
-      ("lookup", "n", {
-        "sg": "s",
-        "pl": "p",
       }),
       ("lookup", "g", {
         "m": "m",
@@ -2871,10 +2914,9 @@ osx_specs = [
         "mfn": "mfn",
         "": [],
       }),
-      ("lookup", "w", {
-        "w": "wk",
-        "s": "str",
-        "": [],
+      ("lookup", "n", {
+        "sg": "s",
+        "pl": "p",
       }),
     ]),
   )),
@@ -3037,8 +3079,9 @@ def ro_form_noun(t, pagemsg):
           "d": "def",
           "": [],
         }),
-        ("lookup", "2", number_table),
+        # Template has the order 2, 3.
         ("lookup", "3", case_table),
+        ("lookup", "2", number_table),
       ]),
     )
   else:
@@ -3052,8 +3095,9 @@ def ro_form_noun(t, pagemsg):
         ("copy", "3"),
         "",
         "def",
-        ("lookup", "1", number_table),
+        # Template has the order 1, 2.
         ("lookup", "2", case_table),
+        ("lookup", "1", number_table),
       ]),
     )
 
@@ -3071,21 +3115,7 @@ ro_specs = [
         "yes": "def",
         "": [],
       }),
-      ("lookup", "1", {
-        "m": ["m", "s"],
-        "ms": ["m", "s"],
-        "f": ["f", "s"],
-        "fs": ["f", "s"],
-        "n": ["n", "s"],
-        "ns": ["n", "s"],
-        "mp": ["m", "p"],
-        "mpl": ["m", "p"],
-        "fp": ["f", "p"],
-        "fpl": ["f", "p"],
-        "np": ["n", "p"],
-        "npl": ["n", "p"],
-        "p": "p",
-      }),
+      # Template has the order 1, 2.
       ("lookup", "2", {
         "n": "nom",
         "nom": "nom",
@@ -3103,6 +3133,21 @@ ro_specs = [
         "voc": "voc",
         "vocative": "voc",
         "": [],
+      }),
+      ("lookup", "1", {
+        "m": ["m", "s"],
+        "ms": ["m", "s"],
+        "f": ["f", "s"],
+        "fs": ["f", "s"],
+        "n": ["n", "s"],
+        "ns": ["n", "s"],
+        "mp": ["m", "p"],
+        "mpl": ["m", "p"],
+        "fp": ["f", "p"],
+        "fpl": ["f", "p"],
+        "np": ["n", "p"],
+        "npl": ["n", "p"],
+        "p": "p",
       }),
     ]),
   )),
@@ -3188,10 +3233,13 @@ ru_specs = [
     ("set", "1", [
       "ru",
       ("copy", "1"),
-      ("copy", "2"),
     ]),
     ("copy", "tr"),
-    ("set", "4", ru_get_nonblank_tags),
+    # FIXME. Verify this works.
+    ("set", "3", [
+      ("copy", "2"),
+      ru_get_nonblank_tags,
+    ]),
     ("copy", "gloss", "t"),
     ("copy", "pos"),
     ("copy", "nocat"),
@@ -3370,9 +3418,8 @@ sh_specs = [
             "imperative": "imp",
             "aor": "aor",
             "aorist": "aor",
-            "future": "fut",
-            "present": "pres",
-            "p": "p",
+            "impf": "impf",
+            "imperfect": "impf",
           }),
         ]),
       )
@@ -3401,16 +3448,7 @@ sl_specs = [
       "sl",
       ("copy", "4"),
       "",
-      ("lookup", "1", {
-        "m": "m",
-        "f": "f",
-        "n": "n",
-      }),
-      ("lookup", "2", {
-        "s": "s",
-        "d": "d",
-        "p": "p",
-      }),
+      # Template has the order 1, 2, 3.
       ("lookup", "3", {
         "n": "nom",
         "g": "gen",
@@ -3425,6 +3463,16 @@ sl_specs = [
         "ai": lambda t, pagemsg: sl_check_1_is_m(t, pagemsg, ["indef", "acc"]),
         "ia": lambda t, pagemsg: sl_check_1_is_m(t, pagemsg, ["indef", "acc"]),
         "aa": lambda t, pagemsg: sl_check_1_is_m(t, pagemsg, ["an", "acc"]),
+      }),
+      ("lookup", "1", {
+        "m": "m",
+        "f": "f",
+        "n": "n",
+      }),
+      ("lookup", "2", {
+        "s": "s",
+        "d": "d",
+        "p": "p",
       }),
     ]),
   )),
@@ -3538,6 +3586,7 @@ sv_specs = [
   # NOTE: All of the following adjective, adverb and verb forms have automatic,
   # non-controllable final periods that we're ignoring. Don't have initial
   # caps. No final period for the noun forms.
+  # First five templates include the word "absolute" that we omit.
   ("sv-adj-form-abs-def", sv_adj_form(["def"])),
   ("sv-adj-form-abs-def+pl", sv_adj_form(["s", "def", "and", "p"])),
   ("sv-adj-form-abs-def-m", sv_adj_form(["def", "natm"])),
@@ -3551,9 +3600,12 @@ sv_specs = [
       ("copy", "1"),
     ]),
   )),
-  ("sv-adj-form-sup-attr", sv_adj_form(["supd", "attr"])),
-  ("sv-adj-form-sup-attr-m", sv_adj_form(["supd", "attr", "s", "m"])),
-  ("sv-adj-form-sup-pred", sv_adj_form(["supd", "pred"])),
+  # Template says "superlative attributive".
+  ("sv-adj-form-sup-attr", sv_adj_form(["attr", "supd"])),
+  # Template says "superlative attributive singular masculine".
+  ("sv-adj-form-sup-attr-m", sv_adj_form(["m", "s", "attr", "supd"])),
+  # Template says "superlative predicative".
+  ("sv-adj-form-sup-pred", sv_adj_form(["pred", "supd"])),
   ("sv-adv-form-comp", (
     "comparative of",
     ("error-if", ("present-except", ["1"])),
@@ -3591,7 +3643,8 @@ sv_specs = [
     ("set", "p", "pn"),
   )),
   ("sv-verb-form-imp", sv_verb_form(["imp"])),
-  ("sv-verb-form-inf-pass", sv_verb_form(["inf", "pass"])),
+  # Template says "infinitive passive".
+  ("sv-verb-form-inf-pass", sv_verb_form(["pass", "inf"])),
   # Contrary to what we said above, this one in particular has the final
   # period controllable by |dot=, which can override it. Pretty sure it
   # never occurs.
@@ -3608,7 +3661,8 @@ sv_specs = [
   ("sv-verb-form-prepart", sv_verb_form(["pres", "part"])),
   ("sv-verb-form-subjunctive", sv_verb_form(["sub"])),
   ("sv-verb-form-sup", sv_verb_form(["sup"])),
-  ("sv-verb-form-sup-pass", sv_verb_form(["sup", "pass"])),
+  # Template says "supine passive".
+  ("sv-verb-form-sup-pass", sv_verb_form(["pass", "sup"])),
 ]
 
 tg_specs = [
