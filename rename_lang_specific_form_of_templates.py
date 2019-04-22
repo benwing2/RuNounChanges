@@ -3902,7 +3902,7 @@ def rewrite_person_number_of(t, pagemsg, comment):
           params.append((unicode(param.name), param.value, param.showkey))
       # Erase all params.
       del t.params[:]
-      # Put back new params
+      # Put back new params.
       for pname, pval, showkey in params:
         t.add(pname, pval, showkey=showkey, preserve_spacing=False)
 
