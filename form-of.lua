@@ -1,10 +1,9 @@
 local m_links = require("Module:links")
 local m_table = require("Module:table")
 local m_pos = mw.loadData("Module:form of/pos")
-local m_data = mw.loadData("Module:form of/data")
-local m_cats = mw.loadData("Module:form of/cats")
 local m_functions = require("Module:form of/functions")
 
+local ulen = mw.ustring.len
 local rsubn = mw.ustring.gsub
 local rmatch = mw.ustring.match
 local rsplit = mw.text.split
@@ -69,9 +68,46 @@ local function infl_track(page)
 end
 
 
+-- Look up a shortcut tag and return its expansion. If no expansion found,
+-- return the tag itself. This first looks up in [[Module:form of/data]]
+-- (which includes more common tags) and then in [[Module:form of/data2]].
+local function lookup_shortcut(tag)
+	local m_data = mw.loadData("Module:form of/data")
+	local shortcut = m_data.shortcuts[tag]
+	if shortcut then
+		return shortcut
+	end
+	local m_data2 = mw.loadData("Module:form of/data2")
+	local shortcut = m_data2.shortcuts[tag]
+	if shortcut then
+		return shortcut
+	end
+	return tag
+end
+
+
+-- Look up a normalized/canonicalized tag and return the data object
+-- associated with it. If the tag isn't found, return nil. This first looks up
+-- in [[Module:form of/data]] (which includes more common tags) and then in
+-- [[Module:form of/data2]].
+local function lookup_tag(tag)
+	local m_data = mw.loadData("Module:form of/data")
+	local tagobj = m_data.tags[tag]
+	if tagobj then
+		return tagobj
+	end
+	local m_data2 = mw.loadData("Module:form of/data2")
+	local tagobj2 = m_data2.tags[tag]
+	if tagobj2 then
+		return tagobj2
+	end
+	return nil
+end
+
+
 -- Normalize a single tag, which should not be a list or multipart tag.
 local function normalize_single_tag(tag, do_track)
-	local normalized = m_data.shortcuts[tag] or tag
+	local normalized = lookup_shortcut(tag)
 	if normalized ~= tag then
 		tag = normalized
 		if do_track then
@@ -79,7 +115,7 @@ local function normalize_single_tag(tag, do_track)
 			infl_track("tag/" .. tag)
 		end
 	end
-	if not m_data.tags[tag] and do_track then
+	if not lookup_tag(tag) and do_track then
 		-- If after all expansions and normalizations we don't recognize
 		-- the canonical tag, track it.
 		infl_track("unknown")
@@ -97,7 +133,7 @@ end
 local function normalize_tag(tag, recombine_multitags, do_track)
 	-- Check for a shortcut before splitting. (I think the only case this
 	-- should apply to is when a list tag expands to a multipart tag.)
-	local expanded_tag = m_data.shortcuts[tag] or tag
+	local expanded_tag = lookup_shortcut(tag)
 	if type(expanded_tag) ~= "string" then
 		error("List tags should already have been expanded: " .. tag)
 	end
@@ -159,7 +195,7 @@ local function normalize_tags(tags, recombine_multitags, do_track)
 		end
 		-- Expand the tag, which may generate a new tag (either a
 		-- fully canonicalized tag, a multipart tag, or a list of tags).
-		local expanded_tag = m_data.shortcuts[tag] or tag
+		local expanded_tag = lookup_shortcut(tag)
 		if expanded_tag ~= tag then
 			tag = expanded_tag
 			-- Track the expansion if it's not the same as the raw tag.
@@ -192,7 +228,7 @@ end
 
 
 local function get_single_tag_display_form(normtag)
-	local data = m_data.tags[normtag]
+	local data = lookup_tag(normtag)
 
 	-- If the tag has a special display form, use it
 	if data and data.display then
@@ -235,6 +271,8 @@ end
 
 
 function export.fetch_lang_categories(lang, tags, terminfo, POS)
+	local m_cats = mw.loadData("Module:form of/cats")
+
 	local categories = {}
 
 	local normalized_tags = normalize_tags(tags, "recombine multitags")
@@ -402,18 +440,34 @@ function export.tagged_inflections(tags, terminfo, notext, capfirst, posttext)
 			--     "no_space_on_left" property; and
 			-- (c) the preceding tag doesn't have the "no_space_on_right"
 			--     property.
-			-- NOTE: We depend here on the fact that all tags with either
-			-- of the above proprties set have the same display form as
-			-- canonical form. This is currently the case, but might not
-			-- be in the future; if so, we need to track the canonical
-			-- form of each tag (including the previous one) as well as
-			-- the display form.
-			if (#cur_infl > 0 and
-				(not m_data.tags[cur_infl[#cur_infl]] or
-				 not m_data.tags[cur_infl[#cur_infl]].no_space_on_right) and
-				(not m_data.tags[to_insert] or
-				 not m_data.tags[to_insert].no_space_on_left)) then
-				table.insert(cur_infl, " ")
+			-- NOTE: We depend here on the fact that
+			-- (1) all tags with either of the above properties set have the
+			--     same display form as canonical form, and
+			-- (2) all tags with either of the above properties set are
+			--     single-character tags.
+			-- The second property is an optimization to avoid looking up
+			-- display forms resulting from multipart tags, which won't be
+			-- found and which will trigger loading of [[Module:form of/data2]].
+			-- If multichar punctuation is added in the future, it's ok to
+			-- change the == 1 below to <= 2 or <= 3.
+			--
+			-- If the first property above fails to hold in the future, we
+			-- need to track the canonical form of each tag (including the
+			-- previous one) as well as the display form. This would also
+			-- avoid the need for the == 1 check.
+			if #cur_infl > 0 then
+				local most_recent_tagobj = ulen(cur_infl[#cur_infl]) == 1 and
+					lookup_tag(cur_infl[#cur_infl])
+				local to_insert_tagobj = ulen(to_insert) == 1 and
+					lookup_tag(to_insert)
+				if (
+					(not most_recent_tagobj or
+					 not most_recent_tagobj.no_space_on_right) and
+					(not to_insert_tagobj or
+					 not to_insert_tagobj.no_space_on_left)
+				) then
+					table.insert(cur_infl, " ")
+				end
 			end
 			table.insert(cur_infl, to_insert)
 		end
@@ -453,7 +507,7 @@ function export.to_Wikidata_IDs(tags, skip_tags_without_ids)
 			return nil
 		end
 
-		local data = m_data.tags[tag]
+		local data = lookup_tag(tag)
 
 		if not data or not data.wikidata then
 			if not skip_tags_without_ids then
