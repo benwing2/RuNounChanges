@@ -207,7 +207,7 @@ tags["animate"] = {
 tags["inanimate"] = {
 	tag_type = "animacy",
 	glossary = "inanimate",
-	shortcuts = {"in"},
+	shortcuts = {"in", "inan"},
 	wikidata = "Q51927539",
 }
 
@@ -215,7 +215,7 @@ tags["personal"] = {
 	tag_type = "animacy",
 	glossary = "animacy",
 	glossary_type = "wp",
-	shortcuts = {"pr"},
+	shortcuts = {"pr", "pers"},
 }
 
 
@@ -230,6 +230,8 @@ tags["present"] = {
 
 tags["simple present"] = {
 	tag_type = "tense-aspect",
+	-- Wikipedia has an entry for "simple present" but it is English-specific,
+	-- while the actual term is used in many languages.
 	glossary = "present tense",
 	shortcuts = {"spres"},
 	-- Same as present.
@@ -244,9 +246,13 @@ tags["past"] = {
 
 tags["simple past"] = {
 	tag_type = "tense-aspect",
+	-- Wikipedia has an entry for "simple past" but it is English-specific,
+	-- while the actual term is used in many languages. There is also a
+	-- French-specific entry "passé simple".
 	glossary = "past tense",
 	shortcuts = {"spast"},
-	-- Same as past.
+	-- Same as past. Wikidata has an entry for "simple past" but it is
+	-- English-specific.
 	wikidata = "Q1994301",
 }
 
@@ -254,6 +260,14 @@ tags["future"] = {
 	tag_type = "tense-aspect",
 	glossary = "future tense",
 	shortcuts = {"fut", "futr"},
+	wikidata = "Q501405",
+}
+
+tags["simple future"] = {
+	tag_type = "tense-aspect",
+	glossary = "future tense",
+	shortcuts = {"sfut", "sfutr"},
+	-- Same as future.
 	wikidata = "Q501405",
 }
 
