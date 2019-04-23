@@ -12,6 +12,7 @@ local shortcuts = {}
 
 ----------------------- Person -----------------------
 
+
 ----------------------- Number -----------------------
 
 tags["trial"] = {
@@ -269,6 +270,14 @@ tags["reciprocal"] = {
 	wikidata = "Q1964083",
 }
 
+-- Specific to Modern Irish, similar to impersonal
+tags["autonomous"] = {
+	tag_type = "voice-valence",
+	glossary = "autonomous",
+	glossary_type = "wikt",
+	shortcuts = {"auton"},
+}
+
 
 ----------------------- Non-finite -----------------------
 
@@ -375,7 +384,8 @@ tags["absolutive"] = {
 	tag_type = "case",
 	glossary = "absolutive case",
 	glossary_type = "wp",
-	shortcuts = {"abs"},
+	-- FIXME, find uses of "abs" = absolutive
+	shortcuts = {"absv"},
 	wikidata = "Q332734",
 }
 
@@ -699,27 +709,97 @@ tags["equative degree"] = {
 }
 
 
------------------------ Levels of politness -----------------------
-
-tags["intimate"] = {
-	tag_type = "politeness",
-	glossary = "T–V distinction",
-	glossary_type = "wp",
-	shortcuts = {"intim"},
-}
+----------------------- Register -----------------------
 
 tags["familiar"] = {
-	tag_type = "politeness",
+	tag_type = "register",
 	glossary = "T–V distinction",
 	glossary_type = "wp",
 	shortcuts = {"fam"},
 }
 
 tags["polite"] = {
-	tag_type = "politeness",
+	tag_type = "register",
 	glossary = "T–V distinction",
 	glossary_type = "wp",
 	shortcuts = {"pol"},
+}
+
+tags["intimate"] = {
+	tag_type = "register",
+	-- "intimate" is also a possible formality level in the sociolinguistic
+	-- register sense.
+	glossary = "T–V distinction",
+	glossary_type = "wp",
+	shortcuts = {"intim"},
+}
+
+tags["formal"] = {
+	tag_type = "register",
+	glossary = "register (sociolinguistics)",
+	glossary_type = "wp",
+	shortcuts = {"form"},
+}
+
+tags["informal"] = {
+	tag_type = "register",
+	glossary = "register (sociolinguistics)",
+	glossary_type = "wp",
+	shortcuts = {"inform"},
+}
+
+tags["colloquial"] = {
+	tag_type = "register",
+	glossary = "colloquialism",
+	glossary_type = "wp",
+	shortcuts = {"colloq"},
+}
+
+tags["slang"] = {
+	tag_type = "register",
+	glossary = "slang",
+	glossary_type = "wp",
+}
+
+tags["contemporary"] = {
+	tag_type = "register",
+	glossary = "contemporary",
+	glossary_type = "wikt",
+	shortcuts = {"conty"},
+}
+
+tags["literary"] = {
+	tag_type = "register",
+	glossary = "literary language",
+	glossary_type = "wp",
+	shortcuts = {"lit"},
+}
+
+tags["dated"] = {
+	tag_type = "register",
+	glossary = "dated",
+	glossary_type = "wikt",
+}
+
+tags["archaic"] = {
+	tag_type = "register",
+	glossary = "archaism",
+	glossary_type = "wp",
+	shortcuts = {"arch"},
+}
+
+tags["obsolete"] = {
+	tag_type = "register",
+	glossary = "obsolete",
+	glossary_type = "wikt",
+	shortcuts = {"obs"},
+}
+
+tags["emphatic"] = {
+	tag_type = "register",
+	glossary = "emphatic",
+	glossary_type = "wikt",
+	shortcuts = {"emph"},
 }
 
 
@@ -773,6 +853,21 @@ tags["obviative"] = {
 
 ----------------------- Inflection classes -----------------------
 
+tags["prototonic"] = {
+	tag_type = "register",
+	glossary = "dependent and independent verb forms",
+	glossary_type = "wp",
+	shortcuts = {"prot"},
+}
+
+tags["deuterotonic"] = {
+	tag_type = "register",
+	glossary = "dependent and independent verb forms",
+	glossary_type = "wp",
+	shortcuts = {"deut"},
+}
+
+
 ----------------------- Attitude -----------------------
 
 tags["endearing"] = {
@@ -789,6 +884,48 @@ tags["endearing"] = {
 ----------------------- Sound changes -----------------------
 
 ----------------------- Misc grammar -----------------------
+
+tags["absolute"] = {
+	tag_type = "grammar",
+	glossary = "absolute",
+	glossary_type = "wikt",
+	shortcuts = {"abs"},
+}
+
+tags["relative"] = {
+	tag_type = "grammar",
+	glossary = "relative",
+	glossary_type = "wikt",
+	shortcuts = {"rel"},
+}
+
+tags["conjunct"] = {
+	tag_type = "grammar",
+	glossary = "conjunct",
+	glossary_type = "wp",
+	shortcuts = {"conjt"},
+}
+
+tags["synthetic"] = {
+	tag_type = "grammar",
+	glossary = "synthetic",
+	glossary_type = "wikt",
+	shortcuts = {"synth"},
+}
+
+tags["analytic"] = {
+	tag_type = "grammar",
+	glossary = "analytic",
+	glossary_type = "wikt",
+	shortcuts = {"anal", "analytical"},
+}
+
+tags["periphrastic"] = {
+	tag_type = "grammar",
+	glossary = "periphrastic",
+	glossary_type = "wikt",
+	shortcuts = {"peri"},
+}
 
 tags["affirmative"] = {
 	tag_type = "grammar",
@@ -931,6 +1068,12 @@ tags["nonfinite"] = {
 	glossary = "nonfinite",
 	shortcuts = {"nonfin"},
 	wikidata = "Q1050494", -- entry for "non-finite verb"
+}
+
+tags["tense"] = {
+	tag_type = "grammar",
+	glossary = "tense",
+	wikidata = "Q177691",
 }
 
 tags["aspect"] = {

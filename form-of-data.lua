@@ -228,31 +228,9 @@ tags["present"] = {
 	wikidata = "Q192613",
 }
 
-tags["simple present"] = {
-	tag_type = "tense-aspect",
-	-- Wikipedia has an entry for "simple present" but it is English-specific,
-	-- while the actual term is used in many languages.
-	glossary = "present tense",
-	shortcuts = {"spres"},
-	-- Same as present.
-	wikidata = "Q192613",
-}
-
 tags["past"] = {
 	tag_type = "tense-aspect",
 	glossary = "past tense",
-	wikidata = "Q1994301",
-}
-
-tags["simple past"] = {
-	tag_type = "tense-aspect",
-	-- Wikipedia has an entry for "simple past" but it is English-specific,
-	-- while the actual term is used in many languages. There is also a
-	-- French-specific entry "passé simple".
-	glossary = "past tense",
-	shortcuts = {"spast"},
-	-- Same as past. Wikidata has an entry for "simple past" but it is
-	-- English-specific.
 	wikidata = "Q1994301",
 }
 
@@ -260,14 +238,6 @@ tags["future"] = {
 	tag_type = "tense-aspect",
 	glossary = "future tense",
 	shortcuts = {"fut", "futr"},
-	wikidata = "Q501405",
-}
-
-tags["simple future"] = {
-	tag_type = "tense-aspect",
-	glossary = "future tense",
-	shortcuts = {"sfut", "sfutr"},
-	-- Same as future.
 	wikidata = "Q501405",
 }
 
@@ -297,14 +267,6 @@ tags["perfect"] = {
 	tag_type = "tense-aspect",
 	glossary = "perfect",
 	shortcuts = {"perf"},
-	wikidata = "Q625420",
-}
-
-tags["simple perfect"] = {
-	tag_type = "tense-aspect",
-	glossary = "perfect",
-	shortcuts = {"sperf"},
-	-- Same as perfect.
 	wikidata = "Q625420",
 }
 
@@ -349,6 +311,11 @@ tags["perfective"] = {
 	shortcuts = {"pfv", "perfv"},
 	wikidata = "Q1424306",
 }
+
+shortcuts["spast"] = {"simple", "past"}
+shortcuts["simple past"] = {"simple", "past"}
+shortcuts["spres"] = {"simple", "present"}
+shortcuts["simple present"] = {"simple", "present"}
 
 
 ----------------------- Mood -----------------------
@@ -727,6 +694,23 @@ tags["contracted"] = {
 
 
 ----------------------- Misc grammar -----------------------
+
+tags["simple"] = {
+	tag_type = "grammar",
+	shortcuts = {"sim"},
+}
+
+tags["short"] = {
+	tag_type = "grammar",
+}
+
+tags["long"] = {
+	tag_type = "grammar",
+}
+
+tags["form"] = {
+	tag_type = "grammar",
+}
 
 tags["adjectival"] = {
 	tag_type = "grammar",
