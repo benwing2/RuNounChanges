@@ -614,7 +614,10 @@ function export.inflection_of_t(frame)
 	local params = {
 		-- Numbered params
 		[compat and "lang" or 1] = {required = not iargs["lang"]},
-		[term_param + 2] = {list = true, required = true},
+		[term_param + 2] = {list = true,
+			-- at least one inflection tag is required unless preinfl or
+			-- postinfl tags are given
+			required = #iargs["preinfl"] == 0 and #iargs["postinfl"] == 0},
 		
 		-- Named params not controlling link display		
 		["cat"] = {list = true},

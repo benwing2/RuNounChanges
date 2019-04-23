@@ -496,12 +496,8 @@ cats["sa"] = {
 }
 
 cats["sco"] = {
-	{"has", "spast", "verb simple past forms"},
-	{"or",
-		{"hasall", {"3", "s", "pres", "ind"}},
-		{"hasall", {"3", "s", "spres", "ind"}},
-		"third-person singular forms",
-	},
+	{"hasall", {"simple", "past"}, "verb simple past forms"},
+	{"hasall", {"3", "s", "pres", "ind"}, "third-person singular forms"},
 }
 
 cats["sl"] = {
