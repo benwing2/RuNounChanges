@@ -2193,7 +2193,7 @@ liv_specs = [
       ("lookup", "3", {
         "pr": ["pres", "ind"],
         "p": ["past", "ind"],
-        "n": ["neg"],
+        "n": ["neg", "form"],
         "i": ["imp"],
         # Template says imperative negative.
         "in": ["neg", "imp"],
@@ -2710,7 +2710,7 @@ lv_specs = [
       "lv",
       ("copy", "1"),
       "",
-      "neg",
+      ["neg", "form"],
     ]),
   )),
 
@@ -3179,10 +3179,10 @@ ro_specs = [
         "present": ["pres", "ind"],
         "impf": ["impf", "ind"],
         "imperfect": ["impf", "ind"],
-        "perf": ["sperf", "ind"],
-        "perfect": ["sperf", "ind"],
-        "pret": ["sperf", "ind"],
-        "preterite": ["sperf", "ind"],
+        "perf": ["sim", "perf", "ind"],
+        "perfect": ["sim", "perf", "ind"],
+        "pret": ["sim", "perf", "ind"],
+        "preterite": ["sim", "perf", "ind"],
         "imperfect": ["impf", "ind"],
         "plu": ["plup", "ind"],
         "plus": ["plup", "ind"],
