@@ -1,3 +1,11 @@
+--[=[
+	This module contains functions to implement {{form of/*doc}} templates.
+	The module contains the wrappers meant to be called directly from templates.
+	The actual implementations are in [[Module:form of doc]].
+
+	Author: Benwing2
+]=]
+
 local export = {}
 
 local m_parameters = require("Module:parameters")
