@@ -1,3 +1,12 @@
+--[=[
+	This module contains functions to implement {{form of/*doc}} templates.
+	The module contains the actual implementation, meant to be called from other
+	Lua code. See [[Module:form of doc/templates]] for the function meant to be
+	called directly from templates.
+
+	Author: Benwing2
+]=]
+
 local export = {}
 
 local m_template_link = require("Module:template link")
@@ -25,16 +34,30 @@ local function ucfirst(text)
 	return uupper(usub(text, 1, 1)) .. usub(text, 2)
 end
 
-local function template_name()
+local function template_name(preserve_lang_code)
+	-- Fetch the template name, minus the '/documentation' suffix that may follow
+	-- and without any language-specific prefixes (e.g. 'el-' or 'bsl-ine-pro-')
+	-- (unless `preserve_lang_code` is given).
 	local PAGENAME =  mw.title.getCurrentTitle().text
-	return rsub(PAGENAME, "/documentation$", "")
+	local tempname = rsub(PAGENAME, "/documentation$", "")
+	if not preserve_lang_code then
+		while true do
+			-- Repeatedly strip off language code prefixes, in case there are multiple.
+			local newname = rsub(tempname, "^[a-z][a-z][a-z]?%-", "")
+			if newname == tempname then
+				break
+			end
+			tempname = newname
+		end
+	end
+	return tempname
 end
 
 function export.introdoc(args)
 	local langname = args.lang and lang_name(args.lang, "lang")
 	local exlangnames = {}
 	for _, exlang in ipairs(args.exlang) do
-		table.insert(exlangnames, lang_name(args.exlang, "exlang"))
+		table.insert(exlangnames, lang_name(exlang, "exlang"))
 	end
 	parts = {}
 	table.insert(parts, "This template creates a definition line for ")
@@ -122,18 +145,19 @@ function export.paramdoc(args)
 	table.insert(parts, "''Positional (unnamed) parameters:''\n")
 	if args.lang then
 		param_and_doc("1", false, true, "The term to link to (which this page is " .. sgdescof .. "). This should include any needed diacritics as appropriate to " .. lang_name(args.lang, "lang") .. ". These diacritics will automatically be stripped out in the appropriate fashion in order to create the link to the page.")
+		param_and_doc("2", false, false, "The text to be shown in the link to the term. If empty or omitted, the term specified by the first parameter will be used. This parameter is normally not necessary, and should not be used solely to indicate diacritics; instead, put the diacritics in the first parameter.")
 	else
-		param_and_doc("1", false, true, "The [[WT:LANGCODE|language code]] of the term linked to (which this page is " .. sgdescof .. "). See [[Wiktionary:Languages]]. <small>The parameter <code>|lang=</code> is a deprecated synonym; please do not use. If this is used, all numbered parameters move down by one.</small>")
+		param_and_doc("1", false, true, "The [[WT:LANGCODE|language code]] of the term linked to (which this page is " .. sgdescof .. "). See [[Wiktionary:List of languages]]. <small>The parameter <code>|lang=</code> is a deprecated synonym; please do not use. If this is used, all numbered parameters move down by one.</small>")
 		param_and_doc("2", false, true, "The term to link to (which this page is " .. sgdescof .. "). This should include diacritics as appropriate to the language (e.g. accents in Russian to mark the stress, vowel diacritics in Arabic, macrons in Latin to indicate vowel length, etc.). These diacritics will automatically be stripped out in a language-specific fashion in order to create the link to the page.")
+		param_and_doc("3", false, false, "The text to be shown in the link to the term. If empty or omitted, the term specified by the second parameter will be used. This parameter is normally not necessary, and should not be used solely to indicate diacritics; instead, put the diacritics in the second parameter.")
 	end
-	param_and_doc(args.lang and "2" or "3", false, false, "The text to be shown in the link to the term. If empty or omitted, the term specified by the second parameter will be used. This parameter is normally not necessary, and should not be used solely to indicate diacritics; instead, put the diacritics in the second parameter.")
 	table.insert(parts, "''Named parameters:''\n")
 	param_and_doc({"t", args.lang and "3" or "4"}, false, false, "A gloss or short translation of the term linked to. <small>The parameter <code>|gloss=</code> is a deprecated synonym; please do not use.</small>")
 	param_and_doc("tr", false, false, "Transliteration for non-Latin-script terms, if different from the automatically-generated one.")
 	param_and_doc("ts", false, false, "Transcription for non-Latin-script terms whose transliteration is markedly different from the actual pronunciation. Should not be used for IPA pronunciations.")
 	param_and_doc("sc", false, false, "Script code to use, if script detection does not work. See [[Wiktionary:Scripts]].")
 	if args.withfrom then
-		param_and_doc("from", true, false, "A label (see " .. m_template_link.format_link({"label"}) .. " that gives additional information on the dialect that the term belongs to, the place that it originates from, or something similar.")
+		param_and_doc("from", true, false, "A label (see " .. m_template_link.format_link({"label"}) .. ") that gives additional information on the dialect that the term belongs to, the place that it originates from, or something similar.")
 	end
 	if args.withdot then
 		param_and_doc("dot", false, false, "A character to replace the final dot that is normally shown automatically.")
@@ -161,9 +185,18 @@ function export.usagedoc(args)
 		table.insert(langparts, '<code>' .. langcode .. '</code> for ' .. lang_name(langcode, "exlang"))
 	end
 	sub.exlangs = m_table.serialCommaJoin(langparts, {conj = "or"})
-	sub.tempname = template_name()
-	
-	return strutils.format([===[
+	sub.tempname = template_name("preserve lang code")
+
+	if args.lang then
+		return strutils.format([===[
+==Usage==
+Use in the definition line, most commonly as follows:
+ # {\op}{\op}{tempname}|<var><primary entry goes here></var>{\cl}{\cl}
+
+===Parameters===
+]===], sub) .. export.paramdoc(args)
+	else
+		return strutils.format([===[
 ==Usage==
 Use in the definition line, most commonly as follows:
  # {\op}{\op}{tempname}|<var><langcode></var>|<var><primary entry goes here></var>{\cl}{\cl}
@@ -171,6 +204,7 @@ where <code><var><langcode></var></code> is the [[Wiktionary:Languages|language 
 
 ===Parameters===
 ]===], sub) .. export.paramdoc(args)
+	end
 end
 
 function export.fulldoc(args)
