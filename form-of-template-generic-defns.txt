@@ -1,3 +1,17 @@
+ca-val:
+(''[[Valencian]]'': {{m|ca|{{{1|}}}|{{{2|}}}}})<!--
+
+--><noinclude>{{documentation}}</noinclude>
+sv-obs noun form:
+<span class='use-with-mention'>obsolete form of {{m|sv|{{{1|}}}|{{{2|}}}}},</span>{{catlangname|sv|obsolete noun forms}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+----------- end text -----------
+sv-obs verb pl:
+<span class='use-with-mention'>obsolete plural form of {{m|sv|{{{1|}}}|{{{2|}}}}},</span>{{catlangname|sv|obsolete verb forms}}<!--
+
+--><noinclude>{{documentation}}</noinclude>
+----------- end text -----------
 nc comp of:
 {{#invoke:form of/templates|tagged_inflection_of_t|comd|def=nocat=1}}<!--
 
