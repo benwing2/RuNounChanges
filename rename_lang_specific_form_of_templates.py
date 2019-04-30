@@ -37,62 +37,164 @@ class BadTemplateValue(Exception):
 class BadRewriteSpec(Exception):
   pass
 
-templates_to_actually_do = [
-  "cu-form of",
-  "da-pl-genitive",
-  "de-du contraction",
-  "de-form-noun",
-  "el-form-of-adv",
-  "el-participle of",
-  "et-nom form of",
-  "fa-form-verb",
-  "gmq-bot-verb-form-sup",
-  "hi-form-adj",
-  "hi-form-adj-verb",
-  "hi-form-noun",
-  "hy-form-noun",
-  "ie-past and pp of",
-  "is-conjugation of",
-  "is-inflection of",
-  "ka-verbal for",
-  "ka-verbal of",
-  "ku-verb form of",
-  "liv-inflection of",
-  "lt-form-adj-is",
-  "lt-form-noun",
-  "lt-form-verb",
-  "lv-definite of",
-  "lv-verbal noun of",
-  "mr-form-adj",
-  "mt-prep-form",
-  "nb-noun-form-def-gen",
-  "nb-noun-form-def-gen-pl",
-  "nb-noun-form-indef-gen-pl",
-  "ofs-nom form of",
-  "osx-nom form of",
-  "pt-adv form of",
-  "pt-article form of",
-  "pt-cardinal form of",
-  "pt-ordinal form",
-  "pt-ordinal def",
-  "ro-adj-form of",
-  "ro-form-adj",
-  "ro-form-noun",
-  "ro-form-verb",
-  "roa-opt-noun plural of",
-  "sh-form-noun",
-  "sh-form-proper-noun",
-  "sh-verb form of",
-  "sh-form-verb",
-  "sl-form-adj",
-  "sl-form-noun",
-  "sl-form-verb",
-  "sl-verb form of",
-  "tg-form-verb",
-  "ur-form-adj",
-  "ur-form-noun",
-  "ur-form-verb",
+round_1_templates = [
+  "cu-form of", # deleted
+  "da-pl-genitive", # can delete
+  "de-du contraction", # can delete
+  "de-form-noun", # can delete
+  "el-form-of-adv", # can delete
+  "el-participle of", # can delete
+  "et-nom form of", # cal delete
+  "fa-form-verb", # can delete
+  "gmq-bot-verb-form-sup", # can delete
+  "hi-form-adj", # can delete
+  "hi-form-adj-verb", # can delete
+  "hi-form-noun", # can delete
+  "hy-form-noun", # can delete
+  "ie-past and pp of", # can delete
+  "is-conjugation of", # can delete
+  "is-inflection of", # deprecate
+  "ka-verbal for", # can delete
+  "ka-verbal of", # can delete
+  "ku-verb form of", # deprecate
+  "liv-inflection of", # can delete
+  "lt-form-adj-is", # can delete
+  "lt-form-noun", # deprecate
+  "lt-form-verb", # deprecate
+  "lv-definite of", # can delete
+  "lv-verbal noun of", # can delete
+  "mr-form-adj", # fix जागा then delete
+  "mt-prep-form", # can delete
+  "nb-noun-form-def-gen", # can delete
+  "nb-noun-form-def-gen-pl", # can delete
+  "nb-noun-form-indef-gen-pl", # can delete
+  "ofs-nom form of", # can delete
+  "osx-nom form of", # can delete
+  "pt-adv form of", # can delete
+  "pt-article form of", # can delete
+  "pt-cardinal form of", # can delete
+  "pt-ordinal form", # can delete
+  "pt-ordinal def", # can delete
+  "ro-adj-form of", # can delete
+  "ro-form-adj", # can delete
+  "ro-form-noun", # can delete
+  "ro-form-verb", # can deprecate
+  "roa-opt-noun plural of", # can delete
+  "sh-form-noun", # can delete
+  "sh-form-proper-noun", # can delete
+  "sh-verb form of", # can delete
+  "sh-form-verb", # can delete
+  "sl-form-adj", # can delete
+  "sl-form-noun", # can delete
+  "sl-form-verb", # can delete
+  "sl-verb form of", # can delete
+  "tg-form-verb", # can delete
+  "ur-form-adj", # can delete
+  "ur-form-noun", # can delete
+  "ur-form-verb", # can delete
 ]
+
+round_2_templates = [
+  "bg-adj form of",
+  "bg-noun form of",
+  "blk-past of",
+  "br-noun-plural",
+  "ca-adj form of",
+  "ca-form of",
+  "chm-inflection of",
+  "de-form-adj",
+  "el-form-of-verb",
+  "el-verb form of",
+  "en-simple past of",
+  "enm-first-person singular of",
+  "enm-first/third-person singular past of",
+  "enm-inflected form of",
+  "enm-plural of",
+  "enm-plural past of",
+  "enm-plural subjunctive of",
+  "enm-plural subjunctive past of",
+  "enm-second-person singular of",
+  "enm-second-person singular past of",
+  "enm-singular subjunctive of",
+  "enm-singular subjunctive past of",
+  "enm-third-person singular of",
+  "es-adj form of",
+  "et-participle of",
+  "et-verb form of",
+  "fa-adj form of",
+  "fa-adj-form",
+  "fi-verb form of",
+  "got-verb form of",
+  "hi-form-verb",
+  "hu-inflection of",
+  "hu-participle",
+  "it-adj form of",
+  "ja-past of verb",
+  "ja-te form of verb",
+  "liv-conjugation of",
+  "liv-participle of",
+  "lt-būdinys",
+  "lt-budinys",
+  "lt-dalyvis-1",
+  "lt-dalyvis",
+  "lt-dalyvis-2",
+  "lt-form-adj",
+  "lt-form-part",
+  "lt-form-pronoun",
+  "lt-padalyvis",
+  "lt-pusdalyvis",
+  "lv-comparative of",
+  "lv-negative of",
+  "lv-reflexive of",
+  "lv-superlative of",
+  "pt-adj form of",
+  "pt-noun form of",
+  "sa-desiderative of",
+  "sa-desi",
+  "sa-frequentative of",
+  "sa-freq",
+  "sa-root form of",
+  "sco-simple past of",
+  "sco-third-person singular of",
+  "sga-verbnec of",
+  "sl-participle of",
+  "sv-adj-form-abs-def",
+  "sv-adj-form-abs-def+pl",
+  "sv-adj-form-abs-def-m",
+  "sv-adj-form-abs-indef-n",
+  "sv-adj-form-abs-pl",
+  "sv-adj-form-comp",
+  "sv-adj-form-sup-attr",
+  "sv-adj-form-sup-attr-m",
+  "sv-adj-form-sup-pred",
+  "sv-adv-form-comp",
+  "sv-adv-form-sup",
+  "sv-noun-form-def",
+  "sv-noun-form-def-gen",
+  "sv-noun-form-def-gen-pl",
+  "sv-noun-form-def-pl",
+  "sv-noun-form-indef-gen",
+  "sv-noun-form-indef-gen-pl",
+  "sv-noun-form-indef-pl",
+  "sv-proper-noun-gen",
+  "sv-verb-form-imp",
+  "sv-verb-form-inf-pass",
+  "sv-verb-form-past",
+  "sv-verb-form-past-pass",
+  "sv-verb-form-pastpart",
+  "sv-verb-form-pre",
+  "sv-verb-form-pre-pass",
+  "sv-verb-form-prepart",
+  "sv-verb-form-subjunctive",
+  "sv-verb-form-sup",
+  "sv-verb-form-sup-pass",
+  "tg-adj form of",
+  "tg-adj-form",
+  "tl-verb form of",
+  "tr-inflection of",
+]
+
+templates_to_actually_do = round_1_templates
 
 # List of templates and their behavior w.r.t. initial caps
 # final period. One of the following:
@@ -1518,6 +1620,7 @@ et_specs = [
         "noun": "n",
         "pronoun": "pro",
         "adj": "a",
+        "adjective": "a",
         "numeral": "num",
       }),
     ),
@@ -1694,6 +1797,20 @@ fi_specs = [
         "": [],
         True: "conn",
       }),
+    ]),
+  )),
+]
+
+ga_lenition_of_specs = [
+  # Has default initial caps and final period (controllable by nocap/nodot).
+  # FIXME: Verify that we can ignore them.
+  ("ga-lenition of", (
+    "lenition of",
+    # We do not include 2=, which needs to be rewritten and moved outside.
+    ("error-if", ("present-except", ["1"])),
+    ("set", "1", [
+      "ga",
+      ("copy", "1"),
     ]),
   )),
 ]
@@ -2753,10 +2870,13 @@ mr_specs = [
   # Doesn't have initial caps.
   ("mr-form-adj", (
     "adj form of",
-    ("error-if", ("present-except", ["1", "2", "3"])),
+    ("error-if", ("present-except", ["1", "2", "3", "tr"])),
     ("set", "1", [
       "mr",
       ("copy", "3"),
+    ]),
+    ("copy", "tr"),
+    ("set", "3", [
       "",
       ("lookup", "1", {
         "d": "dir",
@@ -4206,8 +4326,9 @@ def process_page(page, index, parsed):
   pagemsg("Processing")
   notes = []
 
-  if re.search("^(User|Template|Module|MediaWiki):", pagetitle):
-    pagemsg("WARNING: Page in a blacklisted namespace, skipping")
+  # We do want to change user pages with these templates on them.
+  if blib.page_should_be_ignored(pagetitle, allow_user_pages=True):
+    pagemsg("WARNING: Page has a prefix or suffix indicating it should not be touched, skipping")
     return None, None
 
   for t in parsed.filter_templates():
@@ -4258,8 +4379,9 @@ def process_page_for_check_ignore(page, index, template, ignore_type):
 
   pagemsg("Processing")
 
-  if re.search("^(User|Template|Module|MediaWiki):", pagetitle):
-    pagemsg("WARNING: Page in a blacklisted namespace, skipping")
+  # We do want to change user pages with these templates on them.
+  if blib.page_should_be_ignored(pagetitle, allow_user_pages=True):
+    pagemsg("WARNING: Page has a prefix or suffix indicating it should not be touched, skipping")
     return None, None
 
   text = unicode(page.text)
