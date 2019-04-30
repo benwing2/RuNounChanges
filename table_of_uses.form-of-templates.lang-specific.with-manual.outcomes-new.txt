@@ -25,7 +25,7 @@
 |-
 | '''[[Template:ca-adj form of]]''' || '''[[Template:ca-adj form of]]''' || 11 || Yes || Yes || No || Replace
 |-
-| '''[[Template:ca-form of]]''' || '''[[Template:ca-form of]]''' || 154 || Yes except when {{para|val}} is given; could convert it to {{temp|ca-val}} || No || No || Keep for now?
+| '''[[Template:ca-form of]]''' || '''[[Template:ca-form of]]''' || 154 || Yes except when {{para|val}} is given; could convert it to {{temp|ca-val}} || No || No || Use {{temp|ca-val}} and replace
 |-
 | '''[[Template:ca-verb form of]]''' || '''[[Template:ca-verb form of]]''' || 78144 || Yes || Yes || No || Replace and deprecate (or keep for now due to #uses)
 |-
@@ -40,8 +40,6 @@
 | [[Template:zh-erhua form of]] || [[Template:cmn-erhua form of]] || 375 || No || Yes || No || Rename to {{cmn-erhua form of}}
 |-
 | '''[[Template:cu-Glag spelling of]]''' || '''[[Template:cu-Glag spelling of]]''' || 2 || No || No || No || Keep
-|-
-| '''[[Template:cu-form of]]''' || '''[[Template:cu-form of]]''' || 10 || Yes || No || No || Replace
 |-
 | '''[[Template:da-e-form of]]''' || '''[[Template:da-e-form of]]''' || 366 || Yes but verbosely || No || Yes || Keep?
 |-
@@ -89,9 +87,9 @@
 |-
 | [[Template:el-form-of-pronoun]] || [[Template:el-form-of-nounadj]] || 10 || Yes || Barely, only "dative forms" || No || Rename to {{temp|el-form-of-nounadj}}
 |-
-| '''[[Template:el-form-of-verb]]''' || '''[[Template:el-form-of-verb]]''' || 4768 || Yes || Yes || No || Replace and deprecate (or rename to {{temp|el-verb form of}} and deprecate)
+| '''[[Template:el-form-of-verb]]''' || '''[[Template:el-form-of-verb]]''' || 4768 || Yes || Yes || No || Replace and deprecate
 |-
-| [[Template:el-verb form of]] || [[Template:el-form-of-verb]] || 228 || Yes || Yes || No || Replace (or keep)
+| [[Template:el-verb form of]] || [[Template:el-form-of-verb]] || 228 || Yes || Yes || No || Replace
 |-
 | '''[[Template:el-monotonic form of]]''' || '''[[Template:el-monotonic form of]]''' || 3 || No || No || No || Keep
 |-
@@ -353,7 +351,7 @@
 |-
 | '''[[Template:lt-form-part]]''' || '''[[Template:lt-form-part]]''' || 3967 || Yes || Yes || No || Replace and deprecate
 |-
-| '''[[Template:lt-form-pronoun]]''' || '''[[Template:lt-form-pronoun]]''' || 51 || Yes except has text "([[use]]d as a [[determiner]])" || No || No || Keep for now?
+| '''[[Template:lt-form-pronoun]]''' || '''[[Template:lt-form-pronoun]]''' || 51 || Yes except has text "([[use]]d as a [[determiner]])"; but the argument triggering it never occurs || No || No || Replace
 |-
 | '''[[Template:lt-form-verb]]''' || '''[[Template:lt-form-verb]]''' || 3781 || Yes || No || No || Replace and deprecate
 |-
@@ -429,7 +427,7 @@
 |-
 | [[Template:pinof]] || [[Template:pinyin reading of]] || 6 || No || Yes || No || Rename to {{temp|cmn-pin read}} (or {{temp|zh-pin read}}? see above)
 |-
-| '''[[Template:pt-adj form of]]''' || '''[[Template:pt-adj form of]]''' || 15455 || Yes || Yes || No || Replace and deprecate (or keep for now due to #uses)
+| '''[[Template:pt-adj form of]]''' || '''[[Template:pt-adj form of]]''' || 15455 || Yes || Yes || No || Replace and deprecate
 |-
 | '''[[Template:pt-adv form of]]''' || '''[[Template:pt-adv form of]]''' || 11 || Yes || No || No || Replace
 |-
@@ -567,7 +565,7 @@
 |-
 | '''[[Template:sv-adv-form-sup]]''' || '''[[Template:sv-adv-form-sup]]''' || 7 || Yes || No || Yes || Replace
 |-
-| '''[[Template:sv-noun-form-def]]''' || '''[[Template:sv-noun-form-def]]''' || 10063 || Yes || No || No || Replace and deprecate (or keep for now due to #uses)
+| '''[[Template:sv-noun-form-def]]''' || '''[[Template:sv-noun-form-def]]''' || 10063 || Yes || No || No || Replace and deprecate
 |-
 | '''[[Template:sv-noun-form-def-gen]]''' || '''[[Template:sv-noun-form-def-gen]]''' || 8327 || Yes || No || No || Replace and deprecate
 |-
@@ -615,7 +613,7 @@
 |-
 | '''[[Template:tl-superseded spelling of]]''' || '''[[Template:tl-superseded spelling of]]''' || 12 || No || Yes || No || Keep
 |-
-| '''[[Template:tl-verb form of]]''' || '''[[Template:tl-verb form of]]''' || 40 || Yes (but has some language-specific tags) || No || Yes || Replace?
+| '''[[Template:tl-verb form of]]''' || '''[[Template:tl-verb form of]]''' || 40 || Yes || No || Yes || Replace
 |-
 | '''[[Template:tr-copulative form of]]''' || '''[[Template:tr-copulative form of]]''' || 2 || No || No || No || Keep
 |-
