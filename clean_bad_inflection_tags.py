@@ -17,7 +17,7 @@ tag_replacements = {
   "first person": "1",
   "second person": "2",
   "third person": "3",
-  "per": "pers",
+  "per": "perf",
   "pas": "pass",
   "personal and animate masculine": ["pers//an", "m"],
   "(impersonal)": "impers",
@@ -26,7 +26,89 @@ tag_replacements = {
   "(multiple possessions)": "mpos",
   "negative conjugation": ["neg", "form"],
   "archaiac": "archaic",
+  "honorofic": "honorific",
   "innesive": "inessive",
+  "contraced": "contracted",
+  "m;": ["m", ";"],
+}
+
+cases = {
+  "nom": "nom",
+  "nominative": "nom",
+  "acc": "acc",
+  "accc": "acc",
+  "accusative": "acc",
+  "accusative,": "acc",
+  "voc": "voc",
+  "vocative": "voc",
+  "gen": "gen",
+  "dat": "dat",
+  "ins": "ins",
+  "abl": "abl",
+  "loc": "loc",
+}
+
+tenses = {
+  "pres": "pres",
+  "fut": "fut",
+  "futr": "fut",
+  "impf": "impf",
+  "pret": "pret",
+  "perf": "perf",
+  "perfect": "perf",
+  "plup": "plup",
+}
+
+genders = {
+  "m": "m",
+  "f": "f",
+  "n": "n",
+}
+
+persons = {
+  "1": "1",
+  "2": "2",
+  "3": "3",
+}
+
+moods = {
+  "ind": "ind",
+  "indc": "ind",
+  "sub": "sub",
+  "subj": "sub",
+  "imp": "imp",
+  "impr": "imp",
+}
+
+strengths = {
+  "str": "str",
+  "strong": "str",
+  "wk": "wk",
+  "weak": "wk",
+  "weak,": "wk",
+  "mix": "mix",
+  "mixed": "mix",
+}
+
+multitag_replacements = {
+  ("strong,", "weak,", "and", "mixed"): "str//wk//mix",
+  ("first", "s"): ["1", "s"],
+  ("second", "s"): ["2", "s"],
+  ("first", "p"): ["1", "p"],
+  ("second", "p"): ["2", "p"],
+}
+
+dimensions_to_tags = {
+  "case": cases,
+  "tense": tenses,
+  "mood": moods,
+  "person": persons,
+  "gender": genders,
+  "strength": strengths,
+}
+
+combininable_tags_by_dimension = {
+  tag: dim for dim, tagdict in dimensions_to_tags.iteritems() for tag in tagdict
 }
 
 tags_with_spaces = defaultdict(int)
@@ -76,7 +158,11 @@ def process_text_on_page(pagetitle, index, text):
   for t in parsed.filter_templates():
     origt = unicode(t)
     tn = tname(t)
+
     if tn in ["inflection of"]:
+
+      # (1) Extract the tags and the non-tag parameters. Remove empty tags.
+
       params = []
       if getparam(t, "lang"):
         lang = getparam(t, "lang")
@@ -92,17 +178,24 @@ def process_text_on_page(pagetitle, index, text):
       for param in t.params:
         pname = unicode(param.name).strip()
         pval = unicode(param.value).strip()
-        if re.search("^[0-9]$", pname):
+        if re.search("^[0-9]+$", pname):
           if int(pname) >= term_param + 2:
             if pval:
               tags.append(pval)
             else:
-              notes.append("removed empty params from {{inflection of}}")
+              notes.append("removed empty tags from {{inflection of}}")
         elif pname not in ["lang", "tr", "alt"]:
           params.append((pname, pval, param.showkey))
 
+      # (2) Canonicalize tags on a tag-by-tag basis. This may involve applying the
+      # replacements listed in tag_replacements or subtag_replacements, and may
+      # involve splitting tags on spaces if each component is a recognized tag.
+
       def canonicalize_tag(tag):
-        if tag in good_tags or tag == ";":
+        # Canonicalize a tag into either a single tag or a sequence of tags.
+        # Return value is None if the tag isn't recognized, else a string or
+        # a list of strings.
+        if tag in good_tags:
           return tag
         if tag in tag_replacements:
           return tag_replacements[tag]
@@ -118,6 +211,16 @@ def process_text_on_page(pagetitle, index, text):
           repl = canonicalize_tag(lowertag)
           if repl:
             return repl
+        if "/" in tag:
+          if "//" in tag:
+            split_tags = tag.split("//")
+          else:
+            split_tags = tag.split("/")
+          canon_split_tags = [canonicalize_tag(t) for t in split_tags]
+          if all(isinstance(t, basestring) for t in canon_split_tags):
+            return "//".join(canon_split_tags)
+          else:
+            pagemsg("WARNING: Found slash in tag and wasn't able to canonicalize completely: %s" % tag)
         m = re.search('^\[\[(.*)\]\]$', tag)
         if m:
           repl = canonicalize_tag(m.group(1))
@@ -128,7 +231,10 @@ def process_text_on_page(pagetitle, index, text):
       canon_tags = []
 
       for tag in tags:
-        repl = canonicalize_tag(tag)
+        if tag == ";":
+          repl = tag
+        else:
+          repl = canonicalize_tag(tag)
         if repl is None:
           if ' ' in tag:
             pagemsg("WARNING: Bad multiword tag '%s', can't canonicalize" % tag)
@@ -141,12 +247,80 @@ def process_text_on_page(pagetitle, index, text):
             "replaced bad inflection tag %s with %s")
           notes.append(notemsg % (tag, "|".join(repl) if type(repl) is list else repl))
         if type(repl) is list:
-          for tag in repl:
-            canon_tags.append(tag)
+          canon_tags.extend(repl)
         else:
           canon_tags.append(repl)
 
       tags = canon_tags
+
+      # (3) Apply multi-tag substitutions, e.g. "strong,|weak,|and|mixed" -> "str//wk/mix".
+
+      canon_tags = []
+      i = 0
+      while i < len(tags):
+        for fro, to in multitag_replacements.iteritems():
+          if i + len(fro) <= len(tags):
+            for j in range(len(fro)):
+              if fro[j] != tags[i + j]:
+                break
+            else:
+              if type(to) is list:
+                canon_tags.extend(to)
+                notes.append("replaced inflection tag sequence %s with %s" % ("|".join(fro), "|".join(to)))
+              else:
+                canon_tags.append(to)
+                notes.append("replaced inflection tag sequence %s with %s" % ("|".join(fro), to))
+              i += len(fro)
+              break
+        else:
+          canon_tags.append(tags[i])
+          i += 1
+      tags = canon_tags
+
+      # (4) Canonicalize tags by combining e.g. 'nom|and|voc' to 'nom//voc'.
+
+      canon_tags = []
+      i = 0
+      while i < len(tags):
+        if i < len(tags) - 4 and (
+          tags[i] in combininable_tags_by_dimension and
+          tags[i + 1] in ['and', '/'] and
+          tags[i + 2] in combininable_tags_by_dimension and
+          combininable_tags_by_dimension[tags[i]] == combininable_tags_by_dimension[tags[i + 2]] and
+          tags[i + 3] in ['and', '/'] and
+          tags[i + 4] in combininable_tags_by_dimension and
+          combininable_tags_by_dimension[tags[i + 2]] == combininable_tags_by_dimension[tags[i + 4]]
+        ):
+          # We have foo|and|bar|and|baz where foo, bar and baz are in the same dimension.
+          dim = combininable_tags_by_dimension[tags[i]]
+          tag1 = dimensions_to_tags[dim][tags[i]]
+          tag2 = dimensions_to_tags[dim][tags[i + 2]]
+          tag3 = dimensions_to_tags[dim][tags[i + 4]]
+          combined_tag = "%s//%s//%s" % (tag1, tag2, tag3)
+          canon_tags.append(combined_tag)
+          notes.append("combined %s tags into %s" % (dim, combined_tag))
+          i += 5
+        elif i < len(tags) - 2 and (
+          tags[i] in combininable_tags_by_dimension and
+          tags[i + 1] in ['and', '/'] and
+          tags[i + 2] in combininable_tags_by_dimension and
+          combininable_tags_by_dimension[tags[i]] == combininable_tags_by_dimension[tags[i + 2]]
+        ):
+          # We have foo|and|bar where foo and bar are in the same dimension.
+          dim = combininable_tags_by_dimension[tags[i]]
+          tag1 = dimensions_to_tags[dim][tags[i]]
+          tag2 = dimensions_to_tags[dim][tags[i + 2]]
+          combined_tag = "%s//%s" % (tag1, tag2)
+          canon_tags.append(combined_tag)
+          notes.append("combined %s tags into %s" % (dim, combined_tag))
+          i += 3
+        else:
+          canon_tags.append(tags[i])
+          i += 1
+      tags = canon_tags
+
+      # (5) Put back the new parameters. In the process, log and unrecognized ("bad") tags,
+      # and any tags with spaces in them.
 
       # Erase all params.
       del t.params[:]
