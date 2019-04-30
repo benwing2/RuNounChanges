@@ -285,18 +285,35 @@ def do_process_text(pagetitle, pagetext, index, func=None, verbose=False):
 
     break
 
-ignore_prefixes = ["User:", "Talk:",
-    "Wiktionary:Beer parlour", "Wiktionary:Translation requests",
-    "Wiktionary:Grease pit", "Wiktionary:Etymology scriptorium",
-    "Wiktionary:Information desk", "Wiktionary:Tea room"]
+# we special-case anything with " talk:" in the title
+talk_prefixes = ["Talk:", "Thread:",
+  "Wiktionary:Beer parlour", "Wiktionary:Translation requests",
+  "Wiktionary:Grease pit", "Wiktionary:Etymology scriptorium",
+  "Wiktionary:Information desk", "Wiktionary:Tea room",
+  "Wiktionary:Requests", "Wiktionary:Requested",
+  "Wiktionary:Wikimedia Tech News", "Wiktionary:Feedback",
+  "Wiktionary:Word of the day", "Wiktionary:Foreign Word of the Day",
+  "Wiktionary:Sandbox", "Wiktionary:Votes", "Wiktionary:Wanted entries"
+]
 
-def page_should_be_ignored(pagetitle):
-  # Ignore user pages, talk pages and certain Wiktionary pages
-  is_ignore_prefix = False
-  for ip in ignore_prefixes:
-    if pagetitle.startswith(ip):
+non_talk_ignore_regexps = ["^Module:", "^MediaWiki:", r"\.js$", r"\.css$"]
+
+def is_talk_page(pagetitle):
+  for tp in talk_prefixes:
+    if pagetitle.startswith(tp):
       return True
   if " talk:" in pagetitle:
+    return True
+  return False
+
+def page_should_be_ignored(pagetitle, allow_user_pages=False):
+  # Ignore discussion pages and certain other pages, e.g. user pages
+  if is_talk_page(pagetitle):
+    return True
+  for ignore_re in non_talk_ignore_regexps:
+    if re.search(ignore_re, pagetitle):
+      return True
+  if not allow_user_pages and pagetitle.startswith('User:'):
     return True
   return False
 
@@ -424,7 +441,8 @@ def get_page_name(page):
   #return unicode(page.title(withNamespace=False))
   return unicode(page.title())
 
-def iter_items(items, startsort=None, endsort=None, get_name=get_page_name):
+def iter_items(items, startsort=None, endsort=None, get_name=get_page_name,
+    skip_ignorable_pages=False):
   i = 0
   t = None
   steps = 50
@@ -455,7 +473,11 @@ def iter_items(items, startsort=None, endsort=None, get_name=get_page_name):
     if isinstance(endsort, int) and not t:
       t = datetime.datetime.now()
 
-    yield i, current
+    if skip_ignorable_pages and page_should_be_ignored(get_name(current)):
+      pywikibot.output("Page %s %s: page has a prefix or suffix indicating it should not be touched, skipping" % (
+        i, get_name(current)))
+    else:
+      yield i, current
 
     if i % steps == 0:
       tdisp = ""
@@ -1061,13 +1083,13 @@ def process_links(save, verbose, lang, longlang, cattype, startFrom, upTo,
           do_edit(page, index, process_one_page_links_wrapper, save=save,
               verbose=verbose)
     elif cattype == "pages":
-      for pagename, index in iter_pages(pages_to_do, startFrom, upTo):
+      for index, pagename in iter_items(pages_to_do, startFrom, upTo):
         page = pywikibot.Page(site, pagename)
         do_edit(page, index, process_one_page_links_wrapper, save=save,
             verbose=verbose)
     elif cattype == "pagetext":
-      for current, index in iter_pages(pages_to_do, startFrom, upTo,
-          key=lambda x:x[0]):
+      for index, current in iter_items(pages_to_do, startFrom, upTo,
+          get_name=lambda x:x[0]):
         pagetitle, pagetext = current
         do_process_text(pagetitle, pagetext, index, process_one_page_links,
             verbose=verbose)
