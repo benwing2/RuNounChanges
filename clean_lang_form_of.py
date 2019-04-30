@@ -6,14 +6,14 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, errandmsg, site, tname
 
-sv_templates_with_plural_of = [
+sv_verb_templates_with_plural_of = [
   "sv-verb-form-imp",
   "sv-verb-form-past",
   "sv-verb-form-past-pass",
   "sv-verb-form-pre",
 ]
 
-sv_templates_with_obsoleted_by = [
+sv_noun_templates_with_obsoleted_by = [
   "sv-noun-form-def-pl",
 ]
 
@@ -39,8 +39,8 @@ def init_all_templates(move_dot):
   global all_templates
 
   all_templates = (
-#    sv_templates_with_plural_of +
-#    sv_templates_with_obsoleted_by +
+#    sv_verb_templates_with_plural_of +
+#    sv_noun_templates_with_obsoleted_by +
 #    ca_templates_with_val +
 #    nl_templates_with_comp_of_sup_of +
 #    el_templates_with_active +
@@ -69,21 +69,21 @@ def process_page(page, index, parsed):
   for t in parsed.filter_templates():
     tn = tname(t)
 
-    if tn in sv_templates_with_plural_of and tn in all_templates:
+    if tn in sv_verb_templates_with_plural_of and tn in all_templates:
       plural_of = getparam(t, "plural of")
       if plural_of:
         origt = unicode(t)
         rmparam(t, "plural of")
-        newt = "{{sv-obs pl|%s}}, %s" % (plural_of, unicode(t))
-        templates_to_replace.append((origt, newt, "move plural of= in {{%s}} to {{sv-obs pl}} outside of template" % tn))
+        newt = "{{sv-obs verb pl|%s}} %s" % (plural_of, unicode(t))
+        templates_to_replace.append((origt, newt, "move plural of= in {{%s}} to {{sv-obs verb pl}} outside of template" % tn))
 
-    if tn in sv_templates_with_obsoleted_by and tn in all_templates:
+    if tn in sv_noun_templates_with_obsoleted_by and tn in all_templates:
       obsoleted_by = getparam(t, "obsoleted by")
       if obsoleted_by:
         origt = unicode(t)
         rmparam(t, "obsoleted by")
-        newt = "{{sv-obs by|%s}}, %s" % (obsoleted_by, unicode(t))
-        templates_to_replace.append((origt, newt, "move plural of= in {{%s}} to {{sv-obs by}} outside of template" % tn))
+        newt = "{{sv-obs noun form|%s}} %s" % (obsoleted_by, unicode(t))
+        templates_to_replace.append((origt, newt, "move plural of= in {{%s}} to {{sv-obs noun form}} outside of template" % tn))
 
     if tn in ca_templates_with_val and tn in all_templates:
       val = getparam(t, "val")
@@ -92,7 +92,7 @@ def process_page(page, index, parsed):
         origt = unicode(t)
         rmparam(t, "val")
         rmparam(t, "val2")
-        newt = "%s ({{ca-val|%s%s}})" % (unicode(t), val, "|" + val2 if val2 else "")
+        newt = "%s {{ca-val|%s%s}}" % (unicode(t), val, "|" + val2 if val2 else "")
         templates_to_replace.append((origt, newt, "move val= in {{%s}} to {{ca-val}} outside of template" % tn))
 
     if tn in nl_templates_with_comp_of_sup_of and tn in all_templates:
