@@ -225,4 +225,202 @@ function export.infldoc(args)
 	return export.fulldoc(args)	
 end
 
+local tag_type_to_description = {
+	-- If not listed, we just capitalize the first letter
+	["tense-aspect"] = "Tense/aspect",
+	["voice-valence"] = "Voice/valence",
+	["comparison"] = "Degrees of comparison",
+	["class"] = "Inflectional class",
+	["sound change"] = "Sound changes",
+	["grammar"] = "Misc grammar",
+	["other"] = "Other tags",
+}
+
+local tag_type_order = {
+	"person",
+	"number",
+	"gender",
+	"animacy",
+	"tense-aspect",
+	"mood",
+	"voice-valence",
+	"non-finite",
+	"case",
+	"state",
+	"comparison",
+	"register",
+	"deixis",
+	"clusivity",
+	"class",
+	"attitude",
+	"sound change",
+	"grammar",
+	"other",
+}
+
+function export.tagtable()
+	m_data = mw.loadData("Module:form of/data")
+	m_data2 = mw.loadData("Module:form of/data2")
+	m_form_of = require("Module:form of")
+
+	local function organize_data(data_module)
+		local function sort_by_first(namedata1, namedata2)
+			return namedata1[1] < namedata2[1]
+		end
+		local tab = {}
+		for name, data in pairs(data_module.tags) do
+			if not data.tag_type then
+				-- Throw an error because hopefully it will get noticed and fixed.
+				-- If we just skip it, it may never get fixed.
+				error("Tag '" .. name .. "' has no tag_type")
+			end
+			if not tab[data.tag_type] then
+				tab[data.tag_type] = {}
+			end
+			table.insert(tab[data.tag_type], {name, data})
+		end
+		local tag_type_order_set = require("Module:table").listToSet(tag_type_order)
+		for tag_type, tags_of_type in pairs(tab) do
+			if not tag_type_order_set[tag_type] then
+				-- See justification above for throwing an error.
+				error("Tag type '" .. tag_type .. "' not listed in tag_type_order")
+			end
+			table.sort(tags_of_type, sort_by_first)
+		end
+		local multitag_shortcuts = {}
+		local list_shortcuts = {}
+		local function get_display_form(tags)
+			local normtags = m_form_of.normalize_tags(tags)
+			local display_forms = {}
+			for _, normtag in ipairs(normtags) do
+				table.insert(display_forms, m_form_of.get_tag_display_form(normtag))
+			end
+			return table.concat(display_forms, " ")
+		end
+
+		for shortcut, full in pairs(data_module.shortcuts) do
+			if type(full) == "table" then
+				table.insert(list_shortcuts, {shortcut, get_display_form(full)})
+			elseif full:find("//") then
+				table.insert(multitag_shortcuts, {shortcut, get_display_form({full})})
+			end
+		end
+
+		table.sort(list_shortcuts, sort_by_first)
+		table.sort(multitag_shortcuts, sort_by_first)
+
+		return tab, multitag_shortcuts, list_shortcuts
+	end
+
+	local data_tab, data_multitag_shortcuts, data_list_shortcuts = organize_data(m_data)
+	local data2_tab, data2_multitag_shortcuts, data2_list_shortcuts = organize_data(m_data2)
+
+	local parts = {}
+
+	local function insert_group(group)
+		for _, namedata in ipairs(group) do
+			local sparts = {}
+			local name = namedata[1]
+			local data = namedata[2]
+			table.insert(sparts, "| <code>" .. name .. "</code> || ")
+			if data.shortcuts then
+				local ssparts = {}
+				for _, shortcut in ipairs(data.shortcuts) do
+					table.insert(ssparts, "<code>" .. shortcut .. "</code>")
+				end
+				table.insert(sparts, table.concat(ssparts, ", ") .. " ")
+			end
+			table.insert(sparts, "|| " .. m_form_of.get_tag_display_form(name))
+			table.insert(parts, "|-")
+			table.insert(parts, table.concat(sparts))
+		end
+	end
+
+	local function insert_shortcut_group(shortcuts)
+		for _, namedisp in ipairs(shortcuts) do
+			local name = namedisp[1]
+			local disp = namedisp[2]
+			table.insert(parts, "|-")
+			table.insert(parts, "| || <code>" .. name .. "</code> || " .. disp)
+		end
+	end
+
+	table.insert(parts, '{|class="wikitable"')
+	table.insert(parts, "! Canonical tag !! Shortcut(s) !! Display form")
+	for _, tag_type in ipairs(tag_type_order) do
+		local group_tab = data_tab[tag_type]
+		if group_tab then
+			table.insert(parts, "|-")
+			table.insert(parts, '! colspan="3" style="text-align: center; background: #dddddd;" | ' ..
+				(tag_type_to_description[tag_type] or m_form_of.ucfirst(tag_type)) .. " (more common)")
+			insert_group(group_tab)
+		end
+		group_tab = data2_tab[tag_type]
+		if group_tab then
+			table.insert(parts, "|-")
+			table.insert(parts, '! colspan="3" style="text-align: center; background: #dddddd;" | ' ..
+				(tag_type_to_description[tag_type] or m_form_of.ucfirst(tag_type)) .. " (less common)")
+			insert_group(group_tab)
+		end
+	end
+	if #data_multitag_shortcuts > 0 then
+		table.insert(parts, "|-")
+		table.insert(parts, '! colspan="3" style="text-align: center; background: #dddddd;" | Multitag shortcuts (more common)')
+		insert_shortcut_group(data_multitag_shortcuts)
+	end
+	if #data2_multitag_shortcuts > 0 then
+		table.insert(parts, "|-")
+		table.insert(parts, '! colspan="3" style="text-align: center; background: #dddddd;" | Multitag shortcuts (less common)')
+		insert_shortcut_group(data2_multitag_shortcuts)
+	end
+	if #data_list_shortcuts > 0 then
+		table.insert(parts, "|-")
+		table.insert(parts, '! colspan="3" style="text-align: center; background: #dddddd;" | List shortcuts (more common)')
+		insert_shortcut_group(data_list_shortcuts)
+	end
+	if #data2_list_shortcuts > 0 then
+		table.insert(parts, "|-")
+		table.insert(parts, '! colspan="3" style="text-align: center; background: #dddddd;" | List shortcuts (less common)')
+		insert_shortcut_group(data2_list_shortcuts)
+	end
+	table.insert(parts, "|}")
+	return table.concat(parts, "\n")
+end
+
+function export.postable()
+	m_pos = mw.loadData("Module:form of/pos")
+	local shortcut_tab = {}
+	for shortcut, full in pairs(m_pos) do
+		if not shortcut_tab[full] then
+			shortcut_tab[full] = {}
+		end
+		table.insert(shortcut_tab[full], shortcut)
+	end
+	local shorcut_list = {}
+	for full, shortcuts in pairs(shortcut_tab) do
+		table.sort(shortcuts)
+		table.insert(shorcut_list, {full, shortcuts})
+	end
+	table.sort(shorcut_list, function(fs1, fs2) return fs1[1] < fs2[1] end)
+
+	local parts = {}
+	table.insert(parts, '{|class="wikitable"')
+	table.insert(parts, "! Canonical part of speech !! Shortcut(s)")
+	for _, full_shortcuts in ipairs(shorcut_list) do
+		local full = full_shortcuts[1]
+		local shortcuts = full_shortcuts[2]
+		table.insert(parts, "|-")
+		local sparts = {}
+		for _, shortcut in ipairs(shortcuts) do
+			table.insert(sparts, "<code>" .. shortcut .. "</code>")
+		end
+		table.insert(parts, "| <code>" .. full .. "</code> || " .. table.concat(sparts, ", "))
+	end
+	table.insert(parts, "|}")
+	return table.concat(parts, "\n")
+end
+
 return export
+
+-- For Vim, so we get 4-space tabs
+-- vim: set ts=4 sw=4 noet:

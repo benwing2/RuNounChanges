@@ -89,4 +89,15 @@ function export.infldoc_t(frame)
 	return m_form_of_doc.infldoc(args)
 end
 
+function export.tagtable_t(frame)
+	return m_form_of_doc.tagtable()
+end
+
+function export.postable_t(frame)
+	return m_form_of_doc.postable()
+end
+
 return export
+
+-- For Vim, so we get 4-space tabs
+-- vim: set ts=4 sw=4 noet:
