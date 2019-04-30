@@ -188,8 +188,7 @@ Page 26 Template:comparative of: -------- begin text ---------
 Internally we categorize into "LANG comparative <<p=a>>s".
 
 --><includeonly><!--
--->{{#if:{{{nocat|}}}|[[Category:comparative of/nocat]]|[[Category:comparative 
-of/without nocat]]}}<!--
+-->{{#if:{{{nocat|}}}|[[Category:comparative of/nocat]]|[[Category:comparative of/without nocat]]}}<!--
 -->{{#ifeq:{{#if:{{{lang|}}}|{{{lang}}}|{{{1|}}}}}|en|[[Category:Comparative of lang=en]]}}<!--
 --></includeonly><!--
 
@@ -784,13 +783,6 @@ Page 99 Template:official form of: -------- begin text ---------
 {{#invoke:form of/templates|form_of_t|official form of|cat=official forms|withcap=1|withdot=1}}<!--
 
 --><noinclude>{{documentation}}[[Category:Form-of templates]]</noinclude>
--------- end text --------
-Page 100 Template:participle of: Processing
-Page 100 Template:participle of: Found match for regex: .
-Page 100 Template:participle of: -------- begin text ---------
-{{#invoke:form of/templates|inflection_of_t|postinfl=part|withcap=1|withdot=1|cat=participles}}<!--
-
---><noinclude>{{documentation}}</noinclude>
 -------- end text --------
 Page 101 Template:passive of: Processing
 Page 101 Template:passive of: Found match for regex: .
