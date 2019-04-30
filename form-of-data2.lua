@@ -244,7 +244,7 @@ tags["renarrative"] = {
 }
 
 
------------------------ Voice -----------------------
+----------------------- Voice/valence -----------------------
 
 tags["antipassive"] = {
 	tag_type = "voice-valence",
@@ -851,17 +851,17 @@ tags["obviative"] = {
 }
 
 
------------------------ Inflection classes -----------------------
+----------------------- Inflectional class -----------------------
 
 tags["prototonic"] = {
-	tag_type = "register",
+	tag_type = "class",
 	glossary = "dependent and independent verb forms",
 	glossary_type = "wp",
 	shortcuts = {"prot"},
 }
 
 tags["deuterotonic"] = {
-	tag_type = "register",
+	tag_type = "class",
 	glossary = "dependent and independent verb forms",
 	glossary_type = "wp",
 	shortcuts = {"deut"},

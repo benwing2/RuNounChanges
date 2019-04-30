@@ -363,7 +363,7 @@ tags["jussive"] = {
 }
 
 
------------------------ Voice -----------------------
+----------------------- Voice/valence -----------------------
 
 -- This tag type combines what is normally called "voice" (active, passive,
 -- middle, mediopassive) with other tags that aren't normally called
@@ -611,13 +611,13 @@ tags["superlative degree"] = {
 }
 
 
------------------------ Levels of politness -----------------------
+----------------------- Register -----------------------
 
 ----------------------- Deixis -----------------------
 
 ----------------------- Clusivity -----------------------
 
------------------------ Inflection classes -----------------------
+----------------------- Inflectional class -----------------------
 
 tags["strong"] = {
 	tag_type = "class",
