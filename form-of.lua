@@ -72,6 +72,11 @@ end
 -- return the tag itself. This first looks up in [[Module:form of/data]]
 -- (which includes more common tags) and then in [[Module:form of/data2]].
 local function lookup_shortcut(tag)
+	-- If there is HTML or a link in the tag, return it directly; don't try
+	-- to look it up, which will fail.
+	if tag:find("[[", nil, true) or tag:find("|", nil, true) or tag:find("<", nil, true) then
+		return tag
+	end
 	local m_data = mw.loadData("Module:form of/data")
 	local shortcut = m_data.shortcuts[tag]
 	if shortcut then
@@ -169,7 +174,7 @@ end
 -- isn't given, the return list may itself contains lists; in particular,
 -- multipart tags will be represented as lists. If RECOMBINE_TAGS is given,
 -- they will be represented as canonical-form tags joined by "//".
-local function normalize_tags(tags, recombine_multitags, do_track)
+function export.normalize_tags(tags, recombine_multitags, do_track)
 	-- We track usage of shortcuts, normalized forms and (in the case of
 	-- multipart tags or list tags) intermediate forms. For example,
 	-- if the tags 1s|mn|gen|indefinite are passed in, we track the following:
@@ -249,7 +254,7 @@ local function get_single_tag_display_form(normtag)
 end
 
 
-local function get_tag_display_form(normtag)
+function export.get_tag_display_form(normtag)
 	if type(normtag) == "string" then
 		return get_single_tag_display_form(normtag)
 	end
@@ -275,7 +280,7 @@ function export.fetch_lang_categories(lang, tags, terminfo, POS)
 
 	local categories = {}
 
-	local normalized_tags = normalize_tags(tags, "recombine multitags")
+	local normalized_tags = export.normalize_tags(tags, "recombine multitags")
 	POS = normalize_pos(POS)
 
 	local function make_function_table()
@@ -311,7 +316,7 @@ function export.fetch_lang_categories(lang, tags, terminfo, POS)
 			end
 			return false, 3
 		elseif predicate == "tags=" then
-			local normalized_spec_tags = normalize_tags(spec[2],
+			local normalized_spec_tags = export.normalize_tags(spec[2],
 				"recombine multitags")
 			return m_table.deepEqualsList(normalized_tags, normalized_spec_tags), 3
 		elseif predicate == "p=" then
@@ -422,7 +427,7 @@ function export.tagged_inflections(tags, terminfo, notext, capfirst, posttext)
 	local cur_infl = {}
 	local inflections = {}
 
-	local ntags = normalize_tags(tags, nil, "do-track")
+	local ntags = export.normalize_tags(tags, nil, "do-track")
 
 	for i, tagspec in ipairs(ntags) do
 		if tagspec == ";" then
@@ -432,7 +437,7 @@ function export.tagged_inflections(tags, terminfo, notext, capfirst, posttext)
 
 			cur_infl = {}
 		else
-			local to_insert = get_tag_display_form(tagspec)
+			local to_insert = export.get_tag_display_form(tagspec)
 			-- Maybe insert a space before inserting the display form
 			-- of the tag. We insert a space if
 			-- (a) we're not the first tag; and
@@ -520,7 +525,7 @@ function export.to_Wikidata_IDs(tags, skip_tags_without_ids)
 		end
 	end
 
-	for i, tag in ipairs(normalize_tags(tags)) do
+	for i, tag in ipairs(export.normalize_tags(tags)) do
 		if type(tag) == "table" then
 			local ids = {}
 			for _, onetag in ipairs(tag) do
