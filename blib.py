@@ -19,6 +19,7 @@
 import pywikibot, mwparserfromhell, re, string, sys, codecs, urllib2, datetime, json, argparse, time
 from arabiclib import reorder_shadda
 from collections import defaultdict
+import xml.sax
 
 site = pywikibot.Site()
 
@@ -1150,24 +1151,54 @@ def find_lang_section_from_text(pagetext, lang, pagemsg):
   return None
 
 def replace_in_text(text, curr, repl, pagemsg):
-    found_curr = curr in text
-    if not found_curr:
-      pagemsg("WARNING: Unable to locate current text: %s" % curr)
-      return text, False
-    found_repl = repl in text
-    if found_repl:
-      pagemsg("WARNING: Already found replacement text: %s" % repl)
-      return text, False
-    newtext = text.replace(curr, repl)
-    newtext_text_diff = len(newtext) - len(text)
-    repl_curr_diff = len(repl) - len(curr)
-    ratio = float(newtext_text_diff) / repl_curr_diff
-    if ratio == int(ratio):
-      if int(ratio) > 1:
-        pagemsg("WARNING: Replaced %s occurrences of curr=%s with repl=%s"
-            % (int(ratio), curr, repl))
-    else:
-      pagemsg("WARNING: Something wrong, length mismatch during replacement: Expected length change=%s, actual=%s, ratio=%.2f, curr=%s, repl=%s"
-          % (repl_curr_diff, newtext_text_diff, ratio, curr, repl))
-    text = newtext
-    return text, True
+  found_curr = curr in text
+  if not found_curr:
+    pagemsg("WARNING: Unable to locate current text: %s" % curr)
+    return text, False
+  found_repl = repl in text
+  if found_repl:
+    pagemsg("WARNING: Already found replacement text: %s" % repl)
+    return text, False
+  newtext = text.replace(curr, repl)
+  newtext_text_diff = len(newtext) - len(text)
+  repl_curr_diff = len(repl) - len(curr)
+  ratio = float(newtext_text_diff) / repl_curr_diff
+  if ratio == int(ratio):
+    if int(ratio) > 1:
+      pagemsg("WARNING: Replaced %s occurrences of curr=%s with repl=%s"
+          % (int(ratio), curr, repl))
+  else:
+    pagemsg("WARNING: Something wrong, length mismatch during replacement: Expected length change=%s, actual=%s, ratio=%.2f, curr=%s, repl=%s"
+        % (repl_curr_diff, newtext_text_diff, ratio, curr, repl))
+  text = newtext
+  return text, True
+
+class WikiDumpHandler(xml.sax.ContentHandler):
+  def __init__(self, pagecallback):
+    self.pagecallback = pagecallback
+    self.title = None
+    self.text = None
+    self.cur = None
+
+  def startElement(self, name, attrs):
+    if name == "title":
+      self.cur = "title"
+      self.title = ""
+    elif name == "text":
+      self.cur = "text"
+      self.text = ""
+
+  def endElement(self, name):
+    if name == "text":
+      self.pagecallback(self.title, self.text)
+    self.cur = None
+
+  def characters(self, content):
+    if self.cur == "title":
+      self.title += content
+    elif self.cur == "text":
+      self.text += content
+
+def parse_dump(fp, pagecallback):
+  handler = WikiDumpHandler(pagecallback)
+  xml.sax.parse(fp, handler)
