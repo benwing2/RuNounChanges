@@ -799,7 +799,7 @@ bg_specs = [
         "singular": ["s"],
         "plural": ["p"],
         "count": ["count", "form"],
-        "vocative": ["voc"],
+        "vocative": ["voc", "s"],
       }),
     ]),
   )),
