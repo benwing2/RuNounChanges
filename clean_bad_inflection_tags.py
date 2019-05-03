@@ -8,6 +8,7 @@ import blib
 from blib import getparam, rmparam, msg, errandmsg, site, tname
 
 joiner_tags = ['and', 'or', '/', ',']
+semicolon_tags = [';', ';<!--\n-->']
 
 subtag_replacements = [
   ("first person", "first-person"),
@@ -162,6 +163,9 @@ good_tags = set()
 num_total_templates = 0
 num_templates_with_bad_tags = 0
 
+def remove_comment_continuations(text):
+  return text.replace("<!--\n-->", "").strip()
+
 def parse_form_of_data(lines):
   curtag = None
   for line in lines:
@@ -262,6 +266,13 @@ def process_text_on_page(pagetitle, index, text):
             return "//".join(canon_split_tags)
           else:
             pagemsg("WARNING: Found slash in tag and wasn't able to canonicalize completely: %s" % tag)
+        if "_" in tag and "/" not in tag:
+          split_tags = tag.split("_")
+          canon_split_tags = [canonicalize_tag(t) for t in split_tags]
+          if all(isinstance(t, basestring) for t in canon_split_tags):
+            return "_".join(canon_split_tags)
+          else:
+            pagemsg("WARNING: Found underscore in tag and wasn't able to canonicalize completely: %s" % tag)
         m = re.search('^\[\[(.*)\]\]$', tag)
         if m:
           repl = canonicalize_tag(m.group(1))
@@ -272,7 +283,7 @@ def process_text_on_page(pagetitle, index, text):
       canon_tags = []
 
       for tag in tags:
-        if tag == ";":
+        if tag in semicolon_tags:
           repl = tag
         else:
           repl = canonicalize_tag(tag)
@@ -441,17 +452,228 @@ def process_text_on_page(pagetitle, index, text):
 
       tags = canon_tags
 
-      # (5) Put back the new parameters. In the process, log and unrecognized ("bad") tags,
+      # (5) When multiple tag sets separated by semicolon, combine adjacent
+      # ones that differ in only one tag in a given dimension. Repeat this
+      # until no changes in case we can reduce along multiple dimensions, e.g.
+      #
+      # {{inflection of|canus||dat|m|p|;|dat|f|p|;|dat|n|p|;|abl|m|p|;|abl|f|p|;|abl|n|p|lang=la}}
+      #
+      # which can be reduced to
+      #
+      # {{inflection of|la|canus||dat//abl|m//f//n|p}}
+      while True:
+        old_tags = tags
+
+        # First split into tag sets.
+        tag_set_group = []
+        cur_tag_set = []
+        for tag in tags:
+          if tag in semicolon_tags:
+            if cur_tag_set:
+              tag_set_group.append(cur_tag_set)
+            cur_tag_set = []
+          else:
+            cur_tag_set.append(tag)
+        if cur_tag_set:
+          tag_set_group.append(cur_tag_set)
+
+        # Try combining in two different styles ("adjacent-first" =
+        # do two passes, where the first pass only combines adjacent
+        # tag sets, while the second pass combines nonadjacent tag sets;
+        # "all-first" = do one pass combining nonadjacent tag sets).
+        # Sometimes one is better, sometimes the other.
+        #
+        # An example where adjacent-first is better:
+        #
+        # {{inflection of|medius||m|acc|s|;|n|nom|s|;|n|acc|s|;|n|voc|s|lang=la}}
+        #
+        # all-first results in
+        #
+        # {{inflection of|la|medius||m//n|acc|s|;|n|nom//voc|s}}
+        #
+        # which isn't ideal.
+        #
+        # If we do adjacent-first, we get
+        #
+        # {{inflection of|la|medius||m|acc|s|;|n|nom//acc//voc|s}}
+        #
+        # which is much better.
+        #
+        # The opposite happens in
+        #
+        # {{inflection of|βουλόμενος||n|nom|s|;|m|acc|s|;|n|acc|s|;|n|voc|s|lang=grc}}
+        #
+        # where all-first results in
+        #
+        # {{inflection of|grc|βουλόμενος||n|nom//acc//voc|s|;|m|acc|s}}
+        #
+        # which is better than the result from adjacent-first, which is
+        #
+        # {{inflection of|grc|βουλόμενος||n|nom//voc|s|;|m//n|acc|s}}
+        #
+        # To handle this conundrum, we try both, and look to see which one
+        # results in fewer "combinations" (where a tag with // in it counts
+        # as a combination). If both are different but have the same # of
+        # combinations, we prefer adjacent-first, we seems generally a better
+        # approach.
+
+        tag_set_group_by_style = {}
+        notes_by_style = {}
+
+        for combine_style in ["adjacent-first", "all-first"]:
+          # Now, we do two passes. The first pass only combines adjacent
+          # tag sets, while the second pass combines nonadjacent tag sets.
+          # Copy tag_set_group, since we destructively modify the list.
+          tag_sets = list(tag_set_group)
+          this_notes = []
+          if combine_style == "adjacent-first":
+            combine_passes = ["adjacent", "all"]
+          else:
+            combine_passes = ["all"]
+          for combine_pass in combine_passes:
+            tag_ind = 0
+            while tag_ind < len(tag_sets):
+              if combine_pass == "adjacent":
+                if tag_ind == 0:
+                  prev_tag_range = []
+                else:
+                  prev_tag_range = [tag_ind - 1]
+              else:
+                prev_tag_range = range(tag_ind)
+              for prev_tag_ind in prev_tag_range:
+                cur_tag_set = tag_sets[prev_tag_ind]
+                tag_set = tag_sets[tag_ind]
+                if len(cur_tag_set) == len(tag_set):
+                  mismatch_ind = None
+                  for i, (tag1, tag2) in enumerate(zip(cur_tag_set, tag_set)):
+                    if tag1 == tag2:
+                      continue
+                    if mismatch_ind is not None:
+                      break
+                    if "//" in tag1:
+                      tag1 = tag1.split("//")
+                    else:
+                      tag1 = [tag1]
+                    if "//" in tag2:
+                      tag2 = tag2.split("//")
+                    else:
+                      tag2 = [tag2]
+                    dims1 = [combininable_tags_by_dimension.get(tag, "unknown") for tag in tag1]
+                    dims2 = [combininable_tags_by_dimension.get(tag, "unknown") for tag in tag2]
+                    unique_dims = set(dims1 + dims2)
+                    if len(unique_dims) == 1 and unique_dims != {"unknown"}:
+                      mismatch_ind = i
+                    else:
+                      break
+                  else:
+                    # No break, we either match perfectly or are combinable
+                    if mismatch_ind is None:
+                      pagemsg("WARNING: Two identical tag sets: %s and %s in %s" % (
+                        "|".join(cur_tag_set), "|".join(tag_set), unicode(t)))
+                      del tag_sets[tag_ind]
+                      break
+                    else:
+                      tag1 = cur_tag_set[mismatch_ind]
+                      tag2 = tag_set[mismatch_ind]
+                      combined_tag = "%s//%s" % (tag1, tag2)
+                      new_tag_set = []
+                      for i in xrange(len(cur_tag_set)):
+                        if i == mismatch_ind:
+                          new_tag_set.append(combined_tag)
+                        else:
+                          assert cur_tag_set[i] == tag_set[i]
+                          new_tag_set.append(tag_set[i])
+                      combine_msg = "tag sets %s and %s into %s" % (
+                        "|".join(cur_tag_set), "|".join(tag_set), "|".join(new_tag_set)
+                      )
+                      pagemsg("Combining %s" % combine_msg)
+                      this_notes.append("combined %s" % combine_msg)
+                      tag_sets[prev_tag_ind] = new_tag_set
+                      del tag_sets[tag_ind]
+                      break
+              else:
+                # No break from inner for-loop. Break from that loop indicates
+                # that we found that the current tag set can be combined with
+                # a preceding tag set, did the combination and deleted the
+                # current tag set. The next iteration then processes the same
+                # numbered tag set again (which is actually the following tag
+                # set, because we deleted the tag set before it). No break
+                # indicates that we couldn't combine the current tag set with
+                # any preceding tag set, and need to advance to the next one.
+                tag_ind += 1
+          tag_set_group_by_style[combine_style] = tag_sets
+          notes_by_style[combine_style] = this_notes
+
+        if tag_set_group_by_style["adjacent-first"] != tag_set_group_by_style["all-first"]:
+          def num_combinations(group):
+            num_combos = 0
+            for tag_set in group:
+              for tag in tag_set:
+                if "//" in tag:
+                  num_combos += 1
+            return num_combos
+          def combine_tag_set_group(group):
+            result = []
+            for tag_set in group:
+              if result:
+                result.append(";")
+              result.extend(tag_set)
+            return "|".join(result)
+          num_adjacent_first_combos = num_combinations(tag_set_group_by_style["adjacent-first"])
+          num_all_first_combos = num_combinations(tag_set_group_by_style["all-first"])
+          if num_adjacent_first_combos < num_all_first_combos:
+            pagemsg("Preferring adjacent-first result %s (%s combinations) to all-first result %s (%s combinations)" % (
+              combine_tag_set_group(tag_set_group_by_style["adjacent-first"]),
+              num_adjacent_first_combos,
+              combine_tag_set_group(tag_set_group_by_style["all-first"]),
+              num_all_first_combos
+            ))
+            tag_set_group = tag_set_group_by_style["adjacent-first"]
+            notes.extend(notes_by_style["adjacent-first"])
+          elif num_all_first_combos < num_adjacent_first_combos:
+            pagemsg("Preferring all-first result %s (%s combinations) to adjacent-first result %s (%s combinations)" % (
+              combine_tag_set_group(tag_set_group_by_style["all-first"]),
+              num_all_first_combos,
+              combine_tag_set_group(tag_set_group_by_style["adjacent-first"]),
+              num_adjacent_first_combos
+            ))
+            tag_set_group = tag_set_group_by_style["all-first"]
+            notes.extend(notes_by_style["all-first"])
+          else:
+            pagemsg("Adjacent-first and all-first combination style different but same #combinations %s, preferring adjacent-first result %s to all-first result %s" % (
+              num_adjacent_first_combos,
+              combine_tag_set_group(tag_set_group_by_style["adjacent-first"]),
+              combine_tag_set_group(tag_set_group_by_style["all-first"])
+            ))
+            tag_set_group = tag_set_group_by_style["adjacent-first"]
+            notes.extend(notes_by_style["adjacent-first"])
+        else:
+          # Both are the same, pick either one
+          tag_set_group = tag_set_group_by_style["adjacent-first"]
+          notes.extend(notes_by_style["adjacent-first"])
+
+        tags = []
+        for tag_set in tag_set_group:
+          if tags:
+            tags.append(";")
+          tags.extend(tag_set)
+        if tags == old_tags:
+          break
+
+      # (6) Put back the new parameters. In the process, log and unrecognized ("bad") tags,
       # and any tags with spaces in them.
 
       # Erase all params.
       del t.params[:]
       # Put back new params.
-      t.add("1", lang)
-      t.add("2", term)
+      # Strip comment continuations and line breaks. Such cases generally have linebreaks after semicolons
+      # as well, but we remove those. (FIXME, consider preserving them.)
+      t.add("1", remove_comment_continuations(lang))
+      t.add("2", remove_comment_continuations(term))
+      tr = remove_comment_continuations(tr)
       if tr:
         t.add("tr", tr)
-      t.add("3", alt)
+      t.add("3", remove_comment_continuations(alt))
       next_tag_param = 4
       has_bad_tags = False
       has_joiner = False
@@ -460,15 +682,13 @@ def process_text_on_page(pagetitle, index, text):
           has_joiner = True
         if " " in tag:
           tags_with_spaces[tag] += 1
-        if "//" in tag:
-          split_tags = tag.split("//")
-        else:
-          split_tags = [tag]
-        for split_tag in split_tags:
-          if split_tag != ";" and split_tag not in good_tags:
-            bad_tags[split_tag] += 1
-            has_bad_tags = True
-            pagemsg("Saw bad tag: %s" % split_tag)
+        if tag not in semicolon_tags:
+          split_tags = [tg for split_tag in tag.split("//") for tg in split_tag.split("_")]
+          for split_tag in split_tags:
+            if split_tag not in good_tags:
+              bad_tags[split_tag] += 1
+              has_bad_tags = True
+              pagemsg("Saw bad tag: %s" % split_tag)
         t.add(str(next_tag_param), tag)
         next_tag_param += 1
       for pname, pval, showkey in params:
