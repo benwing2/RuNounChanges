@@ -7,6 +7,8 @@ from collections import defaultdict
 import blib
 from blib import getparam, rmparam, msg, errandmsg, site, tname
 
+joiner_tags = ['and', 'or', '/', ',']
+
 subtag_replacements = [
   ("first person", "first-person"),
   ("second person", "second-person"),
@@ -46,17 +48,20 @@ cases = {
   "ins": "ins",
   "abl": "abl",
   "loc": "loc",
+  "obl": "obl",
 }
 
-tenses = {
+tenses_aspects = {
   "pres": "pres",
   "fut": "fut",
   "futr": "fut",
   "impf": "impf",
+  "imperf": "impf",
   "pret": "pret",
   "perf": "perf",
   "perfect": "perf",
   "plup": "plup",
+  "aor": "aor",
 }
 
 genders = {
@@ -71,6 +76,9 @@ persons = {
   "3": "3",
 }
 
+# We don't do numbers because there are several cases like
+# def|s|and|p and 1|s|,|s|possession that shouldn't be combined.
+
 moods = {
   "ind": "ind",
   "indc": "ind",
@@ -78,6 +86,8 @@ moods = {
   "subj": "sub",
   "imp": "imp",
   "impr": "imp",
+  "optative": "opt",
+  "opt": "opt",
 }
 
 strengths = {
@@ -90,17 +100,49 @@ strengths = {
   "mixed": "mix",
 }
 
-multitag_replacements = {
-  ("strong,", "weak,", "and", "mixed"): "str//wk//mix",
-  ("first", "s"): ["1", "s"],
-  ("second", "s"): ["2", "s"],
-  ("first", "p"): ["1", "p"],
-  ("second", "p"): ["2", "p"],
-}
+multitag_replacements = [
+  (["strong,", "weak,", "and", "mixed"], "str//wk//mix"),
+  (["pres", "indc", "and", "pres", "subj"], ["pres", "ind//sub"]),
+  (["impf", "indc", "/", "impf", "subj"], ["impf", "ind//sub"]),
+  (["1", "s", "and", "2", "s", "and", "3", "s"], ["1//2//3", "s"]),
+  (["1", "s", ",", "2", "s", ",", "and", "3", "s"], ["1//2//3", "s"]),
+  (["2", "s", "and", "3", "s"], ["2//3", "s"]),
+  (["1", "s", "and", "3", "p"], "1_s//3_p"),
+  (["3", "s", "and", "2", "p"], "3_s//2_p"),
+  (["acc", "s", "and", "ins", "s"], ["acc//ins", "s"]),
+  (["dat", "s", "and", "loc", "s"], ["dat//loc", "s"]),
+  (["voc", "s", "and", "gen", "s"], ["voc//gen", "s"]),
+  (["acc", "s", "and", "nom", "p"], "acc_s//nom_p"),
+  (["gen", "s", "and", "nom", "p"], "gen_s//nom_p"),
+  (["first", "s"], ["1", "s"]),
+  (["second", "s"], ["2", "s"]),
+  (["first", "p"], ["1", "p"]),
+  (["second", "p"], ["2", "p"]),
+  (["d", "and", "p"], "d//p"),
+  (["s", "and", "d", "and", "p"], "s//d//p"),
+  (["s", "and", "d"], "s//d"),
+  (["Epic", "and", "Attic"], "{{lb|grc|Epic}}//{{lb|grc|Attic}}"),
+  (["def", "s", "and", "p"], "def_sg//p"),
+  (["def", "and", "p"], "def//p"),
+  (["pres", "indc", "/", "fut"], "pres_ind//fut"),
+  (["pres", "indc", "/", "futr"], "pres_ind//fut"),
+  (["pres", "indc", "/", "future"], "pres_ind//fut"),
+  (["pres", "habitual", "/", "futr"], "pres_hab//fut"),
+  (["impf", "/", "cond"], "impf//cond"),
+  (["imperf", "/", "cond"], "impf//cond"),
+  (["nom", "and", "voc", "and", "dat", "and", "strong", "gen"], "nom//voc//dat//str_gen"),
+  (["nom", "and", "voc", "and", "strong", "gen", "and", "dat"], "nom//voc//dat//str_gen"),
+  (["nom", "and", "voc", "and", "strong", "gen", "p", "and", "dat", "p"],
+    ["nom//voc//dat//str_gen", "p"]),
+  (["nom", "and", "voc", "and", "plural", "and", "strong", "gen", "p"],
+    ["nom//voc//dat//str_gen", "p"]),
+  (["m", "an", "acc", "p", "and", "m", "in", "acc", "p"], ["m", "an//in", "acc", "p"]),
+  (["m", "an", "and", "in", "acc", "p"], ["m", "an//in", "acc", "p"]),
+]
 
 dimensions_to_tags = {
   "case": cases,
-  "tense": tenses,
+  "tense/aspect": tenses_aspects,
   "mood": moods,
   "person": persons,
   "gender": genders,
@@ -146,9 +188,8 @@ def process_text_on_page(pagetitle, index, text):
   pagemsg("Processing")
   notes = []
 
-  if ":" in pagetitle and not re.search(
-      "^(Citations|Appendix|Reconstruction|Transwiki|Talk|Wiktionary|[A-Za-z]+ talk):", pagetitle):
-    pagemsg("WARNING: Colon in page title and not a recognized namespace to include, skipping page")
+  if blib.page_should_be_ignored(pagetitle):
+    pagemsg("WARNING: Page should be ignored")
     return None, None
 
   parsed = blib.parse_text(text)
@@ -258,7 +299,7 @@ def process_text_on_page(pagetitle, index, text):
       canon_tags = []
       i = 0
       while i < len(tags):
-        for fro, to in multitag_replacements.iteritems():
+        for fro, to in multitag_replacements:
           if i + len(fro) <= len(tags):
             for j in range(len(fro)):
               if fro[j] != tags[i + j]:
@@ -282,41 +323,122 @@ def process_text_on_page(pagetitle, index, text):
       canon_tags = []
       i = 0
       while i < len(tags):
-        if i < len(tags) - 4 and (
+
+        # Check for foo|and|bar|and|baz|and|bat|and|quux where foo, bar, baz,
+        # bat and quux are in the same dimension.
+        if i <= len(tags) - 9 and (
           tags[i] in combininable_tags_by_dimension and
-          tags[i + 1] in ['and', '/'] and
+          tags[i + 1] in joiner_tags and
           tags[i + 2] in combininable_tags_by_dimension and
-          combininable_tags_by_dimension[tags[i]] == combininable_tags_by_dimension[tags[i + 2]] and
-          tags[i + 3] in ['and', '/'] and
+          tags[i + 3] in joiner_tags and
           tags[i + 4] in combininable_tags_by_dimension and
-          combininable_tags_by_dimension[tags[i + 2]] == combininable_tags_by_dimension[tags[i + 4]]
+          tags[i + 5] in joiner_tags and
+          tags[i + 6] in combininable_tags_by_dimension and
+          tags[i + 7] in joiner_tags and
+          tags[i + 8] in combininable_tags_by_dimension and
+          combininable_tags_by_dimension[tags[i]] == combininable_tags_by_dimension[tags[i + 2]] and
+          combininable_tags_by_dimension[tags[i + 2]] == combininable_tags_by_dimension[tags[i + 4]] and
+          combininable_tags_by_dimension[tags[i + 4]] == combininable_tags_by_dimension[tags[i + 6]] and
+          combininable_tags_by_dimension[tags[i + 6]] == combininable_tags_by_dimension[tags[i + 8]]
         ):
-          # We have foo|and|bar|and|baz where foo, bar and baz are in the same dimension.
           dim = combininable_tags_by_dimension[tags[i]]
           tag1 = dimensions_to_tags[dim][tags[i]]
           tag2 = dimensions_to_tags[dim][tags[i + 2]]
           tag3 = dimensions_to_tags[dim][tags[i + 4]]
-          combined_tag = "%s//%s//%s" % (tag1, tag2, tag3)
+          tag4 = dimensions_to_tags[dim][tags[i + 6]]
+          tag5 = dimensions_to_tags[dim][tags[i + 8]]
+          orig_tags = "|".join(tags[i:i + 9])
+          combined_tag = "%s//%s//%s//%s//%s" % (tag1, tag2, tag3, tag4, tag5)
           canon_tags.append(combined_tag)
-          notes.append("combined %s tags into %s" % (dim, combined_tag))
-          i += 5
-        elif i < len(tags) - 2 and (
+          notes.append("combined %s tags %s into %s" % (dim, orig_tags, combined_tag))
+          i += 9
+
+        # Check for foo|and|bar|and|baz|and|bat where foo, bar, baz and bat
+        # are in the same dimension.
+        elif i <= len(tags) - 7 and (
           tags[i] in combininable_tags_by_dimension and
-          tags[i + 1] in ['and', '/'] and
+          tags[i + 1] in joiner_tags and
           tags[i + 2] in combininable_tags_by_dimension and
-          combininable_tags_by_dimension[tags[i]] == combininable_tags_by_dimension[tags[i + 2]]
+          tags[i + 3] in joiner_tags and
+          tags[i + 4] in combininable_tags_by_dimension and
+          tags[i + 5] in joiner_tags and
+          tags[i + 6] in combininable_tags_by_dimension and
+          combininable_tags_by_dimension[tags[i]] == combininable_tags_by_dimension[tags[i + 2]] and
+          combininable_tags_by_dimension[tags[i + 2]] == combininable_tags_by_dimension[tags[i + 4]] and
+          combininable_tags_by_dimension[tags[i + 4]] == combininable_tags_by_dimension[tags[i + 6]]
         ):
-          # We have foo|and|bar where foo and bar are in the same dimension.
           dim = combininable_tags_by_dimension[tags[i]]
           tag1 = dimensions_to_tags[dim][tags[i]]
           tag2 = dimensions_to_tags[dim][tags[i + 2]]
+          tag3 = dimensions_to_tags[dim][tags[i + 4]]
+          tag4 = dimensions_to_tags[dim][tags[i + 6]]
+          orig_tags = "|".join(tags[i:i + 7])
+          combined_tag = "%s//%s//%s//%s" % (tag1, tag2, tag3, tag4)
+          canon_tags.append(combined_tag)
+          notes.append("combined %s tags %s into %s" % (dim, orig_tags, combined_tag))
+          i += 7
+
+        # Check for foo|and|bar|and|baz where foo, bar and baz
+        # are in the same dimension.
+        elif i <= len(tags) - 5 and (
+          tags[i] in combininable_tags_by_dimension and
+          tags[i + 1] in joiner_tags and
+          tags[i + 2] in combininable_tags_by_dimension and
+          tags[i + 3] in joiner_tags and
+          tags[i + 4] in combininable_tags_by_dimension and
+          combininable_tags_by_dimension[tags[i]] == combininable_tags_by_dimension[tags[i + 2]] and
+          combininable_tags_by_dimension[tags[i + 2]] == combininable_tags_by_dimension[tags[i + 4]]
+        ):
+          dim = combininable_tags_by_dimension[tags[i]]
+          tag1 = dimensions_to_tags[dim][tags[i]]
+          tag2 = dimensions_to_tags[dim][tags[i + 2]]
+          tag3 = dimensions_to_tags[dim][tags[i + 4]]
+          orig_tags = "|".join(tags[i:i + 5])
+          combined_tag = "%s//%s//%s" % (tag1, tag2, tag3)
+          canon_tags.append(combined_tag)
+          notes.append("combined %s tags %s into %s" % (dim, orig_tags, combined_tag))
+          i += 5
+
+        # Check for foo|bar|and|baz where foo, bar and baz
+        # are in the same dimension.
+        elif i <= len(tags) - 4 and (
+          tags[i] in combininable_tags_by_dimension and
+          tags[i + 1] in combininable_tags_by_dimension and
+          tags[i + 2] in joiner_tags and
+          tags[i + 3] in combininable_tags_by_dimension and
+          combininable_tags_by_dimension[tags[i]] == combininable_tags_by_dimension[tags[i + 1]] and
+          combininable_tags_by_dimension[tags[i + 1]] == combininable_tags_by_dimension[tags[i + 3]]
+        ):
+          dim = combininable_tags_by_dimension[tags[i]]
+          tag1 = dimensions_to_tags[dim][tags[i]]
+          tag2 = dimensions_to_tags[dim][tags[i + 1]]
+          tag3 = dimensions_to_tags[dim][tags[i + 3]]
+          orig_tags = "|".join(tags[i:i + 4])
+          combined_tag = "%s//%s//%s" % (tag1, tag2, tag3)
+          canon_tags.append(combined_tag)
+          notes.append("combined %s tags %s into %s" % (dim, orig_tags, combined_tag))
+          i += 5
+
+        # Check for foo|and|bar where foo and bar are in the same dimension.
+        elif i <= len(tags) - 3 and (
+          tags[i] in combininable_tags_by_dimension and
+          tags[i + 1] in joiner_tags and
+          tags[i + 2] in combininable_tags_by_dimension and
+          combininable_tags_by_dimension[tags[i]] == combininable_tags_by_dimension[tags[i + 2]]
+        ):
+          dim = combininable_tags_by_dimension[tags[i]]
+          tag1 = dimensions_to_tags[dim][tags[i]]
+          tag2 = dimensions_to_tags[dim][tags[i + 2]]
+          orig_tags = "|".join(tags[i:i + 3])
           combined_tag = "%s//%s" % (tag1, tag2)
           canon_tags.append(combined_tag)
-          notes.append("combined %s tags into %s" % (dim, combined_tag))
+          notes.append("combined %s tags %s into %s" % (dim, orig_tags, combined_tag))
           i += 3
+
         else:
           canon_tags.append(tags[i])
           i += 1
+
       tags = canon_tags
 
       # (5) Put back the new parameters. In the process, log and unrecognized ("bad") tags,
@@ -332,7 +454,10 @@ def process_text_on_page(pagetitle, index, text):
       t.add("3", alt)
       next_tag_param = 4
       has_bad_tags = False
+      has_joiner = False
       for tag in tags:
+        if tag in joiner_tags:
+          has_joiner = True
         if " " in tag:
           tags_with_spaces[tag] += 1
         if "//" in tag:
@@ -357,6 +482,8 @@ def process_text_on_page(pagetitle, index, text):
       global num_templates_with_bad_tags
       if has_bad_tags:
         num_templates_with_bad_tags += 1
+      if has_joiner:
+        pagemsg("WARNING: Template has unconverted joiner: %s" % unicode(t))
 
   return unicode(parsed), notes
 
@@ -381,13 +508,22 @@ if args.form_of_files:
 if args.textfile:
   with codecs.open(args.textfile, "r", "utf-8") as fp:
     text = fp.read()
-  pages = text.split('\001')
+  if '\001' in text:
+    pages = text.split('\001')
+    title_text_split = '\n'
+  else:
+    pages = re.split('\nPage [0-9]+ ', text)
+    title_text_split = ': Found template: '
   for index, page in blib.iter_items(pages, start, end):
     if not page: # e.g. first entry
       continue
-    pagetitle, pagetext = page.split('\n', 1)
+    split_vals = page.split(title_text_split, 1)
+    if len(split_vals) < 2:
+      msg("Page %s: Skipping bad text: %s" % (index, page))
+      continue
+    pagetitle, pagetext = split_vals
     newtext, notes = process_text_on_page(pagetitle, index, pagetext)
-    if newtext != pagetext:
+    if newtext and newtext != pagetext:
       msg("Page %s %s: Would save with comment = %s" % (index, pagetitle,
         "; ".join(blib.group_notes(notes))))
       
