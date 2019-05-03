@@ -730,8 +730,8 @@ pages_already_erased = set()
 # or parameters to add to the created DEFTEMP template, similar to
 # HEADTEMP_PARAM; or it should be a list of inflection codes (e.g.
 # ['2', 's', 'pres', 'ind']). DEFTEMP_NEEDS_LANG indicates whether the
-# definition template specified by DEFTEMP needs to have a 'lang' parameter
-# with value 'ru'.
+# definition template specified by DEFTEMP needs to have a 'lang'/'1'
+# parameter with value 'ru'.
 #
 # GENDER should be a list of genders to use in adding or updating gender
 # (assumed to be parameter g= in HEADTEMP if it's a "head|" headword template,
@@ -861,8 +861,8 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
     if rulib.is_multi_stressed(value):
       pagemsg_if(issue_warnings, "WARNING: Value %s to compare to param %s=%s has multiple accents" % (
         value, param, paramval))
-    # If checking the first param, substitute page name if missing.
-    if not paramval and param in ["1", "head"]:
+    # If checking the lemma param, substitute page name if missing.
+    if not paramval and param in ["1", "2", "head"]:
       paramval = pagename
     # Allow cases where the parameter says e.g. апатичный (missing an accent)
     # and the value compared to is e.g. апати́чный (with an accent).
@@ -885,7 +885,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
           unicode(t)))
     # Now, if there's a match, check the translit
     if matches:
-      if param in ["1", "head"]:
+      if param in ["1", "2", "head"]:
         trparam = "tr"
       elif param.startswith("head"):
         trparam = re.sub("^head", "tr", param)
@@ -1020,7 +1020,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
 
     # 4. Synthesize definition template.
     new_defn_template = "{{%s%s|%s%s%s}}" % (
-      deftemp, "|lang=ru" if deftemp_needs_lang else "",
+      deftemp, "|ru" if deftemp_needs_lang else "",
       lemma, "|tr=%s" % lemmatr if lemmatr else "",
       deftemp_param if isinstance(deftemp_param, basestring) else "||" + "|".join(deftemp_param))
 
@@ -1505,11 +1505,13 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
               # template) exactly match the inflections given in INFLS (in
               # any order), or if the former are a superset of the latter
               def compare_inflections(t, infls, issue_warnings=True):
+                lang_in_1 = deftemp_needs_lang and not t.has("lang")
                 infl_params = []
                 for param in t.params:
                   name = pname(param)
                   value = unicode(param.value)
-                  if name not in ["1", "2"] and re.search("^[0-9]+$", name) and value:
+                  if (name not in ["1", "2"] and not (lang_in_1 and name == "3")
+                      and re.search("^[0-9]+$", name) and value):
                     infl_params.append(value)
                 inflset = set(infls)
                 paramset = set(infl_params)
@@ -1591,11 +1593,15 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
               defn_templates_for_already_present_entry = []
               defn_templates_for_inserting_in_same_section = []
               for t in parsed.filter_templates():
-                if (tname(t) == deftemp and
-                    compare_param(t, "1", lemma, lemmatr,
+                if tname(t) != deftemp:
+                  continue
+                lang_in_1 = deftemp_needs_lang and not t.has("lang")
+                lang_param = lang_in_1 and "1" or "lang"
+                lemma_param = lang_in_1 and "2" or "1"
+                if (compare_param(t, lemma_param, lemma, lemmatr,
                       issue_warnings=issue_warnings) and
                     (not deftemp_needs_lang or
-                      compare_param(t, "lang", "ru", None,
+                      compare_param(t, lang_param, "ru", None,
                         issue_warnings=issue_warnings))):
                   defn_templates_for_inserting_in_same_section.append(t)
                   if isinstance(deftemp_param, basestring):
@@ -1610,21 +1616,23 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                 # Also see if the definition template matches a closely-related
                 # lemma where we allow the two to share the same headword
                 # (e.g. огонь and alternative form огнь)
-                elif (tname(t) == deftemp and
-                    check_for_closely_related_lemma(getparam(t, "1"), lemma,
+                elif (check_for_closely_related_lemma(getparam(t, lemma_param), lemma,
                       issue_warnings=issue_warnings) and
                     (not deftemp_needs_lang or
-                      compare_param(t, "lang", "ru", None,
+                      compare_param(t, lang_param, "ru", None,
                         issue_warnings=issue_warnings))):
                   defn_templates_for_inserting_in_same_section.append(t)
 
               singular_in_existing_defn_templates = False
               for t in parsed.filter_templates():
-                if (tname(t) == deftemp and
-                    (not deftemp_needs_lang or
-                      compare_param(t, "lang", "ru", None,
-                        issue_warnings=issue_warnings))):
-                  for paramno in xrange(1, 20):
+                if tname(t) != deftemp:
+                  continue
+                lang_in_1 = deftemp_needs_lang and not t.has("lang")
+                lang_param = lang_in_1 and "1" or "lang"
+                if (not deftemp_needs_lang or
+                      compare_param(t, lang_param, "ru", None,
+                        issue_warnings=issue_warnings)):
+                  for paramno in xrange(lang_in_1 and 4 or 3, 20):
                     if getparam(t, str(paramno)) == "s":
                       singular_in_existing_defn_templates = True
 
@@ -1948,14 +1956,23 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
 
           def matching_defn_templates(parsed, allow_stress_mismatch=False,
               check_for_sg_pl_pairs=False):
-            return [t for t in parsed.filter_templates()
-                if tname(t) == deftemp and
-                (compare_param(t, "1", lemma, lemmatr,
+            retval = []
+            for t in parsed.filter_templates():
+              if tname(t) != deftemp:
+                continue
+              lang_in_1 = deftemp_needs_lang and not t.has("lang")
+              lang_param = lang_in_1 and "1" or "lang"
+              lemma_param = lang_in_1 and "2" or "1"
+              if (
+                (compare_param(t, lemma_param, lemma, lemmatr,
                   allow_stress_mismatch=allow_stress_mismatch) or
                   check_for_sg_pl_pairs and check_for_matching_sg_pl_pair(
-                    getparam(t, "1"), lemma)) and
+                    getparam(t, lemma_param), lemma)) and
                 (not deftemp_needs_lang or
-                  compare_param(t, "lang", "ru", None))]
+                  compare_param(t, lang_param, "ru", None))
+              ):
+                retval.append(t)
+            return retval
 
           # If adjective form, try to find noun form with same headword
           # (inflection) and definition (lemma) to insert before (this happens
@@ -2065,9 +2082,12 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                 # First check for plural in a defn template
                 plural_in_existing_defn_templates = False
                 for t in parsed.filter_templates():
-                  if (tname(t) == deftemp and
-                      (not deftemp_needs_lang or
-                        compare_param(t, "lang", "ru", None))):
+                  if tname(t) != deftemp:
+                    continue
+                  lang_in_1 = deftemp_needs_lang and not t.has("lang")
+                  lang_param = lang_in_1 and "1" or "lang"
+                  if (not deftemp_needs_lang or
+                      compare_param(t, lang_param, "ru", None)):
                     for paramno in xrange(1, 20):
                       if getparam(t, str(paramno)) == "p":
                         plural_in_existing_defn_templates = True
