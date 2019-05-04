@@ -10,6 +10,109 @@ local rsplit = mw.text.split
 
 local export = {}
 
+--[=[
+
+This module implements the underlying processing of {{form of}},
+{{inflection of}} and specific variants such as {{past participle of}}
+and {{alternative spelling of}}. Most of the logic in this file is to
+handle tags in {{inflection of}}. Other related files:
+
+* [[Module:form of/templates]] contains the majority of the logic that
+  implements the templates themselves.
+* [[Module:form of/data]] is a data-only file containing information on
+  the more common inflection tags, listing the tags, their shortcuts,
+  the category they belong to (tense-aspect, case, gender, voice-valence,
+  etc.), the appropriate glossary link and the wikidata ID.
+* [[Module:form of/data2]] is a data-only file containing information on
+  the less common inflection tags, in the same format as
+  [[Module:form of/data]].
+* [[Module:form of/cats]] is a data-only file listing the
+  language-specific categories that are added when the appropriate
+  combinations of tags are seen for a given language.
+* [[Module:form of/pos]] is a data-only file listing the recognized
+  parts of speech and their abbreviations, used for categorization.
+  FIXME: This should be unified with the parts of speech listed in
+  [[Module:links]].
+* [[Module:form of/functions]] contains functions for use with
+  [[Module:form of/data]] and [[Module:form of/cats]]. They are
+  contained in this module because data-only modules can't contain
+  code. The functions in this file are of two types:
+
+  (1) Display handlers allow for customization of the display of
+      multipart tags (see below). Currently there is only one
+	  such handler, for handling multipart person tags such as
+	  '1//2//3'.
+  (2) Cat functions allow for more complex categorization logic,
+      and are referred to by name in [[Module:form of/cats]].
+	  Currently no such functions exist.
+
+The following terminology is used in conjunction with {{inflection of}}:
+
+* A TAG is a single grammatical item, as specified in a single numbered
+  parameter of {{inflection of}}. Examples are 'masculine', 'nominative',
+  or 'first-person'. Tags may be abbreviated, e.g. 'm' for 'masculine',
+  'nom' for 'nominative', or '1' for 'first-person'. Such abbreviations
+  are called SHORTCUTS, and some tags have multiple equivalent shortcuts
+  (e.g. 'p' or 'pl' for 'plural'). The full, non-abbreviated form of
+  a tag is called its CANONICAL FORM.
+* The DISPLAY FORM of a tag is the way it's displayed to the user. Usually
+  the displayed text of the tag is the same as its canonical form, and it
+  normally functions as a link to a glossary entry explaining the tag.
+  Usually the link is to an entry in [[Appendix:Glossary]], but sometimes
+  the tag is linked to an individual dictionary entry or to a Wikipedia
+  entry. Occasionally, the display text differs from the canonical form of
+  the tag. An example is the tag 'comparative case', which has the display
+  text read as simply 'comparative'. Normally, tags referring to cases don't
+  have the word "case" in them, but in this case the tag 'comparative' was
+  already used as a shortcut for the tag 'comparative degree', so the tag was
+  named 'comparative case' to avoid clashing. A similar situation occurs
+  with 'adverbial case' vs. the grammar tag 'adverbial' (as in 'adverbial
+  participle').
+* A TAG SET is an ordered list of tags, which together express a single
+  inflection, for example, '1|s|pres|ind', which can be expanded to
+  canonical-form tags as 'first-person|singular|present|indicative'.
+  Multiple tag sets can be specified in a single call to {{inflection of}}
+  by separating the individual tag sets with a semicolon, e.g.
+  '1|s|pres|ind|;|2|s|imp', which specifies two tag sets, '1|s|pres|ind'
+  as above and '2|s|imp' (in canonical form,
+  'second-person|singular|imperative').
+* A MULTIPART TAG is a tag that embeds multiple tags within it, such as
+  'f//n' or 'nom//acc//voc'. These are used in the case of [[syncretism]],
+  when the same form applies to multiple inflections. Examples are the
+  Spanish present subjunctive, where the first-person and third-person
+  singular have the same form (e.g. [[siga]] from [[seguir]] "to follow"),
+  or Latin third-declension adjectives, where the dative and ablative
+  plural of all genders have the same form (e.g. [[omnibus]] from [[omnis]]
+  "all"). These would be expressed respectively as '1//3|s|pres|sub'
+  and 'dat//abl|m//f//n|p', where the use of the multipart tag compactly
+  encodes the syncretism and avoids the need to individually list out
+  all of the inflections. Multipart tags currently display as a list
+  separated by "and", ''dative and ablative'' or
+  ''masculine, feminine and neuter'' where each individual word is linked
+  appropriately. As a special case, multipart tags involving persons display
+  specially; for example, the multipart tag ''1//2//3'' displays as
+  ''first-, second- and third-person'', with the word "person" occurring
+  only once.
+* A TWO-LEVEL MULTIPART TAG is a special type of multipart tag that
+  joins two or more tag sets instead of joining individual tags. The tags
+  within the tag set are joined by a colon, e.g. '1:s//3:p', which is
+  displayed as ''first-person singular and third-person plural'', e.g.
+  for use with the form [[μέλλον]] of the verb [[μέλλω]] "to intend",
+  which uses the tag set '1:s//3:p|impf|actv|indc|unaugmented' to express
+  the syncretism between the first singular and third plural forms of the
+  imperfect active indicative unaugmented conjugation. Two-level multipart
+  tags should be used sparingly; if in doubt, list out the inflections
+  separately.
+* A MULTIPART TAG SHORTCUT is a shortcut that expands into a multipart
+  tag, for example '123', which expands to the multipart tag '1//2//3'.
+  Only the most common such combinations exist as shortcuts.
+* A LIST TAG SHORTCUT is a special type of shortcut that expands to a list
+  of tags instead of a single tag. For example, the shortcut '1s' expands to
+  '1|s' (first-person singular). Only the most common such combinations
+  exist as shortcuts.
+
+]=]
+
 -- version of rsubn() that discards all but the first return value
 local function rsub(term, foo, bar)
 	local retval = rsubn(term, foo, bar)
@@ -68,26 +171,40 @@ local function infl_track(page)
 end
 
 
+local function is_link_or_html(tag)
+	return tag:find("[[", nil, true) or tag:find("|", nil, true) or
+		tag:find("<", nil, true)
+end
+
+
 -- Look up a shortcut tag and return its expansion. If no expansion found,
--- return the tag itself. This first looks up in [[Module:form of/data]]
--- (which includes more common tags) and then in [[Module:form of/data2]].
-local function lookup_shortcut(tag)
+-- return the tag itself. If the expansion is a string and is different
+-- from the tag, track it if DO_TRACK is true. This first looks up in
+-- [[Module:form of/data]] (which includes more common tags) and then in
+-- [[Module:form of/data2]].
+--
+-- NOTE: The return value may be either a string or (in the case of a
+-- list-tag shortcut) a list, and the caller must handle both cases.
+local function lookup_shortcut(tag, do_track)
 	-- If there is HTML or a link in the tag, return it directly; don't try
 	-- to look it up, which will fail.
-	if tag:find("[[", nil, true) or tag:find("|", nil, true) or tag:find("<", nil, true) then
+	if is_link_or_html(tag) then
 		return tag
 	end
 	local m_data = mw.loadData("Module:form of/data")
-	local shortcut = m_data.shortcuts[tag]
-	if shortcut then
-		return shortcut
+	local expansion = m_data.shortcuts[tag]
+	if not expansion then
+		local m_data2 = mw.loadData("Module:form of/data2")
+		expansion = m_data2.shortcuts[tag]
 	end
-	local m_data2 = mw.loadData("Module:form of/data2")
-	local shortcut = m_data2.shortcuts[tag]
-	if shortcut then
-		return shortcut
+	if not expansion then
+		return tag
 	end
-	return tag
+	-- Maybe track the expansion if it's not the same as the raw tag.
+	if do_track and expansion ~= tag and type(expansion) == "string" then
+		infl_track("tag/" .. tag)
+	end
+	return expansion
 end
 
 
@@ -110,16 +227,14 @@ local function lookup_tag(tag)
 end
 
 
--- Normalize a single tag, which should not be a list or multipart tag.
+-- Normalize a single tag, which may be a shortcut but should not be a
+-- multipart tag, a multipart-tag shortcut or a list-tag shortcut.
 local function normalize_single_tag(tag, do_track)
-	local normalized = lookup_shortcut(tag)
-	if normalized ~= tag then
-		tag = normalized
-		if do_track then
-			-- Track the expansion if it's not the same as the raw tag.
-			infl_track("tag/" .. tag)
-		end
+	local expansion = lookup_shortcut(tag, do_track)
+	if type(expansion) ~= "string" then
+		error("Tag '" .. tag .. "' is a list-tag shortcut, which is not allowed here")
 	end
+	tag = expansion
 	if not lookup_tag(tag) and do_track then
 		-- If after all expansions and normalizations we don't recognize
 		-- the canonical tag, track it.
@@ -130,28 +245,80 @@ local function normalize_single_tag(tag, do_track)
 end
 
 
--- Normalize a single tag, which should not be a list tag but may be a
--- multipart tag. If RECOMBINE_TAGS isn't given, the return value may be a
--- list (in the case of multipart tags); otherwise, it will always be a
--- string, and multipart tags will be represented as canonical-form tags
--- joined by "//".
-local function normalize_tag(tag, recombine_multitags, do_track)
-	-- Check for a shortcut before splitting. (I think the only case this
-	-- should apply to is when a list tag expands to a multipart tag.)
-	local expanded_tag = lookup_shortcut(tag)
-	if type(expanded_tag) ~= "string" then
-		error("List tags should already have been expanded: " .. tag)
+-- Normalize a component of a multipart tag. This should have any // in it,
+-- but may join multiple individual tags with a colon, and may be a single
+-- list-tag shortcut, which is treates as if colon-separated. If
+-- RECOMBINE_TAGS isn't given, the return value may be a list of tags;
+-- otherwise, it will always be a string, and multiple tags will be
+-- represented as canonical-form tags joined by ":".
+local function normalize_multipart_component(tag, recombine_tags, do_track)
+	-- If there is HTML or a link in the tag, don't try to split on colon.
+	-- A colon may legitimately occur in either one, and we don't want
+	-- these things parsed. Note that we don't do this check before splitting
+	-- on //, which we don't expect to occur in links or HTML; see comment
+	-- in normalize_tag().
+	if is_link_or_html(tag) then
+		return tag
 	end
-	if expanded_tag ~= tag then
-		tag = expanded_tag
-		if do_track then
-			-- Track the expansion if it's not the same as the raw tag.
-			infl_track("tag/" .. tag)
+	local components = rsplit(tag, ":", true)
+	if #components == 1 then
+		-- We allow list-tag shortcuts inside of multipart tags, e.g.
+		-- '1s//3p'. Check for this now.
+		tag = lookup_shortcut(tag, do_track)
+		if type(tag) == "table" then
+			-- We found a list-tag shortcut; treat as if colon-separated.
+			components = tag
+		else
+			return normalize_single_tag(tag, do_track)
 		end
+	end
+	local normtags = {}
+	for _, component in ipairs(components) do
+		if do_track then
+			-- There are multiple components; track each of the individual
+			-- raw tags.
+			infl_track("tag/" .. component)
+		end
+		table.insert(normtags, normalize_single_tag(component, do_track))
+	end
+
+	if recombine_tags then
+		return table.concat(normtags, ":")
+	else
+		return normtags
+	end
+end
+
+
+-- Normalize a single tag. If RECOMBINE_TAGS isn't given, the return value
+-- may be a list (in the case of multipart tags), which will contain nested
+-- lists in the case of two-level multipart tags; otherwise, it will always
+-- be a string, and multipart tags will be represented as canonical-form tags
+-- joined by "//" and/or ":".
+local function normalize_tag(tag, recombine_multitags, do_track)
+	-- We don't check for links or HTML before splitting on //, which we
+	-- don't expect to occur in links or HTML. Doing it this way allows for
+	-- a tag like '{{lb|grc|Epic}}//{{lb|grc|Ionic}}' to function correctly
+	-- (the template calls will be expanded before we process the tag, and
+	-- will contain links and HTML). The only check we do is for a URL,
+	-- which shouldn't normally occur, but might if the user tries to put
+	-- an external link into the tag. URL's with // normally have the
+	-- sequence ://, which should never normally occur when // and : are
+	-- used in their normal ways.
+	if tag:find("://", nil, true) then
+		return tag
 	end
 	local split_tags = rsplit(tag, "//", true)
 	if #split_tags == 1 then
-		return normalize_single_tag(split_tags[1], do_track)
+		local retval = normalize_multipart_component(tag, recombine_multitags,
+			do_track)
+		if type(retval) == "table" then
+			-- The user gave a tag like '1:s', i.e. with colon but without
+			-- //. Allow this, but we need to return a nested list. Note,
+			-- this will never happen when RECOMBINE_TAGS is given.
+			return {retval}
+		end
+		return retval
 	end
 	local normtags = {}
 	for _, single_tag in ipairs(split_tags) do
@@ -159,7 +326,8 @@ local function normalize_tag(tag, recombine_multitags, do_track)
 			-- If the tag was a multipart tag, track each of individual raw tags.
 			infl_track("tag/" .. single_tag)
 		end
-		table.insert(normtags, normalize_single_tag(single_tag, do_track))
+		table.insert(normtags, normalize_multipart_component(single_tag,
+			recombine_multitags, do_track))
 	end
 	if recombine_multitags then
 		return table.concat(normtags, "//")
@@ -169,11 +337,19 @@ local function normalize_tag(tag, recombine_multitags, do_track)
 end
 
 
--- Normalize a list of tags into a list of canonical-form tags (which
--- may be larger due to the possibility of list tags). If RECOMBINE_TAGS
--- isn't given, the return list may itself contains lists; in particular,
--- multipart tags will be represented as lists. If RECOMBINE_TAGS is given,
--- they will be represented as canonical-form tags joined by "//".
+-- Normalize a tag set (a list of tags) into a list of canonical-form tags
+-- (which -- may be larger due to the possibility of list-tag shortcuts).
+-- If RECOMBINE_TAGS isn't given, the return list may itself contains lists;
+-- in particular, multipart tags will be represented as lists. Specifically,
+-- the list will consist of the elements of the multipart tag, which will
+-- either be canonical-form strings or (in the case of two-level multipart
+-- tags) nested lists of canonical-form strings. For example, the multipart
+-- tag ''nom//acc//voc'' will expand to
+--   {"nominative", "accusative", "vocative"}
+-- and the two-level multipart tag ''1:s//3:p'' will expand to
+--   {{"first-person", "singular"}, {"third-person", "plural"}}.
+-- If RECOMBINE_TAGS is given, multipart tags will be represented in string
+-- form, i.e. as canonical-form tags joined by "//" and/or ":".
 function export.normalize_tags(tags, recombine_multitags, do_track)
 	-- We track usage of shortcuts, normalized forms and (in the case of
 	-- multipart tags or list tags) intermediate forms. For example,
@@ -200,14 +376,7 @@ function export.normalize_tags(tags, recombine_multitags, do_track)
 		end
 		-- Expand the tag, which may generate a new tag (either a
 		-- fully canonicalized tag, a multipart tag, or a list of tags).
-		local expanded_tag = lookup_shortcut(tag)
-		if expanded_tag ~= tag then
-			tag = expanded_tag
-			-- Track the expansion if it's not the same as the raw tag.
-			if do_track and type(tag) == "string" then
-				infl_track("tag/" .. tag)
-			end
-		end
+		tag = lookup_shortcut(tag, do_track)
 		if type(tag) == "table" then
 			for _, t in ipairs(tag) do
 				if do_track then
@@ -232,6 +401,9 @@ local function normalize_pos(pos)
 end
 
 
+-- Return the display form of a single canonical-form tag. The value
+-- passed in must be a string (i.e. it cannot be a list describing a
+-- multipart tag). To handle multipart tags, use get_tag_display_form().
 local function get_single_tag_display_form(normtag)
 	local data = lookup_tag(normtag)
 
@@ -254,24 +426,41 @@ local function get_single_tag_display_form(normtag)
 end
 
 
-function export.get_tag_display_form(normtag)
-	if type(normtag) == "string" then
-		return get_single_tag_display_form(normtag)
+-- Turn a canonicalized tag spec (which describes a single, possibly
+-- multipart tag) into the displayed form. The tag spec may be a string
+-- (a canonical-form tag), or a list of canonical-form tags (in the
+-- case of a simple multipart tag), or a list of mixed canonical-form
+-- tags and lists of such tags (in the case of a two-level multipart tag).
+function export.get_tag_display_form(tagspec)
+	if type(tagspec) == "string" then
+		return get_single_tag_display_form(tagspec)
 	end
-	-- We have multiple tags. See if there's a display handler to
+	-- We have a multipart tag. See if there's a display handler to
 	-- display them specially.
 	for _, handler in ipairs(m_functions.display_handlers) do
-		local displayval = handler(normtag)
+		local displayval = handler(tagspec)
 		if displayval then
 			return displayval
 		end
 	end
-	-- If not, just join them using serialCommaJoin.
+	-- No display handler.
 	local displayed_tags = {}
-	for _, tag in ipairs(normtag) do
-		table.insert(displayed_tags, get_single_tag_display_form(tag))
+	for _, first_level_tag in ipairs(tagspec) do
+		if type(first_level_tag) == "string" then
+			table.insert(displayed_tags, get_single_tag_display_form(first_level_tag))
+		else
+			-- A first-level element of a two-level multipart tag.
+			-- Currently we just separate the individual components
+			-- with spaces, but other ways are possible, e.g. using
+			-- an underscore, colon, parens or braces.
+			local components = {}
+			for _, component in ipairs(first_level_tag) do
+				table.insert(components, get_single_tag_display_form(component))
+			end
+			table.insert(displayed_tags, table.concat(components, " "))
+		end
 	end
-	return m_table.serialCommaJoin(displayed_tags)
+	return m_functions.join_multiparts(displayed_tags)
 end
 
 
