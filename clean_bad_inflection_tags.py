@@ -110,8 +110,8 @@ multitag_replacements = [
   ("strong,|weak,|and|mixed", "str//wk//mix"),
   ("n|and|acc|and|voc", "n|nom//acc//voc"),
   # Lower Sorbian
-  ("gen|and|an|acc|and|loc", "gen//an_acc//loc"),
-  ("gen|and|an|acc", "gen//an_acc"),
+  ("gen|and|an|acc|and|loc", "gen//an:acc//loc"),
+  ("gen|and|an|acc", "gen//an:acc"),
   # Manx
   ("p|/|formal", "p//formal"),
   ("formal|/|p", "p//formal"),
@@ -123,60 +123,60 @@ multitag_replacements = [
   ("nom|s|and|p", "nom|s//p"),
   ("nom|s|and|pl", "nom|s//p"),
   # Old Irish
-  ("past|subj|and|cond", "past_sub//cond"),
+  ("past|subj|and|cond", "past:sub//cond"),
   ("gen|s|and|gen|d|and|gen|p", "gen|s//d//p"),
   ("absolute|and|relative", "abs//rel"),
-  ("impf|indc|and|past|subj", "impf_ind//past_sub"),
-  ("pret|and|past|subj", "pret//past_sub"),
+  ("impf|indc|and|past|subj", "impf:ind//past:sub"),
+  ("pret|and|past|subj", "pret//past:sub"),
   # Irish
   ("pres|indc|and|pres|subj|and|impr|autonomous",
-    "pres_ind//pres_sub//imp|autonomous"),
+    "pres:ind//pres:sub//imp|autonomous"),
   ("pres|indc|and|impr|and|pres|subj|autonomous",
-    "pres_ind//pres_sub//imp|autonomous"),
+    "pres:ind//pres:sub//imp|autonomous"),
   ("pres|indc|autonomous|and|pres|subj|autonomous|and|impr|autonomous",
-    "pres_ind//pres_sub//imp|autonomous"),
-  ("pres|indc|and|pres|subj|and|impr", "pres_ind//pres_sub//imp"),
+    "pres:ind//pres:sub//imp|autonomous"),
+  ("pres|indc|and|pres|subj|and|impr", "pres:ind//pres:sub//imp"),
   ("pres|indc|and|pres|subj", "pres|ind//sub"),
   ("pres|actv|indc|and|pres|actv|subj", "pres|act|ind//sub"),
   ("3|p|pres|indc|dependent|and|pres|subj",
     "3|p|pres|indc|dependent|;|3|p|pres|subj"),
-  ("nom|and|voc|and|dat|and|strong|gen", "nom//voc//dat//str_gen"),
-  ("nom|and|voc|and|strong|gen|and|dat", "nom//voc//dat//str_gen"),
+  ("nom|and|voc|and|dat|and|strong|gen", "nom//voc//dat//str:gen"),
+  ("nom|and|voc|and|strong|gen|and|dat", "nom//voc//dat//str:gen"),
   ("nom|and|voc|and|strong|gen|p|and|dat|p",
-    "nom//voc//dat//str_gen|p"),
+    "nom//voc//dat//str:gen|p"),
   ("nom|and|voc|and|plural|and|strong|gen|p",
-    "nom//voc//dat//str_gen|p"),
+    "nom//voc//dat//str:gen|p"),
   ("nom|and|voc|and|dat|p|and|strong|gen|p",
-    "nom//voc//dat//str_gen|p"),
+    "nom//voc//dat//str:gen|p"),
   ("nonrelative|and|relative", "nonrelative//relative"),
   ("dat|s|and|nom|p", "dat|s|;|nom|p"),
   ("past|and|cond", "past//cond"),
-  ("impr|and|pres|subj", "imp//pres_sub"),
-  ("pres|indc|and|imperative", "pres_ind//imp"),
+  ("impr|and|pres|subj", "imp//pres:sub"),
+  ("pres|indc|and|imperative", "pres:ind//imp"),
   ("pres|and|impr", "pres//imp"),
   ("gen|s|and|all cases|p", "gen|s|;|all-case|p"),
   ("gen|s|and|nom|and|dat|p", "gen|s|;|nom//dat|p"),
   ("nom|and|strong|gen|p", "nom|p|;|str|gen|p"),
   # Welsh
-  ("impf|indc|/|impf|subj|/|cond|and|impr", "impf_ind//impf_sub//cond//impr"),
-  ("impf|indc|/|impf|subj|/|cond", "impf_ind//impf_sub//cond"),
-  ("impf|indc|/|impr|subj|/|cond", "impf_ind//impf_sub//cond"),
-  ("impf|indc|/|cond|and|impf|subj", "impf_ind//impf_sub//cond"),
-  ("impf|indc|and|subj|/|cond", "impf_ind//impf_sub//cond"),
-  ("impf|indc|/|cond", "impf_ind//cond"),
-  ("impf|indc|/|subj|and|cond", "impf_ind//impf_sub//cond"),
+  ("impf|indc|/|impf|subj|/|cond|and|impr", "impf:ind//impf:sub//cond//impr"),
+  ("impf|indc|/|impf|subj|/|cond", "impf:ind//impf:sub//cond"),
+  ("impf|indc|/|impr|subj|/|cond", "impf:ind//impf:sub//cond"),
+  ("impf|indc|/|cond|and|impf|subj", "impf:ind//impf:sub//cond"),
+  ("impf|indc|and|subj|/|cond", "impf:ind//impf:sub//cond"),
+  ("impf|indc|/|cond", "impf:ind//cond"),
+  ("impf|indc|/|subj|and|cond", "impf:ind//impf:sub//cond"),
   ("imperf|/|cond|and|impr", "impf//cond//imp"),
   ("impf|/|cond", "impf//cond"),
   ("imperf|/|cond", "impf//cond"),
-  ("pres|indc|/|fut|and|impr", "pres_ind//fut//imp"),
-  ("pres|indc|/|futr|and|impr", "pres_ind//fut//imp"),
-  ("pres|indc|/|fut", "pres_ind//fut"),
-  ("pres|indc|/|futr", "pres_ind//fut"),
-  ("pres|indc|/|future", "pres_ind//fut"),
-  ("pres|subj|/|futr", "pres_sub//fut"),
-  ("pres|habitual|/|futr", "pres_hab//fut"),
-  ("pres|indc|and|futr|/|pres|habitual", "pres_ind//fut//pres_hab"),
-  ("futr|/|pres|habitual|and|impr", "fut//pres_hab//imp"),
+  ("pres|indc|/|fut|and|impr", "pres:ind//fut//imp"),
+  ("pres|indc|/|futr|and|impr", "pres:ind//fut//imp"),
+  ("pres|indc|/|fut", "pres:ind//fut"),
+  ("pres|indc|/|futr", "pres:ind//fut"),
+  ("pres|indc|/|future", "pres:ind//fut"),
+  ("pres|subj|/|futr", "pres:sub//fut"),
+  ("pres|habitual|/|futr", "pres:hab//fut"),
+  ("pres|indc|and|futr|/|pres|habitual", "pres:ind//fut//pres:hab"),
+  ("futr|/|pres|habitual|and|impr", "fut//pres:hab//imp"),
   # Italian
   ("1|s|and|2|s|and|3|s", "1//2//3|s"),
   ("1|s|,|2|s|,|and|3|s", "1//2//3|s"),
@@ -185,15 +185,15 @@ multitag_replacements = [
   ("s|and|p|imp", "s//p|imp"),
   ("s|and|p|impr", "s//p|imp"),
   ("gen|s|and|p", "gen|s//p"),
-  ("1|s|and|3|p", "1_s//3_p"),
-  ("3|s|and|2|p", "3_s//2_p"),
+  ("1|s|and|3|p", "1:s//3:p"),
+  ("3|s|and|2|p", "3:s//2:p"),
   ("acc|s|and|ins|s", "acc//ins|s"),
   ("dat|s|and|loc|s", "dat//loc|s"),
   ("voc|s|and|gen|s", "voc//gen|s"),
-  ("acc|s|and|nom|p", "acc_s//nom_p"),
-  ("gen|s|and|nom|p", "gen_s//nom_p"),
+  ("acc|s|and|nom|p", "acc:s//nom:p"),
+  ("gen|s|and|nom|p", "gen:s//nom:p"),
   # The following for Ancient Greek
-  ("gen|s|and|acc|p", "gen_s//acc_p"),
+  ("gen|s|and|acc|p", "gen:s//acc:p"),
   ("first|s", "1|s"),
   ("second|s", "2|s"),
   ("first|p", "1|p"),
@@ -202,14 +202,14 @@ multitag_replacements = [
   ("s|and|d|and|p", "s//d//p"),
   ("s|and|d", "s//d"),
   ("Epic|and|Attic", ["{{lb|grc|Epic}}//{{lb|grc|Attic}}"]),
-  ("def|s|and|p", "def_sg//p"),
+  ("def|s|and|p", "def:sg//p"),
   ("def|and|p", "def//p"),
   # Czech? Polish?
   ("m|an|acc|p|and|m|in|acc|p", "m|an//in|acc|p"),
   ("m|an|and|in|acc|p", "m|an//in|acc|p"),
   ("pr|and|an|m", "pr//an|m"),
   # Polish
-  ("m|in|and|f|and|n", "m_in//f//n"),
+  ("m|in|and|f|and|n", "m:in//f//n"),
   # Italian?
   ("3|s|pres|indc|and|2|s|impr",
     "3|s|pres|ind|;|2|s|imp"),
@@ -357,11 +357,11 @@ def process_text_on_page(pagetitle, index, text):
             return "//".join(canon_split_tags)
           else:
             pagemsg("WARNING: Found slash in tag and wasn't able to canonicalize completely: %s" % tag)
-        if "_" in tag and "/" not in tag:
-          split_tags = tag.split("_")
+        if ":" in tag and "/" not in tag:
+          split_tags = tag.split(":")
           canon_split_tags = [canonicalize_tag(t) for t in split_tags]
           if all(isinstance(t, basestring) for t in canon_split_tags):
-            return "_".join(canon_split_tags)
+            return ":".join(canon_split_tags)
           else:
             pagemsg("WARNING: Found underscore in tag and wasn't able to canonicalize completely: %s" % tag)
         m = re.search('^\[\[(.*)\]\]$', tag)
@@ -774,7 +774,7 @@ def process_text_on_page(pagetitle, index, text):
         if " " in tag:
           tags_with_spaces[tag] += 1
         if tag not in semicolon_tags:
-          split_tags = [tg for split_tag in tag.split("//") for tg in split_tag.split("_")]
+          split_tags = [tg for split_tag in tag.split("//") for tg in split_tag.split(":")]
           for split_tag in split_tags:
             if split_tag not in good_tags:
               bad_tags[split_tag] += 1
