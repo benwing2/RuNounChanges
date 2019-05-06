@@ -1186,18 +1186,18 @@ class WikiDumpHandler(xml.sax.ContentHandler):
       self.title = ""
     elif name == "text":
       self.cur = "text"
-      self.text = ""
+      self.text = []
 
   def endElement(self, name):
     if name == "text":
-      self.pagecallback(self.title, self.text)
+      self.pagecallback(self.title, "".join(self.text))
     self.cur = None
 
   def characters(self, content):
     if self.cur == "title":
       self.title += content
     elif self.cur == "text":
-      self.text += content
+      self.text.append(content)
 
 def parse_dump(fp, pagecallback):
   handler = WikiDumpHandler(pagecallback)
