@@ -16,16 +16,16 @@ positive_ending_tags = {
 comparative_ending_tags = {
   'er' + key: [tag + '|comd' for tag in value] for key, value in positive_ending_tags.iteritems()
 }
-# for mehr
+# for mehr, besser besucht, etc.
 special_comparative_ending_tags = {
-  'r' + key: [tag + '|comd' for tag in value] for key, value in positive_ending_tags.iteritems()
+  key: [tag + '|comd' for tag in value] for key, value in positive_ending_tags.iteritems()
 }
 superlative_ending_tags = {
   'st' + key: [tag + '|supd' for tag in value] for key, value in positive_ending_tags.iteritems()
 }
-# for größt
+# for größt, bestbesucht, etc.
 special_superlative_ending_tags = {
-  't' + key: [tag + '|supd' for tag in value] for key, value in positive_ending_tags.iteritems()
+  key: [tag + '|supd' for tag in value] for key, value in positive_ending_tags.iteritems()
 }
 
 rename_templates_with_lang = [
@@ -79,20 +79,7 @@ def process_text_on_page(pagetitle, index, text):
         lemmaparam = "2"
       else:
         continue
-      endings_to_try = []
-      if lemma == "viel":
-        ending_sets_to_try = [superlative_ending_tags, special_comparative_ending_tags, positive_ending_tags]
-      elif lemma.endswith(u"groß") or lemma.endswith("gross"):
-        ending_sets_to_try = [special_superlative_ending_tags, comparative_ending_tags, positive_ending_tags]
-      else:
-        ending_sets_to_try = [superlative_ending_tags, comparative_ending_tags, positive_ending_tags]
-      for ending_sets in ending_sets_to_try:
-        for ending, tag_sets in ending_sets.iteritems():
-          if pagetitle.endswith(ending):
-            endings_to_try.append((ending, tag_sets))
-      if len(endings_to_try) == 0:
-        pagemsg("WARNING: Can't identify ending of non-lemma form, skipping")
-        continue
+
       lemmas_to_try = [lemma]
       # flott -> flottesten, barsch -> barschesten, betagt -> betagtesten,
       # herzlos -> herzlosesten, frohgemut -> frohgemutesten,
@@ -138,6 +125,43 @@ def process_text_on_page(pagetitle, index, text):
       if re.search("rosa$", lemma):
         # rosa -> rosanen, hellrosa -> hellrosanen
         lemmas_to_try.append(lemma + "n")
+
+      ending_sets_to_try = [superlative_ending_tags, comparative_ending_tags, positive_ending_tags]
+      if lemma == "viel":
+        if pagetitle.startswith("mehr"):
+          lemmas_to_try = ["mehr"]
+          ending_sets_to_try = [special_comparative_ending_tags]
+        elif pagetitle.startswith("meist"):
+          # normal ending_sets_to_try works
+          lemmas_to_try = ["mei"]
+      elif lemma.endswith(u"groß") or lemma.endswith("gross"):
+        # größer, grösser handled normally
+        if re.search(u"grö(ss|ß)te[mnrs]?$", pagetitle):
+          lemmas_to_try = [u"grösst", u"größt"]
+          ending_sets_to_try = [special_superlative_ending_tags]
+      else:
+        gut_prefixed = [
+          ("gutbesucht", ("besser besucht", "bestbesucht")),
+          ("guterhalten", ("besser erhalten", "besterhalten")),
+          ("gutgelaunt", ("besser gelaunt", "bestgelaunt")),
+        ]
+        for gut, (besser, best) in gut_prefixed:
+          if lemma == gut:
+            if pagetitle.startswith(besser):
+              lemmas_to_try = [besser]
+              ending_sets_to_try = [special_comparative_ending_tags]
+            elif pagetitle.startswith(best):
+              lemmas_to_try = [best]
+              ending_sets_to_try = [special_superlative_ending_tags]
+
+      endings_to_try = []
+      for ending_sets in ending_sets_to_try:
+        for ending, tag_sets in ending_sets.iteritems():
+          if pagetitle.endswith(ending):
+            endings_to_try.append((ending, tag_sets))
+      if len(endings_to_try) == 0:
+        pagemsg("WARNING: Can't identify ending of non-lemma form, skipping")
+        continue
       found_combinations = []
       for ending_to_try, tag_sets in endings_to_try:
         for lemma_to_try in lemmas_to_try:
