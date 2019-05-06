@@ -290,11 +290,126 @@ def process_text_on_page(pagetitle, index, text):
     pagemsg("WARNING: Page should be ignored")
     return None, None
 
-  #subsections = re.split("(^==+[^=\n]+==+\n)", text, 0, re.M)
-  #for j in xrange(2, len(subsections), 2):
-  #  if re.search(r"^[#*]+ \{\{inflection of.*\n[#*]+ \{\{inflection of.*", subsections[j], re.M):
-  #    pagemsg("Found subsection with combinable inflection-of:\n%s" %
-  #        subsections[j].strip())
+  if combine_adjacent:
+    def combine_adjacent_inflections(m):
+      inflections = re.split(r"(\{\{inflection of\|.*\}\})", m.group(0))
+      prev_lang = None
+      prev_lemma = None
+      prev_alt = None
+      prev_tr = None
+      prev_gloss = None
+      prev_tags = None
+      prev_misc_params = None
+      j = 1
+      while j < len(inflections):
+        parsed = blib.parse_text(inflections[j])
+        templates = list(parsed.filter_templates())
+        assert len(templates) > 0
+        t = templates[0]
+        assert tname(t) == "inflection of"
+        if t.has("lang"):
+          this_lang = getparam(t, "lang")
+          this_lemma = getparam(t, "1")
+          this_alt = getparam(t, "2")
+          first_tag = 3
+        else:
+          this_lang = getparam(t, "1")
+          this_lemma = getparam(t, "2")
+          this_alt = getparam(t, "3")
+          first_tag = 4
+        this_tr = getparam(t, "tr")
+        this_gloss = getparam(t, "t") or getparam(t, "gloss")
+        this_misc_params = []
+        this_tags = []
+        for param in t.params:
+        # Extract the tags and the non-tag parameters.
+          pname = unicode(param.name).strip()
+          pval = unicode(param.value).strip()
+          if re.search("^[0-9]+$", pname):
+            if int(pname) >= first_tag:
+              if pval:
+                this_tags.append(pval)
+          elif pname not in ["lang", "tr", "alt", "t", "gloss"]:
+            this_misc_params.append((pname, pval, param.showkey))
+        if (prev_lang == this_lang and prev_lemma == this_lemma and
+            prev_alt == this_alt and prev_tr == this_tr and
+            prev_gloss == this_gloss and prev_misc_params == this_misc_params):
+          # Can combine prev with this.
+          this_tags = prev_tags + [";"] + this_tags
+          notes.append("combined adjacent calls to {{inflection of}}")
+
+          # Erase all params.
+          del t.params[:]
+
+          # Put back new params.
+          # Strip comment continuations and line breaks. Such cases generally have linebreaks after semicolons
+          # as well, but we remove those. (FIXME, consider preserving them.)
+          t.add("1", remove_comment_continuations(this_lang))
+          t.add("2", remove_comment_continuations(this_lemma))
+          this_tr = remove_comment_continuations(this_tr)
+          if this_tr:
+            t.add("tr", this_tr)
+          t.add("3", remove_comment_continuations(this_alt))
+          next_tag_param = 4
+          for tag in this_tags:
+            t.add(str(next_tag_param), tag)
+            next_tag_param += 1
+          this_gloss = remove_comment_continuations(this_gloss)
+          if this_gloss:
+            t.add("t", this_gloss)
+          for pname, pval, showkey in this_misc_params:
+            t.add(pname, pval, showkey=showkey, preserve_spacing=False)
+
+          # Replace prev + this with combination.
+          pagemsg("Replaced %s + %s with %s" % (inflections[j - 2],
+            inflections[j], unicode(t)))
+          inflections[j] = unicode(parsed)
+          del inflections[j-2:j]
+          # Don't increment j; this happened effectively because we
+          # deleted the preceding {{inflection of}} call
+        elif prev_lang:
+          if prev_lang != this_lang:
+            difftype = "languages"
+          elif prev_lemma != this_lemma:
+            difftype = "lemmas"
+          elif prev_alt != this_alt:
+            difftype = "alt display texts"
+          elif prev_tr != this_tr:
+            difftype = "transliterations"
+          elif prev_gloss != this_gloss:
+            difftype = "glosses"
+          else:
+            difftype = "misc params"
+          pagemsg("Unable to combine %s with %s because %s differ" % (
+            inflections[j - 2], inflections[j], difftype))
+          j += 2
+        else:
+          j += 2
+
+        prev_lang = this_lang
+        prev_lemma = this_lemma
+        prev_alt = this_alt
+        prev_tr = this_tr
+        prev_gloss = this_gloss
+        prev_tags = this_tags
+        prev_misc_params = this_misc_params
+
+      return "".join(inflections)
+
+    subsections = re.split("(^==+[^=\n]+==+\n)", text, 0, re.M)
+    for j in xrange(0, len(subsections), 2):
+      # Look for adjacent calls to {{inflection of}} with the same
+      # definition line text preceding (usually #). Inside of
+      # {{inflection of}}, allow balanced sets of {{...}} template
+      # calls. We only want {{inflection of}} calls that span the
+      # entire line; we want to disallow lines like
+      #   # {{inflection of|...}}: foo bar {{g|m}}
+      newsubsection = re.sub(r"^([#*]+) \{\{inflection of\|(?:[^{}\n]|\{\{[^{}\n]*\}\})*\}\}(?:\n\1 \{\{inflection of\|(?:[^{}\n]|\{\{[^{}\n]*\}\})*\}\})+$",
+          combine_adjacent_inflections, subsections[j], 0, re.M)
+      if args.verbose and newsubsection != subsections[j]:
+        pagemsg("Replaced <<%s>> with <<%s>>" % (subsections[j], newsubsection))
+      subsections[j] = newsubsection
+    text = "".join(subsections)
 
   parsed = blib.parse_text(text)
 
@@ -834,11 +949,11 @@ if args.textfile:
     title_text_split = '\n'
   else:
     pages = re.split('\nPage [0-9]+ ', text)
-    title_text_split = ': Found template: '
+    title_text_split = ': Found (?:template: |subsection with combinable inflection-of:\n)'
   for index, page in blib.iter_items(pages, start, end):
     if not page: # e.g. first entry
       continue
-    split_vals = page.split(title_text_split, 1)
+    split_vals = re.split(title_text_split, page, 1)
     if len(split_vals) < 2:
       msg("Page %s: Skipping bad text: %s" % (index, page))
       continue
