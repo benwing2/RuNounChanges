@@ -731,7 +731,9 @@ pages_already_erased = set()
 # HEADTEMP_PARAM; or it should be a list of inflection codes (e.g.
 # ['2', 's', 'pres', 'ind']). DEFTEMP_NEEDS_LANG indicates whether the
 # definition template specified by DEFTEMP needs to have a 'lang'/'1'
-# parameter with value 'ru'.
+# parameter with value 'ru'. DEFTEMP_ALLOWS_MULTIPLE_TAG_SETS indicates
+# whether multiple tag sets can be inserted into the definitional template
+# (True for {{inflection of}}, currently false for {{ru-participle of}}).
 #
 # GENDER should be a list of genders to use in adding or updating gender
 # (assumed to be parameter g= in HEADTEMP if it's a "head|" headword template,
@@ -769,8 +771,9 @@ pages_already_erased = set()
 # dated alternant).
 def create_inflection_entry(program_args, save, index, inflections, lemma,
     lemmatr, pos, infltype, lemmatype, headtemp, headtemp_param, deftemp,
-    deftemp_param, gender, deftemp_needs_lang=True, entrytext=None,
-    is_lemma_template=None, lemmas_to_overwrite=[], lemmas_to_not_overwrite=[],
+    deftemp_param, gender, deftemp_allows_multiple_tag_sets=True,
+    deftemp_needs_lang=True, entrytext=None, is_lemma_template=None,
+    lemmas_to_overwrite=[], lemmas_to_not_overwrite=[],
     allow_stress_mismatch_in_defn=False, past_f_end_stressed=False):
 
   # Remove any links that may esp. appear in the lemma, since the
@@ -1459,10 +1462,75 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                 #  sections[i] = ''.join(subsections)
                 return True
 
-              # Replace the form-code parameters in "inflection of"
-              # (or "ru-participle of") with those in INFLS, putting the
-              # non-form-code parameters in the right places.
-              def check_fix_defn_params(t, infls):
+              # Split a list of tags into individual tag sets,
+              # where the individual tag sets are separated by a ; tag.
+              def split_inflection_tag_sets(tags):
+                tag_sets = []
+                cur_tag_set = []
+                for tag in tags:
+                  if tag == ";":
+                    tag_sets.append(cur_tag_set)
+                    cur_tag_set = []
+                  else:
+                    cur_tag_set.append(tag)
+                tag_sets.append(cur_tag_set)
+                return tag_sets
+
+              # Join tag sets back into a list of tags.
+              def join_inflection_tag_sets(tag_sets):
+                tags = []
+                for tag_set in tag_sets:
+                  if tags:
+                    tags.append(";")
+                  tags.extend(tag_set)
+                return tags
+
+              # Split a tag set possibly containing multipart tags
+              # into one or more tag sets not containing such tags.
+              def split_multipart_tag_set(ts):
+                for i, tag in enumerate(ts):
+                  if "//" in tag:
+                    single_tags = tag.split("//")
+                    pre_tags = ts[0:i]
+                    post_tags = ts[i+1:]
+                    tag_sets = []
+                    for single_tag in single_tags:
+                      tag_sets.extend(split_multipart_tag_set(
+                        pre_tags + [single_tag] + post_tags))
+                    return tag_sets
+                return [ts]
+
+              # Check for a given tag (including in part of a multipart tag)
+              # in the tags of any definitional template (with the correct
+              # language) in the subsection.
+              # FIXME, should this check the lemma?
+              def check_for_given_inflection_tag(parsed, tag):
+                for t in parsed.filter_templates():
+                  if tname(t) != deftemp:
+                    continue
+                  lang_in_1 = deftemp_needs_lang and not t.has("lang")
+                  lang_param = lang_in_1 and "1" or "lang"
+                  if (not deftemp_needs_lang or
+                        compare_param(t, lang_param, "ru", None,
+                          issue_warnings=issue_warnings)):
+                    for param in t.params:
+                      pnam = pname(param)
+                      pvalue = unicode(param.value)
+                      if (pnam not in ["1", "2"] and not (lang_in_1 and pnam == "3")
+                          and re.search("^[0-9]+$", pnam)):
+                        # Individual components may be separated by //
+                        # (first-level) or : (second-level).
+                        split_values = re.split("//|:", pvalue)
+                        if tag in split_values:
+                          return True
+                return False
+
+              # Replace the form-code parameters of tag set TAG_SET_NO
+              # in "inflection of" (or "ru-participle of") with those
+              # in INFLS, putting the non-form-code parameters in the
+              # right places. If TAG_SET_NO is -1, add to the end.
+              # if TAG_SET_NO == "all", replace all tag sets.
+              def check_fix_defn_params(t, tag_set_no, infls):
                 # Following code mostly copied from fix_verb_form.py
                 origt = unicode(t)
                 # Fetch lemma and alt params, and non-numbered params.
@@ -1473,11 +1541,26 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                 lemmaparam = getparam(t, "2" if lang_in_1 else "1")
                 altparam = getparam(t, "3" if lang_in_1 else "2")
                 tr = getparam(t, "tr")
+                tags = []
                 non_numbered_params = []
                 for param in t.params:
                   pnam = pname(param)
+                  pvalue = unicode(param.value)
+                  if (pnam not in ["1", "2"] and not (lang_in_1 and pnam == "3")
+                      and re.search("^[0-9]+$", pnam) and pvalue):
+                    tags.append(pvalue)
                   if not re.search(r"^[0-9]+$", pnam) and pnam not in ["lang", "tr"]:
                     non_numbered_params.append((pnam, param.value))
+
+                tag_sets = split_inflection_tag_sets(tags)
+                if tag_set_no == -1:
+                  tag_sets.append(infls)
+                elif tag_set_no == "all":
+                  tag_sets = [infls]
+                else:
+                  tag_sets[tag_set_no] = infls
+                tags = join_inflection_tag_sets(tag_sets)
+
                 # Erase all params.
                 del t.params[:]
                 # Put back lang, lemma param, alt param, tr, then the
@@ -1490,50 +1573,85 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                 t.add("3" if lang else "2", altparam)
                 if tr:
                   t.add("tr", tr)
-                for paramno, param in enumerate(infls):
+                for paramno, param in enumerate(tags):
                   t.add(str(paramno+(4 if lang else 3)), param)
                 for name, value in non_numbered_params:
                   t.add(name, value)
                 newt = unicode(t)
                 if origt != newt:
                   pagemsg("Replaced %s with %s" % (origt, newt))
-                  notes.append("update form codes (pfv/impfv)")
+                  if tag_set_no != -1:
+                    # FIXME, unnecessary long-term dependency here,
+                    # where we happen to know that the places where
+                    # tag_set_no is called with a non-negative
+                    # number or "all" are used for updating aspect
+                    # codes.
+                    notes.append("update form codes (pfv/impfv)")
                   subsections[j] = unicode(parsed)
                   sections[i] = ''.join(subsections)
 
-              # True if the inflection codes in template T (an "inflection of"
+              # True if the tag sets in template T (an "inflection of"
               # template) exactly match the inflections given in INFLS (in
-              # any order), or if the former are a superset of the latter
+              # any order), or if the former are a superset of the latter.
+              # Return value is a tuple (MATCH, TAG_SET_NO) where TAG_SET_NO
+              # is the index of the tag set in template T that matches (0 if
+              # there's only one tag set in T, but there may be multiple tag
+              # sets separated by a semicolon; or "all") and MATCH is
+              # * True if any tag set in T either exactly matches the
+              #   inflections in INFLS (where "exactly match" takes into
+              #   account tag sets with multipart tags, which are effectively
+              #   multiple tag sets jammed together) or is a superset of the
+              #   inflections in INFLS (in which case a warning is issued);
+              # * "update" if an exact match isn't found and the current
+              #   lemma is in lemmas_to_overwrite, or if an exact match or
+              #   superset isn't found but an exact match would be found
+              #   if "pfv" or "impfv" were added to a tag set;
+              # * else False.
               def compare_inflections(t, infls, issue_warnings=True):
                 lang_in_1 = deftemp_needs_lang and not t.has("lang")
-                infl_params = []
+                inflset = set(infls)
+                tags = []
                 for param in t.params:
                   name = pname(param)
                   value = unicode(param.value)
                   if (name not in ["1", "2"] and not (lang_in_1 and name == "3")
                       and re.search("^[0-9]+$", name) and value):
-                    infl_params.append(value)
-                inflset = set(infls)
-                paramset = set(infl_params)
-                if inflset == paramset:
-                  return True
+                    tags.append(value)
+                tag_sets = split_inflection_tag_sets(tags)
+                split_tag_sets = [split_multipart_tag_set(tag_set) for tag_set in tag_sets]
+                # See if there's an exact match.
+                for tag_set_no, split_tag_set_group in enumerate(split_tag_sets):
+                  for indiv_tag_set in split_tag_set_group:
+                    if set(indiv_tag_set) == inflset:
+                      return True, tag_set_no
+
+                # Return "update" if lemma in lemmas_to_overwrite.
                 if rulib.remove_accents(lemma) in lemmas_to_overwrite:
-                  return "update"
-                if paramset > inflset:
-                  pagemsg_if(issue_warnings, "WARNING: Found actual inflection %s whose codes are a superset of intended codes %s, accepting" % (
-                    unicode(t), "|".join(infls)))
-                  return True
-                if paramset < inflset:
-                  # Check to see if we match except for a missing perfective or
-                  # imperfective aspect, which we will update.
-                  if (paramset | {"pfv"}) == inflset or (paramset | {"impfv"}) == inflset:
-                    pagemsg_if(issue_warnings, "Need to update actual inflection %s with intended codes %s" % (
-                      unicode(t), "|".join(infls)))
-                    return "update"
-                  else:
-                    pagemsg_if(issue_warnings, "WARNING: Found actual inflection %s whose codes are a subset of intended codes %s" % (
-                      unicode(t), "|".join(infls)))
-                return False
+                  return "update", "all"
+
+                # See if there's a superset match.
+                for tag_set_no, split_tag_set_group in enumerate(split_tag_sets):
+                  for indiv_tag_set in split_tag_set_group:
+                    if set(indiv_tag_set) > inflset:
+                      pagemsg_if(issue_warnings, "WARNING: Found actual inflection %s in template %s whose codes are a superset of intended codes %s, accepting" % (
+                        "|".join(indiv_tag_set), unicode(t), "|".join(infls)))
+                      return True, tag_set_no
+                # See if there's a subset match.
+                for tag_set_no, split_tag_set_group in enumerate(split_tag_sets):
+                  for indiv_tag_set in split_tag_set_group:
+                    indiv_set = set(indiv_tag_set)
+                    if indiv_set < inflset:
+                      # Check to see if we match except for a missing
+                      # perfective or imperfective aspect, which we will update.
+                      if (indiv_set | {"pfv"}) == inflset or (indiv_set | {"impfv"}) == inflset:
+                        if len(split_tag_set_group) == 1:
+                          pagemsg_if(issue_warnings, "Need to update actual inflection %s in template %s with intended codes %s" % (
+                            "|".join(indiv_tag_set), unicode(t), "|".join(infls)))
+                          return "update", tag_set_no
+                        else:
+                          pagemsg_if(issue_warnings, "WARNING: Found actual inflection %s in template %s whose codes are a subset of intended codes %s and could update aspect except that multipart tags are present" % (
+                            "|".join(indiv_tag_set), unicode(t), "|".join(infls)))
+                return False, 0
 
               # Find the inflection headword template(s) (e.g. 'ru-noun form' or
               # 'head|ru|verb form').
@@ -1592,6 +1710,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
               # form codes).
               defn_templates_for_already_present_entry = []
               defn_templates_for_inserting_in_same_section = []
+              defn_templates_for_inserting_in_same_template = []
               for t in parsed.filter_templates():
                 if tname(t) != deftemp:
                   continue
@@ -1604,15 +1723,16 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                       compare_param(t, lang_param, "ru", None,
                         issue_warnings=issue_warnings))):
                   defn_templates_for_inserting_in_same_section.append(t)
+                  defn_templates_for_inserting_in_same_template.append(t)
                   if isinstance(deftemp_param, basestring):
-                    defn_templates_for_already_present_entry.append((t, False))
+                    defn_templates_for_already_present_entry.append((t, False, 0))
                   else:
-                    result = compare_inflections(t, deftemp_param,
+                    result, tag_set_no = compare_inflections(t, deftemp_param,
                         issue_warnings=issue_warnings)
                     if result == "update":
-                      defn_templates_for_already_present_entry.append((t, True))
+                      defn_templates_for_already_present_entry.append((t, True, tag_set_no))
                     elif result:
-                      defn_templates_for_already_present_entry.append((t, False))
+                      defn_templates_for_already_present_entry.append((t, False, 0))
                 # Also see if the definition template matches a closely-related
                 # lemma where we allow the two to share the same headword
                 # (e.g. огонь and alternative form огнь)
@@ -1623,18 +1743,11 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                         issue_warnings=issue_warnings))):
                   defn_templates_for_inserting_in_same_section.append(t)
 
-              singular_in_existing_defn_templates = False
-              for t in parsed.filter_templates():
-                if tname(t) != deftemp:
-                  continue
-                lang_in_1 = deftemp_needs_lang and not t.has("lang")
-                lang_param = lang_in_1 and "1" or "lang"
-                if (not deftemp_needs_lang or
-                      compare_param(t, lang_param, "ru", None,
-                        issue_warnings=issue_warnings)):
-                  for paramno in xrange(lang_in_1 and 4 or 3, 20):
-                    if getparam(t, str(paramno)) == "s":
-                      singular_in_existing_defn_templates = True
+              # Check for singular in any existing definition templates
+              # (with the correct language) in the subsection.
+              # FIXME, should this check the lemma?
+              singular_in_existing_defn_templates = (
+                check_for_given_inflection_tag(parsed, "s"))
 
               # Make sure there's exactly one headword template.
               if (len(infl_headword_templates_for_already_present_entry) > 1
@@ -1740,9 +1853,9 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                   # definition template(s) with the supplied ones (i.e. those
                   # derived from the declension/conjugation template on the
                   # lemma page).
-                  for t, needs_update in defn_templates_for_already_present_entry:
+                  for t, needs_update, tag_set_no in defn_templates_for_already_present_entry:
                     if needs_update:
-                      check_fix_defn_params(t, deftemp_param)
+                      check_fix_defn_params(t, tag_set_no, deftemp_param)
                   inserted = insert_part_decl_if_needed()
                   if inserted:
                     comment = "Insert declension in existing entry: %s %s, %s %s" % (
@@ -1774,26 +1887,42 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                 if check_fix_infl_params(infl_headword_templates_for_inserting_in_same_section[0],
                     [], gender, singular_in_existing_defn_templates,
                     process_section_pass == 3):
-                  # If there's already a defn line present, insert after
-                  # any such defn lines. Else, insert at beginning.
-                  if re.search(r"^# \{\{%s\|" % deftemp, subsections[j], re.M):
-                    if not subsections[j].endswith("\n"):
-                      subsections[j] += "\n"
-                    subsections[j] = check_re_sub(pagemsg, "inserting definition into existing section",
-                        r"(^(# \{\{%s\|.*\n)+)" % deftemp,
-                        r"\1# %s\n" % new_defn_template, subsections[j],
-                        1, re.M)
+                  # If multiple tag sets can be inserted into a single
+                  # definitional template, try to do that.
+                  if (deftemp_allows_multiple_tag_sets and
+                      len(defn_templates_for_inserting_in_same_template) > 0 and
+                      # FIXME, when is deftemp_param a string?
+                      not isinstance(deftemp_param, basestring)):
+                    check_fix_defn_params(defn_templates_for_inserting_in_same_template[-1],
+                      -1, deftemp_param)
+                    pagemsg("Insert new tag set into existing {{%s}}" % (
+                        deftemp))
+                    # FIXME, this might not occur in these circumstances
+                    inserted = insert_part_decl_if_needed()
+                    comment = "%s new tag set into existing {{%s}}: %s %s, %s %s" % (
+                        "Insert declension in existing entry and insert" if inserted else "Insert",
+                        deftemp, infltype, joined_infls, lemmatype, lemma)
                   else:
-                    subsections[j] = check_re_sub(pagemsg, "inserting definition into existing section",
-                        r"^#", "# %s\n#" % new_defn_template,
-                        subsections[j], 1, re.M)
-                  sections[i] = ''.join(subsections)
-                  inserted = insert_part_decl_if_needed()
-                  pagemsg("Insert existing defn with {{%s}} at beginning after any existing such defns" % (
-                      deftemp))
-                  comment = "%s existing defn with {{%s}} at beginning after any existing such defns: %s %s, %s %s" % (
-                      "Insert declension in existing entry and insert" if inserted else "Insert",
-                      deftemp, infltype, joined_infls, lemmatype, lemma)
+                    # If there's already a defn line present, insert after
+                    # any such defn lines. Else, insert at beginning.
+                    if re.search(r"^# \{\{%s\|" % deftemp, subsections[j], re.M):
+                      if not subsections[j].endswith("\n"):
+                        subsections[j] += "\n"
+                      subsections[j] = check_re_sub(pagemsg, "inserting definition into existing section",
+                          r"(^(# \{\{%s\|.*\n)+)" % deftemp,
+                          r"\1# %s\n" % new_defn_template, subsections[j],
+                          1, re.M)
+                    else:
+                      subsections[j] = check_re_sub(pagemsg, "inserting definition into existing section",
+                          r"^#", "# %s\n#" % new_defn_template,
+                          subsections[j], 1, re.M)
+                    sections[i] = ''.join(subsections)
+                    pagemsg("Insert new defn with {{%s}} at beginning after any existing such defns" % (
+                        deftemp))
+                    inserted = insert_part_decl_if_needed()
+                    comment = "%s new defn with {{%s}} at beginning after any existing such defns: %s %s, %s %s" % (
+                        "Insert declension in existing entry and insert" if inserted else "Insert",
+                        deftemp, infltype, joined_infls, lemmatype, lemma)
                   need_outer_break = True
                   break
 
@@ -2079,18 +2208,11 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
             for j in xrange(2, len(subsections), 2):
               if re.match("^===Noun===+", subsections[j - 1]):
                 parsed = blib.parse_text(subsections[j])
-                # First check for plural in a defn template
-                plural_in_existing_defn_templates = False
-                for t in parsed.filter_templates():
-                  if tname(t) != deftemp:
-                    continue
-                  lang_in_1 = deftemp_needs_lang and not t.has("lang")
-                  lang_param = lang_in_1 and "1" or "lang"
-                  if (not deftemp_needs_lang or
-                      compare_param(t, lang_param, "ru", None)):
-                    for paramno in xrange(1, 20):
-                      if getparam(t, str(paramno)) == "p":
-                        plural_in_existing_defn_templates = True
+                # Check for singular in any existing definition templates
+                # (with the correct language) in the subsection.
+                # FIXME, should this check the lemma?
+                plural_in_existing_defn_templates = (
+                  check_for_given_inflection_tag(parsed, "p"))
                 # Now check for matching ru-noun form, where either there was
                 # a plural in a defn template or there's a plural gender
                 # (the latter is necessary because plurale tantum forms don't
@@ -3006,6 +3128,7 @@ def create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite,
                       header_pos = "Participle"
                       deftemp = "ru-participle of"
                       deftemp_needs_lang = False
+                      deftemp_allows_multiple_tag_sets = False
                       our_headtemp = "head|ru|participle"
                       if "past_f" in split_args:
                         saw_end_stressed_past_f = False
@@ -3025,6 +3148,7 @@ def create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite,
                       header_pos = pos.capitalize()
                       deftemp = "inflection of"
                       deftemp_needs_lang = True
+                      deftemp_allows_multiple_tag_sets = True
                       our_headtemp = headtemp
                     create_inflection_entry(program_args, save, index,
                       inflections, dicformru, dicformtr, header_pos,
@@ -3035,6 +3159,7 @@ def create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite,
                       lemmas_to_not_overwrite=lemmas_to_not_overwrite,
                       allow_stress_mismatch_in_defn=allow_stress_mismatch,
                       deftemp_needs_lang=deftemp_needs_lang,
+                      deftemp_allows_multiple_tag_sets=deftemp_allows_multiple_tag_sets,
                       past_f_end_stressed=past_f_end_stressed)
 
 def skip_future_periphrastic(formname, ru, tr):
