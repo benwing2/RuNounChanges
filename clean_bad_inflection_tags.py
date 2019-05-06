@@ -277,6 +277,9 @@ def parse_form_of_data(lines):
       good_tags.add(m.group(1))
 
 def process_text_on_page(pagetitle, index, text):
+  global args
+  combine_adjacent = args.combine_adjacent
+
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -286,6 +289,12 @@ def process_text_on_page(pagetitle, index, text):
   if blib.page_should_be_ignored(pagetitle):
     pagemsg("WARNING: Page should be ignored")
     return None, None
+
+  #subsections = re.split("(^==+[^=\n]+==+\n)", text, 0, re.M)
+  #for j in xrange(2, len(subsections), 2):
+  #  if re.search(r"^[#*]+ \{\{inflection of.*\n[#*]+ \{\{inflection of.*", subsections[j], re.M):
+  #    pagemsg("Found subsection with combinable inflection-of:\n%s" %
+  #        subsections[j].strip())
 
   parsed = blib.parse_text(text)
 
@@ -807,6 +816,7 @@ parser = blib.create_argparser("Clean up bad inflection tags")
 parser.add_argument("--pagefile", help="List of pages to process.")
 parser.add_argument("--textfile", help="File containing inflection templates to process.")
 parser.add_argument("--form-of-files", help="Comma-separated list of files containing form-of data.")
+parser.add_argument("--combine-adjacent", help="Combine adjacent calls to 'inflection of'.", action="store_true")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
