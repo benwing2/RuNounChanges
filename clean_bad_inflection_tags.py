@@ -7,6 +7,14 @@ from collections import defaultdict
 import blib
 from blib import getparam, rmparam, msg, errandmsg, site, tname
 
+inflection_of_templates = [
+  "inflection of",
+  "noun form of",
+  "verb form of",
+  "adj form of",
+  "participle of"
+]
+
 joiner_tags = ['and', 'or', '/', ',']
 semicolon_tags = [';', ';<!--\n-->']
 
@@ -49,12 +57,20 @@ cases = {
   "dat": "dat",
   "dative": "dat",
   "ins": "ins",
+  "instrumental": "ins",
   "abl": "abl",
+  "ablative": "abl",
   "loc": "loc",
+  "locative": "loc",
   "obl": "obl",
+  "oblique": "obl",
   "par": "par",
+  "partitive": "par",
   "pre": "pre",
+  "prep": "pre",
+  "prepositional": "pre",
   "ill": "ill",
+  "illative": "ill",
 }
 
 tenses_aspects = {
@@ -70,10 +86,42 @@ tenses_aspects = {
   "aor": "aor",
 }
 
+aspects = {
+  "pfv": "pfv",
+  "perfective": "pfv",
+  "impfv": "impfv",
+  "imperfective": "impfv",
+}
+
+definitenesses = {
+  "def": "def",
+  "definite": "def",
+  "indef": "indef",
+  "indefinite": "indef",
+}
+
+animacies = {
+  "an": "an",
+  "animate": "an",
+  "in": "in",
+  "inan": "in",
+  "inanimate": "in",
+  "pr": "pr",
+  "pers": "pr",
+  "personal": "pr",
+}
+
 genders = {
   "m": "m",
+  "masculine": "m",
   "f": "f",
+  "feminine": "f",
   "n": "n",
+  "neuter": "n",
+  "c": "c",
+  "common": "c",
+  "nv": "nv",
+  "nonvirile": "nv",
 }
 
 persons = {
@@ -82,18 +130,39 @@ persons = {
   "3": "3",
 }
 
-# We don't do numbers because there are several cases like
-# def|s|and|p and 1|s|,|s|possession that shouldn't be combined.
+# We don't combine numbers across |and| because there are several cases like
+# def|s|and|p and 1|s|,|s|possession that shouldn't be combined. But we
+# do combine across |;|, because it is safe.
+
+numbers = {
+  "s": "s",
+  "sg": "s",
+  "singular": "s",
+  "d": "d",
+  "du": "d",
+  "dual": "d",
+  "p": "p",
+  "pl": "p",
+  "plural": "p",
+}
 
 moods = {
   "ind": "ind",
   "indc": "ind",
+  "indic": "ind",
+  "indicative": "ind",
   "sub": "sub",
   "subj": "sub",
+  "subjunctive": "sub",
   "imp": "imp",
   "impr": "imp",
-  "optative": "opt",
+  "impv": "imp",
+  "imperative": "imp",
   "opt": "opt",
+  "opta": "opt",
+  "optative": "opt",
+  "juss": "juss",
+  "jussive": "juss",
 }
 
 strengths = {
@@ -104,6 +173,25 @@ strengths = {
   "weak,": "wk",
   "mix": "mix",
   "mixed": "mix",
+}
+
+voices = {
+  "act": "act",
+  "actv": "act",
+  "active": "act",
+  "mid": "mid",
+  "midl": "mid",
+  "middle": "mid",
+  "pass": "pass",
+  "pasv": "pass",
+  "passive": "pass",
+  "mp": "mp",
+  "mpass": "mp",
+  "mpasv": "mp",
+  "mpsv": "mp",
+  "mediopassive": "mp",
+  "refl": "refl",
+  "reflexive": "refl",
 }
 
 multitag_replacements = [
@@ -232,17 +320,60 @@ multitag_replacements = [
   for x, y in multitag_replacements
 ]
 
+multipart_list_tag_to_parts = {
+  "1s": ["1", "s"],
+  "2s": ["2", "s"],
+  "3s": ["3", "s"],
+  "1d": ["1", "d"],
+  "2d": ["2", "d"],
+  "3d": ["3", "d"],
+  "1p": ["1", "p"],
+  "2p": ["2", "p"],
+  "3p": ["3", "p"],
+  "mf": ["m//f"],
+  "mn": ["m//n"],
+  "fn": ["f//n"],
+  "mfn": ["m//f//n"],
+}
+
+# Map from names of dimensions to map from tag to canonical form,
+# for combining across |and|
 dimensions_to_tags = {
   "case": cases,
   "tense/aspect": tenses_aspects,
+  "aspect": aspects,
   "mood": moods,
   "person": persons,
   "gender": genders,
   "strength": strengths,
 }
 
-combininable_tags_by_dimension = {
+# Map from tag to dimension it's in, for combining across |and|
+combinable_tags_by_dimension = {
   tag: dim for dim, tagdict in dimensions_to_tags.iteritems() for tag in tagdict
+}
+
+# Map from tag to its canonical form, for combining across |and|
+tag_to_canonical_form = {
+  tag: canontag for dim, tagdict in dimensions_to_tags.iteritems() for tag, canontag in tagdict.iteritems()
+}
+
+# Map from names of dimensions to map from tag to canonical form,
+# for combining across |;|
+dimensions_to_tags_across_semicolon = dict(dimensions_to_tags)
+dimensions_to_tags_across_semicolon["number"] = numbers
+dimensions_to_tags_across_semicolon["definiteness"] = definitenesses
+dimensions_to_tags_across_semicolon["animacy"] = animacies
+dimensions_to_tags_across_semicolon["voice"] = voices
+
+# Map from tag to dimension it's in, for combining across |;|
+combinable_tags_by_dimension_across_semicolon = {
+  tag: dim for dim, tagdict in dimensions_to_tags_across_semicolon.iteritems() for tag in tagdict
+}
+
+# Map from tag to its canonical form, for combining across |;|
+tag_to_canonical_form_across_semicolon = {
+  tag: canontag for dim, tagdict in dimensions_to_tags_across_semicolon.iteritems() for tag, canontag in tagdict.iteritems()
 }
 
 tags_with_spaces = defaultdict(int)
@@ -291,124 +422,126 @@ def process_text_on_page(pagetitle, index, text):
     return None, None
 
   if combine_adjacent:
-    def combine_adjacent_inflections(m):
-      inflections = re.split(r"(\{\{inflection of\|.*\}\})", m.group(0))
-      prev_lang = None
-      prev_lemma = None
-      prev_alt = None
-      prev_tr = None
-      prev_gloss = None
-      prev_tags = None
-      prev_misc_params = None
-      j = 1
-      while j < len(inflections):
-        parsed = blib.parse_text(inflections[j])
-        templates = list(parsed.filter_templates())
-        assert len(templates) > 0
-        t = templates[0]
-        assert tname(t) == "inflection of"
-        if t.has("lang"):
-          this_lang = getparam(t, "lang")
-          this_lemma = getparam(t, "1")
-          this_alt = getparam(t, "2")
-          first_tag = 3
-        else:
-          this_lang = getparam(t, "1")
-          this_lemma = getparam(t, "2")
-          this_alt = getparam(t, "3")
-          first_tag = 4
-        this_tr = getparam(t, "tr")
-        this_gloss = getparam(t, "t") or getparam(t, "gloss")
-        this_misc_params = []
-        this_tags = []
-        for param in t.params:
-        # Extract the tags and the non-tag parameters.
-          pname = unicode(param.name).strip()
-          pval = unicode(param.value).strip()
-          if re.search("^[0-9]+$", pname):
-            if int(pname) >= first_tag:
-              if pval:
-                this_tags.append(pval)
-          elif pname not in ["lang", "tr", "alt", "t", "gloss"]:
-            this_misc_params.append((pname, pval, param.showkey))
-        if (prev_lang == this_lang and prev_lemma == this_lemma and
-            prev_alt == this_alt and prev_tr == this_tr and
-            prev_gloss == this_gloss and prev_misc_params == this_misc_params):
-          # Can combine prev with this.
-          this_tags = prev_tags + [";"] + this_tags
-          notes.append("combined adjacent calls to {{inflection of}}")
-
-          # Erase all params.
-          del t.params[:]
-
-          # Put back new params.
-          # Strip comment continuations and line breaks. Such cases generally have linebreaks after semicolons
-          # as well, but we remove those. (FIXME, consider preserving them.)
-          t.add("1", remove_comment_continuations(this_lang))
-          t.add("2", remove_comment_continuations(this_lemma))
-          this_tr = remove_comment_continuations(this_tr)
-          if this_tr:
-            t.add("tr", this_tr)
-          t.add("3", remove_comment_continuations(this_alt))
-          next_tag_param = 4
-          for tag in this_tags:
-            t.add(str(next_tag_param), tag)
-            next_tag_param += 1
-          this_gloss = remove_comment_continuations(this_gloss)
-          if this_gloss:
-            t.add("t", this_gloss)
-          for pname, pval, showkey in this_misc_params:
-            t.add(pname, pval, showkey=showkey, preserve_spacing=False)
-
-          # Replace prev + this with combination.
-          pagemsg("Replaced %s + %s with %s" % (inflections[j - 2],
-            inflections[j], unicode(t)))
-          inflections[j] = unicode(parsed)
-          del inflections[j-2:j]
-          # Don't increment j; this happened effectively because we
-          # deleted the preceding {{inflection of}} call
-        elif prev_lang:
-          if prev_lang != this_lang:
-            difftype = "languages"
-          elif prev_lemma != this_lemma:
-            difftype = "lemmas"
-          elif prev_alt != this_alt:
-            difftype = "alt display texts"
-          elif prev_tr != this_tr:
-            difftype = "transliterations"
-          elif prev_gloss != this_gloss:
-            difftype = "glosses"
-          else:
-            difftype = "misc params"
-          pagemsg("Unable to combine %s with %s because %s differ" % (
-            inflections[j - 2], inflections[j], difftype))
-          j += 2
-        else:
-          j += 2
-
-        prev_lang = this_lang
-        prev_lemma = this_lemma
-        prev_alt = this_alt
-        prev_tr = this_tr
-        prev_gloss = this_gloss
-        prev_tags = this_tags
-        prev_misc_params = this_misc_params
-
-      return "".join(inflections)
-
     subsections = re.split("(^==+[^=\n]+==+\n)", text, 0, re.M)
     for j in xrange(0, len(subsections), 2):
-      # Look for adjacent calls to {{inflection of}} with the same
-      # definition line text preceding (usually #). Inside of
-      # {{inflection of}}, allow balanced sets of {{...}} template
-      # calls. We only want {{inflection of}} calls that span the
-      # entire line; we want to disallow lines like
-      #   # {{inflection of|...}}: foo bar {{g|m}}
-      newsubsection = re.sub(r"^([#*]+) \{\{inflection of\|(?:[^{}\n]|\{\{[^{}\n]*\}\})*\}\}(?:\n\1 \{\{inflection of\|(?:[^{}\n]|\{\{[^{}\n]*\}\})*\}\})+$",
-          combine_adjacent_inflections, subsections[j], 0, re.M)
-      if args.verbose and newsubsection != subsections[j]:
-        pagemsg("Replaced <<%s>> with <<%s>>" % (subsections[j], newsubsection))
-      subsections[j] = newsubsection
+      for template in inflection_of_templates:
+        def combine_adjacent_inflections(m):
+          inflections = re.split(r"(\{\{%s\|.*\}\})" % template, m.group(0))
+          prev_lang = None
+          prev_lemma = None
+          prev_alt = None
+          prev_tr = None
+          prev_gloss = None
+          prev_tags = None
+          prev_misc_params = None
+          j = 1
+          while j < len(inflections):
+            parsed = blib.parse_text(inflections[j])
+            templates = list(parsed.filter_templates())
+            assert len(templates) > 0
+            t = templates[0]
+            assert tname(t) == template
+            if t.has("lang"):
+              this_lang = getparam(t, "lang")
+              this_lemma = getparam(t, "1")
+              this_alt = getparam(t, "2")
+              first_tag = 3
+            else:
+              this_lang = getparam(t, "1")
+              this_lemma = getparam(t, "2")
+              this_alt = getparam(t, "3")
+              first_tag = 4
+            this_tr = getparam(t, "tr")
+            this_gloss = getparam(t, "t") or getparam(t, "gloss")
+            this_misc_params = []
+            this_tags = []
+            for param in t.params:
+            # Extract the tags and the non-tag parameters.
+              pname = unicode(param.name).strip()
+              pval = unicode(param.value).strip()
+              if re.search("^[0-9]+$", pname):
+                if int(pname) >= first_tag:
+                  if pval:
+                    this_tags.append(pval)
+              elif pname not in ["lang", "tr", "alt", "t", "gloss"]:
+                this_misc_params.append((pname, pval, param.showkey))
+            if (prev_lang == this_lang and prev_lemma == this_lemma and
+                prev_alt == this_alt and prev_tr == this_tr and
+                prev_gloss == this_gloss and prev_misc_params == this_misc_params):
+              # Can combine prev with this.
+              this_tags = prev_tags + [";"] + this_tags
+              notes.append("combined adjacent calls to {{%s}}" % template)
+
+              # Erase all params.
+              del t.params[:]
+
+              # Put back new params.
+              # Strip comment continuations and line breaks. Such cases generally have linebreaks after semicolons
+              # as well, but we remove those. (FIXME, consider preserving them.)
+              t.add("1", remove_comment_continuations(this_lang))
+              t.add("2", remove_comment_continuations(this_lemma))
+              this_tr = remove_comment_continuations(this_tr)
+              if this_tr:
+                t.add("tr", this_tr)
+              t.add("3", remove_comment_continuations(this_alt))
+              next_tag_param = 4
+              for tag in this_tags:
+                t.add(str(next_tag_param), tag)
+                next_tag_param += 1
+              this_gloss = remove_comment_continuations(this_gloss)
+              if this_gloss:
+                t.add("t", this_gloss)
+              for pname, pval, showkey in this_misc_params:
+                t.add(pname, pval, showkey=showkey, preserve_spacing=False)
+
+              # Replace prev + this with combination.
+              pagemsg("Replaced %s + %s with %s" % (inflections[j - 2],
+                inflections[j], unicode(t)))
+              inflections[j] = unicode(parsed)
+              del inflections[j-2:j]
+              # Don't increment j; this happened effectively because we
+              # deleted the preceding {{inflection of}}/etc. call
+            elif prev_lang:
+              if prev_lang != this_lang:
+                difftype = "languages"
+              elif prev_lemma != this_lemma:
+                difftype = "lemmas"
+              elif prev_alt != this_alt:
+                difftype = "alt display texts"
+              elif prev_tr != this_tr:
+                difftype = "transliterations"
+              elif prev_gloss != this_gloss:
+                difftype = "glosses"
+              else:
+                difftype = "misc params"
+              pagemsg("Unable to combine %s with %s because %s differ" % (
+                inflections[j - 2], inflections[j], difftype))
+              j += 2
+            else:
+              j += 2
+
+            prev_lang = this_lang
+            prev_lemma = this_lemma
+            prev_alt = this_alt
+            prev_tr = this_tr
+            prev_gloss = this_gloss
+            prev_tags = this_tags
+            prev_misc_params = this_misc_params
+
+          return "".join(inflections)
+
+        # Look for adjacent calls to {{inflection of}} with the same
+        # definition line text preceding (usually #). Inside of
+        # {{inflection of}}, allow balanced sets of {{...}} template
+        # calls. We only want {{inflection of}} calls that span the
+        # entire line; we want to disallow lines like
+        #   # {{inflection of|...}}: foo bar {{g|m}}
+        newsubsection = re.sub(r"^([#*]+) \{\{%s\|(?:[^{}\n]|\{\{[^{}\n]*\}\})*\}\}(?:\n\1 \{\{%s\|(?:[^{}\n]|\{\{[^{}\n]*\}\})*\}\})+$" %
+            (template, template),
+            combine_adjacent_inflections, subsections[j], 0, re.M)
+        if args.verbose and newsubsection != subsections[j]:
+          pagemsg("Replaced <<%s>> with <<%s>>" % (subsections[j], newsubsection))
+        subsections[j] = newsubsection
     text = "".join(subsections)
 
   parsed = blib.parse_text(text)
@@ -419,7 +552,7 @@ def process_text_on_page(pagetitle, index, text):
     origt = unicode(t)
     tn = tname(t)
 
-    if tn in ["inflection of"]:
+    if tn in inflection_of_templates:
 
       # (1) Extract the tags and the non-tag parameters. Remove empty tags.
 
@@ -427,7 +560,7 @@ def process_text_on_page(pagetitle, index, text):
       if getparam(t, "lang"):
         lang = getparam(t, "lang")
         term_param = 1
-        notes.append("moved lang= in {{inflection of}} to 1=")
+        notes.append("moved lang= in {{%s}} to 1=" % tn)
       else:
         lang = getparam(t, "1")
         term_param = 2
@@ -443,7 +576,7 @@ def process_text_on_page(pagetitle, index, text):
             if pval:
               tags.append(pval)
             else:
-              notes.append("removed empty tags from {{inflection of}}")
+              notes.append("removed empty tags from {{%s}}" % tn)
         elif pname not in ["lang", "tr", "alt"]:
           params.append((pname, pval, param.showkey))
 
@@ -553,26 +686,26 @@ def process_text_on_page(pagetitle, index, text):
         # Check for foo|and|bar|and|baz|and|bat|and|quux where foo, bar, baz,
         # bat and quux are in the same dimension.
         if i <= len(tags) - 9 and (
-          tags[i] in combininable_tags_by_dimension and
+          tags[i] in combinable_tags_by_dimension and
           tags[i + 1] in joiner_tags and
-          tags[i + 2] in combininable_tags_by_dimension and
+          tags[i + 2] in combinable_tags_by_dimension and
           tags[i + 3] in joiner_tags and
-          tags[i + 4] in combininable_tags_by_dimension and
+          tags[i + 4] in combinable_tags_by_dimension and
           tags[i + 5] in joiner_tags and
-          tags[i + 6] in combininable_tags_by_dimension and
+          tags[i + 6] in combinable_tags_by_dimension and
           tags[i + 7] in joiner_tags and
-          tags[i + 8] in combininable_tags_by_dimension and
-          combininable_tags_by_dimension[tags[i]] == combininable_tags_by_dimension[tags[i + 2]] and
-          combininable_tags_by_dimension[tags[i + 2]] == combininable_tags_by_dimension[tags[i + 4]] and
-          combininable_tags_by_dimension[tags[i + 4]] == combininable_tags_by_dimension[tags[i + 6]] and
-          combininable_tags_by_dimension[tags[i + 6]] == combininable_tags_by_dimension[tags[i + 8]]
+          tags[i + 8] in combinable_tags_by_dimension and
+          combinable_tags_by_dimension[tags[i]] == combinable_tags_by_dimension[tags[i + 2]] and
+          combinable_tags_by_dimension[tags[i + 2]] == combinable_tags_by_dimension[tags[i + 4]] and
+          combinable_tags_by_dimension[tags[i + 4]] == combinable_tags_by_dimension[tags[i + 6]] and
+          combinable_tags_by_dimension[tags[i + 6]] == combinable_tags_by_dimension[tags[i + 8]]
         ):
-          dim = combininable_tags_by_dimension[tags[i]]
-          tag1 = dimensions_to_tags[dim][tags[i]]
-          tag2 = dimensions_to_tags[dim][tags[i + 2]]
-          tag3 = dimensions_to_tags[dim][tags[i + 4]]
-          tag4 = dimensions_to_tags[dim][tags[i + 6]]
-          tag5 = dimensions_to_tags[dim][tags[i + 8]]
+          dim = combinable_tags_by_dimension[tags[i]]
+          tag1 = tag_to_canonical_form[tags[i]]
+          tag2 = tag_to_canonical_form[tags[i + 2]]
+          tag3 = tag_to_canonical_form[tags[i + 4]]
+          tag4 = tag_to_canonical_form[tags[i + 6]]
+          tag5 = tag_to_canonical_form[tags[i + 8]]
           orig_tags = "|".join(tags[i:i + 9])
           combined_tag = "%s//%s//%s//%s//%s" % (tag1, tag2, tag3, tag4, tag5)
           canon_tags.append(combined_tag)
@@ -582,22 +715,22 @@ def process_text_on_page(pagetitle, index, text):
         # Check for foo|and|bar|and|baz|and|bat where foo, bar, baz and bat
         # are in the same dimension.
         elif i <= len(tags) - 7 and (
-          tags[i] in combininable_tags_by_dimension and
+          tags[i] in combinable_tags_by_dimension and
           tags[i + 1] in joiner_tags and
-          tags[i + 2] in combininable_tags_by_dimension and
+          tags[i + 2] in combinable_tags_by_dimension and
           tags[i + 3] in joiner_tags and
-          tags[i + 4] in combininable_tags_by_dimension and
+          tags[i + 4] in combinable_tags_by_dimension and
           tags[i + 5] in joiner_tags and
-          tags[i + 6] in combininable_tags_by_dimension and
-          combininable_tags_by_dimension[tags[i]] == combininable_tags_by_dimension[tags[i + 2]] and
-          combininable_tags_by_dimension[tags[i + 2]] == combininable_tags_by_dimension[tags[i + 4]] and
-          combininable_tags_by_dimension[tags[i + 4]] == combininable_tags_by_dimension[tags[i + 6]]
+          tags[i + 6] in combinable_tags_by_dimension and
+          combinable_tags_by_dimension[tags[i]] == combinable_tags_by_dimension[tags[i + 2]] and
+          combinable_tags_by_dimension[tags[i + 2]] == combinable_tags_by_dimension[tags[i + 4]] and
+          combinable_tags_by_dimension[tags[i + 4]] == combinable_tags_by_dimension[tags[i + 6]]
         ):
-          dim = combininable_tags_by_dimension[tags[i]]
-          tag1 = dimensions_to_tags[dim][tags[i]]
-          tag2 = dimensions_to_tags[dim][tags[i + 2]]
-          tag3 = dimensions_to_tags[dim][tags[i + 4]]
-          tag4 = dimensions_to_tags[dim][tags[i + 6]]
+          dim = combinable_tags_by_dimension[tags[i]]
+          tag1 = tag_to_canonical_form[tags[i]]
+          tag2 = tag_to_canonical_form[tags[i + 2]]
+          tag3 = tag_to_canonical_form[tags[i + 4]]
+          tag4 = tag_to_canonical_form[tags[i + 6]]
           orig_tags = "|".join(tags[i:i + 7])
           combined_tag = "%s//%s//%s//%s" % (tag1, tag2, tag3, tag4)
           canon_tags.append(combined_tag)
@@ -607,18 +740,18 @@ def process_text_on_page(pagetitle, index, text):
         # Check for foo|and|bar|and|baz where foo, bar and baz
         # are in the same dimension.
         elif i <= len(tags) - 5 and (
-          tags[i] in combininable_tags_by_dimension and
+          tags[i] in combinable_tags_by_dimension and
           tags[i + 1] in joiner_tags and
-          tags[i + 2] in combininable_tags_by_dimension and
+          tags[i + 2] in combinable_tags_by_dimension and
           tags[i + 3] in joiner_tags and
-          tags[i + 4] in combininable_tags_by_dimension and
-          combininable_tags_by_dimension[tags[i]] == combininable_tags_by_dimension[tags[i + 2]] and
-          combininable_tags_by_dimension[tags[i + 2]] == combininable_tags_by_dimension[tags[i + 4]]
+          tags[i + 4] in combinable_tags_by_dimension and
+          combinable_tags_by_dimension[tags[i]] == combinable_tags_by_dimension[tags[i + 2]] and
+          combinable_tags_by_dimension[tags[i + 2]] == combinable_tags_by_dimension[tags[i + 4]]
         ):
-          dim = combininable_tags_by_dimension[tags[i]]
-          tag1 = dimensions_to_tags[dim][tags[i]]
-          tag2 = dimensions_to_tags[dim][tags[i + 2]]
-          tag3 = dimensions_to_tags[dim][tags[i + 4]]
+          dim = combinable_tags_by_dimension[tags[i]]
+          tag1 = tag_to_canonical_form[tags[i]]
+          tag2 = tag_to_canonical_form[tags[i + 2]]
+          tag3 = tag_to_canonical_form[tags[i + 4]]
           orig_tags = "|".join(tags[i:i + 5])
           combined_tag = "%s//%s//%s" % (tag1, tag2, tag3)
           canon_tags.append(combined_tag)
@@ -628,17 +761,17 @@ def process_text_on_page(pagetitle, index, text):
         # Check for foo|bar|and|baz where foo, bar and baz
         # are in the same dimension.
         elif i <= len(tags) - 4 and (
-          tags[i] in combininable_tags_by_dimension and
-          tags[i + 1] in combininable_tags_by_dimension and
+          tags[i] in combinable_tags_by_dimension and
+          tags[i + 1] in combinable_tags_by_dimension and
           tags[i + 2] in joiner_tags and
-          tags[i + 3] in combininable_tags_by_dimension and
-          combininable_tags_by_dimension[tags[i]] == combininable_tags_by_dimension[tags[i + 1]] and
-          combininable_tags_by_dimension[tags[i + 1]] == combininable_tags_by_dimension[tags[i + 3]]
+          tags[i + 3] in combinable_tags_by_dimension and
+          combinable_tags_by_dimension[tags[i]] == combinable_tags_by_dimension[tags[i + 1]] and
+          combinable_tags_by_dimension[tags[i + 1]] == combinable_tags_by_dimension[tags[i + 3]]
         ):
-          dim = combininable_tags_by_dimension[tags[i]]
-          tag1 = dimensions_to_tags[dim][tags[i]]
-          tag2 = dimensions_to_tags[dim][tags[i + 1]]
-          tag3 = dimensions_to_tags[dim][tags[i + 3]]
+          dim = combinable_tags_by_dimension[tags[i]]
+          tag1 = tag_to_canonical_form[tags[i]]
+          tag2 = tag_to_canonical_form[tags[i + 1]]
+          tag3 = tag_to_canonical_form[tags[i + 3]]
           orig_tags = "|".join(tags[i:i + 4])
           combined_tag = "%s//%s//%s" % (tag1, tag2, tag3)
           canon_tags.append(combined_tag)
@@ -647,14 +780,14 @@ def process_text_on_page(pagetitle, index, text):
 
         # Check for foo|and|bar where foo and bar are in the same dimension.
         elif i <= len(tags) - 3 and (
-          tags[i] in combininable_tags_by_dimension and
+          tags[i] in combinable_tags_by_dimension and
           tags[i + 1] in joiner_tags and
-          tags[i + 2] in combininable_tags_by_dimension and
-          combininable_tags_by_dimension[tags[i]] == combininable_tags_by_dimension[tags[i + 2]]
+          tags[i + 2] in combinable_tags_by_dimension and
+          combinable_tags_by_dimension[tags[i]] == combinable_tags_by_dimension[tags[i + 2]]
         ):
-          dim = combininable_tags_by_dimension[tags[i]]
-          tag1 = dimensions_to_tags[dim][tags[i]]
-          tag2 = dimensions_to_tags[dim][tags[i + 2]]
+          dim = combinable_tags_by_dimension[tags[i]]
+          tag1 = tag_to_canonical_form[tags[i]]
+          tag2 = tag_to_canonical_form[tags[i + 2]]
           orig_tags = "|".join(tags[i:i + 3])
           combined_tag = "%s//%s" % (tag1, tag2)
           canon_tags.append(combined_tag)
@@ -677,12 +810,20 @@ def process_text_on_page(pagetitle, index, text):
       #
       # {{inflection of|la|canus||dat//abl|m//f//n|p}}
       while True:
-        old_tags = tags
+        # First, canonicalize 1s etc. into 1|s
+        canonicalized_tags = []
+        for tag in tags:
+          if tag in multipart_list_tag_to_parts:
+            canonicalized_tags.extend(multipart_list_tag_to_parts[tag])
+          else:
+            canonicalized_tags.append(tag)
 
-        # First split into tag sets.
+        old_canonicalized_tags = canonicalized_tags
+
+        # Then split into tag sets.
         tag_set_group = []
         cur_tag_set = []
-        for tag in tags:
+        for tag in canonicalized_tags:
           if tag in semicolon_tags:
             if cur_tag_set:
               tag_set_group.append(cur_tag_set)
@@ -735,6 +876,11 @@ def process_text_on_page(pagetitle, index, text):
         tag_set_group_by_style = {}
         notes_by_style = {}
 
+        # Split a possibly multipart tag into the components and
+        # canonicalize them.
+        def split_and_canonicalize_tag(tag):
+          return [tag_to_canonical_form_across_semicolon.get(tg, tg) for tg in tag.split("//")]
+
         for combine_style in ["adjacent-first", "all-first"]:
           # Now, we do two passes. The first pass only combines adjacent
           # tag sets, while the second pass combines nonadjacent tag sets.
@@ -761,20 +907,14 @@ def process_text_on_page(pagetitle, index, text):
                 if len(cur_tag_set) == len(tag_set):
                   mismatch_ind = None
                   for i, (tag1, tag2) in enumerate(zip(cur_tag_set, tag_set)):
-                    if tag1 == tag2:
+                    tag1 = split_and_canonicalize_tag(tag1)
+                    tag2 = split_and_canonicalize_tag(tag2)
+                    if set(tag1) == set(tag2):
                       continue
                     if mismatch_ind is not None:
                       break
-                    if "//" in tag1:
-                      tag1 = tag1.split("//")
-                    else:
-                      tag1 = [tag1]
-                    if "//" in tag2:
-                      tag2 = tag2.split("//")
-                    else:
-                      tag2 = [tag2]
-                    dims1 = [combininable_tags_by_dimension.get(tag, "unknown") for tag in tag1]
-                    dims2 = [combininable_tags_by_dimension.get(tag, "unknown") for tag in tag2]
+                    dims1 = [combinable_tags_by_dimension_across_semicolon.get(tag, "unknown") for tag in tag1]
+                    dims2 = [combinable_tags_by_dimension_across_semicolon.get(tag, "unknown") for tag in tag2]
                     unique_dims = set(dims1 + dims2)
                     if len(unique_dims) == 1 and unique_dims != {"unknown"}:
                       mismatch_ind = i
@@ -790,14 +930,18 @@ def process_text_on_page(pagetitle, index, text):
                     else:
                       tag1 = cur_tag_set[mismatch_ind]
                       tag2 = tag_set[mismatch_ind]
-                      combined_tag = "%s//%s" % (tag1, tag2)
+                      tag1 = split_and_canonicalize_tag(tag1)
+                      tag2 = split_and_canonicalize_tag(tag2)
+                      combined_tag = "//".join(tag1 + tag2)
                       new_tag_set = []
                       for i in xrange(len(cur_tag_set)):
                         if i == mismatch_ind:
                           new_tag_set.append(combined_tag)
                         else:
-                          assert cur_tag_set[i] == tag_set[i]
-                          new_tag_set.append(tag_set[i])
+                          cur_canon_tag = split_and_canonicalize_tag(cur_tag_set[i])
+                          canon_tag = split_and_canonicalize_tag(tag_set[i])
+                          assert set(cur_canon_tag) == set(canon_tag)
+                          new_tag_set.append(cur_tag_set[i])
                       combine_msg = "tag sets %s and %s into %s" % (
                         "|".join(cur_tag_set), "|".join(tag_set), "|".join(new_tag_set)
                       )
@@ -867,13 +1011,17 @@ def process_text_on_page(pagetitle, index, text):
           tag_set_group = tag_set_group_by_style["adjacent-first"]
           notes.extend(notes_by_style["adjacent-first"])
 
-        tags = []
+        canonicalized_tags = []
         for tag_set in tag_set_group:
-          if tags:
-            tags.append(";")
-          tags.extend(tag_set)
-        if tags == old_tags:
+          if canonicalized_tags:
+            canonicalized_tags.append(";")
+          canonicalized_tags.extend(tag_set)
+        if canonicalized_tags == old_canonicalized_tags:
           break
+        # FIXME, we should consider reversing the transformation 1s -> 1|s,
+        # but it's complicated to figure out when the transformation occurred;
+        # not really important as both are equivalent
+        tags = canonicalized_tags
 
       # (6) Put back the new parameters. In the process, log and unrecognized ("bad") tags,
       # and any tags with spaces in them.
@@ -910,7 +1058,7 @@ def process_text_on_page(pagetitle, index, text):
         t.add(pname, pval, showkey=showkey, preserve_spacing=False)
       if origt != unicode(t):
         if not notes:
-          notes.append("canonicalized {{inflection of}}")
+          notes.append("canonicalized {{%s}}" % tn)
         pagemsg("Replaced %s with %s" % (origt, unicode(t)))
       global num_total_templates
       num_total_templates += 1
@@ -949,7 +1097,7 @@ if args.textfile:
     title_text_split = '\n'
   else:
     pages = re.split('\nPage [0-9]+ ', text)
-    title_text_split = ': Found (?:template: |subsection with combinable inflection-of:\n)'
+    title_text_split = ': Found (?:template: |subsection with combinable .*?:\n)'
   for index, page in blib.iter_items(pages, start, end):
     if not page: # e.g. first entry
       continue
