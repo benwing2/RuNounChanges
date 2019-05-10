@@ -604,7 +604,7 @@ tags["partitive"] = {
 	tag_type = "case",
 	glossary = "partitive case",
 	glossary_type = "wp",
-	shortcuts = {"ptv", "par"},
+	shortcuts = {"par", "ptv"},
 	wikidata = "Q857325",
 }
 

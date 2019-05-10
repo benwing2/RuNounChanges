@@ -351,7 +351,7 @@ tags["conditional"] = {
 tags["optative"] = {
 	tag_type = "mood",
 	glossary = "optative mood",
-	shortcuts = {"opta", "opt"},
+	shortcuts = {"opt", "opta"},
 	wikidata = "Q527205",
 }
 
