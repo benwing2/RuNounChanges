@@ -16,14 +16,14 @@
 
 # Find pages that need definitions among a set list (e.g. most frequent words).
 
-import blib, re, codecs
+import blib, re, codecs, sys
 import pywikibot
 
 import blib
 from blib import getparam, rmparam, msg, site
 
 def process_page(regex, index, page_or_title_text, filter_pages, verbose,
-    include_non_mainspace, lang_only):
+    include_text, include_non_mainspace, lang_only):
   text = None
   if type(page_or_title_text) is tuple:
     pagetitle, text = page_or_title_text
@@ -35,7 +35,7 @@ def process_page(regex, index, page_or_title_text, filter_pages, verbose,
   if verbose:
     pagemsg("Processing")
 
-  if not include_non_mainspace and ":" in pagetitle:
+  if not include_non_mainspace and ":" in pagetitle and verbose:
     pagemsg("WARNING: Colon in page title, skipping page")
     return
 
@@ -65,7 +65,7 @@ def process_page(regex, index, page_or_title_text, filter_pages, verbose,
 
   if text_to_search and re.search(regex, text_to_search, re.M):
     pagemsg("Found match for regex: %s" % regex)
-    if verbose:
+    if include_text:
       if not text_to_search.endswith("\n"):
         text_to_search += "\n"
       pagemsg("-------- begin text ---------\n%s-------- end text --------" % text_to_search)
@@ -76,13 +76,13 @@ def yield_pages_in_cats(cats, startFrom, upTo):
       yield index, page
 
 def search_pages(regex, refs, cat, pages, pagefile, stdin, filter_pages,
-    verbose, startFrom, upTo, include_non_mainspace, lang_only):
+    verbose, include_text, startFrom, upTo, include_non_mainspace, lang_only):
   # If reading from dump on stdin, need to go through a callback rather
   # than through an iterator.
   if stdin:
     def process_text_on_page(index, title, text):
       process_page(regex, index, (title, text), filter_pages, verbose,
-          include_non_mainspace, lang_only)
+          include_text, include_non_mainspace, lang_only)
     blib.parse_dump(sys.stdin, process_text_on_page, startsort=startFrom, endsort=upTo)
     return
 
@@ -97,7 +97,7 @@ def search_pages(regex, refs, cat, pages, pagefile, stdin, filter_pages,
     pages = yield_pages_in_cats(cat.split(","), startFrom, upTo)
   for index, page in pages:
     process_page(regex, index, page, filter_pages, verbose,
-        include_non_mainspace, lang_only)
+        include_text, include_non_mainspace, lang_only)
 
 pa = blib.init_argparser("Search on pages")
 pa.add_argument("-e", "--regex", help="Regular expression to search for.",
@@ -110,13 +110,15 @@ pa.add_argument('--filter-pages', help="Regex to use to filter page names.")
 pa.add_argument('--pages', help="List of pages to search, comma-separated.")
 pa.add_argument('--pagefile', help="File containing pages to search.")
 pa.add_argument('--stdin', help="Use dump on stdin.", action="store_true")
+pa.add_argument('--text', help="Include surrounding text.", action="store_true")
 pa.add_argument('--include-non-mainspace', help="Don't skip non-mainspace pages.", action='store_true')
 pa.add_argument('--lang-only', help="Only search the specified language section.")
 params = pa.parse_args()
 startFrom, upTo = blib.parse_start_end(params.start, params.end)
 
-if not params.references and not params.category and not params.pages and not params.pagefile:
-  raise ValueError("--references, --category, --pages or --pagefile must be present")
+if (not params.references and not params.category and not params.pages and
+    not params.pagefile and not params.stdin):
+  raise ValueError("--references, --category, --pages, --pagefile or --stdin must be present")
 
 references = params.references and params.references.decode("utf-8")
 category = params.category and params.category.decode("utf-8")
@@ -125,5 +127,5 @@ pages = params.pages and re.split(",", params.pages.decode("utf-8"))
 filter_pages = params.filter_pages and params.filter_pages.decode("utf-8")
 
 search_pages(regex, references, category, pages, params.pagefile,
-    params.stdin, filter_pages, params.verbose, startFrom, upTo,
+    params.stdin, filter_pages, params.verbose, params.text, startFrom, upTo,
     params.include_non_mainspace, params.lang_only)
