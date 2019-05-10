@@ -129,7 +129,7 @@ end
 
 function export.paramdoc(args)
 	local parts = {}
-	
+
 	local function param_and_doc(params, list, required, doc)
 		table.insert(parts, "; ")
 		table.insert(parts, param(params, list, required))
@@ -222,7 +222,7 @@ function export.infldoc(args)
 	args.pldesc = args.sgdesc
 	args.sgdescof = args.sgdescof or args.sgdesc .. " of"
 	args.primaryentrytext = args.primaryentrytext or "of a primary entry"
-	return export.fulldoc(args)	
+	return export.fulldoc(args)
 end
 
 local tag_type_to_description = {
@@ -426,7 +426,7 @@ function export.cattable()
 	local cats_by_lang = {}
 	local function find_categories(catstruct)
 		local cats = {}
-		
+
 		local function process_spec(spec)
 			if type(spec) == "string" then
 				table.insert(cats, spec)
@@ -461,7 +461,7 @@ function export.cattable()
 				error("Unrecognized predicate: " .. predicate)
 			end
 		end
-		
+
 		for _, spec in ipairs(catstruct) do
 			process_spec(spec)
 		end
@@ -473,7 +473,7 @@ function export.cattable()
 		table.insert(cats_by_lang, {lang, cats})
 	end
 	table.sort(cats_by_lang, sort_by_first)
-	
+
 	local lang_independent_cat_index = nil
 	for i, langcats in ipairs(cats_by_lang) do
 		local lang = langcats[1]
@@ -486,8 +486,8 @@ function export.cattable()
 		local lang_independent_cats = table.remove(cats_by_lang, lang_independent_cat_index)
 		table.insert(cats_by_lang, 1, lang_independent_cats)
 	end
-	
-	local parts = {}	
+
+	local parts = {}
 	table.insert(parts, '{|class="wikitable"')
 
 	for i, langcats in ipairs(cats_by_lang) do
