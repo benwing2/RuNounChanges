@@ -7,7 +7,15 @@ from collections import defaultdict
 import blib
 from blib import getparam, rmparam, msg, errandmsg, site, tname
 
-def process_text_on_page(pagetitle, index, text):
+inflection_of_templates = [
+  "inflection of",
+  "noun form of",
+  "verb form of",
+  "adj form of",
+  "participle of"
+]
+
+def process_text_on_page(index, pagetitle, text):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -17,28 +25,18 @@ def process_text_on_page(pagetitle, index, text):
     #pagemsg("WARNING: Page should be ignored")
     return
 
-  if "inflection of" not in text:
+  if all(x not in text for x in inflection_of_templates):
     return
 
   subsections = re.split("(^==+[^=\n]+==+\n)", text, 0, re.M)
   for j in xrange(2, len(subsections), 2):
-    if re.search(r"^[#*]+ \{\{inflection of.*\n[#*]+ \{\{inflection of.*", subsections[j], re.M):
-      pagemsg("Found subsection with combinable inflection-of:\n%s" %
-          subsections[j].strip())
-
-def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
-  text = unicode(page.text)
-  process_text_on_page(pagetitle, index, text)
+    for template in inflection_of_templates:
+      if re.search(r"^[#*]+ \{\{%s.*\n[#*]+ \{\{%s.*" % (template, template), subsections[j], re.M):
+        pagemsg("Found subsection with combinable %s:\n%s" %
+            (template, subsections[j].strip()))
 
 parser = blib.create_argparser("Find occurrences of multiple 'inflection of' tags in a single subsection")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-page_index = 0
-def process_page_callback(title, text):
-  global page_index
-  page_index += 1
-  process_text_on_page(title, page_index, text)
-
-blib.parse_dump(sys.stdin, process_page_callback)
+blib.parse_dump(sys.stdin, process_text_on_page, startsort=start, endsort=end)
