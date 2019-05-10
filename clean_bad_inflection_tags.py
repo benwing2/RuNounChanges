@@ -195,6 +195,7 @@ voices = {
 }
 
 multitag_replacements = [
+  ("pr|inf", "pinf"),
   ("strong,|weak,|and|mixed", "str//wk//mix"),
   ("n|and|acc|and|voc", "n|nom//acc//voc"),
   # Lower Sorbian
@@ -376,6 +377,20 @@ tag_to_canonical_form_across_semicolon = {
   tag: canontag for dim, tagdict in dimensions_to_tags_across_semicolon.iteritems() for tag, canontag in tagdict.iteritems()
 }
 
+order_of_dimensions = [
+  "person", "clusivity", "class", "state", "animacy", "case", "gender",
+  "number", "tense-aspect", "voice-valence", "mood", "comparison",
+  "non-finite",
+  # Unclear:
+  #"attitude",
+  #"register",
+  #"deixis",
+  #"sound change",
+  #"misc grammar"
+]
+
+indexed_order_of_dimensions = {y:x for x, y in enumerate(order_of_dimensions)}
+
 tags_with_spaces = defaultdict(int)
 
 bad_tags = defaultdict(int)
@@ -388,8 +403,53 @@ num_templates_with_bad_tags = 0
 def remove_comment_continuations(text):
   return text.replace("<!--\n-->", "").strip()
 
+# Split tags into tag sets.
+def split_tags_into_tag_sets(tags):
+  tag_set_group = []
+  cur_tag_set = []
+  for tag in tags:
+    if tag in semicolon_tags:
+      if cur_tag_set:
+        tag_set_group.append(cur_tag_set)
+      cur_tag_set = []
+    else:
+      cur_tag_set.append(tag)
+  if cur_tag_set:
+    tag_set_group.append(cur_tag_set)
+  return tag_set_group
+
+def combine_tag_set_group(group):
+  result = []
+  for tag_set in group:
+    if result:
+      result.append(";")
+    result.extend(tag_set)
+  return result
+
+form_of_dimensions_to_tags = {}
+# Map from tag to dimension it's in, derived from form-of data
+form_of_combinable_tags_by_dimension = {}
+# Map from tag to its canonical form, derived from form-of data
+form_of_tag_to_canonical_form = {}
+
+def set_form_of_tables():
+  global form_of_combinable_tags_by_dimension
+  global form_of_tag_to_canonical_form
+  form_of_combinable_tags_by_dimension = {
+    tag: dim for dim, tagdict in form_of_dimensions_to_tags.iteritems() for tag in tagdict
+  }
+  form_of_tag_to_canonical_form = {
+    tag: canontag for dim, tagdict in form_of_dimensions_to_tags.iteritems() for tag, canontag in tagdict.iteritems()
+  }
+  #for tag, dim in form_of_combinable_tags_by_dimension.iteritems():
+  #  print "form_of_combinable_tags_by_dimension[%s] = %s" % (tag, dim)
+  #for tag, canontag in form_of_tag_to_canonical_form.iteritems():
+  #  print "form_of_tag_to_canonical_form[%s] = %s" % (tag, canontag)
+
 def parse_form_of_data(lines):
   curtag = None
+  tag_type = None
+  shortcuts = None
   for line in lines:
     line = line.strip()
     m = re.search('^tags\["(.*?)"\] = \{$', line)
@@ -397,7 +457,19 @@ def parse_form_of_data(lines):
       curtag = m.group(1)
       good_tags.add(curtag)
     if line == "}":
+      if curtag and tag_type:
+        aliases = (shortcuts or []) + [curtag]
+        if tag_type not in form_of_dimensions_to_tags:
+          form_of_dimensions_to_tags[tag_type] = {}
+        canon_alias = aliases[0]
+        for alias in aliases:
+          form_of_dimensions_to_tags[tag_type][alias] = canon_alias
       curtag = None
+      tag_type = None
+      shortcuts = None
+    m = re.search('^\s*tag_type = "(.*?)",$', line)
+    if m:
+      tag_type = m.group(1)
     m = re.search('^\s*shortcuts = \{(.*?)\},$', line)
     if m:
       shortcuts = [x.strip().strip('"') for x in m.group(1).split(',')]
@@ -407,9 +479,90 @@ def parse_form_of_data(lines):
     if m:
       good_tags.add(m.group(1))
 
+
+####### Statistics #######
+
+# For each tag set with multipart tags, count how many multipart tags
+# there are in the tag set
+multipart_tag_stats_by_num_axes = defaultdict(int)
+# For each tag set, create a tuple of the dimensions that the multipart
+# tags occur in, e.g. ("person", "number") means there is a multipart tag
+# along the "person" dimension followed by a multipart tag along the
+# "number" dimension.
+detailed_multipart_tag_stats = defaultdict(int)
+# Same as previous, but use a set instead of a tuple.
+detailed_multipart_tag_stats_as_set = defaultdict(int)
+num_tag_sets = 0
+
+def record_stats_on_tag_set(tag_set):
+  global args
+  if args.use_form_of_groups:
+    combinable_tags_by_dimension_table = form_of_combinable_tags_by_dimension
+  else:
+    combinable_tags_by_dimension_table = combinable_tags_by_dimension_across_semicolon
+
+  global num_tag_sets
+  num_tag_sets += 1
+  multipart_dims = []
+  for tag in tag_set:
+    if "//" in tag:
+      indiv_tags = tag.split("//")
+      multipart_dims.append(combinable_tags_by_dimension_table.get(indiv_tags[0], "unknown"))
+  multipart_tag_stats_by_num_axes[len(multipart_dims)] += 1
+  detailed_multipart_tag_stats[tuple(multipart_dims)] += 1
+  detailed_multipart_tag_stats_as_set[frozenset(multipart_dims)] += 1
+
+def output_stats_on_tag_set():
+  msg("Num tag sets seen = %s" % num_tag_sets)
+  for key, val in sorted(multipart_tag_stats_by_num_axes.iteritems(),
+      key=lambda x:-x[1]):
+    msg("Num tag sets with %s multipart tags = %6s (%.2f%%)" %
+        (key, val, val * 100.0 / num_tag_sets))
+  msg("Tag sets by ordered dimensions of multipart tags:")
+  for key, val in sorted(detailed_multipart_tag_stats.iteritems(),
+      key=lambda x:-x[1]):
+    msg("%-40s = %6s (%.2f%%)" %
+        (", ".join(key), val, val * 100.0 / num_tag_sets))
+  msg("Tag sets by unordered dimensions of multipart tags:")
+  for key, val in sorted(detailed_multipart_tag_stats_as_set.iteritems(),
+      key=lambda x:-x[1]):
+    msg("%-40s = %6s (%.2f%%)" %
+        (", ".join(sorted(list(key))), val, val * 100.0 / num_tag_sets))
+
+# Sort tags, but leave unknown tags and tags of certain categories where
+# they are (which means we can't move a tag across such a tag).
+def sort_tags(tags):
+  global args
+  if args.use_form_of_groups:
+    combinable_tags_by_dimension_table = form_of_combinable_tags_by_dimension
+  else:
+    combinable_tags_by_dimension_table = combinable_tags_by_dimension_across_semicolon
+  # split into groups of sortable tags.
+  tag_groups = []
+  tag_group = []
+  for tag in tags:
+    indiv_tags = tag.split("//")
+    dim = combinable_tags_by_dimension_table.get(indiv_tags[0], "unknown")
+    if dim in order_of_dimensions:
+      tag_group.append((tag, dim))
+    else:
+      tag_groups.append((tag_group, [tag]))
+      tag_group = []
+  if tag_group:
+    tag_groups.append((tag_group, []))
+  sorted_tags = []
+  # sort within each group of sortable tags.
+  for tag_group, unsortable in tag_groups:
+    if len(tag_group) > 1:
+      tag_group = sorted(tag_group,
+        key=lambda x: indexed_order_of_dimensions[x[1]])
+    for tag, dim in tag_group:
+      sorted_tags.append(tag)
+    sorted_tags.extend(unsortable)
+  return sorted_tags
+
 def process_text_on_page(pagetitle, index, text):
   global args
-  combine_adjacent = args.combine_adjacent
 
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -421,7 +574,7 @@ def process_text_on_page(pagetitle, index, text):
     pagemsg("WARNING: Page should be ignored")
     return None, None
 
-  if combine_adjacent:
+  if args.combine_adjacent:
     subsections = re.split("(^==+[^=\n]+==+\n)", text, 0, re.M)
     for j in xrange(0, len(subsections), 2):
       for template in inflection_of_templates:
@@ -821,17 +974,7 @@ def process_text_on_page(pagetitle, index, text):
         old_canonicalized_tags = canonicalized_tags
 
         # Then split into tag sets.
-        tag_set_group = []
-        cur_tag_set = []
-        for tag in canonicalized_tags:
-          if tag in semicolon_tags:
-            if cur_tag_set:
-              tag_set_group.append(cur_tag_set)
-            cur_tag_set = []
-          else:
-            cur_tag_set.append(tag)
-        if cur_tag_set:
-          tag_set_group.append(cur_tag_set)
+        tag_set_group = split_tags_into_tag_sets(canonicalized_tags)
 
         # Try combining in two different styles ("adjacent-first" =
         # do two passes, where the first pass only combines adjacent
@@ -876,10 +1019,17 @@ def process_text_on_page(pagetitle, index, text):
         tag_set_group_by_style = {}
         notes_by_style = {}
 
+        if args.use_form_of_groups:
+          tag_to_canonical_form_table = form_of_tag_to_canonical_form
+          combinable_tags_by_dimension_table = form_of_combinable_tags_by_dimension
+        else:
+          tag_to_canonical_form_table = tag_to_canonical_form_across_semicolon
+          combinable_tags_by_dimension_table = combinable_tags_by_dimension_across_semicolon
+
         # Split a possibly multipart tag into the components and
         # canonicalize them.
         def split_and_canonicalize_tag(tag):
-          return [tag_to_canonical_form_across_semicolon.get(tg, tg) for tg in tag.split("//")]
+          return [tag_to_canonical_form_table.get(tg, tg) for tg in tag.split("//")]
 
         for combine_style in ["adjacent-first", "all-first"]:
           # Now, we do two passes. The first pass only combines adjacent
@@ -913,8 +1063,8 @@ def process_text_on_page(pagetitle, index, text):
                       continue
                     if mismatch_ind is not None:
                       break
-                    dims1 = [combinable_tags_by_dimension_across_semicolon.get(tag, "unknown") for tag in tag1]
-                    dims2 = [combinable_tags_by_dimension_across_semicolon.get(tag, "unknown") for tag in tag2]
+                    dims1 = [combinable_tags_by_dimension_table.get(tag, "unknown") for tag in tag1]
+                    dims2 = [combinable_tags_by_dimension_table.get(tag, "unknown") for tag in tag2]
                     unique_dims = set(dims1 + dims2)
                     if len(unique_dims) == 1 and unique_dims != {"unknown"}:
                       mismatch_ind = i
@@ -971,29 +1121,25 @@ def process_text_on_page(pagetitle, index, text):
                 if "//" in tag:
                   num_combos += 1
             return num_combos
-          def combine_tag_set_group(group):
-            result = []
-            for tag_set in group:
-              if result:
-                result.append(";")
-              result.extend(tag_set)
-            return "|".join(result)
+          def join_tag_set_group(group):
+            return "|".join(combine_tag_set_group(group))
+
           num_adjacent_first_combos = num_combinations(tag_set_group_by_style["adjacent-first"])
           num_all_first_combos = num_combinations(tag_set_group_by_style["all-first"])
           if num_adjacent_first_combos < num_all_first_combos:
             pagemsg("Preferring adjacent-first result %s (%s combinations) to all-first result %s (%s combinations)" % (
-              combine_tag_set_group(tag_set_group_by_style["adjacent-first"]),
+              join_tag_set_group(tag_set_group_by_style["adjacent-first"]),
               num_adjacent_first_combos,
-              combine_tag_set_group(tag_set_group_by_style["all-first"]),
+              join_tag_set_group(tag_set_group_by_style["all-first"]),
               num_all_first_combos
             ))
             tag_set_group = tag_set_group_by_style["adjacent-first"]
             notes.extend(notes_by_style["adjacent-first"])
           elif num_all_first_combos < num_adjacent_first_combos:
             pagemsg("Preferring all-first result %s (%s combinations) to adjacent-first result %s (%s combinations)" % (
-              combine_tag_set_group(tag_set_group_by_style["all-first"]),
+              join_tag_set_group(tag_set_group_by_style["all-first"]),
               num_all_first_combos,
-              combine_tag_set_group(tag_set_group_by_style["adjacent-first"]),
+              join_tag_set_group(tag_set_group_by_style["adjacent-first"]),
               num_adjacent_first_combos
             ))
             tag_set_group = tag_set_group_by_style["all-first"]
@@ -1001,8 +1147,8 @@ def process_text_on_page(pagetitle, index, text):
           else:
             pagemsg("Adjacent-first and all-first combination style different but same #combinations %s, preferring adjacent-first result %s to all-first result %s" % (
               num_adjacent_first_combos,
-              combine_tag_set_group(tag_set_group_by_style["adjacent-first"]),
-              combine_tag_set_group(tag_set_group_by_style["all-first"])
+              join_tag_set_group(tag_set_group_by_style["adjacent-first"]),
+              join_tag_set_group(tag_set_group_by_style["all-first"])
             ))
             tag_set_group = tag_set_group_by_style["adjacent-first"]
             notes.extend(notes_by_style["adjacent-first"])
@@ -1040,6 +1186,22 @@ def process_text_on_page(pagetitle, index, text):
       next_tag_param = 4
       has_bad_tags = False
       has_joiner = False
+
+      # Record statistics on multipart tags
+      tag_sets = split_tags_into_tag_sets(tags)
+      for tag_set in tag_sets:
+        record_stats_on_tag_set(tag_set)
+
+      sorted_tags_info = ""
+      if args.sort_tags:
+        sorted_tag_sets = [sort_tags(tag_set) for tag_set in tag_sets]
+        new_tags = combine_tag_set_group(sorted_tag_sets)
+        if new_tags != tags:
+          notes.append("sorted tags")
+          sorted_tags_info = " (sorted tags)"
+          tags = new_tags
+
+      # Put back the tags into the template and note stats on bad tags
       for tag in tags:
         if tag in joiner_tags:
           has_joiner = True
@@ -1059,7 +1221,7 @@ def process_text_on_page(pagetitle, index, text):
       if origt != unicode(t):
         if not notes:
           notes.append("canonicalized {{%s}}" % tn)
-        pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+        pagemsg("Replaced %s with %s%s" % (origt, unicode(t), sorted_tags_info))
       global num_total_templates
       num_total_templates += 1
       global num_templates_with_bad_tags
@@ -1079,7 +1241,10 @@ parser = blib.create_argparser("Clean up bad inflection tags")
 parser.add_argument("--pagefile", help="List of pages to process.")
 parser.add_argument("--textfile", help="File containing inflection templates to process.")
 parser.add_argument("--form-of-files", help="Comma-separated list of files containing form-of data.")
+parser.add_argument("--use-form-of-groups", help="Use groups specified in form-of data for combining across semicolons.",
+    action="store_true")
 parser.add_argument("--combine-adjacent", help="Combine adjacent calls to 'inflection of'.", action="store_true")
+parser.add_argument("--sort-tags", help="Sort tags by dimension.", action="store_true")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
@@ -1088,6 +1253,7 @@ if args.form_of_files:
   for f in files:
     with open(f, 'r') as fp:
       parse_form_of_data(fp)
+  set_form_of_tables()
 
 if args.textfile:
   with codecs.open(args.textfile, "r", "utf-8") as fp:
@@ -1116,6 +1282,8 @@ elif args.pagefile:
   for i, page in blib.iter_items(pages, start, end):
     blib.do_edit(pywikibot.Page(site, page), i, process_page, save=args.save,
         verbose=args.verbose)
+
+output_stats_on_tag_set()
 
 msg("Fraction of templates with bad tags = %s / %s = %.2f%%" % (
   num_templates_with_bad_tags, num_total_templates,
