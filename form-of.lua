@@ -431,14 +431,19 @@ end
 -- (a canonical-form tag), or a list of canonical-form tags (in the
 -- case of a simple multipart tag), or a list of mixed canonical-form
 -- tags and lists of such tags (in the case of a two-level multipart tag).
-function export.get_tag_display_form(tagspec)
+-- JOINER indicates how to join the parts of a multipart tag, and can
+-- be either "and" ("foo and bar", or "foo, bar and baz" for 3 or more),
+-- "slash" ("foo/bar"), "en-dash" ("foo–bar") or nil, which uses the
+-- global default found in multipart_join_strategy() in
+-- [[Module:form of/functions]].
+function export.get_tag_display_form(tagspec, joiner)
 	if type(tagspec) == "string" then
 		return get_single_tag_display_form(tagspec)
 	end
 	-- We have a multipart tag. See if there's a display handler to
 	-- display them specially.
 	for _, handler in ipairs(m_functions.display_handlers) do
-		local displayval = handler(tagspec)
+		local displayval = handler(tagspec, joiner)
 		if displayval then
 			return displayval
 		end
@@ -460,7 +465,7 @@ function export.get_tag_display_form(tagspec)
 			table.insert(displayed_tags, table.concat(components, " "))
 		end
 	end
-	return m_functions.join_multiparts(displayed_tags)
+	return m_functions.join_multiparts(displayed_tags, joiner)
 end
 
 
@@ -612,7 +617,7 @@ function export.fetch_lang_categories(lang, tags, terminfo, POS)
 end
 
 
-function export.tagged_inflections(tags, terminfo, notext, capfirst, posttext)
+function export.tagged_inflections(tags, terminfo, notext, capfirst, posttext, joiner)
 	local cur_infl = {}
 	local inflections = {}
 
@@ -626,7 +631,7 @@ function export.tagged_inflections(tags, terminfo, notext, capfirst, posttext)
 
 			cur_infl = {}
 		else
-			local to_insert = export.get_tag_display_form(tagspec)
+			local to_insert = export.get_tag_display_form(tagspec, joiner)
 			-- Maybe insert a space before inserting the display form
 			-- of the tag. We insert a space if
 			-- (a) we're not the first tag; and

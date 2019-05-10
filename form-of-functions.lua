@@ -1,9 +1,11 @@
 --[=[
 DISPLAY_HANDLERS is a list of one or more functions that provide special
-handling for multipart tags. Each function takes a single argument (the
-multipart tag), and should either return the formatted display text or nil to
-check the next handler. If no handlers apply, there is a default handler that
-appropriately formats most multipart tags.
+handling for multipart tags. Each function takes formerly a single argument
+(the multipart tag), now temporarily two arguments (the multipart tag and
+the join strategy, which can be nil to use the default), and should either
+return the formatted display text or nil to check the next handler. If no
+handlers apply, there is a default handler that appropriately formats most
+multipart tags.
 
 CAT_FUNCTIONS is a map from function names to functions of a single argument,
 as described in [[Module:form of/cats]]. There are two types of functions:
@@ -16,11 +18,14 @@ module is loaded using mw.loadData(), which can't directly handle functions.
 local export = {}
 
 function export.multipart_join_strategy()
-	-- Other recognized values are "en-dash", to join with an en dash (–).
-	return "serial-comma-join"
+	-- Recognized values:
+	-- "and": Join with "and", using commas for 3 or more items
+	-- "en-dash": Join with – (en-dash)
+	-- "slash": Join with / (slash)
+	return "and"
 end
 
-function export.join_multiparts(parts)
+function export.join_multiparts(parts, joiner)
 	-- Display the elements of a multipart tag. Currently we use "and",
 	-- with commas when then are three or more elements, of the form
 	-- "foo, bar, baz and bat"; but we are seriously considering switching
@@ -32,11 +37,13 @@ function export.join_multiparts(parts)
 	--   first–second–third-person singular present subjunctive
 	-- looks better than
 	--   first-, second- and third-person singular present subjunctive
-	local strategy = export.multipart_join_strategy()
-	if strategy == "serial-comma-join" then
+	local strategy = joiner or export.multipart_join_strategy()
+	if strategy == "and" then
 		return require("Module:table").serialCommaJoin(parts)
 	elseif strategy == "en-dash" then
 		return table.concat(parts, "–")
+	elseif strategy == "slash" then
+		return table.concat(parts, "/")
 	else
 		error("Unrecognized multipart join strategy: " .. strategy)
 	end
@@ -52,13 +59,13 @@ export.display_handlers = {}
 -- "first-, second- and third-person" (with appropriate glossary links, and
 -- appropriate spans marking the serial comma).
 table.insert(export.display_handlers,
-	function(tags)
+	function(tags, joiner)
 		local els = {}
 		local numtags = #tags
+		local strategy = joiner or export.multipart_join_strategy()
 		for i, tag in ipairs(tags) do
 			local suffix = i == numtags and "-person]]" or
-				export.multipart_join_strategy() == "serial-comma-join" and "-]]" or
-				"]]"
+				strategy == "and" and "-]]" or "]]"
 			if tag == "first-person" then
 				table.insert(els, "[[Appendix:Glossary#first person|first" .. suffix)
 			elseif tag == "second-person" then
@@ -69,7 +76,7 @@ table.insert(export.display_handlers,
 				return nil
 			end
 		end
-		return export.join_multiparts(els)
+		return export.join_multiparts(els, joiner)
 	end
 )
 

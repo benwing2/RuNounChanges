@@ -422,14 +422,17 @@ end
 -- (non-canonicalized) inflection tags. It returns that actual definition-line
 -- text including terminating period/full-stop, formatted categories, etc. and
 -- should be directly returned as the template function's return value.
-local function construct_tagged_form_of_text(iargs, args, term_param, compat, tags)
+-- JOINER is the strategy to join multipart tags for display; currently accepted
+-- values are "and", "slash", "en-dash".
+local function construct_tagged_form_of_text(iargs, args, term_param, compat, tags, joiner)
 	return construct_form_of_text(iargs, args, term_param, compat,
 		function(lang, terminfo)
 			local lang_cats =
 				args["nocat"] and {} or m_form_of.fetch_lang_categories(lang, tags, terminfo, args["p"])
 			return m_form_of.tagged_inflections(
 				tags, terminfo, args["notext"],
-				args["cap"] or iargs["withcap"] and not args["nocap"], iargs["posttext"]
+				args["cap"] or iargs["withcap"] and not args["nocap"], iargs["posttext"],
+				joiner
 			), lang_cats
 		end
 	)
@@ -539,7 +542,7 @@ function export.tagged_form_of_t(frame)
 		params, iargs["def"], iargs["ignore"], ignored_params)
 	
 	return construct_tagged_form_of_text(iargs, args, term_param, compat,
-		split_inflection_tags(iargs[1], iargs["split_tags"]))
+		split_inflection_tags(iargs[1], iargs["split_tags"]), "and")
 end
 
 --[=[
@@ -601,6 +604,9 @@ function export.inflection_of_t(frame)
 		["linktext"] = {},
 		["posttext"] = {},
 		["noprimaryentrycat"] = {},
+		-- Temporary, allows multipart joiner to be controlled on a template-by-template
+		-- basis
+		["joiner"] = {},
 	}
 
 	local iargs = require("Module:parameters").process(frame.args, iparams)
