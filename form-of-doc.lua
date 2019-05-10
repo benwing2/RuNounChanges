@@ -258,15 +258,16 @@ local tag_type_order = {
 	"other",
 }
 
+local function sort_by_first(namedata1, namedata2)
+	return namedata1[1] < namedata2[1]
+end
+
 function export.tagtable()
 	m_data = mw.loadData("Module:form of/data")
 	m_data2 = mw.loadData("Module:form of/data2")
 	m_form_of = require("Module:form of")
 
 	local function organize_data(data_module)
-		local function sort_by_first(namedata1, namedata2)
-			return namedata1[1] < namedata2[1]
-		end
 		local tab = {}
 		for name, data in pairs(data_module.tags) do
 			if not data.tag_type then
@@ -415,6 +416,98 @@ function export.postable()
 			table.insert(sparts, "<code>" .. shortcut .. "</code>")
 		end
 		table.insert(parts, "| <code>" .. full .. "</code> || " .. table.concat(sparts, ", "))
+	end
+	table.insert(parts, "|}")
+	return table.concat(parts, "\n")
+end
+
+function export.cattable()
+	local m_cats = mw.loadData("Module:form of/cats")
+	local cats_by_lang = {}
+	local function find_categories(catstruct)
+		local cats = {}
+		
+		local function process_spec(spec)
+			if type(spec) == "string" then
+				table.insert(cats, spec)
+				return
+			elseif not spec or spec == true then
+				return
+			elseif type(spec) ~= "table" then
+				error("Wrong type of condition " .. spec .. ": " .. type(spec))
+			end
+			local predicate = spec[1]
+			if predicate == "multi" or predicate == "cond" then
+				-- WARNING! #spec doesn't work for objects loaded from loadData()
+				for i, sp in ipairs(spec) do
+					if i > 1 then
+						process_spec(sp)
+					end
+				end
+			elseif predicate == "pexists" then
+				process_spec(spec[2])
+				process_spec(spec[3])
+			elseif predicate == "has" or predicate == "hasall" or predicate == "hasany" or
+				predicate == "tags=" or predicate == "p=" or predicate == "pany" or
+				predicate == "not" then
+				process_spec(spec[3])
+				process_spec(spec[4])
+			elseif predicate == "and" or predicate == "or" then
+				process_spec(spec[3])
+				process_spec(spec[4])
+			elseif predicate == "call" then
+				return
+			else
+				error("Unrecognized predicate: " .. predicate)
+			end
+		end
+		
+		for _, spec in ipairs(catstruct) do
+			process_spec(spec)
+		end
+		return cats
+	end
+
+	for lang, catspecs in pairs(m_cats) do
+		local cats = find_categories(catspecs)
+		table.insert(cats_by_lang, {lang, cats})
+	end
+	table.sort(cats_by_lang, sort_by_first)
+	
+	local lang_independent_cat_index = nil
+	for i, langcats in ipairs(cats_by_lang) do
+		local lang = langcats[1]
+		if lang == "und" then
+			lang_independent_cat_index = i
+			break
+		end
+	end
+	if lang_independent_cat_index then
+		local lang_independent_cats = table.remove(cats_by_lang, lang_independent_cat_index)
+		table.insert(cats_by_lang, 1, lang_independent_cats)
+	end
+	
+	local parts = {}	
+	table.insert(parts, '{|class="wikitable"')
+
+	for i, langcats in ipairs(cats_by_lang) do
+		local langcode = langcats[1]
+		local cats = langcats[2]
+		if #cats > 0 then
+			if i > 1 then
+				table.insert(parts, "|-")
+			end
+			if langcode == "und" then
+				table.insert(parts, '! style="text-align: center; background: #dddddd;" | Language-independent')
+			else
+				local lang = m_languages.getByCode(langcode) or error("Unrecognized language code: " .. langcocde)
+				table.insert(parts, '! style="text-align: center; background: #dddddd;" | ' .. lang:getCanonicalName())
+			end
+			for _, cat in ipairs(cats) do
+				table.insert(parts, "|-")
+				table.insert(parts, "| <code>" .. cat .. "</code>")
+			end
+		end
 	end
 	table.insert(parts, "|}")
 	return table.concat(parts, "\n")
