@@ -59,7 +59,7 @@ def process_text_on_page(pagetitle, index, text):
 
   subsections = re.split("(^==+[^=\n]+==+\n)", text, 0, re.M)
   for j in xrange(2, len(subsections), 2):
-    if "==Adjective==" not in subsections[j - 1]:
+    if not re.search("==(Adjective|Numeral|Participle)==", subsections[j - 1]):
       continue
     parsed = blib.parse_text(subsections[j])
     for t in parsed.filter_templates():
@@ -134,10 +134,15 @@ def process_text_on_page(pagetitle, index, text):
         elif pagetitle.startswith("meist"):
           # normal ending_sets_to_try works
           lemmas_to_try = ["mei"]
-      elif lemma.endswith(u"groß") or lemma.endswith("gross"):
-        # größer, grösser handled normally
-        if re.search(u"grö(ss|ß)te[mnrs]?$", pagetitle):
-          lemmas_to_try = [u"grösst", u"größt"]
+      elif lemma.endswith(u"groß"):
+        # größer handled normally
+        if re.search(u"größte[mnrs]?$", pagetitle):
+          lemmas_to_try = [lemma[0:-4] + u"größt"]
+          ending_sets_to_try = [special_superlative_ending_tags]
+      elif lemma.endswith("gross"):
+        # grösser handled normally
+        if re.search(u"grösste[mnrs]?$", pagetitle):
+          lemmas_to_try = [lemma[0:-5] + u"grösst"]
           ending_sets_to_try = [special_superlative_ending_tags]
       else:
         gut_prefixed = [
