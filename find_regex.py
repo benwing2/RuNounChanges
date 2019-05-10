@@ -22,9 +22,13 @@ import pywikibot
 import blib
 from blib import getparam, rmparam, msg, site
 
-def process_page(regex, index, page, filter_pages, verbose,
-    include_non_mainspace, russian_only):
-  pagetitle = unicode(page.title())
+def process_page(regex, index, page_or_title_text, filter_pages, verbose,
+    include_non_mainspace, lang_only):
+  text = None
+  if type(page_or_title_text) is tuple:
+    pagetitle, text = page_or_title_text
+  else:
+    pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -40,21 +44,22 @@ def process_page(regex, index, page, filter_pages, verbose,
         filter_pages)
     return
 
-  text = unicode(page.text)
+  if text is None:
+    text = unicode(page.text)
 
-  if not russian_only:
+  if not lang_only:
     text_to_search = text
   else:
     text_to_search = None
-    foundrussian = False
+    foundlang = False
     sections = re.split("(^==[^=]*==\n)", text, 0, re.M)
 
     for j in xrange(2, len(sections), 2):
-      if sections[j-1] == "==Russian==\n":
-        if foundrussian:
-          pagemsg("WARNING: Found multiple Russian sections, skipping page")
+      if sections[j-1] == "==%s==\n" % lang_only:
+        if foundlang:
+          pagemsg("WARNING: Found multiple %s sections, skipping page" % lang_only)
           return
-        foundrussian = True
+        foundlang = True
         text_to_search = sections[j]
         break
 
@@ -70,8 +75,17 @@ def yield_pages_in_cats(cats, startFrom, upTo):
     for index, page in blib.cat_articles(cat, startFrom, upTo):
       yield index, page
 
-def search_pages(regex, refs, cat, pages, pagefile, filter_pages, verbose,
-    startFrom, upTo, include_non_mainspace, russian_only):
+def search_pages(regex, refs, cat, pages, pagefile, stdin, filter_pages,
+    verbose, startFrom, upTo, include_non_mainspace, lang_only):
+  # If reading from dump on stdin, need to go through a callback rather
+  # than through an iterator.
+  if stdin:
+    def process_text_on_page(index, title, text):
+      process_page(regex, index, (title, text), filter_pages, verbose,
+          include_non_mainspace, lang_only)
+    blib.parse_dump(sys.stdin, process_text_on_page, startsort=startFrom, endsort=upTo)
+    return
+
   if pages:
     pages = ((index, pywikibot.Page(blib.site, page)) for page, index in blib.iter_pages(pages, startFrom, upTo))
   elif pagefile:
@@ -83,7 +97,7 @@ def search_pages(regex, refs, cat, pages, pagefile, filter_pages, verbose,
     pages = yield_pages_in_cats(cat.split(","), startFrom, upTo)
   for index, page in pages:
     process_page(regex, index, page, filter_pages, verbose,
-        include_non_mainspace, russian_only)
+        include_non_mainspace, lang_only)
 
 pa = blib.init_argparser("Search on pages")
 pa.add_argument("-e", "--regex", help="Regular expression to search for.",
@@ -95,8 +109,9 @@ pa.add_argument("-c", "--category", "--cat",
 pa.add_argument('--filter-pages', help="Regex to use to filter page names.")
 pa.add_argument('--pages', help="List of pages to search, comma-separated.")
 pa.add_argument('--pagefile', help="File containing pages to search.")
+pa.add_argument('--stdin', help="Use dump on stdin.", action="store_true")
 pa.add_argument('--include-non-mainspace', help="Don't skip non-mainspace pages.", action='store_true')
-pa.add_argument('--russian-only', help="Only search the Russian section.", action='store_true')
+pa.add_argument('--lang-only', help="Only search the specified language section.")
 params = pa.parse_args()
 startFrom, upTo = blib.parse_start_end(params.start, params.end)
 
@@ -110,5 +125,5 @@ pages = params.pages and re.split(",", params.pages.decode("utf-8"))
 filter_pages = params.filter_pages and params.filter_pages.decode("utf-8")
 
 search_pages(regex, references, category, pages, params.pagefile,
-    filter_pages, params.verbose, startFrom, upTo,
-    params.include_non_mainspace, params.russian_only)
+    params.stdin, filter_pages, params.verbose, startFrom, upTo,
+    params.include_non_mainspace, params.lang_only)
