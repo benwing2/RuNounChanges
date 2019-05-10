@@ -442,6 +442,65 @@ def get_page_name(page):
   #return unicode(page.title(withNamespace=False))
   return unicode(page.title())
 
+class ProcessItems(object):
+  def __init__(self, startsort=None, endsort=None, get_name=get_page_name,
+      skip_ignorable_pages=False):
+    self.startsort = startsort
+    self.endsort = endsort
+    self.get_name = get_name
+    self.skip_ignorable_pages = skip_ignorable_pages
+    self.i = 0
+    self.t = None
+    self.steps = 50
+    self.skipsteps = 1000
+    self.no_time_output = True
+
+  def should_process(self, item):
+    self.i += 1
+
+    if self.startsort != None:
+      should_skip = False
+      if isinstance(self.startsort, int):
+        if self.i < self.startsort:
+          should_skip = True
+      elif self.get_name(item) < self.startsort:
+        should_skip = True
+      if should_skip:
+        if self.i % skipsteps == 0:
+          pywikibot.output("skipping %s" % str(self.i))
+        return False
+
+    if self.endsort != None:
+      if isinstance(self.endsort, int):
+        if self.i > self.endsort:
+          return None
+      elif self.get_name(item) > self.endsort:
+        return None
+
+    if isinstance(self.endsort, int) and not self.t:
+      self.t = datetime.datetime.now()
+
+    if self.skip_ignorable_pages and page_should_be_ignored(get_name(item)):
+      pywikibot.output("Page %s %s: page has a prefix or suffix indicating it should not be touched, skipping" % (
+        self.i, get_name(item)))
+      retval = False
+    else:
+      retval = self.i
+
+    if self.i % self.steps == 0:
+      tdisp = ""
+
+      if isinstance(self.endsort, int):
+        told = self.t
+        self.t = datetime.datetime.now()
+        pagesleft = (self.endsort - self.i) / self.steps
+        tfuture = self.t + (self.t - told) * pagesleft
+        tdisp = ", est. " + tfuture.strftime("%X")
+
+      pywikibot.output(str(self.i) + "/" + str(self.endsort) + tdisp)
+
+    return retval
+
 def iter_items(items, startsort=None, endsort=None, get_name=get_page_name,
     skip_ignorable_pages=False):
   i = 0
@@ -1199,6 +1258,23 @@ class WikiDumpHandler(xml.sax.ContentHandler):
     elif self.cur == "text":
       self.text.append(content)
 
-def parse_dump(fp, pagecallback):
-  handler = WikiDumpHandler(pagecallback)
-  xml.sax.parse(fp, handler)
+class DumpExitException(Exception):
+  pass
+
+def parse_dump(fp, pagecallback, startsort=None, endsort=None,
+    skip_ignorable_pages=False):
+  item_handler = ProcessItems(startsort=startsort, endsort=endsort,
+      skip_ignorable_pages=skip_ignorable_pages)
+
+  def mycallback(title, text):
+    retval = item_handler.should_process(title)
+    if retval == None:
+      raise DumpExitException
+    if retval != False:
+      pagecallback(retval, title, text)
+
+  handler = WikiDumpHandler(mycallback)
+  try:
+    xml.sax.parse(fp, handler)
+  except DumpExitException as e:
+    return
