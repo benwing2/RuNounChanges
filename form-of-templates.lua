@@ -604,9 +604,6 @@ function export.inflection_of_t(frame)
 		["linktext"] = {},
 		["posttext"] = {},
 		["noprimaryentrycat"] = {},
-		-- Temporary, allows multipart joiner to be controlled on a template-by-template
-		-- basis
-		["joiner"] = {},
 	}
 
 	local iargs = require("Module:parameters").process(frame.args, iparams)
@@ -641,6 +638,9 @@ function export.inflection_of_t(frame)
 		-- invocation args. Before doing that, need to remove all uses of
 		-- nodot= in other circumstances.
 		["nodot"] = {type = "boolean"},
+		-- Temporary, allows multipart joiner to be controlled on a template-by-template
+		-- basis
+		["joiner"] = {},
 	}
 	
 	if not iargs["nolink"] and not iargs["linktext"] then
@@ -679,7 +679,8 @@ function export.inflection_of_t(frame)
 		end
 	end
 
-	return construct_tagged_form_of_text(iargs, args, term_param, compat, infls)
+	return construct_tagged_form_of_text(iargs, args, term_param, compat, infls,
+		parent_args["joiner"])
 end
 
 --[=[
