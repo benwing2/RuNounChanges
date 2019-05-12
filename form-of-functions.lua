@@ -25,6 +25,29 @@ function export.multipart_join_strategy()
 	return "and"
 end
 
+local function wrap_in_inflection_of_sep(text)
+	return '<span class="inflection-of-sep">' .. text .. '</span>'
+end
+	
+-- This is a local version of serialCommaJoin from [[Module:table]] that
+-- implements it a bit differently.
+local function join_multiparts_with_serial_comma(seq)
+	local length = #seq
+
+	if length == 0 then
+		return ""
+	elseif length == 1 then
+		return seq[1] -- nothing to join
+	elseif length == 2 then
+		return seq[1] .. wrap_in_inflection_of_sep("&#32;and&#32;") .. seq[2]
+	else
+		local comma = '<span class="serial-comma">,</span>'
+		local conj = '<span class="serial-and">&#32;and&#32;</span>'
+		return table.concat(seq, wrap_in_inflection_of_sep(",&#32;"), 1, length - 1) ..
+			wrap_in_inflection_of_sep(comma .. conj) .. seq[length]
+	end
+end
+
 function export.join_multiparts(parts, joiner)
 	-- Display the elements of a multipart tag. Currently we use "and",
 	-- with commas when then are three or more elements, of the form
@@ -38,15 +61,17 @@ function export.join_multiparts(parts, joiner)
 	-- looks better than
 	--   first-, second- and third-person singular present subjunctive
 	local strategy = joiner or export.multipart_join_strategy()
+	local retval
 	if strategy == "and" then
-		return require("Module:table").serialCommaJoin(parts)
+		retval = join_multiparts_with_serial_comma(parts)
 	elseif strategy == "en-dash" then
-		return table.concat(parts, "–")
+		retval = table.concat(parts, wrap_in_inflection_of_sep("–"))
 	elseif strategy == "slash" then
-		return table.concat(parts, "/")
+		retval = table.concat(parts, wrap_in_inflection_of_sep("/"))
 	else
 		error("Unrecognized multipart join strategy: " .. strategy)
 	end
+	return '<span class="inflection-of-conjoined">' .. retval .. '</span>'
 end
 
 export.cat_functions = {}
