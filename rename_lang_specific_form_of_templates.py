@@ -44,7 +44,7 @@ round_1_templates = [
   "de-form-noun", # can delete
   "el-form-of-adv", # can delete
   "el-participle of", # can delete
-  "et-nom form of", # cal delete
+  "et-nom form of", # can delete
   "fa-form-verb", # can delete
   "gmq-bot-verb-form-sup", # can delete
   "hi-form-adj", # can delete
@@ -57,7 +57,7 @@ round_1_templates = [
   "ka-verbal for", # can delete
   "ka-verbal of", # can delete
   "ku-verb form of", # deprecate
-  "liv-inflection of", # can delete
+  "liv-inflection of", # deprecate
   "lt-form-adj-is", # can delete
   "lt-form-noun", # deprecate
   "lt-form-verb", # deprecate
