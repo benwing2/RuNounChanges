@@ -11,6 +11,10 @@ recognized_tag_sets = [
   "2|m|p|non-past|actv|jussive",
   "2|m|p|non-past|pasv|subj",
   "2|m|p|non-past|pasv|jussive",
+  "3|m|p|non-past|actv|subj",
+  "3|m|p|non-past|actv|jussive",
+  "3|m|p|non-past|pasv|subj",
+  "3|m|p|non-past|pasv|jussive",
   "2|m|p|actv|impr",
 ]
 
@@ -162,10 +166,12 @@ def process_page(index, page, save, verbose):
         else:
           saw_inflection_of_with_recognized_tag = True
 
+    if not saw_inflection_of_with_recognized_tag:
+      return False
+
     if inflection_of_templates_with_unrecognized_tags:
-      if saw_inflection_of_with_recognized_tag:
-        pagemsg("Unrecognized {{inflection of}} tag set mixed with recognized ones in %s, skipping: %s" %
-          (header, " / ".join(inflection_of_templates_with_unrecognized_tags)))
+      pagemsg("WARNING: Unrecognized {{inflection of}} tag set mixed with recognized ones in %s, skipping: %s" %
+        (header, " / ".join(inflection_of_templates_with_unrecognized_tags)))
       return False
 
     for t in parsed.filter_templates():
@@ -175,11 +181,11 @@ def process_page(index, page, save, verbose):
       if tn == "ar-verb-form":
         form = getparam(t, "1")
         if not form.endswith(u"و") and form.endswith(u"وْ"):
-          pagemsg("ar-verb-form form doesn't end with waw in %s, skipping: %s" % (header, unicode(t)))
+          pagemsg("WARNING: ar-verb-form form doesn't end with waw in %s with recognized {{inflection of}} tags, skipping: %s" % (header, unicode(t)))
           return False
         continue
       if tn != "inflection of":
-        pagemsg("Unrecognized template in %s, skipping: %s" % (header, unicode(t)))
+        pagemsg("WARNING: Unrecognized template in %s with recognized {{inflection of}} tags, skipping: %s" % (header, unicode(t)))
         return False
     return True
 
