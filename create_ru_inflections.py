@@ -2110,7 +2110,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
           if is_adj_form:
             insert_at = None
             for j in xrange(2, len(subsections), 2):
-              if re.match("^===Noun===+", subsections[j - 1]):
+              if re.match("^===+Noun===+", subsections[j - 1]):
                 parsed = blib.parse_text(subsections[j])
                 defn_templates = matching_defn_templates(parsed)
                 for t in parsed.filter_templates():
@@ -2132,7 +2132,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
           if is_noun_form:
             insert_at = None
             for j in xrange(2, len(subsections), 2):
-              if re.match("^===Adjective===+", subsections[j - 1]):
+              if re.match("^===+Adjective===+", subsections[j - 1]):
                 parsed = blib.parse_text(subsections[j])
                 defn_templates = matching_defn_templates(parsed)
                 for t in parsed.filter_templates():
@@ -2206,7 +2206,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
           if is_noun_form and is_noun_adj_plural:
             found_plural_noun_form = False
             for j in xrange(2, len(subsections), 2):
-              if re.match("^===Noun===+", subsections[j - 1]):
+              if re.match("^===+Noun===+", subsections[j - 1]):
                 parsed = blib.parse_text(subsections[j])
                 # Check for singular in any existing definition templates
                 # (with the correct language) in the subsection.
