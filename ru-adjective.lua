@@ -1909,9 +1909,74 @@ local short_clause_mp_no_neuter = nil
 local internal_notes_template = nil
 local notes_template = nil
 
+local function get_accel_forms(old, special, has_nom_mp)
+	return {
+		-- used with all variants
+		nom_m = "nom|m|s",
+		nom_f = "nom|f|s",
+		nom_n = "nom|n|s",
+		-- not used with special; applies to all genders normally but only
+		-- feminine and neuter with old=1
+		nom_p = old and has_nom_mp and "nom|f//n|p" or "nom|p",
+		-- only used with old=1 or special; applies to the masculine and neuter if
+		-- special, but only masculine if old=1
+		nom_mp = special and "nom|m//n|p" or "nom|m|p",
+		-- only used with special
+		nom_fp = "nom|f|p",
+		-- the remaining singulars and non-gendered plurals used with all variants
+		-- except special == "oba"
+		gen_m = "gen|m//n|s",
+		gen_f = "gen|f|s",
+		gen_p = "gen|p",
+		dat_m = "dat|m//n|s",
+		dat_f = "dat|f|s",
+		dat_p = "dat|p",
+		acc_m_an = "an|acc|m|s",
+		acc_m_in = "in|acc|m|s",
+		acc_f = "acc|f|s",
+		acc_n = "acc|n|s",
+		-- the following two not used with special in ("dva", "oba"); applies to
+		-- all genders normally but only feminine and neuter with old=1
+		acc_p_an = old and has_nom_mp and "an|acc|f//n|p" or "an|acc|p",
+		acc_p_in = old and has_nom_mp and "in|acc|f//n|p" or "in|acc|p",
+		-- the following two only used with old=1 or special in ("dva|oba");
+		-- applies to the masculine and neuter if special, but only masculine if
+		-- old=1
+		acc_mp_an = special and "an|acc|m//n|p" or "an|acc|m|p",
+		acc_mp_in = special and "in|acc|m//n|p" or "in|acc|m|p",
+		-- the following two only used with special in ("dva", "oba")
+		acc_fp_an = "an|acc|f|p",
+		acc_fp_in = "in|acc|f|p",
+		-- the next 6 are used with all variants except special == "oba"
+		ins_m = "ins|m//n|s",
+		ins_f = "ins|f|s",
+		ins_p = "ins|p",
+		pre_m = "pre|m//n|s",
+		pre_f = "pre|f|s",
+		pre_p = "pre|p",
+		-- the following two gendered plurals are only used with special == "cdva"
+		acc_mp == "acc|m//n|p",
+		acc_fp = "acc|f|p",
+		-- the remaining gendered plurals are only used with special == "oba"
+		gen_mp = "gen|m//n|p",
+		gen_fp = "gen|f|p",
+		dat_mp = "dat|m//n|p",
+		dat_fp = "dat|f|p",
+		ins_mp = "ins|m//n|p",
+		ins_fp = "ins|f|p",
+		pre_mp = "pre|m//n|p",
+		pre_fp = "pre|f|p",
+		-- short forms
+		short_m = "short|m|s",
+		short_f = "short|f|s",
+		short_n = "short|n|s",
+		short_p = "short|p",
+	}
+end
+
 -- Generate a string to substitute into a particular form in a Wiki-markup
 -- table. FORMS is the list of forms.
-local function show_form(forms, old, lemma)
+local function show_form(forms, old, lemma, accel_form)
 	local russianvals = {}
 	local latinvals = {}
 	local lemmavals = {}
@@ -1937,10 +2002,11 @@ local function show_form(forms, old, lemma)
 		end
 		ruentry = com.remove_monosyllabic_accents(ruentry)
 		local ruspan, trspan
+		local accel = {form = accel_form, transliteration = tr}
 		if old then
-			ruspan = m_links.full_link({lang = lang, term = com.remove_jo(ruentry), alt = ruentry, tr = "-"}) .. runotes
+			ruspan = m_links.full_link({lang = lang, term = com.remove_jo(ruentry), alt = ruentry, tr = "-", accel}) .. runotes
 		else
-			ruspan = m_links.full_link({lang = lang, term = ruentry, tr = "-"}) .. runotes
+			ruspan = m_links.full_link({lang = lang, term = ruentry, tr = "-", accel}) .. runotes
 		end
 		if not trentry then
 			trentry = nom.translit_no_links(ruentry)
@@ -1972,7 +2038,7 @@ end
 -- Make the table
 make_table = function(args)
 	args.lemma = m_links.remove_links(show_form(args.special and args.nom_mp or
-		args.nofull and args.short_m or args.nom_m, args.old, true))
+		args.nofull and args.short_m or args.nom_m, args.old, true, nil))
 	args.title = args.title or strutils.format(
 		(args.special or args.manual) and args.old and old_title_temp_no_short_msg or
 		(args.special or args.manual) and title_temp_no_short_msg or
@@ -1982,9 +2048,18 @@ make_table = function(args)
 
 	local has_nom_mp = args.nom_mp and not (#args.nom_mp == 1 and args.nom_mp[1][1] == "-")
 
+	local accel_forms = get_accel_forms(args.old, args.special, has_nom_mp)
+
 	for _, case in ipairs(all_cases) do
 		if args[case] then
-			args[case] = show_form(args[case], args.old, false)
+			local accel_form = accel_forms[case]
+			if not accel_form then
+				error("Unrecognized case " .. case .. " when looking up accelerator form")
+			end
+			if noneuter then
+				accel_form = rsub(accel_form, "//n", "")
+			end
+			args[case] = show_form(args[case], args.old, false, accel_form)
 		else
 			args[case] = nil
 		end

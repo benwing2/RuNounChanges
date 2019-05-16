@@ -24,6 +24,7 @@
 
 local m_utilities = require("Module:utilities")
 local ut = require("Module:utils")
+local m_links = require("Module:links")
 local com = require("Module:ru-common")
 local nom = require("Module:ru-nominal")
 local m_debug = require("Module:debug")
@@ -1248,7 +1249,7 @@ local function parse_variants(data, variants, allowed)
 
 		-- Allow brackets around both 5 and 6, e.g. [(5)(6)]
 		variants = rsub(variants, "%[(%([56]%))(%([56]%))%]", "[%1][%2]")
-		
+
 		-- Handle all remaining variants. We do this using an rsub() function,
 		-- where we pull out, parse and remove each variant in turn.
 		variants = rsub(variants, "(%[?%(?[23456789ёощийьж+][дp]?%)?%]?)", function(var)
@@ -2113,7 +2114,7 @@ local function guts_of_3b_3c(args, data, vclass)
 		stem, tr = com.make_ending_stressed(stem, tr)
 		present_e_c(forms, stem, tr)
 	end
-	
+
 	return forms
 end
 
@@ -2851,7 +2852,7 @@ conjugations["8b"] = function(args, data)
 			pastm_stem = stressed_past_stem
 			past_part_stem = stressed_past_stem
 		end
-	
+
 		local past_note =
 			class_8b_stem_to_infinitive(pastm_stem) ~= full_inf and IRREG
 		-- default for pres_pasv_part is blank; влечь -> влеко́мый handled through
@@ -3306,7 +3307,7 @@ conjugations["irreg-бежать"] = function(args, data)
 		"у́щий", "-", "-", "вший", "вши", "в", IRREG)
 	append_imper(forms, "беги́", nil, "", "те", IRREG)
 	append_pres_futr(forms, "бе", nil,
-		"гу́" .. IRREG, "жи́шь", "жи́т", "жи́м", "жи́те", "гу́т" .. IRREG)                  
+		"гу́" .. IRREG, "жи́шь", "жи́т", "жи́м", "жи́те", "гу́т" .. IRREG)
 	set_past(forms, "бежа́л", nil, "", "а", "о", "и")
 	if data.old then
 		rsub_forms(forms, "^бе", "бѣ")
@@ -4062,7 +4063,7 @@ present_i = function(forms, stem, tr, abc, shch, note)
 	end
 	append_pres_futr(forms, iotated_stem, iotated_tr,
 		ending_1sg, {}, {}, {}, {}, {}, note)
-end	
+end
 
 -- Add the reflexive particle to all verb forms
 make_reflexive = function(forms, reflex_stress)
@@ -4295,7 +4296,7 @@ handle_forms_and_overrides = function(args, forms, data)
 		{"pastpart", past_part_verb_forms},
 		{"", all_main_verb_forms}
 	}
-	
+
 	for _, tailspec in ipairs(tailargs) do
 		tailforms = tailspec[2]
 		-- Handle the ...tail variants.
@@ -4502,6 +4503,47 @@ finish_generating_forms = function(forms, data)
 	end
 end
 
+local accel_forms = {
+  -- present tense
+  pres_1sg = "1|s|pres|ind",
+  pres_2sg = "2|s|pres|ind",
+  pres_3sg = "3|s|pres|ind",
+  pres_1pl = "1|p|pres|ind",
+  pres_2pl = "2|p|pres|ind",
+  pres_3pl = "3|p|pres|ind",
+  -- future tense
+  futr_1sg = "1|s|fut|ind",
+  futr_2sg = "2|s|fut|ind",
+  futr_3sg = "3|s|fut|ind",
+  futr_1pl = "1|p|fut|ind",
+  futr_2pl = "2|p|fut|ind",
+  futr_3pl = "3|p|fut|ind",
+  -- imperative
+  impr_sg = "2|s|imp",
+  impr_pl = "2|p|imp",
+  -- past
+  past_m = "m|s|past|ind",
+  past_f = "f|s|past|ind",
+  past_n = "n|s|past|ind",
+  past_pl = "p|past|ind",
+  past_m_short = "short|m|s|past|ind",
+  past_f_short = "short|f|s|past|ind",
+  past_n_short = "short|n|s|past|ind",
+  past_pl_short = "short|p|past|ind",
+  -- active participles
+  pres_actv_part = "pres|act|part",
+  past_actv_part = "past|act|part",
+  -- passive participles
+  pres_pasv_part = "pres|pass|part",
+  past_pasv_part = "past|pass|part",
+  -- adverbial participles
+  pres_adv_part = "pres|adv|part",
+  past_adv_part = "past|adv|part",
+  past_adv_part_short = "short|past|adv|part",
+  -- infinitive
+  infinitive = "infinitive",
+}
+
 -- Make the table
 make_table = function(forms, title, perf, intr, impers, notes, internal_notes, old)
 	local infinitives = {}
@@ -4515,18 +4557,23 @@ make_table = function(forms, title, perf, intr, impers, notes, internal_notes, o
 		end
 	end
 
-	-- Group forms together for a given key, add translit and combine adjacent
-	-- forms with the same Russian (they should always have different translits).
+	-- Group forms together for a given key and combine adjacent forms with the same
+	-- Russian (they should always have different translits). Take care not to introduce
+	-- manual translit unnecessarily.
 	local grouped_forms = {}
 	for dispform, sourceforms in pairs(disp_verb_form_map) do
 		local entry = {}
 		for _, form in ipairs(sourceforms) do
-			local ru, tr = extract_russian_tr(forms[form], "translit")
+			local ru, tr = extract_russian_tr(forms[form])
 			-- check for empty strings, dashes and nil's
 			if ru and ru ~= "" and ru ~= "-" and ru ~= "&mdash;" then
 				if #entry > 0 then
-					local lastru, lasttr = extract_russian_tr(entry[#entry], "translit")
+					local lastru, lasttr = extract_russian_tr(entry[#entry])
 					if lastru == ru then
+						if lasttr or tr then
+							lasttr = lasttr or com.translit(lastru)
+							tr = tr or com.translit(ru)
+						end
 						entry[#entry] = {ru, lasttr .. " ''or'' " .. tr}
 					else
 						table.insert(entry, {ru, tr})
@@ -4543,31 +4590,53 @@ make_table = function(forms, title, perf, intr, impers, notes, internal_notes, o
 		" of <span lang=\"ru\" class=\"Cyrl\">''" .. table.concat(infinitives, ", ") .. "''</span>") ..
 		(title and " (" .. title .. ")" or "")
 
-	local function add_links(ru, rusuf, runotes, tr, trnotes)
-		local linked = com.remove_accents(ru)
+	local function add_links(ru, rusuf, runotes, tr, trnotes, accel)
+		local ruspan
 		if old then
-			linked = com.remove_jo(linked)
+			ruspan = m_links.full_link({lang = lang, term = com.remove_jo(ru), accel = accel,
+				alt = not ru:find("[[", 1, true) and ru, tr = "-"})
+		else
+			ruspan = m_links.full_link({lang = lang, term = ru, accel = accel, tr = "-"})
 		end
-		return "<span lang=\"ru\" class=\"Cyrl\">[[" .. linked .. "#Russian|" .. ru .. "]]" .. rusuf .. runotes .. "</span><br/>" .. require("Module:script utilities").tag_translit(tr .. trnotes, lang, "default", 'style="color: #888"')
+		if rusuf ~= "" then
+			rusuf = "<span lang=\"ru\" class=\"Cyrl\">" .. rusuf .. "</span>"
+		end
+		return ruspan .. rusuf .. runotes .. "<br/>" .. require("Module:script utilities").tag_translit(tr .. trnotes, lang, "default", 'style="color: #888"')
 	end
 
 	-- Convert to displayed form
 	local disp = {}
 	for key, entry in pairs(grouped_forms) do
 		for i, form in ipairs(entry) do
-			local ru, tr = extract_russian_tr(form, "always_translit")
+			local ru, origtr = extract_russian_tr(form)
+			local tr = origtr or ru and com.translit(ru)
 			local ruentry, runotes = m_table_tools.get_notes(ru)
 			local trentry, trnotes = m_table_tools.get_notes(tr)
+			local accel_form = accel_forms[key]
+			if not accel_form then
+				error("Unrecognized key " .. key .. " when looking up accelerator form")
+			end
+			local accel
+			if origtr and origtr:find(" ''or'' ") then
+				-- Multiple translits for a given Russian term.
+				-- FIXME! Support this.
+				accel = nil
+			else
+				accel = { form = accel_form, transliteration = origtr }
+			end
+
 			if rfind(key, "^futr") then
 				-- Add link to first word (form of 'to be')
 				tobe, inf = rmatch(ruentry, "^([^ ]*) ([^ ]*)$")
 				if tobe then
-					entry[i] = add_links(tobe, " " .. inf, runotes, trentry, trnotes)
+					-- No accelerators for imperfective future, as it's just the future of "to be"
+					-- plus the infinitive.
+					entry[i] = add_links(tobe, " " .. inf, runotes, trentry, trnotes, nil)
 				else
-					entry[i] = add_links(ruentry, "", runotes, trentry, trnotes)
+					entry[i] = add_links(ruentry, "", runotes, trentry, trnotes, accel)
 				end
 			else
-				entry[i] = add_links(ruentry, "", runotes, trentry, trnotes)
+				entry[i] = add_links(ruentry, "", runotes, trentry, trnotes, accel)
 			end
 		end
 		disp[key] = table.concat(entry, ",<br/>")
