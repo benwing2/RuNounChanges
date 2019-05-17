@@ -654,7 +654,7 @@ def getData():
 def getLanguageData():
   global languages, languages_byCode, languages_byCanonicalName
   
-  jsondata = site.expand_text("{{#invoke:User:MewBot|getLanguageData}}")
+  jsondata = site.expand_text(u"{{#invoke:User:MewBot|getLanguageData}}")
   languages = json.loads(jsondata)
   languages_byCode = {}
   languages_byCanonicalName = {}
@@ -667,7 +667,7 @@ def getLanguageData():
 def getFamilyData():
   global families, families_byCode, families_byCanonicalName
   
-  families = json.loads(site.expand_text("{{#invoke:User:MewBot|getFamilyData}}"))
+  families = json.loads(site.expand_text(u"{{#invoke:User:MewBot|getFamilyData}}"))
   families_byCode = {}
   families_byCanonicalName = {}
   
@@ -679,7 +679,7 @@ def getFamilyData():
 def getScriptData():
   global scripts, scripts_byCode, scripts_byCanonicalName
   
-  scripts = json.loads(site.expand_text("{{#invoke:User:MewBot|getScriptData}}"))
+  scripts = json.loads(site.expand_text(u"{{#invoke:User:MewBot|getScriptData}}"))
   scripts_byCode = {}
   scripts_byCanonicalName = {}
   
@@ -691,7 +691,7 @@ def getScriptData():
 def getEtymLanguageData():
   global etym_languages, etym_languages_byCode, etym_languages_byCanonicalName
   
-  etym_languages = json.loads(site.expand_text("{{#invoke:User:MewBot|getEtymLanguageData}}"))
+  etym_languages = json.loads(site.expand_text(u"{{#invoke:User:MewBot|getEtymLanguageData}}"))
   etym_languages_byCode = {}
   etym_languages_byCanonicalName = {}
   
