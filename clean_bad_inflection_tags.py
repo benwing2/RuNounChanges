@@ -738,7 +738,7 @@ def process_text_on_page(pagetitle, index, text):
 
         def parse_gloss_from_posttext(posttext):
           gloss = ""
-          mmm = re.search(ur" *\([‘'\"]([^‘'\"(){}\[\]]*)[’'\"]\)\.?(.*?)$",
+          mmm = re.search(ur" *\([‘'\"]([^‘'\"(){}]*)[’'\"]\)\.?(.*?)$",
               posttext)
           if mmm:
             gloss, posttext = mmm.groups()
@@ -750,7 +750,7 @@ def process_text_on_page(pagetitle, index, text):
           pretext, tags, posttext = m.groups()
           tags = re.sub(" *[Oo]f$", "", tags)
           # Check for template link
-          mm = re.search(r"^'* *\{\{(?:m|l|l-self)\|([a-zA-Z.-]*)\|([^{}]*?)\}\} *'*\.?(.*?)$", posttext)
+          mm = re.search(r"^'* *\{\{(?:m|l|l-self)\|([a-zA-Z.-]*)\|([^{}]*?)\}\}'*\.?(.*?)$", posttext)
           if mm:
             link_langcode, lemma, postposttext = mm.groups()
             if link_langcode != langcode:
@@ -772,7 +772,7 @@ def process_text_on_page(pagetitle, index, text):
               pagemsg("WARNING: Too many arguments to link template: %s" % m.group(0))
               return m.group(0)
           # Check for raw link
-          mm = re.search(r"^'* *\[\[([^\[\]]*?)\]\] *'*\.?(.*?)$", posttext)
+          mm = re.search(r"^'* *\[\[([^\[\]]*?)\]\]'*\.?(.*?)$", posttext)
           if mm:
             lemma, postposttext = mm.groups()
             gloss, postposttext = parse_gloss_from_posttext(postposttext)
