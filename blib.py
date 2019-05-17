@@ -1232,6 +1232,17 @@ def replace_in_text(text, curr, repl, pagemsg):
   text = newtext
   return text, True
 
+def split_generate_args(tempresult):
+  args = {}
+  for arg in re.split(r"\|", tempresult):
+    name, value = re.split("=", arg)
+    value = re.sub("<!>", "|", value)
+    # With manually specified declensions, we get back "-" for unspecified
+    # forms, which need to be omitted; otherwise they're automatically omitted.
+    if value != "-":
+      args[name] = value
+  return args
+
 class WikiDumpHandler(xml.sax.ContentHandler):
   def __init__(self, pagecallback):
     self.pagecallback = pagecallback

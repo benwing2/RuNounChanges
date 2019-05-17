@@ -6,7 +6,6 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, site
 
-import rulib as ru
 import runounlib as runoun
 
 def process_page(index, page, save, verbose):
@@ -68,7 +67,7 @@ def process_page(index, page, save, verbose):
         if not generate_result:
           pagemsg_with_proposed("WARNING: Error generating noun args, skipping")
           continue
-        args = ru.split_generate_args(generate_result)
+        args = blib.split_generate_args(generate_result)
 
         # This will check number mismatch and animacy mismatch
         new_genders = runoun.check_old_noun_headword_forms(headword_template,

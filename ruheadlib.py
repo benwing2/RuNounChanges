@@ -309,7 +309,7 @@ def lookup_heads_and_inflections(pagename, pagemsg):
                 pagemsg("WARNING: lookup_heads_and_inflections: Error expanding template %s, page %s" %
                   (unicode(t), pagename))
               else:
-                args = rulib.split_generate_args(result)
+                args = blib.split_generate_args(result)
                 for value in args.itervalues():
                   adj_forms.add(value)
           heads.update(this_heads)

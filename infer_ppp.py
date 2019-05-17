@@ -157,7 +157,7 @@ def process_page(index, page, save, verbose):
         if not result:
           pagemsg("WARNING: Error generating forms, skipping")
           continue
-        args = rulib.split_generate_args(result)
+        args = blib.split_generate_args(result)
         if "past_pasv_part" not in args:
           pagemsg("WARNING: Something wrong, no past passive participle generated: %s" % unicode(t))
           continue

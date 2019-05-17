@@ -39,7 +39,7 @@ def process_page(index, page, direc, delete_bad, fix_verbs, save, verbose):
       if not result:
         pagemsg("WARNING: Error generating forms, skipping")
         continue
-      oldargs = rulib.split_generate_args(result)
+      oldargs = blib.split_generate_args(result)
       rmparam(t, "6")
       rmparam(t, "5")
       rmparam(t, "4")
@@ -50,7 +50,7 @@ def process_page(index, page, direc, delete_bad, fix_verbs, save, verbose):
         pagemsg("WARNING: Error generating forms, skipping")
         continue
       if delete_bad:
-        newargs = rulib.split_generate_args(result)
+        newargs = blib.split_generate_args(result)
         for form in ["past_m", "past_f", "past_n", "past_pl", "past_m_short",
             "past_f_short", "past_n_short", "past_pl_short"]:
           oldforms = re.split(",", oldargs[form]) if form in oldargs else []

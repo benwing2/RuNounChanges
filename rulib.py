@@ -585,17 +585,6 @@ def paste_russian_tr(ru, tr):
   else:
     return ru
 
-def split_generate_args(tempresult):
-  args = {}
-  for arg in re.split(r"\|", tempresult):
-    name, value = re.split("=", arg)
-    value = re.sub("<!>", "|", value)
-    # With manually specified declensions, we get back "-" for unspecified
-    # forms, which need to be omitted; otherwise they're automatically omitted.
-    if value != "-":
-      args[name] = value
-  return args
-
 # Given an ru-noun+ or ru-proper noun+ template, fetch the arguments
 # associated with it. May return None if an error occurred in template
 # expansion.
@@ -611,7 +600,7 @@ def fetch_noun_args(t, expand_text, forms_only=False):
   generate_result = expand_text(generate_template)
   if not generate_result:
     return None
-  return split_generate_args(generate_result)
+  return blib.split_generate_args(generate_result)
 
 # Given an ru-noun+ or ru-proper noun+ template, fetch the lemma, which
 # is of the form of one or more terms separted by commas, where each

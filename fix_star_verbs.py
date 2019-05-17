@@ -6,8 +6,6 @@ import pywikibot, re, sys, codecs, argparse, copy
 import blib
 from blib import getparam, rmparam, tname, msg, errmsg, site
 
-import rulib as ru
-
 def process_page(page, index, parsed):
   global args
   pagetitle = unicode(page.title())
@@ -54,7 +52,7 @@ def process_page(page, index, parsed):
       if not result:
         errpagemsg("WARNING: Error expanding new template %s" % new_tempcall)
         return None, ""
-      new_forms = ru.split_generate_args(result)
+      new_forms = blib.split_generate_args(result)
       if tname(t) == "ru-conj":
         orig_tempcall = re.sub(r"^\{\{ru-conj", "{{ru-generate-verb-forms", origt)
       else:
@@ -63,7 +61,7 @@ def process_page(page, index, parsed):
       if not result:
         errpagemsg("WARNING: Error expanding original template %s" % orig_tempcall)
         return None, ""
-      orig_forms = ru.split_generate_args(result)
+      orig_forms = blib.split_generate_args(result)
 
       # Compare each form and accumulate a list of mismatches.
 

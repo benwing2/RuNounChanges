@@ -311,7 +311,7 @@ def process_page(index, page, save, verbose):
           if not orig_result:
             errpagemsg("WARNING: Error expanding original template %s" % orig_tempcall)
             continue
-          orig_forms = rulib.split_generate_args(orig_result)
+          orig_forms = blib.split_generate_args(orig_result)
 
           # 2. Generate and expand the appropriate call to
           #    {{ru-generate-verb-forms}} for the new arguments.
@@ -324,7 +324,7 @@ def process_page(index, page, save, verbose):
           if not new_result:
             errpagemsg("WARNING: Error expanding new template %s" % new_tempcall)
             continue
-          new_forms = rulib.split_generate_args(new_result)
+          new_forms = blib.split_generate_args(new_result)
 
           # 3. Compare each form and accumulate a list of mismatches.
 

@@ -6,8 +6,6 @@ import pywikibot, re, sys, codecs, argparse, copy
 import blib
 from blib import getparam, rmparam, tname, msg, errmsg, site
 
-import rulib as ru
-
 def process_page(page, index, parsed):
   global args
   pagetitle = unicode(page.title())
@@ -49,7 +47,7 @@ def process_page(page, index, parsed):
       if not result:
         errpagemsg("WARNING: Error expanding template %s" % tempcall)
         continue
-      forms = ru.split_generate_args(result)
+      forms = blib.split_generate_args(result)
       pppform = forms.get("past_pasv_part", "")
       if "," in pppform:
         auto_ppp, auto_ppp2 = pppform.split(",")

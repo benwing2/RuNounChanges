@@ -9,7 +9,6 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, site
 
-import rulib as ru
 import runounlib as runoun
 
 def process_page(index, page, save, verbose, lemmas):
@@ -199,7 +198,7 @@ def process_page_section(index, page, section, verbose):
     if not generate_result:
       pagemsg("WARNING: Error generating noun args, skipping")
       return None
-    args = ru.split_generate_args(generate_result)
+    args = blib.split_generate_args(generate_result)
 
     # If proper noun and n is both then we need to add n=both because
     # proper noun+ defaults to n=sg
@@ -217,7 +216,7 @@ def process_page_section(index, page, section, verbose):
       if not generate_result:
         pagemsg("WARNING: Error generating noun args, skipping")
         return None
-      ndef_args = ru.split_generate_args(generate_result)
+      ndef_args = blib.split_generate_args(generate_result)
       if ndef_args["n"] == "s":
         existing_n = getparam(headword_template, "n")
         if existing_n and not re.search(r"^s", existing_n):

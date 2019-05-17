@@ -153,7 +153,7 @@ def process_page(index, page, save, verbose, fix_pages):
       if not result:
         pagemsg("WARNING: Error generating forms, skipping")
         continue
-      args = rulib.split_generate_args(result)
+      args = blib.split_generate_args(result)
       for base in ["past_pasv_part", "ppp"]:
         forms_to_remove = []
         if args[base] == "-":

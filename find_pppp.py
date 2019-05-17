@@ -21,8 +21,6 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, site
 
-import rulib
-
 def process_page(index, page, save, verbose):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
@@ -44,7 +42,7 @@ def process_page(index, page, save, verbose):
       if not result:
         pagemsg("WARNING: Error generating forms, skipping")
         continue
-      args = rulib.split_generate_args(result)
+      args = blib.split_generate_args(result)
       for base in ["past_pasv_part", "ppp"]:
         for i in ["", "2", "3", "4", "5", "6", "7", "8", "9"]:
           val = getparam(t, base + i)

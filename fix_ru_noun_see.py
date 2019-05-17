@@ -6,8 +6,6 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, site
 
-import rulib as ru
-
 def process_page(index, page, save, verbose):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
@@ -61,7 +59,7 @@ def process_page(index, page, save, verbose):
       pagemsg("WARNING: Error generating ru-proper noun+ args")
       return None
     # 2. Fetch actual value of n.
-    headword_args = ru.split_generate_args(headword_generate_result)
+    headword_args = blib.split_generate_args(headword_generate_result)
     headword_n = headword_args["n"]
     # 3. If sg, we always need to set n=sg explicitly in ru-noun-table.
     if headword_n == "s":
@@ -83,7 +81,7 @@ def process_page(index, page, save, verbose):
       if not see_generate_result:
         pagemsg("WARNING: Error generating ru-noun-table args")
         return None
-      see_args = ru.split_generate_args(see_generate_result)
+      see_args = blib.split_generate_args(see_generate_result)
       if see_args["n"] != "b":
         see_template.add("n", "both")
 

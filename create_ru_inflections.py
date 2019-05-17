@@ -2924,7 +2924,7 @@ def create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite,
       if not result:
         pagemsg("WARNING: Error generating %s forms, skipping" % pos)
         continue
-      args = rulib.split_generate_args(result)
+      args = blib.split_generate_args(result)
       for dicform_code in dicform_codes:
         if dicform_code in args:
           break

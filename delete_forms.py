@@ -32,7 +32,7 @@ def process_decl(index, pagetitle, decl, forms, save, verbose):
   if not result:
     pagemsg("WARNING: Error generating forms, skipping")
     return
-  args = rulib.split_generate_args(result)
+  args = blib.split_generate_args(result)
 
   for form in forms:
     if form in args:

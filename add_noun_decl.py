@@ -46,7 +46,7 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, site
 
-import rulib as ru
+import rulib
 import runounlib as runoun
 
 # [singular ending, plural ending, gender, requires special case (1)]
@@ -197,7 +197,7 @@ def process_page(index, page, save, verbose):
   # of a= (if given).
   def find_decl_args(lemma, infl, wordind):
     declpage = pywikibot.Page(site, lemma)
-    if ru.remove_accents(infl) == lemma:
+    if rulib.remove_accents(infl) == lemma:
       wordlink = "[[%s]]" % infl
     else:
       wordlink = "[[%s|%s]]" % (lemma, infl)
@@ -338,7 +338,7 @@ def process_page(index, page, save, verbose):
       else:
         arg_set.append(val)
 
-    canon_infl = ru.remove_accents(infl).lower()
+    canon_infl = rulib.remove_accents(infl).lower()
     canon_lemma = lemma.lower()
     ispl = False
     need_sc1 = False
@@ -375,9 +375,9 @@ def process_page(index, page, save, verbose):
       if "//" in arglemma:
         arglemma, manualtr = re.search("^(.*?)(//.*?)$", arglemma).groups()
       if (not arglemma or arglemma.lower() == infl.lower() or
-          ru.is_monosyllabic(infl) and ru.remove_accents(arglemma).lower() ==
-          ru.remove_accents(infl).lower() or
-          ispl and ru.remove_accents(arglemma).lower() == lemma.lower()
+          rulib.is_monosyllabic(infl) and rulib.remove_accents(arglemma).lower() ==
+          rulib.remove_accents(infl).lower() or
+          ispl and rulib.remove_accents(arglemma).lower() == lemma.lower()
           ):
         arg_set[lemma_arg] = wordlink + manualtr
       else:
@@ -569,8 +569,8 @@ def process_page(index, page, save, verbose):
     m = re.search(r"^\[\[([^\[\]|]+)\|([^\[\]|]+)\]\]$", hword)
     if m:
       lemma, infl = m.groups()
-      lemma = ru.remove_accents(re.sub("#Russian$", "", lemma))
-      if lemma == ru.remove_accents(infl):
+      lemma = rulib.remove_accents(re.sub("#Russian$", "", lemma))
+      if lemma == rulib.remove_accents(infl):
         hword = "[[%s]]" % infl
       else:
         hword = "[[%s|%s]]" % (lemma, infl)
@@ -595,13 +595,13 @@ def process_page(index, page, save, verbose):
       m = re.search(r"^\[\[([^\[\]|]+)\]\]$", word)
       if m:
         infl = m.group(1)
-        lemma = ru.remove_accents(infl)
+        lemma = rulib.remove_accents(infl)
       elif pagetitle in all_parts_declined:
         infl = word
-        lemma = ru.remove_accents(infl)
+        lemma = rulib.remove_accents(infl)
         for inflsuffix, lemmasuffix in infer_adj_lemma:
           if re.search(inflsuffix + "$", infl):
-            lemma = ru.remove_accents(re.sub(inflsuffix + "$", lemmasuffix, infl))
+            lemma = rulib.remove_accents(re.sub(inflsuffix + "$", lemmasuffix, infl))
             lemma = re.sub(u"([кгхшжчщ])ый$", r"\1ий", lemma)
             pagemsg("WARNING: Inferring adjectival lemma from inflection, please check: lemma=%s, infl=%s" %
                 (lemma, infl))
@@ -611,13 +611,13 @@ def process_page(index, page, save, verbose):
               (lemma, infl))
       else:
         infl = word
-        lemma = ru.remove_accents(infl)
+        lemma = rulib.remove_accents(infl)
         saw_unlinked_word = True
     lemmas_infls.append((lemma, infl))
 
   if see_template:
     pagemsg("Found decl-see template: %s" % unicode(see_template))
-    inflected_words = set(ru.remove_accents(blib.remove_links(unicode(x.value)))
+    inflected_words = set(rulib.remove_accents(blib.remove_links(unicode(x.value)))
         for x in see_template.params)
     if saw_unlinked_word:
       pagemsg("WARNING: Unlinked word(s) in headword, found decl-see template, proceeding, please check: %s" % headword)
@@ -635,7 +635,7 @@ def process_page(index, page, save, verbose):
       wordind += 1
       is_inflected = False
       lemma, infl = lemmainfl
-      canon_infl = ru.remove_accents(infl).lower()
+      canon_infl = rulib.remove_accents(infl).lower()
       canon_lemma = lemma.lower()
       if lemma in is_short_adj:
           is_inflected = True
@@ -776,7 +776,7 @@ def process_page(index, page, save, verbose):
 
     else:
       # Invariable
-      if ru.is_unstressed(infl):
+      if rulib.is_unstressed(infl):
         word = "*" + word
       if infl == u"и":
         pagemsg(u"WARNING: Found и, check number args")
@@ -880,7 +880,7 @@ def process_page(index, page, save, verbose):
   if not generate_result:
     pagemsg_with_proposed("WARNING: Error generating noun args, skipping")
     return
-  genargs = ru.split_generate_args(generate_result)
+  genargs = blib.split_generate_args(generate_result)
   if headword_is_proper and genargs["n"] == "s" and not getparam(proposed_decl, "n"):
     proposed_decl.add("n", "sg")
 

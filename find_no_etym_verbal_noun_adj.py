@@ -101,7 +101,7 @@ def find_noun(pagename, pagemsg, expand_text):
       if not generate_result:
         pagemsg("WARNING: Error generating noun forms")
         return None
-      args = rulib.split_generate_args(generate_result)
+      args = blib.split_generate_args(generate_result)
       lemma = args["nom_sg"] if "nom_sg" in args else args["nom_pl"]
       if "," in lemma:
         pagemsg("WARNING: Lemma has multiple forms: %s" % lemma)
@@ -212,7 +212,7 @@ def process_page(index, page, save, verbose, nouns, adjectives):
       if not result:
         pagemsg("WARNING: Error generating forms, skipping")
         continue
-      args = rulib.split_generate_args(result)
+      args = blib.split_generate_args(result)
       if "infinitive" not in args: # e.g. обнимать
         pagemsg("WARNING: No infinitive")
         continue
