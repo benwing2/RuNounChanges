@@ -6,7 +6,7 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, site
 
-import runounlib as runoun
+import runounlib
 
 def process_page(index, page, save, verbose):
   pagetitle = unicode(page.title())
@@ -46,7 +46,7 @@ def process_page(index, page, save, verbose):
     if unicode(t.name) == "ru-decl-noun-z":
       num_z_decl += 1
       pagemsg("Found z-decl template: %s" % unicode(t))
-      ru_noun_table_template = runoun.convert_zdecl_to_ru_noun_table(t,
+      ru_noun_table_template = runounlib.convert_zdecl_to_ru_noun_table(t,
           subpagetitle, pagemsg, headword_template=headword_template)
       if not ru_noun_table_template:
         pagemsg("WARNING: Unable to convert z-decl template: %s" % unicode(t))
@@ -70,7 +70,7 @@ def process_page(index, page, save, verbose):
         args = blib.split_generate_args(generate_result)
 
         # This will check number mismatch and animacy mismatch
-        new_genders = runoun.check_old_noun_headword_forms(headword_template,
+        new_genders = runounlib.check_old_noun_headword_forms(headword_template,
             args, subpagetitle, pagemsg_with_proposed)
         if new_genders == None:
           continue

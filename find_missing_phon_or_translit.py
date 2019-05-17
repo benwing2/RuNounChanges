@@ -22,8 +22,7 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, site
 
-import rulib as ru
-import runounlib as runoun
+import runounlib
 
 def process_page(index, page, save, verbose):
   pagetitle = unicode(page.title())
@@ -77,7 +76,7 @@ def process_page(index, page, save, verbose):
   for t in parsed.filter_templates():
     tname = unicode(t.name)
     if tname in ["ru-noun+", "ru-proper noun+"]:
-      per_word_info = runoun.split_noun_decl_arg_sets(t, pagemsg)
+      per_word_info = runounlib.split_noun_decl_arg_sets(t, pagemsg)
       if len(per_word_info) != len(words):
         pagemsg("WARNING: Something wrong, %s words but %s lemmas" % (
           len(words), len(per_word_info)))

@@ -15,7 +15,7 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, site
 
-import runounlib as runoun
+import runounlib
 
 def process_page(index, page, save, verbose):
   pagetitle = unicode(page.title())
@@ -182,7 +182,7 @@ def process_page_section(index, page, section, verbose):
           pagemsg("WARNING: Headword template has translit param tr%s, can't handle, skipping: %s" % (
             i, unicode(headword_template)))
           return None
-      if runoun.arg1_is_stress(getparam(decl_template, "1")):
+      if runounlib.arg1_is_stress(getparam(decl_template, "1")):
         lemma_arg = "2"
       else:
         lemma_arg = "1"
@@ -243,7 +243,7 @@ def process_page_section(index, page, section, verbose):
     return None
   args = blib.split_generate_args(generate_result)
 
-  genders = runoun.check_old_noun_headword_forms(headword_template, args,
+  genders = runounlib.check_old_noun_headword_forms(headword_template, args,
       subpagetitle, pagemsg)
   if genders == None:
     return None
@@ -253,7 +253,7 @@ def process_page_section(index, page, section, verbose):
     new_params.append((param.name, param.value))
 
   orig_headword_template = unicode(headword_template)
-  params_to_preserve = runoun.fix_old_headword_params(headword_template,
+  params_to_preserve = runounlib.fix_old_headword_params(headword_template,
       new_params, genders, pagemsg)
   if params_to_preserve == None:
     return None

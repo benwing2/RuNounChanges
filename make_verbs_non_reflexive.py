@@ -6,8 +6,6 @@ import pywikibot, re, sys, codecs, argparse, copy
 import blib
 from blib import getparam, rmparam, tname, msg, errmsg, site
 
-import rulib as ru
-
 def process_page(page, index, parsed):
   pagetitle = unicode(page.title())
   def pagemsg(txt):

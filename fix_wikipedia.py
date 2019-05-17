@@ -6,7 +6,7 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, site
 
-import rulib as ru
+import rulib
 
 def process_page(index, page, save, verbose):
   pagetitle = unicode(page.title())
@@ -22,7 +22,7 @@ def process_page(index, page, save, verbose):
     origt = unicode(t)
     if unicode(t.name) == "wikipedia":
       val = getparam(t, "1")
-      newval = ru.remove_accents(val)
+      newval = rulib.remove_accents(val)
       if val != newval:
         pagemsg("Removing accents from 1= in {{wikipedia|...}}")
         notes.append("remove accents from 1= in {{wikipedia|...}}")

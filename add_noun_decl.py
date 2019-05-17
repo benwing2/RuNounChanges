@@ -47,7 +47,7 @@ import blib
 from blib import getparam, rmparam, msg, site
 
 import rulib
-import runounlib as runoun
+import runounlib
 
 # [singular ending, plural ending, gender, requires special case (1)]
 pl_data = [
@@ -251,7 +251,7 @@ def process_page(index, page, save, verbose):
             pagemsg("find_decl_args: For word #%s, lemma=%s, infl=%s, using headword template %s for use with z-decl template %s" %
                 (wordind, lemma, infl, unicode(headword_template),
                   unicode(decl_z_template)))
-          decl_template = runoun.convert_zdecl_to_ru_noun_table(decl_z_template,
+          decl_template = runounlib.convert_zdecl_to_ru_noun_table(decl_z_template,
               subpagetitle, pagemsg, headword_template=headword_template)
           decl_templates = [decl_template]
 
@@ -366,7 +366,7 @@ def process_page(index, page, save, verbose):
     numbered_params = []
     for arg_set in arg_sets:
       lemma_arg = 0
-      if len(arg_set) > 0 and runoun.arg1_is_stress(arg_set[0]):
+      if len(arg_set) > 0 and runounlib.arg1_is_stress(arg_set[0]):
         lemma_arg = 1
       if len(arg_set) <= lemma_arg:
         arg_set.append("")
@@ -886,13 +886,13 @@ def process_page(index, page, save, verbose):
 
   # This will check number mismatch (and animacy mismatch, but that shouldn't
   # occur as we've taken the animacy directly from the headword)
-  new_genders = runoun.check_old_noun_headword_forms(headword_template, genargs,
+  new_genders = runounlib.check_old_noun_headword_forms(headword_template, genargs,
       subpagetitle, pagemsg_with_proposed, laxer_comparison=True)
   if new_genders == None:
     return None
 
   orig_headword_template = unicode(headword_template)
-  params_to_preserve = runoun.fix_old_headword_params(headword_template,
+  params_to_preserve = runounlib.fix_old_headword_params(headword_template,
       params, new_genders, pagemsg_with_proposed)
   if params_to_preserve == None:
     return None

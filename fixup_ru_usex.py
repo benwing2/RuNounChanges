@@ -14,8 +14,7 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, site
 
-import rulib as ru
-import runounlib as runoun
+import runounlib
 
 def process_page(index, page, save, verbose):
   pagetitle = unicode(page.title())
@@ -42,7 +41,7 @@ def process_page(index, page, save, verbose):
       rmparam(t, "inline")
     if unicode(t.name) in ["ux", "uxi"] and getparam(t, "1") == "ru":
       pval = getparam(t, "2")
-      newpval = runoun.fixup_link(pval)
+      newpval = runounlib.fixup_link(pval)
       if pval != newpval:
         t.add("2", newpval)
         notes.append("canonicalize two-part links in %s|ru" % unicode(t.name))

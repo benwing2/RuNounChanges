@@ -22,9 +22,6 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, site
 
-import rulib as ru
-import runounlib as runoun
-
 ru_normal_head_templates = ["ru-noun", "ru-proper noun", "ru-verb", "ru-adj",
   "ru-adv", "ru-phrase", "ru-noun form", "ru-diacritical mark"]
 ru_special_head_templates = ["ru-noun+", "ru-proper noun+", u"ru-noun-alt-ё",

@@ -3,7 +3,7 @@
 
 import re
 
-import rulib as ru
+import rulib
 import blib
 from blib import getparam, rmparam
 
@@ -87,15 +87,15 @@ def try_to_stress(form):
   if "//" in form:
     m = re.search("^(.*?)//(.*)$", form)
     # FIXME: This should stress the translit as well
-    return ru.try_to_stress(m.group(1)) + "//" + m.group(2)
-  return ru.try_to_stress(form)
+    return rulib.try_to_stress(m.group(1)) + "//" + m.group(2)
+  return rulib.try_to_stress(form)
 
 def fixup_link(f):
   def fixup_one_link(m):
     lemma, infl = m.groups()
     # Make sure to remove accents, cf. [[десе́ртный|десе́ртное]]
-    lemma = ru.remove_accents(re.sub("#Russian$", "", lemma))
-    if ru.remove_accents(infl) == lemma:
+    lemma = rulib.remove_accents(re.sub("#Russian$", "", lemma))
+    if rulib.remove_accents(infl) == lemma:
       return "[[%s]]" % infl
     return "[[%s|%s]]" % (lemma, infl)
 
@@ -316,13 +316,13 @@ def convert_zdecl_to_ru_noun_table(decl_z_template, subpagetitle, pagemsg,
     pagemsg("Not preserving gender in z-decl: %s" % zdecl)
 
   # Remove unnecessary stress
-  stressed_lemma = ru.try_to_stress(zlemma)
+  stressed_lemma = rulib.try_to_stress(zlemma)
   def check_defstress(defstr, reason):
     if defstr == zstress:
       pagemsg("Removing stress %s as default because %s: stressed_lemma=%s, template=%s" %
           (defstr, reason, stressed_lemma, zdecl))
     return defstr
-  if ru.is_nonsyllabic(stressed_lemma):
+  if rulib.is_nonsyllabic(stressed_lemma):
     default_stress = check_defstress("b", "nonsyllabic lemma")
   elif re.search(u"([аяоеыи]́|ё́?)$", stressed_lemma):
     default_stress = check_defstress("b", "ending-accented lemma")
@@ -336,7 +336,7 @@ def convert_zdecl_to_ru_noun_table(decl_z_template, subpagetitle, pagemsg,
     pagemsg("Not removing stress %s: %s" % (zstress, zdecl))
 
   # Remove unnecessary lemma
-  if ru.try_to_stress(subpagetitle) == stressed_lemma:
+  if rulib.try_to_stress(subpagetitle) == stressed_lemma:
     pagemsg(u"Removing lemma %s because identical to subpagetitle %s (modulo monosyllabic stress differences): %s" %
         (zlemma, subpagetitle, zdecl))
     zlemma = ""

@@ -27,7 +27,7 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, site
 
-import rulib as ru
+import rulib
 
 lbracket_sub = u"\ufff1"
 rbracket_sub = u"\ufff2"
@@ -70,7 +70,7 @@ def ar_remove_accents(text):
 # hence has no translit, or "notranslit" if the language doesn't do
 # auto-translit)
 languages = {
-    'ru':["Russian", ru.remove_accents, u"Ѐ-џҊ-ԧꚀ-ꚗ", False],
+    'ru':["Russian", rulib.remove_accents, u"Ѐ-џҊ-ԧꚀ-ꚗ", False],
     'hy':["Armenian", hy_remove_accents, u"Ա-֏ﬓ-ﬗ", True],
     'el':["Greek", lambda x:x, u"Ͱ-Ͽ", True],
     'grc':["Ancient Greek", grc_remove_accents, u"ἀ-῾Ͱ-Ͽ", True],

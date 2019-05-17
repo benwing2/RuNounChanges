@@ -9,7 +9,7 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, site
 
-import runounlib as runoun
+# import runounlib
 
 def process_page(index, page, save, verbose, lemmas):
   pagetitle = unicode(page.title())
@@ -260,7 +260,7 @@ def process_page_section(index, page, section, verbose):
     if notrcat:
       headword_template.add("notrcat", notrcat)
     
-  #genders = runoun.check_old_noun_headword_forms(headword_template, args,
+  #genders = runounlib.check_old_noun_headword_forms(headword_template, args,
   #    subpagetitle, pagemsg)
   #if genders == None:
   #  return None
@@ -269,7 +269,7 @@ def process_page_section(index, page, section, verbose):
   #for param in noun_table_template.params:
   #  new_params.append((param.name, param.value))
 
-  #params_to_preserve = runoun.fix_old_headword_params(headword_template,
+  #params_to_preserve = runounlib.fix_old_headword_params(headword_template,
   #    new_params, genders, pagemsg)
   #if params_to_preserve == None:
   #  return None
