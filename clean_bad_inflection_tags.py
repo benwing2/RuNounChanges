@@ -7,6 +7,27 @@ from collections import defaultdict
 import blib
 from blib import getparam, rmparam, msg, errandmsg, site, tname
 
+skip_pages = [
+  u"náhádleeh",
+  u"hoditłééʼ",
+  "gumawa",
+  "kuna",
+  "hakuna",
+  "pana",
+  "Mussulmen",
+  "hippotamus",
+  "walrii",
+  "fetii",
+  "walri",
+  "kneen",
+  "calveren",
+  "lambren",
+  u"escrivões",
+  "octopii",
+  "kifunze",
+  "yupo",
+]
+
 inflection_of_templates = [
   "inflection of",
   "noun form of",
@@ -92,10 +113,14 @@ subtag_replacements = [
   ("second person", "second-person"),
   ("third person", "third-person"),
   ("fourth person", "fourth-person"),
+  ("spatial person", "spatial-person"),
   ("first-? ", "first-person "),
   ("second-? ", "second-person "),
   ("third-? ", "third-person "),
   ("fourth-? ", "fourth-person "),
+  ("2rd-person", "second-person"),
+  ("3nd-person", "third-person"),
+  ("3-rd person", "third-person"),
   ("past historic", "phis"),
   ("alternative form of the", "alternative"),
   ("as well as", "and"),
@@ -103,6 +128,13 @@ subtag_replacements = [
   (u"dative-accusative", "dative and accusative"),
   (u"dative-locative", "dative and locative"),
   ("present active particle", "present active participle"),
+  ("plural noun", "plural"),
+  ("conditional mood", "conditional"),
+  ("feminine-singular", "feminine singular"),
+  ("past participle common gender", "common past participle"),
+  ("dative of the negative form", "negative dative"),
+  ("feminine of past participle", "feminine singular past participle"),
+  ("plural feminine of past participle", "feminine plural past participle"),
 ]
 
 tag_replacements = {
@@ -134,9 +166,10 @@ tag_replacements = {
   "female": "feminine",
   "femal": "feminine",
   "indefinitive": "indefinite",
+  "indfinite": "indefinite",
+  "defnite": "definite",
   "imperatve": "imperative",
   "plurak": "plural",
-  "defnite": "definite",
   "sing.": "s",
   "pl.": "p",
   "m;": ["m", ";"],
@@ -298,7 +331,9 @@ voices = {
 
 degrees = {
   "comparative": "comd",
+  "comd": "comd",
   "superlative": "supd",
+  "supd": "supd",
 }
 
 multitag_replacements = [
@@ -378,7 +413,7 @@ multitag_replacements = [
   ("1|s|,|2|s|,|and|3|s", "1//2//3|s"),
   ("2|s|and|3|s", "2//3|s"),
   ("first-person|singular|second-person|singular|and|third-person|singular", "1//2//3|s"),
-  ("first-person|singular|and|second-person|singular", "1//2|s"),
+  ("1|s|and|2|s", "1//2|s"),
   # Next two for Middle Dutch and Limburgish?
   ("s|and|p|imp", "s//p|imp"),
   ("s|and|p|impr", "s//p|imp"),
@@ -401,14 +436,13 @@ multitag_replacements = [
   ("s|and|d", "s//d"),
   ("Epic|and|Attic", ["{{lb|grc|Epic}}//{{lb|grc|Attic}}"]),
   # Danish
-  ("def|s|and|p", "def|sg|;|p"),
-  ("def|and|p", "def|sg|;|p"),
-  ("p|and|def", "def|sg|;|p"),
-  ("def|form|and|p", "def|sg|;|p"),
-  ("definite|and|plural", "def|sg|;|p"),
-  ("definite|singular|and|plural|form", "def|sg|;|p"),
-  ("definite|singular|and|plural", "def|sg|;|p"),
-  ("plural|and|definite", "def|sg|;|p"),
+  ("def|s|and|p", "def|s|;|p"),
+  ("def|and|p", "def|s|;|p"),
+  ("p|and|def", "def|s|;|p"),
+  ("def|form|and|p", "def|s|;|p"),
+  ("past|part|def|and|p", "def|s|past|part|;|p|past|part"),
+  ("supd|def|and|p", "def|s|supd|;|p|supd"),
+  ("p|and|def|s|past|part", "def|s|past|part|;|p|past|part"),
   # Czech? Polish?
   ("m|an|acc|p|and|m|in|acc|p", "m|an//in|acc|p"),
   ("m|an|and|in|acc|p", "m|an//in|acc|p"),
@@ -431,10 +465,12 @@ multitag_replacements = [
   ("fut|contracted|and|aor|3|d|actv|opt", "3|d|fut|act|opt|contracted|;|3|d|aor|act|opt"),
   ("fut|contracted|and|aor|1|p|mid|opt", "1|p|fut|mid|opt|contracted|;|1|p|aor|mid|opt"),
   # Middle English
-  ("dative|singular|and|genitive|plural", "dat|s|;|gen|p"),
+  ("dat|s|and|gen|p", "dat|s|;|gen|p"),
+  # Navajo
+  ("s|and|duoplural", "s//duoplural"),
   # misc
-  ("simple|past|and|past|participle", "simple|past|;|past|participle"),
-  ("past|tense|and|past|participle", "past|;|past|participle"),
+  ("sim|past|and|past|part", "sim|past|;|past|part"),
+  ("past|and|past|part", "past|;|past|part"),
 ]
 
 new_multitag_replacements = []
@@ -527,12 +563,14 @@ additional_good_tags = {
   "all-gender",
   "duoplural",
   "fourth-person", # Navajo
+  "spatial-person", # Navajo
   "usitative", # Navajo
   "si-perfective", # Navajo
   "durative",
   "modal", # Mongolian
   "postpositional", # Georgian
   "augmented", # lang=nci (?)
+  "determinate", # Maltese
 }
 
 tags_with_spaces = defaultdict(int)
@@ -725,7 +763,7 @@ def process_text_on_page(pagetitle, index, text):
     tag_to_canonical_form_table = tag_to_canonical_form_across_semicolon
     combinable_tags_by_dimension_table = combinable_tags_by_dimension_across_semicolon
 
-  if args.convert_raw:
+  def convert_raw(text):
     sections = re.split("(^==[^=\n]+==\n)", text, 0, re.M)
     for j in xrange(2, len(sections), 2):
       m = re.search("^==(.*)==\n$", sections[j - 1])
@@ -818,9 +856,15 @@ def process_text_on_page(pagetitle, index, text):
         newsection = re.sub(r"^# (.*?)'' *([^'\n]*%s[^'\n]*[Oo]f)'' (.*?)$" %
             raw_and_form_of_alternation_re, replace_raw, sections[j], 0, re.M)
         sections[j] = newsection
-    text = "".join(sections)
+    return "".join(sections)
 
-  if args.convert_form_of:
+  if args.convert_raw:
+    if pagetitle in skip_pages:
+      pagemsg("Page in skip_pages, not applying --convert-raw")
+    else:
+      text = convert_raw(text)
+
+  def convert_form_of(text):
     parsed = blib.parse_text(text)
     for t in parsed.filter_templates():
       origt = unicode(t)
@@ -850,7 +894,7 @@ def process_text_on_page(pagetitle, index, text):
             pname = unicode(param.name).strip()
             pval = unicode(param.value).strip()
             # Igore nodot
-            if (pname in ["lang", "1", "2", "3", "4", "tr", "t", "gloss", "sc", "nodot"] or
+            if (pname in ["lang", "1", "2", "3", "4", "tr", "t", "gloss", "sc", "id", "nodot"] or
                 not lang_in_lang and pname == "5"):
               continue
             pagemsg("WARNING: Unrecognized param %s=%s in otherwise convertible form-of: %s" % (
@@ -877,9 +921,15 @@ def process_text_on_page(pagetitle, index, text):
               t.add("id", id)
             notes.append("replaced {{form of}} containing inflection tags with {{inflection of}}")
             pagemsg("Replacing %s with %s" % (origt, unicode(t)))
-    text = unicode(parsed)
+    return unicode(parsed)
 
-  if args.combine_adjacent:
+  if args.convert_form_of:
+    if pagetitle in skip_pages:
+      pagemsg("Page in skip_pages, not applying --convert-form-of")
+    else:
+      text = convert_form_of(text)
+
+  def combine_adjacent(text):
     subsections = re.split("(^==+[^=\n]+==+\n)", text, 0, re.M)
     for j in xrange(0, len(subsections), 2):
       for template in inflection_of_templates:
@@ -1000,7 +1050,10 @@ def process_text_on_page(pagetitle, index, text):
         if args.verbose and newsubsection != subsections[j]:
           pagemsg("Replaced <<%s>> with <<%s>>" % (subsections[j], newsubsection))
         subsections[j] = newsubsection
-    text = "".join(subsections)
+    return "".join(subsections)
+
+  if args.combine_adjacent:
+    text = combine_adjacent(text)
 
   parsed = blib.parse_text(text)
 
