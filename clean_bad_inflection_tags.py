@@ -18,10 +18,91 @@ inflection_of_templates = [
 joiner_tags = ['and', 'or', '/', ',']
 semicolon_tags = [';', ';<!--\n-->']
 
+tags_for_raw_and_form_of_conversion = [
+  "nominative",
+  "accusative",
+  "genitive",
+  "dative",
+  "vocative",
+  "instrumental",
+  "locative",
+  "ablative",
+  "oblique",
+  "singular",
+  "dual",
+  "plural",
+  "masculine",
+  "feminine",
+  "neuter",
+  "present",
+  "past",
+  "preterite?",
+  "future",
+  "perfect",
+  "aorist",
+  "person",
+  "indicative",
+  "subjunctive",
+  "imperative",
+  "conditional",
+  "definite",
+  "indefinite",
+  "participle",
+  "infinitive",
+  "comparative",
+  "superlative",
+  "perfective",
+  "imperfective",
+  "animate",
+  "inanimate",
+  "durative",
+  "iterative",
+]
+
+raw_and_form_of_alternation_re = "(?:%s)" % "|".join("[%s%s]%s" %
+  (tag[0].upper(), tag[0], tag[1:]) for tag in tags_for_raw_and_form_of_conversion
+)
+
 subtag_replacements = [
+  (" +", " "),
+  (" of$", ""),
+  (r"\{\{glossary(?:\|[^{}|]*)?\|([^{}|]*)\}\}", r"\1"),
+  ("(past|present|future) tense?", r"\1"),
+  ("(%s) form$" % raw_and_form_of_alternation_re, r"\1"),
+  (" of the verb$", ""),
+  (" of the (weak|strong|mixed) declension$", r" \1"),
+  (" for all genders$", "all-gender"),
+  ("the ", ""),
+  (" case$", ""),
+  (" articulation$", ""),
+  (" voice", ""),
+  (" '*or'* ", " and "),
+  (" *, *", " "),
+  ("'", ""),
+  ("[()]", ""),
+  ("1st", "first"),
+  ("2nd", "second"),
+  ("3rd", "third"),
+  ("4th", "fourth"),
+  (r"1\. (person)?", "first-person"),
+  (r"2\. (person)?", "second-person"),
+  (r"3\. (person)?", "third-person"),
+  (r"4\. (person)?", "fourth-person"),
   ("first person", "first-person"),
   ("second person", "second-person"),
   ("third person", "third-person"),
+  ("fourth person", "fourth-person"),
+  ("first-? ", "first-person "),
+  ("second-? ", "second-person "),
+  ("third-? ", "third-person "),
+  ("fourth-? ", "fourth-person "),
+  ("past historic", "phis"),
+  ("alternative form of the", "alternative"),
+  ("as well as", "and"),
+  (u"genitive-accusative", "genitive and accusative"),
+  (u"dative-accusative", "dative and accusative"),
+  (u"dative-locative", "dative and locative"),
+  ("present active particle", "present active participle"),
 ]
 
 tag_replacements = {
@@ -30,6 +111,7 @@ tag_replacements = {
   "third person": "3",
   "per": "perf",
   "pas": "pass",
+  "pst": "past",
   "personal and animate masculine": ["pers//an", "m"],
   "(impersonal)": "impers",
   "positive": "posd",
@@ -40,6 +122,23 @@ tag_replacements = {
   "honorofic": "honorific",
   "innesive": "inessive",
   "contraced": "contracted",
+  "persent": "present",
+  "preterit": "preterite",
+  "pretertite": "preterite",
+  "particple": "participle",
+  "singularform": "singular",
+  "singularimperative": "s|imp",
+  "passiv": "passive",
+  "indiactive": "indicative",
+  "femalinine": "feminine",
+  "female": "feminine",
+  "femal": "feminine",
+  "indefinitive": "indefinite",
+  "imperatve": "imperative",
+  "plurak": "plural",
+  "defnite": "definite",
+  "sing.": "s",
+  "pl.": "p",
   "m;": ["m", ";"],
 }
 
@@ -126,8 +225,11 @@ genders = {
 
 persons = {
   "1": "1",
+  "first-person": "1",
   "2": "2",
+  "second-person": "2",
   "3": "3",
+  "third-person": "3",
 }
 
 # We don't combine numbers across |and| because there are several cases like
@@ -192,6 +294,11 @@ voices = {
   "mediopassive": "mp",
   "refl": "refl",
   "reflexive": "refl",
+}
+
+degrees = {
+  "comparative": "comd",
+  "superlative": "supd",
 }
 
 multitag_replacements = [
@@ -270,6 +377,8 @@ multitag_replacements = [
   ("1|s|and|2|s|and|3|s", "1//2//3|s"),
   ("1|s|,|2|s|,|and|3|s", "1//2//3|s"),
   ("2|s|and|3|s", "2//3|s"),
+  ("first-person|singular|second-person|singular|and|third-person|singular", "1//2//3|s"),
+  ("first-person|singular|and|second-person|singular", "1//2|s"),
   # Next two for Middle Dutch and Limburgish?
   ("s|and|p|imp", "s//p|imp"),
   ("s|and|p|impr", "s//p|imp"),
@@ -291,8 +400,15 @@ multitag_replacements = [
   ("s|and|d|and|p", "s//d//p"),
   ("s|and|d", "s//d"),
   ("Epic|and|Attic", ["{{lb|grc|Epic}}//{{lb|grc|Attic}}"]),
-  ("def|s|and|p", "def:sg//p"),
-  ("def|and|p", "def//p"),
+  # Danish
+  ("def|s|and|p", "def|sg|;|p"),
+  ("def|and|p", "def|sg|;|p"),
+  ("p|and|def", "def|sg|;|p"),
+  ("def|form|and|p", "def|sg|;|p"),
+  ("definite|and|plural", "def|sg|;|p"),
+  ("definite|singular|and|plural|form", "def|sg|;|p"),
+  ("definite|singular|and|plural", "def|sg|;|p"),
+  ("plural|and|definite", "def|sg|;|p"),
   # Czech? Polish?
   ("m|an|acc|p|and|m|in|acc|p", "m|an//in|acc|p"),
   ("m|an|and|in|acc|p", "m|an//in|acc|p"),
@@ -314,12 +430,25 @@ multitag_replacements = [
   ("2|p|perf|imp|and|plup|indc|actv", "2|p|perf|act|imp|;|2|p|plup|act|ind"),
   ("fut|contracted|and|aor|3|d|actv|opt", "3|d|fut|act|opt|contracted|;|3|d|aor|act|opt"),
   ("fut|contracted|and|aor|1|p|mid|opt", "1|p|fut|mid|opt|contracted|;|1|p|aor|mid|opt"),
+  # Middle English
+  ("dative|singular|and|genitive|plural", "dat|s|;|gen|p"),
+  # misc
+  ("simple|past|and|past|participle", "simple|past|;|past|participle"),
+  ("past|tense|and|past|participle", "past|;|past|participle"),
 ]
 
-multitag_replacements = [
-  (x if type(x) is list else x.split("|"), y if type(y) is list else y.split("|"))
-  for x, y in multitag_replacements
-]
+new_multitag_replacements = []
+for repl in multitag_replacements:
+  if len(repl) == 2:
+    fro, to = repl
+    exact = "|;|" in to
+  else:
+    fro, to, exact = repl
+    assert exact == "exact"
+  fro = fro if type(fro) is list else fro.split("|")
+  to = to if type(to) is list else to.split("|")
+  new_multitag_replacements.append((fro, to, exact))
+multitag_replacements = new_multitag_replacements
 
 multipart_list_tag_to_parts = {
   "1s": ["1", "s"],
@@ -347,6 +476,7 @@ dimensions_to_tags = {
   "person": persons,
   "gender": genders,
   "strength": strengths,
+  "degree": degrees,
 }
 
 # Map from tag to dimension it's in, for combining across |and|
@@ -391,11 +521,25 @@ order_of_dimensions = [
 
 indexed_order_of_dimensions = {y:x for x, y in enumerate(order_of_dimensions)}
 
+additional_good_tags = {
+  "alternative",
+  "transgressive",
+  "all-gender",
+  "duoplural",
+  "fourth-person", # Navajo
+  "usitative", # Navajo
+  "si-perfective", # Navajo
+  "durative",
+  "modal", # Mongolian
+  "postpositional", # Georgian
+  "augmented", # lang=nci (?)
+}
+
 tags_with_spaces = defaultdict(int)
 
 bad_tags = defaultdict(int)
 
-good_tags = set()
+good_tags = set() | additional_good_tags
 
 num_total_templates = 0
 num_templates_with_bad_tags = 0
@@ -574,6 +718,167 @@ def process_text_on_page(pagetitle, index, text):
     pagemsg("WARNING: Page should be ignored")
     return None, None
 
+  if args.use_form_of_groups:
+    tag_to_canonical_form_table = form_of_tag_to_canonical_form
+    combinable_tags_by_dimension_table = form_of_combinable_tags_by_dimension
+  else:
+    tag_to_canonical_form_table = tag_to_canonical_form_across_semicolon
+    combinable_tags_by_dimension_table = combinable_tags_by_dimension_across_semicolon
+
+  if args.convert_raw:
+    sections = re.split("(^==[^=\n]+==\n)", text, 0, re.M)
+    for j in xrange(2, len(sections), 2):
+      m = re.search("^==(.*)==\n$", sections[j - 1])
+      assert m
+      langname = m.group(1)
+      if langname not in blib.languages_byCanonicalName:
+        pagemsg("WARNING: Unrecognized language %s" % langname)
+      else:
+        langcode = blib.languages_byCanonicalName[langname]["code"]
+
+        def parse_gloss_from_posttext(posttext):
+          gloss = ""
+          mmm = re.search(ur" *\([‘'\"]([^‘'\"(){}\[\]]*)[’'\"]\)\.?(.*?)$",
+              posttext)
+          if mmm:
+            gloss, posttext = mmm.groups()
+            gloss = "|t=%s" % gloss
+          return gloss, posttext
+
+        def replace_raw(m):
+          newtext = None
+          pretext, tags, posttext = m.groups()
+          tags = re.sub(" *[Oo]f$", "", tags)
+          # Check for template link
+          mm = re.search(r"^'* *\{\{(?:m|l|l-self)\|([a-zA-Z.-]*)\|([^{}]*?)\}\} *'*\.?(.*?)$", posttext)
+          if mm:
+            link_langcode, lemma, postposttext = mm.groups()
+            if link_langcode != langcode:
+              pagemsg("WARNING: Lang code %s in link doesn't match section lang code %s" % (
+                link_langcode, langcode))
+              return m.group(0)
+            gloss, postposttext = parse_gloss_from_posttext(postposttext)
+            lemma_parts = lemma.split("|")
+            if len(lemma_parts) == 1:
+              newtext = "# %s{{inflection of|%s|%s||%s%s}}%s" % (
+                pretext, langcode, lemma, tags, gloss, postposttext)
+            elif len(lemma_parts) == 2:
+              link, alttext = lemma_parts
+              link = re.sub("#.*$", "", link)
+              alttext = re.sub(r"^('+)(.*?)\1$", r"\2", alttext)
+              newtext = "# %s{{inflection of|%s|%s|%s|%s%s}}%s" % (
+                  pretext, langcode, link, alttext, tags, gloss, postposttext)
+            else:
+              pagemsg("WARNING: Too many arguments to link template: %s" % m.group(0))
+              return m.group(0)
+          # Check for raw link
+          mm = re.search(r"^'* *\[\[([^\[\]]*?)\]\] *'*\.?(.*?)$", posttext)
+          if mm:
+            lemma, postposttext = mm.groups()
+            gloss, postposttext = parse_gloss_from_posttext(postposttext)
+            lemma_parts = lemma.split("|")
+            if len(lemma_parts) == 1:
+              newtext = "# %s{{inflection of|%s|%s||%s%s}}%s" % (
+                pretext, langcode, lemma, tags, gloss, postposttext)
+            elif len(lemma_parts) == 2:
+              link, alttext = lemma_parts
+              link = re.sub("#.*$", "", link)
+              alttext = re.sub(r"^('+)(.*?)\1$", r"\2", alttext)
+              if link and link != alttext:
+                newtext = "# %s{{inflection of|%s|%s|%s|%s%s}}%s" % (
+                  pretext, langcode, link, alttext, tags, gloss, postposttext)
+              else:
+                # Probably a link to the same page
+                newtext = "# %s{{inflection of|%s|%s||%s%s}}%s" % (
+                  pretext, langcode, alttext, tags, gloss, postposttext)
+            else:
+              pagemsg("WARNING: Too many arguments to raw link: %s" % m.group(0))
+              return m.group(0)
+          # Check for just bold text
+          mm = re.search(r"^''' *([^'{}\[\]]*?) *'''*\.?(.*?)$", posttext)
+          if mm:
+            lemma, postposttext = mm.groups()
+            gloss, postposttext = parse_gloss_from_posttext(postposttext)
+            newtext = "# %s{{inflection of|%s|%s||%s%s}}%s" % (
+              pretext, langcode, lemma, tags, gloss, postposttext)
+          # Check for just a single word
+          mm = re.search(r"^([a-zA-Z]+)\.?($|:.*?$)$", posttext)
+          if mm:
+            lemma, postposttext = mm.groups()
+            gloss, postposttext = parse_gloss_from_posttext(postposttext)
+            newtext = "# %s{{inflection of|%s|%s||%s%s}}%s" % (
+              pretext, langcode, lemma, tags, gloss, postposttext)
+          if newtext is None:
+            pagemsg("WARNING: Unable to parse raw inflection-of defn: %s" % m.group(0))
+            return m.group(0)
+          pagemsg("Replacing <%s> with <%s>" % (m.group(0), newtext))
+          notes.append("replaced raw inflection-of defn with {{inflection of|%s}}" % langcode)
+          return newtext
+
+        newsection = re.sub(r"^# (.*?)'' *([^'\n]*%s[^'\n]*[Oo]f)'' (.*?)$" %
+            raw_and_form_of_alternation_re, replace_raw, sections[j], 0, re.M)
+        sections[j] = newsection
+    text = "".join(sections)
+
+  if args.convert_form_of:
+    parsed = blib.parse_text(text)
+    for t in parsed.filter_templates():
+      origt = unicode(t)
+      tn = tname(t)
+      if tn == "form of":
+        lang = getparam(t, "lang")
+        if lang:
+          lang_in_lang = True
+          tags = getparam(t, "1")
+          lemma = getparam(t, "2")
+          alt = getparam(t, "3")
+          gloss = getparam(t, "4")
+        else:
+          lang_in_lang = False
+          lang = getparam(t, "1")
+          tags = getparam(t, "2")
+          lemma = getparam(t, "3")
+          alt = getparam(t, "4")
+          gloss = getparam(t, "5")
+        tr = getparam(t, "tr")
+        sc = getparam(t, "sc")
+        id = getparam(t, "id")
+        if not gloss:
+          gloss = getparam(t, "t") or getparam(t, "gloss")
+        if re.search(raw_and_form_of_alternation_re, tags):
+          for param in t.params:
+            pname = unicode(param.name).strip()
+            pval = unicode(param.value).strip()
+            # Igore nodot
+            if (pname in ["lang", "1", "2", "3", "4", "tr", "t", "gloss", "sc", "nodot"] or
+                not lang_in_lang and pname == "5"):
+              continue
+            pagemsg("WARNING: Unrecognized param %s=%s in otherwise convertible form-of: %s" % (
+              pname, pval, unicode(t)))
+            break
+          else:
+            # no break
+            # Erase all params.
+            del t.params[:]
+
+            # Put back new params.
+            blib.set_template_name(t, "inflection of")
+            t.add("1", lang)
+            t.add("2", lemma)
+            if tr:
+              t.add("tr", tr)
+            t.add("3", alt)
+            t.add("4", tags)
+            if gloss:
+              t.add("t", gloss)
+            if sc:
+              t.add("sc", sc)
+            if id:
+              t.add("id", id)
+            notes.append("replaced {{form of}} containing inflection tags with {{inflection of}}")
+            pagemsg("Replacing %s with %s" % (origt, unicode(t)))
+    text = unicode(parsed)
+
   if args.combine_adjacent:
     subsections = re.split("(^==+[^=\n]+==+\n)", text, 0, re.M)
     for j in xrange(0, len(subsections), 2):
@@ -737,48 +1042,63 @@ def process_text_on_page(pagetitle, index, text):
       # replacements listed in tag_replacements or subtag_replacements, and may
       # involve splitting tags on spaces if each component is a recognized tag.
 
-      def canonicalize_tag(tag):
+      def canonicalize_tag(tag, shorten):
+        # pagemsg("canonicalize_tag(%s, %s): Called" % (tag, shorten))
+        retval = canonicalize_tag_1(tag, shorten)
+        # pagemsg("canonicalize_tag(%s, %s): Returned %s" % (tag, shorten, retval))
+        return retval
+
+      def canonicalize_tag_1(tag, shorten):
+        def maybe_shorten(tag):
+          if shorten:
+            return tag_to_canonical_form_table.get(tag, tag)
+          else:
+            return tag
         # Canonicalize a tag into either a single tag or a sequence of tags.
         # Return value is None if the tag isn't recognized, else a string or
         # a list of strings.
         if tag in good_tags:
-          return tag
+          return maybe_shorten(tag)
         if tag in tag_replacements:
-          return tag_replacements[tag]
+          return maybe_shorten(tag_replacements[tag])
+        # Try removing links; [[FOO]] -> FOO, [[FOO|BAR]] -> BAR
+        newtag = re.sub(r'\[\[(?:[^\[\]\|]*?\|)?([^\[\]\|]*?)\]\]', r'\1', tag)
+        if newtag != tag:
+          repl = canonicalize_tag(newtag, shorten)
+          if repl:
+            return repl
+        # Try lowercasing
+        lowertag = tag.lower()
+        if lowertag != tag:
+          repl = canonicalize_tag(lowertag, shorten)
+          if repl:
+            return repl
         if " " in tag:
           newtag = tag
           for fro, to in subtag_replacements:
-            newtag = newtag.replace(fro, to)
+            newtag = re.sub(fro, to, newtag)
           split_tags = newtag.split(" ")
-          if all([t in good_tags for t in split_tags]):
-            return split_tags
-        lowertag = tag.lower()
-        if lowertag != tag:
-          repl = canonicalize_tag(lowertag)
-          if repl:
-            return repl
+          canon_split_tags = [canonicalize_tag(t, shorten=True) for t in split_tags]
+          # pagemsg("canonicalize_tag_1: Output after splitting = %s" % canon_split_tags)
+          if None not in canon_split_tags:
+            return canon_split_tags
         if "/" in tag:
           if "//" in tag:
             split_tags = tag.split("//")
           else:
             split_tags = tag.split("/")
-          canon_split_tags = [canonicalize_tag(t) for t in split_tags]
+          canon_split_tags = [canonicalize_tag(t, shorten) for t in split_tags]
           if all(isinstance(t, basestring) for t in canon_split_tags):
             return "//".join(canon_split_tags)
           else:
             pagemsg("WARNING: Found slash in tag and wasn't able to canonicalize completely: %s" % tag)
         if ":" in tag and "/" not in tag:
           split_tags = tag.split(":")
-          canon_split_tags = [canonicalize_tag(t) for t in split_tags]
+          canon_split_tags = [canonicalize_tag(t, shorten) for t in split_tags]
           if all(isinstance(t, basestring) for t in canon_split_tags):
             return ":".join(canon_split_tags)
           else:
-            pagemsg("WARNING: Found underscore in tag and wasn't able to canonicalize completely: %s" % tag)
-        m = re.search('^\[\[(.*)\]\]$', tag)
-        if m:
-          repl = canonicalize_tag(m.group(1))
-          if repl:
-            return repl
+            pagemsg("WARNING: Found colon in tag and wasn't able to canonicalize completely: %s" % tag)
         return None
 
       canon_tags = []
@@ -787,7 +1107,7 @@ def process_text_on_page(pagetitle, index, text):
         if tag in semicolon_tags:
           repl = tag
         else:
-          repl = canonicalize_tag(tag)
+          repl = canonicalize_tag(tag, shorten=False)
         if repl is None:
           if ' ' in tag:
             pagemsg("WARNING: Bad multiword tag '%s', can't canonicalize" % tag)
@@ -811,7 +1131,9 @@ def process_text_on_page(pagetitle, index, text):
       canon_tags = []
       i = 0
       while i < len(tags):
-        for fro, to in multitag_replacements:
+        for fro, to, exact in multitag_replacements:
+          if exact and (i > 0 or len(tags) != len(fro)):
+            continue
           if i + len(fro) <= len(tags):
             for j in range(len(fro)):
               if fro[j] != tags[i + j]:
@@ -826,6 +1148,7 @@ def process_text_on_page(pagetitle, index, text):
               i += len(fro)
               break
         else:
+          # no break; we considered and rejected all multitag replacements
           canon_tags.append(tags[i])
           i += 1
       tags = canon_tags
@@ -1018,13 +1341,6 @@ def process_text_on_page(pagetitle, index, text):
 
         tag_set_group_by_style = {}
         notes_by_style = {}
-
-        if args.use_form_of_groups:
-          tag_to_canonical_form_table = form_of_tag_to_canonical_form
-          combinable_tags_by_dimension_table = form_of_combinable_tags_by_dimension
-        else:
-          tag_to_canonical_form_table = tag_to_canonical_form_across_semicolon
-          combinable_tags_by_dimension_table = combinable_tags_by_dimension_across_semicolon
 
         # Split a possibly multipart tag into the components and
         # canonicalize them.
@@ -1244,14 +1560,19 @@ parser.add_argument("--form-of-files", help="Comma-separated list of files conta
 parser.add_argument("--use-form-of-groups", help="Use groups specified in form-of data for combining across semicolons.",
     action="store_true")
 parser.add_argument("--combine-adjacent", help="Combine adjacent calls to 'inflection of'.", action="store_true")
+parser.add_argument("--convert-raw", help="Convert raw inflection definitions to {{inflection of}}.", action="store_true")
+parser.add_argument("--convert-form-of", help="Convert {{form of}} inflection definitions to {{inflection of}}.", action="store_true")
 parser.add_argument("--sort-tags", help="Sort tags by dimension.", action="store_true")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
+if args.convert_raw:
+  blib.getData()
+
 if args.form_of_files:
   files = args.form_of_files.split(',')
   for f in files:
-    with open(f, 'r') as fp:
+    with codecs.open(f, 'r', "utf-8") as fp:
       parse_form_of_data(fp)
   set_form_of_tables()
 
@@ -1263,7 +1584,7 @@ if args.textfile:
     title_text_split = '\n'
   else:
     pages = re.split('\nPage [0-9]+ ', text)
-    title_text_split = ': Found (?:template: |subsection with combinable .*?:\n)'
+    title_text_split = ': Found (?:template: |match for regex: |subsection with combinable .*?:\n)'
   for index, page in blib.iter_items(pages, start, end):
     if not page: # e.g. first entry
       continue
