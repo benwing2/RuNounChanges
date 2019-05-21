@@ -18,8 +18,8 @@ import blib, re, codecs
 import pywikibot
 from arabiclib import reorder_shadda
 
-def rewrite_pages(refrom, reto, refs, cat, pages, pagefile, pagetitle_sub,
-    comment, filter_pages, save, verbose, startFrom, upTo):
+def rewrite_pages(refrom, reto, refs, page_and_refs, cat, pages, pagefile,
+    pagetitle_sub, comment, filter_pages, save, verbose, startFrom, upTo):
   def rewrite_one_page(page, index, text):
     #blib.msg("From: [[%s]], To: [[%s]]" % (refrom, reto))
     text = unicode(text)
@@ -40,6 +40,8 @@ def rewrite_pages(refrom, reto, refs, cat, pages, pagefile, pagetitle_sub,
     pages = ((index, pywikibot.Page(blib.site, page)) for index, page in blib.iter_items(lines, startFrom, upTo))
   elif refs:
     pages = blib.references(refs, startFrom, upTo, only_template_inclusion=False)
+  elif page_and_refs:
+    pages = blib.references(page_and_refs, startFrom, upTo, only_template_inclusion=False, include_page=True)
   else:
     pages = blib.cat_articles(cat, startFrom, upTo)
   for index, page in pages:
@@ -59,6 +61,7 @@ pa.add_argument("-t", "--to", help="To regex, can be specified multiple times",
     required=True, action="append")
 pa.add_argument("-r", "--references", "--refs",
     help="Do pages with references to this page")
+pa.add_argument("--page-and-refs", help="Do page and references to this page")
 pa.add_argument("-c", "--category", "--cat",
     help="Do pages in this category")
 pa.add_argument("--comment", help="Specify the change comment to use")
@@ -69,10 +72,11 @@ pa.add_argument('--pagetitle', help="Value to substitute page title with.")
 params = pa.parse_args()
 startFrom, upTo = blib.parse_start_end(params.start, params.end)
 
-if not params.references and not params.category and not params.pages and not params.pagefile:
-  raise ValueError("--references, --category, --pages or --pagefile must be present")
+if not params.references and not params.page_and_refs and not params.category and not params.pages and not params.pagefile:
+  raise ValueError("--references, --category, --pages, page-and-refs or --pagefile must be present")
 
 references = params.references and params.references.decode("utf-8")
+page_and_refs = params.page_and_refs and params.page_and_refs.decode("utf-8")
 category = params.category and params.category.decode("utf-8")
 from_ = [x.decode("utf-8") for x in params.from_]
 to = [x.decode("utf-8") for x in params.to]
@@ -84,6 +88,6 @@ filter_pages = params.filter_pages and params.filter_pages.decode("utf-8")
 if len(from_) != len(to):
   raise ValueError("Same number of --from and --to arguments must be specified")
 
-rewrite_pages(from_, to, references, category, pages, params.pagefile,
-    pagetitle_sub, comment, filter_pages, params.save, params.verbose,
-    startFrom, upTo)
+rewrite_pages(from_, to, references, page_and_refs, category, pages,
+    params.pagefile, pagetitle_sub, comment, filter_pages, params.save,
+    params.verbose, startFrom, upTo)
