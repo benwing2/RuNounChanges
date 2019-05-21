@@ -366,12 +366,17 @@ def iter_pages(pageiter, startsort = None, endsort = None, key = None):
       errmsg(str(i) + "/" + str(endsort) + tdisp)
 
 
-def references(page, startsort = None, endsort = None, namespaces = None, only_template_inclusion = True, filter_redirects = False):
+def references(page, startsort = None, endsort = None, namespaces = None,
+    only_template_inclusion = False, filter_redirects = False, include_page = False):
   if isinstance(page, basestring):
     page = pywikibot.Page(site, page)
   pageiter = page.getReferences(only_template_inclusion = only_template_inclusion,
       namespaces = namespaces, filter_redirects = filter_redirects)
-  for i, current in iter_items(pageiter, startsort, endsort):
+  if include_page:
+    pages = list(pageiter) + [page]
+  else:
+    pages = pageiter
+  for i, current in iter_items(pages, startsort, endsort):
     yield i, current
 
 def get_contributions(user, startsort=None, endsort=None, max=None, ns=None):
