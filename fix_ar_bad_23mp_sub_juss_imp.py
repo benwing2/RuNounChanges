@@ -4,7 +4,7 @@
 import pywikibot, re, sys, codecs, argparse
 
 import blib
-from blib import getparam, rmparam, msg, site, tname, pname
+from blib import getparam, rmparam, msg, errmsg, site, tname, pname
 
 recognized_tag_sets = [
   "2|m|p|non-past|actv|subj",
@@ -44,7 +44,11 @@ def fix_new_page(index, page, save, verbose):
     tn = tname(t)
     if tn == "ar-verb-form":
       form = getparam(t, "1")
-      assert form.endswith(u"و") or form.endswith(u"وْ")
+      if form.endswith(u"ا"):
+        continue
+      elif not form.endswith(u"و") and not form.endswith(u"وْ"):
+        pagemsg("WARNING: Form doesn't end in waw or alif: %s" % origt)
+        continue
       form = form + u"ا"
       t.add("1", form)
       notes.append("add missing final alif to form in {{ar-verb-form}}")
@@ -88,6 +92,8 @@ def process_page(index, page, save, verbose):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
+  def errpagemsg(txt):
+    errmsg("Page %s %s: %s" % (index, pagetitle, txt))
 
   notes = []
 
@@ -274,8 +280,9 @@ def process_page(index, page, save, verbose):
       pagemsg("New page %s already exists, can't rename" % new_pagetitle)
       pagemsg("Page should be deleted")
       return
-    comment = "Rename misspelled 2nd masc pl subj/juss/impr non-lemma form"
+    comment = "Rename misspelled 2nd/3rd masc pl subj/juss/impr non-lemma form"
     pagemsg("Moving to %s (comment=%s)" % (new_pagetitle, comment))
+    errpagemsg("Moving to %s (comment=%s)" % (new_pagetitle, comment))
     if save:
       try:
         page.move(new_pagetitle, reason=comment, movetalk=True, noredirect=True)
@@ -297,7 +304,7 @@ def process_page(index, page, save, verbose):
       pagemsg("Would save with comment = %s" % comment)
 
 
-parser = blib.create_argparser(u"Fix misspelling in Arabic 2nd masc pl non-past subj/juss forms")
+parser = blib.create_argparser(u"Fix misspelling in Arabic 2nd/3rd masc pl non-past subj/juss forms")
 parser.add_argument('--pagefile', help="File containing pages to search.")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
