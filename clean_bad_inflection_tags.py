@@ -10,6 +10,7 @@ from blib import getparam, rmparam, msg, errandmsg, site, tname
 skip_pages = [
   u"náhádleeh",
   u"hoditłééʼ",
+  u"придти",
   "gumawa",
   "kuna",
   "hakuna",
@@ -26,6 +27,7 @@ skip_pages = [
   "octopii",
   "kifunze",
   "yupo",
+  "mna",
 ]
 
 inflection_of_templates = [
@@ -571,6 +573,7 @@ additional_good_tags = {
   "postpositional", # Georgian
   "augmented", # lang=nci (?)
   "determinate", # Maltese
+  "admirative", # Albanian
 }
 
 tags_with_spaces = defaultdict(int)
@@ -751,6 +754,10 @@ def process_text_on_page(pagetitle, index, text):
 
   pagemsg("Processing")
   notes = []
+  # List of (LANG, LEMMA, TAG) triplets for tags that come from
+  # {{form of}}. We shorten those to their canonical abbreviated
+  # form but don't do the same to tags originally in {{inflection of}}.
+  shortenable_tags = []
 
   if blib.page_should_be_ignored(pagetitle):
     pagemsg("WARNING: Page should be ignored")
@@ -800,12 +807,14 @@ def process_text_on_page(pagetitle, index, text):
             if len(lemma_parts) == 1:
               newtext = "# %s{{inflection of|%s|%s||%s%s}}%s" % (
                 pretext, langcode, lemma, tags, gloss, postposttext)
+              shortenable_tags.append((langcode, lemma, tags))
             elif len(lemma_parts) == 2:
               link, alttext = lemma_parts
               link = re.sub("#.*$", "", link)
               alttext = re.sub(r"^('+)(.*?)\1$", r"\2", alttext)
               newtext = "# %s{{inflection of|%s|%s|%s|%s%s}}%s" % (
                   pretext, langcode, link, alttext, tags, gloss, postposttext)
+              shortenable_tags.append((langcode, link, tags))
             else:
               pagemsg("WARNING: Too many arguments to link template: %s" % m.group(0))
               return m.group(0)
@@ -818,6 +827,7 @@ def process_text_on_page(pagetitle, index, text):
             if len(lemma_parts) == 1:
               newtext = "# %s{{inflection of|%s|%s||%s%s}}%s" % (
                 pretext, langcode, lemma, tags, gloss, postposttext)
+              shortenable_tags.append((langcode, lemma, tags))
             elif len(lemma_parts) == 2:
               link, alttext = lemma_parts
               link = re.sub("#.*$", "", link)
@@ -825,10 +835,12 @@ def process_text_on_page(pagetitle, index, text):
               if link and link != alttext:
                 newtext = "# %s{{inflection of|%s|%s|%s|%s%s}}%s" % (
                   pretext, langcode, link, alttext, tags, gloss, postposttext)
+                shortenable_tags.append((langcode, link, tags))
               else:
                 # Probably a link to the same page
                 newtext = "# %s{{inflection of|%s|%s||%s%s}}%s" % (
                   pretext, langcode, alttext, tags, gloss, postposttext)
+                shortenable_tags.append((langcode, alttext, tags))
             else:
               pagemsg("WARNING: Too many arguments to raw link: %s" % m.group(0))
               return m.group(0)
@@ -839,6 +851,7 @@ def process_text_on_page(pagetitle, index, text):
             gloss, postposttext = parse_gloss_from_posttext(postposttext)
             newtext = "# %s{{inflection of|%s|%s||%s%s}}%s" % (
               pretext, langcode, lemma, tags, gloss, postposttext)
+            shortenable_tags.append((langcode, lemma, tags))
           # Check for just a single word
           mm = re.search(r"^([a-zA-Z]+)\.?($|:.*?$)$", posttext)
           if mm:
@@ -846,6 +859,7 @@ def process_text_on_page(pagetitle, index, text):
             gloss, postposttext = parse_gloss_from_posttext(postposttext)
             newtext = "# %s{{inflection of|%s|%s||%s%s}}%s" % (
               pretext, langcode, lemma, tags, gloss, postposttext)
+            shortenable_tags.append((langcode, lemma, tags))
           if newtext is None:
             pagemsg("WARNING: Unable to parse raw inflection-of defn: %s" % m.group(0))
             return m.group(0)
@@ -919,6 +933,7 @@ def process_text_on_page(pagetitle, index, text):
               t.add("sc", sc)
             if id:
               t.add("id", id)
+            shortenable_tags.append((lang, lemma, tags))
             notes.append("replaced {{form of}} containing inflection tags with {{inflection of}}")
             pagemsg("Replacing %s with %s" % (origt, unicode(t)))
     return unicode(parsed)
@@ -1160,7 +1175,11 @@ def process_text_on_page(pagetitle, index, text):
         if tag in semicolon_tags:
           repl = tag
         else:
-          repl = canonicalize_tag(tag, shorten=False)
+          # Canonicalize the tag. Convert to canonical abbreviated form
+          # if the tag came from a raw or {{form of}} inflection originally.
+          # Note that we also abbreviate this way when splitting a tag
+          # on spaces.
+          repl = canonicalize_tag(tag, shorten=(lang, term, tag) in shortenable_tags)
         if repl is None:
           if ' ' in tag:
             pagemsg("WARNING: Bad multiword tag '%s', can't canonicalize" % tag)
@@ -1169,8 +1188,8 @@ def process_text_on_page(pagetitle, index, text):
             pagemsg("WARNING: Bad tag %s, can't canonicalize" % tag)
             repl = tag
         elif repl != tag:
-          notemsg = ("replaced bad multiword inflection tag '%s' with %s" if ' ' in tag else
-            "replaced bad inflection tag %s with %s")
+          notemsg = ("canonicalized multiword inflection tag '%s' to %s" if ' ' in tag else
+            "canonicalized inflection tag %s to %s")
           notes.append(notemsg % (tag, "|".join(repl) if type(repl) is list else repl))
         if type(repl) is list:
           canon_tags.extend(repl)
