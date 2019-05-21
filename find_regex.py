@@ -28,6 +28,7 @@ def process_page(regex, index, page_or_title_text, filter_pages, verbose,
   if type(page_or_title_text) is tuple:
     pagetitle, text = page_or_title_text
   else:
+    page = page_or_title_text
     pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -99,7 +100,7 @@ def search_pages(regex, refs, cat, pages, pagefile, stdin, filter_pages,
     lines = [x.strip() for x in codecs.open(pagefile, "r", "utf-8")]
     pages = ((index, pywikibot.Page(blib.site, page)) for page, index in blib.iter_pages(lines, startFrom, upTo))
   elif refs:
-    pages = blib.references(refs, startFrom, upTo, includelinks=True)
+    pages = blib.references(refs, startFrom, upTo)
   else:
     pages = yield_pages_in_cats(cat.split(","), startFrom, upTo)
   for index, page in pages:
