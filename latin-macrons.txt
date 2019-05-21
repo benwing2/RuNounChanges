@@ -1,0 +1,232 @@
+# T:la-perfect participle
+# T:la-future participle
+# T:la-part-form
+# T:la-noun-form
+# T:la-verb-form
+# T:la-adj-form
+# T:la-IPA
+# T:la-decl-1&2
+# T:inflection of with lang=la or inflection of|la
+a3 sēgnis
+a3 sēgnior
+n1 sēgnitia
+vehō vehere vēxī vectum
+advehō advehere advēxī advectum
+āvehō āvehere āvēxī āvectum
+convehō convehere convēxī convectum
+dēvehō dēvehere dēvēxī dēvectum
+ēvehō ēvehere ēvēxī ēvectum
+invehō invehere invēxī invectum
+pervehō pervehere pervēxī pervectum
+prōvehō prōvehere prōvēxī prōvectum
+revehō revehere revēxī revectum
+subvehō subvehere subvēxī subvectum
+trānsvehō trānsvehere trānsvēxī trānsvectum
+trāvehō trāvehere trāvēxī trāvectum
+tego tegere tēxī tēctum
+circumtegō circumtegere circumtēxī circumtēctum
+contegō contegere contēxī contēctum
+dētegō dētegere dētēxī dētēctum
+integō integere intēxī intēctum
+obtegō obtegere obtēxī obtēctum
+prōtegō prōtegere prōtēxī prōtēctum
+n3 prōtēctiō
+n3 prōtēctor
+retegō retegere retēxī retēctum
+regō regere rēxī rēctum
+n3 rēctor
+a3 rēctior
+adsurgō adsurgere adsurrēxī adsurrēctum
+assurgō assurgere assurrēxī assurrēctum
+conresurgō conresurgere conresurrēxī conresurrēctum
+cōnsurgō cōnsurgere cōnsurrēxī cōnsurrēctum
+n3 cōnsurrēctiō
+corresurgō corresurgere corresurrēxī corresurrēctum
+exsurgō exsurgere exsurrēxī exsurrēctum
+exurgō exurgere exurrēxī exurrēctum
+īnsurgō īnsurgere īnsurrēxī īnsurrēctum
+n3 īnsurrēctiō
+pergō pergere perrēxī perrēctum
+resurgō resurgere resurrēxī resurrēctum
+n3 resurrēctiō
+surgō surgere surrēxī surrēctum
+n3 surrēctiō
+expergīscor expergīscī experrēctum
+arrigō arrigere arrēxī arrēctum
+corrigō corrigere corrēxī corrēctum
+n3 corrēctiō
+n3 corrēctor
+dērigō dērigere dērēxī dērēctum
+dīrigō dīrigere dīrēxī dīrēctum
+n3 dīrēctiō
+ērigō ērigere ērēxī ērēctum
+n3 ērēctiō
+a3 ērēctior
+exporrigō exporrigere exporrēxī exporrēctum
+n3 exporrēctiō
+porrigō porrigere porrēxī porrēctum
+a3 porrēctior
+reporrigō reporrigere reporrēxī reporrēctum
+subrigō subrigere subrēxī subrēctum
+legō legere *lēgī lēctum
+adlegō adlegere *adlēgī adlēctum
+allegō allegere *allēgī allēctum
+a1 allēctīvus
+circumlegō circumlegere *circumlēgī circumlēctum
+intellegō intellegere intellēxī intellēctum
+n3 intellēctiō
+n4 intellēctus
+a3 intellēctuālis
+neglegō neglegere neglēxī neglēctum
+n3 neglēctiō
+n3 neglēctor
+n4 neglēctus
+perlegō perlegere *perlēgī perlēctum
+praelegō praelegere *praelēgī praelēctum
+relegō relegere *relēgī relēctum
+subintellegō subintellegere subintellēxī subintellēctum
+sublegō sublegere *sublēgī sublēctum
+colligō colligere collēgī collēctum
+n3 collēctiō
+n1 collēcta
+a1 collēctīvus
+conligō conligere conlēgī conlēctum
+dēligō dēligere dēlēgī dēlēctum
+n4 dēlēctus
+dīligō dīligere dīlēxī dīlēctum
+n3 dīlēctiō
+n4 dīlēctus
+ēligō ēligere ēlēgī ēlēctum
+n3 ēlēctiō
+intelligō intelligere intellēxī intellēctum
+praeintelligō praeintelligere praeintellēxī praeintellēctum
+recolligō recolligere recollēgī recollēctum
+sēligō sēligere sēlēgī sēlēctum
+n3 sēlēctiō
+subdēligō subdēligere subdēlēgī subdēlēctum
+ago ēgī āctum [and compounds]
+n3 āctiō
+āctitō āctitāre āctitāvī āctitātum
+a1 āctīvus
+a1 ināctīvus
+n3 āctor
+n3 āctrīx
+n4 āctus
+abigō abigere abēgī abāctum
+n3 abāctor
+a1 abāctius
+n4 abāctus
+adigō adigere adēgī adāctum
+# ambigō no perfect; ambactus is a different word
+circumagō circumagere circumēgī circumāctum
+cōgō cōgere coēgī coāctum
+n3 coāctor
+coāctō coāctāre coāctāvī coāctātum
+n4 coāctus
+dēgō dēgere dēgī --
+exigō exigere exēgī exāctum
+n3 exāctiō
+n3 exāctor
+a3 exāctior
+peragō peragere perēgī perāctum
+prōdigō prōdigere prōdēgī prōdāctum
+n2 pūrgātōrium
+n2 pūrgāmentum
+n3 pūrgātiō
+a1 pūrgātīvus
+a1 pūrgātōrius
+pūrgō pūrgāre pūrgāvī pūrgātum
+reagō reagere reēgī reāctum
+n3 reāctiō
+redigō redigere redēgī redāctum
+satagō satagere -- --
+subigō subigere subēgī subāctum
+n3 subāctor
+trānsigō trānsigere trānsēgī trānsāctum
+n3 trānsāctiō
+frangō frangere frēgī frāctum
+n3 frāctiō
+n1 frāctūra
+cōnfringō cōnfringere cōnfrēgī cōnfrāctum
+n3 cōnfrāctiō
+dēfringō dēfringere dēfrēgī dēfrāctum
+diffringō diffringere diffrēgī diffrāctum
+ecfringō ecfringere ecfrēgī ecfrāctum
+effringō effringere effrēgī effrāctum
+īnfringō īnfringere īnfrēgī īnfrāctum
+perfringō perfringere perfrēgī perfrāctum
+refringō refringere refrēgī refrāctum
+n3 refrāctiō
+# suffringō no perfect
+tangō tangere tetigī tāctum
+n4 tāctus
+a1 intāctus
+adtingō adtingere adtigī adtāctum
+attingō attingere attigī attāctum
+contingō contingere contigī contāctum
+n4 contāctus
+n3 contāgiō
+# obtingō no passive
+# optingō no passive
+# pertingō no perfect
+pangō pangere pepigī pāctum
+pangō pangere pēgī pāctum
+pangō pangere pānxī pānctum
+a3 pāctilis
+compingō compingere compēgī compāctum
+conpingō conpingere conpēgī conpāctum
+dēpangō dēpangere -- dēpāctum
+impingō impingere impēgī impāctum
+inpingō inpingere inpēgī inpāctum
+subpingō suppingere suppēgī suppāctum
+a1 cūnctus
+trahō trahere trāxī trāctum
+trāctō trāctāre trāctāvī trāctātum
+n4 trāctus
+a3 trāctābilis
+n3 trāctātiō
+n3 trāctātor
+n3 trāctātrīx
+n4 trāctātus
+abstrahō abstrahere abstrāxī abstrāctum
+n3 abstrāctiō
+adtrahō adtrahere adtrāxī adtrāctum
+adtrāctō adtrāctāre adtrāctāvī adtrāctātum
+attrahō attrahere attrāxī attrāctum
+a1 attrāctīvus
+attrāctō attrāctāre attrāctāvī attrāctātum
+n3 attrāctiō
+circumtrahō circumtrahere circumtrāxī circumtrāctum
+contrahō contrahere contrāxī contrāctum
+a1 contrāctīvus
+n3 contrāctiō
+a3 contrāctior
+a1 contrāctus
+n4 contrāctus
+dētrahō dētrahere dētrāxī dētrāctum
+dētrāctō dētrāctāre dētrāctāvī dētrāctātum
+n3 dētrāctiō
+n3 dētrāctor
+distrahō distrahere distrāxī distrāctum
+n3 distrāctiō
+extrahō extrahere extrāxī extrāctum
+n3 extrāctiō
+n2 extrāctum
+intertrahō intertrahere intertrāxī intertrāctum
+intrahō intrahere intrāxī intrāctum
+obtrahō obtrahere obtrāxī obtrāctum
+pertrahō pertrahere pertrāxī pertrāctum
+pertrāctō pertrāctāre pertrāctāvī pertrāctātum
+prōtrahō prōtrahere prōtrāxī prōtrāctum
+n3 prōtrāctiō
+retrahō retrahere retrāxī retrāctum
+retrāctō retrāctāre retrāctāvī retrāctātum
+n3 retrāctiō
+subtrahō subtrahere subtrāxī subtrāctum
+n3 subtrāctiō
+supertrahō supertrahere -- --
+prēndō prēndere *prēndī prēnsum
+apprēndō apprēndere *apprēndī apprēnsum
+comprēndō comprēndere *comprēndī comprēnsum
+dēprēndō dēprēndere *dēprēndī dēprēnsum
+reprēndō reprēndere *reprēndī reprēnsum
