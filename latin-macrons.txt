@@ -14,27 +14,28 @@ a3 sēgnis
 a3 sēgnior
 n1 sēgnitia
 # n3 sēgnipēs no non-lemma forms created
-# adv sēgniter
+adv sēgniter
 ###
 ### vehō
 ###
-vehō vehere vēxī vectum
-advehō advehere advēxī advectum
-āvehō āvehere āvēxī āvectum
-convehō convehere convēxī convectum
+# short in vexī per Bennett
+vehō vehere vexī vectum
+advehō advehere advexī advectum
+āvehō āvehere āvexī āvectum
+convehō convehere convexī convectum
 # circumvehor deponent
-dēvehō dēvehere dēvēxī dēvectum
-ēvehō ēvehere ēvēxī ēvectum
-invehō invehere invēxī invectum
-pervehō pervehere pervēxī pervectum
+dēvehō dēvehere dēvexī dēvectum
+ēvehō ēvehere ēvexī ēvectum
+invehō invehere invexī invectum
+pervehō pervehere pervexī pervectum
 # praetervehor deponent
 # praevehor deponent
-prōvehō prōvehere prōvēxī prōvectum
-revehō revehere revēxī revectum
-subvehō subvehere subvēxī subvectum
+prōvehō prōvehere prōvexī prōvectum
+revehō revehere revexī revectum
+subvehō subvehere subvexī subvectum
 # supervehor deponent
-trānsvehō trānsvehere trānsvēxī trānsvectum
-trāvehō trāvehere trāvēxī trāvectum
+trānsvehō trānsvehere trānsvexī trānsvectum
+trāvehō trāvehere trāvexī trāvectum
 ###
 ### tegō
 ###
@@ -115,7 +116,7 @@ legō legere *lēgī lēctum
 *lēctitō lēctitāre lēctitāvī lēctitātum
 *n1 lēctiuncula
 adlegō adlegere *adlēgī adlēctum
-*# fix adlecto "dispatch" -> "select"
+*# FIXME fix adlecto "dispatch" -> "select"
 allegō allegere *allēgī allēctum
 a1 allēctīvus
 circumlegō circumlegere *circumlēgī circumlēctum
@@ -438,8 +439,8 @@ a1 cūnctus
 *adv ārdentius
 *adv ārdentissimē
 *ārdēscō ārdēscere ārsī ārsum
-*n3 ārdor ārdōris
-*n3 ārsiō ārsiōnis
+*n3 ārdor
+*n3 ārsiō
 *n1 ārsūra
 *exārdeō exārdēre exārsī exārsum
 *exārdēscō exārdēscere exārsī exārsum
@@ -497,7 +498,7 @@ a1 cūnctus
 *condūcō condūcere condūxī conductum
 *dēdūcō dēdūcere dēdūxī dēductum
 *dīdūcō dīdūcere dīdūxī dīductum
-*ēdūcō ēdūcere ēdūxī ēductum
+**ēdūcō ēdūcere ēdūxī ēductum
 *indūcō indūcere indūxī inductum
 *intrōdūcō intrōdūcere intrōdūxī intrōductum
 *obdūcō obdūcere obdūxī obductum
@@ -654,9 +655,60 @@ a1 cūnctus
 *restinguō restinguere restīnxī restīnctum
 *n3 restīnctiō
 ###
-###
 ### emō
 ###
+*emō emere *ēmī ēmptum
+*n3 ēmptiō
+*n3 ēmptor
+*a1 ēmptīcius
+*adimō adimere adēmī adēmptum
+*n3 adēmptiō
+coëmō coëmere *coēmī coēmptum
+*n3 coēmptiō
+*cōmō cōmere cōmpsī cōmptum
+*n4 cōmptus
+*a1 incōmptus
+*a3 incōmptior
+*dēmō dēmere dēmpsī dēmptum
+*n3 dēmptiō
+*dirimō dirimere dirēmī dirēmptum
+*eximō eximere exēmī exēmptum
+*interimō interimere *interēmī interēmptum
+*interemō interemere *interēmī interēmptum
+*perimō perimere perēmī perēmptum
+*n3 perēmptor
+*a1 perēmptōrius
+*prōmō prōmere prōmpsī prōmptum
+*a1 prōmptus
+*n4 prōmptus
+*a3 prōmptior
+*n3 prōmptitūdō
+*n2 prōmptuārium
+*dēprōmō dēprōmere dēprōmpsī dēprōmptum
+*redimō redimere redēmī redēmptum
+*n3 redēmptiō
+*n3 redēmptor
+*n3 redēmptrīx
+*sūmō sūmere sūmpsī sūmptum
+*n4 sūmptus
+*a1 sūmptuōsus
+*a3 sūmptuōsior
+*a1 sūmptuārius
+*absūmō absūmere absūmpsī absūmptum
+*n3 absūmptiō
+*adsūmō adsūmere adsūmpsī adsūmptum
+*n3 adsūmptiō
+*a1 adsūmptīvus
+*assūmō assūmere assūmpsī assūmptum
+*n3 assūmptiō
+*a1 assūmptīvus
+*cōnsūmō cōnsūmere cōnsūmpsī cōnsūmptum
+*n3 cōnsūmptiō
+*dēsūmō dēsūmere dēsūmpsī dēsūmptum
+*īnsūmō īnsūmere īnsūmpsī īnsūmptum
+*praesūmō assūmere assūmpsī assūmptum
+*n3 praesūmptiō
+*resūmō assūmere assūmpsī assūmptum
 ###
 ### fingō
 ###
@@ -860,14 +912,43 @@ a1 cūnctus
 # following noun wrongly had convīctiō
 *n3 convictiō
 ###
+### māgnus
+###
+*# n1 amita māgna
+*a1 māgnus
+*a1 māgnissimus
+*n3 māgnitūdō
+*adv māgnopere
+*n3 māgnāle māgnāl
+*n3 māgnanimitās
+*a1 māgnanimus
+*a1 māgnārius
+*n3 māgnās māgnāt
+*n2 māgnātus
+*a3 māgnicornis
+*a1 māgnicristātus
+*adv māgnificē
+*n1 māgnificentia
+*a3 māgnificentior
+*a1 māgnificentissimus
+*māgnificō māgnificāre māgnificāvī māgnificātum
+*a1 māgnificus
+*n1 māgniloquentia
+*n2 māgniloquium
+*a1 māgniloquus
+*a1 māgnipapillātus
+*a3 māgnirōstris
+*a1 permāgnificus
+*a1 permāgnus
+###
 ### māximus
+###
 *a1 māximus
 *adv māximē
 *# māximā cum laude
 *# māximus in minimīs
 *adv permāximē
 *# amita māxima
-###
 ###
 ### *āscō
 ###
@@ -896,25 +977,235 @@ a1 cūnctus
 *a1 vāsculōsus
 *vesperāscō vesperāscere vesperāvī --
 *veterāscō veterāscere -- --
-*a3 violāscēns violāscent
+*a3 violāscēns
 ###
 ### *ēscō
 ###
-*abhorrēscō abhorrēscere abhorruī --
-*abolēscō abolēscere abolēvī --
 *crēscō crēscere crēvī crētum
 *accrēscō accrēscere accrēvī accrētum
 *adcrēscō adcrēscere adcrēvī adcrētum
-*adincrēscō adincrēscere adincrēvī adincrētum
+*adincrēscō adincrēscere -- --
 *concrēscō concrēscere concrēvī concrētum
 *dēcrēscō dēcrēscere dēcrēvī dēcrētum
 *incrēscō incrēscere incrēvī incrētum
-*succrēscō succrēscere succrēvī succrētum
-*supercrēscō supercrēscere supercrēvī supercrētum
+*succrēscō succrēscere -- --
+*supercrēscō supercrēscere supercrēvī --
 # FIXME, should have short a
 *macrēscō macrēscere macruī --
 # FIXME, should have perfect
 *ēmacrēscō ēmacrēscere ēmacruī --
+*olēscō olēscere -- --
+*abolēscō abolēscere abolēvī --
+*adolēscō adolēscere abolēvī --
+*exolēscō exolēscere exolēvī exolētum
+*exsolēscō exsolēscere exsolēvī exsolētum
+*indolēscō indolēscere indoluī --
+*inolēscō inolēscere inolēvī inolitum
+*insolēscō insolēscere -- --
+*obsolēscō obsolēscere obsolēvī obsolētum
+*quiēscō quiēscere quiēvī quiētum
+*acquiēscō acquiēscere acquiēvī acquiētum
+*adquiēscō adquiēscere adquiēvī adquiētum
+*conquiēscō conquiēscere conquiēvī conquiētum
+*requiēscō requiēscere requiēvī requiētum
+*suēscō suēscere suēvī suētum
+*adsuēscō adsuēscere adsuēvī adsuētum
+*assuēscō assuēscere assuēvī assuētum
+*consuēscō consuēscere consuēvī consuētum
+*īnsuēscō īnsuēscere īnsuēvī īnsuētum
+*mānsuēscō mānsuēscere mānsuēvī mānsuētum
+*abhorrēscō abhorrēscere abhorruī --
+*acēscō acēscere acēvī acētum
+*adēscō adēscāre adēscāvī adēscātum
+# FIXME, listed as defective
+*adhaerēscō adhaerēscere adhaesī adhaesum
+*adhērēscō adhērēscere adhēsī adhēsum
+*adlubēscō adlubēscere -- --
+*aegrēscō aegrēscere -- --
+*albēscō albēscere -- --
+*alēscō alēscere -- --
+*algēscō algēscere alsī --
+*amārēscō amārēscere -- --
+*appārēscō appārēscere -- --
+*arborēscō arborēscere -- --
+# FIXME, remove fourth part
+*ārdēscō ārdēscere ārsī --
+*ārēscō ārēscere āruī --
+*assenēscō assenēscere -- --
+*augēscō augēscere -- --
+*aurēscō aurēscere -- --
+*calēscō calēscere -- --
+*candēscō candēscere canduī --
+# FIXME, add third part
+*cānēscō cānēscere cānuī --
+*celebrēscō celebrēscere -- --
+*cinerēscō cinerēscere -- --
+*clārēscō clārēscere clāruī --
+*coacēscō coacēscere coacuī --
+*coalēscō coalēscere coaluī coalitum
+*cohaerēscō cohaerēscō cohaesī --
+*colliquēscō colliquēscere colliquī --
+*compēscō compēscere compēscuī --
+# has incorrect long vowel on u
+*computrēscō computrēscere computruī --
+# FIXME, has incorrect 3rd part conpuī
+*conpēscō conpēscere conpēscuī --
+# has incorrect long vowel on u
+*conputrēscō conputrēscere conputruī --
+*cōnsānēscō cōnsānēscere cōnsānuī --
+*cōnsenēscō cōnsenēscere cōnsenuī --
+*cōnsilēscō cōnsilēscere cōnsiluī --
+*contābēscō contābēscere contābuī --
+# has incorrect long vowel on e
+*contenebrēscō contenebrēscere -- --
+*conticēscō conticēscere conticuī --
+# FIXME Delete the following
+#*contremēscō
+*convalēscō convalēscere convaluī --
+*convēscor convēscī --
+*cornēscō cornēscere --
+*crēbēscō crēbēscere crēbuī --
+# FIXME, delete 4th part
+*crēbrēscō crēbrēscere crēbruī --
+*crūdēscō crūdēscere crūduī --
+# FIXME, has two perfs, dēfervī and dēferbuī
+*dēfervēscō dēfervēscere dēfervī --
+*deflorēscō
+*deliquēscō
+*delitēscō
+*desenēscō
+*dilucēscō
+*dulcēscō
+*durēscō
+*effervēscō
+*efflorēscō
+*elanguēscō
+*elucēscō
+*emarcēscō
+*enitēscō
+*erubēscō
+*-ēscō
+*evanēscō
+*exacerbēscō
+*exalbēscō
+*exardēscō
+*exarēscō
+*excandēscō
+*exhorrēscō
+*expallēscō
+*expavēscō
+*extabēscō
+*extimēscō
+*fervēscō
+*fetēscō
+*fistulēscō
+*flaccēscō
+*flavēscō
+*florēscō
+*frigēscō
+*frondēscō
+*glabrēscō
+*grandēscō
+*hebēscō
+*herbēscō
+*horrēscō
+*ignēscō
+*illucēscō
+*inalbēscō
+*inarēscō
+*incalēscō
+*incandēscō
+*incanēscō
+*inclarēscō
+*increbēscō
+*increbrēscō
+*indurēscō
+*ingemēscō
+*ingravēscō
+*inhorrēscō
+*inlucēscō
+*innotēscō
+*insenēscō
+*intumēscō
+*invalēscō
+*iuvenēscō
+*juvenēscō
+*languēscō
+*lapidēscō
+*lassēscō
+*latēscō
+*liquēscō
+*lucēscō
+*lutēscō
+*macerēscō
+*macēscō
+*madēscō
+*marcēscō
+*matrēscō
+*maturēscō
+*mitēscō
+*mollēscō
+*nigrēscō
+*noctēscō
+*notēscō
+*obarēscō
+*obatrēscō
+*obbrutēscō
+*obdulcēscō
+*obdurēscō
+*obmutēscō
+*obrigēscō
+*obsordēscō
+*obstipēscō
+*obstupēscō
+*obsurdēscō
+*obtenebrēscō
+*occallēscō
+*pallēscō
+*patēscō
+*pavēscō
+*percrebēscō
+*percrebrēscō
+*perhorrēscō
+*pertimēscō
+*pinguēscō
+*plumēscō
+*pubēscō
+*putrēscō
+*radicēscō
+*refrigēscō
+*relanguēscō
+*remollēscō
+*revirēscō
+*revivēscō
+*rigēscō
+*rubēscō
+*rufēscō
+*sanēscō
+*senēscō
+*serēscō
+*siccēscō
+*silēscō
+*sordēscō
+*splendēscō
+*stupēscō
+*tabēscō
+*telēscōpium
+*tenebrēscō
+*tepēscō
+*torpēscō
+*tremēscō
+*tumēscō
+*turgēscō
+*umēscō
+*valēscō
+*vanēscō
+*vēscōr
+*veterēscō
+*vigēscō
+*virēscō
+*viridēscō
+
 
 ###
 ### *īscō
@@ -948,6 +1239,7 @@ a1 cūnctus
 *conticīscō conticīscere conticuī --
 *conticēscō conticēscere conticuī --
 *contremīscō contremīscere contremuī --
+# FIXME Delete the following
 *contremēscō contremēscere contremuī --
 *hīscō hīscere -- --
 *dehīscō dehīscere -- --
@@ -1035,6 +1327,164 @@ a1 cūnctus
 *a3 vomāx
 *a3 vorāx
 ###
+### -rīx
+###
+*n3 abdicātrīx
+*a3 accelerātrīx
+*n3 acceptrīx
+*n3 accūsātrīx
+*n3 āctrīx
+*n3 adfectātrīx
+*n3 adiūtrīx
+*n3 adsistrīx
+*n3 adūlātrīx
+*n3 adulterātrīx
+*n3 adversātrīx
+*n3 aemulātrīx
+*n3 affectātrīx
+*n3 agitātrīx
+*n3 altrīx
+*n3 amātrīx
+*n3 ambestrīx
+*pn3 Ambiorīx
+*n3 ambulātrīx
+*n3 apostātrīx
+*n3 assestrīx
+*n3 attribūtrīx
+*n3 auctrīx
+*n3 augurātrīx
+*n3 auxiliātrīx
+*n3 āversātrīx
+*n3 balneātrīx
+*pn3 Beātrīx
+*n3 bellātrīx
+*pn3 Boiorīx
+*n3 calabrīx
+*n3 calcātrīx
+# FIXME, following callithricis (all short vowels) as gen in Gaffiot
+*n3 callithrix
+*n3 calumniātrīx
+*a3 cantātrīx
+*n3 cantrīx
+*n3 cessātrīx
+*n3 cicātrīx
+*n3 circulātrīx
+*n3 collātrīx
+*n3 competītrīx
+*n3 conciliātrīx
+*n3 coniectrīx
+*n3 cōnsecrātrīx
+*n3 cōnsectātrīx
+*n3 cōnservātrīx
+*n3 cōnsiliātrīx
+*n3 contemptrīx
+*n3 cōpulātrīx
+*n3 creātrīx
+*n3 crēditrīx
+*n3 crīminātrīx
+*n3 cultrīx
+*n3 dēlētrīx
+*a3 dēlētrīx
+*n3 dēpraedātrīx
+*n3 dēprecātrīx
+*n3 dēvorātrīx
+*n3 dictātrīx
+*n3 dījūdicātrīx
+*n3 dispēnsātrīx
+*n3 doctrīx
+*pn3 Dumnorīx
+*n3 ēducātrīx
+*n3 ēlēctrīx
+*pn3 Eporedorīx
+*n3 exacerbātrīx
+*n3 exasperātrīx
+*n3 explētrīx
+*n3 fābricātrīx
+*n3 fautrīx
+*n3 fornicātrīx
+*n3 futūtrīx
+*n3 genetrīx
+*n3 genitrīx
+*n3 gubernātrīx
+*n3 habitātrīx
+*n3 histrīx
+*n3 hystrīx
+*a3 hystrīx
+*n3 iactātrīx
+*n3 iaculātrīx
+*n3 imitātrīx
+*n3 imperātrīx
+*n3 inrītātrīx
+*n3 īnsidiātrīx
+*n3 īnsinuātrīx
+*n3 interfectrīx
+*n3 inventrīx
+*n3 irrītātrīx
+*n3 iūdicātrīx
+*n3 jactātrīx
+*n3 jaculātrīx
+*n3 lacerātrīx
+*n3 lāmentātrīx
+*n3 lēctrīx
+*n3 mactātrīx
+*n3 mātrīx
+*n3 mediātrīx
+*n3 meretrīx
+*n3 moderātrīx
+*n3 nātrīx
+*n3 necātrīx
+*n3 nūtrīx
+*n3 obsētrīx
+*n3 obstētrīx
+*n3 ōrātrīx
+*n3 Orgetorīx
+*n3 ōrnātrīx
+*n3 pāstrīx
+*n3 peccātrīx
+*a3 peccātrīx
+*n3 perpetrātrīx
+*n3 pietāticultrīx
+*n3 plicātrīx
+*n3 pollūtrīx
+*n3 pōtrīx
+*n3 praevāricātrīx
+*n3 prōcrāstinātrīx
+*n3 prōcūrātrīx
+*n3 prōvocātrīx
+*n3 pūgnātrīx
+*n3 pūnctātrīx
+*n3 receptrīx
+*n3 redēmptrīx
+*n3 rixātrīx
+*n3 saltātrīx
+*n3 scrīptrīx
+*n3 sectrīx
+*n3 senātrīx
+*n3 sībilātrīx
+*a3 silvicultrīx
+*n3 speculātrīx
+*n3 spoliātrīx
+*n3 stimulātrīx
+*n3 suppīlātrīx
+*n3 susurrātrīx
+*n3 sūtrīx
+*n3 tamarīx
+*n3 Tancorīx
+*n3 testātrīx
+*n3 textrīx
+*n3 tōnstrīx
+*n3 trāctātrīx
+*n3 -trīx
+*n3 tūtrīx
+*n3 ultrīx
+*n3 ūsūrpātrīx
+*n3 vāstātrīx
+*n3 vēnātrīx
+*n3 viātrīx
+*n3 victrīx
+*n3 vorātrīx
+*n3 zēlātrīx
+###
 ### pūgn-
 ###
 *n2 pūgnus
@@ -1067,3 +1517,305 @@ a1 cūnctus
 *repūgnō repūgnāre repūgnāvī repūgnātum
 *n1 repūgnantia
 *a1 repūgnātōrius
+###
+### benīgnus, malīgnus
+###
+*adv benīgnē
+*# phrase benīgnē dīcis
+*n3 benīgnitās
+*adv benīgniter
+*a1 benīgnus
+*n3 malīgnitās
+*malīgnō malīgnāre malīgnāvī malīgnātum
+*a1 malīgnus
+###
+### dīgnus
+###
+*a1 dīgnus
+*a3 dīgnior
+*a1 dīgnissimus
+*n3 dīgnitās
+dīgnō dīgnāre dīgnāvī dīgnātum
+*n3 dīgnātiō
+*a1 condīgnus
+*a1 indīgnus
+*a3 indīgnior
+*n3 indīgnitās
+indīgnor indīgnārī indīgnātum
+*n3 indīgnātiō
+*a1 indīgnābundus
+*a1 perdīgnus
+*dīgnōscō dīgnōscere dīgnōvī dīgnōtum
+*dīnōscō dīnōscere dīnōvī dīnōtum
+###
+### fōrma
+###
+*n1 fōrma
+*fōrmō fōrmāre fōrmāvī fōrmātum
+*a3 fōrmālis
+*adv fōrmāliter
+*n2 fōrmāticum
+*n3 fōrmātiō
+*n1 fōrmella
+*a1 fōrmōsus
+*a1 fōrmōsissimus
+*adv fōrmōsē
+*a1 fōrmōnsus
+*a1 fōrmōnsissimus
+*a3 fōrmigenēs fōrmigen
+*a1 fōrmōsānus
+*n1 fōrmula
+*n3 fōrmulātiō
+*cōnfōrmō cōnfōrmāre cōnfōrmāvī cōnfōrmātum
+*a3 cōnfōrmis
+*n3 cōnfōrmātiō
+*n3 cōnfōrmitās
+*adv cōnfōrmiter
+*dēfōrmō dēfōrmāre dēfōrmāvī dēfōrmātum
+*a3 dēfōrmis
+*n3 dēfōrmātiō
+*n3 dēfōrmitās
+*a1 discifōrmus
+*effōrmō effōrmāre effōrmāvī effōrmātum
+*n3 effōrmātiō
+*īnfōrmō īnfōrmāre īnfōrmāvī īnfōrmātum
+*a3 īnfōrmis
+*n3 īnfōrmātiō
+*a1 īnfōrmātīvus
+*a3 neofōrmāns
+*#phrase prō fōrmā
+*refōrmō refōrmāre refōrmāvī refōrmātum
+*n3 refōrmātiō
+*trānsfōrmō trānsfōrmāre trānsfōrmāvī trānsfōrmātum
+*n3 trānsfōrmātiō
+*adv ūnifōrmiter
+*a3 acāciifōrmis
+*a3 acētābulifōrmis
+*a3 acīnacifōrmis
+*a3 acūtifōrmis
+*a3 aequifōrmis
+*a3 āerifōrmis
+*a3 apifōrmis
+*a3 bacillifōrmis
+*a3 bifōrmis
+*a3 bursifōrmis
+*a3 cancrifōrmis
+*a3 canifōrmis
+*a3 cucumerifōrmis
+*a3 cucumifōrmis
+*a3 cuneifōrmis
+*a3 discifōrmis
+*a3 fīlifōrmis
+*a3 -fōrmis
+*a3 fundifōrmis
+*a3 fūsifōrmis
+*a3 hāmifōrmis
+*a3 līchēnifōrmis
+*a3 lyrifōrmis
+*a3 mīllefōrmis
+*a3 mīllifōrmis
+*a3 monīlifōrmis
+*a3 multifōrmis
+*a3 nārifōrmis
+*a3 nīdifōrmis
+*a3 nūllifōrmis
+*a3 omnifōrmis
+*a3 patellulifōrmis
+*a3 pedifōrmis
+*a3 plūrifōrmis
+*a3 prīmifōrmis
+*a3 prūnifōrmis
+*a3 pyrifōrmis
+# the following has short a
+*a3 quadrifōrmis
+*a3 rānifōrmis
+*a3 rēnifōrmis
+*a3 rubifōrmis
+*a3 rubrifōrmis
+*a3 scalpellifōrmis
+*a3 sēmifōrmis
+*a3 situlifōrmis
+*a3 taurifōrmis
+*a3 trifōrmis
+*a3 ūnifōrmis
+*a3 vermifōrmis
+*a3 versifōrmis
+###
+### ūllus, nūllus
+###
+*adnūllō adnūllāre adnūllāvī adnūllātum
+*annūllō annūllāre annūllāvī annūllātum
+*# homō nūllius colōris
+*a1 nōnnūllus
+*adv nūllātenus
+*adv nūllibi
+*a3 nūllifōrmis
+*n3 nūllitās
+*a1 nūllus
+*# testis ūnus, testis nūllus
+*a1 ūllus
+###
+### mīlle
+###
+*num mīlle
+*#n3 mīlle passūs
+*#n3 mīlle passuum
+*a3 mīllefōrmis
+*a3 mīllifōrmis
+*a1 mīllēnārius
+*num1 mīllēnī
+*n2 mīllennium
+*a1 mīllēsimus
+*a1 mīlliārius
+*n2 mīlliārium
+*adv mīlliēns
+*adv mīlliēs
+###
+### quārtus
+###
+*a1 quārtus
+*a1 quārtānus
+*#a1 quārtus decimus
+*a1 quārtadecimus
+*#num quārtadecem
+*a3 quārtālis
+*a1 quārtālitius
+# FIXME, need to do the following by hand
+*#a1 quārtusdecimus
+###
+### quīnque, quīntus
+###
+*num quīnque
+*adv quīnquiēns
+*adv quīnquiēs
+*a1 quīntus
+*n1 quīntāna
+*num quīndecim
+*adv quīndeciēs
+*adv quīndeciēns
+*a1 quīntadecimus
+# FIXME, need to do the following by hand
+# FIXME, forms are wrong, delete them
+*#a1 quīntusdecimus
+*num quīnquāgintā
+*a1 quīnquāgēsimus
+*a1 quīnquāgēnsimus
+*num1 quīnquāgēnī
+*a1 quīnquāgēnārius
+*a3 quīnquennis
+*a3 quīnquennālis
+*n2 quīnquennium
+*a1 quīnquangulus
+*a1 quīnquefasciātus
+*a1 quīnquefolius
+*a1 quīnquepartītus
+*a1 quīnquepertītus
+*n4 quīnquevirātus
+*n4 quīnquevirātus
+*a3 quīnquiplex quīnquiplic
+*quīnquiplicō quīnquiplicāre quīnquiplicāvī quīnquiplicātum
+*num ūndēquīnquāgintā
+*a1 ūndēquīnquāgēsimus
+*num duodēquīnquāgintā
+*a1 duodēquīnquāgēsimus
+###
+### ūsūrpō
+###
+*ūsūrpō ūsūrpāre ūsūrpāvī ūsūrpātum
+*n3 ūsūrpātiō
+*n3 ūsūrpātrīx
+###
+### vāstus
+###
+*a1 vāstus
+vāstō vāstāre vāstāvī vāstātum
+*a1 vāstābundus
+*n3 vāstātiō
+*n3 vāstātor
+*a1 vāstātōrius
+*n3 vāstātrīx
+*a3 vāstior
+*a1 vāstissimus
+*n3 vāstitās
+*n3 vāstitūdō
+*dēvāstō dēvāstāre dēvāstādēvī dēvāstātum
+###
+### vāllum
+###
+*n2 vāllum
+*n2 vāllus
+*vāllō vāllāre vāllāvī vāllātum
+*circumvāllō circumvāllāre circumvāllāvī circumvāllātum
+*n2 *intervāllum
+*a1 *obvāllātus
+###
+### vāsculum
+###
+*n2 vāsculum
+*a1 vāsculārius
+*a1 vāsculōsus
+*n2 vāscellum
+###
+### bēstia
+###
+*a1 bēstia
+*n2 bēstiarium
+*a1 bēstiarius
+*n2 bēstiarius
+*a1 bēstiola
+###
+### rōstrum
+###
+*a1 rōstrātus
+*n2 rōstrum
+*a3 acūtirōstris
+*a3 albirōstris
+*a3 altirōstris
+*a3 angustirōstris
+*a3 brevirōstris
+*a3 cavirōstris
+*a3 crassirōstris
+*a3 curvirōstris
+*a3 ferreorōstris
+*a3 flāvirōstris
+*a3 gibbirōstris
+*a3 glabrirōstris
+*a3 lātirōstris
+*a3 longirōstris
+*a3 māgnirōstris
+*a3 megarōstris
+*a3 nigrirōstris
+*a3 parvirōstris
+*a3 sulcirōstris
+*a3 tenuirōstris
+###
+### fīrmus
+###
+*a1 fīrmus
+*adv fīrmiter
+*a3 fīrmior
+*n3 fīrmitūdō
+*n3 fīrmitās
+*n2 fīrmārius
+*n2 fīrmāmentum
+*fīrmō fīrmāre fīrmāvī fīrmātum
+*n3 adfīrmātiō
+*adfīrmō adfīrmāre adfīrmāvī adfīrmātum
+*n3 affīrmātiō
+*a1 affīrmātīvus
+*affīrmō affīrmāre affīrmāvī affīrmātum
+*cōnfīrmō cōnfīrmāre cōnfīrmāvī cōnfīrmātum
+*n3 cōnfīrmātiō
+*a3 cōnfīrmātior
+*n1 īnfīrmāria
+*n2 īnfīrmārius
+*n3 īnfīrmātiō
+*a3 īnfīrmior
+*a3 īnfīrmis
+*a1 īnfīrmissimus
+*n3 īnfīrmitās
+*adv īnfīrmiter
+*īnfīrmō īnfīrmāre īnfīrmāvī īnfīrmātum
+*a1 īnfīrmus
+*obfīrmō obfīrmāre obfīrmāvī obfīrmātum
+*offīrmō offīrmāre offīrmāvī offīrmātum
