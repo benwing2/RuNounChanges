@@ -1069,41 +1069,47 @@ coëmō coëmere *coēmī coēmptum
 *crēbrēscō crēbrēscere crēbruī --
 *crūdēscō crūdēscere crūduī --
 # FIXME, has two perfs, dēfervī and dēferbuī
-*dēfervēscō dēfervēscere dēfervī --
-*deflorēscō
-*deliquēscō
-*delitēscō
-*desenēscō
-*dilucēscō
-*dulcēscō
-*durēscō
-*effervēscō
-*efflorēscō
-*elanguēscō
-*elucēscō
-*emarcēscō
-*enitēscō
-*erubēscō
+*dēfervēscō dēfervēscere dēfervī/dēferbuī --
+*dēflōrēscō dēflōrēscere dēflōruī --
+# FIXME, missing 3rd part
+*deliquēscō dēliquēscere dēlicuī --
+*dēlitēscō dēlitēscere dēlituī --
+*dēsenēscō dēsenēscere dēsenuī --
+*dīlūcēscō dīlūcēscere dīlūxī --
+# FIXME, Lewis and Short lists dulcuī, but not Lewis or Gaffiot.
+*dulcēscō dulcēscere -- --
+*dūrēscō dūrēscere dūruī --
+# FIXME, has two perfs
+*effervēscō effervēscere efferbuī/effervī --
+*efflōrēscō efflōrēscere efflōruī --
+*ēlanguēscō ēlanguēscere ēlanguī --
+# FIXME, missing 3rd part
+*ēlūcēscō ēlūcēscere ēlūxī --
+*ēmarcēscō ēmarcēscere ēmarcuī --
+*ēnitēscō ēnitēscere ēnituī --
+*ērubēscō ērubēscere ērubuī --
 *-ēscō
-*evanēscō
-*exacerbēscō
-*exalbēscō
-*exardēscō
-*exarēscō
-*excandēscō
-*exhorrēscō
-*expallēscō
-*expavēscō
-*extabēscō
-*extimēscō
-*fervēscō
-*fetēscō
-*fistulēscō
-*flaccēscō
-*flavēscō
-*florēscō
-*frigēscō
-*frondēscō
+*ēvānēscō ēvānēscere ēvānuī --
+*exacerbēscō exacerbēscere -- --
+*exalbēscō exalbēscere exalbuī --
+*exārdēscō exārdēscere exārsī exārsum
+*exārēscō exārēscere exāruī --
+*excandēscō excandēscere excanduī --
+*exhorrēscō exhorrēscere exhorruī --
+*expallēscō expallēscere expalluī --
+*expavēscō expavēscere expāvī --
+*extābēscō extābēscere extābuī --
+*extimēscō extimēscere extimuī --
+*fervēscō fervēscere -- --
+*fētēscō fētēscere -- --
+# FIXME, remove 3rd part
+*fistulēscō fistulēscere -- --
+*flaccēscō flaccēscere flaccuī --
+*flāvēscō flāvēscere -- --
+*flōrēscō flōrēscere -- --
+*frigēscō frīgēscere frīxī --
+# FIXME, clean up entry
+*frondēscō frondēscere fronduī --
 *glabrēscō
 *grandēscō
 *hebēscō
@@ -1819,3 +1825,26 @@ vāstō vāstāre vāstāvī vāstātum
 *a1 īnfīrmus
 *obfīrmō obfīrmāre obfīrmāvī obfīrmātum
 *offīrmō offīrmāre offīrmāvī offīrmātum
+###
+### fēstus, īnfēstus, manifēstus, but not
+### cōnfestim, festīnus, festūca, festra
+###
+*n1 fēsta
+*a3 fēstīvālis
+*adv fēstīvē
+*n3 fēstīvitās
+*adv fēstīviter
+*n2 fēstīvum
+*a1 fēstīvus
+*n2 fēstum
+*a1 fēstus
+*a3 īnfēstior
+*a1 īnfēstissimus
+*īnfēstō īnfēstāre īnfēstāvī īnfēstātum
+*a1 īnfēstus
+*n3 manifēstātiō
+*a3 manifēstior
+*a1 manifēstissimus
+*manifēstō manifēstāre manifēstāvī manifēstātum
+*a1 manifēstus
+*a1 prŏfēstus
