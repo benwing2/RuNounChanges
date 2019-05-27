@@ -2,6 +2,10 @@ local m_utilities = require("Module:utilities")
 local ut = require("Module:utils")
 local make_link = require("Module:links").full_link
 
+-- If enabled, compare this module with new version of module to make
+-- sure all conjugations are the same.
+local test_new_la_verb_module = false
+
 local export = {}
 
 local lang = require("Module:languages").getByCode("la")
@@ -19,9 +23,57 @@ local conjugations = {}
 -- i.e. the pagename is Reconstruction:Latin/...
 local reconstructed = NAMESPACE == "Reconstruction" and PAGENAME:find("^Latin/")
 
+-- Forward functions
+
+local postprocess
+local make_pres_1st
+local make_pres_2nd
+local make_pres_3rd
+local make_pres_3rd_io
+local make_pres_4th
+local make_perf
+local make_supine
+local make_table
+local make_indc_rows
+local make_subj_rows
+local make_impr_rows
+local make_nonfin_rows
+local make_vn_rows
+local make_footnotes
+local override
+local checkexist
+local checkirregular
+local flatten_values
+local link_google_books
+
 local function if_not_empty(val)
 	if val == "" then
 		return nil
+	else
+		return val
+	end
+end
+
+local function track(page)
+	require("Module:debug").track("la-verb/" .. page)
+	return true
+end
+
+-- For a given form, we allow either strings (a single form) or lists of forms,
+-- and treat strings equivalent to one-element lists.
+local function forms_equal(form1, form2)
+	if type(form1) ~= "table" then
+		form1 = {form1}
+	end
+	if type(form2) ~= "table" then
+		form2 = {form2}
+	end
+	return m_table.deepEquals(form1, form2)
+end
+
+local function concat_vals(val)
+	if type(val) == "table" then
+		return table.concat(val, ",")
 	else
 		return val
 	end
@@ -31,7 +83,56 @@ end
 -- This is the only function that can be invoked from a template.
 
 function export.show(frame)
-	local data, domain = make_data(frame), frame:getParent().args['search']
+	local data, domain = export.make_data(frame), frame:getParent().args['search']
+	-- Test code to compare existing module to new one.
+	if test_new_la_verb_module then
+		local m_new_la_verb = require("Module:User:Benwing2/la-verb")
+		local miscdata = {
+			title = data.title,
+			categories = data.categories,
+		}
+		local newdata = m_new_la_verb.make_data(frame)
+		local newmiscdata = {
+			title = newdata.title,
+			categories = newdata.categories,
+		}
+		local all_verb_props = {"forms", "form_footnote_indices", "footnotes", "miscdata"}
+		local difconj = false
+		for _, prop in ipairs(all_verb_props) do
+			local table = prop == "miscdata" and miscdata or data[prop]
+			local newtable = prop == "miscdata" and newmiscdata or newdata[prop]
+			for key, val in pairs(table) do
+				local newval = newtable[key]
+				if not forms_equal(val, newval) then
+					-- Uncomment this to display the particular key and
+					-- differing forms.
+					--error(key .. " " .. (val and concat_vals(val) or "nil") .. " || " .. (newval and concat_vals(newval) or "nil"))
+					difconj = true
+					break
+				end
+			end
+			if difconj then
+				break
+			end
+			-- Do the comparison the other way as well in case of extra keys
+			-- in the new table.
+			for key, newval in pairs(newtable) do
+				local val = table[key]
+				if not forms_equal(val, newval) then
+					-- Uncomment this to display the particular key and
+					-- differing forms.
+					--error(key .. " " .. (val and concat_vals(val) or "nil") .. " || " .. (newval and concat_vals(newval) or "nil"))
+					difconj = true
+					break
+				end
+			end
+			if difconj then
+				break
+			end
+		end
+		track(difconj and "different-conj" or "same-conj")
+	end
+
 	if domain == nil then
 		return make_table(data) .. m_utilities.format_categories(data.categories, lang)
 	else 
@@ -40,8 +141,28 @@ function export.show(frame)
 end
 
 
-function make_data(frame)
-	local conj_type = frame.args[1] or error("Conjugation type has not been specified. Please pass parameter 1 to the module invocation")
+-- The entry point for 'la-generate-verb-forms' to generate all verb forms.
+function export.generate_forms(frame)
+	local data = export.make_data(frame)
+	local ins_text = {}
+	for key, val in pairs(data.forms) do
+		local ins_form = {}
+		if type(val) ~= "table" then
+			val = {val}
+		end
+		for _, v in ipairs(val) do
+			if v ~= "-" and v ~= "—" and v ~= "&mdash;" then
+				table.insert(ins_form, v)
+			end
+		end
+		table.insert(ins_text, key .. "=" .. table.concat(ins_form, ","))
+	end
+	return table.concat(ins_text, "|")
+end
+
+
+function export.make_data(frame)
+	local conj_type = frame.args[1] or if_not_empty(args["conjtype"]) or error("Conjugation type has not been specified. Please pass parameter 1 to the module invocation")
 	local args = frame:getParent().args
 	local subtype = frame.args["type"] or args["type"]; if subtype == nil then subtype = '' end
 	local sync_perf = args["sync_perf"]; if sync_perf == nil then sync_perf = '' end
@@ -79,45 +200,90 @@ local function form_contains(forms, form)
 	end
 end
 
-local function add_form(data, conjtype, stem, suf, pos)
+-- Add a value to a given form key, e.g. "1s_pres_actv_indc". If the
+-- value is already present in the key, it won't be added again.
+--
+-- The value is formed by concatenating STEM and SUF. SUF can be a list,
+-- in which case STEM will be concatenated in turn to each value in the
+-- list and all the resulting forms added to the key.
+--
+-- POS is the position to insert the form(s) at; default is at the end.
+-- To insert at the beginning specify 1 for POS.
+local function add_form(data, key, stem, suf, pos)
+	if not suf then
+		return
+	end
 	if type(suf) ~= "table" then
 		suf = {suf}
 	end
 	for _, s in ipairs(suf) do
-		if not data[conjtype] then
-			data[conjtype] = {}
-		elseif type(data[conjtype]) == "string" then
-			data[conjtype] = {data[conjtype]}
+		if not data.forms[key] then
+			data.forms[key] = {}
+		elseif type(data.forms[key]) == "string" then
+			data.forms[key] = {data.forms[key]}
 		end
-		ut.insert_if_not(data[conjtype], stem .. s, pos)
+		ut.insert_if_not(data.forms[key], stem .. s, pos)
 	end
 end
 
-local function add_forms(data, conjtype, stem, suf1s, suf2s, suf3s, suf1p, suf2p, suf3p)
-	add_form(data, "1s_" .. conjtype, stem, suf1s)
-	add_form(data, "2s_" .. conjtype, stem, suf2s)
-	add_form(data, "3s_" .. conjtype, stem, suf3s)
-	add_form(data, "1p_" .. conjtype, stem, suf1p)
-	add_form(data, "2p_" .. conjtype, stem, suf2p)
-	add_form(data, "3p_" .. conjtype, stem, suf3p)
+-- Add a value to all persons/numbers of a given tense/voice/mood, e.g.
+-- "pres_actv_indc" (specified by KEYTYPE). If a value is already present
+-- in a key, it won't be added again.
+--
+-- The value for a given person/number combination is formed by concatenating
+-- STEM and the appropriate suffix for that person/number, e.g. SUF1S. The
+-- suffix can be a list, in which case STEM will be concatenated in turn to
+-- each value in the list and all the resulting forms added to the key. To
+-- not add a value for a specific person/number, specify nil or {} for the
+-- suffix for the person/number.
+local function add_forms(data, keytype, stem, suf1s, suf2s, suf3s, suf1p, suf2p, suf3p)
+	add_form(data, "1s_" .. keytype, stem, suf1s)
+	add_form(data, "2s_" .. keytype, stem, suf2s)
+	add_form(data, "3s_" .. keytype, stem, suf3s)
+	add_form(data, "1p_" .. keytype, stem, suf1p)
+	add_form(data, "2p_" .. keytype, stem, suf2p)
+	add_form(data, "3p_" .. keytype, stem, suf3p)
 end
 
-local function add_2_forms(data, conjtype, stem, suf2s, suf2p)
-	add_form(data, "2s_" .. conjtype, stem, suf2s)
-	add_form(data, "2p_" .. conjtype, stem, suf2p)
+-- Add a value to the 2nd person (singular and plural) of a given
+-- tense/voice/mood. This works like add_forms().
+local function add_2_forms(data, keytype, stem, suf2s, suf2p)
+	add_form(data, "2s_" .. keytype, stem, suf2s)
+	add_form(data, "2p_" .. keytype, stem, suf2p)
 end
 
-local function add_23_forms(data, conjtype, stem, suf2s, suf3s, suf2p, suf3p)
-	add_form(data, "2s_" .. conjtype, stem, suf2s)
-	add_form(data, "3s_" .. conjtype, stem, suf3s)
-	add_form(data, "2p_" .. conjtype, stem, suf2p)
-	add_form(data, "3p_" .. conjtype, stem, suf3p)
+-- Add a value to the 2nd and 3rd persons (singular and plural) of a given
+-- tense/voice/mood. This works like add_forms().
+local function add_23_forms(data, keytype, stem, suf2s, suf3s, suf2p, suf3p)
+	add_form(data, "2s_" .. keytype, stem, suf2s)
+	add_form(data, "3s_" .. keytype, stem, suf3s)
+	add_form(data, "2p_" .. keytype, stem, suf2p)
+	add_form(data, "3p_" .. keytype, stem, suf3p)
 end
 
-function postprocess(data, typeinfo)
+-- Clear out all forms from a given key (e.g. "1s_pres_actv_indc").
+local function clear_form(data, key)
+	data.forms[key] = nil
+end
+
+-- Clear out all forms from all persons/numbers a given tense/voice/mood
+-- (e.g. "pres_actv_indc").
+local function clear_forms(data, keytype)
+	clear_form(data, "1s_" .. keytype)
+	clear_form(data, "2s_" .. keytype)
+	clear_form(data, "3s_" .. keytype)
+	clear_form(data, "1p_" .. keytype)
+	clear_form(data, "2p_" .. keytype)
+	clear_form(data, "3p_" .. keytype)
+end
+
+postprocess = function(data, typeinfo)
 	-- Add information for the passive perfective forms
-	if data.forms["perf_pasv_ptc"] and not form.contains(data.forms["perf_pasv_ptc"], "&mdash;") then
+	if data.forms["perf_pasv_ptc"] and not form_contains(data.forms["perf_pasv_ptc"], "&mdash;") then
 		if typeinfo.subtype == "pass-impers" then
+			-- These may already be set by make_supine().
+			clear_form(data, "perf_pasv_inf")
+			clear_form(data, "perf_pasv_ptc")
 			for _, supine_stem in ipairs(typeinfo.supine_stem) do
 				local nns_ppp = "[[" .. (typeinfo.prefix or "") .. supine_stem .. "um]]"
 				add_form(data, "3s_perf_pasv_indc", nns_ppp, " [[est]]")
@@ -126,7 +292,7 @@ function postprocess(data, typeinfo)
 				add_form(data, "3s_perf_pasv_subj", nns_ppp, " [[sit]]")
 				add_form(data, "3s_plup_pasv_subj", nns_ppp, " [[esset]], [[foret]]")
 				add_form(data, "perf_pasv_inf", nns_ppp, " [[esse]]")
-				add_form("perf_pasv_ptc", nns_ppp, "")
+				add_form(data, "perf_pasv_ptc", nns_ppp, "")
 			end
 		elseif typeinfo.subtype == "pass-3only" then
 			for _, supine_stem in ipairs(typeinfo.supine_stem) do
@@ -565,7 +731,7 @@ end
 	Conjugation functions
 ]=]--
 
-function get_regular_stems(args, typeinfo)
+local function get_regular_stems(args, typeinfo)
 	-- Get the parameters
 	if typeinfo.subtype:find("depon") then
 		-- Deponent and semi-deponent verbs don't have the perfective principal part
@@ -1012,8 +1178,8 @@ irreg_conjugations["eo"] = function(args, data, typeinfo)
 	-- Active imperfective indicative
 	add_forms(data, "pres_actv_indc", prefix, "eō", "īs", "it", "īmus", "ītis",
 		prefix == "prōd" and {"eunt", "īnunt"} or "eunt")
-	add_forms(īta, "impf_actv_indc", prefix, "ībam", "ībās", "ībat", "ībāmus", "ībātis", "ībant")
-	add_forms(īta, "futr_actv_indc", prefix, "ībō", "ībis", "ībit", "ībimus", "ībitis", "ībunt")
+	add_forms(data, "impf_actv_indc", prefix, "ībam", "ībās", "ībat", "ībāmus", "ībātis", "ībant")
+	add_forms(data, "futr_actv_indc", prefix, "ībō", "ībis", "ībit", "ībimus", "ībitis", "ībunt")
 	
 	-- Active perfective indicative
 	add_form(data, "1s_perf_actv_indc", prefix, "īvī")
@@ -1023,7 +1189,7 @@ irreg_conjugations["eo"] = function(args, data, typeinfo)
 	
 	-- Passive imperfective indicative
 	add_forms(data, "pres_pasv_indc", prefix, "eor", { "īris", "īre"}, "ītur", "īmur", "īminī", "euntur")
-	add_forms(data, "impfv_pasv_indc", prefix, "ībar", {"ībāris", "ībāre"}, "ībātur", "ībāmur", "ībāminī", "ībantur")
+	add_forms(data, "impf_pasv_indc", prefix, "ībar", {"ībāris", "ībāre"}, "ībātur", "ībāmur", "ībāminī", "ībantur")
 	add_forms(data, "futr_pasv_indc",  prefix, "ībor", {"īberis", "ībere"}, "ībitur", "ībimur", "ībiminī", "ībuntur")
 	
 	-- Active imperfective subjunctive
@@ -2123,7 +2289,7 @@ end
 
 -- Form-generating functions
 
-function make_pres_1st(data, pres_stem)
+make_pres_1st = function(data, pres_stem)
 	if not pres_stem then
 		return
 	end
@@ -2140,7 +2306,7 @@ function make_pres_1st(data, pres_stem)
 
 	-- Active imperfective subjunctive
 	add_forms(data, "pres_actv_subj", pres_stem, "em", "ēs", "et", "ēmus", "ētis", "ent")
-	add_forms(data, "impf_actv_subj", pres_stem, "ārem", "ārās", "āret", "ārāmus", "ārātis", "ārent")
+	add_forms(data, "impf_actv_subj", pres_stem, "ārem", "ārēs", "āret", "ārēmus", "ārētis", "ārent")
 	
 	-- Passive imperfective subjunctive
 	add_forms(data, "pres_pasv_subj", pres_stem, "er", {"ēris", "ēre"}, "ētur", "ēmur", "ēminī", "entur")
@@ -2168,7 +2334,7 @@ function make_pres_1st(data, pres_stem)
 	data.forms["ger_acc"] = pres_stem .. "andum"
 end
 
-function make_pres_2nd(data, pres_stem)
+make_pres_2nd = function(data, pres_stem)
 	-- Active imperfective indicative
 	add_forms(data, "pres_actv_indc", pres_stem, "eō", "ēs", "et", "ēmus", "ētis", "ent")
 	add_forms(data, "impf_actv_indc", pres_stem, "ēbam", "ēbās", "ēbat", "ēbāmus", "ēbātis", "ēbant")
@@ -2209,7 +2375,7 @@ function make_pres_2nd(data, pres_stem)
 	data.forms["ger_acc"] = pres_stem .. "endum"
 end
 
-function make_pres_3rd(data, pres_stem)
+make_pres_3rd = function(data, pres_stem)
 	-- Active imperfective indicative
 	add_forms(data, "pres_actv_indc", pres_stem, "ō", "is", "it", "imus", "itis", "unt")
 	add_forms(data, "impf_actv_indc", pres_stem, "ēbam", "ēbās", "ēbat", "ēbāmus", "ēbātis", "ēbant")
@@ -2250,7 +2416,7 @@ function make_pres_3rd(data, pres_stem)
 	data.forms["ger_acc"] = pres_stem .. "endum"
 end
 
-function make_pres_3rd_io(data, pres_stem)
+make_pres_3rd_io = function(data, pres_stem)
 	-- Active imperfective indicative
 	add_forms(data, "pres_actv_indc", pres_stem, "iō", "is", "it", "imus", "itis", "iunt")
 	add_forms(data, "impf_actv_indc", pres_stem, "iēbam", "iēbās", "iēbat", "iēbāmus", "iēbātis", "iēbant")
@@ -2291,7 +2457,7 @@ function make_pres_3rd_io(data, pres_stem)
 	data.forms["ger_acc"] = pres_stem .. "iendum"
 end
 
-function make_pres_4th(data, pres_stem)
+make_pres_4th = function(data, pres_stem)
 	-- Active imperfective indicative
 	add_forms(data, "pres_actv_indc", pres_stem, "iō", "īs", "it", "īmus", "ītis", "iunt")
 	add_forms(data, "impf_actv_indc", pres_stem, "iēbam", "iēbās", "iēbat", "iēbāmus", "iēbātis", "iēbant")
@@ -2332,7 +2498,7 @@ function make_pres_4th(data, pres_stem)
 	data.forms["ger_acc"] = pres_stem .. "iendum"
 end
 
-function make_perf(data, perf_stem)
+make_perf = function(data, perf_stem)
 	if not perf_stem then
 		return
 	end
@@ -2354,7 +2520,7 @@ function make_perf(data, perf_stem)
 	end
 end
 
-function make_supine(data, supine_stem)
+make_supine = function(data, supine_stem)
 	if not supine_stem then
 		return
 	end
@@ -2427,7 +2593,7 @@ end
 
 -- Functions for generating the inflection table
 
-function show_form(form)
+local function show_form(form)
 	if not form then
 		return "&mdash;"
 	end
@@ -2456,7 +2622,7 @@ function show_form(form)
 end
 
 -- Make the table
-function make_table(data)
+make_table = function(data)
 	local pagename = PAGENAME
 	if reconstructed then
 		pagename = pagename:gsub("Latin/","")
@@ -2516,7 +2682,7 @@ local cases = {
 }
 --]]
 
-function make_indc_rows(data)
+make_indc_rows = function(data)
 	local indc = {}
 	
 	for _, v in ipairs({"actv", "pasv"}) do
@@ -2573,7 +2739,7 @@ function make_indc_rows(data)
 
 end
 
-function make_subj_rows(data)
+make_subj_rows = function(data)
 	local subj = {}
 	
 	for _, v in ipairs({"actv", "pasv"}) do
@@ -2630,7 +2796,7 @@ function make_subj_rows(data)
 
 end
 
-function make_impr_rows(data)
+make_impr_rows = function(data)
 	local impr = {}
 	local has_impr = false
 
@@ -2685,7 +2851,7 @@ function make_impr_rows(data)
 ]=] .. table.concat(impr)
 end
 
-function make_nonfin_rows(data)
+make_nonfin_rows = function(data)
 	local nonfin = {}
 	
 	for _, f in ipairs({"inf", "ptc"}) do
@@ -2720,7 +2886,7 @@ function make_nonfin_rows(data)
 
 end
 
-function make_vn_rows(data)
+make_vn_rows = function(data)
 	local vn = {}
 	local has_vn = false
 	
@@ -2759,7 +2925,7 @@ function make_vn_rows(data)
 
 end
 
-function make_footnotes(data)
+make_footnotes = function(data)
 	local tbl = {}
 	local i = 0
 	for k,v in pairs(data.footnotes) do
@@ -2768,7 +2934,7 @@ function make_footnotes(data)
 	return table.concat(tbl)
 end
 
-function override(data, args)
+override = function(data, args)
 	local function handle_form(form)
 		if args[form] then
 			data.forms[form] = show_form(mw.text.split(args[form], "/"))
@@ -2784,6 +2950,7 @@ function override(data, args)
 					handle_form(p .. "_" .. non_pers_form)
 				end
 			end
+		end
 		for _, t in ipairs({"pres", "impf", "futr", "perf", "plup", "futp"}) do
 			handle_tense(t, "indc")
 		end
@@ -2804,20 +2971,33 @@ function override(data, args)
 	end	
 end
 
-function checkexist(data)
+checkexist = function(data)
 	if NAMESPACE ~= '' then return end
+	local outerbreak = false
 	for _, conjugation in pairs(data.forms) do
-		if conjugation and type(conjugation) == 'string' and not conjugation:find(" ") then
-			local title = lang:makeEntryName(conjugation)
-			local t = mw.title.new(title)
-			if t and not t.exists then
-				table.insert(data.categories,'Latin verbs with red links in their conjugation tables')
+		if conjugation then
+			if type(conjugation) == 'string' then
+				conjugation = {conjugation}
 			end
+			for _, conj in ipairs(conjugation) do
+				if not conj:find(" ") then
+					local title = lang:makeEntryName(conj)
+					local t = mw.title.new(title)
+					if t and not t.exists then
+						table.insert(data.categories, 'Latin verbs with red links in their conjugation tables')
+						outerbreak = true
+						break
+					end
+				end
+			end
+		end
+		if outerbreak then
+			break
 		end
 	end
 end
 
-function checkirregular(args,data)
+checkirregular = function(args,data)
 	local apocopic = mw.ustring.sub(args[1],1,-2)
 	apocopic = mw.ustring.gsub(apocopic,'[^aeiouyāēīōūȳ]+$','')
 	if args[1] and args[2] and not mw.ustring.find(args[2],'^'..apocopic) then
@@ -2833,7 +3013,7 @@ end
 
 -- functions for creating external search hyperlinks
 
-function flatten_values(T)
+flatten_values = function(T)
 	function noaccents(x)
 		return mw.ustring.gsub(mw.ustring.toNFD(x),'[^%w]+',"")	
 	end
@@ -2856,7 +3036,7 @@ function flatten_values(T)
 	return tbl
 end
 
-function link_google_books(verb, forms, domain)
+link_google_books = function(verb, forms, domain)
 	function partition_XS_into_N(XS, N) 
 		local count = 0
 		local mensae = {}
