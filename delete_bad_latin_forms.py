@@ -388,21 +388,34 @@ def process_page(index, lemma, conj, forms, pages_to_delete, save, verbose):
     delete_form(formind, formval, tag_sets_to_delete)
 
 parser = blib.create_argparser(u"Delete bad Latin forms")
-parser.add_argument('--conjfile', required=True, help="File containing lemmas and conj templates.")
-parser.add_argument('--forms', required=True, help="Forms to delete.")
+parser.add_argument('--conjfile', help="File containing lemmas and conj templates.")
+parser.add_argument('--form-conjfile', help="File containing lemmas, forms to delete and conj templates.")
+parser.add_argument('--forms', help="Forms to delete.")
 parser.add_argument('--output-pages-to-delete', help="File to write pages to delete.")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-lines = [x.strip() for x in codecs.open(args.conjfile, "r", "utf-8")]
 pages_to_delete = []
-for index, line in blib.iter_items(lines, start, end):
-  if "!!!" in line:
-    lemma, conj = re.split("!!!", line)
-  else:
-    lemma, conj = re.split(" ", line, 1)
-  process_page(index, lemma, conj, args.forms, pages_to_delete,
-    args.save, args.verbose)
+if args.form_conjfile:
+  lines = [x.strip() for x in codecs.open(args.form_conjfile, "r", "utf-8")]
+  for index, line in blib.iter_items(lines, start, end):
+    if "!!!" in line:
+      lemma, forms, conj = re.split("!!!", line)
+    else:
+      lemma, forms, conj = re.split(" ", line, 2)
+    process_page(index, lemma, conj, forms, pages_to_delete,
+      args.save, args.verbose)
+else:
+  if not args.conjfile or not args.forms:
+    raise ValueError("If --form-conjfile not given, --conjfile and --forms must be given")
+  lines = [x.strip() for x in codecs.open(args.conjfile, "r", "utf-8")]
+  for index, line in blib.iter_items(lines, start, end):
+    if "!!!" in line:
+      lemma, conj = re.split("!!!", line)
+    else:
+      lemma, conj = re.split(" ", line, 1)
+    process_page(index, lemma, conj, args.forms, pages_to_delete,
+      args.save, args.verbose)
 msg("The following pages need to be deleted:")
 for page in pages_to_delete:
   msg(page)
