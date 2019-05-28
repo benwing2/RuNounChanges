@@ -1225,236 +1225,257 @@ coëmō coëmere *coēmī coēmptum
 ###
 ### *ēscō
 ###
-*crēscō crēscere crēvī crētum
-*accrēscō accrēscere accrēvī accrētum
-*adcrēscō adcrēscere adcrēvī adcrētum
-*adincrēscō adincrēscere -- --
-*concrēscō concrēscere concrēvī concrētum
-*dēcrēscō dēcrēscere dēcrēvī dēcrētum
-*incrēscō incrēscere incrēvī incrētum
-*succrēscō succrēscere -- --
-*supercrēscō supercrēscere supercrēvī --
+*crēscō crēscere crēvī crētum [int]
+# FIXME, delete passive
+*accrēscō accrēscere accrēvī accrētum [int]
+# FIXME, delete passive
+*adcrēscō adcrēscere adcrēvī adcrētum [int]
+# FIXME, delete passive, fix headword
+# Example:
+# {{la-verb|adolēscō|adolēscere|conj=3|pattern=nopass-noperf}}
+# {{la-conj-3rd|type=nopass-noperf|adolēsc}}
+*adincrēscō adincrēscere -- -- [int]
+*concrēscō concrēscere concrēvī concrētum [int]
+*dēcrēscō dēcrēscere dēcrēvī dēcrētum [int, has ppp]
+# FIXME, delete supine; Gaffiot and Lewis/Short don't list incrētum
+*incrēscō incrēscere incrēvī -- [int]
+# FIXME, should have perfect and supine; delete passive, fix headword
+*succrēscō succrēscere succrēvī succrētum [int]
+*supercrēscō supercrēscere supercrēvī -- [int]
 # FIXME, should have short a
-*macrēscō macrēscere macruī --
-# FIXME, should have perfect
-*ēmacrēscō ēmacrēscere ēmacruī --
-*olēscō olēscere -- --
-*abolēscō abolēscere abolēvī --
-*adolēscō adolēscere abolēvī --
-*exolēscō exolēscere exolēvī exolētum
-*exsolēscō exsolēscere exsolēvī exsolētum
-*indolēscō indolēscere indoluī --
-*inolēscō inolēscere inolēvī inolitum
-*īnsolēscō īnsolēscere -- --
-*obsolēscō obsolēscere obsolēvī obsolētum
-*quiēscō quiēscere quiēvī quiētum
-*acquiēscō acquiēscere acquiēvī acquiētum
-*adquiēscō adquiēscere adquiēvī adquiētum
-*conquiēscō conquiēscere conquiēvī conquiētum
-*requiēscō requiēscere requiēvī requiētum
-*suēscō suēscere suēvī suētum
-*adsuēscō adsuēscere adsuēvī adsuētum
-*assuēscō assuēscere assuēvī assuētum
-*cōnsuēscō cōnsuēscere cōnsuēvī cōnsuētum
-*īnsuēscō īnsuēscere īnsuēvī īnsuētum
-*mānsuēscō mānsuēscere mānsuēvī mānsuētum
-*abhorrēscō abhorrēscere abhorruī --
-*acēscō acēscere acēvī acētum
-*v1 adēscō
-# FIXME, listed as defective
-*adhaerēscō adhaerēscere adhaesī adhaesum
-*adhērēscō adhērēscere adhēsī adhēsum
-*adlubēscō adlubēscere -- --
-*aegrēscō aegrēscere -- --
-*albēscō albēscere -- --
-*alēscō alēscere -- --
-*algēscō algēscere alsī --
-*amārēscō amārēscere -- --
-*appārēscō appārēscere -- --
-*arborēscō arborēscere -- --
+*macrēscō macrēscere macruī -- [int]
+# FIXME, should have perfect; delete passive, fix headword
+*ēmacrēscō ēmacrēscere ēmacruī -- [int]
+# FIXME, delete passive, fix headword
+*olēscō olēscere -- -- [int]
+*abolēscō abolēscere abolēvī -- [int]
+# FIXME, delete passive
+*adolēscō adolēscere adolēvī adultum [int, has ppp, has also adoluī, syncopated adolēsse]
+# FIXME, delete passive
+*exolēscō exolēscere exolēvī exolētum [int, has ppp]
+# FIXME, delete passive, perfect and supine
+*exsolēscō exsolēscere -- -- [int]
+# FIXME, allow passive
+*indolēscō indolēscere indoluī -- [tr]
+*inolēscō inolēscere inolēvī inolitum [tr]
+# FIXME, delete passive
+*īnsolēscō īnsolēscere -- -- [int]
+# FIXME, delete passive
+*obsolēscō obsolēscere obsolēvī obsolētum [int, obsolētus exists]
+# FIXME, delete passive
+*quiēscō quiēscere quiēvī quiētum [int]
+# FIXME, check all the rest
+*acquiēscō acquiēscere acquiēvī acquiētum [int]
+*adquiēscō adquiēscere adquiēvī adquiētum [int]
+*conquiēscō conquiēscere conquiēvī conquiētum [int]
+*requiēscō requiēscere requiēvī requiētum [tr]
+*suēscō suēscere suēvī suētum [tr]
+*adsuēscō adsuēscere adsuēvī adsuētum [tr]
+*assuēscō assuēscere assuēvī assuētum [tr]
+*cōnsuēscō cōnsuēscere cōnsuēvī cōnsuētum [tr]
+*īnsuēscō īnsuēscere īnsuēvī īnsuētum [tr]
+*mānsuēscō mānsuēscere mānsuēvī mānsuētum [tr]
+# FIXME, allow passive, delete perfect
+*abhorrēscō abhorrēscere -- -- [tr]
+# FIXME, wrong perfect, delete supine
+*acēscō acēscere acuī -- [int]
+*v1 adēscō [per Gaffiot, only adēscātus is used]
+# FIXME, add perfect and supine, delete passive
+*adhaerēscō adhaerēscere adhaesī adhaesum [int]
+# FIXME, add perfect and supine, delete passive
+*adhērēscō adhērēscere adhēsī adhēsum [int]
+*adlubēscō adlubēscere -- -- [int]
+*aegrēscō aegrēscere -- -- [int]
+*albēscō albēscere -- -- [int]
+*alēscō alēscere -- -- [int]
+*algēscō algēscere alsī -- [int]
+*amārēscō amārēscere -- -- [int]
+*appārēscō appārēscere -- -- [int]
+*arborēscō arborēscere -- -- [int]
 # FIXME, remove fourth part
-*ārdēscō ārdēscere ārsī --
-*ārēscō ārēscere āruī --
-*assenēscō assenēscere -- --
-*augēscō augēscere -- --
-*aurēscō aurēscere -- --
-*calēscō calēscere -- --
-*candēscō candēscere canduī --
+*ārdēscō ārdēscere ārsī -- [int]
+*ārēscō ārēscere āruī -- [int]
+*assenēscō assenēscere -- -- [int]
+*augēscō augēscere -- -- [int]
+*aurēscō aurēscere -- -- [int]
+*calēscō calēscere -- -- [int]
+*candēscō candēscere canduī -- [int]
 # FIXME, add third part
-*cānēscō cānēscere cānuī --
-*celebrēscō celebrēscere -- --
-*cinerēscō cinerēscere -- --
-*clārēscō clārēscere clāruī --
-*coacēscō coacēscere coacuī --
-*coalēscō coalēscere coaluī coalitum
-*cohaerēscō cohaerēscō cohaesī --
-*colliquēscō colliquēscere colliquī --
-*compēscō compēscere compēscuī --
+*cānēscō cānēscere cānuī -- [int]
+*celebrēscō celebrēscere -- -- [int]
+*cinerēscō cinerēscere -- -- [int]
+*clārēscō clārēscere clāruī -- [int]
+*coacēscō coacēscere coacuī -- [int]
+*coalēscō coalēscere coaluī coalitum [int, has ppp]
+*cohaerēscō cohaerēscō cohaesī -- [int]
+*colliquēscō colliquēscere colliquī -- [int]
+*compēscō compēscere compēscuī -- [tr; supine compēscitum in Prisc.]
 # has incorrect long vowel on u
-*computrēscō computrēscere computruī --
+*computrēscō computrēscere computruī -- [int]
 # FIXME, has incorrect 3rd part conpuī
-*conpēscō conpēscere conpēscuī --
+*conpēscō conpēscere conpēscuī -- [tr; supine conpēscitum in Prisc.]
 # has incorrect long vowel on u
-*conputrēscō conputrēscere conputruī --
-*cōnsānēscō cōnsānēscere cōnsānuī --
-*cōnsenēscō cōnsenēscere cōnsenuī --
-*cōnsilēscō cōnsilēscere cōnsiluī --
-*contābēscō contābēscere contābuī --
+*conputrēscō conputrēscere conputruī -- [int]
+*cōnsānēscō cōnsānēscere cōnsānuī -- [int]
+*cōnsenēscō cōnsenēscere cōnsenuī -- [int]
+*cōnsilēscō cōnsilēscere cōnsiluī -- [int]
+*contābēscō contābēscere contābuī -- [int]
 # has incorrect long vowel on e
-*contenebrēscō contenebrēscere -- --
-*conticēscō conticēscere conticuī --
+*contenebrēscō contenebrēscere -- -- [int; impers per Gaffiot but not Lewis/Short]
+*conticēscō conticēscere conticuī -- [tr]
 # FIXME Delete the following
 #*contremēscō
-*convalēscō convalēscere convaluī --
-*convēscor convēscī --
-*cornēscō cornēscere --
-*crēbēscō crēbēscere crēbuī --
+*convalēscō convalēscere convaluī -- [int]
+*convēscor convēscī -- [int]
+*cornēscō cornēscere -- [int]
+*crēbēscō crēbēscere crēbuī -- [int]
 # FIXME, delete 4th part
-*crēbrēscō crēbrēscere crēbruī --
-*crūdēscō crūdēscere crūduī --
+*crēbrēscō crēbrēscere crēbruī -- [int]
+*crūdēscō crūdēscere crūduī -- [int]
 # FIXME, has two perfs, dēfervī and dēferbuī
-*dēfervēscō dēfervēscere dēfervī/dēferbuī --
-*dēflōrēscō dēflōrēscere dēflōruī --
+*dēfervēscō dēfervēscere dēferbuī/dēfervī -- [int]
+*dēflōrēscō dēflōrēscere dēflōruī -- [int]
 # FIXME, missing 3rd part
-*deliquēscō dēliquēscere dēlicuī --
-*dēlitēscō dēlitēscere dēlituī --
-*dēsenēscō dēsenēscere dēsenuī --
-*dīlūcēscō dīlūcēscere dīlūxī --
+*deliquēscō dēliquēscere dēlicuī -- [int]
+*dēlitēscō dēlitēscere dēlituī -- [int]
+*dēsenēscō dēsenēscere dēsenuī -- [int, per Gaffiot dēsenēscō is unused]
+*dīlūcēscō dīlūcēscere dīlūxī -- [int]
 # FIXME, Lewis and Short lists dulcuī, but not Lewis or Gaffiot.
-*dulcēscō dulcēscere -- --
-*dūrēscō dūrēscere dūruī --
+*dulcēscō dulcēscere -- -- [int]
+*dūrēscō dūrēscere dūruī -- [int]
 # FIXME, has two perfs
-*effervēscō effervēscere efferbuī/effervī --
-*efflōrēscō efflōrēscere efflōruī --
-*ēlanguēscō ēlanguēscere ēlanguī --
+*effervēscō effervēscere efferbuī/effervī -- [int]
+*efflōrēscō efflōrēscere efflōruī -- [int]
+*ēlanguēscō ēlanguēscere ēlangŭī -- [int]
 # FIXME, missing 3rd part
-*ēlūcēscō ēlūcēscere ēlūxī --
-*ēmarcēscō ēmarcēscere ēmarcuī --
-*ēnitēscō ēnitēscere ēnituī --
-*ērubēscō ērubēscere ērubuī --
+*ēlūcēscō ēlūcēscere ēlūxī -- [int]
+*ēmarcēscō ēmarcēscere ēmarcuī -- [int]
+*ēnitēscō ēnitēscere ēnituī -- [int]
+*ērubēscō ērubēscere ērubuī -- [tr]
 *-ēscō
-*ēvānēscō ēvānēscere ēvānuī --
-*exacerbēscō exacerbēscere -- --
-*exalbēscō exalbēscere exalbuī --
-*exārdēscō exārdēscere exārsī exārsum
-*exārēscō exārēscere exāruī --
-*excandēscō excandēscere excanduī --
-*exhorrēscō exhorrēscere exhorruī --
-*expallēscō expallēscere expalluī --
-*expavēscō expavēscere expāvī --
-*extābēscō extābēscere extābuī --
-*extimēscō extimēscere extimuī --
-*fervēscō fervēscere -- --
-*fētēscō fētēscere -- --
+*ēvānēscō ēvānēscere ēvānuī -- [int]
+*exacerbēscō exacerbēscere -- -- [int]
+*exalbēscō exalbēscere exalbuī -- [int]
+*exārdēscō exārdēscere exārsī exārsum [int, has ppp]
+*exārēscō exārēscere exāruī -- [int]
+*excandēscō excandēscere excanduī -- [int]
+*exhorrēscō exhorrēscere exhorruī -- [tr]
+*expallēscō expallēscere expalluī -- [tr, mostly unused in present/imperfect/future]
+*expavēscō expavēscere expāvī -- [tr]
+*extābēscō extābēscere extābuī -- [int, mostly unused in present/imperfect/future]
+*extimēscō extimēscere extimuī -- [tr]
+*fervēscō fervēscere -- -- [int]
+*fētēscō fētēscere -- -- [int; alt of foetēscō]
 # FIXME, remove 3rd part
-*fistulēscō fistulēscere -- --
-*flaccēscō flaccēscere flaccuī --
-*flāvēscō flāvēscere -- --
-*flōrēscō flōrēscere -- --
-*frigēscō frīgēscere frīxī --
+*fistulēscō fistulēscere -- -- [int]
+*flaccēscō flaccēscere flaccuī -- [int; has flaccīscō as alt]
+*flāvēscō flāvēscere -- -- [int]
+*flōrēscō flōrēscere -- -- [int; rēbus flōrēscendīs praeesse occurs]
+*frigēscō frīgēscere frīxī -- [int; friguī occurs late]
 # FIXME, clean up entry
-*frondēscō frondēscere fronduī --
-*glabrēscō glabrēscere -- --
-*grandēscō grandēscere -- --
-*hebēscō hebēscere -- --
-*herbēscō herbēscere -- --
-*horrēscō horrēscere horruī --
-*īgnēscō īgnēscere -- --
-*illūcēscō illūcēscere illūxī --
-*inalbēscō inalbēscere -- --
-*inārēscō inārēscere ināruī --
-*incalēscō incalēscere incaluī --
-*incandēscō incandēscere incanduī --
-*incānēscō incānēscere incānuī --
-*inclārēscō inclārēscere inclāruī --
-*incrēbēscō incrēbēscere incrēbuī --
-*incrēbrēscō incrēbrēscere incrēbruī --
-*indūrēscō indūrēscere indūruī --
-*ingemēscō ingemēscere ingemuī --
-*ingravēscō ingravēscere -- --
-*inhorrēscō inhorrēscere inhorruī --
-*inlūcēscō inlūcēscere inlūxī --
-*innōtēscō innōtēscere innōtuī --
-*īnsenēscō īnsenēscere īnsenuī --
-*intumēscō intumēscere intumuī --
-*invalēscō invalēscere invaluī --
-*iuvenēscō iuvenēscere iuvenuī --
-*juvenēscō juvenēscere juvenuī --
-*languēscō languēscere langŭī --
-*lapidēscō lapidēscere -- --
-*lassēscō lassēscere -- --
-*latēscō
-*liquēscō
-*lucēscō
-*lutēscō
-*macerēscō
-*macēscō
-*madēscō
-*marcēscō
-*matrēscō
-*maturēscō
-*mitēscō
-*mollēscō
-*nigrēscō
-*noctēscō
-*notēscō
-*obarēscō
-*obatrēscō
-*obbrutēscō
-*obdulcēscō
-*obdurēscō
-*obmutēscō
-*obrigēscō
-*obsordēscō
-*obstipēscō
-*obstupēscō
-*obsurdēscō
-*obtenebrēscō
-*occallēscō
-*pallēscō
-*patēscō
-*pavēscō
-*percrebēscō
-*percrebrēscō
-*perhorrēscō
-*pertimēscō
-*pinguēscō
-*plumēscō
-*pubēscō
-*putrēscō
-*radicēscō
-*refrigēscō
-*relanguēscō
-*remollēscō
-*revirēscō
-*revivēscō
-*rigēscō
-*rubēscō
-*rufēscō
-*sanēscō
-*senēscō
-*serēscō
-*siccēscō
-*silēscō
-*sordēscō
-*splendēscō
-*stupēscō
-*tabēscō
-*telēscōpium
-*tenebrēscō
-*tepēscō
-*torpēscō
-*tremēscō
-*tumēscō
-*turgēscō
-*umēscō
-*valēscō
-*vanēscō
-*vēscōr
-*veterēscō
-*vigēscō
-*virēscō
-*viridēscō
+*frondēscō frondēscere fronduī -- [int]
+*glabrēscō glabrēscere -- -- [int]
+*grandēscō grandēscere -- -- [int]
+*hebēscō hebēscere -- -- [int]
+*herbēscō herbēscere -- -- [int]
+*horrēscō horrēscere horruī -- [tr]
+*īgnēscō īgnēscere -- -- [int]
+*illūcēscō illūcēscere illūxī -- [tr; has alt form illūcīscō]
+*inalbēscō inalbēscere -- -- [int]
+*inārēscō inārēscere ināruī -- [int]
+*incalēscō incalēscere incaluī -- [int]
+*incandēscō incandēscere incanduī -- [int]
+*incānēscō incānēscere incānuī -- [int]
+*inclārēscō inclārēscere inclāruī -- [int]
+*incrēbēscō incrēbēscere incrēbuī -- [int; alt of incrēbrēscō, which is primary]
+*incrēbrēscō incrēbrēscere incrēbruī -- [int]
+*indūrēscō indūrēscere indūruī -- [int]
+*ingemēscō ingemēscere ingemuī -- [int; alt of ingemīscō, which is primary]
+*ingravēscō ingravēscere -- -- [int]
+*inhorrēscō inhorrēscere inhorruī -- [int]
+*inlūcēscō inlūcēscere inlūxī -- [tr; has alt form inlūcīscō]
+*innōtēscō innōtēscere innōtuī -- [tr]
+*īnsenēscō īnsenēscere īnsenuī -- [int]
+*intumēscō intumēscere intumuī -- [int]
+*invalēscō invalēscere invaluī -- [int]
+*iuvenēscō iuvenēscere iuvenuī -- [int]
+*juvenēscō juvenēscere juvenuī -- [int]
+*languēscō languēscere langŭī -- [int]
+*lapidēscō lapidēscere -- -- [int]
+*lassēscō lassēscere -- -- [int]
+# FIXME, two different verbs, latēscō and lātēscō, and need to
+# delete 3rd part latī and forms
+*latēscō latēscere -- -- [int]
+*liquēscō liquēscere licuī -- [int]
+*lūcēscō lūcēscere lūxī -- [int; has alt form lūcīscō]
+*lutēscō lutēscere -- -- [int]
+*mācerēscō mācerēscere -- -- [int]
+*macēscō macēscere -- -- [int]
+*madēscō madēscere maduī -- [int]
+*marcēscō marcēscere -- -- [int; has late perfect marcuī]
+*mātrēscō mātrēscere -- -- [int]
+*mātūrēscō mātūrēscere mātūruī -- [int]
+*mītēscō mītēscere -- -- [int; has alt form mītīscō]
+*mollēscō mollēscere -- -- [int]
+*nigrēscō nigrēscere nigruī -- [int]
+*noctēscō noctēscere -- -- [int]
+*nōtēscō nōtēscere nōtuī -- [int]
+*obārēscō obārēscere -- -- [int]
+*obātrēscō obātrēscere -- -- [int]
+*obbrūtēscō obbrūtēscere obbrūtuī -- [int]
+*obdulcēscō obdulcēscere -- -- [int]
+*obdūrēscō obdūrēscere obdūruī -- [int]
+*obmūtēscō obmūtēscere obmūtuī -- [int]
+*obrigēscō obrigēscere obriguī -- [int]
+*obsordēscō obsordēscere obsorduī -- [int]
+*obstipēscō obstipēscere obstipuī -- [int, alt of obstupēscō]
+*obstupēscō obstupēscere obstupuī -- [int]
+*obsurdēscō obsurdēscere obsurduī -- [int]
+*obtenebrēscō obtenebrēscere -- -- [int]
+*occallēscō occallēscere occalluī -- [int; has alt form obcallēscō]
+*pallēscō pallēscere palluī -- [int]
+*patēscō patēscere patuī -- [int]
+*pavēscō pavēscere -- -- [tr]
+*percrēbēscō percrēbēscere percrēbuī -- [int; alt of percrēbēscō, which is primary]
+*percrēbrēscō percrēbrēscere percrēbruī -- [int]
+*perhorrēscō perhorrēscere perhorruī -- [tr]
+*pertimēscō pertimēscere pertimuī -- [tr]
+*pinguēscō pinguēscere -- -- [int]
+*plūmēscō plūmēscere -- -- [int]
+*pūbēscō pūbēscere pūbuī -- [int]
+*putrēscō putrēscere putruī -- [int]
+*rādīcēscō rādīcēscere -- -- [int]
+*refrīgēscō refrīgēscere refrīxī -- [int; late vulgar pf refrīgŭī]
+*relanguēscō relanguēscere relangŭī -- [int; used mostly in perfect]
+*remollēscō remollēscere -- -- [int]
+*revirēscō revirēscere reviruī -- [int]
+*revīvēscō revīvēscere revīxī -- [int; alt of revīvīscō, which is primary]
+*rigēscō rigēscere rigŭī -- [int]
+*rubēscō rubēscere rubuī -- [int]
+*rūfēscō rūfēscere -- -- [int]
+*sānēscō sānēscere -- -- [int]
+*senēscō senēscere senuī -- [int; but longissimum spatium senēscendōrum hominum occurs]
+*serēscō serēscere -- -- [int; two meanings, "to dry out" < serēnum and "to turn into whey" < serum]
+*siccēscō siccēscere -- -- [int]
+*silēscō silēscere -- -- [int]
+*sordēscō sordēscere sorduī -- [int]
+*splendēscō splendēscere splenduī -- [int]
+*stupēscō stupēscere -- -- [int]
+*tabēscō tabēscere tabuī -- [int]
+*tenebrēscō tenebrēscere -- -- [int]
+*tepēscō tepēscere tepuī -- [int]
+*torpēscō torpēscere torpuī -- [int]
+*tremēscō tremēscere -- -- [tr; has alt form tremīscō]
+*tumēscō tumēscere tumuī -- [int]
+*turgēscō turgēscere -- -- [int; has rare perf tursī in Ennius]
+*ūmēscō ūmēscere -- -- [int; alt of hūmēscō, which is primary]
+*valēscō valēscere valuī -- [int]
+*vānēscō vānēscere -- -- [int]
+*vēscor vēscī -- -- [tr]
+*veterēscō veterēscere -- -- [int]
+*vigēscō vigēscere -- -- [int]
+*virēscō virēscere viruī -- [int]
+*viridēscō viridēscere -- -- [int]
 
 
 ###
