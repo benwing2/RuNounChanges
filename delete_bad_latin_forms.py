@@ -379,6 +379,16 @@ def process_page(index, lemma, conj, forms, pages_to_delete, save, verbose):
         if "perf" in key and "pasv" in key:
           tag_sets_to_delete.append(form_key_to_tag_set(key))
           forms_to_delete.append(val)
+    if form == "sup":
+      for key, val in args.iteritems():
+        if "sup" in key:
+          tag_sets_to_delete.append(form_key_to_tag_set(key))
+          forms_to_delete.append(val)
+    if form == "ger":
+      for key, val in args.iteritems():
+        if "ger" in key:
+          tag_sets_to_delete.append(form_key_to_tag_set(key))
+          forms_to_delete.append(val)
 
   single_forms_to_delete = []
 
