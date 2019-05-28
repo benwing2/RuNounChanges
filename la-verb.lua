@@ -1,4 +1,6 @@
 local m_utilities = require("Module:utilities")
+local m_table = require("Module:table")
+-- FIXME, port remaining functions to [[Module:table]] and use it instead
 local ut = require("Module:utils")
 local make_link = require("Module:links").full_link
 
@@ -80,8 +82,6 @@ local function concat_vals(val)
 end
 
 -- The main entry point.
--- This is the only function that can be invoked from a template.
-
 function export.show(frame)
 	local data, domain = export.make_data(frame), frame:getParent().args['search']
 	-- Test code to compare existing module to new one.
@@ -151,19 +151,22 @@ function export.generate_forms(frame)
 			val = {val}
 		end
 		for _, v in ipairs(val) do
-			if v ~= "-" and v ~= "—" and v ~= "&mdash;" then
+			-- skip forms with HTML or links in them
+			if v ~= "-" and v ~= "—" and v ~= "&mdash;" and not v:find("[<>=|%[%]]") then
 				table.insert(ins_form, v)
 			end
 		end
-		table.insert(ins_text, key .. "=" .. table.concat(ins_form, ","))
+		if #ins_form > 0 then
+			table.insert(ins_text, key .. "=" .. table.concat(ins_form, ","))
+		end
 	end
 	return table.concat(ins_text, "|")
 end
 
 
 function export.make_data(frame)
-	local conj_type = frame.args[1] or if_not_empty(args["conjtype"]) or error("Conjugation type has not been specified. Please pass parameter 1 to the module invocation")
 	local args = frame:getParent().args
+	local conj_type = frame.args[1] or if_not_empty(args["conjtype"]) or error("Conjugation type has not been specified. Please pass parameter 1 to the module invocation")
 	local subtype = frame.args["type"] or args["type"]; if subtype == nil then subtype = '' end
 	local sync_perf = args["sync_perf"]; if sync_perf == nil then sync_perf = '' end
 	local p3inf = args["p3inf"]; if p3inf == nil then p3inf = '' end
@@ -713,7 +716,8 @@ postprocess = function(data, typeinfo)
 			end
 			local newvals = mw.clone(formval)
 			for _, fv in ipairs(formval) do
-				if fv:find('vi' .. suff_sync .. '$') then
+				-- Can only syncopate 'vi', or 'vi' spelled as 'ui' after a vowel
+				if fv:find('vi' .. suff_sync .. '$') or mw.ustring.find(fv, '[aeiouyāēīōūȳăĕĭŏŭ]ui' .. suff_sync.. '$') then
 					ut.insert_if_not(newvals, mw.ustring.sub(fv, 1, -mw.ustring.len(suff_sync) - 3) .. suff_sync)
 				end
 			end
@@ -979,11 +983,13 @@ conjugations["4th"] = function(args, data, typeinfo)
 					forms = {forms}
 				end
 				data.forms[key] = {}
-				for _, form in ipairs(forms) do
+				for _, f in ipairs(forms) do
 					if typeinfo.sync_perf == "yn" then
-						ut.insert_if_not(data.forms[key], form:gsub("%.", ""))
+						-- fuckme, need to assign to local to discard second value
+						local fsub = f:gsub("%.", "")
+						ut.insert_if_not(data.forms[key], fsub)
 					end
-					ut.insert_if_not(data.forms[key], ivi_ive(form))
+					ut.insert_if_not(data.forms[key], ivi_ive(f))
 				end
 			end
 		end
