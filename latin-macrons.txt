@@ -1240,7 +1240,11 @@ coëmō coëmere *coēmī coēmptum
 # FIXME, delete supine; Gaffiot and Lewis/Short don't list incrētum
 *incrēscō incrēscere incrēvī -- [int]
 # FIXME, should have perfect and supine; delete passive, fix headword
+# {{la-verb|succrēscō|succrēscere|succrēvī|succrētum|conj=3|pattern=nopass}}
+# {{la-conj-3rd|type=nopass|succrēsc|succrēv|succrēt}}
 *succrēscō succrēscere succrēvī succrētum [int]
+# {{la-verb|supercrēscō|supercrēscere|supercrēvī|conj=3|pattern=nopass}}
+# {{la-conj-3rd|type=nopass|supercrēsc|supercrēv}}
 *supercrēscō supercrēscere supercrēvī -- [int]
 # FIXME, should have short a
 *macrēscō macrēscere macruī -- [int]
@@ -1249,6 +1253,7 @@ coëmō coëmere *coēmī coēmptum
 # FIXME, delete passive, fix headword
 *olēscō olēscere -- -- [int]
 *abolēscō abolēscere abolēvī -- [int]
+# ---------- got this far ------------
 # FIXME, delete passive
 *adolēscō adolēscere adolēvī adultum [int, has ppp, has also adoluī, syncopated adolēsse]
 # FIXME, delete passive
