@@ -9314,7 +9314,7 @@ Page 4462 revivisco: -------- begin text ---------
 * {{l|la|revīvēscō}}
 
 ===Etymology===
-Cf. {{m|la|revīvō}} and {{m|la|-īscō}}.
+From {{affix|la|revīvō|-īscō}}.
 
 ===Pronunciation===
 * {{la-IPA|revīvīscō}}
