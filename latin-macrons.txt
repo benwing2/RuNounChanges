@@ -1196,31 +1196,31 @@ coëmō coëmere *coēmī coēmptum
 ###
 ### *āscō
 ###
-*advesperāscit advesperāscere advesperāvit --
-*agnāscor agnāscī agnātum
-*dēpāscō dēpāscere dēpāvī dēpāstum
-*ēnāscor ēnāscī ēnātum
-*gnāscor gnāscī gnātum
-*inveterāscō inveterāscere inveterāvī --
-*īrāscor īrāscī īrātum
+*advesperāscit advesperāscere advesperāvit -- [impers]
+*agnāscor agnāscī agnātum [int, has alt form adgnāscor]
+*dēpāscō dēpāscere dēpāvī dēpāstum [tr]
+*ēnāscor ēnāscī ēnātum [int]
+*gnāscor gnāscī gnātum [int, alt of nāscor]
+*inveterāscō inveterāscere inveterāvī -- [int]
+*īrāscor īrāscī īrātum [int]
 *a3 īrāscibilis
-*labāscō labāscere -- --
-*nāscor nāscī nātum
+*labāscō labāscere -- -- [int]
+*nāscor nāscī nātum [int, has alt form gnāscor]
 *n1 nāscentia
 *a1 nāscitūrus
-*pāscō pāscere pāvī pāstum
-*v1 pāscitō
-*pauperāscō pauperāscere -- --
-*purpurāscō purpurāscere -- --
-*redintegrāscō redintegrāscere -- --
-*renāscor renāscī renātum
+*pāscō pāscere pāvī pāstum [tr]
+*v1 pāscitō [int]
+*pauperāscō pauperāscere -- -- [int]
+*purpurāscō purpurāscere -- -- [int]
+*redintegrāscō redintegrāscere -- -- [int?]
+*renāscor renāscī renātum [int]
 *n1 renāscentia
 *n2 vāsculum
 *n2 vāscellum
 *a1 vāsculārius
 *a1 vāsculōsus
-*vesperāscō vesperāscere vesperāvī --
-*veterāscō veterāscere -- --
+*vesperāscō vesperāscere vesperāvī -- [int]
+*veterāscō veterāscere -- -- [int]
 *a3 violāscēns
 ###
 ### *ēscō
@@ -1253,7 +1253,6 @@ coëmō coëmere *coēmī coēmptum
 # FIXME, delete passive, fix headword
 *olēscō olēscere -- -- [int]
 *abolēscō abolēscere abolēvī -- [int]
-# ---------- got this far ------------
 # FIXME, delete passive
 *adolēscō adolēscere adolēvī adultum [int, has ppp, has also adoluī, syncopated adolēsse]
 # FIXME, delete passive
@@ -1428,7 +1427,7 @@ coëmō coëmere *coēmī coēmptum
 *obārēscō obārēscere -- -- [int]
 *obātrēscō obātrēscere -- -- [int]
 *obbrūtēscō obbrūtēscere obbrūtuī -- [int]
-*obdulcēscō obdulcēscere -- -- [int]
+*obdulcēscō obdulcēscere obdulcuī -- [int]
 *obdūrēscō obdūrēscere obdūruī -- [int]
 *obmūtēscō obmūtēscere obmūtuī -- [int]
 *obrigēscō obrigēscere obriguī -- [int]
@@ -1454,6 +1453,7 @@ coëmō coëmere *coēmī coēmptum
 *relanguēscō relanguēscere relangŭī -- [int; used mostly in perfect]
 *remollēscō remollēscere -- -- [int]
 *revirēscō revirēscere reviruī -- [int]
+# ---------- got this far ------------
 *revīvēscō revīvēscere revīxī -- [int; alt of revīvīscō, which is primary]
 *rigēscō rigēscere rigŭī -- [int]
 *rubēscō rubēscere rubuī -- [int]
@@ -1466,7 +1466,7 @@ coëmō coëmere *coēmī coēmptum
 *sordēscō sordēscere sorduī -- [int]
 *splendēscō splendēscere splenduī -- [int]
 *stupēscō stupēscere -- -- [int]
-*tabēscō tabēscere tabuī -- [int]
+*tābēscō tābēscere tābuī -- [int]
 *tenebrēscō tenebrēscere -- -- [int]
 *tepēscō tepēscere tepuī -- [int]
 *torpēscō torpēscere torpuī -- [int]
@@ -1478,7 +1478,7 @@ coëmō coëmere *coēmī coēmptum
 *vānēscō vānēscere -- -- [int]
 *vēscor vēscī -- -- [tr]
 *veterēscō veterēscere -- -- [int]
-*vigēscō vigēscere -- -- [int]
+*vigēscō vigēscere viguī -- [int]
 *virēscō virēscere viruī -- [int]
 *viridēscō viridēscere -- -- [int]
 
@@ -1486,83 +1486,82 @@ coëmō coëmere *coēmī coēmptum
 ###
 ### *īscō
 ###
-*aborīscor aborīscī abortum
-*dormīscō dormīscere -- --
-*addormīscō addormīscere -- --
+*aborīscor aborīscī -- [int]
+*dormīscō dormīscere -- -- [int]
+*addormīscō addormīscere -- -- [int]
+# FIXME, delete the following
 *adormīscō adormīscere -- --
-*condormīscō condormīscere -- --
-*ēdormīscō ēdormīscere -- --
-*perdormīscō ēdormīscere -- --
-*apīscor apīscī aptum
-*adipīscor adipīscī adeptum
-*scīscō scīscere scīvī scītum
-*scīscitor scīscitārī scīscitātum
+*condormīscō condormīscere condormīvī -- [int]
+*ēdormīscō ēdormīscere -- -- [tr]
+*perdormīscō ēdormīscere -- -- [int]
+*apīscor apīscī aptum [tr]
+*adipīscor adipīscī adeptum [tr]
+*scīscō scīscere scīvī scītum [tr]
+*scīscitor scīscitārī scīscitātum [tr]
 *n3 scīscitātiō
 *n3 scīscitātor
-*adscīscō adscīscere adscīvī adscītum
-*ascīscō ascīscere ascīvī ascītum
-*cōnscīscō cōnscīscere cōnscīvī cōnscītum
-*dēscīscō dēscīscere dēscīvī dēscītum
-*perscīscō perscīscere perscīvī perscītum
-*rescīscō rescīscere rescīvī rescītum
-*comminīscor comminīscī commentum
-*pacīscor pacīscī pactum
-*compacīscor compacīscī compactum
-*compecīscor compecīscī compectum
-*dēpecīscor dēpecīscī dēpectum
-*concupīscō concupīscere concupīvī concupītum
-*conquinīscō conquinīscere conquēxī --
-*conticīscō conticīscere conticuī --
-*conticēscō conticēscere conticuī --
-*contremīscō contremīscere contremuī --
+*adscīscō adscīscere adscīvī adscītum [tr, alt of ascīscō]
+*ascīscō ascīscere ascīvī ascītum [tr, has alt form adscīscō]
+*cōnscīscō cōnscīscere cōnscīvī/cōnsciī cōnscītum [tr]
+*dēscīscō dēscīscere dēscīvī/dēsciī dēscītum [int]
+*perscīscō perscīscere -- -- [tr]
+*rescīscō rescīscere rescīvī/resciī rescītum [tr]
+*comminīscor comminīscī commentum [tr]
+*pacīscor pacīscī pactum [tr]
+*compacīscor compacīscī compactum [int, has alt form compeciscor]
+*compecīscor compecīscī compectum [int, alt of compaciscor]
+*dēpecīscor dēpecīscī dēpectum [tr, has alt form dēpacīscor]
+*concupīscō concupīscere concupīvī/concupiī concupītum [tr]
+*conquinīscō conquinīscere conquēxī -- [int]
+*conticīscō conticīscere conticuī -- [tr, alt of conticēscō]
+*conticēscō conticēscere conticuī -- [tr, has alt form conticīscō]
+*contremīscō contremīscere contremuī -- [tr]
 # FIXME Delete the following
-*contremēscō contremēscere contremuī --
-*hīscō hīscere -- --
-*dehīscō dehīscere -- --
-*dēlitīscō dēlitīscere dēlituī --
-*dēlitēscō dēlitēscere dēlituī --
-*expergīscor expergīscī experrēctum
-*fatīscō fatīscere -- --
-*glīscō glīscere -- --
-*ingemīscō ingemīscere ingemuī --
-*ingemēscō ingemēscere ingemuī --
-*longīscō longīscere -- --
-*nancīscor nancīscī nactum
+*contremēscō contremēscere contremuī -- [tr]
+*hīscō hīscere -- -- [tr]
+*dĕhīscō dĕhīscere -- -- [int]
+*dēlitīscō dēlitīscere dēlituī -- [int, alt of dēlitēscō]
+*dēlitēscō dēlitēscere dēlituī -- [int, has alt form dēlitīscō]
+*expergīscor expergīscī experrēctum [int]
+*fatīscō fatīscere -- -- [int]
+*glīscō glīscere -- -- [int, has alt form glīscor]
+*ingemīscō ingemīscere ingemuī -- [tr, has alt form ingemēscō]
+*ingemēscō ingemēscere ingemuī -- [tr, alt of ingemīscō]
+*longīscō longīscere -- -- [int]
+*nancīscor nancīscī nactum [tr]
 *a1 nānctus
-*oblīvīscor oblīvīscī oblītum
-*prŏficīscor prŏficīscī prŏfectum
-# the following is semi-deponent
-*reminīscō reminīscere -- rementum
-*reminīscor reminīscī rementum
-*resipīscō resipīscere resipīvī --
-# FIXME! Page has revīvixī, pointing to nonexistent revīvēscō
-*revīvīscō revīvīscere revīxī --
-# FIXME Delete the following
-*revīvēscō revīvēscere revīxī --
+*oblīvīscor oblīvīscī oblītum [tr]
+*prŏficīscor prŏficīscī prŏfectum [int]
+*reminīscō reminīscere -- -- [tr, alt of reminīscor]
+*reminīscor reminīscī -- [tr]
+*resipīscō resipīscere resipuī/resipiī/resipīvī -- [int]
+# FIXME! Page has revīvixī
+*revīvīscō revīvīscere revīxī -- [int, has alt form revīvēscō]
+*revīvēscō revīvēscere revīxī -- [int, alt of revīvīscō]
 # FIXME Delete perfect active ulciscī
-*ulcīscō ulcīscere -- --
-*ulcīscor ulcīscī ultum
+*ulcīscō ulcīscere -- -- [tr, archaic alt of ulcīscor]
+*ulcīscor ulcīscī ultum [tr]
 ###
 ### *ōscō
 ###
-*nōscō nōscere nōvī nōtum
+*nōscō nōscere nōvī nōtum [tr, has archaic alt form gnōscō]
 *a3 nōscibilis
 *v1 nōscitō
 *a1 nōscitābundus
 *prov nōsce_tē_ipsum
-*gnōscō gnōscere gnōvī gnōtum
-*agnōscō agnōscere agnōvī agnitum
-*adgnōscō adgnōscere adgnōvī adgnitum
-*cognōscō cognōscere cognōvī cognitum
+*gnōscō gnōscere gnōvī gnōtum [tr, alt of nōscō]
+*agnōscō agnōscere agnōvī agnitum [tr, has alt form adgnōscō]
+*adgnōscō adgnōscere adgnōvī adgnitum [tr, alt of agnōscō]
+*cognōscō cognōscere cognōvī cognitum [tr]
 *a3 cognōscibilis
 *adv cognōscibiliter
-*dīnōscō dīnōscere dīnōvī dīnōtum
-*ignōscō ignōscere ignōvī ignōtum
-*internōscō internōscere internōvī internōtum
-*pernōscō pernōscere pernōvī pernōtum
-*praenōscō praenōscere praenōvī praenōtum
-*praecognōscō praecognōscere praecognōvī praecognitum
-*recognōscō recognōscere recognōvī recognitum
+*dīnōscō dīnōscere dīnōvī dīnōtum [tr, alt of dignōscō]
+*ignōscō ignōscere ignōvī ignōtum [tr]
+*internōscō internōscere internōvī internōtum [tr]
+*pernōscō pernōscere pernōvī pernōtum [tr]
+*praenōscō praenōscere praenōvī praenōtum [tr]
+*praecognōscō praecognōscere -- praecognitum [tr]
+*recognōscō recognōscere recognōvī recognitum [tr]
 ###
 ### *ōsc-
 ### (Bennett includes ōscen derived from ōs but our etymology is different)
