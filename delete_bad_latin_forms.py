@@ -123,6 +123,14 @@ def split_tags_into_tag_sets(tags):
     tag_set_group.append(cur_tag_set)
   return tag_set_group
 
+def combine_tag_set_group(group):
+  result = []
+  for tag_set in group:
+    if result:
+      result.append(";")
+    result.extend(tag_set)
+  return result
+
 def canonicalize_tag_set(tag_set):
   new_tag_set = []
   for tag in tag_set:
@@ -210,6 +218,7 @@ def process_page(index, lemma, conj, forms, pages_to_delete, save, verbose):
       sectail = secbodytail + sectail
 
     subsections_to_delete = []
+    subsections_to_remove_inflections_from = []
 
     subsections = re.split("(^==+[^=\n]+==+\n)", secbody, 0, re.M)
     for k in xrange(2, len(subsections), 2):
@@ -217,6 +226,7 @@ def process_page(index, lemma, conj, forms, pages_to_delete, save, verbose):
       saw_head = False
       saw_infl = False
       saw_other_infl = False
+      remove_deletable_tag_sets_from_subsection = False
       saw_bad_template = False
       for t in parsed.filter_templates():
         tn = tname(t)
@@ -267,8 +277,8 @@ def process_page(index, lemma, conj, forms, pages_to_delete, save, verbose):
             saw_other_infl = True
       if saw_head and saw_infl:
         if saw_other_infl:
-          pagemsg("WARNING: Found subsection #%s to delete but has inflection-of template for different lemma" % (k // 2))
-          continue
+          pagemsg("Found subsection #%s to delete but has inflection-of template for different lemma or nondeletable tag set, will remove only deletable tag sets" % (k // 2))
+          remove_deletable_tag_sets_from_subsection = True
         for t in parsed.filter_templates():
           tn = tname(t)
           if tn not in ["la-verb-form", "inflection of"]:
@@ -279,15 +289,82 @@ def process_page(index, lemma, conj, forms, pages_to_delete, save, verbose):
         else:
           # No break
           if "===Verb===" in subsections[k - 1]:
-            subsections_to_delete.append(k)
+            if remove_deletable_tag_sets_from_subsection:
+              subsections_to_remove_inflections_from.append(k)
+            else:
+              subsections_to_delete.append(k)
           else:
             pagemsg("WARNING: Wrong header in otherwise deletable subsection #%s: %s" % (
               k // 2, subsections[k - 1].strip()))
-    if not subsections_to_delete:
-      pagemsg("Found Latin section but no deletable subsections")
+
+    if not subsections_to_delete and not subsections_to_remove_inflections_from:
+      pagemsg("Found Latin section but no deletable or excisable subsections")
       return
 
-    #### Now, we can delete a subsection or the whole section or page
+    #### Now, we can delete an inflection, a subsection or the whole section or page
+
+    for k in subsections_to_remove_inflections_from:
+      newsubsec = subsections[k]
+      if not newsubsec.endswith("\n"):
+        # This applies to the last subsection on the page
+        newsubsec += "\n"
+
+      def remove_inflections(m):
+        parsed = blib.parse_text(m.group(0))
+        for t in parsed.filter_templates():
+          tn = tname(t)
+          if tn == "inflection of":
+            lang = getparam(t, "lang")
+            if lang:
+              lemma_param = 1
+            else:
+              lang = getparam(t, "1")
+              lemma_param = 2
+            assert lang == "la"
+            actual_lemma = getparam(t, str(lemma_param))
+            # Allow mismatch in macrons, which often happens, e.g. because
+            # a macron was added to the lemma page but not to the inflections
+            if remove_macrons(actual_lemma) == remove_macrons(lemma):
+              tr = getparam(t, "tr")
+              alt = getparam(t, "alt") or getparam(t, str(lemma_param + 1))
+              # fetch tags
+              tags = []
+              params = []
+              for param in t.params:
+                pname = unicode(param.name).strip()
+                pval = unicode(param.value).strip()
+                if re.search("^[0-9]+$", pname):
+                  if int(pname) >= lemma_param + 2:
+                    if pval:
+                      tags.append(pval)
+                elif pname not in ["lang", "tr", "alt"]:
+                  params.append((pname, pval, param.showkey))
+              tag_sets = split_tags_into_tag_sets(tags)
+              filtered_tag_sets = []
+              for tag_set in tag_sets:
+                if frozenset(canonicalize_tag_set(tag_set)) not in tag_sets_to_delete:
+                  filtered_tag_sets.append(tag_set)
+              if not filtered_tag_sets:
+                return ""
+
+              # Erase all params.
+              del t.params[:]
+              # Put back new params.
+              t.add("1", lang)
+              t.add("2", actual_lemma)
+              if tr:
+                t.add("tr", tr)
+              t.add("3", alt)
+              next_tag_param = 4
+              for tag in combine_tag_set_group(filtered_tag_sets):
+                t.add(str(next_tag_param), tag)
+                next_tag_param += 1
+        return unicode(parsed)
+
+      newnewsubsec = re.sub(r"^# \{\{inflection of\|[^{}\n]*\}\}\n", remove_inflections, newsubsec, 0, re.M)
+      if newnewsubsec != newsubsec:
+        notes.append("removed inflection(s) for bad Latin form(s)")
+        subsections[k] = newnewsubsec
 
     for k in reversed(subsections_to_delete):
       # Do in reverse order so indices don't change
@@ -326,16 +403,45 @@ def process_page(index, lemma, conj, forms, pages_to_delete, save, verbose):
       # Some but not all subsections remain
       secbody = "".join(subsections)
       sections[j] = secbody + sectail
+      if subsections_to_delete and subsections_to_remove_inflections_from:
+        deletable_subsec_text = "Subsection(s) %s deletable and subsection(s) %s excisable" % (
+          ",".join(str(k//2) for k in subsections_to_delete),
+          ",".join(str(k//2) for k in subsections_to_remove_inflections_from)
+        )
+        deletable_subsec_note_text = "deleted %s subsection%s and partly excised %s subsection%s" % (
+          len(subsections_to_delete),
+          "" if len(subsections_to_delete) == 1 else "s",
+          len(subsections_to_remove_inflections_from),
+          "" if len(subsections_to_remove_inflections_from) == 1 else "s"
+        )
+      elif subsections_to_delete:
+        deletable_subsec_text = "Subsection(s) %s deletable" % (
+          ",".join(str(k//2) for k in subsections_to_delete)
+        )
+        deletable_subsec_note_text = "deleted %s subsection%s" % (
+          len(subsections_to_delete),
+          "" if len(subsections_to_delete) == 1 else "s"
+        )
+      else:
+        deletable_subsec_text = "Subsection(s) %s excisable" % (
+          ",".join(str(k//2) for k in subsections_to_remove_inflections_from)
+        )
+        deletable_subsec_note_text = "partly excised %s subsection%s" % (
+          len(subsections_to_remove_inflections_from),
+          "" if len(subsections_to_remove_inflections_from) == 1 else "s"
+        )
+
       if "==Etymology" in sections[j]:
-        pagemsg("WARNING: Subsection(s) %s deletable but found Etymology subsection, don't know how to handle" %
-            ",".join(k//2 for k in subsections_to_delete))
+        pagemsg("WARNING: %s but found Etymology subsection, don't know how to handle" %
+            deletable_subsec_text)
         return
       if "==Pronunciation" in sections[j]:
-        pagemsg("WARNING: Subsection(s) %s deletable but found Pronunciation subsection, don't know how to handle" %
-            ",".join(k//2 for k in subsections_to_delete))
+        pagemsg("WARNING: %s but found Pronunciation subsection, don't know how to handle" %
+            deletable_subsec_text)
         return
-      notes.append("excised %s subsection%s for bad Latin forms, leaving some subsections remaining" %
-        (len(subsections_to_delete), "" if len(subsections_to_delete) == 1 else "s"))
+
+      notes.append("%s for bad Latin forms, leaving some subsections remaining" %
+        deletable_subsec_note_text)
       text = "".join(sections)
 
     if text != origtext:
@@ -364,6 +470,10 @@ def process_page(index, lemma, conj, forms, pages_to_delete, save, verbose):
     if form in args:
       tag_sets_to_delete.append(form_key_to_tag_set(form))
       forms_to_delete.append(args[form])
+    if form == "all":
+      for key, val in args.iteritems():
+        tag_sets_to_delete.append(form_key_to_tag_set(key))
+        forms_to_delete.append(val)
     if form in ["pasv", "pass"]:
       for key, val in args.iteritems():
         if "pasv" in key:
