@@ -1493,7 +1493,8 @@ coëmō coëmere *coēmī coēmptum
 *adormīscō adormīscere -- --
 *condormīscō condormīscere condormīvī -- [int]
 *ēdormīscō ēdormīscere -- -- [tr]
-*perdormīscō ēdormīscere -- -- [int]
+*obdormīscō ēdormīscere obdormīvī obdormītum [int]
+*perdormīscō perdormīscere -- -- [int]
 *apīscor apīscī aptum [tr]
 *adipīscor adipīscī adeptum [tr]
 *scīscō scīscere scīvī scītum [tr]
@@ -1519,7 +1520,7 @@ coëmō coëmere *coēmī coēmptum
 # FIXME Delete the following
 *contremēscō contremēscere contremuī -- [tr]
 *hīscō hīscere -- -- [tr]
-*dĕhīscō dĕhīscere -- -- [int]
+*dĕhīscō dĕhīscere dĕhīvī -- [int]
 *dēlitīscō dēlitīscere dēlituī -- [int, alt of dēlitēscō]
 *dēlitēscō dēlitēscere dēlituī -- [int, has alt form dēlitīscō]
 *expergīscor expergīscī experrēctum [int]
@@ -1555,7 +1556,7 @@ coëmō coëmere *coēmī coēmptum
 *cognōscō cognōscere cognōvī cognitum [tr]
 *a3 cognōscibilis
 *adv cognōscibiliter
-*dīnōscō dīnōscere dīnōvī dīnōtum [tr, alt of dignōscō]
+*dīnōscō dīnōscere dīnōvī dīnōtum [tr, alt of dīgnōscō]
 *ignōscō ignōscere ignōvī ignōtum [tr]
 *internōscō internōscere internōvī internōtum [tr]
 *pernōscō pernōscere pernōvī pernōtum [tr]
