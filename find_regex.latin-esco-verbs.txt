@@ -4967,12 +4967,12 @@ Page 2439 fervesco: -------- begin text ---------
 ==Latin==
 
 ===Verb===
-{{head|la|verb|head=fervēscō|[[defective verb|defective conjugation]]}}
+{{la-verb|fervēscō|fervēscere|conj=3|pattern=nopass-noperf}}
 
 # I grow [[hot]]; begin to [[boil]]
 
 ====Inflection====
-{{la-conj-3rd|type=noperf|fervēsc}}
+{{la-conj-3rd|type=nopass-noperf|fervēsc}}
 
 ===References===
 * {{R:L&S}}
@@ -4984,17 +4984,20 @@ Page 2442 fetesco: Found match for regex: =
 Page 2442 fetesco: -------- begin text ---------
 ==Latin==
 
+===Alternative forms===
+* {{l|la|foetēscō}}
+
 ===Etymology===
 {{suffix|la|fēteō|ēscō}}.
 
 ===Verb===
-{{head|la|verb|head=fētēscō|[[defective verb|defective conjugation]]}}
+{{la-verb|fētēscō|fētēscere|conj=3|pattern=nopass-noperf}}
 
 # I start to [[stink]]
 #* {{Q|la|Isidorus Hispalensis|Etymologiae|10|3|1|quote=Quam inde recentem dicimus quia non est utilis vetusta, ut vinum, sed statim sublata de flumine et fonte vel puteo; '''fetescit''' enim vetusta.}}
 
 ====Inflection====
-{{la-conj-3rd|type=noperf|fētēsc}}
+{{la-conj-3rd|type=nopass-noperf|fētēsc}}
 
 ===References===
 * {{R:L&S}}
@@ -5024,12 +5027,12 @@ From {{af|la|fistula|-ēscō}}.
 * {{la-IPA|fistulēscō}}
 
 ===Verb===
-{{la-verb|fistulēscō|fistulēscere|fistuluī|pattern=nopass|conj=3}}
+{{la-verb|fistulēscō|fistulēscere|pattern=nopass-noperf|conj=3}}
 
 # {{lb|la|Late Latin}} I become [[full]] of [[hole]]s.
 
 ====Inflection====
-{{la-conj-3rd|type=nopass|fistulēsc|fistulu}}
+{{la-conj-3rd|type=nopass-noperf|fistulēsc}}
 
 ===References===
 * {{R:L&S}}
@@ -5039,6 +5042,9 @@ Page 2457 flacceo: Skipping because doesn't match --filter-pages regex escor?$
 Page 2458 flaccesco: Found match for regex: =
 Page 2458 flaccesco: -------- begin text ---------
 ==Latin==
+
+===Alternative forms===
+* {{l|la|flaccīscō}}
 
 ===Pronunciation===
 * {{la-IPA|flaccēscō}}
@@ -5072,12 +5078,12 @@ Page 2465 flavesco: -------- begin text ---------
 ==Latin==
 
 ===Verb===
-{{head|la|verb|head=flāvēscō|[[defective verb|defective conjugation]]}}
+{{la-verb|flāvēscō|flāvēscere|pattern=nopass-noperf|conj=3}}
 
 # I become [[golden]] or [[yellow]]
 
 ====Inflection====
-{{la-conj-3rd|type=noperf|flāvēsc}}
+{{la-conj-3rd|type=nopass-noperf|flāvēsc}}
 
 ===References===
 * {{R:L&S}}
@@ -5102,13 +5108,14 @@ From {{suffix|la|flōreō|scō|gloss1=I bloom, flower}}.
 * {{la-IPA|flōrēscō}}
 
 ===Verb===
-{{head|la|verb|head=flōrēscō|[[defective verb|defective conjugation]]}}
+{{la-verb|flōrēscō|flōrēscere|pattern=nopass-noperf|conj=3}}
 
 # I [[flower]] (begin to blossom)
 # I begin to [[prosper]] or [[flourish]]
 
 ====Inflection====
-{{la-conj-3rd|type=noperf|flōrēsc}}
+* A future passive participle occurs once in the phrase {{lang|la|rēbus flōrēscendīs praeesse}} from the Fasti Praenestini.
+{{la-conj-3rd|type=nopass-noperf|flōrēsc}}
 
 ====Derived terms====
 * {{l|la|florescens|flōrēscens}}
@@ -5196,6 +5203,7 @@ From {{suffix|la|frīgeō|scō|gloss1=I am cold}}.
 # {{lb|la|figuratively|of behavior}} I become [[cold]] or [[distant]].
 
 ====Inflection====
+* The perfect form {{lang|la|friguī}} occurs in Late Latin.
 {{la-conj-3rd|type=nopass|frīgēsc|frīx}}
 
 ===References===
@@ -5212,12 +5220,18 @@ Page 2515 frondesco: -------- begin text ---------
 ==Latin==
 
 ===Etymology===
-From {{m|la|frondeō}} + {{m|la|-ēscō}}.
+From {{suffix|la|frondeō|scō|gloss1=I am leafy}}.
+
+===Pronunciation===
+* {{la-IPA|frondēscō}}
 
 ===Verb===
-{{head|la|verb}}
+{{la-verb|frondēscō|frondēscere|fronduī|conj=3|pattern=nopass}}
 
 # I become [[leafy]], [[shoot]], put forth [[greens]]
+
+====Inflection====
+{{la-conj-3rd|type=nopass|frondēsc|frondu}}
 
 ====Derived terms====
 * {{l|la|frondescentia}}
@@ -5280,12 +5294,12 @@ Page 2557 glabresco: -------- begin text ---------
 ==Latin==
 
 ===Verb===
-{{head|la|verb|head=glabrēscō|[[defective verb|defective conjugation]]}}
+{{la-verb|glabrēscō|glabrēscere|conj=3|pattern=nopass-noperf}}
 
 # I grow [[bald]]
 
 ====Inflection====
-{{la-conj-3rd|type=noperf|glabrēsc}}
+{{la-conj-3rd|type=nopass-noperf|glabrēsc}}
 
 ===References===
 * {{R:L&S}}
@@ -5370,12 +5384,12 @@ Page 2604 hebesco: -------- begin text ---------
 From {{m|la|hebeo||I am blunt, dull}}
 
 ===Verb===
-{{head|la|verb|head=hebēscō|[[defective verb|defective conjugation]]}}
+{{la-verb|hebēscō|hebēscere|conj=3|pattern=nopass-noperf}}
 
 # I become [[blunt]], [[dull]], [[dim]] or [[faint]]
 
 ====Inflection====
-{{la-conj-3rd|type=noperf|hebēsc}}
+{{la-conj-3rd|type=nopass-noperf|hebēsc}}
 
 ===References===
 * {{R:L&S}}
@@ -5392,12 +5406,12 @@ Page 2609 herbesco: -------- begin text ---------
 ==Latin==
 
 ===Verb===
-{{head|la|verb|head=herbēscō|[[defective verb|defective conjugation]]}}
+{{la-verb|herbēscō|herbēscere|conj=3|pattern=nopass-noperf}}
 
 # I [[grow]] into [[green]] [[stalk]]s, [[blade]]s, [[shoot]]s
 
 ====Inflection====
-{{la-conj-3rd|type=noperf|herbēsc}}
+{{la-conj-3rd|type=nopass-noperf|herbēsc}}
 
 ===References===
 * {{R:L&S}}
@@ -5429,13 +5443,13 @@ From {{suffix|la|horreō|t1=I shudder|scō|pos2=inchoative}}.
 * {{la-IPA|horrēscō}}
 
 ===Verb===
-{{la-verb|horrēscō|horrēscere|horruī|conj=3|pattern=nopass}}
+{{la-verb|horrēscō|horrēscere|horruī|conj=3}}
 
 # I begin to [[bristle]] up; my hair [[rise]]s on [[end]]
 # I become [[terrified]]; I start to [[dread]]; I begin to [[shake]]
 
 ====Inflection====
-{{la-conj-3rd|type=nopass|horrēsc|horru}}
+{{la-conj-3rd|horrēsc|horru}}
 
 ====Synonyms====
 * {{l|la|inhorrēscō}}
@@ -5474,19 +5488,19 @@ Page 2643 ignesco: -------- begin text ---------
 ==Latin==
 
 ===Etymology===
-From {{suf|la|igneus|ēscō}}.
+From {{suf|la|īgneus|ēscō}}.
 
 ===Pronunciation===
-* {{la-IPA|ignēscō}}
+* {{la-IPA|īgnēscō}}
 
 ===Verb===
-{{head|la|verb|head=ignēscō|present infinitive|[[ignēscere]]|[[defective verb|defective conjugation]]}}
+{{la-verb|īgnēscō|īgnēscere|conj=3|pattern=nopass-noperf}}
 
 # I begin to [[burn]]; [[kindle]]
 # I become [[inflamed]] (with passion)
 
 ====Inflection====
-{{la-conj-3rd|type=noperf|ignēsc}}
+{{la-conj-3rd|type=nopass-noperf|īgnēsc}}
 
 ===References===
 * {{R:L&S}}
@@ -5512,6 +5526,7 @@ Page 2656 illucesco: -------- begin text ---------
 
 ===Alternative forms===
 * {{l|la|inlūcēscō}}
+* {{l|la|illūcīscō}}, {{l|la|inlūcīscō}}
 
 ===Etymology===
 From {{affix|la|in-|id1=in|lūcēscō|gloss2=begin to shine}}.
@@ -5520,13 +5535,13 @@ From {{affix|la|in-|id1=in|lūcēscō|gloss2=begin to shine}}.
 * {{la-IPA|illūcēscō}}
 
 ===Verb===
-{{la-verb|illūcēscō|illūcēscere|illuxī|conj=3|pattern=nopass}}
+{{la-verb|illūcēscō|illūcēscere|illūxī|conj=3}}
 
 # I [[begin]] to [[dawn]]
 
 ====Inflection====
 * The third principal part is shared with {{m|la|illūceō}}.
-{{la-conj-3rd|type=nopass|illūcēsc|illux}}
+{{la-conj-3rd|illūcēsc|illūx}}
 
 ====Related terms====
 * {{l|la|illūceō}}
@@ -5599,14 +5614,14 @@ From {{compound|la|in|albēscō|t2=I become white}}.
 * {{la-IPA|inalbēscō}}
 
 ===Verb===
-{{la-verb|inalbēscō|inalbēscere|conj=3|pattern=noperf}}
+{{la-verb|inalbēscō|inalbēscere|conj=3|pattern=nopass-noperf}}
 
 # I become [[pale]]
 # I [[fade]]
 
 ====Inflection====
 * This verb is [[defective verb|defective]], with only those forms based on the first principal part.
-{{la-conj-3rd|type=noperf|inalbēsc}}
+{{la-conj-3rd|type=nopass-noperf|inalbēsc}}
 
 ===References===
 * {{R:L&S}}
@@ -5666,7 +5681,7 @@ From {{affix|la|in-|id1=in|calēscō}}.
 * {{l|la|incalescens|incalēscens}}
 
 ====Descendants====
-* Romanian: [[încări]]
+* {{desc|ro|încări}}
 
 ===References===
 * {{R:L&S}}
@@ -5744,7 +5759,7 @@ Page 2738 inclaresco: -------- begin text ---------
 ==Latin==
 
 ===Etymology===
-{{compound|la|in|clārēscō}}
+{{affix|la|in-|clārēscō}}
 
 ===Pronunciation===
 * {{la-IPA|inclārēscō}}
@@ -5781,8 +5796,7 @@ Page 2746 increbesco: -------- begin text ---------
 ===Verb===
 {{la-verb|incrēbēscō|incrēbēscere|incrēbuī|conj=3|pattern=nopass}}
 
-# I become [[frequent]]
-# I [[increase]], [[gain]] [[ground]], [[prevail]], [[spread]]
+# {{alternative form of|la|incrēbrēscō}}
 
 ====Inflection====
 {{la-conj-3rd|type=nopass|incrēbēsc|incrēbu}}
@@ -5791,16 +5805,20 @@ Page 2747 increbresco: Found match for regex: =
 Page 2747 increbresco: -------- begin text ---------
 ==Latin==
 
+===Alternative forms===
+* {{l|la|incrēbrēscō}}
+
 ===Pronunciation===
-* {{la-IPA|increbrēscō}}
+* {{la-IPA|incrēbrēscō}}
 
 ===Verb===
-{{la-verb|increbrēscō|increbrēscere|increbruī|conj=3|pattern=nopass}}
+{{la-verb|incrēbrēscō|incrēbrēscere|incrēbruī|conj=3|pattern=nopass}}
 
 # I become [[stronger]] or more [[frequent]]
+# I [[increase]], [[gain]] [[ground]], [[prevail]], [[spread]]
 
 ====Inflection====
-{{la-conj-3rd|type=nopass|increbrēsc|increbru}}
+{{la-conj-3rd|type=nopass|incrēbrēsc|incrēbru}}
 
 ===References===
 * {{R:L&S}}
@@ -5955,14 +5973,33 @@ Page 2801 infundo: Skipping because doesn't match --filter-pages regex escor?$
 Page 2802 infusco: Skipping because doesn't match --filter-pages regex escor?$
 Page 2803 inganno: Skipping because doesn't match --filter-pages regex escor?$
 Page 2804 ingemesco: Found match for regex: =
-Page 2804 ingemesco: -------- begin text ---------
+Page 2804 ingemisco: -------- begin text ---------
 ==Latin==
 
 ===Alternative forms===
-* {{l|la|ingemīscō}}
+* {{l|la|ingemēscō}}
 
 ===Etymology===
-From {{suffix|la|ingemō|ēscō|gloss1=I groan, lament}}
+From {{suffix|la|ingemō|īscō|gloss1=I groan, lament}}
+
+===Pronunciation===
+* {{la-IPA|ingemīscō}}
+
+===Verb===
+{{la-verb|ingemīscō|ingemīscere|ingemuī|conj=3|pattern=nopass}}
+
+# I (begin to) [[groan]] or [[moan]] at or over
+
+====Inflection====
+* The third principal part is shared with {{m|la|ingemō}}.
+{{la-conj-3rd|type=nopass|ingemīsc|ingemu}}
+
+====Related terms====
+* {{l|la|ingemō}}
+-------- end text --------
+Page 2804 ingemesco: Found match for regex: =
+Page 2804 ingemesco: -------- begin text ---------
+==Latin==
 
 ===Pronunciation===
 * {{la-IPA|ingemēscō}}
@@ -5970,14 +6007,16 @@ From {{suffix|la|ingemō|ēscō|gloss1=I groan, lament}}
 ===Verb===
 {{la-verb|ingemēscō|ingemēscere|ingemuī|conj=3|pattern=nopass}}
 
-# I (begin to) [[groan]] or [[moan]] at or over
+# {{alternative form of|la|ingemīscō}}
 
 ====Inflection====
-* The third principal part is shared with {{m|la|ingemō}}.
 {{la-conj-3rd|type=nopass|ingemēsc|ingemu}}
 
-====Related terms====
-* {{l|la|ingemō}}
+===References===
+* {{R:L&S}}
+* {{R:Elementary Lewis}}
+* {{R:Gaffiot}}
+* {{R:NLW}}
 -------- end text --------
 Page 2805 ingemino: Skipping because doesn't match --filter-pages regex escor?$
 Page 2806 ingemisco: Skipping because doesn't match --filter-pages regex escor?$
@@ -5992,7 +6031,7 @@ Page 2813 ingravesco: -------- begin text ---------
 ==Latin==
 
 ===Verb===
-{{head|la|verb|head=ingravēscō|[[defective verb|defective conjugation]]}}
+{{la-verb|ingravēscō|ingravēscere|conj=3|pattern=nopass-noperf}}
 
 # I become [[heavy]] (or [[heavier]])
 # I become [[burdensome]]
@@ -6000,7 +6039,7 @@ Page 2813 ingravesco: -------- begin text ---------
 # I [[worsen]]
 
 ====Inflection====
-{{la-conj-3rd|type=noperf|ingravēsc}}
+{{la-conj-3rd|type=nopass-noperf|ingravēsc}}
 
 ===References===
 * {{R:L&S}}
@@ -6069,17 +6108,20 @@ Page 2844 inlucesco: Found match for regex: =
 Page 2844 inlucesco: -------- begin text ---------
 ==Latin==
 
+===Alternative forms===
+* {{l|la|inlūcīscō}}, {{l|la|illūcīscō}}
+
 ===Pronunciation===
 * {{la-IPA|inlūcēscō}}
 
 ===Verb===
-{{la-verb|inlūcēscō|inlūcēscere|inluxī|conj=3|pattern=nopass}}
+{{la-verb|inlūcēscō|inlūcēscere|inlūxī|conj=3}}
 
-# {{alternative form of|illucesco|illūcēscō|lang=la}}
+# {{alternative form of|illūcēscō|lang=la}}
 
 ====Inflection====
 * The third principal part is shared with {{m|la|inlūceō}}.
-{{la-conj-3rd|type=nopass|inlūcēsc|inlux}}
+{{la-conj-3rd|inlūcēsc|inlūx}}
 
 ===References===
 * {{R:Elementary Lewis}}
@@ -6111,12 +6153,12 @@ From {{affix|la|in-|id1=in|nōtēscō|gloss2=become known}}.
 * {{la-IPA|innōtēscō}}
 
 ===Verb===
-{{la-verb|innōtēscō|innōtēscere|innōtuī|conj=3|pattern=nopass}}
+{{la-verb|innōtēscō|innōtēscere|innōtuī|conj=3}}
 
 # I become [[known]] or [[noted]]
 
 ====Inflection====
-{{la-conj-3rd|type=nopass|innōtēsc|innōtu}}
+{{la-conj-3rd|innōtēsc|innōtu}}
 
 ====Related terms====
 * {{l|la|nōtēscō}}
@@ -6403,12 +6445,12 @@ Page 3038 intumesco: -------- begin text ---------
 {{la-conj-3rd|type=nopass|intumēsc|intumu}}
 
 ====Derived terms====
-* {{l|la|intumescens|intumēscens}}
+* {{l|la|intumēscens}}
 
 ====Descendants====
-* English: [[intumesce]]
-* Portuguese: [[entumecer]], [[intumescer]]
-* Spanish: [[entumecer]], [[entomecer]]
+* {{desc|en|intumesce}}
+* {{desc|pt|entumecer}}, {{l|pt|intumescer}}
+* {{desc|es|entumecer}}, {{l|es|entomecer}}
 
 ===References===
 * {{R:L&S}}
@@ -6498,7 +6540,7 @@ Page 3087 iuvenesco: -------- begin text ---------
 ==Latin==
 
 ===Alternative forms===
-* {{l|la|juvenesco|juvenēscō}}
+* {{l|la|juvenēscō}}
 
 ===Etymology===
 From {{affix|la|iuvenis|-ēscō|t1=young}}.
@@ -6546,7 +6588,7 @@ Page 3107 juvenesco: -------- begin text ---------
 ===Verb===
 {{la-verb|juvenēscō|juvenēscere|juvenuī|conj=3|pattern=nopass}}
 
-# {{alternative form of|iuvenesco|iuvenēscō|lang=la}}
+# {{alternative form of|la|iuvenēscō}}
 
 ====Inflection====
 {{la-conj-3rd|type=nopass|juvenēsc|juvenu}}
@@ -6590,13 +6632,13 @@ From {{suffix|la|langueō|scō|gloss1=I am weak}}.
 * {{la-IPA|languēscō}}
 
 ===Verb===
-{{la-verb|languēscō|languēscere|languī|conj=3|pattern=nopass}}
+{{la-verb|languēscō|languēscere|langŭī|conj=3|pattern=nopass}}
 
 # I become [[faint]], [[weak]], [[languid]] or [[sick]]
 # I [[wilt]]
 
 ====Inflection====
-{{la-conj-3rd|type=nopass|languēsc|langu}}
+{{la-conj-3rd|type=nopass|languēsc|langŭ}}
 
 ====Related terms====
 {{top2}}
@@ -6616,8 +6658,6 @@ From {{suffix|la|langueō|scō|gloss1=I am weak}}.
 * {{R:Elementary Lewis}}
 * {{R:Gaffiot}}
 * {{R:M&A}}
-
-[[Category:Latin defective verbs]]
 -------- end text --------
 Page 3133 lanio: Skipping because doesn't match --filter-pages regex escor?$
 Page 3134 lapidesco: Found match for regex: =
@@ -6628,15 +6668,15 @@ Page 3134 lapidesco: -------- begin text ---------
 Derived from the oblique stem ''lapid-'' of {{suffix|la|lapis|t1=stone|ēscō}}.
 
 ===Pronunciation===
-* {{la-IPA|lapidescō|eccl=1|vul=1}}
+* {{la-IPA|lapidēscō|eccl=1|vul=1}}
 
 ===Verb===
-{{la-verb|lapidēscō|lapidēscere|conj=3}}
+{{la-verb|lapidēscō|lapidēscere|conj=3|pattern=nopass-noperf}}
 
 # {{lb|la|intransitive}} I [[petrify]], I become [[stone]]
 
 ====Inflection====
-{{la-conj-3rd|type=noperf|lapidēsc}}
+{{la-conj-3rd|type=nopass-noperf|lapidēsc}}
 
 ===References===
 * {{R:L&S}}
@@ -6653,12 +6693,12 @@ Page 3141 lassesco: -------- begin text ---------
 ==Latin==
 
 ===Verb===
-{{head|la|verb|head=lassēscō|[[defective verb|defective conjugation]]}}
+{{la-verb|lassēscō|lassēscere|conj=3|pattern=nopass-noperf}}
 
 # I become [[tired]] or [[weary]]
 
 ====Inflection====
-{{la-conj-3rd|type=noperf|lassēsc}}
+{{la-conj-3rd|type=nopass-noperf|lassēsc}}
 
 ===References===
 * {{R:L&S}}
@@ -6670,17 +6710,37 @@ Page 3144 latesco: Found match for regex: =
 Page 3144 latesco: -------- begin text ---------
 ==Latin==
 
-===Verb===
-{{la-verb|latēscō|latēscere|latī|conj=3|pattern=nopass}}
+===Etymology 1===
+{{affix|la|lateō|-scō}}
+
+====Pronunciation====
+* {{la-IPA|latēscō}}
+
+====Verb====
+{{la-verb|latēscō|latēscere|conj=3|pattern=nopass-noperf}}
 
 # I [[hide]] or [[conceal]] myself
 # I [[broaden]] or [[widen]]
 
-====Inflection====
-{{la-conj-3rd|type=nopass|lātēsc|lāt}}
+=====Inflection=====
+{{la-conj-3rd|type=nopass-noperf|latēsc}}
 
-====Descendants====
-* Romanian: [[lăți]]
+===Etymology 2===
+{{affix|la|lātus|-ēscō}}
+
+====Pronunciation====
+* {{la-IPA|lātēscō}}
+
+====Verb====
+{{la-verb|lātēscō|lātēscere|conj=3|pattern=nopass-noperf}}
+
+# I [[broaden]] or [[widen]]
+
+=====Inflection=====
+{{la-conj-3rd|type=nopass-noperf|lātēsc}}
+
+=====Descendants=====
+* {{desc|ro|lăți}}
 
 ===References===
 * {{R:L&S|latesco1|latesco1}}
@@ -6688,8 +6748,6 @@ Page 3144 latesco: -------- begin text ---------
 * {{R:Elementary Lewis}}
 * {{R:Gaffiot}}
 * {{R:M&A}}
-
-[[Category:Latin defective verbs]]
 -------- end text --------
 Page 3145 latito: Skipping because doesn't match --filter-pages regex escor?$
 Page 3146 latro: Skipping because doesn't match --filter-pages regex escor?$
@@ -6736,13 +6794,13 @@ Page 3182 liquesco: -------- begin text ---------
 {{la-IPA|liquēscō}}
 
 ===Verb===
-{{head|la|verb|head=liquēscō|[[defective verb|defective conjugation]]}}
+{{la-verb|liquēscō|liquēscere|licuī|conj=3|pattern=nopass}}
 
 # I [[melt]], [[liquefy]]
 #* {{Q|la|Virgil|Aeneid|8|445|quote=Fluit aes riuis aurique metallum, uulnificusque chalybs uasta fornace '''liquescit'''.|trans=Bronze and golden ore flowed in streams, and steel, that deals wounds, melted in a vast furnace.}}
 
 ====Inflection====
-{{la-conj-3rd|type=noperf|liquēsc}}
+{{la-conj-3rd|type=nopass|liquēsc|licu}}
 
 ===References===
 * {{R:L&S}}
@@ -6779,17 +6837,17 @@ Page 3201 lucesco: -------- begin text ---------
 From {{suffix|la|lūceō|scō|gloss1=shine}}.
 
 ===Pronunciation===
-* {{a|Classical}} {{IPA|/luːˈkeːs.koː/|lang=la}}
+* {{la-IPA|lūcēscō}}
 
 ===Verb===
-{{head|la|verb|head=lūcēscō|[[defective verb|defective conjugation]]}}
+{{la-verb|lūcēscō|lūcēscere|lūxī|conj=3|pattern=nopass}}
 
 # I begin to [[shine]]
 # {{lb|la|impersonal}} it [[dawn]]s (grows light)
 
 ====Inflection====
 * This verb is [[defective verb|defective]], with only those forms based on the first principal part.
-{{la-conj-3rd|type=noperf|lūcesc}}
+{{la-conj-3rd|type=nopass|lūcēsc|lūx}}
 
 ====Related terms====
 * {{l|la|lūceō}}
@@ -6824,15 +6882,15 @@ Page 3216 lutesco: -------- begin text ---------
 ==Latin==
 
 ===Etymology===
-[[-esco]] derivation of [[lutum]] "mud"
+{{affix|la|lutum|t1=[[mud]]|-ēscō}}
 
 ===Verb===
-{{head|la|verb|head=lutēscō|[[defective verb|defective conjugation]]}}
+{{la-verb|lutēscō|lutēscere|conj=3|pattern=nopass-noperf}}
 
 # I become [[muddy]]
 
 ====Inflection====
-{{la-conj-3rd|type=noperf|lutēsc}}
+{{la-conj-3rd|type=nopass-noperf|lutēsc}}
 
 ===References===
 * {{R:L&S}}
@@ -6847,12 +6905,12 @@ Page 3221 maceresco: -------- begin text ---------
 ==Latin==
 
 ===Verb===
-{{head|la|verb|head=mācerēscō|[[defective verb|defective conjugation]]}}
+{{la-verb|mācerēscō|mācerēscere|conj=3|pattern=nopass-noperf}}
 
 # I [[soften]], make [[tender]]
 
 ====Declension====
-{{la-conj-3rd|type=noperf|mācerēsc}}
+{{la-conj-3rd|type=nopass-noperf|mācerēsc}}
 
 ===References===
 * {{R:L&S}}
@@ -6864,14 +6922,14 @@ Page 3223 macesco: -------- begin text ---------
 ==Latin==
 
 ===Verb===
-{{head|la|verb|head=macēscō|[[defective verb|defective conjugation]]}}
+{{la-verb|macēscō|macēscere|conj=3|pattern=nopass-noperf}}
 
 # I become [[thin]], [[lean]]
 # I become [[meagre]]
 # I [[wither]] (of plants)
 
 ====Declension====
-{{la-conj-3rd|type=noperf|macēsc}}
+{{la-conj-3rd|type=nopass-noperf|macēsc}}
 
 ===References===
 * {{R:L&S}}
@@ -6988,17 +7046,18 @@ Page 3253 marcesco: -------- begin text ---------
 From {{suffix|la|marceō|scō|gloss1=I wither}}.
 
 ===Pronunciation===
-* {{a|Classical}} {{IPA|/marˈkeːs.koː/|lang=la}}
+* {{la-IPA|marcēscō}}
 
 ===Verb===
-{{head|la|verb|head=marcēscō|[[defective verb|defective conjugation]]}}
+{{la-verb|marcēscō|marcēscere|conj=3|pattern=nopass-noperf}}
 
 # I begin to [[wither]], [[pine]] away; I grew feeble
 # I [[pine]] or [[languish]]
 
 ====Inflection====
 * This verb is [[defective verb|defective]], with only those forms based on the first principal part.
-{{la-conj-3rd|type=noperf|marcesc}}
+* The perfect {{m|la|marcuī}} is attested post-Classically.
+{{la-conj-3rd|type=nopass-noperf|marcēsc}}
 
 ====Related terms====
 * {{l|la|marcēns}}
@@ -7027,13 +7086,13 @@ From {{suffix|la|māter|ēscō|gloss1=mother}}.
 * {{la-IPA|mātrēscō}}
 
 ===Verb===
-{{head|la|verb|head=mātrēscō|[[defective verb|defective conjugation]]}}
+{{la-verb|mātrēscō|mātrēscere|conj=3|pattern=nopass-noperf}}
 
 # I become a [[mother]] or like one's mother.
 
 ====Inflection====
 * This verb is [[defective verb|defective]], with only those forms based on the first principal part.
-{{la-conj-3rd|type=noperf|mātrēsc}}
+{{la-conj-3rd|type=nopass-noperf|mātrēsc}}
 
 ====Related terms====
 {{top4}}
@@ -7074,7 +7133,7 @@ Page 3259 maturesco: -------- begin text ---------
 From {{suffix|la|mātūrus|ēscō|gloss1=ripe, mature}}.
 
 ===Pronunciation===
-* {{a|Classical}} {{IPA|/maː.tuːˈreːs.koː/|lang=la}}
+* {{la-IPA|mātūrēscō}}
 
 ===Verb===
 {{la-verb|mātūrēscō|mātūrēscere|mātūruī|conj=3|pattern=nopass}}
@@ -7082,7 +7141,7 @@ From {{suffix|la|mātūrus|ēscō|gloss1=ripe, mature}}.
 # I [[ripen]] or [[mature]]
 
 ====Inflection====
-{{la-conj-3rd|type=nopass|mātūrēsc|mātūru|}}
+{{la-conj-3rd|type=nopass|mātūrēsc|mātūru}}
 
 ====Related terms====
 * {{l|la|mātūrus}}
@@ -7149,17 +7208,20 @@ Page 3310 mitesco: Found match for regex: =
 Page 3310 mitesco: -------- begin text ---------
 ==Latin==
 
+===Alternative forms===
+* {{la-IPA|mītēscō}}
+
 ===Etymology===
 From {{affix|la|mītis|-ēscō|t1=mild}}.
 
 ===Verb===
-{{head|la|verb|head=mītēscō|[[defective verb|defective conjugation]]}}
+{{la-verb|mītēscō|mītēscere|conj=3|pattern=nopass-noperf}}
 
 # I become [[mild]] or [[mellow]]
 # I [[ripen]] (of fruits)
 
 ====Inflection====
-{{la-conj-3rd|type=noperf|mītēsc}}
+{{la-conj-3rd|type=nopass-noperf|mītēsc}}
 
 ===References===
 * {{R:L&S}}
@@ -7185,7 +7247,7 @@ Page 3322 mollesco: -------- begin text ---------
 From {{suffix|la|mollis|ēscō|gloss1=soft}}.
 
 ===Pronunciation===
-* {{a|Classical}} {{IPA|/molˈleːs.koː/|lang=la}}
+* {{la-IPA|mollēscō}}
 
 ===Verb===
 {{la-verb|mollēscō|mollēscere|conj=3|pattern=nopass-noperf}}
@@ -7336,12 +7398,12 @@ Page 3391 noctesco: -------- begin text ---------
 {{suffix|la|nox|ēscō}}.
 
 ===Verb===
-{{la-verb|noctēscō|noctēscere|pattern=noperf|conj=3}}
+{{la-verb|noctēscō|noctēscere|pattern=nopass-noperf|conj=3}}
 
 # I draw towards [[night]]; grow [[dark]]<ref>http://latinlexicon.org/definition.php?p1=2038655</ref>.
 
 ====Conjugation====
-{{la-conj-3rd|type=noperf|noctēsc}}
+{{la-conj-3rd|type=nopass-noperf|noctēsc}}
 
 ====Descendants====
 * {{desc|ast|anochecer}}
@@ -7410,12 +7472,12 @@ Page 3420 obaresco: -------- begin text ---------
 ==Latin==
 
 ===Verb===
-{{head|la|verb|head=obārēscō|[[defective verb|defective conjugation]]}}
+{{la-verb|obārēscō|obārēscere|conj=3|pattern=nopass-noperf}}
 
 # I [[dry up]] (grow dry)
 
 ====Inflection====
-{{la-conj-3rd|type=noperf|obārēsc}}
+{{la-conj-3rd|type=nopass-noperf|obārēsc}}
 
 ===References===
 * {{R:L&S}}
@@ -7429,12 +7491,12 @@ Page 3423 obatresco: -------- begin text ---------
 ==Latin==
 
 ===Verb===
-{{head|la|verb|head=obātrēscō|[[defective verb|defective conjugation]]}}
+{{la-verb|obātrēscō|obātrēscere|conj=3|pattern=nopass-noperf}}
 
 # I [[blacken]] (become black)
 
 ====Inflection====
-{{la-conj-3rd|type=noperf|obātrēsc}}
+{{la-conj-3rd|type=nopass-noperf|obātrēsc}}
 
 ===References===
 * {{R:L&S}}
@@ -7446,12 +7508,12 @@ Page 3425 obbrutesco: -------- begin text ---------
 ==Latin==
 
 ===Verb===
-{{head|la|verb|head=obbrūtēscō|[[defective verb|defective conjugation]]}}
+{{la-verb|obbrūtēscō|obbrūtēscere|obbrūtuī|conj=3|pattern=nopass}}
 
 # I become [[brutish]]
 
 ====Inflection====
-{{la-conj-3rd|type=noperf|obbrūtēsc}}
+{{la-conj-3rd|type=nopass|obbrūtēsc|obbrūtu}}
 
 ===References===
 * {{R:L&S}}
@@ -7574,8 +7636,6 @@ From {{affix|la|ob-|mūtēscō}}.
 * {{R:L&S}}
 * {{R:Elementary Lewis}}
 * {{R:Gaffiot}}
-
-[[Category:Latin words suffixed with -esco]]
 -------- end text --------
 Page 3465 obnitor: Skipping because doesn't match --filter-pages regex escor?$
 Page 3466 obnubilo: Skipping because doesn't match --filter-pages regex escor?$
@@ -7677,27 +7737,27 @@ Page 3491 obsordesco: -------- begin text ---------
 * {{R:Gaffiot}}
 -------- end text --------
 Page 3492 obstetrico: Skipping because doesn't match --filter-pages regex escor?$
-Page 3493 obstipesco: Found match for regex: =
-Page 3493 obstipesco: -------- begin text ---------
+Page 3493 obstupesco: Found match for regex: =
+Page 3493 obstupesco: -------- begin text ---------
 ==Latin==
 
 ===Alternative forms===
-* {{l|la|obstupēscō}}
+* {{l|la|obstipēscō}}
 
 ===Etymology===
 From {{affix|la|ob-|stupēscō|gloss2=I become amazed}}.
 
 ===Pronunciation===
-* {{la-IPA|obstipēscō}}
+* {{la-IPA|obstupēscō}}
 
 ===Verb===
-{{la-verb|obstipēscō|obstipēscere|obstipuī|conj=3|pattern=nopass}}
+{{la-verb|obstupēscō|obstupēscere|obstupuī|conj=3|pattern=nopass}}
 
 # I become [[numb]] or [[stupefied]]
 # I am [[astonished]], [[astounded]] or [[amazed]]
 
 ====Inflection====
-{{la-conj-3rd|type=nopass|obstipēsc|obstipu}}
+{{la-conj-3rd|type=nopass|obstupēsc|obstupu}}
 
 ====Related terms====
 * {{l|la|stupeō}}
@@ -7713,20 +7773,20 @@ Page 3495 obstrepo: Skipping because doesn't match --filter-pages regex escor?$
 Page 3496 obstringo: Skipping because doesn't match --filter-pages regex escor?$
 Page 3497 obstruo: Skipping because doesn't match --filter-pages regex escor?$
 Page 3498 obstupefacio: Skipping because doesn't match --filter-pages regex escor?$
-Page 3499 obstupesco: Found match for regex: =
-Page 3499 obstupesco: -------- begin text ---------
+Page 3499 obstipesco: Found match for regex: =
+Page 3499 obstipesco: -------- begin text ---------
 ==Latin==
 
 ===Pronunciation===
-* {{la-IPA|obstupēscō}}
+* {{la-IPA|obstipēscō}}
 
 ===Verb===
-{{la-verb|obstupēscō|obstupēscere|obstupuī|conj=3|pattern=nopass}}
+{{la-verb|obstipēscō|obstipēscere|obstipuī|conj=3|pattern=nopass}}
 
-# {{alternative form of|obstipesco|obstipēscō|lang=la}}
+# {{alternative form of|obstupesco|obstupēscō|lang=la}}
 
 ====Inflection====
-{{la-conj-3rd|type=nopass|obstupēsc|obstupu}}
+{{la-conj-3rd|type=nopass|obstipēsc|obstipu}}
 
 ===References===
 * {{R:L&S}}
@@ -7765,8 +7825,6 @@ From {{affix|la|ob-|surdēscō}}.
 * {{R:Elementary Lewis}}
 * {{R:Gaffiot}}
 * {{R:NLW}}
-
-[[Category:Latin words suffixed with -esco]]
 -------- end text --------
 Page 3502 obtego: Skipping because doesn't match --filter-pages regex escor?$
 Page 3503 obtempero: Skipping because doesn't match --filter-pages regex escor?$
@@ -7776,12 +7834,12 @@ Page 3505 obtenebresco: -------- begin text ---------
 ==Latin==
 
 ===Verb===
-{{head|la|verb|head=obtenebrēscō|[[defective verb|defective conjugation]]}}
+{{la-verb|obtenebrēscō|obtenebrēscere|conj=3|pattern=nopass-noperf}}
 
 # I [[darken]]
 
 ====Inflection====
-{{la-conj-3rd|type=noperf|obtenebrēsc}}
+{{la-conj-3rd|type=nopass-noperf|obtenebrēsc}}
 
 ===References===
 * {{R:L&S}}
@@ -7813,6 +7871,9 @@ Page 3528 occaeco: Skipping because doesn't match --filter-pages regex escor?$
 Page 3529 occallesco: Found match for regex: =
 Page 3529 occallesco: -------- begin text ---------
 ==Latin==
+
+===Alternative forms===
+* {{l|la|obcallēscō}}
 
 ===Pronunciation===
 * {{la-IPA|occallēscō}}
@@ -8031,7 +8092,7 @@ Page 3651 pavesco: -------- begin text ---------
 ==Latin==
 
 ===Verb===
-{{head|la|verb|head=pavēscō|[[defective verb|defective conjugation]]}}
+{{la-verb|pavēscō|pavēscere|conj=3|pattern=noperf}}
 
 # I become [[alarmed]] or [[afraid]]
 
@@ -8084,15 +8145,35 @@ Page 3689 percipio: Skipping because doesn't match --filter-pages regex escor?$
 Page 3690 percolo: Skipping because doesn't match --filter-pages regex escor?$
 Page 3691 perconor: Skipping because doesn't match --filter-pages regex escor?$
 Page 3692 percontor: Skipping because doesn't match --filter-pages regex escor?$
-Page 3693 percrebesco: Found match for regex: =
-Page 3693 percrebesco: -------- begin text ---------
+Page 3693 percrebresco: Found match for regex: =
+Page 3693 percrebresco: -------- begin text ---------
 ==Latin==
 
 ===Alternative forms===
-* {{l|la|percrebresco}}
+* {{l|la|percrēbēscō}}
 
 ===Etymology===
-From {{prefix|la|per|crebesco|tr2=crēbēscō}}
+From {{prefix|la|per|crēbrēscō}}
+
+===Pronunciation===
+* {{la-IPA|percrēbrēscō}}
+
+===Verb===
+{{la-verb|percrēbrēscō|percrēbrēscere|percrēbruī|conj=3|pattern=nopass}}
+
+# I become very [[frequent]] or [[prevalent]].
+# I [[spread]].
+
+====Inflection====
+{{la-conj-3rd|type=nopass|percrēbrēsc|percrēbru}}
+
+===References===
+* {{R:L&S}}
+* {{R:Gaffiot}}
+-------- end text --------
+Page 3694 percrebesco: Found match for regex: =
+Page 3694 percrebesco: -------- begin text ---------
+==Latin==
 
 ===Pronunciation===
 * {{la-IPA|percrēbēscō}}
@@ -8100,32 +8181,12 @@ From {{prefix|la|per|crebesco|tr2=crēbēscō}}
 ===Verb===
 {{la-verb|percrēbēscō|percrēbēscere|percrēbuī|conj=3|pattern=nopass}}
 
-# I become very [[frequent]] or [[prevalent]].
-# I [[spread]].
+# {{alternative form of|percrēbrēscō|lang=la}}
 #* '''1832''', [[w:Pope Gregory XVI|Gregory XVI]], ''[[:w:Mirari Vos|Mirari Vos]]''
 #*: Institutis enim exemploque praeceptorum, corruptis adolescentium animis, ingens religionis clades, morumque perversitas teterrima '''percrebuit'''.
 
 ====Inflection====
 {{la-conj-3rd|type=nopass|percrēbēsc|percrēbu}}
-
-===References===
-* {{R:L&S}}
-* {{R:Gaffiot}}
--------- end text --------
-Page 3694 percrebresco: Found match for regex: =
-Page 3694 percrebresco: -------- begin text ---------
-==Latin==
-
-===Pronunciation===
-* {{la-IPA|percrebrescō}}
-
-===Verb===
-{{la-verb|percrebrescō|percrebrescere|percrebruī|conj=3|pattern=nopass}}
-
-# {{alternative form of|percrebesco|lang=la}}
-
-====Inflection====
-{{la-conj-3rd|type=nopass|percrebresc|percrebru}}
 
 ===References===
 * {{R:Elementary Lewis}}
@@ -8179,20 +8240,20 @@ Page 3736 perhorresco: -------- begin text ---------
 
 ===Etymology===
 Either:
-* From {{prefix|la|per|t1=thoroughly|horrēscō|t2=tremble, dread}}; or
-* From {{suffix|la|perhorreō|t1=tremble greatly|scō|pos2=inchoative}}.
+* from {{prefix|la|per|t1=thoroughly|horrēscō|t2=tremble, dread}}; or
+* from {{suffix|la|perhorreō|t1=tremble greatly|scō|pos2=inchoative}}.
 
 ===Pronunciation===
 * {{la-IPA|per.horrēscō}}
 
 ===Verb===
-{{la-verb|perhorrēscō|perhorrēscere|perhorruī|conj=3|pattern=nopass}}
+{{la-verb|perhorrēscō|perhorrēscere|perhorruī|conj=3}}
 
 # I [[tremble]] or [[shudder]] greatly
 # I [[recoil]] in [[terror]] (from)
 
 ====Inflection====
-{{la-conj-3rd|type=nopass|perhorrēsc|perhorru}}
+{{la-conj-3rd|perhorrēsc|perhorru}}
 
 ===References===
 * {{R:L&S}}
@@ -8290,12 +8351,12 @@ Page 3820 pertimesco: -------- begin text ---------
 * {{la-IPA|pertimēscō}}
 
 ===Verb===
-{{la-verb|pertimēscō|pertimēscere|pertimuī|conj=3|pattern=nopass}}
+{{la-verb|pertimēscō|pertimēscere|pertimuī|conj=3}}
 
 # I become very [[frightened]]
 
 ====Inflection====
-{{la-conj-3rd|type=nopass|pertimēsc|pertimu}}
+{{la-conj-3rd|pertimēsc|pertimu}}
 
 ===References===
 * {{R:L&S}}
@@ -8347,12 +8408,12 @@ Page 3861 pinguesco: -------- begin text ---------
 ==Latin==
 
 ===Verb===
-{{head|la|verb|head=pinguēscō|[[defective verb|defective conjugation]]}}
+{{la-verb|pinguēscō|pinguēscere|conj=3|pattern=nopass-noperf}}
 
 # I grow [[fat]] or [[rich]]
 
 ====Inflection====
-{{la-conj-3rd|type=noperf|pinguēsc}}
+{{la-conj-3rd|type=nopass-noperf|pinguēsc}}
 
 ===References===
 * {{R:L&S}}
@@ -8386,12 +8447,12 @@ Page 3884 plumesco: -------- begin text ---------
 ==Latin==
 
 ===Verb===
-{{head|la|verb|head=plūmēscō|[[defective verb|defective conjugation]]}}
+{{la-verb|plūmēscō|plūmēscere|conj=3|pattern=nopass-noperf}}
 
 # I [[fledge]] (grow feathers)
 
 ====Inflection====
-{{la-conj-3rd|type=noperf|plūmēsc}}
+{{la-conj-3rd|type=nopass-noperf|plūmēsc}}
 
 ===References===
 * {{R:L&S}}
@@ -8730,18 +8791,18 @@ Page 4184 putresco: -------- begin text ---------
 From {{suffix|la|putreō|scō|gloss1=to be rotten or putrid}}, from {{cog|la|puter||rotten, crumbling}}.
 
 ===Verb===
-{{head|la|verb|head=putrēscō|[[defective verb|defective conjugation]]}}
+{{la-verb|putrēscō|putrēscere|conj=3|pattern=nopass-noperf}}
 
 # I [[putrefy]] or [[rot]]
 
 ====Inflection====
-{{la-conj-3rd|type=noperf|putrēsc}}
+{{la-conj-3rd|type=nopass-noperf|putrēsc}}
 
 ====Descendants====
-* French: [[pourrir]]
-* Galician: [[podrecer]]
-* Portuguese: [[apodrecer]]
-* Spanish: [[podrecer]]
+* {{desc|fr|pourrir}}
+* {{desc|gl|podrecer}}
+* {{desc|pt|apodrecer}}
+* {{desc|es|podrecer}}
 
 ===References===
 * {{R:L&S}}
@@ -8834,12 +8895,12 @@ Page 4208 radicesco: -------- begin text ---------
 * {{la-IPA|rādīcēscō}}
 
 ===Verb===
-{{la-verb|rādīcēscō|rādīcēscere|rādīcuī|conj=3|pattern=nopass}}
+{{la-verb|rādīcēscō|rādīcēscere|conj=3|pattern=nopass-noperf}}
 
 # I [[take root]]
 
 ====Inflection====
-{{la-conj-3rd|type=nopass|rādīcēsc|rādīcu}}
+{{la-conj-3rd|type=nopass-noperf|rādīcēsc}}
 
 ===References===
 * {{R:L&S}}
@@ -8952,6 +9013,7 @@ From {{prefix|la|re|frīgēscō|gloss2=grow cold}}.
 # I [[abate]] or [[flag]]
 
 ====Inflection====
+* A late, vulgar perfect {{m|la|refrīgŭī}} occurs.
 {{la-conj-3rd|type=nopass|refrīgēsc|refrīx}}
 
 ====Descendants====
@@ -8994,12 +9056,12 @@ From {{prefix|la|re|languēscō|gloss2=I become faint}}.
 * {{la-IPA|relanguēscō}}
 
 ===Verb===
-{{la-verb|relanguēscō|relanguēscere|relanguī|conj=3|pattern=nopass}}
+{{la-verb|relanguēscō|relanguēscere|relangŭī|conj=3|pattern=nopass}}
 
 # I become [[faint]] or [[languid]]
 
 ====Inflection====
-{{la-conj-3rd|type=nopass|relanguēsc|relangu}}
+{{la-conj-3rd|type=nopass|relanguēsc|relangŭ}}
 
 ====Related terms====
 * {{l|la|langueō}}
@@ -9039,13 +9101,13 @@ Page 4342 remollesco: -------- begin text ---------
 From {{prefix|la|re|mollēscō|gloss2=soften}}
 
 ===Verb===
-{{head|la|verb|head=remollēscō|[[defective verb|defective conjugation]]}}
+{{la-verb|remollēscō|remollēscere|conj=3|pattern=nopass-noperf}}
 
 # I become [[soft]] or [[soften]] again
 
 ====Inflection====
 * This verb is [[defective verb|defective]], with only those forms based on the first principal part.
-{{la-conj-3rd|type=noperf|remollēsc}}
+{{la-conj-3rd|type=nopass-noperf|remollēsc}}
 
 ====Related terms====
 * {{l|la|mollēscō}}
@@ -9224,7 +9286,7 @@ Page 4460 reviresco: -------- begin text ---------
 ==Latin==
 
 ===Etymology===
-From {{prefix|la|re|viresco}}
+From {{prefix|la|re|virēscō}}
 
 ===Pronunciation===
 * {{la-IPA|revirēscō}}
@@ -9244,30 +9306,54 @@ From {{prefix|la|re|viresco}}
 * {{R:Gaffiot}}
 -------- end text --------
 Page 4461 reviso: Skipping because doesn't match --filter-pages regex escor?$
-Page 4462 revivesco: Found match for regex: =
-Page 4462 revivesco: -------- begin text ---------
+Page 4462 revivisco: Found match for regex: =
+Page 4462 revivisco: -------- begin text ---------
 ==Latin==
 
 ===Alternative forms===
-* {{l|la|revīviscō}}
+* {{l|la|revīvēscō}}
 
 ===Etymology===
-Cf. {{m|la|revīvō}} and {{m|la|-escō}}.
+Cf. {{m|la|revīvō}} and {{m|la|-īscō}}.
+
+===Pronunciation===
+* {{la-IPA|revīvīscō}}
+
+===Verb===
+{{la-verb|revīvīscō|revīvīscere|revīxī|conj=3|pattern=nopass}}
+
+# I [[revive]] (am restored to life)
+
+====Inflection====
+{{la-conj-3rd|type=nopass|revīvīsc|revīx}}
+
+====Descendants====
+* Catalan: {{l|ca|reviscolar}}
+* Occitan: {{l|oc|reviscolar}}
+
+===References===
+* {{R:L&S}}
+* {{R:Elementary Lewis}}
+* {{R:Gaffiot}}
+-------- end text --------
+Page 4462 revivesco: -------- begin text ---------
+==Latin==
 
 ===Pronunciation===
 * {{la-IPA|revīvēscō}}
 
 ===Verb===
-{{la-verb|revīvēscō|revīvēscere|revīvuī|conj=3|pattern=nopass}}
+{{la-verb|revīvēscō|revīvēscere|revīxī|conj=3|pattern=nopass}}
 
-# I [[revive]] (am restored to life)
+# {{alternative form of|la|revīvīscō}}
 
 ====Inflection====
-{{la-conj-3rd|type=nopass|revīvēsc|revīvu}}
+{{la-conj-3rd|type=nopass|revīvēsc|revīx}}
 
-====Descendants====
-* Catalan: {{l|ca|reviscolar}}
-* Occitan: {{l|oc|reviscolar}}
+===References===
+* {{R:L&S}}
+* {{R:Elementary Lewis}}
+* {{R:Gaffiot}}
 -------- end text --------
 Page 4463 revivisco: Skipping because doesn't match --filter-pages regex escor?$
 Page 4464 revivo: Skipping because doesn't match --filter-pages regex escor?$
@@ -9286,13 +9372,13 @@ Page 4472 rigesco: -------- begin text ---------
 * {{la-IPA|rigēscō}}
 
 ===Verb===
-{{la-verb|rigēscō|rigēscere|riguī|conj=3|pattern=nopass}}
+{{la-verb|rigēscō|rigēscere|rigŭī|conj=3|pattern=nopass}}
 
 # I [[stiffen]], [[harden]]
 # I grow [[numb]]
 
 ====Inflection====
-{{la-conj-3rd|type=nopass|rigēsc|rigu}}
+{{la-conj-3rd|type=nopass|rigēsc|rigŭ}}
 
 ===References===
 * {{R:L&S}}
@@ -9353,12 +9439,12 @@ Page 4495 rufesco: -------- begin text ---------
 ==Latin==
 
 ===Verb===
-{{head|la|verb|head=rūfēscō|[[defective verb|defective conjugation]]}}
+{{la-verb|rūfēscō|rūfēscere|conj=3|pattern=nopass-noperf}}
 
 # I [[redden]] (become reddish)
 
 ====Inflection====
-{{la-conj-3rd|type=noperf|rūfēsc}}
+{{la-conj-3rd|type=nopass-noperf|rūfēsc}}
 
 ===References===
 * {{R:L&S}}
@@ -9407,14 +9493,14 @@ From {{affix|la|sānus|gloss1=healthy|-ēscō}}.
 * {{la-IPA|sānēscō}}
 
 ===Verb===
-{{head|la|verb|head=sānēscō|[[defective verb|defective conjugation]]}}
+{{la-verb|sānēscō|sānēscere|conj=3|pattern=nopass-noperf}}
 
 # I become [[healthy]], I [[get well]]
 # I [[heal]]
 
 ====Inflection====
 * This verb is [[defective verb|defective]], with only those forms based on the first principal part.
-{{la-conj-3rd|type=noperf|sānēsc}}
+{{la-conj-3rd|type=nopass-noperf|sānēsc}}
 
 ===References===
 * {{R:L&S}}
@@ -9542,22 +9628,34 @@ Page 4602 seresco: Found match for regex: =
 Page 4602 seresco: -------- begin text ---------
 ==Latin==
 
-===Etymology===
+===Pronunciation===
+* {{la-IPA|serēscō}}
+
+===Etymology 1===
 From {{der|la|ine-pro|*kseros}}. Cognates include Ancient Greek {{m|grc|ξηρός}}, Old High German {{m|goh|serawēn}}, Old Armenian {{m|xcl|չոր}}, Middle Armenian {{m|axm|չիր}} and perhaps Sanskrit {{m|sa|क्षार|tr=kṣārá||sharp, acrid, pungent}}. Possibly the inchoative of an unattested verb {{m|la|*serō}}, which also produced the adjective {{m|la|serēnus}}.
 
-===Pronunciation===
-* {{la-IPA|sĕrescō}}
-
-===Verb===
-{{la-verb|serescō|serescere|pattern=nopass-noperf|conj=3}}
+====Verb====
+{{la-verb|serēscō|serēscere|pattern=nopass-noperf|conj=3}}
 
 # I become [[dry]].
 
-====Inflection====
-{{la-conj-3rd|type=nopass-noperf|seresc}}
+=====Inflection=====
+{{la-conj-3rd|type=nopass-noperf|serēsc}}
+
+===Etymology 2===
+{{affix|la|serum|t1=[[whey]]|-ēscō}}
+
+====Verb====
+{{la-verb|serēscō|serēscere|pattern=nopass-noperf|conj=3}}
+
+# I turn into [[whey]].
+
+=====Inflection=====
+{{la-conj-3rd|type=nopass-noperf|serēsc}}
 
 ===References===
 * {{R:L&S}}
+* {{R:Gaffiot}}
 -------- end text --------
 Page 4603 sermocinor: Skipping because doesn't match --filter-pages regex escor?$
 Page 4604 sermonor: Skipping because doesn't match --filter-pages regex escor?$
@@ -9576,16 +9674,16 @@ Page 4612 siccesco: -------- begin text ---------
 From {{suffix|la|siccus|ēscō}}.
 
 ===Verb===
-{{head|la|verb|head=siccēscō|[[defective verb|defective conjugation]]}}
+{{la-verb|siccēscō|siccēscere|conj=3|pattern=nopass-noperf}}
 
 # I [[dry up]]; I become [[dry]].
 
 ====Inflection====
 * This verb is [[defective verb|defective]], with only those forms based on the first principal part.
-{{la-conj-3rd|type=noperf|siccēsc}}
+{{la-conj-3rd|type=nopass-noperf|siccēsc}}
 
 ====Related terms====
-* {{l|la|sicco|siccō}}
+* {{l|la|siccō}}
 
 ===References===
 * {{R:L&S}}
@@ -9605,12 +9703,12 @@ Page 4619 silesco: -------- begin text ---------
 * {{la-IPA|silēscō}}
 
 ===Verb===
-{{la-verb|silēscō|silēscere|siluī|conj=3|pattern=nopass}}
+{{la-verb|silēscō|silēscere|conj=3|pattern=nopass-noperf}}
 
 # I become [[still]], [[silent]], [[calm]], or [[quiet]]
 
 ====Inflection====
-{{la-conj-3rd|type=nopass|silēsc|silu}}
+{{la-conj-3rd|type=nopass-noperf|silēsc}}
 
 ===References===
 * {{R:L&S}}
@@ -9648,7 +9746,7 @@ Page 4643 sordesco: -------- begin text ---------
 From {{suffix|la|sordeō|scō|gloss1=I am dirty}}.
 
 ===Pronunciation===
-* {{a|Classical}} {{IPA|/sorˈdeːs.koː/|lang=la}}
+* {{la-IPA|sordēscō}}
 
 ===Verb===
 {{la-verb|sordēscō|sordēscere|sorduī|conj=3|pattern=nopass}}
@@ -9697,7 +9795,7 @@ Page 4656 splendesco: -------- begin text ---------
 ==Latin==
 
 ===Etymology===
-From {{m|la|splendeo}}.
+From {{affix|la|splendeō|-scō}}.
 
 ===Pronunciation===
 * {{la-IPA|splendēscō}}
@@ -9755,12 +9853,12 @@ Page 4692 stupesco: -------- begin text ---------
 ==Latin==
 
 ===Verb===
-{{head|la|verb|head=stupēscō|[[defective verb|defective conjugation]]}}
+{{la-verb|stupēscō|stupēscere|conj=3|pattern=nopass-noperf}}
 
 # I become [[astonished]] or [[amazed]]
 
 ====Inflection====
-{{la-conj-3rd|type=noperf|stupēsc}}
+{{la-conj-3rd|type=nopass-noperf|stupēsc}}
 
 ===References===
 * {{R:L&S}}
@@ -10099,7 +10197,7 @@ Page 4940 tabesco: -------- begin text ---------
 ==Latin==
 
 ===Etymology===
-[[inchoative|Inchoative]] verb of {{m|la|tābeō}}.
+From {{affix|la|tābeō|-scō}}.
 
 ===Pronunciation===
 * {{la-IPA|tābēscō}}
@@ -10147,19 +10245,19 @@ Page 4954 tenebresco: -------- begin text ---------
 From {{suffix|la|tenebrae|ēscō|gloss1=darkness}}.
 
 ===Pronunciation===
-* {{a|Classical}} {{IPA|/te.neˈbreːs.koː/|lang=la}}
+* {{la-IPA|tenebrēscō}}
 
 ===Verb===
-{{head|la|verb|head=tenebrēscō|[[defective verb|defective conjugation]]}}
+{{la-verb|tenebrēscō|tenebrēscere|conj=3|pattern=nopass-noperf}}
 
 # I [[darken]], grow [[dark]], [[dim]], [[gloomy]].
 
 ====Inflection====
 * This verb is [[defective verb|defective]], with only those forms based on the first principal part.
-{{la-conj-3rd|type=noperf|tenebrēsc}}
+{{la-conj-3rd|type=nopass-noperf|tenebrēsc}}
 
 ====Antonyms====
-* {{sense|become dark}} {{l|la|illusesco|illūsēscō}}
+* {{sense|become dark}} {{l|la|illūsēscō}}
 
 ====Related terms====
 {{top2}}
@@ -10189,12 +10287,16 @@ Page 4961 tepesco: Found match for regex: =
 Page 4961 tepesco: -------- begin text ---------
 ==Latin==
 
-=== Verb ===
-{{la-verb|tepēscō|tepēscere|tepuī|conj=3}}
+===Etymology===
+{{affix|la|tepeō|-scō}}
+
+===Verb===
+{{la-verb|tepēscō|tepēscere|tepuī|conj=3|pattern=nopass}}
 
 # I grow [[warm]], I become [[lukewarm]]
 
-[[Category:Latin verbs]]
+====Inflection====
+{{la-conj-3rd|type=nopass|tepēsc|tepu}}
 -------- end text --------
 Page 4962 terebro: Skipping because doesn't match --filter-pages regex escor?$
 Page 4963 terga verto: Skipping because doesn't match --filter-pages regex escor?$
@@ -10315,6 +10417,9 @@ Page 5056 tremesco: Found match for regex: =
 Page 5056 tremesco: -------- begin text ---------
 ==Latin==
 
+===Alternative forms===
+* {{l|la|tremīscō}}
+
 ===Etymology===
 From {{suffix|la|tremō|gloss1=tremble, shake|ēscō|pos2=inchoative}}.
 
@@ -10322,7 +10427,7 @@ From {{suffix|la|tremō|gloss1=tremble, shake|ēscō|pos2=inchoative}}.
 * {{la-IPA|tremēscō}}
 
 ===Verb===
-{{head|la|verb|head=tremēscō|[[defective verb|defective conjugation]]}}
+{{la-verb|tremēscō|tremēscere|conj=3|pattern=noperf}}
 
 # I begin to [[tremble]], [[shake]].
 
@@ -10429,8 +10534,6 @@ From {{suffix|la|tumeō|scō|gloss1=I swell}}.
 * {{R:Elementary Lewis}}
 * {{R:Gaffiot}}
 * {{R:NLW}}
-
-[[Category:Latin defective verbs]]
 -------- end text --------
 Page 5080 tumido: Skipping because doesn't match --filter-pages regex escor?$
 Page 5081 tumulo: Skipping because doesn't match --filter-pages regex escor?$
@@ -10444,12 +10547,12 @@ Page 5087 turgesco: -------- begin text ---------
 ==Latin==
 
 ===Verb===
-{{head|la|verb|head=turgēscō|[[defective verb|defective conjugation]]}}
+{{la-verb|turgēscō|turgēscere|conj=3|pattern=nopass-noperf}}
 
 # I [[swell up]], begin to [[swell]]
 
 ====Inflection====
-{{la-conj-3rd|type=noperf|turgēsc}}
+{{la-conj-3rd|type=nopass-noperf|turgēsc}}
 
 ===References===
 * {{R:L&S}}
@@ -10476,10 +10579,16 @@ Page 5104 umesco: Found match for regex: =
 Page 5104 umesco: -------- begin text ---------
 ==Latin==
 
+===Alternative forms===
+* {{l|la|hūmēscō}}
+
 ===Verb===
-{{la-verb|ūmescō|ūmēscere|conj=3|pattern=noperf}}
+{{la-verb|ūmēscō|ūmēscere|conj=3|pattern=nopass-noperf}}
 
 # I become [[moist]], [[wet]] or [[damp]].
+
+====Inflection====
+{{la-conj-3rd|type=nopass-noperf|ūmēsc}}
 
 ===References===
 * {{R:L&S}}
@@ -10520,6 +10629,7 @@ Page 5135 valeo: Skipping because doesn't match --filter-pages regex escor?$
 Page 5136 valesco: Found match for regex: =
 Page 5136 valesco: -------- begin text ---------
 ==Latin==
+
 ===Etymology===
 From {{affix|la|valeō|-scō}}: beginning to get better.
 
@@ -10527,12 +10637,12 @@ From {{affix|la|valeō|-scō}}: beginning to get better.
 * {{la-IPA|valēscō}}
 
 ===Verb===
-{{la-verb|valēscō|valēscere|valēvī|valētum|conj=3}}
+{{la-verb|valēscō|valēscere|valuī|conj=3|pattern=nopass}}
 
 # I [[grow]] [[strong]], [[acquire]] [[strength]]
 
 ====Inflection====
-{{la-conj-3rd|type=nopass|valēsc|valēv|valēt}}
+{{la-conj-3rd|type=nopass|valēsc|valu}}
 
 ===References===
 * {{R:L&S|vălesco}}
@@ -10551,12 +10661,12 @@ From {{suf|la|vānus|ēscō|t1=empty}}.
 * {{la-IPA|vānēscō}}
 
 ===Verb===
-{{la-verb|vānēscō|vānēscere|vānuī|conj=3|pattern=nopass}}
+{{la-verb|vānēscō|vānēscere|conj=3|pattern=nopass-noperf}}
 
 # I [[vanish]].
 
 ====Inflection====
-{{la-conj-3rd|type=nopass|vānēsc|vānu}}
+{{la-conj-3rd|type=nopass-noperf|vānēsc}}
 
 ====Derived terms====
 * {{l|la|ēvānescō}}
@@ -10651,13 +10761,13 @@ Page 5189 veteresco: -------- begin text ---------
 From {{suffix|la|vetus|ēscō|gloss1=old}}.
 
 ===Verb===
-{{la-verb|veterēscō|veterēscere|pattern=noperf|conj=3}}
+{{la-verb|veterēscō|veterēscere|pattern=nopass-noperf|conj=3}}
 
 # I [[age]], [[grow]] [[old]]
 
 ====Inflection====
 * This verb is [[defective verb|defective]], with only those forms based on the first principal part.
-{{la-conj-3rd|type=noperf|veterēsc}}
+{{la-conj-3rd|type=nopass-noperf|veterēsc}}
 
 ====Related terms====
 {{top2}}
@@ -10729,7 +10839,7 @@ Page 5212 viresco: -------- begin text ---------
 * {{la-IPA|virēscō}}
 
 ===Verb===
-{{la-verb|virēscō|virēscēre|virēscuī|conj=3|pattern=nopass-noperf}}
+{{la-verb|virēscō|virēscēre|viruī|conj=3|pattern=nopass}}
 
 # I [[grow]].
 # I become [[green]], become [[verdant]].
@@ -10737,8 +10847,7 @@ Page 5212 viresco: -------- begin text ---------
 # I [[flourish]], [[prosper]], [[grow]].
 
 ====Inflection====
-{{attention|la|delete extra forms --kc_kennylau}}
-{{la-conj-3rd|type=nopass-noperf|virēsc}}
+{{la-conj-3rd|type=nopass|virēsc|viru}}
 
 ===References===
 * {{R:L&S}}
@@ -10753,24 +10862,24 @@ Page 5213 viridesco: -------- begin text ---------
 From {{suffix|la|viridis|ēscō|gloss1=green}}.
 
 ===Verb===
-{{head|la|verb|head=viridēscō|present active infinitive|viridescere|[[defective verb|defective conjugation]]}}
+{{la-verb|viridēscō|viridēscere|conj=3|pattern=nopass-noperf}}
 
 # I become [[green]]
 
 ====Inflection====
-{{la-conj-3rd|type=noperf|viridēsc}}
+{{la-conj-3rd|type=nopass-noperf|viridēsc}}
 
 ====Descendants====
 {{top2}}
-* Aromanian: [[nvirdzãscu]]
-* Catalan: [[enverdir]]
-* French: [[verdir]]
-* Italian: [[inverdire]]
+* {{desc|rup|nvirdzãscu}}
+* {{desc|ca|enverdir}}
+* {{desc|fr|verdir}}
+* {{desc|it|inverdire}}
 {{mid2}}
-* Occitan: {{l|oc|verdir}}
-* Portuguese: [[enverdecer]]
-* Romanian: [[înverzi]]
-* Spanish: [[enverdecer]]
+* {{desc|oc|verdir}}
+* {{desc|pt|enverdecer}}
+* {{desc|ro|înverzi}}
+* {{desc|es|enverdecer}}
 {{bottom}}
 
 ===References===
