@@ -63,14 +63,14 @@ local function process_forms_and_overrides(data, args)
 				val = data.forms[key]
 			end
 			if type(val) == "string" then
-				val = mw.text.split(val,"/")
+				val = mw.text.split(val, "/")
 			end
 			if data.num == "pl" and key:find("sg") then
 				data.forms[key] = ""
 			elseif val[1] == "" or val == "" or val == {""} or val[1] == "-" or val[1] == "—" or val == "-" or val == "—" then
 				data.forms[key] = "—"
 			else
-				for i,form in ipairs(val) do
+				for i, form in ipairs(val) do
 					local word = data.prefix .. form .. data.suffix
 					
 					local accel = key
@@ -93,7 +93,7 @@ local function process_forms_and_overrides(data, args)
 						local title = lang:makeEntryName(word)
 						local t = mw.title.new(title)
 						if t and not t.exists then
-							table.insert(data.categories,'Latin adjectives with red links in their declension tables')
+							table.insert(data.categories, 'Latin adjectives with red links in their declension tables')
 							redlink = true
 						end
 					end
@@ -111,12 +111,19 @@ local function show_forms(data)
 		local val = data.forms[key]
 		if val and val ~= "" and val ~= "—" then
 			for i, form in ipairs(val) do
-				if data.notes[key .. i] and not data.user_specified[key] then
-					val[i] = m_links.full_link({lang = lang, term = form, accel = {form = data.accel[key .. i], lemma = nil}}) .. '<sup style="color: red">' .. noteindex .. '</sup>'
-					table.insert(notes, '<sup style="color: red">' .. noteindex .. '</sup>' .. data.notes[key .. i])
-					noteindex = noteindex+1
+				local link = m_links.full_link({lang = lang, term = form, accel = {form = data.accel[key .. i], lemma = nil}})
+				if (data.notes[key .. i] or data.noteindex[key .. i]) and not data.user_specified[key] then
+					-- If the decl entry hasn't specified a footnote index, generate one.
+					local this_noteindex = data.noteindex[key .. i]
+					local note_html = '<sup style="color: red">' .. this_noteindex .. '</sup>'
+					if not this_noteindex then
+						this_noteindex = noteindex
+						noteindex = noteindex + 1
+						table.insert(notes, note_html .. data.notes[key .. i])
+					end
+					val[i] = link .. note_html
 				else
-					val[i] = m_links.full_link({lang = lang, term = form, accel = {form = data.accel[key .. i], lemma = nil}})
+					val[i] = link
 				end
 			end
 			data.forms[key] = table.concat(val, ", ")
@@ -134,6 +141,7 @@ local function generate_forms(frame)
 		forms = {},
 		categories = {},
 		notes = {},
+		noteindex = {},
 		user_specified = {},
 		accel = {},
 	}
