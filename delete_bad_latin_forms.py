@@ -37,6 +37,7 @@ demacron_mapper = {
 }
 
 parts_to_tags = {
+  # parts for verbs
   '1s': ['1', 's'],
   '2s': ['2', 's'],
   '3s': ['3', 's'],
@@ -63,6 +64,13 @@ parts_to_tags = {
   'dat': ['dat'],
   'acc': ['acc'],
   'abl': ['abl'],
+  # additional parts for adjectives
+  'voc': ['voc'],
+  'sg': ['s'],
+  'pl': ['p'],
+  'm': ['m'],
+  'f': ['f'],
+  'n': ['n'],
 }
 
 tags_to_canonical = {
@@ -102,6 +110,10 @@ tags_to_canonical = {
   'dative': 'dat',
   'accusative': 'acc',
   'ablative': 'abl',
+  'vocative': 'voc',
+  'masculine': 'm',
+  'feminine': 'f',
+  'neuter': 'n',
 }
 
 def remove_macrons(text):
@@ -137,118 +149,377 @@ def canonicalize_tag_set(tag_set):
     new_tag_set.append(tags_to_canonical.get(tag, tag))
   return new_tag_set
 
-def process_page(index, lemma, conj, forms, pages_to_delete, save, verbose):
-  def pagemsg(txt):
-    msg("Page %s %s: %s" % (index, lemma, txt))
-  def errandpagemsg(txt):
-    errandmsg("Page %s %s: %s" % (index, lemma, txt))
-  def expand_text(tempcall):
-    return blib.expand_text(tempcall, lemma, pagemsg, verbose)
+def generate_adj_forms(template, errandpagemsg, expand_text):
 
-  pagemsg("Processing")
+  def generate_adj_forms_prefix(m):
+    decl_suffix_to_decltype = {
+      'decl-1&2': '1&2',
+      'decl-3rd-1E': '3-1',
+      'decl-3rd-2E': '3-2',
+      'decl-3rd-3E': '3-3',
+      'decl-3rd-comp': '3-C',
+      'decl-3rd-part': '3-P',
+      'adecl-2nd': '2-2',
+      'decl-irreg': 'irreg',
+    }
+    if m.group(1) in decl_suffix_to_decltype:
+      return "{{la-generate-adj-forms|conjtype=%s|" % (
+        decl_suffix_to_decltype[m.group(1)]
+      )
+    return m.group(0)
 
-  if conj.startswith("{{la-conj-3rd-IO|"):
-    generate_template = re.sub(r"^\{\{la-conj-3rd-IO\|", "{{la-generate-verb-forms|conjtype=3rd-io|", conj)
-  else:
-    generate_template = re.sub(r"^\{\{la-conj-(.*?)\|", r"{{la-generate-verb-forms|conjtype=\1|", conj)
-  if not generate_template.startswith("{{la-generate-verb-forms|"):
-    errandpagemsg("Template %s not a recognized conjugation template" % conj)
-    return
+  generate_template = re.sub(r"^\{\{la-(.*?)\|", generate_adj_forms_prefix,
+      template)
+  if not generate_template.startswith("{{la-generate-adj-forms|"):
+    errandpagemsg("Template %s not a recognized declension template" % template)
+    return None
   result = expand_text(generate_template)
   if not result:
     errandpagemsg("WARNING: Error generating forms, skipping")
-    return
-  args = blib.split_generate_args(result)
+    return None
+  return blib.split_generate_args(result)
 
-  def delete_form(formind, formval, tag_sets_to_delete):
-    notes = []
+def generate_verb_forms(template, errandpagemsg, expand_text):
+  if template.startswith("{{la-conj-3rd-IO|"):
+    generate_template = re.sub(r"^\{\{la-conj-3rd-IO\|", "{{la-generate-verb-forms|conjtype=3rd-io|", template)
+  else:
+    generate_template = re.sub(r"^\{\{la-conj-(.*?)\|", r"{{la-generate-verb-forms|conjtype=\1|", template)
+  if not generate_template.startswith("{{la-generate-verb-forms|"):
+    errandpagemsg("Template %s not a recognized conjugation template" % template)
+    return None
+  result = expand_text(generate_template)
+  if not result:
+    errandpagemsg("WARNING: Error generating forms, skipping")
+    return None
+  return blib.split_generate_args(result)
 
-    def pagemsg(txt):
-      msg("Page %s %s: form %s %s: %s" % (index, lemma, formind, formval, txt))
+def find_latin_section(text, pagemsg):
+  sections = re.split("(^==[^=]*==\n)", text, 0, re.M)
 
-    def errandpagemsg(txt):
-      errandmsg("Page %s %s: form %s %s: %s" % (index, lemma, formind, formval, txt))
+  has_non_latin = False
 
-    if "[" in formval:
-      pagemsg("Skipping form value %s with link in it" % formval)
-      return
-    page = pywikibot.Page(site, remove_macrons(formval))
-    if not page.exists():
-      pagemsg("Skipping form value %s, page doesn't exist" % formval)
-      return
-
-    text = unicode(page.text)
-    origtext = text
-    sections = re.split("(^==[^=]*==\n)", text, 0, re.M)
-
-    has_non_latin = False
-
-    latin_j = -1
-    for j in xrange(2, len(sections), 2):
-      if sections[j-1] != "==Latin==\n":
-        has_non_latin = True
-      else:
-        if latin_j >= 0:
-          pagemsg("WARNING: Found two Latin sections, skipping")
-          return
-        latin_j = j
-    if latin_j < 0:
-      pagemsg("Can't find Latin section, skipping")
-      return
-    j = latin_j
-
-    # Extract off trailing separator
-    mm = re.match(r"^(.*?\n)(\n*--+\n*)$", sections[j], re.S)
-    if mm:
-      # Note that this changes the number of sections, which is seemingly
-      # a problem because the for-loop above calculates the end point
-      # at the beginning of the loop, but is not actually a problem
-      # because we always break after processing the Russian section.
-      secbody, sectail = mm.group(1), mm.group(2)
+  latin_j = -1
+  for j in xrange(2, len(sections), 2):
+    if sections[j-1] != "==Latin==\n":
+      has_non_latin = True
     else:
-      secbody = sections[j]
-      sectail = ""
+      if latin_j >= 0:
+        pagemsg("WARNING: Found two Latin sections, skipping")
+        return None
+      latin_j = j
+  if latin_j < 0:
+    pagemsg("Can't find Latin section, skipping")
+    return None
+  j = latin_j
 
-    # Split off categories at end
-    mm = re.match(r"^(.*?\n)(\n*(\[\[Category:[^\]]+\]\]\n*)*)$",
-        secbody, re.S)
-    if mm:
-      # See comment above.
-      secbody, secbodytail = mm.group(1), mm.group(2)
-      sectail = secbodytail + sectail
+  # Extract off trailing separator
+  mm = re.match(r"^(.*?\n)(\n*--+\n*)$", sections[j], re.S)
+  if mm:
+    secbody, sectail = mm.group(1), mm.group(2)
+  else:
+    secbody = sections[j]
+    sectail = ""
 
-    subsections_to_delete = []
-    subsections_to_remove_inflections_from = []
+  # Split off categories at end
+  mm = re.match(r"^(.*?\n)(\n*(\[\[Category:[^\]]+\]\]\n*)*)$",
+      secbody, re.S)
+  if mm:
+    secbody, secbodytail = mm.group(1), mm.group(2)
+    sectail = secbodytail + sectail
 
-    subsections = re.split("(^==+[^=\n]+==+\n)", secbody, 0, re.M)
-    for k in xrange(2, len(subsections), 2):
-      parsed = blib.parse_text(subsections[k])
-      saw_head = False
-      saw_infl = False
-      saw_other_infl = False
-      remove_deletable_tag_sets_from_subsection = False
-      saw_bad_template = False
+  return sections, j, secbody, sectail, has_non_latin
+
+
+def delete_participle(index, lemma, formind, formval, pos, save, verbose):
+  notes = []
+
+  def pagemsg(txt):
+    msg("Page %s %s: form %s %s: %s" % (index, lemma, formind, formval, txt))
+  def errandpagemsg(txt):
+    errandmsg("Page %s %s: form %s %s: %s" % (index, lemma, formind, formval, txt))
+  def expand_text(tempcall):
+    return blib.expand_text(tempcall, remove_macrons(formval), pagemsg, verbose)
+
+  if "[" in formval:
+    pagemsg("Skipping form value %s with link in it" % formval)
+    return
+
+  page = pywikibot.Page(site, remove_macrons(formval))
+  if not page.exists():
+    pagemsg("Skipping form value %s, page doesn't exist" % formval)
+    return
+
+  if pos == "presactpart":
+    expected_head_template = "la-present participle"
+    expected_decl_template = "la-decl-3rd-part"
+  elif pos == "futactpart":
+    expected_head_template = "la-future participle"
+    expected_decl_template = "la-decl-1&2"
+  elif pos == "perfpasspart":
+    expected_head_template = "la-perfect participle"
+    expected_decl_template = "la-decl-1&2"
+  elif pos == "futpasspart":
+    expected_head_template = "la-gerundive"
+    expected_decl_template = "la-decl-1&2"
+  else:
+    raise ValueError("Unrecognized part of speech %s" % pos)
+
+  text = unicode(page.text)
+  origtext = text
+
+  retval = find_latin_section(text, pagemsg)
+  if retval is None:
+    return
+
+  sections, j, secbody, sectail, has_non_latin = retval
+
+  subsections = re.split("(^==+[^=\n]+==+\n)", secbody, 0, re.M)
+  saw_lemma_in_etym = False
+  saw_wrong_lemma_in_etym = False
+  saw_head = False
+  infl_template = None
+  saw_bad_template = False
+  for k in xrange(2, len(subsections), 2):
+    parsed = blib.parse_text(subsections[k])
+    for t in parsed.filter_templates():
+      tn = tname(t)
+      if tn == "m" and "==Etymology==" in subsections[k - 1]:
+        actual_lemma = getparam(t, "2")
+        if remove_macrons(lemma) == remove_macrons(actual_lemma):
+          saw_lemma_in_etym = True
+        else:
+          pagemsg("WARNING: Saw wrong lemma %s != %s in Etymology section: %s" % (
+            actual_lemma, lemma, unicode(t)))
+          saw_wrong_lemma_in_etym = True
+      elif tn == expected_head_template:
+        saw_head = True
+      elif tn == expected_decl_template:
+        if not saw_head:
+          pagemsg("WARNING: Saw inflection template without (or before) head template, skipping: %s" %
+            unicode(t))
+        elif infl_template:
+          pagemsg("WARNING: Saw two possible inflection templates: first %s, second %s" % (
+            infl_template, unicode(t)))
+        else:
+          infl_template = unicode(t)
+      elif tn in ["rfdef"]:
+        pass
+      else:
+        pagemsg("WARNING: Saw unrecognized template in subsection #%s %s: %s" % (
+          k // 2, subsections[k - 1].strip(), unicode(t)))
+        saw_bad_template = True
+
+  delete = False
+  if saw_head and infl_template:
+    if not saw_lemma_in_etym:
+      pagemsg("WARNING: Would delete but didn't see reference to correct lemma %s in Etymology section, not deleting" %
+          lemma)
+    elif saw_wrong_lemma_in_etym:
+      pagemsg("WARNING: Would delete but saw reference to wrong lemma in Etymology section, not deleting")
+    elif saw_bad_template:
+      pagemsg("WARNING: Would delete but saw unrecognized template, not deleting")
+    else:
+      delete = True
+
+    args = generate_adj_forms(infl_template, errandpagemsg, expand_text)
+    if args is None:
+      return
+    single_forms_to_delete = []
+    for key, form in args.iteritems():
+      single_forms_to_delete.extend(form.split(","))
+    for formformind, formformval in blib.iter_items(single_forms_to_delete):
+      delete_form(index, formval, formformind, formformval, "partform", True,
+          save, verbose)
+
+  #### Now, we can maybe delete the whole section or page
+
+  if delete:
+    if subsections[0].strip():
+      pagemsg("WARNING: Whole Latin section deletable except that there's text above all subsections: <%s>" % subsections[0].strip())
+      return
+    if "[[Category:" in sectail:
+      pagemsg("WARNING: Whole Latin section deletable except that there's a category at the end: <%s>" % sectail.strip())
+      return
+    if not has_non_latin:
+      # Can delete the whole page, but check for non-blank section 0
+      cleaned_sec0 = re.sub("^\{\{also\|.*?\}\}\n", "", sections[0])
+      if cleaned_sec0.strip():
+        pagemsg("WARNING: Whole page deletable except that there's text above all sections: <%s>" % cleaned_sec0.strip())
+        return
+      pagetitle = unicode(page.title())
+      pagemsg("Page %s should be deleted" % pagetitle)
+      pages_to_delete.append(pagetitle)
+      return
+    del sections[j]
+    del sections[j-1]
+    notes.append("removed Latin section for bad participle")
+    if j > len(sections):
+      # We deleted the last section, remove the separator at the end of the
+      # previous section.
+      sections[-1] = re.sub(r"\n+--+\n*\Z", "", sections[-1])
+    text = "".join(sections)
+
+  if text != origtext:
+    if verbose:
+      pagemsg("Replacing <%s> with <%s>" % (origtext, text))
+    assert notes
+    comment = "; ".join(blib.group_notes(notes))
+    if save:
+      pagemsg("Saving with comment = %s" % comment)
+      page.text = text
+      page.save(comment=comment)
+    else:
+      pagemsg("Would save with comment = %s" % comment)
+
+
+def delete_form(index, lemma, formind, formval, pos, tag_sets_to_delete, save, verbose):
+  notes = []
+
+  def pagemsg(txt):
+    msg("Page %s %s: form %s %s: %s" % (index, lemma, formind, formval, txt))
+  def errandpagemsg(txt):
+    errandmsg("Page %s %s: form %s %s: %s" % (index, lemma, formind, formval, txt))
+
+  if "[" in formval:
+    pagemsg("Skipping form value %s with link in it" % formval)
+    return
+
+  page = pywikibot.Page(site, remove_macrons(formval))
+  if not page.exists():
+    pagemsg("Skipping form value %s, page doesn't exist" % formval)
+    return
+
+  if pos == "verbform":
+    expected_head_template = "la-verb-form"
+    expected_header_pos = "Verb"
+  elif pos == "partform":
+    expected_head_template = "la-part-form"
+    expected_header_pos = "Participle"
+  else:
+    raise ValueError("Unrecognized part of speech %s" % pos)
+
+  text = unicode(page.text)
+  origtext = text
+
+  retval = find_latin_section(text, pagemsg)
+  if retval is None:
+    return
+
+  sections, j, secbody, sectail, has_non_latin = retval
+
+  subsections_to_delete = []
+  subsections_to_remove_inflections_from = []
+
+  subsections = re.split("(^==+[^=\n]+==+\n)", secbody, 0, re.M)
+  for k in xrange(2, len(subsections), 2):
+    parsed = blib.parse_text(subsections[k])
+    saw_head = False
+    saw_infl = False
+    saw_other_infl = False
+    remove_deletable_tag_sets_from_subsection = False
+    saw_bad_template = False
+    for t in parsed.filter_templates():
+      tn = tname(t)
+      if tn == expected_head_template:
+        saw_head = True
+      elif tn == "inflection of":
+        lang = getparam(t, "lang")
+        if lang:
+          lemma_param = 1
+        else:
+          lang = getparam(t, "1")
+          lemma_param = 2
+        if lang != "la":
+          errandpagemsg("WARNING: In Latin section, found {{inflection of}} for different language %s: %s" % (
+            lang, unicode(t)))
+          return
+        actual_lemma = getparam(t, str(lemma_param))
+        # Allow mismatch in macrons, which often happens, e.g. because
+        # a macron was added to the lemma page but not to the inflections
+        if remove_macrons(actual_lemma) == remove_macrons(lemma):
+          # fetch tags
+          tags = []
+          for param in t.params:
+            pname = unicode(param.name).strip()
+            pval = unicode(param.value).strip()
+            if re.search("^[0-9]+$", pname):
+              if int(pname) >= lemma_param + 2:
+                if pval:
+                  tags.append(pval)
+          for tag in tags:
+            if "//" in tag:
+              pagemsg("WARNING: Don't know how to handle multipart tags yet: %s" % unicode(t))
+              saw_other_infl = True
+              break
+          else:
+            # no break
+            tag_sets = split_tags_into_tag_sets(tags)
+            for tag_set in tag_sets:
+              if tag_sets_to_delete is True or frozenset(canonicalize_tag_set(tag_set)) in tag_sets_to_delete:
+                saw_infl = True
+              else:
+                pagemsg("Found {{inflection of}} for correct lemma but wrong tag set %s: %s" % (
+                  "|".join(tag_set), unicode(t)))
+                saw_other_infl = True
+        else:
+          pagemsg("Found {{inflection of}} for different lemma %s: %s" % (
+            actual_lemma, unicode(t)))
+          saw_other_infl = True
+    if saw_head and saw_infl:
+      if saw_other_infl:
+        pagemsg("Found subsection #%s to delete but has inflection-of template for different lemma or nondeletable tag set, will remove only deletable tag sets" % (k // 2))
+        remove_deletable_tag_sets_from_subsection = True
       for t in parsed.filter_templates():
         tn = tname(t)
-        if tn == "la-verb-form":
-          saw_head = True
-        elif tn == "inflection of":
+        if tn not in [expected_head_template, "inflection of"]:
+          pagemsg("WARNING: Saw unrecognized template in otherwise deletable subsection #%s: %s" % (
+            k // 2, unicode(t)))
+          saw_bad_template = True
+          break
+      else:
+        # No break
+        if "===%s===" % expected_header_pos in subsections[k - 1]:
+          if remove_deletable_tag_sets_from_subsection:
+            subsections_to_remove_inflections_from.append(k)
+          else:
+            subsections_to_delete.append(k)
+        else:
+          pagemsg("WARNING: Wrong header in otherwise deletable subsection #%s: %s" % (
+            k // 2, subsections[k - 1].strip()))
+
+  if not subsections_to_delete and not subsections_to_remove_inflections_from:
+    pagemsg("Found Latin section but no deletable or excisable subsections")
+    return
+
+  #### Now, we can delete an inflection, a subsection or the whole section or page
+
+  for k in subsections_to_remove_inflections_from:
+    newsubsec = subsections[k]
+    if not newsubsec.endswith("\n"):
+      # This applies to the last subsection on the page
+      newsubsec += "\n"
+
+    def remove_inflections(m):
+      parsed = blib.parse_text(m.group(0))
+      for t in parsed.filter_templates():
+        tn = tname(t)
+        if tn == "inflection of":
           lang = getparam(t, "lang")
           if lang:
             lemma_param = 1
           else:
             lang = getparam(t, "1")
             lemma_param = 2
-          if lang != "la":
-            errandpagemsg("WARNING: In Latin section, found {{inflection of}} for different language %s: %s" % (
-              lang, unicode(t)))
-            return
+          assert lang == "la"
           actual_lemma = getparam(t, str(lemma_param))
           # Allow mismatch in macrons, which often happens, e.g. because
           # a macron was added to the lemma page but not to the inflections
           if remove_macrons(actual_lemma) == remove_macrons(lemma):
+            tr = getparam(t, "tr")
+            alt = getparam(t, "alt") or getparam(t, str(lemma_param + 1))
             # fetch tags
             tags = []
+            params = []
             for param in t.params:
               pname = unicode(param.name).strip()
               pval = unicode(param.value).strip()
@@ -256,212 +527,145 @@ def process_page(index, lemma, conj, forms, pages_to_delete, save, verbose):
                 if int(pname) >= lemma_param + 2:
                   if pval:
                     tags.append(pval)
-            for tag in tags:
-              if "//" in tag:
-                pagemsg("WARNING: Don't know how to handle multipart tags yet: %s" % unicode(t))
-                saw_other_infl = True
-                break
-            else:
-              # no break
-              tag_sets = split_tags_into_tag_sets(tags)
-              for tag_set in tag_sets:
-                if frozenset(canonicalize_tag_set(tag_set)) in tag_sets_to_delete:
-                  saw_infl = True
-                else:
-                  pagemsg("Found {{inflection of}} for correct lemma but wrong tag set %s: %s" % (
-                    "|".join(tag_set), unicode(t)))
-                  saw_other_infl = True
-          else:
-            pagemsg("Found {{inflection of}} for different lemma %s: %s" % (
-              actual_lemma, unicode(t)))
-            saw_other_infl = True
-      if saw_head and saw_infl:
-        if saw_other_infl:
-          pagemsg("Found subsection #%s to delete but has inflection-of template for different lemma or nondeletable tag set, will remove only deletable tag sets" % (k // 2))
-          remove_deletable_tag_sets_from_subsection = True
-        for t in parsed.filter_templates():
-          tn = tname(t)
-          if tn not in ["la-verb-form", "inflection of"]:
-            pagemsg("WARNING: Saw unrecognized template in otherwise deletable subsection #%s: %s" % (
-              k // 2, unicode(t)))
-            saw_bad_template = True
-            break
-        else:
-          # No break
-          if "===Verb===" in subsections[k - 1]:
-            if remove_deletable_tag_sets_from_subsection:
-              subsections_to_remove_inflections_from.append(k)
-            else:
-              subsections_to_delete.append(k)
-          else:
-            pagemsg("WARNING: Wrong header in otherwise deletable subsection #%s: %s" % (
-              k // 2, subsections[k - 1].strip()))
+              elif pname not in ["lang", "tr", "alt"]:
+                params.append((pname, pval, param.showkey))
+            tag_sets = split_tags_into_tag_sets(tags)
+            filtered_tag_sets = []
+            for tag_set in tag_sets:
+              if tag_sets_to_delete is not True and frozenset(canonicalize_tag_set(tag_set)) not in tag_sets_to_delete:
+                filtered_tag_sets.append(tag_set)
+            if not filtered_tag_sets:
+              return ""
 
-    if not subsections_to_delete and not subsections_to_remove_inflections_from:
-      pagemsg("Found Latin section but no deletable or excisable subsections")
+            # Erase all params.
+            del t.params[:]
+            # Put back new params.
+            t.add("1", lang)
+            t.add("2", actual_lemma)
+            if tr:
+              t.add("tr", tr)
+            t.add("3", alt)
+            next_tag_param = 4
+            for tag in combine_tag_set_group(filtered_tag_sets):
+              t.add(str(next_tag_param), tag)
+              next_tag_param += 1
+      return unicode(parsed)
+
+    newnewsubsec = re.sub(r"^# \{\{inflection of\|[^{}\n]*\}\}\n", remove_inflections, newsubsec, 0, re.M)
+    if newnewsubsec != newsubsec:
+      notes.append("removed inflection(s) for bad Latin form(s)")
+      subsections[k] = newnewsubsec
+
+  for k in reversed(subsections_to_delete):
+    # Do in reverse order so indices don't change
+    del subsections[k]
+    del subsections[k - 1]
+
+  if len(subsections) == 1:
+    # Whole section deletable
+    if subsections[0].strip():
+      pagemsg("WARNING: Whole Latin section deletable except that there's text above all subsections: <%s>" % subsections[0].strip())
+      return
+    if "[[Category:" in sectail:
+      pagemsg("WARNING: Whole Latin section deletable except that there's a category at the end: <%s>" % sectail.strip())
+      return
+    if not has_non_latin:
+      # Can delete the whole page, but check for non-blank section 0
+      cleaned_sec0 = re.sub("^\{\{also\|.*?\}\}\n", "", sections[0])
+      if cleaned_sec0.strip():
+        pagemsg("WARNING: Whole page deletable except that there's text above all sections: <%s>" % cleaned_sec0.strip())
+        return
+      pagetitle = unicode(page.title())
+      pagemsg("Page %s should be deleted" % pagetitle)
+      pages_to_delete.append(pagetitle)
+      return
+    del sections[j]
+    del sections[j-1]
+    notes.append("excised %s subsection%s for bad Latin forms, leaving no Latin section" %
+      (len(subsections_to_delete), "" if len(subsections_to_delete) == 1 else "s"))
+    if j > len(sections):
+      # We deleted the last section, remove the separator at the end of the
+      # previous section.
+      sections[-1] = re.sub(r"\n+--+\n*\Z", "", sections[-1])
+    text = "".join(sections)
+
+  else:
+    # Some but not all subsections remain
+    secbody = "".join(subsections)
+    sections[j] = secbody + sectail
+    if subsections_to_delete and subsections_to_remove_inflections_from:
+      deletable_subsec_text = "Subsection(s) %s deletable and subsection(s) %s excisable" % (
+        ",".join(str(k//2) for k in subsections_to_delete),
+        ",".join(str(k//2) for k in subsections_to_remove_inflections_from)
+      )
+      deletable_subsec_note_text = "deleted %s subsection%s and partly excised %s subsection%s" % (
+        len(subsections_to_delete),
+        "" if len(subsections_to_delete) == 1 else "s",
+        len(subsections_to_remove_inflections_from),
+        "" if len(subsections_to_remove_inflections_from) == 1 else "s"
+      )
+    elif subsections_to_delete:
+      deletable_subsec_text = "Subsection(s) %s deletable" % (
+        ",".join(str(k//2) for k in subsections_to_delete)
+      )
+      deletable_subsec_note_text = "deleted %s subsection%s" % (
+        len(subsections_to_delete),
+        "" if len(subsections_to_delete) == 1 else "s"
+      )
+    else:
+      deletable_subsec_text = "Subsection(s) %s excisable" % (
+        ",".join(str(k//2) for k in subsections_to_remove_inflections_from)
+      )
+      deletable_subsec_note_text = "partly excised %s subsection%s" % (
+        len(subsections_to_remove_inflections_from),
+        "" if len(subsections_to_remove_inflections_from) == 1 else "s"
+      )
+
+    if "==Etymology" in sections[j]:
+      pagemsg("WARNING: %s but found Etymology subsection, don't know how to handle" %
+          deletable_subsec_text)
+      return
+    if "==Pronunciation" in sections[j]:
+      pagemsg("WARNING: %s but found Pronunciation subsection, don't know how to handle" %
+          deletable_subsec_text)
       return
 
-    #### Now, we can delete an inflection, a subsection or the whole section or page
+    notes.append("%s for bad Latin forms, leaving some subsections remaining" %
+      deletable_subsec_note_text)
+    text = "".join(sections)
 
-    for k in subsections_to_remove_inflections_from:
-      newsubsec = subsections[k]
-      if not newsubsec.endswith("\n"):
-        # This applies to the last subsection on the page
-        newsubsec += "\n"
-
-      def remove_inflections(m):
-        parsed = blib.parse_text(m.group(0))
-        for t in parsed.filter_templates():
-          tn = tname(t)
-          if tn == "inflection of":
-            lang = getparam(t, "lang")
-            if lang:
-              lemma_param = 1
-            else:
-              lang = getparam(t, "1")
-              lemma_param = 2
-            assert lang == "la"
-            actual_lemma = getparam(t, str(lemma_param))
-            # Allow mismatch in macrons, which often happens, e.g. because
-            # a macron was added to the lemma page but not to the inflections
-            if remove_macrons(actual_lemma) == remove_macrons(lemma):
-              tr = getparam(t, "tr")
-              alt = getparam(t, "alt") or getparam(t, str(lemma_param + 1))
-              # fetch tags
-              tags = []
-              params = []
-              for param in t.params:
-                pname = unicode(param.name).strip()
-                pval = unicode(param.value).strip()
-                if re.search("^[0-9]+$", pname):
-                  if int(pname) >= lemma_param + 2:
-                    if pval:
-                      tags.append(pval)
-                elif pname not in ["lang", "tr", "alt"]:
-                  params.append((pname, pval, param.showkey))
-              tag_sets = split_tags_into_tag_sets(tags)
-              filtered_tag_sets = []
-              for tag_set in tag_sets:
-                if frozenset(canonicalize_tag_set(tag_set)) not in tag_sets_to_delete:
-                  filtered_tag_sets.append(tag_set)
-              if not filtered_tag_sets:
-                return ""
-
-              # Erase all params.
-              del t.params[:]
-              # Put back new params.
-              t.add("1", lang)
-              t.add("2", actual_lemma)
-              if tr:
-                t.add("tr", tr)
-              t.add("3", alt)
-              next_tag_param = 4
-              for tag in combine_tag_set_group(filtered_tag_sets):
-                t.add(str(next_tag_param), tag)
-                next_tag_param += 1
-        return unicode(parsed)
-
-      newnewsubsec = re.sub(r"^# \{\{inflection of\|[^{}\n]*\}\}\n", remove_inflections, newsubsec, 0, re.M)
-      if newnewsubsec != newsubsec:
-        notes.append("removed inflection(s) for bad Latin form(s)")
-        subsections[k] = newnewsubsec
-
-    for k in reversed(subsections_to_delete):
-      # Do in reverse order so indices don't change
-      del subsections[k]
-      del subsections[k - 1]
-
-    if len(subsections) == 1:
-      # Whole section deletable
-      if subsections[0].strip():
-        pagemsg("WARNING: Whole Latin section deletable except that there's text above all subsections: <%s>" % subsections[0].strip())
-        return
-      if "[[Category:" in sectail:
-        pagemsg("WARNING: Whole Latin section deletable except that there's a category at the end: <%s>" % sectail.strip())
-        return
-      if not has_non_latin:
-        # Can delete the whole page, but check for non-blank section 0
-        cleaned_sec0 = re.sub("^\{\{also\|.*?\}\}\n", "", sections[0])
-        if cleaned_sec0.strip():
-          pagemsg("WARNING: Whole page deletable except that there's text above all sections: <%s>" % cleaned_sec0.strip())
-          return
-        pagetitle = unicode(page.title())
-        pagemsg("Page %s should be deleted" % pagetitle)
-        pages_to_delete.append(pagetitle)
-        return
-      del sections[j]
-      del sections[j-1]
-      notes.append("excised %s subsection%s for bad Latin forms, leaving no Latin section" %
-        (len(subsections_to_delete), "" if len(subsections_to_delete) == 1 else "s"))
-      if j > len(sections):
-        # We deleted the last section, remove the separator at the end of the
-        # previous section.
-        sections[-1] = re.sub(r"\n+--+\n*\Z", "", sections[-1])
-      text = "".join(sections)
-
+  if text != origtext:
+    if verbose:
+      pagemsg("Replacing <%s> with <%s>" % (origtext, text))
+    assert notes
+    comment = "; ".join(blib.group_notes(notes))
+    if save:
+      pagemsg("Saving with comment = %s" % comment)
+      page.text = text
+      page.save(comment=comment)
     else:
-      # Some but not all subsections remain
-      secbody = "".join(subsections)
-      sections[j] = secbody + sectail
-      if subsections_to_delete and subsections_to_remove_inflections_from:
-        deletable_subsec_text = "Subsection(s) %s deletable and subsection(s) %s excisable" % (
-          ",".join(str(k//2) for k in subsections_to_delete),
-          ",".join(str(k//2) for k in subsections_to_remove_inflections_from)
-        )
-        deletable_subsec_note_text = "deleted %s subsection%s and partly excised %s subsection%s" % (
-          len(subsections_to_delete),
-          "" if len(subsections_to_delete) == 1 else "s",
-          len(subsections_to_remove_inflections_from),
-          "" if len(subsections_to_remove_inflections_from) == 1 else "s"
-        )
-      elif subsections_to_delete:
-        deletable_subsec_text = "Subsection(s) %s deletable" % (
-          ",".join(str(k//2) for k in subsections_to_delete)
-        )
-        deletable_subsec_note_text = "deleted %s subsection%s" % (
-          len(subsections_to_delete),
-          "" if len(subsections_to_delete) == 1 else "s"
-        )
-      else:
-        deletable_subsec_text = "Subsection(s) %s excisable" % (
-          ",".join(str(k//2) for k in subsections_to_remove_inflections_from)
-        )
-        deletable_subsec_note_text = "partly excised %s subsection%s" % (
-          len(subsections_to_remove_inflections_from),
-          "" if len(subsections_to_remove_inflections_from) == 1 else "s"
-        )
+      pagemsg("Would save with comment = %s" % comment)
 
-      if "==Etymology" in sections[j]:
-        pagemsg("WARNING: %s but found Etymology subsection, don't know how to handle" %
-            deletable_subsec_text)
-        return
-      if "==Pronunciation" in sections[j]:
-        pagemsg("WARNING: %s but found Pronunciation subsection, don't know how to handle" %
-            deletable_subsec_text)
-        return
+def form_key_to_tag_set(key):
+  parts = key.split("_")
+  tags = []
+  for part in parts:
+    tags.extend(parts_to_tags[part])
+  return frozenset(tags)
 
-      notes.append("%s for bad Latin forms, leaving some subsections remaining" %
-        deletable_subsec_note_text)
-      text = "".join(sections)
+def process_page(index, lemma, conj, forms, pages_to_delete, save, verbose):
+  def pagemsg(txt):
+    msg("Page %s %s: %s" % (index, lemma, txt))
+  def errandpagemsg(txt):
+    errandmsg("Page %s %s: %s" % (index, lemma, txt))
+  def expand_text(tempcall):
+    return blib.expand_text(tempcall, remove_macrons(lemma), pagemsg, verbose)
 
-    if text != origtext:
-      if verbose:
-        pagemsg("Replacing <%s> with <%s>" % (origtext, text))
-      assert notes
-      comment = "; ".join(blib.group_notes(notes))
-      if save:
-        pagemsg("Saving with comment = %s" % comment)
-        page.text = text
-        page.save(comment=comment)
-      else:
-        pagemsg("Would save with comment = %s" % comment)
+  pagemsg("Processing")
 
-  def form_key_to_tag_set(key):
-    parts = key.split("_")
-    tags = []
-    for part in parts:
-      tags.extend(parts_to_tags[part])
-    return frozenset(tags)
+  args = generate_verb_forms(conj, errandpagemsg, expand_text)
+  if args is None:
+    return
 
   forms_to_delete = []
   tag_sets_to_delete = []
@@ -469,43 +673,58 @@ def process_page(index, lemma, conj, forms, pages_to_delete, save, verbose):
   for form in forms.split(","):
     if form in args:
       tag_sets_to_delete.append(form_key_to_tag_set(form))
-      forms_to_delete.append(args[form])
+      forms_to_delete.append((form, args[form]))
     if form == "all":
       for key, val in args.iteritems():
         tag_sets_to_delete.append(form_key_to_tag_set(key))
-        forms_to_delete.append(val)
+        forms_to_delete.append((key, val))
     if form in ["pasv", "pass"]:
       for key, val in args.iteritems():
         if "pasv" in key:
           tag_sets_to_delete.append(form_key_to_tag_set(key))
-          forms_to_delete.append(val)
+          forms_to_delete.append((key, val))
     if form == "perf":
       for key, val in args.iteritems():
-        if re.search("(perf|plup|futp)", key):
+        if key not in ["perf_actv_ptc", "perf_pasv_ptc"] and re.search("(perf|plup|futp)", key):
           tag_sets_to_delete.append(form_key_to_tag_set(key))
-          forms_to_delete.append(val)
+          forms_to_delete.append((key, val))
     if form in ["perf-pasv", "perf-pass"]:
       for key, val in args.iteritems():
         if "perf" in key and "pasv" in key:
           tag_sets_to_delete.append(form_key_to_tag_set(key))
-          forms_to_delete.append(val)
+          forms_to_delete.append((key, val))
     if form == "sup":
       for key, val in args.iteritems():
-        if "sup" in key:
+        if "sup" in key or key in ["perf_actv_ptc", "perf_pasv_ptc", "futr_actv_ptc"]:
           tag_sets_to_delete.append(form_key_to_tag_set(key))
-          forms_to_delete.append(val)
+          forms_to_delete.append((key, val))
     if form == "ger":
       for key, val in args.iteritems():
         if "ger" in key:
           tag_sets_to_delete.append(form_key_to_tag_set(key))
-          forms_to_delete.append(val)
+          forms_to_delete.append((key, val))
 
   single_forms_to_delete = []
 
-  for form in forms_to_delete:
-    single_forms_to_delete.extend(form.split(","))
-  for formind, formval in blib.iter_items(single_forms_to_delete):
-    delete_form(formind, formval, tag_sets_to_delete)
+  for key, form in forms_to_delete:
+    for single_form in form.split(","):
+      single_forms_to_delete.append((key, single_form))
+  for formind, (key, formval) in blib.iter_items(single_forms_to_delete,
+      get_name=lambda x: x[1]):
+    partpos = None
+    if key == "pres_actv_ptc":
+      partpos = "presactpart"
+    elif key in ["perf_actv_ptc", "perf_pasv_ptc"]:
+      partpos = "perfpasspart"
+    elif key == "futr_actv_ptc":
+      partpos = "futactpart"
+    elif key == "futr_pasv_ptc":
+      partpos = "futpasspart"
+
+    if partpos:
+      delete_participle(index, lemma, formind, formval, partpos, save, verbose)
+    else:
+      delete_form(index, lemma, formind, formval, "verbform", tag_sets_to_delete, save, verbose)
 
 parser = blib.create_argparser(u"Delete bad Latin forms")
 parser.add_argument('--conjfile', help="File containing lemmas and conj templates.")
