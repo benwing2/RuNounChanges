@@ -163,7 +163,7 @@ def generate_adj_forms(template, errandpagemsg, expand_text):
       'decl-irreg': 'irreg',
     }
     if m.group(1) in decl_suffix_to_decltype:
-      return "{{la-generate-adj-forms|conjtype=%s|" % (
+      return "{{la-generate-adj-forms|decltype=%s|" % (
         decl_suffix_to_decltype[m.group(1)]
       )
     return m.group(0)
@@ -680,7 +680,7 @@ def process_page(index, lemma, conj, forms, pages_to_delete, save, verbose):
         forms_to_delete.append((key, val))
     if form in ["pasv", "pass"]:
       for key, val in args.iteritems():
-        if "pasv" in key:
+        if key != "perf_pasv_ptc" and "pasv" in key:
           tag_sets_to_delete.append(form_key_to_tag_set(key))
           forms_to_delete.append((key, val))
     if form == "perf":
