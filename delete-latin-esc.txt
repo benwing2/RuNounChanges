@@ -1,6 +1,6 @@
 accresco pass {{la-conj-3rd|accrēsc|accrēv|accrēt}}
 adcresco pass {{la-conj-3rd|adcrēsc|adcrēv|adcrēt}}
-adincresco pass {{la-conj-3rd|type=noperf|adincrēsc}}
+adincresco pass,perf {{la-conj-3rd|adincrēsc|adincrēsc}}
 incresco sup {{la-conj-3rd|type=nopass|incrēsc|incrēv|incrēt}}
 succresco pass {{la-conj-3rd|type=noperf|succrēsc}}
 emacresco pass {{la-conj-3rd|type=noperf|ēmacrēsc}}
@@ -14,13 +14,13 @@ quiesco pass {{la-conj-3rd|quiēsc|quiēv|quiēt|sync_perf=poet}}
 abhorresco perf {{la-conj-3rd|type=nopass|abhorrēsc|abhorru}}
 acesco perf,sup {{la-conj-3rd|type=nopass|acēsc|acēv|acēt}}
 adhaeresco pass {{la-conj-3rd|type=noperf|adhaerēsc}}
-adheresco pass {{la-conj-3rd|type=noperf|adhērēsc}}
-adlubesco pass {{la-conj-3rd|type=noperf|adlubēsc}}
-amaresco pass {{la-conj-3rd|type=noperf|amārēsc}}
-arboresco pass {{la-conj-3rd|type=noperf|arborēsc}}
+adheresco pass,perf {{la-conj-3rd|adhērēsc|adhērēsc}}
+adlubesco pass,perf {{la-conj-3rd|adlubēsc|ablubēsc}}
+amaresco pass,perf {{la-conj-3rd|amārēsc|amārēsc}}
+arboresco pass,perf {{la-conj-3rd|arborēsc|arborēsc}}
 ardesco sup {{la-conj-3rd|type=nopass|ārdēsc|ārs|ārs}}
 aresco pass {{la-conj-3rd|type=no-pasv-perf|ārēsc|āru}}
-assenesco pass {{la-conj-3rd|type=noperf|assenēsc}}
+assenesco pass,perf {{la-conj-3rd|assenēsc|assenēsc}}
 augesco pass {{la-conj-3rd|type=noperf|augēsc}}
 auresco pass {{la-conj-3rd|type=noperf|aurēsc}}
 calesco pass {{la-conj-3rd|type=noperf|calēsc}}
