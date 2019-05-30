@@ -321,43 +321,45 @@ def delete_participle(index, lemma, formind, formval, pos, save, verbose):
     else:
       delete = True
 
-    args = generate_adj_forms(infl_template, errandpagemsg, expand_text)
-    if args is None:
-      return
-    single_forms_to_delete = []
-    for key, form in args.iteritems():
-      single_forms_to_delete.extend(form.split(","))
-    for formformind, formformval in blib.iter_items(single_forms_to_delete):
-      delete_form(index, formval, formformind, formformval, "partform", True,
-          save, verbose)
+  if not delete:
+    return
+
+  args = generate_adj_forms(infl_template, errandpagemsg, expand_text)
+  if args is None:
+    return
+  single_forms_to_delete = []
+  for key, form in args.iteritems():
+    single_forms_to_delete.extend(form.split(","))
+  for formformind, formformval in blib.iter_items(single_forms_to_delete):
+    delete_form(index, formval, formformind, formformval, "partform", True,
+        save, verbose)
 
   #### Now, we can maybe delete the whole section or page
 
-  if delete:
-    if subsections[0].strip():
-      pagemsg("WARNING: Whole Latin section deletable except that there's text above all subsections: <%s>" % subsections[0].strip())
+  if subsections[0].strip():
+    pagemsg("WARNING: Whole Latin section deletable except that there's text above all subsections: <%s>" % subsections[0].strip())
+    return
+  if "[[Category:" in sectail:
+    pagemsg("WARNING: Whole Latin section deletable except that there's a category at the end: <%s>" % sectail.strip())
+    return
+  if not has_non_latin:
+    # Can delete the whole page, but check for non-blank section 0
+    cleaned_sec0 = re.sub("^\{\{also\|.*?\}\}\n", "", sections[0])
+    if cleaned_sec0.strip():
+      pagemsg("WARNING: Whole page deletable except that there's text above all sections: <%s>" % cleaned_sec0.strip())
       return
-    if "[[Category:" in sectail:
-      pagemsg("WARNING: Whole Latin section deletable except that there's a category at the end: <%s>" % sectail.strip())
-      return
-    if not has_non_latin:
-      # Can delete the whole page, but check for non-blank section 0
-      cleaned_sec0 = re.sub("^\{\{also\|.*?\}\}\n", "", sections[0])
-      if cleaned_sec0.strip():
-        pagemsg("WARNING: Whole page deletable except that there's text above all sections: <%s>" % cleaned_sec0.strip())
-        return
-      pagetitle = unicode(page.title())
-      pagemsg("Page %s should be deleted" % pagetitle)
-      pages_to_delete.append(pagetitle)
-      return
-    del sections[j]
-    del sections[j-1]
-    notes.append("removed Latin section for bad participle")
-    if j > len(sections):
-      # We deleted the last section, remove the separator at the end of the
-      # previous section.
-      sections[-1] = re.sub(r"\n+--+\n*\Z", "", sections[-1])
-    text = "".join(sections)
+    pagetitle = unicode(page.title())
+    pagemsg("Page %s should be deleted" % pagetitle)
+    pages_to_delete.append(pagetitle)
+    return
+  del sections[j]
+  del sections[j-1]
+  notes.append("removed Latin section for bad participle")
+  if j > len(sections):
+    # We deleted the last section, remove the separator at the end of the
+    # previous section.
+    sections[-1] = re.sub(r"\n+--+\n*\Z", "", sections[-1])
+  text = "".join(sections)
 
   if text != origtext:
     if verbose:
