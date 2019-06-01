@@ -36,9 +36,7 @@ local ligatures = {
 	['oe'] = 'œ',
 }
 
-local function process(data,args)
-	local noteindex = 1
-	local notes = {}
+local function process_forms_and_overrides(data, args)
 	local redlink = false
 	if data.num == "pl" and NAMESPACE == '' then
 		table.insert(data.categories, "Latin pluralia tantum")
@@ -47,15 +45,14 @@ local function process(data,args)
 	end
 	for _, key in ipairs(case_order) do
 		if args[key] or data.forms[key] then
-			local user_specified = false
 			if args[key] then
 				val = args[key]
-				user_specified = true
+				data.user_specified[key] = true
 			else
 				val = data.forms[key]
 			end
 			if type(val) == "string" then
-				val = mw.text.split(val,"/")
+				val = mw.text.split(val, "/")
 			end
 			if data.num == "pl" and key:find("sg") then
 				data.forms[key] = ""
@@ -64,7 +61,7 @@ local function process(data,args)
 			elseif val == "" or val == {""} or val[1] == "-" or val[1] == "—" then
 				data.forms[key] = "—"
 			else
-				for i,form in ipairs(val) do
+				for i, form in ipairs(val) do
 					local word = data.prefix .. (data.n and mw.ustring.gsub(form,"m$","n") or form) .. data.suffix
 					if data.lig then
 						word = word:gsub("[AaOo]e", ligatures)
@@ -73,25 +70,47 @@ local function process(data,args)
 					local accel = key
 					accel = accel:gsub("_sg$", "|s")
 					accel = accel:gsub("_pl$", "|p")
-					
-					if data.notes[key .. i] and not user_specified then
-						val[i] = m_links.full_link({lang = lang, term = word, accel = {form = accel, lemma = nil}}) .. '<sup style="color: red">' .. noteindex .. '</sup>'
-						table.insert(notes, '<sup style="color: red">' .. noteindex .. '</sup>' .. data.notes[key .. i])
-						noteindex = noteindex+1
-					else
-						val[i] = m_links.full_link({lang = lang, term = word, accel = {form = accel, lemma = nil}})
-					end
+
+					data.accel[key .. i] = accel
+					val[i] = word
 					if not redlink and NAMESPACE == '' then
 						local title = lang:makeEntryName(word)
 						local t = mw.title.new(title)
 						if t and not t.exists then
-							table.insert(data.categories,'Latin nouns with red links in their declension tables')
+							table.insert(data.categories, 'Latin nouns with red links in their declension tables')
 							redlink = true
 						end
 					end
 				end
-				data.forms[key] = table.concat(val, "<br />")
+				data.forms[key] = val
 			end
+		end
+	end
+end
+
+local function show_forms(data)
+	local noteindex = 1
+	local notes = {}
+	for _, key in ipairs(case_order) do
+		local val = data.forms[key]
+		if val and val ~= "" and val ~= "—" then
+			for i, form in ipairs(val) do
+				local link = m_links.full_link({lang = lang, term = form, accel = {form = data.accel[key .. i], lemma = nil}})
+				if (data.notes[key .. i] or data.noteindex[key .. i]) and not data.user_specified[key] then
+					-- If the decl entry hasn't specified a footnote index, generate one.
+					local this_noteindex = data.noteindex[key .. i]
+					local note_html = '<sup style="color: red">' .. this_noteindex .. '</sup>'
+					if not this_noteindex then
+						this_noteindex = noteindex
+						noteindex = noteindex + 1
+						table.insert(notes, note_html .. data.notes[key .. i])
+					end
+					val[i] = link .. note_html
+				else
+					val[i] = link
+				end
+			end
+			data.forms[key] = table.concat(val, "<br />")
 		end
 	end
 	data.footnote = table.concat(notes, "<br />") .. data.footnote
@@ -107,7 +126,7 @@ local function make_table(data)
 	end
 end
 
-function export.show(frame)
+local function generate_forms(frame)
 	local data = {
 		title = "",
 		footnote = "",
@@ -115,9 +134,12 @@ function export.show(frame)
 		loc = false,
 		um = false,
 		forms = {},
-		notes = {},
-		categories = {},
 		types = {},
+		categories = {},
+		notes = {},
+		noteindex = {},
+		user_specified = {},
+		accel = {},
 	}
 	
 	iparams = {
@@ -178,13 +200,37 @@ function export.show(frame)
 	
 	decl[iargs[1]](data, args)
 	
-	process(data,args)
+	process_forms_and_overrides(data, args)
 	
 	if data.prefix .. data.suffix ~= "" then
 		table.insert(data.categories, "Kenny's testing category 6")
 	end
+
+	return data
+end
+	
+function export.show(frame)
+	local data = generate_forms(frame)
+
+	show_forms(data)
 	
 	return make_table(data) .. m_utilities.format_categories(data.categories, lang)
 end
 
+function export.generate_forms(frame)
+	local data = generate_forms(frame)
+
+	local ins_text = {}
+	for _, key in ipairs(case_order) do
+		local val = data.forms[key]
+		if val and val ~= "" and val ~= "—" and #val > 0 then
+			table.insert(ins_text, key .. "=" .. table.concat(val, ","))
+		end
+	end
+	return table.concat(ins_text, "|")
+end
+
 return export
+
+-- For Vim, so we get 4-space tabs
+-- vim: set ts=4 sw=4 noet:
