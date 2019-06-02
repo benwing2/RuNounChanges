@@ -1848,7 +1848,7 @@ irreg_conjugations["soleo"] = function(args, data, typeinfo)
 	data.forms["3s_perf_actv_indc"] = {prefix .. "soluit", "[[" .. prefix .. "solitus]] [[est]]"}
 	data.forms["1p_perf_actv_indc"] = {prefix .. "soluimus", "[[" .. prefix .. "solitī]] [[sumus]]"}
 	data.forms["2p_perf_actv_indc"] = {prefix .. "soluistis", "[[" .. prefix .. "solitī]] [[estis]]"}
-	data.forms["3p_perf_actv_indc"] = {prefix .. "soluērunt", "soluēre", "[[" .. prefix .. "solitī]] [[sunt]]"}
+	data.forms["3p_perf_actv_indc"] = {prefix .. "soluērunt", prefix .. "soluēre", "[[" .. prefix .. "solitī]] [[sunt]]"}
 	
 	data.forms["1s_plup_actv_indc"] = {prefix .. "solueram", "[[" .. prefix .. "solitus]] [[eram]]"}
 	data.forms["2s_plup_actv_indc"] = {prefix .. "soluerās", "[[" .. prefix .. "solitus]] [[erās]]"}
@@ -1942,7 +1942,7 @@ irreg_conjugations["audeo"] = function(args, data, typeinfo)
 	data.forms["3s_perf_actv_indc"] = {prefix .. "ausit", "[[" .. prefix .. "ausus]] [[est]]"}
 	data.forms["1p_perf_actv_indc"] = {prefix .. "ausimus", "[[" .. prefix .. "ausī]] [[sumus]]"}
 	data.forms["2p_perf_actv_indc"] = {prefix .. "ausistis", "[[" .. prefix .. "ausī]] [[estis]]"}
-	data.forms["3p_perf_actv_indc"] = {prefix .. "ausērunt", "ausēre", "[[" .. prefix .. "ausī]] [[sunt]]"}
+	data.forms["3p_perf_actv_indc"] = {prefix .. "ausērunt", prefix .. "ausēre", "[[" .. prefix .. "ausī]] [[sunt]]"}
 	
 	data.forms["1s_plup_actv_indc"] = {prefix .. "auseram", "[[" .. prefix .. "ausus]] [[eram]]"}
 	data.forms["2s_plup_actv_indc"] = {prefix .. "auserās", "[[" .. prefix .. "ausus]] [[erās]]"}
@@ -2045,7 +2045,7 @@ irreg_conjugations["placeo"] = function(args, data, typeinfo)
 	data.forms["3s_perf_actv_indc"] = {prefix .. "placuit", "[[" .. prefix .. "placitus]] [[est]]"}
 	data.forms["1p_perf_actv_indc"] = {prefix .. "placuimus", "[[" .. prefix .. "placitī]] [[sumus]]"}
 	data.forms["2p_perf_actv_indc"] = {prefix .. "placuistis", "[[" .. prefix .. "placitī]] [[estis]]"}
-	data.forms["3p_perf_actv_indc"] = {prefix .. "placuērunt", "placuēre", "[[" .. prefix .. "placitī]] [[sunt]]"}
+	data.forms["3p_perf_actv_indc"] = {prefix .. "placuērunt", prefix .. "placuēre", "[[" .. prefix .. "placitī]] [[sunt]]"}
 	
 	data.forms["1s_plup_actv_indc"] = {prefix .. "placueram", "[[" .. prefix .. "placitus]] [[eram]]"}
 	data.forms["2s_plup_actv_indc"] = {prefix .. "placuerās", "[[" .. prefix .. "placitus]] [[erās]]"}
