@@ -541,7 +541,7 @@ postprocess = function(data, typeinfo)
 				data.forms[key] = nil
 			end
 		end
-	elseif typeinfo.subtype == "nopass" then
+	elseif typeinfo.subtype == "nopass" or typeinfo.subtype == "nopass-noimp" then
 		-- Some verbs have no passive forms (usually intransitive)
 		table.insert(data.title, "active only")
 		table.insert(data.categories, "Latin active-only verbs")
@@ -654,7 +654,7 @@ postprocess = function(data, typeinfo)
 	end
 
 	-- Handle certain irregularities in the imperative
-	if typeinfo.subtype == "noimp" then
+	if typeinfo.subtype == "noimp" or typeinfo.subtype == "nopass-noimp" then
 		-- Some verbs have no imperatives
 		table.insert(data.title, "no [[imperative]]s")
 	end
@@ -1605,8 +1605,7 @@ irreg_conjugations["malo"] = function(args, data, typeinfo)
 	table.insert(data.title, "[[Appendix:Latin irregular verbs|irregular]]")
 	table.insert(data.categories, "Latin irregular verbs")
 	
-	typeinfo.subtype = "nopass"
-	typeinfo.subtype = "noimp"
+	typeinfo.subtype = "nopass-noimp"
 	make_perf(data, "mālu")
 	
 	-- Active imperfective indicative
@@ -2244,8 +2243,7 @@ irreg_conjugations["volo"] = function(args, data, typeinfo)
 	
 	local prefix = typeinfo.prefix or ""
 	
-	typeinfo.subtype = "nopass"
-	typeinfo.subtype = "noimp"
+	typeinfo.subtype = "nopass-noimp"
 	make_perf(data, prefix .. "volu")
 	
 	-- Active imperfective indicative
