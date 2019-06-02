@@ -15,7 +15,7 @@ start, end = blib.parse_start_end(args.start, args.end)
 
 pages_to_delete = [x.strip() for x in codecs.open(args.pagefile, "r", "utf-8")]
 
-comment = args.comment or "Delete obsolete page"
+comment = args.comment and args.comment.decode('utf-8') or "Delete obsolete page"
 doc_comment = "Delete documentation page of " + re.sub("^([Dd]elete|[Rr]emove) ", "", comment)
 
 for i, pagename in blib.iter_items(pages_to_delete, start, end):
