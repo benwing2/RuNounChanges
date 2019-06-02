@@ -43,6 +43,14 @@ local function process_forms_and_overrides(data, args)
 	elseif data.num == "sg" and NAMESPACE == '' then
 		table.insert(data.categories, "Latin singularia tantum")
 	end
+
+	local accel_lemma
+	if data.num and data.num ~= "" then
+		accel_lemma = data.forms["nom_" .. data.num]
+	else
+		accel_lemma = data.forms["nom_sg"]
+	end
+
 	for _, key in ipairs(case_order) do
 		if args[key] or data.forms[key] then
 			if args[key] then
@@ -54,11 +62,9 @@ local function process_forms_and_overrides(data, args)
 			if type(val) == "string" then
 				val = mw.text.split(val, "/")
 			end
-			if data.num == "pl" and key:find("sg") then
+			if (data.num == "pl" and key:find("sg")) or (data.num == "sg" and key:find("pl")) then
 				data.forms[key] = ""
-			elseif data.num == "sg" and key:find("pl") then
-				data.forms[key] = ""
-			elseif val == "" or val == {""} or val[1] == "-" or val[1] == "—" then
+			elseif val[1] == "" or val[1] == "-" or val[1] == "—" then
 				data.forms[key] = "—"
 			else
 				for i, form in ipairs(val) do
@@ -67,11 +73,11 @@ local function process_forms_and_overrides(data, args)
 						word = word:gsub("[AaOo]e", ligatures)
 					end
 					
-					local accel = key
-					accel = accel:gsub("_sg$", "|s")
-					accel = accel:gsub("_pl$", "|p")
+					local accel_form = key
+					accel_form = accel_form:gsub("_sg$", "|s")
+					accel_form = accel_form:gsub("_pl$", "|p")
 
-					data.accel[key .. i] = accel
+					data.accel[key .. i] = {form = accel_form, lemma = accel_lemma}
 					val[i] = word
 					if not redlink and NAMESPACE == '' then
 						local title = lang:makeEntryName(word)
@@ -95,7 +101,7 @@ local function show_forms(data)
 		local val = data.forms[key]
 		if val and val ~= "" and val ~= "—" then
 			for i, form in ipairs(val) do
-				local link = m_links.full_link({lang = lang, term = form, accel = {form = data.accel[key .. i], lemma = nil}})
+				local link = m_links.full_link({lang = lang, term = form, accel = data.accel[key .. i]})
 				if (data.notes[key .. i] or data.noteindex[key .. i]) and not data.user_specified[key] then
 					-- If the decl entry hasn't specified a footnote index, generate one.
 					local this_noteindex = data.noteindex[key .. i]
