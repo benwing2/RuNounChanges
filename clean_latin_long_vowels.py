@@ -335,7 +335,7 @@ def get_references(page, start, end, include_page=False):
   else:
     return blib.references(remove_macrons(page), start, end, include_page=include_page)
 
-def frob_stem(t, param, stem, split_slashes=False):
+def frob_param(t, param, stem_or_exact, is_exact, split_slashes=False):
   origt = unicode(t)
   origval = getparam(t, param)
   if split_slashes:
@@ -345,36 +345,35 @@ def frob_stem(t, param, stem, split_slashes=False):
   newvals = []
   for val in vals:
     no_macrons_val = remove_macrons(val)
-    assert len(no_macrons_val) == len(val)
-    if type(stem) is not list:
-      stem = [stem]
-    for st in stem:
-      no_macrons_stem = remove_macrons(st)
-      assert len(no_macrons_stem) == len(st)
-      if no_macrons_val.startswith(no_macrons_stem):
-        newval = st + val[len(st):]
-        newvals.append(newval)
-        break
+    if type(stem_or_exact) is not list:
+      stem_or_exact = [stem_or_exact]
+    for st in stem_or_exact:
+      no_macrons_st = remove_macrons(st)
+      if is_exact:
+        if no_macrons_val == no_macrons_st:
+          newval = no_macrons_st
+          newvals.append(newval)
+          break
+        else:
+          newvals.append(val)
       else:
-        newvals.append(val)
+        if no_macrons_val.startswith(no_macrons_st):
+          newval = st + val[len(st):]
+          newvals.append(newval)
+          break
+        else:
+          newvals.append(val)
   newval = "/".join(newvals)
   if newval != origval:
     t.add(param, newval)
     pagemsg("Replaced %s with %s" % (origt, unicode(t)))
     notes.append("updated macrons in %s" % tname(t))
 
-def frob_exact(t, param, newval):
-  origt = unicode(t)
-  val = getparam(t, param)
-  no_macrons_val = remove_macrons(val)
-  assert len(no_macrons_val) == len(val)
-  no_macrons_newval = remove_macrons(newval)
-  assert len(no_macrons_newval) == len(newval)
-  if no_macrons_val == no_macrons_newval:
-    if newval != val:
-      t.add(param, newval)
-      pagemsg("Replaced %s with %s" % (origt, unicode(t)))
-      notes.append("updated macrons in %s" % tname(t))
+def frob_stem(t, param, stem, split_slashes=False):
+  frob_param(t, param, stem, False, split_slashes=split_slashes)
+
+def frob_exact(t, param, newval, split_slashes=False):
+  frob_param(t, param, newval, True, split_slashes=split_slashes)
 
 def frob_chain_stem(t, param, stem, split_slashes=False):
   if type(param) is list:
@@ -388,14 +387,14 @@ def frob_chain_stem(t, param, stem, split_slashes=False):
   while getparam(t, "%s%s" % (rest, num)):
     frob_stem(t, "%s%s" % (rest, num), stem, split_slashes=split_slashes)
 
-def frob_chain_exact(t, param, newval):
+def frob_chain_exact(t, param, newval, split_slashes=False):
   if type(param) is list:
     first, rest = param
   else:
     first = param
     rest = param
   if first:
-    frob_exact(t, first, newval)
+    frob_exact(t, first, newval, split_slashes=split_slashes)
   num = 2
   while getparam(t, "%s%s" % (rest, num)):
     frob_exact(t, "%s%s" % (rest, num), newval)
@@ -549,31 +548,6 @@ def process_page(index, page, pos, lemma, stem, save, verbose):
 
   return unicode(parsed), notes
 
-def process_noun(index, lemma, decl, gen, save, verbose):
-  pagetitle = remove_macrons(lemma)
-  def pagemsg(txt):
-    msg("Page %s %s: %s" % (index, pagetitle, txt))
-  page = pywikibot.Page(site, pagetitle)
-  if not page.exists():
-    pagemsg("WARNING: Page doesn't exist")
-    return
-
-  def expand_text(tempcall):
-    return blib.expand_text(tempcall, pagetitle, pagemsg, verbose)
-
-  pagemsg("Processing")
-
-  text = unicode(page.text)
-  parsed = blib.parse(page)
-  notes = []
-  for t in parsed.filter_templates():
-    origt = unicode(t)
-    tn = tname(t)
-
-    if
-
-  pass
-
 def process_lemma(index, page, pos, infl, lemma, explicit_stem, save, verbose):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
@@ -583,8 +557,6 @@ def process_lemma(index, page, pos, infl, lemma, explicit_stem, save, verbose):
     return blib.expand_text(tempcall, pagetitle, pagemsg, verbose)
 
   pagemsg("Processing")
-
-  lemma_no_macrons = blib.remove_macrons(lemma)
 
   retval = find_heads_and_defns(page, pagemsg)
   if retval is None:
@@ -599,7 +571,44 @@ def process_lemma(index, page, pos, infl, lemma, explicit_stem, save, verbose):
   for headword in headwords:
     ht = headword['head_template']
     tn = tname(ht)
+
     if pos == "noun" and tn == "la-noun":
+      if infl == 1:
+        if lemma.endswith("a"):
+          inferred_stem = lemma[:-1]
+        else:
+          errandpagemsg("WARNING: Bad 1st-declension noun lemma %s" % lemma)
+          return
+      elif infl == 2:
+        if lemma.endswith("r"):
+          inferred_stem = lemma
+        elif lemma.endswith("ius") or lemma.endswith("ium"):
+          inferred_stem = lemma[:-3] # second genitive will have -ī
+        elif lemma.endswith("us") or lemma.endswith("um"):
+          inferred_stem = lemma[:-2]
+        else:
+          errandpagemsg("WARNING: Bad 2nd-declension noun lemma %s" % lemma)
+          return
+      elif infl == 3:
+        inferred_stem = lalib.infer_3rd_decl_stem(lemma)
+      elif infl == 4:
+        if lemma.endswith("us"):
+          inferred_stem = lemma[:-2]
+        else:
+          errandpagemsg("WARNING: Bad 4th-declension noun lemma %s" % lemma)
+          return
+      elif infl == 5:
+        if lemma.endswith(u"ēs"):
+          inferred_stem = lemma[:-2]
+        else:
+          errandpagemsg("WARNING: Bad 5th-declension noun lemma %s" % lemma)
+          return
+      else:
+        errandpagemsg("WARNING: Unrecognized infl %s" % infl)
+        return
+
+      stem = explicit_stem or inferred_stem
+
       infl_to_ordinal = {
         1: 'first',
         2: 'second',
@@ -607,13 +616,14 @@ def process_lemma(index, page, pos, infl, lemma, explicit_stem, save, verbose):
         4: 'fourth',
         5: 'fifth'
       }
-      if (lemma_no_macrons == remove_macrons(getparam(t, "1")) and
-          getparam(t, "4") == infl_to_ordinal[infl]):
-        frob_exact(t, "1", lemma)
-        frob_chain_stem(t, ["2", "gen"], stem)
+
+      if (remove_macrons(lemma) == remove_macrons(getparam(ht, "1")) and
+          getparam(ht, "4") == infl_to_ordinal[infl]):
+        frob_exact(ht, "1", lemma)
+        frob_chain_stem(ht, ["2", "gen"], stem)
         for inflt in headword['infl_templates']:
           infltn = tname(inflt)
-          if infltn not in lalib.la_noun_decl_overrides:
+          if infltn not in lalib.la_noun_decl_templates:
             pagemsg("WARNING: Saw bad declension template for infl=%s noun %s: %s" % (
               infl, lemma, unicode(inflt)))
             continue
@@ -666,8 +676,8 @@ def process_lemma(index, page, pos, infl, lemma, explicit_stem, save, verbose):
                 arg2 = ""
             elif lemma.endswith("r"):
               arg1 = lemma
-              if stem and stem != lemma:
-                arg2 = stem
+              if explicit_stem and explicit_stem != lemma:
+                arg2 = explicit_stem
               else:
                 arg2 = ["", lemma]
             else:
@@ -675,11 +685,10 @@ def process_lemma(index, page, pos, infl, lemma, explicit_stem, save, verbose):
               return
           elif infl == 3:
             arg1 = lemma
-            inferred_stem = lalib.infer_3rd_decl_stem(lemma)
-            if stem and stem != inferred_stem:
-              arg2 = stem
+            if explicit_stem and explicit_stem != inferred_stem:
+              arg2 = explicit_stem
             else:
-              arg2= ["", inferred_stem]
+              arg2 = ["", inferred_stem]
           elif infl == 4:
             if not lemma.endswith("us"):
               errandpagemsg("WARNING: Bad 4th-declension noun lemma %s" % lemma)
@@ -721,13 +730,12 @@ def process_lemma(index, page, pos, infl, lemma, explicit_stem, save, verbose):
             pagemsg("WARNING: lemma secondary stem(s) %s not matching template second param: %s" % (
               ",".join(arg2), unicode(inflt)))
             continue
+
           frob_exact(inflt, "1", arg1)
           frob_exact(inflt, "2", actual_matching_arg2)
 
-      if (lemma_no_macrons == remove_macrons(getparam(t, "1")) and
-          getparam(t, "4") == infl_to_ordinal[infl]):
-        frob_exact(t, "1", lemma)
-        frob_chain_stem(t, ["2", "gen"], stem)
+          for override in la_noun_decl_overrides:
+            frob_stem(inflt, override, stem, split_slashes=True)
 
     elif pos == "adj" and tn in la_adj_headword_templates:
       if infl == 1:
@@ -744,24 +752,337 @@ def process_lemma(index, page, pos, infl, lemma, explicit_stem, save, verbose):
 
       if (infl == 1 and tn in ["la-adj-1&2", "la-adj-superlative"] and
           infl == 3 and tn in ["la-adj-3rd-1E", "la-adj-3rd-2E", "la-adj-3rd-3E", "la-comparative"]):
-        frob_chain_exact(t, ["1", "head"], lemma)
+        frob_chain_exact(ht, ["1", "head"], lemma)
         if tn in ["la-adj-1&2", "la-adj-3rd-1E", "la-adj-3rd-2E", "la-adj-3rd-3E"]:
-          frob_chain_stem(t, "comp", stem)
-          frob_chain_stem(t, "sup", stem)
+          frob_chain_stem(ht, "comp", stem)
+          frob_chain_stem(ht, "sup", stem)
         if tn in ["la-adj-1&2", "la-adj-3rd-3E"]:
-          frob_chain_stem(t, ["2", "f"], stem)
-          frob_chain_stem(t, ["3", "n"], stem)
-        elif tn in "la-adj-3rd-1E":
-          frob_chain_stem(t, ["2", "gen"], stem)
-        elif tn in "la-adj-3rd-2E":
-          frob_chain_stem(t, ["2", "n"], stem)
-    elif tn in la_adj_decl_templates and pos == "adj":
-      frob_stem(t, "1", stem)
-      frob_stem(t, "2", stem)
-      for override in la_noun_decl_overrides:
-        frob_stem(t, override, stem, split_slashes=True)
+          frob_chain_stem(ht, ["2", "f"], stem)
+          frob_chain_stem(ht, ["3", "n"], stem)
+        elif tn == "la-adj-3rd-1E":
+          frob_chain_stem(ht, ["2", "gen"], stem)
+        elif tn == "la-adj-3rd-2E":
+          frob_chain_stem(ht, ["2", "n"], stem)
+        elif tn == "la-adj-comparative":
+          if lemma.endswith("ior"):
+            base = lemma[:-3]
+            frob_stem(ht, "comp", base)
+        elif tn == "la-adj-superlative":
+          if lemma.endswith("issimus"):
+            base = lemma[:-7]
+          if lemma.endswith("rimus"):
+            base = lemma[:-5]
+          else:
+            base = None
+          if base:
+            frob_stem(ht, "sup", base)
 
+        for inflt in headword['infl_templates']:
+          infltn = tname(inflt)
+          if infltn not in lalib.la_adj_decl_templates:
+            pagemsg("WARNING: Saw bad declension template for infl=%s adj %s: %s" % (
+              infl, lemma, unicode(inflt)))
+            continue
 
+          if infl == 1:
+            if infltn != "la-decl-1&2":
+              pagemsg("WARNING: Saw mismatching adjective declension template for first/second-declension adjective %s: %s" % (
+                lemma, unicode(inflt)))
+              continue
+            if lemma.endswith("er") and lemma != stem:
+              if getparam(inflt, "1").endswith("(e)r"):
+                arg1 = lemma[:-2] + "(e)r"
+                arg2 = ""
+              else:
+                arg1 = lemma
+                arg2 = stem
+            else:
+              arg1 = stem
+              arg2 = ""
+          elif infl == 3:
+            if infltn in ["la-decl-3rd-1E", "la-decl-3rd-3E", "la-decl-3rd-part"]:
+              arg1 = lemma
+              if stem != inferred_stem:
+                arg2 = stem
+              else:
+                arg2 = ["", inferred_stem]
+            elif infltn == "la-decl-3rd-2E":
+              if not lemma.endswith("is"):
+                pagemsg("WARNING: Bad lemma %s for 3rd declension, two-ending adjective: %s" % (
+                  lemma, unicode(inflt)))
+                continue
+              arg1 = lemma[:-2]
+              arg2 = ""
+            elif infltn == "la-decl-3rd-comp":
+              if not lemma.endswith("or"):
+                pagemsg("WARNING: Bad lemma %s for 3rd declension comparative adjective: %s" % (
+                  lemma, unicode(inflt)))
+                continue
+              arg1 = lemma[:-3]
+              if getparam(infl, "2"):
+                arg2 = lemma[-3]
+              else:
+                arg2 = ""
+          else:
+            errandpagemsg("WARNING: Unrecognized infl %s" % infl)
+            return
+
+          if remove_macrons(arg1) != remove(getparam(inflt, "1")):
+            pagemsg("WARNING: lemma stem %s doesn't match template stem: %s" % (
+              arg1, unicode(inflt)))
+            continue
+          param2 = getparam(inflt, "2")
+          if type(arg2) is not list:
+            arg2 = [arg2]
+          actual_matching_arg2 = None
+          for matching_arg2 in arg2:
+            if remove_macrons(matching_arg2) == remove_macrons(param2):
+              actual_matching_arg2 = matching_arg2
+              break
+          else:
+            # no break
+            pagemsg("WARNING: lemma secondary stem(s) %s not matching template second param: %s" % (
+              ",".join(arg2), unicode(inflt)))
+            continue
+          frob_exact(inflt, "1", arg1)
+          frob_exact(inflt, "2", actual_matching_arg2)
+
+          for override in la_adj_decl_overrides:
+            frob_stem(inflt, override, stem, split_slashes=True)
+
+      else:
+        pagemsg("WARNING: Mismatch between requested adjective inflection %s and actual adjective headword template %s" % (
+          infl, unicode(ht)))
+
+    elif pos == "verb" and tn == "la-verb":
+      deponent = False
+      if infl == 1 and not explicit_stem:
+        if lemma.endswith("or"):
+          deponent = True
+          vinf = lemma[:-2] + u"ārī"
+          vperf = ""
+          vsup = lemma[:-2] + u"ātum"
+        elif lemma.endswith(u"ō"):
+          vinf = lemma[:-1] + u"āre"
+          vperf = lemma[:-1] + u"āvī"
+          vsup = lemma[:-1] + u"ātum"
+        else:
+          errandpagemsg("WARNING: Bad lemma %s for 1st-conjugation verb" % lemma)
+          return
+      elif infl == 4 and not explicit_stem:
+        if lemma.endswith("ior"):
+          deponent = True
+          vinf = lemma[:-3] + u"īrī"
+          vperf = ""
+          vsup = lemma[:-3] + u"ītum"
+        elif lemma.endswith(u"iō"):
+          vinf = lemma[:-2] + u"īre"
+          vperf = lemma[:-2] + u"īvī"
+          vsup = lemma[:-2] + u"ītum"
+        else:
+          errandpagemsg("WARNING: Bad lemma %s for 4th-conjugation verb" % lemma)
+          return
+      elif not infl and explicit_stem:
+        if lemma.endswith("or"):
+          deponent = True
+          if len(explicit_stem) != 2:
+            errandpagemsg("WARNING: For verb lemma %s, wrong length of explicit stem %s" % (lemma, explicit_stem))
+            return
+          vinf, vsup = explicit_stem
+          vperf = ""
+          if vinf.endswith(u"ī") and lemma[:-2] == vinf[:-1]:
+            infl = 3
+          elif vinf.endswith(u"ī") and lemma.endswith("ior") and lemma[:-3] == vinf[:-1]:
+            infl = "io"
+          elif vinf.endswith(u"ārī"):
+            infl = 1
+          elif vinf.endswith(u"ērī"):
+            infl = 2
+          elif vinf.endswith(u"īrī"):
+            infl = 4
+          else:
+            errandpagemsg("WARNING: Unrecognized verb infinitive %s for lemma %s" % (vinf, lemma))
+            return
+        elif lemma.endswith(u"ō"):
+          if len(explicit_stem) != 3:
+            errandpagemsg("WARNING: For verb lemma %s, wrong length of explicit stem %s" % (lemma, explicit_stem))
+            return
+          vinf, vperf, vsup = explicit_stem
+          if vinf.endswith(u"āre"):
+            infl = 1
+          elif vinf.endswith(u"ēre"):
+            infl = 2
+          elif vinf.endswith(u"īre"):
+            infl = 4
+          elif vinf.endswith("ere") and lemma.endswith(u"iō"):
+            infl = "io"
+          elif vinf.endswith("ere"):
+            infl = 3
+          elif (vinf.endswith("rre") or vinf.endswith("lle") or vinf.endswith("sse") or vinf.endswith("dare")):
+            infl = "irreg"
+          else:
+            errandpagemsg("WARNING: Unrecognized verb infinitive %s for lemma %s" % (vinf, lemma))
+            return
+      else:
+        errandpagemsg("WARNING: For verb lemma %s, bad infl %s combined with explit stem %s" % (lemma, infl, explicit_stem))
+        return
+
+      if getparam(ht, "conj") != str(infl):
+        continue
+
+      def compare_principal_part(first, rest, value):
+        values = value.split("/")
+        no_macron_values = [remove_macrons(x) for x in values]
+        actual_values = blib.fetch_param_chain(ht, first, rest)
+        no_macron_actual_values = [remove_macrons(x) for x in actual_values]
+        if no_macron_values != no_macron_actual_values:
+          pagemsg("WARNING: Principal part mismatch for param=%s, saw %s, expected %s" % (
+            rest, "/".join(actual_values), "/".join(values)))
+          return False
+        return True
+
+      if not compare_principal_part("1", "head", lemma):
+        continue
+      if not compare_principal_part("2", "inf", vinf):
+        continue
+      if deponent:
+        sups = vsup.split("/")
+        perfs = []
+        for sup in sups:
+          if not sup.endswith("um"):
+            errandpagemsg("WARNING: For verb lemma %s, bad deponent supine %s" % (lemma, sup))
+            return
+          perfs.append(sup[:-2] + " sum")
+        if not compare_principal_part("3", "perf", perfs):
+          continue
+      else:
+        if not compare_principal_part("3", "perf", vperf):
+          continue
+        if not compare_principal_part("4", "sup", vsup):
+          continue
+
+      frob_chain_exact(ht, "1", "head", lemma.split("/"))
+      frob_chain_exact(ht, "2", "inf", vinf.split("/"))
+      if deponent:
+        frob_chain_exact(ht, "3", "perfs", perfs)
+      else:
+        frob_chain_exact(ht, "3", "perf", vperf.split("/"))
+        frob_chain_exact(ht, "4", "sup", vsup.split("/"))
+
+      for inflt in headword['infl_templates']:
+        infltn = tname(inflt)
+        if infltn not in lalib.la_verb_conj_templates:
+          pagemsg("WARNING: Saw bad conjugation template for infl=%s verb %s: %s" % (
+            infl, lemma, unicode(inflt)))
+          continue
+
+        def truncate_ending(val, expected_ending, parttype):
+          if not val:
+            return ""
+          vals = val.split("/")
+          stems = []
+          for v in val:
+            if not v.endswith(expected_ending):
+              errpagemsg("WARNING: %s should end in -%s: %s" % (parttype, expected_ending, val))
+              return None
+            stems.append(lemma[:-len(expected_ending)])
+          return "/".join(stems)
+
+        if infl == "irreg":
+          if infltn != "la-conj-irreg":
+            pagemsg("WARNING: Saw mismatching conjugation template for infl=%s verb %s: %s" % (
+              infl, lemma, unicode(inflt)))
+            continue
+          prefix = getparam(inflt, "2")
+          if prefix:
+            lemmaprefix = lemma[0:len(prefix)]
+            if remove_macrons(lemmaprefix) != remove_macrons(prefix):
+              pagemsg("WARNING: Saw prefix mismatch, actual %s != expected %s for lemma %s: %s" % (
+                prefix, lemmaprefix, lemma, unicode(inflt)))
+              continue
+            frob_exact(inflt, "2", lemmaprefix)
+        else:
+          if infl == 1:
+            if infltn != "la-conj-1st":
+              pagemsg("WARNING: Saw mismatching conjugation template for first-conjugation verb %s: %s" % (
+                lemma, unicode(inflt)))
+              continue
+            if deponent:
+              if not lemma.endswith("or"):
+                errpagemsg("First-conjugation deponent lemma should end in -or: %s" % lemma)
+                return
+              arg1 = lemma[:-2]
+              if vsup == arg1 + u"ātum":
+                arg2 = ["", arg1 + u"āt"]
+              else:
+                arg2 = truncate_ending(vsup, "um", "First-conjugation deponent supine")
+                if arg2 is None:
+                  return
+              arg3 = ""
+            else:
+              if not lemma.endswith(u"ō"):
+                errpagemsg(u"First-conjugation lemma should end in -ō: %s" % lemma)
+                return
+              arg1 = lemma[:-1]
+              if vperf == arg1 + u"āvī":
+                arg2 = ["", arg1 + u"āv"]
+              else:
+                arg2 = truncate_ending(vperf, u"ī", "First-conjugation perfect")
+                if arg2 is None:
+                  return
+              if vsup == arg1 + u"ātum":
+                arg3 = ["", arg1 + u"āt"]
+              else:
+                arg3 = truncate_ending(vsup, "um", "First-conjugation supine")
+                if arg3 is None:
+                  return
+          else:
+            if (infl == 2 and infltn != "la-conj-2nd" or
+                infl == 3 and infltn != "la-conj-3rd" or
+                infl == "io" and infltn != "la-conj-3rd-IO" or
+                infl == 4 and infltn != "la-conj-4th"):
+              pagemsg("WARNING: Saw mismatching conjugation template for infl=%s verb %s: %s" % (
+                infl, lemma, unicode(inflt)))
+              continue
+            if deponent:
+              if infl == 2:
+                expected_ending = "eor"
+              elif infl == 3:
+                expected_ending = "or"
+              else:
+                expected_ending = "ior"
+              if not lemma.endswith(expected_ending):
+                errpagemsg("Infl=%s deponent lemma should end in -%s: %s" % (
+                  infl, expected_ending, lemma))
+                return
+              arg1 = lemma[:-len(expected_ending)]
+              arg2 = truncate_ending(vsup, "um", "Infl=%s deponent supine" % infl)
+              if arg2 is None:
+                return
+              arg3 = ""
+            else:
+              if infl == 2:
+                expected_ending = u"eō"
+              elif infl == 3:
+                expected_ending = u"ō"
+              else:
+                expected_ending = u"iō"
+              if not lemma.endswith(expected_ending):
+                errpagemsg("Infl=%s lemma should end in -%s: %s" % (
+                  infl, expected_ending, lemma))
+                return
+              arg1 = lemma[:-len(expected_ending)]
+              arg1 = lemma[:-1]
+              arg2 = truncate_ending(vperf, u"ī", "Infl=%s perfect" % infl)
+              if arg2 is None:
+                return
+              arg3 = truncate_ending(vsup, "um", "Infl=%s supine" % infl)
+              if arg3 is None:
+                return
+          frob_exact(inflt, "1", arg1)
+          frob_exact(inflt, "2", arg2)
+          frob_exact(inflt, "3", arg3)
+          # FIXME, handle overrides
 
 
   for t in parsed.filter_templates():
