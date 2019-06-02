@@ -6,35 +6,7 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, errandmsg, site, tname, pname
 
-demacron_mapper = {
-  u'ā': 'a',
-  u'ē': 'e',
-  u'ī': 'i',
-  u'ō': 'o',
-  u'ū': 'u',
-  u'ȳ': 'y',
-  u'Ā': 'A',
-  u'Ē': 'E',
-  u'Ī': 'I',
-  u'Ō': 'O',
-  u'Ū': 'U',
-  u'Ȳ': 'Y',
-  u'ă': 'a',
-  u'ĕ': 'e',
-  u'ĭ': 'i',
-  u'ŏ': 'o',
-  u'ŭ': 'u',
-  # no composed breve-y
-  u'Ă': 'A',
-  u'Ĕ': 'E',
-  u'Ĭ': 'I',
-  u'Ŏ': 'O',
-  u'Ŭ': 'U',
-  # combining breve
-  u'\u0306': '',
-  u'ë': 'e',
-  u'Ë': 'E',
-}
+import lalib
 
 parts_to_tags = {
   # parts for verbs
@@ -116,9 +88,6 @@ tags_to_canonical = {
   'neuter': 'n',
 }
 
-def remove_macrons(text):
-  return re.sub(u'([āēīōūȳĀĒĪŌŪȲăĕĭŏŭĂĔĬŎŬ\u0306ëË])', lambda m: demacron_mapper[m.group(1)], text)
-
 semicolon_tags = [';', ';<!--\n-->']
 
 def split_tags_into_tag_sets(tags):
@@ -149,87 +118,6 @@ def canonicalize_tag_set(tag_set):
     new_tag_set.append(tags_to_canonical.get(tag, tag))
   return new_tag_set
 
-def generate_adj_forms(template, errandpagemsg, expand_text):
-
-  def generate_adj_forms_prefix(m):
-    decl_suffix_to_decltype = {
-      'decl-1&2': '1&2',
-      'decl-3rd-1E': '3-1',
-      'decl-3rd-2E': '3-2',
-      'decl-3rd-3E': '3-3',
-      'decl-3rd-comp': '3-C',
-      'decl-3rd-part': '3-P',
-      'adecl-2nd': '2-2',
-      'decl-irreg': 'irreg',
-    }
-    if m.group(1) in decl_suffix_to_decltype:
-      return "{{la-generate-adj-forms|decltype=%s|" % (
-        decl_suffix_to_decltype[m.group(1)]
-      )
-    return m.group(0)
-
-  generate_template = re.sub(r"^\{\{la-(.*?)\|", generate_adj_forms_prefix,
-      template)
-  if not generate_template.startswith("{{la-generate-adj-forms|"):
-    errandpagemsg("Template %s not a recognized declension template" % template)
-    return None
-  result = expand_text(generate_template)
-  if not result:
-    errandpagemsg("WARNING: Error generating forms, skipping")
-    return None
-  return blib.split_generate_args(result)
-
-def generate_verb_forms(template, errandpagemsg, expand_text):
-  if template.startswith("{{la-conj-3rd-IO|"):
-    generate_template = re.sub(r"^\{\{la-conj-3rd-IO\|", "{{la-generate-verb-forms|conjtype=3rd-io|", template)
-  else:
-    generate_template = re.sub(r"^\{\{la-conj-(.*?)\|", r"{{la-generate-verb-forms|conjtype=\1|", template)
-  if not generate_template.startswith("{{la-generate-verb-forms|"):
-    errandpagemsg("Template %s not a recognized conjugation template" % template)
-    return None
-  result = expand_text(generate_template)
-  if not result:
-    errandpagemsg("WARNING: Error generating forms, skipping")
-    return None
-  return blib.split_generate_args(result)
-
-def find_latin_section(text, pagemsg):
-  sections = re.split("(^==[^=]*==\n)", text, 0, re.M)
-
-  has_non_latin = False
-
-  latin_j = -1
-  for j in xrange(2, len(sections), 2):
-    if sections[j-1] != "==Latin==\n":
-      has_non_latin = True
-    else:
-      if latin_j >= 0:
-        pagemsg("WARNING: Found two Latin sections, skipping")
-        return None
-      latin_j = j
-  if latin_j < 0:
-    pagemsg("Can't find Latin section, skipping")
-    return None
-  j = latin_j
-
-  # Extract off trailing separator
-  mm = re.match(r"^(.*?\n)(\n*--+\n*)$", sections[j], re.S)
-  if mm:
-    secbody, sectail = mm.group(1), mm.group(2)
-  else:
-    secbody = sections[j]
-    sectail = ""
-
-  # Split off categories at end
-  mm = re.match(r"^(.*?\n)(\n*(\[\[Category:[^\]]+\]\]\n*)*)$",
-      secbody, re.S)
-  if mm:
-    secbody, secbodytail = mm.group(1), mm.group(2)
-    sectail = secbodytail + sectail
-
-  return sections, j, secbody, sectail, has_non_latin
-
-
 def delete_participle(index, lemma, formind, formval, pos, save, verbose):
   notes = []
 
@@ -238,13 +126,13 @@ def delete_participle(index, lemma, formind, formval, pos, save, verbose):
   def errandpagemsg(txt):
     errandmsg("Page %s %s: form %s %s: %s" % (index, lemma, formind, formval, txt))
   def expand_text(tempcall):
-    return blib.expand_text(tempcall, remove_macrons(formval), pagemsg, verbose)
+    return blib.expand_text(tempcall, lalib.remove_macrons(formval), pagemsg, verbose)
 
   if "[" in formval:
     pagemsg("Skipping form value %s with link in it" % formval)
     return
 
-  page = pywikibot.Page(site, remove_macrons(formval))
+  page = pywikibot.Page(site, lalib.remove_macrons(formval))
   if not page.exists():
     pagemsg("Skipping form value %s, page doesn't exist" % formval)
     return
@@ -267,7 +155,7 @@ def delete_participle(index, lemma, formind, formval, pos, save, verbose):
   text = unicode(page.text)
   origtext = text
 
-  retval = find_latin_section(text, pagemsg)
+  retval = lalib.find_latin_section(text, pagemsg)
   if retval is None:
     return
 
@@ -285,7 +173,7 @@ def delete_participle(index, lemma, formind, formval, pos, save, verbose):
       tn = tname(t)
       if tn == "m" and "==Etymology==" in subsections[k - 1]:
         actual_lemma = getparam(t, "2")
-        if remove_macrons(lemma) == remove_macrons(actual_lemma):
+        if lalib.remove_macrons(lemma) == lalib.remove_macrons(actual_lemma):
           saw_lemma_in_etym = True
         else:
           pagemsg("WARNING: Saw wrong lemma %s != %s in Etymology section: %s" % (
@@ -324,7 +212,7 @@ def delete_participle(index, lemma, formind, formval, pos, save, verbose):
   if not delete:
     return
 
-  args = generate_adj_forms(infl_template, errandpagemsg, expand_text)
+  args = lalib.generate_adj_forms(infl_template, errandpagemsg, expand_text)
   if args is None:
     return
   single_forms_to_delete = []
@@ -386,7 +274,7 @@ def delete_form(index, lemma, formind, formval, pos, tag_sets_to_delete, save, v
     pagemsg("Skipping form value %s with link in it" % formval)
     return
 
-  page = pywikibot.Page(site, remove_macrons(formval))
+  page = pywikibot.Page(site, lalib.remove_macrons(formval))
   if not page.exists():
     pagemsg("Skipping form value %s, page doesn't exist" % formval)
     return
@@ -403,7 +291,7 @@ def delete_form(index, lemma, formind, formval, pos, tag_sets_to_delete, save, v
   text = unicode(page.text)
   origtext = text
 
-  retval = find_latin_section(text, pagemsg)
+  retval = lalib.find_latin_section(text, pagemsg)
   if retval is None:
     return
 
@@ -438,7 +326,7 @@ def delete_form(index, lemma, formind, formval, pos, tag_sets_to_delete, save, v
         actual_lemma = getparam(t, str(lemma_param))
         # Allow mismatch in macrons, which often happens, e.g. because
         # a macron was added to the lemma page but not to the inflections
-        if remove_macrons(actual_lemma) == remove_macrons(lemma):
+        if lalib.remove_macrons(actual_lemma) == lalib.remove_macrons(lemma):
           # fetch tags
           tags = []
           for param in t.params:
@@ -516,7 +404,7 @@ def delete_form(index, lemma, formind, formval, pos, tag_sets_to_delete, save, v
           actual_lemma = getparam(t, str(lemma_param))
           # Allow mismatch in macrons, which often happens, e.g. because
           # a macron was added to the lemma page but not to the inflections
-          if remove_macrons(actual_lemma) == remove_macrons(lemma):
+          if lalib.remove_macrons(actual_lemma) == lalib.remove_macrons(lemma):
             tr = getparam(t, "tr")
             alt = getparam(t, "alt") or getparam(t, str(lemma_param + 1))
             # fetch tags
@@ -661,11 +549,11 @@ def process_page(index, lemma, conj, forms, pages_to_delete, save, verbose):
   def errandpagemsg(txt):
     errandmsg("Page %s %s: %s" % (index, lemma, txt))
   def expand_text(tempcall):
-    return blib.expand_text(tempcall, remove_macrons(lemma), pagemsg, verbose)
+    return blib.expand_text(tempcall, lalib.remove_macrons(lemma), pagemsg, verbose)
 
   pagemsg("Processing")
 
-  args = generate_verb_forms(conj, errandpagemsg, expand_text)
+  args = lalib.generate_verb_forms(conj, errandpagemsg, expand_text)
   if args is None:
     return
 
@@ -683,6 +571,11 @@ def process_page(index, lemma, conj, forms, pages_to_delete, save, verbose):
     if form in ["pasv", "pass"]:
       for key, val in args.iteritems():
         if key != "perf_pasv_ptc" and "pasv" in key:
+          tag_sets_to_delete.append(form_key_to_tag_set(key))
+          forms_to_delete.append((key, val))
+    if form == "passnofpp":
+      for key, val in args.iteritems():
+        if key != "perf_pasv_ptc" and key != "futr_pasv_ptc" and "pasv" in key:
           tag_sets_to_delete.append(form_key_to_tag_set(key))
           forms_to_delete.append((key, val))
     if form == "perf":
