@@ -312,51 +312,9 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, site, tname
 
-la_noun_decl_templates = {
-  "la-decl-1st",
-  "la-decl-first",
-  "la-decl-first-loc",
-  "la-decl-1st-1st",
-  "la-decl-1st-1st-loc",
-  "la-decl-1st-abus",
-  "la-decl-1st-am",
-  "la-decl-1st-Greek",
-  "la-decl-1st-Greek-Ma",
-  "la-decl-1st-Greek-Me",
-  "la-decl-2nd",
-  "la-decl-second",
-  "la-decl-2nd-2nd",
-  "la-decl-2nd-er",
-  "la-decl-2nd-Greek",
-  "la-decl-2nd-N-ium",
-  "la-decl-2nd-ius",
-  "la-decl-2nd-N",
-  "la-decl-2nd-N-Greek",
-  "la-decl-2nd-N-us",
-  "la-decl-3rd",
-  "la-decl-3rd-Greek",
-  "la-decl-3rd-Greek-er",
-  "la-decl-3rd-Greek-on-M",
-  "la-decl-3rd-Greek-s",
-  "la-decl-3rd-I",
-  "la-decl-3rd-I-ignis",
-  "la-decl-3rd-I-navis",
-  "la-decl-3rd-N",
-  "la-decl-3rd-N-I",
-  "la-decl-3rd-N-I-pure",
-  "la-decl-3rd-polis",
-  "la-decl-4th",
-  "la-decl-4th-argo",
-  "la-decl-4th-echo",
-  "la-decl-4th-loc+2nd-adj",
-  "la-decl-4th-N",
-  "la-decl-4th-N-ubus",
-  "la-decl-4th-ubus",
-  "la-decl-5th",
-  "la-decl-5th-i",
-  "la-decl-5th-VOW",
-  "la-decl-indecl",
-}
+import lalib
+from lalib import remove_macrons
+
 
 cases = [ "nom", "gen", "dat", "acc", "abl", "voc", "loc" ]
 
@@ -368,55 +326,6 @@ la_adj_decl_overrides = [ "%s_%s_%s" % (case, num, g)
     for num in ["sg", "pl"]
     for case in cases
 ]
-
-la_adj_head_templates = {
-  "la-adj-1&2",
-  "la-adj-3rd-1E",
-  "la-adj-3rd-2E",
-  "la-adj-3rd-3E",
-  "la-adj-comparative",
-  "la-adj-superlative",
-}
-
-la_adj_decl_templates = {
-  "la-decl-1&2",
-  "la-decl-3rd-1E",
-  "la-decl-3rd-2E",
-  "la-decl-3rd-3E",
-}
-
-demacron_mapper = {
-  u'ā': 'a',
-  u'ē': 'e',
-  u'ī': 'i',
-  u'ō': 'o',
-  u'ū': 'u',
-  u'ȳ': 'y',
-  u'Ā': 'A',
-  u'Ē': 'E',
-  u'Ī': 'I',
-  u'Ō': 'O',
-  u'Ū': 'U',
-  u'Ȳ': 'Y',
-  u'ă': 'a',
-  u'ĕ': 'e',
-  u'ĭ': 'i',
-  u'ŏ': 'o',
-  u'ŭ': 'u',
-  # no composed breve-y
-  u'Ă': 'A',
-  u'Ĕ': 'E',
-  u'Ĭ': 'I',
-  u'Ŏ': 'O',
-  u'Ŭ': 'U',
-  # combining breve
-  u'\u0306': '',
-  u'ë', 'e',
-  u'Ë', 'E',
-}
-
-def remove_macrons(text):
-  return re.sub(u'([āēīōūȳĀĒĪŌŪȲăĕĭŏŭĂĔĬŎŬ\u0306ëË])', lambda m: demacron_mapper[m.group(1)], text)
 
 def get_references(page, start, end, include_page=False):
   global args
@@ -491,6 +400,83 @@ def frob_chain_exact(t, param, newval):
   while getparam(t, "%s%s" % (rest, num)):
     frob_exact(t, "%s%s" % (rest, num), newval)
 
+def find_heads_and_defns(page, pagemsg):
+  text = unicode(page.text)
+
+  retval = lalib.find_latin_section(text, pagemsg)
+  if retval is None:
+    return None
+
+  sections, j, secbody, sectail, has_non_latin = retval
+
+  subsections = re.split("(^==+[^=\n]+==+\n)", secbody, 0, re.M)
+
+  parsed_subsections = [] * len(subsections)
+  pronun_templates = []
+  headwords = []
+
+  most_recent_headword = None
+
+  def new_headword(header, level, subsection, head_template, is_lemma):
+    return {
+      'head_template': head_template,
+      'header': header,
+      'is_lemma': is_lemma,
+      'infl_templates': [],
+      'infl_of_templates': [],
+      'subsection': subsection,
+      'level': level,
+    }
+
+  def transfer_most_recent_headword():
+    headwords.append(most_recent_headword)
+
+  for k in xrange(2, len(subsections), 2):
+    m = re.search("^(==+)([^=\n]+)", subsections[k - 1])
+    level = len(m.group(1))
+    header = m.group(2)
+    headword_templates_in_section = []
+
+    if most_recent_headword and most_recent_headword['level'] >= level:
+      transfer_most_recent_headword()
+      most_recent_headword = None
+
+    parsed = blib.parse_text(subsections[k])
+    parsed_subsections[k] = parsed
+    for t in parsed.filter_templates():
+      tn = tname(t)
+      if tn == "la-IPA":
+        pronun_templates.append((t, k))
+      elif tn in la_headword_templates:
+        if headword_templates_in_section:
+          pagemsg("WARNING: Found additional headword template in same section: %s" % unicode(t))
+          transfer_most_recent_headword()
+        elif most_recent_headword:
+          pagemsg("WARNING: Found headword template nested under previous one: %s" % unicode(t))
+          transfer_most_recent_headword()
+        most_recent_headword = new_headword(header, level, k, t,
+          tn in la_lemma_headword_templates)
+        headword_templates_in_section.append(t)
+      elif tn in la_infl_templates:
+        if not most_recent_headword:
+          pagemsg("WARNING: Found inflection template not under headword template: %s" % unicode(t))
+        else:
+          most_recent_headword['infl_templates'].append(t)
+      elif tn in la_infl_of_templates:
+        if not most_recent_headword:
+          pagemsg("WARNING: Found inflection-of template not under headword template: %s" % unicode(t))
+        else:
+          most_recent_headword['infl_of_templates'].append(t)
+
+  if most_recent_headword:
+    transfer_most_recent_headword()
+
+  return (
+    sections, j, secbody, sectail, has_non_latin, subsections,
+    parsed_subsections, pronun_templates, headwords
+  )
+
+
 def process_page(index, page, pos, lemma, stem, save, verbose):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
@@ -563,10 +549,14 @@ def process_page(index, page, pos, lemma, stem, save, verbose):
 
   return unicode(parsed), notes
 
-def process_lemma(index, page, pos, lemma, stem, save, verbose):
-  pagetitle = unicode(page.title())
+def process_noun(index, lemma, decl, gen, save, verbose):
+  pagetitle = remove_macrons(lemma)
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
+  page = pywikibot.Page(site, pagetitle)
+  if not page.exists():
+    pagemsg("WARNING: Page doesn't exist")
+    return
 
   def expand_text(tempcall):
     return blib.expand_text(tempcall, pagetitle, pagemsg, verbose)
@@ -580,6 +570,203 @@ def process_lemma(index, page, pos, lemma, stem, save, verbose):
     origt = unicode(t)
     tn = tname(t)
 
+    if
+
+  pass
+
+def process_lemma(index, page, pos, infl, lemma, explicit_stem, save, verbose):
+  pagetitle = unicode(page.title())
+  def pagemsg(txt):
+    msg("Page %s %s: %s" % (index, pagetitle, txt))
+
+  def expand_text(tempcall):
+    return blib.expand_text(tempcall, pagetitle, pagemsg, verbose)
+
+  pagemsg("Processing")
+
+  lemma_no_macrons = blib.remove_macrons(lemma)
+
+  retval = find_heads_and_defns(page, pagemsg)
+  if retval is None:
+    return None, None
+
+  (
+    sections, j, secbody, sectail, has_non_latin, subsections,
+    parsed_subsections, pronun_templates, headwords
+  ) = retval
+
+  notes = []
+  for headword in headwords:
+    ht = headword['head_template']
+    tn = tname(ht)
+    if pos == "noun" and tn == "la-noun":
+      infl_to_ordinal = {
+        1: 'first',
+        2: 'second',
+        3: 'third',
+        4: 'fourth',
+        5: 'fifth'
+      }
+      if (lemma_no_macrons == remove_macrons(getparam(t, "1")) and
+          getparam(t, "4") == infl_to_ordinal[infl]):
+        frob_exact(t, "1", lemma)
+        frob_chain_stem(t, ["2", "gen"], stem)
+        for inflt in headword['infl_templates']:
+          infltn = tname(inflt)
+          if infltn not in lalib.la_noun_decl_overrides:
+            pagemsg("WARNING: Saw bad declension template for infl=%s noun %s: %s" % (
+              infl, lemma, unicode(inflt)))
+            continue
+          m = re.search('^la-decl-(.*)$', infltn)
+          decltype = lalib.la_noun_decl_suffix_to_decltype[m.group(1)]
+          if type(decltype) is tuple:
+            decl = decltype[0]
+            if len(decltype) != 2:
+              declsubtypes = decltype[1].split("-")
+            else:
+              declsubtypes = []
+          else:
+            decl = decltype
+            declsubtypes = []
+          if decl is None:
+            pagemsg("WARNING: Don't know how to handle decl: %s" % unicode(inflt))
+            continue
+          if decl != str(infl):
+            pagemsg("WARNING: Wrong decl %s != expected %s for decl template: %s" % (
+              decl, infl, unicode(inflt)))
+            continue
+          if infl == 1:
+            if not lemma.endswith("a"):
+              errandpagemsg("WARNING: Bad 1st-declension noun lemma %s" % lemma)
+              return
+            arg1 = lemma[:-1]
+            arg2 = ""
+          elif infl == 2:
+            if lemma.endswith("us"):
+              if "ius" in declsubtypes:
+                if not lemma.endswith("ius"):
+                  pagemsg("WARNING: Declension template requires lemma in -ius but lemma %s doesn't end that way: %s" % (
+                    lemma, unicode(inflt)))
+                  continue
+                arg1 = lemma[:-3]
+                arg2 = ""
+              else:
+                arg1 = lemma[:-2]
+                arg2 = ""
+            elif lemma.endswith("um"):
+              if "ium" in declsubtypes:
+                if not lemma.endswith("ium"):
+                  pagemsg("WARNING: Declension template requires lemma in -ium but lemma %s doesn't end that way: %s" % (
+                    lemma, unicode(inflt)))
+                  continue
+                arg1 = lemma[:-3]
+                arg2 = ""
+              else:
+                arg1 = lemma[:-2]
+                arg2 = ""
+            elif lemma.endswith("r"):
+              arg1 = lemma
+              if stem and stem != lemma:
+                arg2 = stem
+              else:
+                arg2 = ["", lemma]
+            else:
+              errandpagemsg("WARNING: Bad 2nd-declension noun lemma %s" % lemma)
+              return
+          elif infl == 3:
+            arg1 = lemma
+            inferred_stem = lalib.infer_3rd_decl_stem(lemma)
+            if stem and stem != inferred_stem:
+              arg2 = stem
+            else:
+              arg2= ["", inferred_stem]
+          elif infl == 4:
+            if not lemma.endswith("us"):
+              errandpagemsg("WARNING: Bad 4th-declension noun lemma %s" % lemma)
+              return
+            arg1 = lemma[:-2]
+            arg2 = ""
+          elif infl == 5:
+            if not lemma.endswith(u"ēs"):
+              errandpagemsg("WARNING: Bad 5th-declension noun lemma %s" % lemma)
+              return
+            if "i" in declsubtypes:
+              if not lemma.endswith(u"iēs"):
+                pagemsg(u"WARNING: Declension template requires lemma in -iēs but lemma %s doesn't end that way: %s" % (
+                  lemma, unicode(inflt)))
+                continue
+              arg1 = lemma[:-3]
+              arg2 = ""
+            else:
+              arg1 = lemma[:-2]
+              arg2 = ""
+          else:
+            errandpagemsg("WARNING: Unrecognized infl %s" % infl)
+            return
+
+          if remove_macrons(arg1) != remove(getparam(inflt, "1")):
+            pagemsg("WARNING: lemma stem %s doesn't match template stem: %s" % (
+              arg1, unicode(inflt)))
+            continue
+          param2 = getparam(inflt, "2")
+          if type(arg2) is not list:
+            arg2 = [arg2]
+          actual_matching_arg2 = None
+          for matching_arg2 in arg2:
+            if remove_macrons(matching_arg2) == remove_macrons(param2):
+              actual_matching_arg2 = matching_arg2
+              break
+          else:
+            # no break
+            pagemsg("WARNING: lemma secondary stem(s) %s not matching template second param: %s" % (
+              ",".join(arg2), unicode(inflt)))
+            continue
+          frob_exact(inflt, "1", arg1)
+          frob_exact(inflt, "2", actual_matching_arg2)
+
+      if (lemma_no_macrons == remove_macrons(getparam(t, "1")) and
+          getparam(t, "4") == infl_to_ordinal[infl]):
+        frob_exact(t, "1", lemma)
+        frob_chain_stem(t, ["2", "gen"], stem)
+
+    elif pos == "adj" and tn in la_adj_headword_templates:
+      if infl == 1:
+        if lemma.endswith("r"):
+          inferred_stem = lemma
+        elif lemma.endswith("us"):
+          inferred_stem = lemma[:-2]
+        else:
+          errandpagemsg("WARNING: Bad 1st/2nd-declension adjective lemma %s" % lemma)
+          return
+      elif infl == 3:
+        inferred_stem = lalib.infer_3rd_decl_stem(lemma)
+      stem = explicit_stem or inferred_stem
+
+      if (infl == 1 and tn in ["la-adj-1&2", "la-adj-superlative"] and
+          infl == 3 and tn in ["la-adj-3rd-1E", "la-adj-3rd-2E", "la-adj-3rd-3E", "la-comparative"]):
+        frob_chain_exact(t, ["1", "head"], lemma)
+        if tn in ["la-adj-1&2", "la-adj-3rd-1E", "la-adj-3rd-2E", "la-adj-3rd-3E"]:
+          frob_chain_stem(t, "comp", stem)
+          frob_chain_stem(t, "sup", stem)
+        if tn in ["la-adj-1&2", "la-adj-3rd-3E"]:
+          frob_chain_stem(t, ["2", "f"], stem)
+          frob_chain_stem(t, ["3", "n"], stem)
+        elif tn in "la-adj-3rd-1E":
+          frob_chain_stem(t, ["2", "gen"], stem)
+        elif tn in "la-adj-3rd-2E":
+          frob_chain_stem(t, ["2", "n"], stem)
+    elif tn in la_adj_decl_templates and pos == "adj":
+      frob_stem(t, "1", stem)
+      frob_stem(t, "2", stem)
+      for override in la_noun_decl_overrides:
+        frob_stem(t, override, stem, split_slashes=True)
+
+
+
+
+  for t in parsed.filter_templates():
+    origt = unicode(t)
+
     if tn == "la-IPA":
       if not getparam(t, "1"):
         if remove_macrons(lemma) != lemma:
@@ -592,31 +779,7 @@ def process_lemma(index, page, pos, lemma, stem, save, verbose):
       else:
         frob_stem(t, "1", stem)
     elif tn == "la-noun" and pos == "noun":
-      frob_exact(t, "1", lemma)
-      frob_stem(t, "2", stem)
-      frob_chain_stem(t, [None, "gen"], stem)
     elif tn in la_noun_decl_templates and pos == "noun":
-      frob_stem(t, "1", stem)
-      frob_stem(t, "2", stem)
-      for override in la_noun_decl_overrides:
-        frob_stem(t, override, stem, split_slashes=True)
-    elif tn in ["la-adj-1&2", "la-adj-3rd-3E"] and pos == "adj":
-      frob_stem_chain(t, ["1", "head"], stem)
-      frob_stem_chain(t, ["2", "f"], stem)
-      frob_stem_chain(t, ["3", "n"], stem)
-      frob_stem_chain(t, "comp", stem)
-      frob_stem_chain(t, "sup", stem)
-    elif tn in "la-adj-3rd-1E" and pos == "adj":
-      frob_stem_chain(t, ["1", "head"], stem)
-      frob_stem_chain(t, ["2", "gen"], stem)
-      frob_stem_chain(t, "comp", stem)
-      frob_stem_chain(t, "sup", stem)
-    elif tn in "la-adj-3rd-2E" and pos == "adj":
-      frob_stem_chain(t, ["1", "head"], stem)
-      frob_stem_chain(t, ["2", "n"], stem)
-      frob_stem_chain(t, "comp", stem)
-      frob_stem_chain(t, "sup", stem)
-    elif tn in la_adj_decl_templates and pos == "adj":
       frob_stem(t, "1", stem)
       frob_stem(t, "2", stem)
       for override in la_noun_decl_overrides:
@@ -692,6 +855,7 @@ for line in codecs.open(direcfile, "r", "utf-8"):
       assert lemma.endswith("a")
       pos = "noun"
       stem = lemma[:-1]
+      infl = 1
     elif pos == "n2":
       assert lemma.endswith("us") or lemma.endswith("um")
       pos = "noun"
@@ -699,6 +863,7 @@ for line in codecs.open(direcfile, "r", "utf-8"):
         stem = [lemma[:-2], lemma[:-3] + u"ī"]
       else:
         stem = lemma[:-2]
+      infl = 2
     elif pos == "n3":
       pos = "noun"
       if stem:
@@ -715,10 +880,12 @@ for line in codecs.open(direcfile, "r", "utf-8"):
         stem = lemma[:-1] + "in"
       else:
         raise ValueError("Don't recognize n3 lemma %s" % lemma)
+      infl = 3
     elif pos == "n4":
       assert lemma.endswith("us")
       pos = "noun"
       stem = lemma[:-2]
+      infl = 4
     elif pos == "a1":
       assert lemma.endswith("us")
       pos = "adj"
@@ -726,6 +893,7 @@ for line in codecs.open(direcfile, "r", "utf-8"):
         stem = [lemma[:-2], lemma[:-3] + u"ī"]
       else:
         stem = lemma[:-2]
+      infl = 1
     elif pos == "a3":
       pos = "adj"
       if stem:
@@ -742,6 +910,7 @@ for line in codecs.open(direcfile, "r", "utf-8"):
         stem = [lemma[:-2] + "us", lemma[:-2] + u"ōr"]
       else:
         raise ValueError("Don't recognize a3 lemma %s" % lemma)
+      infl = 3
     elif pos == "num1":
       assert lemma.endswith(u"ī")
       pos = "numadj"
