@@ -1399,7 +1399,7 @@ From {{affix|la|con-|gloss1=with|nosco|alt2=(g)nōscō|gloss2=know}}.
 {{la-verb|cognōscō|cognōscere|cognōvī|cognitum|conj=3}}
 
 # I [[learn]], I am [[acquaint]]ed (with), I [[recognize]]
-# ''(in perfect tense)'' I [[know]]
+# {{lb|la|in perfect tense}} I [[know]]
 
 ====Inflection====
 {{la-conj-3rd|cognōsc|cognōv|cognit|sync_perf=poet}}
@@ -2145,12 +2145,12 @@ Page 1459 conticisco: -------- begin text ---------
 * {{la-IPA|conticīscō}}
 
 ===Verb===
-{{la-verb|conticīscō|conticīscere|conticuī|conj=3}}
+{{la-verb|conticīscō|conticīscere|conticuī|conj=3|pattern=no-pasv-perf}}
 
 # {{alternative form of|la|conticēscō}}
 
 ====Inflection====
-{{la-conj-3rd|conticīsc|conticu}}
+{{la-conj-3rd|conticīsc|conticu|type=no-pasv-perf}}
 
 ===References===
 * {{R:L&S}}
@@ -3300,7 +3300,7 @@ From {{suffix|la|ēdormiō|scō}}.
 ===Verb===
 {{la-verb|ēdormīscō|ēdormīscere|conj=3|pattern=noperf}}
 
-# I [[sleep]] away, [[sleep]] through, [[sleep off]]
+# {{lb|la|intransitive|transitive}} I [[sleep]] away, [[sleep]] through, [[sleep off]]
 
 ====Inflection====
 {{la-conj-3rd|type=noperf|ēdormīsc}}
@@ -4132,7 +4132,7 @@ From {{prefix|la|in|id1=in|nōscō|alt2=(g)nōscō}}.
 # I [[forgive]].
 
 ====Usage notes====
-Takes the dative form of the person forgiven.
+Takes the dative form of the person forgiven; in archaic Latin, can take the accusative.
 
 ====Inflection====
 Passive forms are not known except for the third-person singular.
@@ -5030,7 +5030,7 @@ From {{inh|la|ine-pro|*h₂eh₂nóḱe||has reached, attained}}, perfective of 
 {{la-verb|nancīscor|nancīscī|nactus sum|conj=3|pattern=depon}}
 
 # I [[meet with]], [[stumble]] on, [[encounter]], [[acquire]], [[get]], [[reach]], [[find]] something.
-#: {{uxi|la|cum plus otii nactus ero|t=when I have more free time (lit. ''when I will have met more leisure'')}}
+#: {{uxi|la|cum plus otii nactus ero|t=when I have more free time|lit=when I will have met more leisure}}
 # I [[contract]], [[catch]].
 #: {{uxi|la|morbum nancisci|t=to fall ill}}
 # {{lb|la|by extension}} I [[possess]] by [[birth]], have by [[nature]].
