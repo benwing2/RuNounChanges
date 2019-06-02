@@ -30,7 +30,7 @@ From {{affix|la|ab-|horrēscō}}.
 ===Verb===
 {{la-verb|abhorrēscō|abhorrēscere|conj=3|pattern=noperf}}
 
-# {{lb|la|Late Latin}} I [[dread]], become [[terrified]], [[bristle]] up.
+# {{lb|la|Late Latin|transitive|and|intransitive}} I [[dread]], become [[terrified]], [[bristle]] up.
 
 ====Inflection====
 {{la-conj-3rd|abhorrēsc|type=noperf}}
@@ -2282,7 +2282,7 @@ From {{affix|la|con-|parcō|gloss2=to refrain from, forbear|-scō|gloss3=inchoat
 * {{la-IPA|compēscō}}
 
 ===Verb===
-{{la-verb|compēscō|compēscere|compēscuī|conj=3}}
+{{la-verb|compēscō|compēscere|compēscuī|conj=3|pattern=no-pasv-perf}}
 
 # I [[restrain]] or [[check]]
 # I [[quench]]
@@ -2292,7 +2292,7 @@ From {{affix|la|con-|parcō|gloss2=to refrain from, forbear|-scō|gloss3=inchoat
 
 ====Inflection====
 * Priscian documents a supine {{m|la|compēscitum}}.
-{{la-conj-3rd|compēsc|compēscu}}
+{{la-conj-3rd|compēsc|compēscu|type=no-pasv-perf}}
 
 ===References===
 * {{R:L&S}}
@@ -2537,12 +2537,12 @@ Page 1338 conpesco: -------- begin text ---------
 * {{la-IPA|conpēscō}}
 
 ===Verb===
-{{la-verb|conpēscō|conpēscere|conpēscuī|conj=3}}
+{{la-verb|conpēscō|conpēscere|conpēscuī|conj=3|pattern=no-pasv-perf}}
 
 # {{alternative form of|compēscō|lang=la}}
 
 ====Inflection====
-{{la-conj-3rd|conpēsc|conpēscu}}
+{{la-conj-3rd|conpēsc|conpēscu|type=no-pasv-perf}}
 -------- end text --------
 Page 1339 conpeto: Skipping because doesn't match --filter-pages regex escor?$
 Page 1340 conpilo: Skipping because doesn't match --filter-pages regex escor?$
@@ -2772,7 +2772,7 @@ From {{affix|la|con-|suēscō|gloss2=become accustomed}}.
 ===Verb===
 {{la-verb|cōnsuēscō|cōnsuēscere|cōnsuēvī|cōnsuētum|conj=3}}
 
-# I [[accustom]], [[inure]] or [[habituate]], [[tend]] to
+# {{lb|la|transitive}} I [[accustom]], [[inure]] or [[habituate]], [[tend]] to
 # I have [[sexual intercourse]] with
 
 ====Inflection====
@@ -2855,6 +2855,9 @@ Page 1458 conticesco: Found match for regex: =
 Page 1458 conticesco: -------- begin text ---------
 ==Latin==
 
+===Alternative forms===
+* {{l|la|conticīscō}}
+
 ===Etymology===
 From {{affix|la|conticeō|-scō}}.
 
@@ -2862,13 +2865,14 @@ From {{affix|la|conticeō|-scō}}.
 * {{la-IPA|conticēscō}}
 
 ===Verb===
-{{la-verb|conticēscō|conticēscere|conticuī|conj=3}}
+{{la-verb|conticēscō|conticēscere|conticuī|conj=3|pattern=no-pasv-perf}}
 
 # I fall [[silent]]
 # I come to [[rest]] (stop working)
+# {{lb|la|transitive}} I [[silence]]
 
 ====Inflection====
-{{la-conj-3rd|conticēsc|conticu}}
+{{la-conj-3rd|conticēsc|conticu|type=no-pasv-perf}}
 
 ====Derived terms====
 * {{l|la|conticinium}}
@@ -2902,14 +2906,14 @@ From {{affix|la|con-|tremīscō|gloss2=shake, tremble at}}.
 * {{la-IPA|contremīscō}}
 
 ===Verb===
-{{la-verb|contremīscō|contremīscere|contremuī|conj=3}}
+{{la-verb|contremīscō|contremīscere|contremuī|conj=3|pattern=no-pasv-perf}}
 
 # {{lb|la|intransitive}} to [[tremble]] all over
 # {{lb|la|intransitive}} to [[waver]]
 # {{lb|la|transitive}} to be [[afraid]] of
 
 ====Inflection====
-{{la-conj-3rd|contremīsc|contremu}}
+{{la-conj-3rd|contremīsc|contremu|type=no-pasv-perf}}
 
 ====Related terms====
 * {{l|la|tremīscō}}
@@ -4310,14 +4314,15 @@ From {{affix|la|ex-|t1=out of|rubēscō|t2=redden}}.
 * {{la-IPA|ērubēscō}}
 
 ===Verb===
-{{la-verb|ērubēscō|ērubēscere|ērubuī|conj=3|pattern=nopass}}
+{{la-verb|ērubēscō|ērubēscere|ērubuī|conj=3|pattern=no-pasv-perf}}
 
 # I [[redden]]
 # I [[blush]] (with shame)
 # I am [[ashamed]], [[embarrassed]]
+# {{lb|la|transitive|poetic}} I [[blush]] [[on account of]], I am [[ashamed]] [[due to]]
 
 ====Inflection====
-{{la-conj-3rd|type=nopass|ērubēsc|ērubu}}
+{{la-conj-3rd|ērubēsc|ērubu|type=no-pasv-perf}}
 
 ====Related terms====
 * {{l|la|rubēscō}}
@@ -4612,13 +4617,14 @@ From {{affix|la|ex-|horrēscō|t2=I begin to bristle up or dread}}
 * {{la-IPA|exhorrēscō}}
 
 ===Verb===
-{{la-verb|exhorrēscō|exhorrēscere|exhorruī|conj=3}}
+{{la-verb|exhorrēscō|exhorrēscere|exhorruī|conj=3|pattern=no-pasv-perf}}
 
 # I [[tremble]] or [[shudder]] greatly
 # I am [[terrified]]
+# {{lb|la|transitive}} I [[dread]] [[greatly]]
 
 ====Inflection====
-{{la-conj-3rd|exhorrēsc|exhorru}}
+{{la-conj-3rd|exhorrēsc|exhorru|type=no-pasv-perf}}
 
 ====Synonyms====
 * {{l|la|exhorreō}}
@@ -4704,12 +4710,13 @@ From {{prefix|la|ex|pallēscō}}
 * {{la-IPA|expallēscō}}
 
 ===Verb===
-{{la-verb|expallēscō|expallēscere|expalluī|conj=3}}
+{{la-verb|expallēscō|expallēscere|expalluī|conj=3|pattern=no-pasv-perf}}
 
 # I grow very [[pale]]
+# {{lb|la|transitive}} I [[dread]]
 
 ====Inflection====
-{{la-conj-3rd|expallēsc|expallu}}
+{{la-conj-3rd|expallēsc|expallu|type=no-pasv-perf}}
 
 ====Usage notes====
 * Per Gaffiot, only the perfect forms are in regular use.
@@ -4733,16 +4740,16 @@ From {{affix|la|ex-|pavēscō|gloss2=I begin to fear}}.
 * {{la-IPA|expavēscō}}
 
 ===Verb===
-{{la-verb|expavēscō|expavēscere|expāvī|conj=3}}
+{{la-verb|expavēscō|expavēscere|expāvī|conj=3|pattern=no-pasv-perf}}
 
 # I become very [[frightened]]
 # I [[shrink]]/[[shy]] away from
 #* '''1832''', [[:w:Pope Gregory XVI|Gregory XVI]], ''[[:w:Mirari Vos|Mirari Vos]]''
-#*: Procul dubio expavissetis ad solitudinem vestram […]
-#*:: ''Undoubtedly, you would have become very frightened by your solitude'' […]
+#*: {{ux|la|Procul dubio expavissetis ad solitudinem vestram […]|Undoubtedly, you would have become very frightened by your solitude […]}}
+# {{lb|la|transitive}} to [[dread]]
 
 ====Inflection====
-{{la-conj-3rd|expavēsc|expāv}}
+{{la-conj-3rd|expavēsc|expāv|type=no-pasv-perf}}
 
 ====Related terms====
 * {{l|la|expaveō}}
@@ -4889,13 +4896,13 @@ From {{affix|la|ex-|timeō|gloss2=fear|-scō}}.
 * {{la-IPA|extimēscō}}
 
 ===Verb===
-{{la-verb|extimēscō|extimēscere|extimuī|conj=3}}
+{{la-verb|extimēscō|extimēscere|extimuī|conj=3|pattern=no-pasv-perf}}
 
 # I am greatly [[frightened]]
-# I [[dread]]
+# {{lb|la|transitive}} I [[dread]]
 
 ====Inflection====
-{{la-conj-3rd|extimēsc|extimu}}
+{{la-conj-3rd|extimēsc|extimu|type=no-pasv-perf}}
 
 ====Related terms====
 * {{l|la|timeō}}
@@ -5443,13 +5450,15 @@ From {{suffix|la|horreō|t1=I shudder|scō|pos2=inchoative}}.
 * {{la-IPA|horrēscō}}
 
 ===Verb===
-{{la-verb|horrēscō|horrēscere|horruī|conj=3}}
+{{la-verb|horrēscō|horrēscere|horruī|conj=3|pattern=no-pasv-perf}}
 
 # I begin to [[bristle]] up; my hair [[rise]]s on [[end]]
-# I become [[terrified]]; I start to [[dread]]; I begin to [[shake]]
+# I become [[terrified]]
+# I begin to [[shake]]
+# {{lb|la|transitive}} I start to [[dread]]
 
 ====Inflection====
-{{la-conj-3rd|horrēsc|horru}}
+{{la-conj-3rd|horrēsc|horru|type=no-pasv-perf}}
 
 ====Synonyms====
 * {{l|la|inhorrēscō}}
@@ -5538,6 +5547,7 @@ From {{affix|la|in-|id1=in|lūcēscō|gloss2=begin to shine}}.
 {{la-verb|illūcēscō|illūcēscere|illūxī|conj=3}}
 
 # I [[begin]] to [[dawn]]
+# {{lb|la|transitive}} I [[begin]] to [[light up]]
 
 ====Inflection====
 * The third principal part is shared with {{m|la|illūceō}}.
@@ -5897,13 +5907,15 @@ Page 2766 indolesco: -------- begin text ---------
 * {{la-IPA|indolēscō}}
 
 ===Verb===
-{{la-verb|indolēscō|indolēscere|indoluī|conj=3}}
+{{la-verb|indolēscō|indolēscere|indoluī|conj=3|pattern=no-pasv-perf}}
 
 # I [[ache]]
 # I [[grieve]]
+# {{lb|la|transitive}} I [[feel]] [[pain]] at
+# {{lb|la|transitive}} I [[grieve]] at, I am [[troubled]] by
 
 ====Inflection====
-{{la-conj-3rd|indolēsc|indolu}}
+{{la-conj-3rd|indolēsc|indolu|type=no-pasv-perf}}
 
 ===References===
 * {{R:L&S}}
@@ -5986,13 +5998,14 @@ From {{suffix|la|ingemō|īscō|gloss1=I groan, lament}}
 * {{la-IPA|ingemīscō}}
 
 ===Verb===
-{{la-verb|ingemīscō|ingemīscere|ingemuī|conj=3|pattern=nopass}}
+{{la-verb|ingemīscō|ingemīscere|ingemuī|conj=3|pattern=no-pasv-perf}}
 
 # I (begin to) [[groan]] or [[moan]] at or over
+# {{lb|la|transitive}} I [[deplore]]
 
 ====Inflection====
 * The third principal part is shared with {{m|la|ingemō}}.
-{{la-conj-3rd|type=nopass|ingemīsc|ingemu}}
+{{la-conj-3rd|ingemīsc|ingemu|type=no-pasv-perf}}
 
 ====Related terms====
 * {{l|la|ingemō}}
@@ -6005,12 +6018,12 @@ Page 2804 ingemesco: -------- begin text ---------
 * {{la-IPA|ingemēscō}}
 
 ===Verb===
-{{la-verb|ingemēscō|ingemēscere|ingemuī|conj=3|pattern=nopass}}
+{{la-verb|ingemēscō|ingemēscere|ingemuī|conj=3|pattern=no-pasv-perf}}
 
 # {{alternative form of|la|ingemīscō}}
 
 ====Inflection====
-{{la-conj-3rd|type=nopass|ingemēsc|ingemu}}
+{{la-conj-3rd|ingemēsc|ingemu|type=no-pasv-perf}}
 
 ===References===
 * {{R:L&S}}
@@ -6115,13 +6128,13 @@ Page 2844 inlucesco: -------- begin text ---------
 * {{la-IPA|inlūcēscō}}
 
 ===Verb===
-{{la-verb|inlūcēscō|inlūcēscere|inlūxī|conj=3}}
+{{la-verb|inlūcēscō|inlūcēscere|inlūxī|conj=3|pattern=no-pasv-perf}}
 
 # {{alternative form of|illūcēscō|lang=la}}
 
 ====Inflection====
 * The third principal part is shared with {{m|la|inlūceō}}.
-{{la-conj-3rd|inlūcēsc|inlūx}}
+{{la-conj-3rd|inlūcēsc|inlūx|type=no-pasv-perf}}
 
 ===References===
 * {{R:Elementary Lewis}}
@@ -6153,12 +6166,13 @@ From {{affix|la|in-|id1=in|nōtēscō|gloss2=become known}}.
 * {{la-IPA|innōtēscō}}
 
 ===Verb===
-{{la-verb|innōtēscō|innōtēscere|innōtuī|conj=3}}
+{{la-verb|innōtēscō|innōtēscere|innōtuī|conj=3|pattern=no-pasv-perf}}
 
 # I become [[known]] or [[noted]]
+# {{lb|la|transitive|stigmatized}} I [[make]] [[known]]
 
 ====Inflection====
-{{la-conj-3rd|innōtēsc|innōtu}}
+{{la-conj-3rd|innōtēsc|innōtu|type=no-pasv-perf}}
 
 ====Related terms====
 * {{l|la|nōtēscō}}
@@ -7015,7 +7029,7 @@ From {{m|la|manus||hand}} + {{m|la|suēscō||become accustomed}}.
 ===Verb===
 {{la-verb|mānsuēscō|mānsuēscere|mānsuēvī|mānsuētum|conj=3}}
 
-# I [[tame]]
+# {{lb|la|transitive}} I [[tame]]
 
 ====Inflection====
 {{la-conj-3rd|mānsuēsc|mānsuēv|mānsuēt}}
@@ -8095,6 +8109,7 @@ Page 3651 pavesco: -------- begin text ---------
 {{la-verb|pavēscō|pavēscere|conj=3|pattern=noperf}}
 
 # I become [[alarmed]] or [[afraid]]
+# {{lb|la|transitive}} I [[fear]], I [[dread]]
 
 ====Inflection====
 {{la-conj-3rd|type=noperf|pavēsc}}
@@ -8247,13 +8262,14 @@ Either:
 * {{la-IPA|per.horrēscō}}
 
 ===Verb===
-{{la-verb|perhorrēscō|perhorrēscere|perhorruī|conj=3}}
+{{la-verb|perhorrēscō|perhorrēscere|perhorruī|conj=3|pattern=no-pasv-perf}}
 
 # I [[tremble]] or [[shudder]] greatly
 # I [[recoil]] in [[terror]] (from)
+# {{lb|la|transitive}} I [[dread]]
 
 ====Inflection====
-{{la-conj-3rd|perhorrēsc|perhorru}}
+{{la-conj-3rd|perhorrēsc|perhorru|type=no-pasv-perf}}
 
 ===References===
 * {{R:L&S}}
@@ -8351,12 +8367,13 @@ Page 3820 pertimesco: -------- begin text ---------
 * {{la-IPA|pertimēscō}}
 
 ===Verb===
-{{la-verb|pertimēscō|pertimēscere|pertimuī|conj=3}}
+{{la-verb|pertimēscō|pertimēscere|pertimuī|conj=3|pattern=no-pasv-perf}}
 
 # I become very [[frightened]]
+# {{lb|la|transitive}} I [[fear]] [[greatly]], I [[dread]]
 
 ====Inflection====
-{{la-conj-3rd|pertimēsc|pertimu}}
+{{la-conj-3rd|pertimēsc|pertimu|type=no-pasv-perf}}
 
 ===References===
 * {{R:L&S}}
@@ -10429,7 +10446,8 @@ From {{suffix|la|tremō|gloss1=tremble, shake|ēscō|pos2=inchoative}}.
 ===Verb===
 {{la-verb|tremēscō|tremēscere|conj=3|pattern=noperf}}
 
-# I begin to [[tremble]], [[shake]].
+# I begin to [[tremble]], [[shake]]
+# {{lb|la|transitive}} I [[dread]]
 
 ====Inflection====
 * This verb is [[defective verb|defective]], with only those forms based on the first principal part.
