@@ -45,18 +45,12 @@ def find_latin_section(text, pagemsg):
 
 la_noun_decl_templates = {
   "la-decl-1st",
-  "la-decl-first",
-  "la-decl-first-loc",
-  "la-decl-1st-1st",
-  "la-decl-1st-1st-loc",
   "la-decl-1st-abus",
   "la-decl-1st-am",
   "la-decl-1st-Greek",
   "la-decl-1st-Greek-Ma",
   "la-decl-1st-Greek-Me",
   "la-decl-2nd",
-  "la-decl-second",
-  "la-decl-2nd-2nd",
   "la-decl-2nd-er",
   "la-decl-2nd-Greek",
   "la-decl-2nd-N-ium",
@@ -80,7 +74,6 @@ la_noun_decl_templates = {
   "la-decl-4th",
   "la-decl-4th-argo",
   "la-decl-4th-echo",
-  "la-decl-4th-loc+2nd-adj",
   "la-decl-4th-N",
   "la-decl-4th-N-ubus",
   "la-decl-4th-ubus",
@@ -94,18 +87,12 @@ la_noun_decl_templates = {
 
 la_noun_decl_suffix_to_decltype = {
   '1st': '1',
-  'first': None,
-  'first-loc': None,
-  '1st-1st': None,
-  '1st-1st-loc': None,
   '1st-abus': ('1', 'abus'),
   '1st-am': ('1', 'am'),
   '1st-Greek': ('1', 'Greek'),
   '1st-Greek-Ma': ('1', 'Greek-Ma'),
   '1st-Greek-Me': ('1', 'Greek-Me'),
   '2nd': '2',
-  'second': None,
-  '2nd-2nd': None,
   '2nd-er': ('2', 'er'),
   '2nd-Greek': ('2', 'Greek'),
   '2nd-N-ium': ('2', 'N-ium'),
@@ -127,9 +114,8 @@ la_noun_decl_suffix_to_decltype = {
   '3rd-N-I-pure': ('3', 'N-I-pure'),
   '3rd-polis': ('3', 'polis', 'sg'),
   '4th': '4',
-  '4th-argo': None, 
-  '4th-echo': None,
-  '4th-loc+2nd-adj': None,
+  '4th-argo': ('4', 'argo'),
+  '4th-echo': ('4', 'echo'),
   '4th-N': ('4', 'N'),
   '4th-N-ubus': ('4', 'N-ubus'),
   '4th-ubus': ('4', 'ubus'),
@@ -217,6 +203,7 @@ la_misc_headword_templates = {
   "la-proper noun",
   "la-num-1&2",
   "la-num-card",
+  "la-prep",
   "la-punctuation mark",
   "la-verb",
 }
@@ -229,6 +216,50 @@ la_lemma_headword_templates = (
 )
 
 la_headword_templates = la_lemma_headword_templates | la_nonlemma_headword_templates
+
+la_lemma_poses = {
+  "adjective",
+  "adverb",
+  "cardinal number",
+  "circumfix",
+  "conjunction",
+  "determiner",
+  "diacritical mark",
+  "gerund",
+  "idiom",
+  "interfix",
+  "interjection",
+  "letter",
+  "noun",
+  "numeral",
+  "particle",
+  "participle",
+  "phrase",
+  "predicative",
+  "prefix",
+  "preposition",
+  "prepositional phrase",
+  "pronoun",
+  "proper noun",
+  "proverb",
+  "punctuation mark",
+  "suffix",
+  "verb",
+}
+
+la_nonlemma_poses = {
+  "adjective form",
+  "determiner form",
+  "gerund form",
+  "noun form",
+  "numeral form",
+  "participle form",
+  "pronoun form",
+  "proper noun form",
+  "verb form",
+}
+
+la_poses = la_lemma_poses | la_nonlemma_poses
 
 la_infl_of_templates = {
   "inflection of",
