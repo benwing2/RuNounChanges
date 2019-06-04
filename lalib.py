@@ -133,7 +133,7 @@ la_noun_decl_suffix_to_decltype = {
   '4th-N': ('4', 'N'),
   '4th-N-ubus': ('4', 'N-ubus'),
   '4th-ubus': ('4', 'ubus'),
-  '5th': '5'
+  '5th': '5',
   '5th-i': ('5', 'i'),
   '5th-VOW': ('5', 'vow'),
   'indecl': 'indecl',
@@ -238,7 +238,7 @@ la_infl_of_templates = {
   "participle of",
 }
 
-3rd_decl_stem_patterns = [
+third_decl_stem_patterns = [
   (u"tūdō", u"tūdin"),
   ("is", ""),
   (u"āns", "ant"),
@@ -259,7 +259,7 @@ la_infl_of_templates = {
 
 def infer_3rd_decl_stem(nomsg):
   # According to algorithm in [[Module:la-utilities]]
-  for nomsg_ending, stem_ending in 3rd_decl_stem_patterns:
+  for nomsg_ending, stem_ending in third_decl_stem_patterns:
     if nomsg.endswith(nomsg_ending):
       return nomsg[:-len(nomsg_ending)] + stem_ending
   return nomsg
@@ -354,8 +354,8 @@ demacron_mapper = {
   u'Ŭ': 'U',
   # combining breve
   u'\u0306': '',
-  u'ë', 'e',
-  u'Ë', 'E',
+  u'ë': 'e',
+  u'Ë': 'E',
 }
 
 def remove_macrons(text):
