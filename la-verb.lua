@@ -2012,32 +2012,9 @@ irreg_conjugations["placeo"] = function(args, data, typeinfo)
 	
 	local prefix = typeinfo.prefix or ""
 	
-	--[[
-	-- not used
-	local ppplink = make_link({lang = lang, term = prefix .. "placitus"}, "term")
-	local sumlink = make_link({lang = lang, term = "sum"}, "term")
-	--]]
-
-	data.forms["1s_pres_actv_indc"] = prefix .. "placeō"
-	data.forms["2s_pres_actv_indc"] = prefix .. "placēs"
-	data.forms["3s_pres_actv_indc"] = prefix .. "placet"
-	data.forms["1p_pres_actv_indc"] = prefix .. "placēmus"
-	data.forms["2p_pres_actv_indc"] = prefix .. "placētis"
-	data.forms["3p_pres_actv_indc"] = prefix .. "placent"
-	
-	data.forms["1s_impf_actv_indc"] = prefix .. "placēbam"
-	data.forms["2s_impf_actv_indc"] = prefix .. "placēbās"
-	data.forms["3s_impf_actv_indc"] = prefix .. "placēbat"
-	data.forms["1p_impf_actv_indc"] = prefix .. "placēbāmus"
-	data.forms["2p_impf_actv_indc"] = prefix .. "placēbātis"
-	data.forms["3p_impf_actv_indc"] = prefix .. "placēbant"
-
-	data.forms["1s_futr_actv_indc"] = prefix .. "placēbō"
-	data.forms["2s_futr_actv_indc"] = prefix .. "placēbis"
-	data.forms["3s_futr_actv_indc"] = prefix .. "placēbit"
-	data.forms["1p_futr_actv_indc"] = prefix .. "placēbimus"
-	data.forms["2p_futr_actv_indc"] = prefix .. "placēbitis"
-	data.forms["3p_futr_actv_indc"] = prefix .. "placēbunt"
+	add_forms(data, "pres_actv_indc", prefix .. "plac", "eō", "ēs", "et", "ēmus", "ētis", "ent")
+	add_forms(data, "impf_actv_indc", prefix .. "plac", "ēbam", "ēbās", "ēbat", "ēbāmus", "ēbātis", "ēbant")
+	add_forms(data, "futr_actv_indc", prefix .. "plac", "ēbō", "ēbis", "ēbit", "ēbimus", "ēbitis", "ēbunt")
 
 	data.forms["1s_perf_actv_indc"] = {prefix .. "placuī", "[[" .. prefix .. "placitus]] [[sum]]"}
 	data.forms["2s_perf_actv_indc"] = {prefix .. "placuistī", "[[" .. prefix .. "placitus]] [[es]]"}
