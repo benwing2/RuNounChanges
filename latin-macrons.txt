@@ -61,7 +61,7 @@ a3 rēctior
 *a1 rēctissimus
 *adv rēctē
 *a1 rēctangulus
-*v1 rēctificō rēctificāre rēctificāvī rēctificātum
+*v1 rēctificō
 *n3 rēctificātiō
 *a1 rēctilīneus
 *n3 rēctitātor
@@ -409,7 +409,7 @@ a1 cūnctus
 ###
 ### ōrdō
 ###
-*n3 ōrdō ōrdinis
+*n3 ōrdō ōrdin
 *v1 ōrdinō
 *n3 ōrdinātiō
 *n3 ōrdinātor
@@ -429,7 +429,7 @@ a1 cūnctus
 *v1 praeōrdinō
 *n3 praeōrdinātiō
 *v1 subōrdinō
-*n3 subōrdō subōrdinis
+*n3 subōrdō subōrdin
 *v1 superōrdinō
 ###
 ### ārdeō
@@ -544,7 +544,7 @@ a1 cūnctus
 *n3 cōnscrīptiō
 *n3 cōnscrīptor
 *n2 cōnscrīptus
-*# phrase deinde scrīptum
+*phr deinde_scrīptum
 *v1 cōnscrībillō
 *contrāscrībō contrāscrībere contrāscrīpsī contrāscrīptum
 *dēscrībō dēscrībere dēscrīpsī dēscrīptum
@@ -559,7 +559,7 @@ a1 cūnctus
 *n2 manūscrīptus
 *perscrībō perscrībere perscrīpsī perscrīptum
 *n3 perscrīptiō
-*# phrase post scrīptum
+*phr post_scrīptum
 *praescrībō praescrībere praescrīpsī praescrīptum
 *n3 praescrīptiō
 *prōscrībō prōscrībere prōscrīpsī prōscrīptum
@@ -574,7 +574,7 @@ a1 cūnctus
 *n3 suprāscrīptiō
 *trānscrībō trānscrībere trānscrīpsī trānscrīptum
 *trānsscrībō trānsscrībere trānsscrīpsī trānsscrīptum
-*# phrase vōx audīta perit lītera scrīpta manet
+*phr vōx_audīta_perit_lītera_scrīpta_manet
 ###
 ### vīvō
 ###
@@ -627,7 +627,7 @@ a1 cūnctus
 *dēlinquō dēlinquere dēlīquī dēlīctum
 *n3 dēlīctor
 *n2 dēlīctum
-*# phrase locus dēlīctī
+*phr locus_dēlīctī
 *relinquō relinquere relīquī relīctum
 *n3 relīctiō
 *a1 abrelīctus
@@ -761,7 +761,7 @@ coëmō coëmere *coēmī coēmptum
 ###
 *fruor fruī frūctum
 *n3 frūx frūg
-*a1 frūctifer frūctifer
+*a1 frūctifer
 *v1 frūctificō
 *a1 frūctuōsus
 *n4 frūctus
@@ -1000,7 +1000,7 @@ coëmō coëmere *coēmī coēmptum
 *inpingō inpingere inpīnxī inpīctum
 *a1 subpīctus
 *suppingō suppingere suppīnxī suppīctum
-*# phrase ut pīctūra poēsis
+*phr ut_pīctūra_poēsis
 ###
 ### pungō
 ###
@@ -1020,7 +1020,7 @@ coëmō coëmere *coēmī coēmptum
 *a3 rēptilis
 *adrēpō adrēpēre adrēpsī adrēptum
 *arrēpō arrēpēre arrēpsī arrēptum
-*corrēptum homograph of correptum "seized" from corripiō
+*# corrēptum homograph of correptum "seized" from corripiō
 *corrēpō corrēpēre corrēpsī *corrēptum
 *a1 correptus
 *ērēpō ērēpēre ērēpsī ērēptum
@@ -1356,7 +1356,7 @@ coëmō coëmere *coēmī coēmptum
 *ēmarcēscō ēmarcēscere ēmarcuī -- [int]
 *ēnitēscō ēnitēscere ēnituī -- [int]
 *ērubēscō ērubēscere ērubuī -- [tr]
-*-ēscō
+*# -ēscō
 *ēvānēscō ēvānēscere ēvānuī -- [int]
 *exacerbēscō exacerbēscere -- -- [int]
 *exalbēscō exalbēscere exalbuī -- [int]
@@ -1481,8 +1481,6 @@ coëmō coëmere *coēmī coēmptum
 *vigēscō vigēscere viguī -- [int]
 *virēscō virēscere viruī -- [int]
 *viridēscō viridēscere -- -- [int]
-
-
 ###
 ### *īscō
 ###
@@ -1847,7 +1845,7 @@ coëmō coëmere *coēmī coēmptum
 ### benīgnus, malīgnus
 ###
 *adv benīgnē
-*# phrase benīgnē dīcis
+*phr benīgnē_dīcis
 *n3 benīgnitās
 *adv benīgniter
 *a1 benīgnus
@@ -1893,7 +1891,7 @@ coëmō coëmere *coēmī coēmptum
 *adv sīgnanter
 *n2 sīgnārius
 *n3 sīgnātor
-*a1 sīgnifer sīgnifer
+*a1 sīgnifer
 *n3 sīgnifex sīgnific
 *n3 sīgnificātiō
 *v1 sīgnificō
@@ -1914,7 +1912,7 @@ coëmō coëmere *coēmī coēmptum
 # FIXME, noun dēsignāta should be dēsignātus
 *a1 dēsīgnātus
 *v1 dēsīgnō
-*# in hoc sīgnō vincēs
+*phr in_hoc_sīgnō_vincēs
 *n3 īnsīgne īnsīgn
 *a3 īnsīgnificābilis
 *v4 īnsīgniō
@@ -1960,7 +1958,7 @@ coëmō coëmere *coēmī coēmptum
 *a1 īgneus
 *a3 īgnicomāns īgnicomant
 *n2 īgniculus
-*a1 īgnifer īgnifer
+*a1 īgnifer
 *a1 īgnigenus
 *v4 īgniō
 *a3 īgnipēs īgniped
@@ -2027,7 +2025,7 @@ coëmō coëmere *coēmī coēmptum
 *n3 īnfōrmātiō
 *a1 īnfōrmātīvus
 *a3 neofōrmāns
-*#phrase prō fōrmā
+*phr prō_fōrmā
 *v1 refōrmō
 *n3 refōrmātiō
 *v1 trānsfōrmō
@@ -2089,14 +2087,14 @@ coëmō coëmere *coēmī coēmptum
 ###
 *v1 adnūllō
 *v1 annūllō
-*# homō nūllius colōris
+*prov homō_nūllius_colōris
 *a1 nōnnūllus
 *adv nūllātenus
 *adv nūllibi
 *a3 nūllifōrmis
 *n3 nūllitās
 *a1 nūllus
-*# testis ūnus, testis nūllus
+*prov testis_ūnus,_testis_nūllus
 *a1 ūllus
 ###
 ### mīlle
@@ -2182,7 +2180,7 @@ coëmō coëmere *coēmī coēmptum
 *a1 vāstissimus
 *n3 vāstitās
 *n3 vāstitūdō
-*dēvāstō dēvāstāre dēvāstādēvī dēvāstātum
+*v1 dēvāstō
 ###
 ### vāllum
 ###
@@ -2190,8 +2188,8 @@ coëmō coëmere *coēmī coēmptum
 *n2 vāllus
 *v1 vāllō
 *v1 circumvāllō
-*n2 *intervāllum
-*a1 *obvāllātus
+*n2 intervāllum
+*a1 obvāllātus
 ###
 ### vāsculum
 ###
@@ -2339,7 +2337,7 @@ coëmō coëmere *coēmī coēmptum
 ### pūblicus
 ###
 *# opera pūblica
-*# prō bonō pūblicō
+*phr prō_bonō_pūblicō
 *n1 pūblica
 *a1 pūblicānus
 *n2 pūblicānus
@@ -2348,7 +2346,7 @@ coëmō coëmere *coēmī coēmptum
 *v1 pūblicō
 *n2 pūblicum
 *a1 pūblicus
-*FIXME! Do the following two by hand
+*# FIXME! Do the following two by hand
 *#rēs pūblica
 *#rēspūblica
 *n1 Pūblicola
@@ -2359,7 +2357,7 @@ coëmō coëmere *coēmī coēmptum
 ### prīnceps
 ###
 *# comes prīncipālis
-*# obstā prīncipiīs
+*prov obstā_prīncipiīs
 *n3 prīnceps prīncip
 *a3 prīncipālis
 *# n3 prīncipālis pars
