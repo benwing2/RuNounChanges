@@ -310,7 +310,7 @@
 import pywikibot, re, sys, codecs, argparse
 
 import blib
-from blib import getparam, rmparam, msg, site, tname
+from blib import getparam, rmparam, msg, errandmsg, site, tname
 
 import lalib
 from lalib import remove_macrons
@@ -335,7 +335,7 @@ def get_references(page, start, end, include_page=False):
   else:
     return blib.references(remove_macrons(page), start, end, include_page=include_page)
 
-def frob_param(t, param, stem_or_exact, is_exact, split_slashes=False):
+def frob_param(t, param, stem_or_exact, is_exact, pagemsg, notes, split_slashes=False, no_warn=False):
   origt = unicode(t)
   origval = getparam(t, param)
   if split_slashes:
@@ -345,59 +345,73 @@ def frob_param(t, param, stem_or_exact, is_exact, split_slashes=False):
   newvals = []
   for val in vals:
     no_macrons_val = remove_macrons(val)
+    assert len(no_macrons_val) == len(val)
     if type(stem_or_exact) is not list:
       stem_or_exact = [stem_or_exact]
     for st in stem_or_exact:
       no_macrons_st = remove_macrons(st)
+      assert len(no_macrons_st) == len(st)
       if is_exact:
         if no_macrons_val == no_macrons_st:
-          newval = no_macrons_st
-          newvals.append(newval)
+          newvals.append(st)
           break
-        else:
-          newvals.append(val)
       else:
         if no_macrons_val.startswith(no_macrons_st):
-          newval = st + val[len(st):]
-          newvals.append(newval)
+          newvals.append(st + val[len(st):])
           break
+    else:
+      if val or not no_warn:
+        # no break
+        if is_exact:
+          pagemsg("WARNING: Unable to match value %s in param %s against replacement(s) %s" % (
+            val, param, ",".join(stem_or_exact)))
         else:
-          newvals.append(val)
+          pagemsg("WARNING: Unable to match value %s in param %s against replacement stem(s) %s" % (
+            val, param, ",".join(stem_or_exact)))
+      newvals.append(val)
   newval = "/".join(newvals)
   if newval != origval:
     t.add(param, newval)
     pagemsg("Replaced %s with %s" % (origt, unicode(t)))
     notes.append("updated macrons in %s" % tname(t))
 
-def frob_stem(t, param, stem, split_slashes=False):
-  frob_param(t, param, stem, False, split_slashes=split_slashes)
+def frob_stem(t, param, stem, pagemsg, notes, split_slashes=False, no_warn=False):
+  frob_param(t, param, stem, False, pagemsg, notes, split_slashes=split_slashes,
+      no_warn=no_warn)
 
-def frob_exact(t, param, newval, split_slashes=False):
-  frob_param(t, param, newval, True, split_slashes=split_slashes)
+def frob_exact(t, param, newval, pagemsg, notes, split_slashes=False, no_warn=False):
+  frob_param(t, param, newval, True, pagemsg, notes, split_slashes=split_slashes,
+      no_warn=no_warn)
 
-def frob_chain_stem(t, param, stem, split_slashes=False):
+def frob_chain_stem(t, param, stem, pagemsg, notes, split_slashes=False, no_warn=False):
   if type(param) is list:
     first, rest = param
   else:
     first = param
     rest = param
   if first:
-    frob_stem(t, first, stem, split_slashes=split_slashes)
+    frob_stem(t, first, stem, pagemsg, notes, split_slashes=split_slashes,
+        no_warn=no_warn)
   num = 2
   while getparam(t, "%s%s" % (rest, num)):
-    frob_stem(t, "%s%s" % (rest, num), stem, split_slashes=split_slashes)
+    frob_stem(t, "%s%s" % (rest, num), stem, pagemsg, notes, split_slashes=split_slashes,
+        no_warn=no_warn)
+    num += 1
 
-def frob_chain_exact(t, param, newval, split_slashes=False):
+def frob_chain_exact(t, param, newval, pagemsg, notes, split_slashes=False, no_warn=False):
   if type(param) is list:
     first, rest = param
   else:
     first = param
     rest = param
   if first:
-    frob_exact(t, first, newval, split_slashes=split_slashes)
+    frob_exact(t, first, newval, pagemsg, notes, split_slashes=split_slashes,
+        no_warn=no_warn)
   num = 2
   while getparam(t, "%s%s" % (rest, num)):
-    frob_exact(t, "%s%s" % (rest, num), newval)
+    frob_exact(t, "%s%s" % (rest, num), newval, pagemsg, notes, split_slashes=split_slashes,
+        no_warn=no_warn)
+    num += 1
 
 def find_heads_and_defns(page, pagemsg):
   text = unicode(page.text)
@@ -410,7 +424,7 @@ def find_heads_and_defns(page, pagemsg):
 
   subsections = re.split("(^==+[^=\n]+==+\n)", secbody, 0, re.M)
 
-  parsed_subsections = [] * len(subsections)
+  parsed_subsections = [None] * len(subsections)
   pronun_templates = []
   headwords = []
 
@@ -430,7 +444,10 @@ def find_heads_and_defns(page, pagemsg):
   def transfer_most_recent_headword():
     headwords.append(most_recent_headword)
 
-  for k in xrange(2, len(subsections), 2):
+  for k in xrange(len(subsections)):
+    if k < 2 or (k % 2) == 1:
+      parsed_subsections[k] = blib.parse_text(subsections[k])
+      continue
     m = re.search("^(==+)([^=\n]+)", subsections[k - 1])
     level = len(m.group(1))
     header = m.group(2)
@@ -446,7 +463,7 @@ def find_heads_and_defns(page, pagemsg):
       tn = tname(t)
       if tn == "la-IPA":
         pronun_templates.append((t, k))
-      elif tn in la_headword_templates:
+      elif tn in lalib.la_headword_templates:
         if headword_templates_in_section:
           pagemsg("WARNING: Found additional headword template in same section: %s" % unicode(t))
           transfer_most_recent_headword()
@@ -454,14 +471,14 @@ def find_heads_and_defns(page, pagemsg):
           pagemsg("WARNING: Found headword template nested under previous one: %s" % unicode(t))
           transfer_most_recent_headword()
         most_recent_headword = new_headword(header, level, k, t,
-          tn in la_lemma_headword_templates)
+          tn in lalib.la_lemma_headword_templates)
         headword_templates_in_section.append(t)
-      elif tn in la_infl_templates:
+      elif tn in lalib.la_infl_templates:
         if not most_recent_headword:
           pagemsg("WARNING: Found inflection template not under headword template: %s" % unicode(t))
         else:
           most_recent_headword['infl_templates'].append(t)
-      elif tn in la_infl_of_templates:
+      elif tn in lalib.la_infl_of_templates:
         if not most_recent_headword:
           pagemsg("WARNING: Found inflection-of template not under headword template: %s" % unicode(t))
         else:
@@ -480,6 +497,9 @@ def process_page(index, page, pos, lemma, stem, save, verbose):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
+
+  def errandpagemsg(txt):
+    errandmsg("Page %s %s: %s" % (index, pagetitle, txt))
 
   def expand_text(tempcall):
     return blib.expand_text(tempcall, pagetitle, pagemsg, verbose)
@@ -503,18 +523,18 @@ def process_page(index, page, pos, lemma, stem, save, verbose):
             t.add("eccl", eccl)
           notes.append("add pronunciation to {{la-IPA}}")
       else:
-        frob_stem(t, "1", stem)
+        frob_stem(t, "1", stem, pagemsg, notes)
     elif tn == "la-noun-form" and pos == "noun":
-      frob_stem(t, "1", stem)
+      frob_stem(t, "1", stem, pagemsg, notes)
     elif tn == "la-adj-form" and pos == "adj":
-      frob_stem(t, "1", stem)
+      frob_stem(t, "1", stem, pagemsg, notes)
     elif tn == "la-num-form" and pos == "numadj":
-      frob_stem(t, "1", stem)
+      frob_stem(t, "1", stem, pagemsg, notes)
     elif tn in ["la-perfect participle", "la-future participle",
         "la-gerundive",
         "la-verb-form", "la-part-form", "la-decl-1&2",
         "la-decl-3rd-part"] and pos == "verb":
-      frob_stem(t, "1", stem)
+      frob_stem(t, "1", stem, pagemsg, notes)
     elif tn == "la-present participle" and pos == "verb":
       # la-present participle has a different format
       stems = stem
@@ -522,7 +542,7 @@ def process_page(index, page, pos, lemma, stem, save, verbose):
         stems = [stem]
       stems = [re.sub(u"[āē]ns$", "", st) for st in stems]
       for st in stems:
-        frob_exact(t, "1", st)
+        frob_exact(t, "1", st, pagemsg, notes)
     elif tn == "inflection of":
       lang = getparam(t, "lang")
       if lang:
@@ -536,22 +556,25 @@ def process_page(index, page, pos, lemma, stem, save, verbose):
         tlemma = getparam(t, lemma_param)
         talt = getparam(t, alt_param)
         if not talt:
-          frob_exact(t, lemma_param, lemma)
+          frob_exact(t, lemma_param, lemma, pagemsg, notes)
         elif remove_macrons(tlemma) == remove_macrons(talt):
           t.add(lemma_param, talt)
           t.add(alt_param, "")
           notes.append("moved alt param in {{inflection of|la}} to lemma")
-          frob_exact(t, lemma_param, lemma)
+          frob_exact(t, lemma_param, lemma, pagemsg, notes)
         else:
           pagemsg("WARNING: In %s, alt param != lemma param even aside from macrons" % origt)
-          frob_exact(t, alt_param, lemma)
+          frob_exact(t, alt_param, lemma, pagemsg, notes)
 
   return unicode(parsed), notes
 
-def process_lemma(index, page, pos, infl, lemma, explicit_stem, save, verbose):
+def process_lemma(index, page, pos, explicit_infl, lemma, explicit_stem, save, verbose):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
+
+  def errandpagemsg(txt):
+    errandmsg("Page %s %s: %s" % (index, pagetitle, txt))
 
   def expand_text(tempcall):
     return blib.expand_text(tempcall, pagetitle, pagemsg, verbose)
@@ -573,13 +596,13 @@ def process_lemma(index, page, pos, infl, lemma, explicit_stem, save, verbose):
     tn = tname(ht)
 
     if pos == "noun" and tn == "la-noun":
-      if infl == 1:
+      if explicit_infl == 1:
         if lemma.endswith("a"):
           inferred_stem = lemma[:-1]
         else:
           errandpagemsg("WARNING: Bad 1st-declension noun lemma %s" % lemma)
-          return
-      elif infl == 2:
+          return None, None
+      elif explicit_infl == 2:
         if lemma.endswith("r"):
           inferred_stem = lemma
         elif lemma.endswith("ius") or lemma.endswith("ium"):
@@ -588,24 +611,24 @@ def process_lemma(index, page, pos, infl, lemma, explicit_stem, save, verbose):
           inferred_stem = lemma[:-2]
         else:
           errandpagemsg("WARNING: Bad 2nd-declension noun lemma %s" % lemma)
-          return
-      elif infl == 3:
+          return None, None
+      elif explicit_infl == 3:
         inferred_stem = lalib.infer_3rd_decl_stem(lemma)
-      elif infl == 4:
+      elif explicit_infl == 4:
         if lemma.endswith("us"):
           inferred_stem = lemma[:-2]
         else:
           errandpagemsg("WARNING: Bad 4th-declension noun lemma %s" % lemma)
-          return
-      elif infl == 5:
+          return None, None
+      elif explicit_infl == 5:
         if lemma.endswith(u"ēs"):
           inferred_stem = lemma[:-2]
         else:
           errandpagemsg("WARNING: Bad 5th-declension noun lemma %s" % lemma)
-          return
+          return None, None
       else:
-        errandpagemsg("WARNING: Unrecognized infl %s" % infl)
-        return
+        errandpagemsg("WARNING: Unrecognized infl %s" % explicit_infl)
+        return None, None
 
       stem = explicit_stem or inferred_stem
 
@@ -618,20 +641,20 @@ def process_lemma(index, page, pos, infl, lemma, explicit_stem, save, verbose):
       }
 
       if (remove_macrons(lemma) == remove_macrons(getparam(ht, "1")) and
-          getparam(ht, "4") == infl_to_ordinal[infl]):
-        frob_exact(ht, "1", lemma)
-        frob_chain_stem(ht, ["2", "gen"], stem)
+          getparam(ht, "4") == infl_to_ordinal[explicit_infl]):
+        frob_exact(ht, "1", lemma, pagemsg, notes)
+        frob_chain_stem(ht, ["2", "gen"], stem, pagemsg, notes)
         for inflt in headword['infl_templates']:
           infltn = tname(inflt)
           if infltn not in lalib.la_noun_decl_templates:
             pagemsg("WARNING: Saw bad declension template for infl=%s noun %s: %s" % (
-              infl, lemma, unicode(inflt)))
+              explicit_infl, lemma, unicode(inflt)))
             continue
           m = re.search('^la-decl-(.*)$', infltn)
           decltype = lalib.la_noun_decl_suffix_to_decltype[m.group(1)]
           if type(decltype) is tuple:
             decl = decltype[0]
-            if len(decltype) != 2:
+            if len(decltype) >= 2:
               declsubtypes = decltype[1].split("-")
             else:
               declsubtypes = []
@@ -641,17 +664,17 @@ def process_lemma(index, page, pos, infl, lemma, explicit_stem, save, verbose):
           if decl is None:
             pagemsg("WARNING: Don't know how to handle decl: %s" % unicode(inflt))
             continue
-          if decl != str(infl):
+          if decl != str(explicit_infl):
             pagemsg("WARNING: Wrong decl %s != expected %s for decl template: %s" % (
-              decl, infl, unicode(inflt)))
+              decl, explicit_infl, unicode(inflt)))
             continue
-          if infl == 1:
+          if explicit_infl == 1:
             if not lemma.endswith("a"):
               errandpagemsg("WARNING: Bad 1st-declension noun lemma %s" % lemma)
-              return
+              return None, None
             arg1 = lemma[:-1]
             arg2 = ""
-          elif infl == 2:
+          elif explicit_infl == 2:
             if lemma.endswith("us"):
               if "ius" in declsubtypes:
                 if not lemma.endswith("ius"):
@@ -682,23 +705,23 @@ def process_lemma(index, page, pos, infl, lemma, explicit_stem, save, verbose):
                 arg2 = ["", lemma]
             else:
               errandpagemsg("WARNING: Bad 2nd-declension noun lemma %s" % lemma)
-              return
-          elif infl == 3:
+              return None, None
+          elif explicit_infl == 3:
             arg1 = lemma
             if explicit_stem and explicit_stem != inferred_stem:
               arg2 = explicit_stem
             else:
               arg2 = ["", inferred_stem]
-          elif infl == 4:
+          elif explicit_infl == 4:
             if not lemma.endswith("us"):
               errandpagemsg("WARNING: Bad 4th-declension noun lemma %s" % lemma)
-              return
+              return None, None
             arg1 = lemma[:-2]
             arg2 = ""
-          elif infl == 5:
+          elif explicit_infl == 5:
             if not lemma.endswith(u"ēs"):
               errandpagemsg("WARNING: Bad 5th-declension noun lemma %s" % lemma)
-              return
+              return None, None
             if "i" in declsubtypes:
               if not lemma.endswith(u"iēs"):
                 pagemsg(u"WARNING: Declension template requires lemma in -iēs but lemma %s doesn't end that way: %s" % (
@@ -710,10 +733,10 @@ def process_lemma(index, page, pos, infl, lemma, explicit_stem, save, verbose):
               arg1 = lemma[:-2]
               arg2 = ""
           else:
-            errandpagemsg("WARNING: Unrecognized infl %s" % infl)
-            return
+            errandpagemsg("WARNING: Unrecognized infl %s" % explicit_infl)
+            return None, None
 
-          if remove_macrons(arg1) != remove(getparam(inflt, "1")):
+          if remove_macrons(arg1) != remove_macrons(getparam(inflt, "1")):
             pagemsg("WARNING: lemma stem %s doesn't match template stem: %s" % (
               arg1, unicode(inflt)))
             continue
@@ -731,42 +754,43 @@ def process_lemma(index, page, pos, infl, lemma, explicit_stem, save, verbose):
               ",".join(arg2), unicode(inflt)))
             continue
 
-          frob_exact(inflt, "1", arg1)
-          frob_exact(inflt, "2", actual_matching_arg2)
+          frob_exact(inflt, "1", arg1, pagemsg, notes)
+          frob_exact(inflt, "2", actual_matching_arg2, pagemsg, notes)
 
           for override in la_noun_decl_overrides:
-            frob_stem(inflt, override, stem, split_slashes=True)
+            frob_stem(inflt, override, stem, pagemsg, notes, split_slashes=True,
+                no_warn=True)
 
-    elif pos == "adj" and tn in la_adj_headword_templates:
-      if infl == 1:
+    elif pos == "adj" and tn in lalib.la_adj_headword_templates:
+      if explicit_infl == 1:
         if lemma.endswith("r"):
           inferred_stem = lemma
         elif lemma.endswith("us"):
           inferred_stem = lemma[:-2]
         else:
           errandpagemsg("WARNING: Bad 1st/2nd-declension adjective lemma %s" % lemma)
-          return
-      elif infl == 3:
+          return None, None
+      elif explicit_infl == 3:
         inferred_stem = lalib.infer_3rd_decl_stem(lemma)
       stem = explicit_stem or inferred_stem
 
-      if (infl == 1 and tn in ["la-adj-1&2", "la-adj-superlative"] and
-          infl == 3 and tn in ["la-adj-3rd-1E", "la-adj-3rd-2E", "la-adj-3rd-3E", "la-comparative"]):
-        frob_chain_exact(ht, ["1", "head"], lemma)
+      if (explicit_infl == 1 and tn in ["la-adj-1&2", "la-adj-superlative"] or
+          explicit_infl == 3 and tn in ["la-adj-3rd-1E", "la-adj-3rd-2E", "la-adj-3rd-3E", "la-adj-comparative"]):
+        frob_chain_exact(ht, ["1", "head"], lemma, pagemsg, notes)
         if tn in ["la-adj-1&2", "la-adj-3rd-1E", "la-adj-3rd-2E", "la-adj-3rd-3E"]:
-          frob_chain_stem(ht, "comp", stem)
-          frob_chain_stem(ht, "sup", stem)
+          frob_chain_stem(ht, "comp", stem, pagemsg, notes, no_warn=True)
+          frob_chain_stem(ht, "sup", stem, pagemsg, notes, no_warn=True)
         if tn in ["la-adj-1&2", "la-adj-3rd-3E"]:
-          frob_chain_stem(ht, ["2", "f"], stem)
-          frob_chain_stem(ht, ["3", "n"], stem)
+          frob_chain_stem(ht, ["2", "f"], stem, pagemsg, notes)
+          frob_chain_stem(ht, ["3", "n"], stem, pagemsg, notes)
         elif tn == "la-adj-3rd-1E":
-          frob_chain_stem(ht, ["2", "gen"], stem)
+          frob_chain_stem(ht, ["2", "gen"], stem, pagemsg, notes)
         elif tn == "la-adj-3rd-2E":
-          frob_chain_stem(ht, ["2", "n"], stem)
+          frob_chain_stem(ht, ["2", "n"], stem, pagemsg, notes)
         elif tn == "la-adj-comparative":
           if lemma.endswith("ior"):
             base = lemma[:-3]
-            frob_stem(ht, "comp", base)
+            frob_stem(ht, "comp", base, pagemsg, notes, no_warn=True)
         elif tn == "la-adj-superlative":
           if lemma.endswith("issimus"):
             base = lemma[:-7]
@@ -775,16 +799,16 @@ def process_lemma(index, page, pos, infl, lemma, explicit_stem, save, verbose):
           else:
             base = None
           if base:
-            frob_stem(ht, "sup", base)
+            frob_stem(ht, "sup", base, pagemsg, notes)
 
         for inflt in headword['infl_templates']:
           infltn = tname(inflt)
           if infltn not in lalib.la_adj_decl_templates:
             pagemsg("WARNING: Saw bad declension template for infl=%s adj %s: %s" % (
-              infl, lemma, unicode(inflt)))
+              explicit_infl, lemma, unicode(inflt)))
             continue
 
-          if infl == 1:
+          if explicit_infl == 1:
             if infltn != "la-decl-1&2":
               pagemsg("WARNING: Saw mismatching adjective declension template for first/second-declension adjective %s: %s" % (
                 lemma, unicode(inflt)))
@@ -799,7 +823,7 @@ def process_lemma(index, page, pos, infl, lemma, explicit_stem, save, verbose):
             else:
               arg1 = stem
               arg2 = ""
-          elif infl == 3:
+          elif explicit_infl == 3:
             if infltn in ["la-decl-3rd-1E", "la-decl-3rd-3E", "la-decl-3rd-part"]:
               arg1 = lemma
               if stem != inferred_stem:
@@ -819,15 +843,15 @@ def process_lemma(index, page, pos, infl, lemma, explicit_stem, save, verbose):
                   lemma, unicode(inflt)))
                 continue
               arg1 = lemma[:-3]
-              if getparam(infl, "2"):
+              if getparam(inflt, "2"):
                 arg2 = lemma[-3]
               else:
                 arg2 = ""
           else:
-            errandpagemsg("WARNING: Unrecognized infl %s" % infl)
-            return
+            errandpagemsg("WARNING: Unrecognized infl %s" % explicit_infl)
+            return None, None
 
-          if remove_macrons(arg1) != remove(getparam(inflt, "1")):
+          if remove_macrons(arg1) != remove_macrons(getparam(inflt, "1")):
             pagemsg("WARNING: lemma stem %s doesn't match template stem: %s" % (
               arg1, unicode(inflt)))
             continue
@@ -844,19 +868,21 @@ def process_lemma(index, page, pos, infl, lemma, explicit_stem, save, verbose):
             pagemsg("WARNING: lemma secondary stem(s) %s not matching template second param: %s" % (
               ",".join(arg2), unicode(inflt)))
             continue
-          frob_exact(inflt, "1", arg1)
-          frob_exact(inflt, "2", actual_matching_arg2)
+          frob_exact(inflt, "1", arg1, pagemsg, notes)
+          frob_exact(inflt, "2", actual_matching_arg2, pagemsg, notes)
 
           for override in la_adj_decl_overrides:
-            frob_stem(inflt, override, stem, split_slashes=True)
+            frob_stem(inflt, override, stem, pagemsg, notes, split_slashes=True,
+                no_warn=True)
 
       else:
         pagemsg("WARNING: Mismatch between requested adjective inflection %s and actual adjective headword template %s" % (
-          infl, unicode(ht)))
+          explicit_infl, unicode(ht)))
 
     elif pos == "verb" and tn == "la-verb":
       deponent = False
-      if infl == 1 and not explicit_stem:
+      if explicit_infl == 1 and not explicit_stem:
+        infl = 1
         if lemma.endswith("or"):
           deponent = True
           vinf = lemma[:-2] + u"ārī"
@@ -868,8 +894,9 @@ def process_lemma(index, page, pos, infl, lemma, explicit_stem, save, verbose):
           vsup = lemma[:-1] + u"ātum"
         else:
           errandpagemsg("WARNING: Bad lemma %s for 1st-conjugation verb" % lemma)
-          return
-      elif infl == 4 and not explicit_stem:
+          return None, None
+      elif explicit_infl == 4 and not explicit_stem:
+        infl = 4
         if lemma.endswith("ior"):
           deponent = True
           vinf = lemma[:-3] + u"īrī"
@@ -881,13 +908,13 @@ def process_lemma(index, page, pos, infl, lemma, explicit_stem, save, verbose):
           vsup = lemma[:-2] + u"ītum"
         else:
           errandpagemsg("WARNING: Bad lemma %s for 4th-conjugation verb" % lemma)
-          return
-      elif not infl and explicit_stem:
+          return None, None
+      elif not explicit_infl and explicit_stem:
         if lemma.endswith("or"):
           deponent = True
           if len(explicit_stem) != 2:
             errandpagemsg("WARNING: For verb lemma %s, wrong length of explicit stem %s" % (lemma, explicit_stem))
-            return
+            return None, None
           vinf, vsup = explicit_stem
           vperf = ""
           if vinf.endswith(u"ī") and lemma[:-2] == vinf[:-1]:
@@ -902,11 +929,11 @@ def process_lemma(index, page, pos, infl, lemma, explicit_stem, save, verbose):
             infl = 4
           else:
             errandpagemsg("WARNING: Unrecognized verb infinitive %s for lemma %s" % (vinf, lemma))
-            return
+            return None, None
         elif lemma.endswith(u"ō"):
           if len(explicit_stem) != 3:
             errandpagemsg("WARNING: For verb lemma %s, wrong length of explicit stem %s" % (lemma, explicit_stem))
-            return
+            return None, None
           vinf, vperf, vsup = explicit_stem
           if vinf.endswith(u"āre"):
             infl = 1
@@ -922,16 +949,16 @@ def process_lemma(index, page, pos, infl, lemma, explicit_stem, save, verbose):
             infl = "irreg"
           else:
             errandpagemsg("WARNING: Unrecognized verb infinitive %s for lemma %s" % (vinf, lemma))
-            return
+            return None, None
       else:
-        errandpagemsg("WARNING: For verb lemma %s, bad infl %s combined with explit stem %s" % (lemma, infl, explicit_stem))
-        return
+        errandpagemsg("WARNING: For verb lemma %s, bad infl %s combined with explicit stem %s" % (lemma, explicit_infl, explicit_stem))
+        return None, None
 
       if getparam(ht, "conj") != str(infl):
         continue
 
       def compare_principal_part(first, rest, value):
-        values = value.split("/")
+        values = [] if not value else value.split("/")
         no_macron_values = [remove_macrons(x) for x in values]
         actual_values = blib.fetch_param_chain(ht, first, rest)
         no_macron_actual_values = [remove_macrons(x) for x in actual_values]
@@ -951,9 +978,9 @@ def process_lemma(index, page, pos, infl, lemma, explicit_stem, save, verbose):
         for sup in sups:
           if not sup.endswith("um"):
             errandpagemsg("WARNING: For verb lemma %s, bad deponent supine %s" % (lemma, sup))
-            return
-          perfs.append(sup[:-2] + " sum")
-        if not compare_principal_part("3", "perf", perfs):
+            return None, None
+          perfs.append(sup[:-2] + "us sum")
+        if not compare_principal_part("3", "perf", "/".join(perfs)):
           continue
       else:
         if not compare_principal_part("3", "perf", vperf):
@@ -961,13 +988,13 @@ def process_lemma(index, page, pos, infl, lemma, explicit_stem, save, verbose):
         if not compare_principal_part("4", "sup", vsup):
           continue
 
-      frob_chain_exact(ht, "1", "head", lemma.split("/"))
-      frob_chain_exact(ht, "2", "inf", vinf.split("/"))
+      frob_chain_exact(ht, ["1", "head"], lemma.split("/"), pagemsg, notes)
+      frob_chain_exact(ht, ["2", "inf"], vinf.split("/"), pagemsg, notes)
       if deponent:
-        frob_chain_exact(ht, "3", "perfs", perfs)
+        frob_chain_exact(ht, ["3", "perf"], perfs, pagemsg, notes)
       else:
-        frob_chain_exact(ht, "3", "perf", vperf.split("/"))
-        frob_chain_exact(ht, "4", "sup", vsup.split("/"))
+        frob_chain_exact(ht, ["3", "perf"], vperf.split("/"), pagemsg, notes)
+        frob_chain_exact(ht, ["4", "sup"], vsup.split("/"), pagemsg, notes)
 
       for inflt in headword['infl_templates']:
         infltn = tname(inflt)
@@ -981,11 +1008,11 @@ def process_lemma(index, page, pos, infl, lemma, explicit_stem, save, verbose):
             return ""
           vals = val.split("/")
           stems = []
-          for v in val:
+          for v in vals:
             if not v.endswith(expected_ending):
-              errpagemsg("WARNING: %s should end in -%s: %s" % (parttype, expected_ending, val))
+              errandpagemsg("WARNING: %s should end in -%s: %s" % (parttype, expected_ending, v))
               return None
-            stems.append(lemma[:-len(expected_ending)])
+            stems.append(v[:-len(expected_ending)])
           return "/".join(stems)
 
         if infl == "irreg":
@@ -1000,7 +1027,7 @@ def process_lemma(index, page, pos, infl, lemma, explicit_stem, save, verbose):
               pagemsg("WARNING: Saw prefix mismatch, actual %s != expected %s for lemma %s: %s" % (
                 prefix, lemmaprefix, lemma, unicode(inflt)))
               continue
-            frob_exact(inflt, "2", lemmaprefix)
+            frob_exact(inflt, "2", lemmaprefix, pagemsg, notes)
         else:
           if infl == 1:
             if infltn != "la-conj-1st":
@@ -1010,32 +1037,32 @@ def process_lemma(index, page, pos, infl, lemma, explicit_stem, save, verbose):
             if deponent:
               if not lemma.endswith("or"):
                 errpagemsg("First-conjugation deponent lemma should end in -or: %s" % lemma)
-                return
+                return None, None
               arg1 = lemma[:-2]
               if vsup == arg1 + u"ātum":
                 arg2 = ["", arg1 + u"āt"]
               else:
                 arg2 = truncate_ending(vsup, "um", "First-conjugation deponent supine")
                 if arg2 is None:
-                  return
+                  return None, None
               arg3 = ""
             else:
               if not lemma.endswith(u"ō"):
                 errpagemsg(u"First-conjugation lemma should end in -ō: %s" % lemma)
-                return
+                return None, None
               arg1 = lemma[:-1]
               if vperf == arg1 + u"āvī":
                 arg2 = ["", arg1 + u"āv"]
               else:
                 arg2 = truncate_ending(vperf, u"ī", "First-conjugation perfect")
                 if arg2 is None:
-                  return
+                  return None, None
               if vsup == arg1 + u"ātum":
                 arg3 = ["", arg1 + u"āt"]
               else:
                 arg3 = truncate_ending(vsup, "um", "First-conjugation supine")
                 if arg3 is None:
-                  return
+                  return None, None
           else:
             if (infl == 2 and infltn != "la-conj-2nd" or
                 infl == 3 and infltn != "la-conj-3rd" or
@@ -1054,11 +1081,11 @@ def process_lemma(index, page, pos, infl, lemma, explicit_stem, save, verbose):
               if not lemma.endswith(expected_ending):
                 errpagemsg("Infl=%s deponent lemma should end in -%s: %s" % (
                   infl, expected_ending, lemma))
-                return
+                return None, None
               arg1 = lemma[:-len(expected_ending)]
               arg2 = truncate_ending(vsup, "um", "Infl=%s deponent supine" % infl)
               if arg2 is None:
-                return
+                return None, None
               arg3 = ""
             else:
               if infl == 2:
@@ -1070,82 +1097,84 @@ def process_lemma(index, page, pos, infl, lemma, explicit_stem, save, verbose):
               if not lemma.endswith(expected_ending):
                 errpagemsg("Infl=%s lemma should end in -%s: %s" % (
                   infl, expected_ending, lemma))
-                return
+                return None, None
               arg1 = lemma[:-len(expected_ending)]
-              arg1 = lemma[:-1]
               arg2 = truncate_ending(vperf, u"ī", "Infl=%s perfect" % infl)
               if arg2 is None:
-                return
+                return None, None
               arg3 = truncate_ending(vsup, "um", "Infl=%s supine" % infl)
               if arg3 is None:
-                return
-          frob_exact(inflt, "1", arg1)
-          frob_exact(inflt, "2", arg2)
-          frob_exact(inflt, "3", arg3)
+                return None, None
+          frob_exact(inflt, "1", arg1, pagemsg, notes)
+          frob_exact(inflt, "2", arg2, pagemsg, notes)
+          frob_exact(inflt, "3", arg3, pagemsg, notes)
           # FIXME, handle overrides
 
+  secbody = "".join(unicode(x) for x in parsed_subsections)
+  sections[j] = secbody + sectail
+  return "".join(sections), notes
 
-  for t in parsed.filter_templates():
-    origt = unicode(t)
-
-    if tn == "la-IPA":
-      if not getparam(t, "1"):
-        if remove_macrons(lemma) != lemma:
-          eccl = getparam(t, "eccl")
-          rmparam(t, "eccl")
-          t.add("1", lemma)
-          if eccl:
-            t.add("eccl", eccl)
-          notes.append("add pronunciation to {{la-IPA}}")
-      else:
-        frob_stem(t, "1", stem)
-    elif tn == "la-noun" and pos == "noun":
-    elif tn in la_noun_decl_templates and pos == "noun":
-      frob_stem(t, "1", stem)
-      frob_stem(t, "2", stem)
-      for override in la_noun_decl_overrides:
-        frob_stem(t, override, stem, split_slashes=True)
-    elif tn == "la-adj-form" and pos == "adj":
-      frob_stem(t, "1", stem)
-    elif tn == "la-num-form" and pos == "numadj":
-      frob_stem(t, "1", stem)
-    elif tn in ["la-perfect participle", "la-future participle",
-        "la-gerundive",
-        "la-verb-form", "la-part-form", "la-decl-1&2",
-        "la-decl-3rd-part"] and pos == "verb":
-      frob_stem(t, "1", stem)
-    elif tn == "la-present participle" and pos == "verb":
-      # la-present participle has a different format
-      stems = stem
-      if type(stems) is not list:
-        stems = [stem]
-      stems = [re.sub(u"[āē]ns$", "", st) for st in stems]
-      for st in stems:
-        frob_exact(t, "1", st)
-    elif tn == "inflection of":
-      lang = getparam(t, "lang")
-      if lang:
-        lemma_param = "1"
-        alt_param = "2"
-      else:
-        lang = getparam(t, "1")
-        lemma_param = "2"
-        alt_param = "3"
-      if lang == "la":
-        tlemma = getparam(t, lemma_param)
-        talt = getparam(t, alt_param)
-        if not talt:
-          frob_exact(t, lemma_param, lemma)
-        elif remove_macrons(tlemma) == remove_macrons(talt):
-          t.add(lemma_param, talt)
-          t.add(alt_param, "")
-          notes.append("moved alt param in {{inflection of|la}} to lemma")
-          frob_exact(t, lemma_param, lemma)
-        else:
-          pagemsg("WARNING: In %s, alt param != lemma param even aside from macrons" % origt)
-          frob_exact(t, alt_param, lemma)
-
-  return unicode(parsed), notes
+  #for t in parsed.filter_templates():
+  #  origt = unicode(t)
+  #
+  #  if tn == "la-IPA":
+  #    if not getparam(t, "1"):
+  #      if remove_macrons(lemma) != lemma:
+  #        eccl = getparam(t, "eccl")
+  #        rmparam(t, "eccl")
+  #        t.add("1", lemma)
+  #        if eccl:
+  #          t.add("eccl", eccl)
+  #        notes.append("add pronunciation to {{la-IPA}}")
+  #    else:
+  #      frob_stem(t, "1", stem, pagemsg, notes)
+  #  elif tn == "la-noun" and pos == "noun":
+  #  elif tn in la_noun_decl_templates and pos == "noun":
+  #    frob_stem(t, "1", stem, pagemsg, notes)
+  #    frob_stem(t, "2", stem, pagemsg, notes)
+  #    for override in la_noun_decl_overrides:
+  #      frob_stem(t, override, stem, pagemsg, notes, split_slashes=True)
+  #  elif tn == "la-adj-form" and pos == "adj":
+  #    frob_stem(t, "1", stem, pagemsg, notes)
+  #  elif tn == "la-num-form" and pos == "numadj":
+  #    frob_stem(t, "1", stem, pagemsg, notes)
+  #  elif tn in ["la-perfect participle", "la-future participle",
+  #      "la-gerundive",
+  #      "la-verb-form", "la-part-form", "la-decl-1&2",
+  #      "la-decl-3rd-part"] and pos == "verb":
+  #    frob_stem(t, "1", stem, pagemsg, notes)
+  #  elif tn == "la-present participle" and pos == "verb":
+  #    # la-present participle has a different format
+  #    stems = stem
+  #    if type(stems) is not list:
+  #      stems = [stem]
+  #    stems = [re.sub(u"[āē]ns$", "", st) for st in stems]
+  #    for st in stems:
+  #      frob_exact(t, "1", st, pagemsg, notes)
+  #  elif tn == "inflection of":
+  #    lang = getparam(t, "lang")
+  #    if lang:
+  #      lemma_param = "1"
+  #      alt_param = "2"
+  #    else:
+  #      lang = getparam(t, "1")
+  #      lemma_param = "2"
+  #      alt_param = "3"
+  #    if lang == "la":
+  #      tlemma = getparam(t, lemma_param)
+  #      talt = getparam(t, alt_param)
+  #      if not talt:
+  #        frob_exact(t, lemma_param, lemma, pagemsg, notes)
+  #      elif remove_macrons(tlemma) == remove_macrons(talt):
+  #        t.add(lemma_param, talt)
+  #        t.add(alt_param, "")
+  #        notes.append("moved alt param in {{inflection of|la}} to lemma")
+  #        frob_exact(t, lemma_param, lemma, pagemsg, notes)
+  #      else:
+  #        pagemsg("WARNING: In %s, alt param != lemma param even aside from macrons" % origt)
+  #        frob_exact(t, alt_param, lemma, pagemsg, notes)
+  #
+  #return unicode(parsed), notes
 
 
 parser = blib.create_argparser("Clean up usage of macrons in Latin non-lemma forms")
@@ -1155,6 +1184,9 @@ args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
 direcfile = args.direcfile.decode("utf-8")
+
+lemmas = []
+
 for line in codecs.open(direcfile, "r", "utf-8"):
   line = line.rstrip('\n')
   if line.startswith("*"):
@@ -1162,98 +1194,49 @@ for line in codecs.open(direcfile, "r", "utf-8"):
     msg("Need to investigate: %s" % line)
   if line.startswith("#"):
     continue
+  line = re.sub(r" *\[.*\]$", "", line)
   parts = line.split(" ")
-  if len(parts) == 2 and parts[0] in ["adv", "num", "phrase"]:
+  if len(parts) == 2 and parts[0] in ["adv", "num", "phr", "prov"]:
     pass
-  elif len(parts) == 2 or len(parts) == 3 and parts[0] in ["n3", "a3"]:
+  elif (len(parts) == 2 or len(parts) == 3) and parts[0] in [
+      "n1", "n2", "n3", "n4", "n5", "pn1", "pn2", "pn3", "pn4", "pn5",
+      "num1", "a1", "a3"
+  ]:
     # noun or adjective
     if len(parts) == 3:
-      pos, lemma, stem = parts
+      pos, lemma, explicit_stem = parts
     else:
       pos, lemma = parts
-      stem = None
-    if pos == "n1":
-      assert lemma.endswith("a")
-      pos = "noun"
-      stem = lemma[:-1]
-      infl = 1
-    elif pos == "n2":
-      assert lemma.endswith("us") or lemma.endswith("um")
-      pos = "noun"
-      if lemma.endswith("ius"):
-        stem = [lemma[:-2], lemma[:-3] + u"ī"]
-      else:
-        stem = lemma[:-2]
-      infl = 2
-    elif pos == "n3":
-      pos = "noun"
-      if stem:
-        pass
-      elif lemma.endswith(u"iō"):
-        stem = lemma + "n"
-      elif lemma.endswith("or"):
-        stem = lemma[:-2] + u"ōr"
-      elif lemma.endswith(u"īx"):
-        stem = lemma[:-1] + "c"
-      elif lemma.endswith(u"tās"):
-        stem = lemma[:-1] + "t"
-      elif lemma.endswith(u"ūdō"):
-        stem = lemma[:-1] + "in"
-      else:
-        raise ValueError("Don't recognize n3 lemma %s" % lemma)
-      infl = 3
-    elif pos == "n4":
-      assert lemma.endswith("us")
-      pos = "noun"
-      stem = lemma[:-2]
-      infl = 4
-    elif pos == "a1":
-      assert lemma.endswith("us")
-      pos = "adj"
-      if lemma.endswith("ius"):
-        stem = [lemma[:-2], lemma[:-3] + u"ī"]
-      else:
-        stem = lemma[:-2]
-      infl = 1
-    elif pos == "a3":
-      pos = "adj"
-      if stem:
-        pass
-      elif lemma.endswith("is"):
-        stem = lemma[:-2]
-      elif lemma.endswith(u"āx") or lemma.endswith(u"īx"):
-        stem = lemma[:-1] + "c"
-      elif lemma.endswith(u"āns"):
-        stem = lemma[:-3] + "ant"
-      elif lemma.endswith(u"ēns"):
-        stem = lemma[:-3] + "ent"
-      elif lemma.endswith("ior"):
-        stem = [lemma[:-2] + "us", lemma[:-2] + u"ōr"]
-      else:
-        raise ValueError("Don't recognize a3 lemma %s" % lemma)
-      infl = 3
-    elif pos == "num1":
-      assert lemma.endswith(u"ī")
-      pos = "numadj"
-      stem = lemma[:-1]
-    else:
-      raise ValueError("Don't recognize pos spec %s" % pos)
-    def do_process_page(page, index, parsed):
-      return process_page(index, page, pos, lemma, stem, args.save, args.verbose)
-    for index, page in get_references(lemma, start, end):
-      stems = stem
-      if type(stems) is not list:
-        stems = [stems]
-      for st in stems:
-        no_macrons_stem = remove_macrons(st)
-        assert len(no_macrons_stem) == len(st)
-        if unicode(page.title()).startswith(no_macrons_stem):
-          blib.do_edit(page, index, do_process_page, save=args.save, verbose=args.verbose)
-          break
-      else:
-        # no break
-        msg("Skipped %s for lemma %s because doesn't match stem(s) %s" % (
-          unicode(page.title()), lemma, ", ".join(stems)))
+      explicit_stem = None
+    m = re.search("^(n|pn|a|num)([1-5])$", pos)
+    code_to_pos = {"n": "noun", "pn": "propernoun", "a": "adj", "num": "numadj"}
+    pos = code_to_pos[m.group(1)]
+    infl = int(m.group(2))
+  
+    lemmas.append((pos, infl, lemma, explicit_stem))
+
+    #def do_process_page(page, index, parsed):
+    #  return process_page(index, page, pos, lemma, stem, args.save, args.verbose)
+    #for index, page in get_references(lemma, start, end):
+    #  stems = stem
+    #  if type(stems) is not list:
+    #    stems = [stems]
+    #  for st in stems:
+    #    no_macrons_stem = remove_macrons(st)
+    #    assert len(no_macrons_stem) == len(st)
+    #    if unicode(page.title()).startswith(no_macrons_stem):
+    #      blib.do_edit(page, index, do_process_page, save=args.save, verbose=args.verbose)
+    #      break
+    #  else:
+    #    # no break
+    #    msg("Skipped %s for lemma %s because doesn't match stem(s) %s" % (
+    #      unicode(page.title()), lemma, ", ".join(stems)))
+  elif len(parts) == 2 and parts[0] in ["v1", "v4"]:
+    # regular verb
+    pos, lemma = parts
+    m = re.search("^v([14])$", pos)
+    infl = int(m.group(1))
+    lemmas.append(("verb", infl, lemma, None))
   else:
     pos = "verb"
     stems_lemmas = []
@@ -1265,55 +1248,67 @@ for line in codecs.open(direcfile, "r", "utf-8"):
         lemma = lemma[1:]
       else:
         no_main = False
-      # do the past passive and future active participles
-      if not supine.startswith("*") and not supine.startswith("--"):
-        assert supine.endswith("um")
-        stems_lemmas.append((supine[:-2], supine[:-2] + "us", True))
-        stems_lemmas.append((supine[:-2] + u"ūr", supine[:-2] + u"ūrus", True))
-      if not no_main:
-        # do the remaining two participles
-        assert lemma.endswith(u"or") or lemma.endswith("itur")
-        if inf.endswith(u"ārī"):
-          short_part_stem = inf[:-3] + "a"
-          long_part_stem = inf[:-2]
-        elif inf.endswith(u"īrī"):
-          short_part_stem = inf[:-3] + "ie"
-          long_part_stem = inf[:-3] + u"iē"
-        elif inf.endswith(u"ērī"):
-          short_part_stem = inf[:-3] + "e"
-          long_part_stem = inf[:-2]
-        elif inf.endswith(u"ī") and lemma.endswith(u"iō"):
-          short_part_stem = inf[:-1] + "ie"
-          long_part_stem = inf[:-1] + u"iē"
-        elif inf.endswith(u"ī") and lemma.endswith(u"it"):
-          # impersonal -ī; don't know whether i-stem or not
-          short_part_stem = [inf[:-1] + "e", inf[:-1] + "ie"]
-          long_part_stem = [inf[:-1] + u"ē", inf[:-1] + u"iē"]
-        else:
-          assert inf.endswith(u"ī")
-          short_part_stem = inf[:-1] + "e"
-          long_part_stem = inf[:-1] + u"ē"
-        if type(short_part_stem) is not list:
-          short_part_stem = [short_part_stem]
-        if type(long_part_stem) is not list:
-          long_part_stem = [long_part_stem]
-        for shstem, lostem in zip(short_part_stem, long_part_stem):
-          stems_lemmas.append((shstem + "nt", lostem + "ns", True))
-          stems_lemmas.append((shstem + "nd", shstem + "ndus", True))
+      if inf.startswith("*"):
+        # FIXME
+        inf = inf[1:]
+      if supine.startswith("*"):
+        # FIXME
+        supine = supine[1:]
+      if inf == "--":
+        inf = ""
+      if supine == "--":
+        supine = ""
+      lemmas.append(("verb", None, lemma, [inf, supine]))
 
-        # do the present stem
-        if lemma.endswith(u"or"):
-          m = re.search(u"^(.*?)([ei]?)or$", lemma)
-          assert m
-          if inf.endswith(u"ārī"):
-            stem = m.group(1) + m.group(2)
-          else:
-            stem = m.group(1)
-        else:
-          m = re.search(u"^(.*?)([āēīi])tur$", lemma)
-          assert m
-          stem = m.group(1)
-        stems_lemmas.append((stem, lemma, False))
+      ## do the past passive and future active participles
+      #if not supine.startswith("*") and not supine.startswith("--"):
+      #  assert supine.endswith("um")
+      #  stems_lemmas.append((supine[:-2], supine[:-2] + "us", True))
+      #  stems_lemmas.append((supine[:-2] + u"ūr", supine[:-2] + u"ūrus", True))
+      #if not no_main:
+      #  # do the remaining two participles
+      #  assert lemma.endswith(u"or") or lemma.endswith("itur")
+      #  if inf.endswith(u"ārī"):
+      #    short_part_stem = inf[:-3] + "a"
+      #    long_part_stem = inf[:-2]
+      #  elif inf.endswith(u"īrī"):
+      #    short_part_stem = inf[:-3] + "ie"
+      #    long_part_stem = inf[:-3] + u"iē"
+      #  elif inf.endswith(u"ērī"):
+      #    short_part_stem = inf[:-3] + "e"
+      #    long_part_stem = inf[:-2]
+      #  elif inf.endswith(u"ī") and lemma.endswith(u"iō"):
+      #    short_part_stem = inf[:-1] + "ie"
+      #    long_part_stem = inf[:-1] + u"iē"
+      #  elif inf.endswith(u"ī") and lemma.endswith(u"it"):
+      #    # impersonal -ī; don't know whether i-stem or not
+      #    short_part_stem = [inf[:-1] + "e", inf[:-1] + "ie"]
+      #    long_part_stem = [inf[:-1] + u"ē", inf[:-1] + u"iē"]
+      #  else:
+      #    assert inf.endswith(u"ī")
+      #    short_part_stem = inf[:-1] + "e"
+      #    long_part_stem = inf[:-1] + u"ē"
+      #  if type(short_part_stem) is not list:
+      #    short_part_stem = [short_part_stem]
+      #  if type(long_part_stem) is not list:
+      #    long_part_stem = [long_part_stem]
+      #  for shstem, lostem in zip(short_part_stem, long_part_stem):
+      #    stems_lemmas.append((shstem + "nt", lostem + "ns", True))
+      #    stems_lemmas.append((shstem + "nd", shstem + "ndus", True))
+      #
+      #  # do the present stem
+      #  if lemma.endswith(u"or"):
+      #    m = re.search(u"^(.*?)([ei]?)or$", lemma)
+      #    assert m
+      #    if inf.endswith(u"ārī"):
+      #      stem = m.group(1) + m.group(2)
+      #    else:
+      #      stem = m.group(1)
+      #  else:
+      #    m = re.search(u"^(.*?)([āēīi])tur$", lemma)
+      #    assert m
+      #    stem = m.group(1)
+      #  stems_lemmas.append((stem, lemma, False))
 
     else:
       assert len(parts) == 4
@@ -1323,67 +1318,89 @@ for line in codecs.open(direcfile, "r", "utf-8"):
         lemma = lemma[1:]
       else:
         no_main = False
-      # do the past passive and future active participles
-      if not supine.startswith("*") and not supine.startswith("--"):
-        assert supine.endswith("um")
-        stems_lemmas.append((supine[:-2], supine[:-2] + "us", True))
-        stems_lemmas.append((supine[:-2] + u"ūr", supine[:-2] + u"ūrus", True))
-      # do the perfect stem
-      if not perf.startswith("*") and not perf.startswith("--"):
-        assert perf.endswith(u"ī") or perf.endswith("it")
-        if perf.endswith(u"ī"):
-          stems_lemmas.append((perf[:-1], lemma, False))
-        else:
-          # impersonal
-          stems_lemmas.append((perf[:-2], lemma, False))
-      if not no_main:
-        # do the remaining two participles
-        assert lemma.endswith(u"ō") or lemma.endswith("t")
-        if inf.endswith(u"āre"):
-          short_part_stem = inf[:-3] + "a"
-          long_part_stem = inf[:-2]
-        elif inf.endswith(u"īre") or inf.endswith("ere") and lemma.endswith(u"iō"):
-          short_part_stem = inf[:-3] + "ie"
-          long_part_stem = inf[:-3] + u"iē"
-        elif inf.endswith(u"ere") and lemma.endswith(u"it"):
-          # impersonal -ere; don't know whether i-stem or not
-          short_part_stem = [inf[:-3] + "e", inf[:-3] + "ie"]
-          long_part_stem = [inf[:-3] + u"ē", inf[:-3] + u"iē"]
-        else:
-          assert inf.endswith("ere") or inf.endswith(u"ēre")
-          short_part_stem = inf[:-3] + "e"
-          long_part_stem = inf[:-3] + u"ē"
-        if type(short_part_stem) is not list:
-          short_part_stem = [short_part_stem]
-        if type(long_part_stem) is not list:
-          long_part_stem = [long_part_stem]
-        for shstem, lostem in zip(short_part_stem, long_part_stem):
-          stems_lemmas.append((shstem + "nt", lostem + "ns", True))
-          stems_lemmas.append((shstem + "nd", shstem + "ndus", True))
+      if inf.startswith("*"):
+        # FIXME
+        inf = inf[1:]
+      if perf.startswith("*"):
+        # FIXME
+        perf = perf[1:]
+      if supine.startswith("*"):
+        # FIXME
+        supine = supine[1:]
+      if inf == "--":
+        inf = ""
+      if perf == "--":
+        perf = ""
+      if supine == "--":
+        supine = ""
+      lemmas.append(("verb", None, lemma, [inf, perf, supine]))
+      ## do the past passive and future active participles
+      #if not supine.startswith("*") and not supine.startswith("--"):
+      #  assert supine.endswith("um")
+      #  stems_lemmas.append((supine[:-2], supine[:-2] + "us", True))
+      #  stems_lemmas.append((supine[:-2] + u"ūr", supine[:-2] + u"ūrus", True))
+      ## do the perfect stem
+      #if not perf.startswith("*") and not perf.startswith("--"):
+      #  assert perf.endswith(u"ī") or perf.endswith("it")
+      #  if perf.endswith(u"ī"):
+      #    stems_lemmas.append((perf[:-1], lemma, False))
+      #  else:
+      #    # impersonal
+      #    stems_lemmas.append((perf[:-2], lemma, False))
+      #if not no_main:
+      #  # do the remaining two participles
+      #  assert lemma.endswith(u"ō") or lemma.endswith("t")
+      #  if inf.endswith(u"āre"):
+      #    short_part_stem = inf[:-3] + "a"
+      #    long_part_stem = inf[:-2]
+      #  elif inf.endswith(u"īre") or inf.endswith("ere") and lemma.endswith(u"iō"):
+      #    short_part_stem = inf[:-3] + "ie"
+      #    long_part_stem = inf[:-3] + u"iē"
+      #  elif inf.endswith(u"ere") and lemma.endswith(u"it"):
+      #    # impersonal -ere; don't know whether i-stem or not
+      #    short_part_stem = [inf[:-3] + "e", inf[:-3] + "ie"]
+      #    long_part_stem = [inf[:-3] + u"ē", inf[:-3] + u"iē"]
+      #  else:
+      #    assert inf.endswith("ere") or inf.endswith(u"ēre")
+      #    short_part_stem = inf[:-3] + "e"
+      #    long_part_stem = inf[:-3] + u"ē"
+      #  if type(short_part_stem) is not list:
+      #    short_part_stem = [short_part_stem]
+      #  if type(long_part_stem) is not list:
+      #    long_part_stem = [long_part_stem]
+      #  for shstem, lostem in zip(short_part_stem, long_part_stem):
+      #    stems_lemmas.append((shstem + "nt", lostem + "ns", True))
+      #    stems_lemmas.append((shstem + "nd", shstem + "ndus", True))
 
-        # do the present stem
-        if lemma.endswith(u"ō"):
-          m = re.search(u"^(.*?)([ei]?)ō$", lemma)
-          assert m
-          if inf.endswith(u"āre"):
-            stem = m.group(1) + m.group(2)
-          else:
-            stem = m.group(1)
-        else:
-          m = re.search(u"^(.*?)([aei])t$", lemma)
-          assert m
-          stem = m.group(1)
-        stems_lemmas.append((stem, lemma, False))
+      #  # do the present stem
+      #  if lemma.endswith(u"ō"):
+      #    m = re.search(u"^(.*?)([ei]?)ō$", lemma)
+      #    assert m
+      #    if inf.endswith(u"āre"):
+      #      stem = m.group(1) + m.group(2)
+      #    else:
+      #      stem = m.group(1)
+      #  else:
+      #    m = re.search(u"^(.*?)([aei])t$", lemma)
+      #    assert m
+      #    stem = m.group(1)
+      #  stems_lemmas.append((stem, lemma, False))
 
-    for stem, lemma, include_page in stems_lemmas:
-      def do_process_page(page, index, parsed):
-        return process_page(index, page, pos, lemma, stem, args.save, args.verbose)
-      for index, page in get_references(lemma, start, end,
-          include_page=include_page):
-        no_macrons_stem = remove_macrons(stem)
-        assert len(no_macrons_stem) == len(stem)
-        if unicode(page.title()).startswith(no_macrons_stem):
-          blib.do_edit(page, index, do_process_page, save=args.save, verbose=args.verbose)
-        else:
-          msg("Skipped %s for lemma %s because doesn't match stem %s" % (
-            unicode(page.title()), lemma, stem))
+    #for stem, lemma, include_page in stems_lemmas:
+    #  def do_process_page(page, index, parsed):
+    #    return process_page(index, page, pos, lemma, stem, args.save, args.verbose)
+    #  for index, page in get_references(lemma, start, end,
+    #      include_page=include_page):
+    #    no_macrons_stem = remove_macrons(stem)
+    #    assert len(no_macrons_stem) == len(stem)
+    #    if unicode(page.title()).startswith(no_macrons_stem):
+    #      blib.do_edit(page, index, do_process_page, save=args.save, verbose=args.verbose)
+    #    else:
+    #      msg("Skipped %s for lemma %s because doesn't match stem %s" % (
+    #        unicode(page.title()), lemma, stem))
+
+for index, (pos, infl, lemma, explicit_stem) in blib.iter_items(lemmas, start, end,
+    get_name=lambda lemmas: remove_macrons(lemmas[2])):
+  def do_process_lemma(page, index, parsed):
+    return process_lemma(index, page, pos, infl, lemma, explicit_stem, args.save, args.verbose)
+  blib.do_edit(pywikibot.Page(site, remove_macrons(lemma)), index, do_process_lemma, save=args.save, verbose=args.verbose)
