@@ -2198,6 +2198,11 @@ coëmō coëmere *coēmī coēmptum
 *a1 vāsculōsus
 *n2 vāscellum
 ###
+### vexō
+###
+*v1 vexō
+*v1 dīvexō
+###
 ### bēstia
 ###
 *a1 bēstia
