@@ -341,7 +341,7 @@
 # 4. * before supine and perfect (maybe not needed).
 # 5. For participles, check the etymology section to make sure the lemma
 #    is correct.
-# 6. Numbers, phrases, etc.
+# 6. DONE: Numbers, phrases, etc.
 
 # Clean up use of macrons in Latin lemmas.
 
@@ -539,6 +539,16 @@ def process_pronun_template(t, lemma, pagemsg, notes):
   else:
     frob_exact(t, "1", lemma, pagemsg, notes)
 
+def process_pronun_templates(pronun_templates, headwords, lemma, pagemsg, notes):
+  if len(pronun_templates) > 1:
+    pagemsg("WARNING: Multiple pronunciation templates, not changing: %s" %
+      ",".join(unicode(t) for t in pronun_templates))
+  elif len(pronun_templates) == 1:
+    if len(headwords) > 1:
+      pagemsg("WARNING: Multiple headwords for pronunciation template, check manually: %s" %
+        ",".join(unicode(hw['head_template']) for hw in headwords))
+    process_pronun_template(pronun_templates[0][0], lemma, pagemsg, notes)
+
 def do_process_form(index, page, lemma, formind, formval, pos, tag_sets_to_process, save, verbose):
   pagetitle = unicode(page.title())
 
@@ -572,10 +582,18 @@ def do_process_form(index, page, lemma, formind, formval, pos, tag_sets_to_proce
     expected_head_template = "la-noun-form"
     expected_pos = "noun form"
     expected_header_pos = "Noun"
+  elif pos == "propernounform":
+    expected_head_template = "la-proper noun-form"
+    expected_pos = "proper noun form"
+    expected_header_pos = "Proper noun"
   elif pos == "partform":
     expected_head_template = "la-part-form"
     expected_pos = "participle form"
     expected_header_pos = "Participle"
+  elif pos == "numform":
+    expected_head_template = "la-num-form"
+    expected_pos = "numeral form"
+    expected_header_pos = "Numeral"
   else:
     raise ValueError("Unrecognized part of speech %s" % pos)
 
@@ -592,6 +610,8 @@ def do_process_form(index, page, lemma, formind, formval, pos, tag_sets_to_proce
 
   notes = []
 
+  found_matching_head = False
+
   for headword in headwords:
     ht = headword['head_template']
     tn = tname(ht)
@@ -603,7 +623,7 @@ def do_process_form(index, page, lemma, formind, formval, pos, tag_sets_to_proce
       if getparam(ht, "1") != "la":
         errandpagemsg("WARNING: Wrong-language {{head}} template in Latin section: %s" % unicode(ht))
         continue
-      head_pos = getparam(t, "2")
+      head_pos = getparam(ht, "2")
       if head_pos != expected_pos:
         pagemsg("Skipping incorrect part of speech %s: %s" % (head_pos, unicode(ht)))
         continue
@@ -616,6 +636,10 @@ def do_process_form(index, page, lemma, formind, formval, pos, tag_sets_to_proce
 
     if not found_head:
       continue
+
+    if headword['header'] != expected_header_pos:
+      pagemsg("WARNING: Bad section header %s != %s for headword template %s" % (
+        headword['header'], expected_header_pos, unicode(ht)))
 
     for t in headword['infl_of_templates']:
       lang = getparam(t, "lang")
@@ -667,6 +691,8 @@ def do_process_form(index, page, lemma, formind, formval, pos, tag_sets_to_proce
     if not saw_infl:
       continue
 
+    found_matching_head = True
+
     frob_exact(ht, head_param, formval, pagemsg, notes)
     for t in headword['infl_of_templates']:
       lang = getparam(t, "lang")
@@ -677,6 +703,9 @@ def do_process_form(index, page, lemma, formind, formval, pos, tag_sets_to_proce
         lemma_param = 2
       assert lang == "la"
       frob_exact(t, str(lemma_param), lemma, pagemsg, notes)
+
+  if found_matching_head:
+    process_pronun_templates(pronun_templates, headwords, formval, pagemsg, notes)
 
   secbody = "".join(unicode(x) for x in parsed_subsections)
   sections[j] = secbody + sectail
@@ -757,6 +786,8 @@ def do_process_participle(index, page, lemma, formind, formval, pos, save, verbo
 
   notes = []
 
+  found_matching_head = False
+
   for headword in headwords:
     ht = headword['head_template']
     tn = tname(ht)
@@ -782,6 +813,8 @@ def do_process_participle(index, page, lemma, formind, formval, pos, save, verbo
     if not found_head:
       continue
 
+    found_matching_head = True
+
     for inflt in headword['infl_templates']:
       infltn = tname(inflt)
       if infltn != expected_decl_template:
@@ -795,6 +828,9 @@ def do_process_participle(index, page, lemma, formind, formval, pos, save, verbo
         return None, None
 
       process_all_forms(args, index, formval, "partform", save, verbose)
+
+  if found_matching_head:
+    process_pronun_templates(pronun_templates, headwords, formval, pagemsg, notes)
 
   secbody = "".join(unicode(x) for x in parsed_subsections)
   sections[j] = secbody + sectail
@@ -828,6 +864,9 @@ def do_process_lemma(index, page, pos, explicit_infl, lemma, explicit_stem, save
   ) = retval
 
   notes = []
+
+  found_matching_head = False
+
   for headword in headwords:
     ht = headword['head_template']
     tn = tname(ht)
@@ -848,12 +887,38 @@ def do_process_lemma(index, page, pos, explicit_infl, lemma, explicit_stem, save
         "prov": "proverb", 
         "verb": "verb",
         "num": "numeral",
+        "numadj": "numeral",
       }
       if getparam(ht, "2") == pos_to_full_pos[pos]:
         frob_exact(ht, "head", lemma, pagemsg, notes)
         found_head_template = True
+        found_matching_head = True
 
-    if pos == "noun" and (found_head_template or tn == "la-noun"):
+    if pos == "adv" and tn == "la-adv":
+      found_matching_head = True
+      frob_exact(ht, "1", lemma, pagemsg, notes)
+      stem = lalib.infer_adv_stem(lemma)
+      frob_stem(ht, "2", stem, pagemsg, notes, no_warn=True)
+      frob_stem(ht, "3", stem, pagemsg, notes, no_warn=True)
+      frob_chain_stem(ht, "comp", stem, pagemsg, notes, no_warn=True)
+      frob_chain_stem(ht, "sup", stem, pagemsg, notes, no_warn=True)
+
+    elif pos == "phr" and tn == "la-phrase":
+      found_matching_head = True
+      frob_exact(ht, "head", lemma, pagemsg, notes)
+
+    elif pos == "num" and tn == "la-num-card":
+      found_matching_head = True
+      if lemma.endswith(u"ī"):
+        stem = lemma[:-1]
+      else:
+        stem = lemma
+      frob_exact(ht, "1", stem, pagemsg, notes)
+
+    elif (
+      pos == "noun" and (found_head_template or tn == "la-noun") or
+      pos == "propernoun" and (found_head_template or tn == "la-proper noun")
+    ):
       if not found_head_template:
         if explicit_infl == 1:
           if lemma.endswith("a"):
@@ -905,6 +970,8 @@ def do_process_lemma(index, page, pos, explicit_infl, lemma, explicit_stem, save
           frob_chain_stem(ht, ["2", "gen"], stem, pagemsg, notes)
         else:
           continue
+
+      found_matching_head = True
 
       for inflt in headword['infl_templates']:
         infltn = tname(inflt)
@@ -1027,9 +1094,14 @@ def do_process_lemma(index, page, pos, explicit_infl, lemma, explicit_stem, save
         if args is None:
           return None, None
 
-        process_all_forms(args, index, lemma, "nounform", save, verbose)
+        process_all_forms(args, index, lemma,
+          pos == "propernoun" and "propernounform" or "nounform", save, verbose
+        )
 
-    elif pos == "adj" and (found_head_template or tn in lalib.la_adj_headword_templates):
+    elif (
+      pos == "adj" and (found_head_template or tn in lalib.la_adj_headword_templates) or
+      pos == "numadj" and (found_head_template or tn == "la-num-1&2")
+    ):
       if not found_head_template:
         if explicit_infl == 1:
           if lemma.endswith("r"):
@@ -1043,13 +1115,13 @@ def do_process_lemma(index, page, pos, explicit_infl, lemma, explicit_stem, save
           inferred_stem = lalib.infer_3rd_decl_stem(lemma)
         stem = explicit_stem or inferred_stem
 
-        if (explicit_infl == 1 and tn in ["la-adj-1&2", "la-adj-superlative"] or
+        if (explicit_infl == 1 and tn in ["la-adj-1&2", "la-adj-superlative", "la-num-1&2"] or
             explicit_infl == 3 and tn in ["la-adj-3rd-1E", "la-adj-3rd-2E", "la-adj-3rd-3E", "la-adj-comparative"]):
           frob_chain_exact(ht, ["1", "head"], lemma, pagemsg, notes)
           if tn in ["la-adj-1&2", "la-adj-3rd-1E", "la-adj-3rd-2E", "la-adj-3rd-3E"]:
             frob_chain_stem(ht, "comp", stem, pagemsg, notes, no_warn=True)
             frob_chain_stem(ht, "sup", stem, pagemsg, notes, no_warn=True)
-          if tn in ["la-adj-1&2", "la-adj-3rd-3E"]:
+          if tn in ["la-adj-1&2", "la-num-1&2", "la-adj-3rd-3E"]:
             frob_chain_stem(ht, ["2", "f"], stem, pagemsg, notes)
             frob_chain_stem(ht, ["3", "n"], stem, pagemsg, notes)
           elif tn == "la-adj-3rd-1E":
@@ -1073,6 +1145,8 @@ def do_process_lemma(index, page, pos, explicit_infl, lemma, explicit_stem, save
           pagemsg("WARNING: Mismatch between requested adjective inflection %s and actual adjective headword template %s" % (
             explicit_infl, unicode(ht)))
           continue
+
+      found_matching_head = True
 
       for inflt in headword['infl_templates']:
         infltn = tname(inflt)
@@ -1151,7 +1225,8 @@ def do_process_lemma(index, page, pos, explicit_infl, lemma, explicit_stem, save
         args = lalib.generate_adj_forms(unicode(inflt), errandpagemsg, expand_text)
         if args is None:
           return None, None
-        process_all_forms(args, index, lemma, "adjform", save, verbose)
+        process_all_forms(args, index, lemma,
+          pos == "numadj" and "numform" or "adjform", save, verbose)
 
     elif pos == "verb" and (found_head_template or tn == "la-verb"):
       if not found_head_template:
@@ -1270,6 +1345,8 @@ def do_process_lemma(index, page, pos, explicit_infl, lemma, explicit_stem, save
         else:
           frob_chain_exact(ht, ["3", "perf"], vperf.split("/"), pagemsg, notes)
           frob_chain_exact(ht, ["4", "sup"], vsup.split("/"), pagemsg, notes)
+
+      found_matching_head = True
 
       for inflt in headword['infl_templates']:
         infltn = tname(inflt)
@@ -1437,6 +1514,9 @@ def do_process_lemma(index, page, pos, explicit_infl, lemma, explicit_stem, save
 
         #  for formind, (key, formval) in blib.iter_items(
         #      single_forms_to_process, get_name=lambda x: x[1]):
+
+  if found_matching_head:
+    process_pronun_templates(pronun_templates, headwords, lemma, pagemsg, notes)
 
   secbody = "".join(unicode(x) for x in parsed_subsections)
   sections[j] = secbody + sectail

@@ -295,6 +295,30 @@ def infer_3rd_decl_stem(nomsg):
       return nomsg[:-len(nomsg_ending)] + stem_ending
   return nomsg
 
+adv_stem_patterns = [
+  "iter",
+  ("nter", "nt"),
+  "ter",
+  "er",
+  u"iē",
+  u"ē",
+  "im",
+  u"ō",
+  "e",
+]
+
+def infer_adv_stem(adv):
+  # According to algorithm in [[Module:la-headword]], with -e added
+  for pattern in adv_stem_patterns:
+    if type(pattern) is tuple:
+      suffix, newsuff = pattern
+    else:
+      suffix = pattern
+      newsuff = ""
+    if adv.endswith(suffix):
+      return adv[:-len(suffix)] + newsuff
+  return adv
+
 def generate_adj_forms(template, errandpagemsg, expand_text):
 
   def generate_adj_forms_prefix(m):
