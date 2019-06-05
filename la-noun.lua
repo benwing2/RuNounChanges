@@ -5,8 +5,9 @@ local m_links = require("Module:links")
 local m_utilities = require("Module:utilities")
 local m_para = require("Module:parameters")
 
-NAMESPACE = NAMESPACE or mw.title.getCurrentTitle().nsText
-PAGENAME = PAGENAME or mw.title.getCurrentTitle().text
+local current_title = mw.title.getCurrentTitle().nsText
+local NAMESPACE = current_title.nsText
+local PAGENAME = current_title.text
 
 local decl = require("Module:la-noun/data")
 local m_table = require("Module:la-noun/table")
@@ -53,6 +54,7 @@ local function process_forms_and_overrides(data, args)
 
 	for _, key in ipairs(case_order) do
 		if args[key] or data.forms[key] then
+			local val
 			if args[key] then
 				val = args[key]
 				data.user_specified[key] = true
@@ -74,8 +76,7 @@ local function process_forms_and_overrides(data, args)
 					end
 					
 					local accel_form = key
-					accel_form = accel_form:gsub("_sg$", "|s")
-					accel_form = accel_form:gsub("_pl$", "|p")
+					accel_form = accel_form:gsub("_([sp])[gl]$", "|%1")
 
 					data.accel[key .. i] = {form = accel_form, lemma = accel_lemma}
 					val[i] = word
@@ -105,13 +106,12 @@ local function show_forms(data)
 				if (data.notes[key .. i] or data.noteindex[key .. i]) and not data.user_specified[key] then
 					-- If the decl entry hasn't specified a footnote index, generate one.
 					local this_noteindex = data.noteindex[key .. i]
-					local note_html = '<sup style="color: red">' .. this_noteindex .. '</sup>'
 					if not this_noteindex then
 						this_noteindex = noteindex
 						noteindex = noteindex + 1
-						table.insert(notes, note_html .. data.notes[key .. i])
+						table.insert(notes, '<sup style="color: red">' .. this_noteindex .. '</sup>' .. data.notes[key .. i])
 					end
-					val[i] = link .. note_html
+					val[i] = link .. '<sup style="color: red">' .. this_noteindex .. '</sup>'
 				else
 					val[i] = link
 				end
@@ -148,22 +148,28 @@ local function generate_forms(frame)
 		accel = {},
 	}
 	
-	iparams = {
-		[1] = {required = true},
+	local iparams = {
+		[1] = {},
 		decl_type = {},
 		num = {},
 	}
 	
 	local iargs = m_para.process(frame.args, iparams)
+
+	local parent_args = frame:getParent().args
 	
-	if iargs.decl_type ~= "" and iargs.decl_type ~= nil then 
-		for name, val in ipairs(mw.text.split(iargs.decl_type, "-")) do
+	local decl_type = iargs.decl_type or parent_args.decl_type
+	
+	if decl_type and decl_type ~= "" then 
+		for name, val in ipairs(mw.text.split(decl_type, "-")) do
 			data.types[val] = true
 		end
 	end
 	
-	params = {
+	local params = {
 		[1] = {required = true},
+		decl = {},
+		decl_type = {},
 		noun = {},
 		num = {},
 		nom_sg = {},
@@ -189,11 +195,14 @@ local function generate_forms(frame)
 		suffix = {},
 		footnote = {},
 	}
-	if (iargs[1] == "2" and data.types.er) or iargs[1] == "3" then
+	
+	local decl_arg = iargs[1] or parent_args.decl
+	
+	if (decl_arg == "2" and data.types.er) or decl_arg == "3" then
 		params[2] = {}
 	end
 	
-	local args = m_para.process(frame:getParent().args, params)
+	local args = m_para.process(parent_args, params)
 	
 	data.num = iargs.num or args.num or ""
 	data.loc = args.loc
@@ -204,7 +213,7 @@ local function generate_forms(frame)
 	data.footnote = args.footnote or ""
 	data.n = args.n and (data.suffix ~= "") -- Must have a suffix and n specified
 	
-	decl[iargs[1]](data, args)
+	decl[decl_arg](data, args)
 	
 	process_forms_and_overrides(data, args)
 	
