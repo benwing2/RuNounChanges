@@ -317,27 +317,49 @@ def generate_adj_forms(template, errandpagemsg, expand_text):
   generate_template = re.sub(r"^\{\{la-(.*?)\|", generate_adj_forms_prefix,
       template)
   if not generate_template.startswith("{{la-generate-adj-forms|"):
-    errandpagemsg("Template %s not a recognized declension template" % template)
+    errandpagemsg("Template %s not a recognized adjective declension template" % template)
     return None
   result = expand_text(generate_template)
   if not result:
     errandpagemsg("WARNING: Error generating forms, skipping")
     return None
-  return blib.split_generate_args(result)
+  args = blib.split_generate_args(result)
+  # Add missing feminine forms if needed
+  augmented_args = {}
+  for key, form in args.iteritems():
+    augmented_args[key] = form
+    if key.endswith("_m"):
+      equiv_fem = key[:-2] + "_f"
+      if equiv_fem not in args:
+        augmented_args[equiv_fem] = form
+  return augmented_args
 
 def generate_noun_forms(template, errandpagemsg, expand_text):
 
   def generate_noun_forms_prefix(m):
     if m.group(1) in la_noun_decl_suffix_to_decltype:
-      return "{{la-generate-adj-forms|decltype=%s|" % (
-        decl_suffix_to_decltype[m.group(1)]
+      declspec = la_noun_decl_suffix_to_decltype[m.group(1)]
+      if type(declspec) is not tuple:
+        declspec = (declspec,)
+      decl = declspec[0]
+      if len(declspec) == 1:
+        decltype = ""
+        num = ""
+      else:
+        decltype = "|decl_type=%s" % declspec[1]
+        if len(declspec) == 2:
+          num = ""
+        else:
+          num = "|num=%s" % declspec[2]
+      return "{{la-generate-noun-forms|decl=%s%s%s|" % (
+        decl, decltype, num
       )
     return m.group(0)
 
-  generate_template = re.sub(r"^\{\{la-(.*?)\|", generate_adj_forms_prefix,
+  generate_template = re.sub(r"^\{\{la-decl-(.*?)\|", generate_noun_forms_prefix,
       template)
-  if not generate_template.startswith("{{la-generate-adj-forms|"):
-    errandpagemsg("Template %s not a recognized declension template" % template)
+  if not generate_template.startswith("{{la-generate-noun-forms|"):
+    errandpagemsg("Template %s not a recognized noun declension template" % template)
     return None
   result = expand_text(generate_template)
   if not result:
@@ -392,3 +414,158 @@ demacron_mapper = {
 def remove_macrons(text):
   return re.sub(u'([āēīōūȳĀĒĪŌŪȲăĕĭŏŭĂĔĬŎŬ\u0306ëË])', lambda m: demacron_mapper[m.group(1)], text)
 
+parts_to_tags = {
+  # parts for verbs
+  '1s': ['1', 's'],
+  '2s': ['2', 's'],
+  '3s': ['3', 's'],
+  '1p': ['1', 'p'],
+  '2p': ['2', 'p'],
+  '3p': ['3', 'p'],
+  'actv': ['act'],
+  'pasv': ['pass'],
+  'pres': ['pres'],
+  'impf': ['impf'],
+  'futr': ['fut'],
+  'perf': ['perf'],
+  'plup': ['plup'],
+  'futp': ['fut', 'perf'],
+  'indc': ['ind'],
+  'subj': ['sub'],
+  'impr': ['imp'],
+  'inf': ['inf'],
+  'ptc': ['part'],
+  'ger': ['ger'],
+  'sup': ['sup'],
+  'nom': ['nom'],
+  'gen': ['gen'],
+  'dat': ['dat'],
+  'acc': ['acc'],
+  'abl': ['abl'],
+  # additional parts for adjectives
+  'voc': ['voc'],
+  'sg': ['s'],
+  'pl': ['p'],
+  'm': ['m'],
+  'f': ['f'],
+  'n': ['n'],
+}
+
+tags_to_canonical = {
+  'first-person': '1',
+  'second-person': '2',
+  'third-person': '3',
+  'sg': 's',
+  'singular': 's',
+  'pl': 'p',
+  'plural': 'p',
+  'actv': 'act',
+  'active': 'act',
+  'pasv': 'pass',
+  'passive': 'pass',
+  'imperf': 'impf',
+  'imperfect': 'impf',
+  'futr': 'fut',
+  'future': 'fut',
+  'perfect': 'perf',
+  'pluperf': 'plup',
+  'pluperfect': 'plup',
+  'indc': 'ind',
+  'indic': 'ind',
+  'indicative': 'ind',
+  'subj': 'sub',
+  'subjunctive': 'sub',
+  'impr': 'imp',
+  'impv': 'imp',
+  'imperative': 'imp',
+  'infinitive': 'inf',
+  'ptcp': 'part',
+  'participle': 'part',
+  'gerund': 'ger',
+  'supine': 'sup',
+  'nominative': 'nom',
+  'genitive': 'gen',
+  'dative': 'dat',
+  'accusative': 'acc',
+  'ablative': 'abl',
+  'vocative': 'voc',
+  'masculine': 'm',
+  'feminine': 'f',
+  'neuter': 'n',
+}
+
+semicolon_tags = [';', ';<!--\n-->']
+
+def split_tags_into_tag_sets(tags):
+  tag_set_group = []
+  cur_tag_set = []
+  for tag in tags:
+    if tag in semicolon_tags:
+      if cur_tag_set:
+        tag_set_group.append(cur_tag_set)
+      cur_tag_set = []
+    else:
+      cur_tag_set.append(tag)
+  if cur_tag_set:
+    tag_set_group.append(cur_tag_set)
+  return tag_set_group
+
+def combine_tag_set_group(group):
+  result = []
+  for tag_set in group:
+    if result:
+      result.append(";")
+    result.extend(tag_set)
+  return result
+
+def canonicalize_tag_set(tag_set):
+  new_tag_set = []
+  for tag in tag_set:
+    new_tag_set.append(tags_to_canonical.get(tag, tag))
+  return new_tag_set
+
+def form_key_to_tag_set(key):
+  parts = key.split("_")
+  tags = []
+  for part in parts:
+    tags.extend(parts_to_tags[part])
+  return frozenset(tags)
+
+cases = [ "nom", "gen", "dat", "acc", "abl", "voc", "loc" ]
+
+la_noun_decl_overrides = [ "%s_%s" % (case, num)
+  for num in ["sg", "pl"] for case in cases]
+
+la_adj_decl_overrides = [ "%s_%s_%s" % (case, num, g)
+  for g in ["m", "f", "n"]
+  for num in ["sg", "pl"]
+  for case in cases
+]
+
+la_verb_finite_overrides = [ "%s%s_%s_%s" % (pernum, tense, voice, mood)
+  for pernum in ["", "1s_", "2s_", "3s_", "1p_", "2p_", "3p_"]
+  for tense in ["pres", "impf", "futr", "perf", "plup", "futp"]
+  for voice in ["actv", "pasv"]
+  for mood in ["indc", "subj", "impr"]
+  if not (
+    mood == "subj" and tense in ["futr", "futp"] or
+    mood == "impr" and tense in ["impf", "perf", "plup", "futp"]
+  )
+]
+
+la_verb_inf_ptc_overrides = [ "%s_%s_%s" % (tense, voice, form)
+  for tense in ["pres", "perf", "futr"]
+  for voice in ["actv", "pasv"]
+  for form in ["inf", "ptc"]
+]
+
+la_verb_ger_sup_overrides = [
+  "ger_nom", "ger_gen", "ger_dat", "ger_acc",
+  "sup_acc", "sup_abl"
+]
+
+la_verb_overrides = (
+  la_verb_finite_overrides +
+  la_verb_inf_ptc_overrides +
+  la_verb_ger_sup_overrides
+)

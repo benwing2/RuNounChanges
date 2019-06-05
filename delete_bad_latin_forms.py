@@ -7,116 +7,7 @@ import blib
 from blib import getparam, rmparam, msg, errandmsg, site, tname, pname
 
 import lalib
-
-parts_to_tags = {
-  # parts for verbs
-  '1s': ['1', 's'],
-  '2s': ['2', 's'],
-  '3s': ['3', 's'],
-  '1p': ['1', 'p'],
-  '2p': ['2', 'p'],
-  '3p': ['3', 'p'],
-  'actv': ['act'],
-  'pasv': ['pass'],
-  'pres': ['pres'],
-  'impf': ['impf'],
-  'futr': ['fut'],
-  'perf': ['perf'],
-  'plup': ['plup'],
-  'futp': ['fut', 'perf'],
-  'indc': ['ind'],
-  'subj': ['sub'],
-  'impr': ['imp'],
-  'inf': ['inf'],
-  'ptc': ['part'],
-  'ger': ['ger'],
-  'sup': ['sup'],
-  'nom': ['nom'],
-  'gen': ['gen'],
-  'dat': ['dat'],
-  'acc': ['acc'],
-  'abl': ['abl'],
-  # additional parts for adjectives
-  'voc': ['voc'],
-  'sg': ['s'],
-  'pl': ['p'],
-  'm': ['m'],
-  'f': ['f'],
-  'n': ['n'],
-}
-
-tags_to_canonical = {
-  'first-person': '1',
-  'second-person': '2',
-  'third-person': '3',
-  'sg': 's',
-  'singular': 's',
-  'pl': 'p',
-  'plural': 'p',
-  'actv': 'act',
-  'active': 'act',
-  'pasv': 'pass',
-  'passive': 'pass',
-  'imperf': 'impf',
-  'imperfect': 'impf',
-  'futr': 'fut',
-  'future': 'fut',
-  'perfect': 'perf',
-  'pluperf': 'plup',
-  'pluperfect': 'plup',
-  'indc': 'ind',
-  'indic': 'ind',
-  'indicative': 'ind',
-  'subj': 'sub',
-  'subjunctive': 'sub',
-  'impr': 'imp',
-  'impv': 'imp',
-  'imperative': 'imp',
-  'infinitive': 'inf',
-  'ptcp': 'part',
-  'participle': 'part',
-  'gerund': 'ger',
-  'supine': 'sup',
-  'nominative': 'nom',
-  'genitive': 'gen',
-  'dative': 'dat',
-  'accusative': 'acc',
-  'ablative': 'abl',
-  'vocative': 'voc',
-  'masculine': 'm',
-  'feminine': 'f',
-  'neuter': 'n',
-}
-
-semicolon_tags = [';', ';<!--\n-->']
-
-def split_tags_into_tag_sets(tags):
-  tag_set_group = []
-  cur_tag_set = []
-  for tag in tags:
-    if tag in semicolon_tags:
-      if cur_tag_set:
-        tag_set_group.append(cur_tag_set)
-      cur_tag_set = []
-    else:
-      cur_tag_set.append(tag)
-  if cur_tag_set:
-    tag_set_group.append(cur_tag_set)
-  return tag_set_group
-
-def combine_tag_set_group(group):
-  result = []
-  for tag_set in group:
-    if result:
-      result.append(";")
-    result.extend(tag_set)
-  return result
-
-def canonicalize_tag_set(tag_set):
-  new_tag_set = []
-  for tag in tag_set:
-    new_tag_set.append(tags_to_canonical.get(tag, tag))
-  return new_tag_set
+from lalib import remove_macrons
 
 def delete_participle(index, lemma, formind, formval, pos, save, verbose):
   notes = []
@@ -126,13 +17,13 @@ def delete_participle(index, lemma, formind, formval, pos, save, verbose):
   def errandpagemsg(txt):
     errandmsg("Page %s %s: form %s %s: %s" % (index, lemma, formind, formval, txt))
   def expand_text(tempcall):
-    return blib.expand_text(tempcall, lalib.remove_macrons(formval), pagemsg, verbose)
+    return blib.expand_text(tempcall, remove_macrons(formval), pagemsg, verbose)
 
   if "[" in formval:
     pagemsg("Skipping form value %s with link in it" % formval)
     return
 
-  page = pywikibot.Page(site, lalib.remove_macrons(formval))
+  page = pywikibot.Page(site, remove_macrons(formval))
   if not page.exists():
     pagemsg("Skipping form value %s, page doesn't exist" % formval)
     return
@@ -173,7 +64,7 @@ def delete_participle(index, lemma, formind, formval, pos, save, verbose):
       tn = tname(t)
       if tn == "m" and "==Etymology==" in subsections[k - 1]:
         actual_lemma = getparam(t, "2")
-        if lalib.remove_macrons(lemma) == lalib.remove_macrons(actual_lemma):
+        if remove_macrons(lemma) == remove_macrons(actual_lemma):
           saw_lemma_in_etym = True
         else:
           pagemsg("WARNING: Saw wrong lemma %s != %s in Etymology section: %s" % (
@@ -274,7 +165,7 @@ def delete_form(index, lemma, formind, formval, pos, tag_sets_to_delete, save, v
     pagemsg("Skipping form value %s with link in it" % formval)
     return
 
-  page = pywikibot.Page(site, lalib.remove_macrons(formval))
+  page = pywikibot.Page(site, remove_macrons(formval))
   if not page.exists():
     pagemsg("Skipping form value %s, page doesn't exist" % formval)
     return
@@ -326,7 +217,7 @@ def delete_form(index, lemma, formind, formval, pos, tag_sets_to_delete, save, v
         actual_lemma = getparam(t, str(lemma_param))
         # Allow mismatch in macrons, which often happens, e.g. because
         # a macron was added to the lemma page but not to the inflections
-        if lalib.remove_macrons(actual_lemma) == lalib.remove_macrons(lemma):
+        if remove_macrons(actual_lemma) == remove_macrons(lemma):
           # fetch tags
           tags = []
           for param in t.params:
@@ -343,9 +234,9 @@ def delete_form(index, lemma, formind, formval, pos, tag_sets_to_delete, save, v
               break
           else:
             # no break
-            tag_sets = split_tags_into_tag_sets(tags)
+            tag_sets = lalib.split_tags_into_tag_sets(tags)
             for tag_set in tag_sets:
-              if tag_sets_to_delete is True or frozenset(canonicalize_tag_set(tag_set)) in tag_sets_to_delete:
+              if tag_sets_to_delete is True or frozenset(lalib.canonicalize_tag_set(tag_set)) in tag_sets_to_delete:
                 saw_infl = True
               else:
                 pagemsg("Found {{inflection of}} for correct lemma but wrong tag set %s: %s" % (
@@ -404,7 +295,7 @@ def delete_form(index, lemma, formind, formval, pos, tag_sets_to_delete, save, v
           actual_lemma = getparam(t, str(lemma_param))
           # Allow mismatch in macrons, which often happens, e.g. because
           # a macron was added to the lemma page but not to the inflections
-          if lalib.remove_macrons(actual_lemma) == lalib.remove_macrons(lemma):
+          if remove_macrons(actual_lemma) == remove_macrons(lemma):
             tr = getparam(t, "tr")
             alt = getparam(t, "alt") or getparam(t, str(lemma_param + 1))
             # fetch tags
@@ -419,10 +310,10 @@ def delete_form(index, lemma, formind, formval, pos, tag_sets_to_delete, save, v
                     tags.append(pval)
               elif pname not in ["lang", "tr", "alt"]:
                 params.append((pname, pval, param.showkey))
-            tag_sets = split_tags_into_tag_sets(tags)
+            tag_sets = lalib.split_tags_into_tag_sets(tags)
             filtered_tag_sets = []
             for tag_set in tag_sets:
-              if tag_sets_to_delete is not True and frozenset(canonicalize_tag_set(tag_set)) not in tag_sets_to_delete:
+              if tag_sets_to_delete is not True and frozenset(lalib.canonicalize_tag_set(tag_set)) not in tag_sets_to_delete:
                 filtered_tag_sets.append(tag_set)
             if not filtered_tag_sets:
               return ""
@@ -436,7 +327,7 @@ def delete_form(index, lemma, formind, formval, pos, tag_sets_to_delete, save, v
               t.add("tr", tr)
             t.add("3", alt)
             next_tag_param = 4
-            for tag in combine_tag_set_group(filtered_tag_sets):
+            for tag in lalib.combine_tag_set_group(filtered_tag_sets):
               t.add(str(next_tag_param), tag)
               next_tag_param += 1
       return unicode(parsed)
@@ -536,20 +427,13 @@ def delete_form(index, lemma, formind, formval, pos, tag_sets_to_delete, save, v
     else:
       pagemsg("Would save with comment = %s" % comment)
 
-def form_key_to_tag_set(key):
-  parts = key.split("_")
-  tags = []
-  for part in parts:
-    tags.extend(parts_to_tags[part])
-  return frozenset(tags)
-
 def process_page(index, lemma, conj, forms, pages_to_delete, save, verbose):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, lemma, txt))
   def errandpagemsg(txt):
     errandmsg("Page %s %s: %s" % (index, lemma, txt))
   def expand_text(tempcall):
-    return blib.expand_text(tempcall, lalib.remove_macrons(lemma), pagemsg, verbose)
+    return blib.expand_text(tempcall, remove_macrons(lemma), pagemsg, verbose)
 
   pagemsg("Processing")
 
@@ -562,41 +446,41 @@ def process_page(index, lemma, conj, forms, pages_to_delete, save, verbose):
 
   for form in forms.split(","):
     if form in args:
-      tag_sets_to_delete.append(form_key_to_tag_set(form))
+      tag_sets_to_delete.append(lalib.form_key_to_tag_set(form))
       forms_to_delete.append((form, args[form]))
     if form == "all":
       for key, val in args.iteritems():
-        tag_sets_to_delete.append(form_key_to_tag_set(key))
+        tag_sets_to_delete.append(lalib.form_key_to_tag_set(key))
         forms_to_delete.append((key, val))
     if form in ["pasv", "pass"]:
       for key, val in args.iteritems():
         if key != "perf_pasv_ptc" and "pasv" in key:
-          tag_sets_to_delete.append(form_key_to_tag_set(key))
+          tag_sets_to_delete.append(lalib.form_key_to_tag_set(key))
           forms_to_delete.append((key, val))
     if form == "passnofpp":
       for key, val in args.iteritems():
         if key != "perf_pasv_ptc" and key != "futr_pasv_ptc" and "pasv" in key:
-          tag_sets_to_delete.append(form_key_to_tag_set(key))
+          tag_sets_to_delete.append(lalib.form_key_to_tag_set(key))
           forms_to_delete.append((key, val))
     if form == "perf":
       for key, val in args.iteritems():
         if key not in ["perf_actv_ptc", "perf_pasv_ptc"] and re.search("(perf|plup|futp)", key):
-          tag_sets_to_delete.append(form_key_to_tag_set(key))
+          tag_sets_to_delete.append(lalib.form_key_to_tag_set(key))
           forms_to_delete.append((key, val))
     if form in ["perf-pasv", "perf-pass"]:
       for key, val in args.iteritems():
         if "perf" in key and "pasv" in key:
-          tag_sets_to_delete.append(form_key_to_tag_set(key))
+          tag_sets_to_delete.append(lalib.form_key_to_tag_set(key))
           forms_to_delete.append((key, val))
     if form == "sup":
       for key, val in args.iteritems():
         if "sup" in key or key in ["perf_actv_ptc", "perf_pasv_ptc", "futr_actv_ptc"]:
-          tag_sets_to_delete.append(form_key_to_tag_set(key))
+          tag_sets_to_delete.append(lalib.form_key_to_tag_set(key))
           forms_to_delete.append((key, val))
     if form == "ger":
       for key, val in args.iteritems():
         if "ger" in key:
-          tag_sets_to_delete.append(form_key_to_tag_set(key))
+          tag_sets_to_delete.append(lalib.form_key_to_tag_set(key))
           forms_to_delete.append((key, val))
 
   single_forms_to_delete = []
