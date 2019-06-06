@@ -36,12 +36,14 @@ def process_page(regex, index, page_or_title_text, filter_pages, verbose,
   if verbose:
     pagemsg("Processing")
 
-  if not include_non_mainspace and ":" in pagetitle and verbose:
-    pagemsg("WARNING: Colon in page title, skipping page")
+  if not include_non_mainspace and ":" in pagetitle:
+    if verbose:
+      pagemsg("WARNING: Colon in page title, skipping page")
     return
 
   if filter_pages and not re.search(filter_pages, pagetitle):
-    pagemsg("Skipping because doesn't match --filter-pages regex %s" %
+    if verbose:
+      pagemsg("Skipping because doesn't match --filter-pages regex %s" %
         filter_pages)
     return
 
