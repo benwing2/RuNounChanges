@@ -335,13 +335,29 @@
 
 # FIXME:
 #
-# 1. Pronunciation templates.
+# 1. DONE: Pronunciation templates.
 # 2. DONE: Make sure lang and pos in {{head}} agree.
 # 3. DONE: Verb overrides.
 # 4. * before supine and perfect (maybe not needed).
-# 5. For participles, check the etymology section to make sure the lemma
+# 5. DONE: For participles, check the etymology section to make sure the lemma
 #    is correct.
 # 6. DONE: Numbers, phrases, etc.
+# 7. DONE: Handle multipart tag sets.
+# 8. Handle irregular verb conjugations, which may have prefixes.
+# 9. MOSTLY DONE: Review latin-macrons.txt against http://www.alatius.com/latin/bennetthidden.html, which corrects Bennett. Ask JohnC5 about this.
+# 10. Pluralia tantum lemmas, e.g. nuptiae.
+#
+# Examples of disagreements with Bennett:
+#
+# Bennett: dēlīctus/relīctus (dēlinquō/relinquō), fīctus (fingō), pīctus (pingō), trāctus (trahō); Allen: dēlĭctus/relĭctus, fĭctus, pĭctus, trăctus
+# Bennett: ārdeō, ārsī, ārsurus; Michelson: ărd- in Lindsay, Sommer, Brugmann
+# Bennett: fīrmus; Michelson: fĭrmus or fīrmus
+# Bennett: ūlna; Michelson: ŭlna
+# Bennett: ūstus (ūrō); Michelson: ŭstus
+# Bennett: ūsque, nūsque, quoūsque; Buck: ŭsque, etc.
+# Bennett: cŭnctor: Michelson: cūnctor
+# Bennett: not all vowels are lengthened before -nct; Michelson, Allen: all vowels lengthened before -nct
+# Bennett: earlier version: most vowels long before -gn; later version changed his mind
 
 # Clean up use of macrons in Latin lemmas.
 
@@ -354,6 +370,7 @@ import lalib
 from lalib import remove_macrons
 
 
+# Return True if changed.
 def frob_param(t, param, stem_or_exact, is_exact, pagemsg, notes, split_slashes=False, no_warn=False):
   origt = unicode(t)
   origval = getparam(t, param)
@@ -392,45 +409,59 @@ def frob_param(t, param, stem_or_exact, is_exact, pagemsg, notes, split_slashes=
   if newval != origval:
     t.add(param, newval)
     pagemsg("Replaced %s with %s" % (origt, unicode(t)))
-    notes.append("updated macrons in %s per Bennett" % tname(t))
+    notes.append("updated macrons in %s per Bennett (with corrections by Allen and Michelson)" % tname(t))
+    return True
+  return False
 
+# Return True if changed.
 def frob_stem(t, param, stem, pagemsg, notes, split_slashes=False, no_warn=False):
-  frob_param(t, param, stem, False, pagemsg, notes, split_slashes=split_slashes,
+  return frob_param(t, param, stem, False, pagemsg, notes, split_slashes=split_slashes,
       no_warn=no_warn)
 
+# Return True if changed.
 def frob_exact(t, param, newval, pagemsg, notes, split_slashes=False, no_warn=False):
-  frob_param(t, param, newval, True, pagemsg, notes, split_slashes=split_slashes,
+  return frob_param(t, param, newval, True, pagemsg, notes, split_slashes=split_slashes,
       no_warn=no_warn)
 
+# Return True if anything changed.
 def frob_chain_stem(t, param, stem, pagemsg, notes, split_slashes=False, no_warn=False):
+  changed = False
   if type(param) is list:
     first, rest = param
   else:
     first = param
     rest = param
   if first:
-    frob_stem(t, first, stem, pagemsg, notes, split_slashes=split_slashes,
-        no_warn=no_warn)
+    if frob_stem(t, first, stem, pagemsg, notes, split_slashes=split_slashes,
+        no_warn=no_warn):
+      changed = True
   num = 2
   while getparam(t, "%s%s" % (rest, num)):
-    frob_stem(t, "%s%s" % (rest, num), stem, pagemsg, notes, split_slashes=split_slashes,
-        no_warn=no_warn)
+    if frob_stem(t, "%s%s" % (rest, num), stem, pagemsg, notes, split_slashes=split_slashes,
+        no_warn=no_warn):
+      changed = True
     num += 1
+  return changed
 
+# Return True if anything changed.
 def frob_chain_exact(t, param, newval, pagemsg, notes, split_slashes=False, no_warn=False):
+  changed = False
   if type(param) is list:
     first, rest = param
   else:
     first = param
     rest = param
   if first:
-    frob_exact(t, first, newval, pagemsg, notes, split_slashes=split_slashes,
-        no_warn=no_warn)
+    if frob_exact(t, first, newval, pagemsg, notes, split_slashes=split_slashes,
+        no_warn=no_warn):
+      changed = True
   num = 2
   while getparam(t, "%s%s" % (rest, num)):
-    frob_exact(t, "%s%s" % (rest, num), newval, pagemsg, notes, split_slashes=split_slashes,
-        no_warn=no_warn)
+    if frob_exact(t, "%s%s" % (rest, num), newval, pagemsg, notes, split_slashes=split_slashes,
+        no_warn=no_warn):
+      changed = True
     num += 1
+  return changed
 
 def find_heads_and_defns(page, pagemsg):
   text = unicode(page.text)
@@ -444,13 +475,17 @@ def find_heads_and_defns(page, pagemsg):
   subsections = re.split("(^==+[^=\n]+==+\n)", secbody, 0, re.M)
 
   parsed_subsections = [None] * len(subsections)
-  pronun_templates = []
+
   headwords = []
+  pronun_sections = []
+  etym_sections = []
 
   most_recent_headword = None
+  most_recent_pronun_section = None
+  most_recent_etym_section = None
 
   def new_headword(header, level, subsection, head_template, is_lemma):
-    return {
+    retval = {
       'head_template': head_template,
       'header': header,
       'is_lemma': is_lemma,
@@ -458,10 +493,31 @@ def find_heads_and_defns(page, pagemsg):
       'infl_of_templates': [],
       'subsection': subsection,
       'level': level,
+      'pronun_section': most_recent_pronun_section,
+      'etym_section': most_recent_etym_section,
+    }
+    if most_recent_pronun_section:
+      most_recent_pronun_section['headwords'].append(retval)
+    if most_recent_etym_section:
+      most_recent_etym_section['headwords'].append(retval)
+    return retval
+
+  def new_pronun_section(header, level, subsection):
+    return {
+      'header': header,
+      'pronun_templates': [],
+      'headwords': [],
+      'subsection': subsection,
+      'level': level,
     }
 
-  def transfer_most_recent_headword():
-    headwords.append(most_recent_headword)
+  def new_etym_section(header, level, subsection):
+    return {
+      'header': header,
+      'headwords': [],
+      'subsection': subsection,
+      'level': level,
+    }
 
   for k in xrange(len(subsections)):
     if k < 2 or (k % 2) == 1:
@@ -473,15 +529,37 @@ def find_heads_and_defns(page, pagemsg):
     headword_templates_in_section = []
 
     if most_recent_headword and most_recent_headword['level'] >= level:
-      transfer_most_recent_headword()
+      headwords.append(most_recent_headword)
       most_recent_headword = None
+
+    is_pronun_section = header.startswith('Pronunciation')
+    if is_pronun_section:
+      if most_recent_pronun_section:
+        pronun_sections.append(most_recent_pronun_section)
+      most_recent_pronun_section = new_pronun_section(header, level, k)
+    elif most_recent_pronun_section and most_recent_pronun_section['level'] > level:
+      pronun_sections.append(most_recent_pronun_section)
+      most_recent_pronun_section = None
+
+    is_etym_section = header.startswith('Etymology')
+    if is_etym_section:
+      if most_recent_etym_section:
+        etym_sections.append(most_recent_etym_section)
+      most_recent_etym_section = new_etym_section(header, level, k)
+    elif most_recent_etym_section and most_recent_etym_section['level'] > level:
+      etym_sections.append(most_recent_etym_section)
+      most_recent_etym_section = None
 
     parsed = blib.parse_text(subsections[k])
     parsed_subsections[k] = parsed
     for t in parsed.filter_templates():
       tn = tname(t)
       if tn == "la-IPA":
-        pronun_templates.append((t, k))
+        if is_pronun_section:
+          most_recent_pronun_section['pronun_templates'].append(t)
+        else:
+          pagemsg("WARNING: Pronunciation template %s in %s section, not pronunciation section" % (
+            unicode(t), header))
       elif tn in lalib.la_headword_templates or tn == "head":
         if tn == "head":
           if getparam(t, "1") != "la":
@@ -492,10 +570,10 @@ def find_heads_and_defns(page, pagemsg):
             pagemsg("WARNING: Unrecognized part of speech %s" % pos)
         if headword_templates_in_section:
           pagemsg("WARNING: Found additional headword template in same section: %s" % unicode(t))
-          transfer_most_recent_headword()
+          headwords.append(most_recent_headword)
         elif most_recent_headword:
           pagemsg("WARNING: Found headword template nested under previous one: %s" % unicode(t))
-          transfer_most_recent_headword()
+          headwords.append(most_recent_headword)
         most_recent_headword = new_headword(header, level, k, t,
           tn in lalib.la_lemma_headword_templates or (
             tn == "head" and head_pos in lalib.la_lemma_poses))
@@ -512,11 +590,16 @@ def find_heads_and_defns(page, pagemsg):
           most_recent_headword['infl_of_templates'].append(t)
 
   if most_recent_headword:
-    transfer_most_recent_headword()
+    headwords.append(most_recent_headword)
+  if most_recent_pronun_section:
+    pronun_sections.append(most_recent_pronun_section)
+  if most_recent_etym_section:
+    etym_sections.append(most_recent_etym_section)
+
 
   return (
     sections, j, secbody, sectail, has_non_latin, subsections,
-    parsed_subsections, pronun_templates, headwords
+    parsed_subsections, headwords, pronun_sections, etym_sections
   )
 
 def find_tag_sets_for_form(args, form):
@@ -527,6 +610,7 @@ def find_tag_sets_for_form(args, form):
       tag_sets.append(lalib.form_key_to_tag_set(key))
   return tag_sets
 
+# Return True if changed.
 def process_pronun_template(t, lemma, pagemsg, notes):
   if not getparam(t, "1"):
     if remove_macrons(lemma) != lemma:
@@ -536,18 +620,25 @@ def process_pronun_template(t, lemma, pagemsg, notes):
       if eccl:
         t.add("eccl", eccl)
       notes.append("add pronunciation to {{la-IPA}}")
+      return True
   else:
-    frob_exact(t, "1", lemma, pagemsg, notes)
+    return frob_exact(t, "1", lemma, pagemsg, notes)
 
-def process_pronun_templates(pronun_templates, headwords, lemma, pagemsg, notes):
+def process_pronun_templates(pronun_section, lemma, pagemsg, notes):
+  if not pronun_section:
+    return
+  pronun_templates = pronun_section['pronun_templates']
   if len(pronun_templates) > 1:
     pagemsg("WARNING: Multiple pronunciation templates, not changing: %s" %
       ",".join(unicode(t) for t in pronun_templates))
   elif len(pronun_templates) == 1:
-    if len(headwords) > 1:
-      pagemsg("WARNING: Multiple headwords for pronunciation template, check manually: %s" %
-        ",".join(unicode(hw['head_template']) for hw in headwords))
-    process_pronun_template(pronun_templates[0][0], lemma, pagemsg, notes)
+    pront = pronun_templates[0]
+    origpront = unicode(pront)
+    if process_pronun_template(pront, lemma, pagemsg, notes):
+      if len(pronun_section['headwords']) > 1:
+        pagemsg("WARNING: Multiple headwords for changed pronunciation template (originally %s, changed to %s), check manually: %s" % (
+          origpront, unicode(pront),
+          ",".join(unicode(hw['head_template']) for hw in pronun_section['headwords'])))
 
 def do_process_form(index, page, lemma, formind, formval, pos, tag_sets_to_process, save, verbose):
   pagetitle = unicode(page.title())
@@ -605,18 +696,19 @@ def do_process_form(index, page, lemma, formind, formval, pos, tag_sets_to_proce
 
   (
     sections, j, secbody, sectail, has_non_latin, subsections,
-    parsed_subsections, pronun_templates, headwords
+    parsed_subsections, headwords, pronun_sections, etym_sections
   ) = retval
 
   notes = []
-
-  found_matching_head = False
 
   for headword in headwords:
     ht = headword['head_template']
     tn = tname(ht)
     saw_infl = False
+    good_tag_sets = []
     saw_other_infl = False
+    bad_tag_sets = []
+    other_lemmas = []
     found_head = False
 
     if tn == "head":
@@ -663,35 +755,41 @@ def do_process_form(index, page, lemma, formind, formval, pos, tag_sets_to_proce
             if int(pname) >= lemma_param + 2:
               if pval:
                 tags.append(pval)
-        for tag in tags:
-          if "//" in tag:
-            pagemsg("WARNING: Don't know how to handle multipart tags yet: %s" % unicode(t))
+        # split tags into tag sets (which may be multipart) and further
+        # split any multipart tag sets into component tag sets
+        tag_sets = [tag_set
+          for maybe_multipart_tag_set in lalib.split_tags_into_tag_sets(tags)
+          for tag_set in lalib.split_multipart_tag_set(maybe_multipart_tag_set)
+        ]
+        for tag_set in tag_sets:
+          if tag_sets_to_process is True or frozenset(lalib.canonicalize_tag_set(tag_set)) in tag_sets_to_process:
+            saw_infl = True
+            good_tag_sets.append(tag_set)
+          else:
+            expected_tag_sets = "|".join(lalib.combine_tag_set_group(tag_sets_to_process))
+            pagemsg("Found {{inflection of}} for correct lemma but wrong tag set %s (expected %s): %s" % (
+              "|".join(tag_set), expected_tag_sets, unicode(t)))
             saw_other_infl = True
-            break
-        else:
-          # no break
-          tag_sets = lalib.split_tags_into_tag_sets(tags)
-          for tag_set in tag_sets:
-            if tag_sets_to_process is True or frozenset(lalib.canonicalize_tag_set(tag_set)) in tag_sets_to_process:
-              saw_infl = True
-            else:
-              expected_tag_sets = "|".join(lalib.combine_tag_set_group(tag_sets_to_process))
-              pagemsg("Found {{inflection of}} for correct lemma but wrong tag set %s (expected %s): %s" % (
-                "|".join(tag_set), expected_tag_sets, unicode(t)))
-              saw_other_infl = True
+            bad_tag_sets.append(tag_set)
       else:
         pagemsg("Found {{inflection of}} for different lemma %s: %s" % (
           actual_lemma, unicode(t)))
         saw_other_infl = True
+        other_lemmas.append(actual_lemma)
 
     if saw_infl and saw_other_infl:
-      pagemsg("WARNING: Found mixture of good inflection-of templates and inflection-of templates for different lemma or nondeletable tag set, won't frob")
+      good_tag_set_str = ",".join("|".join(tag_set) for tag_set in good_tag_sets)
+      bad_msgs = []
+      if other_lemmas:
+        bad_msgs.append("different lemma(s) %s" % ",".join(other_lemmas))
+      if bad_tag_sets:
+        bad_msgs.append("wrong tag set(s) %s" % ",".join("|".join(tag_set) for tag_set in bad_tag_sets))
+      pagemsg("WARNING: Found mixture of inflection-of templates for good tag set(s) %s and inflection-of templates for %s, won't frob" % (
+        good_tag_set_str, " and ".join(bad_msgs)))
       continue
 
     if not saw_infl:
       continue
-
-    found_matching_head = True
 
     frob_exact(ht, head_param, formval, pagemsg, notes)
     for t in headword['infl_of_templates']:
@@ -704,8 +802,7 @@ def do_process_form(index, page, lemma, formind, formval, pos, tag_sets_to_proce
       assert lang == "la"
       frob_exact(t, str(lemma_param), lemma, pagemsg, notes)
 
-  if found_matching_head:
-    process_pronun_templates(pronun_templates, headwords, formval, pagemsg, notes)
+    process_pronun_templates(headword['pronun_section'], formval, pagemsg, notes)
 
   secbody = "".join(unicode(x) for x in parsed_subsections)
   sections[j] = secbody + sectail
@@ -781,12 +878,10 @@ def do_process_participle(index, page, lemma, formind, formval, pos, save, verbo
 
   (
     sections, j, secbody, sectail, has_non_latin, subsections,
-    parsed_subsections, pronun_templates, headwords
+    parsed_subsections, headwords, pronun_sections, etym_sections
   ) = retval
 
   notes = []
-
-  found_matching_head = False
 
   for headword in headwords:
     ht = headword['head_template']
@@ -803,23 +898,52 @@ def do_process_participle(index, page, lemma, formind, formval, pos, save, verbo
       if head_pos != "participle":
         pagemsg("Skipping incorrect part of speech %s: %s" % (head_pos, unicode(ht)))
         continue
-      frob_exact(ht, "head", formval, pagemsg, notes)
+      param_to_frob = "head"
+      frob_val = formval
       found_head = True
 
     if tn == expected_head_template:
-      frob_exact(ht, "1", expected_head_arg, pagemsg, notes)
+      param_to_frob = "1"
+      frob_val = expected_head_arg
       found_head = True
 
     if not found_head:
       continue
 
-    found_matching_head = True
+    # Make sure there's an etym section mentioning the correct lemma and
+    # no others.
+    if not headword['etym_section']:
+      pagemsg("WARNING: Missing etymology section for participle, don't know if it's for the correct verb, skipping")
+      continue
+    parsed = parsed_subsections[headword['etym_section']['subsection']]
+    saw_lemma_in_etym = False
+    saw_wrong_lemma_in_etym = False
+    for et in parsed.filter_templates():
+      etn = tname(et)
+      if etn == "m":
+        actual_lemma = getparam(et, "2")
+        if remove_macrons(lemma) == remove_macrons(actual_lemma):
+          saw_lemma_in_etym = True
+        else:
+          pagemsg("WARNING: Saw wrong lemma %s != %s in Etymology section for participle: %s" % (
+            actual_lemma, lemma, unicode(et)))
+          saw_wrong_lemma_in_etym = True
+    if saw_lemma_in_etym and saw_wrong_lemma_in_etym:
+      pagemsg("WARNING: Saw both correct and wrong lemma in Etymology section for participle, skipping")
+      continue
+    if saw_wrong_lemma_in_etym:
+      continue
+    if not saw_lemma_in_etym:
+      pagemsg("WARNING: Didn't see any lemma in Etymology section for participle, don't know if it's for correct verb, skipping")
+      contiue
+
+    frob_exact(ht, param_to_frob, frob_val, pagemsg, notes)
 
     for inflt in headword['infl_templates']:
       infltn = tname(inflt)
       if infltn != expected_decl_template:
         pagemsg("WARNING: Saw bad declension template for participle: %s" % (
-          formval, unicode(inflt)))
+          unicode(inflt)))
         continue
       frob_exact(inflt, "1", expected_decl_arg, pagemsg, notes)
 
@@ -829,8 +953,7 @@ def do_process_participle(index, page, lemma, formind, formval, pos, save, verbo
 
       process_all_forms(args, index, formval, "partform", save, verbose)
 
-  if found_matching_head:
-    process_pronun_templates(pronun_templates, headwords, formval, pagemsg, notes)
+    process_pronun_templates(headword['pronun_section'], formval, pagemsg, notes)
 
   secbody = "".join(unicode(x) for x in parsed_subsections)
   sections[j] = secbody + sectail
@@ -860,18 +983,18 @@ def do_process_lemma(index, page, pos, explicit_infl, lemma, explicit_stem, save
 
   (
     sections, j, secbody, sectail, has_non_latin, subsections,
-    parsed_subsections, pronun_templates, headwords
+    parsed_subsections, headwords, pronun_sections, etym_sections
   ) = retval
 
   notes = []
 
-  found_matching_head = False
 
   for headword in headwords:
     ht = headword['head_template']
     tn = tname(ht)
 
     found_head_template = False
+    found_matching_head = False
 
     if tn == "head":
       if getparam(ht, "1") != "la":
@@ -923,6 +1046,8 @@ def do_process_lemma(index, page, pos, explicit_infl, lemma, explicit_stem, save
         if explicit_infl == 1:
           if lemma.endswith("a"):
             inferred_stem = lemma[:-1]
+          elif lemma.endswith("ae"): # plural
+            inferred_stem = lemma[:-2]
           else:
             errandpagemsg("WARNING: Bad 1st-declension noun lemma %s" % lemma)
             return None, None
@@ -930,9 +1055,16 @@ def do_process_lemma(index, page, pos, explicit_infl, lemma, explicit_stem, save
           if lemma.endswith("r"):
             inferred_stem = lemma
           elif lemma.endswith("ius") or lemma.endswith("ium"):
-            inferred_stem = lemma[:-3] # second genitive will have -ī
+            inferred_stem = lemma[:-3]
           elif lemma.endswith("us") or lemma.endswith("um"):
             inferred_stem = lemma[:-2]
+          elif lemma.endswith(u"iī"): # plural
+            inferred_stem = lemma[:-2]
+          elif lemma.endswith(u"ī"): # plural
+            inferred_stem = lemma[:-1]
+          # We don't implement neuter plurals to catch errors where
+          # n2 is given instead of n1. If we need them, we should make
+          # the plurality be specified explicitly, e.g. 'n2p' for n2 plural.
           else:
             errandpagemsg("WARNING: Bad 2nd-declension noun lemma %s" % lemma)
             return None, None
@@ -1515,8 +1647,8 @@ def do_process_lemma(index, page, pos, explicit_infl, lemma, explicit_stem, save
         #  for formind, (key, formval) in blib.iter_items(
         #      single_forms_to_process, get_name=lambda x: x[1]):
 
-  if found_matching_head:
-    process_pronun_templates(pronun_templates, headwords, lemma, pagemsg, notes)
+    if found_matching_head:
+      process_pronun_templates(headword['pronun_section'], lemma, pagemsg, notes)
 
   secbody = "".join(unicode(x) for x in parsed_subsections)
   sections[j] = secbody + sectail
@@ -1539,8 +1671,11 @@ for line in codecs.open(direcfile, "r", "utf-8"):
     msg("Need to investigate: %s" % line)
   if line.startswith("#"):
     continue
+  # remove transitive/intransitive notation after verbs
   line = re.sub(r" *\[.*\]$", "", line)
   parts = line.split(" ")
+  # allow underscore to stand for space
+  parts = [part.replace("_", " ") for part in parts]
   if len(parts) == 2 and parts[0] in ["adv", "num", "phr", "prov"]:
     pass
   elif (len(parts) == 2 or len(parts) == 3) and parts[0] in [

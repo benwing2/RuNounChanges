@@ -520,6 +520,30 @@ tags_to_canonical = {
 
 semicolon_tags = [';', ';<!--\n-->']
 
+# Split a possibly multipart tag set into individual tag sets
+# without any multipart tags. Can handle multiple multipart tags
+# in a single tag set, e.g. 'dat//abl|m//f//n|p' will split into
+# six tag sets.
+def split_multipart_tag_set(tag_set):
+  split_tag_sets = [tag_set]
+  while True:
+    new_tag_sets = []
+    found_multipart = False
+    for ts in split_tag_sets:
+      for i, tag in enumerate(ts):
+        if "//" in tag:
+          for split_tag in tag.split("//"):
+            new_tag_sets.append(ts[0:i] + [split_tag] + ts[i+1:])
+          found_multipart = True
+          break
+      else:
+        # no break
+        new_tag_sets.append(ts)
+    split_tag_sets = new_tag_sets
+    if not found_multipart:
+      break
+  return split_tag_sets
+
 def split_tags_into_tag_sets(tags):
   tag_set_group = []
   cur_tag_set = []
