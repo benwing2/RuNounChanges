@@ -2039,6 +2039,21 @@ adv sēgniter
 *a3 stāgnālis
 *v1 stāgnō
 ###
+### staurum
+###
+# wrongly have long ē
+*v1 restaurō
+*n3 restaurātiō
+###
+### stēlla
+###
+*n1 stēlla
+*a3 stēllāris
+*a1 stēllātus
+*a1 stēlliger
+*n3 cōnstēllātiō
+*a3 interstēllāris
+###
 ### stīlla, stīllō
 ###
 *n1 stīlla
