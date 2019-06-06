@@ -285,9 +285,9 @@ coëmō coëmere *coēmī coēmptum
 *n3 cōnsūmptiō
 *dēsūmō dēsūmere dēsūmpsī dēsūmptum
 *īnsūmō īnsūmere īnsūmpsī īnsūmptum
-*praesūmō assūmere assūmpsī assūmptum
+*praesūmō praesūmere praesūmpsī praesūmptum
 *n3 praesūmptiō
-*resūmō assūmere assūmpsī assūmptum
+*resūmō resūmere resūmpsī resūmptum
 ###
 ### ēmungō
 ###
@@ -2115,11 +2115,11 @@ a3 intāctilis
 adtingō adtingere adtigī adtāctum
 attingō attingere attigī attāctum
 contingō contingere contigī contāctum
+*obtingō obtingere obtigī --
+*optingō optingere optigī --
 n4 contāctus
 n3 contāgiō
-# obtingō no passive
-# optingō no passive
-# pertingō no perfect
+pertingō pertingere -- --
 ###
 ### tegō
 ###
@@ -2151,14 +2151,8 @@ retegō retegere retēxī retēctum
 *n3 tīnctiō
 *a1 tīnctōrius
 *n1 tīnctūra
-*adtingō adtingere adtīnxī adtīnctum
-*attingō attingere attīnxī attīnctum
-*contingō contingere contīnxī contīnctum
 *intingō intingere intīnxī intīnctum
 *intinguō intinguere intīnxī intīnctum
-*obtingō obtingere obtīnxī obtīnctum
-*optingō optingere optīnxī optīnctum
-*pertingō pertingere pertīnxī pertīnctum
 ###
 ### trahō
 ###
