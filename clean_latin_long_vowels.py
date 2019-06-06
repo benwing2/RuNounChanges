@@ -768,15 +768,16 @@ def do_process_form(index, page, lemma, formind, formval, pos, tag_sets_to_proce
           for tag_set in lalib.split_multipart_tag_set(maybe_multipart_tag_set)
         ]
         for tag_set in tag_sets:
-          if tag_sets_to_process is True or frozenset(lalib.canonicalize_tag_set(tag_set)) in frozenset_tag_sets_to_process:
+          canon_tag_set = lalib.canonicalize_tag_set(tag_set)
+          if tag_sets_to_process is True or frozenset(canon_tag_set) in frozenset_tag_sets_to_process:
             saw_infl = True
-            good_tag_sets.append(tag_set)
+            good_tag_sets.append(canon_tag_set)
           else:
             expected_tag_sets = "|".join(lalib.combine_tag_set_group(tag_sets_to_process))
             pagemsg("Found {{inflection of}} for correct lemma but wrong tag set %s (expected %s): %s" % (
-              "|".join(tag_set), expected_tag_sets, unicode(t)))
+              "|".join(canon_tag_set), expected_tag_sets, unicode(t)))
             saw_other_infl = True
-            bad_tag_sets.append(tag_set)
+            bad_tag_sets.append(canon_tag_set)
       else:
         pagemsg("Found {{inflection of}} for different lemma %s: %s" % (
           actual_lemma, unicode(t)))
@@ -941,7 +942,7 @@ def do_process_participle(index, page, lemma, formind, formval, pos, save, verbo
       continue
     if not saw_lemma_in_etym:
       pagemsg("WARNING: Didn't see any lemma in Etymology section for participle, don't know if it's for correct verb, skipping")
-      contiue
+      continue
 
     frob_exact(ht, param_to_frob, frob_val, pagemsg, notes)
 
