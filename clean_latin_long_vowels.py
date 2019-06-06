@@ -701,6 +701,12 @@ def do_process_form(index, page, lemma, formind, formval, pos, tag_sets_to_proce
 
   notes = []
 
+  tag_sets_to_process = True if tag_sets_to_process is True else (
+    sorted(tag_sets_to_process)
+  )
+  frozenset_tag_sets_to_process = True if tag_sets_to_process is True else set(
+    frozenset(tag_set) for tag_set in tag_sets_to_process
+  )
   for headword in headwords:
     ht = headword['head_template']
     tn = tname(ht)
@@ -762,7 +768,7 @@ def do_process_form(index, page, lemma, formind, formval, pos, tag_sets_to_proce
           for tag_set in lalib.split_multipart_tag_set(maybe_multipart_tag_set)
         ]
         for tag_set in tag_sets:
-          if tag_sets_to_process is True or frozenset(lalib.canonicalize_tag_set(tag_set)) in tag_sets_to_process:
+          if tag_sets_to_process is True or frozenset(lalib.canonicalize_tag_set(tag_set)) in frozenset_tag_sets_to_process:
             saw_infl = True
             good_tag_sets.append(tag_set)
           else:
@@ -1361,81 +1367,82 @@ def do_process_lemma(index, page, pos, explicit_infl, lemma, explicit_stem, save
           pos == "numadj" and "numform" or "adjform", save, verbose)
 
     elif pos == "verb" and (found_head_template or tn == "la-verb"):
-      if not found_head_template:
-        deponent = False
-        if explicit_infl == 1 and not explicit_stem:
-          infl = 1
-          if lemma.endswith("or"):
-            deponent = True
-            vinf = lemma[:-2] + u"ārī"
-            vperf = ""
-            vsup = lemma[:-2] + u"ātum"
-          elif lemma.endswith(u"ō"):
-            vinf = lemma[:-1] + u"āre"
-            vperf = lemma[:-1] + u"āvī"
-            vsup = lemma[:-1] + u"ātum"
-          else:
-            errandpagemsg("WARNING: Bad lemma %s for 1st-conjugation verb" % lemma)
-            return None, None
-        elif explicit_infl == 4 and not explicit_stem:
-          infl = 4
-          if lemma.endswith("ior"):
-            deponent = True
-            vinf = lemma[:-3] + u"īrī"
-            vperf = ""
-            vsup = lemma[:-3] + u"ītum"
-          elif lemma.endswith(u"iō"):
-            vinf = lemma[:-2] + u"īre"
-            vperf = lemma[:-2] + u"īvī"
-            vsup = lemma[:-2] + u"ītum"
-          else:
-            errandpagemsg("WARNING: Bad lemma %s for 4th-conjugation verb" % lemma)
-            return None, None
-        elif not explicit_infl and explicit_stem:
-          if lemma.endswith("or"):
-            deponent = True
-            if len(explicit_stem) != 2:
-              errandpagemsg("WARNING: For verb lemma %s, wrong length of explicit stem %s" % (lemma, explicit_stem))
-              return None, None
-            vinf, vsup = explicit_stem
-            vperf = ""
-            if vinf.endswith(u"ī") and lemma[:-2] == vinf[:-1]:
-              infl = 3
-            elif vinf.endswith(u"ī") and lemma.endswith("ior") and lemma[:-3] == vinf[:-1]:
-              infl = "io"
-            elif vinf.endswith(u"ārī"):
-              infl = 1
-            elif vinf.endswith(u"ērī"):
-              infl = 2
-            elif vinf.endswith(u"īrī"):
-              infl = 4
-            else:
-              errandpagemsg("WARNING: Unrecognized verb infinitive %s for lemma %s" % (vinf, lemma))
-              return None, None
-          elif lemma.endswith(u"ō"):
-            if len(explicit_stem) != 3:
-              errandpagemsg("WARNING: For verb lemma %s, wrong length of explicit stem %s" % (lemma, explicit_stem))
-              return None, None
-            vinf, vperf, vsup = explicit_stem
-            if vinf.endswith(u"āre"):
-              infl = 1
-            elif vinf.endswith(u"ēre"):
-              infl = 2
-            elif vinf.endswith(u"īre"):
-              infl = 4
-            elif vinf.endswith("ere") and lemma.endswith(u"iō"):
-              infl = "io"
-            elif vinf.endswith("ere"):
-              infl = 3
-            elif (vinf.endswith("rre") or vinf.endswith("lle") or vinf.endswith("sse") or vinf.endswith("dare")):
-              infl = "irreg"
-            else:
-              errandpagemsg("WARNING: Unrecognized verb infinitive %s for lemma %s" % (vinf, lemma))
-              return None, None
+      # Figure out the actual inflection and deponent status.
+      deponent = False
+      if explicit_infl == 1 and not explicit_stem:
+        infl = 1
+        if lemma.endswith("or"):
+          deponent = True
+          vinf = lemma[:-2] + u"ārī"
+          vperf = ""
+          vsup = lemma[:-2] + u"ātum"
+        elif lemma.endswith(u"ō"):
+          vinf = lemma[:-1] + u"āre"
+          vperf = lemma[:-1] + u"āvī"
+          vsup = lemma[:-1] + u"ātum"
         else:
-          errandpagemsg("WARNING: For verb lemma %s, bad infl %s combined with explicit stem %s" % (lemma, explicit_infl, explicit_stem))
+          errandpagemsg("WARNING: Bad lemma %s for 1st-conjugation verb" % lemma)
           return None, None
+      elif explicit_infl == 4 and not explicit_stem:
+        infl = 4
+        if lemma.endswith("ior"):
+          deponent = True
+          vinf = lemma[:-3] + u"īrī"
+          vperf = ""
+          vsup = lemma[:-3] + u"ītum"
+        elif lemma.endswith(u"iō"):
+          vinf = lemma[:-2] + u"īre"
+          vperf = lemma[:-2] + u"īvī"
+          vsup = lemma[:-2] + u"ītum"
+        else:
+          errandpagemsg("WARNING: Bad lemma %s for 4th-conjugation verb" % lemma)
+          return None, None
+      elif not explicit_infl and explicit_stem:
+        if lemma.endswith("or"):
+          deponent = True
+          if len(explicit_stem) != 2:
+            errandpagemsg("WARNING: For verb lemma %s, wrong length of explicit stem %s" % (lemma, explicit_stem))
+            return None, None
+          vinf, vsup = explicit_stem
+          vperf = ""
+          if vinf.endswith(u"ī") and lemma[:-2] == vinf[:-1]:
+            infl = 3
+          elif vinf.endswith(u"ī") and lemma.endswith("ior") and lemma[:-3] == vinf[:-1]:
+            infl = "io"
+          elif vinf.endswith(u"ārī"):
+            infl = 1
+          elif vinf.endswith(u"ērī"):
+            infl = 2
+          elif vinf.endswith(u"īrī"):
+            infl = 4
+          else:
+            errandpagemsg("WARNING: Unrecognized verb infinitive %s for lemma %s" % (vinf, lemma))
+            return None, None
+        elif lemma.endswith(u"ō"):
+          if len(explicit_stem) != 3:
+            errandpagemsg("WARNING: For verb lemma %s, wrong length of explicit stem %s" % (lemma, explicit_stem))
+            return None, None
+          vinf, vperf, vsup = explicit_stem
+          if vinf.endswith(u"āre"):
+            infl = 1
+          elif vinf.endswith(u"ēre"):
+            infl = 2
+          elif vinf.endswith(u"īre"):
+            infl = 4
+          elif vinf.endswith("ere") and lemma.endswith(u"iō"):
+            infl = "io"
+          elif vinf.endswith("ere"):
+            infl = 3
+          elif (vinf.endswith("rre") or vinf.endswith("lle") or vinf.endswith("sse") or vinf.endswith("dare")):
+            infl = "irreg"
+          else:
+            errandpagemsg("WARNING: Unrecognized verb infinitive %s for lemma %s" % (vinf, lemma))
+            return None, None
+      else:
+        errandpagemsg("WARNING: For verb lemma %s, bad infl %s combined with explicit stem %s" % (lemma, explicit_infl, explicit_stem))
+        return None, None
 
+      if not found_head_template:
         if getparam(ht, "conj") != str(infl):
           continue
 

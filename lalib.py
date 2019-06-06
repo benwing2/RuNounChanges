@@ -577,7 +577,7 @@ def form_key_to_tag_set(key):
   tags = []
   for part in parts:
     tags.extend(parts_to_tags[part])
-  return frozenset(tags)
+  return tags
 
 cases = [ "nom", "gen", "dat", "acc", "abl", "voc", "loc" ]
 
