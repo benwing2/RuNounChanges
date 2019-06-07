@@ -169,6 +169,7 @@ la_suffix_headword_templates = {
   "la-suffix-3rd-2E",
   "la-suffix-adv",
   "la-suffix-noun",
+  "la-suffix-verb",
 }
 
 la_participle_headword_templates = {
@@ -216,6 +217,7 @@ la_lemma_headword_templates = (
 )
 
 la_headword_templates = la_lemma_headword_templates | la_nonlemma_headword_templates
+
 
 la_lemma_poses = {
   "adjective",
@@ -617,3 +619,69 @@ la_verb_overrides = (
   la_verb_inf_ptc_overrides +
   la_verb_ger_sup_overrides
 )
+
+def la_get_headword_from_template(t, pagename):
+  tn = tname(t)
+  if tn in la_adj_headword_templates or tn in ["la-noun", "la-suffix"]:
+    retval = getparam(t, "1")
+  elif tn == "la-present participle":
+    stem = getparam(t, "1")
+    ending = getparam(t, "2")
+    if ending == "ans":
+      retval = stem + u"āns"
+    if ending == "ens":
+      retval = stem + u"ēns"
+    else:
+      msg("WARNING: Unrecognized ending for la-present participle: %s" % ending)
+      retval = stem + ending
+  elif tn in ["la-future participle", "la-perfect participle", "la-gerundive"]:
+    retval = getparam(t, "2") or getparam(t, "1")
+    if retval:
+      retval = retval + "us"
+  elif tn == "la-suffix-3rd-2E":
+    retval = getparam(t, "1")
+    if retval:
+      retval = "-" + retval + "is"
+  elif tn == "la-suffix-1&2":
+    retval = getparam(t, "1")
+    if retval:
+      retval = "-" + retval + "us"
+  elif tn in la_suffix_headword_templates:
+    retval = getparam(t, "1")
+    if retval:
+      retval = "-" + retval
+  elif tn == "la-suffix-form":
+    retval = getparam(t, "2") or getparam(t, "1")
+    if retval:
+      retval = "-" + retval
+  elif tn == "head":
+    retval = getparam(t, "head")
+  elif tn == "la-num-card":
+    num = getparam(t, "num")
+    if num == "1":
+      retval = u"ūnus"
+    elif num == "2":
+      retval = "duo"
+    elif num == "3":
+      retval = u"trēs"
+    elif num == "M":
+      retval = u"mīlle"
+    elif num == "C":
+      retval = getparam(t, "1")
+      if retval:
+        retval = retval + u"ī"
+    elif num:
+      msg("WARNING: Unrecognized value for num: %s" % num)
+      retval = getparam(t, "1")
+    else:
+      retval = getparam(t, "1")
+  elif tn == "la-gerund":
+    retval = getparam(t, "head") or (getparam(t, "1") + "um")
+  elif tn == "la-letter":
+    retval = pagename
+  elif tn in la_nonlemma_headword_templates or tn in la_misc_headword_templates:
+    retval = getparam(t, "head") or getparam(t, "1")
+  else:
+    msg("WARNING: Unrecognized headword template %s" % unicode(t))
+    retval = ""
+  return retval or pagename

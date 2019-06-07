@@ -634,7 +634,12 @@ def process_pronun_templates(pronun_section, lemma, pagemsg, notes):
   elif len(pronun_templates) == 1:
     pront = pronun_templates[0]
     origpront = unicode(pront)
-    if process_pronun_template(pront, lemma, pagemsg, notes):
+    pagetitle = remove_macrons(lemma)
+    headwords = set(lalib.la_get_headword_from_template(hw['head_template'], pagetitle) for hw in pronun_section['headwords'])
+    if len(list(headwords)) > 1:
+      pagemsg("WARNING: One pronunciation template %s but multiple headword templates with different headwords, not changing: %s" %
+        (origpront, ",".join(unicode(hw['head_template']) for hw in pronun_section['headwords'])))
+    elif process_pronun_template(pront, lemma, pagemsg, notes):
       if len(pronun_section['headwords']) > 1:
         pagemsg("WARNING: Multiple headwords for changed pronunciation template (originally %s, changed to %s), check manually: %s" % (
           origpront, unicode(pront),
@@ -1049,52 +1054,52 @@ def do_process_lemma(index, page, pos, explicit_infl, lemma, explicit_stem, save
       pos == "noun" and (found_head_template or tn == "la-noun") or
       pos == "propernoun" and (found_head_template or tn == "la-proper noun")
     ):
-      if not found_head_template:
-        if explicit_infl == 1:
-          if lemma.endswith("a"):
-            inferred_stem = lemma[:-1]
-          elif lemma.endswith("ae"): # plural
-            inferred_stem = lemma[:-2]
-          else:
-            errandpagemsg("WARNING: Bad 1st-declension noun lemma %s" % lemma)
-            return None, None
-        elif explicit_infl == 2:
-          if lemma.endswith("r"):
-            inferred_stem = lemma
-          elif lemma.endswith("ius") or lemma.endswith("ium"):
-            inferred_stem = lemma[:-3]
-          elif lemma.endswith("us") or lemma.endswith("um"):
-            inferred_stem = lemma[:-2]
-          elif lemma.endswith(u"iī"): # plural
-            inferred_stem = lemma[:-2]
-          elif lemma.endswith(u"ī"): # plural
-            inferred_stem = lemma[:-1]
-          # We don't implement neuter plurals to catch errors where
-          # n2 is given instead of n1. If we need them, we should make
-          # the plurality be specified explicitly, e.g. 'n2p' for n2 plural.
-          else:
-            errandpagemsg("WARNING: Bad 2nd-declension noun lemma %s" % lemma)
-            return None, None
-        elif explicit_infl == 3:
-          inferred_stem = lalib.infer_3rd_decl_stem(lemma)
-        elif explicit_infl == 4:
-          if lemma.endswith("us"):
-            inferred_stem = lemma[:-2]
-          else:
-            errandpagemsg("WARNING: Bad 4th-declension noun lemma %s" % lemma)
-            return None, None
-        elif explicit_infl == 5:
-          if lemma.endswith(u"ēs"):
-            inferred_stem = lemma[:-2]
-          else:
-            errandpagemsg("WARNING: Bad 5th-declension noun lemma %s" % lemma)
-            return None, None
+      if explicit_infl == 1:
+        if lemma.endswith("a"):
+          inferred_stem = lemma[:-1]
+        elif lemma.endswith("ae"): # plural
+          inferred_stem = lemma[:-2]
         else:
-          errandpagemsg("WARNING: Unrecognized infl %s" % explicit_infl)
+          errandpagemsg("WARNING: Bad 1st-declension noun lemma %s" % lemma)
           return None, None
+      elif explicit_infl == 2:
+        if lemma.endswith("r"):
+          inferred_stem = lemma
+        elif lemma.endswith("ius") or lemma.endswith("ium"):
+          inferred_stem = lemma[:-3]
+        elif lemma.endswith("us") or lemma.endswith("um"):
+          inferred_stem = lemma[:-2]
+        elif lemma.endswith(u"iī"): # plural
+          inferred_stem = lemma[:-2]
+        elif lemma.endswith(u"ī"): # plural
+          inferred_stem = lemma[:-1]
+        # We don't implement neuter plurals to catch errors where
+        # n2 is given instead of n1. If we need them, we should make
+        # the plurality be specified explicitly, e.g. 'n2p' for n2 plural.
+        else:
+          errandpagemsg("WARNING: Bad 2nd-declension noun lemma %s" % lemma)
+          return None, None
+      elif explicit_infl == 3:
+        inferred_stem = lalib.infer_3rd_decl_stem(lemma)
+      elif explicit_infl == 4:
+        if lemma.endswith("us"):
+          inferred_stem = lemma[:-2]
+        else:
+          errandpagemsg("WARNING: Bad 4th-declension noun lemma %s" % lemma)
+          return None, None
+      elif explicit_infl == 5:
+        if lemma.endswith(u"ēs"):
+          inferred_stem = lemma[:-2]
+        else:
+          errandpagemsg("WARNING: Bad 5th-declension noun lemma %s" % lemma)
+          return None, None
+      else:
+        errandpagemsg("WARNING: Unrecognized infl %s" % explicit_infl)
+        return None, None
 
-        stem = explicit_stem or inferred_stem
+      stem = explicit_stem or inferred_stem
 
+      if not found_head_template:
         infl_to_ordinal = {
           1: 'first',
           2: 'second',
@@ -1137,10 +1142,7 @@ def do_process_lemma(index, page, pos, explicit_infl, lemma, explicit_stem, save
             decl, explicit_infl, unicode(inflt)))
           continue
         if explicit_infl == 1:
-          if not lemma.endswith("a"):
-            errandpagemsg("WARNING: Bad 1st-declension noun lemma %s" % lemma)
-            return None, None
-          arg1 = lemma[:-1]
+          arg1 = inferred_stem
           arg2 = ""
         elif explicit_infl == 2:
           if lemma.endswith("us"):
@@ -1153,6 +1155,17 @@ def do_process_lemma(index, page, pos, explicit_infl, lemma, explicit_stem, save
               arg2 = ""
             else:
               arg1 = lemma[:-2]
+              arg2 = ""
+          elif lemma.endswith(u"ī"):
+            if "ius" in declsubtypes:
+              if not lemma.endswith(u"iī"):
+                pagemsg(u"WARNING: Declension template requires lemma in -iī but lemma %s doesn't end that way: %s" % (
+                  lemma, unicode(inflt)))
+                continue
+              arg1 = lemma[:-2]
+              arg2 = ""
+            else:
+              arg1 = lemma[:-1]
               arg2 = ""
           elif lemma.endswith("um"):
             if "ium" in declsubtypes:
@@ -1181,10 +1194,7 @@ def do_process_lemma(index, page, pos, explicit_infl, lemma, explicit_stem, save
           else:
             arg2 = ["", inferred_stem]
         elif explicit_infl == 4:
-          if not lemma.endswith("us"):
-            errandpagemsg("WARNING: Bad 4th-declension noun lemma %s" % lemma)
-            return None, None
-          arg1 = lemma[:-2]
+          arg1 = inferred_stem
           arg2 = ""
         elif explicit_infl == 5:
           if not lemma.endswith(u"ēs"):
@@ -1399,14 +1409,15 @@ def do_process_lemma(index, page, pos, explicit_infl, lemma, explicit_stem, save
           errandpagemsg("WARNING: Bad lemma %s for 4th-conjugation verb" % lemma)
           return None, None
       elif not explicit_infl and explicit_stem:
-        if lemma.endswith("or"):
+        if lemma.endswith("or") or lemma.endswith("tur"):
+          impers = lemma.endswith("tur")
           deponent = True
           if len(explicit_stem) != 2:
             errandpagemsg("WARNING: For verb lemma %s, wrong length of explicit stem %s" % (lemma, explicit_stem))
             return None, None
           vinf, vsup = explicit_stem
           vperf = ""
-          if vinf.endswith(u"ī") and lemma[:-2] == vinf[:-1]:
+          if vinf.endswith(u"ī") and (lemma[:-4] if impers else lemma[:-2]) == vinf[:-1]:
             infl = 3
           elif vinf.endswith(u"ī") and lemma.endswith("ior") and lemma[:-3] == vinf[:-1]:
             infl = "io"
@@ -1419,7 +1430,7 @@ def do_process_lemma(index, page, pos, explicit_infl, lemma, explicit_stem, save
           else:
             errandpagemsg("WARNING: Unrecognized verb infinitive %s for lemma %s" % (vinf, lemma))
             return None, None
-        elif lemma.endswith(u"ō"):
+        elif lemma.endswith(u"ō") or lemma.endswith("t"):
           if len(explicit_stem) != 3:
             errandpagemsg("WARNING: For verb lemma %s, wrong length of explicit stem %s" % (lemma, explicit_stem))
             return None, None
@@ -1439,6 +1450,9 @@ def do_process_lemma(index, page, pos, explicit_infl, lemma, explicit_stem, save
           else:
             errandpagemsg("WARNING: Unrecognized verb infinitive %s for lemma %s" % (vinf, lemma))
             return None, None
+        else:
+          errandpagemsg("WARNING: Unrecognized verb lemma %s" % lemma)
+          return None, None
       else:
         errandpagemsg("WARNING: For verb lemma %s, bad infl %s combined with explicit stem %s" % (lemma, explicit_infl, explicit_stem))
         return None, None
@@ -1571,7 +1585,7 @@ def do_process_lemma(index, page, pos, explicit_infl, lemma, explicit_stem, save
               else:
                 expected_ending = "ior"
               if not lemma.endswith(expected_ending):
-                errpagemsg("Infl=%s deponent lemma should end in -%s: %s" % (
+                errpagemsg("WARNING: Infl=%s deponent lemma should end in -%s: %s" % (
                   infl, expected_ending, lemma))
                 return None, None
               arg1 = lemma[:-len(expected_ending)]
@@ -1587,7 +1601,7 @@ def do_process_lemma(index, page, pos, explicit_infl, lemma, explicit_stem, save
               else:
                 expected_ending = u"iō"
               if not lemma.endswith(expected_ending):
-                errpagemsg("Infl=%s lemma should end in -%s: %s" % (
+                errandpagemsg("WARNING: Infl=%s lemma should end in -%s: %s" % (
                   infl, expected_ending, lemma))
                 return None, None
               arg1 = lemma[:-len(expected_ending)]
