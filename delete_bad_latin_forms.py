@@ -156,6 +156,13 @@ def delete_participle(index, lemma, formind, formval, pos, save, verbose):
 def delete_form(index, lemma, formind, formval, pos, tag_sets_to_delete, save, verbose):
   notes = []
 
+  tag_sets_to_delete = True if tag_sets_to_delete is True else (
+    sorted(tag_sets_to_delete)
+  )
+  frozenset_tag_sets_to_delete = True if tag_sets_to_delete is True else set(
+    frozenset(tag_set) for tag_set in tag_sets_to_delete
+  )
+
   def pagemsg(txt):
     msg("Page %s %s: form %s %s: %s" % (index, lemma, formind, formval, txt))
   def errandpagemsg(txt):
@@ -236,7 +243,7 @@ def delete_form(index, lemma, formind, formval, pos, tag_sets_to_delete, save, v
             # no break
             tag_sets = lalib.split_tags_into_tag_sets(tags)
             for tag_set in tag_sets:
-              if tag_sets_to_delete is True or frozenset(lalib.canonicalize_tag_set(tag_set)) in tag_sets_to_delete:
+              if tag_sets_to_delete is True or frozenset(lalib.canonicalize_tag_set(tag_set)) in frozenset_tag_sets_to_delete:
                 saw_infl = True
               else:
                 pagemsg("Found {{inflection of}} for correct lemma but wrong tag set %s: %s" % (
@@ -313,7 +320,7 @@ def delete_form(index, lemma, formind, formval, pos, tag_sets_to_delete, save, v
             tag_sets = lalib.split_tags_into_tag_sets(tags)
             filtered_tag_sets = []
             for tag_set in tag_sets:
-              if tag_sets_to_delete is not True and frozenset(lalib.canonicalize_tag_set(tag_set)) not in tag_sets_to_delete:
+              if tag_sets_to_delete is not True and frozenset(lalib.canonicalize_tag_set(tag_set)) not in frozenset_tag_sets_to_delete:
                 filtered_tag_sets.append(tag_set)
             if not filtered_tag_sets:
               return ""
@@ -455,6 +462,12 @@ def process_page(index, lemma, conj, forms, pages_to_delete, save, verbose):
     if form in ["pasv", "pass"]:
       for key, val in args.iteritems():
         if key != "perf_pasv_ptc" and "pasv" in key:
+          tag_sets_to_delete.append(lalib.form_key_to_tag_set(key))
+          forms_to_delete.append((key, val))
+    if form in ["12pasv", "12pass"]:
+      for key, val in args.iteritems():
+        if key != "perf_pasv_ptc" and "pasv" in key and (
+            "1s" in key or "1p" in key or "2s" in key or "2p" in key):
           tag_sets_to_delete.append(lalib.form_key_to_tag_set(key))
           forms_to_delete.append((key, val))
     if form == "passnofpp":
