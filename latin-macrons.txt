@@ -825,6 +825,7 @@ subdēligō subdēligere subdēlēgī subdēlēctum
 *n4 lūctus
 *a1 lūctificus
 *a3 lūctificior
+*a1 lūctificissimus
 *a1 lūctuōsus
 *a3 lūctuōsior
 *a1 lūctuōsissimus
