@@ -1,4 +1,17 @@
 ###
+### abiēgnus
+###
+*a1 abiēgnus
+###
+### Āfrica
+###
+*a1 Āfer Āfr
+*pn2 Āfer Āfr
+*n1 Āfrica
+*# Āfrica Austrālis
+*a1 āfricānus
+*a1 āfricus
+###
 ### agō
 ###
 agō agere ēgī āctum
@@ -48,6 +61,10 @@ n3 subāctor
 trānsigō trānsigere trānsēgī trānsāctum
 n3 trānsāctiō
 ###
+### Amāzōn
+###
+*pn3 Amāzōn Amāzon
+###
 ### ardeō
 ###
 *ardeō ardēre arsī arsum
@@ -60,6 +77,46 @@ n3 trānsāctiō
 *n1 arsūra
 *exardeō exardēre exarsī exarsum
 *exardēscō exardēscere exarsī exarsum
+###
+### Amāzōn
+###
+*v1 āspernor
+*n3 āspernātiō
+###
+### āthlēta
+###
+*n1 āthlēta
+*a1 āthlēticus
+###
+### āter, ātrāmentum, ātrium
+###
+a1 āter ātr
+n2 ātrāmentum
+n2 ātrāmentārium
+*# ātra bīlis
+*a1 ātrabīlārius
+*a1 ātrātus
+*a1 obātrātus
+*n2 ātrium
+*n2 ātriolum
+*a3 ātriēnsis
+*a3 ātriceps
+*a3 ātrioventriculāris
+*a3 ātripectorālis
+*a3 ātripēs ātriped
+*a1 ātropurpureus
+*a1 ātrosepticus
+*a3 ātroviridis
+###
+### -ātrum
+###
+*n2 arātrum
+*n2 computātrum
+*n2 amphitheātrum
+*n2 amphitheāter amphitheātr
+*n2 theātrum
+*a3 theātrālis
+*a1 theātricus
 ###
 ### -āx
 ###
@@ -122,6 +179,27 @@ n3 trānsāctiō
 *a3 vomāx
 *a3 vorāx
 ###
+### āxilla, māxilla, pāxillus
+###
+*n1 āxilla
+*a3 āxillāris
+*n1 māxilla
+*a3 māxillāris
+*n2 pāxillus
+###
+### bārdus
+###
+*a1 bārdus
+###
+### Bēdriacum
+###
+*pn2 Bēdriacum
+###
+### bēllua
+###
+*n1 bēllua
+*a1 bēlluīnus
+###
 ### benignus, malignus
 ###
 *adv benignē
@@ -140,6 +218,37 @@ n3 trānsāctiō
 *a1 bēstiārius
 *n2 bēstiārius
 *a1 bēstiola
+*pn1 Bēstia
+###
+### būrrus
+###
+*a1 būrrus
+*n1 būrra
+*n2 būrricus
+###
+### Būthrōtum
+###
+*pn2 Būthrōtum
+###
+### chīrūrgus
+###
+*n2 chīrūrgus
+*a1 chīrūrgius
+*n1 chīrūrgia
+###
+### cicātrīx
+###
+*n3 cicātrīx
+*a1 cicātrīcōsus
+###
+### cīccum
+###
+*n2 cīccum
+###
+### Cīncius
+###
+*pn2 Cīncius
+*a1 Cīncius
 ###
 ### cingō
 ###
@@ -159,15 +268,110 @@ n3 trānsāctiō
 *recingō recingere recīnxī recīnctum
 *succingō succingere succīnxī succīnctum
 ###
-### compēscō
+### clandēstīnus
 ###
-*compēscō compēscere compēscuī --
-# FIXME: conpuī -> conpēscuī
-*conpēscō conpēscere conpēscuī --
+*a1 clandēstīnus
+*# vōx clandēstīna
 ###
-### cūnctus
+### Cnōssus
+###
+*pn2 Cnōssos
+*pn2 Cnōssus
+###
+### compescō
+###
+*compescō compescere compescuī --
+*conpescō conpescere conpescuī --
+###
+### cōntiō
+###
+*n3 cōntiō
+*v1 cōntior
+*a1 cōntiōnābundus
+###
+### corōlla
+###
+*n1 corōlla
+*n1 corōllāria
+*n2 corōllārium
+###
+### crābrō
+###
+*n3 crābrō crābrōn
+*phr irrītābis_crābrōnēs
+###
+### crās
+###
+*adv crās
+*a1 crāstinus
+*v1 prōcrāstinō
+*n3 prōcrāstinātiō
+*n3 prōcrāstinātrīx
+###
+### Crēssa
+###
+*pn1 Crēssa
+###
+### crībrum
+###
+*n2 crībrum
+*v1 crībrō
+*v1 percrībrō
+*a3 crībricollis
+###
+### crīspus
+###
+*a1 crīspus
+*a1 subcrīspus
+*a1 succrīspus
+*v1 crīspō
+*n3 crīspitūdō
+###
+### crūsta
+###
+*n1 crūsta
+*v1 crūstō
+*n2 crūstum
+*n2 crūstulum
+*n1 crūstula
+*a1 crūstōsus
+*v1 incrūstō
+*n3 incrūstātiō
+###
+### Ctēsiphōn
+###
+*pn3 Ctēsiphōn Ctēsiphōnt
+###
+### cucūllus
+###
+*n2 cucūllus
+*n1 cucūlla
+*a1 cucūllātus
+*prov cucūllus_nōn_facit_monachum
+###
+### cū̆stōs
+###
+*n3 cū̆stōs cū̆stōd
+*v4 cū̆stōdiō
+*n1 cū̆stōdia
+*n3 cū̆stōdītiō
+*phr quis cū̆stōdiet ipsōs cū̆stōdēs
+###
+### cūnctus, cūnctor
 ###
 a1 cūnctus
+v1 cūnctor
+*a1 cūnctābundus
+*adv cūnctanter
+*adv incūnctanter
+*n3 cūnctātiō
+*a3 cūnctātior
+*n3 cūnctātor
+*v1 cūnctō
+###
+### dēlūbrum
+###
+*n2 dēlūbrum
 ###
 ### dīcō
 ###
@@ -187,6 +391,10 @@ a1 cūnctus
 *superdīcō superdīcere superdīxī superdictum
 *valedīcō valedīcere valedīxī valedictum
 ###
+### dīctērium
+###
+*n2 dīctērium
+###
 ### dignus
 ###
 *a1 dignus
@@ -205,6 +413,11 @@ a1 cūnctus
 *a1 perdignus
 *dīgnōscō dīgnōscere dīgnōvī dīgnōtum
 *dīnōscō dīnōscere dīnōvī dīnōtum
+###
+### dolābra
+###
+*n1 dolābra
+*a1 dolābrātus
 ###
 ### dūcō
 ###
@@ -233,6 +446,25 @@ a1 cūnctus
 *superindūcō superindūcere superindūxī superinductum
 *trādūcō trādūcere trādūxī trāductum
 *trānsdūcō trānsdūcere trānsdūxī trānsductum
+###
+### ēbrius
+###
+*a1 ēbrius
+*a1 ēbriācus
+*n3 ēbriāmen
+*n3 ēbrietās
+*v1 ēbriō
+*a1 ēbriolātus
+*a1 ēbriolus
+*a1 ēbriōsus
+*a3 ēbriōsior
+*n3 ēbriōsitās
+*v1 inēbriō
+*n3 inēbriātiō
+###
+### edō
+###
+*n3 comēstor
 ###
 ### emō
 ###
@@ -289,10 +521,44 @@ coëmō coëmere *coēmī coēmptum
 *n3 praesūmptiō
 *resūmō resūmere resūmpsī resūmptum
 ###
+### eclīpsis
+###
+*n3 eclīpsis
+*n1 eclīptica
+*a1 eclīpticus
+###
 ### ēmungō
 ###
 *ēmungō ēmungere ēmunxī ēmūnctum
 *n2 ēmūnctōrium
+###
+### ēsca
+###
+*n1 ēsca
+*a1 ēscārius
+###
+### Etrūria
+###
+*pn1 Etrūria
+*a1 Etrūscus
+###
+### exīstimō
+###
+*v1 exīstimō
+*n3 exīstimātiō
+*n3 exīstumātiō
+###
+### fāstus
+###
+*a1 fāstus
+*n2 fāstus
+*a1 nefāstus
+###
+### fēllō
+###
+*v1 fēllō
+*n3 fēllātiō
+*a3 fēllebris
 ###
 ### fēstus, īnfēstus, manifēstus, but not
 ### cōnfestim, festīnus, festūca, festra
@@ -349,36 +615,40 @@ coëmō coëmere *coēmī coēmptum
 *effingō effingere effīnxī effictum
 *perfingō perfingere perfīnxī perfictum
 ###
-### fīrmus
+### firmus
 ###
-*a1 fīrmus
-*adv fīrmiter
-*a3 fīrmior
-*n3 fīrmitūdō
-*n3 fīrmitās
-*n2 fīrmārius
-*n2 fīrmāmentum
-*v1 fīrmō
-*n3 adfīrmātiō
-*v1 adfīrmō
-*n3 affīrmātiō
-*a1 affīrmātīvus
-*v1 affīrmō
-*v1 cōnfīrmō
-*n3 cōnfīrmātiō
-*a3 cōnfīrmātior
-*n1 īnfīrmāria
-*n2 īnfīrmārius
-*n3 īnfīrmātiō
-*a3 īnfīrmior
-*a3 īnfīrmis
-*a1 īnfīrmissimus
-*n3 īnfīrmitās
-*adv īnfīrmiter
-*v1 īnfīrmō
-*a1 īnfīrmus
-*v1 obfīrmō
-*v1 offīrmō
+*a1 firmus
+*adv firmiter
+*a3 firmior
+*n3 firmitūdō
+*n3 firmitās
+*n2 firmārius
+*n2 firmāmentum
+*v1 firmō
+*n3 adfirmātiō
+*v1 adfirmō
+*n3 affirmātiō
+*a1 affirmātīvus
+*v1 affirmō
+*v1 cōnfirmō
+*n3 cōnfirmātiō
+*a3 cōnfirmātior
+*n1 īnfirmāria
+*n2 īnfirmārius
+*n3 īnfirmātiō
+*a3 īnfirmior
+*a3 īnfirmis
+*a1 īnfirmissimus
+*n3 īnfirmitās
+*adv īnfirmiter
+*v1 īnfirmō
+*a1 īnfirmus
+*v1 obfirmō
+*v1 offirmō
+###
+### flābrum
+###
+*n1 flābrum
 ###
 ### flīgō
 ###
@@ -400,6 +670,46 @@ coëmō coëmere *coēmī coēmptum
 *īnflīgō īnflīgere īnflīxī īnflīctum
 *n3 īnflīctiō
 *v1 prōflīgō
+###
+### flōsculus
+###
+*n2 flōsculus
+###
+### flūctus
+###
+a1 flūctiger
+a1 flūctivagus
+a1 flūctuābundus
+n3 flūctuātiō
+v1 flūctuō
+n4 flūctus
+###
+### fluō
+###
+adfluō adfluere adflūxī adflūxum
+affluō affluere afflūxī afflūxum
+circumfluō circumfluere circumflūxī circumflūxum
+cōnfluō cōnfluere cōnflūxī cōnflūxum
+dēfluō dēfluere dēflūxī dēflūxum
+diffluō diffluere difflūxī difflūxum
+effluō effluere efflūxī efflūxum
+fluō fluere flūxī flūxum
+īnfluō īnfluere īnflūxī īnflūxum
+interfluō interfluere interflūxī interflūxum
+pereffluō pereffluere perefflūxī perefflūxum
+perfluō perfluere perflūxī perflūxum
+praefluō praefluere praeflūxī praeflūxum
+praeterfluō praeterfluere praeterflūxī praeterflūxum
+prōfluō prōfluere prōflūxī prōflūxum
+refluō refluere reflūxī reflūxum
+subterfluō subterfluere subterflūxī subterflūxum
+supereffluō supereffluere superefflūxī superefflūxum
+superfluō superfluere superflūxī superflūxum
+trānsfluō trānsfluere trānsflūxī trānsflūxum
+n4 flūxus
+a3 flūxior
+n4 īnflūxus
+n4 reflūxus
 ###
 ### fōrma
 ###
@@ -514,6 +824,13 @@ n3 refrāctiō
 a1 refrāctāriolus
 # suffringō no perfect
 ###
+### frātr-
+###
+*n1 frātricīda
+*n2 frātricīdium
+*n1 frātriscīda
+*#gener frātris
+###
 ### frīgō
 ###
 *frīgō frīgere frīxī frīctum
@@ -528,6 +845,16 @@ a1 refrāctāriolus
 *n4 frūctus
 *a1 īnfrūctuōsus
 ###
+### frūstrā, frūstum
+###
+adv frūstrā
+n3 frūstrātiō
+n3 frūstrātor
+a1 frūstrātōrius
+v1 frūstrō
+a1 frūstulentus
+n2 frūstum
+###
 ### fungor
 ###
 *fungor fungī fūnctum
@@ -536,6 +863,101 @@ a1 refrāctāriolus
 *n3 dēfūnctiō
 *perfungor perfungī perfūnctum
 *a1 perfūnctōrius
+###
+### fūrt-
+###
+a1 fūrtificus
+a1 fūrtīvus
+adv fūrtim
+n2 fūrtum
+###
+### fūstis
+###
+n3 fūstis
+n1 fūsta
+n1 fūsterna
+n3 fūstibalātor
+v1 fūstīgō
+n2 fūstuārium
+###
+### geōgraphia
+###
+n1 geōgraphia
+n2 geōgraphus
+a1 geōgraphicus
+###
+### Geōrgius
+###
+pn2 Geōrgius
+pn2 Geōrgī
+pn1 Geōrgia
+a1 geōrgiānus
+a3 geōrgiēnsis
+###
+### glōssa
+###
+n1 glōssa
+n2 glōssārium
+a1 acroglōssus
+n1 būglōssa
+n2 cynoglōssos
+n1 glōssopetra
+n1 sphaeroglōssa
+###
+### grȳllus
+###
+n2 grȳllus
+###
+### hāctenus
+###
+adv hāctenus
+###
+### Hellēspontus
+###
+pn2 Hellēspontus
+###
+### hibīscum
+###
+n2 hibīscum
+###
+### hīrtus
+###
+a1 hīrtus
+pn2 Hīrtius
+a1 hīrsūtus
+a1 hīrtellus
+a3 hīrtipēs hīrtiped
+###
+### Hīspellum
+###
+pn2 Hīspellum
+pn3 Hīspō
+###
+### hōrnus
+###
+a1 hōrnus
+###
+### Hymēttus
+###
+pn2 Hymēttus
+###
+### -iciō
+###
+*coniciō conicere coniēcī coniectum
+*coiciō coicere coiēcī coiectum
+*obiciō obicere obiēcī obiectum
+*reiciō reicere reiēcī reiectum
+*n3 reiectiō
+*n3 obex obic
+###
+### iēnt-
+###
+n2 iēntāculum
+n3 iēntātiō
+v1 iēntō
+n2 jēntāculum
+n3 jēntātiō
+v1 jēntō
 ###
 ### īgnis (but not ignāvus, maybe not ignia?)
 ###
@@ -582,6 +1004,25 @@ a1 refrāctāriolus
 *a1 suīllus
 *pn2 Suīllius
 ###
+### Īllyria
+###
+pn1 Īllyria
+pn1 Īllyriae
+pn2 Īllyricum
+###
+### involūcrum
+###
+n2 involūcrum
+###
+### Iōlcus
+###
+pn2 Iōlcus
+###
+### iūglāns
+###
+n3 iūglāns iūglānd
+n3 jūglāns jūglānd
+###
 ### iungō
 ###
 *iungō iungere iūnxī iūnctum
@@ -604,6 +1045,8 @@ a1 refrāctāriolus
 *a1 coniūnctus
 *n2 coniūnctum
 *n3 coniūnx coniug
+# coniux has short ŭ!
+*n3 coniŭx coniug
 *dēiungō dēiungere dēiūnxī dēiūnctum
 *dīiungō dīiungere dīiūnxī dīiūnctum
 *n3 dīiūnctiō
@@ -636,6 +1079,8 @@ a1 refrāctāriolus
 *a1 conjūnctīvus
 *n2 conjūnctum
 *n3 conjūnx conjug
+# conjux has short ŭ!
+*n3 conjŭx conjug
 *dējungō dējungere dējūnxī dējūnctum
 *n3 dījūnctiō
 *disjungō disjungere disjūnxī disjūnctum
@@ -664,6 +1109,51 @@ v1 obiūrgō
 n3 obiūrgātiō
 v1 objūrgō
 n3 objūrgātiō
+###
+### iūst-
+###
+a3 iniūstior
+n1 iniūstitia
+a1 iniūstus
+#plurale tantum
+#n2 iūsta
+n1 iūsticiāria
+n2 iūsticiārius
+a1 iūsticiārius
+n3 iūstificātiō
+n3 iūstificātor
+v1 iūstificō
+a1 iūstificus
+a3 iūstior
+n1 iūstitia
+n1 iūstitiāria
+n2 iūstitiārius
+a1 iūstitiārius
+n2 iūstitium
+a1 iūstus
+n1 injūstitia
+a1 injūstus
+n1 jūsticiāria
+n2 jūsticiārius
+a1 jūsticiārius
+n3 jūstificātiō
+v1 jūstificō
+a3 jūstior
+n1 jūstitia
+n1 jūstitiāria
+n2 jūstitiārius
+a1 jūstitiārius
+n2 jūstitium
+a1 jūstus
+pn2 Jūstus
+a1 Jūstīniāneus
+###
+### iūxtā
+###
+prep iū̆xtā
+adv iū̆xtim
+prep jū̆xtā
+adv jū̆xtim
 ###
 ### lābor
 ###
@@ -737,6 +1227,20 @@ recolligō recolligere recollēgī recollēctum
 sēligō sēligere sēlēgī sēlēctum
 n3 sēlēctiō
 subdēligō subdēligere subdēlēgī subdēlēctum
+###
+### lībra "weight"
+###
+*a3 aequilībris
+*n3 aequilībritās
+*n2 aequilībrium
+*n1 bilībra
+*a3 bilībris
+*n1 lībra
+*n3 lībrāmen
+*n2 lībrāmentum
+*n3 lībrātiō
+*a3 lībrīlis
+*v1 lībrō
 ###
 ### lignum, Paelignus, salignus
 ###
@@ -887,14 +1391,38 @@ subdēligō subdēligere subdēlēgī subdēlēctum
 *mālō mālle māluī --
 *nōlō nōlle nōluī --
 ###
-### māximus
+### mātr-
 ###
-*a1 māximus
-*adv māximē
-*# māximā cum laude
-*# māximus in minimīs
-*adv permāximē
-*# amita māxima
+*a3 mātrālis
+*mātrēscō mātrēscere -- --
+*a3 mātricālis
+*n1 mātricīda
+*n2 mātricīdium
+*n1 mātrīcula
+*n2 mātrīculārius
+*a3 mātrimōniālis
+*n1 mātrimōnium
+*a1 mātrimus
+*n3 mātrīx
+*n1 mātrōna
+*a3 mātrōnālis
+*adv mātrōnāliter
+*n4 mātrōnātus
+*n3 mātruēlis
+###
+### maximus
+###
+*a1 maximus
+*adv maximē
+*# maximā cum laude
+*# maximus in minimīs
+*adv permaximē
+*# amita maxima
+###
+### -mēstris
+###
+*a3 sēmēstris
+*a3 trimēstris
 ###
 ### mīlle
 ###
@@ -1049,6 +1577,29 @@ n3 renūntiātiō
 *v1 exōrnō
 *n3 exōrnātiō
 *v1 subōrnō
+###
+### -ōrsum
+###
+*adv aliōrsum
+*adv dēsūrsum
+*adv dextrōrsum
+*adv dextrōrsus
+*adv hōrsum
+*adv illōrsum
+*adv intrōrsum
+*adv istōrsum
+*adv laevōrsum
+*adv longitrōrsus
+*adv prōrsum
+*adv prōrsus
+*a1 prōrsus
+*adv quōrsum
+*adv quōrsus
+*adv retrōrsum
+*adv rūrsum
+*adv rūrsus
+*adv sinistrōrsus
+*adv sūrsum
 ###
 ### *ōsc-
 ### (Bennett includes ōscen derived from ōs but our etymology is different)
@@ -1222,6 +1773,107 @@ v1 expūrgō
 *v1 prōpūrgō
 *v1 repūrgō
 *n3 repūrgātiō
+###
+### quadr-
+###
+*a1 biquadrāticus
+*num duodēquadrāgintā
+*n1 quadra
+*a1 quadrāgēnārius
+*num1 quadrāgēni
+*n1 quadrāgēsima
+*a1 quadrāgēsimus
+*adv quadrāgiēns
+*adv quadrāgiēs
+*num quadrāgintā
+*num1 quadrāgintā ūnus
+*n3 quadrāle
+*a3 quadrangulāris
+*a1 quadrangulātus
+*n2 quadrangulum
+*a1 quadrangulus
+*n3 quadrāns
+*a3 quadrantālis
+*a1 quadrantārius
+*a1 quadrātārius
+*adv quadrātē
+*a1 quadrāticus
+*adv quadrātim
+*n3 quadrātiō
+*n3 quadrātor
+*n2 quadrātum
+*n1 quadrātūra
+*n2 quadrātus
+*a1 quadriangulus
+*n2 quadribaccium
+*a1 quadricarīnātus
+*#quadricauda
+*a3 quadricolor
+*a3 tricolor
+*a3 quadricornis
+*a3 quadridēns
+*a1 quadridentātus
+*a1 quadriduānus
+*n2 quadriduum
+*a3 quadriennis
+*n2 quadriennium
+*n3 quadriēris
+*adv quadrifāriam
+*adv quadrifāriter
+*a1 quadrifārius
+*a1 quadrifidus
+*a3 quadrifīnālis
+*n2 quadrifīnium
+*a1 quadriflōrus
+*a1 quadrifluus
+*a1 quadrifolius
+*a1 quadriforis
+*a1 quadrifōrmis
+*a1 quadrifurcus
+*n1 quadrīga
+*n1 quadrīgae
+*a1 quadrīgālis
+*n2 quadrigamus
+*a1 quadrīgārius
+*n2 quadrīgātus
+*a1 quadrigeminus
+*a1 quadrigōnus
+*a1 quadrīgula
+*a1 quadrīgulae
+*n2 quadriiugī
+*a3 quadriiugis
+*a1 quadriiugus
+*a1 quadrilaterus
+*a1 quadrilīneātus
+*a1 quadrimaculātus
+*num1 quadringēnī
+*num1 quadringentēsimus
+*num1 quadringentī
+*adv quadringentiēns
+*adv quadringentiēs
+*v4 quadripartiō
+*n3 quadripartītiō
+*adv quadripartītō
+*a1 quadripunctātus
+*n3 quadrirēmis
+*a1 quadrisētus
+*a1 quadrispīnōsus
+*n2 quadrivium
+*v1 quadrō
+*n2 quadrum
+*a3 quadrupedāns
+*adv quadrupedātim
+*a3 quadrupēs quadruped
+*n3 quadruplātor
+*a3 quadruplex
+*n3 quadruplex
+*v1 quadruplicō
+*v1 quadruplō
+*a1 quadruplus
+*a1 quadrus
+*num1 ūndēquadrāgēsimus
+*num ūndēquadrāgintā
+#
 ###
 ### quārtus
 ###
@@ -1678,7 +2330,7 @@ subrigō subrigere subrēxī subrēctum
 *clārēscō clārēscere clāruī -- [int]
 *coacēscō coacēscere coacuī -- [int]
 *coalēscō coalēscere coaluī coalitum [int, has ppp]
-*cohaerēscō cohaerēscō cohaesī -- [int]
+*cohaerēscō cohaerēscere cohaesī -- [int]
 *colliquēscō colliquēscere colliquī -- [int]
 *compēscō compēscere compēscuī -- [tr; supine compēscitum in Prisc.]
 # has incorrect long vowel on u
@@ -1842,7 +2494,7 @@ subrigō subrigere subrēxī subrēctum
 *ūmēscō ūmēscere -- -- [int; alt of hūmēscō, which is primary]
 *valēscō valēscere valuī -- [int]
 *vānēscō vānēscere -- -- [int]
-*vēscor vēscī -- -- [tr]
+*vēscor vēscī -- [tr]
 *veterēscō veterēscere -- -- [int]
 *vigēscō vigēscere viguī -- [int]
 *virēscō virēscere viruī -- [int]
@@ -2237,6 +2889,17 @@ supertrahō supertrahere -- --
 *a1 nūllus
 *prov testis_ūnus,_testis_nūllus
 *a1 ūllus
+###
+### ūncia, -ūnx
+###
+*n3 deūnx deūnc
+*n3 quīncūnx quīncūnc
+*n3 septūnx septūnc
+*n1 sēscūncia
+*n1 ūncia
+*adv ūnciātim
+*n2 terūncius
+*n2 terrūncius
 ###
 ### ungō
 ###
