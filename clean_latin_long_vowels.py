@@ -371,7 +371,7 @@ from lalib import remove_macrons
 
 
 # Return True if changed.
-def frob_param(t, param, stem_or_exact, is_exact, pagemsg, notes, split_slashes=False, no_warn=False):
+def frob_param(t, param, stem_or_exact, is_exact, pagemsg, notes, split_slashes=False, no_warn=False, add_if_needed=False):
   origt = unicode(t)
   origval = getparam(t, param)
   if split_slashes:
@@ -396,14 +396,21 @@ def frob_param(t, param, stem_or_exact, is_exact, pagemsg, notes, split_slashes=
           newvals.append(st + val[len(st):])
           break
     else:
+      if not val and add_if_needed:
+        nonempty = [x for x in stem_or_exact if x]
+        if nonempty:
+          t.add(param, nonempty[0])
+        else:
+          pagemsg("WARNING: Unable to add blank value to param %s: %s" % (
+            param, unicode(t)))
       if val or not no_warn:
         # no break
         if is_exact:
-          pagemsg("WARNING: Unable to match value %s in param %s against replacement(s) %s" % (
-            val, param, ",".join(stem_or_exact)))
+          pagemsg("WARNING: Unable to match value %s in param %s against replacement(s) %s: %s" % (
+            val, param, ",".join(stem_or_exact), unicode(t)))
         else:
-          pagemsg("WARNING: Unable to match value %s in param %s against replacement stem(s) %s" % (
-            val, param, ",".join(stem_or_exact)))
+          pagemsg("WARNING: Unable to match value %s in param %s against replacement stem(s) %s: %s" % (
+            val, param, ",".join(stem_or_exact), unicode(t)))
       newvals.append(val)
   newval = "/".join(newvals)
   if newval != origval:
@@ -414,14 +421,14 @@ def frob_param(t, param, stem_or_exact, is_exact, pagemsg, notes, split_slashes=
   return False
 
 # Return True if changed.
-def frob_stem(t, param, stem, pagemsg, notes, split_slashes=False, no_warn=False):
+def frob_stem(t, param, stem, pagemsg, notes, split_slashes=False, no_warn=False
   return frob_param(t, param, stem, False, pagemsg, notes, split_slashes=split_slashes,
       no_warn=no_warn)
 
 # Return True if changed.
-def frob_exact(t, param, newval, pagemsg, notes, split_slashes=False, no_warn=False):
+def frob_exact(t, param, newval, pagemsg, notes, split_slashes=False, no_warn=False, add_if_needed=False):
   return frob_param(t, param, newval, True, pagemsg, notes, split_slashes=split_slashes,
-      no_warn=no_warn)
+      no_warn=no_warn, add_if_needed=add_if_needed)
 
 # Return True if anything changed.
 def frob_chain_stem(t, param, stem, pagemsg, notes, split_slashes=False, no_warn=False):
@@ -444,7 +451,7 @@ def frob_chain_stem(t, param, stem, pagemsg, notes, split_slashes=False, no_warn
   return changed
 
 # Return True if anything changed.
-def frob_chain_exact(t, param, newval, pagemsg, notes, split_slashes=False, no_warn=False):
+def frob_chain_exact(t, param, newval, pagemsg, notes, split_slashes=False, no_warn=False, add_if_needed=False):
   changed = False
   if type(param) is list:
     first, rest = param
@@ -453,7 +460,7 @@ def frob_chain_exact(t, param, newval, pagemsg, notes, split_slashes=False, no_w
     rest = param
   if first:
     if frob_exact(t, first, newval, pagemsg, notes, split_slashes=split_slashes,
-        no_warn=no_warn):
+        no_warn=no_warn, add_if_needed=add_if_needed):
       changed = True
   num = 2
   while getparam(t, "%s%s" % (rest, num)):
@@ -732,10 +739,12 @@ def do_process_form(index, page, lemma, formind, formval, pos, tag_sets_to_proce
         continue
       head_param = "head"
       found_head = True
+      add_if_needed = True
 
     if tn == expected_head_template:
       head_param = "1"
       found_head = True
+      add_if_needed = False
 
     if not found_head:
       continue
@@ -803,7 +812,7 @@ def do_process_form(index, page, lemma, formind, formval, pos, tag_sets_to_proce
     if not saw_infl:
       continue
 
-    frob_exact(ht, head_param, formval, pagemsg, notes)
+    frob_exact(ht, head_param, formval, pagemsg, notes, add_if_needed=add_if_needed)
     for t in headword['infl_of_templates']:
       lang = getparam(t, "lang")
       if lang:
@@ -906,7 +915,7 @@ def do_process_participle(index, page, lemma, formind, formval, pos, save, verbo
       if getparam(ht, "1") != "la":
         errandpagemsg("WARNING: Wrong-language {{head}} template in Latin section: %s" % unicode(ht))
         continue
-      head_pos = getparam(t, "2")
+      head_pos = getparam(ht, "2")
       if head_pos != "participle":
         pagemsg("Skipping incorrect part of speech %s: %s" % (head_pos, unicode(ht)))
         continue
@@ -1067,7 +1076,7 @@ def do_process_lemma(index, page, pos, explicit_infl, lemma, explicit_stem, save
           inferred_stem = lemma
         elif lemma.endswith("ius") or lemma.endswith("ium"):
           inferred_stem = lemma[:-3]
-        elif lemma.endswith("us") or lemma.endswith("um"):
+        elif lemma.endswith("us") or lemma.endswith("um") or lemma.endswith("os"):
           inferred_stem = lemma[:-2]
         elif lemma.endswith(u"iī"): # plural
           inferred_stem = lemma[:-2]
@@ -1145,7 +1154,10 @@ def do_process_lemma(index, page, pos, explicit_infl, lemma, explicit_stem, save
           arg1 = inferred_stem
           arg2 = ""
         elif explicit_infl == 2:
-          if lemma.endswith("us"):
+          if lemma.endswith("os"):
+            arg1 = inferred_stem
+            arg2 = ""
+          elif lemma.endswith("us"):
             if "ius" in declsubtypes:
               if not lemma.endswith("ius"):
                 pagemsg("WARNING: Declension template requires lemma in -ius but lemma %s doesn't end that way: %s" % (
@@ -1257,6 +1269,9 @@ def do_process_lemma(index, page, pos, explicit_infl, lemma, explicit_stem, save
             inferred_stem = lemma
           elif lemma.endswith("us"):
             inferred_stem = lemma[:-2]
+          elif lemma.endswith(u"ī"):
+            # plurale tantum
+            inferred_stem = lemma[:-1]
           else:
             errandpagemsg("WARNING: Bad 1st/2nd-declension adjective lemma %s" % lemma)
             return None, None
@@ -1480,10 +1495,13 @@ def do_process_lemma(index, page, pos, explicit_infl, lemma, explicit_stem, save
           sups = vsup.split("/")
           perfs = []
           for sup in sups:
-            if not sup.endswith("um"):
-              errandpagemsg("WARNING: For verb lemma %s, bad deponent supine %s" % (lemma, sup))
-              return None, None
-            perfs.append(sup[:-2] + "us sum")
+            if not sup:
+              perfs.append(sup)
+            else:
+              if not sup.endswith("um"):
+                errandpagemsg("WARNING: For verb lemma %s, bad deponent supine %s" % (lemma, sup))
+                return None, None
+              perfs.append(sup[:-2] + "us sum")
           if not compare_principal_part("3", "perf", "/".join(perfs)):
             continue
         else:
