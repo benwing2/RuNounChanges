@@ -345,7 +345,9 @@
 # 7. DONE: Handle multipart tag sets.
 # 8. Handle irregular verb conjugations, which may have prefixes.
 # 9. MOSTLY DONE: Review latin-macrons.txt against http://www.alatius.com/latin/bennetthidden.html, which corrects Bennett. Ask JohnC5 about this.
-# 10. Pluralia tantum lemmas, e.g. nuptiae.
+# 10. DONE?: Pluralia tantum lemmas, e.g. nuptiae.
+# 11. DONE: If {{head|...}} with missing head= param, add it.
+# 12. Add note about hidden quantity to pronunciation section if potential hidden quantity is present.
 #
 # Examples of disagreements with Bennett:
 #
@@ -381,29 +383,37 @@ def frob_param(t, param, stem_or_exact, is_exact, pagemsg, notes, split_slashes=
   newvals = []
   for val in vals:
     no_macrons_val = remove_macrons(val)
-    assert len(no_macrons_val) == len(val)
     if type(stem_or_exact) is not list:
       stem_or_exact = [stem_or_exact]
     for st in stem_or_exact:
       no_macrons_st = remove_macrons(st)
-      assert len(no_macrons_st) == len(st)
       if is_exact:
         if no_macrons_val == no_macrons_st:
           newvals.append(st)
           break
       else:
         if no_macrons_val.startswith(no_macrons_st):
-          newvals.append(st + val[len(st):])
-          break
+          if len(no_macrons_st) == len(st) and len(no_macrons_val) == len(val):
+            newvals.append(st + val[len(st):])
+            break
+          else:
+            full_stem_len = lalib.synchronize_stems(val, st)
+            if full_stem_len is False:
+              pagemsg("WARNING: Unable to synchronize param %s value %s with replacement stem %s" % (
+                param, val, st))
+            else:
+              newvals.append(st + val[full_stem_len:])
+              break
     else:
+      # no break
       if not val and add_if_needed:
         nonempty = [x for x in stem_or_exact if x]
         if nonempty:
-          t.add(param, nonempty[0])
+          val = nonempty[0]
         else:
           pagemsg("WARNING: Unable to add blank value to param %s: %s" % (
             param, unicode(t)))
-      if val or not no_warn:
+      elif val or not no_warn:
         # no break
         if is_exact:
           pagemsg("WARNING: Unable to match value %s in param %s against replacement(s) %s: %s" % (
@@ -421,7 +431,7 @@ def frob_param(t, param, stem_or_exact, is_exact, pagemsg, notes, split_slashes=
   return False
 
 # Return True if changed.
-def frob_stem(t, param, stem, pagemsg, notes, split_slashes=False, no_warn=False
+def frob_stem(t, param, stem, pagemsg, notes, split_slashes=False, no_warn=False):
   return frob_param(t, param, stem, False, pagemsg, notes, split_slashes=split_slashes,
       no_warn=no_warn)
 
@@ -845,7 +855,7 @@ def process_all_forms(args, index, lemma, pos, save, verbose):
     process_form(index, lemma, formind, formval, pos,
         find_tag_sets_for_form(args, formval), save, verbose)
 
-def do_process_participle(index, page, lemma, formind, formval, pos, save, verbose):
+def do_process_participle(index, page, lemma, formind, formval, pos, skip_forms, save, verbose):
   pagetitle = unicode(page.title())
 
   def pagemsg(txt):
@@ -972,7 +982,8 @@ def do_process_participle(index, page, lemma, formind, formval, pos, save, verbo
       if args is None:
         return None, None
 
-      process_all_forms(args, index, formval, "partform", save, verbose)
+      if not skip_forms:
+        process_all_forms(args, index, formval, "partform", save, verbose)
 
     process_pronun_templates(headword['pronun_section'], formval, pagemsg, notes)
 
@@ -980,12 +991,12 @@ def do_process_participle(index, page, lemma, formind, formval, pos, save, verbo
   sections[j] = secbody + sectail
   return "".join(sections), notes
 
-def process_participle(index, lemma, formind, formval, pos, save, verbose):
+def process_participle(index, lemma, formind, formval, pos, skip_forms, save, verbose):
   def handler(page, index, parsed):
-    return do_process_participle(index, page, lemma, formind, formval, pos, save, verbose)
+    return do_process_participle(index, page, lemma, formind, formval, pos, skip_forms, save, verbose)
   blib.do_edit(pywikibot.Page(site, remove_macrons(formval)), index, handler, save=save, verbose=verbose)
 
-def do_process_lemma(index, page, pos, explicit_infl, lemma, explicit_stem, save, verbose):
+def do_process_lemma(index, page, pos, explicit_infl, lemma, explicit_stem, skip_forms, save, verbose):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -1028,13 +1039,14 @@ def do_process_lemma(index, page, pos, explicit_infl, lemma, explicit_stem, save
         "adj": "adjective",
         "adv": "adverb",
         "phr": "phrase",
+        "prep": "preposition",
         "prov": "proverb", 
         "verb": "verb",
         "num": "numeral",
         "numadj": "numeral",
       }
       if getparam(ht, "2") == pos_to_full_pos[pos]:
-        frob_exact(ht, "head", lemma, pagemsg, notes)
+        frob_exact(ht, "head", lemma, pagemsg, notes, add_if_needed=True)
         found_head_template = True
         found_matching_head = True
 
@@ -1050,6 +1062,10 @@ def do_process_lemma(index, page, pos, explicit_infl, lemma, explicit_stem, save
     elif pos == "phr" and tn == "la-phrase":
       found_matching_head = True
       frob_exact(ht, "head", lemma, pagemsg, notes)
+
+    elif pos == "prep" and tn == "la-prep":
+      found_matching_head = True
+      frob_exact(ht, "1", lemma, pagemsg, notes)
 
     elif pos == "num" and tn == "la-num-card":
       found_matching_head = True
@@ -1255,9 +1271,10 @@ def do_process_lemma(index, page, pos, explicit_infl, lemma, explicit_stem, save
         if args is None:
           return None, None
 
-        process_all_forms(args, index, lemma,
-          pos == "propernoun" and "propernounform" or "nounform", save, verbose
-        )
+        if not skip_forms:
+          process_all_forms(args, index, lemma,
+            pos == "propernoun" and "propernounform" or "nounform", save, verbose
+          )
 
     elif (
       pos == "adj" and (found_head_template or tn in lalib.la_adj_headword_templates) or
@@ -1389,8 +1406,9 @@ def do_process_lemma(index, page, pos, explicit_infl, lemma, explicit_stem, save
         args = lalib.generate_adj_forms(unicode(inflt), errandpagemsg, expand_text)
         if args is None:
           return None, None
-        process_all_forms(args, index, lemma,
-          pos == "numadj" and "numform" or "adjform", save, verbose)
+        if not skip_forms:
+          process_all_forms(args, index, lemma,
+            pos == "numadj" and "numform" or "adjform", save, verbose)
 
     elif pos == "verb" and (found_head_template or tn == "la-verb"):
       # Figure out the actual inflection and deponent status.
@@ -1527,16 +1545,23 @@ def do_process_lemma(index, page, pos, explicit_infl, lemma, explicit_stem, save
             infl, lemma, unicode(inflt)))
           continue
 
-        def truncate_ending(val, expected_ending, parttype):
+        def truncate_ending(val, expected_endings, parttype):
           if not val:
             return ""
           vals = val.split("/")
+          if type(expected_endings) is not list:
+            expected_endings = [expected_endings]
           stems = []
           for v in vals:
-            if not v.endswith(expected_ending):
-              errandpagemsg("WARNING: %s should end in -%s: %s" % (parttype, expected_ending, v))
+            for expected_ending in expected_endings:
+              if v.endswith(expected_ending):
+                stems.append(v[:-len(expected_ending)])
+                break
+            else:
+              # no break
+              errandpagemsg("WARNING: %s should end in %s: %s" % (parttype,
+                " or ".join("-%s" % ending for ending in expected_endings), v))
               return None
-            stems.append(v[:-len(expected_ending)])
           return "/".join(stems)
 
         if infl == "irreg":
@@ -1571,14 +1596,17 @@ def do_process_lemma(index, page, pos, explicit_infl, lemma, explicit_stem, save
                   return None, None
               arg3 = ""
             else:
-              if not lemma.endswith(u"ō"):
-                errpagemsg(u"First-conjugation lemma should end in -ō: %s" % lemma)
+              arg1 = truncate_ending(lemma, [u"ō", "at"], "First-conjugation lemma")
+              if arg1 is None:
                 return None, None
-              arg1 = lemma[:-1]
-              if vperf == arg1 + u"āvī":
+              if lemma.endswith("at"):
+                perf_ending = "it"
+              else:
+                perf_ending = u"ī"
+              if vperf == arg1 + u"āv" + perf_ending:
                 arg2 = ["", arg1 + u"āv"]
               else:
-                arg2 = truncate_ending(vperf, u"ī", "First-conjugation perfect")
+                arg2 = truncate_ending(vperf, perf_ending, "First-conjugation perfect")
                 if arg2 is None:
                   return None, None
               if vsup == arg1 + u"ātum":
@@ -1597,33 +1625,43 @@ def do_process_lemma(index, page, pos, explicit_infl, lemma, explicit_stem, save
               continue
             if deponent:
               if infl == 2:
-                expected_ending = "eor"
+                expected_normal_ending = "eor"
+                expected_impers_ending = u"ētur"
               elif infl == 3:
-                expected_ending = "or"
+                expected_normal_ending = "or"
+                expected_impers_ending = u"itur"
               else:
-                expected_ending = "ior"
-              if not lemma.endswith(expected_ending):
-                errpagemsg("WARNING: Infl=%s deponent lemma should end in -%s: %s" % (
-                  infl, expected_ending, lemma))
+                expected_normal_ending = "ior"
+                expected_impers_ending = u"itur"
+              arg1 = truncate_ending(lemma,
+                [expected_normal_ending, expected_impers_ending],
+                "Infl=%s deponent lemma" % infl)
+              if arg1 is None:
                 return None, None
-              arg1 = lemma[:-len(expected_ending)]
               arg2 = truncate_ending(vsup, "um", "Infl=%s deponent supine" % infl)
               if arg2 is None:
                 return None, None
               arg3 = ""
             else:
               if infl == 2:
-                expected_ending = u"eō"
+                expected_normal_ending = u"eō"
+                expected_impers_ending = u"et"
               elif infl == 3:
-                expected_ending = u"ō"
+                expected_normal_ending = u"ō"
+                expected_impers_ending = u"it"
               else:
-                expected_ending = u"iō"
-              if not lemma.endswith(expected_ending):
-                errandpagemsg("WARNING: Infl=%s lemma should end in -%s: %s" % (
-                  infl, expected_ending, lemma))
+                expected_normal_ending = u"iō"
+                expected_impers_ending = u"it"
+              arg1 = truncate_ending(lemma,
+                [expected_normal_ending, expected_impers_ending],
+                "Infl=%s lemma" % infl)
+              if arg1 is None:
                 return None, None
-              arg1 = lemma[:-len(expected_ending)]
-              arg2 = truncate_ending(vperf, u"ī", "Infl=%s perfect" % infl)
+              if lemma.endswith(expected_impers_ending):
+                perf_ending = "it"
+              else:
+                perf_ending = u"ī"
+              arg2 = truncate_ending(vperf, perf_ending, "Infl=%s perfect" % infl)
               if arg2 is None:
                 return None, None
               arg3 = truncate_ending(vsup, "um", "Infl=%s supine" % infl)
@@ -1663,8 +1701,8 @@ def do_process_lemma(index, page, pos, explicit_infl, lemma, explicit_stem, save
 
           if partpos:
             process_participle(index, lemma, formind, formval, partpos,
-                save, verbose)
-          else:
+                skip_forms, save, verbose)
+          elif not skip_forms:
             process_form(index, lemma, formind, formval, "verbform",
                 find_tag_sets_for_form(args, formval), save, verbose)
 
@@ -1694,9 +1732,9 @@ def do_process_lemma(index, page, pos, explicit_infl, lemma, explicit_stem, save
   sections[j] = secbody + sectail
   return "".join(sections), notes
 
-parser = blib.create_argparser("Clean up usage of macrons in Latin non-lemma forms")
+parser = blib.create_argparser("Clean up usage of macrons in Latin lemmas and non-lemma forms")
 parser.add_argument("--direcfile", help="File containing directives of lemmas to process.")
-parser.add_argument("--dry-run", help="Just show what would be checked, don't actually check references.", action="store_true")
+parser.add_argument("--skip-forms", help="Skip processing non-lemma forms.", action="store_true")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
@@ -1716,7 +1754,7 @@ for line in codecs.open(direcfile, "r", "utf-8"):
   parts = line.split(" ")
   # allow underscore to stand for space
   parts = [part.replace("_", " ") for part in parts]
-  if len(parts) == 2 and parts[0] in ["adv", "num", "phr", "prov"]:
+  if len(parts) == 2 and parts[0] in ["adv", "num", "phr", "prep", "prov"]:
     pass
   elif (len(parts) == 2 or len(parts) == 3) and parts[0] in [
       "n1", "n2", "n3", "n4", "n5", "pn1", "pn2", "pn3", "pn4", "pn5",
@@ -1765,6 +1803,9 @@ for line in codecs.open(direcfile, "r", "utf-8"):
       lemmas.append(("verb", None, lemma, [inf, supine]))
 
     else:
+      if len(parts) != 4:
+        errandmsg("WARNING: Wrong number of verb parts: %s" % line)
+        continue
       assert len(parts) == 4
       lemma, inf, perf, supine = parts
       if lemma.startswith("*"):
@@ -1792,5 +1833,5 @@ for line in codecs.open(direcfile, "r", "utf-8"):
 for index, (pos, infl, lemma, explicit_stem) in blib.iter_items(lemmas, start, end,
     get_name=lambda lemmas: remove_macrons(lemmas[2])):
   def handler(page, index, parsed):
-    return do_process_lemma(index, page, pos, infl, lemma, explicit_stem, args.save, args.verbose)
+    return do_process_lemma(index, page, pos, infl, lemma, explicit_stem, args.skip_forms, args.save, args.verbose)
   blib.do_edit(pywikibot.Page(site, remove_macrons(lemma)), index, handler, save=args.save, verbose=args.verbose)

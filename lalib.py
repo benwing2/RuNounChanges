@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+# !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 import re
@@ -475,6 +475,8 @@ parts_to_tags = {
   'm': ['m'],
   'f': ['f'],
   'n': ['n'],
+  # additional parts for nouns
+  'loc': ['loc'],
 }
 
 tags_to_canonical = {
@@ -629,7 +631,7 @@ def la_get_headword_from_template(t, pagename):
     ending = getparam(t, "2")
     if ending == "ans":
       retval = stem + u"āns"
-    if ending == "ens":
+    elif ending == "ens":
       retval = stem + u"ēns"
     else:
       msg("WARNING: Unrecognized ending for la-present participle: %s" % ending)
@@ -685,3 +687,32 @@ def la_get_headword_from_template(t, pagename):
     msg("WARNING: Unrecognized headword template %s" % unicode(t))
     retval = ""
   return retval or pagename
+
+# Return the length of FULL that matches STEM, even with mismatches in
+# macrons and breves.
+def synchronize_stems(full, stem):
+  i = 0
+  j = 0
+  msg("full=%s stem=%s: Enter" % (full, stem))
+  while i < len(full) and j < len(stem):
+    ok = False
+    if full[i] == stem[j] or remove_macrons(full[i]) == remove_macrons(stem[j]):
+      i += 1
+      j += 1
+      ok = True
+    # If there's both a macron and a breve at the end of the stem,
+    # we need to skip past the breve.
+    if i < len(full) and full[i] == u'\u0306':
+      i += 1
+      ok = True
+    if j < len(stem) and stem[j] == u'\u0306':
+      j += 1
+      ok = True
+    if not ok:
+      msg("full=%s stem=%s: not OK, return False" % (full, stem))
+      return False
+  if j < len(stem):
+    msg("full=%s stem=%s: j < len(stem), return False" % (full, stem))
+    return False
+  msg("full=%s stem=%s: j < len(stem), return %s" % (full, stem, i))
+  return i
