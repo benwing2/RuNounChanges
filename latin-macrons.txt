@@ -327,16 +327,16 @@ n2 ātrāmentārium
 *v1 crīspō
 *n3 crīspitūdō
 ###
-### crūsta
+### crū̆sta
 ###
-*n1 crūsta
-*v1 crūstō
-*n2 crūstum
-*n2 crūstulum
-*n1 crūstula
-*a1 crūstōsus
-*v1 incrūstō
-*n3 incrūstātiō
+*n1 crū̆sta
+*v1 crū̆stō
+*n2 crū̆stum
+*n2 crū̆stulum
+*n1 crū̆stula
+*a1 crū̆stōsus
+*v1 incrū̆stō
+*n3 incrū̆stātiō
 ###
 ### Ctēsiphōn
 ###
@@ -355,7 +355,7 @@ n2 ātrāmentārium
 *v4 cū̆stōdiō
 *n1 cū̆stōdia
 *n3 cū̆stōdītiō
-*phr quis cū̆stōdiet ipsōs cū̆stōdēs
+*phr quis_cū̆stōdiet_ipsōs_cū̆stōdēs
 ###
 ### cūnctus, cūnctor
 ###
@@ -648,7 +648,7 @@ coëmō coëmere *coēmī coēmptum
 ###
 ### flābrum
 ###
-*n1 flābrum
+*n2 flābrum
 ###
 ### flīgō
 ###
@@ -1151,8 +1151,10 @@ a1 Jūstīniāneus
 ### iūxtā
 ###
 prep iū̆xtā
+adv iū̆xtā
 adv iū̆xtim
 prep jū̆xtā
+adv jū̆xtā
 adv jū̆xtim
 ###
 ### lābor
@@ -1175,6 +1177,10 @@ adv jū̆xtim
 *prōlābor prōlābī prōlāpsum
 *n3 prōlāpsiō
 *relābor relābī relāpsum
+###
+### lābrūsca
+###
+n1 lābrūsca
 ###
 ### legō
 ###
@@ -1401,7 +1407,7 @@ subdēligō subdēligere subdēlēgī subdēlēctum
 *n1 mātrīcula
 *n2 mātrīculārius
 *a3 mātrimōniālis
-*n1 mātrimōnium
+*n2 mātrimōnium
 *a1 mātrimus
 *n3 mātrīx
 *n1 mātrōna
@@ -1780,7 +1786,7 @@ v1 expūrgō
 *num duodēquadrāgintā
 *n1 quadra
 *a1 quadrāgēnārius
-*num1 quadrāgēni
+*num1 quadrāgēnī
 *n1 quadrāgēsima
 *a1 quadrāgēsimus
 *adv quadrāgiēns
@@ -1827,12 +1833,12 @@ v1 expūrgō
 *a1 quadriflōrus
 *a1 quadrifluus
 *a1 quadrifolius
-*a1 quadriforis
-*a1 quadrifōrmis
+*a3 quadriforis
+*a3 quadrifōrmis
 *a1 quadrifurcus
 *n1 quadrīga
 *n1 quadrīgae
-*a1 quadrīgālis
+*a3 quadrīgālis
 *n2 quadrigamus
 *a1 quadrīgārius
 *n2 quadrīgātus
@@ -2350,7 +2356,7 @@ subrigō subrigere subrēxī subrēctum
 #*contremēscō
 *convalēscō convalēscere convaluī -- [int]
 *convēscor convēscī -- [int]
-*cornēscō cornēscere -- [int]
+*cornēscō cornēscere -- -- [int]
 *crēbēscō crēbēscere crēbuī -- [int]
 # FIXME, delete 4th part
 *crēbrēscō crēbrēscere crēbruī -- [int]
@@ -3027,9 +3033,10 @@ trāvehō trāvehere trāvexī trāvectum
 ### vīvō
 ###
 *vīvō vīvere vīxī vīctum
-*# n4 vīctus homograph of victus past participle of vincō
+n4 vīctus
 *a3 vīctuālis
 *advīvō advīvere advīxī advīctum
 *convīvō convīvere convīxī convīctum
+n4 convīctus
 *revīvō revīvere revīxī revīctum
 *supervīvō supervīvere supervīxī supervīctum
