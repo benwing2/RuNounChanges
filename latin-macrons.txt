@@ -686,26 +686,26 @@ n4 flūctus
 ###
 ### fluō
 ###
-adfluō adfluere adflūxī adflūxum
-affluō affluere afflūxī afflūxum
-circumfluō circumfluere circumflūxī circumflūxum
-cōnfluō cōnfluere cōnflūxī cōnflūxum
-dēfluō dēfluere dēflūxī dēflūxum
-diffluō diffluere difflūxī difflūxum
-effluō effluere efflūxī efflūxum
-fluō fluere flūxī flūxum
-īnfluō īnfluere īnflūxī īnflūxum
-interfluō interfluere interflūxī interflūxum
-pereffluō pereffluere perefflūxī perefflūxum
-perfluō perfluere perflūxī perflūxum
-praefluō praefluere praeflūxī praeflūxum
-praeterfluō praeterfluere praeterflūxī praeterflūxum
-prōfluō prōfluere prōflūxī prōflūxum
-refluō refluere reflūxī reflūxum
-subterfluō subterfluere subterflūxī subterflūxum
-supereffluō supereffluere superefflūxī superefflūxum
-superfluō superfluere superflūxī superflūxum
-trānsfluō trānsfluere trānsflūxī trānsflūxum
+adfluō adfluere adflūxī adflūxum [int + dat]
+affluō affluere afflūxī afflūxum [int + dat]
+circumfluō circumfluere circumflūxī circumflūxum [tr]
+cōnfluō cōnfluere cōnflūxī -- [int]
+dēfluō dēfluere dēflūxī -- [int + de]
+diffluō diffluere difflūxī difflūxum [int]
+effluō effluere efflūxī -- [tr]
+fluō fluere flūxī flūxum [int]
+īnfluō īnfluere īnflūxī īnflūxum [int + in]
+interfluō interfluere interflūxī -- [tr]
+pereffluō pereffluere -- -- [int]
+perfluō perfluere perflūxī perflūxum [int + per/in]
+praefluō praefluere -- -- [tr]
+praeterfluō praeterfluere -- -- [tr]
+prōfluō prōfluere prōflūxī prōflūxum [int]
+refluō refluere -- -- [int]
+subterfluō subterfluere -- -- [tr]
+supereffluō supereffluere -- -- [int + dative]
+superfluō superfluere superflūxī -- [tr]
+trānsfluō trānsfluere trānsflūxī -- [int]
 n4 flūxus
 a3 flūxior
 n4 īnflūxus
@@ -1283,12 +1283,12 @@ subdēligō subdēligere subdēlēgī subdēlēctum
 ###
 ### lūceō, lūx
 ###
-*lūceō lūcēre lūxī --
-*allūceō allūcēre allūxī --
+*lūceō lūcēre lūxī -- [tr]
+*allūceō allūcēre allūxī -- [int]
 *circumlūceō circumlūcēre circumlūxī --
-*collūceō collūcēre collūxī --
-*conlūceō conlūcēre conlūxī --
-*dīlūceō dīlūcēre dīlūxī --
+*collūceō collūcēre collūxī -- [int, + abl]
+*conlūceō conlūcēre conlūxī -- [int, + abl]
+*dīlūceō dīlūcēre dīlūxī -- [int]
 *ēlūceō ēlūcēre ēlūxī --
 *illūceō illūcēre illūxī --
 *inlūceō inlūcēre inlūxī --
