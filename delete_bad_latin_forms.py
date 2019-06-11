@@ -434,7 +434,7 @@ def delete_form(index, lemma, formind, formval, pos, tag_sets_to_delete, save, v
     else:
       pagemsg("Would save with comment = %s" % comment)
 
-def process_page(index, lemma, conj, forms, pages_to_delete, save, verbose):
+def process_page(index, lemma, pos, infl, forms, pages_to_delete, save, verbose):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, lemma, txt))
   def errandpagemsg(txt):
@@ -444,7 +444,12 @@ def process_page(index, lemma, conj, forms, pages_to_delete, save, verbose):
 
   pagemsg("Processing")
 
-  args = lalib.generate_verb_forms(conj, errandpagemsg, expand_text)
+  if pos == "noun":
+    args = lalib.generate_noun_forms(infl, errandpagemsg, expand_text)
+  elif pos == "verb":
+    args = lalib.generate_verb_forms(infl, errandpagemsg, expand_text)
+  else:
+    args = lalib.generate_adj_forms(infl, errandpagemsg, expand_text)
   if args is None:
     return
 
@@ -462,6 +467,12 @@ def process_page(index, lemma, conj, forms, pages_to_delete, save, verbose):
     if form in ["pasv", "pass"]:
       for key, val in args.iteritems():
         if key != "perf_pasv_ptc" and "pasv" in key:
+          tag_sets_to_delete.append(lalib.form_key_to_tag_set(key))
+          forms_to_delete.append((key, val))
+    if form in ["nonimperspasv", "nonimperspass"]:
+      for key, val in args.iteritems():
+        if key != "perf_pasv_ptc" and "pasv" in key and (
+            "1s" in key or "1p" in key or "2s" in key or "2p" in key or "3p" in key):
           tag_sets_to_delete.append(lalib.form_key_to_tag_set(key))
           forms_to_delete.append((key, val))
     if form in ["12pasv", "12pass"]:
@@ -519,33 +530,35 @@ def process_page(index, lemma, conj, forms, pages_to_delete, save, verbose):
       delete_form(index, lemma, formind, formval, "verbform", tag_sets_to_delete, save, verbose)
 
 parser = blib.create_argparser(u"Delete bad Latin forms")
-parser.add_argument('--conjfile', help="File containing lemmas and conj templates.")
-parser.add_argument('--form-conjfile', help="File containing lemmas, forms to delete and conj templates.")
+parser.add_argument('--inflfile', help="File containing lemmas and inflection templates.")
+parser.add_argument('--form-inflfile', help="File containing lemmas, forms to delete and infl templates.")
 parser.add_argument('--forms', help="Forms to delete.")
+parser.add_argument('--pos', required=True, help="Part of speech of words to delete",
+    choices=['noun', 'verb', 'adj'])
 parser.add_argument('--output-pages-to-delete', help="File to write pages to delete.")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
 pages_to_delete = []
-if args.form_conjfile:
-  lines = [x.strip() for x in codecs.open(args.form_conjfile, "r", "utf-8")]
+if args.form_inflfile:
+  lines = [x.strip() for x in codecs.open(args.form_inflfile, "r", "utf-8")]
   for index, line in blib.iter_items(lines, start, end):
     if "!!!" in line:
-      lemma, forms, conj = re.split("!!!", line)
+      lemma, forms, infl = re.split("!!!", line)
     else:
-      lemma, forms, conj = re.split(" ", line, 2)
-    process_page(index, lemma, conj, forms, pages_to_delete,
+      lemma, forms, infl = re.split(" ", line, 2)
+    process_page(index, lemma, args.pos, infl, forms, pages_to_delete,
       args.save, args.verbose)
 else:
-  if not args.conjfile or not args.forms:
-    raise ValueError("If --form-conjfile not given, --conjfile and --forms must be given")
-  lines = [x.strip() for x in codecs.open(args.conjfile, "r", "utf-8")]
+  if not args.inflfile or not args.forms:
+    raise ValueError("If --form-inflfile not given, --inflfile and --forms must be given")
+  lines = [x.strip() for x in codecs.open(args.inflfile, "r", "utf-8")]
   for index, line in blib.iter_items(lines, start, end):
     if "!!!" in line:
-      lemma, conj = re.split("!!!", line)
+      lemma, infl = re.split("!!!", line)
     else:
-      lemma, conj = re.split(" ", line, 1)
-    process_page(index, lemma, conj, args.forms, pages_to_delete,
+      lemma, infl = re.split(" ", line, 1)
+    process_page(index, lemma, args.pos, infl, args.forms, pages_to_delete,
       args.save, args.verbose)
 msg("The following pages need to be deleted:")
 for page in pages_to_delete:
