@@ -407,6 +407,17 @@ def generate_verb_forms(template, errandpagemsg, expand_text):
     return None
   return blib.split_generate_args(result)
 
+def generate_infl_forms(pos, template, errandpagemsg, expand_text):
+  if pos == 'noun':
+    return generate_noun_forms(template, errandpagemsg, expand_text)
+  elif pos == 'verb':
+    return generate_verb_forms(template, errandpagemsg, expand_text)
+  elif pos == 'adj':
+    return generate_adj_forms(template, errandpagemsg, expand_text)
+  else:
+    errandpagemsg("WARNING: Bad pos=%s, expected noun/verb/adj")
+    return None
+
 demacron_mapper = {
   u'ā': 'a',
   u'ē': 'e',
@@ -622,7 +633,7 @@ la_verb_overrides = (
   la_verb_ger_sup_overrides
 )
 
-def la_get_headword_from_template(t, pagename):
+def la_get_headword_from_template(t, pagename, pagemsg):
   tn = tname(t)
   if tn in la_adj_headword_templates or tn in ["la-noun", "la-suffix"]:
     retval = getparam(t, "1")
@@ -634,7 +645,7 @@ def la_get_headword_from_template(t, pagename):
     elif ending == "ens":
       retval = stem + u"ēns"
     else:
-      msg("WARNING: Unrecognized ending for la-present participle: %s" % ending)
+      pagemsg("WARNING: Unrecognized ending for la-present participle: %s" % ending)
       retval = stem + ending
   elif tn in ["la-future participle", "la-perfect participle", "la-gerundive"]:
     retval = getparam(t, "2") or getparam(t, "1")
@@ -673,7 +684,7 @@ def la_get_headword_from_template(t, pagename):
       if retval:
         retval = retval + u"ī"
     elif num:
-      msg("WARNING: Unrecognized value for num: %s" % num)
+      pagemsg("WARNING: Unrecognized value for num: %s" % num)
       retval = getparam(t, "1")
     else:
       retval = getparam(t, "1")
@@ -681,10 +692,12 @@ def la_get_headword_from_template(t, pagename):
     retval = getparam(t, "head") or (getparam(t, "1") + "um")
   elif tn == "la-letter":
     retval = pagename
+  elif tn == "la-prep":
+    retval = getparam(t, "head")
   elif tn in la_nonlemma_headword_templates or tn in la_misc_headword_templates:
     retval = getparam(t, "head") or getparam(t, "1")
   else:
-    msg("WARNING: Unrecognized headword template %s" % unicode(t))
+    pagemsg("WARNING: Unrecognized headword template %s" % unicode(t))
     retval = ""
   return retval or pagename
 
@@ -693,7 +706,6 @@ def la_get_headword_from_template(t, pagename):
 def synchronize_stems(full, stem):
   i = 0
   j = 0
-  msg("full=%s stem=%s: Enter" % (full, stem))
   while i < len(full) and j < len(stem):
     ok = False
     if full[i] == stem[j] or remove_macrons(full[i]) == remove_macrons(stem[j]):
@@ -709,10 +721,7 @@ def synchronize_stems(full, stem):
       j += 1
       ok = True
     if not ok:
-      msg("full=%s stem=%s: not OK, return False" % (full, stem))
       return False
   if j < len(stem):
-    msg("full=%s stem=%s: j < len(stem), return False" % (full, stem))
     return False
-  msg("full=%s stem=%s: j < len(stem), return %s" % (full, stem, i))
   return i
