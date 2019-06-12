@@ -38,7 +38,7 @@ rename_templates_without_lang = [
 
 rename_templates = rename_templates_with_lang + rename_templates_without_lang
 
-def process_text_on_page(pagetitle, index, text):
+def process_text_on_page(index, pagetitle, text):
   global args
 
   def pagemsg(txt):
@@ -221,7 +221,7 @@ def process_text_on_page(pagetitle, index, text):
 def process_page(page, index, parsed):
   pagetitle = unicode(page.title())
   text = unicode(page.text)
-  return process_text_on_page(pagetitle, index, text)
+  return process_text_on_page(index, pagetitle, text)
 
 parser = blib.create_argparser("Replace {{inflected form of}} with proper call to {{inflection of}}")
 parser.add_argument("--stdin", help="Read dump from stdin.", action="store_true")
@@ -229,12 +229,7 @@ args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
 if args.stdin:
-  page_index = 0
-  def process_page_callback(title, text):
-    global page_index
-    page_index += 1
-    process_text_on_page(title, page_index, text)
-  blib.parse_dump(sys.stdin, process_page_callback)
+  blib.parse_dump(sys.stdin, process_text_on_page)
 else:
   for template in rename_templates:
     msg("Processing references to Template:%s" % template)
