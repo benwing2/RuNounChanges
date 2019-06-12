@@ -444,12 +444,7 @@ def process_page(index, lemma, pos, infl, forms, pages_to_delete, save, verbose)
 
   pagemsg("Processing")
 
-  if pos == "noun":
-    args = lalib.generate_noun_forms(infl, errandpagemsg, expand_text)
-  elif pos == "verb":
-    args = lalib.generate_verb_forms(infl, errandpagemsg, expand_text)
-  else:
-    args = lalib.generate_adj_forms(infl, errandpagemsg, expand_text)
+  args = lalib.generate_infl_forms(pos, infl, errandpagemsg, expand_text)
   if args is None:
     return
 
