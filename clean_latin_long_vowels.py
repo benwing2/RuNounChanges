@@ -348,11 +348,13 @@
 # 10. DONE?: Pluralia tantum lemmas, e.g. nuptiae.
 # 11. DONE: If {{head|...}} with missing head= param, add it.
 # 12. Add note about hidden quantity to pronunciation section if potential hidden quantity is present.
+# 13. DONE: If pronun begins with lowercase letter but substitution begins with
+#     capital letter, allow it.
 #
 # Examples of disagreements with Bennett:
 #
 # Bennett: dēlīctus/relīctus (dēlinquō/relinquō), fīctus (fingō), pīctus (pingō), trāctus (trahō); Allen: dēlĭctus/relĭctus, fĭctus, pĭctus, trăctus
-# Bennett: ārdeō, ārsī, ārsurus; Michelson: ărd- in Lindsay, Sommer, Brugmann
+# Bennett: ārdeō, ārsī, ārsūrus; Michelson: ărd-/ărs- in Lindsay, Sommer, Brugmann
 # Bennett: fīrmus; Michelson: fĭrmus or fīrmus
 # Bennett: ūlna; Michelson: ŭlna
 # Bennett: ūstus (ūrō); Michelson: ŭstus
@@ -373,7 +375,7 @@ from lalib import remove_macrons
 
 
 # Return True if changed.
-def frob_param(t, param, stem_or_exact, is_exact, pagemsg, notes, split_slashes=False, no_warn=False, add_if_needed=False):
+def frob_param(t, param, stem_or_exact, is_exact, pagemsg, notes, split_slashes=False, no_warn=False, add_if_needed=False, allow_case_difference=False):
   origt = unicode(t)
   origval = getparam(t, param)
   if split_slashes:
@@ -383,10 +385,14 @@ def frob_param(t, param, stem_or_exact, is_exact, pagemsg, notes, split_slashes=
   newvals = []
   for val in vals:
     no_macrons_val = remove_macrons(val)
+    if allow_case_difference:
+      no_macrons_val = no_macrons_val.lower()
     if type(stem_or_exact) is not list:
       stem_or_exact = [stem_or_exact]
     for st in stem_or_exact:
       no_macrons_st = remove_macrons(st)
+      if allow_case_difference:
+        no_macrons_st = no_macrons_st.lower()
       if is_exact:
         if no_macrons_val == no_macrons_st:
           newvals.append(st)
@@ -397,6 +403,8 @@ def frob_param(t, param, stem_or_exact, is_exact, pagemsg, notes, split_slashes=
             newvals.append(st + val[len(st):])
             break
           else:
+            # FIXME, If allow_case_difference, synchronize_stems() should
+            # be passed that flag in and should allow for case differences.
             full_stem_len = lalib.synchronize_stems(val, st)
             if full_stem_len is False:
               pagemsg("WARNING: Unable to synchronize param %s value %s with replacement stem %s" % (
@@ -436,9 +444,11 @@ def frob_stem(t, param, stem, pagemsg, notes, split_slashes=False, no_warn=False
       no_warn=no_warn)
 
 # Return True if changed.
-def frob_exact(t, param, newval, pagemsg, notes, split_slashes=False, no_warn=False, add_if_needed=False):
-  return frob_param(t, param, newval, True, pagemsg, notes, split_slashes=split_slashes,
-      no_warn=no_warn, add_if_needed=add_if_needed)
+def frob_exact(t, param, newval, pagemsg, notes, split_slashes=False,
+    no_warn=False, add_if_needed=False, allow_case_difference=False):
+  return frob_param(t, param, newval, True, pagemsg, notes,
+    split_slashes=split_slashes, no_warn=no_warn, add_if_needed=add_if_needed,
+    allow_case_difference=allow_case_difference)
 
 # Return True if anything changed.
 def frob_chain_stem(t, param, stem, pagemsg, notes, split_slashes=False, no_warn=False):
@@ -639,7 +649,7 @@ def process_pronun_template(t, lemma, pagemsg, notes):
       notes.append("add pronunciation to {{la-IPA}}")
       return True
   else:
-    return frob_exact(t, "1", lemma, pagemsg, notes)
+    return frob_exact(t, "1", lemma, pagemsg, notes, allow_case_difference=True)
 
 def process_pronun_templates(pronun_section, lemma, pagemsg, notes):
   if not pronun_section:
@@ -652,7 +662,7 @@ def process_pronun_templates(pronun_section, lemma, pagemsg, notes):
     pront = pronun_templates[0]
     origpront = unicode(pront)
     pagetitle = remove_macrons(lemma)
-    headwords = set(lalib.la_get_headword_from_template(hw['head_template'], pagetitle) for hw in pronun_section['headwords'])
+    headwords = set(lalib.la_get_headword_from_template(hw['head_template'], pagetitle, pagemsg) for hw in pronun_section['headwords'])
     if len(list(headwords)) > 1:
       pagemsg("WARNING: One pronunciation template %s but multiple headword templates with different headwords, not changing: %s" %
         (origpront, ",".join(unicode(hw['head_template']) for hw in pronun_section['headwords'])))
