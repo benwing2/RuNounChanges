@@ -412,11 +412,18 @@ def generate_infl_forms(pos, template, errandpagemsg, expand_text):
     return generate_noun_forms(template, errandpagemsg, expand_text)
   elif pos == 'verb':
     return generate_verb_forms(template, errandpagemsg, expand_text)
-  elif pos == 'adj':
+  elif pos in ['adj', 'part']:
     return generate_adj_forms(template, errandpagemsg, expand_text)
   else:
     errandpagemsg("WARNING: Bad pos=%s, expected noun/verb/adj")
     return None
+
+MACRON = u"\u0304" # macron =  ̄
+BREVE = u"\u0306" # breve =  ̆
+DOUBLE_INV_BREVE = u"\u0361" # double inverted breve
+DIAER = u"\u0308" # diaeresis =  ̈
+
+combining_accents = [MACRON, BREVE, DOUBLE_INV_BREVE, DIAER]
 
 demacron_mapper = {
   u'ā': 'a',
@@ -442,14 +449,32 @@ demacron_mapper = {
   u'Ĭ': 'I',
   u'Ŏ': 'O',
   u'Ŭ': 'U',
-  # combining breve
-  u'\u0306': '',
+  MACRON: '',
+  BREVE: '',
+  DOUBLE_INV_BREVE: '',
+  u'ä': 'a',
+  u'Ä': 'A',
   u'ë': 'e',
   u'Ë': 'E',
+  u'ï': 'i',
+  u'Ï': 'I',
+  u'ö': 'o',
+  u'Ö': 'O',
+  u'ü': 'u',
+  u'Ü': 'U',
+  u'ÿ': 'y',
+  u'Ÿ': 'Y',
+  DIAER: '',
 }
 
-def remove_macrons(text):
-  return re.sub(u'([āēīōūȳĀĒĪŌŪȲăĕĭŏŭĂĔĬŎŬ\u0306ëË])', lambda m: demacron_mapper[m.group(1)], text)
+macron_breve_etc_no_diaeresis = u'āēīōūȳĀĒĪŌŪȲăĕĭŏŭĂĔĬŎŬ' + MACRON + BREVE + DOUBLE_INV_BREVE
+macron_breve_etc = macron_breve_etc_no_diaeresis + u'äÄëËïÏöÖüÜÿŸ' + DIAER
+
+def remove_macrons(text, preserve_diaeresis=False):
+  if preserve_diaeresis:
+    return re.sub(u'([' + macron_breve_etc_no_diaeresis + '])', lambda m: demacron_mapper[m.group(1)], text)
+  else:
+    return re.sub(u'([' + macron_breve_etc + '])', lambda m: demacron_mapper[m.group(1)], text)
 
 parts_to_tags = {
   # parts for verbs
@@ -644,6 +669,8 @@ def la_get_headword_from_template(t, pagename, pagemsg):
       retval = stem + u"āns"
     elif ending == "ens":
       retval = stem + u"ēns"
+    elif ending == "iens":
+      retval = stem + u"iēns"
     else:
       pagemsg("WARNING: Unrecognized ending for la-present participle: %s" % ending)
       retval = stem + ending
@@ -714,10 +741,10 @@ def synchronize_stems(full, stem):
       ok = True
     # If there's both a macron and a breve at the end of the stem,
     # we need to skip past the breve.
-    if i < len(full) and full[i] == u'\u0306':
+    if i < len(full) and full[i] in combining_accents:
       i += 1
       ok = True
-    if j < len(stem) and stem[j] == u'\u0306':
+    if j < len(stem) and stem[j] in combining_accents:
       j += 1
       ok = True
     if not ok:
