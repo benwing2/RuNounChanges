@@ -136,7 +136,7 @@ function export.show(frame)
 
 	if domain == nil then
 		return make_table(data) .. m_utilities.format_categories(data.categories, lang)
-	else 
+	else
 		local verb = data['forms']['1s_pres_actv_indc'] ~= nil and ('[['..mw.ustring.gsub(mw.ustring.toNFD(data['forms']['1s_pres_actv_indc']),'[^%w]+',"")..'|'..data['forms']['1s_pres_actv_indc'].. ']]') or 'verb'
 		return link_google_books(verb, flatten_values(data['forms']), domain) end
 end
@@ -171,26 +171,26 @@ function export.make_data(frame)
 	local subtype = frame.args["type"] or args["type"]; if subtype == nil then subtype = '' end
 	local sync_perf = args["sync_perf"]; if sync_perf == nil then sync_perf = '' end
 	local p3inf = args["p3inf"]; if p3inf == nil then p3inf = '' end
-	
+
 	if not conjugations[conj_type] then
 		error("Unknown conjugation type '" .. conj_type .. "'")
 	end
-	
+
 	local data = {forms = {}, title = {}, categories = {}, form_footnote_indices = {}, footnotes = {}}  --note: the addition of red superscripted footnotes ('<sup style="color: red">' ... </sup>) is only implemented for the three form printing loops in which it is used
 	local typeinfo = {conj_type = conj_type, subtype = subtype, sync_perf = sync_perf, p3inf = p3inf}
-	
+
 	-- Generate the verb forms
 	conjugations[conj_type](args, data, typeinfo)
-	
+
 	-- Override with user-set forms
 	override(data, args)
-	
+
 	-- Post-process the forms
 	postprocess(data, typeinfo)
-	
+
 	-- Check if the links to the verb forms exist
 	checkexist(data)
-	
+
 	-- Check if the verb is irregular
 	if not conj_type == 'irreg' then checkirregular(args, data) end
 	return data
@@ -292,7 +292,7 @@ local function make_perfect_passive(data)
 	end
 	local ppplink = table.concat(ppplinks, " or ")
 	local sumlink = make_link({lang = lang, term = "sum"}, "term")
-	
+
 	data.forms["perf_pasv_indc"] = ppplink .. " + present active indicative of " .. sumlink
 	data.forms["futp_pasv_indc"] = ppplink .. " + future active indicative of " .. sumlink
 	data.forms["plup_pasv_indc"] = ppplink .. " + imperfect active indicative of " .. sumlink
@@ -303,7 +303,7 @@ end
 postprocess = function(data, typeinfo)
 	-- Add information for the passive perfective forms
 	if data.forms["perf_pasv_ptc"] and not form_contains(data.forms["perf_pasv_ptc"], "&mdash;") then
-		if typeinfo.subtype == "pass-impers" then
+		if typeinfo.subtype:find("pass-impers") then
 			-- These may already be set by make_supine().
 			clear_form(data, "perf_pasv_inf")
 			clear_form(data, "perf_pasv_ptc")
@@ -317,7 +317,7 @@ postprocess = function(data, typeinfo)
 				add_form(data, "perf_pasv_inf", nns_ppp, " [[esse]]")
 				add_form(data, "perf_pasv_ptc", nns_ppp, "")
 			end
-		elseif typeinfo.subtype == "pass-3only" then
+		elseif typeinfo.subtype:find("pass-3only") then
 			for _, supine_stem in ipairs(typeinfo.supine_stem) do
 				local nns_ppp_s = "[[" .. supine_stem .. "us]]"
 				local nns_ppp_p = "[[" .. supine_stem .. "ī]]"
@@ -336,251 +336,8 @@ postprocess = function(data, typeinfo)
 			make_perfect_passive(data)
 		end
 	end
-	
-	-- Types of irregularity related primarily to the active.
-	-- These could in theory be combined with those related to the passive and imperative,
-	-- i.e. there's no reason there couldn't be an impersonal deponent verb with no imperatives.
-	if typeinfo.subtype == "impers" then
-		-- Impersonal verbs have only third-person singular forms.
-		table.insert(data.title, "[[impersonal]]")
-		table.insert(data.categories, "Latin impersonal verbs")
-		
-		-- Remove all non-3sg forms
-		for key, _ in pairs(data.forms) do
-			if key:find("^[12][sp]") or key:find("^3p") then
-				data.forms[key] = nil
-			end
-		end
-	elseif typeinfo.subtype == "impers-nopass" then
-		-- Impersonal verbs have only third-person singular forms.
-		table.insert(data.title, "[[impersonal]]")
-		table.insert(data.title, "active only")
-		table.insert(data.categories, "Latin impersonal verbs")
-		table.insert(data.categories, "Latin active-only verbs")
-		
-		-- Remove all non-3sg and passive forms
-		for key, _ in pairs(data.forms) do
-			if key:find("^[12][sp]") or key:find("^3p") or key:find("pasv") then
-				data.forms[key] = nil
-			end
-		end
-	elseif typeinfo.subtype == "impers-depon" then
-		-- Impersonal verbs have only third-person singular forms.
-		table.insert(data.title, "[[impersonal]]")
-		table.insert(data.title, "[[deponent]]")
-		table.insert(data.categories, "Latin impersonal verbs")
-		table.insert(data.categories, "Latin deponent verbs")
-		
-		-- Remove all non-3sg and active forms and future passive infinitive
-		for key, _ in pairs(data.forms) do
-			if key:find("^[12][sp]") or key:find("^3p") or key:find("actv") and key ~= "pres_actv_ptc" and key ~= "futr_actv_ptc" or key == "futr_pasv_inf" then
-				data.forms[key] = nil
-			end
-		end
-		
-		-- Change passive to active
-		for key, form in pairs(data.forms) do
-			if key:find("pasv") and key ~= "pres_pasv_ptc" and key ~= "futr_pasv_ptc" then
-				data.forms[key:gsub("pasv", "actv")] = form
-				data.forms[key] = nil
-			end
-		end
-	elseif typeinfo.subtype == "3only" then
-		table.insert(data.title, "[[impersonal]]")
-		table.insert(data.categories, "Latin impersonal verbs")
-		
-		-- Remove all non-3sg forms
-		for key, _ in pairs(data.forms) do
-			if key:find("^[12][sp]") then
-				data.forms[key] = nil
-			end
-		end
-	elseif typeinfo.subtype == "3only-nopass" then
-		table.insert(data.title, "[[impersonal]]")
-		table.insert(data.title, "active only")
-		table.insert(data.categories, "Latin impersonal verbs")
-		table.insert(data.categories, "Latin active-only verbs")
-		
-		-- Remove all non-3sg and passive forms
-		for key, _ in pairs(data.forms) do
-			if key:find("^[12][sp]") or key:find("pasv") then
-				data.forms[key] = nil
-			end
-		end
-	elseif typeinfo.subtype == "3only-depon" then
-		table.insert(data.title, "[[impersonal]]")
-		table.insert(data.title, "[[deponent]]")
-		table.insert(data.categories, "Latin impersonal verbs")
-		table.insert(data.categories, "Latin deponent verbs")
-		
-		-- Remove all non-3sg and active forms and future passive infinitive
-		for key, _ in pairs(data.forms) do
-			if key:find("^[12][sp]") or key:find("actv") and key ~= "pres_actv_ptc" and key ~= "futr_actv_ptc" or key == "futr_pasv_inf" then
-				data.forms[key] = nil
-			end
-		end
-		
-		-- Change passive to active
-		for key, form in pairs(data.forms) do
-			if key:find("pasv") and key ~= "pres_pasv_ptc" and key ~= "futr_pasv_ptc" then
-				data.forms[key:gsub("pasv", "actv")] = form
-				data.forms[key] = nil
-			end
-		end
-	end
-	
-	-- Handle certain irregularities in the passive
-	if typeinfo.subtype == "depon" then
-		-- Deponent verbs use passive forms with active meaning
-		table.insert(data.title, "[[deponent]]")
-		table.insert(data.categories, "Latin deponent verbs")
-		
-		-- Remove active forms and future passive infinitive
-		for key, _ in pairs(data.forms) do
-			if key:find("actv") and key ~= "pres_actv_ptc" and key ~= "futr_actv_ptc" and key ~= "futr_actv_inf" or key == "futr_pasv_inf" then
-				data.forms[key] = nil
-			end
-		end
-		
-		-- Change passive to active
-		for key, form in pairs(data.forms) do
-			if key:find("pasv") and key ~= "pres_pasv_ptc" and key ~= "futr_pasv_ptc" and key ~= "futr_pasv_inf" then
-				data.forms[key:gsub("pasv", "actv")] = form
-				data.forms[key] = nil
-			end
-		end
-	
-		-- Generate correct form of infinitive for nominative gerund
-		data.forms["ger_nom"] = data.forms["pres_actv_inf"]
-		
-	elseif typeinfo.subtype == "semi-depon" then
-		-- Semi-deponent verbs use perfective passive forms with active meaning,
-		-- and have no imperfective passive
-		table.insert(data.title, "[[semi-deponent]]")
-		table.insert(data.categories, "Latin semi-deponent verbs")
-		
-		-- Remove perfective active and imperfective passive forms
-		for key, _ in pairs(data.forms) do
-			if key:find("perf_actv") or key:find("plup_actv") or key:find("futp_actv") or key:find("pres_pasv") or key:find("impf_pasv") or key:find("futr_pasv") then
-				data.forms[key] = nil
-			end
-		end
-		
-		-- Change perfective passive to active
-		for key, form in pairs(data.forms) do
-			if key:find("perf_pasv") or key:find("plup_pasv") or key:find("futp_pasv") then
-				data.forms[key:gsub("pasv", "actv")] = form
-				data.forms[key] = nil
-			end
-		end
-	elseif typeinfo.subtype == "depon-noperf" then --(e.g. calvor, -ī)
-		table.insert(data.title, "[[deponent]]")
-		table.insert(data.categories, "Latin deponent verbs")
-		table.insert(data.title, "[[defective verb|defective]]")
-		table.insert(data.categories, "Latin defective verbs")
-		
-		-- Remove active forms and future passive infinitive
-		for key, _ in pairs(data.forms) do
-			if key:find("actv") and key ~= "pres_actv_ptc" and key ~= "futr_actv_ptc" and key ~= "futr_actv_inf" or key == "futr_pasv_inf" then
-				data.forms[key] = nil
-			end
-		end
-		
-		-- Change passive to active
-		for key, form in pairs(data.forms) do
-			if key:find("pasv") and key ~= "pres_pasv_ptc" and key ~= "futr_pasv_ptc" and key ~= "futr_pasv_inf" then
-				data.forms[key:gsub("pasv", "actv")] = form
-				data.forms[key] = nil
-			end
-		end
-		
-		-- Remove all perfect forms
-		for key, _ in pairs(data.forms) do
-			if key:find("perf") or key:find("plup") or key:find("futp") then
-				data.forms[key] = nil
-			end
-		end
-	elseif typeinfo.subtype == "noperf" then
-		-- Some verbs have no perfect forms (e.g. inalbēscō, -ěre)
-		table.insert(data.title, "[[defective verb|defective]]")
-		table.insert(data.categories, "Latin defective verbs")
 
-		-- Remove all perfect forms
-		for key, _ in pairs(data.forms) do
-			if key:find("perf") or key:find("plup") or key:find("futp") then
-				data.forms[key] = nil
-			end
-		end
-	elseif typeinfo.subtype == "no-actv-perf" then
-		-- Some verbs have no active perfect forms (e.g. interstinguō, -ěre)
-		table.insert(data.title, "no active perfect forms")
-		table.insert(data.categories, "Latin defective verbs")
-		
-		-- Remove all active perfect forms
-		for key, _ in pairs(data.forms) do
-			if key:find("actv") and (key:find("perf") or key:find("plup") or key:find("futp")) then
-				data.forms[key] = nil
-			end
-		end
-	elseif typeinfo.subtype == "no-pasv-perf" then
-		-- Some verbs have no passive perfect forms (e.g. ārēscō, -ěre)
-		table.insert(data.title, "no passive perfect forms")
-		table.insert(data.categories, "Latin defective verbs")
-		
-		-- Remove all passive perfect forms
-		for key, _ in pairs(data.forms) do
-			if key:find("pasv") and (key:find("perf") or key:find("plup") or key:find("futp")) then
-				data.forms[key] = nil
-			end
-		end
-	elseif typeinfo.subtype == "nopass-noperf" then
-		-- Some verbs have no passive and no perfect forms (e.g. albēscō, -ěre)
-		table.insert(data.title, "[[defective verb|defective]]")
-		table.insert(data.title, "active only")
-		table.insert(data.categories, "Latin defective verbs")
-		table.insert(data.categories, "Latin active-only verbs")
-		
-		-- Remove all passive and all perfect forms
-		for key, _ in pairs(data.forms) do
-			if key:find("pasv") or key:find("perf") or key:find("plup") or key:find("futp") then
-				data.forms[key] = nil
-			end
-		end
-	elseif typeinfo.subtype == "nopass" or typeinfo.subtype == "nopass-noimp" then
-		-- Some verbs have no passive forms (usually intransitive)
-		table.insert(data.title, "active only")
-		table.insert(data.categories, "Latin active-only verbs")
-		
-		-- Remove all passive forms
-		for key, _ in pairs(data.forms) do
-			if key:find("pasv") then
-				data.forms[key] = nil
-			end
-		end
-	elseif typeinfo.subtype == "pass-3only" then
-		-- Some verbs have only third-person forms in the passive
-		table.insert(data.title, "only third-person forms in passive")
-		table.insert(data.categories, "Latin verbs with third-person passive")
-		
-		-- Remove all non-3rd-person passive forms and all passive imperatives
-		for key, _ in pairs(data.forms) do
-			if key:find("pasv") and (key:find("^[12][sp]") or key:find("impr")) then
-				data.forms[key] = nil
-			end
-		end
-	elseif typeinfo.subtype == "pass-impers" then
-		-- Some verbs are impersonal in the passive
-		table.insert(data.title, "[[impersonal]] in passive")
-		table.insert(data.categories, "Latin verbs with impersonal passive")
-		
-		-- Remove all non-3sg passive forms
-		for key, _ in pairs(data.forms) do
-			if key:find("pasv") and (key:find("^[12][sp]") or key:find("^3p") or key:find("impr")) or key:find("futr_pasv_inf") then
-				data.forms[key] = nil
-			end
-		end
-		
-	elseif typeinfo.subtype == "perf-as-pres" then
+	if typeinfo.subtype:find("perf-as-pres") then
 		-- Perfect forms as present tense
 		table.insert(data.title, "active only")
 		table.insert(data.title, "[[perfect]] forms as present")
@@ -589,13 +346,13 @@ postprocess = function(data, typeinfo)
 		table.insert(data.categories, "Latin defective verbs")
 		table.insert(data.categories, "Latin active-only verbs")
         table.insert(data.categories, "Latin verbs with perfect forms having imperfective meanings")
-		
+
 		-- Change perfect passive participle to perfect active participle
 		data.forms["perf_actv_ptc"] = data.forms["perf_pasv_ptc"]
-		
+
 		-- Change perfect active infinitive to present active infinitive
 		data.forms["pres_actv_inf"] = data.forms["perf_actv_inf"]
-		
+
 		-- Remove passive forms
 		-- Remove present active, imperfect active and future active forms
 		for key, _ in pairs(data.forms) do
@@ -619,9 +376,9 @@ postprocess = function(data, typeinfo)
 				data.forms[key] = nil
 			end
 		end
-		
+
 		data.forms["pres_actv_ptc"] = nil
-	elseif typeinfo.subtype == "memini" then
+	elseif typeinfo.subtype:find("memini") then
 		-- Perfect forms as present tense
 		table.insert(data.title, "active only")
 		table.insert(data.title, "[[perfect]] forms as present")
@@ -652,18 +409,196 @@ postprocess = function(data, typeinfo)
 				data.forms[key] = nil
 			end
 		end
-		
+
 		-- Add imperative forms
 		data.forms["2s_futr_actv_impr"] = "mementō"
 		data.forms["2p_futr_actv_impr"] = "mementōte"
 	end
 
+	-- Types of irregularity related primarily to the active.
+	-- These could in theory be combined with those related to the passive and imperative,
+	-- i.e. there's no reason there couldn't be an impersonal deponent verb with no imperatives.
+	if typeinfo.subtype:find("impers") and not typeinfo.subtype:find("pass-impers") then
+		-- Impersonal verbs have only third-person singular forms.
+		table.insert(data.title, "[[impersonal]]")
+		table.insert(data.categories, "Latin impersonal verbs")
+
+		-- Remove all non-3sg forms
+		for key, _ in pairs(data.forms) do
+			if key:find("^[12][sp]") or key:find("^3p") then
+				data.forms[key] = nil
+			end
+		end
+	elseif typeinfo.subtype:find("3only") and not typeinfo.subtype:find("pass-3only") then
+		table.insert(data.title, "[[impersonal]]")
+		table.insert(data.categories, "Latin impersonal verbs")
+
+		-- Remove all non-3sg forms
+		for key, _ in pairs(data.forms) do
+			if key:find("^[12][sp]") then
+				data.forms[key] = nil
+			end
+		end
+	end
+
+	if typeinfo.subtype:find("nopass") then
+		-- Remove all passive forms
+		table.insert(data.title, "active only")
+		table.insert(data.categories, "Latin active-only verbs")
+
+		-- Remove all non-3sg and passive forms
+		for key, _ in pairs(data.forms) do
+			if key:find("pasv") then
+				data.forms[key] = nil
+			end
+		end
+	elseif typeinfo.subtype:find("pass-3only") then
+		-- Some verbs have only third-person forms in the passive
+		table.insert(data.title, "only third-person forms in passive")
+		table.insert(data.categories, "Latin verbs with third-person passive")
+
+		-- Remove all non-3rd-person passive forms and all passive imperatives
+		for key, _ in pairs(data.forms) do
+			if key:find("pasv") and (key:find("^[12][sp]") or key:find("impr")) then
+				data.forms[key] = nil
+			end
+		end
+	elseif typeinfo.subtype:find("pass-impers") then
+		-- Some verbs are impersonal in the passive
+		table.insert(data.title, "[[impersonal]] in passive")
+		table.insert(data.categories, "Latin verbs with impersonal passive")
+
+		-- Remove all non-3sg passive forms
+		for key, _ in pairs(data.forms) do
+			if key:find("pasv") and (key:find("^[12][sp]") or key:find("^3p") or key:find("impr")) or key:find("futr_pasv_inf") then
+				data.forms[key] = nil
+			end
+		end
+	end
+
+	if typeinfo.subtype:find("no-actv-perf") then
+		-- Some verbs have no active perfect forms (e.g. interstinguō, -ěre)
+		table.insert(data.title, "no active perfect forms")
+		table.insert(data.categories, "Latin defective verbs")
+
+		-- Remove all active perfect forms
+		for key, _ in pairs(data.forms) do
+			if key:find("actv") and (key:find("perf") or key:find("plup") or key:find("futp")) then
+				data.forms[key] = nil
+			end
+		end
+	elseif typeinfo.subtype:find("no-pasv-perf") then
+		-- Some verbs have no passive perfect forms (e.g. ārēscō, -ěre)
+		table.insert(data.title, "no passive perfect forms")
+		table.insert(data.categories, "Latin defective verbs")
+
+		-- Remove all passive perfect forms
+		for key, _ in pairs(data.forms) do
+			if key:find("pasv") and (key:find("perf") or key:find("plup") or key:find("futp")) then
+				data.forms[key] = nil
+			end
+		end
+	end
+
+	-- Handle certain irregularities in the passive
+	if typeinfo.subtype:find("semi-depon") then
+		-- Semi-deponent verbs use perfective passive forms with active meaning,
+		-- and have no imperfective passive
+		table.insert(data.title, "[[semi-deponent]]")
+		table.insert(data.categories, "Latin semi-deponent verbs")
+
+		-- Remove perfective active and imperfective passive forms
+		for key, _ in pairs(data.forms) do
+			if key:find("perf_actv") or key:find("plup_actv") or key:find("futp_actv") or key:find("pres_pasv") or key:find("impf_pasv") or key:find("futr_pasv") then
+				data.forms[key] = nil
+			end
+		end
+
+		-- Change perfective passive to active
+		for key, form in pairs(data.forms) do
+			if key:find("perf_pasv") or key:find("plup_pasv") or key:find("futp_pasv") then
+				data.forms[key:gsub("pasv", "actv")] = form
+				data.forms[key] = nil
+			end
+		end
+	elseif typeinfo.subtype:find("depon") then
+		-- Deponent verbs use passive forms with active meaning
+		table.insert(data.title, "[[deponent]]")
+		table.insert(data.categories, "Latin deponent verbs")
+
+		-- Remove active forms and future passive infinitive
+		for key, _ in pairs(data.forms) do
+			if key:find("actv") and key ~= "pres_actv_ptc" and key ~= "futr_actv_ptc" and key ~= "futr_actv_inf" or key == "futr_pasv_inf" then
+				data.forms[key] = nil
+			end
+		end
+
+		-- Change passive to active
+		for key, form in pairs(data.forms) do
+			if key:find("pasv") and key ~= "pres_pasv_ptc" and key ~= "futr_pasv_ptc" and key ~= "futr_pasv_inf" then
+				data.forms[key:gsub("pasv", "actv")] = form
+				data.forms[key] = nil
+			end
+		end
+
+		-- Generate correct form of infinitive for nominative gerund
+		data.forms["ger_nom"] = data.forms["pres_actv_inf"]
+	end
+
+	if typeinfo.subtype:find("noperf") then
+		-- Some verbs have no perfect forms (e.g. inalbēscō, -ěre)
+		table.insert(data.title, "[[defective verb|defective]]")
+		table.insert(data.categories, "Latin defective verbs")
+
+		-- Remove all perfect forms
+		for key, _ in pairs(data.forms) do
+			if key:find("perf") or key:find("plup") or key:find("futp") then
+				data.forms[key] = nil
+			end
+		end
+	end
+
+	if typeinfo.subtype:find("nosup") then
+		-- Some verbs have no supine forms or forms derived from the supine
+		table.insert(data.title, "[[defective verb|defective]]")
+		table.insert(data.categories, "Latin defective verbs")
+
+		for key, _ in pairs(data.forms) do
+			if key:find("sup") or (
+				key == "perf_actv_ptc" or key == "perf_pasv_ptc" or key == "perf_pasv_inf" or
+				key == "futr_actv_ptc" or key == "futr_actv_inf" or key == "futr_pasv_inf"
+			) then
+				data.forms[key] = nil
+			end
+		end
+	elseif typeinfo.subtype:find("sup-futr-actv-only") then
+		-- Some verbs have no supine forms or forms derived from the supine,
+		-- except for the future active infinitive/participle
+		table.insert(data.title, "[[defective verb|defective]]")
+		table.insert(data.categories, "Latin defective verbs")
+
+		for key, _ in pairs(data.forms) do
+			if key:find("sup") or (
+				key == "perf_actv_ptc" or key == "perf_pasv_ptc" or key == "perf_pasv_inf" or
+				key == "futr_pasv_inf"
+			) then
+				data.forms[key] = nil
+			end
+		end
+	end
+
 	-- Handle certain irregularities in the imperative
-	if typeinfo.subtype == "noimp" or typeinfo.subtype == "nopass-noimp" then
+	if typeinfo.subtype:find("noimp") then
 		-- Some verbs have no imperatives
 		table.insert(data.title, "no [[imperative]]s")
+
+		-- Remove all imperative forms
+		for key, _ in pairs(data.forms) do
+			if key:find("impr") then
+				data.forms[key] = nil
+			end
+		end
 	end
-	
 
 	-- Add the ancient future_passive_participle of certain verbs
 	if typeinfo.pres_stem == "lāb" then
@@ -678,7 +613,9 @@ postprocess = function(data, typeinfo)
 
 	-- Add the poetic present passive infinitive forms of certain verbs
 	if typeinfo.p3inf == '1' then
-			local form, noteindex = "pres_"..(typeinfo.subtype=='depon' and "actv" or "pasv").."_inf", #(data.footnotes)+1
+			local is_depon = typeinfo.subtype:find("depon") and not typeinfo.subtype:find("semi-depon")
+			local form = "pres_" .. (is_depon and "actv" or "pasv") .. "_inf"
+			local noteindex = #(data.footnotes) + 1
 			local formval = data.forms[form]
 			if type(formval) ~= "table" then
 				formval = {formval}
@@ -689,15 +626,15 @@ postprocess = function(data, typeinfo)
 			end
 			data.forms[form] = newvals
 			data.form_footnote_indices[form] = tostring(noteindex)
-			if typeinfo.subtype == 'depon' then
+			if is_depon then
 				data.form_footnote_indices["ger_nom"] = tostring(noteindex)
 				data.forms['ger_nom'] = data.forms[form]
 			end
 			data.footnotes[noteindex] = 'The present passive infinitive in -ier is a rare poetic form which is attested for this verb.'
 	end
-	
+
 	--Add the syncopated perfect forms, omitting the separately handled fourth conjugation cases
-	
+
 	if typeinfo.sync_perf == 'poet' then
 		local sss = {
 			--infinitive
@@ -714,7 +651,7 @@ postprocess = function(data, typeinfo)
 			{'3p_plup_actv_subj', 'ssent'}
 		}
 		local noteindex = #(data.footnotes)+1
-		function add_sync_perf(form, suff_sync) 
+		function add_sync_perf(form, suff_sync)
 			local formval = data.forms[form]
 			if type(formval) ~= "table" then
 				formval = {formval}
@@ -752,9 +689,11 @@ local function get_regular_stems(args, typeinfo)
 		typeinfo.perf_stem = if_not_empty(args[2])
 		typeinfo.supine_stem = if_not_empty(args[3])
 	end
-	
-	if (typeinfo.subtype == "perf-as-pres" or typeinfo.subtype == "memini") and not typeinfo.pres_stem then typeinfo.pres_stem = "whatever" end
-	
+
+	if (typeinfo.subtype:find("perf-as-pres") or typeinfo.subtype:find("memini")) and not typeinfo.pres_stem then
+		typeinfo.pres_stem = "whatever"
+	end
+
 	-- Prepare stems
 	if not typeinfo.pres_stem then
 		if NAMESPACE == "Template" then
@@ -763,7 +702,7 @@ local function get_regular_stems(args, typeinfo)
 			error("Present stem has not been provided")
 		end
 	end
-	
+
 	if not typeinfo.perf_stem and not typeinfo.subtype:find("depon") and not typeinfo.subtype:find("noperf") then
 		if typeinfo.conj_type == "1st" then
 			typeinfo.perf_stem = typeinfo.pres_stem .. "āv"
@@ -780,7 +719,11 @@ local function get_regular_stems(args, typeinfo)
 		typeinfo.perf_stem = {}
 	end
 
-	if not typeinfo.supine_stem and not typeinfo.subtype:find("nopass") and not typeinfo.subtype:find("noperf") and typeinfo.subtype ~= "no-pasv-perf" and typeinfo.subtype ~= "memini" and typeinfo.subtype ~= "pass-3only" then
+	if not typeinfo.supine_stem and (
+		not typeinfo.subtype:find("nopass") and not typeinfo.subtype:find("noperf") and
+		not typeinfo.subtype:find("nosup") and not typeinfo.subtype:find("no-pasv-perf") and
+		not typeinfo.subtype:find("memini") and not typeinfo.subtype:find("pass-3only")
+	) then
 		if typeinfo.conj_type == "1st" then
 			typeinfo.supine_stem = typeinfo.pres_stem .. "āt"
 		elseif NAMESPACE == "Template" then
@@ -801,16 +744,16 @@ local function has_perf_in_s_or_x(pres_stem, perf_stem)
 	if pres_stem == perf_stem then
 		return false
 	end
-	
+
 	return perf_stem and perf_stem:find("[sx]$") ~= nil
 end
 
 conjugations["1st"] = function(args, data, typeinfo)
 	get_regular_stems(args, typeinfo)
-	
+
 	table.insert(data.title, "[[Appendix:Latin first conjugation|first conjugation]]")
 	table.insert(data.categories, "Latin first conjugation verbs")
-	
+
 	for _, perf_stem in ipairs(typeinfo.perf_stem) do
 		if perf_stem == typeinfo.pres_stem .. "āv" then
 			table.insert(data.categories, "Latin first conjugation verbs with perfect in -av-")
@@ -822,7 +765,7 @@ conjugations["1st"] = function(args, data, typeinfo)
 			table.insert(data.categories, "Latin first conjugation verbs with irregular perfect")
 		end
 	end
-	
+
 	make_pres_1st(data, typeinfo.pres_stem)
 	make_perf(data, typeinfo.perf_stem)
 	make_supine(data, typeinfo.supine_stem)
@@ -830,10 +773,10 @@ end
 
 conjugations["2nd"] = function(args, data, typeinfo)
 	get_regular_stems(args, typeinfo)
-	
+
 	table.insert(data.title, "[[Appendix:Latin second conjugation|second conjugation]]")
 	table.insert(data.categories, "Latin second conjugation verbs")
-	
+
 	for _, perf_stem in ipairs(typeinfo.perf_stem) do
 		local pres_stem = typeinfo.pres_stem
 		pres_stem = pres_stem:gsub("qu", "1")
@@ -850,7 +793,7 @@ conjugations["2nd"] = function(args, data, typeinfo)
 			table.insert(data.categories, "Latin second conjugation verbs with irregular perfect")
 		end
 	end
-	
+
 	make_pres_2nd(data, typeinfo.pres_stem)
 	make_perf(data, typeinfo.perf_stem)
 	make_supine(data, typeinfo.supine_stem)
@@ -858,10 +801,10 @@ end
 
 conjugations["3rd"] = function(args, data, typeinfo)
 	get_regular_stems(args, typeinfo)
-	
+
 	table.insert(data.title, "[[Appendix:Latin third conjugation|third conjugation]]")
 	table.insert(data.categories, "Latin third conjugation verbs")
-	
+
 	for _, perf_stem in ipairs(typeinfo.perf_stem) do
 		local pres_stem = typeinfo.pres_stem
 		pres_stem = pres_stem:gsub("qu", "1")
@@ -882,11 +825,11 @@ conjugations["3rd"] = function(args, data, typeinfo)
 			table.insert(data.categories, "Latin third conjugation verbs with irregular perfect")
 		end
 	end
-	
+
 	if typeinfo.pres_stem and mw.ustring.match(typeinfo.pres_stem,"[āēīōū]sc$") then
 		table.insert(data.categories, "Latin inchoative verbs")
 	end
-	
+
 	make_pres_3rd(data, typeinfo.pres_stem)
 	make_perf(data, typeinfo.perf_stem)
 	make_supine(data, typeinfo.supine_stem)
@@ -894,10 +837,10 @@ end
 
 conjugations["3rd-io"] = function(args, data, typeinfo)
 	get_regular_stems(args, typeinfo)
-	
+
 	table.insert(data.title, "[[Appendix:Latin third conjugation|third conjugation]] ''iō''-variant")
 	table.insert(data.categories, "Latin third conjugation verbs")
-	
+
 	for _, perf_stem in ipairs(typeinfo.perf_stem) do
 		local pres_stem = typeinfo.pres_stem
 		pres_stem = pres_stem:gsub("qu", "1")
@@ -918,7 +861,7 @@ conjugations["3rd-io"] = function(args, data, typeinfo)
 			table.insert(data.categories, "Latin third conjugation verbs with irregular perfect")
 		end
 	end
-	
+
 	make_pres_3rd_io(data, typeinfo.pres_stem)
 	make_perf(data, typeinfo.perf_stem)
 	make_supine(data, typeinfo.supine_stem)
@@ -934,11 +877,11 @@ end
 
 conjugations["4th"] = function(args, data, typeinfo)
 	get_regular_stems(args, typeinfo)
-	
+
 	table.insert(data.title, "[[Appendix:Latin fourth conjugation|fourth conjugation]]")
 	table.insert(data.categories, "Latin fourth conjugation verbs")
-	
-	
+
+
 	for _, perf_stem in ipairs(typeinfo.perf_stem) do
 		local pres_stem = typeinfo.pres_stem
 		pres_stem = pres_stem:gsub("qu", "1")
@@ -955,11 +898,11 @@ conjugations["4th"] = function(args, data, typeinfo)
 			table.insert(data.categories, "Latin fourth conjugation verbs with irregular perfect")
 		end
 	end
-	
+
 	make_pres_4th(data, typeinfo.pres_stem)
 	make_perf(data, typeinfo.perf_stem)
 	make_supine(data, typeinfo.supine_stem)
-	
+
 	if form_contains(data.forms["1s_pres_actv_indc"], "serviō") or form_contains(data.forms["1s_pres_actv_indc"], "saeviō") then
 		add_forms(data, "impf_actv_indc", typeinfo.pres_stem,
 			{"iēbam", "ībam"},
@@ -969,7 +912,7 @@ conjugations["4th"] = function(args, data, typeinfo)
 			{"iēbātis", "ībātis"},
 			{"iēbant", "ībant"}
 		)
-	
+
 		add_forms(data, "futr_actv_indc", typeinfo.pres_stem,
 			{"iam", "ībō"},
 			{"iēs", "ībis"},
@@ -979,7 +922,7 @@ conjugations["4th"] = function(args, data, typeinfo)
 			{"ient", "ībunt"}
 		)
 	end
-	
+
 	if typeinfo.sync_perf == "y" or typeinfo.sync_perf == "yn" then
 		for key, form in pairs(data.forms) do
 			if key:find("perf") or key:find("plup") or key:find("futp") then
@@ -1007,7 +950,7 @@ local irreg_conjugations = {}
 conjugations["irreg"] = function(args, data, typeinfo)
 	local verb = if_not_empty(args[1])
 	local prefix = if_not_empty(args[2])
-	
+
 	if not verb then
 		if NAMESPACE == "Template" then
 			verb = "sum"
@@ -1015,14 +958,14 @@ conjugations["irreg"] = function(args, data, typeinfo)
 			error("The verb to be conjugated has not been specified.")
 		end
 	end
-	
+
 	if not irreg_conjugations[verb] then
 		error("The verb '" .. verb .. "' is not recognised as an irregular verb.")
 	end
-	
+
 	typeinfo.verb = verb
 	typeinfo.prefix = prefix
-	
+
 	-- Generate the verb forms
 	irreg_conjugations[verb](args, data, typeinfo)
 end
@@ -1036,30 +979,30 @@ irreg_conjugations["aio"] = function(args, data, typeinfo)
 	table.insert(data.categories, "Latin irregular verbs")
 	table.insert(data.categories, "Latin active-only verbs")
 	table.insert(data.categories, "Latin defective verbs")
-	
+
 	local prefix = typeinfo.prefix or ""
-	
+
 	data.forms["1s_pres_actv_indc"] = {prefix .. "āiō", prefix .. "aiiō"}
 	data.forms["2s_pres_actv_indc"] = {prefix .. "āis", prefix .. "ais"}
 	data.forms["3s_pres_actv_indc"] = prefix .. "ait"
 	data.forms["3p_pres_actv_indc"] = {prefix .. "āiunt", prefix .. "aiiunt"}
-	
+
 	data.forms["1s_impf_actv_indc"] = {prefix .. "aiēbam", prefix .. "āībam"}
 	data.forms["2s_impf_actv_indc"] = {prefix .. "aiēbās", prefix .. "āībās"}
 	data.forms["3s_impf_actv_indc"] = {prefix .. "aiēbat", prefix .. "āībat"}
 	data.forms["1p_impf_actv_indc"] = {prefix .. "aiēbāmus", prefix .. "āībāmus"}
 	data.forms["2p_impf_actv_indc"] = {prefix .. "aiēbātis", prefix .. "āībātis"}
 	data.forms["3p_impf_actv_indc"] = {prefix .. "aiēbant", prefix .. "āībant"}
-	
+
 	data.forms["2s_perf_actv_indc"] = prefix .. "aistī"
 	data.forms["3s_perf_actv_indc"] = prefix .. "ait"
-	
+
 	data.forms["2s_pres_actv_subj"] = prefix .. "āiās"
 	data.forms["3s_pres_actv_subj"] = prefix .. "āiat"
 	data.forms["3p_pres_actv_subj"] = prefix .. "āiant"
-	
+
 	data.forms["2s_pres_actv_impr"] = prefix .. "aï"
-	
+
 	data.forms["pres_actv_inf"] = prefix .. "āiere"
 	data.forms["pres_actv_ptc"] = prefix .. "aiēns"
 end
@@ -1069,9 +1012,9 @@ irreg_conjugations["dico"] = function(args, data, typeinfo)
 	table.insert(data.title, "[[Appendix:Latin irregular verbs|irregular]] short imperative")
 	table.insert(data.categories, "Latin third conjugation verbs")
 	table.insert(data.categories, "Latin irregular verbs")
-	
+
 	local prefix = typeinfo.prefix or ""
-	
+
 	make_pres_3rd(data, prefix .. "dīc")
 	make_perf(data, prefix .. "dīx")
 	make_supine(data, prefix .. "dict")
@@ -1084,46 +1027,46 @@ irreg_conjugations["do"] = function(args, data, typeinfo)
 	table.insert(data.title, "[[Appendix:Latin irregular verbs|irregular]] short ''a'' in most forms except " .. make_link({lang = lang, alt = "dās"}, "term") .. " and " .. make_link({lang = lang, alt = "dā"}, "term"))
 	table.insert(data.categories, "Latin first conjugation verbs")
 	table.insert(data.categories, "Latin irregular verbs")
-	
+
 	local prefix = typeinfo.prefix or ""
-	
+
 	make_perf(data, prefix .. "ded")
 	make_supine(data, prefix .. "dat")
-	
+
 	-- Active imperfective indicative
 	add_forms(data, "pres_actv_indc", prefix, "dō", "dās", "dat", "damus", "datis", "dant")
 	add_forms(data, "impf_actv_indc", prefix, "dabam", "dabās", "dabat", "dabāmus", "dabātis", "dabant")
 	add_forms(data, "futr_actv_indc", prefix, "dabō", "dabis", "dabit", "dabimus", "dabitis", "dabunt")
-	
+
 	-- Passive imperfective indicative
 	add_forms(data, "pres_pasv_indc", prefix, "dor", {"daris", "dare"}, "datur", "damur", "daminī", "dantur")
 	add_forms(data, "impf_pasv_indc", prefix, "dabar", {"dabāris", "dabāre"}, "dabātur", "dabāmur", "dabāminī", "dabantur")
 	add_forms(data, "futr_pasv_indc", prefix, "dabor", {"daberis", "dabere"}, "dabitur", "dabimur", "dabiminī", "dabuntur")
-	
+
 	-- Active imperfective subjunctive
 	add_forms(data, "pres_actv_subj", prefix, "dem", "dēs", "det", "dēmus", "dētis", "dent")
 	add_forms(data, "impf_actv_subj", prefix, "darem", "darēs", "daret", "darēmus", "darētis", "darent")
-	
+
 	-- Passive imperfective subjunctive
 	add_forms(data, "pres_pasv_subj", prefix, "der", {"dēris", "dēre"}, "dētur", "dēmur", "dēminī", "dentur")
 	add_forms(data, "impf_pasv_subj", prefix, "darer", {"darēris", "darēre"}, "darētur", "darēmur", "darēminī", "darentur")
-	
+
 	-- Imperative
 	add_2_forms(data, "pres_actv_impr", prefix, "dā", "date")
 	add_23_forms(data, "futr_actv_impr", prefix, "datō", "datō", "datōte", "dantō")
-	
+
 	add_2_forms(data, "pres_pasv_impr", prefix, "dare", "daminī")
 	-- no 2p form
 	add_23_forms(data, "futr_pasv_impr", prefix, "dator", "dator", {}, "dantor")
-	
+
 	-- Present infinitives
 	data.forms["pres_actv_inf"] = prefix .. "dare"
 	data.forms["pres_pasv_inf"] = prefix .. "darī"
-	
+
 	-- Imperfective participles
 	data.forms["pres_actv_ptc"] = prefix .. "dāns"
 	data.forms["futr_pasv_ptc"] = prefix .. "dandus"
-	
+
 	-- Gerund
 	data.forms["ger_nom"] = data.forms["pres_actv_inf"]
 	data.forms["ger_gen"] = prefix .. "dandī"
@@ -1136,9 +1079,9 @@ irreg_conjugations["duco"] = function(args, data, typeinfo)
 	table.insert(data.title, "[[Appendix:Latin irregular verbs|irregular]] short imperative")
 	table.insert(data.categories, "Latin third conjugation verbs")
 	table.insert(data.categories, "Latin irregular verbs")
-	
+
 	local prefix = typeinfo.prefix or ""
-	
+
 	make_pres_3rd(data, prefix .. "dūc")
 	make_perf(data, prefix .. "dūx")
 	make_supine(data, prefix .. "duct")
@@ -1151,27 +1094,27 @@ irreg_conjugations["edo"] = function(args, data, typeinfo)
 	table.insert(data.title, "some [[Appendix:Latin irregular verbs|irregular]] alternative forms")
 	table.insert(data.categories, "Latin third conjugation verbs")
 	table.insert(data.categories, "Latin irregular verbs")
-	
+
 	local prefix = typeinfo.prefix or ""
-	
+
 	make_pres_3rd(data, prefix .. "ed")
 	make_perf(data, prefix .. "ēd")
 	make_supine(data, prefix .. "ēs")
-	
+
 	-- Active imperfective indicative
 	add_forms(data, "pres_actv_indc", prefix, {}, "ēs", "ēst", {}, "ēstis", {})
-	
+
 	-- Passive imperfective indicative
 	add_form(data, "3s_pres_pasv_indc", prefix, "ēstur")
-	
+
 	-- Active imperfective subjunctive
 	add_forms(data, "pres_actv_subj", prefix, "edim", "edīs", "edit", "edīmus", "edītis", "edint")
 	add_forms(data, "impf_actv_subj", prefix, "ēssem", "ēssēs", "ēsset", "ēssēmus", "ēssētis", "ēssent")
-	
+
 	-- Active imperative
 	add_2_forms(data, "pres_actv_impr", prefix, "ēs", "ēste")
 	add_23_forms(data, "futr_actv_impr", prefix, "ēstō", "ēstō", "ēstōte", {})
-	
+
 	-- Present infinitives
 	add_form(data, "pres_actv_inf", prefix, "ēsse")
 end
@@ -1179,34 +1122,34 @@ end
 irreg_conjugations["eo"] = function(args, data, typeinfo)
 	table.insert(data.title, "[[Appendix:Latin irregular verbs|irregular]]")
 	table.insert(data.categories, "Latin irregular verbs")
-	
+
 	local prefix = typeinfo.prefix or ""
-	
+
 	make_perf(data, prefix .. "i")
 	make_supine(data, prefix .. "it")
 	typeinfo.supine_stem = {"it"}
-	
+
 	-- Active imperfective indicative
 	add_forms(data, "pres_actv_indc", prefix, "eō", "īs", "it", "īmus", "ītis",
 		prefix == "prōd" and {"eunt", "īnunt"} or "eunt")
 	add_forms(data, "impf_actv_indc", prefix, "ībam", "ībās", "ībat", "ībāmus", "ībātis", "ībant")
 	add_forms(data, "futr_actv_indc", prefix, "ībō", "ībis", "ībit", "ībimus", "ībitis", "ībunt")
-	
+
 	-- Active perfective indicative
 	add_form(data, "1s_perf_actv_indc", prefix, "īvī")
 	data.forms["2s_perf_actv_indc"] = {prefix .. "īstī", prefix .. "īvistī"}
 	add_form(data, "3s_perf_actv_indc", prefix, "īvit")
 	data.forms["2p_perf_actv_indc"] = prefix .. "īstis"
-	
+
 	-- Passive imperfective indicative
 	add_forms(data, "pres_pasv_indc", prefix, "eor", { "īris", "īre"}, "ītur", "īmur", "īminī", "euntur")
 	add_forms(data, "impf_pasv_indc", prefix, "ībar", {"ībāris", "ībāre"}, "ībātur", "ībāmur", "ībāminī", "ībantur")
 	add_forms(data, "futr_pasv_indc",  prefix, "ībor", {"īberis", "ībere"}, "ībitur", "ībimur", "ībiminī", "ībuntur")
-	
+
 	-- Active imperfective subjunctive
 	add_forms(data, "pres_actv_subj", prefix, "eam", "eās", "eat", "eāmus", "eātis", "eant")
 	add_forms(data, "impf_actv_subj", prefix, "īrem", "īrēs", "īret", "īrēmus", "īrētis", "īrent")
-	
+
 	-- Active perfective subjunctive
 	data.forms["1s_plup_actv_subj"] = prefix .. "īssem"
 	data.forms["2s_plup_actv_subj"] = prefix .. "īssēs"
@@ -1214,29 +1157,29 @@ irreg_conjugations["eo"] = function(args, data, typeinfo)
 	data.forms["1p_plup_actv_subj"] = prefix .. "īssēmus"
 	data.forms["2p_plup_actv_subj"] = prefix .. "īssētis"
 	data.forms["3p_plup_actv_subj"] = prefix .. "īssent"
-	
+
 	-- Passive imperfective subjunctive
 	add_forms(data, "pres_pasv_subj", prefix, "ear", {"eāris", "eāre"}, "eātur", "eāmur", "eāminī", "eantur")
 	add_forms(data, "impf_pasv_subj", prefix, "īrer", {"īrēris", "īrēre"}, "īrētur", "īrēmur", "īrēminī", "īrentur")
-	
+
 	-- Imperative
 	add_2_forms(data, "pres_actv_impr", prefix, "ī", "īte")
 	add_23_forms(data, "futr_actv_impr", prefix, "ītō", "ītō", "ītōte", "euntō")
-	
+
 	add_2_forms(data, "pres_pasv_impr", prefix, "īre", "īminī")
 	add_23_forms(data, "futr_pasv_impr", prefix, "ītor", "ītor", {}, "euntor")
-	
+
 	-- Present infinitives
 	data.forms["pres_actv_inf"] = prefix .. "īre"
 	data.forms["pres_pasv_inf"] = prefix .. "īrī"
-	
+
 	-- Perfect/future infinitives
 	data.forms["perf_actv_inf"] = prefix .. "īsse"
-	
+
 	-- Imperfective participles
 	data.forms["pres_actv_ptc"] = prefix .. "iēns"
 	data.forms["futr_pasv_ptc"] = prefix .. "eundus"
-	
+
 	-- Gerund
 	data.forms["ger_nom"] = data.forms["pres_actv_inf"]
 	data.forms["ger_gen"] = prefix .. "eundī"
@@ -1252,13 +1195,13 @@ local function fio(data, prefix, voice)
 		"am", "ās", "at", "āmus", "ātis", "ant")
 	add_forms(data, "futr_" .. voice .. "_indc", prefix .. "fī",
 		"am", "ēs", "et", "ēmus", "ētis", "ent")
-	
+
 	-- Active/passive imperfective subjunctive
 	add_forms(data, "pres_" .. voice .. "_subj", prefix .. "fī",
 		"am", "ās", "at", "āmus", "ātis", "ant")
 	add_forms(data, "impf_" .. voice .. "_subj", prefix .. "fier",
 		"em", "ēs", "et", "ēmus", "ētis", "ent")
-	
+
 	-- Active/passive imperative
 	add_2_forms(data, "pres_" .. voice .. "_impr", prefix .. "fī", "", "te")
 	add_23_forms(data, "futr_" .. voice .. "_impr", prefix .. "fī", "tō", "tō", "tōte", "untō")
@@ -1273,16 +1216,16 @@ irreg_conjugations["facio"] = function(args, data, typeinfo)
 	table.insert(data.categories, "Latin third conjugation verbs")
 	table.insert(data.categories, "Latin irregular verbs")
 	table.insert(data.categories, "Latin suppletive verbs")
-	
+
 	local prefix = typeinfo.prefix or ""
-	
+
 	make_pres_3rd_io(data, prefix .. "fac", "nopass")
 	-- We said no passive, but we do want the future passive participle.
 	data.forms["futr_pasv_ptc"] = prefix .. "faciendus"
 
 	make_perf(data, prefix .. "fēc")
 	make_supine(data, prefix .. "fact")
-	
+
 	-- Active imperative
 	if prefix == "" then
 		add_form(data, "2s_pres_actv_impr", prefix, "fac", 1)
@@ -1298,22 +1241,22 @@ irreg_conjugations["fio"] = function(args, data, typeinfo)
 	table.insert(data.categories, "Latin third conjugation verbs")
 	table.insert(data.categories, "Latin irregular verbs")
 	table.insert(data.categories, "Latin suppletive verbs")
-	
+
 	local prefix = typeinfo.prefix or ""
-	
+
 	typeinfo.subtype = "semi-depon"
 
 	fio(data, prefix, "actv")
-	
+
 	make_supine(data, prefix .. "fact")
 
 	-- Perfect/future infinitives
 	data.forms["futr_actv_inf"] = data.forms["futr_pasv_inf"]
-	
+
 	-- Imperfective participles
 	data.forms["pres_actv_ptc"] = nil
 	data.forms["futr_actv_ptc"] = nil
-	
+
 	-- Gerund
 	data.forms["ger_nom"] = data.forms["pres_actv_inf"]
 	data.forms["ger_gen"] = prefix .. "fiendī"
@@ -1328,26 +1271,26 @@ irreg_conjugations["fero"] = function(args, data, typeinfo)
 	table.insert(data.categories, "Latin third conjugation verbs")
 	table.insert(data.categories, "Latin irregular verbs")
 	table.insert(data.categories, "Latin suppletive verbs")
-	
+
 	local prefix_pres = typeinfo.prefix or ""
 	local prefix_perf = if_not_empty(args[3])
 	local prefix_supine = if_not_empty(args[4])
-	
+
 	prefix_perf = prefix_perf or prefix_pres
 	prefix_supine = prefix_supine or prefix_pres
-	
+
 	make_pres_3rd(data, prefix_pres .. "fer")
 	make_perf(data, prefix_perf .. "tul")
 	make_supine(data, prefix_supine .. "lāt")
-	
+
 	-- Active imperfective indicative
 	data.forms["2s_pres_actv_indc"] = prefix_pres .. "fers"
 	data.forms["3s_pres_actv_indc"] = prefix_pres .. "fert"
 	data.forms["2p_pres_actv_indc"] = prefix_pres .. "fertis"
-	
+
 	-- Passive imperfective indicative
 	data.forms["3s_pres_pasv_indc"] = prefix_pres .. "fertur"
-	
+
 	-- Active imperfective subjunctive
 	data.forms["1s_impf_actv_subj"] = prefix_pres .. "ferrem"
 	data.forms["2s_impf_actv_subj"] = prefix_pres .. "ferrēs"
@@ -1358,7 +1301,7 @@ irreg_conjugations["fero"] = function(args, data, typeinfo)
 
 	-- Passive present indicative
 	data.forms["2s_pres_pasv_indc"] = {prefix_pres .. "ferris", prefix_pres .. "ferre"}
-	
+
 	-- Passive imperfective subjunctive
 	data.forms["1s_impf_pasv_subj"] = prefix_pres .. "ferrer"
 	data.forms["2s_impf_pasv_subj"] = {prefix_pres .. "ferrēris", prefix_pres .. "ferrēre"}
@@ -1366,24 +1309,24 @@ irreg_conjugations["fero"] = function(args, data, typeinfo)
 	data.forms["1p_impf_pasv_subj"] = prefix_pres .. "ferrēmur"
 	data.forms["2p_impf_pasv_subj"] = prefix_pres .. "ferrēminī"
 	data.forms["3p_impf_pasv_subj"] = prefix_pres .. "ferrentur"
-	
+
 	-- Imperative
 	data.forms["2s_pres_actv_impr"] = prefix_pres .. "fer"
 	data.forms["2p_pres_actv_impr"] = prefix_pres .. "ferte"
-	
+
 	data.forms["2s_futr_actv_impr"] = prefix_pres .. "fertō"
 	data.forms["3s_futr_actv_impr"] = prefix_pres .. "fertō"
 	data.forms["2p_futr_actv_impr"] = prefix_pres .. "fertōte"
-	
+
 	data.forms["2s_pres_pasv_impr"] = prefix_pres .. "ferre"
 
 	data.forms["2s_futr_pasv_impr"] = prefix_pres .. "fertor"
 	data.forms["3s_futr_pasv_impr"] = prefix_pres .. "fertor"
-	
+
 	-- Present infinitives
 	data.forms["pres_actv_inf"] = prefix_pres .. "ferre"
 	data.forms["pres_pasv_inf"] = prefix_pres .. "ferrī"
-	
+
 	-- Gerund
 	data.forms["ger_nom"] = data.forms["pres_actv_inf"]
 end
@@ -1393,32 +1336,32 @@ irreg_conjugations["inquam"] = function(args, data, typeinfo)
 	table.insert(data.title, "highly [[defective verb|defective]]")
 	table.insert(data.categories, "Latin irregular verbs")
 	table.insert(data.categories, "Latin defective verbs")
-	
+
 	-- not used
 	-- local prefix = typeinfo.prefix or ""
-	
+
 	data.forms["1s_pres_actv_indc"] = "inquam"
 	data.forms["2s_pres_actv_indc"] = "inquis"
 	data.forms["3s_pres_actv_indc"] = "inquit"
 	data.forms["1p_pres_actv_indc"] = "inquimus"
 	data.forms["2p_pres_actv_indc"] = "inquitis"
 	data.forms["3p_pres_actv_indc"] = "inquiunt"
-	
+
 	data.forms["2s_futr_actv_indc"] = "inquiēs"
 	data.forms["3s_futr_actv_indc"] = "inquiet"
-	
+
 	data.forms["3s_impf_actv_indc"] = "inquiēbat"
-	
+
 	data.forms["1s_perf_actv_indc"] = "inquiī"
 	data.forms["2s_perf_actv_indc"] = "inquistī"
 	data.forms["3s_perf_actv_indc"] = "inquit"
-	
+
 	data.forms["3s_pres_actv_subj"] = "inquiat"
-	
+
 	data.forms["2s_pres_actv_impr"] = "inque"
 	data.forms["2s_futr_actv_impr"] = "inquitō"
 	data.forms["3s_futr_actv_impr"] = "inquitō"
-	
+
 	data.forms["pres_actv_ptc"] = "inquiēns"
 end
 
@@ -1427,43 +1370,43 @@ local function libet_lubet(data, typeinfo, stem)
 	table.insert(data.title, "mostly [[impersonal]]")
 	table.insert(data.categories, "Latin second conjugation verbs")
 	table.insert(data.categories, "Latin impersonal verbs")
-	
+
 	typeinfo.subtype = "nopass"
 	local prefix = typeinfo.prefix or ""
 
 	stem = prefix .. stem
-	
+
 	-- Active imperfective indicative
 	data.forms["3s_pres_actv_indc"] = stem .. "et"
-	
+
 	data.forms["3s_impf_actv_indc"] = stem .. "ēbat"
-	
+
 	data.forms["3s_futr_actv_indc"] = stem .. "ēbit"
-	
+
 	-- Active perfective indicative
 	data.forms["3s_perf_actv_indc"] = {stem .. "uit", "[[" .. stem .. "itum]] [[est]]"}
-	
+
 	data.forms["3s_plup_actv_indc"] = {stem .. "uerat", "[[" .. stem .. "itum]] [[erat]]"}
-	
+
 	data.forms["3s_futp_actv_indc"] = {stem .. "uerit", "[[" .. stem .. "itum]] [[erit]]"}
-	
+
 	-- Active imperfective subjunctive
 	data.forms["3s_pres_actv_subj"] = stem .. "eat"
-	
+
 	data.forms["3s_impf_actv_subj"] = stem .. "ēret"
-	
+
 	-- Active perfective subjunctive
 	data.forms["3s_perf_actv_subj"] = {stem .. "uerit", "[[" .. stem .. "itum]] [[sit]]"}
-	
+
 	data.forms["3s_plup_actv_subj"] = {stem .. "uisset", "[[" .. stem .. "itum]] [[esset]]"}
 	data.forms["3p_plup_actv_subj"] = stem .. "uissent"
-	
+
 	-- Present infinitives
 	data.forms["pres_actv_inf"] = stem .. "ēre"
-	
+
 	-- Perfect infinitive
 	data.forms["perf_actv_inf"] = {stem .. "uisse", "[[" .. stem .. "itum]] [[esse]]"}
-	
+
 	-- Imperfective participles
 	data.forms["pres_actv_ptc"] = stem .. "ēns"
 	data.forms["perf_actv_ptc"] = stem .. "itum"
@@ -1482,45 +1425,45 @@ irreg_conjugations["licet"] = function(args, data, typeinfo)
 	table.insert(data.title, "mostly [[impersonal]]")
 	table.insert(data.categories, "Latin second conjugation verbs")
 	table.insert(data.categories, "Latin impersonal verbs")
-	
+
 	typeinfo.subtype = "nopass"
-	
+
 	-- Active imperfective indicative
 	data.forms["3s_pres_actv_indc"] = "licet"
 	data.forms["3p_pres_actv_indc"] = "licent"
-	
+
 	data.forms["3s_impf_actv_indc"] = "licēbat"
 	data.forms["3p_impf_actv_indc"] = "licēbant"
-	
+
 	data.forms["3s_futr_actv_indc"] = "licēbit"
-	
+
 	-- Active perfective indicative
 	data.forms["3s_perf_actv_indc"] = {"licuit", "[[licitum]] [[est]]"}
-	
+
 	data.forms["3s_plup_actv_indc"] = {"licuerat", "[[licitum]] [[erat]]"}
-	
+
 	data.forms["3s_futp_actv_indc"] = {"licuerit", "[[licitum]] [[erit]]"}
-	
+
 	-- Active imperfective subjunctive
 	data.forms["3s_pres_actv_subj"] = "liceat"
 	data.forms["3p_pres_actv_subj"] = "liceant"
-	
+
 	data.forms["3s_impf_actv_subj"] = "licēret"
-	
+
 	-- Perfective subjunctive
 	data.forms["3s_perf_actv_subj"] = {"licuerit", "[[licitum]] [[sit]]"}
-	
+
 	data.forms["3s_plup_actv_subj"] = {"licuisset", "[[licitum]] [[esset]]"}
-	
+
 	-- Imperative
 	data.forms["2s_futr_actv_impr"] = "licētō"
 	data.forms["3s_futr_actv_impr"] = "licētō"
-	
+
 	-- Infinitives
 	data.forms["pres_actv_inf"] = "licēre"
 	data.forms["perf_actv_inf"] = {"licuisse", "[[licitum]] [[esse]]"}
 	data.forms["futr_actv_inf"] = "[[licitūrum]] [[esse]]"
-	
+
 	-- Participles
 	data.forms["pres_actv_ptc"] = "licēns"
 	data.forms["perf_actv_ptc"] = "licitus"
@@ -1533,14 +1476,14 @@ local function volo_malo_nolo(data, indc_stem, subj_stem)
 	-- verb is different.
 	add_forms(data, "impf_actv_indc", indc_stem .. "ēb", "am", "ās", "at", "āmus", "ātis", "ant")
 	add_forms(data, "futr_actv_indc", indc_stem, "am", "ēs", "et", "ēmus", "ētis", "ent")
-	
+
 	-- Active imperfective subjunctive
 	add_forms(data, "pres_actv_subj", subj_stem, "im", "īs", "it", "īmus", "ītis", "int")
 	add_forms(data, "impf_actv_subj", subj_stem .. "l", "em", "ēs", "et", "ēmus", "ētis", "ent")
-	
+
 	-- Present infinitives
 	data.forms["pres_actv_inf"] = subj_stem .. "le"
-	
+
 	-- Imperfective participles
 	data.forms["pres_actv_ptc"] = indc_stem .. "ēns"
 end
@@ -1548,12 +1491,12 @@ end
 irreg_conjugations["volo"] = function(args, data, typeinfo)
 	table.insert(data.title, "[[Appendix:Latin irregular verbs|irregular]]")
 	table.insert(data.categories, "Latin irregular verbs")
-	
+
 	local prefix = typeinfo.prefix or ""
-	
+
 	typeinfo.subtype = "nopass-noimp"
 	make_perf(data, prefix .. "volu")
-	
+
 	-- Active imperfective indicative
 	add_forms(data, "pres_actv_indc", prefix,
 		"volō", "vīs", prefix ~= "" and "vult" or {"vult", "volt"},
@@ -1564,10 +1507,10 @@ end
 irreg_conjugations["malo"] = function(args, data, typeinfo)
 	table.insert(data.title, "[[Appendix:Latin irregular verbs|irregular]]")
 	table.insert(data.categories, "Latin irregular verbs")
-	
+
 	typeinfo.subtype = "nopass-noimp"
 	make_perf(data, "mālu")
-	
+
 	-- Active imperfective indicative
 	add_forms(data, "pres_actv_indc", "",
 		"mālō", "māvīs", "māvult", "mālumus", "māvultis", "mālunt")
@@ -1577,10 +1520,10 @@ end
 irreg_conjugations["nolo"] = function(args, data, typeinfo)
 	table.insert(data.title, "[[Appendix:Latin irregular verbs|irregular]]")
 	table.insert(data.categories, "Latin irregular verbs")
-	
+
 	typeinfo.subtype = "nopass"
 	make_perf(data, "nōlu")
-	
+
 	-- Active imperfective indicative
 	add_forms(data, "pres_actv_indc", "",
 		"nōlō", "nōn vīs", "nōn vult", "nōlumus", "nōn vultis", "nōlunt")
@@ -1597,23 +1540,23 @@ irreg_conjugations["possum"] = function(args, data, typeinfo)
 	table.insert(data.title, "[[suppletive]]")
 	table.insert(data.categories, "Latin irregular verbs")
 	table.insert(data.categories, "Latin suppletive verbs")
-	
+
 	typeinfo.subtype = "nopass"
 	make_perf(data, "potu")
-	
+
 	-- Active imperfective indicative
 	add_forms(data, "pres_actv_indc", "", "possum", "potes", "potest",
 		"possumus", "potestis", "possunt")
 	add_forms(data, "impf_actv_indc", "poter", "am", "ās", "at", "āmus", "ātis", "ant")
 	add_forms(data, "futr_actv_indc", "poter", "ō", {"is", "e"}, "it", "imus", "itis", "unt")
-	
+
 	-- Active imperfective subjunctive
 	add_forms(data, "pres_actv_subj", "poss", "im", "īs", "it", "īmus", "ītis", "int")
 	add_forms(data, "impf_actv_subj", "poss", "em", "ēs", "et", "ēmus", "ētis", "ent")
-	
+
 	-- Present infinitives
 	data.forms["pres_actv_inf"] = "posse"
-	
+
 	-- Imperfective participles
 	data.forms["pres_actv_ptc"] = "potēns"
 end
@@ -1626,9 +1569,9 @@ irreg_conjugations["piget"] = function(args, data, typeinfo)
 	table.insert(data.categories, "Latin impersonal verbs")
 	table.insert(data.categories, "Latin semi-deponent verbs")
 	table.insert(data.categories, "Latin defective verbs")
-	
+
 	local prefix = typeinfo.prefix or ""
-	
+
 	--[[
 	-- not used
 	local ppplink = make_link({lang = lang, term = prefix .. "ausus"}, "term")
@@ -1636,7 +1579,7 @@ irreg_conjugations["piget"] = function(args, data, typeinfo)
 	--]]
 
 	data.forms["3s_pres_actv_indc"] = prefix .. "piget"
-	
+
 	data.forms["3s_impf_actv_indc"] = prefix .. "pigēbat"
 
 	data.forms["3s_futr_actv_indc"] = prefix .. "pigēbit"
@@ -1675,9 +1618,9 @@ irreg_conjugations["soleo"] = function(args, data, typeinfo)
 	table.insert(data.categories, "Latin second conjugation verbs")
 	table.insert(data.categories, "Latin semi-deponent verbs")
 	table.insert(data.categories, "Latin defective verbs")
-	
+
 	local prefix = typeinfo.prefix or ""
-	
+
 	make_pres_2nd(data, prefix .. "sol", "nopass", "noimpr")
 	make_perf(data, prefix .. "solu", "noinf")
 	make_deponent_perf(data, prefix .. "solit")
@@ -1694,9 +1637,9 @@ irreg_conjugations["audeo"] = function(args, data, typeinfo)
 	table.insert(data.categories, "Latin second conjugation verbs")
 	table.insert(data.categories, "Latin semi-deponent verbs")
 	table.insert(data.categories, "Latin defective verbs")
-	
+
 	local prefix = typeinfo.prefix or ""
-	
+
 	make_pres_2nd(data, prefix .. "aud", "nopass", "noimpr")
 	make_perf(data, prefix .. "aus", "noinf")
 	make_deponent_perf(data, prefix .. "aus")
@@ -1708,9 +1651,9 @@ irreg_conjugations["placeo"] = function(args, data, typeinfo)
 	table.insert(data.categories, "Latin second conjugation verbs")
 	table.insert(data.categories, "Latin semi-deponent verbs")
 	table.insert(data.categories, "Latin defective verbs")
-	
+
 	local prefix = typeinfo.prefix or ""
-	
+
 	make_pres_2nd(data, prefix .. "plac", "nopass", "noimpr")
 	make_perf(data, prefix .. "placu", "noinf")
 	make_deponent_perf(data, prefix .. "placit")
@@ -1722,7 +1665,7 @@ irreg_conjugations["coepi"] = function(args, data, typeinfo)
 	table.insert(data.categories, "Latin defective verbs")
 
 	local prefix = typeinfo.prefix or ""
-	
+
 	make_perf(data, prefix .. "coep")
 	make_supine(data, prefix .. "coept")
 	make_perfect_passive(data)
@@ -1735,7 +1678,7 @@ irreg_conjugations["sum"] = function(args, data, typeinfo)
 	table.insert(data.title, "[[suppletive]]")
 	table.insert(data.categories, "Latin irregular verbs")
 	table.insert(data.categories, "Latin suppletive verbs")
-	
+
 	local prefix = typeinfo.prefix or ""
 	local prefix_d = if_not_empty(args[3])
 	prefix_d = prefix_d or prefix
@@ -1744,11 +1687,11 @@ irreg_conjugations["sum"] = function(args, data, typeinfo)
 	-- The vowel of the prefix is lengthened if it ends in -n and the next word begins with f- or s-.
 	local prefix_long = prefix:gsub("([aeiou]n)$", {["an"] = "ān", ["en"] = "ēn", ["in"] = "īn", ["on"] = "ōn", ["un"] = "ūn"})
 	prefix_f = prefix_f:gsub("([aeiou]n)$", {["an"] = "ān", ["en"] = "ēn", ["in"] = "īn", ["on"] = "ōn", ["un"] = "ūn"})
-	
+
 	typeinfo.subtype = "nopass"
 	make_perf(data, prefix_f .. "fu")
 	make_supine(data, prefix_f .. "fut")
-	
+
 	-- Active imperfective indicative
 	data.forms["1s_pres_actv_indc"] = prefix_long .. "sum"
 	data.forms["2s_pres_actv_indc"] = prefix_d .. "es"
@@ -1756,7 +1699,7 @@ irreg_conjugations["sum"] = function(args, data, typeinfo)
 	data.forms["1p_pres_actv_indc"] = prefix_long .. "sumus"
 	data.forms["2p_pres_actv_indc"] = prefix_d .. "estis"
 	data.forms["3p_pres_actv_indc"] = prefix_long .. "sunt"
-	
+
 	data.forms["1s_impf_actv_indc"] = prefix_d .. "eram"
 	data.forms["2s_impf_actv_indc"] = prefix_d .. "erās"
 	data.forms["3s_impf_actv_indc"] = prefix_d .. "erat"
@@ -1770,7 +1713,7 @@ irreg_conjugations["sum"] = function(args, data, typeinfo)
 	data.forms["1p_futr_actv_indc"] = prefix_d .. "erimus"
 	data.forms["2p_futr_actv_indc"] = prefix_d .. "eritis"
 	data.forms["3p_futr_actv_indc"] = prefix_d .. "erunt"
-	
+
 	-- Active imperfective subjunctive
 	data.forms["1s_pres_actv_subj"] = prefix_long .. "sim"
 	data.forms["2s_pres_actv_subj"] = prefix_long .. "sīs"
@@ -1778,26 +1721,26 @@ irreg_conjugations["sum"] = function(args, data, typeinfo)
 	data.forms["1p_pres_actv_subj"] = prefix_long .. "sīmus"
 	data.forms["2p_pres_actv_subj"] = prefix_long .. "sītis"
 	data.forms["3p_pres_actv_subj"] = prefix_long .. "sint"
-	
+
 	data.forms["1s_impf_actv_subj"] = {prefix_d .. "essem", prefix_f .. "forem"}
 	data.forms["2s_impf_actv_subj"] = {prefix_d .. "essēs", prefix_f .. "forēs"}
 	data.forms["3s_impf_actv_subj"] = {prefix_d .. "esset", prefix_f .. "foret"}
 	data.forms["1p_impf_actv_subj"] = {prefix_d .. "essēmus", prefix_f .. "forēmus"}
 	data.forms["2p_impf_actv_subj"] = {prefix_d .. "essētis", prefix_f .. "forētis"}
 	data.forms["3p_impf_actv_subj"] = {prefix_d .. "essent", prefix_f .. "forent"}
-	
+
 	-- Imperative
 	data.forms["2s_pres_actv_impr"] = prefix_d .. "es"
 	data.forms["2p_pres_actv_impr"] = prefix_d .. "este"
-	
+
 	data.forms["2s_futr_actv_impr"] = prefix_d .. "estō"
 	data.forms["3s_futr_actv_impr"] = prefix_d .. "estō"
 	data.forms["2p_futr_actv_impr"] = prefix_d .. "estōte"
 	data.forms["3p_futr_actv_impr"] = prefix_long .. "suntō"
-	
+
 	-- Present infinitives
 	data.forms["pres_actv_inf"] = prefix_d .. "esse"
-	
+
 	-- Future infinitives
 	data.forms["futr_actv_inf"] = {"[[" .. prefix_f .. "futūrus]] [[esse]]", prefix_f .. "fore"}
 
@@ -1807,13 +1750,13 @@ irreg_conjugations["sum"] = function(args, data, typeinfo)
 	elseif prefix == "prae" then
 		data.forms["pres_actv_ptc"] = "praesēns"
 	end
-	
+
 	-- Gerund
 	data.forms["ger_nom"] = nil
 	data.forms["ger_gen"] = nil
 	data.forms["ger_dat"] = nil
 	data.forms["ger_acc"] = nil
-	
+
 	-- Supine
 	data.forms["sup_acc"] = nil
 	data.forms["sup_abl"] = nil
@@ -1831,7 +1774,7 @@ make_pres_1st = function(data, pres_stem)
 	add_forms(data, "pres_actv_indc", pres_stem, "ō", "ās", "at", "āmus", "ātis", "ant")
 	add_forms(data, "impf_actv_indc", pres_stem, "ābam", "ābās", "ābat", "ābāmus", "ābātis", "ābant")
 	add_forms(data, "futr_actv_indc", pres_stem, "ābō", "ābis", "ābit", "ābimus", "ābitis", "ābunt")
-	
+
 	-- Passive imperfective indicative
 	add_forms(data, "pres_pasv_indc", pres_stem, "or", {"āris", "āre"}, "ātur", "āmur", "āminī", "antur")
 	add_forms(data, "impf_pasv_indc", pres_stem, "ābar", {"ābāris", "ābāre"}, "ābātur", "ābāmur", "ābāminī", "ābantur")
@@ -1840,26 +1783,26 @@ make_pres_1st = function(data, pres_stem)
 	-- Active imperfective subjunctive
 	add_forms(data, "pres_actv_subj", pres_stem, "em", "ēs", "et", "ēmus", "ētis", "ent")
 	add_forms(data, "impf_actv_subj", pres_stem, "ārem", "ārēs", "āret", "ārēmus", "ārētis", "ārent")
-	
+
 	-- Passive imperfective subjunctive
 	add_forms(data, "pres_pasv_subj", pres_stem, "er", {"ēris", "ēre"}, "ētur", "ēmur", "ēminī", "entur")
 	add_forms(data, "impf_pasv_subj", pres_stem, "ārer", {"ārēris", "ārēre"}, "ārētur", "ārēmur", "ārēminī", "ārentur")
-	
+
 	-- Imperative
 	add_2_forms(data, "pres_actv_impr", pres_stem, "ā", "āte")
 	add_23_forms(data, "futr_actv_impr", pres_stem, "ātō", "ātō", "ātōte", "antō")
-	
+
 	add_2_forms(data, "pres_pasv_impr", pres_stem, "āre", "āminī")
 	add_23_forms(data, "futr_pasv_impr", pres_stem, "ātor", "ātor", {}, "antor")
-	
+
 	-- Present infinitives
 	data.forms["pres_actv_inf"] = pres_stem .. "āre"
 	data.forms["pres_pasv_inf"] = pres_stem .. "ārī"
-	
+
 	-- Imperfective participles
 	data.forms["pres_actv_ptc"] = pres_stem .. "āns"
 	data.forms["futr_pasv_ptc"] = pres_stem .. "andus"
-	
+
 	-- Gerund
 	data.forms["ger_nom"] = data.forms["pres_actv_inf"]
 	data.forms["ger_gen"] = pres_stem .. "andī"
@@ -1872,17 +1815,17 @@ make_pres_2nd = function(data, pres_stem, nopass, noimpr)
 	add_forms(data, "pres_actv_indc", pres_stem, "eō", "ēs", "et", "ēmus", "ētis", "ent")
 	add_forms(data, "impf_actv_indc", pres_stem, "ēbam", "ēbās", "ēbat", "ēbāmus", "ēbātis", "ēbant")
 	add_forms(data, "futr_actv_indc", pres_stem, "ēbō", "ēbis", "ēbit", "ēbimus", "ēbitis", "ēbunt")
-	
+
 	-- Active imperfective subjunctive
 	add_forms(data, "pres_actv_subj", pres_stem, "eam", "eās", "eat", "eāmus", "eātis", "eant")
 	add_forms(data, "impf_actv_subj", pres_stem, "ērem", "ērēs", "ēret", "ērēmus", "ērētis", "ērent")
-	
+
 	-- Active imperative
 	if not noimpr then
 		add_2_forms(data, "pres_actv_impr", pres_stem, "ē", "ēte")
 		add_23_forms(data, "futr_actv_impr", pres_stem, "ētō", "ētō", "ētōte", "entō")
 	end
-	
+
 	if not nopass then
 		-- Passive imperfective indicative
 		add_forms(data, "pres_pasv_indc", pres_stem, "eor", {"ēris", "ēre"}, "ētur", "ēmur", "ēminī", "entur")
@@ -1892,14 +1835,14 @@ make_pres_2nd = function(data, pres_stem, nopass, noimpr)
 		-- Passive imperfective subjunctive
 		add_forms(data, "pres_pasv_subj", pres_stem, "ear", {"eāris", "eāre"}, "eātur", "eāmur", "eāminī", "eantur")
 		add_forms(data, "impf_pasv_subj", pres_stem, "ērer", {"ērēris", "ērēre"}, "ērētur", "ērēmur", "ērēminī", "ērentur")
-		
+
 		-- Passive imperative
 		if not noimpr then
 			add_2_forms(data, "pres_pasv_impr", pres_stem, "ēre", "ēminī")
 			add_23_forms(data, "futr_pasv_impr", pres_stem, "ētor", "ētor", {}, "entor")
 		end
 	end
-	
+
 	-- Present infinitives
 	data.forms["pres_actv_inf"] = pres_stem .. "ēre"
 	if not nopass then
@@ -1911,7 +1854,7 @@ make_pres_2nd = function(data, pres_stem, nopass, noimpr)
 	if not nopass then
 		data.forms["futr_pasv_ptc"] = pres_stem .. "endus"
 	end
-	
+
 	-- Gerund
 	data.forms["ger_nom"] = data.forms["pres_actv_inf"]
 	data.forms["ger_gen"] = pres_stem .. "endī"
@@ -1924,7 +1867,7 @@ make_pres_3rd = function(data, pres_stem)
 	add_forms(data, "pres_actv_indc", pres_stem, "ō", "is", "it", "imus", "itis", "unt")
 	add_forms(data, "impf_actv_indc", pres_stem, "ēbam", "ēbās", "ēbat", "ēbāmus", "ēbātis", "ēbant")
 	add_forms(data, "futr_actv_indc", pres_stem, "am", "ēs", "et", "ēmus", "ētis", "ent")
-	
+
 	-- Passive imperfective indicative
 	add_forms(data, "pres_pasv_indc", pres_stem, "or", {"eris", "ere"}, "itur", "imur", "iminī", "untur")
 	add_forms(data, "impf_pasv_indc", pres_stem, "ēbar", {"ēbāris", "ēbāre"}, "ēbātur", "ēbāmur", "ēbāminī", "ēbantur")
@@ -1933,26 +1876,26 @@ make_pres_3rd = function(data, pres_stem)
 	-- Active imperfective subjunctive
 	add_forms(data, "pres_actv_subj", pres_stem, "am", "ās", "at", "āmus", "ātis", "ant")
 	add_forms(data, "impf_actv_subj", pres_stem, "erem", "erēs", "eret", "erēmus", "erētis", "erent")
-	
+
 	-- Passive imperfective subjunctive
 	add_forms(data, "pres_pasv_subj", pres_stem, "ar", {"āris", "āre"}, "ātur", "āmur", "āminī", "antur")
 	add_forms(data, "impf_pasv_subj", pres_stem, "erer", {"erēris", "erēre"}, "erētur", "erēmur", "erēminī", "erentur")
-	
+
 	-- Imperative
 	add_2_forms(data, "pres_actv_impr", pres_stem, "e", "ite")
 	add_23_forms(data, "futr_actv_impr", pres_stem, "itō", "itō", "itōte", "untō")
-	
+
 	add_2_forms(data, "pres_pasv_impr", pres_stem, "ere", "iminī")
 	add_23_forms(data, "futr_pasv_impr", pres_stem, "itor", "itor", {}, "untor")
-	
+
 	-- Present infinitives
 	data.forms["pres_actv_inf"] = pres_stem .. "ere"
 	data.forms["pres_pasv_inf"] = pres_stem .. "ī"
-	
+
 	-- Imperfective participles
 	data.forms["pres_actv_ptc"] = pres_stem .. "ēns"
 	data.forms["futr_pasv_ptc"] = pres_stem .. "endus"
-	
+
 	-- Gerund
 	data.forms["ger_nom"] = data.forms["pres_actv_inf"]
 	data.forms["ger_gen"] = pres_stem .. "endī"
@@ -1965,15 +1908,15 @@ make_pres_3rd_io = function(data, pres_stem, nopass)
 	add_forms(data, "pres_actv_indc", pres_stem, "iō", "is", "it", "imus", "itis", "iunt")
 	add_forms(data, "impf_actv_indc", pres_stem, "iēbam", "iēbās", "iēbat", "iēbāmus", "iēbātis", "iēbant")
 	add_forms(data, "futr_actv_indc", pres_stem, "iam", "iēs", "iet", "iēmus", "iētis", "ient")
-	
+
 	-- Active imperfective subjunctive
 	add_forms(data, "pres_actv_subj", pres_stem, "iam", "iās", "iat", "iāmus", "iātis", "iant")
 	add_forms(data, "impf_actv_subj", pres_stem, "erem", "erēs", "eret", "erēmus", "erētis", "erent")
-	
+
 	-- Active imperative
 	add_2_forms(data, "pres_actv_impr", pres_stem, "e", "ite")
 	add_23_forms(data, "futr_actv_impr", pres_stem, "itō", "itō", "itōte", "iuntō")
-	
+
 	-- Passive imperfective indicative
 	if not nopass then
 		add_forms(data, "pres_pasv_indc", pres_stem, "ior", {"eris", "ere"}, "itur", "imur", "iminī", "iuntur")
@@ -1983,24 +1926,24 @@ make_pres_3rd_io = function(data, pres_stem, nopass)
 		-- Passive imperfective subjunctive
 		add_forms(data, "pres_pasv_subj", pres_stem, "iar", {"iāris", "iāre"}, "iātur", "iāmur", "iāminī", "iantur")
 		add_forms(data, "impf_pasv_subj", pres_stem, "erer", {"erēris", "erēre"}, "erētur", "erēmur", "erēminī", "erentur")
-		
+
 		-- Passive imperative
 		add_2_forms(data, "pres_pasv_impr", pres_stem, "ere", "iminī")
 		add_23_forms(data, "futr_pasv_impr", pres_stem, "itor", "itor", {}, "iuntor")
 	end
-	
+
 	-- Present infinitives
 	data.forms["pres_actv_inf"] = pres_stem .. "ere"
 	if not nopass then
 		data.forms["pres_pasv_inf"] = pres_stem .. "ī"
 	end
-	
+
 	-- Imperfective participles
 	data.forms["pres_actv_ptc"] = pres_stem .. "iēns"
 	if not nopass then
 		data.forms["futr_pasv_ptc"] = pres_stem .. "iendus"
 	end
-	
+
 	-- Gerund
 	data.forms["ger_nom"] = data.forms["pres_actv_inf"]
 	data.forms["ger_gen"] = pres_stem .. "iendī"
@@ -2013,7 +1956,7 @@ make_pres_4th = function(data, pres_stem)
 	add_forms(data, "pres_actv_indc", pres_stem, "iō", "īs", "it", "īmus", "ītis", "iunt")
 	add_forms(data, "impf_actv_indc", pres_stem, "iēbam", "iēbās", "iēbat", "iēbāmus", "iēbātis", "iēbant")
 	add_forms(data, "futr_actv_indc", pres_stem, "iam", "iēs", "iet", "iēmus", "iētis", "ient")
-	
+
 	-- Passive imperfective indicative
 	add_forms(data, "pres_pasv_indc", pres_stem, "ior", {"īris", "īre"}, "ītur", "īmur", "īminī", "iuntur")
 	add_forms(data, "impf_pasv_indc", pres_stem, "iēbar", {"iēbāris", "iēbāre"}, "iēbātur", "iēbāmur", "iēbāminī", "iēbantur")
@@ -2022,26 +1965,26 @@ make_pres_4th = function(data, pres_stem)
 	-- Active imperfective subjunctive
 	add_forms(data, "pres_actv_subj", pres_stem, "iam", "iās", "iat", "iāmus", "iātis", "iant")
 	add_forms(data, "impf_actv_subj", pres_stem, "īrem", "īrēs", "īret", "īrēmus", "īrētis", "īrent")
-	
+
 	-- Passive imperfective subjunctive
 	add_forms(data, "pres_pasv_subj", pres_stem, "iar", {"iāris", "iāre"}, "iātur", "iāmur", "iāminī", "iantur")
 	add_forms(data, "impf_pasv_subj", pres_stem, "īrer", {"īrēris", "īrēre"}, "īrētur", "īrēmur", "īrēminī", "īrentur")
-	
+
 	-- Imperative
 	add_2_forms(data, "pres_actv_impr", pres_stem, "ī", "īte")
 	add_23_forms(data, "futr_actv_impr", pres_stem, "ītō", "ītō", "ītōte", "iuntō")
-	
+
 	add_2_forms(data, "pres_pasv_impr", pres_stem, "īre", "īminī")
 	add_23_forms(data, "futr_pasv_impr", pres_stem, "ītor", "ītor", {}, "iuntor")
-	
+
 	-- Present infinitives
 	data.forms["pres_actv_inf"] = pres_stem .. "īre"
 	data.forms["pres_pasv_inf"] = pres_stem .. "īrī"
-	
+
 	-- Imperfective participles
 	data.forms["pres_actv_ptc"] = pres_stem .. "iēns"
 	data.forms["futr_pasv_ptc"] = pres_stem .. "iendus"
-	
+
 	-- Gerund
 	data.forms["ger_nom"] = data.forms["pres_actv_inf"]
 	data.forms["ger_gen"] = pres_stem .. "iendī"
@@ -2065,7 +2008,7 @@ make_perf = function(data, perf_stem, no_inf)
 		-- Perfective subjunctive
 		add_forms(data, "perf_actv_subj", stem, "erim", "erīs", "erit", "erīmus", "erītis", "erint")
 		add_forms(data, "plup_actv_subj", stem, "issem", "issēs", "isset", "issēmus", "issētis", "issent")
-		
+
 		-- Perfect infinitive
 		if not no_inf then
 			add_form(data, "perf_actv_inf", stem, "isse")
@@ -2080,7 +2023,7 @@ make_deponent_perf = function(data, supine_stem)
 	if type(supine_stem) ~= "table" then
 		supine_stem = {supine_stem}
 	end
-	
+
 	-- Perfect/future infinitives
 	for _, stem in ipairs(supine_stem) do
 		local stems = "[[" .. stem .. "us]] "
@@ -2119,7 +2062,7 @@ make_supine = function(data, supine_stem)
 	if type(supine_stem) ~= "table" then
 		supine_stem = {supine_stem}
 	end
-	
+
 	-- Perfect/future infinitives
 	for _, stem in ipairs(supine_stem) do
 		local futr_actv_inf, perf_pasv_inf, futr_pasv_inf, futr_actv_ptc, perf_pasv_ptc
@@ -2132,11 +2075,11 @@ make_supine = function(data, supine_stem)
 			perf_pasv_inf = "[[" .. stem .. "us]] [[esse]]"
 			futr_pasv_inf = "[[" .. stem .. "um]] [[īrī]]"
 		end
-		
+
 		-- Perfect/future participles
 		futr_actv_ptc = stem .. "ūrus"
 		perf_pasv_ptc = stem .. "us"
-		
+
 		-- Exceptions
 		local mortu = {
 			["conmortu"]=true,
@@ -2189,7 +2132,7 @@ local function show_form(form)
 	if not form then
 		return "&mdash;"
 	end
-	
+
 	if type(form) == "table" then
 		for key, subform in ipairs(form) do
 			if subform == "-" or subform == "—" or subform == "&mdash;" then
@@ -2200,7 +2143,7 @@ local function show_form(form)
 				form[key] = make_link({lang = lang, term = subform})
 			end
 		end
-		
+
 		return table.concat(form, ", ")
 	else
 		if form == "-" or form == "—" or form == "&mdash;" then
@@ -2224,9 +2167,9 @@ make_table = function(data)
 |-
 ! colspan="8" class="vsToggleElement" style="background: #CCC; text-align: left;" | &nbsp;&nbsp;&nbsp;Conjugation of ]=] .. make_link({lang = lang, alt = pagename}, "term") .. (#data.title > 0 and " (" .. table.concat(data.title, ", ") .. ")" or "") .. [=[
 
-]=] .. make_indc_rows(data) .. make_subj_rows(data) .. make_impr_rows(data) .. make_nonfin_rows(data) .. make_vn_rows(data) .. [=[ 
+]=] .. make_indc_rows(data) .. make_subj_rows(data) .. make_impr_rows(data) .. make_nonfin_rows(data) .. make_vn_rows(data) .. [=[
 
-|}]=].. make_footnotes(data) 
+|}]=].. make_footnotes(data)
 
 end
 
@@ -2276,15 +2219,15 @@ local cases = {
 
 make_indc_rows = function(data)
 	local indc = {}
-	
+
 	for _, v in ipairs({"actv", "pasv"}) do
 		local group = {}
 		local nonempty = false
-		
+
 		for _, t in ipairs({"pres", "impf", "futr", "perf", "plup", "futp"}) do
 			local row = {}
 			local notempty = false
-			
+
 			if data.forms[t .. "_" .. v .. "_indc"] then
 				row = "\n! colspan=\"6\" style=\"background: #CCC\" |" .. data.forms[t .. "_" .. v .. "_indc"]
 				nonempty = true
@@ -2293,26 +2236,26 @@ make_indc_rows = function(data)
 				for col, p in ipairs({"1s", "2s", "3s", "1p", "2p", "3p"}) do
 					local form = p .. "_" .. t .. "_" .. v .. "_indc"
 					row[col] = "\n| " .. show_form(data.forms[form])..(data.form_footnote_indices[form]==nil and "" or '<sup style="color: red">'..data.form_footnote_indices[form].."</sup>")
-					
+
 					if data.forms[p .. "_" .. t .. "_" .. v .. "_indc"] then
 						nonempty = true
 						notempty = true
 					end
 				end
-				
+
 				row = table.concat(row)
 			end
-			
+
 			if notempty then
 				table.insert(group, "\n! style=\"background:#c0cfe4\" | " .. tenses[t] .. row)
 			end
 		end
-		
+
 		if nonempty and #group > 0 then
 			table.insert(indc, "\n|- class=\"vsHide\"\n! rowspan=\"" .. tostring(#group) .. "\" style=\"background:#c0cfe4\" | " .. voices[v] .. "\n" .. table.concat(group, "\n|- class=\"vsHide\""))
 		end
 	end
-	
+
 	return
 [=[
 
@@ -2333,15 +2276,15 @@ end
 
 make_subj_rows = function(data)
 	local subj = {}
-	
+
 	for _, v in ipairs({"actv", "pasv"}) do
 		local group = {}
 		local nonempty = false
-		
+
 		for _, t in ipairs({"pres", "impf", "perf", "plup"}) do
 			local row = {}
 			local notempty = false
-			
+
 			if data.forms[t .. "_" .. v .. "_subj"] then
 				row = "\n! colspan=\"6\" style=\"background: #CCC\" |" .. data.forms[t .. "_" .. v .. "_subj"]
 				nonempty = true
@@ -2350,26 +2293,26 @@ make_subj_rows = function(data)
 				for col, p in ipairs({"1s", "2s", "3s", "1p", "2p", "3p"}) do
 					local form = p .. "_" .. t .. "_" .. v .. "_subj"
 					row[col] = "\n| " .. show_form(data.forms[form])..(data.form_footnote_indices[form]==nil and "" or '<sup style="color: red">'..data.form_footnote_indices[form].."</sup>")
-					
+
 					if data.forms[p .. "_" .. t .. "_" .. v .. "_subj"] then
 						nonempty = true
 						notempty = true
 					end
 				end
-				
+
 				row = table.concat(row)
 			end
-			
+
 			if notempty then
 				table.insert(group, "\n! style=\"background:#c0e4c0\" | " .. tenses[t] .. row)
 			end
 		end
-		
+
 		if nonempty and #group > 0 then
 			table.insert(subj, "\n|- class=\"vsHide\"\n! rowspan=\"" .. tostring(#group) .. "\" style=\"background:#c0e4c0\" | " .. voices[v] .. "\n" .. table.concat(group, "\n|- class=\"vsHide\""))
 		end
 	end
-	
+
 	return
 [=[
 
@@ -2395,28 +2338,28 @@ make_impr_rows = function(data)
 	for _, v in ipairs({"actv", "pasv"}) do
 		local group = {}
 		local nonempty = false
-		
+
 		for _, t in ipairs({"pres", "futr"}) do
 			local row = {}
-			
+
 			if data.forms[t .. "_" .. v .. "_impr"] then
 				row = "\n! colspan=\"6\" style=\"background: #CCC\" |" .. data.forms[t .. "_" .. v .. "_impr"]
 				nonempty = true
 			else
 				for col, p in ipairs({"1s", "2s", "3s", "1p", "2p", "3p"}) do
 					row[col] = "\n| " .. show_form(data.forms[p .. "_" .. t .. "_" .. v .. "_impr"])
-					
+
 					if data.forms[p .. "_" .. t .. "_" .. v .. "_impr"] then
 						nonempty = true
 					end
 				end
-				
+
 				row = table.concat(row)
 			end
-			
+
 			table.insert(group, "\n! style=\"background:#e4d4c0\" | " .. tenses[t] .. row)
 		end
-		
+
 		if nonempty and #group > 0 then
 			has_impr = true
 			table.insert(impr, "\n|- class=\"vsHide\"\n! rowspan=\"" .. tostring(#group) .. "\" style=\"background:#e4d4c0\" | " .. voices[v] .. "\n" .. table.concat(group, "\n|- class=\"vsHide\""))
@@ -2445,21 +2388,21 @@ end
 
 make_nonfin_rows = function(data)
 	local nonfin = {}
-	
+
 	for _, f in ipairs({"inf", "ptc"}) do
 		local row = {}
-		
+
 		for col, t in ipairs({"pres_actv", "perf_actv", "futr_actv", "pres_pasv", "perf_pasv", "futr_pasv"}) do
 			--row[col] = "\n| " .. show_form(data.forms[t .. "_" .. f])
 			local form = t .. "_" .. f
 			row[col] = "\n| " .. show_form(data.forms[form])..(data.form_footnote_indices[form]==nil and "" or '<sup style="color: red">'..data.form_footnote_indices[form].."</sup>")
-			
+
 		end
-		
+
 		row = table.concat(row)
 		table.insert(nonfin, "\n|- class=\"vsHide\"\n! style=\"background:#e2e4c0\" colspan=\"2\" | " .. nonfins[f] .. row)
 	end
-	
+
 	return
 [=[
 
@@ -2481,18 +2424,18 @@ end
 make_vn_rows = function(data)
 	local vn = {}
 	local has_vn = false
-	
+
 	local row = {}
-		
+
 	for col, n in ipairs({"ger_nom", "ger_gen", "ger_dat", "ger_acc", "sup_acc", "sup_abl"}) do
 		if data.forms[n] then
 			has_vn = true
 		end
 		row[col] = "\n| " .. show_form(data.forms[n])..(data.form_footnote_indices[n]==nil and "" or '<sup style="color: red">'..data.form_footnote_indices[n].."</sup>")
-	end	
-		
+	end
+
 	row = table.concat(row)
-		
+
 	if has_vn then
 		table.insert(vn, "\n|- class=\"vsHide\"" .. row)
 	end
@@ -2560,7 +2503,7 @@ override = function(data, args)
 	end
 	for _, n in ipairs({"ger_nom", "ger_gen", "ger_dat", "ger_acc", "sup_acc", "sup_abl"}) do
 		handle_form(n)
-	end	
+	end
 end
 
 checkexist = function(data)
@@ -2607,14 +2550,14 @@ end
 
 flatten_values = function(T)
 	function noaccents(x)
-		return mw.ustring.gsub(mw.ustring.toNFD(x),'[^%w]+',"")	
+		return mw.ustring.gsub(mw.ustring.toNFD(x),'[^%w]+',"")
 	end
-	function cleanup(x) 
+	function cleanup(x)
 		return noaccents(string.gsub(string.gsub(string.gsub(x, '%[', ''), '%]', ''), ' ', '+'))
 	end
 		local tbl = {}
 	for _, v in pairs(T) do
-		if type(v) == "table" then 
+		if type(v) == "table" then
 			local FT = flatten_values(v)
 			for _, V in pairs(FT) do
 				tbl[#tbl+1] = cleanup(V)
@@ -2629,7 +2572,7 @@ flatten_values = function(T)
 end
 
 link_google_books = function(verb, forms, domain)
-	function partition_XS_into_N(XS, N) 
+	function partition_XS_into_N(XS, N)
 		local count = 0
 		local mensae = {}
 		for _, v in pairs(XS) do
