@@ -9,7 +9,7 @@ from blib import getparam, rmparam, msg, errandmsg, site, tname, pname
 import lalib
 from lalib import remove_macrons
 
-def delete_participle(index, lemma, formind, formval, pos, save, verbose):
+def delete_participle(index, lemma, formind, formval, pos, preserve_diaeresis, save, verbose):
   notes = []
 
   def pagemsg(txt):
@@ -17,13 +17,13 @@ def delete_participle(index, lemma, formind, formval, pos, save, verbose):
   def errandpagemsg(txt):
     errandmsg("Page %s %s: form %s %s: %s" % (index, lemma, formind, formval, txt))
   def expand_text(tempcall):
-    return blib.expand_text(tempcall, remove_macrons(formval), pagemsg, verbose)
+    return blib.expand_text(tempcall, remove_macrons(formval, preserve_diaeresis), pagemsg, verbose)
 
   if "[" in formval:
     pagemsg("Skipping form value %s with link in it" % formval)
     return
 
-  page = pywikibot.Page(site, remove_macrons(formval))
+  page = pywikibot.Page(site, remove_macrons(formval, preserve_diaeresis))
   if not page.exists():
     pagemsg("Skipping form value %s, page doesn't exist" % formval)
     return
@@ -64,7 +64,7 @@ def delete_participle(index, lemma, formind, formval, pos, save, verbose):
       tn = tname(t)
       if tn == "m" and "==Etymology==" in subsections[k - 1]:
         actual_lemma = getparam(t, "2")
-        if remove_macrons(lemma) == remove_macrons(actual_lemma):
+        if remove_macrons(lemma, preserve_diaeresis) == remove_macrons(actual_lemma, preserve_diaeresis):
           saw_lemma_in_etym = True
         else:
           pagemsg("WARNING: Saw wrong lemma %s != %s in Etymology section: %s" % (
@@ -111,7 +111,7 @@ def delete_participle(index, lemma, formind, formval, pos, save, verbose):
     single_forms_to_delete.extend(form.split(","))
   for formformind, formformval in blib.iter_items(single_forms_to_delete):
     delete_form(index, formval, formformind, formformval, "partform", True,
-        save, verbose)
+        preserve_diaeresis, save, verbose)
 
   #### Now, we can maybe delete the whole section or page
 
@@ -153,7 +153,8 @@ def delete_participle(index, lemma, formind, formval, pos, save, verbose):
       pagemsg("Would save with comment = %s" % comment)
 
 
-def delete_form(index, lemma, formind, formval, pos, tag_sets_to_delete, save, verbose):
+def delete_form(index, lemma, formind, formval, pos, tag_sets_to_delete,
+    preserve_diaeresis, save, verbose):
   notes = []
 
   tag_sets_to_delete = True if tag_sets_to_delete is True else (
@@ -172,7 +173,7 @@ def delete_form(index, lemma, formind, formval, pos, tag_sets_to_delete, save, v
     pagemsg("Skipping form value %s with link in it" % formval)
     return
 
-  page = pywikibot.Page(site, remove_macrons(formval))
+  page = pywikibot.Page(site, remove_macrons(formval, preserve_diaeresis))
   if not page.exists():
     pagemsg("Skipping form value %s, page doesn't exist" % formval)
     return
@@ -180,6 +181,12 @@ def delete_form(index, lemma, formind, formval, pos, tag_sets_to_delete, save, v
   if pos == "verbform":
     expected_head_template = "la-verb-form"
     expected_header_pos = "Verb"
+  elif pos == "nounform":
+    expected_head_template = "la-noun-form"
+    expected_header_pos = "Noun"
+  elif pos == "adjform":
+    expected_head_template = "la-adj-form"
+    expected_header_pos = "Adjective"
   elif pos == "partform":
     expected_head_template = "la-part-form"
     expected_header_pos = "Participle"
@@ -224,7 +231,7 @@ def delete_form(index, lemma, formind, formval, pos, tag_sets_to_delete, save, v
         actual_lemma = getparam(t, str(lemma_param))
         # Allow mismatch in macrons, which often happens, e.g. because
         # a macron was added to the lemma page but not to the inflections
-        if remove_macrons(actual_lemma) == remove_macrons(lemma):
+        if remove_macrons(actual_lemma, preserve_diaeresis) == remove_macrons(lemma, preserve_diaeresis):
           # fetch tags
           tags = []
           for param in t.params:
@@ -302,7 +309,7 @@ def delete_form(index, lemma, formind, formval, pos, tag_sets_to_delete, save, v
           actual_lemma = getparam(t, str(lemma_param))
           # Allow mismatch in macrons, which often happens, e.g. because
           # a macron was added to the lemma page but not to the inflections
-          if remove_macrons(actual_lemma) == remove_macrons(lemma):
+          if remove_macrons(actual_lemma, preserve_diaeresis) == remove_macrons(lemma, preserve_diaeresis):
             tr = getparam(t, "tr")
             alt = getparam(t, "alt") or getparam(t, str(lemma_param + 1))
             # fetch tags
@@ -434,13 +441,13 @@ def delete_form(index, lemma, formind, formval, pos, tag_sets_to_delete, save, v
     else:
       pagemsg("Would save with comment = %s" % comment)
 
-def process_page(index, lemma, pos, infl, forms, pages_to_delete, save, verbose):
+def process_page(index, lemma, pos, infl, forms, pages_to_delete, preserve_diaeresis, save, verbose):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, lemma, txt))
   def errandpagemsg(txt):
     errandmsg("Page %s %s: %s" % (index, lemma, txt))
   def expand_text(tempcall):
-    return blib.expand_text(tempcall, remove_macrons(lemma), pagemsg, verbose)
+    return blib.expand_text(tempcall, remove_macrons(lemma, preserve_diaeresis), pagemsg, verbose)
 
   pagemsg("Processing")
 
@@ -520,22 +527,48 @@ def process_page(index, lemma, pos, infl, forms, pages_to_delete, save, verbose)
       partpos = "futpasspart"
 
     if partpos:
-      delete_participle(index, lemma, formind, formval, partpos, save, verbose)
+      delete_participle(index, lemma, formind, formval, partpos,
+        preserve_diaeresis, save, verbose)
     else:
-      delete_form(index, lemma, formind, formval, "verbform", tag_sets_to_delete, save, verbose)
+      if pos == "noun":
+        posform = "nounform"
+      elif pos == "verb":
+        posform = "verbform"
+      elif pos == "adj":
+        posform = "adjform"
+      elif pos == "part":
+        posform = "partform"
+      else:
+        raise ValueError("Invalid part of speech %s" % pos)
+      delete_form(index, lemma, formind, formval, posform, tag_sets_to_delete,
+        preserve_diaeresis, save, verbose)
 
 parser = blib.create_argparser(u"Delete bad Latin forms")
 parser.add_argument('--inflfile', help="File containing lemmas and inflection templates.")
 parser.add_argument('--form-inflfile', help="File containing lemmas, forms to delete and infl templates.")
+parser.add_argument('--pos-form-inflfile', help="File containing POSes, lemmas, forms to delete and infl templates.")
 parser.add_argument('--forms', help="Forms to delete.")
-parser.add_argument('--pos', required=True, help="Part of speech of words to delete",
+parser.add_argument('--pos', help="Part of speech of words to delete",
     choices=['noun', 'verb', 'adj'])
 parser.add_argument('--output-pages-to-delete', help="File to write pages to delete.")
+parser.add_argument('--preserve-diaeresis', action="store_true",
+    help="Don't remove diaeresis when removing macrons to compute pag name.")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
 pages_to_delete = []
-if args.form_inflfile:
+if args.pos_form_inflfile:
+  lines = [x.strip() for x in codecs.open(args.pos_form_inflfile, "r", "utf-8")]
+  for index, line in blib.iter_items(lines, start, end):
+    if "!!!" in line:
+      pos, lemma, forms, infl = re.split("!!!", line)
+    else:
+      pos, lemma, forms, infl = re.split(" ", line, 3)
+    process_page(index, lemma, pos, infl, forms, pages_to_delete,
+      args.preserve_diaeresis, args.save, args.verbose)
+elif args.form_inflfile:
+  if not args.pos:
+    raise ValueError("If --form-inflfile given, --pos must be given")
   lines = [x.strip() for x in codecs.open(args.form_inflfile, "r", "utf-8")]
   for index, line in blib.iter_items(lines, start, end):
     if "!!!" in line:
@@ -543,10 +576,10 @@ if args.form_inflfile:
     else:
       lemma, forms, infl = re.split(" ", line, 2)
     process_page(index, lemma, args.pos, infl, forms, pages_to_delete,
-      args.save, args.verbose)
+      args.preserve_diaeresis, args.save, args.verbose)
 else:
-  if not args.inflfile or not args.forms:
-    raise ValueError("If --form-inflfile not given, --inflfile and --forms must be given")
+  if not args.inflfile or not args.forms or not args.pos:
+    raise ValueError("If --form-inflfile not given, --inflfile, --pos and --forms must be given")
   lines = [x.strip() for x in codecs.open(args.inflfile, "r", "utf-8")]
   for index, line in blib.iter_items(lines, start, end):
     if "!!!" in line:
@@ -554,7 +587,7 @@ else:
     else:
       lemma, infl = re.split(" ", line, 1)
     process_page(index, lemma, args.pos, infl, args.forms, pages_to_delete,
-      args.save, args.verbose)
+      args.preserve_diaeresis, args.save, args.verbose)
 msg("The following pages need to be deleted:")
 for page in pages_to_delete:
   msg(page)
