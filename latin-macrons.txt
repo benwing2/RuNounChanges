@@ -466,6 +466,12 @@ v1 cūnctor
 ###
 *n3 comēstor
 ###
+### eclīpsis
+###
+*n3 eclīpsis
+*n1 eclīptica
+*a1 eclīpticus
+###
 ### emō
 ###
 *emō emere *ēmī ēmptum
@@ -521,16 +527,44 @@ coëmō coëmere *coēmī coēmptum
 *n3 praesūmptiō
 *resūmō resūmere resūmpsī resūmptum
 ###
-### eclīpsis
-###
-*n3 eclīpsis
-*n1 eclīptica
-*a1 eclīpticus
-###
 ### ēmungō
 ###
 *ēmungō ēmungere ēmunxī ēmūnctum
 *n2 ēmūnctōrium
+###
+### eō
+###
+# These typically don't have long ī in -īss- in forms.
+abeō abīre abiī abitum [int, takes ablative, infinitive, supine or even accusative occasionally]
+adeō adīre adiī aditum [tr]
+ambeō ambīre ambiī ambitum [tr]
+anteeō anteīre anteiī anteitum [tr]
+circueō circuīre circuiī circuitum [tr]
+circumeō circumīre circumiī circumitum [tr]
+coeō coīre coiī coitum [tr]
+deeō deīre -- -- [int; missing perf and supine]
+dēpereō dēperīre dēperiī dēperitūrus [tr; missing supine, has dēperitūrus]
+dispereō disperīre disperiī -- [int; missing supine]
+exeō exīre exiī exitum  [tr]
+ineō inīre iniī initum [tr]
+intereō interīre interiī interitum [int; ppp interitus "destroyed" exists]
+introeō introīre introiī introitum [tr]
+nequeō nequīre nequiī nequitum [int but has passive]
+obeō obīre obiī obitum [tr]
+ōdeō ōdīre ōdiī ōditum [doesn't exist]
+pereō perīre periī peritum [int]
+pertrānseō pertrānsīre pertrānsiī pertrānsitum [tr]
+posteō postīre -- -- [int; tr per Lewis/Short; post-Classical]
+praeeō praeīre praeiī praeitum [tr]
+praetereō praeterīre praeteriī praeteritum [tr]
+prōdeō prōdīre prōdiī prōditum [int]
+queō quīre quiī quitum [int but has passive]
+redeō redīre rediī reditum [int; has impersonal passive]
+subeō subīre subiī subitum [tr]
+subintroeō subintroīre subintroiī -- [int+tr]
+trānsabeō trānsabīre trānsabiī trānsabitum [tr]
+trānseō trānsīre trānsiī trānsitum [tr]
+vēneō vēnīre vēniī vēnitum [int but has passive; participle venītus found once]
 ###
 ### ēsca
 ###
@@ -1009,6 +1043,12 @@ v1 jēntō
 pn1 Īllyria
 pn1 Īllyriae
 pn2 Īllyricum
+###
+### īnfidēlis
+###
+# These don't have the right long vowels.
+a3 īnfidēlis
+a3 īnfidēlior
 ###
 ### involūcrum
 ###
@@ -2030,7 +2070,7 @@ subrigō subrigere subrēxī subrēctum
 *n3 altrīx
 *n3 amātrīx
 *n3 ambestrīx
-*pn3 Ambiorīx
+*pn3 Ambiorīx Ambiorīg
 *n3 ambulātrīx
 *n3 apostātrīx
 *n3 assestrīx
@@ -2042,11 +2082,11 @@ subrigō subrigere subrēxī subrēctum
 *n3 balneātrīx
 *pn3 Beātrīx
 *n3 bellātrīx
-*pn3 Boiorīx
+*pn3 Boiorīx Boiorīg
 *n3 calabrīx
 *n3 calcātrīx
 # FIXME, following callithricis (all short vowels) as gen in Gaffiot
-*n3 callithrix
+*n3 callithrix callithrich
 *n3 calumniātrīx
 *a3 cantātrīx
 *n3 cantrīx
@@ -2076,10 +2116,10 @@ subrigō subrigere subrēxī subrēctum
 *n3 dījūdicātrīx
 *n3 dispēnsātrīx
 *n3 doctrīx
-*pn3 Dumnorīx
+*pn3 Dumnorīx Dumnorīg
 *n3 ēducātrīx
 *n3 ēlēctrīx
-*pn3 Eporedorīx
+*pn3 Eporedorīx Eporedorīg
 *n3 exacerbātrīx
 *n3 exasperātrīx
 *n3 explētrīx
