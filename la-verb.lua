@@ -1430,6 +1430,8 @@ local function libet_lubet(data, typeinfo, stem)
 	
 	typeinfo.subtype = "nopass"
 	local prefix = typeinfo.prefix or ""
+
+	stem = prefix .. stem
 	
 	-- Active imperfective indicative
 	data.forms["3s_pres_actv_indc"] = stem .. "et"
