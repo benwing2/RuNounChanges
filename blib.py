@@ -1189,6 +1189,42 @@ def find_lang_section(pagename, lang, pagemsg):
 
   return find_lang_section_from_text(pagetext, lang, pagemsg)
 
+def find_modifiable_lang_section(text, lang, pagemsg):
+  sections = re.split("(^==[^=]*==\n)", text, 0, re.M)
+
+  has_non_lang = False
+
+  lang_j = -1
+  for j in xrange(2, len(sections), 2):
+    if sections[j-1] != "==" + lang + "==\n":
+      has_non_lang = True
+    else:
+      if lang_j >= 0:
+        pagemsg("WARNING: Found two %s sections, skipping" % lang)
+        return None
+      lang_j = j
+  if lang_j < 0:
+    pagemsg("Can't find %s section, skipping" % lang)
+    return None
+  j = lang_j
+
+  # Extract off trailing separator
+  mm = re.match(r"^(.*?\n)(\n*--+\n*)$", sections[j], re.S)
+  if mm:
+    secbody, sectail = mm.group(1), mm.group(2)
+  else:
+    secbody = sections[j]
+    sectail = ""
+
+  # Split off categories at end
+  mm = re.match(r"^(.*?\n)(\n*(\[\[Category:[^\]]+\]\]\n*)*)$",
+      secbody, re.S)
+  if mm:
+    secbody, secbodytail = mm.group(1), mm.group(2)
+    sectail = secbodytail + sectail
+
+  return sections, j, secbody, sectail, has_non_lang
+
 def split_text_into_sections(pagetext, lang):
   # Split into sections
   splitsections = re.split("(^==[^=\n]+==\n)", pagetext, 0, re.M)
@@ -1214,15 +1250,16 @@ def find_lang_section_from_text(pagetext, lang, pagemsg):
 
   return None
 
-def replace_in_text(text, curr, repl, pagemsg):
+def replace_in_text(text, curr, repl, pagemsg, no_found_repl_check=False):
   found_curr = curr in text
   if not found_curr:
     pagemsg("WARNING: Unable to locate current text: %s" % curr)
     return text, False
-  found_repl = repl in text
-  if found_repl:
-    pagemsg("WARNING: Already found replacement text: %s" % repl)
-    return text, False
+  if not no_found_repl_check:
+    found_repl = repl in text
+    if found_repl:
+      pagemsg("WARNING: Already found replacement text: %s" % repl)
+      return text, False
   newtext = text.replace(curr, repl)
   newtext_text_diff = len(newtext) - len(text)
   repl_curr_diff = len(repl) - len(curr)
