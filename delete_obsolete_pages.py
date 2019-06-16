@@ -4,7 +4,7 @@
 import pywikibot, re, sys, codecs, argparse
 
 import blib
-from blib import getparam, rmparam, msg, site
+from blib import getparam, rmparam, msg, errandmsg, site
 
 parser = blib.create_argparser(u"Delete obsolete pages")
 parser.add_argument('--pagefile', help="Pages to delete")
@@ -23,8 +23,10 @@ for i, pagename in blib.iter_items(pages_to_delete, start, end):
   if page.exists():
     msg("Deleting %s (comment=%s)" % (page.title(), comment))
     page.delete('%s (content was "%s")' % (comment, unicode(page.text)))
+    errandmsg("Page [[%s]] deleted" % page.title())
   if args.delete_docs:
     doc_page = pywikibot.Page(site, "%s/documentation" % pagename)
     if doc_page.exists():
       msg("Deleting %s (comment=%s)" % (doc_page.title(), doc_comment))
       doc_page.delete('%s (content was "%s")' % (doc_comment, unicode(doc_page.text)))
+      errandmsg("Page [[%s]] deleted" % doc_page.title())
