@@ -49,6 +49,14 @@ local checkirregular
 local flatten_values
 local link_google_books
 
+-- Regex find() handling Unicode correctly
+local rfind = mw.ustring.find
+
+local function cfind(str, text)
+	-- Constant version of :find()
+	return str:find(text, nil, true)
+end
+
 local function if_not_empty(val)
 	if val == "" then
 		return nil
@@ -303,7 +311,7 @@ end
 postprocess = function(data, typeinfo)
 	-- Add information for the passive perfective forms
 	if data.forms["perf_pasv_ptc"] and not form_contains(data.forms["perf_pasv_ptc"], "&mdash;") then
-		if typeinfo.subtype:find("pass-impers") then
+		if cfind(typeinfo.subtype, "pass-impers") then
 			-- These may already be set by make_supine().
 			clear_form(data, "perf_pasv_inf")
 			clear_form(data, "perf_pasv_ptc")
@@ -317,7 +325,7 @@ postprocess = function(data, typeinfo)
 				add_form(data, "perf_pasv_inf", nns_ppp, " [[esse]]")
 				add_form(data, "perf_pasv_ptc", nns_ppp, "")
 			end
-		elseif typeinfo.subtype:find("pass-3only") then
+		elseif cfind(typeinfo.subtype, "pass-3only") then
 			for _, supine_stem in ipairs(typeinfo.supine_stem) do
 				local nns_ppp_s = "[[" .. supine_stem .. "us]]"
 				local nns_ppp_p = "[[" .. supine_stem .. "ī]]"
@@ -337,7 +345,7 @@ postprocess = function(data, typeinfo)
 		end
 	end
 
-	if typeinfo.subtype:find("perf-as-pres") then
+	if cfind(typeinfo.subtype, "perf-as-pres") then
 		-- Perfect forms as present tense
 		table.insert(data.title, "active only")
 		table.insert(data.title, "[[perfect]] forms as present")
@@ -356,29 +364,32 @@ postprocess = function(data, typeinfo)
 		-- Remove passive forms
 		-- Remove present active, imperfect active and future active forms
 		for key, _ in pairs(data.forms) do
-			if key ~= "futr_actv_inf" and key ~= "futr_actv_ptc" and (key:find("pasv") or key:find("pres") and key ~= "pres_actv_inf" or key:find("impf") or key:find("futr")) then
+			if key ~= "futr_actv_inf" and key ~= "futr_actv_ptc" and (
+				cfind(key, "pasv") or cfind(key, "pres") and key ~= "pres_actv_inf" or
+				cfind(key, "impf") or cfind(key, "futr")
+			) then
 				data.forms[key] = nil
 			end
 		end
 
 		-- Change perfect forms to non-perfect forms
 		for key, form in pairs(data.forms) do
-			if key:find("perf") and key ~= "perf_actv_ptc" then
+			if cfind(key, "perf") and key ~= "perf_actv_ptc" then
 				data.forms[key:gsub("perf", "pres")] = form
 				data.forms[key] = nil
-			elseif key:find("plup") then
+			elseif cfind(key, "plup") then
 				data.forms[key:gsub("plup", "impf")] = form
 				data.forms[key] = nil
-			elseif key:find("futp") then
+			elseif cfind(key, "futp") then
 				data.forms[key:gsub("futp", "futr")] = form
 				data.forms[key] = nil
-			elseif key:find("ger") then
+			elseif cfind(key, "ger") then
 				data.forms[key] = nil
 			end
 		end
 
 		data.forms["pres_actv_ptc"] = nil
-	elseif typeinfo.subtype:find("memini") then
+	elseif cfind(typeinfo.subtype, "memini") then
 		-- Perfect forms as present tense
 		table.insert(data.title, "active only")
 		table.insert(data.title, "[[perfect]] forms as present")
@@ -391,20 +402,20 @@ postprocess = function(data, typeinfo)
 		-- Remove present active, imperfect active and future active forms
 		-- Except for future active imperatives
 		for key, _ in pairs(data.forms) do
-			if key:find("pasv") or key:find("pres") or key:find("impf") or key:find("futr") or key:find("ptc") or key:find("ger") then
+			if cfind(key, "pasv") or cfind(key, "pres") or cfind(key, "impf") or cfind(key, "futr") or cfind(key, "ptc") or cfind(key, "ger") then
 				data.forms[key] = nil
 			end
 		end
 
 		-- Change perfect forms to non-perfect forms
 		for key, form in pairs(data.forms) do
-			if key:find("perf") and key ~= "perf_actv_ptc" then
+			if cfind(key, "perf") and key ~= "perf_actv_ptc" then
 				data.forms[key:gsub("perf", "pres")] = form
 				data.forms[key] = nil
-			elseif key:find("plup") then
+			elseif cfind(key, "plup") then
 				data.forms[key:gsub("plup", "impf")] = form
 				data.forms[key] = nil
-			elseif key:find("futp") then
+			elseif cfind(key, "futp") then
 				data.forms[key:gsub("futp", "futr")] = form
 				data.forms[key] = nil
 			end
@@ -418,7 +429,7 @@ postprocess = function(data, typeinfo)
 	-- Types of irregularity related primarily to the active.
 	-- These could in theory be combined with those related to the passive and imperative,
 	-- i.e. there's no reason there couldn't be an impersonal deponent verb with no imperatives.
-	if typeinfo.subtype:find("impers") and not typeinfo.subtype:find("pass-impers") then
+	if cfind(typeinfo.subtype, "impers") and not cfind(typeinfo.subtype, "pass-impers") then
 		-- Impersonal verbs have only third-person singular forms.
 		table.insert(data.title, "[[impersonal]]")
 		table.insert(data.categories, "Latin impersonal verbs")
@@ -429,7 +440,7 @@ postprocess = function(data, typeinfo)
 				data.forms[key] = nil
 			end
 		end
-	elseif typeinfo.subtype:find("3only") and not typeinfo.subtype:find("pass-3only") then
+	elseif cfind(typeinfo.subtype, "3only") and not cfind(typeinfo.subtype, "pass-3only") then
 		table.insert(data.title, "[[impersonal]]")
 		table.insert(data.categories, "Latin impersonal verbs")
 
@@ -441,67 +452,67 @@ postprocess = function(data, typeinfo)
 		end
 	end
 
-	if typeinfo.subtype:find("nopass") then
+	if cfind(typeinfo.subtype, "nopass") then
 		-- Remove all passive forms
 		table.insert(data.title, "active only")
 		table.insert(data.categories, "Latin active-only verbs")
 
 		-- Remove all non-3sg and passive forms
 		for key, _ in pairs(data.forms) do
-			if key:find("pasv") then
+			if cfind(key, "pasv") then
 				data.forms[key] = nil
 			end
 		end
-	elseif typeinfo.subtype:find("pass-3only") then
+	elseif cfind(typeinfo.subtype, "pass-3only") then
 		-- Some verbs have only third-person forms in the passive
 		table.insert(data.title, "only third-person forms in passive")
 		table.insert(data.categories, "Latin verbs with third-person passive")
 
 		-- Remove all non-3rd-person passive forms and all passive imperatives
 		for key, _ in pairs(data.forms) do
-			if key:find("pasv") and (key:find("^[12][sp]") or key:find("impr")) then
+			if cfind(key, "pasv") and (key:find("^[12][sp]") or cfind(key, "impr")) then
 				data.forms[key] = nil
 			end
 		end
-	elseif typeinfo.subtype:find("pass-impers") then
+	elseif cfind(typeinfo.subtype, "pass-impers") then
 		-- Some verbs are impersonal in the passive
 		table.insert(data.title, "[[impersonal]] in passive")
 		table.insert(data.categories, "Latin verbs with impersonal passive")
 
 		-- Remove all non-3sg passive forms
 		for key, _ in pairs(data.forms) do
-			if key:find("pasv") and (key:find("^[12][sp]") or key:find("^3p") or key:find("impr")) or key:find("futr_pasv_inf") then
+			if cfind(key, "pasv") and (key:find("^[12][sp]") or key:find("^3p") or cfind(key, "impr")) or cfind(key, "futr_pasv_inf") then
 				data.forms[key] = nil
 			end
 		end
 	end
 
-	if typeinfo.subtype:find("no-actv-perf") then
+	if cfind(typeinfo.subtype, "no-actv-perf") then
 		-- Some verbs have no active perfect forms (e.g. interstinguō, -ěre)
 		table.insert(data.title, "no active perfect forms")
 		table.insert(data.categories, "Latin defective verbs")
 
 		-- Remove all active perfect forms
 		for key, _ in pairs(data.forms) do
-			if key:find("actv") and (key:find("perf") or key:find("plup") or key:find("futp")) then
+			if cfind(key, "actv") and (cfind(key, "perf") or cfind(key, "plup") or cfind(key, "futp")) then
 				data.forms[key] = nil
 			end
 		end
-	elseif typeinfo.subtype:find("no-pasv-perf") then
+	elseif cfind(typeinfo.subtype, "no-pasv-perf") then
 		-- Some verbs have no passive perfect forms (e.g. ārēscō, -ěre)
 		table.insert(data.title, "no passive perfect forms")
 		table.insert(data.categories, "Latin defective verbs")
 
 		-- Remove all passive perfect forms
 		for key, _ in pairs(data.forms) do
-			if key:find("pasv") and (key:find("perf") or key:find("plup") or key:find("futp")) then
+			if cfind(key, "pasv") and (cfind(key, "perf") or cfind(key, "plup") or cfind(key, "futp")) then
 				data.forms[key] = nil
 			end
 		end
 	end
 
 	-- Handle certain irregularities in the passive
-	if typeinfo.subtype:find("semi-depon") then
+	if cfind(typeinfo.subtype, "semi-depon") then
 		-- Semi-deponent verbs use perfective passive forms with active meaning,
 		-- and have no imperfective passive
 		table.insert(data.title, "[[semi-deponent]]")
@@ -509,33 +520,33 @@ postprocess = function(data, typeinfo)
 
 		-- Remove perfective active and imperfective passive forms
 		for key, _ in pairs(data.forms) do
-			if key:find("perf_actv") or key:find("plup_actv") or key:find("futp_actv") or key:find("pres_pasv") or key:find("impf_pasv") or key:find("futr_pasv") then
+			if cfind(key, "perf_actv") or cfind(key, "plup_actv") or cfind(key, "futp_actv") or cfind(key, "pres_pasv") or cfind(key, "impf_pasv") or cfind(key, "futr_pasv") then
 				data.forms[key] = nil
 			end
 		end
 
 		-- Change perfective passive to active
 		for key, form in pairs(data.forms) do
-			if key:find("perf_pasv") or key:find("plup_pasv") or key:find("futp_pasv") then
+			if cfind(key, "perf_pasv") or cfind(key, "plup_pasv") or cfind(key, "futp_pasv") then
 				data.forms[key:gsub("pasv", "actv")] = form
 				data.forms[key] = nil
 			end
 		end
-	elseif typeinfo.subtype:find("depon") then
+	elseif cfind(typeinfo.subtype, "depon") then
 		-- Deponent verbs use passive forms with active meaning
 		table.insert(data.title, "[[deponent]]")
 		table.insert(data.categories, "Latin deponent verbs")
 
 		-- Remove active forms and future passive infinitive
 		for key, _ in pairs(data.forms) do
-			if key:find("actv") and key ~= "pres_actv_ptc" and key ~= "futr_actv_ptc" and key ~= "futr_actv_inf" or key == "futr_pasv_inf" then
+			if cfind(key, "actv") and key ~= "pres_actv_ptc" and key ~= "futr_actv_ptc" and key ~= "futr_actv_inf" or key == "futr_pasv_inf" then
 				data.forms[key] = nil
 			end
 		end
 
 		-- Change passive to active
 		for key, form in pairs(data.forms) do
-			if key:find("pasv") and key ~= "pres_pasv_ptc" and key ~= "futr_pasv_ptc" and key ~= "futr_pasv_inf" then
+			if cfind(key, "pasv") and key ~= "pres_pasv_ptc" and key ~= "futr_pasv_ptc" and key ~= "futr_pasv_inf" then
 				data.forms[key:gsub("pasv", "actv")] = form
 				data.forms[key] = nil
 			end
@@ -545,40 +556,40 @@ postprocess = function(data, typeinfo)
 		data.forms["ger_nom"] = data.forms["pres_actv_inf"]
 	end
 
-	if typeinfo.subtype:find("noperf") then
+	if cfind(typeinfo.subtype, "noperf") then
 		-- Some verbs have no perfect forms (e.g. inalbēscō, -ěre)
 		table.insert(data.title, "[[defective verb|defective]]")
 		table.insert(data.categories, "Latin defective verbs")
 
 		-- Remove all perfect forms
 		for key, _ in pairs(data.forms) do
-			if key:find("perf") or key:find("plup") or key:find("futp") then
+			if cfind(key, "perf") or cfind(key, "plup") or cfind(key, "futp") then
 				data.forms[key] = nil
 			end
 		end
 	end
 
-	if typeinfo.subtype:find("nosup") then
+	if cfind(typeinfo.subtype, "nosup") then
 		-- Some verbs have no supine forms or forms derived from the supine
 		table.insert(data.title, "[[defective verb|defective]]")
 		table.insert(data.categories, "Latin defective verbs")
 
 		for key, _ in pairs(data.forms) do
-			if key:find("sup") or (
+			if cfind(key, "sup") or (
 				key == "perf_actv_ptc" or key == "perf_pasv_ptc" or key == "perf_pasv_inf" or
 				key == "futr_actv_ptc" or key == "futr_actv_inf" or key == "futr_pasv_inf"
 			) then
 				data.forms[key] = nil
 			end
 		end
-	elseif typeinfo.subtype:find("sup-futr-actv-only") then
+	elseif cfind(typeinfo.subtype, "sup-futr-actv-only") then
 		-- Some verbs have no supine forms or forms derived from the supine,
 		-- except for the future active infinitive/participle
 		table.insert(data.title, "[[defective verb|defective]]")
 		table.insert(data.categories, "Latin defective verbs")
 
 		for key, _ in pairs(data.forms) do
-			if key:find("sup") or (
+			if cfind(key, "sup") or (
 				key == "perf_actv_ptc" or key == "perf_pasv_ptc" or key == "perf_pasv_inf" or
 				key == "futr_pasv_inf"
 			) then
@@ -588,13 +599,13 @@ postprocess = function(data, typeinfo)
 	end
 
 	-- Handle certain irregularities in the imperative
-	if typeinfo.subtype:find("noimp") then
+	if cfind(typeinfo.subtype, "noimp") then
 		-- Some verbs have no imperatives
 		table.insert(data.title, "no [[imperative]]s")
 
 		-- Remove all imperative forms
 		for key, _ in pairs(data.forms) do
-			if key:find("impr") then
+			if cfind(key, "impr") then
 				data.forms[key] = nil
 			end
 		end
@@ -613,7 +624,7 @@ postprocess = function(data, typeinfo)
 
 	-- Add the poetic present passive infinitive forms of certain verbs
 	if typeinfo.p3inf == '1' then
-			local is_depon = typeinfo.subtype:find("depon") and not typeinfo.subtype:find("semi-depon")
+			local is_depon = cfind(typeinfo.subtype, "depon") and not cfind(typeinfo.subtype, "semi-depon")
 			local form = "pres_" .. (is_depon and "actv" or "pasv") .. "_inf"
 			local noteindex = #(data.footnotes) + 1
 			local formval = data.forms[form]
@@ -679,7 +690,7 @@ end
 
 local function get_regular_stems(args, typeinfo)
 	-- Get the parameters
-	if typeinfo.subtype:find("depon") then
+	if cfind(typeinfo.subtype, "depon") then
 		-- Deponent and semi-deponent verbs don't have the perfective principal part
 		typeinfo.pres_stem = if_not_empty(args[1])
 		typeinfo.perf_stem = nil
@@ -690,7 +701,7 @@ local function get_regular_stems(args, typeinfo)
 		typeinfo.supine_stem = if_not_empty(args[3])
 	end
 
-	if (typeinfo.subtype:find("perf-as-pres") or typeinfo.subtype:find("memini")) and not typeinfo.pres_stem then
+	if (cfind(typeinfo.subtype, "perf-as-pres") or cfind(typeinfo.subtype, "memini")) and not typeinfo.pres_stem then
 		typeinfo.pres_stem = "whatever"
 	end
 
@@ -703,7 +714,7 @@ local function get_regular_stems(args, typeinfo)
 		end
 	end
 
-	if not typeinfo.perf_stem and not typeinfo.subtype:find("depon") and not typeinfo.subtype:find("noperf") then
+	if not typeinfo.perf_stem and not cfind(typeinfo.subtype, "depon") and not cfind(typeinfo.subtype, "noperf") then
 		if typeinfo.conj_type == "1st" then
 			typeinfo.perf_stem = typeinfo.pres_stem .. "āv"
 		elseif NAMESPACE == "Template" then
@@ -720,9 +731,9 @@ local function get_regular_stems(args, typeinfo)
 	end
 
 	if not typeinfo.supine_stem and (
-		not typeinfo.subtype:find("nopass") and not typeinfo.subtype:find("noperf") and
-		not typeinfo.subtype:find("nosup") and not typeinfo.subtype:find("no-pasv-perf") and
-		not typeinfo.subtype:find("memini") and not typeinfo.subtype:find("pass-3only")
+		not cfind(typeinfo.subtype, "nopass") and not cfind(typeinfo.subtype, "noperf") and
+		not cfind(typeinfo.subtype, "nosup") and not cfind(typeinfo.subtype, "no-pasv-perf") and
+		not cfind(typeinfo.subtype, "memini") and not cfind(typeinfo.subtype, "pass-3only")
 	) then
 		if typeinfo.conj_type == "1st" then
 			typeinfo.supine_stem = typeinfo.pres_stem .. "āt"
@@ -925,7 +936,7 @@ conjugations["4th"] = function(args, data, typeinfo)
 
 	if typeinfo.sync_perf == "y" or typeinfo.sync_perf == "yn" then
 		for key, form in pairs(data.forms) do
-			if key:find("perf") or key:find("plup") or key:find("futp") then
+			if cfind(key, "perf") or cfind(key, "plup") or cfind(key, "futp") then
 				local forms = data.forms[key]
 				if type(forms) ~= "table" then
 					forms = {forms}
@@ -2515,7 +2526,7 @@ checkexist = function(data)
 				conjugation = {conjugation}
 			end
 			for _, conj in ipairs(conjugation) do
-				if not conj:find(" ") then
+				if not cfind(conj, " ") then
 					local title = lang:makeEntryName(conj)
 					local t = mw.title.new(title)
 					if t and not t.exists then
