@@ -81,7 +81,8 @@ def delete_participle(index, lemma, formind, formval, pos, preserve_diaeresis, s
             infl_template, unicode(t)))
         else:
           infl_template = unicode(t)
-      elif tn in ["rfdef"]:
+      elif tn in ["rfdef", "R:L&S", "R:Elementary Lewis", "R:du Cange", "R:Gaffiot",
+          "alternative form of"]:
         pass
       else:
         pagemsg("WARNING: Saw unrecognized template in subsection #%s %s: %s" % (
@@ -501,6 +502,11 @@ def process_page(index, lemma, pos, infl, forms, pages_to_delete, preserve_diaer
     if form == "sup":
       for key, val in args.iteritems():
         if "sup" in key or key in ["perf_actv_ptc", "perf_pasv_ptc", "futr_actv_ptc"]:
+          tag_sets_to_delete.append(lalib.form_key_to_tag_set(key))
+          forms_to_delete.append((key, val))
+    if form == "supnofap":
+      for key, val in args.iteritems():
+        if "sup" in key or key in ["perf_actv_ptc", "perf_pasv_ptc"]:
           tag_sets_to_delete.append(lalib.form_key_to_tag_set(key))
           forms_to_delete.append((key, val))
     if form == "ger":
