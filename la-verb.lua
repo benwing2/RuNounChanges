@@ -347,13 +347,13 @@ postprocess = function(data, typeinfo)
 
 	if cfind(typeinfo.subtype, "perf-as-pres") then
 		-- Perfect forms as present tense
-		table.insert(data.title, "active only")
-		table.insert(data.title, "[[perfect]] forms as present")
-		table.insert(data.title, "pluperfect as imperfect")
-		table.insert(data.title, "future perfect as future")
-		table.insert(data.categories, "Latin defective verbs")
-		table.insert(data.categories, "Latin active-only verbs")
-        table.insert(data.categories, "Latin verbs with perfect forms having imperfective meanings")
+		ut.insert_if_not(data.title, "active only")
+		ut.insert_if_not(data.title, "[[perfect]] forms as present")
+		ut.insert_if_not(data.title, "pluperfect as imperfect")
+		ut.insert_if_not(data.title, "future perfect as future")
+		ut.insert_if_not(data.categories, "Latin defective verbs")
+		ut.insert_if_not(data.categories, "Latin active-only verbs")
+        ut.insert_if_not(data.categories, "Latin verbs with perfect forms having imperfective meanings")
 
 		-- Change perfect passive participle to perfect active participle
 		data.forms["perf_actv_ptc"] = data.forms["perf_pasv_ptc"]
@@ -391,12 +391,12 @@ postprocess = function(data, typeinfo)
 		data.forms["pres_actv_ptc"] = nil
 	elseif cfind(typeinfo.subtype, "memini") then
 		-- Perfect forms as present tense
-		table.insert(data.title, "active only")
-		table.insert(data.title, "[[perfect]] forms as present")
-		table.insert(data.title, "pluperfect as imperfect")
-		table.insert(data.title, "future perfect as future")
-		table.insert(data.categories, "Latin defective verbs")
-		table.insert(data.categories, "Latin verbs with perfect forms having imperfective meanings")
+		ut.insert_if_not(data.title, "active only")
+		ut.insert_if_not(data.title, "[[perfect]] forms as present")
+		ut.insert_if_not(data.title, "pluperfect as imperfect")
+		ut.insert_if_not(data.title, "future perfect as future")
+		ut.insert_if_not(data.categories, "Latin defective verbs")
+		ut.insert_if_not(data.categories, "Latin verbs with perfect forms having imperfective meanings")
 
 		-- Remove passive forms
 		-- Remove present active, imperfect active and future active forms
@@ -431,8 +431,8 @@ postprocess = function(data, typeinfo)
 	-- i.e. there's no reason there couldn't be an impersonal deponent verb with no imperatives.
 	if cfind(typeinfo.subtype, "impers") and not cfind(typeinfo.subtype, "pass-impers") then
 		-- Impersonal verbs have only third-person singular forms.
-		table.insert(data.title, "[[impersonal]]")
-		table.insert(data.categories, "Latin impersonal verbs")
+		ut.insert_if_not(data.title, "[[impersonal]]")
+		ut.insert_if_not(data.categories, "Latin impersonal verbs")
 
 		-- Remove all non-3sg forms
 		for key, _ in pairs(data.forms) do
@@ -441,8 +441,8 @@ postprocess = function(data, typeinfo)
 			end
 		end
 	elseif cfind(typeinfo.subtype, "3only") and not cfind(typeinfo.subtype, "pass-3only") then
-		table.insert(data.title, "[[impersonal]]")
-		table.insert(data.categories, "Latin impersonal verbs")
+		ut.insert_if_not(data.title, "[[impersonal]]")
+		ut.insert_if_not(data.categories, "Latin impersonal verbs")
 
 		-- Remove all non-3sg forms
 		for key, _ in pairs(data.forms) do
@@ -452,45 +452,10 @@ postprocess = function(data, typeinfo)
 		end
 	end
 
-	if cfind(typeinfo.subtype, "nopass") then
-		-- Remove all passive forms
-		table.insert(data.title, "active only")
-		table.insert(data.categories, "Latin active-only verbs")
-
-		-- Remove all non-3sg and passive forms
-		for key, _ in pairs(data.forms) do
-			if cfind(key, "pasv") then
-				data.forms[key] = nil
-			end
-		end
-	elseif cfind(typeinfo.subtype, "pass-3only") then
-		-- Some verbs have only third-person forms in the passive
-		table.insert(data.title, "only third-person forms in passive")
-		table.insert(data.categories, "Latin verbs with third-person passive")
-
-		-- Remove all non-3rd-person passive forms and all passive imperatives
-		for key, _ in pairs(data.forms) do
-			if cfind(key, "pasv") and (key:find("^[12][sp]") or cfind(key, "impr")) then
-				data.forms[key] = nil
-			end
-		end
-	elseif cfind(typeinfo.subtype, "pass-impers") then
-		-- Some verbs are impersonal in the passive
-		table.insert(data.title, "[[impersonal]] in passive")
-		table.insert(data.categories, "Latin verbs with impersonal passive")
-
-		-- Remove all non-3sg passive forms
-		for key, _ in pairs(data.forms) do
-			if cfind(key, "pasv") and (key:find("^[12][sp]") or key:find("^3p") or cfind(key, "impr")) or cfind(key, "futr_pasv_inf") then
-				data.forms[key] = nil
-			end
-		end
-	end
-
 	if cfind(typeinfo.subtype, "no-actv-perf") then
 		-- Some verbs have no active perfect forms (e.g. interstinguō, -ěre)
-		table.insert(data.title, "no active perfect forms")
-		table.insert(data.categories, "Latin defective verbs")
+		ut.insert_if_not(data.title, "no active perfect forms")
+		ut.insert_if_not(data.categories, "Latin defective verbs")
 
 		-- Remove all active perfect forms
 		for key, _ in pairs(data.forms) do
@@ -500,8 +465,8 @@ postprocess = function(data, typeinfo)
 		end
 	elseif cfind(typeinfo.subtype, "no-pasv-perf") then
 		-- Some verbs have no passive perfect forms (e.g. ārēscō, -ěre)
-		table.insert(data.title, "no passive perfect forms")
-		table.insert(data.categories, "Latin defective verbs")
+		ut.insert_if_not(data.title, "no passive perfect forms")
+		ut.insert_if_not(data.categories, "Latin defective verbs")
 
 		-- Remove all passive perfect forms
 		for key, _ in pairs(data.forms) do
@@ -515,8 +480,8 @@ postprocess = function(data, typeinfo)
 	if cfind(typeinfo.subtype, "semi-depon") then
 		-- Semi-deponent verbs use perfective passive forms with active meaning,
 		-- and have no imperfective passive
-		table.insert(data.title, "[[semi-deponent]]")
-		table.insert(data.categories, "Latin semi-deponent verbs")
+		ut.insert_if_not(data.title, "[[semi-deponent]]")
+		ut.insert_if_not(data.categories, "Latin semi-deponent verbs")
 
 		-- Remove perfective active and imperfective passive forms
 		for key, _ in pairs(data.forms) do
@@ -534,8 +499,8 @@ postprocess = function(data, typeinfo)
 		end
 	elseif cfind(typeinfo.subtype, "depon") then
 		-- Deponent verbs use passive forms with active meaning
-		table.insert(data.title, "[[deponent]]")
-		table.insert(data.categories, "Latin deponent verbs")
+		ut.insert_if_not(data.title, "[[deponent]]")
+		ut.insert_if_not(data.categories, "Latin deponent verbs")
 
 		-- Remove active forms and future passive infinitive
 		for key, _ in pairs(data.forms) do
@@ -558,8 +523,8 @@ postprocess = function(data, typeinfo)
 
 	if cfind(typeinfo.subtype, "noperf") then
 		-- Some verbs have no perfect forms (e.g. inalbēscō, -ěre)
-		table.insert(data.title, "[[defective verb|defective]]")
-		table.insert(data.categories, "Latin defective verbs")
+		ut.insert_if_not(data.title, "[[defective verb|defective]]")
+		ut.insert_if_not(data.categories, "Latin defective verbs")
 
 		-- Remove all perfect forms
 		for key, _ in pairs(data.forms) do
@@ -569,10 +534,45 @@ postprocess = function(data, typeinfo)
 		end
 	end
 
+	if cfind(typeinfo.subtype, "nopass") then
+		-- Remove all passive forms
+		ut.insert_if_not(data.title, "active only")
+		ut.insert_if_not(data.categories, "Latin active-only verbs")
+
+		-- Remove all non-3sg and passive forms
+		for key, _ in pairs(data.forms) do
+			if cfind(key, "pasv") then
+				data.forms[key] = nil
+			end
+		end
+	elseif cfind(typeinfo.subtype, "pass-3only") then
+		-- Some verbs have only third-person forms in the passive
+		ut.insert_if_not(data.title, "only third-person forms in passive")
+		ut.insert_if_not(data.categories, "Latin verbs with third-person passive")
+
+		-- Remove all non-3rd-person passive forms and all passive imperatives
+		for key, _ in pairs(data.forms) do
+			if cfind(key, "pasv") and (key:find("^[12][sp]") or cfind(key, "impr")) then
+				data.forms[key] = nil
+			end
+		end
+	elseif cfind(typeinfo.subtype, "pass-impers") then
+		-- Some verbs are impersonal in the passive
+		ut.insert_if_not(data.title, "[[impersonal]] in passive")
+		ut.insert_if_not(data.categories, "Latin verbs with impersonal passive")
+
+		-- Remove all non-3sg passive forms
+		for key, _ in pairs(data.forms) do
+			if cfind(key, "pasv") and (key:find("^[12][sp]") or key:find("^3p") or cfind(key, "impr")) or cfind(key, "futr_pasv_inf") then
+				data.forms[key] = nil
+			end
+		end
+	end
+
 	if cfind(typeinfo.subtype, "nosup") then
 		-- Some verbs have no supine forms or forms derived from the supine
-		table.insert(data.title, "[[defective verb|defective]]")
-		table.insert(data.categories, "Latin defective verbs")
+		ut.insert_if_not(data.title, "[[defective verb|defective]]")
+		ut.insert_if_not(data.categories, "Latin defective verbs")
 
 		for key, _ in pairs(data.forms) do
 			if cfind(key, "sup") or (
@@ -585,8 +585,8 @@ postprocess = function(data, typeinfo)
 	elseif cfind(typeinfo.subtype, "sup-futr-actv-only") then
 		-- Some verbs have no supine forms or forms derived from the supine,
 		-- except for the future active infinitive/participle
-		table.insert(data.title, "[[defective verb|defective]]")
-		table.insert(data.categories, "Latin defective verbs")
+		ut.insert_if_not(data.title, "[[defective verb|defective]]")
+		ut.insert_if_not(data.categories, "Latin defective verbs")
 
 		for key, _ in pairs(data.forms) do
 			if cfind(key, "sup") or (
@@ -601,7 +601,7 @@ postprocess = function(data, typeinfo)
 	-- Handle certain irregularities in the imperative
 	if cfind(typeinfo.subtype, "noimp") then
 		-- Some verbs have no imperatives
-		table.insert(data.title, "no [[imperative]]s")
+		ut.insert_if_not(data.title, "no [[imperative]]s")
 
 		-- Remove all imperative forms
 		for key, _ in pairs(data.forms) do
