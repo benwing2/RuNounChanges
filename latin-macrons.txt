@@ -542,7 +542,7 @@ anteeō anteīre anteiī anteitum [tr]
 circueō circuīre circuiī circuitum [tr]
 circumeō circumīre circumiī circumitum [tr]
 coeō coīre coiī coitum [tr]
-deeō deīre -- -- [int; missing perf and supine]
+deeō deīre -- -- [int; missing perf and supine; fix to nopass-noperf-nosup]
 dēpereō dēperīre dēperiī dēperitūrus [tr; missing supine, has dēperitūrus]
 dispereō disperīre disperiī -- [int; missing supine]
 exeō exīre exiī exitum  [tr]
@@ -1403,34 +1403,34 @@ subdēligō subdēligere subdēlēgī subdēlēctum
 *n4 lūxus
 *v1 lūxō
 ###
-### māgnus
+### magnus
 ###
-*# n1 amita māgna
-*a1 māgnus
-*a1 māgnissimus
-*n3 māgnitūdō
-*adv māgnopere
-*n3 māgnāle māgnāl
-*n3 māgnanimitās
-*a1 māgnanimus
-*a1 māgnārius
-*n3 māgnās māgnāt
-*n2 māgnātus
-*a3 māgnicornis
-*a1 māgnicristātus
-*adv māgnificē
-*n1 māgnificentia
-*a3 māgnificentior
-*a1 māgnificentissimus
-*v1 māgnificō
-*a1 māgnificus
-*n1 māgniloquentia
-*n2 māgniloquium
-*a1 māgniloquus
-*a1 māgnipapillātus
-*a3 māgnirōstris
-*a1 permāgnificus
-*a1 permāgnus
+*# n1 amita magna
+*a1 magnus
+*a1 magnissimus
+*n3 magnitūdō
+*adv magnopere
+*n3 magnāle magnāl
+*n3 magnanimitās
+*a1 magnanimus
+*a1 magnārius
+*n3 magnās magnāt
+*n2 magnātus
+*a3 magnicornis
+*a1 magnicristātus
+*adv magnificē
+*n1 magnificentia
+*a3 magnificentior
+*a1 magnificentissimus
+*v1 magnificō
+*a1 magnificus
+*n1 magniloquentia
+*n2 magniloquium
+*a1 magniloquus
+*a1 magnipapillātus
+*a3 magnirōstris
+*a1 permagnificus
+*a1 permagnus
 ###
 ### mālō nōlō
 ###
@@ -2035,21 +2035,20 @@ subrigō subrigere subrēxī subrēctum
 ### rēpō
 ###
 *rēpō rēpēre rēpsī rēptum
-*v1 rēptō
+*v1 rēptō [int; rēptātus "on which one has crawled; crowded; where one has swum" exists]
 *a1 rēptābundus
 *a3 rēptilis
-*adrēpō adrēpēre adrēpsī adrēptum
-*arrēpō arrēpēre arrēpsī arrēptum
-*# corrēptum homograph of correptum "seized" from corripiō
-*corrēpō corrēpēre corrēpsī *corrēptum
+*adrēpō adrēpēre adrēpsī -- [int]
+*arrēpō arrēpēre arrēpsī -- [int]
+*corrēpō corrēpēre corrēpsī -- [int]
 *a1 correptus
-*ērēpō ērēpēre ērēpsī ērēptum
-*inrēpō inrēpēre inrēpsī inrēptum
-*irrēpō irrēpēre irrēpsī irrēptum
-*v1 perrēptō
-*obrēpō obrēpēre obrēpsī obrēptum
-*subrēpō subrēpēre subrēpsī subrēptum
-*surrēpō surrēpēre surrēpsī surrēptum
+*ērēpō ērēpēre ērēpsī ērēptum [tr]
+*inrēpō inrēpēre inrēpsī inrēptum [tr]
+*irrēpō irrēpēre irrēpsī irrēptum [tr]
+*v1 perrēptō [tr]
+*obrēpō obrēpēre obrēpsī obrēptum [tr]
+*subrēpō subrēpēre subrēpsī subrēptum [tr]
+*surrēpō surrēpēre surrēpsī surrēptum [tr]
 ###
 ### -rīx
 ###
@@ -2227,7 +2226,7 @@ subrigō subrigere subrēxī subrēctum
 *a3 glabrirōstris
 *a3 lātirōstris
 *a3 longirōstris
-*a3 māgnirōstris
+*a3 magnirōstris
 *a3 megarōstris
 *a3 nigrirōstris
 *a3 parvirōstris
@@ -3072,11 +3071,11 @@ trāvehō trāvehere trāvexī trāvectum
 ###
 ### vīvō
 ###
-*vīvō vīvere vīxī vīctum
+*vīvō vīvere vīxī vīctum [impers pass]
 n4 vīctus
 *a3 vīctuālis
-*advīvō advīvere advīxī advīctum
-*convīvō convīvere convīxī convīctum
+*advīvō advīvere advīxī -- [no supine, int w/dat]
+*convīvō convīvere convīxī convīctum [int w/dat]
 n4 convīctus
-*revīvō revīvere revīxī revīctum
-*supervīvō supervīvere supervīxī supervīctum
+*revīvō revīvere -- -- [int]
+*supervīvō supervīvere supervīxī -- [int w/dat]
