@@ -1044,12 +1044,6 @@ pn1 Īllyria
 pn1 Īllyriae
 pn2 Īllyricum
 ###
-### īnfidēlis
-###
-# These don't have the right long vowels.
-a3 īnfidēlis
-a3 īnfidēlior
-###
 ### involūcrum
 ###
 n2 involūcrum
@@ -1325,23 +1319,23 @@ subdēligō subdēligere subdēlēgī subdēlēctum
 ###
 *lūceō lūcēre lūxī -- [tr]
 *allūceō allūcēre allūxī -- [int]
-*circumlūceō circumlūcēre circumlūxī --
+*circumlūceō circumlūcēre circumlūxī -- [not Classical; only circumlucens]
 *collūceō collūcēre collūxī -- [int, + abl]
 *conlūceō conlūcēre conlūxī -- [int, + abl]
 *dīlūceō dīlūcēre dīlūxī -- [int]
-*ēlūceō ēlūcēre ēlūxī --
-*illūceō illūcēre illūxī --
-*inlūceō inlūcēre inlūxī --
-*pellūceō pellūcēre pellūxī --
-*perlūceō perlūcēre perlūxī --
-*pollūceō pollūcēre pollūxī pollūctum
-*praelūceō praelūcēre praelūxī --
-*prōlūceō prōlūcēre prōlūxī --
-*relūceō relūcēre relūxī --
-*sublūceō sublūcēre sublūxī --
-*superlūceō superlūcēre superlūxī --
-*trānslūceō trānslūcēre trānslūxī --
-*trālūceō trālūcēre trālūxī --
+*ēlūceō ēlūcēre ēlūxī -- [int]
+*illūceō illūcēre -- -- [int]
+*inlūceō inlūcēre -- -- [int]
+*pellūceō pellūcēre pellūxī -- [int]
+*perlūceō perlūcēre perlūxī -- [int]
+*pollūceō pollūcēre pollūxī pollūctum [tr]
+*praelūceō praelūcēre praelūxī -- [tr]
+*prōlūceō prōlūcēre prōlūxī -- [int; not in Gaffiot, fix ref]
+*relūceō relūcēre relūxī -- [int]
+*sublūceō sublūcēre sublūxī -- [int]
+*superlūceō superlūcēre -- -- [int; Late Latin, not in Gaffiot, fix ref]
+*trānslūceō trānslūcēre -- -- [int]
+*trālūceō trālūcēre -- -- [int]
 *n3 lūx lūc
 *phr fīat_lūx
 *n1 lūxuria
@@ -1494,6 +1488,115 @@ subdēligō subdēligere subdēlēgī subdēlēctum
 *v1 ēnārrō
 *n3 ēnārrātiō
 *a3 inēnārrābilis
+###
+### -nf-
+###
+# These don't have the right long vowels esp. before -nf-.
+# ānfrāctus done elsewhere
+v1 cōnfābulor
+n3 cōnfarreātiō
+n3 cōnfectiō
+n3 cōnfector
+cōnferciō cōnfercīre cōnfersī cōnfertum
+a1 cōnfersus
+a1 cōnfertifolius
+a3 cōnfertior
+n3 cōnfessor
+a1 cōnficientissimus
+n3 cōnfictiō
+n1 cōnfīdentia
+a1 cōnfīdentiloquus
+# cōnfīgō done elsewhere
+v1 cōnfigūrō
+# cōnfingō done elsewhere
+a3 cōnfīnis
+n2 cōnfīnium
+a1 cōnfīnius
+# cōnfirm... done elsewhere
+v1 cōnfiscō
+a3 cōnflātilis
+n3 cōnflātiō
+n2 cōnflātōrium
+# cōnflīct... done elsewhere
+a1 cōnflīgātus
+n2 cōnflīgium
+# cōnflīgō done elsewhere
+v1 cōnflō
+n3 cōnfluēns
+# cōnfluō done elsewhere
+cōnfodiō cōnfodere cōnfōdī cōnfossum
+# cōnfōrm... done elsewhere
+# cōnfrāctiō done elsewhere
+a1 cōnfragōsus
+v1 cōnfricō
+# cōnfringō done elsewhere
+cōnfugiō cōnfugere cōnfūgī cōnfugitum
+n2 cōnfugium
+n3 cōnfūsiō
+n3 cōnfūtātor
+v1 cōnfūtō
+v1 cōnfutuō cōnfutuere cōnfutuī cōnfutūtum
+a3 incōnfūsibilis
+n1 īnfacētia
+a3 īnfacētior
+a1 īnfacētus
+n1 īnfantia
+a1 īnfantissimus
+n1 īnfantula
+n2 īnfantulus
+īnfarciō īnfarcīre īnfarsī īnfartum
+v1 īnfatuō
+n3 īnfectiō
+a1 īnfectiōsus
+adv īnfēlīciter īnfēlīcius īnfēlīcissimē
+a1 īnfēnsus
+a3 īnferior
+a3 īnfernālis
+a3 īnfestior
+a1 īnfestus
+n1 īnficētia
+a3 īnfidēlior
+a3 īnfidēlis
+a1 īnfidēlissimus
+n3 īnfidēlitās
+a1 īnfīdus
+# īnfīgō done elsewhere
+a1 īnfimus
+# īnfirm... done elsewhere
+# ...
+a3 īnflammābilis
+n3 īnflammātiō
+n3 īnflātiō
+n3 īnflectiō
+a3 īnflexilis
+a1 īnflexuōsus
+# īnflīctiō, īnflīgō done elsewhere
+# FIXME: Fix etymology for īnfluentia (stray long vowel)
+# īnfluō done elsewhere
+# īnflūxus done elsewhere
+# Has long vowel īnfodiēnt-; FIXME, how many other participles are similar?
+part3 īnfodiēns
+# īnfōrm... done elsewhere
+n2 īnfortūnium
+a3 īnfrāorbitālis
+a3 īnfrēnis
+v1 īnfrēnō
+a1 īnfrēnus
+a3 īnfrequēns
+adv īnfrequenter
+n3 īnfrīgidātiō
+v1 īnfrīgidō
+# īnfringō done elsewhere
+# īnfrūctuōsus done elsewhere
+a1 īnfrūnītus
+n1 īnfula
+a1 īnfūmātus
+īnfundō īnfundere īnfūdī īnfūsum
+v1 īnfuscō
+n3 īnfūsiō
+a3 perīnfāmis
+a3 sēmicōnfectus
+pn1 Tānfāna
 ###
 ### nītor
 ###
@@ -1983,7 +2086,7 @@ v1 expūrgō
 ###
 ### regō
 ###
-regō regere rēxī rēctum
+regō regere rēxī rēctum [tr]
 n3 rēctor
 a3 rēctior
 *a1 rēctissimus
@@ -1995,42 +2098,42 @@ a3 rēctior
 *n3 rēctitātor
 *n3 rēctitūdō
 *#n1 sphaera rēcta
-adsurgō adsurgere adsurrēxī adsurrēctum
-assurgō assurgere assurrēxī assurrēctum
-conresurgō conresurgere conresurrēxī conresurrēctum
-cōnsurgō cōnsurgere cōnsurrēxī cōnsurrēctum
+adsurgō adsurgere adsurrēxī adsurrēctum [int]
+assurgō assurgere assurrēxī assurrēctum [int]
+conresurgō conresurgere -- -- [int]
+cōnsurgō cōnsurgere cōnsurrēxī cōnsurrēctum [int]
 n3 cōnsurrēctiō
-corresurgō corresurgere corresurrēxī corresurrēctum
-exsurgō exsurgere exsurrēxī exsurrēctum
-exurgō exurgere exurrēxī exurrēctum
-īnsurgō īnsurgere īnsurrēxī īnsurrēctum
+corresurgō corresurgere -- -- [int]
+exsurgō exsurgere exsurrēxī exsurrēctum [int]
+exurgō exurgere exurrēxī exurrēctum [int]
+īnsurgō īnsurgere īnsurrēxī īnsurrēctum [mostly int]
 n3 īnsurrēctiō
-pergō pergere perrēxī perrēctum
-resurgō resurgere resurrēxī resurrēctum
+pergō pergere perrēxī perrēctum [tr]
+resurgō resurgere resurrēxī resurrēctum [int]
 n3 resurrēctiō
-surgō surgere surrēxī surrēctum
+surgō surgere surrēxī surrēctum [int except in archaic surgō = subrigō "to straighten, to set upright"]
 n3 surrēctiō
 expergīscor expergīscī experrēctum
-arrigō arrigere arrēxī arrēctum
-corrigō corrigere corrēxī corrēctum
+arrigō arrigere arrēxī arrēctum [tr]
+corrigō corrigere corrēxī corrēctum [tr]
 n3 corrēctiō
 n3 corrēctor
-dērigō dērigere dērēxī dērēctum
-dīrigō dīrigere dīrēxī dīrēctum
+dērigō dērigere dērēxī dērēctum [tr]
+dīrigō dīrigere dīrēxī dīrēctum [tr]
 n3 dīrēctiō
 *n2 dīrēctōrium
 *n1 dīrēctūra
-ērigō ērigere ērēxī ērēctum
+ērigō ērigere ērēxī ērēctum [tr]
 *adv diērēctē
 *a1 diērēctus
 n3 ērēctiō
 a3 ērēctior
-exporrigō exporrigere exporrēxī exporrēctum
+exporrigō exporrigere exporrēxī exporrēctum [tr]
 n3 exporrēctiō
-porrigō porrigere porrēxī porrēctum
+porrigō porrigere porrēxī porrēctum [tr]
 a3 porrēctior
-reporrigō reporrigere reporrēxī reporrēctum
-subrigō subrigere subrēxī subrēctum
+reporrigō reporrigere -- -- [tr]
+subrigō subrigere subrēxī subrēctum [tr; not same as surgō]
 ###
 ### rēpō
 ###
@@ -2730,18 +2833,27 @@ adv sēgniter
 *v1 resīgnō
 *v1 subsīgnō
 ###
+### missing long vowels
+###
+#wrongly has short i
+v1 cōnspīrō
+#wrongly has short i
+n2 suspīrium
+#wrongly has short e
+n1 rēsīna
+#wrongly has short first a
+n3 respōnsābilitās
+#wrongly has short i
+n3 restīnctiō
+# wrongly has short u
+part1 īnsecūtus
+###
 ### stāgnum
 ###
 #the following clashes with short stagnum, alternative form of stannum
 *#n2 stāgnum
 *a3 stāgnālis
 *v1 stāgnō
-###
-### staurum
-###
-# wrongly have long ē
-*v1 restaurō
-*n3 restaurātiō
 ###
 ### stēlla
 ###
