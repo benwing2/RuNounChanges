@@ -136,7 +136,8 @@ category = params.category and params.category.decode("utf-8")
 regex = params.regex.decode("utf-8")
 pages = params.pages and re.split(",", params.pages.decode("utf-8"))
 filter_pages = params.filter_pages and params.filter_pages.decode("utf-8")
+lang_only = params.lang_only and params.lang_only.decode("utf-8")
 
 search_pages(regex, references, category, pages, params.pagefile,
     params.stdin, filter_pages, params.verbose, params.text, params.all,
-    startFrom, upTo, params.include_non_mainspace, params.lang_only)
+    startFrom, upTo, params.include_non_mainspace, lang_only)
