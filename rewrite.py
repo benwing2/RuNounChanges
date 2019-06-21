@@ -19,18 +19,41 @@ import pywikibot
 from arabiclib import reorder_shadda
 
 def rewrite_pages(refrom, reto, refs, page_and_refs, cat, pages, pagefile,
-    pagetitle_sub, comment, filter_pages, save, verbose, startFrom, upTo):
+    pagetitle_sub, comment, filter_pages, lang_only, save, verbose,
+    startFrom, upTo):
   def rewrite_one_page(page, index, text):
     #blib.msg("From: [[%s]], To: [[%s]]" % (refrom, reto))
     text = unicode(text)
     text = reorder_shadda(text)
     zipped_fromto = zip(refrom, reto)
-    for fromval, toval in zipped_fromto:
-      if pagetitle_sub:
-        pagetitle = unicode(page.title())
-        fromval = fromval.replace(pagetitle_sub, re.escape(pagetitle))
-        toval = toval.replace(pagetitle_sub, pagetitle)
-      text = re.sub(fromval, toval, text)
+    def replace_text(text):
+      for fromval, toval in zipped_fromto:
+        if pagetitle_sub:
+          pagetitle = unicode(page.title())
+          fromval = fromval.replace(pagetitle_sub, re.escape(pagetitle))
+          toval = toval.replace(pagetitle_sub, pagetitle)
+        text = re.sub(fromval, toval, text)
+      return text
+    if not lang_only:
+      text = replace_text(text)
+    else:
+      sec_to_replace = None
+      foundlang = False
+      sections = re.split("(^==[^=]*==\n)", text, 0, re.M)
+
+      for j in xrange(2, len(sections), 2):
+        if sections[j-1] == "==%s==\n" % lang_only:
+          if foundlang:
+            pagemsg("WARNING: Found multiple %s sections, skipping page" % lang_only)
+            return None, None
+          foundlang = True
+          sec_to_replace = j
+          break
+
+      if sec_to_replace is None:
+        return None, None
+      sections[sec_to_replace] = replace_text(sections[sec_to_replace])
+      text = "".join(sections)
     return text, comment or "replace %s" % (", ".join("%s -> %s" % (f, t) for f, t in zipped_fromto))
 
   if pages:
@@ -69,6 +92,7 @@ pa.add_argument('--filter-pages', help="Regex to use to filter page names.")
 pa.add_argument('--pages', help="List of pages to fix, comma-separated.")
 pa.add_argument('--pagefile', help="File containing pages to fix.")
 pa.add_argument('--pagetitle', help="Value to substitute page title with.")
+pa.add_argument('--lang-only', help="Only replace in the specified language section.")
 params = pa.parse_args()
 startFrom, upTo = blib.parse_start_end(params.start, params.end)
 
@@ -84,10 +108,11 @@ pages = params.pages and re.split(",", params.pages.decode("utf-8"))
 pagetitle_sub = params.pagetitle and params.pagetitle.decode("utf-8")
 comment = params.comment and params.comment.decode("utf-8")
 filter_pages = params.filter_pages and params.filter_pages.decode("utf-8")
+lang_only = params.lang_only and params.lang_only.decode("utf-8")
 
 if len(from_) != len(to):
   raise ValueError("Same number of --from and --to arguments must be specified")
 
 rewrite_pages(from_, to, references, page_and_refs, category, pages,
-    params.pagefile, pagetitle_sub, comment, filter_pages, params.save,
-    params.verbose, startFrom, upTo)
+    params.pagefile, pagetitle_sub, comment, filter_pages, lang_only,
+    params.save, params.verbose, startFrom, upTo)
