@@ -467,6 +467,12 @@ def process_page(index, lemma, pos, infl, forms, pages_to_delete, preserve_diaer
       for key, val in args.iteritems():
         tag_sets_to_delete.append(lalib.form_key_to_tag_set(key))
         forms_to_delete.append((key, val))
+    if form == "firstpart":
+      for key, val in args.iteritems():
+        if key != "futr_actv_ptc" and key != "futr_actv_inf" and key != "futr_pasv_inf" and (
+          "pres" in key or "impf" in key or "futr" in key or "ger" in key):
+          tag_sets_to_delete.append(lalib.form_key_to_tag_set(key))
+          forms_to_delete.append((key, val))
     if form in ["pasv", "pass"]:
       for key, val in args.iteritems():
         if key != "perf_pasv_ptc" and "pasv" in key:
