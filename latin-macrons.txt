@@ -981,6 +981,7 @@ pn2 Hymēttus
 *coiciō coicere coiēcī coiectum
 *obiciō obicere obiēcī obiectum
 *reiciō reicere reiēcī reiectum
+interjaciō interjacere interjēcī interjectum
 *n3 reiectiō
 *n3 obex obic
 ###
@@ -1769,8 +1770,7 @@ n3 renūntiātiō
 ###
 ### pangō
 ###
-pangō pangere pepigī pāctum
-pangō pangere pēgī pāctum
+pangō pangere pēgī/pepigī pāctum
 pangō pangere pānxī pānctum
 a3 pāctilis
 compingō compingere compēgī compāctum
@@ -2833,6 +2833,11 @@ adv sēgniter
 *v1 resīgnō
 *v1 subsīgnō
 ###
+### extra long vowels
+###
+# has -stīt- in perf
+obstō obstāre obstitī obstātum
+###
 ### missing long vowels
 ###
 #wrongly has short i
@@ -2841,12 +2846,45 @@ v1 cōnspīrō
 n2 suspīrium
 #wrongly has short e
 n1 rēsīna
-#wrongly has short first a
-n3 respōnsābilitās
 #wrongly has short i
 n3 restīnctiō
 # wrongly has short u
 part1 īnsecūtus
+# wrongly has short u in perf and sometimes sup
+circumfundō circumfundere circumfūdī circumfūsum
+superfundō superfundere superfūdī superfūsum
+obfundō obfundere obfūdī obfūsum
+offundō offundere offūdī offūsum
+prōfundō prōfundere prōfūdī prōfūsum
+cōnfugiō cōnfugere cōnfūgī cōnfugitum
+subterfugiō subterfugere subterfūgī --
+supterfugiō supterfugere supterfūgī --
+# wrongly has short o in perf
+circumfodiō circumfodere circumfōdī circumfossum
+# wrongly has short e in all forms
+suppēdō suppēdere suppēdī suppēditum
+v1 dēblaterō
+# wrongly has short o in all forms
+explōdō explōdere explōsī explōsum
+plōdō plōdere plōsī plōsum
+# wrongly has short i in perf
+dēvincō dēvincere dēvīcī dēvictum
+immittō immittere immīsī immissum
+intermittō intermittere intermīsī intermissum
+manūmittō manūmittere manūmīsī manūmissum
+# wrongly has short e in perf
+adsuēfaciō adsuēfacere adsuēfēcī adsuēfactum
+assuēfaciō assuēfacere assuēfēcī assuēfactum
+# found elsewhere
+#peragō
+#diffringō
+#conligō
+#pangō
+peredō peredere perēdī perēsum
+exedō exedere exēdī exēsum
+hērēo hērēre hēsī hēsum
+# wrongly has long e in perf and sup
+antecēdō antecēdere antecessī antecessum
 ###
 ### stāgnum
 ###
