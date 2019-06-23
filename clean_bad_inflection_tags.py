@@ -91,6 +91,7 @@ subtag_replacements = [
   (" of$", ""),
   (r"\{\{glossary(?:\|[^{}|]*)?\|([^{}|]*)\}\}", r"\1"),
   ("(past|present|future) tense?", r"\1"),
+  (" mood((?: form)?)$", r"\1"),
   ("(%s) form$" % raw_and_form_of_alternation_re, r"\1"),
   (" of the verb$", ""),
   (" of the (weak|strong|mixed) declension$", r" \1"),
@@ -545,6 +546,9 @@ tag_to_canonical_form_across_semicolon = {
   tag: canontag for dim, tagdict in dimensions_to_tags_across_semicolon.iteritems() for tag, canontag in tagdict.iteritems()
 }
 
+tag_to_canonical_form_table = None
+combinable_tags_by_dimension_table = None
+
 order_of_dimensions = [
   "person", "clusivity", "class", "state", "animacy", "case", "gender",
   "number", "tense-aspect", "voice-valence", "mood", "comparison",
@@ -564,6 +568,8 @@ additional_good_tags = {
   "transgressive",
   "all-gender",
   "duoplural",
+  "realis",
+  "irrealis",
   "fourth-person", # Navajo
   "spatial-person", # Navajo
   "usitative", # Navajo
@@ -580,10 +586,14 @@ tags_with_spaces = defaultdict(int)
 
 bad_tags = defaultdict(int)
 
+bad_tags_during_split_canonicalization = defaultdict(int)
+
 good_tags = set() | additional_good_tags
 
 num_total_templates = 0
 num_templates_with_bad_tags = 0
+
+matching_textfile_lines = set()
 
 def remove_comment_continuations(text):
   return text.replace("<!--\n-->", "").strip()
@@ -746,6 +756,70 @@ def sort_tags(tags):
     sorted_tags.extend(unsortable)
   return sorted_tags
 
+def canonicalize_tag_1(tag, shorten, pagemsg, add_to_bad_tags_split_canon=False):
+  global args
+
+  def maybe_shorten(tag):
+    if shorten:
+      return tag_to_canonical_form_table.get(tag, tag)
+    else:
+      return tag
+  # Canonicalize a tag into either a single tag or a sequence of tags.
+  # Return value is None if the tag isn't recognized, else a string or
+  # a list of strings.
+  if tag in good_tags:
+    return maybe_shorten(tag)
+  if tag in tag_replacements:
+    return maybe_shorten(tag_replacements[tag])
+  # Try removing links; [[FOO]] -> FOO, [[FOO|BAR]] -> BAR
+  newtag = re.sub(r'\[\[(?:[^\[\]\|]*?\|)?([^\[\]\|]*?)\]\]', r'\1', tag)
+  if newtag != tag:
+    repl = canonicalize_tag(newtag, shorten, pagemsg)
+    if repl:
+      return repl
+  # Try lowercasing
+  lowertag = tag.lower()
+  if lowertag != tag:
+    repl = canonicalize_tag(lowertag, shorten, pagemsg)
+    if repl:
+      return repl
+  if " " in tag:
+    newtag = tag
+    for fro, to in subtag_replacements:
+      newtag = re.sub(fro, to, newtag)
+    split_tags = newtag.split(" ")
+    canon_split_tags = [canonicalize_tag(t, True, pagemsg, add_to_bad_tags_split_canon=True) for t in split_tags]
+    if args.debug:
+      pagemsg("canonicalize_tag_1: Output after splitting = %s" % canon_split_tags)
+    if None not in canon_split_tags:
+      return canon_split_tags
+  if "/" in tag:
+    if "//" in tag:
+      split_tags = tag.split("//")
+    else:
+      split_tags = tag.split("/")
+    canon_split_tags = [canonicalize_tag(t, shorten, pagemsg) for t in split_tags]
+    if all(isinstance(t, basestring) for t in canon_split_tags):
+      return "//".join(canon_split_tags)
+    else:
+      pagemsg("WARNING: Found slash in tag and wasn't able to canonicalize completely: %s" % tag)
+  if ":" in tag and "/" not in tag:
+    split_tags = tag.split(":")
+    canon_split_tags = [canonicalize_tag(t, shorten, pagemsg) for t in split_tags]
+    if all(isinstance(t, basestring) for t in canon_split_tags):
+      return ":".join(canon_split_tags)
+    else:
+      pagemsg("WARNING: Found colon in tag and wasn't able to canonicalize completely: %s" % tag)
+  if add_to_bad_tags_split_canon:
+    bad_tags_during_split_canonicalization[tag] += 1
+  return None
+
+def canonicalize_tag(tag, shorten, pagemsg, add_to_bad_tags_split_canon=False):
+  # pagemsg("canonicalize_tag(%s, %s): Called" % (tag, shorten))
+  retval = canonicalize_tag_1(tag, shorten, pagemsg, add_to_bad_tags_split_canon)
+  # pagemsg("canonicalize_tag(%s, %s): Returned %s" % (tag, shorten, retval))
+  return retval
+
 def process_text_on_page(pagetitle, index, text):
   global args
 
@@ -763,6 +837,9 @@ def process_text_on_page(pagetitle, index, text):
     pagemsg("WARNING: Page should be ignored")
     return None, None
 
+  global tag_to_canonical_form_table
+  global combinable_tags_by_dimension_table
+
   if args.use_form_of_groups:
     tag_to_canonical_form_table = form_of_tag_to_canonical_form
     combinable_tags_by_dimension_table = form_of_combinable_tags_by_dimension
@@ -770,7 +847,168 @@ def process_text_on_page(pagetitle, index, text):
     tag_to_canonical_form_table = tag_to_canonical_form_across_semicolon
     combinable_tags_by_dimension_table = combinable_tags_by_dimension_across_semicolon
 
+  def convert_raw_section(text, section_langcode, infer_langcode):
+    def parse_gloss_from_posttext(posttext):
+      gloss = ""
+      mmm = re.search(ur" *\([‘'\"]([^‘'\"(){}]*)[’'\"]\)\.?(.*?)$",
+          posttext)
+      if mmm:
+        gloss, posttext = mmm.groups()
+        gloss = "|t=%s" % gloss
+      return gloss, posttext
+
+    def replace_raw(m, only_canonicalize):
+      langcode = section_langcode
+      newtext = None
+      pound_sign, pretext, tags, posttext = m.groups()
+      pretext = pound_sign + pretext
+      tags = re.sub(" *[Oo]f$", "", tags)
+      if only_canonicalize and canonicalize_tag(tags, True, pagemsg) is None:
+        pagemsg("WARNING: Unable to canonicalize tags \"%s\": %s" % (tags, m.group(0)))
+        return m.group(0)
+
+      # Check for template link
+      mm = re.search(r"^'* *(\{\{(?:m|l|l-self)\|[^{}]*?\}\})'*\.?(.*?)$", posttext)
+      if mm:
+        link_text, postposttext = mm.groups()
+        linkt = blib.parse_text(link_text).filter_templates()[0]
+        link_langcode = getparam(linkt, "1")
+        lemma = getparam(linkt, "2")
+        if link_langcode != langcode:
+          if not infer_langcode:
+            pagemsg("WARNING: Lang code %s in link doesn't match section lang code %s: %s" % (
+              link_langcode, langcode, m.group(0)))
+            return m.group(0)
+          else:
+            langcode = link_langcode
+        gloss, postposttext = parse_gloss_from_posttext(postposttext)
+        alttext = ""
+        this_gloss = ""
+        tr = ""
+        ts = ""
+        extraparams = ""
+        for param in linkt.params:
+          pname = unicode(param.name).strip()
+          pval = unicode(param.value).strip()
+          if pname in ["1", "2"]:
+            continue
+          elif pname in ["3", "alt"]:
+            alttext = pval
+          elif pname in ["4", "t", "gloss"]:
+            this_gloss = "|t=%s" % pval
+          elif pname == "tr":
+            tr = "|tr=%s" % pval
+          elif pname == "ts":
+            ts = "|ts=%s" % pval
+          elif pname in ["sc", "g", "g2", "g3", "g4", "g5", "pos", "id", "lit"]:
+            extraparams += "|%s=%s" % (pname, pval)
+          else:
+            pagemsg("WARNING: Unrecognized param %s=%s in link template %s: %s" % (
+              pname, pval, unicode(linkt), m.group(0)))
+            return m.group(0)
+        if this_gloss and gloss:
+          pagemsg("WARNING: Both gloss in link and after link: %s" % m.group(0))
+          return m.group(0)
+        lemma = re.sub("#.*$", "", lemma)
+        alttext = re.sub(r"^('+)(.*?)\1$", r"\2", alttext)
+        newtext = "%s{{inflection of|%s|%s%s%s|%s|%s%s%s}}%s" % (
+            pretext, langcode, lemma, tr, ts, alttext, tags, this_gloss or gloss,
+            extraparams, postposttext)
+        shortenable_tags.append((langcode, lemma, tags))
+
+      # Check for raw link
+      mm = re.search(r"^'* *\[\[([^\[\]]*?)\]\]'*\.?(.*?)$", posttext)
+      if mm:
+        lemma, postposttext = mm.groups()
+        gloss, postposttext = parse_gloss_from_posttext(postposttext)
+        lemma_parts = lemma.split("|")
+        if len(lemma_parts) == 1:
+          newtext = "%s{{inflection of|%s|%s||%s%s}}%s" % (
+            pretext, langcode, lemma, tags, gloss, postposttext)
+          shortenable_tags.append((langcode, lemma, tags))
+        elif len(lemma_parts) == 2:
+          link, alttext = lemma_parts
+          link = re.sub("#.*$", "", link)
+          alttext = re.sub(r"^('+)(.*?)\1$", r"\2", alttext)
+          if link and link != alttext:
+            newtext = "%s{{inflection of|%s|%s|%s|%s%s}}%s" % (
+              pretext, langcode, link, alttext, tags, gloss, postposttext)
+            shortenable_tags.append((langcode, link, tags))
+          else:
+            # Probably a link to the same page
+            newtext = "%s{{inflection of|%s|%s||%s%s}}%s" % (
+              pretext, langcode, alttext, tags, gloss, postposttext)
+            shortenable_tags.append((langcode, alttext, tags))
+        else:
+          pagemsg("WARNING: Too many arguments to raw link: %s" % m.group(0))
+          return m.group(0)
+
+      # Check for just bold, italic or bold-italic text
+      mm = re.search(r"^'''* *([^'{}\[\]]*?) *'''*\.?(.*?)$", posttext)
+      if mm:
+        lemma, postposttext = mm.groups()
+        gloss, postposttext = parse_gloss_from_posttext(postposttext)
+        newtext = "%s{{inflection of|%s|%s||%s%s}}%s" % (
+          pretext, langcode, lemma, tags, gloss, postposttext)
+        shortenable_tags.append((langcode, lemma, tags))
+
+      # Check for just a single word
+      mm = re.search(r"^([a-zA-Z]+)\.?($|:.*?$)$", posttext)
+      if mm:
+        lemma, postposttext = mm.groups()
+        gloss, postposttext = parse_gloss_from_posttext(postposttext)
+        newtext = "%s{{inflection of|%s|%s||%s%s}}%s" % (
+          pretext, langcode, lemma, tags, gloss, postposttext)
+        shortenable_tags.append((langcode, lemma, tags))
+      if newtext is None:
+        pagemsg("WARNING: Unable to parse raw inflection-of defn: %s" % m.group(0))
+        return m.group(0)
+      if matching_textfile_lines and m.group(0) not in matching_textfile_lines:
+        pagemsg("WARNING: Modifying line not in --matching-textfile: %s" %
+            m.group(0))
+      pagemsg("Replacing <%s> with <%s>" % (m.group(0), newtext))
+      notes.append("replaced raw inflection-of defn with {{inflection of|%s}}" % langcode)
+      return newtext
+
+    def replace_raw_any(m):
+      return replace_raw(m, only_canonicalize=False)
+
+    def replace_raw_only_canonicalize(m):
+      return replace_raw(m, only_canonicalize=True)
+
+    newtext = text
+    # Try both with and without a surrounding {{non-gloss definition|...}}
+    # or {{n-g|...}}, to handle cases like:
+    # # {{non-gloss definition|accusative form of {{m|nov|tu}}}}
+    for with_non_gloss_defn in [False, True]:
+      if with_non_gloss_defn:
+        non_gloss_pretext = r"\{\{(?:non-gloss definition|n-g)\|"
+        non_gloss_posttext = r"\}\}"
+      else:
+        non_gloss_pretext = ""
+        non_gloss_posttext = ""
+      # Handle defn lines with the inflection text italicized.
+      newtext = re.sub(r"^(#+ )%s(.*?)'' *([^'\n]*%s[^'\n]*[Oo]f)'' (.*?)%s$" % (
+        non_gloss_pretext, raw_and_form_of_alternation_re, non_gloss_posttext),
+        replace_raw_any, newtext, 0, re.M)
+      # Handle defn lines with the inflection text not italicized, possibly
+      # with a preceding label. We restrict the lemma to either be a single
+      # alphabetic word or some text preceded by left bracket, left brace or
+      # single quote, to avoid parsing arbitrary definitions with "of" in them.
+      newtext = re.sub(r"^(#+ )%s((?:\{\{.*?\}\} *)?\(?)(.* [Oo]f) ([[{'].*?|[a-zA-Z]+\.?)%s$" % (
+        non_gloss_pretext, non_gloss_posttext), replace_raw_only_canonicalize,
+        newtext, 0, re.M)
+      # As previously, but allowing a preceding raw link, to handle case like:
+      # # [[that]]; ''genitive singular masculine form of [[tas]]''
+      # # [[shone]], singular past tense form of ''[[skína]]'' (to shine)
+      newtext = re.sub(r"^(#+ )%s(\[\[.*?\]\][:;,] *\(?)(.* [Oo]f) ([[{'].*?|[a-zA-Z]+\.?)%s$" % (
+        non_gloss_pretext, non_gloss_posttext), replace_raw_only_canonicalize,
+        newtext, 0, re.M)
+    return newtext
+
   def convert_raw(text):
+    if args.langcode:
+      return convert_raw_section(text, args.langcode, infer_langcode=True)
     sections = re.split("(^==[^=\n]+==\n)", text, 0, re.M)
     for j in xrange(2, len(sections), 2):
       m = re.search("^==(.*)==\n$", sections[j - 1])
@@ -780,95 +1018,7 @@ def process_text_on_page(pagetitle, index, text):
         pagemsg("WARNING: Unrecognized language %s" % langname)
       else:
         langcode = blib.languages_byCanonicalName[langname]["code"]
-
-        def parse_gloss_from_posttext(posttext):
-          gloss = ""
-          mmm = re.search(ur" *\([‘'\"]([^‘'\"(){}]*)[’'\"]\)\.?(.*?)$",
-              posttext)
-          if mmm:
-            gloss, posttext = mmm.groups()
-            gloss = "|t=%s" % gloss
-          return gloss, posttext
-
-        def replace_raw(m):
-          newtext = None
-          pretext, tags, posttext = m.groups()
-          tags = re.sub(" *[Oo]f$", "", tags)
-          # Check for template link
-          mm = re.search(r"^'* *\{\{(?:m|l|l-self)\|([a-zA-Z.-]*)\|([^{}]*?)\}\}'*\.?(.*?)$", posttext)
-          if mm:
-            link_langcode, lemma, postposttext = mm.groups()
-            if link_langcode != langcode:
-              pagemsg("WARNING: Lang code %s in link doesn't match section lang code %s" % (
-                link_langcode, langcode))
-              return m.group(0)
-            gloss, postposttext = parse_gloss_from_posttext(postposttext)
-            lemma_parts = lemma.split("|")
-            if len(lemma_parts) == 1:
-              newtext = "# %s{{inflection of|%s|%s||%s%s}}%s" % (
-                pretext, langcode, lemma, tags, gloss, postposttext)
-              shortenable_tags.append((langcode, lemma, tags))
-            elif len(lemma_parts) == 2:
-              link, alttext = lemma_parts
-              link = re.sub("#.*$", "", link)
-              alttext = re.sub(r"^('+)(.*?)\1$", r"\2", alttext)
-              newtext = "# %s{{inflection of|%s|%s|%s|%s%s}}%s" % (
-                  pretext, langcode, link, alttext, tags, gloss, postposttext)
-              shortenable_tags.append((langcode, link, tags))
-            else:
-              pagemsg("WARNING: Too many arguments to link template: %s" % m.group(0))
-              return m.group(0)
-          # Check for raw link
-          mm = re.search(r"^'* *\[\[([^\[\]]*?)\]\]'*\.?(.*?)$", posttext)
-          if mm:
-            lemma, postposttext = mm.groups()
-            gloss, postposttext = parse_gloss_from_posttext(postposttext)
-            lemma_parts = lemma.split("|")
-            if len(lemma_parts) == 1:
-              newtext = "# %s{{inflection of|%s|%s||%s%s}}%s" % (
-                pretext, langcode, lemma, tags, gloss, postposttext)
-              shortenable_tags.append((langcode, lemma, tags))
-            elif len(lemma_parts) == 2:
-              link, alttext = lemma_parts
-              link = re.sub("#.*$", "", link)
-              alttext = re.sub(r"^('+)(.*?)\1$", r"\2", alttext)
-              if link and link != alttext:
-                newtext = "# %s{{inflection of|%s|%s|%s|%s%s}}%s" % (
-                  pretext, langcode, link, alttext, tags, gloss, postposttext)
-                shortenable_tags.append((langcode, link, tags))
-              else:
-                # Probably a link to the same page
-                newtext = "# %s{{inflection of|%s|%s||%s%s}}%s" % (
-                  pretext, langcode, alttext, tags, gloss, postposttext)
-                shortenable_tags.append((langcode, alttext, tags))
-            else:
-              pagemsg("WARNING: Too many arguments to raw link: %s" % m.group(0))
-              return m.group(0)
-          # Check for just bold text
-          mm = re.search(r"^''' *([^'{}\[\]]*?) *'''*\.?(.*?)$", posttext)
-          if mm:
-            lemma, postposttext = mm.groups()
-            gloss, postposttext = parse_gloss_from_posttext(postposttext)
-            newtext = "# %s{{inflection of|%s|%s||%s%s}}%s" % (
-              pretext, langcode, lemma, tags, gloss, postposttext)
-            shortenable_tags.append((langcode, lemma, tags))
-          # Check for just a single word
-          mm = re.search(r"^([a-zA-Z]+)\.?($|:.*?$)$", posttext)
-          if mm:
-            lemma, postposttext = mm.groups()
-            gloss, postposttext = parse_gloss_from_posttext(postposttext)
-            newtext = "# %s{{inflection of|%s|%s||%s%s}}%s" % (
-              pretext, langcode, lemma, tags, gloss, postposttext)
-            shortenable_tags.append((langcode, lemma, tags))
-          if newtext is None:
-            pagemsg("WARNING: Unable to parse raw inflection-of defn: %s" % m.group(0))
-            return m.group(0)
-          pagemsg("Replacing <%s> with <%s>" % (m.group(0), newtext))
-          notes.append("replaced raw inflection-of defn with {{inflection of|%s}}" % langcode)
-          return newtext
-
-        newsection = re.sub(r"^# (.*?)'' *([^'\n]*%s[^'\n]*[Oo]f)'' (.*?)$" %
-            raw_and_form_of_alternation_re, replace_raw, sections[j], 0, re.M)
+        newsection = convert_raw_section(sections[j], langcode, infer_langcode=False)
         sections[j] = newsection
     return "".join(sections)
 
@@ -1110,65 +1260,6 @@ def process_text_on_page(pagetitle, index, text):
       # replacements listed in tag_replacements or subtag_replacements, and may
       # involve splitting tags on spaces if each component is a recognized tag.
 
-      def canonicalize_tag(tag, shorten):
-        # pagemsg("canonicalize_tag(%s, %s): Called" % (tag, shorten))
-        retval = canonicalize_tag_1(tag, shorten)
-        # pagemsg("canonicalize_tag(%s, %s): Returned %s" % (tag, shorten, retval))
-        return retval
-
-      def canonicalize_tag_1(tag, shorten):
-        def maybe_shorten(tag):
-          if shorten:
-            return tag_to_canonical_form_table.get(tag, tag)
-          else:
-            return tag
-        # Canonicalize a tag into either a single tag or a sequence of tags.
-        # Return value is None if the tag isn't recognized, else a string or
-        # a list of strings.
-        if tag in good_tags:
-          return maybe_shorten(tag)
-        if tag in tag_replacements:
-          return maybe_shorten(tag_replacements[tag])
-        # Try removing links; [[FOO]] -> FOO, [[FOO|BAR]] -> BAR
-        newtag = re.sub(r'\[\[(?:[^\[\]\|]*?\|)?([^\[\]\|]*?)\]\]', r'\1', tag)
-        if newtag != tag:
-          repl = canonicalize_tag(newtag, shorten)
-          if repl:
-            return repl
-        # Try lowercasing
-        lowertag = tag.lower()
-        if lowertag != tag:
-          repl = canonicalize_tag(lowertag, shorten)
-          if repl:
-            return repl
-        if " " in tag:
-          newtag = tag
-          for fro, to in subtag_replacements:
-            newtag = re.sub(fro, to, newtag)
-          split_tags = newtag.split(" ")
-          canon_split_tags = [canonicalize_tag(t, shorten=True) for t in split_tags]
-          # pagemsg("canonicalize_tag_1: Output after splitting = %s" % canon_split_tags)
-          if None not in canon_split_tags:
-            return canon_split_tags
-        if "/" in tag:
-          if "//" in tag:
-            split_tags = tag.split("//")
-          else:
-            split_tags = tag.split("/")
-          canon_split_tags = [canonicalize_tag(t, shorten) for t in split_tags]
-          if all(isinstance(t, basestring) for t in canon_split_tags):
-            return "//".join(canon_split_tags)
-          else:
-            pagemsg("WARNING: Found slash in tag and wasn't able to canonicalize completely: %s" % tag)
-        if ":" in tag and "/" not in tag:
-          split_tags = tag.split(":")
-          canon_split_tags = [canonicalize_tag(t, shorten) for t in split_tags]
-          if all(isinstance(t, basestring) for t in canon_split_tags):
-            return ":".join(canon_split_tags)
-          else:
-            pagemsg("WARNING: Found colon in tag and wasn't able to canonicalize completely: %s" % tag)
-        return None
-
       canon_tags = []
 
       for tag in tags:
@@ -1179,7 +1270,7 @@ def process_text_on_page(pagetitle, index, text):
           # if the tag came from a raw or {{form of}} inflection originally.
           # Note that we also abbreviate this way when splitting a tag
           # on spaces.
-          repl = canonicalize_tag(tag, shorten=(lang, term, tag) in shortenable_tags)
+          repl = canonicalize_tag(tag, (lang, term, tag) in shortenable_tags, pagemsg)
         if repl is None:
           if ' ' in tag:
             pagemsg("WARNING: Bad multiword tag '%s', can't canonicalize" % tag)
@@ -1627,7 +1718,9 @@ def process_page(page, index, parsed):
 
 parser = blib.create_argparser("Clean up bad inflection tags")
 parser.add_argument("--pagefile", help="List of pages to process.")
-parser.add_argument("--textfile", help="File containing inflection templates to process.")
+parser.add_argument("--textfile", help="File containing page text or defn line text to process.")
+parser.add_argument("--matching-textfile", help="File containing defn lines to match against; if we change a line not listed, output a warnings.")
+parser.add_argument("--langcode", help="Specify lang code to use, instead of inferring it from headings.")
 parser.add_argument("--form-of-files", help="Comma-separated list of files containing form-of data.")
 parser.add_argument("--use-form-of-groups", help="Use groups specified in form-of data for combining across semicolons.",
     action="store_true")
@@ -1635,11 +1728,35 @@ parser.add_argument("--combine-adjacent", help="Combine adjacent calls to 'infle
 parser.add_argument("--convert-raw", help="Convert raw inflection definitions to {{inflection of}}.", action="store_true")
 parser.add_argument("--convert-form-of", help="Convert {{form of}} inflection definitions to {{inflection of}}.", action="store_true")
 parser.add_argument("--sort-tags", help="Sort tags by dimension.", action="store_true")
+parser.add_argument("--debug", help="Output debug info about canonicalization.", action="store_true")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
 if args.convert_raw:
   blib.getData()
+
+def fetch_page_titles_and_text(textfile):
+  with codecs.open(textfile, "r", "utf-8") as fp:
+    text = fp.read()
+  if '\001' in text:
+    pages = text.split('\001')
+    title_text_split = '\n'
+  else:
+    pages = re.split('\nPage [0-9]+ ', '\n' + text)
+    title_text_split = ': Found (?:template: |match for regex: |subsection with combinable .*?:\n)'
+  for index, page in enumerate(pages):
+    if not page.strip(): # e.g. first entry
+      continue
+    split_vals = re.split(title_text_split, page, 1)
+    if len(split_vals) < 2:
+      msg("Page %s: Skipping bad text: %s" % (index + 1, page))
+      continue
+    yield split_vals
+
+if args.matching_textfile:
+  matching_textfile_lines = set(
+    text for title, text in fetch_page_titles_and_text(args.matching_textfile)
+  )
 
 if args.form_of_files:
   files = args.form_of_files.split(',')
@@ -1649,27 +1766,14 @@ if args.form_of_files:
   set_form_of_tables()
 
 if args.textfile:
-  with codecs.open(args.textfile, "r", "utf-8") as fp:
-    text = fp.read()
-  if '\001' in text:
-    pages = text.split('\001')
-    title_text_split = '\n'
-  else:
-    pages = re.split('\nPage [0-9]+ ', text)
-    title_text_split = ': Found (?:template: |match for regex: |subsection with combinable .*?:\n)'
-  for index, page in blib.iter_items(pages, start, end):
-    if not page: # e.g. first entry
-      continue
-    split_vals = re.split(title_text_split, page, 1)
-    if len(split_vals) < 2:
-      msg("Page %s: Skipping bad text: %s" % (index, page))
-      continue
-    pagetitle, pagetext = split_vals
+  titles_and_text = fetch_page_titles_and_text(args.textfile)
+  for index, (pagetitle, pagetext) in blib.iter_items(titles_and_text, start,
+      end, get_name=lambda title_and_text: title_and_text[0]):
     newtext, notes = process_text_on_page(pagetitle, index, pagetext)
     if newtext and newtext != pagetext:
       msg("Page %s %s: Would save with comment = %s" % (index, pagetitle,
         "; ".join(blib.group_notes(notes))))
-      
+
 elif args.pagefile:
   pages = [x.rstrip('\n') for x in codecs.open(args.pagefile, "r", "utf-8")]
   for i, page in blib.iter_items(pages, start, end):
@@ -1682,9 +1786,14 @@ msg("Fraction of templates with bad tags = %s / %s = %.2f%%" % (
   num_templates_with_bad_tags, num_total_templates,
   float(num_templates_with_bad_tags) * 100 / float(num_total_templates)
 ))
+
+def print_table(table):
+  for key, val in sorted(table.iteritems(), key=lambda x: -x[1]):
+    msg("%s = %s" % (key, val))
+
 msg("Bad tags:")
-for key, val in sorted(bad_tags.iteritems(), key=lambda x: -x[1]):
-  msg("%s = %s" % (key, val))
+print_table(bad_tags)
+msg("Bad tags during split canonicalization:")
+print_table(bad_tags_during_split_canonicalization)
 msg("Tags with spaces:")
-for key, val in sorted(tags_with_spaces.iteritems(), key=lambda x: -x[1]):
-  msg("%s = %s" % (key, val))
+print_table(tags_with_spaces)
