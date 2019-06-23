@@ -2883,8 +2883,8 @@ assuēfaciō assuēfacere assuēfēcī assuēfactum
 peredō peredere perēdī perēsum
 exedō exedere exēdī exēsum
 hērēo hērēre hēsī hēsum
-# wrongly has long e in perf and sup
-antecēdō antecēdere antecessī antecessum
+# wrongly has īnesse etc.
+īnsum inesse īnfuī īnfutūrus
 ###
 ### stāgnum
 ###
