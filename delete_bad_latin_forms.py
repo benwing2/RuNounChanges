@@ -357,7 +357,7 @@ def delete_form(index, lemma, formind, formval, pos, tag_sets_to_delete,
     del subsections[k]
     del subsections[k - 1]
 
-  if len(subsections) == 1:
+  if len(subsections) == 1 or len(subsections) == 3 and re.search("^==+References==+$", subsections[1].strip()):
     # Whole section deletable
     if subsections[0].strip():
       pagemsg("WARNING: Whole Latin section deletable except that there's text above all subsections: <%s>" % subsections[0].strip())
@@ -463,63 +463,65 @@ def process_page(index, lemma, pos, infl, forms, pages_to_delete, preserve_diaer
     if form in args:
       tag_sets_to_delete.append(lalib.form_key_to_tag_set(form))
       forms_to_delete.append((form, args[form]))
-    if form == "all":
+    elif form == "all":
       for key, val in args.iteritems():
         tag_sets_to_delete.append(lalib.form_key_to_tag_set(key))
         forms_to_delete.append((key, val))
-    if form == "firstpart":
+    elif form == "firstpart":
       for key, val in args.iteritems():
         if key != "futr_actv_ptc" and key != "futr_actv_inf" and key != "futr_pasv_inf" and (
           "pres" in key or "impf" in key or "futr" in key or "ger" in key):
           tag_sets_to_delete.append(lalib.form_key_to_tag_set(key))
           forms_to_delete.append((key, val))
-    if form in ["pasv", "pass"]:
+    elif form in ["pasv", "pass"]:
       for key, val in args.iteritems():
         if key != "perf_pasv_ptc" and "pasv" in key:
           tag_sets_to_delete.append(lalib.form_key_to_tag_set(key))
           forms_to_delete.append((key, val))
-    if form in ["nonimperspasv", "nonimperspass"]:
+    elif form in ["nonimperspasv", "nonimperspass"]:
       for key, val in args.iteritems():
         if key != "perf_pasv_ptc" and "pasv" in key and (
             "1s" in key or "1p" in key or "2s" in key or "2p" in key or "3p" in key):
           tag_sets_to_delete.append(lalib.form_key_to_tag_set(key))
           forms_to_delete.append((key, val))
-    if form in ["12pasv", "12pass"]:
+    elif form in ["12pasv", "12pass"]:
       for key, val in args.iteritems():
         if key != "perf_pasv_ptc" and "pasv" in key and (
             "1s" in key or "1p" in key or "2s" in key or "2p" in key):
           tag_sets_to_delete.append(lalib.form_key_to_tag_set(key))
           forms_to_delete.append((key, val))
-    if form == "passnofpp":
+    elif form == "passnofpp":
       for key, val in args.iteritems():
         if key != "perf_pasv_ptc" and key != "futr_pasv_ptc" and "pasv" in key:
           tag_sets_to_delete.append(lalib.form_key_to_tag_set(key))
           forms_to_delete.append((key, val))
-    if form == "perf":
+    elif form == "perf":
       for key, val in args.iteritems():
         if key not in ["perf_actv_ptc", "perf_pasv_ptc"] and re.search("(perf|plup|futp)", key):
           tag_sets_to_delete.append(lalib.form_key_to_tag_set(key))
           forms_to_delete.append((key, val))
-    if form in ["perf-pasv", "perf-pass"]:
+    elif form in ["perf-pasv", "perf-pass"]:
       for key, val in args.iteritems():
         if "perf" in key and "pasv" in key:
           tag_sets_to_delete.append(lalib.form_key_to_tag_set(key))
           forms_to_delete.append((key, val))
-    if form == "sup":
+    elif form == "sup":
       for key, val in args.iteritems():
         if "sup" in key or key in ["perf_actv_ptc", "perf_pasv_ptc", "futr_actv_ptc"]:
           tag_sets_to_delete.append(lalib.form_key_to_tag_set(key))
           forms_to_delete.append((key, val))
-    if form == "supnofap":
+    elif form == "supnofap":
       for key, val in args.iteritems():
         if "sup" in key or key in ["perf_actv_ptc", "perf_pasv_ptc"]:
           tag_sets_to_delete.append(lalib.form_key_to_tag_set(key))
           forms_to_delete.append((key, val))
-    if form == "ger":
+    elif form == "ger":
       for key, val in args.iteritems():
         if "ger" in key:
           tag_sets_to_delete.append(lalib.form_key_to_tag_set(key))
           forms_to_delete.append((key, val))
+    elif "_" not in form:
+      raise ValueError("Unrecognized form type: %s" % form)
 
   single_forms_to_delete = []
 
