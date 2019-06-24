@@ -28,6 +28,14 @@ skip_pages = [
   "kifunze",
   "yupo",
   "mna",
+  # Gets tripped up by # {{lb|la|grammar}} [[ablative case|ablative]] of [[causing]] [[fact]]
+  "ablativus rei efficientis",
+  # Gets tripped up by # {{lb|la|grammar}} [[ablative case|ablative]] of [[instrument]]
+  "ablativus instrumenti",
+  # Gets tripped up by # {{lb|la|grammar}} [[ablative case|ablative]] of [[means]]
+  "ablativus modi",
+  # Gets tripped up by # {{n-g|form of {{m|mn|-жээ}} before {{m|mn|уу}}}}
+  u"-ж",
 ]
 
 inflection_of_templates = [
@@ -38,7 +46,7 @@ inflection_of_templates = [
   "participle of"
 ]
 
-joiner_tags = ['and', 'or', '/', ',']
+joiner_tags = ['and', 'or', '/', ',', '&']
 semicolon_tags = [';', ';<!--\n-->']
 
 tags_for_raw_and_form_of_conversion = [
@@ -101,6 +109,7 @@ subtag_replacements = [
   (" articulation$", ""),
   (" voice", ""),
   (" '*or'* ", " and "),
+  (" '*&'* ", " and "),
   (" *, *", " "),
   ("'", ""),
   ("[()]", ""),
@@ -138,6 +147,7 @@ subtag_replacements = [
   ("dative of the negative form", "negative dative"),
   ("feminine of past participle", "feminine singular past participle"),
   ("plural feminine of past participle", "feminine plural past participle"),
+  ("plural; imperative", "plural imperative"),
 ]
 
 tag_replacements = {
@@ -412,6 +422,7 @@ multitag_replacements = [
   ("pres|indc|and|futr|/|pres|habitual", "pres:ind//fut//pres:hab"),
   ("futr|/|pres|habitual|and|impr", "fut//pres:hab//imp"),
   # Italian
+  ("1|s|2|s|and|3|s", "1//2//3|s"),
   ("1|s|and|2|s|and|3|s", "1//2//3|s"),
   ("1|s|,|2|s|,|and|3|s", "1//2//3|s"),
   ("2|s|and|3|s", "2//3|s"),
@@ -564,6 +575,7 @@ order_of_dimensions = [
 indexed_order_of_dimensions = {y:x for x, y in enumerate(order_of_dimensions)}
 
 additional_good_tags = {
+  "&", # occurs in some places in place of "and"
   "alternative",
   "transgressive",
   "all-gender",
@@ -758,6 +770,10 @@ def sort_tags(tags):
 
 def canonicalize_tag_1(tag, shorten, pagemsg, add_to_bad_tags_split_canon=False):
   global args
+
+  if re.search(r"([Tt]he|[A]n) \[*[Aa]ct\]*\b", tag):
+    pagemsg("WARNING: Saw 'the/an act of', not a valid tag, rejecting: %s" % tag)
+    return None
 
   def maybe_shorten(tag):
     if shorten:
@@ -988,20 +1004,27 @@ def process_text_on_page(pagetitle, index, text):
         non_gloss_pretext = ""
         non_gloss_posttext = ""
       # Handle defn lines with the inflection text italicized.
-      newtext = re.sub(r"^(#+ )%s(.*?)'' *([^'\n]*%s[^'\n]*[Oo]f)'' (.*?)%s$" % (
+      # NOTE: The expression (?![#:*]) below is a negative lookahead assertion.
+      # We want to allow definition lines with a # or ## not followed by a
+      # space, but ignore definition lines like #:, #*, #*: or ##*:.
+      # The whole expression (#+(?: +|(?![#:*]))) means "one or more # signs,
+      # followed either by one or more spaces or not followed by #, * or :".
+      # We need to include the # sign in the negative lookahead or we will
+      # allow lines beginning with ##*:.
+      newtext = re.sub(r"^(#+(?: +|(?![#:*])))%s(.*?)'' *([^'\n]*%s[^'\n]*[Oo]f)'' (.*?)%s$" % (
         non_gloss_pretext, raw_and_form_of_alternation_re, non_gloss_posttext),
         replace_raw_any, newtext, 0, re.M)
       # Handle defn lines with the inflection text not italicized, possibly
       # with a preceding label. We restrict the lemma to either be a single
       # alphabetic word or some text preceded by left bracket, left brace or
       # single quote, to avoid parsing arbitrary definitions with "of" in them.
-      newtext = re.sub(r"^(#+ )%s((?:\{\{.*?\}\} *)?\(?)(.* [Oo]f) ([[{'].*?|[a-zA-Z]+\.?)%s$" % (
+      newtext = re.sub(r"^(#+(?: +|(?![#:*])))%s((?:\{\{.*?\}\} *)?\(?)(.* [Oo]f) ([[{'].*?|[a-zA-Z]+\.?)%s$" % (
         non_gloss_pretext, non_gloss_posttext), replace_raw_only_canonicalize,
         newtext, 0, re.M)
       # As previously, but allowing a preceding raw link, to handle case like:
       # # [[that]]; ''genitive singular masculine form of [[tas]]''
       # # [[shone]], singular past tense form of ''[[skína]]'' (to shine)
-      newtext = re.sub(r"^(#+ )%s(\[\[.*?\]\][:;,] *\(?)(.* [Oo]f) ([[{'].*?|[a-zA-Z]+\.?)%s$" % (
+      newtext = re.sub(r"^(#+(?: +|(?![#:*])))%s(\[\[.*?\]\][:;,] *\(?)(.* [Oo]f) ([[{'].*?|[a-zA-Z]+\.?)%s$" % (
         non_gloss_pretext, non_gloss_posttext), replace_raw_only_canonicalize,
         newtext, 0, re.M)
     return newtext
@@ -1648,39 +1671,17 @@ def process_text_on_page(pagetitle, index, text):
         # not really important as both are equivalent
         tags = canonicalized_tags
 
-      # (6) Put back the new parameters. In the process, log and unrecognized ("bad") tags,
-      # and any tags with spaces in them.
-
-      # Erase all params.
-      del t.params[:]
-      # Put back new params.
-      # Strip comment continuations and line breaks. Such cases generally have linebreaks after semicolons
-      # as well, but we remove those. (FIXME, consider preserving them.)
-      t.add("1", remove_comment_continuations(lang))
-      t.add("2", remove_comment_continuations(term))
-      tr = remove_comment_continuations(tr)
-      if tr:
-        t.add("tr", tr)
-      t.add("3", remove_comment_continuations(alt))
-      next_tag_param = 4
-      has_bad_tags = False
-      has_joiner = False
+      # (6) Record statistics on multipart tags, unrecognized ("bad") tags,
+      # tags with spaces in them, etc.  # Maybe sort the tags.
 
       # Record statistics on multipart tags
       tag_sets = split_tags_into_tag_sets(tags)
       for tag_set in tag_sets:
         record_stats_on_tag_set(tag_set)
 
-      sorted_tags_info = ""
-      if args.sort_tags:
-        sorted_tag_sets = [sort_tags(tag_set) for tag_set in tag_sets]
-        new_tags = combine_tag_set_group(sorted_tag_sets)
-        if new_tags != tags:
-          notes.append("sorted tags")
-          sorted_tags_info = " (sorted tags)"
-          tags = new_tags
-
-      # Put back the tags into the template and note stats on bad tags
+      # Note stats on bad tags
+      has_bad_tags = False
+      has_joiner = False
       for tag in tags:
         if tag in joiner_tags:
           has_joiner = True
@@ -1693,14 +1694,59 @@ def process_text_on_page(pagetitle, index, text):
               bad_tags[split_tag] += 1
               has_bad_tags = True
               pagemsg("Saw bad tag: %s" % split_tag)
-        t.add(str(next_tag_param), tag)
-        next_tag_param += 1
+
+      # Maybe sort tags
+      sorted_tags_info = ""
+      if args.sort_tags:
+        sorted_tag_sets = [sort_tags(tag_set) for tag_set in tag_sets]
+        new_tags = combine_tag_set_group(sorted_tag_sets)
+        if new_tags != tags:
+          notes.append("sorted tags")
+          sorted_tags_info = " (sorted tags)"
+          tags = new_tags
+
+      # (7) Put back the new parameters.
+
+      # Erase all params.
+      del t.params[:]
+
+      # Put back new params.
+
+      # Strip comment continuations and line breaks. Such cases generally
+      # have linebreaks after semicolons as well, but we remove those.
+      # (FIXME, consider preserving them.)
+      t.add("1", remove_comment_continuations(lang))
+      t.add("2", remove_comment_continuations(term))
+      tr = remove_comment_continuations(tr)
+      if tr:
+        t.add("tr", tr)
+
+      if tags == ["p"]:
+        # Convert to 'plural of'.
+        blib.set_template_name(t, "plural of")
+        altparam = remove_comment_continuations(alt)
+        if altparam:
+          t.add("3", altparam)
+        notes.append("replaced {{inflection of|...|p}} with {{plural of}}")
+
+      else:
+        t.add("3", remove_comment_continuations(alt))
+        next_tag_param = 4
+
+        # Put back the tags into the template and note stats on bad tags
+        for tag in tags:
+          t.add(str(next_tag_param), tag)
+          next_tag_param += 1
+
+      # Finally, put back misc. tags.
       for pname, pval, showkey in params:
         t.add(pname, pval, showkey=showkey, preserve_spacing=False)
+
       if origt != unicode(t):
         if not notes:
           notes.append("canonicalized {{%s}}" % tn)
         pagemsg("Replaced %s with %s%s" % (origt, unicode(t), sorted_tags_info))
+
       global num_total_templates
       num_total_templates += 1
       global num_templates_with_bad_tags
