@@ -28,14 +28,34 @@ skip_pages = [
   "kifunze",
   "yupo",
   "mna",
+  # Gets tripped up by # Alternative form of '''{{l|ang|-isċ}}''', collective noun suffix
+  "-isce",
   # Gets tripped up by # {{lb|la|grammar}} [[ablative case|ablative]] of [[causing]] [[fact]]
   "ablativus rei efficientis",
   # Gets tripped up by # {{lb|la|grammar}} [[ablative case|ablative]] of [[instrument]]
   "ablativus instrumenti",
   # Gets tripped up by # {{lb|la|grammar}} [[ablative case|ablative]] of [[means]]
   "ablativus modi",
+  # Gets tripped up by # {{lb|la|grammar}} [[ablative case|ablative]] of [[cause]]
+  "ablativus causae",
+  # Gets tripped up by # {{lb|ga|obsolete}} [[vocative case|Vocative case]] of [[collective noun|collective nouns]]
+  u"slógacallam",
   # Gets tripped up by # {{n-g|form of {{m|mn|-жээ}} before {{m|mn|уу}}}}
   u"-ж",
+  # Gets tripped up by # {{lb|en|physics}} [[independent|Independent]] of [[arbitrary]] units of measurement, [[standard]]s, or [[property|properties]]; not [[comparative]] or [[relative]].
+  "absolute",
+  # Gets tripped up by # {{lb|en|slang}} Indicative of [[police]] [[presence]] or [[activity]].
+  "hot",
+  # Gets tripped up by # {{given name|female|lang=pt|eq=Victoria}} and feminine of {{l|pt|Vítor}}
+  u"Vitória",
+  # {{non-gloss definition|The feminine of [[lord]].}}
+  "lady",
+  # {{given name|female|lang=nl}}: feminine form of [[Willem]].
+  "Wilhelmina",
+  # {{n-g|Dative singular of ''o''-stem {{grc-apdx|3d|third-declension}} nouns}}
+  u"-οι",
+  # [[posturing]], plural of [[coquetry]]
+  u"ادائیں"
 ]
 
 inflection_of_templates = [
@@ -45,6 +65,15 @@ inflection_of_templates = [
   "adj form of",
   "participle of"
 ]
+
+tags_to_templates = {
+  ("p",): "plural of",
+  ("f",): "feminine of",
+  ("aug",): "augmentative of",
+  ("dim",): "diminutive of",
+  ("alternative", "form"): "alternative form of",
+  ("pfv",): "perfective form of",
+}
 
 joiner_tags = ['and', 'or', '/', ',', '&']
 semicolon_tags = [';', ';<!--\n-->']
@@ -423,6 +452,7 @@ multitag_replacements = [
   ("futr|/|pres|habitual|and|impr", "fut//pres:hab//imp"),
   # Italian
   ("1|s|2|s|and|3|s", "1//2//3|s"),
+  ("1|s|2|s|3|s", "1//2//3|s"),
   ("1|s|and|2|s|and|3|s", "1//2//3|s"),
   ("1|s|,|2|s|,|and|3|s", "1//2//3|s"),
   ("2|s|and|3|s", "2//3|s"),
@@ -582,6 +612,7 @@ additional_good_tags = {
   "duoplural",
   "realis",
   "irrealis",
+  "clitic",
   "fourth-person", # Navajo
   "spatial-person", # Navajo
   "usitative", # Navajo
@@ -771,10 +802,6 @@ def sort_tags(tags):
 def canonicalize_tag_1(tag, shorten, pagemsg, add_to_bad_tags_split_canon=False):
   global args
 
-  if re.search(r"([Tt]he|[A]n) \[*[Aa]ct\]*\b", tag):
-    pagemsg("WARNING: Saw 'the/an act of', not a valid tag, rejecting: %s" % tag)
-    return None
-
   def maybe_shorten(tag):
     if shorten:
       return tag_to_canonical_form_table.get(tag, tag)
@@ -836,6 +863,12 @@ def canonicalize_tag(tag, shorten, pagemsg, add_to_bad_tags_split_canon=False):
   # pagemsg("canonicalize_tag(%s, %s): Returned %s" % (tag, shorten, retval))
   return retval
 
+def canonicalize_raw_tag(tag, shorten, pagemsg, add_to_bad_tags_split_canon=False):
+  if re.search(r"^(the |an |)\[*(act|object|indicative|end|all|part|form)\]*\s*$", tag, re.I):
+    pagemsg("WARNING: Saw 'the/an/ act/object/indicative/end/all/part/form of', not a valid tag, rejecting: %s" % tag)
+    return None
+  return canonicalize_tag(tag, shorten, pagemsg, add_to_bad_tags_split_canon)
+
 def process_text_on_page(pagetitle, index, text):
   global args
 
@@ -871,7 +904,11 @@ def process_text_on_page(pagetitle, index, text):
       if mmm:
         gloss, posttext = mmm.groups()
         gloss = "|t=%s" % gloss
-      return gloss, posttext
+      if posttext.strip().startswith("in the"):
+        potential_tags = re.sub(r"^in the\s*(.*?)\.?$", r"\1", posttext.strip())
+        if canonicalize_raw_tag(potential_tags, True, pagemsg) is not None:
+          return gloss, " " + potential_tags, ""
+      return gloss, "", posttext
 
     def replace_raw(m, only_canonicalize):
       langcode = section_langcode
@@ -879,7 +916,7 @@ def process_text_on_page(pagetitle, index, text):
       pound_sign, pretext, tags, posttext = m.groups()
       pretext = pound_sign + pretext
       tags = re.sub(" *[Oo]f$", "", tags)
-      if only_canonicalize and canonicalize_tag(tags, True, pagemsg) is None:
+      if only_canonicalize and canonicalize_raw_tag(tags, True, pagemsg) is None:
         pagemsg("WARNING: Unable to canonicalize tags \"%s\": %s" % (tags, m.group(0)))
         return m.group(0)
 
@@ -897,7 +934,8 @@ def process_text_on_page(pagetitle, index, text):
             return m.group(0)
           else:
             langcode = link_langcode
-        gloss, postposttext = parse_gloss_from_posttext(postposttext)
+        gloss, posttags, postposttext = parse_gloss_from_posttext(postposttext)
+        tags += posttags
         alttext = ""
         this_gloss = ""
         tr = ""
@@ -936,7 +974,8 @@ def process_text_on_page(pagetitle, index, text):
       mm = re.search(r"^'* *\[\[([^\[\]]*?)\]\]'*\.?(.*?)$", posttext)
       if mm:
         lemma, postposttext = mm.groups()
-        gloss, postposttext = parse_gloss_from_posttext(postposttext)
+        gloss, posttags, postposttext = parse_gloss_from_posttext(postposttext)
+        tags += posttags
         lemma_parts = lemma.split("|")
         if len(lemma_parts) == 1:
           newtext = "%s{{inflection of|%s|%s||%s%s}}%s" % (
@@ -963,7 +1002,8 @@ def process_text_on_page(pagetitle, index, text):
       mm = re.search(r"^'''* *([^'{}\[\]]*?) *'''*\.?(.*?)$", posttext)
       if mm:
         lemma, postposttext = mm.groups()
-        gloss, postposttext = parse_gloss_from_posttext(postposttext)
+        gloss, posttags, postposttext = parse_gloss_from_posttext(postposttext)
+        tags += posttags
         newtext = "%s{{inflection of|%s|%s||%s%s}}%s" % (
           pretext, langcode, lemma, tags, gloss, postposttext)
         shortenable_tags.append((langcode, lemma, tags))
@@ -972,7 +1012,8 @@ def process_text_on_page(pagetitle, index, text):
       mm = re.search(r"^([a-zA-Z]+)\.?($|:.*?$)$", posttext)
       if mm:
         lemma, postposttext = mm.groups()
-        gloss, postposttext = parse_gloss_from_posttext(postposttext)
+        gloss, posttags, postposttext = parse_gloss_from_posttext(postposttext)
+        tags += posttags
         newtext = "%s{{inflection of|%s|%s||%s%s}}%s" % (
           pretext, langcode, lemma, tags, gloss, postposttext)
         shortenable_tags.append((langcode, lemma, tags))
@@ -1024,7 +1065,10 @@ def process_text_on_page(pagetitle, index, text):
       # As previously, but allowing a preceding raw link, to handle case like:
       # # [[that]]; ''genitive singular masculine form of [[tas]]''
       # # [[shone]], singular past tense form of ''[[skína]]'' (to shine)
-      newtext = re.sub(r"^(#+(?: +|(?![#:*])))%s(\[\[.*?\]\][:;,] *\(?)(.* [Oo]f) ([[{'].*?|[a-zA-Z]+\.?)%s$" % (
+      # # [[they]] (nominative plural of {{m|sh|òna||she}})
+      # # of [[them]] (clitic genitive plural of {{m|sh|sc=Cyrl|о̑н||he}})
+      # # (with) [[us]] (instrumental plural of {{m|sh|jȃ||I}})
+      newtext = re.sub(r"^(#+(?: +|(?![#:*])))%s((?:[a-zA-Z()]+? +)?\[\[.*?\]\](?:[:;,] *\(?| *\())(.* [Oo]f) ([[{'].*?|[a-zA-Z]+\.?)%s$" % (
         non_gloss_pretext, non_gloss_posttext), replace_raw_only_canonicalize,
         newtext, 0, re.M)
     return newtext
@@ -1721,13 +1765,15 @@ def process_text_on_page(pagetitle, index, text):
       if tr:
         t.add("tr", tr)
 
-      if tags == ["p"]:
-        # Convert to 'plural of'.
-        blib.set_template_name(t, "plural of")
+      if tuple(tags) in tags_to_templates:
+        tempname = tags_to_templates[tuple(tags)]
+        # Convert to more specific template, e.g. {{plural of}}.
+        blib.set_template_name(t, tempname)
         altparam = remove_comment_continuations(alt)
         if altparam:
           t.add("3", altparam)
-        notes.append("replaced {{inflection of|...|p}} with {{plural of}}")
+        notes.append("replaced {{inflection of|...|%s}} with {{%s}}" % (
+          "|".join(tags), tempname))
 
       else:
         t.add("3", remove_comment_continuations(alt))
