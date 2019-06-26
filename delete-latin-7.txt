@@ -14,3 +14,7 @@ verb desipio pass {{la-conj-3rd-IO|type=nosup|dēsip|dēsipu}}
 verb dispicio firstpart {{la-conj-3rd-IO|dispici|dispex|dispect}}
 verb subterfugio firstpart {{la-conj-3rd-IO|subterfugi|subterfug|type=nosup}}
 verb supterfugio firstpart {{la-conj-3rd-IO|supterfugi|supterfug|type=nosup}}
+verb affremo pass {{la-conj-3rd|type=noperf|affrem}}
+verb adfremo pass {{la-conj-3rd|type=noperf|adfrem}}
+verb effervo pass {{la-conj-3rd|type=noperf|efferv}}
+verb disquaero all {{la-conj-3rd|type=noperf|disquaer}}
