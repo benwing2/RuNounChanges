@@ -32,7 +32,7 @@ def rewrite_pages(refrom, reto, refs, page_and_refs, cat, pages, pagefile,
           pagetitle = unicode(page.title())
           fromval = fromval.replace(pagetitle_sub, re.escape(pagetitle))
           toval = toval.replace(pagetitle_sub, pagetitle)
-        text = re.sub(fromval, toval, text)
+        text = re.sub(fromval, toval, text, 0, re.M)
       return text
     if not lang_only:
       text = replace_text(text)
