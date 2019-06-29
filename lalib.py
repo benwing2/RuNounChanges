@@ -658,6 +658,14 @@ la_verb_overrides = (
   la_verb_ger_sup_overrides
 )
 
+def la_template_is_head(t):
+  tn = tname(t)
+  if tn in la_headword_templates:
+    return True
+  if tn == "head" and getparam(t, "1") == "la":
+    return True
+  return False
+
 def la_get_headword_from_template(t, pagename, pagemsg):
   tn = tname(t)
   if tn in la_adj_headword_templates or tn in ["la-noun", "la-suffix"]:
