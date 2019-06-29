@@ -116,8 +116,8 @@ def synchronize(term, hyphenation, pagemsg):
   i = 0
   hyph = "|".join(hyphenation)
   j = 0
-  transfer_j = None
-  transfer_char = None
+  transfer_j = []
+  transfer_char = []
   while i < len(term) and j < len(hyph):
     while j < len(hyph) and hyph[j] == '|':
       j += 1
@@ -128,12 +128,8 @@ def synchronize(term, hyphenation, pagemsg):
       j += 1
       continue
     if remove_stress(term[i]) == hyph[j]:
-      if transfer_j is not None:
-        pagemsg("WARNING: Two potential accents to transfer, #%s=%s and #%s=%s" % (
-          transfer_j, transfer_char, j, term[i]))
-        return None
-      transfer_j = j
-      transfer_char = term[i]
+      transfer_j.append(j)
+      transfer_char.append(term[i])
       i += 1
       j += 1
       continue
@@ -151,12 +147,18 @@ def synchronize(term, hyphenation, pagemsg):
     pagemsg("WARNING: Trailing hyphenation chars %s in term %s when matching against it-stress %s" % (
       hyph[j:], hyph, term))
     return None
-  if transfer_char is None:
+  if not transfer_char:
     pagemsg("Stress already transferred from %s to %s" % (term, hyph))
     return hyphenation
-  return (hyph[0:transfer_j] + transfer_char + hyph[transfer_j+1:]).split("|")
+  secs = []
+  last_transfer_j = 0
+  for this_transfer_j, this_transfer_char in zip(transfer_j, transfer_char):
+    secs.append(hyph[last_transfer_j:this_transfer_j] + this_transfer_char)
+    last_transfer_j = this_transfer_j + 1
+  secs.append(hyph[last_transfer_j:])
+  return "".join(secs).replace(" ", "").split("|")
 
-def process_page(index, page):
+def process_page(index, page, title_with_syllable_divs=None):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -169,12 +171,19 @@ def process_page(index, page):
 
   notes = []
 
-  retval = blib.find_modifiable_lang_section(text, "Italian", pagemsg)
-  if retval is None:
-    return None, None
-  sections, j, secbody, sectail, has_non_lang = retval
+  if pagetitle.startswith("Rhymes:Italian/"):
+    sections = [text]
+    j = 0
+    secbody = text
+    sectail = ""
+    has_non_lang = False
+  else:
+    retval = blib.find_modifiable_lang_section(text, "Italian", pagemsg)
+    if retval is None:
+      return None, None
+    sections, j, secbody, sectail, has_non_lang = retval
 
-  subsections = re.split("(^===+[^=\n]+===+\n)", secbody, 0, re.M)
+  subsections = re.split("(^==+[^=\n]+==+\n)", secbody, 0, re.M)
 
   for k in xrange(2, len(subsections), 2):
     parsed = blib.parse_text(subsections[k])
@@ -206,43 +215,58 @@ def process_page(index, page):
     if do_continue:
       continue
     if not it_stress_template:
-      if "==Phonology==" in subsections[k - 1]:
-        pagemsg("No it-stress template in Phonology section")
+      if "==Pronunciation==" in subsections[k - 1]:
+        pagemsg("No it-stress template in Pronunciation section")
       continue
     if not it_hyph_template:
-      pagemsg("WARNING: Saw it-stress template %s but no hyphenation template" %
-          unicode(it_stress_template))
-      continue
-    if getparam(it_hyph_template, "lang"):
-      first_hyph_param = 1
+      if not title_with_syllable_divs:
+        pagemsg("WARNING: Saw it-stress template %s but no hyphenation template and --stressfile not given" %
+            unicode(it_stress_template))
+        continue
+      new_hyph = synchronize(getparam(it_stress_template, "1"),
+          title_with_syllable_divs.split("."), pagemsg)
+      if new_hyph is None:
+        continue
+      it_hyph_template = "{{hyph|it|%s}}" % "|".join(new_hyph)
+      subsec_k = unicode(parsed)
+      subsec_k, modified = blib.replace_in_text(subsec_k,
+        "* %s\n" % unicode(it_stress_template), "* %s\n" % it_hyph_template,
+        pagemsg, no_found_repl_check=True)
+      if not modified:
+        continue
+      subsections[k] = subsec_k
+      notes.append("replace {{it-stress}} with {{hyph|it}}")
     else:
-      first_hyph_param = 2
-    hyph_params = []
-    i = first_hyph_param
-    while getparam(it_hyph_template, str(i)):
-      hyph_params.append(getparam(it_hyph_template, str(i)))
-      i += 1
-    new_hyph = synchronize(getparam(it_stress_template, "1"), hyph_params,
-        pagemsg)
-    if new_hyph is None:
-      continue
-    assert len(hyph_params) == len(new_hyph)
-    orig_hyph_template = unicode(it_hyph_template)
-    i = first_hyph_param
-    for param in new_hyph:
-      it_hyph_template.add(str(i), param)
-      i += 1
-    if orig_hyph_template != unicode(it_hyph_template):
-      pagemsg("Replaced %s with %s" % (orig_hyph_template, unicode(it_hyph_template)))
-    else:
-      pagemsg("No changes to hyph template %s" % (orig_hyph_template))
-    subsec_k = unicode(parsed)
-    subsec_k, modified = blib.replace_in_text(subsec_k,
-      "* %s\n" % unicode(it_stress_template), "", pagemsg, no_found_repl_check=True)
-    if not modified:
-      continue
-    subsections[k] = subsec_k
-    notes.append("transfer accent from {{it-stress}} to {{hyph|it}} and remove {{it-stress}}")
+      if getparam(it_hyph_template, "lang"):
+        first_hyph_param = 1
+      else:
+        first_hyph_param = 2
+      hyph_params = []
+      i = first_hyph_param
+      while getparam(it_hyph_template, str(i)):
+        hyph_params.append(getparam(it_hyph_template, str(i)))
+        i += 1
+      new_hyph = synchronize(getparam(it_stress_template, "1"), hyph_params,
+          pagemsg)
+      if new_hyph is None:
+        continue
+      assert len(hyph_params) == len(new_hyph)
+      orig_hyph_template = unicode(it_hyph_template)
+      i = first_hyph_param
+      for param in new_hyph:
+        it_hyph_template.add(str(i), param)
+        i += 1
+      if orig_hyph_template != unicode(it_hyph_template):
+        pagemsg("Replaced %s with %s" % (orig_hyph_template, unicode(it_hyph_template)))
+      else:
+        pagemsg("No changes to hyph template %s" % (orig_hyph_template))
+      subsec_k = unicode(parsed)
+      subsec_k, modified = blib.replace_in_text(subsec_k,
+        "* %s\n" % unicode(it_stress_template), "", pagemsg, no_found_repl_check=True)
+      if not modified:
+        continue
+      subsections[k] = subsec_k
+      notes.append("transfer accent from {{it-stress}} to {{hyph|it}} and remove {{it-stress}}")
 
   secbody = "".join(subsections)
   sections[j] = secbody + sectail
@@ -253,12 +277,25 @@ def process_page(index, page):
       return process_form(index, page, lemma, formind, form, subs)
     blib.do_edit(pywikibot.Page(site, remove_macrons(form)), formind, handler, save=save, verbose=verbose)
 
-parser = blib.create_argparser(u"Transfer accent from {{it-stress}} to {{hyph|it}} and remove {{it-stress}}")
+parser = blib.create_argparser(u"Transfer accent from {{it-stress}} to {{hyph|it}} and remove {{it-stress}}, or replace {{it-stress}} with synthesized {{hyph|it}}")
+parser.add_argument("--stressfile", help="List of pages with stress.")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-def handler(page, index, parsed):
-  return process_page(index, page)
-
-for index, page in blib.references("Template:it-stress", start, end):
-  blib.do_edit(page, index, handler, save=args.save, verbose=args.verbose)
+if args.stressfile:
+  lines = [x.rstrip('\n') for x in codecs.open(args.stressfile, "r", "utf-8")]
+  for index, line in blib.iter_items(lines, start, end):
+    m = re.search(r"^\* Page [0-9]+ \[\[(.*?)\]\]: WARNING:.*$", line)
+    if not m:
+      msg("WARNING: Unable to parse: %s" % line)
+    else:
+      title_with_syllable_divs = m.group(1)
+      page = pywikibot.Page(site, title_with_syllable_divs.replace(".", ""))
+      def handler(page, index, parsed):
+        return process_page(index, page, title_with_syllable_divs)
+      blib.do_edit(page, index, handler, save=args.save, verbose=args.verbose)
+else:
+  for index, page in blib.references("Template:it-stress", start, end):
+    def handler(page, index, parsed):
+      return process_page(index, page)
+    blib.do_edit(page, index, handler, save=args.save, verbose=args.verbose)
