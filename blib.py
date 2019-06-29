@@ -20,6 +20,7 @@ import pywikibot, mwparserfromhell, re, string, sys, codecs, urllib2, datetime, 
 from arabiclib import reorder_shadda
 from collections import defaultdict
 import xml.sax
+import difflib
 
 site = pywikibot.Site()
 
@@ -220,7 +221,21 @@ def do_edit(page, index, func=None, null=False, save=False, verbose=False):
           if reorder_shadda(page.text) != reorder_shadda(new):
             assert comment
             if verbose:
-              pagemsg('Replacing <%s> with <%s>' % (page.text, new))
+              #pagemsg('Replacing <%s> with <%s>' % (page.text, new))
+              pagemsg('Diff:')
+              oldlines = page.text.splitlines(True)
+              newlines = new.splitlines(True)
+              diff = difflib.unified_diff(oldlines, newlines)
+              dangling_newline = False
+              for line in diff:
+                dangling_newline = not line.endswith('\n')
+                sys.stdout.write(line.encode('utf-8'))
+                if dangling_newline:
+                  sys.stdout.write("\n")
+              if dangling_newline:
+                sys.stdout.write("\\ No newline at end of file\n")
+              #pywikibot.showDiff(page.text, new, context=3)
+
             page.text = new
             if save:
               pagemsg("Saving with comment = %s" % comment)
