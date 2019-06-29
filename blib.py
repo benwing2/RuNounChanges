@@ -196,7 +196,7 @@ def expand_text(tempcall, pagetitle, pagemsg, verbose):
     return False
   return result
 
-def do_edit(page, index, func=None, null=False, save=False, verbose=False):
+def do_edit(page, index, func=None, null=False, save=False, verbose=False, diff=False):
   title = unicode(page.title())
   def pagemsg(text):
     msg("Page %s %s: %s" % (index, title, text))
@@ -220,8 +220,7 @@ def do_edit(page, index, func=None, null=False, save=False, verbose=False):
           # that only involve different shadda orders.
           if reorder_shadda(page.text) != reorder_shadda(new):
             assert comment
-            if verbose:
-              #pagemsg('Replacing <%s> with <%s>' % (page.text, new))
+            if diff:
               pagemsg('Diff:')
               oldlines = page.text.splitlines(True)
               newlines = new.splitlines(True)
@@ -235,6 +234,8 @@ def do_edit(page, index, func=None, null=False, save=False, verbose=False):
               if dangling_newline:
                 sys.stdout.write("\\ No newline at end of file\n")
               #pywikibot.showDiff(page.text, new, context=3)
+            elif verbose:
+              pagemsg('Replacing <%s> with <%s>' % (page.text, new))
 
             page.text = new
             if save:
@@ -602,6 +603,7 @@ def create_argparser(desc):
   parser.add_argument('end', help="Ending page index", nargs="?")
   parser.add_argument('-s', '--save', action="store_true", help="Save results")
   parser.add_argument('-v', '--verbose', action="store_true", help="More verbose output")
+  parser.add_argument('-d', '--diff', action="store_true", help="Show diff of changes")
   return parser
 
 def init_argparser(desc):
@@ -1278,14 +1280,19 @@ def replace_in_text(text, curr, repl, pagemsg, no_found_repl_check=False):
   newtext = text.replace(curr, repl)
   newtext_text_diff = len(newtext) - len(text)
   repl_curr_diff = len(repl) - len(curr)
-  ratio = float(newtext_text_diff) / repl_curr_diff
-  if ratio == int(ratio):
-    if int(ratio) > 1:
-      pagemsg("WARNING: Replaced %s occurrences of curr=%s with repl=%s"
-          % (int(ratio), curr, repl))
+  if repl_curr_diff == 0:
+    if newtext_text_diff != 0:
+      pagemsg("WARNING: Something wrong, no change in text length during replacement but expected change: Expected length change=%s, actual=%s, curr=%s, repl=%s"
+          % (repl_curr_diff, newtext_text_diff, curr, repl))
   else:
-    pagemsg("WARNING: Something wrong, length mismatch during replacement: Expected length change=%s, actual=%s, ratio=%.2f, curr=%s, repl=%s"
-        % (repl_curr_diff, newtext_text_diff, ratio, curr, repl))
+    ratio = float(newtext_text_diff) / repl_curr_diff
+    if ratio == int(ratio):
+      if int(ratio) > 1:
+        pagemsg("WARNING: Replaced %s occurrences of curr=%s with repl=%s"
+            % (int(ratio), curr, repl))
+    else:
+      pagemsg("WARNING: Something wrong, length mismatch during replacement: Expected length change=%s, actual=%s, ratio=%.2f, curr=%s, repl=%s"
+          % (repl_curr_diff, newtext_text_diff, ratio, curr, repl))
   text = newtext
   return text, True
 
