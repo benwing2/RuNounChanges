@@ -4691,7 +4691,7 @@ end
 -- the lemma in the declension table title. In this case, we don't include
 -- the translit, and remove monosyllabic accents from the Cyrillic (but not
 -- in multiword expressions).
-local function show_form(forms, old, lemma)
+local function show_form(forms, old, lemma, accel)
 	local russianvals = {}
 	local latinvals = {}
 	local lemmavals = {}
@@ -4732,11 +4732,12 @@ local function show_form(forms, old, lemma)
 			ruspan = "&mdash;"
 			is_missing = true
 		elseif ishyp then
+			-- no accelerator for hypothetical forms
 			ruspan = m_links.full_link({lang = lang, term = nil, alt = ruentry, tr = "-"}, "hypothetical")
 		elseif old then
-			ruspan = m_links.full_link({lang = lang, term = com.remove_jo(ruentry), alt = not ruentry:find("[[", 1, true) and ruentry, tr = "-"})
+			ruspan = m_links.full_link({lang = lang, term = com.remove_jo(ruentry), alt = not ruentry:find("[[", 1, true) and ruentry, tr = "-", accel = accel})
 		else
-			ruspan = m_links.full_link({lang = lang, term = ruentry, tr = "-"})
+			ruspan = m_links.full_link({lang = lang, term = ruentry, tr = "-", accel = accel})
 		end
 		ruspan = ruspan .. runotes
 		if not trentry then
@@ -4839,17 +4840,56 @@ concat_word_forms = function(per_word_info, case)
 	return concat_word_forms_1(word_forms, {{""}})
 end
 
+local accel_forms = {
+	nom_sg = "nom|s",
+	nom_sg_linked = "nom|s",
+	nom_pl = "nom|p",
+	nom_pl_linked = "nom|p",
+	gen_sg = "gen|s",
+	gen_pl = "gen|p",
+	dat_sg = "dat|s",
+	dat_pl = "dat|p",
+	acc_sg_an = "an|acc|s",
+	acc_pl_an = "an|acc|p",
+	acc_sg_in = "in|acc|s",
+	acc_pl_in = "in|acc|p",
+	ins_sg = "ins|s",
+	ins_pl = "ins|p",
+	pre_sg = "pre|s",
+	pre_pl = "pre|p",
+	loc = "loc|s",
+	loc_pl = "loc|p",
+	voc = "voc|s",
+	voc_pl = "voc|p",
+	par = "par|s",
+	par_pl = "par|p",
+}
+
 -- Make the table
 make_table = function(args)
 	local data = {}
 	data.after_title = " " .. args.heading
 	data.number = args.nonumber and "" or numbers[args.n]
 
-	data.lemma = show_form(args[args.n == "p" and "nom_pl_linked" or "nom_sg_linked"], args.old, "lemma")
+	data.lemma = show_form(args[args.n == "p" and "nom_pl_linked" or "nom_sg_linked"], args.old, "lemma", nil)
 	data.title = args.title or strutils.format(args.old and old_title_temp or title_temp, data)
 
+	local sg_an_in_equal = ut.equals(args.acc_sg_an, args.acc_sg_in)
+	local pl_an_in_equal = ut.equals(args.acc_pl_an, args.acc_pl_in)
+
 	for _, case in ipairs(displayable_cases) do
-		data[case] = show_form(args[case], args.old, false)
+		local accel_form = accel_forms[case]
+		if not accel_form then
+			error("Something wrong, can't find accelerator form for " .. case)
+		end
+		if (sg_an_in_equal and (case == "acc_sg_an" or case == "acc_sg_in") or
+			pl_an_in_equal and (case == "acc_pl_an" or case == "acc_pl_in")) then
+			accel_form = rsub(accel_form, "^[ai]n|", "")
+		end
+		if args.n == "p" then
+			accel_form = rsub(accel_form, "|p$", "")
+		end
+		data[case] = show_form(args[case], args.old, false, {form = accel_form})
 	end
 
 	local temp = nil
@@ -4862,7 +4902,7 @@ make_table = function(args)
 		data.acc_x_in = data.acc_sg_in
 		data.ins_x = data.ins_sg
 		data.pre_x = data.pre_sg
-		if data.acc_sg_an == data.acc_sg_in then
+		if sg_an_in_equal then
 			temp = "half"
 		else
 			temp = "half_a"
@@ -4878,15 +4918,15 @@ make_table = function(args)
 		data.par = nil
 		data.loc = nil
 		data.voc = nil
-		if data.acc_pl_an == data.acc_pl_in then
+		if pl_an_in_equal then
 			temp = "half"
 		else
 			temp = "half_a"
 		end
 	else
-		if data.acc_pl_an == data.acc_pl_in then
+		if pl_an_in_equal then
 			temp = "full"
-		elseif data.acc_sg_an == data.acc_sg_in then
+		elseif sg_an_in_equal then
 			temp = "full_af"
 		else
 			temp = "full_a"
