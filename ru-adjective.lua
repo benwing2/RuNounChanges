@@ -1976,7 +1976,7 @@ end
 
 -- Generate a string to substitute into a particular form in a Wiki-markup
 -- table. FORMS is the list of forms.
-local function show_form(forms, old, lemma, accel_form)
+local function show_form(forms, old, is_lemma, accel_form, lemma_forms)
 	local russianvals = {}
 	local latinvals = {}
 	local lemmavals = {}
@@ -1993,6 +1993,18 @@ local function show_form(forms, old, lemma, accel_form)
 		return "&mdash;"
 	end
 
+	local lemmaru, lemmatr
+	if accel_form and lemma_forms then
+		local lemma_form = lemma_forms[1]
+		if lemma_form[1] ~= "-" then
+			lemmaru, lemmatr = lemma_form[1], lemma_form[2]
+			lemmaru, _ = m_table_tools.separate_notes(lemmaru)
+			if lemmatr then
+				lemmatr, _ = m_table_tools.separate_notes(lemmatr)
+			end
+		end
+	end
+
 	for _, form in ipairs(forms) do
 		local ru, tr = form[1], form[2]
 		local ruentry, runotes = m_table_tools.get_notes(ru)
@@ -2002,11 +2014,12 @@ local function show_form(forms, old, lemma, accel_form)
 		end
 		ruentry = com.remove_monosyllabic_accents(ruentry)
 		local ruspan, trspan
-		local accel = {form = accel_form, transliteration = tr}
+		local accel = lemmaru and {form = accel_form, translit = tr, lemma = lemmaru,
+			lemma_translit = lemmatr} or nil
 		if old then
-			ruspan = m_links.full_link({lang = lang, term = com.remove_jo(ruentry), alt = ruentry, tr = "-", accel}) .. runotes
+			ruspan = m_links.full_link({lang = lang, term = com.remove_jo(ruentry), alt = ruentry, tr = "-", accel = accel}) .. runotes
 		else
-			ruspan = m_links.full_link({lang = lang, term = ruentry, tr = "-", accel}) .. runotes
+			ruspan = m_links.full_link({lang = lang, term = ruentry, tr = "-", accel = accel}) .. runotes
 		end
 		if not trentry then
 			trentry = nom.translit_no_links(ruentry)
@@ -2017,7 +2030,7 @@ local function show_form(forms, old, lemma, accel_form)
 		trspan = m_links.remove_links(trentry) .. trnotes
 		trspan = require("Module:script utilities").tag_translit(trspan, lang, "default", " style=\"color: #888;\"")
 
-		if lemma then
+		if is_lemma then
 			-- insert_if_not(lemmavals, ruspan .. " (" .. trspan .. ")")
 			ut.insert_if_not(lemmavals, ruspan)
 		else
@@ -2026,7 +2039,7 @@ local function show_form(forms, old, lemma, accel_form)
 		end
 	end
 
-	if lemma then
+	if is_lemma then
 		return table.concat(lemmavals, ", ")
 	else
 		local russian_span = table.concat(russianvals, ", ")
@@ -2037,8 +2050,9 @@ end
 
 -- Make the table
 make_table = function(args)
-	args.lemma = m_links.remove_links(show_form(args.special and args.nom_mp or
-		args.nofull and args.short_m or args.nom_m, args.old, true, nil))
+	local lemma_forms = args.special and args.nom_mp or
+		args.nofull and args.short_m or args.nom_m
+	args.lemma = m_links.remove_links(show_form(lemma_forms, args.old, true, nil, nil))
 	args.title = args.title or strutils.format(
 		(args.special or args.manual) and args.old and old_title_temp_no_short_msg or
 		(args.special or args.manual) and title_temp_no_short_msg or
@@ -2059,7 +2073,7 @@ make_table = function(args)
 			if noneuter then
 				accel_form = rsub(accel_form, "//n", "")
 			end
-			args[case] = show_form(args[case], args.old, false, accel_form)
+			args[case] = show_form(args[case], args.old, false, accel_form, lemma_forms)
 		else
 			args[case] = nil
 		end
