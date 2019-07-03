@@ -3802,8 +3802,6 @@ conjugations["irreg-быть"] = function(args, data)
 	-- only for "бы́ть", some forms are archaic
 	if forms["infinitive"] == "бы́ть" then
 		append_pres_futr(forms, "", nil, "есть", "есть", "есть", "есть", "есть", "есть")
-		append_pres_futr(forms, "", nil,
-			"есмь", "еси́", {}, "есмы́", "е́сте", "суть")
 	elseif com.is_stressed(prefix) then
 		-- if the prefix is stressed, e.g. "вы́быть"
 		present_e_a(forms, prefix .. "буд")
@@ -4541,7 +4539,7 @@ local accel_forms = {
   past_adv_part = "past|adv|part",
   past_adv_part_short = "short|past|adv|part",
   -- infinitive
-  infinitive = "infinitive",
+  infinitive = "inf",
 }
 
 -- Make the table
@@ -4570,10 +4568,11 @@ make_table = function(forms, title, perf, intr, impers, notes, internal_notes, o
 				if #entry > 0 then
 					local lastru, lasttr = extract_russian_tr(entry[#entry])
 					if lastru == ru then
-						if lasttr or tr then
-							lasttr = lasttr or com.translit(lastru)
-							tr = tr or com.translit(ru)
+						if not lasttr and not tr or lasttr == tr then
+							error("Russian form " .. ru .. " is duplicated, probably due to a duplicative override")
 						end
+						lasttr = lasttr or com.translit(lastru)
+						tr = tr or com.translit(ru)
 						entry[#entry] = {ru, lasttr .. " ''or'' " .. tr}
 					else
 						table.insert(entry, {ru, tr})
@@ -4604,6 +4603,23 @@ make_table = function(forms, title, perf, intr, impers, notes, internal_notes, o
 		return ruspan .. rusuf .. runotes .. "<br/>" .. require("Module:script utilities").tag_translit(tr .. trnotes, lang, "default", 'style="color: #888"')
 	end
 
+	-- NOTE: No need to check for multiple infinitives because the accel system
+	-- doesn't support multiple lemmas.
+	local lemma, lemmatr = extract_russian_tr(forms["infinitive"])
+
+	-- check for empty strings, dashes and nil's
+	if lemma and lemma ~= "" and lemma ~= "-" and lemma ~= "&mdash;" then
+		lemma, _ = m_table_tools.separate_notes(lemma)
+		if lemmatr then
+			lemmatr, _ = m_table_tools.separate_notes(lemmatr)
+		end
+	else
+		-- In case the lemma is an empty string or dash, set to nil so we don't
+		-- set a lemma in the accelerator and fall back to the page name.
+		lemma = nil
+		lemmatr = nil
+	end
+
 	-- Convert to displayed form
 	local disp = {}
 	for key, entry in pairs(grouped_forms) do
@@ -4622,7 +4638,8 @@ make_table = function(forms, title, perf, intr, impers, notes, internal_notes, o
 				-- FIXME! Support this.
 				accel = nil
 			else
-				accel = { form = accel_form, transliteration = origtr }
+				accel = { form = accel_form, translit = origtr,
+					lemma = lemma, lemma_translit = lemmatr}
 			end
 
 			if rfind(key, "^futr") then
@@ -4660,7 +4677,8 @@ make_table = function(forms, title, perf, intr, impers, notes, internal_notes, o
 		"Note: For declension of participles, see their entries. Adverbial participles are indeclinable.")
 	notes_text = table.concat(all_notes, "<br />") .. "\n"
 
-	return [=[<div class="NavFrame" style="width:49.6em;">
+	return require("Module:TemplateStyles")("Module:ru-verb/style.css") ..
+[=[<div class="NavFrame" style="width:49.6em;">
 <div class="NavHead" style="text-align:left; background:#e0e0ff;">]=] .. title .. [=[</div>
 <div class="NavContent">
 {| class="inflection inflection-ru inflection-verb inflection-table"
