@@ -459,67 +459,59 @@ def process_page(index, lemma, pos, infl, forms, pages_to_delete, preserve_diaer
   forms_to_delete = []
   tag_sets_to_delete = []
 
+  def add_bad_forms(bad_form_fun):
+    for key, val in args.iteritems():
+      if bad_form_fun(key):
+        tag_sets_to_delete.append(lalib.form_key_to_tag_set(key))
+        forms_to_delete.append((key, val))
+
   for form in forms.split(","):
     if form in args:
       tag_sets_to_delete.append(lalib.form_key_to_tag_set(form))
       forms_to_delete.append((form, args[form]))
     elif form == "all":
-      for key, val in args.iteritems():
-        tag_sets_to_delete.append(lalib.form_key_to_tag_set(key))
-        forms_to_delete.append((key, val))
+      add_bad_forms(lambda key: True)
     elif form == "firstpart":
-      for key, val in args.iteritems():
-        if key != "futr_actv_ptc" and key != "futr_actv_inf" and key != "futr_pasv_inf" and (
-          "pres" in key or "impf" in key or "futr" in key or "ger" in key):
-          tag_sets_to_delete.append(lalib.form_key_to_tag_set(key))
-          forms_to_delete.append((key, val))
+      add_bad_forms(lambda key: (
+        key not in ["futr_actv_ptc", "futr_actv_inf", "futr_pasv_inf"] and (
+          "pres" in key or "impf" in key or "futr" in key or "ger" in key
+      )))
     elif form in ["pasv", "pass"]:
-      for key, val in args.iteritems():
-        if key != "perf_pasv_ptc" and "pasv" in key:
-          tag_sets_to_delete.append(lalib.form_key_to_tag_set(key))
-          forms_to_delete.append((key, val))
+      add_bad_forms(lambda key: key != "perf_pasv_ptc" and "pasv" in key)
     elif form in ["nonimperspasv", "nonimperspass"]:
-      for key, val in args.iteritems():
-        if key != "perf_pasv_ptc" and "pasv" in key and (
-            "1s" in key or "1p" in key or "2s" in key or "2p" in key or "3p" in key):
-          tag_sets_to_delete.append(lalib.form_key_to_tag_set(key))
-          forms_to_delete.append((key, val))
+      add_bad_forms(lambda key: key != "perf_pasv_ptc" and "pasv" in key and (
+        "1s" in key or "1p" in key or "2s" in key or "2p" in key or "3p" in key
+      ))
     elif form in ["12pasv", "12pass"]:
-      for key, val in args.iteritems():
-        if key != "perf_pasv_ptc" and "pasv" in key and (
-            "1s" in key or "1p" in key or "2s" in key or "2p" in key):
-          tag_sets_to_delete.append(lalib.form_key_to_tag_set(key))
-          forms_to_delete.append((key, val))
+      add_bad_forms(lambda key: (
+        key != "perf_pasv_ptc" and "pasv" in key and (
+          "1s" in key or "1p" in key or "2s" in key or "2p" in key
+        )
+      ))
     elif form == "passnofpp":
-      for key, val in args.iteritems():
-        if key != "perf_pasv_ptc" and key != "futr_pasv_ptc" and "pasv" in key:
-          tag_sets_to_delete.append(lalib.form_key_to_tag_set(key))
-          forms_to_delete.append((key, val))
+      add_bad_forms(lambda key: (
+        key not in ["perf_pasv_ptc", "futr_pasv_ptc"] and "pasv" in key
+      ))
     elif form == "perf":
-      for key, val in args.iteritems():
-        if key not in ["perf_actv_ptc", "perf_pasv_ptc"] and re.search("(perf|plup|futp)", key):
-          tag_sets_to_delete.append(lalib.form_key_to_tag_set(key))
-          forms_to_delete.append((key, val))
+      add_bad_forms(lambda key: (
+        key not in ["perf_actv_ptc", "perf_pasv_ptc"] and
+        re.search("(perf|plup|futp)", key)
+      ))
     elif form in ["perf-pasv", "perf-pass"]:
-      for key, val in args.iteritems():
-        if "perf" in key and "pasv" in key:
-          tag_sets_to_delete.append(lalib.form_key_to_tag_set(key))
-          forms_to_delete.append((key, val))
+      add_bad_forms(lambda key: "perf" in key and "pasv" in key)
     elif form == "sup":
-      for key, val in args.iteritems():
-        if "sup" in key or key in ["perf_actv_ptc", "perf_pasv_ptc", "futr_actv_ptc"]:
-          tag_sets_to_delete.append(lalib.form_key_to_tag_set(key))
-          forms_to_delete.append((key, val))
+      add_bad_forms(lambda key: (
+        "sup" in key or
+        key in ["perf_actv_ptc", "perf_pasv_ptc", "futr_actv_ptc"]
+      ))
     elif form == "supnofap":
-      for key, val in args.iteritems():
-        if "sup" in key or key in ["perf_actv_ptc", "perf_pasv_ptc"]:
-          tag_sets_to_delete.append(lalib.form_key_to_tag_set(key))
-          forms_to_delete.append((key, val))
+      add_bad_forms(lambda key: (
+        "sup" in key or key in ["perf_actv_ptc", "perf_pasv_ptc"]
+      ))
     elif form == "ger":
-      for key, val in args.iteritems():
-        if "ger" in key:
-          tag_sets_to_delete.append(lalib.form_key_to_tag_set(key))
-          forms_to_delete.append((key, val))
+      add_bad_forms(lambda key: "ger" in key)
+    elif form in ["imp", "impr"]:
+      add_bad_forms(lambda key: "impr" in key)
     elif "_" not in form:
       raise ValueError("Unrecognized form type: %s" % form)
 
