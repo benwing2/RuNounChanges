@@ -1159,7 +1159,7 @@ def do_process_lemma(index, page, pos, explicit_infl, lemma, explicit_stem, skip
             explicit_infl, lemma, unicode(inflt)))
           continue
         m = re.search('^la-decl-(.*)$', infltn)
-        decltype = lalib.la_noun_decl_suffix_to_decltype[m.group(1)]
+        decltype, stem_suffix, pl_suffix, to_auto = lalib.la_noun_decl_suffix_to_decltype[m.group(1)]
         if type(decltype) is tuple:
           decl = decltype[0]
           if len(decltype) >= 2:

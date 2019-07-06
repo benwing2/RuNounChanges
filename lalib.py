@@ -42,90 +42,173 @@ def find_latin_section(text, pagemsg):
 
   return sections, j, secbody, sectail, has_non_latin
 
+def stem_matches_any(stem1, stem2, endings_and_subtypes):
+  stem2 = stem2 or infer_3rd_decl_stem(stem1)
+  for ending, subtypes in endings_and_subtypes:
+    if type(ending) is tuple:
+      stem1_ending, stem2_ending = ending
+      m = re.search("^(.*)" + stem1_ending + "$", stem1)
+      if m and m.group(1) + stem2_ending == stem2:
+        return subtypes
+    else:
+      m = re.search("^(.*)" + ending + "$", stem1)
+      if m:
+        return subtypes
+  return False
 
-la_noun_decl_templates = {
-  "la-decl-1st",
-  "la-decl-1st-abus",
-  "la-decl-1st-am",
-  "la-decl-1st-Greek",
-  "la-decl-1st-Greek-Ma",
-  "la-decl-1st-Greek-Me",
-  "la-decl-2nd",
-  "la-decl-2nd-er",
-  "la-decl-2nd-Greek",
-  "la-decl-2nd-N-ium",
-  "la-decl-2nd-ius",
-  "la-decl-2nd-N",
-  "la-decl-2nd-N-Greek",
-  "la-decl-2nd-N-us",
-  "la-decl-3rd",
-  "la-decl-3rd-Greek",
-  "la-decl-3rd-Greek-er",
-  "la-decl-3rd-Greek-on-M",
-  "la-decl-3rd-Greek-s",
-  "la-decl-3rd-is",
-  "la-decl-3rd-I",
-  "la-decl-3rd-I-ignis",
-  "la-decl-3rd-I-navis",
-  "la-decl-3rd-N",
-  "la-decl-3rd-N-I",
-  "la-decl-3rd-N-I-pure",
-  "la-decl-3rd-polis",
-  "la-decl-4th",
-  "la-decl-4th-argo",
-  "la-decl-4th-echo",
-  "la-decl-4th-N",
-  "la-decl-4th-N-ubus",
-  "la-decl-4th-ubus",
-  "la-decl-5th",
-  "la-decl-5th-i",
-  "la-decl-5th-VOW",
-  "la-decl-indecl",
-  "la-decl-irreg",
-  "la-decl-multi",
-}
+def la_noun_3rd_subtype(t):
+  stem1 = getparam(t, "1")
+  stem2 = getparam(t, "2")
+  return stem_matches_any(stem1, stem2, [
+    (("polis", "pol"), ('-polis', '-I')),
+    ("polis", ('-polis',)),
+    (("is", ""), ('-I',)),
+    ((u"ēs", ""), ('-I',)),
+    (("us", "or"), ('-N',)),
+    (("us", "er"), ('-N',)),
+    (("ma", "mat"), ('-N',)),
+    (("men", "min"), ('-N',)),
+    (("e", ""), ('-N',)),
+    (("al", u"āl"), ('-N',)),
+    (("ar", u"ār"), ('-N',)),
+    ("", ()),
+  ])
+
+def la_noun_3rd_Greek_subtype(t):
+  stem1 = getparam(t, "1")
+  if stem1.endswith(u"ēr"):
+    return ('Greek', '-er')
+  if stem1.endswith(u"ōn"):
+    return ('Greek', '-on')
+  if stem1.endswith("s"):
+    return ('Greek', '-s')
+  return ('Greek',)
+
+def la_noun_3rd_I_subtype(t):
+  stem1 = getparam(t, "1")
+  stem2 = getparam(t, "2")
+  return stem_matches_any(stem1, stem2, [
+    (("polis", "pol"), ('-polis',)),
+    ("polis", ('-polis', 'I')),
+    (("is", ""), ()),
+    ((u"ēs", ""), ()),
+    (("us", "or"), ('-N', 'I')),
+    (("us", "er"), ('-N', 'I')),
+    (("ma", "mat"), ('-N', 'I')),
+    (("men", "min"), ('-N', 'I')),
+    (("e", ""), ('-N', 'I')),
+    (("al", u"āl"), ('-N', 'I')),
+    (("ar", u"ār"), ('-N', 'I')),
+    ("", ('I',)),
+  ])
+
+def la_noun_3rd_N_subtype(t):
+  stem1 = getparam(t, "1")
+  stem2 = getparam(t, "2")
+  return stem_matches_any(stem1, stem2, [
+    (("us", "or"), ()),
+    (("us", "er"), ()),
+    (("ma", "mat"), ()),
+    (("men", "min"), ()),
+    (("e", ""), ('N', '-pure')),
+    (("al", u"āl"), ('N', '-pure')),
+    (("ar", u"ār"), ('N', '-pure')),
+    ("", ('N',)),
+  ])
+
+def la_noun_3rd_N_I_subtype(t):
+  stem1 = getparam(t, "1")
+  stem2 = getparam(t, "2")
+  return stem_matches_any(stem1, stem2, [
+    (("e", ""), ('N', 'I', '-pure')),
+    (("al", u"āl"), ('N', 'I', '-pure')),
+    (("ar", u"ār"), ('N', 'I', '-pure')),
+    ("", ('N', 'I')),
+  ])
+
+def la_noun_3rd_N_I_pure_subtype(t):
+  stem1 = getparam(t, "1")
+  stem2 = getparam(t, "2")
+  return stem_matches_any(stem1, stem2, [
+    (("e", ""), ()),
+    (("al", u"āl"), ()),
+    (("ar", u"ār"), ()),
+    ("", ('N', 'I', 'pure')),
+  ])
+
+# The key is the decl suffix found in the template name, e.g.
+# {{la-decl-1st-abus}} maps to key '1st-abus'. The value is a three-entry
+# list of [DECLSPEC, STEM_SUFFIX, TO_AUTO] where:
+#
+# * DECLSPEC is either a single string (the declension type, e.g. '2', '3'),
+#   or a tuple of (DECLTYPE, SUBTYPE), or a tuple of (DECLTYPE, SUBTYPE, NUM),
+#   where DECLTYPE is the declension type as above (e.g. '2', '3'); optional
+#   SUBTYPE specifies a value for the decl_type= invocation or parent argument
+#   (e.g. 'Greek', 'N-ium')gument; and optional NUM specifies a value for the
+#   num= invocation or parent argument.
+# * STEM_SUFFIX is the suffix to add to the stem specified in 1= in order to
+#   get the lemma.
+# * PL_SUFFIX is the suffix to add to the stem specified in 1= in order to
+#   get the plural lemma; but should be None if the new, autodetecting mechanism
+#   can't detect such plurals.
+# * TO_AUTO specifies any subtypes that need to be provided when using the
+#   new, autodetecting mechanism, and is either a tuple of subtypes, possibly
+#   empty, or a function of one argument (the old-style template) that returns
+#   a tuple of subtypes. Any of the subtypes can be "negative", i.e. a subtype
+#   prefixed by a hyphen, which cancels out that subtype if it was
+#   autodetected. In such a case, a warning will be issued in the code to
+#   convert from old-style to new-style declension templates, because this
+#   may well indicate a mistake in the old-style template.
 
 la_noun_decl_suffix_to_decltype = {
-  '1st': '1',
-  '1st-abus': ('1', 'abus'),
-  '1st-am': ('1', 'am'),
-  '1st-Greek': ('1', 'Greek'),
-  '1st-Greek-Ma': ('1', 'Greek-Ma'),
-  '1st-Greek-Me': ('1', 'Greek-Me'),
-  '2nd': '2',
-  '2nd-er': ('2', 'er'),
-  '2nd-Greek': ('2', 'Greek'),
-  '2nd-N-ium': ('2', 'N-ium'),
-  '2nd-ius': ('2', 'ius'),
-  '2nd-N': ('2', 'N'),
-  '2nd-N-Greek': ('2', 'Greek-N'),
-  '2nd-N-us': ('2', 'N-us'),
-  '3rd': '3',
-  '3rd-Greek': ('3', 'Greek'),
-  '3rd-Greek-er': ('3', 'Greek-er'),
-  '3rd-Greek-on-M': ('3', 'Greek-on'),
-  '3rd-Greek-s': ('3', 'Greek-s'),
-  '3rd-is': ('3', 'is'),
-  '3rd-I': ('3', 'I'),
-  '3rd-I-ignis': ('3', 'ignis'),
-  '3rd-I-navis': ('3', 'navis'),
-  '3rd-N': ('3', 'N'),
-  '3rd-N-I': ('3', 'N-I'),
-  '3rd-N-I-pure': ('3', 'N-I-pure'),
-  '3rd-polis': ('3', 'polis', 'sg'),
-  '4th': '4',
-  '4th-argo': ('4', 'argo'),
-  '4th-echo': ('4', 'echo'),
-  '4th-N': ('4', 'N'),
-  '4th-N-ubus': ('4', 'N-ubus'),
-  '4th-ubus': ('4', 'ubus'),
-  '5th': '5',
-  '5th-i': ('5', 'i'),
-  '5th-VOW': ('5', 'vow'),
-  'indecl': 'indecl',
-  'irreg': 'irreg', # only if noun=something
+  '1st': ['1', 'a', 'ae', ()],
+  '1st-abus': [('1', 'abus'), 'a', 'ae', ('abus',)],
+  '1st-am': [('1', 'am'), u'ām', None, ()],
+  '1st-Greek': [('1', 'Greek'), u'ē', None, ()],
+  '1st-Greek-Ma': [('1', 'Greek-Ma'), u'ās', None, ()],
+  '1st-Greek-Me': [('1', 'Greek-Me'), u'ēs', None, ()],
+  '2nd': ['2', 'us', u'ī',
+    lambda t: ('-ius',) if getparam(t, "1").endswith('i') else ()],
+  '2nd-er': [('2', 'er'), '', None, ()],
+  '2nd-Greek': [('2', 'Greek'), 'os', None, ()],
+  '2nd-N-ium': [('2', 'N-ium'), 'ium', 'ia', ()],
+  '2nd-ius': [('2', 'ius'), 'ius', u'iī', ()],
+  '2nd-N': [('2', 'N'), 'um', 'a',
+    lambda t: ('-ium',) if getparam(t, "1").endswith('i') else ()],
+  '2nd-N-Greek': [('2', 'Greek-N'), 'on', None, ()],
+  '2nd-N-us': [('2', 'N-us'), 'us', u'ī', ('N',)],
+  '3rd': ['3', '', None, la_noun_3rd_subtype],
+  '3rd-Greek': [('3', 'Greek'), '', None, la_noun_3rd_Greek_subtype],
+  '3rd-Greek-er': [('3', 'Greek-er'), u'ēr', None, ('Greek',)],
+  '3rd-Greek-on-M': [('3', 'Greek-on'), u'ōn', None, ('Greek',)],
+  '3rd-Greek-s': [('3', 'Greek-s'), 's', None, ('Greek',)],
+  '3rd-is': [('3', 'is'), '', None, ('is',)],
+  '3rd-I': [('3', 'I'), '', None, la_noun_3rd_I_subtype],
+  '3rd-I-ignis': [('3', 'ignis'), '', None, ('ignis',)],
+  '3rd-I-navis': [('3', 'navis'), '', None, ('navis',)],
+  '3rd-N': [('3', 'N'), '', None, la_noun_3rd_N_subtype],
+  '3rd-N-I': [('3', 'N-I'), '', None, la_noun_3rd_N_I_subtype],
+  '3rd-N-I-pure': [('3', 'N-I-pure'), '', None, la_noun_3rd_N_I_pure_subtype],
+  '3rd-polis': [('3', 'polis', 'sg'), 'polis', None, ()],
+  '4th': ['4', 'us', u'ūs', ()],
+  '4th-argo': [('4', 'argo'), u'ō', None, ('argo',)],
+  '4th-echo': [('4', 'echo'), u'ō', None, ('echo',)],
+  '4th-N': [('4', 'N'), u'ū', 'ua', ()],
+  '4th-N-ubus': [('4', 'N-ubus'), u'ū', 'ua', ('ubus',)],
+  '4th-ubus': [('4', 'ubus'), 'us', u'ū', ('ubus', )],
+  '5th': ['5', u'ēs', None,
+    lambda t: ('-i',) if getparam(t, "1").endswith('i') else ()],
+  '5th-i': [('5', 'i'), u'iēs', None, ()],
+  '5th-VOW': [('5', 'vow'), u'ēs', None,
+    lambda t: ('-i',) if getparam(t, "1").endswith('i') else ()],
+  'indecl': ['indecl', '', None, ()],
+  'irreg': ['irreg', '', None, ()], # only if noun=something
   'multi': None,
 }
+
+la_noun_decl_templates = set(
+  'la-decl-%s' % k for k in la_noun_decl_suffix_to_decltype
+)
 
 la_adj_decl_templates = {
   "la-decl-1&2",
@@ -151,7 +234,8 @@ la_verb_conj_templates = {
 la_infl_templates = (
   la_noun_decl_templates |
   la_adj_decl_templates |
-  la_verb_conj_templates
+  la_verb_conj_templates |
+  {"la-decl-gerund"}
 )
 
 la_adj_headword_templates = {
@@ -282,6 +366,8 @@ third_decl_stem_patterns = [
   ("ex", "ic"),
   ("ma", "mat"),
   ("e", ""),
+  ("al", u"āl"),
+  ("ar", u"ār"),
   ("men", "min"),
   ("er", "r"),
   ("or", u"ōr"),
@@ -364,7 +450,7 @@ def generate_noun_forms(template, errandpagemsg, expand_text):
 
   def generate_noun_forms_prefix(m):
     if m.group(1) in la_noun_decl_suffix_to_decltype:
-      declspec = la_noun_decl_suffix_to_decltype[m.group(1)]
+      declspec, stem_suffix, pl_suffix, to_auto = la_noun_decl_suffix_to_decltype[m.group(1)]
       if type(declspec) is not tuple:
         declspec = (declspec,)
       decl = declspec[0]
@@ -657,6 +743,26 @@ la_verb_overrides = (
   la_verb_inf_ptc_overrides +
   la_verb_ger_sup_overrides
 )
+
+def la_infl_template_pos(t):
+  tn = tname(t)
+  if tn in la_verb_conj_templates:
+    return "verb"
+  elif tn == "la-decl-irreg":
+    return "noun" if getparam(t, "noun") else "adj"
+  elif tn == "la-decl-multi":
+    # FIXME, hard to determine properly
+    return "noun"
+  elif tn in la_noun_decl_templates:
+    return "noun"
+  elif tn in la_adj_decl_templates:
+    return "adj"
+  elif tn == "la-decl-gerund":
+    return "noun"
+  elif tn == "la-decl-ppron":
+    return "pron"
+  else:
+    return None
 
 def la_template_is_head(t):
   tn = tname(t)
