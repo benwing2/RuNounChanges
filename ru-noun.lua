@@ -4691,7 +4691,7 @@ end
 -- the lemma in the declension table title. In this case, we don't include
 -- the translit, and remove monosyllabic accents from the Cyrillic (but not
 -- in multiword expressions).
-local function show_form(forms, old, lemma, accel)
+local function show_form(forms, old, is_lemma, accel_form, lemma_forms)
 	local russianvals = {}
 	local latinvals = {}
 	local lemmavals = {}
@@ -4704,6 +4704,18 @@ local function show_form(forms, old, lemma, accel)
 	-- title of the declension table.) (Actually, currently we don't
 	-- include the translit in the declension table title.)
 
+	local lemmaru, lemmatr
+	if accel_form and lemma_forms then
+		local lemma_form = lemma_forms[1]
+		if lemma_form[1] ~= "-" then
+			lemmaru, lemmatr = lemma_form[1], lemma_form[2]
+			lemmaru, _ = m_table_tools.separate_notes(lemmaru)
+			if lemmatr then
+				lemmatr, _ = m_table_tools.separate_notes(lemmatr)
+			end
+		end
+	end
+
 	local is_missing = false
 	for _, form in ipairs(forms) do
 		local ru, tr = form[1], form[2]
@@ -4713,12 +4725,14 @@ local function show_form(forms, old, lemma, accel)
 			trentry, trnotes = m_table_tools.separate_notes(tr)
 			trnotes = rsub(trnotes, HYPMARKER, "")
 		end
-		if lemma and com.is_monosyllabic(ruentry) then
+		if is_lemma and com.is_monosyllabic(ruentry) then
 			ruentry = com.remove_accents(ruentry)
 			if trentry then
 				trentry = com.remove_accents(trentry)
 			end
 		end
+		local accel = lemmaru and {form = accel_form, translit = tr, lemma = lemmaru,
+			lemma_translit = lemmatr} or nil
 		local ishyp = rfind(runotes, HYPMARKER)
 		if ishyp then
 			runotes = rsub(runotes, HYPMARKER, "")
@@ -4752,7 +4766,7 @@ local function show_form(forms, old, lemma, accel)
 		end
 		trspan = scriptutils.tag_translit(trspan .. trnotes, lang, "default", ' style="color: #888"')
 
-		if lemma then
+		if is_lemma then
 			-- insert_if_not(lemmavals, ruspan .. " (" .. trspan .. ")")
 			insert_if_not(lemmavals, ruspan)
 		else
@@ -4761,7 +4775,7 @@ local function show_form(forms, old, lemma, accel)
 		end
 	end
 
-	if lemma then
+	if is_lemma then
 		return table.concat(lemmavals, ", ")
 	else
 		local russian_span = table.concat(russianvals, ", ")
@@ -4871,7 +4885,8 @@ make_table = function(args)
 	data.after_title = " " .. args.heading
 	data.number = args.nonumber and "" or numbers[args.n]
 
-	data.lemma = show_form(args[args.n == "p" and "nom_pl_linked" or "nom_sg_linked"], args.old, "lemma", nil)
+	local lemma_forms = args[args.n == "p" and "nom_pl" or "nom_sg"]
+	data.lemma = show_form(args[args.n == "p" and "nom_pl_linked" or "nom_sg_linked"], args.old, "lemma", nil, nil)
 	data.title = args.title or strutils.format(args.old and old_title_temp or title_temp, data)
 
 	local sg_an_in_equal = ut.equals(args.acc_sg_an, args.acc_sg_in)
@@ -4889,7 +4904,7 @@ make_table = function(args)
 		if args.n == "p" then
 			accel_form = rsub(accel_form, "|p$", "")
 		end
-		data[case] = show_form(args[case], args.old, false, {form = accel_form})
+		data[case] = show_form(args[case], args.old, false, accel_form, lemma_forms)
 	end
 
 	local temp = nil
