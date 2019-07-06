@@ -2837,19 +2837,36 @@ adv sēgniter
 ###
 # has -stīt- in perf
 obstō obstāre obstitī obstātum
+# has pār-
+part1 paritūrus
 ###
 ### missing long vowels
 ###
+#wrongly has short a
+a3 pyrālis
+n3 cervīcal
+n3 tribūnal
+n3 minūtal
+n3 conpār conpar
+a3 conpār conpar
+n3 pulvīnar
+n3 māchināmen
+#wrongly has short a and u
+part1 abbreviātūrus
 #wrongly has short i
 v1 cōnspīrō
 #wrongly has short i
 n2 suspīrium
 #wrongly has short e
 n1 rēsīna
+n3 syllēpsis
+n3 conpāgēs conpāg
 #wrongly has short i
 n3 restīnctiō
 # wrongly has short u
 part1 īnsecūtus
+part3 abiūdicāns
+n3 juventūs juventūt
 # wrongly has short u in perf and sometimes sup
 circumfundō circumfundere circumfūdī circumfūsum
 superfundō superfundere superfūdī superfūsum
