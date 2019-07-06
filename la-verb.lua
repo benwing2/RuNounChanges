@@ -4,6 +4,7 @@ local m_table = require("Module:table")
 local ut = require("Module:utils")
 local make_link = require("Module:links").full_link
 local m_la_headword = require("Module:la-headword")
+local m_la_utilities = require("Module:la-utilities")
 
 -- If enabled, compare this module with new version of module to make
 -- sure all conjugations are the same.
@@ -59,7 +60,7 @@ local function cfind(str, text)
 	return str:find(text, nil, true)
 end
 
-local function if_not_empty(val)
+local function ine(val)
 	if val == "" then
 		return nil
 	else
@@ -90,6 +91,142 @@ local function concat_vals(val)
 	else
 		return val
 	end
+end
+
+local function split_prefix_and_base(lemma, main_verbs)
+	for _, main in ipairs(main_verbs) do
+		local prefix = rmatch(lemma, "^(.*)" .. main .. "$")
+		if prefix then
+			return prefix, m_la_utilities.strip_macrons(main)
+		end
+	end
+	error("Argument " .. lemma .. " doesn't end in any of " .. table.concat(main_verbs, ","))
+end
+
+local function detect_decl_and_subtypes(args)
+	local specs = rsplit(ine(args[1]) or "", "/")
+	local subtypes = {}
+	local conj_arg
+	for i, spec in ipairs(specs) do
+		if i == 1 then
+			conj_arg = spec
+		else
+			subtypes[spec] = true
+		end
+	end
+
+	local lemma = ine(args[2]) or mw.title.getCurrentTitle().subpageText
+	lemma = rsub(lemma, "o$", "ō")
+	local base, conjtype, detected_subtypes
+	if conj_arg == "1" then
+		conjtype = "1st"
+		base, detected_subtypes = get_subtype_by_ending(lemma, "1", {
+			{"ō", {}},
+			{"or", {"depon"}},
+			{"at", {"impers"}},
+			{"ātur", {"depon", "impers"}},
+		})
+	elseif conj_arg == "2" then
+		conjtype = "2nd"
+		base, detected_subtypes = get_subtype_by_ending(lemma, "2", {
+			{"eō", {}},
+			{"eor", {"depon"}},
+			{"et", {"impers"}},
+			{"ētur", {"depon", "impers"}},
+		})
+	elseif conj_arg == "3" then
+		base, detected_subtypes = get_subtype_by_ending(lemma, nil, {
+			{"iō", {}},
+			{"ior", {"depon"}},
+		})
+		if base then
+			conjtype = "3rd-io"
+		else
+			base, detected_subtypes = get_subtype_by_ending(lemma, "3", {
+				{"ō", {}},
+				{"or", {"depon"}},
+				{"it", {"impers"}},
+				{"itur", {"depon", "impers"}},
+			})
+			if subtypes.I then
+				conjtype = "3rd-io"
+			else
+				conjtype = "3rd"
+			end
+		end
+	elseif conj_arg == "4" then
+		conjtype = "4th"
+		base, detected_subtypes = get_subtype_by_ending(lemma, "4", {
+			{"iō", {}},
+			{"ior", {"depon"}},
+			{"it", {"impers"}},
+			{"ītur", {"depon", "impers"}},
+		})
+	elseif conj_arg == "irreg" then
+		conjtype = "irreg"
+		local prefix
+		prefix, base = split_prefix_and_base(lemma, {
+			"āiō",
+			"aiiō",
+			"dīcō",
+			"dūcō",
+			"faciō",
+			"fīō",
+			"ferō",
+			"inquam",
+			"libet",
+			"lubet",
+			"licet",
+			"volō",
+			"mālō",
+			"nōlō",
+			"possum",
+			"piget",
+			"coepī",
+			-- list sum after possum
+			"sum",
+			-- FIXME: Will praedō cause problems?
+			"edō",
+			-- list dō after edō
+			"dō",
+			"eō",
+		})
+		args[1] = base
+		args[2] = prefix
+		-- args[3] and args[4] are used by ferō and sum and stay where they are
+	else
+		error("Unrecognized conjugation '" .. conj_arg .. "'")
+	end
+
+	for _, detected_subtype in ipairs(detected_subtypes) do
+		subtypes[detected_subtype] = true
+	end
+
+	if conjtype ~= "irreg" then
+		args[1] = base
+		local perf_stem, supine_stem
+		if subtypes.depon or subtype.semidepon then
+			supine_stem = ine(args[3])
+			if not supine_stem then
+				subtypes.noperf = true
+				subtypes.nosup = true
+			end
+		else
+			perf_stem = ine(args[3])
+			if not perf_stem then
+				subtypes.noperf = true
+			end
+			supine_stem = ine(args[4])
+			if not supine_stem then
+				subtypes.nosup = true
+			end
+		end
+		args[2] = args[3]
+		args[3] = args[4]
+		args[4] = nil
+	end
+
+	return conjtype, subtypes
 end
 
 -- The main entry point.
@@ -177,10 +314,10 @@ end
 
 function export.make_data(frame)
 	local args = frame:getParent().args
-	local conj_type = frame.args[1] or if_not_empty(args["conjtype"]) or error("Conjugation type has not been specified. Please pass parameter 1 to the module invocation")
-	local subtype = frame.args["type"] or args["type"]; if subtype == nil then subtype = '' end
-	local sync_perf = args["sync_perf"]; if sync_perf == nil then sync_perf = '' end
-	local p3inf = args["p3inf"]; if p3inf == nil then p3inf = '' end
+	local conj_type = frame.args[1] or ine(args["conjtype"]) or error("Conjugation type has not been specified. Please pass parameter 1 to the module invocation")
+	local subtype = ine(frame.args["type"] or args["type"]) or ""
+	local sync_perf = ine(args["sync_perf"]) or ""
+	local p3inf = ine(args["p3inf"]) or ""
 
 	if not conjugations[conj_type] then
 		error("Unknown conjugation type '" .. conj_type .. "'")
@@ -730,13 +867,13 @@ local function get_regular_stems(args, typeinfo)
 	if ut.contains(typeinfo.subtypes, "depon") or ut.contains(typeinfo.subtypes, "semidepon") then
 		-- Deponent and semi-deponent verbs don't have the perfective principal part.
 		-- But optionally semi-deponent verbs do.
-		typeinfo.pres_stem = if_not_empty(args[1])
+		typeinfo.pres_stem = ine(args[1])
 		typeinfo.perf_stem = nil
-		typeinfo.supine_stem = if_not_empty(args[2])
+		typeinfo.supine_stem = ine(args[2])
 	else
-		typeinfo.pres_stem = if_not_empty(args[1])
-		typeinfo.perf_stem = if_not_empty(args[2])
-		typeinfo.supine_stem = if_not_empty(args[3])
+		typeinfo.pres_stem = ine(args[1])
+		typeinfo.perf_stem = ine(args[2])
+		typeinfo.supine_stem = ine(args[3])
 	end
 
 	if (ut.contains(typeinfo.subtypes, "perfaspres") or ut.contains(typeinfo.subtypes, "memini")
@@ -1001,8 +1138,8 @@ end
 local irreg_conjugations = {}
 
 conjugations["irreg"] = function(args, data, typeinfo)
-	local verb = if_not_empty(args[1])
-	local prefix = if_not_empty(args[2])
+	local verb = ine(args[1])
+	local prefix = ine(args[2])
 
 	if not verb then
 		if NAMESPACE == "Template" then
@@ -1328,8 +1465,8 @@ irreg_conjugations["fero"] = function(args, data, typeinfo)
 	table.insert(data.categories, "Latin suppletive verbs")
 
 	local prefix_pres = typeinfo.prefix or ""
-	local prefix_perf = if_not_empty(args[3])
-	local prefix_supine = if_not_empty(args[4])
+	local prefix_perf = ine(args[3])
+	local prefix_supine = ine(args[4])
 
 	prefix_perf = prefix_perf or prefix_pres
 	prefix_supine = prefix_supine or prefix_pres
@@ -1689,9 +1826,9 @@ irreg_conjugations["sum"] = function(args, data, typeinfo)
 	table.insert(data.categories, "Latin suppletive verbs")
 
 	local prefix = typeinfo.prefix or ""
-	local prefix_d = if_not_empty(args[3])
+	local prefix_d = ine(args[3])
 	prefix_d = prefix_d or prefix
-	local prefix_f = if_not_empty(args[4]); if prefix == "ab" then prefix_f = "ā" end
+	local prefix_f = ine(args[4]); if prefix == "ab" then prefix_f = "ā" end
 	prefix_f = prefix_f or prefix
 	-- The vowel of the prefix is lengthened if it ends in -n and the next word begins with f- or s-.
 	local prefix_long = prefix:gsub("([aeiou]n)$", {["an"] = "ān", ["en"] = "ēn", ["in"] = "īn", ["on"] = "ōn", ["un"] = "ūn"})
