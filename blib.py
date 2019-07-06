@@ -87,6 +87,9 @@ def getrmparam(template, param):
   rmparam(template, param)
   return val
 
+def bool_param_is_true(param):
+  return param and param not in ["0", "no", "n", "false"]
+
 def tname(template):
   return unicode(template.name).strip()
 
