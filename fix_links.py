@@ -29,8 +29,15 @@ from blib import getparam, rmparam, msg, site
 
 import rulib
 
+import unicodedata
+
 lbracket_sub = u"\ufff1"
 rbracket_sub = u"\ufff2"
+
+MACRON = u"\u0304" # macron =  ̄
+BREVE = u"\u0306" # breve =  ̆
+DOUBLE_INV_BREVE = u"\u0361" # double inverted breve
+DIAER = u"\u0308" # diaeresis =  ̈
 
 def rsub_repeatedly(fr, to, text):
   while True:
@@ -54,6 +61,12 @@ def grc_remove_accents(text):
   text = re.sub(u"[ῨῩ]", u"Υ", text)
   text = re.sub(u"[ῠῡ]", u"υ", text)
   return text
+
+def la_remove_accents(text):
+  return unicodedata.normalize("NFC", unicodedata.normalize("NFD", text).
+    replace(MACRON, "").replace(BREVE, "").
+    replace(DIAER, "").replace(DOUBLE_INV_BREVE, "")
+  )
 
 def he_remove_accents(text):
   text = re.sub(u"[\u0591-\u05BD\u05BF-\u05C5\u05C7]", "", text)
@@ -82,7 +95,8 @@ languages = {
     'pa':["Punjabi", lambda x:x, u"\u0A01-\u0A75", "notranslit"],
     'he':["Hebrew", he_remove_accents, u"\u0590-\u05FF\uFB1D-\uFB4F", "notranslit"],
     'ar':["Arabic", ar_remove_accents, u"؀-ۿݐ-ݿࢠ-ࣿﭐ-﷽ﹰ-ﻼ", False],
-    'fr':["French", lambda x:x, u"\\- '’.0-9A-Za-z¡-\u036FḀ-ỿ", "latin"]
+    'fr':["French", lambda x:x, u"\\- '’.0-9A-Za-z¡-\u036FḀ-ỿ", "latin"],
+    'la':["Latin", la_remove_accents, u"\\- '’.0-9A-Za-z¡-\u036FḀ-ỿ", "latin"],
 }
 
 thislangname = None
