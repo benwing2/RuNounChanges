@@ -285,15 +285,21 @@ start, end = blib.parse_start_end(args.start, args.end)
 if args.stressfile:
   lines = [x.rstrip('\n') for x in codecs.open(args.stressfile, "r", "utf-8")]
   for index, line in blib.iter_items(lines, start, end):
-    m = re.search(r"^\* Page [0-9]+ \[\[(.*?)\]\]: WARNING:.*$", line)
-    if not m:
-      msg("WARNING: Unable to parse: %s" % line)
+    m = re.search(r"^\* Page [0-9]+ \[\[(Rhymes:.*?)\]\]: WARNING: Saw it-stress template \{\{temp\|it-stress\|(.*?)\}\}.*$", line)
+    if m:
+      title, title_with_syllable_divs = m.groups()
     else:
-      title_with_syllable_divs = m.group(1)
-      page = pywikibot.Page(site, title_with_syllable_divs.replace(".", ""))
-      def handler(page, index, parsed):
-        return process_page(index, page, title_with_syllable_divs)
-      blib.do_edit(page, index, handler, save=args.save, verbose=args.verbose)
+      m = re.search(r"^\* Page [0-9]+ \[\[(.*?)\]\]: WARNING:.*$", line)
+      if m:
+        title = m.group(1)
+        title_with_syllable_divs = title.replace(".", "")
+      else:
+        msg("WARNING: Unable to parse: %s" % line)
+        continue
+    page = pywikibot.Page(site, title)
+    def handler(page, index, parsed):
+      return process_page(index, page, title_with_syllable_divs)
+    blib.do_edit(page, index, handler, save=args.save, verbose=args.verbose)
 else:
   for index, page in blib.references("Template:it-stress", start, end):
     def handler(page, index, parsed):
