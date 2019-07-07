@@ -14,6 +14,7 @@ local m_table = require("Module:la-noun/table")
 local m_la_utilities = require("Module:la-utilities")
 
 local rsplit = mw.text.split
+local rfind = mw.ustring.find
 local rmatch = mw.ustring.match
 local rsubn = mw.ustring.gsub
 
@@ -253,6 +254,17 @@ function export.generate_forms(frame)
 	return concat_forms(data)
 end
 
+-- Given an ending (or possibly a full regex matching the entire lemma, if
+-- a regex group is present), return the base minus the ending, or nil if
+-- the ending doesn't match.
+local function extract_base(lemma, ending)
+	if ending:find("%(") then
+		return rmatch(lemma, ending)
+	else
+		return rmatch(lemma, "^(.*)" .. ending .. "$")
+	end
+end
+	
 -- Given ENDINGS_AND_SUBTYPES (a list of pairs of endings with associated subtypes,
 -- where each ending (a string) is associated with a list of subtypes), check each
 -- ending in turn against LEMMA. If it matches, return the pair BASE, SUBTYPES
@@ -291,12 +303,12 @@ local function get_subtype_by_ending(lemma, decltype, specified_subtypes, stem2,
 			if type(ending) == "table" then
 				local lemma_ending = ending[1]
 				local stem2_ending = ending[2]
-				local base = rmatch(lemma, "^(.*)" .. lemma_ending .. "$")
+				local base = extract_base(lemma, lemma_ending)
 				if base and base .. stem2_ending == stem2 then
 					return base, subtypes
 				end
 			else
-				local base = rmatch(lemma, "^(.*)" .. ending .. "$")
+				local base = extract_base(lemma, ending)
 				if base then
 					return base, subtypes
 				end
@@ -371,7 +383,7 @@ local function detect_subtype(lemma, typ, subtypes, stem2)
 
 		if not subtypes.N then
 			base, detected_subtypes = get_subtype_by_ending(lemma, nil, subtypes, stem2, {
-				{"polis", {"polis", "sg"}},
+				{"^([A-ZĀĒĪŌŪȲĂĔĬŎŬ].*)polis$", {"polis", "sg"}},
 			})
 			if base then
 				return base, detected_subtypes
@@ -387,7 +399,7 @@ local function detect_subtype(lemma, typ, subtypes, stem2)
 				{{"trīx", "trīc"}, {"F"}},
 				{{"trix", "trīc"}, {"F"}},
 				{{"is", ""}, {"I"}},
-				{{"ēs", ""}, {"I"}},
+				{{"^([a-zāēīōūȳăĕĭŏŭ].*)ēs$", ""}, {"I"}},
 			})
 			if base then
 				return lemma, detected_subtypes
