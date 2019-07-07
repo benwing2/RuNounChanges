@@ -34,6 +34,7 @@ local make_pres_2nd
 local make_pres_3rd
 local make_pres_3rd_io
 local make_pres_4th
+local make_perf_and_supine
 local make_perf
 local make_deponent_perf
 local make_supine
@@ -483,7 +484,22 @@ postprocess = function(data, typeinfo)
 	end
 
 	-- Handle certain irregularities in the passive
-	if ut.contains(typeinfo.subtypes, "semidepon") then
+	if ut.contains(typeinfo.subtypes, "optsemidepon") then
+		-- Optional semi-deponent verbs use perfective passive forms with active
+		-- meaning, but also have perfect active forms with the same meaning,
+		-- and have no imperfective passive. We already generated the perfective
+		-- forms but need to clear out the imperfective passive.
+		ut.insert_if_not(data.title, "optionally [[semi-deponent]]")
+		ut.insert_if_not(data.categories, "Latin semi-deponent verbs")
+		ut.insert_if_not(data.categories, "Latin optionally semi-deponent verbs")
+
+		-- Remove imperfective passive forms
+		for key, _ in pairs(data.forms) do
+			if cfind(key, "pres_pasv") or cfind(key, "impf_pasv") or cfind(key, "futr_pasv") then
+				data.forms[key] = nil
+			end
+		end
+	elseif ut.contains(typeinfo.subtypes, "semidepon") then
 		-- Semi-deponent verbs use perfective passive forms with active meaning,
 		-- and have no imperfective passive
 		ut.insert_if_not(data.title, "[[semi-deponent]]")
@@ -583,7 +599,9 @@ postprocess = function(data, typeinfo)
 		for key, _ in pairs(data.forms) do
 			if cfind(key, "sup") or (
 				key == "perf_actv_ptc" or key == "perf_pasv_ptc" or key == "perf_pasv_inf" or
-				key == "futr_actv_ptc" or key == "futr_actv_inf" or key == "futr_pasv_inf"
+				key == "futr_actv_ptc" or key == "futr_actv_inf" or key == "futr_pasv_inf" or
+				(ut.contains(typeinfo.subtypes, "depon") or ut.contains(typeinfo.subtypes, "semidepon") or
+				 ut.contains(typeinfo.subtypes, "optsemidepon")) and key == "perf_actv_inf"
 			) then
 				data.forms[key] = nil
 			end
@@ -612,6 +630,19 @@ postprocess = function(data, typeinfo)
 		-- Remove all imperative forms
 		for key, _ in pairs(data.forms) do
 			if cfind(key, "impr") then
+				data.forms[key] = nil
+			end
+		end
+	end
+
+	-- Handle certain irregularities in the future
+	if ut.contains(typeinfo.subtypes, "nofut") then
+		-- Some verbs (e.g. soleō) have no future
+		ut.insert_if_not(data.title, "no [[future]]")
+
+		-- Remove all future forms
+		for key, _ in pairs(data.forms) do
+			if cfind(key, "fut") then -- handles futr = future and futp = future perfect
 				data.forms[key] = nil
 			end
 		end
@@ -697,7 +728,8 @@ end
 local function get_regular_stems(args, typeinfo)
 	-- Get the parameters
 	if ut.contains(typeinfo.subtypes, "depon") or ut.contains(typeinfo.subtypes, "semidepon") then
-		-- Deponent and semi-deponent verbs don't have the perfective principal part
+		-- Deponent and semi-deponent verbs don't have the perfective principal part.
+		-- But optionally semi-deponent verbs do.
 		typeinfo.pres_stem = if_not_empty(args[1])
 		typeinfo.perf_stem = nil
 		typeinfo.supine_stem = if_not_empty(args[2])
@@ -724,6 +756,7 @@ local function get_regular_stems(args, typeinfo)
 	if (not typeinfo.perf_stem and
 		not ut.contains(typeinfo.subtypes, "depon") and
 		not ut.contains(typeinfo.subtypes, "semidepon") and
+		-- Doesn't include optsemidepon, which does have active perfect forms.
 		not ut.contains(typeinfo.subtypes, "noperf")
 	) then
 		if typeinfo.conj_type == "1st" then
@@ -792,8 +825,7 @@ conjugations["1st"] = function(args, data, typeinfo)
 	end
 
 	make_pres_1st(data, typeinfo.pres_stem)
-	make_perf(data, typeinfo.perf_stem)
-	make_supine(data, typeinfo.supine_stem)
+	make_perf_and_supine(data, typeinfo)
 end
 
 conjugations["2nd"] = function(args, data, typeinfo)
@@ -820,8 +852,7 @@ conjugations["2nd"] = function(args, data, typeinfo)
 	end
 
 	make_pres_2nd(data, typeinfo.pres_stem)
-	make_perf(data, typeinfo.perf_stem)
-	make_supine(data, typeinfo.supine_stem)
+	make_perf_and_supine(data, typeinfo)
 end
 
 conjugations["3rd"] = function(args, data, typeinfo)
@@ -856,8 +887,7 @@ conjugations["3rd"] = function(args, data, typeinfo)
 	end
 
 	make_pres_3rd(data, typeinfo.pres_stem)
-	make_perf(data, typeinfo.perf_stem)
-	make_supine(data, typeinfo.supine_stem)
+	make_perf_and_supine(data, typeinfo)
 end
 
 conjugations["3rd-io"] = function(args, data, typeinfo)
@@ -888,8 +918,7 @@ conjugations["3rd-io"] = function(args, data, typeinfo)
 	end
 
 	make_pres_3rd_io(data, typeinfo.pres_stem)
-	make_perf(data, typeinfo.perf_stem)
-	make_supine(data, typeinfo.supine_stem)
+	make_perf_and_supine(data, typeinfo)
 end
 
 local function ivi_ive(form)
@@ -925,8 +954,7 @@ conjugations["4th"] = function(args, data, typeinfo)
 	end
 
 	make_pres_4th(data, typeinfo.pres_stem)
-	make_perf(data, typeinfo.perf_stem)
-	make_supine(data, typeinfo.supine_stem)
+	make_perf_and_supine(data, typeinfo)
 
 	if form_contains(data.forms["1s_pres_actv_indc"], "serviō") or form_contains(data.forms["1s_pres_actv_indc"], "saeviō") then
 		add_forms(data, "impf_actv_indc", typeinfo.pres_stem,
@@ -1262,14 +1290,16 @@ end
 irreg_conjugations["fio"] = function(args, data, typeinfo)
 	table.insert(data.title, "[[Appendix:Latin third conjugation|third conjugation]] ''iō''-variant")
 	table.insert(data.title, "[[Appendix:Latin irregular verbs|irregular]] long ''ī''")
-	table.insert(data.title, "[[suppletive]] in the supine stem")
+	if not ut.contains(typeinfo.subtypes, "nosup") then
+		table.insert(data.title, "[[suppletive]] in the supine stem")
+	end
 	table.insert(data.categories, "Latin third conjugation verbs")
 	table.insert(data.categories, "Latin irregular verbs")
 	table.insert(data.categories, "Latin suppletive verbs")
 
 	local prefix = typeinfo.prefix or ""
 
-	typeinfo.subtypes = {"semidepon"}
+	ut.insert_if_not(typeinfo.subtypes, "semidepon")
 
 	fio(data, prefix, "actv")
 
@@ -1396,7 +1426,7 @@ local function libet_lubet(data, typeinfo, stem)
 	table.insert(data.categories, "Latin second conjugation verbs")
 	table.insert(data.categories, "Latin impersonal verbs")
 
-	typeinfo.subtypes = {"nopass"}
+	ut.insert_if_not(typeinfo.subtypes, "nopass")
 	local prefix = typeinfo.prefix or ""
 
 	stem = prefix .. stem
@@ -1451,7 +1481,7 @@ irreg_conjugations["licet"] = function(args, data, typeinfo)
 	table.insert(data.categories, "Latin second conjugation verbs")
 	table.insert(data.categories, "Latin impersonal verbs")
 
-	typeinfo.subtypes = {"nopass"}
+	ut.insert_if_not(typeinfo.subtypes, "nopass")
 
 	-- Active imperfective indicative
 	data.forms["3s_pres_actv_indc"] = "licet"
@@ -1519,7 +1549,8 @@ irreg_conjugations["volo"] = function(args, data, typeinfo)
 
 	local prefix = typeinfo.prefix or ""
 
-	typeinfo.subtypes = {"nopass", "noimp"}
+	ut.insert_if_not(typeinfo.subtypes, "nopass")
+	ut.insert_if_not(typeinfo.subtypes, "noimp")
 	make_perf(data, prefix .. "volu")
 
 	-- Active imperfective indicative
@@ -1533,7 +1564,8 @@ irreg_conjugations["malo"] = function(args, data, typeinfo)
 	table.insert(data.title, "[[Appendix:Latin irregular verbs|irregular]]")
 	table.insert(data.categories, "Latin irregular verbs")
 
-	typeinfo.subtypes = {"nopass", "noimp"}
+	ut.insert_if_not(typeinfo.subtypes, "nopass")
+	ut.insert_if_not(typeinfo.subtypes, "noimp")
 	make_perf(data, "mālu")
 
 	-- Active imperfective indicative
@@ -1546,7 +1578,7 @@ irreg_conjugations["nolo"] = function(args, data, typeinfo)
 	table.insert(data.title, "[[Appendix:Latin irregular verbs|irregular]]")
 	table.insert(data.categories, "Latin irregular verbs")
 
-	typeinfo.subtypes = {"nopass"}
+	ut.insert_if_not(typeinfo.subtypes, "nopass")
 	make_perf(data, "nōlu")
 
 	-- Active imperfective indicative
@@ -1566,7 +1598,7 @@ irreg_conjugations["possum"] = function(args, data, typeinfo)
 	table.insert(data.categories, "Latin irregular verbs")
 	table.insert(data.categories, "Latin suppletive verbs")
 
-	typeinfo.subtypes = {"nopass"}
+	ut.insert_if_not(typeinfo.subtypes, "nopass")
 	make_perf(data, "potu")
 
 	-- Active imperfective indicative
@@ -1636,54 +1668,6 @@ irreg_conjugations["piget"] = function(args, data, typeinfo)
 
 end
 
-irreg_conjugations["soleo"] = function(args, data, typeinfo)
-	table.insert(data.title, "[[Appendix:Latin second conjugation|second conjugation]]")
-	table.insert(data.title, "[[semi-deponent]]")
-	table.insert(data.title, "no [[future]]")
-	table.insert(data.categories, "Latin second conjugation verbs")
-	table.insert(data.categories, "Latin semi-deponent verbs")
-	table.insert(data.categories, "Latin defective verbs")
-
-	local prefix = typeinfo.prefix or ""
-
-	make_pres_2nd(data, prefix .. "sol", "nopass", "noimpr")
-	make_perf(data, prefix .. "solu", "noinf")
-	make_deponent_perf(data, prefix .. "solit")
-	-- There isn't any future, so clear out the future forms.
-	clear_forms(data, "futr_actv_indc")
-	clear_forms(data, "futp_actv_indc")
-	clear_form(data, "futr_actv_inf")
-	clear_form(data, "futr_actv_ptc")
-end
-
-irreg_conjugations["audeo"] = function(args, data, typeinfo)
-	table.insert(data.title, "[[Appendix:Latin second conjugation|second conjugation]]")
-	table.insert(data.title, "[[semi-deponent]]")
-	table.insert(data.categories, "Latin second conjugation verbs")
-	table.insert(data.categories, "Latin semi-deponent verbs")
-	table.insert(data.categories, "Latin defective verbs")
-
-	local prefix = typeinfo.prefix or ""
-
-	make_pres_2nd(data, prefix .. "aud", "nopass", "noimpr")
-	make_perf(data, prefix .. "aus", "noinf")
-	make_deponent_perf(data, prefix .. "aus")
-end
-
-irreg_conjugations["placeo"] = function(args, data, typeinfo)
-	table.insert(data.title, "[[Appendix:Latin second conjugation|second conjugation]]")
-	table.insert(data.title, "[[semi-deponent]]")
-	table.insert(data.categories, "Latin second conjugation verbs")
-	table.insert(data.categories, "Latin semi-deponent verbs")
-	table.insert(data.categories, "Latin defective verbs")
-
-	local prefix = typeinfo.prefix or ""
-
-	make_pres_2nd(data, prefix .. "plac", "nopass", "noimpr")
-	make_perf(data, prefix .. "placu", "noinf")
-	make_deponent_perf(data, prefix .. "placit")
-end
-
 irreg_conjugations["coepi"] = function(args, data, typeinfo)
 	table.insert(data.title, "[[Appendix:Latin third conjugation|third conjugation]]")
 	table.insert(data.categories, "Latin third conjugation verbs")
@@ -1713,7 +1697,7 @@ irreg_conjugations["sum"] = function(args, data, typeinfo)
 	local prefix_long = prefix:gsub("([aeiou]n)$", {["an"] = "ān", ["en"] = "ēn", ["in"] = "īn", ["on"] = "ōn", ["un"] = "ūn"})
 	prefix_f = prefix_f:gsub("([aeiou]n)$", {["an"] = "ān", ["en"] = "ēn", ["in"] = "īn", ["on"] = "ōn", ["un"] = "ūn"})
 
-	typeinfo.subtypes = {"nopass"}
+	ut.insert_if_not(typeinfo.subtypes, "nopass")
 	make_perf(data, prefix_f .. "fu")
 	make_supine(data, prefix_f .. "fut")
 
@@ -2017,6 +2001,16 @@ make_pres_4th = function(data, pres_stem)
 	data.forms["ger_acc"] = pres_stem .. "iendum"
 end
 
+make_perf_and_supine = function(data, typeinfo)
+	if ut.contains(typeinfo.subtypes, "optsemidepon") then
+		make_perf(data, typeinfo.perf_stem, "noinf")
+		make_deponent_perf(data, typeinfo.supine_stem)
+	else
+		make_perf(data, typeinfo.perf_stem)
+		make_supine(data, typeinfo.supine_stem)
+	end
+end
+
 make_perf = function(data, perf_stem, no_inf)
 	if not perf_stem then
 		return
@@ -2070,7 +2064,7 @@ make_deponent_perf = function(data, supine_stem)
 		add_forms(data, "plup_actv_subj", stemp, {}, {}, {}, "[[essēmus]]", "[[essētis]]", "[[essent]]")
 
 		add_form(data, "perf_actv_inf", stems, "[[esse]]")
-		add_form(data, "futr_actv_inf", stem, "ūrus esse")
+		add_form(data, "futr_actv_inf", "", "[[" .. stem .. "ūrus]] [[esse]]")
 		add_form(data, "perf_actv_ptc", stem, "us")
 		add_form(data, "futr_actv_ptc", stem, "ūrus")
 
