@@ -2861,6 +2861,7 @@ n2 suspīrium
 n1 rēsīna
 n3 syllēpsis
 n3 conpāgēs conpāg
+n3 aēneātor
 #wrongly has short i
 n3 restīnctiō
 # wrongly has short u
