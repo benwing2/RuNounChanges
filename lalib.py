@@ -42,16 +42,22 @@ def find_latin_section(text, pagemsg):
 
   return sections, j, secbody, sectail, has_non_latin
 
+def extract_base(lemma, ending):
+  if "(" in ending:
+    return re.search(ending, lemma)
+  else:
+    return re.search("^(.*)" + ending + "$", lemma)
+
 def stem_matches_any(stem1, stem2, endings_and_subtypes):
   stem2 = stem2 or infer_3rd_decl_stem(stem1)
   for ending, subtypes in endings_and_subtypes:
     if type(ending) is tuple:
       stem1_ending, stem2_ending = ending
-      m = re.search("^(.*)" + stem1_ending + "$", stem1)
+      m = extract_base(stem1, stem1_ending)
       if m and m.group(1) + stem2_ending == stem2:
         return subtypes
     else:
-      m = re.search("^(.*)" + ending + "$", stem1)
+      m = extract_base(stem1, ending)
       if m:
         return subtypes
   return False
@@ -60,10 +66,10 @@ def la_noun_3rd_subtype(t):
   stem1 = getparam(t, "1")
   stem2 = getparam(t, "2")
   return stem_matches_any(stem1, stem2, [
-    (("polis", "pol"), ('-polis', '-I')),
-    ("polis", ('-polis',)),
+    ((u"^([A-ZĀĒĪŌŪȲĂĔĬŎŬ].*)polis$", "pol"), ('-polis', '-I')),
+    (u"^([A-ZĀĒĪŌŪȲĂĔĬŎŬ].*)polis$", ('-polis',)),
     (("is", ""), ('-I',)),
-    ((u"ēs", ""), ('-I',)),
+    ((u"^([a-zāēīōūȳăĕĭŏŭ].*)ēs$", ""), ('-I',)),
     (("us", "or"), ('-N',)),
     (("us", "er"), ('-N',)),
     (("ma", "mat"), ('-N',)),
@@ -88,10 +94,10 @@ def la_noun_3rd_I_subtype(t):
   stem1 = getparam(t, "1")
   stem2 = getparam(t, "2")
   return stem_matches_any(stem1, stem2, [
-    (("polis", "pol"), ('-polis',)),
-    ("polis", ('-polis', 'I')),
+    ((u"^([A-ZĀĒĪŌŪȲĂĔĬŎŬ].*)polis$", "pol"), ('-polis',)),
+    (u"^([A-ZĀĒĪŌŪȲĂĔĬŎŬ].*)polis$", ('-polis', 'I')),
     (("is", ""), ()),
-    ((u"ēs", ""), ()),
+    ((u"^([a-zāēīōūȳăĕĭŏŭ].*)ēs$", ""), ()),
     (("us", "or"), ('-N', 'I')),
     (("us", "er"), ('-N', 'I')),
     (("ma", "mat"), ('-N', 'I')),
@@ -172,7 +178,10 @@ la_noun_decl_suffix_to_decltype = {
   '2nd-er': [('2', 'er'), '', None, ()],
   '2nd-Greek': [('2', 'Greek'), 'os', None, ()],
   '2nd-N-ium': [('2', 'N-ium'), 'ium', 'ia', ()],
-  '2nd-ius': [('2', 'ius'), 'ius', u'iī', ()],
+  '2nd-ius': [('2', 'ius'), 'ius', u'iī',
+    lambda t: ('-voci',) if re.search(u"^[A-ZĀĒĪŌŪȲĂĔĬŎŬ]", getparam(t, "1")) else ()],
+  '2nd-ius-voci': [('2', 'ius-voci'), 'ius', u'iī',
+    lambda t: ('voci',) if not re.search(u"^[A-ZĀĒĪŌŪȲĂĔĬŎŬ]", getparam(t, "1")) else ()],
   '2nd-N': [('2', 'N'), 'um', 'a',
     lambda t: ('-ium',) if getparam(t, "1").endswith('i') else ()],
   '2nd-N-Greek': [('2', 'Greek-N'), 'on', None, ()],
