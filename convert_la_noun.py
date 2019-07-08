@@ -96,10 +96,10 @@ def convert_template_to_new(t, pagetitle, pagemsg, errandpagemsg):
   # Erase all params
   del t.params[:]
   # Put back params
-  t.add("1", "/".join([declspec] + subtypes))
-  t.add("2", lemma)
   if stem2:
-    t.add("3", stem2)
+    lemma += "/" + stem2
+  lemma += "<%s>" % ".".join([declspec] + subtypes)
+  t.add("1", lemma)
   for name, value, showkey in named_params:
     t.add(name, value, showkey=showkey, preserve_spacing=False)
   pagemsg("Replaced %s with %s" % (origt, unicode(t)))
@@ -129,7 +129,7 @@ parser = blib.create_argparser("Convert Latin noun decl templates to new form")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-#for cat in ["Latin nouns", "Latin proper nouns"]:
-for cat in ["Latin proper nouns"]:
+for cat in ["Latin nouns", "Latin proper nouns"]:
+#for cat in ["Latin proper nouns"]:
   for i, page in blib.cat_articles(cat, start, end):
     blib.do_edit(page, i, process_page, save=args.save, verbose=args.verbose)
