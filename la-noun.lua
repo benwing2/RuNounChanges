@@ -342,9 +342,23 @@ local function get_subtype_by_ending(lemma, decltype, specified_subtypes, stem2,
 			-- normally masculine are exceptionally feminine and vice-versa
 			-- (nauta, agricola, fraxinus, malus "apple tree", manus, rēs,
 			-- etc.).
+			--
+			-- In addition, sg as a subtype is canceled by pl and vice-versa.
+			-- It's also possible to specify both, which will override sg but
+			-- not cancel it (in the sense that it won't prevent the relevant
+			-- rule from matching). For example, there's a rule specifying that
+			-- lemmas beginning with a capital letter and ending in -ius take
+			-- the ius.voci.sg subtypes.  Specifying such a lemma with the
+			-- subtype both will result in the ius.voci.both subtypes, whereas
+			-- specifying such a lemma with the subtype pl will cause this rule
+			-- not to match, and it will fall through to a less specific rule
+			-- that returns just the ius subtype, which will be combined with
+			-- the explicitly specified pl subtype to produce ius.pl.
 			if specified_subtypes["-" .. subtype] or
 				subtype == "N" and (specified_subtypes.M or specified_subtypes.F) or
-				(subtype == "M" or subtype == "F") and specified_subtypes.N then
+				(subtype == "M" or subtype == "F") and specified_subtypes.N or
+				subtype == "sg" and specified_subtypes.pl or
+				subtype == "pl" and specified_subtypes.sg then
 				not_this_subtype = true
 				break
 			end
@@ -393,8 +407,9 @@ local function detect_subtype(lemma, typ, subtypes, stem2)
 			{"on", {"N", "Greek"}},
 			-- -ius beginning with a capital letter is assumed a proper name,
 			-- and takes the voci subtype (vocative in -ī) along with the ius
-			-- subtype. Other nouns in -ius just take the ius subtype.
-			{"^([A-ZĀĒĪŌŪȲĂĔĬŎŬ].*)ius$", {"M", "ius", "voci"}},
+			-- subtype and sg-only. Other nouns in -ius just take the ius
+			-- subtype.
+			{"^([A-ZĀĒĪŌŪȲĂĔĬŎŬ].*)ius$", {"M", "ius", "voci", "sg"}},
 			{"ius", {"M", "ius"}},
 			{"ium", {"N", "ium"}},
 			-- If the lemma ends in -us and the user said N or -M, then the
@@ -562,6 +577,10 @@ local function parse_segment(segment)
 		elseif (subtype == "M" or subtype == "F" or subtype == "N") and
 				(data.types.M or data.types.F or data.types.N) then
 			-- if gender already specified, don't create conflicting gender spec
+		elseif (subtype == "sg" or subtype == "pl" or subtype == "both") and
+				(data.types.sg or data.types.pl or data.types.both) then
+			-- if number restriction already specified, don't create conflicting
+			-- number restriction spec
 		else
 			data.types[subtype] = true
 		end
@@ -627,12 +646,12 @@ local function parse_segment_run(segment_run)
 	for i = 2, (#segments - 1), 2 do
 		local parsed_segment = parse_segment(segments[i])
 		-- Overall locative is true if any segments call for locative.
-		loc = loc or parse_segment.data.loc
+		loc = loc or parsed_segment.data.loc
 		-- The first specified value for num is used becomes the overall value.
 		if num == "" then
-			num = parse_segment.data.num
+			num = parsed_segment.data.num
 		end
-		parse_segment.prefix = segments[i - 1]
+		parsed_segment.prefix = segments[i - 1]
 		table.insert(parsed_segments, parsed_segment)
 	end
 	if segments[#segments] ~= "" then
