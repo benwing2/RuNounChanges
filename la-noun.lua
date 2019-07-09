@@ -11,8 +11,9 @@ local current_title = mw.title.getCurrentTitle()
 local NAMESPACE = current_title.nsText
 local PAGENAME = current_title.text
 
-local m_decl = require("Module:la-noun/data")
+local m_noun_decl = require("Module:la-noun/data")
 local m_table = require("Module:la-noun/table")
+local m_adj_decl = require("Module:la-adj/data")
 local m_la_utilities = require("Module:la-utilities")
 
 local rsplit = mw.text.split
@@ -247,7 +248,7 @@ local function generate_forms(frame)
 	data.footnote = args.footnote or ""
 	data.n = args.n and (data.suffix ~= "") -- Must have a suffix and n specified
 
-	m_decl[decl](data, args)
+	m_noun_decl[decl](data, args)
 
 	process_forms_and_overrides(data, args)
 
@@ -841,6 +842,18 @@ local function append_form(forms, notes, new_forms, new_notes, prefix)
 	end
 end
 
+local function apply_ligatures(forms)
+	for name in itercn() do
+		if type(forms[name]) == "string" then
+			forms[name] = forms[name]:gsub("[AaOo]e", ligatures)
+		elseif type(forms[name]) == "table" then
+			for i = 1, #forms[name] do
+				forms[name][i] = forms[name][i]:gsub("[AaOo]e", ligatures)
+			end
+		end
+	end
+end
+
 -- If NUM == "sg", copy the singular forms to the plural ones; vice-versa if
 -- NUM == "pl". This should allow for the equivalent of plural
 -- "alpha and omega" formed from two singular nouns, and for the equivalent of
@@ -851,7 +864,7 @@ local function propagate_number_restrictions(forms, num)
 		for name in itercn() do
 			if rfind(name, num) then
 				local other_num_name = num == "sg" and name:gsub("sg", "pl") or name:gsub("pl", "sg")
-				forms[other_num_name] = ut.clone(forms[name])
+				forms[other_num_name] = type(forms[name]) == "table" and ut.clone(forms[name]) or forms[name]
 			end
 		end
 	end
@@ -893,12 +906,16 @@ local function decline_segment_run(parsed_run)
 				seg.data.num = parsed_run.num
 			end
 
-			if not m_decl[seg.decl] then
+			if not m_noun_decl[seg.decl] then
 				error("Unrecognized declension '" .. seg.decl .. "'")
 			end
 
 
-			m_decl[seg.decl](seg.data, seg.args)
+			m_noun_decl[seg.decl](seg.data, seg.args)
+
+			if seg.data.lig then
+				apply_ligatures(seg.data.forms)
+			end
 
 			propagate_number_restrictions(seg.data.forms, seg.data.num)
 
@@ -923,7 +940,7 @@ local function decline_segment_run(parsed_run)
 
 			if not seg.data.types.nocat then
 				for _, cat in ipairs(seg.data.categories) do
-					ut.insert_if_not(declension.categories, cat)
+					ut.insert_if_not(declensions.categories, cat)
 				end
 			end
 
@@ -1009,15 +1026,25 @@ local function decline_segment_run(parsed_run)
 				ut.insert_if_not(seg_titles, table.concat(this_declensions.title, " and "))
 			end
 
-			seg_declensions.categories = seg_categories
-			seg_declensions.title = table.concat(seg_title, " or ")
-
 			-- If overall run is singular, copy singular to plural, and
 			-- vice-versa. See propagate_number_restrictions() for rationale;
 			-- also, this should eliminate cases of empty forms, which will
 			-- cause the overall set of forms for that case/number combination
 			-- to be empty.
 			propagate_number_restrictions(seg_declensions.forms, parsed_run.num)
+
+			for name in itercn() do
+				declensions.forms[name], declensions.notes[name] = append_form(
+					declensions.forms[name], declensions.notes[name],
+					seg_declensions.forms[name], seg_declensions.notes[name], nil)
+			end
+
+			for _, cat in ipairs(seg_categories) do
+				ut.insert_if_not(declensions.categories, cat)
+			end
+
+			table.insert(declensions.title, table.concat(seg_titles, " or "))
+
 		else
 			for name in itercn() do
 				declensions.forms[name], declensions.notes[name] = append_form(
