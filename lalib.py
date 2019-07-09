@@ -62,6 +62,20 @@ def stem_matches_any(stem1, stem2, endings_and_subtypes):
         return subtypes
   return False
 
+def la_noun_2nd_ius_subtype(t):
+  if re.search(u"^[A-ZĀĒĪŌŪȲĂĔĬŎŬ]", getparam(t, "1")) and getparam(t, "num") != "pl":
+    return ('-voci',)
+  else:
+    return ()
+
+def la_noun_2nd_ius_voci_subtype(t):
+  if not re.search(u"^[A-ZĀĒĪŌŪȲĂĔĬŎŬ]", getparam(t, "1")):
+    return ('voci',)
+  elif not getparam(t, "num") or getparam(t, "num") == "both":
+    return ('both',)
+  else:
+    return ()
+
 def la_noun_3rd_subtype(t):
   stem1 = getparam(t, "1")
   stem2 = getparam(t, "2")
@@ -178,10 +192,8 @@ la_noun_decl_suffix_to_decltype = {
   '2nd-er': [('2', 'er'), '', None, ()],
   '2nd-Greek': [('2', 'Greek'), 'os', None, ()],
   '2nd-N-ium': [('2', 'N-ium'), 'ium', 'ia', ()],
-  '2nd-ius': [('2', 'ius'), 'ius', u'iī',
-    lambda t: ('-voci',) if re.search(u"^[A-ZĀĒĪŌŪȲĂĔĬŎŬ]", getparam(t, "1")) else ()],
-  '2nd-ius-voci': [('2', 'ius-voci'), 'ius', u'iī',
-    lambda t: ('voci',) if not re.search(u"^[A-ZĀĒĪŌŪȲĂĔĬŎŬ]", getparam(t, "1")) else ()],
+  '2nd-ius': [('2', 'ius'), 'ius', u'iī', la_noun_2nd_ius_subtype],
+  '2nd-ius-voci': [('2', 'ius-voci'), 'ius', u'iī', la_noun_2nd_ius_voci_subtype],
   '2nd-N': [('2', 'N'), 'um', 'a',
     lambda t: ('-ium',) if getparam(t, "1").endswith('i') else ()],
   '2nd-N-Greek': [('2', 'Greek-N'), 'on', None, ()],
