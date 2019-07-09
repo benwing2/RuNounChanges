@@ -446,7 +446,7 @@ local function detect_subtype(lemma, typ, subtypes, stem2)
 
 		if not subtypes.N then
 			base, detected_subtypes = get_subtype_by_ending(lemma, nil, subtypes, stem2, {
-				{"^([A-ZĀĒĪŌŪȲĂĔĬŎŬ].*)polis$", {"polis", "sg"}},
+				{"^([A-ZĀĒĪŌŪȲĂĔĬŎŬ].*)polis$", {"polis", "sg", "loc"}},
 			})
 			if base then
 				return base, detected_subtypes
@@ -501,6 +501,8 @@ local function detect_subtype(lemma, typ, subtypes, stem2)
 			{"iēs", {"F", "i"}},
 			{"ēs", {"F"}},
 		})
+	elseif typ == "irreg" and lemma == "domus" then
+		return "domus", {"loc"}
 	else
 		return lemma, {}
 	end
@@ -839,6 +841,32 @@ local function append_form(forms, notes, new_forms, new_notes, prefix)
 	end
 end
 
+-- If NUM == "sg", copy the singular forms to the plural ones; vice-versa if
+-- NUM == "pl". This should allow for the equivalent of plural
+-- "alpha and omega" formed from two singular nouns, and for the equivalent of
+-- plural "St. Vincent and the Grenadines" formed from a singular noun and a
+-- plural noun. (These two examples actually occur in Russian, at least.)
+local function propagate_number_restrictions(forms, num)
+	if num == "sg" or num == "pl" then
+		for name in itercn() do
+			if rfind(name, num) then
+				local other_num_name = num == "sg" and name:gsub("sg", "pl") or name:gsub("pl", "sg")
+				forms[other_num_name] = ut.clone(forms[name])
+			end
+		end
+	end
+end
+
+-- Construct the declension of a parsed segment run of the form returned by
+-- parse_segment_run() or parse_segment_run_allowing_alternants(). Return value
+-- is a table
+-- {
+--   forms = FORMS (keyed by case/number, list of forms for that case/number),
+--   notes = NOTES (keyed by case/number, map from form indices to lists of
+--     footnotes),
+--   title = TITLE (list of titles for each segment in the run),
+--   categories = CATEGORIES (combined categories for all segments),
+-- }
 local function decline_segment_run(parsed_run)
 	local declensions = {
 		-- For each possible case/number combination (e.g. "abl_sg"),
@@ -872,6 +900,8 @@ local function decline_segment_run(parsed_run)
 
 			m_decl[seg.decl](seg.data, seg.args)
 
+			propagate_number_restrictions(seg.data.forms, seg.data.num)
+
 			for name in itercn() do
 				local new_forms = seg.data.forms[name]
 				local new_notes = {}
@@ -891,34 +921,103 @@ local function decline_segment_run(parsed_run)
 					new_forms, new_notes, seg.prefix)
 			end
 
-			table.insert(declensions.title, seg.data.title)
-
 			if not seg.data.types.nocat then
-				for j=1, #seg.data.categories do
-					table.insert(declensions.categories, seg.data.categories[j])
+				for _, cat in ipairs(seg.data.categories) do
+					ut.insert_if_not(declension.categories, cat)
 				end
 			end
+
+			table.insert(declensions.title, seg.data.title)
 		elseif seg.alternants then
 			local seg_declensions = nil
+			local seg_titles = {}
+			local seg_categories = {}
 			for _, this_parsed_run in ipairs(seg.alternants) do
-				local this_declensions = decltype(this_parsed_run)
+				local this_declensions = decline_segment_run(this_parsed_run)
+				-- If there's a number restriction on the segment run, blank
+				-- out the forms outside the restriction. This allows us to
+				-- e.g. construct heteroclites that decline one way in the
+				-- singular and a different way in the plural.
+				if this_parsed_run.num == "sg" or this_parsed_run.num == "pl" then
+					for name in itercn() do
+						if this_parsed_run.num == "sg" and rfind(name, "pl") or
+							this_parsed_run.num == "pl" and rfind(name, "sg") then
+							this_declensions.forms[name] = {}
+							this_declensions.notes[name] = nil
+						end
+					end
+				end
 				if not seg_declensions then
 					seg_declensions = this_declensions
 				else
 					for name in itercn() do
+						-- For a given case/number combination, combine
+						-- the existing and new forms. We do this by
+						-- checking to see whether a new form is already
+						-- present and not adding it if so; in the process,
+						-- we keep a map from indices in the new forms to
+						-- indices in the combined forms, for use in
+						-- combining footnotes below.
 						local curforms = seg_declensions.forms[name] or {}
 						local newforms = this_declensions.forms[name] or {}
-						for _, form in ipairs(newforms) do
-							ut.insert_if_not(curforms, form)
+						local newform_index_to_new_index = {}
+						for newj, form in ipairs(newforms) do
+							local did_break = false
+							for j = 1, #curforms do
+								if curforms[j] == form then
+									newform_index_to_new_index[newj] = j
+									did_break = true
+									break
+								end
+							end
+							if not did_break then
+								table.insert(curforms, form)
+								newform_index_to_new_index[newj] = #curforms
+							end
 						end
 						seg_declensions.forms[name] = curforms
-
-						-- FIXME, implement me
+						-- Now combine the footnotes. Keep in mind that
+						-- each form may have its own set of footnotes, and
+						-- in some cases we didn't add a form from the new
+						-- list of forms because it already occurred in the
+						-- existing list of forms; in that case, we combine
+						-- footnotes from the two sources.
+						local curnotes = seg_declensions.notes[name]
+						local newnotes = this_declensions.notes[name]
+						if newnotes then
+							if not curnotes then
+								curnotes = {}
+							end
+							for index, notes in pairs(newnotes) do
+								local combined_index = newform_index_to_new_index[index]
+								if not curnotes[combined_index] then
+									curnotes[combined_index] = notes
+								else
+									local combined = mw.clone(curnotes[combined_index])
+									for _, note in ipairs(newnotes) do
+										ut.insert_if_not(combined, newnotes)
+									end
+									curnotes[combined_index] = combined
+								end
+							end
+						end
 					end
 				end
+				for _, cat in ipairs(this_declensions.categories) do
+					ut.insert_if_not(seg_categories, cat)
+				end
+				ut.insert_if_not(seg_titles, table.concat(this_declensions.title, " and "))
 			end
 
-			-- FIXME, implement me
+			seg_declensions.categories = seg_categories
+			seg_declensions.title = table.concat(seg_title, " or ")
+
+			-- If overall run is singular, copy singular to plural, and
+			-- vice-versa. See propagate_number_restrictions() for rationale;
+			-- also, this should eliminate cases of empty forms, which will
+			-- cause the overall set of forms for that case/number combination
+			-- to be empty.
+			propagate_number_restrictions(seg_declensions.forms, parsed_run.num)
 		else
 			for name in itercn() do
 				declensions.forms[name], declensions.notes[name] = append_form(
