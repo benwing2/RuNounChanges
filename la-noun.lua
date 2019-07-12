@@ -458,7 +458,7 @@ local function detect_subtype(lemma, stem2, typ, subtypes)
 		end
 
 		if not subtypes.N then
-			base, detected_subtypes = get_subtype_by_ending(lemma, stem2, nil, subtypes, stem2, {
+			base, detected_subtypes = get_subtype_by_ending(lemma, stem2, nil, subtypes, {
 				{"^([A-ZĀĒĪŌŪȲĂĔĬŎŬ].*)polis$", {"polis", "sg", "loc"}},
 			})
 			if base then
@@ -530,6 +530,24 @@ local function detect_subtype(lemma, stem2, typ, subtypes)
 	else
 		return lemma, {}
 	end
+end
+
+function export.detect_subtype(frame)
+	local params = {
+		[1] = {required = true},
+		[2] = {},
+		[3] = {},
+		[4] = {},
+	}
+	local args = m_para.process(frame.args, params)
+	local specified_subtypes = {}
+	if args[4] then
+		for _, subtype in ipairs(rsplit(args[4], ".")) do
+			specified_subtypes[subtype] = true
+		end
+	end
+	local base, subtypes = detect_subtype(args[1], args[2], args[3], specified_subtypes)
+	return base .. "|" .. table.concat(subtypes, ".")
 end
 
 -- Parse a segment (i.e. a string of the form "lūna<1>" or
