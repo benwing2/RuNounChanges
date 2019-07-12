@@ -62,23 +62,19 @@ def stem_matches_any(stem1, stem2, endings_and_subtypes):
         return subtypes
   return False
 
-def la_noun_2nd_ius_subtype(t):
-  if re.search(u"^[A-ZĀĒĪŌŪȲĂĔĬŎŬ]", getparam(t, "1")) and getparam(t, "num") != "pl":
+def la_noun_2nd_ius_subtype(stem1, stem2, num):
+  if re.search(u"^[A-ZĀĒĪŌŪȲĂĔĬŎŬ]", stem1) and num != "pl":
     return ('-voci',)
   else:
     return ()
 
-def la_noun_2nd_ius_voci_subtype(t):
-  if not re.search(u"^[A-ZĀĒĪŌŪȲĂĔĬŎŬ]", getparam(t, "1")):
+def la_noun_2nd_ius_voci_subtype(stem1, stem2, num):
+  if not re.search(u"^[A-ZĀĒĪŌŪȲĂĔĬŎŬ]", stem1):
     return ('voci',)
-  elif not getparam(t, "num") or getparam(t, "num") == "both":
-    return ('both',)
   else:
     return ()
 
-def la_noun_3rd_subtype(t):
-  stem1 = getparam(t, "1")
-  stem2 = getparam(t, "2")
+def la_noun_3rd_subtype(stem1, stem2, num):
   return stem_matches_any(stem1, stem2, [
     ((u"^([A-ZĀĒĪŌŪȲĂĔĬŎŬ].*)polis$", "pol"), ('-polis', '-I')),
     (u"^([A-ZĀĒĪŌŪȲĂĔĬŎŬ].*)polis$", ('-polis',)),
@@ -94,8 +90,7 @@ def la_noun_3rd_subtype(t):
     ("", ()),
   ])
 
-def la_noun_3rd_Greek_subtype(t):
-  stem1 = getparam(t, "1")
+def la_noun_3rd_Greek_subtype(stem1, stem2, num):
   if stem1.endswith(u"ēr"):
     return ('Greek', '-er')
   if stem1.endswith(u"ōn"):
@@ -104,9 +99,7 @@ def la_noun_3rd_Greek_subtype(t):
     return ('Greek', '-s')
   return ('Greek',)
 
-def la_noun_3rd_I_subtype(t):
-  stem1 = getparam(t, "1")
-  stem2 = getparam(t, "2")
+def la_noun_3rd_I_subtype(stem1, stem2, num):
   return stem_matches_any(stem1, stem2, [
     ((u"^([A-ZĀĒĪŌŪȲĂĔĬŎŬ].*)polis$", "pol"), ('-polis',)),
     (u"^([A-ZĀĒĪŌŪȲĂĔĬŎŬ].*)polis$", ('-polis', 'I')),
@@ -122,39 +115,42 @@ def la_noun_3rd_I_subtype(t):
     ("", ('I',)),
   ])
 
-def la_noun_3rd_N_subtype(t):
-  stem1 = getparam(t, "1")
-  stem2 = getparam(t, "2")
+def la_noun_3rd_N_subtype(stem1, stem2, num):
   return stem_matches_any(stem1, stem2, [
     (("us", "or"), ()),
     (("us", "er"), ()),
     (("ma", "mat"), ()),
     (("men", "min"), ()),
+    ((u"^([A-ZĀĒĪŌŪȲĂĔĬŎŬ].*)e$", ""), ()),
     (("e", ""), ('N', '-pure')),
     (("al", u"āl"), ('N', '-pure')),
     (("ar", u"ār"), ('N', '-pure')),
     ("", ('N',)),
   ])
 
-def la_noun_3rd_N_I_subtype(t):
-  stem1 = getparam(t, "1")
-  stem2 = getparam(t, "2")
+def la_noun_3rd_N_I_subtype(stem1, stem2, num):
   return stem_matches_any(stem1, stem2, [
+    ((u"^([A-ZĀĒĪŌŪȲĂĔĬŎŬ].*)e$", ""), ('N', 'I')),
     (("e", ""), ('N', 'I', '-pure')),
     (("al", u"āl"), ('N', 'I', '-pure')),
     (("ar", u"ār"), ('N', 'I', '-pure')),
     ("", ('N', 'I')),
   ])
 
-def la_noun_3rd_N_I_pure_subtype(t):
-  stem1 = getparam(t, "1")
-  stem2 = getparam(t, "2")
+def la_noun_3rd_N_I_pure_subtype(stem1, stem2, num):
   return stem_matches_any(stem1, stem2, [
+    ((u"^([A-ZĀĒĪŌŪȲĂĔĬŎŬ].*)e$", ""), ('N', 'I', 'pure')),
     (("e", ""), ()),
     (("al", u"āl"), ()),
     (("ar", u"ār"), ()),
     ("", ('N', 'I', 'pure')),
   ])
+
+def la_noun_3rd_polis_subtype(stem1, stem2, num):
+  if not re.search(u"^[A-ZĀĒĪŌŪȲĂĔĬŎŬ]", stem1):
+    return ('polis',)
+  else:
+    return ()
 
 # The key is the decl suffix found in the template name, e.g.
 # {{la-decl-1st-abus}} maps to key '1st-abus'. The value is a three-entry
@@ -188,14 +184,14 @@ la_noun_decl_suffix_to_decltype = {
   '1st-Greek-Ma': [('1', 'Greek-Ma'), u'ās', None, ()],
   '1st-Greek-Me': [('1', 'Greek-Me'), u'ēs', None, ()],
   '2nd': ['2', 'us', u'ī',
-    lambda t: ('-ius',) if getparam(t, "1").endswith('i') else ()],
+    lambda stem1, stem2, num: ('-ius',) if stem1.endswith('i') else ()],
   '2nd-er': [('2', 'er'), '', None, ()],
   '2nd-Greek': [('2', 'Greek'), 'os', None, ()],
   '2nd-N-ium': [('2', 'N-ium'), 'ium', 'ia', ()],
   '2nd-ius': [('2', 'ius'), 'ius', u'iī', la_noun_2nd_ius_subtype],
   '2nd-ius-voci': [('2', 'ius-voci'), 'ius', u'iī', la_noun_2nd_ius_voci_subtype],
   '2nd-N': [('2', 'N'), 'um', 'a',
-    lambda t: ('-ium',) if getparam(t, "1").endswith('i') else ()],
+    lambda stem1, stem2, num: ('-ium',) if stem1.endswith('i') else ()],
   '2nd-N-Greek': [('2', 'Greek-N'), 'on', None, ()],
   '2nd-N-us': [('2', 'N-us'), 'us', u'ī', ('N',)],
   '3rd': ['3', '', None, la_noun_3rd_subtype],
@@ -210,7 +206,7 @@ la_noun_decl_suffix_to_decltype = {
   '3rd-N': [('3', 'N'), '', None, la_noun_3rd_N_subtype],
   '3rd-N-I': [('3', 'N-I'), '', None, la_noun_3rd_N_I_subtype],
   '3rd-N-I-pure': [('3', 'N-I-pure'), '', None, la_noun_3rd_N_I_pure_subtype],
-  '3rd-polis': [('3', 'polis', 'sg'), 'polis', None, ()],
+  '3rd-polis': [('3', 'polis', 'sg'), 'polis', None, la_noun_3rd_polis_subtype],
   '4th': ['4', 'us', u'ūs', ()],
   '4th-argo': [('4', 'argo'), u'ō', None, ('argo',)],
   '4th-echo': [('4', 'echo'), u'ō', None, ('echo',)],
@@ -218,14 +214,33 @@ la_noun_decl_suffix_to_decltype = {
   '4th-N-ubus': [('4', 'N-ubus'), u'ū', 'ua', ('ubus',)],
   '4th-ubus': [('4', 'ubus'), 'us', u'ū', ('ubus', )],
   '5th': ['5', u'ēs', None,
-    lambda t: ('-i',) if getparam(t, "1").endswith('i') else ()],
+    lambda stem1, stem2, num: ('-i',) if stem1.endswith('i') else ()],
   '5th-i': [('5', 'i'), u'iēs', None, ()],
   '5th-VOW': [('5', 'vow'), u'ēs', None,
-    lambda t: ('-i',) if getparam(t, "1").endswith('i') else ()],
+    lambda stem1, stem2, num: ('-i',) if stem1.endswith('i') else ()],
   'indecl': ['indecl', '', None, ()],
   'irreg': ['irreg', '', None, ()], # only if noun=something
   'multi': None,
 }
+
+decl_and_subtype_to_props = {}
+for key, val in la_noun_decl_suffix_to_decltype.iteritems():
+  if val is None:
+    continue
+  declspec, stem_suffix, pl_suffix, to_auto = val
+  if type(declspec) is not tuple:
+    declspec = (declspec,)
+  decl = declspec[0]
+  if len(declspec) == 1:
+    subtypes = ()
+    num = ""
+  else:
+    subtypes = tuple(declspec[1].split("-"))
+    if len(declspec) == 2:
+      num = ""
+    else:
+      num = declspec[2]
+  decl_and_subtype_to_props[(decl, subtypes)] = [num, stem_suffix, pl_suffix, to_auto]
 
 la_noun_decl_templates = set(
   'la-decl-%s' % k for k in la_noun_decl_suffix_to_decltype
