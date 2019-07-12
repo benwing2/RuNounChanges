@@ -325,7 +325,7 @@ end
 --    to be considered a match. An example is {"is", ""}, which will match
 --    lemma == "follis", stem2 == "foll", but not lemma == "lapis",
 --    stem2 == "lapid".
-local function get_subtype_by_ending(lemma, decltype, specified_subtypes, stem2,
+local function get_subtype_by_ending(lemma, stem2, decltype, specified_subtypes,
 		endings_and_subtypes)
 	for _, ending_and_subtypes in ipairs(endings_and_subtypes) do
 		local ending = ending_and_subtypes[1]
@@ -386,12 +386,22 @@ local function get_subtype_by_ending(lemma, decltype, specified_subtypes, stem2,
 	return nil, nil
 end
 
-local function detect_subtype(lemma, typ, subtypes, stem2)
+-- Autodetect the subtype of a noun given all the information specified by the
+-- user: lemma, stem2, declension type and specified subtypes. Two values are
+-- returned: the lemma base (i.e. the stem of the lemma, as required by the
+-- declension functions) and the autodetected subtypes. Note that this will
+-- not detect a given subtype if the explicitly specified subtypes are
+-- incompatible (i.e. if -SUBTYPE is specified for any subtype that would be
+-- returned; or if M or F is specified when N would be returned, and
+-- vice-versa; or if pl is specified when sg would be returned, and vice-versa).
+--
+-- NOTE: This function has intimate knowledge of the way that the declension
+-- functions handle subtypes, particularly for the third declension.
+local function detect_subtype(lemma, stem2, typ, subtypes)
 	local base, ending
-	local detected = {}
 
 	if typ == "1" then
-		return get_subtype_by_ending(lemma, typ, subtypes, stem2, {
+		return get_subtype_by_ending(lemma, stem2, typ, subtypes, {
 			{"ām", {"F", "am"}},
 			{"ās", {"M", "Greek", "Ma"}},
 			{"ēs", {"M", "Greek", "Me"}},
@@ -403,13 +413,14 @@ local function detect_subtype(lemma, typ, subtypes, stem2)
 		if rmatch(lemma, "r$") then
 			return lemma, {"er"}
 		end
-		return get_subtype_by_ending(lemma, typ, subtypes, stem2, {
+		return get_subtype_by_ending(lemma, stem2, typ, subtypes, {
 			{"os", {"M", "Greek"}},
 			{"on", {"N", "Greek"}},
 			-- -ius beginning with a capital letter is assumed a proper name,
 			-- and takes the voci subtype (vocative in -ī) along with the ius
 			-- subtype and sg-only. Other nouns in -ius just take the ius
-			-- subtype.
+			-- subtype. Explicitly specify "sg" so that if .pl is given,
+			-- this rule won't apply.
 			{"^([A-ZĀĒĪŌŪȲĂĔĬŎŬ].*)ius$", {"M", "ius", "voci", "sg"}},
 			{"ius", {"M", "ius"}},
 			{"ium", {"N", "ium"}},
@@ -430,11 +441,12 @@ local function detect_subtype(lemma, typ, subtypes, stem2)
 		stem2 = stem2 or m_la_utilities.make_stem2(lemma)
 		local detected_subtypes
 		if subtypes.Greek then
-			base, detected_subtypes = get_subtype_by_ending(lemma, nil, subtypes, stem2, {
-				{"ēr", {"er"}},
-				{"ōn", {"on"}},
-				{"s", {"s"}},
-			})
+			base, detected_subtypes =
+				get_subtype_by_ending(lemma, stem2, nil, subtypes, {
+					{"ēr", {"er"}},
+					{"ōn", {"on"}},
+					{"s", {"s"}},
+				})
 			if base then
 				return base, detected_subtypes
 			end
@@ -446,13 +458,13 @@ local function detect_subtype(lemma, typ, subtypes, stem2)
 		end
 
 		if not subtypes.N then
-			base, detected_subtypes = get_subtype_by_ending(lemma, nil, subtypes, stem2, {
+			base, detected_subtypes = get_subtype_by_ending(lemma, stem2, nil, subtypes, stem2, {
 				{"^([A-ZĀĒĪŌŪȲĂĔĬŎŬ].*)polis$", {"polis", "sg", "loc"}},
 			})
 			if base then
 				return base, detected_subtypes
 			end
-			base, detected_subtypes = get_subtype_by_ending(lemma, nil, subtypes, stem2, {
+			base, detected_subtypes = get_subtype_by_ending(lemma, stem2, nil, subtypes, {
 				{{"tūdō", "tūdin"}, {"F"}},
 				{{"tās", "tāt"}, {"F"}},
 				{{"tūs", "tūt"}, {"F"}},
@@ -470,11 +482,12 @@ local function detect_subtype(lemma, typ, subtypes, stem2)
 			end
 		end
 
-		base, detected_subtypes = get_subtype_by_ending(lemma, nil, subtypes, stem2, {
+		base, detected_subtypes = get_subtype_by_ending(lemma, stem2, nil, subtypes, {
 			{{"us", "or"}, {"N"}},
 			{{"us", "er"}, {"N"}},
 			{{"ma", "mat"}, {"N"}},
 			{{"men", "min"}, {"N"}},
+			{{"^([A-ZĀĒĪŌŪȲĂĔĬŎŬ].*)e$", ""}, {"N", "sg"}},
 			{{"e", ""}, {"N", "I", "pure"}},
 			{{"al", "āl"}, {"N", "I", "pure"}},
 			{{"ar", "ār"}, {"N", "I", "pure"}},
@@ -487,23 +500,33 @@ local function detect_subtype(lemma, typ, subtypes, stem2)
 		if subtypes.echo or subtypes.argo then
 			base = rmatch(lemma, "^(.*)ō$")
 			if not base then
-				error("Declension-4 noun of subtype /echo or /argo should end in -ō: " .. lemma)
+				error("Declension-4 noun of subtype .echo or .argo should end in -ō: " .. lemma)
 			end
 			return base, {}
 		end
-		return get_subtype_by_ending(lemma, typ, subtypes, stem2, {
+		return get_subtype_by_ending(lemma, stem2, typ, subtypes, {
 			{"us", {"M"}},
 			{"ū", {"N"}},
 			{"ūs", {"M", "pl"}},
 			{"ua", {"N", "pl"}},
 		})
 	elseif typ == "5" then
-		return get_subtype_by_ending(lemma, typ, subtypes, stem2, {
+		return get_subtype_by_ending(lemma, stem2, typ, subtypes, {
 			{"iēs", {"F", "i"}},
 			{"ēs", {"F"}},
 		})
 	elseif typ == "irreg" and lemma == "domus" then
-		return "domus", {"loc"}
+		-- [[domus]] auto-sets data.loc = true, but we need to know this
+		-- before declining the noun so we can propagate it to other segments.
+		return lemma, {"loc"}
+	elseif typ == "indecl" or type == "irreg" and (
+		lemma == "Deus" or lemma == "Iēsus" or lemma == "venum" or
+		lemma == "Callistō" or lemma == "Themistō"
+	) then
+		-- Indeclinable nouns, and certain irregular nouns, set data.num = "sg",
+		-- but we need to know this before declining the noun so we can
+		-- propagate it to other segments.
+		return lemma, {"sg"}
 	else
 		return lemma, {}
 	end
@@ -570,7 +593,7 @@ local function parse_segment(segment)
 		error("Too many stems, at most 2 should be given: " .. stem_part)
 	end
 
-	local base, detected_subtypes = detect_subtype(lemma, decl, data.types, stem2)
+	local base, detected_subtypes = detect_subtype(lemma, stem2, decl, data.types)
 
 	for _, subtype in ipairs(detected_subtypes) do
 		if data.types["-" .. subtype] then
@@ -587,6 +610,10 @@ local function parse_segment(segment)
 		else
 			data.types[subtype] = true
 		end
+	end
+
+	if not data.types.pl and not data.types.both and rfind(lemma, "^[A-ZĀĒĪŌŪȲĂĔĬŎŬ]") then
+		data.types.sg = true
 	end
 
 	args[1] = base
@@ -842,6 +869,9 @@ local function append_form(forms, notes, new_forms, new_notes, prefix)
 	end
 end
 
+-- Destructively modify any forms in FORMS (a map from a case/number combination
+-- to a form or a list of forms) by converting sequences of ae, oe, Ae or Oe
+-- to the appropriate ligatures.
 local function apply_ligatures(forms)
 	for name in itercn() do
 		if type(forms[name]) == "string" then
