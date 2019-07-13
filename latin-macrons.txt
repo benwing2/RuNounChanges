@@ -2851,6 +2851,11 @@ n3 conpār conpar
 a3 conpār conpar
 n3 pulvīnar
 n3 māchināmen
+a1 māsculus
+n2 māsculus
+a1 arquātus
+# wrongly has short a and i
+a1 aquītānus
 # wrongly has short a and u
 part1 abbreviātūrus
 # wrongly has short e
@@ -2858,6 +2863,9 @@ n1 rēsīna
 n3 syllēpsis
 n3 conpāgēs conpāg
 n3 aēneātor
+a3 inquiēs inquiēt
+a3 plumipēs plumiped
+a3 properipēs properiped
 # wrongly has short i
 v1 cōnspīrō
 n2 suspīrium
