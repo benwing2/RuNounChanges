@@ -538,7 +538,7 @@ local function detect_subtype(lemma, stem2, typ, subtypes)
 		-- [[domus]] auto-sets data.loc = true, but we need to know this
 		-- before declining the noun so we can propagate it to other segments.
 		return lemma, {"loc"}
-	elseif typ == "indecl" or type == "irreg" and (
+	elseif typ == "indecl" or typ == "irreg" and (
 		lemma == "Deus" or lemma == "Iēsus" or lemma == "Jēsus" or lemma == "vēnum"
 	) then
 		-- Indeclinable nouns, and certain irregular nouns, set data.num = "sg",
