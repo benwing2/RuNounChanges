@@ -28,7 +28,7 @@ decl["1"] = function(data, args)
 	data.forms["dat_sg"] = stem .. "ae"
 	data.forms["acc_sg"] = stem .. "am"
 	data.forms["abl_sg"] = stem .. "ā"
-	data.forms["voc_sg"] = stem .. "a" 
+	data.forms["voc_sg"] = stem .. "a"
 
 	data.forms["nom_pl"] = stem .. "ae"
 	data.forms["gen_pl"] = stem .. "ārum"
@@ -125,7 +125,7 @@ decl["2"] = function(data, args)
 	data.forms["dat_sg"] = stem1 .. "ō"
 	data.forms["acc_sg"] = stem1 .. "um"
 	data.forms["abl_sg"] = stem1 .. "ō"
-	data.forms["voc_sg"] = stem1 .. "e" 
+	data.forms["voc_sg"] = stem1 .. "e"
 
 	data.forms["nom_pl"] = stem1 .. "ī"
 	data.forms["gen_pl"] = stem1 .. "ōrum"
@@ -151,7 +151,7 @@ decl["2"] = function(data, args)
 			data.forms["dat_sg"] = stem1 .. "iō"
 			data.forms["acc_sg"] = stem1 .. "ium"
 			data.forms["abl_sg"] = stem1 .. "iō"
-			data.forms["voc_sg"] = stem1 .. "ium" 
+			data.forms["voc_sg"] = stem1 .. "ium"
 
 			data.forms["nom_pl"] = stem1 .. "ia"
 			data.forms["gen_pl"] = stem1 .. "iōrum"
@@ -214,7 +214,7 @@ decl["2"] = function(data, args)
 		data.forms["abl_sg"] = stem1 .. "iō"
 		if data.types.voci then
 			-- Only for proper names and fīlius, genius
-			data.forms["voc_sg"] = stem1 .. "ī" 
+			data.forms["voc_sg"] = stem1 .. "ī"
 		else
 			data.forms["voc_sg"] = stem1 .. "ie"
 		end
@@ -542,7 +542,7 @@ decl["4"] = function(data, args)
 	data.forms["dat_sg"] = stem .. "uī"
 	data.forms["acc_sg"] = stem .. "um"
 	data.forms["abl_sg"] = stem .. "ū"
-	data.forms["voc_sg"] = stem .. "us" 
+	data.forms["voc_sg"] = stem .. "us"
 
 	data.forms["nom_pl"] = stem .. "ūs"
 	data.forms["gen_pl"] = stem .. "uum"
@@ -554,13 +554,13 @@ decl["4"] = function(data, args)
 	if data.types.echo then
 		table.insert(title, "nominative/vocative singular in ''-ō''")
 		data.forms["nom_sg"] = stem .. "ō"
-		data.forms["voc_sg"] = stem .. "ō" 
+		data.forms["voc_sg"] = stem .. "ō"
 	elseif data.types.argo then
 		table.insert(title, "nominative/accusative/vocative singular in ''-ō'', ablative singular in ''-uī''")
 		data.forms["nom_sg"] = stem .. "ō"
 		data.forms["acc_sg"] = stem .. "ō"
 		data.forms["abl_sg"] = stem .. "uī"
-		data.forms["voc_sg"] = stem .. "ō" 
+		data.forms["voc_sg"] = stem .. "ō"
 	elseif data.types.Callisto then
 		table.insert(title, "all cases except the genitive singular in ''-ō''")
 		data.forms["nom_sg"] = stem .. "ō"
@@ -577,7 +577,7 @@ decl["4"] = function(data, args)
 		data.forms["nom_sg"] = stem .. "ū"
 		data.forms["dat_sg"] = stem .. "ū"
 		data.forms["acc_sg"] = stem .. "ū"
-		data.forms["voc_sg"] = stem .. "ū" 
+		data.forms["voc_sg"] = stem .. "ū"
 
 		data.forms["nom_pl"] = stem .. "ua"
 		data.forms["acc_pl"] = stem .. "ua"
@@ -643,7 +643,7 @@ decl["5"] = function(data, args)
 	data.forms["dat_sg"] = stem .. "eī"
 	data.forms["acc_sg"] = stem .. "em"
 	data.forms["abl_sg"] = stem .. "ē"
-	data.forms["voc_sg"] = stem .. "ēs" 
+	data.forms["voc_sg"] = stem .. "ēs"
 
 	data.forms["nom_pl"] = stem .. "ēs"
 	data.forms["gen_pl"] = stem .. "ērum"
