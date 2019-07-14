@@ -181,6 +181,50 @@ decl["1&2"] = function(data, args)
 	table.insert(data.categories, "Latin first and second declension adjectives")
 end
 
+decl["1-1"] = function(data, args)
+	local title = {}
+	table.insert(title, "[[Appendix:Latin first declension|First declension]], masculine feminine forms identical to feminine forms")
+	if data.num == "sg" then
+		table.insert(title, "no plural")
+	elseif data.num == "pl" then
+		table.insert(title, "no singular")
+	end
+
+	local stem = args[1]
+
+	if not stem or stem == "" then
+		if NAMESPACE ~= "" and NAMESPACE ~= "Appendix" then
+			stem = "{{{1}}}"
+		else
+			error('Please provide a stem')
+		end
+	end
+
+	data.forms["nom_sg_m"] = stem .. "a"
+	data.forms["nom_pl_m"] = stem .. "ae"
+
+	data.forms["gen_sg_m"] = stem .. "ae"
+	data.forms["gen_pl_m"] = stem .. "ārum"
+
+	data.forms["dat_sg_m"] = stem .. "ae"
+	data.forms["dat_pl_m"] = stem .. "īs"
+
+	-- FIXME, do neuter forms, e.g. of [[aurigena]], have distinct accusative
+	-- that's the same as the nominative?
+	data.forms["acc_sg_m"] = stem .. "am"
+	data.forms["acc_pl_m"] = stem .. "ās"
+
+	data.forms["abl_sg_m"] = stem .. "ā"
+	data.forms["abl_pl_m"] = stem .. "īs"
+
+	data.forms["voc_sg_m"] = stem .. "a"
+	data.forms["voc_pl_m"] = stem .. "ae"
+
+	data.title = table.concat(title, ", ") .. "."
+
+	table.insert(data.categories, "Latin first declension adjectives")
+end
+
 decl["2-2"] = function(data, args)
 	local title = {}
 	table.insert(title, "[[Appendix:Latin second declension|Second declension]], feminine forms identical to masculine forms")
