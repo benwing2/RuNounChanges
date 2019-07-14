@@ -1,5 +1,13 @@
 local export = {}
 
+-- TODO:
+-- Eliminate specification of noteindex from la-adj/data
+-- Finish autodetection of adjectives
+-- Remove old noun code
+-- Implement <.sufn>
+-- Look into adj voc=false
+-- Handle loc in adjectives
+
 local lang = require("Module:languages").getByCode("la")
 local m_links = require("Module:links")
 local m_utilities = require("Module:utilities")
@@ -11,6 +19,7 @@ local current_title = mw.title.getCurrentTitle()
 local NAMESPACE = current_title.nsText
 local PAGENAME = current_title.text
 
+local m_la_adj = require("Module:la-adj")
 local m_noun_decl = require("Module:la-noun/data")
 local m_table = require("Module:la-noun/table")
 local m_adj_decl = require("Module:la-adj/data")
@@ -35,6 +44,12 @@ local ligatures = {
 	['ae'] = 'æ',
 	['Oe'] = 'Œ',
 	['oe'] = 'œ',
+}
+
+local gender_to_lc = {
+	['M'] = 'm',
+	['F'] = 'f',
+	['N'] = 'n',
 }
 
 local cases = {
@@ -207,7 +222,7 @@ local function generate_forms(frame)
 	local decl_type = iargs.decl_type or parent_args.decl_type
 
 	if decl_type and decl_type ~= "" then 
-		for name, val in ipairs(rsplit(decl_type, "-")) do
+		for _, val in ipairs(rsplit(decl_type, "%-")) do
 			data.types[val] = true
 		end
 	end
@@ -553,44 +568,64 @@ function export.detect_subtype(frame)
 	return base .. "|" .. table.concat(subtypes, ".")
 end
 
--- Parse a segment (i.e. a string of the form "lūna<1>" or
--- "aegis/aegid<3.Greek>"), consisting of a lemma (or optionally a lemma/stem)
--- and declension+subtypes. The return value is a table, e.g.:
+-- Parse a segment (e.g. "lūna<1>", "aegis/aegid<3.Greek>", "bonus<+>", or
+-- "vetus/veter<3+.-I>"), consisting of a lemma (or optionally a lemma/stem)
+-- and declension+subtypes, where a + in the declension indicates an adjective.
+-- The return value is a table, e.g.:
 -- {
 --   decl = "1",
+--   is_adj = false,
 --   lemma = "lūna",
 --   stem2 = nil,
+--   gender = "F",
 --   data = DATA_TABLE (a table of info extracted from subtypes),
---   args = {"aqua"}
+--   args = {"lūn"}
 -- }
 --
 -- or
 --
 -- {
 --   decl = "3",
---   lemma = "aequor",
---   stem2 = "aequor",
+--   is_adj = false,
+--   lemma = "aegis",
+--   stem2 = "aegid",
+--   gender = nil,
 --   data = DATA_TABLE (a table of info extracted from subtypes),
---   args = {"aequor", "aequor"}
+--   args = {"aegis", "aegid"}
+-- }
+--
+-- or
+--
+-- {
+--   decl = "1&2",
+--   is_adj = true,
+--   lemma = "bonus",
+--   stem2 = nil,
+--   gender = nil,
+--   data = DATA_TABLE (a table of info extracted from subtypes),
+--   args = {"bon"}
+-- }
+--
+-- or
+--
+-- {
+--   decl = "3-1",
+--   is_adj = true,
+--   lemma = "vetus",
+--   stem2 = "veter",
+--   gender = nil,
+--   data = DATA_TABLE (a table of info extracted from subtypes),
+--   args = {"vetus", "veter"}
 -- }
 local function parse_segment(segment)
 	local stem_part, spec_part = rmatch(segment, "^(.*)<(.-)>$")
 	local stems = rsplit(stem_part, "/", true)
 	local specs = rsplit(spec_part, ".", true)
 
-	local data = {
-		title = "",
-		footnote = "",
-		num = "",
-		loc = false,
-		um = false,
-		forms = {},
-		types = {},
-		categories = {},
-		notes = {},
-		user_specified = {},
-		accel = {},
-	}
+	local types = {}
+	local num = nil
+	local loc = false
+
 	local args = {}
 
 	local decl
@@ -598,7 +633,7 @@ local function parse_segment(segment)
 		if j == 1 then
 			decl = spec
 		else
-			data.types[spec] = true
+			types[spec] = true
 		end
 	end
 
@@ -614,61 +649,83 @@ local function parse_segment(segment)
 		error("Too many stems, at most 2 should be given: " .. stem_part)
 	end
 
-	local base, detected_subtypes = detect_subtype(lemma, stem2, decl, data.types)
+	local base, detected_subtypes
+	local is_adj = false
+	local gender = nil
 
-	for _, subtype in ipairs(detected_subtypes) do
-		if data.types["-" .. subtype] then
-			-- if a "cancel subtype" spec is given, remove the cancel spec
-			-- and don't apply the subtype
-			data.types["-" .. subtype] = nil
-		elseif (subtype == "M" or subtype == "F" or subtype == "N") and
-				(data.types.M or data.types.F or data.types.N) then
-			-- if gender already specified, don't create conflicting gender spec
-		elseif (subtype == "sg" or subtype == "pl" or subtype == "both") and
-				(data.types.sg or data.types.pl or data.types.both) then
-			-- if number restriction already specified, don't create conflicting
-			-- number restriction spec
-		else
-			data.types[subtype] = true
+	if rfind(decl, "%+") then
+		decl = decl:gsub("%+", "")
+		base, decl, detected_subtypes = m_la_adj.detect_type_and_subtype(
+			lemma, stem2, decl, types
+		)
+		is_adj = true
+
+		for _, subtype in ipairs(detected_subtypes) do
+			if types["-" .. subtype] then
+				-- if a "cancel subtype" spec is given, remove the cancel spec
+				-- and don't apply the subtype
+				types["-" .. subtype] = nil
+			else
+				types[subtype] = true
+			end
 		end
-	end
+	else
+		base, detected_subtypes = detect_subtype(lemma, stem2, decl, types)
 
-	if not data.types.pl and not data.types.both and rfind(lemma, "^[A-ZĀĒĪŌŪȲĂĔĬŎŬ]") then
-		data.types.sg = true
+		for _, subtype in ipairs(detected_subtypes) do
+			if types["-" .. subtype] then
+				-- if a "cancel subtype" spec is given, remove the cancel spec
+				-- and don't apply the subtype
+				types["-" .. subtype] = nil
+			elseif (subtype == "M" or subtype == "F" or subtype == "N") and
+					(types.M or types.F or types.N) then
+				-- if gender already specified, don't create conflicting gender spec
+			elseif (subtype == "sg" or subtype == "pl" or subtype == "both") and
+					(types.sg or types.pl or types.both) then
+				-- if number restriction already specified, don't create conflicting
+				-- number restriction spec
+			else
+				types[subtype] = true
+			end
+		end
+
+		if not types.pl and not types.both and rfind(lemma, "^[A-ZĀĒĪŌŪȲĂĔĬŎŬ]") then
+			types.sg = true
+		end
+
+		if types.pl then
+			num = "pl"
+			types.pl = nil
+		elseif types.sg then
+			num = "sg"
+			types.sg = nil
+		end
+		if types.loc then
+			loc = true
+			types.loc = nil
+		end
+
+		if types.M then
+			gender = "M"
+		elseif types.F then
+			gender = "F"
+		elseif types.N then
+			gender = "N"
+		end
 	end
 
 	args[1] = base
 	args[2] = stem2
 
-	if data.types.pl then
-		data.num = "pl"
-		data.types.pl = nil
-	elseif data.types.sg then
-		data.num = "sg"
-		data.types.sg = nil
-	end
-	if data.types.loc then
-		data.loc = true
-		data.types.loc = nil
-	end
-	if data.types.lig then
-		data.lig = true
-		data.types.lig = nil
-	end
-	if data.types.genplum then
-		data.um = true
-		data.types.genplum = nil
-	end
-	if data.types.sufn then
-		data.n = true
-		data.types.sufn = nil
-	end
-
 	return {
 		decl = decl,
+		is_adj = is_adj,
+		gender = gender,
 		lemma = lemma,
 		stem2 = stem2,
-		data = data,
+		types = types,
+		num = num,
+		loc = loc,
 		args = args,
 	}
 end
@@ -682,8 +739,9 @@ end
 --   segments = PARSED_SEGMENTS (a list of parsed segments),
 --   loc = LOC (a boolean indicating whether any of the individual segments
 --     has a locative),
---   num = NUM (the first specified value for a number restriction, or "" if no
---     number restrictions),
+--   num = NUM (the first specified value for a number restriction, or nil if
+--     no number restrictions),
+--   gender = GENDER (the first specified or inferred gender, or nil if none),
 -- }
 -- Each element in PARSED_SEGMENTS is as returned by parse_segment() but will
 -- have an additional .prefix field indicating the text before the segment. If
@@ -691,7 +749,7 @@ end
 -- containing that trailing text.
 local function parse_segment_run(segment_run)
 	local loc = nil
-	local num = ""
+	local num = nil
 	local segments
 	-- If the segment run begins with a hyphen, include the hyphen in the
 	-- set of allowed characters for a declined segment. This way, e.g. the
@@ -703,14 +761,14 @@ local function parse_segment_run(segment_run)
 		segments = m_string_utilities.capturing_split(segment_run, "([^<> ,%-]+<.->)")
 	end
 	local parsed_segments = {}
+	local gender = nil
 	for i = 2, (#segments - 1), 2 do
 		local parsed_segment = parse_segment(segments[i])
 		-- Overall locative is true if any segments call for locative.
-		loc = loc or parsed_segment.data.loc
+		loc = loc or parsed_segment.loc
 		-- The first specified value for num is used becomes the overall value.
-		if num == "" then
-			num = parsed_segment.data.num
-		end
+		num = num or parsed_segment.num
+		gender = gender or parsed_segment.gender
 		parsed_segment.prefix = segments[i - 1]
 		table.insert(parsed_segments, parsed_segment)
 	end
@@ -721,11 +779,12 @@ local function parse_segment_run(segment_run)
 		segments = parsed_segments,
 		loc = loc,
 		num = num,
+		gender = gender,
 	}
 end
 
 -- Parse an alternant, e.g. "((epulum<2.sg>,epulae<1>))",
--- "((Serapis<3.sg>,Serapis/Serapid<3.sg>))" or
+-- "((Serapis<3>,Serapis/Serapid<3>))" or
 -- "((rēs<5>pūblica<1>,rēspūblica<1>))". The return value is a table of the form
 -- {
 --   alternants = PARSED_ALTERNANTS (a list of segment runs, each of which is a
@@ -733,6 +792,7 @@ end
 --   loc = LOC (a boolean indicating whether any of the individual segment runs
 --     has a locative),
 --   num = NUM (the overall number restriction, one of "sg", "pl" or "both"),
+--   gender = GENDER (the first specified or inferred gender, or nil if none),
 -- }
 local function parse_alternant(alternant)
 	local parsed_alternants = {}
@@ -740,6 +800,7 @@ local function parse_alternant(alternant)
 	local alternants = rsplit(alternant_spec, ",")
 	local loc = false
 	local num = nil
+	local gender = nil
 	for _, alternant in ipairs(alternants) do
 		local parsed_run = parse_segment_run(alternant)
 		table.insert(parsed_alternants, parsed_run)
@@ -751,11 +812,13 @@ local function parse_alternant(alternant)
 			-- adjective alternants.
 			num = "both"
 		end
+		gender = gender or parsed_run.gender
 	end
 	return {
 		alternants = parsed_alternants,
 		loc = loc,
 		num = num,
+		gender = gender,
 	}
 end
 
@@ -768,8 +831,8 @@ end
 --   segments = PARSED_SEGMENTS (a list of parsed segments),
 --   loc = LOC (a boolean indicating whether any of the individual segments has
 --     a locative),
---   num = NUM (the first specified value for a number restriction, or "" if no
---     number restrictions),
+--   num = NUM (the first specified value for a number restriction, or nil if
+--     no number restrictions),
 -- }.
 -- Each element in PARSED_SEGMENTS is one of three types:
 --
@@ -784,6 +847,7 @@ end
 --   loc = LOC (a boolean indicating whether the segment as a whole has a
 --     locative),
 --   num = NUM (the number restriction of the segment as a whole),
+--   gender = GENDER (the first specified or inferred gender, or nil if none),
 -- }
 -- Note that each alternant is a segment run rather than a single parsed
 -- segment to allow for alternants like "((rēs<5>pūblica<1>,rēspūblica<1>))".
@@ -794,7 +858,8 @@ local function parse_segment_run_allowing_alternants(segment_run)
 	local alternating_segments = m_string_utilities.capturing_split(segment_run, "(%(%(.-%)%))")
 	local parsed_segments = {} 
 	local loc = false
-	local num = ""
+	local num = nil
+	local gender = nil
 	for i = 1, #alternating_segments do
 		local alternating_segment = alternating_segments[i]
 		if alternating_segment ~= "" then
@@ -804,15 +869,13 @@ local function parse_segment_run_allowing_alternants(segment_run)
 					table.insert(parsed_segments, parsed_segment)
 				end
 				loc = loc or parsed_run.loc
-				if num == "" then
-					num = parsed_run.num
-				end
+				num = num or parsed_run.num
+				gender = gender or parsed_run.gender
 			else
 				local parsed_alternating_segment = parse_alternant(alternating_segment)
 				loc = loc or parsed_alternating_segment.loc
-				if num == "" then
-					num = parsed_alternating_segment.num
-				end
+				num = num or parsed_alternating_segment.num
+				gender = gender or parsed_alternating_segment.gender
 				table.insert(parsed_segments, parsed_alternating_segment)
 			end
 		end
@@ -822,6 +885,7 @@ local function parse_segment_run_allowing_alternants(segment_run)
 		segments = parsed_segments,
 		loc = loc,
 		num = num,
+		gender = gender,
 	}
 end
 
@@ -961,55 +1025,119 @@ local function decline_segment_run(parsed_run)
 
 	for _, seg in ipairs(parsed_run.segments) do
 		if seg.decl then
-			seg.data.loc = parsed_run.loc
-			if seg.data.num == "" then
-				seg.data.num = parsed_run.num
+			seg.loc = parsed_run.loc
+			seg.num = seg.num or parsed_run.num
+			seg.gender = seg.gender or parsed_run.gender
+
+			local data
+
+			if seg.is_adj then
+				if not m_adj_decl[seg.decl] then
+					error("Unrecognized declension '" .. seg.decl .. "'")
+				end
+				if not seg.gender then
+					error("Declining modifying adjective " .. seg.lemma .. " but don't know gender of associated noun")
+				end
+
+				data = {
+					title = "",
+					footnote = "",
+					num = seg.num or "",
+					voc = true,
+					forms = {},
+					types = seg.types,
+					categories = {},
+					notes = {},
+					noteindex = {},
+				}
+				m_adj_decl[seg.decl](data, seg.args)
+			else
+				if not m_noun_decl[seg.decl] then
+					error("Unrecognized declension '" .. seg.decl .. "'")
+				end
+
+				data = {
+					title = "",
+					footnote = "",
+					num = seg.num or "",
+					loc = seg.loc,
+					um = false,
+					n = false,
+					forms = {},
+					types = seg.types,
+					categories = {},
+					notes = {},
+				}
+				if seg.types.genplum then
+					data.um = true
+					seg.types.genplum = nil
+				end
+				if seg.types.sufn then
+					data.n = true
+					seg.types.sufn = nil
+				end
+
+				m_noun_decl[seg.decl](data, seg.args)
 			end
 
-			if not m_noun_decl[seg.decl] then
-				error("Unrecognized declension '" .. seg.decl .. "'")
+			if seg.types.lig then
+				apply_ligatures(data.forms)
 			end
 
-
-			m_noun_decl[seg.decl](seg.data, seg.args)
-
-			if seg.data.lig then
-				apply_ligatures(seg.data.forms)
-			end
-
-			propagate_number_restrictions(seg.data.forms, seg.data.num)
+			propagate_number_restrictions(data.forms, seg.num)
 
 			for name in itercn() do
-				local new_forms = seg.data.forms[name]
+				-- 1. Select the forms to append to the existing ones.
+
+				local new_forms
+				if seg.is_adj then
+					-- Select the appropriately gendered equivalent of the case/number
+					-- combination. Some adjectives won't have feminine or neuter
+					-- variants, though (e.g. 3-1 and 3-2 adjectives don't have a
+					-- distinct feminine), so in that case select the masculine.
+					new_forms = data.forms[name .. "_" .. gender_to_lc[seg.gender]]
+						or data.forms[name .. "_m"]
+				else
+					new_forms = data.forms[name]
+				end
+
+				-- 2. Extract the new footnotes in the format we require, which is
+				-- different from the format passed in by the declension functions.
+
 				local new_notes = {}
 
-				if type(new_forms) == "string" and seg.data.notes[name .. "1"] then
-					new_notes[1] = {seg.data.notes[name .. "1"]}
+				if type(new_forms) == "string" and data.notes[name .. "1"] then
+					new_notes[1] = {data.notes[name .. "1"]}
 				elseif new_forms then
 					for j = 1, #new_forms do
-						if seg.data.notes[name .. j] then
-							new_notes[j] = {seg.data.notes[name .. j]}
+						if data.notes[name .. j] then
+							new_notes[j] = {data.notes[name .. j]}
 						end
 					end
 				end
+
+				-- 3. Append new forms and footnotes to the existing ones.
 
 				declensions.forms[name], declensions.notes[name] = append_form(
 					declensions.forms[name], declensions.notes[name],
 					new_forms, new_notes, seg.prefix)
 			end
 
-			if not seg.data.types.nocat then
-				for _, cat in ipairs(seg.data.categories) do
+			if not seg.types.nocat then
+				for _, cat in ipairs(data.categories) do
 					ut.insert_if_not(declensions.categories, cat)
 				end
 			end
 
-			table.insert(declensions.title, seg.data.title)
+			table.insert(declensions.title, data.title)
 		elseif seg.alternants then
 			local seg_declensions = nil
 			local seg_titles = {}
 			local seg_categories = {}
 			for _, this_parsed_run in ipairs(seg.alternants) do
+				this_parsed_run.loc = seg.loc
+				this_parsed_run.num = this_parsed_run.num or seg.num
+				this_parsed_run.gender = this_parsed_run.gender or seg.gender
 				local this_declensions = decline_segment_run(this_parsed_run)
 				-- If there's a number restriction on the segment run, blank
 				-- out the forms outside the restriction. This allows us to
@@ -1165,7 +1293,7 @@ local function new_generate_forms(frame)
 	local all_data = {
 		title = declensions.title,
 		footnote = args.footnote or "",
-		num = parsed_run.num,
+		num = parsed_run.num or "",
 		forms = declensions.forms,
 		categories = declensions.categories,
 		notes = {},
