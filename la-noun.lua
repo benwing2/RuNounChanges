@@ -655,7 +655,7 @@ local function parse_segment(segment)
 
 	if rfind(decl, "%+") then
 		decl = decl:gsub("%+", "")
-		base, decl, detected_subtypes = m_la_adj.detect_type_and_subtype(
+		base, stem2, decl, detected_subtypes = m_la_adj.detect_type_and_subtype(
 			lemma, stem2, decl, types
 		)
 		is_adj = true

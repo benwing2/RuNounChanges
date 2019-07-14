@@ -12,6 +12,7 @@ local decl = require("Module:User:Benwing2/la-adj/data")
 local m_table = require("Module:la-adj/table")
 
 local rmatch = mw.ustring.match
+local rfind = mw.ustring.find
 
 local case_order = {
 	"nom_sg_m",
@@ -298,12 +299,9 @@ local function get_type_and_subtype_by_ending(lemma, stem2, decltype, specified_
 		endings_and_subtypes)
 	for _, ending_and_subtypes in ipairs(endings_and_subtypes) do
 		local ending = ending_and_subtypes[1]
-		local rettype = decltype
-		local subtypes = ending_and_subtypes[2]
-		if #ending_and_subtypes == 3 then
-			rettype = ending_and_subtypes[2]
-			subtypes = ending_and_subtypes[3]
-		end
+		local rettype = ending_and_subtypes[2]
+		local subtypes = ending_and_subtypes[3]
+		local specified_stem2 = ending_and_subtypes[4]
 		not_this_subtype = false
 		for _, subtype in ipairs(subtypes) do
 			-- A subtype is directly canceled by specifying -SUBTYPE.
@@ -311,20 +309,36 @@ local function get_type_and_subtype_by_ending(lemma, stem2, decltype, specified_
 				not_this_subtype = true
 				break
 			end
+			-- A subtype is canceled if the user specified SUBTYPE and
+			-- -SUBTYPE is given in the to-be-returned subtypes.
+			must_not_be_present = rmatch(subtype, "^%-(.*)$")
+			if must_not_be_present and specified_subtypes[must_not_be_present] then
+				not_this_subtype = true
+				break
+			end
 		end
 		if not not_this_subtype then
+			local base
 			if type(ending) == "table" then
 				local lemma_ending = ending[1]
 				local stem2_ending = ending[2]
-				local base = extract_base(lemma, lemma_ending)
-				if base and base .. stem2_ending == stem2 then
-					return base, rettype, subtypes
+				base = extract_base(lemma, lemma_ending)
+				if base and base .. stem2_ending ~= stem2 then
+					base = nil
 				end
 			else
-				local base = extract_base(lemma, ending)
-				if base then
-					return base, rettype, subtypes
+				base = extract_base(lemma, ending)
+			end
+			if base then
+				-- Remove subtypes of the form -SUBTYPE from the subtypes
+				-- to be returned.
+				local new_subtypes = {}
+				for _, subtype in ipairs(subtypes) do
+					if not rfind(subtype, "^%-") then
+						table.insert(new_subtypes, subtype)
+					end
 				end
+				return base, specified_stem2 or stem2, rettype, new_subtypes
 			end
 		end
 	end
@@ -333,22 +347,23 @@ local function get_type_and_subtype_by_ending(lemma, stem2, decltype, specified_
 	else
 		error("Unrecognized ending for declension-" .. decltype .. " adjective: " .. lemma)
 	end
-	return nil, nil, nil
 end
--- Autodetect the subtype of an adjective given all the information specified
--- by the user: lemma, stem2, declension type and specified subtypes. Two
--- values are returned: the lemma base (i.e. the stem of the lemma, as required
--- by the declension functions) and the autodetected subtypes. Note that this
--- will not detect a given subtype if the explicitly specified subtypes are
--- incompatible (i.e. if -SUBTYPE is specified for any subtype that would be
--- returned; or if M or F is specified when N would be returned, and
--- vice-versa; or if pl is specified when sg would be returned, and vice-versa).
---
--- NOTE: This function has intimate knowledge of the way that the declension
--- functions handle subtypes, particularly for the third declension.
-function export.detect_type_and_subtype(lemma, stem2, typ, subtypes)
-	local base, ending
 
+-- Autodetect the type and subtype of an adjective given all the information
+-- specified by the user: lemma, stem2, declension type and specified subtypes.
+-- Four values are returned: the lemma base (i.e. the stem of the lemma, as
+-- required by the declension functions), the value of stem2 to pass to the
+-- declension function, the declension type and the autodetected subtypes.
+-- Note that this will not detect a given subtype if -SUBTYPE is specified for
+-- any subtype that would be returned, or if SUBTYPE is specified and -SUBTYPE
+-- is among the subtypes that would be returned (such subtypes are filtered out
+-- of the returned subtypes).
+function export.detect_type_and_subtype(lemma, stem2, typ, subtypes)
+	if not rfind(typ, "^[123]") then
+		subtypes = mw.clone(subtypes)
+		subtypes[typ] = true
+		typ = ""
+	end
 	if typ == "" then
 		return get_type_and_subtype_by_ending(lemma, stem2, typ, subtypes, {
 			{"us", "1&2", {}},
@@ -356,51 +371,18 @@ function export.detect_type_and_subtype(lemma, stem2, typ, subtypes)
 			{"um", "1&2", {}},
 			{"ī", "1&2", {}},
 			{"ae", "1&2", {}},
-			-- FIXME, check whether this makes the most sense
-			{"os", "1&2", {"greekA"}},
-			{"ē", "1&2", {"greekE"}},
-			-- FIXME, check whether this makes the most sense
-			{"on", "1&2", {"greekA"}},
+			-- Nearly all -os adjective are greekA
+			{"os", "1&2", {"greekA", "-greekE"}},
+			{"ē", "1&2", {"greekE", "-greekA"}},
+			{"on", "1&2", {"greekA", "-greekE"}},
 			{"er", "1&2", {"er"}},
-			-- FIXME, maybe should be 3rd declension
 			{"ur", "1&2", {"er"}},
 			{"is", "3-2", {}},
+			{"e", "3-2", {}},
 			{"ior", "3-C", {}},
-			{"jor", "3-C", {}},
-			{"", "3-1", {}},
-		})
-	end
-
-	if typ == "1&2" then
-		return get_type_and_subtype_by_ending(lemma, stem2, typ, subtypes, {
-			{"us", {}},
-			{"a", {}},
-			{"um", {}},
-			{"ī", {}},
-			{"ae", {}},
-			-- FIXME, check whether this makes the most sense
-			{"os", {"greekA"}},
-			{"os", {"greekE"}},
-			{"ē", {"greekE"}},
-			-- FIXME, check whether this makes the most sense
-			{"on", {"greekA"}},
-			{"er", {"er"}},
-			{"ur", {"er"}},
-		})
-	elseif typ == "1-1" then
-		return get_type_and_subtype_by_ending(lemma, stem2, typ, subtypes, {
-			{"a", {}},
-			{"ae", {}},
-		})
-	elseif typ == "2-2" then
-		return get_type_and_subtype_by_ending(lemma, stem2, typ, subtypes, {
-			{"us", {}},
-			{"um", {}},
-			{"ī", {}},
-			{"a", {}},
-			{"os", {"greek"}},
-			{"on", {"greek"}},
-			{"oe", {"greek"}},
+			{"jor", "3-C", {}, "j"},
+			{"^(mi)nor$", "3-C", {}, "n"},
+			{"", "3-1", {"I"}},
 		})
 	elseif typ == "3" then
 		return get_type_and_subtype_by_ending(lemma, stem2, typ, subtypes, {
@@ -408,11 +390,52 @@ function export.detect_type_and_subtype(lemma, stem2, typ, subtypes)
 			{"is", "3-2", {}},
 			{"e", "3-2", {}},
 			{"ior", "3-C", {}},
-			{"jor", "3-C", {}},
+			{"jor", "3-C", {}, "j"},
+			{"^(mi)nor$", "3-C", {}, "n"},
 			{"", "3-1", {}},
 		})
+	elseif typ == "1&2" then
+		return get_type_and_subtype_by_ending(lemma, stem2, typ, subtypes, {
+			{"us", "1&2", {}},
+			{"a", "1&2", {}},
+			{"um", "1&2", {}},
+			{"ī", "1&2", {}},
+			{"ae", "1&2", {}},
+			-- Nearly all -os adjective are greekA
+			{"os", "1&2", {"greekA", "-greekE"}},
+			{"ē", "1&2", {"greekE", "-greekA"}},
+			{"on", "1&2", {"greekA", "-greekE"}},
+			{"er", "1&2", {"er"}},
+			{"ur", "1&2", {"er"}},
+		})
+	elseif typ == "1-1" then
+		return get_type_and_subtype_by_ending(lemma, stem2, typ, subtypes, {
+			{"a", "1-1", {}},
+			{"ae", "1-1", {}},
+		})
+	elseif typ == "2-2" then
+		return get_type_and_subtype_by_ending(lemma, stem2, typ, subtypes, {
+			{"us", "2-2", {}},
+			{"um", "2-2", {}},
+			{"ī", "2-2", {}},
+			{"a", "2-2", {}},
+			{"os", "2-2", {"greek"}},
+			{"on", "2-2", {"greek"}},
+			{"oe", "2-2", {"greek"}},
+		})
+	elseif typ == "3-2" then
+		return get_type_and_subtype_by_ending(lemma, stem2, typ, subtypes, {
+			{"is", "3-2", {}},
+			{"e", "3-2", {}},
+		})
+	elseif typ == "3-C" then
+		return get_type_and_subtype_by_ending(lemma, stem2, typ, subtypes, {
+			{"ior", "3-C", {}},
+			{"jor", "3-C", {}, "j"},
+			{"^(mi)nor$", "3-C", {}, "n"},
+		})
 	else
-		return lemma, typ, {}
+		return lemma, stem2, typ, {}
 	end
 end
 
