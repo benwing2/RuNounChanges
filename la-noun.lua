@@ -497,12 +497,16 @@ local function detect_subtype(lemma, stem2, typ, subtypes)
 		end
 		return lemma, {}
 	elseif typ == "4" then
-		if subtypes.echo or subtypes.argo then
+		if subtypes.echo or subtypes.argo or subtypes.Callisto then
 			base = rmatch(lemma, "^(.*)ō$")
 			if not base then
-				error("Declension-4 noun of subtype .echo or .argo should end in -ō: " .. lemma)
+				error("Declension-4 noun of subtype .echo, .argo or .Callisto should end in -ō: " .. lemma)
 			end
-			return base, {}
+			if subtypes.Callisto then
+				return base, {"sg"}
+			else
+				return base, {}
+			end
 		end
 		return get_subtype_by_ending(lemma, stem2, typ, subtypes, {
 			{"us", {"M"}},
@@ -520,8 +524,7 @@ local function detect_subtype(lemma, stem2, typ, subtypes)
 		-- before declining the noun so we can propagate it to other segments.
 		return lemma, {"loc"}
 	elseif typ == "indecl" or type == "irreg" and (
-		lemma == "Deus" or lemma == "Iēsus" or lemma == "venum" or
-		lemma == "Callistō" or lemma == "Themistō"
+		lemma == "Deus" or lemma == "Iēsus" or lemma == "Jēsus" or lemma == "vēnum"
 	) then
 		-- Indeclinable nouns, and certain irregular nouns, set data.num = "sg",
 		-- but we need to know this before declining the noun so we can
@@ -689,7 +692,16 @@ end
 local function parse_segment_run(segment_run)
 	local loc = nil
 	local num = ""
-	local segments = m_string_utilities.capturing_split(segment_run, "([^<> ,%-]+<.->)")
+	local segments
+	-- If the segment run begins with a hyphen, include the hyphen in the
+	-- set of allowed characters for a declined segment. This way, e.g. the
+	-- suffix [[-cen]] can be declared as {{la-ndecl|-cen/-cin<3>}} rather than
+	-- {{la-ndecl|-cen/cin<3>}}, which is less intuitive.
+	if rfind(segment_run, "^%-") then
+		segments = m_string_utilities.capturing_split(segment_run, "([^<> ,]+<.->)")
+	else
+		segments = m_string_utilities.capturing_split(segment_run, "([^<> ,%-]+<.->)")
+	end
 	local parsed_segments = {}
 	for i = 2, (#segments - 1), 2 do
 		local parsed_segment = parse_segment(segments[i])
