@@ -135,20 +135,30 @@ end
 local function show_forms(data)
 	local noteindex = 1
 	local notes = {}
+	local seen_notes = {}
 	for _, key in ipairs(case_order) do
 		local val = data.forms[key]
 		if val and val ~= "" and val ~= "—" then
 			for i, form in ipairs(val) do
 				local link = m_links.full_link({lang = lang, term = form, accel = data.accel[key .. i]})
-				if (data.notes[key .. i] or data.noteindex[key .. i]) and not data.user_specified[key] then
-					-- If the decl entry hasn't specified a footnote index, generate one.
-					local this_noteindex = data.noteindex[key .. i]
-					if not this_noteindex then
-						this_noteindex = noteindex
-						noteindex = noteindex + 1
-						table.insert(notes, '<sup style="color: red">' .. this_noteindex .. '</sup>' .. data.notes[key .. i])
+				local this_notes = data.notes[key .. i]
+				if this_notes and not data.user_specified[key] then
+					if type(this_notes) == "string" then
+						this_notes = {this_notes}
 					end
-					val[i] = link .. '<sup style="color: red">' .. this_noteindex .. '</sup>'
+					local link_indices = {}
+					for _, this_note in ipairs(this_notes) do
+						local this_noteindex = seen_notes[this_note]
+						if not this_noteindex then
+							-- Generate a footnote index.
+							this_noteindex = noteindex
+							noteindex = noteindex + 1
+							table.insert(notes, '<sup style="color: red">' .. this_noteindex .. '</sup>' .. this_note)
+							seen_notes[this_note] = this_noteindex
+						end
+						ut.insert_if_not(link_indices, this_noteindex)
+					end
+					val[i] = link .. '<sup style="color: red">' .. table.concat(link_indices, ",") .. '</sup>'
 				else
 					val[i] = link
 				end
@@ -169,7 +179,6 @@ local function generate_forms(frame)
 		types = {},
 		categories = {},
 		notes = {},
-		noteindex = {},
 		user_specified = {},
 		accel = {},
 	}

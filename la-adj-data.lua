@@ -432,12 +432,10 @@ decl["3-P"] = function(data, args)
 	end
 
 	data.forms["abl_sg_m"] = {stem2 .. "e", stem2 .. "ī"}
-	data.noteindex["abl_sg_m2"] = 1
+	data.notes["abl_sg_m2"] = "When used purely as an adjective."
 	data.forms["abl_sg_n"] = {stem2 .. "e", stem2 .. "ī"}
-	data.noteindex["abl_sg_n2"] = 1
+	data.notes["abl_sg_n2"] = "When used purely as an adjective."
 	data.forms["acc_pl_m"] = {stem2 .. "ēs", stem2 .. "īs"}
-
-	data.footnote = "<sup style='color: red'>1</sup>When used purely as an adjective."
 end
 
 decl["3-2"] = function(data, args)
