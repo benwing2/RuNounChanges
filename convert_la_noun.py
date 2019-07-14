@@ -47,7 +47,7 @@ def compare_new_and_old_templates(origt, newt, pagetitle, pagemsg, errandpagemsg
   pagemsg("%s and %s have same forms" % (origt, newt))
   return True
 
-def compute_lemma_and_subtypes(stem1, stem2, num, stem_suffix, pl_suffix,
+def compute_lemma_and_subtypes(decl, stem1, stem2, num, stem_suffix, pl_suffix,
     to_auto, pagemsg, origt):
   if type(to_auto) is not tuple:
     to_auto = to_auto(stem1, stem2, num)
@@ -64,13 +64,27 @@ def compute_lemma_and_subtypes(stem1, stem2, num, stem_suffix, pl_suffix,
       pagemsg("WARNING: Inferred canceling subtype %s, need to verify: %s" % (subtype, origt))
     subtypes.append(subtype)
   if re.search(u"^[A-ZĀĒĪŌŪȲĂĔĬŎŬ]", lemma):
-    if not num and not num_originally_pl:
+    # Proper nouns in -polis that use {{la-decl-3rd-polis}} won't specify
+    # num=sg because the declension template itself specifies num=sg when
+    # invoking the module. Meanwhile the module itself specifies num=sg for
+    # indeclinable nouns and certain irregular nouns. In all these cases,
+    # we should not add .both.
+    auto_sg = (
+      decl == "3" and lemma.endswith("polis") and "-polis" not in subtypes or
+      decl == "indecl" or
+      decl == "irreg" and lemma in ["Deus", u"Iēsus", u"Jēsus", u"Callistō", u"Themistō"]
+    )
+    if not num and not num_originally_pl and not auto_sg:
       num = "both"
     elif num == "sg":
       num = None
   if num:
     subtypes.append(num)
-  return lemma, subtypes
+  if stem2:
+    if (decl == "3" and lalib.infer_3rd_decl_stem(lemma) == stem2 or
+        decl == "2" and lemma == stem2):
+      stem2 = ""
+  return lemma, stem2, subtypes
 
 def convert_la_decl_multi_to_new(t, pagetitle, pagemsg, errandpagemsg):
   global args
@@ -125,7 +139,7 @@ def convert_la_decl_multi_to_new(t, pagetitle, pagemsg, errandpagemsg):
         lookup_key, origt))
       return None
     auto_num, stem_suffix, pl_suffix, to_auto = lalib.decl_and_subtype_to_props[lookup_key]
-    lemma, subtypes = compute_lemma_and_subtypes(stem1, stem2, num, stem_suffix, pl_suffix, to_auto, pagemsg, origt)
+    lemma, stem2, subtypes = compute_lemma_and_subtypes(decl, stem1, stem2, num, stem_suffix, pl_suffix, to_auto, pagemsg, origt)
     base_and_detected_subtypes = expand_text("{{#invoke:User:Benwing2/la-noun|detect_subtype|%s|%s|%s|%s}}" % (lemma, stem2, decl, ".".join(subtypes)))
     base, detected_subtypes = base_and_detected_subtypes.split("|")
     detected_subtypes = detected_subtypes.split(".")
@@ -152,8 +166,10 @@ def convert_la_decl_multi_to_new(t, pagetitle, pagemsg, errandpagemsg):
   blib.set_template_name(t, "la-ndecl")
   t.add("1", "".join(segments))
   pagemsg("Replaced %s with %s" % (origt, unicode(t)))
-  compare_new_and_old_templates(origt, unicode(t), pagetitle, pagemsg, errandpagemsg)
-  return t
+  if compare_new_and_old_templates(origt, unicode(t), pagetitle, pagemsg, errandpagemsg):
+    return t
+  else:
+    return None
 
 def convert_template_to_new(t, pagetitle, pagemsg, errandpagemsg):
   origt = unicode(t)
@@ -176,7 +192,7 @@ def convert_template_to_new(t, pagetitle, pagemsg, errandpagemsg):
   stem1 = getparam(t, "1").strip()
   stem2 = getparam(t, "2").strip()
   num = getrmparam(t, "num")
-  lemma, subtypes = compute_lemma_and_subtypes(stem1, stem2, num, stem_suffix, pl_suffix, to_auto, pagemsg, origt)
+  lemma, stem2, subtypes = compute_lemma_and_subtypes(declspec, stem1, stem2, num, stem_suffix, pl_suffix, to_auto, pagemsg, origt)
   loc = getrmparam(t, "loc")
   if bool_param_is_true(loc):
     subtypes.append("loc")
@@ -208,8 +224,10 @@ def convert_template_to_new(t, pagetitle, pagemsg, errandpagemsg):
   for name, value, showkey in named_params:
     t.add(name, value, showkey=showkey, preserve_spacing=False)
   pagemsg("Replaced %s with %s" % (origt, unicode(t)))
-  compare_new_and_old_templates(origt, unicode(t), pagetitle, pagemsg, errandpagemsg)
-  return t
+  if compare_new_and_old_templates(origt, unicode(t), pagetitle, pagemsg, errandpagemsg):
+    return t
+  else:
+    return None
 
 def process_page(page, index, parsed):
   pagetitle = unicode(page.title())
