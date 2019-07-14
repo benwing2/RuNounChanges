@@ -54,7 +54,21 @@ local function process_forms_and_overrides(data, args)
 	if data.num == "pl" then
 		table.insert(data.categories, "Latin plural-only adjectives")
 	end
+	
+	local accel_lemma, accel_lemma_f
+	if data.num and data.num ~= "" then
+		accel_lemma = data.forms["nom_" .. data.num .. "_m"]
+		accel_lemma_f = data.forms["nom_" .. data.num .. "_f"]
+	else
+		accel_lemma = data.forms["nom_sg_m"]
+		accel_lemma_f = data.forms["nom_sg_f"]
+	end
+	
 	for _, key in ipairs(case_order) do
+		-- If noneut=1 passed, clear out all neuter forms.
+		if data.noneut and key:find("_n") then
+			data.forms[key] = nil
+		end
 		if args[key] or data.forms[key] then
 			if args[key] then
 				val = args[key]
@@ -67,27 +81,40 @@ local function process_forms_and_overrides(data, args)
 			end
 			if data.num == "pl" and key:find("sg") then
 				data.forms[key] = ""
-			elseif val[1] == "" or val == "" or val == {""} or val[1] == "-" or val[1] == "—" or val == "-" or val == "—" then
+			elseif val[1] == "" or val == "" or val[1] == "-" or val[1] == "—" or val == "-" or val == "—" then
 				data.forms[key] = "—"
 			else
 				for i, form in ipairs(val) do
 					local word = data.prefix .. form .. data.suffix
 					
-					local accel = key
-					accel = accel:gsub("_sg_", "|s|")
-					accel = accel:gsub("_pl_", "|p|")
+					local accel_form = key
+					accel_form = accel_form:gsub("_([sp])[gl]_", "|%1|")
+
+					if data.noneut then
+						-- If noneut=1, we're being asked to do a noun like
+						-- Aquītānus or Rōmānus that has masculine and feminine
+						-- variants, not an adjective. In that case, make the
+						-- accelerators correspond to nomminal case/number forms
+						-- without the gender, and use the feminine as the
+						-- lemma for feminine forms.
+						if key:find("_f") then
+							data.accel[key .. i] = {form = accel_form:gsub("|f$", ""), lemma = accel_lemma_f}
+						else
+							data.accel[key .. i] = {form = accel_form:gsub("|m$", ""), lemma = accel_lemma}
+						end
+					else
+						if not data.forms.nom_sg_n and not data.forms.nom_pl_n then
+							-- use multipart tags if called for
+							accel_form = accel_form:gsub("|m$", "|m//f//n")
+						elseif not data.forms.nom_sg_f and not data.forms.nom_pl_f then
+							accel_form = accel_form:gsub("|m$", "|m//f")
+						end
+						
+						-- use the order nom|m|s, which is more standard than nom|s|m
+						accel_form = accel_form:gsub("|(.-)|(.-)$", "|%2|%1")
 					
-					if not data.forms.nom_sg_n and not data.forms.nom_pl_n then
-						-- use multipart tags if called for
-						accel = accel:gsub("|m$", "|m//f//n")
-					elseif not data.forms.nom_sg_f and not data.forms.nom_pl_f then
-						accel = accel:gsub("|m$", "|m//f")
+						data.accel[key .. i] = {form = accel_form, lemma = accel_lemma}
 					end
-					
-					-- use the order nom|m|s, which is more standard than nom|s|m
-					accel = accel:gsub("|(.-)|(.-)$", "|%2|%1")
-				
-					data.accel[key .. i] = accel
 					val[i] = word
 					if not redlink and NAMESPACE == '' then
 						local title = lang:makeEntryName(word)
@@ -111,17 +138,16 @@ local function show_forms(data)
 		local val = data.forms[key]
 		if val and val ~= "" and val ~= "—" then
 			for i, form in ipairs(val) do
-				local link = m_links.full_link({lang = lang, term = form, accel = {form = data.accel[key .. i], lemma = nil}})
+				local link = m_links.full_link({lang = lang, term = form, accel = data.accel[key .. i]})
 				if (data.notes[key .. i] or data.noteindex[key .. i]) and not data.user_specified[key] then
 					-- If the decl entry hasn't specified a footnote index, generate one.
 					local this_noteindex = data.noteindex[key .. i]
-					local note_html = '<sup style="color: red">' .. this_noteindex .. '</sup>'
 					if not this_noteindex then
 						this_noteindex = noteindex
 						noteindex = noteindex + 1
-						table.insert(notes, note_html .. data.notes[key .. i])
+						table.insert(notes, '<sup style="color: red">' .. this_noteindex .. '</sup>' .. data.notes[key .. i])
 					end
-					val[i] = link .. note_html
+					val[i] = link .. '<sup style="color: red">' .. this_noteindex .. '</sup>'
 				else
 					val[i] = link
 				end
@@ -144,15 +170,19 @@ local function generate_forms(frame)
 		noteindex = {},
 		user_specified = {},
 		accel = {},
+		noneut = false,
 	}
 
 	local args = frame:getParent().args
 	local iargs = frame.args
 	
+	-- FIXME! Use [[Module:parameters]]
 	data.subtype = iargs["type"] or args["type"] or ""
 	data.num = iargs["num"] or args["num"] or ""
 	data.prefix = args["prefix"] or ""
 	data.suffix = args["suffix"] or ""
+	local noneut = args["noneut"]
+	data.noneut = not (not noneut or noneut == "" or noneut == "0" or noneut == "no" or noneut == "n" or noneut == "false")
 	
 	decl[iargs[1] or args["decltype"]](data, args)
 	
