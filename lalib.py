@@ -223,7 +223,7 @@ la_noun_decl_suffix_to_decltype = {
   'multi': None,
 }
 
-decl_and_subtype_to_props = {}
+noun_decl_and_subtype_to_props = {}
 for key, val in la_noun_decl_suffix_to_decltype.iteritems():
   if val is None:
     continue
@@ -240,7 +240,133 @@ for key, val in la_noun_decl_suffix_to_decltype.iteritems():
       num = ""
     else:
       num = declspec[2]
-  decl_and_subtype_to_props[(decl, subtypes)] = [num, stem_suffix, pl_suffix, to_auto]
+  noun_decl_and_subtype_to_props[(decl, subtypes)] = [num, stem_suffix, pl_suffix, to_auto]
+
+def la_adj_1_and_2_subtype(stem1, stem2, decl, types, num, g, is_adj, pagetitle, pagemsg):
+  if stem2:
+    pagemsg("WARNING: stem2=%s should not be present with 1&2 adjectives" %
+        stem2)
+    stem2 = ""
+  set_stem1 = False
+  if stem1.endswith("(e)r"):
+    if num == "pl":
+      stem2 = stem1[:-4] + ("rae" if g == "F" else u"rī")
+    elif g in ["F", "N"]:
+      stem2 = stem1[:-4] + ("ra" if g == "F" else u"rum")
+    else:
+      stem2 = stem1[:-4] + "r"
+      stem1 = stem1[:-4] + "er"
+    set_stem1 = True
+  elif stem1.endswith("er") or stem1.endswith("ur"):
+    if stem1 != pagetitle and stem1 + "us" != pagetitle:
+      pagemsg("WARNING: Potential 1&2 adjective ending in -er or -ur, but pagetitle=%s not same" %
+          pagetitle)
+    else:
+      if num == "pl":
+        stem1 += ("ae" if g == "F" else u"ī")
+      elif g in ["F", "N"]:
+        stem1 += ("a" if g == "F" else "um")
+      set_stem1 = True
+  if not set_stem1:
+    if "greekA" in types or "greekE" in types:
+      stem1 += ("on" if g == "N" else "os")
+      types = [x for x in types if x != "greekA"]
+      if num == "pl":
+        types = types + ["pl"]
+    elif "ic" in types:
+      stem1 += "ic"
+      types = [x for x in types if x != "ic"]
+    elif num == "pl":
+      stem1 += ("ae" if g == "F" else u"ī")
+    else:
+      stem1 += ("a" if g == "F" else "um" if g == "N" else "us")
+  return stem1, stem2, "", types
+
+def la_adj_3rd_1E_subtype(stem1, stem2, decl, types, num, g, is_adj, pagetitle, pagemsg):
+  if "par" in types:
+    types = ["-I" if x == "par" else x for x in types]
+  if num == "pl":
+    types = types + ["pl"]
+  if stem2 == infer_3rd_decl_stem(stem1):
+    stem2 = ""
+  if re.search("(is|[ij]or|e)$", stem1):
+    pagemsg("WARNING: Possible wrongly tagged adj, decl=3-1, stem1=%s, stem2=%s" % (
+      stem1, stem2))
+    decl = "3-1"
+  elif stem1.endswith("er"):
+    # Just 3 is detected as 3-3
+    decl = "3-1"
+  elif re.search(u"(us|a|um|ī|ae|ur)$", stem1) or stem1 == "hic":
+    decl = "3"
+  else:
+    decl = ""
+  return stem1, stem2, decl, types
+
+def la_adj_3rd_2E_subtype(stem1, stem2, decl, types, num, g, is_adj, pagetitle, pagemsg):
+  if num == "pl":
+    types = types + ["pl"]
+  if stem2:
+    pagemsg("WARNING: stem2=%s present with decl=3-2" % stem2)
+    stem2 = ""
+  stem1 += ("e" if g == "N" else "is")
+  decl = ""
+  return stem1, stem2, decl, types
+
+def la_adj_3rd_3E_subtype(stem1, stem2, decl, types, num, g, is_adj, pagetitle, pagemsg):
+  if num == "pl":
+    types = types + ["pl"]
+  if stem2 == infer_3rd_decl_stem(stem1):
+    stem2 = ""
+  if not stem1.endswith("er"):
+    pagemsg("WARNING: Possible wrongly tagged adj, decl=3-3, stem1=%s, stem2=%s" % (
+      stem1, stem2))
+    decl = "3-2"
+  else:
+    decl = "3" # need to indicate 3 to distinguish from 1&2 adjs in -er
+  if g in ["F", "N"]:
+    stem1 = stem2 + ("is" if g == "F" else "e")
+    stem2 = ""
+  return stem1, stem2, decl, types
+
+def la_adj_3rd_comp_subtype(stem1, stem2, decl, types, num, g, is_adj, pagetitle, pagemsg):
+  if num == "pl":
+    types = types + ["pl"]
+  if stem2:
+    if stem2 == "j":
+      stem1 += "jor"
+      stem2 = ""
+    elif stem2 == "n" and stem1 == "mi":
+      stem1 = "minor"
+      stem2 = ""
+    else:
+      pagemsg("WARNING: strange stem2=%s present with decl=3-C" % stem2)
+  else:
+    stem1 += "ior"
+  decl = ""
+  return stem1, stem2, decl, types
+
+def la_adj_3rd_part_subtype(stem1, stem2, decl, types, num, g, is_adj, pagetitle, pagemsg):
+  if num == "pl":
+    types = types + ["pl"]
+  if not re.search(u"[āē]ns$", stem1):
+    pagemsg("WARNING: strange stem1=%s present with decl=3-P" % stem1)
+  if stem2 and not stem2.endswith("eunt"):
+    pagemsg("WARNING: strange stem2=%s present with decl=3-P" % stem2)
+  return stem1, stem2, decl, types
+
+la_adj_decl_suffix_to_decltype = {
+  '1&2': ['1&2', la_adj_1_and_2_subtype],
+  '3rd-1E': ['3-1', la_adj_3rd_1E_subtype],
+  '3rd-2E': ['3-2', la_adj_3rd_2E_subtype],
+  '3rd-3E': ['3-3', la_adj_3rd_3E_subtype],
+  '3rd-comp': ['3-C', la_adj_3rd_comp_subtype],
+  '3rd-part': ['3-P', la_adj_3rd_part_subtype],
+}
+
+adj_decl_and_subtype_to_props = {}
+for key, val in la_adj_decl_suffix_to_decltype.iteritems():
+  decl, compute_props = val
+  adj_decl_and_subtype_to_props[decl] = [key, compute_props]
 
 la_noun_decl_templates = set(
   'la-decl-%s' % k for k in la_noun_decl_suffix_to_decltype
@@ -248,6 +374,7 @@ la_noun_decl_templates = set(
 
 la_adj_decl_templates = {
   "la-decl-1&2",
+  "la-adecl-1st",
   "la-adecl-2nd",
   "la-decl-3rd-1E",
   "la-decl-3rd-2E",
