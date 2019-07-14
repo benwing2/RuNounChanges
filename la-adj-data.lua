@@ -18,7 +18,7 @@ decl["1&2"] = function(data, args)
 
 	local stem = args[1]
 	local original = nil
-	local er = false
+	local er = data.types.er
 
 	if (not stem or stem == "") and not data.allow_empty then
 		if NAMESPACE ~= "" and NAMESPACE ~= "Appendix" then
@@ -57,7 +57,7 @@ decl["1&2"] = function(data, args)
 	local am = "am"
 	local a_macron = "ā"
 
-	if data.subtype:find("greekA") then
+	if data.types.greekA then
 		table.insert(title, "Greek type")
 		table.insert(data.categories, "Latin first and second declension adjectives with Greek declension")
 		us = "os"
@@ -65,7 +65,7 @@ decl["1&2"] = function(data, args)
 		am = "ān"
 	end
 
-	if data.subtype:find("greekE") then
+	if data.types.greekE then
 		table.insert(title, "Greek type")
 		table.insert(data.categories, "Latin first and second declension adjectives with Greek declension")
 		us = "os"
@@ -76,7 +76,7 @@ decl["1&2"] = function(data, args)
 		a_macron = "ē"
 	end
 
-	local ae = data.subtype:find("ae") and "æ" or "ae"
+	local ae = data.types.ae and "æ" or "ae"
 
 	data.forms["nom_sg_m"] = original or (stem .. us)
 	data.forms["nom_sg_f"] = stem .. a_sf
@@ -120,7 +120,7 @@ decl["1&2"] = function(data, args)
 	data.forms["voc_pl_f"] = stem .. ae
 	data.forms["voc_pl_n"] = stem .. "a"
 
-	if data.subtype:find("ius") then
+	if data.types.ius then
 		table.insert(title, "with genitive singular in ''-īus'' and dative singular in ''-ī''")
 		table.insert(data.categories, "Latin first and second declension adjectives with genitive singular in -īus")
 		data.forms["gen_sg_m"] = stem .. "īus"
@@ -135,13 +135,13 @@ decl["1&2"] = function(data, args)
 
 		data.forms["voc_sg_m"] = "mī"
 	end
-	if data.subtype:find("%-n%-") or data.subtype:find("%-n$") or data.subtype:find("^n%-") or data.subtype:find("^n$") then
+	if data.types.n then
 		table.insert(title, "with ''m'' → ''n'' in compounds")
 		for key,val in pairs(data.forms) do
 			data.forms[key] = mw.ustring.gsub(val,"m$","n")
 		end
 	end
-	if data.subtype == "ic" then
+	if data.types.ic then
 		table.insert(title, "with genitive singular ending in ''-ius'' and dative singular ending in ''-ic''")
 
 		local oc = "oc"
@@ -248,7 +248,7 @@ decl["2-2"] = function(data, args)
 	local um = "um"
 	local i_pl = "ī"
 
-	if data.subtype:find("greek") then
+	if data.types.greek then
 		table.insert(title, "Greek type")
 		table.insert(data.categories, "Latin second declension adjectives with Greek declension")
 		us = "os"
@@ -353,7 +353,7 @@ decl["3-1"] = function(data, args)
 	data.forms["voc_pl_m"] = stem2 .. "ēs"
 	data.forms["voc_pl_n"] = stem2 .. "ia"
 
-	if data.subtype:find("par") then
+	if data.types.par then
 		table.insert(title, "non-i-stem (genitive plural in ''-um'')")
 		data.forms["nom_pl_n"] = stem2 .. "a"
 		data.forms["gen_pl_m"] = stem2 .. "um"
@@ -386,7 +386,7 @@ decl["3-C"] = function(data, args)
 		stem = stem .. "i"
 	end
 
-	data.subtype = data.subtype and data.subtype .. "-par" or "par"
+	data.types.par = true
 	decl["3-1"](data, {stem .. "or"})
 
 	local title = {}
@@ -585,7 +585,7 @@ decl["irreg"] = function(data,args)
 			error('please provide the adjective')
 		end
 	end
-	if data.subtype:find("duo") then
+	if data.types.duo then
 		data.title = "Irregular, no singular."
 		local stem = args[1]
 		data.num = "pl"
@@ -762,7 +762,7 @@ decl["irreg"] = function(data,args)
 			data.forms["acc_sg_n"] = "i"
 		end
 	elseif args[1] == "ille" then
-		data.subtype = data.subtype .. "-ius"
+		data.types.ius = true
 
 		decl["1&2"](data, {"ill"})
 
@@ -777,7 +777,7 @@ decl["irreg"] = function(data,args)
 
 		data.categories = {}
 	elseif args[1] == "iste" then
-		data.subtype = data.subtype .. "-ius"
+		data.types.ius = true
 
 		decl["1&2"](data, {"ist"})
 
@@ -792,7 +792,7 @@ decl["irreg"] = function(data,args)
 
 		data.categories = {}
 	elseif args[1] == "ipse" then
-		data.subtype = data.subtype .. "-ius"
+		data.types.ius = true
 
 		decl["1&2"](data, {"ips"})
 

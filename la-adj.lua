@@ -3,6 +3,7 @@ local export = {}
 local lang = require("Module:languages").getByCode("la")
 local m_links = require("Module:links")
 local m_utilities = require("Module:utilities")
+local m_para = require("Module:parameters")
 
 NAMESPACE = NAMESPACE or mw.title.getCurrentTitle().nsText
 PAGENAME = PAGENAME or mw.title.getCurrentTitle().text
@@ -165,27 +166,56 @@ local function generate_forms(frame)
 		num = "",
 		voc = true,
 		forms = {},
+		types = {},
 		categories = {},
 		notes = {},
 		noteindex = {},
 		user_specified = {},
 		accel = {},
-		noneut = false,
 	}
 
-	local args = frame:getParent().args
-	local iargs = frame.args
-	
-	-- FIXME! Use [[Module:parameters]]
-	data.subtype = iargs["type"] or args["type"] or ""
-	data.num = iargs["num"] or args["num"] or ""
-	data.prefix = args["prefix"] or ""
-	data.suffix = args["suffix"] or ""
-	local noneut = args["noneut"]
-	data.noneut = not (not noneut or noneut == "" or noneut == "0" or noneut == "no" or noneut == "n" or noneut == "false")
-	
-	decl[iargs[1] or args["decltype"]](data, args)
-	
+	local iparams = {
+		[1] = {},
+		["type"] = {},
+		num = {},
+	}
+
+	local iargs = m_para.process(frame.args, iparams)
+
+	local parent_args = frame:getParent().args
+
+	local subtype = iargs["type"] or parent_args["type"]
+
+	if subtype and subtype ~= "" then
+		for name, val in ipairs(rsplit(decl_type, "%-")) do
+			data.types[val] = true
+		end
+	end
+
+	local params = {
+		[1] = {required = true, default = "{{{1}}}"},
+		[2] = {},
+		["type"] = {},
+		decltype = {},
+		noun = {},
+		num = {},
+		prefix = {},
+		suffix = {},
+		noneut = {type = "boolean"},
+	}
+	for _, case in ipairs(case_order) do
+		params[case] = {}
+	end
+
+	local args = m_para.process(parent_args, params)
+
+	data.num = iargs.num or args.num or ""
+	data.prefix = args.prefix or ""
+	data.suffix = args.suffix or ""
+	data.noneut = args.noneut
+
+	decl[iargs[1] or args.decltype](data, args)
+
 	process_forms_and_overrides(data, args)
 
 	if data.prefix .. data.suffix ~= "" then
@@ -199,7 +229,7 @@ function export.show(frame)
 	local data = generate_forms(frame)
 
 	show_forms(data)
-	
+
 	return m_table.make_table(data) .. m_utilities.format_categories(data.categories, lang)
 end
 
@@ -214,6 +244,87 @@ function export.generate_forms(frame)
 		end
 	end
 	return table.concat(ins_text, "|")
+end
+
+-- Autodetect the subtype of an adjective given all the information specified
+-- by the user: lemma, stem2, declension type and specified subtypes. Two
+-- values are returned: the lemma base (i.e. the stem of the lemma, as required
+-- by the declension functions) and the autodetected subtypes. Note that this
+-- will not detect a given subtype if the explicitly specified subtypes are
+-- incompatible (i.e. if -SUBTYPE is specified for any subtype that would be
+-- returned; or if M or F is specified when N would be returned, and
+-- vice-versa; or if pl is specified when sg would be returned, and vice-versa).
+--
+-- NOTE: This function has intimate knowledge of the way that the declension
+-- functions handle subtypes, particularly for the third declension.
+local function detect_type_and_subtype(lemma, stem2, typ, subtypes)
+	local base, ending
+
+	if typ == "" then
+		return get_type_and_subtype_by_ending(lemma, stem2, typ, subtypes, {
+			{"us", "1&2", {}},
+			{"a", "1&2", {}},
+			{"um", "1&2", {}},
+			{"ī", "1&2", {}},
+			{"ae", "1&2", {}},
+			-- FIXME, check whether this makes the most sense
+			{"os", "1&2", {"greekA"}},
+			{"ē", "1&2", {"greekE"}},
+			-- FIXME, check whether this makes the most sense
+			{"on", "1&2", {"greekA"}},
+			{"er", "1&2", {"er"}},
+			-- FIXME, maybe should be 3rd declension
+			{"ur", "1&2", {"er"}},
+			{"is", "3-2", {}},
+			{"ior", "3-C", {}},
+			{"jor", "3-C", {}},
+			{"", "3-1", {}},
+		})
+	end
+
+	if typ == "1&2" then
+		return get_type_and_subtype_by_ending(lemma, stem2, typ, subtypes, {
+			{"us", {}},
+			{"a", {}},
+			{"um", {}},
+			{"ī", {}},
+			{"ae", {}},
+			-- FIXME, check whether this makes the most sense
+			{"os", {"greekA"}},
+			{"os", {"greekE"}},
+			{"ē", {"greekE"}},
+			-- FIXME, check whether this makes the most sense
+			{"on", {"greekA"}},
+			{"er", {"er"}},
+			{"ur", {"er"}},
+		})
+	elseif typ == "1-1" then
+		return get_type_and_subtype_by_ending(lemma, stem2, typ, subtypes, {
+			{"a", {}},
+			{"ae", {}},
+		})
+	elseif typ == "2-2" then
+		return get_type_and_subtype_by_ending(lemma, stem2, typ, subtypes, {
+			{"us", {}},
+			{"um", {}},
+			{"ī", {}},
+			{"a", {}},
+			{"os", {"greek"}},
+			{"on", {"greek"}},
+			{"oe", {"greek"}},
+		})
+	elseif typ == "3" then
+		return get_type_and_subtype_by_ending(lemma, stem2, typ, subtypes, {
+			{"er", "3-3", {}},
+			{"is", "3-2", {}},
+			{"e", "3-2", {}},
+			{"ior", "3-C", {}},
+			{"jor", "3-C", {}},
+			{"", "3-1", {}},
+		})
+	else
+		return lemma, typ, {}
+	end
 end
 
 return export
