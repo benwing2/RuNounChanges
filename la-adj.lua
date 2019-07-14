@@ -8,8 +8,10 @@ local m_para = require("Module:parameters")
 NAMESPACE = NAMESPACE or mw.title.getCurrentTitle().nsText
 PAGENAME = PAGENAME or mw.title.getCurrentTitle().text
 
-local decl = require("Module:la-adj/data")
+local decl = require("Module:User:Benwing2/la-adj/data")
 local m_table = require("Module:la-adj/table")
+
+local rmatch = mw.ustring.match
 
 local case_order = {
 	"nom_sg_m",
@@ -255,6 +257,84 @@ function export.generate_forms(frame)
 	return table.concat(ins_text, "|")
 end
 
+-- Given an ending (or possibly a full regex matching the entire lemma, if
+-- a regex group is present), return the base minus the ending, or nil if
+-- the ending doesn't match.
+local function extract_base(lemma, ending)
+	if ending:find("%(") then
+		return rmatch(lemma, ending)
+	else
+		return rmatch(lemma, "^(.*)" .. ending .. "$")
+	end
+end
+
+-- Given ENDINGS_AND_SUBTYPES (a list of pairs of endings with associated
+-- subtypes, where each pair consists of a single ending spec and a list of
+-- subtypes), check each ending in turn against LEMMA. If it matches, return
+-- the pair BASE, SUBTYPES where BASE is the remainder of LEMMA minus the
+-- ending, and SUBTYPES is the subtypes associated with the ending. But don't
+-- return SUBTYPES if any of the subtypes in the list is specifically canceled
+-- in SPECIFIED_SUBTYPES (a set, i.e. a table where the keys are strings and
+-- the value is always true); instead, consider the next ending in turn. If no
+-- endings match, throw an error if DECLTYPE is non-nil, mentioning the
+-- DECLTYPE (the user-specified declension); but if DECLTYPE is nil, just
+-- return the tuple nil, nil, nil.
+--
+-- The ending spec in ENDINGS_AND_SUBTYPES is one of the following:
+--
+-- 1. A simple string, e.g. "tūdō", specifying an ending.
+-- 2. A regex that should match the entire lemma (it should be anchored at
+--    the beginning with ^ and at the end with $), and contains a single
+--    capturing group to match the base.
+-- 3. A pair {SIMPLE_STRING_OR_REGEX, STEM2_ENDING} where
+--    SIMPLE_STRING_OR_REGEX is one of the previous two possibilities and
+--    STEM2_ENDING is a string specifying the corresponding ending that must
+--    be present in STEM2. If this form is used, the combination of
+--    base + STEM2_ENDING must exactly match STEM2 in order for this entry
+--    to be considered a match. An example is {"is", ""}, which will match
+--    lemma == "follis", stem2 == "foll", but not lemma == "lapis",
+--    stem2 == "lapid".
+local function get_type_and_subtype_by_ending(lemma, stem2, decltype, specified_subtypes,
+		endings_and_subtypes)
+	for _, ending_and_subtypes in ipairs(endings_and_subtypes) do
+		local ending = ending_and_subtypes[1]
+		local rettype = decltype
+		local subtypes = ending_and_subtypes[2]
+		if #ending_and_subtypes == 3 then
+			rettype = ending_and_subtypes[2]
+			subtypes = ending_and_subtypes[3]
+		end
+		not_this_subtype = false
+		for _, subtype in ipairs(subtypes) do
+			-- A subtype is directly canceled by specifying -SUBTYPE.
+			if specified_subtypes["-" .. subtype] then
+				not_this_subtype = true
+				break
+			end
+		end
+		if not not_this_subtype then
+			if type(ending) == "table" then
+				local lemma_ending = ending[1]
+				local stem2_ending = ending[2]
+				local base = extract_base(lemma, lemma_ending)
+				if base and base .. stem2_ending == stem2 then
+					return base, rettype, subtypes
+				end
+			else
+				local base = extract_base(lemma, ending)
+				if base then
+					return base, rettype, subtypes
+				end
+			end
+		end
+	end
+	if decltype == "" then
+		error("Unrecognized ending for adjective: " .. lemma)
+	else
+		error("Unrecognized ending for declension-" .. decltype .. " adjective: " .. lemma)
+	end
+	return nil, nil, nil
+end
 -- Autodetect the subtype of an adjective given all the information specified
 -- by the user: lemma, stem2, declension type and specified subtypes. Two
 -- values are returned: the lemma base (i.e. the stem of the lemma, as required
@@ -266,7 +346,7 @@ end
 --
 -- NOTE: This function has intimate knowledge of the way that the declension
 -- functions handle subtypes, particularly for the third declension.
-local function detect_type_and_subtype(lemma, stem2, typ, subtypes)
+function export.detect_type_and_subtype(lemma, stem2, typ, subtypes)
 	local base, ending
 
 	if typ == "" then

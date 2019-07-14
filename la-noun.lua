@@ -1,7 +1,7 @@
 local export = {}
 
 -- TODO:
--- Eliminate specification of noteindex from la-adj/data
+-- (DONE) Eliminate specification of noteindex from la-adj/data
 -- Finish autodetection of adjectives
 -- Remove old noun code
 -- Implement <.sufn>
@@ -19,10 +19,10 @@ local current_title = mw.title.getCurrentTitle()
 local NAMESPACE = current_title.nsText
 local PAGENAME = current_title.text
 
-local m_la_adj = require("Module:la-adj")
+local m_la_adj = require("Module:User:Benwing2/la-adj")
 local m_noun_decl = require("Module:la-noun/data")
 local m_table = require("Module:la-noun/table")
-local m_adj_decl = require("Module:la-adj/data")
+local m_adj_decl = require("Module:User:Benwing2/la-adj/data")
 local m_la_utilities = require("Module:la-utilities")
 
 local rsplit = mw.text.split
@@ -1048,7 +1048,8 @@ local function decline_segment_run(parsed_run)
 					types = seg.types,
 					categories = {},
 					notes = {},
-					noteindex = {},
+					prefix = "",
+					suffix = "",
 				}
 				m_adj_decl[seg.decl](data, seg.args)
 			else
@@ -1067,6 +1068,8 @@ local function decline_segment_run(parsed_run)
 					types = seg.types,
 					categories = {},
 					notes = {},
+					prefix = "",
+					suffix = "",
 				}
 				if seg.types.genplum then
 					data.um = true
