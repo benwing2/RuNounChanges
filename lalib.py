@@ -394,6 +394,7 @@ la_infl_of_templates = {
 third_decl_stem_patterns = [
   (u"tūdō", u"tūdin"),
   ("is", ""),
+  (u"ēs", ""),
   (u"āns", "ant"),
   (u"ēns", "ent"),
   (u"ōns", "ont"),
@@ -408,6 +409,8 @@ third_decl_stem_patterns = [
   ("er", "r"),
   ("or", u"ōr"),
   (u"ō", u"ōn"),
+  ("ps", "p"),
+  ("bs", "b"),
   ("s", "t"),
   ("x", "c"),
 ]
