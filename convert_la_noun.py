@@ -47,7 +47,7 @@ def compare_new_and_old_templates(origt, newt, pagetitle, pagemsg, errandpagemsg
   pagemsg("%s and %s have same forms" % (origt, newt))
   return True
 
-def compute_lemma_and_subtypes(decl, stem1, stem2, num, stem_suffix, pl_suffix,
+def compute_noun_lemma_and_subtypes(decl, stem1, stem2, num, stem_suffix, pl_suffix,
     to_auto, pagemsg, origt):
   if type(to_auto) is not tuple:
     to_auto = to_auto(stem1, stem2, num)
@@ -131,37 +131,50 @@ def convert_la_decl_multi_to_new(t, pagetitle, pagemsg, errandpagemsg):
     else:
       errandpagemsg("WARNING: Too many subtypes: %s" % origt)
       return None
-    if g == "N" and "N" not in specified_subtypes:
-      specified_subtypes = ("N",) + specified_subtypes
-    lookup_key = (decl, specified_subtypes)
-    if lookup_key not in lalib.decl_and_subtype_to_props:
-      errandpagemsg("WARNING: Lookup key %s not found: %s" % (
-        lookup_key, origt))
-      return None
-    auto_num, stem_suffix, pl_suffix, to_auto = lalib.decl_and_subtype_to_props[lookup_key]
-    lemma, stem2, subtypes = compute_lemma_and_subtypes(decl, stem1, stem2, num, stem_suffix, pl_suffix, to_auto, pagemsg, origt)
-    base_and_detected_subtypes = expand_text("{{#invoke:User:Benwing2/la-noun|detect_subtype|%s|%s|%s|%s}}" % (lemma, stem2, decl, ".".join(subtypes)))
-    base, detected_subtypes = base_and_detected_subtypes.split("|")
-    detected_subtypes = detected_subtypes.split(".")
-    if (g == "N" and ("M" in detected_subtypes or "F" in detected_subtypes or "N" not in detected_subtypes and "N" not in subtypes) or
-        (g == "M" or g == "F") and ("N" in detected_subtypes)):
-      errandpagemsg("WARNING: Incompatible gender specification: g=%s, subtypes=%s, detected_subtypes=%s: %s" % (
-        g, ".".join(subtypes), ".".join(detected_subtypes), origt))
-      return None
-    if (g == "M" or g == "F") and g not in detected_subtypes:
-      # Add the gender explicitly, and remove any -N specification, which
-      # becomes redundant.
-      subtypes = [g] + [x for x in subtypes if x != "-N"]
-    loc = getrmparam(t, "loc")
-    if bool_param_is_true(loc):
-      subtypes.append("loc")
+    if decl in lalib.adj_decl_and_subtype_to_props:
+      adj_key, adj_compute_props = lalib.adj_decl_and_subtype_to_props[decl]
+      lemma, stem2, decl, subtypes = (
+        adj_compute_props(stem1, stem2, decl, list(specified_subtypes), num, g, False,
+          pagetitle, pagemsg)
+      )
+      # No point in attaching .sg or .pl to modifying adjectives; they
+      # inherit the surrounding number restriction
+      subtypes = [x for x in subtypes if x not in ["pl", "sg"]]
+      decl += "+"
+    else:
+      if g == "N" and "N" not in specified_subtypes:
+        specified_subtypes = ("N",) + specified_subtypes
+      lookup_key = (decl, specified_subtypes)
+      if lookup_key not in lalib.noun_decl_and_subtype_to_props:
+        errandpagemsg("WARNING: Lookup key %s not found: %s" % (
+          lookup_key, origt))
+        return None
+      auto_num, stem_suffix, pl_suffix, to_auto = lalib.noun_decl_and_subtype_to_props[lookup_key]
+      lemma, stem2, subtypes = compute_noun_lemma_and_subtypes(decl, stem1, stem2, num, stem_suffix, pl_suffix, to_auto, pagemsg, origt)
+      base_and_detected_subtypes = expand_text("{{#invoke:User:Benwing2/la-noun|detect_subtype|%s|%s|%s|%s}}" % (lemma, stem2, decl, ".".join(subtypes)))
+      base, detected_subtypes = base_and_detected_subtypes.split("|")
+      detected_subtypes = detected_subtypes.split(".")
+      if (g == "N" and ("M" in detected_subtypes or "F" in detected_subtypes or "N" not in detected_subtypes and "N" not in subtypes) or
+          (g == "M" or g == "F") and ("N" in detected_subtypes)):
+        errandpagemsg("WARNING: Incompatible gender specification: g=%s, subtypes=%s, detected_subtypes=%s: %s" % (
+          g, ".".join(subtypes), ".".join(detected_subtypes), origt))
+        return None
+      if (g == "M" or g == "F") and g not in detected_subtypes:
+        # Add the gender explicitly, and remove any -N specification, which
+        # becomes redundant.
+        subtypes = [g] + [x for x in subtypes if x != "-N"]
+      loc = getrmparam(t, "loc")
+      if bool_param_is_true(loc):
+        subtypes.append("loc")
+      if str((i + 1) / 2) in um:
+        subtypes.append("genplum")
     if bool_param_is_true(lig):
       subtypes.append("lig")
-    if str((i + 1) / 2) in um:
-      subtypes.append("genplum")
     if stem2:
       lemma += "/" + stem2
-    lemma += "<%s>" % ".".join([decl] + subtypes)
+    if decl:
+      subtypes = [decl] + subtypes
+    lemma += "<%s>" % ".".join(subtypes)
     segments[i] = lemma
   blib.set_template_name(t, "la-ndecl")
   t.add("1", "".join(segments))
@@ -192,7 +205,7 @@ def convert_template_to_new(t, pagetitle, pagemsg, errandpagemsg):
   stem1 = getparam(t, "1").strip()
   stem2 = getparam(t, "2").strip()
   num = getrmparam(t, "num")
-  lemma, stem2, subtypes = compute_lemma_and_subtypes(declspec, stem1, stem2, num, stem_suffix, pl_suffix, to_auto, pagemsg, origt)
+  lemma, stem2, subtypes = compute_noun_lemma_and_subtypes(declspec, stem1, stem2, num, stem_suffix, pl_suffix, to_auto, pagemsg, origt)
   loc = getrmparam(t, "loc")
   if bool_param_is_true(loc):
     subtypes.append("loc")
