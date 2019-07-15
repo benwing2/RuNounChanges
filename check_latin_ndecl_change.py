@@ -8,41 +8,27 @@ from blib import getparam, rmparam, tname, msg, site
 
 import lalib
 
-def compare_new_and_old_templates(t, pagetitle, pagemsg, errandpagemsg):
+def compare_new_and_old_templates(origt, newt, pagetitle, pagemsg, errandpagemsg):
   global args
   def expand_text(tempcall):
     return blib.expand_text(tempcall, pagetitle, pagemsg, args.verbose)
 
-  old_generate_template = re.sub(r"^\{\{la-ndecl\|", "{{la-generate-noun-forms|", t)
-  old_result = expand_text(old_generate_template)
-  if not old_result:
-    old_forms = None
-  else:
-    old_forms = blib.split_generate_args(old_result)
-  if old_forms is None:
-    errandpagemsg("WARNING: Error generating old forms, can't compare")
-    return False
-  new_generate_template = re.sub(r"^\{\{la-ndecl\|", "{{User:Benwing2/la-new-generate-noun-forms|", t)
-  new_result = expand_text(new_generate_template)
-  if not new_result:
-    errandpagemsg("WARNING: Error generating new forms, can't compare")
-    return False
-  new_forms = blib.split_generate_args(new_result)
-  for form in set(old_forms.keys() + new_forms.keys()):
-    if form not in new_forms:
-      pagemsg("WARNING: form %s=%s in old forms but missing in new forms" % (
-        form, old_forms[form]))
-      return False
-    if form not in old_forms:
-      pagemsg("WARNING: form %s=%s in new forms but missing in old forms" % (
-        form, new_forms[form]))
-      return False
-    if new_forms[form] != old_forms[form]:
-      pagemsg("WARNING: form %s=%s in old forms but =%s in new forms" % (
-        form, old_forms[form], new_forms[form]))
-      return False
-  pagemsg("Old and new implementations of %s compare the same" % t)
-  return True
+  def generate_old_forms():
+    old_generate_template = re.sub(r"^\{\{la-ndecl\|", "{{la-generate-noun-forms|", t)
+    old_result = expand_text(old_generate_template)
+    if not old_result:
+      return None
+    return old_result
+
+  def generate_new_forms():
+    new_generate_template = re.sub(r"^\{\{la-ndecl\|", "{{User:Benwing2/la-new-generate-noun-forms|", newt)
+    new_result = expand_text(new_generate_template)
+    if not new_result:
+      return None
+    return new_result
+
+  return blib.compare_new_and_old_template_forms(origt, newt, generate_old_forms,
+    generate_new_forms, pagemsg, errandpagemsg)
 
 def process_page(index, page):
   pagetitle = unicode(page.title())
