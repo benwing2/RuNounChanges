@@ -8,6 +8,37 @@ local export = {}
 -- Look into adj voc=false
 -- Handle loc in adjectives
 
+--[=[
+
+TERMINOLOGY:
+
+-- "slot" = A particular case/number combination (for nouns) or
+	 case/number/gender combination (for adjectives). Example slot names are
+	 "abl_sg" (for noun) or "acc_pl_f" (for adjectives). Each slot is filled
+	 with zero or more forms.
+
+-- "form" = The declined Latin form representing the value of a given slot.
+	 For example, rēge is a form, representing the value of the abl_sg slot of
+	 the lemma rēx.
+
+-- "lemma" = The dictionary form of a given Latin term. For nouns, it's
+	 generally the nominative singular, but will be the nominative plural of
+	 plurale tantum nouns (e.g. [[castra]]), and may occasionally be another
+	 form (e.g. the genitive singular) if the nominative singular is missing.
+	 For adjectives, it's generally the masculine nominative singular, but
+	 will be the masculine nominative plural of plurale tantum adjectives
+	 (e.g. [[dēnī]]).
+
+-- "plurale tantum" (plural "pluralia tantum") = A noun or adjective that
+	 exists only in the plural. Examples are castra "army camp", faucēs "throat",
+	 and dēnī "ten each" (used for counting pluralia tantum nouns).
+
+-- "singulare tantum" (plural "singularia tantum") = A noun or adjective that
+	 exists only in the singular. Examples are geōlogia "geology" (and in
+	 general most non-count nouns) and the adjective ūnus "one".
+
+]=]
+
 local lang = require("Module:languages").getByCode("la")
 local m_links = require("Module:links")
 local m_utilities = require("Module:utilities")
@@ -21,8 +52,9 @@ local PAGENAME = current_title.text
 
 local m_la_adj = require("Module:User:Benwing2/la-adj")
 local m_noun_decl = require("Module:la-noun/data")
-local m_table = require("Module:la-noun/table")
+local m_noun_table = require("Module:la-noun/table")
 local m_adj_decl = require("Module:User:Benwing2/la-adj/data")
+local m_adj_table = require("Module:la-adj/table")
 local m_la_utilities = require("Module:la-utilities")
 
 local rsplit = mw.text.split
@@ -35,8 +67,8 @@ local uupper = mw.ustring.upper
 
 -- version of rsubn() that discards all but the first return value
 local function rsub(term, foo, bar)
-    local retval = rsubn(term, foo, bar)
-    return retval
+	local retval = rsubn(term, foo, bar)
+	return retval
 end
 
 local ligatures = {
@@ -60,16 +92,13 @@ local nums = {
 	"sg", "pl"
 }
 
--- Canonical order of cases
-local case_order = {}
+local genders = {
+	"m", "f", "n"
+}
 
-for _, num in ipairs(nums) do
-	for _, case in ipairs(cases) do
-		table.insert(case_order, case .. "_" .. num)
-	end
-end
-
-local function itercn()
+-- Iterate over all the "slots" associated with a noun declension, where a slot
+-- is a particular case/number combination.
+local function iter_noun_slots()
 	local i = 1
 	local j = 0
 	local function iter()
@@ -86,7 +115,42 @@ local function itercn()
 	return iter
 end
 
-local function process_forms_and_overrides(data, args)
+-- Iterate over all the "slots" associated with an adjective declension, where a slot
+-- is a particular case/number/gender combination.
+local function iter_adj_slots()
+	local i = 1
+	local j = 1
+	local k = 0
+	local function iter()
+		k = k + 1
+		if k > #genders then
+			k = 1
+			j = j + 1
+			if j > #nums then
+				j = 1
+				i = i + 1
+				if i > #cases then
+					return nil
+				end
+			end
+		end
+		return cases[i] .. "_" .. nums[j] .. "_" .. genders[k]
+	end
+	return iter
+end
+
+-- Iterate over all the "slots" associated with a noun or adjective declension (depending on
+-- the value of IS_ADJ), where a slot is a particular case/number combination (in the case of
+-- nouns) or case/number/gender combination (in the case of adjectives).
+local function iter_slots(is_adj)
+	if is_adj then
+		return iter_adj_slots()
+	else
+		return iter_noun_slots()
+	end
+end
+
+local function process_noun_forms_and_overrides(data, args)
 	local redlink = false
 	if data.num == "pl" and NAMESPACE == '' then
 		table.insert(data.categories, "Latin pluralia tantum")
@@ -104,33 +168,30 @@ local function process_forms_and_overrides(data, args)
 		accel_lemma = accel_lemma[1]
 	end
 
-	for _, key in ipairs(case_order) do
-		if args[key] or data.forms[key] then
+	for slot in iter_noun_slots() do
+		if args[slot] or data.forms[slot] then
 			local val
-			if args[key] then
-				val = args[key]
-				data.user_specified[key] = true
+			if args[slot] then
+				val = args[slot]
+				data.user_specified[slot] = true
 			else
-				val = data.forms[key]
+				val = data.forms[slot]
 			end
 			if type(val) == "string" then
 				val = rsplit(val, "/")
 			end
-			if (data.num == "pl" and key:find("sg")) or (data.num == "sg" and key:find("pl")) then
-				data.forms[key] = ""
+			if (data.num == "pl" and slot:find("sg")) or (data.num == "sg" and slot:find("pl")) then
+				data.forms[slot] = ""
 			elseif val[1] == "" or val[1] == "-" or val[1] == "—" then
-				data.forms[key] = "—"
+				data.forms[slot] = "—"
 			else
 				for i, form in ipairs(val) do
 					local word = data.prefix .. (data.n and rsub(form,"m$","n") or form) .. data.suffix
-					if data.lig then
-						word = word:gsub("[AaOo]e", ligatures)
-					end
 
-					local accel_form = key
+					local accel_form = slot
 					accel_form = accel_form:gsub("_([sp])[gl]$", "|%1")
 
-					data.accel[key .. i] = {form = accel_form, lemma = accel_lemma}
+					data.accel[slot .. i] = {form = accel_form, lemma = accel_lemma}
 					val[i] = word
 					if not redlink and NAMESPACE == '' then
 						local title = lang:makeEntryName(word)
@@ -141,23 +202,105 @@ local function process_forms_and_overrides(data, args)
 						end
 					end
 				end
-				data.forms[key] = val
+				data.forms[slot] = val
 			end
 		end
 	end
 end
 
-local function show_forms(data)
+local function process_adj_forms_and_overrides(data, args)
+	local redlink = false
+	if data.num == "pl" then
+		table.insert(data.categories, "Latin plural-only adjectives")
+	end
+
+	local accel_lemma, accel_lemma_f
+	if data.num and data.num ~= "" then
+		accel_lemma = data.forms["nom_" .. data.num .. "_m"]
+		accel_lemma_f = data.forms["nom_" .. data.num .. "_f"]
+	else
+		accel_lemma = data.forms["nom_sg_m"]
+		accel_lemma_f = data.forms["nom_sg_f"]
+	end
+
+	for slot in iter_adj_slots() do
+		-- If noneut=1 passed, clear out all neuter forms.
+		if data.noneut and slot:find("_n") then
+			data.forms[slot] = nil
+		end
+		if args[slot] or data.forms[slot] then
+			if args[slot] then
+				val = args[slot]
+				data.user_specified[slot] = true
+			else
+				val = data.forms[slot]
+			end
+			if type(val) == "string" then
+				val = mw.text.split(val, "/")
+			end
+			if data.num == "pl" and slot:find("sg") then
+				data.forms[slot] = ""
+			elseif val[1] == "" or val == "" or val[1] == "-" or val[1] == "—" or val == "-" or val == "—" then
+				data.forms[slot] = "—"
+			else
+				for i, form in ipairs(val) do
+					local word = data.prefix .. form .. data.suffix
+
+					local accel_form = slot
+					accel_form = accel_form:gsub("_([sp])[gl]_", "|%1|")
+
+					if data.noneut then
+						-- If noneut=1, we're being asked to do a noun like
+						-- Aquītānus or Rōmānus that has masculine and feminine
+						-- variants, not an adjective. In that case, make the
+						-- accelerators correspond to nominal case/number forms
+						-- without the gender, and use the feminine as the
+						-- lemma for feminine forms.
+						if slot:find("_f") then
+							data.accel[slot .. i] = {form = accel_form:gsub("|f$", ""), lemma = accel_lemma_f}
+						else
+							data.accel[slot .. i] = {form = accel_form:gsub("|m$", ""), lemma = accel_lemma}
+						end
+					else
+						if not data.forms.nom_sg_n and not data.forms.nom_pl_n then
+							-- use multipart tags if called for
+							accel_form = accel_form:gsub("|m$", "|m//f//n")
+						elseif not data.forms.nom_sg_f and not data.forms.nom_pl_f then
+							accel_form = accel_form:gsub("|m$", "|m//f")
+						end
+
+						-- use the order nom|m|s, which is more standard than nom|s|m
+						accel_form = accel_form:gsub("|(.-)|(.-)$", "|%2|%1")
+
+						data.accel[slot .. i] = {form = accel_form, lemma = accel_lemma}
+					end
+					val[i] = word
+					if not redlink and NAMESPACE == '' then
+						local title = lang:makeEntryName(word)
+						local t = mw.title.new(title)
+						if t and not t.exists then
+							table.insert(data.categories, 'Latin adjectives with red links in their declension tables')
+							redlink = true
+						end
+					end
+				end
+				data.forms[slot] = val
+			end
+		end
+	end
+end
+
+local function show_forms(data, is_adj)
 	local noteindex = 1
 	local notes = {}
 	local seen_notes = {}
-	for _, key in ipairs(case_order) do
-		local val = data.forms[key]
+	for slot in iter_slots(is_adj) do
+		local val = data.forms[slot]
 		if val and val ~= "" and val ~= "—" then
 			for i, form in ipairs(val) do
-				local link = m_links.full_link({lang = lang, term = form, accel = data.accel[key .. i]})
-				local this_notes = data.notes[key .. i]
-				if this_notes and not data.user_specified[key] then
+				local link = m_links.full_link({lang = lang, term = form, accel = data.accel[slot .. i]})
+				local this_notes = data.notes[slot .. i]
+				if this_notes and not data.user_specified[slot] then
 					if type(this_notes) == "string" then
 						this_notes = {this_notes}
 					end
@@ -178,129 +321,36 @@ local function show_forms(data)
 					val[i] = link
 				end
 			end
-			data.forms[key] = table.concat(val, "<br />")
+			-- FIXME, do we want this difference?
+			data.forms[slot] = table.concat(val, is_adj and ", " or "<br />")
 		end
 	end
 	data.footnote = table.concat(notes, "<br />") .. data.footnote
 end
 
-local function make_table(data)
+local function make_noun_table(data)
 	if data.num == "sg" then
-		return m_table.make_table_sg(data)
+		return m_noun_table.make_table_sg(data)
 	elseif data.num == "pl" then
-		return m_table.make_table_pl(data)
+		return m_noun_table.make_table_pl(data)
 	else
-		return m_table.make_table(data)
+		return m_noun_table.make_table(data)
 	end
 end
 
-local function generate_forms(frame)
-	local data = {
-		title = "",
-		footnote = "",
-		num = "",
-		loc = false,
-		um = false,
-		forms = {},
-		types = {},
-		categories = {},
-		notes = {},
-		user_specified = {},
-		accel = {},
-	}
-
-	local iparams = {
-		[1] = {},
-		decl_type = {},
-		num = {},
-	}
-
-	local iargs = m_para.process(frame.args, iparams)
-
-	local parent_args = frame:getParent().args
-
-	local decl_type = iargs.decl_type or parent_args.decl_type
-
-	if decl_type and decl_type ~= "" then 
-		for _, val in ipairs(rsplit(decl_type, "%-")) do
-			data.types[val] = true
-		end
-	end
-
-	local params = {
-		[1] = {required = true},
-		decl = {},
-		decl_type = {},
-		noun = {},
-		num = {},
-		loc = {type = "boolean"},
-		um = {type = "boolean"},
-		genplum = {type = "boolean"},
-		n = {type = "boolean"},
-		lig = {type = "boolean"},
-		prefix = {},
-		suffix = {},
-		footnote = {},
-	}
-	for _, case in ipairs(case_order) do
-		params[case] = {}
-	end
-
-	local decl = iargs[1] or parent_args.decl
-
-	if (decl == "2" and data.types.er) or decl == "3" then
-		params[2] = {}
-	end
-
-	local args = m_para.process(parent_args, params)
-
-	data.num = iargs.num or args.num or ""
-	data.loc = args.loc
-	data.lig = args.lig
-	data.um = args.um or args.genplum
-	data.prefix = args.prefix or ""
-	data.suffix = args.suffix or ""
-	data.footnote = args.footnote or ""
-	data.n = args.n and (data.suffix ~= "") -- Must have a suffix and n specified
-
-	m_noun_decl[decl](data, args)
-
-	process_forms_and_overrides(data, args)
-
-	if data.prefix .. data.suffix ~= "" then
-		table.insert(data.categories, "Kenny's testing category 6")
-	end
-
-	return data
-end
-
-function export.show(frame)
-	local data = generate_forms(frame)
-
-	show_forms(data)
-
-	return make_table(data) .. m_utilities.format_categories(data.categories, lang)
-end
-
-local function concat_forms(data)
+local function concat_forms(data, is_adj)
 	local ins_text = {}
-	for _, key in ipairs(case_order) do
-		local val = data.forms[key]
+	for slot in iter_slots(is_adj) do
+		local val = data.forms[slot]
 		if val and val ~= "" and val ~= "—" and #val > 0 then
 			local new_vals = {}
 			for _, v in ipairs(val) do
 				table.insert(new_vals, rsub(v, "|", "<!>"))
 			end
-			table.insert(ins_text, key .. "=" .. table.concat(new_vals, ","))
+			table.insert(ins_text, slot .. "=" .. table.concat(new_vals, ","))
 		end
 	end
 	return table.concat(ins_text, "|")
-end
-
-function export.generate_forms(frame)
-	local data = generate_forms(frame)
-
-	return concat_forms(data)
 end
 
 -- Given an ending (or possibly a full regex matching the entire lemma, if
@@ -340,7 +390,7 @@ end
 --    to be considered a match. An example is {"is", ""}, which will match
 --    lemma == "follis", stem2 == "foll", but not lemma == "lapis",
 --    stem2 == "lapid".
-local function get_subtype_by_ending(lemma, stem2, decltype, specified_subtypes,
+local function get_noun_subtype_by_ending(lemma, stem2, decltype, specified_subtypes,
 		endings_and_subtypes)
 	for _, ending_and_subtypes in ipairs(endings_and_subtypes) do
 		local ending = ending_and_subtypes[1]
@@ -412,11 +462,11 @@ end
 --
 -- NOTE: This function has intimate knowledge of the way that the declension
 -- functions handle subtypes, particularly for the third declension.
-local function detect_subtype(lemma, stem2, typ, subtypes)
+local function detect_noun_subtype(lemma, stem2, typ, subtypes)
 	local base, ending
 
 	if typ == "1" then
-		return get_subtype_by_ending(lemma, stem2, typ, subtypes, {
+		return get_noun_subtype_by_ending(lemma, stem2, typ, subtypes, {
 			{"ām", {"F", "am"}},
 			{"ās", {"M", "Greek", "Ma"}},
 			{"ēs", {"M", "Greek", "Me"}},
@@ -428,7 +478,7 @@ local function detect_subtype(lemma, stem2, typ, subtypes)
 		if rmatch(lemma, "r$") then
 			return lemma, {"er"}
 		end
-		return get_subtype_by_ending(lemma, stem2, typ, subtypes, {
+		return get_noun_subtype_by_ending(lemma, stem2, typ, subtypes, {
 			{"os", {"M", "Greek"}},
 			{"on", {"N", "Greek"}},
 			-- -ius beginning with a capital letter is assumed a proper name,
@@ -457,7 +507,7 @@ local function detect_subtype(lemma, stem2, typ, subtypes)
 		local detected_subtypes
 		if subtypes.Greek then
 			base, detected_subtypes =
-				get_subtype_by_ending(lemma, stem2, nil, subtypes, {
+				get_noun_subtype_by_ending(lemma, stem2, nil, subtypes, {
 					{"ēr", {"er"}},
 					{"ōn", {"on"}},
 					{"s", {"s"}},
@@ -473,13 +523,13 @@ local function detect_subtype(lemma, stem2, typ, subtypes)
 		end
 
 		if not subtypes.N then
-			base, detected_subtypes = get_subtype_by_ending(lemma, stem2, nil, subtypes, {
+			base, detected_subtypes = get_noun_subtype_by_ending(lemma, stem2, nil, subtypes, {
 				{"^([A-ZĀĒĪŌŪȲĂĔĬŎŬ].*)polis$", {"polis", "sg", "loc"}},
 			})
 			if base then
 				return base, detected_subtypes
 			end
-			base, detected_subtypes = get_subtype_by_ending(lemma, stem2, nil, subtypes, {
+			base, detected_subtypes = get_noun_subtype_by_ending(lemma, stem2, nil, subtypes, {
 				{{"tūdō", "tūdin"}, {"F"}},
 				{{"tās", "tāt"}, {"F"}},
 				{{"tūs", "tūt"}, {"F"}},
@@ -497,7 +547,7 @@ local function detect_subtype(lemma, stem2, typ, subtypes)
 			end
 		end
 
-		base, detected_subtypes = get_subtype_by_ending(lemma, stem2, nil, subtypes, {
+		base, detected_subtypes = get_noun_subtype_by_ending(lemma, stem2, nil, subtypes, {
 			{{"us", "or"}, {"N"}},
 			{{"us", "er"}, {"N"}},
 			{{"ma", "mat"}, {"N"}},
@@ -523,14 +573,14 @@ local function detect_subtype(lemma, stem2, typ, subtypes)
 				return base, {}
 			end
 		end
-		return get_subtype_by_ending(lemma, stem2, typ, subtypes, {
+		return get_noun_subtype_by_ending(lemma, stem2, typ, subtypes, {
 			{"us", {"M"}},
 			{"ū", {"N"}},
 			{"ūs", {"M", "pl"}},
 			{"ua", {"N", "pl"}},
 		})
 	elseif typ == "5" then
-		return get_subtype_by_ending(lemma, stem2, typ, subtypes, {
+		return get_noun_subtype_by_ending(lemma, stem2, typ, subtypes, {
 			{"iēs", {"F", "i"}},
 			{"ēs", {"F"}},
 		})
@@ -550,7 +600,7 @@ local function detect_subtype(lemma, stem2, typ, subtypes)
 	end
 end
 
-function export.detect_subtype(frame)
+function export.detect_noun_subtype(frame)
 	local params = {
 		[1] = {required = true},
 		[2] = {},
@@ -564,8 +614,199 @@ function export.detect_subtype(frame)
 			specified_subtypes[subtype] = true
 		end
 	end
-	local base, subtypes = detect_subtype(args[1], args[2], args[3], specified_subtypes)
+	local base, subtypes = detect_noun_subtype(args[1], args[2], args[3], specified_subtypes)
 	return base .. "|" .. table.concat(subtypes, ".")
+end
+
+-- Given ENDINGS_AND_SUBTYPES (a list of pairs of endings with associated
+-- subtypes, where each pair consists of a single ending spec and a list of
+-- subtypes), check each ending in turn against LEMMA. If it matches, return
+-- the pair BASE, SUBTYPES where BASE is the remainder of LEMMA minus the
+-- ending, and SUBTYPES is the subtypes associated with the ending. But don't
+-- return SUBTYPES if any of the subtypes in the list is specifically canceled
+-- in SPECIFIED_SUBTYPES (a set, i.e. a table where the keys are strings and
+-- the value is always true); instead, consider the next ending in turn. If no
+-- endings match, throw an error if DECLTYPE is non-nil, mentioning the
+-- DECLTYPE (the user-specified declension); but if DECLTYPE is nil, just
+-- return the tuple nil, nil, nil.
+--
+-- The ending spec in ENDINGS_AND_SUBTYPES is one of the following:
+--
+-- 1. A simple string, e.g. "tūdō", specifying an ending.
+-- 2. A regex that should match the entire lemma (it should be anchored at
+--    the beginning with ^ and at the end with $), and contains a single
+--    capturing group to match the base.
+-- 3. A pair {SIMPLE_STRING_OR_REGEX, STEM2_ENDING} where
+--    SIMPLE_STRING_OR_REGEX is one of the previous two possibilities and
+--    STEM2_ENDING is a string specifying the corresponding ending that must
+--    be present in STEM2. If this form is used, the combination of
+--    base + STEM2_ENDING must exactly match STEM2 in order for this entry
+--    to be considered a match. An example is {"is", ""}, which will match
+--    lemma == "follis", stem2 == "foll", but not lemma == "lapis",
+--    stem2 == "lapid".
+local function get_unadjusted_adj_type_and_subtype_by_ending(lemma, stem2, decltype,
+		specified_subtypes, endings_and_subtypes)
+	for _, ending_and_subtypes in ipairs(endings_and_subtypes) do
+		local ending = ending_and_subtypes[1]
+		local rettype = ending_and_subtypes[2]
+		local subtypes = ending_and_subtypes[3]
+		local specified_stem2 = ending_and_subtypes[4]
+		not_this_subtype = false
+		for _, subtype in ipairs(subtypes) do
+			-- A subtype is directly canceled by specifying -SUBTYPE.
+			if specified_subtypes["-" .. subtype] then
+				not_this_subtype = true
+				break
+			end
+			-- A subtype is canceled if the user specified SUBTYPE and
+			-- -SUBTYPE is given in the to-be-returned subtypes.
+			must_not_be_present = rmatch(subtype, "^%-(.*)$")
+			if must_not_be_present and specified_subtypes[must_not_be_present] then
+				not_this_subtype = true
+				break
+			end
+		end
+		if not not_this_subtype then
+			local base
+			if type(ending) == "table" then
+				local lemma_ending = ending[1]
+				local stem2_ending = ending[2]
+				base = extract_base(lemma, lemma_ending)
+				if base and base .. stem2_ending ~= stem2 then
+					base = nil
+				end
+			else
+				base = extract_base(lemma, ending)
+			end
+			if base then
+				-- Remove subtypes of the form -SUBTYPE from the subtypes
+				-- to be returned.
+				local new_subtypes = {}
+				for _, subtype in ipairs(subtypes) do
+					if not rfind(subtype, "^%-") then
+						table.insert(new_subtypes, subtype)
+					end
+				end
+				return base, specified_stem2 or stem2, rettype, new_subtypes
+			end
+		end
+	end
+	if decltype == "" then
+		error("Unrecognized ending for adjective: " .. lemma)
+	else
+		error("Unrecognized ending for declension-" .. decltype .. " adjective: " .. lemma)
+	end
+end
+
+-- Hack: The declension functions for 3-1 expect type "par" for non-i-stems. We instead use -I
+-- to indicate non-i-stems, which is more standard. This function converts as appropriate.
+local function get_adj_type_and_subtype_by_ending(lemma, stem2, decltype, specified_subtypes,
+		endings_and_subtypes)
+	local base, stem2, decl, subtypes = get_unadjusted_adj_type_and_subtype_by_ending(lemma, stem2,
+		decltype, specified_subtypes, endings_and_subtypes)
+	if decl == "3-1" and not ut.contains(subtypes, "I") then
+		-- NOTE: This depends on the subtypes list getting generated afresh each time in the
+		-- call to this function. This is currently always the case, so we can save space (but be
+		-- potentially more dangerous) by not cloning.
+		table.insert(subtypes, "par")
+	end
+	return base, stem2, decl, subtypes
+end
+
+-- Autodetect the type and subtype of an adjective given all the information
+-- specified by the user: lemma, stem2, declension type and specified subtypes.
+-- Four values are returned: the lemma base (i.e. the stem of the lemma, as
+-- required by the declension functions), the value of stem2 to pass to the
+-- declension function, the declension type and the autodetected subtypes.
+-- Note that this will not detect a given subtype if -SUBTYPE is specified for
+-- any subtype that would be returned, or if SUBTYPE is specified and -SUBTYPE
+-- is among the subtypes that would be returned (such subtypes are filtered out
+-- of the returned subtypes).
+local function detect_adj_type_and_subtype(lemma, stem2, typ, subtypes)
+	if not rfind(typ, "^[123]") then
+		subtypes = mw.clone(subtypes)
+		subtypes[typ] = true
+		typ = ""
+	end
+	if typ == "" then
+		return get_adj_type_and_subtype_by_ending(lemma, stem2, typ, subtypes, {
+			{"us", "1&2", {}},
+			{"a", "1&2", {}},
+			{"um", "1&2", {}},
+			{"ī", "1&2", {"pl"}},
+			{"ae", "1&2", {"pl"}},
+			-- Nearly all -os adjective are greekA
+			{"os", "1&2", {"greekA", "-greekE"}},
+			{"ē", "1&2", {"greekE", "-greekA"}},
+			{"on", "1&2", {"greekA", "-greekE"}},
+			{"er", "1&2", {"er"}},
+			{"ur", "1&2", {"er"}},
+			{"is", "3-2", {}},
+			{"e", "3-2", {}},
+			{"ior", "3-C", {}},
+			{"jor", "3-C", {}, "j"},
+			{"^(mi)nor$", "3-C", {}, "n"},
+			{"", "3-1", {"I"}},
+		})
+	elseif typ == "3" then
+		return get_adj_type_and_subtype_by_ending(lemma, stem2, typ, subtypes, {
+			{"er", "3-3", {}},
+			{"is", "3-2", {}},
+			{"e", "3-2", {}},
+			{"ior", "3-C", {}},
+			{"jor", "3-C", {}, "j"},
+			{"^(mi)nor$", "3-C", {}, "n"},
+			{"", "3-1", {"I"}},
+		})
+	elseif typ == "1&2" then
+		return get_adj_type_and_subtype_by_ending(lemma, stem2, typ, subtypes, {
+			{"us", "1&2", {}},
+			{"a", "1&2", {}},
+			{"um", "1&2", {}},
+			{"ī", "1&2", {"pl"}},
+			{"ae", "1&2", {"pl"}},
+			-- Nearly all -os adjective are greekA
+			{"os", "1&2", {"greekA", "-greekE"}},
+			{"ē", "1&2", {"greekE", "-greekA"}},
+			{"on", "1&2", {"greekA", "-greekE"}},
+			{"er", "1&2", {"er"}},
+			{"ur", "1&2", {"er"}},
+		})
+	elseif typ == "1-1" then
+		return get_adj_type_and_subtype_by_ending(lemma, stem2, typ, subtypes, {
+			{"a", "1-1", {}},
+			{"ae", "1-1", {}},
+		})
+	elseif typ == "2-2" then
+		return get_adj_type_and_subtype_by_ending(lemma, stem2, typ, subtypes, {
+			{"us", "2-2", {}},
+			{"um", "2-2", {}},
+			{"ī", "2-2", {}},
+			{"a", "2-2", {}},
+			{"os", "2-2", {"greek"}},
+			{"on", "2-2", {"greek"}},
+			{"oe", "2-2", {"greek"}},
+		})
+	elseif typ == "3-1" then
+		-- This will cancel out the I if -I is specified in subtypes, and the
+		-- resulting lack of I will get converted to "par".
+		return get_adj_type_and_subtype_by_ending(lemma, stem2, typ, subtypes, {
+			{"", "3-1", {"I"}},
+		})
+	elseif typ == "3-2" then
+		return get_adj_type_and_subtype_by_ending(lemma, stem2, typ, subtypes, {
+			{"is", "3-2", {}},
+			{"e", "3-2", {}},
+		})
+	elseif typ == "3-C" then
+		return get_adj_type_and_subtype_by_ending(lemma, stem2, typ, subtypes, {
+			{"ior", "3-C", {}},
+			{"jor", "3-C", {}, "j"},
+			{"^(mi)nor$", "3-C", {}, "n"},
+		})
+	else
+		return lemma, stem2, typ, {}
+	end
 end
 
 -- Parse a segment (e.g. "lūna<1>", "aegis/aegid<3.Greek>", "bonus<+>", or
@@ -655,7 +896,7 @@ local function parse_segment(segment)
 
 	if rfind(decl, "%+") then
 		decl = decl:gsub("%+", "")
-		base, stem2, decl, detected_subtypes = m_la_adj.detect_type_and_subtype(
+		base, stem2, decl, detected_subtypes = detect_adj_type_and_subtype(
 			lemma, stem2, decl, types
 		)
 		is_adj = true
@@ -670,7 +911,7 @@ local function parse_segment(segment)
 			end
 		end
 	else
-		base, detected_subtypes = detect_subtype(lemma, stem2, decl, types)
+		base, detected_subtypes = detect_noun_subtype(lemma, stem2, decl, types)
 
 		for _, subtype in ipairs(detected_subtypes) do
 			if types["-" .. subtype] then
@@ -889,15 +1130,14 @@ local function parse_segment_run_allowing_alternants(segment_run)
 	}
 end
 
--- Combine each form in FORMS (a list of forms associated with a case/number
--- combination) with each form in NEW_FORMS (either a single string for a
--- single form, or a list of forms) by concatenating
--- EXISTING_FORM .. PREFIX .. NEW_FORM. Also combine NOTES (a table specifying
--- the footnotes associated with each existing form, i.e. a map from form
--- indices to lists of footnotes) with NEW_NOTES (new footnotes associated with
--- the new forms, in the same format as NOTES). Return a pair
--- NEW_FORMS, NEW_NOTES where either or both of FORMS and NOTES (but not the
--- sublists in NOTES) may be destructively modified to generate the return
+-- Combine each form in FORMS (a list of forms associated with a slot) with each
+-- form in NEW_FORMS (either a single string for a single form, or a list of
+-- forms) by concatenating EXISTING_FORM .. PREFIX .. NEW_FORM. Also combine
+-- NOTES (a table specifying the footnotes associated with each existing form,
+-- i.e. a map from form indices to lists of footnotes) with NEW_NOTES (new
+-- footnotes associated with the new forms, in the same format as NOTES). Return
+-- a pair NEW_FORMS, NEW_NOTES where either or both of FORMS and NOTES (but not
+-- the sublists in NOTES) may be destructively modified to generate the return
 -- values.
 local function append_form(forms, notes, new_forms, new_notes, prefix)
 	new_forms = new_forms or ""
@@ -963,16 +1203,16 @@ local function append_form(forms, notes, new_forms, new_notes, prefix)
 	end
 end
 
--- Destructively modify any forms in FORMS (a map from a case/number combination
--- to a form or a list of forms) by converting sequences of ae, oe, Ae or Oe
--- to the appropriate ligatures.
-local function apply_ligatures(forms)
-	for name in itercn() do
-		if type(forms[name]) == "string" then
-			forms[name] = forms[name]:gsub("[AaOo]e", ligatures)
-		elseif type(forms[name]) == "table" then
-			for i = 1, #forms[name] do
-				forms[name][i] = forms[name][i]:gsub("[AaOo]e", ligatures)
+-- Destructively modify any forms in FORMS (a map from a slot to a form or a
+-- list of forms) by converting sequences of ae, oe, Ae or Oe to the
+-- appropriate ligatures.
+local function apply_ligatures(forms, is_adj)
+	for slot in iter_slots(is_adj) do
+		if type(forms[slot]) == "string" then
+			forms[slot] = forms[slot]:gsub("[AaOo]e", ligatures)
+		elseif type(forms[slot]) == "table" then
+			for i = 1, #forms[slot] do
+				forms[slot][i] = forms[slot][i]:gsub("[AaOo]e", ligatures)
 			end
 		end
 	end
@@ -983,12 +1223,12 @@ end
 -- "alpha and omega" formed from two singular nouns, and for the equivalent of
 -- plural "St. Vincent and the Grenadines" formed from a singular noun and a
 -- plural noun. (These two examples actually occur in Russian, at least.)
-local function propagate_number_restrictions(forms, num)
+local function propagate_number_restrictions(forms, num, is_adj)
 	if num == "sg" or num == "pl" then
-		for name in itercn() do
-			if rfind(name, num) then
-				local other_num_name = num == "sg" and name:gsub("sg", "pl") or name:gsub("pl", "sg")
-				forms[other_num_name] = type(forms[name]) == "table" and ut.clone(forms[name]) or forms[name]
+		for slot in iter_slots(is_adj) do
+			if rfind(slot, num) then
+				local other_num_slot = num == "sg" and slot:gsub("sg", "pl") or slot:gsub("pl", "sg")
+				forms[other_num_slot] = type(forms[slot]) == "table" and ut.clone(forms[slot]) or forms[slot]
 			end
 		end
 	end
@@ -998,20 +1238,17 @@ end
 -- parse_segment_run() or parse_segment_run_allowing_alternants(). Return value
 -- is a table
 -- {
---   forms = FORMS (keyed by case/number, list of forms for that case/number),
---   notes = NOTES (keyed by case/number, map from form indices to lists of
---     footnotes),
+--   forms = FORMS (keyed by slot, list of forms for that slot),
+--   notes = NOTES (keyed by slot, map from form indices to lists of footnotes),
 --   title = TITLE (list of titles for each segment in the run),
 --   categories = CATEGORIES (combined categories for all segments),
 -- }
-local function decline_segment_run(parsed_run)
+local function decline_segment_run(parsed_run, is_adj)
 	local declensions = {
-		-- For each possible case/number combination (e.g. "abl_sg"),
-		-- list of possible forms.
+		-- For each possible slot (e.g. "abl_sg"), list of possible forms.
 		forms = {},
-		-- Keyed by case/number combination (e.g. "abl_sg"). Value is a
-		-- table indicating the footnotes corresponding to the forms for
-		-- that case/number combination. Each such table maps indices
+		-- Keyed by slot (e.g. "abl_sg"). Value is a table indicating the footnotes
+		-- corresponding to the forms for that slot. Each such table maps indices
 		-- (the index of the corresponding form) to a list of one or more
 		-- footnotes.
 		notes = {},
@@ -1019,8 +1256,8 @@ local function decline_segment_run(parsed_run)
 		categories = {},
 	}
 
-	for name in itercn() do
-		declensions.forms[name] = {""}
+	for slot in iter_slots(is_adj) do
+		declensions.forms[slot] = {""}
 	end
 
 	for _, seg in ipairs(parsed_run.segments) do
@@ -1084,24 +1321,32 @@ local function decline_segment_run(parsed_run)
 			end
 
 			if seg.types.lig then
-				apply_ligatures(data.forms)
+				apply_ligatures(data.forms, is_adj)
 			end
 
-			propagate_number_restrictions(data.forms, seg.num)
+			propagate_number_restrictions(data.forms, seg.num, is_adj)
 
-			for name in itercn() do
+			for slot in iter_slots(is_adj) do
 				-- 1. Select the forms to append to the existing ones.
 
 				local new_forms
-				if seg.is_adj then
+				if is_adj then
+					if not seg.is_adj then
+						error("Can't decline noun '" .. seg.lemma .. "' when overall term is an adjective")
+					end
+					new_forms = data.forms[slot]
+					if not new_forms and slot:find("_[fn]$") then
+						new_forms = data.forms[slot:gsub("_[fn]$", "_m")]
+					end
+				elseif seg.is_adj then
 					-- Select the appropriately gendered equivalent of the case/number
 					-- combination. Some adjectives won't have feminine or neuter
 					-- variants, though (e.g. 3-1 and 3-2 adjectives don't have a
 					-- distinct feminine), so in that case select the masculine.
-					new_forms = data.forms[name .. "_" .. gender_to_lc[seg.gender]]
-						or data.forms[name .. "_m"]
+					new_forms = data.forms[slot .. "_" .. gender_to_lc[seg.gender]]
+						or data.forms[slot .. "_m"]
 				else
-					new_forms = data.forms[name]
+					new_forms = data.forms[slot]
 				end
 
 				-- 2. Extract the new footnotes in the format we require, which is
@@ -1109,20 +1354,20 @@ local function decline_segment_run(parsed_run)
 
 				local new_notes = {}
 
-				if type(new_forms) == "string" and data.notes[name .. "1"] then
-					new_notes[1] = {data.notes[name .. "1"]}
+				if type(new_forms) == "string" and data.notes[slot .. "1"] then
+					new_notes[1] = {data.notes[slot .. "1"]}
 				elseif new_forms then
 					for j = 1, #new_forms do
-						if data.notes[name .. j] then
-							new_notes[j] = {data.notes[name .. j]}
+						if data.notes[slot .. j] then
+							new_notes[j] = {data.notes[slot .. j]}
 						end
 					end
 				end
 
 				-- 3. Append new forms and footnotes to the existing ones.
 
-				declensions.forms[name], declensions.notes[name] = append_form(
-					declensions.forms[name], declensions.notes[name],
+				declensions.forms[slot], declensions.notes[slot] = append_form(
+					declensions.forms[slot], declensions.notes[slot],
 					new_forms, new_notes, seg.prefix)
 			end
 
@@ -1141,33 +1386,32 @@ local function decline_segment_run(parsed_run)
 				this_parsed_run.loc = seg.loc
 				this_parsed_run.num = this_parsed_run.num or seg.num
 				this_parsed_run.gender = this_parsed_run.gender or seg.gender
-				local this_declensions = decline_segment_run(this_parsed_run)
+				local this_declensions = decline_segment_run(this_parsed_run, is_adj)
 				-- If there's a number restriction on the segment run, blank
 				-- out the forms outside the restriction. This allows us to
 				-- e.g. construct heteroclites that decline one way in the
 				-- singular and a different way in the plural.
 				if this_parsed_run.num == "sg" or this_parsed_run.num == "pl" then
-					for name in itercn() do
-						if this_parsed_run.num == "sg" and rfind(name, "pl") or
-							this_parsed_run.num == "pl" and rfind(name, "sg") then
-							this_declensions.forms[name] = {}
-							this_declensions.notes[name] = nil
+					for slot in iter_slots(is_adj) do
+						if this_parsed_run.num == "sg" and rfind(slot, "pl") or
+							this_parsed_run.num == "pl" and rfind(slot, "sg") then
+							this_declensions.forms[slot] = {}
+							this_declensions.notes[slot] = nil
 						end
 					end
 				end
 				if not seg_declensions then
 					seg_declensions = this_declensions
 				else
-					for name in itercn() do
-						-- For a given case/number combination, combine
-						-- the existing and new forms. We do this by
-						-- checking to see whether a new form is already
-						-- present and not adding it if so; in the process,
-						-- we keep a map from indices in the new forms to
-						-- indices in the combined forms, for use in
+					for slot in iter_slots(is_adj) do
+						-- For a given slot, combine the existing and new forms.
+						-- We do this by checking to see whether a new form is
+						-- already present and not adding it if so; in the
+						-- process, we keep a map from indices in the new forms
+						-- to indices in the combined forms, for use in
 						-- combining footnotes below.
-						local curforms = seg_declensions.forms[name] or {}
-						local newforms = this_declensions.forms[name] or {}
+						local curforms = seg_declensions.forms[slot] or {}
+						local newforms = this_declensions.forms[slot] or {}
 						local newform_index_to_new_index = {}
 						for newj, form in ipairs(newforms) do
 							local did_break = false
@@ -1183,15 +1427,15 @@ local function decline_segment_run(parsed_run)
 								newform_index_to_new_index[newj] = #curforms
 							end
 						end
-						seg_declensions.forms[name] = curforms
+						seg_declensions.forms[slot] = curforms
 						-- Now combine the footnotes. Keep in mind that
 						-- each form may have its own set of footnotes, and
 						-- in some cases we didn't add a form from the new
 						-- list of forms because it already occurred in the
 						-- existing list of forms; in that case, we combine
 						-- footnotes from the two sources.
-						local curnotes = seg_declensions.notes[name]
-						local newnotes = this_declensions.notes[name]
+						local curnotes = seg_declensions.notes[slot]
+						local newnotes = this_declensions.notes[slot]
 						if newnotes then
 							if not curnotes then
 								curnotes = {}
@@ -1220,14 +1464,14 @@ local function decline_segment_run(parsed_run)
 			-- If overall run is singular, copy singular to plural, and
 			-- vice-versa. See propagate_number_restrictions() for rationale;
 			-- also, this should eliminate cases of empty forms, which will
-			-- cause the overall set of forms for that case/number combination
-			-- to be empty.
-			propagate_number_restrictions(seg_declensions.forms, parsed_run.num)
+			-- cause the overall set of forms for that slot to be empty.
+			propagate_number_restrictions(seg_declensions.forms, parsed_run.num,
+				is_adj)
 
-			for name in itercn() do
-				declensions.forms[name], declensions.notes[name] = append_form(
-					declensions.forms[name], declensions.notes[name],
-					seg_declensions.forms[name], seg_declensions.notes[name], nil)
+			for slot in iter_slots(is_adj) do
+				declensions.forms[slot], declensions.notes[slot] = append_form(
+					declensions.forms[slot], declensions.notes[slot],
+					seg_declensions.forms[slot], seg_declensions.notes[slot], nil)
 			end
 
 			for _, cat in ipairs(seg_categories) do
@@ -1237,9 +1481,9 @@ local function decline_segment_run(parsed_run)
 			table.insert(declensions.title, table.concat(seg_titles, " or "))
 
 		else
-			for name in itercn() do
-				declensions.forms[name], declensions.notes[name] = append_form(
-					declensions.forms[name], declensions.notes[name],
+			for slot in iter_slots(is_adj) do
+				declensions.forms[slot], declensions.notes[slot] = append_form(
+					declensions.forms[slot], declensions.notes[slot],
 					seg.prefix)
 			end
 		end
@@ -1248,15 +1492,38 @@ local function decline_segment_run(parsed_run)
 	return declensions
 end
 
-local function new_generate_forms(frame)
+local function construct_title(args_title, declensions_title)
+	if args_title then
+		declensions_title = "^" .. args_title
+		declensions_title = rsub(declensions_title, "<1>", "[[Appendix:Latin first declension|first declension]]")
+		declensions_title = rsub(declensions_title, "<1&2>", "[[Appendix:Latin first declension|first]]/[[Appendix:Latin second declension|second declension]]")
+		declensions_title = rsub(declensions_title, "<2>", "[[Appendix:Latin second declension|second declension]]")
+		declensions_title = rsub(declensions_title, "<3>", "[[Appendix:Latin third declension|third declension]]")
+		declensions_title = rsub(declensions_title, "<4>", "[[Appendix:Latin fourth declension|fourth declension]]")
+		declensions_title = rsub(declensions_title, "<5>", "[[Appendix:Latin fifth declension|fifth declension]]")
+		declensions_title = rsub(declensions_title, "%^(%[%[[^|%]]+|)(.)([^|%]]+%]%])", function(a, b, c)
+			return a .. uupper(b) .. c
+		end)
+		declensions_title = rsub(declensions_title, "%^%[%[(.)([^|%]]+)%]%]", function(a, b, c)
+			return "[[" .. a .. b .. "|" .. uupper(a) .. b .. "]]"
+		end)
+		declensions_title = rsub(declensions_title, "%^(.)", uupper)
+	else
+		declensions_title = table.concat(declensions_title, "<br/>")
+	end
+
+	return declensions_title
+end
+
+local function generate_noun_forms(frame)
 	local params = {
 		[1] = {required = true, default = "aqua<1>"},
 		footnote = {},
 		title = {},
 		num = {},
 	}
-	for _, case in ipairs(case_order) do
-		params[case] = {}
+	for slot in iter_noun_slots() do
+		params[slot] = {}
 	end
 
 	local parent_args = frame:getParent().args
@@ -1267,31 +1534,14 @@ local function new_generate_forms(frame)
 	parsed_run.loc = parsed_run.loc or not not (args.loc_sg or args.loc_pl)
 	parsed_run.num = args.num or parsed_run.num
 
-	local declensions = decline_segment_run(parsed_run)
+	local declensions = decline_segment_run(parsed_run, false)
 
 	if not parsed_run.loc then
 		declensions.forms.loc_sg = nil
 		declensions.forms.loc_pl = nil
 	end
 
-	if args.title then
-		declensions.title = "^" .. args.title
-		declensions.title = rsub(declensions.title, "<1>", "[[Appendix:Latin first declension|first declension]]")
-		declensions.title = rsub(declensions.title, "<1&2>", "[[Appendix:Latin first declension|first]]/[[Appendix:Latin second declension|second declension]]")
-		declensions.title = rsub(declensions.title, "<2>", "[[Appendix:Latin second declension|second declension]]")
-		declensions.title = rsub(declensions.title, "<3>", "[[Appendix:Latin third declension|third declension]]")
-		declensions.title = rsub(declensions.title, "<4>", "[[Appendix:Latin fourth declension|fourth declension]]")
-		declensions.title = rsub(declensions.title, "<5>", "[[Appendix:Latin fifth declension|fifth declension]]")
-		declensions.title = rsub(declensions.title, "%^(%[%[[^|%]]+|)(.)([^|%]]+%]%])", function(a, b, c)
-			return a .. uupper(b) .. c
-		end)
-		declensions.title = rsub(declensions.title, "%^%[%[(.)([^|%]]+)%]%]", function(a, b, c)
-			return "[[" .. a .. b .. "|" .. uupper(a) .. b .. "]]"
-		end)
-		declensions.title = rsub(declensions.title, "%^(.)", uupper)
-	else
-		declensions.title = table.concat(declensions.title, "<br/>")
-	end
+	declensions.title = construct_title(args.title, declensions.title)
 
 	local all_data = {
 		title = declensions.title,
@@ -1306,31 +1556,110 @@ local function new_generate_forms(frame)
 		suffix = "",
 	}
 
-	for name in itercn() do
-		if declensions.notes[name] then
-			for index, notes in pairs(declensions.notes[name]) do
-				all_data.notes[name .. index] = notes
+	for slot in iter_noun_slots() do
+		if declensions.notes[slot] then
+			for index, notes in pairs(declensions.notes[slot]) do
+				all_data.notes[slot .. index] = notes
 			end
 		end
 	end
 
-	process_forms_and_overrides(all_data, args)
+	process_noun_forms_and_overrides(all_data, args)
 
 	return all_data
 end
 
-function export.new_show(frame)
-	local data = new_generate_forms(frame)
+local function generate_adj_forms(frame)
+	local params = {
+		[1] = {required = true, default = "bonus"},
+		footnote = {},
+		title = {},
+		num = {},
+		noneut = {type = "boolean"},
+	}
+	for slot in iter_adj_slots() do
+		params[slot] = {}
+	end
 
-	show_forms(data)
+	local parent_args = frame:getParent().args
 
-	return make_table(data) .. m_utilities.format_categories(data.categories, lang)
+	local args = m_para.process(parent_args, params)
+
+	local segment_run = args[1]
+	if not rfind(segment_run, "[<(]") then
+		-- If the segment run doesn't have any explicit declension specs or alternants,
+		-- add a default declension spec of <+> to it. This allows the majority of
+		-- adjectives to just specify the lemma.
+		segment_run = segment_run .. "<+>"
+	end
+	local parsed_run = parse_segment_run_allowing_alternants(segment_run)
+	parsed_run.loc = parsed_run.loc or not not (args.loc_sg or args.loc_pl)
+	parsed_run.num = args.num or parsed_run.num
+
+	local declensions = decline_segment_run(parsed_run, true)
+
+	if not parsed_run.loc then
+		declensions.forms.loc_sg = nil
+		declensions.forms.loc_pl = nil
+	end
+
+	declensions.title = construct_title(args.title, declensions.title)
+
+	local all_data = {
+		title = declensions.title,
+		footnote = args.footnote or "",
+		num = parsed_run.num or "",
+		forms = declensions.forms,
+		categories = declensions.categories,
+		notes = {},
+		user_specified = {},
+		accel = {},
+		prefix = "",
+		suffix = "",
+		-- FIXME, might not end up being true
+		voc = true,
+		noneut = args.noneut,
+	}
+
+	for slot in iter_adj_slots() do
+		if declensions.notes[slot] then
+			for index, notes in pairs(declensions.notes[slot]) do
+				all_data.notes[slot .. index] = notes
+			end
+		end
+	end
+
+	process_adj_forms_and_overrides(all_data, args)
+
+	return all_data
 end
 
-function export.new_generate_forms(frame)
-	local data = new_generate_forms(frame)
+function export.show_noun(frame)
+	local data = generate_noun_forms(frame)
 
-	return concat_forms(data)
+	show_forms(data, false)
+
+	return make_noun_table(data) .. m_utilities.format_categories(data.categories, lang)
+end
+
+function export.show_adj(frame)
+	local data = generate_adj_forms(frame)
+
+	show_forms(data, true)
+
+	return m_adj_table.make_table(data) .. m_utilities.format_categories(data.categories, lang)
+end
+
+function export.generate_noun_forms(frame)
+	local data = generate_noun_forms(frame)
+
+	return concat_forms(data, false)
+end
+
+function export.generate_adj_forms(frame)
+	local data = generate_adj_forms(frame)
+
+	return concat_forms(data, true)
 end
 
 return export
