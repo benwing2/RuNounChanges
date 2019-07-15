@@ -24,7 +24,10 @@ def compare_new_and_old_templates(origt, newt, pagetitle, pagemsg, errandpagemsg
       return lalib.generate_noun_forms(origt, errandpagemsg, expand_text, return_raw=True)
 
   def generate_new_forms():
-    new_generate_template = re.sub(r"^\{\{la-ndecl\|", "{{User:Benwing2/la-new-generate-noun-forms|", newt)
+    if newt.startswith("{{la-ndecl|"):
+      new_generate_template = re.sub(r"^\{\{la-ndecl\|", "{{User:Benwing2/la-new-generate-noun-forms|", newt)
+    else:
+      new_generate_template = re.sub(r"^\{\{la-adecl\|", "{{User:Benwing2/la-new-generate-adj-forms|", newt)
     new_result = expand_text(new_generate_template)
     if not new_result:
       return None
@@ -79,10 +82,7 @@ def convert_la_decl_multi_to_new(t, pagetitle, pagemsg, errandpagemsg):
   origt = unicode(t)
   segments = re.split(r"([^<> ]+<[^<>]*>)", getparam(t, "1"))
   g = getrmparam(t, "g")
-  if not g:
-    errandpagemsg("WARNING: No gender, can't handle adjectives yet")
-    return None
-  else:
+  if g:
     gender_map = {"m": "M", "f": "F", "n": "N"}
     if g not in gender_map:
       errandpagemsg("WARNING: Unrecognized gender g=%s" % g)
@@ -130,6 +130,10 @@ def convert_la_decl_multi_to_new(t, pagetitle, pagemsg, errandpagemsg):
     else:
       if g == "N" and "N" not in specified_subtypes:
         specified_subtypes = ("N",) + specified_subtypes
+      sufn = False
+      if "n" in specified_subtypes:
+        sufn = True
+        specified_subtypes = tuple(x for x in specified_subtypes if x != "n")
       lookup_key = (decl, specified_subtypes)
       if lookup_key not in lalib.noun_decl_and_subtype_to_props:
         errandpagemsg("WARNING: Lookup key %s not found: %s" % (
@@ -154,6 +158,8 @@ def convert_la_decl_multi_to_new(t, pagetitle, pagemsg, errandpagemsg):
         subtypes.append("loc")
       if str((i + 1) / 2) in um:
         subtypes.append("genplum")
+      if sufn:
+        subtypes.append("sufn")
     if bool_param_is_true(lig):
       subtypes.append("lig")
     if stem2:
@@ -162,7 +168,7 @@ def convert_la_decl_multi_to_new(t, pagetitle, pagemsg, errandpagemsg):
       subtypes = [decl] + subtypes
     lemma += "<%s>" % ".".join(subtypes)
     segments[i] = lemma
-  blib.set_template_name(t, "la-ndecl")
+  blib.set_template_name(t, "la-ndecl" if g else "la-adecl")
   t.add("1", "".join(segments))
   pagemsg("Replaced %s with %s" % (origt, unicode(t)))
   if compare_new_and_old_templates(origt, unicode(t), pagetitle, pagemsg, errandpagemsg):
