@@ -2,10 +2,10 @@ local export = {}
 
 -- TODO:
 -- (DONE) Eliminate specification of noteindex from la-adj/data
--- Finish autodetection of adjectives
--- Remove old noun code
+-- (DONE?) Finish autodetection of adjectives
+-- (DONE) Remove old noun code
 -- Implement <.sufn>
--- Look into adj voc=false
+-- (DONE) Look into adj voc=false
 -- Handle loc in adjectives
 
 --[=[
@@ -285,6 +285,29 @@ local function process_adj_forms_and_overrides(data, args)
 					end
 				end
 				data.forms[slot] = val
+			end
+		end
+	end
+
+	-- See if the masculine and feminine are the same across all slots. If so, blank out the feminine so we use a
+	-- table that combines masculine and feminine.
+	local fem_is_masc = true
+	for _, case in ipairs(cases) do
+		for _, num in ipairs(nums) do
+			if not ut.equals(data.forms[case .. "_" .. num .. "_f"], data.forms[case .. "_" .. num .. "_m"]) then
+				fem_is_masc = false
+				break
+			end
+		end
+		if not fem_is_masc then
+			break
+		end
+	end
+
+	if fem_is_masc then
+		for _, case in ipairs(cases) do
+			for _, num in ipairs(nums) do
+				data.forms[case .. "_" .. num .. "_f"] = nil
 			end
 		end
 	end
@@ -1242,6 +1265,7 @@ end
 --   notes = NOTES (keyed by slot, map from form indices to lists of footnotes),
 --   title = TITLE (list of titles for each segment in the run),
 --   categories = CATEGORIES (combined categories for all segments),
+--   voc = BOOLEAN (false if any adjective in the run has no vocative),
 -- }
 local function decline_segment_run(parsed_run, is_adj)
 	local declensions = {
@@ -1254,6 +1278,9 @@ local function decline_segment_run(parsed_run, is_adj)
 		notes = {},
 		title = {},
 		categories = {},
+		-- FIXME, do we really need to special-case this? Maybe the nonexistent vocative
+		-- form will automatically propagate up through the other forms.
+		voc = true,
 	}
 
 	for slot in iter_slots(is_adj) do
@@ -1289,6 +1316,9 @@ local function decline_segment_run(parsed_run, is_adj)
 					suffix = "",
 				}
 				m_adj_decl[seg.decl](data, seg.args)
+				if not data.voc then
+					declensions.voc = false
+				end
 			else
 				if not m_noun_decl[seg.decl] then
 					error("Unrecognized declension '" .. seg.decl .. "'")
@@ -1387,6 +1417,9 @@ local function decline_segment_run(parsed_run, is_adj)
 				this_parsed_run.num = this_parsed_run.num or seg.num
 				this_parsed_run.gender = this_parsed_run.gender or seg.gender
 				local this_declensions = decline_segment_run(this_parsed_run, is_adj)
+				if not this_declensions.voc then
+					declensions.voc = false
+				end
 				-- If there's a number restriction on the segment run, blank
 				-- out the forms outside the restriction. This allows us to
 				-- e.g. construct heteroclites that decline one way in the
@@ -1616,8 +1649,7 @@ local function generate_adj_forms(frame)
 		accel = {},
 		prefix = "",
 		suffix = "",
-		-- FIXME, might not end up being true
-		voc = true,
+		voc = declensions.voc,
 		noneut = args.noneut,
 	}
 
