@@ -4,7 +4,7 @@ local export = {}
 -- (DONE) Eliminate specification of noteindex from la-adj/data
 -- (DONE?) Finish autodetection of adjectives
 -- (DONE) Remove old noun code
--- Implement <.sufn>
+-- (DONE) Implement <.sufn>
 -- (DONE) Look into adj voc=false
 -- Handle loc in adjectives
 
@@ -1241,6 +1241,20 @@ local function apply_ligatures(forms, is_adj)
 	end
 end
 
+-- Destructively modify any forms in FORMS (a map from a slot to a form or a
+-- list of forms) by converting final m to n.
+local function apply_sufn(forms, is_adj)
+	for slot in iter_slots(is_adj) do
+		if type(forms[slot]) == "string" then
+			forms[slot] = forms[slot]:gsub("m$", "n")
+		elseif type(forms[slot]) == "table" then
+			for i = 1, #forms[slot] do
+				forms[slot][i] = forms[slot][i]:gsub("m$", "n")
+			end
+		end
+	end
+end
+
 -- If NUM == "sg", copy the singular forms to the plural ones; vice-versa if
 -- NUM == "pl". This should allow for the equivalent of plural
 -- "alpha and omega" formed from two singular nouns, and for the equivalent of
@@ -1352,6 +1366,10 @@ local function decline_segment_run(parsed_run, is_adj)
 
 			if seg.types.lig then
 				apply_ligatures(data.forms, is_adj)
+			end
+
+			if seg.types.sufn then
+				apply_sufn(data.forms, is_adj)
 			end
 
 			propagate_number_restrictions(data.forms, seg.num, is_adj)
