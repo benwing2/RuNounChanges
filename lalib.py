@@ -280,7 +280,27 @@ def la_adj_1_and_2_subtype(stem1, stem2, decl, types, num, g, is_adj, pagetitle,
       stem1 += ("ae" if g == "F" else u"ī")
     else:
       stem1 += ("a" if g == "F" else "um" if g == "N" else "us")
+  types = ["lig" if x == "ea" else x for x in types]
   return stem1, stem2, "", types
+
+def la_adj_1_1_subtype(stem1, stem2, decl, types, num, g, is_adj, pagetitle, pagemsg):
+  if stem2:
+    pagemsg("WARNING: stem2=%s should not be present with 1-1 adjectives" %
+        stem2)
+    stem2 = ""
+  stem1 += "ae" if num == "pl" else "a"
+  return stem1, stem2, decl, types
+
+def la_adj_2_2_subtype(stem1, stem2, decl, types, num, g, is_adj, pagetitle, pagemsg):
+  if stem2:
+    pagemsg("WARNING: stem2=%s should not be present with 2-2 adjectives" %
+        stem2)
+    stem2 = ""
+  if num == "pl":
+    stem1 += "a" if g == "N" else u"ī"
+  else:
+    stem1 += "um" if g == "N" else u"us"
+  return stem1, stem2, decl, types
 
 def la_adj_3rd_1E_subtype(stem1, stem2, decl, types, num, g, is_adj, pagetitle, pagemsg):
   if "par" in types:
@@ -354,13 +374,25 @@ def la_adj_3rd_part_subtype(stem1, stem2, decl, types, num, g, is_adj, pagetitle
     pagemsg("WARNING: strange stem2=%s present with decl=3-P" % stem2)
   return stem1, stem2, decl, types
 
+def la_adj_irreg_subtype(stem1, stem2, decl, types, num, g, is_adj, pagetitle, pagemsg):
+  if num == "pl":
+    types = types + ["pl"]
+  if not re.search(u"[āē]ns$", stem1):
+    pagemsg("WARNING: strange stem1=%s present with decl=3-P" % stem1)
+  if stem2 and not stem2.endswith("eunt"):
+    pagemsg("WARNING: strange stem2=%s present with decl=3-P" % stem2)
+  return stem1, stem2, decl, types
+
 la_adj_decl_suffix_to_decltype = {
-  '1&2': ['1&2', la_adj_1_and_2_subtype],
-  '3rd-1E': ['3-1', la_adj_3rd_1E_subtype],
-  '3rd-2E': ['3-2', la_adj_3rd_2E_subtype],
-  '3rd-3E': ['3-3', la_adj_3rd_3E_subtype],
-  '3rd-comp': ['3-C', la_adj_3rd_comp_subtype],
-  '3rd-part': ['3-P', la_adj_3rd_part_subtype],
+  'decl-1&2': ['1&2', la_adj_1_and_2_subtype],
+  'adecl-1st': ['1-1', la_adj_1_1_subtype],
+  'adecl-2nd': ['2-2', la_adj_2_2_subtype],
+  'decl-3rd-1E': ['3-1', la_adj_3rd_1E_subtype],
+  'decl-3rd-2E': ['3-2', la_adj_3rd_2E_subtype],
+  'decl-3rd-3E': ['3-3', la_adj_3rd_3E_subtype],
+  'decl-3rd-comp': ['3-C', la_adj_3rd_comp_subtype],
+  'decl-3rd-part': ['3-P', la_adj_3rd_part_subtype],
+  'decl-irreg': ['irreg', la_adj_irreg_subtype],
 }
 
 adj_decl_and_subtype_to_props = {}
@@ -573,7 +605,7 @@ def infer_adv_stem(adv):
       return adv[:-len(suffix)] + newsuff
   return adv
 
-def generate_adj_forms(template, errandpagemsg, expand_text):
+def generate_adj_forms(template, errandpagemsg, expand_text, return_raw=False):
 
   def generate_adj_forms_prefix(m):
     decl_suffix_to_decltype = {
@@ -598,6 +630,8 @@ def generate_adj_forms(template, errandpagemsg, expand_text):
     errandpagemsg("Template %s not a recognized adjective declension template" % template)
     return None
   result = expand_text(generate_template)
+  if return_raw:
+    return None if result is False else result
   if not result:
     errandpagemsg("WARNING: Error generating forms, skipping")
     return None
@@ -612,7 +646,7 @@ def generate_adj_forms(template, errandpagemsg, expand_text):
         augmented_args[equiv_fem] = form
   return augmented_args
 
-def generate_noun_forms(template, errandpagemsg, expand_text):
+def generate_noun_forms(template, errandpagemsg, expand_text, return_raw=False):
 
   def generate_noun_forms_prefix(m):
     if m.group(1) in la_noun_decl_suffix_to_decltype:
@@ -640,12 +674,14 @@ def generate_noun_forms(template, errandpagemsg, expand_text):
     errandpagemsg("Template %s not a recognized noun declension template" % template)
     return None
   result = expand_text(generate_template)
+  if return_raw:
+    return None if result is False else result
   if not result:
     errandpagemsg("WARNING: Error generating forms, skipping")
     return None
   return blib.split_generate_args(result)
 
-def generate_verb_forms(template, errandpagemsg, expand_text):
+def generate_verb_forms(template, errandpagemsg, expand_text, return_raw=False):
   if template.startswith("{{la-conj-3rd-IO|"):
     generate_template = re.sub(r"^\{\{la-conj-3rd-IO\|", "{{la-generate-verb-forms|conjtype=3rd-io|", template)
   else:
@@ -654,18 +690,20 @@ def generate_verb_forms(template, errandpagemsg, expand_text):
     errandpagemsg("Template %s not a recognized conjugation template" % template)
     return None
   result = expand_text(generate_template)
+  if return_raw:
+    return None if result is False else result
   if not result:
     errandpagemsg("WARNING: Error generating forms, skipping")
     return None
   return blib.split_generate_args(result)
 
-def generate_infl_forms(pos, template, errandpagemsg, expand_text):
+def generate_infl_forms(pos, template, errandpagemsg, expand_text, return_raw=False):
   if pos == 'noun':
-    return generate_noun_forms(template, errandpagemsg, expand_text)
+    return generate_noun_forms(template, errandpagemsg, expand_text, return_raw)
   elif pos == 'verb':
-    return generate_verb_forms(template, errandpagemsg, expand_text)
+    return generate_verb_forms(template, errandpagemsg, expand_text, return_raw)
   elif pos in ['adj', 'part']:
-    return generate_adj_forms(template, errandpagemsg, expand_text)
+    return generate_adj_forms(template, errandpagemsg, expand_text, return_raw)
   else:
     errandpagemsg("WARNING: Bad pos=%s, expected noun/verb/adj")
     return None
