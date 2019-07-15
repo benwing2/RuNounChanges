@@ -1310,6 +1310,33 @@ def split_generate_args(tempresult):
       args[name] = value
   return args
 
+def compare_new_and_old_template_forms(origt, newt, generate_old_forms, generate_new_forms, pagemsg, errandpagemsg):
+  old_result = generate_old_forms()
+  if old_result is None:
+    errandpagemsg("WARNING: Error generating old forms, can't compare")
+    return False
+  old_forms = split_generate_args(old_result)
+  new_result = generate_new_forms()
+  if new_result is None:
+    errandpagemsg("WARNING: Error generating new forms, can't compare")
+    return False
+  new_forms = split_generate_args(new_result)
+  for form in set(old_forms.keys() + new_forms.keys()):
+    if form not in new_forms:
+      pagemsg("WARNING: form %s=%s in old forms but missing in new forms" % (
+        form, old_forms[form]))
+      return False
+    if form not in old_forms:
+      pagemsg("WARNING: form %s=%s in new forms but missing in old forms" % (
+        form, new_forms[form]))
+      return False
+    if new_forms[form] != old_forms[form]:
+      pagemsg("WARNING: form %s=%s in old forms but =%s in new forms" % (
+        form, old_forms[form], new_forms[form]))
+      return False
+  pagemsg("%s and %s have same forms" % (origt, newt))
+  return True
+
 class WikiDumpHandler(xml.sax.ContentHandler):
   def __init__(self, pagecallback):
     self.pagecallback = pagecallback
