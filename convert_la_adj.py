@@ -37,7 +37,7 @@ def convert_template_to_new(t, pagetitle, pagemsg, errandpagemsg):
   if decl_suffix not in lalib.la_adj_decl_suffix_to_decltype:
     pagemsg("WARNING: Unrecognized adj decl template name: %s" % tn)
     return None
-  decl, compute_props = lalib.adj_decl_and_subtype_to_props[decl_suffix]
+  decl, compute_props = lalib.la_adj_decl_suffix_to_decltype[decl_suffix]
   stem1 = getparam(t, "1").strip()
   stem2 = getparam(t, "2").strip()
   num = getrmparam(t, "num")
@@ -117,7 +117,7 @@ if args.pagefile:
         verbose=args.verbose, diff=args.diff)
 else:
   if not args.cats and not args.refs:
-    cats = ["Latin nouns", "Latin proper nouns"]
+    cats = ["Latin adjectives"]
     refs = []
   else:
     cats = args.cats and [x.decode("utf-8") for x in args.cats.split(",")] or []
