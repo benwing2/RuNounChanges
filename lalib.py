@@ -258,10 +258,11 @@ def la_adj_1_and_2_subtype(stem1, stem2, decl, types, num, g, is_adj, pagetitle,
       stem1 = stem1[:-4] + "er"
     set_stem1 = True
   elif stem1.endswith("er") or stem1.endswith("ur"):
-    if stem1 != pagetitle and stem1 + "us" != pagetitle:
+    macronless_stem1 = remove_macrons(stem1)
+    if macronless_stem1 != pagetitle and macronless_stem1 + "us" != pagetitle:
       pagemsg("WARNING: Potential 1&2 adjective ending in -er or -ur, but pagetitle=%s not same" %
           pagetitle)
-    else:
+    if macronless_stem1 == pagetitle:
       if num == "pl":
         stem1 += ("ae" if g == "F" else u"ī")
       elif g in ["F", "N"]:
@@ -316,7 +317,7 @@ def la_adj_3rd_1E_subtype(stem1, stem2, decl, types, num, g, is_adj, pagetitle, 
   elif stem1.endswith("er"):
     # Just 3 is detected as 3-3
     decl = "3-1"
-  elif re.search(u"(us|a|um|ī|ae|ur)$", stem1) or stem1 == "hic":
+  elif re.search(u"(us|a|um|ī|ae|ur|os|ē|on)$", stem1) or stem1 == "hic":
     decl = "3"
   else:
     decl = ""
@@ -377,10 +378,6 @@ def la_adj_3rd_part_subtype(stem1, stem2, decl, types, num, g, is_adj, pagetitle
 def la_adj_irreg_subtype(stem1, stem2, decl, types, num, g, is_adj, pagetitle, pagemsg):
   if num == "pl":
     types = types + ["pl"]
-  if not re.search(u"[āē]ns$", stem1):
-    pagemsg("WARNING: strange stem1=%s present with decl=3-P" % stem1)
-  if stem2 and not stem2.endswith("eunt"):
-    pagemsg("WARNING: strange stem2=%s present with decl=3-P" % stem2)
   return stem1, stem2, decl, types
 
 la_adj_decl_suffix_to_decltype = {
@@ -615,6 +612,7 @@ def generate_adj_forms(template, errandpagemsg, expand_text, return_raw=False):
       'decl-3rd-3E': '3-3',
       'decl-3rd-comp': '3-C',
       'decl-3rd-part': '3-P',
+      'adecl-1st': '1-1',
       'adecl-2nd': '2-2',
       'decl-irreg': 'irreg',
     }
