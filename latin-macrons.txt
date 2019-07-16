@@ -2839,6 +2839,10 @@ adv sēgniter
 obstō obstāre obstitī obstātum
 # has pār-
 part1 paritūrus
+# wrongly has long a
+a3 causālis
+# wrongly has long e
+a3 cathedrālis
 ###
 ### missing long vowels
 ###
@@ -2854,10 +2858,39 @@ n3 māchināmen
 a1 māsculus
 n2 māsculus
 a1 arquātus
+a3 parietālis
+part1 abbacinātus
+part1 abiectātus
+a3 quālis
+a3 agricultūrālis
+a3 ānālis
+a3 antennālis
+a3 apicālis
+a3 āreālis
+a3 ātripectorālis
+a3 baptismālis
+a3 basālis
+a3 basivertebrālis
+a3 branchiālis
+a3 vertebrālis
+a3 caudālis
+a3 cephālis
 # wrongly has short a and i
 a1 aquītānus
+a3 alpīnālis
+# wrongly has short a and o
+a3 aequātōriālis
 # wrongly has short a and u
 part1 abbreviātūrus
+part1 abbacinātūrus
+part1 abiectātūrus
+part1 abiūdicātūrus
+part1 abiugātūrus
+part1 abiūrātūrus
+part1 abiūrātus
+part1 abiūrgātūrus
+part1 abiūrgātus
+a3 acūtālis
 # wrongly has short e
 n1 rēsīna
 n3 syllēpsis
@@ -2866,15 +2899,37 @@ n3 aēneātor
 a3 inquiēs inquiēt
 a3 plumipēs plumiped
 a3 properipēs properiped
+part3 ecferēns
+part3 intrōferēns
+part3 prōdiēns
+part3 rediēns
+# wrongly as short e and i
+a3 mēningītidis
 # wrongly has short i
 v1 cōnspīrō
 n2 suspīrium
 n3 sedīle
 n3 restīnctiō
+a3 fabrīlis
+# wrongly has short o
+a3 tricolor
+a3 ūnicolor
+a3 discolor
+a3 coelicolor
+a3 varicolor
+a3 quadricolor
+a3 diversicolor
+a3 vinicolor
+a3 saxicolor
 # wrongly has short u
 part1 īnsecūtus
 part3 abiūdicāns
 n3 juventūs juventūt
+part1 ablūtus
+part1 adnūtus
+part1 abhibitūrus
+part1 abiūdicandus
+part1 abiūrandus
 # wrongly has short u in perf and sometimes sup
 circumfundō circumfundere circumfūdī circumfūsum
 superfundō superfundere superfūdī superfūsum
