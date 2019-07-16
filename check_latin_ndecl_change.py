@@ -8,7 +8,7 @@ from blib import getparam, rmparam, tname, msg, site
 
 import lalib
 
-def compare_new_and_old_templates(origt, newt, pagetitle, pagemsg, errandpagemsg):
+def compare_new_and_old_templates(t, pagetitle, pagemsg, errandpagemsg):
   global args
   def expand_text(tempcall):
     return blib.expand_text(tempcall, pagetitle, pagemsg, args.verbose)
@@ -21,13 +21,13 @@ def compare_new_and_old_templates(origt, newt, pagetitle, pagemsg, errandpagemsg
     return old_result
 
   def generate_new_forms():
-    new_generate_template = re.sub(r"^\{\{la-ndecl\|", "{{User:Benwing2/la-new-generate-noun-forms|", newt)
+    new_generate_template = re.sub(r"^\{\{la-ndecl\|", "{{User:Benwing2/la-new-generate-noun-forms|", t)
     new_result = expand_text(new_generate_template)
     if not new_result:
       return None
     return new_result
 
-  return blib.compare_new_and_old_template_forms(origt, newt, generate_old_forms,
+  return blib.compare_new_and_old_template_forms(t, t, generate_old_forms,
     generate_new_forms, pagemsg, errandpagemsg)
 
 def process_page(index, page):
