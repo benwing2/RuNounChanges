@@ -715,8 +715,12 @@ def generate_adj_forms(template, errandpagemsg, expand_text, return_raw=False):
       )
     return m.group(0)
 
-  generate_template = re.sub(r"^\{\{la-(.*?)\|", generate_adj_forms_prefix,
-      template)
+  if template.startswith("{{la-adecl|"):
+    generate_template = re.sub(r"^\{\{la-ndecl\|", "la-generate-adj-forms|",
+        template)
+  else:
+    generate_template = re.sub(r"^\{\{la-(.*?)\|", generate_adj_forms_prefix,
+        template)
   if not generate_template.startswith("{{la-generate-adj-forms|"):
     errandpagemsg("Template %s not a recognized adjective declension template" % template)
     return None
@@ -759,8 +763,12 @@ def generate_noun_forms(template, errandpagemsg, expand_text, return_raw=False):
       )
     return m.group(0)
 
-  generate_template = re.sub(r"^\{\{la-decl-(.*?)\|", generate_noun_forms_prefix,
-      template)
+  if template.startswith("{{la-ndecl|"):
+    generate_template = re.sub(r"^\{\{la-ndecl\|", "la-generate-noun-forms|",
+        template)
+  else:
+    generate_template = re.sub(r"^\{\{la-decl-(.*?)\|", generate_noun_forms_prefix,
+        template)
   if not generate_template.startswith("{{la-generate-noun-forms|"):
     errandpagemsg("Template %s not a recognized noun declension template" % template)
     return None
@@ -773,7 +781,10 @@ def generate_noun_forms(template, errandpagemsg, expand_text, return_raw=False):
   return blib.split_generate_args(result)
 
 def generate_verb_forms(template, errandpagemsg, expand_text, return_raw=False):
-  if template.startswith("{{la-conj-3rd-IO|"):
+  if template.startswith("{{la-conj|"):
+    generate_template = re.sub(r"^\{\{la-conj\|", "la-generate-verb-forms|",
+        template)
+  elif template.startswith("{{la-conj-3rd-IO|"):
     generate_template = re.sub(r"^\{\{la-conj-3rd-IO\|", "{{la-generate-verb-forms|conjtype=3rd-io|", template)
   else:
     generate_template = re.sub(r"^\{\{la-conj-(.*?)\|", r"{{la-generate-verb-forms|conjtype=\1|", template)
