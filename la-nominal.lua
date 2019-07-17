@@ -727,12 +727,12 @@ local function get_adj_type_and_subtype_by_ending(lemma, stem2, decltype, specif
 		endings_and_subtypes)
 	local base, stem2, decl, subtypes = get_unadjusted_adj_type_and_subtype_by_ending(lemma, stem2,
 		decltype, specified_subtypes, endings_and_subtypes)
-	if decl == "3-1" and not ut.contains(subtypes, "I") then
+	--if decl == "3-1" and not ut.contains(subtypes, "I") then
 		-- NOTE: This depends on the subtypes list getting generated afresh each time in the
 		-- call to this function. This is currently always the case, so we can save space (but be
 		-- potentially more dangerous) by not cloning.
-		table.insert(subtypes, "par")
-	end
+	--	table.insert(subtypes, "par")
+	--end
 	return base, stem2, decl, subtypes
 end
 
@@ -770,6 +770,7 @@ local function detect_adj_type_and_subtype(lemma, stem2, typ, subtypes)
 			{"jor", "3-C", {}, "j"},
 			{"^(mi)nor$", "3-C", {}, "n"},
 			{"", "3-1", {"I"}},
+			{"", "3-1", {"par"}},
 		})
 	elseif typ == "3" then
 		return get_adj_type_and_subtype_by_ending(lemma, stem2, typ, subtypes, {
@@ -780,6 +781,7 @@ local function detect_adj_type_and_subtype(lemma, stem2, typ, subtypes)
 			{"jor", "3-C", {}, "j"},
 			{"^(mi)nor$", "3-C", {}, "n"},
 			{"", "3-1", {"I"}},
+			{"", "3-1", {"par"}},
 		})
 	elseif typ == "1&2" then
 		return get_adj_type_and_subtype_by_ending(lemma, stem2, typ, subtypes, {
@@ -815,6 +817,7 @@ local function detect_adj_type_and_subtype(lemma, stem2, typ, subtypes)
 		-- resulting lack of I will get converted to "par".
 		return get_adj_type_and_subtype_by_ending(lemma, stem2, typ, subtypes, {
 			{"", "3-1", {"I"}},
+			{"", "3-1", {"par"}},
 		})
 	elseif typ == "3-2" then
 		return get_adj_type_and_subtype_by_ending(lemma, stem2, typ, subtypes, {
@@ -1313,9 +1316,6 @@ local function decline_segment_run(parsed_run, is_adj)
 				if not m_adj_decl[seg.decl] then
 					error("Unrecognized declension '" .. seg.decl .. "'")
 				end
-				if not seg.gender then
-					error("Declining modifying adjective " .. seg.lemma .. " but don't know gender of associated noun")
-				end
 
 				data = {
 					title = "",
@@ -1387,6 +1387,9 @@ local function decline_segment_run(parsed_run, is_adj)
 						new_forms = data.forms[slot:gsub("_[fn]$", "_m")]
 					end
 				elseif seg.is_adj then
+					if not seg.gender then
+						error("Declining modifying adjective " .. seg.lemma .. " but don't know gender of associated noun")
+					end
 					-- Select the appropriately gendered equivalent of the case/number
 					-- combination. Some adjectives won't have feminine or neuter
 					-- variants, though (e.g. 3-1 and 3-2 adjectives don't have a
