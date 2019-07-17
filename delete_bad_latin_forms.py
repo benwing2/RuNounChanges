@@ -518,6 +518,10 @@ def process_page(index, lemma, pos, infl, forms, pages_to_delete, preserve_diaer
       add_bad_forms(lambda key: "ger" in key)
     elif form in ["imp", "impr"]:
       add_bad_forms(lambda key: "impr" in key)
+    elif form == "fem":
+      add_bad_forms(lambda key: re.search("_f$", key))
+    elif form == "neut":
+      add_bad_forms(lambda key: re.search("_n$", key))
     elif "_" not in form:
       raise ValueError("Unrecognized form type: %s" % form)
 
