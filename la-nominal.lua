@@ -7,6 +7,8 @@ local export = {}
 -- (DONE) Implement <.sufn>
 -- (DONE) Look into adj voc=false
 -- Handle loc in adjectives
+-- Error on bad subtypes
+-- Make sure Google Books link still works.
 
 --[=[
 

@@ -7,6 +7,11 @@ local m_la_headword = require("Module:la-headword")
 local m_la_utilities = require("Module:la-utilities")
 local m_para = require("Module:parameters")
 
+-- TODO:
+-- 1. detect_decl_and_subtypes doesn't do anything with perf_stem or supine_stem.
+-- 2. Should error on bad subtypes.
+-- 3. Make sure Google Books link still works.
+--
 -- If enabled, compare this module with new version of module to make
 -- sure all conjugations are the same.
 local test_new_la_verb_module = false
