@@ -399,7 +399,7 @@ def la_verb_1st_subtype(stem, arg2, arg3, arg4, types):
   else:
     lemma = stem + ("or" if 'depon' in types else u"ō")
   types = [x for x in types if x != 'depon' and x != 'impers']
-  if ((depon and arg2 = stem + u"āt") or
+  if ((depon and arg2 == stem + u"āt") or
       (not depon and arg2 == stem + u"āv" and arg3 == stem + u"āt")):
     return "1+", lemma, None, None, types
   else:
@@ -412,7 +412,7 @@ def la_verb_2nd_subtype(stem, arg2, arg3, arg4, types):
   else:
     lemma = stem + ("eor" if 'depon' in types else u"eō")
   types = [x for x in types if x != 'depon' and x != 'impers']
-  if ((depon and arg2 = stem + "it") or
+  if ((depon and arg2 == stem + "it") or
       (not depon and arg2 == stem + "u" and arg3 == stem + "it")):
     return "2+", lemma, None, None, types
   else:
@@ -442,7 +442,7 @@ def la_verb_4th_subtype(stem, arg2, arg3, arg4, types):
   else:
     lemma = stem + ("ior" if 'depon' in types else u"iō")
   types = [x for x in types if x != 'depon' and x != 'impers']
-  if ((depon and arg2 = stem + u"īt") or
+  if ((depon and arg2 == stem + u"īt") or
       (not depon and arg2 == stem + u"īv" and arg3 == stem + u"īt")):
     return "4+", lemma, None, None, types
   else:
@@ -716,7 +716,7 @@ def generate_adj_forms(template, errandpagemsg, expand_text, return_raw=False):
     return m.group(0)
 
   if template.startswith("{{la-adecl|"):
-    generate_template = re.sub(r"^\{\{la-ndecl\|", "la-generate-adj-forms|",
+    generate_template = re.sub(r"^\{\{la-ndecl\|", "{{la-generate-adj-forms|",
         template)
   else:
     generate_template = re.sub(r"^\{\{la-(.*?)\|", generate_adj_forms_prefix,
@@ -764,7 +764,7 @@ def generate_noun_forms(template, errandpagemsg, expand_text, return_raw=False):
     return m.group(0)
 
   if template.startswith("{{la-ndecl|"):
-    generate_template = re.sub(r"^\{\{la-ndecl\|", "la-generate-noun-forms|",
+    generate_template = re.sub(r"^\{\{la-ndecl\|", "{{la-generate-noun-forms|",
         template)
   else:
     generate_template = re.sub(r"^\{\{la-decl-(.*?)\|", generate_noun_forms_prefix,
@@ -804,7 +804,7 @@ def generate_infl_forms(pos, template, errandpagemsg, expand_text, return_raw=Fa
     return generate_noun_forms(template, errandpagemsg, expand_text, return_raw)
   elif pos == 'verb':
     return generate_verb_forms(template, errandpagemsg, expand_text, return_raw)
-  elif pos in ['adj', 'part']:
+  elif pos in ['adj', 'nounadj', 'part']:
     return generate_adj_forms(template, errandpagemsg, expand_text, return_raw)
   else:
     errandpagemsg("WARNING: Bad pos=%s, expected noun/verb/adj")
