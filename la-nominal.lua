@@ -97,57 +97,76 @@ local genders = {
 	"m", "f", "n"
 }
 
+local linked_suffixes = {
+	"", "_linked"
+}
+
 -- Iterate over all the "slots" associated with a noun declension, where a slot
--- is a particular case/number combination.
-local function iter_noun_slots()
-	local i = 1
-	local j = 0
+-- is a particular case/number combination. If overridable_only, don't include the
+-- "_linked" variants (nom_sg_linked, nom_pl_linked), which aren't overridable.
+local function iter_noun_slots(overridable_only)
+	local case = 1
+	local num = 1
+	local linked_variant = 0
 	local function iter()
-		j = j + 1
-		if j > #nums then
-			j = 1
-			i = i + 1
-			if i > #cases then
-				return nil
+		linked_variant = linked_variant + 1
+		local max_linked_variant = overridable_only and 1 or cases[case] == "nom" and 2 or 1
+		if linked_variant > max_linked_variants then
+			linked_variant = 1
+			num = num + 1
+			if num > #nums then
+				num = 1
+				case = case + 1
+				if case > #cases then
+					return nil
+				end
 			end
 		end
-		return cases[i] .. "_" .. nums[j]
+		return cases[case] .. "_" .. nums[num] .. linked_suffix[linked_variant]
 	end
 	return iter
 end
 
 -- Iterate over all the "slots" associated with an adjective declension, where a slot
--- is a particular case/number/gender combination.
-local function iter_adj_slots()
-	local i = 1
-	local j = 1
-	local k = 0
+-- is a particular case/number/gender combination. If overridable_only, don't include the
+-- "_linked" variants (nom_sg_m_linked, nom_pl_m_linked), which aren't overridable.
+local function iter_adj_slots(overridable_only)
+	local case = 1
+	local num = 1
+	local gen = 1
+	local linked_variant = 0
 	local function iter()
-		k = k + 1
-		if k > #genders then
-			k = 1
-			j = j + 1
-			if j > #nums then
-				j = 1
-				i = i + 1
-				if i > #cases then
-					return nil
+		linked_variant = linked_variant + 1
+		local max_linked_variant = overridable_only and 1 or cases[case] == "nom" and genders[gen] == "m" and 2 or 1
+		if linked_variant > max_linked_variants then
+			linked_variant = 1
+			gen = gen + 1
+			if gen > #genders then
+				gen = 1
+				num = num + 1
+				if num > #nums then
+					num = 1
+					case = case + 1
+					if case > #cases then
+						return nil
+					end
 				end
 			end
 		end
-		return cases[i] .. "_" .. nums[j] .. "_" .. genders[k]
+		return cases[case] .. "_" .. nums[num] .. "_" .. genders[gen] .. linked_suffix[linked_variant]
 	end
 	return iter
 end
 
 -- Iterate over all the "slots" associated with a noun or adjective declension (depending on
 -- the value of IS_ADJ), where a slot is a particular case/number combination (in the case of
--- nouns) or case/number/gender combination (in the case of adjectives).
-local function iter_slots(is_adj)
+-- nouns) or case/number/gender combination (in the case of adjectives). If OVERRIDABLE_ONLY
+-- is specified, only include overridable slots (not including _linked variants).
+local function iter_slots(is_adj, overridable_only)
 	if is_adj then
-		return iter_adj_slots()
+		return iter_adj_slots(overridable_only)
 	else
-		return iter_noun_slots()
+		return iter_noun_slots(overridable_only)
 	end
 end
 
@@ -187,15 +206,13 @@ local function process_noun_forms_and_overrides(data, args)
 				data.forms[slot] = "—"
 			else
 				for i, form in ipairs(val) do
-					local word = data.prefix .. (data.n and rsub(form,"m$","n") or form) .. data.suffix
-
 					local accel_form = slot
 					accel_form = accel_form:gsub("_([sp])[gl]$", "|%1")
 
 					data.accel[slot .. i] = {form = accel_form, lemma = accel_lemma}
-					val[i] = word
+					val[i] = form
 					if not redlink and NAMESPACE == '' then
-						local title = lang:makeEntryName(word)
+						local title = lang:makeEntryName(form)
 						local t = mw.title.new(title)
 						if t and not t.exists then
 							table.insert(data.categories, 'Latin nouns with red links in their declension tables')
@@ -251,8 +268,6 @@ local function process_adj_forms_and_overrides(data, args)
 				data.forms[slot] = "—"
 			else
 				for i, form in ipairs(val) do
-					local word = data.prefix .. form .. data.suffix
-
 					local accel_form = slot
 					accel_form = accel_form:gsub("_([sp])[gl]_", "|%1|")
 
@@ -281,9 +296,9 @@ local function process_adj_forms_and_overrides(data, args)
 
 						data.accel[slot .. i] = {form = accel_form, lemma = accel_lemma}
 					end
-					val[i] = word
+					val[i] = form
 					if not redlink and NAMESPACE == '' then
-						local title = lang:makeEntryName(word)
+						local title = lang:makeEntryName(form)
 						local t = mw.title.new(title)
 						if t and not t.exists then
 							table.insert(data.categories, 'Latin adjectives with red links in their declension tables')
@@ -838,12 +853,14 @@ local function detect_adj_type_and_subtype(lemma, stem2, typ, subtypes)
 end
 
 -- Parse a segment (e.g. "lūna<1>", "aegis/aegid<3.Greek>", "bonus<+>", or
--- "vetus/veter<3+.-I>"), consisting of a lemma (or optionally a lemma/stem)
+-- "[[vetus]]/veter<3+.-I>"), consisting of a lemma (or optionally a lemma/stem)
 -- and declension+subtypes, where a + in the declension indicates an adjective.
+-- Brackets can be present to indicate links, for use in {{la-noun}} and {{la-adj}}.
 -- The return value is a table, e.g.:
 -- {
 --   decl = "1",
 --   is_adj = false,
+--   orig_lemma = "lūna",
 --   lemma = "lūna",
 --   stem2 = nil,
 --   gender = "F",
@@ -856,6 +873,7 @@ end
 -- {
 --   decl = "3",
 --   is_adj = false,
+--   orig_lemma = "aegis",
 --   lemma = "aegis",
 --   stem2 = "aegid",
 --   gender = nil,
@@ -868,6 +886,7 @@ end
 -- {
 --   decl = "1&2",
 --   is_adj = true,
+--   orig_lemma = "bonus",
 --   lemma = "bonus",
 --   stem2 = nil,
 --   gender = nil,
@@ -880,6 +899,7 @@ end
 -- {
 --   decl = "3-1",
 --   is_adj = true,
+--   orig_lemma = "[[vetus]]",
 --   lemma = "vetus",
 --   stem2 = "veter",
 --   gender = nil,
@@ -1002,9 +1022,9 @@ end
 
 -- Parse a segment run (i.e. a string with zero or more segments [see
 -- parse_segment] and optional surrounding text, e.g. "foenum<2>-graecum<2>"
--- or "pars/part<3.navis> ōrātiōnis"). The segment run currently cannot contain
--- any alternants (e.g. "((epulum<2.sg>,epulae<1>))"). The return value is a
--- table of the following form:
+-- or "pars/part<3.navis> [[oratio|ōrātiōnis]]"). The segment run currently
+-- cannot contain any alternants (e.g. "((epulum<2.sg>,epulae<1>))"). The
+-- return value is a table of the following form:
 -- {
 --   segments = PARSED_SEGMENTS (a list of parsed segments),
 --   loc = LOC (a boolean indicating whether any of the individual segments
@@ -1014,21 +1034,33 @@ end
 --   gender = GENDER (the first specified or inferred gender, or nil if none),
 -- }
 -- Each element in PARSED_SEGMENTS is as returned by parse_segment() but will
--- have an additional .prefix field indicating the text before the segment. If
--- there is trailing text, the last element will have only a .prefix field
--- containing that trailing text.
+-- have an additional .orig_prefix field indicating the text before the segment
+-- (including bracketed links) and corresponding .prefix field indicating the text
+-- with bracketed links resolved. If there is trailing text, the last element will
+-- have only .orig_prefix and .prefix fields containing that trailing text.
 local function parse_segment_run(segment_run)
 	local loc = nil
 	local num = nil
-	local segments
 	-- If the segment run begins with a hyphen, include the hyphen in the
 	-- set of allowed characters for a declined segment. This way, e.g. the
 	-- suffix [[-cen]] can be declared as {{la-ndecl|-cen/-cin<3>}} rather than
 	-- {{la-ndecl|-cen/cin<3>}}, which is less intuitive.
-	if rfind(segment_run, "^%-") then
-		segments = m_string_utilities.capturing_split(segment_run, "([^<> ,]+<.->)")
-	else
-		segments = m_string_utilities.capturing_split(segment_run, "([^<> ,%-]+<.->)")
+	local is_suffix = rfind(segment_run, "^%-")
+	local segments = {}
+	-- We want to not break up a bracketed link followed by <> even if it has a space or
+	-- hyphen in it. So we do an outer capturing split to find the bracketed links followed
+	-- by <>, then do inner capturing splits on all the remaining text to find the other
+	-- declined terms.
+	local bracketed_segments = m_string_utilities.capturing_split(segment_run, "(%[%[.-%]%]<.->)")
+	for i, bracketed_segment in ipairs(bracketed_segments) do
+		if i % 2 == 0 then
+			table.insert(segments, bracketed_segment)
+		else
+			for _, subsegment in m_string_utilities.capturing_split(bracketed_segment,
+				is_suffix and "([^<> ,]+<.->)" or "([^<> ,%-]+<.->)") do
+				table.insert(segments, subsegment)
+			end
+		end
 	end
 	local parsed_segments = {}
 	local gender = nil
@@ -1039,11 +1071,15 @@ local function parse_segment_run(segment_run)
 		-- The first specified value for num is used becomes the overall value.
 		num = num or parsed_segment.num
 		gender = gender or parsed_segment.gender
-		parsed_segment.prefix = segments[i - 1]
+		parsed_segment.orig_prefix = segments[i - 1]
+		parsed_segment.prefix = m_links.remove_links(segments[i - 1])
 		table.insert(parsed_segments, parsed_segment)
 	end
 	if segments[#segments] ~= "" then
-		table.insert(parsed_segments, {prefix = segments[#segments]})
+		table.insert(parsed_segments, {
+			orig_prefix = segments[#segments],
+			prefix = m_links.remove_links(segments[#segments]),
+		})
 	end
 	return {
 		segments = parsed_segments,
@@ -1112,11 +1148,11 @@ end
 -- }.
 -- Each element in PARSED_SEGMENTS is one of three types:
 --
--- 1. A regular segment, as returned by parse_segment() but with an additional
---    .prefix field indicating the text before the segment, as per the
---    return value of parse_segment_run().
--- 2. A raw-text segment, i.e. a table with only a .prefix field containing
---    the raw text.
+-- 1. A regular segment, as returned by parse_segment() but with additional
+--    .prefix and .orig_prefix fields indicating the text before the segment, as per
+--    the return value of parse_segment_run().
+-- 2. A raw-text segment, i.e. a table with only .prefix and .orig_prefix fields
+--    containing the raw text.
 -- 3. An alternating segment, i.e. a table of the following form:
 -- {
 --   alternants = PARSED_SEGMENT_RUNS (a list of parsed segment runs),
@@ -1353,7 +1389,6 @@ local function decline_segment_run(parsed_run, is_adj)
 					num = seg.num or "",
 					loc = seg.loc,
 					um = false,
-					n = false,
 					forms = {},
 					types = seg.types,
 					categories = {},
@@ -1364,10 +1399,6 @@ local function decline_segment_run(parsed_run, is_adj)
 				if seg.types.genplum then
 					data.um = true
 					seg.types.genplum = nil
-				end
-				if seg.types.sufn then
-					data.n = true
-					seg.types.sufn = nil
 				end
 
 				m_noun_decl[seg.decl](data, seg.args)
@@ -1427,8 +1458,8 @@ local function decline_segment_run(parsed_run, is_adj)
 				-- 3. Append new forms and footnotes to the existing ones.
 
 				declensions.forms[slot], declensions.notes[slot] = append_form(
-					declensions.forms[slot], declensions.notes[slot],
-					new_forms, new_notes, seg.prefix)
+					declensions.forms[slot], declensions.notes[slot], new_forms,
+					new_notes, slot:find("linked") and seg.orig_prefix or seg.prefix)
 			end
 
 			if not seg.types.nocat then
@@ -1547,7 +1578,7 @@ local function decline_segment_run(parsed_run, is_adj)
 			for slot in iter_slots(is_adj) do
 				declensions.forms[slot], declensions.notes[slot] = append_form(
 					declensions.forms[slot], declensions.notes[slot],
-					seg.prefix)
+					slot:find("linked") and seg.orig_prefix or seg.prefix)
 			end
 		end
 	end
