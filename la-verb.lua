@@ -8,7 +8,7 @@ local m_la_utilities = require("Module:la-utilities")
 local m_para = require("Module:parameters")
 
 -- TODO:
--- 1. detect_decl_and_subtypes doesn't do anything with perf_stem or supine_stem.
+-- 1. (DONE) detect_decl_and_subtypes doesn't do anything with perf_stem or supine_stem.
 -- 2. Should error on bad subtypes.
 -- 3. Make sure Google Books link still works.
 --
@@ -179,13 +179,24 @@ end
 -- 2. A regex that should match the entire lemma (it should be anchored at
 --    the beginning with ^ and at the end with $), and contains a single
 --    capturing group to match the base.
-local function get_subtype_by_ending(lemma, conjtype, endings_and_subtypes)
+local function get_subtype_by_ending(lemma, conjtype, specified_subtypes,
+		endings_and_subtypes)
 	for _, ending_and_subtypes in ipairs(endings_and_subtypes) do
 		local ending = ending_and_subtypes[1]
 		local subtypes = ending_and_subtypes[2]
-		local base = extract_base(lemma, ending)
-		if base then
-			return base, subtypes
+		not_this_subtype = false
+		for _, subtype in ipairs(subtypes) do
+			-- A subtype is directly canceled by specifying -SUBTYPE.
+			if specified_subtypes["-" .. subtype] then
+				not_this_subtype = true
+				break
+			end
+		end
+		if not not_this_subtype then
+			local base = extract_base(lemma, ending)
+			if base then
+				return base, subtypes
+			end
 		end
 	end
 	if conjtype then
@@ -202,7 +213,12 @@ local function detect_decl_and_subtypes(args)
 		if i == 1 then
 			conj_arg = spec
 		else
-			subtypes[spec:gsub("%-", "")] = true
+			local begins_with_hyphen = rfind(spec, "^%-")
+			spec = spec:gsub("%-", "")
+			if begins_with_hyphen then
+				spec = "-" .. spec
+			end
+			subtypes[spec] = true
 		end
 	end
 
@@ -219,7 +235,7 @@ local function detect_decl_and_subtypes(args)
 
 	if conj_arg == "1" then
 		conjtype = "1st"
-		base, detected_subtypes = get_subtype_by_ending(lemma, "1", {
+		base, detected_subtypes = get_subtype_by_ending(lemma, "1", subtypes, {
 			{"ō", {}},
 			{"or", {"depon"}},
 			{"at", {"impers"}},
@@ -231,7 +247,7 @@ local function detect_decl_and_subtypes(args)
 		end
 	elseif conj_arg == "2" then
 		conjtype = "2nd"
-		base, detected_subtypes = get_subtype_by_ending(lemma, "2", {
+		base, detected_subtypes = get_subtype_by_ending(lemma, "2", subtypes, {
 			{"eō", {}},
 			{"eor", {"depon"}},
 			{"et", {"impers"}},
@@ -242,14 +258,14 @@ local function detect_decl_and_subtypes(args)
 			auto_supine = base .. "it"
 		end
 	elseif conj_arg == "3" then
-		base, detected_subtypes = get_subtype_by_ending(lemma, nil, {
-			{"iō", {}},
-			{"ior", {"depon"}},
+		base, detected_subtypes = get_subtype_by_ending(lemma, nil, subtypes, {
+			{"iō", {"I"}},
+			{"ior", {"depon", "I"}},
 		})
 		if base then
 			conjtype = "3rd-io"
 		else
-			base, detected_subtypes = get_subtype_by_ending(lemma, "3", {
+			base, detected_subtypes = get_subtype_by_ending(lemma, "3", subtypes, {
 				{"ō", {}},
 				{"or", {"depon"}},
 				{"it", {"impers"}},
@@ -263,7 +279,7 @@ local function detect_decl_and_subtypes(args)
 		end
 	elseif conj_arg == "4" then
 		conjtype = "4th"
-		base, detected_subtypes = get_subtype_by_ending(lemma, "4", {
+		base, detected_subtypes = get_subtype_by_ending(lemma, "4", subtypes, {
 			{"iō", {}},
 			{"ior", {"depon"}},
 			{"it", {"impers"}},
@@ -326,6 +342,8 @@ local function detect_decl_and_subtypes(args)
 				subtypes.noperf = true
 				subtypes.nosup = true
 			end
+			args[2] = supine_stem
+			args[3] = nil
 		else
 			perf_stem = args[3] or auto_perf
 			if perf_stem == "-" then
@@ -341,137 +359,13 @@ local function detect_decl_and_subtypes(args)
 			if not supine_stem then
 				subtypes.nosup = true
 			end
+			args[2] = perf_stem
+			args[3] = supine_stem
 		end
-		args[2] = args[3]
-		args[3] = args[4]
 		args[4] = nil
 	end
 
 	return conjtype, subtypes
-end
-
--- The main entry point.
-function export.show(frame)
-	local data, domain = export.make_data(frame), frame:getParent().args['search']
-	-- Test code to compare existing module to new one.
-	if test_new_la_verb_module then
-		local m_new_la_verb = require("Module:User:Benwing2/la-verb")
-		local miscdata = {
-			title = data.title,
-			categories = data.categories,
-		}
-		local newdata = m_new_la_verb.make_data(frame)
-		local newmiscdata = {
-			title = newdata.title,
-			categories = newdata.categories,
-		}
-		local all_verb_props = {"forms", "form_footnote_indices", "footnotes", "miscdata"}
-		local difconj = false
-		for _, prop in ipairs(all_verb_props) do
-			local table = prop == "miscdata" and miscdata or data[prop]
-			local newtable = prop == "miscdata" and newmiscdata or newdata[prop]
-			for key, val in pairs(table) do
-				local newval = newtable[key]
-				if not forms_equal(val, newval) then
-					-- Uncomment this to display the particular key and
-					-- differing forms.
-					--error(key .. " " .. (val and concat_vals(val) or "nil") .. " || " .. (newval and concat_vals(newval) or "nil"))
-					difconj = true
-					break
-				end
-			end
-			if difconj then
-				break
-			end
-			-- Do the comparison the other way as well in case of extra keys
-			-- in the new table.
-			for key, newval in pairs(newtable) do
-				local val = table[key]
-				if not forms_equal(val, newval) then
-					-- Uncomment this to display the particular key and
-					-- differing forms.
-					--error(key .. " " .. (val and concat_vals(val) or "nil") .. " || " .. (newval and concat_vals(newval) or "nil"))
-					difconj = true
-					break
-				end
-			end
-			if difconj then
-				break
-			end
-		end
-		track(difconj and "different-conj" or "same-conj")
-	end
-
-	if domain == nil then
-		return make_table(data) .. m_utilities.format_categories(data.categories, lang)
-	else
-		local verb = data['forms']['1s_pres_actv_indc'] ~= nil and ('[['..mw.ustring.gsub(mw.ustring.toNFD(data['forms']['1s_pres_actv_indc']),'[^%w]+',"")..'|'..data['forms']['1s_pres_actv_indc'].. ']]') or 'verb'
-		return link_google_books(verb, flatten_values(data['forms']), domain) end
-end
-
-
--- The entry point for 'la-generate-verb-forms' to generate all verb forms.
-function export.generate_forms(frame)
-	local data = export.make_data(frame)
-	local ins_text = {}
-	for key, val in pairs(data.forms) do
-		local ins_form = {}
-		if type(val) ~= "table" then
-			val = {val}
-		end
-		for _, v in ipairs(val) do
-			-- skip forms with HTML or links in them
-			if v ~= "-" and v ~= "—" and v ~= "&mdash;" and not v:find("[<>=|%[%]]") then
-				table.insert(ins_form, v)
-			end
-		end
-		if #ins_form > 0 then
-			table.insert(ins_text, key .. "=" .. table.concat(ins_form, ","))
-		end
-	end
-	return table.concat(ins_text, "|")
-end
-
-
-function export.make_data(frame)
-	local args = frame:getParent().args
-	local conj_type = frame.args[1] or ine(args["conjtype"]) or error("Conjugation type has not been specified. Please pass parameter 1 to the module invocation")
-	local subtype = ine(frame.args["type"] or args["type"]) or ""
-	local sync_perf = ine(args["sync_perf"]) or ""
-	local p3inf = ine(args["p3inf"]) or ""
-
-	if not conjugations[conj_type] then
-		error("Unknown conjugation type '" .. conj_type .. "'")
-	end
-
-	local data = {forms = {}, title = {}, categories = {}, form_footnote_indices = {}, footnotes = {}}  --note: the addition of red superscripted footnotes ('<sup style="color: red">' ... </sup>) is only implemented for the three form printing loops in which it is used
-	local subtype_list = m_la_headword.split_verb_subtype(subtype)
-	local subtypes = {}
-	for _, subt in ipairs(subtype_list) do
-		subtypes[subt] = true
-	end
-	local typeinfo = {
-		conj_type = conj_type,
-		subtypes = subtypes,
-		sync_perf = sync_perf,
-		p3inf = p3inf
-	}
-
-	-- Generate the verb forms
-	conjugations[conj_type](args, data, typeinfo)
-
-	-- Override with user-set forms
-	override(data, args)
-
-	-- Post-process the forms
-	postprocess(data, typeinfo)
-
-	-- Check if the links to the verb forms exist
-	checkexist(data)
-
-	-- Check if the verb is irregular
-	if not conj_type == 'irreg' then checkirregular(args, data) end
-	return data
 end
 
 
@@ -1153,9 +1047,7 @@ local function get_regular_stems(args, typeinfo)
 		-- Doesn't include optsemidepon, which does have active perfect forms.
 		not typeinfo.subtypes.noperf
 	) then
-		if typeinfo.conj_type == "1st" then
-			typeinfo.perf_stem = typeinfo.pres_stem .. "āv"
-		elseif NAMESPACE == "Template" then
+		if NAMESPACE == "Template" then
 			typeinfo.perf_stem = "-"
 		else
 			error("Perfect stem has not been provided")
@@ -1173,9 +1065,7 @@ local function get_regular_stems(args, typeinfo)
 		not typeinfo.subtypes.nosup and not typeinfo.subtypes.nopasvperf and
 		not typeinfo.subtypes.memini and not typeinfo.subtypes.pass3only
 	) then
-		if typeinfo.conj_type == "1st" then
-			typeinfo.supine_stem = typeinfo.pres_stem .. "āt"
-		elseif NAMESPACE == "Template" then
+		if NAMESPACE == "Template" then
 			typeinfo.supine_stem = "-"
 		else
 			error("Supine stem has not been provided")
