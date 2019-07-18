@@ -120,6 +120,13 @@ decl["1&2"] = function(data, args)
 	data.forms["voc_pl_f"] = stem .. ae
 	data.forms["voc_pl_n"] = stem .. "a"
 
+	data.forms["loc_sg_m"] = stem .. "ī"
+	data.forms["loc_sg_f"] = stem .. ae
+	data.forms["loc_sg_n"] = stem .. "ī"
+	data.forms["loc_pl_m"] = stem .. "īs"
+	data.forms["loc_pl_f"] = stem .. "īs"
+	data.forms["loc_pl_n"] = stem .. "īs"
+
 	if data.types.ius then
 		table.insert(title, "with genitive singular in ''-īus'' and dative singular in ''-ī''")
 		table.insert(data.categories, "Latin first and second declension adjectives with genitive singular in -īus")
@@ -217,6 +224,9 @@ decl["1-1"] = function(data, args)
 	data.forms["abl_sg_m"] = stem .. "ā"
 	data.forms["abl_pl_m"] = stem .. "īs"
 
+	data.forms["loc_sg_m"] = stem .. "ae"
+	data.forms["loc_pl_m"] = stem .. "īs"
+
 	data.forms["voc_sg_m"] = stem .. "a"
 	data.forms["voc_pl_m"] = stem .. "ae"
 
@@ -280,6 +290,11 @@ decl["2-2"] = function(data, args)
 	data.forms["abl_sg_n"] = stem .. "ō"
 	data.forms["abl_pl_m"] = stem .. "īs"
 	data.forms["abl_pl_n"] = stem .. "īs"
+
+	data.forms["loc_sg_m"] = stem .. "ī"
+	data.forms["loc_sg_n"] = stem .. "ī"
+	data.forms["loc_pl_m"] = stem .. "īs"
+	data.forms["loc_pl_n"] = stem .. "īs"
 
 	data.forms["voc_sg_m"] = stem .. "e"
 	data.forms["voc_sg_n"] = stem .. um
@@ -348,6 +363,11 @@ decl["3-1"] = function(data, args)
 	data.forms["abl_pl_m"] = stem2 .. "ibus"
 	data.forms["abl_pl_n"] = stem2 .. "ibus"
 
+	data.forms["loc_sg_m"] = stem2 .. "ī"
+	data.forms["loc_sg_n"] = stem2 .. "ī"
+	data.forms["loc_pl_m"] = stem2 .. "ibus"
+	data.forms["loc_pl_n"] = stem2 .. "ibus"
+
 	data.forms["voc_sg_m"] = stem1
 	data.forms["voc_sg_n"] = stem1
 	data.forms["voc_pl_m"] = stem2 .. "ēs"
@@ -360,6 +380,8 @@ decl["3-1"] = function(data, args)
 		data.forms["gen_pl_n"] = stem2 .. "um"
 		data.forms["abl_sg_m"] = stem2 .. "e"
 		data.forms["abl_sg_n"] = stem2 .. "e"
+		data.forms["loc_sg_m"] = {stem2 .. "ī", stem2 .. "e"}
+		data.forms["loc_sg_n"] = {stem2 .. "ī", stem2 .. "e"}
 		data.forms["acc_pl_n"] = stem2 .. "a"
 		data.forms["voc_pl_n"] = stem2 .. "a"
 	end
@@ -485,6 +507,11 @@ decl["3-2"] = function(data, args)
 	data.forms["abl_pl_m"] = stem .. "ibus"
 	data.forms["abl_pl_n"] = stem .. "ibus"
 
+	data.forms["loc_sg_m"] = stem2 .. "ī"
+	data.forms["loc_sg_n"] = stem2 .. "ī"
+	data.forms["loc_pl_m"] = stem2 .. "ibus"
+	data.forms["loc_pl_n"] = stem2 .. "ibus"
+
 	data.forms["voc_sg_m"] = stem .. "is"
 	data.forms["voc_sg_n"] = stem .. "e"
 	data.forms["voc_pl_m"] = stem .. "ēs"
@@ -562,6 +589,13 @@ decl["3-3"] = function(data, args)
 	data.forms["abl_pl_m"] = stem2 .. "ibus"
 	data.forms["abl_pl_f"] = stem2 .. "ibus"
 	data.forms["abl_pl_n"] = stem2 .. "ibus"
+
+	data.forms["loc_sg_m"] = stem2 .. "ī"
+	data.forms["loc_sg_f"] = stem2 .. "ī"
+	data.forms["loc_sg_n"] = stem2 .. "ī"
+	data.forms["loc_pl_m"] = stem2 .. "ibus"
+	data.forms["loc_pl_f"] = stem2 .. "ibus"
+	data.forms["loc_pl_n"] = stem2 .. "ibus"
 
 	data.forms["voc_sg_m"] = stem1
 	data.forms["voc_sg_f"] = stem2 .. "is"
