@@ -45,23 +45,38 @@ def convert_template_to_new(t, pagetitle, pagemsg, errandpagemsg):
   types = getparam(t, "type").strip()
   if not types:
     types = []
+    depon = False
   else:
-    types = re.split("(semi-depon|pass-3only|pass-impers|no-actv-perf|no-pasv-perf|perf-as-pres|short-imp|sup-futr-actv-only|[a-z0-9]+)", types)
+    types = re.split("(opt-semi-depon|semi-depon|pass-3only|pass-impers|no-actv-perf|no-pasv-perf|perf-as-pres|short-imp|sup-futr-actv-only|[a-z0-9]+)", types)
     types = [x for i, x in enumerate(types) if i % 2 == 1]
-  if conj_suffix != "irreg":
-    if "noperf" in types:
+    depon = "depon" in types or "semidepon" in types or "semi-depon" in types
+  conj, lemma, arg3, arg4, types = to_props(stem, arg2, arg3, arg4, types)
+  if conj != "irreg":
+    if "noperf" in types and not depon:
       if arg3:
         pagemsg("WARNING: Perfect %s specified along with noperf: %s" % (
           arg3, origt))
         arg3 = ""
-      types = [x for x in types if x != "noperf"]
     if "nosup" in types:
-      if arg4:
-        pagemsg("WARNING: Supine %s specified along with nosup: %s" % (
-          arg4, origt))
-        arg4 = ""
-      types = [x for x in types if x != "nosup"]
-  conj, lemma, arg3, arg4, types = to_props(stem, arg2, arg3, arg4, types)
+      if depon:
+        if arg3:
+          pagemsg("WARNING: Supine %s specified along with nosup: %s" % (
+            arg3, origt))
+          arg3 = ""
+      else:
+        if arg4:
+          pagemsg("WARNING: Supine %s specified along with nosup: %s" % (
+            arg4, origt))
+          arg4 = ""
+    if not conj.endswith("+"):
+      if depon:
+        if not arg3:
+          types = [x for x in types if x != "noperf" and x != "nosup"]
+      else:
+        if not arg3:
+          types = [x for x in types if x != "noperf"]
+        if not arg4:
+          types = [x for x in types if x != "nosup"]
   # Fetch all params
   named_params = []
   for param in t.params:

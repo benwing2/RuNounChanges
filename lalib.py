@@ -393,20 +393,37 @@ la_adj_decl_suffix_to_decltype = {
 }
 
 def la_verb_1st_subtype(stem, arg2, arg3, arg4, types):
-  depon = 'depon' in types or 'semidepon' or 'semi-depon' in types
+  depon = 'depon' in types or 'semidepon' in types or 'semi-depon' in types
   if 'impers' in types:
     lemma = stem + (u"ātur" if 'depon' in types else "at")
   else:
     lemma = stem + ("or" if 'depon' in types else u"ō")
+  if depon:
+    perf_stem = None
+    supine_stem = arg2
+  else:
+    perf_stem = arg2
+    supine_stem = arg3
+  if not perf_stem and not depon and 'noperf' not in types:
+    perf_stem = stem + u"āv"
+    arg2 = perf_stem
+  if not supine_stem and ('nopass' not in types and 'noperf' not in types
+      and 'nosup' not in types and 'no-pasv-perf' not in types and
+      'nopasvperf' not in types and 'memini' not in types and
+      'pass-3only' not in types and 'pass3only' not in types):
+    supine_stem = stem + u"āt"
+    if depon:
+      arg2 = supine_stem
+    else:
+      arg3 = supine_stem
   types = [x for x in types if x != 'depon' and x != 'impers']
-  if ((depon and arg2 == stem + u"āt") or
-      (not depon and arg2 == stem + u"āv" and arg3 == stem + u"āt")):
+  if supine_stem == stem + u"āt" and (depon or perf_stem == stem + u"āv"):
     return "1+", lemma, None, None, types
   else:
     return "1", lemma, arg2, arg3, types
 
 def la_verb_2nd_subtype(stem, arg2, arg3, arg4, types):
-  depon = 'depon' in types or 'semidepon' or 'semi-depon' in types
+  depon = 'depon' in types or 'semidepon' in types or 'semi-depon' in types
   if 'impers' in types:
     lemma = stem + (u"ētur" if 'depon' in types else "et")
   else:
@@ -423,6 +440,8 @@ def la_verb_3rd_subtype(stem, arg2, arg3, arg4, types):
     lemma = stem + ("itur" if 'depon' in types else "it")
   else:
     lemma = stem + ("or" if 'depon' in types else u"ō")
+  if stem.endswith("i"):
+    types = types + ["-I"]
   types = [x for x in types if x != 'depon' and x != 'impers']
   return "3", lemma, arg2, arg3, types
 
@@ -436,7 +455,7 @@ def la_verb_3rd_io_subtype(stem, arg2, arg3, arg4, types):
   return "3", lemma, arg2, arg3, types
 
 def la_verb_4th_subtype(stem, arg2, arg3, arg4, types):
-  depon = 'depon' in types or 'semidepon' or 'semi-depon' in types
+  depon = 'depon' in types or 'semidepon' in types or 'semi-depon' in types
   if 'impers' in types:
     lemma = stem + (u"ītur" if 'depon' in types else "it")
   else:
@@ -473,7 +492,7 @@ irreg_verb_type_to_lemma = {
 }
 
 def la_verb_irreg_subtype(stem, arg2, arg3, arg4, types):
-  lemma = arg2 + irreg_type_to_lemma[stem]
+  lemma = arg2 + irreg_verb_type_to_lemma[stem]
   return "irreg", lemma, arg3, arg4, types
 
 la_verb_conj_suffix_to_props = {
