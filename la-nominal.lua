@@ -50,7 +50,6 @@ local current_title = mw.title.getCurrentTitle()
 local NAMESPACE = current_title.nsText
 local PAGENAME = current_title.text
 
-local m_la_adj = require("Module:User:Benwing2/la-adj")
 local m_noun_decl = require("Module:la-noun/data")
 local m_noun_table = require("Module:la-noun/table")
 local m_adj_decl = require("Module:User:Benwing2/la-adj/data")
@@ -222,6 +221,12 @@ local function process_adj_forms_and_overrides(data, args)
 		accel_lemma = data.forms["nom_sg_m"]
 		accel_lemma_f = data.forms["nom_sg_f"]
 	end
+	if type(accel_lemma) == "table" then
+		accel_lemma = accel_lemma[1]
+	end
+	if type(accel_lemma_f) == "table" then
+		accel_lemma_f = accel_lemma_f[1]
+	end
 
 	for slot in iter_adj_slots() do
 		-- If noneut=1 passed, clear out all neuter forms.
@@ -238,7 +243,7 @@ local function process_adj_forms_and_overrides(data, args)
 			if type(val) == "string" then
 				val = mw.text.split(val, "/")
 			end
-			if data.num == "pl" and slot:find("sg") then
+			if (data.num == "pl" and slot:find("sg")) or (data.num == "sg" and slot:find("pl")) then
 				data.forms[slot] = ""
 			elseif val[1] == "" or val == "" or val[1] == "-" or val[1] == "—" or val == "-" or val == "—" then
 				data.forms[slot] = "—"
@@ -289,25 +294,29 @@ local function process_adj_forms_and_overrides(data, args)
 		end
 	end
 
-	-- See if the masculine and feminine are the same across all slots. If so, blank out the feminine so we use a
-	-- table that combines masculine and feminine.
-	local fem_is_masc = true
-	for _, case in ipairs(cases) do
-		for _, num in ipairs(nums) do
-			if not ut.equals(data.forms[case .. "_" .. num .. "_f"], data.forms[case .. "_" .. num .. "_m"]) then
-				fem_is_masc = false
+	-- See if the masculine and feminine/neuter are the same across all slots.
+	-- If so, blank out the feminine/neuter so we use a table that combines
+	-- masculine and feminine, or masculine/feminine/neuter.
+	for _, gender in ipairs({"f", "n"}) do
+		local other_is_masc = true
+		for _, case in ipairs(cases) do
+			for _, num in ipairs(nums) do
+				if not ut.equals(data.forms[case .. "_" .. num .. "_" .. gender],
+						data.forms[case .. "_" .. num .. "_m"]) then
+					other_is_masc = false
+					break
+				end
+			end
+			if not other_is_masc then
 				break
 			end
 		end
-		if not fem_is_masc then
-			break
-		end
-	end
-
-	if fem_is_masc then
-		for _, case in ipairs(cases) do
-			for _, num in ipairs(nums) do
-				data.forms[case .. "_" .. num .. "_f"] = nil
+	
+		if other_is_masc then
+			for _, case in ipairs(cases) do
+				for _, num in ipairs(nums) do
+					data.forms[case .. "_" .. num .. "_" .. gender] = nil
+				end
 			end
 		end
 	end
@@ -667,7 +676,7 @@ end
 --    to be considered a match. An example is {"is", ""}, which will match
 --    lemma == "follis", stem2 == "foll", but not lemma == "lapis",
 --    stem2 == "lapid".
-local function get_unadjusted_adj_type_and_subtype_by_ending(lemma, stem2, decltype,
+local function get_adj_type_and_subtype_by_ending(lemma, stem2, decltype,
 		specified_subtypes, endings_and_subtypes)
 	for _, ending_and_subtypes in ipairs(endings_and_subtypes) do
 		local ending = ending_and_subtypes[1]
@@ -721,21 +730,6 @@ local function get_unadjusted_adj_type_and_subtype_by_ending(lemma, stem2, declt
 	end
 end
 
--- Hack: The declension functions for 3-1 expect type "par" for non-i-stems. We instead use -I
--- to indicate non-i-stems, which is more standard. This function converts as appropriate.
-local function get_adj_type_and_subtype_by_ending(lemma, stem2, decltype, specified_subtypes,
-		endings_and_subtypes)
-	local base, stem2, decl, subtypes = get_unadjusted_adj_type_and_subtype_by_ending(lemma, stem2,
-		decltype, specified_subtypes, endings_and_subtypes)
-	--if decl == "3-1" and not ut.contains(subtypes, "I") then
-		-- NOTE: This depends on the subtypes list getting generated afresh each time in the
-		-- call to this function. This is currently always the case, so we can save space (but be
-		-- potentially more dangerous) by not cloning.
-	--	table.insert(subtypes, "par")
-	--end
-	return base, stem2, decl, subtypes
-end
-
 -- Autodetect the type and subtype of an adjective given all the information
 -- specified by the user: lemma, stem2, declension type and specified subtypes.
 -- Four values are returned: the lemma base (i.e. the stem of the lemma, as
@@ -746,7 +740,7 @@ end
 -- is among the subtypes that would be returned (such subtypes are filtered out
 -- of the returned subtypes).
 local function detect_adj_type_and_subtype(lemma, stem2, typ, subtypes)
-	if not rfind(typ, "^[123]") then
+	if not rfind(typ, "^[123]") and not rfind(typ, "^irreg") then
 		subtypes = mw.clone(subtypes)
 		subtypes[typ] = true
 		typ = ""
@@ -760,10 +754,13 @@ local function detect_adj_type_and_subtype(lemma, stem2, typ, subtypes)
 			{"ae", "1&2", {"pl"}},
 			-- Nearly all -os adjective are greekA
 			{"os", "1&2", {"greekA", "-greekE"}},
+			{"os", "1&2", {"greekE", "-greekA"}},
 			{"ē", "1&2", {"greekE", "-greekA"}},
 			{"on", "1&2", {"greekA", "-greekE"}},
-			{"er", "1&2", {"er"}},
-			{"ur", "1&2", {"er"}},
+			{"on", "1&2", {"greekE", "-greekA"}},
+			{"^(.*er)$", "1&2", {"er"}},
+			{"^(.*ur)$", "1&2", {"er"}},
+			{"^(h)ic$", "1&2", {"ic"}},
 			{"is", "3-2", {}},
 			{"e", "3-2", {}},
 			{"ior", "3-C", {}},
@@ -774,7 +771,7 @@ local function detect_adj_type_and_subtype(lemma, stem2, typ, subtypes)
 		})
 	elseif typ == "3" then
 		return get_adj_type_and_subtype_by_ending(lemma, stem2, typ, subtypes, {
-			{"er", "3-3", {}},
+			{"^(.*er)$", "3-3", {}},
 			{"is", "3-2", {}},
 			{"e", "3-2", {}},
 			{"ior", "3-C", {}},
@@ -792,10 +789,13 @@ local function detect_adj_type_and_subtype(lemma, stem2, typ, subtypes)
 			{"ae", "1&2", {"pl"}},
 			-- Nearly all -os adjective are greekA
 			{"os", "1&2", {"greekA", "-greekE"}},
+			{"os", "1&2", {"greekE", "-greekA"}},
 			{"ē", "1&2", {"greekE", "-greekA"}},
 			{"on", "1&2", {"greekA", "-greekE"}},
+			{"on", "1&2", {"greekE", "-greekA"}},
 			{"er", "1&2", {"er"}},
 			{"ur", "1&2", {"er"}},
+			{"ic", "1&2", {"ic"}},
 		})
 	elseif typ == "1-1" then
 		return get_adj_type_and_subtype_by_ending(lemma, stem2, typ, subtypes, {
@@ -960,13 +960,6 @@ local function parse_segment(segment)
 			types.sg = true
 		end
 
-		if types.pl then
-			num = "pl"
-			types.pl = nil
-		elseif types.sg then
-			num = "sg"
-			types.sg = nil
-		end
 		if types.loc then
 			loc = true
 			types.loc = nil
@@ -979,6 +972,14 @@ local function parse_segment(segment)
 		elseif types.N then
 			gender = "N"
 		end
+	end
+
+	if types.pl then
+		num = "pl"
+		types.pl = nil
+	elseif types.sg then
+		num = "sg"
+		types.sg = nil
 	end
 
 	args[1] = base
@@ -1068,11 +1069,17 @@ local function parse_alternant(alternant)
 	local loc = false
 	local num = nil
 	local gender = nil
-	for _, alternant in ipairs(alternants) do
+	for i, alternant in ipairs(alternants) do
 		local parsed_run = parse_segment_run(alternant)
 		table.insert(parsed_alternants, parsed_run)
 		loc = loc or parsed_run.loc
-		if not num then
+		-- First time through, set the overall num to the num of the first run,
+		-- even if nil. After that, if we ever see a run with a different value
+		-- of num, set the overall num to "both". That way, if all alternants
+		-- don't specify a num, we get an unspecified num, but if some do and
+		-- some don't, we get both, because an unspecified num defaults to
+		-- both.
+		if i == 1 then
 			num = parsed_run.num
 		elseif num ~= parsed_run.num then
 			-- FIXME, this needs to be rethought to allow for
@@ -1647,14 +1654,20 @@ local function generate_adj_forms(frame)
 		segment_run = segment_run .. "<+>"
 	end
 	local parsed_run = parse_segment_run_allowing_alternants(segment_run)
-	parsed_run.loc = parsed_run.loc or not not (args.loc_sg or args.loc_pl)
+	parsed_run.loc = parsed_run.loc or not not (
+		args.loc_sg_m or args.loc_sg_f or args.loc_sg_n or args.loc_pl_m or args.loc_pl_f or args.loc_pl_n
+	)
 	parsed_run.num = args.num or parsed_run.num
 
 	local declensions = decline_segment_run(parsed_run, true)
 
 	if not parsed_run.loc then
-		declensions.forms.loc_sg = nil
-		declensions.forms.loc_pl = nil
+		declensions.forms.loc_sg_m = nil
+		declensions.forms.loc_sg_f = nil
+		declensions.forms.loc_sg_n = nil
+		declensions.forms.loc_pl_m = nil
+		declensions.forms.loc_pl_f = nil
+		declensions.forms.loc_pl_n = nil
 	end
 
 	declensions.title = construct_title(args.title, declensions.title)
@@ -1700,7 +1713,7 @@ function export.show_adj(frame)
 
 	show_forms(data, true)
 
-	return m_adj_table.make_table(data) .. m_utilities.format_categories(data.categories, lang)
+	return m_adj_table.make_table(data, data.noneut) .. m_utilities.format_categories(data.categories, lang)
 end
 
 function export.generate_noun_forms(frame)
