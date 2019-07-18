@@ -53,8 +53,16 @@ local checkirregular
 local flatten_values
 local link_google_books
 
--- Regex find() handling Unicode correctly
+local rsplit = mw.text.split
 local rfind = mw.ustring.find
+local rmatch = mw.ustring.match
+local rsubn = mw.ustring.gsub
+
+-- version of rsubn() that discards all but the first return value
+local function rsub(term, foo, bar)
+	local retval = rsubn(term, foo, bar)
+	return retval
+end
 
 local function cfind(str, text)
 	-- Constant version of :find()
@@ -292,6 +300,7 @@ local function detect_decl_and_subtypes(args)
 		args[1] = base
 		args[2] = prefix
 		-- args[3] and args[4] are used by ferō and sum and stay where they are
+		detected_subtypes = {}
 	else
 		error("Unrecognized conjugation '" .. conj_arg .. "'")
 	end
@@ -303,7 +312,7 @@ local function detect_decl_and_subtypes(args)
 	if conjtype ~= "irreg" then
 		args[1] = base
 		local perf_stem, supine_stem
-		if subtypes.depon or subtype.semidepon then
+		if subtypes.depon or subtypes.semidepon then
 			supine_stem = args[3] or auto_supine
 			if supine_stem == "-" then
 				supine_stem = nil
