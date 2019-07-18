@@ -182,15 +182,19 @@ def delete_form(index, lemma, formind, formval, pos, tag_sets_to_delete,
   if pos == "verbform":
     expected_head_template = "la-verb-form"
     expected_header_pos = "Verb"
+    expected_head_pos = "verb form"
   elif pos == "nounform":
     expected_head_template = "la-noun-form"
     expected_header_pos = "Noun"
+    expected_head_pos = "noun form"
   elif pos == "adjform":
     expected_head_template = "la-adj-form"
     expected_header_pos = "Adjective"
+    expected_head_pos = "adjective form"
   elif pos == "partform":
     expected_head_template = "la-part-form"
     expected_header_pos = "Participle"
+    expected_head_pos = "participle form"
   else:
     raise ValueError("Unrecognized part of speech %s" % pos)
 
@@ -217,6 +221,8 @@ def delete_form(index, lemma, formind, formval, pos, tag_sets_to_delete,
     for t in parsed.filter_templates():
       tn = tname(t)
       if tn == expected_head_template:
+        saw_head = True
+      elif tn == "head" and getparam(t, "1") == "la" and getparam(t, "2") == expected_head_pos:
         saw_head = True
       elif tn == "inflection of":
         lang = getparam(t, "lang")
@@ -254,8 +260,8 @@ def delete_form(index, lemma, formind, formval, pos, tag_sets_to_delete,
               if tag_sets_to_delete is True or frozenset(lalib.canonicalize_tag_set(tag_set)) in frozenset_tag_sets_to_delete:
                 saw_infl = True
               else:
-                pagemsg("Found {{inflection of}} for correct lemma but wrong tag set %s: %s" % (
-                  "|".join(tag_set), unicode(t)))
+                pagemsg("Found {{inflection of}} for correct lemma but wrong tag set %s, expected one of %s: %s" % (
+                  "|".join(tag_set), ",".join("|".join(x) for x in tag_sets_to_delete), unicode(t)))
                 saw_other_infl = True
         else:
           pagemsg("Found {{inflection of}} for different lemma %s: %s" % (
@@ -267,7 +273,9 @@ def delete_form(index, lemma, formind, formval, pos, tag_sets_to_delete,
         remove_deletable_tag_sets_from_subsection = True
       for t in parsed.filter_templates():
         tn = tname(t)
-        if tn not in [expected_head_template, "inflection of"]:
+        if tn not in [expected_head_template, "inflection of"] and not (
+            tn == "head" and getparam(t, "1") == "la" and getparam(t, "2") == expected_head_pos
+          ):
           pagemsg("WARNING: Saw unrecognized template in otherwise deletable subsection #%s: %s" % (
             k // 2, unicode(t)))
           saw_bad_template = True
@@ -552,6 +560,9 @@ def process_page(index, lemma, pos, infl, forms, pages_to_delete, preserve_diaer
         posform = "verbform"
       elif pos == "adj":
         posform = "adjform"
+      elif pos == "nounadj":
+        # Noun that uses an adjective declension
+        posform = "nounform"
       elif pos == "part":
         posform = "partform"
       else:
