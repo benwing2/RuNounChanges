@@ -2849,6 +2849,8 @@ a3 horizontālis
 ### missing long vowels
 ###
 # wrongly has short a
+a1 commūnitārius
+a1 complēmentārius
 a3 pyrālis
 n3 cervīcal
 n3 tribūnal
@@ -2890,8 +2892,23 @@ a3 īnfrāorbitālis
 a3 integrālis
 a3 lacrymālis
 a3 marsūpiālis
+a3 axillāris
+a3 cellulāris
+a3 culīnāris
+a3 dissimilāris
+a3 glandulāris
+a3 hyomandibulāris
+a3 maxillāris
+a3 scutellāris
+a3 subnūcleāris
+a3 superciliāris
+a3 ventriculāris
+a3 vestibulāris
 # wrongly has short a and e
-intellēctuālis
+a3 intellēctuālis
+# wrongly has short a, e and o
+a1 acētābulōsus
+a3 acētābulifōrmis
 # wrongly has short a and i
 a1 aquītānus
 a3 alpīnālis
@@ -2900,6 +2917,7 @@ a3 discoīdālis
 a3 experīmentālis
 # wrongly has short a and o
 a3 aequātōriālis
+a1 sexhōrārius
 # wrongly has short a and u
 part1 abbreviātūrus
 part1 abbacinātūrus
@@ -2911,6 +2929,7 @@ part1 abiūrātus
 part1 abiūrgātūrus
 part1 abiūrgātus
 a3 acūtālis
+a1 acūtātus
 # wrongly has short e
 n1 rēsīna
 n3 syllēpsis
@@ -2925,12 +2944,20 @@ part3 prōdiēns
 part3 rediēns
 # wrongly as short e and i
 a3 mēningītidis
+# wrongly has short e and o
+a1 acētōsus
+a1 emphysēmatōsus
+a1 gangrēnōsus
 # wrongly has short i
 v1 cōnspīrō
 n2 suspīrium
 n3 sedīle
 n3 restīnctiō
 a3 fabrīlis
+a1 mūnītissimus
+# wrongly has short i and o
+a1 altispīnōsus
+a1 thermolīmōsus
 # wrongly has short o
 a3 tricolor
 a3 ūnicolor
@@ -2941,6 +2968,21 @@ a3 quadricolor
 a3 diversicolor
 a3 vinicolor
 a3 saxicolor
+a1 bisticōsus
+a1 forāminōsus
+a1 legūminōsus
+a1 pulpōsus
+a1 rigōrōsus
+a1 stomachōsus
+a1 stylōsus
+a1 suspiciōsus
+a1 suspitiōsus
+# wrongly has short o and u
+a1 frūctuōsus
+a1 frūctuōsissimus
+a1 acūminōsus
+a1 rūgulōsus
+a1 sētulōsus
 # wrongly has short u
 part1 īnsecūtus
 part3 abiūdicāns
@@ -2952,6 +2994,7 @@ part1 abiūdicandus
 part1 abiūrandus
 a3 īnstrūmentālis
 a3 iūdicālis
+a1 oportūnissimus
 # wrongly has short u in perf and sometimes sup
 circumfundō circumfundere circumfūdī circumfūsum
 superfundō superfundere superfūdī superfūsum
