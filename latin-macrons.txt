@@ -2841,6 +2841,7 @@ obstō obstāre obstitī obstātum
 part1 paritūrus
 # wrongly has long a
 a3 causālis
+n3 circumdatiō
 # wrongly has long e
 a3 cathedrālis
 # wrongly has long i
@@ -2876,7 +2877,6 @@ a3 baptismālis
 a3 basālis
 a3 basivertebrālis
 a3 branchiālis
-a3 vertebrālis
 a3 caudālis
 a3 cephālis
 a3 cerebrālis
@@ -2904,20 +2904,120 @@ a3 subnūcleāris
 a3 superciliāris
 a3 ventriculāris
 a3 vestibulāris
+# FIXME, following definition may be wrong, should be "made with pearls"
+a1 baccātus
+a1 tūberculātus
+a1 bitūberculātus
+a1 clāvellātus
+a1 dorsātus
+a1 lēgitimātus
+# FIXME, fix petiolus
+a1 longipetiolātus
+a1 magnicristātus
+a1 mamillātus
+a1 mammillātus
+a1 moderātus
+part1 moderātus
+a1 passiōnātus
+a1 rheumātus
+a1 rhombeātus
+# FIXME, attributive -> relational
+a1 vaccīnātus
+a3 sēmihiāns
+# FIXME, fix entry
+a1 tertiānus
+# FIXME, fix entry
+a1 sēmitertiānus
+a1 columbiānus
+a1 dioecēsānus
+a1 montānus
+a1 silvānus
+# FIXME, move to lc
+a1 Tetzcocānus
+a3 orthogōnālis
+a3 palpālis
+# FIXME, attributive -> relational
+a3 physicālis
+a3 sēdecimālis
+a3 synoviālis
+a3 theologālis
+a3 venereālis
+a3 vertebrālis
+a1 arōmāticus
+a1 austrōāsiāticus
+a1 eurāsiāticus
+a1 bromeliāceus
+# FIXME, attributive -> relational
+a1 coriāceus
+# FIXME, attributive -> relational
+a1 miliāceus
+# FIXME, attributive -> relational
+a1 tiliāceus
+a1 vituperābilis
+a3 -āx
+a1 -āneus
+a1 dubitābundus
+a1 voluntābundus
+# FIXME, fix entry
+n2 pentāculum
+n3 simulāmen
+n2 advocāmentum
+n2 calciāmentum
+n2 exsecrāmentum
+n2 execrāmentum
+n2 temptāmentum
+n3 puerīlitās
+n3 aggregātiō
+n3 coordinātiō
+n3 corrūgātiō
+n3 decorātiō
+n3 discursātiō
+n3 dispōnsātiō
+n3 distillātiō
+n3 excitātiō
+n3 exultātiō
+n3 impinguātiō
+n3 mīnātiō
+n3 nartātiō
+n3 percontātiō
+n3 reprobātiō
+n3 sustentātiō
+adv capreolātim
 # wrongly has short a and e
 a3 intellēctuālis
+a1 arēnātus
+a1 sēmitorquātus
+a1 sēticaudātus
 # wrongly has short a, e and o
 a1 acētābulōsus
 a3 acētābulifōrmis
+n3 cōmēsātiō
 # wrongly has short a and i
 a1 aquītānus
 a3 alpīnālis
 a3 convīvālis
 a3 discoīdālis
 a3 experīmentālis
+a1 bicarīnātus
+a1 eucarīnātus
+a1 illībātus
+# FIXME, fix etym
+a1 pīleātus
+a3 tardivītālis
+# FIXME, attributive -> relational
+a1 achātīnus
+a1 germinātīvus
 # wrongly has short a and o
 a3 aequātōriālis
 a1 sexhōrārius
+a1 affectiōnātus
+a3 sacrōlumbālis
+a1 āfrōāsiāticus
+a1 computātōrius
+a1 precātōrius
+n3 cōdificātiō
+# wrongly has short a, o and u
+a1 acūtisquāmōsus
 # wrongly has short a and u
 part1 abbreviātūrus
 part1 abbacinātūrus
@@ -2930,6 +3030,7 @@ part1 abiūrgātūrus
 part1 abiūrgātus
 a3 acūtālis
 a1 acūtātus
+a1 acūtisquāmātus
 # wrongly has short e
 n1 rēsīna
 n3 syllēpsis
@@ -2942,12 +3043,31 @@ part3 ecferēns
 part3 intrōferēns
 part3 prōdiēns
 part3 rediēns
-# wrongly as short e and i
+a1 sēmicaudātus
+a1 sēmilautus
+# FIXME, has sēminic as stem
+a3 sēminex sēminec
+a1 sēminiger sēminigr
+# FIXME, attributive -> relational
+a3 carolicoroniēnsis
+a3 delawarēnsis
+# FIXME, attributive -> relational
+a3 gestriciēnsis
+# FIXME, attributive -> relational
+a3 gevalēnsis
+# FIXME, attributive -> relational
+a3 hallandēnsis
+# FIXME, attributive -> relational
+a3 visbyēnsis
+# wrongly has short e and i
 a3 mēningītidis
 # wrongly has short e and o
 a1 acētōsus
 a1 emphysēmatōsus
 a1 gangrēnōsus
+# wrongly has short e and u
+a1 acūtisēpalus
+a1 sēminūdus
 # wrongly has short i
 v1 cōnspīrō
 n2 suspīrium
@@ -2955,6 +3075,23 @@ n3 sedīle
 n3 restīnctiō
 a3 fabrīlis
 a1 mūnītissimus
+a1 altispīnus
+a1 astrictīvus
+a1 calefactīvus
+a1 commūnicātīvus
+a1 cōnstitūtīvus
+a1 contemplātīvus
+a1 corrōsīvus
+a1 diffūsīvus
+a1 excessīvus
+a1 expānsīvus
+a1 imāginātīvus
+a1 incoeptīvus
+a1 mōtīvus
+a1 multiplicātīvus
+a1 susceptīvus
+a1 temporīvus
+n1 insecticīda
 # wrongly has short i and o
 a1 altispīnōsus
 a1 thermolīmōsus
@@ -2977,12 +3114,22 @@ a1 stomachōsus
 a1 stylōsus
 a1 suspiciōsus
 a1 suspitiōsus
+n3 prōclāmātiō
+n3 prōcōnsul
+n3 prōmissiō
+n3 pronepōs pronepōt
+n2 prōtium
+prōvulgō prōvulgāre prōvulgāvī prōvulgātum
+a1 prōgeneticus
 # wrongly has short o and u
 a1 frūctuōsus
 a1 frūctuōsissimus
 a1 acūminōsus
 a1 rūgulōsus
 a1 sētulōsus
+a1 acūtiflōrus
+# wrongly has short o and y
+a1 acrōcȳaneus
 # wrongly has short u
 part1 īnsecūtus
 part3 abiūdicāns
@@ -2995,6 +3142,21 @@ part1 abiūrandus
 a3 īnstrūmentālis
 a3 iūdicālis
 a1 oportūnissimus
+a1 acūtangulus
+a1 acūticarpus
+a3 acūtidēns
+a1 acūtidentātus
+a1 acūtifolius
+a3 acūtiglūmis
+a1 acūtiglūmus
+a1 acūtilobus
+a3 acūtipennis
+a1 acūtipetalus
+a3 acūtivalvis
+a1 sēmipūnctātus
+a3 ūnipēs ūniped
+# FIXME, add declension
+n2 tūberculum
 # wrongly has short u in perf and sometimes sup
 circumfundō circumfundere circumfūdī circumfūsum
 superfundō superfundere superfūdī superfūsum
