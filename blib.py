@@ -112,11 +112,21 @@ def do_assert(cond, msg=None):
   return True
 
 # Retrieve a chain of parameters from template T, where the first parameter
-# is named FIRST and the remainder are named PREF2, PREF3, etc.
+# is named FIRST and the remainder are named PREF2, PREF3, etc. FIRST can be
+# a list of parameters to try in turn.
 # If FIRSTDEFAULT is given, use if FIRST is missing or empty.
 def fetch_param_chain(t, first, pref, firstdefault=""):
   ret = []
-  val = getparam(t, first) or firstdefault
+  if type(first) is not list:
+    first = [first]
+  val = None
+  for f in first:
+    val = getparam(t, f)
+    if val:
+      break
+  else:
+    # no break
+    val = firstdefault
   i = 2
   while val:
     ret.append(val)
