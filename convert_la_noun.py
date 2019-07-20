@@ -117,6 +117,12 @@ def convert_la_decl_multi_to_new(t, pagetitle, pagemsg, errandpagemsg):
     else:
       errandpagemsg("WARNING: Too many subtypes: %s" % origt)
       return None
+    if decl == "i":
+      decl = "irreg"
+    sufn = False
+    if "n" in specified_subtypes:
+      sufn = True
+      specified_subtypes = tuple(x for x in specified_subtypes if x != "n")
     if decl in lalib.adj_decl_and_subtype_to_props:
       adj_key, adj_compute_props = lalib.adj_decl_and_subtype_to_props[decl]
       lemma, stem2, decl, subtypes = (
@@ -130,10 +136,6 @@ def convert_la_decl_multi_to_new(t, pagetitle, pagemsg, errandpagemsg):
     else:
       if g == "N" and "N" not in specified_subtypes:
         specified_subtypes = ("N",) + specified_subtypes
-      sufn = False
-      if "n" in specified_subtypes:
-        sufn = True
-        specified_subtypes = tuple(x for x in specified_subtypes if x != "n")
       lookup_key = (decl, specified_subtypes)
       if lookup_key not in lalib.noun_decl_and_subtype_to_props:
         errandpagemsg("WARNING: Lookup key %s not found: %s" % (
@@ -158,8 +160,8 @@ def convert_la_decl_multi_to_new(t, pagetitle, pagemsg, errandpagemsg):
         subtypes.append("loc")
       if str((i + 1) / 2) in um:
         subtypes.append("genplum")
-      if sufn:
-        subtypes.append("sufn")
+    if sufn:
+      subtypes.append("sufn")
     if bool_param_is_true(lig):
       subtypes.append("lig")
     if stem2:
@@ -248,8 +250,9 @@ def process_page(page, index, parsed):
   for t in parsed.filter_templates():
     tn = tname(t)
     if tn == "la-decl-multi":
-      if convert_la_decl_multi_to_new(t, pagetitle, pagemsg, errandpagemsg):
-        notes.append("converted {{%s}} to {{la-ndecl}}" % tn)
+      t = convert_la_decl_multi_to_new(t, pagetitle, pagemsg, errandpagemsg)
+      if t:
+        notes.append("converted {{la-decl-multi}} to {{%s}}" % tname(t))
       else:
         return None, None
     elif tn in lalib.la_noun_decl_templates:
