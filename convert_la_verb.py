@@ -77,6 +77,20 @@ def convert_template_to_new(t, pagetitle, pagemsg, errandpagemsg):
           types = [x for x in types if x != "noperf"]
         if not arg4:
           types = [x for x in types if x != "nosup"]
+  p3inf = getrmparam(t, "p3inf")
+  if p3inf == "1":
+    types = types + ["p3inf"]
+  elif p3inf:
+    pagemsg("WARNING: Unrecognized value for p3inf=%s" % p3inf)
+  sync_perf = getrmparam(t, "sync_perf")
+  if sync_perf == "poet":
+    types = types + ["poet-sync-perf"]
+  elif sync_perf == "y":
+    types = types + ["always-sync-perf"]
+  elif sync_perf == "yn":
+    types = types + ["opt-sync-perf"]
+  elif sync_perf:
+    pagemsg("WARNING: Unrecognized value for sync_perf=%s" % sync_perf)
   # Fetch all params
   named_params = []
   for param in t.params:
