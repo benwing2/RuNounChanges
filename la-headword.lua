@@ -445,7 +445,9 @@ pos_functions["verbs"] = function(class, args, data, infl_classes, appendix)
 end
 
 pos_functions["adjectives"] = function(class, args, data, infl_classes, appendix)
-	if class == "1&2" or class == "3-3E" then
+	if class == "new" then
+		pos_functions["adjectives-new"](class, args, data, infl_classes, appendix)
+	elseif class == "1&2" or class == "3-3E" then
 		pos_functions["adjectives-m-f-n"](class, args, data, infl_classes, appendix)
 	elseif class == "3-1E" then
 		pos_functions["adjectives-mfn-gen"](class, args, data, infl_classes, appendix)
@@ -456,6 +458,58 @@ pos_functions["adjectives"] = function(class, args, data, infl_classes, appendix
 	elseif class == "sup" then
 		pos_functions["adjectives-sup"](class, args, data, infl_classes, appendix)
 	end
+end
+
+pos_functions["adjectives-new"] = function(class, args, data, infl_classes, appendix)
+	local decldata = require("Module:User:Benwing2/la-nominal").do_generate_adj_forms(args, true)
+	local lemma = decldata.lemma
+	local lemma_num = decldata.num == "pl" and "pl" or "sg"
+	if not lemma or #lemma == 0 then
+		lemma = decldata.forms["linked_nom_" .. lemma_num .. "_m"]
+	end
+
+	data.heads = lemma
+	data.id = args.id
+
+	local masc = decldata.forms["nom_" .. lemma_num .. "_m"]
+	local fem = decldata.forms["nom_" .. lemma_num .. "_f"]
+	local neut = decldata.forms["nom_" .. lemma_num .. "_n"]
+	local gen = decldata.forms["gen_" .. lemma_num .. "_m"]
+
+	local function is_missing(form)
+		return not form or form == "" or form == "—" or #form == 0
+	end
+	-- We display the inflections in three different ways to mimic the
+	-- old way of doing things:
+	--
+	-- 1. If masc and fem are different, show masc, fem and neut.
+	-- 2. Otherwise, if masc and neut are different, show masc and neut.
+	-- 3. Otherwise, show masc nominative and masc genitive.
+	if not is_missing(fem) and not ut.equals(masc, fem) then
+		fem.label = "feminine"
+		table.insert(data.inflections, fem)
+		if not is_missing(neut) then
+			neut.label = "neuter"
+			table.insert(data.inflections, neut)
+		end
+	elseif not is_missing(neut) and not ut.equals(masc, neut) then
+		neut.label = "neuter"
+		table.insert(data.inflections, neut)
+	elseif not is_missing(gen) then
+		gen.label = "genitive"
+		table.insert(data.inflections, gen)
+	end
+
+	if #decldata.comp > 0 then
+		decldata.comp.label = "comparative"
+		table.insert(data.inflections, decldata.comp)
+	end
+	if #decldata.sup > 0 then
+		decldata.sup.label = "superlative"
+		table.insert(data.inflections, decldata.sup)
+	end
+
+	table.insert(infl_classes, decldata.title)
 end
 
 pos_functions["adjectives-m-f-n"] = function(class, args, data, infl_classes, appendix)
