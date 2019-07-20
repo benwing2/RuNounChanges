@@ -52,8 +52,16 @@ local gender_names = {
 local lang = require("Module:languages").getByCode("la")
 local suffix = nil
 
+local u = mw.ustring.char
+local rfind = mw.ustring.find
 local rsplit = mw.text.split
 local rsubn = mw.ustring.gsub
+
+local MACRON = u(0x0304)
+local BREVE = u(0x0306)
+local DIAER = u(0x0308)
+local DOUBLE_INV_BREVE = u(0x0361)
+local accents = MACRON .. BREVE .. DIAER .. DOUBLE_INV_BREVE
 
 -- version of rsubn() that discards all but the first return value
 local function rsub(term, foo, bar)
@@ -138,6 +146,8 @@ pos_functions["nouns"] = function(class, args, data, infl_classes, appendix)
 		decl = {list = true},
 		indecl = {type = "boolean"},
 		id = {},
+		m = {list = true},
+		f = {list = true},
 	}
 	local args = require("Module:parameters").process(args, params)
 	data.heads = args.head
@@ -197,6 +207,26 @@ pos_functions["nouns"] = function(class, args, data, infl_classes, appendix)
 			end
 			table.insert(data.inflections, args.gen)
 		end
+
+		if #args.m > 0 then
+			args.m.label = "masculine"
+			if suffix then
+				for i, m in ipairs(args.m) do
+					args.m[i] = suffix .. m
+				end
+			end
+			table.insert(data.inflections, args.m)
+		end
+
+		if #args.f > 0 then
+			args.f.label = "feminine"
+			if suffix then
+				for i, f in ipairs(args.f) do
+					args.f[i] = suffix .. f
+				end
+			end
+			table.insert(data.inflections, args.f)
+		end
 	end
 end
 
@@ -208,6 +238,7 @@ local allowed_subtypes = {
 	["3only"] = true,
 	["depon"] = true,
 	["semidepon"] = true,
+	["optsemidepon"] = true,
 	["nopass"] = true,
 	["pass3only"] = true,
 	["passimpers"] = true,
@@ -220,6 +251,7 @@ local allowed_subtypes = {
 	["supfutractvonly"] = true,
 	["noimp"] = true,
 	["shortimp"] = true,
+	["nofut"] = true,
 	["def"] = true,
 	["facio"] = true,
 	["irreg"] = true,
@@ -230,6 +262,7 @@ function export.split_verb_subtype(subtype)
 		return {}
 	end
 
+	subtype = rsub(subtype, "opt%-semi%-depon", "optsemidepon")
 	subtype = rsub(subtype, "semi%-depon", "semidepon")
 	subtype = rsub(subtype, "pass%-3only", "pass3only")
 	subtype = rsub(subtype, "pass%-impers", "passimpers")
@@ -256,7 +289,7 @@ pos_functions["verbs"] = function(class, args, data, infl_classes, appendix)
 		[2] = {alias_of = 'inf'},
 		[3] = {alias_of = 'perf'},
 		[4] = {alias_of = 'sup'},
-		[44] = {default = 'supine'},
+		[44] = {},
 		head = {list = true},
 		inf = {list = true},
 		perf = {list = true},
@@ -274,16 +307,21 @@ pos_functions["verbs"] = function(class, args, data, infl_classes, appendix)
 	
 	args.inf.label = "present infinitive"
 	args.perf.label = "perfect active"
+	if not args[44] then
+		args[44] = #args.sup > 0 and rfind(args.sup[1], "ūrus$") and "future participle" or "supine"
+	end
 	args.sup.label = args[44]
 	
 	for i, array in ipairs({args.head, args.inf, args.perf, args.sup}) do
 		for j, param in ipairs(array) do
-			if mw.ustring.gsub(param,"^[*a-zA-ZĀāĒēĪīŌōŪūȲȳÄäËëÏïÖöÜü ]+$","") ~= "" then
-				table.insert(data.categories,"la-verb invalid parameters")
+			if mw.ustring.gsub(param, "^[*%[%]a-zA-ZĀāĒēĪīŌōŪūȲȳÄäËëÏïÖöÜüŸÿĂăĔĕĬĭŎŏŬŭ " .. accents .. "]+$", "") ~= "" then
+				table.insert(data.categories, "la-verb invalid parameters")
 			end
 			
 			if i == 3 then
-				array[j] = {term = mw.ustring.gsub(param," sum$",""), alt = param}
+				-- For (semi-)deponent verbs, remove sum/est ("est" for impersonal
+				-- verbs like [[pertaedet]]) when constructing the link.
+				array[j] = {term = mw.ustring.gsub(mw.ustring.gsub(param, " sum$", ""), " est$", ""), alt = param}
 			end
 		end
 	end
@@ -291,9 +329,11 @@ pos_functions["verbs"] = function(class, args, data, infl_classes, appendix)
 	table.insert(data.inflections, args.inf)
 	if #args.perf > 0 then table.insert(data.inflections, args.perf) end
 	if #args.sup > 0 then table.insert(data.inflections, args.sup) end
-	
-	if #args.perf > 0 and #args.sup == 0 then pattern = pattern or "depon" end
-	
+
+	if not pattern and #args.head > 0 and rfind(args.head[1], "r$") then
+		pattern = "depon"
+	end
+
 	if conj == "1" then
 		table.insert(appendix, "[[Appendix:Latin first conjugation|first conjugation]]")
 	elseif conj == "2" then
@@ -331,11 +371,18 @@ pos_functions["verbs"] = function(class, args, data, infl_classes, appendix)
 		table.insert(appendix, "[[deponent#English|deponent]]")
 	end
 	if ut.contains(subtypes, "semidepon") then
-		-- fido
+		-- fīdō, gaudeō
 		table.insert(appendix, "[[semi-deponent#English|semi-deponent]]")
 	end
+	if ut.contains(subtypes, "optsemidepon") then
+		-- audeō, placeō, soleō, pudeō
+		table.insert(appendix, "optionally [[semi-deponent#English|semi-deponent]]")
+	end
 	if ut.contains(subtypes, "noperf") then
-		if ut.contains(subtypes, "nopass") then
+		if (ut.contains(subtypes, "nopass") and not
+			ut.contains(subtypes, "nosup") and not
+			ut.contains(subtypes, "supfutractvonly")
+		) then
 			-- albēscō
 			-- FIXME, this seems wrong
 			table.insert(appendix, "no [[perfect#English|perfect]] or [[supine#English|supine]] forms")
@@ -390,6 +437,10 @@ pos_functions["verbs"] = function(class, args, data, infl_classes, appendix)
 	if ut.contains(subtypes, "shortimp") then
 		--dīcō
 		table.insert(appendix, "irregular short [[imperative#English|imperative]]")
+	end
+	if ut.contains(subtypes, "nofut") then
+		--soleō
+		table.insert(appendix, "no [[future#English|future]]")
 	end
 end
 
