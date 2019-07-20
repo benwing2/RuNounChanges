@@ -1,12 +1,20 @@
 local export = {}
 
+
+--[=[
+
+Authorship: Ben Wing <benwing2>, with many ideas and a little code coming from
+the old [[Module:la-decl-multi]] by KC Kenny Lau.
+
+]=]
+
 -- TODO:
 -- (DONE) Eliminate specification of noteindex from la-adj/data
 -- (DONE?) Finish autodetection of adjectives
 -- (DONE) Remove old noun code
 -- (DONE) Implement <.sufn>
 -- (DONE) Look into adj voc=false
--- Handle loc in adjectives
+-- (DONE) Handle loc in adjectives
 -- Error on bad subtypes
 -- Make sure Google Books link still works.
 
@@ -97,13 +105,13 @@ local genders = {
 	"m", "f", "n"
 }
 
-local linked_suffixes = {
-	"", "_linked"
+local linked_prefixes = {
+	"", "linked_"
 }
 
 -- Iterate over all the "slots" associated with a noun declension, where a slot
 -- is a particular case/number combination. If overridable_only, don't include the
--- "_linked" variants (nom_sg_linked, nom_pl_linked), which aren't overridable.
+-- "linked_" variants (linked_nom_sg, linked_nom_pl), which aren't overridable.
 local function iter_noun_slots(overridable_only)
 	local case = 1
 	local num = 1
@@ -111,7 +119,7 @@ local function iter_noun_slots(overridable_only)
 	local function iter()
 		linked_variant = linked_variant + 1
 		local max_linked_variant = overridable_only and 1 or cases[case] == "nom" and 2 or 1
-		if linked_variant > max_linked_variants then
+		if linked_variant > max_linked_variant then
 			linked_variant = 1
 			num = num + 1
 			if num > #nums then
@@ -122,14 +130,14 @@ local function iter_noun_slots(overridable_only)
 				end
 			end
 		end
-		return cases[case] .. "_" .. nums[num] .. linked_suffix[linked_variant]
+		return linked_prefixes[linked_variant] .. cases[case] .. "_" .. nums[num]
 	end
 	return iter
 end
 
 -- Iterate over all the "slots" associated with an adjective declension, where a slot
 -- is a particular case/number/gender combination. If overridable_only, don't include the
--- "_linked" variants (nom_sg_m_linked, nom_pl_m_linked), which aren't overridable.
+-- "linked_" variants (linked_nom_sg_m, linked_nom_pl_m), which aren't overridable.
 local function iter_adj_slots(overridable_only)
 	local case = 1
 	local num = 1
@@ -138,7 +146,7 @@ local function iter_adj_slots(overridable_only)
 	local function iter()
 		linked_variant = linked_variant + 1
 		local max_linked_variant = overridable_only and 1 or cases[case] == "nom" and genders[gen] == "m" and 2 or 1
-		if linked_variant > max_linked_variants then
+		if linked_variant > max_linked_variant then
 			linked_variant = 1
 			gen = gen + 1
 			if gen > #genders then
@@ -153,7 +161,7 @@ local function iter_adj_slots(overridable_only)
 				end
 			end
 		end
-		return cases[case] .. "_" .. nums[num] .. "_" .. genders[gen] .. linked_suffix[linked_variant]
+		return linked_prefixes[linked_variant] .. cases[case] .. "_" .. nums[num] .. "_" .. genders[gen]
 	end
 	return iter
 end
@@ -161,7 +169,7 @@ end
 -- Iterate over all the "slots" associated with a noun or adjective declension (depending on
 -- the value of IS_ADJ), where a slot is a particular case/number combination (in the case of
 -- nouns) or case/number/gender combination (in the case of adjectives). If OVERRIDABLE_ONLY
--- is specified, only include overridable slots (not including _linked variants).
+-- is specified, only include overridable slots (not including linked_ variants).
 local function iter_slots(is_adj, overridable_only)
 	if is_adj then
 		return iter_adj_slots(overridable_only)
@@ -926,10 +934,11 @@ local function parse_segment(segment)
 		end
 	end
 
-	local lemma = stems[1]
-	if not lemma or lemma == "" then
-		lemma = current_title.subpageText
+	local orig_lemma = stems[1]
+	if not orig_lemma or orig_lemma == "" then
+		orig_lemma = current_title.subpageText
 	end
+	local lemma = m_links.remove_links(orig_lemma)
 	local stem2 = stems[2]
 	if stem2 == "" then
 		stem2 = nil
@@ -1011,6 +1020,7 @@ local function parse_segment(segment)
 		decl = decl,
 		is_adj = is_adj,
 		gender = gender,
+		orig_lemma = orig_lemma,
 		lemma = lemma,
 		stem2 = stem2,
 		types = types,
@@ -1056,8 +1066,9 @@ local function parse_segment_run(segment_run)
 		if i % 2 == 0 then
 			table.insert(segments, bracketed_segment)
 		else
-			for _, subsegment in m_string_utilities.capturing_split(bracketed_segment,
-				is_suffix and "([^<> ,]+<.->)" or "([^<> ,%-]+<.->)") do
+			for _, subsegment in ipairs(m_string_utilities.capturing_split(
+				bracketed_segment, is_suffix and "([^<> ,]+<.->)" or "([^<> ,%-]+<.->)"
+			)) do
 				table.insert(segments, subsegment)
 			end
 		end
@@ -1357,10 +1368,14 @@ local function decline_segment_run(parsed_run, is_adj)
 
 			local data
 
+			local potential_lemma_slots
+
 			if seg.is_adj then
 				if not m_adj_decl[seg.decl] then
 					error("Unrecognized declension '" .. seg.decl .. "'")
 				end
+
+				potential_lemma_slots = {"nom_sg_m", "nom_pl_m"}
 
 				data = {
 					title = "",
@@ -1383,6 +1398,8 @@ local function decline_segment_run(parsed_run, is_adj)
 					error("Unrecognized declension '" .. seg.decl .. "'")
 				end
 
+				potential_lemma_slots = {"nom_sg", "nom_pl"}
+
 				data = {
 					title = "",
 					footnote = "",
@@ -1402,6 +1419,27 @@ local function decline_segment_run(parsed_run, is_adj)
 				end
 
 				m_noun_decl[seg.decl](data, seg.args)
+			end
+
+			-- Generate linked variants of slots that may be the lemma.
+			-- If the form is the same as the lemma (with links removed),
+			-- substitute the original lemma (with links included).
+			for _, slot in ipairs(potential_lemma_slots) do
+				local forms = data.forms[slot]
+				local linked_forms = {}
+				if forms then
+					if type(forms) ~= "table" then
+						forms = {forms}
+					end
+					for _, form in ipairs(forms) do
+						if form == seg.lemma then
+							table.insert(linked_forms, seg.orig_lemma)
+						else
+							table.insert(linked_forms, form)
+						end
+					end
+				end
+				data.forms["linked_" .. slot] = linked_forms
 			end
 
 			if seg.types.lig then
@@ -1586,7 +1624,7 @@ local function decline_segment_run(parsed_run, is_adj)
 	return declensions
 end
 
-local function construct_title(args_title, declensions_title)
+local function construct_title(args_title, declensions_title, from_headword)
 	if args_title then
 		declensions_title = "^" .. args_title
 		declensions_title = rsub(declensions_title, "<1>", "[[Appendix:Latin first declension|first declension]]")
@@ -1602,6 +1640,15 @@ local function construct_title(args_title, declensions_title)
 			return "[[" .. a .. b .. "|" .. uupper(a) .. b .. "]]"
 		end)
 		declensions_title = rsub(declensions_title, "%^(.)", uupper)
+	elseif from_headword then
+		local normalized_titles = {}
+		-- Remove final period and lowercase the first letter, so we can
+		-- join them together with "and".
+		-- FIXME: Should we join three or more as "foo, bar and baz"?
+		for _, title in ipairs(declensions_title) do
+			table.insert(normalized_titles, m_string_utilities.lcfirst(rsub(title, "%.$", "")))
+		end
+		declensions_title = table.concat(normalized_titles, " and ")
 	else
 		declensions_title = table.concat(declensions_title, "<br/>")
 	end
@@ -1663,7 +1710,7 @@ local function generate_noun_forms(frame)
 	return all_data
 end
 
-local function generate_adj_forms(frame)
+function export.do_generate_adj_forms(parent_args, from_headword)
 	local params = {
 		[1] = {required = true, default = "bonus"},
 		footnote = {},
@@ -1674,8 +1721,12 @@ local function generate_adj_forms(frame)
 	for slot in iter_adj_slots() do
 		params[slot] = {}
 	end
-
-	local parent_args = frame:getParent().args
+	if from_headword then
+		params.lemma = {list = true}
+		params.comp = {list = true}
+		params.sup = {list = true}
+		params.id = {}
+	end
 
 	local args = m_para.process(parent_args, params)
 
@@ -1703,7 +1754,7 @@ local function generate_adj_forms(frame)
 		declensions.forms.loc_pl_n = nil
 	end
 
-	declensions.title = construct_title(args.title, declensions.title)
+	declensions.title = construct_title(args.title, declensions.title, from_headword)
 
 	local all_data = {
 		title = declensions.title,
@@ -1718,6 +1769,10 @@ local function generate_adj_forms(frame)
 		suffix = "",
 		voc = declensions.voc,
 		noneut = args.noneut,
+		lemma = args.lemma,
+		comp = args.comp,
+		sup = args.sup,
+		id = args.id
 	}
 
 	for slot in iter_adj_slots() do
@@ -1742,7 +1797,8 @@ function export.show_noun(frame)
 end
 
 function export.show_adj(frame)
-	local data = generate_adj_forms(frame)
+	local parent_args = frame:getParent().args
+	local data = export.do_generate_adj_forms(parent_args)
 
 	show_forms(data, true)
 
@@ -1756,7 +1812,8 @@ function export.generate_noun_forms(frame)
 end
 
 function export.generate_adj_forms(frame)
-	local data = generate_adj_forms(frame)
+	local parent_args = frame:getParent().args
+	local data = export.do_generate_adj_forms(parent_args)
 
 	return concat_forms(data, true)
 end
