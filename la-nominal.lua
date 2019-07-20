@@ -709,7 +709,7 @@ local function get_adj_type_and_subtype_by_ending(lemma, stem2, decltype,
 			end
 			-- A subtype is canceled if the user specified SUBTYPE and
 			-- -SUBTYPE is given in the to-be-returned subtypes.
-			must_not_be_present = rmatch(subtype, "^%-(.*)$")
+			local must_not_be_present = rmatch(subtype, "^%-(.*)$")
 			if must_not_be_present and specified_subtypes[must_not_be_present] then
 				not_this_subtype = true
 				break
