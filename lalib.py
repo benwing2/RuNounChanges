@@ -394,7 +394,7 @@ la_adj_decl_suffix_to_decltype = {
 
 def la_verb_1st_subtype(stem, arg2, arg3, arg4, types):
   depon = 'depon' in types or 'semidepon' in types or 'semi-depon' in types
-  if 'impers' in types:
+  if 'impers' in types or '3only' in types:
     lemma = stem + (u"ātur" if 'depon' in types else "at")
   else:
     lemma = stem + ("or" if 'depon' in types else u"ō")
@@ -424,7 +424,7 @@ def la_verb_1st_subtype(stem, arg2, arg3, arg4, types):
 
 def la_verb_2nd_subtype(stem, arg2, arg3, arg4, types):
   depon = 'depon' in types or 'semidepon' in types or 'semi-depon' in types
-  if 'impers' in types:
+  if 'impers' in types or '3only' in types:
     lemma = stem + (u"ētur" if 'depon' in types else "et")
   else:
     lemma = stem + ("eor" if 'depon' in types else u"eō")
@@ -436,7 +436,7 @@ def la_verb_2nd_subtype(stem, arg2, arg3, arg4, types):
     return "2", lemma, arg2, arg3, types
 
 def la_verb_3rd_subtype(stem, arg2, arg3, arg4, types):
-  if 'impers' in types:
+  if 'impers' in types or '3only' in types:
     lemma = stem + ("itur" if 'depon' in types else "it")
   else:
     lemma = stem + ("or" if 'depon' in types else u"ō")
@@ -446,7 +446,7 @@ def la_verb_3rd_subtype(stem, arg2, arg3, arg4, types):
   return "3", lemma, arg2, arg3, types
 
 def la_verb_3rd_io_subtype(stem, arg2, arg3, arg4, types):
-  if 'impers' in types:
+  if 'impers' in types or '3only' in types:
     lemma = stem + ("itur" if 'depon' in types else "it")
     types = types + ["I"]
   else:
@@ -455,8 +455,13 @@ def la_verb_3rd_io_subtype(stem, arg2, arg3, arg4, types):
   return "3", lemma, arg2, arg3, types
 
 def la_verb_4th_subtype(stem, arg2, arg3, arg4, types):
+  # For at least serviō and saeviō, the perfect is written
+  # serv.īv and saev.īv, where the dot was a signal used in conjunction
+  # with sync_perf=y or sync_perf=yn. We don't need it so remove it.
+  arg2 = arg2 and arg2.replace(".", "") or ""
+  arg3 = arg3 and arg3.replace(".", "") or ""
   depon = 'depon' in types or 'semidepon' in types or 'semi-depon' in types
-  if 'impers' in types:
+  if 'impers' in types or '3only' in types:
     lemma = stem + (u"ītur" if 'depon' in types else "it")
   else:
     lemma = stem + ("ior" if 'depon' in types else u"iō")
@@ -735,7 +740,7 @@ def generate_adj_forms(template, errandpagemsg, expand_text, return_raw=False):
     return m.group(0)
 
   if template.startswith("{{la-adecl|"):
-    generate_template = re.sub(r"^\{\{la-ndecl\|", "{{la-generate-adj-forms|",
+    generate_template = re.sub(r"^\{\{la-adecl\|", "{{la-generate-adj-forms|",
         template)
   else:
     generate_template = re.sub(r"^\{\{la-(.*?)\|", generate_adj_forms_prefix,
