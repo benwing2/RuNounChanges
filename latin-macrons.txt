@@ -2847,6 +2847,8 @@ a1 patricius
 a3 cathedrālis
 # wrongly has long i
 a3 horizontālis
+a1 nigritus
+a1 tigrīnus
 ###
 ### missing long vowels
 ###
@@ -2952,7 +2954,6 @@ a1 bromeliāceus
 a1 coriāceus
 # FIXME, attributive -> relational
 a1 miliāceus
-# FIXME, attributive -> relational
 a1 tiliāceus
 a1 vituperābilis
 a3 -āx
@@ -3084,12 +3085,14 @@ n3 dēcoctiō
 a1 dēceptīvus
 a1 dēceptōrius
 a1 dēserticolus
+a3 inquiēs inquiēt
 # wrongly has short e and i
 a3 mēningītidis
 # wrongly has short e and o
 a1 acētōsus
 a1 emphysēmatōsus
 a1 gangrēnōsus
+a1 ēlectrōnicus
 # wrongly has short e and u
 a1 acūtisēpalus
 a1 sēminūdus
@@ -3124,6 +3127,8 @@ a1 commentīcius
 a1 crātīcius
 a1 damnātīcius
 a3 spīnipennis
+# following wrongly has danistīcus
+a1 danīsticus
 # wrongly has short i and o
 a1 altispīnōsus
 a1 thermolīmōsus
@@ -3191,6 +3196,7 @@ a3 ūnipēs ūniped
 n2 tūberculum
 n3 exsūdātiō
 n3 exūdātiō
+a1 pūsulātus
 # wrongly has short u in perf and sometimes sup
 circumfundō circumfundere circumfūdī circumfūsum
 superfundō superfundere superfūdī superfūsum
