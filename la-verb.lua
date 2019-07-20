@@ -2407,27 +2407,58 @@ local function show_form(form)
 		return "&mdash;"
 	end
 
-	if type(form) == "table" then
-		for key, subform in ipairs(form) do
-			if subform == "-" or subform == "—" or subform == "&mdash;" then
-				form[key] = "&mdash;"
-			elseif reconstructed and not subform:find(NAMESPACE .. ":Latin/")then
-				form[key] = make_link({lang = lang, term = NAMESPACE .. ":Latin/" .. subform, alt = subform})
-			else
-				form[key] = make_link({lang = lang, term = subform})
-			end
-		end
+	if type(form) ~= "table" then
+		form = {form}
+	end
 
-		return table.concat(form, ", ")
-	else
-		if form == "-" or form == "—" or form == "&mdash;" then
-			return "&mdash;"
-		elseif reconstructed and not form:find(NAMESPACE .. ":Latin/") then
-			return make_link({lang = lang, term = NAMESPACE .. ":Latin/" .. form, alt = form})
+	for key, subform in ipairs(form) do
+		if subform == "-" or subform == "—" or subform == "&mdash;" then
+			form[key] = "&mdash;"
+		elseif reconstructed and not subform:find(NAMESPACE .. ":Latin/") then
+			form[key] = make_link({lang = lang, term = NAMESPACE .. ":Latin/" .. subform, alt = subform})
 		else
-			return make_link({lang = lang, term = form})
+			form[key] = make_link({lang = lang, term = subform})
 		end
 	end
+
+	return table.concat(form, ", ")
+end
+
+local function get_lemma(data)
+	local slots_to_try = {
+		"1s_pres_actv_indc", -- regular
+		"3s_pres_actv_indc", -- impersonal
+		"1s_pres_pasv_indc", -- deponent
+		"3s_pres_pasv_indc", -- impersonal deponent
+		"1s_perf_actv_indc", -- ōdī, coepī, meminī
+		"3s_perf_actv_indc", -- doesn't occur?
+		"1s_perf_pasv_indc", -- doesn't occur?
+		"3s_perf_pasv_indc", -- doesn't occur?
+	}
+
+	for _, slot in ipairs(slots_to_try) do
+		local lemma_forms = {}
+		local form = data.forms[slot]
+		if form then
+			if type(form) ~= "table" then
+				form = {form}
+			end
+			for _, subform in ipairs(form) do
+				if subform ~= "-" and subform ~= "—" and subform ~= "&mdash;" then
+					table.insert(lemma_forms, subform)
+				end
+			end
+			if #lemma_forms > 0 then
+				local lemma_links = {}
+				for _, subform in ipairs(lemma_forms) do
+					table.insert(lemma_links, make_link({lang = lang, alt = subform}, "term"))
+				end
+				return table.concat(lemma_links, ", ")
+			end
+		end
+	end
+
+	return "&mdash;"
 end
 
 -- Make the table
@@ -2439,7 +2470,7 @@ make_table = function(data)
 	return [=[
 {| style="width: 100%; background: #EEE; border: 1px solid #AAA; font-size: 95%; text-align: center;" class="inflection-table vsSwitcher vsToggleCategory-inflection"
 |-
-! colspan="8" class="vsToggleElement" style="background: #CCC; text-align: left;" | &nbsp;&nbsp;&nbsp;Conjugation of ]=] .. make_link({lang = lang, alt = pagename}, "term") .. (#data.title > 0 and " (" .. table.concat(data.title, ", ") .. ")" or "") .. [=[
+! colspan="8" class="vsToggleElement" style="background: #CCC; text-align: left;" | &nbsp;&nbsp;&nbsp;Conjugation of ]=] .. get_lemma(data) .. (#data.title > 0 and " (" .. table.concat(data.title, ", ") .. ")" or "") .. [=[
 
 ]=] .. make_indc_rows(data) .. make_subj_rows(data) .. make_impr_rows(data) .. make_nonfin_rows(data) .. make_vn_rows(data) .. [=[
 
