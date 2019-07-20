@@ -327,7 +327,11 @@ local function detect_decl_and_subtypes(args)
 	end
 
 	for _, detected_subtype in ipairs(detected_subtypes) do
-		subtypes[detected_subtype] = true
+		if detected_subtype == "impers" and subtypes["3only"] then
+			-- 3only overrides impers
+		else
+			subtypes[detected_subtype] = true
+		end
 	end
 
 	if conjtype ~= "irreg" then
@@ -370,8 +374,8 @@ end
 
 
 -- The main new entry point.
-function export.new_show(frame)
-	local data, domain = export.make_new_data(frame), frame:getParent().args['search']
+function export.show(frame)
+	local data, domain = export.make_data(frame), frame:getParent().args['search']
 	-- Test code to compare existing module to new one.
 	if test_new_la_verb_module then
 		local m_new_la_verb = require("Module:User:Benwing2/la-verb")
@@ -379,7 +383,7 @@ function export.new_show(frame)
 			title = data.title,
 			categories = data.categories,
 		}
-		local newdata = m_new_la_verb.make_new_data(frame)
+		local newdata = m_new_la_verb.make_data(frame)
 		local newmiscdata = {
 			title = newdata.title,
 			categories = newdata.categories,
@@ -430,8 +434,8 @@ end
 
 
 -- The entry point for 'la-generate-verb-forms' to generate all verb forms.
-function export.generate_new_forms(frame)
-	local data = export.make_new_data(frame)
+function export.generate_forms(frame)
+	local data = export.make_data(frame)
 	local ins_text = {}
 	for key, val in pairs(data.forms) do
 		local ins_form = {}
@@ -452,14 +456,12 @@ function export.generate_new_forms(frame)
 end
 
 
-function export.make_new_data(frame)
+function export.make_data(frame)
 	local params = {
 		[1] = {required = true, default = "1+"},
 		[2] = {required = true, default = "amō"},
 		[3] = {},
 		[4] = {},
-		sync_perf = {},
-		p3inf = {},
 		-- examined directly in export.show()
 		search = {},
 	}
@@ -479,8 +481,6 @@ function export.make_new_data(frame)
 	local typeinfo = {
 		conj_type = conj_type,
 		subtypes = subtypes,
-		sync_perf = args.sync_perf or "",
-		p3inf = args.p3inf or "",
 	}
 
 	-- Generate the verb forms
@@ -949,7 +949,7 @@ postprocess = function(data, typeinfo)
 	end
 
 	-- Add the poetic present passive infinitive forms of certain verbs
-	if typeinfo.p3inf == '1' then
+	if typeinfo.subtypes.p3inf then
 			local is_depon = typeinfo.subtypes.depon
 			local form = "pres_" .. (is_depon and "actv" or "pasv") .. "_inf"
 			local noteindex = #(data.footnotes) + 1
@@ -972,7 +972,7 @@ postprocess = function(data, typeinfo)
 
 	--Add the syncopated perfect forms, omitting the separately handled fourth conjugation cases
 
-	if typeinfo.sync_perf == 'poet' then
+	if typeinfo.subtypes.poetsyncperf then
 		local sss = {
 			--infinitive
 			{'perf_actv_inf', 'sse'},
@@ -1042,34 +1042,10 @@ local function get_regular_stems(args, typeinfo)
 		end
 	end
 
-	if (not typeinfo.perf_stem and not typeinfo.subtypes.depon and
-		not typeinfo.subtypes.semidepon and
-		-- Doesn't include optsemidepon, which does have active perfect forms.
-		not typeinfo.subtypes.noperf
-	) then
-		if NAMESPACE == "Template" then
-			typeinfo.perf_stem = "-"
-		else
-			error("Perfect stem has not been provided")
-		end
-	end
-
 	if typeinfo.perf_stem then
 		typeinfo.perf_stem = mw.text.split(typeinfo.perf_stem, "/")
 	else
 		typeinfo.perf_stem = {}
-	end
-
-	if not typeinfo.supine_stem and (
-		not typeinfo.subtypes.nopass and not typeinfo.subtypes.noperf and
-		not typeinfo.subtypes.nosup and not typeinfo.subtypes.nopasvperf and
-		not typeinfo.subtypes.memini and not typeinfo.subtypes.pass3only
-	) then
-		if NAMESPACE == "Template" then
-			typeinfo.supine_stem = "-"
-		else
-			error("Supine stem has not been provided")
-		end
 	end
 
 	if typeinfo.supine_stem then
@@ -1203,10 +1179,10 @@ conjugations["3rd-io"] = function(args, data, typeinfo)
 end
 
 local function ivi_ive(form)
-	form = form:gsub("%.īvī", "iī")
-	form = form:gsub("%.īvi", "ī")
-	form = form:gsub("%.īve", "ī")
-	form = form:gsub("%.īvē", "ē")
+	form = form:gsub("īvī", "iī")
+	form = form:gsub("īvi", "ī")
+	form = form:gsub("īve", "ī")
+	form = form:gsub("īvē", "ē")
 	return form
 end
 
@@ -1220,7 +1196,7 @@ conjugations["4th"] = function(args, data, typeinfo)
 	for _, perf_stem in ipairs(typeinfo.perf_stem) do
 		local pres_stem = typeinfo.pres_stem
 		pres_stem = pres_stem:gsub("qu", "1")
-		perf_stem = perf_stem:gsub("qu", "1"):gsub("%.", "")
+		perf_stem = perf_stem:gsub("qu", "1")
 		if perf_stem == pres_stem .. "īv" then
 			table.insert(data.categories, "Latin fourth conjugation verbs with perfect in -iv-")
 		elseif perf_stem == pres_stem .. "u" then
@@ -1257,7 +1233,7 @@ conjugations["4th"] = function(args, data, typeinfo)
 		)
 	end
 
-	if typeinfo.sync_perf == "y" or typeinfo.sync_perf == "yn" then
+	if typeinfo.subtypes.alwayssyncperf or typeinfo.subtypes.optsyncperf then
 		for key, form in pairs(data.forms) do
 			if cfind(key, "perf") or cfind(key, "plup") or cfind(key, "futp") then
 				local forms = data.forms[key]
@@ -1266,10 +1242,8 @@ conjugations["4th"] = function(args, data, typeinfo)
 				end
 				data.forms[key] = {}
 				for _, f in ipairs(forms) do
-					if typeinfo.sync_perf == "yn" then
-						-- fuckme, need to assign to local to discard second value
-						local fsub = f:gsub("%.", "")
-						ut.insert_if_not(data.forms[key], fsub)
+					if typeinfo.subtypes.optsyncperf then
+						ut.insert_if_not(data.forms[key], f)
 					end
 					ut.insert_if_not(data.forms[key], ivi_ive(f))
 				end
