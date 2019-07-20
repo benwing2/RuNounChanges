@@ -2842,6 +2842,7 @@ part1 paritūrus
 # wrongly has long a
 a3 causālis
 n3 circumdatiō
+a1 patricius
 # wrongly has long e
 a3 cathedrālis
 # wrongly has long i
@@ -2944,7 +2945,7 @@ a3 theologālis
 a3 venereālis
 a3 vertebrālis
 a1 arōmāticus
-a1 austrōāsiāticus
+a1 austroāsiāticus
 a1 eurāsiāticus
 a1 bromeliāceus
 # FIXME, attributive -> relational
@@ -2983,11 +2984,27 @@ n3 percontātiō
 n3 reprobātiō
 n3 sustentātiō
 adv capreolātim
+n4 trāiectus
+a3 ācridēns
+a1 ācridentātus
+a1 ācrisepalus
+a3 clāripennis
+a3 clāvicornis
+a1 flāvicaudus
+a1 flāvicostus
+a1 flāvimanus
+a1 flāvipalpus
+a3 flāvipennis
+a3 flāvipinnis
+a3 flāvitarsis
+a3 flāviventris
+a1 āfroāsiāticus
 # wrongly has short a and e
 a3 intellēctuālis
 a1 arēnātus
 a1 sēmitorquātus
 a1 sēticaudātus
+n2 ēiectāmenta
 # wrongly has short a, e and o
 a1 acētābulōsus
 a3 acētābulifōrmis
@@ -3007,15 +3024,18 @@ a3 tardivītālis
 # FIXME, attributive -> relational
 a1 achātīnus
 a1 germinātīvus
+# wrongly has short a, i and o
+a1 aegrōtātīcius
+a3 flāvōlīneātus
 # wrongly has short a and o
 a3 aequātōriālis
 a1 sexhōrārius
 a1 affectiōnātus
 a3 sacrōlumbālis
-a1 āfrōāsiāticus
 a1 computātōrius
 a1 precātōrius
 n3 cōdificātiō
+a3 flāvomaculātus
 # wrongly has short a, o and u
 a1 acūtisquāmōsus
 # wrongly has short a and u
@@ -3045,6 +3065,7 @@ part3 prōdiēns
 part3 rediēns
 a1 sēmicaudātus
 a1 sēmilautus
+n3 ēnigma
 # FIXME, has sēminic as stem
 a3 sēminex sēminec
 a1 sēminiger sēminigr
@@ -3059,6 +3080,10 @@ a3 gevalēnsis
 a3 hallandēnsis
 # FIXME, attributive -> relational
 a3 visbyēnsis
+n3 dēcoctiō
+a1 dēceptīvus
+a1 dēceptōrius
+a1 dēserticolus
 # wrongly has short e and i
 a3 mēningītidis
 # wrongly has short e and o
@@ -3068,6 +3093,7 @@ a1 gangrēnōsus
 # wrongly has short e and u
 a1 acūtisēpalus
 a1 sēminūdus
+n2 dējūrium
 # wrongly has short i
 v1 cōnspīrō
 n2 suspīrium
@@ -3092,6 +3118,12 @@ a1 multiplicātīvus
 a1 susceptīvus
 a1 temporīvus
 n1 insecticīda
+a1 cessīcius
+a1 commendātīcius
+a1 commentīcius
+a1 crātīcius
+a1 damnātīcius
+a3 spīnipennis
 # wrongly has short i and o
 a1 altispīnōsus
 a1 thermolīmōsus
@@ -3157,6 +3189,8 @@ a1 sēmipūnctātus
 a3 ūnipēs ūniped
 # FIXME, add declension
 n2 tūberculum
+n3 exsūdātiō
+n3 exūdātiō
 # wrongly has short u in perf and sometimes sup
 circumfundō circumfundere circumfūdī circumfūsum
 superfundō superfundere superfūdī superfūsum
@@ -3171,6 +3205,11 @@ circumfodiō circumfodere circumfōdī circumfossum
 # wrongly has short e in all forms
 suppēdō suppēdere suppēdī suppēditum
 v1 dēblaterō
+dēlūdō dēlūdere dēlūsī dēlūsum
+v1 dēsūdō
+dēsuēfaciō dēsuēfacere dēsuēfēcī dēsuēfactum
+v1 ēiaculor
+v1 ērūginō
 # wrongly has short o in all forms
 explōdō explōdere explōsī explōsum
 plōdō plōdere plōsī plōsum
