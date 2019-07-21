@@ -507,10 +507,10 @@ decl["3-2"] = function(data, args)
 	data.forms["abl_pl_m"] = stem .. "ibus"
 	data.forms["abl_pl_n"] = stem .. "ibus"
 
-	data.forms["loc_sg_m"] = stem2 .. "ī"
-	data.forms["loc_sg_n"] = stem2 .. "ī"
-	data.forms["loc_pl_m"] = stem2 .. "ibus"
-	data.forms["loc_pl_n"] = stem2 .. "ibus"
+	data.forms["loc_sg_m"] = stem .. "ī"
+	data.forms["loc_sg_n"] = stem .. "ī"
+	data.forms["loc_pl_m"] = stem .. "ibus"
+	data.forms["loc_pl_n"] = stem .. "ibus"
 
 	data.forms["voc_sg_m"] = stem .. "is"
 	data.forms["voc_sg_n"] = stem .. "e"
