@@ -336,7 +336,7 @@ local function process_adj_forms_and_overrides(data, args)
 				break
 			end
 		end
-	
+
 		if other_is_masc then
 			for _, case in ipairs(cases) do
 				for _, num in ipairs(nums) do
@@ -855,6 +855,11 @@ local function detect_adj_type_and_subtype(lemma, stem2, typ, subtypes)
 			{"jor", "3-C", {}, "j"},
 			{"^(mi)nor$", "3-C", {}, "n"},
 		})
+	elseif typ == "irreg" and (lemma == "duo" or lemma == "ambō") then
+		-- Certain irregular adjectives set data.num = "pl", but we need to know
+		-- this before declining the adjective so we can propagate it to other
+		-- segments.
+		return lemma, stem2, typ, {"pl"}
 	else
 		return lemma, stem2, typ, {}
 	end
@@ -990,19 +995,19 @@ local function parse_segment(segment)
 		if not types.pl and not types.both and rfind(lemma, "^[A-ZĀĒĪŌŪȲĂĔĬŎŬ]") then
 			types.sg = true
 		end
+	end
 
-		if types.loc then
-			loc = true
-			types.loc = nil
-		end
+	if types.loc then
+		loc = true
+		types.loc = nil
+	end
 
-		if types.M then
-			gender = "M"
-		elseif types.F then
-			gender = "F"
-		elseif types.N then
-			gender = "N"
-		end
+	if types.M then
+		gender = "M"
+	elseif types.F then
+		gender = "F"
+	elseif types.N then
+		gender = "N"
 	end
 
 	if types.pl then
@@ -1743,6 +1748,9 @@ function export.do_generate_adj_forms(parent_args, from_headword)
 	)
 	parsed_run.num = args.num or parsed_run.num
 
+	local overriding_voc = not not (
+		args.voc_sg_m or args.voc_sg_f or args.voc_sg_n or args.voc_pl_m or args.voc_pl_f or args.voc_pl_n
+	)
 	local declensions = decline_segment_run(parsed_run, true)
 
 	if not parsed_run.loc then
@@ -1752,6 +1760,18 @@ function export.do_generate_adj_forms(parent_args, from_headword)
 		declensions.forms.loc_pl_m = nil
 		declensions.forms.loc_pl_f = nil
 		declensions.forms.loc_pl_n = nil
+	end
+
+	-- declensions.voc is false if any component has no vocative (e.g. quī); in
+	-- that case, if the user didn't supply any vocative overrides, wipe out
+	-- any partially-generated vocatives
+	if not overriding_voc and not declensions.voc then
+		declensions.forms.voc_sg_m = nil
+		declensions.forms.voc_sg_f = nil
+		declensions.forms.voc_sg_n = nil
+		declensions.forms.voc_pl_m = nil
+		declensions.forms.voc_pl_f = nil
+		declensions.forms.voc_pl_n = nil
 	end
 
 	declensions.title = construct_title(args.title, declensions.title, from_headword)
