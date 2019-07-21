@@ -612,14 +612,14 @@ end
 decl["irreg"] = function(data,args)
 	if not args[1] or args[1] == "" then
 		if NAMESPACE ~= "" and NAMESPACE ~= "Appendix" then
-			args[1] = "plus"
+			args[1] = "plūs"
 		else
 			error('please provide the adjective')
 		end
 	end
-	if data.types.duo then
+	if args[1] == "duo" or args[1] == "ambō" then
 		data.title = "Irregular, no singular."
-		local stem = args[1]
+		local stem = args[1] == "duo" and "du" or "amb"
 		data.num = "pl"
 
 		if stem == "amb" then
@@ -698,7 +698,7 @@ decl["irreg"] = function(data,args)
 
 		data.forms["voc_sg_m"] = "mīlle"
 		data.forms["voc_pl_m"] = {"mīlia", "mīllia"}
-	elseif args[1] == "plus" then
+	elseif args[1] == "plūs" then
 		data.title = "[[Appendix:Latin third declension|Third declension]], comparative variant. Several missing or irregular forms."
 
 		data.forms["nom_sg_m"] = ""
@@ -838,11 +838,11 @@ decl["irreg"] = function(data,args)
 		data.voc = false
 
 		data.categories = {}
-	elseif args[1] == "quis" or args[1] == "qui" then
+	elseif args[1] == "quis" or args[1] == "quī" then
 		local id = "id"
 		local em = "em"
 		local o = "ō"
-		if args[1] == "qui" then
+		if args[1] == "quī" then
 			id = "od"
 			em = "am"
 			o = "ā"
@@ -885,7 +885,7 @@ decl["irreg"] = function(data,args)
 
 		data.voc = false
 
-		if args[1] == "qui" then
+		if args[1] == "quī" then
 			data.forms["nom_sg_m"] = "quī"
 			data.forms["nom_sg_f"] = "quae"
 		end
