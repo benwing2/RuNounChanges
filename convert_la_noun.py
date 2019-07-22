@@ -31,6 +31,8 @@ def compare_new_and_old_templates(origt, newt, pagetitle, pagemsg, errandpagemsg
     new_result = expand_text(new_generate_template)
     if not new_result:
       return None
+    # Omit linked_* variants, which won't be present in the old forms
+    new_result = "|".join(x for x in new_result.split("|") if not x.startswith("linked_"))
     return new_result
 
   return blib.compare_new_and_old_template_forms(origt, newt, generate_old_forms,
@@ -123,7 +125,15 @@ def convert_la_decl_multi_to_new(t, pagetitle, pagemsg, errandpagemsg):
     if "n" in specified_subtypes:
       sufn = True
       specified_subtypes = tuple(x for x in specified_subtypes if x != "n")
-    if decl in lalib.adj_decl_and_subtype_to_props:
+    if decl == "":
+      if specified_subtypes:
+        errandpagemsg("WARNING: Blank decl class with subtypes: %s" % origt)
+        return None
+      lemma = stem1
+      subtypes = []
+      # Do nothing else, we'll handle a blank decl specially below by
+      # wrapping in ((...))
+    elif decl in lalib.adj_decl_and_subtype_to_props:
       adj_key, adj_compute_props = lalib.adj_decl_and_subtype_to_props[decl]
       lemma, stem2, decl, subtypes = (
         adj_compute_props(stem1, stem2, decl, list(specified_subtypes), num, g, False,
@@ -168,7 +178,10 @@ def convert_la_decl_multi_to_new(t, pagetitle, pagemsg, errandpagemsg):
       lemma += "/" + stem2
     if decl:
       subtypes = [decl] + subtypes
-    lemma += "<%s>" % ".".join(subtypes)
+    if not subtypes:
+      lemma = "((%s))" % lemma
+    else:
+      lemma += "<%s>" % ".".join(subtypes)
     segments[i] = lemma
   blib.set_template_name(t, "la-ndecl" if g else "la-adecl")
   t.add("1", "".join(segments))
