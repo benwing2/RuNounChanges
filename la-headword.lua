@@ -96,7 +96,7 @@ function export.show(frame)
 	local PAGENAME = mw.title.getCurrentTitle().text
 	
 	local head = args["head"]; if head == "" then head = nil end
-	
+
 	local poscat = frame.args[1] or error("Part of speech has not been specified. Please pass parameter 1 to the module invocation.")
 	local class = frame.args[2]
 	local suff_type = frame.args.suff_type
@@ -106,33 +106,33 @@ function export.show(frame)
 	else
 		postype = poscat
 	end
-	
+
 	local data = {lang = lang, pos_category = (NAMESPACE == "Reconstruction" and "reconstructed " or "") .. poscat, categories = {}, heads = {head}, genders = {}, inflections = {}}
 	local infl_classes = {}
 	local appendix = {}
 	local postscript = {}
-	
+
 	if poscat == "suffixes" then
 		table.insert(data.categories, "Latin " .. suff_type .. "-forming suffixes")
 		suffix = '-'
 	end
-	
+
 	if pos_functions[postype] then
 		pos_functions[postype](class, args, data, infl_classes, appendix, postscript)
 	end
-	
+
 	if suffix then
 		for i, h in ipairs(data.heads) do
 			data.heads[i] = suffix .. h
 		end
 	end
-	
+
 	if mw.ustring.find(mw.ustring.gsub(PAGENAME,"qu","kv"),"[aeiouāēīōū][iu][aeiouāēīōū]") then
 		table.insert(data.categories, "Kenny's testing category 7")
 	end
-	
+
 	postscript = table.concat(postscript, ", ")
-	
+
 	return
 		require("Module:headword").full_headword(data)
 		.. format(infl_classes, "/")
@@ -158,7 +158,7 @@ pos_functions["nouns"] = function(class, args, data, infl_classes, appendix)
 	local args = require("Module:parameters").process(args, params)
 	data.heads = args.head
 	data.id = args.id
-	
+
 	for _, g in ipairs(args.g) do
 		if legal_gender[g] then
 			table.insert(data.genders, g)
@@ -186,14 +186,14 @@ pos_functions["nouns"] = function(class, args, data, infl_classes, appendix)
 				error("Please provide the declension class.")
 			end
 		end
-	
+
 		for _, decl_class in ipairs(args.decl) do
 			if legal_declension[decl_class] then
 				table.insert(appendix, "[[Appendix:Latin " .. decl_class .. " declension|" .. decl_class .. " declension]]")
 				if decl_class ~= "irregular" then
 					table.insert(data.categories, "Latin " .. decl_class .. " declension nouns")
 				end
-				
+
 				for _, g in ipairs(args.g) do
 					table.insert(data.categories, "Latin " .. gender_names[g] ..  " nouns in the " .. decl_class .. " declension")
 				end
@@ -201,7 +201,7 @@ pos_functions["nouns"] = function(class, args, data, infl_classes, appendix)
 				error("Declension “" .. decl_class .. "” is not an legal Latin declension.")
 			end
 		end
-	
+
 		if #args.gen == 0 then
 			table.insert(data.inflections, {label = "no genitive"})
 			table.insert(data.categories, "Latin nouns without a genitive singular")
@@ -240,7 +240,7 @@ end
 pos_functions["proper nouns"] = pos_functions["nouns"]
 pos_functions["suffixes-noun"] = pos_functions["nouns"]
 
-local allowed_subtypes = {
+export.allowed_subtypes = {
 	["impers"] = true,
 	["3only"] = true,
 	["depon"] = true,
@@ -257,11 +257,18 @@ local allowed_subtypes = {
 	["nosup"] = true,
 	["supfutractvonly"] = true,
 	["noimp"] = true,
+	-- FIXME, remove this once we've converted all the verbs
 	["shortimp"] = true,
 	["nofut"] = true,
 	["def"] = true,
+	-- FIXME, remove this once we've converted all the verbs
 	["facio"] = true,
+	-- FIXME, remove this once we've converted all the verbs
 	["irreg"] = true,
+	["p3inf"] = true,
+	["poetsyncperf"] = true,
+	["optsyncperf"] = true,
+	["alwayssyncperf"] = true,
 }
 
 function export.split_verb_subtype(subtype)
@@ -282,7 +289,7 @@ function export.split_verb_subtype(subtype)
 	local subtypes = rsplit(subtype, "%-")
 
 	for _, subtype in ipairs(subtypes) do
-		if not allowed_subtypes[subtype] then
+		if not export.allowed_subtypes[subtype] then
 			error("Unrecognized verb subtype " .. subtype)
 		end
 	end
@@ -291,6 +298,10 @@ function export.split_verb_subtype(subtype)
 end
 
 pos_functions["verbs"] = function(class, args, data, infl_classes, appendix)
+	if args[1] and (rfind(args[1], "^[0-9]%+?$") or rfind(args[1], "^[0-9]%+?%.")) then
+		return pos_functions["verbs-new"](class, args, data, infl_classes, appendix)
+	end
+
 	params = {
 		[1] = {alias_of = 'head'},
 		[2] = {alias_of = 'inf'},
@@ -306,25 +317,26 @@ pos_functions["verbs"] = function(class, args, data, infl_classes, appendix)
 		conj = {},
 		id = {},
 	}
+
 	local args = require("Module:parameters").process(args,params)
 	data.heads = args.head
 	data.id = args.id
 	local conj = args.conj
 	local pattern = args.pattern
-	
+
 	args.inf.label = "present infinitive"
 	args.perf.label = "perfect active"
 	if not args[44] then
 		args[44] = #args.sup > 0 and rfind(args.sup[1], "ūrus$") and "future participle" or "supine"
 	end
 	args.sup.label = args[44]
-	
+
 	for i, array in ipairs({args.head, args.inf, args.perf, args.sup}) do
 		for j, param in ipairs(array) do
 			if mw.ustring.gsub(param, "^[*%[%]a-zA-ZĀāĒēĪīŌōŪūȲȳÄäËëÏïÖöÜüŸÿĂăĔĕĬĭŎŏŬŭ " .. accents .. "]+$", "") ~= "" then
 				table.insert(data.categories, "la-verb invalid parameters")
 			end
-			
+
 			if i == 3 then
 				-- For (semi-)deponent verbs, remove sum/est ("est" for impersonal
 				-- verbs like [[pertaedet]]) when constructing the link.
@@ -332,7 +344,7 @@ pos_functions["verbs"] = function(class, args, data, infl_classes, appendix)
 			end
 		end
 	end
-	
+
 	table.insert(data.inflections, args.inf)
 	if #args.perf > 0 then table.insert(data.inflections, args.perf) end
 	if #args.sup > 0 then table.insert(data.inflections, args.sup) end
@@ -361,7 +373,7 @@ pos_functions["verbs"] = function(class, args, data, infl_classes, appendix)
 			table.insert(data.categories, "Latin verbs without the conjugation in their headwords")
 		end
 	end
-	
+
 	local subtypes = export.split_verb_subtype(pattern)
 
 	if ut.contains(subtypes, "impers") then
@@ -452,6 +464,181 @@ pos_functions["verbs"] = function(class, args, data, infl_classes, appendix)
 	end
 end
 
+pos_functions["verbs-new"] = function(class, args, data, infl_classes, appendix)
+	local m_la_verb = require("Module:la-verb")
+	local conjdata, typeinfo = m_la_verb.make_data(args, true)
+	local lemma_forms = conjdata.lemma
+	if not lemma_forms or #lemma_forms == 0 then
+		lemma_forms = m_la_verb.get_lemma_forms(conjdata)
+	end
+	local first_lemma = ""
+	if #lemma_forms > 0 then
+		first_lemma = require("Module:links").remove_links(lemma_forms[1])
+	end
+	data.heads = lemma_forms
+	data.id = conjdata.id
+	local conj = typeinfo.conj_type
+	local subconj = typeinfo.conj_subtype
+	local subtypes = typeinfo.subtypes
+	local perf_only = false
+
+	local function insert_inflection(infl, label)
+		for _, form in ipairs(infl) do
+			if rsub(form, "^[*%[%]a-zA-ZĀāĒēĪīŌōŪūȲȳÄäËëÏïÖöÜüŸÿĂăĔĕĬĭŎŏŬŭ " .. accents .. "]+$", "") ~= "" then
+				table.insert(data.categories, "la-verb invalid parameters")
+			end
+		end
+		infl.label = label
+		table.insert(data.inflections, infl)
+	end
+
+
+	local inf = m_la_verb.get_valid_forms(conjdata.forms["pres_actv_inf"])
+	if #inf > 0 then
+		insert_inflection(inf, "present infinitive")
+	else
+		inf = m_la_verb.get_valid_forms(conjdata.forms["perf_actv_inf"])
+		if #inf > 0 then
+			perf_only = true
+			insert_inflection(inf, "perfect infinitive")
+		end
+	end
+
+	local depon = typeinfo.subtypes.depon or typeinfo.subtypes.semidepon
+	if not perf_only then
+		local perf
+		if depon then
+			local sup = m_la_verb.get_valid_forms(conjdata.forms["sup_acc"])
+			perf = {}
+			for _, form in ipairs(sup) do
+				if typeinfo.subtypes.impers then
+					form = rsub(form, "^(.*)m$", "[[%1s|%1m]] est")
+				elseif typeinfo.subtypes["3only"] then
+					form = rsub(form, "^(.*)m$", "[[%1s]] est")
+				else
+					form = rsub(form, "^(.*)m$", "[[%1s]] sum")
+				end
+				table.insert(perf, form)
+			end
+		else
+			perf = m_la_verb.get_valid_forms(conjdata.forms["1s_perf_actv_indc"])
+			if #perf == 0 then
+				perf = m_la_verb.get_valid_forms(conjdata.forms["3s_perf_actv_indc"])
+			end
+		end
+		if #perf > 0 then
+			insert_inflection(perf, "perfect active")
+		end
+	end
+
+	if not depon then
+		local sup = m_la_verb.get_valid_forms(conjdata.forms["sup_acc"])
+		if #sup > 0 then
+			insert_inflection(sup, "supine")
+		else
+			local fap = m_la_verb.get_valid_forms(conjfdata.forms["futr_actv_ptc"])
+			if #fap > 0 then
+				insert_inflection(fap, "future participle")
+			end
+		end
+	end
+
+	if conj == "1st" or subconj == "1st" then
+		table.insert(appendix, "[[Appendix:Latin first conjugation|first conjugation]]")
+	elseif conj == "2nd" or subconj == "2nd" then
+		table.insert(appendix, "[[Appendix:Latin second conjugation|second conjugation]]")
+	elseif conj == "3rd" or subconj == "3rd" then
+		table.insert(appendix, "[[Appendix:Latin third conjugation|third conjugation]]")
+	elseif conj == "3rd-io" or subconj == "3rd-io" then
+		table.insert(appendix, "[[Appendix:Latin third conjugation|third conjugation]] iō-variant")
+	elseif conj == "4th" or subconj == "4th" then
+		table.insert(appendix, "[[Appendix:Latin fourth conjugation|fourth conjugation]]")
+	elseif conj == "irreg" then --sum
+		table.insert(appendix, "[[Appendix:Latin irregular verbs|irregular conjugation]]")
+	else
+		if NAMESPACE == "Template" then
+			table.insert(appendix, "? declension")
+		else
+			table.insert(data.categories, "Latin verbs without the conjugation in their headwords")
+		end
+	end
+
+	if subtypes.impers then
+		-- decet
+		-- advesperāscit (also nopass)
+		table.insert(appendix, "[[impersonal#English|impersonal]]")
+	end
+	if subtypes.nopass then
+		--coacēscō
+		table.insert(appendix, "no [[passive#English|passive]]")
+	end
+	if subtypes.depon then
+		-- dēmōlior
+		-- calvor (also noperf)
+		table.insert(appendix, "[[deponent#English|deponent]]")
+	end
+	if subtypes.semidepon then
+		-- fīdō, gaudeō
+		table.insert(appendix, "[[semi-deponent#English|semi-deponent]]")
+	end
+	if subtypes.optsemidepon then
+		-- audeō, placeō, soleō, pudeō
+		table.insert(appendix, "optionally [[semi-deponent#English|semi-deponent]]")
+	end
+	if subtypes.noperf then
+		-- īnsolēscō
+		table.insert(appendix, "no [[perfect#English|perfect]]")
+	end
+	if (subtypes.noactvperf or subtypes.nopasvperf or subtypes.perfaspres or subtypes.def
+	) then
+		-- interstinguō (noactvperf)
+		-- ārēscō (nopasvperf)
+		-- ōdī (perfaspres)
+		-- āiō (def)
+		table.insert(appendix, "[[defective#English|defective]]")
+	end
+	if subtypes.nosup then
+		-- deeō etc.
+		table.insert(appendix, "no [[supine#English|supine]] stem")
+	end
+	if subtypes.supfutractvonly then
+		-- sum, dēpereō, etc.
+		table.insert(appendix, "no [[supine#English|supine]] stem except in the [[future#English|future]] [[active#English|active]] [[participle#English|participle]]")
+	end
+	if subtypes.pass3only then
+		--praefundō
+		table.insert(appendix, "limited [[passive#English|passive]]")
+	end
+	if subtypes.passimpers then
+		--abambulō
+		table.insert(appendix, "[[impersonal#English|impersonal]] in the passive")
+	end
+	if rfind(first_lemma, "faciō$") then
+		--faciō
+		table.insert(appendix, "irregular [[passive voice#English|passive voice]]")
+	end
+	if subtypes["3only"] then
+		--decet
+		table.insert(appendix,"[[third person#English|third person]] only")
+	end
+	if conj == "irreg" then
+		--ferō
+		table.insert(appendix, "[[irregular#English|irregular]]")
+	end
+	if subtypes.noimp then
+		--volō
+		table.insert(appendix, "no [[imperative#English|imperative]]")
+	end
+	if rfind(first_lemma, "d[īū]cō$") then
+		--dīcō
+		table.insert(appendix, "irregular short [[imperative#English|imperative]]")
+	end
+	if subtypes.nofut then
+		--soleō
+		table.insert(appendix, "no [[future#English|future]]")
+	end
+end
+
 pos_functions["adjectives"] = function(class, args, data, infl_classes, appendix)
 	if class == "new" then
 		pos_functions["adjectives-new"](class, args, data, infl_classes, appendix)
@@ -531,15 +718,15 @@ pos_functions["adjectives-comp"] = function(class, args, data, infl_classes, app
 	data.id = args.id
 	table.insert(data.categories, "Latin comparative adjectives")
 	table.insert(infl_classes, "[[Appendix:Latin third declension|third declension]]")
-	
+
 	local n = {label = "neuter"}
 	for _, head in ipairs(args.head) do
 		local neuter = mw.ustring.gsub(head, "or$", "us")
 		table.insert(n, neuter)
 	end
-	
+
 	table.insert(data.inflections, n)
-	
+
 	if args.comp then
 		-- [[Special:WhatLinksHere/Template:tracking/la-adj-comparative]]
 		require("Module:debug").track("la-adj-comparative")
@@ -557,21 +744,21 @@ pos_functions["adjectives-sup"] = function(class, args, data, infl_classes, appe
 	local args = require("Module:parameters").process(args, params)
 	data.heads = args.head
 	data.id = args.id
-	
+
 	table.insert(data.categories, "Latin superlative adjectives")
 	table.insert(infl_classes, "[[Appendix:Latin first declension|first]]")
 	table.insert(infl_classes, "[[Appendix:Latin second declension|second declension]]")
-	
+
 	local f, n = {label = "feminine"}, {label = "neuter"}
 	for _, head in ipairs(args.head) do
 		local stem = mw.ustring.gsub(head, "us$", "")
 		table.insert(f, stem .. "a")
 		table.insert(n, stem .. "um")
 	end
-	
+
 	table.insert(data.inflections, f)
 	table.insert(data.inflections, n)
-	
+
 	if args.sup then
 		-- [[Special:WhatLinksHere/Template:tracking/la-adj-superlative]]
 		require("Module:debug").track("la-adj-superlative")
@@ -588,11 +775,11 @@ pos_functions["adverbs"] = function(class, args, data, infl_classes, appendix)
 		["sup"] = {list = true},
 		["id"] = {},
 	}
-	
+
 	local args = require("Module:parameters").process(args, params)
 	data.heads = args.head
 	data.id = args.id
-	
+
 	if #args.comp > 0 and args.comp[1] ~= "-" then
 		args.comp.label = glossary_link("comparative")
 		table.insert(data.inflections, args.comp)
@@ -646,16 +833,16 @@ pos_functions["prepositions"] = function(class, args, data, infl_classes, append
 		["head"] = {list = true},
 		["id"] = {},
 	}
-	
+
 	local args = require("Module:parameters").process(args, params)
-	
+
 	-- Case names are supplied in numbered arguments, optionally preceded by
 	-- headwords.
 	local cases = {}
 	while prepositional_cases[args[1][#args[1]]] do
 		table.insert(cases, 1, table.remove(args[1]))
 	end
-	
+
 	for i = 1, #cases do
 		for j = i + 1, #cases do
 			if cases[i] == cases[j] then
@@ -670,11 +857,11 @@ pos_functions["prepositions"] = function(class, args, data, infl_classes, append
 		table.insert(postscript, appendix_link)
 		table.insert(data.categories, "Latin " .. case .. " prepositions")
 	end
-	
+
 	for _, v in ipairs(args[1]) do
 		table.insert(args.head, 1, v)
 	end
-	
+
 	data.heads = args.head
 	data.id = args.id
 end
