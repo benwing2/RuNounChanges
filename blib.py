@@ -1313,7 +1313,7 @@ def split_generate_args(tempresult):
   args = {}
   for arg in re.split(r"\|", tempresult):
     name, value = arg.split("=")
-    value = re.sub("<!>", "|", value)
+    value = value.replace("<!>", "|").replace("<->", "=")
     # With manually specified declensions, we get back "-" for unspecified
     # forms, which need to be omitted; otherwise they're automatically omitted.
     if value != "-":
