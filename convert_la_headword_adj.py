@@ -15,6 +15,21 @@ def safe_split(text, delim):
     return []
   return text.split(delim)
 
+def lengthen_ns_nf(text):
+  text = re.sub("an([sf])", ur"ān\1", text)
+  text = re.sub("en([sf])", ur"ēn\1", text)
+  text = re.sub("in([sf])", ur"īn\1", text)
+  text = re.sub("on([sf])", ur"ōn\1", text)
+  text = re.sub("un([sf])", ur"ūn\1", text)
+  text = re.sub("yn([sf])", ur"ȳn\1", text)
+  text = re.sub("An([sf])", ur"Ān\1", text)
+  text = re.sub("En([sf])", ur"Ēn\1", text)
+  text = re.sub("In([sf])", ur"Īn\1", text)
+  text = re.sub("On([sf])", ur"Ōn\1", text)
+  text = re.sub("Un([sf])", ur"Ūn\1", text)
+  text = re.sub("Yn([sf])", ur"Ȳn\1", text)
+  return text
+
 def process_page(page, index, parsed):
   global args
   pagetitle = unicode(page.title())
@@ -90,9 +105,11 @@ def process_page(page, index, parsed):
           decl_forms = adj_forms[slot]
           break
       decl_forms = safe_split(decl_forms, ",")
-      if set(headword_forms) != set(decl_forms):
-        macronless_headword_forms = set(lalib.remove_macrons(x) for x in headword_forms)
-        macronless_decl_forms = set(lalib.remove_macrons(x) for x in decl_forms)
+      corrected_headword_forms = set(lengthen_ns_nf(x) for x in headword_forms)
+      corrected_decl_forms = set(lengthen_ns_nf(x) for x in decl_forms)
+      if corrected_headword_forms != corrected_decl_forms:
+        macronless_headword_forms = set(lalib.remove_macrons(x) for x in corrected_headword_forms)
+        macronless_decl_forms = set(lalib.remove_macrons(x) for x in corrected_decl_forms)
         if macronless_headword_forms == macronless_decl_forms:
           pagemsg("WARNING: Headword %s=%s different from decl %s=%s in macrons only, skipping" % (
             id_slot, ",".join(headword_forms), id_slot, ",".join(decl_forms)
