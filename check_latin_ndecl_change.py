@@ -15,6 +15,7 @@ def compare_new_and_old_templates(t, pagetitle, pagemsg, errandpagemsg):
 
   def generate_old_forms():
     old_generate_template = re.sub(r"^\{\{la-ndecl\|", "{{la-generate-noun-forms|", t)
+    old_generate_template = re.sub(r"^\{\{la-adecl\|", "{{la-generate-adj-forms|", old_generate_template)
     old_result = expand_text(old_generate_template)
     if not old_result:
       return None
@@ -22,9 +23,12 @@ def compare_new_and_old_templates(t, pagetitle, pagemsg, errandpagemsg):
 
   def generate_new_forms():
     new_generate_template = re.sub(r"^\{\{la-ndecl\|", "{{User:Benwing2/la-new-generate-noun-forms|", t)
+    new_generate_template = re.sub(r"^\{\{la-adecl\|", "{{User:Benwing2/la-new-generate-adj-forms|", new_generate_template)
     new_result = expand_text(new_generate_template)
     if not new_result:
       return None
+    # Omit linked_* variants, which won't be present in the old forms
+    new_result = "|".join(x for x in new_result.split("|") if not x.startswith("linked_"))
     return new_result
 
   return blib.compare_new_and_old_template_forms(t, t, generate_old_forms,
@@ -43,10 +47,10 @@ def process_page(index, page):
 
   for t in parsed.filter_templates():
     tn = tname(t)
-    if tn == "la-ndecl":
+    if tn == "la-ndecl" or tn == "la-adecl":
       compare_new_and_old_templates(unicode(t), pagetitle, pagemsg, errandpagemsg)
 
-parser = blib.create_argparser("Check potential changes to {{la-ndecl}} implementation")
+parser = blib.create_argparser("Check potential changes to {{la-ndecl}} or {{la-adecl}} implementation")
 parser.add_argument("--pagefile", help="List of pages to process.")
 parser.add_argument("--cats", help="List of categories to process.")
 parser.add_argument("--refs", help="List of references to process.")
@@ -60,7 +64,7 @@ if args.pagefile:
 else:
   if not args.cats and not args.refs:
     cats = []
-    refs = ["Template:la-ndecl"]
+    refs = ["Template:la-ndecl", "Template:la-adecl"]
   else:
     cats = args.cats and [x.decode("utf-8") for x in args.cats.split(",")] or []
     refs = args.refs and [x.decode("utf-8") for x in args.refs.split(",")] or []
