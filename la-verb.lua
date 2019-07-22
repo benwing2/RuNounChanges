@@ -9,7 +9,7 @@ local m_para = require("Module:parameters")
 
 -- TODO:
 -- 1. (DONE) detect_decl_and_subtypes doesn't do anything with perf_stem or supine_stem.
--- 2. Should error on bad subtypes.
+-- 2. (DONE) Should error on bad subtypes.
 -- 3. Make sure Google Books link still works.
 --
 -- If enabled, compare this module with new version of module to make
@@ -147,7 +147,7 @@ local function split_prefix_and_base(lemma, main_verbs)
 	for _, main in ipairs(main_verbs) do
 		local prefix = rmatch(lemma, "^(.*)" .. main .. "$")
 		if prefix then
-			return prefix, m_la_utilities.strip_macrons(main)
+			return prefix, main
 		end
 	end
 	error("Argument " .. lemma .. " doesn't end in any of " .. table.concat(main_verbs, ","))
@@ -205,6 +205,30 @@ local function get_subtype_by_ending(lemma, conjtype, specified_subtypes,
 	return nil, nil
 end
 
+local irreg_verbs_to_conj_type = {
+	["āiō"] = "3rd-io",
+	["aiiō"] = "3rd-io",
+	["dīcō"] = "3rd",
+	["dūcō"] = "3rd",
+	["faciō"] = "3rd-io",
+	["fīō"] = "3rd",
+	["ferō"] = "3rd",
+	["inquam"] = "irreg",
+	["libet"] = "2nd",
+	["lubet"] = "2nd",
+	["licet"] = "2nd",
+	["volō"] = "irreg",
+	["mālō"] = "irreg",
+	["nōlō"] = "irreg",
+	["possum"] = "irreg",
+	["piget"] = "2nd",
+	["coepī"] = "irreg",
+	["sum"] = "irreg",
+	["edō"] = "3rd",
+	["dō"] = "1st",
+	["eō"] = "irreg",
+}
+
 local function detect_decl_and_subtypes(args)
 	local specs = rsplit(args[1] or "", "%.")
 	local subtypes = {}
@@ -224,7 +248,7 @@ local function detect_decl_and_subtypes(args)
 
 	local lemma = args[2] or mw.title.getCurrentTitle().subpageText
 	lemma = rsub(lemma, "o$", "ō")
-	local base, conjtype, detected_subtypes
+	local base, conjtype, conj_subtype, detected_subtypes
 	local auto_perf_supine = false
 	local base_conj_arg = rmatch(conj_arg, "^([124])%+$")
 	if base_conj_arg then
@@ -318,7 +342,8 @@ local function detect_decl_and_subtypes(args)
 			"dō",
 			"eō",
 		})
-		args[1] = base
+		conj_subtype = irreg_verbs_to_conj_type[base]
+		args[1] = m_la_utilities.strip_macrons(base)
 		args[2] = prefix
 		-- args[3] and args[4] are used by ferō and sum and stay where they are
 		detected_subtypes = {}
@@ -369,13 +394,21 @@ local function detect_decl_and_subtypes(args)
 		args[4] = nil
 	end
 
-	return conjtype, subtypes
-end
+	for subtype, _ in pairs(subtypes) do
+		if not m_la_headword.allowed_subtypes[subtype] and
+			not (conjtype == "3rd-io" and subtype == "I") then
+			error("Unrecognized verb subtype " .. subtype)
+		end
+	end
 
+	return conjtype, conj_subtype, subtypes
+end
 
 -- The main new entry point.
 function export.show(frame)
-	local data, domain = export.make_data(frame), frame:getParent().args['search']
+	local parent_args = frame:getParent().args
+	local data, typeinfo = export.make_data(parent_args)
+	local domain = frame:getParent().args['search']
 	-- Test code to compare existing module to new one.
 	if test_new_la_verb_module then
 		local m_new_la_verb = require("Module:User:Benwing2/la-verb")
@@ -383,7 +416,8 @@ function export.show(frame)
 			title = data.title,
 			categories = data.categories,
 		}
-		local newdata = m_new_la_verb.make_data(frame)
+		local new_parent_args = frame:getParent().args
+		local newdata, newtypeinfo = m_new_la_verb.make_data(new_parent_args)
 		local newmiscdata = {
 			title = newdata.title,
 			categories = newdata.categories,
@@ -432,10 +466,7 @@ function export.show(frame)
 		return link_google_books(verb, flatten_values(data['forms']), domain) end
 end
 
-
--- The entry point for 'la-generate-verb-forms' to generate all verb forms.
-function export.generate_forms(frame)
-	local data = export.make_data(frame)
+local function concat_forms(data, typeinfo)
 	local ins_text = {}
 	for key, val in pairs(data.forms) do
 		local ins_form = {}
@@ -443,20 +474,40 @@ function export.generate_forms(frame)
 			val = {val}
 		end
 		for _, v in ipairs(val) do
-			-- skip forms with HTML or links in them
-			if v ~= "-" and v ~= "—" and v ~= "&mdash;" and not v:find("[<>=|%[%]]") then
-				table.insert(ins_form, v)
+			if v ~= "-" and v ~= "—" and v ~= "&mdash;" then
+				table.insert(ins_form,
+					rsub(v, rsub(v, rsub(v, "|", "<!>"), "=", "<->"), ",", "<.>")
+				)
 			end
 		end
 		if #ins_form > 0 then
 			table.insert(ins_text, key .. "=" .. table.concat(ins_form, ","))
 		end
 	end
+	if include_props then
+		table.insert(ins_text, "conj_type=" .. typeinfo.conjtype)
+		if typeinfo.conj_subtype then
+			table.insert(ins_text, "conj_subtype=" .. typeinfo.conj_subtype)
+		end
+		local subtypes = {}
+		for subtype, _ in pairs(typeinfo.subtypes) do
+			table.insert(subtypes, subtype)
+		end
+		table.insert(ins_text, "subtypes=" .. table.concat(subtypes, "."))
+	end
 	return table.concat(ins_text, "|")
 end
 
+-- The entry point for 'la-generate-verb-forms' and 'la-generate-verb-props'
+-- to generate all verb forms/props.
+function export.generate_forms(frame)
+	local include_props = frame.args["include_props"]
+	local parent_args = frame:getParent().args
+	local data, typeinfo = export.make_data(parent_args)
+	return concat_forms(data, typeinfo)
+end
 
-function export.make_data(frame)
+function export.make_data(parent_args, from_headword)
 	local params = {
 		[1] = {required = true, default = "1+"},
 		[2] = {required = true, default = "amō"},
@@ -469,17 +520,30 @@ function export.make_data(frame)
 		params[slot] = {}
 	end
 
-	local parent_args = frame:getParent().args
+	if from_headword then
+		params.lemma = {list = true}
+		params.id = {}
+	end
+
 	local args = m_para.process(parent_args, params)
-	local conj_type, subtypes = detect_decl_and_subtypes(args)
+	local conj_type, conj_subtype, subtypes = detect_decl_and_subtypes(args)
 
 	if not conjugations[conj_type] then
 		error("Unknown conjugation type '" .. conj_type .. "'")
 	end
 
-	local data = {forms = {}, title = {}, categories = {}, form_footnote_indices = {}, footnotes = {}}  --note: the addition of red superscripted footnotes ('<sup style="color: red">' ... </sup>) is only implemented for the three form printing loops in which it is used
+	local data = {
+		forms = {},
+		title = {},
+		categories = {},
+		form_footnote_indices = {},
+		footnotes = {},
+		id = args.id,
+		lemma = args.lemma,
+	}  --note: the addition of red superscripted footnotes ('<sup style="color: red">' ... </sup>) is only implemented for the three form printing loops in which it is used
 	local typeinfo = {
 		conj_type = conj_type,
+		conj_subtype = conj_subtype,
 		subtypes = subtypes,
 	}
 
@@ -497,7 +561,7 @@ function export.make_data(frame)
 
 	-- Check if the verb is irregular
 	if not conj_type == 'irreg' then checkirregular(args, data) end
-	return data
+	return data, typeinfo
 end
 
 local function form_contains(forms, form)
@@ -2424,41 +2488,49 @@ local function show_form(form)
 	return table.concat(form, ", ")
 end
 
-local function get_lemma(data)
-	local slots_to_try = {
-		"1s_pres_actv_indc", -- regular
-		"3s_pres_actv_indc", -- impersonal
-		"1s_pres_pasv_indc", -- deponent
-		"3s_pres_pasv_indc", -- impersonal deponent
-		"1s_perf_actv_indc", -- ōdī, coepī, meminī
-		"3s_perf_actv_indc", -- doesn't occur?
-		"1s_perf_pasv_indc", -- doesn't occur?
-		"3s_perf_pasv_indc", -- doesn't occur?
-	}
-
-	for _, slot in ipairs(slots_to_try) do
-		local lemma_forms = {}
-		local form = data.forms[slot]
-		if form then
-			if type(form) ~= "table" then
-				form = {form}
-			end
-			for _, subform in ipairs(form) do
-				if subform ~= "-" and subform ~= "—" and subform ~= "&mdash;" then
-					table.insert(lemma_forms, subform)
-				end
-			end
-			if #lemma_forms > 0 then
-				local lemma_links = {}
-				for _, subform in ipairs(lemma_forms) do
-					table.insert(lemma_links, make_link({lang = lang, alt = subform}, "term"))
-				end
-				return table.concat(lemma_links, ", ")
+function export.get_valid_forms(raw_forms)
+	local valid_forms = {}
+	if raw_forms then
+		if type(raw_forms) ~= "table" then
+			raw_forms = {raw_forms}
+		end
+		for _, subform in ipairs(raw_forms) do
+			if subform ~= "-" and subform ~= "—" and subform ~= "&mdash;" then
+				table.insert(raw_forms, subform)
 			end
 		end
 	end
+	return valid_forms
+end
 
-	return "&mdash;"
+function export.get_lemma_forms(data)
+	local slots_to_try = {
+		"1s_pres_actv_indc", -- regular
+		"3s_pres_actv_indc", -- impersonal
+		"1s_perf_actv_indc", -- coepī
+		"3s_perf_actv_indc", -- doesn't occur?
+	}
+
+	for _, slot in ipairs(slots_to_try) do
+		local lemma_forms = export.get_valid_forms(data.forms[slot])
+		if #lemma_forms > 0 then
+			return lemma_forms
+		end
+	end
+
+	return nil
+end
+
+local function get_lemma(data)
+	local lemma_forms = export.get_lemma_forms(data)
+	if not lemma_forms then
+		return "&mdash;"
+	end
+	local lemma_links = {}
+	for _, subform in ipairs(lemma_forms) do
+		table.insert(lemma_links, make_link({lang = lang, alt = subform}, "term"))
+	end
+	return table.concat(lemma_links, ", ")
 end
 
 -- Make the table
