@@ -1,0 +1,7 @@
+verb strideo pass,sup {{la-conj|2|strīdeō|strīd|strīd}}
+verb immineo perf,sup {{la-conj|2.nopass|immineō|imminu|imminit}}
+adj seminex allbutlemma {{la-adecl|sēminex}}
+verb renuo sup {{la-conj|3|rennuō|rennu|rennut}}
+verb circumsisto sup {{la-conj|3|circumsistō|circumstet/circumstit|circumstat}}
+verb intersero sup {{la-conj|3|interserō|intersēv|intersat}}
+verb reneo sup {{la-conj|2.no-actv-perf|reneō|renu|renet}}
