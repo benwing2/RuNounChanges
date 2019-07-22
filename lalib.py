@@ -804,10 +804,15 @@ def generate_noun_forms(template, errandpagemsg, expand_text, return_raw=False):
     return None
   return blib.split_generate_args(result)
 
-def generate_verb_forms(template, errandpagemsg, expand_text, return_raw=False):
+def generate_verb_forms(template, errandpagemsg, expand_text, return_raw=False,
+    include_props=False):
   if template.startswith("{{la-conj|"):
-    generate_template = re.sub(r"^\{\{la-conj\|", "la-generate-verb-forms|",
-        template)
+    if include_props:
+      generate_template = re.sub(r"^\{\{la-conj\|", "la-generate-verb-props|",
+          template)
+    else:
+      generate_template = re.sub(r"^\{\{la-conj\|", "la-generate-verb-forms|",
+          template)
   elif template.startswith("{{la-conj-3rd-IO|"):
     generate_template = re.sub(r"^\{\{la-conj-3rd-IO\|", "{{la-generate-verb-forms|conjtype=3rd-io|", template)
   else:
@@ -823,11 +828,11 @@ def generate_verb_forms(template, errandpagemsg, expand_text, return_raw=False):
     return None
   return blib.split_generate_args(result)
 
-def generate_infl_forms(pos, template, errandpagemsg, expand_text, return_raw=False):
+def generate_infl_forms(pos, template, errandpagemsg, expand_text, return_raw=False, include_props=False):
   if pos == 'noun':
     return generate_noun_forms(template, errandpagemsg, expand_text, return_raw)
   elif pos == 'verb':
-    return generate_verb_forms(template, errandpagemsg, expand_text, return_raw)
+    return generate_verb_forms(template, errandpagemsg, expand_text, return_raw, include_props)
   elif pos in ['adj', 'nounadj', 'part']:
     return generate_adj_forms(template, errandpagemsg, expand_text, return_raw)
   else:
