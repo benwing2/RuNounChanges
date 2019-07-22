@@ -2849,6 +2849,8 @@ a3 cathedrālis
 a3 horizontālis
 a1 nigritus
 a1 tigrīnus
+# wrongly has long o
+pn2 Mediolānum
 ###
 ### missing long vowels
 ###
@@ -2914,6 +2916,16 @@ a1 bitūberculātus
 a1 clāvellātus
 a1 dorsātus
 a1 lēgitimātus
+part1 conputātus
+part1 computātus
+part1 commemorātus
+part1 commemorātūrus
+part1 vetātus
+part1 contribulātus
+part1 tribulātus
+part1 persecātus
+part1 mandūcātus
+part1 lacessātus
 # FIXME, fix petiolus
 a1 longipetiolātus
 a1 magnicristātus
@@ -3025,6 +3037,14 @@ a3 tardivītālis
 # FIXME, attributive -> relational
 a1 achātīnus
 a1 germinātīvus
+part1 invītātus
+part1 testificātus
+part1 dēturbātus
+part1 perturbātus
+part1 sublevātus
+part1 interpretātus
+part1 superlucrātus
+part1 contestātus
 # wrongly has short a, i and o
 a1 aegrōtātīcius
 a3 flāvōlīneātus
@@ -3129,6 +3149,8 @@ a1 damnātīcius
 a3 spīnipennis
 # following wrongly has danistīcus
 a1 danīsticus
+a1 bipartītus
+a1 bipertītus
 # wrongly has short i and o
 a1 altispīnōsus
 a1 thermolīmōsus
@@ -3197,6 +3219,48 @@ n2 tūberculum
 n3 exsūdātiō
 n3 exūdātiō
 a1 pūsulātus
+part1 dēminūtus
+part1 indūtus
+part1 dissolūtus
+a1 dissolūtus
+# wrongly has short a in sup
+v1 vēlitor
+v1 vērificō
+v1 dignō
+v1 ēnumerō
+v1 scrūtō
+v1 adiugō
+v1 adjugō
+v1 braciō
+intonō intonāre intonuī intonātum
+# following also wrongly has short i
+īnsternō īnsternere īnstrāvī īnstrātum
+# wrongly has short u in sup
+dissolvō dissolvere dissolvī dissolūtum
+prōstituō prōstituere prōstituī prōstitūtum
+praestituō praestituere praestituī praestitūtum
+substituō substituere substituī substitūtum
+ecfutuō ecfutuere ecfutuī ecfutūtum
+effutuō effutuere effutuī effutūtum
+dēminuō dēminuere dēminuī dēminūtum
+dīminuō dīminuere dīminuī dīminūtum
+comminuō comminuere comminuī comminūtum
+induō induere induī indūtum
+superinduō superinduere superinduī superindūtum
+compluor compluī complūtum
+conpluor conpluī conplūtum
+exacuō exacuere exacuī exacūtum
+imbuō imbuere imbuī imbūtum
+annuō annuere annuī annūtum
+adnuō adnuere adnuī adnūtum
+suō suere suī sūtum
+īnsuō īnsuere īnsuī īnsūtum
+adsuō adsuere adsuī adsūtum
+assuō assuere assuī assūtum
+exspuō exspuere exspuī exspūtum
+expuō expuere expuī expūtum
+# following also wrongly has short i
+dīlibuō dīlibuere dīlibuī dīlibūtum
 # wrongly has short u in perf and sometimes sup
 circumfundō circumfundere circumfūdī circumfūsum
 superfundō superfundere superfūdī superfūsum
