@@ -4,7 +4,7 @@ local m_table = require("Module:table")
 local ut = require("Module:utils")
 local m_links = require("Module:links")
 local make_link = m_links.full_link
-local m_la_headword = require("Module:la-headword")
+local m_la_headword = require("Module:User:Benwing2/la-headword")
 local m_la_utilities = require("Module:la-utilities")
 local m_para = require("Module:parameters")
 
@@ -414,6 +414,7 @@ local function detect_decl_and_subtypes(args)
 
 	for subtype, _ in pairs(subtypes) do
 		if not m_la_headword.allowed_subtypes[subtype] and
+			not (conjtype == "3rd" and subtype == "-I") and
 			not (conjtype == "3rd-io" and subtype == "I") then
 			error("Unrecognized verb subtype " .. subtype)
 		end
@@ -503,7 +504,7 @@ local function concat_forms(data, typeinfo)
 		end
 	end
 	if include_props then
-		table.insert(ins_text, "conj_type=" .. typeinfo.conjtype)
+		table.insert(ins_text, "conj_type=" .. typeinfo.conj_type)
 		if typeinfo.conj_subtype then
 			table.insert(ins_text, "conj_subtype=" .. typeinfo.conj_subtype)
 		end
@@ -2579,7 +2580,7 @@ function export.get_valid_forms(raw_forms)
 		end
 		for _, subform in ipairs(raw_forms) do
 			if subform ~= "-" and subform ~= "—" and subform ~= "&mdash;" then
-				table.insert(raw_forms, subform)
+				table.insert(valid_forms, subform)
 			end
 		end
 	end
@@ -2589,7 +2590,7 @@ end
 function export.get_lemma_forms(data, do_linked)
 	local linked_prefix = do_linked and "linked_" or ""
 	for _, slot in ipairs(potential_lemma_slots) do
-		local lemma_forms = export.get_valid_forms(data.forms[do_linked .. slot])
+		local lemma_forms = export.get_valid_forms(data.forms[linked_prefix .. slot])
 		if #lemma_forms > 0 then
 			return lemma_forms
 		end
