@@ -314,7 +314,7 @@ local function detect_decl_and_subtypes(args)
 		if auto_perf_supine == "++" then
 			auto_perf = base .. "īv/" .. base .. "i"
 			auto_supine = base .. "īt"
-		else
+		elseif auto_perf_supine == "+" then
 			auto_perf = base .. "īv"
 			auto_supine = base .. "īt"
 		end
@@ -1181,10 +1181,7 @@ conjugations["2nd"] = function(args, data, typeinfo)
 	make_perf_and_supine(data, typeinfo)
 end
 
-conjugations["3rd"] = function(args, data, typeinfo)
-	get_regular_stems(args, typeinfo)
-
-	table.insert(data.title, "[[Appendix:Latin third conjugation|third conjugation]]")
+local function set_3rd_conj_categories(data, typeinfo)
 	table.insert(data.categories, "Latin third conjugation verbs")
 
 	for _, perf_stem in ipairs(typeinfo.perf_stem) do
@@ -1197,6 +1194,8 @@ conjugations["3rd"] = function(args, data, typeinfo)
 			table.insert(data.categories, "Latin third conjugation verbs with perfect in -ev-")
 		elseif perf_stem == pres_stem .. "īv" then
 			table.insert(data.categories, "Latin third conjugation verbs with perfect in -iv-")
+		elseif perf_stem == pres_stem .. "i" then
+			table.insert(data.categories, "Latin third conjugation verbs with perfect in -i-")
 		elseif perf_stem == pres_stem .. "u" then
 			table.insert(data.categories, "Latin third conjugation verbs with perfect in -u-")
 		elseif perf_stem == pres_stem then
@@ -1207,6 +1206,13 @@ conjugations["3rd"] = function(args, data, typeinfo)
 			table.insert(data.categories, "Latin third conjugation verbs with irregular perfect")
 		end
 	end
+end
+
+conjugations["3rd"] = function(args, data, typeinfo)
+	get_regular_stems(args, typeinfo)
+
+	table.insert(data.title, "[[Appendix:Latin third conjugation|third conjugation]]")
+	set_3rd_conj_categories(data, typeinfo)
 
 	if typeinfo.pres_stem and mw.ustring.match(typeinfo.pres_stem,"[āēīōū]sc$") then
 		table.insert(data.categories, "Latin inchoative verbs")
@@ -1220,28 +1226,7 @@ conjugations["3rd-io"] = function(args, data, typeinfo)
 	get_regular_stems(args, typeinfo)
 
 	table.insert(data.title, "[[Appendix:Latin third conjugation|third conjugation]] ''iō''-variant")
-	table.insert(data.categories, "Latin third conjugation verbs")
-
-	for _, perf_stem in ipairs(typeinfo.perf_stem) do
-		local pres_stem = typeinfo.pres_stem
-		pres_stem = pres_stem:gsub("qu", "1")
-		perf_stem = perf_stem:gsub("qu", "1")
-		if perf_stem == pres_stem .. "āv" then
-			table.insert(data.categories, "Latin third conjugation verbs with perfect in -av-")
-		elseif perf_stem == pres_stem .. "ēv" then
-			table.insert(data.categories, "Latin third conjugation verbs with perfect in -ev-")
-		elseif perf_stem == pres_stem .. "īv" then
-			table.insert(data.categories, "Latin third conjugation verbs with perfect in -iv-")
-		elseif perf_stem == pres_stem .. "u" then
-			table.insert(data.categories, "Latin third conjugation verbs with perfect in -u-")
-		elseif perf_stem == pres_stem then
-			table.insert(data.categories, "Latin third conjugation verbs with suffixless perfect")
-		elseif has_perf_in_s_or_x(pres_stem, perf_stem) then
-			table.insert(data.categories, "Latin third conjugation verbs with perfect in -s- or -x-")
-		else
-			table.insert(data.categories, "Latin third conjugation verbs with irregular perfect")
-		end
-	end
+	set_3rd_conj_categories(data, typeinfo)
 
 	make_pres_3rd_io(data, typeinfo.pres_stem)
 	make_perf_and_supine(data, typeinfo)
@@ -1268,6 +1253,8 @@ conjugations["4th"] = function(args, data, typeinfo)
 		perf_stem = perf_stem:gsub("qu", "1")
 		if perf_stem == pres_stem .. "īv" then
 			table.insert(data.categories, "Latin fourth conjugation verbs with perfect in -iv-")
+		elseif perf_stem == pres_stem .. "i" then
+			table.insert(data.categories, "Latin fourth conjugation verbs with perfect in -i-")
 		elseif perf_stem == pres_stem .. "u" then
 			table.insert(data.categories, "Latin fourth conjugation verbs with perfect in -u-")
 		elseif perf_stem == pres_stem then
