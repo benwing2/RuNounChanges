@@ -2,7 +2,8 @@ local m_utilities = require("Module:utilities")
 local m_table = require("Module:table")
 -- FIXME, port remaining functions to [[Module:table]] and use it instead
 local ut = require("Module:utils")
-local make_link = require("Module:links").full_link
+local m_links = require("Module:links")
+local make_link = m_links.full_link
 local m_la_headword = require("Module:la-headword")
 local m_la_utilities = require("Module:la-utilities")
 local m_para = require("Module:parameters")
@@ -247,8 +248,9 @@ local function detect_decl_and_subtypes(args)
 		end
 	end
 
-	local lemma = args[2] or mw.title.getCurrentTitle().subpageText
-	lemma = rsub(lemma, "o$", "ō")
+	local orig_lemma = args[2] or mw.title.getCurrentTitle().subpageText
+	orig_lemma = rsub(orig_lemma, "o$", "ō")
+	local lemma = m_links.remove_links(orig_lemma)
 	local base, conjtype, conj_subtype, detected_subtypes
 	local base_conj_arg, auto_perf_supine = rmatch(conj_arg, "^([124])(%+%+?)$")
 	if base_conj_arg then
@@ -406,7 +408,7 @@ local function detect_decl_and_subtypes(args)
 		end
 	end
 
-	return conjtype, conj_subtype, subtypes
+	return conjtype, conj_subtype, subtypes, orig_lemma, lemma
 end
 
 -- The main new entry point.
