@@ -110,7 +110,7 @@ def process_page(page, index, parsed):
       continue
 
     orig_la_verb_template = unicode(la_verb_template)
-    if re.search(r"^[0-9]\+?(\..*)?$", getparam(la_verb_template, "1")):
+    if re.search(r"^[0-9]\+*(\..*)?$", getparam(la_verb_template, "1")):
       pagemsg("Found new-style verb headword template, skipping: %s" %
         orig_la_verb_template)
       continue
