@@ -73,7 +73,13 @@ local function format(array, concatenater)
 	if #array == 0 then
 		return ""
 	else
-		return "; ''" .. table.concat(array, concatenater) .. "''"
+		local concatenated = table.concat(array, concatenater)
+		if concatenated == "" then
+			return ""
+		elseif rfind(concatenated, "'$") then
+			concatenated = concatenated .. " "
+		end
+		return "; ''" .. concatenated .. "''"
 	end
 end
 
@@ -86,8 +92,8 @@ end
 -- This is the only function that can be invoked from a template.
 function export.show(frame)
 	local args = frame:getParent().args
-	NAMESPACE = mw.title.getCurrentTitle().nsText
-	PAGENAME = mw.title.getCurrentTitle().text
+	local NAMESPACE = mw.title.getCurrentTitle().nsText
+	local PAGENAME = mw.title.getCurrentTitle().text
 	
 	local head = args["head"]; if head == "" then head = nil end
 	
@@ -173,6 +179,7 @@ pos_functions["nouns"] = function(class, args, data, infl_classes, appendix)
 			table.insert(data.inflections, {label = 'variously declined'})
 			table.insert(data.categories, "Latin nouns with multiple declensions")
 		elseif #args.decl == 0 then
+			local NAMESPACE = mw.title.getCurrentTitle().nsText
 			if NAMESPACE == "Template" then
 				table.insert(appendix, "? declension")
 			else
@@ -347,6 +354,7 @@ pos_functions["verbs"] = function(class, args, data, infl_classes, appendix)
 	elseif conj == "irreg" then --sum
 		table.insert(appendix, "[[Appendix:Latin irregular verbs|irregular conjugation]]")
 	else
+		local NAMESPACE = mw.title.getCurrentTitle().nsText
 		if NAMESPACE == "Template" then
 			table.insert(appendix, "? declension")
 		else
@@ -447,12 +455,6 @@ end
 pos_functions["adjectives"] = function(class, args, data, infl_classes, appendix)
 	if class == "new" then
 		pos_functions["adjectives-new"](class, args, data, infl_classes, appendix)
-	elseif class == "1&2" or class == "3-3E" then
-		pos_functions["adjectives-m-f-n"](class, args, data, infl_classes, appendix)
-	elseif class == "3-1E" then
-		pos_functions["adjectives-mfn-gen"](class, args, data, infl_classes, appendix)
-	elseif class == "3-2E" then
-		pos_functions["adjectives-mf-n"](class, args, data, infl_classes, appendix)
 	elseif class == "comp" then
 		pos_functions["adjectives-comp"](class, args, data, infl_classes, appendix)
 	elseif class == "sup" then
@@ -461,7 +463,7 @@ pos_functions["adjectives"] = function(class, args, data, infl_classes, appendix
 end
 
 pos_functions["adjectives-new"] = function(class, args, data, infl_classes, appendix)
-	local decldata = require("Module:User:Benwing2/la-nominal").do_generate_adj_forms(args, true)
+	local decldata = require("Module:la-nominal").do_generate_adj_forms(args, true)
 	local lemma = decldata.lemma
 	local lemma_num = decldata.num == "pl" and "pl" or "sg"
 	if not lemma or #lemma == 0 then
@@ -469,7 +471,11 @@ pos_functions["adjectives-new"] = function(class, args, data, infl_classes, appe
 	end
 
 	data.heads = lemma
-	data.id = args.id
+	data.id = decldata.id
+	if decldata.pos then
+		local NAMESPACE = mw.title.getCurrentTitle().nsText
+		data.pos_category = (NAMESPACE == "Reconstruction" and "reconstructed " or "") .. decldata.pos
+	end
 
 	local masc = decldata.forms["nom_" .. lemma_num .. "_m"]
 	local fem = decldata.forms["nom_" .. lemma_num .. "_f"]
@@ -510,108 +516,6 @@ pos_functions["adjectives-new"] = function(class, args, data, infl_classes, appe
 	end
 
 	table.insert(infl_classes, decldata.title)
-end
-
-pos_functions["adjectives-m-f-n"] = function(class, args, data, infl_classes, appendix)
-	params = {
-		[1] = {alias_of = 'head'},
-		[2] = {alias_of = 'f'},
-		[3] = {alias_of = 'n'},
-		["head"] = {list = true, required = true},
-		["f"] = {list = true, required = true},
-		["n"] = {list = true, required = true},
-		["comp"] = {list = true},
-		["sup"] = {list = true},
-		["id"] = {},
-	}
-	local args = require("Module:parameters").process(args, params)
-	data.heads = args.head
-	data.id = args.id
-	
-	args.f.label = "feminine"
-	args.n.label = "neuter"
-	
-	table.insert(data.inflections, args.f)
-	table.insert(data.inflections, args.n)
-	if #args.comp > 0 then
-		args.comp.label = "comparative"
-		table.insert(data.inflections, args.comp)
-	end
-	if #args.sup > 0 then
-		args.sup.label = "superlative"
-		table.insert(data.inflections, args.sup)
-	end
-	
-	if class == "1&2" then
-		table.insert(infl_classes, "[[Appendix:Latin first declension|first]]")
-		table.insert(infl_classes, "[[Appendix:Latin second declension|second declension]]")
-	elseif class == "3-3E" then
-		table.insert(infl_classes, "[[Appendix:Latin third declension|third declension]]")
-	end
-end
-
-pos_functions["adjectives-mfn-gen"] = function(class, args, data, infl_classes, appendix)
-	params = {
-		[1] = {alias_of = 'head'},
-		[2] = {alias_of = 'gen'},
-		["head"] = {list = true, required = true},
-		["gen"] = {list = true, required = true},
-		["comp"] = {list = true},
-		["sup"] = {list = true},
-		["id"] = {},
-	}
-	local args = require("Module:parameters").process(args, params)
-	data.heads = args.head
-	data.id = args.id
-	
-	args.gen.label = "genitive"
-	
-	table.insert(data.inflections, args.gen)
-	
-	if #args.comp > 0 then
-		args.comp.label = "comparative"
-		table.insert(data.inflections, args.comp)
-	end
-	if #args.sup > 0 then
-		args.sup.label = "superlative"
-		table.insert(data.inflections, args.sup)
-	end
-	
-	if class == "3-1E" then
-		table.insert(infl_classes, "[[Appendix:Latin third declension|third declension]]")
-	end
-end
-
-pos_functions["adjectives-mf-n"] = function(class, args, data, infl_classes, appendix)
-	params = {
-		[1] = {alias_of = 'head'},
-		[2] = {alias_of = 'n'},
-		["head"] = {list = true, required = true},
-		["n"] = {list = true, required = true},
-		["comp"] = {list = true},
-		["sup"] = {list = true},
-		["id"] = {},
-	}
-	local args = require("Module:parameters").process(args, params)
-	data.heads = args.head
-	data.id = args.id
-	
-	args.n.label = "neuter"
-	
-	table.insert(data.inflections, args.n)
-	
-	if #args.comp > 0 then
-		args.comp.label = "comparative"
-		table.insert(data.inflections, args.comp)
-	end
-	if #args.sup > 0 then
-		args.sup.label = "superlative"
-		table.insert(data.inflections, args.sup)
-	end
-	
-	if class == "3-2E" then
-		table.insert(infl_classes, "[[Appendix:Latin third declension|third declension]]")
-	end
 end
 
 pos_functions["adjectives-comp"] = function(class, args, data, infl_classes, appendix)
