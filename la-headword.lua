@@ -298,7 +298,7 @@ function export.split_verb_subtype(subtype)
 end
 
 pos_functions["verbs"] = function(class, args, data, infl_classes, appendix)
-	if args[1] and (rfind(args[1], "^[0-9]%+?$") or rfind(args[1], "^[0-9]%+?%.")) then
+	if args[1] and (rfind(args[1], "^[0-9]%+*$") or rfind(args[1], "^[0-9]%+*%.")) then
 		return pos_functions["verbs-new"](class, args, data, infl_classes, appendix)
 	end
 
