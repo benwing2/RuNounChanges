@@ -110,7 +110,7 @@ def process_page(page, index, parsed):
       continue
 
     orig_la_verb_template = unicode(la_verb_template)
-    if re.search(r"^[0-9]\+*(\..*)?$", getparam(la_verb_template, "1")):
+    if re.search(r"^(irreg|[0-9]\+*)(\..*)?$", getparam(la_verb_template, "1")):
       pagemsg("Found new-style verb headword template, skipping: %s" %
         orig_la_verb_template)
       continue
@@ -123,13 +123,15 @@ def process_page(page, index, parsed):
     conj_subtype = verb_props.get("conj_subtype", None)
 
     def compare_headword_conj_forms(id_slot, headword_forms, conj_slots,
-        adjust_for_missing_perf_forms=False):
+        adjust_for_missing_perf_forms=False, remove_conj_links=False):
       conj_forms = ""
       for slot in conj_slots:
         if slot in verb_props:
           conj_forms = verb_props[slot]
           break
       conj_forms = safe_split(conj_forms, ",")
+      if remove_conj_links:
+        conj_forms = [blib.remove_links(x) for x in conj_forms]
       corrected_headword_forms = [lengthen_ns_nf(x) for x in headword_forms]
       corrected_conj_forms = [lengthen_ns_nf(x) for x in conj_forms]
       if adjust_for_missing_perf_forms:
@@ -163,6 +165,12 @@ def process_page(page, index, parsed):
     inf = blib.fetch_param_chain(la_verb_template, ["2", "inf", "inf1"], "inf")
     perf = blib.fetch_param_chain(la_verb_template, ["3", "perf", "perf1"], "perf")
     sup = blib.fetch_param_chain(la_verb_template, ["4", "sup", "sup1"], "sup")
+    # Hack to handle cases like abeō where the headword normally lists perfect
+    # abiī but the conj lists abiī, abīvī.
+    if verb_conj == "irreg" and len(lemma) > 0 and lemma[0].endswith(u"eō"):
+      ivi = re.sub(u"eō$", u"īvī", lemma[0])
+      if ivi not in perf:
+        perf.append(ivi)
     if not compare_headword_conj_forms("lemma", lemma, ["1s_pres_actv_indc", "3s_pres_actv_indc", "1s_perf_actv_indc", "3s_perf_actv_indc"]):
       continue
     if "depon" in subtypes or "semidepon" in subtypes:
@@ -173,7 +181,11 @@ def process_page(page, index, parsed):
       sup = [re.sub("[sm] (sum|est)$", "m", x) for x in perf]
     else:
       if not compare_headword_conj_forms("perfect", perf, ["1s_perf_actv_indc", "3s_perf_actv_indc"],
-          adjust_for_missing_perf_forms=True):
+          adjust_for_missing_perf_forms=True,
+          # Remove links from perfect to handle cases like adsoleō where the
+          # perfect is adsoluī,[[adsolitus]] [[sum]] and the headword says
+          # adsoluī,adsolitus sum.
+          remove_conj_links=True):
         continue
     if len(sup) > 0 and sup[0].endswith(u"ūrus"):
       if not compare_headword_conj_forms("future participle", sup, ["futr_actv_ptc"]):
@@ -225,7 +237,7 @@ def process_page(page, index, parsed):
     pattern = pattern.replace("short-imp", "shortimp")
     pattern = pattern.replace("sup-futr-actv-only", "supfutractvonly")
     pattern = safe_split(pattern, "-")
-    pattern = [x for x in pattern if x not in ["noperf", "nosup", "irreg", "def", "facio"]]
+    pattern = [x for x in pattern if x not in ["noperf", "nosup", "irreg", "def", "facio", "shortimp"]]
     subtypes = [x for x in subtypes if x not in ["I", "noperf", "nosup"]]
     if set(pattern) != set(subtypes):
       if set(subtypes) >= set(pattern) and (
