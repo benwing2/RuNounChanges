@@ -378,6 +378,9 @@ def la_adj_3rd_part_subtype(stem1, stem2, decl, types, num, g, is_adj, pagetitle
 def la_adj_irreg_subtype(stem1, stem2, decl, types, num, g, is_adj, pagetitle, pagemsg):
   if num == "pl":
     types = types + ["pl"]
+  if stem1 == "qui":
+    stem1 = u"quī"
+  # duo, ambō converted by hand
   return stem1, stem2, decl, types
 
 la_adj_decl_suffix_to_decltype = {
