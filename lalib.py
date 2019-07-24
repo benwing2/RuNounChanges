@@ -722,7 +722,8 @@ def infer_adv_stem(adv):
       return adv[:-len(suffix)] + newsuff
   return adv
 
-def generate_adj_forms(template, errandpagemsg, expand_text, return_raw=False):
+def generate_adj_forms(template, errandpagemsg, expand_text, return_raw=False,
+    include_linked=False):
 
   def generate_adj_forms_prefix(m):
     decl_suffix_to_decltype = {
@@ -758,6 +759,8 @@ def generate_adj_forms(template, errandpagemsg, expand_text, return_raw=False):
     errandpagemsg("WARNING: Error generating forms, skipping")
     return None
   args = blib.split_generate_args(result)
+  if not include_linked:
+    args = {k: v for k, v in args.iteritems() if not k.startswith("linked_")}
   # Add missing feminine forms if needed
   augmented_args = {}
   for key, form in args.iteritems():
@@ -768,7 +771,8 @@ def generate_adj_forms(template, errandpagemsg, expand_text, return_raw=False):
         augmented_args[equiv_fem] = form
   return augmented_args
 
-def generate_noun_forms(template, errandpagemsg, expand_text, return_raw=False):
+def generate_noun_forms(template, errandpagemsg, expand_text, return_raw=False,
+  include_linked=False):
 
   def generate_noun_forms_prefix(m):
     if m.group(1) in la_noun_decl_suffix_to_decltype:
@@ -805,16 +809,19 @@ def generate_noun_forms(template, errandpagemsg, expand_text, return_raw=False):
   if not result:
     errandpagemsg("WARNING: Error generating forms, skipping")
     return None
-  return blib.split_generate_args(result)
+  args = blib.split_generate_args(result)
+  if not include_linked:
+    args = {k: v for k, v in args.iteritems() if not k.startswith("linked_")}
+  return args
 
 def generate_verb_forms(template, errandpagemsg, expand_text, return_raw=False,
-    include_props=False):
+    include_linked=False, include_props=False):
   if template.startswith("{{la-conj|"):
     if include_props:
-      generate_template = re.sub(r"^\{\{la-conj\|", "la-generate-verb-props|",
+      generate_template = re.sub(r"^\{\{la-conj\|", "{{la-generate-verb-props|",
           template)
     else:
-      generate_template = re.sub(r"^\{\{la-conj\|", "la-generate-verb-forms|",
+      generate_template = re.sub(r"^\{\{la-conj\|", "{{la-generate-verb-forms|",
           template)
   elif template.startswith("{{la-conj-3rd-IO|"):
     generate_template = re.sub(r"^\{\{la-conj-3rd-IO\|", "{{la-generate-verb-forms|conjtype=3rd-io|", template)
@@ -829,15 +836,22 @@ def generate_verb_forms(template, errandpagemsg, expand_text, return_raw=False,
   if not result:
     errandpagemsg("WARNING: Error generating forms, skipping")
     return None
-  return blib.split_generate_args(result)
+  args = blib.split_generate_args(result)
+  if not include_linked:
+    args = {k: v for k, v in args.iteritems() if not k.startswith("linked_")}
+  return args
 
-def generate_infl_forms(pos, template, errandpagemsg, expand_text, return_raw=False, include_props=False):
+def generate_infl_forms(pos, template, errandpagemsg, expand_text,
+    return_raw=False, include_linked=False, include_props=False):
   if pos == 'noun':
-    return generate_noun_forms(template, errandpagemsg, expand_text, return_raw)
+    return generate_noun_forms(template, errandpagemsg, expand_text, return_raw,
+        include_linked)
   elif pos == 'verb':
-    return generate_verb_forms(template, errandpagemsg, expand_text, return_raw, include_props)
+    return generate_verb_forms(template, errandpagemsg, expand_text, return_raw,
+        include_linked, include_props)
   elif pos in ['adj', 'nounadj', 'part']:
-    return generate_adj_forms(template, errandpagemsg, expand_text, return_raw)
+    return generate_adj_forms(template, errandpagemsg, expand_text, return_raw,
+        include_linked)
   else:
     errandpagemsg("WARNING: Bad pos=%s, expected noun/verb/adj")
     return None
