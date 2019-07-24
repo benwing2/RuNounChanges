@@ -122,16 +122,26 @@ def process_page(page, index, parsed):
     conj_type = verb_props["conj_type"]
     conj_subtype = verb_props.get("conj_subtype", None)
 
-    def compare_headword_conj_forms(id_slot, headword_forms, conj_slots):
+    def compare_headword_conj_forms(id_slot, headword_forms, conj_slots,
+        adjust_for_missing_perf_forms=False):
       conj_forms = ""
       for slot in conj_slots:
         if slot in verb_props:
           conj_forms = verb_props[slot]
           break
       conj_forms = safe_split(conj_forms, ",")
-      corrected_headword_forms = set(lengthen_ns_nf(x) for x in headword_forms)
-      corrected_conj_forms = set(lengthen_ns_nf(x) for x in conj_forms)
-      if corrected_headword_forms != corrected_conj_forms:
+      corrected_headword_forms = [lengthen_ns_nf(x) for x in headword_forms]
+      corrected_conj_forms = [lengthen_ns_nf(x) for x in conj_forms]
+      if adjust_for_missing_perf_forms:
+        # There are several instances of 4++ verbs where only the -īvī variant,
+        # not the -iī variant, is listed in the headword. Don't get tripped up
+        # by that.
+        ivi_conj_forms = [x for x in corrected_conj_forms if x.endswith(u"īvī")]
+        for ivi_conj_form in ivi_conj_forms:
+          ii_conj_form = re.sub(u"īvī$", u"iī", ivi_conj_form)
+          if ii_conj_form in corrected_conj_forms and ii_conj_form not in corrected_headword_forms:
+            corrected_headword_forms.append(ii_conj_form)
+      if set(corrected_headword_forms) != set(corrected_conj_forms):
         macronless_headword_forms = set(lalib.remove_macrons(x) for x in corrected_headword_forms)
         macronless_conj_forms = set(lalib.remove_macrons(x) for x in corrected_conj_forms)
         if macronless_headword_forms == macronless_conj_forms:
@@ -162,7 +172,8 @@ def process_page(page, index, parsed):
         continue
       sup = [re.sub("[sm] (sum|est)$", "m", x) for x in perf]
     else:
-      if not compare_headword_conj_forms("perfect", perf, ["1s_perf_actv_indc", "3s_perf_actv_indc"]):
+      if not compare_headword_conj_forms("perfect", perf, ["1s_perf_actv_indc", "3s_perf_actv_indc"],
+          adjust_for_missing_perf_forms=True):
         continue
     if len(sup) > 0 and sup[0].endswith(u"ūrus"):
       if not compare_headword_conj_forms("future participle", sup, ["futr_actv_ptc"]):
