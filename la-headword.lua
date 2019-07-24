@@ -298,7 +298,10 @@ function export.split_verb_subtype(subtype)
 end
 
 pos_functions["verbs"] = function(class, args, data, infl_classes, appendix)
-	if args[1] and (rfind(args[1], "^[0-9]%+*$") or rfind(args[1], "^[0-9]%+*%.")) then
+	if args[1] and (
+		rfind(args[1], "^[0-9]%+*$") or rfind(args[1], "^[0-9]%+*%.") or
+		rfind(args[1], "^irreg$") or rfind(args[1], "^irreg%.")
+	) then
 		return pos_functions["verbs-new"](class, args, data, infl_classes, appendix)
 	end
 
@@ -465,7 +468,7 @@ pos_functions["verbs"] = function(class, args, data, infl_classes, appendix)
 end
 
 pos_functions["verbs-new"] = function(class, args, data, infl_classes, appendix)
-	local m_la_verb = require("Module:la-verb")
+	local m_la_verb = require("Module:User:Benwing2/la-verb")
 	local conjdata, typeinfo = m_la_verb.make_data(args, true)
 	local lemma_forms = conjdata.overriding_lemma
 	if not lemma_forms or #lemma_forms == 0 then
@@ -536,7 +539,7 @@ pos_functions["verbs-new"] = function(class, args, data, infl_classes, appendix)
 		if #sup > 0 then
 			insert_inflection(sup, "supine")
 		else
-			local fap = m_la_verb.get_valid_forms(conjfdata.forms["futr_actv_ptc"])
+			local fap = m_la_verb.get_valid_forms(conjdata.forms["futr_actv_ptc"])
 			if #fap > 0 then
 				insert_inflection(fap, "future participle")
 			end
