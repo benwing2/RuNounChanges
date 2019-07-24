@@ -17,6 +17,8 @@ the old [[Module:la-decl-multi]] by KC Kenny Lau.
 -- (DONE) Handle loc in adjectives
 -- Error on bad subtypes
 -- Make sure Google Books link still works.
+-- (DONE) Make sure .sufn triggers insertion of 'with m -> n in compounds' in title.
+-- (DONE) Make sure title returned to la-adj lowercases the first letter even with a custom title.
 
 --[=[
 
@@ -186,6 +188,40 @@ local function process_noun_forms_and_overrides(data, args)
 		table.insert(data.categories, "Latin singularia tantum")
 	end
 
+	-- Process overrides and canonicalize forms.
+	for slot in iter_noun_slots() do
+		local val = nil
+		if args[slot] then
+			val = args[slot]
+			data.user_specified[slot] = true
+		elseif slot == "linked_nom_sg" and args["nom_sg"] then
+			-- Overridding nom_sg should override linked_nom_sg so that
+			-- the correct value gets displayed in the headword, which uses
+			-- linked_nom_sg.
+			val = args["nom_sg"]
+		elseif slot == "linked_nom_pl" and args["nom_pl"] then
+			-- Likewise for linked_nom_pl, in the case of plural-only
+			-- nouns.
+			val = args["nom_pl"]
+		else
+			val = data.forms[slot]
+		end
+		if val then
+			if type(val) == "string" then
+				val = mw.text.split(val, "/")
+			end
+			if (data.num == "pl" and slot:find("sg")) or (data.num == "sg" and slot:find("pl")) then
+				data.forms[slot] = ""
+			elseif val[1] == "" or val[1] == "-" or val[1] == "—" then
+				data.forms[slot] = "—"
+			else
+				data.forms[slot] = val
+			end
+		end
+	end
+
+	-- Compute the lemma for accelerators. Do this after processing
+	-- overrides in case we overrode the lemma form(s).
 	local accel_lemma
 	if data.num and data.num ~= "" then
 		accel_lemma = data.forms["nom_" .. data.num]
@@ -196,39 +232,23 @@ local function process_noun_forms_and_overrides(data, args)
 		accel_lemma = accel_lemma[1]
 	end
 
+	-- Set the accelerators, and determine if there are red links.
 	for slot in iter_noun_slots() do
-		if args[slot] or data.forms[slot] then
-			local val
-			if args[slot] then
-				val = args[slot]
-				data.user_specified[slot] = true
-			else
-				val = data.forms[slot]
-			end
-			if type(val) == "string" then
-				val = rsplit(val, "/")
-			end
-			if (data.num == "pl" and slot:find("sg")) or (data.num == "sg" and slot:find("pl")) then
-				data.forms[slot] = ""
-			elseif val[1] == "" or val[1] == "-" or val[1] == "—" then
-				data.forms[slot] = "—"
-			else
-				for i, form in ipairs(val) do
-					local accel_form = slot
-					accel_form = accel_form:gsub("_([sp])[gl]$", "|%1")
+		local val = data.forms[slot]
+		if val and val ~= "" and val ~= "—" and #val > 0 then
+			for i, form in ipairs(val) do
+				local accel_form = slot
+				accel_form = accel_form:gsub("_([sp])[gl]$", "|%1")
 
-					data.accel[slot .. i] = {form = accel_form, lemma = accel_lemma}
-					val[i] = form
-					if not redlink and NAMESPACE == '' then
-						local title = lang:makeEntryName(form)
-						local t = mw.title.new(title)
-						if t and not t.exists then
-							table.insert(data.categories, 'Latin nouns with red links in their declension tables')
-							redlink = true
-						end
+				data.accel[slot .. i] = {form = accel_form, lemma = accel_lemma}
+				if not redlink and NAMESPACE == '' then
+					local title = lang:makeEntryName(form)
+					local t = mw.title.new(title)
+					if t and not t.exists then
+						table.insert(data.categories, 'Latin nouns with red links in their declension tables')
+						redlink = true
 					end
 				end
-				data.forms[slot] = val
 			end
 		end
 	end
@@ -240,6 +260,44 @@ local function process_adj_forms_and_overrides(data, args)
 		table.insert(data.categories, "Latin plural-only adjectives")
 	end
 
+	-- Process overrides and canonicalize forms.
+	for slot in iter_adj_slots() do
+		-- If noneut=1 passed, clear out all neuter forms.
+		if data.noneut and slot:find("_n") then
+			data.forms[slot] = nil
+		end
+		local val = nil
+		if args[slot] then
+			val = args[slot]
+			data.user_specified[slot] = true
+		elseif slot == "linked_nom_sg_m" and args["nom_sg_m"] then
+			-- Overridding nom_sg_m should override linked_nom_sg_m so that
+			-- the correct value gets displayed in the headword, which uses
+			-- linked_nom_sg_m.
+			val = args["nom_sg_m"]
+		elseif slot == "linked_nom_pl_m" and args["nom_pl_m"] then
+			-- Likewise for linked_nom_pl_m, in the case of plural-only
+			-- adjectives.
+			val = args["nom_pl_m"]
+		else
+			val = data.forms[slot]
+		end
+		if val then
+			if type(val) == "string" then
+				val = mw.text.split(val, "/")
+			end
+			if (data.num == "pl" and slot:find("sg")) or (data.num == "sg" and slot:find("pl")) then
+				data.forms[slot] = ""
+			elseif val[1] == "" or val[1] == "-" or val[1] == "—" then
+				data.forms[slot] = "—"
+			else
+				data.forms[slot] = val
+			end
+		end
+	end
+
+	-- Compute the lemma for accelerators. Do this after processing
+	-- overrides in case we overrode the lemma form(s).
 	local accel_lemma, accel_lemma_f
 	if data.num and data.num ~= "" then
 		accel_lemma = data.forms["nom_" .. data.num .. "_m"]
@@ -255,66 +313,47 @@ local function process_adj_forms_and_overrides(data, args)
 		accel_lemma_f = accel_lemma_f[1]
 	end
 
+	-- Set the accelerators, and determine if there are red links.
 	for slot in iter_adj_slots() do
-		-- If noneut=1 passed, clear out all neuter forms.
-		if data.noneut and slot:find("_n") then
-			data.forms[slot] = nil
-		end
-		if args[slot] or data.forms[slot] then
-			if args[slot] then
-				val = args[slot]
-				data.user_specified[slot] = true
-			else
-				val = data.forms[slot]
-			end
-			if type(val) == "string" then
-				val = mw.text.split(val, "/")
-			end
-			if (data.num == "pl" and slot:find("sg")) or (data.num == "sg" and slot:find("pl")) then
-				data.forms[slot] = ""
-			elseif val[1] == "" or val == "" or val[1] == "-" or val[1] == "—" or val == "-" or val == "—" then
-				data.forms[slot] = "—"
-			else
-				for i, form in ipairs(val) do
-					local accel_form = slot
-					accel_form = accel_form:gsub("_([sp])[gl]_", "|%1|")
+		local val = data.forms[slot]
+		if val and val ~= "" and val ~= "—" and #val > 0 then
+			for i, form in ipairs(val) do
+				local accel_form = slot
+				accel_form = accel_form:gsub("_([sp])[gl]_", "|%1|")
 
-					if data.noneut then
-						-- If noneut=1, we're being asked to do a noun like
-						-- Aquītānus or Rōmānus that has masculine and feminine
-						-- variants, not an adjective. In that case, make the
-						-- accelerators correspond to nominal case/number forms
-						-- without the gender, and use the feminine as the
-						-- lemma for feminine forms.
-						if slot:find("_f") then
-							data.accel[slot .. i] = {form = accel_form:gsub("|f$", ""), lemma = accel_lemma_f}
-						else
-							data.accel[slot .. i] = {form = accel_form:gsub("|m$", ""), lemma = accel_lemma}
-						end
+				if data.noneut then
+					-- If noneut=1, we're being asked to do a noun like
+					-- Aquītānus or Rōmānus that has masculine and feminine
+					-- variants, not an adjective. In that case, make the
+					-- accelerators correspond to nominal case/number forms
+					-- without the gender, and use the feminine as the
+					-- lemma for feminine forms.
+					if slot:find("_f") then
+						data.accel[slot .. i] = {form = accel_form:gsub("|f$", ""), lemma = accel_lemma_f}
 					else
-						if not data.forms.nom_sg_n and not data.forms.nom_pl_n then
-							-- use multipart tags if called for
-							accel_form = accel_form:gsub("|m$", "|m//f//n")
-						elseif not data.forms.nom_sg_f and not data.forms.nom_pl_f then
-							accel_form = accel_form:gsub("|m$", "|m//f")
-						end
-
-						-- use the order nom|m|s, which is more standard than nom|s|m
-						accel_form = accel_form:gsub("|(.-)|(.-)$", "|%2|%1")
-
-						data.accel[slot .. i] = {form = accel_form, lemma = accel_lemma}
+						data.accel[slot .. i] = {form = accel_form:gsub("|m$", ""), lemma = accel_lemma}
 					end
-					val[i] = form
-					if not redlink and NAMESPACE == '' then
-						local title = lang:makeEntryName(form)
-						local t = mw.title.new(title)
-						if t and not t.exists then
-							table.insert(data.categories, 'Latin adjectives with red links in their declension tables')
-							redlink = true
-						end
+				else
+					if not data.forms.nom_sg_n and not data.forms.nom_pl_n then
+						-- use multipart tags if called for
+						accel_form = accel_form:gsub("|m$", "|m//f//n")
+					elseif not data.forms.nom_sg_f and not data.forms.nom_pl_f then
+						accel_form = accel_form:gsub("|m$", "|m//f")
+					end
+
+					-- use the order nom|m|s, which is more standard than nom|s|m
+					accel_form = accel_form:gsub("|(.-)|(.-)$", "|%2|%1")
+
+					data.accel[slot .. i] = {form = accel_form, lemma = accel_lemma}
+				end
+				if not redlink and NAMESPACE == '' then
+					local title = lang:makeEntryName(form)
+					local t = mw.title.new(title)
+					if t and not t.exists then
+						table.insert(data.categories, 'Latin adjectives with red links in their declension tables')
+						redlink = true
 					end
 				end
-				data.forms[slot] = val
 			end
 		end
 	end
@@ -1631,27 +1670,27 @@ end
 
 local function construct_title(args_title, declensions_title, from_headword)
 	if args_title then
-		declensions_title = "^" .. args_title
 		declensions_title = rsub(declensions_title, "<1>", "[[Appendix:Latin first declension|first declension]]")
 		declensions_title = rsub(declensions_title, "<1&2>", "[[Appendix:Latin first declension|first]]/[[Appendix:Latin second declension|second declension]]")
 		declensions_title = rsub(declensions_title, "<2>", "[[Appendix:Latin second declension|second declension]]")
 		declensions_title = rsub(declensions_title, "<3>", "[[Appendix:Latin third declension|third declension]]")
 		declensions_title = rsub(declensions_title, "<4>", "[[Appendix:Latin fourth declension|fourth declension]]")
 		declensions_title = rsub(declensions_title, "<5>", "[[Appendix:Latin fifth declension|fifth declension]]")
-		declensions_title = rsub(declensions_title, "%^(%[%[[^|%]]+|)(.)([^|%]]+%]%])", function(a, b, c)
-			return a .. uupper(b) .. c
-		end)
-		declensions_title = rsub(declensions_title, "%^%[%[(.)([^|%]]+)%]%]", function(a, b, c)
-			return "[[" .. a .. b .. "|" .. uupper(a) .. b .. "]]"
-		end)
-		declensions_title = rsub(declensions_title, "%^(.)", uupper)
+		if from_headword then
+			declensions_title = m_string_utilities.lcfirst(rsub(declensions_title, "%.$", ""))
+		else
+			declensions_title = m_string_utilities.ucfirst(declensions_title)
+		end
 	elseif from_headword then
 		local normalized_titles = {}
 		-- Remove final period and lowercase the first letter, so we can
 		-- join them together with "and".
 		-- FIXME: Should we join three or more as "foo, bar and baz"?
 		for _, title in ipairs(declensions_title) do
-			table.insert(normalized_titles, m_string_utilities.lcfirst(rsub(title, "%.$", "")))
+			local normalized_title = m_string_utilities.lcfirst(rsub(title, "%.$", ""))
+			if normalized_title ~= "" then
+				table.insert(normalized_titles, normalized_title)
+			end
 		end
 		declensions_title = table.concat(normalized_titles, " and ")
 	else
@@ -1731,6 +1770,7 @@ function export.do_generate_adj_forms(parent_args, from_headword)
 		params.comp = {list = true}
 		params.sup = {list = true}
 		params.id = {}
+		params.pos = {}
 	end
 
 	local args = m_para.process(parent_args, params)
@@ -1792,7 +1832,8 @@ function export.do_generate_adj_forms(parent_args, from_headword)
 		lemma = args.lemma,
 		comp = args.comp,
 		sup = args.sup,
-		id = args.id
+		id = args.id,
+		pos = args.pos,
 	}
 
 	for slot in iter_adj_slots() do
