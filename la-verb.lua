@@ -77,11 +77,12 @@ local function cfind(str, text)
 end
 
 local function initialize_slots()
-	local all_slots = {}
+	local generic_slots = {}
 	local non_generic_slots = {}
 	local function handle_slot(slot, generic)
-		table.insert(all_slots, slot)
-		if not generic then
+		if generic then
+			table.insert(generic_slots, slot)
+		else
 			table.insert(non_generic_slots, slot)
 		end
 	end
@@ -111,10 +112,10 @@ local function initialize_slots()
 	for _, n in ipairs({"ger_nom", "ger_gen", "ger_dat", "ger_acc", "sup_acc", "sup_abl"}) do
 		handle_slot(n, false)
 	end
-	return all_slots, non_generic_slots
+	return non_generic_slots, generic_slots
 end
 
-local all_slots, non_generic_slots = initialize_slots()
+local non_generic_slots, generic_slots = initialize_slots()
 
 local potential_lemma_slots = {
 	"1s_pres_actv_indc", -- regular
@@ -122,6 +123,51 @@ local potential_lemma_slots = {
 	"1s_perf_actv_indc", -- coepī
 	"3s_perf_actv_indc", -- doesn't occur?
 }
+
+-- Iterate over all the "slots" associated with a verb declension, where a slot
+-- is e.g. 1s_pres_actv_indc (a non-generic slot), pres_actv_indc (a generic slot),
+-- or linked_1s_pres_actv_indc (a linked slot). Only include the generic and/or linked
+-- slots if called for.
+local function iter_slots(include_generic, include_linked)
+	-- stage == 1: non-generic slots
+	-- stage == 2: generic slots
+	-- stage == 3: linked slots
+	local stage = 1
+	local slotnum = 0
+	local max_slotnum = #non_generic_slots
+	local function iter()
+		slotnum = slotnum + 1
+		if slotnum > max_slotnum then
+			slotnum = 1
+			stage = stage + 1
+			if stage == 2 then
+				if include_generic then
+					max_slotnum = #generic_slots
+				else
+					stage = stage + 1
+				end
+			end
+			if stage == 3 then
+				if include_linked then
+					max_slotnum = #potential_lemma_slots
+				else
+					stage = stage + 1
+				end
+			end
+			if stage > 3 then
+				return nil
+			end
+		end
+		if stage == 1 then
+			return non_generic_slots[slotnum]
+		elseif stage == 2 then
+			return generic_slots[slotnum]
+		else then
+			return "linked_" .. potential_lemma_slots[slotnum]
+		end
+	end
+	return iter
+end
 
 local function ine(val)
 	if val == "" then
@@ -526,6 +572,46 @@ function export.generate_forms(frame)
 	return concat_forms(data, typeinfo, include_props)
 end
 
+-- Add prefixes and suffixes to non-generic slots. The generic slots (e.g.
+-- perf_pasv_indc, whose text indicates to use the past passive participle +
+-- the present active indicative of [[sum]]), handle prefixes and suffixes
+-- themselves in make_perfect_passive().
+local function add_prefix_suffix(data, typeinfo)
+	if not data.prefix and not data.suffix then
+		return
+	end
+	local prefix_no_links = m_links.remove_links(data.prefix or "")
+	local suffix_no_links = m_links.remove_links(data.suffix or "")
+	for slot in iter_slots(false, true) do
+		local forms = data.forms[slot]
+		local affixed_forms = {}
+		if forms then
+			if type(forms) ~= "table" then
+				forms = {forms}
+			end
+			for _, form in ipairs(forms) do
+				if form == "-" or form == "—" or form == "&mdash;" then
+					table.insert(affixed_forms, form)
+				elseif slot:find("^linked") then
+					-- If we're dealing with a linked slot, include the original links
+					-- in the prefix/suffix and also add a link around the form itself
+					-- if links aren't already present. (Note, above we early-exited
+					-- if there was no prefix and no suffix.)
+					if not form:find("[%[%]]") then
+						form = "[[" .. form .. "]]"
+					end
+					table.insert(affixed_forms, (data.prefix or "") .. form .. (data.suffix or ""))
+				else
+					-- If not dealing with a linked slot, use the non-linking versions
+					-- of the prefix and suffix.
+					table.insert(affixed_forms, prefix_no_links .. form .. suffix_no_links)
+				end
+			end
+		end
+		data.forms[slot] = affixed_forms
+	end
+end
+
 local function set_linked_forms(data, typeinfo)
 	-- Generate linked variants of slots that may be the lemma.
 	-- If the form is the same as the lemma (with links removed),
@@ -555,10 +641,12 @@ function export.make_data(parent_args, from_headword)
 		[2] = {required = true, default = "amō"},
 		[3] = {},
 		[4] = {},
+		prefix = {},
+		suffix = {},
 		-- examined directly in export.show()
 		search = {},
 	}
-	for _, slot in ipairs(all_slots) do
+	for slot in iter_slots(true, false) do
 		params[slot] = {}
 	end
 
@@ -592,6 +680,28 @@ function export.make_data(parent_args, from_headword)
 		subtypes = subtypes,
 	}
 
+	if args.prefix then
+		local no_space_prefix = rmatch(args.prefix, "(.*)_$")
+		if no_space_prefix then
+			data.prefix = no_space_prefix
+		elseif rfind(args.prefix, "%-$") then
+			data.prefix = args.prefix
+		else
+			data.prefix = args.prefix .. " "
+		end
+	end
+
+	if args.suffix then
+		local no_space_suffix = rmatch(args.suffix, "^_(.*)$")
+		if no_space_suffix then
+			data.suffix = no_space_suffix
+		elseif rfind(args.suffix, "^%-") then
+			data.suffix = args.suffix
+		else
+			data.suffix = " " .. args.suffix
+		end
+	end
+
 	-- Generate the verb forms
 	conjugations[conj_type](args, data, typeinfo)
 
@@ -603,6 +713,9 @@ function export.make_data(parent_args, from_headword)
 
 	-- Set linked_* forms
 	set_linked_forms(data, typeinfo)
+
+	-- Prepend any prefixes, append any suffixes
+	add_prefix_suffix(data)
 
 	-- Check if the links to the verb forms exist
 	checkexist(data)
@@ -709,11 +822,20 @@ local function make_perfect_passive(data)
 	local ppplink = table.concat(ppplinks, " or ")
 	local sumlink = make_link({lang = lang, term = "sum"}, "term")
 
-	data.forms["perf_pasv_indc"] = ppplink .. " + present active indicative of " .. sumlink
-	data.forms["futp_pasv_indc"] = ppplink .. " + future active indicative of " .. sumlink
-	data.forms["plup_pasv_indc"] = ppplink .. " + imperfect active indicative of " .. sumlink
-	data.forms["perf_pasv_subj"] = ppplink .. " + present active subjunctive of " .. sumlink
-	data.forms["plup_pasv_subj"] = ppplink .. " + imperfect active subjunctive of " .. sumlink
+	text_for_slot = {
+		perf_pasv_indc = "present active indicative",
+		futp_pasv_indc = "future active indicative",
+		plup_pasv_indc = "imperfect active indicative",
+		perf_pasv_subj = "present active subjunctive",
+		plup_pasv_subj = "imperfect active subjunctive"
+	}
+	local prefix_joiner = data.prefix and data.prefix:find(" $") and "+ " or ""
+	local suffix_joiner = data.suffix and data.suffix:find("^ ") and " +" or ""
+	for slot, text in pairs(text_for_slot) do
+		data.forms[slot] =
+			(data.prefix or "") .. prefix_joiner .. ppplink .. " + " ..
+			text .. " of " .. sumlink .. suffix_joiner .. (data.suffix or "")
+	end
 end
 
 postprocess = function(data, typeinfo)
@@ -2565,7 +2687,7 @@ parts_to_tags = {
 -- comma-separated links with accelerators in them.
 local function convert_forms_into_links(data)
 	local accel_lemma = data.actual_lemma[1]
-	for _, slot in ipairs(non_generic_slots) do
+	for slot in iter_slots(false, false) do
 		local slot_parts = rsplit(slot, "_")
 		local tags = {}
 		for _, part in ipairs(slot_parts) do
@@ -2947,7 +3069,7 @@ make_footnotes = function(data)
 end
 
 override = function(data, args)
-	for _, slot in ipairs(all_slots) do
+	for slot in iter_slots(true, false) do
 		if args[slot] then
 			data.forms[slot] = mw.text.split(args[slot], "/")
 		end
