@@ -5,7 +5,6 @@ local m_links = require("Module:links")
 local m_utilities = require("Module:utilities")
 
 NAMESPACE = NAMESPACE or mw.title.getCurrentTitle().nsText
-PAGENAME = PAGENAME or mw.title.getCurrentTitle().text
 
 decl["1&2"] = function(data, args)
 	local title = {}
@@ -18,7 +17,6 @@ decl["1&2"] = function(data, args)
 
 	local stem = args[1]
 	local original = nil
-	local er = data.types.er
 
 	if (not stem or stem == "") and not data.allow_empty then
 		if NAMESPACE ~= "" and NAMESPACE ~= "Appendix" then
@@ -28,11 +26,11 @@ decl["1&2"] = function(data, args)
 		end
 	end
 
-	if lang:makeEntryName(data.prefix .. stem .. data.suffix) == PAGENAME then
-		if mw.ustring.match(stem,"er$") then
+	if data.types.er then
+		if mw.ustring.match(stem, "er$") then
 			table.insert(title, "nominative masculine singular in ''-er''")
 			table.insert(data.categories, "Latin first and second declension adjectives with nominative masculine singular in -er")
-		elseif mw.ustring.match(stem,"ur$") then
+		elseif mw.ustring.match(stem, "ur$") then
 			table.insert(title, "nominative masculine singular in ''-ur''")
 			table.insert(data.categories, "Latin first and second declension adjectives with nominative masculine singular in -ur")
 		else
@@ -40,14 +38,6 @@ decl["1&2"] = function(data, args)
 		end
 		original = stem
 		stem = args[2] or stem
-		er = true
-	end
-
-	if mw.ustring.match(stem,"%(e%)r$") then
-		table.insert(title, "nominative masculine singular in ''-er''")
-		table.insert(data.categories, "Latin first and second declension adjectives with nominative masculine singular in -er")
-		original = mw.ustring.gsub(stem,"%(e%)r$","er")
-		stem = mw.ustring.gsub(stem,"%(e%)r$","r")
 	end
 
 	local us = "us"
@@ -142,11 +132,8 @@ decl["1&2"] = function(data, args)
 
 		data.forms["voc_sg_m"] = "mī"
 	end
-	if data.types.n then
+	if data.types.sufn then
 		table.insert(title, "with ''m'' → ''n'' in compounds")
-		for key,val in pairs(data.forms) do
-			data.forms[key] = mw.ustring.gsub(val,"m$","n")
-		end
 	end
 	if data.types.ic then
 		table.insert(title, "with genitive singular ending in ''-ius'' and dative singular ending in ''-ic''")
