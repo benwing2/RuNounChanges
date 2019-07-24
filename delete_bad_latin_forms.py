@@ -30,16 +30,12 @@ def delete_participle(index, lemma, formind, formval, pos, preserve_diaeresis, s
 
   if pos == "presactpart":
     expected_head_template = "la-present participle"
-    expected_decl_template = "la-decl-3rd-part"
   elif pos == "futactpart":
     expected_head_template = "la-future participle"
-    expected_decl_template = "la-decl-1&2"
   elif pos == "perfpasspart":
     expected_head_template = "la-perfect participle"
-    expected_decl_template = "la-decl-1&2"
   elif pos == "futpasspart":
     expected_head_template = "la-gerundive"
-    expected_decl_template = "la-decl-1&2"
   else:
     raise ValueError("Unrecognized part of speech %s" % pos)
 
@@ -72,7 +68,7 @@ def delete_participle(index, lemma, formind, formval, pos, preserve_diaeresis, s
           saw_wrong_lemma_in_etym = True
       elif tn == expected_head_template:
         saw_head = True
-      elif tn == expected_decl_template:
+      elif tn == "la-adecl":
         if not saw_head:
           pagemsg("WARNING: Saw inflection template without (or before) head template, skipping: %s" %
             unicode(t))
@@ -82,7 +78,7 @@ def delete_participle(index, lemma, formind, formval, pos, preserve_diaeresis, s
         else:
           infl_template = unicode(t)
       elif tn in ["rfdef", "R:L&S", "R:Elementary Lewis", "R:du Cange", "R:Gaffiot",
-          "alternative form of"]:
+          "R:NLW", "alternative form of", "la-IPA"]:
         pass
       else:
         pagemsg("WARNING: Saw unrecognized template in subsection #%s %s: %s" % (
