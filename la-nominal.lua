@@ -64,7 +64,7 @@ local PAGENAME = current_title.text
 
 local m_noun_decl = require("Module:la-noun/data")
 local m_noun_table = require("Module:la-noun/table")
-local m_adj_decl = require("Module:User:Benwing2/la-adj/data")
+local m_adj_decl = require("Module:la-adj/data")
 local m_adj_table = require("Module:la-adj/table")
 local m_la_utilities = require("Module:la-utilities")
 
@@ -1670,7 +1670,7 @@ end
 
 local function construct_title(args_title, declensions_title, from_headword)
 	if args_title then
-		declensions_title = rsub(declensions_title, "<1>", "[[Appendix:Latin first declension|first declension]]")
+		declensions_title = rsub(args_title, "<1>", "[[Appendix:Latin first declension|first declension]]")
 		declensions_title = rsub(declensions_title, "<1&2>", "[[Appendix:Latin first declension|first]]/[[Appendix:Latin second declension|second declension]]")
 		declensions_title = rsub(declensions_title, "<2>", "[[Appendix:Latin second declension|second declension]]")
 		declensions_title = rsub(declensions_title, "<3>", "[[Appendix:Latin third declension|third declension]]")
