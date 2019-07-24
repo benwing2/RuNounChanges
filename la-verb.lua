@@ -485,7 +485,7 @@ function export.show(frame)
 		return link_google_books(verb, flatten_values(data['forms']), domain) end
 end
 
-local function concat_forms(data, typeinfo)
+local function concat_forms(data, typeinfo, include_props)
 	local ins_text = {}
 	for key, val in pairs(data.forms) do
 		local ins_form = {}
@@ -495,7 +495,7 @@ local function concat_forms(data, typeinfo)
 		for _, v in ipairs(val) do
 			if v ~= "-" and v ~= "—" and v ~= "&mdash;" then
 				table.insert(ins_form,
-					rsub(v, rsub(v, rsub(v, "|", "<!>"), "=", "<->"), ",", "<.>")
+					rsub(rsub(rsub(v, "|", "<!>"), "=", "<->"), ",", "<.>")
 				)
 			end
 		end
@@ -523,7 +523,7 @@ function export.generate_forms(frame)
 	local include_props = frame.args["include_props"]
 	local parent_args = frame:getParent().args
 	local data, typeinfo = export.make_data(parent_args)
-	return concat_forms(data, typeinfo)
+	return concat_forms(data, typeinfo, include_props)
 end
 
 local function set_linked_forms(data, typeinfo)
