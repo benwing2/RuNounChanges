@@ -11,6 +11,7 @@ local m_para = require("Module:parameters")
 -- 1. (DONE) detect_decl_and_subtypes doesn't do anything with perf_stem or supine_stem.
 -- 2. (DONE) Should error on bad subtypes.
 -- 3. Make sure Google Books link still works.
+-- 4. (DONE) Add 4++ that has alternative perfects -īvī/-iī.
 --
 -- If enabled, compare this module with new version of module to make
 -- sure all conjugations are the same.
@@ -249,11 +250,12 @@ local function detect_decl_and_subtypes(args)
 	local lemma = args[2] or mw.title.getCurrentTitle().subpageText
 	lemma = rsub(lemma, "o$", "ō")
 	local base, conjtype, conj_subtype, detected_subtypes
-	local auto_perf_supine = false
-	local base_conj_arg = rmatch(conj_arg, "^([124])%+$")
+	local base_conj_arg, auto_perf_supine = rmatch(conj_arg, "^([124])(%+%+?)$")
 	if base_conj_arg then
+		if auto_perf_supine == "++" and base_conj_arg ~= "4" then
+			error("Conjugation types 1++ and 2++ not allowed")
+		end
 		conj_arg = base_conj_arg
-		auto_perf_supine = true
 	end
 	local auto_perf, auto_supine
 
@@ -309,7 +311,10 @@ local function detect_decl_and_subtypes(args)
 			{"it", {"impers"}},
 			{"ītur", {"depon", "impers"}},
 		})
-		if auto_perf_supine then
+		if auto_perf_supine == "++" then
+			auto_perf = base .. "īv/" .. base .. "i"
+			auto_supine = base .. "īt"
+		else
 			auto_perf = base .. "īv"
 			auto_supine = base .. "īt"
 		end
@@ -2849,7 +2854,7 @@ end
 override = function(data, args)
 	for _, slot in ipairs(all_slots) do
 		if args[slot] then
-			data.forms[slot] = show_form(mw.text.split(args[slot], "/"))
+			data.forms[slot] = mw.text.split(args[slot], "/")
 		end
 	end
 end
