@@ -77,16 +77,20 @@ local function cfind(str, text)
 end
 
 local function initialize_slots()
-	local slots = {}
-	local function handle_slot(slot)
-		table.insert(slots, slot)
+	local all_slots = {}
+	local non_generic_slots = {}
+	local function handle_slot(slot, generic)
+		table.insert(all_slots, slot)
+		if not generic then
+			table.insert(non_generic_slots, slot)
+		end
 	end
 	for _, v in ipairs({"actv", "pasv"}) do
 		local function handle_tense(t, mood)
 			local non_pers_slot = t .. "_" .. v .. "_" .. mood
-			handle_slot(non_pers_slot)
+			handle_slot(non_pers_slot, true)
 			for _, p in ipairs({"1s", "2s", "3s", "1p", "2p", "3p"}) do
-				handle_slot(p .. "_" .. non_pers_slot)
+				handle_slot(p .. "_" .. non_pers_slot, false)
 			end
 		end
 		for _, t in ipairs({"pres", "impf", "futr", "perf", "plup", "futp"}) do
@@ -101,16 +105,23 @@ local function initialize_slots()
 	end
 	for _, f in ipairs({"inf", "ptc"}) do
 		for _, t in ipairs({"pres_actv", "perf_actv", "futr_actv", "pres_pasv", "perf_pasv", "futr_pasv"}) do
-			handle_slot(t .. "_" .. f)
+			handle_slot(t .. "_" .. f, false)
 		end
 	end
 	for _, n in ipairs({"ger_nom", "ger_gen", "ger_dat", "ger_acc", "sup_acc", "sup_abl"}) do
-		handle_slot(n)
+		handle_slot(n, false)
 	end
-	return slots
+	return all_slots, non_generic_slots
 end
 
-local all_slots = initialize_slots()
+local all_slots, non_generic_slots = initialize_slots()
+
+local potential_lemma_slots = {
+	"1s_pres_actv_indc", -- regular
+	"3s_pres_actv_indc", -- impersonal
+	"1s_perf_actv_indc", -- coepī
+	"3s_perf_actv_indc", -- doesn't occur?
+}
 
 local function ine(val)
 	if val == "" then
@@ -514,6 +525,29 @@ function export.generate_forms(frame)
 	return concat_forms(data, typeinfo)
 end
 
+local function set_linked_forms(data, typeinfo)
+	-- Generate linked variants of slots that may be the lemma.
+	-- If the form is the same as the lemma (with links removed),
+	-- substitute the original lemma (with links included).
+	for _, slot in ipairs(potential_lemma_slots) do
+		local forms = data.forms[slot]
+		local linked_forms = {}
+		if forms then
+			if type(forms) ~= "table" then
+				forms = {forms}
+			end
+			for _, form in ipairs(forms) do
+				if form == typeinfo.lemma then
+					table.insert(linked_forms, typeinfo.orig_lemma)
+				else
+					table.insert(linked_forms, form)
+				end
+			end
+		end
+		data.forms["linked_" .. slot] = linked_forms
+	end
+end
+
 function export.make_data(parent_args, from_headword)
 	local params = {
 		[1] = {required = true, default = "1+"},
@@ -533,7 +567,8 @@ function export.make_data(parent_args, from_headword)
 	end
 
 	local args = m_para.process(parent_args, params)
-	local conj_type, conj_subtype, subtypes = detect_decl_and_subtypes(args)
+	local conj_type, conj_subtype, subtypes, orig_lemma, lemma =
+		detect_decl_and_subtypes(args)
 
 	if not conjugations[conj_type] then
 		error("Unknown conjugation type '" .. conj_type .. "'")
@@ -546,9 +581,11 @@ function export.make_data(parent_args, from_headword)
 		form_footnote_indices = {},
 		footnotes = {},
 		id = args.id,
-		lemma = args.lemma,
+		overriding_lemma = args.lemma,
 	}  --note: the addition of red superscripted footnotes ('<sup style="color: red">' ... </sup>) is only implemented for the three form printing loops in which it is used
 	local typeinfo = {
+		lemma = lemma,
+		orig_lemma = orig_lemma,
 		conj_type = conj_type,
 		conj_subtype = conj_subtype,
 		subtypes = subtypes,
@@ -562,6 +599,9 @@ function export.make_data(parent_args, from_headword)
 
 	-- Post-process the forms
 	postprocess(data, typeinfo)
+
+	-- Set linked_* forms
+	set_linked_forms(data, typeinfo)
 
 	-- Check if the links to the verb forms exist
 	checkexist(data)
@@ -2460,7 +2500,7 @@ end
 
 -- Functions for generating the inflection table
 
-local function show_form(form)
+local function show_form(form, accel)
 	if not form then
 		return "&mdash;"
 	end
@@ -2475,11 +2515,60 @@ local function show_form(form)
 		elseif reconstructed and not subform:find(NAMESPACE .. ":Latin/") then
 			form[key] = make_link({lang = lang, term = NAMESPACE .. ":Latin/" .. subform, alt = subform})
 		else
-			form[key] = make_link({lang = lang, term = subform})
+			form[key] = make_link({lang = lang, term = subform, accel = accel})
 		end
 	end
 
 	return table.concat(form, ", ")
+end
+
+parts_to_tags = {
+  ['1s'] = {'1', 's'},
+  ['2s'] = {'2', 's'},
+  ['3s'] = {'3', 's'},
+  ['1p'] = {'1', 'p'},
+  ['2p'] = {'2', 'p'},
+  ['3p'] = {'3', 'p'},
+  ['actv'] = {'act'},
+  ['pasv'] = {'pass'},
+  ['pres'] = {'pres'},
+  ['impf'] = {'impf'},
+  ['futr'] = {'fut'},
+  ['perf'] = {'perf'},
+  ['plup'] = {'plup'},
+  ['futp'] = {'fut', 'perf'},
+  ['indc'] = {'ind'},
+  ['subj'] = {'sub'},
+  ['impr'] = {'imp'},
+  ['inf'] = {'inf'},
+  ['ptc'] = {'part'},
+  ['ger'] = {'ger'},
+  ['sup'] = {'sup'},
+  ['nom'] = {'nom'},
+  ['gen'] = {'gen'},
+  ['dat'] = {'dat'},
+  ['acc'] = {'acc'},
+  ['abl'] = {'abl'},
+}
+
+-- Call show_form() the forms in each non-generic slot (where a
+-- generic slot is something like pres_actv_indc that covers a whole
+-- row of slots), converting the forms to a string consisting of
+-- comma-separated links with accelerators in them.
+local function convert_forms_into_links(data)
+	local accel_lemma = data.actual_lemma[1]
+	for _, slot in ipairs(non_generic_slots) do
+		local slot_parts = rsplit(slot, "_")
+		local tags = {}
+		for _, part in ipairs(slot_parts) do
+			for _, tag in ipairs(parts_to_tags[part]) do
+				table.insert(tags, tag)
+			end
+		end
+		local accel_slot = table.concat(tags, "|")
+		local accel = {form = accel_slot, lemma = accel_lemma}
+		data.forms[slot] = show_form(data.forms[slot], accel)
+	end
 end
 
 function export.get_valid_forms(raw_forms)
@@ -2497,16 +2586,10 @@ function export.get_valid_forms(raw_forms)
 	return valid_forms
 end
 
-function export.get_lemma_forms(data)
-	local slots_to_try = {
-		"1s_pres_actv_indc", -- regular
-		"3s_pres_actv_indc", -- impersonal
-		"1s_perf_actv_indc", -- coepī
-		"3s_perf_actv_indc", -- doesn't occur?
-	}
-
-	for _, slot in ipairs(slots_to_try) do
-		local lemma_forms = export.get_valid_forms(data.forms[slot])
+function export.get_lemma_forms(data, do_linked)
+	local linked_prefix = do_linked and "linked_" or ""
+	for _, slot in ipairs(potential_lemma_slots) do
+		local lemma_forms = export.get_valid_forms(data.forms[do_linked .. slot])
 		if #lemma_forms > 0 then
 			return lemma_forms
 		end
@@ -2515,8 +2598,7 @@ function export.get_lemma_forms(data)
 	return nil
 end
 
-local function get_lemma(data)
-	local lemma_forms = export.get_lemma_forms(data)
+local function get_displayable_lemma(lemma_forms)
 	if not lemma_forms then
 		return "&mdash;"
 	end
@@ -2533,10 +2615,13 @@ make_table = function(data)
 	if reconstructed then
 		pagename = pagename:gsub("Latin/","")
 	end
+	data.actual_lemma = export.get_lemma_forms(data)
+	convert_forms_into_links(data)
+
 	return [=[
 {| style="width: 100%; background: #EEE; border: 1px solid #AAA; font-size: 95%; text-align: center;" class="inflection-table vsSwitcher vsToggleCategory-inflection"
 |-
-! colspan="8" class="vsToggleElement" style="background: #CCC; text-align: left;" | &nbsp;&nbsp;&nbsp;Conjugation of ]=] .. get_lemma(data) .. (#data.title > 0 and " (" .. table.concat(data.title, ", ") .. ")" or "") .. [=[
+! colspan="8" class="vsToggleElement" style="background: #CCC; text-align: left;" | &nbsp;&nbsp;&nbsp;Conjugation of ]=] .. get_displayable_lemma(data.actual_lemma) .. (#data.title > 0 and " (" .. table.concat(data.title, ", ") .. ")" or "") .. [=[
 
 ]=] .. make_indc_rows(data) .. make_subj_rows(data) .. make_impr_rows(data) .. make_nonfin_rows(data) .. make_vn_rows(data) .. [=[
 
@@ -2605,10 +2690,13 @@ make_indc_rows = function(data)
 				notempty = true
 			else
 				for col, p in ipairs({"1s", "2s", "3s", "1p", "2p", "3p"}) do
-					local form = p .. "_" .. t .. "_" .. v .. "_indc"
-					row[col] = "\n| " .. show_form(data.forms[form])..(data.form_footnote_indices[form]==nil and "" or '<sup style="color: red">'..data.form_footnote_indices[form].."</sup>")
+					local slot = p .. "_" .. t .. "_" .. v .. "_indc"
+					row[col] = "\n| " .. data.forms[slot] .. (
+						data.form_footnote_indices[slot] == nil and "" or
+						'<sup style="color: red">' .. data.form_footnote_indices[slot].."</sup>"
+					)
 
-					if data.forms[p .. "_" .. t .. "_" .. v .. "_indc"] then
+					if data.forms[slot] ~= "&mdash;" then
 						nonempty = true
 						notempty = true
 					end
@@ -2662,10 +2750,13 @@ make_subj_rows = function(data)
 				notempty = true
 			else
 				for col, p in ipairs({"1s", "2s", "3s", "1p", "2p", "3p"}) do
-					local form = p .. "_" .. t .. "_" .. v .. "_subj"
-					row[col] = "\n| " .. show_form(data.forms[form])..(data.form_footnote_indices[form]==nil and "" or '<sup style="color: red">'..data.form_footnote_indices[form].."</sup>")
+					local slot = p .. "_" .. t .. "_" .. v .. "_subj"
+					row[col] = "\n| " .. data.forms[slot] .. (
+						data.form_footnote_indices[slot] == nil and "" or
+						'<sup style="color: red">' .. data.form_footnote_indices[slot].."</sup>"
+					)
 
-					if data.forms[p .. "_" .. t .. "_" .. v .. "_subj"] then
+					if data.forms[slot] ~= "&mdash;" then
 						nonempty = true
 						notempty = true
 					end
@@ -2718,9 +2809,10 @@ make_impr_rows = function(data)
 				nonempty = true
 			else
 				for col, p in ipairs({"1s", "2s", "3s", "1p", "2p", "3p"}) do
-					row[col] = "\n| " .. show_form(data.forms[p .. "_" .. t .. "_" .. v .. "_impr"])
+					local slot = p .. "_" .. t .. "_" .. v .. "_impr"
+					row[col] = "\n| " .. data.forms[slot]
 
-					if data.forms[p .. "_" .. t .. "_" .. v .. "_impr"] then
+					if data.forms[slot] ~= "&mdash;" then
 						nonempty = true
 					end
 				end
@@ -2764,9 +2856,12 @@ make_nonfin_rows = function(data)
 		local row = {}
 
 		for col, t in ipairs({"pres_actv", "perf_actv", "futr_actv", "pres_pasv", "perf_pasv", "futr_pasv"}) do
-			--row[col] = "\n| " .. show_form(data.forms[t .. "_" .. f])
-			local form = t .. "_" .. f
-			row[col] = "\n| " .. show_form(data.forms[form])..(data.form_footnote_indices[form]==nil and "" or '<sup style="color: red">'..data.form_footnote_indices[form].."</sup>")
+			local slot = t .. "_" .. f
+			--row[col] = "\n| " .. data.forms[slot]
+			row[col] = "\n| " .. data.forms[slot] .. (
+				data.form_footnote_indices[slot] == nil and "" or
+				'<sup style="color: red">' .. data.form_footnote_indices[slot] .."</sup>"
+			)
 
 		end
 
@@ -2798,11 +2893,14 @@ make_vn_rows = function(data)
 
 	local row = {}
 
-	for col, n in ipairs({"ger_nom", "ger_gen", "ger_dat", "ger_acc", "sup_acc", "sup_abl"}) do
-		if data.forms[n] then
+	for col, slot in ipairs({"ger_nom", "ger_gen", "ger_dat", "ger_acc", "sup_acc", "sup_abl"}) do
+		if data.forms[slot] ~= "&mdash;" then
 			has_vn = true
 		end
-		row[col] = "\n| " .. show_form(data.forms[n])..(data.form_footnote_indices[n]==nil and "" or '<sup style="color: red">'..data.form_footnote_indices[n].."</sup>")
+		row[col] = "\n| " .. data.forms[slot] .. (
+			data.form_footnote_indices[slot] == nil and "" or
+			'<sup style="color: red">' .. data.form_footnote_indices[slot] .. "</sup>"
+		)
 	end
 
 	row = table.concat(row)
