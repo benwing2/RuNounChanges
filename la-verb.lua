@@ -849,8 +849,8 @@ postprocess = function(data, typeinfo)
 			end
 		end
 	elseif typeinfo.subtypes["3only"] then
-		ut.insert_if_not(data.title, "[[impersonal]]")
-		ut.insert_if_not(data.categories, "Latin impersonal verbs")
+		ut.insert_if_not(data.title, "[[third person]] only")
+		ut.insert_if_not(data.categories, "Latin third-person-only verbs")
 
 		-- Remove all non-3sg forms
 		for key, _ in pairs(data.forms) do
@@ -946,7 +946,8 @@ postprocess = function(data, typeinfo)
 
 	if typeinfo.subtypes.noperf then
 		-- Some verbs have no perfect forms (e.g. inalbēscō, -ěre)
-		ut.insert_if_not(data.title, "[[defective verb|defective]]")
+		ut.insert_if_not(data.title, "no [[perfect tense|perfect]]")
+		ut.insert_if_not(data.categories, "Latin verbs with missing perfect")
 		ut.insert_if_not(data.categories, "Latin defective verbs")
 
 		-- Remove all perfect forms
@@ -994,7 +995,8 @@ postprocess = function(data, typeinfo)
 
 	if typeinfo.subtypes.nosup then
 		-- Some verbs have no supine forms or forms derived from the supine
-		ut.insert_if_not(data.title, "[[defective verb|defective]]")
+		ut.insert_if_not(data.title, "no [[supine]] stem")
+		ut.insert_if_not(data.categories, "Latin verbs with missing supine stem")
 		ut.insert_if_not(data.categories, "Latin defective verbs")
 
 		for key, _ in pairs(data.forms) do
@@ -1010,7 +1012,8 @@ postprocess = function(data, typeinfo)
 	elseif typeinfo.subtypes.supfutractvonly then
 		-- Some verbs have no supine forms or forms derived from the supine,
 		-- except for the future active infinitive/participle
-		ut.insert_if_not(data.title, "[[defective verb|defective]]")
+		ut.insert_if_not(data.title, "no [[supine]] stem except in the [[future]] [[active]] [[participle]]")
+		ut.insert_if_not(data.categories, "Latin verbs with missing supine stem except in the future active participle")
 		ut.insert_if_not(data.categories, "Latin defective verbs")
 
 		for key, _ in pairs(data.forms) do
@@ -1027,6 +1030,8 @@ postprocess = function(data, typeinfo)
 	if typeinfo.subtypes.noimp then
 		-- Some verbs have no imperatives
 		ut.insert_if_not(data.title, "no [[imperative]]s")
+		ut.insert_if_not(data.categories, "Latin verbs with missing imperative")
+		ut.insert_if_not(data.categories, "Latin defective verbs")
 
 		-- Remove all imperative forms
 		for key, _ in pairs(data.forms) do
@@ -1040,6 +1045,8 @@ postprocess = function(data, typeinfo)
 	if typeinfo.subtypes.nofut then
 		-- Some verbs (e.g. soleō) have no future
 		ut.insert_if_not(data.title, "no [[future]]")
+		ut.insert_if_not(data.categories, "Latin verbs with missing future")
+		ut.insert_if_not(data.categories, "Latin defective verbs")
 
 		-- Remove all future forms
 		for key, _ in pairs(data.forms) do
