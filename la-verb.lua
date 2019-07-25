@@ -586,9 +586,27 @@ local function add_prefix_suffix(data, typeinfo)
 	if not data.prefix and not data.suffix then
 		return
 	end
-	local prefix_no_links = m_links.remove_links(data.prefix or "")
-	local suffix_no_links = m_links.remove_links(data.suffix or "")
+	local active_prefix = data.prefix or ""
+	local passive_prefix = data.passive_prefix or ""
+	local active_suffix = data.suffix or ""
+	local passive_suffix = data.passive_suffix or ""
+	local active_prefix_no_links = m_links.remove_links(active_prefix)
+	local passive_prefix_no_links = m_links.remove_links(passive_prefix)
+	local active_suffix_no_links = m_links.remove_links(active_suffix)
+	local passive_suffix_no_links = m_links.remove_links(passive_suffix)
 	for slot in iter_slots(false, true) do
+		local prefix, suffix, prefix_no_links, suffix_no_links
+		if slot:find("pasv") then
+			prefix = passive_prefix
+			suffix = passive_suffix
+			prefix_no_links = passive_prefix_no_links
+			suffix_no_links = passive_suffix_no_links
+		else
+			prefix = active_prefix
+			suffix = active_suffix
+			prefix_no_links = active_prefix_no_links
+			suffix_no_links = active_suffix_no_links
+		end
 		local forms = data.forms[slot]
 		if not form_is_empty(forms) then
 			local affixed_forms = {}
@@ -606,7 +624,7 @@ local function add_prefix_suffix(data, typeinfo)
 					if not form:find("[%[%]]") then
 						form = "[[" .. form .. "]]"
 					end
-					table.insert(affixed_forms, (data.prefix or "") .. form .. (data.suffix or ""))
+					table.insert(affixed_forms, prefix .. form .. suffix)
 				else
 					-- If not dealing with a linked slot, use the non-linking versions
 					-- of the prefix and suffix.
@@ -648,7 +666,9 @@ function export.make_data(parent_args, from_headword)
 		[3] = {},
 		[4] = {},
 		prefix = {},
+		passive_prefix = {},
 		suffix = {},
+		passive_suffix = {},
 		-- examined directly in export.show()
 		search = {},
 	}
@@ -686,27 +706,46 @@ function export.make_data(parent_args, from_headword)
 		subtypes = subtypes,
 	}
 
-	if args.prefix then
-		local no_space_prefix = rmatch(args.prefix, "(.*)_$")
+	if args.passive_prefix and not args.prefix then
+		error("Can't specify passive_prefix= without prefix=")
+	end
+	if args.passive_suffix and not args.suffix then
+		error("Can't specify passive_suffix= without suffix=")
+	end
+
+	local function normalize_prefix(prefix)
+		if not prefix then
+			return nil
+		end
+		local no_space_prefix = rmatch(prefix, "(.*)_$")
 		if no_space_prefix then
-			data.prefix = no_space_prefix
-		elseif rfind(args.prefix, "%-$") then
-			data.prefix = args.prefix
+			return no_space_prefix
+		elseif rfind(prefix, "%-$") then
+			return prefix
 		else
-			data.prefix = args.prefix .. " "
+			return prefix .. " "
 		end
 	end
 
-	if args.suffix then
-		local no_space_suffix = rmatch(args.suffix, "^_(.*)$")
+	local function normalize_suffix(suffix)
+		if not suffix then
+			return nil
+		end
+		local no_space_suffix = rmatch(suffix, "^_(.*)$")
 		if no_space_suffix then
-			data.suffix = no_space_suffix
-		elseif rfind(args.suffix, "^%-") then
-			data.suffix = args.suffix
+			return no_space_suffix
+		elseif rfind(suffix, "^%-") then
+			return suffix
 		else
-			data.suffix = " " .. args.suffix
+			return " " .. suffix
 		end
 	end
+
+	data.prefix = normalize_prefix(args.prefix)
+	data.passive_prefix = normalize_prefix(args.passive_prefix) or data.prefix
+
+	data.suffix = normalize_suffix(args.suffix)
+	data.passive_suffix = normalize_suffix(args.passive_suffix) or data.suffix
 
 	-- Generate the verb forms
 	conjugations[conj_type](args, data, typeinfo)
