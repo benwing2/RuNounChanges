@@ -76,6 +76,12 @@ local function cfind(str, text)
 	return str:find(text, nil, true)
 end
 
+local function form_is_empty(form)
+	return not form or form == "" or form == "-" or form == "—" or form == "&mdash;" or (
+		type(form) == "table" and (form[1] == "" or form[1] == "-" or form[1] == "—" or form[1] == "&mdash;")
+	)
+end
+
 local function initialize_slots()
 	local generic_slots = {}
 	local non_generic_slots = {}
@@ -162,7 +168,7 @@ local function iter_slots(include_generic, include_linked)
 			return non_generic_slots[slotnum]
 		elseif stage == 2 then
 			return generic_slots[slotnum]
-		else then
+		else
 			return "linked_" .. potential_lemma_slots[slotnum]
 		end
 	end
@@ -539,7 +545,7 @@ local function concat_forms(data, typeinfo, include_props)
 			val = {val}
 		end
 		for _, v in ipairs(val) do
-			if v ~= "-" and v ~= "—" and v ~= "&mdash;" then
+			if not form_is_empty(v) then
 				table.insert(ins_form,
 					rsub(rsub(rsub(v, "|", "<!>"), "=", "<->"), ",", "<.>")
 				)
@@ -590,7 +596,7 @@ local function add_prefix_suffix(data, typeinfo)
 				forms = {forms}
 			end
 			for _, form in ipairs(forms) do
-				if form == "-" or form == "—" or form == "&mdash;" then
+				if not form_is_empty(form) then
 					table.insert(affixed_forms, form)
 				elseif slot:find("^linked") then
 					-- If we're dealing with a linked slot, include the original links
@@ -840,7 +846,7 @@ end
 
 postprocess = function(data, typeinfo)
 	-- Add information for the passive perfective forms
-	if data.forms["perf_pasv_ptc"] and not form_contains(data.forms["perf_pasv_ptc"], "&mdash;") then
+	if data.forms["perf_pasv_ptc"] and not form_is_empty(data.forms["perf_pasv_ptc"]) then
 		if typeinfo.subtypes.passimpers then
 			-- These may already be set by make_supine().
 			clear_form(data, "perf_pasv_inf")
@@ -2630,6 +2636,8 @@ end
 
 -- Functions for generating the inflection table
 
+-- Convert FORM (one or more forms) to a string of links. If the form is empty
+-- (see form_is_empty), the return value will be "&mdash;".
 local function show_form(form, accel)
 	if not form then
 		return "&mdash;"
@@ -2640,10 +2648,16 @@ local function show_form(form, accel)
 	end
 
 	for key, subform in ipairs(form) do
-		if subform == "-" or subform == "—" or subform == "&mdash;" then
+		if form_is_empty(subform) then
 			form[key] = "&mdash;"
 		elseif reconstructed and not subform:find(NAMESPACE .. ":Latin/") then
 			form[key] = make_link({lang = lang, term = NAMESPACE .. ":Latin/" .. subform, alt = subform})
+		elseif subform:find("[%[%]]") then
+			-- Don't put accelerators on forms already containing links such as
+			-- the perfect passive infinitive and future active infinitive, or
+			-- the participles wrongly get tagged as infinitives as well as
+			-- participles.
+			form[key] = make_link({lang = lang, term = subform})
 		else
 			form[key] = make_link({lang = lang, term = subform, accel = accel})
 		end
@@ -2708,7 +2722,7 @@ function export.get_valid_forms(raw_forms)
 			raw_forms = {raw_forms}
 		end
 		for _, subform in ipairs(raw_forms) do
-			if subform ~= "-" and subform ~= "—" and subform ~= "&mdash;" then
+			if not form_is_empty(subform) then
 				table.insert(valid_forms, subform)
 			end
 		end
@@ -2826,6 +2840,7 @@ make_indc_rows = function(data)
 						'<sup style="color: red">' .. data.form_footnote_indices[slot].."</sup>"
 					)
 
+					-- show_form() already called so can just check for "&mdash;"
 					if data.forms[slot] ~= "&mdash;" then
 						nonempty = true
 						notempty = true
@@ -2886,6 +2901,7 @@ make_subj_rows = function(data)
 						'<sup style="color: red">' .. data.form_footnote_indices[slot].."</sup>"
 					)
 
+					-- show_form() already called so can just check for "&mdash;"
 					if data.forms[slot] ~= "&mdash;" then
 						nonempty = true
 						notempty = true
@@ -2942,6 +2958,7 @@ make_impr_rows = function(data)
 					local slot = p .. "_" .. t .. "_" .. v .. "_impr"
 					row[col] = "\n| " .. data.forms[slot]
 
+					-- show_form() already called so can just check for "&mdash;"
 					if data.forms[slot] ~= "&mdash;" then
 						nonempty = true
 					end
@@ -3024,6 +3041,7 @@ make_vn_rows = function(data)
 	local row = {}
 
 	for col, slot in ipairs({"ger_nom", "ger_gen", "ger_dat", "ger_acc", "sup_acc", "sup_abl"}) do
+		-- show_form() already called so can just check for "&mdash;"
 		if data.forms[slot] ~= "&mdash;" then
 			has_vn = true
 		end
