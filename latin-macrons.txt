@@ -2845,6 +2845,7 @@ n3 circumdatiō
 a1 patricius
 # wrongly has long e
 a3 cathedrālis
+a1 extreus
 # wrongly has long i
 a3 horizontālis
 a1 nigritus
@@ -3012,6 +3013,7 @@ a3 flāvipinnis
 a3 flāvitarsis
 a3 flāviventris
 a1 āfroāsiāticus
+v1 calō
 # wrongly has short a and e
 a3 intellēctuālis
 a1 arēnātus
