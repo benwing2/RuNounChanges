@@ -240,7 +240,7 @@ local function process_noun_forms_and_overrides(data, args)
 				local accel_form = slot
 				accel_form = accel_form:gsub("_([sp])[gl]$", "|%1")
 
-				data.accel[slot .. i] = {form = accel_form, lemma = accel_lemma}
+				data.accel[slot] = {form = accel_form, lemma = accel_lemma}
 				if not redlink and NAMESPACE == '' then
 					local title = lang:makeEntryName(form)
 					local t = mw.title.new(title)
@@ -329,9 +329,9 @@ local function process_adj_forms_and_overrides(data, args)
 					-- without the gender, and use the feminine as the
 					-- lemma for feminine forms.
 					if slot:find("_f") then
-						data.accel[slot .. i] = {form = accel_form:gsub("|f$", ""), lemma = accel_lemma_f}
+						data.accel[slot] = {form = accel_form:gsub("|f$", ""), lemma = accel_lemma_f}
 					else
-						data.accel[slot .. i] = {form = accel_form:gsub("|m$", ""), lemma = accel_lemma}
+						data.accel[slot] = {form = accel_form:gsub("|m$", ""), lemma = accel_lemma}
 					end
 				else
 					if not data.forms.nom_sg_n and not data.forms.nom_pl_n then
@@ -344,7 +344,7 @@ local function process_adj_forms_and_overrides(data, args)
 					-- use the order nom|m|s, which is more standard than nom|s|m
 					accel_form = accel_form:gsub("|(.-)|(.-)$", "|%2|%1")
 
-					data.accel[slot .. i] = {form = accel_form, lemma = accel_lemma}
+					data.accel[slot] = {form = accel_form, lemma = accel_lemma}
 				end
 				if not redlink and NAMESPACE == '' then
 					local title = lang:makeEntryName(form)
@@ -386,6 +386,12 @@ local function process_adj_forms_and_overrides(data, args)
 	end
 end
 
+-- Convert data.forms[slot] for all slots into displayable text. This is
+-- an older function, still currently used for nouns but not for adjectives.
+-- For adjectives, the adjective table module has special code to combine
+-- adjacent slots, and needs the original forms plus other text that will
+-- go into the displayable text for the slot; this is handled below by
+-- partial_show_forms() and finish_show_form().
 local function show_forms(data, is_adj)
 	local noteindex = 1
 	local notes = {}
@@ -394,7 +400,7 @@ local function show_forms(data, is_adj)
 		local val = data.forms[slot]
 		if val and val ~= "" and val ~= "—" then
 			for i, form in ipairs(val) do
-				local link = m_links.full_link({lang = lang, term = form, accel = data.accel[slot .. i]})
+				local link = m_links.full_link({lang = lang, term = form, accel = data.accel[slot]})
 				local this_notes = data.notes[slot .. i]
 				if this_notes and not data.user_specified[slot] then
 					if type(this_notes) == "string" then
@@ -419,6 +425,87 @@ local function show_forms(data, is_adj)
 			end
 			-- FIXME, do we want this difference?
 			data.forms[slot] = table.concat(val, is_adj and ", " or "<br />")
+		end
+	end
+	data.footnote = table.concat(notes, "<br />") .. data.footnote
+end
+
+-- Generate the display form for a set of slots with identical content. We
+-- verify that the slots are actually identical, and throw an assertion error
+-- if not. The display form is as in show_forms() but combines together all the
+-- accelerator forms for all the slots.
+local function finish_show_form(data, slots, is_adj)
+	assert #slots > 0
+	local slot1 = slots[1]
+	local forms = data.forms[slot1]
+	local notetext = data.notetext[slot1]
+	for _, slot in ipairs(slots) do
+		assert(data.forms[slot] == forms)
+		assert(data.notetext[slot] == notetext)
+	end
+	if not forms then
+		return "—"
+	else
+		local accel_forms = {}
+		local accel_lemma = data.accel[slot1].lemma
+		for _, slot in ipairs(slots) do
+			assert data.accel[slot].lemma == accel_lemma
+			table.insert(accel_forms, data.accel[slot].form)
+		end
+		local combined_accel_form = table.concat(accel_forms, "|;|")
+		local accel = {form = combined_accel_form, lemma = accel_lemma}
+		local formtext = {}
+		for i, form in ipairs(forms) do
+			table.insert(formtext, m_links.full_link({lang = lang, term = form, accel = accel}) .. notetext[i])
+		end
+		-- FIXME, do we want this difference?
+		return table.concat(formtext, is_adj and ", " or "<br />")
+	end
+end
+
+-- Used by the adjective table module. This does some of the work of
+-- show_forms(); in particular, it converts all empty forms of any format
+-- (nil, "", "—") to nil and, if the forms aren't empty, generates the footnote
+-- text associated with each form.
+local function partial_show_forms(data, is_adj)
+	local noteindex = 1
+	local notes = {}
+	local seen_notes = {}
+	data.notetext = {}
+	-- Store this function in DATA so that it can be called from the adjective
+	-- table module without needing to require this module, which will (or
+	-- could) lead to recursive module requiring.
+	data.finish_show_form = finish_show_form
+	for slot in iter_slots(is_adj) do
+		local val = data.forms[slot]
+		if not or val == "" or val == "—" then
+			data.forms[slot] = nil
+		else
+			local notetext = {}
+			for i, form in ipairs(val) do
+				local this_notes = data.notes[slot .. i]
+				if this_notes and not data.user_specified[slot] then
+					if type(this_notes) == "string" then
+						this_notes = {this_notes}
+					end
+					local link_indices = {}
+					for _, this_note in ipairs(this_notes) do
+						local this_noteindex = seen_notes[this_note]
+						if not this_noteindex then
+							-- Generate a footnote index.
+							this_noteindex = noteindex
+							noteindex = noteindex + 1
+							table.insert(notes, '<sup style="color: red">' .. this_noteindex .. '</sup>' .. this_note)
+							seen_notes[this_note] = this_noteindex
+						end
+						ut.insert_if_not(link_indices, this_noteindex)
+					end
+					table.insert(notetext, '<sup style="color: red">' .. table.concat(link_indices, ",") .. '</sup>')
+				else
+					table.insert(notetext, "")
+				end
+			end
+			data.notetext[slot] = notetext
 		end
 	end
 	data.footnote = table.concat(notes, "<br />") .. data.footnote
@@ -1861,7 +1948,7 @@ function export.show_adj(frame)
 	local parent_args = frame:getParent().args
 	local data = export.do_generate_adj_forms(parent_args)
 
-	show_forms(data, true)
+	partial_show_forms(data, true)
 
 	return m_adj_table.make_table(data, data.noneut) .. m_utilities.format_categories(data.categories, lang)
 end
