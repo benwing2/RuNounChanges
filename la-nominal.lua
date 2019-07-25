@@ -89,12 +89,6 @@ local ligatures = {
 	['oe'] = 'œ',
 }
 
-local gender_to_lc = {
-	['M'] = 'm',
-	['F'] = 'f',
-	['N'] = 'n',
-}
-
 local cases = {
 	"nom", "gen", "dat", "acc", "abl", "voc", "loc"
 }
@@ -521,7 +515,7 @@ local function make_noun_table(data)
 	end
 end
 
-local function concat_forms(data, is_adj)
+local function concat_forms(data, is_adj, include_props)
 	local ins_text = {}
 	for slot in iter_slots(is_adj) do
 		local val = data.forms[slot]
@@ -532,6 +526,16 @@ local function concat_forms(data, is_adj)
 			end
 			table.insert(ins_text, slot .. "=" .. table.concat(new_vals, ","))
 		end
+	end
+	if include_props then
+		if data.gender then
+			table.insert(ins_text, "g=" .. mw.ustring.lower(data.gender))
+		end
+		local num = data.num
+		if not num or num == "" then
+			num = "both"
+		end
+		table.insert(ins_text, "num=" .. num)
 	end
 	return table.concat(ins_text, "|")
 end
@@ -1603,7 +1607,7 @@ local function decline_segment_run(parsed_run, is_adj)
 					-- combination. Some adjectives won't have feminine or neuter
 					-- variants, though (e.g. 3-1 and 3-2 adjectives don't have a
 					-- distinct feminine), so in that case select the masculine.
-					new_forms = data.forms[slot .. "_" .. gender_to_lc[seg.gender]]
+					new_forms = data.forms[slot .. "_" .. mw.ustring.lower(seg.gender)]
 						or data.forms[slot .. "_m"]
 				else
 					new_forms = data.forms[slot]
@@ -1787,7 +1791,7 @@ local function construct_title(args_title, declensions_title, from_headword)
 	return declensions_title
 end
 
-local function generate_noun_forms(frame)
+function export.do_generate_noun_forms(parent_args, from_headword)
 	local params = {
 		[1] = {required = true, default = "aqua<1>"},
 		footnote = {},
@@ -1797,8 +1801,11 @@ local function generate_noun_forms(frame)
 	for slot in iter_noun_slots() do
 		params[slot] = {}
 	end
-
-	local parent_args = frame:getParent().args
+	if from_headword then
+		params.lemma = {list = true}
+		params.id = {}
+		params.pos = {}
+	end
 
 	local args = m_para.process(parent_args, params)
 
@@ -1819,6 +1826,7 @@ local function generate_noun_forms(frame)
 		title = declensions.title,
 		footnote = args.footnote or "",
 		num = parsed_run.num or "",
+		gender = parsed_run.gender,
 		forms = declensions.forms,
 		categories = declensions.categories,
 		notes = {},
@@ -1937,7 +1945,8 @@ function export.do_generate_adj_forms(parent_args, from_headword)
 end
 
 function export.show_noun(frame)
-	local data = generate_noun_forms(frame)
+	local parent_args = frame:getParent().args
+	local data = export.do_generate_noun_forms(parent_args)
 
 	show_forms(data, false)
 
@@ -1954,16 +1963,19 @@ function export.show_adj(frame)
 end
 
 function export.generate_noun_forms(frame)
-	local data = generate_noun_forms(frame)
+	local include_props = frame.args["include_props"]
+	local parent_args = frame:getParent().args
+	local data = export.do_generate_noun_forms(parent_args)
 
-	return concat_forms(data, false)
+	return concat_forms(data, false, include_props)
 end
 
 function export.generate_adj_forms(frame)
+	local include_props = frame.args["include_props"]
 	local parent_args = frame:getParent().args
 	local data = export.do_generate_adj_forms(parent_args)
 
-	return concat_forms(data, true)
+	return concat_forms(data, true, include_props)
 end
 
 return export
