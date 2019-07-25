@@ -590,13 +590,13 @@ local function add_prefix_suffix(data, typeinfo)
 	local suffix_no_links = m_links.remove_links(data.suffix or "")
 	for slot in iter_slots(false, true) do
 		local forms = data.forms[slot]
-		local affixed_forms = {}
-		if forms then
+		if not form_is_empty(forms) then
+			local affixed_forms = {}
 			if type(forms) ~= "table" then
 				forms = {forms}
 			end
 			for _, form in ipairs(forms) do
-				if not form_is_empty(form) then
+				if form_is_empty(form) then
 					table.insert(affixed_forms, form)
 				elseif slot:find("^linked") then
 					-- If we're dealing with a linked slot, include the original links
@@ -613,8 +613,8 @@ local function add_prefix_suffix(data, typeinfo)
 					table.insert(affixed_forms, prefix_no_links .. form .. suffix_no_links)
 				end
 			end
+			data.forms[slot] = affixed_forms
 		end
-		data.forms[slot] = affixed_forms
 	end
 end
 
