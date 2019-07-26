@@ -4,7 +4,7 @@ local m_table = require("Module:table")
 local ut = require("Module:utils")
 local m_links = require("Module:links")
 local make_link = m_links.full_link
-local m_la_headword = require("Module:User:Benwing2/la-headword")
+local m_la_headword = require("Module:la-headword")
 local m_la_utilities = require("Module:la-utilities")
 local m_para = require("Module:parameters")
 
@@ -750,11 +750,11 @@ function export.make_data(parent_args, from_headword)
 	-- Generate the verb forms
 	conjugations[conj_type](args, data, typeinfo)
 
-	-- Override with user-set forms
-	override(data, args)
-
 	-- Post-process the forms
 	postprocess(data, typeinfo)
+
+	-- Override with user-set forms
+	override(data, args)
 
 	-- Set linked_* forms
 	set_linked_forms(data, typeinfo)
@@ -964,41 +964,6 @@ postprocess = function(data, typeinfo)
 		end
 
 		data.forms["pres_actv_ptc"] = nil
-	elseif typeinfo.subtypes.memini then
-		-- Perfect forms as present tense
-		ut.insert_if_not(data.title, "active only")
-		ut.insert_if_not(data.title, "[[perfect]] forms as present")
-		ut.insert_if_not(data.title, "pluperfect as imperfect")
-		ut.insert_if_not(data.title, "future perfect as future")
-		ut.insert_if_not(data.categories, "Latin defective verbs")
-		ut.insert_if_not(data.categories, "Latin verbs with perfect forms having imperfective meanings")
-
-		-- Remove passive forms
-		-- Remove present active, imperfect active and future active forms
-		-- Except for future active imperatives
-		for key, _ in pairs(data.forms) do
-			if cfind(key, "pasv") or cfind(key, "pres") or cfind(key, "impf") or cfind(key, "futr") or cfind(key, "ptc") or cfind(key, "ger") then
-				data.forms[key] = nil
-			end
-		end
-
-		-- Change perfect forms to non-perfect forms
-		for key, form in pairs(data.forms) do
-			if cfind(key, "perf") and key ~= "perf_actv_ptc" then
-				data.forms[key:gsub("perf", "pres")] = form
-				data.forms[key] = nil
-			elseif cfind(key, "plup") then
-				data.forms[key:gsub("plup", "impf")] = form
-				data.forms[key] = nil
-			elseif cfind(key, "futp") then
-				data.forms[key:gsub("futp", "futr")] = form
-				data.forms[key] = nil
-			end
-		end
-
-		-- Add imperative forms
-		data.forms["2s_futr_actv_impr"] = "mementō"
-		data.forms["2p_futr_actv_impr"] = "mementōte"
 	end
 
 	-- Types of irregularity related primarily to the active.
@@ -1314,8 +1279,7 @@ local function get_regular_stems(args, typeinfo)
 		typeinfo.supine_stem = ine(args[3])
 	end
 
-	if (typeinfo.subtypes.perfaspres or typeinfo.subtypes.memini
-	) and not typeinfo.pres_stem then
+	if typeinfo.subtypes.perfaspres and not typeinfo.pres_stem then
 		typeinfo.pres_stem = "whatever"
 	end
 
