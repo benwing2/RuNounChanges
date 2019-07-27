@@ -9,3 +9,6 @@ verb auxilio pass,perf {{la-conj|1+|auxiliō}}
 verb blatero pass {{la-conj|1+|blaterō}}
 verb caleo supnofap {{la-conj|2+.nopass|caleō}}
 verb calvor sup {{la-conj|3.noperf|calvor|calv}}
+verb circito perf,sup {{la-conj|1+|circitō}}
+verb clueo pass {{la-conj|2|clueō}}
+verb cohortor sup {{la-conj|1|cohortor|cohortar}}
