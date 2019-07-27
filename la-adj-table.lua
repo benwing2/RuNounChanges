@@ -2,7 +2,6 @@ local export = {}
 
 local ut = require("Module:utils")
 
-
 local function convert(data, conv)
 	local col = {}
 	local row = {}
@@ -54,9 +53,9 @@ local function convert(data, conv)
 	-- different lemmas (e.g. when noneut=1 is set, the masculine slots
 	-- will have the masculine lemma but the feminine slots will have the
 	-- feminine lemma).
-	local function slots_equal(slot1, slo2)
+	local function slots_equal(slot1, slot2)
 		return ut.equals(data.forms[slot1], data.forms[slot2]) and
-			ut.equals(data.notetext[slot1], data.notetext[slot2])
+			ut.equals(data.notetext[slot1], data.notetext[slot2]) and
 			(data.accel[slot1] and data.accel[slot1].lemma or nil) ==
 			(data.accel[slot2] and data.accel[slot2].lemma or nil)
 	end
@@ -88,7 +87,7 @@ local function convert(data, conv)
 				for k=i+1,#conv do
 					local slotij = conv[i][j]
 					local slotkj = conv[k][j]
-					if not slots_equal(slotij, slotkj) then
+					if not slots_equal(slotij, slotkj) or col[i][j] ~= col[k][j] then
 						break
 					end
 					row[i][j] = row[i][j] + 1
@@ -103,13 +102,13 @@ local function convert(data, conv)
 	end
 	
 	--final
-	for i=1,#data do
-		for j=1,#data[i] do
-			data[i][j] = add(i,j)
+	for i=1,#conv do
+		for j=1,#conv[i] do
+			conv[i][j] = add(i,j)
 		end
-		data[i] = table.concat(data[i])
+		conv[i] = table.concat(conv[i])
 	end
-	return data
+	return conv
 end
 
 local function make_table_mfn_pl(data, noneut)
@@ -545,7 +544,7 @@ local function make_table_mf_and_n(data)
 		{"acc_sg_m", "acc_sg_n"},
 		{"abl_sg_m", "abl_sg_n"},
 		{"voc_sg_m", "voc_sg_n"},
-		{"----"},
+		{"----", "----"},
 		{"nom_pl_m", "nom_pl_n"},
 		{"gen_pl_m", "gen_pl_n"},
 		{"dat_pl_m", "dat_pl_n"},
@@ -612,7 +611,7 @@ local function make_table_m_and_f(data)
 		{"acc_sg_m", "acc_sg_f"},
 		{"abl_sg_m", "abl_sg_f"},
 		{"voc_sg_m", "voc_sg_f"},
-		{"----"},
+		{"----", "----"},
 		{"nom_pl_m", "nom_pl_f"},
 		{"gen_pl_m", "gen_pl_f"},
 		{"dat_pl_m", "dat_pl_f"},
