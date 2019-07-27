@@ -13,6 +13,9 @@ local m_para = require("Module:parameters")
 -- 2. (DONE) Should error on bad subtypes.
 -- 3. Make sure Google Books link still works.
 -- 4. (DONE) Add 4++ that has alternative perfects -īvī/-iī.
+-- 5. (DONE) If sup but no perf, allow passive perfect forms unless no-pasv-perf.
+-- 6. (DONE) Remove no-actv-perf.
+-- 7. (DONE) Support plural prefix/suffix and plural passive prefix/suffix
 --
 -- If enabled, compare this module with new version of module to make
 -- sure all conjugations are the same.
@@ -586,21 +589,42 @@ local function add_prefix_suffix(data, typeinfo)
 	if not data.prefix and not data.suffix then
 		return
 	end
+
 	local active_prefix = data.prefix or ""
 	local passive_prefix = data.passive_prefix or ""
-	local active_suffix = data.suffix or ""
-	local passive_suffix = data.passive_suffix or ""
+	local plural_prefix = data.plural_prefix or ""
+	local plural_passive_prefix = data.plural_passive_prefix or ""
 	local active_prefix_no_links = m_links.remove_links(active_prefix)
 	local passive_prefix_no_links = m_links.remove_links(passive_prefix)
+	local plural_prefix_no_links = m_links.remove_links(plural_prefix)
+	local plural_passive_prefix_no_links = m_links.remove_links(plural_passive_prefix)
+
+	local active_suffix = data.suffix or ""
+	local passive_suffix = data.passive_suffix or ""
+	local plural_suffix = data.plural_suffix or ""
+	local plural_passive_suffix = data.plural_passive_suffix or ""
 	local active_suffix_no_links = m_links.remove_links(active_suffix)
 	local passive_suffix_no_links = m_links.remove_links(passive_suffix)
+	local plural_suffix_no_links = m_links.remove_links(plural_suffix)
+	local plural_passive_suffix_no_links = m_links.remove_links(plural_passive_suffix)
+
 	for slot in iter_slots(false, true) do
 		local prefix, suffix, prefix_no_links, suffix_no_links
-		if slot:find("pasv") then
+		if slot:find("pasv") and slot:find("[123]p") then
+			prefix = plural_passive_prefix
+			suffix = plural_passive_suffix
+			prefix_no_links = plural_passive_prefix_no_links
+			suffix_no_links = plural_passive_suffix_no_links
+		elseif slot:find("pasv") then
 			prefix = passive_prefix
 			suffix = passive_suffix
 			prefix_no_links = passive_prefix_no_links
 			suffix_no_links = passive_suffix_no_links
+		elseif slot:find("[123]p") then
+			prefix = plural_prefix
+			suffix = plural_suffix
+			prefix_no_links = plural_prefix_no_links
+			suffix_no_links = plural_suffix_no_links
 		else
 			prefix = active_prefix
 			suffix = active_suffix
@@ -667,8 +691,12 @@ function export.make_data(parent_args, from_headword)
 		[4] = {},
 		prefix = {},
 		passive_prefix = {},
+		plural_prefix = {},
+		plural_passive_prefix = {},
 		suffix = {},
 		passive_suffix = {},
+		plural_suffix = {},
+		plural_passive_suffix = {},
 		-- examined directly in export.show()
 		search = {},
 	}
@@ -709,8 +737,21 @@ function export.make_data(parent_args, from_headword)
 	if args.passive_prefix and not args.prefix then
 		error("Can't specify passive_prefix= without prefix=")
 	end
+	if args.plural_prefix and not args.prefix then
+		error("Can't specify plural_prefix= without prefix=")
+	end
+	if args.plural_passive_prefix and not args.prefix then
+		error("Can't specify plural_passive_prefix= without prefix=")
+	end
+
 	if args.passive_suffix and not args.suffix then
 		error("Can't specify passive_suffix= without suffix=")
+	end
+	if args.plural_suffix and not args.suffix then
+		error("Can't specify plural_suffix= without suffix=")
+	end
+	if args.plural_passive_suffix and not args.suffix then
+		error("Can't specify plural_passive_suffix= without suffix=")
 	end
 
 	local function normalize_prefix(prefix)
@@ -743,9 +784,20 @@ function export.make_data(parent_args, from_headword)
 
 	data.prefix = normalize_prefix(args.prefix)
 	data.passive_prefix = normalize_prefix(args.passive_prefix) or data.prefix
+	data.plural_prefix = normalize_prefix(args.plural_prefix) or data.prefix
+	-- First fall back to the passive prefix (e.g. poenās dare, where the
+	-- plural noun is used with both singular and plural verbs, but there's a
+	-- separate passive form ''poenae datur''), then to the plural prefix,
+	-- then to the base prefix.
+	data.plural_passive_prefix = normalize_prefix(args.plural_passive_prefix) or
+		normalize_prefix(args.passive_prefix) or data.plural_prefix
 
 	data.suffix = normalize_suffix(args.suffix)
 	data.passive_suffix = normalize_suffix(args.passive_suffix) or data.suffix
+	data.plural_suffix = normalize_suffix(args.plural_suffix) or data.suffix
+	-- Same as above for prefixes.
+	data.plural_passive_suffix = normalize_suffix(args.plural_passive_suffix) or
+		normalize_suffix(args.passive_suffix) or data.plural_suffix
 
 	-- Generate the verb forms
 	conjugations[conj_type](args, data, typeinfo)
@@ -884,6 +936,42 @@ local function make_perfect_passive(data)
 end
 
 postprocess = function(data, typeinfo)
+	-- Maybe clear out the supine-derived forms (except maybe for the
+	-- future active participle). Do this first because some code below
+	-- looks at the perfect participle to derive other forms.
+	if typeinfo.subtypes.nosup then
+		-- Some verbs have no supine forms or forms derived from the supine
+		ut.insert_if_not(data.title, "no [[supine]] stem")
+		ut.insert_if_not(data.categories, "Latin verbs with missing supine stem")
+		ut.insert_if_not(data.categories, "Latin defective verbs")
+
+		for key, _ in pairs(data.forms) do
+			if cfind(key, "sup") or (
+				key == "perf_actv_ptc" or key == "perf_pasv_ptc" or key == "perf_pasv_inf" or
+				key == "futr_actv_ptc" or key == "futr_actv_inf" or key == "futr_pasv_inf" or
+				(typeinfo.subtypes.depon or typeinfo.subtypes.semidepon or
+				 typeinfo.subtypes.optsemidepon) and key == "perf_actv_inf"
+			) then
+				data.forms[key] = nil
+			end
+		end
+	elseif typeinfo.subtypes.supfutractvonly then
+		-- Some verbs have no supine forms or forms derived from the supine,
+		-- except for the future active infinitive/participle
+		ut.insert_if_not(data.title, "no [[supine]] stem except in the [[future]] [[active]] [[participle]]")
+		ut.insert_if_not(data.categories, "Latin verbs with missing supine stem except in the future active participle")
+		ut.insert_if_not(data.categories, "Latin defective verbs")
+
+		for key, _ in pairs(data.forms) do
+			if cfind(key, "sup") or (
+				key == "perf_actv_ptc" or key == "perf_pasv_ptc" or key == "perf_pasv_inf" or
+				key == "futr_pasv_inf"
+			) then
+				data.forms[key] = nil
+			end
+		end
+	end
+
 	-- Add information for the passive perfective forms
 	if data.forms["perf_pasv_ptc"] and not form_is_empty(data.forms["perf_pasv_ptc"]) then
 		if typeinfo.subtypes.passimpers then
@@ -992,19 +1080,11 @@ postprocess = function(data, typeinfo)
 		end
 	end
 
-	if typeinfo.subtypes.noactvperf then
-		-- Some verbs have no active perfect forms (e.g. interstinguō, -ěre)
-		ut.insert_if_not(data.title, "no active perfect forms")
-		ut.insert_if_not(data.categories, "Latin defective verbs")
-
-		-- Remove all active perfect forms
-		for key, _ in pairs(data.forms) do
-			if cfind(key, "actv") and (cfind(key, "perf") or cfind(key, "plup") or cfind(key, "futp")) then
-				data.forms[key] = nil
-			end
-		end
-	elseif typeinfo.subtypes.nopasvperf then
-		-- Some verbs have no passive perfect forms (e.g. ārēscō, -ěre)
+	if typeinfo.subtypes.nopasvperf and not typeinfo.subtypes.nosup and
+			not typeinfo.subtypes.supfutractvonly then
+		-- Some verbs have no passive perfect forms (e.g. ārēscō, -ěre).
+		-- Only do anything here if the verb has a supine; otherwise it
+		-- necessarily has no passive perfect forms.
 		ut.insert_if_not(data.title, "no passive perfect forms")
 		ut.insert_if_not(data.categories, "Latin defective verbs")
 
@@ -1077,14 +1157,15 @@ postprocess = function(data, typeinfo)
 	end
 
 	if typeinfo.subtypes.noperf then
-		-- Some verbs have no perfect forms (e.g. inalbēscō, -ěre)
-		ut.insert_if_not(data.title, "no [[perfect tense|perfect]]")
-		ut.insert_if_not(data.categories, "Latin verbs with missing perfect")
+		-- Some verbs have no perfect stem (e.g. inalbēscō, -ěre)
+		ut.insert_if_not(data.title, "no [[perfect tense|perfect]] stem")
+		ut.insert_if_not(data.categories, "Latin verbs with missing perfect stem")
 		ut.insert_if_not(data.categories, "Latin defective verbs")
 
-		-- Remove all perfect forms
+		-- Remove all active perfect forms (passive perfect forms may
+		-- still exist as they are formed with the supine stem)
 		for key, _ in pairs(data.forms) do
-			if cfind(key, "perf") or cfind(key, "plup") or cfind(key, "futp") then
+			if cfind(key, "actv") and (cfind(key, "perf") or cfind(key, "plup") or cfind(key, "futp")) then
 				data.forms[key] = nil
 			end
 		end
@@ -1120,39 +1201,6 @@ postprocess = function(data, typeinfo)
 		-- Remove all non-3sg passive forms
 		for key, _ in pairs(data.forms) do
 			if cfind(key, "pasv") and (key:find("^[12][sp]") or key:find("^3p") or cfind(key, "impr")) or cfind(key, "futr_pasv_inf") then
-				data.forms[key] = nil
-			end
-		end
-	end
-
-	if typeinfo.subtypes.nosup then
-		-- Some verbs have no supine forms or forms derived from the supine
-		ut.insert_if_not(data.title, "no [[supine]] stem")
-		ut.insert_if_not(data.categories, "Latin verbs with missing supine stem")
-		ut.insert_if_not(data.categories, "Latin defective verbs")
-
-		for key, _ in pairs(data.forms) do
-			if cfind(key, "sup") or (
-				key == "perf_actv_ptc" or key == "perf_pasv_ptc" or key == "perf_pasv_inf" or
-				key == "futr_actv_ptc" or key == "futr_actv_inf" or key == "futr_pasv_inf" or
-				(typeinfo.subtypes.depon or typeinfo.subtypes.semidepon or
-				 typeinfo.subtypes.optsemidepon) and key == "perf_actv_inf"
-			) then
-				data.forms[key] = nil
-			end
-		end
-	elseif typeinfo.subtypes.supfutractvonly then
-		-- Some verbs have no supine forms or forms derived from the supine,
-		-- except for the future active infinitive/participle
-		ut.insert_if_not(data.title, "no [[supine]] stem except in the [[future]] [[active]] [[participle]]")
-		ut.insert_if_not(data.categories, "Latin verbs with missing supine stem except in the future active participle")
-		ut.insert_if_not(data.categories, "Latin defective verbs")
-
-		for key, _ in pairs(data.forms) do
-			if cfind(key, "sup") or (
-				key == "perf_actv_ptc" or key == "perf_pasv_ptc" or key == "perf_pasv_inf" or
-				key == "futr_pasv_inf"
-			) then
 				data.forms[key] = nil
 			end
 		end
@@ -1525,6 +1573,10 @@ irreg_conjugations["aio"] = function(args, data, typeinfo)
 	table.insert(data.categories, "Latin active-only verbs")
 	table.insert(data.categories, "Latin defective verbs")
 
+	-- Signal to {{la-verb}} to display the verb as irregular and highly defective
+	typeinfo.subtypes.irreg = true
+	typeinfo.subtypes.highlydef = true
+
 	local prefix = typeinfo.prefix or ""
 
 	data.forms["1s_pres_actv_indc"] = {prefix .. "āiō", prefix .. "aiiō"}
@@ -1572,6 +1624,9 @@ irreg_conjugations["do"] = function(args, data, typeinfo)
 	table.insert(data.title, "[[Appendix:Latin irregular verbs|irregular]] short ''a'' in most forms except " .. make_link({lang = lang, alt = "dās"}, "term") .. " and " .. make_link({lang = lang, alt = "dā"}, "term"))
 	table.insert(data.categories, "Latin first conjugation verbs")
 	table.insert(data.categories, "Latin irregular verbs")
+
+	-- Signal to {{la-verb}} to display the verb as irregular
+	typeinfo.subtypes.irreg = true
 
 	local prefix = typeinfo.prefix or ""
 
@@ -1639,6 +1694,9 @@ irreg_conjugations["edo"] = function(args, data, typeinfo)
 	table.insert(data.title, "some [[Appendix:Latin irregular verbs|irregular]] alternative forms")
 	table.insert(data.categories, "Latin third conjugation verbs")
 	table.insert(data.categories, "Latin irregular verbs")
+
+	-- Signal to {{la-verb}} to display the verb as irregular
+	typeinfo.subtypes.irreg = true
 
 	local prefix = typeinfo.prefix or ""
 
@@ -1819,6 +1877,9 @@ irreg_conjugations["fero"] = function(args, data, typeinfo)
 	table.insert(data.categories, "Latin irregular verbs")
 	table.insert(data.categories, "Latin suppletive verbs")
 
+	-- Signal to {{la-verb}} to display the verb as irregular
+	typeinfo.subtypes.irreg = true
+
 	local prefix_pres = typeinfo.prefix or ""
 	local prefix_perf = ine(args[3])
 	local prefix_supine = ine(args[4])
@@ -1884,8 +1945,10 @@ irreg_conjugations["inquam"] = function(args, data, typeinfo)
 	table.insert(data.categories, "Latin irregular verbs")
 	table.insert(data.categories, "Latin defective verbs")
 
-	-- not used
-	-- local prefix = typeinfo.prefix or ""
+	-- Signal to {{la-verb}} to display the verb as highly defective
+	-- (it already displays as irregular because conj == "irreg" and
+	-- subconj == "irreg")
+	typeinfo.subtypes.highlydef = true
 
 	data.forms["1s_pres_actv_indc"] = "inquam"
 	data.forms["2s_pres_actv_indc"] = "inquis"
@@ -2190,6 +2253,7 @@ irreg_conjugations["sum"] = function(args, data, typeinfo)
 	prefix_f = prefix_f:gsub("([aeiou]n)$", {["an"] = "ān", ["en"] = "ēn", ["in"] = "īn", ["on"] = "ōn", ["un"] = "ūn"})
 
 	typeinfo.subtypes.nopass = true
+	typeinfo.subtypes.supfutractvonly = true
 	make_perf(data, prefix_f .. "fu")
 	make_supine(data, prefix_f .. "fut")
 
