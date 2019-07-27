@@ -250,27 +250,27 @@ export.allowed_subtypes = {
 	["pass3only"] = true,
 	["passimpers"] = true,
 	["perfaspres"] = true,
-	["memini"] = true,
 	["noperf"] = true,
-	["noactvperf"] = true,
 	["nopasvperf"] = true,
 	["nosup"] = true,
 	["supfutractvonly"] = true,
 	["noimp"] = true,
-	-- FIXME, remove this once we've converted all the verbs
-	["shortimp"] = true,
 	["nofut"] = true,
-	["def"] = true,
-	-- FIXME, remove this once we've converted all the verbs
-	["facio"] = true,
-	-- FIXME, remove this once we've converted all the verbs
-	["irreg"] = true,
 	["p3inf"] = true,
 	["poetsyncperf"] = true,
 	["optsyncperf"] = true,
 	["alwayssyncperf"] = true,
+	-- can be specified manually in the headword to display "highly defective"
+	-- in the title (e.g. aveō)
+	["highlydef"] = true,
+	-- FIXME, remove the remainder once we've converted all the verbs
+	["shortimp"] = true,
+	["def"] = true,
+	["facio"] = true,
+	["irreg"] = true,
 }
 
+-- FIXME, remove this once we've converted all the verbs
 function export.split_verb_subtype(subtype)
 	if not subtype or subtype == "" then
 		return {}
@@ -280,7 +280,6 @@ function export.split_verb_subtype(subtype)
 	subtype = rsub(subtype, "semi%-depon", "semidepon")
 	subtype = rsub(subtype, "pass%-3only", "pass3only")
 	subtype = rsub(subtype, "pass%-impers", "passimpers")
-	subtype = rsub(subtype, "no%-actv%-perf", "noactvperf")
 	subtype = rsub(subtype, "no%-pasv%-perf", "nopasvperf")
 	subtype = rsub(subtype, "perf%-as%-pres", "perfaspres")
 	subtype = rsub(subtype, "short%-imp", "shortimp")
@@ -297,6 +296,7 @@ function export.split_verb_subtype(subtype)
 	return subtypes
 end
 
+-- FIXME, remove this and replace with verbs-new once we've converted all the verbs
 pos_functions["verbs"] = function(class, args, data, infl_classes, appendix)
 	if args[1] and (
 		rfind(args[1], "^[0-9]%+*$") or rfind(args[1], "^[0-9]%+*%.") or
@@ -411,15 +411,13 @@ pos_functions["verbs"] = function(class, args, data, infl_classes, appendix)
 			table.insert(appendix, "no [[perfect#English|perfect]] or [[supine#English|supine]] forms")
 		else
 			-- īnsolēscō
-			table.insert(appendix, "no [[perfect#English|perfect]]")
+			table.insert(appendix, "no [[perfect#English|perfect]] stem")
 		end
 	end
-	if (ut.contains(subtypes, "noactvperf") or
-		ut.contains(subtypes, "nopasvperf") or
+	if (ut.contains(subtypes, "nopasvperf") or
 		ut.contains(subtypes, "perfaspres") or
 		ut.contains(subtypes, "def")
 	) then
-		-- interstinguō (noactvperf)
 		-- ārēscō (nopasvperf)
 		-- ōdī (perfaspres)
 		-- āiō (def)
@@ -468,7 +466,7 @@ pos_functions["verbs"] = function(class, args, data, infl_classes, appendix)
 end
 
 pos_functions["verbs-new"] = function(class, args, data, infl_classes, appendix)
-	local m_la_verb = require("Module:User:Benwing2/la-verb")
+	local m_la_verb = require("Module:la-verb")
 	local conjdata, typeinfo = m_la_verb.make_data(args, true)
 	local lemma_forms = conjdata.overriding_lemma
 	if not lemma_forms or #lemma_forms == 0 then
@@ -566,6 +564,18 @@ pos_functions["verbs-new"] = function(class, args, data, infl_classes, appendix)
 		end
 	end
 
+	if conj == "irreg" and subconj == "irreg" or subtypes.irreg then
+		--sum, volō, ferō etc.
+		table.insert(appendix, "[[irregular#English|irregular]]")
+	end
+	if subtypes.highlydef then
+		-- āiō, inquam
+		table.insert(appendix, "highly [[defective#English|defective]]")
+	end
+	if subtypes.perfaspres then
+		-- ōdī, meminī, commeminī
+		table.insert(appendix, "[[perfect#English|perfect]] forms have [[present#English|present]] meaning")
+	end
 	if subtypes.impers then
 		-- decet
 		-- advesperāscit (also nopass)
@@ -588,25 +598,22 @@ pos_functions["verbs-new"] = function(class, args, data, infl_classes, appendix)
 		-- audeō, placeō, soleō, pudeō
 		table.insert(appendix, "optionally [[semi-deponent#English|semi-deponent]]")
 	end
-	if subtypes.noperf then
-		-- īnsolēscō
-		table.insert(appendix, "no [[perfect#English|perfect]]")
-	end
-	if (subtypes.noactvperf or subtypes.nopasvperf or subtypes.perfaspres or subtypes.def
-	) then
-		-- interstinguō (noactvperf)
-		-- ārēscō (nopasvperf)
-		-- ōdī (perfaspres)
-		-- āiō (def)
-		table.insert(appendix, "[[defective#English|defective]]")
-	end
-	if subtypes.nosup then
+	if subtypes.nosup and subtypes.noperf then
+		-- many verbs
+		table.insert(appendix, "no [[perfect#English|perfect]] or [[supine#English|supine]] stem")
+	elseif subtypes.noperf then
+		-- īnsolēscō etc.
+		table.insert(appendix, "no [[perfect#English|perfect]] stem")
+	elseif subtypes.nosup then
 		-- deeō etc.
 		table.insert(appendix, "no [[supine#English|supine]] stem")
-	end
-	if subtypes.supfutractvonly then
+	elseif subtypes.supfutractvonly then
 		-- sum, dēpereō, etc.
 		table.insert(appendix, "no [[supine#English|supine]] stem except in the [[future#English|future]] [[active#English|active]] [[participle#English|participle]]")
+	end
+	if typeinfo.subtypes.nopasvperf and not typeinfo.subtypes.nosup and
+			not typeinfo.subtypes.supfutractvonly then
+		table.insert(appendix, "no [[passive#English|passive]] [[perfect#English|perfect]] forms")
 	end
 	if subtypes.pass3only then
 		--praefundō
@@ -623,10 +630,6 @@ pos_functions["verbs-new"] = function(class, args, data, infl_classes, appendix)
 	if subtypes["3only"] then
 		--decet
 		table.insert(appendix,"[[third person#English|third person]] only")
-	end
-	if conj == "irreg" then
-		--ferō
-		table.insert(appendix, "[[irregular#English|irregular]]")
 	end
 	if subtypes.noimp then
 		--volō
