@@ -3014,6 +3014,8 @@ a3 flāvitarsis
 a3 flāviventris
 a1 āfroāsiāticus
 v1 calō
+n4 auspicātus
+n4 baccalaureātus
 # wrongly has short a and e
 a3 intellēctuālis
 a1 arēnātus
@@ -3108,6 +3110,7 @@ a1 dēceptīvus
 a1 dēceptōrius
 a1 dēserticolus
 a3 inquiēs inquiēt
+n1 bibliothēcula
 # wrongly has short e and i
 a3 mēningītidis
 # wrongly has short e and o
