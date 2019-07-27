@@ -177,7 +177,7 @@ end
 
 decl["1-1"] = function(data, args)
 	local title = {}
-	table.insert(title, "[[Appendix:Latin first declension|First declension]], masculine feminine forms identical to feminine forms")
+	table.insert(title, "[[Appendix:Latin first declension|First declension]], masculine forms identical to feminine forms, no neuter forms")
 	if data.num == "sg" then
 		table.insert(title, "no plural")
 	elseif data.num == "pl" then
@@ -216,6 +216,8 @@ decl["1-1"] = function(data, args)
 
 	data.forms["voc_sg_m"] = stem .. "a"
 	data.forms["voc_pl_m"] = stem .. "ae"
+
+	data.noneut = true
 
 	data.title = table.concat(title, ", ") .. "."
 

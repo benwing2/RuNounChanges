@@ -65,7 +65,7 @@ local PAGENAME = current_title.text
 local m_noun_decl = require("Module:la-noun/data")
 local m_noun_table = require("Module:la-noun/table")
 local m_adj_decl = require("Module:la-adj/data")
-local m_adj_table = require("Module:User:Benwing2/la-adj/table")
+local m_adj_table = require("Module:la-adj/table")
 local m_la_utilities = require("Module:la-utilities")
 
 local rsplit = mw.text.split
@@ -1527,6 +1527,8 @@ local function decline_segment_run(parsed_run, is_adj)
 		-- FIXME, do we really need to special-case this? Maybe the nonexistent vocative
 		-- form will automatically propagate up through the other forms.
 		voc = true,
+		-- May be set true if declining a 1-1 adjective
+		noneut = false,
 	}
 
 	for slot in iter_slots(is_adj) do
@@ -1555,6 +1557,7 @@ local function decline_segment_run(parsed_run, is_adj)
 					footnote = "",
 					num = seg.num or "",
 					voc = true,
+					noneut = false,
 					forms = {},
 					types = seg.types,
 					categories = {},
@@ -1565,6 +1568,9 @@ local function decline_segment_run(parsed_run, is_adj)
 				m_adj_decl[seg.decl](data, seg.args)
 				if not data.voc then
 					declensions.voc = false
+				end
+				if data.noneut then
+					declensions.noneut = true
 				end
 			else
 				if not m_noun_decl[seg.decl] then
@@ -1691,6 +1697,9 @@ local function decline_segment_run(parsed_run, is_adj)
 				local this_declensions = decline_segment_run(this_parsed_run, is_adj)
 				if not this_declensions.voc then
 					declensions.voc = false
+				end
+				if this_declensions.noneut then
+					declensions.noneut = true
 				end
 				-- If there's a number restriction on the segment run, blank
 				-- out the forms outside the restriction. This allows us to
@@ -1961,7 +1970,7 @@ function export.do_generate_adj_forms(parent_args, from_headword)
 		prefix = "",
 		suffix = "",
 		voc = declensions.voc,
-		noneut = args.noneut,
+		noneut = args.noneut or declensions.noneut,
 		lemma = args.lemma,
 		comp = args.comp,
 		sup = args.sup,
