@@ -65,7 +65,7 @@ local PAGENAME = current_title.text
 local m_noun_decl = require("Module:la-noun/data")
 local m_noun_table = require("Module:la-noun/table")
 local m_adj_decl = require("Module:la-adj/data")
-local m_adj_table = require("Module:la-adj/table")
+local m_adj_table = require("Module:User:Benwing2/la-adj/table")
 local m_la_utilities = require("Module:la-utilities")
 
 local rsplit = mw.text.split
@@ -105,6 +105,33 @@ local linked_prefixes = {
 	"", "linked_"
 }
 
+-- List of adjective slots for which we generate linked variants. Include
+-- feminine and neuter variants because they will be needed if the adjective
+-- is part of a multiword feminine or neuter noun.
+local potential_adj_lemma_slots = {
+	"nom_sg_m",
+	"nom_pl_m",
+	"nom_sg_f",
+	"nom_pl_f",
+	"nom_sg_n",
+	"nom_pl_n"
+}
+
+local linked_to_non_linked_adj_slots = {}
+for _, slot in ipairs(potential_adj_lemma_slots) do
+	linked_to_non_linked_adj_slots["linked_" .. slot] = slot
+end
+
+local potential_noun_lemma_slots = {
+	"nom_sg",
+	"nom_pl"
+}
+
+local linked_to_non_linked_noun_slots = {}
+for _, slot in ipairs(potential_noun_lemma_slots) do
+	linked_to_non_linked_noun_slots["linked_" .. slot] = slot
+end
+
 -- Iterate over all the "slots" associated with a noun declension, where a slot
 -- is a particular case/number combination. If overridable_only, don't include the
 -- "linked_" variants (linked_nom_sg, linked_nom_pl), which aren't overridable.
@@ -133,7 +160,7 @@ end
 
 -- Iterate over all the "slots" associated with an adjective declension, where a slot
 -- is a particular case/number/gender combination. If overridable_only, don't include the
--- "linked_" variants (linked_nom_sg_m, linked_nom_pl_m), which aren't overridable.
+-- "linked_" variants (linked_nom_sg_m, linked_nom_pl_m, etc.), which aren't overridable.
 local function iter_adj_slots(overridable_only)
 	local case = 1
 	local num = 1
@@ -174,6 +201,18 @@ local function iter_slots(is_adj, overridable_only)
 	end
 end
 
+local function concat_forms_in_slot(forms)
+	if forms and forms ~= "" and forms ~= "—" and #forms > 0 then
+		local new_vals = {}
+		for _, v in ipairs(forms) do
+			table.insert(new_vals, rsub(v, "|", "<!>"))
+		end
+		return table.concat(new_vals, ",")
+	else
+		return nil
+	end
+end
+
 local function process_noun_forms_and_overrides(data, args)
 	local redlink = false
 	if data.num == "pl" and NAMESPACE == '' then
@@ -188,17 +227,17 @@ local function process_noun_forms_and_overrides(data, args)
 		if args[slot] then
 			val = args[slot]
 			data.user_specified[slot] = true
-		elseif slot == "linked_nom_sg" and args["nom_sg"] then
-			-- Overridding nom_sg should override linked_nom_sg so that
+		else
+			-- Overridding nom_sg etc. should override linked_nom_sg so that
 			-- the correct value gets displayed in the headword, which uses
 			-- linked_nom_sg.
-			val = args["nom_sg"]
-		elseif slot == "linked_nom_pl" and args["nom_pl"] then
-			-- Likewise for linked_nom_pl, in the case of plural-only
-			-- nouns.
-			val = args["nom_pl"]
-		else
-			val = data.forms[slot]
+			local non_linked_equiv_slot = linked_to_non_linked_noun_slots[slot]
+			if non_linked_equiv_slot and args[non_linked_equiv_slot] then
+				val = args[non_linked_equiv_slot]
+				data.user_specified[slot] = true
+			else
+				val = data.forms[slot]
+			end
 		end
 		if val then
 			if type(val) == "string" then
@@ -264,17 +303,17 @@ local function process_adj_forms_and_overrides(data, args)
 		if args[slot] then
 			val = args[slot]
 			data.user_specified[slot] = true
-		elseif slot == "linked_nom_sg_m" and args["nom_sg_m"] then
-			-- Overridding nom_sg_m should override linked_nom_sg_m so that
+		else
+			-- Overridding nom_sg_m etc. should override linked_nom_sg_m so that
 			-- the correct value gets displayed in the headword, which uses
 			-- linked_nom_sg_m.
-			val = args["nom_sg_m"]
-		elseif slot == "linked_nom_pl_m" and args["nom_pl_m"] then
-			-- Likewise for linked_nom_pl_m, in the case of plural-only
-			-- adjectives.
-			val = args["nom_pl_m"]
-		else
-			val = data.forms[slot]
+			local non_linked_equiv_slot = linked_to_non_linked_adj_slots[slot]
+			if non_linked_equiv_slot and args[non_linked_equiv_slot] then
+				val = args[non_linked_equiv_slot]
+				data.user_specified[slot] = true
+			else
+				val = data.forms[slot]
+			end
 		end
 		if val then
 			if type(val) == "string" then
@@ -429,13 +468,16 @@ end
 -- if not. The display form is as in show_forms() but combines together all the
 -- accelerator forms for all the slots.
 local function finish_show_form(data, slots, is_adj)
-	assert #slots > 0
+	assert(#slots > 0)
 	local slot1 = slots[1]
 	local forms = data.forms[slot1]
 	local notetext = data.notetext[slot1]
 	for _, slot in ipairs(slots) do
-		assert(data.forms[slot] == forms)
-		assert(data.notetext[slot] == notetext)
+		if not ut.equals(data.forms[slot], forms) then
+			error("data.forms[" .. slot1 .. "] = " .. (concat_forms_in_slot(forms) or "nil") ..
+				", but data.forms[" .. slot .. "] = " .. (concat_forms_in_slot(data.forms[slot]) or "nil"))
+		end
+		assert(ut.equals(data.notetext[slot], notetext))
 	end
 	if not forms then
 		return "—"
@@ -443,7 +485,7 @@ local function finish_show_form(data, slots, is_adj)
 		local accel_forms = {}
 		local accel_lemma = data.accel[slot1].lemma
 		for _, slot in ipairs(slots) do
-			assert data.accel[slot].lemma == accel_lemma
+			assert(data.accel[slot].lemma == accel_lemma)
 			table.insert(accel_forms, data.accel[slot].form)
 		end
 		local combined_accel_form = table.concat(accel_forms, "|;|")
@@ -472,7 +514,7 @@ local function partial_show_forms(data, is_adj)
 	data.finish_show_form = finish_show_form
 	for slot in iter_slots(is_adj) do
 		local val = data.forms[slot]
-		if not or val == "" or val == "—" then
+		if not val or val == "" or val == "—" then
 			data.forms[slot] = nil
 		else
 			local notetext = {}
@@ -518,13 +560,9 @@ end
 local function concat_forms(data, is_adj, include_props)
 	local ins_text = {}
 	for slot in iter_slots(is_adj) do
-		local val = data.forms[slot]
-		if val and val ~= "" and val ~= "—" and #val > 0 then
-			local new_vals = {}
-			for _, v in ipairs(val) do
-				table.insert(new_vals, rsub(v, "|", "<!>"))
-			end
-			table.insert(ins_text, slot .. "=" .. table.concat(new_vals, ","))
+		local formtext = concat_forms_in_slot(data.forms[slot])
+		if formtext then
+			table.insert(ins_text, slot .. "=" .. formtext)
 		end
 	end
 	if include_props then
@@ -1196,7 +1234,7 @@ local function parse_segment_run(segment_run)
 	-- hyphen in it. So we do an outer capturing split to find the bracketed links followed
 	-- by <>, then do inner capturing splits on all the remaining text to find the other
 	-- declined terms.
-	local bracketed_segments = m_string_utilities.capturing_split(segment_run, "(%[%[.-%]%]<.->)")
+	local bracketed_segments = m_string_utilities.capturing_split(segment_run, "(%[%[[^%[%]]-%]%]<.->)")
 	for i, bracketed_segment in ipairs(bracketed_segments) do
 		if i % 2 == 0 then
 			table.insert(segments, bracketed_segment)
@@ -1510,7 +1548,7 @@ local function decline_segment_run(parsed_run, is_adj)
 					error("Unrecognized declension '" .. seg.decl .. "'")
 				end
 
-				potential_lemma_slots = {"nom_sg_m", "nom_pl_m"}
+				potential_lemma_slots = potential_adj_lemma_slots
 
 				data = {
 					title = "",
@@ -1533,7 +1571,7 @@ local function decline_segment_run(parsed_run, is_adj)
 					error("Unrecognized declension '" .. seg.decl .. "'")
 				end
 
-				potential_lemma_slots = {"nom_sg", "nom_pl"}
+				potential_lemma_slots = potential_noun_lemma_slots
 
 				data = {
 					title = "",
