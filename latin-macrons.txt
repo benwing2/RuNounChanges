@@ -2843,6 +2843,8 @@ part1 paritūrus
 a3 causālis
 n3 circumdatiō
 a1 patricius
+n3 chīlias chīliad
+n1 flagrantia
 # wrongly has long e
 a3 cathedrālis
 a1 extreus
@@ -2850,8 +2852,10 @@ a1 extreus
 a3 horizontālis
 a1 nigritus
 a1 tigrīnus
+part1 obstitus
 # wrongly has long o
 pn2 Mediolānum
+n2 cuprum
 ###
 ### missing long vowels
 ###
@@ -3016,6 +3020,8 @@ a1 āfroāsiāticus
 v1 calō
 n4 auspicātus
 n4 baccalaureātus
+n4 patriarchātus
+n2 tomāclum
 # wrongly has short a and e
 a3 intellēctuālis
 a1 arēnātus
@@ -3061,6 +3067,7 @@ a1 computātōrius
 a1 precātōrius
 n3 cōdificātiō
 a3 flāvomaculātus
+n3 decorātiō
 # wrongly has short a, o and u
 a1 acūtisquāmōsus
 # wrongly has short a and u
@@ -3111,6 +3118,54 @@ a1 dēceptōrius
 a1 dēserticolus
 a3 inquiēs inquiēt
 n1 bibliothēcula
+n5 aciēs
+n5 ascitītiēs
+n5 avāritiēs
+n5 caesariēs
+n5 cānitiēs
+n5 cariēs
+n5 congeriēs
+n5 crassitiēs
+n5 diēs
+n5 dūritiēs
+n5 effigiēs
+n5 ēgeriēs
+n5 ēluviēs
+n5 ēsuriēs
+n5 faciēs
+n5 fidēs
+n5 glaciēs
+n5 Hērōdis diēs
+n5 -iēs
+n5 illuviēs
+n5 inluviēs
+n5 luxuriēs
+n5 māceriēs
+n5 maciēs
+n5 māteriēs
+n5 medīdiēs
+n5 merīdiēs
+n5 mollitiēs
+n5 munditiēs
+n5 nāvitiēs
+n5 pauperiēs
+n5 permitiēs
+n5 perniciēs
+n5 plānitiēs
+n5 prōgeniēs
+n5 rabiēs
+n5 saniēs
+n5 scabiēs
+n5 seriēs
+n5 sēsquidiēs
+n5 subspeciēs
+n5 superficiēs
+n5 temperiēs
+n3 faelēs fael
+n1 lēctiuncula
+n1 medēla
+pn1 Aurēlia
+pn1 Cornēlia
 # wrongly has short e and i
 a3 mēningītidis
 # wrongly has short e and o
@@ -3122,6 +3177,7 @@ a1 ēlectrōnicus
 a1 acūtisēpalus
 a1 sēminūdus
 n2 dējūrium
+n5 dūritiēs
 # wrongly has short i
 v1 cōnspīrō
 n2 suspīrium
@@ -3152,6 +3208,7 @@ a1 commentīcius
 a1 crātīcius
 a1 damnātīcius
 a3 spīnipennis
+pn1 Frīsia
 # following wrongly has danistīcus
 a1 danīsticus
 a1 bipartītus
@@ -3159,6 +3216,7 @@ a1 bipertītus
 # wrongly has short i and o
 a1 altispīnōsus
 a1 thermolīmōsus
+n3 silīgō silīgin
 # wrongly has short o
 a3 tricolor
 a3 ūnicolor
@@ -3185,6 +3243,9 @@ n3 pronepōs pronepōt
 n2 prōtium
 prōvulgō prōvulgāre prōvulgāvī prōvulgātum
 a1 prōgeneticus
+n2 cotōnium
+n3 incubō
+n3 prōcōnsul
 # wrongly has short o and u
 a1 frūctuōsus
 a1 frūctuōsissimus
@@ -3228,6 +3289,12 @@ part1 dēminūtus
 part1 indūtus
 part1 dissolūtus
 a1 dissolūtus
+a1 iūdaeus
+n2 iūdaeus
+n1 mūsica
+n2 praepūtium
+pn2 Lūcius
+pn1 Lūcia
 # wrongly has short a in sup
 v1 vēlitor
 v1 vērificō
