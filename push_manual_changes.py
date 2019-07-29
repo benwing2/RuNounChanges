@@ -41,24 +41,32 @@ def push_manual_changes(save, verbose, direcfile, annotation, startFrom, upTo):
     if not m:
       m = re.match(r"^(?:Page [^ ]+ )(.*?): .* /// (.*?) /// (.*?)$", line)
       repl_on_right = True
-    if not m:
-      msg("WARNING: Unable to parse line: [%s]" % line)
-      continue
-    if m.group(2) != m.group(3):
-      # If the current template is the same as the current template of the
-      # previous entry, ignore the previous entry; otherwise we won't be
-      # able to locate the current template the second time around. This
-      # happens e.g. in the output of find_russian_need_vowels.py when
-      # processing a template such as cardinalbox or compound that has
-      # more than one foreign-language parameter in it.
-      if len(template_changes) > 0 and template_changes[-1][2] == m.group(3):
-        msg("Ignoring change for pagename %s, %s -> %s" % template_changes[-1])
-        template_changes.pop()
-      if repl_on_right:
-        pagename, curr, repl = m.groups()
-        template_changes.append((pagename, repl, curr))
-      else:
-        template_changes.append(m.groups())
+    if m:
+      if m.group(2) != m.group(3):
+        # If the current template is the same as the current template of the
+        # previous entry, ignore the previous entry; otherwise we won't be
+        # able to locate the current template the second time around. This
+        # happens e.g. in the output of find_russian_need_vowels.py when
+        # processing a template such as cardinalbox or compound that has
+        # more than one foreign-language parameter in it.
+        if len(template_changes) > 0 and template_changes[-1][2] == m.group(3):
+          msg("Ignoring change for pagename %s, %s -> %s" % template_changes[-1])
+          template_changes.pop()
+        if repl_on_right:
+          pagename, curr, repl = m.groups()
+          template_changes.append((pagename, repl, curr))
+        else:
+          template_changes.append(m.groups())
+    else:
+      mpage = re.search(r"^(?:Page [^ ]+ )(.*?): (.*)$", line)
+      if not mpage:
+        msg("WARNING: Unable to parse line: [%s]" % line)
+        continue
+      pagename, directives = mpage.groups()
+      for m in re.finditer("<from> (.*?) <to> (.*?) <end>", directives):
+        curr, repl = m.groups()
+        if curr != repl:
+          template_changes.append((pagename, repl, curr))
 
   for current, index in blib.iter_pages(template_changes, startFrom, upTo,
       # key is the page name
@@ -94,6 +102,10 @@ def push_manual_changes(save, verbose, direcfile, annotation, startFrom, upTo):
         newtext_text_diff = len(newtext) - len(text)
         if newtext_text_diff == repl_curr_diff:
           pass
+        if repl_curr_diff == 0:
+          if newtext_text_diff != 0:
+            pagemsg("WARNING: Something wrong, no change in text length during replacement but expected change: Expected length change=%s, actual=%s, curr=%s, repl=%s"
+                % (repl_curr_diff, newtext_text_diff, curr, repl))
         else:
           ratio = float(newtext_text_diff) / repl_curr_diff
           if ratio == int(ratio):
