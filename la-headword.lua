@@ -22,6 +22,14 @@ local legal_gender = {
 	["?-p"] = true,
 }
 
+local new_legal_gender = {
+	["m"] = true,
+	["f"] = true,
+	["n"] = true,
+	["c"] = true,
+	["?"] = true,
+}
+
 local legal_declension = {
 	["first"] = true,
 	["second"] = true,
@@ -29,6 +37,15 @@ local legal_declension = {
 	["fourth"] = true,
 	["fifth"] = true,
 	["irregular"] = true,
+}
+
+local new_declension_to_old_declension = {
+	["1"] = "first",
+	["2"] = "second",
+	["3"] = "third",
+	["4"] = "fourth",
+	["5"] = "fifth",
+	["irreg"] = "irregular",
 }
 
 local gender_names = {
@@ -49,6 +66,14 @@ local gender_names = {
 	["?-p"] = "unknown gender",
 }
 
+local new_gender_names = {
+	["m"] = "masculine",
+	["f"] = "feminine",
+	["n"] = "neuter",
+	["c"] = "common",
+	["?"] = "unknown gender",
+}
+
 local lang = require("Module:languages").getByCode("la")
 local suffix = nil
 
@@ -56,6 +81,7 @@ local u = mw.ustring.char
 local rfind = mw.ustring.find
 local rsplit = mw.text.split
 local rsubn = mw.ustring.gsub
+local ulower = mw.ustring.lower
 
 local MACRON = u(0x0304)
 local BREVE = u(0x0306)
@@ -141,6 +167,10 @@ function export.show(frame)
 end
 
 pos_functions["nouns"] = function(class, args, data, infl_classes, appendix)
+	if not args[2] and not args[3] and not args[4] then
+		return pos_functions["nouns-new"](class, args, data, infl_classes, appendix)
+	end
+
 	params = {
 		[1] = {alias_of = 'head'},
 		[2] = {alias_of = 'gen'},
@@ -164,7 +194,7 @@ pos_functions["nouns"] = function(class, args, data, infl_classes, appendix)
 			table.insert(data.genders, g)
 			table.insert(data.categories, "Latin " .. gender_names[g] .. " nouns")
 		else
-			error("Gender “" .. g .. "” is not an valid Latin gender.")
+			error("Gender “" .. g .. "” is not a valid Latin gender.")
 		end
 	end
 
@@ -214,26 +244,147 @@ pos_functions["nouns"] = function(class, args, data, infl_classes, appendix)
 			end
 			table.insert(data.inflections, args.gen)
 		end
+	end
 
-		if #args.m > 0 then
-			args.m.label = "masculine"
-			if suffix then
-				for i, m in ipairs(args.m) do
-					args.m[i] = suffix .. m
+	if #args.m > 0 then
+		args.m.label = "masculine"
+		if suffix then
+			for i, m in ipairs(args.m) do
+				args.m[i] = suffix .. m
+			end
+		end
+		table.insert(data.inflections, args.m)
+	end
+
+	if #args.f > 0 then
+		args.f.label = "feminine"
+		if suffix then
+			for i, f in ipairs(args.f) do
+				args.f[i] = suffix .. f
+			end
+		end
+		table.insert(data.inflections, args.f)
+	end
+end
+
+pos_functions["nouns-new"] = function(class, args, data, infl_classes, appendix)
+	local decldata = require("Module:User:Benwing2/la-nominal").do_generate_noun_forms(args, true)
+	local lemma = decldata.overriding_lemma
+	local lemma_num = decldata.num == "pl" and "pl" or "sg"
+	if not lemma or #lemma == 0 then
+		lemma = decldata.forms["linked_nom_" .. lemma_num]
+	end
+
+	data.heads = lemma
+	data.id = decldata.id
+	if decldata.pos then
+		local NAMESPACE = mw.title.getCurrentTitle().nsText
+		data.pos_category = (NAMESPACE == "Reconstruction" and "reconstructed " or "") .. decldata.pos
+	end
+
+	local genders = decldata.overriding_genders
+	if #genders == 0 then
+		if decldata.gender then
+			genders = {ulower(decldata.gender)}
+		else
+			error("No gender explicitly specified in headword template using g=, and can't infer gender from lemma spec")
+		end
+	end
+
+	for _, g in ipairs(genders) do
+		if not new_legal_gender[g] then
+			error("Gender “" .. g .. "” is not a valid Latin gender.")
+		end
+		local gender_name = new_gender_names[g]
+		if decldata.num == "pl" then
+			g = g .. "-p"
+		elseif decldata.num == "sg" then
+			g = g .. "-s"
+		end
+		table.insert(data.genders, g)
+		table.insert(data.categories, "Latin " .. gender_name .. " nouns")
+	end
+
+	if decldata.indecl then
+		table.insert(data.inflections, {label = glossary_link("indeclinable")})
+		table.insert(data.categories, "Latin indeclinable nouns")
+		for _, g in ipairs(genders) do
+			table.insert(data.categories, "Latin " .. new_gender_names[g] ..  " indeclinable nouns")
+		end
+	else
+		-- flatten declension specs
+		local decls = {}
+		for _, decl in ipairs(decldata.decls) do
+			if type(decl) ~= "table" then
+				-- skip adjectival declensions
+				if not rfind(decl, "%+$") then
+					ut.insert_if_not(decls, decl)
+				end
+			else
+				for _, alternant in ipairs(decl) do
+					for _, single_decl in ipairs(alternant) do
+						-- skip adjectival declensions
+						if not rfind(single_decl, "%+$") then
+							ut.insert_if_not(decls, single_decl)
+						end
+					end
 				end
 			end
-			table.insert(data.inflections, args.m)
 		end
 
-		if #args.f > 0 then
-			args.f.label = "feminine"
+		if #decls > 1 then
+			table.insert(data.inflections, {label = 'variously declined'})
+			table.insert(data.categories, "Latin nouns with multiple declensions")
+		end
+
+		for _, decl in ipairs(decls) do
+			local decl_class = new_declension_to_old_declension[decl]
+			if not decl_class then
+				error("Something wrong with declension '" .. decl .. "', don't recognize it")
+			end
+			table.insert(appendix, "[[Appendix:Latin " .. decl_class .. " declension|" .. decl_class .. " declension]]")
+			if decl_class ~= "irregular" then
+				table.insert(data.categories, "Latin " .. decl_class .. " declension nouns")
+			end
+
+			for _, g in ipairs(genders) do
+				table.insert(data.categories, "Latin " .. new_gender_names[g] ..  " nouns in the " .. decl_class .. " declension")
+			end
+		end
+
+		local gen = decldata.forms["gen_" .. lemma_num]
+		if gen and gen ~= "" and gen ~= "—" and #gen > 0 then
+			gen.label = "genitive"
 			if suffix then
-				for i, f in ipairs(args.f) do
-					args.f[i] = suffix .. f
+				for i, g in ipairs(gen) do
+					gen[i] = suffix .. g
 				end
 			end
-			table.insert(data.inflections, args.f)
+			table.insert(data.inflections, gen)
+		else
+			table.insert(data.inflections, {label = "no genitive"})
+			table.insert(data.categories, "Latin nouns without a genitive singular")
 		end
+	end
+
+	if #decldata.m > 0 then
+		decldata.m.label = "masculine"
+		if suffix then
+			for i, m in ipairs(decldata.m) do
+				decldata.m[i] = suffix .. m
+			end
+		end
+		table.insert(data.inflections, decldata.m)
+	end
+
+	if #decldata.f > 0 then
+		decldata.f.label = "feminine"
+		if suffix then
+			for i, f in ipairs(decldata.f) do
+				decldata.f[i] = suffix .. f
+			end
+		end
+		table.insert(data.inflections, decldata.f)
 	end
 end
 
@@ -260,6 +411,12 @@ export.allowed_subtypes = {
 	["poetsyncperf"] = true,
 	["optsyncperf"] = true,
 	["alwayssyncperf"] = true,
+	["m"] = true,
+	["f"] = true,
+	["n"] = true,
+	["mp"] = true,
+	["fp"] = true,
+	["np"] = true,
 	-- can be specified manually in the headword to display "highly defective"
 	-- in the title (e.g. aveō)
 	["highlydef"] = true,
@@ -466,7 +623,7 @@ pos_functions["verbs"] = function(class, args, data, infl_classes, appendix)
 end
 
 pos_functions["verbs-new"] = function(class, args, data, infl_classes, appendix)
-	local m_la_verb = require("Module:la-verb")
+	local m_la_verb = require("Module:User:Benwing2/la-verb")
 	local conjdata, typeinfo = m_la_verb.make_data(args, true)
 	local lemma_forms = conjdata.overriding_lemma
 	if not lemma_forms or #lemma_forms == 0 then
@@ -656,8 +813,8 @@ pos_functions["adjectives"] = function(class, args, data, infl_classes, appendix
 end
 
 pos_functions["adjectives-new"] = function(class, args, data, infl_classes, appendix)
-	local decldata = require("Module:la-nominal").do_generate_adj_forms(args, true)
-	local lemma = decldata.lemma
+	local decldata = require("Module:User:Benwing2/la-nominal").do_generate_adj_forms(args, true)
+	local lemma = decldata.overriding_lemma
 	local lemma_num = decldata.num == "pl" and "pl" or "sg"
 	if not lemma or #lemma == 0 then
 		lemma = decldata.forms["linked_nom_" .. lemma_num .. "_m"]
