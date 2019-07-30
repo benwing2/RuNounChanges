@@ -20,10 +20,12 @@ def process_page(page, index, parsed):
     return None, None
   pagemsg("Processing")
 
+  num_ndecl_templates = 0
   for t in parsed.filter_templates():
     origt = unicode(t)
     tn = tname(t)
     if tn == "la-ndecl":
+      num_ndecl_templates += 1
       lemmaspec = getparam(t, "1")
       m = re.search("^(.*)<(.*)>$", lemmaspec)
       if not m:
@@ -31,11 +33,20 @@ def process_page(page, index, parsed):
           lemmaspec, origt))
         continue
       lemma, spec = m.groups()
-      if ".loc" not in spec:
+      if ".loc" in spec:
+        pagemsg("Already has .loc in spec: %s" % origt)
+      elif lemma.endswith("polis"):
+        pagemsg("Ends with -polis, don't need to add .loc: %s" % origt)
+      else:
         spec += ".loc"
         t.add("1", "%s<%s>" % (lemma, spec))
         pagemsg("Replaced %s with %s" % (origt, unicode(t)))
         notes.append("add .loc to declension of Latin city")
+  if num_ndecl_templates > 1:
+    pagemsg("WARNING: Saw multiple {{la-ndecl}} templates, some may not be cities")
+    return None, None
+  if num_ndecl_templates == 0:
+    pagemsg("WARNING: Didn't see any {{la-ndecl}} templates")
 
   return unicode(parsed), notes
 
@@ -50,7 +61,9 @@ if args.pagefile:
     blib.do_edit(pywikibot.Page(site, page), i, process_page, save=args.save,
       verbose=args.verbose, diff=args.diff)
 else:
-  for cat in ["la:Cities", "la:Towns"]:
+  for cat in ["la:Cities", "la:Towns", "la:Capital cities", "la:Cities in France",
+      "la:Cities in Italy", "la:Cities in Spain", "la:Cities in Sweden",
+      "la:Cities in the United Kingdom", "la:Cities in England"]:
     for i, page in blib.cat_articles(cat, start, end):
       blib.do_edit(page, i, process_page, save=args.save, verbose=args.verbose,
         diff=args.diff)
