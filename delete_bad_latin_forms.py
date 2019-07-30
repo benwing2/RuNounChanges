@@ -481,6 +481,8 @@ def process_page(index, lemma, pos, infl, forms, pages_to_delete, preserve_diaer
         if remove_macrons(lemma) not in [remove_macrons(v) for v in vals]:
           tag_sets_to_delete.append(lalib.form_key_to_tag_set(key))
           forms_to_delete.append((key, val))
+    elif form in ["allbutnomsgn"]:
+      add_bad_forms(lambda key: key != "nom_sg_n")
     elif form == "firstpart":
       add_bad_forms(lambda key: (
         key not in ["futr_actv_ptc", "futr_actv_inf", "futr_pasv_inf"] and (
