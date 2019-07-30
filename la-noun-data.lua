@@ -94,7 +94,7 @@ decl["1"] = function(data, args)
 		data.forms["loc_pl"] = stem .. "īs"
 	end
 
-	if data.n then
+	if data.types.sufn then
 		table.insert(title, "with ''m'' → ''n'' in compounds")
 	end
 
@@ -266,7 +266,7 @@ decl["2"] = function(data, args)
 		end
 	end
 
-	if data.n then
+	if data.types.sufn then
 		table.insert(title, "with ''m'' → ''n'' in compounds")
 	end
 
@@ -516,7 +516,7 @@ decl["3"] = function(data, args)
 		--end
 	end
 
-	if data.n then
+	if data.types.sufn then
 		table.insert(title, "with ''m'' → ''n'' in compounds")
 	end
 
@@ -601,19 +601,11 @@ decl["4"] = function(data, args)
 	if data.loc then
 		table.insert(title, "with locative")
 
-		data.forms["loc_sg"] = stem .. "ū"
-
-		--ubus
-		if data.types.ubus then
-			data.forms["loc_pl"] = stem .. "ubus"
-
-		-- normal locative
-		else
-			data.forms["loc_pl"] = stem .. "ibus"
-		end
+		data.forms["loc_sg"] = data.forms["abl_sg"]
+		data.forms["loc_pl"] = data.forms["abl_pl"]
 	end
 
-	if data.n then
+	if data.types.sufn then
 		table.insert(title, "with ''m'' → ''n'' in compounds")
 	end
 
@@ -672,7 +664,7 @@ decl["5"] = function(data, args)
 		data.forms["loc_pl"] = stem .. "ēbus"
 	end
 
-	if data.n then
+	if data.types.sufn then
 		table.insert(title, "with ''m'' → ''n'' in compounds")
 	end
 
@@ -827,7 +819,7 @@ decl["irreg"] = function(data, args)
 		data.forms["acc_pl"] = {"domūs", "domōs"}
 		data.forms["abl_pl"] = "domibus"
 		data.forms["voc_pl"] = "domūs"
-		data.forms["loc_pl"] = "-"
+		data.forms["loc_pl"] = "domibus"
 
 		data.loc = true
 
