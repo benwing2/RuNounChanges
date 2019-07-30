@@ -48,6 +48,42 @@ def new_generate_noun_forms(template, errandpagemsg, expand_text, return_raw=Fal
     return None
   return blib.split_generate_args(result)
 
+def compare_headword_decl_forms(id_slot, headword_forms, decl_slots, noun_props,
+    headword_and_decl_text, adjust_for_missing_gen_forms=False, remove_headword_links=False):
+  decl_forms = ""
+  for slot in decl_slots:
+    if slot in noun_props:
+      decl_forms = noun_props[slot]
+      break
+  decl_forms = safe_split(decl_forms, ",")
+  if remove_headword_links:
+    headword_forms = [blib.remove_links(x) for x in headword_forms]
+  corrected_headword_forms = [lengthen_ns_nf(x) for x in headword_forms]
+  corrected_decl_forms = [lengthen_ns_nf(x) for x in decl_forms]
+  if adjust_for_missing_gen_forms:
+    # Nouns in -ius and -ium are commonly missing the shortened genitive
+    # variants. Don't get tripped up by that.
+    ii_decl_forms = [x for x in corrected_decl_forms if x.endswith(u"iī")]
+    for ii_decl_form in ii_decl_forms:
+      i_decl_form = re.sub(u"iī$", u"ī", ii_decl_form)
+      if i_decl_form in corrected_decl_forms and i_decl_form not in corrected_headword_forms:
+        corrected_headword_forms.append(i_decl_form)
+  if set(corrected_headword_forms) != set(corrected_decl_forms):
+    macronless_headword_forms = set(lalib.remove_macrons(x) for x in corrected_headword_forms)
+    macronless_decl_forms = set(lalib.remove_macrons(x) for x in corrected_decl_forms)
+    if macronless_headword_forms == macronless_decl_forms:
+      pagemsg("WARNING: Headword %s=%s different from decl %s=%s in macrons only, skipping: %s" % (
+        id_slot, ",".join(headword_forms), id_slot, ",".join(decl_forms),
+        headword_and_decl_text
+      ))
+    else:
+      pagemsg("WARNING: Headword %s=%s different from decl %s=%s in more than just macrons, skipping: %s" % (
+        id_slot, ",".join(headword_forms), id_slot, ",".join(decl_forms),
+        headword_and_decl_text
+      ))
+    return False
+  return True
+
 def process_page(page, index, parsed):
   global args
   pagetitle = unicode(page.title())
@@ -153,41 +189,12 @@ def process_page(page, index, parsed):
       continue
     decl_gender = noun_props.get("g", None)
 
-    def compare_headword_decl_forms(id_slot, headword_forms, decl_slots,
+    def do_compare_headword_decl_forms(id_slot, headword_forms, decl_slots,
         adjust_for_missing_gen_forms=False, remove_headword_links=False):
-      decl_forms = ""
-      for slot in decl_slots:
-        if slot in noun_props:
-          decl_forms = noun_props[slot]
-          break
-      decl_forms = safe_split(decl_forms, ",")
-      if remove_headword_links:
-        headword_forms = [blib.remove_links(x) for x in headword_forms]
-      corrected_headword_forms = [lengthen_ns_nf(x) for x in headword_forms]
-      corrected_decl_forms = [lengthen_ns_nf(x) for x in decl_forms]
-      if adjust_for_missing_gen_forms:
-        # Nouns in -ius and -ium are commonly missing the shortened genitive
-        # variants. Don't get tripped up by that.
-        ii_decl_forms = [x for x in corrected_decl_forms if x.endswith(u"iī")]
-        for ii_decl_form in ii_decl_forms:
-          i_decl_form = re.sub(u"iī$", u"ī", ii_decl_form)
-          if i_decl_form in corrected_decl_forms and i_decl_form not in corrected_headword_forms:
-            corrected_headword_forms.append(i_decl_form)
-      if set(corrected_headword_forms) != set(corrected_decl_forms):
-        macronless_headword_forms = set(lalib.remove_macrons(x) for x in corrected_headword_forms)
-        macronless_decl_forms = set(lalib.remove_macrons(x) for x in corrected_decl_forms)
-        if macronless_headword_forms == macronless_decl_forms:
-          pagemsg("WARNING: Headword %s=%s different from decl %s=%s in macrons only, skipping: %s" % (
-            id_slot, ",".join(headword_forms), id_slot, ",".join(decl_forms),
-            render_headword_and_decl()
-          ))
-        else:
-          pagemsg("WARNING: Headword %s=%s different from decl %s=%s in more than just macrons, skipping: %s" % (
-            id_slot, ",".join(headword_forms), id_slot, ",".join(decl_forms),
-            render_headword_and_decl()
-          ))
-        return False
-      return True
+      return compare_headword_decl_forms(id_slot, headword_forms, decl_slots,
+        noun_props, render_headword_and_decl(),
+        adjust_for_missing_gen_forms=adjust_for_missing_gen_forms,
+        remove_headword_links=remove_headword_links)
 
     noun_decl = blib.fetch_param_chain(la_noun_template, ["4", "decl", "decl1"], "decl")
     if not noun_decl:
@@ -198,10 +205,10 @@ def process_page(page, index, parsed):
       pagemsg("WARNING: No gender in old-style headword, skipping: %s" % render_headword_and_decl())
       continue
     genitive = blib.fetch_param_chain(la_noun_template, ["2", "gen", "gen1"], "gen")
-    if not compare_headword_decl_forms("lemma", lemma, ["linked_nom_sg", "linked_nom_pl"]):
+    if not do_compare_headword_decl_forms("lemma", lemma, ["linked_nom_sg", "linked_nom_pl"]):
 
       continue
-    if not compare_headword_decl_forms("genitive", genitive, ["gen_sg", "gen_pl"],
+    if not do_compare_headword_decl_forms("genitive", genitive, ["gen_sg", "gen_pl"],
         adjust_for_missing_gen_forms=True, remove_headword_links=True):
       continue
     noun_decl_to_decl_type = {
@@ -294,29 +301,30 @@ def process_page(page, index, parsed):
   sections[j] = secbody + sectail
   return "".join(sections), notes
 
-parser = blib.create_argparser("Convert Latin noun headword templates to new form")
-parser.add_argument("--pagefile", help="List of pages to process.")
-parser.add_argument("--cats", help="List of categories to process.")
-parser.add_argument("--refs", help="List of references to process.")
-args = parser.parse_args()
-start, end = blib.parse_start_end(args.start, args.end)
+if __name__ == "__main__":
+  parser = blib.create_argparser("Convert Latin noun headword templates to new form")
+  parser.add_argument("--pagefile", help="List of pages to process.")
+  parser.add_argument("--cats", help="List of categories to process.")
+  parser.add_argument("--refs", help="List of references to process.")
+  args = parser.parse_args()
+  start, end = blib.parse_start_end(args.start, args.end)
 
-if args.pagefile:
-  pages = [x.rstrip('\n') for x in codecs.open(args.pagefile, "r", "utf-8")]
-  for i, page in blib.iter_items(pages, start, end):
-    blib.do_edit(pywikibot.Page(site, page), i, process_page, save=args.save,
-        verbose=args.verbose, diff=args.diff)
-else:
-  if not args.cats and not args.refs:
-    cats = ["Latin nouns", "Latin proper nouns"]
-    refs = []
+  if args.pagefile:
+    pages = [x.rstrip('\n') for x in codecs.open(args.pagefile, "r", "utf-8")]
+    for i, page in blib.iter_items(pages, start, end):
+      blib.do_edit(pywikibot.Page(site, page), i, process_page, save=args.save,
+          verbose=args.verbose, diff=args.diff)
   else:
-    cats = args.cats and [x.decode("utf-8") for x in args.cats.split(",")] or []
-    refs = args.refs and [x.decode("utf-8") for x in args.refs.split(",")] or []
+    if not args.cats and not args.refs:
+      cats = ["Latin nouns", "Latin proper nouns"]
+      refs = []
+    else:
+      cats = args.cats and [x.decode("utf-8") for x in args.cats.split(",")] or []
+      refs = args.refs and [x.decode("utf-8") for x in args.refs.split(",")] or []
 
-  for cat in cats:
-    for i, page in blib.cat_articles(cat, start, end):
-      blib.do_edit(page, i, process_page, save=args.save, verbose=args.verbose)
-  for ref in refs:
-    for i, page in blib.references(ref, start, end):
-      blib.do_edit(page, i, process_page, save=args.save, verbose=args.verbose)
+    for cat in cats:
+      for i, page in blib.cat_articles(cat, start, end):
+        blib.do_edit(page, i, process_page, save=args.save, verbose=args.verbose)
+    for ref in refs:
+      for i, page in blib.references(ref, start, end):
+        blib.do_edit(page, i, process_page, save=args.save, verbose=args.verbose)
