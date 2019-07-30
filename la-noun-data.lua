@@ -228,6 +228,11 @@ decl["2"] = function(data, args)
 
 		data.notes["gen_sg2"] = "Found in older Latin (until the Augustan Age)."
 
+	-- vos (servos, etc.)
+	elseif data.types.vos then
+		data.forms["nom_sg"] = stem1 .. "os"
+		data.forms["acc_sg"] = stem1 .. "om"
+
 	-- Greek
 	elseif data.types.Greek then
 		table.insert(title, "Greek type")
