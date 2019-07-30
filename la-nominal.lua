@@ -592,14 +592,14 @@ end
 -- Given ENDINGS_AND_SUBTYPES (a list of pairs of endings with associated
 -- subtypes, where each pair consists of a single ending spec and a list of
 -- subtypes), check each ending in turn against LEMMA. If it matches, return
--- the pair BASE, SUBTYPES where BASE is the remainder of LEMMA minus the
--- ending, and SUBTYPES is the subtypes associated with the ending. But don't
--- return SUBTYPES if any of the subtypes in the list is specifically canceled
--- in SPECIFIED_SUBTYPES (a set, i.e. a table where the keys are strings and
--- the value is always true); instead, consider the next ending in turn. If no
--- endings match, throw an error if DECLTYPE is non-nil, mentioning the
--- DECLTYPE (the user-specified declension); but if DECLTYPE is nil, just
--- return the pair nil, nil.
+-- the pair BASE, STEM2, SUBTYPES where BASE is the remainder of LEMMA minus
+-- the ending, STEM2 is as passed in, and SUBTYPES is the subtypes associated
+-- with the ending. But don't return SUBTYPES if any of the subtypes in the
+-- list is specifically canceled in SPECIFIED_SUBTYPES (a set, i.e. a table
+-- where the keys are strings and the value is always true); instead, consider
+-- the next ending in turn. If no endings match, throw an error if DECLTYPE is
+-- non-nil, mentioning the DECLTYPE (the user-specified declension); but if
+-- DECLTYPE is nil, just return nil, nil, nil.
 --
 -- The ending spec in ENDINGS_AND_SUBTYPES is one of the following:
 --
@@ -621,37 +621,44 @@ local function get_noun_subtype_by_ending(lemma, stem2, decltype, specified_subt
 		local ending = ending_and_subtypes[1]
 		local subtypes = ending_and_subtypes[2]
 		not_this_subtype = false
-		for _, subtype in ipairs(subtypes) do
-			-- A subtype is directly canceled by specifying -SUBTYPE.
-			-- In addition, M or F as a subtype is canceled by N, and
-			-- vice-versa, but M doesn't cancel F or vice-versa; instead,
-			-- we simply ignore the conflicting gender specification when
-			-- constructing the combination of specified and inferred subtypes.
-			-- The reason for this is that neuters have distinct declensions
-			-- from masculines and feminines, but masculines and feminines have
-			-- the same declension, and various nouns in Latin that are
-			-- normally masculine are exceptionally feminine and vice-versa
-			-- (nauta, agricola, fraxinus, malus "apple tree", manus, rēs,
-			-- etc.).
-			--
-			-- In addition, sg as a subtype is canceled by pl and vice-versa.
-			-- It's also possible to specify both, which will override sg but
-			-- not cancel it (in the sense that it won't prevent the relevant
-			-- rule from matching). For example, there's a rule specifying that
-			-- lemmas beginning with a capital letter and ending in -ius take
-			-- the ius.voci.sg subtypes.  Specifying such a lemma with the
-			-- subtype both will result in the ius.voci.both subtypes, whereas
-			-- specifying such a lemma with the subtype pl will cause this rule
-			-- not to match, and it will fall through to a less specific rule
-			-- that returns just the ius subtype, which will be combined with
-			-- the explicitly specified pl subtype to produce ius.pl.
-			if specified_subtypes["-" .. subtype] or
-				subtype == "N" and (specified_subtypes.M or specified_subtypes.F) or
-				(subtype == "M" or subtype == "F") and specified_subtypes.N or
-				subtype == "sg" and specified_subtypes.pl or
-				subtype == "pl" and specified_subtypes.sg then
-				not_this_subtype = true
-				break
+		if specified_subtypes.pl and not subtypes.pl then
+			-- We now require that plurale tantum terms specify a plural-form lemma.
+			-- The autodetected subtypes will include 'pl' for such lemmas; if not,
+			-- we fail this entry.
+			not_this_subtype = true
+		else
+			for _, subtype in ipairs(subtypes) do
+				-- A subtype is directly canceled by specifying -SUBTYPE.
+				-- In addition, M or F as a subtype is canceled by N, and
+				-- vice-versa, but M doesn't cancel F or vice-versa; instead,
+				-- we simply ignore the conflicting gender specification when
+				-- constructing the combination of specified and inferred subtypes.
+				-- The reason for this is that neuters have distinct declensions
+				-- from masculines and feminines, but masculines and feminines have
+				-- the same declension, and various nouns in Latin that are
+				-- normally masculine are exceptionally feminine and vice-versa
+				-- (nauta, agricola, fraxinus, malus "apple tree", manus, rēs,
+				-- etc.).
+				--
+				-- In addition, sg as a subtype is canceled by pl and vice-versa.
+				-- It's also possible to specify both, which will override sg but
+				-- not cancel it (in the sense that it won't prevent the relevant
+				-- rule from matching). For example, there's a rule specifying that
+				-- lemmas beginning with a capital letter and ending in -ius take
+				-- the ius.voci.sg subtypes.  Specifying such a lemma with the
+				-- subtype both will result in the ius.voci.both subtypes, whereas
+				-- specifying such a lemma with the subtype pl will cause this rule
+				-- not to match, and it will fall through to a less specific rule
+				-- that returns just the ius subtype, which will be combined with
+				-- the explicitly specified pl subtype to produce ius.pl.
+				if specified_subtypes["-" .. subtype] or
+					subtype == "N" and (specified_subtypes.M or specified_subtypes.F) or
+					(subtype == "M" or subtype == "F") and specified_subtypes.N or
+					subtype == "sg" and specified_subtypes.pl or
+					subtype == "pl" and specified_subtypes.sg then
+					not_this_subtype = true
+					break
+				end
 			end
 		end
 		if not not_this_subtype then
@@ -660,12 +667,12 @@ local function get_noun_subtype_by_ending(lemma, stem2, decltype, specified_subt
 				local stem2_ending = ending[2]
 				local base = extract_base(lemma, lemma_ending)
 				if base and base .. stem2_ending == stem2 then
-					return base, subtypes
+					return base, stem2, subtypes
 				end
 			else
 				local base = extract_base(lemma, ending)
 				if base then
-					return base, subtypes
+					return base, stem2, subtypes
 				end
 			end
 		end
@@ -673,17 +680,18 @@ local function get_noun_subtype_by_ending(lemma, stem2, decltype, specified_subt
 	if decltype then
 		error("Unrecognized ending for declension-" .. decltype .. " noun: " .. lemma)
 	end
-	return nil, nil
+	return nil, nil, nil
 end
 
 -- Autodetect the subtype of a noun given all the information specified by the
--- user: lemma, stem2, declension type and specified subtypes. Two values are
+-- user: lemma, stem2, declension type and specified subtypes. Three values are
 -- returned: the lemma base (i.e. the stem of the lemma, as required by the
--- declension functions) and the autodetected subtypes. Note that this will
--- not detect a given subtype if the explicitly specified subtypes are
--- incompatible (i.e. if -SUBTYPE is specified for any subtype that would be
--- returned; or if M or F is specified when N would be returned, and
--- vice-versa; or if pl is specified when sg would be returned, and vice-versa).
+-- declension functions), tne new stem2 and the autodetected subtypes. Note
+-- that this will not detect a given subtype if the explicitly specified
+-- subtypes are incompatible (i.e. if -SUBTYPE is specified for any subtype
+-- that would be returned; or if M or F is specified when N would be returned,
+-- and vice-versa; or if pl is specified when sg would be returned, and
+-- vice-versa).
 --
 -- NOTE: This function has intimate knowledge of the way that the declension
 -- functions handle subtypes, particularly for the third declension.
@@ -700,10 +708,9 @@ local function detect_noun_subtype(lemma, stem2, typ, subtypes)
 			{"a", {"F"}},
 		})
 	elseif typ == "2" then
-		if rmatch(lemma, "r$") then
-			return lemma, {"er"}
-		end
 		return get_noun_subtype_by_ending(lemma, stem2, typ, subtypes, {
+			{"^(.*r)$", {"M", "er"}},
+			{"^(.*v)os", {"M", "vos"}},
 			{"os", {"M", "Greek"}},
 			{"on", {"N", "Greek"}},
 			-- -ius beginning with a capital letter is assumed a proper name,
@@ -728,33 +735,64 @@ local function detect_noun_subtype(lemma, stem2, typ, subtypes)
 			{"a", {"N", "pl"}},
 		})
 	elseif typ == "3" then
+		if subtypes.pl then
+			if subtypes.Greek then
+				base = rmatch(lemma, "^(.*)erēs$")
+				if base then
+					return base, nil, {"er"}
+				end
+				base = rmatch(lemma, "^(.*)ontēs$")
+				if base then
+					return base, nil, {"on"}
+				end
+				base = rmatch(lemma, "^(.*)es$")
+				if base then
+					return "foo", stem2 or base, {}
+				end
+				error("Unrecognized ending for declension-3 plural Greek noun: " .. lemma)
+			end
+			base = rmatch(lemma, "^(.*)ia$")
+			if base then
+				return "foo", stem2 or base, {"N", "I", "pure"}
+			end
+			base = rmatch(lemma, "^(.*)a$")
+			if base then
+				return "foo", stem2 or base, {"N"}
+			end
+			base = rmatch(lemma, "^(.*)ēs$")
+			if base then
+				return "foo", stem2 or base, {}
+			end
+			error("Unrecognized ending for declension-3 plural noun: " .. lemma)
+		end
+
 		stem2 = stem2 or m_la_utilities.make_stem2(lemma)
 		local detected_subtypes
 		if subtypes.Greek then
-			base, detected_subtypes =
+			base, _, detected_subtypes =
 				get_noun_subtype_by_ending(lemma, stem2, nil, subtypes, {
 					{"ēr", {"er"}},
 					{"ōn", {"on"}},
 					{"s", {"s"}},
 				})
 			if base then
-				return base, detected_subtypes
+				return base, stem2, detected_subtypes
 			end
-			return lemma, {}
+			return lemma, stem2, {}
 		end
 
 		if subtypes.navis or subtypes.ignis then
-			return lemma, {}
+			return lemma, stem2, {}
 		end
 
 		if not subtypes.N then
-			base, detected_subtypes = get_noun_subtype_by_ending(lemma, stem2, nil, subtypes, {
+			base, _, detected_subtypes = get_noun_subtype_by_ending(lemma, stem2, nil, subtypes, {
 				{"^([A-ZĀĒĪŌŪȲĂĔĬŎŬ].*)polis$", {"polis", "sg", "loc"}},
 			})
 			if base then
-				return base, detected_subtypes
+				return base, stem2, detected_subtypes
 			end
-			base, detected_subtypes = get_noun_subtype_by_ending(lemma, stem2, nil, subtypes, {
+			base, _, detected_subtypes = get_noun_subtype_by_ending(lemma, stem2, nil, subtypes, {
 				{{"tūdō", "tūdin"}, {"F"}},
 				{{"tās", "tāt"}, {"F"}},
 				{{"tūs", "tūt"}, {"F"}},
@@ -768,11 +806,11 @@ local function detect_noun_subtype(lemma, stem2, typ, subtypes)
 				{{"^([a-zāēīōūȳăĕĭŏŭ].*)ēs$", ""}, {"I"}},
 			})
 			if base then
-				return lemma, detected_subtypes
+				return lemma, stem2, detected_subtypes
 			end
 		end
 
-		base, detected_subtypes = get_noun_subtype_by_ending(lemma, stem2, nil, subtypes, {
+		base, _, detected_subtypes = get_noun_subtype_by_ending(lemma, stem2, nil, subtypes, {
 			{{"us", "or"}, {"N"}},
 			{{"us", "er"}, {"N"}},
 			{{"ma", "mat"}, {"N"}},
@@ -783,9 +821,9 @@ local function detect_noun_subtype(lemma, stem2, typ, subtypes)
 			{{"ar", "ār"}, {"N", "I", "pure"}},
 		})
 		if base then
-			return lemma, detected_subtypes
+			return lemma, stem2, detected_subtypes
 		end
-		return lemma, {}
+		return lemma, stem2, {}
 	elseif typ == "4" then
 		if subtypes.echo or subtypes.argo or subtypes.Callisto then
 			base = rmatch(lemma, "^(.*)ō$")
@@ -793,9 +831,9 @@ local function detect_noun_subtype(lemma, stem2, typ, subtypes)
 				error("Declension-4 noun of subtype .echo, .argo or .Callisto should end in -ō: " .. lemma)
 			end
 			if subtypes.Callisto then
-				return base, {"sg"}
+				return base, nil, {"sg"}
 			else
-				return base, {}
+				return base, nil, {}
 			end
 		end
 		return get_noun_subtype_by_ending(lemma, stem2, typ, subtypes, {
@@ -807,21 +845,23 @@ local function detect_noun_subtype(lemma, stem2, typ, subtypes)
 	elseif typ == "5" then
 		return get_noun_subtype_by_ending(lemma, stem2, typ, subtypes, {
 			{"iēs", {"F", "i"}},
+			{"iēs", {"F", "i", "pl"}},
 			{"ēs", {"F"}},
+			{"ēs", {"F", "pl"}},
 		})
 	elseif typ == "irreg" and lemma == "domus" then
 		-- [[domus]] auto-sets data.loc = true, but we need to know this
 		-- before declining the noun so we can propagate it to other segments.
-		return lemma, {"loc"}
+		return lemma, nil, {"loc"}
 	elseif typ == "indecl" or typ == "irreg" and (
 		lemma == "Deus" or lemma == "Iēsus" or lemma == "Jēsus" or lemma == "vēnum"
 	) then
 		-- Indeclinable nouns, and certain irregular nouns, set data.num = "sg",
 		-- but we need to know this before declining the noun so we can
 		-- propagate it to other segments.
-		return lemma, {"sg"}
+		return lemma, nil, {"sg"}
 	else
-		return lemma, {}
+		return lemma, nil, {}
 	end
 end
 
@@ -839,8 +879,8 @@ function export.detect_noun_subtype(frame)
 			specified_subtypes[subtype] = true
 		end
 	end
-	local base, subtypes = detect_noun_subtype(args[1], args[2], args[3], specified_subtypes)
-	return base .. "|" .. table.concat(subtypes, ".")
+	local base, stem2, subtypes = detect_noun_subtype(args[1], args[2], args[3], specified_subtypes)
+	return base .. "|" .. (stem2 or "") .. "|" .. table.concat(subtypes, ".")
 end
 
 -- Given ENDINGS_AND_SUBTYPES (a list of pairs of endings with associated
@@ -1045,7 +1085,7 @@ end
 --   lemma = "lūna",
 --   stem2 = nil,
 --   gender = "F",
---   data = DATA_TABLE (a table of info extracted from subtypes),
+--   types = {["F"] = true},
 --   args = {"lūn"}
 -- }
 --
@@ -1058,7 +1098,7 @@ end
 --   lemma = "aegis",
 --   stem2 = "aegid",
 --   gender = nil,
---   data = DATA_TABLE (a table of info extracted from subtypes),
+--   types = {["Greek"] = true},
 --   args = {"aegis", "aegid"}
 -- }
 --
@@ -1071,7 +1111,7 @@ end
 --   lemma = "bonus",
 --   stem2 = nil,
 --   gender = nil,
---   data = DATA_TABLE (a table of info extracted from subtypes),
+--   types = {},
 --   args = {"bon"}
 -- }
 --
@@ -1084,7 +1124,7 @@ end
 --   lemma = "vetus",
 --   stem2 = "veter",
 --   gender = nil,
---   data = DATA_TABLE (a table of info extracted from subtypes),
+--   types = {},
 --   args = {"vetus", "veter"}
 -- }
 local function parse_segment(segment)
@@ -1141,7 +1181,7 @@ local function parse_segment(segment)
 			end
 		end
 	else
-		base, detected_subtypes = detect_noun_subtype(lemma, stem2, decl, types)
+		base, stem2, detected_subtypes = detect_noun_subtype(lemma, stem2, decl, types)
 
 		for _, subtype in ipairs(detected_subtypes) do
 			if types["-" .. subtype] then
@@ -1215,6 +1255,7 @@ end
 --   num = NUM (the first specified value for a number restriction, or nil if
 --     no number restrictions),
 --   gender = GENDER (the first specified or inferred gender, or nil if none),
+--   decls = DECLS (list of declensions),
 -- }
 -- Each element in PARSED_SEGMENTS is as returned by parse_segment() but will
 -- have an additional .orig_prefix field indicating the text before the segment
@@ -1230,6 +1271,7 @@ local function parse_segment_run(segment_run)
 	-- {{la-ndecl|-cen/cin<3>}}, which is less intuitive.
 	local is_suffix = rfind(segment_run, "^%-")
 	local segments = {}
+	local decls = {}
 	-- We want to not break up a bracketed link followed by <> even if it has a space or
 	-- hyphen in it. So we do an outer capturing split to find the bracketed links followed
 	-- by <>, then do inner capturing splits on all the remaining text to find the other
@@ -1257,6 +1299,11 @@ local function parse_segment_run(segment_run)
 		gender = gender or parsed_segment.gender
 		parsed_segment.orig_prefix = segments[i - 1]
 		parsed_segment.prefix = m_links.remove_links(segments[i - 1])
+		if parsed_segment.is_adj then
+			table.insert(decls, parsed_segment.decl .. "+")
+		else
+			table.insert(decls, parsed_segment.decl)
+		end
 		table.insert(parsed_segments, parsed_segment)
 	end
 	if segments[#segments] ~= "" then
@@ -1270,6 +1317,7 @@ local function parse_segment_run(segment_run)
 		loc = loc,
 		num = num,
 		gender = gender,
+		decls = decls,
 	}
 end
 
@@ -1283,6 +1331,7 @@ end
 --     has a locative),
 --   num = NUM (the overall number restriction, one of "sg", "pl" or "both"),
 --   gender = GENDER (the first specified or inferred gender, or nil if none),
+--   decls = DECLS (list of lists of declensions),
 -- }
 local function parse_alternant(alternant)
 	local parsed_alternants = {}
@@ -1291,6 +1340,7 @@ local function parse_alternant(alternant)
 	local loc = false
 	local num = nil
 	local gender = nil
+	local decls = {}
 	for i, alternant in ipairs(alternants) do
 		local parsed_run = parse_segment_run(alternant)
 		table.insert(parsed_alternants, parsed_run)
@@ -1309,12 +1359,14 @@ local function parse_alternant(alternant)
 			num = "both"
 		end
 		gender = gender or parsed_run.gender
+		table.insert(decls, parsed_run.decls)
 	end
 	return {
 		alternants = parsed_alternants,
 		loc = loc,
 		num = num,
 		gender = gender,
+		decls = decls,
 	}
 end
 
@@ -1329,6 +1381,8 @@ end
 --     a locative),
 --   num = NUM (the first specified value for a number restriction, or nil if
 --     no number restrictions),
+--   gender = GENDER (the first specified or inferred gender, or nil if none),
+--   decls = DECLS (list of either strings or lists of lists, specifying the declensions),
 -- }.
 -- Each element in PARSED_SEGMENTS is one of three types:
 --
@@ -1344,6 +1398,7 @@ end
 --     locative),
 --   num = NUM (the number restriction of the segment as a whole),
 --   gender = GENDER (the first specified or inferred gender, or nil if none),
+--   decls = DECLS (list of lists of declensions),
 -- }
 -- Note that each alternant is a segment run rather than a single parsed
 -- segment to allow for alternants like "((rēs<5>pūblica<1>,rēspūblica<1>))".
@@ -1356,6 +1411,7 @@ local function parse_segment_run_allowing_alternants(segment_run)
 	local loc = false
 	local num = nil
 	local gender = nil
+	local decls = {}
 	for i = 1, #alternating_segments do
 		local alternating_segment = alternating_segments[i]
 		if alternating_segment ~= "" then
@@ -1367,12 +1423,16 @@ local function parse_segment_run_allowing_alternants(segment_run)
 				loc = loc or parsed_run.loc
 				num = num or parsed_run.num
 				gender = gender or parsed_run.gender
+				for _, decl in ipairs(parsed_run.decls) do
+					table.insert(decls, decl)
+				end
 			else
 				local parsed_alternating_segment = parse_alternant(alternating_segment)
+				table.insert(parsed_segments, parsed_alternating_segment)
 				loc = loc or parsed_alternating_segment.loc
 				num = num or parsed_alternating_segment.num
 				gender = gender or parsed_alternating_segment.gender
-				table.insert(parsed_segments, parsed_alternating_segment)
+				table.insert(decls, parsed_alternating_segment.decls)
 			end
 		end
 	end
@@ -1382,6 +1442,7 @@ local function parse_segment_run_allowing_alternants(segment_run)
 		loc = loc,
 		num = num,
 		gender = gender,
+		decls = decls,
 	}
 end
 
@@ -1562,8 +1623,6 @@ local function decline_segment_run(parsed_run, is_adj)
 					types = seg.types,
 					categories = {},
 					notes = {},
-					prefix = "",
-					suffix = "",
 				}
 				m_adj_decl[seg.decl](data, seg.args)
 				if not data.voc then
@@ -1589,8 +1648,6 @@ local function decline_segment_run(parsed_run, is_adj)
 					types = seg.types,
 					categories = {},
 					notes = {},
-					prefix = "",
-					suffix = "",
 				}
 				if seg.types.genplum then
 					data.um = true
@@ -1852,6 +1909,10 @@ function export.do_generate_noun_forms(parent_args, from_headword)
 		params.lemma = {list = true}
 		params.id = {}
 		params.pos = {}
+		params.indecl = {type = "boolean"}
+		params.m = {list = true}
+		params.f = {list = true}
+		params.g = {list = true}
 	end
 
 	local args = m_para.process(parent_args, params)
@@ -1874,13 +1935,19 @@ function export.do_generate_noun_forms(parent_args, from_headword)
 		footnote = args.footnote or "",
 		num = parsed_run.num or "",
 		gender = parsed_run.gender,
+		decls = parsed_run.decls,
 		forms = declensions.forms,
 		categories = declensions.categories,
 		notes = {},
 		user_specified = {},
 		accel = {},
-		prefix = "",
-		suffix = "",
+		overriding_lemma = args.lemma,
+		id = args.id,
+		pos = args.pos,
+		indecl = args.indecl,
+		m = args.m,
+		f = args.f,
+		overriding_genders = args.g,
 	}
 
 	for slot in iter_noun_slots() do
@@ -1962,16 +2029,15 @@ function export.do_generate_adj_forms(parent_args, from_headword)
 		title = declensions.title,
 		footnote = args.footnote or "",
 		num = parsed_run.num or "",
+		decls = parsed_run.decls,
 		forms = declensions.forms,
 		categories = declensions.categories,
 		notes = {},
 		user_specified = {},
 		accel = {},
-		prefix = "",
-		suffix = "",
 		voc = declensions.voc,
 		noneut = args.noneut or declensions.noneut,
-		lemma = args.lemma,
+		overriding_lemma = args.lemma,
 		comp = args.comp,
 		sup = args.sup,
 		id = args.id,
