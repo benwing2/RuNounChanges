@@ -13,3 +13,4 @@ verb circito perf,sup {{la-conj|1+|circitō}}
 verb clueo pass {{la-conj|2|clueō}}
 verb cohortor sup {{la-conj|1|cohortor|cohortar}}
 noun Ulysippo allbutlemma {{la-ndecl|Ulysippō/Ulysippōnis<3.loc>}}
+noun pinguedo allbutlemma {{la-ndecl|pinguēdō/pinguēdōn<3>}}
