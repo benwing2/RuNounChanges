@@ -3166,6 +3166,9 @@ n1 lēctiuncula
 n1 medēla
 pn1 Aurēlia
 pn1 Cornēlia
+a3 carolicoroniēnsis
+a3 gevalēnsis
+a3 visbyēnsis
 # wrongly has short e and i
 a3 mēningītidis
 # wrongly has short e and o
@@ -3213,6 +3216,7 @@ pn1 Frīsia
 a1 danīsticus
 a1 bipartītus
 a1 bipertītus
+n3 pinguīdō pinguīdin
 # wrongly has short i and o
 a1 altispīnōsus
 a1 thermolīmōsus
@@ -3246,6 +3250,11 @@ a1 prōgeneticus
 n2 cotōnium
 n3 incubō
 n3 prōcōnsul
+n3 phagō phagōn
+n3 ūlīgō ūlīgin
+n3 serrāgō serrāgin
+n3 valitūdō
+pn3 Apollō Apollin
 # wrongly has short o and u
 a1 frūctuōsus
 a1 frūctuōsissimus
