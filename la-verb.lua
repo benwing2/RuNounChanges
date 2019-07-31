@@ -211,6 +211,23 @@ local function concat_vals(val)
 	end
 end
 
+-- Construct a one- or two-part link. For reasons I don't understand, if we're in
+-- the reconstructed namespace (e.g. for the page [[Reconstruction:Latin/nuo]]), we
+-- need to construct a special type of link; full_link() doesn't handle this
+-- correctly (although it tries ...). Ideally we should fix full_link() instead of
+-- doing this.
+local function make_raw_link(page, display)
+	if reconstructed then
+		display = display or page
+		page = lang:makeEntryName(page)
+		return "[[" .. NAMESPACE .. ":Latin/" .. page .. "|" .. display .. "]]"
+	elseif display then
+		return "[[" .. lang:makeEntryName(page) .. "|" .. display .. "]]"
+	else
+		return "[[" .. page .. "]]"
+	end
+end
+
 local function split_prefix_and_base(lemma, main_verbs)
 	for _, main in ipairs(main_verbs) do
 		local prefix = rmatch(lemma, "^(.*)" .. main .. "$")
@@ -649,9 +666,14 @@ local function add_prefix_suffix(data, typeinfo)
 						form = "[[" .. form .. "]]"
 					end
 					table.insert(affixed_forms, prefix .. form .. suffix)
+				elseif form:find("[%[%]]") then
+					-- If not dealing with a linked slot, but there are links in the slot,
+					-- include the original, potentially linked versions of the prefix and
+					-- suffix (e.g. in perfect passive forms).
+					table.insert(affixed_forms, prefix .. form .. suffix)
 				else
-					-- If not dealing with a linked slot, use the non-linking versions
-					-- of the prefix and suffix.
+					-- Otherwise, use the non-linking versions of the prefix and suffix
+					-- so that the whole term (including prefix/suffix) gets linked.
 					table.insert(affixed_forms, prefix_no_links .. form .. suffix_no_links)
 				end
 			end
@@ -926,12 +948,12 @@ local function make_perfect_passive(data)
 		perf_pasv_subj = "present active subjunctive",
 		plup_pasv_subj = "imperfect active subjunctive"
 	}
-	local prefix_joiner = data.prefix and data.prefix:find(" $") and "+ " or ""
-	local suffix_joiner = data.suffix and data.suffix:find("^ ") and " +" or ""
+	local prefix_joiner = data.passive_prefix and data.passive_prefix:find(" $") and "+ " or ""
+	local suffix_joiner = data.passive_suffix and data.passive_suffix:find("^ ") and " +" or ""
 	for slot, text in pairs(text_for_slot) do
 		data.forms[slot] =
-			(data.prefix or "") .. prefix_joiner .. ppplink .. " + " ..
-			text .. " of " .. sumlink .. suffix_joiner .. (data.suffix or "")
+			(data.passive_prefix or "") .. prefix_joiner .. ppplink .. " + " ..
+			text .. " of " .. sumlink .. suffix_joiner .. (data.passive_suffix or "")
 	end
 end
 
@@ -975,33 +997,59 @@ postprocess = function(data, typeinfo)
 	-- Add information for the passive perfective forms
 	if data.forms["perf_pasv_ptc"] and not form_is_empty(data.forms["perf_pasv_ptc"]) then
 		if typeinfo.subtypes.passimpers then
-			-- These may already be set by make_supine().
-			clear_form(data, "perf_pasv_inf")
-			clear_form(data, "perf_pasv_ptc")
-			for _, supine_stem in ipairs(typeinfo.supine_stem) do
-				local nns_ppp = "[[" .. (typeinfo.prefix or "") .. supine_stem .. "um]]"
-				add_form(data, "3s_perf_pasv_indc", nns_ppp, " [[est]]")
-				add_form(data, "3s_futp_pasv_indc", nns_ppp, " [[erit]]")
-				add_form(data, "3s_plup_pasv_indc", nns_ppp, " [[erat]]")
-				add_form(data, "3s_perf_pasv_subj", nns_ppp, " [[sit]]")
-				add_form(data, "3s_plup_pasv_subj", nns_ppp, " [[esset]], [[foret]]")
-				add_form(data, "perf_pasv_inf", nns_ppp, " [[esse]]")
-				add_form(data, "perf_pasv_ptc", nns_ppp, "")
+			-- this should always be a table because it's generated only in
+			-- make_supine()
+			local pppforms = data.forms["perf_pasv_ptc"]
+			for _, ppp in ipairs(pppforms) do
+				if not form_is_empty(ppp) then
+					-- make_supine() already generated the neuter form of the PPP.
+					local nns_ppp = make_raw_link(ppp)
+					add_form(data, "3s_perf_pasv_indc", nns_ppp, " [[est]]")
+					add_form(data, "3s_futp_pasv_indc", nns_ppp, " [[erit]]")
+					add_form(data, "3s_plup_pasv_indc", nns_ppp, " [[erat]]")
+					add_form(data, "3s_perf_pasv_subj", nns_ppp, " [[sit]]")
+					add_form(data, "3s_plup_pasv_subj", nns_ppp, {" [[esset]]", " [[foret]]"})
+				end
 			end
 		elseif typeinfo.subtypes.pass3only then
-			for _, supine_stem in ipairs(typeinfo.supine_stem) do
-				local nns_ppp_s = "[[" .. supine_stem .. "us]]"
-				local nns_ppp_p = "[[" .. supine_stem .. "ī]]"
-				add_form(data, "3s_perf_pasv_indc", nns_ppp_s, " [[est]]")
-				add_form(data, "3p_perf_pasv_indc", nns_ppp_p, " [[sunt]]")
-				add_form(data, "3s_futp_pasv_indc", nns_ppp_s, " [[erit]]")
-				add_form(data, "3p_futp_pasv_indc", nns_ppp_p, " [[erunt]]")
-				add_form(data, "3s_plup_pasv_indc", nns_ppp_s, " [[erat]]")
-				add_form(data, "3p_plup_pasv_indc", nns_ppp_p, " [[erant]]")
-				add_form(data, "3s_perf_pasv_subj", nns_ppp_s, " [[sit]]")
-				add_form(data, "3p_perf_pasv_subj", nns_ppp_p, " [[sint]]")
-				add_form(data, "3s_plup_pasv_subj", nns_ppp_s, " [[esset]], [[foret]]")
-				add_form(data, "3p_plup_pasv_subj", nns_ppp_p, " [[essent]], [[forent]]")
+			local pppforms = data.forms["perf_pasv_ptc"]
+			if type(pppforms) ~= "table" then
+				pppforms = {pppforms}
+			end
+			for _, ppp in ipairs(pppforms) do
+				if not form_is_empty(ppp) then
+					local ppp_s, ppp_p
+					if typeinfo.subtypes.mp then
+						ppp_p = make_raw_link(rsub(ppp, "ī$", "us"), ppp)
+					elseif typeinfo.subtypes.fp then
+						ppp_p = make_raw_link(rsub(ppp, "ae$", "us"), ppp)
+					elseif typeinfo.subtypes.np then
+						ppp_p = make_raw_link(rsub(ppp, "a$", "us"), ppp)
+					elseif typeinfo.subtypes.f then
+						local ppp_lemma = rsub(ppp, "a$", "us")
+						ppp_s = make_raw_link(ppp_lemma, ppp)
+						ppp_p = make_raw_link(ppp_lemma, rsub(ppp, "a$", "ae"))
+					elseif typeinfo.subtypes.n then
+						local ppp_lemma = rsub(ppp, "um$", "us")
+						ppp_s = make_raw_link(ppp_lemma, ppp)
+						ppp_p = make_raw_link(ppp_lemma, rsub(ppp, "um$", "a"))
+					else
+						ppp_s = make_raw_link(ppp)
+						ppp_p = make_raw_link(ppp, rsub(ppp, "us$", "ī"))
+					end
+					if not typeinfo.subtypes.mp and not typeinfo.subtypes.fp and not typeinfo.subtypes.np then
+						add_form(data, "3s_perf_pasv_indc", ppp_s, " [[est]]")
+						add_form(data, "3s_futp_pasv_indc", ppp_s, " [[erit]]")
+						add_form(data, "3s_plup_pasv_indc", ppp_s, " [[erat]]")
+						add_form(data, "3s_perf_pasv_subj", ppp_s, " [[sit]]")
+						add_form(data, "3s_plup_pasv_subj", ppp_s, {" [[esset]]", " [[foret]]"})
+					end
+					add_form(data, "3p_perf_pasv_indc", ppp_p, " [[sunt]]")
+					add_form(data, "3p_futp_pasv_indc", ppp_p, " [[erunt]]")
+					add_form(data, "3p_plup_pasv_indc", ppp_p, " [[erant]]")
+					add_form(data, "3p_perf_pasv_subj", ppp_p, " [[sint]]")
+					add_form(data, "3p_plup_pasv_subj", ppp_p, {" [[essent]]", " [[forent]]"})
+				end
 			end
 		else
 			make_perfect_passive(data)
@@ -1191,6 +1239,13 @@ postprocess = function(data, typeinfo)
 		for key, _ in pairs(data.forms) do
 			if cfind(key, "pasv") and (key:find("^[12][sp]") or cfind(key, "impr")) then
 				data.forms[key] = nil
+			end
+			-- For phrasal verbs with a plural complement, also need to erase the
+			-- 3s forms.
+			if typeinfo.subtypes.mp or typeinfo.subtypes.fp or typeinfo.subtypes.np then
+				if cfind(key, "pasv") and key:find("^3s") then
+					data.forms[key] = nil
+				end
 			end
 		end
 	elseif typeinfo.subtypes.passimpers then
@@ -1614,7 +1669,7 @@ irreg_conjugations["dico"] = function(args, data, typeinfo)
 
 	make_pres_3rd(data, prefix .. "dīc")
 	make_perf(data, prefix .. "dīx")
-	make_supine(data, prefix .. "dict")
+	make_supine(data, typeinfo, prefix .. "dict")
 
 	add_form(data, "2s_pres_actv_impr", prefix, "dīc", 1)
 end
@@ -1631,7 +1686,7 @@ irreg_conjugations["do"] = function(args, data, typeinfo)
 	local prefix = typeinfo.prefix or ""
 
 	make_perf(data, prefix .. "ded")
-	make_supine(data, prefix .. "dat")
+	make_supine(data, typeinfo, prefix .. "dat")
 
 	-- Active imperfective indicative
 	add_forms(data, "pres_actv_indc", prefix, "dō", "dās", "dat", "damus", "datis", "dant")
@@ -1684,7 +1739,7 @@ irreg_conjugations["duco"] = function(args, data, typeinfo)
 
 	make_pres_3rd(data, prefix .. "dūc")
 	make_perf(data, prefix .. "dūx")
-	make_supine(data, prefix .. "duct")
+	make_supine(data, typeinfo, prefix .. "duct")
 
 	add_form(data, "2s_pres_actv_impr", prefix, "dūc", 1)
 end
@@ -1702,7 +1757,7 @@ irreg_conjugations["edo"] = function(args, data, typeinfo)
 
 	make_pres_3rd(data, prefix .. "ed")
 	make_perf(data, prefix .. "ēd")
-	make_supine(data, prefix .. "ēs")
+	make_supine(data, typeinfo, prefix .. "ēs")
 
 	-- Active imperfective indicative
 	add_forms(data, "pres_actv_indc", prefix, {}, "ēs", "ēst", {}, "ēstis", {})
@@ -1729,8 +1784,7 @@ irreg_conjugations["eo"] = function(args, data, typeinfo)
 	local prefix = typeinfo.prefix or ""
 
 	make_perf(data, prefix .. "i")
-	make_supine(data, prefix .. "it")
-	typeinfo.supine_stem = {"it"}
+	make_supine(data, typeinfo, prefix .. "it")
 
 	-- Active imperfective indicative
 	add_forms(data, "pres_actv_indc", prefix, "eō", "īs", "it", "īmus", "ītis",
@@ -1827,7 +1881,7 @@ irreg_conjugations["facio"] = function(args, data, typeinfo)
 	data.forms["futr_pasv_ptc"] = prefix .. "faciendus"
 
 	make_perf(data, prefix .. "fēc")
-	make_supine(data, prefix .. "fact")
+	make_supine(data, typeinfo, prefix .. "fact")
 
 	-- Active imperative
 	if prefix == "" then
@@ -1853,7 +1907,7 @@ irreg_conjugations["fio"] = function(args, data, typeinfo)
 
 	fio(data, prefix, "actv")
 
-	make_supine(data, prefix .. "fact")
+	make_supine(data, typeinfo, prefix .. "fact")
 
 	-- Perfect/future infinitives
 	data.forms["futr_actv_inf"] = data.forms["futr_pasv_inf"]
@@ -1889,7 +1943,7 @@ irreg_conjugations["fero"] = function(args, data, typeinfo)
 
 	make_pres_3rd(data, prefix_pres .. "fer")
 	make_perf(data, prefix_perf .. "tul")
-	make_supine(data, prefix_supine .. "lāt")
+	make_supine(data, typeinfo, prefix_supine .. "lāt")
 
 	-- Active imperfective indicative
 	data.forms["2s_pres_actv_indc"] = prefix_pres .. "fers"
@@ -2231,7 +2285,7 @@ irreg_conjugations["coepi"] = function(args, data, typeinfo)
 	local prefix = typeinfo.prefix or ""
 
 	make_perf(data, prefix .. "coep")
-	make_supine(data, prefix .. "coept")
+	make_supine(data, typeinfo, prefix .. "coept")
 	make_perfect_passive(data)
 
 	data.forms["futr_pasv_ptc"] = prefix .. "coepiendus"
@@ -2255,7 +2309,7 @@ irreg_conjugations["sum"] = function(args, data, typeinfo)
 	typeinfo.subtypes.nopass = true
 	typeinfo.subtypes.supfutractvonly = true
 	make_perf(data, prefix_f .. "fu")
-	make_supine(data, prefix_f .. "fut")
+	make_supine(data, typeinfo, prefix_f .. "fut")
 
 	-- Active imperfective indicative
 	data.forms["1s_pres_actv_indc"] = prefix_long .. "sum"
@@ -2563,7 +2617,7 @@ make_perf_and_supine = function(data, typeinfo)
 		make_deponent_perf(data, typeinfo.supine_stem)
 	else
 		make_perf(data, typeinfo.perf_stem)
-		make_supine(data, typeinfo.supine_stem)
+		make_supine(data, typeinfo, typeinfo.supine_stem)
 	end
 end
 
@@ -2630,7 +2684,7 @@ make_deponent_perf = function(data, supine_stem)
 	end
 end
 
-make_supine = function(data, supine_stem)
+make_supine = function(data, typeinfo, supine_stem)
 	if not supine_stem then
 		return
 	end
@@ -2640,50 +2694,64 @@ make_supine = function(data, supine_stem)
 
 	-- Perfect/future infinitives
 	for _, stem in ipairs(supine_stem) do
-		local futr_actv_inf, perf_pasv_inf, futr_pasv_inf, futr_actv_ptc, perf_pasv_ptc
-		if reconstructed then
-			futr_actv_inf = "[[" .. NAMESPACE .. ":Latin/" .. stem .. "ūrus|" .. stem .. "ūrus]] [[esse]]"
-			perf_pasv_inf = "[[" .. NAMESPACE .. ":Latin/" .. stem .. "us|" .. stem .. "us]] [[esse]]"
-			futr_pasv_inf = "[[" .. NAMESPACE .. ":Latin/" .. stem .. "um|" .. stem .. "um]] [[īrī]]"
-		else
-			futr_actv_inf = "[[" .. stem .. "ūrus]] [[esse]]"
-			perf_pasv_inf = "[[" .. stem .. "us]] [[esse]]"
-			futr_pasv_inf = "[[" .. stem .. "um]] [[īrī]]"
-		end
-
+		local futr_actv_inf, perf_pasv_inf, futr_pasv_inf
+		local futr_actv_ptc, perf_pasv_ptc, perf_pasv_ptc_lemma
 		-- Perfect/future participles
 		futr_actv_ptc = stem .. "ūrus"
-		perf_pasv_ptc = stem .. "us"
+		if typeinfo.subtypes.passimpers then
+			perf_pasv_ptc_lemma = stem .. "um"
+			perf_pasv_ptc = perf_pasv_ptc_lemma
+		else
+			perf_pasv_ptc_lemma = stem .. "us"
+			if typeinfo.subtypes.mp then
+				perf_pasv_ptc = stem .. "ī"
+			elseif typeinfo.subtypes.fp then
+				perf_pasv_ptc = stem .. "ae"
+			elseif typeinfo.subtypes.np then
+				perf_pasv_ptc = stem .. "a"
+			elseif typeinfo.subtypes.f then
+				perf_pasv_ptc = stem .. "a"
+			elseif typeinfo.subtypes.np then
+				perf_pasv_ptc = stem .. "um"
+			else
+				perf_pasv_ptc = perf_pasv_ptc_lemma
+			end
+		end
+
+		futr_actv_inf = make_raw_link(futr_actv_ptc) .. " [[esse]]"
+		perf_pasv_inf = make_raw_link(perf_pasv_ptc_lemma,
+			perf_pasv_ptc ~= perf_pasv_ptc_lemma and perf_pasv_ptc or nil) .. " [[esse]]"
+		futr_pasv_inf = make_raw_link(stem .. "um") .. " [[īrī]]"
 
 		-- Exceptions
 		local mortu = {
-			["conmortu"]=true,
-			["commortu"]=true,
-			["dēmortu"]=true,
-			["ēmortu"]=true,
-			["inmortu"]=true,
-			["immortu"]=true,
-			["inēmortu"]=true,
-			["intermortu"]=true,
-			["permortu"]=true,
-			["praemortu"]=true,
-			["superēmortu"]=true
+			["conmortu"] = true,
+			["commortu"] = true,
+			["dēmortu"] = true,
+			["ēmortu"] = true,
+			["inmortu"] = true,
+			["immortu"] = true,
+			["inēmortu"] = true,
+			["intermortu"] = true,
+			["permortu"] = true,
+			["praemortu"] = true,
+			["superēmortu"] = true
 		}
 		local ort = {
-			["ort"]=true,
-			["abort"]=true,
-			["adort"]=true,
-			["coort"]=true,
-			["exort"]=true,
-			["hort"]=true,
-			["obort"]=true
+			["ort"] = true,
+			["abort"] = true,
+			["adort"] = true,
+			["coort"] = true,
+			["exort"] = true,
+			["hort"] = true,
+			["obort"] = true
 		}
 		if mortu[stem] then
-			futr_actv_inf = "[["..stem:gsub("mortu$","moritūrus").."]] [[esse]]"
-			futr_actv_ptc = stem:gsub("mortu$","moritūrus")
+			futr_actv_inf = "[["..stem:gsub("mortu$", "moritūrus") .. "]] [[esse]]"
+			futr_actv_ptc = stem:gsub("mortu$", "moritūrus")
 		elseif ort[stem] then
-			futr_actv_inf = "[["..stem:gsub("ort$","oritūrus").."]] [[esse]]"
-			futr_actv_ptc = stem:gsub("ort$","oritūrus")
+			futr_actv_inf = "[["..stem:gsub("ort$", "oritūrus") .. "]] [[esse]]"
+			futr_actv_ptc = stem:gsub("ort$", "oritūrus")
 		elseif stem == "mortu" then
 			futr_actv_inf = {}
 			futr_actv_ptc = "moritūrus"
