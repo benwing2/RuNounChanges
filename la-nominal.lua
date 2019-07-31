@@ -621,7 +621,7 @@ local function get_noun_subtype_by_ending(lemma, stem2, decltype, specified_subt
 		local ending = ending_and_subtypes[1]
 		local subtypes = ending_and_subtypes[2]
 		not_this_subtype = false
-		if specified_subtypes.pl and not subtypes.pl then
+		if specified_subtypes.pl and not ut.contains(subtypes, "pl") then
 			-- We now require that plurale tantum terms specify a plural-form lemma.
 			-- The autodetected subtypes will include 'pl' for such lemmas; if not,
 			-- we fail this entry.
@@ -710,7 +710,7 @@ local function detect_noun_subtype(lemma, stem2, typ, subtypes)
 	elseif typ == "2" then
 		return get_noun_subtype_by_ending(lemma, stem2, typ, subtypes, {
 			{"^(.*r)$", {"M", "er"}},
-			{"^(.*v)os", {"M", "vos"}},
+			{"^(.*v)os$", {"M", "vos"}},
 			{"os", {"M", "Greek"}},
 			{"on", {"N", "Greek"}},
 			-- -ius beginning with a capital letter is assumed a proper name,
@@ -883,17 +883,22 @@ function export.detect_noun_subtype(frame)
 	return base .. "|" .. (stem2 or "") .. "|" .. table.concat(subtypes, ".")
 end
 
--- Given ENDINGS_AND_SUBTYPES (a list of pairs of endings with associated
--- subtypes, where each pair consists of a single ending spec and a list of
--- subtypes), check each ending in turn against LEMMA. If it matches, return
--- the pair BASE, SUBTYPES where BASE is the remainder of LEMMA minus the
--- ending, and SUBTYPES is the subtypes associated with the ending. But don't
--- return SUBTYPES if any of the subtypes in the list is specifically canceled
--- in SPECIFIED_SUBTYPES (a set, i.e. a table where the keys are strings and
--- the value is always true); instead, consider the next ending in turn. If no
--- endings match, throw an error if DECLTYPE is non-nil, mentioning the
--- DECLTYPE (the user-specified declension); but if DECLTYPE is nil, just
--- return the tuple nil, nil, nil.
+-- Given ENDINGS_AND_SUBTYPES (a list of four-tuples of ENDING, RETTYPE,
+-- SUBTYPES, PROCESS_RETVAL), check each ENDING in turn against LEMMA and
+-- STEM2. If it matches, return a four-tuple BASE, STEM2, RETTYPE, NEW_SUBTYPES
+-- where BASE is normally the remainder of LEMMA minus the ending, STEM2 is
+-- as passed in, RETTYPE is as passed in, and NEW_SUBTYPES is the same as
+-- SUBTYPES minus any subtypes beginning with a hyphen. If no endings match,
+-- throw an error if DECLTYPPE is non-nil, mentioning the DECLTYPE
+-- (user-specified declension); but if DECLTYPE is nil, just return the tuple
+-- nil, nil, nil, nil.
+--
+-- In order for a given entry to match, ENDING must match and also the subtypes
+-- in SUBTYPES (a list) must not be incompatible with the passed-in
+-- user-specified subtypes SPECIFIED_SUBTYPES (a set, i.e. a table where the
+-- keys are strings and the value is always true). "Incompatible" means that
+-- a given SUBTYPE is specified in either one and -SUBTYPE in the other, or
+-- that "pl" is found in SPECIFIED_SUBTYPES and not in SUBTYPES.
 --
 -- The ending spec in ENDINGS_AND_SUBTYPES is one of the following:
 --
@@ -915,20 +920,27 @@ local function get_adj_type_and_subtype_by_ending(lemma, stem2, decltype,
 		local ending = ending_and_subtypes[1]
 		local rettype = ending_and_subtypes[2]
 		local subtypes = ending_and_subtypes[3]
-		local specified_stem2 = ending_and_subtypes[4]
+		local process_retval = ending_and_subtypes[4]
 		not_this_subtype = false
-		for _, subtype in ipairs(subtypes) do
-			-- A subtype is directly canceled by specifying -SUBTYPE.
-			if specified_subtypes["-" .. subtype] then
-				not_this_subtype = true
-				break
-			end
-			-- A subtype is canceled if the user specified SUBTYPE and
-			-- -SUBTYPE is given in the to-be-returned subtypes.
-			local must_not_be_present = rmatch(subtype, "^%-(.*)$")
-			if must_not_be_present and specified_subtypes[must_not_be_present] then
-				not_this_subtype = true
-				break
+		if specified_subtypes.pl and not ut.contains(subtypes, "pl") then
+			-- We now require that plurale tantum terms specify a plural-form lemma.
+			-- The autodetected subtypes will include 'pl' for such lemmas; if not,
+			-- we fail this entry.
+			not_this_subtype = true
+		else
+			for _, subtype in ipairs(subtypes) do
+				-- A subtype is directly canceled by specifying -SUBTYPE.
+				if specified_subtypes["-" .. subtype] then
+					not_this_subtype = true
+					break
+				end
+				-- A subtype is canceled if the user specified SUBTYPE and
+				-- -SUBTYPE is given in the to-be-returned subtypes.
+				local must_not_be_present = rmatch(subtype, "^%-(.*)$")
+				if must_not_be_present and specified_subtypes[must_not_be_present] then
+					not_this_subtype = true
+					break
+				end
 			end
 		end
 		if not not_this_subtype then
@@ -952,11 +964,16 @@ local function get_adj_type_and_subtype_by_ending(lemma, stem2, decltype,
 						table.insert(new_subtypes, subtype)
 					end
 				end
-				return base, specified_stem2 or stem2, rettype, new_subtypes
+				if process_retval then
+					base, stem2 = process_retval(base, stem2)
+				end
+				return base, stem2, rettype, new_subtypes
 			end
 		end
 	end
-	if decltype == "" then
+	if not decltype then
+		return nil, nil, nil, nil
+	elseif decltype == "" then
 		error("Unrecognized ending for adjective: " .. lemma)
 	else
 		error("Unrecognized ending for declension-" .. decltype .. " adjective: " .. lemma)
@@ -978,77 +995,115 @@ local function detect_adj_type_and_subtype(lemma, stem2, typ, subtypes)
 		subtypes[typ] = true
 		typ = ""
 	end
+
+	local function base_as_stem2(base, stem2)
+		return "foo", base
+	end
+
+	local decl12_entries = {
+		{"us", "1&2", {}},
+		{"a", "1&2", {}},
+		{"um", "1&2", {}},
+		{"ī", "1&2", {"pl"}},
+		{"ae", "1&2", {"pl"}},
+		{"a", "1&2", {"pl"}},
+		-- Nearly all -os adjectives are greekA
+		{"os", "1&2", {"greekA", "-greekE"}},
+		{"os", "1&2", {"greekE", "-greekA"}},
+		{"ē", "1&2", {"greekE", "-greekA"}},
+		{"on", "1&2", {"greekA", "-greekE"}},
+		{"on", "1&2", {"greekE", "-greekA"}},
+		{"^(.*er)$", "1&2", {"er"}},
+		{"^(.*ur)$", "1&2", {"er"}},
+		{"^(h)ic$", "1&2", {"ic"}},
+	}
+
+	local decl3_entries = {
+		{"^(.*er)$", "3-3", {}},
+		{"is", "3-2", {}},
+		{"e", "3-2", {}},
+		{"ior", "3-C", {}},
+		{"jor", "3-C", {}, function(base, stem2) return base, "j" end},
+		{"^(mi)nor$", "3-C", {}, function(base, stem2) return base, "n" end},
+		-- Detect -ēs as 3-2 without auto-inferring .pl if .pl
+		-- not specified. If we don't do this, the later entry for
+		-- -ēs will auto-infer .pl whenever -ēs is specified (which
+		-- won't work for adjectives like isoscelēs). Essentially,
+		-- for declension-3 adjectives, we require that .pl is given
+		-- if the lemma is plural.
+		{"ēs", "3-2", {}},
+		{"iōrēs", "3-C", {"pl"}},
+		{"jōrēs", "3-C", {"pl"}, function(base, stem2) return base, "j" end},
+		{"^(mi)nōrēs$", "3-C", {"pl"}, function(base, stem2) return base, "n" end},
+		-- If .pl with -ēs, we don't know if the adjective is 3-1, 3-2
+		-- or 3-3. Since 3-2 is probably the most common, we infer it
+		-- (as well as the fact that these adjectives *are* in a sense
+		-- 3-2 since they have a distinct neuter in -(i)a. Note that
+		-- we have two entries here; the first one will apply unless
+		-- -I is given, and will infer an i-stem adjective; the second
+		-- one will apply otherwise (and infer a non-i-stem 3-1 adjective).
+		{"ēs", "3-2", {"pl", "I"}},
+		{"ēs", "3-1", {"pl", "par"}, base_as_stem2},
+		-- Same for neuters.
+		{"ia", "3-2", {"pl", "I"}},
+		{"a", "3-1", {"pl", "par"}, base_as_stem2},
+		-- As above for .pl with -ēs but for miscellaneous singulars.
+		-- Most 3-1 adjectives are i-stem (e.g. audāx) so we require -I
+		-- to be given with non-i-stem adjectives. The first entry below
+		-- will apply when -I isn't given, the second when it is given.
+		{"", "3-1", {"I"}},
+		{"", "3-1", {"par"}},
+	}
+
 	if typ == "" then
-		return get_adj_type_and_subtype_by_ending(lemma, stem2, typ, subtypes, {
-			{"us", "1&2", {}},
-			{"a", "1&2", {}},
-			{"um", "1&2", {}},
-			{"ī", "1&2", {"pl"}},
-			{"ae", "1&2", {"pl"}},
-			-- Nearly all -os adjective are greekA
-			{"os", "1&2", {"greekA", "-greekE"}},
-			{"os", "1&2", {"greekE", "-greekA"}},
-			{"ē", "1&2", {"greekE", "-greekA"}},
-			{"on", "1&2", {"greekA", "-greekE"}},
-			{"on", "1&2", {"greekE", "-greekA"}},
-			{"^(.*er)$", "1&2", {"er"}},
-			{"^(.*ur)$", "1&2", {"er"}},
-			{"^(h)ic$", "1&2", {"ic"}},
-			{"is", "3-2", {}},
-			{"e", "3-2", {}},
-			{"ior", "3-C", {}},
-			{"jor", "3-C", {}, "j"},
-			{"^(mi)nor$", "3-C", {}, "n"},
-			{"", "3-1", {"I"}},
-			{"", "3-1", {"par"}},
-		})
+		local base, new_stem2, rettype, new_subtypes =
+			get_adj_type_and_subtype_by_ending(lemma, stem2, nil, subtypes,
+				decl12_entries)
+		if base then
+			return base, new_stem2, rettype, new_subtypes
+		else
+			return get_adj_type_and_subtype_by_ending(lemma, stem2, typ,
+				subtypes, decl3_entries)
+		end
 	elseif typ == "3" then
-		return get_adj_type_and_subtype_by_ending(lemma, stem2, typ, subtypes, {
-			{"^(.*er)$", "3-3", {}},
-			{"is", "3-2", {}},
-			{"e", "3-2", {}},
-			{"ior", "3-C", {}},
-			{"jor", "3-C", {}, "j"},
-			{"^(mi)nor$", "3-C", {}, "n"},
-			{"", "3-1", {"I"}},
-			{"", "3-1", {"par"}},
-		})
+		return get_adj_type_and_subtype_by_ending(lemma, stem2, typ, subtypes,
+			decl3_entries)
 	elseif typ == "1&2" then
-		return get_adj_type_and_subtype_by_ending(lemma, stem2, typ, subtypes, {
-			{"us", "1&2", {}},
-			{"a", "1&2", {}},
-			{"um", "1&2", {}},
-			{"ī", "1&2", {"pl"}},
-			{"ae", "1&2", {"pl"}},
-			-- Nearly all -os adjective are greekA
-			{"os", "1&2", {"greekA", "-greekE"}},
-			{"os", "1&2", {"greekE", "-greekA"}},
-			{"ē", "1&2", {"greekE", "-greekA"}},
-			{"on", "1&2", {"greekA", "-greekE"}},
-			{"on", "1&2", {"greekE", "-greekA"}},
-			{"er", "1&2", {"er"}},
-			{"ur", "1&2", {"er"}},
-			{"ic", "1&2", {"ic"}},
-		})
+		return get_adj_type_and_subtype_by_ending(lemma, stem2, typ, subtypes,
+			decl12_entries)
 	elseif typ == "1-1" then
 		return get_adj_type_and_subtype_by_ending(lemma, stem2, typ, subtypes, {
 			{"a", "1-1", {}},
-			{"ae", "1-1", {}},
+			{"ae", "1-1", {"pl"}},
 		})
 	elseif typ == "2-2" then
 		return get_adj_type_and_subtype_by_ending(lemma, stem2, typ, subtypes, {
 			{"us", "2-2", {}},
 			{"um", "2-2", {}},
-			{"ī", "2-2", {}},
-			{"a", "2-2", {}},
+			{"ī", "2-2", {"pl"}},
+			{"a", "2-2", {"pl"}},
 			{"os", "2-2", {"greek"}},
 			{"on", "2-2", {"greek"}},
-			{"oe", "2-2", {"greek"}},
+			{"oe", "2-2", {"greek", "pl"}},
 		})
 	elseif typ == "3-1" then
 		-- This will cancel out the I if -I is specified in subtypes, and the
 		-- resulting lack of I will get converted to "par".
 		return get_adj_type_and_subtype_by_ending(lemma, stem2, typ, subtypes, {
+			-- Detect -ēs as 3-1 without auto-inferring .pl if .pl
+			-- not specified. If we don't do this, the later entry for
+			-- -ēs will auto-infer .pl whenever -ēs is specified.
+			-- Essentially, for declension-3 adjectives, we require that
+			-- .pl is given if the lemma is plural.
+			{"ēs", "3-1", {"I"}},
+			-- We have two entries here; the first one will apply unless
+			-- -I is given, and will infer an i-stem adjective; the second
+			-- one will apply otherwise.
+			{"ēs", "3-1", {"pl", "I"}, base_as_stem2},
+			{"ēs", "3-1", {"pl", "par"}, base_as_stem2},
+			-- Same for neuters.
+			{"ia", "3-1", {"pl", "I"}, base_as_stem2},
+			{"a", "3-1", {"pl", "par"}, base_as_stem2},
 			{"", "3-1", {"I"}},
 			{"", "3-1", {"par"}},
 		})
@@ -1056,20 +1111,80 @@ local function detect_adj_type_and_subtype(lemma, stem2, typ, subtypes)
 		return get_adj_type_and_subtype_by_ending(lemma, stem2, typ, subtypes, {
 			{"is", "3-2", {}},
 			{"e", "3-2", {}},
+			-- Detect -ēs as 3-2 without auto-inferring .pl if .pl
+			-- not specified. If we don't do this, the later entry for
+			-- -ēs will auto-infer .pl whenever -ēs is specified (which
+			-- won't work for adjectives like isoscelēs). Essentially,
+			-- for declension-3 adjectives, we require that .pl is given
+			-- if the lemma is plural.
+			{"ēs", "3-2", {}},
+			{"ēs", "3-2", {"pl"}},
+			{"ia", "3-2", {"pl"}},
 		})
 	elseif typ == "3-C" then
 		return get_adj_type_and_subtype_by_ending(lemma, stem2, typ, subtypes, {
 			{"ior", "3-C", {}},
-			{"jor", "3-C", {}, "j"},
-			{"^(mi)nor$", "3-C", {}, "n"},
+			{"jor", "3-C", {}, function(base, stem2) return base, "j" end},
+			{"^(mi)nor$", "3-C", {}, function(base, stem2) return base, "n" end},
+			{"iōrēs", "3-C", {"pl"}},
+			{"jōrēs", "3-C", {"pl"}, function(base, stem2) return base, "j" end},
+			{"^(mi)nōrēs$", "3-C", {"pl"}, function(base, stem2) return base, "n" end},
 		})
-	elseif typ == "irreg" and (lemma == "duo" or lemma == "ambō") then
-		-- Certain irregular adjectives set data.num = "pl", but we need to know
-		-- this before declining the adjective so we can propagate it to other
-		-- segments.
-		return lemma, stem2, typ, {"pl"}
-	else
-		return lemma, stem2, typ, {}
+	elseif typ == "irreg" then
+		return get_adj_type_and_subtype_by_ending(lemma, stem2, typ, subtypes, {
+			{"^(duo)$", typ, {"pl"}},
+			{"^(ambō)$", typ, {"pl"}},
+			{"^(mīll?ia)$", typ, {"N", "pl"}, function(base, stem2) return "mīlle", nil end},
+			-- match ea
+			{"^(ea)$", typ, {}, function(base, stem2) return "is", nil end},
+			-- match id
+			{"^(id)$", typ, {}, function(base, stem2) return "is", nil end},
+			-- match plural eī, iī
+			{"^([ei]ī)$", typ, {"pl"}, function(base, stem2) return "is", nil end},
+			-- match plural ea, eae
+			{"^(eae?)$", typ, {"pl"}, function(base, stem2) return "is", nil end},
+			-- match eadem
+			{"^(eadem)$", typ, {}, function(base, stem2) return "īdem", nil end},
+			-- match īdem, idem
+			{"^([īi]dem)$", typ, {}, function(base, stem2) return "īdem", nil end},
+			-- match plural īdem
+			{"^(īdem)$", typ, {"pl"}},
+			-- match plural eadem, eaedem
+			{"^(eae?dem)$", typ, {"pl"}, function(base, stem2) return "īdem", nil end},
+			-- match illa, ipsa, ista; it doesn't matter if we overmatch because
+			-- we'll get an error as we use the stem itself in the returned base
+			{"^(i[lps][lst])a$", typ, {}, function(base, stem2) return base .. "e", nil end},
+			-- match illud, istud; as above, it doesn't matter if we overmatch
+			{"^(i[ls][lt])ud$", typ, {}, function(base, stem2) return base .. "e", nil end},
+			-- match ipsum
+			{"^(ipsum)$", typ, {}, function(base, stem2) return "ipse", nil end},
+			-- match plural illī, ipsī, istī; as above, it doesn't matter if we
+			-- overmatch
+			{"^(i[lps][lst])ī$", typ, {"pl"}, function(base, stem2) return base .. "e", nil end},
+			-- match plural illa, illae, ipsa, ipsae, ista, istae; as above, it
+			-- doesn't matter if we overmatch
+			{"^(i[lps][lst])ae?$", typ, {"pl"}, function(base, stem2) return base .. "e", nil end},
+			-- Detect quī as non-plural unless .pl specified.
+			{"^(quī)$", typ, {}},
+			-- Otherwise detect quī as plural.
+			{"^(quī)$", typ, {"pl"}},
+			-- Same for quae.
+			{"^(quae)$", typ, {}, function(base, stem2) return "quī", nil end},
+			{"^(quae)$", typ, {"pl"}, function(base, stem2) return "quī", nil end},
+			{"^(quid)$", typ, {}, function(base, stem2) return "quis", nil end},
+			{"^(quod)$", typ, {}, function(base, stem2) return "quī", nil end},
+			{"^(qui[cd]quid)$", typ, {}, function(base, stem2) return "quisquis", nil end},
+			{"^(quīquī)$", typ, {"pl"}, function(base, stem2) return "quisquis", nil end},
+			{"^(quaequae)$", typ, {"pl"}, function(base, stem2) return "quisquis", nil end},
+			-- match all remaining lemmas in lemma form
+			{"", typ, {}},
+		})
+	else -- 3-3 or 3-P
+		return get_adj_type_and_subtype_by_ending(lemma, stem2, typ, subtypes, {
+			{"ēs", typ, {"pl"}, base_as_stem2},
+			{"ia", typ, {"pl"}, base_as_stem2},
+			{"", typ, {}},
+		})
 	end
 end
 
