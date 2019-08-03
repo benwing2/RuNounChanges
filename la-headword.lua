@@ -94,6 +94,11 @@ local function rsub(term, foo, bar)
 	return retval
 end
 
+local function track(page)
+	require("Module:debug").track("la-headword/" .. page)
+	return true
+end
+
 local function format(array, concatenater)
 	if #array == 0 then
 		return ""
@@ -163,6 +168,7 @@ pos_functions["nouns"] = function(class, args, data, infl_classes, appendix)
 		return pos_functions["nouns-new"](class, args, data, infl_classes, appendix)
 	end
 
+	track("nouns-old")
 	params = {
 		[1] = {alias_of = 'head'},
 		[2] = {alias_of = 'gen'},
@@ -245,6 +251,7 @@ pos_functions["nouns"] = function(class, args, data, infl_classes, appendix)
 end
 
 pos_functions["nouns-new"] = function(class, args, data, infl_classes, appendix)
+	track("nouns-new")
 	local decldata = require("Module:la-nominal").do_generate_noun_forms(args, true)
 	local lemma = decldata.overriding_lemma
 	local lemma_num = decldata.num == "pl" and "pl" or "sg"
@@ -424,6 +431,7 @@ pos_functions["verbs"] = function(class, args, data, infl_classes, appendix)
 		return pos_functions["verbs-new"](class, args, data, infl_classes, appendix)
 	end
 
+	track("verbs-old")
 	params = {
 		[1] = {alias_of = 'head'},
 		[2] = {alias_of = 'inf'},
@@ -585,6 +593,7 @@ pos_functions["verbs"] = function(class, args, data, infl_classes, appendix)
 end
 
 pos_functions["verbs-new"] = function(class, args, data, infl_classes, appendix)
+	track("verbs-new")
 	local m_la_verb = require("Module:la-verb")
 	local conjdata, typeinfo = m_la_verb.make_data(args, true)
 	local lemma_forms = conjdata.overriding_lemma
@@ -855,8 +864,8 @@ pos_functions["adjectives-comp"] = function(class, args, data, infl_classes, app
 	table.insert(data.inflections, n)
 
 	if args.comp then
-		-- [[Special:WhatLinksHere/Template:tracking/la-adj-comparative]]
-		require("Module:debug").track("la-adj-comparative")
+		-- [[Special:WhatLinksHere/Template:tracking/adjectives/comp]]
+		track("adjectives/comp")
 	end
 end
 
@@ -887,8 +896,8 @@ pos_functions["adjectives-sup"] = function(class, args, data, infl_classes, appe
 	table.insert(data.inflections, n)
 
 	if args.sup then
-		-- [[Special:WhatLinksHere/Template:tracking/la-adj-superlative]]
-		require("Module:debug").track("la-adj-superlative")
+		-- [[Special:WhatLinksHere/Template:tracking/adjectives/sup]]
+		track("adjectives/sup")
 	end
 end
 
