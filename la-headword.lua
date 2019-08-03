@@ -75,7 +75,6 @@ local new_gender_names = {
 }
 
 local lang = require("Module:languages").getByCode("la")
-local suffix = nil
 
 local u = mw.ustring.char
 local rfind = mw.ustring.find
@@ -140,17 +139,10 @@ function export.show(frame)
 
 	if poscat == "suffixes" then
 		table.insert(data.categories, "Latin " .. suff_type .. "-forming suffixes")
-		suffix = '-'
 	end
 
 	if pos_functions[postype] then
 		pos_functions[postype](class, args, data, infl_classes, appendix, postscript)
-	end
-
-	if suffix then
-		for i, h in ipairs(data.heads) do
-			data.heads[i] = suffix .. h
-		end
 	end
 
 	if mw.ustring.find(mw.ustring.gsub(PAGENAME,"qu","kv"),"[aeiouāēīōū][iu][aeiouāēīōū]") then
@@ -237,38 +229,23 @@ pos_functions["nouns"] = function(class, args, data, infl_classes, appendix)
 			table.insert(data.categories, "Latin nouns without a genitive singular")
 		else
 			args.gen.label = "genitive"
-			if suffix then
-				for i, g in ipairs(args.gen) do
-					args.gen[i] = suffix .. g
-				end
-			end
 			table.insert(data.inflections, args.gen)
 		end
 	end
 
 	if #args.m > 0 then
 		args.m.label = "masculine"
-		if suffix then
-			for i, m in ipairs(args.m) do
-				args.m[i] = suffix .. m
-			end
-		end
 		table.insert(data.inflections, args.m)
 	end
 
 	if #args.f > 0 then
 		args.f.label = "feminine"
-		if suffix then
-			for i, f in ipairs(args.f) do
-				args.f[i] = suffix .. f
-			end
-		end
 		table.insert(data.inflections, args.f)
 	end
 end
 
 pos_functions["nouns-new"] = function(class, args, data, infl_classes, appendix)
-	local decldata = require("Module:User:Benwing2/la-nominal").do_generate_noun_forms(args, true)
+	local decldata = require("Module:la-nominal").do_generate_noun_forms(args, true)
 	local lemma = decldata.overriding_lemma
 	local lemma_num = decldata.num == "pl" and "pl" or "sg"
 	if not lemma or #lemma == 0 then
@@ -355,11 +332,6 @@ pos_functions["nouns-new"] = function(class, args, data, infl_classes, appendix)
 		local gen = decldata.forms["gen_" .. lemma_num]
 		if gen and gen ~= "" and gen ~= "—" and #gen > 0 then
 			gen.label = "genitive"
-			if suffix then
-				for i, g in ipairs(gen) do
-					gen[i] = suffix .. g
-				end
-			end
 			table.insert(data.inflections, gen)
 		else
 			table.insert(data.inflections, {label = "no genitive"})
@@ -369,21 +341,11 @@ pos_functions["nouns-new"] = function(class, args, data, infl_classes, appendix)
 
 	if #decldata.m > 0 then
 		decldata.m.label = "masculine"
-		if suffix then
-			for i, m in ipairs(decldata.m) do
-				decldata.m[i] = suffix .. m
-			end
-		end
 		table.insert(data.inflections, decldata.m)
 	end
 
 	if #decldata.f > 0 then
 		decldata.f.label = "feminine"
-		if suffix then
-			for i, f in ipairs(decldata.f) do
-				decldata.f[i] = suffix .. f
-			end
-		end
 		table.insert(data.inflections, decldata.f)
 	end
 end
@@ -623,7 +585,7 @@ pos_functions["verbs"] = function(class, args, data, infl_classes, appendix)
 end
 
 pos_functions["verbs-new"] = function(class, args, data, infl_classes, appendix)
-	local m_la_verb = require("Module:User:Benwing2/la-verb")
+	local m_la_verb = require("Module:la-verb")
 	local conjdata, typeinfo = m_la_verb.make_data(args, true)
 	local lemma_forms = conjdata.overriding_lemma
 	if not lemma_forms or #lemma_forms == 0 then
@@ -802,6 +764,8 @@ pos_functions["verbs-new"] = function(class, args, data, infl_classes, appendix)
 	end
 end
 
+pos_functions["suffixes-verb"] = pos_functions["verbs"]
+
 pos_functions["adjectives"] = function(class, args, data, infl_classes, appendix)
 	if class == "new" then
 		pos_functions["adjectives-new"](class, args, data, infl_classes, appendix)
@@ -813,7 +777,7 @@ pos_functions["adjectives"] = function(class, args, data, infl_classes, appendix
 end
 
 pos_functions["adjectives-new"] = function(class, args, data, infl_classes, appendix)
-	local decldata = require("Module:User:Benwing2/la-nominal").do_generate_adj_forms(args, true)
+	local decldata = require("Module:la-nominal").do_generate_adj_forms(args, true)
 	local lemma = decldata.overriding_lemma
 	local lemma_num = decldata.num == "pl" and "pl" or "sg"
 	if not lemma or #lemma == 0 then
@@ -928,6 +892,8 @@ pos_functions["adjectives-sup"] = function(class, args, data, infl_classes, appe
 	end
 end
 
+pos_functions["suffixes-adjective"] = pos_functions["adjectives"]
+
 pos_functions["adverbs"] = function(class, args, data, infl_classes, appendix)
 	params = {
 		[1] = {alias_of = 'head'},
@@ -942,23 +908,30 @@ pos_functions["adverbs"] = function(class, args, data, infl_classes, appendix)
 	local args = require("Module:parameters").process(args, params)
 	data.heads = args.head
 	data.id = args.id
+	local comp, sup
+	local irreg = false
 
-	if #args.comp > 0 and args.comp[1] ~= "-" then
+	if args.comp[1] == "-" then
+		comp = "-"
+	elseif #args.comp > 0 then
 		args.comp.label = glossary_link("comparative")
-		table.insert(data.inflections, args.comp)
-		if #args.sup > 0 and args.sup[1] ~= "-" then
-			args.sup.label = glossary_link("superlative")
-			table.insert(data.inflections, args.sup)
-		else
-			table.insert(data.inflections, {label = "no [[Appendix:Glossary#superlative|superlative]]"})
-		end
+		comp = args.comp
+		irreg = true
+	end
+	if args.comp[1] == "-" or args.sup[1] == "-" then
+		sup = "-"
+	elseif #args.sup > 0 then
+		args.sup.label = glossary_link("superlative")
+		sup = args.sup
+		irreg = true
+	end
+	if irreg then
 		table.insert(data.categories, "Latin irregular adverbs")
-	elseif args.comp[1] == "-" then
-		table.insert(data.inflections, {label = "not [[Appendix:Glossary#comparative|comparable]]"})
-		table.insert(data.categories, "Latin uncomparable adverbs")
-	else
-		local comp = {label = glossary_link("comparative")}
-		local sup = {label = glossary_link("superlative")}
+	end
+
+	if not comp or not sup then
+		local default_comp = {label = glossary_link("comparative")}
+		local default_sup = {label = glossary_link("superlative")}
 		for _, head in ipairs(args.head) do
 			local stem = nil
 			for _, suff in ipairs({"iter", "nter", "ter", "er", "iē", "ē", "im", "ō"}) do
@@ -968,8 +941,8 @@ pos_functions["adverbs"] = function(class, args, data, infl_classes, appendix)
 						stem = stem .. "nt"
 						suff = "er"
 					end
-					table.insert(comp, stem .. "ius")
-					table.insert(sup, stem .. "issimē")
+					table.insert(default_comp, stem .. "ius")
+					table.insert(default_sup, stem .. "issimē")
 					break
 				end
 			end
@@ -977,15 +950,26 @@ pos_functions["adverbs"] = function(class, args, data, infl_classes, appendix)
 				error("Unrecognized adverb type, recognized types are “-ē”, “-er”, “-ter”, “-iter”, “-im”, or “-ō” or specify irregular forms or “-” if incomparable.")
 			end
 		end
+		comp = comp or default_comp
+		sup = sup or default_sup
+	end
+
+	if comp == "-" then
+		table.insert(data.inflections, {label = "not [[Appendix:Glossary#comparative|comparable]]"})
+		table.insert(data.categories, "Latin uncomparable adverbs")
+	else
 		table.insert(data.inflections, comp)
-		if args.sup[1] ~= '-' then
-			table.insert(data.inflections, sup)
-		else
+	end
+	if sup == "-" then
+		if comp ~= "-" then
 			table.insert(data.inflections, {label = "no [[Appendix:Glossary#superlative|superlative]]"})
-			table.insert(data.categories, "Latin irregular adverbs")
 		end
+	else
+		table.insert(data.inflections, sup)
 	end
 end
+
+pos_functions["suffixes-adverb"] = pos_functions["adverbs"]
 
 local prepositional_cases = {
 	genitive = true, accusative = true, ablative = true,
