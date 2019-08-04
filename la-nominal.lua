@@ -771,6 +771,13 @@ local function detect_noun_subtype(lemma, stem2, typ, subtypes)
 		if subtypes.Greek then
 			base, _, detected_subtypes =
 				get_noun_subtype_by_ending(lemma, stem2, nil, subtypes, {
+					{{"is", ""}, {"I"}},
+			})
+			if base then
+				return lemma, stem2, detected_subtypes
+			end
+			base, _, detected_subtypes =
+				get_noun_subtype_by_ending(lemma, stem2, nil, subtypes, {
 					{"ēr", {"er"}},
 					{"ōn", {"on"}},
 					{"s", {"s"}},
@@ -1273,6 +1280,9 @@ local function parse_segment(segment)
 		if j == 1 then
 			decl = spec
 		else
+			local begins_with_hyphen
+			begins_with_hyphen, spec = rmatch(spec, "^(%-?)(.-)$")
+			spec = begins_with_hyphen .. spec:gsub("%-", "_")
 			types[spec] = true
 		end
 	end
