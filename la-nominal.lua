@@ -1802,8 +1802,8 @@ local function decline_segment_run(parsed_run, is_adj)
 			-- substitute the original lemma (with links included).
 			for _, slot in ipairs(potential_lemma_slots) do
 				local forms = data.forms[slot]
-				local linked_forms = {}
 				if forms then
+					local linked_forms = {}
 					if type(forms) ~= "table" then
 						forms = {forms}
 					end
@@ -1814,8 +1814,8 @@ local function decline_segment_run(parsed_run, is_adj)
 							table.insert(linked_forms, form)
 						end
 					end
+					data.forms["linked_" .. slot] = linked_forms
 				end
-				data.forms["linked_" .. slot] = linked_forms
 			end
 
 			if seg.types.lig then
