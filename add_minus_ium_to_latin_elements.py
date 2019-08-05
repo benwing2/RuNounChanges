@@ -23,10 +23,12 @@ def process_page(page, index, parsed):
     return None, None
   pagemsg("Processing")
 
+  num_ndecl_templates = 0
   for t in parsed.filter_templates():
     origt = unicode(t)
     tn = tname(t)
     if tn == "la-ndecl":
+      num_ndecl_templates += 1
       lemmaspec = getparam(t, "1")
       m = re.search("^(.*)<(.*)>$", lemmaspec)
       if not m:
@@ -39,6 +41,9 @@ def process_page(page, index, parsed):
         t.add("1", "%s<%s>" % (lemma, spec))
         pagemsg("Replaced %s with %s" % (origt, unicode(t)))
         notes.append("add .-ium to declension of Latin chemical element")
+  if num_ndecl_templates > 1:
+    pagemsg("WARNING: Saw multiple {{la-ndecl}} templates, some may not be elements")
+    return None, None
 
   return unicode(parsed), notes
 
