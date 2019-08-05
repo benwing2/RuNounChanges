@@ -585,6 +585,8 @@ pages_to_delete = []
 if args.pos_form_inflfile:
   lines = [x.strip() for x in codecs.open(args.pos_form_inflfile, "r", "utf-8")]
   for index, line in blib.iter_items(lines, start, end):
+    if line.startswith("#"):
+      continue
     if "!!!" in line:
       pos, lemma, forms, infl = re.split("!!!", line)
     else:
@@ -596,6 +598,8 @@ elif args.form_inflfile:
     raise ValueError("If --form-inflfile given, --pos must be given")
   lines = [x.strip() for x in codecs.open(args.form_inflfile, "r", "utf-8")]
   for index, line in blib.iter_items(lines, start, end):
+    if line.startswith("#"):
+      continue
     if "!!!" in line:
       lemma, forms, infl = re.split("!!!", line)
     else:
@@ -607,6 +611,8 @@ else:
     raise ValueError("If --form-inflfile not given, --inflfile, --pos and --forms must be given")
   lines = [x.strip() for x in codecs.open(args.inflfile, "r", "utf-8")]
   for index, line in blib.iter_items(lines, start, end):
+    if line.startswith("#"):
+      continue
     if "!!!" in line:
       lemma, infl = re.split("!!!", line)
     else:
