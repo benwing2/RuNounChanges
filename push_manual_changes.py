@@ -102,7 +102,7 @@ def push_manual_changes(save, verbose, direcfile, annotation, startFrom, upTo):
         newtext_text_diff = len(newtext) - len(text)
         if newtext_text_diff == repl_curr_diff:
           pass
-        if repl_curr_diff == 0:
+        elif repl_curr_diff == 0:
           if newtext_text_diff != 0:
             pagemsg("WARNING: Something wrong, no change in text length during replacement but expected change: Expected length change=%s, actual=%s, curr=%s, repl=%s"
                 % (repl_curr_diff, newtext_text_diff, curr, repl))
