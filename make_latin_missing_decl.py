@@ -81,11 +81,21 @@ def process_line(index, line, online):
         else:
           la_ndecl = "{{la-ndecl|%s/%s<3>}}" % (lemma, stem)
       elif gen1.endswith("ium"):
-        stem = gen1[:-3]
-        la_ndecl = "{{la-ndecl|/%s<3.I.pl>}}" % stem
+        if lemma.endswith("ia"):
+          la_ndecl = "{{la-ndecl|%s<3.pl>}}" % lemma
+        elif lemma.endswith(u"ēs"):
+          la_ndecl = "{{la-ndecl|%s<3.I.pl>}}" % lemma
+        else:
+          pagemsg("WARNING: Unrecognized lemma %s with decl 3 genitive -ium, skipping: %s" % (
+            lemma, unicode(t)))
+          return
       elif gen1.endswith("um"):
-        stem = gen1[:-2]
-        la_ndecl = "{{la-ndecl|/%s<3.pl>}}" % stem
+        if lemma.endswith("a") or lemma.endswith(u"ēs"):
+          la_ndecl = "{{la-ndecl|%s<3.pl>}}" % lemma
+        else:
+          pagemsg("WARNING: Unrecognized lemma %s with decl 3 genitive -um, skipping: %s" % (
+            lemma, unicode(t)))
+          return
       else:
         pagemsg("WARNING: Unrecognized genitive %s with decl 3 lemma %s, skipping: %s" % (
           gen1, lemma, unicode(t)))
@@ -104,7 +114,8 @@ def process_line(index, line, online):
     if noun_props is None:
       return
     convert_la_headword_noun.compare_headword_decl_forms("genitive", genitive,
-        ["gen_sg", "gen_pl"], noun_props, "headword=%s, decl=%s" % (unicode(t), la_ndecl),
+        ["gen_sg", "gen_pl"], noun_props,
+        "headword=%s, decl=%s" % (unicode(t), la_ndecl), pagemsg,
         adjust_for_missing_gen_forms=True, remove_headword_links=True)
 
 parser = blib.create_argparser("Add missing declension to Latin terms")
