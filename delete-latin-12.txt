@@ -14,3 +14,9 @@ verb clueo pass {{la-conj|2|clueō}}
 verb cohortor sup {{la-conj|1|cohortor|cohortar}}
 noun Ulysippo allbutlemma {{la-ndecl|Ulysippō/Ulysippōnis<3.loc>}}
 noun pinguedo allbutlemma {{la-ndecl|pinguēdō/pinguēdōn<3>}}
+adj macrantha allbutlemma {{la-adecl|macrantha/macranth<3+>}}
+adj cepacia allbutlemma {{la-adecl|cēpācia/cēpāc<3+>}}
+adj quintusdecimus allbutlemma {{la-adecl|quintusdecimus}}
+adj quartadecimus all {{la-adecl|quārtadecimus}}
+adj quintadecimus all {{la-adecl|quintadecimus}}
+noun scaturrigo allbutlemma {{la-ndecl|scaturrīgō/scaturrīgōn<3>}}
