@@ -4,7 +4,7 @@
 import pywikibot, re, sys, codecs, argparse
 
 import blib
-from blib import getparam, rmparam, tname, msg, site
+from blib import getparam, rmparam, tname, msg, errandmsg, site
 
 import lalib
 
@@ -27,14 +27,12 @@ def compare_new_and_old_templates(t, pagetitle, pagemsg, errandpagemsg):
     new_result = expand_text(new_generate_template)
     if not new_result:
       return None
-    # Omit linked_* variants, which won't be present in the old forms
-    new_result = "|".join(x for x in new_result.split("|") if not x.startswith("linked_"))
     return new_result
 
   return blib.compare_new_and_old_template_forms(t, t, generate_old_forms,
     generate_new_forms, pagemsg, errandpagemsg)
 
-def process_page(index, page):
+def process_page(page, index):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -50,28 +48,10 @@ def process_page(index, page):
     if tn == "la-ndecl" or tn == "la-adecl":
       compare_new_and_old_templates(unicode(t), pagetitle, pagemsg, errandpagemsg)
 
-parser = blib.create_argparser("Check potential changes to {{la-ndecl}} or {{la-adecl}} implementation")
-parser.add_argument("--pagefile", help="List of pages to process.")
-parser.add_argument("--cats", help="List of categories to process.")
-parser.add_argument("--refs", help="List of references to process.")
+parser = blib.create_argparser("Check potential changes to {{la-ndecl}} or {{la-adecl}} implementation",
+    include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-if args.pagefile:
-  pages = [x.rstrip('\n') for x in codecs.open(args.pagefile, "r", "utf-8")]
-  for i, page in blib.iter_items(pages, start, end):
-    process_page(i, pywikibot.Page(site, page))
-else:
-  if not args.cats and not args.refs:
-    cats = []
-    refs = ["Template:la-ndecl", "Template:la-adecl"]
-  else:
-    cats = args.cats and [x.decode("utf-8") for x in args.cats.split(",")] or []
-    refs = args.refs and [x.decode("utf-8") for x in args.refs.split(",")] or []
-
-  for cat in cats:
-    for i, page in blib.cat_articles(cat, start, end):
-      process_page(i, page)
-  for ref in refs:
-    for i, page in blib.references(ref, start, end):
-      process_page(i, page)
+blib.do_pagefile_cats_refs(args, start, end, process_page,
+    default_refs=["Template:la-ndecl", "Template:la-adecl"])

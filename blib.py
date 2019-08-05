@@ -609,7 +609,7 @@ def group_notes(notes):
 
 starttime = time.time()
 
-def create_argparser(desc):
+def create_argparser(desc, include_pagefile=False):
   msg("Beginning at %s" % time.ctime(starttime))
   parser = argparse.ArgumentParser(description=desc)
   parser.add_argument('start', help="Starting page index", nargs="?")
@@ -617,6 +617,10 @@ def create_argparser(desc):
   parser.add_argument('-s', '--save', action="store_true", help="Save results")
   parser.add_argument('-v', '--verbose', action="store_true", help="More verbose output")
   parser.add_argument('-d', '--diff', action="store_true", help="Show diff of changes")
+  if include_pagefile:
+    parser.add_argument("--pagefile", help="List of pages to process.")
+    parser.add_argument("--cats", help="List of categories to process.")
+    parser.add_argument("--refs", help="List of references to process.")
   return parser
 
 def init_argparser(desc):
@@ -645,6 +649,37 @@ def parse_start_end(startsort, endsort):
       endsort = str.decode(endsort, "utf-8")
 
   return (startsort, endsort)
+
+def do_pagefile_cats_refs(args, start, end, process_page, default_cats=[],
+    default_refs=[], edit=False):
+  def do_process_page(page, i):
+    if edit:
+      do_edit(page, i, process_page, save=args.save, verbose=args.verbose,
+          diff=args.diff)
+    else:
+      process_page(page, i)
+
+  if args.pagefile:
+    pages = [x.rstrip('\n') for x in codecs.open(args.pagefile, "r", "utf-8")]
+    for i, page in iter_items(pages, start, end):
+      do_process_page(pywikibot.Page(site, page), i)
+  else:
+    if not args.cats and not args.refs:
+      if not default_cats and not default_refs:
+        raise ValueError("One of --pagefile, --cats or --refs should be specified")
+      cats = default_cats
+      refs = default_refs
+    else:
+      cats = args.cats and [x.decode("utf-8") for x in args.cats.split(",")] or []
+      refs = args.refs and [x.decode("utf-8") for x in args.refs.split(",")] or []
+
+    for cat in cats:
+      for i, page in cat_articles(cat, start, end):
+        do_process_page(page, i)
+    for ref in refs:
+      for i, page in references(ref, start, end):
+        do_process_page(page, i)
+  elapsed_time()
 
 def elapsed_time():
   endtime = time.time()

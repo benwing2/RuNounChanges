@@ -32,7 +32,7 @@ def compare_new_and_old_templates(t, pagetitle, pagemsg, errandpagemsg):
   return blib.compare_new_and_old_template_forms(t, t, generate_old_forms,
     generate_new_forms, pagemsg, errandpagemsg)
 
-def process_page(index, page):
+def process_page(page, index):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -48,28 +48,10 @@ def process_page(index, page):
     if tn == "la-conj":
       compare_new_and_old_templates(unicode(t), pagetitle, pagemsg, errandpagemsg)
 
-parser = blib.create_argparser("Check potential changes to {{la-conj}} implementation")
-parser.add_argument("--pagefile", help="List of pages to process.")
-parser.add_argument("--cats", help="List of categories to process.")
-parser.add_argument("--refs", help="List of references to process.")
+parser = blib.create_argparser("Check potential changes to {{la-conj}} implementation",
+    include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-if args.pagefile:
-  pages = [x.rstrip('\n') for x in codecs.open(args.pagefile, "r", "utf-8")]
-  for i, page in blib.iter_items(pages, start, end):
-    process_page(i, pywikibot.Page(site, page))
-else:
-  if not args.cats and not args.refs:
-    cats = []
-    refs = ["Template:la-conj"]
-  else:
-    cats = args.cats and [x.decode("utf-8") for x in args.cats.split(",")] or []
-    refs = args.refs and [x.decode("utf-8") for x in args.refs.split(",")] or []
-
-  for cat in cats:
-    for i, page in blib.cat_articles(cat, start, end):
-      process_page(i, page)
-  for ref in refs:
-    for i, page in blib.references(ref, start, end):
-      process_page(i, page)
+blib.do_pagefile_cats_refs(args, start, end, process_page,
+    default_refs=["Template:la-conj"])
