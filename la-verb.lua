@@ -118,7 +118,7 @@ local function initialize_slots()
 			handle_slot(t .. "_" .. f, false)
 		end
 	end
-	for _, n in ipairs({"ger_nom", "ger_gen", "ger_dat", "ger_acc", "sup_acc", "sup_abl"}) do
+	for _, n in ipairs({"ger_gen", "ger_dat", "ger_acc", "ger_abl", "sup_acc", "sup_abl"}) do
 		handle_slot(n, false)
 	end
 	return non_generic_slots, generic_slots
@@ -626,58 +626,60 @@ local function add_prefix_suffix(data, typeinfo)
 	local plural_passive_suffix_no_links = m_links.remove_links(plural_passive_suffix)
 
 	for slot in iter_slots(false, true) do
-		local prefix, suffix, prefix_no_links, suffix_no_links
-		if slot:find("pasv") and slot:find("[123]p") then
-			prefix = plural_passive_prefix
-			suffix = plural_passive_suffix
-			prefix_no_links = plural_passive_prefix_no_links
-			suffix_no_links = plural_passive_suffix_no_links
-		elseif slot:find("pasv") then
-			prefix = passive_prefix
-			suffix = passive_suffix
-			prefix_no_links = passive_prefix_no_links
-			suffix_no_links = passive_suffix_no_links
-		elseif slot:find("[123]p") then
-			prefix = plural_prefix
-			suffix = plural_suffix
-			prefix_no_links = plural_prefix_no_links
-			suffix_no_links = plural_suffix_no_links
-		else
-			prefix = active_prefix
-			suffix = active_suffix
-			prefix_no_links = active_prefix_no_links
-			suffix_no_links = active_suffix_no_links
-		end
-		local forms = data.forms[slot]
-		if not form_is_empty(forms) then
-			local affixed_forms = {}
-			if type(forms) ~= "table" then
-				forms = {forms}
+		if not slot:find("ger_") then
+			local prefix, suffix, prefix_no_links, suffix_no_links
+			if slot:find("pasv") and slot:find("[123]p") then
+				prefix = plural_passive_prefix
+				suffix = plural_passive_suffix
+				prefix_no_links = plural_passive_prefix_no_links
+				suffix_no_links = plural_passive_suffix_no_links
+			elseif slot:find("pasv") then
+				prefix = passive_prefix
+				suffix = passive_suffix
+				prefix_no_links = passive_prefix_no_links
+				suffix_no_links = passive_suffix_no_links
+			elseif slot:find("[123]p") then
+				prefix = plural_prefix
+				suffix = plural_suffix
+				prefix_no_links = plural_prefix_no_links
+				suffix_no_links = plural_suffix_no_links
+			else
+				prefix = active_prefix
+				suffix = active_suffix
+				prefix_no_links = active_prefix_no_links
+				suffix_no_links = active_suffix_no_links
 			end
-			for _, form in ipairs(forms) do
-				if form_is_empty(form) then
-					table.insert(affixed_forms, form)
-				elseif slot:find("^linked") then
-					-- If we're dealing with a linked slot, include the original links
-					-- in the prefix/suffix and also add a link around the form itself
-					-- if links aren't already present. (Note, above we early-exited
-					-- if there was no prefix and no suffix.)
-					if not form:find("[%[%]]") then
-						form = "[[" .. form .. "]]"
-					end
-					table.insert(affixed_forms, prefix .. form .. suffix)
-				elseif form:find("[%[%]]") then
-					-- If not dealing with a linked slot, but there are links in the slot,
-					-- include the original, potentially linked versions of the prefix and
-					-- suffix (e.g. in perfect passive forms).
-					table.insert(affixed_forms, prefix .. form .. suffix)
-				else
-					-- Otherwise, use the non-linking versions of the prefix and suffix
-					-- so that the whole term (including prefix/suffix) gets linked.
-					table.insert(affixed_forms, prefix_no_links .. form .. suffix_no_links)
+			local forms = data.forms[slot]
+			if not form_is_empty(forms) then
+				local affixed_forms = {}
+				if type(forms) ~= "table" then
+					forms = {forms}
 				end
+				for _, form in ipairs(forms) do
+					if form_is_empty(form) then
+						table.insert(affixed_forms, form)
+					elseif slot:find("^linked") then
+						-- If we're dealing with a linked slot, include the original links
+						-- in the prefix/suffix and also add a link around the form itself
+						-- if links aren't already present. (Note, above we early-exited
+						-- if there was no prefix and no suffix.)
+						if not form:find("[%[%]]") then
+							form = "[[" .. form .. "]]"
+						end
+						table.insert(affixed_forms, prefix .. form .. suffix)
+					elseif form:find("[%[%]]") then
+						-- If not dealing with a linked slot, but there are links in the slot,
+						-- include the original, potentially linked versions of the prefix and
+						-- suffix (e.g. in perfect passive forms).
+						table.insert(affixed_forms, prefix .. form .. suffix)
+					else
+						-- Otherwise, use the non-linking versions of the prefix and suffix
+						-- so that the whole term (including prefix/suffix) gets linked.
+						table.insert(affixed_forms, prefix_no_links .. form .. suffix_no_links)
+					end
+				end
+				data.forms[slot] = affixed_forms
 			end
-			data.forms[slot] = affixed_forms
 		end
 	end
 end
@@ -715,10 +717,18 @@ function export.make_data(parent_args, from_headword)
 		passive_prefix = {},
 		plural_prefix = {},
 		plural_passive_prefix = {},
+		gen_prefix = {},
+		dat_prefix = {},
+		acc_prefix = {},
+		abl_prefix = {},
 		suffix = {},
 		passive_suffix = {},
 		plural_suffix = {},
 		plural_passive_suffix = {},
+		gen_suffix = {},
+		dat_suffix = {},
+		acc_suffix = {},
+		abl_suffix = {},
 		-- examined directly in export.show()
 		search = {},
 	}
@@ -813,6 +823,10 @@ function export.make_data(parent_args, from_headword)
 	-- then to the base prefix.
 	data.plural_passive_prefix = normalize_prefix(args.plural_passive_prefix) or
 		normalize_prefix(args.passive_prefix) or data.plural_prefix
+	data.gen_prefix = normalize_prefix(args.gen_prefix)
+	data.dat_prefix = normalize_prefix(args.dat_prefix)
+	data.acc_prefix = normalize_prefix(args.acc_prefix)
+	data.abl_prefix = normalize_prefix(args.abl_prefix)
 
 	data.suffix = normalize_suffix(args.suffix)
 	data.passive_suffix = normalize_suffix(args.passive_suffix) or data.suffix
@@ -820,6 +834,10 @@ function export.make_data(parent_args, from_headword)
 	-- Same as above for prefixes.
 	data.plural_passive_suffix = normalize_suffix(args.plural_passive_suffix) or
 		normalize_suffix(args.passive_suffix) or data.plural_suffix
+	data.gen_suffix = normalize_suffix(args.gen_suffix)
+	data.dat_suffix = normalize_suffix(args.dat_suffix)
+	data.acc_suffix = normalize_suffix(args.acc_suffix)
+	data.abl_suffix = normalize_suffix(args.abl_suffix)
 
 	-- Generate the verb forms
 	conjugations[conj_type](args, data, typeinfo)
@@ -954,6 +972,66 @@ local function make_perfect_passive(data)
 		data.forms[slot] =
 			(data.passive_prefix or "") .. prefix_joiner .. ppplink .. " + " ..
 			text .. " of " .. sumlink .. suffix_joiner .. (data.passive_suffix or "")
+	end
+end
+
+local function make_gerund(data, typeinfo, base)
+	local neut_endings = {
+		gen = "ī",
+		dat = "ō",
+		acc = "um",
+		abl = "ō",
+	}
+
+	local endings
+	if typeinfo.subtypes.f then
+		endings = {
+			gen = "ae",
+			dat = "ae",
+			acc = "am",
+			abl = "ā",
+		}
+	elseif typeinfo.subtypes.n then
+		endings = neut_endings
+	elseif typeinfo.subtypes.mp then
+		endings = {
+			gen = "ōrum",
+			dat = "īs",
+			acc = "ōs",
+			abl = "īs",
+		}
+	elseif typeinfo.subtypes.fp then
+		endings = {
+			gen = "ārum",
+			dat = "īs",
+			acc = "ās",
+			abl = "īs",
+		}
+	elseif typeinfo.subtypes.np then
+		endings = {
+			gen = "ōrum",
+			dat = "īs",
+			acc = "a",
+			abl = "īs",
+		}
+	else
+		endings = {
+			gen = "ī",
+			dat = "ō",
+			acc = "um",
+			abl = "ō",
+		}
+	end
+
+	for case, ending in pairs(endings) do
+		if data[case .. "_prefix"] or data[case .. "_suffix"] then
+			add_form(data, "ger_" .. case, "", (data[case .. "_prefix"] or "")
+				.. base .. ending .. (data[case .. "_suffix"] or ""))
+		end
+	end
+	for case, ending in pairs(neut_endings) do
+		add_form(data, "ger_" .. case, "",
+			(data.prefix or  "") ..	base .. ending .. (data.suffix or  ""))
 	end
 end
 
@@ -1199,9 +1277,6 @@ postprocess = function(data, typeinfo)
 				data.forms[key] = nil
 			end
 		end
-
-		-- Generate correct form of infinitive for nominative gerund
-		data.forms["ger_nom"] = data.forms["pres_actv_inf"]
 	end
 
 	if typeinfo.subtypes.noperf then
@@ -1317,10 +1392,6 @@ postprocess = function(data, typeinfo)
 			end
 			data.forms[form] = newvals
 			data.form_footnote_indices[form] = tostring(noteindex)
-			if is_depon then
-				data.form_footnote_indices["ger_nom"] = tostring(noteindex)
-				data.forms['ger_nom'] = data.forms[form]
-			end
 			data.footnotes[noteindex] = 'The present passive infinitive in -ier is a rare poetic form which is attested for this verb.'
 	end
 
@@ -1434,7 +1505,7 @@ conjugations["1st"] = function(args, data, typeinfo)
 		end
 	end
 
-	make_pres_1st(data, typeinfo.pres_stem)
+	make_pres_1st(data, typeinfo, typeinfo.pres_stem)
 	make_perf_and_supine(data, typeinfo)
 end
 
@@ -1461,7 +1532,7 @@ conjugations["2nd"] = function(args, data, typeinfo)
 		end
 	end
 
-	make_pres_2nd(data, typeinfo.pres_stem)
+	make_pres_2nd(data, typeinfo, typeinfo.pres_stem)
 	make_perf_and_supine(data, typeinfo)
 end
 
@@ -1502,7 +1573,7 @@ conjugations["3rd"] = function(args, data, typeinfo)
 		table.insert(data.categories, "Latin inchoative verbs")
 	end
 
-	make_pres_3rd(data, typeinfo.pres_stem)
+	make_pres_3rd(data, typeinfo, typeinfo.pres_stem)
 	make_perf_and_supine(data, typeinfo)
 end
 
@@ -1512,7 +1583,7 @@ conjugations["3rd-io"] = function(args, data, typeinfo)
 	table.insert(data.title, "[[Appendix:Latin third conjugation|third conjugation]] ''iō''-variant")
 	set_3rd_conj_categories(data, typeinfo)
 
-	make_pres_3rd_io(data, typeinfo.pres_stem)
+	make_pres_3rd_io(data, typeinfo, typeinfo.pres_stem)
 	make_perf_and_supine(data, typeinfo)
 end
 
@@ -1550,7 +1621,7 @@ conjugations["4th"] = function(args, data, typeinfo)
 		end
 	end
 
-	make_pres_4th(data, typeinfo.pres_stem)
+	make_pres_4th(data, typeinfo, typeinfo.pres_stem)
 	make_perf_and_supine(data, typeinfo)
 
 	if form_contains(data.forms["1s_pres_actv_indc"], "serviō") or form_contains(data.forms["1s_pres_actv_indc"], "saeviō") then
@@ -1667,7 +1738,7 @@ irreg_conjugations["dico"] = function(args, data, typeinfo)
 
 	local prefix = typeinfo.prefix or ""
 
-	make_pres_3rd(data, prefix .. "dīc")
+	make_pres_3rd(data, typeinfo, prefix .. "dīc")
 	make_perf(data, prefix .. "dīx")
 	make_supine(data, typeinfo, prefix .. "dict")
 
@@ -1723,10 +1794,7 @@ irreg_conjugations["do"] = function(args, data, typeinfo)
 	data.forms["futr_pasv_ptc"] = prefix .. "dandus"
 
 	-- Gerund
-	data.forms["ger_nom"] = data.forms["pres_actv_inf"]
-	data.forms["ger_gen"] = prefix .. "dandī"
-	data.forms["ger_dat"] = prefix .. "dandō"
-	data.forms["ger_acc"] = prefix .. "dandum"
+	make_gerund(data, typeinfo, prefix .. "dand")
 end
 
 irreg_conjugations["duco"] = function(args, data, typeinfo)
@@ -1737,7 +1805,7 @@ irreg_conjugations["duco"] = function(args, data, typeinfo)
 
 	local prefix = typeinfo.prefix or ""
 
-	make_pres_3rd(data, prefix .. "dūc")
+	make_pres_3rd(data, typeinfo, prefix .. "dūc")
 	make_perf(data, prefix .. "dūx")
 	make_supine(data, typeinfo, prefix .. "duct")
 
@@ -1755,7 +1823,7 @@ irreg_conjugations["edo"] = function(args, data, typeinfo)
 
 	local prefix = typeinfo.prefix or ""
 
-	make_pres_3rd(data, prefix .. "ed")
+	make_pres_3rd(data, typeinfo, prefix .. "ed")
 	make_perf(data, prefix .. "ēd")
 	make_supine(data, typeinfo, prefix .. "ēs")
 
@@ -1838,10 +1906,7 @@ irreg_conjugations["eo"] = function(args, data, typeinfo)
 	data.forms["futr_pasv_ptc"] = prefix .. "eundus"
 
 	-- Gerund
-	data.forms["ger_nom"] = data.forms["pres_actv_inf"]
-	data.forms["ger_gen"] = prefix .. "eundī"
-	data.forms["ger_dat"] = prefix .. "eundō"
-	data.forms["ger_acc"] = prefix .. "eundum"
+	make_gerund(data, typeinfo, prefix .. "eund")
 end
 
 local function fio(data, prefix, voice)
@@ -1876,7 +1941,7 @@ irreg_conjugations["facio"] = function(args, data, typeinfo)
 
 	local prefix = typeinfo.prefix or ""
 
-	make_pres_3rd_io(data, prefix .. "fac", "nopass")
+	make_pres_3rd_io(data, typeinfo, prefix .. "fac", "nopass")
 	-- We said no passive, but we do want the future passive participle.
 	data.forms["futr_pasv_ptc"] = prefix .. "faciendus"
 
@@ -1917,10 +1982,7 @@ irreg_conjugations["fio"] = function(args, data, typeinfo)
 	data.forms["futr_actv_ptc"] = nil
 
 	-- Gerund
-	data.forms["ger_nom"] = data.forms["pres_actv_inf"]
-	data.forms["ger_gen"] = prefix .. "fiendī"
-	data.forms["ger_dat"] = prefix .. "fiendō"
-	data.forms["ger_acc"] = prefix .. "fiendum"
+	make_gerund(data, typeinfo, prefix .. "fiend")
 end
 
 irreg_conjugations["fero"] = function(args, data, typeinfo)
@@ -1941,7 +2003,7 @@ irreg_conjugations["fero"] = function(args, data, typeinfo)
 	prefix_perf = prefix_perf or prefix_pres
 	prefix_supine = prefix_supine or prefix_pres
 
-	make_pres_3rd(data, prefix_pres .. "fer")
+	make_pres_3rd(data, typeinfo, prefix_pres .. "fer")
 	make_perf(data, prefix_perf .. "tul")
 	make_supine(data, typeinfo, prefix_supine .. "lāt")
 
@@ -1988,9 +2050,6 @@ irreg_conjugations["fero"] = function(args, data, typeinfo)
 	-- Present infinitives
 	data.forms["pres_actv_inf"] = prefix_pres .. "ferre"
 	data.forms["pres_pasv_inf"] = prefix_pres .. "ferrī"
-
-	-- Gerund
-	data.forms["ger_nom"] = data.forms["pres_actv_inf"]
 end
 
 irreg_conjugations["inquam"] = function(args, data, typeinfo)
@@ -2270,11 +2329,7 @@ irreg_conjugations["piget"] = function(args, data, typeinfo)
 	data.forms["perf_actv_ptc"] = prefix .. "pigitum"
 
 	-- Gerund
-	data.forms["ger_nom"] = data.forms["pres_actv_inf"]
-	data.forms["ger_gen"] = prefix .. "pigendī"
-	data.forms["ger_dat"] = prefix .. "pigendō"
-	data.forms["ger_acc"] = prefix .. "pigendum"
-
+	make_gerund(data, typeinfo, prefix .. "pigend")
 end
 
 irreg_conjugations["coepi"] = function(args, data, typeinfo)
@@ -2371,10 +2426,10 @@ irreg_conjugations["sum"] = function(args, data, typeinfo)
 	end
 
 	-- Gerund
-	data.forms["ger_nom"] = nil
 	data.forms["ger_gen"] = nil
 	data.forms["ger_dat"] = nil
 	data.forms["ger_acc"] = nil
+	data.forms["ger_abl"] = nil
 
 	-- Supine
 	data.forms["sup_acc"] = nil
@@ -2384,7 +2439,7 @@ end
 
 -- Form-generating functions
 
-make_pres_1st = function(data, pres_stem)
+make_pres_1st = function(data, typeinfo, pres_stem)
 	if not pres_stem then
 		return
 	end
@@ -2423,13 +2478,10 @@ make_pres_1st = function(data, pres_stem)
 	data.forms["futr_pasv_ptc"] = pres_stem .. "andus"
 
 	-- Gerund
-	data.forms["ger_nom"] = data.forms["pres_actv_inf"]
-	data.forms["ger_gen"] = pres_stem .. "andī"
-	data.forms["ger_dat"] = pres_stem .. "andō"
-	data.forms["ger_acc"] = pres_stem .. "andum"
+	make_gerund(data, typeinfo, pres_stem .. "and")
 end
 
-make_pres_2nd = function(data, pres_stem, nopass, noimpr)
+make_pres_2nd = function(data, typeinfo, pres_stem, nopass, noimpr)
 	-- Active imperfective indicative
 	add_forms(data, "pres_actv_indc", pres_stem, "eō", "ēs", "et", "ēmus", "ētis", "ent")
 	add_forms(data, "impf_actv_indc", pres_stem, "ēbam", "ēbās", "ēbat", "ēbāmus", "ēbātis", "ēbant")
@@ -2475,13 +2527,10 @@ make_pres_2nd = function(data, pres_stem, nopass, noimpr)
 	end
 
 	-- Gerund
-	data.forms["ger_nom"] = data.forms["pres_actv_inf"]
-	data.forms["ger_gen"] = pres_stem .. "endī"
-	data.forms["ger_dat"] = pres_stem .. "endō"
-	data.forms["ger_acc"] = pres_stem .. "endum"
+	make_gerund(data, typeinfo, pres_stem .. "end")
 end
 
-make_pres_3rd = function(data, pres_stem)
+make_pres_3rd = function(data, typeinfo, pres_stem)
 	-- Active imperfective indicative
 	add_forms(data, "pres_actv_indc", pres_stem, "ō", "is", "it", "imus", "itis", "unt")
 	add_forms(data, "impf_actv_indc", pres_stem, "ēbam", "ēbās", "ēbat", "ēbāmus", "ēbātis", "ēbant")
@@ -2516,13 +2565,10 @@ make_pres_3rd = function(data, pres_stem)
 	data.forms["futr_pasv_ptc"] = pres_stem .. "endus"
 
 	-- Gerund
-	data.forms["ger_nom"] = data.forms["pres_actv_inf"]
-	data.forms["ger_gen"] = pres_stem .. "endī"
-	data.forms["ger_dat"] = pres_stem .. "endō"
-	data.forms["ger_acc"] = pres_stem .. "endum"
+	make_gerund(data, typeinfo, pres_stem .. "end")
 end
 
-make_pres_3rd_io = function(data, pres_stem, nopass)
+make_pres_3rd_io = function(data, typeinfo, pres_stem, nopass)
 	-- Active imperfective indicative
 	add_forms(data, "pres_actv_indc", pres_stem, "iō", "is", "it", "imus", "itis", "iunt")
 	add_forms(data, "impf_actv_indc", pres_stem, "iēbam", "iēbās", "iēbat", "iēbāmus", "iēbātis", "iēbant")
@@ -2564,13 +2610,10 @@ make_pres_3rd_io = function(data, pres_stem, nopass)
 	end
 
 	-- Gerund
-	data.forms["ger_nom"] = data.forms["pres_actv_inf"]
-	data.forms["ger_gen"] = pres_stem .. "iendī"
-	data.forms["ger_dat"] = pres_stem .. "iendō"
-	data.forms["ger_acc"] = pres_stem .. "iendum"
+	make_gerund(data, typeinfo, pres_stem .. "iend")
 end
 
-make_pres_4th = function(data, pres_stem)
+make_pres_4th = function(data, typeinfo, pres_stem)
 	-- Active imperfective indicative
 	add_forms(data, "pres_actv_indc", pres_stem, "iō", "īs", "it", "īmus", "ītis", "iunt")
 	add_forms(data, "impf_actv_indc", pres_stem, "iēbam", "iēbās", "iēbat", "iēbāmus", "iēbātis", "iēbant")
@@ -2605,10 +2648,7 @@ make_pres_4th = function(data, pres_stem)
 	data.forms["futr_pasv_ptc"] = pres_stem .. "iendus"
 
 	-- Gerund
-	data.forms["ger_nom"] = data.forms["pres_actv_inf"]
-	data.forms["ger_gen"] = pres_stem .. "iendī"
-	data.forms["ger_dat"] = pres_stem .. "iendō"
-	data.forms["ger_acc"] = pres_stem .. "iendum"
+	make_gerund(data, typeinfo, pres_stem .. "iend")
 end
 
 make_perf_and_supine = function(data, typeinfo)
@@ -3175,7 +3215,7 @@ make_vn_rows = function(data)
 
 	local row = {}
 
-	for col, slot in ipairs({"ger_nom", "ger_gen", "ger_dat", "ger_acc", "sup_acc", "sup_abl"}) do
+	for col, slot in ipairs({"ger_gen", "ger_dat", "ger_acc", "ger_abl", "sup_acc", "sup_abl"}) do
 		-- show_form() already called so can just check for "&mdash;"
 		if data.forms[slot] ~= "&mdash;" then
 			has_vn = true
@@ -3203,10 +3243,10 @@ make_vn_rows = function(data)
 ! colspan="4" style="background:#e0e0b0" | gerund
 ! colspan="2" style="background:#e0e0b0" | supine
 |- class="vsHide"
-! style="background:#e0e0b0;width:12.5%" | nominative
 ! style="background:#e0e0b0;width:12.5%" | genitive
-! style="background:#e0e0b0;width:12.5%" | dative/ablative
+! style="background:#e0e0b0;width:12.5%" | dative
 ! style="background:#e0e0b0;width:12.5%" | accusative
+! style="background:#e0e0b0;width:12.5%" | ablative
 ! style="background:#e0e0b0;width:12.5%" | accusative
 ! style="background:#e0e0b0;width:12.5%" | ablative]=] .. table.concat(vn)
 
