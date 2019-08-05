@@ -30,14 +30,14 @@ def process_text_on_page(index, pagetitle, text):
   for t in parsed.filter_templates():
     tn = tname(t)
     if tn in lalib.la_headword_templates:
-      head = lalib.la_get_headword_from_template(t, pagetitle, pagemsg)
-      no_macrons_head = remove_macrons(blib.remove_links(head))
-      if pagetitle.startswith("Reconstruction"):
-        unprefixed_title = "*" + re.sub(".*/", "", pagetitle)
-      else:
-        unprefixed_title = pagetitle
-      if no_macrons_head != unprefixed_title:
-        pagemsg("WARNING: Bad Latin head: %s" % unicode(t))
+      for head in lalib.la_get_headword_from_template(t, pagetitle, pagemsg):
+        no_macrons_head = remove_macrons(blib.remove_links(head))
+        if pagetitle.startswith("Reconstruction"):
+          unprefixed_title = "*" + re.sub(".*/", "", pagetitle)
+        else:
+          unprefixed_title = pagetitle
+        if no_macrons_head != unprefixed_title:
+          pagemsg("WARNING: Bad Latin head: %s" % unicode(t))
   return None, None
 
 def process_page(page, index, parsed):

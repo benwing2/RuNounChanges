@@ -34,7 +34,7 @@ def process_page(page, index, parsed):
     for t in parsed.filter_templates():
       tn = tname(t)
       if lalib.la_template_is_head(t):
-        heads.add(blib.remove_links(lalib.la_get_headword_from_template(t, pagetitle, pagemsg)))
+        heads |= set(blib.remove_links(x) for x in lalib.la_get_headword_from_template(t, pagetitle, pagemsg))
       elif tn == "la-IPA":
         pronun_templates.append(t)
     if len(heads) > 1:

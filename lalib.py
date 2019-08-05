@@ -517,30 +517,16 @@ for key, val in la_adj_decl_suffix_to_decltype.iteritems():
   decl, compute_props = val
   adj_decl_and_subtype_to_props[decl] = [key, compute_props]
 
-la_noun_decl_templates = set(
-  'la-decl-%s' % k for k in la_noun_decl_suffix_to_decltype
-)
+la_noun_decl_templates = {
+  "la-ndecl"
+}
 
 la_adj_decl_templates = {
-  "la-decl-1&2",
-  "la-adecl-1st",
-  "la-adecl-2nd",
-  "la-decl-3rd-1E",
-  "la-decl-3rd-2E",
-  "la-decl-3rd-3E",
-  "la-decl-3rd-comp",
-  "la-decl-3rd-part",
-  "la-decl-irreg",
-  "la-decl-multi",
+  "la-adecl",
 }
 
 la_verb_conj_templates = {
-  "la-conj-1st",
-  "la-conj-2nd",
-  "la-conj-3rd",
-  "la-conj-3rd-IO",
-  "la-conj-4th",
-  "la-conj-irreg",
+  "la-conj",
 }
 
 la_infl_templates = (
@@ -551,10 +537,7 @@ la_infl_templates = (
 )
 
 la_adj_headword_templates = {
-  "la-adj-1&2",
-  "la-adj-3rd-1E",
-  "la-adj-3rd-2E",
-  "la-adj-3rd-3E",
+  "la-adj",
   "la-adj-comparative",
   "la-adj-superlative",
 }
@@ -684,6 +667,7 @@ third_decl_stem_patterns = [
   ("men", "min"),
   ("er", "r"),
   ("or", u"ōr"),
+  (u"gō", "gin"),
   (u"ō", u"ōn"),
   ("ps", "p"),
   ("bs", "b"),
@@ -1125,8 +1109,93 @@ def la_template_is_head(t):
   return False
 
 def la_get_headword_from_template(t, pagename, pagemsg):
+  def expand_text(tempcall):
+    return blib.expand_text(tempcall, pagetitle, pagemsg, False)
   tn = tname(t)
-  if tn in la_adj_headword_templates or tn in ["la-noun", "la-suffix"]:
+  if tn == "la-adj":
+    retval = blib.fetch_param_chain(t, "lemma", "lemma")
+    if not retval:
+      retval = getparam(t, "1")
+      if "<" in retval or "((" in retval:
+        generate_template = blib.parse_text(unicode(t)).filter_templates()[0]
+        blib.set_template_name(generate_template, "la-generate-adj-forms")
+        blib.remove_param_chain(generate_template, "comp", "comp")
+        blib.remove_param_chain(generate_template, "sup", "sup")
+        blib.remove_param_chain(generate_template, "lemma", "lemma")
+        rmparam(generate_template, "id")
+        rmparam(generate_template, "pos")
+        result = expand_text(unicode(generate_template))
+        if not result:
+          pagemsg("WARNING: Error generating forms, skipping")
+          retval = ""
+        else:
+          args = blib.split_generate_args(result)
+          if "linked_nom_sg_m" in args:
+            retval = args["linked_nom_sg_m"]
+          elif "linked_nom_pl_m" in args:
+            retval = args["linked_nom_pl_m"]
+          else:
+            pagemsg("WARNING: Can't locate lemma in {{la-generate-adj-forms}} result: generate_template=%s, result=%s" % (
+              unicode(generate_template), result))
+            retval = ""
+          retval = retval.split(",")
+  elif tn == "la-noun":
+    if getparam(t, "2") or getparam(t, "3") or getparam(t, "4"):
+      retval = blib.fetch_param_chain(la_verb_template, ["1", "head", "head1"], "head")
+    else:
+      retval = blib.fetch_param_chain(t, "lemma", "lemma")
+      if not retval:
+        generate_template = blib.parse_text(unicode(t)).filter_templates()[0]
+        blib.set_template_name(generate_template, "la-generate-noun-forms")
+        blib.remove_param_chain(generate_template, "lemma", "lemma")
+        blib.remove_param_chain(generate_template, "m", "m")
+        blib.remove_param_chain(generate_template, "f", "f")
+        blib.remove_param_chain(generate_template, "g", "g")
+        rmparam(generate_template, "indecl")
+        rmparam(generate_template, "id")
+        rmparam(generate_template, "pos")
+        result = expand_text(unicode(generate_template))
+        if not result:
+          pagemsg("WARNING: Error generating forms, skipping")
+          retval = ""
+        else:
+          args = blib.split_generate_args(result)
+          if "linked_nom_sg" in args:
+            retval = args["linked_nom_sg"]
+          elif "linked_nom_pl" in args:
+            retval = args["linked_nom_pl"]
+          else:
+            pagemsg("WARNING: Can't locate lemma in {{la-generate-noun-forms}} result: generate_template=%s, result=%s" % (
+              unicode(generate_template), result))
+            retval = ""
+          retval = retval.split(",")
+  elif tn == "la-verb":
+    if not re.search(r"^(irreg|[0-9]\+*)(\..*)?$", getparam(t, "1")):
+      retval = getparam(t, "head") or getparam(t, "1")
+    else:
+      retval = blib.fetch_param_chain(t, "lemma", "lemma")
+      if not retval:
+        generate_template = blib.parse_text(unicode(t)).filter_templates()[0]
+        blib.set_template_name(generate_template, "la-generate-verb-forms")
+        rmparam(generate_template, "id")
+        result = expand_text(unicode(generate_template))
+        if not result:
+          pagemsg("WARNING: Error generating forms, skipping")
+          retval = ""
+        else:
+          args = blib.split_generate_args(result)
+          for slot in ["linked_1s_pres_actv_indc", "linked_3s_pres_actv_indc",
+              "linked_1s_perf_actv_indc", "linked_3s_perf_actv_indc"]:
+            if slot in args:
+              retval = args[slot]
+              break
+          else:
+            # no break
+            pagemsg("WARNING: Can't locate lemma in {{la-generate-verb-forms}} result: generate_template=%s, result=%s" % (
+              unicode(generate_template), result))
+            retval = ""
+          retval = retval.split(",")
+  elif tn in la_adj_headword_templates or tn == "la-suffix":
     retval = getparam(t, "1")
   elif tn == "la-present participle":
     stem = getparam(t, "1")
@@ -1192,7 +1261,10 @@ def la_get_headword_from_template(t, pagename, pagemsg):
   else:
     pagemsg("WARNING: Unrecognized headword template %s" % unicode(t))
     retval = ""
-  return retval or pagename
+  retval = retval or pagename
+  if type(retval) is not list:
+    retval = [retval]
+  return retval
 
 # Return the length of FULL that matches STEM, even with mismatches in
 # macrons and breves.
