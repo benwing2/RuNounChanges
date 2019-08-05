@@ -1856,9 +1856,8 @@ reprēndō reprēndere *reprēndī reprēnsum
 *v1 pūblicō
 *n2 pūblicum
 *a1 pūblicus
-*# FIXME! Do the following two by hand
-*#rēs pūblica
-*#rēspūblica
+n rēs<5.F>_pūblica<+>
+n rēs<5>pūblica<+>
 *n1 Pūblicola
 *n2 Pūblilius
 *n3 Pūblīpor Pūblīpōr
@@ -2028,13 +2027,10 @@ v1 expūrgō
 ###
 *a1 quārtus
 *a1 quārtānus
-*#a1 quārtus decimus
-*a1 quārtadecimus
-*#num quārtadecem
+a1 quārtus<+>_decimus<+>
 *a3 quārtālis
 *a1 quārtālitius
-# FIXME, need to do the following by hand
-*#a1 quārtusdecimus
+a1 quārtus<+>decimus<+>
 ###
 ### quīnque, quīntus
 ###
@@ -2046,10 +2042,7 @@ v1 expūrgō
 *num quīndecim
 *adv quīndeciēs
 *adv quīndeciēns
-*a1 quīntadecimus
-# FIXME, need to do the following by hand
-# FIXME, forms are wrong, delete them
-*#a1 quīntusdecimus
+*a1 quīntusdecimus
 *num quīnquāgintā
 *a1 quīnquāgēsimus
 *a1 quīnquāgēnsimus
@@ -2848,11 +2841,13 @@ n1 flagrantia
 # wrongly has long e
 a3 cathedrālis
 a1 extreus
+n3 abiēs abiet
 # wrongly has long i
 a3 horizontālis
 a1 nigritus
 a1 tigrīnus
 part1 obstitus
+n3 epizygis epizygid
 # wrongly has long o
 pn2 Mediolānum
 n2 cuprum
@@ -3022,6 +3017,8 @@ n4 auspicātus
 n4 baccalaureātus
 n4 patriarchātus
 n2 tomāclum
+n3 concorporālis
+n1 caldāria
 # wrongly has short a and e
 a3 intellēctuālis
 a1 arēnātus
@@ -3068,6 +3065,7 @@ a1 precātōrius
 n3 cōdificātiō
 a3 flāvomaculātus
 n3 decorātiō
+pn2 Iācōbus
 # wrongly has short a, o and u
 a1 acūtisquāmōsus
 # wrongly has short a and u
@@ -3169,6 +3167,27 @@ pn1 Cornēlia
 a3 carolicoroniēnsis
 a3 gevalēnsis
 a3 visbyēnsis
+n3 polygonoīdēs
+n3 sordēs
+n3 strāgēs
+n3 tābēs
+n3 ambāgēs
+n3 compāgēs
+n3 conpāgēs
+n3 clādēs
+n3 dagnadēs
+n3 faelēs
+n3 indolēs
+n3 lābēs
+n3 mōlēs
+n3 mercēs mercēd
+a3 pūbēs puber
+n3 pūbēs
+n3 quiēs quiēt
+n3 scinifēs
+n3 subolēs
+n3 struēs
+n3 hēresis
 # wrongly has short e and i
 a3 mēningītidis
 # wrongly has short e and o
@@ -3217,6 +3236,11 @@ a1 danīsticus
 a1 bipartītus
 a1 bipertītus
 n3 pinguīdō pinguīdin
+# following wrongly has gentilīcium
+n3 nōmen<3>_gentīlicium<+>
+n3 cōnsilīgō
+n3 tentīgō
+n1 Isrāēlīta
 # wrongly has short i and o
 a1 altispīnōsus
 a1 thermolīmōsus
@@ -3304,6 +3328,7 @@ n1 mūsica
 n2 praepūtium
 pn2 Lūcius
 pn1 Lūcia
+n1 būra
 # wrongly has short a in sup
 v1 vēlitor
 v1 vērificō
