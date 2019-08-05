@@ -277,6 +277,60 @@ decl["2"] = function(data, args)
 	table.insert(data.categories, "Latin second declension nouns")
 end
 
+local acc_sg_i_stem_subtypes = {
+	accim = {
+		-- amussis, basis, buris, cucumis, gummis, mephitis, paraphrasis, poesis, ravis, sitis, tussis, (vis) [abl -ī];
+		-- cannabis, senapis, sinapis [abl -e, -ī]
+		acc_sg = {"im"},
+		title = {"accusative singular in ''-im''"},
+	},
+	accimin = {
+		-- cities, rivers, gods, e.g. Bilbilis, Syrtis, Tiberis, Anubis, Osiris [abl -ī];
+		-- Baetis, Tigris [acc -e, -ī]
+		acc_sg = {"im", "in"},
+		title = {"accusative singular in ''-im'' or ''-in''"},
+	},
+	accimoccem = {
+		-- febris, pelvis, puppis, restis, securis, turris [abl -ī, -e]
+		acc_sg = {"im", "em"},
+		title = {"accusative singular in ''-im'' or occasionally ''-em''"},
+	},
+	accemim = {
+		-- aqualis, clavis, lens, navis [abl -e, -ī];
+		-- cutis, restis [abl -e]
+		acc_sg = {"em", "im"},
+		title = {"accusative singular in ''-em'' or ''-im''"},
+	},
+}
+
+local abl_sg_i_stem_subtypes = {
+	abli = {
+		-- amussis, basis, buris, cucumis, gummis, mephitis, paraphrasis, poesis, ravis, sitis, tussis, (vis) [acc -im];
+		-- cities, rivers, gods, e.g. Bilbilis, Syrtis, Tiberis, Anubis, Osiris [acc -im or -in];
+		-- canalis "water pipe", months in -is or -er, nouns originally i-stem adjectives such as aedilis, affinis, bipennis, familiaris, sodalis, volucris, etc. [acc -em]
+		abl_sg = {"ī"},
+		title = {"ablative singular in ''-ī''"},
+	},
+	ablie = {
+		-- febris, pelvis, puppis, restis, securis, turris [acc -im, -em]
+		abl_sg = {"ī", "e"},
+		title = {"ablative singular in ''-ī'' or ''-e''"},
+	},
+	ablei = {
+		-- cannabis, senapis, sinapis [acc -im];
+		-- Baetis, Tigris [acc -im, -in];
+		-- aqualis, clavis, lens, navis [acc -em, -im];
+		-- finis, mugilis, occiput, pugil, rus, supellex, vectis [acc -em]
+		abl_sg = {"e", "ī"},
+		title = {"ablative singular in ''-e'' or ''-ī''"},
+	},
+	ableocci = {
+		-- amnis, anguis, avis, civis, classis, fustis, ignis, imber, orbis, pars, postis, sors, unguis, vesper [acc -em]
+		abl_sg = {"e", "ī"},
+		title = {"ablative singular in ''-e'' or occasionally ''-ī''"},
+	},
+}
+
 decl["3"] = function(data, args)
 	local title = {}
 	table.insert(title, {"[[Appendix:Latin third declension|Third declension]]"})
@@ -318,13 +372,32 @@ decl["3"] = function(data, args)
 	data.forms["abl_pl"] = stem2 .. "ibus"
 	data.forms["voc_pl"] = stem2 .. "ēs"
 
-	--with acc.pl. īs variation
-	if data.types.is then
+	-- FIXME, remove this compatibility code when we've converted all
+	-- the entries
+	if data.types.navis then
+		data.types.accemim = true
+		data.types.ablei = true
+	elseif data.types.ignis then
+		data.types.ablei = true
+	end
 
-		data.forms["acc_pl"] = {stem2 .. "ēs", stem2 .. "īs"}
+	local acc_sg_i_stem_subtype = false
+	for subtype, _ in pairs(data.types) do
+		if acc_sg_i_stem_subtypes[subtype] then
+			acc_sg_i_stem_subtype = true
+			break
+		end
+	end
+	local abl_sg_i_stem_subtype = false
+	for subtype, _ in pairs(data.types) do
+		if abl_sg_i_stem_subtypes[subtype] then
+			abl_sg_i_stem_subtype = true
+			break
+		end
+	end
 
 	-- all neuter
-	elseif data.types.N then
+	if data.types.N then
 		table.insert(title[1], "neuter")
 
 		data.forms["acc_sg"] = stem1
@@ -359,31 +432,46 @@ decl["3"] = function(data, args)
 		end
 
 	-- I stem
-	elseif data.types.I then
+	elseif data.types.I or acc_sg_i_stem_subtype or abl_sg_i_stem_subtype then
 		table.insert(title[1], "i-stem")
 
 		data.forms["gen_pl"] = stem2 .. "ium"
-
-	-- navis and ignis
-	elseif data.types.navis or data.types.ignis then
-
-		-- just navis
-		if data.types.navis then
-			table.insert(title, "alternative accusative singular in ''-im''")
-
-			data.forms["acc_sg"] = {stem2 .. "em", stem2 .. "im"}
-		end
-		if data.num == "sg" then
-			table.insert(title, "alternative ablative singular in ''-ī''")
-		elseif data.num == "pl" then
-			table.insert(title, "alternative accusative plural in ''-īs''")
-		else
-			table.insert(title, "alternative ablative singular in ''-ī'' and accusative plural in ''-īs''")
-		end
-		data.forms["abl_sg"] = {stem2 .. "e", stem2 .. "ī"}
-
-		data.forms["gen_pl"] = stem2 .. "ium"
+		-- Per Allen and Greenough, Hiley and others, the acc_pl in -īs
+		-- applied originally to all i-stem nouns, and was current as an
+		-- alternative form up through Caesar.
 		data.forms["acc_pl"] = {stem2 .. "ēs", stem2 .. "īs"}
+
+		for subtype, _ in pairs(data.types) do
+			local acc_sg_i_stem_props = acc_sg_i_stem_subtypes[subtype]
+			if acc_sg_i_stem_props then
+				data.forms["acc_sg"] = {}
+				for _, ending in ipairs(acc_sg_i_stem_props.acc_sg) do
+					table.insert(data.forms["acc_sg"], stem2 .. ending)
+				end
+				if data.num ~= "pl" then
+					for _, t in ipairs(i_stem_props.title) do
+						table.insert(title, t)
+					end
+				end
+				break
+			end
+		end
+
+		for subtype, _ in pairs(data.types) do
+			local abl_sg_i_stem_props = abl_sg_i_stem_subtypes[subtype]
+			if abl_sg_i_stem_props then
+				data.forms["abl_sg"] = {}
+				for _, ending in ipairs(abl_sg_i_stem_props.abl_sg) do
+					table.insert(data.forms["abl_sg"], stem2 .. ending)
+				end
+				if data.num ~= "pl" then
+					for _, t in ipairs(i_stem_props.title) do
+						table.insert(title, t)
+					end
+				end
+				break
+			end
+		end
 
 	-- all Greek
 	elseif data.types.Greek then
