@@ -39,6 +39,10 @@ def process_page(page, index, headword_template, decl_template):
     if tn == "la-adecl":
       num_adecl_templates += 1
     # FIXME, also add something for manually-specified declensions (synaeresis?)
+  if "\n===Declension===\n" in secbody:
+    pagemsg("WARNING: Saw misindented Declension header")
+  if num_adecl_templates >= 1:
+    pagemsg("WARNING: Saw {{la-adecl}} in noun section")
   if num_ndecl_templates + num_adecl_templates >= num_noun_headword_templates:
     pagemsg("WARNING: Already seen %s decl template(s) >= %s headword template(s), skipping" % (
       num_ndecl_templates + num_adecl_templates, num_noun_headword_templates))
@@ -49,7 +53,7 @@ def process_page(page, index, headword_template, decl_template):
   num_declension_headers = 0
   for k in xrange(1, len(subsections), 2):
     if "Declension" in subsections[k] or "Inflection" in subsections[k]:
-      declension_headers += 1
+      num_declension_headers += 1
   if num_declension_headers >= num_noun_headword_templates:
     pagemsg("WARNING: Already seen %s Declension/Inflection header(s) >= %s headword template(s), skipping" % (
       num_declension_headers, num_noun_headword_templates))
@@ -58,12 +62,12 @@ def process_page(page, index, headword_template, decl_template):
   for k in xrange(2, len(subsections), 2):
     if headword_template in subsections[k]:
       pagemsg("Inserting declension section after subsection %s" % k)
-      if not subsections[k].endswith("\n\n"):
-        subsections[k] += "\n\n"
+      subsections[k] = subsections[k].rstrip('\n') + "\n\n"
       num_equal_signs = len(re.sub("^(=+).*", r"\1", subsections[k - 1].strip()))
       subsections[k + 1:k + 1] = [
         "%sDeclension%s\n%s\n\n" % (
-          num_equal_signs + 1, num_equal_signs + 1, decl_template
+          "=" * (num_equal_signs + 1), "=" * (num_equal_signs + 1),
+          decl_template
         )
       ]
       notes.append("add section for Latin declension %s" % decl_template)
@@ -73,7 +77,11 @@ def process_page(page, index, headword_template, decl_template):
     return None, None
   secbody = "".join(subsections)
   sections[j] = secbody + sectail
-  return "".join(sections), notes
+  text = "".join(sections)
+  text = re.sub("\n\n\n+", "\n\n", text)
+  if not notes:
+    notes.append("convert 3+ newlines to 2")
+  return text, notes
 
 parser = blib.create_argparser("Add missing declension to Latin terms")
 parser.add_argument("--direcfile", help="File of output directives from make_latin_missing_decl.py", required=True)
