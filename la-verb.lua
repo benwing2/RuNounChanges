@@ -975,7 +975,7 @@ local function make_perfect_passive(data)
 	end
 end
 
-local function make_gerund(data, typeinfo, base)
+local function make_gerund(data, typeinfo, base, und_variant)
 	local neut_endings = {
 		gen = "ī",
 		dat = "ō",
@@ -1023,10 +1023,15 @@ local function make_gerund(data, typeinfo, base)
 		}
 	end
 
+	local und_base = und_variant and base:gsub("end$", "und")
 	for case, ending in pairs(endings) do
 		if data[case .. "_prefix"] or data[case .. "_suffix"] then
 			add_form(data, "ger_" .. case, "", (data[case .. "_prefix"] or "")
 				.. base .. ending .. (data[case .. "_suffix"] or ""))
+			if und_base then
+				add_form(data, "ger_" .. case, "", (data[case .. "_prefix"] or "")
+					.. und_base .. ending .. (data[case .. "_suffix"] or ""))
+			end
 		end
 	end
 	for case, ending in pairs(neut_endings) do
@@ -1982,7 +1987,7 @@ irreg_conjugations["fio"] = function(args, data, typeinfo)
 	data.forms["futr_actv_ptc"] = nil
 
 	-- Gerund
-	make_gerund(data, typeinfo, prefix .. "fiend")
+	make_gerund(data, typeinfo, prefix .. "fiend", "und-variant")
 end
 
 irreg_conjugations["fero"] = function(args, data, typeinfo)
@@ -2565,7 +2570,7 @@ make_pres_3rd = function(data, typeinfo, pres_stem)
 	data.forms["futr_pasv_ptc"] = pres_stem .. "endus"
 
 	-- Gerund
-	make_gerund(data, typeinfo, pres_stem .. "end")
+	make_gerund(data, typeinfo, pres_stem .. "end", "und-variant")
 end
 
 make_pres_3rd_io = function(data, typeinfo, pres_stem, nopass)
@@ -2610,7 +2615,7 @@ make_pres_3rd_io = function(data, typeinfo, pres_stem, nopass)
 	end
 
 	-- Gerund
-	make_gerund(data, typeinfo, pres_stem .. "iend")
+	make_gerund(data, typeinfo, pres_stem .. "iend", "und-variant")
 end
 
 make_pres_4th = function(data, typeinfo, pres_stem)
@@ -2648,7 +2653,7 @@ make_pres_4th = function(data, typeinfo, pres_stem)
 	data.forms["futr_pasv_ptc"] = pres_stem .. "iendus"
 
 	-- Gerund
-	make_gerund(data, typeinfo, pres_stem .. "iend")
+	make_gerund(data, typeinfo, pres_stem .. "iend", "und-variant")
 end
 
 make_perf_and_supine = function(data, typeinfo)
@@ -2734,33 +2739,39 @@ make_supine = function(data, typeinfo, supine_stem)
 
 	-- Perfect/future infinitives
 	for _, stem in ipairs(supine_stem) do
-		local futr_actv_inf, perf_pasv_inf, futr_pasv_inf
-		local futr_actv_ptc, perf_pasv_ptc, perf_pasv_ptc_lemma
+		local futr_actv_inf, perf_pasv_inf, futr_pasv_inf, futr_actv_ptc
+		local perf_pasv_ptc_lemma, perf_actv_ptc, perf_actv_ptc_acc
 		-- Perfect/future participles
 		futr_actv_ptc = stem .. "ūrus"
 		if typeinfo.subtypes.passimpers then
 			perf_pasv_ptc_lemma = stem .. "um"
 			perf_pasv_ptc = perf_pasv_ptc_lemma
+			perf_pasv_ptc_acc = perf_pasv_ptc_lemma
 		else
 			perf_pasv_ptc_lemma = stem .. "us"
 			if typeinfo.subtypes.mp then
 				perf_pasv_ptc = stem .. "ī"
+				perf_pasv_ptc_acc = stem .. "ōs"
 			elseif typeinfo.subtypes.fp then
 				perf_pasv_ptc = stem .. "ae"
+				perf_pasv_ptc_acc = stem .. "ās"
 			elseif typeinfo.subtypes.np then
 				perf_pasv_ptc = stem .. "a"
+				perf_pasv_ptc_acc = perf_pasv_ptc
 			elseif typeinfo.subtypes.f then
 				perf_pasv_ptc = stem .. "a"
-			elseif typeinfo.subtypes.np then
+				perf_pasv_ptc_acc = stem .. "am"
+			elseif typeinfo.subtypes.n then
 				perf_pasv_ptc = stem .. "um"
+				perf_pasv_ptc_acc = perf_pasv_ptc
 			else
 				perf_pasv_ptc = perf_pasv_ptc_lemma
+				perf_pasv_ptc_acc = stem .. "um"
 			end
 		end
 
-		futr_actv_inf = make_raw_link(futr_actv_ptc) .. " [[esse]]"
 		perf_pasv_inf = make_raw_link(perf_pasv_ptc_lemma,
-			perf_pasv_ptc ~= perf_pasv_ptc_lemma and perf_pasv_ptc or nil) .. " [[esse]]"
+			perf_pasv_ptc_acc ~= perf_pasv_ptc_lemma and perf_pasv_ptc_acc or nil) .. " [[esse]]"
 		futr_pasv_inf = make_raw_link(stem .. "um") .. " [[īrī]]"
 
 		-- Exceptions
@@ -2787,14 +2798,17 @@ make_supine = function(data, typeinfo, supine_stem)
 			["obort"] = true
 		}
 		if mortu[stem] then
-			futr_actv_inf = "[["..stem:gsub("mortu$", "moritūrus") .. "]] [[esse]]"
 			futr_actv_ptc = stem:gsub("mortu$", "moritūrus")
 		elseif ort[stem] then
-			futr_actv_inf = "[["..stem:gsub("ort$", "oritūrus") .. "]] [[esse]]"
 			futr_actv_ptc = stem:gsub("ort$", "oritūrus")
 		elseif stem == "mortu" then
+			-- FIXME, are we sure about this?
 			futr_actv_inf = {}
 			futr_actv_ptc = "moritūrus"
+		end
+
+		if not futr_actv_inf then
+			futr_actv_inf = make_raw_link(futr_actv_ptc, futr_actv_ptc:gsub("us$", "um") .. " [[esse]]"
 		end
 
 		add_form(data, "futr_actv_inf", "", futr_actv_inf)
