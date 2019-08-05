@@ -31,10 +31,6 @@ def process_page(page, index, parsed):
           lemmaspec, origt))
         continue
       lemma, spec = m.groups()
-      if not lemma.endswith(u"gō"):
-        pagemsg(u"WARNING: Lemma %s doesn't end in -gō, skipping: %s" % (
-          lemma, origt))
-        continue
       if "/" in lemma:
         base, stem2 = lemma.split("/")
         if stem2 == re.sub(u"gō$", "gin", base):
@@ -42,6 +38,10 @@ def process_page(page, index, parsed):
       else:
         base = lemma
         stem2 = base + "n"
+      if not base.endswith(u"gō"):
+        pagemsg(u"WARNING: Base %s doesn't end in -gō, skipping: %s" % (
+          base, origt))
+        continue
       if stem2:
         newlemma = "%s/%s" % (base, stem2)
       else:
