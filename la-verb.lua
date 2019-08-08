@@ -633,7 +633,7 @@ local function add_prefix_suffix(data, typeinfo)
 				suffix = plural_passive_suffix
 				prefix_no_links = plural_passive_prefix_no_links
 				suffix_no_links = plural_passive_suffix_no_links
-			elseif slot:find("pasv") then
+			elseif slot:find("pasv") and not slot:find("_inf") then
 				prefix = passive_prefix
 				suffix = passive_suffix
 				prefix_no_links = passive_prefix_no_links
@@ -975,8 +975,17 @@ local function make_perfect_passive(data)
 	end
 end
 
-local function make_gerund(data, typeinfo, base, und_variant)
+-- Make the gerund and gerundive/future passive participle. For the forms
+-- labeled "gerund", we generate both gerund and gerundive variants if there's
+-- a case-specific prefix or suffix for the case in question; otherwise we
+-- generate only the gerund per se. BASE is the stem (ending in -nd).
+-- UND_VARIANT, if true, means that a gerundive in -und should be generated
+-- along with a gerundive in -end. NO_GERUND means to skip generating any
+-- gerunds (and gerundive variants). NO_FUTR_PASV_PTC means to skip generating
+-- the future passive participle.
+local function make_gerund(data, typeinfo, base, und_variant, no_gerund, no_futr_pasv_ptc)
 	local neut_endings = {
+		nom = "um",
 		gen = "ī",
 		dat = "ō",
 		acc = "um",
@@ -986,6 +995,7 @@ local function make_gerund(data, typeinfo, base, und_variant)
 	local endings
 	if typeinfo.subtypes.f then
 		endings = {
+			nom = "a",
 			gen = "ae",
 			dat = "ae",
 			acc = "am",
@@ -995,6 +1005,7 @@ local function make_gerund(data, typeinfo, base, und_variant)
 		endings = neut_endings
 	elseif typeinfo.subtypes.mp then
 		endings = {
+			nom = "ī",
 			gen = "ōrum",
 			dat = "īs",
 			acc = "ōs",
@@ -1002,6 +1013,7 @@ local function make_gerund(data, typeinfo, base, und_variant)
 		}
 	elseif typeinfo.subtypes.fp then
 		endings = {
+			nom = "ae",
 			gen = "ārum",
 			dat = "īs",
 			acc = "ās",
@@ -1009,6 +1021,7 @@ local function make_gerund(data, typeinfo, base, und_variant)
 		}
 	elseif typeinfo.subtypes.np then
 		endings = {
+			nom = "a",
 			gen = "ōrum",
 			dat = "īs",
 			acc = "a",
@@ -1016,6 +1029,7 @@ local function make_gerund(data, typeinfo, base, und_variant)
 		}
 	else
 		endings = {
+			nom = "us",
 			gen = "ī",
 			dat = "ō",
 			acc = "um",
@@ -1023,9 +1037,24 @@ local function make_gerund(data, typeinfo, base, und_variant)
 		}
 	end
 
+	if rfind(base, "[uv]end$") then
+		-- Per Lane's grammar section 899: "Verbs in -ere and -īre often have
+		-- -undus, when not preceded by u or v, especially in formal style"
+		und_variant = false
+	end
 	local und_base = und_variant and base:gsub("end$", "und")
 	for case, ending in pairs(endings) do
-		if data[case .. "_prefix"] or data[case .. "_suffix"] then
+		if case == "nom" then
+			if not no_futr_pasv_ptc then
+				if typeinfo.subtypes.passimpers then
+					ending = "um"
+				end
+				add_form(data, "futr_pasv_ptc", "", base .. ending)
+				if und_base then
+					add_form(data, "futr_pasv_ptc", "", und_base .. ending)
+				end
+			end
+		elseif (data[case .. "_prefix"] or data[case .. "_suffix"]) and not no_gerund then
 			add_form(data, "ger_" .. case, "", (data[case .. "_prefix"] or "")
 				.. base .. ending .. (data[case .. "_suffix"] or ""))
 			if und_base then
@@ -1034,9 +1063,11 @@ local function make_gerund(data, typeinfo, base, und_variant)
 			end
 		end
 	end
-	for case, ending in pairs(neut_endings) do
-		add_form(data, "ger_" .. case, "",
-			(data.prefix or  "") ..	base .. ending .. (data.suffix or  ""))
+	if not no_gerund then
+		for case, ending in pairs(neut_endings) do
+			add_form(data, "ger_" .. case, "",
+				(data.prefix or  "") ..	base .. ending .. (data.suffix or  ""))
+		end
 	end
 end
 
@@ -1372,15 +1403,15 @@ postprocess = function(data, typeinfo)
 	end
 
 	-- Add the ancient future_passive_participle of certain verbs
-	if typeinfo.pres_stem == "lāb" then
-		data.forms["futr_pasv_ptc"] = "lābundus"
-	elseif typeinfo.pres_stem == "collāb" then
-		data.forms["futr_pasv_ptc"] = "collābundus"
-	elseif typeinfo.pres_stem == "illāb" then
-		data.forms["futr_pasv_ptc"] = "illābundus"
-	elseif typeinfo.pres_stem == "relāb" then
-		data.forms["futr_pasv_ptc"] = "relābundus"
-	end
+	-- if typeinfo.pres_stem == "lāb" then
+	-- 	data.forms["futr_pasv_ptc"] = "lābundus"
+	-- elseif typeinfo.pres_stem == "collāb" then
+	-- 	data.forms["futr_pasv_ptc"] = "collābundus"
+	-- elseif typeinfo.pres_stem == "illāb" then
+	-- 	data.forms["futr_pasv_ptc"] = "illābundus"
+	-- elseif typeinfo.pres_stem == "relāb" then
+	-- 	data.forms["futr_pasv_ptc"] = "relābundus"
+	-- end
 
 	-- Add the poetic present passive infinitive forms of certain verbs
 	if typeinfo.subtypes.p3inf then
@@ -1735,6 +1766,8 @@ irreg_conjugations["aio"] = function(args, data, typeinfo)
 	data.forms["pres_actv_ptc"] = prefix .. "aiēns"
 end
 
+irreg_conjugations["aiio"] = irreg_conjugations["aio"]
+
 irreg_conjugations["dico"] = function(args, data, typeinfo)
 	table.insert(data.title, "[[Appendix:Latin third conjugation|third conjugation]]")
 	table.insert(data.title, "[[Appendix:Latin irregular verbs|irregular]] short imperative")
@@ -1796,7 +1829,6 @@ irreg_conjugations["do"] = function(args, data, typeinfo)
 
 	-- Imperfective participles
 	data.forms["pres_actv_ptc"] = prefix .. "dāns"
-	data.forms["futr_pasv_ptc"] = prefix .. "dandus"
 
 	-- Gerund
 	make_gerund(data, typeinfo, prefix .. "dand")
@@ -1908,7 +1940,6 @@ irreg_conjugations["eo"] = function(args, data, typeinfo)
 
 	-- Imperfective participles
 	data.forms["pres_actv_ptc"] = prefix .. "iēns"
-	data.forms["futr_pasv_ptc"] = prefix .. "eundus"
 
 	-- Gerund
 	make_gerund(data, typeinfo, prefix .. "eund")
@@ -1948,7 +1979,7 @@ irreg_conjugations["facio"] = function(args, data, typeinfo)
 
 	make_pres_3rd_io(data, typeinfo, prefix .. "fac", "nopass")
 	-- We said no passive, but we do want the future passive participle.
-	data.forms["futr_pasv_ptc"] = prefix .. "faciendus"
+	make_gerund(data, typeinfo, prefix .. "faciend", "und-variant", "no-gerund")
 
 	make_perf(data, prefix .. "fēc")
 	make_supine(data, typeinfo, prefix .. "fact")
@@ -2009,7 +2040,18 @@ irreg_conjugations["fero"] = function(args, data, typeinfo)
 	prefix_supine = prefix_supine or prefix_pres
 
 	make_pres_3rd(data, typeinfo, prefix_pres .. "fer")
-	make_perf(data, prefix_perf .. "tul")
+	if prefix_perf == "" then
+		make_perf(data, {"tul", "tetul"})
+		local noteindex = #(data.footnotes) + 1
+		for slot in iter_slots(false, false) do
+			if cfind(slot, "perf") or cfind(slot, "plup") or cfind(slot, "futp") then
+				data.form_footnote_indices[slot] = tostring(noteindex)
+				data.footnotes[noteindex] = 'Archaic.'
+			end
+		end
+	else
+		make_perf(data, prefix_perf .. "tul")
+	end
 	make_supine(data, typeinfo, prefix_supine .. "lāt")
 
 	-- Active imperfective indicative
@@ -2348,7 +2390,7 @@ irreg_conjugations["coepi"] = function(args, data, typeinfo)
 	make_supine(data, typeinfo, prefix .. "coept")
 	make_perfect_passive(data)
 
-	data.forms["futr_pasv_ptc"] = prefix .. "coepiendus"
+	make_gerund(data, typeinfo, prefix .. "coepiend", "und-variant", "no-gerund")
 end
 
 irreg_conjugations["sum"] = function(args, data, typeinfo)
@@ -2480,7 +2522,6 @@ make_pres_1st = function(data, typeinfo, pres_stem)
 
 	-- Imperfective participles
 	data.forms["pres_actv_ptc"] = pres_stem .. "āns"
-	data.forms["futr_pasv_ptc"] = pres_stem .. "andus"
 
 	-- Gerund
 	make_gerund(data, typeinfo, pres_stem .. "and")
@@ -2527,12 +2568,9 @@ make_pres_2nd = function(data, typeinfo, pres_stem, nopass, noimpr)
 
 	-- Imperfective participles
 	data.forms["pres_actv_ptc"] = pres_stem .. "ēns"
-	if not nopass then
-		data.forms["futr_pasv_ptc"] = pres_stem .. "endus"
-	end
 
 	-- Gerund
-	make_gerund(data, typeinfo, pres_stem .. "end")
+	make_gerund(data, typeinfo, pres_stem .. "end", nil, nil, nopass)
 end
 
 make_pres_3rd = function(data, typeinfo, pres_stem)
@@ -2567,7 +2605,6 @@ make_pres_3rd = function(data, typeinfo, pres_stem)
 
 	-- Imperfective participles
 	data.forms["pres_actv_ptc"] = pres_stem .. "ēns"
-	data.forms["futr_pasv_ptc"] = pres_stem .. "endus"
 
 	-- Gerund
 	make_gerund(data, typeinfo, pres_stem .. "end", "und-variant")
@@ -2610,12 +2647,9 @@ make_pres_3rd_io = function(data, typeinfo, pres_stem, nopass)
 
 	-- Imperfective participles
 	data.forms["pres_actv_ptc"] = pres_stem .. "iēns"
-	if not nopass then
-		data.forms["futr_pasv_ptc"] = pres_stem .. "iendus"
-	end
 
 	-- Gerund
-	make_gerund(data, typeinfo, pres_stem .. "iend", "und-variant")
+	make_gerund(data, typeinfo, pres_stem .. "iend", "und-variant", nil, nopass)
 end
 
 make_pres_4th = function(data, typeinfo, pres_stem)
@@ -2650,7 +2684,6 @@ make_pres_4th = function(data, typeinfo, pres_stem)
 
 	-- Imperfective participles
 	data.forms["pres_actv_ptc"] = pres_stem .. "iēns"
-	data.forms["futr_pasv_ptc"] = pres_stem .. "iendus"
 
 	-- Gerund
 	make_gerund(data, typeinfo, pres_stem .. "iend", "und-variant")
@@ -2808,7 +2841,7 @@ make_supine = function(data, typeinfo, supine_stem)
 		end
 
 		if not futr_actv_inf then
-			futr_actv_inf = make_raw_link(futr_actv_ptc, futr_actv_ptc:gsub("us$", "um") .. " [[esse]]"
+			futr_actv_inf = make_raw_link(futr_actv_ptc, futr_actv_ptc:gsub("us$", "um")) .. " [[esse]]"
 		end
 
 		add_form(data, "futr_actv_inf", "", futr_actv_inf)
