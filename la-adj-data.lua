@@ -29,10 +29,12 @@ decl["1&2"] = function(data, args)
 	if data.types.er then
 		if mw.ustring.match(stem, "er$") then
 			table.insert(title, "nominative masculine singular in ''-er''")
-			table.insert(data.categories, "Latin first and second declension adjectives with nominative masculine singular in -er")
+			table.insert(data.categories, "Latin first and second declension "
+				.. data.pos .. " with nominative masculine singular in -er")
 		elseif mw.ustring.match(stem, "ur$") then
 			table.insert(title, "nominative masculine singular in ''-ur''")
-			table.insert(data.categories, "Latin first and second declension adjectives with nominative masculine singular in -ur")
+			table.insert(data.categories, "Latin first and second declension "
+				.. data.pos .. " with nominative masculine singular in -ur")
 		else
 			error("Please notify [[User:kc_kennylau/talk|User:kc_kennylau]]")
 		end
@@ -49,7 +51,8 @@ decl["1&2"] = function(data, args)
 
 	if data.types.greekA then
 		table.insert(title, "Greek type")
-		table.insert(data.categories, "Latin first and second declension adjectives with Greek declension")
+		table.insert(data.categories, "Latin first and second declension " ..
+			data.pos .. " with Greek declension")
 		us = "os"
 		um = "on"
 		am = "ān"
@@ -57,7 +60,8 @@ decl["1&2"] = function(data, args)
 
 	if data.types.greekE then
 		table.insert(title, "Greek type")
-		table.insert(data.categories, "Latin first and second declension adjectives with Greek declension")
+		table.insert(data.categories, "Latin first and second declension " ..
+			data.pos .. " with Greek declension")
 		us = "os"
 		a_sf = "ē"
 		um = "on"
@@ -119,7 +123,8 @@ decl["1&2"] = function(data, args)
 
 	if data.types.ius then
 		table.insert(title, "with genitive singular in ''-īus'' and dative singular in ''-ī''")
-		table.insert(data.categories, "Latin first and second declension adjectives with genitive singular in -īus")
+		table.insert(data.categories, "Latin first and second declension " ..
+			data.pos .. " with genitive singular in -īus")
 		data.forms["gen_sg_m"] = stem .. "īus"
 		data.forms["gen_sg_f"] = stem .. "īus"
 		data.forms["gen_sg_n"] = stem .. "īus"
@@ -172,7 +177,8 @@ decl["1&2"] = function(data, args)
 
 	data.title = table.concat(title, ", ") .. "."
 
-	table.insert(data.categories, "Latin first and second declension adjectives")
+	table.insert(data.categories, "Latin first and second declension " ..
+		data.pos)
 end
 
 decl["1-1"] = function(data, args)
@@ -221,7 +227,7 @@ decl["1-1"] = function(data, args)
 
 	data.title = table.concat(title, ", ") .. "."
 
-	table.insert(data.categories, "Latin first declension adjectives")
+	table.insert(data.categories, "Latin first declension " .. data.pos)
 end
 
 decl["2-2"] = function(data, args)
@@ -249,7 +255,8 @@ decl["2-2"] = function(data, args)
 
 	if data.types.greek then
 		table.insert(title, "Greek type")
-		table.insert(data.categories, "Latin second declension adjectives with Greek declension")
+		table.insert(data.categories, "Latin second declension " .. data.pos ..
+			" with Greek declension")
 		us = "os"
 		um = "on"
 		i_pl = "oe"
@@ -292,7 +299,7 @@ decl["2-2"] = function(data, args)
 
 	data.title = table.concat(title, ", ") .. "."
 
-	table.insert(data.categories, "Latin second declension adjectives")
+	table.insert(data.categories, "Latin second declension " .. data.pos)
 end
 
 decl["3-1"] = function(data, args)
@@ -377,7 +384,7 @@ decl["3-1"] = function(data, args)
 
 	data.title = table.concat(title, ", ") .. "."
 
-	table.insert(data.categories, "Latin third declension adjectives")
+	table.insert(data.categories, "Latin third declension " .. data.pos)
 end
 
 decl["3-C"] = function(data, args)
@@ -508,7 +515,7 @@ decl["3-2"] = function(data, args)
 
 	data.title = table.concat(title, ", ") .. "."
 
-	table.insert(data.categories, "Latin third declension adjectives")
+	table.insert(data.categories, "Latin third declension " .. data.pos)
 end
 
 decl["3-3"] = function(data, args)
@@ -595,7 +602,7 @@ decl["3-3"] = function(data, args)
 
 	data.title = table.concat(title, ", ") .. "."
 
-	table.insert(data.categories, "Latin third declension adjectives")
+	table.insert(data.categories, "Latin third declension " .. data.pos)
 end
 
 decl["irreg"] = function(data,args)
@@ -722,13 +729,13 @@ decl["irreg"] = function(data,args)
 
 		data.footnote = "Note: Singular forms take the genitive of the whole and do not function as adjectives."
 
-		table.insert(data.categories, "Latin third declension adjectives")
-	elseif args[1] == "is" then
+		table.insert(data.categories, "Latin third declension " .. data.pos)
+	elseif args[1] == "is" or args[1] == "īdem" then
 		data.title = "Irregular: similar to first and second declensions, except for genitive singular ending in ''-ius'' and dative singular ending in ''-ī''."
 
 		local m = "m"
 		local i = "i"
-		if data.suffix == "dem" then
+		if args[1] == "īdem" then
 			data.title = "Irregular declension. Similar to the declension of ''is, ea, id''."
 			m = "n"
 			i = ""
@@ -771,7 +778,7 @@ decl["irreg"] = function(data,args)
 
 		data.voc = false
 
-		if data.suffix == "dem" then
+		if args[1] == "īdem" then
 			data.forms["nom_sg_m"] = "ī"
 			data.forms["nom_sg_n"] = "i"
 			data.forms["nom_pl_m"] = "ī"
