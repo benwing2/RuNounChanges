@@ -101,6 +101,39 @@ local genders = {
 	"m", "f", "n"
 }
 
+local irreg_noun_to_decl = {
+	["bōs"] = "3",
+	["cherub"] = "irreg",
+	["deus"] = "2",
+	["Deus"] = "2",
+	["domus"] = "4,2",
+	["Iēsus"] = "4",
+	["Jēsus"] = "4",
+	["iūgerum"] = "2,3",
+	["jūgerum"] = "2,3",
+	["sūs"] = "3",
+	["ēthos"] = "3",
+	["Athōs"] = "2",
+	["lexis"] = "3",
+	["vēnum"] = "4,2",
+	["vīs"] = "3",
+}
+
+local irreg_adj_to_decl = {
+	["duo"] = "irreg+",
+	["ambō"] = "irreg+",
+	["mīlle"] = "3-1+",
+	["plūs"] = "3-1+",
+	["is"] = "1&2+",
+	["īdem"] = "1&2+",
+	["ille"] = "1&2+",
+	["ipse"] = "1&2+",
+	["iste"] = "1&2+",
+	["quis"] = "irreg+",
+	["quī"] = "irreg+",
+	["quisquis"] = "irreg+",
+}
+
 local linked_prefixes = {
 	"", "linked_"
 }
@@ -215,11 +248,6 @@ end
 
 local function process_noun_forms_and_overrides(data, args)
 	local redlink = false
-	if data.num == "pl" and NAMESPACE == '' then
-		table.insert(data.categories, "Latin pluralia tantum")
-	elseif data.num == "sg" and NAMESPACE == '' then
-		table.insert(data.categories, "Latin singularia tantum")
-	end
 
 	-- Process overrides and canonicalize forms.
 	for slot in iter_noun_slots() do
@@ -278,7 +306,7 @@ local function process_noun_forms_and_overrides(data, args)
 					local title = lang:makeEntryName(form)
 					local t = mw.title.new(title)
 					if t and not t.exists then
-						table.insert(data.categories, 'Latin nouns with red links in their declension tables')
+						table.insert(data.categories, "Latin " .. data.pos .. " with red links in their declension tables")
 						redlink = true
 					end
 				end
@@ -289,9 +317,6 @@ end
 
 local function process_adj_forms_and_overrides(data, args)
 	local redlink = false
-	if data.num == "pl" then
-		table.insert(data.categories, "Latin plural-only adjectives")
-	end
 
 	-- Process overrides and canonicalize forms.
 	for slot in iter_adj_slots() do
@@ -383,7 +408,7 @@ local function process_adj_forms_and_overrides(data, args)
 					local title = lang:makeEntryName(form)
 					local t = mw.title.new(title)
 					if t and not t.exists then
-						table.insert(data.categories, 'Latin adjectives with red links in their declension tables')
+						table.insert(data.categories, "Latin " .. data.pos .. " with red links in their declension tables")
 						redlink = true
 					end
 				end
@@ -769,37 +794,20 @@ local function detect_noun_subtype(lemma, stem2, typ, subtypes)
 		stem2 = stem2 or m_la_utilities.make_stem2(lemma)
 		local detected_subtypes
 		if subtypes.Greek then
-			base, _, detected_subtypes =
-				get_noun_subtype_by_ending(lemma, stem2, nil, subtypes, {
-					{{"is", ""}, {"I"}},
+			base, _, detected_subtypes = get_noun_subtype_by_ending(lemma, stem2, nil, subtypes, {
+				{{"is", ""}, {"I"}},
+				{"ēr", {"er"}},
+				{"ōn", {"on"}},
 			})
 			if base then
 				return lemma, stem2, detected_subtypes
 			end
-			base, _, detected_subtypes =
-				get_noun_subtype_by_ending(lemma, stem2, nil, subtypes, {
-					{"ēr", {"er"}},
-					{"ōn", {"on"}},
-					{"s", {"s"}},
-				})
-			if base then
-				return base, stem2, detected_subtypes
-			end
-			return lemma, stem2, {}
-		end
-
-		if subtypes.navis or subtypes.ignis then
 			return lemma, stem2, {}
 		end
 
 		if not subtypes.N then
 			base, _, detected_subtypes = get_noun_subtype_by_ending(lemma, stem2, nil, subtypes, {
-				{"^([A-ZĀĒĪŌŪȲĂĔĬŎŬ].*)polis$", {"polis", "sg", "loc"}},
-			})
-			if base then
-				return base, stem2, detected_subtypes
-			end
-			base, _, detected_subtypes = get_noun_subtype_by_ending(lemma, stem2, nil, subtypes, {
+				{{"^([A-ZĀĒĪŌŪȲĂĔĬŎŬ].*pol)is$", ""}, {"F", "polis", "sg", "loc"}},
 				{{"tūdō", "tūdin"}, {"F"}},
 				{{"tās", "tāt"}, {"F"}},
 				{{"tūs", "tūt"}, {"F"}},
@@ -839,9 +847,9 @@ local function detect_noun_subtype(lemma, stem2, typ, subtypes)
 				error("Declension-4 noun of subtype .echo, .argo or .Callisto should end in -ō: " .. lemma)
 			end
 			if subtypes.Callisto then
-				return base, nil, {"sg"}
+				return base, nil, {"F", "sg"}
 			else
-				return base, nil, {}
+				return base, nil, {"F"}
 			end
 		end
 		return get_noun_subtype_by_ending(lemma, stem2, typ, subtypes, {
@@ -862,7 +870,8 @@ local function detect_noun_subtype(lemma, stem2, typ, subtypes)
 		-- before declining the noun so we can propagate it to other segments.
 		return lemma, nil, {"loc"}
 	elseif typ == "indecl" or typ == "irreg" and (
-		lemma == "Deus" or lemma == "Iēsus" or lemma == "Jēsus" or lemma == "vēnum"
+		lemma == "Deus" or lemma == "Iēsus" or lemma == "Jēsus" or
+		lemma == "Athōs" or lemma == "vēnum"
 	) then
 		-- Indeclinable nouns, and certain irregular nouns, set data.num = "sg",
 		-- but we need to know this before declining the noun so we can
@@ -1210,13 +1219,14 @@ local function detect_adj_type_and_subtype(lemma, stem2, typ, subtypes)
 	end
 end
 
--- Parse a segment (e.g. "lūna<1>", "aegis/aegid<3.Greek>", "bonus<+>", or
--- "[[vetus]]/veter<3+.-I>"), consisting of a lemma (or optionally a lemma/stem)
--- and declension+subtypes, where a + in the declension indicates an adjective.
--- Brackets can be present to indicate links, for use in {{la-noun}} and {{la-adj}}.
--- The return value is a table, e.g.:
+-- Parse a segment (e.g. "lūna<1>", "aegis/aegid<3.Greek>", "bōs<irreg.F>",
+-- bonus<+>", or "[[vetus]]/veter<3+.-I>"), consisting of a lemma (or optionally
+-- a lemma/stem) and declension+subtypes, where a + in the declension indicates
+-- an adjective. Brackets can be present to indicate links, for use in
+-- {{la-noun}} and {{la-adj}}. The return value is a table, e.g.:
 -- {
 --   decl = "1",
+--   headword_decl = "1",
 --   is_adj = false,
 --   orig_lemma = "lūna",
 --   lemma = "lūna",
@@ -1230,6 +1240,7 @@ end
 --
 -- {
 --   decl = "3",
+--   headword_decl = "3",
 --   is_adj = false,
 --   orig_lemma = "aegis",
 --   lemma = "aegis",
@@ -1242,7 +1253,21 @@ end
 -- or
 --
 -- {
+--   decl = "irreg",
+--   headword_decl = "irreg/3",
+--   is_adj = false,
+--   orig_lemma = "bōs",
+--   lemma = "bōs",
+--   stem2 = nil,
+--   gender = "F",
+--   types = {["F"] = true},
+--   args = {"bōs"}
+-- }
+-- or
+--
+-- {
 --   decl = "1&2",
+--   headword_decl = "1&2+",
 --   is_adj = true,
 --   orig_lemma = "bonus",
 --   lemma = "bonus",
@@ -1256,6 +1281,7 @@ end
 --
 -- {
 --   decl = "3-1",
+--   headword_decl = "3-1+",
 --   is_adj = true,
 --   orig_lemma = "[[vetus]]",
 --   lemma = "vetus",
@@ -1311,6 +1337,8 @@ local function parse_segment(segment)
 		)
 		is_adj = true
 
+		headword_decl = irreg_adj_to_decl[lemma] and "irreg/" .. irreg_adj_to_decl[lemma] or decl .. "+"
+
 		for _, subtype in ipairs(detected_subtypes) do
 			if types["-" .. subtype] then
 				-- if a "cancel subtype" spec is given, remove the cancel spec
@@ -1322,6 +1350,8 @@ local function parse_segment(segment)
 		end
 	else
 		base, stem2, detected_subtypes = detect_noun_subtype(lemma, stem2, decl, types)
+
+		headword_decl = irreg_noun_to_decl[lemma] and "irreg/" .. irreg_noun_to_decl[lemma] or decl
 
 		for _, subtype in ipairs(detected_subtypes) do
 			if types["-" .. subtype] then
@@ -1371,6 +1401,7 @@ local function parse_segment(segment)
 
 	return {
 		decl = decl,
+		headword_decl = headword_decl,
 		is_adj = is_adj,
 		gender = gender,
 		orig_lemma = orig_lemma,
@@ -1385,9 +1416,9 @@ end
 
 -- Parse a segment run (i.e. a string with zero or more segments [see
 -- parse_segment] and optional surrounding text, e.g. "foenum<2>-graecum<2>"
--- or "pars/part<3.navis> [[oratio|ōrātiōnis]]"). The segment run currently
--- cannot contain any alternants (e.g. "((epulum<2.sg>,epulae<1>))"). The
--- return value is a table of the following form:
+-- or "[[pars]]/part<3.abl-e-occ-i> [[oratio|ōrātiōnis]]"). The segment run
+-- currently cannot contain any alternants (e.g. "((epulum<2.sg>,epulae<1>))").
+-- The return value is a table of the following form:
 -- {
 --   segments = PARSED_SEGMENTS (a list of parsed segments),
 --   loc = LOC (a boolean indicating whether any of the individual segments
@@ -1396,6 +1427,7 @@ end
 --     no number restrictions),
 --   gender = GENDER (the first specified or inferred gender, or nil if none),
 --   decls = DECLS (list of declensions),
+--   headword_decls = HEADWORD_DECLS (list of declensions to be displayed in headword)
 -- }
 -- Each element in PARSED_SEGMENTS is as returned by parse_segment() but will
 -- have an additional .orig_prefix field indicating the text before the segment
@@ -1412,6 +1444,7 @@ local function parse_segment_run(segment_run)
 	local is_suffix = rfind(segment_run, "^%-")
 	local segments = {}
 	local decls = {}
+	local headword_decls = {}
 	-- We want to not break up a bracketed link followed by <> even if it has a space or
 	-- hyphen in it. So we do an outer capturing split to find the bracketed links followed
 	-- by <>, then do inner capturing splits on all the remaining text to find the other
@@ -1439,11 +1472,8 @@ local function parse_segment_run(segment_run)
 		gender = gender or parsed_segment.gender
 		parsed_segment.orig_prefix = segments[i - 1]
 		parsed_segment.prefix = m_links.remove_links(segments[i - 1])
-		if parsed_segment.is_adj then
-			table.insert(decls, parsed_segment.decl .. "+")
-		else
-			table.insert(decls, parsed_segment.decl)
-		end
+		table.insert(decls, parsed_segment.decl)
+		table.insert(headword_decls, parsed_segment.headword_decl)
 		table.insert(parsed_segments, parsed_segment)
 	end
 	if segments[#segments] ~= "" then
@@ -1458,6 +1488,7 @@ local function parse_segment_run(segment_run)
 		num = num,
 		gender = gender,
 		decls = decls,
+		headword_decls = headword_decls,
 	}
 end
 
@@ -1472,6 +1503,7 @@ end
 --   num = NUM (the overall number restriction, one of "sg", "pl" or "both"),
 --   gender = GENDER (the first specified or inferred gender, or nil if none),
 --   decls = DECLS (list of lists of declensions),
+--   headword_decls = HEADWORD_DECLS (list of lists of headword declensions),
 -- }
 local function parse_alternant(alternant)
 	local parsed_alternants = {}
@@ -1481,6 +1513,7 @@ local function parse_alternant(alternant)
 	local num = nil
 	local gender = nil
 	local decls = {}
+	local headword_decls = {}
 	for i, alternant in ipairs(alternants) do
 		local parsed_run = parse_segment_run(alternant)
 		table.insert(parsed_alternants, parsed_run)
@@ -1500,6 +1533,7 @@ local function parse_alternant(alternant)
 		end
 		gender = gender or parsed_run.gender
 		table.insert(decls, parsed_run.decls)
+		table.insert(headword_decls, parsed_run.headword_decls)
 	end
 	return {
 		alternants = parsed_alternants,
@@ -1507,6 +1541,7 @@ local function parse_alternant(alternant)
 		num = num,
 		gender = gender,
 		decls = decls,
+		headword_decls = headword_decls,
 	}
 end
 
@@ -1523,6 +1558,8 @@ end
 --     no number restrictions),
 --   gender = GENDER (the first specified or inferred gender, or nil if none),
 --   decls = DECLS (list of either strings or lists of lists, specifying the declensions),
+--   headword_decls = HEADWORD_DECLS (list of either strings or lists of lists,
+--     specifying the declensions to go into the headword),
 -- }.
 -- Each element in PARSED_SEGMENTS is one of three types:
 --
@@ -1539,6 +1576,7 @@ end
 --   num = NUM (the number restriction of the segment as a whole),
 --   gender = GENDER (the first specified or inferred gender, or nil if none),
 --   decls = DECLS (list of lists of declensions),
+--   headword_decls = HEADWORD_DECLS (list of lists of headword declensions),
 -- }
 -- Note that each alternant is a segment run rather than a single parsed
 -- segment to allow for alternants like "((rēs<5>pūblica<1>,rēspūblica<1>))".
@@ -1552,6 +1590,7 @@ local function parse_segment_run_allowing_alternants(segment_run)
 	local num = nil
 	local gender = nil
 	local decls = {}
+	local headword_decls = {}
 	for i = 1, #alternating_segments do
 		local alternating_segment = alternating_segments[i]
 		if alternating_segment ~= "" then
@@ -1566,6 +1605,9 @@ local function parse_segment_run_allowing_alternants(segment_run)
 				for _, decl in ipairs(parsed_run.decls) do
 					table.insert(decls, decl)
 				end
+				for _, headword_decl in ipairs(parsed_run.headword_decls) do
+					table.insert(headword_decls, headword_decl)
+				end
 			else
 				local parsed_alternating_segment = parse_alternant(alternating_segment)
 				table.insert(parsed_segments, parsed_alternating_segment)
@@ -1573,6 +1615,7 @@ local function parse_segment_run_allowing_alternants(segment_run)
 				num = num or parsed_alternating_segment.num
 				gender = gender or parsed_alternating_segment.gender
 				table.insert(decls, parsed_alternating_segment.decls)
+				table.insert(headword_decls, parsed_alternating_segment.headword_decls)
 			end
 		end
 	end
@@ -1583,6 +1626,7 @@ local function parse_segment_run_allowing_alternants(segment_run)
 		num = num,
 		gender = gender,
 		decls = decls,
+		headword_decls = headword_decls,
 	}
 end
 
@@ -1704,6 +1748,24 @@ local function propagate_number_restrictions(forms, num, is_adj)
 	end
 end
 
+local function join_sentences(sentences, joiner)
+	-- Lowercase the first letter of all but the first sentence, and remove the
+	-- final period from all but the last sentence. Then join together with the
+	-- joiner (e.g. " and " or " or ").
+	-- FIXME: Should we join three or more as e.g. "foo, bar and baz"?
+	local sentences_to_join = {}
+	for i, sentence in ipairs(sentences) do
+		if i < #sentences then
+			sentence = rsub(sentence, "%.$", "")
+		end
+		if i > 1 then
+			sentence = m_string_utilities.lcfirst(sentence)
+		end
+		table.insert(sentences_to_join, sentence)
+	end
+	return table.concat(sentences_to_join, joiner)
+end
+
 -- Construct the declension of a parsed segment run of the form returned by
 -- parse_segment_run() or parse_segment_run_allowing_alternants(). Return value
 -- is a table
@@ -1714,7 +1776,7 @@ end
 --   categories = CATEGORIES (combined categories for all segments),
 --   voc = BOOLEAN (false if any adjective in the run has no vocative),
 -- }
-local function decline_segment_run(parsed_run, is_adj)
+local function decline_segment_run(parsed_run, pos, is_adj)
 	local declensions = {
 		-- For each possible slot (e.g. "abl_sg"), list of possible forms.
 		forms = {},
@@ -1759,6 +1821,7 @@ local function decline_segment_run(parsed_run, is_adj)
 					num = seg.num or "",
 					voc = true,
 					noneut = false,
+					pos = pos,
 					forms = {},
 					types = seg.types,
 					categories = {},
@@ -1784,6 +1847,7 @@ local function decline_segment_run(parsed_run, is_adj)
 					num = seg.num or "",
 					loc = seg.loc,
 					um = false,
+					pos = pos,
 					forms = {},
 					types = seg.types,
 					categories = {},
@@ -1891,7 +1955,7 @@ local function decline_segment_run(parsed_run, is_adj)
 				this_parsed_run.loc = seg.loc
 				this_parsed_run.num = this_parsed_run.num or seg.num
 				this_parsed_run.gender = this_parsed_run.gender or seg.gender
-				local this_declensions = decline_segment_run(this_parsed_run, is_adj)
+				local this_declensions = decline_segment_run(this_parsed_run, pos, is_adj)
 				if not this_declensions.voc then
 					declensions.voc = false
 				end
@@ -1969,7 +2033,7 @@ local function decline_segment_run(parsed_run, is_adj)
 				for _, cat in ipairs(this_declensions.categories) do
 					ut.insert_if_not(seg_categories, cat)
 				end
-				ut.insert_if_not(seg_titles, table.concat(this_declensions.title, " and "))
+				ut.insert_if_not(seg_titles, join_sentences(this_declensions.title, " and "))
 			end
 
 			-- If overall run is singular, copy singular to plural, and
@@ -1989,7 +2053,7 @@ local function decline_segment_run(parsed_run, is_adj)
 				ut.insert_if_not(declensions.categories, cat)
 			end
 
-			table.insert(declensions.title, table.concat(seg_titles, " or "))
+			table.insert(declensions.title, join_sentences(seg_titles, " or "))
 
 		else
 			for slot in iter_slots(is_adj) do
@@ -2035,7 +2099,7 @@ local function construct_title(args_title, declensions_title, from_headword)
 	return declensions_title
 end
 
-function export.do_generate_noun_forms(parent_args, from_headword)
+function export.do_generate_noun_forms(parent_args, pos, from_headword, support_num_type)
 	local params = {
 		[1] = {required = true, default = "aqua<1>"},
 		footnote = {},
@@ -2048,20 +2112,25 @@ function export.do_generate_noun_forms(parent_args, from_headword)
 	if from_headword then
 		params.lemma = {list = true}
 		params.id = {}
-		params.pos = {}
+		params.pos = {default = pos}
 		params.indecl = {type = "boolean"}
 		params.m = {list = true}
 		params.f = {list = true}
 		params.g = {list = true}
 	end
+	if support_num_type then
+		params["type"] = {}
+	end
 
 	local args = m_para.process(parent_args, params)
 
+	pos = args.pos or pos -- args.pos only set when from_headword
+	
 	local parsed_run = parse_segment_run_allowing_alternants(args[1])
 	parsed_run.loc = parsed_run.loc or not not (args.loc_sg or args.loc_pl)
 	parsed_run.num = args.num or parsed_run.num
 
-	local declensions = decline_segment_run(parsed_run, false)
+	local declensions = decline_segment_run(parsed_run, pos, false)
 
 	if not parsed_run.loc then
 		declensions.forms.loc_sg = nil
@@ -2076,6 +2145,7 @@ function export.do_generate_noun_forms(parent_args, from_headword)
 		num = parsed_run.num or "",
 		gender = parsed_run.gender,
 		decls = parsed_run.decls,
+		headword_decls = parsed_run.headword_decls,
 		forms = declensions.forms,
 		categories = declensions.categories,
 		notes = {},
@@ -2083,11 +2153,12 @@ function export.do_generate_noun_forms(parent_args, from_headword)
 		accel = {},
 		overriding_lemma = args.lemma,
 		id = args.id,
-		pos = args.pos,
+		pos = pos,
 		indecl = args.indecl,
 		m = args.m,
 		f = args.f,
 		overriding_genders = args.g,
+		num_type = args["type"],
 	}
 
 	for slot in iter_noun_slots() do
@@ -2103,7 +2174,7 @@ function export.do_generate_noun_forms(parent_args, from_headword)
 	return all_data
 end
 
-function export.do_generate_adj_forms(parent_args, from_headword)
+function export.do_generate_adj_forms(parent_args, pos, from_headword, support_num_type)
 	local params = {
 		[1] = {required = true, default = "bonus"},
 		footnote = {},
@@ -2119,11 +2190,16 @@ function export.do_generate_adj_forms(parent_args, from_headword)
 		params.comp = {list = true}
 		params.sup = {list = true}
 		params.id = {}
-		params.pos = {}
+		params.pos = {default = pos}
+	end
+	if support_num_type then
+		params["type"] = {}
 	end
 
 	local args = m_para.process(parent_args, params)
 
+	pos = args.pos or pos -- args.pos only set when from_headword
+	
 	local segment_run = args[1]
 	if not rfind(segment_run, "[<(]") then
 		-- If the segment run doesn't have any explicit declension specs or alternants,
@@ -2140,7 +2216,7 @@ function export.do_generate_adj_forms(parent_args, from_headword)
 	local overriding_voc = not not (
 		args.voc_sg_m or args.voc_sg_f or args.voc_sg_n or args.voc_pl_m or args.voc_pl_f or args.voc_pl_n
 	)
-	local declensions = decline_segment_run(parsed_run, true)
+	local declensions = decline_segment_run(parsed_run, pos, true)
 
 	if not parsed_run.loc then
 		declensions.forms.loc_sg_m = nil
@@ -2170,6 +2246,7 @@ function export.do_generate_adj_forms(parent_args, from_headword)
 		footnote = args.footnote or "",
 		num = parsed_run.num or "",
 		decls = parsed_run.decls,
+		headword_decls = parsed_run.headword_decls,
 		forms = declensions.forms,
 		categories = declensions.categories,
 		notes = {},
@@ -2181,7 +2258,8 @@ function export.do_generate_adj_forms(parent_args, from_headword)
 		comp = args.comp,
 		sup = args.sup,
 		id = args.id,
-		pos = args.pos,
+		pos = pos,
+		num_type = args["type"],
 	}
 
 	for slot in iter_adj_slots() do
@@ -2199,26 +2277,26 @@ end
 
 function export.show_noun(frame)
 	local parent_args = frame:getParent().args
-	local data = export.do_generate_noun_forms(parent_args)
+	local data = export.do_generate_noun_forms(parent_args, "nouns")
 
 	show_forms(data, false)
 
-	return make_noun_table(data) .. m_utilities.format_categories(data.categories, lang)
+	return make_noun_table(data)
 end
 
 function export.show_adj(frame)
 	local parent_args = frame:getParent().args
-	local data = export.do_generate_adj_forms(parent_args)
+	local data = export.do_generate_adj_forms(parent_args, "adjectives")
 
 	partial_show_forms(data, true)
 
-	return m_adj_table.make_table(data, data.noneut) .. m_utilities.format_categories(data.categories, lang)
+	return m_adj_table.make_table(data, data.noneut)
 end
 
 function export.generate_noun_forms(frame)
 	local include_props = frame.args["include_props"]
 	local parent_args = frame:getParent().args
-	local data = export.do_generate_noun_forms(parent_args)
+	local data = export.do_generate_noun_forms(parent_args, "nouns")
 
 	return concat_forms(data, false, include_props)
 end
@@ -2226,7 +2304,7 @@ end
 function export.generate_adj_forms(frame)
 	local include_props = frame.args["include_props"]
 	local parent_args = frame:getParent().args
-	local data = export.do_generate_adj_forms(parent_args)
+	local data = export.do_generate_adj_forms(parent_args, "adjectives")
 
 	return concat_forms(data, true, include_props)
 end
