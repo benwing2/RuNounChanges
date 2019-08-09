@@ -45,7 +45,6 @@ local new_declension_to_old_declension = {
 	["3"] = "third",
 	["4"] = "fourth",
 	["5"] = "fifth",
-	["irreg"] = "irregular",
 }
 
 local gender_names = {
@@ -78,6 +77,7 @@ local lang = require("Module:languages").getByCode("la")
 
 local u = mw.ustring.char
 local rfind = mw.ustring.find
+local rmatch = mw.ustring.match
 local rsplit = mw.text.split
 local rsubn = mw.ustring.gsub
 local ulower = mw.ustring.lower
@@ -124,7 +124,7 @@ function export.show(frame)
 	local args = frame:getParent().args
 	local NAMESPACE = mw.title.getCurrentTitle().nsText
 	local PAGENAME = mw.title.getCurrentTitle().text
-	
+
 	local head = args["head"]; if head == "" then head = nil end
 
 	local poscat = frame.args[1] or error("Part of speech has not been specified. Please pass parameter 1 to the module invocation.")
@@ -163,11 +163,7 @@ function export.show(frame)
 		.. (postscript ~= "" and " (" .. postscript .. ")" or "")
 end
 
-pos_functions["nouns"] = function(class, args, data, infl_classes, appendix)
-	if not args[2] and not args[3] and not args[4] then
-		return pos_functions["nouns-new"](class, args, data, infl_classes, appendix)
-	end
-
+local function nouns_old(pos, args, data, infl_classes, appendix)
 	track("nouns-old")
 	params = {
 		[1] = {alias_of = 'head'},
@@ -250,9 +246,31 @@ pos_functions["nouns"] = function(class, args, data, infl_classes, appendix)
 	end
 end
 
-pos_functions["nouns-new"] = function(class, args, data, infl_classes, appendix)
+local function process_num_type(numtype, categories)
+	if numtype == "card" then
+		table.insert(categories, "Latin cardinal numbers")
+	elseif numtype == "ord" then
+		table.insert(categories, "Latin ordinal numbers")
+	elseif numtype == "dist" then
+		-- FIXME, should be named 'Latin distributive numbers'
+		table.insert(categories, "la:Distributive numbers")
+	elseif numtype == "mul" then
+		-- FIXME, should be named 'Latin multiplicative numbers'
+		table.insert(categories, "la:Multiplicative numbers")
+	elseif numtype == "coll" then
+		-- FIXME, should be named 'Latin collective numbers'
+		table.insert(categories, "la:Collective numbers")
+	elseif numtype then
+		error("Unrecognized numeral type '" .. numtype .. "'")
+	end
+end
+
+local function nouns_new(pos, args, data, infl_classes, appendix)
 	track("nouns-new")
-	local decldata = require("Module:la-nominal").do_generate_noun_forms(args, true)
+	local NAMESPACE = mw.title.getCurrentTitle().nsText
+	local is_num = pos == "numerals"
+	local decldata = require("Module:la-nominal").do_generate_noun_forms(
+	  args, pos, true, is_num)
 	local lemma = decldata.overriding_lemma
 	local lemma_num = decldata.num == "pl" and "pl" or "sg"
 	if not lemma or #lemma == 0 then
@@ -261,88 +279,186 @@ pos_functions["nouns-new"] = function(class, args, data, infl_classes, appendix)
 
 	data.heads = lemma
 	data.id = decldata.id
-	if decldata.pos then
-		local NAMESPACE = mw.title.getCurrentTitle().nsText
-		data.pos_category = (NAMESPACE == "Reconstruction" and "reconstructed " or "") .. decldata.pos
-	end
+	data.pos_category = (NAMESPACE == "Reconstruction" and "reconstructed " or "") .. decldata.pos
 
 	local genders = decldata.overriding_genders
 	if #genders == 0 then
 		if decldata.gender then
 			genders = {ulower(decldata.gender)}
-		else
+		elseif not is_num then
 			error("No gender explicitly specified in headword template using g=, and can't infer gender from lemma spec")
 		end
 	end
 
-	for _, g in ipairs(genders) do
-		if not new_legal_gender[g] then
-			error("Gender “" .. g .. "” is not a valid Latin gender.")
-		end
-		local gender_name = new_gender_names[g]
-		if decldata.num == "pl" then
-			g = g .. "-p"
-		elseif decldata.num == "sg" then
-			g = g .. "-s"
-		end
-		table.insert(data.genders, g)
-		table.insert(data.categories, "Latin " .. gender_name .. " nouns")
+	if is_num then
+		process_num_type(decldata.num_type, data.categories)
 	end
 
 	if decldata.indecl then
 		table.insert(data.inflections, {label = glossary_link("indeclinable")})
-		table.insert(data.categories, "Latin indeclinable nouns")
+		table.insert(data.categories, "Latin indeclinable " .. decldata.pos)
+
 		for _, g in ipairs(genders) do
-			table.insert(data.categories, "Latin " .. new_gender_names[g] ..  " indeclinable nouns")
+			local gender, number = rmatch(g, "^(.)%-([sp])$")
+			if not gender then
+				gender = g
+			end
+			if not new_legal_gender[gender] then
+				error("Gender “" .. gender .. "” is not a valid Latin gender.")
+			end
+			table.insert(data.genders, g)
+			local gender_name = new_gender_names[gender]
+			table.insert(data.categories, "Latin " .. gender_name .. " " .. decldata.pos)
+			table.insert(data.categories, "Latin " .. gender_name ..  " indeclinable " .. decldata.pos)
+			if number == "p" and NAMESPACE == '' then
+				table.insert(data.categories, "Latin pluralia tantum")
+			elseif number == "s" and NAMESPACE == '' then
+				table.insert(data.categories, "Latin singularia tantum")
+			end
 		end
 	else
+		local is_irreg = false
+		local is_indecl = false
+		local is_decl = false
+		local has_multiple_decls = false
+		local has_multiple_variants = false
 		-- flatten declension specs
 		local decls = {}
-		for _, decl in ipairs(decldata.decls) do
-			if type(decl) ~= "table" then
-				-- skip adjectival declensions
-				if not rfind(decl, "%+$") then
-					ut.insert_if_not(decls, decl)
+
+		for _, g in ipairs(genders) do
+			if not new_legal_gender[g] then
+				error("Gender “" .. g .. "” is not a valid Latin gender.")
+			end
+			local gender_name = new_gender_names[g]
+			if decldata.num == "pl" then
+				g = g .. "-p"
+			elseif decldata.num == "sg" then
+				g = g .. "-s"
+			end
+			table.insert(data.genders, g)
+			table.insert(data.categories, "Latin " .. gender_name .. " " .. decldata.pos)
+		end
+
+		if decldata.num == "pl" and NAMESPACE == '' then
+			table.insert(data.categories, "Latin pluralia tantum")
+		elseif decldata.num == "sg" and NAMESPACE == '' then
+			table.insert(data.categories, "Latin singularia tantum")
+		end
+
+		local function process_decl(decl_list, decl)
+			-- skip adjectival declensions
+			if not rfind(decl, "%+$") then
+				local irreg_decl_spec = rmatch(decl, "^irreg/(.*)$")
+				if irreg_decl_spec then
+					is_irreg = true
+					local irreg_decls = rsplit(irreg_decl_spec, ",")
+					if #irreg_decls > 1 then
+						has_multiple_decls = true
+					end
+					for _, d in ipairs(irreg_decls) do
+						if d == "indecl" or decl == "0" then
+							is_indecl = true
+						else
+							is_decl = true
+						end
+						ut.insert_if_not(decl_list, d)
+					end
+				else
+					if decl == "indecl" or decl == "0" then
+						is_indecl = true
+					else
+						is_decl = true
+					end
+					ut.insert_if_not(decl_list, decl)
 				end
+			end
+		end
+
+		for _, decl in ipairs(decldata.headword_decls) do
+			if type(decl) ~= "table" then
+				process_decl(decls, decl)
 			else
+				local alternant_decls = {}
 				for _, alternant in ipairs(decl) do
 					for _, single_decl in ipairs(alternant) do
-						-- skip adjectival declensions
-						if not rfind(single_decl, "%+$") then
-							ut.insert_if_not(decls, single_decl)
-						end
+						process_decl(alternant_decls, single_decl)
 					end
 				end
+				if #alternant_decls > 1 then
+					has_multiple_decls = true
+				elseif #decl > 1 then
+					has_multiple_variants = true
+				end
+				for _, d in ipairs(alternant_decls) do
+					ut.insert_if_not(decls, d)
+				end
+			end
+		end
+
+		if is_indecl and is_decl then
+			has_multiple_decls = true
+		end
+		if has_multiple_decls then
+			table.insert(data.categories, "Latin " .. decldata.pos .. " with multiple declensions")
+		end
+		if has_multiple_variants then
+			table.insert(data.categories, "Latin " .. decldata.pos .. " with multiple variants of a single declension")
+		end
+		if is_irreg then
+			table.insert(data.inflections, {label = glossary_link("irregular")})
+			table.insert(data.categories, "Latin irregular " .. decldata.pos)
+			for _, g in ipairs(genders) do
+				table.insert(data.categories, "Latin " .. new_gender_names[g] ..  " irregular " .. decldata.pos)
+			end
+		end
+
+		if is_indecl then
+			if is_decl then
+				table.insert(appendix, glossary_link("indeclinable"))
+			else
+				table.insert(data.inflections, {label = glossary_link("indeclinable")})
+			end
+			table.insert(data.categories, "Latin indeclinable " .. decldata.pos)
+			for _, g in ipairs(genders) do
+				table.insert(data.categories, "Latin " .. new_gender_names[g] ..  " indeclinable " .. decldata.pos)
 			end
 		end
 
 		if #decls > 1 then
 			table.insert(data.inflections, {label = 'variously declined'})
-			table.insert(data.categories, "Latin nouns with multiple declensions")
+			--This causes multipart nouns composed of two nouns of different declensions
+			--to go into the category. The above code only triggers if a given term has
+			--multiple declensions.
+			--table.insert(data.categories, "Latin " .. decldata.pos .. " with multiple declensions")
 		end
 
 		for _, decl in ipairs(decls) do
-			local decl_class = new_declension_to_old_declension[decl]
-			if not decl_class then
-				error("Something wrong with declension '" .. decl .. "', don't recognize it")
-			end
-			table.insert(appendix, "[[Appendix:Latin " .. decl_class .. " declension|" .. decl_class .. " declension]]")
-			if decl_class ~= "irregular" then
-				table.insert(data.categories, "Latin " .. decl_class .. " declension nouns")
-			end
+			if decl ~= "irreg" and decl ~= "indecl" and decl ~= "0" then
+				local decl_class = new_declension_to_old_declension[decl]
+				if not decl_class then
+					error("Something wrong with declension '" .. decl .. "', don't recognize it")
+				end
+				table.insert(appendix, "[[Appendix:Latin " .. decl_class .. " declension|" .. decl_class .. " declension]]")
+				table.insert(data.categories, "Latin " .. decl_class .. " declension " .. decldata.pos)
 
-			for _, g in ipairs(genders) do
-				table.insert(data.categories, "Latin " .. new_gender_names[g] ..  " nouns in the " .. decl_class .. " declension")
+				for _, g in ipairs(genders) do
+					table.insert(data.categories, "Latin " .. new_gender_names[g] ..  " " .. decldata.pos .. " in the " .. decl_class .. " declension")
+				end
 			end
 		end
 
 		local gen = decldata.forms["gen_" .. lemma_num]
 		if gen and gen ~= "" and gen ~= "—" and #gen > 0 then
-			gen.label = "genitive"
-			table.insert(data.inflections, gen)
+			if is_decl then
+				-- Skip displaying the genitive for nouns that are only
+				-- indeclinable. But we do display it for nouns like Abrahām
+				-- and Ādām that can be either indeclinable or declined.
+				gen.label = "genitive"
+				table.insert(data.inflections, gen)
+			end
 		else
 			table.insert(data.inflections, {label = "no genitive"})
-			table.insert(data.categories, "Latin nouns without a genitive singular")
+			table.insert(data.categories, "Latin " .. decldata.pos .. " without a genitive singular")
 		end
 	end
 
@@ -355,10 +471,33 @@ pos_functions["nouns-new"] = function(class, args, data, infl_classes, appendix)
 		decldata.f.label = "feminine"
 		table.insert(data.inflections, decldata.f)
 	end
+
+	for _, cat in ipairs(decldata.categories) do
+		ut.insert_if_not(data.categories, cat)
+	end
+end
+
+local function nouns(pos, args, data, infl_classes, appendix)
+	if not args[2] and not args[3] and not args[4] then
+		return nouns_new(pos, args, data, infl_classes, appendix)
+	else
+		return nouns_old(pos, args, data, infl_classes, appendix)
+	end
+end
+
+pos_functions["nouns"] = function(class, args, data, infl_classes, appendix)
+	return nouns("nouns", args, data, infl_classes, appendix)
 end
 
 pos_functions["proper nouns"] = pos_functions["nouns"]
-pos_functions["suffixes-noun"] = pos_functions["nouns"]
+
+pos_functions["suffixes-noun"] = function(class, args, data, infl_classes, appendix)
+	return nouns("suffixes", args, data, infl_classes, appendix)
+end
+
+pos_functions["numerals-noun"] = function(class, args, data, infl_classes, appendix)
+	return nouns("numerals", args, data, infl_classes, appendix)
+end
 
 export.allowed_subtypes = {
 	["impers"] = true,
@@ -775,18 +914,11 @@ end
 
 pos_functions["suffixes-verb"] = pos_functions["verbs"]
 
-pos_functions["adjectives"] = function(class, args, data, infl_classes, appendix)
-	if class == "new" then
-		pos_functions["adjectives-new"](class, args, data, infl_classes, appendix)
-	elseif class == "comp" then
-		pos_functions["adjectives-comp"](class, args, data, infl_classes, appendix)
-	elseif class == "sup" then
-		pos_functions["adjectives-sup"](class, args, data, infl_classes, appendix)
-	end
-end
-
-pos_functions["adjectives-new"] = function(class, args, data, infl_classes, appendix)
-	local decldata = require("Module:la-nominal").do_generate_adj_forms(args, true)
+local function adjectives_new(pos, args, data, infl_classes, appendix)
+	local NAMESPACE = mw.title.getCurrentTitle().nsText
+	local is_num = pos == "numerals"
+	local decldata = require("Module:la-nominal").do_generate_adj_forms(
+	  args, pos, true, is_num)
 	local lemma = decldata.overriding_lemma
 	local lemma_num = decldata.num == "pl" and "pl" or "sg"
 	if not lemma or #lemma == 0 then
@@ -795,9 +927,14 @@ pos_functions["adjectives-new"] = function(class, args, data, infl_classes, appe
 
 	data.heads = lemma
 	data.id = decldata.id
-	if decldata.pos then
-		local NAMESPACE = mw.title.getCurrentTitle().nsText
-		data.pos_category = (NAMESPACE == "Reconstruction" and "reconstructed " or "") .. decldata.pos
+	data.pos_category = (NAMESPACE == "Reconstruction" and "reconstructed " or "") .. decldata.pos
+
+	if is_num then
+		process_num_type(decldata.num_type, data.categories)
+	end
+
+	if decldata.num == "pl" then
+		table.insert(data.categories, "Latin plural-only " .. decldata.pos)
 	end
 
 	local masc = decldata.forms["nom_" .. lemma_num .. "_m"]
@@ -839,9 +976,13 @@ pos_functions["adjectives-new"] = function(class, args, data, infl_classes, appe
 	end
 
 	table.insert(infl_classes, decldata.title)
+
+	for _, cat in ipairs(decldata.categories) do
+		ut.insert_if_not(data.categories, cat)
+	end
 end
 
-pos_functions["adjectives-comp"] = function(class, args, data, infl_classes, appendix)
+local function adjectives_comp(pos, args, data, infl_classes, appendix)
 	params = {
 		[1] = {alias_of = 'head'},
 		[2] = {alias_of = 'comp'},
@@ -852,7 +993,7 @@ pos_functions["adjectives-comp"] = function(class, args, data, infl_classes, app
 	local args = require("Module:parameters").process(args, params)
 	data.heads = args.head
 	data.id = args.id
-	table.insert(data.categories, "Latin comparative adjectives")
+	table.insert(data.categories, "Latin comparative " .. pos)
 	table.insert(infl_classes, "[[Appendix:Latin third declension|third declension]]")
 
 	local n = {label = "neuter"}
@@ -869,7 +1010,7 @@ pos_functions["adjectives-comp"] = function(class, args, data, infl_classes, app
 	end
 end
 
-pos_functions["adjectives-sup"] = function(class, args, data, infl_classes, appendix)
+local function adjectives_sup(pos, args, data, infl_classes, appendix)
 	params = {
 		[1] = {alias_of = 'head'},
 		[2] = {alias_of = 'sup'},
@@ -881,7 +1022,7 @@ pos_functions["adjectives-sup"] = function(class, args, data, infl_classes, appe
 	data.heads = args.head
 	data.id = args.id
 
-	table.insert(data.categories, "Latin superlative adjectives")
+	table.insert(data.categories, "Latin superlative " .. pos)
 	table.insert(infl_classes, "[[Appendix:Latin first declension|first]]")
 	table.insert(infl_classes, "[[Appendix:Latin second declension|second declension]]")
 
@@ -901,7 +1042,27 @@ pos_functions["adjectives-sup"] = function(class, args, data, infl_classes, appe
 	end
 end
 
-pos_functions["suffixes-adjective"] = pos_functions["adjectives"]
+local function adjectives(pos, class, args, data, infl_classes, appendix)
+	if class == "new" then
+		return adjectives_new(pos, args, data, infl_classes, appendix)
+	elseif class == "comp" then
+		return adjectives_comp(pos, args, data, infl_classes, appendix)
+	elseif class == "sup" then
+		return adjectives_sup(pos, args, data, infl_classes, appendix)
+	end
+end
+
+pos_functions["adjectives"] = function(class, args, data, infl_classes, appendix)
+	return adjectives("adjectives", class, args, data, infl_classes, appendix)
+end
+
+pos_functions["suffixes-adjective"] = function(class, args, data, infl_classes, appendix)
+	return adjectives("suffixes", class, args, data, infl_classes, appendix)
+end
+
+pos_functions["numerals-adjective"] = function(class, args, data, infl_classes, appendix)
+	return adjectives("numerals", class, args, data, infl_classes, appendix)
+end
 
 pos_functions["adverbs"] = function(class, args, data, infl_classes, appendix)
 	params = {
