@@ -1426,8 +1426,12 @@ end
 --   num = NUM (the first specified value for a number restriction, or nil if
 --     no number restrictions),
 --   gender = GENDER (the first specified or inferred gender, or nil if none),
---   decls = DECLS (list of declensions),
---   headword_decls = HEADWORD_DECLS (list of declensions to be displayed in headword)
+--   propses = PROPSES (list of per-word properties, where each element is an
+--     object {
+--       decl = DECL (declension),
+--       headword_decl = HEADWORD_DECL (declension to be displayed in headword),
+--       types = TYPES (set describing the subtypes of a given word),
+--     }
 -- }
 -- Each element in PARSED_SEGMENTS is as returned by parse_segment() but will
 -- have an additional .orig_prefix field indicating the text before the segment
@@ -1443,8 +1447,7 @@ local function parse_segment_run(segment_run)
 	-- {{la-ndecl|-cen/cin<3>}}, which is less intuitive.
 	local is_suffix = rfind(segment_run, "^%-")
 	local segments = {}
-	local decls = {}
-	local headword_decls = {}
+	local propses = {}
 	-- We want to not break up a bracketed link followed by <> even if it has a space or
 	-- hyphen in it. So we do an outer capturing split to find the bracketed links followed
 	-- by <>, then do inner capturing splits on all the remaining text to find the other
@@ -1472,9 +1475,13 @@ local function parse_segment_run(segment_run)
 		gender = gender or parsed_segment.gender
 		parsed_segment.orig_prefix = segments[i - 1]
 		parsed_segment.prefix = m_links.remove_links(segments[i - 1])
-		table.insert(decls, parsed_segment.decl)
-		table.insert(headword_decls, parsed_segment.headword_decl)
 		table.insert(parsed_segments, parsed_segment)
+		local props = {
+			decl = parsed_segment.decl,
+			headword_decl = parsed_segment.headword_decl,
+			types = parsed_segment.types,
+		}
+		table.insert(propses, props)
 	end
 	if segments[#segments] ~= "" then
 		table.insert(parsed_segments, {
@@ -1487,8 +1494,7 @@ local function parse_segment_run(segment_run)
 		loc = loc,
 		num = num,
 		gender = gender,
-		decls = decls,
-		headword_decls = headword_decls,
+		propses = propses,
 	}
 end
 
@@ -1502,8 +1508,7 @@ end
 --     has a locative),
 --   num = NUM (the overall number restriction, one of "sg", "pl" or "both"),
 --   gender = GENDER (the first specified or inferred gender, or nil if none),
---   decls = DECLS (list of lists of declensions),
---   headword_decls = HEADWORD_DECLS (list of lists of headword declensions),
+--   propses = PROPSES (list of lists of per-word properties),
 -- }
 local function parse_alternant(alternant)
 	local parsed_alternants = {}
@@ -1512,8 +1517,7 @@ local function parse_alternant(alternant)
 	local loc = false
 	local num = nil
 	local gender = nil
-	local decls = {}
-	local headword_decls = {}
+	local propses = {}
 	for i, alternant in ipairs(alternants) do
 		local parsed_run = parse_segment_run(alternant)
 		table.insert(parsed_alternants, parsed_run)
@@ -1532,16 +1536,14 @@ local function parse_alternant(alternant)
 			num = "both"
 		end
 		gender = gender or parsed_run.gender
-		table.insert(decls, parsed_run.decls)
-		table.insert(headword_decls, parsed_run.headword_decls)
+		table.insert(propses, parsed_run.propses)
 	end
 	return {
 		alternants = parsed_alternants,
 		loc = loc,
 		num = num,
 		gender = gender,
-		decls = decls,
-		headword_decls = headword_decls,
+		propses = propses,
 	}
 end
 
@@ -1557,9 +1559,8 @@ end
 --   num = NUM (the first specified value for a number restriction, or nil if
 --     no number restrictions),
 --   gender = GENDER (the first specified or inferred gender, or nil if none),
---   decls = DECLS (list of either strings or lists of lists, specifying the declensions),
---   headword_decls = HEADWORD_DECLS (list of either strings or lists of lists,
---     specifying the declensions to go into the headword),
+--   propses = PROPSES (list of either per-word property objects or lists of
+--		lists of such objects),
 -- }.
 -- Each element in PARSED_SEGMENTS is one of three types:
 --
@@ -1575,8 +1576,7 @@ end
 --     locative),
 --   num = NUM (the number restriction of the segment as a whole),
 --   gender = GENDER (the first specified or inferred gender, or nil if none),
---   decls = DECLS (list of lists of declensions),
---   headword_decls = HEADWORD_DECLS (list of lists of headword declensions),
+--   propses = PROPSES (list of lists of per-word property objects),
 -- }
 -- Note that each alternant is a segment run rather than a single parsed
 -- segment to allow for alternants like "((rēs<5>pūblica<1>,rēspūblica<1>))".
@@ -1589,8 +1589,7 @@ local function parse_segment_run_allowing_alternants(segment_run)
 	local loc = false
 	local num = nil
 	local gender = nil
-	local decls = {}
-	local headword_decls = {}
+	local propses = {}
 	for i = 1, #alternating_segments do
 		local alternating_segment = alternating_segments[i]
 		if alternating_segment ~= "" then
@@ -1602,11 +1601,8 @@ local function parse_segment_run_allowing_alternants(segment_run)
 				loc = loc or parsed_run.loc
 				num = num or parsed_run.num
 				gender = gender or parsed_run.gender
-				for _, decl in ipairs(parsed_run.decls) do
-					table.insert(decls, decl)
-				end
-				for _, headword_decl in ipairs(parsed_run.headword_decls) do
-					table.insert(headword_decls, headword_decl)
+				for _, props in ipairs(parsed_run.propses) do
+					table.insert(propses, props)
 				end
 			else
 				local parsed_alternating_segment = parse_alternant(alternating_segment)
@@ -1614,8 +1610,7 @@ local function parse_segment_run_allowing_alternants(segment_run)
 				loc = loc or parsed_alternating_segment.loc
 				num = num or parsed_alternating_segment.num
 				gender = gender or parsed_alternating_segment.gender
-				table.insert(decls, parsed_alternating_segment.decls)
-				table.insert(headword_decls, parsed_alternating_segment.headword_decls)
+				table.insert(propses, parsed_alternating_segment.propses)
 			end
 		end
 	end
@@ -1625,8 +1620,7 @@ local function parse_segment_run_allowing_alternants(segment_run)
 		loc = loc,
 		num = num,
 		gender = gender,
-		decls = decls,
-		headword_decls = headword_decls,
+		propses = propses,
 	}
 end
 
@@ -2144,8 +2138,7 @@ function export.do_generate_noun_forms(parent_args, pos, from_headword, support_
 		footnote = args.footnote or "",
 		num = parsed_run.num or "",
 		gender = parsed_run.gender,
-		decls = parsed_run.decls,
-		headword_decls = parsed_run.headword_decls,
+		propses = parsed_run.propses,
 		forms = declensions.forms,
 		categories = declensions.categories,
 		notes = {},
@@ -2245,8 +2238,7 @@ function export.do_generate_adj_forms(parent_args, pos, from_headword, support_n
 		title = declensions.title,
 		footnote = args.footnote or "",
 		num = parsed_run.num or "",
-		decls = parsed_run.decls,
-		headword_decls = parsed_run.headword_decls,
+		propses = parsed_run.propses,
 		forms = declensions.forms,
 		categories = declensions.categories,
 		notes = {},
