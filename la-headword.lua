@@ -251,19 +251,19 @@ local function nouns(pos, args, data, infl_classes, appendix)
 			end
 		end
 
-		for _, decl in ipairs(decldata.headword_decls) do
-			if type(decl) ~= "table" then
-				process_decl(decls, decl)
+		for _, props in ipairs(decldata.propses) do
+			if props.headword_decl then
+				process_decl(decls, props.headword_decl)
 			else
 				local alternant_decls = {}
-				for _, alternant in ipairs(decl) do
-					for _, single_decl in ipairs(alternant) do
-						process_decl(alternant_decls, single_decl)
+				for _, alternant in ipairs(props) do
+					for _, single_props in ipairs(alternant) do
+						process_decl(alternant_decls, single_props.headword_decl)
 					end
 				end
 				if #alternant_decls > 1 then
 					has_multiple_decls = true
-				elseif #decl > 1 then
+				elseif #decls > 1 then
 					has_multiple_variants = true
 				end
 				for _, d in ipairs(alternant_decls) do
