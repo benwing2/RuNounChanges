@@ -58,7 +58,8 @@ def new_generate_noun_forms(template, errandpagemsg, expand_text, return_raw=Fal
   return blib.split_generate_args(result)
 
 def compare_headword_decl_forms(id_slot, headword_forms, decl_slots, noun_props,
-    headword_and_decl_text, pagemsg, adjust_for_missing_gen_forms=False, remove_headword_links=False):
+    headword_and_decl_text, pagemsg, adjust_for_missing_gen_forms=False,
+    adjust_for_e_ae_gen=False, remove_headword_links=False):
   decl_forms = ""
   for slot in decl_slots:
     if slot in noun_props:
@@ -69,6 +70,8 @@ def compare_headword_decl_forms(id_slot, headword_forms, decl_slots, noun_props,
     headword_forms = [blib.remove_links(x) for x in headword_forms]
   corrected_headword_forms = [lengthen_ns_nf(x) for x in headword_forms]
   corrected_decl_forms = [lengthen_ns_nf(x) for x in decl_forms]
+  if adjust_for_e_ae_gen:
+    corrected_headword_forms = [re.sub(u"ē$", "ae", x) for x in headword_forms]
   if adjust_for_missing_gen_forms:
     # Nouns in -ius and -ium are commonly missing the shortened genitive
     # variants. Don't get tripped up by that.
