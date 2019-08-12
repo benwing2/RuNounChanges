@@ -115,6 +115,12 @@ def process_page(page, index, parsed):
         orig_la_verb_template)
       continue
 
+    def render_headword_and_conj():
+      return "headword template <from> %s <to> %s <end>, conjugation template <from> %s <to> %s <end>" % (
+        orig_la_verb_template, orig_la_verb_template,
+        unicode(la_conj_template), unicode(la_conj_template)
+      )
+
     verb_props = new_generate_verb_forms(unicode(la_conj_template), errandpagemsg, expand_text, include_props=True)
     if verb_props is None:
       continue
@@ -147,14 +153,14 @@ def process_page(page, index, parsed):
         macronless_headword_forms = set(lalib.remove_macrons(x) for x in corrected_headword_forms)
         macronless_conj_forms = set(lalib.remove_macrons(x) for x in corrected_conj_forms)
         if macronless_headword_forms == macronless_conj_forms:
-          pagemsg("WARNING: Headword %s=%s different from conj %s=%s in macrons only, skipping: headword template %s, conjugation template %s" % (
+          pagemsg("WARNING: Headword %s=%s different from conj %s=%s in macrons only, skipping: %s" % (
             id_slot, ",".join(headword_forms), id_slot, ",".join(conj_forms),
-            orig_la_verb_template, unicode(la_conj_template)
+            render_headword_and_conj()
           ))
         else:
-          pagemsg("WARNING: Headword %s=%s different from conj %s=%s in more than just macrons, skipping: headword template %s, conjugation template %s" % (
+          pagemsg("WARNING: Headword %s=%s different from conj %s=%s in more than just macrons, skipping: %s" % (
             id_slot, ",".join(headword_forms), id_slot, ",".join(conj_forms),
-            orig_la_verb_template, unicode(la_conj_template)
+            render_headword_and_conj()
           ))
         return False
       return True
@@ -176,9 +182,9 @@ def process_page(page, index, parsed):
     if "depon" in subtypes or "semidepon" in subtypes:
       if sup:
         pagemsg("WARNING: Saw supine in conjunction with deponent verb, skipping: %s" %
-          orig_la_verb_template)
+          render_headword_and_conj())
         continue
-      sup = [re.sub("[sm] (sum|est)$", "m", x) for x in perf]
+      sup = [re.sub("[sm]( (sum|est))?$", "m", x) for x in perf]
     else:
       if not compare_headword_conj_forms("perfect", perf, ["1s_perf_actv_indc", "3s_perf_actv_indc"],
           adjust_for_missing_perf_forms=True,
@@ -194,15 +200,15 @@ def process_page(page, index, parsed):
         if len(lemma) > 0 and lemma[0].endswith("sum"):
           pass
         else:
-          pagemsg("WARNING: Expected supfutractvonly in subtypes=%s, skipping: conj template %s, headword template %s" % (
-            ".".join(sorted(subtypes)), unicode(la_conj_template), orig_la_verb_template
+          pagemsg("WARNING: Expected supfutractvonly in subtypes=%s, skipping: %s" % (
+            ".".join(sorted(subtypes)), render_headword_and_conj()
           ))
           continue
     else:
       if not compare_headword_conj_forms("supine", sup, ["sup_acc"]):
         continue
     if not verb_conj:
-      pagemsg("WARNING: No conj in headword template: %s" % orig_la_verb_template)
+      pagemsg("WARNING: No conj in headword template: %s" % render_headword_and_conj())
     else:
       conj_type_to_verb_conj = {
         "1st": "1",
@@ -213,18 +219,19 @@ def process_page(page, index, parsed):
         "irreg": "irreg",
       }
       if conj_type not in conj_type_to_verb_conj:
-        pagemsg("WARNING: Something wrong, saw unrecognized conj_type=%s" % conj_type)
+        pagemsg("WARNING: Something wrong, saw unrecognized conj_type=%s: %s" %
+            (conj_type, render_headword_and_conj()))
         continue
       conj_type = conj_type_to_verb_conj[conj_type]
       if conj_subtype:
         if conj_subtype not in conj_type_to_verb_conj:
-          pagemsg("WARNING: Something wrong, saw unrecognized conj_subtype=%s" % conj_subtype)
+          pagemsg("WARNING: Something wrong, saw unrecognized conj_subtype=%s" %
+              (conj_subtype, render_headword_and_conj()))
           continue
         conj_subtype = conj_type_to_verb_conj[conj_subtype]
       if verb_conj != conj_type and verb_conj != conj_subtype:
-        pagemsg("WARNING: Conjugation template %s has conj=%s, subconj=%s but headword template %s has conj=%s, skipping" % (
-          unicode(la_conj_template), conj_type, conj_subtype,
-          orig_la_verb_template, verb_conj
+        pagemsg("WARNING: Conjugation template has conj=%s, subconj=%s but headword template has conj=%s, skipping: %s" % (
+          conj_type, conj_subtype, verb_conj, render_headword_and_conj()
         ))
         continue
     pattern = pattern.replace("opt-semi-depon", "optsemidepon")
@@ -237,20 +244,24 @@ def process_page(page, index, parsed):
     pattern = pattern.replace("short-imp", "shortimp")
     pattern = pattern.replace("sup-futr-actv-only", "supfutractvonly")
     pattern = safe_split(pattern, "-")
-    pattern = [x for x in pattern if x not in ["noperf", "nosup", "irreg", "def", "facio", "shortimp"]]
-    subtypes = [x for x in subtypes if x not in ["I", "noperf", "nosup"]]
+    pattern = [x for x in pattern if x not in ["noperf", "nosup", "irreg", "def", "facio", "shortimp", "depon"]]
+    subtypes = [x for x in subtypes if x not in ["I", "noperf", "nosup", "irreg", "depon"]]
+    if len(lemma) > 0 and lemma[0].endswith("sum"):
+      # This is added automatically by [[sum]]
+      subtypes = [x for x in subtypes if x != "supfutractvonly"]
     if set(pattern) != set(subtypes):
       if set(subtypes) >= set(pattern) and (
         set(subtypes) - set(pattern) <= {"nopass", "p3inf", "poetsyncperf", "optsyncperf", "alwayssyncperf"}
       ):
-        pagemsg("Subtypes=%s of conjugation template %s have extra, ignorable subtypes %s compared with pattern=%s of headword template %s" % (
-          ".".join(sorted(subtypes)), unicode(la_conj_template),
+        pagemsg("Subtypes=%s of conjugation template have extra, ignorable subtypes %s compared with pattern=%s of headword template: %s" % (
+          ".".join(sorted(subtypes)),
           ".".join(sorted(list(set(subtypes) - set(pattern)))),
-          ".".join(sorted(pattern)), orig_la_verb_template
+          ".".join(sorted(pattern)), render_headword_and_conj()
         ))
       else:
-        pagemsg("WARNING: Conjugation template %s has subtypes=%s but headword template %s has pattern=%s, skipping" % (
-          unicode(la_conj_template), ".".join(sorted(subtypes)), orig_la_verb_template, ".".join(sorted(pattern))
+        pagemsg("WARNING: Conjugation template has subtypes=%s but headword template has pattern=%s, skipping: %s" % (
+          ".".join(sorted(subtypes)), ".".join(sorted(pattern)),
+          render_headword_and_conj()
         ))
         continue
 
