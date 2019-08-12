@@ -1,0 +1,8 @@
+Template:la-decl-1st-1st-loc
+Template:la-decl-first
+Template:la-decl-first-loc
+Template:la-decl-second
+Template:la-decl-2nd-2nd
+Template:la-decl-4th-loc+2nd-adj
+Template:la-decl-qui
+Template:la-decl-quis

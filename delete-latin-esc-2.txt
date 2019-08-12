@@ -1,0 +1,3 @@
+exardesco pass {{la-conj-3rd|exārdēsc|exārs|exārs}}
+consurgo pass {{la-conj-3rd|cōnsurg|cōnsurrēx|cōnsurrēct}}
+insurgo 12pass {{la-conj-3rd|īnsurg|īnsurrēx|īnsurrēct}}

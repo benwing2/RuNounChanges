@@ -1,0 +1,29 @@
+part abambulandus allbutnomsgn {{la-adecl|abambulandus}}
+part abeundus allbutnomsgn {{la-adecl|abeundus}}
+part adfluendus allbutnomsgn {{la-adecl|adfluendus}}
+part adsurgendus allbutnomsgn {{la-adecl|adsurgendus}}
+part adveniendus allbutnomsgn {{la-adecl|adveniendus}}
+part affluendus allbutnomsgn {{la-adecl|affluendus}}
+part anteveniendus allbutnomsgn {{la-adecl|anteveniendus}}
+part assurgendus allbutnomsgn {{la-adecl|assurgendus}}
+part buccinandus allbutnomsgn {{la-adecl|buccinandus}}
+part būcinandus allbutnomsgn {{la-adecl|būcinandus}}
+part cadendus allbutnomsgn {{la-adecl|cadendus}}
+part cōnsistendus allbutnomsgn {{la-adecl|cōnsistendus}}
+part dēfluendus allbutnomsgn {{la-adecl|dēfluendus}}
+part ēveniendus allbutnomsgn {{la-adecl|ēveniendus}}
+part fervendus allbutnomsgn {{la-adecl|fervendus}}
+part hymniendus allbutnomsgn {{la-adecl|hymniendus}}
+part lāpsandus allbutnomsgn {{la-adecl|lāpsandus}}
+part pārendus allbutnomsgn {{la-adecl|pārendus}}
+part perfluendus allbutnomsgn {{la-adecl|perfluendus}}
+part perveniendus allbutnomsgn {{la-adecl|perveniendus}}
+part redeundus allbutnomsgn {{la-adecl|redeundus}}
+part reveniendus allbutnomsgn {{la-adecl|reveniendus}}
+part saeviendus allbutnomsgn {{la-adecl|saeviendus}}
+part sedendus allbutnomsgn {{la-adecl|sedendus}}
+# part serviendus allbutnomsgn {{la-adecl|serviendus}}
+# part subveniendus allbutnomsgn {{la-adecl|subveniendus}}
+part vāpulandus allbutnomsgn {{la-adecl|vāpulandus}}
+# part veniendus allbutnomsgn {{la-adecl|veniendus}}
+part vomitandus allbutnomsgn {{la-adecl|vomitandus}}

@@ -1,0 +1,6 @@
+Template:la-conj-1st
+Template:la-conj-2nd
+Template:la-conj-3rd
+Template:la-conj-3rd-IO
+Template:la-conj-4th
+Template:la-conj-irreg

@@ -1,0 +1,2 @@
+Module:la-decl-multi
+Template:la-decl-multi
