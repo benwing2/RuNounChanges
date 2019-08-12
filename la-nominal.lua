@@ -134,6 +134,14 @@ local irreg_adj_to_decl = {
 	["quisquis"] = "irreg+",
 }
 
+local declension_to_english = {
+	["1"] = "first",
+	["2"] = "second",
+	["3"] = "third",
+	["4"] = "fourth",
+	["5"] = "fifth",
+}
+
 local linked_prefixes = {
 	"", "linked_"
 }
@@ -244,6 +252,26 @@ local function concat_forms_in_slot(forms)
 	else
 		return nil
 	end
+end
+
+local function set_union(sets)
+	local union = {}
+	for _, set in ipairs(sets) do
+		for key, _ in pairs(set) do
+			union[key] = true
+		end
+	end
+	return union
+end
+
+local function set_difference(set1, set2)
+	local diff = {}
+	for key, _ in pairs(set1) do
+		if not set2[key] then
+			diff[key] = true
+		end
+	end
+	return diff
 end
 
 local function process_noun_forms_and_overrides(data, args)
@@ -1793,7 +1821,7 @@ local function decline_segment_run(parsed_run, pos, is_adj)
 	end
 
 	for _, seg in ipairs(parsed_run.segments) do
-		if seg.decl then
+		if seg.decl then -- not an alternant, not a constant segment
 			seg.loc = parsed_run.loc
 			seg.num = seg.num or parsed_run.num
 			seg.gender = seg.gender or parsed_run.gender
@@ -1813,6 +1841,7 @@ local function decline_segment_run(parsed_run, pos, is_adj)
 					title = "",
 					footnote = "",
 					num = seg.num or "",
+					gender = seg.gender,
 					voc = true,
 					noneut = false,
 					pos = pos,
@@ -1836,23 +1865,20 @@ local function decline_segment_run(parsed_run, pos, is_adj)
 				potential_lemma_slots = potential_noun_lemma_slots
 
 				data = {
-					title = "",
+					subtitle = {},
 					footnote = "",
 					num = seg.num or "",
 					loc = seg.loc,
-					um = false,
 					pos = pos,
 					forms = {},
 					types = seg.types,
 					categories = {},
 					notes = {},
 				}
-				if seg.types.genplum then
-					data.um = true
-					seg.types.genplum = nil
-				end
 
 				m_noun_decl[seg.decl](data, seg.args)
+
+				data.title = ...
 			end
 
 			-- Generate linked variants of slots that may be the lemma.
@@ -1945,6 +1971,49 @@ local function decline_segment_run(parsed_run, pos, is_adj)
 			local seg_declensions = nil
 			local seg_titles = {}
 			local seg_categories = {}
+			local title_the_hard_way = false
+			local alternant_decl = nil
+			for _, this_parsed_run in ipairs(seg.alternants) do
+				local num_non_constant_segments = 0
+				for _, segment in ipairs(this_parsed_run.segments) do
+					if segment.decl then
+						if not alternant_decl then
+							alternant_decl = segment.decl
+						elseif alternant_decl ~= segment.decl then
+							title_the_hard_way = true
+							num_non_constant_segments = 500
+							break
+						end
+						num_non_constant_segments = num_non_constant_segments + 1
+					end
+				end
+				if num_non_constant_segments ~= 1 then
+					title_the_hard_way = true
+					break
+				end
+			end
+			if not title_the_hard_way then
+				local subtypeses = {}
+				for _, this_parsed_run in ipairs(seg.alternants) do
+					for _, segment in ipairs(this_parsed_run.segments) do
+						if segment.decl then
+							table.insert(subtypes, segment.types)
+						end
+					end
+				end
+				local union = set_union(subtypeses)
+				for _, this_parsed_run in ipairs(seg.alternants) do
+					for _, segment in ipairs(this_parsed_run.segments) do
+						if segment.decl then
+							local neg_subtypes = set_difference(union, segment.types)
+							for _, neg_subtype in ipairs(neg_subtypes) do
+								segment.types["not_" .. neg_subtype] = true
+							end
+						end
+					end
+				end
+			end
+
 			for _, this_parsed_run in ipairs(seg.alternants) do
 				this_parsed_run.loc = seg.loc
 				this_parsed_run.num = this_parsed_run.num or seg.num

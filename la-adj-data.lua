@@ -8,11 +8,18 @@ NAMESPACE = NAMESPACE or mw.title.getCurrentTitle().nsText
 
 decl["1&2"] = function(data, args)
 	local title = {}
+	local noun_title = {}
 	table.insert(title, "[[Appendix:Latin first declension|First]]/[[Appendix:Latin second declension|second declension]]")
 	if data.num == "sg" then
 		table.insert(title, "no plural")
 	elseif data.num == "pl" then
 		table.insert(title, "no singular")
+	end
+
+	if data.gender == "f" then
+		table.insert(noun_title, "a [[Appendix:Latin first declension|first-declension]]")
+	else
+		table.insert(noun_title, "a [[Appendix:Latin second declension|second-declension]]")
 	end
 
 	local stem = args[1]
@@ -51,6 +58,7 @@ decl["1&2"] = function(data, args)
 
 	if data.types.greekA then
 		table.insert(title, "Greek type")
+		table.insert(noun_title, "Greek-type")
 		table.insert(data.categories, "Latin first and second declension " ..
 			data.pos .. " with Greek declension")
 		us = "os"
@@ -60,6 +68,7 @@ decl["1&2"] = function(data, args)
 
 	if data.types.greekE then
 		table.insert(title, "Greek type")
+		table.insert(noun_title, "Greek-type")
 		table.insert(data.categories, "Latin first and second declension " ..
 			data.pos .. " with Greek declension")
 		us = "os"
@@ -123,6 +132,7 @@ decl["1&2"] = function(data, args)
 
 	if data.types.ius then
 		table.insert(title, "with genitive singular in ''-īus'' and dative singular in ''-ī''")
+		table.insert(noun_title, "pronominal")
 		table.insert(data.categories, "Latin first and second declension " ..
 			data.pos .. " with genitive singular in -īus")
 		data.forms["gen_sg_m"] = stem .. "īus"
@@ -142,6 +152,7 @@ decl["1&2"] = function(data, args)
 	end
 	if data.types.ic then
 		table.insert(title, "with genitive singular ending in ''-ius'' and dative singular ending in ''-ic''")
+		table.insert(noun_title, "''hic''-type")
 
 		local oc = "oc"
 		local oc_macron = "ōc"
@@ -176,6 +187,7 @@ decl["1&2"] = function(data, args)
 	end
 
 	data.title = table.concat(title, ", ") .. "."
+	data.noun_title = table.concat(noun_title, " ") .. " adjective"
 
 	table.insert(data.categories, "Latin first and second declension " ..
 		data.pos)
@@ -184,6 +196,7 @@ end
 decl["1-1"] = function(data, args)
 	local title = {}
 	table.insert(title, "[[Appendix:Latin first declension|First declension]], masculine forms identical to feminine forms, no neuter forms")
+	data.noun_title = "a [[Appendix:Latin first declension|first-declension]] adjective"
 	if data.num == "sg" then
 		table.insert(title, "no plural")
 	elseif data.num == "pl" then
@@ -233,6 +246,7 @@ end
 decl["2-2"] = function(data, args)
 	local title = {}
 	table.insert(title, "[[Appendix:Latin second declension|Second declension]], feminine forms identical to masculine forms")
+	local noun_title = {"a [[Appendix:Latin second declension|second-declension]]"}
 	if data.num == "sg" then
 		table.insert(title, "no plural")
 	elseif data.num == "pl" then
@@ -255,6 +269,7 @@ decl["2-2"] = function(data, args)
 
 	if data.types.greek then
 		table.insert(title, "Greek type")
+		table.insert(noun_title, "Greek-type")
 		table.insert(data.categories, "Latin second declension " .. data.pos ..
 			" with Greek declension")
 		us = "os"
@@ -298,6 +313,7 @@ decl["2-2"] = function(data, args)
 	data.forms["voc_pl_n"] = stem .. "a"
 
 	data.title = table.concat(title, ", ") .. "."
+	data.noun_title = table.concat(noun_title, " ") .. " adjective"
 
 	table.insert(data.categories, "Latin second declension " .. data.pos)
 end
@@ -305,6 +321,7 @@ end
 decl["3-1"] = function(data, args)
 	local title = {}
 	table.insert(title, "[[Appendix:Latin third declension|Third declension]]")
+	local noun_title = {"a [[Appendix:Latin third declension|third-declension]]"}
 	if data.num == "sg" or data.num == "" then
 		data.title = "nominative neuter singular like masculine/feminine"
 	end
@@ -371,6 +388,7 @@ decl["3-1"] = function(data, args)
 
 	if data.types.par then
 		table.insert(title, "non-i-stem (genitive plural in ''-um'')")
+		table.insert(noun_title, "non-i-stem")
 		data.forms["nom_pl_n"] = stem2 .. "a"
 		data.forms["gen_pl_m"] = stem2 .. "um"
 		data.forms["gen_pl_n"] = stem2 .. "um"
@@ -383,6 +401,7 @@ decl["3-1"] = function(data, args)
 	end
 
 	data.title = table.concat(title, ", ") .. "."
+	data.noun_title = table.concat(noun_title, " ") .. " adjective"
 
 	table.insert(data.categories, "Latin third declension " .. data.pos)
 end
@@ -409,6 +428,7 @@ decl["3-C"] = function(data, args)
 
 	local title = {}
 	data.title = "[[Appendix:Latin third declension|Third declension]], comparative variant"
+	data.noun_title = "a [[Appendix:Latin third declension|third-declension]] comparative adjective"
 	if data.num == "sg" then
 		table.insert(title, "no plural")
 	elseif data.num == "pl" then
@@ -439,11 +459,14 @@ decl["3-P"] = function(data, args)
 
 	decl["3-1"](data, {stem1, stem2})
 	local title = {}
+	table.insert(title, "[[Appendix:Latin third declension|Third declension]] participle")
 	if data.num == "sg" then
 		table.insert(title, "no plural")
 	elseif data.num == "pl" then
 		table.insert(title, "no singular")
 	end
+	data.title = table.concat(title, ", ") .. "."
+	data.noun_title = "a [[Appendix:Latin third declension|third-declension]] participle"
 
 	if stem2 == "" then
 		stem2 = require("Module:la-utilities").make_stem2(stem1)
@@ -514,6 +537,7 @@ decl["3-2"] = function(data, args)
 	data.forms["voc_pl_n"] = stem .. "ia"
 
 	data.title = table.concat(title, ", ") .. "."
+	data.noun_title = "a [[Appendix:Latin third declension|third-declension]] adjective"
 
 	table.insert(data.categories, "Latin third declension " .. data.pos)
 end
@@ -601,6 +625,7 @@ decl["3-3"] = function(data, args)
 	data.forms["voc_pl_n"] = stem2 .. "ia"
 
 	data.title = table.concat(title, ", ") .. "."
+	data.noun_title = "a [[Appendix:Latin third declension|third-declension]] adjective"
 
 	table.insert(data.categories, "Latin third declension " .. data.pos)
 end
@@ -615,22 +640,15 @@ decl["irreg"] = function(data,args)
 	end
 	if args[1] == "duo" or args[1] == "ambō" then
 		data.title = "Irregular, no singular."
+		data.noun_title = stem == "amb" and "an irregular adjective" or "a numeral"
 		local stem = args[1] == "duo" and "du" or "amb"
 		data.num = "pl"
 
-		if stem == "amb" then
-			data.forms["nom_pl_m"] = stem .. "ō"
-		else
-			data.forms["nom_pl_m"] = stem .. "o"
-		end
+		local stem_with_o = stem .. (stem == "amb" and "ō" or "o")
 
+		data.forms["nom_pl_m"] = stem_with_o
 		data.forms["nom_pl_f"] = stem .. "ae"
-
-		if stem == "amb" then
-			data.forms["nom_pl_n"] = stem .. "ō"
-		else
-			data.forms["nom_pl_n"] = stem .. "o"
-		end
+		data.forms["nom_pl_n"] = stem_with_o
 
 		data.forms["gen_pl_m"] = stem .. "ōrum"
 		data.forms["gen_pl_f"] = stem .. "ārum"
@@ -640,43 +658,24 @@ decl["irreg"] = function(data,args)
 		data.forms["dat_pl_f"] = stem .. "ābus"
 		data.forms["dat_pl_n"] = stem .. "ōbus"
 
-		if stem == "amb" then
-			data.forms["acc_pl_m"] = {stem .. "ōs", stem .. "ō"}
-		else
-			data.forms["acc_pl_m"] = {stem .. "ōs", stem .. "o"}
-		end
-
+		data.forms["acc_pl_m"] = {stem .. "ōs", stem_with_o}
 		data.forms["acc_pl_f"] = stem .. "ās"
-
-		if stem == "amb" then
-			data.forms["acc_pl_n"] = stem .. "ō"
-		else
-			data.forms["acc_pl_n"] = stem .. "o"
-		end
+		data.forms["acc_pl_n"] = stem_with_o
 
 		data.forms["abl_pl_m"] = stem .. "ōbus"
 		data.forms["abl_pl_f"] = stem .. "ābus"
 		data.forms["abl_pl_n"] = stem .. "ōbus"
 
-		if stem == "amb" then
-			data.forms["voc_pl_m"] = stem .. "ō"
-		else
-			data.forms["voc_pl_m"] = stem .. "o"
-		end
-
+		data.forms["voc_pl_m"] = stem_with_o
 		data.forms["voc_pl_f"] = stem .. "ae"
-
-		if stem == "amb" then
-			data.forms["voc_pl_n"] = stem .. "ō"
-		else
-			data.forms["voc_pl_n"] = stem .. "o"
-		end
+		data.forms["voc_pl_n"] = stem_with_o
 
 		if stem == "du" then
 			data.footnote = "Note: The genitive masculine and neuter can also be found in the contracted form ''[[duum]]'' (also spelt ''[[duûm]]'')."
 		end
 
 	elseif args[1] == "mīlle" then
+		data.noun_title = "a numeral"
 		data.forms["nom_sg_m"] = "mīlle"
 		data.forms["nom_pl_m"] = {"mīlia", "mīllia"}
 
@@ -696,6 +695,7 @@ decl["irreg"] = function(data,args)
 		data.forms["voc_pl_m"] = {"mīlia", "mīllia"}
 	elseif args[1] == "plūs" then
 		data.title = "[[Appendix:Latin third declension|Third declension]], comparative variant. Several missing or irregular forms."
+		data.noun_title = "an irregular comparative adjective"
 
 		data.forms["nom_sg_m"] = ""
 		data.forms["nom_sg_n"] = "plūs"
@@ -732,6 +732,7 @@ decl["irreg"] = function(data,args)
 		table.insert(data.categories, "Latin third declension " .. data.pos)
 	elseif args[1] == "is" or args[1] == "īdem" then
 		data.title = "Irregular: similar to first and second declensions, except for genitive singular ending in ''-ius'' and dative singular ending in ''-ī''."
+		data.noun_title = "a demonstrative pronoun"
 
 		local m = "m"
 		local i = "i"
@@ -795,6 +796,7 @@ decl["irreg"] = function(data,args)
 		decl["1&2"](data, {"ill"})
 
 		data.title = "Irregular: similar to first and second declensions but with genitive singular ending in ''-īus'' and dative singular ending in ''-ī''."
+		data.noun_title = "a demonstrative pronoun"
 
 		data.forms["nom_sg_m"] = "ille"
 		data.forms["nom_sg_n"] = "illud"
@@ -810,6 +812,7 @@ decl["irreg"] = function(data,args)
 		decl["1&2"](data, {"ist"})
 
 		data.title = "Irregular: similar to first and second declensions but with genitive singular ending in ''-īus'' and dative singular ending in ''-ī''."
+		data.noun_title = "a demonstrative pronoun"
 
 		data.forms["nom_sg_m"] = "iste"
 		data.forms["nom_sg_n"] = "istud"
@@ -825,6 +828,7 @@ decl["irreg"] = function(data,args)
 		decl["1&2"](data, {"ips"})
 
 		data.title = "Irregular: similar to first and second declensions but with genitive singular ending in ''-īus'' and dative singular ending in ''-ī''."
+		data.noun_title = "a demonstrative pronoun"
 
 		data.forms["nom_sg_m"] = "ipse"
 		data.forms["nom_sg_n"] = "ipsum"
@@ -843,6 +847,7 @@ decl["irreg"] = function(data,args)
 			em = "am"
 			o = "ā"
 		end
+		data.noun_title = "a relative/interrogative pronoun"
 
 		data.forms["nom_sg_m"] = "quis"
 		data.forms["nom_sg_f"] = "quis"
@@ -887,6 +892,8 @@ decl["irreg"] = function(data,args)
 		end
 
 	elseif args[1] == "quisquis" then
+		data.noun_title = "a relative/interrogative pronoun"
+
 		data.forms["nom_sg_m"] = "quisquis"
 		data.forms["nom_sg_f"] = "quisquis"
 		data.forms["nom_sg_n"] = {"quidquid", "quicquid"}
