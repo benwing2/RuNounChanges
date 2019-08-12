@@ -686,7 +686,7 @@ vēneō vēnīre vēniī vēnitum [int but has passive; participle venītus foun
 ###
 ### flīgō
 ###
-*flīgō flīgere -- --
+*flīgō flīgere flīxī flīctum
 *adflīgō adflīgere adflīxī adflīctum
 *n3 adflīctiō
 *v1 adflīctō
@@ -1602,20 +1602,20 @@ pn1 Tānfāna
 ### nītor
 ###
 # homograph with nĭtor "brightness"
-**nītor *nītī nīxum
+**nītor *nītī nīsum/nīxum
 *v1 nīxor
 *n4 nīxus
 *a1 nīxābundus
-*adnītor adnītī adnīxum
-*annītor annītī annīxum
-*cōnītor cōnītī cōnīxum
-*connītor connītī connīxum
-*ēnītor ēnītī ēnīxum
+*adnītor adnītī adnīxum/adnīsum
+*annītor annītī annīxum/annīsum
+*cōnītor cōnītī cōnīsum/cōnīxum
+*connītor connītī connīsum/connīxum
+*ēnītor ēnītī ēnīxum/ēnīxum
 *adv enīxē
 *n3 enīxiō
-*innītor innītī innīxum
-*obnītor obnītī obnīxum
-*renītor renītī renīxum
+*innītor innītī innīxum/innīsum
+*obnītor obnītī obnīxum/obnīsum
+*renītor renītī renīsum
 *a1 subnīxus
 ###
 ### -nīx
@@ -2842,6 +2842,8 @@ n1 flagrantia
 a3 cathedrālis
 a1 extreus
 n3 abiēs abiet
+# wrongly has long e in perf
+īnflectō īnflectere īnflexī īnflexum
 # wrongly has long i
 a3 horizontālis
 a1 nigritus
@@ -2851,6 +2853,11 @@ n3 epizygis epizygid
 # wrongly has long o
 pn2 Mediolānum
 n2 cuprum
+# wrongly has long o in perfect and supine
+componō componere composuī compositum
+conponō conponere conposuī conpositum
+# wrongly has long u
+a1 duplus
 ###
 ### missing long vowels
 ###
@@ -3187,7 +3194,7 @@ n3 quiēs quiēt
 n3 scinifēs
 n3 subolēs
 n3 struēs
-n3 hēresis
+sēclūdō sēclūdere sēclūsī sēclūsum
 # wrongly has short e and i
 a3 mēningītidis
 # wrongly has short e and o
@@ -3341,6 +3348,9 @@ v1 braciō
 intonō intonāre intonuī intonātum
 # following also wrongly has short i
 īnsternō īnsternere īnstrāvī īnstrātum
+# wrongly has short i in sup
+v1 intrīcō
+v4 largior
 # wrongly has short u in sup
 dissolvō dissolvere dissolvī dissolūtum
 prōstituō prōstituere prōstituī prōstitūtum
@@ -3389,6 +3399,8 @@ v1 ērūginō
 # wrongly has short o in all forms
 explōdō explōdere explōsī explōsum
 plōdō plōdere plōsī plōsum
+# wrongly has short u in all forms
+manūteneō manūtenēre manūtenuī manūtentum
 # wrongly has short i in perf
 dēvincō dēvincere dēvīcī dēvictum
 immittō immittere immīsī immissum
@@ -3397,6 +3409,7 @@ manūmittō manūmittere manūmīsī manūmissum
 # wrongly has short e in perf
 adsuēfaciō adsuēfacere adsuēfēcī adsuēfactum
 assuēfaciō assuēfacere assuēfēcī assuēfactum
+disserō disserere dissēvī dissitum
 # found elsewhere
 #peragō
 #diffringō
