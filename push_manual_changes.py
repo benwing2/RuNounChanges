@@ -137,4 +137,4 @@ pa.add_argument("--annotation", default="manually",
 params = pa.parse_args()
 startFrom, upTo = blib.parse_start_end(params.start, params.end)
 
-push_manual_changes(params.save, params.verbose, params.file, params.annotation, startFrom, upTo)
+push_manual_changes(params.save, params.verbose, params.file, params.annotation.decode('utf-8'), startFrom, upTo)
