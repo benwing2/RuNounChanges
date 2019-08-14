@@ -39,17 +39,17 @@ decl["1"] = function(data, args)
 
 	-- abus
 	if data.types.abus then
-		table.insert(data.subtitle, "dative/ablative plural in ''-ābus''")
+		table.insert(data.subtitles, "dative/ablative plural in ''-ābus''")
 
 		data.forms["dat_pl"] = stem .. "ābus"
 		data.forms["abl_pl"] = stem .. "ābus"
 	elseif data.types.not_abus then
-		table.insert(data.post_subtitle, "''-īs''")
+		table.insert(data.subtitles, "''-īs''")
 	end
 
 	-- am
 	if data.types.am then
-		table.insert(data.subtitle, "nominative/vocative singular in ''-ām''")
+		table.insert(data.subtitles, "nominative/vocative singular in ''-ām''")
 
 		data.forms["nom_sg"] = stem .. "ām"
 		data.forms["acc_sg"] = stem .. "ām"
@@ -61,7 +61,7 @@ decl["1"] = function(data, args)
 
 		--Greek Ma
 		if data.types.Ma then
-			table.insert(data.subtitle, "masculine Greek-type with nominative singular in ''-ās''")
+			table.insert(data.subtitles, "masculine Greek-type with nominative singular in ''-ās''")
 
 			data.forms["nom_sg"] = stem .. "ās"
 			data.forms["acc_sg"] = stem .. "ān"
@@ -69,7 +69,7 @@ decl["1"] = function(data, args)
 
 		-- Greek Me
 		elseif data.types.Me then
-			table.insert(data.subtitle, "masculine Greek-type with nominative singular in ''-ēs''")
+			table.insert(data.subtitles, "masculine Greek-type with nominative singular in ''-ēs''")
 
 			data.forms["nom_sg"] = stem .. "ēs"
 			data.forms["acc_sg"] = stem .. "ēn"
@@ -78,7 +78,7 @@ decl["1"] = function(data, args)
 
 		-- Greek
 		else
-			table.insert(data.subtitle, "Greek-type")
+			table.insert(data.subtitles, "Greek-type")
 
 			data.forms["nom_sg"] = stem .. "ē"
 			data.forms["gen_sg"] = stem .. "ēs"
@@ -87,9 +87,9 @@ decl["1"] = function(data, args)
 			data.forms["voc_sg"] = stem .. "ē"
 		end
 	elseif data.types.not_Greek then
-		table.insert(data.subtitle, "non-Greek-type")
+		table.insert(data.subtitles, "non-Greek-type")
 	elseif data.types.not_am then
-		table.insert(data.subtitle, "''-a''")
+		table.insert(data.subtitles, "''-a''")
 	end
 
 	-- with locative
@@ -123,7 +123,7 @@ decl["2"] = function(data, args)
 
 	-- all neuter
 	if data.types.N then
-		table.insert(data.subtitle, "neuter")
+		table.insert(data.subtitles, "neuter")
 
 		data.forms["nom_sg"] = stem1 .. "um"
 		data.forms["voc_sg"] = stem1 .. "um"
@@ -152,7 +152,7 @@ decl["2"] = function(data, args)
 
 		-- neuter Greek
 		elseif data.types.Greek then
-			table.insert(data.subtitle, "Greek-type")
+			table.insert(data.subtitles, "Greek-type")
 
 			data.forms["nom_sg"] = stem1 .. "on"
 			data.forms["acc_sg"] = stem1 .. "on"
@@ -160,7 +160,7 @@ decl["2"] = function(data, args)
 
 		-- neuter us
 		elseif data.types.us then
-			table.insert(data.subtitle, "nominative/accusative/vocative in ''-us''")
+			table.insert(data.subtitles, "nominative/accusative/vocative in ''-us''")
 
 			data.forms["nom_sg"] = stem1 .. "us"
 			data.forms["acc_sg"] = stem1 .. "us"
@@ -170,15 +170,15 @@ decl["2"] = function(data, args)
 			data.forms["acc_pl"] = stem1 .. "ōs"
 			data.forms["voc_pl"] = stem1 .. "ī"
 		elseif data.types.not_Greek or data.types.not_us then
-			table.insert(data.subtitle, "nominative/accusative/vocative in ''-um''")
+			table.insert(data.subtitles, "nominative/accusative/vocative in ''-um''")
 		end
 
 	-- er
 	elseif data.types.er then
 		if mw.ustring.match(stem1, "[aiouy]r$") then
-			table.insert(data.subtitle, "nominative singular in ''-r''")
+			table.insert(data.subtitles, "nominative singular in ''-r''")
 		else
-			table.insert(data.subtitle, "nominative singular in ''-er''")
+			table.insert(data.subtitles, "nominative singular in ''-er''")
 		end
 
 		data.forms["nom_sg"] = stem1
@@ -220,23 +220,23 @@ decl["2"] = function(data, args)
 
 	-- vos (servos, etc.)
 	elseif data.types.vos then
-		table.insert(data.subtitle, "nominative singular in ''-os'' after ''v''")
+		table.insert(data.subtitles, "nominative singular in ''-os'' after ''v''")
 		data.forms["nom_sg"] = stem1 .. "os"
 		data.forms["acc_sg"] = stem1 .. "om"
 
 	-- Greek
 	elseif data.types.Greek then
-		table.insert(data.subtitle, "Greek-type")
+		table.insert(data.subtitles, "Greek-type")
 
 		data.forms["nom_sg"] = stem1 .. "os"
 		data.forms["acc_sg"] = {stem1 .. "on"}
 	elseif data.types.not_Greek then
-		table.insert(data.subtitle, "non-Greek-type")
+		table.insert(data.subtitles, "non-Greek-type")
 	end
 
 	-- with -um genitive plural
 	if data.types.genplum then
-		table.insert(data.subtitle, "contracted genitive plural")
+		table.insert(data.subtitles, "contracted genitive plural")
 		data.notes["gen_pl2"] = "Contraction found in poetry."
 		if data.types.ius or  data.types.ium then
 			data.forms["gen_pl"] = {stem2 .. "iōrum", stem2 .. "ium"}
@@ -244,7 +244,7 @@ decl["2"] = function(data, args)
 			data.forms["gen_pl"] = {stem2 .. "ōrum", stem2 .. "um"}
 		end
 	elseif data.types.not_genplum then
-		table.insert(data.subtitle, "normal genitive plural")
+		table.insert(data.subtitles, "normal genitive plural")
 	end
 
 	-- with locative
@@ -338,6 +338,22 @@ decl["3"] = function(data, args)
 		stem2 = require("Module:la-utilities").make_stem2(stem1)
 	end
 
+	local function parisyllabic_type()
+		local stem1_vowels = rsub(
+			require("Module:la-utilities").strip_macrons(stem1),
+			"[^AEIOUYaeiouy]", ""
+		)
+		local stem2_vowels = rsub(
+			require("Module:la-utilities").strip_macrons(stem2),
+			"[^AEIOUYaeiouy]", ""
+		)
+		return #stem1_vowels > #stem2_vowels and "parisyllabic" or "imparisyllabic"
+	end
+
+	local function non_i_stem_type()
+		return parisyllabic_type() .. " non-i-stem"
+	end
+
 	--normal 3rd
 	data.forms["nom_sg"] = stem1
 	data.forms["gen_sg"] = stem2 .. "is"
@@ -362,7 +378,7 @@ decl["3"] = function(data, args)
 		end
 	end
 	for acc_sg_subtype, _ in pairs(acc_sg_i_stem_subtypes) do
-		if subtypes["not_" .. acc_sg_subtype] then
+		if data.types["not_" .. acc_sg_subtype] then
 			not_acc_sg_i_stem_subtype = true
 			break
 		end
@@ -376,7 +392,7 @@ decl["3"] = function(data, args)
 		end
 	end
 	for abl_sg_subtype, _ in pairs(abl_sg_i_stem_subtypes) do
-		if subtypes["not_" .. abl_sg_subtype] then
+		if data.types["not_" .. abl_sg_subtype] then
 			not_abl_sg_i_stem_subtype = true
 			break
 		end
@@ -384,11 +400,11 @@ decl["3"] = function(data, args)
 
 	-- all Greek
 	if data.types.Greek then
-		table.insert(data.subtitle, "Greek-type")
+		table.insert(data.subtitles, "Greek-type")
 
 		-- Greek er
 		if data.types.er then
-			table.insert(data.subtitle, "nominative singular in ''-ēr''")
+			table.insert(data.subtitles, "nominative singular in ''-ēr''")
 			stem1 = extract_stem(stem1, "ēr")
 
 			data.forms["nom_sg"] = stem1 .. "ēr"
@@ -407,7 +423,7 @@ decl["3"] = function(data, args)
 
 		-- Greek on
 		elseif data.types.on then
-			table.insert(data.subtitle, "nominative singular in ''-ōn''")
+			table.insert(data.subtitles, "nominative singular in ''-ōn''")
 			stem1 = extract_stem(stem1, "ōn")
 
 			data.forms["nom_sg"] = stem1 .. "ōn"
@@ -426,7 +442,7 @@ decl["3"] = function(data, args)
 
 		-- Greek i-stem
 		elseif data.types.I then
-			table.insert(data.subtitle, "i-stem")
+			table.insert(data.subtitles, "i-stem")
 			data.forms["gen_sg"] = {stem2 .. "is", stem2 .. "eōs", stem2 .. "ios"}
 			data.forms["acc_sg"] = {stem2 .. "im", stem2 .. "in", stem2 .. "em"}
 			data.forms["abl_sg"] = {stem2 .. "ī", stem2 .. "e"}
@@ -468,13 +484,13 @@ decl["3"] = function(data, args)
 			end
 		end
 	elseif data.types.not_Greek then
-		table.insert(data.subtitle, "non-Greek-type")
+		table.insert(data.subtitles, "non-Greek-type")
 	end
 
 	-- polis
 	if data.types.polis then
 		stem1 = extract_stem(stem1, "polis")
-		table.insert(data.subtitle, "i-stem, partially Greek-type")
+		table.insert(data.subtitles, "i-stem, partially Greek-type")
 
 		data.forms["nom_sg"] = stem1 .. "polis"
 		data.forms["gen_sg"] = stem1 .. "polis"
@@ -483,12 +499,12 @@ decl["3"] = function(data, args)
 		data.forms["abl_sg"] = stem1 .. "polī"
 		data.forms["voc_sg"] = {stem1 .. "polis", stem1 .. "polī"}
 	elseif data.types.not_polis then
-		table.insert(data.subtitle, "non-i-stem")
+		table.insert(data.subtitles, non_i_stem_type())
 	end
 
 	-- all neuter
 	if data.types.N then
-		table.insert(data.subtitle, "neuter")
+		table.insert(data.subtitles, "neuter")
 
 		data.forms["acc_sg"] = stem1
 
@@ -497,7 +513,7 @@ decl["3"] = function(data, args)
 
 			-- pure variety
 			if data.types.pure then
-				table.insert(data.subtitle, "“pure” i-stem")
+				table.insert(data.subtitles, "“pure” i-stem")
 				data.forms["abl_sg"] = stem2 .. "ī"
 
 				data.forms["nom_pl"] = stem2 .. "ia"
@@ -507,7 +523,7 @@ decl["3"] = function(data, args)
 
 			-- non-pure variety (rare)
 			else
-				table.insert(data.subtitle, "i-stem")
+				table.insert(data.subtitles, "i-stem")
 				data.forms["nom_pl"] = stem2 .. "a"
 				data.forms["gen_pl"] = {stem2 .. "ium", stem2 .. "um"}
 				data.forms["acc_pl"] = stem2 .. "a"
@@ -516,7 +532,7 @@ decl["3"] = function(data, args)
 
 		-- normal neuter
 		else
-			table.insert(data.subtitle, "non-i-stem")
+			table.insert(data.subtitles, non_i_stem_type())
 			data.forms["nom_pl"] = stem2 .. "a"
 			data.forms["acc_pl"] = stem2 .. "a"
 			data.forms["voc_pl"] = stem2 .. "a"
@@ -525,9 +541,9 @@ decl["3"] = function(data, args)
 	-- I stem
 	elseif data.types.I or acc_sg_i_stem_subtype or abl_sg_i_stem_subtype then
 		if data.types.not_N then
-			table.insert(data.subtitle, "non-neuter i-stem")
+			table.insert(data.subtitles, "non-neuter i-stem")
 		else
-			table.insert(data.subtitle, "i-stem")
+			table.insert(data.subtitles, "i-stem")
 		end
 
 		data.forms["gen_pl"] = stem2 .. "ium"
@@ -545,7 +561,7 @@ decl["3"] = function(data, args)
 				end
 				if data.num ~= "pl" then
 					for _, t in ipairs(acc_sg_i_stem_props.title) do
-						table.insert(data.subtitle, t)
+						table.insert(data.subtitles, t)
 					end
 				end
 				break
@@ -561,18 +577,18 @@ decl["3"] = function(data, args)
 				end
 				if data.num ~= "pl" then
 					for _, t in ipairs(abl_sg_i_stem_props.title) do
-						table.insert(data.subtitle, t)
+						table.insert(data.subtitles, t)
 					end
 				end
 				break
 			end
 		end
 	elseif data.types.not_N and data.types.not_I then
-		table.insert(data.subtitle, "non-neuter non-i-stem")
+		table.insert(data.subtitles, "non-neuter " .. non_i_stem_type())
 	elseif data.types.not_N then
-		table.insert(data.subtitle, "non-neuter")
+		table.insert(data.subtitles, "non-neuter")
 	elseif data.types.not_I then
-		table.insert(data.subtitle, "non-i-stem")
+		table.insert(data.subtitles, non_i_stem_type())
 	end
 
 	-- with locative
@@ -631,17 +647,17 @@ decl["4"] = function(data, args)
 	data.forms["voc_pl"] = stem .. "ūs"
 
 	if data.types.echo then
-		table.insert(data.subtitle, "nominative/vocative singular in ''-ō''")
+		table.insert(data.subtitles, "nominative/vocative singular in ''-ō''")
 		data.forms["nom_sg"] = stem .. "ō"
 		data.forms["voc_sg"] = stem .. "ō"
 	elseif data.types.argo then
-		table.insert(data.subtitle, "nominative/accusative/vocative singular in ''-ō'', ablative singular in ''-uī''")
+		table.insert(data.subtitles, "nominative/accusative/vocative singular in ''-ō'', ablative singular in ''-uī''")
 		data.forms["nom_sg"] = stem .. "ō"
 		data.forms["acc_sg"] = stem .. "ō"
 		data.forms["abl_sg"] = stem .. "uī"
 		data.forms["voc_sg"] = stem .. "ō"
 	elseif data.types.Callisto then
-		table.insert(data.subtitle, "all cases except the genitive singular in ''-ō''")
+		table.insert(data.subtitles, "all cases except the genitive singular in ''-ō''")
 		data.forms["nom_sg"] = stem .. "ō"
 		data.forms["dat_sg"] = stem .. "ō"
 		data.forms["acc_sg"] = stem .. "ō"
@@ -651,7 +667,7 @@ decl["4"] = function(data, args)
 
 	-- neuter
 	if data.types.N then
-		table.insert(data.subtitle, "neuter")
+		table.insert(data.subtitles, "neuter")
 
 		data.forms["nom_sg"] = stem .. "ū"
 		data.forms["dat_sg"] = stem .. "ū"
@@ -665,12 +681,12 @@ decl["4"] = function(data, args)
 
 	-- ubus
 	if data.types.ubus then
-		table.insert(data.subtitle, "dative/ablative plural in ''-ubus''")
+		table.insert(data.subtitles, "dative/ablative plural in ''-ubus''")
 
 		data.forms["dat_pl"] = stem .. "ubus"
 		data.forms["abl_pl"] = stem .. "ubus"
 	elseif data.types.not_ubus then
-		table.insert(data.subtitle, "''-ibus''")
+		table.insert(data.subtitles, "''-ibus''")
 	end
 
 	-- with locative

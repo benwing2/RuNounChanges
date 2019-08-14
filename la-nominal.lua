@@ -142,6 +142,9 @@ local declension_to_english = {
 	["5"] = "fifth",
 }
 
+local number_to_english = {
+	"one", "two", "three", "four", "five"
+}
 local linked_prefixes = {
 	"", "linked_"
 }
@@ -252,6 +255,16 @@ local function concat_forms_in_slot(forms)
 	else
 		return nil
 	end
+end
+
+local function glossary_link(anchor, text)
+	text = text or anchor
+	return "[[Appendix:Glossary#" .. anchor .. "|" .. text .. "]]"
+end
+
+local function track(page)
+	require("Module:debug").track("la-nominal/" .. page)
+	return true
 end
 
 local function set_union(sets)
@@ -1612,6 +1625,12 @@ end
 -- parse_segment_run() (of the same form as the overall return value of
 -- parse_segment_run_allowing_alternants()).
 local function parse_segment_run_allowing_alternants(segment_run)
+	if rfind(segment_run, " ") then
+		track("has-space")
+	end
+	if rfind(segment_run, "%(%(") then
+		track("has-alternant")
+	end
 	local alternating_segments = m_string_utilities.capturing_split(segment_run, "(%(%(.-%)%))")
 	local parsed_segments = {} 
 	local loc = false
@@ -1643,6 +1662,10 @@ local function parse_segment_run_allowing_alternants(segment_run)
 		end
 	end
 
+	if #parsed_segments > 1 then
+		track("multiple-segments")
+	end
+	
 	return {
 		segments = parsed_segments,
 		loc = loc,
@@ -1808,6 +1831,8 @@ local function decline_segment_run(parsed_run, pos, is_adj)
 		-- footnotes.
 		notes = {},
 		title = {},
+		subtitleses = {},
+		orig_titles = {},
 		categories = {},
 		-- FIXME, do we really need to special-case this? Maybe the nonexistent vocative
 		-- form will automatically propagate up through the other forms.
@@ -1838,7 +1863,7 @@ local function decline_segment_run(parsed_run, pos, is_adj)
 				potential_lemma_slots = potential_adj_lemma_slots
 
 				data = {
-					title = "",
+					subtitles = {},
 					footnote = "",
 					num = seg.num or "",
 					gender = seg.gender,
@@ -1857,6 +1882,18 @@ local function decline_segment_run(parsed_run, pos, is_adj)
 				if data.noneut then
 					declensions.noneut = true
 				end
+				-- Construct title out of "original title" and subtitles.
+				if data.types.sufn then
+					table.insert(data.subtitles, "with ''m'' → ''n'' in compounds")
+				elseif data.types.not_sufn then
+					table.insert(data.subtitles, "without ''m'' → ''n'' in compounds")
+				end
+				-- Record original title and subtitles for use in alternant title-constructing code.
+				table.insert(declensions.orig_titles, data.title)
+				if #data.subtitles > 0 then
+					data.title = data.title .. " (" .. table.concat(data.subtitles, ", ") .. ")"
+				end
+				table.insert(declensions.subtitleses, data.subtitles)
 			else
 				if not m_noun_decl[seg.decl] then
 					error("Unrecognized declension '" .. seg.decl .. "'")
@@ -1865,7 +1902,7 @@ local function decline_segment_run(parsed_run, pos, is_adj)
 				potential_lemma_slots = potential_noun_lemma_slots
 
 				data = {
-					subtitle = {},
+					subtitles = {},
 					footnote = "",
 					num = seg.num or "",
 					loc = seg.loc,
@@ -1878,7 +1915,29 @@ local function decline_segment_run(parsed_run, pos, is_adj)
 
 				m_noun_decl[seg.decl](data, seg.args)
 
-				data.title = ...
+				-- Construct title out of "original title" and subtitles.
+				if data.types.sufn then
+					table.insert(data.subtitles, "with ''m'' → ''n'' in compounds")
+				elseif data.types.not_sufn then
+					table.insert(data.subtitles, "without ''m'' → ''n'' in compounds")
+				end
+				if declension_to_english[seg.decl] then
+					local english = declension_to_english[seg.decl]
+					data.title = "[[Appendix:Latin " .. english .. " declension|" .. english .. "-declension]]"
+				elseif seg.decl == "irreg" then
+					data.title = glossary_link("irregular")
+				elseif seg.decl == "indecl" or seg.decl == "0" then
+					data.title = glossary_link("indeclinable")
+				else
+					error("Internal error! Don't recognize noun declension " .. seg.decl)
+				end
+				data.title = data.title .. " noun"
+				-- Record original title and subtitles for use in alternant title-constructing code.
+				table.insert(declensions.orig_titles, data.title)
+				if #data.subtitles > 0 then
+					data.title = data.title .. " (" .. table.concat(data.subtitles, ", ") .. ")"
+				end
+				table.insert(declensions.subtitleses, data.subtitles)
 			end
 
 			-- Generate linked variants of slots that may be the lemma.
@@ -1966,13 +2025,25 @@ local function decline_segment_run(parsed_run, pos, is_adj)
 				end
 			end
 
+			if seg.prefix ~= "" and seg.prefix ~= "-" and seg.prefix ~= " " then
+				table.insert(declensions.title, glossary_link("indeclinable") .. " portion")
+			end
 			table.insert(declensions.title, data.title)
 		elseif seg.alternants then
 			local seg_declensions = nil
 			local seg_titles = {}
+			local seg_subtitleses = {}
+			local seg_stems_seen = {}
 			local seg_categories = {}
+			-- If all alternants have exactly one non-constant segment and all are
+			-- of the same declension, we use special code that displays the
+			-- differences in the subtitles. Otherwise we use more general code
+			-- that displays the full title and subtitles of each segment,
+			-- separating segment combined titles by "and" and the segment-run
+			-- combined titles by "or".
 			local title_the_hard_way = false
 			local alternant_decl = nil
+			local alternant_decl_title = nil
 			for _, this_parsed_run in ipairs(seg.alternants) do
 				local num_non_constant_segments = 0
 				for _, segment in ipairs(this_parsed_run.segments) do
@@ -1993,11 +2064,18 @@ local function decline_segment_run(parsed_run, pos, is_adj)
 				end
 			end
 			if not title_the_hard_way then
+				-- If using the special-purpose code, find the subtypes that are
+				-- not present in a given alternant but are present in at least
+				-- one other, and record "negative" variants of these subtypes
+				-- so that the declension-construction code can record subtitles
+				-- for these negative variants (so we can construct text like
+				-- "i-stem or imparisyllabic non-i-stem").
 				local subtypeses = {}
 				for _, this_parsed_run in ipairs(seg.alternants) do
 					for _, segment in ipairs(this_parsed_run.segments) do
 						if segment.decl then
-							table.insert(subtypes, segment.types)
+							table.insert(subtypeses, segment.types)
+							ut.insert_if_not(seg_stems_seen, segment.stem2)
 						end
 					end
 				end
@@ -2006,7 +2084,7 @@ local function decline_segment_run(parsed_run, pos, is_adj)
 					for _, segment in ipairs(this_parsed_run.segments) do
 						if segment.decl then
 							local neg_subtypes = set_difference(union, segment.types)
-							for _, neg_subtype in ipairs(neg_subtypes) do
+							for neg_subtype, _ in pairs(neg_subtypes) do
 								segment.types["not_" .. neg_subtype] = true
 							end
 						end
@@ -2096,7 +2174,13 @@ local function decline_segment_run(parsed_run, pos, is_adj)
 				for _, cat in ipairs(this_declensions.categories) do
 					ut.insert_if_not(seg_categories, cat)
 				end
-				ut.insert_if_not(seg_titles, join_sentences(this_declensions.title, " and "))
+				ut.insert_if_not(seg_titles, this_declensions.title)
+				for _, subtitles in ipairs(this_declensions.subtitleses) do
+					table.insert(seg_subtitleses, subtitles)
+				end
+				if not alternant_decl_title then
+					alternant_decl_title = this_declensions.orig_titles[1]
+				end
 			end
 
 			-- If overall run is singular, copy singular to plural, and
@@ -2116,21 +2200,104 @@ local function decline_segment_run(parsed_run, pos, is_adj)
 				ut.insert_if_not(declensions.categories, cat)
 			end
 
-			table.insert(declensions.title, join_sentences(seg_titles, " or "))
-
+			local title_to_insert
+			if title_the_hard_way then
+				title_to_insert = join_sentences(seg_titles, " or ")
+			else
+				-- Special-purpose title-generation code, for the common
+				-- situation where each alternant has single-segment runs and
+				-- all segments belong to the same declension.
+				--
+				-- 1. Find the initial subtitles common to all segments.
+				local first_subtitles = seg_subtitleses[1]
+				local num_common_subtitles = #first_subtitles
+				for i = 2, #seg_subtitleses do
+					local this_subtitles = seg_subtitleses[i]
+					for j = 1, num_common_subtitles do
+						if first_subtitles[j] ~= this_subtitles[j] then
+							num_common_subtitles = j - 1
+							break
+						end
+					end
+				end
+				-- 2. Construct the portion of the text based on the common subtitles.
+				local common_subtitles = {}
+				for i = 1, num_common_subtitles do
+					table.insert(common_subtitles, first_subtitles[i])
+				end
+				local common_subtitle_portion = table.concat(common_subtitles, ", ")
+				local non_common_subtitles = {}
+				-- 3. Join the subtitles that differ from segment to segment.
+				--    Record whether there are any such differing subtitles.
+				--    If some segments have differing subtitles and others don't,
+				--    we use the text "otherwise" for the segments without
+				--    differing subtitles.
+				local saw_non_common_subtitles = false
+				for i = 1, #seg_subtitleses do
+					local this_subtitles = seg_subtitleses[i]
+					local this_non_common_subtitles = {}
+					for j = num_common_subtitles + 1, #this_subtitles do
+						table.insert(this_non_common_subtitles, this_subtitles[j])
+					end
+					if #this_non_common_subtitles > 0 then
+						table.insert(non_common_subtitles, table.concat(this_non_common_subtitles, ", "))
+						saw_non_common_subtitles = true
+					else
+						table.insert(non_common_subtitles, "otherwise")
+					end
+				end
+				-- 4. Combine the common and non-common subtitle portions.
+				local subtitle_portions = {}
+				if common_subtitle_portion ~= "" then
+					table.insert(subtitle_portions, common_subtitle_portion)
+				end
+				local non_common_subtitle_portion =
+					saw_non_common_subtitles and table.concat(non_common_subtitles, " or ") or ""
+				if non_common_subtitle_portion ~= "" then
+					table.insert(subtitle_portions, non_common_subtitle_portion)
+				end
+				if #seg_stems_seen > 1 then
+					table.insert(subtitle_portions,
+						(number_to_english[#seg_stems_seen] or "" .. #seg_stems_seen) .. " different stems"
+					)
+				end
+				local subtitle_portion =  table.concat(subtitle_portions, "; ")
+				if subtitle_portion ~= "" then
+					title_to_insert = alternant_decl_title .. " (" .. subtitle_portion .. ")"
+				else
+					title_to_insert = alternant_decl_title
+				end
+			end
+			-- Don't insert blank title (happens e.g. with "((ali))quis<irreg+>").
+			if title_to_insert ~= "" then
+				table.insert(declensions.title, title_to_insert)
+			end
 		else
 			for slot in iter_slots(is_adj) do
 				declensions.forms[slot], declensions.notes[slot] = append_form(
 					declensions.forms[slot], declensions.notes[slot],
 					slot:find("linked") and seg.orig_prefix or seg.prefix)
 			end
+			table.insert(declensions.title, glossary_link("indeclinable") .. " portion")
 		end
 	end
+
+	-- First title is uppercase, remainder have an indefinite article, joined
+	-- using "with".
+	local titles = {}
+	for i, title in ipairs(declensions.title) do
+		if i == 1 then
+			table.insert(titles, m_string_utilities.ucfirst(title))
+		else
+			table.insert(titles, m_string_utilities.add_indefinite_article(title))
+		end
+	end
+	declensions.title = table.concat(titles, " with ")
 
 	return declensions
 end
 
-local function construct_title(args_title, declensions_title, from_headword)
+local function construct_title(args_title, declensions_title, from_headword, parsed_run)
 	if args_title then
 		declensions_title = rsub(args_title, "<1>", "[[Appendix:Latin first declension|first declension]]")
 		declensions_title = rsub(declensions_title, "<1&2>", "[[Appendix:Latin first declension|first]]/[[Appendix:Latin second declension|second declension]]")
@@ -2143,20 +2310,23 @@ local function construct_title(args_title, declensions_title, from_headword)
 		else
 			declensions_title = m_string_utilities.ucfirst(declensions_title)
 		end
-	elseif from_headword then
-		local normalized_titles = {}
-		-- Remove final period and lowercase the first letter, so we can
-		-- join them together with "and".
-		-- FIXME: Should we join three or more as "foo, bar and baz"?
-		for _, title in ipairs(declensions_title) do
-			local normalized_title = m_string_utilities.lcfirst(rsub(title, "%.$", ""))
-			if normalized_title ~= "" then
-				table.insert(normalized_titles, normalized_title)
-			end
-		end
-		declensions_title = table.concat(normalized_titles, " and ")
 	else
-		declensions_title = table.concat(declensions_title, "<br/>")
+		local post_text_parts = {}
+		if parsed_run.loc then
+			table.insert(post_text_parts, ", with locative")
+		end
+		if parsed_run.num == "sg" then
+			table.insert(post_text_parts, ", singular only")
+		elseif parsed_run.num == "pl" then
+			table.insert(post_text_parts, ", plural only")
+		end
+		
+		local post_text = table.concat(post_text_parts)	
+		if from_headword then
+			declensions_title = m_string_utilities.lcfirst(declensions_title) .. post_text
+		else
+			declensions_title = m_string_utilities.ucfirst(declensions_title) .. post_text .. "."
+		end
 	end
 
 	return declensions_title
@@ -2187,6 +2357,9 @@ function export.do_generate_noun_forms(parent_args, pos, from_headword, support_
 
 	local args = m_para.process(parent_args, params)
 
+	if args.title then
+		track("overriding-title")
+	end
 	pos = args.pos or pos -- args.pos only set when from_headword
 	
 	local parsed_run = parse_segment_run_allowing_alternants(args[1])
@@ -2200,7 +2373,7 @@ function export.do_generate_noun_forms(parent_args, pos, from_headword, support_
 		declensions.forms.loc_pl = nil
 	end
 
-	declensions.title = construct_title(args.title, declensions.title)
+	declensions.title = construct_title(args.title, declensions.title, false, parsed_run)
 
 	local all_data = {
 		title = declensions.title,
@@ -2260,6 +2433,9 @@ function export.do_generate_adj_forms(parent_args, pos, from_headword, support_n
 
 	local args = m_para.process(parent_args, params)
 
+	if args.title then
+		track("overriding-title")
+	end
 	pos = args.pos or pos -- args.pos only set when from_headword
 	
 	local segment_run = args[1]
@@ -2301,7 +2477,7 @@ function export.do_generate_adj_forms(parent_args, pos, from_headword, support_n
 		declensions.forms.voc_pl_n = nil
 	end
 
-	declensions.title = construct_title(args.title, declensions.title, from_headword)
+	declensions.title = construct_title(args.title, declensions.title, from_headword, parsed_run)
 
 	local all_data = {
 		title = declensions.title,
