@@ -62,9 +62,9 @@ local current_title = mw.title.getCurrentTitle()
 local NAMESPACE = current_title.nsText
 local PAGENAME = current_title.text
 
-local m_noun_decl = require("Module:la-noun/data")
+local m_noun_decl = require("Module:User:Benwing2/la-noun/data")
 local m_noun_table = require("Module:la-noun/table")
-local m_adj_decl = require("Module:la-adj/data")
+local m_adj_decl = require("Module:User:Benwing2/la-adj/data")
 local m_adj_table = require("Module:la-adj/table")
 local m_la_utilities = require("Module:la-utilities")
 
@@ -1884,9 +1884,9 @@ local function decline_segment_run(parsed_run, pos, is_adj)
 				end
 				-- Construct title out of "original title" and subtitles.
 				if data.types.sufn then
-					table.insert(data.subtitles, "with ''m'' → ''n'' in compounds")
+					table.insert(data.subtitles, {"with", " ''m'' → ''n'' in compounds"})
 				elseif data.types.not_sufn then
-					table.insert(data.subtitles, "without ''m'' → ''n'' in compounds")
+					table.insert(data.subtitles, {"without", " ''m'' → ''n'' in compounds"})
 				end
 				-- Record original title and subtitles for use in alternant title-constructing code.
 				table.insert(declensions.orig_titles, data.title)
@@ -1916,26 +1916,47 @@ local function decline_segment_run(parsed_run, pos, is_adj)
 				m_noun_decl[seg.decl](data, seg.args)
 
 				-- Construct title out of "original title" and subtitles.
+				if not data.title then
+					local apparent_decl = rmatch(seg.headword_decl, "^irreg/(.*)$")
+					if apparent_decl then
+						if #data.subtitles == 0 then
+							table.insert(data.subtitles, glossary_link("irregular"))
+						end
+					else
+						apparent_decl = seg.headword_decl
+					end
+					if declension_to_english[apparent_decl] then
+						local english = declension_to_english[apparent_decl]
+						data.title = "[[Appendix:Latin " .. english .. " declension|" .. english .. "-declension]]"
+					elseif apparent_decl == "irreg" then
+						data.title = glossary_link("irregular")
+					elseif apparent_decl == "indecl" or apparent_decl == "0" then
+						data.title = glossary_link("indeclinable")
+					else
+						error("Internal error! Don't recognize noun declension " .. apparent_decl)
+					end
+					data.title = data.title .. " noun"
+				end
 				if data.types.sufn then
-					table.insert(data.subtitles, "with ''m'' → ''n'' in compounds")
+					table.insert(data.subtitles, {"with", " ''m'' → ''n'' in compounds"})
 				elseif data.types.not_sufn then
-					table.insert(data.subtitles, "without ''m'' → ''n'' in compounds")
+					table.insert(data.subtitles, {"without", " ''m'' → ''n'' in compounds"})
 				end
-				if declension_to_english[seg.decl] then
-					local english = declension_to_english[seg.decl]
-					data.title = "[[Appendix:Latin " .. english .. " declension|" .. english .. "-declension]]"
-				elseif seg.decl == "irreg" then
-					data.title = glossary_link("irregular")
-				elseif seg.decl == "indecl" or seg.decl == "0" then
-					data.title = glossary_link("indeclinable")
-				else
-					error("Internal error! Don't recognize noun declension " .. seg.decl)
-				end
-				data.title = data.title .. " noun"
 				-- Record original title and subtitles for use in alternant title-constructing code.
 				table.insert(declensions.orig_titles, data.title)
 				if #data.subtitles > 0 then
-					data.title = data.title .. " (" .. table.concat(data.subtitles, ", ") .. ")"
+					local subtitles = {}
+					for _, subtitle in ipairs(data.subtitles) do
+						if type(subtitle) == "table" then
+							-- Occurs e.g. with 1st-declension ''-ābus'' ending where
+							-- we want a common prefix to be extracted out if possible
+							-- in the alternant title-generating code.
+							table.insert(subtitles, table.concat(subtitle))
+						else
+							table.insert(subtitles, subtitle)
+						end
+					end
+					data.title = data.title .. " (" .. table.concat(subtitles, ", ") .. ")"
 				end
 				table.insert(declensions.subtitleses, data.subtitles)
 			end
@@ -2214,7 +2235,7 @@ local function decline_segment_run(parsed_run, pos, is_adj)
 				for i = 2, #seg_subtitleses do
 					local this_subtitles = seg_subtitleses[i]
 					for j = 1, num_common_subtitles do
-						if first_subtitles[j] ~= this_subtitles[j] then
+						if not ut.equals(first_subtitles[j], this_subtitles[j]) then
 							num_common_subtitles = j - 1
 							break
 						end
@@ -2223,36 +2244,92 @@ local function decline_segment_run(parsed_run, pos, is_adj)
 				-- 2. Construct the portion of the text based on the common subtitles.
 				local common_subtitles = {}
 				for i = 1, num_common_subtitles do
-					table.insert(common_subtitles, first_subtitles[i])
+					if type(first_subtitles[i]) == "table" then
+						table.insert(common_subtitles, table.concat(first_subtitles[i]))
+					else
+						table.insert(common_subtitles, first_subtitles[i])
+					end
 				end
 				local common_subtitle_portion = table.concat(common_subtitles, ", ")
-				local non_common_subtitles = {}
-				-- 3. Join the subtitles that differ from segment to segment.
-				--    Record whether there are any such differing subtitles.
-				--    If some segments have differing subtitles and others don't,
-				--    we use the text "otherwise" for the segments without
-				--    differing subtitles.
-				local saw_non_common_subtitles = false
+				local non_common_subtitle_portion
+				-- 3. Special-case the situation where there's one non-common
+				--    subtitle in each segment and a common prefix or suffix to
+				--    all of them.
+				local common_prefix, common_suffix
 				for i = 1, #seg_subtitleses do
 					local this_subtitles = seg_subtitleses[i]
-					local this_non_common_subtitles = {}
-					for j = num_common_subtitles + 1, #this_subtitles do
-						table.insert(this_non_common_subtitles, this_subtitles[j])
+					if #this_subtitles ~= num_common_subtitles + 1 or
+						type(this_subtitles[num_common_subtitles + 1]) ~= "table" or
+						#this_subtitles[num_common_subtitles + 1] ~= 2 then
+						break
 					end
-					if #this_non_common_subtitles > 0 then
-						table.insert(non_common_subtitles, table.concat(this_non_common_subtitles, ", "))
-						saw_non_common_subtitles = true
+					if i == 1 then
+						common_prefix = this_subtitles[num_common_subtitles + 1][1]
+						common_suffix = this_subtitles[num_common_subtitles + 1][2]
 					else
-						table.insert(non_common_subtitles, "otherwise")
+						local this_prefix = this_subtitles[num_common_subtitles + 1][1]
+						local this_suffix = this_subtitles[num_common_subtitles + 1][2]
+						if this_prefix ~= common_prefix then
+							common_prefix = nil
+						end
+						if this_suffix ~= common_suffix then
+							common_suffix = nil
+						end
+						if not common_prefix and not common_suffix then
+							break
+						end
 					end
 				end
-				-- 4. Combine the common and non-common subtitle portions.
+				if common_prefix or common_suffix then
+					if common_prefix and common_suffix then
+						error("Something is wrong, first non-common subtitle is actually common to all segments")
+					end
+					if common_prefix then
+						local non_common_parts = {}
+						for i = 1, #seg_subtitleses do
+							table.insert(non_common_parts, seg_subtitleses[i][num_common_subtitles + 1][2])
+						end
+						non_common_subtitle_portion = common_prefix .. table.concat(non_common_parts, " or ")
+					else
+						local non_common_parts = {}
+						for i = 1, #seg_subtitleses do
+							table.insert(non_common_parts, seg_subtitleses[i][num_common_subtitles + 1][1])
+						end
+						non_common_subtitle_portion = table.concat(non_common_parts, " or ") .. common_suffix
+					end
+				else
+					-- 4. Join the subtitles that differ from segment to segment.
+					--    Record whether there are any such differing subtitles.
+					--    If some segments have differing subtitles and others don't,
+					--    we use the text "otherwise" for the segments without
+					--    differing subtitles.
+					local saw_non_common_subtitles = false
+					local non_common_subtitles = {}
+					for i = 1, #seg_subtitleses do
+						local this_subtitles = seg_subtitleses[i]
+						local this_non_common_subtitles = {}
+						for j = num_common_subtitles + 1, #this_subtitles do
+							if type(this_subtitles[j]) == "table" then
+								table.insert(this_non_common_subtitles, table.concat(this_subtitles[j]))
+							else
+								table.insert(this_non_common_subtitles, this_subtitles[j])
+							end
+						end
+						if #this_non_common_subtitles > 0 then
+							table.insert(non_common_subtitles, table.concat(this_non_common_subtitles, ", "))
+							saw_non_common_subtitles = true
+						else
+							table.insert(non_common_subtitles, "otherwise")
+						end
+					end
+					non_common_subtitle_portion =
+						saw_non_common_subtitles and table.concat(non_common_subtitles, " or ") or ""
+				end
+				-- 5. Combine the common and non-common subtitle portions.
 				local subtitle_portions = {}
 				if common_subtitle_portion ~= "" then
 					table.insert(subtitle_portions, common_subtitle_portion)
 				end
-				local non_common_subtitle_portion =
-					saw_non_common_subtitles and table.concat(non_common_subtitles, " or ") or ""
 				if non_common_subtitle_portion ~= "" then
 					table.insert(subtitle_portions, non_common_subtitle_portion)
 				end

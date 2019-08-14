@@ -15,6 +15,11 @@ local function rsub(term, foo, bar)
 	return retval
 end
 
+local function glossary_link(anchor, text)
+	text = text or anchor
+	return "[[Appendix:Glossary#" .. anchor .. "|" .. text .. "]]"
+end
+
 local current_title = mw.title.getCurrentTitle().nsText
 local NAMESPACE = current_title.nsText
 local PAGENAME = current_title.text
@@ -39,17 +44,17 @@ decl["1"] = function(data, args)
 
 	-- abus
 	if data.types.abus then
-		table.insert(data.subtitles, "dative/ablative plural in ''-ābus''")
+		table.insert(data.subtitles, {"dative/ablative plural in ", "''-ābus''"})
 
 		data.forms["dat_pl"] = stem .. "ābus"
 		data.forms["abl_pl"] = stem .. "ābus"
 	elseif data.types.not_abus then
-		table.insert(data.subtitles, "''-īs''")
+		table.insert(data.subtitles, {"dative/ablative plural in ", "''-īs''"})
 	end
 
 	-- am
 	if data.types.am then
-		table.insert(data.subtitles, "nominative/vocative singular in ''-ām''")
+		table.insert(data.subtitles, {"nominative/vocative singular in ", "''-ām''"})
 
 		data.forms["nom_sg"] = stem .. "ām"
 		data.forms["acc_sg"] = stem .. "ām"
@@ -89,7 +94,7 @@ decl["1"] = function(data, args)
 	elseif data.types.not_Greek then
 		table.insert(data.subtitles, "non-Greek-type")
 	elseif data.types.not_am then
-		table.insert(data.subtitles, "''-a''")
+		table.insert(data.subtitles, {"nominative/vocative singular in ", "''-a''"})
 	end
 
 	-- with locative
@@ -236,7 +241,7 @@ decl["2"] = function(data, args)
 
 	-- with -um genitive plural
 	if data.types.genplum then
-		table.insert(data.subtitles, "contracted genitive plural")
+		table.insert(data.subtitles, {"contracted", " genitive plural"})
 		data.notes["gen_pl2"] = "Contraction found in poetry."
 		if data.types.ius or  data.types.ium then
 			data.forms["gen_pl"] = {stem2 .. "iōrum", stem2 .. "ium"}
@@ -244,7 +249,7 @@ decl["2"] = function(data, args)
 			data.forms["gen_pl"] = {stem2 .. "ōrum", stem2 .. "um"}
 		end
 	elseif data.types.not_genplum then
-		table.insert(data.subtitles, "normal genitive plural")
+		table.insert(data.subtitles, {"normal", " genitive plural"})
 	end
 
 	-- with locative
@@ -404,7 +409,7 @@ decl["3"] = function(data, args)
 
 		-- Greek er
 		if data.types.er then
-			table.insert(data.subtitles, "nominative singular in ''-ēr''")
+			table.insert(data.subtitles, "variant with nominative singular in ''-ēr''")
 			stem1 = extract_stem(stem1, "ēr")
 
 			data.forms["nom_sg"] = stem1 .. "ēr"
@@ -423,7 +428,7 @@ decl["3"] = function(data, args)
 
 		-- Greek on
 		elseif data.types.on then
-			table.insert(data.subtitles, "nominative singular in ''-ōn''")
+			table.insert(data.subtitles, "variant with nominative singular in ''-ōn''")
 			stem1 = extract_stem(stem1, "ōn")
 
 			data.forms["nom_sg"] = stem1 .. "ōn"
@@ -465,6 +470,7 @@ decl["3"] = function(data, args)
 
 		-- normal Greek
 		else
+			table.insert(data.subtitles, "normal variant")
 			data.forms["gen_sg"] = stem2 .. "os"
 			if stem2:find("y$") then
 				data.forms["acc_sg"] = stem2 .. "n"
@@ -781,8 +787,6 @@ decl["indecl"] = function(data, args)
 end
 
 decl["irreg"] = function(data, args)
-	local title = {}
-
 	local stem = args[1]
 
 	data.forms["nom_sg"] = "-"
@@ -800,8 +804,6 @@ decl["irreg"] = function(data, args)
 	data.forms["voc_pl"] = "-"
 
 	if stem == "bōs" then
-		table.insert(title, "[[Appendix:Latin third declension|Third declension]], irregular")
-
 		data.forms["nom_sg"] = "bōs"
 		data.forms["gen_sg"] = "bovis"
 		data.forms["dat_sg"] = "bovī"
@@ -817,7 +819,8 @@ decl["irreg"] = function(data, args)
 		data.forms["voc_pl"] = "bovēs"
 
 	elseif stem == "cherub" then
-		table.insert(title, "Borrowed from Hebrew with its plural, otherwise indeclinable")
+		data.title = "mostly " .. glossary_link("indeclinable")
+		table.insert(data.subtitles, "with a distinct plural")
 
 		data.forms["nom_sg"] = "cherub"
 		data.forms["gen_sg"] = "cherub"
@@ -834,8 +837,6 @@ decl["irreg"] = function(data, args)
 		data.forms["voc_pl"] = {"cherubim", "cherubin"}
 
 	elseif stem == "deus" then
-		table.insert(title, "[[Appendix:Latin second declension|Second declension]], with several irregular plural forms")
-
 		data.forms["nom_sg"] = "deus"
 		data.forms["gen_sg"] = "deī"
 		data.forms["dat_sg"] = "deō"
@@ -851,8 +852,6 @@ decl["irreg"] = function(data, args)
 		data.forms["voc_pl"] = {"dī", "diī", "deī"}
 
 	elseif stem == "Deus" then
-		table.insert(title, "[[Appendix:Latin second declension|Second declension]], with irregular vocative")
-
 		data.forms["nom_sg"] = "Deus"
 		data.forms["gen_sg"] = "Deī"
 		data.forms["dat_sg"] = "Deō"
@@ -862,8 +861,7 @@ decl["irreg"] = function(data, args)
 		data.num = "sg"
 
 	elseif stem == "domus" then
-		table.insert(title, "[[Appendix:Latin fourth declension|Fourth declension]] with locative, some alternative forms from the [[Appendix:Latin second declension|second declension]]")
-
+		data.title = "[[Appendix:Latin fourth declension|fourth]]/[[Appendix:Latin second declension|second-declension]] noun"
 		data.forms["nom_sg"] = "domus"
 		data.forms["gen_sg"] = {"domūs", "domī"}
 		data.forms["dat_sg"] = {"domuī", "domō", "domū"}
@@ -883,8 +881,8 @@ decl["irreg"] = function(data, args)
 		data.loc = true
 
 	elseif stem == "Iēsus" or stem == "Jēsus" then
+		table.insert(data.subtitles, "highly " .. glossary_link("irregular"))
 		ij = stem == "Iēsus" and "I" or "J"
-		table.insert(title, "Highly irregular, but often considered to belong to the [[Appendix:Latin fourth declension|fourth declension]]")
 
 		data.forms["nom_sg"] = ij .. "ēsus"
 		data.forms["gen_sg"] = ij .. "ēsū"
@@ -896,7 +894,8 @@ decl["irreg"] = function(data, args)
 
 	elseif stem == "iūgerum" or stem == "jūgerum" then
 		ij = stem == "iūgerum" and "i" or "j"
-		table.insert(title, "[[Appendix:Latin second declension|Second]]–[[Appendix:Latin third declension|third-declension]] hybrid neuter")
+		data.title = "[[Appendix:Latin second declension|second]]–[[Appendix:Latin third declension|third-declension]] hybrid noun"
+		table.insert(data.subtitles, "neuter")
 
 		data.forms["nom_sg"] = ij .. "ūgerum"
 		data.forms["gen_sg"] = ij .. "ūgerī"
@@ -914,8 +913,6 @@ decl["irreg"] = function(data, args)
 		data.notes["abl_pl2"] = "Once only, in:<br/>M. Terentius Varro, ''Res Rusticae'', bk I, ch. x"
 
 	elseif stem == "sūs" then
-		table.insert(title, "[[Appendix:Latin third declension|Third declension]], irregular")
-
 		data.forms["nom_sg"] = "sūs"
 		data.forms["gen_sg"] = "suis"
 		data.forms["dat_sg"] = "suī"
@@ -931,7 +928,8 @@ decl["irreg"] = function(data, args)
 		data.forms["voc_pl"] = "suēs"
 
 	elseif stem == "ēthos" then
-		table.insert(title, "[[Appendix:Latin third declension|Third declension]], irregular, Greek type")
+		table.insert(data.subtitles, glossary_link("irregular"))
+		table.insert(data.subtitles, "Greek-type")
 
 		data.forms["nom_sg"] = "ēthos"
 		data.forms["gen_sg"] = "ētheos"
@@ -945,14 +943,16 @@ decl["irreg"] = function(data, args)
 		data.forms["voc_pl"] = {"ēthea", "ēthē"}
 
 	elseif stem == "lexis" then
-		table.insert(title, "[[Appendix:Latin third declension|Third declension]], irregular, Greek type")
+		table.insert(data.subtitles, glossary_link("irregular"))
+		table.insert(data.subtitles, "Greek-type")
 
 		data.forms["nom_sg"] = "lexis"
 		data.forms["gen_sg"] = "lexeōs"
 		data.forms["acc_pl"] = "lexeis"
 
 	elseif stem == "Athōs" then
-		table.insert(title, "Highly irregular, but often considered to belong to the [[Appendix:Latin second declension|second declension]]; Greek type")
+		table.insert(data.subtitles, "highly " .. glossary_link("irregular"))
+		table.insert(data.subtitles, "Greek-type")
 
 		data.forms["nom_sg"] = "Athōs"
 		data.forms["gen_sg"] = "Athō"
@@ -963,14 +963,15 @@ decl["irreg"] = function(data, args)
 		data.num = "sg"
 
 	elseif stem == "vēnum" then
-		table.insert(title, "[[Appendix:Latin fourth declension|Fourth]] or [[Appendix:Latin second declension|second declension]]. Attested only in the dative and accusative singular forms")
+		table.insert(data.subtitles, glossary_link("defective"))
 
 		data.forms["dat_sg"] = {"vēnuī", "vēnō"}
 		data.forms["acc_sg"] = "vēnum"
 		data.num = "sg"
 
 	elseif stem == "vīs" then
-		table.insert(title, "[[Appendix:Latin third declension|Third declension]], but with shortened stem in the singular. The genitive and dative singular forms are rarely used")
+		table.insert(data.subtitles, glossary_link("irregular"))
+		table.insert(data.subtitles, glossary_link("defective"))
 
 		data.forms["nom_sg"] = "vīs"
 		data.forms["gen_sg"] = "*vīs"
