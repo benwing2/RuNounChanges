@@ -62,9 +62,9 @@ local current_title = mw.title.getCurrentTitle()
 local NAMESPACE = current_title.nsText
 local PAGENAME = current_title.text
 
-local m_noun_decl = require("Module:User:Benwing2/la-noun/data")
+local m_noun_decl = require("Module:la-noun/data")
 local m_noun_table = require("Module:la-noun/table")
-local m_adj_decl = require("Module:User:Benwing2/la-adj/data")
+local m_adj_decl = require("Module:la-adj/data")
 local m_adj_table = require("Module:la-adj/table")
 local m_la_utilities = require("Module:la-utilities")
 
@@ -752,7 +752,7 @@ end
 -- Autodetect the subtype of a noun given all the information specified by the
 -- user: lemma, stem2, declension type and specified subtypes. Three values are
 -- returned: the lemma base (i.e. the stem of the lemma, as required by the
--- declension functions), tne new stem2 and the autodetected subtypes. Note
+-- declension functions), the new stem2 and the autodetected subtypes. Note
 -- that this will not detect a given subtype if the explicitly specified
 -- subtypes are incompatible (i.e. if -SUBTYPE is specified for any subtype
 -- that would be returned; or if M or F is specified when N would be returned,
@@ -774,7 +774,8 @@ local function detect_noun_subtype(lemma, stem2, typ, subtypes)
 			{"a", {"F"}},
 		})
 	elseif typ == "2" then
-		return get_noun_subtype_by_ending(lemma, stem2, typ, subtypes, {
+		local detected_subtypes
+		lemma, stem2, detected_subtypes = get_noun_subtype_by_ending(lemma, stem2, typ, subtypes, {
 			{"^(.*r)$", {"M", "er"}},
 			{"^(.*v)os$", {"M", "vos"}},
 			{"os", {"M", "Greek"}},
@@ -800,16 +801,18 @@ local function detect_noun_subtype(lemma, stem2, typ, subtypes)
 			{"ī", {"N", "us", "pl"}},
 			{"a", {"N", "pl"}},
 		})
+		stem2 = stem2 or lemma
+		return lemma, stem2, detected_subtypes
 	elseif typ == "3" then
 		if subtypes.pl then
 			if subtypes.Greek then
 				base = rmatch(lemma, "^(.*)erēs$")
 				if base then
-					return base, nil, {"er"}
+					return base .. "ēr", base .. "er", {"er"}
 				end
 				base = rmatch(lemma, "^(.*)ontēs$")
 				if base then
-					return base, nil, {"on"}
+					return base .. "ōn", base .. "ont", {"on"}
 				end
 				base = rmatch(lemma, "^(.*)es$")
 				if base then
@@ -972,8 +975,11 @@ end
 --    to be considered a match. An example is {"is", ""}, which will match
 --    lemma == "follis", stem2 == "foll", but not lemma == "lapis",
 --    stem2 == "lapid".
+--
+-- If PROCESS_STEM2 is given and the returned STEM2 would be nil, call
+-- process_stem2(BASE) to get the STEM2 to return.
 local function get_adj_type_and_subtype_by_ending(lemma, stem2, decltype,
-		specified_subtypes, endings_and_subtypes)
+		specified_subtypes, endings_and_subtypes, process_stem2)
 	for _, ending_and_subtypes in ipairs(endings_and_subtypes) do
 		local ending = ending_and_subtypes[1]
 		local rettype = ending_and_subtypes[2]
@@ -1025,6 +1031,9 @@ local function get_adj_type_and_subtype_by_ending(lemma, stem2, decltype,
 				if process_retval then
 					base, stem2 = process_retval(base, stem2)
 				end
+				if process_stem2 then
+					stem2 = stem2 or process_stem2(base)
+				end
 				return base, stem2, rettype, new_subtypes
 			end
 		end
@@ -1064,12 +1073,14 @@ local function detect_adj_type_and_subtype(lemma, stem2, typ, subtypes)
 		end
 	end
 
-	local function constant_stem2(stem2val)
-		return function(base, stem2)
-			return base, stem2val
-		end
+	local function decl12_stem2(base)
+		return base
 	end
-
+	
+	local function decl3_stem2(base)
+		return m_la_utilities.make_stem2(base)
+	end
+		
 	local decl12_entries = {
 		{"us", "1&2", {}},
 		{"a", "1&2", {}},
@@ -1092,9 +1103,8 @@ local function detect_adj_type_and_subtype(lemma, stem2, typ, subtypes)
 		{"^(.*er)$", "3-3", {}},
 		{"is", "3-2", {}},
 		{"e", "3-2", {}},
-		{"ior", "3-C", {}},
-		{"jor", "3-C", {}, constant_stem2("j")},
-		{"^(mi)nor$", "3-C", {}, constant_stem2("n")},
+		{"^(.*[ij])or$", "3-C", {}},
+		{"^(min)or$", "3-C", {}},
 		-- Detect -ēs as 3-1 without auto-inferring .pl if .pl
 		-- not specified. If we don't do this, the later entry for
 		-- -ēs will auto-infer .pl whenever -ēs is specified (which
@@ -1107,9 +1117,8 @@ local function detect_adj_type_and_subtype(lemma, stem2, typ, subtypes)
 		-- will apply when -I isn't given, the second when it is given.
 		{"^(.*ēs)$", "3-1", {"I"}},
 		{"^(.*ēs)$", "3-1", {"par"}},
-		{"iōrēs", "3-C", {"pl"}},
-		{"jōrēs", "3-C", {"pl"}, constant_stem2("j")},
-		{"^(mi)nōrēs$", "3-C", {"pl"}, constant_stem2("n")},
+		{"^(.*[ij])ōrēs$", "3-C", {"pl"}},
+		{"^(min)ōrēs$", "3-C", {"pl"}},
 		-- If .pl with -ēs, we don't know if the adjective is 3-1, 3-2
 		-- or 3-3. Since 3-2 is probably the most common, we infer it
 		-- (as well as the fact that these adjectives *are* in a sense
@@ -1130,19 +1139,19 @@ local function detect_adj_type_and_subtype(lemma, stem2, typ, subtypes)
 	if typ == "" then
 		local base, new_stem2, rettype, new_subtypes =
 			get_adj_type_and_subtype_by_ending(lemma, stem2, nil, subtypes,
-				decl12_entries)
+				decl12_entries, decl12_stem2)
 		if base then
 			return base, new_stem2, rettype, new_subtypes
 		else
 			return get_adj_type_and_subtype_by_ending(lemma, stem2, typ,
-				subtypes, decl3_entries)
+				subtypes, decl3_entries, decl3_stem2)
 		end
 	elseif typ == "3" then
 		return get_adj_type_and_subtype_by_ending(lemma, stem2, typ, subtypes,
-			decl3_entries)
+			decl3_entries, decl3_stem2)
 	elseif typ == "1&2" then
 		return get_adj_type_and_subtype_by_ending(lemma, stem2, typ, subtypes,
-			decl12_entries)
+			decl12_entries, decl12_stem2)
 	elseif typ == "1-1" then
 		return get_adj_type_and_subtype_by_ending(lemma, stem2, typ, subtypes, {
 			{"a", "1-1", {}},
@@ -1178,7 +1187,7 @@ local function detect_adj_type_and_subtype(lemma, stem2, typ, subtypes)
 			{"a", "3-1", {"pl", "par"}, base_as_stem2},
 			{"", "3-1", {"I"}},
 			{"", "3-1", {"par"}},
-		})
+		}, decl3_stem2)
 	elseif typ == "3-2" then
 		return get_adj_type_and_subtype_by_ending(lemma, stem2, typ, subtypes, {
 			{"is", "3-2", {}},
@@ -1192,16 +1201,14 @@ local function detect_adj_type_and_subtype(lemma, stem2, typ, subtypes)
 			{"ēs", "3-2", {}},
 			{"ēs", "3-2", {"pl"}},
 			{"ia", "3-2", {"pl"}},
-		})
+		}, decl3_stem2)
 	elseif typ == "3-C" then
 		return get_adj_type_and_subtype_by_ending(lemma, stem2, typ, subtypes, {
-			{"ior", "3-C", {}},
-			{"jor", "3-C", {}, constant_stem2("j")},
-			{"^(mi)nor$", "3-C", {}, constant_stem2("n")},
-			{"iōrēs", "3-C", {"pl"}},
-			{"jōrēs", "3-C", {"pl"}, constant_stem2("j")},
-			{"^(mi)nōrēs$", "3-C", {"pl"}, constant_stem2("n")},
-		})
+			{"^(.*[ij])or$", "3-C", {}},
+			{"^(min)or$", "3-C", {}},
+			{"^(.*[ij])ōrēs$", "3-C", {"pl"}},
+			{"^(min)ōrēs$", "3-C", {"pl"}},
+		}, decl3_stem2)
 	elseif typ == "irreg" then
 		return get_adj_type_and_subtype_by_ending(lemma, stem2, typ, subtypes, {
 			{"^(duo)$", typ, {"pl"}},
@@ -1256,7 +1263,7 @@ local function detect_adj_type_and_subtype(lemma, stem2, typ, subtypes)
 			{"ēs", typ, {"pl"}, base_as_stem2},
 			{"ia", typ, {"pl"}, base_as_stem2},
 			{"", typ, {}},
-		})
+		}, decl3_stem2)
 	end
 end
 
@@ -1891,7 +1898,16 @@ local function decline_segment_run(parsed_run, pos, is_adj)
 				-- Record original title and subtitles for use in alternant title-constructing code.
 				table.insert(declensions.orig_titles, data.title)
 				if #data.subtitles > 0 then
-					data.title = data.title .. " (" .. table.concat(data.subtitles, ", ") .. ")"
+					local subtitles = {}
+					for _, subtitle in ipairs(data.subtitles) do
+						if type(subtitle) == "table" then
+							-- Occurs e.g. with ''idem'', ''quīdam''
+							table.insert(subtitles, table.concat(subtitle))
+						else
+							table.insert(subtitles, subtitle)
+						end
+					end
+					data.title = data.title .. " (" .. table.concat(subtitles, ", ") .. ")"
 				end
 				table.insert(declensions.subtitleses, data.subtitles)
 			else
