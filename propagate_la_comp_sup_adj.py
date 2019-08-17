@@ -61,7 +61,10 @@ def process_lemma_page(page, index, is_comp, form):
     pagemsg("Already saw %s=: %s" % (param, unicode(template)))
   else:
     orig_template = unicode(template)
-    template.add(param, form)
+    if param == "comp":
+      template.add(param, form, before="sup")
+    else:
+      template.add(param, form)
     pagemsg("Replaced %s with %s" % (orig_template, unicode(template)))
     notes.append("add %s=%s to {{la-adj}}" % (param, form))
 
@@ -78,7 +81,7 @@ def process_non_lemma_page(page, index):
   for t in parsed.filter_templates():
     tn = tname(t)
     if tn in ["la-adj-comparative", "la-adj-superlative"]:
-      lemma = getparam(t, "1")
+      lemma = getparam(t, "1") or pagetitle
       pos = getparam(t, "2")
       if pos:
         def do_process(page, index, parsed):
