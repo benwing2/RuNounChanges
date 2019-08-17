@@ -544,18 +544,15 @@ la_adj_headword_templates = {
 
 la_suffix_headword_templates = {
   "la-suffix",
-  "la-suffix-1&2",
-  "la-suffix-3rd-2E",
+  "la-suffix-adj",
   "la-suffix-adv",
   "la-suffix-noun",
   "la-suffix-verb",
 }
 
-la_participle_headword_templates = {
-  "la-present participle",
-  "la-future participle",
-  "la-perfect participle",
-  "la-gerundive",
+la_num_headword_templates = {
+  "la-num-adj",
+  "la-num-noun",
 }
 
 la_nonlemma_headword_templates = {
@@ -580,9 +577,8 @@ la_misc_headword_templates = {
   "la-letter",
   "la-location",
   "la-noun",
+  "la-part",
   "la-proper noun",
-  "la-num-1&2",
-  "la-num-card",
   "la-prep",
   "la-punctuation mark",
   "la-verb",
@@ -591,7 +587,7 @@ la_misc_headword_templates = {
 la_lemma_headword_templates = (
   la_adj_headword_templates |
   la_suffix_headword_templates |
-  la_participle_headword_templates |
+  la_num_headword_templates |
   la_misc_headword_templates
 )
 
@@ -1084,11 +1080,6 @@ def la_infl_template_pos(t):
   tn = tname(t)
   if tn in la_verb_conj_templates:
     return "verb"
-  elif tn == "la-decl-irreg":
-    return "noun" if getparam(t, "noun") else "adj"
-  elif tn == "la-decl-multi":
-    # FIXME, hard to determine properly
-    return "noun"
   elif tn in la_noun_decl_templates:
     return "noun"
   elif tn in la_adj_decl_templates:
@@ -1112,7 +1103,7 @@ def la_get_headword_from_template(t, pagename, pagemsg):
   def expand_text(tempcall):
     return blib.expand_text(tempcall, pagetitle, pagemsg, False)
   tn = tname(t)
-  if tn == "la-adj":
+  if tn in ["la-adj", "la-part", "la-num-adj", "la-suffix-adj"]:
     retval = blib.fetch_param_chain(t, "lemma", "lemma")
     if not retval:
       retval = getparam(t, "1")
@@ -1139,117 +1130,62 @@ def la_get_headword_from_template(t, pagename, pagemsg):
               unicode(generate_template), result))
             retval = ""
           retval = retval.split(",")
-  elif tn == "la-noun":
-    if getparam(t, "2") or getparam(t, "3") or getparam(t, "4"):
-      retval = blib.fetch_param_chain(la_verb_template, ["1", "head", "head1"], "head")
-    else:
-      retval = blib.fetch_param_chain(t, "lemma", "lemma")
-      if not retval:
-        generate_template = blib.parse_text(unicode(t)).filter_templates()[0]
-        blib.set_template_name(generate_template, "la-generate-noun-forms")
-        blib.remove_param_chain(generate_template, "lemma", "lemma")
-        blib.remove_param_chain(generate_template, "m", "m")
-        blib.remove_param_chain(generate_template, "f", "f")
-        blib.remove_param_chain(generate_template, "g", "g")
-        rmparam(generate_template, "indecl")
-        rmparam(generate_template, "id")
-        rmparam(generate_template, "pos")
-        result = expand_text(unicode(generate_template))
-        if not result:
-          pagemsg("WARNING: Error generating forms, skipping")
-          retval = ""
+  elif tn in ["la-noun", "la-num-noun", "la-suffix-noun"]:
+    retval = blib.fetch_param_chain(t, "lemma", "lemma")
+    if not retval:
+      generate_template = blib.parse_text(unicode(t)).filter_templates()[0]
+      blib.set_template_name(generate_template, "la-generate-noun-forms")
+      blib.remove_param_chain(generate_template, "lemma", "lemma")
+      blib.remove_param_chain(generate_template, "m", "m")
+      blib.remove_param_chain(generate_template, "f", "f")
+      blib.remove_param_chain(generate_template, "g", "g")
+      rmparam(generate_template, "indecl")
+      rmparam(generate_template, "id")
+      rmparam(generate_template, "pos")
+      result = expand_text(unicode(generate_template))
+      if not result:
+        pagemsg("WARNING: Error generating forms, skipping")
+        retval = ""
+      else:
+        args = blib.split_generate_args(result)
+        if "linked_nom_sg" in args:
+          retval = args["linked_nom_sg"]
+        elif "linked_nom_pl" in args:
+          retval = args["linked_nom_pl"]
         else:
-          args = blib.split_generate_args(result)
-          if "linked_nom_sg" in args:
-            retval = args["linked_nom_sg"]
-          elif "linked_nom_pl" in args:
-            retval = args["linked_nom_pl"]
-          else:
-            pagemsg("WARNING: Can't locate lemma in {{la-generate-noun-forms}} result: generate_template=%s, result=%s" % (
-              unicode(generate_template), result))
-            retval = ""
-          retval = retval.split(",")
-  elif tn == "la-verb":
-    if not re.search(r"^(irreg|[0-9]\+*)(\..*)?$", getparam(t, "1")):
-      retval = getparam(t, "head") or getparam(t, "1")
-    else:
-      retval = blib.fetch_param_chain(t, "lemma", "lemma")
-      if not retval:
-        generate_template = blib.parse_text(unicode(t)).filter_templates()[0]
-        blib.set_template_name(generate_template, "la-generate-verb-forms")
-        rmparam(generate_template, "id")
-        result = expand_text(unicode(generate_template))
-        if not result:
-          pagemsg("WARNING: Error generating forms, skipping")
+          pagemsg("WARNING: Can't locate lemma in {{la-generate-noun-forms}} result: generate_template=%s, result=%s" % (
+            unicode(generate_template), result))
           retval = ""
+        retval = retval.split(",")
+  elif tn in ["la-verb", "la-suffix-verb"]:
+    retval = blib.fetch_param_chain(t, "lemma", "lemma")
+    if not retval:
+      generate_template = blib.parse_text(unicode(t)).filter_templates()[0]
+      blib.set_template_name(generate_template, "la-generate-verb-forms")
+      rmparam(generate_template, "id")
+      result = expand_text(unicode(generate_template))
+      if not result:
+        pagemsg("WARNING: Error generating forms, skipping")
+        retval = ""
+      else:
+        args = blib.split_generate_args(result)
+        for slot in ["linked_1s_pres_actv_indc", "linked_3s_pres_actv_indc",
+            "linked_1s_perf_actv_indc", "linked_3s_perf_actv_indc"]:
+          if slot in args:
+            retval = args[slot]
+            break
         else:
-          args = blib.split_generate_args(result)
-          for slot in ["linked_1s_pres_actv_indc", "linked_3s_pres_actv_indc",
-              "linked_1s_perf_actv_indc", "linked_3s_perf_actv_indc"]:
-            if slot in args:
-              retval = args[slot]
-              break
-          else:
-            # no break
-            pagemsg("WARNING: Can't locate lemma in {{la-generate-verb-forms}} result: generate_template=%s, result=%s" % (
-              unicode(generate_template), result))
-            retval = ""
-          retval = retval.split(",")
+          # no break
+          pagemsg("WARNING: Can't locate lemma in {{la-generate-verb-forms}} result: generate_template=%s, result=%s" % (
+            unicode(generate_template), result))
+          retval = ""
+        retval = retval.split(",")
   elif tn in la_adj_headword_templates or tn == "la-suffix":
     retval = getparam(t, "1")
-  elif tn == "la-present participle":
-    stem = getparam(t, "1")
-    ending = getparam(t, "2")
-    if ending == "ans":
-      retval = stem + u"āns"
-    elif ending == "ens":
-      retval = stem + u"ēns"
-    elif ending == "iens":
-      retval = stem + u"iēns"
-    else:
-      pagemsg("WARNING: Unrecognized ending for la-present participle: %s" % ending)
-      retval = stem + ending
-  elif tn in ["la-future participle", "la-perfect participle", "la-gerundive"]:
-    retval = getparam(t, "2") or getparam(t, "1")
-    if retval:
-      retval = retval + "us"
-  elif tn == "la-suffix-3rd-2E":
-    retval = getparam(t, "1")
-    if retval:
-      retval = "-" + retval + "is"
-  elif tn == "la-suffix-1&2":
-    retval = getparam(t, "1")
-    if retval:
-      retval = "-" + retval + "us"
-  elif tn in la_suffix_headword_templates:
-    retval = getparam(t, "1")
-    if retval:
-      retval = "-" + retval
   elif tn == "la-suffix-form":
-    retval = getparam(t, "2") or getparam(t, "1")
-    if retval:
-      retval = "-" + retval
+    retval = getparam(t, "1")
   elif tn == "head":
     retval = getparam(t, "head")
-  elif tn == "la-num-card":
-    num = getparam(t, "num")
-    if num == "1":
-      retval = u"ūnus"
-    elif num == "2":
-      retval = "duo"
-    elif num == "3":
-      retval = u"trēs"
-    elif num == "M":
-      retval = u"mīlle"
-    elif num == "C":
-      retval = getparam(t, "1")
-      if retval:
-        retval = retval + u"ī"
-    elif num:
-      pagemsg("WARNING: Unrecognized value for num: %s" % num)
-      retval = getparam(t, "1")
-    else:
-      retval = getparam(t, "1")
   elif tn == "la-gerund":
     retval = getparam(t, "head") or (getparam(t, "1") + "um")
   elif tn == "la-letter":
