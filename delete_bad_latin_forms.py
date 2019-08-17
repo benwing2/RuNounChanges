@@ -28,16 +28,7 @@ def delete_participle(index, lemma, formind, formval, pos, preserve_diaeresis, s
     pagemsg("Skipping form value %s, page doesn't exist" % formval)
     return
 
-  if pos == "presactpart":
-    expected_head_template = "la-present participle"
-  elif pos == "futactpart":
-    expected_head_template = "la-future participle"
-  elif pos == "perfpasspart":
-    expected_head_template = "la-perfect participle"
-  elif pos == "futpasspart":
-    expected_head_template = "la-gerundive"
-  else:
-    raise ValueError("Unrecognized part of speech %s" % pos)
+  expected_head_template = "la-part"
 
   text = unicode(page.text)
   origtext = text
