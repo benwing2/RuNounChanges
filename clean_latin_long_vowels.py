@@ -8,128 +8,127 @@
 #
 # aquila:
 #
-# {{la-noun|aquila|aquilae|f|first}}
-# {{la-decl-1st|aquil}}
+# {{la-noun|aquila<1>}}
+# {{la-ndecl|aquila<1>}}
 #
 # abāctor:
 #
-# {{la-noun|abāctor|abāctōris|m|third}}
-# {{la-decl-3rd|abactor}}
+# {{la-noun|abāctor<3>}}
+# {{la-ndecl|abāctor<3>}}
 #
 # abaculus:
 #
-# {{la-noun|abaculus|abaculī|m|second}}
-# {{la-decl-2nd|abacul}}
+# {{la-noun|abaculus<2>}}
+# {{la-ndecl|abaculus<2>}}
 #
 # abdōmen:
 #
-# {{la-noun|abdōmen|abdōminis|n|third}}
-# {{la-decl-3rd-N|abdōmen}}
+# {{la-noun|abdōmen<3>}}
+# {{la-ndecl|abdōmen<3>}}
 #
 # abomāsum:
 #
-# {{la-noun|abomāsum|abomāsī|n|second}}
-# {{la-decl-2nd-N|abomās}}
+# {{la-noun|abomāsum<2>}}
+# {{la-ndecl|abomāsum<2>}}
 #
 # accipiter:
 #
-# {{la-noun|accipiter|accipitris|m|third}}
-# {{la-decl-3rd|accipiter}}
+# {{la-noun|accipiter<3>|g=m}}
+# {{la-ndecl|accipiter<3>}}
 #
 # ȳ:
 #
-# {{la-noun|ȳ|indecl=yes}}
+# {{la-noun|ȳ|g=f|indecl=y}}
 #
 # dē:
 #
-# {{head|la|noun|head=dē|{{l|en|indeclinable}}}}
+# {{la-noun|dē|g=f|indecl=y}}
 #
 # absinthium:
 #
-# {{la-noun|absinthium|absinthiī|gen2=absinthī|n|second}}
-# {{la-decl-2nd-N-ium|absinth}}
+# {{la-noun|absinthium<2>}}
+# {{la-ndecl|absinthium,2>}}
 #
 # lēns:
 #
-# {{la-noun|lēns|lentis|f|third}}
-# {{la-decl-3rd|lēns}}
+# {{la-noun|lēns<3>|g=f}}
+# {{la-ndecl|lēns<3>}}
 #
 # diēs:
 #
-# {{la-noun|diēs|diēī|m|g2=f|fifth}}
-# {{la-decl-5th-i|d}}
+# {{la-noun|diēs<5>|g=m|g2=f}}
+# {{la-ndecl|diēs<5>}}
 #
 # ōs:
 #
-# {{la-noun|ōs|ōris|n|third}}
-# {{la-decl-3rd-N-I|ōs|ōr}}
+# {{la-noun|ōs/ōr<3.N.I>}}
+# {{la-ndecl|ōs/ōr<3.N.I>}}
 #
 # os:
 #
-# {{la-noun|os|ossis|n|third}}
-# {{la-decl-3rd-N-I|os|oss|gen_pl=ossium}}
+# {{la-noun|os/oss<3.N.I>|gen_pl=ossium}}
+# {{la-ndecl|os/oss<3.N.I>|gen_pl=ossium}}
 #
 # cōnsēnsus:
 #
-# {{la-noun|cōnsēnsus|cōnsēnsūs|m|fourth}}
-# {{la-decl-4th|cōnsēns}}
+# {{la-noun|cōnsēnsus<4>}}
+# {{la-ndecl|cōnsēnsus<4>}}
 #
 # comma:
 #
-# {{la-noun|comma|commatis|n|third}}
-# {{la-decl-3rd-N|comma}}
+# {{la-noun|comma<3>}}
+# {{la-ndecl|comma<3>}}
 #
 # colon:
 #
-# {{la-noun|colon|colī|n|second}}
-# {{la-decl-2nd-N-Greek|col}}
+# {{la-noun|colon<2>}}
+# {{la-ndecl|colon<2>}}
 #
 # gas:
 #
-# {{la-noun|gas|gasis|n|third}}
-# {{la-decl-3rd|gas|gas}}
+# {{la-noun|gas/gas<3.N>}}
+# {{la-ndecl|gas/gas<3.N>}}
 #
 # phoenīx:
 #
-# {{la-noun|phoenīx|phoenīcis|f|third}}
-# {{la-decl-3rd-I|phoenīx}}
-# {{la-noun|phoenīx|phoenīcis|m|third}}
-# {{la-decl-3rd|phoenīx}}
+# {{la-noun|phoenīx<3.I>|g=f}}
+# {{la-ndecl|phoenīx<3.I>}}
+# {{la-noun|phoenīx<3>|g=m}}
+# {{la-ndecl|phoenīx<3>}}
 #
 # Proper nouns:
 # -------------
 #
 # Belgium:
 #
-# {{la-proper noun|Belgium|Belgiī|n|second}}
-# {{la-decl-2nd-N|num=sg|Belgi}}
+# {{la-proper noun|Belgium<2>}}
+# {{la-ndecl|Belgium<2>}}
 #
 # Isrāēl:
 #
-# {{la-proper noun|Isrāēl||m|indecl=1}}<br/>
-# {{la-proper noun|Isrāēl|Isrāēlis|m|third}}
-# {{la-decl-3rd|num=sg|Isrāēl|Isrāēl}}
+# {{la-proper noun|((Isrāēl<0>,Isrāēl<3>))|g=m}}
+# {{la-ndecl|((Isrāēl<0>,Isrāēl<3>))}}
 #
 # Abaddōn:
 #
-# {{head|la|proper noun|head=Abaddōn|g=m|indeclinable}}
+# {{la-proper noun|Abaddōn|g=m|indecl=1}}
 #
 # Andorra:
 #
-# {{la-proper noun|Andorra|Andorrae|f|first}}
-# {{la-decl-1st|loc=1|num=sg|Andorr}}
+# {{la-proper noun|Andorra<1.loc>}}
+# {{la-ndecl|Andorra<1.loc>}}
 #
 # Niger:
 #
-# {{la-proper noun|Niger|Nigrī|m|second}}
-# {{la-decl-2nd-er|Niger|Nigr}}
-# {{la-proper noun|Niger|Nigris|m|third}}
-# {{la-decl-3rd|num=sg|Niger|acc_sg=Nigrim}}
+# {{la-proper noun|Niger/Nigr<2>}}
+# {{la-ndecl|Niger/Nigr<2>}}
+# {{la-proper noun|Niger/Nigr<3>|acc_sg=Nigrim|g=m}}
+# {{la-ndecl|Niger/Nigr<3>|acc_sg=Nigrim}}
 #
 # Achilles:
 #
-# {{la-proper noun|Achilles|Achillis|m|third}}
-# {{la-decl-3rd|num=sg|Achilles|Achill}}
+# {{la-proper noun|Achilles/Achill<3>|g=m}}
+# {{la-ndecl|Achilles/Achill<3>}}
 #
 # Pronouns:
 # ---------
@@ -137,94 +136,93 @@
 # is:
 #
 # {{head|la|pronoun}}
-# {{la-decl-irreg|is}}
+# {{la-adecl|is<irreg+>}}
 #
 # Verbs:
 # ------
 #
 # līberō:
 #
-# {{la-verb|līberō|līberāre|līberāvī|līberātum|conj=1}}
-# {{la-conj-1st|līber|līberāv|līberāt|sync_perf=poet|p3inf=1}}
+# {{la-verb|1+.p3inf.poet-sync-perf|līberō}}
+# {{la-conj|1+.p3inf.poet-sync-perf|līberō}}
 #
 # ferō:
 #
-# {{la-verb|ferō|ferre|tulī|perf2=tetulī|lātum|conj=3|pattern=irreg}}
-# {{la-conj-irreg|fero}}
+# {{la-verb|irreg|ferō}}
+# {{la-conj|irreg|fero}}
 #
 # eō:
 #
-# {{la-verb|eō|īre|iī|itum|conj=irreg}}
-# {{la-conj-irreg|eo|p3inf=1}}
+# {{la-verb|irreg.p3inf|eō}}
+# {{la-conj|irreg.p3inf|eō}}
 #
 # for:
 #
-# {{la-verb|for|fārī|fātus sum|conj=1|pattern=depon}}
-# {{la-conj-1st|type=depon|f|fāt|p3inf=1}}
+# {{la-verb|1+.p3inf|for}}
+# {{la-conj|1+.p3inf|for}}
 #
 # abdīcō:
 #
-# {{la-verb|abdīcō|abdīcere|abdīxī|abdictum|conj=irreg}}
-# {{la-conj-irreg|dico|ab}}
+# {{la-verb|irreg|abdīcō}}
+# {{la-conj|irreg|abdīcō}}
 #
 # abdō:
 #
-# {{la-verb|abdō|abdere|abdidī|abditum|conj=3}}
-# {{la-conj-3rd|abd|abdid|abdit}}
+# {{la-verb|3|abdō|abdid|abdit}}
+# {{la-conj|3|abdō|abdid|abdit}}
 #
 # alō:
 #
-# {{la-verb|alō|alere|aluī|altum|sup2=alitum|conj=3}}
-# {{la-conj-3rd|al|alu|alt}}
-# {{la-conj-3rd|al|alu|alit}}
+# {{la-verb|3|alō|alu|alt/alit}}
+# {{la-conj|3|alō|alu|alt/alit}}
 #
 # lingō:
 #
-# {{la-verb|lingō|lingere|linxī|linctum|conj=3}}
-# {{la-conj-3rd|ling|linx|linct}}
+# {{la-verb|3|lingō|linx|linct}}
+# {{la-conj|3|lingō|linx|linct}}
 #
 # vērō:
 #
-# {{la-verb|vērō|vērāre|conj=1|pattern=nopass-noperf}}
-# {{la-conj-1st|type=nopass-noperf|vēr}}
+# {{la-verb|1.nopass|vērō}}
+# {{la-conj|1.nopass|vērō}}
 #
 # lābor:
 #
-# {{la-verb|lābor|lābī|lāpsus sum|conj=3|pattern=depon}}
-# {{la-conj-3rd|type=depon|lāb|lāps}}
+# {{la-verb|3|lābor|lāps}}
+# {{la-conj|3|lābor|lāps}}
 #
 # videō:
 #
-# {{la-verb|videō|vidēre|vīdī|vīsum|conj=2}}
-# {{la-conj-2nd|vid|vīd|vīs|p3inf=1}} 
+# {{la-verb|2.p3inf|videō|vīd|vīs}}
+# {{la-conj|2.p3inf|videō|vīd|vīs}}
 #
 # Participles:
 # ------------
 #
 # accūsāns:
 #
-# {{la-present participle|accūs|ans}}
-# {{la-decl-3rd-part|accūsāns}}
+# {{la-part|accūsāns}}
+# {{la-adecl|accūsāns<3-P+>}}
 #
 # sapiēns:
 #
-# {{la-present participle|sapi|ens}}
-# {{la-decl-3rd-part|sapiēns}}
+# {{la-part|sapiēns}}
+# {{la-adecl|sapiēns<3-P+>}}
 #
 # abditus:
 #
-# {{la-perfect participle|abdit}}
-# {{la-decl-1&2|abdit}}
+# {{la-part|abditus}}
+# {{la-adecl|abditus}}
 #
 # futūrus:
 #
-# {{la-future participle|futūr}}
-# {{la-decl-1&2|futūr}}
+# {{la-part|futūrus}}
+# {{la-adecl|futūrus}}
 #
-# rendus:
+# gerendus:
 #
-# {{la-gerundive|rend}}
-# {{la-decl-1&2|rend}}
+# {{la-part|gerendus}}
+# {{la-adecl|gerendus}}
 #
 # Prefixes:
 # ---------
@@ -245,13 +243,13 @@
 #
 # phoenīx:
 #
-# {{la-adj-3rd-1E|phoenīx|phoenīcis}}
-# {{la-decl-3rd-1E|type=par|phoenīx|phoenīc}}
+# {{la-adj|phoenīx<+.-I>}}
+# {{la-adecl|phoenīx<+.-I>}}
 #
 # incōmptus:
 #
-# {{la-adj-1&2|incōmptus|incōmpta|incōmptum}}
-# {{la-decl-1&2|incōmpt}}
+# {{la-adj|incomptus|comp=incomptior}}
+# {{la-adecl|incomptus}}
 #
 # Adverbs:
 # --------
@@ -901,26 +899,16 @@ def do_process_participle(index, page, lemma, formind, formval, pos, skip_forms,
     return None, None
 
   if pos == "presactpart":
-    expected_head_template = "la-present participle"
-    if not re.search(u"[āē]ns$", formval):
-      pagemsg("WARNING: Bad present participle form %s, wrong ending" %
-        formval)
-      return None, None
-    expected_head_arg = re.sub(u"[āē]ns$", "", formval)
+    expected_head_template = "la-part"
+    expected_head_arg = formval
     expected_decl_arg = formval + "<3-P+>"
   else:
-    if pos == "perfpasspart":
-      expected_head_template = "la-perfect participle"
-    elif pos == "futactpart":
-      expected_head_template = "la-future participle"
-    elif pos == "futpasspart":
-      expected_head_template = "la-gerundive"
-    else:
+    if pos not in ["perfpasspart", "futactpart", "futpasspart"]:
       raise ValueError("Unrecognized participle part of speech %s" % pos)
     if not formval.endswith("us"):
       pagemsg("WARNING: Bad participle form %s, wrong ending" % formval)
       return None, None
-    expected_head_arg = re.sub("us$", "", formval)
+    expected_head_arg = formval
     expected_decl_arg = formval
 
   pagemsg("Processing")
@@ -1256,132 +1244,48 @@ def do_process_lemma(index, page, pos, explicit_infl, lemmaspec, lemma, explicit
             pos == "numadj" and "numform" or "adjform", save, verbose)
 
     elif pos == "verb" and (found_head_template or tn == "la-verb"):
-      # Figure out the actual inflection and deponent status.
-      deponent = False
-      if explicit_infl == 1 and not explicit_stem:
-        infl = 1
-        if lemma.endswith("or"):
-          deponent = True
-          vinf = lemma[:-2] + u"ārī"
-          vperf = ""
-          vsup = lemma[:-2] + u"ātum"
-        elif lemma.endswith(u"ō"):
-          vinf = lemma[:-1] + u"āre"
-          vperf = lemma[:-1] + u"āvī"
-          vsup = lemma[:-1] + u"ātum"
-        else:
-          errandpagemsg("WARNING: Bad lemma %s for 1st-conjugation verb" % lemma)
-          return None, None
-      elif explicit_infl == 4 and not explicit_stem:
-        infl = 4
-        if lemma.endswith("ior"):
-          deponent = True
-          vinf = lemma[:-3] + u"īrī"
-          vperf = ""
-          vsup = lemma[:-3] + u"ītum"
-        elif lemma.endswith(u"iō"):
-          vinf = lemma[:-2] + u"īre"
-          vperf = lemma[:-2] + u"īvī"
-          vsup = lemma[:-2] + u"ītum"
-        else:
-          errandpagemsg("WARNING: Bad lemma %s for 4th-conjugation verb" % lemma)
-          return None, None
-      elif not explicit_infl and explicit_stem:
-        if lemma.endswith("or") or lemma.endswith("tur"):
-          impers = lemma.endswith("tur")
-          deponent = True
-          if len(explicit_stem) != 2:
-            errandpagemsg("WARNING: For verb lemma %s, wrong length of explicit stem %s" % (lemma, explicit_stem))
-            return None, None
-          vinf, vsup = explicit_stem
-          vperf = ""
-          if vinf.endswith(u"ī") and (lemma[:-4] if impers else lemma[:-2]) == vinf[:-1]:
-            infl = 3
-          elif vinf.endswith(u"ī") and lemma.endswith("ior") and lemma[:-3] == vinf[:-1]:
-            infl = "io"
-          elif vinf.endswith(u"ārī"):
-            infl = 1
-          elif vinf.endswith(u"ērī"):
-            infl = 2
-          elif vinf.endswith(u"īrī"):
-            infl = 4
-          else:
-            errandpagemsg("WARNING: Unrecognized verb infinitive %s for lemma %s" % (vinf, lemma))
-            return None, None
-        elif lemma.endswith(u"ō") or lemma.endswith("t"):
-          if len(explicit_stem) != 3:
-            errandpagemsg("WARNING: For verb lemma %s, wrong length of explicit stem %s" % (lemma, explicit_stem))
-            return None, None
-          vinf, vperf, vsup = explicit_stem
-          if vinf.endswith(u"āre"):
-            infl = 1
-          elif vinf.endswith(u"ēre"):
-            infl = 2
-          elif vinf.endswith(u"īre"):
-            infl = 4
-          elif vinf.endswith("ere") and lemma.endswith(u"iō"):
-            infl = "io"
-          elif vinf.endswith("ere"):
-            infl = 3
-          elif (vinf.endswith("rre") or vinf.endswith("lle") or vinf.endswith("sse") or vinf.endswith("dare")):
-            infl = "irreg"
-          else:
-            errandpagemsg("WARNING: Unrecognized verb infinitive %s for lemma %s" % (vinf, lemma))
-            return None, None
-        else:
-          errandpagemsg("WARNING: Unrecognized verb lemma %s" % lemma)
-          return None, None
+      if not explicit_stem:
+        param3 = ""
+        param4 = ""
+      elif len(explicit_stem) == 1:
+        param3 = explicit_stem[0]
+        param4 = ""
       else:
-        errandpagemsg("WARNING: For verb lemma %s, bad infl %s combined with explicit stem %s" % (lemma, explicit_infl, explicit_stem))
-        return None, None
+        param3 = explicit_stem[0]
+        param4 = explicit_stem[1]
+        if param3 == "--":
+          param3 = ""
 
       if not found_head_template:
-        if getparam(ht, "conj") != str(infl):
-          continue
-
-        def compare_principal_part(first, rest, value):
-          values = [] if not value else value.split("/")
-          no_macron_values = [remove_macrons(x) for x in values]
-          actual_values = blib.fetch_param_chain(ht, first, rest)
-          no_macron_actual_values = [remove_macrons(x) for x in actual_values]
-          if no_macron_values != no_macron_actual_values:
-            pagemsg("WARNING: Principal part mismatch for param=%s, saw %s, expected %s" % (
-              rest, "/".join(actual_values), "/".join(values)))
+        def fix_verb_template(t, infl, lemma, param3, param4):
+          if re.sub(r"\.(.*)", "", getparam(t, "1")).replace("++", "+") != str(infl):
             return False
+
+          def compare_principal_part(param, value):
+            existing = getparam(t, param)
+            no_macron_existing = remove_macrons(existing)
+            no_macron_value = remove_macrons(value)
+            if no_macron_existing != no_macron_value:
+              pagemsg("WARNING: Principal part mismatch for param=%s, saw %s, expected %s: %s" % (
+                param, existing, value, unicode(t)))
+              return False
+            return True
+
+          if not compare_principal_part("2", lemma):
+            return False
+          if not compare_principal_part("3", param3):
+            return False
+          if not compare_principal_part("4", param4):
+            return False
+
+          frob_exact(t, "2", lemma, pagemsg, notes)
+          frob_exact(t, "3", param3, pagemsg, notes, split_slashes=True)
+          frob_exact(t, "4", param4, pagemsg, notes, split_slashes=True)
+
           return True
 
-        if not compare_principal_part("1", "head", lemma):
-          continue
-        if not compare_principal_part("2", "inf", vinf):
-          continue
-        if deponent:
-          sups = vsup.split("/")
-          perfs = []
-          for sup in sups:
-            if not sup:
-              perfs.append(sup)
-            else:
-              if not sup.endswith("um"):
-                errandpagemsg("WARNING: For verb lemma %s, bad deponent supine %s" % (lemma, sup))
-                return None, None
-              perfs.append(sup[:-2] + "us sum")
-          if not compare_principal_part("3", "perf", "/".join(perfs)):
-            continue
-        else:
-          if not compare_principal_part("3", "perf", vperf):
-            continue
-          if not compare_principal_part("4", "sup", vsup):
-            continue
-
-        frob_chain_exact(ht, ["1", "head"], lemma.split("/"), pagemsg, notes)
-        frob_chain_exact(ht, ["2", "inf"], vinf.split("/"), pagemsg, notes)
-        if deponent:
-          frob_chain_exact(ht, ["3", "perf"], perfs, pagemsg, notes)
-        else:
-          frob_chain_exact(ht, ["3", "perf"], vperf.split("/"), pagemsg, notes)
-          frob_chain_exact(ht, ["4", "sup"], vsup.split("/"), pagemsg, notes)
-
-      found_matching_head = True
+      if not fix_verb_template(ht, infl, lemma, param3, param4):
+        found_matching_head = True
 
       for inflt in headword['infl_templates']:
         infltn = tname(inflt)
@@ -1390,131 +1294,8 @@ def do_process_lemma(index, page, pos, explicit_infl, lemmaspec, lemma, explicit
             infl, lemma, unicode(inflt)))
           continue
 
-        def truncate_ending(val, expected_endings, parttype):
-          if not val:
-            return ""
-          vals = val.split("/")
-          if type(expected_endings) is not list:
-            expected_endings = [expected_endings]
-          stems = []
-          for v in vals:
-            for expected_ending in expected_endings:
-              if v.endswith(expected_ending):
-                stems.append(v[:-len(expected_ending)])
-                break
-            else:
-              # no break
-              errandpagemsg("WARNING: %s should end in %s: %s" % (parttype,
-                " or ".join("-%s" % ending for ending in expected_endings), v))
-              return None
-          return "/".join(stems)
-
-        if infl == "irreg":
-          if infltn != "la-conj-irreg":
-            pagemsg("WARNING: Saw mismatching conjugation template for infl=%s verb %s: %s" % (
-              infl, lemma, unicode(inflt)))
-            continue
-          prefix = getparam(inflt, "2")
-          if prefix:
-            lemmaprefix = lemma[0:len(prefix)]
-            if remove_macrons(lemmaprefix) != remove_macrons(prefix):
-              pagemsg("WARNING: Saw prefix mismatch, actual %s != expected %s for lemma %s: %s" % (
-                prefix, lemmaprefix, lemma, unicode(inflt)))
-              continue
-            frob_exact(inflt, "2", lemmaprefix, pagemsg, notes)
-        else:
-          if infl == 1:
-            if infltn != "la-conj-1st":
-              pagemsg("WARNING: Saw mismatching conjugation template for first-conjugation verb %s: %s" % (
-                lemma, unicode(inflt)))
-              continue
-            if deponent:
-              if not lemma.endswith("or"):
-                errpagemsg("First-conjugation deponent lemma should end in -or: %s" % lemma)
-                return None, None
-              arg1 = lemma[:-2]
-              if vsup == arg1 + u"ātum":
-                arg2 = ["", arg1 + u"āt"]
-              else:
-                arg2 = truncate_ending(vsup, "um", "First-conjugation deponent supine")
-                if arg2 is None:
-                  return None, None
-              arg3 = ""
-            else:
-              arg1 = truncate_ending(lemma, [u"ō", "at"], "First-conjugation lemma")
-              if arg1 is None:
-                return None, None
-              if lemma.endswith("at"):
-                perf_ending = "it"
-              else:
-                perf_ending = u"ī"
-              if vperf == arg1 + u"āv" + perf_ending:
-                arg2 = ["", arg1 + u"āv"]
-              else:
-                arg2 = truncate_ending(vperf, perf_ending, "First-conjugation perfect")
-                if arg2 is None:
-                  return None, None
-              if vsup == arg1 + u"ātum":
-                arg3 = ["", arg1 + u"āt"]
-              else:
-                arg3 = truncate_ending(vsup, "um", "First-conjugation supine")
-                if arg3 is None:
-                  return None, None
-          else:
-            if (infl == 2 and infltn != "la-conj-2nd" or
-                infl == 3 and infltn != "la-conj-3rd" or
-                infl == "io" and infltn != "la-conj-3rd-IO" or
-                infl == 4 and infltn != "la-conj-4th"):
-              pagemsg("WARNING: Saw mismatching conjugation template for infl=%s verb %s: %s" % (
-                infl, lemma, unicode(inflt)))
-              continue
-            if deponent:
-              if infl == 2:
-                expected_normal_ending = "eor"
-                expected_impers_ending = u"ētur"
-              elif infl == 3:
-                expected_normal_ending = "or"
-                expected_impers_ending = u"itur"
-              else:
-                expected_normal_ending = "ior"
-                expected_impers_ending = u"itur"
-              arg1 = truncate_ending(lemma,
-                [expected_normal_ending, expected_impers_ending],
-                "Infl=%s deponent lemma" % infl)
-              if arg1 is None:
-                return None, None
-              arg2 = truncate_ending(vsup, "um", "Infl=%s deponent supine" % infl)
-              if arg2 is None:
-                return None, None
-              arg3 = ""
-            else:
-              if infl == 2:
-                expected_normal_ending = u"eō"
-                expected_impers_ending = u"et"
-              elif infl == 3:
-                expected_normal_ending = u"ō"
-                expected_impers_ending = u"it"
-              else:
-                expected_normal_ending = u"iō"
-                expected_impers_ending = u"it"
-              arg1 = truncate_ending(lemma,
-                [expected_normal_ending, expected_impers_ending],
-                "Infl=%s lemma" % infl)
-              if arg1 is None:
-                return None, None
-              if lemma.endswith(expected_impers_ending):
-                perf_ending = "it"
-              else:
-                perf_ending = u"ī"
-              arg2 = truncate_ending(vperf, perf_ending, "Infl=%s perfect" % infl)
-              if arg2 is None:
-                return None, None
-              arg3 = truncate_ending(vsup, "um", "Infl=%s supine" % infl)
-              if arg3 is None:
-                return None, None
-          frob_exact(inflt, "1", arg1, pagemsg, notes)
-          frob_exact(inflt, "2", arg2, pagemsg, notes)
-          frob_exact(inflt, "3", arg3, pagemsg, notes)
+        if not fix_verb_template(inflt, infl, lemma, param3, param4):
+          continue
 
         # FIXME, handle overrides
         for override in lalib.la_verb_overrides:
@@ -1550,25 +1331,6 @@ def do_process_lemma(index, page, pos, explicit_infl, lemmaspec, lemma, explicit
           elif not skip_forms:
             process_form(index, lemma, formind, formval, "verbform",
                 find_tag_sets_for_form(args, formval), save, verbose)
-
-        #for formtype in ["pres", "perf", "sup"]:
-        #  forms_to_process = []
-        #  tag_sets_to_process = []
-        #  for key, val in args.iteritems():
-        #    if (
-        #        (formtype == "pres" and not re.search("(perf|plup|futp|sup)", key) and key != "futr_actv_ptc") or
-        #        (formtype == "perf" and key not in ["perf_actv_ptc", "perf_pasv_ptc"] and re.search("(perf|plup|futp)", key)) or
-        #        (formtype == "sup" and ("sup" in key or key in ["perf_actv_ptc", "perf_pasv_ptc", "futr_actv_ptc"]))
-        #      ):
-        #      tag_sets_to_process.append(lalib.form_key_to_tag_set(key))
-        #      forms_to_process.append((key, val))
-        #  single_forms_to_process = []
-        #  for key, form in forms_to_process:
-        #    for single_form in form.split(","):
-        #      single_forms_to_process.append((key, single_form))
-
-        #  for formind, (key, formval) in blib.iter_items(
-        #      single_forms_to_process, get_name=lambda x: x[1]):
 
     if found_matching_head:
       process_pronun_templates(headword['pronun_section'], lemma, pagemsg, notes)
@@ -1618,12 +1380,13 @@ for line in codecs.open(direcfile, "r", "utf-8"):
   
     lemmas.append((pos, infl, lemma, explicit_stem))
 
-  elif len(parts) == 2 and parts[0] in ["v1", "v4"]:
+  elif len(parts) == 2 and parts[0] in ["v1", "v1+", "v4", "v4+"]:
     # regular verb
     pos, lemma = parts
     m = re.search("^v([14])$", pos)
     infl = int(m.group(1))
     lemmas.append(("verb", infl, lemma, None))
+  FIXME: handle participles
   else:
     pos = "verb"
     stems_lemmas = []
