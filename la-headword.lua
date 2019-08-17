@@ -76,15 +76,21 @@ end
 -- The main entry point.
 -- This is the only function that can be invoked from a template.
 function export.show(frame)
-	local args = frame:getParent().args
 	local NAMESPACE = mw.title.getCurrentTitle().nsText
 	local PAGENAME = mw.title.getCurrentTitle().text
 
-	local head = args["head"]; if head == "" then head = nil end
-
-	local poscat = frame.args[1] or error("Part of speech has not been specified. Please pass parameter 1 to the module invocation.")
-	local class = frame.args[2]
-	local suff_type = frame.args.suff_type
+	local iparams = {
+		[1] = {required = true},
+		[2] = {},
+		["def"] = {},
+		["suff_type"] = {},
+	}
+	local iargs = require("Module:parameters").process(frame.args, iparams)
+	local args = frame:getParent().args
+	local poscat = iargs[1]
+	local class = iargs[2]
+	local def = iargs.def
+	local suff_type = iargs.suff_type
 	local postype = nil
 	if suff_type then
 		postype = poscat .. '-' .. suff_type
@@ -92,7 +98,7 @@ function export.show(frame)
 		postype = poscat
 	end
 
-	local data = {lang = lang, pos_category = (NAMESPACE == "Reconstruction" and "reconstructed " or "") .. poscat, categories = {}, heads = {head}, genders = {}, inflections = {}}
+	local data = {lang = lang, pos_category = (NAMESPACE == "Reconstruction" and "reconstructed " or "") .. poscat, categories = {}, heads = {}, genders = {}, inflections = {}}
 	local infl_classes = {}
 	local appendix = {}
 	local postscript = {}
@@ -102,7 +108,7 @@ function export.show(frame)
 	end
 
 	if pos_functions[postype] then
-		pos_functions[postype](class, args, data, infl_classes, appendix, postscript)
+		pos_functions[postype](class, def, args, data, infl_classes, appendix, postscript)
 	end
 
 	if mw.ustring.find(mw.ustring.gsub(PAGENAME,"qu","kv"),"[aeiouāēīōū][iu][aeiouāēīōū]") then
@@ -137,7 +143,7 @@ local function process_num_type(numtype, categories)
 	end
 end
 
-local function nouns(pos, args, data, infl_classes, appendix)
+local function nouns(pos, def, args, data, infl_classes, appendix)
 	local NAMESPACE = mw.title.getCurrentTitle().nsText
 	local is_num = pos == "numerals"
 	local is_pn = false
@@ -354,20 +360,20 @@ local function nouns(pos, args, data, infl_classes, appendix)
 	end
 end
 
-pos_functions["nouns"] = function(class, args, data, infl_classes, appendix)
-	return nouns("nouns", args, data, infl_classes, appendix)
+pos_functions["nouns"] = function(class, def, args, data, infl_classes, appendix)
+	return nouns("nouns", def, args, data, infl_classes, appendix)
 end
 
-pos_functions["proper nouns"] = function(class, args, data, infl_classes, appendix)
-	return nouns("proper nouns", args, data, infl_classes, appendix)
+pos_functions["proper nouns"] = function(class, def, args, data, infl_classes, appendix)
+	return nouns("proper nouns", def, args, data, infl_classes, appendix)
 end
 
-pos_functions["suffixes-noun"] = function(class, args, data, infl_classes, appendix)
-	return nouns("suffixes", args, data, infl_classes, appendix)
+pos_functions["suffixes-noun"] = function(class, def, args, data, infl_classes, appendix)
+	return nouns("suffixes", def, args, data, infl_classes, appendix)
 end
 
-pos_functions["numerals-noun"] = function(class, args, data, infl_classes, appendix)
-	return nouns("numerals", args, data, infl_classes, appendix)
+pos_functions["numerals-noun"] = function(class, def, args, data, infl_classes, appendix)
+	return nouns("numerals", def, args, data, infl_classes, appendix)
 end
 
 export.allowed_subtypes = {
@@ -401,7 +407,7 @@ export.allowed_subtypes = {
 	["highlydef"] = true,
 }
 
-pos_functions["verbs"] = function(class, args, data, infl_classes, appendix)
+pos_functions["verbs"] = function(class, def, args, data, infl_classes, appendix)
 	local m_la_verb = require("Module:la-verb")
 	local conjdata, typeinfo = m_la_verb.make_data(args, true)
 	local lemma_forms = conjdata.overriding_lemma
@@ -583,7 +589,7 @@ end
 
 pos_functions["suffixes-verb"] = pos_functions["verbs"]
 
-local function adjectives_new(pos, args, data, infl_classes, appendix)
+local function adjectives_new(pos, def, args, data, infl_classes, appendix)
 	local NAMESPACE = mw.title.getCurrentTitle().nsText
 	local is_num = pos == "numerals"
 	local decldata = require("Module:la-nominal").do_generate_adj_forms(
@@ -610,6 +616,21 @@ local function adjectives_new(pos, args, data, infl_classes, appendix)
 	local fem = decldata.forms["nom_" .. lemma_num .. "_f"]
 	local neut = decldata.forms["nom_" .. lemma_num .. "_n"]
 	local gen = decldata.forms["gen_" .. lemma_num .. "_m"]
+
+	if decldata.pos == "participles" then
+		if rfind(masc, "ūrus$") then
+			table.insert(data.category, "Latin future participles")
+		elseif rfind(masc, "ndus$") then
+			-- FIXME, should rename to "Latin gerundives")
+			table.insert(data.category, "Latin future passive participles")
+		elseif rfind(masc, "[stx]us$") then
+			table.insert(data.category, "Latin perfect participles")
+		elseif rfind(masc, "ns$") then
+			table.insert(data.category, "Latin present participles")
+		else
+			error("Unrecognized participle ending: " .. masc)
+		end
+	end
 
 	local function is_missing(form)
 		return not form or form == "" or form == "—" or #form == 0
@@ -651,8 +672,8 @@ local function adjectives_new(pos, args, data, infl_classes, appendix)
 	end
 end
 
-local function adjectives_comp(pos, args, data, infl_classes, appendix)
-	params = {
+local function adjectives_comp(pos, def, args, data, infl_classes, appendix)
+	local params = {
 		[1] = {alias_of = 'head'},
 		[2] = {alias_of = 'comp'},
 		["head"] = {list = true, default = mw.title.getCurrentTitle().text},
@@ -679,8 +700,8 @@ local function adjectives_comp(pos, args, data, infl_classes, appendix)
 	end
 end
 
-local function adjectives_sup(pos, args, data, infl_classes, appendix)
-	params = {
+local function adjectives_sup(pos, def, args, data, infl_classes, appendix)
+	local params = {
 		[1] = {alias_of = 'head'},
 		[2] = {alias_of = 'sup'},
 		["head"] = {list = true, default = mw.title.getCurrentTitle().text},
@@ -711,30 +732,34 @@ local function adjectives_sup(pos, args, data, infl_classes, appendix)
 	end
 end
 
-local function adjectives(pos, class, args, data, infl_classes, appendix)
+local function adjectives(pos, class, def, args, data, infl_classes, appendix)
 	if class == "new" then
-		return adjectives_new(pos, args, data, infl_classes, appendix)
+		return adjectives_new(pos, def, args, data, infl_classes, appendix)
 	elseif class == "comp" then
-		return adjectives_comp(pos, args, data, infl_classes, appendix)
+		return adjectives_comp(pos, def, args, data, infl_classes, appendix)
 	elseif class == "sup" then
-		return adjectives_sup(pos, args, data, infl_classes, appendix)
+		return adjectives_sup(pos, def, args, data, infl_classes, appendix)
 	end
 end
 
-pos_functions["adjectives"] = function(class, args, data, infl_classes, appendix)
-	return adjectives("adjectives", class, args, data, infl_classes, appendix)
+pos_functions["adjectives"] = function(class, def, args, data, infl_classes, appendix)
+	return adjectives("adjectives", class, def, args, data, infl_classes, appendix)
 end
 
-pos_functions["suffixes-adjective"] = function(class, args, data, infl_classes, appendix)
-	return adjectives("suffixes", class, args, data, infl_classes, appendix)
+pos_functions["participles"] = function(class, def, args, data, infl_classes, appendix)
+	return adjectives("participles", class, def, args, data, infl_classes, appendix)
 end
 
-pos_functions["numerals-adjective"] = function(class, args, data, infl_classes, appendix)
-	return adjectives("numerals", class, args, data, infl_classes, appendix)
+pos_functions["suffixes-adjective"] = function(class, def, args, data, infl_classes, appendix)
+	return adjectives("suffixes", class, def, args, data, infl_classes, appendix)
 end
 
-pos_functions["adverbs"] = function(class, args, data, infl_classes, appendix)
-	params = {
+pos_functions["numerals-adjective"] = function(class, def, args, data, infl_classes, appendix)
+	return adjectives("numerals", class, def, args, data, infl_classes, appendix)
+end
+
+pos_functions["adverbs"] = function(class, def, args, data, infl_classes, appendix)
+	local params = {
 		[1] = {alias_of = 'head'},
 		[2] = {alias_of = 'comp'},
 		[3] = {alias_of = 'sup'},
@@ -813,8 +838,9 @@ pos_functions["suffixes-adverb"] = pos_functions["adverbs"]
 local prepositional_cases = {
 	genitive = true, accusative = true, ablative = true,
 }
-pos_functions["prepositions"] = function(class, args, data, infl_classes, appendix, postscript)
-	params = {
+
+pos_functions["prepositions"] = function(class, def, args, data, infl_classes, appendix, postscript)
+	local params = {
 		[1] = {list = true, required = true}, -- headword or cases
 		["head"] = {list = true},
 		["id"] = {},

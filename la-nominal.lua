@@ -2425,9 +2425,9 @@ local function construct_title(args_title, declensions_title, from_headword, par
 	return declensions_title
 end
 
-function export.do_generate_noun_forms(parent_args, pos, from_headword, support_num_type)
+function export.do_generate_noun_forms(parent_args, pos, from_headword, def, support_num_type)
 	local params = {
-		[1] = {required = true, default = "aqua<1>"},
+		[1] = {required = true, default = def or "aqua<1>"},
 		footnote = {},
 		title = {},
 		num = {},
@@ -2502,9 +2502,9 @@ function export.do_generate_noun_forms(parent_args, pos, from_headword, support_
 	return all_data
 end
 
-function export.do_generate_adj_forms(parent_args, pos, from_headword, support_num_type)
+function export.do_generate_adj_forms(parent_args, pos, from_headword, def, support_num_type)
 	local params = {
-		[1] = {required = true, default = "bonus"},
+		[1] = {required = true, default = def or "bonus"},
 		footnote = {},
 		title = {},
 		num = {},
