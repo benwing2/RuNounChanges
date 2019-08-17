@@ -14,7 +14,7 @@ a1 āfricus
 ###
 ### agō
 ###
-agō agere ēgī āctum
+v3 agō ēg āct
 n3 āctiō
 # ācta neuter plural homograph with ăcta
 v1+ āctitō
@@ -33,32 +33,32 @@ adv āctuōsē
 n3 āctuōsitās
 a1 āctuōsus
 adv āctūtum
-abigō abigere abēgī abāctum
+v3 abigō abēg abāct
 n3 abāctor
 a1 abāctius
 n4 abāctus
-adigō adigere adēgī adāctum
+v3 adigō adēg adāct
 # ambigō no perfect; ambactus is a different word
 a1 anteāctus
-circumagō circumagere circumēgī circumāctum
-cōgō cōgere coēgī coāctum
+v3 circumagō circumēg circumāct
+v3 cōgō coēg coāct
 n3 coāctor
 v1+ coāctō
 n4 coāctus
-dēgō dēgere dēgī --
-exigō exigere exēgī exāctum
+v3 dēgō dēg
+v3 exigō exēg exāct
 n3 exāctiō
 n3 exāctor
 a3 exāctior
-peragō peragere perēgī perāctum
-prōdigō prōdigere prōdēgī prōdāctum
-reagō reagere reēgī reāctum
+v3 peragō perēg perāct
+v3 prōdigō prōdēg prōdāct
+v3 reagō reēg reāct
 n3 reāctiō
-redigō redigere redēgī redāctum
-satagō satagere -- --
-subigō subigere subēgī subāctum
+v3 redigō redēg redāct
+v3 satagō
+v3 subigō subēg subāct
 n3 subāctor
-trānsigō trānsigere trānsēgī trānsāctum
+v3 trānsigō trānsēg trānsāct
 n3 trānsāctiō
 ###
 ### Amāzōn
@@ -67,16 +67,16 @@ pn3 Amāzōn Amāzon
 ###
 ### ardeō
 ###
-ardeō ardēre arsī arsum
+v2 ardeō ars ars
 adv ardenter
 adv ardentius
 adv ardentissimē
-ardēscō ardēscere arsī arsum
+v3 ardēscō ars ars
 n3 ardor
 n3 arsiō
 n1 arsūra
-exardeō exardēre exarsī exarsum
-exardēscō exardēscere exarsī exarsum
+v2 exardeō exars exars
+v3 exardēscō exars exars
 ###
 ### āspernor
 ###
@@ -252,21 +252,21 @@ a1 Cīncius
 ###
 ### cingō
 ###
-cingō cingere cīnxī cīnctum
+v3 cingō cīnx cīnct
 n2 cīnctōrium
 n2 cīnctum
 n1 cīnctūra
 n4 cīnctus
-accingō accingere accīnxī accīnctum
+v3 accingō accīnx accīnct
 a1 bicīnctus
-circumcingō circumcingere circumcīnxī circumcīnctum
-discingō discingere discīnxī discīnctum
-incingō incingere incīnxī incīnctum
+v3 circumcingō circumcīnx circumcīnct
+v3 discingō discīnx discīnct
+v3 incingō incīnx incīnct
 a1 novemcīnctus
-praecingō praecingere praecīnxī praecīnctum
+v3 praecingō praecīnx praecīnct
 n4 prōcīnctus
-recingō recingere recīnxī recīnctum
-succingō succingere succīnxī succīnctum
+v3 recingō recīnx recīnct
+v3 succingō succīnx succīnct
 ###
 ### clandēstīnus
 ###
@@ -280,8 +280,8 @@ pn2 Cnōssus
 ###
 ### compescō
 ###
-compescō compescere compescuī --
-conpescō conpescere conpescuī --
+v3 compescō compescu
+v3 conpescō conpescu
 ###
 ### cōntiō
 ###
@@ -375,21 +375,21 @@ n2 dēlūbrum
 ###
 ### dīcō
 ###
-dīcō dīcere dīxī dictum
+v3 dīcō dīx dict
 # *abdīcō abdīcere abdīxī abdictum homograph of abdicō abdicāre
-addīcō addīcere addīxī addictum
-antedīcō antedīcere antedīxī antedictum
-benedīcō benedīcere benedīxī benedictum
-condīcō condīcere condīxī condictum
-contrādīcō contrādīcere contrādīxī contrādictum
-ēdīcō ēdīcere ēdīxī ēdictum
+v3 addīcō addīx addict
+v3 antedīcō antedīx antedict
+v3 benedīcō benedīx benedict
+v3 condīcō condīx condict
+v3 contrādīcō contrādīx contrādict
+v3 ēdīcō ēdīx ēdict
 # *indīcō indīcere indīxī indictum homograph of indicō indicāre
-interdīcō interdīcere interdīxī interdictum
-maledīcō maledīcere maledīxī maledictum
-praedīcō praedīcere praedīxī praedictum
-prōdīcō prōdīcere prōdīxī prōdictum
-superdīcō superdīcere superdīxī superdictum
-valedīcō valedīcere valedīxī valedictum
+v3 interdīcō interdīx interdict
+v3 maledīcō maledīx maledict
+v3 praedīcō praedīx praedict
+v3 prōdīcō prōdīx prōdict
+v3 superdīcō superdīx superdict
+v3 valedīcō valedīx valedict
 ###
 ### dīctērium
 ###
@@ -407,12 +407,12 @@ a1 condignus
 a1 indignus
 a3 indignior
 n3 indignitās
-indignor indignārī indignātum
+v1 indignor indignāt
 n3 indignātiō
 a1 indignābundus
 a1 perdignus
-dīgnōscō dīgnōscere dīgnōvī dīgnōtum
-dīnōscō dīnōscere dīnōvī dīnōtum
+v3 dīgnōscō dīgnōv dīgnōt
+v3 dīnōscō dīnōv dīnōt
 ###
 ### dolābra
 ###
@@ -421,31 +421,31 @@ a1 dolābrātus
 ###
 ### dūcō
 ###
-dūcō dūcere dūxī ductum
+v3 dūcō dūx duct
 #dūcō uxōrem
-abdūcō abdūcere abdūxī abductum
-addūcō addūcere addūxī adductum
-circumdūcō circumdūcere circumdūxī circumductum
-condūcō condūcere condūxī conductum
-dēdūcō dēdūcere dēdūxī dēductum
-dīdūcō dīdūcere dīdūxī dīductum
-ēdūcō ēdūcere ēdūxī ēductum
-indūcō indūcere indūxī inductum
-intrōdūcō intrōdūcere intrōdūxī intrōductum
-obdūcō obdūcere obdūxī obductum
-perdūcō perdūcere perdūxī perductum
-praedūcō praedūcere praedūxī praeductum
-praeterdūcō praeterdūcere praeterdūxī praeterductum
-prōdūcō prōdūcere prōdūxī prōductum
-redūcō redūcere redūxī reductum
-sēdūcō sēdūcere sēdūxī sēductum
-subdūcō subdūcere subdūxī subductum
-subintrōdūcō subintrōdūcere subintrōdūxī subintrōductum
-subterdūcō subterdūcere subterdūxī subterductum
-superdūcō superdūcere superdūxī superductum
-superindūcō superindūcere superindūxī superinductum
-trādūcō trādūcere trādūxī trāductum
-trānsdūcō trānsdūcere trānsdūxī trānsductum
+v3 abdūcō abdūx abduct
+v3 addūcō addūx adduct
+v3 circumdūcō circumdūx circumduct
+v3 condūcō condūx conduct
+v3 dēdūcō dēdūx dēduct
+v3 dīdūcō dīdūx dīduct
+v3 ēdūcō ēdūx ēduct
+v3 indūcō indūx induct
+v3 intrōdūcō intrōdūx intrōduct
+v3 obdūcō obdūx obduct
+v3 perdūcō perdūx perduct
+v3 praedūcō praedūx praeduct
+v3 praeterdūcō praeterdūx praeterduct
+v3 prōdūcō prōdūx prōduct
+v3 redūcō redūx reduct
+v3 sēdūcō sēdūx sēduct
+v3 subdūcō subdūx subduct
+v3 subintrōdūcō subintrōdūx subintrōduct
+v3 subterdūcō subterdūx subterduct
+v3 superdūcō superdūx superduct
+v3 superindūcō superindūx superinduct
+v3 trādūcō trādūx trāduct
+v3 trānsdūcō trānsdūx trānsduct
 ###
 ### ēbrius
 ###
@@ -474,62 +474,62 @@ a1 eclīpticus
 ###
 ### emō
 ###
-emō emere *ēmī ēmptum
+v3 emō *ēm ēmpt
 n3 ēmptiō
 n3 ēmptor
 a1 ēmptīcius
-adimō adimere adēmī adēmptum
+v3 adimō adēm adēmpt
 n3 adēmptiō
-coëmō coëmere *coēmī coēmptum
+v3 coëmō *coēm coēmpt
 n3 coēmptiō
-cōmō cōmere cōmpsī cōmptum
+v3 cōmō cōmps cōmpt
 n4 cōmptus
 a1 incōmptus
 a3 incōmptior
-dēmō dēmere dēmpsī dēmptum
+v3 dēmō dēmps dēmpt
 n3 dēmptiō
-dirimō dirimere dirēmī dirēmptum
-eximō eximere exēmī exēmptum
-interimō interimere *interēmī interēmptum
-interemō interemere *interēmī interēmptum
-perimō perimere perēmī perēmptum
+v3 dirimō dirēm dirēmpt
+v3 eximō exēm exēmpt
+v3 interimō *interēm interēmpt
+v3 interemō *interēm interēmpt
+v3 perimō perēm perēmpt
 n3 perēmptor
 a1 perēmptōrius
-prōmō prōmere prōmpsī prōmptum
+v3 prōmō prōmps prōmpt
 a1 prōmptus
 n4 prōmptus
 a3 prōmptior
 n3 prōmptitūdō
 n2 prōmptuārium
-dēprōmō dēprōmere dēprōmpsī dēprōmptum
-redimō redimere redēmī redēmptum
+v3 dēprōmō dēprōmps dēprōmpt
+v3 redimō redēm redēmpt
 n3 redēmptiō
 n3 redēmptor
 n3 redēmptrīx
-sūmō sūmere sūmpsī sūmptum
+v3 sūmō sūmps sūmpt
 n4 sūmptus
 a1 sūmptuōsus
 a3 sūmptuōsior
 a1 sūmptuārius
-absūmō absūmere absūmpsī absūmptum
+v3 absūmō absūmps absūmpt
 n3 absūmptiō
-adsūmō adsūmere adsūmpsī adsūmptum
+v3 adsūmō adsūmps adsūmpt
 n3 adsūmptiō
 a1 adsūmptīvus
-assūmō assūmere assūmpsī assūmptum
+v3 assūmō assūmps assūmpt
 n3 assūmptiō
 a1 assūmptīvus
-cōnsūmō cōnsūmere cōnsūmpsī cōnsūmptum
+v3 cōnsūmō cōnsūmps cōnsūmpt
 n3 cōnsūmptiō
-dēsūmō dēsūmere dēsūmpsī dēsūmptum
-īnsūmō īnsūmere īnsūmpsī īnsūmptum
-praesūmō praesūmere praesūmpsī praesūmptum
+v3 dēsūmō dēsūmps dēsūmpt
+v3 īnsūmō īnsūmps īnsūmpt
+v3 praesūmō praesūmps praesūmpt
 n3 praesūmptiō
-resūmō resūmere resūmpsī resūmptum
+v3 resūmō resūmps resūmpt
 ###
 ### ēmungō
 ###
-ēmungō ēmungere ēmunxī ēmūnctum
+v3 ēmungō ēmunx ēmūnct
 n2 ēmūnctōrium
 ###
 ### eō
@@ -619,35 +619,35 @@ a1 prŏfēstus
 ###
 ### fīgō
 ###
-fīgō fīgere fīxī fīxum
-adfīgō adfīgere adfīxī adfīxum
-cōnfīgō cōnfīgere cōnfīxī cōnfīxum
-crucifīgō crucifīgere crucifīxī crucifīxum
+v3 fīgō fīx fīx
+v3 adfīgō adfīx adfīx
+v3 cōnfīgō cōnfīx cōnfīx
+v3 crucifīgō crucifīx crucifīx
 n3 crucifīxiō
-dēfīgō dēfīgere dēfīxī dēfīxum
+v3 dēfīgō dēfīx dēfīx
 n3 dēfīxiō
-īnfīgō īnfīgere īnfīxī īnfīxum
-perfīgō perfīgere perfīxī perfīxum
-praefīgō praefīgere praefīxī praefīxum
-suffīgō suffīgere suffīxī suffīxum
-trānsfīgō trānsfīgere trānsfīxī trānsfīxum
+v3 īnfīgō īnfīx īnfīx
+v3 perfīgō perfīx perfīx
+v3 praefīgō praefīx praefīx
+v3 suffīgō suffīx suffīx
+v3 trānsfīgō trānsfīx trānsfīx
 ###
 ### fingō
 ###
-fingō fingere fīnxī fictum
+v3 fingō fīnx fict
 n1 fictia
 a1 fictīcius
 a3 fictilis
 n3 fictiō
 a1 fictītius
 n3 fictor
-adfingō adfingere adfīnxī adfictum
-affingō affingere affīnxī affictum
-cōnfingō cōnfingere cōnfīnxī cōnfictum
+v3 adfingō adfīnx adfict
+v3 affingō affīnx affict
+v3 cōnfingō cōnfīnx cōnfict
 n3 cōnfictiō
-dēfingō dēfingere dēfīnxī dēfictum
-effingō effingere effīnxī effictum
-perfingō perfingere perfīnxī perfictum
+v3 dēfingō dēfīnx dēfict
+v3 effingō effīnx effict
+v3 perfingō perfīnx perfict
 ###
 ### firmus
 ###
@@ -686,22 +686,22 @@ n2 flābrum
 ###
 ### flīgō
 ###
-flīgō flīgere flīxī flīctum
-adflīgō adflīgere adflīxī adflīctum
+v3 flīgō flīx flīct
+v3 adflīgō adflīx adflīct
 n3 adflīctiō
 v1+ adflīctō
 n3 adflīctor
 a1 adflīctus
-afflīgō afflīgere afflīxī afflīctum
+v3 afflīgō afflīx afflīct
 n3 afflīctiō
 v1+ afflīctō
 n3 afflīctor
-cōnflīgō cōnflīgere cōnflīxī cōnflīctum
+v3 cōnflīgō cōnflīx cōnflīct
 n3 cōnflīctātiō
 n3 cōnflīctiō
 v1+ cōnflīctō
 n4 cōnflīctus
-īnflīgō īnflīgere īnflīxī īnflīctum
+v3 īnflīgō īnflīx īnflīct
 n3 īnflīctiō
 v1+ prōflīgō
 ###
@@ -720,26 +720,26 @@ n4 flūctus
 ###
 ### fluō
 ###
-adfluō adfluere adflūxī adflūxum [int + dat]
-affluō affluere afflūxī afflūxum [int + dat]
-circumfluō circumfluere circumflūxī circumflūxum [tr]
-cōnfluō cōnfluere cōnflūxī -- [int]
-dēfluō dēfluere dēflūxī -- [int + de]
-diffluō diffluere difflūxī difflūxum [int]
-effluō effluere efflūxī -- [tr]
-fluō fluere flūxī flūxum [int]
-īnfluō īnfluere īnflūxī īnflūxum [int + in]
-interfluō interfluere interflūxī -- [tr]
-pereffluō pereffluere -- -- [int]
-perfluō perfluere perflūxī perflūxum [int + per/in]
-praefluō praefluere -- -- [tr]
-praeterfluō praeterfluere -- -- [tr]
-prōfluō prōfluere prōflūxī prōflūxum [int]
-refluō refluere -- -- [int]
-subterfluō subterfluere -- -- [tr]
-supereffluō supereffluere -- -- [int + dative]
-superfluō superfluere superflūxī -- [tr]
-trānsfluō trānsfluere trānsflūxī -- [int]
+v3 adfluō adflūx adflūx [int + dat]
+v3 affluō afflūx afflūx [int + dat]
+v3 circumfluō circumflūx circumflūx [tr]
+v3 cōnfluō cōnflūx [int]
+v3 dēfluō dēflūx [int + de]
+v3 diffluō difflūx difflūx [int]
+v3 effluō efflūx [tr]
+v3 fluō flūx flūx [int]
+v3 īnfluō īnflūx īnflūx [int + in]
+v3 interfluō interflūx [tr]
+v3 pereffluō [int]
+v3 perfluō perflūx perflūx [int + per/in]
+v3 praefluō [tr]
+v3 praeterfluō [tr]
+v3 prōfluō prōflūx prōflūx [int]
+v3 refluō [int]
+v3 subterfluō [tr]
+v3 supereffluō [int + dative]
+v3 superfluō superflūx [tr]
+v3 trānsfluō trānsflūx [int]
 n4 flūxus
 a3 flūxior
 n4 īnflūxus
@@ -840,20 +840,20 @@ a3 versifōrmis
 ###
 ### frangō
 ###
-frangō frangere frēgī frāctum
+v3 frangō frēg frāct
 n3 frāctiō
 n1 frāctūra
 a1 ānfrāctus
 n4 ānfrāctus
-cōnfringō cōnfringere cōnfrēgī cōnfrāctum
+v3 cōnfringō cōnfrēg cōnfrāct
 n3 cōnfrāctiō
-dēfringō dēfringere dēfrēgī dēfrāctum
-diffringō diffringere diffrēgī diffrāctum
-ecfringō ecfringere ecfrēgī ecfrāctum
-effringō effringere effrēgī effrāctum
-īnfringō īnfringere īnfrēgī īnfrāctum
-perfringō perfringere perfrēgī perfrāctum
-refringō refringere refrēgī refrāctum
+v3 dēfringō dēfrēg dēfrāct
+v3 diffringō diffrēg diffrāct
+v3 ecfringō ecfrēg ecfrāct
+v3 effringō effrēg effrāct
+v3 īnfringō īnfrēg īnfrāct
+v3 perfringō perfrēg perfrāct
+v3 refringō refrēg refrāct
 n3 refrāctiō
 a1 refrāctāriolus
 # suffringō no perfect
@@ -867,11 +867,11 @@ n1 frātriscīda
 ###
 ### frīgō
 ###
-frīgō frīgere frīxī frīctum
+v3 frīgō frīx frīct
 ###
 ### fruor
 ###
-fruor fruī frūctum
+v3 fruor frūct
 n3 frūx frūg
 a1 frūctifer
 v1+ frūctificō
@@ -891,11 +891,11 @@ n2 frūstum
 ###
 ### fungor
 ###
-fungor fungī fūnctum
+v3 fungor fūnct
 n3 fūnctiō
-dēfungor dēfungī dēfūnctum
+v3 dēfungor dēfūnct
 n3 dēfūnctiō
-perfungor perfungī perfūnctum
+v3 perfungor perfūnct
 a1 perfūnctōrius
 ###
 ### fūrt-
@@ -977,11 +977,11 @@ pn2 Hymēttus
 ###
 ### -iciō
 ###
-coniciō conicere coniēcī coniectum
-coiciō coicere coiēcī coiectum
-obiciō obicere obiēcī obiectum
-reiciō reicere reiēcī reiectum
-interjaciō interjacere interjēcī interjectum
+v3 coniciō coniēc coniect
+v3 coiciō coiēc coiect
+v3 obiciō obiēc obiect
+v3 reiciō reiēc reiect
+v3 interjaciō interjēc interject
 n3 reiectiō
 n3 obex obic
 ###
@@ -1002,7 +1002,7 @@ n1 ignāvia
 a3 ignāvior
 a1 ignāvissimus
 a1 ignāvus
-īgnēscō īgnēscere -- --
+v3 īgnēscō
 a1 īgneus
 a3 īgnicomāns īgnicomant
 n2 īgniculus
@@ -1060,17 +1060,17 @@ n3 jūglāns jūglānd
 ###
 ### iungō
 ###
-iungō iungere iūnxī iūnctum
+v3 iungō iūnx iūnct
 n3 iūnctiō
 n1 iūnctūra
-abiungō abiungere abiūnxī abiūnctum
-adiungō adiungere adiūnxī adiūnctum
+v3 abiungō abiūnx abiūnct
+v3 adiungō adiūnx adiūnct
 n3 adiūnctiō
 a3 adiūnctior
 a1 adiūnctīvus
 n3 adiūnctor
 a1 adiūnctus
-coniungō coniungere coniūnxī coniūnctum
+v3 coniungō coniūnx coniūnct
 adv coniūnctē
 adv coniūnctim
 n3 coniūnctiō
@@ -1082,11 +1082,11 @@ n2 coniūnctum
 n3 coniūnx coniug
 # coniux has short ŭ!
 n3 coniŭx coniug
-dēiungō dēiungere dēiūnxī dēiūnctum
-dīiungō dīiungere dīiūnxī dīiūnctum
+v3 dēiungō dēiūnx dēiūnct
+v3 dīiungō dīiūnx dīiūnct
 n3 dīiūnctiō
 a3 dīiūnctior
-disiungō disiungere disiūnxī disiūnctum
+v3 disiungō disiūnx disiūnct
 adv disiūnctē
 adv disiūnctim
 n3 disiūnctiō
@@ -1094,21 +1094,21 @@ a3 disiūnctior
 a1 disiūnctissimus
 a1 disiūnctīvus
 adv indisiūnctim
-iniungō iniungere iniūnxī iniūnctum
+v3 iniungō iniūnx iniūnct
 n3 iniūnctiō
-interiungō interiungere interiūnxī interiūnctum
-sēiungō sēiungere sēiūnxī sēiūnctum
+v3 interiungō interiūnx interiūnct
+v3 sēiungō sēiūnx sēiūnct
 adv sēiūnctim
-subiungō subiungere subiūnxī subiūnctum
+v3 subiungō subiūnx subiūnct
 a1 subiūnctīvus
-jungō jungere jūnxī jūnctum
+v3 jungō jūnx jūnct
 n3 jūnctiō
-abjungō abjungere abjūnxī abjūnctum
-adjungō adjungere adjūnxī adjūnctum
+v3 abjungō abjūnx abjūnct
+v3 adjungō adjūnx adjūnct
 n3 adjūnctiō
 a1 adjūnctīvus
 n3 adjūnctor
-conjungō conjungere conjūnxī conjūnctum
+v3 conjungō conjūnx conjūnct
 adv conjūnctim
 n3 conjūnctiō
 a1 conjūnctīvus
@@ -1116,19 +1116,19 @@ n2 conjūnctum
 n3 conjūnx conjug
 # conjux has short ŭ!
 n3 conjŭx conjug
-dējungō dējungere dējūnxī dējūnctum
+v3 dējungō dējūnx dējūnct
 n3 dījūnctiō
-disjungō disjungere disjūnxī disjūnctum
+v3 disjungō disjūnx disjūnct
 adv disjūnctim
 n3 disjūnctiō
 a1 disjūnctīvus
 adv indisjūnctim
-injungō injungere injūnxī injūnctum
+v3 injungō injūnx injūnct
 n3 injūnctiō
-interjungō interjungere interjūnxī interjūnctum
-sējungō sējungere sējūnxī sējūnctum
+v3 interjungō interjūnx interjūnct
+v3 sējungō sējūnx sējūnct
 adv sējūnctim
-subjungō subjungere subjūnxī subjūnctum
+v3 subjungō subjūnx subjūnct
 a1 subjūnctīvus
 ###
 ### iūrgō
@@ -1194,24 +1194,24 @@ adv jū̆xtim
 ###
 ### lābor
 ###
-lābor lābī lāpsum
+v3 lābor lāps
 v1+ lāpsō
 n4 lāpsus
 phr lāpsus_auris
 n4 adlāpsus
-allābor allābī allāpsum
-collābor collābī collāpsum
-conlābor conlābī conlāpsum
-dēlābor dēlābī dēlāpsum
-dīlābor dīlābī dīlāpsum
-ēlābor ēlābī ēlāpsum
-illābor illābī illāpsum
+v3 allābor allāps
+v3 collābor collāps
+v3 conlābor conlāps
+v3 dēlābor dēlāps
+v3 dīlābor dīlāps
+v3 ēlābor ēlāps
+v3 illābor illāps
 n4 illāpsus
-perlābor perlābī perlāpsum
-praeterlābor praeterlābī praeterlāpsum
-prōlābor prōlābī prōlāpsum
+v3 perlābor perlāps
+v3 praeterlābor praeterlāps
+v3 prōlābor prōlāps
 n3 prōlāpsiō
-relābor relābī relāpsum
+v3 relābor relāps
 ###
 ### lābrūsca
 ###
@@ -1219,7 +1219,7 @@ n1 lābrūsca
 ###
 ### legō
 ###
-legō legere *lēgī lēctum
+v3 legō *lēg lēct
 n3 lēctiō
 a3 lēctior
 a1 lēctissimus
@@ -1228,46 +1228,46 @@ n3 lēctrīx
 v1+ lēctō
 v1+ lēctitō
 n1 lēctiuncula
-adlegō adlegere *adlēgī adlēctum
+v3 adlegō *adlēg adlēct
 # FIXME fix adlecto "dispatch" -> "select"
-allegō allegere *allēgī allēctum
+v3 allegō *allēg allēct
 a1 allēctīvus
-circumlegō circumlegere *circumlēgī circumlēctum
-intellegō intellegere intellēxī intellēctum
+v3 circumlegō *circumlēg circumlēct
+v3 intellegō intellēx intellēct
 n3 intellēctiō
 n4 intellēctus
 a3 intellēctuālis
-neglegō neglegere neglēxī neglēctum
+v3 neglegō neglēx neglēct
 n3 neglēctiō
 n3 neglēctor
 n4 neglēctus
-perlegō perlegere *perlēgī perlēctum
+v3 perlegō *perlēg perlēct
 n3 pellēctiō
-praelegō praelegere *praelēgī praelēctum
-relegō relegere *relēgī relēctum
-subintellegō subintellegere subintellēxī subintellēctum
-sublegō sublegere *sublēgī sublēctum
-colligō colligere collēgī collēctum
+v3 praelegō *praelēg praelēct
+v3 relegō *relēg relēct
+v3 subintellegō subintellēx subintellēct
+v3 sublegō *sublēg sublēct
+v3 colligō collēg collēct
 n3 collēctiō
 n1 collēcta
 a1 collēctīvus
-conligō conligere conlēgī conlēctum
+v3 conligō conlēg conlēct
 n3 conlēctiō
-dēligō dēligere dēlēgī dēlēctum
+v3 dēligō dēlēg dēlēct
 n4 dēlēctus
-dīligō dīligere dīlēxī dīlēctum
+v3 dīligō dīlēx dīlēct
 n3 dīlēctiō
 n4 dīlēctus
-ēligō ēligere ēlēgī ēlēctum
+v3 ēligō ēlēg ēlēct
 n3 ēlēctiō
 a1 ēlēctissimus
-intelligō intelligere intellēxī intellēctum
-negligō negligere neglēxī neglēctum
-praeintelligō praeintelligere praeintellēxī praeintellēctum
-recolligō recolligere recollēgī recollēctum
-sēligō sēligere sēlēgī sēlēctum
+v3 intelligō intellēx intellēct
+v3 negligō neglēx neglēct
+v3 praeintelligō praeintellēx praeintellēct
+v3 recolligō recollēg recollēct
+v3 sēligō sēlēg sēlēct
 n3 sēlēctiō
-subdēligō subdēligere subdēlēgī subdēlēctum
+v3 subdēligō subdēlēg subdēlēct
 ###
 ### lībra "weight"
 ###
@@ -1303,40 +1303,40 @@ a1 salignus
 ###
 ### linquō
 ###
-linquō linquere līquī lictum
+v3 linquō līqu lict
 n3 lictor
-dēlinquō dēlinquere dēlīquī dēlictum
+v3 dēlinquō dēlīqu dēlict
 n3 dēlictor
 n2 dēlictum
 phr locus_dēlictī
-relinquō relinquere relīquī relictum
+v3 relinquō relīqu relict
 n3 relictiō
 a1 abrelictus
-dērelinquō dērelinquere dērelīquī dērelictum
+v3 dērelinquō dērelīqu dērelict
 n3 dērelictiō
 # nucēs relinquō
 ###
 ### lūceō, lūx
 ###
-lūceō lūcēre lūxī -- [tr]
-allūceō allūcēre allūxī -- [int]
-circumlūceō circumlūcēre circumlūxī -- [not Classical; only circumlucens]
-collūceō collūcēre collūxī -- [int, + abl]
-conlūceō conlūcēre conlūxī -- [int, + abl]
-dīlūceō dīlūcēre dīlūxī -- [int]
-ēlūceō ēlūcēre ēlūxī -- [int]
-illūceō illūcēre -- -- [int]
-inlūceō inlūcēre -- -- [int]
-pellūceō pellūcēre pellūxī -- [int]
-perlūceō perlūcēre perlūxī -- [int]
-pollūceō pollūcēre pollūxī pollūctum [tr]
-praelūceō praelūcēre praelūxī -- [tr]
-prōlūceō prōlūcēre prōlūxī -- [int; not in Gaffiot, fix ref]
-relūceō relūcēre relūxī -- [int]
-sublūceō sublūcēre sublūxī -- [int]
-superlūceō superlūcēre -- -- [int; Late Latin, not in Gaffiot, fix ref]
-trānslūceō trānslūcēre -- -- [int]
-trālūceō trālūcēre -- -- [int]
+v2 lūceō lūx [tr]
+v2 allūceō allūx [int]
+v2 circumlūceō circumlūx [not Classical; only circumlucens]
+v2 collūceō collūx [int, + abl]
+v2 conlūceō conlūx [int, + abl]
+v2 dīlūceō dīlūx [int]
+v2 ēlūceō ēlūx [int]
+v2 illūceō [int]
+v2 inlūceō [int]
+v2 pellūceō pellūx [int]
+v2 perlūceō perlūx [int]
+v2 pollūceō pollūx pollūct [tr]
+v2 praelūceō praelūx [tr]
+v2 prōlūceō prōlūx [int; not in Gaffiot, fix ref]
+v2 relūceō relūx [int]
+v2 sublūceō sublūx [int]
+v2 superlūceō [int; Late Latin, not in Gaffiot, fix ref]
+v2 trānslūceō [int]
+v2 trālūceō [int]
 n3 lūx lūc
 phr fīat_lūx
 n1 lūxuria
@@ -1365,8 +1365,8 @@ v1+ relūctātiō
 ###
 ### lūgeō
 ###
-lūgeō lūgēre lūxī --
-ēlūgeō ēlūgēre ēlūxī --
+v2 lūgeō lūx
+v2 ēlūgeō ēlūx
 n4 lūctus
 a1 lūctificus
 a3 lūctificior
@@ -1435,7 +1435,7 @@ virreg nōlō
 ### mātr-
 ###
 a3 mātrālis
-mātrēscō mātrēscere -- --
+v3 mātrēscō
 a3 mātricālis
 n1 mātricīda
 n2 mātricīdium
@@ -1498,7 +1498,7 @@ v1+ cōnfābulor
 n3 cōnfarreātiō
 n3 cōnfectiō
 n3 cōnfector
-cōnferciō cōnfercīre cōnfersī cōnfertum
+v4 cōnferciō cōnfers cōnfert
 a1 cōnfersus
 a1 cōnfertifolius
 a3 cōnfertior
@@ -1525,13 +1525,13 @@ n2 cōnflīgium
 v1+ cōnflō
 n3 cōnfluēns
 # cōnfluō done elsewhere
-cōnfodiō cōnfodere cōnfōdī cōnfossum
+v3 cōnfodiō cōnfōd cōnfoss
 # cōnfōrm... done elsewhere
 # cōnfrāctiō done elsewhere
 a1 cōnfragōsus
 v1+ cōnfricō
 # cōnfringō done elsewhere
-cōnfugiō cōnfugere cōnfūgī cōnfugitum
+v3 cōnfugiō cōnfūg cōnfugit
 n2 cōnfugium
 n3 cōnfūsiō
 n3 cōnfūtātor
@@ -1545,7 +1545,7 @@ n1 īnfantia
 a1 īnfantissimus
 n1 īnfantula
 n2 īnfantulus
-īnfarciō īnfarcīre īnfarsī īnfartum
+v4 īnfarciō īnfars īnfart
 v1+ īnfatuō
 n3 īnfectiō
 a1 īnfectiōsus
@@ -1592,7 +1592,7 @@ v1+ īnfrīgidō
 a1 īnfrūnītus
 n1 īnfula
 a1 īnfūmātus
-īnfundō īnfundere īnfūdī īnfūsum
+v3 īnfundō īnfūd īnfūs
 v1+ īnfuscō
 n3 īnfūsiō
 a3 perīnfāmis
@@ -1601,20 +1601,20 @@ pn1 Tānfāna
 ###
 ### nītor
 ###
-nītor nītī nīsum/nīxum
+v3 nītor nīs/nīx
 v1+ nīxor
 n4 nīxus
 a1 nīxābundus
-adnītor adnītī adnīxum/adnīsum
-annītor annītī annīxum/annīsum
-cōnītor cōnītī cōnīsum/cōnīxum
-connītor connītī connīsum/connīxum
-ēnītor ēnītī ēnīxum/ēnīxum
+v3 adnītor adnīx/adnīs
+v3 annītor annīx/annīs
+v3 cōnītor cōnīs/cōnīx
+v3 connītor connīs/connīx
+v3 ēnītor ēnīx/ēnīx
 adv enīxē
 n3 enīxiō
-innītor innītī innīxum/innīsum
-obnītor obnītī obnīxum/obnīsum
-renītor renītī renīsum
+v3 innītor innīx/innīs
+v3 obnītor obnīx/obnīs
+v3 renītor renīs
 a1 subnīxus
 ###
 ### -nīx
@@ -1631,8 +1631,8 @@ n3 vernīx
 ###
 ### nūbō
 ###
-nūbō nūbere nūpsī nūptum
-ēnūbō ēnūbere ēnūpsī ēnūptum
+v3 nūbō nūps nūpt
+v3 ēnūbō ēnūps ēnūpt
 a1 innūptus
 n1 nūpta
 n1 nūptia
@@ -1674,7 +1674,7 @@ n3 renūntiātiō
 ###
 ### nūtriō
 ###
-nūtriō nūtrīre nūtrīvī nūtrītum
+v4 nūtriō nūtrīv nūtrīt
 n3 nūtrīciō
 a1 nūtrīcius
 v1+ nūtrīcō
@@ -1683,10 +1683,10 @@ n2 nūtrīmentum
 n3 nūtrītiō
 a1 nūtrītius
 n3 nūtrīx
-adnūtriō adnūtrīre adnūtrīvī adnūtrītum
-annūtriō annūtrīre annūtrīvī annūtrītum
-ēnūtriō ēnūtrīre ēnūtrīvī ēnūtrītum
-innūtriō innūtrīre innūtrīvī innūtrītum
+v4 adnūtriō adnūtrīv adnūtrīt
+v4 annūtriō annūtrīv annūtrīt
+v4 ēnūtriō ēnūtrīv ēnūtrīt
+v4 innūtriō innūtrīv innūtrīt
 ###
 ### ōrdō
 ###
@@ -1697,12 +1697,12 @@ n3 ōrdinātor
 adv ōrdinātim
 a1 ōrdinārius
 n4 ōrdināriātus
-ōrdior ōrdīrī ōrsum/ōrdītum
+v4 ōrdior ōrs/ōrdīt
 a1 ōrdītus
 # n1 voluntās ōrdināta
 v1+ adōrdinō
 n3 coōrdinātiō
-exōrdior exōrdīrī exōrsum
+v4 exōrdior exōrs
 n2 exōrdium
 a1 extrāōrdinārius
 a1 inōrdinātus
@@ -1769,17 +1769,17 @@ v1+ dēōsculor
 ###
 ### pangō
 ###
-pangō pangere pēgī/pepigī pāctum
-pangō pangere pānxī pānctum
+v3 pangō pēg/pepig pāct
+v3 pangō pānx pānct
 a3 pāctilis
-compingō compingere compēgī compāctum
+v3 compingō compēg compāct
 a1 compāctus
 a1 compāctissimus
-conpingō conpingere conpēgī conpāctum
-dēpangō dēpangere -- dēpāctum
-impingō impingere impēgī impāctum
-inpingō inpingere inpēgī inpāctum
-suppingō suppingere suppēgī suppāctum
+v3 conpingō conpēg conpāct
+v3 dēpangō -- dēpāct
+v3 impingō impēg impāct
+v3 inpingō inpēg inpāct
+v3 suppingō suppēg suppāct
 ###
 ### pāst-
 ###
@@ -1799,7 +1799,7 @@ v1+ oppignerō
 ###
 ### pingō
 ###
-pingō pingere pīnxī pictum
+v3 pingō pīnx pict
 a3 pictipennis
 a3 pictipēs pictiped
 n3 pictor
@@ -1807,22 +1807,22 @@ n1 pictūra
 a1 pictūrātus
 a1 albōpictus
 # acū pingō
-compingō compingere compīnxī compictum
-conpingō conpingere conpīnxī conpictum
-dēpingō dēpingere dēpīnxī dēpictum
-impingō impingere impīnxī impictum
-inpingō inpingere inpīnxī inpictum
+v3 compingō compīnx compict
+v3 conpingō conpīnx conpict
+v3 dēpingō dēpīnx dēpict
+v3 impingō impīnx impict
+v3 inpingō inpīnx inpict
 a1 subpictus
-suppingō suppingere suppīnxī suppictum
+v3 suppingō suppīnx suppict
 phr ut_pictūra_poēsis
 ###
 ### prēndō
 ###
-prēndō prēndere *prēndī prēnsum
-apprēndō apprēndere *apprēndī apprēnsum
-comprēndō comprēndere *comprēndī comprēnsum
-dēprēndō dēprēndere *dēprēndī dēprēnsum
-reprēndō reprēndere *reprēndī reprēnsum
+v3 prēndō *prēnd prēns
+v3 apprēndō *apprēnd apprēns
+v3 comprēndō *comprēnd comprēns
+v3 dēprēndō *dēprēnd dēprēns
+v3 reprēndō *reprēnd reprēns
 ###
 ### prīnceps
 ###
@@ -1897,13 +1897,13 @@ a1 repugnātōrius
 ###
 ### pungō
 ###
-pungō pungere pupugī pūnctum
-compungō compungere compūnxī compūnctum
-conpungō conpungere conpūnxī conpūnctum
-dispungō dispungere dispūnxī dispūnctum
-expungō expungere expūnxī expūnctum
-interpungō interpungere interpūnxī interpūnctum
-perpungō perpungere perpūnxī perpūnctum
+v3 pungō pupug pūnct
+v3 compungō compūnx compūnct
+v3 conpungō conpūnx conpūnct
+v3 dispungō dispūnx dispūnct
+v3 expungō expūnx expūnct
+v3 interpungō interpūnx interpūnct
+v3 perpungō perpūnx perpūnct
 ###
 ### pūrgō
 ###
@@ -2078,7 +2078,7 @@ n2 vicerēgnum
 ###
 ### regō
 ###
-regō regere rēxī rēctum [tr]
+v3 regō rēx rēct [tr]
 n3 rēctor
 a3 rēctior
 a1 rēctissimus
@@ -2090,60 +2090,60 @@ a1 rēctilīneus
 n3 rēctitātor
 n3 rēctitūdō
 #n1 sphaera rēcta
-adsurgō adsurgere adsurrēxī adsurrēctum [int]
-assurgō assurgere assurrēxī assurrēctum [int]
-conresurgō conresurgere -- -- [int]
-cōnsurgō cōnsurgere cōnsurrēxī cōnsurrēctum [int]
+v3 adsurgō adsurrēx adsurrēct [int]
+v3 assurgō assurrēx assurrēct [int]
+v3 conresurgō [int]
+v3 cōnsurgō cōnsurrēx cōnsurrēct [int]
 n3 cōnsurrēctiō
-corresurgō corresurgere -- -- [int]
-exsurgō exsurgere exsurrēxī exsurrēctum [int]
-exurgō exurgere exurrēxī exurrēctum [int]
-īnsurgō īnsurgere īnsurrēxī īnsurrēctum [mostly int]
+v3 corresurgō [int]
+v3 exsurgō exsurrēx exsurrēct [int]
+v3 exurgō exurrēx exurrēct [int]
+v3 īnsurgō īnsurrēx īnsurrēct [mostly int]
 n3 īnsurrēctiō
-pergō pergere perrēxī perrēctum [tr]
-resurgō resurgere resurrēxī resurrēctum [int]
+v3 pergō perrēx perrēct [tr]
+v3 resurgō resurrēx resurrēct [int]
 n3 resurrēctiō
-surgō surgere surrēxī surrēctum [int except in archaic surgō = subrigō "to straighten, to set upright"]
+v3 surgō surrēx surrēct [int except in archaic surgō = subrigō "to straighten, to set upright"]
 n3 surrēctiō
-expergīscor expergīscī experrēctum
-arrigō arrigere arrēxī arrēctum [tr]
-corrigō corrigere corrēxī corrēctum [tr]
+v3 expergīscor experrēct
+v3 arrigō arrēx arrēct [tr]
+v3 corrigō corrēx corrēct [tr]
 n3 corrēctiō
 n3 corrēctor
-dērigō dērigere dērēxī dērēctum [tr]
-dīrigō dīrigere dīrēxī dīrēctum [tr]
+v3 dērigō dērēx dērēct [tr]
+v3 dīrigō dīrēx dīrēct [tr]
 n3 dīrēctiō
 n2 dīrēctōrium
 n1 dīrēctūra
-ērigō ērigere ērēxī ērēctum [tr]
+v3 ērigō ērēx ērēct [tr]
 adv diērēctē
 a1 diērēctus
 n3 ērēctiō
 a3 ērēctior
-exporrigō exporrigere exporrēxī exporrēctum [tr]
+v3 exporrigō exporrēx exporrēct [tr]
 n3 exporrēctiō
-porrigō porrigere porrēxī porrēctum [tr]
+v3 porrigō porrēx porrēct [tr]
 a3 porrēctior
-reporrigō reporrigere -- -- [tr]
-subrigō subrigere subrēxī subrēctum [tr; not same as surgō]
+v3 reporrigō [tr]
+v3 subrigō subrēx subrēct [tr; not same as surgō]
 ###
 ### rēpō
 ###
-rēpō rēpere rēpsī rēptum
+v3 rēpō rēps rēpt
 v1+ rēptō [int; rēptātus "on which one has crawled; crowded; where one has swum" exists]
 a1 rēptābundus
 a3 rēptilis
-adrēpō adrēpere adrēpsī -- [int]
-arrēpō arrēpere arrēpsī -- [int]
-corrēpō corrēpere corrēpsī -- [int]
+v3 adrēpō adrēps [int]
+v3 arrēpō arrēps [int]
+v3 corrēpō corrēps [int]
 a1 correptus
-ērēpō ērēpere ērēpsī ērēptum [tr]
-inrēpō inrēpere inrēpsī inrēptum [tr]
-irrēpō irrēpere irrēpsī irrēptum [tr]
+v3 ērēpō ērēps ērēpt [tr]
+v3 inrēpō inrēps inrēpt [tr]
+v3 irrēpō irrēps irrēpt [tr]
 v1+ perrēptō [tr]
-obrēpō obrēpere obrēpsī obrēptum [tr]
-subrēpō subrēpere subrēpsī subrēptum [tr]
-surrēpō surrēpere surrēpsī surrēptum [tr]
+v3 obrēpō obrēps obrēpt [tr]
+v3 subrēpō subrēps subrēpt [tr]
+v3 surrēpō surrēps surrēpt [tr]
 ###
 ### -rīx
 ###
@@ -2337,7 +2337,7 @@ v1+ ērūctō
 ###
 ### sanciō
 ###
-sanciō sancīre sānxī sānctum
+v4 sanciō sānx sānct
 n3 sānctificātiō
 n2 sānctificium
 v1+ sānctificō
@@ -2356,422 +2356,422 @@ n2 sānctus
 ### -s̄cō: -āscō
 ###
 v3 advesperāscit advesperāv [impers]
-agnāscor agnāscī agnātum [int, has alt form adgnāscor]
-dēpāscō dēpāscere dēpāvī dēpāstum [tr]
-ēnāscor ēnāscī ēnātum [int]
-gnāscor gnāscī gnātum [int, alt of nāscor]
-inveterāscō inveterāscere inveterāvī -- [int]
-īrāscor īrāscī īrātum [int]
+v3 agnāscor agnāt [int, has alt form adgnāscor]
+v3 dēpāscō dēpāv dēpāst [tr]
+v3 ēnāscor ēnāt [int]
+v3 gnāscor gnāt [int, alt of nāscor]
+v3 inveterāscō inveterāv [int]
+v3 īrāscor īrāt [int]
 a3 īrāscibilis
-labāscō labāscere -- -- [int]
-nāscor nāscī nātum [int, has alt form gnāscor]
+v3 labāscō [int]
+v3 nāscor nāt [int, has alt form gnāscor]
 n1 nāscentia
 a1 nāscitūrus
-pāscō pāscere pāvī pāstum [tr]
+v3 pāscō pāv pāst [tr]
 v1+ pāscitō [int]
-pauperāscō pauperāscere -- -- [int]
-purpurāscō purpurāscere -- -- [int]
-redintegrāscō redintegrāscere -- -- [int?]
-renāscor renāscī renātum [int]
+v3 pauperāscō [int]
+v3 purpurāscō [int]
+v3 redintegrāscō [int?]
+v3 renāscor renāt [int]
 n1 renāscentia
 n2 vāsculum
 n2 vāscellum
 a1 vāsculārius
 a1 vāsculōsus
-vesperāscō vesperāscere vesperāvī -- [int]
-veterāscō veterāscere -- -- [int]
+v3 vesperāscō vesperāv [int]
+v3 veterāscō [int]
 a3 violāscēns
 ###
 ### -s̄cō: -ēscō
 ###
-crēscō crēscere crēvī crētum [int]
+v3 crēscō crēv crēt [int]
 # FIXME, delete passive
-accrēscō accrēscere accrēvī accrētum [int]
+v3 accrēscō accrēv accrēt [int]
 # FIXME, delete passive
-adcrēscō adcrēscere adcrēvī adcrētum [int]
+v3 adcrēscō adcrēv adcrēt [int]
 # FIXME, delete passive, fix headword
 # Example:
 # {{la-verb|adolēscō|adolēscere|conj=3|pattern=nopass-noperf}}
 # {{la-conj-3rd|type=nopass-noperf|adolēsc}}
-adincrēscō adincrēscere -- -- [int]
-concrēscō concrēscere concrēvī concrētum [int]
-dēcrēscō dēcrēscere dēcrēvī dēcrētum [int, has ppp]
+v3 adincrēscō [int]
+v3 concrēscō concrēv concrēt [int]
+v3 dēcrēscō dēcrēv dēcrēt [int, has ppp]
 # FIXME, delete supine; Gaffiot and Lewis/Short don't list incrētum
-incrēscō incrēscere incrēvī -- [int]
+v3 incrēscō incrēv [int]
 # FIXME, should have perfect and supine; delete passive, fix headword
 # {{la-verb|succrēscō|succrēscere|succrēvī|succrētum|conj=3|pattern=nopass}}
 # {{la-conj-3rd|type=nopass|succrēsc|succrēv|succrēt}}
-succrēscō succrēscere succrēvī succrētum [int]
+v3 succrēscō succrēv succrēt [int]
 # {{la-verb|supercrēscō|supercrēscere|supercrēvī|conj=3|pattern=nopass}}
 # {{la-conj-3rd|type=nopass|supercrēsc|supercrēv}}
-supercrēscō supercrēscere supercrēvī -- [int]
+v3 supercrēscō supercrēv [int]
 # FIXME, should have short a
-macrēscō macrēscere macruī -- [int]
+v3 macrēscō macru [int]
 # FIXME, should have perfect; delete passive, fix headword
-ēmacrēscō ēmacrēscere ēmacruī -- [int]
+v3 ēmacrēscō ēmacru [int]
 # FIXME, delete passive, fix headword
-olēscō olēscere -- -- [int]
-abolēscō abolēscere abolēvī -- [int]
+v3 olēscō [int]
+v3 abolēscō abolēv [int]
 # FIXME, delete passive
-adolēscō adolēscere adolēvī adultum [int, has ppp, has also adoluī, syncopated adolēsse]
+v3 adolēscō adolēv adult [int, has ppp, has also adoluī, syncopated adolēsse]
 # FIXME, delete passive
-exolēscō exolēscere exolēvī exolētum [int, has ppp]
+v3 exolēscō exolēv exolēt [int, has ppp]
 # FIXME, delete passive, perfect and supine
-exsolēscō exsolēscere -- -- [int]
+v3 exsolēscō [int]
 # FIXME, allow passive
-indolēscō indolēscere indoluī -- [tr]
-inolēscō inolēscere inolēvī inolitum [tr]
+v3 indolēscō indolu [tr]
+v3 inolēscō inolēv inolit [tr]
 # FIXME, delete passive
-īnsolēscō īnsolēscere -- -- [int]
+v3 īnsolēscō [int]
 # FIXME, delete passive
-obsolēscō obsolēscere obsolēvī obsolētum [int, obsolētus exists]
+v3 obsolēscō obsolēv obsolēt [int, obsolētus exists]
 # FIXME, delete passive
-quiēscō quiēscere quiēvī quiētum [int]
+v3 quiēscō quiēv quiēt [int]
 # FIXME, check all the rest
-acquiēscō acquiēscere acquiēvī acquiētum [int]
-adquiēscō adquiēscere adquiēvī adquiētum [int]
-conquiēscō conquiēscere conquiēvī conquiētum [int]
-requiēscō requiēscere requiēvī requiētum [tr]
-suēscō suēscere suēvī suētum [tr]
-adsuēscō adsuēscere adsuēvī adsuētum [tr]
-assuēscō assuēscere assuēvī assuētum [tr]
-cōnsuēscō cōnsuēscere cōnsuēvī cōnsuētum [tr]
-īnsuēscō īnsuēscere īnsuēvī īnsuētum [tr]
-mānsuēscō mānsuēscere mānsuēvī mānsuētum [tr]
+v3 acquiēscō acquiēv acquiēt [int]
+v3 adquiēscō adquiēv adquiēt [int]
+v3 conquiēscō conquiēv conquiēt [int]
+v3 requiēscō requiēv requiēt [tr]
+v3 suēscō suēv suēt [tr]
+v3 adsuēscō adsuēv adsuēt [tr]
+v3 assuēscō assuēv assuēt [tr]
+v3 cōnsuēscō cōnsuēv cōnsuēt [tr]
+v3 īnsuēscō īnsuēv īnsuēt [tr]
+v3 mānsuēscō mānsuēv mānsuēt [tr]
 # FIXME, allow passive, delete perfect
-abhorrēscō abhorrēscere -- -- [tr]
+v3 abhorrēscō [tr]
 # FIXME, wrong perfect, delete supine
-acēscō acēscere acuī -- [int]
+v3 acēscō acu [int]
 v1+ adēscō [per Gaffiot, only adēscātus is used]
 # FIXME, add perfect and supine, delete passive
-adhaerēscō adhaerēscere adhaesī adhaesum [int]
+v3 adhaerēscō adhaes adhaes [int]
 # FIXME, add perfect and supine, delete passive
-adhērēscō adhērēscere adhēsī adhēsum [int]
-adlubēscō adlubēscere -- -- [int]
-aegrēscō aegrēscere -- -- [int]
-albēscō albēscere -- -- [int]
-alēscō alēscere -- -- [int]
-algēscō algēscere alsī -- [int]
-amārēscō amārēscere -- -- [int]
-appārēscō appārēscere -- -- [int]
-arborēscō arborēscere -- -- [int]
+v3 adhērēscō adhēs adhēs [int]
+v3 adlubēscō [int]
+v3 aegrēscō [int]
+v3 albēscō [int]
+v3 alēscō [int]
+v3 algēscō als [int]
+v3 amārēscō [int]
+v3 appārēscō [int]
+v3 arborēscō [int]
 # FIXME, remove fourth part
-ārdēscō ārdēscere ārsī -- [int]
-ārēscō ārēscere āruī -- [int]
-assenēscō assenēscere -- -- [int]
-augēscō augēscere -- -- [int]
-aurēscō aurēscere -- -- [int]
-calēscō calēscere -- -- [int]
-candēscō candēscere canduī -- [int]
+v3 ārdēscō ārs [int]
+v3 ārēscō āru [int]
+v3 assenēscō [int]
+v3 augēscō [int]
+v3 aurēscō [int]
+v3 calēscō [int]
+v3 candēscō candu [int]
 # FIXME, add third part
-cānēscō cānēscere cānuī -- [int]
-celebrēscō celebrēscere -- -- [int]
-cinerēscō cinerēscere -- -- [int]
-clārēscō clārēscere clāruī -- [int]
-coacēscō coacēscere coacuī -- [int]
-coalēscō coalēscere coaluī coalitum [int, has ppp]
-cohaerēscō cohaerēscere cohaesī -- [int]
-colliquēscō colliquēscere colliquī -- [int]
-compēscō compēscere compēscuī -- [tr; supine compēscitum in Prisc.]
+v3 cānēscō cānu [int]
+v3 celebrēscō [int]
+v3 cinerēscō [int]
+v3 clārēscō clāru [int]
+v3 coacēscō coacu [int]
+v3 coalēscō coalu coalit [int, has ppp]
+v3 cohaerēscō cohaes [int]
+v3 colliquēscō colliqu [int]
+v3 compēscō compēscu [tr; supine compēscitum in Prisc.]
 # has incorrect long vowel on u
-computrēscō computrēscere computruī -- [int]
+v3 computrēscō computru [int]
 # FIXME, has incorrect 3rd part conpuī
-conpēscō conpēscere conpēscuī -- [tr; supine conpēscitum in Prisc.]
+v3 conpēscō conpēscu [tr; supine conpēscitum in Prisc.]
 # has incorrect long vowel on u
-conputrēscō conputrēscere conputruī -- [int]
-cōnsānēscō cōnsānēscere cōnsānuī -- [int]
-cōnsenēscō cōnsenēscere cōnsenuī -- [int]
-cōnsilēscō cōnsilēscere cōnsiluī -- [int]
-contābēscō contābēscere contābuī -- [int]
+v3 conputrēscō conputru [int]
+v3 cōnsānēscō cōnsānu [int]
+v3 cōnsenēscō cōnsenu [int]
+v3 cōnsilēscō cōnsilu [int]
+v3 contābēscō contābu [int]
 # has incorrect long vowel on e
-contenebrēscō contenebrēscere -- -- [int; impers per Gaffiot but not Lewis/Short]
-conticēscō conticēscere conticuī -- [tr]
+v3 contenebrēscō [int; impers per Gaffiot but not Lewis/Short]
+v3 conticēscō conticu [tr]
 # FIXME Delete the following
 #*contremēscō
-convalēscō convalēscere convaluī -- [int]
-convēscor convēscī -- [int]
-cornēscō cornēscere -- -- [int]
-crēbēscō crēbēscere crēbuī -- [int]
+v3 convalēscō convalu [int]
+v3 convēscor [int]
+v3 cornēscō [int]
+v3 crēbēscō crēbu [int]
 # FIXME, delete 4th part
-crēbrēscō crēbrēscere crēbruī -- [int]
-crūdēscō crūdēscere crūduī -- [int]
+v3 crēbrēscō crēbru [int]
+v3 crūdēscō crūdu [int]
 # FIXME, has two perfs, dēfervī and dēferbuī
-dēfervēscō dēfervēscere dēferbuī/dēfervī -- [int]
-dēflōrēscō dēflōrēscere dēflōruī -- [int]
+v3 dēfervēscō dēferbu/dēferv [int]
+v3 dēflōrēscō dēflōru [int]
 # FIXME, missing 3rd part
-dēliquēscō dēliquēscere dēlicuī -- [int]
-dēlitēscō dēlitēscere dēlituī -- [int]
-dēsenēscō dēsenēscere dēsenuī -- [int, per Gaffiot dēsenēscō is unused]
-dīlūcēscō dīlūcēscere dīlūxī -- [int]
+v3 dēliquēscō dēlicu [int]
+v3 dēlitēscō dēlitu [int]
+v3 dēsenēscō dēsenu [int, per Gaffiot dēsenēscō is unused]
+v3 dīlūcēscō dīlūx [int]
 # FIXME, Lewis and Short lists dulcuī, but not Lewis or Gaffiot.
-dulcēscō dulcēscere -- -- [int]
-dūrēscō dūrēscere dūruī -- [int]
+v3 dulcēscō [int]
+v3 dūrēscō dūru [int]
 # FIXME, has two perfs
-effervēscō effervēscere efferbuī/effervī -- [int]
-efflōrēscō efflōrēscere efflōruī -- [int]
-ēlanguēscō ēlanguēscere ēlangŭī -- [int]
+v3 effervēscō efferbu/efferv [int]
+v3 efflōrēscō efflōru [int]
+v3 ēlanguēscō ēlangŭ [int]
 # FIXME, missing 3rd part
-ēlūcēscō ēlūcēscere ēlūxī -- [int]
-ēmarcēscō ēmarcēscere ēmarcuī -- [int]
-ēnitēscō ēnitēscere ēnituī -- [int]
-ērubēscō ērubēscere ērubuī -- [tr]
+v3 ēlūcēscō ēlūx [int]
+v3 ēmarcēscō ēmarcu [int]
+v3 ēnitēscō ēnitu [int]
+v3 ērubēscō ērubu [tr]
 # -ēscō
-ēvānēscō ēvānēscere ēvānuī -- [int]
-exacerbēscō exacerbēscere -- -- [int]
-exalbēscō exalbēscere exalbuī -- [int]
-exārdēscō exārdēscere exārsī exārsum [int, has ppp]
-exārēscō exārēscere exāruī -- [int]
-excandēscō excandēscere excanduī -- [int]
-exhorrēscō exhorrēscere exhorruī -- [tr]
-expallēscō expallēscere expalluī -- [tr, mostly unused in present/imperfect/future]
-expavēscō expavēscere expāvī -- [tr]
-extābēscō extābēscere extābuī -- [int, mostly unused in present/imperfect/future]
-extimēscō extimēscere extimuī -- [tr]
-fervēscō fervēscere -- -- [int]
-fētēscō fētēscere -- -- [int; alt of foetēscō]
+v3 ēvānēscō ēvānu [int]
+v3 exacerbēscō [int]
+v3 exalbēscō exalbu [int]
+v3 exārdēscō exārs exārs [int, has ppp]
+v3 exārēscō exāru [int]
+v3 excandēscō excandu [int]
+v3 exhorrēscō exhorru [tr]
+v3 expallēscō expallu [tr, mostly unused in present/imperfect/future]
+v3 expavēscō expāv [tr]
+v3 extābēscō extābu [int, mostly unused in present/imperfect/future]
+v3 extimēscō extimu [tr]
+v3 fervēscō [int]
+v3 fētēscō [int; alt of foetēscō]
 # FIXME, remove 3rd part
-fistulēscō fistulēscere -- -- [int]
-flaccēscō flaccēscere flaccuī -- [int; has flaccīscō as alt]
-flāvēscō flāvēscere -- -- [int]
-flōrēscō flōrēscere -- -- [int; rēbus flōrēscendīs praeesse occurs]
-frīgēscō frīgēscere frīxī -- [int; friguī occurs late]
+v3 fistulēscō [int]
+v3 flaccēscō flaccu [int; has flaccīscō as alt]
+v3 flāvēscō [int]
+v3 flōrēscō [int; rēbus flōrēscendīs praeesse occurs]
+v3 frīgēscō frīx [int; friguī occurs late]
 # FIXME, clean up entry
-frondēscō frondēscere fronduī -- [int]
-glabrēscō glabrēscere -- -- [int]
-grandēscō grandēscere -- -- [int]
-hebēscō hebēscere -- -- [int]
-herbēscō herbēscere -- -- [int]
-horrēscō horrēscere horruī -- [tr]
-īgnēscō īgnēscere -- -- [int]
-illūcēscō illūcēscere illūxī -- [tr; has alt form illūcīscō]
-inalbēscō inalbēscere -- -- [int]
-inārēscō inārēscere ināruī -- [int]
-incalēscō incalēscere incaluī -- [int]
-incandēscō incandēscere incanduī -- [int]
-incānēscō incānēscere incānuī -- [int]
-inclārēscō inclārēscere inclāruī -- [int]
-incrēbēscō incrēbēscere incrēbuī -- [int; alt of incrēbrēscō, which is primary]
-incrēbrēscō incrēbrēscere incrēbruī -- [int]
-indūrēscō indūrēscere indūruī -- [int]
-ingemēscō ingemēscere ingemuī -- [int; alt of ingemīscō, which is primary]
-ingravēscō ingravēscere -- -- [int]
-inhorrēscō inhorrēscere inhorruī -- [int]
-inlūcēscō inlūcēscere inlūxī -- [tr; has alt form inlūcīscō]
-innōtēscō innōtēscere innōtuī -- [tr]
-īnsenēscō īnsenēscere īnsenuī -- [int]
-intumēscō intumēscere intumuī -- [int]
-invalēscō invalēscere invaluī -- [int]
-iuvenēscō iuvenēscere iuvenuī -- [int]
-juvenēscō juvenēscere juvenuī -- [int]
-languēscō languēscere langŭī -- [int]
-lapidēscō lapidēscere -- -- [int]
-lassēscō lassēscere -- -- [int]
+v3 frondēscō frondu [int]
+v3 glabrēscō [int]
+v3 grandēscō [int]
+v3 hebēscō [int]
+v3 herbēscō [int]
+v3 horrēscō horru [tr]
+v3 īgnēscō [int]
+v3 illūcēscō illūx [tr; has alt form illūcīscō]
+v3 inalbēscō [int]
+v3 inārēscō ināru [int]
+v3 incalēscō incalu [int]
+v3 incandēscō incandu [int]
+v3 incānēscō incānu [int]
+v3 inclārēscō inclāru [int]
+v3 incrēbēscō incrēbu [int; alt of incrēbrēscō, which is primary]
+v3 incrēbrēscō incrēbru [int]
+v3 indūrēscō indūru [int]
+v3 ingemēscō ingemu [int; alt of ingemīscō, which is primary]
+v3 ingravēscō [int]
+v3 inhorrēscō inhorru [int]
+v3 inlūcēscō inlūx [tr; has alt form inlūcīscō]
+v3 innōtēscō innōtu [tr]
+v3 īnsenēscō īnsenu [int]
+v3 intumēscō intumu [int]
+v3 invalēscō invalu [int]
+v3 iuvenēscō iuvenu [int]
+v3 juvenēscō juvenu [int]
+v3 languēscō langŭ [int]
+v3 lapidēscō [int]
+v3 lassēscō [int]
 # FIXME, two different verbs, latēscō and lātēscō, and need to
 # delete 3rd part latī and forms
-latēscō latēscere -- -- [int]
-liquēscō liquēscere licuī -- [int]
-lūcēscō lūcēscere lūxī -- [int; has alt form lūcīscō]
-lutēscō lutēscere -- -- [int]
-mācerēscō mācerēscere -- -- [int]
-macēscō macēscere -- -- [int]
-madēscō madēscere maduī -- [int]
-marcēscō marcēscere -- -- [int; has late perfect marcuī]
-mātrēscō mātrēscere -- -- [int]
-mātūrēscō mātūrēscere mātūruī -- [int]
-mītēscō mītēscere -- -- [int; has alt form mītīscō]
-mollēscō mollēscere -- -- [int]
-nigrēscō nigrēscere nigruī -- [int]
-noctēscō noctēscere -- -- [int]
-nōtēscō nōtēscere nōtuī -- [int]
-obārēscō obārēscere -- -- [int]
-obātrēscō obātrēscere -- -- [int]
-obbrūtēscō obbrūtēscere obbrūtuī -- [int]
-obdulcēscō obdulcēscere obdulcuī -- [int]
-obdūrēscō obdūrēscere obdūruī -- [int]
-obmūtēscō obmūtēscere obmūtuī -- [int]
-obrigēscō obrigēscere obriguī -- [int]
-obsordēscō obsordēscere obsorduī -- [int]
-obstipēscō obstipēscere obstipuī -- [int, alt of obstupēscō]
-obstupēscō obstupēscere obstupuī -- [int]
-obsurdēscō obsurdēscere obsurduī -- [int]
-obtenebrēscō obtenebrēscere -- -- [int]
-occallēscō occallēscere occalluī -- [int; has alt form obcallēscō]
-pallēscō pallēscere palluī -- [int]
-patēscō patēscere patuī -- [int]
-pavēscō pavēscere -- -- [tr]
-percrēbēscō percrēbēscere percrēbuī -- [int; alt of percrēbēscō, which is primary]
-percrēbrēscō percrēbrēscere percrēbruī -- [int]
-perhorrēscō perhorrēscere perhorruī -- [tr]
-pertimēscō pertimēscere pertimuī -- [tr]
-pinguēscō pinguēscere -- -- [int]
-plūmēscō plūmēscere -- -- [int]
-pūbēscō pūbēscere pūbuī -- [int]
-putrēscō putrēscere putruī -- [int]
-rādīcēscō rādīcēscere -- -- [int]
-refrīgēscō refrīgēscere refrīxī -- [int; late vulgar pf refrīgŭī]
-relanguēscō relanguēscere relangŭī -- [int; used mostly in perfect]
-remollēscō remollēscere -- -- [int]
-revirēscō revirēscere reviruī -- [int]
-revīvēscō revīvēscere revīxī -- [int; alt of revīvīscō, which is primary]
-rigēscō rigēscere rigŭī -- [int]
-rubēscō rubēscere rubuī -- [int]
-rūfēscō rūfēscere -- -- [int]
-sānēscō sānēscere -- -- [int]
-senēscō senēscere senuī -- [int; but longissimum spatium senēscendōrum hominum occurs]
-serēscō serēscere -- -- [int; two meanings, "to dry out" < serēnum and "to turn into whey" < serum]
-siccēscō siccēscere -- -- [int]
-silēscō silēscere -- -- [int]
-sordēscō sordēscere sorduī -- [int]
-splendēscō splendēscere splenduī -- [int]
-stupēscō stupēscere -- -- [int]
-tābēscō tābēscere tābuī -- [int]
-tenebrēscō tenebrēscere -- -- [int]
-tepēscō tepēscere tepuī -- [int]
-torpēscō torpēscere torpuī -- [int]
-tremēscō tremēscere -- -- [tr; has alt form tremīscō]
-tumēscō tumēscere tumuī -- [int]
-turgēscō turgēscere -- -- [int; has rare perf tursī in Ennius]
-ūmēscō ūmēscere -- -- [int; alt of hūmēscō, which is primary]
-valēscō valēscere valuī -- [int]
-vānēscō vānēscere -- -- [int]
-vēscor vēscī -- [tr]
-veterēscō veterēscere -- -- [int]
-vigēscō vigēscere viguī -- [int]
-virēscō virēscere viruī -- [int]
-viridēscō viridēscere -- -- [int]
+v3 latēscō [int]
+v3 liquēscō licu [int]
+v3 lūcēscō lūx [int; has alt form lūcīscō]
+v3 lutēscō [int]
+v3 mācerēscō [int]
+v3 macēscō [int]
+v3 madēscō madu [int]
+v3 marcēscō [int; has late perfect marcuī]
+v3 mātrēscō [int]
+v3 mātūrēscō mātūru [int]
+v3 mītēscō [int; has alt form mītīscō]
+v3 mollēscō [int]
+v3 nigrēscō nigru [int]
+v3 noctēscō [int]
+v3 nōtēscō nōtu [int]
+v3 obārēscō [int]
+v3 obātrēscō [int]
+v3 obbrūtēscō obbrūtu [int]
+v3 obdulcēscō obdulcu [int]
+v3 obdūrēscō obdūru [int]
+v3 obmūtēscō obmūtu [int]
+v3 obrigēscō obrigu [int]
+v3 obsordēscō obsordu [int]
+v3 obstipēscō obstipu [int, alt of obstupēscō]
+v3 obstupēscō obstupu [int]
+v3 obsurdēscō obsurdu [int]
+v3 obtenebrēscō [int]
+v3 occallēscō occallu [int; has alt form obcallēscō]
+v3 pallēscō pallu [int]
+v3 patēscō patu [int]
+v3 pavēscō [tr]
+v3 percrēbēscō percrēbu [int; alt of percrēbēscō, which is primary]
+v3 percrēbrēscō percrēbru [int]
+v3 perhorrēscō perhorru [tr]
+v3 pertimēscō pertimu [tr]
+v3 pinguēscō [int]
+v3 plūmēscō [int]
+v3 pūbēscō pūbu [int]
+v3 putrēscō putru [int]
+v3 rādīcēscō [int]
+v3 refrīgēscō refrīx [int; late vulgar pf refrīgŭī]
+v3 relanguēscō relangŭ [int; used mostly in perfect]
+v3 remollēscō [int]
+v3 revirēscō reviru [int]
+v3 revīvēscō revīx [int; alt of revīvīscō, which is primary]
+v3 rigēscō rigŭ [int]
+v3 rubēscō rubu [int]
+v3 rūfēscō [int]
+v3 sānēscō [int]
+v3 senēscō senu [int; but longissimum spatium senēscendōrum hominum occurs]
+v3 serēscō [int; two meanings, "to dry out" < serēnum and "to turn into whey" < serum]
+v3 siccēscō [int]
+v3 silēscō [int]
+v3 sordēscō sordu [int]
+v3 splendēscō splendu [int]
+v3 stupēscō [int]
+v3 tābēscō tābu [int]
+v3 tenebrēscō [int]
+v3 tepēscō tepu [int]
+v3 torpēscō torpu [int]
+v3 tremēscō [tr; has alt form tremīscō]
+v3 tumēscō tumu [int]
+v3 turgēscō [int; has rare perf tursī in Ennius]
+v3 ūmēscō [int; alt of hūmēscō, which is primary]
+v3 valēscō valu [int]
+v3 vānēscō [int]
+v3 vēscor [tr]
+v3 veterēscō [int]
+v3 vigēscō vigu [int]
+v3 virēscō viru [int]
+v3 viridēscō [int]
 ###
 ### -s̄cō: -īscō
 ###
-aborīscor aborīscī -- [int]
-dormīscō dormīscere -- -- [int]
-addormīscō addormīscere -- -- [int]
+v3 aborīscor [int]
+v3 dormīscō [int]
+v3 addormīscō [int]
 # FIXME, delete the following
-adormīscō adormīscere -- --
-condormīscō condormīscere condormīvī -- [int]
-ēdormīscō ēdormīscere -- -- [tr]
-obdormīscō obdormīscere obdormīvī obdormītum [int]
-perdormīscō perdormīscere -- -- [int]
-apīscor apīscī aptum [tr]
-adipīscor adipīscī adeptum [tr]
-scīscō scīscere scīvī scītum [tr]
-scīscitor scīscitārī scīscitātum [tr]
+v3 adormīscō
+v3 condormīscō condormīv [int]
+v3 ēdormīscō [tr]
+v3 obdormīscō obdormīv obdormīt [int]
+v3 perdormīscō [int]
+v3 apīscor apt [tr]
+v3 adipīscor adept [tr]
+v3 scīscō scīv scīt [tr]
+v1 scīscitor scīscitāt [tr]
 n3 scīscitātiō
 n3 scīscitātor
-adscīscō adscīscere adscīvī adscītum [tr, alt of ascīscō]
-ascīscō ascīscere ascīvī ascītum [tr, has alt form adscīscō]
-cōnscīscō cōnscīscere cōnscīvī/cōnsciī cōnscītum [tr]
-dēscīscō dēscīscere dēscīvī/dēsciī dēscītum [int]
-perscīscō perscīscere -- -- [tr]
-rescīscō rescīscere rescīvī/resciī rescītum [tr]
-comminīscor comminīscī commentum [tr]
-pacīscor pacīscī pactum [tr]
-compacīscor compacīscī compactum [int, has alt form compeciscor]
-compecīscor compecīscī compectum [int, alt of compaciscor]
-dēpecīscor dēpecīscī dēpectum [tr, has alt form dēpacīscor]
-concupīscō concupīscere concupīvī/concupiī concupītum [tr]
-conquinīscō conquinīscere conquēxī -- [int]
-conticīscō conticīscere conticuī -- [tr, alt of conticēscō]
-conticēscō conticēscere conticuī -- [tr, has alt form conticīscō]
-contremīscō contremīscere contremuī -- [tr]
+v3 adscīscō adscīv adscīt [tr, alt of ascīscō]
+v3 ascīscō ascīv ascīt [tr, has alt form adscīscō]
+v3 cōnscīscō cōnscīv/cōnsci cōnscīt [tr]
+v3 dēscīscō dēscīv/dēsci dēscīt [int]
+v3 perscīscō [tr]
+v3 rescīscō rescīv/resci rescīt [tr]
+v3 comminīscor comment [tr]
+v3 pacīscor pact [tr]
+v3 compacīscor compact [int, has alt form compeciscor]
+v3 compecīscor compect [int, alt of compaciscor]
+v3 dēpecīscor dēpect [tr, has alt form dēpacīscor]
+v3 concupīscō concupīv/concupi concupīt [tr]
+v3 conquinīscō conquēx [int]
+v3 conticīscō conticu [tr, alt of conticēscō]
+v3 conticēscō conticu [tr, has alt form conticīscō]
+v3 contremīscō contremu [tr]
 # FIXME Delete the following
-contremēscō contremēscere contremuī -- [tr]
-hīscō hīscere -- -- [tr]
-dĕhīscō dĕhīscere dĕhīvī -- [int]
-dēlitīscō dēlitīscere dēlituī -- [int, alt of dēlitēscō]
-dēlitēscō dēlitēscere dēlituī -- [int, has alt form dēlitīscō]
-expergīscor expergīscī experrēctum [int]
-fatīscō fatīscere -- -- [int]
-glīscō glīscere -- -- [int, has alt form glīscor]
-ingemīscō ingemīscere ingemuī -- [tr, has alt form ingemēscō]
-ingemēscō ingemēscere ingemuī -- [tr, alt of ingemīscō]
-longīscō longīscere -- -- [int]
-nancīscor nancīscī nactum [tr]
+v3 contremēscō contremu [tr]
+v3 hīscō [tr]
+v3 dĕhīscō dĕhīv [int]
+v3 dēlitīscō dēlitu [int, alt of dēlitēscō]
+v3 dēlitēscō dēlitu [int, has alt form dēlitīscō]
+v3 expergīscor experrēct [int]
+v3 fatīscō [int]
+v3 glīscō [int, has alt form glīscor]
+v3 ingemīscō ingemu [tr, has alt form ingemēscō]
+v3 ingemēscō ingemu [tr, alt of ingemīscō]
+v3 longīscō [int]
+v3 nancīscor nact [tr]
 a1 nānctus
-oblīvīscor oblīvīscī oblītum [tr]
-prŏficīscor prŏficīscī prŏfectum [int]
-reminīscō reminīscere -- -- [tr, alt of reminīscor]
-reminīscor reminīscī -- [tr]
-resipīscō resipīscere resipuī/resipiī/resipīvī -- [int]
+v3 oblīvīscor oblīt [tr]
+v3 prŏficīscor prŏfect [int]
+v3 reminīscō [tr, alt of reminīscor]
+v3 reminīscor [tr]
+v3 resipīscō resipu/resipi/resipīv [int]
 # FIXME! Page has revīvixī
-revīvīscō revīvīscere revīxī -- [int, has alt form revīvēscō]
-revīvēscō revīvēscere revīxī -- [int, alt of revīvīscō]
+v3 revīvīscō revīx [int, has alt form revīvēscō]
+v3 revīvēscō revīx [int, alt of revīvīscō]
 # FIXME Delete perfect active ulciscī
-ulcīscō ulcīscere -- -- [tr, archaic alt of ulcīscor]
-ulcīscor ulcīscī ultum [tr]
+v3 ulcīscō [tr, archaic alt of ulcīscor]
+v3 ulcīscor ult [tr]
 ###
 ### -s̄cō: -ōscō
 ###
-nōscō nōscere nōvī nōtum [tr, has archaic alt form gnōscō]
+v3 nōscō nōv nōt [tr, has archaic alt form gnōscō]
 a3 nōscibilis
 v1+ nōscitō
 a1 nōscitābundus
 prov nōsce_tē_ipsum
-gnōscō gnōscere gnōvī gnōtum [tr, alt of nōscō]
-agnōscō agnōscere agnōvī agnitum [tr, has alt form adgnōscō]
-adgnōscō adgnōscere adgnōvī adgnitum [tr, alt of agnōscō]
-cognōscō cognōscere cognōvī cognitum [tr]
+v3 gnōscō gnōv gnōt [tr, alt of nōscō]
+v3 agnōscō agnōv agnit [tr, has alt form adgnōscō]
+v3 adgnōscō adgnōv adgnit [tr, alt of agnōscō]
+v3 cognōscō cognōv cognit [tr]
 a3 cognōscibilis
 adv cognōscibiliter
-dīnōscō dīnōscere dīnōvī dīnōtum [tr, alt of dīgnōscō]
-ignōscō ignōscere ignōvī ignōtum [tr]
-internōscō internōscere internōvī internōtum [tr]
-pernōscō pernōscere pernōvī pernōtum [tr]
-praenōscō praenōscere praenōvī praenōtum [tr]
-praecognōscō praecognōscere -- praecognitum [tr]
-recognōscō recognōscere recognōvī recognitum [tr]
+v3 dīnōscō dīnōv dīnōt [tr, alt of dīgnōscō]
+v3 ignōscō ignōv ignōt [tr]
+v3 internōscō internōv internōt [tr]
+v3 pernōscō pernōv pernōt [tr]
+v3 praenōscō praenōv praenōt [tr]
+v3 praecognōscō -- praecognit [tr]
+v3 recognōscō recognōv recognit [tr]
 ###
 ### scrībō
 ###
-scrībō scrībere scrīpsī scrīptum
+v3 scrībō scrīps scrīpt
 n3 scrīptiō
 n3 scrīptor
 n3 scrīptrīx
 n2 scrīptum
 n1 scrīptūra
 a1 scrīptōrius
-adscrībō adscrībere adscrīpsī adscrīptum
+v3 adscrībō adscrīps adscrīpt
 n3 adscrīptor
-āscrībō āscrībere āscrīpsī āscrīptum
+v3 āscrībō āscrīps āscrīpt
 n3 āscrīptiō
 n3 āscrīptor
-circumscrībō circumscrībere circumscrīpsī circumscrīptum
+v3 circumscrībō circumscrīps circumscrīpt
 adv circumscrīptē
 n3 circumscrīptiō
 n3 cirucmscrīptor
-cōnscrībō cōnscrībere cōnscrīpsī cōnscrīptum
+v3 cōnscrībō cōnscrīps cōnscrīpt
 n3 cōnscrīptiō
 n3 cōnscrīptor
 n2 cōnscrīptus
 phr deinde_scrīptum
 v1+ cōnscrībillō
-contrāscrībō contrāscrībere contrāscrīpsī contrāscrīptum
-dēscrībō dēscrībere dēscrīpsī dēscrīptum
+v3 contrāscrībō contrāscrīps contrāscrīpt
+v3 dēscrībō dēscrīps dēscrīpt
 n3 dēscrīptiō
-discrībō discrībere discrīpsī discrīptum
+v3 discrībō discrīps discrīpt
 n3 discrīptiō
-exscrībō exscrībere exscrīpsī exscrīptum
-īnscrībō īnscrībere īnscrīpsī īnscrīptum
+v3 exscrībō exscrīps exscrīpt
+v3 īnscrībō īnscrīps īnscrīpt
 n3 īnscrīptiō
 # īnscrīptiō ēlectrōnica
-interscrībō interscrībere interscrīpsī interscrīptum
+v3 interscrībō interscrīps interscrīpt
 n2 manūscrīptus
-perscrībō perscrībere perscrīpsī perscrīptum
+v3 perscrībō perscrīps perscrīpt
 n3 perscrīptiō
 phr post_scrīptum
-praescrībō praescrībere praescrīpsī praescrīptum
+v3 praescrībō praescrīps praescrīpt
 n3 praescrīptiō
-prōscrībō prōscrībere prōscrīpsī prōscrīptum
+v3 prōscrībō prōscrīps prōscrīpt
 n3 prōscrīptiō
-rescrībō rescrībere rescrīpsī rescrīptum
+v3 rescrībō rescrīps rescrīpt
 n2 rescrīptum
-subscrībō subscrībere subscrīpsī subscrīptum
+v3 subscrībō subscrīps subscrīpt
 n3 subscrīptiō
 n3 subscrīptor
-superscrībō superscrībere superscrīpsī superscrīptum
+v3 superscrībō superscrīps superscrīpt
 n3 superscrīptiō
 n3 suprāscrīptiō
-trānscrībō trānscrībere trānscrīpsī trānscrīptum
-trānsscrībō trānsscrībere trānsscrīpsī trānsscrīptum
+v3 trānscrībō trānscrīps trānscrīpt
+v3 trānsscrībō trānsscrīps trānsscrīpt
 phr vōx_audīta_perit_lītera_scrīpta_manet
 ###
 ### sēgnis
@@ -2828,7 +2828,7 @@ v1+ subsīgnō
 ### extra long vowels
 ###
 # has -stīt- in perf
-obstō obstāre obstitī obstātum
+v1 obstō obstit obstāt
 # has pār-
 part1 paritūrus
 # wrongly has long a
@@ -2842,9 +2842,9 @@ a3 cathedrālis
 a1 extreus
 n3 abiēs abiet
 # wrongly has long e in perf
-īnflectō īnflectere īnflexī īnflexum
+v3 īnflectō īnflex īnflex
 # wrongly has long i in e.g. quaesieris (first i)
-quaerō quaerere quaesīvī/quaesiī quaesītum
+v3 quaerō quaesīv/quaesi quaesīt
 a3 horizontālis
 a1 nigritus
 a1 tigrīnus
@@ -2854,8 +2854,8 @@ n3 epizygis epizygid
 pn2 Mediolānum
 n2 cuprum
 # wrongly has long o in perfect and supine
-componō componere composuī compositum
-conponō conponere conposuī conpositum
+v3 componō composu composit
+v3 conponō conposu conposit
 # wrongly has long u
 a1 duplus
 ###
@@ -3227,7 +3227,7 @@ n3 quiēs quiēt
 n3 scinifēs
 n3 subolēs
 n3 struēs
-sēclūdō sēclūdere sēclūsī sēclūsum
+v3 sēclūdō sēclūs sēclūs
 part1 ēbibendus
 part1 ēdictandus
 part1 ēdisserendus
@@ -3363,7 +3363,7 @@ n3 prōcōnsul
 n3 prōmissiō
 n3 pronepōs pronepōt
 n2 prōtium
-prōvulgō prōvulgāre prōvulgāvī prōvulgātum
+v1 prōvulgō prōvulgāv prōvulgāt
 a1 prōgeneticus
 n2 cotōnium
 n3 incubō
@@ -3436,9 +3436,9 @@ v1+ scrūtō
 v1+ adiugō
 v1+ adjugō
 v1+ braciō
-intonō intonāre intonuī intonātum
+v1 intonō intonu intonāt
 # following also wrongly has short i
-īnsternō īnsternere īnstrāvī īnstrātum
+v3 īnsternō īnstrāv īnstrāt
 # wrongly has short i in sup
 v4+ blandior
 v4+ bulliō
@@ -3448,74 +3448,74 @@ v4+ dīlargior
 v4+ garriō
 v4+ mentior
 # wrongly has short u in sup
-dissolvō dissolvere dissolvī dissolūtum
-prōstituō prōstituere prōstituī prōstitūtum
-praestituō praestituere praestituī praestitūtum
-substituō substituere substituī substitūtum
-ecfutuō ecfutuere ecfutuī ecfutūtum
-effutuō effutuere effutuī effutūtum
-dēminuō dēminuere dēminuī dēminūtum
-dīminuō dīminuere dīminuī dīminūtum
-comminuō comminuere comminuī comminūtum
-induō induere induī indūtum
-superinduō superinduere superinduī superindūtum
-compluor compluī complūtum
-conpluor conpluī conplūtum
-exacuō exacuere exacuī exacūtum
-imbuō imbuere imbuī imbūtum
-annuō annuere annuī annūtum
-adnuō adnuere adnuī adnūtum
-suō suere suī sūtum
-īnsuō īnsuere īnsuī īnsūtum
-adsuō adsuere adsuī adsūtum
-assuō assuere assuī assūtum
-exspuō exspuere exspuī exspūtum
-expuō expuere expuī expūtum
+v3 dissolvō dissolv dissolūt
+v3 prōstituō prōstitu prōstitūt
+v3 praestituō praestitu praestitūt
+v3 substituō substitu substitūt
+v3 ecfutuō ecfutu ecfutūt
+v3 effutuō effutu effutūt
+v3 dēminuō dēminu dēminūt
+v3 dīminuō dīminu dīminūt
+v3 comminuō comminu comminūt
+v3 induō indu indūt
+v3 superinduō superindu superindūt
+v3 compluor complūt
+v3 conpluor conplūt
+v3 exacuō exacu exacūt
+v3 imbuō imbu imbūt
+v3 annuō annu annūt
+v3 adnuō adnu adnūt
+v3 suō su sūt
+v3 īnsuō īnsu īnsūt
+v3 adsuō adsu adsūt
+v3 assuō assu assūt
+v3 exspuō exspu exspūt
+v3 expuō expu expūt
 # following also wrongly has short i
-dīlibuō dīlibuere dīlibuī dīlibūtum
+v3 dīlibuō dīlibu dīlibūt
 # wrongly has short u in perf and sometimes sup
-circumfundō circumfundere circumfūdī circumfūsum
-superfundō superfundere superfūdī superfūsum
-obfundō obfundere obfūdī obfūsum
-offundō offundere offūdī offūsum
-prōfundō prōfundere prōfūdī prōfūsum
-cōnfugiō cōnfugere cōnfūgī cōnfugitum
-subterfugiō subterfugere subterfūgī --
-supterfugiō supterfugere supterfūgī --
+v3 circumfundō circumfūd circumfūs
+v3 superfundō superfūd superfūs
+v3 obfundō obfūd obfūs
+v3 offundō offūd offūs
+v3 prōfundō prōfūd prōfūs
+v3 cōnfugiō cōnfūg cōnfugit
+v3 subterfugiō subterfūg
+v3 supterfugiō supterfūg
 # wrongly has short o in perf
-circumfodiō circumfodere circumfōdī circumfossum
+v3 circumfodiō circumfōd circumfoss
 # wrongly has short e in all forms
-suppēdō suppēdere suppēdī suppēditum
+v3 suppēdō suppēd suppēdit
 v1+ dēblaterō
-dēlūdō dēlūdere dēlūsī dēlūsum
+v3 dēlūdō dēlūs dēlūs
 v1+ dēsūdō
-dēsuēfaciō dēsuēfacere dēsuēfēcī dēsuēfactum
+v3 dēsuēfaciō dēsuēfēc dēsuēfact
 v1+ ēiaculor
 v1+ ērūginō
-dēfugiō dēfugere dēfūgī dēfugitum
+v3 dēfugiō dēfūg dēfugit
 v1+ dēliquō
 # wrongly has short o in all forms
-explōdō explōdere explōsī explōsum
-plōdō plōdere plōsī plōsum
+v3 explōdō explōs explōs
+v3 plōdō plōs plōs
 # wrongly has short u in all forms
-manūteneō manūtenēre manūtenuī manūtentum
+v2 manūteneō manūtenu manūtent
 # wrongly has short i in perf
-dēvincō dēvincere dēvīcī dēvictum
-immittō immittere immīsī immissum
-intermittō intermittere intermīsī intermissum
-manūmittō manūmittere manūmīsī manūmissum
+v3 dēvincō dēvīc dēvict
+v3 immittō immīs immiss
+v3 intermittō intermīs intermiss
+v3 manūmittō manūmīs manūmiss
 # wrongly has short e in perf
-adsuēfaciō adsuēfacere adsuēfēcī adsuēfactum
-assuēfaciō assuēfacere assuēfēcī assuēfactum
-disserō disserere dissēvī dissitum
+v3 adsuēfaciō adsuēfēc adsuēfact
+v3 assuēfaciō assuēfēc assuēfact
+v3 disserō dissēv dissit
 # found elsewhere
 #peragō
 #diffringō
 #conligō
 #pangō
-peredō peredere perēdī perēsum
-exedō exedere exēdī exēsum
-hēreō hērēre hēsī hēsum
+v3 peredō perēd perēs
+v3 exedō exēd exēs
+v2 hēreō hēs hēs
 # wrongly has īnesse etc.
 virreg īnsum
 ###
@@ -3550,88 +3550,88 @@ v1+ perstīllō
 ###
 ### stinguō
 ###
-stinguō stinguere -- --
-distinguō distinguere distīnxī distīnctum
+v3 stinguō
+v3 distinguō distīnx distīnct
 n3 distīnctiō
 a3 distīnctior
 a1 distīnctissimus
 a1 distīnctus
 a1 indistīnctus
-exstinguō exstinguere exstīnxī exstīnctum
+v3 exstinguō exstīnx exstīnct
 n3 exstīnctiō
 n3 exstīnctor
-extinguō extinguere extīnxī extīnctum
+v3 extinguō extīnx extīnct
 n3 extīnctiō
 a1 īnstīnctus
 n4 īnstīnctus
-interstinguō interstinguere interstīnxī interstīnctum
-restinguō restinguere restīnxī restīnctum
+v3 interstinguō interstīnx interstīnct
+v3 restinguō restīnx restīnct
 n3 restīnctiō
 ###
 ### struō
 ###
-struō struere strūxī strūctum
+v3 struō strūx strūct
 a3 strūctilis
 n3 strūctor
 n1 strūctūra
-astruō astruere astrūxī astrūctum
-cōnstruō cōnstruere cōnstrūxī cōnstrūctum
+v3 astruō astrūx astrūct
+v3 cōnstruō cōnstrūx cōnstrūct
 n3 cōnstrūctiō
-dēstruō dēstruere dēstrūxī dēstrūctum
+v3 dēstruō dēstrūx dēstrūct
 n3 dēstrūctiō
 a1 dēstrūctīvus
 n3 dēstrūctor
-exstruō exstruere exstrūxī exstrūctum
-īnstruō īnstruere īnstrūxī īnstrūctum
+v3 exstruō exstrūx exstrūct
+v3 īnstruō īnstrūx īnstrūct
 adv īnstrūctē
 n3 īnstrūctiō
 a3 īnstrūctior
 n3 īnstrūctor
 n1 īnstrūctūra
-obstruō obstruere obstrūxī obstrūctum
+v3 obstruō obstrūx obstrūct
 n3 obstrūctiō
-praestruō praestruere praestrūxī praestrūctum
-substruō substruere substrūxī substrūctum
+v3 praestruō praestrūx praestrūct
+v3 substruō substrūx substrūct
 n3 substrūctiō
-superstruō superstruere superstrūxī superstrūctum
+v3 superstruō superstrūx superstrūct
 ###
 ### sūgō
 ###
-sūgō sūgere sūxī sūctum
-exsūgō exsūgere exsūxī exsūctum
+v3 sūgō sūx sūct
+v3 exsūgō exsūx exsūct
 n3 exsūctiō
 ###
 ### tangō
 ###
-tangō tangere tetigī tāctum
+v3 tangō tetig tāct
 n4 tāctus
 a1 intāctus
 a3 tāctilis
 a3 intāctilis
-adtingō adtingere adtigī adtāctum
-attingō attingere attigī attāctum
-contingō contingere contigī contāctum
-obtingō obtingere obtigī --
-optingō optingere optigī --
+v3 adtingō adtig adtāct
+v3 attingō attig attāct
+v3 contingō contig contāct
+v3 obtingō obtig
+v3 optingō optig
 n4 contāctus
 n3 contāgiō
-pertingō pertingere -- --
+v3 pertingō
 ###
 ### tegō
 ###
-tegō tegere tēxī tēctum
+v3 tegō tēx tēct
 n3 tēctiō
 a3 tēctior
 n2 tēctum
-circumtegō circumtegere circumtēxī circumtēctum
-contegō contegere contēxī contēctum
-dētegō dētegere dētēxī dētēctum
-integō integere intēxī intēctum
-obtegō obtegere obtēxī obtēctum
-prōtegō prōtegere prōtēxī prōtēctum
+v3 circumtegō circumtēx circumtēct
+v3 contegō contēx contēct
+v3 dētegō dētēx dētēct
+v3 integō intēx intēct
+v3 obtegō obtēx obtēct
+v3 prōtegō prōtēx prōtēct
 n3 prōtēctiō
 n3 prōtēctor
-retegō retegere retēxī retēctum
+v3 retegō retēx retēct
 ###
 ### tignum
 ###
@@ -3642,17 +3642,17 @@ n3 contignātiō
 ###
 ### tinguō, tingō
 ###
-tingō tingere tīnxī tīnctum
+v3 tingō tīnx tīnct
 a3 tīnctilis
 n3 tīnctiō
 a1 tīnctōrius
 n1 tīnctūra
-intingō intingere intīnxī intīnctum
-intinguō intinguere intīnxī intīnctum
+v3 intingō intīnx intīnct
+v3 intinguō intīnx intīnct
 ###
 ### trahō
 ###
-trahō trahere trāxī tractum
+v3 trahō trāx tract
 v1+ tractō
 n4 tractus
 a3 tractābilis
@@ -3661,45 +3661,45 @@ n3 tractātiō
 n3 tractātor
 n3 tractātrīx
 n4 tractātus
-abstrahō abstrahere abstrāxī abstractum
+v3 abstrahō abstrāx abstract
 n3 abstractiō
-adtrahō adtrahere adtrāxī adtractum
+v3 adtrahō adtrāx adtract
 v1+ adtractō
-attrahō attrahere attrāxī attractum
+v3 attrahō attrāx attract
 a1 attractīvus
 v1+ attractō
 n3 attractiō
-circumtrahō circumtrahere circumtrāxī circumtractum
-contrahō contrahere contrāxī contractum
+v3 circumtrahō circumtrāx circumtract
+v3 contrahō contrāx contract
 a1 contractīvus
 n3 contractiō
 a3 contractior
 a1 contractus
 n4 contractus
-dētrahō dētrahere dētrāxī dētractum
+v3 dētrahō dētrāx dētract
 n3 dētractiō
 n3 dētractor
 v1+ dētractō
 n3 dētractātiō
-distrahō distrahere distrāxī distractum
+v3 distrahō distrāx distract
 n3 distractiō
-extrahō extrahere extrāxī extractum
+v3 extrahō extrāx extract
 n3 extractiō
 n2 extractum
-intertrahō intertrahere intertrāxī intertractum
-intrahō intrahere intrāxī intractum
-obtrahō obtrahere obtrāxī obtractum
-pertrahō pertrahere pertrāxī pertractum
+v3 intertrahō intertrāx intertract
+v3 intrahō intrāx intract
+v3 obtrahō obtrāx obtract
+v3 pertrahō pertrāx pertract
 v1+ pertractō
-prōtrahō prōtrahere prōtrāxī prōtractum
+v3 prōtrahō prōtrāx prōtract
 n3 prōtractiō
-retrahō retrahere retrāxī retractum
+v3 retrahō retrāx retract
 n3 retractiō
 v1+ retractō
 n3 retractātiō
-subtrahō subtrahere subtrāxī subtractum
+v3 subtrahō subtrāx subtract
 n3 subtractiō
-supertrahō supertrahere -- --
+v3 supertrahō
 ###
 ### -trīx: see -rīx
 ###
@@ -3731,49 +3731,49 @@ n2 terrūncius
 ###
 ### ungō
 ###
-ungō ungere ūnxī ūnctum
-unguō unguere ūnxī ūnctum
+v3 ungō ūnx ūnct
+v3 unguō ūnx ūnct
 n3 ūnctiō
 a3 ūnctior
 n2 ūnctum
 a1 ūnctuōsus
 n1 ūnctūra
-inunguō inunguere inūnxī inūnctum
-perungō perungere perūnxī perūnctum
+v3 inunguō inūnx inūnct
+v3 perungō perūnx perūnct
 ###
 ### ūrō
 ###
-ūrō ūrere ussī ustum
+v3 ūrō uss ust
 n3 ustilāgō ustilāgin
 n3 ustiō
 n3 ustor
 v1+ ustulō
-adūrō adūrere adussī adustum
+v3 adūrō aduss adust
 n3 adustiō
 a1 inadustus
-ambūrō ambūrere ambussī ambustum
+v3 ambūrō ambuss ambust
 n3 ambustiō
 n2 bustum
 n2 busticētum
 n2 bustirapus
 a1 bustuārius
-combūrō combūrere combussī combustum
+v3 combūrō combuss combust
 n3 combustiō
-conbūrō conbūrere conbussī conbustum
+v3 conbūrō conbuss conbust
 n3 conbustiō
 # following wrongly has long vowel on u in dēussī
-dēūrō dēūrere dēussī dēustum
-exūrō exūrere exussī exustum
+v3 dēūrō dēuss dēust
+v3 exūrō exuss exust
 n3 exustiō
-inūrō inūrere inussī inustum
-perūrō perūrere perussī perustum
-praeūrō praeūrere praeussī praeustum
+v3 inūrō inuss inust
+v3 perūrō peruss perust
+v3 praeūrō praeuss praeust
 a1 sēmicombustus
 v1+ sēmiustilō
 v1+ sēmustulō
 a1 sēmiustus
 a1 sēmustus
-subūrō subūrere subussī subustum
+v3 subūrō subuss subust
 ###
 ### ūsūrpō
 ###
@@ -3815,28 +3815,28 @@ v1+ dēvāstō
 ### vehō
 ###
 # short in vexī per Bennett
-vehō vehere vexī vectum
-advehō advehere advexī advectum
-āvehō āvehere āvexī āvectum
-convehō convehere convexī convectum
+v3 vehō vex vect
+v3 advehō advex advect
+v3 āvehō āvex āvect
+v3 convehō convex convect
 # circumvehor deponent
-dēvehō dēvehere dēvexī dēvectum
-ēvehō ēvehere ēvexī ēvectum
-invehō invehere invexī invectum
-pervehō pervehere pervexī pervectum
+v3 dēvehō dēvex dēvect
+v3 ēvehō ēvex ēvect
+v3 invehō invex invect
+v3 pervehō pervex pervect
 # praetervehor deponent
 # praevehor deponent
-prōvehō prōvehere prōvexī prōvectum
-revehō revehere revexī revectum
-subvehō subvehere subvexī subvectum
+v3 prōvehō prōvex prōvect
+v3 revehō revex revect
+v3 subvehō subvex subvect
 # supervehor deponent
-trānsvehō trānsvehere trānsvexī trānsvectum
-trāvehō trāvehere trāvexī trāvectum
+v3 trānsvehō trānsvex trānsvect
+v3 trāvehō trāvex trāvect
 ###
 ### vēndō
 ###
-vēndō vēndere vēndidī vēnditum
-dīvēndō dīvēndere dīvēndidī dīvēnditum
+v3 vēndō vēndid vēndit
+v3 dīvēndō dīvēndid dīvēndit
 a3 vēndibilis
 n3 vēnditiō
 v1+ vēnditō
@@ -3854,11 +3854,11 @@ n3 convictiō
 ###
 ### vīvō
 ###
-vīvō vīvere vīxī vīctum [impers pass]
+v3 vīvō vīx vīct [impers pass]
 n4 vīctus
 a3 vīctuālis
-advīvō advīvere advīxī -- [no supine, int w/dat]
-convīvō convīvere convīxī convīctum [int w/dat]
+v3 advīvō advīx [no supine, int w/dat]
+v3 convīvō convīx convīct [int w/dat]
 n4 convīctus
-revīvō revīvere -- -- [int]
-supervīvō supervīvere supervīxī -- [int w/dat]
+v3 revīvō [int]
+v3 supervīvō supervīx [int w/dat]
