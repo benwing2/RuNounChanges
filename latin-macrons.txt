@@ -7,7 +7,7 @@ a1 abiēgnus
 ###
 a1 Āfer Āfr
 pn2 Āfer Āfr
-n1 Āfrica
+pn1 Āfrica
 # Āfrica Austrālis
 a1 āfricānus
 a1 āfricus
@@ -63,7 +63,7 @@ n3 trānsāctiō
 ###
 ### Amāzōn
 ###
-pn3 Amāzōn Amāzon
+n3 Amāzōn Amāzon
 ###
 ### ardeō
 ###
@@ -71,7 +71,7 @@ v2 ardeō ars ars
 adv ardenter
 adv ardentius
 adv ardentissimē
-v3 ardēscō ars ars
+v3 ardēscō ars
 n3 ardor
 n3 arsiō
 n1 arsūra
@@ -99,7 +99,7 @@ a1 ātrātus
 a1 obātrātus
 n2 ātrium
 n2 ātriolum
-a3 ātriēnsis
+n3 ātriēnsis
 a3 ātriceps
 a3 ātrioventriculāris
 a3 ātripectorālis
@@ -213,11 +213,11 @@ a1 malignus
 ###
 ### bēstia
 ###
-a1 bēstia
+n1 bēstia
 n2 bēstiārium
 a1 bēstiārius
 n2 bēstiārius
-a1 bēstiola
+n1 bēstiola
 pn1 Bēstia
 ###
 ### būrrus
@@ -375,21 +375,21 @@ n2 dēlūbrum
 ###
 ### dīcō
 ###
-v3 dīcō dīx dict
-# *abdīcō abdīcere abdīxī abdictum homograph of abdicō abdicāre
-v3 addīcō addīx addict
-v3 antedīcō antedīx antedict
-v3 benedīcō benedīx benedict
-v3 condīcō condīx condict
-v3 contrādīcō contrādīx contrādict
-v3 ēdīcō ēdīx ēdict
-# *indīcō indīcere indīxī indictum homograph of indicō indicāre
-v3 interdīcō interdīx interdict
-v3 maledīcō maledīx maledict
-v3 praedīcō praedīx praedict
-v3 prōdīcō prōdīx prōdict
-v3 superdīcō superdīx superdict
-v3 valedīcō valedīx valedict
+virreg dīcō
+virreg abdīcō
+virreg addīcō
+virreg antedīcō
+virreg benedīcō
+virreg condīcō
+virreg contrādīcō
+virreg ēdīcō
+virreg indīcō
+virreg interdīcō
+virreg maledīcō
+virreg praedīcō
+virreg prōdīcō
+virreg superdīcō
+virreg valedīcō
 ###
 ### dīctērium
 ###
@@ -407,7 +407,7 @@ a1 condignus
 a1 indignus
 a3 indignior
 n3 indignitās
-v1 indignor indignāt
+v1+ indignor
 n3 indignātiō
 a1 indignābundus
 a1 perdignus
@@ -421,31 +421,31 @@ a1 dolābrātus
 ###
 ### dūcō
 ###
-v3 dūcō dūx duct
-#dūcō uxōrem
-v3 abdūcō abdūx abduct
-v3 addūcō addūx adduct
-v3 circumdūcō circumdūx circumduct
-v3 condūcō condūx conduct
-v3 dēdūcō dēdūx dēduct
-v3 dīdūcō dīdūx dīduct
-v3 ēdūcō ēdūx ēduct
-v3 indūcō indūx induct
-v3 intrōdūcō intrōdūx intrōduct
-v3 obdūcō obdūx obduct
-v3 perdūcō perdūx perduct
-v3 praedūcō praedūx praeduct
-v3 praeterdūcō praeterdūx praeterduct
-v3 prōdūcō prōdūx prōduct
-v3 redūcō redūx reduct
-v3 sēdūcō sēdūx sēduct
-v3 subdūcō subdūx subduct
-v3 subintrōdūcō subintrōdūx subintrōduct
-v3 subterdūcō subterdūx subterduct
-v3 superdūcō superdūx superduct
-v3 superindūcō superindūx superinduct
-v3 trādūcō trādūx trāduct
-v3 trānsdūcō trānsdūx trānsduct
+virreg dūcō
+#dūcō
+virreg abdūcō
+virreg addūcō
+virreg circumdūcō
+virreg condūcō
+virreg dēdūcō
+virreg dīdūcō
+virreg ēdūcō
+virreg indūcō
+virreg intrōdūcō
+virreg obdūcō
+virreg perdūcō
+virreg praedūcō
+virreg praeterdūcō
+virreg prōdūcō
+virreg redūcō
+virreg sēdūcō
+virreg subdūcō
+virreg subintrōdūcō
+virreg subterdūcō
+virreg superdūcō
+virreg superindūcō
+virreg trādūcō
+virreg trānsdūcō
 ###
 ### ēbrius
 ###
@@ -474,13 +474,13 @@ a1 eclīpticus
 ###
 ### emō
 ###
-v3 emō *ēm ēmpt
+v3 emō ēm ēmpt
 n3 ēmptiō
 n3 ēmptor
 a1 ēmptīcius
 v3 adimō adēm adēmpt
 n3 adēmptiō
-v3 coëmō *coēm coēmpt
+v3 coëmō coēm coēmpt
 n3 coēmptiō
 v3 cōmō cōmps cōmpt
 n4 cōmptus
@@ -490,8 +490,8 @@ v3 dēmō dēmps dēmpt
 n3 dēmptiō
 v3 dirimō dirēm dirēmpt
 v3 eximō exēm exēmpt
-v3 interimō *interēm interēmpt
-v3 interemō *interēm interēmpt
+v3 interimō interēm interēmpt
+v3 interemō interēm interēmpt
 v3 perimō perēm perēmpt
 n3 perēmptor
 a1 perēmptōrius
@@ -724,7 +724,7 @@ v3 adfluō adflūx adflūx [int + dat]
 v3 affluō afflūx afflūx [int + dat]
 v3 circumfluō circumflūx circumflūx [tr]
 v3 cōnfluō cōnflūx [int]
-v3 dēfluō dēflūx [int + de]
+v3 dēfluō dēflūx dēflūx [int + de]
 v3 diffluō difflūx difflūx [int]
 v3 effluō efflūx [tr]
 v3 fluō flūx flūx [int]
@@ -803,7 +803,7 @@ a3 cucumifōrmis
 a3 cuneifōrmis
 a3 discifōrmis
 a3 fīlifōrmis
-a3 -fōrmis
+sufa3 -fōrmis
 a3 fundifōrmis
 a3 fūsifōrmis
 a3 hāmifōrmis
@@ -1219,7 +1219,7 @@ n1 lābrūsca
 ###
 ### legō
 ###
-v3 legō *lēg lēct
+v3 legō lēg lēct
 n3 lēctiō
 a3 lēctior
 a1 lēctissimus
@@ -1228,11 +1228,11 @@ n3 lēctrīx
 v1+ lēctō
 v1+ lēctitō
 n1 lēctiuncula
-v3 adlegō *adlēg adlēct
+v3 adlegō adlēg adlēct
 # FIXME fix adlecto "dispatch" -> "select"
-v3 allegō *allēg allēct
+v3 allegō allēg allēct
 a1 allēctīvus
-v3 circumlegō *circumlēg circumlēct
+v3 circumlegō circumlēg circumlēct
 v3 intellegō intellēx intellēct
 n3 intellēctiō
 n4 intellēctus
@@ -1241,12 +1241,12 @@ v3 neglegō neglēx neglēct
 n3 neglēctiō
 n3 neglēctor
 n4 neglēctus
-v3 perlegō *perlēg perlēct
+v3 perlegō perlēg perlēct
 n3 pellēctiō
-v3 praelegō *praelēg praelēct
-v3 relegō *relēg relēct
+v3 praelegō praelēg praelēct
+v3 relegō relēg relēct
 v3 subintellegō subintellēx subintellēct
-v3 sublegō *sublēg sublēct
+v3 sublegō sublēg sublēct
 v3 colligō collēg collēct
 n3 collēctiō
 n1 collēcta
@@ -1298,12 +1298,12 @@ v1+ lignor
 a1 lignōsus
 n3 lignyizōn lignyizont
 n3 lignȳzōn lignȳzont
-n2 Paelignī
+pn2 Paelignī
 a1 salignus
 ###
 ### linquō
 ###
-v3 linquō līqu lict
+v3 linquō līqu
 n3 lictor
 v3 dēlinquō dēlīqu dēlict
 n3 dēlictor
@@ -1361,11 +1361,11 @@ v1+ ēlūctor
 a3 ēlūctābilis
 a3 inēlūctābilis
 v1+ relūctor
-v1+ relūctātiō
+n3 relūctātiō
 ###
 ### lūgeō
 ###
-v2 lūgeō lūx
+v2 lūgeō lūx lūct
 v2 ēlūgeō ēlūx
 n4 lūctus
 a1 lūctificus
@@ -1467,15 +1467,15 @@ a3 trimēstris
 ###
 ### mīlle
 ###
-num mīlle
+numn mīlle
 #n3 mīlle passūs
 #n3 mīlle passuum
 a3 mīllefōrmis
 a3 mīllifōrmis
 a1 mīllēnārius
-num1 mīllēnī
+numa1 mīllēnī
 n2 mīllennium
-a1 mīllēsimus
+numa1 mīllēsimus
 a1 mīlliārius
 n2 mīlliārium
 adv mīlliēns
@@ -1536,7 +1536,7 @@ n2 cōnfugium
 n3 cōnfūsiō
 n3 cōnfūtātor
 v1+ cōnfūtō
-v1+ cōnfutuō cōnfutuere cōnfutuī cōnfutūtum
+v3 cōnfutuō cōnfutu cōnfutūt
 a3 incōnfūsibilis
 n1 īnfacētia
 a3 īnfacētior
@@ -1549,7 +1549,7 @@ v4 īnfarciō īnfars īnfart
 v1+ īnfatuō
 n3 īnfectiō
 a1 īnfectiōsus
-adv īnfēlīciter īnfēlīcius īnfēlīcissimē
+adv īnfēlīciter
 a1 īnfēnsus
 a3 īnferior
 a3 īnfernālis
@@ -1609,7 +1609,7 @@ v3 adnītor adnīx/adnīs
 v3 annītor annīx/annīs
 v3 cōnītor cōnīs/cōnīx
 v3 connītor connīs/connīx
-v3 ēnītor ēnīx/ēnīx
+v3 ēnītor ēnīs/ēnīx
 adv enīxē
 n3 enīxiō
 v3 innītor innīx/innīs
@@ -1638,7 +1638,7 @@ n1 nūpta
 n1 nūptia
 n1 nūptiae
 a3 nūptiālis
-v1+ nūpturiō
+v4 nūpturiō nūpturīv
 n4 nūptus
 ###
 ### nūntiō
@@ -1651,7 +1651,7 @@ n1 nūntia
 a1 nūntiātōrius
 a1 nūnciātōrius
 a1 nūnciātīvus
-v1+ abrenūntiō
+v1 abrenūntiō abrenūntiāv
 n3 abrenūntiātiō
 v1+ adnūntiō
 n3 adnūntiātiō
@@ -1674,7 +1674,7 @@ n3 renūntiātiō
 ###
 ### nūtriō
 ###
-v4 nūtriō nūtrīv nūtrīt
+v4+ nūtriō
 n3 nūtrīciō
 a1 nūtrīcius
 v1+ nūtrīcō
@@ -1683,10 +1683,10 @@ n2 nūtrīmentum
 n3 nūtrītiō
 a1 nūtrītius
 n3 nūtrīx
-v4 adnūtriō adnūtrīv adnūtrīt
-v4 annūtriō annūtrīv annūtrīt
-v4 ēnūtriō ēnūtrīv ēnūtrīt
-v4 innūtriō innūtrīv innūtrīt
+v4 adnūtriō
+v4 annūtri
+v4+ ēnūtriō
+v4+ innūtriō
 ###
 ### ōrdō
 ###
@@ -1750,7 +1750,7 @@ adv rūrsus
 adv sinistrōrsus
 adv sūrsum
 ###
-### *ōsc-
+### ōsc-
 ### (Bennett includes ōscen derived from ōs but our etymology is different)
 ###
 v1+ ōsculor
@@ -1769,8 +1769,7 @@ v1+ dēōsculor
 ###
 ### pangō
 ###
-v3 pangō pēg/pepig pāct
-v3 pangō pānx pānct
+v3 pangō pānx/pēg/pepig pānct/pāct
 a3 pāctilis
 v3 compingō compēg compāct
 a1 compāctus
@@ -1818,11 +1817,11 @@ phr ut_pictūra_poēsis
 ###
 ### prēndō
 ###
-v3 prēndō *prēnd prēns
-v3 apprēndō *apprēnd apprēns
-v3 comprēndō *comprēnd comprēns
-v3 dēprēndō *dēprēnd dēprēns
-v3 reprēndō *reprēnd reprēns
+v3 prēndō prēnd prēns
+v3 apprēndō apprēnd apprēns
+v3 comprēndō comprēnd comprēns
+v3 dēprēndō dēprēnd dēprēns
+v3 reprēndō reprēnd reprēns
 ###
 ### prīnceps
 ###
@@ -1857,10 +1856,10 @@ n2 pūblicum
 a1 pūblicus
 n rēs<5.F>_pūblica<+>
 n rēs<5>pūblica<+>
-n1 Pūblicola
-n2 Pūblilius
+pn1 Pūblicola
+pn2 Pūblilius
 n3 Pūblīpor Pūblīpōr
-n2 Pūblius
+pn2 Pūblius
 ###
 ### pugn-
 ###
@@ -1924,16 +1923,16 @@ n3 repūrgātiō
 ### quadr-
 ###
 a1 biquadrāticus
-num duodēquadrāgintā
+numn duodēquadrāgintā
 n1 quadra
 a1 quadrāgēnārius
-num1 quadrāgēnī
+numa1 quadrāgēnī
 n1 quadrāgēsima
 a1 quadrāgēsimus
 adv quadrāgiēns
 adv quadrāgiēs
-num quadrāgintā
-num1 quadrāgintā ūnus
+numn quadrāgintā
+numa1 quadrāgintā_ūnus
 n3 quadrāle
 a3 quadrangulāris
 a1 quadrangulātus
@@ -1985,20 +1984,20 @@ a1 quadrīgārius
 n2 quadrīgātus
 a1 quadrigeminus
 a1 quadrigōnus
-a1 quadrīgula
-a1 quadrīgulae
+n1 quadrīgula
+n1 quadrīgulae
 n2 quadriiugī
 a3 quadriiugis
 a1 quadriiugus
 a1 quadrilaterus
 a1 quadrilīneātus
 a1 quadrimaculātus
-num1 quadringēnī
-num1 quadringentēsimus
-num1 quadringentī
+numa1 quadringēnī
+numa1 quadringentēsimus
+numa1 quadringentī
 adv quadringentiēns
 adv quadringentiēs
-v4+ quadripartiō
+v4 quadripartiō -- quadripartīt
 n3 quadripartītiō
 adv quadripartītō
 a1 quadripunctātus
@@ -2015,11 +2014,11 @@ n3 quadruplātor
 a3 quadruplex
 n3 quadruplex
 v1+ quadruplicō
-v1+ quadruplō
+v1 quadruplō -- quadruplāt
 a1 quadruplus
 a1 quadrus
-num1 ūndēquadrāgēsimus
-num ūndēquadrāgintā
+numa1 ūndēquadrāgēsimus
+numn ūndēquadrāgintā
 #
 ###
 ### quārtus
@@ -2033,19 +2032,19 @@ a1 quārtus<+>decimus<+>
 ###
 ### quīnque, quīntus
 ###
-num quīnque
+numn quīnque
 adv quīnquiēns
 adv quīnquiēs
 a1 quīntus
 n1 quīntāna
-num quīndecim
+numn quīndecim
 adv quīndeciēs
 adv quīndeciēns
 a1 quīntusdecimus
-num quīnquāgintā
+numn quīnquāgintā
 a1 quīnquāgēsimus
 a1 quīnquāgēnsimus
-num1 quīnquāgēnī
+numa1 quīnquāgēnī
 a1 quīnquāgēnārius
 a3 quīnquennis
 a3 quīnquennālis
@@ -2059,9 +2058,9 @@ n4 quīnquevirātus
 n4 quīnquevirātus
 a3 quīnquiplex quīnquiplic
 v1+ quīnquiplicō
-num ūndēquīnquāgintā
+numn ūndēquīnquāgintā
 a1 ūndēquīnquāgēsimus
-num duodēquīnquāgintā
+numn duodēquīnquāgintā
 a1 duodēquīnquāgēsimus
 ###
 ### rēgnum
@@ -2136,7 +2135,6 @@ a3 rēptilis
 v3 adrēpō adrēps [int]
 v3 arrēpō arrēps [int]
 v3 corrēpō corrēps [int]
-a1 correptus
 v3 ērēpō ērēps ērēpt [tr]
 v3 inrēpō inrēps inrēpt [tr]
 v3 irrēpō irrēps irrēpt [tr]
@@ -2255,7 +2253,7 @@ n3 nūtrīx
 n3 obsētrīx
 n3 obstētrīx
 n3 ōrātrīx
-n3 Orgetorīx
+pn3 Orgetorīx Orgetorīg
 n3 ōrnātrīx
 n3 pāstrīx
 n3 peccātrīx
@@ -2287,12 +2285,12 @@ n3 suppīlātrīx
 n3 susurrātrīx
 n3 sūtrīx
 n3 tamarīx
-n3 Tancorīx
+pn3 Tancorīx Tancorīg
 n3 testātrīx
 n3 textrīx
 n3 tōnstrīx
 n3 trāctātrīx
-n3 -trīx
+sufn3 -trīx
 n3 tūtrīx
 n3 ultrīx
 n3 ūsūrpātrīx
@@ -2376,7 +2374,7 @@ v3 renāscor renāt [int]
 n1 renāscentia
 n2 vāsculum
 n2 vāscellum
-a1 vāsculārius
+n2 vāsculārius
 a1 vāsculōsus
 v3 vesperāscō vesperāv [int]
 v3 veterāscō [int]
@@ -2654,7 +2652,7 @@ v3 perdormīscō [int]
 v3 apīscor apt [tr]
 v3 adipīscor adept [tr]
 v3 scīscō scīv scīt [tr]
-v1 scīscitor scīscitāt [tr]
+v1+ scīscitor [tr]
 n3 scīscitātiō
 n3 scīscitātor
 v3 adscīscō adscīv adscīt [tr, alt of ascīscō]
@@ -2686,7 +2684,7 @@ v3 ingemīscō ingemu [tr, has alt form ingemēscō]
 v3 ingemēscō ingemu [tr, alt of ingemīscō]
 v3 longīscō [int]
 v3 nancīscor nact [tr]
-a1 nānctus
+part1 nānctus
 v3 oblīvīscor oblīt [tr]
 v3 prŏficīscor prŏfect [int]
 v3 reminīscō [tr, alt of reminīscor]
@@ -2754,7 +2752,7 @@ v3 īnscrībō īnscrīps īnscrīpt
 n3 īnscrīptiō
 # īnscrīptiō ēlectrōnica
 v3 interscrībō interscrīps interscrīpt
-n2 manūscrīptus
+a1 manūscrīptus
 v3 perscrībō perscrīps perscrīpt
 n3 perscrīptiō
 phr post_scrīptum
@@ -2807,8 +2805,6 @@ adv cōnsīgnātē
 n3 cōnsīgnātiō
 v1+ cōnsīgnō
 n3 dēsīgnātiō
-# FIXME, noun dēsīgnāta should be dēsīgnātus
-a1 dēsīgnātus
 v1+ dēsīgnō
 phr in_hoc_sīgnō_vincēs
 n3 īnsīgne īnsīgn
@@ -2890,7 +2886,6 @@ a3 basālis
 a3 basivertebrālis
 a3 branchiālis
 a3 caudālis
-a3 cephālis
 a3 cerebrālis
 a3 costālis
 a3 decimālis
@@ -2973,9 +2968,9 @@ a1 coriāceus
 # FIXME, attributive -> relational
 a1 miliāceus
 a1 tiliāceus
-a1 vituperābilis
-a3 -āx
-a1 -āneus
+a3 vituperābilis
+sufa3 -āx
+sufa1 -āneus
 a1 dubitābundus
 a1 voluntābundus
 # FIXME, fix entry
@@ -3173,8 +3168,9 @@ n5 ēsuriēs
 n5 faciēs
 n5 fidēs
 n5 glaciēs
-n5 Hērōdis diēs
-n5 -iēs
+# FIXME, fix code to handle links in headword
+n5 Hērōdis_diēs
+sufn5 -iēs
 n5 illuviēs
 n5 inluviēs
 n5 luxuriēs
@@ -3347,7 +3343,7 @@ a3 coelicolor
 a3 varicolor
 a3 quadricolor
 a3 diversicolor
-a3 vinicolor
+a3 vīnicolor
 a3 saxicolor
 a1 bisticōsus
 a1 forāminōsus
@@ -3363,7 +3359,7 @@ n3 prōcōnsul
 n3 prōmissiō
 n3 pronepōs pronepōt
 n2 prōtium
-v1 prōvulgō prōvulgāv prōvulgāt
+v1+ prōvulgō
 a1 prōgeneticus
 n2 cotōnium
 n3 incubō
@@ -3485,11 +3481,11 @@ v3 supterfugiō supterfūg
 # wrongly has short o in perf
 v3 circumfodiō circumfōd circumfoss
 # wrongly has short e in all forms
-v3 suppēdō suppēd suppēdit
+v3 suppēdō
 v1+ dēblaterō
 v3 dēlūdō dēlūs dēlūs
 v1+ dēsūdō
-v3 dēsuēfaciō dēsuēfēc dēsuēfact
+virreg dēsuēfaciō
 v1+ ēiaculor
 v1+ ērūginō
 v3 dēfugiō dēfūg dēfugit
@@ -3505,8 +3501,8 @@ v3 immittō immīs immiss
 v3 intermittō intermīs intermiss
 v3 manūmittō manūmīs manūmiss
 # wrongly has short e in perf
-v3 adsuēfaciō adsuēfēc adsuēfact
-v3 assuēfaciō assuēfēc assuēfact
+virreg adsuēfaciō
+virreg assuēfaciō
 v3 disserō dissēv dissit
 # found elsewhere
 #peragō
@@ -3637,7 +3633,7 @@ v3 retegō retēx retēct
 ###
 n2 tignum
 a1 tignārius
-v1+ contignō
+v1 contignō -- contignāt
 n3 contignātiō
 ###
 ### tinguō, tingō
@@ -3706,8 +3702,8 @@ v3 supertrahō
 ###
 ### ūllus, nūllus
 ###
-v1+ adnūllō
-v1+ annūllō
+v1 adnūllō adnūllāv
+v1 annūllō annūllāv
 prov homō_nūllius_colōris
 a1 nōnnūllus
 adv nūllātenus
@@ -3793,7 +3789,7 @@ a1 obvāllātus
 ### vāsculum
 ###
 n2 vāsculum
-a1 vāsculārius
+n2 vāsculārius
 a1 vāsculōsus
 n2 vāscellum
 ###
