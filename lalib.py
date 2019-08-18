@@ -1101,7 +1101,7 @@ def la_template_is_head(t):
 
 def la_get_headword_from_template(t, pagename, pagemsg):
   def expand_text(tempcall):
-    return blib.expand_text(tempcall, pagetitle, pagemsg, False)
+    return blib.expand_text(tempcall, pagename, pagemsg, False)
   tn = tname(t)
   if tn in ["la-adj", "la-part", "la-num-adj", "la-suffix-adj"]:
     retval = blib.fetch_param_chain(t, "lemma", "lemma")
