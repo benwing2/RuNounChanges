@@ -47,7 +47,7 @@
 # absinthium:
 #
 # {{la-noun|absinthium<2>}}
-# {{la-ndecl|absinthium,2>}}
+# {{la-ndecl|absinthium<2>}}
 #
 # lēns:
 #
@@ -606,7 +606,7 @@ def find_heads_and_defns(page, pagemsg):
             continue
           head_pos = getparam(t, "2")
           if head_pos not in lalib.la_poses:
-            pagemsg("WARNING: Unrecognized part of speech %s" % pos)
+            pagemsg("WARNING: Unrecognized part of speech %s" % head_pos)
         if headword_templates_in_section:
           pagemsg("WARNING: Found additional headword template in same section: %s" % unicode(t))
           headwords.append(most_recent_headword)
@@ -684,7 +684,7 @@ def process_pronun_templates(pronun_section, lemma, pagemsg, notes):
           origpront, unicode(pront),
           ",".join(unicode(hw['head_template']) for hw in pronun_section['headwords'])))
 
-def do_process_form(index, page, lemma, formind, formval, pos, tag_sets_to_process, save, verbose):
+def do_process_form(index, page, lemma, formind, formval, pos, tag_sets_to_process, progargs):
   pagetitle = unicode(page.title())
 
   def pagemsg(txt):
@@ -694,7 +694,7 @@ def do_process_form(index, page, lemma, formind, formval, pos, tag_sets_to_proce
     errandmsg("Page %s %s: form %s %s: %s" % (index, lemma, formind, formval, txt))
 
   def expand_text(tempcall):
-    return blib.expand_text(tempcall, pagetitle, pagemsg, verbose)
+    return blib.expand_text(tempcall, pagetitle, pagemsg, progargs.verbose)
 
   if "[" in formval:
     pagemsg("Skipping form value %s with link in it" % formval)
@@ -729,6 +729,10 @@ def do_process_form(index, page, lemma, formind, formval, pos, tag_sets_to_proce
     expected_head_template = "la-num-form"
     expected_pos = "numeral form"
     expected_header_pos = "Numeral"
+  elif pos == "sufform":
+    expected_head_template = "la-suffix-form"
+    expected_pos = "suffix form"
+    expected_header_pos = "Suffix"
   else:
     raise ValueError("Unrecognized part of speech %s" % pos)
 
@@ -861,12 +865,20 @@ def do_process_form(index, page, lemma, formind, formval, pos, tag_sets_to_proce
   sections[j] = secbody + sectail
   return "".join(sections), notes
 
-def process_form(index, lemma, formind, formval, pos, tag_sets_to_process, save, verbose):
+def process_form(index, lemma, formind, formval, pos, tag_sets_to_process, progargs):
+  def pagemsg(txt):
+    msg("Page %s %s: form %s %s: %s" % (index, lemma, formind, formval, txt))
   def handler(page, index, parsed):
-    return do_process_form(index, page, lemma, formind, formval, pos, tag_sets_to_process, save, verbose)
-  blib.do_edit(pywikibot.Page(site, remove_macrons(formval)), index, handler, save=save, verbose=verbose)
+    return do_process_form(index, page, lemma, formind, formval, pos, tag_sets_to_process, progargs)
+  if "[" in formval:
+    pagemsg("Skipping form value %s with link in it" % formval)
+  else:
+    blib.do_edit(pywikibot.Page(site, remove_macrons(formval)), index, handler, save=progargs.save, verbose=progargs.verbose, diff=progargs.diff)
 
-def process_all_forms(args, index, lemma, pos, save, verbose):
+def process_all_forms(args, index, lemma, pos, progargs):
+  if progargs.skip_forms:
+    return
+
   single_forms_to_process = []
   for key, form in args.iteritems():
     for single_form in form.split(","):
@@ -874,10 +886,11 @@ def process_all_forms(args, index, lemma, pos, save, verbose):
 
   for formind, (key, formval) in blib.iter_items(
       single_forms_to_process, get_name=lambda x: x[1]):
-    process_form(index, lemma, formind, formval, pos,
-        find_tag_sets_for_form(args, formval), save, verbose)
+    if not progargs.n_forms or formind <= progargs.n_forms:
+      process_form(index, lemma, formind, formval, pos,
+          find_tag_sets_for_form(args, formval), progargs)
 
-def do_process_participle(index, page, lemma, formind, formval, pos, skip_forms, save, verbose):
+def do_process_participle(index, page, lemma, formind, formval, pos, progargs):
   pagetitle = unicode(page.title())
 
   def pagemsg(txt):
@@ -887,7 +900,7 @@ def do_process_participle(index, page, lemma, formind, formval, pos, skip_forms,
     errandmsg("Page %s %s: form %s %s: %s" % (index, lemma, formind, formval, txt))
 
   def expand_text(tempcall):
-    return blib.expand_text(tempcall, pagetitle, pagemsg, verbose)
+    return blib.expand_text(tempcall, pagetitle, pagemsg, progargs.verbose)
 
   if "[" in formval:
     pagemsg("Skipping form value %s with link in it" % formval)
@@ -899,8 +912,6 @@ def do_process_participle(index, page, lemma, formind, formval, pos, skip_forms,
     return None, None
 
   if pos == "presactpart":
-    expected_head_template = "la-part"
-    expected_head_arg = formval
     expected_decl_arg = formval + "<3-P+>"
   else:
     if pos not in ["perfpasspart", "futactpart", "futpasspart"]:
@@ -908,7 +919,6 @@ def do_process_participle(index, page, lemma, formind, formval, pos, skip_forms,
     if not formval.endswith("us"):
       pagemsg("WARNING: Bad participle form %s, wrong ending" % formval)
       return None, None
-    expected_head_arg = formval
     expected_decl_arg = formval
 
   pagemsg("Processing")
@@ -940,12 +950,10 @@ def do_process_participle(index, page, lemma, formind, formval, pos, skip_forms,
         pagemsg("Skipping incorrect part of speech %s: %s" % (head_pos, unicode(ht)))
         continue
       param_to_frob = "head"
-      frob_val = formval
       found_head = True
 
-    if tn == expected_head_template:
+    if tn == "la-part":
       param_to_frob = "1"
-      frob_val = expected_head_arg
       found_head = True
 
     if not found_head:
@@ -978,7 +986,7 @@ def do_process_participle(index, page, lemma, formind, formval, pos, skip_forms,
       pagemsg("WARNING: Didn't see any lemma in Etymology section for participle, don't know if it's for correct verb, skipping")
       continue
 
-    frob_exact(ht, param_to_frob, frob_val, pagemsg, notes)
+    frob_exact(ht, param_to_frob, formval, pagemsg, notes)
 
     for inflt in headword['infl_templates']:
       infltn = tname(inflt)
@@ -992,8 +1000,7 @@ def do_process_participle(index, page, lemma, formind, formval, pos, skip_forms,
       if args is None:
         return None, None
 
-      if not skip_forms:
-        process_all_forms(args, index, formval, "partform", save, verbose)
+      process_all_forms(args, index, formval, "partform", progargs)
 
     process_pronun_templates(headword['pronun_section'], formval, pagemsg, notes)
 
@@ -1001,10 +1008,10 @@ def do_process_participle(index, page, lemma, formind, formval, pos, skip_forms,
   sections[j] = secbody + sectail
   return "".join(sections), notes
 
-def process_participle(index, lemma, formind, formval, pos, skip_forms, save, verbose):
+def process_participle(index, lemma, formind, formval, pos, progargs):
   def handler(page, index, parsed):
-    return do_process_participle(index, page, lemma, formind, formval, pos, skip_forms, save, verbose)
-  blib.do_edit(pywikibot.Page(site, remove_macrons(formval)), index, handler, save=save, verbose=verbose)
+    return do_process_participle(index, page, lemma, formind, formval, pos, progargs)
+  blib.do_edit(pywikibot.Page(site, remove_macrons(formval)), index, handler, save=progargs.save, verbose=progargs.verbose, diff=progargs.diff)
 
 def frob_nominal_lemma_spec(ht, lemmaspec, stem, pagemsg, notes):
   if "((" in lemmaspec or " " in lemmaspec or "<" in lemmaspec or "/" in lemmaspec:
@@ -1041,22 +1048,24 @@ def frob_nominal_lemma_spec(ht, lemmaspec, stem, pagemsg, notes):
       if retval == "changed":
         changed = True
       if head_stem:
-        retval = raw_frob_value(ht, "1", head_stem, stem, pagemsg, notes)
+        retval = raw_frob_value(ht, "1", head_stem, stem or "", pagemsg, notes)
         if retval == "mismatch":
           return "fail"
         if retval == "changed":
           changed = True
       if changed:
         oright = unicode(ht)
+        if head_decl:
+          head_decl = "<%s>" % head_decl
         if stem:
-          ht.add("1", "%s/%s<%s>" % (lemmaspec, stem, head_decl))
+          ht.add("1", "%s/%s%s" % (lemmaspec, stem, head_decl))
         else:
-          ht.add("1", "%s<%s>" % (lemmaspec, head_decl))
+          ht.add("1", "%s%s" % (lemmaspec, head_decl))
         pagemsg("Replaced %s with %s" % (oright, unicode(ht)))
         return "changed"
       return "nochange"
 
-def do_process_lemma(index, page, pos, explicit_infl, lemmaspec, lemma, explicit_stem, skip_forms, save, verbose):
+def do_process_lemma(index, page, pos, explicit_infl, lemmaspec, lemma, explicit_stem, progargs):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -1065,7 +1074,7 @@ def do_process_lemma(index, page, pos, explicit_infl, lemmaspec, lemma, explicit
     errandmsg("Page %s %s: %s" % (index, pagetitle, txt))
 
   def expand_text(tempcall):
-    return blib.expand_text(tempcall, pagetitle, pagemsg, verbose)
+    return blib.expand_text(tempcall, pagetitle, pagemsg, progargs.verbose)
 
   pagemsg("Processing")
 
@@ -1080,6 +1089,7 @@ def do_process_lemma(index, page, pos, explicit_infl, lemmaspec, lemma, explicit
 
   notes = []
 
+  found_any_matching_head = False
 
   for headword in headwords:
     ht = headword['head_template']
@@ -1097,13 +1107,16 @@ def do_process_lemma(index, page, pos, explicit_infl, lemmaspec, lemma, explicit
         "noun": "noun",
         "propernoun": "proper noun",
         "adj": "adjective",
+        "part": "participle",
         "adv": "adverb",
         "phr": "phrase",
         "prep": "preposition",
         "prov": "proverb", 
         "verb": "verb",
-        "num": "numeral",
+        "numnoun": "numeral",
         "numadj": "numeral",
+        "sufnoun": "suffix",
+        "sufadj": "suffix",
       }
       if getparam(ht, "2") == pos_to_full_pos[pos]:
         frob_exact(ht, "head", lemma, pagemsg, notes, add_if_needed=True)
@@ -1127,17 +1140,11 @@ def do_process_lemma(index, page, pos, explicit_infl, lemmaspec, lemma, explicit
       found_matching_head = True
       frob_exact(ht, "1", lemma, pagemsg, notes)
 
-    elif pos == "num" and tn == "la-num-card":
-      found_matching_head = True
-      if lemma.endswith(u"ī"):
-        stem = lemma[:-1]
-      else:
-        stem = lemma
-      frob_exact(ht, "1", stem, pagemsg, notes)
-
     elif (
       pos == "noun" and (found_head_template or tn == "la-noun") or
-      pos == "propernoun" and (found_head_template or tn == "la-proper noun")
+      pos == "propernoun" and (found_head_template or tn == "la-proper noun") or
+      pos == "numnoun" and (found_head_template or tn == "la-num-noun") or
+      pos == "sufnoun" and (found_head_template or tn == "la-suffix-noun")
     ):
       ending_re = u"(a|ās|ē|ēs|ae|us|um|os|on|ī|is)"
       if re.search(ending_re + "$", lemma):
@@ -1146,7 +1153,7 @@ def do_process_lemma(index, page, pos, explicit_infl, lemmaspec, lemma, explicit
         inferred_stem = lalib.infer_3rd_decl_stem(lemma)
       stem = explicit_stem or inferred_stem
 
-      if tn in ["la-noun", "la-proper noun"];
+      if tn in ["la-noun", "la-proper noun", "la-num-noun", "la-suffix-noun"]:
         if frob_nominal_lemma_spec(ht, lemmaspec, explicit_stem, pagemsg, notes) == "fail":
           continue
 
@@ -1168,14 +1175,19 @@ def do_process_lemma(index, page, pos, explicit_infl, lemmaspec, lemma, explicit
         if args is None:
           return None, None
 
-        if not skip_forms:
-          process_all_forms(args, index, lemma,
-            pos == "propernoun" and "propernounform" or "nounform", save, verbose
-          )
+        process_all_forms(args, index, lemma,
+          pos == "propernoun" and "propernounform" or
+          pos == "numnoun" and "numform" or
+          pos == "sufnoun" and "sufform" or
+          "nounform",
+          progargs
+        )
 
     elif (
       pos == "adj" and (found_head_template or tn in lalib.la_adj_headword_templates) or
-      pos == "numadj" and (found_head_template or tn == "la-num-1&2")
+      pos == "part" and (found_head_template or tn == "la-part") or
+      pos == "numadj" and (found_head_template or tn == "la-num-adj") or
+      pos == "sufadj" and (found_head_template or tn == "la-suffix-adj")
     ):
       if not found_head_template:
         if explicit_infl == 1:
@@ -1193,7 +1205,7 @@ def do_process_lemma(index, page, pos, explicit_infl, lemmaspec, lemma, explicit
           inferred_stem = lalib.infer_3rd_decl_stem(lemma)
         stem = explicit_stem or inferred_stem
 
-        if tn == "la-adj":
+        if tn in ["la-adj", "la-part", "la-num-adj", "la-suffix-adj"]:
           if frob_nominal_lemma_spec(ht, lemmaspec, explicit_stem, pagemsg, notes) == "fail":
             continue
 
@@ -1239,9 +1251,12 @@ def do_process_lemma(index, page, pos, explicit_infl, lemmaspec, lemma, explicit
         args = lalib.generate_adj_forms(unicode(inflt), errandpagemsg, expand_text)
         if args is None:
           return None, None
-        if not skip_forms:
-          process_all_forms(args, index, lemma,
-            pos == "numadj" and "numform" or "adjform", save, verbose)
+
+        process_all_forms(args, index, lemma,
+          pos == "part" and "partform" or
+          pos == "numadj" and "numform" or
+          pos == "sufadj" and "sufform" or
+          "adjform", progargs)
 
     elif pos == "verb" and (found_head_template or tn == "la-verb"):
       if not explicit_stem:
@@ -1285,7 +1300,9 @@ def do_process_lemma(index, page, pos, explicit_infl, lemmaspec, lemma, explicit
           return True
 
       if not fix_verb_template(ht, infl, lemma, param3, param4):
-        found_matching_head = True
+        continue
+
+      found_matching_head = True
 
       for inflt in headword['infl_templates']:
         infltn = tname(inflt)
@@ -1326,14 +1343,17 @@ def do_process_lemma(index, page, pos, explicit_infl, lemmaspec, lemma, explicit
             partpos = "futpasspart"
 
           if partpos:
-            process_participle(index, lemma, formind, formval, partpos,
-                skip_forms, save, verbose)
-          elif not skip_forms:
+            process_participle(index, lemma, formind, formval, partpos, progargs)
+          elif not progargs.skip_forms and (not progargs.n_forms or formind <= progargs.n_forms):
             process_form(index, lemma, formind, formval, "verbform",
-                find_tag_sets_for_form(args, formval), save, verbose)
+                find_tag_sets_for_form(args, formval), progargs)
 
     if found_matching_head:
+      found_any_matching_head = True
       process_pronun_templates(headword['pronun_section'], lemma, pagemsg, notes)
+
+  if not found_any_matching_head:
+    pagemsg("WARNING: Unable to find matching head")
 
   secbody = "".join(unicode(x) for x in parsed_subsections)
   sections[j] = secbody + sectail
@@ -1342,6 +1362,7 @@ def do_process_lemma(index, page, pos, explicit_infl, lemmaspec, lemma, explicit
 parser = blib.create_argparser("Clean up usage of macrons in Latin lemmas and non-lemma forms")
 parser.add_argument("--direcfile", help="File containing directives of lemmas to process.")
 parser.add_argument("--skip-forms", help="Skip processing non-lemma forms.", action="store_true")
+parser.add_argument("--n-forms", help="Do only first N non-lemma forms.", type=int)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
@@ -1363,80 +1384,35 @@ for line in codecs.open(direcfile, "r", "utf-8"):
   parts = [part.replace("_", " ") for part in parts]
   if len(parts) == 2 and parts[0] in ["adv", "num", "phr", "prep", "prov"]:
     pass
-  elif (len(parts) == 2 or len(parts) == 3) and parts[0] in [
-      "n1", "n2", "n3", "n4", "n5", "pn1", "pn2", "pn3", "pn4", "pn5",
-      "num1", "a1", "a3"
-  ]:
-    # noun or adjective
+  elif ((len(parts) == 2 or len(parts) == 3) and
+      re.search("^([na]|pn|part|num[na]|suf[na])([1-5]?)$", parts[0])):
+    # noun, adjective or participle
     if len(parts) == 3:
       pos, lemma, explicit_stem = parts
     else:
       pos, lemma = parts
       explicit_stem = None
-    m = re.search("^(n|pn|a|num)([1-5])$", pos)
-    code_to_pos = {"n": "noun", "pn": "propernoun", "a": "adj", "num": "numadj"}
+    m = re.search("^([na]|pn|part|num[na]|suf[na])([1-5]?)$", pos)
+    code_to_pos = {
+      "n": "noun",
+      "pn": "propernoun",
+      "a": "adj",
+      "part": "part",
+      "sufn": "sufnoun",
+      "sufa": "sufadj",
+      "numn": "numnoun",
+      "numa": "numadj",
+    }
     pos = code_to_pos[m.group(1)]
-    infl = int(m.group(2))
-  
+    infl = m.group(2) and int(m.group(2)) or None
     lemmas.append((pos, infl, lemma, explicit_stem))
-
-  elif len(parts) == 2 and parts[0] in ["v1", "v1+", "v4", "v4+"]:
-    # regular verb
-    pos, lemma = parts
-    m = re.search("^v([14])$", pos)
-    infl = int(m.group(1))
-    lemmas.append(("verb", infl, lemma, None))
-  FIXME: handle participles
+  elif len(parts) >= 2 and parts[0].startswith("v"):
+    infl = parts[0][1:]
+    lemma = parts[1]
+    explicit_stem = parts[2:]
+    lemmas.append(("verb", infl, lemma, explicit_stem))
   else:
-    pos = "verb"
-    stems_lemmas = []
-    if len(parts) == 3:
-      # deponent verb
-      lemma, inf, supine = parts
-      if lemma.startswith("*"):
-        no_main = True
-        lemma = lemma[1:]
-      else:
-        no_main = False
-      if inf.startswith("*"):
-        # FIXME
-        inf = inf[1:]
-      if supine.startswith("*"):
-        # FIXME
-        supine = supine[1:]
-      if inf == "--":
-        inf = ""
-      if supine == "--":
-        supine = ""
-      lemmas.append(("verb", None, lemma, [inf, supine]))
-
-    else:
-      if len(parts) != 4:
-        errandmsg("WARNING: Wrong number of verb parts: %s" % line)
-        continue
-      assert len(parts) == 4
-      lemma, inf, perf, supine = parts
-      if lemma.startswith("*"):
-        no_main = True
-        lemma = lemma[1:]
-      else:
-        no_main = False
-      if inf.startswith("*"):
-        # FIXME
-        inf = inf[1:]
-      if perf.startswith("*"):
-        # FIXME
-        perf = perf[1:]
-      if supine.startswith("*"):
-        # FIXME
-        supine = supine[1:]
-      if inf == "--":
-        inf = ""
-      if perf == "--":
-        perf = ""
-      if supine == "--":
-        supine = ""
-      lemmas.append(("verb", None, lemma, [inf, perf, supine]))
+    errandmsg("Unrecognized line: %s" % line)
 
 for index, (pos, infl, lemma, explicit_stem) in blib.iter_items(lemmas, start, end,
     get_name=lambda lemmas: remove_macrons(lemmas[2])):
@@ -1444,6 +1420,6 @@ for index, (pos, infl, lemma, explicit_stem) in blib.iter_items(lemmas, start, e
   lemma = re.sub("/[^<) ]*", "", lemma)
   lemma = re.sub("<.*>", "", lemma)
   def handler(page, index, parsed):
-    return do_process_lemma(index, page, pos, infl, lemmaspec, lemma, explicit_stem, args.skip_forms, args.save, args.verbose)
+    return do_process_lemma(index, page, pos, infl, lemmaspec, lemma, explicit_stem, args)
 
-  blib.do_edit(pywikibot.Page(site, remove_macrons(lemma)), index, handler, save=args.save, verbose=args.verbose)
+  blib.do_edit(pywikibot.Page(site, remove_macrons(lemma)), index, handler, save=args.save, verbose=args.verbose, diff=args.diff)
