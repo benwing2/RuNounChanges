@@ -2023,27 +2023,27 @@ numn ūndēquadrāgintā
 ###
 ### quārtus
 ###
-a1 quārtus
+numa1 quārtus
 a1 quārtānus
-a1 quārtus<+>_decimus<+>
+numa quārtus<+>_decimus<+>
 a3 quārtālis
 a1 quārtālitius
-a1 quārtus<+>decimus<+>
+numa quārtus<+>decimus<+>
 ###
 ### quīnque, quīntus
 ###
 numn quīnque
 adv quīnquiēns
 adv quīnquiēs
-a1 quīntus
+numa1 quīntus
 n1 quīntāna
 numn quīndecim
 adv quīndeciēs
 adv quīndeciēns
-a1 quīntusdecimus
+numa quīntus<+>decimus<+>
 numn quīnquāgintā
-a1 quīnquāgēsimus
-a1 quīnquāgēnsimus
+numa1 quīnquāgēsimus
+numa1 quīnquāgēnsimus
 numa1 quīnquāgēnī
 a1 quīnquāgēnārius
 a3 quīnquennis
@@ -2055,13 +2055,12 @@ a1 quīnquefolius
 a1 quīnquepartītus
 a1 quīnquepertītus
 n4 quīnquevirātus
-n4 quīnquevirātus
 a3 quīnquiplex quīnquiplic
 v1+ quīnquiplicō
 numn ūndēquīnquāgintā
-a1 ūndēquīnquāgēsimus
+numa1 ūndēquīnquāgēsimus
 numn duodēquīnquāgintā
-a1 duodēquīnquāgēsimus
+numa1 duodēquīnquāgēsimus
 ###
 ### rēgnum
 ###
@@ -2884,7 +2883,7 @@ a3 ātripectorālis
 a3 baptismālis
 a3 basālis
 a3 basivertebrālis
-a3 branchiālis
+a3 branchiālis
 a3 caudālis
 a3 cerebrālis
 a3 costālis
@@ -2893,7 +2892,7 @@ a3 ecclēsiālis
 a3 expōnentiālis
 a3 fīliālis
 a3 foetālis
-a3 fundāmentālis
+a3 fundāmentālis
 a3 haemorrhoidālis
 a3 īnfrāorbitālis
 a3 integrālis
@@ -2901,15 +2900,15 @@ a3 lacrymālis
 a3 marsūpiālis
 a3 axillāris
 a3 cellulāris
-a3 culīnāris
-a3 dissimilāris
-a3 glandulāris
-a3 hyomandibulāris
-a3 maxillāris
-a3 scutellāris
-a3 subnūcleāris
-a3 superciliāris
-a3 ventriculāris
+a3 culīnāris
+a3 dissimilāris
+a3 glandulāris
+a3 hyomandibulāris
+a3 maxillāris
+a3 scutellāris
+a3 subnūcleāris
+a3 superciliāris
+a3 ventriculāris
 a3 vestibulāris
 # FIXME, following definition may be wrong, should be "made with pearls"
 a1 baccātus
@@ -3058,15 +3057,15 @@ part1 ēvādendus
 part1 ērādīcandus
 part1 ēvāgīnandus
 # wrongly has short a, e and o
-a1 acētābulōsus
-a3 acētābulifōrmis
+a1 acētābulōsus
+a3 acētābulifōrmis
 n3 cōmēsātiō
 # wrongly has short a and i
 a1 aquītānus
 a3 alpīnālis
 a3 convīvālis
 a3 discoīdālis
-a3 experīmentālis
+a3 experīmentālis
 a1 bicarīnātus
 a1 eucarīnātus
 a1 illībātus
@@ -3089,7 +3088,7 @@ a1 aegrōtātīcius
 a3 flāvōlīneātus
 part1 āmōlītūrus
 # wrongly has short a and o
-a3 aequātōriālis
+a3 aequātōriālis
 a1 sexhōrārius
 a1 affectiōnātus
 a3 sacrōlumbālis
@@ -3112,7 +3111,7 @@ part1 abiūrātus
 part1 abiūrgātūrus
 part1 abiūrgātus
 a3 acūtālis
-a1 acūtātus
+a1 acūtātus
 a1 acūtisquāmātus
 part1 conciliātūrus
 part1 tardātūrus
@@ -3202,7 +3201,7 @@ pn1 Aurēlia
 pn1 Cornēlia
 a3 carolicoroniēnsis
 a3 gevalēnsis
-a3 visbyēnsis
+a3 visbyēnsis
 n3 polygonoīdēs
 n3 sordēs
 n3 strāgēs
@@ -3274,9 +3273,9 @@ part1 ēlīmandus
 part1 ēlīminandus
 part1 mētītūrus
 # wrongly has short e and o
-a1 acētōsus
-a1 emphysēmatōsus
-a1 gangrēnōsus
+a1 acētōsus
+a1 emphysēmatōsus
+a1 gangrēnōsus
 a1 ēlectrōnicus
 # wrongly has short e and u
 a1 acūtisēpalus
@@ -3322,7 +3321,7 @@ a1 damnātīcius
 a3 spīnipennis
 pn1 Frīsia
 # following wrongly has danistīcus
-a1 danīsticus
+a1 danīsticus
 a1 bipartītus
 a1 bipertītus
 n3 pinguīdō pinguīdin
@@ -3332,8 +3331,8 @@ n3 cōnsilīgō
 n3 tentīgō
 n1 Isrāēlīta
 # wrongly has short i and o
-a1 altispīnōsus
-a1 thermolīmōsus
+a1 altispīnōsus
+a1 thermolīmōsus
 n3 silīgō silīgin
 # wrongly has short o
 a3 tricolor
@@ -3346,12 +3345,12 @@ a3 diversicolor
 a3 vīnicolor
 a3 saxicolor
 a1 bisticōsus
-a1 forāminōsus
-a1 legūminōsus
-a1 pulpōsus
-a1 rigōrōsus
+a1 forāminōsus
+a1 legūminōsus
+a1 pulpōsus
+a1 rigōrōsus
 a1 stomachōsus
-a1 stylōsus
+a1 stylōsus
 a1 suspiciōsus
 a1 suspitiōsus
 n3 prōclāmātiō
@@ -3371,9 +3370,9 @@ n3 valitūdō
 pn3 Apollō Apollin
 # wrongly has short o and u
 a1 frūctuōsus
-a1 frūctuōsissimus
-a1 acūminōsus
-a1 rūgulōsus
+a1 frūctuōsissimus
+a1 acūminōsus
+a1 rūgulōsus
 a1 sētulōsus
 a1 acūtiflōrus
 # wrongly has short o and y
@@ -3389,7 +3388,7 @@ part1 abiūdicandus
 part1 abiūrandus
 a3 īnstrūmentālis
 a3 iūdicālis
-a1 oportūnissimus
+a1 oportūnissimus
 a1 acūtangulus
 a1 acūticarpus
 a3 acūtidēns
@@ -3434,7 +3433,7 @@ v1+ adjugō
 v1+ braciō
 v1 intonō intonu intonāt
 # following also wrongly has short i
-v3 īnsternō īnstrāv īnstrāt
+v3 īnsternō īnstrāv īnstrāt
 # wrongly has short i in sup
 v4+ blandior
 v4+ bulliō
