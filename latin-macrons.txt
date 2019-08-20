@@ -121,39 +121,39 @@ a1 theātricus
 ### -āx
 ###
 a3 abstināx
-a3 altithorāx
+a3 altithōrāx
 a3 audāx
 adv audācter
 a3 bellāx
 a3 bibāx
 a3 bifāx
-a3 brevithorāx
+a3 brevithōrāx
 a3 capāx
 a3 contumāx
 a3 dĭcāx
 a3 edāx
 a3 efficāx
 a3 emāx
-a3 erythrothorāx
+a3 erythrothōrāx
 a3 fallāx
 a3 ferāx
-a3 flāvithorāx
+a3 flāvithōrāx
 a3 fugāx
-a3 fulvithorāx
+a3 fulvithōrāx
 a3 fūrāx
 a3 hominivorāx
 a3 incapāx
 a3 inefficāx
-a3 lātithorāx
+a3 lātithōrāx
 a3 linguāx
-a3 longithorāx
+a3 longithōrāx
 a3 loquāx
-a3 maculithorāx
-a3 melanōthorāx
+a3 maculithōrāx
+a3 melanothōrāx
 a3 mendāx
 a3 mināx
 a3 mordāx
-a3 nigrithorāx
+a3 nigrithōrāx
 a3 pellāx
 a3 perspicāx
 a3 pertināx
@@ -161,8 +161,8 @@ a3 pervicāx
 a3 procāx
 a3 pūgnāx
 a3 rapāx
-a3 rubrithorāx
-a3 rūfithorāx
+a3 rubrithōrāx
+a3 rūfithōrāx
 a3 săgāx
 a3 salāx
 a3 sēbāx
@@ -652,6 +652,7 @@ v3 perfingō perfīnx perfict
 ### firmus
 ###
 a1 firmus
+a3 firmis
 adv firmiter
 a3 firmior
 n3 firmitūdō
@@ -759,7 +760,7 @@ a1 fōrmōsissimus
 adv fōrmōsē
 a1 fōrmōnsus
 a1 fōrmōnsissimus
-a3 fōrmigenēs fōrmigen
+a3 formigenēs formigen
 a1 fōrmōsānus
 n1 fōrmula
 n3 fōrmulātiō
@@ -1684,7 +1685,7 @@ n3 nūtrītiō
 a1 nūtrītius
 n3 nūtrīx
 v4 adnūtriō
-v4 annūtri
+v4 annūtriō
 v4+ ēnūtriō
 v4+ innūtriō
 ###
@@ -1928,7 +1929,7 @@ n1 quadra
 a1 quadrāgēnārius
 numa1 quadrāgēnī
 n1 quadrāgēsima
-a1 quadrāgēsimus
+numa1 quadrāgēsimus
 adv quadrāgiēns
 adv quadrāgiēs
 numn quadrāgintā
@@ -2365,7 +2366,7 @@ v3 nāscor nāt [int, has alt form gnāscor]
 n1 nāscentia
 a1 nāscitūrus
 v3 pāscō pāv pāst [tr]
-v1+ pāscitō [int]
+v1+ pāscitō [tr]
 v3 pauperāscō [int]
 v3 purpurāscō [int]
 v3 redintegrāscō [int?]
@@ -2382,47 +2383,25 @@ a3 violāscēns
 ### -s̄cō: -ēscō
 ###
 v3 crēscō crēv crēt [int]
-# FIXME, delete passive
 v3 accrēscō accrēv accrēt [int]
-# FIXME, delete passive
 v3 adcrēscō adcrēv adcrēt [int]
-# FIXME, delete passive, fix headword
-# Example:
-# {{la-verb|adolēscō|adolēscere|conj=3|pattern=nopass-noperf}}
-# {{la-conj-3rd|type=nopass-noperf|adolēsc}}
 v3 adincrēscō [int]
 v3 concrēscō concrēv concrēt [int]
 v3 dēcrēscō dēcrēv dēcrēt [int, has ppp]
-# FIXME, delete supine; Gaffiot and Lewis/Short don't list incrētum
 v3 incrēscō incrēv [int]
-# FIXME, should have perfect and supine; delete passive, fix headword
-# {{la-verb|succrēscō|succrēscere|succrēvī|succrētum|conj=3|pattern=nopass}}
-# {{la-conj-3rd|type=nopass|succrēsc|succrēv|succrēt}}
 v3 succrēscō succrēv succrēt [int]
-# {{la-verb|supercrēscō|supercrēscere|supercrēvī|conj=3|pattern=nopass}}
-# {{la-conj-3rd|type=nopass|supercrēsc|supercrēv}}
 v3 supercrēscō supercrēv [int]
-# FIXME, should have short a
 v3 macrēscō macru [int]
-# FIXME, should have perfect; delete passive, fix headword
 v3 ēmacrēscō ēmacru [int]
-# FIXME, delete passive, fix headword
 v3 olēscō [int]
 v3 abolēscō abolēv [int]
-# FIXME, delete passive
-v3 adolēscō adolēv adult [int, has ppp, has also adoluī, syncopated adolēsse]
-# FIXME, delete passive
+v3 adolēscō adolēv/adolu adult [int, has ppp, has also adoluī, syncopated adolēsse]
 v3 exolēscō exolēv exolēt [int, has ppp]
-# FIXME, delete passive, perfect and supine
 v3 exsolēscō [int]
-# FIXME, allow passive
 v3 indolēscō indolu [tr]
 v3 inolēscō inolēv inolit [tr]
-# FIXME, delete passive
 v3 īnsolēscō [int]
-# FIXME, delete passive
 v3 obsolēscō obsolēv obsolēt [int, obsolētus exists]
-# FIXME, delete passive
 v3 quiēscō quiēv quiēt [int]
 # FIXME, check all the rest
 v3 acquiēscō acquiēv acquiēt [int]
@@ -2435,14 +2414,10 @@ v3 assuēscō assuēv assuēt [tr]
 v3 cōnsuēscō cōnsuēv cōnsuēt [tr]
 v3 īnsuēscō īnsuēv īnsuēt [tr]
 v3 mānsuēscō mānsuēv mānsuēt [tr]
-# FIXME, allow passive, delete perfect
 v3 abhorrēscō [tr]
-# FIXME, wrong perfect, delete supine
 v3 acēscō acu [int]
 v1+ adēscō [per Gaffiot, only adēscātus is used]
-# FIXME, add perfect and supine, delete passive
 v3 adhaerēscō adhaes adhaes [int]
-# FIXME, add perfect and supine, delete passive
 v3 adhērēscō adhēs adhēs [int]
 v3 adlubēscō [int]
 v3 aegrēscō [int]
@@ -2452,15 +2427,14 @@ v3 algēscō als [int]
 v3 amārēscō [int]
 v3 appārēscō [int]
 v3 arborēscō [int]
-# FIXME, remove fourth part
-v3 ārdēscō ārs [int]
+# FIXME, formerly had ārdēscō, which is wrong
+v3 ardēscō ars [int]
 v3 ārēscō āru [int]
 v3 assenēscō [int]
 v3 augēscō [int]
 v3 aurēscō [int]
 v3 calēscō [int]
 v3 candēscō candu [int]
-# FIXME, add third part
 v3 cānēscō cānu [int]
 v3 celebrēscō [int]
 v3 cinerēscō [int]
@@ -2469,11 +2443,12 @@ v3 coacēscō coacu [int]
 v3 coalēscō coalu coalit [int, has ppp]
 v3 cohaerēscō cohaes [int]
 v3 colliquēscō colliqu [int]
-v3 compēscō compēscu [tr; supine compēscitum in Prisc.]
+# FIXME, formerly had compēscō, which is wrong
+v3 compescō compescu [tr; supine compescitum in Prisc.]
 # has incorrect long vowel on u
 v3 computrēscō computru [int]
-# FIXME, has incorrect 3rd part conpuī
-v3 conpēscō conpēscu [tr; supine conpēscitum in Prisc.]
+# FIXME, formerly had conpēscō, which is wrong
+v3 conpescō conpescu [tr; supine conpescitum in Prisc.]
 # has incorrect long vowel on u
 v3 conputrēscō conputru [int]
 v3 cōnsānēscō cōnsānu [int]
@@ -2483,31 +2458,23 @@ v3 contābēscō contābu [int]
 # has incorrect long vowel on e
 v3 contenebrēscō [int; impers per Gaffiot but not Lewis/Short]
 v3 conticēscō conticu [tr]
-# FIXME Delete the following
-#*contremēscō
 v3 convalēscō convalu [int]
 v3 convēscor [int]
 v3 cornēscō [int]
 v3 crēbēscō crēbu [int]
-# FIXME, delete 4th part
 v3 crēbrēscō crēbru [int]
 v3 crūdēscō crūdu [int]
-# FIXME, has two perfs, dēfervī and dēferbuī
 v3 dēfervēscō dēferbu/dēferv [int]
 v3 dēflōrēscō dēflōru [int]
-# FIXME, missing 3rd part
 v3 dēliquēscō dēlicu [int]
 v3 dēlitēscō dēlitu [int]
 v3 dēsenēscō dēsenu [int, per Gaffiot dēsenēscō is unused]
 v3 dīlūcēscō dīlūx [int]
-# FIXME, Lewis and Short lists dulcuī, but not Lewis or Gaffiot.
-v3 dulcēscō [int]
+v3 dulcēscō dulcu [int]
 v3 dūrēscō dūru [int]
-# FIXME, has two perfs
 v3 effervēscō efferbu/efferv [int]
 v3 efflōrēscō efflōru [int]
 v3 ēlanguēscō ēlangŭ [int]
-# FIXME, missing 3rd part
 v3 ēlūcēscō ēlūx [int]
 v3 ēmarcēscō ēmarcu [int]
 v3 ēnitēscō ēnitu [int]
@@ -2516,7 +2483,8 @@ v3 ērubēscō ērubu [tr]
 v3 ēvānēscō ēvānu [int]
 v3 exacerbēscō [int]
 v3 exalbēscō exalbu [int]
-v3 exārdēscō exārs exārs [int, has ppp]
+# FIXME, formerly had exārdēscō, which is wrong
+v3 exardēscō exars exars [int, has ppp]
 v3 exārēscō exāru [int]
 v3 excandēscō excandu [int]
 v3 exhorrēscō exhorru [tr]
@@ -2526,13 +2494,11 @@ v3 extābēscō extābu [int, mostly unused in present/imperfect/future]
 v3 extimēscō extimu [tr]
 v3 fervēscō [int]
 v3 fētēscō [int; alt of foetēscō]
-# FIXME, remove 3rd part
 v3 fistulēscō [int]
 v3 flaccēscō flaccu [int; has flaccīscō as alt]
 v3 flāvēscō [int]
 v3 flōrēscō [int; rēbus flōrēscendīs praeesse occurs]
 v3 frīgēscō frīx [int; friguī occurs late]
-# FIXME, clean up entry
 v3 frondēscō frondu [int]
 v3 glabrēscō [int]
 v3 grandēscō [int]
@@ -2563,8 +2529,6 @@ v3 juvenēscō juvenu [int]
 v3 languēscō langŭ [int]
 v3 lapidēscō [int]
 v3 lassēscō [int]
-# FIXME, two different verbs, latēscō and lātēscō, and need to
-# delete 3rd part latī and forms
 v3 latēscō [int]
 v3 liquēscō licu [int]
 v3 lūcēscō lūx [int; has alt form lūcīscō]
@@ -2642,8 +2606,6 @@ v3 viridēscō [int]
 v3 aborīscor [int]
 v3 dormīscō [int]
 v3 addormīscō [int]
-# FIXME, delete the following
-v3 adormīscō
 v3 condormīscō condormīv [int]
 v3 ēdormīscō [tr]
 v3 obdormīscō obdormīv obdormīt [int]
@@ -2670,7 +2632,6 @@ v3 conquinīscō conquēx [int]
 v3 conticīscō conticu [tr, alt of conticēscō]
 v3 conticēscō conticu [tr, has alt form conticīscō]
 v3 contremīscō contremu [tr]
-# FIXME Delete the following
 v3 contremēscō contremu [tr]
 v3 hīscō [tr]
 v3 dĕhīscō dĕhīv [int]
@@ -2682,7 +2643,7 @@ v3 glīscō [int, has alt form glīscor]
 v3 ingemīscō ingemu [tr, has alt form ingemēscō]
 v3 ingemēscō ingemu [tr, alt of ingemīscō]
 v3 longīscō [int]
-v3 nancīscor nact [tr]
+v3 nancīscor nact/nānct [tr]
 part1 nānctus
 v3 oblīvīscor oblīt [tr]
 v3 prŏficīscor prŏfect [int]
@@ -3125,8 +3086,8 @@ a3 plumipēs plumiped
 a3 properipēs properiped
 part3 ecferēns
 part3 intrōferēns
-part3 prōdiēns
-part3 rediēns
+part3 prōdiēns prōdeunt
+part3 rediēns redeunt
 a1 sēmicaudātus
 a1 sēmilautus
 n3 ēnigma
@@ -3326,7 +3287,7 @@ a1 bipartītus
 a1 bipertītus
 n3 pinguīdō pinguīdin
 # following wrongly has gentilīcium
-n3 nōmen<3>_gentīlicium<+>
+n nōmen<3>_gentīlicium<+>
 n3 cōnsilīgō
 n3 tentīgō
 n1 Isrāēlīta
