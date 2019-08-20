@@ -33,3 +33,4 @@ verb condormisco pass {{la-conj|3|condormīscō|condormīv}}
 verb perdormisco pass {{la-conj|3.nopass|perdormīscō}}
 verb resipisco pass {{la-conj|3|resipīscō|resipu/resipi/resipīv}}
 noun Upsala pl {{la-ndecl|Upsala<1.both.loc>}}
+noun Ceres pl {{la-ndecl|Cerēs/Cerer<3.both>}}
