@@ -182,6 +182,10 @@ def delete_form(index, lemma, formind, formval, pos, tag_sets_to_delete,
     expected_head_template = "la-part-form"
     expected_header_pos = "Participle"
     expected_head_pos = "participle form"
+  elif pos == "numform":
+    expected_head_template = "la-num-form"
+    expected_header_pos = "Numeral"
+    expected_head_pos = "numeral form"
   else:
     raise ValueError("Unrecognized part of speech %s" % pos)
 
@@ -519,6 +523,8 @@ def process_page(index, lemma, pos, infl, forms, pages_to_delete, preserve_diaer
       add_bad_forms(lambda key: re.search("_f$", key))
     elif form == "neut":
       add_bad_forms(lambda key: re.search("_n$", key))
+    elif form == "pl":
+      add_bad_forms(lambda key: re.search("_pl$", key))
     elif "_" not in form:
       raise ValueError("Unrecognized form type: %s" % form)
 
@@ -552,6 +558,8 @@ def process_page(index, lemma, pos, infl, forms, pages_to_delete, preserve_diaer
       elif pos == "nounadj":
         # Noun that uses an adjective declension
         posform = "nounform"
+      elif pos == "numadj":
+        posform = "numform"
       elif pos == "part":
         posform = "partform"
       else:
