@@ -633,6 +633,7 @@ la_nonlemma_poses = {
   "participle form",
   "pronoun form",
   "proper noun form",
+  "suffix form",
   "verb form",
 }
 
@@ -829,11 +830,11 @@ def generate_infl_forms(pos, template, errandpagemsg, expand_text,
   elif pos == 'verb':
     return generate_verb_forms(template, errandpagemsg, expand_text, return_raw,
         include_linked, include_props)
-  elif pos in ['adj', 'nounadj', 'part']:
+  elif pos in ['adj', 'nounadj', 'numadj', 'part']:
     return generate_adj_forms(template, errandpagemsg, expand_text, return_raw,
         include_linked)
   else:
-    errandpagemsg("WARNING: Bad pos=%s, expected noun/verb/adj")
+    errandpagemsg("WARNING: Bad pos=%s, expected noun/verb/adj/nounadj/numadj/part" % pos)
     return None
 
 MACRON = u"\u0304" # macron =  ̄
@@ -1113,6 +1114,7 @@ def la_get_headword_from_template(t, pagename, pagemsg):
         blib.remove_param_chain(generate_template, "comp", "comp")
         blib.remove_param_chain(generate_template, "sup", "sup")
         blib.remove_param_chain(generate_template, "lemma", "lemma")
+        rmparam(generate_template, "type")
         rmparam(generate_template, "id")
         rmparam(generate_template, "pos")
         result = expand_text(unicode(generate_template))
@@ -1130,7 +1132,9 @@ def la_get_headword_from_template(t, pagename, pagemsg):
               unicode(generate_template), result))
             retval = ""
           retval = retval.split(",")
-  elif tn in ["la-noun", "la-num-noun", "la-suffix-noun"]:
+      else:
+        retval = re.sub("/.*", "", retval)
+  elif tn in ["la-noun", "la-num-noun", "la-suffix-noun", "la-proper noun"]:
     retval = blib.fetch_param_chain(t, "lemma", "lemma")
     if not retval:
       generate_template = blib.parse_text(unicode(t)).filter_templates()[0]
@@ -1139,6 +1143,8 @@ def la_get_headword_from_template(t, pagename, pagemsg):
       blib.remove_param_chain(generate_template, "m", "m")
       blib.remove_param_chain(generate_template, "f", "f")
       blib.remove_param_chain(generate_template, "g", "g")
+      rmparam(generate_template, "type")
+      # FIXME: This is wrong, if indecl=1 then we shouldn't try to decline it.
       rmparam(generate_template, "indecl")
       rmparam(generate_template, "id")
       rmparam(generate_template, "pos")
