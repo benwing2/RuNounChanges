@@ -446,7 +446,7 @@ def frob_param(t, param, stem_or_exact, is_exact, pagemsg, notes, split_slashes=
   if newval != origval:
     t.add(param, newval)
     pagemsg("Replaced %s with %s" % (origt, unicode(t)))
-    notes.append("updated macrons in %s per Bennett (with corrections by Allen and Michelson)" % tname(t))
+    notes.append("update macrons in %s: if before two cons, per Bennett corrected by Allen/Michelson" % tname(t))
     return True
   return False
 
@@ -676,8 +676,8 @@ def process_pronun_templates(pronun_section, lemma, pagemsg, notes):
     pagetitle = remove_macrons(lemma)
     headwords = set(x for hw in pronun_section['headwords'] for x in lalib.la_get_headword_from_template(hw['head_template'], pagetitle, pagemsg))
     if len(list(headwords)) > 1:
-      pagemsg("WARNING: One pronunciation template %s but multiple headword templates with different headwords, not changing: %s" %
-        (origpront, ",".join(unicode(hw['head_template']) for hw in pronun_section['headwords'])))
+      pagemsg("WARNING: One pronunciation template %s but multiple headword templates with different headwords %s, not changing: %s" %
+        (origpront, ",".join(headwords), ",".join(unicode(hw['head_template']) for hw in pronun_section['headwords'])))
     elif process_pronun_template(pront, lemma, pagemsg, notes):
       if len(pronun_section['headwords']) > 1:
         pagemsg("WARNING: Multiple headwords for changed pronunciation template (originally %s, changed to %s), check manually: %s" % (
@@ -799,7 +799,7 @@ def do_process_form(index, page, lemma, formind, formval, pos, tag_sets_to_proce
       if lang != "la":
         errandpagemsg("WARNING: In Latin section, found {{inflection of}} for different language %s: %s" % (
           lang, unicode(t)))
-        return None, None
+        continue
       actual_lemma = getparam(t, str(lemma_param))
       if remove_macrons(actual_lemma) == remove_macrons(lemma):
         # fetch tags
@@ -857,7 +857,11 @@ def do_process_form(index, page, lemma, formind, formval, pos, tag_sets_to_proce
         lang = getparam(t, "1")
         lemma_param = 2
       assert lang == "la"
-      frob_exact(t, str(lemma_param), lemma, pagemsg, notes)
+      changed = frob_exact(t, str(lemma_param), lemma, pagemsg, notes)
+      if getparam(t, str(lemma_param + 1)):
+        t.add(str(lemma_param + 1), "")
+        if not changed:
+          notes.append("remove alt form of {{inflection of}}")
 
     process_pronun_templates(headword['pronun_section'], formval, pagemsg, notes)
 
@@ -1000,7 +1004,7 @@ def do_process_participle(index, page, lemma, formind, formval, pos, progargs):
       if args is None:
         return None, None
 
-      process_all_forms(args, index, formval, "partform", progargs)
+      process_all_forms(args, "%s.%s" % (index, formind), formval, "partform", progargs)
 
     process_pronun_templates(headword['pronun_section'], formval, pagemsg, notes)
 
@@ -1294,8 +1298,8 @@ def do_process_lemma(index, page, pos, explicit_infl, lemmaspec, lemma, explicit
             return False
 
           frob_exact(t, "2", lemma, pagemsg, notes)
-          frob_exact(t, "3", param3, pagemsg, notes, split_slashes=True)
-          frob_exact(t, "4", param4, pagemsg, notes, split_slashes=True)
+          frob_exact(t, "3", param3, pagemsg, notes)
+          frob_exact(t, "4", param4, pagemsg, notes)
 
           return True
 
@@ -1416,9 +1420,21 @@ for line in codecs.open(direcfile, "r", "utf-8"):
 
 for index, (pos, infl, lemma, explicit_stem) in blib.iter_items(lemmas, start, end,
     get_name=lambda lemmas: remove_macrons(lemmas[2])):
+  def pagemsg(txt):
+    msg("Page %s %s: %s" % (index, lemma, txt))
   lemmaspec = lemma
-  lemma = re.sub("/[^<) ]*", "", lemma)
-  lemma = re.sub("<.*>", "", lemma)
+  if "/" in lemma or "<" in lemma:
+    if pos == "noun":
+      fake_template = blib.parse_text("{{la-noun|%s}}" % lemma).filter_templates()[0]
+    elif pos == "adj":
+      fake_template = blib.parse_text("{{la-adj|%s}}" % lemma).filter_templates()[0]
+    elif pos == "numadj":
+      fake_template = blib.parse_text("{{la-num-adj|%s}}" % lemma).filter_templates()[0]
+    else:
+      errandmsg("Page %s %s: Apparent complex nominal spec for lemma but POS %s isn't noun/adj/numadj" % (
+        index, lemma, pos))
+      continue
+    lemma = lalib.la_get_headword_from_template(fake_template, "foo", pagemsg)[0]
   def handler(page, index, parsed):
     return do_process_lemma(index, page, pos, infl, lemmaspec, lemma, explicit_stem, args)
 
