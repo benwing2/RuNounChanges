@@ -441,7 +441,7 @@ def delete_form(index, lemma, formind, formval, pos, tag_sets_to_delete,
     else:
       pagemsg("Would save with comment = %s" % comment)
 
-def process_page(index, lemma, pos, infl, forms, pages_to_delete, preserve_diaeresis, save, verbose):
+def process_page(index, lemma, pos, infl, slots, pages_to_delete, preserve_diaeresis, save, verbose):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, lemma, txt))
   def errandpagemsg(txt):
@@ -457,92 +457,101 @@ def process_page(index, lemma, pos, infl, forms, pages_to_delete, preserve_diaer
 
   forms_to_delete = []
   tag_sets_to_delete = []
+  lemma_no_macrons = remove_macrons(lemma)
 
-  def add_bad_forms(bad_form_fun):
-    for key, val in args.iteritems():
-      if bad_form_fun(key):
-        tag_sets_to_delete.append(lalib.form_key_to_tag_set(key))
-        forms_to_delete.append((key, val))
+  def add_bad_forms(bad_slot_fun):
+    for slot, formspec in args.iteritems():
+      if bad_slot_fun(slot):
+        tag_sets_to_delete.append(lalib.slot_to_tag_set(slot))
+        forms_to_delete.append((slot, formspec))
 
-  for form in forms.split(","):
-    if form in args:
-      tag_sets_to_delete.append(lalib.form_key_to_tag_set(form))
-      forms_to_delete.append((form, args[form]))
-    elif form == "all":
-      add_bad_forms(lambda key: True)
-    elif form == "allbutlemma":
-      for key, val in args.iteritems():
-        vals = val.split(",")
-        if remove_macrons(lemma) not in [remove_macrons(v) for v in vals]:
-          tag_sets_to_delete.append(lalib.form_key_to_tag_set(key))
-          forms_to_delete.append((key, val))
-    elif form in ["allbutnomsgn"]:
-      add_bad_forms(lambda key: key != "nom_sg_n")
-    elif form == "firstpart":
-      add_bad_forms(lambda key: (
-        key not in ["futr_actv_ptc", "futr_actv_inf", "futr_pasv_inf"] and (
-          "pres" in key or "impf" in key or "futr" in key or "ger" in key
+  for slot in slots.split(","):
+    if slot.startswith("@"):
+      if ":" in slot:
+        real_form, real_slot = slot[1:].split(":")
+        tag_sets_to_delete.append(lalib.slot_to_tag_set(real_slot))
+        forms_to_delete.append((real_slot, real_form))
+      else:
+        forms_to_delete.append((None, slot[1:]))
+    elif slot in args:
+      tag_sets_to_delete.append(lalib.slot_to_tag_set(slot))
+      forms_to_delete.append((slot, args[slot]))
+    elif slot == "all":
+      add_bad_forms(lambda sl: True)
+    elif slot == "allbutlemma":
+      for sl, formspec in args.iteritems():
+        forms = formspec.split(",")
+        forms = [form for form in forms if lemma_no_macrons != remove_macrons(form)]
+        if forms:
+          tag_sets_to_delete.append(lalib.slot_to_tag_set(sl))
+          forms_to_delete.append((sl, ",".join(forms)))
+    elif slot in ["allbutnomsgn"]:
+      add_bad_forms(lambda sl: sl != "nom_sg_n")
+    elif slot == "firstpart":
+      add_bad_forms(lambda sl: (
+        sl not in ["futr_actv_ptc", "futr_actv_inf", "futr_pasv_inf"] and (
+          "pres" in sl or "impf" in sl or "futr" in sl or "ger" in sl
       )))
-    elif form in ["pasv", "pass"]:
-      add_bad_forms(lambda key: key != "perf_pasv_ptc" and "pasv" in key)
-    elif form in ["nonimperspasv", "nonimperspass"]:
-      add_bad_forms(lambda key: key != "perf_pasv_ptc" and "pasv" in key and (
-        "1s" in key or "1p" in key or "2s" in key or "2p" in key or "3p" in key
+    elif slot in ["pasv", "pass"]:
+      add_bad_forms(lambda sl: sl != "perf_pasv_ptc" and "pasv" in sl)
+    elif slot in ["nonimperspasv", "nonimperspass"]:
+      add_bad_forms(lambda sl: sl != "perf_pasv_ptc" and "pasv" in sl and (
+        "1s" in sl or "1p" in sl or "2s" in sl or "2p" in sl or "3p" in sl
       ))
-    elif form in ["12pasv", "12pass"]:
-      add_bad_forms(lambda key: (
-        key != "perf_pasv_ptc" and "pasv" in key and (
-          "1s" in key or "1p" in key or "2s" in key or "2p" in key
+    elif slot in ["12pasv", "12pass"]:
+      add_bad_forms(lambda sl: (
+        sl != "perf_pasv_ptc" and "pasv" in sl and (
+          "1s" in sl or "1p" in sl or "2s" in sl or "2p" in sl
         )
       ))
-    elif form == "passnofpp":
-      add_bad_forms(lambda key: (
-        key not in ["perf_pasv_ptc", "futr_pasv_ptc"] and "pasv" in key
+    elif slot == "passnofpp":
+      add_bad_forms(lambda sl: (
+        sl not in ["perf_pasv_ptc", "futr_pasv_ptc"] and "pasv" in sl
       ))
-    elif form == "perf":
-      add_bad_forms(lambda key: (
-        key not in ["perf_actv_ptc", "perf_pasv_ptc"] and
-        re.search("(perf|plup|futp)", key)
+    elif slot == "perf":
+      add_bad_forms(lambda sl: (
+        sl not in ["perf_actv_ptc", "perf_pasv_ptc"] and
+        re.search("(perf|plup|futp)", sl)
       ))
-    elif form in ["perf-pasv", "perf-pass"]:
-      add_bad_forms(lambda key: "perf" in key and "pasv" in key)
-    elif form == "sup":
-      add_bad_forms(lambda key: (
-        "sup" in key or
-        key in ["perf_actv_ptc", "perf_pasv_ptc", "futr_actv_ptc"]
+    elif slot in ["perf-pasv", "perf-pass"]:
+      add_bad_forms(lambda sl: "perf" in sl and "pasv" in sl)
+    elif slot == "sup":
+      add_bad_forms(lambda sl: (
+        "sup" in sl or
+        sl in ["perf_actv_ptc", "perf_pasv_ptc", "futr_actv_ptc"]
       ))
-    elif form == "supnofap":
-      add_bad_forms(lambda key: (
-        "sup" in key or key in ["perf_actv_ptc", "perf_pasv_ptc"]
+    elif slot == "supnofap":
+      add_bad_forms(lambda sl: (
+        "sup" in sl or sl in ["perf_actv_ptc", "perf_pasv_ptc"]
       ))
-    elif form == "ger":
-      add_bad_forms(lambda key: "ger" in key)
-    elif form in ["imp", "impr"]:
-      add_bad_forms(lambda key: "impr" in key)
-    elif form == "fem":
-      add_bad_forms(lambda key: re.search("_f$", key))
-    elif form == "neut":
-      add_bad_forms(lambda key: re.search("_n$", key))
-    elif form == "pl":
-      add_bad_forms(lambda key: re.search("_pl$", key))
-    elif "_" not in form:
-      raise ValueError("Unrecognized form type: %s" % form)
+    elif slot == "ger":
+      add_bad_forms(lambda sl: "ger" in sl)
+    elif slot in ["imp", "impr"]:
+      add_bad_forms(lambda sl: "impr" in sl)
+    elif slot == "fem":
+      add_bad_forms(lambda sl: re.search("_f$", sl))
+    elif slot == "neut":
+      add_bad_forms(lambda sl: re.search("_n$", sl))
+    elif slot == "pl":
+      add_bad_forms(lambda sl: re.search("_pl$", sl))
+    elif "_" not in slot:
+      raise ValueError("Unrecognized slot: %s" % slot)
 
   single_forms_to_delete = []
 
-  for key, form in forms_to_delete:
-    for single_form in form.split(","):
-      single_forms_to_delete.append((key, single_form))
-  for formind, (key, formval) in blib.iter_items(single_forms_to_delete,
+  for slot, formspec in forms_to_delete:
+    for single_form in formspec.split(","):
+      single_forms_to_delete.append((slot, single_form))
+  for formind, (slot, formval) in blib.iter_items(single_forms_to_delete,
       get_name=lambda x: x[1]):
     partpos = None
-    if key == "pres_actv_ptc":
+    if slot == "pres_actv_ptc":
       partpos = "presactpart"
-    elif key in ["perf_actv_ptc", "perf_pasv_ptc"]:
+    elif slot in ["perf_actv_ptc", "perf_pasv_ptc"]:
       partpos = "perfpasspart"
-    elif key == "futr_actv_ptc":
+    elif slot == "futr_actv_ptc":
       partpos = "futactpart"
-    elif key == "futr_pasv_ptc":
+    elif slot == "futr_pasv_ptc":
       partpos = "futpasspart"
 
     if partpos:
@@ -564,50 +573,51 @@ def process_page(index, lemma, pos, infl, forms, pages_to_delete, preserve_diaer
         posform = "partform"
       else:
         raise ValueError("Invalid part of speech %s" % pos)
-      delete_form(index, lemma, formind, formval, posform, tag_sets_to_delete,
+      delete_form(index, lemma, formind, formval, posform,
+        True if slot is None else tag_sets_to_delete,
         preserve_diaeresis, save, verbose)
 
 parser = blib.create_argparser(u"Delete bad Latin forms")
 parser.add_argument('--inflfile', help="File containing lemmas and inflection templates.")
-parser.add_argument('--form-inflfile', help="File containing lemmas, forms to delete and infl templates.")
-parser.add_argument('--pos-form-inflfile', help="File containing POSes, lemmas, forms to delete and infl templates.")
-parser.add_argument('--forms', help="Forms to delete.")
+parser.add_argument('--slot-inflfile', help="File containing lemmas, slots to delete and infl templates.")
+parser.add_argument('--pos-slot-inflfile', help="File containing POSes, lemmas, slots to delete and infl templates.")
+parser.add_argument('--slots', help="Slots to delete.")
 parser.add_argument('--pos', help="Part of speech of words to delete",
     choices=['noun', 'verb', 'adj'])
 parser.add_argument('--output-pages-to-delete', help="File to write pages to delete.")
 parser.add_argument('--preserve-diaeresis', action="store_true",
-    help="Don't remove diaeresis when removing macrons to compute pag name.")
+    help="Don't remove diaeresis when removing macrons to compute page name.")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
 pages_to_delete = []
-if args.pos_form_inflfile:
-  lines = [x.strip() for x in codecs.open(args.pos_form_inflfile, "r", "utf-8")]
+if args.pos_slot_inflfile:
+  lines = [x.strip() for x in codecs.open(args.pos_slot_inflfile, "r", "utf-8")]
   for index, line in blib.iter_items(lines, start, end):
     if line.startswith("#"):
       continue
     if "!!!" in line:
-      pos, lemma, forms, infl = re.split("!!!", line)
+      pos, lemma, slots, infl = re.split("!!!", line)
     else:
-      pos, lemma, forms, infl = re.split(" ", line, 3)
-    process_page(index, lemma, pos, infl, forms, pages_to_delete,
+      pos, lemma, slots, infl = re.split(" ", line, 3)
+    process_page(index, lemma, pos, infl, slots, pages_to_delete,
       args.preserve_diaeresis, args.save, args.verbose)
-elif args.form_inflfile:
+elif args.slot_inflfile:
   if not args.pos:
-    raise ValueError("If --form-inflfile given, --pos must be given")
-  lines = [x.strip() for x in codecs.open(args.form_inflfile, "r", "utf-8")]
+    raise ValueError("If --slot-inflfile given, --pos must be given")
+  lines = [x.strip() for x in codecs.open(args.slot_inflfile, "r", "utf-8")]
   for index, line in blib.iter_items(lines, start, end):
     if line.startswith("#"):
       continue
     if "!!!" in line:
-      lemma, forms, infl = re.split("!!!", line)
+      lemma, slots, infl = re.split("!!!", line)
     else:
-      lemma, forms, infl = re.split(" ", line, 2)
-    process_page(index, lemma, args.pos, infl, forms, pages_to_delete,
+      lemma, slots, infl = re.split(" ", line, 2)
+    process_page(index, lemma, args.pos, infl, slots, pages_to_delete,
       args.preserve_diaeresis, args.save, args.verbose)
 else:
-  if not args.inflfile or not args.forms or not args.pos:
-    raise ValueError("If --form-inflfile not given, --inflfile, --pos and --forms must be given")
+  if not args.inflfile or not args.slots or not args.pos:
+    raise ValueError("If --slot-inflfile not given, --inflfile, --pos and --slots must be given")
   lines = [x.strip() for x in codecs.open(args.inflfile, "r", "utf-8")]
   for index, line in blib.iter_items(lines, start, end):
     if line.startswith("#"):
@@ -616,7 +626,7 @@ else:
       lemma, infl = re.split("!!!", line)
     else:
       lemma, infl = re.split(" ", line, 1)
-    process_page(index, lemma, args.pos, infl, args.forms, pages_to_delete,
+    process_page(index, lemma, args.pos, infl, args.slots, pages_to_delete,
       args.preserve_diaeresis, args.save, args.verbose)
 msg("The following pages need to be deleted:")
 for page in pages_to_delete:

@@ -1031,8 +1031,8 @@ def canonicalize_tag_set(tag_set):
     new_tag_set.append(tags_to_canonical.get(tag, tag))
   return new_tag_set
 
-def form_key_to_tag_set(key):
-  parts = key.split("_")
+def slot_to_tag_set(slot):
+  parts = slot.split("_")
   tags = []
   for part in parts:
     tags.extend(parts_to_tags[part])

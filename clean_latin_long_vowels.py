@@ -643,10 +643,10 @@ def find_heads_and_defns(page, pagemsg):
 
 def find_tag_sets_for_form(args, form):
   tag_sets = []
-  for key, formspec in args.iteritems():
+  for slot, formspec in args.iteritems():
     forms = formspec.split(",")
     if form in forms:
-      tag_sets.append(lalib.form_key_to_tag_set(key))
+      tag_sets.append(lalib.slot_to_tag_set(slot))
   return tag_sets
 
 # Return True if changed.
