@@ -1194,18 +1194,10 @@ def do_process_lemma(index, page, pos, explicit_infl, lemmaspec, lemma, explicit
       pos == "sufadj" and (found_head_template or tn == "la-suffix-adj")
     ):
       if not found_head_template:
-        if explicit_infl == 1:
-          if lemma.endswith("r"):
-            inferred_stem = lemma
-          elif lemma.endswith("us"):
-            inferred_stem = lemma[:-2]
-          elif lemma.endswith(u"ī"):
-            # plurale tantum
-            inferred_stem = lemma[:-1]
-          else:
-            errandpagemsg("WARNING: Bad 1st/2nd-declension adjective lemma %s" % lemma)
-            return None, None
-        elif explicit_infl == 3:
+        ending_re = u"(us|ī|er|ur|is|ēs)"
+        if re.search(ending_re + "$", lemma):
+          inferred_stem = re.sub(u"^(.*?)%s$" % ending_re, r"\1", lemma)
+        else:
           inferred_stem = lalib.infer_3rd_decl_stem(lemma)
         stem = explicit_stem or inferred_stem
 
@@ -1232,8 +1224,8 @@ def do_process_lemma(index, page, pos, explicit_infl, lemmaspec, lemma, explicit
             frob_stem(ht, "sup", base, pagemsg, notes)
 
         else:
-          pagemsg("WARNING: Mismatch between requested adjective inflection %s and actual adjective headword template %s" % (
-            explicit_infl, unicode(ht)))
+          pagemsg("WARNING: Unrecognized djective headword template %s" % (
+            unicode(ht)))
           continue
 
       found_matching_head = True
@@ -1241,8 +1233,8 @@ def do_process_lemma(index, page, pos, explicit_infl, lemmaspec, lemma, explicit
       for inflt in headword['infl_templates']:
         infltn = tname(inflt)
         if infltn not in lalib.la_adj_decl_templates:
-          pagemsg("WARNING: Saw bad declension template for infl=%s adj %s: %s" % (
-            explicit_infl, lemma, unicode(inflt)))
+          pagemsg("WARNING: Saw bad declension template for adj %s: %s" % (
+            lemma, unicode(inflt)))
           continue
 
         if frob_nominal_lemma_spec(inflt, lemmaspec, explicit_stem, pagemsg, notes) == "fail":
@@ -1303,7 +1295,7 @@ def do_process_lemma(index, page, pos, explicit_infl, lemmaspec, lemma, explicit
 
           return True
 
-      if not fix_verb_template(ht, infl, lemma, param3, param4):
+      if not fix_verb_template(ht, explicit_infl, lemma, param3, param4):
         continue
 
       found_matching_head = True
@@ -1312,10 +1304,10 @@ def do_process_lemma(index, page, pos, explicit_infl, lemmaspec, lemma, explicit
         infltn = tname(inflt)
         if infltn not in lalib.la_verb_conj_templates:
           pagemsg("WARNING: Saw bad conjugation template for infl=%s verb %s: %s" % (
-            infl, lemma, unicode(inflt)))
+            explicit_infl, lemma, unicode(inflt)))
           continue
 
-        if not fix_verb_template(inflt, infl, lemma, param3, param4):
+        if not fix_verb_template(inflt, explicit_infl, lemma, param3, param4):
           continue
 
         # FIXME, handle overrides
@@ -1409,6 +1401,7 @@ for line in codecs.open(direcfile, "r", "utf-8"):
     }
     pos = code_to_pos[m.group(1)]
     infl = m.group(2) and int(m.group(2)) or None
+    # FIXME: The infl for nouns and adjectives is no longer used at all
     lemmas.append((pos, infl, lemma, explicit_stem))
   elif len(parts) >= 2 and parts[0].startswith("v"):
     infl = parts[0][1:]
