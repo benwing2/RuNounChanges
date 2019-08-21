@@ -5,7 +5,7 @@ verb supercresco pass {{la-conj|3|supercrēscō|supercrēv}}
 verb conquiesco pass {{la-conj|3|conquiēscō|conquiēv|conquiēt}}
 verb aegresco pass {{la-conj|3|aegrēscō}}
 verb albesco passnofpp {{la-conj|3|albēscō}}
-verb candesco pass {{la-verb|3|candēscō|candu}}
+verb candesco pass {{la-conj|3|candēscō|candu}}
 verb canesco pass {{la-conj|3|cānēscō|cānu}}
 verb compesco perf {{la-conj|3|compescō|compu}}
 verb contremesco pass {{la-conj|3|contremēscō|contremu}}
