@@ -661,24 +661,7 @@ def check_for_alt_yo_terms(text, pagemsg):
   return False
 
 def find_defns(text):
-  lines = text.split("\n")
-  defns = []
-  for line in lines:
-    if not line.startswith('#'):
-      continue
-    if line.startswith('#:') or line.startswith('#*'):
-      line = re.sub('^#[*:]+ *', '', line)
-      line = re.sub(r'\{\{uxi?\|ru\|((?:[^{}]|\{\{.*?\}\})+)\}\}', r'ux:\1', line)
-    else:
-      line = re.sub('^# *', '', line)
-    def convert_to_parens(m):
-      labels = m.group(1).split('|')
-      return ''.join('(%s)' % label for label in labels)
-    line = re.sub(r'\{\{lb\|ru\|(.*?)\}\} *', convert_to_parens, line)
-    line = line.replace(';', r'\;')
-    defns.append(line)
-  return defns
-
+  return blib.find_defns(text, 'ru')
 
 ################################ Test code ##########################
 

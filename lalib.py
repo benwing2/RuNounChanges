@@ -542,6 +542,12 @@ la_adj_headword_templates = {
   "la-adj-superlative",
 }
 
+la_adv_headword_templates = {
+  "la-adv",
+  "la-adv-comp",
+  "la-adv-sup",
+}
+
 la_suffix_headword_templates = {
   "la-suffix",
   "la-suffix-adj",
@@ -557,7 +563,6 @@ la_num_headword_templates = {
 
 la_nonlemma_headword_templates = {
   "la-adj-form",
-  "la-comp-form",
   "la-gerund-form",
   "la-noun-form",
   "la-proper noun-form",
@@ -569,13 +574,11 @@ la_nonlemma_headword_templates = {
 }
 
 la_misc_headword_templates = {
-  "la-adv",
   "la-diacritical mark",
   "la-gerund",
   "la-interj",
   "la-phrase",
   "la-letter",
-  "la-location",
   "la-noun",
   "la-part",
   "la-proper noun",
@@ -586,6 +589,7 @@ la_misc_headword_templates = {
 
 la_lemma_headword_templates = (
   la_adj_headword_templates |
+  la_adv_headword_templates |
   la_suffix_headword_templates |
   la_num_headword_templates |
   la_misc_headword_templates
@@ -626,6 +630,7 @@ la_lemma_poses = {
 
 la_nonlemma_poses = {
   "adjective form",
+  "adverb form",
   "determiner form",
   "gerund form",
   "noun form",
@@ -700,8 +705,8 @@ def infer_adv_stem(adv):
       suffix = pattern
       newsuff = ""
     if adv.endswith(suffix):
-      return adv[:-len(suffix)] + newsuff
-  return adv
+      return adv[:-len(suffix)] + newsuff, True
+  return adv, False
 
 def generate_adj_forms(template, errandpagemsg, expand_text, return_raw=False,
     include_linked=False):
@@ -1232,3 +1237,6 @@ def synchronize_stems(full, stem):
   if j < len(stem):
     return False
   return i
+
+def find_defns(text):
+  return blib.find_defns(text, 'la')

@@ -651,8 +651,12 @@ def parse_start_end(startsort, endsort):
   return (startsort, endsort)
 
 def do_pagefile_cats_refs(args, start, end, process_page, default_cats=[],
-    default_refs=[], edit=False):
+    default_refs=[], edit=False, filter_pages=None):
   def do_process_page(page, i):
+    if filter_pages:
+      pagetitle = unicode(page.title())
+      if not filter_pages(pagetitle):
+        return
     if edit:
       do_edit(page, i, process_page, save=args.save, verbose=args.verbose,
           diff=args.diff)
@@ -1381,6 +1385,25 @@ def compare_new_and_old_template_forms(origt, newt, generate_old_forms, generate
       return False
   pagemsg("%s and %s have same forms" % (origt, newt))
   return True
+
+def find_defns(text, langcode):
+  lines = text.split("\n")
+  defns = []
+  for line in lines:
+    if not line.startswith('#'):
+      continue
+    if line.startswith('#:') or line.startswith('#*'):
+      line = re.sub('^#[*:]+ *', '', line)
+      line = re.sub(r'\{\{uxi?\|%s\|((?:[^{}]|\{\{.*?\}\})+)\}\}' % langcode, r'ux:\1', line)
+    else:
+      line = re.sub('^# *', '', line)
+    def convert_to_parens(m):
+      labels = m.group(1).split('|')
+      return ''.join('(%s)' % label for label in labels)
+    line = re.sub(r'\{\{lb\|%s\|(.*?)\}\} *' % langcode, convert_to_parens, line)
+    line = line.replace(';', r'\;')
+    defns.append(line)
+  return defns
 
 class WikiDumpHandler(xml.sax.ContentHandler):
   def __init__(self, pagecallback):

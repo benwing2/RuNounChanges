@@ -1130,7 +1130,7 @@ def do_process_lemma(index, page, pos, explicit_infl, lemmaspec, lemma, explicit
     if pos == "adv" and tn == "la-adv":
       found_matching_head = True
       frob_exact(ht, "1", lemma, pagemsg, notes)
-      stem = lalib.infer_adv_stem(lemma)
+      stem, is_stem = lalib.infer_adv_stem(lemma)
       frob_stem(ht, "2", stem, pagemsg, notes, no_warn=True)
       frob_stem(ht, "3", stem, pagemsg, notes, no_warn=True)
       frob_chain_stem(ht, "comp", stem, pagemsg, notes, no_warn=True)
