@@ -30,7 +30,7 @@ verb sordesco pass {{la-conj|3|sordēscō|sordu}}
 verb tumesco pass {{la-conj|3|tumēscō|tumu}}
 verb addormisco pass {{la-conj|3|addormīscō}}
 verb condormisco pass {{la-conj|3|condormīscō|condormīv}}
-verb perdormisco pass {{la-conj|3.nopass|perdormīscō}}
+verb perdormisco pass {{la-conj|3|perdormīscō}}
 verb resipisco pass {{la-conj|3|resipīscō|resipu/resipi/resipīv}}
 noun Upsala pl {{la-ndecl|Upsala<1.both.loc>}}
 noun Ceres pl {{la-ndecl|Cerēs/Cerer<3.both>}}
