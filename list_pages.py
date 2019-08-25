@@ -35,6 +35,8 @@ elif args.namespace:
   ns = args.namespace
   if re.search('^[0-9]+$', ns):
     ns = int(ns)
+  else:
+    ns = unicode(ns)
   for i, page in blib.iter_items(site.allpages(
     start=start if isinstance(start, basestring) else '!', namespace=ns,
     filterredir=False), start, end):
