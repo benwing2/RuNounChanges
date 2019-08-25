@@ -1,0 +1,37 @@
+### From before
+n5 lūxuriēs
+v3 prŏfundō prŏfūd prŏfūs
+v3 tinguō tīnx tīnct
+a3 īnfēstior
+a1 īnfēstus
+
+### Other
+a3 bovīlis
+a1 reflexīvus
+
+###
+### L
+###
+# n2 lābrum "bowl" do manually; cf. labrum "lip" with short vowel
+n1 labrūsca
+n2 lārdum
+n1 lārva
+v1 lātrō
+v1 adlātrō
+v1 allātrō
+v1 oblātrō
+n3 lēmma
+n2 lentīscus
+a1 lentīscifer
+n3 līctor
+a1 līmpidus
+v3 lingō līnx līnct
+v3 dēlingō dēlīnx dēlīnct
+v3 ēlingō ēlīnx ēlīnct
+v3 pollingō pollīnx pollīnct
+n4 līnctus
+n3 pollīnctor
+a1 lūbricus
+v1 lūbricō
+n3 lūbricitās
+pn Lycūrgus

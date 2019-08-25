@@ -1,0 +1,7 @@
+verb conspiro pass {{la-conj|1+|cōnspīrō}}
+verb perdormisco pass {{la-conj|3|perdormīscō}}
+verb confugio nonimperspass {{la-conj|3|cōnfugiō|cōnfūg|cōnfugit}}
+verb defugio nonimperspass {{la-conj|3|dēfugiō|dēfūg|dēfugit}}
+verb adsuefacio pass {{la-conj|3|adsuēfaciō|adsuēfēc}}
+verb assuefacio pass {{la-conj|3|assuēfaciō|assuēfēc}}
+verb vivo 12pass {{la-conj|3|vīvō|vīx|vīct}}
