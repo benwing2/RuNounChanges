@@ -1554,8 +1554,6 @@ adv īnfēlīciter
 a1 īnfēnsus
 a3 īnferior
 a3 īnfernālis
-a3 īnfestior
-a1 īnfestus
 n1 īnficētia
 a3 īnfidēlior
 a3 īnfidēlis
@@ -2748,6 +2746,7 @@ adv sīgnanter
 n2 sīgnārius
 n3 sīgnātor
 a1 sīgnifer
+n2 sīgnifer
 n3 sīgnifex sīgnific
 n3 sīgnificātiō
 v1+ sīgnificō
@@ -2791,6 +2790,7 @@ part1 paritūrus
 a3 causālis
 n3 circumdatiō
 a1 patricius
+n2 patricius
 n3 chīlias chīliad
 n1 flagrantia
 # wrongly has long e
@@ -3133,7 +3133,6 @@ n5 Hērōdis_diēs
 sufn5 -iēs
 n5 illuviēs
 n5 inluviēs
-n5 luxuriēs
 n5 māceriēs
 n5 maciēs
 n5 māteriēs
