@@ -47,18 +47,10 @@ def process_page(page, index, parsed):
 
   return unicode(parsed), notes
 
-parser = blib.create_argparser("Add missing .-ium to Latin elements")
-parser.add_argument("--pagefile", help="List of pages to process.")
+parser = blib.create_argparser("Add missing .-ium to Latin elements",
+    include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-if args.pagefile:
-  pages = [x.rstrip('\n') for x in codecs.open(args.pagefile, "r", "utf-8")]
-  for i, page in blib.iter_items(pages, start, end):
-    blib.do_edit(pywikibot.Page(site, page), i, process_page, save=args.save,
-      verbose=args.verbose, diff=args.diff)
-else:
-  for cat in ["la:Chemical elements"]:
-    for i, page in blib.cat_articles(cat, start, end):
-      blib.do_edit(page, i, process_page, save=args.save, verbose=args.verbose,
-        diff=args.diff)
+blib.do_pagefile_cats_refs(args, start, end, process_page,
+    default_cats=["la:Chemical elements"], edit=True)
