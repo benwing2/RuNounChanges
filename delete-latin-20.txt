@@ -5,3 +5,5 @@ verb defugio nonimperspass {{la-conj|3|dēfugiō|dēfūg|dēfugit}}
 verb adsuefacio pass {{la-conj|3|adsuēfaciō|adsuēfēc}}
 verb assuefacio pass {{la-conj|3|assuēfaciō|assuēfēc}}
 verb vivo 12pass {{la-conj|3|vīvō|vīx|vīct}}
+adj gigasporarus all {{la-adecl|gigasporarus}}
+adj pugnitus allbutlemma {{la-adecl|pugnitus}}
