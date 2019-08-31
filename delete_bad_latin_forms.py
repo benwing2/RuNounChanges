@@ -476,8 +476,6 @@ def process_page(index, lemma, pos, infl, slots, pages_to_delete, preserve_diaer
     elif slot in args:
       tag_sets_to_delete.append(lalib.slot_to_tag_set(slot))
       forms_to_delete.append((slot, args[slot]))
-    elif slot == "all":
-      add_bad_forms(lambda sl: True)
     elif slot == "allbutlemma":
       for sl, formspec in args.iteritems():
         forms = formspec.split(",")
@@ -485,57 +483,8 @@ def process_page(index, lemma, pos, infl, slots, pages_to_delete, preserve_diaer
         if forms:
           tag_sets_to_delete.append(lalib.slot_to_tag_set(sl))
           forms_to_delete.append((sl, ",".join(forms)))
-    elif slot in ["allbutnomsgn"]:
-      add_bad_forms(lambda sl: sl != "nom_sg_n")
-    elif slot == "firstpart":
-      add_bad_forms(lambda sl: (
-        sl not in ["futr_actv_ptc", "futr_actv_inf", "futr_pasv_inf"] and (
-          "pres" in sl or "impf" in sl or "futr" in sl or "ger" in sl
-      )))
-    elif slot in ["pasv", "pass"]:
-      add_bad_forms(lambda sl: sl != "perf_pasv_ptc" and "pasv" in sl)
-    elif slot in ["nonimperspasv", "nonimperspass"]:
-      add_bad_forms(lambda sl: sl != "perf_pasv_ptc" and "pasv" in sl and (
-        "1s" in sl or "1p" in sl or "2s" in sl or "2p" in sl or "3p" in sl
-      ))
-    elif slot in ["12pasv", "12pass"]:
-      add_bad_forms(lambda sl: (
-        sl != "perf_pasv_ptc" and "pasv" in sl and (
-          "1s" in sl or "1p" in sl or "2s" in sl or "2p" in sl
-        )
-      ))
-    elif slot == "passnofpp":
-      add_bad_forms(lambda sl: (
-        sl not in ["perf_pasv_ptc", "futr_pasv_ptc"] and "pasv" in sl
-      ))
-    elif slot == "perf":
-      add_bad_forms(lambda sl: (
-        sl not in ["perf_actv_ptc", "perf_pasv_ptc"] and
-        re.search("(perf|plup|futp)", sl)
-      ))
-    elif slot in ["perf-pasv", "perf-pass"]:
-      add_bad_forms(lambda sl: "perf" in sl and "pasv" in sl)
-    elif slot == "sup":
-      add_bad_forms(lambda sl: (
-        "sup" in sl or
-        sl in ["perf_actv_ptc", "perf_pasv_ptc", "futr_actv_ptc"]
-      ))
-    elif slot == "supnofap":
-      add_bad_forms(lambda sl: (
-        "sup" in sl or sl in ["perf_actv_ptc", "perf_pasv_ptc"]
-      ))
-    elif slot == "ger":
-      add_bad_forms(lambda sl: "ger" in sl)
-    elif slot in ["imp", "impr"]:
-      add_bad_forms(lambda sl: "impr" in sl)
-    elif slot == "fem":
-      add_bad_forms(lambda sl: re.search("_f$", sl))
-    elif slot == "neut":
-      add_bad_forms(lambda sl: re.search("_n$", sl))
-    elif slot == "pl":
-      add_bad_forms(lambda sl: re.search("_pl$", sl))
-    elif "_" not in slot:
-      raise ValueError("Unrecognized slot: %s" % slot)
+    else:
+      add_bad_forms(lambda sl: slot_matches_spec(sl, slot))
 
   single_forms_to_delete = []
 

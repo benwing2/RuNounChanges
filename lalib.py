@@ -716,3 +716,49 @@ def synchronize_stems(full, stem):
 
 def find_defns(text):
   return blib.find_defns(text, 'la')
+
+def slot_matches_spec(slot, spec):
+  if spec == "all":
+    return True
+  elif spec == "allbutnomsgn":
+    return slot != "nom_sg_n"
+  elif spec == "firstpart":
+    return slot not in ["futr_actv_ptc", "futr_actv_inf", "futr_pasv_inf"] and (
+      "pres" in slot or "impf" in slot or "futr" in slot or "ger" in slot
+    )
+  elif spec in ["pasv", "pass"]:
+    return slot != "perf_pasv_ptc" and "pasv" in slot
+  elif spec in ["nonimperspasv", "nonimperspass"]:
+    return slot != "perf_pasv_ptc" and "pasv" in slot and (
+      "1s" in slot or "1p" in slot or "2s" in slot or "2p" in slot or "3p" in slot
+    )
+  elif spec in ["12pasv", "12pass"]:
+    return slot != "perf_pasv_ptc" and "pasv" in slot and (
+      "1s" in slot or "1p" in slot or "2s" in slot or "2p" in slot
+    )
+  elif spec == "passnofpp":
+    return slot not in ["perf_pasv_ptc", "futr_pasv_ptc"] and "pasv" in slot
+  elif spec == "perf":
+    return (slot not in ["perf_actv_ptc", "perf_pasv_ptc"] and
+      re.search("(perf|plup|futp)", slot)
+    )
+  elif spec in ["perf-pasv", "perf-pass"]:
+    return "perf" in slot and "pasv" in slot
+  elif spec == "sup":
+    return "sup" in slot or slot in ["perf_actv_ptc", "perf_pasv_ptc", "futr_actv_ptc"]
+  elif spec == "supnofap":
+    return "sup" in slot or slot in ["perf_actv_ptc", "perf_pasv_ptc"]
+  elif spec == "ger":
+    return "ger" in slot
+  elif spec in ["imp", "impr"]:
+    return "impr" in slot
+  elif spec == "fem":
+    return re.search("_f$", slot)
+  elif spec == "neut":
+    return re.search("_n$", slot)
+  elif spec == "pl":
+    return re.search("_pl$", slot)
+  elif "_" not in spec:
+    raise ValueError("Unrecognized spec: %s" % spec)
+  else:
+    return False
