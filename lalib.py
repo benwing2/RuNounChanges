@@ -305,7 +305,7 @@ def generate_verb_forms(template, errandpagemsg, expand_text, return_raw=False,
 
 def generate_infl_forms(pos, template, errandpagemsg, expand_text,
     return_raw=False, include_linked=False, include_props=False):
-  if pos == 'noun':
+  if pos in ['noun', 'pn']:
     return generate_noun_forms(template, errandpagemsg, expand_text, return_raw,
         include_linked)
   elif pos == 'verb':
@@ -318,14 +318,19 @@ def generate_infl_forms(pos, template, errandpagemsg, expand_text,
     errandpagemsg("WARNING: Bad pos=%s, expected noun/verb/adj/nounadj/numadj/part" % pos)
     return None
 
+uppercase = u"A-ZĀĒĪŌŪȲĂĔĬŎŬÄËÏÖÜŸ"
+lowercase = u"a-zāēīōūȳăĕĭŏŭäëïöüÿ"
+vowel = u"aeiouyAEIOUYāēīōūȳăĕĭŏŭäëïöüÿĀĒĪŌŪȲĂĔĬŎŬÄËÏÖÜŸ"
+
 MACRON = u"\u0304" # macron =  ̄
 BREVE = u"\u0306" # breve =  ̆
 DOUBLE_INV_BREVE = u"\u0361" # double inverted breve
 DIAER = u"\u0308" # diaeresis =  ̈
 
 combining_accents = [MACRON, BREVE, DOUBLE_INV_BREVE, DIAER]
+combining_accent_str = "".join(combining_accents)
 
-demacron_mapper = {
+deaccent_mapper = {
   u'ā': 'a',
   u'ē': 'e',
   u'ī': 'i',
@@ -367,53 +372,87 @@ demacron_mapper = {
   DIAER: '',
 }
 
-macron_breve_etc_no_diaeresis = u'āēīōūȳĀĒĪŌŪȲăĕĭŏŭĂĔĬŎŬ' + MACRON + BREVE + DOUBLE_INV_BREVE
-macron_breve_etc = macron_breve_etc_no_diaeresis + u'äÄëËïÏöÖüÜÿŸ' + DIAER
+breves = u'ăĕĭŏŭĂĔĬŎŬ' + BREVE + DOUBLE_INV_BREVE
+macrons = u'āēīōūȳĀĒĪŌŪȲ' + MACRON
+diaereses = u'äÄëËïÏöÖüÜÿŸ' + DIAER
+macrons_breves = macrons + breves
+macrons_breves_diaereses = macrons_breves + diaereses
 
 def remove_macrons(text, preserve_diaeresis=False):
   if preserve_diaeresis:
-    return re.sub(u'([' + macron_breve_etc_no_diaeresis + '])', lambda m: demacron_mapper[m.group(1)], text)
+    return re.sub(u'([' + macrons_breves + '])', lambda m: deaccent_mapper[m.group(1)], text)
   else:
-    return re.sub(u'([' + macron_breve_etc + '])', lambda m: demacron_mapper[m.group(1)], text)
+    return re.sub(u'([' + macrons_breves_diaereses + '])', lambda m: deaccent_mapper[m.group(1)], text)
 
-parts_to_tags = {
+def remove_non_macron_accents(text):
+  return re.sub(u'([' + breves + diaereses + '])', lambda m: deaccent_mapper[m.group(1)], text)
+
+def is_nonsyllabic(word):
+  return not re.search("[" + vowel + "]", word)
+
+parts_to_tags_list = [
   # parts for verbs
-  '1s': ['1', 's'],
-  '2s': ['2', 's'],
-  '3s': ['3', 's'],
-  '1p': ['1', 'p'],
-  '2p': ['2', 'p'],
-  '3p': ['3', 'p'],
-  'actv': ['act'],
-  'pasv': ['pass'],
-  'pres': ['pres'],
-  'impf': ['impf'],
-  'futr': ['fut'],
-  'perf': ['perf'],
-  'plup': ['plup'],
-  'futp': ['fut', 'perf'],
-  'indc': ['ind'],
-  'subj': ['sub'],
-  'impr': ['imp'],
-  'inf': ['inf'],
-  'ptc': ['part'],
-  'ger': ['ger'],
-  'sup': ['sup'],
-  'nom': ['nom'],
-  'gen': ['gen'],
-  'dat': ['dat'],
-  'acc': ['acc'],
-  'abl': ['abl'],
+  ('1s', ['1', 's']),
+  ('2s', ['2', 's']),
+  ('3s', ['3', 's']),
+  ('1p', ['1', 'p']),
+  ('2p', ['2', 'p']),
+  ('3p', ['3', 'p']),
+  ('actv', ['act']),
+  ('pasv', ['pass']),
+  ('pres', ['pres']),
+  ('impf', ['impf']),
+  ('futp', ['fut', 'perf']),
+  ('futr', ['fut']),
+  ('perf', ['perf']),
+  ('plup', ['plup']),
+  ('indc', ['ind']),
+  ('subj', ['sub']),
+  ('impr', ['imp']),
+  ('inf', ['inf']),
+  ('ptc', ['part']),
+  ('ger', ['ger']),
+  ('sup', ['sup']),
+  ('nom', ['nom']),
+  ('gen', ['gen']),
+  ('dat', ['dat']),
+  ('acc', ['acc']),
+  ('abl', ['abl']),
   # additional parts for adjectives
-  'voc': ['voc'],
-  'sg': ['s'],
-  'pl': ['p'],
-  'm': ['m'],
-  'f': ['f'],
-  'n': ['n'],
+  ('voc', ['voc']),
+  ('sg', ['s']),
+  ('pl', ['p']),
+  ('m', ['m']),
+  ('f', ['f']),
+  ('n', ['n']),
   # additional parts for nouns
-  'loc': ['loc'],
-}
+  ('loc', ['loc']),
+]
+tags_to_parts_list = [(y, x) for x, y in parts_to_tags_list]
+parts_to_tags = dict(parts_to_tags_list)
+
+noun_tag_groups = [
+  ['nom', 'gen', 'dat', 'acc', 'abl', 'voc', 'loc'],
+  ['s', 'p'],
+]
+
+adj_tag_groups = [
+  ['nom', 'gen', 'dat', 'acc', 'abl', 'voc', 'loc'],
+  ['s', 'p'],
+  ['m', 'f', 'n'],
+]
+
+verb_tag_groups = [
+  ['1', '2', '3'],
+  ['s', 'p'],
+  ['pres', 'impf', 'fut', 'plup'],
+  ['perf'],
+  ['act', 'pass'],
+  ['ind', 'sub', 'imp'],
+  ['inf', 'part'],
+  ['ger', 'sup'],
+  ['nom', 'gen', 'dat', 'acc', 'abl'],
+]
 
 tags_to_canonical = {
   'first-person': '1',
@@ -453,6 +492,7 @@ tags_to_canonical = {
   'accusative': 'acc',
   'ablative': 'abl',
   'vocative': 'voc',
+  'locative': 'loc',
   'masculine': 'm',
   'feminine': 'f',
   'neuter': 'n',
@@ -512,12 +552,58 @@ def canonicalize_tag_set(tag_set):
     new_tag_set.append(tags_to_canonical.get(tag, tag))
   return new_tag_set
 
+# Sort a tag set according to the groups in GROUPS (e.g. one of noun_tag_groups,
+# verb_tag_groups, adj_tag_groups). This first canonicalizes the tags.
+# If any tag is unrecognized, a warning is printed using PAGEMSG and None
+# returned; otherwise the sorted tag set is returned.
+def sort_tag_set(tag_set, groups, pagemsg):
+  tag_set = canonicalize_tag_set(tag_set)
+  tag_to_level = {
+    tag: num for num, tag_level in enumerate(groups) for tag in tag_level
+  }
+  tag_set_with_levels = []
+  for tag in tag_set:
+    if tag in tag_to_level:
+      tag_set_with_levels.append((tag, tag_to_level[tag]))
+    else:
+      pagemsg("WARNING: Unrecognized tag %s in %s" % (tag, "|".join(tag_set)))
+      return None
+  return [x for x, num in sorted(tag_set_with_levels, key=lambda tag_and_level: tag_and_level[1])]
+
 def slot_to_tag_set(slot):
   parts = slot.split("_")
   tags = []
   for part in parts:
     tags.extend(parts_to_tags[part])
   return tags
+
+# Convert a tag set to a noun, verb or adj slot. GROUPS is used for sorting
+# the tags prior to conversion to slot parts and should be one of
+# noun_tag_groups, verb_tag_groups, or adj_tag_groups. If a given canonicalized
+# tag cannot be recognized in tags_to_parts_list, a warning is output by
+# PAGEMSG and None returned. Otherwise a string (slot) returned. Note that the
+# slot might not be a legal slot; this needs to be checked separately.
+def tag_set_to_slot(tag_set, groups, pagemsg):
+  tag_set = sort_tag_set(tag_set, groups, pagemsg)
+  if tag_set is None:
+    return None
+  parts = []
+  i = 0
+  while i < len(tag_set):
+    for tags, part in tags_to_parts_list:
+      #pagemsg("tags=%s, part=%s, i=%s, tag_set[i:i + len(tags)]=%s" % (
+      #  tags, part, i, tag_set[i:i + len(tags)]))
+      if i + len(tags) <= len(tag_set) and tags == tag_set[i:i + len(tags)]:
+        #pagemsg("Appending part=%s" % part)
+        parts.append(part)
+        i += len(tags)
+        break
+    else:
+      # no break
+      pagemsg("WARNING: Unable to recognize tag_set[%s] = %s in %s" %
+          (i, tag_set[i], "|".join(tag_set)))
+      return None
+  return "_".join(parts)
 
 cases = [ "nom", "gen", "dat", "acc", "abl", "voc", "loc" ]
 
@@ -581,19 +667,21 @@ def la_template_is_head(t):
     return True
   return False
 
-def la_get_headword_from_template(t, pagename, pagemsg):
-  def expand_text(tempcall):
-    return blib.expand_text(tempcall, pagename, pagemsg, False)
+def la_get_headword_from_template(t, pagename, pagemsg, expand_text=None):
+  if not expand_text:
+    def expand_text(tempcall):
+      return blib.expand_text(tempcall, pagename, pagemsg, False)
   tn = tname(t)
   if tn in ["la-adj", "la-part", "la-num-adj", "la-suffix-adj"]:
     retval = blib.fetch_param_chain(t, "lemma", "lemma")
     if not retval:
       retval = getparam(t, "1")
-      if "<" in retval or "((" in retval:
+      if "<" in retval or "((" in retval or " " in retval or "-" in retval:
         generate_template = blib.parse_text(unicode(t)).filter_templates()[0]
         blib.set_template_name(generate_template, "la-generate-adj-forms")
         blib.remove_param_chain(generate_template, "comp", "comp")
         blib.remove_param_chain(generate_template, "sup", "sup")
+        blib.remove_param_chain(generate_template, "adv", "adv")
         blib.remove_param_chain(generate_template, "lemma", "lemma")
         rmparam(generate_template, "type")
         rmparam(generate_template, "id")
@@ -667,18 +755,14 @@ def la_get_headword_from_template(t, pagename, pagemsg):
             unicode(generate_template), result))
           retval = ""
         retval = retval.split(",")
-  elif tn in la_adj_headword_templates or tn == "la-suffix":
+  elif tn in la_adj_headword_templates or tn in la_adv_headword_templates or (
+    tn in ["la-suffix", "la-suffix-adv", "la-suffix-form", "la-gerund"]
+  ):
     retval = getparam(t, "1")
-  elif tn == "la-suffix-form":
-    retval = getparam(t, "1")
-  elif tn == "head":
-    retval = getparam(t, "head")
-  elif tn == "la-gerund":
-    retval = getparam(t, "head") or (getparam(t, "1") + "um")
   elif tn == "la-letter":
     retval = pagename
-  elif tn == "la-prep":
-    retval = getparam(t, "head")
+  elif tn in ["head", "la-prep"]:
+    retval = blib.fetch_param_chain(t, "head", "head")
   elif tn in la_nonlemma_headword_templates or tn in la_misc_headword_templates:
     retval = getparam(t, "head") or getparam(t, "1")
   else:
