@@ -20,7 +20,7 @@ from arabiclib import reorder_shadda
 
 def rewrite_pages(refrom, reto, refs, page_and_refs, cat, pages, pagefile,
     pagetitle_sub, comment, filter_pages, lang_only, save, verbose,
-    startFrom, upTo):
+    diff, startFrom, upTo):
   def rewrite_one_page(page, index, text):
     #blib.msg("From: [[%s]], To: [[%s]]" % (refrom, reto))
     text = unicode(text)
@@ -75,7 +75,8 @@ def rewrite_pages(refrom, reto, refs, page_and_refs, cat, pages, pagefile,
     else:
       if verbose:
         blib.msg("Processing %s" % pagetitle)
-      blib.do_edit(page, index, rewrite_one_page, save=save, verbose=verbose)
+      blib.do_edit(page, index, rewrite_one_page, save=save, verbose=verbose,
+          diff=diff)
 
 pa = blib.init_argparser("Search and replace on pages")
 pa.add_argument("-f", "--from", help="From regex, can be specified multiple times",
@@ -115,4 +116,4 @@ if len(from_) != len(to):
 
 rewrite_pages(from_, to, references, page_and_refs, category, pages,
     params.pagefile, pagetitle_sub, comment, filter_pages, lang_only,
-    params.save, params.verbose, startFrom, upTo)
+    params.save, params.verbose, params.diff, startFrom, upTo)
