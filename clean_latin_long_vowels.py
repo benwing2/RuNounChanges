@@ -1355,80 +1355,81 @@ def do_process_lemma(index, page, pos, explicit_infl, lemmaspec, lemma, explicit
   sections[j] = secbody + sectail
   return "".join(sections), notes
 
-parser = blib.create_argparser("Clean up usage of macrons in Latin lemmas and non-lemma forms")
-parser.add_argument("--direcfile", help="File containing directives of lemmas to process.")
-parser.add_argument("--skip-forms", help="Skip processing non-lemma forms.", action="store_true")
-parser.add_argument("--n-forms", help="Do only first N non-lemma forms.", type=int)
-args = parser.parse_args()
-start, end = blib.parse_start_end(args.start, args.end)
+if __name__ == "__main__":
+  parser = blib.create_argparser("Clean up usage of macrons in Latin lemmas and non-lemma forms")
+  parser.add_argument("--direcfile", help="File containing directives of lemmas to process.")
+  parser.add_argument("--skip-forms", help="Skip processing non-lemma forms.", action="store_true")
+  parser.add_argument("--n-forms", help="Do only first N non-lemma forms.", type=int)
+  args = parser.parse_args()
+  start, end = blib.parse_start_end(args.start, args.end)
 
-direcfile = args.direcfile.decode("utf-8")
+  direcfile = args.direcfile.decode("utf-8")
 
-lemmas = []
+  lemmas = []
 
-for line in codecs.open(direcfile, "r", "utf-8"):
-  line = line.rstrip('\n')
-  if line.startswith("*"):
-    line = line[1:]
-    msg("Need to investigate: %s" % line)
-  if line.startswith("#"):
-    continue
-  # remove transitive/intransitive notation after verbs
-  line = re.sub(r" *\[.*\]$", "", line)
-  parts = line.split(" ")
-  # allow underscore to stand for space
-  parts = [part.replace("_", " ") for part in parts]
-  if len(parts) == 2 and parts[0] in ["adv", "num", "phr", "prep", "prov"]:
-    pass
-  elif ((len(parts) == 2 or len(parts) == 3) and
-      re.search("^([na]|pn|part|num[na]|suf[na])([1-5]?)$", parts[0])):
-    # noun, adjective or participle
-    if len(parts) == 3:
-      pos, lemma, explicit_stem = parts
-    else:
-      pos, lemma = parts
-      explicit_stem = None
-    m = re.search("^([na]|pn|part|num[na]|suf[na])([1-5]?)$", pos)
-    code_to_pos = {
-      "n": "noun",
-      "pn": "propernoun",
-      "a": "adj",
-      "part": "part",
-      "sufn": "sufnoun",
-      "sufa": "sufadj",
-      "numn": "numnoun",
-      "numa": "numadj",
-    }
-    pos = code_to_pos[m.group(1)]
-    infl = m.group(2) and int(m.group(2)) or None
-    # FIXME: The infl for nouns and adjectives is no longer used at all
-    lemmas.append((pos, infl, lemma, explicit_stem))
-  elif len(parts) >= 2 and parts[0].startswith("v"):
-    infl = parts[0][1:]
-    lemma = parts[1]
-    explicit_stem = parts[2:]
-    lemmas.append(("verb", infl, lemma, explicit_stem))
-  else:
-    errandmsg("Unrecognized line: %s" % line)
-
-for index, (pos, infl, lemma, explicit_stem) in blib.iter_items(lemmas, start, end,
-    get_name=lambda lemmas: remove_macrons(lemmas[2])):
-  def pagemsg(txt):
-    msg("Page %s %s: %s" % (index, lemma, txt))
-  lemmaspec = lemma
-  if "/" in lemma or "<" in lemma:
-    if pos == "noun":
-      fake_template = blib.parse_text("{{la-noun|%s}}" % lemma).filter_templates()[0]
-    elif pos == "adj":
-      fake_template = blib.parse_text("{{la-adj|%s}}" % lemma).filter_templates()[0]
-    elif pos == "numadj":
-      fake_template = blib.parse_text("{{la-num-adj|%s}}" % lemma).filter_templates()[0]
-    else:
-      errandmsg("Page %s %s: Apparent complex nominal spec for lemma but POS %s isn't noun/adj/numadj" % (
-        index, lemma, pos))
+  for line in codecs.open(direcfile, "r", "utf-8"):
+    line = line.rstrip('\n')
+    if line.startswith("*"):
+      line = line[1:]
+      msg("Need to investigate: %s" % line)
+    if line.startswith("#"):
       continue
-    lemma = lalib.la_get_headword_from_template(fake_template, "foo", pagemsg)[0]
-  def handler(page, index, parsed):
-    return do_process_lemma(index, page, pos, infl, lemmaspec, lemma, explicit_stem, args)
+    # remove transitive/intransitive notation after verbs
+    line = re.sub(r" *\[.*\]$", "", line)
+    parts = line.split(" ")
+    # allow underscore to stand for space
+    parts = [part.replace("_", " ") for part in parts]
+    if len(parts) == 2 and parts[0] in ["adv", "num", "phr", "prep", "prov"]:
+      pass
+    elif ((len(parts) == 2 or len(parts) == 3) and
+        re.search("^([na]|pn|part|num[na]|suf[na])([1-5]?)$", parts[0])):
+      # noun, adjective or participle
+      if len(parts) == 3:
+        pos, lemma, explicit_stem = parts
+      else:
+        pos, lemma = parts
+        explicit_stem = None
+      m = re.search("^([na]|pn|part|num[na]|suf[na])([1-5]?)$", pos)
+      code_to_pos = {
+        "n": "noun",
+        "pn": "propernoun",
+        "a": "adj",
+        "part": "part",
+        "sufn": "sufnoun",
+        "sufa": "sufadj",
+        "numn": "numnoun",
+        "numa": "numadj",
+      }
+      pos = code_to_pos[m.group(1)]
+      infl = m.group(2) and int(m.group(2)) or None
+      # FIXME: The infl for nouns and adjectives is no longer used at all
+      lemmas.append((pos, infl, lemma, explicit_stem))
+    elif len(parts) >= 2 and parts[0].startswith("v"):
+      infl = parts[0][1:]
+      lemma = parts[1]
+      explicit_stem = parts[2:]
+      lemmas.append(("verb", infl, lemma, explicit_stem))
+    else:
+      errandmsg("Unrecognized line: %s" % line)
 
-  blib.do_edit(pywikibot.Page(site, remove_macrons(lemma)), index, handler, save=args.save, verbose=args.verbose, diff=args.diff)
+  for index, (pos, infl, lemma, explicit_stem) in blib.iter_items(lemmas, start, end,
+      get_name=lambda lemmas: remove_macrons(lemmas[2])):
+    def pagemsg(txt):
+      msg("Page %s %s: %s" % (index, lemma, txt))
+    lemmaspec = lemma
+    if "/" in lemma or "<" in lemma:
+      if pos == "noun":
+        fake_template = blib.parse_text("{{la-noun|%s}}" % lemma).filter_templates()[0]
+      elif pos == "adj":
+        fake_template = blib.parse_text("{{la-adj|%s}}" % lemma).filter_templates()[0]
+      elif pos == "numadj":
+        fake_template = blib.parse_text("{{la-num-adj|%s}}" % lemma).filter_templates()[0]
+      else:
+        errandmsg("Page %s %s: Apparent complex nominal spec for lemma but POS %s isn't noun/adj/numadj" % (
+          index, lemma, pos))
+        continue
+      lemma = lalib.la_get_headword_from_template(fake_template, "foo", pagemsg)[0]
+    def handler(page, index, parsed):
+      return do_process_lemma(index, page, pos, infl, lemmaspec, lemma, explicit_stem, args)
+
+    blib.do_edit(pywikibot.Page(site, remove_macrons(lemma)), index, handler, save=args.save, verbose=args.verbose, diff=args.diff)
