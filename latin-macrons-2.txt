@@ -8,6 +8,20 @@ a1 īnfēstus
 ### Other
 a3 bovīlis
 a1 reflexīvus
+a3 sphaeroīdēs
+n2 muscārium
+pn1 Marīa
+pn1 Adriāna
+n3 abligurrītiō
+n1 neāniās
+a1 foeminīnus
+a1 faeminīnus
+a1 puerīnus
+a3 bovīlis
+n2 pūnctillum
+n2 pūnctōrium
+n1 pūnctiuncula
+n3 impetīx
 
 ###
 ### L
@@ -34,4 +48,71 @@ n3 pollīnctor
 a1 lūbricus
 v1 lūbricō
 n3 lūbricitās
-pn Lycūrgus
+pn2 Lycūrgus
+
+###
+### M
+###
+pn2 Mānlius
+n2 manūpretium
+pn1 Mārcella
+pn2 Mārcellus
+pn1 Mārcia
+a1 Mārciānus
+n3 Mārcipor
+pn2 Mārcius
+pn2 Mārcus
+n diēs<5>_Mārtis
+pn3 Mārs
+n3 Mārs
+pn Mārt.
+a Mārt.
+a3 mārtiālis
+pn3 Mārtiālis
+a1 Mārtiānus
+pn1 Mārtīna
+pn2 Mārtīnus
+a1 mārtius
+a1 Mārtius
+pn2 Mārtius
+pn2 Mārtī
+a1 mārsicus
+n1 māssa
+pn1 Māssa
+a1 māza
+a1 mercēnnārius
+n3 mētropolis
+a1 mētropolītānus
+pn2 Mētrodōrus
+n1 mētrocōmia
+n2 mīlvus
+n3 mūcrō
+a1 mūcrōnātus
+a1 mūlleus
+n2 mūllus
+n1 mūscerda
+n2 mūsculus
+a1 mūsculōsus
+a3 mūsculāris
+n2 mūscus
+a1 mūscicolus
+n1 mūscipula
+n2 mūscipulum
+n1 mūstēla
+pn1 Mūstēla
+pn2 Mycalēssus
+
+###
+### N
+###
+pn1 Nārnia
+n2 nāsturtium
+adv nēquīcquam
+adv nōndum
+num1 nōngentī
+adv nōnne
+pn1 Nōrba
+adv nūdiūs
+a1 nūndinus
+n1 nūndinae
+# FIXME: nūndina form of nūndina should be form of nūndinus
