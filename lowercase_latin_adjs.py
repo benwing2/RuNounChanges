@@ -10,8 +10,6 @@ import lalib
 
 import push_find_regex_changes
 
-pages_to_delete = []
-
 def process_page(index, pagename, text):
   pagename = pagename[0].lower() + pagename[1:]
   def pagemsg(txt):
