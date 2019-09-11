@@ -281,7 +281,7 @@ def generate_noun_forms(template, errandpagemsg, expand_text, return_raw=False,
   return args
 
 def generate_verb_forms(template, errandpagemsg, expand_text, return_raw=False,
-    include_linked=False, include_props=False):
+    include_linked=False, include_props=False, add_sync_forms=False):
   if template.startswith("{{la-conj|"):
     if include_props:
       generate_template = re.sub(r"^\{\{la-conj\|", "{{la-generate-verb-props|",
@@ -301,16 +301,27 @@ def generate_verb_forms(template, errandpagemsg, expand_text, return_raw=False,
   args = blib.split_generate_args(result)
   if not include_linked:
     args = {k: v for k, v in args.iteritems() if not k.startswith("linked_")}
+  def augment_with_sync_forms(forms):
+    forms = forms.split(",")
+    augmented_forms = []
+    for form in forms:
+      augmented_forms.append(form)
+      if re.search(u"(vi(stī|stis)|vērunt|ver(am|ās|at|āmus|ātis|ant|ō|im|[iī]s|it|[iī]mus|[iī]tis|int)|viss(e|em|ēs|et|ēmus|ētis|ent))$", form):
+        augmented_forms.append(re.sub(u"^(.*)v[ieē]", r"\1", form))
+    return ",".join(augmented_forms)
+  if add_sync_forms:
+    args = {k: augment_with_sync_forms(v) for k, v in args.iteritems()}
   return args
 
 def generate_infl_forms(pos, template, errandpagemsg, expand_text,
-    return_raw=False, include_linked=False, include_props=False):
+    return_raw=False, include_linked=False, include_props=False,
+    add_sync_verb_forms=False):
   if pos in ['noun', 'pn']:
     return generate_noun_forms(template, errandpagemsg, expand_text, return_raw,
         include_linked)
   elif pos == 'verb':
     return generate_verb_forms(template, errandpagemsg, expand_text, return_raw,
-        include_linked, include_props)
+        include_linked, include_props, add_sync_forms=add_sync_verb_forms)
   elif pos in ['adj', 'nounadj', 'numadj', 'part']:
     return generate_adj_forms(template, errandpagemsg, expand_text, return_raw,
         include_linked)
@@ -803,6 +814,12 @@ def find_defns(text):
 
 def slot_matches_spec(slot, spec):
   if spec == "all":
+    return True
+  elif spec.startswith("!"):
+    notspecs = spec[1:].split("+")
+    for notspec in notspecs:
+      if re.search(notspec, slot):
+        return False
     return True
   elif spec == "allbutnomsgn":
     return slot != "nom_sg_n"
