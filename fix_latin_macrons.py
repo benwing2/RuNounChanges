@@ -8,7 +8,7 @@ from blib import getparam, rmparam, tname, msg, errmsg, site
 
 import lalib
 
-parser = blib.create_argparser(u"Convert Latin participle headwords to use {{la-part}}")
+parser = blib.create_argparser(u"Fix old-style verb declarations in latin-macrons.txt")
 parser.add_argument("--direcfile", help="List of directives to process.",
     required=True)
 args = parser.parse_args()
