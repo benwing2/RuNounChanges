@@ -409,7 +409,10 @@ export.allowed_subtypes = {
 
 pos_functions["verbs"] = function(class, def, args, data, infl_classes, appendix)
 	local m_la_verb = require("Module:la-verb")
-	local conjdata, typeinfo = m_la_verb.make_data(args, true)
+	local def1, def2
+	if def then
+		def1, def2 = rmatch(def, "^(.*):(.*)$")
+	local conjdata, typeinfo = m_la_verb.make_data(args, true, def1, def2)
 	local lemma_forms = conjdata.overriding_lemma
 	if not lemma_forms or #lemma_forms == 0 then
 		lemma_forms = m_la_verb.get_lemma_forms(conjdata, true)
