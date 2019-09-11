@@ -20,7 +20,8 @@ import blib
 from blib import getparam, rmparam, msg, site, tname
 
 def rewrite_pages(template, new_name, params_to_remove, params_to_rename,
-    pages, filters, comment, startFrom, upTo, save, verbose):
+    pages, filters, comment, startFrom, upTo):
+  global args
   def process_page(page, index, parsed):
     pagetitle = unicode(page.title())
     def pagemsg(txt):
@@ -70,10 +71,11 @@ def rewrite_pages(template, new_name, params_to_remove, params_to_rename,
   if pages:
     for i, page in blib.iter_items(pages, startFrom, upTo):
       blib.do_edit(pywikibot.Page(site, page), i, process_page, save=args.save,
-          verbose=args.verbose)
+          verbose=args.verbose, diff=args.diff)
   else:
     for index, page in blib.references("Template:%s" % template, startFrom, upTo):
-      blib.do_edit(page, index, process_page, save=args.save, verbose=args.verbose)
+      blib.do_edit(page, index, process_page, save=args.save, verbose=args.verbose,
+          diff=args.diff)
 
 pa = blib.init_argparser("Rewrite templates, possibly renaming params or the template itself, or removing params")
 pa.add_argument("-t", "--template", help="Name of template", required=True)
@@ -97,6 +99,7 @@ from_ = [x.decode("utf-8") for x in args.from_] if args.from_ else []
 to = [x.decode("utf-8") for x in args.to] if args.to else []
 params_to_remove = [x.decode("utf-8") for x in args.remove] if args.remove else []
 filters = [x.decode("utf-8") for x in args.filter] if args.filter else []
+comment = args.comment and args.comment.decode("utf-8")
 
 if len(from_) != len(to):
   raise ValueError("Same number of --from and --to arguments must be specified")
@@ -109,4 +112,4 @@ else:
   pages = None
 
 rewrite_pages(template, new_name, params_to_remove, params_to_rename,
-    pages, filters, args.comment, startFrom, upTo, args.save, args.verbose)
+    pages, filters, comment, startFrom, upTo)
