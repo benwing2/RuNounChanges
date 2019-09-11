@@ -697,10 +697,16 @@ def parse_start_end(startsort, endsort):
 #    is given.
 # 5. Else, an error is thrown.
 #
-# If filter_pages is given, it's an unanchored regex used to filter page
-# titles.
+# If only_lang is given, it should be a canonical name of a language (e.g.
+# "Latin"), and pages not containing this language will be skipped. (This is
+# especially useful in conjunction with dumps on stdin, where it can greatly
+# speed up processing by avoiding the need to parse every page.)
+#
+# If filter_pages is given, it should be an unanchored regex used to filter
+# page titles.
 def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
-    default_refs=[], edit=False, stdin=False, filter_pages=None):
+    default_refs=[], edit=False, stdin=False, only_lang=None,
+    filter_pages=None):
   args_filter_pages = args.filter_pages and args.filter_pages.decode("utf-8")
   def process_page(page, i):
     if filter_pages or args_filter_pages:
@@ -712,12 +718,19 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
     def do_process_page(page, index, parsed=None):
       if stdin:
         pagetitle = unicode(page.title())
-        text = unicode(page.text)
+        text = safe_page_text(page)
+        if only_lang and "==%s==" % only_lang not in text:
+          return None, None
         return process(index, pagetitle, text)
-      elif edit:
-        return process(page, index, parsed)
       else:
-        return process(page, index)
+        if only_lang:
+          text = safe_page_text(page)
+          if "==%s==" % only_lang not in text:
+            return None, None
+        if edit:
+          return process(page, index, parsed)
+        else:
+          return process(page, index)
     if edit:
       do_edit(page, i, do_process_page, save=args.save, verbose=args.verbose,
           diff=args.diff)
@@ -861,6 +874,23 @@ def try_repeatedly(fun, pagemsg, operation="save", max_tries=10, sleep_time=5):
         sleep_time += 40
       else:
         sleep_time *= 2
+
+def safe_page_text(page, pagemsg):
+  try:
+    existing_text = try_repeatedly(lambda: page.text, pagemsg, "fetch page text")
+  except pywikibot.exceptions.InvalidTitle as e:
+    pagemsg("WARNING: Invalid title, skipping")
+    traceback.print_exc(file=sys.stdout)
+    existing_text = ""
+  return unicode(existing_text)
+
+def safe_page_exists(page, pagemsg):
+  try:
+    return try_repeatedly(lambda: page.exists(), pagemsg, "determine if page exists")
+  except pywikibot.exceptions.InvalidTitle as e:
+    pagemsg("WARNING: Invalid title, skipping")
+    traceback.print_exc(file=sys.stdout)
+    return False
 
 # Process link-like templates containing foreign text in specified language(s),
 # on pages from STARTFROM to (but not including) UPTO, either page names or
