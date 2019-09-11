@@ -707,10 +707,10 @@ local function set_linked_forms(data, typeinfo)
 	end
 end
 
-function export.make_data(parent_args, from_headword)
+function export.make_data(parent_args, from_headword, def1, def2)
 	local params = {
-		[1] = {required = true, default = "1+"},
-		[2] = {required = true, default = "amō"},
+		[1] = {required = true, default = def1 or "1+"},
+		[2] = {required = true, default = def2 or "amō"},
 		[3] = {},
 		[4] = {},
 		prefix = {},
@@ -739,6 +739,7 @@ function export.make_data(parent_args, from_headword)
 	if from_headword then
 		params.lemma = {list = true}
 		params.id = {}
+		params.cat = {list = true}
 	end
 
 	local args = m_para.process(parent_args, params)
@@ -752,7 +753,7 @@ function export.make_data(parent_args, from_headword)
 	local data = {
 		forms = {},
 		title = {},
-		categories = {},
+		categories = args.cat and ut.clone(args.cat) or {},
 		form_footnote_indices = {},
 		footnotes = {},
 		id = args.id,
