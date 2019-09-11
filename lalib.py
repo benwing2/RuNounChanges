@@ -63,8 +63,8 @@ la_infl_templates = (
 
 la_adj_headword_templates = {
   "la-adj",
-  "la-adj-comparative",
-  "la-adj-superlative",
+  "la-adj-comp",
+  "la-adj-sup",
 }
 
 la_adv_headword_templates = {

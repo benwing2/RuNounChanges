@@ -37,9 +37,9 @@ def process_page(page, index, parsed):
         rmparam(t, "3")
         t.add("1", lemma)
         t.add("2", base_lemma)
-        blib.set_template_name(t, "la-adj-superlative")
+        blib.set_template_name(t, "la-adj-sup")
         pagemsg("Replaced %s with %s" % (origt, unicode(t)))
-        notes.append("Use {{la-adj-superlative}} instead of {{head|la|...}}")
+        notes.append("Use {{la-adj-sup}} instead of {{head|la|...}}")
       else:
         pagemsg("WARNING: Head template doesn't include base form: %s" % unicode(t))
 

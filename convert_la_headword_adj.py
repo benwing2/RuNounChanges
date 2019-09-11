@@ -145,7 +145,7 @@ def process_page(page, index, parsed):
         continue
       if not compare_headword_decl_forms("neuter", nom_n, ["nom_sg_n", "nom_pl_n"]):
         continue
-    #elif tn_adj in ["la-adj-comparative", "la-adj-superlative"]:
+    #elif tn_adj in ["la-adj-comp", "la-adj-sup"]:
     #  nom_m = blib.fetch_param_chain(la_adj_template, ["1", "head", "head1"], "head", pagetitle)
     #  if not compare_headword_decl_forms("headword", nom_m, ["nom_sg_m", "nom_pl_m"]):
     #    continue

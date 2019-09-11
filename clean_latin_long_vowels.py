@@ -1069,12 +1069,12 @@ def do_process_lemma(index, page, pos, explicit_infl, lemmaspec, lemma, explicit
           frob_chain_stem(ht, "comp", stem, pagemsg, notes, no_warn=True)
           frob_chain_stem(ht, "sup", stem, pagemsg, notes, no_warn=True)
 
-        elif tn == "la-adj-comparative":
+        elif tn == "la-adj-comp":
           if lemma.endswith("ior"):
             base = lemma[:-3]
             frob_stem(ht, "comp", base, pagemsg, notes, no_warn=True)
 
-        elif tn == "la-adj-superlative":
+        elif tn == "la-adj-sup":
           if lemma.endswith("issimus"):
             base = lemma[:-7]
           if lemma.endswith("rimus"):
