@@ -152,7 +152,7 @@ def process_page(page, index):
             "%s.%s" % (index, formindex),
             handler, save=args.save, verbose=args.verbose, diff=args.diff)
 
-parser = blib.create_argparser(u"Correct headers/headwords of participle forms wrongly identified as adjective forms and proper noun forms wrongly identified as noun forms",
+parser = blib.create_argparser(u"Correct headers/headwords of non-lemma forms with the wrong part of speech",
     include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
