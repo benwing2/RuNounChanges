@@ -450,20 +450,20 @@ def prefix(prefix, startsort = None, endsort = None, namespace = None):
 
 def stream(st, startsort = None, endsort = None):
   i = 0
-  
+
   for name in st:
     i += 1
-    
+
     if startsort != None and i < startsort:
       continue
     if endsort != None and i > endsort:
       break
-    
+
     if type(name) is str:
       name = str.decode(name, "utf-8")
-    
+
     name = re.sub(ur"^[#*] *\[\[(.+)]]$", ur"\1", name, flags=re.UNICODE)
-    
+
     yield i, pywikibot.Page(site, name)
 
 def get_page_name(page):
@@ -609,7 +609,7 @@ def group_notes(notes):
 
 starttime = time.time()
 
-def create_argparser(desc, include_pagefile=False):
+def create_argparser(desc, include_pagefile=False, include_stdin=False):
   msg("Beginning at %s" % time.ctime(starttime))
   parser = argparse.ArgumentParser(description=desc)
   parser.add_argument('start', help="Starting page index", nargs="?")
@@ -621,6 +621,9 @@ def create_argparser(desc, include_pagefile=False):
     parser.add_argument("--pagefile", help="List of pages to process.")
     parser.add_argument("--cats", help="List of categories to process.")
     parser.add_argument("--refs", help="List of references to process.")
+    parser.add_argument("--filter-pages", help="Regex to use to filter page names.")
+  if include_stdin:
+    parser.add_argument("--stdin", help="Read dump from stdin.", action="store_true")
   return parser
 
 def init_argparser(desc):
@@ -650,23 +653,84 @@ def parse_start_end(startsort, endsort):
 
   return (startsort, endsort)
 
-def do_pagefile_cats_refs(args, start, end, process_page, default_cats=[],
-    default_refs=[], edit=False, filter_pages=None):
-  def do_process_page(page, i):
-    if filter_pages:
+# Process a run of pages, with the set of pages coming from either
+# --pagefile, --cats, --refs, or (if --stdin is given) from a Wiktionary
+# dump read from stdin. PROCESS is called to process the page, and has
+# different calling conventions depending on the EDIT and STDIN flags:
+#
+# If stdin=True, PROCESS should be defined like this:
+#
+# def process_text_on_page(index, pagetitle, text):
+#   ...
+#
+# If stdin=False and edit=True, PROCESS should be defined like this:
+#
+# def process_page(index, pagetitle, parsed):
+#   ...
+#
+# If stdin=False and edit=False, PROCESS should be defined like this:
+#
+# def process_page(index, pagetitle):
+#   ...
+#
+# FIXME: The PARSED argument is unnecessary and shouldn't be passed in.
+#
+# The return value of PROCESS is immaterial if edit=False; otherwise it
+# should be NEWTEXT, NOTES where NEWTEXT is the new text of the page,
+# and NOTES is either a string (the comment to use when saving the page)
+# or a list of strings (which are grouped together using blib.group_notes()
+# to form the comment to use when saving the page). To make no change,
+# return None, None.
+#
+# Note that if stdin=True and edit=True, there's (currently) no way to save
+# a page if the page's source is a dump on stdin; in that circumstance, the
+# return value is ignored.
+#
+# The pages iterated over will be:
+#
+# 1. Those from the dump on stdin if stdin=True and --stdin is given.
+# 2. Else, the pages in --pagefile if that argument is given.
+# 3. Else, pages in the category/categories in --cats and/or pages referring
+#    to the page(s) specified in --refs if either --cats or --refs is given.
+# 4. Else, pages in the category/categories in default_cats[] and/or pages
+#    referring to the page(s) specified in default_refs[], if either argument
+#    is given.
+# 5. Else, an error is thrown.
+#
+# If filter_pages is given, it's an unanchored regex used to filter page
+# titles.
+def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
+    default_refs=[], edit=False, stdin=False, filter_pages=None):
+  args_filter_pages = args.filter_pages and args.filter_pages.decode("utf-8")
+  def process_page(page, i):
+    if filter_pages or args_filter_pages:
       pagetitle = unicode(page.title())
-      if not filter_pages(pagetitle):
+      if filter_pages and not filter_pages(pagetitle):
         return
+      if args_filter_pages and not re.search(args_filter_pages, pagetitle):
+        return
+    def do_process_page(page, index, parsed=None):
+      if stdin:
+        pagetitle = unicode(page.title())
+        text = unicode(page.text)
+        return process(index, pagetitle, text)
+      elif edit:
+        return process(page, index, parsed)
+      else:
+        return process(page, index)
     if edit:
-      do_edit(page, i, process_page, save=args.save, verbose=args.verbose,
+      do_edit(page, i, do_process_page, save=args.save, verbose=args.verbose,
           diff=args.diff)
     else:
-      process_page(page, i)
+      do_process_page(page, i)
 
-  if args.pagefile:
+  if stdin and args.stdin:
+    parse_dump(sys.stdin, process)
+
+  elif args.pagefile:
     pages = [x.rstrip('\n') for x in codecs.open(args.pagefile, "r", "utf-8")]
     for i, page in iter_items(pages, start, end):
-      do_process_page(pywikibot.Page(site, page), i)
+      process_page(pywikibot.Page(site, page), i)
   else:
     if not args.cats and not args.refs:
       if not default_cats and not default_refs:
@@ -679,10 +743,10 @@ def do_pagefile_cats_refs(args, start, end, process_page, default_cats=[],
 
     for cat in cats:
       for i, page in cat_articles(cat, start, end):
-        do_process_page(page, i)
+        process_page(page, i)
     for ref in refs:
       for i, page in references(ref, start, end):
-        do_process_page(page, i)
+        process_page(page, i)
   elapsed_time()
 
 def elapsed_time():
@@ -727,12 +791,12 @@ def getData():
 
 def getLanguageData():
   global languages, languages_byCode, languages_byCanonicalName
-  
+
   jsondata = site.expand_text(u"{{#invoke:User:MewBot|getLanguageData}}")
   languages = json.loads(jsondata)
   languages_byCode = {}
   languages_byCanonicalName = {}
-  
+
   for lang in languages:
     languages_byCode[lang["code"]] = lang
     languages_byCanonicalName[lang["canonicalName"]] = lang
@@ -740,11 +804,11 @@ def getLanguageData():
 
 def getFamilyData():
   global families, families_byCode, families_byCanonicalName
-  
+
   families = json.loads(site.expand_text(u"{{#invoke:User:MewBot|getFamilyData}}"))
   families_byCode = {}
   families_byCanonicalName = {}
-  
+
   for fam in families:
     families_byCode[fam["code"]] = fam
     families_byCanonicalName[fam["canonicalName"]] = fam
@@ -752,11 +816,11 @@ def getFamilyData():
 
 def getScriptData():
   global scripts, scripts_byCode, scripts_byCanonicalName
-  
+
   scripts = json.loads(site.expand_text(u"{{#invoke:User:MewBot|getScriptData}}"))
   scripts_byCode = {}
   scripts_byCanonicalName = {}
-  
+
   for sc in scripts:
     scripts_byCode[sc["code"]] = sc
     scripts_byCanonicalName[sc["canonicalName"]] = sc
@@ -764,11 +828,11 @@ def getScriptData():
 
 def getEtymLanguageData():
   global etym_languages, etym_languages_byCode, etym_languages_byCanonicalName
-  
+
   etym_languages = json.loads(site.expand_text(u"{{#invoke:User:MewBot|getEtymLanguageData}}"))
   etym_languages_byCode = {}
   etym_languages_byCanonicalName = {}
-  
+
   for etyl in etym_languages:
     etym_languages_byCode[etyl["code"]] = etyl
     etym_languages_byCanonicalName[etyl["canonicalName"]] = etyl
