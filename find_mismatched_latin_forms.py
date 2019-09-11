@@ -8,8 +8,6 @@ from blib import getparam, rmparam, msg, errandmsg, site, tname
 
 import lalib
 
-import clean_latin_long_vowels
-
 heads_and_defns_cache = {}
 infl_forms_cache = {}
 get_headword_from_template_cache = {}
@@ -73,7 +71,7 @@ def lookup_inflection(lemma_no_macrons, pos, expected_headtemps, expected_inflte
       heads_and_defns_cache[lemma_pagetitle] = "nonexistent"
       return None
 
-    retval = clean_latin_long_vowels.find_heads_and_defns(page, pagemsg)
+    retval = lalib.find_heads_and_defns(unicode(page.text), pagemsg)
     heads_and_defns_cache[lemma_pagetitle] = retval
 
   if retval == "nonexistent":
@@ -155,7 +153,7 @@ def process_text_on_page(index, pagetitle, text):
   if "==Latin==" not in text:
     return None, None
 
-  retval = clean_latin_long_vowels.find_heads_and_defns(page, pagemsg)
+  retval = lalib.find_heads_and_defns(text, pagemsg)
   if retval is None:
     return None, None
 
@@ -686,15 +684,11 @@ def process_page(page, index, parsed):
   text = unicode(page.text)
   return process_text_on_page(index, pagetitle, text)
 
-parser = blib.create_argparser("Check for Latin forms that don't match headword")
-parser.add_argument("--stdin", help="Read dump from stdin.", action="store_true")
+parser = blib.create_argparser("Check for Latin forms that don't match headword",
+    include_pagefile=True, include_stdin=True)
 parser.add_argument("--fix-macrons", help="Correct macron differences.", action="store_true")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-if args.stdin:
-  blib.parse_dump(sys.stdin, process_text_on_page)
-else:
-  for i, page in blib.cat_articles("Latin non-lemma forms", start, end):
-    blib.do_edit(page, i, process_page, save=args.save, verbose=args.verbose,
-        diff=args.diff)
+blib.do_pagefile_cats_refs(args, start, end, process_text_on_page,
+  default_cats=["Latin non-lemma forms"], edit=True, stdin=True)

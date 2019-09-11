@@ -863,3 +863,140 @@ def slot_matches_spec(slot, spec):
     raise ValueError("Unrecognized spec: %s" % spec)
   else:
     return False
+
+def find_heads_and_defns(text, pagemsg):
+  retval = find_latin_section(text, pagemsg)
+  if retval is None:
+    return None
+
+  sections, j, secbody, sectail, has_non_latin = retval
+
+  subsections = re.split("(^==+[^=\n]+==+\n)", secbody, 0, re.M)
+
+  parsed_subsections = [None] * len(subsections)
+
+  headwords = []
+  pronun_sections = []
+  etym_sections = []
+
+  most_recent_headword = None
+  most_recent_pronun_section = None
+  most_recent_etym_section = None
+
+  def new_headword(header, level, subsection, head_template, is_lemma):
+    retval = {
+      'head_template': head_template,
+      'header': header,
+      'is_lemma': is_lemma,
+      'infl_templates': [],
+      'infl_of_templates': [],
+      'subsection': subsection,
+      'level': level,
+      'pronun_section': most_recent_pronun_section,
+      'etym_section': most_recent_etym_section,
+    }
+    if most_recent_pronun_section:
+      most_recent_pronun_section['headwords'].append(retval)
+    if most_recent_etym_section:
+      most_recent_etym_section['headwords'].append(retval)
+    return retval
+
+  def new_pronun_section(header, level, subsection):
+    return {
+      'header': header,
+      'pronun_templates': [],
+      'headwords': [],
+      'subsection': subsection,
+      'level': level,
+    }
+
+  def new_etym_section(header, level, subsection):
+    return {
+      'header': header,
+      'headwords': [],
+      'subsection': subsection,
+      'level': level,
+    }
+
+  for k in xrange(len(subsections)):
+    if k < 2 or (k % 2) == 1:
+      parsed_subsections[k] = blib.parse_text(subsections[k])
+      continue
+    m = re.search("^(==+)([^=\n]+)", subsections[k - 1])
+    level = len(m.group(1))
+    header = m.group(2)
+    headword_templates_in_section = []
+
+    if most_recent_headword and most_recent_headword['level'] >= level:
+      headwords.append(most_recent_headword)
+      most_recent_headword = None
+
+    is_pronun_section = header.startswith('Pronunciation')
+    if is_pronun_section:
+      if most_recent_pronun_section:
+        pronun_sections.append(most_recent_pronun_section)
+      most_recent_pronun_section = new_pronun_section(header, level, k)
+    elif most_recent_pronun_section and most_recent_pronun_section['level'] > level:
+      pronun_sections.append(most_recent_pronun_section)
+      most_recent_pronun_section = None
+
+    is_etym_section = header.startswith('Etymology')
+    if is_etym_section:
+      if most_recent_etym_section:
+        etym_sections.append(most_recent_etym_section)
+      most_recent_etym_section = new_etym_section(header, level, k)
+    elif most_recent_etym_section and most_recent_etym_section['level'] > level:
+      etym_sections.append(most_recent_etym_section)
+      most_recent_etym_section = None
+
+    parsed = blib.parse_text(subsections[k])
+    parsed_subsections[k] = parsed
+    for t in parsed.filter_templates():
+      tn = tname(t)
+      if tn == "la-IPA":
+        if is_pronun_section:
+          most_recent_pronun_section['pronun_templates'].append(t)
+        else:
+          pagemsg("WARNING: Pronunciation template %s in %s section, not pronunciation section" % (
+            unicode(t), header))
+      elif tn in la_headword_templates or tn == "head":
+        if tn == "head":
+          if getparam(t, "1") != "la":
+            pagemsg("WARNING: Wrong-language {{head}} template in Latin section: %s" % unicode(t))
+            continue
+          head_pos = getparam(t, "2")
+          if head_pos not in la_poses:
+            pagemsg("WARNING: Unrecognized part of speech %s" % head_pos)
+        if headword_templates_in_section:
+          pagemsg("WARNING: Found additional headword template in same section: %s" % unicode(t))
+          headwords.append(most_recent_headword)
+        elif most_recent_headword:
+          pagemsg("WARNING: Found headword template nested under previous one: %s" % unicode(t))
+          headwords.append(most_recent_headword)
+        most_recent_headword = new_headword(header, level, k, t,
+          tn in la_lemma_headword_templates or (
+            tn == "head" and head_pos in la_lemma_poses))
+        headword_templates_in_section.append(t)
+      elif tn in la_infl_templates:
+        if not most_recent_headword:
+          pagemsg("WARNING: Found inflection template not under headword template: %s" % unicode(t))
+        else:
+          most_recent_headword['infl_templates'].append(t)
+      elif tn in la_infl_of_templates:
+        if not most_recent_headword:
+          pagemsg("WARNING: Found inflection-of template not under headword template: %s" % unicode(t))
+        else:
+          most_recent_headword['infl_of_templates'].append(t)
+
+  if most_recent_headword:
+    headwords.append(most_recent_headword)
+  if most_recent_pronun_section:
+    pronun_sections.append(most_recent_pronun_section)
+  if most_recent_etym_section:
+    etym_sections.append(most_recent_etym_section)
+
+
+  return (
+    sections, j, secbody, sectail, has_non_latin, subsections,
+    parsed_subsections, headwords, pronun_sections, etym_sections
+  )

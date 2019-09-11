@@ -8,8 +8,6 @@ from blib import getparam, rmparam, msg, errandmsg, site, tname, pname
 
 import lalib
 
-import clean_latin_long_vowels
-
 def process_form(page, index, slot, form, pos, pagemsg):
   orig_pagemsg = pagemsg
   def pagemsg(txt):
@@ -84,7 +82,7 @@ def process_page(page, index):
 
   text = unicode(page.text)
 
-  retval = clean_latin_long_vowels.find_heads_and_defns(page, pagemsg)
+  retval = lalib.find_heads_and_defns(text, pagemsg)
   if retval is None:
     return None, None
 
