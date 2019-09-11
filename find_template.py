@@ -70,7 +70,8 @@ def process_page(page, index, template, paramspecs, negate, from_to,
                     (countparam, template, temptext))
               counted_param_values[countparam][None] += 1
 
-parser = blib.create_argparser("Find templates with specified params")
+parser = blib.create_argparser("Find templates with specified params",
+    include_pagefile=True)
 parser.add_argument("--templates",
     help=u"""Comma-separated list of templates to check params of.""")
 parser.add_argument("--params",
@@ -119,12 +120,16 @@ if args.negate:
 
 countparams = re.split(",", args.count) if args.count else []
 
+counted_param_values_by_template = {template: {} for template in templates}
+def do_process_page(page, index):
+  for template in templates:
+    process_page(page, index, template, paramspecs, args.negate, args.from_to,
+        countparams, counted_param_values_by_template[template])
+blib.do_pagefile_cats_refs(args, start, end, do_process_page,
+    default_refs=["Template:%s" % template for template in templates])
+
 for template in templates:
-  msg("Processing references to Template:%s" % template)
-  counted_param_values = {}
-  for i, page in blib.references("Template:%s" % template, start, end):
-    process_page(page, i, template, paramspecs, args.negate, args.from_to,
-        countparams, counted_param_values)
+  counted_param_values = counted_param_values_by_template[template]
   if "*" in countparams:
     countparams = sorted(list(counted_param_values.keys()))
   for countparam in countparams:
