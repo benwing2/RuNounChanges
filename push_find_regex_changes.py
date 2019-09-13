@@ -68,7 +68,8 @@ def yield_text(lines, verbose):
       yield pagename, "".join(templines)
     elif in_multiline:
       if line.rstrip('\n').endswith(':'):
-        errmsg("WARNING: Possible missing ----- end text -----: %s" % line.rstrip('\n'))
+        if verbose:
+          errmsg("WARNING: Possible missing ----- end text -----: %s" % line.rstrip('\n'))
       templines.append(line)
     else:
       line = line.rstrip('\n')
