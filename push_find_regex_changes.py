@@ -7,7 +7,8 @@ from blib import getparam, rmparam, msg, errmsg, errandmsg, site
 import pywikibot, re, sys, codecs, argparse
 import unicodedata
 
-def process_page(index, page, contents, origcontents, verbose, lang_only):
+def process_page(index, page, contents, origcontents, verbose, comment,
+    lang_only, allow_page_creation):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -22,8 +23,12 @@ def process_page(index, page, contents, origcontents, verbose, lang_only):
     pagemsg("------- begin text --------")
     msg(contents.rstrip('\n'))
     msg("------- end text --------")
-  comment = args.comment.decode('utf-8')
-  if page.exists() and origcontents is not None:
+  page_exists = page.exists() and origcontents is not None
+  if not page_exists:
+    if lang_only or not allow_page_creation:
+      errandpagemsg("WARNING: Trying to create page when --lang-only or not --allow-page-creation")
+      return None, None
+  else:
     if lang_only:
       foundlang = False
       sec_to_search = 0
@@ -92,6 +97,7 @@ if __name__ == "__main__":
   parser.add_argument('--origfile', help="File containing unchanged directives.")
   parser.add_argument('--comment', help="Comment to use.", required="true")
   parser.add_argument('--lang-only', help="Change applies only to the specified language section.")
+  parser.add_argument('--allow-page-creation', help="Allow page creation.", action="store_true")
   args = parser.parse_args()
   start, end = blib.parse_start_end(args.start, args.end)
 
@@ -109,6 +115,7 @@ if __name__ == "__main__":
       get_name=lambda x:x[0]):
     def do_process_page(page, index, parsed):
       return process_page(index, page, text, origpages.get(pagename, None),
-          args.verbose, args.lang_only)
+          args.verbose, args.comment.decode('utf-8'), args.lang_only,
+          args.allow_page_creation)
     blib.do_edit(pywikibot.Page(site, pagename), index, do_process_page,
         save=args.save, verbose=args.verbose, diff=args.diff)
