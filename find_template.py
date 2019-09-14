@@ -7,8 +7,8 @@ from collections import defaultdict
 import blib
 from blib import getparam, rmparam, msg, site, tname
 
-def process_page(page, index, template, paramspecs, negate, from_to,
-    countparams, counted_param_values):
+def process_page(page, index, templates, paramspecs, negate, from_to,
+    countparams, counted_param_values_by_template):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -26,11 +26,12 @@ def process_page(page, index, template, paramspecs, negate, from_to,
     else:
       temptext = unicode(t)
     tn = tname(t)
-    if tn == template:
+    if tn in templates:
       if not paramspecs and not countparams:
-        pagemsg("Found %s template: %s" % (template, temptext))
+        pagemsg("Found %s template: %s" % (tn, temptext))
       else:
         seen_params = set()
+        counted_param_values = counted_param_values_by_template[tn]
         for tparam in t.params:
           pname = unicode(tparam.name).strip()
           pvalue = unicode(tparam.value).strip()
@@ -40,12 +41,12 @@ def process_page(page, index, template, paramspecs, negate, from_to,
               counted_param_values[pname] = defaultdict(int)
             if pvalue not in counted_param_values[pname]:
               pagemsg("Found new value %s=%s for %s template: %s" %
-                  (pname, pvalue, template, temptext))
+                  (pname, pvalue, tn, temptext))
             counted_param_values[pname][pvalue] += 1
           if negate:
             if pname not in paramset:
               pagemsg("Found %s template with unrecognized param %s=%s: %s" %
-                  (template, pname, pvalue, temptext))
+                  (tn, pname, pvalue, temptext))
           elif paramspecs:
             for spec in paramspecs:
               found = False
@@ -58,7 +59,7 @@ def process_page(page, index, template, paramspecs, negate, from_to,
                 found = True
               if found:
                 pagemsg("Found %s template with %s=%s: %s" %
-                    (template, pname, pvalue, temptext))
+                    (tn, pname, pvalue, temptext))
         # Also track occurrences of params in countparams not occurring
         if countparams:
           for countparam in countparams:
@@ -67,7 +68,7 @@ def process_page(page, index, template, paramspecs, negate, from_to,
                 counted_param_values[countparam] = defaultdict(int)
               if None not in counted_param_values[countparam]:
                 pagemsg("Found new value %s=(unseen) for %s template: %s" %
-                    (countparam, template, temptext))
+                    (countparam, tn, temptext))
               counted_param_values[countparam][None] += 1
 
 parser = blib.create_argparser("Find templates with specified params",
@@ -122,9 +123,8 @@ countparams = re.split(",", args.count) if args.count else []
 
 counted_param_values_by_template = {template: {} for template in templates}
 def do_process_page(page, index):
-  for template in templates:
-    process_page(page, index, template, paramspecs, args.negate, args.from_to,
-        countparams, counted_param_values_by_template[template])
+  process_page(page, index, templates, paramspecs, args.negate, args.from_to,
+      countparams, counted_param_values_by_template)
 blib.do_pagefile_cats_refs(args, start, end, do_process_page,
     default_refs=["Template:%s" % template for template in templates])
 
