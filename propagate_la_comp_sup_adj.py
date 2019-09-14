@@ -82,7 +82,7 @@ def process_non_lemma_page(page, index):
     tn = tname(t)
     if tn in ["la-adj-comp", "la-adj-sup"]:
       lemma = getparam(t, "1") or pagetitle
-      pos = getparam(t, "2")
+      pos = getparam(t, "pos")
       if pos:
         def do_process(page, index, parsed):
           return process_lemma_page(page, index, tn == "la-adj-comp",
