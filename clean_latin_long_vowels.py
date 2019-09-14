@@ -371,7 +371,7 @@ from blib import getparam, rmparam, msg, errandmsg, site, tname
 import lalib
 from lalib import remove_macrons
 
-default_comment = "update macrons in %s: if before two cons, per Bennett corrected by Allen and Michelson"
+default_comment = "update macrons in '%s': if before two cons, per Bennett corrected by Allen and Michelson"
 
 def raw_frob_value(t, param, oldval, newval, pagemsg, notes, comment):
   no_macrons_oldval = remove_macrons(oldval)
@@ -585,6 +585,14 @@ def do_process_form(index, page, lemma, formind, formval, pos, tag_sets_to_proce
     expected_head_template = "la-proper noun-form"
     expected_pos = "proper noun form"
     expected_header_pos = "Proper noun"
+  elif pos == "pronounform":
+    expected_head_template = "la-pronoun-form"
+    expected_pos = "pronoun form"
+    expected_header_pos = "Pronoun"
+  elif pos == "detform":
+    expected_head_template = "la-det-form"
+    expected_pos = "determiner form"
+    expected_header_pos = "Determiner"
   elif pos == "partform":
     expected_head_template = "la-part-form"
     expected_pos = "participle form"
@@ -760,7 +768,8 @@ def process_all_forms(args, index, lemma, pos, progargs):
       process_form(index, lemma, formind, formval, pos,
           find_tag_sets_for_form(args, formval), progargs)
 
-def do_process_participle(index, page, lemma, formind, formval, pos, progargs):
+def do_process_participle(index, page, lemma, formind, formval, explicit_stem,
+    progargs):
   pagetitle = unicode(page.title())
 
   def pagemsg(txt):
@@ -781,11 +790,12 @@ def do_process_participle(index, page, lemma, formind, formval, pos, progargs):
     pagemsg("Skipping form value %s, page doesn't exist" % formval)
     return None, None
 
-  if pos == "presactpart":
-    expected_decl_arg = formval + "<3-P+>"
+  if formval.endswith("ns"):
+    if explicit_stem:
+      expected_decl_arg = "%s/%s<3-P+>" % (formval, explicit_stem)
+    else:
+      expected_decl_arg = formval + "<3-P+>"
   else:
-    if pos not in ["perfpasspart", "futactpart", "futpasspart"]:
-      raise ValueError("Unrecognized participle part of speech %s" % pos)
     if not formval.endswith("us"):
       pagemsg("WARNING: Bad participle form %s, wrong ending" % formval)
       return None, None
@@ -820,10 +830,15 @@ def do_process_participle(index, page, lemma, formind, formval, pos, progargs):
         pagemsg("Skipping incorrect part of speech %s: %s" % (head_pos, unicode(ht)))
         continue
       param_to_frob = "head"
+      value_to_frob = formval
       found_head = True
 
     if tn == "la-part":
       param_to_frob = "1"
+      if explicit_stem:
+        value_to_frob = "%s/%s" % (formval, explicit_stem)
+      else:
+        value_to_frob = formval
       found_head = True
 
     if not found_head:
@@ -837,12 +852,14 @@ def do_process_participle(index, page, lemma, formind, formval, pos, progargs):
     parsed = parsed_subsections[headword['etym_section']['subsection']]
     saw_lemma_in_etym = False
     saw_wrong_lemma_in_etym = False
+    lemma_templates_in_etym = []
     for et in parsed.filter_templates():
       etn = tname(et)
       if etn == "m":
         actual_lemma = getparam(et, "2")
         if remove_macrons(lemma) == remove_macrons(actual_lemma):
           saw_lemma_in_etym = True
+          lemma_templates_in_etym.append(et)
         else:
           pagemsg("WARNING: Saw wrong lemma %s != %s in Etymology section for participle: %s" % (
             actual_lemma, lemma, unicode(et)))
@@ -856,7 +873,9 @@ def do_process_participle(index, page, lemma, formind, formval, pos, progargs):
       pagemsg("WARNING: Didn't see any lemma in Etymology section for participle, don't know if it's for correct verb, skipping")
       continue
 
-    frob_exact(ht, param_to_frob, formval, pagemsg, notes, default_comment)
+    for et in lemma_templates_in_etym:
+      frob_exact(et, "2", lemma, pagemsg, notes, default_comment)
+    frob_exact(ht, param_to_frob, value_to_frob, pagemsg, notes, default_comment)
 
     for inflt in headword['infl_templates']:
       infltn = tname(inflt)
@@ -879,9 +898,10 @@ def do_process_participle(index, page, lemma, formind, formval, pos, progargs):
   sections[j] = secbody + sectail
   return "".join(sections), notes
 
-def process_participle(index, lemma, formind, formval, pos, progargs):
+def process_participle(index, lemma, formind, formval, explicit_stem, progargs):
   def handler(page, index, parsed):
-    return do_process_participle(index, page, lemma, formind, formval, pos, progargs)
+    return do_process_participle(index, page, lemma, formind, formval,
+        explicit_stem, progargs)
   blib.do_edit(pywikibot.Page(site, remove_macrons(formval)), index, handler, save=progargs.save, verbose=progargs.verbose, diff=progargs.diff)
 
 def frob_nominal_lemma_spec(ht, lemmaspec, stem, pagemsg, notes, comment):
@@ -947,6 +967,14 @@ def do_process_lemma(index, page, pos, explicit_infl, lemmaspec, lemma, explicit
   def expand_text(tempcall):
     return blib.expand_text(tempcall, pagetitle, pagemsg, progargs.verbose)
 
+  # If the participle's lemma is supplied, use do_process_participle(),
+  # which checks (and if necessary updates) the lemma mention in the Etymology
+  # section.
+  if pos == "part" and type(explicit_stem) is list:
+    explicit_stem, paramlemma = explicit_stem
+    return do_process_participle(index, page, paramlemma, 1, lemma,
+        explicit_stem, progargs)
+
   pagemsg("Processing")
 
   retval = lalib.find_heads_and_defns(unicode(page.text), pagemsg)
@@ -977,7 +1005,9 @@ def do_process_lemma(index, page, pos, explicit_infl, lemmaspec, lemma, explicit
       pos_to_full_pos = {
         "noun": "noun",
         "propernoun": "proper noun",
+        "pronoun": "pronoun",
         "adj": "adjective",
+        "det": "determiner",
         "part": "participle",
         "adv": "adverb",
         "phr": "phrase",
@@ -1059,6 +1089,8 @@ def do_process_lemma(index, page, pos, explicit_infl, lemmaspec, lemma, explicit
 
     elif (
       pos == "adj" and (found_head_template or tn in lalib.la_adj_headword_templates) or
+      pos == "pronoun" and (found_head_template or tn == "la-pronoun") or
+      pos == "det" and (found_head_template or tn == "la-det") or
       pos == "part" and (found_head_template or tn == "la-part") or
       pos == "numadj" and (found_head_template or tn == "la-num-adj") or
       pos == "sufadj" and (found_head_template or tn == "la-suffix-adj")
@@ -1071,8 +1103,8 @@ def do_process_lemma(index, page, pos, explicit_infl, lemmaspec, lemma, explicit
           inferred_stem = lalib.infer_3rd_decl_stem(lemma)
         stem = explicit_stem or inferred_stem
 
-        if tn in ["la-adj", "la-adj-comp", "la-adj-sup", "la-part", "la-num-adj",
-            "la-suffix-adj"]:
+        if tn in ["la-adj", "la-adj-comp", "la-adj-sup", "la-pronoun", "la-det",
+            "la-part", "la-num-adj", "la-suffix-adj"]:
           if frob_nominal_lemma_spec(ht, lemmaspec, explicit_stem, pagemsg, notes,
               default_comment) == "fail":
             continue
@@ -1107,7 +1139,7 @@ def do_process_lemma(index, page, pos, explicit_infl, lemmaspec, lemma, explicit
 
       for inflt in headword['infl_templates']:
         infltn = tname(inflt)
-        if infltn not in lalib.la_adj_decl_templates:
+        if infltn != "la-adecl":
           pagemsg("WARNING: Saw bad declension template for adj %s: %s" % (
             lemma, unicode(inflt)))
           continue
@@ -1126,6 +1158,8 @@ def do_process_lemma(index, page, pos, explicit_infl, lemmaspec, lemma, explicit
 
         process_all_forms(args, index, lemma,
           pos == "part" and "partform" or
+          pos == "pronoun" and "pronounform" or
+          pos == "det" and "detform" or
           pos == "numadj" and "numform" or
           pos == "sufadj" and "sufform" or
           "adjform", progargs)
@@ -1178,7 +1212,7 @@ def do_process_lemma(index, page, pos, explicit_infl, lemmaspec, lemma, explicit
 
       for inflt in headword['infl_templates']:
         infltn = tname(inflt)
-        if infltn not in lalib.la_verb_conj_templates:
+        if infltn != "la-conj":
           pagemsg("WARNING: Saw bad conjugation template for infl=%s verb %s: %s" % (
             explicit_infl, lemma, unicode(inflt)))
           continue
@@ -1215,7 +1249,8 @@ def do_process_lemma(index, page, pos, explicit_infl, lemmaspec, lemma, explicit
             partpos = "futpasspart"
 
           if partpos:
-            process_participle(index, lemma, formind, formval, partpos, progargs)
+            # FIXME! Supply correct explicit stem for compounds of eō
+            process_participle(index, lemma, formind, formval, None, progargs)
           elif not progargs.skip_forms and (not progargs.n_forms or formind <= progargs.n_forms):
             process_form(index, lemma, formind, formval, "verbform",
                 find_tag_sets_for_form(args, formval), progargs)
@@ -1258,20 +1293,22 @@ if __name__ == "__main__":
     parts = [part.replace("_", " ") for part in parts]
     if len(parts) == 2 and parts[0] in ["adv", "num", "phr", "prep", "prov"]:
       pass
-    elif ((len(parts) == 2 or len(parts) == 3) and
-        re.search("^([na]|pn|part|num[na]|suf[na])([1-5]?)$", parts[0])):
-      # noun, adjective or participle
+    elif (len(parts) in [2, 3] and
+        re.search("^([na]|pn|det|pron|num[na]|suf[na])([1-5]?)$", parts[0])):
+      # noun, proper noun, pronoun, adjective, determiner, numeral noun/adj,
+      # suffix noun/adj
       if len(parts) == 3:
         pos, lemma, explicit_stem = parts
       else:
         pos, lemma = parts
         explicit_stem = None
-      m = re.search("^([na]|pn|part|num[na]|suf[na])([1-5]?)$", pos)
+      m = re.search("^(.*?)([1-5]?)$", pos)
       code_to_pos = {
         "n": "noun",
         "pn": "propernoun",
+        "pron": "pronoun",
         "a": "adj",
-        "part": "part",
+        "det": "det",
         "sufn": "sufnoun",
         "sufa": "sufadj",
         "numn": "numnoun",
@@ -1281,6 +1318,25 @@ if __name__ == "__main__":
       infl = m.group(2) and int(m.group(2)) or None
       # FIXME: The infl for nouns and adjectives is no longer used at all
       lemmas.append((pos, infl, lemma, explicit_stem))
+    elif (len(parts) in [2, 3, 4] and
+        re.search("^part([13]?)$", parts[0])):
+      # participle
+      infl = parts[0][4:] or None
+      partform = parts[1]
+      explicit_stem = parts[2:]
+      # An explicit stem and/or lemma can be supplied. If one additional
+      # argument is given, it could be either, but we can distinguish them
+      # because the explicit stem must end in "nt" (it's used only for
+      # present participles) and the lemma can never end in "nt".
+      if len(explicit_stem) == 0:
+        explicit_stem = None
+      elif len(explicit_stem) == 2:
+        pass
+      elif explicit_stem[0].endswith("nt"):
+        explicit_stem = explicit_stem[0]
+      else:
+        explicit_stem = [None, explicit_stem[0]]
+      lemmas.append(("part", infl, partform, explicit_stem))
     elif len(parts) >= 2 and parts[0].startswith("v"):
       infl = parts[0][1:]
       lemma = parts[1]
