@@ -21,7 +21,6 @@ def delete_term(index, term, expected_head_templates, save, verbose):
     return
 
   text = unicode(page.text)
-  origtext = text
 
   retval = lalib.find_latin_section(text, pagemsg)
   if retval is None:
@@ -92,29 +91,21 @@ def delete_term(index, term, expected_head_templates, save, verbose):
     sections[-1] = re.sub(r"\n+--+\n*\Z", "", sections[-1])
   text = "".join(sections)
 
-  if text != origtext:
-    if verbose:
-      pagemsg("Replacing <%s> with <%s>" % (origtext, text))
-    assert notes
-    comment = "; ".join(blib.group_notes(notes))
-    if save:
-      pagemsg("Saving with comment = %s" % comment)
-      page.text = text
-      page.save(comment=comment)
-    else:
-      pagemsg("Would save with comment = %s" % comment)
+  return text, notes
 
-parser = blib.create_argparser(u"Delete bad Latin terms")
+parser = blib.create_argparser(u"Delete bad Latin terms", include_pagefile=True)
 parser.add_argument('--headtemp', required=True, help="Name(s) of expected headword template(s).")
-parser.add_argument('--pagefile', required=True, help="File containing terms to delete.")
 parser.add_argument('--output-pages-to-delete', help="File to write pages to delete.")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-terms = [x.strip() for x in codecs.open(args.pagefile, "r", "utf-8")]
 headtemp = args.headtemp.decode('utf-8').split(',')
-for index, term in blib.iter_items(terms, start, end):
-  delete_term(index, term, args.headtemp, args.save, args.verbose)
+
+def process_page(page, index, parsed):
+  return delete_term(index, page, headtemp)
+
+blib.do_pagefile_cats_refs(args, start, end, process_page, edit=True)
+
 msg("The following pages need to be deleted:")
 for page in pages_to_delete:
   msg(page)

@@ -22,7 +22,7 @@ split_recognized_tag_sets = [
   tag_set.split("|") for tag_set in recognized_tag_sets
 ]
 
-def fix_new_page(index, page, save, verbose):
+def fix_new_page(page, index, parsed):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -56,20 +56,7 @@ def fix_new_page(index, page, save, verbose):
     if origt != newt:
       pagemsg("Replaced %s with %s" % (origt, newt))
 
-  text = unicode(parsed)
-
-  if text != origtext:
-    if verbose:
-      pagemsg("Replacing <%s> with <%s>" % (origtext, text))
-    assert notes
-    comment = "; ".join(blib.group_notes(notes))
-    if save:
-      pagemsg("Saving with comment = %s" % comment)
-      page.text = text
-      page.save(comment=comment)
-    else:
-      pagemsg("Would save with comment = %s" % comment)
-
+  return unicode(parsed), notes
 
 def convert_etym_subsection_to_single_etymology_section(text):
   subsections = re.split("(^==+[^=\n]+==+\n)", text, 0, re.M)
@@ -88,7 +75,7 @@ def convert_etym_subsection_to_single_etymology_section(text):
   return "".join(subsections)
 
 
-def process_page(index, page, save, verbose):
+def process_page(page, index, parsed):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -289,26 +276,15 @@ def process_page(index, page, save, verbose):
       except pywikibot.PageRelatedError as error:
         pagemsg("Error moving to %s: %s" % (new_pagetitle, error))
         return
-    fix_new_page(index, pywikibot.Page(site, new_pagetitle), save, verbose)
+    blib.do_edit(pywikibot.Page(site, new_pagetitle), index, fix_new_page,
+        save=args.save, verbose=args.verbose, diff=args.diff)
 
-  elif text != origtext:
-    if verbose:
-      pagemsg("Replacing <%s> with <%s>" % (origtext, text))
-    assert notes
-    comment = "; ".join(blib.group_notes(notes))
-    if save:
-      pagemsg("Saving with comment = %s" % comment)
-      page.text = text
-      page.save(comment=comment)
-    else:
-      pagemsg("Would save with comment = %s" % comment)
+  else:
+    return text, notes
 
-
-parser = blib.create_argparser(u"Fix misspelling in Arabic 2nd/3rd masc pl non-past subj/juss forms")
-parser.add_argument('--pagefile', help="File containing pages to search.")
+parser = blib.create_argparser(u"Fix misspelling in Arabic 2nd/3rd masc pl non-past subj/juss forms",
+  include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-lines = [x.strip() for x in codecs.open(args.pagefile, "r", "utf-8")]
-for index, page in blib.iter_items(lines, start, end):
-  process_page(index, pywikibot.Page(site, page), args.save, args.verbose)
+blib.do_pagefile_cats_refs(args, start, end, process_page, edit=True)

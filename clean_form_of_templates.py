@@ -78,19 +78,12 @@ def process_page(page, index, parsed):
 
   return unicode(parsed), notes
 
-parser = blib.create_argparser("Move lang= to 1= and remove effectless nodot= in form-of templates")
-parser.add_argument('--pagefile', help="File containing pages to fix.")
+parser = blib.create_argparser("Move lang= to 1= and remove effectless nodot= in form-of templates",
+    include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-#for template in templates_to_move_lang:
-#  msg("Processing references to Template:%s" % template)
-#  for i, page in blib.references("Template:%s" % template, start, end):
-#    blib.do_edit(page, i, process_page, save=args.save, verbose=args.verbose)
-#for ref in ["Template:tracking/form-of/form-of-t/unused/nodot"]:
-#  msg("Processing references to %s" % ref)
-#  for i, page in blib.references(ref, start, end):
-#    blib.do_edit(page, i, process_page, save=args.save, verbose=args.verbose)
-lines = [x.strip() for x in codecs.open(args.pagefile, "r", "utf-8")]
-for i, page in blib.iter_items(lines, start, end):
-    blib.do_edit(pywikibot.Page(site, page), i, process_page, save=args.save, verbose=args.verbose)
+blib.do_pagefile_cats_refs(args, start, end, process_page, edit=True,
+    #default_refs=["Template:%s" % template for template in templates_to_move_lang]
+    #default_refs=["Template:tracking/form-of/form-of-t/unused/nodot"]
+)

@@ -1808,8 +1808,8 @@ def process_page(page, index, parsed):
   text = unicode(page.text)
   return process_text_on_page(pagetitle, index, text)
 
-parser = blib.create_argparser("Clean up bad inflection tags")
-parser.add_argument("--pagefile", help="List of pages to process.")
+parser = blib.create_argparser("Clean up bad inflection tags",
+  include_pagefile=True)
 parser.add_argument("--textfile", help="File containing page text or defn line text to process.")
 parser.add_argument("--matching-textfile", help="File containing defn lines to match against; if we change a line not listed, output a warnings.")
 parser.add_argument("--langcode", help="Specify lang code to use, instead of inferring it from headings.")
@@ -1866,11 +1866,8 @@ if args.textfile:
       msg("Page %s %s: Would save with comment = %s" % (index, pagetitle,
         "; ".join(blib.group_notes(notes))))
 
-elif args.pagefile:
-  pages = [x.rstrip('\n') for x in codecs.open(args.pagefile, "r", "utf-8")]
-  for i, page in blib.iter_items(pages, start, end):
-    blib.do_edit(pywikibot.Page(site, page), i, process_page, save=args.save,
-        verbose=args.verbose)
+else:
+  blib.do_pagefile_cats_refs(args, start, end, process_page, edit=True)
 
 output_stats_on_tag_set()
 

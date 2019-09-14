@@ -29,11 +29,9 @@ def process_page(page, index, parsed):
 
   return unicode(parsed), notes
 
-parser = blib.create_argparser("Convert plural pos= to singular POS= in {{diminutive of}}")
-parser.add_argument('--pagefile', help="Pages to do")
+parser = blib.create_argparser("Convert plural pos= to singular POS= in {{diminutive of}}",
+  include_pagefile=True)
 args = parser.parse_args()
-
 start, end = blib.parse_start_end(args.start, args.end)
-lines = [x.strip() for x in codecs.open(args.pagefile, "r", "utf-8")]
-for i, page in blib.iter_items(lines, start, end):
-  blib.do_edit(pywikibot.Page(site, page), i, process_page, save=args.save, verbose=args.verbose)
+
+blib.do_pagefile_cats_refs(args, start, end, process_page, edit=True)

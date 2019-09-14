@@ -6,7 +6,7 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, site
 
-def process_page(index, page, save, verbose, warn_on_no_change=False):
+def process_page(page, index, warn_on_no_change=False):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -47,37 +47,20 @@ def process_page(index, page, save, verbose, warn_on_no_change=False):
   text = "".join(sections)
 
   if origtext != text:
-    if verbose:
-      pagemsg("Replacing <%s> with <%s>" % (origtext, text))
-    assert notes
-    comment = "; ".join(notes)
-    if save:
-      pagemsg("Saving with comment = %s" % comment)
-      page.text = text
-      page.save(comment=comment)
-    else:
-      pagemsg("Would save with comment = %s" % comment)
+    return text, notes
   elif warn_on_no_change:
     pagemsg("WARNING: No changes")
 
-parser = blib.create_argparser(u"Fix indentation of Pronunciation, Declension, Conjugation, Alternative forms sections")
-parser.add_argument("--pagefile",
-    help="""List of pages to process.""")
+parser = blib.create_argparser(u"Fix indentation of Pronunciation, Declension, Conjugation, Alternative forms sections",
+  include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-if args.pagefile:
-  lines = [x.strip() for x in codecs.open(args.pagefile, "r", "utf-8")]
-  for i, line in blib.iter_items(lines, start, end):
-    m = re.search("^Page [0-9]+ (.*?): WARNING: .*?$", line)
-    if not m:
-      msg("WARNING: Can't process line: %s" % line)
-    else:
-      page = m.group(1)
-      process_page(i, pywikibot.Page(site, page), args.save, args.verbose,
-          warn_on_no_change=True)
-else:
-  for cat in ["Russian lemmas", "Russian non-lemma forms"]:
-    msg("Processing category %s" % cat)
-    for i, page in blib.cat_articles(cat, start, end):
-      process_page(i, page, args.save, args.verbose) 
+def do_process_page(page, index, parsed):
+  if args.pagefile:
+    return process_page(page, index, warn_on_no_change=True)
+  else:
+    return process_page(page, index, warn_on_no_change=False)
+
+blib.do_pagefile_cats_refs(args, start, end, process_page, edit=True,
+    default_cats=["Russian lemmas", "Russian non-lemma forms"])

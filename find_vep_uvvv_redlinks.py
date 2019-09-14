@@ -23,7 +23,7 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, site
 
-def process_page(index, page, save, verbose):
+def process_page(page, index):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -38,10 +38,10 @@ def process_page(index, page, save, verbose):
         if not pywikibot.Page(site, refpage).exists():
           pagemsg("Page [[%s]] does not exist" % refpage)
 
-parser = blib.create_argparser(u"Find red links in pages in Category:R:vep:UVVV with red link")
-parser.add_argument("--pagefile", help="File containing pages to check")
+parser = blib.create_argparser(u"Find red links in pages in Category:R:vep:UVVV with red link",
+  include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-for i, page in blib.cat_articles("R:vep:UVVV with red link", start, end):
-  process_page(i, page, args.save, args.verbose)
+blib.do_pagefile_cats_refs(args, start, end, process_page,
+    default_cats=["R:vep:UVVV with red link"])

@@ -10,8 +10,7 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, site
 
-def process_page(index, page, fix, save, verbose):
-  pagetitle = unicode(page.title())
+def process_page(page, index, parsed):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -20,7 +19,6 @@ def process_page(index, page, fix, save, verbose):
   text = unicode(page.text)
   notes = []
 
-  parsed = blib.parse(page)
   headword_aspects = set()
   found_multiple_headwords = False
   for t in parsed.filter_templates():
@@ -71,33 +69,13 @@ def process_page(index, page, fix, save, verbose):
           pagemsg("Replaced %s with %s" % (origt, newt))
           notes.append("overrode conjugation aspect with %s" % list(headword_aspects)[0])
 
-  new_text = unicode(parsed)
+  return unicode(parsed), notes
 
-  if new_text != text:
-    if verbose:
-      pagemsg("Replacing <%s> with <%s>" % (text, new_text))
-    assert notes
-    comment = "; ".join(blib.group_notes(notes))
-    if save:
-      pagemsg("Saving with comment = %s" % comment)
-      page.text = new_text
-      page.save(comment=comment)
-    else:
-      pagemsg("Would save with comment = %s" % comment)
-
-parser = blib.create_argparser(u"Find incorrect verb aspects")
-parser.add_argument('--pagefile', help="File containing pages to fix.")
+parser = blib.create_argparser(u"Find incorrect verb aspects",
+    include_pagefile=True)
 parser.add_argument('--fix', action="store_true", help="Fix errors by copying aspect from headword to conjugation")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-if args.pagefile:
-  lines = [x.strip() for x in codecs.open(args.pagefile, "r", "utf-8")]
-  for i, page in blib.iter_items(lines, start, end):
-    process_page(i, pywikibot.Page(site, page), args.fix, args.save,
-      args.verbose)
-else:
-  for category in ["Russian verbs"]:
-    msg("Processing category: %s" % category)
-    for i, page in blib.cat_articles(category, start, end):
-      process_page(i, page, args.fix, args.save, args.verbose)
+blib.do_pagefile_cats_refs(args, start, end, process_page, edit=True,
+    default_cats=["Russian verbs"])
