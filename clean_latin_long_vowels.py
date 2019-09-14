@@ -371,8 +371,9 @@ from blib import getparam, rmparam, msg, errandmsg, site, tname
 import lalib
 from lalib import remove_macrons
 
+default_comment = "update macrons in %s: if before two cons, per Bennett corrected by Allen and Michelson"
 
-def raw_frob_value(t, param, oldval, newval, pagemsg, notes):
+def raw_frob_value(t, param, oldval, newval, pagemsg, notes, comment):
   no_macrons_oldval = remove_macrons(oldval)
   no_macrons_newval = remove_macrons(newval)
   if no_macrons_oldval != no_macrons_newval:
@@ -382,13 +383,13 @@ def raw_frob_value(t, param, oldval, newval, pagemsg, notes):
     return "mismatch"
   if oldval != newval:
     pagemsg("Changed value %s to %s" % (oldval, newval))
-    notes.append("updated macrons in %s per Bennett (with corrections by Allen and Michelson)" % tname(t))
+    notes.append(comment % tname(t))
     return "changed"
   return "unchanged"
 
 
 # Return True if changed.
-def frob_param(t, param, stem_or_exact, is_exact, pagemsg, notes, split_slashes=False, no_warn=False, add_if_needed=False, allow_case_difference=False):
+def frob_param(t, param, stem_or_exact, is_exact, pagemsg, notes, comment, split_slashes=False, no_warn=False, add_if_needed=False, allow_case_difference=False):
   origt = unicode(t)
   origval = getparam(t, param)
   if split_slashes:
@@ -446,24 +447,24 @@ def frob_param(t, param, stem_or_exact, is_exact, pagemsg, notes, split_slashes=
   if newval != origval:
     t.add(param, newval)
     pagemsg("Replaced %s with %s" % (origt, unicode(t)))
-    notes.append("update macrons in %s: if before two cons, per Bennett corrected by Allen/Michelson" % tname(t))
+    notes.append(comment % tname(t))
     return True
   return False
 
 # Return True if changed.
-def frob_stem(t, param, stem, pagemsg, notes, split_slashes=False, no_warn=False):
-  return frob_param(t, param, stem, False, pagemsg, notes, split_slashes=split_slashes,
+def frob_stem(t, param, stem, pagemsg, notes, comment, split_slashes=False, no_warn=False):
+  return frob_param(t, param, stem, False, pagemsg, notes, comment, split_slashes=split_slashes,
       no_warn=no_warn)
 
 # Return True if changed.
-def frob_exact(t, param, newval, pagemsg, notes, split_slashes=False,
+def frob_exact(t, param, newval, pagemsg, notes, comment, split_slashes=False,
     no_warn=False, add_if_needed=False, allow_case_difference=False):
-  return frob_param(t, param, newval, True, pagemsg, notes,
+  return frob_param(t, param, newval, True, pagemsg, notes, comment,
     split_slashes=split_slashes, no_warn=no_warn, add_if_needed=add_if_needed,
     allow_case_difference=allow_case_difference)
 
 # Return True if anything changed.
-def frob_chain_stem(t, param, stem, pagemsg, notes, split_slashes=False, no_warn=False):
+def frob_chain_stem(t, param, stem, pagemsg, notes, comment, split_slashes=False, no_warn=False):
   changed = False
   if type(param) is list:
     first, rest = param
@@ -471,19 +472,20 @@ def frob_chain_stem(t, param, stem, pagemsg, notes, split_slashes=False, no_warn
     first = param
     rest = param
   if first:
-    if frob_stem(t, first, stem, pagemsg, notes, split_slashes=split_slashes,
+    if frob_stem(t, first, stem, pagemsg, notes, comment, split_slashes=split_slashes,
         no_warn=no_warn):
       changed = True
   num = 2
   while getparam(t, "%s%s" % (rest, num)):
-    if frob_stem(t, "%s%s" % (rest, num), stem, pagemsg, notes, split_slashes=split_slashes,
-        no_warn=no_warn):
+    if frob_stem(t, "%s%s" % (rest, num), stem, pagemsg, notes, comment,
+        split_slashes=split_slashes, no_warn=no_warn):
       changed = True
     num += 1
   return changed
 
 # Return True if anything changed.
-def frob_chain_exact(t, param, newval, pagemsg, notes, split_slashes=False, no_warn=False, add_if_needed=False):
+def frob_chain_exact(t, param, newval, pagemsg, notes, comment, split_slashes=False,
+    no_warn=False, add_if_needed=False):
   changed = False
   if type(param) is list:
     first, rest = param
@@ -491,13 +493,13 @@ def frob_chain_exact(t, param, newval, pagemsg, notes, split_slashes=False, no_w
     first = param
     rest = param
   if first:
-    if frob_exact(t, first, newval, pagemsg, notes, split_slashes=split_slashes,
-        no_warn=no_warn, add_if_needed=add_if_needed):
+    if frob_exact(t, first, newval, pagemsg, notes, comment,
+        split_slashes=split_slashes, no_warn=no_warn, add_if_needed=add_if_needed):
       changed = True
   num = 2
   while getparam(t, "%s%s" % (rest, num)):
-    if frob_exact(t, "%s%s" % (rest, num), newval, pagemsg, notes, split_slashes=split_slashes,
-        no_warn=no_warn):
+    if frob_exact(t, "%s%s" % (rest, num), newval, pagemsg, notes, comment,
+        split_slashes=split_slashes, no_warn=no_warn):
       changed = True
     num += 1
   return changed
@@ -511,7 +513,7 @@ def find_tag_sets_for_form(args, form):
   return tag_sets
 
 # Return True if changed.
-def process_pronun_template(t, lemma, pagemsg, notes):
+def process_pronun_template(t, lemma, pagemsg, notes, comment):
   if not getparam(t, "1"):
     if remove_macrons(lemma) != lemma:
       eccl = getparam(t, "eccl")
@@ -522,9 +524,10 @@ def process_pronun_template(t, lemma, pagemsg, notes):
       notes.append("add pronunciation to {{la-IPA}}")
       return True
   else:
-    return frob_exact(t, "1", lemma, pagemsg, notes, allow_case_difference=True)
+    return frob_exact(t, "1", lemma, pagemsg, notes, comment,
+        allow_case_difference=True)
 
-def process_pronun_templates(pronun_section, lemma, pagemsg, notes):
+def process_pronun_templates(pronun_section, lemma, pagemsg, notes, comment):
   if not pronun_section:
     return
   pronun_templates = pronun_section['pronun_templates']
@@ -539,7 +542,7 @@ def process_pronun_templates(pronun_section, lemma, pagemsg, notes):
     if len(list(headwords)) > 1:
       pagemsg("WARNING: One pronunciation template %s but multiple headword templates with different headwords %s, not changing: %s" %
         (origpront, ",".join(headwords), ",".join(unicode(hw['head_template']) for hw in pronun_section['headwords'])))
-    elif process_pronun_template(pront, lemma, pagemsg, notes):
+    elif process_pronun_template(pront, lemma, pagemsg, notes, comment):
       if len(pronun_section['headwords']) > 1:
         pagemsg("WARNING: Multiple headwords for changed pronunciation template (originally %s, changed to %s), check manually: %s" % (
           origpront, unicode(pront),
@@ -709,7 +712,8 @@ def do_process_form(index, page, lemma, formind, formval, pos, tag_sets_to_proce
     if not saw_infl:
       continue
 
-    frob_exact(ht, head_param, formval, pagemsg, notes, add_if_needed=add_if_needed)
+    frob_exact(ht, head_param, formval, pagemsg, notes, default_comment,
+        add_if_needed=add_if_needed)
     for t in headword['infl_of_templates']:
       lang = getparam(t, "lang")
       if lang:
@@ -718,13 +722,14 @@ def do_process_form(index, page, lemma, formind, formval, pos, tag_sets_to_proce
         lang = getparam(t, "1")
         lemma_param = 2
       assert lang == "la"
-      changed = frob_exact(t, str(lemma_param), lemma, pagemsg, notes)
+      changed = frob_exact(t, str(lemma_param), lemma, pagemsg, notes, default_comment)
       if getparam(t, str(lemma_param + 1)):
         t.add(str(lemma_param + 1), "")
         if not changed:
           notes.append("remove alt form of {{inflection of}}")
 
-    process_pronun_templates(headword['pronun_section'], formval, pagemsg, notes)
+    process_pronun_templates(headword['pronun_section'], formval, pagemsg, notes,
+        default_comment)
 
   secbody = "".join(unicode(x) for x in parsed_subsections)
   sections[j] = secbody + sectail
@@ -851,7 +856,7 @@ def do_process_participle(index, page, lemma, formind, formval, pos, progargs):
       pagemsg("WARNING: Didn't see any lemma in Etymology section for participle, don't know if it's for correct verb, skipping")
       continue
 
-    frob_exact(ht, param_to_frob, formval, pagemsg, notes)
+    frob_exact(ht, param_to_frob, formval, pagemsg, notes, default_comment)
 
     for inflt in headword['infl_templates']:
       infltn = tname(inflt)
@@ -859,7 +864,7 @@ def do_process_participle(index, page, lemma, formind, formval, pos, progargs):
         pagemsg("WARNING: Saw bad declension template for participle: %s" % (
           unicode(inflt)))
         continue
-      frob_exact(inflt, "1", expected_decl_arg, pagemsg, notes)
+      frob_exact(inflt, "1", expected_decl_arg, pagemsg, notes, default_comment)
 
       args = lalib.generate_adj_forms(unicode(inflt), errandpagemsg, expand_text)
       if args is None:
@@ -867,7 +872,8 @@ def do_process_participle(index, page, lemma, formind, formval, pos, progargs):
 
       process_all_forms(args, "%s.%s" % (index, formind), formval, "partform", progargs)
 
-    process_pronun_templates(headword['pronun_section'], formval, pagemsg, notes)
+    process_pronun_templates(headword['pronun_section'], formval, pagemsg, notes,
+        default_comment)
 
   secbody = "".join(unicode(x) for x in parsed_subsections)
   sections[j] = secbody + sectail
@@ -878,9 +884,9 @@ def process_participle(index, lemma, formind, formval, pos, progargs):
     return do_process_participle(index, page, lemma, formind, formval, pos, progargs)
   blib.do_edit(pywikibot.Page(site, remove_macrons(formval)), index, handler, save=progargs.save, verbose=progargs.verbose, diff=progargs.diff)
 
-def frob_nominal_lemma_spec(ht, lemmaspec, stem, pagemsg, notes):
+def frob_nominal_lemma_spec(ht, lemmaspec, stem, pagemsg, notes, comment):
   if "((" in lemmaspec or " " in lemmaspec or "<" in lemmaspec or "/" in lemmaspec:
-    if frob_exact(ht, "1", lemmaspec, pagemsg, notes):
+    if frob_exact(ht, "1", lemmaspec, pagemsg, notes, comment):
       return "changed"
     else:
       return "nochange"
@@ -907,13 +913,13 @@ def frob_nominal_lemma_spec(ht, lemmaspec, stem, pagemsg, notes):
       else:
         head_stem = None
       changed = False
-      retval = raw_frob_value(ht, "1", head_lemma, lemmaspec, pagemsg, notes)
+      retval = raw_frob_value(ht, "1", head_lemma, lemmaspec, pagemsg, notes, comment)
       if retval == "mismatch":
         return "fail"
       if retval == "changed":
         changed = True
       if head_stem:
-        retval = raw_frob_value(ht, "1", head_stem, stem or "", pagemsg, notes)
+        retval = raw_frob_value(ht, "1", head_stem, stem or "", pagemsg, notes, comment)
         if retval == "mismatch":
           return "fail"
         if retval == "changed":
@@ -984,26 +990,27 @@ def do_process_lemma(index, page, pos, explicit_infl, lemmaspec, lemma, explicit
         "sufadj": "suffix",
       }
       if getparam(ht, "2") == pos_to_full_pos[pos]:
-        frob_exact(ht, "head", lemma, pagemsg, notes, add_if_needed=True)
+        frob_exact(ht, "head", lemma, pagemsg, notes, default_comment,
+            add_if_needed=True)
         found_head_template = True
         found_matching_head = True
 
     if pos == "adv" and tn == "la-adv":
       found_matching_head = True
-      frob_exact(ht, "1", lemma, pagemsg, notes)
+      frob_exact(ht, "1", lemma, pagemsg, notes, default_comment)
       stem, is_stem = lalib.infer_adv_stem(lemma)
-      frob_stem(ht, "2", stem, pagemsg, notes, no_warn=True)
-      frob_stem(ht, "3", stem, pagemsg, notes, no_warn=True)
-      frob_chain_stem(ht, "comp", stem, pagemsg, notes, no_warn=True)
-      frob_chain_stem(ht, "sup", stem, pagemsg, notes, no_warn=True)
+      frob_stem(ht, "2", stem, pagemsg, notes, default_comment, no_warn=True)
+      frob_stem(ht, "3", stem, pagemsg, notes, default_comment, no_warn=True)
+      frob_chain_stem(ht, "comp", stem, pagemsg, notes, default_comment, no_warn=True)
+      frob_chain_stem(ht, "sup", stem, pagemsg, notes, default_comment, no_warn=True)
 
     elif pos == "phr" and tn == "la-phrase":
       found_matching_head = True
-      frob_exact(ht, "head", lemma, pagemsg, notes)
+      frob_exact(ht, "head", lemma, pagemsg, notes, default_comment)
 
     elif pos == "prep" and tn == "la-prep":
       found_matching_head = True
-      frob_exact(ht, "1", lemma, pagemsg, notes)
+      frob_exact(ht, "1", lemma, pagemsg, notes, default_comment)
 
     elif (
       pos == "noun" and (found_head_template or tn == "la-noun") or
@@ -1019,22 +1026,24 @@ def do_process_lemma(index, page, pos, explicit_infl, lemmaspec, lemma, explicit
       stem = explicit_stem or inferred_stem
 
       if tn in ["la-noun", "la-proper noun", "la-num-noun", "la-suffix-noun"]:
-        if frob_nominal_lemma_spec(ht, lemmaspec, explicit_stem, pagemsg, notes) == "fail":
+        if frob_nominal_lemma_spec(ht, lemmaspec, explicit_stem, pagemsg, notes,
+            default_comment) == "fail":
           continue
 
         for override in lalib.la_noun_decl_overrides:
-          frob_stem(ht, override, stem, pagemsg, notes, split_slashes=True,
-              no_warn=True)
+          frob_stem(ht, override, stem, pagemsg, notes, default_comment,
+              split_slashes=True, no_warn=True)
 
       found_matching_head = True
 
       for inflt in headword['infl_templates']:
-        if frob_nominal_lemma_spec(inflt, lemmaspec, explicit_stem, pagemsg, notes) == "fail":
+        if frob_nominal_lemma_spec(inflt, lemmaspec, explicit_stem, pagemsg, notes,
+            default_comment) == "fail":
           continue
 
         for override in lalib.la_noun_decl_overrides:
-          frob_stem(inflt, override, stem, pagemsg, notes, split_slashes=True,
-              no_warn=True)
+          frob_stem(inflt, override, stem, pagemsg, notes, default_comment,
+              split_slashes=True, no_warn=True)
 
         args = lalib.generate_noun_forms(unicode(inflt), errandpagemsg, expand_text)
         if args is None:
@@ -1062,30 +1071,35 @@ def do_process_lemma(index, page, pos, explicit_infl, lemmaspec, lemma, explicit
           inferred_stem = lalib.infer_3rd_decl_stem(lemma)
         stem = explicit_stem or inferred_stem
 
-        if tn in ["la-adj", "la-part", "la-num-adj", "la-suffix-adj"]:
-          if frob_nominal_lemma_spec(ht, lemmaspec, explicit_stem, pagemsg, notes) == "fail":
+        if tn in ["la-adj", "la-adj-comp", "la-adj-sup", "la-part", "la-num-adj",
+            "la-suffix-adj"]:
+          if frob_nominal_lemma_spec(ht, lemmaspec, explicit_stem, pagemsg, notes,
+              default_comment) == "fail":
             continue
 
-          frob_chain_stem(ht, "comp", stem, pagemsg, notes, no_warn=True)
-          frob_chain_stem(ht, "sup", stem, pagemsg, notes, no_warn=True)
-
-        elif tn == "la-adj-comp":
-          if lemma.endswith("ior"):
-            base = lemma[:-3]
-            frob_stem(ht, "comp", base, pagemsg, notes, no_warn=True)
-
-        elif tn == "la-adj-sup":
-          if lemma.endswith("issimus"):
-            base = lemma[:-7]
-          if lemma.endswith("rimus"):
-            base = lemma[:-5]
+          if tn == "la-adj-comp":
+            if lemma.endswith("ior"):
+              base = lemma[:-3]
+              frob_stem(ht, "pos", base, pagemsg, notes, default_comment, no_warn=True)
+          elif tn == "la-adj-sup":
+            if lemma.endswith("issimus"):
+              base = lemma[:-7]
+            if lemma.endswith("rimus"):
+              base = lemma[:-5]
+            else:
+              base = None
+            if base:
+              frob_stem(ht, "pos", base, pagemsg, notes, default_comment)
           else:
-            base = None
-          if base:
-            frob_stem(ht, "sup", base, pagemsg, notes)
+            frob_chain_stem(ht, "comp", stem, pagemsg, notes, default_comment,
+                no_warn=True)
+            frob_chain_stem(ht, "sup", stem, pagemsg, notes, default_comment,
+                no_warn=True)
+            frob_chain_stem(ht, "adv", stem, pagemsg, notes, default_comment,
+                no_warn=True)
 
         else:
-          pagemsg("WARNING: Unrecognized djective headword template %s" % (
+          pagemsg("WARNING: Unrecognized adjective headword template %s" % (
             unicode(ht)))
           continue
 
@@ -1098,12 +1112,13 @@ def do_process_lemma(index, page, pos, explicit_infl, lemmaspec, lemma, explicit
             lemma, unicode(inflt)))
           continue
 
-        if frob_nominal_lemma_spec(inflt, lemmaspec, explicit_stem, pagemsg, notes) == "fail":
+        if frob_nominal_lemma_spec(inflt, lemmaspec, explicit_stem, pagemsg, notes,
+            default_comment) == "fail":
           continue
 
         for override in lalib.la_adj_decl_overrides:
-          frob_stem(inflt, override, stem, pagemsg, notes, split_slashes=True,
-              no_warn=True)
+          frob_stem(inflt, override, stem, pagemsg, notes, default_comment,
+              split_slashes=True, no_warn=True)
 
         args = lalib.generate_adj_forms(unicode(inflt), errandpagemsg, expand_text)
         if args is None:
@@ -1150,9 +1165,9 @@ def do_process_lemma(index, page, pos, explicit_infl, lemmaspec, lemma, explicit
           if not compare_principal_part("4", param4):
             return False
 
-          frob_exact(t, "2", lemma, pagemsg, notes)
-          frob_exact(t, "3", param3, pagemsg, notes)
-          frob_exact(t, "4", param4, pagemsg, notes)
+          frob_exact(t, "2", lemma, pagemsg, notes, default_comment)
+          frob_exact(t, "3", param3, pagemsg, notes, default_comment)
+          frob_exact(t, "4", param4, pagemsg, notes, default_comment)
 
           return True
 
@@ -1207,7 +1222,8 @@ def do_process_lemma(index, page, pos, explicit_infl, lemmaspec, lemma, explicit
 
     if found_matching_head:
       found_any_matching_head = True
-      process_pronun_templates(headword['pronun_section'], lemma, pagemsg, notes)
+      process_pronun_templates(headword['pronun_section'], lemma, pagemsg, notes,
+          default_comment)
 
   if not found_any_matching_head:
     pagemsg("WARNING: Unable to find matching head")
