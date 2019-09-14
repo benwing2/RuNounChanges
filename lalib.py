@@ -42,24 +42,12 @@ def find_latin_section(text, pagemsg):
 
   return sections, j, secbody, sectail, has_non_latin
 
-la_noun_decl_templates = {
-  "la-ndecl"
-}
-
-la_adj_decl_templates = {
+la_infl_templates = {
+  "la-ndecl",
   "la-adecl",
-}
-
-la_verb_conj_templates = {
   "la-conj",
+  "la-decl-gerund",
 }
-
-la_infl_templates = (
-  la_noun_decl_templates |
-  la_adj_decl_templates |
-  la_verb_conj_templates |
-  {"la-decl-gerund"}
-)
 
 la_adj_headword_templates = {
   "la-adj",
@@ -99,6 +87,7 @@ la_nonlemma_headword_templates = {
 }
 
 la_misc_headword_templates = {
+  "la-det",
   "la-diacritical mark",
   "la-gerund",
   "la-interj",
@@ -106,6 +95,7 @@ la_misc_headword_templates = {
   "la-letter",
   "la-noun",
   "la-part",
+  "la-pronoun",
   "la-proper noun",
   "la-prep",
   "la-punctuation mark",
@@ -170,6 +160,7 @@ la_poses = la_lemma_poses | la_nonlemma_poses
 
 la_infl_of_templates = {
   "inflection of",
+  "infl of",
   "noun form of",
   "verb form of",
   "adj form of",
@@ -657,11 +648,11 @@ la_verb_overrides = (
 
 def la_infl_template_pos(t):
   tn = tname(t)
-  if tn in la_verb_conj_templates:
+  if tn == "la-conj":
     return "verb"
-  elif tn in la_noun_decl_templates:
+  elif tn == "la-ndecl":
     return "noun"
-  elif tn in la_adj_decl_templates:
+  elif tn == "la-adecl":
     return "adj"
   elif tn == "la-decl-gerund":
     return "noun"
@@ -683,7 +674,7 @@ def la_get_headword_from_template(t, pagename, pagemsg, expand_text=None):
     def expand_text(tempcall):
       return blib.expand_text(tempcall, pagename, pagemsg, False)
   tn = tname(t)
-  if tn in ["la-adj", "la-part", "la-num-adj", "la-suffix-adj"]:
+  if tn in ["la-adj", "la-part", "la-num-adj", "la-suffix-adj", "la-det", "la-pronoun"]:
     retval = blib.fetch_param_chain(t, "lemma", "lemma")
     if not retval:
       retval = getparam(t, "1")
@@ -695,6 +686,8 @@ def la_get_headword_from_template(t, pagename, pagemsg, expand_text=None):
         blib.remove_param_chain(generate_template, "adv", "adv")
         blib.remove_param_chain(generate_template, "lemma", "lemma")
         rmparam(generate_template, "type")
+        # FIXME: This is wrong, if indecl=1 then we shouldn't try to decline it.
+        rmparam(generate_template, "indecl")
         rmparam(generate_template, "id")
         rmparam(generate_template, "pos")
         result = expand_text(unicode(generate_template))
@@ -767,7 +760,7 @@ def la_get_headword_from_template(t, pagename, pagemsg, expand_text=None):
           retval = ""
         retval = retval.split(",")
   elif tn in la_adj_headword_templates or tn in la_adv_headword_templates or (
-    tn in ["la-suffix", "la-suffix-adv", "la-suffix-form", "la-gerund"]
+    tn in ["la-suffix", "la-suffix-adv", "la-gerund"]
   ):
     retval = getparam(t, "1")
   elif tn == "la-letter":
@@ -775,7 +768,7 @@ def la_get_headword_from_template(t, pagename, pagemsg, expand_text=None):
   elif tn in ["head", "la-prep"]:
     retval = blib.fetch_param_chain(t, "head", "head")
   elif tn in la_nonlemma_headword_templates or tn in la_misc_headword_templates:
-    retval = getparam(t, "head") or getparam(t, "1")
+    retval = blib.fetch_param_chain(t, "1", "head")
   else:
     pagemsg("WARNING: Unrecognized headword template %s" % unicode(t))
     retval = ""
