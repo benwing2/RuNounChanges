@@ -7,6 +7,7 @@ import blib
 from blib import getparam, rmparam, msg, errandmsg, site, tname
 
 import lalib
+import clean_latin_long_vowels
 
 heads_and_defns_cache = {}
 infl_forms_cache = {}
@@ -497,7 +498,7 @@ def process_text_on_page(index, pagetitle, text):
             if len(tag_set_matches) > 0:
               matched_infl_of_templates = True
               if len(all_matching_lemmas) == 1:
-                notes.append("fix macrons in lemma of %s (stage 1): %s -> %s" % (
+                notes.append("fix macrons in lemma of '%s' (stage 1): %s -> %s" % (
                   tname(t), lemma, all_matching_lemmas[0]))
                 if len(tag_set_mismatches) > 0:
                   stagemsg("WARNING: Fixing macrons in lemma %s -> %s despite only some tag sets %s but not %s matching, counting as a match: %s" % (
@@ -574,7 +575,7 @@ def process_text_on_page(index, pagetitle, text):
           stagemsg("WARNING: No forms match pagetitle %s across all {{inflection of}} tags and tag sets, not changing headword form(s) but trying again allowing macron differences in lemmas: %s" % (
             pagetitle, unicode(ht)))
         else:
-          notes.append("fix macrons in forms of %s (stage 2): %s -> %s" % (
+          notes.append("fix macrons in forms of '%s' (stage 2): %s -> %s" % (
             tname(ht), ",".join(headword_forms), ",".join(common_forms)))
           oright = unicode(ht)
           if tname(ht) == "head":
@@ -582,7 +583,15 @@ def process_text_on_page(index, pagetitle, text):
           else:
             blib.set_param_chain(ht, common_forms, "1", "head")
           stagemsg("Replaced %s with %s" % (oright, unicode(ht)))
-          # FIXME: Replace pronunciation
+          if len(common_forms) > 1:
+            stagemsg("WARNING: FIXME: No support yet for pronunciation for multiple headword forms %s" %
+                ",".join(common_forms))
+          else:
+            assert len(common_forms) == 1
+            clean_latin_long_vowels.process_pronun_templates(
+                headword['pronun_section'], common_forms[0], stagemsg, notes,
+                "fix macrons in pronun of '%%s' (stage 2): %s -> %s" % (
+                  ",".join(headword_forms), ",".join(common_forms)))
           break
 
       else:
@@ -657,14 +666,14 @@ def process_text_on_page(index, pagetitle, text):
             pagetitle, unicode(ht)))
         else:
           for actual_lemma, (t, lemma_param, lemma, inflargs_sets, tag_sets) in zip(cur_assignment, yield_infl_of_templates_and_properties()):
-            notes.append("fix macrons in lemma of %s (stage 3): %s -> %s" % (
+            notes.append("fix macrons in lemma of '%s' (stage 3): %s -> %s" % (
               tname(t), lemma, actual_lemma))
             stagemsg("WARNING: found common forms %s, updating lemma %s to %s: %s" % (
               ",".join(cur_common_forms), lemma, actual_lemma, unicode(t)))
             origt = unicode(t)
             t.add(str(lemma_param), actual_lemma)
             stagemsg("Replaced %s with %s" % (origt, unicode(t)))
-          notes.append("fix macrons in forms of %s (stage 3): %s -> %s" % (
+          notes.append("fix macrons in forms of '%s' (stage 3): %s -> %s" % (
             tname(ht), ",".join(headword_forms), ",".join(cur_common_forms)))
           oright = unicode(ht)
           if tname(ht) == "head":
@@ -672,7 +681,15 @@ def process_text_on_page(index, pagetitle, text):
           else:
             blib.set_param_chain(ht, cur_common_forms, "1", "head")
           stagemsg("Replaced %s with %s" % (oright, unicode(ht)))
-          # FIXME: Replace pronunciation
+          if len(cur_common_forms) > 1:
+            stagemsg("WARNING: FIXME: No support yet for pronunciation for multiple headword forms %s" %
+                ",".join(cur_common_forms))
+          else:
+            assert len(cur_common_forms) == 1
+            clean_latin_long_vowels.process_pronun_templates(
+                headword['pronun_section'], cur_common_forms[0], stagemsg, notes,
+                "fix macrons in pronun of '%%s' (stage 3): %s -> %s" % (
+                  ",".join(headword_forms), ",".join(cur_common_forms)))
           break
 
   secbody = "".join(unicode(x) for x in parsed_subsections)
