@@ -114,7 +114,7 @@ pa.add_argument("-e", "--regex", help="Regular expression to search for.",
     required=True)
 pa.add_argument("-r", "--references", "--refs",
     help="Do pages with references to this page.")
-pa.add_argument("-c", "--category", "--cat",
+pa.add_argument("-c", "--categories", "--cats",
     help="List of categories to search, comma-separated.")
 pa.add_argument('--filter-pages', help="Regex to use to filter page names.")
 pa.add_argument('--pages', help="List of pages to search, comma-separated.")
@@ -127,17 +127,17 @@ pa.add_argument('--lang-only', help="Only search the specified language section.
 params = pa.parse_args()
 startFrom, upTo = blib.parse_start_end(params.start, params.end)
 
-if (not params.references and not params.category and not params.pages and
+if (not params.references and not params.categories and not params.pages and
     not params.pagefile and not params.stdin):
-  raise ValueError("--references, --category, --pages, --pagefile or --stdin must be present")
+  raise ValueError("--refs, --cats, --pages, --pagefile or --stdin must be present")
 
 references = params.references and params.references.decode("utf-8")
-category = params.category and params.category.decode("utf-8")
+categories = params.categories and params.categories.decode("utf-8")
 regex = params.regex.decode("utf-8")
 pages = params.pages and re.split(",", params.pages.decode("utf-8"))
 filter_pages = params.filter_pages and params.filter_pages.decode("utf-8")
 lang_only = params.lang_only and params.lang_only.decode("utf-8")
 
-search_pages(regex, references, category, pages, params.pagefile,
+search_pages(regex, references, categories, pages, params.pagefile,
     params.stdin, filter_pages, params.verbose, params.text, params.all,
     startFrom, upTo, params.include_non_mainspace, lang_only)
