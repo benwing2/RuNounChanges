@@ -718,13 +718,18 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
     def do_process_page(page, index, parsed=None):
       if stdin:
         pagetitle = unicode(page.title())
-        text = safe_page_text(page)
+        def pagemsg(txt):
+          msg("Page %s %s: %s" % (index, pagetitle, txt))
+        text = safe_page_text(page, pagemsg)
         if only_lang and "==%s==" % only_lang not in text:
           return None, None
         return process(index, pagetitle, text)
       else:
         if only_lang:
-          text = safe_page_text(page)
+          pagetitle = unicode(page.title())
+          def pagemsg(txt):
+            msg("Page %s %s: %s" % (index, pagetitle, txt))
+          text = safe_page_text(page, pagemsg)
           if "==%s==" % only_lang not in text:
             return None, None
         if edit:
@@ -738,7 +743,11 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
       do_process_page(page, i)
 
   if stdin and args.stdin:
-    parse_dump(sys.stdin, process)
+    def do_process_text_on_page(index, pagetitle, text):
+      if only_lang and "==%s==" % only_lang not in text:
+        return None, None
+      return process(index, pagetitle, text)
+    parse_dump(sys.stdin, do_process_text_on_page)
 
   elif args.pagefile:
     pages = [x.rstrip('\n') for x in codecs.open(args.pagefile, "r", "utf-8")]
