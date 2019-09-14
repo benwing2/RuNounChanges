@@ -112,9 +112,12 @@ def do_assert(cond, msg=None):
   return True
 
 # Retrieve a chain of parameters from template T, where the first parameter
-# is named FIRST and the remainder are named PREF2, PREF3, etc. FIRST can be
-# a list of parameters to try in turn.
-# If FIRSTDEFAULT is given, use if FIRST is missing or empty.
+# is named FIRST, and the remainder are named PREF2, PREF3, etc. FIRST can be
+# a list of parameters to try in turn. If FIRSTDEFAULT is given, use if FIRST
+# is missing or empty. This also checks for PREF if not the same as FIRST or
+# (if FIRST is a list) any element of FIRST, and PREF1, because the
+# parameter-handling code checks for both. Finally, it allows gaps in the
+# numbered parameters, because the parameter-handling code allows them.
 def fetch_param_chain(t, first, pref, firstdefault=""):
   ret = []
   if type(first) is not list:
@@ -123,15 +126,19 @@ def fetch_param_chain(t, first, pref, firstdefault=""):
   for f in first:
     val = getparam(t, f)
     if val:
+      ret.append(val)
       break
   else:
     # no break
-    val = firstdefault
-  i = 2
-  while val:
-    ret.append(val)
+    ret.append(firstdefault)
+  if pref != first and (type(first) is not list or pref not in first):
+    val = getparam(t, pref)
+    if val:
+      ret.append(val)
+  for i in xrange(1, 30):
     val = getparam(t, pref + str(i))
-    i += 1
+    if val:
+      ret.append(val)
   return ret
 
 def append_param_to_chain(t, val, firstparam, parampref, before=None):
@@ -221,7 +228,12 @@ def do_edit(page, index, func=None, null=False, save=False, verbose=False, diff=
       if func:
         if verbose:
           pagemsg("Begin processing")
-        new, comment = func(page, index, parse(page))
+        retval = func(page, index, parse(page))
+        if retval is None:
+          new = None
+          comment = None
+        else:
+          new, comment = retval
 
         if type(comment) is list:
           comment = "; ".join(group_notes(comment))
