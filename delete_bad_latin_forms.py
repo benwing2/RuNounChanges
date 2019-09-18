@@ -136,7 +136,7 @@ def delete_participle(index, lemma, formind, formval, pos, preserve_diaeresis, s
 
   def do_delete_participle_1(page, index, parsed):
     return delete_participle_1(page, index, lemma, formind, formval, pos,
-        tag_sets_to_delete, preserve_diaeresis):
+        preserve_diaeresis, save, verbose, diff)
   blib.do_edit(page, index, do_delete_participle_1, save=save, verbose=verbose,
       diff=diff)
 
@@ -445,7 +445,7 @@ def delete_form(index, lemma, formind, formval, pos, tag_sets_to_delete,
 
   def do_delete_form_1(page, index, parsed):
     return delete_form_1(page, index, lemma, formind, formval, pos,
-        tag_sets_to_delete, preserve_diaeresis):
+        tag_sets_to_delete, preserve_diaeresis)
   blib.do_edit(page, index, do_delete_form_1, save=save, verbose=verbose,
       diff=diff)
 
