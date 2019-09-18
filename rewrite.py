@@ -18,7 +18,7 @@ import blib, re, codecs
 import pywikibot
 from arabiclib import reorder_shadda
 
-def rewrite_pages(refrom, reto, refs, page_and_refs, cat, pages, pagefile,
+def rewrite_pages(refrom, reto, refs, pages_and_refs, cats, pages, pagefile,
     pagetitle_sub, comment, filter_pages, lang_only, save, verbose,
     diff, startFrom, upTo):
   def rewrite_one_page(page, index, text):
@@ -56,18 +56,28 @@ def rewrite_pages(refrom, reto, refs, page_and_refs, cat, pages, pagefile,
       text = "".join(sections)
     return text, comment or "replace %s" % (", ".join("%s -> %s" % (f, t) for f, t in zipped_fromto))
 
-  if pages:
-    pages = ((index, pywikibot.Page(blib.site, page)) for index, page in blib.iter_items(pages, startFrom, upTo))
-  elif pagefile:
-    lines = [x.strip() for x in codecs.open(pagefile, "r", "utf-8")]
-    pages = ((index, pywikibot.Page(blib.site, page)) for index, page in blib.iter_items(lines, startFrom, upTo))
-  elif refs:
-    pages = blib.references(refs, startFrom, upTo, only_template_inclusion=False)
-  elif page_and_refs:
-    pages = blib.references(page_and_refs, startFrom, upTo, only_template_inclusion=False, include_page=True)
-  else:
-    pages = blib.cat_articles(cat, startFrom, upTo)
-  for index, page in pages:
+  def yield_pages():
+    if pages:
+      for index, page in blib.iter_items(pages, startFrom, upTo):
+        yield index, pywikibot.Page(blib.site, page)
+    if pagefile:
+      lines = [x.strip() for x in codecs.open(pagefile, "r", "utf-8")]
+      for index, page in blib.iter_items(lines, startFrom, upTo):
+        yield index, pywikibot.Page(blib.site, page)
+    if refs:
+      for ref in refs:
+        for index, page in blib.references(ref, startFrom, upTo, only_template_inclusion=False):
+          yield index, page
+    if pages_and_refs:
+      for page_and_refs in pages_and_refs:
+        for index, page in blib.references(page_and_refs, startFrom, upTo, only_template_inclusion=False, include_page=True):
+          yield index, page
+    if cats:
+      for cat in cats:
+        for index, page in blib.cat_articles(cat, startFrom, upTo):
+          yield index, page
+
+  for index, page in yield_pages():
     pagetitle = unicode(page.title())
     if filter_pages and not re.search(filter_pages, pagetitle):
       blib.msg("Skipping %s because doesn't match --filter-pages regex %s" %
@@ -84,28 +94,28 @@ pa.add_argument("-f", "--from", help="From regex, can be specified multiple time
 pa.add_argument("-t", "--to", help="To regex, can be specified multiple times",
     required=True, action="append")
 pa.add_argument("-r", "--references", "--refs",
-    help="Do pages with references to this page")
-pa.add_argument("--page-and-refs", help="Do page and references to this page")
-pa.add_argument("-c", "--category", "--cat",
-    help="Do pages in this category")
+    help="Do pages with references to this pages (comma-separated)")
+pa.add_argument("--pages-and-refs", help="Comma-separated list of pages to do, along with references to those pages")
+pa.add_argument("-c", "--categories", "--cats",
+    help="Do pages in these categories (comma-separated)")
 pa.add_argument("--comment", help="Specify the change comment to use")
-pa.add_argument('--filter-pages', help="Regex to use to filter page names.")
-pa.add_argument('--pages', help="List of pages to fix, comma-separated.")
-pa.add_argument('--pagefile', help="File containing pages to fix.")
-pa.add_argument('--pagetitle', help="Value to substitute page title with.")
-pa.add_argument('--lang-only', help="Only replace in the specified language section.")
+pa.add_argument('--filter-pages', help="Regex to use to filter page names")
+pa.add_argument('--pages', help="List of pages to fix (comma-separated)")
+pa.add_argument('--pagefile', help="File containing pages to fix")
+pa.add_argument('--pagetitle', help="Value to substitute page title with")
+pa.add_argument('--lang-only', help="Only replace in the specified language section")
 params = pa.parse_args()
 startFrom, upTo = blib.parse_start_end(params.start, params.end)
 
-if not params.references and not params.page_and_refs and not params.category and not params.pages and not params.pagefile:
-  raise ValueError("--references, --category, --pages, page-and-refs or --pagefile must be present")
+if not params.references and not params.pages_and_refs and not params.categories and not params.pages and not params.pagefile:
+  raise ValueError("--references, --categories, --pages, pages-and-refs or --pagefile must be present")
 
-references = params.references and params.references.decode("utf-8")
-page_and_refs = params.page_and_refs and params.page_and_refs.decode("utf-8")
-category = params.category and params.category.decode("utf-8")
+references = params.references and params.references.decode("utf-8").split(",") or []
+pages_and_refs = params.pages_and_refs and params.pages_and_refs.decode("utf-8").split(",") or []
+categories = params.categories and params.categories.decode("utf-8").split(",") or []
 from_ = [x.decode("utf-8") for x in params.from_]
 to = [x.decode("utf-8") for x in params.to]
-pages = params.pages and re.split(",", params.pages.decode("utf-8"))
+pages = params.pages and params.pages.decode("utf-8").split(",") or []
 pagetitle_sub = params.pagetitle and params.pagetitle.decode("utf-8")
 comment = params.comment and params.comment.decode("utf-8")
 filter_pages = params.filter_pages and params.filter_pages.decode("utf-8")
@@ -114,6 +124,6 @@ lang_only = params.lang_only and params.lang_only.decode("utf-8")
 if len(from_) != len(to):
   raise ValueError("Same number of --from and --to arguments must be specified")
 
-rewrite_pages(from_, to, references, page_and_refs, category, pages,
+rewrite_pages(from_, to, references, pages_and_refs, categories, pages,
     params.pagefile, pagetitle_sub, comment, filter_pages, lang_only,
     params.save, params.verbose, params.diff, startFrom, upTo)
