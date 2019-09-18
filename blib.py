@@ -130,7 +130,8 @@ def fetch_param_chain(t, first, pref, firstdefault=""):
       break
   else:
     # no break
-    ret.append(firstdefault)
+    if firstdefault:
+      ret.append(firstdefault)
   if pref != first and (type(first) is not list or pref not in first):
     val = getparam(t, pref)
     if val:
@@ -621,8 +622,10 @@ def group_notes(notes):
 
 starttime = time.time()
 
-def create_argparser(desc, include_pagefile=False, include_stdin=False):
-  msg("Beginning at %s" % time.ctime(starttime))
+def create_argparser(desc, include_pagefile=False, include_stdin=False,
+    no_beginning_line=False):
+  if not no_beginning_line:
+    msg("Beginning at %s" % time.ctime(starttime))
   parser = argparse.ArgumentParser(description=desc)
   parser.add_argument('start', help="Starting page index", nargs="?")
   parser.add_argument('end', help="Ending page index", nargs="?")
@@ -677,12 +680,12 @@ def parse_start_end(startsort, endsort):
 #
 # If stdin=False and edit=True, PROCESS should be defined like this:
 #
-# def process_page(index, pagetitle, parsed):
+# def process_page(page, index, parsed):
 #   ...
 #
 # If stdin=False and edit=False, PROCESS should be defined like this:
 #
-# def process_page(index, pagetitle):
+# def process_page(page, index):
 #   ...
 #
 # FIXME: The PARSED argument is unnecessary and shouldn't be passed in.
@@ -718,7 +721,7 @@ def parse_start_end(startsort, endsort):
 # page titles.
 def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
     default_refs=[], edit=False, stdin=False, only_lang=None,
-    filter_pages=None):
+    filter_pages=None, ref_namespaces=None):
   args_filter_pages = args.filter_pages and args.filter_pages.decode("utf-8")
   def process_page(page, i):
     if filter_pages or args_filter_pages:
@@ -779,7 +782,7 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
       for i, page in cat_articles(cat, start, end):
         process_page(page, i)
     for ref in refs:
-      for i, page in references(ref, start, end):
+      for i, page in references(ref, start, end, namespaces=ref_namespaces):
         process_page(page, i)
   elapsed_time()
 
