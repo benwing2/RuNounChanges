@@ -118,19 +118,10 @@ def process_page(page, index, parsed):
     return None, None
   return unicode(parsed), notes
 
-parser = blib.create_argparser("Fix Latin 3rd-decl plural nouns to specify plural lemma, and check new against old {{la-ndecl}} code")
-parser.add_argument("--pagefile", help="List of pages to process.")
+parser = blib.create_argparser("Fix Latin 3rd-decl plural nouns to specify plural lemma, and check new against old {{la-ndecl}} code",
+  include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-if args.pagefile:
-  pages = [x.rstrip('\n') for x in codecs.open(args.pagefile, "r", "utf-8")]
-  for i, page in blib.iter_items(pages, start, end):
-    blib.do_edit(pywikibot.Page(site, page), i, process_page, save=args.save,
-      verbose=args.verbose, diff=args.diff)
-else:
-  refs = ["Template:la-ndecl", "Template:la-adecl"]
-  for ref in refs:
-    for i, page in blib.references(ref, start, end):
-      blib.do_edit(page, i, process_page, save=args.save, verbose=args.verbose,
-          diff=args.diff)
+blib.do_pagefile_cats_refs(args, start, end, process_page, edit=True,
+  default_refs=["Template:la-ndecl", "Template:la-adecl"])

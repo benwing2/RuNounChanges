@@ -23,7 +23,7 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, site
 
-def process_page(index, page, fix_star, save, verbose):
+def process_page(page, index, fix_star):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -55,31 +55,18 @@ def process_page(index, page, fix_star, save, verbose):
         pagetext, 0, re.M)
     if newtext != pagetext:
       notes.append("add missing * to ru-IPA lines")
-      if verbose:
-        pagemsg("Replacing <%s> with <%s>" % (pagetext, newtext))
-      assert notes
-      comment = "; ".join(notes)
-      if save:
-        pagemsg("Saving with comment = %s" % comment)
-        page.text = newtext
-        page.save(comment=comment)
-      else:
-        pagemsg("Would save with comment = %s" % comment)
+      pagetext = newtext
+    return pagetext, notes
 
-parser = blib.create_argparser(u"Find strange Russian pronun lines")
-parser.add_argument('--pagefile', help="File containing pages to fix.")
+parser = blib.create_argparser(u"Find strange Russian pronun lines",
+  include_pagefile=True)
 parser.add_argument("--fix-star", action="store_true",
   help="Fix pronun lines missing * at beginning")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-if args.pagefile:
-  lines = [x.strip() for x in codecs.open(args.pagefile, "r", "utf-8")]
-  for i, page in blib.iter_items(lines, start, end):
-    process_page(i, pywikibot.Page(site, page), args.fix_star, args.save,
-        args.verbose)
-else:
-  for category in ["Russian lemmas", "Russian non-lemma forms"]:
-    msg("Processing category: %s" % category)
-    for i, page in blib.cat_articles(category, start, end):
-      process_page(i, page, args.fix_star, args.save, args.verbose)
+def do_process_page(page, index, parsed):
+  return process_page(page, index, args.fix_star)
+
+blib.do_pagefile_cats_refs(args, start, end, do_process_page, edit=True,
+  default_cats=["Russian lemmas", "Russian non-lemma forms"])

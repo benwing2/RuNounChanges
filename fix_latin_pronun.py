@@ -93,12 +93,9 @@ def process_page(page, index, parsed):
   sections[j] = secbody + sectail
   return "".join(sections), notes
 
-parser = blib.create_argparser("Replace manual Latin pronun with {{la-IPA}}")
-parser.add_argument("--pagefile", help="List of pages to process.", required=True)
+parser = blib.create_argparser("Replace manual Latin pronun with {{la-IPA}}",
+  include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-pages = [x.rstrip('\n') for x in codecs.open(args.pagefile, "r", "utf-8")]
-for i, page in blib.iter_items(pages, start, end):
-  blib.do_edit(pywikibot.Page(site, page), i, process_page, save=args.save,
-      verbose=args.verbose)
+blib.do_pagefile_cats_refs(args, start, end, process_page, edit=True)

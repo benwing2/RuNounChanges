@@ -50,20 +50,12 @@ def process_page(page, index, parsed):
 
   return unicode(parsed), notes
 
-parser = blib.create_argparser("Add missing .loc to Latin cities")
-parser.add_argument("--pagefile", help="List of pages to process.")
+parser = blib.create_argparser("Add missing .loc to Latin cities",
+  include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-if args.pagefile:
-  pages = [x.rstrip('\n') for x in codecs.open(args.pagefile, "r", "utf-8")]
-  for i, page in blib.iter_items(pages, start, end):
-    blib.do_edit(pywikibot.Page(site, page), i, process_page, save=args.save,
-      verbose=args.verbose, diff=args.diff)
-else:
-  for cat in ["la:Cities", "la:Towns", "la:Capital cities", "la:Cities in France",
+blib.do_pagefile_cats_refs(args, start, end, process_page, edit=True,
+  default_cats=["la:Cities", "la:Towns", "la:Capital cities", "la:Cities in France",
       "la:Cities in Italy", "la:Cities in Spain", "la:Cities in Sweden",
-      "la:Cities in the United Kingdom", "la:Cities in England"]:
-    for i, page in blib.cat_articles(cat, start, end):
-      blib.do_edit(page, i, process_page, save=args.save, verbose=args.verbose,
-        diff=args.diff)
+      "la:Cities in the United Kingdom", "la:Cities in England"])

@@ -122,12 +122,9 @@ From {{m|la|%s}}.
   sections[j] = sectext + sectail
   return "".join(sections), comment
 
-parser = blib.create_argparser("Fix Latin forms wrongly specified as infinitives that should be participles or gerunds")
-parser.add_argument("--pagefile", help="List of pages to process.", required=True)
+parser = blib.create_argparser("Fix Latin forms wrongly specified as infinitives that should be participles or gerunds",
+  include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-pages = [x.rstrip('\n') for x in codecs.open(args.pagefile, "r", "utf-8")]
-for i, page in blib.iter_items(pages, start, end):
-  blib.do_edit(pywikibot.Page(site, page), i, process_page, save=args.save,
-      verbose=args.verbose, diff=args.diff)
+blib.do_pagefile_cats_refs(args, start, end, process_page, edit=True)

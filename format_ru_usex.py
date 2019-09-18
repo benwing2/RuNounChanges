@@ -9,7 +9,7 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, site
 
-def process_page(index, page, save, verbose):
+def process_page(page, index, parsed):
   pagetitle = unicode(page.title())
   subpagetitle = re.sub("^.*:", "", pagetitle)
   def pagemsg(txt):
@@ -142,37 +142,13 @@ def process_page(index, page, save, verbose):
         # Version without ''...''
         sections[j] = re.sub(ur"^(#:[:*]*?)\*? ((?:[^{}\n]|\{\{(?:l|m|lang)\|ru\|.*?\}\})*)(?: |\&nbsp;)(—|-|\&mdash;|≈)(?: |\&nbsp;|≈)([^%s\n]*?)$" % maybe_exclude_braces, single_line_usex_raw, sections[j], 0, re.M)
 
-  new_text = "".join(sections)
+  return "".join(sections), notes
 
-  if new_text != text:
-    if verbose:
-      pagemsg("Replacing <<%s>> with <<%s>>" % (text, new_text))
-    assert notes
-    comment = "; ".join(blib.group_notes(notes))
-    if save:
-      pagemsg("Saving with comment = %s" % comment)
-      page.text = new_text
-      page.save(comment=comment)
-    else:
-      pagemsg("Would save with comment = %s" % comment)
-
-parser = blib.create_argparser(u"Convert manually formatted Russian usage examples to uxi|ru")
-parser.add_argument('--pages', help="Comma-separated list of pages to fix.")
-parser.add_argument('--pagefile', help="File containing pages to fix.")
+parser = blib.create_argparser(u"Convert manually formatted Russian usage examples to uxi|ru",
+  include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-if args.pagefile:
-  lines = [x.strip() for x in codecs.open(args.pagefile, "r", "utf-8")]
-  for i, page in blib.iter_items(lines, start, end):
-    process_page(i, pywikibot.Page(site, page), args.save, args.verbose)
-elif args.pages:
-  pages_to_process = re.split(",", args.pages.decode("utf-8"))
-  for i, page in blib.iter_items(pages_to_process, start, end):
-    process_page(i, pywikibot.Page(site, page), args.save, args.verbose)
-else:
-  #for cat in ["Russian lemmas", "Russian non-lemma forms"]:
-  for cat in ["Russian lemmas"]:
-    msg("Processing category %s" % cat)
-    for i, page in blib.cat_articles(cat, start, end):
-      process_page(i, page, args.save, args.verbose) 
+blib.do_pagefile_cats_refs(args, start, end, process_page, edit=True,
+  #default_cats=["Russian lemmas", "Russian non-lemma forms"]
+  default_cats=["Russian lemmas"])

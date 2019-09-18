@@ -65,17 +65,10 @@ def process_page(page, index, parsed):
 
   return unicode(parsed), notes
 
-parser = blib.create_argparser("Rewrite 'doublet' to use multiple-term syntax")
-parser.add_argument('--pagefile', help="File containing pages to search.")
+parser = blib.create_argparser("Rewrite 'doublet' to use multiple-term syntax",
+  include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-if args.pagefile:
-  lines = [x.strip() for x in codecs.open(args.pagefile, "r", "utf-8")]
-  for index, page in blib.iter_items(lines, start, end):
-    blib.do_edit(pywikibot.Page(site, page), index, process_page,
-        save=args.save, verbose=args.verbose)
-else:
-  for i, page in blib.references("Template:doublet", start, end):
-    blib.do_edit(page, i, process_page, save=args.save,
-        verbose=args.verbose)
+blib.do_pagefile_cats_refs(args, start, end, process_page, edit=True,
+  default_refs=["Template:doublet"])

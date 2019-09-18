@@ -100,8 +100,8 @@ def process_page(index, page, save, verbose, diff):
             do_correct_nom_sg_n_participle, save=save, verbose=verbose,
             diff=diff)
 
-parser = blib.create_argparser("Fix Latin impersonal passive participles and output deletion lines for non-impersonal variants")
-parser.add_argument("--pagefile", help="List of pages to process.")
+parser = blib.create_argparser("Fix Latin impersonal passive participles and output deletion lines for non-impersonal variants",
+  include_pagefile=True)
 parser.add_argument("--ignore", help="Comma-separated pages to ignore.")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
@@ -109,12 +109,11 @@ start, end = blib.parse_start_end(args.start, args.end)
 ignore_pages = []
 if args.ignore:
   ignore_pages = args.ignore.decode("utf-8").split(",")
-if args.pagefile:
-  pages = [x.rstrip('\n') for x in codecs.open(args.pagefile, "r", "utf-8")]
-  for i, page in blib.iter_items(pages, start, end):
-    blib.do_edit(pywikibot.Page(site, page), i, process_page, save=args.save,
-        verbose=args.verbose, diff=args.diff)
-else:
-  for i, page in blib.cat_articles("Latin verbs with impersonal passive"):
-    if not unicode(page.title()) in ignore_pages:
-      process_page(i, page, args.save, args.verbose, args.diff)
+
+def do_process_page(page, index, parsed):
+  if unicode(page.title()) not in ignore_pages:
+    return process_page(index, page, args.save, args.verbose, args.diff)
+  return None, None
+
+blib.do_pagefile_cats_refs(args, start, end, do_process_page, edit=True,
+  default_cats=["Latin verbs with impersonal passive"])

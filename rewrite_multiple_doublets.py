@@ -77,14 +77,9 @@ def process_page(page, index, parsed):
 
   return text, notes
 
-parser = blib.create_argparser("Combine adjacent doublets")
-parser.add_argument('--pagefile', help="File containing pages to search.")
+parser = blib.create_argparser("Combine adjacent doublets",
+  include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-assert args.pagefile
-
-lines = [x.strip() for x in codecs.open(args.pagefile, "r", "utf-8")]
-for index, page in blib.iter_items(lines, start, end):
-  blib.do_edit(pywikibot.Page(site, page), index, process_page,
-      save=args.save, verbose=args.verbose)
+blib.do_pagefile_cats_refs(args, start, end, process_page, edit=True)

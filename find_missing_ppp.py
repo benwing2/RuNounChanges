@@ -27,7 +27,7 @@ from blib import getparam, rmparam, msg, site
 
 import rulib
 
-def process_page(index, page, save, verbose, fixdirecs):
+def process_page(page, index, fixdirecs):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -81,19 +81,7 @@ def process_page(index, page, save, verbose, fixdirecs):
           elif direc == "intrans":
             pagemsg("WARNING: Transitive verb marked as intrans")
 
-  new_text = unicode(parsed)
-
-  if new_text != text:
-    if verbose:
-      pagemsg("Replacing <%s> with <%s>" % (text, new_text))
-    assert notes
-    comment = "; ".join(notes)
-    if save:
-      pagemsg("Saving with comment = %s" % comment)
-      page.text = new_text
-      page.save(comment=comment)
-    else:
-      pagemsg("Would save with comment = %s" % comment)
+  return unicode(parsed), notes
 
 parser = blib.create_argparser(u"Find verbs with missing past passive participles")
 parser.add_argument('--fix-pagefile', help="File containing pages to fix.")
@@ -109,9 +97,15 @@ if args.fix_pagefile:
     verb, direc = re.split(" ", line)
     fixdirecs[verb] = direc
     fixpages.append(verb)
+  def do_process_page(page, index, parsed):
+    return process_page(page, index, fixdirecs)
   for i, page in blib.iter_items(fixpages, start, end):
-    process_page(i, pywikibot.Page(site, page), args.save, args.verbose, fixdirecs)
+    blib.do_edit(pywikibot.Page(site, page), i, do_process_page, save=args.save,
+        verbose=args.verbose, diff=args.diff)
 else:
+  def do_process_page(page, index, parsed):
+    return process_page(page, index, {})
   for category in ["Russian verbs"]:
     for i, page in blib.cat_articles(category, start, end):
-      process_page(i, page, args.save, args.verbose, {})
+      blib.do_edit(pywikibot.Page(site, page), i, do_process_page, save=args.save,
+          verbose=args.verbose, diff=args.diff)
