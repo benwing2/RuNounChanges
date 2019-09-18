@@ -1,0 +1,93 @@
+a3 immarcēscibilis
+a3 inmarcēscibilis
+v3 capessō capessīv capessīt
+v3 capissō capissīv capissīt
+v2 fidēiubeō fidēiuss fidēiuss
+v2 fidējubeō fidējuss fidējuss
+n3 fidēiussiō
+n3 fidējussiō
+n3 fidēiussor
+n3 fidējussor
+a1 fidēiussōrius
+a1 fidējussōrius
+v3 conjiciō conjēc conject
+v1+ dējūrō
+v1+ expeiūrō
+v1+ expejūrō
+n2 octaedros
+a1 octaëdricus
+a1 forōiūliānus
+a1 forōiūlicus
+a1 eiulābundus
+part1 eiulātus eiulō
+v1+ eiulō
+v1+ vērnō
+a3 vērnālis
+# FIXME, when updating a verb, need to update the etymology of the participles.
+# FIXME, would like to do the same for participles but don't know base verb.
+part3 abligurriēns abligurriō
+part1 abligurrītūrus abligurriō
+part1 abligurriendus abligurriō
+n3 abligurrītor
+part1 admōtus admoveō
+part3 aiēns aiō
+part1 ālūcinātus ālūcinor
+v1+ angariō
+part3 āvolāns āvolō
+part3 coincidēns coincidō
+part1 coincidendus coincidō
+v3 comprōmittō comprōmīs comprōmiss
+v1+ cōnstuprō
+v1+ cōntiōnor
+part3 contrāveniēns contrāveniō
+part1 contrāventus contrāveniō
+v1+ contrīstō
+v1+ convolō
+v1+ convulnerō
+v1+ dehortor
+v1+ dēlibrō
+part1 dēlīnītus dēlīniō
+part1 dēmigrandus dēmigrō
+part3 dīvergēns dīvergeō
+part1 ēlūctandus ēlūctor
+part1 ērūctandus ērūctō
+part1 excūsātūrus excūsō
+part1 execrātus execror
+part1 exhonōrandus exhonōrō
+part1 exsecrātus exsecror
+v3 frendō frendu frēs
+part1 fūrandus fūror
+v1+ ignōrō
+v3 impōnō imposu imposit
+v1+ lāmentō
+part3 latrōcināns latrōcinor
+v1+ māterior
+part3 mēiēns mēiō
+v1+ nōrmō
+v1+ nūncupō
+v1+ nūndinor
+v1+ obdūrō
+v1+ patrō
+v1+ pavīmentō
+v1+ penetrō
+part1 plānctūrus plangō
+part1 potītus potior
+v2 prŏfiteor prŏfess
+v2 pūteō
+part1 recīdendus recīdō
+part1 recāsus recidō
+part1 recāsūrus recidō
+part1 refocilātus refocilō
+part3 reiiciēns reiiciō
+part1 reiiciendus reiiciō
+v3 respergō respers respers
+v1+ rīmō
+part1 sēdātus sēdō
+part1 sēdātūrus sēdō
+v1+ sufflāminō
+part1 suprādictus suprādīcō
+part1 surreptus surripiō
+v1+ trīstor
+part1 ūrīnandus ūrīnō
+virreg vēnumdō
+virreg vēnundō

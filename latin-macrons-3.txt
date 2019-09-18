@@ -1,0 +1,153 @@
+a1 cuius
+v1+ execūtō
+n3 Carthāginēnsis
+pn3 Clītōr Clītor
+a1 abdicātīvus
+a1 abdicātōrius
+a1 sēductōrius
+n3 adsentātor
+n3 cōmēsātor
+pn1 Aequātōria
+pn1 Salvātōria
+a3 aequātōriēnsis
+n3 porōsitās
+adv intrōrsus
+a1 facinerōsus
+a1 facinerōsissimus
+a1 porōsus
+a3 porōsior
+a1 suspiciōsissimus
+#
+# long vowels in īv
+#
+n3 biodīversitās
+n3 captīvātiō
+a3 dēclīvior
+a3 dēclīvis
+v3 dēlinō dēlīv dēlit
+#
+# long vowels before nx
+#
+v3 dēstringō dēstrīnx dēstrict
+v3 distringō distrīnx district
+v3 obstringō obstrīnx obstrict
+v3 perstringō perstrīnx perstrict
+v3 praestringō praestrīnx praestrict
+#
+#
+# long vowels before nct
+#
+a3 adiūnctior
+a1 albipūnctātus
+a1 albipūnctus
+v3 angō anx ānct
+a1 bipūnctātus
+v3 circumpungō circumpūnx circumpūnct
+v3 commingō comminx commīnct
+n3 compūnctiō
+a3 coniūnctior
+a1 coniūnctissimus
+n3 conpūnctiō
+n2 contrāpūnctus
+a3 cūnctātior
+v3 dēpungō dēpūnx dēpūnct
+v4 dēvinciō dēvinx dēvīnct
+a3 distīnctior
+a1 distīnctissimus
+v4 ēvinciō ēvinx ēvīnct
+a1 flāvipūnctātus
+a1 impūnctātus
+adv incūnctanter
+adv indisjūnctim
+n3 interpūnctiō
+a1 Jūnctīnus
+pn2 Jūnctīnus
+n3 mīnctiō
+a1 multipūnctātus
+a1 nigropūnctātus
+a1 oblongopūnctātus
+pn1 Plānctae
+v3 prōpungō prōpūnx prōpūnct
+a1 pūnctātus
+a3 pūncticollis
+a3 pūnctifrōns
+a1 pūnctigerus
+a3 pūnctipennis
+a1 pūnctulātus
+n2 pūnctulum
+v1+ pūnctuō
+a1 quadripūnctātus
+v3 repungō repūnx repūnct
+v4 revinciō revinx revīnct
+# done below v3 trānspungō trānspūnx trānspūnct
+a1 tripūnctātus
+a3 ūnctior
+v4 vinciō vinx vīnct
+n3 vīnctiō
+n3 vīnctor
+n1 vīnctūra
+#
+# long vowels before ns
+#
+v3 accendō accend accēns
+pn3 Acherūns
+v3 adprehendō adprehend adprehēns
+v3 adscendō adscend adscēns
+v4 adsentiō adsēns adsēns
+v4 assentiō assēns assēns
+pn1 Cēnsennia
+v3 commandō command commāns
+v2 commaneō commāns
+v1+ comprehēnsō
+v3 conprehendō conprehend conprehēns
+pn2 Cōnsabrum
+pn1 Cōnsentia
+pn2 Cōnsentius
+pn2 Cōnsidius
+v3 cōnsīdō cōnsēd/cōnsīd cōnsess
+pn2 Cōnsorannī
+v1+ cōnstruprō
+pn1 Cōnsuantae
+v1+ dēfēnsō
+v2 ēmaneō ēmāns ēmāns
+v3 floccipendō floccipend floccipēns
+v2 immaneō immāns
+v2 inmaneō inmāns
+n1 īnsecticīda
+v3 īnstrepō īnstrepu īnstrepit
+pn2 Lichtēnstenum
+v3 oppandō oppand oppāns
+v3 parvipendō parvipend parvipēns
+v1+ pēnsitō
+v2 permaneō permāns permāns
+v3 prehendō prehend prehēns
+n3 prehēnsiō
+v1+ prehēnsō
+v1+ prēnsō
+a1 prōpēnsus
+pn3 Pudēns
+v3 retundō rettud/retud retūs/retūns
+adv sēnsātē
+a1 sēnsātus
+n3 sēnsificātor
+a1 sēnsilocus
+a1 sēnsiloquus
+a3 sēnsuālis
+adv sēnsuāliter
+a1 sēnsūtus
+v3 suboffendō suboffend suboffēns
+v3 superprehendō superprehend superprehēns
+v3 superscandō superscand superscāns
+pn2 Tōnsus
+v3 trānspungō trānspūnx trānspūnct
+v3 trānsscendō trānsscend trānsscēns
+pn2 Widmānstadius
+#
+# long vowels before nf
+#
+n2 cōnfectōrium
+#
+# FIXME: fluxior or flūxior?
+n1 extrāvagantia
+pn1 Flāviobrīga
+pn1 Flāvionāvia
