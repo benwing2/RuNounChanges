@@ -7,40 +7,7 @@ import blib
 from blib import getparam, rmparam, msg, errandmsg, site, tname, pname
 
 def find_latin_section(text, pagemsg):
-  sections = re.split("(^==[^=]*==\n)", text, 0, re.M)
-
-  has_non_latin = False
-
-  latin_j = -1
-  for j in xrange(2, len(sections), 2):
-    if sections[j-1] != "==Latin==\n":
-      has_non_latin = True
-    else:
-      if latin_j >= 0:
-        pagemsg("WARNING: Found two Latin sections, skipping")
-        return None
-      latin_j = j
-  if latin_j < 0:
-    pagemsg("Can't find Latin section, skipping")
-    return None
-  j = latin_j
-
-  # Extract off trailing separator
-  mm = re.match(r"^(.*?\n)(\n*--+\n*)$", sections[j], re.S)
-  if mm:
-    secbody, sectail = mm.group(1), mm.group(2)
-  else:
-    secbody = sections[j]
-    sectail = ""
-
-  # Split off categories at end
-  mm = re.match(r"^(.*?\n)(\n*(\[\[Category:[^\]]+\]\]\n*)*)$",
-      secbody, re.S)
-  if mm:
-    secbody, secbodytail = mm.group(1), mm.group(2)
-    sectail = secbodytail + sectail
-
-  return sections, j, secbody, sectail, has_non_latin
+  return blib.find_modifiable_lang_section(text, "Latin", pagemsg)
 
 la_infl_templates = {
   "la-ndecl",
