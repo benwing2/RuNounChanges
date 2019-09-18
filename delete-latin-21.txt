@@ -1,0 +1,184 @@
+verb iro all {{la-conj|1+|irō}}
+verb secor all {{la-conj|3|secor|secut}}
+verb surrepo nonimperspass {{la-conj|3|surrēpō|surrēps|surrēpt}}
+verb delino perf {{la-conj|3|dēlinō|dēliv|dēlit}}
+verb defugio sup {{la-conj|3|dēfugiō|dēfūg|dēfugit}}
+verb divergeo pass,perf,sup {{la-conj|2+|divergeō}}
+verb renuo sup {{la-conj|3|renuō|renu|renut}}
+verb insanio nonimperspass {{la-conj|4++|īnsāniō}}
+#
+# from find_mismatched_latin_forms.out.2:
+# grep WARNING find_mismatched_latin_forms.out.2| grep 'even allowing' | grep -v 'arunt:' | grep lemma |perl -pe 's/.*lemma (.*)\).*/$1/'|sort|uniq -c | sort -k 1,2nr|less
+#
+verb praecello !1s_pres_pasv_indc {{la-conj|1+|praecellō}}
+verb mico pass {{la-conj|1|micō|micu}}
+verb odio !1s_pres_pasv_indc {{la-conj|1+|odiō}}
+verb exilio pass {{la-conj|4|exiliō|exilu}}
+verb exsilio pass {{la-conj|4|exsiliō|exsilu}}
+verb diffringo !1s_pres_pasv_indc {{la-conj|1|diffringō}}
+verb incarno !1s_pres_pasv_indc {{la-conj|3|incarnō}}
+verb assum !1p_pres_actv_indc+3p_pres_actv_indc+pres_actv_subj+3p_futr_actv_impr {{la-conj|irreg|assum|as|as}}
+verb accubo perf,pass {{la-conj|1+|accubō}}
+verb exto perf {{la-conj|1+|extō}}
+verb venumdo perf {{la-conj|1|venumdō|venumdāv}}
+verb venundo perf {{la-conj|1|venundō|venundāv}}
+# intono perf intonāvī occurs (rarely) Classically
+verb perseco perf {{la-conj|1|persecō|persecāv}}
+verb plico perf {{la-conj|1|plicō|plicāv}}
+# insilio passive forms appear to occur as verb can be transitive
+verb incido pass {{la-conj|3|incidō|incid}}
+verb volo nonimperspass {{la-conj|1+|volō}}
+verb concumbo nonimperspass {{la-conj|3|concumbō|concubu|concubit}}
+verb obvenio 12pass {{la-conj|4|obveniō|obvēn|obvent}}
+verb disto pass {{la-conj|1|distō|distit}}
+# sitio passive forms appear to occur as verb can be transitive
+# timeo passive forms appear to occur as verb can be transitive
+verb frondeo pass {{la-conj|2|frondeō|frondu}}
+# plecto (plēctō) passive forms appear to occur as verb can be transitive
+verb tintino pass,perf {{la-conj|1|tintinō|tintināv}}
+verb avfugio all {{la-conj|3|avfugiō|avfūg}}
+verb clango 12pass,perf {{la-conj|3|clangō|clangu}}
+verb convergo 12pass {{la-conj|3|convergō}}
+verb disconvenio pass {{la-conj|4|disconveniō}}
+verb dissideo nonimperspass {{la-conj|2|dissideō|dissēd}}
+verb decumbo nonimperspass {{la-conj|3|dēcumbō|dēcubu}}
+# flagro occasional passive use Classically poetically
+# ingemo passive forms appear to occur as verb can be transitive
+verb pervenio nonimperspass {{la-conj|4|perveniō|pervēn|pervent}}
+verb prurio pass {{la-conj|4|prūriō|prūrīv}}
+verb redormio pass,perf {{la-conj|4|redormiō|redormīv}}
+verb sileo 12pass {{la-conj|2|sileō|silu}}
+verb enascor allbutlemma {{la-conj|1|ēnascor}}
+verb aufugio nonimperspass {{la-conj|3|aufugiō|aufūg}}
+verb cado nonimperspass {{la-conj|3|cadō|cecid|cās}}
+verb ningo nonimperspass {{la-conj|3|ningō|ninx}}
+verb revenio nonimperspass {{la-conj|4|reveniō|revēn|revent}}
+verb sterto nonimperspass {{la-conj|3|stertō|stertu}}
+verb subvenio nonimperspass {{la-conj|4|subveniō|subvēn|subvent}}
+verb traluceo perf,sup {{la-conj|2|trālūceō|trālūx|trālūc}}
+verb transluceo perf,sup {{la-conj|2|trānslūceō|trānslūx|trānslūc}}
+verb transpicio perf,sup {{la-conj|3|trānspiciō|trānspix|trānspict}}
+verb spicio perf,sup {{la-conj|3|spiciō|spix|spict}}
+verb evenio nonimperspass {{la-conj|4|ēveniō|ēvēn|ēvent}}
+verb assurgo perf {{la-conj|3|assurgō|assurēx|assurrēct}}
+verb barbio perf,sup {{la-conj|4+|barbiō}}
+# FIXME: diffugio nonimperspass {{la-conj|3|diffugiō}} FIXME: currently nopass
+verb intelligo perf,sup {{la-conj|3|intelligō|intellix|intellict}}
+# FIXME: verb perfugio nonimperspass {{la-conj|3|perfugiō}} FIXME: currently nopass
+# FIXME: verb profugio nonimperspass {{la-conj|3|prōfugiō}} FIXME: currently nopass
+# FIXME: verb refugio nonimperspass {{la-conj|3|refugiō}} FIXME: currently nopass
+# FIXME: verb faveo perf,sup {{la-conj|2|faveō|favu|favit}} FIXME: should be pass-impers?
+# FIXME: following used transitively in ML to "play (a psalm)"
+verb psallo 12pass {{la-conj|3|psallō|psall}}
+# FIXME: verb absum perf,sup {{la-conj|irreg|absum}} FIXME: note that regularized perf abfuit occurs Medievally; need to fix la-verb not to always have ā for f-prefix with absum
+verb adsurgo perf {{la-conj|3|adsurgō|adsurex}}
+verb commurmuro perf {{la-conj|1|commurmurō|commumurāv}}
+# FIXME: contignō add perf contignāv but note that it's Medieval
+verb conjicio perf {{la-conj|3|cōnjiciō|cōnjiēc}}
+verb discerpo perf {{la-conj|3|discerpō|discerpt}}
+# FIXME: dējerō perf parts dējurāvī etc. switch lemma to dējurō
+# FIXME: explicō add explicuī explicitum to 3rd/4th principal parts
+verb incendo perf {{la-conj|3|incendō|incēns}}
+verb intendo perf {{la-conj|3|intendō|intetend}}
+verb lacio perf {{la-conj|3|laciō|lēx}}
+# FIXME: pungō pepugī etc. is valid archaic form; fix this
+# FIXME: saeviō ask about always-sync-perf and forms like future perfect saevīrō (instead of saevierō); Gaffiot and LS say "saeviī"
+verb insero perf {{la-conj|3|īnserō|īnserv}}
+verb murmuro perf {{la-conj|1|murmurō|mumurāv}}
+# FIXME: fix note and attention in ==Conjugation== section of reticeo
+verb reticeo 12pass {{la-conj|2|reticeō|reticu}}
+verb summurmuro perf {{la-conj|1|summurmurō|summumurāv}}
+verb areo pass {{la-conj|2|āreō|āru}}
+part accusans allbutlemma {{la-adecl|accusans/accusans<3-P+>}}
+# FIXME: adiuvō do adiuvāvī/adiuvātum occur rarely classically? if so add note about rare classically, more commonly Medievally, else delete
+adj caelebs allbutlemma {{la-adecl|caelebs/caeleb}}
+verb coīciō perf {{la-conj|3|coīciō|coīc}}
+adj fontinalis allbutlemma {{la-adecl|fontinālis/fontinālis}}
+part perciens allbutlemma {{la-adecl|perciens/perciens<3-P+>}}
+part praeteriens allbutlemma {{la-adecl|praeteriēns<3-P+>}}
+adj spadix allbutlemma {{la-adecl|spādīx/spadicis}}
+adj citer allbutlemma {{la-adecl|citer}}
+verb adicio perf {{la-conj|3|adiciō|adiēcīv}}
+verb asto perf,nonimperspass {{la-conj|1|astō|astāv}}
+verb iuvo perf {{la-conj|1|iuvō|iuvāv}}
+# FIXME: meminī switch perf -> pres, futr|perf -> futr, plup -> impf and correct memini -> meminī
+# FIXME: verb persono perf,sup {{la-conj|1+|personō}} FIXME: switch sup to personitum, note personātum Medievally
+verb seco perf {{la-conj|1+|secō}}
+part trānsiēns allbutlemma {{la-adecl|trānsiēns<3-P+>}}
+verb obsto perf,nonimperspass {{la-conj|1|obstō|obstāv}}
+verb pareo nonimperspass {{la-conj|2|pāreō|pāru|pārit}}
+verb sono perf {{la-conj|1+|sonō}}
+verb vindemio 12pass {{la-conj|1+|vindēmiō}}
+# FIXME: verb adfrico perf,sup {{la-conj|1+|adfricō}} FIXME: switch adfricātum to adfrictum, verify that adfricātum not in L+S
+# FIXME: adjuvō do adjuvāvī/adjuvātum occur rarely classically? if so add note about rare classically, more commonly Medievally, else delete
+verb adsto perf {{la-conj|1+|adstō}}
+# FIXME: verb affrico perf,sup {{la-conj|1+|affricō}} FIXME: switch affricātum to affrictum, verify that affricātum not in L+S
+# FIXME: verb aperto perf,sup {{la-conj|1+|apertō}} FIXME: perf/sup not defined Classically, should we note them Medievally?
+verb assulto 12pass {{la-conj|1+|assultō}}
+# FIXME: verb circumsono perf,sup {{la-conj|1+|circumsonō}} FIXME: switch sup to circumsonitum, note circumsonātum Medievally
+verb consto perf {{la-conj|1+|cōnstō}}
+verb domo perf {{la-conj|1+|domō}}
+verb juvo perf {{la-conj|1|juvō|juvāv}}
+# verb lavō perf {{la-conj|1+|lavō}} FIXME: Gaffiot has two verbs 1|lavō and 3|lavō; reflect this
+verb persto perf {{la-conj|1+|perstō}}
+verb redundo 12pass {{la-conj|1+|redundō}}
+verb resto perf {{la-conj|1+|restō}}
+verb veto perf,sup {{la-conj|1+|vetō}}
+verb abjicio perf {{la-conj|3|abjiciō|abjiēc}}
+verb adtono perf {{la-conj|1+|adtonō}}
+verb adsilio 12pass {{la-conj|4|assiliō}}
+verb attono perf {{la-conj|1+|attonō}}
+verb auxilio perf {{la-conj|1+|auxiliō}}
+verb circito perf {{la-conj|1+|circitō}}
+verb circumdo perf {{la-conj|1+|circumdō}}
+verb circumseco perf {{la-conj|1+|circumsecō}}
+verb circumsto perf {{la-conj|1+|circumstō}}
+verb circundo perf {{la-conj|1+|circundō}}
+verb concrepo perf {{la-conj|1+|concrepō}}
+verb conseco perf {{la-conj|1+|cōnsecō}}
+verb consimilo perf {{la-conj|1+|cōnsimilō}}
+verb disseco perf {{la-conj|1+|dissecō}}
+verb deseco perf {{la-conj|1+|dēsecō}}
+verb despecto perf {{la-conj|1+|dēspectō}}
+verb detono perf {{la-conj|1+|dētonō}}
+verb excubo perf {{la-conj|1+|excubō}}
+verb exseco perf {{la-conj|1+|exsecō}}
+# FIXME: add confricātum to confricō
+# FIXME: add dēfricuī dēfrictum/dēfricātum to dēfricō
+verb frico perf {{la-conj|1+|fricō}}
+verb impedico perf {{la-conj|1+|impedicō}}
+verb occubo perf {{la-conj|1+|occubō}}
+verb perdomo perf {{la-conj|1+|perdomō}}
+# FIXME: verb perfrico perf {{la-conj|1+|perfricō}} FIXME: Gaffiot says perfricātum/perfrictum; update accordingly; Gaffiot also says perfricāvī but that appears to be a mistake; check Gaffiot 1934
+verb proseco perf {{la-conj|1+|prōsecō}}
+verb prosto perf {{la-conj|1+|prōstō}}
+# FIXME: verb refrico perf,supnofap {{la-conj|1+|refricō}} FIXME: Gaffiot says refricātūrūs only; if L+S agree, update, otherwise remove supnofap preceding
+verb reseco perf {{la-conj|1+|resecō}}
+# FIXME: sēmustulō; perf parts sēmiustulāvī etc. switch lemma to sēmiustulō
+verb tono perf {{la-conj|1+|tonō}}
+# FIXME: ēmicō ēmicāvī occurs (rarely) Classically; add and note
+verb eneco perf {{la-conj|1+|ēnecō}}
+verb inseco perf {{la-conj|1+|īnsecō}}
+verb respondeo 12pass {{la-conj|2|respondeō}}
+part accusans allbutlemma {{la-adecl|accusans/accusans<3-P+>}}
+part addens allbutlemma {{la-adecl|addēns/addēns<3-P+>}}
+verb diluo 12pass {{la-conj|3|dīluō}}
+verb tribuo 12pass {{la-conj|3|tribuō}}
+part munificens allbutlemma {{la-adecl|mūnificens/mūnific<3-P+>}}
+# FIXME: verb supersapio perf,pass {{la-conj|3|supersapiō|supersapīv}} check if supersapīvī exists in L+S; if not, remove from page; if so, remove perf preceding
+# FIXME: verb proficio nonimperspass {{la-conj|3|prōficiō|prōfēc|prōfect}} FIXME: change nopass to pass-impers
+# FIXME: verb sapio 12pass {{la-conj|3|sapiō}} # FIXME: change to pass-3only, note transitive; change perf to sapi/sapu/sapīv, note rare sapīvī
+# FIXME: suffugiō occurs transitively, change entry
+# FIXME: verb transfugio nonimperspass {{la-conj|3|trānsfugiō}} # FIXME: change to pass-impers
+# FIXME: fugiō occurs transitively, change entry
+# FIXME: praesaepiō occurs transitively, change entry; also check praesēpiō
+# FIXME: exstō occurs transitively poetically
+# FIXME: vacēfiō
+# FIXME: cōnfirmō
+# FIXME: adferō
+# FIXME: cōnfiō
+# FIXME: dēfiō
+# FIXME: obsolefiō
+noun pycnitis allbutlemma {{la-ndecl|pycnītis/pycnīd<3>}}
+noun paneros allbutlemma {{la-ndecl|paneros<2>}}
+noun thraex allbutlemma {{la-ndecl|thraex/thraic<3>}}
