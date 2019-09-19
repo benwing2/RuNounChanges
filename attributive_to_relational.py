@@ -16,10 +16,9 @@
 
 import pywikibot, re, sys, codecs, argparse, time
 import blib
-from blib import site, msg, errmsg, group_notes, iter_items
-import rulib
+from blib import site, msg, errmsg
 
-def process_page(index, page, save, verbose):
+def process_page(page, index, parsed):
   pagetitle = page.title()
 
   def pagemsg(txt):
@@ -34,7 +33,6 @@ def process_page(index, page, save, verbose):
     pagemsg("Page doesn't exist, can't add etymology")
     return
 
-  notes = []
   pagetext = unicode(page.text)
 
   def attributive_to_relational(m):
@@ -60,35 +58,12 @@ def process_page(index, page, save, verbose):
     errpagemsg("Can't find Russian section")
     return
 
-  newtext = pagehead + ''.join(sections)
-
-  if newtext != pagetext:
-    notes.append("attributive -> relational")
-    if verbose:
-      pagemsg("Replacing <%s> with <%s>" % (pagetext, newtext))
-    assert notes
-    comment = "; ".join(group_notes(notes))
-    if save:
-      pagemsg("Saving with comment = %s" % comment)
-      page.text = newtext
-      page.save(comment=comment)
-    else:
-      pagemsg("Would save with comment = %s" % comment)
+  return pagehead + ''.join(sections), "attributive -> relational"
 
 if __name__ == "__main__":
-  parser = blib.create_argparser("Convert attributive labels to relational")
-  parser.add_argument('--lemmafile', help="File containing pages to do.")
-  parser.add_argument('--cats', help="Categories to do, comma-separated.")
+  parser = blib.create_argparser("Convert attributive labels to relational",
+    include_pagefile=True)
   args = parser.parse_args()
   start, end = blib.parse_start_end(args.start, args.end)
 
-  if args.lemmafile:
-    lines = codecs.open(args.lemmafile, "r", "utf-8")
-    for i, term in iter_items(lines, start, end):
-      term = term.strip()
-      process_page(i, pywikibot.Page(site, term), args.save, args.verbose)
-  else:
-    for cat in re.split(",", args.cats):
-      msg("Processing category: %s" % cat)
-      for i, page in blib.cat_articles(cat, start, end):
-        process_page(i, page, args.save, args.verbose)
+  blib.do_pagefile_cats_refs(args, start, end, process_page, edit=True)

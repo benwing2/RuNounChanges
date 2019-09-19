@@ -82,7 +82,7 @@ def look_up_tonal_form(pagename, pagemsg, verbose):
           tonal_forms.append(getparam(t, param))
   return tonal_forms
 
-def process_page(index, page, save, verbose):
+def process_page(page, index, parsed):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -200,23 +200,12 @@ def process_page(index, page, save, verbose):
     else:
       repeat = False
 
-  new_text = unicode(parsed).replace("{{l-REPLACEME|", "{{l|")
+  return unicode(parsed).replace("{{l-REPLACEME|", "{{l|"), notes
 
-  if new_text != text:
-    if verbose:
-      pagemsg("Replacing <%s> with <%s>" % (text, new_text))
-    assert notes
-    comment = "; ".join(notes)
-    if save:
-      pagemsg("Saving with comment = %s" % comment)
-      page.text = new_text
-      page.save(comment=comment)
-    else:
-      pagemsg("Would save with comment = %s" % comment)
-
-parser = blib.create_argparser(u"Convert Slovene links in Proto-Slavic pages to tonal form")
+parser = blib.create_argparser(u"Convert Slovene links in Proto-Slavic pages to tonal form",
+  include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-for i, page in blib.cat_articles("Proto-Slavic lemmas", start, end):
-  process_page(i, page, args.save, args.verbose)
+blib.do_pagefile_cats_refs(args, start, end, process_page, edit=True,
+  default_cats=["Proto-Slavic lemmas"])

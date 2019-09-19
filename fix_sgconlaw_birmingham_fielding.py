@@ -24,12 +24,9 @@
 # where the volume is based on the book.
 
 import pywikibot, re, sys, codecs, argparse
-import mwparserfromhell as mw
 
 import blib
 from blib import getparam, rmparam, set_template_name, msg, errmsg, site
-
-import rulib
 
 replace_templates = [
   "RQ:Brmnghm Gsmr", "RQ:Fielding Tom Jones"
@@ -56,7 +53,7 @@ fielding_book_to_volume = {
   "XVIII": "VI",
 }
 
-def process_page(index, page, save, verbose):
+def process_page(page, index, parsed):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -95,26 +92,16 @@ def process_page(index, page, save, verbose):
     notes.append("reformat {{RQ:Fielding Tom Jones}}")
     curtext = newtext
 
-  if text != newtext:
-    if verbose:
-      pagemsg("Replacing <%s> with <%s>" % (text, newtext))
-    assert notes
-    comment = "; ".join(blib.group_notes(notes))
-    if save:
-      pagemsg("Saving with comment = %s" % comment)
-      page.text = newtext
-      page.save(comment=comment)
-    else:
-      pagemsg("Would save with comment = %s" % comment)
+  return curtext, notes
 
 if __name__ == "__main__":
-  parser = blib.create_argparser("Reformat {{RQ:Brmnghm Gsmr}} and {{RQ:Fielding Tom Jones}}")
+  parser = blib.create_argparser("Reformat {{RQ:Brmnghm Gsmr}} and {{RQ:Fielding Tom Jones}}",
+    include_pagefile=True)
   args = parser.parse_args()
   start, end = blib.parse_start_end(args.start, args.end)
 
-  for template in replace_templates:
-    msg("Processing references to Template:%s" % template)
-    errmsg("Processing references to Template:%s" % template)
-    for i, page in blib.references("Template:%s" % template, start, end,
-        includelinks=True):
-      process_page(i, page, args.save, args.verbose)
+  blib.do_pagefile_cats_refs(args, start, end, process_page, edit=True,
+    default_refs=["Template:%s" % template for template in replace_templates],
+    # FIXME: formerly had includelinks=True on call to blib.references();
+    # doesn't exist any more
+  )

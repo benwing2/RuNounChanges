@@ -4,14 +4,11 @@
 # Replace title= with work= in cite-web, if work= doesn't already exist.
 
 import pywikibot, re, sys, codecs, argparse
-import mwparserfromhell as mw
 
 import blib
 from blib import getparam, rmparam, set_template_name, msg, errmsg, site
 
-import rulib
-
-def process_page(index, page, save, verbose):
+def process_page(page, index, parsed):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -53,27 +50,16 @@ def process_page(index, page, save, verbose):
         notes.append("trans-title -> trans-work in {{%s}}" % tname.strip())
       if changed:
         pagemsg(("Replacing %s with %s" % (origt, unicode(t))).replace("\n", r"\n"))
-  newtext = unicode(parsed)
-  if text != newtext:
-    if verbose:
-      pagemsg("Replacing <%s> with <%s>" % (text, newtext))
-    assert notes
-    comment = "; ".join(blib.group_notes(notes))
-    if save:
-      pagemsg("Saving with comment = %s" % comment)
-      page.text = newtext
-      page.save(comment=comment)
-    else:
-      pagemsg("Would save with comment = %s" % comment)
+  return unicode(parsed), notes
 
 if __name__ == "__main__":
-  parser = blib.create_argparser("Fix title and entry in a couple reference templates")
+  parser = blib.create_argparser("Fix title and entry in a couple reference templates",
+    include_pagefile=True)
   args = parser.parse_args()
   start, end = blib.parse_start_end(args.start, args.end)
 
-  for template in ["cite-web"]:
-    msg("Processing references to Template:%s" % template)
-    errmsg("Processing references to Template:%s" % template)
-    for i, page in blib.references("Template:%s" % template, start, end,
-        includelinks=True):
-      process_page(i, page, args.save, args.verbose)
+  blib.do_pagefile_cats_refs(args, start, end, process_page, edit=True,
+    default_refs=["Template:cite-web"],
+    # FIXME: formerly had includelinks=True on call to blib.references();
+    # doesn't exist any more
+  )
