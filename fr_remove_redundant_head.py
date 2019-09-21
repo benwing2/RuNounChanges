@@ -44,7 +44,7 @@ def link_text(text):
     for i, word in enumerate(words)]
   return "".join(linked_words)
 
-def process_page(index, page, save, verbose):
+def process_page(page, index, parsed):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -98,23 +98,13 @@ def process_page(index, page, save, verbose):
     if origt != newt:
       pagemsg("Replacing %s with %s" % (origt, newt))
 
-  newtext = unicode(parsed)
-  if newtext != text:
-    assert notes
-    comment = "; ".join(notes)
-    if save:
-      pagemsg("Saving with comment = %s" % comment)
-      page.text = newtext
-      page.save(comment=comment)
-    else:
-      pagemsg("Would save with comment = %s" % comment)
+  return unicode(parsed), notes
 
-parser = blib.create_argparser("Remove redundant head= from French terms")
+parser = blib.create_argparser("Remove redundant head= from French terms",
+  include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-#for cat in ["French lemmas", "French non-lemma forms"]:
-for cat in ["French lemmas"]:
-  msg("Processing category: %s" % cat)
-  for i, page in blib.cat_articles(cat, start, end):
-    process_page(i, page, args.save, args.verbose)
+blib.do_pagefile_cats_refs(args, start, end, process_page, edit=True,
+  default_cats=["French lemmas"],
+  #default_cats=["French lemmas", "French non-lemma forms"],)

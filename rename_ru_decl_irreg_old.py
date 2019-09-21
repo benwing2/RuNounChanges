@@ -16,7 +16,7 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, tname, msg, site
 
-def process_page(index, page, save, verbose):
+def process_page(page, index, parsed):
   pagetitle = unicode(page.title())
   subpagetitle = re.sub("^.*:", "", pagetitle)
   def pagemsg(txt):
@@ -76,26 +76,14 @@ def process_page(index, page, save, verbose):
         else:
           t.add(newarg, newval + has_newline)
 
-  newtext = unicode(parsed)
+  return unicode(parsed), notes
 
-  if newtext != text:
-    if verbose:
-      pagemsg("Replacing <%s> with <%s>" % (text, newtext))
-    assert notes
-    comment = "; ".join(blib.group_notes(notes))
-    if save:
-      pagemsg("Saving with comment = %s" % comment)
-      page.text = newtext
-      page.save(comment=comment)
-    else:
-      pagemsg("Would save with comment = %s" % comment)
-
-parser = blib.create_argparser(u"Rename declension templates for irregular and old (pre-reform) nouns")
+parser = blib.create_argparser("Rename declension templates for irregular and old (pre-reform) nouns",
+  include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-for template in ["ru-adj-table", "ru-decl-noun", "ru-decl-noun-unc",
-  "ru-decl-noun-pl", "ru-noun-old", "ru-adj-old"]:
-  msg("Processing references to Template:%s" % template)
-  for i, page in blib.references("Template:%s" % template, start, end):
-    process_page(i, page, args.save, args.verbose)
+blib.do_pagefile_cats_refs(args, start, end, process_page, edit=True,
+  default_refs=["Template:%s" % template for template in
+    ["ru-adj-table", "ru-decl-noun", "ru-decl-noun-unc",
+     "ru-decl-noun-pl", "ru-noun-old", "ru-adj-old"])

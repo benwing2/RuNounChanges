@@ -9,7 +9,7 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, site
 
-def process_page(index, page, save, verbose):
+def process_page(page, index, parsed):
   pagetitle = unicode(page.title())
   subpagetitle = re.sub("^.*:", "", pagetitle)
   def pagemsg(txt):
@@ -261,25 +261,12 @@ def process_page(index, page, save, verbose):
           sections[j], 0, re.I)
       sections[j] = newsec
 
-  new_text = "".join(sections)
+  return "".join(sections), notes
 
-  if new_text != text:
-    if verbose:
-      pagemsg("Replacing <%s> with <%s>" % (text, new_text))
-    assert notes
-    comment = "; ".join(blib.group_notes(notes))
-    if save:
-      pagemsg("Saving with comment = %s" % comment)
-      page.text = new_text
-      page.save(comment=comment)
-    else:
-      pagemsg("Would save with comment = %s" % comment)
-
-parser = blib.create_argparser(u"Convert raw verb forms to use 'inflection of'")
+parser = blib.create_argparser("Convert raw verb forms to use 'inflection of'",
+  include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-for category in ["Russian verb forms"]:
-  msg("Processing category: %s" % category)
-  for i, page in blib.cat_articles(category, start, end):
-    process_page(i, page, args.save, args.verbose)
+blib.do_pagefile_cats_refs(args, start, end, process_page, edit=True,
+  default_cats=["Russian verb forms"])

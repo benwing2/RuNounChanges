@@ -8,7 +8,7 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, site
 
-def process_page(index, page, save, verbose):
+def process_page(page, index, parsed):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -35,26 +35,16 @@ def process_page(index, page, save, verbose):
         t.add("past_actv_part", "-")
         pagemsg("Replacing %s with %s" % (origt, unicode(t)))
 
-  new_text = unicode(parsed)
-
   if new_text != text:
-    if verbose:
-      pagemsg("Replacing <%s> with <%s>" % (text, new_text))
-    assert notes
-    comment = "; ".join(notes)
-    if save:
-      pagemsg("Saving with comment = %s" % comment)
-      page.text = new_text
-      page.save(comment=comment)
-    else:
-      pagemsg("Would save with comment = %s" % comment)
+    return new_text, notes
 
   if not notes:
     pagemsg("WARNING: No changes")
 
-parser = blib.create_argparser(u"Fix past_adv_part_short to use dash instead of blank")
+parser = blib.create_argparser("Fix past_adv_part_short to use dash instead of blank",
+  include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-for i, page in blib.references("Template:tracking/ru-verb/different-conj", start, end):
-  process_page(i, page, args.save, args.verbose)
+blib.do_pagefile_cats_refs(args, start, end, process_page, edit=True,
+  default_refs=["Template:tracking/ru-verb/different-conj"])

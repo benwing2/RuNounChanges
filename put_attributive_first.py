@@ -14,13 +14,12 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import pywikibot, re, sys, codecs, argparse, time
+import pywikibot, re, sys, argparse
 import blib
-from blib import site, msg, errmsg, group_notes, iter_items
-import rulib
+from blib import site, msg, errmsg
 
-def process_term(index, term, save, verbose):
-  pagetitle = term
+def process_page(page, index, parsed):
+  pagetitle = unicode(page.title())
 
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -28,9 +27,6 @@ def process_term(index, term, save, verbose):
   def errpagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
     errmsg("Page %s %s: %s" % (index, pagetitle, txt))
-
-  # Load page
-  page = pywikibot.Page(site, pagetitle)
 
   if not blib.try_repeatedly(lambda: page.exists(), pagemsg,
       "check page existence"):
@@ -50,24 +46,12 @@ def process_term(index, term, save, verbose):
 
   if newtext != pagetext:
     notes.append("put attributive label first")
-    if verbose:
-      pagemsg("Replacing <%s> with <%s>" % (pagetext, newtext))
-    assert notes
-    comment = "; ".join(group_notes(notes))
-    if save:
-      pagemsg("Saving with comment = %s" % comment)
-      page.text = newtext
-      page.save(comment=comment)
-    else:
-      pagemsg("Would save with comment = %s" % comment)
+  return newtext, notes
 
 if __name__ == "__main__":
-  parser = blib.create_argparser("Put attributive label first")
-  parser.add_argument('--direcfile', help="File containing pages to do.")
+  parser = blib.create_argparser("Put attributive label first",
+    include_pagefile=True)
   args = parser.parse_args()
   start, end = blib.parse_start_end(args.start, args.end)
 
-  lines = codecs.open(args.direcfile, "r", "utf-8")
-  for i, term in iter_items(lines, start, end):
-    term = term.strip()
-    process_term(i, term, args.save, args.verbose)
+  blib.do_pagefile_cats_refs(args, start, end, process_page, edit=True)

@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# Remove gender from adjective forms.
+# Remove gender from Russian adjective forms.
 
 import pywikibot, re, sys, codecs, argparse
 
 import blib
 from blib import getparam, rmparam, msg, site
 
-def process_page(index, page, save, verbose):
+def process_page(page, index, parsed):
   pagetitle = unicode(page.title())
   subpagetitle = re.sub("^.*:", "", pagetitle)
   def pagemsg(txt):
@@ -49,23 +49,12 @@ def process_page(index, page, save, verbose):
       sections[j] = unicode(parsed)
   new_text = "".join(sections)
 
-  if new_text != text:
-    if verbose:
-      pagemsg("Replacing <%s> with <%s>" % (text, new_text))
-    assert notes
-    comment = "; ".join(blib.group_notes(notes))
-    if save:
-      pagemsg("Saving with comment = %s" % comment)
-      page.text = new_text
-      page.save(comment=comment)
-    else:
-      pagemsg("Would save with comment = %s" % comment)
+  return new_text, notes
 
-parser = blib.create_argparser(u"Add 'inflection of' for raw short adjective forms and canonicalize existing 'inflection of'")
+parser = blib.create_argparser("Remove gender from Russian adjective forms",
+  include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-for category in ["Russian adjective forms"]:
-  msg("Processing category: %s" % category)
-  for i, page in blib.cat_articles(category, start, end):
-    process_page(i, page, args.save, args.verbose)
+blib.do_pagefile_cats_refs(args, start, end, process_page, edit=True,
+  default_cats=["Russian adjective forms"])

@@ -22,7 +22,7 @@ import pywikibot
 import blib
 from blib import getparam, rmparam, msg, site
 
-def process_page(index, page, save, verbose):
+def process_page(page, index, parsed):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -152,26 +152,12 @@ def process_page(index, page, save, verbose):
 
       sections[j] = "".join(subsections)
 
-  newtext = "".join(sections)
+  return "".join(sections), notes
 
-  if newtext != text:
-    notes.append("add 'to' to verbal definitions")
-    if verbose:
-      pagemsg("Replacing <%s> with <%s>" % (text, newtext))
-    assert notes
-    comment = "; ".join(blib.group_notes(notes))
-    if save:
-      pagemsg("Saving with comment = %s" % comment)
-      page.text = newtext
-      page.save(comment=comment)
-    else:
-      pagemsg("Would save with comment = %s" % comment)
-
-parser = blib.create_argparser("Add 'to' to Russian verb defns when missing")
+parser = blib.create_argparser("Add 'to' to Russian verb defns when missing",
+  include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-for category in ["Russian verbs"]:
-  msg("Processing category: %s" % category)
-  for i, page in blib.cat_articles(category, start, end):
-    process_page(i, page, args.save, args.verbose)
+blib.do_pagefile_cats_refs(args, start, end, process_page, edit=True,
+  default_cats=["Russian verbs"])

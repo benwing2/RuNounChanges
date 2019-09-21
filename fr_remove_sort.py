@@ -27,7 +27,7 @@ fr_head_templates = ["fr-noun", "fr-proper noun", "fr-proper-noun",
   "fr-past participle", "fr-prefix", "fr-prep", "fr-pron",
   "fr-punctuation mark", "fr-suffix", "fr-verb form", "fr-verb-form"]
 
-def process_page(index, page, save, verbose):
+def process_page(page, index, parsed):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -52,22 +52,12 @@ def process_page(index, page, save, verbose):
       pagemsg("Replacing %s with %s" % (origt, newt))
       notes.append("remove sort= from {{%s}}" % name)
 
-  newtext = unicode(parsed)
-  if newtext != text:
-    assert notes
-    comment = "; ".join(notes)
-    if save:
-      pagemsg("Saving with comment = %s" % comment)
-      page.text = newtext
-      page.save(comment=comment)
-    else:
-      pagemsg("Would save with comment = %s" % comment)
+  return unicode(parsed), notes
 
-parser = blib.create_argparser("Remove sort= from French terms")
+parser = blib.create_argparser("Remove sort= from French terms",
+  include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-for cat in ["French lemmas", "French non-lemma forms"]:
-  msg("Processing category: %s" % cat)
-  for i, page in blib.cat_articles(cat, start, end):
-    process_page(i, page, args.save, args.verbose)
+blib.do_pagefile_cats_refs(args, start, end, process_page, edit=True,
+  default_cats=["French lemmas", "French non-lemma forms"])

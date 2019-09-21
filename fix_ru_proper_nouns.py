@@ -6,7 +6,7 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, site
 
-def process_page(index, page, save, verbose):
+def process_page(page, index, parsed):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -86,24 +86,12 @@ def process_page(index, page, save, verbose):
   newtext = re.sub(r"\[\[Category:ru:Names]]\n", "", newtext)
   newtext = re.sub(r"(\{\{surname\|.*)\.\n", r"\1\n", newtext)
 
-  if newtext != text:
-    if verbose:
-      pagemsg("Replacing <<%s>> with <<%s>>" % (text, newtext))
-    comment = "Convert ru-adj11 to ru-decl-adj and fix up associated templates"
-    if save:
-      pagemsg("Saving with comment = %s" % comment)
-      page.text = newtext
-      page.save(comment=comment)
-    else:
-      pagemsg("Would save with comment = %s" % comment)
-  else:
-    pagemsg("Skipping")
+  return newtext, "Convert ru-adj11 to ru-decl-adj and fix up associated templates"
 
-parser = blib.create_argparser("Fix uses of ru-adj11")
+parser = blib.create_argparser("Fix uses of ru-adj11",
+  include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-for temp in ["ru-adj11"]:
-  msg("Processing references to Template:%s" % temp)
-  for i, page in blib.references("Template:" + temp, start, end):
-    process_page(i, page, args.save, args.verbose)
+blib.do_pagefile_cats_refs(args, start, end, process_page, edit=True,
+  default_refs=["Template:ru-adj11"])

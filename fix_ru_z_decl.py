@@ -8,7 +8,8 @@ from blib import getparam, rmparam, msg, site
 
 import runounlib
 
-def process_page(index, page, save, verbose):
+def process_page(page, index, parsed):
+  global args
   pagetitle = unicode(page.title())
   subpagetitle = re.sub(".*:", "", pagetitle)
   def pagemsg(txt):
@@ -21,7 +22,7 @@ def process_page(index, page, save, verbose):
     return
 
   def expand_text(tempcall):
-    return blib.expand_text(tempcall, pagetitle, pagemsg, verbose)
+    return blib.expand_text(tempcall, pagetitle, pagemsg, args.verbose)
 
   parsed = blib.parse(page)
 
@@ -86,19 +87,12 @@ def process_page(index, page, save, verbose):
   if num_z_decl > 1:
     pagemsg("WARNING: Found multiple z-decl templates (%s)" % num_z_decl)
 
-  newtext = unicode(parsed)
-  if page.text != newtext:
-    comment = "Replace ru-decl-noun-z with ru-noun-table"
-    if save:
-      pagemsg("Saving with comment = %s" % comment)
-      page.text = newtext
-      page.save(comment=comment)
-    else:
-      pagemsg("Would save with comment = %s" % comment)
+  return unicode(parsed), "Replace ru-decl-noun-z with ru-noun-table"
 
-parser = blib.create_argparser("Convert ru-decl-noun-z into ru-noun-table")
+parser = blib.create_argparser("Convert ru-decl-noun-z into ru-noun-table",
+  include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-for index, page in blib.references("Template:ru-decl-noun-z", start, end):
-  process_page(index, page, args.save, args.verbose)
+blib.do_pagefile_cats_refs(args, start, end, process_page, edit=True,
+  default_refs=["Template:ru-decl-noun-z"])

@@ -22,7 +22,8 @@ from blib import site, msg, errmsg, group_notes, iter_items
 # at the top of a page, before any language sections. This script undoes the
 # damage.
 
-def restore_removed_pagehead(index, pagetitle, comment, oldrevid, save, verbose):
+def restore_removed_pagehead(index, pagetitle, comment, oldrevid):
+  global args
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -46,48 +47,30 @@ def restore_removed_pagehead(index, pagetitle, comment, oldrevid, save, verbose)
         pagetext = page.text
         newtext = oldtext_pagehead + pagetext
 
-        if verbose:
-          pagemsg("Replacing <%s> with <%s>" % (pagetext, newtext))
-        notes = ['Restore missing page head: %s' % oldtext_pagehead.strip()]
-        comment = "; ".join(group_notes(notes))
-        if save:
-          pagemsg("Saving with comment = %s" % comment)
-          page.text = newtext
-          page.save(comment=comment)
-        else:
-          pagemsg("Would save with comment = %s" % comment)
+        def do_process_page(pg, ind, parsed):
+          return newtext, ["Restore missing page head: %s" % oldtext_pagehead.strip()]
+        blib.do_edit(page, index, do_process_page, save=args.save,
+          verbose=args.verbose, diff=args.diff)
 
-def process_item(index, item, save, verbose):
-  restore_removed_pagehead(index, item['title'], item['comment'], item['parentid'],
-      save, verbose)
+def process_item(index, item):
+  restore_removed_pagehead(index, item['title'], item['comment'], item['parentid'])
 
-def process_page(index, pagetitle, save, verbose):
-  page = pywikibot.Page(site, pagetitle)
+def process_page(page, index):
+  pagetitle = unicode(page.title())
   revisions = list(page.revisions(total=50))
   for rev in revisions:
     if rev['user'] == 'WingerBot':
       oldrevid = rev['_parent_id']
       if oldrevid:
-        restore_removed_pagehead(index, pagetitle, rev['comment'], oldrevid, save, verbose)
+        restore_removed_pagehead(index, pagetitle, rev['comment'], oldrevid)
 
-parser = blib.create_argparser(u"Undo wrongly-erased {{also|...}} tags from the top of a page")
-parser.add_argument("--lemmafile",
-    help=u"""List of lemmas to process, without accents.""")
-parser.add_argument("--lemmas",
-    help=u"""Comma-separated list of lemmas to process.""")
+parser = blib.create_argparser("Undo wrongly-erased {{also|...}} tags from the top of a page",
+  include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-if args.lemmafile:
-  lemmas_to_process = [x.strip() for x in codecs.open(args.lemmafile, "r", "utf-8")]
-elif args.lemmas:
-  lemmas_to_process = re.split(",", args.lemmas.decode("utf-8"))
-else:
-  lemmas_to_process = []
-
-if lemmas_to_process:
-  for i, pagetitle in blib.iter_items(lemmas_to_process, start, end):
-    process_page(i, pagetitle, args.save, args.verbose)
+if args.pagefile or args.pages or args.cats or args.refs:
+  blib.do_pagefile_cats_refs(args, start, end, process_page)
 else:
   for i, item in blib.get_contributions("WingerBot", start, end):
-    process_item(i, item, args.save, args.verbose)
+    process_item(i, item)

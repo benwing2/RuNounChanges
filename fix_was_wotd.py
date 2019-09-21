@@ -8,7 +8,7 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, site
 
-def process_page(index, page, save, verbose):
+def process_page(page, index, parsed):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -20,21 +20,12 @@ def process_page(index, page, save, verbose):
   text = re.sub(r"(\{\{was wotd\|.*?\}\}\n)(==English==\n)", r"\2\1", text)
   notes = ["put {{was wotd}} after ==English== per [[User:Smuconlaw]]"]
 
-  if text != origtext:
-    if verbose:
-      pagemsg("Replacing <%s> with <%s>" % (origtext, text))
-    assert notes
-    comment = "; ".join(notes)
-    if save:
-      pagemsg("Saving with comment = %s" % comment)
-      page.text = text
-      page.save(comment=comment)
-    else:
-      pagemsg("Would save with comment = %s" % comment)
+  return text, notes
 
-parser = blib.create_argparser(u"Remove adj= and shto= from ru-ux")
+parser = blib.create_argparser("Rearrange {{was wotd}} to go after ==English==",
+  include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-for i, page in blib.references("Template:was wotd", start, end):
-  process_page(i, page, args.save, args.verbose)
+blib.do_pagefile_cats_refs(args, start, end, process_page, edit=True,
+  default_refs=["Template:was wotd"])

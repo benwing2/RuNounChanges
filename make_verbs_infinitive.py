@@ -76,7 +76,8 @@ def paste_arg_sets(arg_sets, t, verb_type, rm_pres_stem, as_string,
         args.append((unicode(param.name), unicode(param.value)))
   return args
 
-def process_page(index, page, save, verbose):
+def process_page(page, index, parsed):
+  global args
   pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -87,7 +88,7 @@ def process_page(index, page, save, verbose):
   pagemsg("Processing")
 
   def expand_text(tempcall):
-    return blib.expand_text(tempcall, pagetitle, pagemsg, verbose)
+    return blib.expand_text(tempcall, pagetitle, pagemsg, args.verbose)
 
   text = unicode(page.text)
   parsed = blib.parse(page)
@@ -371,37 +372,21 @@ def process_page(index, page, save, verbose):
       if origt != newt:
         pagemsg("Replaced %s with %s" % (origt, newt))
 
-  ##### If page changed, maybe save it.
+  return unicode(parsed), notes
 
-  new_text = unicode(parsed)
-
-  if new_text != text:
-    if verbose:
-      pagemsg("Replacing <%s> with <%s>" % (text, new_text))
-    assert notes
-    comment = "; ".join(notes)
-    if save:
-      pagemsg("Saving with comment = %s" % comment)
-      page.text = new_text
-      page.save(comment=comment)
-    else:
-      pagemsg("Would save with comment = %s" % comment)
-
-parser = blib.create_argparser(u"Fix up verb conjugations to use the infinitive")
+parser = blib.create_argparser("Fix up verb conjugations to use the infinitive",
+  include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-process_page(1, pywikibot.Page(site, "User:Benwing2/test-ru-verb"),
-  args.save, args.verbose)
-process_page(2, pywikibot.Page(site, "User:Benwing2/test-ru-verb-2"),
-  args.save, args.verbose)
-for ref in ["Template:ru-conj-old"]:
-  msg("Processing references to: %s" % ref)
-  for i, page in blib.references(ref, start, end):
-    process_page(i, page, args.save, args.verbose)
-process_page(1, pywikibot.Page(site, "Module:ru-verb/documentation"),
-  args.save, args.verbose)
-for category in ["Russian irregular verbs", "Russian verbs"]:
-  msg("Processing category: %s" % category)
-  for i, page in blib.cat_articles(category, start, end):
-    process_page(i, page, args.save, args.verbose)
+blib.do_pagefile_cats_refs(args, start, end, process_page, edit=True,
+  default_refs=["Template:ru-conj-old"],
+  default_cats=["Russian irregular verbs", "Russian verbs"])
+
+for pagename, index in [
+  ("User:Benwing2/test-ru-verb", 1),
+  ("User:Benwing2/test-ru-verb-2", 2),
+  ("Module:ru-verb/documentation", 1)
+]:
+  blib.do_edit(pywikibot.Page(site, pagename), index, process_page,
+  save=args.save, verbose=args.verbose, diff=args.diff)
