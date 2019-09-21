@@ -27,6 +27,8 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, site
 
+# blib.getData()
+
 import rulib
 
 import unicodedata
@@ -34,10 +36,22 @@ import unicodedata
 lbracket_sub = u"\ufff1"
 rbracket_sub = u"\ufff2"
 
+GRAVE = u"\u0300" # grave =  ̀
+ACUTE = u"\u0301" # acute =  ́
+CIRC = u"\u0302" # circumflex =  ̂
+TILDE = u"\u0303" # tilde =  ̃
 MACRON = u"\u0304" # macron =  ̄
 BREVE = u"\u0306" # breve =  ̆
-DOUBLE_INV_BREVE = u"\u0361" # double inverted breve
+DOTABOVE = u"\u0307" # dot above =  ̇
 DIAER = u"\u0308" # diaeresis =  ̈
+CARON = u"\u030C" # caron =  ̌
+DGRAVE = u"\u030F" # double grave
+INVBREVE = u"\u0311" # inverse breve
+DOTBELOW = u"\u0323" # dot below
+RINGBELOW = u"\u0325" # ring below
+CEDILLA = u"\u0327" # cedilla =  ̧
+OGONEK = u"\u0328" # ogonek =  ̨
+DOUBLEINVBREVE = u"\u0361" # double inverted breve
 
 def rsub_repeatedly(fr, to, text):
   while True:
@@ -62,10 +76,41 @@ def grc_remove_accents(text):
   text = re.sub(u"[ῠῡ]", u"υ", text)
   return text
 
+def bg_remove_accents(text):
+  return unicodedata.normalize("NFC", unicodedata.normalize("NFD", text).
+    replace(ACUTE, "").replace(GRAVE, "")
+  )
+
+def mk_remove_accents(text):
+  return unicodedata.normalize("NFC", unicodedata.normalize("NFD", text).
+    replace(ACUTE, "")
+  )
+
+def sh_remove_accents(text):
+  return unicodedata.normalize("NFC", unicodedata.normalize("NFD", text).
+    replace(ACUTE, "").replace(GRAVE, "").
+    replace(DGRAVE, "").replace(INVBREVE, "").
+    replace(MACRON, "").replace(TILDE, "")
+  )
+
+def sl_remove_accents(text):
+  return unicodedata.normalize("NFC", unicodedata.normalize("NFD", text).
+    replace(ACUTE, "").replace(GRAVE, "").
+    replace(MACRON, "").replace(CIRC, "").
+    replace(DGRAVE, "").replace(INVBREVE, "").
+    replace(DOTBELOW, "").replace(u"ə", "e").replace(u"ł", "l")
+  )
+
 def la_remove_accents(text):
   return unicodedata.normalize("NFC", unicodedata.normalize("NFD", text).
     replace(MACRON, "").replace(BREVE, "").
-    replace(DIAER, "").replace(DOUBLE_INV_BREVE, "")
+    replace(DIAER, "").replace(DOUBLEINVBREVE, "")
+  )
+
+def lt_remove_accents(text):
+  return unicodedata.normalize("NFC", unicodedata.normalize("NFD", text).
+    replace(ACUTE, "").replace(GRAVE, "").
+    replace(TILDE, "")
   )
 
 def he_remove_accents(text):
@@ -77,33 +122,138 @@ def ar_remove_accents(text):
   text = re.sub(u"[\u064B-\u0652\u0670\u0640]", "", text)
   return text
 
+def fa_remove_accents(text):
+  text = re.sub(u"[\u064E-\u0652]", "", text)
+  return text
+
+def ur_remove_accents(text):
+  text = re.sub(u"[\u064B-\u0652]", "", text)
+  return text
+
+latin_charset = u"\\- '’.,0-9A-Za-z¡-\u036FḀ-ỿ"
+cyrillic_charset = u"Ѐ-џҊ-ԧꚀ-ꚗ"
+# Doesn't work due to surrogate chars.
+#glagolitic_charset = u"Ⰰ-ⱞ𞀀-𞀪"
+arabic_charset = u"؀-ۿݐ-ݿࢠ-ࣿﭐ-﷽ﹰ-ﻼ"
+hebrew_charset = u"\u0590-\u05FF\uFB1D-\uFB4F"
+devanagari_charset = u"\u0900-\u097F\uA8E0-\uA8FD"
+assamese_charset = u"\u0981-\u0983\u0985-\u098c\u098f\u0990\u0993-\u09a8\u09aa-\u09af\u09b6-\u09b9\u09bc-\u09c4\u09c7-\u09ce\u09d7\u09a1\u09bc\u09a2\u09bc\u09af\u09bc\u09bc\u09e0-\u09e3\u09e6-\u09f1"
+newa_charset = u"𑐀-𑑞"
+malayalam_charset = u"\u0d02-\u0d7f"
+sinhalese_charset = u"\u0d82-\u0df4"
+
 # Each element is full language name, function to remove accents to normalize
 # an entry, character set range(s), and whether to ignore translit (info
 # from [[Module:links]], or "latin" if the language uses the Latin script and
 # hence has no translit, or "notranslit" if the language doesn't do
 # auto-translit)
 languages = {
-    'ru':["Russian", rulib.remove_accents, u"Ѐ-џҊ-ԧꚀ-ꚗ", False],
-    'hy':["Armenian", hy_remove_accents, u"Ա-֏ﬓ-ﬗ", True],
+    'af':["Afrikaans", lambda x:x, latin_charset, "latin"],
+    'am':["Amharic", lambda x:x, u"ሀ-᎙ⶀ-ⷞꬁ-ꬮ", False],
+    'ar':["Arabic", ar_remove_accents, arabic_charset, False],
+    'as':["Assamese", lambda x:x, assamese_charset, False],
+    'az':["Azerbaijani", lambda x:x, latin_charset, "latin"],
+    'ba':["Bashkir", lambda x:x, cyrillic_charset, True],
+    'be':["Belarusian", bg_remove_accents, cyrillic_charset, False],
+    'bg':["Bulgarian", bg_remove_accents, cyrillic_charset, False],
+    'bn':["Bengali", lambda x:x, u"ঀ-ঃঅ-ঌএঐও-নপ-রললশ-হ়-ৄেৈো-ৎৗড়ঢ়য়়ৠ-ৣ০-৯", False],
+    'bo':["Tibetan", lambda x:x, u"ༀ-࿚", True],
+    'br':["Breton", lambda x:x, latin_charset, "latin"],
+    'ca':["Catalan", lambda x:x, latin_charset, "latin"],
+    'ce':["Chechen", lambda x:x.replace(MACRON, ""), cyrillic_charset, True],
+    'cs':["Czech", lambda x:x, latin_charset, "latin"],
+    #'cu': ["Old Church Slavonic", lambda x:x.replace(u"\u0484", ""), cyrillic_charset + glagolitic_charset, False],
+    'cv':["Chuvash", lambda x:x, cyrillic_charset, True],
+    'cy':["Welsh", lambda x:x, latin_charset, "latin"],
+    'da':["Danish", lambda x:x, latin_charset, "latin"],
+    'de':["German", lambda x:x, latin_charset, "latin"],
     'el':["Greek", lambda x:x, u"Ͱ-Ͽ", True],
+    'eo':["Esperanto", lambda x:x, latin_charset, "latin"],
+    'es':["Spanish", lambda x:x, latin_charset, "latin"],
+    'et':["Estonian", lambda x:x, latin_charset, "latin"],
+    'eu':["Basque", lambda x:x, latin_charset, "latin"],
+    'fa':["Persian", fa_remove_accents, arabic_charset, "notranslit"],
+    'fi':["Finnish", lambda x:x.replace(u"ˣ", ""), latin_charset, "latin"],
+    'fo':["Faroese", lambda x:x, latin_charset, "latin"],
+    'fr':["French", lambda x:x, latin_charset, "latin"],
+    'fy':["West Frisian", lambda x:x, latin_charset, "latin"],
+    'ga':["Irish", lambda x:x, latin_charset, "latin"],
+    'gd':["Scottish Gaelic", lambda x:x, latin_charset, "latin"],
+    'gl':["Galician", lambda x:x, latin_charset, "latin"],
     'grc':["Ancient Greek", grc_remove_accents, u"ἀ-῾Ͱ-Ͽ", True],
+    'gu':["Gujarati", lambda x:x, u"\u0A81-\u0AF9", False],
+    'gv':["Manx", lambda x:x, latin_charset, "latin"],
+    'he':["Hebrew", he_remove_accents, hebrew_charset, "notranslit"],
     'hi':["Hindi", lambda x:x, u"\u0900-\u097F\uA8E0-\uA8FD", False],
+    'hu':["Hungarian", lambda x:x, latin_charset, "latin"],
+    'hy':["Armenian", hy_remove_accents, u"Ա-֏ﬓ-ﬗ", True],
+    'ia':["Interlingua", lambda x:x, latin_charset, "latin"],
+    'id':["Indonesian", lambda x:x, latin_charset, "latin"],
+    'io':["Ido", lambda x:x, latin_charset, "latin"],
+    'is':["Icelandic", lambda x:x, latin_charset, "latin"],
+    'it':["Italian", lambda x:x, latin_charset, "latin"],
+    'ka':["Georgian", lambda x:x.replace(CIRC, ""), u"ა-ჿᲐ-Ჿ", True],
+    'km':["Khmer", lambda x:x, u"ក-៹᧠-᧿", False],
+    'kn':["Kannada", lambda x:x, u"ಀ-ೲ", False],
+    'la':["Latin", la_remove_accents, latin_charset, "latin"],
+    'lb':["Luxembourgish", lambda x:x, latin_charset, "latin"],
+    'lo':["Lao", lambda x:x, u"ກ-ໟ", False],
+    'lt':["Lithuanian", lt_remove_accents, latin_charset, "latin"],
+    # 'lv': ["Latvian", ..., latin_charset, "latin"],
+    'mg':["Malagasy", lambda x:x, latin_charset, "latin"],
+    'mk':["Macedonian", mk_remove_accents, cyrillic_charset, False],
+    'ml':["Malayalam", lambda x:x, malayalam_charset, True],
+    'mr':["Marathi", lambda x:x, devanagari_charset, False],
+    'ms':["Malay", lambda x:x, latin_charset, "latin"],
+    'mt':["Maltese", lambda x:x, latin_charset, "latin"],
+    'my':["Burmese", lambda x:x, u"က-႟ꩠ-ꩿꧠ-ꧾ", True],
+    'nb':[u"Norwegian Bokmål", lambda x:x, latin_charset, "latin"],
+    'ne':["Nepalese", lambda x:x, devanagari_charset + newa_charset, False],
+    'nl':["Dutch", lambda x:x, latin_charset, "latin"],
+    'nn':["Norwegian Nynorsk", lambda x:x, latin_charset, "latin"],
+    'no':["Norwegian", lambda x:x, latin_charset, "latin"],
+    'oc':["Occitan", lambda x:x, latin_charset, "latin"],
+    'or':["Oriya", lambda x:x, u"\u0B01-\u0B77", False],
+    'pa':["Punjabi", lambda x:x, u"\u0A01-\u0A75", "notranslit"],
+    'pl':["Polish", lambda x:x, latin_charset, "latin"],
+    'ps':["Pashto", lambda x:x, arabic_charset, "notranslit"],
+    'pt':["Portuguese", lambda x:x, latin_charset, "latin"],
+    'qu':["Quechua", lambda x:x, latin_charset, "latin"],
+    'ro':["Romanian", lambda x:x, latin_charset, "latin"],
+    'ru':["Russian", rulib.remove_accents, cyrillic_charset, False],
+    'sh':["Serbo-Croatian", sh_remove_accents, latin_charset + cyrillic_charset, "latin"],
+    'si':["Sinhalese", lambda x:x, sinhalese_charset, True],
+    'sk':["Slovak", lambda x:x, latin_charset, "latin"],
+    'sl':["Slovene", sl_remove_accents, latin_charset, "latin"],
+    'sq':["Albanian", lambda x:x, latin_charset, "latin"],
+    'sv':["Swedish", lambda x:x, latin_charset, "latin"],
+    'sw':["Swahili", lambda x:x, latin_charset, "latin"],
     'ta':["Tamil", lambda x:x, u"\u0B82-\u0BFA", True],
     'te':["Telugu", lambda x:x, u"\u0C00-\u0C7F", True],
-    'gu':["Gujarati", lambda x:x, u"\u0A81-\u0AF9", "notranslit"],
-    'or':["Oriya", lambda x:x, u"\u0B01-\u0B77", "notranslit"],
-    'pa':["Punjabi", lambda x:x, u"\u0A01-\u0A75", "notranslit"],
-    'he':["Hebrew", he_remove_accents, u"\u0590-\u05FF\uFB1D-\uFB4F", "notranslit"],
-    'ar':["Arabic", ar_remove_accents, u"؀-ۿݐ-ݿࢠ-ࣿﭐ-﷽ﹰ-ﻼ", False],
-    'fr':["French", lambda x:x, u"\\- '’.0-9A-Za-z¡-\u036FḀ-ỿ", "latin"],
-    'la':["Latin", la_remove_accents, u"\\- '’.0-9A-Za-z¡-\u036FḀ-ỿ", "latin"],
+    'tg':["Tajik", lambda x:x.replace(ACUTE, ""), cyrillic_charset, True],
+    'th':["Thai", lambda x:x, u"ก-๛", False],
+    'tl':["Tagalog", lambda x:x, latin_charset, "latin"],
+    'tr':["Turkish", lambda x:x, latin_charset, "latin"],
+    'uk':["Ukrainian", bg_remove_accents, cyrillic_charset, False],
+    'ur':["Urdu", ur_remove_accents, arabic_charset, "notranslit"],
+    'vi':["Vietnamese", lambda x:x, latin_charset, "latin"],
+    'yi':["Yiddish", lambda x:x, hebrew_charset, False],
 }
 
-thislangname = None
-thislangcode = None
-this_remove_accents = None
-this_charset = None
-this_ignore_translit = False
+#auto_languages = {}
+#for code, desc in blib.languages_byCode.iteritems():
+#  canonical_
+
+language_names_to_lang_properties = {
+  langprops[0]: [langcode] + langprops[1:]
+  for langcode, langprops in languages.iteritems()
+}
+
+def do_remove_diacritics(text, patterns, remove_diacritics):
+  pass
+
+thislangcodes = None
+thislangnames = None
 
 # From wikibooks
 def levenshtein(s1, s2):
@@ -126,62 +276,83 @@ def levenshtein(s1, s2):
 
     return previous_row[-1]
 
-def process_page(index, page, save, verbose):
-  pagetitle = unicode(page.title())
+sections_to_always_include = {
+  "Anagrams", "Related terms", "Synonyms", "Derived terms", "Alternative forms",
+  "Antonyms", "Compounds", "Coordinate terms", "Hyponyms", "Hypernyms",
+  "Abbreviations", "Meronyms", "Holonyms", "Troponyms", "Homophones"
+}
+sections_to_include_if_not_latin_script = {
+  "Usage notes", "See also"
+}
+# Always skip Etymology, Pronunciation, Descendants, References,
+# Further reading, Quotations, etc.
+
+def process_text_on_page(index, pagetitle, text):
+  global args
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
-  def expand_text(tempcall):
-    return blib.expand_text(tempcall, pagetitle, pagemsg, verbose)
-
-  if not page.exists():
-    pagemsg("WARNING: Page doesn't exist")
+  if ":" in pagetitle and not pagetitle.startswith("Reconstruction:"):
     return
 
-  text = unicode(page.text)
+  def expand_text(tempcall):
+    return blib.expand_text(tempcall, pagetitle, pagemsg, args.verbose)
 
   subbed_links = []
 
-  # Split off templates or tables, in each case allowing one nested template
-  template_table_split_re = r"(\{\{(?:[^{}]|\{\{[^{}]*\}\})*\}\}|\{\|(?:[^{}]|\{\{[^{}]*\}\})*\|\})"
-  foundlang = False
-  sections = re.split("(^==[^=]*==\n)", text, 0, re.M)
+  # Split off templates, tables, in each case allowing one nested template;
+  # also split off comments and stuff after dashes and between quotes.
+  template_table_split_re = ur'''(\{\{(?:[^{}]|\{\{[^{}]*\}\})*\}\}|\{\|(?:[^{}]|\{\{[^{}]*\}\})*\|\}|<!--.*-->| +(?:[-–—=]|&[mn]dash;) +[^\n]*|\(?(?<!')''[^'\n]*?''\)?|"[^"\n]*?"|“[^\n]*?”|‘[^\n]*?’)'''
+  sections = re.split("(^==[^\n=]*==\n)", text, 0, re.M)
   newtext = text
   for j in xrange(2, len(sections), 2):
-    if sections[j-1] == "==%s==\n" % thislangname:
-      if foundlang:
-        pagemsg("WARNING: Found multiple %s sections" % thislangname)
-        return
-      foundlang = True
+    m = re.search("^==(.*?)==\n$", sections[j - 1])
+    if not m:
+      pagemsg("WARNING: Something wrong, can't parse section from %s" %
+        sections[j - 1].strip())
+      continue
+    thislangname = m.group(1)
+    if thislangname in thislangnames:
+      thislangcode, this_remove_accents, this_charset, this_ignore_translit = (
+          language_names_to_lang_properties[thislangname])
 
       subsections = re.split("(^==.*==\n)", sections[j], 0, re.M)
       for k in xrange(2, len(subsections), 2):
         m = re.search("^===*([^=]*)=*==\n$", subsections[k-1])
-        subsectitle = m.group(1)
-        if subsectitle in ["Etymology", "Pronunciation"]:
+        subsectitle = m.group(1).strip()
+        if not (subsectitle in sections_to_always_include or
+          this_ignore_translit != "latin" and subsectitle in sections_to_include_if_not_latin_script
+        ):
           continue
 
+        def linktext(cap=False):
+          if cap:
+            return "Link in '%s' in %s" % (subsectitle, thislangname)
+          else:
+            return "link in '%s' in %s" % (subsectitle, thislangname)
         def sub_link(orig, text, translit, origtemplate):
-          if subsectitle in ["Usage notes", "Descendants", "References"] and this_ignore_translit == "latin":
-            pagemsg("Ignoring putative link in '%s', might be English or some other language: %s" % (subsectitle, orig))
-            return orig
           if re.search("[\[\]]", text):
-            pagemsg("WARNING: Stray brackets in link, skipping: %s" % orig)
+            pagemsg("WARNING: Stray brackets in %s, skipping: %s" %
+              (linktext(), orig))
             return orig
           if this_ignore_translit == "latin":
             if not re.search("^[#|%s]+$" % this_charset, text):
-              pagemsg("WARNING: Link contains characters not in proper charset, skipping: %s" % orig)
+              pagemsg("WARNING: %s contains characters not in proper charset, skipping: %s" %
+                  (linktext(cap=True), orig))
               return orig
           else:
             if not re.search("[^ -~]", text):
-              pagemsg("No non-Latin characters in link, skipping: %s" % orig)
+              pagemsg("No non-Latin characters in %s, skipping: %s" %
+                (linktext(), orig))
               return orig
             if not re.search("^[ -~%s]*$" % this_charset, text):
-              pagemsg("WARNING: Link contains non-Latin characters not in proper charset, skipping: %s" % orig)
+              pagemsg("WARNING: %s contains non-Latin characters not in proper charset, skipping: %s" %
+                  (linktext(cap=True), orig))
               return orig
           parts = re.split(r"\|", text)
           if len(parts) > 2:
-            pagemsg("WARNING: Too many parts in link, skipping: %s" % orig)
+            pagemsg("WARNING: Too many parts in %s, skipping: %s" %
+                (linktext(), orig))
             return orig
           template = origtemplate or subsectitle == "Usage notes" and "m" or "l"
           if not origtemplate and thislangcode == "grc" and subsectitle == "Descendants":
@@ -200,15 +371,17 @@ def process_page(index, page, save, verbose):
             if this_remove_accents(accented) == page:
               page = None
             elif re.search("[#:]", page):
-              pagemsg("WARNING: Found special chars # or : in left side of link, skipping: %s" % orig)
+              pagemsg("WARNING: Found special chars # or : in left side of %s, skipping: %s" %
+                  (linktext(), orig))
               return orig
             else:
-              pagemsg("WARNING: %s page %s doesn't match accented %s, converting to two-part link" % (thislangname, page, accented))
+              pagemsg("WARNING: Page %s doesn't match accented %s in %s, converting to two-part link" %
+                  (page, accented, linktext()))
           translit_arg = ""
           post_translit_arg = ""
           if translit and this_ignore_translit == "notranslit":
-            pagemsg("WARNING: Unable to determine whether putative explicit translit %s is translit of %s" % (
-              translit, accented))
+            pagemsg("WARNING: Unable to determine whether putative explicit translit %s is translit of %s in %s" % (
+              translit, accented, linktext()))
             post_translit_arg = " (%s)" % translit
           elif translit:
             orig_translit = translit
@@ -217,37 +390,37 @@ def process_page(index, page, save, verbose):
             accented_translit = expand_text("{{xlit|%s|%s}}" % (langcode,
                 accented))
             if accented_translit == "":
-              pagemsg("WARNING: Unable to transliterate %s (putative explicit transit %s)" % (
-                accented, translit))
+              pagemsg("WARNING: Unable to transliterate %s (putative explicit transit %s in %s)" %
+                  (accented, translit, linktext()))
             if not accented_translit:
               # Error occurred computing transliteration
               post_translit_arg = " (%s)" % orig_translit
             elif accented_translit == translit:
-              pagemsg("No translit difference between explicit %s and auto %s (%s %s)" % (
-                translit, accented_translit, thislangname, accented))
+              pagemsg("No translit difference between explicit %s and auto %s (%s) in %s" %
+                (translit, accented_translit, accented, linktext()))
               # Translit same as explicit translit, ignore
               pass
             else:
               levdist = levenshtein(accented_translit, translit)
               tranlen = min(len(translit), len(accented_translit))
               if accented_translit[0].isupper() != translit[0].isupper():
-                pagemsg("WARNING: Upper/lower mismatch between explicit %s and auto %s, not treating as translit (%s %s)" % (
-                  translit, accented_translit, thislangname, accented))
+                pagemsg("WARNING: Upper/lower mismatch between explicit %s and auto %s, not treating as translit (%s) in %s" %
+                  (translit, accented_translit, accented, linktext()))
                 post_translit_arg = " (%s)" % orig_translit
               elif thislangcode == "grc" and (translit.endswith("ic") or translit.endswith("an")):
-                pagemsg("WARNING: Explicit translit %s ends with -ic or -an, not treating as translit vs. auto-translit %s (Levenshtein distance %s, %s %s)" % (
-                  translit, accented_translit, levdist, thislangname, accented))
+                pagemsg("WARNING: Explicit translit %s ends with -ic or -an, not treating as translit vs. auto-translit %s (Levenshtein distance %s, %s in %s)" %
+                  (translit, accented_translit, levdist, accented, linktext()))
                 post_translit_arg = " (%s)" % orig_translit
               elif (levdist == 1 and tranlen >= 3 or levdist == 2 and tranlen >= 4
                   or levdist == 3 and tranlen >= 5 or levdist == 4 and tranlen >= 7
                   or levdist == 5 and tranlen >= 9):
-                pagemsg("Levenshtein distance %s and length %s, accept translit difference between explicit %s and auto %s (%s %s)" % (
-                  levdist, tranlen, translit, accented_translit, thislangname, accented))
+                pagemsg("Levenshtein distance %s and length %s, accept translit difference between explicit %s and auto %s (%s) in %s" %
+                  (levdist, tranlen, translit, accented_translit, accented, linktext()))
                 if not this_ignore_translit:
                   translit_arg = "|tr=%s" % translit
               else:
-                pagemsg("WARNING: Levenshtein distance %s too big for length %s, not treating %s as transliteration of %s (%s %s)" % (
-                levdist, tranlen, translit, accented_translit, thislangname, accented))
+                pagemsg("WARNING: Levenshtein distance %s too big for length %s, not treating %s as transliteration of %s (%s) in %s" %
+                  (levdist, tranlen, translit, accented_translit, accented, linktext()))
                 post_translit_arg = " (%s)" % orig_translit
 
           if page:
@@ -265,8 +438,8 @@ def process_page(index, page, save, verbose):
 
         def sub_raw_latin_link(m):
           if m.group(1).count('(') != m.group(1).count(')'):
-            pagemsg("WARNING: Unbalanced parens preceding raw link: %s" %
-                unobfuscate_brackets(m.group(0)))
+            pagemsg("WARNING: Unbalanced parens preceding raw %s: %s" %
+                (linktext(), unobfuscate_brackets(m.group(0))))
             retsub = m.group(2)
           else:
             retsub = sub_link(m.group(2), m.group(3), None, None)
@@ -281,10 +454,15 @@ def process_page(index, page, save, verbose):
         # Split templates, then rejoin text involving templates that don't
         # have newlines in them
         split_templates = re.split(template_table_split_re, subsections[k], 0, re.S)
+        must_continue = False
         for l in xrange(0, len(split_templates), 2):
           if "{" in split_templates[l] or "}" in split_templates[l]:
-            pagemsg("WARNING: Stray brace in split_templates[%s]: Skipping page: <<%s>>" % (l, split_templates[l].replace("\n", r"\n")))
-            return
+            pagemsg("WARNING: Stray brace in split_templates[%s] in '%s' in %s: Skipping section: <<%s>>" %
+              (l, subsectitle, thislangname, split_templates[l].replace("\n", r"\n")))
+            must_continue = True
+            break
+        if must_continue:
+          continue
         # Add an extra newline to first item so we can consistently check
         # below for lines beginning with *, rather than * directly after
         # a template; will remove the newline later
@@ -317,15 +495,17 @@ def process_page(index, page, save, verbose):
                 else:
                   new_subline = re.sub(r"\[\[([^A-Za-z]*?)\]\](?: \(([^()|]*?)\))?", sub_raw_link, subline)
                 if new_subline != subline:
-                  pagemsg("Replacing %s with %s in %s section" % (subline, new_subline, subsectitle))
+                  pagemsg("Replacing %s with %s in %s section in %s" %
+                    (subline, new_subline, subsectitle, thislangname))
                   subline = new_subline
                   replaced = True
-                if this_ignore_translit !="latin":
+                if this_ignore_translit != "latin":
                   # Only try subbing template links with what looks like a
                   # following translit
                   new_subline = re.sub(r"\{\{([lm])\|%s\|([^A-Za-z{}]*?)\}\}(?: \(([^()|]*?)\))" % thislangcode, sub_template_link, subline)
                   if new_subline != subline:
-                    pagemsg("Replacing %s with %s in %s section" % (subline, new_subline, subsectitle))
+                    pagemsg("Replacing %s with %s in %s section in %s" %
+                      (subline, new_subline, subsectitle, thislangname))
                     subline = new_subline
                     replaced = True
                 if replaced:
@@ -337,55 +517,37 @@ def process_page(index, page, save, verbose):
                   assert subsections[k][0] == "\n"
                   subsections[k] = subsections[k][1:]
                   sections[j] = "".join(subsections)
-                  newtext = "".join(sections)
 
-  if not foundlang:
-    pagemsg("WARNING: Can't find %s section" % thislangname)
-    return
+  newtext = "".join(sections)
 
-  if text != newtext:
-    if verbose:
-      pagemsg("Replacing <<%s>> with <<%s>>" % (text, newtext))
-
-    comment = "Replace raw links with templated links: %s" % ",".join(subbed_links)
-    if save:
-      pagemsg("Saving with comment = %s" % comment)
-      page.text = newtext
-      page.save(comment=comment)
-    else:
-      pagemsg("Would save with comment = %s" % comment)
+  return newtext, "Replace raw links with templated links: %s" % ",".join(subbed_links)
 
 if __name__ == "__main__":
-  parser = blib.create_argparser("Replace raw links with templated links")
-  parser.add_argument('--lang', help="Language code for language to do")
-  parser.add_argument("--lemmafile",
-      help=u"""List of lemmas to process, without accents.""")
-  parser.add_argument("--lemmas",
-      help=u"""Comma-separated list of lemmas to process.""")
+  parser = blib.create_argparser("Replace raw links with templated links",
+    include_pagefile=True, include_stdin=True)
+  parser.add_argument('--langs', help="Language codes for languages to do, comma-separated")
   args = parser.parse_args()
   start, end = blib.parse_start_end(args.start, args.end)
 
-  if not args.lang:
-    raise ValueError("Language code must be specified")
-  if args.lang not in languages:
-    raise ValueError("Unrecognized language code: %s" % args.lang)
-  thislangcode = args.lang
-  thislangname, this_remove_accents, this_charset, this_ignore_translit = (
-      languages[thislangcode])
+  if not args.langs:
+    raise ValueError("Language code(s) must be specified")
 
-  if args.lemmafile:
-    lemmas_to_process = [x.strip() for x in codecs.open(args.lemmafile, "r", "utf-8")]
-  elif args.lemmas:
-    lemmas_to_process = re.split(",", args.lemmas.decode("utf-8"))
+  if args.langs == "all":
+    langs = sorted(list(languages.keys()))
   else:
-    lemmas_to_process = []
+    langs = [x.decode("utf-8") for x in args.langs.split(",")]
+  default_cats = []
+  thislangnames = set()
+  for lang in langs:
+    if lang not in languages:
+      raise ValueError("Unrecognized language code: %s" % lang)
+    thislangname, this_remove_accents, this_charset, this_ignore_translit = (
+      languages[lang])
+    default_cats.append("%s lemmas" % thislangname)
+    default_cats.append("%s non-lemma forms" % thislangname)
+    thislangnames.add(thislangname)
 
-  if lemmas_to_process:
-    pages_to_process = ((index, pywikibot.Page(site, page)) for index, page in
-        blib.iter_items(lemmas_to_process, start, end))
-  else:
-    pages_to_process = blib.cat_articles(
-        ["%s lemmas" % thislangname, "%s non-lemma forms" % thislangname], start, end)
-  for i, page in pages_to_process:
-    msg("Page %s %s: Processing" % (i, unicode(page.title())))
-    process_page(i, page, args.save, args.verbose)
+  thislangcodes = langs
+
+  blib.do_pagefile_cats_refs(args, start, end, process_text_on_page,
+    edit=True, stdin=True, default_cats=default_cats)
