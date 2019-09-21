@@ -633,9 +633,10 @@ def create_argparser(desc, include_pagefile=False, include_stdin=False,
   parser.add_argument('-v', '--verbose', action="store_true", help="More verbose output")
   parser.add_argument('-d', '--diff', action="store_true", help="Show diff of changes")
   if include_pagefile:
-    parser.add_argument("--pagefile", help="List of pages to process.")
-    parser.add_argument("--cats", help="List of categories to process.")
-    parser.add_argument("--refs", help="List of references to process.")
+    parser.add_argument("--pagefile", help="File listing pages to process.")
+    parser.add_argument("--pages", help="List of pages to process, comma-separated.")
+    parser.add_argument("--cats", help="List of categories to process, comma-separated.")
+    parser.add_argument("--refs", help="List of references to process, comma-separated.")
     parser.add_argument("--filter-pages", help="Regex to use to filter page names.")
   if include_stdin:
     parser.add_argument("--stdin", help="Read dump from stdin.", action="store_true")
@@ -704,13 +705,12 @@ def parse_start_end(startsort, endsort):
 # The pages iterated over will be:
 #
 # 1. Those from the dump on stdin if stdin=True and --stdin is given.
-# 2. Else, the pages in --pagefile if that argument is given.
-# 3. Else, pages in the category/categories in --cats and/or pages referring
-#    to the page(s) specified in --refs if either --cats or --refs is given.
-# 4. Else, pages in the category/categories in default_cats[] and/or pages
+# 2. Else, the pages in --pages, --pagefile, --cats and/or --refs if any of
+#    those arguments are given.
+# 3. Else, pages in the category/categories in default_cats[] and/or pages
 #    referring to the page(s) specified in default_refs[], if either argument
 #    is given.
-# 5. Else, an error is thrown.
+# 4. Else, an error is thrown.
 #
 # If only_lang is given, it should be a canonical name of a language (e.g.
 # "Latin"), and pages not containing this language will be skipped. (This is
@@ -764,26 +764,36 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
       return process(index, pagetitle, text)
     parse_dump(sys.stdin, do_process_text_on_page)
 
-  elif args.pagefile:
-    pages = [x.rstrip('\n') for x in codecs.open(args.pagefile, "r", "utf-8")]
-    for i, page in iter_items(pages, start, end):
-      process_page(pywikibot.Page(site, page), i)
+  elif args.pages or args.pagefile or args.cats or args.refs:
+    if args.pages:
+      pages = [x.decode("utf-8") for x in args.pages.split(",")]
+      for i, page in iter_items(pages, start, end):
+        process_page(pywikibot.Page(site, page), i)
+    if args.pagefile:
+      pages = [x.rstrip('\n') for x in codecs.open(args.pagefile, "r", "utf-8")]
+      for i, page in iter_items(pages, start, end):
+        process_page(pywikibot.Page(site, page), i)
+    if args.cats:
+      for cat in [x.decode("utf-8") for x in args.cats.split(",")]:
+        for i, page in cat_articles(cat, start, end):
+          process_page(page, i)
+    if args.refs:
+      for ref in [x.decode("utf-8") for x in args.refs.split(",")]:
+        # We don't use ref_namespaces here because the user might not want it.
+        for i, page in references(ref, start, end):
+          process_page(page, i)
+
   else:
     if not args.cats and not args.refs:
       if not default_cats and not default_refs:
-        raise ValueError("One of --pagefile, --cats or --refs should be specified")
-      cats = default_cats
-      refs = default_refs
-    else:
-      cats = args.cats and [x.decode("utf-8") for x in args.cats.split(",")] or []
-      refs = args.refs and [x.decode("utf-8") for x in args.refs.split(",")] or []
-
-    for cat in cats:
+        raise ValueError("One of --pages, --pagefile, --cats or --refs should be specified")
+    for cat in default_cats:
       for i, page in cat_articles(cat, start, end):
         process_page(page, i)
-    for ref in refs:
+    for ref in default_refs:
       for i, page in references(ref, start, end, namespaces=ref_namespaces):
         process_page(page, i)
+
   elapsed_time()
 
 def elapsed_time():
