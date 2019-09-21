@@ -62,15 +62,14 @@ verb spicio perf,sup {{la-conj|3|spiciō|spix|spict}}
 verb evenio nonimperspass {{la-conj|4|ēveniō|ēvēn|ēvent}}
 verb assurgo perf {{la-conj|3|assurgō|assurēx|assurrēct}}
 verb barbio perf,sup {{la-conj|4+|barbiō}}
-# FIXME: diffugio nonimperspass {{la-conj|3|diffugiō}} FIXME: currently nopass
+verb diffugio nonimperspass {{la-conj|3|diffugiō}}
 verb intelligo perf,sup {{la-conj|3|intelligō|intellix|intellict}}
-# FIXME: verb perfugio nonimperspass {{la-conj|3|perfugiō}} FIXME: currently nopass
-# FIXME: verb profugio nonimperspass {{la-conj|3|prōfugiō}} FIXME: currently nopass
-# FIXME: verb refugio nonimperspass {{la-conj|3|refugiō}} FIXME: currently nopass
-# FIXME: verb faveo perf,sup {{la-conj|2|faveō|favu|favit}} FIXME: should be pass-impers?
-# FIXME: following used transitively in ML to "play (a psalm)"
-verb psallo 12pass {{la-conj|3|psallō|psall}}
-# FIXME: verb absum perf,sup {{la-conj|irreg|absum}} FIXME: note that regularized perf abfuit occurs Medievally; need to fix la-verb not to always have ā for f-prefix with absum
+verb perfugio nonimperspass {{la-conj|3|perfugiō}}
+verb profugio nonimperspass {{la-conj|3|prōfugiō}}
+verb refugio nonimperspass {{la-conj|3|refugiō}}
+verb faveo perf,sup,nonimperspass {{la-conj|2|faveō|favu|favit}}
+verb psallo nonimperspass {{la-conj|3|psallō|psall}}
+verb absum perf,sup {{la-conj|irreg|absum}}
 verb adsurgo perf {{la-conj|3|adsurgō|adsurex}}
 verb commurmuro perf {{la-conj|1|commurmurō|commumurāv}}
 # FIXME: contignō add perf contignāv but note that it's Medieval
@@ -173,12 +172,12 @@ part munificens allbutlemma {{la-adecl|mūnificens/mūnific<3-P+>}}
 # FIXME: fugiō occurs transitively, change entry
 # FIXME: praesaepiō occurs transitively, change entry; also check praesēpiō
 # FIXME: exstō occurs transitively poetically
-# FIXME: vacēfiō
-# FIXME: cōnfirmō
-# FIXME: adferō
-# FIXME: cōnfiō
-# FIXME: dēfiō
-# FIXME: obsolefiō
+# FIXME: vacēfiō impf and futr are reversed
+verb confirmo perf {{la-conj|1|cōnfirmō|cōnfirm}}
+# FIXME: adferō switch to adtulī adlātum
+# FIXME: cōnfiō impf and futr are reversed
+# FIXME: dēfiō impf and futr are reversed
+# FIXME: obsolefiō impf and futr are reversed
 noun pycnitis allbutlemma {{la-ndecl|pycnītis/pycnīd<3>}}
 noun paneros allbutlemma {{la-ndecl|paneros<2>}}
 noun thraex allbutlemma {{la-ndecl|thraex/thraic<3>}}
