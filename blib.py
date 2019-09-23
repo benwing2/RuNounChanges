@@ -513,7 +513,7 @@ class ProcessItems(object):
       elif self.get_name(item) < self.startsort:
         should_skip = True
       if should_skip:
-        if self.i % skipsteps == 0:
+        if self.i % self.skipsteps == 0:
           pywikibot.output("skipping %s" % str(self.i))
         return False
 
@@ -762,7 +762,7 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
       if only_lang and "==%s==" % only_lang not in text:
         return None, None
       return process(index, pagetitle, text)
-    parse_dump(sys.stdin, do_process_text_on_page)
+    parse_dump(sys.stdin, do_process_text_on_page, start, end)
 
   elif args.pages or args.pagefile or args.cats or args.refs:
     if args.pages:
