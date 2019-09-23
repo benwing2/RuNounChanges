@@ -6,8 +6,6 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, site
 
-borrowed_langs = {}
-
 blib.getData()
 
 # Compile a map from etym language code to its first non-etym-language ancestor.
@@ -192,9 +190,10 @@ def process_text_on_page(index, pagetitle, pagetext):
 
   return pagehead + "".join(sections), "Use {{cog}} for cognates in place of LANG {{m|CODE|...}} or {{etyl|CODE|-}} {{m|CODE|...}}"
 
-parser = blib.create_argparser("Use {{cog}} for cognates in place of LANG {{m|CODE|...}} or {{etyl|CODE|-}} {{m|CODE|...}}",
-  include_pagefile=True, include_stdin=True)
-args = parser.parse_args()
-start, end = blib.parse_start_end(args.start, args.end)
+if __name__ == "__main__":
+  parser = blib.create_argparser("Use {{cog}} for cognates in place of LANG {{m|CODE|...}} or {{etyl|CODE|-}} {{m|CODE|...}}",
+    include_pagefile=True, include_stdin=True)
+  args = parser.parse_args()
+  start, end = blib.parse_start_end(args.start, args.end)
 
-blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True, default_refs=["Template:m"], ref_namespaces=[0])
+  blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True, default_refs=["Template:m"], ref_namespaces=[0])

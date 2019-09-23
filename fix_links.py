@@ -147,7 +147,7 @@ sinhalese_charset = u"\u0d82-\u0df4"
 # from [[Module:links]], or "latin" if the language uses the Latin script and
 # hence has no translit, or "notranslit" if the language doesn't do
 # auto-translit)
-languages = {
+language_codes_to_properties = {
     'af':["Afrikaans", lambda x:x, latin_charset, "latin"],
     'am':["Amharic", lambda x:x, u"ሀ-᎙ⶀ-ⷞꬁ-ꬮ", False],
     'ar':["Arabic", ar_remove_accents, arabic_charset, False],
@@ -244,9 +244,9 @@ languages = {
 #for code, desc in blib.languages_byCode.iteritems():
 #  canonical_
 
-language_names_to_lang_properties = {
+language_names_to_properties = {
   langprops[0]: [langcode] + langprops[1:]
-  for langcode, langprops in languages.iteritems()
+  for langcode, langprops in language_codes_to_properties.iteritems()
 }
 
 def do_remove_diacritics(text, patterns, remove_diacritics):
@@ -314,7 +314,7 @@ def process_text_on_page(index, pagetitle, text):
     thislangname = m.group(1)
     if thislangname in thislangnames:
       thislangcode, this_remove_accents, this_charset, this_ignore_translit = (
-          language_names_to_lang_properties[thislangname])
+          language_names_to_properties[thislangname])
 
       subsections = re.split("(^==.*==\n)", sections[j], 0, re.M)
       for k in xrange(2, len(subsections), 2):
@@ -533,16 +533,16 @@ if __name__ == "__main__":
     raise ValueError("Language code(s) must be specified")
 
   if args.langs == "all":
-    langs = sorted(list(languages.keys()))
+    langs = sorted(list(language_codes_to_properties.keys()))
   else:
     langs = [x.decode("utf-8") for x in args.langs.split(",")]
   default_cats = []
   thislangnames = set()
   for lang in langs:
-    if lang not in languages:
+    if lang not in language_codes_to_properties:
       raise ValueError("Unrecognized language code: %s" % lang)
     thislangname, this_remove_accents, this_charset, this_ignore_translit = (
-      languages[lang])
+      language_codes_to_properties[lang])
     default_cats.append("%s lemmas" % thislangname)
     default_cats.append("%s non-lemma forms" % thislangname)
     thislangnames.add(thislangname)
