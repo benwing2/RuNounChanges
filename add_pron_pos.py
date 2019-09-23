@@ -140,7 +140,7 @@ def find_noun_word_types(lemma, pagemsg):
 
   return per_word_types, seen_poses
 
-def process_page(index, page, save, verbose):
+def process_page(page, index, parsed):
   pagetitle = unicode(page.title())
   subpagetitle = re.sub("^.*:", "", pagetitle)
   def pagemsg(txt):
@@ -617,8 +617,6 @@ def process_page(index, page, save, verbose):
       return "%s (%s)" % (key, val)
 
   if new_text != text:
-    if verbose:
-      pagemsg("Replacing <%s> with <%s>" % (text, new_text))
     assert notes
     # Group identical notes together and append the number of such identical
     # notes if > 1, putting 'added pos=X' notes before others, so we get e.g.
@@ -635,18 +633,11 @@ def process_page(index, page, save, verbose):
     notes = [fmt_key_val(x, y) for x, y in added_pos]
     notes.extend([fmt_key_val(x, y) for x, y in not_added_pos])
 
-    comment = "; ".join(notes)
-    if save:
-      pagemsg("Saving with comment = %s" % comment)
-      page.text = new_text
-      blib.try_repeatedly(lambda: page.save(comment=comment), pagemsg,
-                    "save page")
-    else:
-      pagemsg("Would save with comment = %s" % comment)
+    return new_text, notes
 
-parser = blib.create_argparser(u"Add pos= to final -е ru-IPA, fix use of phonetic -и/-я")
+parser = blib.create_argparser(u"Add pos= to final -е ru-IPA, fix use of phonetic -и/-я",
+  include_pagefile=True)
 parser.add_argument('--posfile', help="File containing parts of speech for pages, in the form of part of speech, space, page name, one per line")
-parser.add_argument('--cats', default="lemma,nonlemma", help="Categories to do (lemma, nonlemma or comma-separated list)")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
@@ -664,19 +655,8 @@ if args.posfile:
       pos, page = m.groups()
       pages_pos[page] = pos
 
-categories = []
-for cattype in re.split(",", args.cats):
-  if cattype == "lemma":
-    categories.append("Russian lemmas")
-  elif cattype == "nonlemma":
-    categories.append("Russian non-lemma forms")
-  else:
-    raise RuntimeError("Invalid value %s, should be 'lemma' or 'nonlemma'" %
-        cattype)
-for category in categories:
-  msg("Processing category: %s" % category)
-  for i, page in blib.cat_articles(category, start, end):
-    process_page(i, page, args.save, args.verbose)
+blib.do_pagefile_cats_refs(args, start, end, process_page, edit=True,
+  default_cats=["Russian lemmas", "Russian non-lemma forms"])
 
 for page, pos in pages_pos.iteritems():
   msg("Page 000 %s: WARNING: Override for non-existent page, pos=%s" % (

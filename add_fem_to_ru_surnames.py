@@ -10,7 +10,7 @@ non_adjectival_names = [
   u"Дарвин"
 ]
 
-def process_page(index, page, save, verbose):
+def process_page(page, index, parsed):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -68,26 +68,12 @@ def process_page(index, page, save, verbose):
             notes.append("add feminine %s to %s" % (new_fem, name))
             pagemsg("Replacing %s with %s" % (origt, unicode(t)))
 
-  newtext = unicode(parsed)
+  return unicode(parsed), notes
 
-  if newtext != text:
-    if verbose:
-      pagemsg("Replacing <<%s>> with <<%s>>" % (text, newtext))
-    comment = "; ".join(notes)
-    if save:
-      pagemsg("Saving with comment = %s" % comment)
-      page.text = newtext
-      page.save(comment=comment)
-    else:
-      pagemsg("Would save with comment = %s" % comment)
-  else:
-    pagemsg("Skipping")
-
-parser = blib.create_argparser("Add feminines to Russian proper names")
+parser = blib.create_argparser("Add feminines to Russian proper names",
+  include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-for cat in ["Russian surnames"]:
-  msg("Processing category: %s" % cat)
-  for i, page in blib.cat_articles(cat, start, end):
-    process_page(i, page, args.save, args.verbose)
+blib.do_pagefile_cats_refs(args, start, end, process_page, edit=True,
+  default_cats=["Russian surnames"])

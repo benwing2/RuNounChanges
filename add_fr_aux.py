@@ -244,7 +244,7 @@ def compare_conjugation(index, page, template, refl, pagemsg, expand_text,
     difvals.append((prop, (curval, newval)))
   return difvals
 
-def process_page(index, page, save, verbose):
+def process_page(page, index, parsed):
   pagetitle = unicode(page.title())
   subpagetitle = re.sub("^.*:", "", pagetitle)
   def pagemsg(txt):
@@ -308,22 +308,12 @@ def process_page(index, page, save, verbose):
         pagemsg("Replacing %s with %s" % (oldt, newt))
         notes.append("replaced {{%s}} with %s" % (name, newt))
 
-  newtext = unicode(parsed)
-  if newtext != text:
-    assert notes
-    comment = "; ".join(notes)
-    if save:
-      pagemsg("Saving with comment = %s" % comment)
-      page.text = newtext
-      page.save(comment=comment)
-    else:
-      pagemsg("Would save with comment = %s" % comment)
+  return unicode(parsed), notes
 
-parser = blib.create_argparser("Convert old fr-conj-* to fr-conj-auto")
+parser = blib.create_argparser("Convert old fr-conj-* to fr-conj-auto",
+  include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-for cat in ["French verbs"]:
-  msg("Processing category: %s" % cat)
-  for i, page in blib.cat_articles(cat, start, end):
-    process_page(i, page, args.save, args.verbose)
+blib.do_pagefile_cats_refs(args, start, end, process_page, edit=True,
+  default_cats=["French verbs"])

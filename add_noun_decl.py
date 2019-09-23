@@ -172,7 +172,8 @@ keep_locative = [
     u"Западный берег"
 ]
     
-def process_page(index, page, save, verbose):
+def process_page(page, index, parsed):
+  global args
   pagetitle = unicode(page.title())
   subpagetitle = re.sub("^.*:", "", pagetitle)
   def pagemsg(txt):
@@ -185,7 +186,7 @@ def process_page(index, page, save, verbose):
     return
 
   def expand_text(tempcall):
-    return blib.expand_text(tempcall, pagetitle, pagemsg, verbose)
+    return blib.expand_text(tempcall, pagetitle, pagemsg, args.verbose)
 
   origtext = page.text
   parsed = blib.parse_text(origtext)
@@ -948,26 +949,22 @@ def process_page(index, page, save, verbose):
         else:
           pagemsg("Subbed in new declension: %s" % unicode(proposed_decl))
           notes.append("create declension from headword")
-          if verbose:
+          if args.verbose:
             pagemsg("Replaced <%s> with <%s>" % (text, newtext))
 
-  comment = "; ".join(notes)
-  if save:
-    pagemsg("Saving with comment = %s" % comment)
-    page.text = newtext
-    page.save(comment=comment)
-  else:
-    pagemsg("Would save with comment = %s" % comment)
+  return newtext, notes
 
+parser = blib.create_argparser("Convert ru-noun to ru-noun+, ru-proper noun to ru-proper noun+ for multiword nouns",
+  include_pagefile=True)
+args = parser.parse_args()
+start, end = blib.parse_start_end(args.start, args.end)
 
-parser = blib.create_argparser("Convert ru-noun to ru-noun+, ru-proper noun to ru-proper noun+ for multiword nouns")
-pargs = parser.parse_args()
-start, end = blib.parse_start_end(pargs.start, pargs.end)
-
+refs = []
 #for pos in ["proper nouns"]:
 for pos in ["nouns", "proper nouns"]:
   for refpage in ["Template:tracking/ru-headword/space-in-headword/%s" % pos,
       "Template:tracking/ru-headword/hyphen-no-space-in-headword/%s" % pos]:
-    msg("PROCESSING REFERENCES TO: %s" % refpage)
-    for i, page in blib.references(refpage, start, end):
-      process_page(i, page, pargs.save, pargs.verbose)
+    refs.append(refpage)
+
+blib.do_pagefile_cats_refs(args, start, end, process_page, edit=True,
+  default_refs=refs)
