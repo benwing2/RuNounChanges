@@ -217,13 +217,107 @@ def expand_text(tempcall, pagetitle, pagemsg, verbose):
     return False
   return result
 
+# For use inside of expand_text in EditParams below.
+def blib_expand_text(tempcall, pagetitle, pagemsg, verbose):
+  return expand_text(tempcall, pagetitle, pagemsg, verbose)
+
+class EditParams(object):
+  def __init__(self, index, page, save=False, verbose=False, diff=False):
+    self.index = index
+    self.page = page
+    self.title = unicode(page.title())
+    self.save = save
+    self.verbose = verbose
+    self.diff = diff
+
+  def pagemsg(self, txt):
+    msg("Page %s %s: %s" % (self.index, self.title, txt))
+
+  def errandpagemsg(self, txt):
+    errandmsg("Page %s %s: %s" % (self, index, self, title, txt))
+
+  def expand_text(self, tempcall):
+    return blib_expand_text(tempcall, self.title, self.pagemsg, self.verbose)
+
+def new_do_edit(index, page, func=None, null=False, save=False, verbose=False, diff=False):
+  p = EditParams(index, page, save=save, verbose=verbose, diff=diff)
+  while True:
+    try:
+      if func:
+        if verbose:
+          p.pagemsg("Begin processing")
+        retval = func(page, index, parse(page))
+        if retval is None:
+          new = None
+          comment = None
+        else:
+          new, comment = retval
+
+        if type(comment) is list:
+          comment = "; ".join(group_notes(comment))
+
+        if new:
+          new = unicode(new)
+
+          # Canonicalize shaddas when comparing pages so we don't do saves
+          # that only involve different shadda orders.
+          if reorder_shadda(page.text) != reorder_shadda(new):
+            assert comment
+            if diff:
+              p.pagemsg('Diff:')
+              oldlines = page.text.splitlines(True)
+              newlines = new.splitlines(True)
+              diff = difflib.unified_diff(oldlines, newlines)
+              dangling_newline = False
+              for line in diff:
+                dangling_newline = not line.endswith('\n')
+                sys.stdout.write(line.encode('utf-8'))
+                if dangling_newline:
+                  sys.stdout.write("\n")
+              if dangling_newline:
+                sys.stdout.write("\\ No newline at end of file\n")
+              #pywikibot.showDiff(page.text, new, context=3)
+            elif verbose:
+              p.pagemsg('Replacing <%s> with <%s>' % (page.text, new))
+
+            page.text = new
+            if save:
+              p.pagemsg("Saving with comment = %s" % comment)
+              page.save(comment = comment)
+            else:
+              p.pagemsg("Would save with comment = %s" % comment)
+          elif null:
+            p.pagemsg('Purged page cache')
+            page.purge(forcelinkupdate = True)
+          else:
+            p.pagemsg('Skipped, no changes')
+        elif null:
+          p.pagemsg('Purged page cache')
+          page.purge(forcelinkupdate = True)
+        else:
+          p.pagemsg('Skipped: %s' % comment)
+      else:
+        p.pagemsg('Purged page cache')
+        page.purge(forcelinkupdate = True)
+    except (pywikibot.LockedPage, pywikibot.NoUsername):
+      p.errandpagemsg('WARNING: Skipped, page is protected')
+    except pywikibot.exceptions.PageSaveRelatedError as e:
+      p.errandpagemsg('WARNING: Skipped, unable to save (abuse filter?): %s' % e)
+    except urllib2.HTTPError as e:
+      if e.code != 503:
+        raise
+    except:
+      p.errandpagemsg('WARNING: Error')
+      raise
+
+    break
+
 def do_edit(page, index, func=None, null=False, save=False, verbose=False, diff=False):
   title = unicode(page.title())
-  def pagemsg(text):
-    msg("Page %s %s: %s" % (index, title, text))
-  def errpagemsg(txt):
+  def pagemsg(txt):
     msg("Page %s %s: %s" % (index, title, txt))
-    errmsg("Page %s %s: %s" % (index, title, txt))
+  def errandpagemsg(txt):
+    errandmsg("Page %s %s: %s" % (index, title, txt))
   while True:
     try:
       if func:
@@ -283,14 +377,14 @@ def do_edit(page, index, func=None, null=False, save=False, verbose=False, diff=
         pagemsg('Purged page cache')
         page.purge(forcelinkupdate = True)
     except (pywikibot.LockedPage, pywikibot.NoUsername):
-      errpagemsg(u'Page %s %s: WARNING: Skipped, page is protected' % (index, title))
+      errandpagemsg('WARNING: Skipped, page is protected')
     except pywikibot.exceptions.PageSaveRelatedError as e:
-      errpagemsg(u'Page %s %s: WARNING: Skipped, unable to save (abuse filter?): %s' % (index, title, e))
+      errandpagemsg('WARNING: Skipped, unable to save (abuse filter?): %s' % e)
     except urllib2.HTTPError as e:
       if e.code != 503:
         raise
     except:
-      errpagemsg(u'Page %s %s: WARNING: Error' % (index, title))
+      errandpagemsg(u'WARNING: Error')
       raise
 
     break
