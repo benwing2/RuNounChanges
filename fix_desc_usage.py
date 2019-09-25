@@ -10,8 +10,9 @@ from fix_cog_usage import etym_language_to_parent, language_name_to_code
 from fix_links import language_codes_to_properties, sh_remove_accents
 
 langcode_langname_to_correct_langcode = {
-  ("Middle Chinese", "zh"): "ltc",
-  ("Old Chinese", "zh"): "och",
+  # Don't do the following; they aren't correct.
+  # ("Middle Chinese", "zh"): "ltc",
+  # ("Old Chinese", "zh"): "och",
   ("Middle French", "fr"): "frm",
   ("Old French", "fr"): "fro",
   ("Low German", "nds-de"): "nds-de",
@@ -77,7 +78,8 @@ langcode_langname_to_correct_langcode = {
   ("Galician", "pt"): "gl",
   # Chinese, cmn 
   ("Catalan", "en"): "ca",
-  ("Cantonese", "zh"): "yue",
+  # Don't do the following; it isn't correct.
+  # ("Cantonese", "zh"): "yue",
   # Wa, prk
   ("Ukrainian", "ru"): "uk",
   # Swedish, gmq-osw
@@ -117,16 +119,16 @@ non_canonical_to_canonical_names = {
   # Nynorsk: more specific than Norwegian
   "Azeri": "Azerbaijani",
   "Old Frankish": "Frankish",
-  "Cuman": "Kipchak",
+  "Cuman": "Kipchak", # is this correct?
   "Khorezmian": "Khwarezmian",
   "East Frisian": "Saterland Frisian",
   "Uighur": "Uyghur",
   "Meadow Mari": "Eastern Mari",
   "Hill Mari": "Western Mari",
-  "Komi": "Komi-Zyrian",
+  "Komi": "Komi-Zyrian", # is this correct?
   # Croatian: ? map to Serbo-Croatian?
   # Nancowry: more specific than Central Nicobarese
-  "Mari": "Eastern Mari",
+  # Mari: less specific than Eastern Mari
   "Malaccan Creole Portuguese": "Kristang",
   "Modern Greek": "Greek",
   "Odia": "Oriya",
@@ -134,10 +136,10 @@ non_canonical_to_canonical_names = {
   # Gascon: more specific than Occitan
   "Nogay": "Nogai",
   "Kurripako": "Curripaco",
-  # Official Aramaic: ? more specific than Aramaic?
+  "Official Aramaic": "Imperial Aramaic",
   "Southern Altay": "Southern Altai",
   "Ludic": "Ludian",
-  # Sorani: ? map to Central Kurdish?
+  "Sorani": "Central Kurdish",
   "Sinhala": "Sinhalese",
   "Car": "Car Nicobarese",
   # Serbian: ? map to Serbo-Croatian?
@@ -157,7 +159,7 @@ non_canonical_to_canonical_names = {
   # Kinyarwanda: ? more specific than Rwanda-Rundi?
   # Kajkavian: more specific than Serbo-Croatian
   "Izhorian": "Ingrian",
-  # Flemish: more specific than Dutch
+  # Flemish: ? more specific than Dutch?
   "Belarussian": "Belarusian",
   "Sipakapa": "Sipakapense",
   # Ripuarian: ? more specific than Central Franonian?
@@ -171,18 +173,31 @@ non_canonical_to_canonical_names = {
   # Siglitun: ? more specific than Inuktitut?
   "Salako": "Kendayan",
   "Proto-Sami": "Proto-Samic",
-  # Poitevin: more specific than Frernch
+  "Poitevin": "Poitevin-Saintongeais",
   "Old Uighur": "Old Uyghur",
   # Nunatsiavummiut: ? more specific than Inuktitut?
   "Khamnigan": "Khamnigan Mongol",
   # Inuinnaqtun: ? more specific than Inkutitut?
   "Ilokano": "Ilocano",
-  "High German": "German",
+  # "High German": "German",
   # Erzgebirgisch: more specific than East Central German
   # Bontok: not same as Central Bontoc
   "Bikol": "Bikol Central",
   "Balochi": "Baluchi",
   # Amuzgo: not same as Guerrero Amuzgo
+  ###
+  ### Names formerly unrecognized, now non-canonical
+  ###
+  "Khalkha": "Khalkha Mongolian",
+  "Eastern Yugur": "East Yugur",
+  "Orkhon": "Old Turkic",
+  "Sgaw": "S'gaw Karen",
+  "Faeroese": "Faroese",
+}
+
+unrecognized_to_canonical_names = {
+  "Written Tibetan": ("Written", "Tibetan"),
+  "Written Burmese": ("Written", "Burmese"),
 }
 
 def process_text_on_page(index, pagetitle, pagetext):
@@ -281,6 +296,19 @@ def process_text_on_page(index, pagetitle, pagetext):
         langname, new_langname, origtext))
       langname = new_langname
 
+    pretext = ""
+    if langname in unrecognized_to_canonical_names:
+      spec = unrecognized_to_canonical_names[langname]
+      if type(spec) is tuple:
+        new_pretext, new_langname = spec
+        pretext = new_pretext + " "
+      else:
+        new_langname = spec
+      pagemsg("Replacing unrecognized %s with %s%s: %s" % (
+        langname, new_langname, ' (with pretext "%s")' % pretext if pretext else "",
+        origtext))
+      langname = new_langname
+
     if langname not in language_name_to_code:
       pagemsg("WARNING: Saw unrecognized lang name <%s>" % langname)
       return origtext
@@ -349,7 +377,7 @@ def process_text_on_page(index, pagetitle, pagetext):
     parsed = blib.parse_text(links)
     made_mod = False
     for t in parsed.filter_templates():
-      if tname(t) == "l":
+      if tname(t) in ["l", "m"]:
         template_langcode = getparam(t, "1")
         if (langname, template_langcode) in langcode_langname_to_correct_langcode:
           new_langcode = langcode_langname_to_correct_langcode[(langname, template_langcode)]
@@ -357,7 +385,9 @@ def process_text_on_page(index, pagetitle, pagetext):
             if template_langcode in blib.languages_byCode:
               new_langname = blib.languages_byCode[template_langcode]["canonicalName"]
             elif template_langcode in blib.etym_languages_byCode:
-              new_langname = blib.etym_languages_byCode[template_langcode]["canonicalName"]
+              pagemsg("WARNING: Encountered template langcode %s that's an etymology language: %s" % (
+                template_langcode, origtext))
+              break
             else:
               pagemsg("WARNING: Encountered unrecognized template langcode %s: %s" % (
                 template_langcode, origtext))
@@ -371,10 +401,15 @@ def process_text_on_page(index, pagetitle, pagetext):
             pagemsg("Replacing language code %s with %s based on language name %s and template langcode %s in %s: %s" % (
               langcode, new_langcode, langname, template_langcode, unicode(t), origtext))
             langcode = new_langcode
+          link_langcode = etym_language_to_parent.get(langcode, langcode)
           origt = unicode(t)
-          t.add("1", new_langcode)
-          pagemsg("Replacing langcode %s in template %s with %s based on language name %s, producing %s: %s" %
-            (template_langcode, origt, new_langcode, langname, unicode(t), origtext))
+          t.add("1", link_langcode)
+          if langcode == link_langcode:
+            pagemsg("Replacing langcode %s in template %s with %s based on language name %s, producing %s: %s" %
+              (template_langcode, origt, link_langcode, langname, unicode(t), origtext))
+          else:
+            pagemsg("Replacing langcode %s in template %s with %s based on etymology language name %s with langcode %s, producing %s: %s" %
+              (template_langcode, origt, link_langcode, langname, langcode, unicode(t), origtext))
           made_mod = True
     if made_mod:
       links = unicode(parsed)
@@ -400,7 +435,7 @@ def process_text_on_page(index, pagetitle, pagetext):
       bortext = ""
     links = re.sub(r"\{\{[lm]\|[^{}|\n]*?\|(.*?)\}\}",
         r"{{desc|%s|\1%s}}" % (langcode, bortext), links, 1)
-    newtext = "%s%s" % (bullets, links.lstrip())
+    newtext = "%s%s%s" % (bullets, pretext, links.lstrip())
     pagemsg("Replacing <%s> with <%s>" % (origtext, newtext))
     return newtext
 
@@ -414,7 +449,7 @@ def process_text_on_page(index, pagetitle, pagetext):
          replace_with_desc, text, 0, re.M)
       sections[i] = text
 
-  return pagehead + "".join(sections), "Use {{desc}} for cognates in place of LANG {{l|CODE|...}} or LANG [[LINK]]"
+  return pagehead + "".join(sections), "Use {{desc}} for descendants in place of LANG {{l|CODE|...}} or LANG [[LINK]]"
 
 parser = blib.create_argparser("Use {{desc}} for descendants in place of LANG {{l|CODE|...}} or LANG [[LINK]]",
   include_pagefile=True, include_stdin=True)
