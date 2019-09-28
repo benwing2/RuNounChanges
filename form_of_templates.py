@@ -161,7 +161,7 @@ form_of_templates = [
   ("imperfective form of", {"cat": "imperfective verbs"}),
   ("indefinite plural of", {}),
   ("inflected form of", {}),
-  ("inflection of", {"deprecated-aliases": ["conjugation of"]}),
+  ("inflection of", {"aliases": ["infl of"], "deprecated-aliases": ["conjugation of"]}),
   ("informal form of", {"withcap": True, "withdot": True, "cat": "informal forms"}),
   ("informal spelling of", {"withcap": True, "withdot": True, "cat": "informal forms"}),
   ("initialism of", {"aliases": ["init of"], "withcap": True, "withdot": True, "cat": "initialisms"}),
