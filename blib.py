@@ -379,7 +379,9 @@ def do_edit(page, index, func=None, null=False, save=False, verbose=False, diff=
     except (pywikibot.LockedPage, pywikibot.NoUsername):
       errandpagemsg('WARNING: Skipped, page is protected')
     except pywikibot.exceptions.PageSaveRelatedError as e:
-      errandpagemsg('WARNING: Skipped, unable to save (abuse filter?): %s' % e)
+      # This needs to have Unicode format string or it will choke on
+      # exceptions with Unicode characters in the message.
+      errandpagemsg(u'WARNING: Skipped, unable to save (abuse filter?): %s' % e)
     except urllib2.HTTPError as e:
       if e.code != 503:
         raise
