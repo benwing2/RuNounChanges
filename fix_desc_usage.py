@@ -359,9 +359,19 @@ def process_text_on_page(index, pagetitle, pagetext):
         language_codes_to_properties[link_langcode])
 
     # Replace raw links with templated links.
-    new_links = re.sub(r"\[\[([^\[\]\n]*?)\]\]",
-      lambda m: sub_link(m, langname, link_langcode, link_langcode_remove_accents,
-        origtext, add_sclb=False), links)
+    def replace_raw_link(m):
+      linktext = m.group(0)
+      if linktext.startswith("["):
+        mm = re.search(r"^\[\[([^\[\]\n]*?)\]\]$", linktext)
+        if not mm:
+          pagemsg("WARNING: Something wrong, not a raw link: %s: %s" % (linktext, origtext))
+          return linktext
+        return sub_link(m, langname, link_langcode, link_langcode_remove_accents,
+          origtext, add_sclb=False)
+      return linktext
+    # We don't want to replace raw links inside of templates, so we match both templates
+    # and raw links and don't change the templates.
+    new_links = re.sub(r"\{\{[^{}\n]*?\}\}|\[\[[^\[\]\n]*?\]\]", replace_raw_link, links)
     if new_links != links:
       pagemsg("Replacing raw link <%s> with <%s>" % (links, new_links))
       links = new_links
