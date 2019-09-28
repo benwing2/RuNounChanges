@@ -11,7 +11,9 @@ from blib import getparam, rmparam, msg, site
 
 # import runounlib
 
-def process_page(index, page, save, verbose, lemmas):
+def process_page(page, index, parsed):
+  global args
+  verbose = args.verbose
   pagetitle = unicode(page.title())
   subpagetitle = re.sub("^.*:", "", pagetitle)
   def pagemsg(txt):
@@ -70,14 +72,7 @@ def process_page(index, page, save, verbose, lemmas):
     if num_ru_proper_noun_subs > 0:
       notes.append("copy ru-noun-table params to ru-proper noun+%s" % (
         "" if num_ru_proper_noun_subs == 1 else " (%s)" % num_ru_proper_noun_subs))
-    assert notes
-    comment = "; ".join(notes)
-    if save:
-      pagemsg("Saving with comment = %s" % comment)
-      page.text = new_text
-      page.save(comment=comment)
-    else:
-      pagemsg("Would save with comment = %s" % comment)
+    return new_text, notes
 
 def process_page_section(index, page, section, verbose):
   pagetitle = unicode(page.title())
@@ -250,7 +245,7 @@ def process_page_section(index, page, section, verbose):
           % (existing_filtered_headword_template, new_headword_template))
       change_existing_headword = True
 
-  if change_existing_headword and (not lemmas or pagetitle in lemmas):
+  if change_existing_headword:
     del headword_template.params[:]
     for param in modified_noun_table_template.params:
       headword_template.add(param.name, param.value)
@@ -290,28 +285,10 @@ def process_page_section(index, page, section, verbose):
 
   return unicode(parsed), ru_noun_table_cleaned, ru_noun_table_link_copied, ru_noun_changed, ru_proper_noun_changed
 
-parser = blib.create_argparser("Copy the declension in ru-noun-table to ru-noun+, preserving any m=, f=, g=, etc. in the latter.")
-parser.add_argument('--cats', default="nouns,proper nouns", help="Categories to do ('nouns', 'proper nouns' or 'nouns,proper nouns')")
-parser.add_argument('--lemma-file', help="File containing lemmas to copy declension of. Will remove extraneous params from ru-noun-table and copy links to ru-noun-table regardless of this.")
+parser = blib.create_argparser("Copy the declension in ru-noun-table to ru-noun+, preserving any m=, f=, g=, etc. in the latter.",
+  include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-if args.lemma_file:
-  lemmas = set([x.strip() for x in codecs.open(args.lemma_file, "r", "utf-8")])
-else:
-  lemmas = None
-
-for cat in re.split(",", args.cats):
-  if cat == "nouns":
-    template = "Template:ru-noun+"
-  elif cat == "proper nouns":
-    template = "Template:ru-proper noun+"
-  else:
-    raise ValueError("Invalid value to --cats: %s" % cat)
-  msg("Processing references to %s" % template)
-  if lemmas:
-    for i, page in blib.iter_items(lemmas, start, end):
-      process_page(i, pywikibot.Page(site, page), args.save, args.verbose, lemmas)
-  else:
-    for i, page in blib.references(template, start, end):
-      process_page(i, page, args.save, args.verbose, lemmas)
+blib.do_pagefile_cats_refs(args, start, end, process_page, edit=True,
+  default_refs=["Template:ru-noun+", "Template:ru-proper noun+"])

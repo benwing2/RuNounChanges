@@ -9,7 +9,7 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, site
 
-def process_page(index, page, save, verbose):
+def process_page(page, index, parsed):
   pagetitle = unicode(page.title())
   subpagetitle = re.sub("^.*:", "", pagetitle)
   def pagemsg(txt):
@@ -121,29 +121,16 @@ def process_page(index, page, save, verbose):
         pagemsg("WARNING: Apparent raw-text short inflection, not converted: %s" %
             (m and m.group(1) or "Can't get line?"))
 
-  new_text = "".join(sections)
-
-  if new_text != text:
-    if verbose:
-      pagemsg("Replacing <%s> with <%s>" % (text, new_text))
-    assert notes
-    comment = "; ".join(blib.group_notes(notes))
-    if save:
-      pagemsg("Saving with comment = %s" % comment)
-      page.text = new_text
-      page.save(comment=comment)
-    else:
-      pagemsg("Would save with comment = %s" % comment)
-
   if not notes and not already_canonicalized:
     pagemsg("Skipping, no short form found%s" % (
       warned_about_short and " (warning issued)" or " (no warning)"))
 
-parser = blib.create_argparser(u"Add 'inflection of' for raw short adjective forms and canonicalize existing 'inflection of'")
+  return "".join(sections), notes
+
+parser = blib.create_argparser("Add 'inflection of' for raw short adjective forms and canonicalize existing 'inflection of'",
+  include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-for category in ["Russian adjective forms"]:
-  msg("Processing category: %s" % category)
-  for i, page in blib.cat_articles(category, start, end):
-    process_page(i, page, args.save, args.verbose)
+blib.do_pagefile_cats_refs(args, start, end, process_page, edit=True,
+  default_cats=["Russian adjective forms"])

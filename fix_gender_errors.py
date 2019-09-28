@@ -6,7 +6,7 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, site
 
-def process_page(index, page, save, verbose, genders):
+def process_page(index, page, genders):
   pagetitle = unicode(page.title())
   subpagetitle = re.sub(".*:", "", pagetitle)
   def pagemsg(txt):
@@ -39,16 +39,11 @@ def process_page(index, page, save, verbose, genders):
     headword_template.add(param, g)
   pagemsg("Replacing %s with %s" % (orig_template, unicode(headword_template)))
 
-  comment = "Fix headword gender, substituting new value %s" % ",".join(genders)
-  if save:
-    pagemsg("Saving with comment = %s" % comment)
-    page.text = unicode(parsed)
-    page.save(comment=comment)
-  else:
-    pagemsg("Would save with comment = %s" % comment)
+  return unicode(parsed), "Fix headword gender, substituting new value %s" % ",".join(genders)
 
 parser = blib.create_argparser("Fix gender errors introduced by fix_ru_noun.py")
-parser.add_argument('--pagefile', help="File containing pages and warnings to process")
+parser.add_argument('--direcfile', help="File containing pages and warnings to process",
+  required=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
@@ -61,5 +56,7 @@ for i, line in blib.iter_items(lines, start, end):
   else:
     page, genders = m.groups()
     msg("Page %s %s: Processing: %s" % (i, page, line))
-    process_page(i, pywikibot.Page(site, page), args.save, args.verbose,
-        re.split(",", genders))
+    def do_process_page(page, index, parsed):
+      return process_page(index, page, re.split(",", genders))
+    blib.do_edit(pywikibot.Page(site, page), i, do_process_page, save=args.save,
+      verbose=args.verbose, diff=args.diff)

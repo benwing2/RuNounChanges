@@ -10,7 +10,7 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, site
 
-def process_page(index, page, save, verbose):
+def process_page(page, index, parsed):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -42,21 +42,14 @@ def process_page(index, page, save, verbose):
     r"\1Borrowed from \2\3}}", text, 0, re.M | re.X)
 
   if text != origtext:
-    if verbose:
-      pagemsg("Replacing <%s> with <%s>" % (origtext, text))
-    comment = "Remove withtext= from {{bor}}/{{borrowed}}/{{borrowing}}"
-    if save:
-      pagemsg("Saving with comment = %s" % comment)
-      page.text = text
-      page.save(comment=comment)
-    else:
-      pagemsg("Would save with comment = %s" % comment)
+    return text, "Remove withtext= from {{bor}}/{{borrowed}}/{{borrowing}}"
   else:
     pagemsg("WARNING: Unable to remove withtext=1")
 
-parser = blib.create_argparser(u"Replace withtext= in {{bor}} with 'Borrowed from {{bor}}'")
+parser = blib.create_argparser("Replace withtext= in {{bor}} with 'Borrowed from {{bor}}'",
+  include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-for i, page in blib.cat_articles("bor with withtext", start, end):
-  process_page(i, page, args.save, args.verbose)
+blib.do_pagefile_cats_refs(args, start, end, process_page, edit=True,
+  default_cats=["bor with withtext"])

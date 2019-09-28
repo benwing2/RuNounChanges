@@ -8,7 +8,7 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, site
 
-def process_page(index, page, save, verbose):
+def process_page(page, index, parsed):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -42,25 +42,12 @@ def process_page(index, page, save, verbose):
           sections[j] = '\n===Etymology===\nLiterally, "%s".\n%s%s%s' % (m.group(3), m.group(1), m.group(2), m.group(4))
           notes.append("Move literal meaning '%s' to etymology" % m.group(3))
 
-  newtext = "".join(sections)
+  return "".join(sections), notes
 
-  if newtext != text:
-    if verbose:
-      pagemsg("Replacing <%s> with <%s>" % (text, newtext))
-    assert notes
-    comment = "; ".join(blib.group_notes(notes))
-    if save:
-      pagemsg("Saving with comment = %s" % comment)
-      page.text = newtext
-      page.save(comment=comment)
-    else:
-      pagemsg("Would save with comment = %s" % comment)
-
-parser = blib.create_argparser('Convert "literally X" expressions in the definition of a proverb into etymologies')
+parser = blib.create_argparser('Convert "literally X" expressions in the definition of a proverb into etymologies',
+  include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-for category in ["Russian proverbs"]:
-  msg("Processing category: %s" % category)
-  for i, page in blib.cat_articles(category, start, end):
-    process_page(i, page, args.save, args.verbose)
+blib.do_pagefile_cats_refs(args, start, end, process_page, edit=True,
+  default_cats=["Russian proverbs"])

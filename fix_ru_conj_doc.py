@@ -8,7 +8,7 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, site
 
-def process_page(index, page, save, verbose):
+def process_page(page, index, parsed):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -17,16 +17,9 @@ def process_page(index, page, save, verbose):
   return
 
   pagemsg("Processing")
-  new_text = "#REDIRECT [[Module:ru-verb/documentation]]"
-  comment = "redirect to [[Module:ru-verb/documentation]]"
-  if save:
-    pagemsg("Saving with comment = %s" % comment)
-    page.text = new_text
-    page.save(comment=comment)
-  else:
-    pagemsg("Would save with comment = %s" % comment)
+  return "#REDIRECT [[Module:ru-verb/documentation]]", "redirect to [[Module:ru-verb/documentation]]"
 
-parser = blib.create_argparser(u"Redirect ru-conj-* documentation pages")
+parser = blib.create_argparser("Redirect ru-conj-* documentation pages")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
@@ -41,4 +34,5 @@ types = ["7a", "7b", "8a", "8b", "9a", "9b", "10a", "10c", "11a", "11b",
     u"irreg-плескать", u"irreg-внимать", u"irreg-обязывать"]
 for i, ty in blib.iter_items(types, start, end):
   template = "Template:ru-conj-%s/documentation" % ty
-  process_page(i, pywikibot.Page(site, template), args.save, args.verbose)
+  blib.do_edit(pywikibot.Page(site, template), i, process_page, save=args.save,
+    verbose=args.verbose, diff=args.diff)

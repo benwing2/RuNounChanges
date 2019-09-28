@@ -21,7 +21,7 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, site
 
-def process_page(index, page, save, verbose):
+def process_page(page, index, parsed):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -135,22 +135,12 @@ def process_page(index, page, save, verbose):
     if origt != newt:
       pagemsg("Replacing %s with %s" % (origt, newt))
 
-  newtext = unicode(parsed)
-  if newtext != text:
-    assert notes
-    comment = "; ".join(notes)
-    if save:
-      pagemsg("Saving with comment = %s" % comment)
-      page.text = newtext
-      page.save(comment=comment)
-    else:
-      pagemsg("Would save with comment = %s" % comment)
+  return unicode(parsed), notes
 
-parser = blib.create_argparser("Remove extraneous params from {{fr-adj}}")
+parser = blib.create_argparser("Remove extraneous params from {{fr-adj}}",
+  include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-for cat in ["French adjectives"]:
-  msg("Processing category: %s" % cat)
-  for i, page in blib.cat_articles(cat, start, end):
-    process_page(i, page, args.save, args.verbose)
+blib.do_pagefile_cats_refs(args, start, end, process_page, edit=True,
+  default_cats=["French adjectives"])

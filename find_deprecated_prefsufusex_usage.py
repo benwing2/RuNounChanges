@@ -10,7 +10,7 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, site, tname
 
-def process_page(index, page, save, verbose):
+def process_page(page, index, parsed):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -88,26 +88,13 @@ def process_page(index, page, save, verbose):
     if origt != newt:
       pagemsg("Replaced %s with %s" % (origt, newt))
 
-  newtext = unicode(parsed)
-
-  if newtext != text:
-    if verbose:
-      pagemsg("Replacing <%s> with <%s>" % (text, newtext))
-    assert notes
-    comment = "; ".join(blib.group_notes(notes))
-    if save:
-      pagemsg("Saving with comment = %s" % comment)
-      page.text = newtext
-      page.save(comment=comment)
-    else:
-      pagemsg("Would save with comment = %s" % comment)
+  return unicode(parsed), notes
 
 
-parser = blib.create_argparser('Find deprecated usages of {{prefixusex}} and {{suffixusex}} and fix some of them')
+parser = blib.create_argparser('Find deprecated usages of {{prefixusex}} and {{suffixusex}} and fix some of them',
+  include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-for template in ["prefixusex", "suffixusex"]:
-  msg("Processing references to Template:%s" % template)
-  for i, page in blib.references("Template:%s" % template, start, end):
-    process_page(i, page, args.save, args.verbose)
+blib.do_pagefile_cats_refs(args, start, end, process_page, edit=True,
+  default_refs=["Template:prefixusex", "Template:suffixusex"])

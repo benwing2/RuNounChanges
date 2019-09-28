@@ -8,7 +8,7 @@ from blib import getparam, rmparam, msg, site
 
 borrowed_langs = {}
 
-def process_page(index, page, save, verbose):
+def process_page(page, index, parsed):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -115,25 +115,15 @@ def process_page(index, page, save, verbose):
   if not found_borrowing:
     pagemsg("WARNING: Can't find proper borrowing template")
 
-  if text != orig_text:
-    comment = "Use {{inh}}/{{bor}} in Russian for terms inherited or borrowed"
-    if save:
-      pagemsg("Saving with comment = %s" % comment)
-      page.text = text
-      page.save(comment=comment)
-    else:
-      pagemsg("Would save with comment = %s" % comment)
-  else:
-    pagemsg("Skipping")
+  return text, "Use {{inh}}/{{bor}} in Russian for terms inherited or borrowed"
 
-parser = blib.create_argparser("Use {{inh}} and {{bor}} where possible in Russian")
+parser = blib.create_argparser("Use {{inh}} and {{bor}} where possible in Russian",
+  include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-for cat in ["Russian lemmas", "Russian non-lemma forms"]:
-  msg("Processing category %s" % cat)
-  for i, page in blib.cat_articles(cat, start, end):
-    process_page(i, page, args.save, args.verbose)
+blib.do_pagefile_cats_refs(args, start, end, process_page, edit=True,
+  default_cats=["Russian lemmas", "Russian non-lemma forms"])
 
 msg("")
 msg("Processed borrowed languages:")

@@ -232,7 +232,7 @@ def process_line(index, line, add_passive_of, override_etym, save, verbose):
       pagemsg("Would save with comment = %s" % comment)
 
 if __name__ == "__main__":
-  parser = blib.create_argparser("Fix params in RQ:Wodehouse Offing templates")
+  parser = blib.create_argparser("Add etymologies to Russian pages based on directives")
   parser.add_argument('--direcfile', help="File containing directives.")
   parser.add_argument('--add-passive-of', action='store_true',
       help="Add {{passive of|lang=ru|...}} to defn.")

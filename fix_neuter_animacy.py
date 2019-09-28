@@ -6,7 +6,7 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, site
 
-def process_page(index, page, save, verbose, fix_indeclinable):
+def process_page(page, index, fix_indeclinable):
   pagetitle = unicode(page.title())
   subpagetitle = re.sub(".*:", "", pagetitle)
   def pagemsg(txt):
@@ -56,29 +56,22 @@ def process_page(index, page, save, verbose, fix_indeclinable):
             return
         pagemsg("Replacing %s with %s" % (origt, unicode(t)))
 
-  new_text = unicode(parsed)
+  if notes:
+    comment = "Add inanimacy to neuters (%s)" % "; ".join(notes)
+  else:
+    comment = "Add inanimacy to neuters"
 
-  if new_text != text:
-    if verbose:
-      pagemsg("Replacing <%s> with <%s>" % (text, new_text))
-    if notes:
-      comment = "Add inanimacy to neuters (%s)" % "; ".join(notes)
-    else:
-      comment = "Add inanimacy to neuters"
-    if save:
-      pagemsg("Saving with comment = %s" % comment)
-      page.text = new_text
-      page.save(comment=comment)
-    else:
-      pagemsg("Would save with comment = %s" % comment)
+  return unicode(parsed), comment
 
-parser = blib.create_argparser("Make neuter nouns be inanimate")
+parser = blib.create_argparser("Make neuter nouns be inanimate",
+  include_pagefile=True)
 parser.add_argument("--fix-indeclinable", action="store_true",
     help="Make non-indeclinables be indeclinable")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-for i, page in blib.references("Template:ru-noun", start, end):
-  process_page(i, page, args.save, args.verbose, args.fix_indeclinable)
-for i, page in blib.references("Template:ru-proper noun", start, end):
-  process_page(i, page, args.save, args.verbose, args.fix_indeclinable)
+def do_process_page(page, index, parsed):
+  return process_page(index, page, args.fix_indeclinable)
+
+blib.do_pagefile_cats_refs(args, start, end, do_process_page, edit=True,
+  default_refs=["Template:ru-noun", "Template:ru-proper noun"])

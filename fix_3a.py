@@ -8,7 +8,7 @@ from blib import getparam, rmparam, msg, site
 
 import rulib
 
-def process_page(index, page, direc, delete_bad, fix_verbs, save, verbose):
+def process_page(index, page, direc, delete_bad, verbose):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -90,24 +90,11 @@ def process_page(index, page, direc, delete_bad, fix_verbs, save, verbose):
     if origt != newt:
       pagemsg("Replaced %s with %s" % (origt, newt))
 
-  new_text = unicode(parsed)
+  return unicode(parsed), notes
 
-  if new_text != text and fix_verbs:
-    if verbose:
-      pagemsg("Replacing <%s> with <%s>" % (text, new_text))
-    assert notes
-    comment = "; ".join(notes)
-    if save:
-      pagemsg("Saving with comment = %s" % comment)
-      page.text = new_text
-      page.save(comment=comment)
-    else:
-      pagemsg("Would save with comment = %s" % comment)
-
-parser = blib.create_argparser(u"Fix up class 3a")
+parser = blib.create_argparser("Fix up class 3a")
 parser.add_argument('--direcfile', help="File containing pages to fix and directives.")
 parser.add_argument('--delete-bad', action="store_true", help="Delete bad forms.")
-parser.add_argument('--fix-verbs', action="store_true", help="Fix verb conjugation.")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
@@ -118,4 +105,7 @@ for i, line in blib.iter_items(lines, start, end):
     msg("Skipping comment: %s" % line)
   else:
     page, direc = re.split(" ", line)
-    process_page(i, pywikibot.Page(site, page), direc, args.delete_bad, args.fix_verbs, args.save, args.verbose)
+    def do_process_page(page, index, parsed):
+      return process_page(index, page, direc, args.delete_bad, args.verbose)
+    blib.do_edit(pywikibot.Page(site, page), i, do_process_page, save=args.save,
+      verbose=args.verbose, diff=args.diff)

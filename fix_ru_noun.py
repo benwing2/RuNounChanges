@@ -17,7 +17,7 @@ from blib import getparam, rmparam, msg, site
 
 import runounlib
 
-def process_page(index, page, save, verbose):
+def process_page(page, index, parsed):
   pagetitle = unicode(page.title())
   subpagetitle = re.sub("^.*:", "", pagetitle)
   def pagemsg(txt):
@@ -79,13 +79,7 @@ def process_page(index, page, save, verbose):
       notes.append("transfer %s to decl template" % (
         ",".join("tr=%s" % x for x in transferred_tr)))
     assert notes
-    comment = "; ".join(notes)
-    if save:
-      pagemsg("Saving with comment = %s" % comment)
-      page.text = new_text
-      page.save(comment=comment)
-    else:
-      pagemsg("Would save with comment = %s" % comment)
+    return new_text, notes
 
 def process_page_section(index, page, section, verbose):
   pagetitle = unicode(page.title())
@@ -304,12 +298,11 @@ def process_page_section(index, page, section, verbose):
 
   return unicode(parsed), ru_noun_changed, ru_proper_noun_changed, bian_replaced, frobbed_manual_translit
 
-parser = blib.create_argparser("Convert ru-noun to ru-noun+, ru-proper noun to ru-proper noun+")
+parser = blib.create_argparser("Convert ru-noun to ru-noun+, ru-proper noun to ru-proper noun+",
+  include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-#for template in ["Template:ru-noun", "Template:ru-proper noun"]:
-for template in ["Template:tracking/ru-headword/bad-ru-noun"]:
-  msg("Processing references to %s" % template)
-  for i, page in blib.references(template, start, end):
-    process_page(i, page, args.save, args.verbose)
+blib.do_pagefile_cats_refs(args, start, end, process_page, edit=True,
+  #default_refs=["Template:ru-noun", "Template:ru-proper noun"],
+  default_refs=["Template:tracking/ru-headword/bad-ru-noun"])

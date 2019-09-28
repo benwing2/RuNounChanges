@@ -8,7 +8,7 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, site
 
-def process_page(index, page, save, verbose, fix_missing_plurals):
+def process_page(index, page, fix_missing_plurals):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -180,31 +180,26 @@ def process_page(index, page, save, verbose, fix_missing_plurals):
         notes.append("replaced {{head|fr|%s}} with {{%s}}%s" % (headtype,
           unicode(t.name), " (NEEDS REVIEW)" if fixed_plural_warning else ""))
 
-  newtext = unicode(parsed)
-  if newtext != text:
-    assert notes
-    comment = "; ".join(notes)
-    if save:
-      pagemsg("Saving with comment = %s" % comment)
-      page.text = newtext
-      blib.try_repeatedly(lambda: page.save(comment=comment), pagemsg,
-                    "save page")
-    else:
-      pagemsg("Would save with comment = %s" % comment)
+  return unicode(parsed), notes
 
-parser = blib.create_argparser("Convert head|fr|* to fr-*")
+parser = blib.create_argparser("Convert head|fr|* to fr-*",
+  include_pagefile=True)
 parser.add_argument("--fix-missing-plurals", action="store_true", help="Fix cases with missing plurals by just assuming the default plural.")
-parser.add_argument("--lemma-file",help="File containing lemmas to do.")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-if args.lemma_file:
-  lines = [x.strip() for x in codecs.open(args.lemma_file, "r", "utf-8")]
-  for i, pagename in blib.iter_items(lines, start, end):
-    process_page(i, pywikibot.Page(site, pagename), args.save, args.verbose, args.fix_missing_plurals)
-else:
-  for cat in ["French nouns", "French proper nouns", "French pronouns", "French determiners", "French adjectives", "French verbs", "French participles", "French adverbs", "French prepositions", "French conjunctions", "French interjections", "French idioms", "French phrases", "French abbreviations", "French acronyms", "French initialisms", "French noun forms", "French proper noun forms", "French pronoun forms", "French determiner forms", "French verb forms", "French adjective forms", "French participle forms", "French proverbs", "French prefixes", "French suffixes", "French diacritical marks", "French punctuation marks"]:
-  #for cat in ["French adjective forms", "French participle forms", "French proverbs", "French prefixes", "French suffixes", "French diacritical marks", "French punctuation marks"]:
-    msg("Processing category: %s" % cat)
-    for i, page in blib.cat_articles(cat, start, end):
-      process_page(i, page, args.save, args.verbose, args.fix_missing_plurals)
+def do_process_page(page, index, parsed):
+  return process_page(index, page, args.fix_missing_plurals)
+
+blib.do_pagefile_cats_refs(args, start, end, process_page, edit=True,
+  default_cats=["French nouns", "French proper nouns", "French pronouns", "French determiners",
+    "French adjectives", "French verbs", "French participles", "French adverbs",
+    "French prepositions", "French conjunctions", "French interjections", "French idioms",
+    "French phrases", "French abbreviations", "French acronyms", "French initialisms",
+    "French noun forms", "French proper noun forms", "French pronoun forms",
+    "French determiner forms", "French verb forms", "French adjective forms",
+    "French participle forms", "French proverbs", "French prefixes", "French suffixes",
+    "French diacritical marks", "French punctuation marks"],
+  #default_cats=["French adjective forms", "French participle forms", "French proverbs",
+  #  "French prefixes", "French suffixes", "French diacritical marks", "French punctuation marks"]
+)

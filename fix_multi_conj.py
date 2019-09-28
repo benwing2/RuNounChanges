@@ -8,7 +8,7 @@ from blib import getparam, rmparam, msg, site
 
 import rulib
 
-def process_page(index, page, save, verbose):
+def process_page(page, index, parsed):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -95,21 +95,12 @@ def process_page(index, page, save, verbose):
 
   new_text = re.sub(r"(\{\{ru-conj\|[^{}]*\}\})\s*''or(.*?)''\s*(\{\{ru-conj\|[^{}]*\}\})",
       combine_verbs, text)
-  if new_text != text:
-    if verbose:
-      pagemsg("Replacing <%s> with <%s>" % (text, new_text))
-    assert notes
-    comment = "; ".join(notes)
-    if save:
-      pagemsg("Saving with comment = %s" % comment)
-      page.text = new_text
-      page.save(comment=comment)
-    else:
-      pagemsg("Would save with comment = %s" % comment)
+  return new_text, notes
 
-parser = blib.create_argparser(u"Fix verbs with multiple conjugations to be a single conjugation if possible")
+parser = blib.create_argparser("Fix verbs with multiple conjugations to be a single conjugation if possible",
+  include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-for i, page in blib.cat_articles("Russian verbs", start, end):
-  process_page(i, page, args.save, args.verbose)
+blib.do_pagefile_cats_refs(args, start, end, process_page, edit=True,
+  default_cats=["Russian verbs"])

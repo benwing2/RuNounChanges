@@ -6,7 +6,7 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, site
 
-def process_page(index, page, save, verbose):
+def process_page(page, index, parsed):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -47,24 +47,12 @@ def process_page(index, page, save, verbose):
     if origt != newt:
       pagemsg("Replaced %s with %s" % (origt, newt))
 
-  new_text = unicode(parsed)
+  return unicode(parsed), notes
 
-  if new_text != text:
-    if verbose:
-      pagemsg("Replacing <%s> with <%s>" % (text, new_text))
-    assert notes
-    comment = "; ".join(notes)
-    if save:
-      pagemsg("Saving with comment = %s" % comment)
-      page.text = new_text
-      page.save(comment=comment)
-    else:
-      pagemsg("Would save with comment = %s" % comment)
-
-parser = blib.create_argparser(u"Fix up class 6a arg 6 -> 4, class 7b arg 7 -> 6")
+parser = blib.create_argparser("Fix up class 6a arg 6 -> 4, class 7b arg 7 -> 6",
+  include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-for vclass in ["6a", "7b"]:
-  for i, page in blib.references("Template:tracking/ru-verb/conj-%s" % vclass, start, end):
-    process_page(i, page, args.save, args.verbose)
+blib.do_pagefile_cats_refs(args, start, end, process_page, edit=True,
+  default_refs=["Template:tracking/ru-verb/conj-%s" % vclass for vclass in ["6a", "7b"]])

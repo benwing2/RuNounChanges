@@ -8,14 +8,13 @@ from blib import getparam, rmparam, msg, errmsg, site
 
 import rulib
 
-def process_page(index, page, save, verbose):
+def process_page(page, index, parsed):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
   pagemsg("Processing")
 
-  text = unicode(page.text)
   parsed = blib.parse(page)
   notes = []
   for t in parsed.filter_templates():
@@ -61,25 +60,12 @@ def process_page(index, page, save, verbose):
       pagemsg("Replaced %s with %s" % (origt, newt))
       notes.append("rewrite class 8b verb to correspond to module changes")
 
-  new_text = unicode(parsed)
+  return unicode(parsed), notes
 
-  if new_text != text:
-    if verbose:
-      pagemsg("Replacing <%s> with <%s>" % (text, new_text))
-    assert notes
-    comment = "; ".join(notes)
-    if save:
-      pagemsg("Saving with comment = %s" % comment)
-      page.text = new_text
-      page.save(comment=comment)
-    else:
-      pagemsg("Would save with comment = %s" % comment)
-
-parser = blib.create_argparser(u"Rewrite class 8b verbs to correspond to module changes")
+parser = blib.create_argparser("Rewrite class 8b verbs to correspond to module changes",
+  include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-for category in ["Russian class 8b verbs"]:
-  msg("Processing category: %s" % category)
-  for i, page in blib.cat_articles(category, start, end):
-    process_page(i, page, args.save, args.verbose)
+blib.do_pagefile_cats_refs(args, start, end, process_page, edit=True,
+  default_cats=["Russian class 8b verbs"])

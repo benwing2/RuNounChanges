@@ -50,7 +50,7 @@ simple_replace = [
     ("reference-video", "quote-video"),
 ]
 
-def process_page(index, page, save, verbose):
+def process_page(page, index, parsed)::
   pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -277,28 +277,15 @@ def process_page(index, page, save, verbose):
         notes.append("remove double #* prefix")
         pagemsg("Removed double #* prefix")
       subsections[j] = newval
-  newtext = "".join(subsections)
 
-  if text != newtext:
-    if verbose:
-      pagemsg("Replacing <%s> with <%s>" % (text, newtext))
-    assert notes
-    comment = "; ".join(blib.group_notes(notes))
-    if save:
-      pagemsg("Saving with comment = %s" % comment)
-      page.text = newtext
-      page.save(comment=comment)
-    else:
-      pagemsg("Would save with comment = %s" % comment)
+  return "".join(subsections), notes
 
 if __name__ == "__main__":
-  parser = blib.create_argparser("Fix old cite/quote/reference templates")
+  parser = blib.create_argparser("Fix old cite/quote/reference templates",
+    include_pagefile=True)
   args = parser.parse_args()
   start, end = blib.parse_start_end(args.start, args.end)
 
-  for template in replace_templates:
-    msg("Processing references to Template:%s" % template)
-    errmsg("Processing references to Template:%s" % template)
-    for i, page in blib.references("Template:%s" % template, start, end,
-        includelinks=True):
-      process_page(i, page, args.save, args.verbose)
+  blib.do_pagefile_cats_refs(args, start, end, process_page, edit=True,
+    # FIXME, had includelinks= for references, which we don't have a flag for now
+    default_refs=["Template:%s" % template for template in replace_templates])

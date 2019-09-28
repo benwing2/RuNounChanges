@@ -8,7 +8,7 @@ from blib import getparam, rmparam, msg, site
 
 import rulib
 
-def process_page(index, page, direc, save, verbose):
+def process_page(index, page, direc):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -80,19 +80,7 @@ def process_page(index, page, direc, save, verbose):
     if origt != newt:
       pagemsg("Replaced %s with %s" % (origt, newt))
 
-  new_text = unicode(parsed)
-
-  if new_text != text:
-    if verbose:
-      pagemsg("Replacing <%s> with <%s>" % (text, new_text))
-    assert notes
-    comment = "; ".join(notes)
-    if save:
-      pagemsg("Saving with comment = %s" % comment)
-      page.text = new_text
-      page.save(comment=comment)
-    else:
-      pagemsg("Would save with comment = %s" % comment)
+  return unicode(parsed), notes
 
 parser = blib.create_argparser(u"Fix up class-7b arguments")
 parser.add_argument('--direcfile', help="File containing pages to fix and directives.")
@@ -110,4 +98,7 @@ for i, line in blib.iter_items(lines, start, end):
     msg("Skipping because 7b not in line: %s" % line)
   else:
     page, direc = re.split(" ", line)
-    process_page(i, pywikibot.Page(site, page), direc, args.save, args.verbose)
+    def do_process_page(page, index, parsed):
+      return process_page(index, page, direc)
+    blib.do_edit(pywikibot.Page(site, page), i, do_process_page, save=args.save,
+      verbose=args.verbose, diff=args.diff)
