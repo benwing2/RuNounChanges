@@ -35,7 +35,7 @@ else:
     if not args.table_of_uses:
       msg("Processing references to %s" % pagename)
     aliases = []
-    for i, page in blib.references(pagename, start, end, namespaces=["Template"], only_template_inclusion=False, filter_redirects=args.redirects_only):
+    for i, page in blib.references(pagename, start, end, namespaces=[10], only_template_inclusion=False, filter_redirects=args.redirects_only):
       aliases.append(unicode(page.title()))
       if not args.table_of_uses:
         process_page(page, i)
