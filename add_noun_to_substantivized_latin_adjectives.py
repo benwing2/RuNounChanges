@@ -8,7 +8,7 @@ from blib import getparam, rmparam, tname, msg, site
 
 import lalib
 
-import push_find_regex_changes
+import find_regex
 
 def process_page(index, pagetitle, text):
   def pagemsg(txt):
@@ -84,7 +84,7 @@ start, end = blib.parse_start_end(args.start, args.end)
 
 lines = codecs.open(args.direcfile, "r", "utf-8")
 
-pagename_and_text = push_find_regex_changes.yield_text(lines, args.verbose)
+pagename_and_text = find_regex.yield_text_from_find_regex(lines, args.verbose)
 for index, (pagename, text) in blib.iter_items(pagename_and_text, start, end,
     get_name=lambda x:x[0]):
   process_page(index, pagename, text)

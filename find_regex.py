@@ -85,21 +85,91 @@ def process_page(regex, index, page_or_title_text, filter_pages, filter_pages_no
             text_to_search += "\n"
           pagemsg("-------- begin text ---------\n%s-------- end text --------" % text_to_search)
 
+def yield_text_from_find_regex(lines, verbose):
+  in_multiline = False
+  while True:
+    try:
+      line = next(lines)
+    except StopIteration:
+      break
+    if in_multiline and re.search("^-+ end text -+$", line):
+      in_multiline = False
+      yield pagename, "".join(templines)
+    elif in_multiline:
+      if line.rstrip('\n').endswith(':'):
+        if verbose:
+          errmsg("WARNING: Possible missing ----- end text -----: %s" % line.rstrip('\n'))
+      templines.append(line)
+    else:
+      line = line.rstrip('\n')
+      if line.endswith(':'):
+        pagename = "Template:%s" % line[:-1]
+        in_multiline = True
+        templines = []
+      else:
+        m = re.search("^Page [0-9]+ (.*): -+ begin text -+$", line)
+        if m:
+          pagename = m.group(1)
+          in_multiline = True
+          templines = []
+        elif verbose:
+          msg("Skipping: %s" % line)
+
+def yield_text_from_diff(lines, verbose):
+  in_multiline = False
+  while True:
+    try:
+      line = next(lines)
+    except StopIteration:
+      break
+    if in_multiline and re.search("^Page [0-9]+", line):
+      in_multiline = False
+      yield pagename, "".join(templines)
+    elif in_multiline:
+      templines.append(line)
+    else:
+      line = line.rstrip('\n')
+      m = re.search("^Page [0-9]+ (.*): Diff:$", line)
+      if m:
+        pagename = m.group(1)
+        in_multiline = True
+        templines = []
+      elif verbose:
+        msg("Skipping: %s" % line)
+
 def yield_pages_in_cats(cats, startFrom, upTo):
   for cat in cats:
     for index, page in blib.cat_articles(cat, startFrom, upTo):
       yield index, page
 
-def search_pages(regex, refs, cat, pages, pagefile, stdin, filter_pages,
-    filter_pages_not, verbose, include_text, all_matches, startFrom, upTo,
-    namespaces, include_non_mainspace, lang_only):
+def search_pages(regex, refs, cat, pages, pagefile, stdin, input_from_output,
+    input_from_diff, filter_pages, filter_pages_not, verbose, include_text, all_matches,
+    startFrom, upTo, namespaces, include_non_mainspace, lang_only):
+
+  def process_text_on_page(index, title, text):
+    process_page(regex, index, (title, text), filter_pages, filter_pages_not,
+        verbose, include_text, all_matches, include_non_mainspace, lang_only)
+
   # If reading from dump on stdin, need to go through a callback rather
   # than through an iterator.
   if stdin:
-    def process_text_on_page(index, title, text):
-      process_page(regex, index, (title, text), filter_pages, filter_pages_not,
-          verbose, include_text, all_matches, include_non_mainspace, lang_only)
     blib.parse_dump(sys.stdin, process_text_on_page, startsort=startFrom, endsort=upTo)
+    return
+
+  if input_from_output:
+    lines = codecs.open(input_from_output, "r", "utf-8")
+    pagename_and_text = yield_text_from_find_regex(lines, verbose)
+    for index, (pagename, text) in blib.iter_items(pagename_and_text, startFrom, upTo,
+        get_name=lambda x:x[0]):
+      process_text_on_page(index, pagename, text)
+    return
+
+  if input_from_diff:
+    lines = codecs.open(input_from_diff, "r", "utf-8")
+    pagename_and_text = yield_text_from_diff(lines, verbose)
+    for index, (pagename, text) in blib.iter_items(pagename_and_text, startFrom, upTo,
+        get_name=lambda x:x[0]):
+      process_text_on_page(index, pagename, text)
     return
 
   if pages:
@@ -115,40 +185,46 @@ def search_pages(regex, refs, cat, pages, pagefile, stdin, filter_pages,
     process_page(regex, index, page, filter_pages, filter_pages_not, verbose,
         include_text, all_matches, include_non_mainspace, lang_only)
 
-pa = blib.init_argparser("Search on pages")
-pa.add_argument("-e", "--regex", help="Regular expression to search for.",
-    required=True)
-pa.add_argument("-r", "--references", "--refs",
-    help="Do pages with references to this page.")
-pa.add_argument("-c", "--categories", "--cats",
-    help="List of categories to search, comma-separated.")
-pa.add_argument('--filter-pages', help="Regex to use to filter page names; only includes pages matching this regex.")
-pa.add_argument('--filter-pages-not', help="Regex to use to filter page names; only includes pages not matching this regex.")
-pa.add_argument('--pages', help="List of pages to search, comma-separated.")
-pa.add_argument('--pagefile', help="File containing pages to search.")
-pa.add_argument('--stdin', help="Use dump on stdin.", action="store_true")
-pa.add_argument('--all', help="Include all matches.", action="store_true")
-pa.add_argument('--text', help="Include surrounding text.", action="store_true")
-pa.add_argument('--include-non-mainspace', help="Don't skip non-mainspace pages. Defaults to true if --namespaces is given.", action='store_true')
-pa.add_argument('--namespaces', help="Comma-separated list of namespaces to search when --refs is given.")
-pa.add_argument('--lang-only', help="Only search the specified language section.")
-params = pa.parse_args()
-startFrom, upTo = blib.parse_start_end(params.start, params.end)
+if __name__ == "__main__":
+  pa = blib.init_argparser("Search on pages")
+  pa.add_argument("-e", "--regex", help="Regular expression to search for.",
+      required=True)
+  pa.add_argument("-r", "--references", "--refs",
+      help="Do pages with references to this page.")
+  pa.add_argument("-c", "--categories", "--cats",
+      help="List of categories to search, comma-separated.")
+  pa.add_argument('--filter-pages', help="Regex to use to filter page names; only includes pages matching this regex.")
+  pa.add_argument('--filter-pages-not', help="Regex to use to filter page names; only includes pages not matching this regex.")
+  pa.add_argument('--pages', help="List of pages to search, comma-separated.")
+  pa.add_argument('--pagefile', help="File containing pages to search.")
+  pa.add_argument('--stdin', help="Use dump on stdin.", action="store_true")
+  pa.add_argument('--input-from-output', help="Use the specified file as input, a previous output of this script.")
+  pa.add_argument('--input-from-diff', help="Use the specified file as input, a previous output of a job run with --diff.")
+  pa.add_argument('--all', help="Include all matches.", action="store_true")
+  pa.add_argument('--text', help="Include surrounding text.", action="store_true")
+  pa.add_argument('--include-non-mainspace', help="Don't skip non-mainspace pages. Defaults to true if --namespaces is given.", action='store_true')
+  pa.add_argument('--namespaces', help="Comma-separated list of namespaces to search when --refs is given.")
+  pa.add_argument('--lang-only', help="Only search the specified language section.")
+  params = pa.parse_args()
+  startFrom, upTo = blib.parse_start_end(params.start, params.end)
 
-if (not params.references and not params.categories and not params.pages and
-    not params.pagefile and not params.stdin):
-  raise ValueError("--refs, --cats, --pages, --pagefile or --stdin must be present")
+  if (not params.references and not params.categories and not params.pages and
+      not params.pagefile and not params.stdin and not params.input_from_output and
+      not params.input_from_diff):
+    raise ValueError("--refs, --cats, --pages, --pagefile, --stdin, --input-from-output or --input-from-diff must be present")
 
-references = params.references and params.references.decode("utf-8")
-categories = params.categories and params.categories.decode("utf-8")
-regex = params.regex.decode("utf-8")
-pages = params.pages and re.split(",", params.pages.decode("utf-8"))
-namespaces = params.namespaces and re.split(",", params.namespaces.decode("utf-8"))
-filter_pages = params.filter_pages and params.filter_pages.decode("utf-8")
-filter_pages_not = params.filter_pages_not and params.filter_pages_not.decode("utf-8")
-lang_only = params.lang_only and params.lang_only.decode("utf-8")
+  references = params.references and params.references.decode("utf-8")
+  categories = params.categories and params.categories.decode("utf-8")
+  regex = params.regex.decode("utf-8")
+  pages = params.pages and re.split(",", params.pages.decode("utf-8"))
+  input_from_output = params.input_from_output and params.input_from_output.decode("utf-8")
+  input_from_diff = params.input_from_diff and params.input_from_diff.decode("utf-8")
+  namespaces = params.namespaces and re.split(",", params.namespaces.decode("utf-8"))
+  filter_pages = params.filter_pages and params.filter_pages.decode("utf-8")
+  filter_pages_not = params.filter_pages_not and params.filter_pages_not.decode("utf-8")
+  lang_only = params.lang_only and params.lang_only.decode("utf-8")
 
-search_pages(regex, references, categories, pages, params.pagefile,
-    params.stdin, filter_pages, filter_pages_not, params.verbose,
-    params.text, params.all, startFrom, upTo, namespaces,
-    params.include_non_mainspace or namespaces, lang_only)
+  search_pages(regex, references, categories, pages, params.pagefile,
+      params.stdin, input_from_output, input_from_diff, filter_pages, filter_pages_not,
+      params.verbose, params.text, params.all, startFrom, upTo, namespaces,
+      params.include_non_mainspace or namespaces, lang_only)

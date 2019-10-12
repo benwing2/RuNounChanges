@@ -7,6 +7,8 @@ from blib import getparam, rmparam, msg, errmsg, errandmsg, site
 import pywikibot, re, sys, codecs, argparse
 import unicodedata
 
+import find_regex
+
 def process_page(index, page, contents, origcontents, verbose, comment,
     lang_only, allow_page_creation):
   pagetitle = unicode(page.title())
@@ -61,36 +63,6 @@ def process_page(index, page, contents, origcontents, verbose, comment,
         return None, None
   return contents, comment
 
-def yield_text(lines, verbose):
-  in_multiline = False
-  while True:
-    try:
-      line = next(lines)
-    except StopIteration:
-      break
-    if in_multiline and re.search("^-+ end text -+$", line):
-      in_multiline = False
-      yield pagename, "".join(templines)
-    elif in_multiline:
-      if line.rstrip('\n').endswith(':'):
-        if verbose:
-          errmsg("WARNING: Possible missing ----- end text -----: %s" % line.rstrip('\n'))
-      templines.append(line)
-    else:
-      line = line.rstrip('\n')
-      if line.endswith(':'):
-        pagename = "Template:%s" % line[:-1]
-        in_multiline = True
-        templines = []
-      else:
-        m = re.search("^Page [0-9]+ (.*): -+ begin text -+$", line)
-        if m:
-          pagename = m.group(1)
-          in_multiline = True
-          templines = []
-        elif verbose:
-          msg("Skipping: %s" % line)
-
 if __name__ == "__main__":
   parser = blib.create_argparser("Push changes made to find_regex.py output files")
   parser.add_argument('--direcfile', help="File containing directives.")
@@ -105,12 +77,12 @@ if __name__ == "__main__":
 
   if args.origfile:
     origlines = codecs.open(args.origfile, "r", "utf-8")
-    for pagename, text in yield_text(origlines, args.verbose):
+    for pagename, text in find_regex.yield_text_from_find_regex(origlines, args.verbose):
       origpages[pagename] = text
 
   lines = codecs.open(args.direcfile, "r", "utf-8")
 
-  pagename_and_text = yield_text(lines, args.verbose)
+  pagename_and_text = find_regex.yield_text_from_find_regex(lines, args.verbose)
   for index, (pagename, text) in blib.iter_items(pagename_and_text, start, end,
       get_name=lambda x:x[0]):
     def do_process_page(page, index, parsed):
