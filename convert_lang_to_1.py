@@ -18,14 +18,12 @@ for form_of_spec in form_of_templates:
   if "aliases" in form_of_spec[1]:
     form_of_template_list.extend(form_of_spec[1]["aliases"])
 request_templates = [
-  "etystub", "rfap", "rfc-pron-n", "rfc-sense",
-  "rfd", "rfd-redundant", "rfd-sense", "rfdecl", "rfdef", "defn",
-  "request for etymology", "rfe", "rfelite", "rfex",
-  "rfform", "rfi", "rfinfl", "rfp", "rfp-old",
-  "rfquote", "rfquote-sense",
-  "request for references", "rfr", "rft-sense",
-  "rfv", "rfv-etymology", "rfv-etym", "rfv-pronunciation", "rfv-pron",
-  "rfv-sense", "sense stub", "rfgloss",
+  "etystub", "rfap", "rfc", "rfc-header", "rfc-pron-n", "rfc-sense",
+  "rfclarify", "rfd", "rfd-redundant", "rfd-sense",
+  "rfdate", "rfdatek", "rfdecl", "rfdef", "rfe", "rfelite",
+  "rfex", "rfform", "rfi", "rfinfl", "rfm", "rfp", "rfp-old", "rfquote",
+  "rfquote-sense", "rfquotek", "rfref", "rfv", "rfv-etym", "rfv-pron",
+  "rfv-sense", "tea room", "tea room sense",
 ]
 multicolumn_templates = [
   "columns", "col", "col-u",
@@ -38,6 +36,12 @@ quote_templates = [
   "quote-av", "quote-book", "quote-hansard", "quote-journal",
   "quote-newsgroup", "quote-song", "quote-us-patent", "quote-web",
   "quote-wikipedia", "quote-text",
+]
+headtempboiler_templates = [
+  "headtempboiler", "headtempboiler:suffix", "headtempboiler:letter",
+  "headtempboiler:number", "headtempdocboiler",
+  "headtempdocboiler:suffix", "headtempdocboiler:letter",
+  "headtempdocboiler:number"
 ]
 misc_templates = [
   "&lit", "audio", "audio-IPA", "audio-pron", "given name",
@@ -178,7 +182,7 @@ form_of_templates_1000_to_5000_uses = [
   "feminine of", # 2529 uses
   "genitive singular of", # 3536 uses
   "genitive of", # 3670 uses
-  # "form of", # 4023 uses
+  "form of", # 4023 uses
   "female equivalent of", # 4656 uses
   "indefinite plural of", # 4799 uses
   "obsolete form of", # 4916 uses
@@ -202,7 +206,7 @@ form_of_templates_5000_to_20000_uses = [
   "superlative of", # 8126 uses
   "verb form of", # 9614 uses
   "romanization of", # 10994 uses
-  # "synonym of", # 12661 uses
+  "synonym of", # 12661 uses
   "gerund of", # 13038 uses
 ]
 
@@ -227,25 +231,30 @@ form_of_templates_more_than_100000_uses = [
 request_templates_1000_uses_or_less = [
   "rfp-old", # 3 uses
   "rfform", # 5 uses
-  "rft-sense", # 17 uses
-  "request for references", # 21 uses
+  "tea room sense", # 17 uses
+  "rfref", # 21 uses
   "rfdecl", # 34 uses
   "rfd-redundant", # 43 uses
   "rfc-sense", # 86 uses
   "rfd-sense", # 102 uses
+  "rfm", # 66 uses
+  "tea room", # 100 uses
   "rfquote-sense", # 140 uses
-  "rfv-pronunciation", # 164 uses
+  "rfv-pron", # 164 uses
+  "rfdatek", # 290 uses
   "rfquote", # 421 uses
   "rfv-sense", # 499 uses
-  "rfv-etymology", # 681 uses
+  "rfv-etym", # 681 uses
   "rfex", # 756 uses
   "sense stub", # 836 uses
   "rfc-pron-n", # 841 uses
+  "rfc", # 936 uses
 ]
 
 # approximately sorted from least to most number of uses
 request_templates_1000_to_5000_uses = [
   "rfv", # 1424 uses
+  "rfc-header", # 1546 uses
   "rfd", # 1768 uses
   "rfi", # 2832 uses
   "rfelite", # 4188 uses
@@ -256,12 +265,13 @@ request_templates_1000_to_5000_uses = [
 # approximately sorted from least to most number of uses
 request_templates_5000_to_20000_uses = [
   "rfp", # 5367 uses
+  "rfquotek", # 9323 uses
   "rfinfl", # 16337 uses
 ]
 
 # approximately sorted from least to most number of uses
 request_templates_more_than_20000_uses = [
-  "request for etymology", # 34200 uses
+  "rfe", # 34200 uses
   "rfdef", # 65117 uses
 ]
 
@@ -297,11 +307,11 @@ misc_templates_5000_to_20000_uses = [
 
 # approximately sorted from least to most number of uses
 misc_templates_20000_to_100000_uses = [
-  "citation", # 25746 uses
+  #"citation", # 25746 uses
   "given name", # 29449 uses
   "surname", # 53168 uses
   "homophones", # 64011 uses
-  "rhymes", # 88788 uses
+  #"rhymes", # 88788 uses
 ]
 
 # approximately sorted from least to most number of uses
@@ -319,7 +329,7 @@ non_alias_multicolumn_templates = [
 
 templates_to_move_lang = (
   form_of_template_list + request_templates + multicolumn_templates +
-  quote_templates + misc_templates
+  quote_templates + headtempboiler_templates + misc_templates
 )
 
 #templates_to_iterate_over = ["form of", "synonym of"] + quote_templates
@@ -342,8 +352,15 @@ templates_to_move_lang = (
 #  form_of_templates_5000_to_20000_uses +
 #  request_templates_5000_to_20000_uses
 #)
-templates_to_iterate_over = ["defn"]
-
+#templates_to_iterate_over = ["defn"]
+#templates_to_iterate_over = (
+#  misc_templates_20000_to_100000_uses +
+#  form_of_templates_20000_to_100000_uses +
+#  request_templates_more_than_20000_uses
+#)
+#templates_to_iterate_over = ["rfm", "tea room", "rfdatek", "rfc",
+#  "rfc-header", "rfquotek"]
+templates_to_iterate_over = ["alternative form of", "present participle of"]
 #templates_to_iterate_over = ["given name", "surname"]
 #templates_to_iterate_over = ["audio", "IPA"]
 
