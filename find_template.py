@@ -51,15 +51,22 @@ def process_page(page, index, templates, paramspecs, negate, from_to,
             for spec in paramspecs:
               found = False
               if type(spec) is tuple:
-                cond, name, value = spec
-                if (cond == 'eq' and pname == name and pvalue == value or
-                    cond == 'neq' and pname == name and pvalue != value):
+                cond = spec[0]
+                if (cond == 'eq' and pname == spec[1] and pvalue == spec[2] or
+                    cond == 'neq' and pname == spec[1] and pvalue != spec[2]):
                   found = True
               elif pname == spec:
                 found = True
               if found:
                 pagemsg("Found %s template with %s=%s: %s" %
                     (tn, pname, pvalue, temptext))
+        # Also output occurrences of missing params when !PARAM given
+        if paramspecs:
+          for spec in paramspecs:
+            if type(spec) is tuple and spec[0] == 'notpresent':
+              if not getparam(t, spec[1]):
+                pagemsg("Found %s template with param %s missing or blank: %s" %
+                    (tn, spec[1], temptext))
         # Also track occurrences of params in countparams not occurring
         if countparams:
           for countparam in countparams:
@@ -105,6 +112,8 @@ def process_param(param):
     if len(parts) != 2:
       raise ValueError("Too many parts in PARAM=VALUE spec: %s" % param)
     return ('eq', parts[0], parts[1])
+  if param.startswith("!"):
+    return ('notpresent', param[1:])
   return param
 
 if args.params:
@@ -117,7 +126,7 @@ if args.negate:
     raise ValueError("When --negate is given, --params must be given")
   for paramspec in paramspecs:
     if type(paramspec) is tuple:
-      raise ValueError("When --negate is given, PARAM=VALUE and PARAM!=VALUE specs not currently supported")
+      raise ValueError("When --negate is given, PARAM=VALUE, PARAM!=VALUE, !PARAM specs not currently supported")
 
 countparams = re.split(",", args.count) if args.count else []
 
