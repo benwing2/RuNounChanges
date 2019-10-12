@@ -8,50 +8,66 @@ from blib import getparam, rmparam, msg, site, tname
 
 borrowed_langs = {}
 
-name_templates = ["given name", "surname"]
+#name_templates = ["given name", "surname"]
+#name_templates = ["rfdatek", "rfquotek"]
+#name_templates = ["rfdate"] # requires --lang-as-1
+#name_templates = ["rfc-header", "tea room"]
+name_templates = ["rfc"] # requires --lang-as-1
 blib.getData()
 
-def process_page(page, index, parsed):
+def process_page(page, index, parsed, lang_in_1):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
   if blib.page_should_be_ignored(pagetitle):
     pagemsg("Skipping ignored page")
-    return None, ""
+    return None, None
+
+  langparam = "1" if lang_in_1 else "lang"
       
-  def hack_templates(parsed, langname):
+  def hack_templates(parsed, langname, langnamecode=None, is_citation=False):
     if langname not in blib.languages_byCanonicalName:
-      langnamecode = None
+      if not is_citation:
+        langnamecode = None
     else:
       langnamecode = blib.languages_byCanonicalName[langname]["code"]
 
     for t in parsed.filter_templates():
       origt = unicode(t)
       tn = tname(t)
-      if tn in name_templates:
-        if getparam(t, "lang"):
+      if tn in ["citation", "citations"] and is_citation:
+        langnamecode = getparam(t, "lang") or getparam(t, "1")
+      elif tn in name_templates:
+        if getparam(t, langparam):
           continue
-        if langname != "English":
-          pagemsg("WARNING: Would default to English but in %s section: %s" %
-            (langname, origt))
         if not langnamecode:
           pagemsg("WARNING: Unrecognized language %s, unable to add language to %s" % (langname, origt))
           continue
-        notes.append("infer lang=%s for {{%s}} based on section it's in" % (langnamecode, tn))
-        # Fetch all params.
-        params = []
-        for param in t.params:
-          pname = unicode(param.name)
-          params.append((pname, param.value, param.showkey))
-        # Erase all params.
-        del t.params[:]
+        notes.append("infer %s=%s for {{%s}} based on section it's in" % (
+          langparam, langnamecode, tn))
         newline = "\n" if "\n" in unicode(t.name) else ""
-        t.add("lang", langnamecode + newline, preserve_spacing=False)
-        # Put remaining parameters in order.
-        for name, value, showkey in params:
-          t.add(name, value, showkey=showkey, preserve_spacing=False)
+        if langparam == "1":
+          if t.has("lang"):
+            pagemsg("WARNING: Template has lang=, removing: %s" % origt)
+            notes.append("remove lang= from {{%s}}" % tn)
+            rmparam(t, "lang")
+          t.add(langparam, langnamecode + newline, preserve_spacing=False)
+        else:
+          # Fetch all params.
+          params = []
+          for param in t.params:
+            pname = unicode(param.name)
+            params.append((pname, param.value, param.showkey))
+          # Erase all params.
+          del t.params[:]
+          t.add(langparam, langnamecode + newline, preserve_spacing=False)
+          # Put remaining parameters in order.
+          for name, value, showkey in params:
+            t.add(name, value, showkey=showkey, preserve_spacing=False)
         pagemsg("Replaced <%s> with <%s>" % (origt, unicode(t)))
+
+    return langnamecode
 
   pagemsg("Processing")
 
@@ -60,21 +76,40 @@ def process_page(page, index, parsed):
 
   sections = re.split("(^==[^=]*==\n)", text, 0, re.M)
 
-  for j in xrange(2, len(sections), 2):
-    m = re.search("^==(.*)==\n$", sections[j - 1])
-    assert m
-    langname = m.group(1)
-    parsed = blib.parse_text(sections[j])
-    hack_templates(parsed, langname)
-    sections[j] = unicode(parsed)
+  if not pagetitle.startswith("Citations"):
+    for j in xrange(2, len(sections), 2):
+      m = re.search("^==(.*)==\n$", sections[j - 1])
+      assert m
+      langname = m.group(1)
+      parsed = blib.parse_text(sections[j])
+      hack_templates(parsed, langname)
+      sections[j] = unicode(parsed)
+  else:
+    # Citation section?
+    langnamecode = None
+    for j in xrange(0, len(sections), 2):
+      if j == 0:
+        langname = "Unknown"
+      else:
+        m = re.search("^==(.*)==\n$", sections[j - 1])
+        assert m
+        langname = m.group(1)
+      parsed = blib.parse_text(sections[j])
+      langnamecode = hack_templates(parsed, langname,
+          langnamecode=langnamecode, is_citation=True)
+      sections[j] = unicode(parsed)
 
   newtext = "".join(sections)
   return newtext, notes
 
-parser = blib.create_argparser("Add language to name templates, based on the section it's within",
+parser = blib.create_argparser("Add language to templates, based on the section they're within",
   include_pagefile=True)
+parser.add_argument("--lang-in-1", action="store_true", help="Add language in 1= instead of lang=")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-blib.do_pagefile_cats_refs(args, start, end, process_page, edit=True,
-  default_refs=["Template:%s" for template in name_templates])
+def do_process_page(page, index, parsed):
+  return process_page(page, index, parsed, args.lang_in_1)
+
+blib.do_pagefile_cats_refs(args, start, end, do_process_page, edit=True,
+  default_refs=["Template:%s" % template for template in name_templates])
