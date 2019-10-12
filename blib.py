@@ -733,6 +733,7 @@ def create_argparser(desc, include_pagefile=False, include_stdin=False,
     parser.add_argument("--pages", help="List of pages to process, comma-separated.")
     parser.add_argument("--cats", help="List of categories to process, comma-separated.")
     parser.add_argument("--refs", help="List of references to process, comma-separated.")
+    parser.add_argument("--ref-namespaces", help="List of namespace(s) to restrict --refs to.")
     parser.add_argument("--filter-pages", help="Regex to use to filter page names.")
   if include_stdin:
     parser.add_argument("--stdin", help="Read dump from stdin.", action="store_true")
@@ -818,6 +819,7 @@ def parse_start_end(startsort, endsort):
 def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
     default_refs=[], edit=False, stdin=False, only_lang=None,
     filter_pages=None, ref_namespaces=None):
+  args_ref_namespaces = args.ref_namespaces and args.ref_namespaces.decode("utf-8")
   args_filter_pages = args.filter_pages and args.filter_pages.decode("utf-8")
   def process_page(page, i):
     if filter_pages or args_filter_pages:
@@ -876,7 +878,7 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
     if args.refs:
       for ref in [x.decode("utf-8") for x in args.refs.split(",")]:
         # We don't use ref_namespaces here because the user might not want it.
-        for i, page in references(ref, start, end):
+        for i, page in references(ref, start, end, namespaces=args_ref_namespaces):
           process_page(page, i)
 
   else:
