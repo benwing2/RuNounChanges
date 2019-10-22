@@ -650,6 +650,7 @@ def iter_items(items, startsort=None, endsort=None, get_name=get_page_name,
   t = None
   steps = 50
   skipsteps = 1000
+  tstart = datetime.datetime.now()
 
   for current in items:
     i += 1
@@ -685,12 +686,46 @@ def iter_items(items, startsort=None, endsort=None, get_name=get_page_name,
     if i % steps == 0:
       tdisp = ""
 
-      if isinstance(endsort, int):
-        told = t
+      actual_startsort = startsort or 1
+      if isinstance(endsort, int) and isinstance(actual_startsort, int):
         t = datetime.datetime.now()
-        pagesleft = (endsort - i) / steps
-        tfuture = t + (t - told) * pagesleft
-        tdisp = ", est. " + tfuture.strftime("%X")
+        # Logically:
+        #
+        # time_so_far = t - tstart
+        # pages_so_far = i - startsort + 1
+        # time_per_page = time_so_far / pages_so_far
+        # remaining_pages = endsort - i
+        # remaining_time = time_per_page * remaining_pages
+        #
+        # We do the same but multiply before dividing, for increased precision and
+        # due to the inability to multiply or divide timedeltas by floats.
+        remaining_pages = endsort - i
+        pages_so_far = i - startsort + 1
+        remaining_time = (t - tstart) * remaining_pages / pages_so_far
+        seconds_left = remaining_time.seconds
+        hours_left_in_day = seconds_left // 3600
+        hours_left = remaining_time.days * 24 + hours_left_in_day
+        seconds_left_in_hour = seconds_left - 3600 * hours_left_in_day
+        minutes_left_in_hour = seconds_left_in_hour // 60
+        seconds_left_in_minute = seconds_left_in_hour - 60 * minutes_left_in_hour
+        seconds_left_str = (
+          "1 second" if seconds_left_in_minute == 1 else
+          "%s seconds" % seconds_left_in_minute
+        )
+        minutes_left_str = (
+          "" if minutes_left_in_hour == 0 else
+          "1 minute" if minutes_left_in_hour == 1 else
+          "%s minutes" % minutes_left_in_hour
+        )
+        hours_left_str = (
+          "" if hours_left == 0 else
+          "1 hour" if hours_left == 1 else
+          "%s hours" % hours_left
+        )
+        time_left_str = ", ".join(
+          x for x in [hours_left_str, minutes_left_str, seconds_left_str] if x
+        )
+        tdisp = ", est. %s left" % time_left_str
 
       pywikibot.output(str(i) + "/" + str(endsort) + tdisp)
 
