@@ -43,13 +43,15 @@ headtempboiler_templates = [
   "headtempdocboiler:suffix", "headtempdocboiler:letter",
   "headtempdocboiler:number"
 ]
+metatempboiler_templates = [
+  "meta-diacritical mark", "meta-phrase", "meta-punctuation mark"
+]
 misc_templates = [
-  "&lit", "audio", "audio-IPA", "audio-pron", "given name",
-  "historical given name",
-  "homophones", "homophone", "hmp",
-  "hot word", "hyphenation", "hyph", "IPA", "named-after", "no entry",
-  "only used in", "picdicimg", "picdiclabel",
-  "rhymes", "rhyme", "seemoreCites",
+  "&lit", "abbreviated", "audio", "audio-IPA", "audio-pron", "citation", "citations",
+  "cuneiform", "elements", "enum", "given name", "historical given name", "homophones",
+  "homophone", "hmp", "hot word", "hyphenation", "hyph", "IPA", "IPA letters",
+  "named-after", "no entry", "only used in", "patronymic", "picdicimg", "picdiclabel",
+  "rhymes", "rhyme", "seeCites", "seemoreCites", "seeSynonyms", "SI-unit", "SI-unit-np",
   "surname", "term-context", "tcx", "trademark erosion",
   "was fwotd", "X2IPA", "x2IPA", "x2ipa", "x2rhymes", "Zodiac",
 ]
@@ -226,6 +228,13 @@ form_of_templates_more_than_100000_uses = [
   "plural of", # 423977 uses
   "inflection of", # 1912109 uses
 ]
+# inflection of progress as of 20191018, 1045pm
+#1/338400/506000 = 167600 to go
+#505000/527450/701000 = 173550 to go
+#700000/776150/951000 = 174850 to go
+#950000/1048300/1251000 = 202700 to go
+#1250000/1420900/1551000 = 130100 to go
+#1550000/1677200/2000000 = 322800 to go
 
 # approximately sorted from least to most number of uses
 request_templates_1000_uses_or_less = [
@@ -235,9 +244,9 @@ request_templates_1000_uses_or_less = [
   "rfref", # 21 uses
   "rfdecl", # 34 uses
   "rfd-redundant", # 43 uses
+  "rfm", # 66 uses
   "rfc-sense", # 86 uses
   "rfd-sense", # 102 uses
-  "rfm", # 66 uses
   "tea room", # 100 uses
   "rfquote-sense", # 140 uses
   "rfv-pron", # 164 uses
@@ -246,7 +255,7 @@ request_templates_1000_uses_or_less = [
   "rfv-sense", # 499 uses
   "rfv-etym", # 681 uses
   "rfex", # 756 uses
-  "sense stub", # 836 uses
+  "rfclarify", # 836 uses
   "rfc-pron-n", # 841 uses
   "rfc", # 936 uses
 ]
@@ -293,6 +302,7 @@ misc_templates_1000_uses_or_less = [
 
 # approximately sorted from least to most number of uses
 misc_templates_1000_to_5000_uses = [
+  "elements", # 1686 uses
   "seemoreCites", # 1823 uses
   "&lit", # 2053 uses
   "was fwotd", # 2571 uses
@@ -302,16 +312,16 @@ misc_templates_1000_to_5000_uses = [
 
 # approximately sorted from least to most number of uses
 misc_templates_5000_to_20000_uses = [
-  # none
+  "seeCites", # 5559 uses
 ]
 
 # approximately sorted from least to most number of uses
 misc_templates_20000_to_100000_uses = [
-  #"citation", # 25746 uses
+  "citation", # 25746 uses
   "given name", # 29449 uses
   "surname", # 53168 uses
   "homophones", # 64011 uses
-  #"rhymes", # 88788 uses
+  "rhymes", # 88788 uses
 ]
 
 # approximately sorted from least to most number of uses
@@ -329,7 +339,8 @@ non_alias_multicolumn_templates = [
 
 templates_to_move_lang = (
   form_of_template_list + request_templates + multicolumn_templates +
-  quote_templates + headtempboiler_templates + misc_templates
+  quote_templates + headtempboiler_templates + metatempboiler_templates +
+  misc_templates
 )
 
 #templates_to_iterate_over = ["form of", "synonym of"] + quote_templates
@@ -360,9 +371,25 @@ templates_to_move_lang = (
 #)
 #templates_to_iterate_over = ["rfm", "tea room", "rfdatek", "rfc",
 #  "rfc-header", "rfquotek"]
-templates_to_iterate_over = ["alternative form of", "present participle of"]
-#templates_to_iterate_over = ["given name", "surname"]
-#templates_to_iterate_over = ["audio", "IPA"]
+#templates_to_iterate_over = ["alternative form of", "present participle of"]
+#templates_to_iterate_over = ["citation"]
+#templates_to_iterate_over = ["alternative spelling of"]
+#templates_to_iterate_over = ["past participle of"]
+#templates_to_iterate_over = [
+#  "masculine plural of",
+#  "feminine plural of",
+#  "feminine singular of"
+#]
+#templates_to_iterate_over = ["rfdef", "rfe"]
+#templates_to_iterate_over = ["past participle form of", "audio"]
+#templates_to_iterate_over = ["plural of"]
+#templates_to_iterate_over = ["IPA"]
+#templates_to_iterate_over = ["inflection of"]
+#templates_to_iterate_over = ["seeCites"]
+#templates_to_iterate_over = ["elements"]
+#templates_to_iterate_over = metatempboiler_templates
+templates_to_iterate_over = ["abbreviated", "cuneiform", "patronymic", "IPA letters",
+  "seeSynonyms", "SI-unit", "SI-unit-np"]
 
 #templates_to_remove_empty_dot = (
 #  form_of_template_list + language_specific_form_of_templates
@@ -438,5 +465,6 @@ start, end = blib.parse_start_end(args.start, args.end)
 
 blib.do_pagefile_cats_refs(args, start, end, process_page, edit=True,
     default_refs=["Template:%s" % template for template in templates_to_iterate_over],
+    #ref_namespaces=[10]
     #default_refs=["Template:tracking/form-of/form-of-t/unused/nodot"]
 )
