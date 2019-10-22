@@ -3,90 +3,6 @@
 
 from blib import msg
 
-request_template_list = [
-  # With <code>lang=</code> (no default; disables language-specific behavior)
-  "rfc-header",
-  "tea room",
-  "beer",
-  # Allows <code>1=</code> or <code>lang=</code> (no default; disables language-specific behavior)
-  "rfc",
-  # Error when the lang is missing
-  "rfc-level",
-  "rfdate",
-  "rfgender",
-  "rfscript",
-  "rfscriptcat",
-  "rfv-quote",
-  "rftranslit",
-  "t-needed",
-  "rftrans", # alias of t-needed
-  # With <code>1=</code> (accepts <code>lang=</code>, but issues a deprecation warning)
-  "etystub",
-  "rfap",
-  "rfc-pron-n",
-  "rfc-sense",
-  "rfclarify",
-  "rfd",
-  "rfd-redundant",
-  "rfd-sense",
-  "rfdecl",
-  "rfelite",
-  "rfex",
-  "rfform",
-  "rfi",
-  "rfinfl",
-  "rfp",
-  "rfp-old",
-  "rfquote",
-  "rfquote-sense",
-  "rfref",
-  "rfv",
-  "rfv-etym",
-  "rfv-pron",
-  "rfv-sense",
-  "tea room sense",
-  # Allows <code>1=</code> or <code>lang=</code> (<code>1=</code> should be used in new uses)
-  "rfdatek",
-  "rfdef",
-  "rfe",
-  "rfm",
-  "rfquotek",
-  "attention",
-  # Unclassified
-  "ase-rfr",
-  "copyvio suspected",
-  "delete",
-  "merge",
-  "move",
-  "rfc-auto",
-  "rfexp",
-  "rfm-sense",
-  "MW1913Abbr",
-  "no inline",
-  "rfi0",
-  "rf-sound example",
-  "split",
-  "rftaxon",
-  "transtranslitreqboiler",
-  "unblock",
-  "USRegionDisputed",
-  "rfqez",
-  "rft2",
-  # Cleanup templates
-  "broken ref",
-  "checksense",
-  # "rfc-sense",
-  "missing template",
-  "Nuttall",
-  "oed1923",
-  # "rfc-auto",
-  # "rfc-header",
-  "stub entry",
-  "tbot entry",
-  "ttbc",
-  "Webster 1913",
-]
-
 request_templates = [
   # Allows <code>1=</code> or <code>lang=</code> (no default; disables language-specific behavior)
   ("ttbc", {
@@ -188,18 +104,8 @@ request_templates = [
     "lang1": "req", "langlang": "no"
   }),
   ("t-needed", {
-    "aliases": ["rftrans"],
     "desc": "Request for translation",
     "cat": ["Requests for transliterations into LANG"],
-    "lang1": "req", "langlang": "no"
-  }),
-  "transtranslitreqboiler",
-    "desc": "Category boiler for requests for transliterations in translations from English",
-    "cat": [
-      ("LANG translations needing attention", "in all namespaces"),
-      ("LANG terms needing attention", "in all namespaces"),
-      ("Translations which need romanization", "in all namespaces"),
-    ],
     "lang1": "req", "langlang": "no"
   }),
   ("checksense", {
@@ -506,14 +412,6 @@ request_templates = [
     ],
     "lang1": "no", "langlang": "no"
   }),
-  ("rfi0", {
-    "desc": "Request for photograph",
-    "cat": [
-      "Requests for photographs",
-      ("Entries needing topical attention", "if |topic= is present"),
-    ],
-    "lang1": "no", "langlang": "no"
-  }),
   ("rf-sound example", {
     "desc": "Request for sound clip",
     "lang1": "no", "langlang": "no"
@@ -555,7 +453,7 @@ request_templates = [
     "lang1": "no", "langlang": "no"
   }),
   ("rft2", {
-    "desc": "Template to generate a {{tea room}} invocation (substitutable)",
+    "desc": "Template to generate a {{temp|tea room}} invocation (substitutable)",
     "lang1": "no", "langlang": "no"
   }),
   # Cleanup templates
@@ -592,7 +490,7 @@ request_templates = [
     ],
     "lang1": "no", "langlang": "no"
   }),
-  ("tbot entry",
+  ("tbot entry", {
     "desc": "Request for clean of Tbot stub translation entry (bot-added)",
     "cat": [
       "Tbot entries {{{4}}} {{{3}}}",
@@ -606,5 +504,5 @@ request_templates = [
 request_template_map = dict(request_templates)
 
 if __name__ == "__main__":
-  for template in request_template_list:
+  for template in sorted(request_template_map.keys()):
     msg("Template:%s" % template)
