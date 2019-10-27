@@ -114,7 +114,8 @@ def process_text_on_page(index, pagetitle, text):
           "v" if verb_templates else ""
         )
         pos_arg = "|pos=%s" % pos_val if pos_val else ""
-        autopron = expand_text("{{#invoke:User:Benwing2/fr-pron|show|%s%s}}" % (
+        #autopron = expand_text("{{#invoke:User:Benwing2/fr-pron|show|%s%s}}" % (
+        autopron = expand_text("{{#invoke:fr-pron|show|%s%s}}" % (
           pagetitle, pos_arg))
         if not autopron:
           continue
@@ -149,6 +150,7 @@ def process_text_on_page(index, pagetitle, text):
         # {{fr-IPA}} converts sequences of Crj and Clj to Cri.j and Cli.j,
         # which is correct, but Dawnraybot doesn't do that.
         pron = re.sub(u"([szfvtdpbkɡ][ʁl])j", r"\1i.j", pron)
+        allow_mismatch = False
         if pron != autopron:
           tempcall = "{{fr-IPA%s}}" % pos_arg
           if pron.replace(u"ɑ", "a") == autopron.replace(u"ɑ", "a"):
@@ -160,13 +162,15 @@ def process_text_on_page(index, pagetitle, text):
           elif pron.replace(".", "") == autopron.replace(".", ""):
             pagemsg("WARNING: Would replace %s with %s but auto-generated pron %s disagrees with %s in syllable division only" % (
               unicode(t), tempcall, autopron, pron))
+            allow_mismatch = True
           elif pron.replace(".", "").replace(" ", "") == autopron.replace(".", "").replace(" ", ""):
             pagemsg("WARNING: Would replace %s with %s but auto-generated pron %s disagrees with %s in syllable/word division only" % (
               unicode(t), tempcall, autopron, pron))
           else:
             pagemsg("WARNING: Can't replace %s with %s because auto-generated pron %s doesn't match %s" % (
               unicode(t), tempcall, autopron, pron))
-          continue
+          if not allow_mismatch:
+            continue
         origt = unicode(t)
         rmparam(t, "lang")
         rmparam(t, "1")
