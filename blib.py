@@ -557,6 +557,10 @@ def prefix(prefix, startsort = None, endsort = None, namespace = None):
   for i, current in iter_items(pageiter, startsort, endsort):
     yield i, current
 
+def query_special_pages(specialpage, startsort = None, endsort = None):
+  for i, current in iter_items(site.querypage(specialpage), startsort, endsort):
+    yield i, current
+
 def stream(st, startsort = None, endsort = None):
   i = 0
 
@@ -767,6 +771,10 @@ def create_argparser(desc, include_pagefile=False, include_stdin=False,
     parser.add_argument("--pagefile", help="File listing pages to process.")
     parser.add_argument("--pages", help="List of pages to process, comma-separated.")
     parser.add_argument("--cats", help="List of categories to process, comma-separated.")
+    parser.add_argument("--do-subcats", action="store_true",
+      help="When processing categories, do subcategories instead of pages belong to the category.")
+    parser.add_argument("--recursive", action="store_true",
+      help="In conjunction with --cats, recursively process pages in subcategories.")
     parser.add_argument("--refs", help="List of references to process, comma-separated.")
     parser.add_argument("--ref-namespaces", help="List of namespace(s) to restrict --refs to.")
     parser.add_argument("--filter-pages", help="Regex to use to filter page names.")
@@ -908,8 +916,16 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
         process_page(pywikibot.Page(site, page), i)
     if args.cats:
       for cat in [x.decode("utf-8") for x in args.cats.split(",")]:
-        for i, page in cat_articles(cat, start, end):
-          process_page(page, i)
+        if args.do_subcats:
+          for i, subcat in cat_subcats(cat, start, end, recurse=args.recursive):
+            process_page(subcat, i)
+        else:
+          for i, page in cat_articles(cat, start, end):
+            process_page(page, i)
+          if args.recursive:
+            for i, subcat in cat_subcats(cat, start, end, recurse=True):
+              for j, page in cat_articles(subcat, start, end):
+                process_page(page, j)
     if args.refs:
       for ref in [x.decode("utf-8") for x in args.refs.split(",")]:
         # We don't use ref_namespaces here because the user might not want it.
