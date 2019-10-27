@@ -12,6 +12,7 @@ parser.add_argument('--do-subcats', help="When listing categories, list subcateg
 parser.add_argument('--recursive', help="In conjunction with --cats, recursively list pages in subcategories.",
   action="store_true")
 parser.add_argument('--refs', help="References to do (can be comma-separated list)")
+parser.add_argument('--specials', help="Special pages to do (can be comma-separated list)")
 parser.add_argument('--namespace', help="List all pages in namespace")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
@@ -35,7 +36,11 @@ elif args.cats:
           msg("Processing subcategory: %s" % unicode(subcat.title()))
           for j, page in blib.cat_articles(subcat, start, end):
             msg("Page %s %s: Processing" % (j, unicode(page.title())))
-
+elif args.specials:
+  for special in re.split(",", args.specials):
+    msg("Processing pages on Special:%s" % special)
+    for i, page in blib.query_special_pages(special, start, end):
+      msg("Page %s %s: Processing" % (i, unicode(page.title())))
 elif args.namespace:
   ns = args.namespace
   if re.search('^[0-9]+$', ns):
