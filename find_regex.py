@@ -137,14 +137,19 @@ def yield_text_from_diff(lines, verbose):
       elif verbose:
         msg("Skipping: %s" % line)
 
-def yield_pages_in_cats(cats, startFrom, upTo):
+def yield_pages_in_cats(cats, recursive, startFrom, upTo):
   for cat in cats:
     for index, page in blib.cat_articles(cat, startFrom, upTo):
       yield index, page
+    if recursive:
+      for i, subcat in blib.cat_subcats(cat, startFrom, upTo, recurse=True):
+        for j, page in blib.cat_articles(subcat, startFrom, upTo):
+          yield j, page
 
-def search_pages(regex, refs, cat, pages, pagefile, stdin, input_from_output,
-    input_from_diff, filter_pages, filter_pages_not, verbose, include_text, all_matches,
-    startFrom, upTo, namespaces, include_non_mainspace, lang_only):
+def search_pages(regex, refs, cats, recursive, pages, pagefile, stdin,
+    input_from_output, input_from_diff, filter_pages, filter_pages_not,
+    verbose, include_text, all_matches, startFrom, upTo, namespaces,
+    include_non_mainspace, lang_only):
 
   def process_text_on_page(index, title, text):
     process_page(regex, index, (title, text), filter_pages, filter_pages_not,
@@ -180,7 +185,7 @@ def search_pages(regex, refs, cat, pages, pagefile, stdin, input_from_output,
   elif refs:
     pages = blib.references(refs, startFrom, upTo, namespaces=namespaces)
   else:
-    pages = yield_pages_in_cats(cat.split(","), startFrom, upTo)
+    pages = yield_pages_in_cats(cats.split(","), recursive, startFrom, upTo)
   for index, page in pages:
     process_page(regex, index, page, filter_pages, filter_pages_not, verbose,
         include_text, all_matches, include_non_mainspace, lang_only)
@@ -193,6 +198,8 @@ if __name__ == "__main__":
       help="Do pages with references to this page.")
   pa.add_argument("-c", "--categories", "--cats",
       help="List of categories to search, comma-separated.")
+  pa.add_argument("--recursive", action="store_true",
+    help="In conjunction with --cats, recursively process pages in subcategories.")
   pa.add_argument('--filter-pages', help="Regex to use to filter page names; only includes pages matching this regex.")
   pa.add_argument('--filter-pages-not', help="Regex to use to filter page names; only includes pages not matching this regex.")
   pa.add_argument('--pages', help="List of pages to search, comma-separated.")
@@ -224,7 +231,8 @@ if __name__ == "__main__":
   filter_pages_not = params.filter_pages_not and params.filter_pages_not.decode("utf-8")
   lang_only = params.lang_only and params.lang_only.decode("utf-8")
 
-  search_pages(regex, references, categories, pages, params.pagefile,
-      params.stdin, input_from_output, input_from_diff, filter_pages, filter_pages_not,
-      params.verbose, params.text, params.all, startFrom, upTo, namespaces,
-      params.include_non_mainspace or namespaces, lang_only)
+  search_pages(regex, references, categories, params.recursive, pages,
+      params.pagefile, params.stdin, input_from_output, input_from_diff,
+      filter_pages, filter_pages_not, params.verbose, params.text, params.all,
+      startFrom, upTo, namespaces, params.include_non_mainspace or namespaces,
+      lang_only)
