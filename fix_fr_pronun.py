@@ -93,6 +93,12 @@ def process_text_on_page(index, pagetitle, text):
     for t in parsed.filter_templates():
       tn = tname(t)
       if tn == "IPA":
+        m = re.search("^.*?%s.*$" % re.escape(unicode(t)), sectext, re.M)
+        if not m:
+          pagemsg("WARNING: Couldn't find template %s in section text" % unicode(t))
+          line = "(unknown)"
+        else:
+          line = m.group(0)
         if t.has("lang"):
           first_param = 1
           lang = getparam(t, "lang")
@@ -100,14 +106,17 @@ def process_text_on_page(index, pagetitle, text):
           first_param = 2
           lang = getparam(t, "1")
         if lang != "fr":
-          pagemsg("WARNING: Saw wrong-language {{IPA}} template: %s" % unicode(t))
+          pagemsg("WARNING: Saw wrong-language {{IPA}} template: %s in line <%s>" %
+            (unicode(t), line))
           continue
         pron = getparam(t, str(first_param))
         if not pron:
-          pagemsg("WARNING: No pronun in {{IPA}} template: %s" % unicode(t))
+          pagemsg("WARNING: No pronun in {{IPA}} template: %s in line <%s>" %
+            (unicode(t), line))
           continue
         if getparam(t, str(first_param + 1)) or getparam(t, str(first_param + 2)) or getparam(t, str(first_param + 3)):
-          pagemsg("WARNING: Multiple pronuns in {{IPA}} template: %s" % unicode(t))
+          pagemsg("WARNING: Multiple pronuns in {{IPA}} template: %s in line <%s>" %
+            (unicode(t), line))
           continue
         pos_val = (
           "vnv" if verb_templates and nonverb_templates else
@@ -154,21 +163,21 @@ def process_text_on_page(index, pagetitle, text):
         if pron != autopron:
           tempcall = "{{fr-IPA%s}}" % pos_arg
           if pron.replace(u"ɑ", "a") == autopron.replace(u"ɑ", "a"):
-            pagemsg(u"WARNING: Would replace %s with %s but auto-generated pron %s disagrees with %s in ɑ vs. a only" % (
-              unicode(t), tempcall, autopron, pron))
+            pagemsg(u"WARNING: Would replace %s with %s but auto-generated pron %s disagrees with %s in ɑ vs. a only: line <%s>" % (
+              unicode(t), tempcall, autopron, pron, line))
           elif re.sub(u"ɛ(.)", r"e\1", pron) == re.sub(u"ɛ(.)", r"e\1", autopron):
-            pagemsg(u"WARNING: Would replace %s with %s but auto-generated pron %s disagrees with %s in ɛ vs. e only" % (
-              unicode(t), tempcall, autopron, pron))
+            pagemsg(u"WARNING: Would replace %s with %s but auto-generated pron %s disagrees with %s in ɛ vs. e only: line <%s>" % (
+              unicode(t), tempcall, autopron, pron, line))
           elif pron.replace(".", "") == autopron.replace(".", ""):
-            pagemsg("WARNING: Would replace %s with %s but auto-generated pron %s disagrees with %s in syllable division only" % (
-              unicode(t), tempcall, autopron, pron))
+            pagemsg("WARNING: Would replace %s with %s but auto-generated pron %s disagrees with %s in syllable division only: line <%s>" % (
+              unicode(t), tempcall, autopron, pron, line))
             allow_mismatch = True
           elif pron.replace(".", "").replace(" ", "") == autopron.replace(".", "").replace(" ", ""):
-            pagemsg("WARNING: Would replace %s with %s but auto-generated pron %s disagrees with %s in syllable/word division only" % (
-              unicode(t), tempcall, autopron, pron))
+            pagemsg("WARNING: Would replace %s with %s but auto-generated pron %s disagrees with %s in syllable/word division only: line <%s>" % (
+              unicode(t), tempcall, autopron, pron, line))
           else:
-            pagemsg("WARNING: Can't replace %s with %s because auto-generated pron %s doesn't match %s" % (
-              unicode(t), tempcall, autopron, pron))
+            pagemsg("WARNING: Can't replace %s with %s because auto-generated pron %s doesn't match %s: line <%s>" % (
+              unicode(t), tempcall, autopron, pron, line))
           if not allow_mismatch:
             continue
         origt = unicode(t)
@@ -179,7 +188,10 @@ def process_text_on_page(index, pagetitle, text):
         if pos_val:
           t.add("pos", pos_val)
         notes.append("replace manually-specified {{IPA|fr}} pronun with {{fr-IPA}}")
-        pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+        pagemsg("Replaced %s with %s: line <%s>" % (origt, unicode(t), line))
+        if "{{a|" in line:
+          pagemsg("WARNING: Replaced %s with %s on a line with an accent spec: line <%s>" %
+            (origt, unicode(t), line))
     return unicode(parsed)
 
   # If there are multiple Etymology sections, the pronunciation may be above all of
