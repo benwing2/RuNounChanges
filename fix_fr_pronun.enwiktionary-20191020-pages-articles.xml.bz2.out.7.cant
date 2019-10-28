@@ -150,7 +150,7 @@ symposium,sympŏsium|Page 71593 symposium: WARNING: Can't replace {{IPA|fr|/sɛ�
 cat_ion|Page 72101 cation: WARNING: Can't replace {{IPA|fr|/katjɔ̃/}} with {{fr-IPA}} because auto-generated pron kasjɔ̃ doesn't match katjɔ̃
 compindium,compendium|Page 74073 compendium: WARNING: Can't replace {{IPA|fr|/kɔ̃.pɛ̃.djɔm/}} with {{fr-IPA}} because auto-generated pron kɔ̃.pɑ̃.djɔm doesn't match kɔ̃.pɛ̃.djɔm
 a-bé-cé|Page 74115 abc: WARNING: Can't replace {{IPA|fr|/a.be.se/}} with {{fr-IPA}} because auto-generated pron abk doesn't match a.be.se
-y|Page 74169 germanophone: WARNING: Can't replace {{IPA|fr|/ʒɛʁ.ma.no.fɔn/}} with {{fr-IPA}} because auto-generated pron ʒɛʁ.ma.nɔ.fɔn doesn't match ʒɛʁ.ma.no.fɔn
+germanôphone,germanophone|Page 74169 germanophone: WARNING: Can't replace {{IPA|fr|/ʒɛʁ.ma.no.fɔn/}} with {{fr-IPA}} because auto-generated pron ʒɛʁ.ma.nɔ.fɔn doesn't match ʒɛʁ.ma.no.fɔn
 couce-couce|Page 74230 couscous: WARNING: Can't replace {{IPA|fr|/kus.kus/}} with {{fr-IPA}} because auto-generated pron kus.ku doesn't match kus.kus
 -|Page 74522 sable: WARNING: Can't replace {{IPA|fr|[sɑɔ̯bl]}} with {{fr-IPA|pos=vnv}} because auto-generated pron sabl doesn't match sɑɔ̯bl
 -|Page 74522 sable: WARNING: Can't replace {{IPA|fr|[sab]}} with {{fr-IPA|pos=vnv}} because auto-generated pron sabl doesn't match sab
@@ -360,7 +360,7 @@ y|Page 485909 implose: WARNING: Can't replace {{IPA|fr|/ɛ̃.plɔz/}} with {{fr-
 point gé|Page 490250 point G: WARNING: Can't replace {{IPA|fr|/pwɛ̃ ʒe/}} with {{fr-IPA}} because auto-generated pron pwɛ̃  doesn't match pwɛ̃ ʒe
 y|Page 502227 brodeur: WARNING: Can't replace {{IPA|fr|/bʁɔdɶʁ/}} with {{fr-IPA}} because auto-generated pron bʁɔdœʁ doesn't match bʁɔdɶʁ
 y|Page 503213 controversa: WARNING: Can't replace {{IPA|fr|/kɔ̃.tʁo.vɛʁ.sa/}} with {{fr-IPA|pos=v}} because auto-generated pron kɔ̃.tʁɔ.vɛʁ.sa doesn't match kɔ̃.tʁo.vɛʁ.sa
-akwariums|Page 519872 aquariums: WARNING: Can't replace {{IPA|fr|/a.kwa.ʁjɔm/}} with {{fr-IPA}} because auto-generated pron a.ka.ʁjɔm doesn't match a.kwa.ʁjɔm
+aqwariums|Page 519872 aquariums: WARNING: Can't replace {{IPA|fr|/a.kwa.ʁjɔm/}} with {{fr-IPA}} because auto-generated pron a.ka.ʁjɔm doesn't match a.kwa.ʁjɔm
 y|Page 521329 gouges: WARNING: Can't replace {{IPA|fr|/ɡuːʒ/}} with {{fr-IPA|pos=vnv}} because auto-generated pron ɡuʒ doesn't match ɡuːʒ
 -|Page 521329 gouges: WARNING: Can't replace {{IPA|fr|/ɡʊːʒ/}} with {{fr-IPA|pos=vnv}} because auto-generated pron ɡuʒ doesn't match ɡʊːʒ
 y|Page 521342 gougent: WARNING: Can't replace {{IPA|fr|/ɡuːʒ/}} with {{fr-IPA|pos=v}} because auto-generated pron ɡuʒ doesn't match ɡuːʒ
@@ -394,7 +394,7 @@ mini-shorte|Page 622047 mini-short: WARNING: Can't replace {{IPA|fr|/miniʃɔʁt
 Trancylvanie|Page 630281 Transylvanie: WARNING: Can't replace {{IPA|fr|/tʁɑ̃.sil.va.ni/}} with {{fr-IPA}} because auto-generated pron tʁɑ̃.zil.va.ni doesn't match tʁɑ̃.sil.va.ni
 y|Page 630960 opopanax: WARNING: Can't replace {{IPA|fr|/ɔ.pɔ.pa.naks/}} with {{fr-IPA}} because auto-generated pron ɔ.pɔ.pa.na doesn't match ɔ.pɔ.pa.naks
 aigüillete|Page 631396 aiguillette: WARNING: Can't replace {{IPA|fr|/e.ɡɥi.jɛt/}} with {{fr-IPA}} because auto-generated pron ɛ.ɡi.jɛt doesn't match e.ɡɥi.jɛt
-skwame|Page 632938 squame: WARNING: Can't replace {{IPA|fr|/skwam/}} with {{fr-IPA}} because auto-generated pron skam doesn't match skwam
+sqwame|Page 632938 squame: WARNING: Can't replace {{IPA|fr|/skwam/}} with {{fr-IPA}} because auto-generated pron skam doesn't match skwam
 caotique|Page 636118 chaotique: WARNING: Can't replace {{IPA|fr|/ka.ɔ.tik/}} with {{fr-IPA}} because auto-generated pron ʃa.ɔ.tik doesn't match ka.ɔ.tik
 y|Page 639874 baobabs: WARNING: Can't replace {{IPA|fr|/ba.o.bab/}} with {{fr-IPA}} because auto-generated pron ba.ɔ.ba doesn't match ba.o.bab
 -|Page 641325 bénéfice: WARNING: Can't replace {{IPA|fr|/bɛ̃nifis/}} with {{fr-IPA}} because auto-generated pron benefis doesn't match bɛ̃nifis
@@ -600,9 +600,9 @@ mulétas|Page 1234275 muletas: WARNING: Can't replace {{IPA|fr|/my.lɛ.ta/}} wit
 y|Page 1237193 orientales: WARNING: Can't replace {{IPA|fr|/ɔ.ʁjɑ̃.tal/}} with {{fr-IPA}} because auto-generated pron ɔ.ʁjɛ̃.tal doesn't match ɔ.ʁjɑ̃.tal
 y|Page 1247414 exponentiels: WARNING: Can't replace {{IPA|fr|/ɛkspɔnɑ̃sjɛl/}} with {{fr-IPA}} because auto-generated pron ɛkspɔnɑ̃tjɛl doesn't match ɛkspɔnɑ̃sjɛl
 y|Page 1250335 sexuation: WARNING: Can't replace {{IPA|fr|/sɛk.sy.a.sjɔ̃/}} with {{fr-IPA}} because auto-generated pron sɛk.sɥa.sjɔ̃ doesn't match sɛk.sy.a.sjɔ̃
-|Page 1252560 adéquatement: WARNING: Can't replace {{IPA|fr|/a.de.kwat.mɑ̃/}} with {{fr-IPA}} because auto-generated pron a.de.kat.mɑ̃ doesn't match a.de.kwat.mɑ̃
-adékwats|Page 1253032 adéquats: WARNING: Can't replace {{IPA|fr|/a.de.kwa/}} with {{fr-IPA}} because auto-generated pron a.de.ka doesn't match a.de.kwa
-adékwates|Page 1253033 adéquates: WARNING: Can't replace {{IPA|fr|/a.de.kwat/}} with {{fr-IPA}} because auto-generated pron a.de.kat doesn't match a.de.kwat
+adéqwatement|Page 1252560 adéquatement: WARNING: Can't replace {{IPA|fr|/a.de.kwat.mɑ̃/}} with {{fr-IPA}} because auto-generated pron a.de.kat.mɑ̃ doesn't match a.de.kwat.mɑ̃
+adéqwats|Page 1253032 adéquats: WARNING: Can't replace {{IPA|fr|/a.de.kwa/}} with {{fr-IPA}} because auto-generated pron a.de.ka doesn't match a.de.kwa
+adéqwates|Page 1253033 adéquates: WARNING: Can't replace {{IPA|fr|/a.de.kwat/}} with {{fr-IPA}} because auto-generated pron a.de.kat doesn't match a.de.kwat
 ubiqüistes|Page 1255917 ubiquistes: WARNING: Can't replace {{IPA|fr|/y.bi.kɥist/}} with {{fr-IPA}} because auto-generated pron y.bi.kist doesn't match y.bi.kɥist
 ubiqüitaire|Page 1255918 ubiquitaire: WARNING: Can't replace {{IPA|fr|/y.bi.kɥi.tɛʁ/}} with {{fr-IPA}} because auto-generated pron y.bi.ki.tɛʁ doesn't match y.bi.kɥi.tɛʁ
 ubiqüitaires|Page 1255919 ubiquitaires: WARNING: Can't replace {{IPA|fr|/y.bi.kɥi.tɛʁ/}} with {{fr-IPA}} because auto-generated pron y.bi.ki.tɛʁ doesn't match y.bi.kɥi.tɛʁ
@@ -1958,7 +1958,7 @@ pans du jour|Page 1575980 paons du jour: WARNING: Can't replace {{IPA|fr|/pɔ̃ 
 fan|Page 1576172 faons: WARNING: Can't replace {{IPA|fr|/fɑ̃/}} with {{fr-IPA}} because auto-generated pron faɔ̃ doesn't match fɑ̃
 y|Page 1576537 féodalismes: WARNING: Can't replace {{IPA|fr|/fe.o.da.lism/}} with {{fr-IPA}} because auto-generated pron fe.ɔ.da.lism doesn't match fe.o.da.lism
 y|Page 1577039 agiographies: WARNING: Can't replace {{IPA|fr|/a.ʒjo.ɡʁa.fi/}} with {{fr-IPA}} because auto-generated pron a.ʒjɔ.ɡʁa.fi doesn't match a.ʒjo.ɡʁa.fi
-skwales|Page 1578556 squales: WARNING: Can't replace {{IPA|fr|/skwal/}} with {{fr-IPA}} because auto-generated pron skal doesn't match skwal
+sqwales|Page 1578556 squales: WARNING: Can't replace {{IPA|fr|/skwal/}} with {{fr-IPA}} because auto-generated pron skal doesn't match skwal
 y|Page 1578665 optimismes: WARNING: Can't replace {{IPA|fr|/ɔp.ti.mizm/}} with {{fr-IPA}} because auto-generated pron ɔp.ti.mism doesn't match ɔp.ti.mizm
 y|Page 1579162 nid d'amour: WARNING: Can't replace {{IPA|fr|/nidamuʁ/}} with {{fr-IPA}} because auto-generated pron ni d‿amuʁ doesn't match nidamuʁ
 y|Page 1579163 nids d'amour: WARNING: Can't replace {{IPA|fr|/nidamuʁ/}} with {{fr-IPA}} because auto-generated pron ni d‿amuʁ doesn't match nidamuʁ
@@ -2387,7 +2387,7 @@ y|Page 1625302 slavisme: WARNING: Can't replace {{IPA|fr|/sla.vizm/}} with {{fr-
 y|Page 1625309 panslavisme: WARNING: Can't replace {{IPA|fr|/pɑ̃.sla.vizm/}} with {{fr-IPA}} because auto-generated pron pɑ̃.sla.vism doesn't match pɑ̃.sla.vizm
 y|Page 1625326 slavophile: WARNING: Can't replace {{IPA|fr|/slavofil/}} with {{fr-IPA}} because auto-generated pron slavɔfil doesn't match slavofil
 y|Page 1625328 slavophiles: WARNING: Can't replace {{IPA|fr|/slavofil/}} with {{fr-IPA}} because auto-generated pron slavɔfil doesn't match slavofil
-skwattériser|Page 1626188 squattériser: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.ze/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁi.ze doesn't match skwa.te.ʁi.ze
+sqwattériser|Page 1626188 squattériser: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.ze/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁi.ze doesn't match skwa.te.ʁi.ze
 y|Page 1626226 autonyme: WARNING: Can't replace {{IPA|fr|/ɔ.tɔ.nim/}} with {{fr-IPA}} because auto-generated pron o.tɔ.nim doesn't match ɔ.tɔ.nim
 y|Page 1626393 sébum: WARNING: Can't replace {{IPA|fr|/sebum/}} with {{fr-IPA}} because auto-generated pron sebɔm doesn't match sebum
 y|Page 1626526 snobinard: WARNING: Can't replace {{IPA|fr|/sno.bi.naʁ/}} with {{fr-IPA}} because auto-generated pron snɔ.bi.naʁ doesn't match sno.bi.naʁ
@@ -2399,97 +2399,97 @@ y|Page 1628323 nord-ouest-quart-nord: WARNING: Can't replace {{IPA|fr|/nɔ.ʁ‿
 -|Page 1628323 nord-ouest-quart-nord: WARNING: Can't replace {{IPA|fr|/nɔʁ.d‿wɛst.kaʁ.nɔʁ/}} with {{fr-IPA}} because auto-generated pron nɔ.ʁwɛst.kaʁ.nɔʁ doesn't match nɔʁ.d‿wɛst.kaʁ.nɔʁ
 -|Page 1628324 nord-ouest-quart-ouest: WARNING: Can't replace {{IPA|fr|/nɔ.ʁ‿wɛst.ka.ʁ‿wɛst/}} with {{fr-IPA}} because auto-generated pron nɔ.ʁwɛst.ka.ʁwɛst doesn't match nɔ.ʁ‿wɛst.ka.ʁ‿wɛst
 -|Page 1628324 nord-ouest-quart-ouest: WARNING: Can't replace {{IPA|fr|/nɔʁ.d‿wɛst.ka.ʁ‿wɛst/}} with {{fr-IPA}} because auto-generated pron nɔ.ʁwɛst.ka.ʁwɛst doesn't match nɔʁ.d‿wɛst.ka.ʁ‿wɛst
-|Page 1628338 sud-ouest-quart-ouest: WARNING: Can't replace {{IPA|fr|/sy.d‿wɛst.ka.ʁ‿wɛst/}} with {{fr-IPA}} because auto-generated pron sy.wɛst.ka.ʁwɛst doesn't match sy.d‿wɛst.ka.ʁ‿wɛst
-|Page 1628345 sud-ouest-quart-sud: WARNING: Can't replace {{IPA|fr|/sy.d‿wɛst.kaʁ.syd/}} with {{fr-IPA}} because auto-generated pron sy.wɛst.kaʁ.sy doesn't match sy.d‿wɛst.kaʁ.syd
-|Page 1628352 sud-quart-sud-ouest: WARNING: Can't replace {{IPA|fr|/syd.kaʁ.sy.d‿wɛst/}} with {{fr-IPA}} because auto-generated pron sy.kaʁ.sy.wɛst doesn't match syd.kaʁ.sy.d‿wɛst
-|Page 1628357 sud-quart-sud-est: WARNING: Can't replace {{IPA|fr|/syd.kaʁ.sy.d‿ɛst/}} with {{fr-IPA}} because auto-generated pron sy.kaʁ.sy.ɛ doesn't match syd.kaʁ.sy.d‿ɛst
-|Page 1628368 sud-est-quart-sud: WARNING: Can't replace {{IPA|fr|/sy.d‿ɛst.kaʁ.syd/}} with {{fr-IPA}} because auto-generated pron sy.ɛ.kaʁ.sy doesn't match sy.d‿ɛst.kaʁ.syd
-|Page 1628369 sud-est-quart-est: WARNING: Can't replace {{IPA|fr|/sy.d‿ɛst.ka.ʁ‿ɛs/}} with {{fr-IPA}} because auto-generated pron sy.ɛ.ka.ʁɛ doesn't match sy.d‿ɛst.ka.ʁ‿ɛs
-|Page 1628371 est-quart-sud-est: WARNING: Can't replace {{IPA|fr|/ɛst.kaʁ.sy.d‿ɛst/}} with {{fr-IPA}} because auto-generated pron ɛ.kaʁ.sy.ɛ doesn't match ɛst.kaʁ.sy.d‿ɛst
-|Page 1628372 est-quart-nord-est: WARNING: Can't replace {{IPA|fr|/ɛst.kaʁ.nɔ.ʁ‿ɛst/}} with {{fr-IPA}} because auto-generated pron ɛ.kaʁ.nɔ.ʁɛ doesn't match ɛst.kaʁ.nɔ.ʁ‿ɛst
-|Page 1628372 est-quart-nord-est: WARNING: Can't replace {{IPA|fr|/ɛst.kaʁ.nɔʁ.d‿ɛst/}} with {{fr-IPA}} because auto-generated pron ɛ.kaʁ.nɔ.ʁɛ doesn't match ɛst.kaʁ.nɔʁ.d‿ɛst
-|Page 1628375 nord-est-quart-est: WARNING: Can't replace {{IPA|fr|/nɔ.ʁ‿ɛst.ka.ʁ‿ɛst/}} with {{fr-IPA}} because auto-generated pron nɔ.ʁɛ.ka.ʁɛ doesn't match nɔ.ʁ‿ɛst.ka.ʁ‿ɛst
-|Page 1628375 nord-est-quart-est: WARNING: Can't replace {{IPA|fr|/nɔʁ.d‿ɛst.ka.ʁ‿ɛst/}} with {{fr-IPA}} because auto-generated pron nɔ.ʁɛ.ka.ʁɛ doesn't match nɔʁ.d‿ɛst.ka.ʁ‿ɛst
-|Page 1628378 nord-est-quart-nord: WARNING: Can't replace {{IPA|fr|/nɔ.ʁ‿ɛst.kaʁ.nɔʁ/}} with {{fr-IPA}} because auto-generated pron nɔ.ʁɛ.kaʁ.nɔʁ doesn't match nɔ.ʁ‿ɛst.kaʁ.nɔʁ
-|Page 1628378 nord-est-quart-nord: WARNING: Can't replace {{IPA|fr|/nɔʁ.d‿ɛst.kaʁ.nɔʁ/}} with {{fr-IPA}} because auto-generated pron nɔ.ʁɛ.kaʁ.nɔʁ doesn't match nɔʁ.d‿ɛst.kaʁ.nɔʁ
-|Page 1628380 nord-quart-nord-est: WARNING: Can't replace {{IPA|fr|/nɔʁ.kaʁ.nɔ.ʁ‿ɛst/}} with {{fr-IPA}} because auto-generated pron nɔʁ.kaʁ.nɔ.ʁɛ doesn't match nɔʁ.kaʁ.nɔ.ʁ‿ɛst
-|Page 1628380 nord-quart-nord-est: WARNING: Can't replace {{IPA|fr|/nɔʁ.kaʁ.nɔʁ.d‿ɛst/}} with {{fr-IPA}} because auto-generated pron nɔʁ.kaʁ.nɔ.ʁɛ doesn't match nɔʁ.kaʁ.nɔʁ.d‿ɛst
-skwattant|Page 1628633 squattant: WARNING: Can't replace {{IPA|fr|/skwa.tɑ̃/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.tɑ̃ doesn't match skwa.tɑ̃
-skwatté|Page 1628634 squatté: WARNING: Can't replace {{IPA|fr|/skwa.te/}} with {{fr-IPA}} because auto-generated pron ska.te doesn't match skwa.te
-skwatte|Page 1628635 squatte: WARNING: Can't replace {{IPA|fr|/skwat/}} with {{fr-IPA|pos=v}} because auto-generated pron skat doesn't match skwat
-skwattes|Page 1628636 squattes: WARNING: Can't replace {{IPA|fr|/skwat/}} with {{fr-IPA|pos=v}} because auto-generated pron skat doesn't match skwat
-skwattons|Page 1628637 squattons: WARNING: Can't replace {{IPA|fr|/skwa.tɔ̃/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.tɔ̃ doesn't match skwa.tɔ̃
-skwattez|Page 1628638 squattez: WARNING: Can't replace {{IPA|fr|/skwa.te/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te doesn't match skwa.te
-skwattent|Page 1628639 squattent: WARNING: Can't replace {{IPA|fr|/skwat/}} with {{fr-IPA|pos=v}} because auto-generated pron skat doesn't match skwat
-skwattais|Page 1628640 squattais: WARNING: Can't replace {{IPA|fr|/skwa.tɛ/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.tɛ doesn't match skwa.tɛ
-skwattait|Page 1628641 squattait: WARNING: Can't replace {{IPA|fr|/skwa.tɛ/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.tɛ doesn't match skwa.tɛ
-skwattions|Page 1628642 squattions: WARNING: Can't replace {{IPA|fr|/skwa.tjɔ̃/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.tjɔ̃ doesn't match skwa.tjɔ̃
-skwattiez|Page 1628643 squattiez: WARNING: Can't replace {{IPA|fr|/skwa.tje/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.tje doesn't match skwa.tje
-skwattaient|Page 1628644 squattaient: WARNING: Can't replace {{IPA|fr|/skwa.tɛ/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.tɛ doesn't match skwa.tɛ
-skwattai|Page 1628645 squattai: WARNING: Can't replace {{IPA|fr|/skwa.te/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te doesn't match skwa.te
-skwattas|Page 1628646 squattas: WARNING: Can't replace {{IPA|fr|/skwa.ta/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.ta doesn't match skwa.ta
-skwatta|Page 1628647 squatta: WARNING: Can't replace {{IPA|fr|/skwa.ta/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.ta doesn't match skwa.ta
-skwattâmes|Page 1628648 squattâmes: WARNING: Can't replace {{IPA|fr|/skwa.tam/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.tam doesn't match skwa.tam
-skwattâtes|Page 1628649 squattâtes: WARNING: Can't replace {{IPA|fr|/skwa.tat/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.tat doesn't match skwa.tat
-skwattèrent|Page 1628650 squattèrent: WARNING: Can't replace {{IPA|fr|/skwa.tɛʁ/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.tɛʁ doesn't match skwa.tɛʁ
-skwatterai|Page 1628651 squatterai: WARNING: Can't replace {{IPA|fr|/skwa.tə.ʁe/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.tʁe doesn't match skwa.tʁe
-skwatteras|Page 1628652 squatteras: WARNING: Can't replace {{IPA|fr|/skwa.tə.ʁa/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.tʁa doesn't match skwa.tʁa
-skwattera|Page 1628653 squattera: WARNING: Can't replace {{IPA|fr|/skwa.tə.ʁa/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.tʁa doesn't match skwa.tʁa
-skwatterons|Page 1628654 squatterons: WARNING: Can't replace {{IPA|fr|/skwa.tə.ʁɔ̃/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.tʁɔ̃ doesn't match skwa.tʁɔ̃
-skwatterez|Page 1628655 squatterez: WARNING: Can't replace {{IPA|fr|/skwa.tə.ʁe/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.tʁe doesn't match skwa.tʁe
-skwatteront|Page 1628656 squatteront: WARNING: Can't replace {{IPA|fr|/skwa.tə.ʁɔ̃/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.tʁɔ̃ doesn't match skwa.tʁɔ̃
-skwatterais|Page 1628657 squatterais: WARNING: Can't replace {{IPA|fr|/skwa.tə.ʁɛ/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.tʁɛ doesn't match skwa.tʁɛ
-skwatterait|Page 1628658 squatterait: WARNING: Can't replace {{IPA|fr|/skwa.tə.ʁɛ/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.tʁɛ doesn't match skwa.tʁɛ
-skwatterions|Page 1628659 squatterions: WARNING: Can't replace {{IPA|fr|/skwa.tə.ʁjɔ̃/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.tə.ʁjɔ̃ doesn't match skwa.tə.ʁjɔ̃
-skwatteriez|Page 1628660 squatteriez: WARNING: Can't replace {{IPA|fr|/skwa.tə.ʁje/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.tə.ʁje doesn't match skwa.tə.ʁje
-skwatteraient|Page 1628661 squatteraient: WARNING: Can't replace {{IPA|fr|/skwa.tə.ʁɛ/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.tʁɛ doesn't match skwa.tʁɛ
-skwattasse|Page 1628662 squattasse: WARNING: Can't replace {{IPA|fr|/skwa.tas/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.tas doesn't match skwa.tas
-skwattasses|Page 1628663 squattasses: WARNING: Can't replace {{IPA|fr|/skwa.tas/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.tas doesn't match skwa.tas
-skwattât|Page 1628664 squattât: WARNING: Can't replace {{IPA|fr|/skwa.ta/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.ta doesn't match skwa.ta
-skwattassions|Page 1628665 squattassions: WARNING: Can't replace {{IPA|fr|/skwa.ta.sjɔ̃/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.ta.sjɔ̃ doesn't match skwa.ta.sjɔ̃
-skwattassiez|Page 1628666 squattassiez: WARNING: Can't replace {{IPA|fr|/skwa.ta.sje/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.ta.sje doesn't match skwa.ta.sje
-skwattassent|Page 1628667 squattassent: WARNING: Can't replace {{IPA|fr|/skwa.tas/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.tas doesn't match skwa.tas
+-|Page 1628338 sud-ouest-quart-ouest: WARNING: Can't replace {{IPA|fr|/sy.d‿wɛst.ka.ʁ‿wɛst/}} with {{fr-IPA}} because auto-generated pron sy.wɛst.ka.ʁwɛst doesn't match sy.d‿wɛst.ka.ʁ‿wɛst
+-|Page 1628345 sud-ouest-quart-sud: WARNING: Can't replace {{IPA|fr|/sy.d‿wɛst.kaʁ.syd/}} with {{fr-IPA}} because auto-generated pron sy.wɛst.kaʁ.sy doesn't match sy.d‿wɛst.kaʁ.syd
+-|Page 1628352 sud-quart-sud-ouest: WARNING: Can't replace {{IPA|fr|/syd.kaʁ.sy.d‿wɛst/}} with {{fr-IPA}} because auto-generated pron sy.kaʁ.sy.wɛst doesn't match syd.kaʁ.sy.d‿wɛst
+-|Page 1628357 sud-quart-sud-est: WARNING: Can't replace {{IPA|fr|/syd.kaʁ.sy.d‿ɛst/}} with {{fr-IPA}} because auto-generated pron sy.kaʁ.sy.ɛ doesn't match syd.kaʁ.sy.d‿ɛst
+-|Page 1628368 sud-est-quart-sud: WARNING: Can't replace {{IPA|fr|/sy.d‿ɛst.kaʁ.syd/}} with {{fr-IPA}} because auto-generated pron sy.ɛ.kaʁ.sy doesn't match sy.d‿ɛst.kaʁ.syd
+-|Page 1628369 sud-est-quart-est: WARNING: Can't replace {{IPA|fr|/sy.d‿ɛst.ka.ʁ‿ɛs/}} with {{fr-IPA}} because auto-generated pron sy.ɛ.ka.ʁɛ doesn't match sy.d‿ɛst.ka.ʁ‿ɛs
+-|Page 1628371 est-quart-sud-est: WARNING: Can't replace {{IPA|fr|/ɛst.kaʁ.sy.d‿ɛst/}} with {{fr-IPA}} because auto-generated pron ɛ.kaʁ.sy.ɛ doesn't match ɛst.kaʁ.sy.d‿ɛst
+-|Page 1628372 est-quart-nord-est: WARNING: Can't replace {{IPA|fr|/ɛst.kaʁ.nɔ.ʁ‿ɛst/}} with {{fr-IPA}} because auto-generated pron ɛ.kaʁ.nɔ.ʁɛ doesn't match ɛst.kaʁ.nɔ.ʁ‿ɛst
+-|Page 1628372 est-quart-nord-est: WARNING: Can't replace {{IPA|fr|/ɛst.kaʁ.nɔʁ.d‿ɛst/}} with {{fr-IPA}} because auto-generated pron ɛ.kaʁ.nɔ.ʁɛ doesn't match ɛst.kaʁ.nɔʁ.d‿ɛst
+-|Page 1628375 nord-est-quart-est: WARNING: Can't replace {{IPA|fr|/nɔ.ʁ‿ɛst.ka.ʁ‿ɛst/}} with {{fr-IPA}} because auto-generated pron nɔ.ʁɛ.ka.ʁɛ doesn't match nɔ.ʁ‿ɛst.ka.ʁ‿ɛst
+-|Page 1628375 nord-est-quart-est: WARNING: Can't replace {{IPA|fr|/nɔʁ.d‿ɛst.ka.ʁ‿ɛst/}} with {{fr-IPA}} because auto-generated pron nɔ.ʁɛ.ka.ʁɛ doesn't match nɔʁ.d‿ɛst.ka.ʁ‿ɛst
+-|Page 1628378 nord-est-quart-nord: WARNING: Can't replace {{IPA|fr|/nɔ.ʁ‿ɛst.kaʁ.nɔʁ/}} with {{fr-IPA}} because auto-generated pron nɔ.ʁɛ.kaʁ.nɔʁ doesn't match nɔ.ʁ‿ɛst.kaʁ.nɔʁ
+-|Page 1628378 nord-est-quart-nord: WARNING: Can't replace {{IPA|fr|/nɔʁ.d‿ɛst.kaʁ.nɔʁ/}} with {{fr-IPA}} because auto-generated pron nɔ.ʁɛ.kaʁ.nɔʁ doesn't match nɔʁ.d‿ɛst.kaʁ.nɔʁ
+-|Page 1628380 nord-quart-nord-est: WARNING: Can't replace {{IPA|fr|/nɔʁ.kaʁ.nɔ.ʁ‿ɛst/}} with {{fr-IPA}} because auto-generated pron nɔʁ.kaʁ.nɔ.ʁɛ doesn't match nɔʁ.kaʁ.nɔ.ʁ‿ɛst
+-|Page 1628380 nord-quart-nord-est: WARNING: Can't replace {{IPA|fr|/nɔʁ.kaʁ.nɔʁ.d‿ɛst/}} with {{fr-IPA}} because auto-generated pron nɔʁ.kaʁ.nɔ.ʁɛ doesn't match nɔʁ.kaʁ.nɔʁ.d‿ɛst
+sqwattant|Page 1628633 squattant: WARNING: Can't replace {{IPA|fr|/skwa.tɑ̃/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.tɑ̃ doesn't match skwa.tɑ̃
+sqwatté|Page 1628634 squatté: WARNING: Can't replace {{IPA|fr|/skwa.te/}} with {{fr-IPA}} because auto-generated pron ska.te doesn't match skwa.te
+sqwatte|Page 1628635 squatte: WARNING: Can't replace {{IPA|fr|/skwat/}} with {{fr-IPA|pos=v}} because auto-generated pron skat doesn't match skwat
+sqwattes|Page 1628636 squattes: WARNING: Can't replace {{IPA|fr|/skwat/}} with {{fr-IPA|pos=v}} because auto-generated pron skat doesn't match skwat
+sqwattons|Page 1628637 squattons: WARNING: Can't replace {{IPA|fr|/skwa.tɔ̃/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.tɔ̃ doesn't match skwa.tɔ̃
+sqwattez|Page 1628638 squattez: WARNING: Can't replace {{IPA|fr|/skwa.te/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te doesn't match skwa.te
+sqwattent|Page 1628639 squattent: WARNING: Can't replace {{IPA|fr|/skwat/}} with {{fr-IPA|pos=v}} because auto-generated pron skat doesn't match skwat
+sqwattais|Page 1628640 squattais: WARNING: Can't replace {{IPA|fr|/skwa.tɛ/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.tɛ doesn't match skwa.tɛ
+sqwattait|Page 1628641 squattait: WARNING: Can't replace {{IPA|fr|/skwa.tɛ/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.tɛ doesn't match skwa.tɛ
+sqwattions|Page 1628642 squattions: WARNING: Can't replace {{IPA|fr|/skwa.tjɔ̃/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.tjɔ̃ doesn't match skwa.tjɔ̃
+sqwattiez|Page 1628643 squattiez: WARNING: Can't replace {{IPA|fr|/skwa.tje/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.tje doesn't match skwa.tje
+sqwattaient|Page 1628644 squattaient: WARNING: Can't replace {{IPA|fr|/skwa.tɛ/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.tɛ doesn't match skwa.tɛ
+sqwattai|Page 1628645 squattai: WARNING: Can't replace {{IPA|fr|/skwa.te/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te doesn't match skwa.te
+sqwattas|Page 1628646 squattas: WARNING: Can't replace {{IPA|fr|/skwa.ta/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.ta doesn't match skwa.ta
+sqwatta|Page 1628647 squatta: WARNING: Can't replace {{IPA|fr|/skwa.ta/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.ta doesn't match skwa.ta
+sqwattâmes|Page 1628648 squattâmes: WARNING: Can't replace {{IPA|fr|/skwa.tam/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.tam doesn't match skwa.tam
+sqwattâtes|Page 1628649 squattâtes: WARNING: Can't replace {{IPA|fr|/skwa.tat/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.tat doesn't match skwa.tat
+sqwattèrent|Page 1628650 squattèrent: WARNING: Can't replace {{IPA|fr|/skwa.tɛʁ/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.tɛʁ doesn't match skwa.tɛʁ
+sqwatterai|Page 1628651 squatterai: WARNING: Can't replace {{IPA|fr|/skwa.tə.ʁe/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.tʁe doesn't match skwa.tʁe
+sqwatteras|Page 1628652 squatteras: WARNING: Can't replace {{IPA|fr|/skwa.tə.ʁa/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.tʁa doesn't match skwa.tʁa
+sqwattera|Page 1628653 squattera: WARNING: Can't replace {{IPA|fr|/skwa.tə.ʁa/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.tʁa doesn't match skwa.tʁa
+sqwatterons|Page 1628654 squatterons: WARNING: Can't replace {{IPA|fr|/skwa.tə.ʁɔ̃/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.tʁɔ̃ doesn't match skwa.tʁɔ̃
+sqwatterez|Page 1628655 squatterez: WARNING: Can't replace {{IPA|fr|/skwa.tə.ʁe/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.tʁe doesn't match skwa.tʁe
+sqwatteront|Page 1628656 squatteront: WARNING: Can't replace {{IPA|fr|/skwa.tə.ʁɔ̃/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.tʁɔ̃ doesn't match skwa.tʁɔ̃
+sqwatterais|Page 1628657 squatterais: WARNING: Can't replace {{IPA|fr|/skwa.tə.ʁɛ/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.tʁɛ doesn't match skwa.tʁɛ
+sqwatterait|Page 1628658 squatterait: WARNING: Can't replace {{IPA|fr|/skwa.tə.ʁɛ/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.tʁɛ doesn't match skwa.tʁɛ
+sqwatterions|Page 1628659 squatterions: WARNING: Can't replace {{IPA|fr|/skwa.tə.ʁjɔ̃/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.tə.ʁjɔ̃ doesn't match skwa.tə.ʁjɔ̃
+sqwatteriez|Page 1628660 squatteriez: WARNING: Can't replace {{IPA|fr|/skwa.tə.ʁje/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.tə.ʁje doesn't match skwa.tə.ʁje
+sqwatteraient|Page 1628661 squatteraient: WARNING: Can't replace {{IPA|fr|/skwa.tə.ʁɛ/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.tʁɛ doesn't match skwa.tʁɛ
+sqwattasse|Page 1628662 squattasse: WARNING: Can't replace {{IPA|fr|/skwa.tas/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.tas doesn't match skwa.tas
+sqwattasses|Page 1628663 squattasses: WARNING: Can't replace {{IPA|fr|/skwa.tas/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.tas doesn't match skwa.tas
+sqwattât|Page 1628664 squattât: WARNING: Can't replace {{IPA|fr|/skwa.ta/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.ta doesn't match skwa.ta
+sqwattassions|Page 1628665 squattassions: WARNING: Can't replace {{IPA|fr|/skwa.ta.sjɔ̃/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.ta.sjɔ̃ doesn't match skwa.ta.sjɔ̃
+sqwattassiez|Page 1628666 squattassiez: WARNING: Can't replace {{IPA|fr|/skwa.ta.sje/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.ta.sje doesn't match skwa.ta.sje
+sqwattassent|Page 1628667 squattassent: WARNING: Can't replace {{IPA|fr|/skwa.tas/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.tas doesn't match skwa.tas
 y|Page 1629173 indigniez: WARNING: Can't replace {{IPA|fr|/ɛ̃.di.ɲ/}} with {{fr-IPA|pos=v}} because auto-generated pron ɛ̃.di.ɲje doesn't match ɛ̃.di.ɲ
 y|Page 1629186 indigneriez: WARNING: Can't replace {{IPA|fr|/ɛ̃.di.ɲə.ʁ/}} with {{fr-IPA|pos=v}} because auto-generated pron ɛ̃.di.ɲə.ʁje doesn't match ɛ̃.di.ɲə.ʁ
 y|Page 1629191 indignassiez: WARNING: Can't replace {{IPA|fr|/ɛ̃.di.ɲa.s/}} with {{fr-IPA|pos=v}} because auto-generated pron ɛ̃.di.ɲa.sje doesn't match ɛ̃.di.ɲa.s
 y|Page 1629201 scandalisiez: WARNING: Can't replace {{IPA|fr|/skɑ̃.da.li.z/}} with {{fr-IPA|pos=v}} because auto-generated pron skɑ̃.da.li.zje doesn't match skɑ̃.da.li.z
 y|Page 1629218 scandaliseriez: WARNING: Can't replace {{IPA|fr|/skɑ̃.da.li.zə.ʁ/}} with {{fr-IPA|pos=v}} because auto-generated pron skɑ̃.da.li.zə.ʁje doesn't match skɑ̃.da.li.zə.ʁ
 y|Page 1629224 scandalisassiez: WARNING: Can't replace {{IPA|fr|/skɑ̃.da.li.za.s/}} with {{fr-IPA|pos=v}} because auto-generated pron skɑ̃.da.li.za.sje doesn't match skɑ̃.da.li.za.s
-skwattérisant|Page 1629293 squattérisant: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.zɑ̃/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁi.zɑ̃ doesn't match skwa.te.ʁi.zɑ̃
-skwattérisé|Page 1629294 squattérisé: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.ze/}} with {{fr-IPA}} because auto-generated pron ska.te.ʁi.ze doesn't match skwa.te.ʁi.ze
-skwattérise|Page 1629295 squattérise: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁiz/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁiz doesn't match skwa.te.ʁiz
-skwattérises|Page 1629296 squattérises: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁiz/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁiz doesn't match skwa.te.ʁiz
-skwattérisons|Page 1629297 squattérisons: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.zɔ̃/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁi.zɔ̃ doesn't match skwa.te.ʁi.zɔ̃
-skwattérisez|Page 1629298 squattérisez: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.ze/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁi.ze doesn't match skwa.te.ʁi.ze
-skwattérisent|Page 1629299 squattérisent: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁiz/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁiz doesn't match skwa.te.ʁiz
-skwattérisais|Page 1629300 squattérisais: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.zɛ/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁi.zɛ doesn't match skwa.te.ʁi.zɛ
-skwattérisait|Page 1629301 squattérisait: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.zɛ/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁi.zɛ doesn't match skwa.te.ʁi.zɛ
-skwattérisions|Page 1629302 squattérisions: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.zjɔ̃/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁi.zjɔ̃ doesn't match skwa.te.ʁi.zjɔ̃
-skwattérisiez|Page 1629303 squattérisiez: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.zje/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁi.zje doesn't match skwa.te.ʁi.zje
-skwattérisaient|Page 1629304 squattérisaient: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.zɛ/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁi.zɛ doesn't match skwa.te.ʁi.zɛ
-skwattérisai|Page 1629305 squattérisai: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.ze/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁi.ze doesn't match skwa.te.ʁi.ze
-skwattérisas|Page 1629306 squattérisas: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.za/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁi.za doesn't match skwa.te.ʁi.za
-skwattérisa|Page 1629307 squattérisa: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.za/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁi.za doesn't match skwa.te.ʁi.za
-skwattérisâmes|Page 1629308 squattérisâmes: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.zam/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁi.zam doesn't match skwa.te.ʁi.zam
-skwattérisâtes|Page 1629309 squattérisâtes: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.zat/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁi.zat doesn't match skwa.te.ʁi.zat
-skwattérisèrent|Page 1629310 squattérisèrent: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.zɛʁ/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁi.zɛʁ doesn't match skwa.te.ʁi.zɛʁ
-skwattériserai|Page 1629311 squattériserai: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.zə.ʁe/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁiz.ʁe doesn't match skwa.te.ʁi.zʁe
-skwattériseras|Page 1629312 squattériseras: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.zə.ʁa/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁiz.ʁa doesn't match skwa.te.ʁi.zʁa
-skwattérisera|Page 1629313 squattérisera: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.zə.ʁa/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁiz.ʁa doesn't match skwa.te.ʁi.zʁa
-skwattériserons|Page 1629314 squattériserons: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.zə.ʁɔ̃/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁiz.ʁɔ̃ doesn't match skwa.te.ʁi.zʁɔ̃
-skwattériserez|Page 1629315 squattériserez: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.zə.ʁe/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁiz.ʁe doesn't match skwa.te.ʁi.zʁe
-skwattériseront|Page 1629316 squattériseront: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.zə.ʁɔ̃/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁiz.ʁɔ̃ doesn't match skwa.te.ʁi.zʁɔ̃
-skwattériserais|Page 1629317 squattériserais: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.zə.ʁɛ/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁiz.ʁɛ doesn't match skwa.te.ʁi.zʁɛ
-skwattériserait|Page 1629318 squattériserait: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.zə.ʁɛ/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁiz.ʁɛ doesn't match skwa.te.ʁi.zʁɛ
-skwattériserions|Page 1629319 squattériserions: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.zə.ʁjɔ̃/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁi.zə.ʁjɔ̃ doesn't match skwa.te.ʁi.zə.ʁjɔ̃
-skwattériseriez|Page 1629320 squattériseriez: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.zə.ʁje/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁi.zə.ʁje doesn't match skwa.te.ʁi.zə.ʁje
-skwattériseraient|Page 1629321 squattériseraient: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.zə.ʁɛ/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁiz.ʁɛ doesn't match skwa.te.ʁi.zʁɛ
-skwattérisasse|Page 1629322 squattérisasse: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.zas/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁi.zas doesn't match skwa.te.ʁi.zas
-skwattérisasses|Page 1629323 squattérisasses: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.zas/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁi.zas doesn't match skwa.te.ʁi.zas
-skwattérisât|Page 1629324 squattérisât: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.za/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁi.za doesn't match skwa.te.ʁi.za
-skwattérisassions|Page 1629325 squattérisassions: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.za.sjɔ̃/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁi.za.sjɔ̃ doesn't match skwa.te.ʁi.za.sjɔ̃
-skwattérisassiez|Page 1629326 squattérisassiez: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.za.sje/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁi.za.sje doesn't match skwa.te.ʁi.za.sje
-skwattérisassent|Page 1629327 squattérisassent: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.zas/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁi.zas doesn't match skwa.te.ʁi.zas
+sqwattérisant|Page 1629293 squattérisant: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.zɑ̃/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁi.zɑ̃ doesn't match skwa.te.ʁi.zɑ̃
+sqwattérisé|Page 1629294 squattérisé: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.ze/}} with {{fr-IPA}} because auto-generated pron ska.te.ʁi.ze doesn't match skwa.te.ʁi.ze
+sqwattérise|Page 1629295 squattérise: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁiz/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁiz doesn't match skwa.te.ʁiz
+sqwattérises|Page 1629296 squattérises: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁiz/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁiz doesn't match skwa.te.ʁiz
+sqwattérisons|Page 1629297 squattérisons: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.zɔ̃/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁi.zɔ̃ doesn't match skwa.te.ʁi.zɔ̃
+sqwattérisez|Page 1629298 squattérisez: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.ze/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁi.ze doesn't match skwa.te.ʁi.ze
+sqwattérisent|Page 1629299 squattérisent: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁiz/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁiz doesn't match skwa.te.ʁiz
+sqwattérisais|Page 1629300 squattérisais: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.zɛ/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁi.zɛ doesn't match skwa.te.ʁi.zɛ
+sqwattérisait|Page 1629301 squattérisait: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.zɛ/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁi.zɛ doesn't match skwa.te.ʁi.zɛ
+sqwattérisions|Page 1629302 squattérisions: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.zjɔ̃/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁi.zjɔ̃ doesn't match skwa.te.ʁi.zjɔ̃
+sqwattérisiez|Page 1629303 squattérisiez: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.zje/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁi.zje doesn't match skwa.te.ʁi.zje
+sqwattérisaient|Page 1629304 squattérisaient: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.zɛ/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁi.zɛ doesn't match skwa.te.ʁi.zɛ
+sqwattérisai|Page 1629305 squattérisai: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.ze/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁi.ze doesn't match skwa.te.ʁi.ze
+sqwattérisas|Page 1629306 squattérisas: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.za/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁi.za doesn't match skwa.te.ʁi.za
+sqwattérisa|Page 1629307 squattérisa: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.za/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁi.za doesn't match skwa.te.ʁi.za
+sqwattérisâmes|Page 1629308 squattérisâmes: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.zam/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁi.zam doesn't match skwa.te.ʁi.zam
+sqwattérisâtes|Page 1629309 squattérisâtes: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.zat/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁi.zat doesn't match skwa.te.ʁi.zat
+sqwattérisèrent|Page 1629310 squattérisèrent: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.zɛʁ/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁi.zɛʁ doesn't match skwa.te.ʁi.zɛʁ
+sqwattériserai|Page 1629311 squattériserai: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.zə.ʁe/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁiz.ʁe doesn't match skwa.te.ʁi.zʁe
+sqwattériseras|Page 1629312 squattériseras: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.zə.ʁa/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁiz.ʁa doesn't match skwa.te.ʁi.zʁa
+sqwattérisera|Page 1629313 squattérisera: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.zə.ʁa/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁiz.ʁa doesn't match skwa.te.ʁi.zʁa
+sqwattériserons|Page 1629314 squattériserons: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.zə.ʁɔ̃/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁiz.ʁɔ̃ doesn't match skwa.te.ʁi.zʁɔ̃
+sqwattériserez|Page 1629315 squattériserez: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.zə.ʁe/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁiz.ʁe doesn't match skwa.te.ʁi.zʁe
+sqwattériseront|Page 1629316 squattériseront: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.zə.ʁɔ̃/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁiz.ʁɔ̃ doesn't match skwa.te.ʁi.zʁɔ̃
+sqwattériserais|Page 1629317 squattériserais: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.zə.ʁɛ/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁiz.ʁɛ doesn't match skwa.te.ʁi.zʁɛ
+sqwattériserait|Page 1629318 squattériserait: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.zə.ʁɛ/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁiz.ʁɛ doesn't match skwa.te.ʁi.zʁɛ
+sqwattériserions|Page 1629319 squattériserions: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.zə.ʁjɔ̃/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁi.zə.ʁjɔ̃ doesn't match skwa.te.ʁi.zə.ʁjɔ̃
+sqwattériseriez|Page 1629320 squattériseriez: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.zə.ʁje/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁi.zə.ʁje doesn't match skwa.te.ʁi.zə.ʁje
+sqwattériseraient|Page 1629321 squattériseraient: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.zə.ʁɛ/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁiz.ʁɛ doesn't match skwa.te.ʁi.zʁɛ
+sqwattérisasse|Page 1629322 squattérisasse: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.zas/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁi.zas doesn't match skwa.te.ʁi.zas
+sqwattérisasses|Page 1629323 squattérisasses: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.zas/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁi.zas doesn't match skwa.te.ʁi.zas
+sqwattérisât|Page 1629324 squattérisât: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.za/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁi.za doesn't match skwa.te.ʁi.za
+sqwattérisassions|Page 1629325 squattérisassions: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.za.sjɔ̃/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁi.za.sjɔ̃ doesn't match skwa.te.ʁi.za.sjɔ̃
+sqwattérisassiez|Page 1629326 squattérisassiez: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.za.sje/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁi.za.sje doesn't match skwa.te.ʁi.za.sje
+sqwattérisassent|Page 1629327 squattérisassent: WARNING: Can't replace {{IPA|fr|/skwa.te.ʁi.zas/}} with {{fr-IPA|pos=v}} because auto-generated pron ska.te.ʁi.zas doesn't match skwa.te.ʁi.zas
 galvodant|Page 1629739 galvaudant: WARNING: Can't replace {{IPA|fr|/ɡal.vɔ.dɑ̃/}} with {{fr-IPA|pos=v}} because auto-generated pron ɡal.vo.dɑ̃ doesn't match ɡal.vɔ.dɑ̃
 galvode|Page 1629741 galvaude: WARNING: Can't replace {{IPA|fr|/ɡal.vɔd/}} with {{fr-IPA|pos=v}} because auto-generated pron ɡal.vod doesn't match ɡal.vɔd
 galvodes|Page 1629742 galvaudes: WARNING: Can't replace {{IPA|fr|/ɡal.vɔd/}} with {{fr-IPA|pos=v}} because auto-generated pron ɡal.vod doesn't match ɡal.vɔd
@@ -2559,7 +2559,7 @@ smeurfât|Page 1630275 smurfât: WARNING: Can't replace {{IPA|fr|/ smœʁ.fa/}} 
 smeurfassions|Page 1630276 smurfassions: WARNING: Can't replace {{IPA|fr|/ smœʁ.fa.sjɔ̃/}} with {{fr-IPA|pos=v}} because auto-generated pron smyʁ.fa.sjɔ̃ doesn't match smœʁ.fa.sjɔ̃
 smeurfassiez|Page 1630277 smurfassiez: WARNING: Can't replace {{IPA|fr|/ smœʁ.fa.sje/}} with {{fr-IPA|pos=v}} because auto-generated pron smyʁ.fa.sje doesn't match smœʁ.fa.sje
 smeurfassent|Page 1630278 smurfassent: WARNING: Can't replace {{IPA|fr|/ smœʁ.fas/}} with {{fr-IPA|pos=v}} because auto-generated pron smyʁ.fas doesn't match smœʁ.fas
-|Page 1631222 pitonner: WARNING: Can't replace {{IPA|fr|/pi.to.ne/}} with {{fr-IPA|pos=v}} because auto-generated pron pi.tɔ.ne doesn't match pi.to.ne
+y|Page 1631222 pitonner: WARNING: Can't replace {{IPA|fr|/pi.to.ne/}} with {{fr-IPA|pos=v}} because auto-generated pron pi.tɔ.ne doesn't match pi.to.ne
 polytecnicien|Page 1631942 polytechnicien: WARNING: Can't replace {{IPA|fr|/pɔ.li.tɛk.ni.sjɛ̃/}} with {{fr-IPA}} because auto-generated pron pɔ.li.tɛʃ.ni.sjɛ̃ doesn't match pɔ.li.tɛk.ni.sjɛ̃
 préssupposant|Page 1632998 présupposant: WARNING: Can't replace {{IPA|fr|/pʁe.sy.pɔ.zɑ̃/}} with {{fr-IPA|pos=v}} because auto-generated pron pʁe.zy.po.zɑ̃ doesn't match pʁe.sy.pɔ.zɑ̃
 préssupposé|Page 1632999 présupposé: WARNING: Can't replace {{IPA|fr|/pʁe.sy.pɔ.ze/}} with {{fr-IPA}} because auto-generated pron pʁe.zy.po.ze doesn't match pʁe.sy.pɔ.ze
@@ -2670,7 +2670,7 @@ y|Page 1675127 reconnecter: WARNING: Can't replace {{IPA|fr|/ʁəkɔ̃nɛtke/}} 
 y|Page 1678752 déloyauté: WARNING: Can't replace {{IPA|fr|/de.lwa.jɔ.te/}} with {{fr-IPA}} because auto-generated pron de.lwa.jo.te doesn't match de.lwa.jɔ.te
 y|Page 1678753 déloyautés: WARNING: Can't replace {{IPA|fr|/de.lwa.jɔ.te/}} with {{fr-IPA}} because auto-generated pron de.lwa.jo.te doesn't match de.lwa.jɔ.te
 moyenne‿anglais|Page 1679918 moyen anglais: WARNING: Can't replace {{IPA|fr|/mwa.jɛn‿ɑ̃.ɡlɛ/}} with {{fr-IPA}} because auto-generated pron mwa.jɛ̃ ɑ̃.ɡlɛ doesn't match mwa.jɛn‿ɑ̃.ɡlɛ
-|Page 1680263 side-car: WARNING: Can't replace {{IPA|fr|/sajdkaːʁ/}} with {{fr-IPA}} because auto-generated pron sidkaʁ doesn't match sajdkaːʁ
+sailldė-car|Page 1680263 side-car: WARNING: Can't replace {{IPA|fr|/sajdkaːʁ/}} with {{fr-IPA}} because auto-generated pron sidkaʁ doesn't match sajdkaːʁ
 y|Page 1685042 minauderie: WARNING: Can't replace {{IPA|fr|/minod(ə)ʁi/}} with {{fr-IPA}} because auto-generated pron minodʁi doesn't match minod(ə)ʁi
 y|Page 1685123 Petite Ourse: WARNING: Can't replace {{IPA|fr|/pə.tit‿uʁs/}} with {{fr-IPA}} because auto-generated pron pə.tit uʁs doesn't match pə.tit‿uʁs
 y|Page 1685362 repeuvent: WARNING: Can't replace {{IPA|fr|/ʁəpøv/}} with {{fr-IPA|pos=v}} because auto-generated pron ʁəpœv doesn't match ʁəpøv
@@ -2788,166 +2788,166 @@ y|Page 1780758 diluable: WARNING: Can't replace {{IPA|fr|/di.ly.ɥabl/}} with {{
 y|Page 1780759 diluables: WARNING: Can't replace {{IPA|fr|/di.ly.ɥabl/}} with {{fr-IPA}} because auto-generated pron di.lɥabl doesn't match di.ly.ɥabl
 y|Page 1781007 papamobiles: WARNING: Can't replace {{IPA|fr|/pa.pa.mo.bil/}} with {{fr-IPA}} because auto-generated pron pa.pa.mɔ.bil doesn't match pa.pa.mo.bil
 deundis,dundées|Page 1782777 dundees: WARNING: Can't replace {{IPA|fr|/dɛ̃.de/}} with {{fr-IPA}} because auto-generated pron dœ̃d doesn't match dɛ̃.de
-|Page 1782804 duveter: WARNING: Can't replace {{IPA|fr|/dy.və.te/}} with {{fr-IPA|pos=v}} because auto-generated pron dyv.te doesn't match dy.və.te
-|Page 1782908 duffle-coats: WARNING: Can't replace {{IPA|fr|/dœ.fəl.kot/}} with {{fr-IPA}} because auto-generated pron dy.flə.kɔ.a doesn't match dœ.fəl.kot
-|Page 1783521 driveurs: WARNING: Can't replace {{IPA|fr|/draj.vœʁ/}} with {{fr-IPA}} because auto-generated pron dʁi.vœʁ doesn't match dʁaj.vœʁ
-|Page 1783554 dreyfusards: WARNING: Can't replace {{IPA|fr|/dʁɛ.fys.aʁ/}} with {{fr-IPA}} because auto-generated pron dʁɛj.fy.zaʁ doesn't match dʁɛ.fys.aʁ
-|Page 1783557 dreyfusarde: WARNING: Can't replace {{IPA|fr|/dʁɛ.fys.aʁd/}} with {{fr-IPA}} because auto-generated pron dʁɛj.fy.zaʁd doesn't match dʁɛ.fys.aʁd
-|Page 1783558 dreyfusardes: WARNING: Can't replace {{IPA|fr|/dʁɛ.fys.aʁd/}} with {{fr-IPA}} because auto-generated pron dʁɛj.fy.zaʁd doesn't match dʁɛ.fys.aʁd
-|Page 1786451 doigtiers: WARNING: Can't replace {{IPA|fr|/dwa.tje/}} with {{fr-IPA}} because auto-generated pron dwaɡ.tje doesn't match dwa.tje
-|Page 1789841 Tadjik: WARNING: Can't replace {{IPA|fr|/ta.d͡ʒik/}} with {{fr-IPA}} because auto-generated pron ta.dʒik doesn't match ta.d͡ʒik
-|Page 1793200 Simonet: WARNING: Can't replace {{IPA|fr|/si.mo.ˈneː/}} with {{fr-IPA}} because auto-generated pron si.mɔ.nɛ doesn't match si.mo.ˈneː
-|Page 1793519 archipleine: WARNING: Can't replace {{IPA|fr|/aʁ.ʃi.plin/}} with {{fr-IPA}} because auto-generated pron aʁ.ʃi.plɛn doesn't match aʁ.ʃi.plin
-|Page 1793521 archipleines: WARNING: Can't replace {{IPA|fr|/aʁ.ʃi.plin/}} with {{fr-IPA}} because auto-generated pron aʁ.ʃi.plɛn doesn't match aʁ.ʃi.plin
+y|Page 1782804 duveter: WARNING: Can't replace {{IPA|fr|/dy.və.te/}} with {{fr-IPA|pos=v}} because auto-generated pron dyv.te doesn't match dy.və.te
+deufĕl-côtes|Page 1782908 duffle-coats: WARNING: Can't replace {{IPA|fr|/dœ.fəl.kot/}} with {{fr-IPA}} because auto-generated pron dy.flə.kɔ.a doesn't match dœ.fəl.kot
+draillveurs|Page 1783521 driveurs: WARNING: Can't replace {{IPA|fr|/draj.vœʁ/}} with {{fr-IPA}} because auto-generated pron dʁi.vœʁ doesn't match dʁaj.vœʁ
+drèfusards|Page 1783554 dreyfusards: WARNING: Can't replace {{IPA|fr|/dʁɛ.fys.aʁ/}} with {{fr-IPA}} because auto-generated pron dʁɛj.fy.zaʁ doesn't match dʁɛ.fys.aʁ
+drèfusarde|Page 1783557 dreyfusarde: WARNING: Can't replace {{IPA|fr|/dʁɛ.fys.aʁd/}} with {{fr-IPA}} because auto-generated pron dʁɛj.fy.zaʁd doesn't match dʁɛ.fys.aʁd
+drèfusardes|Page 1783558 dreyfusardes: WARNING: Can't replace {{IPA|fr|/dʁɛ.fys.aʁd/}} with {{fr-IPA}} because auto-generated pron dʁɛj.fy.zaʁd doesn't match dʁɛ.fys.aʁd
+doitiers|Page 1786451 doigtiers: WARNING: Can't replace {{IPA|fr|/dwa.tje/}} with {{fr-IPA}} because auto-generated pron dwaɡ.tje doesn't match dwa.tje
+-|Page 1789841 Tadjik: WARNING: Can't replace {{IPA|fr|/ta.d͡ʒik/}} with {{fr-IPA}} because auto-generated pron ta.dʒik doesn't match ta.d͡ʒik
+y|Page 1793200 Simonet: WARNING: Can't replace {{IPA|fr|/si.mo.ˈneː/}} with {{fr-IPA}} because auto-generated pron si.mɔ.nɛ doesn't match si.mo.ˈneː
+y|Page 1793519 archipleine: WARNING: Can't replace {{IPA|fr|/aʁ.ʃi.plin/}} with {{fr-IPA}} because auto-generated pron aʁ.ʃi.plɛn doesn't match aʁ.ʃi.plin
+y|Page 1793521 archipleines: WARNING: Can't replace {{IPA|fr|/aʁ.ʃi.plin/}} with {{fr-IPA}} because auto-generated pron aʁ.ʃi.plɛn doesn't match aʁ.ʃi.plin
 carisme|Page 1794493 charisme: WARNING: Can't replace {{IPA|fr|/ka.ʁism/}} with {{fr-IPA}} because auto-generated pron ʃa.ʁism doesn't match ka.ʁism
 carismatiques|Page 1794495 charismatiques: WARNING: Can't replace {{IPA|fr|/ka.ʁis.ma.tik/}} with {{fr-IPA}} because auto-generated pron ʃa.ʁis.ma.tik doesn't match ka.ʁis.ma.tik
-|Page 1796175 catalanophone: WARNING: Can't replace {{IPA|fr|/ka.ta.la.no.fon/}} with {{fr-IPA}} because auto-generated pron ka.ta.la.nɔ.fɔn doesn't match ka.ta.la.no.fon
-|Page 1796242 Nations Unies: WARNING: Can't replace {{IPA|fr|/nasjɔ̃z‿yni/}} with {{fr-IPA}} because auto-generated pron nasjɔ̃ yni doesn't match nasjɔ̃z‿yni
-|Page 1796591 Franconien: WARNING: Can't replace {{IPA|fr|/fʁɑ̃.ko.njɛ̃/}} with {{fr-IPA}} because auto-generated pron fʁɑ̃.kɔ.njɛ̃ doesn't match fʁɑ̃.ko.njɛ̃
-|Page 1796592 Franconiens: WARNING: Can't replace {{IPA|fr|/fʁɑ̃.ko.njɛ̃/}} with {{fr-IPA}} because auto-generated pron fʁɑ̃.kɔ.njɛ̃ doesn't match fʁɑ̃.ko.njɛ̃
-|Page 1796593 Franconienne: WARNING: Can't replace {{IPA|fr|/fʁɑ̃.ko.njɛn/}} with {{fr-IPA}} because auto-generated pron fʁɑ̃.kɔ.njɛn doesn't match fʁɑ̃.ko.njɛn
-|Page 1796594 Franconiennes: WARNING: Can't replace {{IPA|fr|/fʁɑ̃.ko.njɛn/}} with {{fr-IPA}} because auto-generated pron fʁɑ̃.kɔ.njɛn doesn't match fʁɑ̃.ko.njɛn
-|Page 1800282 décomposition: WARNING: Can't replace {{IPA|fr|/dekɔ̃pɔzisjɔ̃/}} with {{fr-IPA}} because auto-generated pron dekɔ̃pozisjɔ̃ doesn't match dekɔ̃pɔzisjɔ̃
-|Page 1804893 retraire: WARNING: Can't replace {{IPA|fr|/ʁɘtʁɛʁ/}} with {{fr-IPA|pos=v}} because auto-generated pron ʁətʁɛʁ doesn't match ʁɘtʁɛʁ
-|Page 1809005 portos: WARNING: Can't replace {{IPA|fr|/pɔʁtos/}} with {{fr-IPA}} because auto-generated pron pɔʁto doesn't match pɔʁtos
-|Page 1858126 périhélie: WARNING: Can't replace {{IPA|fr|/pe.ʁi.ʔe.li/}} with {{fr-IPA}} because auto-generated pron pe.ʁi.e.li doesn't match pe.ʁi.ʔe.li
-|Page 1858250 chayotte: WARNING: Can't replace {{IPA|fr|[ʃa.jɔt]}} with {{fr-IPA}} because auto-generated pron ʃɛ.jɔt doesn't match ʃa.jɔt
-|Page 1858603 bureau de poste: WARNING: Can't replace {{IPA|fr|/by.ʁo.də.pɔst/}} with {{fr-IPA}} because auto-generated pron by.ʁo d(ə) pɔst doesn't match by.ʁo.də.pɔst
+catalanôphone,catalanophone|Page 1796175 catalanophone: WARNING: Can't replace {{IPA|fr|/ka.ta.la.no.fon/}} with {{fr-IPA}} because auto-generated pron ka.ta.la.nɔ.fɔn doesn't match ka.ta.la.no.fon
+Nations‿Unies|Page 1796242 Nations Unies: WARNING: Can't replace {{IPA|fr|/nasjɔ̃z‿yni/}} with {{fr-IPA}} because auto-generated pron nasjɔ̃ yni doesn't match nasjɔ̃z‿yni
+y|Page 1796591 Franconien: WARNING: Can't replace {{IPA|fr|/fʁɑ̃.ko.njɛ̃/}} with {{fr-IPA}} because auto-generated pron fʁɑ̃.kɔ.njɛ̃ doesn't match fʁɑ̃.ko.njɛ̃
+y|Page 1796592 Franconiens: WARNING: Can't replace {{IPA|fr|/fʁɑ̃.ko.njɛ̃/}} with {{fr-IPA}} because auto-generated pron fʁɑ̃.kɔ.njɛ̃ doesn't match fʁɑ̃.ko.njɛ̃
+y|Page 1796593 Franconienne: WARNING: Can't replace {{IPA|fr|/fʁɑ̃.ko.njɛn/}} with {{fr-IPA}} because auto-generated pron fʁɑ̃.kɔ.njɛn doesn't match fʁɑ̃.ko.njɛn
+y|Page 1796594 Franconiennes: WARNING: Can't replace {{IPA|fr|/fʁɑ̃.ko.njɛn/}} with {{fr-IPA}} because auto-generated pron fʁɑ̃.kɔ.njɛn doesn't match fʁɑ̃.ko.njɛn
+y|Page 1800282 décomposition: WARNING: Can't replace {{IPA|fr|/dekɔ̃pɔzisjɔ̃/}} with {{fr-IPA}} because auto-generated pron dekɔ̃pozisjɔ̃ doesn't match dekɔ̃pɔzisjɔ̃
+y|Page 1804893 retraire: WARNING: Can't replace {{IPA|fr|/ʁɘtʁɛʁ/}} with {{fr-IPA|pos=v}} because auto-generated pron ʁətʁɛʁ doesn't match ʁɘtʁɛʁ
+-|Page 1809005 portos: WARNING: Can't replace {{IPA|fr|/pɔʁtos/}} with {{fr-IPA}} because auto-generated pron pɔʁto doesn't match pɔʁtos
+péri-hélie|Page 1858126 périhélie: WARNING: Can't replace {{IPA|fr|/pe.ʁi.ʔe.li/}} with {{fr-IPA}} because auto-generated pron pe.ʁi.e.li doesn't match pe.ʁi.ʔe.li
+chaillotte|Page 1858250 chayotte: WARNING: Can't replace {{IPA|fr|[ʃa.jɔt]}} with {{fr-IPA}} because auto-generated pron ʃɛ.jɔt doesn't match ʃa.jɔt
+y|Page 1858603 bureau de poste: WARNING: Can't replace {{IPA|fr|/by.ʁo.də.pɔst/}} with {{fr-IPA}} because auto-generated pron by.ʁo d(ə) pɔst doesn't match by.ʁo.də.pɔst
 coclée|Page 1859113 cochlée: WARNING: Can't replace {{IPA|fr|/kɔk.le/}} with {{fr-IPA}} because auto-generated pron kɔʃ.le doesn't match kɔk.le
-|Page 1859709 hot-dogs: WARNING: Can't replace {{IPA|fr|/ɔt.dɔɡ/}} with {{fr-IPA}} because auto-generated pron o.do doesn't match ɔt.dɔɡ
-|Page 1860346 plus facile à dire qu'à faire: WARNING: Can't replace {{IPA|fr|/ply fa.si.l‿a diʁ ka fɛʁ/}} with {{fr-IPA}} because auto-generated pron ply fa.sil a diʁ k‿a fɛʁ doesn't match ply fa.si.l‿a diʁ ka fɛʁ
+hotte-dogues|Page 1859709 hot-dogs: WARNING: Can't replace {{IPA|fr|/ɔt.dɔɡ/}} with {{fr-IPA}} because auto-generated pron o.do doesn't match ɔt.dɔɡ
+y|Page 1860346 plus facile à dire qu'à faire: WARNING: Can't replace {{IPA|fr|/ply fa.si.l‿a diʁ ka fɛʁ/}} with {{fr-IPA}} because auto-generated pron ply fa.sil a diʁ k‿a fɛʁ doesn't match ply fa.si.l‿a diʁ ka fɛʁ
 y|Page 1862069 filet à cheveux: WARNING: Can't replace {{IPA|fr|/fi.lɛ a ʃə.vø/}} with {{fr-IPA}} because auto-generated pron fi.lɛ a ʃ(ə).vø doesn't match fi.lɛ a ʃə.vø
-|Page 1863676 illisible: WARNING: Can't replace {{IPA|fr|/i(l).li.zibl/}} with {{fr-IPA}} because auto-generated pron i.li.zibl doesn't match i(l).li.zibl
-|Page 1865103 crosne: WARNING: Can't replace {{IPA|fr|/kʁon/}} with {{fr-IPA}} because auto-generated pron kʁɔsn doesn't match kʁon
-|Page 1865141 aquaphobie: WARNING: Can't replace {{IPA|fr|/ak.wa.fɔ.bi/}} with {{fr-IPA}} because auto-generated pron a.ka.fɔ.bi doesn't match ak.wa.fɔ.bi
-|Page 1868957 soulagien: WARNING: Can't replace {{IPA|fr|/su.la.ʒjɛ/}} with {{fr-IPA}} because auto-generated pron su.la.ʒjɛ̃ doesn't match su.la.ʒjɛ
-|Page 1872046 Dubaï: WARNING: Can't replace {{IPA|fr|/du.baj/}} with {{fr-IPA}} because auto-generated pron dy.ba.i doesn't match du.baj
-|Page 1872804 biométrie: WARNING: Can't replace {{IPA|fr|/bjo.me.tʁi/}} with {{fr-IPA}} because auto-generated pron bjɔ.me.tʁi doesn't match bjo.me.tʁi
-|Page 1905173 trou de ver: WARNING: Can't replace {{IPA|fr|/tʁu də vɛʁ/}} with {{fr-IPA}} because auto-generated pron tʁu d(ə) vɛʁ doesn't match tʁu də vɛʁ
-|Page 1937709 saigner à blanc: WARNING: Can't replace {{IPA|fr|/sɛ.ɲe.ʁ‿a blɑ̃/}} with {{fr-IPA|pos=v}} because auto-generated pron sɛ.ɲe a blɑ̃ doesn't match sɛ.ɲe.ʁ‿a blɑ̃
-|Page 2003566 raout: WARNING: Can't replace {{IPA|fr|/ʁa.ut/}} with {{fr-IPA}} because auto-generated pron ʁa.u doesn't match ʁa.ut
+y|Page 1863676 illisible: WARNING: Can't replace {{IPA|fr|/i(l).li.zibl/}} with {{fr-IPA}} because auto-generated pron i.li.zibl doesn't match i(l).li.zibl
+crône|Page 1865103 crosne: WARNING: Can't replace {{IPA|fr|/kʁon/}} with {{fr-IPA}} because auto-generated pron kʁɔsn doesn't match kʁon
+aqwaphobie|Page 1865141 aquaphobie: WARNING: Can't replace {{IPA|fr|/ak.wa.fɔ.bi/}} with {{fr-IPA}} because auto-generated pron a.ka.fɔ.bi doesn't match ak.wa.fɔ.bi
+y|Page 1868957 soulagien: WARNING: Can't replace {{IPA|fr|/su.la.ʒjɛ/}} with {{fr-IPA}} because auto-generated pron su.la.ʒjɛ̃ doesn't match su.la.ʒjɛ
+Doubaille|Page 1872046 Dubaï: WARNING: Can't replace {{IPA|fr|/du.baj/}} with {{fr-IPA}} because auto-generated pron dy.ba.i doesn't match du.baj
+y|Page 1872804 biométrie: WARNING: Can't replace {{IPA|fr|/bjo.me.tʁi/}} with {{fr-IPA}} because auto-generated pron bjɔ.me.tʁi doesn't match bjo.me.tʁi
+y|Page 1905173 trou de ver: WARNING: Can't replace {{IPA|fr|/tʁu də vɛʁ/}} with {{fr-IPA}} because auto-generated pron tʁu d(ə) vɛʁ doesn't match tʁu də vɛʁ
+saignér‿à blanc|Page 1937709 saigner à blanc: WARNING: Can't replace {{IPA|fr|/sɛ.ɲe.ʁ‿a blɑ̃/}} with {{fr-IPA|pos=v}} because auto-generated pron sɛ.ɲe a blɑ̃ doesn't match sɛ.ɲe.ʁ‿a blɑ̃
+raoute,route|Page 2003566 raout: WARNING: Can't replace {{IPA|fr|/ʁa.ut/}} with {{fr-IPA}} because auto-generated pron ʁa.u doesn't match ʁa.ut
 idiocie|Page 2022470 idiotie: WARNING: Can't replace {{IPA|fr|/i.djɔ.si/}} with {{fr-IPA}} because auto-generated pron i.djɔ.ti doesn't match i.djɔ.si
-|Page 2036366 gyroscopiques: WARNING: Can't replace {{IPA|fr|/ʒi.ʁo.skɔ.pik/}} with {{fr-IPA}} because auto-generated pron ʒi.ʁɔs.kɔ.pik doesn't match ʒi.ʁo.skɔ.pik
-|Page 2040724 justifiablement: WARNING: Can't replace {{IPA|fr|/ʒys.ti.fjabl.mɑ̃/}} with {{fr-IPA}} because auto-generated pron ʒys.ti.fja.blə.mɑ̃ doesn't match ʒys.ti.fjabl.mɑ̃
-|Page 2042784 irrésolument: WARNING: Can't replace {{IPA|fr|/i.ʁe.sɔ.ly.mɑ̃/}} with {{fr-IPA}} because auto-generated pron i.ʁe.zɔ.ly.mɑ̃ doesn't match i.ʁe.sɔ.ly.mɑ̃
-|Page 2044222 louable: WARNING: Can't replace {{IPA|fr|/lu.abl/}} with {{fr-IPA}} because auto-generated pron lwabl doesn't match lu.abl
-|Page 2044223 louables: WARNING: Can't replace {{IPA|fr|/lu.abl/}} with {{fr-IPA}} because auto-generated pron lwabl doesn't match lu.abl
+y|Page 2036366 gyroscopiques: WARNING: Can't replace {{IPA|fr|/ʒi.ʁo.skɔ.pik/}} with {{fr-IPA}} because auto-generated pron ʒi.ʁɔs.kɔ.pik doesn't match ʒi.ʁo.skɔ.pik
+y|Page 2040724 justifiablement: WARNING: Can't replace {{IPA|fr|/ʒys.ti.fjabl.mɑ̃/}} with {{fr-IPA}} because auto-generated pron ʒys.ti.fja.blə.mɑ̃ doesn't match ʒys.ti.fjabl.mɑ̃
+y|Page 2042784 irrésolument: WARNING: Can't replace {{IPA|fr|/i.ʁe.sɔ.ly.mɑ̃/}} with {{fr-IPA}} because auto-generated pron i.ʁe.zɔ.ly.mɑ̃ doesn't match i.ʁe.sɔ.ly.mɑ̃
+y|Page 2044222 louable: WARNING: Can't replace {{IPA|fr|/lu.abl/}} with {{fr-IPA}} because auto-generated pron lwabl doesn't match lu.abl
+y|Page 2044223 louables: WARNING: Can't replace {{IPA|fr|/lu.abl/}} with {{fr-IPA}} because auto-generated pron lwabl doesn't match lu.abl
 sculter|Page 2044234 sculpter: WARNING: Can't replace {{IPA|fr|/skyl.te/}} with {{fr-IPA|pos=v}} because auto-generated pron skylp.te doesn't match skyl.te
-|Page 2046679 talon aiguille: WARNING: Can't replace {{IPA|fr|/ta.lɔ̃ ɛ.ɡɥij/}} with {{fr-IPA}} because auto-generated pron ta.lɔ̃ ɛ.ɡij doesn't match ta.lɔ̃ ɛ.ɡɥij
+talon aigüille|Page 2046679 talon aiguille: WARNING: Can't replace {{IPA|fr|/ta.lɔ̃ ɛ.ɡɥij/}} with {{fr-IPA}} because auto-generated pron ta.lɔ̃ ɛ.ɡij doesn't match ta.lɔ̃ ɛ.ɡɥij
 -|Page 2050065 icitte: WARNING: Can't replace {{IPA|fr|/iˈsɪt/}} with {{fr-IPA}} because auto-generated pron isit doesn't match iˈsɪt
 crysalide|Page 2055398 chrysalide: WARNING: Can't replace {{IPA|fr|/kʁi.za.lid/}} with {{fr-IPA|pos=vnv}} because auto-generated pron ʃʁi.za.lid doesn't match kʁi.za.lid
 paciences|Page 2066360 patiences: WARNING: Can't replace {{IPA|fr|/pasjɑ̃s/}} with {{fr-IPA}} because auto-generated pron pasjɛ̃s doesn't match pasjɑ̃s
-|Page 2079093 entremettre: WARNING: Can't replace {{IPA|fr|/ɑ̃.tʁə.mɛːtʁ/}} with {{fr-IPA|pos=v}} because auto-generated pron ɑ̃.tʁə.mɛtʁ doesn't match ɑ̃.tʁə.mɛːtʁ
-|Page 2079919 chronophotographie: WARNING: Can't replace {{IPA|fr|/kʁɔ.nɔ.fɔ.to.ɡʁa.fi/}} with {{fr-IPA}} because auto-generated pron ʃʁɔ.nɔ.fɔ.tɔ.ɡʁa.fi doesn't match kʁɔ.nɔ.fɔ.to.ɡʁa.fi
-|Page 2082512 tomographie: WARNING: Can't replace {{IPA|fr|/tɔ.mo.ɡʁa.fi/}} with {{fr-IPA}} because auto-generated pron tɔ.mɔ.ɡʁa.fi doesn't match tɔ.mo.ɡʁa.fi
-|Page 2093818 engober: WARNING: Can't replace {{IPA|fr|/ɑ̃.ɡo.be/}} with {{fr-IPA|pos=v}} because auto-generated pron ɑ̃.ɡɔ.be doesn't match ɑ̃.ɡo.be
-|Page 2108651 brittophone: WARNING: Can't replace {{IPA|fr|/bʁi.to.fɔn/}} with {{fr-IPA}} because auto-generated pron bʁi.tɔ.fɔn doesn't match bʁi.to.fɔn
-|Page 2118235 dissensus: WARNING: Can't replace {{IPA|fr|/di.sɛ̃.sys/}} with {{fr-IPA}} because auto-generated pron di.sɑ̃.sy doesn't match di.sɛ̃.sys
-|Page 2190708 proctodeum: WARNING: Can't replace {{IPA|fr|/pʁɔktɔde.ɔm/}} with {{fr-IPA}} because auto-generated pron pʁɔk.tɔ.dœm doesn't match pʁɔktɔde.ɔm
-|Page 2199255 hami: WARNING: Can't replace {{IPA|fr|[ħæmi]}} with {{fr-IPA}} because auto-generated pron ami doesn't match ħæmi
-|Page 2234501 thermodynamique: WARNING: Can't replace {{IPA|fr|/tɛʁ.mo.di.na.mik/}} with {{fr-IPA}} because auto-generated pron tɛʁ.mɔ.di.na.mik doesn't match tɛʁ.mo.di.na.mik
-|Page 2234510 thermodynamiques: WARNING: Can't replace {{IPA|fr|/tɛʁ.mo.di.na.mik/}} with {{fr-IPA}} because auto-generated pron tɛʁ.mɔ.di.na.mik doesn't match tɛʁ.mo.di.na.mik
+y|Page 2079093 entremettre: WARNING: Can't replace {{IPA|fr|/ɑ̃.tʁə.mɛːtʁ/}} with {{fr-IPA|pos=v}} because auto-generated pron ɑ̃.tʁə.mɛtʁ doesn't match ɑ̃.tʁə.mɛːtʁ
+cronophotographie|Page 2079919 chronophotographie: WARNING: Can't replace {{IPA|fr|/kʁɔ.nɔ.fɔ.to.ɡʁa.fi/}} with {{fr-IPA}} because auto-generated pron ʃʁɔ.nɔ.fɔ.tɔ.ɡʁa.fi doesn't match kʁɔ.nɔ.fɔ.to.ɡʁa.fi
+y|Page 2082512 tomographie: WARNING: Can't replace {{IPA|fr|/tɔ.mo.ɡʁa.fi/}} with {{fr-IPA}} because auto-generated pron tɔ.mɔ.ɡʁa.fi doesn't match tɔ.mo.ɡʁa.fi
+y|Page 2093818 engober: WARNING: Can't replace {{IPA|fr|/ɑ̃.ɡo.be/}} with {{fr-IPA|pos=v}} because auto-generated pron ɑ̃.ɡɔ.be doesn't match ɑ̃.ɡo.be
+y|Page 2108651 brittophone: WARNING: Can't replace {{IPA|fr|/bʁi.to.fɔn/}} with {{fr-IPA}} because auto-generated pron bʁi.tɔ.fɔn doesn't match bʁi.to.fɔn
+dissinsusse|Page 2118235 dissensus: WARNING: Can't replace {{IPA|fr|/di.sɛ̃.sys/}} with {{fr-IPA}} because auto-generated pron di.sɑ̃.sy doesn't match di.sɛ̃.sys
+proctodéum|Page 2190708 proctodeum: WARNING: Can't replace {{IPA|fr|/pʁɔktɔde.ɔm/}} with {{fr-IPA}} because auto-generated pron pʁɔk.tɔ.dœm doesn't match pʁɔktɔde.ɔm
+-|Page 2199255 hami: WARNING: Can't replace {{IPA|fr|[ħæmi]}} with {{fr-IPA}} because auto-generated pron ami doesn't match ħæmi
+thermôdynamique|Page 2234501 thermodynamique: WARNING: Can't replace {{IPA|fr|/tɛʁ.mo.di.na.mik/}} with {{fr-IPA}} because auto-generated pron tɛʁ.mɔ.di.na.mik doesn't match tɛʁ.mo.di.na.mik
+thermôdynamiques|Page 2234510 thermodynamiques: WARNING: Can't replace {{IPA|fr|/tɛʁ.mo.di.na.mik/}} with {{fr-IPA}} because auto-generated pron tɛʁ.mɔ.di.na.mik doesn't match tɛʁ.mo.di.na.mik
 facécie|Page 2238864 facétie: WARNING: Can't replace {{IPA|fr|/fa.se.si/}} with {{fr-IPA}} because auto-generated pron fa.se.ti doesn't match fa.se.si
-|Page 2292730 craignos: WARNING: Can't replace {{IPA|fr|/kʁɛ.ɲos/}} with {{fr-IPA}} because auto-generated pron kʁɛ.ɲo doesn't match kʁɛ.ɲos
-|Page 2317415 clebs: WARNING: Can't replace {{IPA|fr|/klɛbs/}} with {{fr-IPA}} because auto-generated pron klɛ doesn't match klɛbs
-|Page 2381291 loquacité: WARNING: Can't replace {{IPA|fr|/lo.ka.si.te/}} with {{fr-IPA}} because auto-generated pron lɔ.ka.si.te doesn't match lo.ka.si.te
-|Page 2418154 c'est ça: WARNING: Can't replace {{IPA|fr|[se sɔ]}} with {{fr-IPA}} because auto-generated pron s‿ɛ sa doesn't match se sɔ
-|Page 2504540 noyau terrestre: WARNING: Can't replace {{IPA|fr|/nwajoteʁɛstʁ/}} with {{fr-IPA}} because auto-generated pron nwajo tɛʁɛstʁ doesn't match nwajoteʁɛstʁ
-|Page 2569566 psychophysiologique: WARNING: Can't replace {{IPA|fr|/psikofizjɔlɔʒik/}} with {{fr-IPA}} because auto-generated pron psiʃɔfizjɔlɔʒik doesn't match psikofizjɔlɔʒik
+craignôsse|Page 2292730 craignos: WARNING: Can't replace {{IPA|fr|/kʁɛ.ɲos/}} with {{fr-IPA}} because auto-generated pron kʁɛ.ɲo doesn't match kʁɛ.ɲos
+clebse,cleb_se|Page 2317415 clebs: WARNING: Can't replace {{IPA|fr|/klɛbs/}} with {{fr-IPA}} because auto-generated pron klɛ doesn't match klɛbs
+,loqwacité|Page 2381291 loquacité: WARNING: Can't replace {{IPA|fr|/lo.ka.si.te/}} with {{fr-IPA}} because auto-generated pron lɔ.ka.si.te doesn't match lo.ka.si.te
+-|Page 2418154 c'est ça: WARNING: Can't replace {{IPA|fr|[se sɔ]}} with {{fr-IPA}} because auto-generated pron s‿ɛ sa doesn't match se sɔ
+y|Page 2504540 noyau terrestre: WARNING: Can't replace {{IPA|fr|/nwajoteʁɛstʁ/}} with {{fr-IPA}} because auto-generated pron nwajo tɛʁɛstʁ doesn't match nwajoteʁɛstʁ
+psycôphysiologie|Page 2569566 psychophysiologique: WARNING: Can't replace {{IPA|fr|/psikofizjɔlɔʒik/}} with {{fr-IPA}} because auto-generated pron psiʃɔfizjɔlɔʒik doesn't match psikofizjɔlɔʒik
 y|Page 2569618 caféisme: WARNING: Can't replace {{IPA|fr|/ka.fe.izm/}} with {{fr-IPA}} because auto-generated pron ka.fe.ism doesn't match ka.fe.izm
 facécieusement|Page 2571885 facétieusement: WARNING: Can't replace {{IPA|fr|/fasesjøzmɑ̃/}} with {{fr-IPA}} because auto-generated pron fasetjøzmɑ̃ doesn't match fasesjøzmɑ̃
-|Page 2645398 esclandre: WARNING: Can't replace {{IPA|fr|/e.sklɑ̃dʁ/}} with {{fr-IPA}} because auto-generated pron ɛs.klɑ̃dʁ doesn't match e.sklɑ̃dʁ
-|Page 2646201 film d'exploitation: WARNING: Can't replace {{IPA|fr|/film dɛksplwatasjɔ̃/}} with {{fr-IPA}} because auto-generated pron film d‿ɛksplwatasjɔ̃ doesn't match film dɛksplwatasjɔ̃
-|Page 2658887 videuse: WARNING: Can't replace {{IPA|fr|/vi.dœːz/}} with {{fr-IPA}} because auto-generated pron vi.døz doesn't match vi.dœːz
-|Page 2663595 tôlerie: WARNING: Can't replace {{IPA|fr|/tɔl.ʁi/}} with {{fr-IPA}} because auto-generated pron tol.ʁi doesn't match tɔl.ʁi
-|Page 2663618 vocaliser: WARNING: Can't replace {{IPA|fr|/vo.ka.li.ze/}} with {{fr-IPA|pos=v}} because auto-generated pron vɔ.ka.li.ze doesn't match vo.ka.li.ze
-|Page 2711603 remblai: WARNING: Can't replace {{IPA|fr|/ʁɑ̃.ble/}} with {{fr-IPA}} because auto-generated pron ʁɑ̃.blɛ doesn't match ʁɑ̃.ble
-|Page 2721000 melon d'eau: WARNING: Can't replace {{IPA|fr|/mə.lɔ̃ do/}} with {{fr-IPA}} because auto-generated pron mə.lɔ̃ d‿o doesn't match mə.lɔ̃ do
-|Page 2729680 orientaliste: WARNING: Can't replace {{IPA|fr|/ɔ.ʁjɑ̃.ta.list/}} with {{fr-IPA}} because auto-generated pron ɔ.ʁjɛ̃.ta.list doesn't match ɔ.ʁjɑ̃.ta.list
-|Page 2729681 orientalisme: WARNING: Can't replace {{IPA|fr|/ɔ.ʁjɑ̃.ta.lism/}} with {{fr-IPA}} because auto-generated pron ɔ.ʁjɛ̃.ta.lism doesn't match ɔ.ʁjɑ̃.ta.lism
-|Page 2780467 poireauter: WARNING: Can't replace {{IPA|fr|/pwa.ʁɔ.te/}} with {{fr-IPA|pos=v}} because auto-generated pron pwa.ʁo.te doesn't match pwa.ʁɔ.te
-|Page 2792762 prédisposition: WARNING: Can't replace {{IPA|fr|/pʁe.dis.pɔ.zi.sjɔ̃/}} with {{fr-IPA}} because auto-generated pron pʁe.dis.po.zi.sjɔ̃ doesn't match pʁe.dis.pɔ.zi.sjɔ̃
-|Page 2804056 réengageas: WARNING: Can't replace {{IPA|fr|/ʁeɑ̃ɡaʒɑ/}} with {{fr-IPA|pos=v}} because auto-generated pron ʁeɛ̃ɡaʒɑ doesn't match ʁeɑ̃ɡaʒɑ
+y|Page 2645398 esclandre: WARNING: Can't replace {{IPA|fr|/e.sklɑ̃dʁ/}} with {{fr-IPA}} because auto-generated pron ɛs.klɑ̃dʁ doesn't match e.sklɑ̃dʁ
+y|Page 2646201 film d'exploitation: WARNING: Can't replace {{IPA|fr|/film dɛksplwatasjɔ̃/}} with {{fr-IPA}} because auto-generated pron film d‿ɛksplwatasjɔ̃ doesn't match film dɛksplwatasjɔ̃
+y|Page 2658887 videuse: WARNING: Can't replace {{IPA|fr|/vi.dœːz/}} with {{fr-IPA}} because auto-generated pron vi.døz doesn't match vi.dœːz
+y|Page 2663595 tôlerie: WARNING: Can't replace {{IPA|fr|/tɔl.ʁi/}} with {{fr-IPA}} because auto-generated pron tol.ʁi doesn't match tɔl.ʁi
+y|Page 2663618 vocaliser: WARNING: Can't replace {{IPA|fr|/vo.ka.li.ze/}} with {{fr-IPA|pos=v}} because auto-generated pron vɔ.ka.li.ze doesn't match vo.ka.li.ze
+y|Page 2711603 remblai: WARNING: Can't replace {{IPA|fr|/ʁɑ̃.ble/}} with {{fr-IPA}} because auto-generated pron ʁɑ̃.blɛ doesn't match ʁɑ̃.ble
+y|Page 2721000 melon d'eau: WARNING: Can't replace {{IPA|fr|/mə.lɔ̃ do/}} with {{fr-IPA}} because auto-generated pron mə.lɔ̃ d‿o doesn't match mə.lɔ̃ do
+y|Page 2729680 orientaliste: WARNING: Can't replace {{IPA|fr|/ɔ.ʁjɑ̃.ta.list/}} with {{fr-IPA}} because auto-generated pron ɔ.ʁjɛ̃.ta.list doesn't match ɔ.ʁjɑ̃.ta.list
+y|Page 2729681 orientalisme: WARNING: Can't replace {{IPA|fr|/ɔ.ʁjɑ̃.ta.lism/}} with {{fr-IPA}} because auto-generated pron ɔ.ʁjɛ̃.ta.lism doesn't match ɔ.ʁjɑ̃.ta.lism
+y|Page 2780467 poireauter: WARNING: Can't replace {{IPA|fr|/pwa.ʁɔ.te/}} with {{fr-IPA|pos=v}} because auto-generated pron pwa.ʁo.te doesn't match pwa.ʁɔ.te
+y|Page 2792762 prédisposition: WARNING: Can't replace {{IPA|fr|/pʁe.dis.pɔ.zi.sjɔ̃/}} with {{fr-IPA}} because auto-generated pron pʁe.dis.po.zi.sjɔ̃ doesn't match pʁe.dis.pɔ.zi.sjɔ̃
+y|Page 2804056 réengageas: WARNING: Can't replace {{IPA|fr|/ʁeɑ̃ɡaʒɑ/}} with {{fr-IPA|pos=v}} because auto-generated pron ʁeɛ̃ɡaʒɑ doesn't match ʁeɑ̃ɡaʒɑ
 y|Page 2866389 insurgeasse: WARNING: Can't replace {{IPA|fr|/ɛ̃.syʁ.ʒa/}} with {{fr-IPA|pos=v}} because auto-generated pron ɛ̃.syʁ.ʒas doesn't match ɛ̃.syʁ.ʒa
 y|Page 2866390 insurgeasses: WARNING: Can't replace {{IPA|fr|/ɛ̃.syʁ.ʒa/}} with {{fr-IPA|pos=v}} because auto-generated pron ɛ̃.syʁ.ʒas doesn't match ɛ̃.syʁ.ʒa
 y|Page 2866394 insurgeassent: WARNING: Can't replace {{IPA|fr|/ɛ̃.syʁ.ʒa/}} with {{fr-IPA|pos=v}} because auto-generated pron ɛ̃.syʁ.ʒas doesn't match ɛ̃.syʁ.ʒa
-|Page 2888790 enregistrable: WARNING: Can't replace {{IPA|fr|/ɑ̃.ʁə.ʒis.tʁabl/}} with {{fr-IPA}} because auto-generated pron ɑ̃ʁ.ʒis.tʁabl doesn't match ɑ̃.ʁə.ʒis.tʁabl
-|Page 2888791 enregistrables: WARNING: Can't replace {{IPA|fr|/ɑ̃.ʁə.ʒis.tʁabl/}} with {{fr-IPA}} because auto-generated pron ɑ̃ʁ.ʒis.tʁabl doesn't match ɑ̃.ʁə.ʒis.tʁabl
-|Page 2901771 décomposer: WARNING: Can't replace {{IPA|fr|/de.kɔ̃.pɔ.ze/}} with {{fr-IPA|pos=v}} because auto-generated pron de.kɔ̃.po.ze doesn't match de.kɔ̃.pɔ.ze
-|Page 2926266 cinématographe: WARNING: Can't replace {{IPA|fr|/si.ne.ma.to.ɡʁaf/}} with {{fr-IPA}} because auto-generated pron si.ne.ma.tɔ.ɡʁaf doesn't match si.ne.ma.to.ɡʁaf
-|Page 2936818 Pot-au-Noir: WARNING: Can't replace {{IPA|fr|/po o nwɑʁ/}} with {{fr-IPA}} because auto-generated pron poonwaʁ doesn't match po o nwɑʁ
-|Page 2941163 Hadrien: WARNING: Can't replace {{IPA|fr|/a.dʁi.ɛ̃/}} with {{fr-IPA}} because auto-generated pron a.dʁi.jɛ̃ doesn't match a.dʁi.ɛ̃
-|Page 2949731 rebouillions: WARNING: Can't replace {{IPA|fr|/ʁə.bu.jɔ̃/}} with {{fr-IPA|pos=v}} because auto-generated pron ʁə.buj.jɔ̃ doesn't match ʁə.bu.jɔ̃
-|Page 2949732 rebouilliez: WARNING: Can't replace {{IPA|fr|/ʁə.bu.je/}} with {{fr-IPA|pos=v}} because auto-generated pron ʁə.buj.je doesn't match ʁə.bu.je
-|Page 2950001 resverez: WARNING: Can't replace {{IPA|fr|/ʁɛv.ʁe/}} with {{fr-IPA|pos=v}} because auto-generated pron ʁɛs.və.ʁe doesn't match ʁɛv.ʁe
-|Page 2960369 PACS: WARNING: Can't replace {{IPA|fr|/paks/}} with {{fr-IPA}} because auto-generated pron pak doesn't match paks
-|Page 2969527 orangeat: WARNING: Can't replace {{IPA|fr|/ɔʁ.ʒa/}} with {{fr-IPA}} because auto-generated pron ɔ.ʁɑ̃.ʒa doesn't match ɔʁ.ʒa
-|Page 2969743 paysagiste: WARNING: Can't replace {{IPA|fr|/pɛ.i.za.ʒist/}} with {{fr-IPA}} because auto-generated pron pɛj.za.ʒist doesn't match pɛ.i.za.ʒist
-|Page 2980076 hoazin: WARNING: Can't replace {{IPA|fr|/o.a.zɛ̃/}} with {{fr-IPA}} because auto-generated pron ɔ.a.zɛ̃ doesn't match o.a.zɛ̃
-|Page 2992172 endocarpe: WARNING: Can't replace {{IPA|fr|/ɑ̃.do.kaʁp/}} with {{fr-IPA}} because auto-generated pron ɑ̃.dɔ.kaʁp doesn't match ɑ̃.do.kaʁp
-|Page 2992175 endoblaste: WARNING: Can't replace {{IPA|fr|/ɑ̃.do.blast/}} with {{fr-IPA}} because auto-generated pron ɑ̃.dɔ.blast doesn't match ɑ̃.do.blast
+enr(ə)gistrable|Page 2888790 enregistrable: WARNING: Can't replace {{IPA|fr|/ɑ̃.ʁə.ʒis.tʁabl/}} with {{fr-IPA}} because auto-generated pron ɑ̃ʁ.ʒis.tʁabl doesn't match ɑ̃.ʁə.ʒis.tʁabl
+enr(ə)gistrables|Page 2888791 enregistrables: WARNING: Can't replace {{IPA|fr|/ɑ̃.ʁə.ʒis.tʁabl/}} with {{fr-IPA}} because auto-generated pron ɑ̃ʁ.ʒis.tʁabl doesn't match ɑ̃.ʁə.ʒis.tʁabl
+y|Page 2901771 décomposer: WARNING: Can't replace {{IPA|fr|/de.kɔ̃.pɔ.ze/}} with {{fr-IPA|pos=v}} because auto-generated pron de.kɔ̃.po.ze doesn't match de.kɔ̃.pɔ.ze
+y|Page 2926266 cinématographe: WARNING: Can't replace {{IPA|fr|/si.ne.ma.to.ɡʁaf/}} with {{fr-IPA}} because auto-generated pron si.ne.ma.tɔ.ɡʁaf doesn't match si.ne.ma.to.ɡʁaf
+Potte‿au-Noir|Page 2936818 Pot-au-Noir: WARNING: Can't replace {{IPA|fr|/po o nwɑʁ/}} with {{fr-IPA}} because auto-generated pron poonwaʁ doesn't match po o nwɑʁ
+y|Page 2941163 Hadrien: WARNING: Can't replace {{IPA|fr|/a.dʁi.ɛ̃/}} with {{fr-IPA}} because auto-generated pron a.dʁi.jɛ̃ doesn't match a.dʁi.ɛ̃
+y|Page 2949731 rebouillions: WARNING: Can't replace {{IPA|fr|/ʁə.bu.jɔ̃/}} with {{fr-IPA|pos=v}} because auto-generated pron ʁə.buj.jɔ̃ doesn't match ʁə.bu.jɔ̃
+y|Page 2949732 rebouilliez: WARNING: Can't replace {{IPA|fr|/ʁə.bu.je/}} with {{fr-IPA|pos=v}} because auto-generated pron ʁə.buj.je doesn't match ʁə.bu.je
+rêverez|Page 2950001 resverez: WARNING: Can't replace {{IPA|fr|/ʁɛv.ʁe/}} with {{fr-IPA|pos=v}} because auto-generated pron ʁɛs.və.ʁe doesn't match ʁɛv.ʁe
+PACSe|Page 2960369 PACS: WARNING: Can't replace {{IPA|fr|/paks/}} with {{fr-IPA}} because auto-generated pron pak doesn't match paks
+y|Page 2969527 orangeat: WARNING: Can't replace {{IPA|fr|/ɔʁ.ʒa/}} with {{fr-IPA}} because auto-generated pron ɔ.ʁɑ̃.ʒa doesn't match ɔʁ.ʒa
+paiïsagiste,péïsagiste|Page 2969743 paysagiste: WARNING: Can't replace {{IPA|fr|/pɛ.i.za.ʒist/}} with {{fr-IPA}} because auto-generated pron pɛj.za.ʒist doesn't match pɛ.i.za.ʒist
+hôazin|Page 2980076 hoazin: WARNING: Can't replace {{IPA|fr|/o.a.zɛ̃/}} with {{fr-IPA}} because auto-generated pron ɔ.a.zɛ̃ doesn't match o.a.zɛ̃
+y|Page 2992172 endocarpe: WARNING: Can't replace {{IPA|fr|/ɑ̃.do.kaʁp/}} with {{fr-IPA}} because auto-generated pron ɑ̃.dɔ.kaʁp doesn't match ɑ̃.do.kaʁp
+y|Page 2992175 endoblaste: WARNING: Can't replace {{IPA|fr|/ɑ̃.do.blast/}} with {{fr-IPA}} because auto-generated pron ɑ̃.dɔ.blast doesn't match ɑ̃.do.blast
 y|Page 3004468 deutoxide: WARNING: Can't replace {{IPA|fr|/dø.tɔk.sid/}} with {{fr-IPA}} because auto-generated pron dœ.tɔk.sid doesn't match dø.tɔk.sid
 argucie|Page 3014500 argutie: WARNING: Can't replace {{IPA|fr|/aʁ.ɡy.si/}} with {{fr-IPA}} because auto-generated pron aʁ.ɡy.ti doesn't match aʁ.ɡy.si
-|Page 3014843 attelage: WARNING: Can't replace {{IPA|fr|/a.tə.laʒ/}} with {{fr-IPA}} because auto-generated pron a.tlaʒ doesn't match a.tə.laʒ
-|Page 3015469 auditif: WARNING: Can't replace {{IPA|fr|/ɔ.di.tif/}} with {{fr-IPA}} because auto-generated pron o.di.tif doesn't match ɔ.di.tif
-|Page 3015915 tchatche: WARNING: Can't replace {{IPA|fr|/tʃatʃ(ə)/}} with {{fr-IPA}} because auto-generated pron tʃatʃ doesn't match tʃatʃ(ə)
-|Page 3015980 aqueuse: WARNING: Can't replace {{IPA|fr|/a.kœs/}} with {{fr-IPA}} because auto-generated pron a.køz doesn't match a.kœs
-|Page 3016009 engatse: WARNING: Can't replace {{IPA|fr|/ɑ̃(ŋ)ɡatsə/}} with {{fr-IPA}} because auto-generated pron ɑ̃ɡats doesn't match ɑ̃(ŋ)ɡatsə
-|Page 3016722 BCBG: WARNING: Can't replace {{IPA|fr|/besebeʒe/}} with {{fr-IPA}} because auto-generated pron bkb doesn't match besebeʒe
-|Page 3016737 bellastre: WARNING: Can't replace {{IPA|fr|/bɛlastʁ(ə)/}} with {{fr-IPA}} because auto-generated pron bɛlastʁ doesn't match bɛlastʁ(ə)
-|Page 3017625 biseauter: WARNING: Can't replace {{IPA|fr|/bi.zɔ.te/}} with {{fr-IPA|pos=v}} because auto-generated pron bi.zo.te doesn't match bi.zɔ.te
+y|Page 3014843 attelage: WARNING: Can't replace {{IPA|fr|/a.tə.laʒ/}} with {{fr-IPA}} because auto-generated pron a.tlaʒ doesn't match a.tə.laʒ
+y|Page 3015469 auditif: WARNING: Can't replace {{IPA|fr|/ɔ.di.tif/}} with {{fr-IPA}} because auto-generated pron o.di.tif doesn't match ɔ.di.tif
+y|Page 3015915 tchatche: WARNING: Can't replace {{IPA|fr|/tʃatʃ(ə)/}} with {{fr-IPA}} because auto-generated pron tʃatʃ doesn't match tʃatʃ(ə)
+y|Page 3015980 aqueuse: WARNING: Can't replace {{IPA|fr|/a.kœs/}} with {{fr-IPA}} because auto-generated pron a.køz doesn't match a.kœs
+-|Page 3016009 engatse: WARNING: Can't replace {{IPA|fr|/ɑ̃(ŋ)ɡatsə/}} with {{fr-IPA}} because auto-generated pron ɑ̃ɡats doesn't match ɑ̃(ŋ)ɡatsə
+bé-cé-bé-gé|Page 3016722 BCBG: WARNING: Can't replace {{IPA|fr|/besebeʒe/}} with {{fr-IPA}} because auto-generated pron bkb doesn't match besebeʒe
+-|Page 3016737 bellastre: WARNING: Can't replace {{IPA|fr|/bɛlastʁ(ə)/}} with {{fr-IPA}} because auto-generated pron bɛlastʁ doesn't match bɛlastʁ(ə)
+y|Page 3017625 biseauter: WARNING: Can't replace {{IPA|fr|/bi.zɔ.te/}} with {{fr-IPA|pos=v}} because auto-generated pron bi.zo.te doesn't match bi.zɔ.te
 y|Page 3019416 rameuter: WARNING: Can't replace {{IPA|fr|/ʁa.mø.te/}} with {{fr-IPA|pos=v}} because auto-generated pron ʁa.mœ.te doesn't match ʁa.mø.te
-|Page 3023654 chevillier: WARNING: Can't replace {{IPA|fr|/ʃə.vi.je/}} with {{fr-IPA}} because auto-generated pron ʃə.vij.je doesn't match ʃə.vi.je
-|Page 3026363 conteneurisation: WARNING: Can't replace {{IPA|fr|/kɔ̃.tə.nœ.ʁi.za.sjɔ̃/}} with {{fr-IPA}} because auto-generated pron kɔ̃t.nœ.ʁi.za.sjɔ̃ doesn't match kɔ̃.tə.nœ.ʁi.za.sjɔ̃
-|Page 3026443 conteneurisations: WARNING: Can't replace {{IPA|fr|/kɔ̃.tə.nœ.ʁi.za.sjɔ̃/}} with {{fr-IPA}} because auto-generated pron kɔ̃t.nœ.ʁi.za.sjɔ̃ doesn't match kɔ̃.tə.nœ.ʁi.za.sjɔ̃
+cheviller|Page 3023654 chevillier: WARNING: Can't replace {{IPA|fr|/ʃə.vi.je/}} with {{fr-IPA}} because auto-generated pron ʃə.vij.je doesn't match ʃə.vi.je
+cont(ə)neurisation|Page 3026363 conteneurisation: WARNING: Can't replace {{IPA|fr|/kɔ̃.tə.nœ.ʁi.za.sjɔ̃/}} with {{fr-IPA}} because auto-generated pron kɔ̃t.nœ.ʁi.za.sjɔ̃ doesn't match kɔ̃.tə.nœ.ʁi.za.sjɔ̃
+cont(ə)neurisations|Page 3026443 conteneurisations: WARNING: Can't replace {{IPA|fr|/kɔ̃.tə.nœ.ʁi.za.sjɔ̃/}} with {{fr-IPA}} because auto-generated pron kɔ̃t.nœ.ʁi.za.sjɔ̃ doesn't match kɔ̃.tə.nœ.ʁi.za.sjɔ̃
 contrecigner|Page 3026551 contresigner: WARNING: Can't replace {{IPA|fr|/kɔ̃t.ʁə.si.ɲe/}} with {{fr-IPA|pos=v}} because auto-generated pron kɔ̃.tʁə.zi.ɲe doesn't match kɔ̃t.ʁə.si.ɲe
 débatiser|Page 3028223 débaptiser: WARNING: Can't replace {{IPA|fr|/de.ba.ti.ze/}} with {{fr-IPA|pos=v}} because auto-generated pron de.bap.ti.ze doesn't match de.ba.ti.ze
-|Page 3055348 polars: WARNING: Can't replace {{IPA|fr|[polaʁ]}} with {{fr-IPA}} because auto-generated pron pɔlaʁ doesn't match polaʁ
-|Page 3057364 encaustiquer: WARNING: Can't replace {{IPA|fr|/ɑ̃.kɔs.ti.ke/}} with {{fr-IPA|pos=v}} because auto-generated pron ɑ̃.kos.ti.ke doesn't match ɑ̃.kɔs.ti.ke
-|Page 3057743 ensemencer: WARNING: Can't replace {{IPA|fr|/ɑ̃s(ə).mɑ̃.se/}} with {{fr-IPA|pos=v}} because auto-generated pron ɑ̃s.mɑ̃.se doesn't match ɑ̃s(ə).mɑ̃.se
+y|Page 3055348 polars: WARNING: Can't replace {{IPA|fr|[polaʁ]}} with {{fr-IPA}} because auto-generated pron pɔlaʁ doesn't match polaʁ
+encostiquer,encaustiquer|Page 3057364 encaustiquer: WARNING: Can't replace {{IPA|fr|/ɑ̃.kɔs.ti.ke/}} with {{fr-IPA|pos=v}} because auto-generated pron ɑ̃.kos.ti.ke doesn't match ɑ̃.kɔs.ti.ke
+ens(ə)mencer|Page 3057743 ensemencer: WARNING: Can't replace {{IPA|fr|/ɑ̃s(ə).mɑ̃.se/}} with {{fr-IPA|pos=v}} because auto-generated pron ɑ̃s.mɑ̃.se doesn't match ɑ̃s(ə).mɑ̃.se
 entrelas|Page 3058762 entrelacs: WARNING: Can't replace {{IPA|fr|/ɑ̃.tʁə.lɑ/}} with {{fr-IPA}} because auto-generated pron ɑ̃.tʁə.lak doesn't match ɑ̃.tʁə.lɑ
 fesandé|Page 3061259 faisandé: WARNING: Can't replace {{IPA|fr|/fə.zɑ̃.de/}} with {{fr-IPA}} because auto-generated pron fɛ.zɑ̃.de doesn't match fə.zɑ̃.de
-|Page 3065370 cucumeriforme: WARNING: Can't replace {{IPA|fr|/kykymɛʁifɔʁm/}} with {{fr-IPA}} because auto-generated pron kykymʁifɔʁm doesn't match kykymɛʁifɔʁm
-|Page 3068004 gentilhommière: WARNING: Can't replace {{IPA|fr|/ʒɑ̃.ti.jɔ.mjɛʁ/}} with {{fr-IPA}} because auto-generated pron ʒɑ̃.ti.lɔ.mjɛʁ doesn't match ʒɑ̃.ti.jɔ.mjɛʁ
-|Page 3072764 impatienter: WARNING: Can't replace {{IPA|fr|/ɛ̃.pa.sjɑ̃.te/}} with {{fr-IPA|pos=v}} because auto-generated pron ɛ̃.pa.sjɛ̃.te doesn't match ɛ̃.pa.sjɑ̃.te
-|Page 3073449 cycle du carbone: WARNING: Can't replace {{IPA|fr|/sikl dy kaʁ.bɔn/}} with {{fr-IPA}} because auto-generated pron si.klə dy kaʁ.bɔn doesn't match sikl dy kaʁ.bɔn
-|Page 3083680 machiste: WARNING: Can't replace {{IPA|fr|/ma.(t)ʃist/}} with {{fr-IPA}} because auto-generated pron ma.ʃist doesn't match ma.(t)ʃist
+cucumèriforme|Page 3065370 cucumeriforme: WARNING: Can't replace {{IPA|fr|/kykymɛʁifɔʁm/}} with {{fr-IPA}} because auto-generated pron kykymʁifɔʁm doesn't match kykymɛʁifɔʁm
+gentillommière|Page 3068004 gentilhommière: WARNING: Can't replace {{IPA|fr|/ʒɑ̃.ti.jɔ.mjɛʁ/}} with {{fr-IPA}} because auto-generated pron ʒɑ̃.ti.lɔ.mjɛʁ doesn't match ʒɑ̃.ti.jɔ.mjɛʁ
+y|Page 3072764 impatienter: WARNING: Can't replace {{IPA|fr|/ɛ̃.pa.sjɑ̃.te/}} with {{fr-IPA|pos=v}} because auto-generated pron ɛ̃.pa.sjɛ̃.te doesn't match ɛ̃.pa.sjɑ̃.te
+y|Page 3073449 cycle du carbone: WARNING: Can't replace {{IPA|fr|/sikl dy kaʁ.bɔn/}} with {{fr-IPA}} because auto-generated pron si.klə dy kaʁ.bɔn doesn't match sikl dy kaʁ.bɔn
+matchiste,machiste|Page 3083680 machiste: WARNING: Can't replace {{IPA|fr|/ma.(t)ʃist/}} with {{fr-IPA}} because auto-generated pron ma.ʃist doesn't match ma.(t)ʃist
 malfesant|Page 3083817 malfaisant: WARNING: Can't replace {{IPA|fr|/mal.fə.zɑ̃/}} with {{fr-IPA}} because auto-generated pron mal.fɛ.zɑ̃ doesn't match mal.fə.zɑ̃
-|Page 3086375 meunerie: WARNING: Can't replace {{IPA|fr|/møn.ʁi/}} with {{fr-IPA}} because auto-generated pron mœn.ʁi doesn't match møn.ʁi
-|Page 3090787 ovationner: WARNING: Can't replace {{IPA|fr|/o.va.sjɔ.ne/}} with {{fr-IPA|pos=v}} because auto-generated pron ɔ.va.sjɔ.ne doesn't match o.va.sjɔ.ne
+meûnerie|Page 3086375 meunerie: WARNING: Can't replace {{IPA|fr|/møn.ʁi/}} with {{fr-IPA}} because auto-generated pron mœn.ʁi doesn't match møn.ʁi
+y|Page 3090787 ovationner: WARNING: Can't replace {{IPA|fr|/o.va.sjɔ.ne/}} with {{fr-IPA|pos=v}} because auto-generated pron ɔ.va.sjɔ.ne doesn't match o.va.sjɔ.ne
 y|Page 3094191 pleutre: WARNING: Can't replace {{IPA|fr|/pløtʁ/}} with {{fr-IPA|pos=vnv}} because auto-generated pron plœtʁ doesn't match pløtʁ
 y|Page 3095742 préempter: WARNING: Can't replace {{IPA|fr|/pʁe.ɑ̃p.te/}} with {{fr-IPA|pos=v}} because auto-generated pron pʁe.ɛ̃p.te doesn't match pʁe.ɑ̃p.te
 ménecme|Page 3095948 ménechme: WARNING: Can't replace {{IPA|fr|/menɛkm/}} with {{fr-IPA}} because auto-generated pron menɛʃm doesn't match menɛkm
-|Page 3099508 radioguider: WARNING: Can't replace {{IPA|fr|/ʁa.djo.ɡi.de/}} with {{fr-IPA|pos=v}} because auto-generated pron ʁa.djɔ.ɡi.de doesn't match ʁa.djo.ɡi.de
-|Page 3099954 rapetasser: WARNING: Can't replace {{IPA|fr|/ʁa.p(ə.)ta.se/}} with {{fr-IPA|pos=v}} because auto-generated pron ʁap.ta.se doesn't match ʁa.p(ə.)ta.se
-|Page 3100132 rattachement: WARNING: Can't replace {{IPA|fr|/ʁa.ta.ʃə.mɑ̃/}} with {{fr-IPA}} because auto-generated pron ʁa.taʃ.mɑ̃ doesn't match ʁa.ta.ʃə.mɑ̃
+radiôguider|Page 3099508 radioguider: WARNING: Can't replace {{IPA|fr|/ʁa.djo.ɡi.de/}} with {{fr-IPA|pos=v}} because auto-generated pron ʁa.djɔ.ɡi.de doesn't match ʁa.djo.ɡi.de
+rap(ə)tasser|Page 3099954 rapetasser: WARNING: Can't replace {{IPA|fr|/ʁa.p(ə.)ta.se/}} with {{fr-IPA|pos=v}} because auto-generated pron ʁap.ta.se doesn't match ʁa.p(ə.)ta.se
+y|Page 3100132 rattachement: WARNING: Can't replace {{IPA|fr|/ʁa.ta.ʃə.mɑ̃/}} with {{fr-IPA}} because auto-generated pron ʁa.taʃ.mɑ̃ doesn't match ʁa.ta.ʃə.mɑ̃
 différencier|Page 3101002 différentier: WARNING: Can't replace {{IPA|fr|/di.fe.ʁɑ̃.sje/}} with {{fr-IPA|pos=v}} because auto-generated pron di.fe.ʁɑ̃.tje doesn't match di.fe.ʁɑ̃.sje
-|Page 3101428 géomorphologie: WARNING: Can't replace {{IPA|fr|/ʒe.o.mɔʁ.fɔ.lɔ.ʒi/}} with {{fr-IPA}} because auto-generated pron ʒe.ɔ.mɔʁ.fɔ.lɔ.ʒi doesn't match ʒe.o.mɔʁ.fɔ.lɔ.ʒi
-|Page 3101475 géomorphologies: WARNING: Can't replace {{IPA|fr|/ʒe.o.mɔʁ.fɔ.lɔ.ʒi/}} with {{fr-IPA}} because auto-generated pron ʒe.ɔ.mɔʁ.fɔ.lɔ.ʒi doesn't match ʒe.o.mɔʁ.fɔ.lɔ.ʒi
+géômorphologie|Page 3101428 géomorphologie: WARNING: Can't replace {{IPA|fr|/ʒe.o.mɔʁ.fɔ.lɔ.ʒi/}} with {{fr-IPA}} because auto-generated pron ʒe.ɔ.mɔʁ.fɔ.lɔ.ʒi doesn't match ʒe.o.mɔʁ.fɔ.lɔ.ʒi
+géômorphologies|Page 3101475 géomorphologies: WARNING: Can't replace {{IPA|fr|/ʒe.o.mɔʁ.fɔ.lɔ.ʒi/}} with {{fr-IPA}} because auto-generated pron ʒe.ɔ.mɔʁ.fɔ.lɔ.ʒi doesn't match ʒe.o.mɔʁ.fɔ.lɔ.ʒi
 y|Page 3102875 réapprovisionner: WARNING: Can't replace {{IPA|fr|/ʁe.a.pʁɔ.vi.sjɔ.ne/}} with {{fr-IPA|pos=v}} because auto-generated pron ʁe.a.pʁɔ.vi.zjɔ.ne doesn't match ʁe.a.pʁɔ.vi.sjɔ.ne
-|Page 3103570 boueuses: WARNING: Can't replace {{IPA|fr|/bu.øz/}} with {{fr-IPA}} because auto-generated pron bwøz doesn't match bu.øz
+y|Page 3103570 boueuses: WARNING: Can't replace {{IPA|fr|/bu.øz/}} with {{fr-IPA}} because auto-generated pron bwøz doesn't match bu.øz
 papailler|Page 3122252 papayer: WARNING: Can't replace {{IPA|fr|/pa.pa.je/}} with {{fr-IPA}} because auto-generated pron pa.pɛ.je doesn't match pa.pa.je
-|Page 3128879 polydenté: WARNING: Can't replace {{IPA|fr|/po.li.dɑ̃.te/}} with {{fr-IPA}} because auto-generated pron pɔ.li.dɑ̃.te doesn't match po.li.dɑ̃.te
-|Page 3128895 bromhydrique: WARNING: Can't replace {{IPA|fr|/bʁɔ.mi.dʁik/}} with {{fr-IPA}} because auto-generated pron bʁɔ̃.i.dʁik doesn't match bʁɔ.mi.dʁik
+y|Page 3128879 polydenté: WARNING: Can't replace {{IPA|fr|/po.li.dɑ̃.te/}} with {{fr-IPA}} because auto-generated pron pɔ.li.dɑ̃.te doesn't match po.li.dɑ̃.te
+y|Page 3128895 bromhydrique: WARNING: Can't replace {{IPA|fr|/bʁɔ.mi.dʁik/}} with {{fr-IPA}} because auto-generated pron bʁɔ̃.i.dʁik doesn't match bʁɔ.mi.dʁik
 cloreux|Page 3128896 chloreux: WARNING: Can't replace {{IPA|fr|/klɔ.ʁø/}} with {{fr-IPA}} because auto-generated pron ʃlɔ.ʁø doesn't match klɔ.ʁø
 y|Page 3129058 descripteur: WARNING: Can't replace {{IPA|fr|/dəsk.ʁip.tœʁ/}} with {{fr-IPA}} because auto-generated pron dɛs.kʁip.tœʁ doesn't match dəsk.ʁip.tœʁ
 -|Page 3129164 recombinent: WARNING: Can't replace {{IPA|fr|/ʁə.kɔ̃.bin/}} with {{fr-IPA}} because auto-generated pron ʁə.kɔ̃.bi.nɑ̃ doesn't match ʁə.kɔ̃.bin
-|Page 3129197 nævus: WARNING: Can't replace {{IPA|fr|/ne.vys/}} with {{fr-IPA}} because auto-generated pron ne.vy doesn't match ne.vys
+nævusse|Page 3129197 nævus: WARNING: Can't replace {{IPA|fr|/ne.vys/}} with {{fr-IPA}} because auto-generated pron ne.vy doesn't match ne.vys
 oscilateur|Page 3130080 oscillateur: WARNING: Can't replace {{IPA|fr|/ɔ.si.la.tœʁ/}} with {{fr-IPA}} because auto-generated pron ɔ.si.ja.tœʁ doesn't match ɔ.si.la.tœʁ
-|Page 3133244 métaboliser: WARNING: Can't replace {{IPA|fr|/me.ta.bo.li.ze/}} with {{fr-IPA|pos=v}} because auto-generated pron me.ta.bɔ.li.ze doesn't match me.ta.bo.li.ze
-|Page 3136082 réembaucher: WARNING: Can't replace {{IPA|fr|/ʁe.ɑ̃.bɔ.ʃe/}} with {{fr-IPA|pos=v}} because auto-generated pron ʁe.ɛ̃.bo.ʃe doesn't match ʁe.ɑ̃.bɔ.ʃe
+y|Page 3133244 métaboliser: WARNING: Can't replace {{IPA|fr|/me.ta.bo.li.ze/}} with {{fr-IPA|pos=v}} because auto-generated pron me.ta.bɔ.li.ze doesn't match me.ta.bo.li.ze
+y|Page 3136082 réembaucher: WARNING: Can't replace {{IPA|fr|/ʁe.ɑ̃.bɔ.ʃe/}} with {{fr-IPA|pos=v}} because auto-generated pron ʁe.ɛ̃.bo.ʃe doesn't match ʁe.ɑ̃.bɔ.ʃe
 y|Page 3136130 réemployer: WARNING: Can't replace {{IPA|fr|/ʁe.ɑ̃.plwa.je/}} with {{fr-IPA|pos=v}} because auto-generated pron ʁe.ɛ̃.plwa.je doesn't match ʁe.ɑ̃.plwa.je
-|Page 3137600 empoter: WARNING: Can't replace {{IPA|fr|/ɑ̃.po.te/}} with {{fr-IPA|pos=v}} because auto-generated pron ɑ̃.pɔ.te doesn't match ɑ̃.po.te
-|Page 3138914 replâtrer: WARNING: Can't replace {{IPA|fr|/ʁə.plat.ʁe/}} with {{fr-IPA|pos=v}} because auto-generated pron ʁə.plɑ.tʁe doesn't match ʁə.plat.ʁe
-|Page 3139306 resurgir: WARNING: Can't replace {{IPA|fr|/ʁə.syʁ.ʒiʁ/}} with {{fr-IPA|pos=v}} because auto-generated pron ʁə.zyʁ.ʒiʁ doesn't match ʁə.syʁ.ʒiʁ
-|Page 3146745 ripoliner: WARNING: Can't replace {{IPA|fr|/ʁi.po.li.ne/}} with {{fr-IPA|pos=v}} because auto-generated pron ʁi.pɔ.li.ne doesn't match ʁi.po.li.ne
-|Page 3149849 réabsorber: WARNING: Can't replace {{IPA|fr|/ʁe.ab.sɔʁ.be/}} with {{fr-IPA|pos=v}} because auto-generated pron ʁe.ap.sɔʁ.be doesn't match ʁe.ab.sɔʁ.be
-|Page 3164167 astheure: WARNING: Can't replace {{IPA|fr|[astœ(ɾ)]}} with {{fr-IPA}} because auto-generated pron astœʁ doesn't match astœ(ɾ)
-|Page 3181105 topographier: WARNING: Can't replace {{IPA|fr|/tɔ.po.ɡʁa.fje/}} with {{fr-IPA|pos=v}} because auto-generated pron tɔ.pɔ.ɡʁa.fje doesn't match tɔ.po.ɡʁa.fje
-|Page 3183288 truander: WARNING: Can't replace {{IPA|fr|/tʁy.ɑ̃.de/}} with {{fr-IPA|pos=v}} because auto-generated pron tʁɥɑ̃.de doesn't match tʁy.ɑ̃.de
-|Page 3210529 repartager: WARNING: Can't replace {{IPA|fr|/ʁe.paʁ.ta.ʒe/}} with {{fr-IPA|pos=v}} because auto-generated pron ʁə.paʁ.ta.ʒe doesn't match ʁe.paʁ.ta.ʒe
-|Page 3210742 saurir: WARNING: Can't replace {{IPA|fr|/sɔ.ʁiʁ/}} with {{fr-IPA|pos=v}} because auto-generated pron so.ʁiʁ doesn't match sɔ.ʁiʁ
-|Page 3214061 dépiauter: WARNING: Can't replace {{IPA|fr|/de.pjɔ.te/}} with {{fr-IPA|pos=v}} because auto-generated pron de.pjo.te doesn't match de.pjɔ.te
+y|Page 3137600 empoter: WARNING: Can't replace {{IPA|fr|/ɑ̃.po.te/}} with {{fr-IPA|pos=v}} because auto-generated pron ɑ̃.pɔ.te doesn't match ɑ̃.po.te
+y|Page 3138914 replâtrer: WARNING: Can't replace {{IPA|fr|/ʁə.plat.ʁe/}} with {{fr-IPA|pos=v}} because auto-generated pron ʁə.plɑ.tʁe doesn't match ʁə.plat.ʁe
+reçurgir|Page 3139306 resurgir: WARNING: Can't replace {{IPA|fr|/ʁə.syʁ.ʒiʁ/}} with {{fr-IPA|pos=v}} because auto-generated pron ʁə.zyʁ.ʒiʁ doesn't match ʁə.syʁ.ʒiʁ
+y|Page 3146745 ripoliner: WARNING: Can't replace {{IPA|fr|/ʁi.po.li.ne/}} with {{fr-IPA|pos=v}} because auto-generated pron ʁi.pɔ.li.ne doesn't match ʁi.po.li.ne
+y|Page 3149849 réabsorber: WARNING: Can't replace {{IPA|fr|/ʁe.ab.sɔʁ.be/}} with {{fr-IPA|pos=v}} because auto-generated pron ʁe.ap.sɔʁ.be doesn't match ʁe.ab.sɔʁ.be
+-|Page 3164167 astheure: WARNING: Can't replace {{IPA|fr|[astœ(ɾ)]}} with {{fr-IPA}} because auto-generated pron astœʁ doesn't match astœ(ɾ)
+y|Page 3181105 topographier: WARNING: Can't replace {{IPA|fr|/tɔ.po.ɡʁa.fje/}} with {{fr-IPA|pos=v}} because auto-generated pron tɔ.pɔ.ɡʁa.fje doesn't match tɔ.po.ɡʁa.fje
+y|Page 3183288 truander: WARNING: Can't replace {{IPA|fr|/tʁy.ɑ̃.de/}} with {{fr-IPA|pos=v}} because auto-generated pron tʁɥɑ̃.de doesn't match tʁy.ɑ̃.de
+y|Page 3210529 repartager: WARNING: Can't replace {{IPA|fr|/ʁe.paʁ.ta.ʒe/}} with {{fr-IPA|pos=v}} because auto-generated pron ʁə.paʁ.ta.ʒe doesn't match ʁe.paʁ.ta.ʒe
+sorir,saurir|Page 3210742 saurir: WARNING: Can't replace {{IPA|fr|/sɔ.ʁiʁ/}} with {{fr-IPA|pos=v}} because auto-generated pron so.ʁiʁ doesn't match sɔ.ʁiʁ
+dépioter|Page 3214061 dépiauter: WARNING: Can't replace {{IPA|fr|/de.pjɔ.te/}} with {{fr-IPA|pos=v}} because auto-generated pron de.pjo.te doesn't match de.pjɔ.te
 y|Page 3223651 engrisailler: WARNING: Can't replace {{IPA|fr|/ɑ̃.ɡʁi.sa.je/}} with {{fr-IPA|pos=v}} because auto-generated pron ɑ̃.ɡʁi.za.je doesn't match ɑ̃.ɡʁi.sa.je
 y|Page 3225919 minaudière: WARNING: Can't replace {{IPA|fr|/mi.nɔ.djɛʁ/}} with {{fr-IPA}} because auto-generated pron mi.no.djɛʁ doesn't match mi.nɔ.djɛʁ
 -|Page 3290977 vous autres: WARNING: Can't replace {{IPA|fr|[vu.zɔt]}} with {{fr-IPA}} because auto-generated pron vu otʁ doesn't match vu.zɔt
@@ -2968,52 +2968,52 @@ clé u-esse-bé|Page 3566318 clé USB: WARNING: Can't replace {{IPA|fr|/kle.y.ɛ
 -|Page 3575365 Appendix:List of shibboleths: WARNING: Can't replace {{IPA|fr|/œ̃.bɔ̃.vɛ̃.blɑ̃/}} with {{fr-IPA}} because auto-generated pron a.pɑ̃.diks:.list ɔf ʃi.bɔ.lɛt doesn't match œ̃.bɔ̃.vɛ̃.blɑ̃
 y|Page 3614502 rarissimement: WARNING: Can't replace {{IPA|fr|/ʁa.ʁi.si.mə.mɑ̃/}} with {{fr-IPA}} because auto-generated pron ʁa.ʁi.sim.mɑ̃ doesn't match ʁa.ʁi.si.mə.mɑ̃
 louvèterie|Page 3646391 louveterie: WARNING: Can't replace {{IPA|fr|/lu.vɛ.t(ə)ʁi/}} with {{fr-IPA}} because auto-generated pron lu.və.t(ə).ʁi doesn't match lu.vɛ.t(ə)ʁi
-|Page 3651685 atteleuse: WARNING: Can't replace {{IPA|fr|/a.tə.løz/}} with {{fr-IPA}} because auto-generated pron a.tløz doesn't match a.tə.løz
-|Page 3651686 atteleuses: WARNING: Can't replace {{IPA|fr|/a.tə.løz/}} with {{fr-IPA}} because auto-generated pron a.tløz doesn't match a.tə.løz
-|Page 3651687 atteleurs: WARNING: Can't replace {{IPA|fr|/a.tə.lœʁ/}} with {{fr-IPA}} because auto-generated pron a.tlœʁ doesn't match a.tə.lœʁ
-|Page 3660384 asteur: WARNING: Can't replace {{IPA|fr|[astœ(ɾ)]}} with {{fr-IPA}} because auto-generated pron astœʁ doesn't match astœ(ɾ)
-|Page 3678945 gouverneure: WARNING: Can't replace {{IPA|fr|/ɡu.vɛʁ.nøːʁ/}} with {{fr-IPA}} because auto-generated pron ɡu.vɛʁ.nœʁ doesn't match ɡu.vɛʁ.nøːʁ
+att(ə)leuse|Page 3651685 atteleuse: WARNING: Can't replace {{IPA|fr|/a.tə.løz/}} with {{fr-IPA}} because auto-generated pron a.tløz doesn't match a.tə.løz
+att(ə)leuses|Page 3651686 atteleuses: WARNING: Can't replace {{IPA|fr|/a.tə.løz/}} with {{fr-IPA}} because auto-generated pron a.tløz doesn't match a.tə.løz
+att(ə)leur|Page 3651687 atteleurs: WARNING: Can't replace {{IPA|fr|/a.tə.lœʁ/}} with {{fr-IPA}} because auto-generated pron a.tlœʁ doesn't match a.tə.lœʁ
+-|Page 3660384 asteur: WARNING: Can't replace {{IPA|fr|[astœ(ɾ)]}} with {{fr-IPA}} because auto-generated pron astœʁ doesn't match astœ(ɾ)
+y|Page 3678945 gouverneure: WARNING: Can't replace {{IPA|fr|/ɡu.vɛʁ.nøːʁ/}} with {{fr-IPA}} because auto-generated pron ɡu.vɛʁ.nœʁ doesn't match ɡu.vɛʁ.nøːʁ
 y|Page 3685537 inhéremment: WARNING: Can't replace {{IPA|fr|/in.ne.ʁa.mɑ̃/}} with {{fr-IPA}} because auto-generated pron i.ne.ʁa.mɑ̃ doesn't match in.ne.ʁa.mɑ̃
 y|Page 3687439 box-calf: WARNING: Can't replace {{IPA|fr|/bɔk.skalf/}} with {{fr-IPA}} because auto-generated pron bo.kalf doesn't match bɔk.skalf
-|Page 3690874 néonicotinoïde: WARNING: Can't replace {{IPA|fr|/ne.o.ni.kɔ.ti.nɔ.id/}} with {{fr-IPA}} because auto-generated pron ne.ɔ.ni.kɔ.ti.nɔ.id doesn't match ne.o.ni.kɔ.ti.nɔ.id
+néônicotinoïde|Page 3690874 néonicotinoïde: WARNING: Can't replace {{IPA|fr|/ne.o.ni.kɔ.ti.nɔ.id/}} with {{fr-IPA}} because auto-generated pron ne.ɔ.ni.kɔ.ti.nɔ.id doesn't match ne.o.ni.kɔ.ti.nɔ.id
 y|Page 3691215 ballon d'essai: WARNING: Can't replace {{IPA|fr|/ba.lɔ̃.dɛ.sɛ/}} with {{fr-IPA}} because auto-generated pron ba.lɔ̃ d‿e.sɛ doesn't match ba.lɔ̃.dɛ.sɛ
-|Page 3697215 criailler: WARNING: Can't replace {{IPA|fr|/kʁi.(j)ɑ.je/}} with {{fr-IPA|pos=v}} because auto-generated pron kʁi.ja.je doesn't match kʁi.(j)ɑ.je
-|Page 3698574 pelleterie: WARNING: Can't replace {{IPA|fr|/pɛ.lɛ.tʁi/}} with {{fr-IPA}} because auto-generated pron pɛ.lə.t(ə).ʁi doesn't match pɛ.lɛ.tʁi
-|Page 3698832 dépenailler: WARNING: Can't replace {{IPA|fr|/de.pə.na.je/}} with {{fr-IPA|pos=v}} because auto-generated pron dep.na.je doesn't match de.pə.na.je
+criâiller,crihâiller|Page 3697215 criailler: WARNING: Can't replace {{IPA|fr|/kʁi.(j)ɑ.je/}} with {{fr-IPA|pos=v}} because auto-generated pron kʁi.ja.je doesn't match kʁi.(j)ɑ.je
+pellėterie|Page 3698574 pelleterie: WARNING: Can't replace {{IPA|fr|/pɛ.lɛ.tʁi/}} with {{fr-IPA}} because auto-generated pron pɛ.lə.t(ə).ʁi doesn't match pɛ.lɛ.tʁi
+dépĕnailler|Page 3698832 dépenailler: WARNING: Can't replace {{IPA|fr|/de.pə.na.je/}} with {{fr-IPA|pos=v}} because auto-generated pron dep.na.je doesn't match de.pə.na.je
 récipiscence|Page 3698881 résipiscence: WARNING: Can't replace {{IPA|fr|/ʁe.si.pi.sɑ̃s/}} with {{fr-IPA}} because auto-generated pron ʁe.zi.pi.sɑ̃s doesn't match ʁe.si.pi.sɑ̃s
 poutrappe|Page 3699634 poutrap: WARNING: Can't replace {{IPA|fr|/pu.tʁap/}} with {{fr-IPA}} because auto-generated pron pu.tʁa doesn't match pu.tʁap
-|Page 3707877 Wiktionary:Beer parlour/2014/March: Can't find French section, skipping
+-|Page 3707877 Wiktionary:Beer parlour/2014/March: Can't find French section, skipping
 maccab|Page 3717103 macchab: WARNING: Can't replace {{IPA|fr|/ma.kab/}} with {{fr-IPA}} because auto-generated pron mak.ʃab doesn't match ma.kab
 jan-foutre|Page 3717494 jean-foutre: WARNING: Can't replace {{IPA|fr|/ʒɑ̃.futʁ/}} with {{fr-IPA}} because auto-generated pron ʒə.ɑ̃.futʁ doesn't match ʒɑ̃.futʁ
 béseff|Page 3732244 beseff: WARNING: Can't replace {{IPA|fr|/be.zɛf/}} with {{fr-IPA}} because auto-generated pron bə.zɛf doesn't match be.zɛf
 cu-rond|Page 3732812 cul-rond: WARNING: Can't replace {{IPA|fr|/ky.ʁɔ̃/}} with {{fr-IPA}} because auto-generated pron kyl.ʁɔ̃ doesn't match ky.ʁɔ̃
-ékwanimité|Page 3779709 équanimité: WARNING: Can't replace {{IPA|fr|/e.kwa.ni.mi.te/}} with {{fr-IPA}} because auto-generated pron e.ka.ni.mi.te doesn't match e.kwa.ni.mi.te
-|Page 3779808 riocher: WARNING: Can't replace {{IPA|fr|/ʁi.jɔ.ʃe/}} with {{fr-IPA|pos=v}} because auto-generated pron ʁjɔ.ʃe doesn't match ʁi.jɔ.ʃe
-|Page 3875306 patenôtre: WARNING: Can't replace {{IPA|fr|/pat.nɔtʁ/}} with {{fr-IPA}} because auto-generated pron pat.notʁ doesn't match pat.nɔtʁ
+éqwanimité|Page 3779709 équanimité: WARNING: Can't replace {{IPA|fr|/e.kwa.ni.mi.te/}} with {{fr-IPA}} because auto-generated pron e.ka.ni.mi.te doesn't match e.kwa.ni.mi.te
+rillocher|Page 3779808 riocher: WARNING: Can't replace {{IPA|fr|/ʁi.jɔ.ʃe/}} with {{fr-IPA|pos=v}} because auto-generated pron ʁjɔ.ʃe doesn't match ʁi.jɔ.ʃe
+y|Page 3875306 patenôtre: WARNING: Can't replace {{IPA|fr|/pat.nɔtʁ/}} with {{fr-IPA}} because auto-generated pron pat.notʁ doesn't match pat.nɔtʁ
 feseuse|Page 3900353 faiseuse: WARNING: Can't replace {{IPA|fr|/fə.zœz/}} with {{fr-IPA}} because auto-generated pron fɛ.zøz doesn't match fə.zœz
 feseuses|Page 3900354 faiseuses: WARNING: Can't replace {{IPA|fr|/fə.zœz/}} with {{fr-IPA}} because auto-generated pron fɛ.zøz doesn't match fə.zœz
 cronique scandaleuse|Page 3922824 chronique scandaleuse: WARNING: Can't replace {{IPA|fr|[kʁɔ.nik.skɑ̃.da.løz]}} with {{fr-IPA}} because auto-generated pron ʃʁɔ.nik skɑ̃.da.løz doesn't match kʁɔ.nik.skɑ̃.da.løz
 croniques scandaleuses|Page 3922860 chroniques scandaleuses: WARNING: Can't replace {{IPA|fr|[kʁɔ.nik.skɑ̃.da.løz]}} with {{fr-IPA}} because auto-generated pron ʃʁɔ.nik skɑ̃.da.løz doesn't match kʁɔ.nik.skɑ̃.da.løz
 y|Page 3950532 réengazonner: WARNING: Can't replace {{IPA|fr|/ʁe.ɑ̃.ɡa.zɔ.ne/}} with {{fr-IPA|pos=v}} because auto-generated pron ʁe.ɛ̃.ɡa.zɔ.ne doesn't match ʁe.ɑ̃.ɡa.zɔ.ne
 y|Page 4013678 deutoxyde: WARNING: Can't replace {{IPA|fr|/dø.tɔk.sid/}} with {{fr-IPA}} because auto-generated pron dœ.tɔk.sid doesn't match dø.tɔk.sid
-|Page 4016044 déjeusnai: WARNING: Can't replace {{IPA|fr|/de.ʒø.ne/}} with {{fr-IPA|pos=v}} because auto-generated pron de.ʒœs.ne doesn't match de.ʒø.ne
-|Page 4016050 déjeusné: WARNING: Can't replace {{IPA|fr|/de.ʒø.ne/}} with {{fr-IPA}} because auto-generated pron de.ʒœs.ne doesn't match de.ʒø.ne
-|Page 4016052 déjeusnée: WARNING: Can't replace {{IPA|fr|/de.ʒø.ne/}} with {{fr-IPA|pos=v}} because auto-generated pron de.ʒœs.ne doesn't match de.ʒø.ne
-|Page 4016053 déjeusnées: WARNING: Can't replace {{IPA|fr|/de.ʒø.ne/}} with {{fr-IPA|pos=v}} because auto-generated pron de.ʒœs.ne doesn't match de.ʒø.ne
-|Page 4016054 déjeusner: WARNING: Can't replace {{IPA|fr|/de.ʒø.ne/}} with {{fr-IPA|pos=v}} because auto-generated pron de.ʒœs.ne doesn't match de.ʒø.ne
-|Page 4016055 déjeusnés: WARNING: Can't replace {{IPA|fr|/de.ʒø.ne/}} with {{fr-IPA|pos=v}} because auto-generated pron de.ʒœs.ne doesn't match de.ʒø.ne
-|Page 4016056 déjeusnez: WARNING: Can't replace {{IPA|fr|/de.ʒø.ne/}} with {{fr-IPA|pos=v}} because auto-generated pron de.ʒœs.ne doesn't match de.ʒø.ne
-|Page 4025912 antipodiste: WARNING: Can't replace {{IPA|fr|/ɑ̃.ti.po.dist/}} with {{fr-IPA}} because auto-generated pron ɑ̃.ti.pɔ.dist doesn't match ɑ̃.ti.po.dist
-|Page 4025913 antipodistes: WARNING: Can't replace {{IPA|fr|/ɑ̃.ti.po.dist/}} with {{fr-IPA}} because auto-generated pron ɑ̃.ti.pɔ.dist doesn't match ɑ̃.ti.po.dist
-|Page 4026833 pot-au-feu: WARNING: Can't replace {{IPA|fr|/pɔt‿o fø/}} with {{fr-IPA}} because auto-generated pron poofø doesn't match pɔt‿o fø
-|Page 4049181 okroug: WARNING: Can't replace {{IPA|fr|/o.kʁuɡ/}} with {{fr-IPA}} because auto-generated pron ɔ.kʁu doesn't match o.kʁuɡ
-|Page 4049182 okrougs: WARNING: Can't replace {{IPA|fr|/o.kʁuɡ/}} with {{fr-IPA}} because auto-generated pron ɔ.kʁu doesn't match o.kʁuɡ
-|Page 4051852 fuckasses: WARNING: Can't replace {{IPA|fr|/fɔ.kas/}} with {{fr-IPA|pos=v}} because auto-generated pron fy.kas doesn't match fɔ.kas
-|Page 4144003 Proulx: WARNING: Can't replace {{IPA|fr|/pʁu/}} with {{fr-IPA}} because auto-generated pron pʁul doesn't match pʁu
-|Page 4165508 inofficieuse: WARNING: Can't replace {{IPA|fr|[inɔfisjøːz]}} with {{fr-IPA}} because auto-generated pron inɔfisjøz doesn't match inɔfisjøːz
-|Page 4165509 inofficieuses: WARNING: Can't replace {{IPA|fr|[inɔfisjøːz]}} with {{fr-IPA}} because auto-generated pron inɔfisjøz doesn't match inɔfisjøːz
-|Page 4203950 cepstre: WARNING: Can't replace {{IPA|fr|/kepstʁ/}} with {{fr-IPA}} because auto-generated pron sɛpstʁ doesn't match kepstʁ
-|Page 4336341 Monsieur Propre: WARNING: Can't replace {{IPA|fr|/møsjø pʁɔpʁ/}} with {{fr-IPA}} because auto-generated pron mɔ̃sjœʁ pʁɔpʁ doesn't match møsjø pʁɔpʁ
+déjeûnai|Page 4016044 déjeusnai: WARNING: Can't replace {{IPA|fr|/de.ʒø.ne/}} with {{fr-IPA|pos=v}} because auto-generated pron de.ʒœs.ne doesn't match de.ʒø.ne
+déjeûné|Page 4016050 déjeusné: WARNING: Can't replace {{IPA|fr|/de.ʒø.ne/}} with {{fr-IPA}} because auto-generated pron de.ʒœs.ne doesn't match de.ʒø.ne
+déjeûnée|Page 4016052 déjeusnée: WARNING: Can't replace {{IPA|fr|/de.ʒø.ne/}} with {{fr-IPA|pos=v}} because auto-generated pron de.ʒœs.ne doesn't match de.ʒø.ne
+déjeûnés|Page 4016053 déjeusnées: WARNING: Can't replace {{IPA|fr|/de.ʒø.ne/}} with {{fr-IPA|pos=v}} because auto-generated pron de.ʒœs.ne doesn't match de.ʒø.ne
+déjeûnér|Page 4016054 déjeusner: WARNING: Can't replace {{IPA|fr|/de.ʒø.ne/}} with {{fr-IPA|pos=v}} because auto-generated pron de.ʒœs.ne doesn't match de.ʒø.ne
+déjeûnés|Page 4016055 déjeusnés: WARNING: Can't replace {{IPA|fr|/de.ʒø.ne/}} with {{fr-IPA|pos=v}} because auto-generated pron de.ʒœs.ne doesn't match de.ʒø.ne
+déjeûnéz|Page 4016056 déjeusnez: WARNING: Can't replace {{IPA|fr|/de.ʒø.ne/}} with {{fr-IPA|pos=v}} because auto-generated pron de.ʒœs.ne doesn't match de.ʒø.ne
+antipôdiste|Page 4025912 antipodiste: WARNING: Can't replace {{IPA|fr|/ɑ̃.ti.po.dist/}} with {{fr-IPA}} because auto-generated pron ɑ̃.ti.pɔ.dist doesn't match ɑ̃.ti.po.dist
+antipôdistes|Page 4025913 antipodistes: WARNING: Can't replace {{IPA|fr|/ɑ̃.ti.po.dist/}} with {{fr-IPA}} because auto-generated pron ɑ̃.ti.pɔ.dist doesn't match ɑ̃.ti.po.dist
+potte‿au-feu|Page 4026833 pot-au-feu: WARNING: Can't replace {{IPA|fr|/pɔt‿o fø/}} with {{fr-IPA}} because auto-generated pron poofø doesn't match pɔt‿o fø
+ôkrougue|Page 4049181 okroug: WARNING: Can't replace {{IPA|fr|/o.kʁuɡ/}} with {{fr-IPA}} because auto-generated pron ɔ.kʁu doesn't match o.kʁuɡ
+ôkrougues|Page 4049182 okrougs: WARNING: Can't replace {{IPA|fr|/o.kʁuɡ/}} with {{fr-IPA}} because auto-generated pron ɔ.kʁu doesn't match o.kʁuɡ
+fockasses|Page 4051852 fuckasses: WARNING: Can't replace {{IPA|fr|/fɔ.kas/}} with {{fr-IPA|pos=v}} because auto-generated pron fy.kas doesn't match fɔ.kas
+Proux|Page 4144003 Proulx: WARNING: Can't replace {{IPA|fr|/pʁu/}} with {{fr-IPA}} because auto-generated pron pʁul doesn't match pʁu
+y|Page 4165508 inofficieuse: WARNING: Can't replace {{IPA|fr|[inɔfisjøːz]}} with {{fr-IPA}} because auto-generated pron inɔfisjøz doesn't match inɔfisjøːz
+y|Page 4165509 inofficieuses: WARNING: Can't replace {{IPA|fr|[inɔfisjøːz]}} with {{fr-IPA}} because auto-generated pron inɔfisjøz doesn't match inɔfisjøːz
+kepstre|Page 4203950 cepstre: WARNING: Can't replace {{IPA|fr|/kepstʁ/}} with {{fr-IPA}} because auto-generated pron sɛpstʁ doesn't match kepstʁ
+Məssieu Propre|Page 4336341 Monsieur Propre: WARNING: Can't replace {{IPA|fr|/møsjø pʁɔpʁ/}} with {{fr-IPA}} because auto-generated pron mɔ̃sjœʁ pʁɔpʁ doesn't match møsjø pʁɔpʁ
 limite des‿arbres|Page 4355324 limite des arbres: WARNING: Can't replace {{IPA|fr|/limit dɛz‿aʁbʁ/}} with {{fr-IPA}} because auto-generated pron limit de aʁbʁ doesn't match limit dɛz‿aʁbʁ
 y|Page 4365902 lianescent: WARNING: Can't replace {{IPA|fr|/ljanesɑ̃t/}} with {{fr-IPA}} because auto-generated pron ljanɛsɑ̃ doesn't match ljanesɑ̃t
 y|Page 4375347 loi de la jungle: WARNING: Can't replace {{IPA|fr|/lwa d(ə) la jœ̃ɡl/}} with {{fr-IPA}} because auto-generated pron lwa d(ə) la ʒœ̃ɡl doesn't match lwa d(ə) la jœ̃ɡl
@@ -3026,46 +3026,46 @@ batistère|Page 4478137 baptistère: WARNING: Can't replace {{IPA|fr|/ba.tis.tɛ
 cacheroute|Page 4931262 cacherout: WARNING: Can't replace {{IPA|fr|/kaʃʁut/}} with {{fr-IPA}} because auto-generated pron kaʃʁu doesn't match kaʃʁut
 y|Page 4938118 greluche: WARNING: Can't replace {{IPA|fr|/ɡʀəlyʃ/}} with {{fr-IPA}} because auto-generated pron ɡʁəlyʃ doesn't match ɡʀəlyʃ
 y|Page 4943350 mère-grand: WARNING: Can't replace {{IPA|fr|/mɛʀɡʀɑ̃/}} with {{fr-IPA}} because auto-generated pron mɛʁɡʁɑ̃ doesn't match mɛʀɡʀɑ̃
-|Page 4968610 bonjour/hi: WARNING: Can't replace {{IPA|fr|[bɒ̃ʊ̯̃.ˈʒʊu̯ʁ haɪ̯]}} with {{fr-IPA}} because auto-generated pron bɔ̃.ʒuʁ./i doesn't match bɒ̃ʊ̯̃.ˈʒʊu̯ʁ haɪ̯
-|Page 5036000 protolangue: WARNING: Can't replace {{IPA|fr|/pʁo.to.lɑ̃ɡ/}} with {{fr-IPA}} because auto-generated pron pʁɔ.tɔ.lɑ̃ɡ doesn't match pʁo.to.lɑ̃ɡ
-|Page 5036001 proto-langue: WARNING: Can't replace {{IPA|fr|/pʁo.to.lɑ̃ɡ/}} with {{fr-IPA}} because auto-generated pron pʁɔ.to.lɑ̃ɡ doesn't match pʁo.to.lɑ̃ɡ
-|Page 5066651 autoclassifier: WARNING: Can't replace {{IPA|fr| /o.to.kla.si.fje/}} with {{fr-IPA|pos=v}} because auto-generated pron o.tɔ.kla.si.fje doesn't match /o.to.kla.si.fje/
+-|Page 4968610 bonjour/hi: WARNING: Can't replace {{IPA|fr|[bɒ̃ʊ̯̃.ˈʒʊu̯ʁ haɪ̯]}} with {{fr-IPA}} because auto-generated pron bɔ̃.ʒuʁ./i doesn't match bɒ̃ʊ̯̃.ˈʒʊu̯ʁ haɪ̯
+prôto-langue|Page 5036000 protolangue: WARNING: Can't replace {{IPA|fr|/pʁo.to.lɑ̃ɡ/}} with {{fr-IPA}} because auto-generated pron pʁɔ.tɔ.lɑ̃ɡ doesn't match pʁo.to.lɑ̃ɡ
+prôto-langue|Page 5036001 proto-langue: WARNING: Can't replace {{IPA|fr|/pʁo.to.lɑ̃ɡ/}} with {{fr-IPA}} because auto-generated pron pʁɔ.to.lɑ̃ɡ doesn't match pʁo.to.lɑ̃ɡ
+auto-classifier|Page 5066651 autoclassifier: WARNING: Can't replace {{IPA|fr| /o.to.kla.si.fje/}} with {{fr-IPA|pos=v}} because auto-generated pron o.tɔ.kla.si.fje doesn't match /o.to.kla.si.fje/
 y|Page 5118546 nganda: WARNING: Can't replace {{IPA|fr|/ŋɡɑ̃.da/}} with {{fr-IPA}} because auto-generated pron nɡɑ̃.da doesn't match ŋɡɑ̃.da
 kéloïdes|Page 5140399 chéloïdes: WARNING: Can't replace {{IPA|fr|/ke.lɔ.id/}} with {{fr-IPA}} because auto-generated pron ʃe.lɔ.id doesn't match ke.lɔ.id
 poitrail de peŭzeule|Page 5143697 poitrail de puzzle: WARNING: Can't replace {{IPA|fr|/pwatʁaj də pœzœl/}} with {{fr-IPA}} because auto-generated pron pwatʁaj də pyzl doesn't match pwatʁaj də pœzœl
-|Page 5150582 quinteau: WARNING: Can't replace {{IPA|fr|[kɛ̃ti̯o]}} with {{fr-IPA}} because auto-generated pron kɛ̃to doesn't match kɛ̃ti̯o
+-|Page 5150582 quinteau: WARNING: Can't replace {{IPA|fr|[kɛ̃ti̯o]}} with {{fr-IPA}} because auto-generated pron kɛ̃to doesn't match kɛ̃ti̯o
 paéla|Page 5152803 paëlla: WARNING: Can't replace {{IPA|fr|/pa.e.la/}} with {{fr-IPA}} because auto-generated pron pa.la doesn't match pa.e.la
 y|Page 5230141 glanage: WARNING: Can't replace {{IPA|fr|[ɡlanaːʒ]}} with {{fr-IPA}} because auto-generated pron ɡlanaʒ doesn't match ɡlanaːʒ
 y|Page 5242387 maître-cylindre: WARNING: Can't replace {{IPA|fr|/mɛ.tʁ(ə).si.lɛ̃ndʁ/}} with {{fr-IPA}} because auto-generated pron mɛ.tʁə.si.lɛ̃dʁ doesn't match mɛ.tʁ(ə).si.lɛ̃ndʁ
 y|Page 5242389 maîtres-cylindres: WARNING: Can't replace {{IPA|fr|/mɛ.tʁ(ə).si.lɛ̃ndʁ/}} with {{fr-IPA}} because auto-generated pron mɛ.tʁə.si.lɛ̃dʁ doesn't match mɛ.tʁ(ə).si.lɛ̃ndʁ
 Tocquevile|Page 5357741 Tocqueville: WARNING: Can't replace {{IPA|fr|/tɔkvil/}} with {{fr-IPA}} because auto-generated pron tɔkvij doesn't match tɔkvil
 cé-el-esse-cé|Page 5373138 CLSC: WARNING: Can't replace {{IPA|fr|/seɛlɛsse/}} with {{fr-IPA}} because auto-generated pron klsk doesn't match seɛlɛsse
-|Page 5377787 au ras de: WARNING: Can't replace {{IPA|fr|[oɾad]}} with {{fr-IPA}} because auto-generated pron o ʁɑ də doesn't match oɾad
+-|Page 5377787 au ras de: WARNING: Can't replace {{IPA|fr|[oɾad]}} with {{fr-IPA}} because auto-generated pron o ʁɑ də doesn't match oɾad
 système dé|Page 5385581 système D: WARNING: Can't replace {{IPA|fr|/sis.tɛm de/}} with {{fr-IPA}} because auto-generated pron sis.tɛm  doesn't match sis.tɛm de
 ce fesant|Page 5398210 ce faisant: WARNING: Can't replace {{IPA|fr|/sə fə.zɑ̃/}} with {{fr-IPA}} because auto-generated pron sə fɛ.zɑ̃ doesn't match sə fə.zɑ̃
 y|Page 5403895 riabilité: WARNING: Can't replace {{IPA|fr|/ʁijabilite/}} with {{fr-IPA}} because auto-generated pron ʁjabilite doesn't match ʁijabilite
 bougainvilée|Page 5404216 bougainvillée: WARNING: Can't replace {{IPA|fr|/bu.ɡɛ̃.vi.le/}} with {{fr-IPA}} because auto-generated pron bu.ɡɛ̃.vi.je doesn't match bu.ɡɛ̃.vi.le
 eussocialité|Page 5431635 eusocialité: WARNING: Can't replace {{IPA|fr|/ø.sɔ.sja.li.te/}} with {{fr-IPA}} because auto-generated pron ø.zɔ.sja.li.te doesn't match ø.sɔ.sja.li.te
 y|Page 5449257 irremplissabilité: WARNING: Can't replace {{IPA|fr|/iʁʁɑ̃plisabilite/}} with {{fr-IPA}} because auto-generated pron iʁɑ̃plisabilite doesn't match iʁʁɑ̃plisabilite
-|Page 5451869 Laocoon: WARNING: Can't replace {{IPA|fr|/la.o.ko.ɔ̃/}} with {{fr-IPA}} because auto-generated pron la.ɔ.kɔ.ɔ̃ doesn't match la.o.ko.ɔ̃
+Laôcôon|Page 5451869 Laocoon: WARNING: Can't replace {{IPA|fr|/la.o.ko.ɔ̃/}} with {{fr-IPA}} because auto-generated pron la.ɔ.kɔ.ɔ̃ doesn't match la.o.ko.ɔ̃
 djeun_ss|Page 5505756 djeun's: WARNING: Can't replace {{IPA|fr|/dʒœns/}} with {{fr-IPA}} because auto-generated pron dʒœ̃‿ doesn't match dʒœns
-paciantèle|Page 5552613 patientèle: WARNING: Can't replace {{IPA|fr|/pa.sjɑ̃.tɛl/}} with {{fr-IPA}} because auto-generated pron pa.sjɛ̃.tɛl doesn't match pa.sjɑ̃.tɛl
+y|Page 5552613 patientèle: WARNING: Can't replace {{IPA|fr|/pa.sjɑ̃.tɛl/}} with {{fr-IPA}} because auto-generated pron pa.sjɛ̃.tɛl doesn't match pa.sjɑ̃.tɛl
 chuis|Page 5596361 j'suis: WARNING: Can't replace {{IPA|fr|/ʃɥi/}} with {{fr-IPA}} because auto-generated pron ʒ‿sɥi doesn't match ʃɥi
 Chierre|Page 5618546 Chiers: WARNING: Can't replace {{IPA|fr|/ʃjɛʁ/}} with {{fr-IPA}} because auto-generated pron ʃje doesn't match ʃjɛʁ
-|Page 5630493 guimbler: WARNING: Can't replace {{IPA|fr|[ɡæ̃.ble]}} with {{fr-IPA|pos=v}} because auto-generated pron ɡɛ̃.ble doesn't match ɡæ̃.ble
+-|Page 5630493 guimbler: WARNING: Can't replace {{IPA|fr|[ɡæ̃.ble]}} with {{fr-IPA|pos=v}} because auto-generated pron ɡɛ̃.ble doesn't match ɡæ̃.ble
 Lévecque|Page 5671911 Lévesque: WARNING: Can't replace {{IPA|fr|/le.vɛk/}} with {{fr-IPA}} because auto-generated pron le.vɛsk doesn't match le.vɛk
-|Page 5688031 tchernobyl: WARNING: Can't replace {{IPA|fr|/tʃɛʁ.no.bil/}} with {{fr-IPA}} because auto-generated pron tʃɛʁ.nɔ.bil doesn't match tʃɛʁ.no.bil
+y|Page 5688031 tchernobyl: WARNING: Can't replace {{IPA|fr|/tʃɛʁ.no.bil/}} with {{fr-IPA}} because auto-generated pron tʃɛʁ.nɔ.bil doesn't match tʃɛʁ.no.bil
 y|Page 5699034 masque-cheval: WARNING: Can't replace {{IPA|fr|/mask ʃə.val/}} with {{fr-IPA}} because auto-generated pron mas.k(ə).ʃə.val doesn't match mask ʃə.val
 némésisse|Page 5804797 némésis: WARNING: Can't replace {{IPA|fr|/ne.me.zis/}} with {{fr-IPA}} because auto-generated pron ne.me.zi doesn't match ne.me.zis
-|Page 5813653 bibitte: WARNING: Can't replace {{IPA|fr|[bi.bɪt]}} with {{fr-IPA}} because auto-generated pron bi.bit doesn't match bi.bɪt
-|Page 5856101 powoir: WARNING: Can't replace {{IPA|fr|[pu.wɒɾ]}} with {{fr-IPA|pos=vnv}} because auto-generated pron pɔ.wwaʁ doesn't match pu.wɒɾ
-|Page 5856101 powoir: WARNING: Can't replace {{IPA|fr|[po.wɒɾ]}} with {{fr-IPA|pos=vnv}} because auto-generated pron pɔ.wwaʁ doesn't match po.wɒɾ
-|Page 5865820 Trois-Rivières: WARNING: Can't replace {{IPA|fr|[tʁwɔ ʁi.vjaɛ̯ʁ]}} with {{fr-IPA}} because auto-generated pron tʁwa.ʁi.vjɛʁ doesn't match tʁwɔ ʁi.vjaɛ̯ʁ
+-|Page 5813653 bibitte: WARNING: Can't replace {{IPA|fr|[bi.bɪt]}} with {{fr-IPA}} because auto-generated pron bi.bit doesn't match bi.bɪt
+-|Page 5856101 powoir: WARNING: Can't replace {{IPA|fr|[pu.wɒɾ]}} with {{fr-IPA|pos=vnv}} because auto-generated pron pɔ.wwaʁ doesn't match pu.wɒɾ
+-|Page 5856101 powoir: WARNING: Can't replace {{IPA|fr|[po.wɒɾ]}} with {{fr-IPA|pos=vnv}} because auto-generated pron pɔ.wwaʁ doesn't match po.wɒɾ
+-|Page 5865820 Trois-Rivières: WARNING: Can't replace {{IPA|fr|[tʁwɔ ʁi.vjaɛ̯ʁ]}} with {{fr-IPA}} because auto-generated pron tʁwa.ʁi.vjɛʁ doesn't match tʁwɔ ʁi.vjaɛ̯ʁ
 preumse|Page 5884280 preums: WARNING: Can't replace {{IPA|fr|/pʁœms/}} with {{fr-IPA}} because auto-generated pron pʁœm doesn't match pʁœms
 preumse|Page 5884281 prem's: WARNING: Can't replace {{IPA|fr|/pʁœms/}} with {{fr-IPA}} because auto-generated pron pʁɛm‿ doesn't match pʁœms
 preumse|Page 5884282 preum's: WARNING: Can't replace {{IPA|fr|/pʁœms/}} with {{fr-IPA}} because auto-generated pron pʁœm‿ doesn't match pʁœms
 bougainvilier|Page 5938131 bougainvillier: WARNING: Can't replace {{IPA|fr|/bu.ɡɛ̃.vi.lje/}} with {{fr-IPA}} because auto-generated pron bu.ɡɛ̃.vij.je doesn't match bu.ɡɛ̃.vi.lje
-naillte shoppe|Page 5949138 night shop: WARNING: Can't replace {{IPA|fr|/najt ʃɔp/}} with {{fr-IPA}} because auto-generated pron niɡ ʃo doesn't match najt ʃɔp
+nailltė shoppe|Page 5949138 night shop: WARNING: Can't replace {{IPA|fr|/najt ʃɔp/}} with {{fr-IPA}} because auto-generated pron niɡ ʃo doesn't match najt ʃɔp
 y|Page 5977673 tirant d'air: WARNING: Can't replace {{IPA|fr|/ti.ʁɑ̃.deʁ/}} with {{fr-IPA}} because auto-generated pron ti.ʁɑ̃ d‿ɛʁ doesn't match ti.ʁɑ̃.deʁ
 y|Page 5977675 tirant d'eau: WARNING: Can't replace {{IPA|fr|/ti.ʁɑ̃.do/}} with {{fr-IPA}} because auto-generated pron ti.ʁɑ̃ d‿o doesn't match ti.ʁɑ̃.do
 y|Page 5977700 encalminer: WARNING: Can't replace {{IPA|fr|/eŋ.kal.mi.ne/}} with {{fr-IPA|pos=v}} because auto-generated pron ɑ̃.kal.mi.ne doesn't match eŋ.kal.mi.ne
@@ -3073,27 +3073,27 @@ y|Page 5977702 étalingure: WARNING: Can't replace {{IPA|fr|/e.ta.lãŋ.ɡyʁ/}}
 y|Page 5977706 nœud de chaise: WARNING: Can't replace {{IPA|fr|/nø.də.ʃez/}} with {{fr-IPA}} because auto-generated pron nø d(ə) ʃɛz doesn't match nø.də.ʃez
 vent traverre|Page 5977718 vent travers: WARNING: Can't replace {{IPA|fr|/vɑ̃.tʁa.vɛʁ/}} with {{fr-IPA}} because auto-generated pron vɑ̃ tʁa.ve doesn't match vɑ̃.tʁa.vɛʁ
 y|Page 5977719 acastilleur: WARNING: Can't replace {{IPA|fr|/a.kas.ti.ʎœʁ/}} with {{fr-IPA}} because auto-generated pron a.kas.ti.jœʁ doesn't match a.kas.ti.ʎœʁ
-|Page 5977727 nœud de cabestan: WARNING: Can't replace {{IPA|fr|/nø.də.ka.be.stɑ̃/}} with {{fr-IPA}} because auto-generated pron nø d(ə) ka.bɛs.tɑ̃ doesn't match nø.də.ka.be.stɑ̃
+y|Page 5977727 nœud de cabestan: WARNING: Can't replace {{IPA|fr|/nø.də.ka.be.stɑ̃/}} with {{fr-IPA}} because auto-generated pron nø d(ə) ka.bɛs.tɑ̃ doesn't match nø.də.ka.be.stɑ̃
 y|Page 5977730 nœud de batelier: WARNING: Can't replace {{IPA|fr|/nø.də.bat.ə.lje/}} with {{fr-IPA}} because auto-generated pron nø d(ə) ba.tə.lje doesn't match nø.də.bat.ə.lje
 demi-clé|Page 5977759 demi-clef: WARNING: Can't replace {{IPA|fr|/də.mi.kle/}} with {{fr-IPA}} because auto-generated pron də.mi.klɛf doesn't match də.mi.kle
 y|Page 5977770 empanner: WARNING: Can't replace {{IPA|fr|/ɑ̃m.pa.ne/}} with {{fr-IPA|pos=v}} because auto-generated pron ɑ̃.pa.ne doesn't match ɑ̃m.pa.ne
 y|Page 5977771 empannage: WARNING: Can't replace {{IPA|fr|/ɑ̃m.pa.nɑʒ/}} with {{fr-IPA}} because auto-generated pron ɑ̃.pa.naʒ doesn't match ɑ̃m.pa.nɑʒ
 intra-murosse|Page 6170189 intra-muros: WARNING: Can't replace {{IPA|fr|/ɛ̃t.ʁa.my.ʁɔs/}} with {{fr-IPA}} because auto-generated pron ɛ̃.tʁa.my.ʁo doesn't match ɛ̃t.ʁa.my.ʁɔs
 y|Page 6271610 farce ou friandise: WARNING: Can't replace {{IPA|fr|/faʁ.s‿u fʁi.jɑ̃.diz/}} with {{fr-IPA}} because auto-generated pron faʁs u fʁi.jɑ̃.diz doesn't match faʁ.s‿u fʁi.jɑ̃.diz
-|Page 6273699 girevoy: WARNING: Can't replace {{IPA|fr|/ɡi.ʁə.vɔj/}} with {{fr-IPA}} because auto-generated pron ʒi.ʁə.vwaj doesn't match ɡi.ʁə.vɔj
-|Page 6274668 à la one again: WARNING: Can't replace {{IPA|fr|/a la wanəɡɛn/}} with {{fr-IPA}} because auto-generated pron a la ɔn aɡɛ̃ doesn't match a la wanəɡɛn
-|Page 6336067 trompe d’Eustache: WARNING: Can't replace {{IPA|fr|/tʁɔ̃p dœs.taʃ/}} with {{fr-IPA}} because auto-generated pron tʁɔ̃p d’œs.taʃ doesn't match tʁɔ̃p dœs.taʃ
-|Page 6338815 jdid: WARNING: Can't replace {{IPA|fr|/d͡ʒdiːd/}} with {{fr-IPA}} because auto-generated pron ʒdi doesn't match d͡ʒdiːd
-|Page 6410228 aéropalynologie: WARNING: Can't replace {{IPA|fr|/a.e.ʁo.pa.li.nɔ.lɔ.ʒi/}} with {{fr-IPA}} because auto-generated pron a.e.ʁɔ.pa.li.nɔ.lɔ.ʒi doesn't match a.e.ʁo.pa.li.nɔ.lɔ.ʒi
+guirĕvoille|Page 6273699 girevoy: WARNING: Can't replace {{IPA|fr|/ɡi.ʁə.vɔj/}} with {{fr-IPA}} because auto-generated pron ʒi.ʁə.vwaj doesn't match ɡi.ʁə.vɔj
+à la wanne əgaine|Page 6274668 à la one again: WARNING: Can't replace {{IPA|fr|/a la wanəɡɛn/}} with {{fr-IPA}} because auto-generated pron a la ɔn aɡɛ̃ doesn't match a la wanəɡɛn
+-|Page 6336067 trompe d’Eustache: WARNING: Can't replace {{IPA|fr|/tʁɔ̃p dœs.taʃ/}} with {{fr-IPA}} because auto-generated pron tʁɔ̃p d’œs.taʃ doesn't match tʁɔ̃p dœs.taʃ
+jdide|Page 6338815 jdid: WARNING: Can't replace {{IPA|fr|/d͡ʒdiːd/}} with {{fr-IPA}} because auto-generated pron ʒdi doesn't match d͡ʒdiːd
+aéro-palynologie|Page 6410228 aéropalynologie: WARNING: Can't replace {{IPA|fr|/a.e.ʁo.pa.li.nɔ.lɔ.ʒi/}} with {{fr-IPA}} because auto-generated pron a.e.ʁɔ.pa.li.nɔ.lɔ.ʒi doesn't match a.e.ʁo.pa.li.nɔ.lɔ.ʒi
 y|Page 6412390 pain de sucre: WARNING: Can't replace {{IPA|fr|/pɛ̃ də sykʁ/}} with {{fr-IPA}} because auto-generated pron pɛ̃ d(ə) sykʁ doesn't match pɛ̃ də sykʁ
 y|Page 6413509 article zéro: WARNING: Can't replace {{IPA|fr|/aʁ.tikl ze.ʁo/}} with {{fr-IPA}} because auto-generated pron aʁ.ti.klə ze.ʁo doesn't match aʁ.tikl ze.ʁo
 hypertrikose|Page 6414386 hypertrichose: WARNING: Can't replace {{IPA|fr|/i.pɛʁ.tʁi.koz/}} with {{fr-IPA}} because auto-generated pron i.pɛʁ.tʁi.ʃoz doesn't match i.pɛʁ.tʁi.koz
 trikinose|Page 6414391 trichinose: WARNING: Can't replace {{IPA|fr|/tʁi.ki.noz/}} with {{fr-IPA}} because auto-generated pron tʁi.ʃi.noz doesn't match tʁi.ki.noz
-|Page 6457665 hanout: WARNING: Can't replace {{IPA|fr|/ħæ.nuːt/}} with {{fr-IPA}} because auto-generated pron a.nu doesn't match ħæ.nuːt
-|Page 6457666 haouanet: WARNING: Can't replace {{IPA|fr|/ħæ.wæː.net/}} with {{fr-IPA}} because auto-generated pron a.wa.nɛ doesn't match ħæ.wæː.net
+-|Page 6457665 hanout: WARNING: Can't replace {{IPA|fr|/ħæ.nuːt/}} with {{fr-IPA}} because auto-generated pron a.nu doesn't match ħæ.nuːt
+-|Page 6457666 haouanet: WARNING: Can't replace {{IPA|fr|/ħæ.wæː.net/}} with {{fr-IPA}} because auto-generated pron a.wa.nɛ doesn't match ħæ.wæː.net
 eux‿autres|Page 6501449 eux-autres: WARNING: Can't replace {{IPA|fr|/ø.z‿otʁ/}} with {{fr-IPA}} because auto-generated pron ø.otʁ doesn't match ø.z‿otʁ
 eux‿autres|Page 6501449 eux-autres: WARNING: Can't replace {{IPA|fr|/ø.z‿ot/}} with {{fr-IPA}} because auto-generated pron ø.otʁ doesn't match ø.z‿ot
 y|Page 6543728 Centre-Val de Loire: WARNING: Can't replace {{IPA|fr|/sɑ̃tʁ(ə) val də lwaʁ/}} with {{fr-IPA}} because auto-generated pron sɑ̃tʁəval də lwaʁ doesn't match sɑ̃tʁ(ə) val də lwaʁ
-|Page 6577795 réglet: WARNING: Can't replace {{IPA|fr|/ˈɹɛɡlɛ/}} with {{fr-IPA}} because auto-generated pron ʁeɡlɛ doesn't match ˈɹɛɡlɛ
-|Page 6596431 djô: WARNING: Can't replace {{IPA|fr|/dʒɔ/}} with {{fr-IPA|pos=v}} because auto-generated pron dʒo doesn't match dʒɔ
+y|Page 6577795 réglet: WARNING: Can't replace {{IPA|fr|/ˈɹɛɡlɛ/}} with {{fr-IPA}} because auto-generated pron ʁeɡlɛ doesn't match ˈɹɛɡlɛ
+-|Page 6596431 djô: WARNING: Can't replace {{IPA|fr|/dʒɔ/}} with {{fr-IPA|pos=v}} because auto-generated pron dʒo doesn't match dʒɔ
 abou-markoub|Page 6610608 abu-markub: WARNING: Can't replace {{IPA|fr|/a.bu.maʁ.kub/}} with {{fr-IPA}} because auto-generated pron a.by.maʁ.kyb doesn't match a.bu.maʁ.kub
