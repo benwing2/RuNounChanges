@@ -28,25 +28,25 @@ FIXME:
    and pronunciation derived.
 10. (DONE) Convert remaining use of old templates to use {{fr-conj-auto}}.
 11. (DONE) Figure out what the COMBINING flag in [[Module:fr-pron]] does and
-    remove it, including all calls from this module.
+	remove it, including all calls from this module.
 12. (ALREADY DONE) Support sevrer, two-stem e/è verb.
 13. (DONE) Autodetect e-er verbs including eCer as well as eCler and eCrer verbs
-    like sevrer, and eguer/equer (if they exist). Make sure there aren't
+	like sevrer, and eguer/equer (if they exist). Make sure there aren't
 	verbs of this form that aren't e-er by looking for them in the list of
 	fr-conj-auto verbs that have an empty typ arg (possibly enough to look
 	at all fr-conj-auto verbs).
 14. Check pronunciation of 'pleuvoir'. TLFi says /pløvwaʁ/, frwikt says /plœvwaʁ/.
 15. (DONE) Check if -er-type conjugations of -aillir, -cueillir, braire are
-    correct.
+	correct.
 16. (DONE) Fix notes for prefixed croitre/croître verbs, based on the old-style
 	templates.
 17. (DONE) Implement impersonal and only-third verbs, including impers=
-    and onlythird=.
+	and onlythird=.
 18. (DONE) Fix schwa in -ayer, -eyer pronunciation and check other uses of
-    ind_f() to see if they need a fut_stem_i.
+	ind_f() to see if they need a fut_stem_i.
 19. Implement sort key in {{fr-verb}}. Should map accented letters to
-    unaccented letters and rearrange "se regarded" to "regarded, se" and
-    similarly for "s'infiltrer".
+	unaccented letters and rearrange "se regarded" to "regarded, se" and
+	similarly for "s'infiltrer".
 20. "se regarder" should have optional schwa in re-.
 
 Remaining templates:
@@ -1718,6 +1718,32 @@ local function append_tables(tab1, tab2)
 	end
 end
 
+local verb_prefix_to_type = {
+	{"les y en ", "lesyen"},
+	{"les en ", "lesen"},
+	{"s'en ", "reflen"},
+	{"se le ", "reflle"},
+	{"se la ", "reflla"},
+	{"se l'", "refll"},
+	{"se les y ", "refllesy"},
+	{"les y ", "lesy"},
+	{"se les ", "reflles"},
+	{"les ", "les"},
+	{"se l'y ", "reflly"},
+	{"l'y ", "l_y"},
+	{"l'en ", "l_en"},
+	{"l'", "l"},
+	{"le ", "le"},
+	{"la ", "la"},
+	{"s'y en ", "reflyen"},
+	{"y en ", "yen"},
+	{"en ", "en"},
+	{"s'y ", "refly"},
+	{"y ", "y"},
+	{"s'", "refl"},
+	{"se ", "refl"},
+}
+
 -- This is meant to be invoked by the module itself, or possibly by a
 -- different version of the module (for comparing changes to see whether
 -- they have an effect on conjugations or pronunciations).
@@ -1726,28 +1752,7 @@ function export.do_generate_forms(args)
 	local stem = args[1] or ""
 	local typ = args[2] or ""
 	local argspron = args.pron
-	local en = false
-	local y = false
-	local yen = false
-	local l = false
-	local le = false
-	local la = false
-	local les = false
-	local l_y = false
-    local l_en = false
-    local l_yen = false
-    local lesen = false
-    local lesyen = false
-	local lesy = false
-	local refl = false
-    local reflen = false
-	local reflle = false
-	local reflla = false
-	local reflles = false
-	local reflly = false
-	local refllesy = false
-    local refly = false
-	local reflyen = false
+	local prefix, preftype
 
 	if typ == "" then typ = stem; stem = ""; end
 
@@ -1763,108 +1768,17 @@ function export.do_generate_forms(args)
 	-- else, explicitly specified stem and type, e.g. {{fr-conj-auto|appe|ler}}
 	end
 
-	-- autodetect reflexives
-    if rfind(stem, "^les y en ") then
-		stem = rsub(stem, "^les y en ", "")
-		argspron = strip_respelling_beginning(argspron, "les y en ", "split")
-		lesyen = true
-    elseif rfind(stem, "^les en ") then
-		stem = rsub(stem, "^les en ", "")
-		argspron = strip_respelling_beginning(argspron, "les en ", "split")
-		lesen = true
-    elseif rfind(stem, "^s'en ") then
-		stem = rsub(stem, "^s'en ", "")
-		argspron = strip_respelling_beginning(argspron, "s'en ", "split")
-		reflen = true
-    elseif rfind(stem, "^se le ") then
-		stem = rsub(stem, "^se le ", "")
-		argspron = strip_respelling_beginning(argspron, "se le ", "split")
-		reflle = true
-    elseif rfind(stem, "^se la ") then
-		stem = rsub(stem, "^se la ", "")
-		argspron = strip_respelling_beginning(argspron, "se la ", "split")
-		reflla = true
-    elseif rfind(stem, "^se l'") then
-		stem = rsub(stem, "^se l'", "")
-		argspron = strip_respelling_beginning(argspron, "se l'", "split")
-		refll = true
-    elseif rfind(stem, "^se les y ") then
-		stem = rsub(stem, "^se les y ", "")
-		argspron = strip_respelling_beginning(argspron, "se les y ", "split")
-		refllesy = true
-    elseif rfind(stem, "^les y ") then
-		stem = rsub(stem, "^les y ", "")
-		argspron = strip_respelling_beginning(argspron, "les y ", "split")
-		lesy = true
-    elseif rfind(stem, "^se les ") then
-		stem = rsub(stem, "^se les ", "")
-		argspron = strip_respelling_beginning(argspron, "se les ", "split")
-		reflles = true
-    elseif rfind(stem, "^les ") then
-		stem = rsub(stem, "^les ", "")
-		argspron = strip_respelling_beginning(argspron, "les ", "split")
-		les = true
-    elseif rfind(stem, "^se l'y ") then
-		stem = rsub(stem, "^se l'y ", "")
-		argspron = strip_respelling_beginning(argspron, "se l'y ", "split")
-		reflly = true
-    elseif rfind(stem, "^l'y ") then
-		stem = rsub(stem, "^l'y ", "")
-		argspron = strip_respelling_beginning(argspron, "l'y ", "split")
-		l_y = true
-    elseif rfind(stem, "^l'en ") then
-		stem = rsub(stem, "^l'en ", "")
-		argspron = strip_respelling_beginning(argspron, "l'en ", "split")
-		l_en = true
-    elseif rfind(stem, "^l'") then
-		stem = rsub(stem, "^l'", "")
-		argspron = strip_respelling_beginning(argspron, "l'", "split")
-		l = true
-    elseif rfind(stem, "^le ") then
-		stem = rsub(stem, "^le ", "")
-		argspron = strip_respelling_beginning(argspron, "le ", "split")
-		le = true
-    elseif rfind(stem, "^la ") then
-		stem = rsub(stem, "^la ", "")
-		argspron = strip_respelling_beginning(argspron, "la ", "split")
-		la = true
-    elseif rfind(stem, "^le ") then
-		stem = rsub(stem, "^le ", "")
-		argspron = strip_respelling_beginning(argspron, "le ", "split")
-		le = true
-    elseif rfind(stem, "^la ") then
-		stem = rsub(stem, "^la ", "")
-		argspron = strip_respelling_beginning(argspron, "la ", "split")
-		la = true
-    elseif rfind(stem, "^s'y en ") then
-		stem = rsub(stem, "^s'y en ", "")
-		argspron = strip_respelling_beginning(argspron, "s'y en ", "split")
-		reflyen = true
-    elseif rfind(stem, "^y en ") then
-		stem = rsub(stem, "^y en ", "")
-		argspron = strip_respelling_beginning(argspron, "y en ", "split")
-		yen = true
-    elseif rfind(stem, "^en ") then
-		stem = rsub(stem, "^en ", "")
-		argspron = strip_respelling_beginning(argspron, "en ", "split")
-		en = true
-    elseif rfind(stem, "^s'y ") then
-		stem = rsub(stem, "^s'y ", "")
-		argspron = strip_respelling_beginning(argspron, "s'y ", "split")
-		refly = true
-    elseif rfind(stem, "^y ") then
-		stem = rsub(stem, "^y ", "")
-		argspron = strip_respelling_beginning(argspron, "y ", "split")
-		y = true
-    elseif rfind(stem, "^s'") then
-		stem = rsub(stem, "^s'", "")
-		argspron = strip_respelling_beginning(argspron, "s'", "split")
-		refl = true
-	elseif rfind(stem, "^se ") then
-		stem = rsub(stem, "^se ", "")
-		argspron = strip_respelling_beginning(argspron, "se ", "split")
-		refl = true
-    end
+	-- autodetect prefixed verbs
+	for _, pref_and_type in ipairs(verb_prefix_to_type) do
+		local pref, prefty = pref_and_type[1], pref_and_type[2]
+		if rfind(stem, "^" .. pref) then
+			stem = rsub(stem, "^" .. pref, "")
+			argspron = strip_respelling_beginning(argspron, pref, "split")
+			prefix = pref
+			preftype = prefty
+			break
+		end
+	end
 
 	local pronargs = argspron and rsplit(argspron, ",") or {false}
 	local all_forms, all_prons 
@@ -1872,29 +1786,8 @@ function export.do_generate_forms(args)
 		local pronarg = pronargs[i]
 		if pronarg == false then pronarg = nil end
 		data = {
-			en = en,
-			y = y,
-			yen = yen,
-			l = l,
-			le = le,
-			la = la,
-			les = les,
-			l_en = l_en,
-			l_y = l_y,
-			l_yen = l_yen,
-			lesen = lesen,
-			lesy = lesy,
-			lesyen = lesyen,
-			refl = refl,
-			reflen = reflen,
-			refll = refll,
-			reflle = reflle,
-			reflla = reflla,
-			reflles = reflles,
-			reflly = reflly,
-			refllesy = refllesy,
-			refly = refly,
-			reflyen = reflyen,
+			prefix = prefix,
+			preftype = preftype,
 			stem = stem,
 			aux = "avoir",
 			pron = pronarg,
@@ -1975,261 +1868,36 @@ function export.do_generate_forms(args)
 		end
 	end
 
-	-- args.en can override data.en
-	if args.en == "n" or args.en == "no" then
-		data.en = false
-	elseif args.en then
-		data.en = true
+	for _, pref_and_type in ipairs(verb_prefix_to_type) do
+		local pref, prefty = pref_and_type[1], pref_and_type[2]
+		if args[prefty] == "n" or args[prefty] == "no" then
+			if data.preftype == prefty then
+				data.preftype = nil
+			end
+		elseif args[prefty] then
+			data.preftype = prefty
+		end
 	end
-	if data.en then m_core.en(data) end
 
-	-- args.y can override data.y
-	if args.y == "n" or args.y == "no" then
-		data.y = false
-	elseif args.y then
-		data.y = true
+	if data.preftype then
+		for key, val in pairs(data.forms) do
+			m_core.pref_sufs[data.preftype](data, key, val)
+		end
 	end
-	if data.y then m_core.y(data) end
-
-	-- args.yen can override data.yen
-	if args.yen == "n" or args.yen == "no" then
-		data.yen = false
-	elseif args.yen then
-		data.yen = true
-	end
-	if data.yen then m_core.yen(data) end
-
-	-- args.le can override data.le
-	if args.le == "n" or args.le == "no" then
-		data.le = false
-	elseif args.le then
-		data.le = true
-	end
-	if data.le then m_core.le(data) end
-
-	-- args.la can override data.la
-	if args.la == "n" or args.la == "no" then
-		data.la = false
-	elseif args.la then
-		data.la = true
-	end
-	if data.la then m_core.la(data) end
-
-	-- args.l can override data.l
-	if args.l == "n" or args.l == "no" then
-		data.l = false
-	elseif args.l then
-		data.l = true
-	end
-	if data.l then m_core.l(data) end
-
-	-- args.les can override data.les
-	if args.les == "n" or args.les == "no" then
-		data.les = false
-	elseif args.les then
-		data.les = true
-	end
-	if data.les then m_core.les(data) end
-
-	-- args.l_en can override data.yen 
-	if args.l_en == "n" or args.l_en == "no" then
-		data.l_en = false
-	elseif args.l_en then
-		data.l_en = true
-	end
-	if data.l_en then m_core.l_en(data) end
-
-	-- args.l_y can override data.l_y
-	if args.l_y == "n" or args.l_y == "no" then
-		data.l_y = false
-	elseif args.l_y then
-		data.l_y = true
-	end
-	if data.l_y then m_core.l_y(data) end
-
-	-- args.l_yen can override data.l_yen
-	if args.l_yen == "n" or args.l_yen == "no" then
-		data.l_yen = false
-	elseif args.l_yen then
-		data.l_yen = true
-	end
-	if data.l_yen then m_core.l_yen(data) end
-
-	-- args.lesen can override data.lesen
-	if args.lesen == "n" or args.lesen == "no" then
-		data.lesen = false
-	elseif args.lesen then
-		data.lesen = true
-	end
-	if data.lesen then m_core.lesen(data) end
-
-	-- args.lesy can override data.lesy
-	if args.lesy == "n" or args.lesy == "no" then
-		data.lesy = false
-	elseif args.lesy then
-		data.lesy = true
-	end
-	if data.lesy then m_core.lesy(data) end
-
-	-- args.lesyen can override data.lesyen
-	if args.lesyen == "n" or args.lesyen == "no" then
-		data.lesyen = false
-	elseif args.lesyen then
-		data.lesyen = true
-	end
-	if data.lesyen then m_core.lesyen(data) end
-
-	-- args.refl can override data.refl
-	if args.refl == "n" or args.refl == "no" then
-		data.refl = false
-	elseif args.refl then
-		data.refl = true
-	end
-	if data.refl then m_core.refl(data) end
-
-	-- args.reflen can override data.reflen
-	if args.reflen == "n" or args.reflen == "no" then
-		data.reflen = false
-	elseif args.reflen then
-		data.reflen = true
-	end
-	if data.reflen then m_core.reflen(data) end
-
-	-- args.refll can override data.refll
-	if args.refll == "n" or args.refll == "no" then
-		data.refll = false
-	elseif args.refll then
-		data.refll = true
-	end
-	if data.refll then m_core.refll(data) end
-
-	-- args.reflle can override data.reflle
-	if args.reflle == "n" or args.reflle == "no" then
-		data.reflle = false
-	elseif args.reflle then
-		data.reflle = true
-	end
-	if data.reflle then m_core.reflle(data) end
-
-	-- args.reflla can override data.reflla
-	if args.reflla == "n" or args.reflla == "no" then
-		data.reflla = false
-	elseif args.reflla then
-		data.reflla = true
-	end
-	if data.reflla then m_core.reflla(data) end
-
-	-- args.reflles can override data.reflles
-	if args.reflles == "n" or args.reflles == "no" then
-		data.reflles = false
-	elseif args.reflles then
-		data.reflles = true
-	end
-	if data.reflles then m_core.reflles(data) end
-
-	-- args.reflly can override data.reflly
-	if args.reflly == "n" or args.reflly == "no" then
-		data.reflly = false
-	elseif args.reflly then
-		data.reflly = true
-	end
-	if data.reflly then m_core.reflly(data) end
-
-	-- args.refllesy can override data.refllesy
-	if args.refllesy == "n" or args.refllesy == "no" then
-		data.refllesy = false
-	elseif args.refllesy then
-		data.refllesy = true
-	end
-	if data.refllesy then m_core.refllesy(data) end
-
-	-- args.refly can override data.refly
-	if args.refly == "n" or args.refly == "no" then
-		data.refly = false
-	elseif args.refly then
-		data.refly = true
-	end
-	if data.refly then m_core.refly(data) end
-
-	-- args.reflyen can override data.reflyen
-	if args.reflyen == "n" or args.reflyen == "no" then
-		data.reflyen = false
-	elseif args.reflyen then
-		data.reflyen = true
-	end
-	if data.reflyen then m_core.reflyen(data) end
 
 	if etre[data.forms.inf] then
 		data.aux = "être"
 	elseif avoir_or_etre[data.forms.inf] then
 		data.aux = "avoir or être"
 	end
+	local aux_prefix = data.prefix or ""
+	aux_prefix = rsub(aux_prefix, "l[ae] $", "l'")
 	if args.aux == "a" or args.aux == "avoir" then
-        if data.le == true then
-                data.aux = "l'avoir"
-        elseif data.la == true then
-                data.aux = "l'avoir"
-        elseif data.l == true then
-                data.aux = "l'avoir"
-        elseif data.l_y == true then
-                data.aux = "l'y avoir"
-        elseif data.y == true then
-                data.aux = "y avoir"
-        elseif data.les == true then
-                data.aux = "les avoir"
-        elseif data.lesy == true then
-                data.aux = "les y avoir"
-        elseif data.en == true then
-                data.aux = "en avoir"
-        elseif data.yen == true then
-                data.aux = "y en avoir"
-        else
-                data.aux = "avoir"
-        end
+		data.aux = aux_prefix .. "avoir"
 	elseif args.aux == "e" or args.aux == "être" then
-        if data.le == true then
-                data.aux = "l'être"
-        elseif data.la == true then
-                data.aux = "l'être"
-        elseif data.l == true then
-                data.aux = "l'être"
-        elseif data.l_y == true then
-                data.aux = "l'y être"
-        elseif data.y == true then
-                data.aux = "y être"
-        elseif data.les == true then
-                data.aux = "les être"
-        elseif data.lesy == true then
-                data.aux = "les y être"
-        elseif data.en == true then
-                data.aux = "en être"
-        elseif data.yen == true then
-                data.aux = "y en être"
-        else
-                data.aux = "être"
-        end
+		data.aux = aux_prefix .. "être"
 	elseif args.aux == "ae" or args.aux == "avoir,être" or args.aux == "avoir or être" then
-        if data.le == true then
-                data.aux = "l'avoir or être"
-        elseif data.la == true then
-                data.aux = "l'avoir or être"
-        elseif data.l == true then
-                data.aux = "l'avoir or être"
-        elseif data.l_y == true then
-                data.aux = "l'y avoir or être"
-        elseif data.y == true then
-                data.aux = "y avoir or être"
-        elseif data.les == true then
-                data.aux = "les avoir or être"
-        elseif data.lesy == true then
-                data.aux = "les y avoir or être"
-        elseif data.en == true then
-                data.aux = "en avoir or être"
-        elseif data.yen == true then
-                data.aux = "y en avoir or être"
-        else
-                data.aux = "avoir or être"
-        end
+		data.aux = aux_prefix .. "avoir or être"
 	elseif args.aux then
 		error("Unrecognized value for aux=, should be 'a', 'e', 'ae', 'avoir', 'être', or 'avoir,être'")
 	end

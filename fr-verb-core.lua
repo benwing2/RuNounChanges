@@ -10,6 +10,9 @@ end
 local rmatch = mw.ustring.match
 local rsubn = mw.ustring.gsub
 
+local pref_sufs = {}
+export.pref_sufs = pref_sufs
+
 -- version of rsubn() that discards all but the first return value
 local function rsub(term, foo, bar)
 	local retval = rsubn(term, foo, bar)
@@ -198,1300 +201,224 @@ function export.clear_imp(data)
 	data.forms.imp_p_2p = "—"
 end
 
-function export.y(data)
-	data.y = true
-
-	for key,val in pairs(data.forms) do
-		local pref_v, pref_c, pron_v, pron_c, imp, pron_imp, do_nolink
-		if key == "inf" or key == "ppr" then
-			pref_v, pref_c, pron_v, pron_c = "y ", "y ", "i.j‿", "i "
-			do_nolink = true
-		elseif mw.ustring.match(key,"1s") then
-			pref_v, pref_c, pron_v, pron_c = "y ", "y ", "i.j‿", "i "
-		elseif mw.ustring.match(key,"2s") then
-                        if mw.ustring.match(val,"[s]$") then
-			        pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "y ", "y ", "i.j‿", "i ", "-y", ".zi"
-                        else
-                  		pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "y ", "y ", "i.j‿", "i ", "s-y", ".zi"
-                        end
-		elseif mw.ustring.match(key,"3[sp]") then
-			pref_v, pref_c, pron_v, pron_c = "y ", "y ", "i.j‿", "i "
-		elseif mw.ustring.match(key,"1p") then
-			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "y ", "y ", "i.j‿", "i ", "-y", ".zi"
-		elseif mw.ustring.match(key,"2p") then
-			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "y ", "y ", "i.j‿", "i ", "-y", ".zi"
+local function add_prefix_suffix(data, key, val, pref_v, pref_c, pron_v, pron_c, imp, pron_imp, join_imp_dash)
+	if key == "pp" or rmatch(key, "_nolink") then
+		return
+	end
+	local imp_joiner, imp_pron_joiner
+	if join_imp_dash then
+		imp_joiner = "-"
+		imp_pron_joiner = "."
+	else
+		imp_joiner = ""
+		imp_pron_joiner = ""
+	end
+	local pref, suf, pref_pron, suf_pron
+	local function get_pref_suf(v)
+		pref, suf, pref_pron, suf_pron = "", "", "", ""
+		if not rmatch(key, "imp") then
+			if rmatch(v, "^[aeéêiouhywjɑɛœø]") then
+				pref, pref_pron = pref_v, pron_v
+			else
+				pref, pref_pron = pref_c, pron_c
+			end
+		else
+			suf, suf_pron = imp_joiner .. imp, imp_pron_joiner .. pron_imp
 		end
-		if pref_v then
-			local pref, suf, pref_pron, suf_pron
-			local function get_pref_suf(v)
-				pref, suf, pref_pron, suf_pron = "", "", "", ""
-				if not mw.ustring.match(key,"imp") then
-					if mw.ustring.match(v,"^[aeéêiouhywjɑɛœø]") then
-						pref, pref_pron = pref_v, pron_v
-					else
-						pref, pref_pron = pref_c, pron_c
-					end
-				else
-					suf, suf_pron = "" .. imp, "" .. pron_imp
-				end
-			end
-			if do_nolink then
-				data.forms[key .. '_nolink'] =
-					map(data.forms[key], function(val)
-						get_pref_suf(val)
-						return pref .. val .. suf
-					end)
-			end
-			data.forms[key] = map(val, function(v)
-				get_pref_suf(v)
-				return rsub(pref .. "[[" .. v .. "]]" .. suf, "%.h", "h")
+	end
+	if key == "inf" or key == "ppr" then
+		data.forms[key .. '_nolink'] =
+			map(data.forms[key], function(val)
+				get_pref_suf(val)
+				return pref .. val .. suf
 			end)
-			if data.prons[key] then
-				data.prons[key] = map(data.prons[key], function(v)
-					get_pref_suf(v)
-					return pref_pron .. v .. suf_pron
-				end)
-			end
-		end
+	end
+	data.forms[key] = map(val, function(v)
+		get_pref_suf(v)
+		return rsub(pref .. "[[" .. v .. "]]" .. suf, "%.h", "h")
+	end)
+	if data.prons[key] then
+		data.prons[key] = map(data.prons[key], function(v)
+			get_pref_suf(v)
+			return pref_pron .. v .. suf_pron
+		end)
 	end
 end
 
-function export.en(data)
-	data.en = true
-
-	    for key,val in pairs(data.forms) do
-		local pref_v, pref_c, pron_v, pron_c, imp, pron_imp, do_nolink
-		if key == "inf" or key == "ppr" then
-			pref_v, pref_c, pron_v, pron_c = "en ", "en ", "ã.n‿", "ã "
-			do_nolink = true
-		elseif mw.ustring.match(key,"1s") then
-			pref_v, pref_c, pron_v, pron_c = "en ", "en ", "ã.n‿", "ã "
-		elseif mw.ustring.match(key,"2s") then
-                        if mw.ustring.match(val,"[s]$") then
-			        pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "en ", "en ", "ã.n‿", "ã ", "-en", ".zã"
-                        else
-                  		pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "en ", "en ", "ã.n‿", "ã ", "s-en", ".zã"
-                        end
-		elseif mw.ustring.match(key,"3[sp]") then
-			pref_v, pref_c, pron_v, pron_c = "en ", "en ", "ã.n‿", "ã "
-		elseif mw.ustring.match(key,"1p") then
-			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "en ", "en ", "ã.n‿", "ã ", "-en", ".zã"
-		elseif mw.ustring.match(key,"2p") then
-			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "en ", "en ", "ã.n‿", "ã ", "-en", ".zã"
-		end
-		if pref_v then
-			local pref, suf, pref_pron, suf_pron
-			local function get_pref_suf(v)
-				pref, suf, pref_pron, suf_pron = "", "", "", ""
-				if not mw.ustring.match(key,"imp") then
-					if mw.ustring.match(v,"^[aeéêiouhywjɑɛœø]") then
-						pref, pref_pron = pref_v, pron_v
-					else
-						pref, pref_pron = pref_c, pron_c
-					end
-				else
-					suf, suf_pron = "" .. imp, "" .. pron_imp
-				end
-			end
-			if do_nolink then
-				data.forms[key .. '_nolink'] =
-					map(data.forms[key], function(val)
-						get_pref_suf(val)
-						return pref .. val .. suf
-					end)
-			end
-			data.forms[key] = map(val, function(v)
-				get_pref_suf(v)
-				return rsub(pref .. "[[" .. v .. "]]" .. suf, "%.h", "h")
-			end)
-			if data.prons[key] then
-				data.prons[key] = map(data.prons[key], function(v)
-					get_pref_suf(v)
-					return pref_pron .. v .. suf_pron
-				end)
-			end
-		end
-	end
+pref_sufs["y"] = function(data, key, val)
+	local imp = rmatch(key, "2s") and not rmatch(val, "s$") and "s-y" or "-y"
+	add_prefix_suffix(data, key, val, "y ", "y ", "i.j‿", "i ", imp, ".zi", false)
 end
 
-function export.yen(data)
-	data.yen = true
-
-	    for key,val in pairs(data.forms) do
-		local pref_v, pref_c, pron_v, pron_c, imp, pron_imp, do_nolink
-		if key == "inf" or key == "ppr" then
-			pref_v, pref_c, pron_v, pron_c = "y en ", "y en ", "i.j‿ã.n‿", "i.j‿ã "
-			do_nolink = true
-		elseif mw.ustring.match(key,"1s") then
-			pref_v, pref_c, pron_v, pron_c = "y en ", "y en ", "i.j‿ã.n‿", "i.j‿ã "
-		elseif mw.ustring.match(key,"2s") then
-                        if mw.ustring.match(val,"[s]$") then
-			        pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "y en ", "y en ", "i.j‿ã.n‿", "i.j‿ã ", "-y-en", ".zi.jã"
-                        else
-                  		pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "y en ", "y en ", "i.j‿ã.n‿", "i.j‿ã ", "s-y en", ".zi.jã"
-                        end
-		elseif mw.ustring.match(key,"3[sp]") then
-			pref_v, pref_c, pron_v, pron_c = "y en ", "y en ", "i.j‿ã.n‿", "i.j‿ã "
-		elseif mw.ustring.match(key,"1p") then
-			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "y en ", "y en ", "i.j‿ã.n‿", "i.j‿ã ", "-y-en", ".zi.jã"
-		elseif mw.ustring.match(key,"2p") then
-			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "y en ", "y en ", "i.j‿ã.n‿", "i.j‿ã ", "-y-en", ".zi.jã"
-		end
-		if pref_v then
-			local pref, suf, pref_pron, suf_pron
-			local function get_pref_suf(v)
-				pref, suf, pref_pron, suf_pron = "", "", "", ""
-				if not mw.ustring.match(key,"imp") then
-					if mw.ustring.match(v,"^[aeéêiouhywjɑɛœø]") then
-						pref, pref_pron = pref_v, pron_v
-					else
-						pref, pref_pron = pref_c, pron_c
-					end
-				else
-					suf, suf_pron = "" .. imp, "" .. pron_imp
-				end
-			end
-			if do_nolink then
-				data.forms[key .. '_nolink'] =
-					map(data.forms[key], function(val)
-						get_pref_suf(val)
-						return pref .. val .. suf
-					end)
-			end
-			data.forms[key] = map(val, function(v)
-				get_pref_suf(v)
-				return rsub(pref .. "[[" .. v .. "]]" .. suf, "%.h", "h")
-			end)
-			if data.prons[key] then
-				data.prons[key] = map(data.prons[key], function(v)
-					get_pref_suf(v)
-					return pref_pron .. v .. suf_pron
-				end)
-			end
-		end
-	end
+pref_sufs["en"] = function(data, key, val)
+	local imp = rmatch(key, "2s") and not rmatch(val, "s$") and "s-en" or "-en"
+	add_prefix_suffix(data, key, val, "en ", "en ", "ɑ̃.n‿", "ɑ̃ ", imp, ".zɑ̃", false)
 end
 
-function export.le(data)
-	data.le = true
-
-	    for key,val in pairs(data.forms) do
-		local pref_v, pref_c, pron_v, pron_c, imp, pron_imp, do_nolink
-		if key == "inf" or key == "ppr" then
-			pref_v, pref_c, pron_v, pron_c = "l'", "le ", "l", "lə "
-			do_nolink = true
-		elseif mw.ustring.match(key,"1s") then
-			pref_v, pref_c, pron_v, pron_c = "l'", "le ", "l", "lə "
-		elseif mw.ustring.match(key,"2s") then
-                        if mw.ustring.match(val,"[s]$") then
-			        pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "l'", "le ", "l", "lə ", "-le", ".lə"
-                        else
-                  		pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "l'", "le ", "l", "lə ", "-le", ".lə"
-                        end
-		elseif mw.ustring.match(key,"3[sp]") then
-			pref_v, pref_c, pron_v, pron_c = "l'", "le ", "l", "lə "
-		elseif mw.ustring.match(key,"1p") then
-			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "l'", "le ", "l", "lə ", "-le", ".lə"
-		elseif mw.ustring.match(key,"2p") then
-			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "l'", "le ''or'' la ", "l", "lə ", "-le", ".lə"
-		end
-		if pref_v then
-			local pref, suf, pref_pron, suf_pron
-			local function get_pref_suf(v)
-				pref, suf, pref_pron, suf_pron = "", "", "", ""
-				if not mw.ustring.match(key,"imp") then
-					if mw.ustring.match(v,"^[aeéêiouhywjɑɛœø]") then
-						pref, pref_pron = pref_v, pron_v
-					else
-						pref, pref_pron = pref_c, pron_c
-					end
-				else
-					suf, suf_pron = "" .. imp, "" .. pron_imp
-				end
-			end
-			if do_nolink then
-				data.forms[key .. '_nolink'] =
-					map(data.forms[key], function(val)
-						get_pref_suf(val)
-						return pref .. val .. suf
-					end)
-			end
-			data.forms[key] = map(val, function(v)
-				get_pref_suf(v)
-				return rsub(pref .. "[[" .. v .. "]]" .. suf, "%.h", "h")
-			end)
-			if data.prons[key] then
-				data.prons[key] = map(data.prons[key], function(v)
-					get_pref_suf(v)
-					return pref_pron .. v .. suf_pron
-				end)
-			end
-		end
-	end
+pref_sufs["yen"] = function(data, key, val)
+	local imp = rmatch(key, "2s") and not rmatch(val, "s$") and "s-y en" or "-y-en"
+	add_prefix_suffix(data, key, val, "y en ", "y en ", "i.j‿ɑ̃.n‿", "i.j‿ɑ̃ ", imp, ".zi.jɑ̃", false)
 end
 
-function export.la(data)
-	data.la = true
-
-	    for key,val in pairs(data.forms) do
-		local pref_v, pref_c, pron_v, pron_c, imp, pron_imp, do_nolink
-		if key == "inf" or key == "ppr" then
-			pref_v, pref_c, pron_v, pron_c = "l'", "la ", "l", "la "
-			do_nolink = true
-		elseif mw.ustring.match(key,"1s") then
-			pref_v, pref_c, pron_v, pron_c = "l'", "la ", "l", "la "
-		elseif mw.ustring.match(key,"2s") then
-                        if mw.ustring.match(val,"[s]$") then
-			        pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "l'", "la ", "l", "la ", "-la", ".la"
-                        else
-                  		pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "l'", "la ", "l", "la ", "-la", ".la"
-                        end
-		elseif mw.ustring.match(key,"3[sp]") then
-			pref_v, pref_c, pron_v, pron_c = "l'", "la ", "l", "la "
-		elseif mw.ustring.match(key,"1p") then
-			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "l'", "la ", "l", "la ", "-la", ".la"
-		elseif mw.ustring.match(key,"2p") then
-			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "l'", "la ", "l", "la ", "-la", ".la"
-		end
-		if pref_v then
-			local pref, suf, pref_pron, suf_pron
-			local function get_pref_suf(v)
-				pref, suf, pref_pron, suf_pron = "", "", "", ""
-				if not mw.ustring.match(key,"imp") then
-					if mw.ustring.match(v,"^[aeéêiouhywjɑɛœø]") then
-						pref, pref_pron = pref_v, pron_v
-					else
-						pref, pref_pron = pref_c, pron_c
-					end
-				else
-					suf, suf_pron = "" .. imp, "" .. pron_imp
-				end
-			end
-			if do_nolink then
-				data.forms[key .. '_nolink'] =
-					map(data.forms[key], function(val)
-						get_pref_suf(val)
-						return pref .. val .. suf
-					end)
-			end
-			data.forms[key] = map(val, function(v)
-				get_pref_suf(v)
-				return rsub(pref .. "[[" .. v .. "]]" .. suf, "%.h", "h")
-			end)
-			if data.prons[key] then
-				data.prons[key] = map(data.prons[key], function(v)
-					get_pref_suf(v)
-					return pref_pron .. v .. suf_pron
-				end)
-			end
-		end
-	end
+pref_sufs["le"] = function(data, key, val)
+	add_prefix_suffix(data, key, val, "l'", rmatch(key, "2p") and "le ''or'' la " or "le ", "l", "lə ", "-le", ".lə", false)
 end
 
-function export.l(data)
-	data.l = true
-
-	    for key,val in pairs(data.forms) do
-		local pref_v, pref_c, pron_v, pron_c, imp, pron_imp, do_nolink
-		if key == "inf" or key == "ppr" then
-			pref_v, pref_c, pron_v, pron_c = "l'", "l'", "l", "l"
-			do_nolink = true
-		elseif mw.ustring.match(key,"1s") then
-			pref_v, pref_c, pron_v, pron_c = "l'", "l'", "l", "l"
-		elseif mw.ustring.match(key,"2s") then
-                        if mw.ustring.match(val,"[s]$") then
-			        pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "l'", "l'", "l", "l", "-le ''or'' -la", ".lə ''or'' .la"
-                        else
-                  		pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "l'", "l'", "l", "l", "-le ''or'' -la", ".lə ''or'' .la"
-                        end
-		elseif mw.ustring.match(key,"3[sp]") then
-			pref_v, pref_c, pron_v, pron_c = "l'", "l'", "l", "l"
-		elseif mw.ustring.match(key,"1p") then
-			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "l'", "l'", "l", "l", "-le ''or'' -la", ".lə ''or'' .la"
-		elseif mw.ustring.match(key,"2p") then
-			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "l'", "l'", "l", "l", "-le ''or'' -la", ".lə ''or'' .la"
-		end
-		if pref_v then
-			local pref, suf, pref_pron, suf_pron
-			local function get_pref_suf(v)
-				pref, suf, pref_pron, suf_pron = "", "", "", ""
-				if not mw.ustring.match(key,"imp") then
-					if mw.ustring.match(v,"^[aeéêiouhywjɑɛœø]") then
-						pref, pref_pron = pref_v, pron_v
-					else
-						pref, pref_pron = pref_c, pron_c
-					end
-				else
-					suf, suf_pron = "" .. imp, "" .. pron_imp
-				end
-			end
-			if do_nolink then
-				data.forms[key .. '_nolink'] =
-					map(data.forms[key], function(val)
-						get_pref_suf(val)
-						return pref .. val .. suf
-					end)
-			end
-			data.forms[key] = map(val, function(v)
-				get_pref_suf(v)
-				return rsub(pref .. "[[" .. v .. "]]" .. suf, "%.h", "h")
-			end)
-			if data.prons[key] then
-				data.prons[key] = map(data.prons[key], function(v)
-					get_pref_suf(v)
-					return pref_pron .. v .. suf_pron
-				end)
-			end
-		end
-	end
+pref_sufs["la"] = function(data, key, val)
+	add_prefix_suffix(data, key, val, "l'", "la ", "l", "la ", "-la", ".la", false)
 end
 
-function export.les(data)
-	data.les = true
-
-	    for key,val in pairs(data.forms) do
-		local pref_v, pref_c, pron_v, pron_c, imp, pron_imp, do_nolink
-		if key == "inf" or key == "ppr" then
-			pref_v, pref_c, pron_v, pron_c = "les ", "les ", "le.z‿", "le"
-			do_nolink = true
-		elseif mw.ustring.match(key,"1s") then
-			pref_v, pref_c, pron_v, pron_c = "les ", "les ", "le.z‿", "le"
-		elseif mw.ustring.match(key,"2s") then
-                        if mw.ustring.match(val,"[s]$") then
-			        pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "les ", "les ", "le.z‿", "le", "-les", ".le"
-                        else
-                  		pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "les ", "les ", "le.z‿", "le", "-les", ".le"
-                        end
-		elseif mw.ustring.match(key,"3[sp]") then
-			pref_v, pref_c, pron_v, pron_c = "les ", "les ", "le.z‿", "le"
-		elseif mw.ustring.match(key,"1p") then
-			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "les ", "les ", "le.z‿", "le", "-les", ".le"
-		elseif mw.ustring.match(key,"2p") then
-			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "les ", "les ", "le.z‿", "le", "-les", ".le"
-		end
-		if pref_v then
-			local pref, suf, pref_pron, suf_pron
-			local function get_pref_suf(v)
-				pref, suf, pref_pron, suf_pron = "", "", "", ""
-				if not mw.ustring.match(key,"imp") then
-					if mw.ustring.match(v,"^[aeéêiouhywjɑɛœø]") then
-						pref, pref_pron = pref_v, pron_v
-					else
-						pref, pref_pron = pref_c, pron_c
-					end
-				else
-					suf, suf_pron = "" .. imp, "" .. pron_imp
-				end
-			end
-			if do_nolink then
-				data.forms[key .. '_nolink'] =
-					map(data.forms[key], function(val)
-						get_pref_suf(val)
-						return pref .. val .. suf
-					end)
-			end
-			data.forms[key] = map(val, function(v)
-				get_pref_suf(v)
-				return rsub(pref .. "[[" .. v .. "]]" .. suf, "%.h", "h")
-			end)
-			if data.prons[key] then
-				data.prons[key] = map(data.prons[key], function(v)
-					get_pref_suf(v)
-					return pref_pron .. v .. suf_pron
-				end)
-			end
-		end
-	end
+pref_sufs["l"] = function(data, key, val)
+	add_prefix_suffix(data, key, val, "l'", "l'", "l", "l", "-le ''or'' -la", ".lə ''or'' .la", false)
 end
 
-function export.l_y(data)
-	data.l_y = true
-
-	    for key,val in pairs(data.forms) do
-		local pref_v, pref_c, pron_v, pron_c, imp, pron_imp, do_nolink
-		if key == "inf" or key == "ppr" then
-			pref_v, pref_c, pron_v, pron_c = "l'y ", "l'y ", "li.j‿", "li "
-			do_nolink = true
-		elseif mw.ustring.match(key,"1s") then
-			pref_v, pref_c, pron_v, pron_c = "l'y ", "l'y ", "li.j‿", "li "
-		elseif mw.ustring.match(key,"2s") then
-                        if mw.ustring.match(val,"[s]$") then
-			        pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "l'y ", "l'y ", "li.j‿", "li ", "-l'y", ".li"
-                        else
-                  		pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "l'y ", "l'y ", "li.j‿", "li ", "-l'y", ".li"
-                        end
-		elseif mw.ustring.match(key,"3[sp]") then
-			pref_v, pref_c, pron_v, pron_c = "l'y ", "l'y ", "li.j‿", "li "
-		elseif mw.ustring.match(key,"1p") then
-			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "l'y ", "l'y ", "li.j‿", "li ", "-l'y", ".li"
-		elseif mw.ustring.match(key,"2p") then
-			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "l'y ", "l'y ", "li.j‿", "li ", "-l'y", ".li"
-		end
-		if pref_v then
-			local pref, suf, pref_pron, suf_pron
-			local function get_pref_suf(v)
-				pref, suf, pref_pron, suf_pron = "", "", "", ""
-				if not mw.ustring.match(key,"imp") then
-					if mw.ustring.match(v,"^[aeéêiouhywjɑɛœø]") then
-						pref, pref_pron = pref_v, pron_v
-					else
-						pref, pref_pron = pref_c, pron_c
-					end
-				else
-					suf, suf_pron = "" .. imp, "" .. pron_imp
-				end
-			end
-			if do_nolink then
-				data.forms[key .. '_nolink'] =
-					map(data.forms[key], function(val)
-						get_pref_suf(val)
-						return pref .. val .. suf
-					end)
-			end
-			data.forms[key] = map(val, function(v)
-				get_pref_suf(v)
-				return rsub(pref .. "[[" .. v .. "]]" .. suf, "%.h", "h")
-			end)
-			if data.prons[key] then
-				data.prons[key] = map(data.prons[key], function(v)
-					get_pref_suf(v)
-					return pref_pron .. v .. suf_pron
-				end)
-			end
-		end
-	end
+pref_sufs["les"] = function(data, key, val)
+	add_prefix_suffix(data, key, val, "les ", "les ", "le.z‿", "le", "-les", ".le", false)
 end
 
-function export.l_en(data)
-	data.l_en = true
-		data.aux = "l'en avoir"
-
-	    for key,val in pairs(data.forms) do
-		local pref_v, pref_c, pron_v, pron_c, imp, pron_imp, do_nolink
-		if key == "inf" or key == "ppr" then
-			pref_v, pref_c, pron_v, pron_c = "l'en ", "l'en ", "lã.n‿", "lã "
-			do_nolink = true
-		elseif mw.ustring.match(key,"1s") then
-			pref_v, pref_c, pron_v, pron_c = "l'en ", "l'en ", "lã.n‿", "lã "
-		elseif mw.ustring.match(key,"2s") then
-			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "l'en ", "l'en ", "lã.n‿", "lã ", "l'en", "lã"
-		elseif mw.ustring.match(key,"3[sp]") then
-			pref_v, pref_c, pron_v, pron_c = "l'en ", "l'en ", "lã.n‿", "lã "
-		elseif mw.ustring.match(key,"1p") then
-			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "l'en ", "l'en ", "lã.n‿", "lã ", "l'en", "lã"
-		elseif mw.ustring.match(key,"2p") then
-			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "l'en ", "l'en ", "lã.n‿", "lã ", "l'en", "lã"
-		end
-		if pref_v then
-			local pref, suf, pref_pron, suf_pron
-			local function get_pref_suf(v)
-				pref, suf, pref_pron, suf_pron = "", "", "", ""
-				if not mw.ustring.match(key,"imp") then
-					if mw.ustring.match(v,"^[aeéêiouhywjɑɛœø]") then
-						pref, pref_pron = pref_v, pron_v
-					else
-						pref, pref_pron = pref_c, pron_c
-					end
-				else
-					suf, suf_pron = "-" .. imp, "." .. pron_imp
-				end
-			end
-			if do_nolink then
-				data.forms[key .. '_nolink'] =
-					map(data.forms[key], function(val)
-						get_pref_suf(val)
-						return pref .. val .. suf
-					end)
-			end
-			data.forms[key] = map(val, function(v)
-				get_pref_suf(v)
-				return rsub(pref .. "[[" .. v .. "]]" .. suf, "%.h", "h")
-			end)
-			if data.prons[key] then
-				data.prons[key] = map(data.prons[key], function(v)
-					get_pref_suf(v)
-					return pref_pron .. v .. suf_pron
-				end)
-			end
-		end
-	end
+pref_sufs["l_y"] = function(data, key, val)
+	add_prefix_suffix(data, key, val, "l'y ", "l'y ", "li.j‿", "li ", "-l'y", ".li", false)
 end
 
-function export.lesen(data)
-	data.lesen = true
-		data.aux = "les en avoir"
-
-	    for key,val in pairs(data.forms) do
-		local pref_v, pref_c, pron_v, pron_c, imp, pron_imp, do_nolink
-		if key == "inf" or key == "ppr" then
-			pref_v, pref_c, pron_v, pron_c = "les en ", "les en ", "le.z‿ã.n‿", "le.z‿ã "
-			do_nolink = true
-		elseif mw.ustring.match(key,"1s") then
-			pref_v, pref_c, pron_v, pron_c = "les en ", "les en ", "le.z‿ã.n‿", "le.z‿ã "
-		elseif mw.ustring.match(key,"2s") then
-			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "les en ", "les en ", "le.z‿ã.n‿", "le.z‿ã ", "-les-en", "le.zã"
-		elseif mw.ustring.match(key,"3[sp]") then
-			pref_v, pref_c, pron_v, pron_c = "les en ", "les en ", "le.z‿ã.n‿", "le.z‿ã "
-		elseif mw.ustring.match(key,"1p") then
-			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "les en ", "les en ", "le.z‿ã.n‿", "le.z‿ã ", "-les-en", "le.zã"
-		elseif mw.ustring.match(key,"2p") then
-			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "les en ", "les en ", "le.z‿ã.n‿", "le.z‿ã ", "-les-en", "le.zã"
-		end
-		if pref_v then
-			local pref, suf, pref_pron, suf_pron
-			local function get_pref_suf(v)
-				pref, suf, pref_pron, suf_pron = "", "", "", ""
-				if not mw.ustring.match(key,"imp") then
-					if mw.ustring.match(v,"^[aeéêiouhywjɑɛœø]") then
-						pref, pref_pron = pref_v, pron_v
-					else
-						pref, pref_pron = pref_c, pron_c
-					end
-				else
-					suf, suf_pron = "-" .. imp, "." .. pron_imp
-				end
-			end
-			if do_nolink then
-				data.forms[key .. '_nolink'] =
-					map(data.forms[key], function(val)
-						get_pref_suf(val)
-						return pref .. val .. suf
-					end)
-			end
-			data.forms[key] = map(val, function(v)
-				get_pref_suf(v)
-				return rsub(pref .. "[[" .. v .. "]]" .. suf, "%.h", "h")
-			end)
-			if data.prons[key] then
-				data.prons[key] = map(data.prons[key], function(v)
-					get_pref_suf(v)
-					return pref_pron .. v .. suf_pron
-				end)
-			end
-		end
-	end
+pref_sufs["l_en"] = function(data, key, val)
+	data.aux = "l'en avoir"
+	add_prefix_suffix(data, key, val, "l'en ", "l'en ", "lɑ̃.n‿", "lɑ̃ ", "l'en", "lɑ̃", true)
 end
 
-function export.lesy(data)
-	data.lesy = true
-
-	    for key,val in pairs(data.forms) do
-		local pref_v, pref_c, pron_v, pron_c, imp, pron_imp, do_nolink
-		if key == "inf" or key == "ppr" then
-			pref_v, pref_c, pron_v, pron_c = "les y ", "les y ", "le.z‿i.j‿", "le.z‿i "
-			do_nolink = true
-		elseif mw.ustring.match(key,"1s") then
-			pref_v, pref_c, pron_v, pron_c = "les y ", "les y ", "le.z‿i.j‿", "le.z‿i "
-		elseif mw.ustring.match(key,"2s") then
-                        if mw.ustring.match(val,"[s]$") then
-			        pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "les y ", "les y ", "le.z‿i.j‿", "le.z‿i ", "-les-y", ".le.zi"
-                        else
-                  		pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "les y ", "les y ", "le.z‿i.j‿", "le.z‿i ", "-les-y", ".le.zi"
-                        end
-		elseif mw.ustring.match(key,"3[sp]") then
-			pref_v, pref_c, pron_v, pron_c = "les y ", "les y ", "le.z‿i.j‿", "le.z‿i "
-		elseif mw.ustring.match(key,"1p") then
-			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "les y ", "les y ", "le.z‿i.j‿", "le.z‿i ", "-les-y", ".le.zi"
-		elseif mw.ustring.match(key,"2p") then
-			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "les y ", "les y ", "le.z‿i.j‿", "le.z‿i ", "-les-y", ".le.zi"
-		end
-		if pref_v then
-			local pref, suf, pref_pron, suf_pron
-			local function get_pref_suf(v)
-				pref, suf, pref_pron, suf_pron = "", "", "", ""
-				if not mw.ustring.match(key,"imp") then
-					if mw.ustring.match(v,"^[aeéêiouhywjɑɛœø]") then
-						pref, pref_pron = pref_v, pron_v
-					else
-						pref, pref_pron = pref_c, pron_c
-					end
-				else
-					suf, suf_pron = "" .. imp, "" .. pron_imp
-				end
-			end
-			if do_nolink then
-				data.forms[key .. '_nolink'] =
-					map(data.forms[key], function(val)
-						get_pref_suf(val)
-						return pref .. val .. suf
-					end)
-			end
-			data.forms[key] = map(val, function(v)
-				get_pref_suf(v)
-				return rsub(pref .. "[[" .. v .. "]]" .. suf, "%.h", "h")
-			end)
-			if data.prons[key] then
-				data.prons[key] = map(data.prons[key], function(v)
-					get_pref_suf(v)
-					return pref_pron .. v .. suf_pron
-				end)
-			end
-		end
-	end
+pref_sufs["lesen"] = function(data, key, val)
+	data.aux = "les en avoir"
+	add_prefix_suffix(data, key, val, "les en ", "les en ", "le.z‿ɑ̃.n‿", "le.z‿ɑ̃ ", "-les-en", "le.zɑ̃", true)
 end
 
-function export.l_yen(data)
-	data.l_yen = true
-		data.aux = "l'y en avoir"
-
-	    for key,val in pairs(data.forms) do
-		local pref_v, pref_c, pron_v, pron_c, imp, pron_imp, do_nolink
-		if key == "inf" or key == "ppr" then
-			pref_v, pref_c, pron_v, pron_c = "l'y en ", "l'y en ", "li.j‿ã.n‿", "li.j‿ã "
-			do_nolink = true
-		elseif mw.ustring.match(key,"1s") then
-			pref_v, pref_c, pron_v, pron_c = "l'y en ", "l'y en ", "li.j‿ã.n‿", "li.j‿ã "
-		elseif mw.ustring.match(key,"2s") then
-			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "l'y en ", "l'y en ", "li.j‿ã.n‿", "li.j‿ã ", "l'y-en", "li.jã"
-		elseif mw.ustring.match(key,"3[sp]") then
-			pref_v, pref_c, pron_v, pron_c = "l'y en ", "l'y en ", "li.j‿ã.n‿", "li.j‿ã "
-		elseif mw.ustring.match(key,"1p") then
-			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "l'y en ", "l'y en ", "li.j‿ã.n‿", "li.j‿ã ", "l'y-en", "li.jã"
-		elseif mw.ustring.match(key,"2p") then
-			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "l'y en ", "l'y en ", "li.j‿ã.n‿", "li.j‿ã ", "l'y-en", "li.jã"
-		end
-		if pref_v then
-			local pref, suf, pref_pron, suf_pron
-			local function get_pref_suf(v)
-				pref, suf, pref_pron, suf_pron = "", "", "", ""
-				if not mw.ustring.match(key,"imp") then
-					if mw.ustring.match(v,"^[aeéêiouhywjɑɛœø]") then
-						pref, pref_pron = pref_v, pron_v
-					else
-						pref, pref_pron = pref_c, pron_c
-					end
-				else
-					suf, suf_pron = "-" .. imp, "." .. pron_imp
-				end
-			end
-			if do_nolink then
-				data.forms[key .. '_nolink'] =
-					map(data.forms[key], function(val)
-						get_pref_suf(val)
-						return pref .. val .. suf
-					end)
-			end
-			data.forms[key] = map(val, function(v)
-				get_pref_suf(v)
-				return rsub(pref .. "[[" .. v .. "]]" .. suf, "%.h", "h")
-			end)
-			if data.prons[key] then
-				data.prons[key] = map(data.prons[key], function(v)
-					get_pref_suf(v)
-					return pref_pron .. v .. suf_pron
-				end)
-			end
-		end
-	end
+pref_sufs["lesy"] = function(data, key, val)
+	add_prefix_suffix(data, key, val, "les y ", "les y ", "le.z‿i.j‿", "le.z‿i ", "-les-y", ".le.zi", false)
 end
 
-function export.lesyen(data)
-	data.lesyen = true
-		data.aux = "les y en avoir"
-
-	    for key,val in pairs(data.forms) do
-		local pref_v, pref_c, pron_v, pron_c, imp, pron_imp, do_nolink
-		if key == "inf" or key == "ppr" then
-			pref_v, pref_c, pron_v, pron_c = "les y en ", "les y en ", "le.z‿i.j‿ã.n‿", "le.z‿i.j‿ã "
-			do_nolink = true
-		elseif mw.ustring.match(key,"1s") then
-			pref_v, pref_c, pron_v, pron_c = "les y en ", "les y en ", "le.z‿i.j‿ã.n‿", "le.z‿i.j‿ã "
-		elseif mw.ustring.match(key,"2s") then
-			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "les y en ", "les y en ", "le.z‿i.j‿ã.n‿", "le.z‿i.j‿ã ", "-les-y-en", "le.zi.jã"
-		elseif mw.ustring.match(key,"3[sp]") then
-			pref_v, pref_c, pron_v, pron_c = "les y en ", "les y en ", "le.z‿i.j‿ã.n‿", "le.z‿i.j‿ã "
-		elseif mw.ustring.match(key,"1p") then
-			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "les y en ", "les y en ", "le.z‿i.j‿ã.n‿", "le.z‿i.j‿ã ", "-les-y-en", "le.zi.jã"
-		elseif mw.ustring.match(key,"2p") then
-			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "les y en ", "les y en ", "le.z‿i.j‿ã.n‿", "le.z‿i.j‿ã ", "-les-y-en", "le.zi.jã"
-		end
-		if pref_v then
-			local pref, suf, pref_pron, suf_pron
-			local function get_pref_suf(v)
-				pref, suf, pref_pron, suf_pron = "", "", "", ""
-				if not mw.ustring.match(key,"imp") then
-					if mw.ustring.match(v,"^[aeéêiouhywjɑɛœø]") then
-						pref, pref_pron = pref_v, pron_v
-					else
-						pref, pref_pron = pref_c, pron_c
-					end
-				else
-					suf, suf_pron = "-" .. imp, "." .. pron_imp
-				end
-			end
-			if do_nolink then
-				data.forms[key .. '_nolink'] =
-					map(data.forms[key], function(val)
-						get_pref_suf(val)
-						return pref .. val .. suf
-					end)
-			end
-			data.forms[key] = map(val, function(v)
-				get_pref_suf(v)
-				return rsub(pref .. "[[" .. v .. "]]" .. suf, "%.h", "h")
-			end)
-			if data.prons[key] then
-				data.prons[key] = map(data.prons[key], function(v)
-					get_pref_suf(v)
-					return pref_pron .. v .. suf_pron
-				end)
-			end
-		end
-	end
+pref_sufs["l_yen"] = function(data, key, val)
+	data.aux = "l'y en avoir"
+	add_prefix_suffix(data, key, val, "l'y en ", "l'y en ", "li.j‿ɑ̃.n‿", "li.j‿ɑ̃ ", "l'y-en", "li.jɑ̃", true)
 end
 
-function export.refl(data)
-	data.refl = true
-        data.aux = "s'être"
-
-	    for key,val in pairs(data.forms) do
-		local pref_v, pref_c, pron_v, pron_c, imp, pron_imp, do_nolink
-		if key == "inf" or key == "ppr" then
-			pref_v, pref_c, pron_v, pron_c = "s'", "se ", "s", "sə "
-			do_nolink = true
-		elseif mw.ustring.match(key,"1s") then
-			pref_v, pref_c, pron_v, pron_c = "m'", "me ", "m", "mə "
-		elseif mw.ustring.match(key,"2s") then
-			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "t'", "te ", "t", "tə ", "toi", "twa"
-		elseif mw.ustring.match(key,"3[sp]") then
-			pref_v, pref_c, pron_v, pron_c = "s'", "se ", "s", "sə "
-		elseif mw.ustring.match(key,"1p") then
-			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "nous ", "nous ", "nu.z‿", "nu ", "nous", "nu"
-		elseif mw.ustring.match(key,"2p") then
-			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "vous ", "vous ", "vu.z‿", "vu ", "vous", "vu"
-		end
-		if pref_v then
-			local pref, suf, pref_pron, suf_pron
-			local function get_pref_suf(v)
-				pref, suf, pref_pron, suf_pron = "", "", "", ""
-				if not mw.ustring.match(key,"imp") then
-					if mw.ustring.match(v,"^[aeéêiouhywjɑɛœø]") then
-						pref, pref_pron = pref_v, pron_v
-					else
-						pref, pref_pron = pref_c, pron_c
-					end
-				else
-					suf, suf_pron = "-" .. imp, "." .. pron_imp
-				end
-			end
-			if do_nolink then
-				data.forms[key .. '_nolink'] =
-					map(data.forms[key], function(val)
-						get_pref_suf(val)
-						return pref .. val .. suf
-					end)
-			end
-			data.forms[key] = map(val, function(v)
-				get_pref_suf(v)
-				return rsub(pref .. "[[" .. v .. "]]" .. suf, "%.h", "h")
-			end)
-			if data.prons[key] then
-				data.prons[key] = map(data.prons[key], function(v)
-					get_pref_suf(v)
-					return pref_pron .. v .. suf_pron
-				end)
-			end
-		end
-	end
+pref_sufs["lesyen"] = function(data, key, val)
+	data.aux = "les y en avoir"
+	add_prefix_suffix(data, key, val, "les y en ", "les y en ", "le.z‿i.j‿ɑ̃.n‿", "le.z‿i.j‿ɑ̃ ", "-les-y-en", "le.zi.jɑ̃", true)
 end
 
-function export.reflen(data)
-	data.reflen = true
-        data.aux = "s'en être"
-
-        for key,val in pairs(data.forms) do
-		local pref_v, pref_c, pron_v, pron_c, imp, pron_imp, do_nolink
-		if key == "inf" or key == "ppr" then
-			pref_v, pref_c, pron_v, pron_c = "s'en ", "s'en ", "sã.n‿", "sã "
-			do_nolink = true
-		elseif mw.ustring.match(key,"1s") then
-			pref_v, pref_c, pron_v, pron_c = "m'en ", "m'en ", "mã.n‿", "mã "
-		elseif mw.ustring.match(key,"2s") then
-			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "t'en ", "t'en ", "tã.n‿", "tã ", "t'en", "tã"
-		elseif mw.ustring.match(key,"3[sp]") then
-			pref_v, pref_c, pron_v, pron_c = "s'en ", "s'en ", "sã.n‿", "sã "
-		elseif mw.ustring.match(key,"1p") then
-			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "nous en ", "nous en ", "nu.z‿ã.n‿", "nu.z‿ã ", "nous-en", "nu.zã"
-		elseif mw.ustring.match(key,"2p") then
-			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "vous en ", "vous en ", "vu.z‿ã.n‿", "vu.z‿ã ", "vous-en", "vu.zã"
-		end
-		if pref_v then
-			local pref, suf, pref_pron, suf_pron
-			local function get_pref_suf(v)
-				pref, suf, pref_pron, suf_pron = "", "", "", ""
-				if not mw.ustring.match(key,"imp") then
-					if mw.ustring.match(v,"^[aeéêiouhywjɑɛœø]") then
-						pref, pref_pron = pref_v, pron_v
-					else
-						pref, pref_pron = pref_c, pron_c
-					end
-				else
-					suf, suf_pron = "-" .. imp, "." .. pron_imp
-				end
-			end
-			if do_nolink then
-				data.forms[key .. '_nolink'] =
-					map(data.forms[key], function(val)
-						get_pref_suf(val)
-						return pref .. val .. suf
-					end)
-			end
-			data.forms[key] = map(val, function(v)
-				get_pref_suf(v)
-				return rsub(pref .. "[[" .. v .. "]]" .. suf, "%.h", "h")
-			end)
-			if data.prons[key] then
-				data.prons[key] = map(data.prons[key], function(v)
-					get_pref_suf(v)
-					return pref_pron .. v .. suf_pron
-				end)
-			end
-		end
+-- Add reflexive prefixes and suffixes to verb forms. KEY is the form to add to, and VAL is the value
+-- without prefixes and suffixes. PREF_V is the prefix to add to non-imperative forms that begin with a
+-- vowel, and PREF_C is the corresponding prefix for non-imperative forms beginning with a consonant.
+-- PRON_V is the prefix to add to the pronunciation of non-imperative forms that begin with a vowel, and
+-- PRON_C is the corresponding prefix for pronunciations beginning with a consonant. IMP is the suffix to
+-- add to imperative forms, and PRON_IMP is the corresponding suffix to add to the pronunciation of
+-- imperative forms. All prefixes and suffixes are added directly, without an intervening space.
+--
+-- Since the prefixes and suffixes vary depending on the person and number, the specified prefixes and
+-- suffixes should contain "%c" and/or "%v" specs in them. "%c" represents the appropriate pronominal
+-- form to add before a consonant (or when nothing follows, in the case of suffixes), and "%v" represents
+-- the corresponding form to add before a vowel. The actual forms substituted depend on both the person
+-- and number of KEY and the type of prefix (i.e. whether it's a spelled prefix, pronunciation prefix,
+-- spelled imperative suffix or pronunciation imperative suffix). For example, if key contains "2s"
+-- (i.e. it represents a second person singular form), a "%v" in a spelled prefix will be replaced with
+-- "t'" and a "%c" in a pronounced prefix will be replaced with "tə ". Note that it's not always the
+-- case that %c should occur in a pre-consonant prefix/suffix and correspondingly for %v. For example,
+-- if the prefix occurs before "en" or "y" you should use %v in both the pre-vowel and pre-consonant
+-- prefixes.
+local function add_refl_prefix_suffix(data, key, val, pref_v, pref_c, pron_v, pron_c, imp, pron_imp)
+	local sub_pref_v, sub_pref_c, sub_pron_v, sub_pron_c
+	local sub_imp_v, sub_imp_c, sub_pron_imp_v, sub_pron_imp_c = "", "", "", ""
+	if rmatch(key, "1s") then
+		sub_pref_v, sub_pref_c, sub_pron_v, sub_pron_c = "m'", "me ", "m", "mə "
+	elseif rmatch(key, "2s") then
+		sub_pref_v, sub_pref_c, sub_pron_v, sub_pron_c = "t'", "te ", "t", "tə "
+		sub_imp_v, sub_imp_c, sub_pron_imp_v, sub_pron_imp_c = "t'", "toi", "t", "twa"
+	elseif rmatch(key, "1p") then
+		sub_pref_v, sub_pref_c, sub_pron_v, sub_pron_c = "nous ", "nous ", "nu.z‿", "nu "
+		sub_imp_v, sub_imp_c, sub_pron_imp_v, sub_pron_imp_c = "nous-", "nous", "nu.z", "nu"
+	elseif rmatch(key, "2p") then
+		sub_pref_v, sub_pref_c, sub_pron_v, sub_pron_c = "vous ", "vous ", "vu.z‿", "vu "
+		sub_imp_v, sub_imp_c, sub_pron_imp_v, sub_pron_imp_c = "vous-", "vous", "vu.z", "vu"
+	else
+		sub_pref_v, sub_pref_c, sub_pron_v, sub_pron_c = "s'", "se ", "s", "sə "
 	end
+	local function dosub(spec, dotype)
+		if type(spec) == "table" then
+			local sing, plur = spec[1], spec[2]
+			if rmatch(key, "[12]p") then
+				spec = plur
+			else
+				spec = sing
+			end
+		end
+		spec = rsub(spec, "%%v",
+			dotype == "pron" and sub_pron_v or
+			dotype == "imp" and sub_imp_v or
+			dotype == "pron-imp" and sub_pron_imp_v or
+			sub_pref_v
+		)
+		spec = rsub(spec, "%%c",
+			dotype == "pron" and sub_pron_c or
+			dotype == "imp" and sub_imp_c or
+			dotype == "pron-imp" and sub_pron_imp_c or
+			sub_pref_c
+		)
+		return spec
+	end
+	add_prefix_suffix(data, key, val, dosub(pref_v), dosub(pref_c), dosub(pron_v, "pron"), dosub(pron_c, "pron"),
+		dosub(imp, "imp"), dosub(pron_imp, "pron-imp"), true)
 end
 
-function export.refly(data)
-	data.refly = true
-        data.aux = "s'y être"
-
-        for key,val in pairs(data.forms) do
-		local pref_v, pref_c, pron_v, pron_c, imp, pron_imp, do_nolink
-		if key == "inf" or key == "ppr" then
-			pref_v, pref_c, pron_v, pron_c = "s'y ", "s'y ", "si.j‿", "si "
-			do_nolink = true
-		elseif mw.ustring.match(key,"1s") then
-			pref_v, pref_c, pron_v, pron_c = "m'y ", "m'y ", "mi.j‿", "mi "
-		elseif mw.ustring.match(key,"2s") then
-			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "t'y ", "t'y ", "ti.j‿", "ti ", "t'y", "ti"
-		elseif mw.ustring.match(key,"3[sp]") then
-			pref_v, pref_c, pron_v, pron_c = "s'y ", "s'y ", "si.j‿", "si "
-		elseif mw.ustring.match(key,"1p") then
-			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "nous y ", "nous y ", "nu.z‿i.j‿", "nu.z‿i ", "nous-y", "nu.zi"
-		elseif mw.ustring.match(key,"2p") then
-			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "vous y ", "vous y ", "vu.z‿i.j‿", "vu.z‿i ", "vous-y", "vu.zi"
-		end
-		if pref_v then
-			local pref, suf, pref_pron, suf_pron
-			local function get_pref_suf(v)
-				pref, suf, pref_pron, suf_pron = "", "", "", ""
-				if not mw.ustring.match(key,"imp") then
-					if mw.ustring.match(v,"^[aeéêiouhywjɑɛœø]") then
-						pref, pref_pron = pref_v, pron_v
-					else
-						pref, pref_pron = pref_c, pron_c
-					end
-				else
-					suf, suf_pron = "-" .. imp, "." .. pron_imp
-				end
-			end
-			if do_nolink then
-				data.forms[key .. '_nolink'] =
-					map(data.forms[key], function(val)
-						get_pref_suf(val)
-						return pref .. val .. suf
-					end)
-			end
-			data.forms[key] = map(val, function(v)
-				get_pref_suf(v)
-				return rsub(pref .. "[[" .. v .. "]]" .. suf, "%.h", "h")
-			end)
-			if data.prons[key] then
-				data.prons[key] = map(data.prons[key], function(v)
-					get_pref_suf(v)
-					return pref_pron .. v .. suf_pron
-				end)
-			end
-		end
-	end
+pref_sufs["refl"] = function(data, key, val)
+	data.aux = "s'être"
+	add_refl_prefix_suffix(data, key, val, "%v", "%c", "%v", "%c", "%c", "%c")
 end
 
-function export.reflyen(data)
-	data.reflyen = true
-        data.aux = "s'y en être"
-
-        for key,val in pairs(data.forms) do
-		local pref_v, pref_c, pron_v, pron_c, imp, pron_imp, do_nolink
-		if key == "inf" or key == "ppr" then
-			pref_v, pref_c, pron_v, pron_c = "s'y en ", "s'y en ", "si.j‿ã.n‿", "si.j‿ã "
-			do_nolink = true
-		elseif mw.ustring.match(key,"1s") then
-			pref_v, pref_c, pron_v, pron_c = "m'y en ", "m'y en ", "mi.j‿ã.n‿", "mi.j‿ã "
-		elseif mw.ustring.match(key,"2s") then
-			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "t'y en ", "t'y en ", "ti.j‿ã.n‿", "ti.j‿ã ", "t'y-en", "ti.jã"
-		elseif mw.ustring.match(key,"3[sp]") then
-			pref_v, pref_c, pron_v, pron_c = "s'y en ", "s'y en ", "si.j‿ã.n‿", "si.j‿ã "
-		elseif mw.ustring.match(key,"1p") then
-			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "nous y en ", "nous y en ", "nu.z‿i.j‿ã.n‿", "nu.z‿i.j‿ã ", "nous-y-en", "nu.zi.jã"
-		elseif mw.ustring.match(key,"2p") then
-			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "vous y en ", "vous y en ", "vu.z‿i.j‿ã.n‿", "vu.z‿i.j‿ã ", "vous-y-en", "vu.zi.jã"
-		end
-		if pref_v then
-			local pref, suf, pref_pron, suf_pron
-			local function get_pref_suf(v)
-				pref, suf, pref_pron, suf_pron = "", "", "", ""
-				if not mw.ustring.match(key,"imp") then
-					if mw.ustring.match(v,"^[aeéêiouhywjɑɛœø]") then
-						pref, pref_pron = pref_v, pron_v
-					else
-						pref, pref_pron = pref_c, pron_c
-					end
-				else
-					suf, suf_pron = "-" .. imp, "." .. pron_imp
-				end
-			end
-			if do_nolink then
-				data.forms[key .. '_nolink'] =
-					map(data.forms[key], function(val)
-						get_pref_suf(val)
-						return pref .. val .. suf
-					end)
-			end
-			data.forms[key] = map(val, function(v)
-				get_pref_suf(v)
-				return rsub(pref .. "[[" .. v .. "]]" .. suf, "%.h", "h")
-			end)
-			if data.prons[key] then
-				data.prons[key] = map(data.prons[key], function(v)
-					get_pref_suf(v)
-					return pref_pron .. v .. suf_pron
-				end)
-			end
-		end
-	end
+pref_sufs["reflen"] = function(data, key, val)
+	data.aux = "s'en être"
+	add_refl_prefix_suffix(data, key, val, "%ven ", "%ven ", "%vɑ̃.n‿", "%vɑ̃ ", "%ven", "%vɑ̃")
 end
 
-function export.reflle(data)
-	data.reflle = true
-        data.aux = "se l'être"
-
-        for key,val in pairs(data.forms) do
-		local pref_v, pref_c, pron_v, pron_c, imp, pron_imp, do_nolink
-		if key == "inf" or key == "ppr" then
-			pref_v, pref_c, pron_v, pron_c = "se l'", "se le ", "sə l", "sə lə "
-			do_nolink = true
-		elseif mw.ustring.match(key,"1s") then
-			pref_v, pref_c, pron_v, pron_c = "me l'", "me le ", "mə l", "mə lə "
-		elseif mw.ustring.match(key,"2s") then
-			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "te l'", "te le ", "tə l", "tə lə ", "le-toi", "lə.twa"
-		elseif mw.ustring.match(key,"3[sp]") then
-			pref_v, pref_c, pron_v, pron_c = "se l'", "se le ", "sə l", "sə lə "
-		elseif mw.ustring.match(key,"1p") then
-			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "nous l'", "nous le ", "nu l", "nu lə ", "le-nous", "lə.nu"
-		elseif mw.ustring.match(key,"2p") then
-			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "vous l'", "vous le ", "vu l", "vu lə ", "le-vous", "lə.vu"
-		end
-		if pref_v then
-			local pref, suf, pref_pron, suf_pron
-			local function get_pref_suf(v)
-				pref, suf, pref_pron, suf_pron = "", "", "", ""
-				if not mw.ustring.match(key,"imp") then
-					if mw.ustring.match(v,"^[aeéêiouhywjɑɛœø]") then
-						pref, pref_pron = pref_v, pron_v
-					else
-						pref, pref_pron = pref_c, pron_c
-					end
-				else
-					suf, suf_pron = "-" .. imp, "." .. pron_imp
-				end
-			end
-			if do_nolink then
-				data.forms[key .. '_nolink'] =
-					map(data.forms[key], function(val)
-						get_pref_suf(val)
-						return pref .. val .. suf
-					end)
-			end
-			data.forms[key] = map(val, function(v)
-				get_pref_suf(v)
-				return rsub(pref .. "[[" .. v .. "]]" .. suf, "%.h", "h")
-			end)
-			if data.prons[key] then
-				data.prons[key] = map(data.prons[key], function(v)
-					get_pref_suf(v)
-					return pref_pron .. v .. suf_pron
-				end)
-			end
-		end
-	end
+pref_sufs["refly"] = function(data, key, val)
+	data.aux = "s'y être"
+	add_refl_prefix_suffix(data, key, val, "%vy ", "%vy ", "%vi.j‿", "%vi ", "%vy", "%vi")
 end
 
-function export.refll(data)
-	data.refll = true
-        data.aux = "se l'être"
-
-        for key,val in pairs(data.forms) do
-		local pref_v, pref_c, pron_v, pron_c, imp, pron_imp, do_nolink
-		if key == "inf" or key == "ppr" then
-			pref_v, pref_c, pron_v, pron_c = "se l'", "se l'", "sə l", "sə l"
-			do_nolink = true
-		elseif mw.ustring.match(key,"1s") then
-			pref_v, pref_c, pron_v, pron_c = "me l'", "me l'", "mə l", "mə l"
-		elseif mw.ustring.match(key,"2s") then
-			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "te l'", "te l'", "tə l", "tə l", "le-toi ''or'' -la-toi", "lə.twa ''or'' .la.twa"
-		elseif mw.ustring.match(key,"3[sp]") then
-			pref_v, pref_c, pron_v, pron_c = "se l'", "se l'", "sə l", "sə l"
-		elseif mw.ustring.match(key,"1p") then
-			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "nous l'", "nous l'", "nu l", "nu l", "le-nous ''or'' -la-nous", "lə.nu ''or'' .la.nu"
-		elseif mw.ustring.match(key,"2p") then
-			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "vous l'", "vous l'", "vu l", "vu l", "le-vous ''or'' -la-vous", "lə.vu ''or'' .la.vu"
-		end
-		if pref_v then
-			local pref, suf, pref_pron, suf_pron
-			local function get_pref_suf(v)
-				pref, suf, pref_pron, suf_pron = "", "", "", ""
-				if not mw.ustring.match(key,"imp") then
-					if mw.ustring.match(v,"^[aeéêiouhywjɑɛœø]") then
-						pref, pref_pron = pref_v, pron_v
-					else
-						pref, pref_pron = pref_c, pron_c
-					end
-				else
-					suf, suf_pron = "-" .. imp, "." .. pron_imp
-				end
-			end
-			if do_nolink then
-				data.forms[key .. '_nolink'] =
-					map(data.forms[key], function(val)
-						get_pref_suf(val)
-						return pref .. val .. suf
-					end)
-			end
-			data.forms[key] = map(val, function(v)
-				get_pref_suf(v)
-				return rsub(pref .. "[[" .. v .. "]]" .. suf, "%.h", "h")
-			end)
-			if data.prons[key] then
-				data.prons[key] = map(data.prons[key], function(v)
-					get_pref_suf(v)
-					return pref_pron .. v .. suf_pron
-				end)
-			end
-		end
-	end
+pref_sufs["reflyen"] = function(data, key, val)
+	data.aux = "s'y en être"
+	add_refl_prefix_suffix(data, key, val, "%vy en ", "%vy en ", "%vi.j‿ɑ̃.n‿", "%vi.j‿ɑ̃ ", "%v'y-en", "%vi.jɑ̃")
 end
 
-function export.reflla(data)
-	data.reflla = true
-        data.aux = "se l'être"
-
-        for key,val in pairs(data.forms) do
-		local pref_v, pref_c, pron_v, pron_c, imp, pron_imp, do_nolink
-		if key == "inf" or key == "ppr" then
-			pref_v, pref_c, pron_v, pron_c = "se l'", "se la ", "sə l", "sə la "
-			do_nolink = true
-		elseif mw.ustring.match(key,"1s") then
-			pref_v, pref_c, pron_v, pron_c = "me l'", "me la ", "mə l", "mə la "
-		elseif mw.ustring.match(key,"2s") then
-			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "te l'", "te la ", "tə l", "tə la ", "la-toi", "la.twa"
-		elseif mw.ustring.match(key,"3[sp]") then
-			pref_v, pref_c, pron_v, pron_c = "se l'", "se la ", "sə l", "sə la "
-		elseif mw.ustring.match(key,"1p") then
-			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "nous l'", "nous la ", "nu l", "nu la ", "la-nous", "la.nu"
-		elseif mw.ustring.match(key,"2p") then
-			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "vous l'", "vous la ", "vu l", "vu la ", "la-vous", "la.vu"
-		end
-		if pref_v then
-			local pref, suf, pref_pron, suf_pron
-			local function get_pref_suf(v)
-				pref, suf, pref_pron, suf_pron = "", "", "", ""
-				if not mw.ustring.match(key,"imp") then
-					if mw.ustring.match(v,"^[aeéêiouhywjɑɛœø]") then
-						pref, pref_pron = pref_v, pron_v
-					else
-						pref, pref_pron = pref_c, pron_c
-					end
-				else
-					suf, suf_pron = "-" .. imp, "." .. pron_imp
-				end
-			end
-			if do_nolink then
-				data.forms[key .. '_nolink'] =
-					map(data.forms[key], function(val)
-						get_pref_suf(val)
-						return pref .. val .. suf
-					end)
-			end
-			data.forms[key] = map(val, function(v)
-				get_pref_suf(v)
-				return rsub(pref .. "[[" .. v .. "]]" .. suf, "%.h", "h")
-			end)
-			if data.prons[key] then
-				data.prons[key] = map(data.prons[key], function(v)
-					get_pref_suf(v)
-					return pref_pron .. v .. suf_pron
-				end)
-			end
-		end
-	end
+pref_sufs["reflle"] = function(data, key, val)
+	data.aux = "se l'être"
+	add_refl_prefix_suffix(data, key, val, "%cl'", "%cle ", "%cl", "%clə ", "le-%c", "lə.%c")
 end
 
-function export.reflles(data)
-	data.reflles = true
-        data.aux = "se les être"
-
-        for key,val in pairs(data.forms) do
-		local pref_v, pref_c, pron_v, pron_c, imp, pron_imp, do_nolink
-		if key == "inf" or key == "ppr" then
-			pref_v, pref_c, pron_v, pron_c = "se les ", "se les ", "sə le.z‿", "sə le "
-			do_nolink = true
-		elseif mw.ustring.match(key,"1s") then
-			pref_v, pref_c, pron_v, pron_c = "me les ", "me les ", "mə le.z‿", "mə le "
-		elseif mw.ustring.match(key,"2s") then
-			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "te les ", "te les ", "tə le.z‿", "tə le ", "les-toi", "le.twa"
-		elseif mw.ustring.match(key,"3[sp]") then
-			pref_v, pref_c, pron_v, pron_c = "se les ", "se les ", "sə le.z‿", "sə le "
-		elseif mw.ustring.match(key,"1p") then
-			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "nous les ", "nous les ", "nu le.z‿", "nu le ", "les-nous", "le.nu"
-		elseif mw.ustring.match(key,"2p") then
-			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "vous les ", "vous les ", "vu le.z‿", "vu le ", "les-vous", "le.vu"
-		end
-		if pref_v then
-			local pref, suf, pref_pron, suf_pron
-			local function get_pref_suf(v)
-				pref, suf, pref_pron, suf_pron = "", "", "", ""
-				if not mw.ustring.match(key,"imp") then
-					if mw.ustring.match(v,"^[aeéêiouhywjɑɛœø]") then
-						pref, pref_pron = pref_v, pron_v
-					else
-						pref, pref_pron = pref_c, pron_c
-					end
-				else
-					suf, suf_pron = "-" .. imp, "." .. pron_imp
-				end
-			end
-			if do_nolink then
-				data.forms[key .. '_nolink'] =
-					map(data.forms[key], function(val)
-						get_pref_suf(val)
-						return pref .. val .. suf
-					end)
-			end
-			data.forms[key] = map(val, function(v)
-				get_pref_suf(v)
-				return rsub(pref .. "[[" .. v .. "]]" .. suf, "%.h", "h")
-			end)
-			if data.prons[key] then
-				data.prons[key] = map(data.prons[key], function(v)
-					get_pref_suf(v)
-					return pref_pron .. v .. suf_pron
-				end)
-			end
-		end
-	end
+pref_sufs["refll"] = function(data, key, val)
+	data.aux = "se l'être"
+	add_refl_prefix_suffix(data, key, val, "%cl'", "%cl'", "%cl", "%cl", "le-%c ''or'' -la-%c", "lə.%c ''or'' .la.%c")
 end
 
-function export.reflly(data)
-	data.reflly = true
-        data.aux = "se l'y être"
-
-        for key,val in pairs(data.forms) do
-		local pref_v, pref_c, pron_v, pron_c, imp, pron_imp, do_nolink
-		if key == "inf" or key == "ppr" then
-			pref_v, pref_c, pron_v, pron_c = "se l'y ", "se l'y ", "sə li.j‿", "sə li "
-			do_nolink = true
-		elseif mw.ustring.match(key,"1s") then
-			pref_v, pref_c, pron_v, pron_c = "me l'y ", "me l'y ", "mə li.j‿", "mə li "
-		elseif mw.ustring.match(key,"2s") then
-			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "te l'y ", "te l'y ", "tə li.j‿", "tə li ", "le-t'y <i>or</i> -la-t'y", "lə.ti <i>or</i> .la.ti"
-		elseif mw.ustring.match(key,"3[sp]") then
-			pref_v, pref_c, pron_v, pron_c = "se l'y ", "se l'y ", "sə li.j‿", "sə li "
-		elseif mw.ustring.match(key,"1p") then
-			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "nous l'y ", "nous l'y ", "nu li.j‿", "nu li ", "le-nous-y <i>or</i> -la-nous-y", "lə.nu.zi <i>or</i> .la.nu.zi"
-		elseif mw.ustring.match(key,"2p") then
-			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "vous l'y ", "vous l'y ", "vu li.j‿", "vu li ", "le-vous-y <i>or</i> -la-vous-y", "lə.vu.zi <i>or</i> .la.vu.zi"
-		end
-		if pref_v then
-			local pref, suf, pref_pron, suf_pron
-			local function get_pref_suf(v)
-				pref, suf, pref_pron, suf_pron = "", "", "", ""
-				if not mw.ustring.match(key,"imp") then
-					if mw.ustring.match(v,"^[aeéêiouhywjɑɛœø]") then
-						pref, pref_pron = pref_v, pron_v
-					else
-						pref, pref_pron = pref_c, pron_c
-					end
-				else
-					suf, suf_pron = "-" .. imp, "." .. pron_imp
-				end
-			end
-			if do_nolink then
-				data.forms[key .. '_nolink'] =
-					map(data.forms[key], function(val)
-						get_pref_suf(val)
-						return pref .. val .. suf
-					end)
-			end
-			data.forms[key] = map(val, function(v)
-				get_pref_suf(v)
-				return rsub(pref .. "[[" .. v .. "]]" .. suf, "%.h", "h")
-			end)
-			if data.prons[key] then
-				data.prons[key] = map(data.prons[key], function(v)
-					get_pref_suf(v)
-					return pref_pron .. v .. suf_pron
-				end)
-			end
-		end
-	end
+pref_sufs["reflla"] = function(data, key, val)
+	data.aux = "se l'être"
+	add_refl_prefix_suffix(data, key, val, "%cl'", "%cla ", "%cl", "%cla ", "la-%c", "la.%c")
 end
 
-function export.refllesy(data)
-	data.refllesy = true
-        data.aux = "se les y être"
+pref_sufs["reflles"] = function(data, key, val)
+	data.aux = "se les être"
+	add_refl_prefix_suffix(data, key, val, "%cles ", "%cles ", "%cle.z‿", "%cle ", "les-%c", "le.%c")
+end
 
-        for key,val in pairs(data.forms) do
-		local pref_v, pref_c, pron_v, pron_c, imp, pron_imp, do_nolink
-		if key == "inf" or key == "ppr" then
-			pref_v, pref_c, pron_v, pron_c = "se les y ", "se les y ", "sə le.z‿i.j‿", "sə le.z‿i "
-			do_nolink = true
-		elseif mw.ustring.match(key,"1s") then
-			pref_v, pref_c, pron_v, pron_c = "me les y ", "me les y ", "mə le.z‿i.j‿", "mə le.z‿i "
-		elseif mw.ustring.match(key,"2s") then
-			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "te les y ", "te les y ", "tə le.z‿i.j‿", "tə le.z‿i ", "les-t'y", "le.ti"
-		elseif mw.ustring.match(key,"3[sp]") then
-			pref_v, pref_c, pron_v, pron_c = "se les y ", "se les y ", "sə le.z‿i.j‿", "sə le.z‿i "
-		elseif mw.ustring.match(key,"1p") then
-			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "nous les y ", "nous les y ", "nu le.z‿i.j‿", "nu le.z‿i ", "les-nous-y", "le.nu.zi"
-		elseif mw.ustring.match(key,"2p") then
-			pref_v, pref_c, pron_v, pron_c, imp, pron_imp = "vous les y ", "vous les y ", "vu le.z‿i.j‿", "vu le.z‿i ", "les-vous-y", "le.vu.zi"
-		end
-		if pref_v then
-			local pref, suf, pref_pron, suf_pron
-			local function get_pref_suf(v)
-				pref, suf, pref_pron, suf_pron = "", "", "", ""
-				if not mw.ustring.match(key,"imp") then
-					if mw.ustring.match(v,"^[aeéêiouhywjɑɛœø]") then
-						pref, pref_pron = pref_v, pron_v
-					else
-						pref, pref_pron = pref_c, pron_c
-					end
-				else
-					suf, suf_pron = "-" .. imp, "." .. pron_imp
-				end
-			end
-			if do_nolink then
-				data.forms[key .. '_nolink'] =
-					map(data.forms[key], function(val)
-						get_pref_suf(val)
-						return pref .. val .. suf
-					end)
-			end
-			data.forms[key] = map(val, function(v)
-				get_pref_suf(v)
-				return rsub(pref .. "[[" .. v .. "]]" .. suf, "%.h", "h")
-			end)
-			if data.prons[key] then
-				data.prons[key] = map(data.prons[key], function(v)
-					get_pref_suf(v)
-					return pref_pron .. v .. suf_pron
-				end)
-			end
-		end
-	end
+pref_sufs["reflly"] = function(data, key, val)
+	data.aux = "se l'y être"
+	add_refl_prefix_suffix(data, key, val, "%cl'y ", "%cl'y ", "%cli.j‿", "%cli ", "le-%cy <i>or</i> -la-%cy", "lə.%ci <i>or</i> .la.%ci")
+end
+
+pref_sufs["refllesy"] = function(data, key, val)
+	data.aux = "se les y être"
+	add_refl_prefix_suffix(data, key, val, "%cles y ", "%cles y ", "%cle.z‿i.j‿", "%cle.z‿i ", "les-%cy", "le.%ci")
 end
 
 function export.link(data)
-	for key,val in pairs(data.forms) do
+	for key, val in pairs(data.forms) do
 		if type(val) ~= "table" then
 			val = {val}
 		end
@@ -1500,18 +427,18 @@ function export.link(data)
 		local newval = {}
 		for i,form in ipairs(val) do
 			local newform = form
-			if not mw.ustring.match(key,"nolink") and not mw.ustring.match(form,"—") then
+			if not rmatch(key,"nolink") and not rmatch(form,"—") then
 				newform = m_links.full_link({term = form, lang = lang})
 			end
-			if mw.ustring.match(form, "—") then
+			if rmatch(form, "—") then
 				newform = "—"
 			end
 			table.insert(newval, newform)
 		end
 		data.forms[key] = table.concat(newval, " or ")
 	end
-	for key,val in pairs(data.prons) do
-		if not mw.ustring.match(key,"nolink") then
+	for key, val in pairs(data.prons) do
+		if not rmatch(key,"nolink") then
 			if type(val) ~= "table" then
 				val = {val}
 			end
@@ -1519,7 +446,7 @@ function export.link(data)
 			-- be shared among different keys
 			local newprons = {}
 			for i,form in ipairs(val) do
-				if not mw.ustring.match(form,"—") then
+				if not rmatch(form,"—") then
 					table.insert(newprons, IPA('/' .. form .. '/'))
 				end
 			end
@@ -1543,7 +470,7 @@ function export.extract(data, args)
 	end
 	if args.pp then
 		data.forms.pp = args.pp
-		if mw.ustring.match(args.pp, "[iu]$") then
+		if rmatch(args.pp, "[iu]$") then
 			export.make_ind_ps(data, args.pp)
 			export.make_sub_pa(data, args.pp)
 		end
@@ -1555,11 +482,11 @@ function export.extract(data, args)
 				local stem = args[dot_form]
 				local stem2 = stem
 				local stem3 = stem
-				if mw.ustring.match(stem, "^[^/]+/[^/]+/[^/]+$") then
+				if rmatch(stem, "^[^/]+/[^/]+/[^/]+$") then
 					stem = rsub(stem, "^([^/]+)/([^/]+)/([^/]+)$", "%1")
 					stem2 = rsub(stem2, "^([^/]+)/([^/]+)/([^/]+)$", "%2")
 					stem3 = rsub(stem3, "^([^/]+)/([^/]+)/([^/]+)$", "%3")
-				elseif mw.ustring.match(stem, "^[^/]+/[^/]+$") then
+				elseif rmatch(stem, "^[^/]+/[^/]+$") then
 					stem = rsub(stem, "^([^/]+)/([^/]+)$", "%1")
 					stem2 = rsub(stem2, "^([^/]+)/([^/]+)$", "%2")
 					stem3 = stem2
@@ -1576,7 +503,7 @@ function export.extract(data, args)
 			elseif form == "ind_i" then
 				export.make_ind_i(data, args[dot_form])
 			elseif form == "ind_ps" then
-				if mw.ustring.match(args["ind.ps"], "a$") then
+				if rmatch(args["ind.ps"], "a$") then
 					local stem = rsub(args[dot_form],"a$","")
 					export.make_ind_ps_a(data, stem)
 				else
@@ -1590,7 +517,7 @@ function export.extract(data, args)
 			elseif form == "sub_p" then
 				local stem = args[dot_form]
 				local stem2 = stem
-				if mw.ustring.match(stem, "^[^/]+/[^/]+$") then
+				if rmatch(stem, "^[^/]+/[^/]+$") then
 					stem = rsub(stem, "^([^/]+)/([^/]+)$", "%1")
 					stem2 = rsub(stem2, "^([^/]+)/([^/]+)$", "%2")
 				end
