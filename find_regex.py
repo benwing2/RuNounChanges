@@ -22,14 +22,8 @@ import pywikibot
 import blib
 from blib import getparam, rmparam, msg, site
 
-def process_page(regex, index, page_or_title_text, filter_pages, filter_pages_not,
-    verbose, include_text, all_matches, include_non_mainspace, lang_only):
-  text = None
-  if type(page_or_title_text) is tuple:
-    pagetitle, text = page_or_title_text
-  else:
-    page = page_or_title_text
-    pagetitle = unicode(page.title())
+def process_text_on_page(index, pagetitle, text, regex, verbose, include_text,
+    all_matches, include_non_mainspace, lang_only):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -40,21 +34,6 @@ def process_page(regex, index, page_or_title_text, filter_pages, filter_pages_no
     if verbose:
       pagemsg("WARNING: Colon in page title, skipping page")
     return
-
-  if filter_pages and not re.search(filter_pages, pagetitle):
-    if verbose:
-      pagemsg("Skipping because doesn't match --filter-pages regex %s" %
-        filter_pages)
-    return
-
-  if filter_pages_not and re.search(filter_pages_not, pagetitle):
-    if verbose:
-      pagemsg("Skipping because matches --filter-pages-not regex %s" %
-        filter_pages)
-    return
-
-  if text is None:
-    text = unicode(page.text)
 
   if not lang_only:
     text_to_search = text
@@ -137,102 +116,58 @@ def yield_text_from_diff(lines, verbose):
       elif verbose:
         msg("Skipping: %s" % line)
 
-def yield_pages_in_cats(cats, recursive, startFrom, upTo):
+def yield_pages_in_cats(cats, recursive, start, end):
   for cat in cats:
-    for index, page in blib.cat_articles(cat, startFrom, upTo):
+    for index, page in blib.cat_articles(cat, start, end):
       yield index, page
     if recursive:
-      for i, subcat in blib.cat_subcats(cat, startFrom, upTo, recurse=True):
-        for j, page in blib.cat_articles(subcat, startFrom, upTo):
+      for i, subcat in blib.cat_subcats(cat, start, end, recurse=True):
+        for j, page in blib.cat_articles(subcat, start, end):
           yield j, page
 
-def search_pages(regex, refs, cats, recursive, pages, pagefile, stdin,
-    input_from_output, input_from_diff, filter_pages, filter_pages_not,
-    verbose, include_text, all_matches, startFrom, upTo, namespaces,
-    include_non_mainspace, lang_only):
+def search_pages(args, regex, input_from_output, input_from_diff, start, end,
+    lang_only):
 
-  def process_text_on_page(index, title, text):
-    process_page(regex, index, (title, text), filter_pages, filter_pages_not,
-        verbose, include_text, all_matches, include_non_mainspace, lang_only)
-
-  # If reading from dump on stdin, need to go through a callback rather
-  # than through an iterator.
-  if stdin:
-    blib.parse_dump(sys.stdin, process_text_on_page, startsort=startFrom, endsort=upTo)
-    return
+  def do_process_text_on_page(index, title, text):
+    process_text_on_page(index, title, text, regex, args.verbose, args.text,
+        args.all, args.include_non_mainspace, lang_only)
 
   if input_from_output:
     lines = codecs.open(input_from_output, "r", "utf-8")
     pagename_and_text = yield_text_from_find_regex(lines, verbose)
-    for index, (pagename, text) in blib.iter_items(pagename_and_text, startFrom, upTo,
+    for index, (pagename, text) in blib.iter_items(pagename_and_text, start, end,
         get_name=lambda x:x[0]):
-      process_text_on_page(index, pagename, text)
+      do_process_text_on_page(index, pagename, text)
     return
 
   if input_from_diff:
     lines = codecs.open(input_from_diff, "r", "utf-8")
     pagename_and_text = yield_text_from_diff(lines, verbose)
-    for index, (pagename, text) in blib.iter_items(pagename_and_text, startFrom, upTo,
+    for index, (pagename, text) in blib.iter_items(pagename_and_text, start, end,
         get_name=lambda x:x[0]):
-      process_text_on_page(index, pagename, text)
+      do_process_text_on_page(index, pagename, text)
     return
 
-  if pages:
-    pages = ((index, pywikibot.Page(blib.site, page)) for page, index in blib.iter_pages(pages, startFrom, upTo))
-  elif pagefile:
-    lines = [x.strip() for x in codecs.open(pagefile, "r", "utf-8")]
-    pages = ((index, pywikibot.Page(blib.site, page)) for page, index in blib.iter_pages(lines, startFrom, upTo))
-  elif refs:
-    pages = blib.references(refs, startFrom, upTo, namespaces=namespaces)
-  else:
-    pages = yield_pages_in_cats(cats.split(","), recursive, startFrom, upTo)
-  for index, page in pages:
-    process_page(regex, index, page, filter_pages, filter_pages_not, verbose,
-        include_text, all_matches, include_non_mainspace, lang_only)
+  blib.do_pagefile_cats_refs(args, start, end, do_process_text_on_page, stdin=True)
 
 if __name__ == "__main__":
-  pa = blib.init_argparser("Search on pages")
-  pa.add_argument("-e", "--regex", help="Regular expression to search for.",
+  parser = blib.create_argparser("Search on pages", include_pagefile=True,
+    include_stdin=True)
+  parser.add_argument("-e", "--regex", help="Regular expression to search for.",
       required=True)
-  pa.add_argument("-r", "--references", "--refs",
-      help="Do pages with references to this page.")
-  pa.add_argument("-c", "--categories", "--cats",
-      help="List of categories to search, comma-separated.")
-  pa.add_argument("--recursive", action="store_true",
-    help="In conjunction with --cats, recursively process pages in subcategories.")
-  pa.add_argument('--filter-pages', help="Regex to use to filter page names; only includes pages matching this regex.")
-  pa.add_argument('--filter-pages-not', help="Regex to use to filter page names; only includes pages not matching this regex.")
-  pa.add_argument('--pages', help="List of pages to search, comma-separated.")
-  pa.add_argument('--pagefile', help="File containing pages to search.")
-  pa.add_argument('--stdin', help="Use dump on stdin.", action="store_true")
-  pa.add_argument('--input-from-output', help="Use the specified file as input, a previous output of this script.")
-  pa.add_argument('--input-from-diff', help="Use the specified file as input, a previous output of a job run with --diff.")
-  pa.add_argument('--all', help="Include all matches.", action="store_true")
-  pa.add_argument('--text', help="Include surrounding text.", action="store_true")
-  pa.add_argument('--include-non-mainspace', help="Don't skip non-mainspace pages. Defaults to true if --namespaces is given.", action='store_true')
-  pa.add_argument('--namespaces', help="Comma-separated list of namespaces to search when --refs is given.")
-  pa.add_argument('--lang-only', help="Only search the specified language section.")
-  params = pa.parse_args()
-  startFrom, upTo = blib.parse_start_end(params.start, params.end)
+  parser.add_argument('--input-from-output', help="Use the specified file as input, a previous output of this script.")
+  parser.add_argument('--input-from-diff', help="Use the specified file as input, a previous output of a job run with --diff.")
+  parser.add_argument('--all', help="Include all matches.", action="store_true")
+  parser.add_argument('--text', help="Include surrounding text.", action="store_true")
+  parser.add_argument('--include-non-mainspace', help="Don't skip non-mainspace pages. Defaults to true if --namespaces is given.", action='store_true')
+  parser.add_argument('--lang-only', help="Only search the specified language section.")
+  args = parser.parse_args()
+  start, end = blib.parse_start_end(args.start, args.end)
 
-  if (not params.references and not params.categories and not params.pages and
-      not params.pagefile and not params.stdin and not params.input_from_output and
-      not params.input_from_diff):
-    raise ValueError("--refs, --cats, --pages, --pagefile, --stdin, --input-from-output or --input-from-diff must be present")
+  regex = args.regex.decode("utf-8")
+  input_from_output = args.input_from_output and args.input_from_output.decode("utf-8")
+  input_from_diff = args.input_from_diff and args.input_from_diff.decode("utf-8")
+  lang_only = args.lang_only and args.lang_only.decode("utf-8")
 
-  references = params.references and params.references.decode("utf-8")
-  categories = params.categories and params.categories.decode("utf-8")
-  regex = params.regex.decode("utf-8")
-  pages = params.pages and re.split(",", params.pages.decode("utf-8"))
-  input_from_output = params.input_from_output and params.input_from_output.decode("utf-8")
-  input_from_diff = params.input_from_diff and params.input_from_diff.decode("utf-8")
-  namespaces = params.namespaces and re.split(",", params.namespaces.decode("utf-8"))
-  filter_pages = params.filter_pages and params.filter_pages.decode("utf-8")
-  filter_pages_not = params.filter_pages_not and params.filter_pages_not.decode("utf-8")
-  lang_only = params.lang_only and params.lang_only.decode("utf-8")
-
-  search_pages(regex, references, categories, params.recursive, pages,
-      params.pagefile, params.stdin, input_from_output, input_from_diff,
-      filter_pages, filter_pages_not, params.verbose, params.text, params.all,
-      startFrom, upTo, namespaces, params.include_non_mainspace or namespaces,
-      lang_only)
+  search_pages(args, regex, input_from_output, input_from_diff, start, end,
+    lang_only)
