@@ -1,6 +1,7 @@
 --[=[
 
-Author: Kc kennylau; significant rewriting by Benwing
+Author: originally Kc kennylau; rewritten by Benwing
+Sep 2018: Work by Paris91 that needs to be massively cleaned up and rewritten
 
 This implements {{fr-conj-auto}}. It uses the following submodules:
 * [[Module:fr-verb/core]] (helper for generating conjugations)
@@ -10,7 +11,7 @@ This implements {{fr-conj-auto}}. It uses the following submodules:
 
 FIXME:
 
-1. Use ‿ to join reflexive pronouns.
+1. (DONE) Use ‿ to join reflexive pronouns.
 2. montre-toi needs a schwa in it.
 3. 'etre' and 'avoir_or_etre' tables should be moved to the template call.
 3a. (DONE) Make sure aux= is supported at the template level.
@@ -21,31 +22,36 @@ FIXME:
 7. (MAYBE? MAYBE NOT NECESSARY, {{fr-conj-ir}} doesn't seem to use it,
    MAYBE ALREADY DONE IN THE HEADWORD CODE?) Implement sort= for sort key,
    and handle most cases automatically (e.g. chérir with sort=cherir).
-8. Copy notes from {{fr-conj-ir}} to our conj["ir"].
-9. Lots of other conjugations needed. Consider generalizing existing code
+8. (DONE) Copy notes from {{fr-conj-ir}} to our conj["ir"].
+9. (DONE) Lots of other conjugations needed. Consider generalizing existing code
    so a minimal number of principal parts can be given and all the conjugation
    and pronunciation derived.
-10. Convert remaining use of old templates to use {{fr-conj-auto}}.
+10. (DONE) Convert remaining use of old templates to use {{fr-conj-auto}}.
 11. (DONE) Figure out what the COMBINING flag in [[Module:fr-pron]] does and
     remove it, including all calls from this module.
 12. (ALREADY DONE) Support sevrer, two-stem e/è verb.
-13. Autodetect e-er verbs including eCer as well as eCler and eCrer verbs
+13. (DONE) Autodetect e-er verbs including eCer as well as eCler and eCrer verbs
     like sevrer, and eguer/equer (if they exist). Make sure there aren't
 	verbs of this form that aren't e-er by looking for them in the list of
 	fr-conj-auto verbs that have an empty typ arg (possibly enough to look
 	at all fr-conj-auto verbs).
-14. Check if overriding pronunciation of ppr 'pleuvant' is correct.
-15. Check if -er-type conjugations of -aillir, -cueillir, braire are correct.
-16. Fix notes for prefixed croitre/croître verbs, based on the old-style
+14. Check pronunciation of 'pleuvoir'. TLFi says /pløvwaʁ/, frwikt says /plœvwaʁ/.
+15. (DONE) Check if -er-type conjugations of -aillir, -cueillir, braire are
+    correct.
+16. (DONE) Fix notes for prefixed croitre/croître verbs, based on the old-style
 	templates.
 17. (DONE) Implement impersonal and only-third verbs, including impers=
     and onlythird=.
+18. (DONE) Fix schwa in -ayer, -eyer pronunciation and check other uses of
+    ind_f() to see if they need a fut_stem_i.
+19. Implement sort key in {{fr-verb}}. Should map accented letters to
+    unaccented letters and rearrange "se regarded" to "regarded, se" and
+    similarly for "s'infiltrer".
+20. "se regarder" should have optional schwa in re-.
 
 Remaining templates:
 
--- copier-coller: FIXME, eventually implement general suppot for verbs like this
--- er (archaic)
--- y avoir
+-- copier-coller: FIXME, eventually implement general support for verbs like this
 --]=]
 
 -- Table of exported functions.
@@ -75,6 +81,7 @@ local m_conj = require("Module:fr-conj")
 local m_fr_pron = require("Module:fr-pron")
 local lang = require("Module:languages").getByCode("fr")
 local ut = require("Module:utils")
+local m_utilities = require("Module:utilities")
 local m_debug = require("Module:debug")
 
 local u = mw.ustring.char
@@ -91,6 +98,7 @@ local written_vowel = "aàâeéèêiîoôuûäëïöüÿ"
 local written_cons_c = "[^%-" .. written_vowel .. "]"
 local written_cons_no_cgy_c = "[^%-cgy" .. written_vowel .. "]"
 local written_cons_no_cgyx_c = "[^%-cgyx" .. written_vowel .. "]"
+local written_cons_no_lryx_c = "[^%-lryx" .. written_vowel .. "]"
 
 -- version of rsubn() that discards all but the first return value
 local function rsub(term, foo, bar)
@@ -98,10 +106,27 @@ local function rsub(term, foo, bar)
 	return retval
 end
 
-local function map(seq, fun)
+-- Map a function over one of the following:
+-- (1) a single string (return value will be FUN(STRING))
+-- (2) a list of either strings or tables of the form {"STEM", RESPELLING="RESPELLING"};
+--     the return value is a list of calls to FUN, with one element per element in SEQ;
+--     if an element of SEQ is a string, the corresponding return value will be
+--     FUN(STRING); if an element of SEQ is a table, the corresponding return value
+--     will be FUN("STEM"), unless third arg USE_RESPELLING is given, in which case
+--     the corresponding return value will be FUN("RESPELLING").
+local function map(seq, fun, use_respelling)
 	if type(seq) == "table" then
 		local ret = {}
 		for _, s in ipairs(seq) do
+			local single_stem_or_respelling
+			if type(s) == "table" then
+				if use_respelling then
+					assert(s.respelling)
+					s = s.respelling
+				else
+					s = s[1]
+				end
+			end
 			-- store in separate var in case fun() has multiple retvals
 			local retval = fun(s)
 			table.insert(ret, retval)
@@ -126,7 +151,7 @@ local function dopron(data, stem, suffix)
 	suffix = suffix or ""
 	return map(stem, function(s)
 		return pron((data and data.pronstem or "") .. s .. suffix)
-	end)
+	end, "respelling")
 end
 
 local function setform(data, form, val)
@@ -151,18 +176,17 @@ local all_verb_props = {
 -- FIXME: This should be in the template, not here.
 local etre = {
 	"aller",
-	"alterner",
-	"apparaître",
+	"apparaitre", "apparaître",
 	"arriver",
-	"décéder",
-	"entrer", "rentrer",
+	"entrer",
 	"mourir",
 	"naitre", "naître", "renaitre", "renaître",
-	"partir", "départir",
+	"partir", "repartir",
+	"repasser",
 	"rester",
 	"surmener",
-	"tomber", "retomber",
-	"venir", "advenir", "bienvenir", "devenir", "intervenir", "parvenir", "provenir", "redevenir", "revenir", "survenir"
+	"retomber",
+	"venir", "advenir", "bienvenir", "devenir", "intervenir", "obvenir", "parvenir", "provenir", "redevenir", "revenir", "survenir"
 }
 
 for _,key in ipairs(etre) do
@@ -172,24 +196,9 @@ end
 -- List of verbs that can be conjugated using either 'avoir' or 'être' in the
 -- passé composé. FIXME: This should be in the template, not here.
 local avoir_or_etre = {
-	"abdiquer", "abonnir","absconder","abuser","abâtardir","accommoder","acculturer","adapter","adhærer","admirer","aguerrir","aider","aliter","alourdir","alphabétiser","amerrir","anémier","apparenter","aspirer","attrouper","ausculter",
-	"balbutier","barbeler","batailler","bloguer","bosseler","bouillir","bouturer","buer",
-	"cagouler","candir","cartonner","cascader","caserner","cauchemarder","ceindre","cintrer","circuler","coincer","commercer","commémorer","comparaître","confectionner","connaitre","consentir","conspuer","consterner","constituer","contorsionner","contrister","convoyer","couver","couvrir","crever",
-	"demeurer","déchoir","descendre","diplômer","disparaitre","disparaître","dormir","déborder","décapitaliser","déceler","découvrir","déficeler","défier","dégeler","déglutir","délaver","délecter","démanteler","démasquer","dénationaliser","dénoncer","dépendre","dépuceler","déshabituer","désister","déstabiliser","détériorer","dévaler","dévitaliser",
-	"effoirer","emmener","encabaner","encapsuler","encaquer","encartonner","encartoucher","encaster","encommencer","endetter","endormir","enferrer","engrisailler","enlever","enserrer","envier","envoiler",
-	"fasciner","ferrer","filigraner","fouetter","fourmiller","fringuer","fucker","fureter",
-	"gargariser","gascher","gausser","geler","gnoquer","grincer","gémir",
-	"haleter","harasser","hâter","hæsiter","hésiter",
-	"identifier","impartir","inquieter","insonoriser",
-	"larder","larmoyer","lemmatiser","lever","lier",
-	"malmener","marketer","marteler","matter","maugréer","mener","mentir","microprogrammer","mincir","modeler","modéliser","monitorer","monter","muloter","multiplier","méconnaître",
-	"niveler","obvenir","omettre","orner",
-	"pailler","paraitre","paraître","parfumer","parjurer","parsemer","passer","permettre","perpétuer","peser","poiler","promettre","præsumer","prætendre","prélever","préserver",
-	"qualifier","rainurer","ramener","rebattre","reboiser","reclasser","recoiffer","recoller","recomparaître","redormir","redécouvrir","refusionner","regeler","relancer","relever","relier","remonter","rendormir","repartir","repasser","repatrier","repentir","respitier","ressentir","ressortir","ressouvenir","restaurer","restreindre","restructurer","retourner","retransmettre","retweeter","réagir","réapparaitre","réapparaître","réentendre","référencer",
-	"savourer","sentir","siffler","simplifier","sortir","soupeser","spammer","subvenir","suspecter","synchroniser",
-	"taire","tiédir",
-	"volleyer","ædifier",
-	"élancer","élever","éloigner","étriver"
+	"descendre", "monter", "paraitre", "paraître", "passer",
+	"rentrer", "repartir", "ressortir", "retourner", "réapparaitre", "réapparaître",
+	"sortir", "tomber"
 }
 
 for _,key in ipairs(avoir_or_etre) do
@@ -253,8 +262,7 @@ local function strip_pron_ending(pron, ending)
 	end
 	return map(pron, function(val)
 		if not rfind(val, ending .. "$") then
-			error("Internal error: expected pronunciation '" .. val ..
-				"' to end with '" .. ending .. "'")
+			error('Internal error: expected pronunciation "' .. val .. '" to end with "' .. ending .. '"')
 		end
 		return rsub(val, ending .. "$", "")
 	end)
@@ -268,8 +276,7 @@ local function strip_respelling_ending(pron, ending)
 	end
 	return map(pron, function(val)
 		if not rfind(val, ending .. "$") then
-			error("Expected respelling '" .. val .. "' to end with '" ..
-				ending "'")
+			error('Expected respelling "' .. val .. '" to end with "' .. ending .. '"')
 		end
 		return rsub(val, ending .. "$", "")
 	end)
@@ -292,7 +299,7 @@ local function strip_respelling_beginning(pron, beginning, split)
 		return table.concat(stripped_pronvals, ",")
 	end
 	if not rfind(pron, "^" .. beginning) then
-		error("Expected respelling '" .. pron .. "' to begin with '" .. beginning "'")
+		error('Expected respelling "' .. pron .. '" to begin with "' .. beginning .. '"')
 	end
 	return rsub(pron, "^" .. beginning, "")
 end
@@ -302,23 +309,23 @@ end
 -- given, it is used in place of PRONSTEM for the forms without a pronounced
 -- ending (i.e. 1s/2s/3s/3p present) and for the future and conditional; this
 -- is used with two-stem verbs such as mener (with stems 'men' and 'mèn') and
--- céder (with stems 'céd' and 'cèd'). FIXME: Rewrite to work with tables as
--- stem values.
+-- céder (with stems 'céd' and 'cèd').
 local function construct_er_pron(data, pronstem, pronstem_final_fut)
 	pronstem_final_fut = pronstem_final_fut or pronstem
-	pronstem = data.pronstem .. pronstem
-	pronstem_final_fut = data.pronstem .. pronstem_final_fut
-	-- In pronstem_final_fut, convert é+C in the last syllable to è even if
-	-- the caller didn't do it. This is principally useful with pron=
-	-- specifications, so that e.g. pron=blésser,blèsser works.
-	pronstem_final_fut = rsub(pronstem_final_fut,
-		"é(" .. written_cons_c .. "+)$", "è%1")
-	pronstem_final_fut = rsub(pronstem_final_fut, "é([gq]u)$", "è%1")
-	local stem_final = pron(pronstem_final_fut .. "e")
-	local stem_nonfinal = strip_pron_ending(pron(pronstem .. "ez"), "e")
-	local stem_nonfinal_i = strip_pron_ending(pron(pronstem .. "iez"), "je")
-	local stem_fut = strip_pron_ending(pron(pronstem_final_fut .. "erez"), "ʁe")
-	local stem_fut_i = strip_pron_ending(pron(pronstem_final_fut .. "eriez"), "ʁje")
+	pronstem = map(pronstem, function(stem) return data.pronstem .. stem end)
+	pronstem_final_fut = map(pronstem_final_fut, function(stem)
+		stem = data.pronstem .. stem
+		-- In pronstem_final_fut, convert é+C in the last syllable to è even if
+		-- the caller didn't do it. This is principally useful with pron=
+		-- specifications, so that e.g. pron=blésser,blèsser works.
+		stem = rsub(stem, "é(" .. written_cons_c .. "+)$", "è%1")
+		return rsub(stem, "é([gq]u)$", "è%1")
+	end)
+	local stem_final = dopron(nil, pronstem_final_fut, "e")
+	local stem_nonfinal = strip_pron_ending(dopron(nil, pronstem, "ez"), "e")
+	local stem_nonfinal_i = strip_pron_ending(dopron(nil, pronstem, "iez"), "je")
+	local stem_fut = strip_pron_ending(dopron(nil, pronstem_final_fut, "erez"), "e")
+	local stem_fut_i = strip_pron_ending(dopron(nil, pronstem_final_fut, "eriez"), "je")
 	return m_pron.er(data, stem_final, stem_nonfinal, stem_nonfinal_i,
 		stem_fut, stem_fut_i)
 end
@@ -342,7 +349,11 @@ end
 --    In this case, PRES_12P_STEM and PRES_3P_STEM are currently ignored.
 --    Normally, use construct_non_er_conj_er_present() in place of this arg.
 --
--- Any of the stem arguments may actually be a table of stems.
+-- Any of the stem arguments may actually be a table, where each element can be
+-- a string (a stem) or a table of the form {"STEM", RESPELLING="RESPELLING"},
+-- specifying a stem to use for constructing the verb forms and the corresponding
+-- respelling to use when constructing the pronunciation. This is used, for
+-- example, in mourir and courir.
 local function construct_non_er_conj(data, pres_sg_stem, pres_12p_stem,
 	pres_3p_stem, past_stem, fut_stem, pp, pres_subj_stem,
 	pres_subj_nonfinal_stem, er_present)
@@ -373,7 +384,7 @@ local function construct_non_er_conj(data, pres_sg_stem, pres_12p_stem,
 		else
 			local pres_sg_stem_pron = map(pres_sg_stem, function(stem)
 				return rmatch(data.pronstem .. stem, "er$") and dopron(data, stem, "t") or dopron(data, stem, "s")
-			end)
+			end, "respelling")
 			local pres_12p_stem_pron = strip_pron_ending(dopron(data, pres_12p_stem, "ez"), "e")
 			local pres_3p_stem_pron = dopron(data, pres_3p_stem, "e")
 			local pre_j_stem_pron = strip_pron_ending(dopron(data, pres_12p_stem, "iez"), "je")
@@ -385,8 +396,14 @@ local function construct_non_er_conj(data, pres_sg_stem, pres_12p_stem,
 		m_pron.ind_ps(data, past_stem_pron)
 	end
 	if fut_stem ~= "—" then
-		local fut_stem_pron = strip_pron_ending(dopron(data, fut_stem, "ez"), "ʁe")
-		m_pron.ind_f(data, fut_stem_pron)
+		local fut_stem_pron = strip_pron_ending(dopron(data, fut_stem, "ez"), "e")
+		-- If the future stem ends in -er, the schwa is optional in -erez but
+		-- not in -eriez; examples are assaillir, cueillir, refaire, défaire,
+		-- contrefaire, méfaire (the latter four have the future pronounced
+		-- -fer-). Also, if the future stem ends in -Cr, there will be an
+		-- extra syllable inserted before -ions, -iez.
+		local fut_stem_pron_i = strip_pron_ending(dopron(data, fut_stem, "iez"), "je")
+		m_pron.ind_f(data, fut_stem_pron, fut_stem_pron_i)
 	end
 
 	if pp then
@@ -397,7 +414,7 @@ local function construct_non_er_conj(data, pres_sg_stem, pres_12p_stem,
 	end
 
 	if pres_subj_stem then
-		m_core.make_sub_p(data, pres_subj_stem)
+		m_core.make_sub_p(data, pres_subj_stem, pres_subj_nonfinal_stem)
 		if pres_subj_stem ~= "—" then
 			local pres_subj_pron1 = dopron(data, pres_subj_stem, "e")
 			local pres_subj_pron2 = strip_pron_ending(dopron(data, pres_subj_nonfinal_stem or pres_subj_stem, "iez"), "je")
@@ -498,8 +515,6 @@ conj["ger"] = function(data)
 end
 
 conj["ayer"] = function(data)
-	m_core.make_ind_p_e(data, {"ay", "ai"}, "ay", "ay")
-
 	data.notes = "This is a regular " .. link("-er") .. " verb as far as "
 		.. "pronunciation is concerned, but as with other verbs in ''-ayer'' "
 		.. "(such as " .. link(data.stem == "pay" and "essayer" or "payer")
@@ -510,38 +525,15 @@ conj["ayer"] = function(data)
 		.. "and ''-uyer'', which always have it; verbs in ''-ayer'' belong to "
 		.. "both groups, according to the writer's preference)."
 
-	local root = dopron(data, "a")
-	root = rsub(root,".$","")
-
-	local stem = root .. "ɛ"
-	local stem2 = root .. "ɛj"
-	local stem3 = root .. "e.j"
-	local stem4 = root .. "ej."
-	local stem5 = root .. "e"
-
-	data.prons.ppr = stem3 .. "ɑ̃"
-	data.prons.pp = stem3 .. "e"
-
-	m_pron.er(data, {stem2, stem}, stem3)
-	m_pron.ind_f(data, {stem3 .. "ə.", stem5 .. "."})
-
+	m_core.make_ind_p_e(data, {"ay", "ai"}, "ay", "ay")
+	construct_er_pron(data, {"ay", "éy"}, {"ay", "ai"})
 	data.group = 1
 	data.conjcat = "-ayer"
 end
 
 conj["eyer"] = function(data)
 	m_core.make_ind_p_e(data, "ey")
-
-	local root = dopron(data, "i")
-	root = rsub(root,".$","")
-
-	local stem = root .. "ɛj"
-	local stem2 = root .. "e.j"
-	local stem3 = root .. "ej"
-
-	m_pron.er(data, stem, stem2)
-	m_pron.ind_f(data, stem3 .. ".")
-
+	construct_er_pron(data, {"ey", "éy"}, "ey")
 	data.group = 1
 	data.conjcat = "-eyer"
 end
@@ -552,12 +544,9 @@ conj["yer"] = function(data)
 		.. link(data.stem == "no" and "employer" or "noyer") .. " or "
 		.. link(data.stem == "ennu" and "appuyer" or "ennuyer") .. ". These "
 		.. "verbs always replace the ‘y’ with an ‘i’ before a silent ‘e’."
+
 	m_core.make_ind_p_e(data, "i", "y", "y")
-
-	local stem = dopron(data, "i")
-
-	m_pron.er(data, stem, stem..".j")
-
+	construct_er_pron(data, "y", "i")
 	data.group = 1
 	data.conjcat = "-yer"
 end
@@ -793,7 +782,7 @@ conj["surseoir"] = function(data)
 	construct_non_er_conj(data, "sursoi", "sursoy", "sursoi", "sursi", nil,
 		"sursis")
 	-- Pronunciation in future/cond as if written sursoir- not surseoir-
-	m_pron.ind_f(data, strip_pron_ending(dopron(data, "sursoirez"), "ʁe"))
+	m_pron.ind_f(data, strip_pron_ending(dopron(data, "sursoirez"), "e"))
 	data.conjcat = "seoir"
 end
 
@@ -813,7 +802,7 @@ conj["bouillir"] = function(data)
 end
 
 conj["enir"] = function(data)
-	construct_non_er_conj(data, "ien", "en", "ienn", "in", "iendr", "enu")
+	construct_non_er_conj(data, "ien", "en", "ienn", "in", {{"iendr", respelling="iaindr"}}, "enu")
 
 	if usub(data.stem,-1) == "t" then
 		data.notes = "This is a verb in a group of " .. link("-ir")
@@ -891,7 +880,7 @@ conj["choir"] = function(data)
 		-- FIXME! frwikt says future in cherr- is archaic, and archaic
 		-- conditional forms in cherr- exist as well.
 		m_core.make_cond_p(data, "choir")
-		m_pron.cond_p(data, dopron(data, "choi"))
+		m_pron.cond_p(data, dopron(data, "choir"))
 		m_core.make_sub_p(data, "—")
 		-- FIXME! frwikt does not say subjunctive past is missing other than
 		-- 3s.
@@ -925,7 +914,7 @@ conj["courir"] = function(data)
 	data.notes = data.notes .. "except that in the conditional and future tenses an extra ‘r’ is added to the end of the stem "
 	data.notes = data.notes .. "and the past participle ends in ''-u''. All verb ending in ''-courir'' are conjugated this way."
 
-	construct_non_er_conj(data, "cour", "cour", "cour", "couru", "courr")
+	construct_non_er_conj(data, "cour", "cour", "cour", "couru", {{"courr", respelling="cour_r"}})
 end
 
 conj["falloir"] = function(data)
@@ -937,18 +926,27 @@ conj["falloir"] = function(data)
 end
 
 conj["faillir"] = function(data)
-	data.notes = "This verb has two conjugations, one is older and irregular, "
-		.. "but is in modern usage giving way to a conjugation like that of "
-		.. link("finir") .. ". It is hardly used except in the infinitive, "
-		.. "past historic, and the composed tenses. The third-person singular "
-		.. "present indicative " .. link("faut") .. " is also found in "
-		.. "certain set phrases."
-	construct_non_er_conj(data, "fau", "faill", "faill", "failli",
-		{"faudr", "faillir"})
-	data.prons.ind_p_1s = "faux"
-	data.prons.ind_p_2s = "faux"
-	m_core.clear_imp()
-	data.cat = "defective"
+	if data.stem == "" then
+		data.notes = "This verb has two conjugations, one is older and irregular, "
+			.. "but is in modern usage giving way to a conjugation like that of "
+			.. link("finir") .. ". It is hardly used except in the infinitive, "
+			.. "past historic, and the composed tenses. The third-person singular "
+			.. "present indicative " .. link("faut") .. " is also found in "
+			.. "certain set phrases."
+		construct_non_er_conj(data, "fau", "faill", "faill", "failli",
+			{"faudr", "faillir"})
+		data.forms.ind_p_1s = "faux"
+		data.forms.ind_p_2s = "faux"
+		m_core.clear_imp(data)
+		data.cat = "defective"
+	else
+		data.notes = "Verbs in ''-faillir'', with the exception of "
+		.. link("faillir") .. " itself, conjugate similarly to other verbs in "
+		.. "''-illir'', such as " .. link("assaillir") .. " and "
+		.. link("cueillir") .. "."
+		-- frwikt doesn't include forms like -faillerai
+		construct_non_er_conj_er_present(data, "faill", "failli", "faillir")
+	end
 end
 
 conj["férir"] = function(data)
@@ -1013,6 +1011,11 @@ conj["uire"] = function(data)
 	construct_non_er_conj(data, "ui", "uis", "uis", "uisi", nil, "uit")
 end
 
+conj["nuire"] = function(data)
+	-- nuire has different pp from other -uire verbs
+	construct_non_er_conj(data, "nui", "nuis", "nuis", "nuisi", nil, "nui")
+end
+
 conj["aitre"] = function(data)
 	data.notes = "This verb is one of a fairly small group of " .. link("-re") .. " verbs, that are all conjugated the same way. They are conjugated the same as the alternative spelling, which has a [[circumflex]] over the ‘i’, except that the circumflex is dropped here."
 
@@ -1040,7 +1043,7 @@ conj["oître"] = function(data)
 
 	m_pron.ind_p(data, stem, stem2, stem3)
 	m_pron.ind_ps(data, stem4)
-	m_pron.ind_f(data, stem .. ".t")
+	m_pron.ind_f(data, stem .. ".tʁ", stem .. ".tʁi.")
 end
 
 conj["indre"] = function(data)
@@ -1077,7 +1080,7 @@ conj["raire"] = function(data) --braire, traire
 	data.forms.pp = "rait"
 
 	local stem2 = stem .. ".j"
-	local stem3 = stem .. "."
+	local stem3 = stem .. ".ʁ"
 
 	m_pron.ind_p(data, stem, stem2)
 	m_pron.ind_ps_a(data, stem2)
@@ -1098,7 +1101,7 @@ conj["clore"] = function(data)
 	local stem = dopron(data, "clo")
 	local stem2 = stem .. ".z"
 	local stem3 = stem .. "z"
-	local stem4 = dopron(data, "clɔ") .. "."
+	local stem4 = dopron(data, "clɔ") .. ".ʁ"
 
 	m_pron.ind_p(data, stem, stem2, stem3)
 	m_pron.ind_f(data, stem4)
@@ -1106,8 +1109,12 @@ conj["clore"] = function(data)
 	data.cat = "defective"
 end
 
-conj["fire"] = function(data) -- confire, suffire
-	construct_non_er_conj(data, "fi", "fis", "fis", "fi")
+conj["confire"] = function(data)
+	construct_non_er_conj(data, "confi", "confis", "confis", "confi", nil, "confit")
+end
+
+conj["suffire"] = function(data)
+	construct_non_er_conj(data, "suffi", "suffis", "suffis", "suffi")
 end
 
 conj["coudre"] = function(data)
@@ -1255,8 +1262,8 @@ end
 
 conj["paitre"] = function(data)
 	data.notes = "This verb is not conjugated in certain tenses."
-	construct_non_er_conj(data, "pai", "paiss", "paiss", "—")
-	data.cat = "defective"
+	construct_non_er_conj(data, "pai", "paiss", "paiss", "pu")
+	--data.cat = "defective" -- FIXME: Not true with pu as past participle?
 end
 
 conj["paître"] = function(data)
@@ -1280,8 +1287,6 @@ conj["pleuvoir"] = function(data)
 		only_third_verb(data)
 		data.cat = "defective"
 	end
-	-- FIXME, check if this is correct
-	data.prons.ppr = "plø.vɑ̃"
 end
 
 conj["pourvoir"] = function(data)
@@ -1347,7 +1352,7 @@ conj["avoir"] = function(data)
 	local stem = root .. "a"
 	local stem2 = root .. "a.v"
 	local stem3 = root .. "y"
-	local stem4 = root .. "o."
+	local stem4 = root .. "o.ʁ"
 	local stem5 = root .. "ɛ"
 	local stem6 = root .. "ɛ."
 
@@ -1391,7 +1396,7 @@ conj["être"] = function(data)
 	local stem = root_e .. "ɛ"
 	local stem2 = root_e .. "e.t"
 	local stem3 = root_f .. "fy"
-	local stem4 = root_s .. "sə."
+	local stem4 = root_s .. "sə.ʁ"
 	local stem5 = root_s .. "swa"
 	local stem6 = root_s .. "swa."
 
@@ -1440,14 +1445,14 @@ conj["naître"] = function(data)
 end
 
 conj["envoyer"] = function(data)
-	data.notes = "This verb is is one a few verbs that conjugate like " .. link("noyer") .. ", except in the future and conditional, where they conjugate like " .. link("voir") .. "."
+	data.notes = "This verb is one of a few verbs that conjugate like " .. link("noyer") .. ", except in the future and conditional, where they conjugate like " .. link("voir") .. "."
 
 	m_core.make_ind_p_e(data, "envoi", "envoy", "envoy")
 	m_core.make_ind_f(data, "enverr")
 
 	local stem = dopron(data, "envoi")
 	local stem2 = stem .. ".j"
-	local stem3 = dopron(data, "envè") .. "."
+	local stem3 = dopron(data, "envè") .. ".ʁ"
 
 	m_pron.er(data, stem, stem2)
 	m_pron.ind_f(data, stem3)
@@ -1459,20 +1464,21 @@ conj["irreg-aller"] = function(data)
 	data.notes = "The verb ''{stem}aller'' has a unique and highly irregular conjugation. The second-person singular imperative ''[[va]]'' additionally combines with ''[[y]]'' to form ''[[vas-y]]'' instead of the expected ''va-y''."
 
 	m_core.make_ind_p_e(data, "all")
+	m_core.make_ind_f(data, "ir")
+	m_core.make_sub_p(data, "aill", "all")
+
+	local stem = dopron(data, "a")
+	local stem2 = dopron(data, "i") .. ".ʁ"
+
+	m_pron.er(data, stem .. "l", stem .. ".l")
+	m_pron.ind_f(data, stem2)
+	m_pron.sub_p(data, stem .. "j", stem .. ".l")
+
 	setform(data, "ind_p_1s", "vais")
 	setform(data, "ind_p_2s", "vas")
 	setform(data, "ind_p_3s", "va")
 	setform(data, "ind_p_3p", "vont")
-	m_core.make_ind_f(data, "ir")
-	m_core.make_sub_p(data, "aill")
 	setform(data, "imp_p_2s", "va")
-
-	local stem = dopron(data, "a")
-	local stem2 = dopron(data, "i")
-
-	m_pron.er(data, stem .. "l", stem .. ".l")
-	m_pron.ind_f(data, stem2)
-	m_pron.sub_p(data, stem .. "j", stem .. "j.")
 end
 
 conj["dire"] = function(data)
@@ -1495,22 +1501,23 @@ conj["vivre"] = function(data)
 end
 
 conj["mourir"] = function(data)
-	construct_non_er_conj(data, "meur", "mour", "meur", "mouru", "mourr",
+	construct_non_er_conj(data, "meur", "mour", "meur", "mouru", {{"mourr", respelling="mour_r"}},
 		"mort")
 end
 
 conj["savoir"] = function(data)
-	construct_non_er_conj(data, "sai", "sav", "sav", "su", "saur", nil,
+	construct_non_er_conj(data, "sai", "sav", "sav", "su", {{"saur", respelling="sor"}}, nil,
 		"sach")
 	m_core.make_imp_p_sub(data)
+	setform(data, "ppr", "sachant")
 	generate_imp_pron_from_forms(data)
 end
 
 conj["pouvoir"] = function(data)
 	construct_non_er_conj(data, "peu", "pouv", "peuv", "pu", "pourr", nil,
 		"puiss")
-	data.prons.ind_p_1s = "peux"
-	data.prons.ind_p_2s = "peux"
+	data.forms.ind_p_1s = "peux"
+	data.forms.ind_p_2s = "peux"
 	m_core.clear_imp(data)
 	data.cat = "defective"
 end
@@ -1518,11 +1525,14 @@ end
 conj["ouloir"] = function(data) -- vouloir, revouloir, douloir
 	construct_non_er_conj(data, "eu", "oul", "eul", "oulu", "oudr", nil,
 		"euill", "oul")
-	data.prons.ind_p_1s = "eux"
-	data.prons.ind_p_2s = "eux"
-	if data.stem == "v" then -- no imperative for vouloir but yes for revouloir
-		m_core.clear_imp(data)
-		data.cat = "defective"
+	data.forms.ind_p_1s = "eux"
+	data.forms.ind_p_2s = "eux"
+	if data.stem == "v" then -- irregular imperative for vouloir
+		setform(data, "imp_p_2s", {"eux", "euille"})
+		setform(data, "imp_p_1p", {"oulons", "euillons"})
+		setform(data, "imp_p_2p", {"oulez", "euillez"})
+	else
+		data.forms.imp_p_2s = "eux"
 	end
 end
 
@@ -1534,7 +1544,7 @@ conj["ensuivre"] = function(data)
 	data.notes = "This verb is [[defective]], and is only used in the "
 		.. "infinitive and the third-person singular and plural forms."
 	construct_non_er_conj(data, "ensui", "ensuiv", "ensuiv", "ensuivi")
-	only_third_verb()
+	only_third_verb(data)
 	data.cat = "defective"
 end
 
@@ -1542,7 +1552,7 @@ conj["frire"] = function(data)
 	data.notes = "This verb is defective and it is not conjugated in certain"
 		.. " tenses and plural persons. Using " .. link("faire") ..
 		" '''frire''' is recommended."
-	construct_non_er_conj(data, "fris", "fris", "fris", "fri", nil, "frit")
+	construct_non_er_conj(data, "fri", "fris", "fris", "fri", nil, "frit")
 	-- clear subjunctive present and past
 	m_core.make_sub_pa(data, "—")
 	m_core.make_sub_p(data, "—")
@@ -1560,7 +1570,7 @@ conj["plaire"] = function(data)
 		.. link("taire") .. ", except that the third person singular of the "
 		.. "present indicative may take a circumflex on the ‘i’."
 	construct_non_er_conj(data, "plai", "plais", "plais", "plu")
-	data.prons.ind_p_3s = {"plaît", "plait"}
+	data.forms.ind_p_3s = {"plaît", "plait"}
 end
 
 conj["suivre"] = function(data)
@@ -1574,8 +1584,8 @@ end
 conj["valoir"] = function(data)
 	construct_non_er_conj(data, "vau", "val", "val", "valu", "vaudr", nil,
 		data.stem == "pré" and "val" or "vaill", "val")
-	data.prons.ind_p_1s = "vaux"
-	data.prons.ind_p_2s = "vaux"
+	data.forms.ind_p_1s = "vaux"
+	data.forms.ind_p_2s = "vaux"
 	m_core.clear_imp(data)
 	data.cat = "defective"
 end
@@ -1662,9 +1672,13 @@ local function auto(pagename)
 	if stem then
 		return stem, "é-er"
 	end
-	-- check for acheter, etc.; also verbs like sevrer; exclude -exer, -ecer,
-	-- -eger, -eyer
-	stem = rmatch(pagename, "^(.*e" .. written_cons_no_cgyx_c .. "[lr]?)er$")
+	-- check for acheter, etc.; exclude -exer, -ecer, -eger, -eyer
+	stem = rmatch(pagename, "^(.*e" .. written_cons_no_cgyx_c .. ")er$")
+	if stem then
+		return stem, "e-er"
+	end
+	-- check for sevrer, etc.; exclude -ller, -rrer, -rler (perler)
+	stem = rmatch(pagename, "^(.*e" .. written_cons_no_lryx_c .. "[lr])er$")
 	if stem then
 		return stem, "e-er"
 	end
@@ -1712,7 +1726,29 @@ function export.do_generate_forms(args)
 	local stem = args[1] or ""
 	local typ = args[2] or ""
 	local argspron = args.pron
+	local en = false
+	local y = false
+	local yen = false
+	local l = false
+	local le = false
+	local la = false
+	local les = false
+	local l_y = false
+    local l_en = false
+    local l_yen = false
+    local lesen = false
+    local lesyen = false
+	local lesy = false
 	local refl = false
+    local reflen = false
+	local reflle = false
+	local reflla = false
+	local reflles = false
+	local reflly = false
+	local refllesy = false
+    local refly = false
+	local reflyen = false
+
 	if typ == "" then typ = stem; stem = ""; end
 
 	local PAGENAME = mw.title.getCurrentTitle().text
@@ -1728,7 +1764,99 @@ function export.do_generate_forms(args)
 	end
 
 	-- autodetect reflexives
-	if rfind(stem, "^s'") then
+    if rfind(stem, "^les y en ") then
+		stem = rsub(stem, "^les y en ", "")
+		argspron = strip_respelling_beginning(argspron, "les y en ", "split")
+		lesyen = true
+    elseif rfind(stem, "^les en ") then
+		stem = rsub(stem, "^les en ", "")
+		argspron = strip_respelling_beginning(argspron, "les en ", "split")
+		lesen = true
+    elseif rfind(stem, "^s'en ") then
+		stem = rsub(stem, "^s'en ", "")
+		argspron = strip_respelling_beginning(argspron, "s'en ", "split")
+		reflen = true
+    elseif rfind(stem, "^se le ") then
+		stem = rsub(stem, "^se le ", "")
+		argspron = strip_respelling_beginning(argspron, "se le ", "split")
+		reflle = true
+    elseif rfind(stem, "^se la ") then
+		stem = rsub(stem, "^se la ", "")
+		argspron = strip_respelling_beginning(argspron, "se la ", "split")
+		reflla = true
+    elseif rfind(stem, "^se l'") then
+		stem = rsub(stem, "^se l'", "")
+		argspron = strip_respelling_beginning(argspron, "se l'", "split")
+		refll = true
+    elseif rfind(stem, "^se les y ") then
+		stem = rsub(stem, "^se les y ", "")
+		argspron = strip_respelling_beginning(argspron, "se les y ", "split")
+		refllesy = true
+    elseif rfind(stem, "^les y ") then
+		stem = rsub(stem, "^les y ", "")
+		argspron = strip_respelling_beginning(argspron, "les y ", "split")
+		lesy = true
+    elseif rfind(stem, "^se les ") then
+		stem = rsub(stem, "^se les ", "")
+		argspron = strip_respelling_beginning(argspron, "se les ", "split")
+		reflles = true
+    elseif rfind(stem, "^les ") then
+		stem = rsub(stem, "^les ", "")
+		argspron = strip_respelling_beginning(argspron, "les ", "split")
+		les = true
+    elseif rfind(stem, "^se l'y ") then
+		stem = rsub(stem, "^se l'y ", "")
+		argspron = strip_respelling_beginning(argspron, "se l'y ", "split")
+		reflly = true
+    elseif rfind(stem, "^l'y ") then
+		stem = rsub(stem, "^l'y ", "")
+		argspron = strip_respelling_beginning(argspron, "l'y ", "split")
+		l_y = true
+    elseif rfind(stem, "^l'en ") then
+		stem = rsub(stem, "^l'en ", "")
+		argspron = strip_respelling_beginning(argspron, "l'en ", "split")
+		l_en = true
+    elseif rfind(stem, "^l'") then
+		stem = rsub(stem, "^l'", "")
+		argspron = strip_respelling_beginning(argspron, "l'", "split")
+		l = true
+    elseif rfind(stem, "^le ") then
+		stem = rsub(stem, "^le ", "")
+		argspron = strip_respelling_beginning(argspron, "le ", "split")
+		le = true
+    elseif rfind(stem, "^la ") then
+		stem = rsub(stem, "^la ", "")
+		argspron = strip_respelling_beginning(argspron, "la ", "split")
+		la = true
+    elseif rfind(stem, "^le ") then
+		stem = rsub(stem, "^le ", "")
+		argspron = strip_respelling_beginning(argspron, "le ", "split")
+		le = true
+    elseif rfind(stem, "^la ") then
+		stem = rsub(stem, "^la ", "")
+		argspron = strip_respelling_beginning(argspron, "la ", "split")
+		la = true
+    elseif rfind(stem, "^s'y en ") then
+		stem = rsub(stem, "^s'y en ", "")
+		argspron = strip_respelling_beginning(argspron, "s'y en ", "split")
+		reflyen = true
+    elseif rfind(stem, "^y en ") then
+		stem = rsub(stem, "^y en ", "")
+		argspron = strip_respelling_beginning(argspron, "y en ", "split")
+		yen = true
+    elseif rfind(stem, "^en ") then
+		stem = rsub(stem, "^en ", "")
+		argspron = strip_respelling_beginning(argspron, "en ", "split")
+		en = true
+    elseif rfind(stem, "^s'y ") then
+		stem = rsub(stem, "^s'y ", "")
+		argspron = strip_respelling_beginning(argspron, "s'y ", "split")
+		refly = true
+    elseif rfind(stem, "^y ") then
+		stem = rsub(stem, "^y ", "")
+		argspron = strip_respelling_beginning(argspron, "y ", "split")
+		y = true
+    elseif rfind(stem, "^s'") then
 		stem = rsub(stem, "^s'", "")
 		argspron = strip_respelling_beginning(argspron, "s'", "split")
 		refl = true
@@ -1736,7 +1864,7 @@ function export.do_generate_forms(args)
 		stem = rsub(stem, "^se ", "")
 		argspron = strip_respelling_beginning(argspron, "se ", "split")
 		refl = true
-	end
+    end
 
 	local pronargs = argspron and rsplit(argspron, ",") or {false}
 	local all_forms, all_prons 
@@ -1744,7 +1872,29 @@ function export.do_generate_forms(args)
 		local pronarg = pronargs[i]
 		if pronarg == false then pronarg = nil end
 		data = {
+			en = en,
+			y = y,
+			yen = yen,
+			l = l,
+			le = le,
+			la = la,
+			les = les,
+			l_en = l_en,
+			l_y = l_y,
+			l_yen = l_yen,
+			lesen = lesen,
+			lesy = lesy,
+			lesyen = lesyen,
 			refl = refl,
+			reflen = reflen,
+			refll = refll,
+			reflle = reflle,
+			reflla = reflla,
+			reflles = reflles,
+			reflly = reflly,
+			refllesy = refllesy,
+			refly = refly,
+			reflyen = reflyen,
 			stem = stem,
 			aux = "avoir",
 			pron = pronarg,
@@ -1775,6 +1925,15 @@ function export.do_generate_forms(args)
 	-- type the same, but might matter one day if we break this assumption.
 	m_core.extract(data, args)
 
+	if args.archaic then
+		for k, v in pairs(data.forms) do
+			data.forms[k] = map(v, function(val)
+				val = rsub(val, "ai", "oi")
+				val = rsub(val, "â", "as")
+				return val end)
+		end
+	end
+
 	if args.impers or args.onlythird then
 		if data.notes then
 			data.notes = data.notes .. "\n"
@@ -1792,6 +1951,15 @@ function export.do_generate_forms(args)
 		only_third_verb(data)
 	end
 
+	if args.note then
+		if data.notes then
+			data.notes = data.notes .. "\n"
+		else
+			data.notes = ""
+		end
+		data.notes = data.notes .. args.note
+	end
+	
 	if data.notes then data.notes = rsub(data.notes, "{stem}", data.stem) end
 	for key,val in pairs(data.forms) do
 		if type(val) == "table" then
@@ -1807,6 +1975,110 @@ function export.do_generate_forms(args)
 		end
 	end
 
+	-- args.en can override data.en
+	if args.en == "n" or args.en == "no" then
+		data.en = false
+	elseif args.en then
+		data.en = true
+	end
+	if data.en then m_core.en(data) end
+
+	-- args.y can override data.y
+	if args.y == "n" or args.y == "no" then
+		data.y = false
+	elseif args.y then
+		data.y = true
+	end
+	if data.y then m_core.y(data) end
+
+	-- args.yen can override data.yen
+	if args.yen == "n" or args.yen == "no" then
+		data.yen = false
+	elseif args.yen then
+		data.yen = true
+	end
+	if data.yen then m_core.yen(data) end
+
+	-- args.le can override data.le
+	if args.le == "n" or args.le == "no" then
+		data.le = false
+	elseif args.le then
+		data.le = true
+	end
+	if data.le then m_core.le(data) end
+
+	-- args.la can override data.la
+	if args.la == "n" or args.la == "no" then
+		data.la = false
+	elseif args.la then
+		data.la = true
+	end
+	if data.la then m_core.la(data) end
+
+	-- args.l can override data.l
+	if args.l == "n" or args.l == "no" then
+		data.l = false
+	elseif args.l then
+		data.l = true
+	end
+	if data.l then m_core.l(data) end
+
+	-- args.les can override data.les
+	if args.les == "n" or args.les == "no" then
+		data.les = false
+	elseif args.les then
+		data.les = true
+	end
+	if data.les then m_core.les(data) end
+
+	-- args.l_en can override data.yen 
+	if args.l_en == "n" or args.l_en == "no" then
+		data.l_en = false
+	elseif args.l_en then
+		data.l_en = true
+	end
+	if data.l_en then m_core.l_en(data) end
+
+	-- args.l_y can override data.l_y
+	if args.l_y == "n" or args.l_y == "no" then
+		data.l_y = false
+	elseif args.l_y then
+		data.l_y = true
+	end
+	if data.l_y then m_core.l_y(data) end
+
+	-- args.l_yen can override data.l_yen
+	if args.l_yen == "n" or args.l_yen == "no" then
+		data.l_yen = false
+	elseif args.l_yen then
+		data.l_yen = true
+	end
+	if data.l_yen then m_core.l_yen(data) end
+
+	-- args.lesen can override data.lesen
+	if args.lesen == "n" or args.lesen == "no" then
+		data.lesen = false
+	elseif args.lesen then
+		data.lesen = true
+	end
+	if data.lesen then m_core.lesen(data) end
+
+	-- args.lesy can override data.lesy
+	if args.lesy == "n" or args.lesy == "no" then
+		data.lesy = false
+	elseif args.lesy then
+		data.lesy = true
+	end
+	if data.lesy then m_core.lesy(data) end
+
+	-- args.lesyen can override data.lesyen
+	if args.lesyen == "n" or args.lesyen == "no" then
+		data.lesyen = false
+	elseif args.lesyen then
+		data.lesyen = true
+	end
+	if data.lesyen then m_core.lesyen(data) end
+
 	-- args.refl can override data.refl
 	if args.refl == "n" or args.refl == "no" then
 		data.refl = false
@@ -1815,17 +2087,149 @@ function export.do_generate_forms(args)
 	end
 	if data.refl then m_core.refl(data) end
 
+	-- args.reflen can override data.reflen
+	if args.reflen == "n" or args.reflen == "no" then
+		data.reflen = false
+	elseif args.reflen then
+		data.reflen = true
+	end
+	if data.reflen then m_core.reflen(data) end
+
+	-- args.refll can override data.refll
+	if args.refll == "n" or args.refll == "no" then
+		data.refll = false
+	elseif args.refll then
+		data.refll = true
+	end
+	if data.refll then m_core.refll(data) end
+
+	-- args.reflle can override data.reflle
+	if args.reflle == "n" or args.reflle == "no" then
+		data.reflle = false
+	elseif args.reflle then
+		data.reflle = true
+	end
+	if data.reflle then m_core.reflle(data) end
+
+	-- args.reflla can override data.reflla
+	if args.reflla == "n" or args.reflla == "no" then
+		data.reflla = false
+	elseif args.reflla then
+		data.reflla = true
+	end
+	if data.reflla then m_core.reflla(data) end
+
+	-- args.reflles can override data.reflles
+	if args.reflles == "n" or args.reflles == "no" then
+		data.reflles = false
+	elseif args.reflles then
+		data.reflles = true
+	end
+	if data.reflles then m_core.reflles(data) end
+
+	-- args.reflly can override data.reflly
+	if args.reflly == "n" or args.reflly == "no" then
+		data.reflly = false
+	elseif args.reflly then
+		data.reflly = true
+	end
+	if data.reflly then m_core.reflly(data) end
+
+	-- args.refllesy can override data.refllesy
+	if args.refllesy == "n" or args.refllesy == "no" then
+		data.refllesy = false
+	elseif args.refllesy then
+		data.refllesy = true
+	end
+	if data.refllesy then m_core.refllesy(data) end
+
+	-- args.refly can override data.refly
+	if args.refly == "n" or args.refly == "no" then
+		data.refly = false
+	elseif args.refly then
+		data.refly = true
+	end
+	if data.refly then m_core.refly(data) end
+
+	-- args.reflyen can override data.reflyen
+	if args.reflyen == "n" or args.reflyen == "no" then
+		data.reflyen = false
+	elseif args.reflyen then
+		data.reflyen = true
+	end
+	if data.reflyen then m_core.reflyen(data) end
+
 	if etre[data.forms.inf] then
 		data.aux = "être"
 	elseif avoir_or_etre[data.forms.inf] then
 		data.aux = "avoir or être"
 	end
 	if args.aux == "a" or args.aux == "avoir" then
-		data.aux = "avoir"
+        if data.le == true then
+                data.aux = "l'avoir"
+        elseif data.la == true then
+                data.aux = "l'avoir"
+        elseif data.l == true then
+                data.aux = "l'avoir"
+        elseif data.l_y == true then
+                data.aux = "l'y avoir"
+        elseif data.y == true then
+                data.aux = "y avoir"
+        elseif data.les == true then
+                data.aux = "les avoir"
+        elseif data.lesy == true then
+                data.aux = "les y avoir"
+        elseif data.en == true then
+                data.aux = "en avoir"
+        elseif data.yen == true then
+                data.aux = "y en avoir"
+        else
+                data.aux = "avoir"
+        end
 	elseif args.aux == "e" or args.aux == "être" then
-		data.aux = "être"
+        if data.le == true then
+                data.aux = "l'être"
+        elseif data.la == true then
+                data.aux = "l'être"
+        elseif data.l == true then
+                data.aux = "l'être"
+        elseif data.l_y == true then
+                data.aux = "l'y être"
+        elseif data.y == true then
+                data.aux = "y être"
+        elseif data.les == true then
+                data.aux = "les être"
+        elseif data.lesy == true then
+                data.aux = "les y être"
+        elseif data.en == true then
+                data.aux = "en être"
+        elseif data.yen == true then
+                data.aux = "y en être"
+        else
+                data.aux = "être"
+        end
 	elseif args.aux == "ae" or args.aux == "avoir,être" or args.aux == "avoir or être" then
-		data.aux = "avoir or être"
+        if data.le == true then
+                data.aux = "l'avoir or être"
+        elseif data.la == true then
+                data.aux = "l'avoir or être"
+        elseif data.l == true then
+                data.aux = "l'avoir or être"
+        elseif data.l_y == true then
+                data.aux = "l'y avoir or être"
+        elseif data.y == true then
+                data.aux = "y avoir or être"
+        elseif data.les == true then
+                data.aux = "les avoir or être"
+        elseif data.lesy == true then
+                data.aux = "les y avoir or être"
+        elseif data.en == true then
+                data.aux = "en avoir or être"
+        elseif data.yen == true then
+                data.aux = "y en avoir or être"
+        else
+                data.aux = "avoir or être"
+        end
 	elseif args.aux then
 		error("Unrecognized value for aux=, should be 'a', 'e', 'ae', 'avoir', 'être', or 'avoir,être'")
 	end
@@ -1854,7 +2258,7 @@ function export.generate_forms(frame)
 		local array = data[arrayname]
 		for _, prop in ipairs(all_verb_props) do
 			local val = array[prop]
-			if type(val) == "string" then val = {val} end
+			if type(val) ~= "table" then val = {val} end
 			local newval = {}
 			for _, form in ipairs(val) do
 				if not rmatch(form, "—") then
@@ -1932,32 +2336,32 @@ function export.show(frame)
 
 	m_core.link(data)
 
-	local category = ""
+	local categories = {}
 	if data.aux == "être" then
-		category = "[[Category:French verbs taking être as auxiliary]]"
+		table.insert(categories, "French verbs taking être as auxiliary")
 	elseif data.aux == "avoir or être" then
-		category = "[[Category:French verbs taking avoir or être as auxiliary]]"
+		table.insert(categories, "French verbs taking avoir or être as auxiliary")
 	end
 	if data.conjcat then
-		category = category .. "[[Category:French verbs with conjugation " .. data.conjcat .. "]]"
+		table.insert(categories, "French verbs with conjugation " .. data.conjcat)
 	end
 	for _, cat in ipairs(data.cat) do
-		category = category .. "[[Category:French " .. cat .. " verbs]]"
+		table.insert(categories, "French " .. cat .. " verbs")
 	end
 	for _, group in ipairs(type(data.group) == "table" and data.group or {data.group}) do
 		if group == 1 then
-			category = category .. "[[Category:French first group verbs]]"
+			table.insert(categories, "French first group verbs")
 		elseif group == 2 then
-			category = category .. "[[Category:French second group verbs]]"
+			table.insert(categories, "French second group verbs")
 		else
-			category = category .. "[[Category:French third group verbs]]"
+			table.insert(categories, "French third group verbs")
 		end
 	end
 	if data.irregular == "yes" then
-		category = category .. "[[Category:French irregular verbs]]"
+			table.insert(categories, "French irregular verbs")
 	end
 
-	return m_conj.make_table(data) .. category
+	return m_conj.make_table(data) .. m_utilities.format_categories(categories, lang)
 end
 
 return export
