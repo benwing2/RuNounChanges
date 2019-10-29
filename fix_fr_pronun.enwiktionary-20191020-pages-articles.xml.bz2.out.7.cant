@@ -450,7 +450,7 @@ y|Page 724074 cosmonaute: WARNING: Can't replace {{IPA|fr|/kɔs.mɔ.nɔt/}} with
 y|Page 725106 pieuté: WARNING: Can't replace {{IPA|fr|/pjø.te/}} with {{fr-IPA}} because auto-generated pron pjœ.te doesn't match pjø.te
 y|Page 728047 bloquera: WARNING: Can't replace {{IPA|fr|/blokəʁa/}} with {{fr-IPA|pos=v}} because auto-generated pron blɔkʁa doesn't match blokəʁa
 y|Page 734949 lesbienne: WARNING: Can't replace {{IPA|fr|/lɛzbjɛn/}} with {{fr-IPA}} because auto-generated pron lɛsbjɛn doesn't match lɛzbjɛn
-y|Page 739357 chirurgien: WARNING: Can't replace {{IPA|fr|/si.ryr.ʒɛ̃/}} with {{fr-IPA}} because auto-generated pron ʃi.ʁyʁ.ʒjɛ̃ doesn't match si.ʁyʁ.ʒɛ̃
+-|Page 739357 chirurgien: WARNING: Can't replace {{IPA|fr|/si.ryr.ʒɛ̃/}} with {{fr-IPA}} because auto-generated pron ʃi.ʁyʁ.ʒjɛ̃ doesn't match si.ʁyʁ.ʒɛ̃
 y|Page 739634 cantonais: WARNING: Can't replace {{IPA|fr|/kã.to.nɛ/}} with {{fr-IPA}} because auto-generated pron kɑ̃.tɔ.nɛ doesn't match kã.to.nɛ
 soule|Page 740699 saoule: WARNING: Can't replace {{IPA|fr|/sul/}} with {{fr-IPA|pos=vnv}} because auto-generated pron saul doesn't match sul
 y|Page 758542 scrotales: WARNING: Can't replace {{IPA|fr|/skʁotal/}} with {{fr-IPA}} because auto-generated pron skʁɔtal doesn't match skʁotal
@@ -2142,11 +2142,11 @@ y|Page 1608863 pollinisassiez: WARNING: Can't replace {{IPA|fr|/po.li.ni.za.sje/
 y|Page 1608864 pollinisassent: WARNING: Can't replace {{IPA|fr|/po.li.ni.zas/}} with {{fr-IPA|pos=v}} because auto-generated pron pɔ.li.ni.zas doesn't match po.li.ni.zas
 entremêlant,entremélant|Page 1608937 entremêlant: WARNING: Can't replace {{IPA|fr|/ɑ̃tʁ.me.lɑ̃/}} with {{fr-IPA|pos=v}} because auto-generated pron ɑ̃.tʁə.mɛ.lɑ̃ doesn't match ɑ̃tʁ.me.lɑ̃
 entremêlé,entremélé|Page 1608938 entremêlé: WARNING: Can't replace {{IPA|fr|/ɑ̃tʁ.me.le/}} with {{fr-IPA}} because auto-generated pron ɑ̃.tʁə.mɛ.le doesn't match ɑ̃tʁ.me.le
-entremêle,entreméle|Page 1608939 entremêle: WARNING: Can't replace {{IPA|fr|/ɑ̃tʁ.mel/}} with {{fr-IPA|pos=v}} because auto-generated pron ɑ̃.tʁə.mɛl doesn't match ɑ̃tʁ.mel
-entremêles,entreméles|Page 1608940 entremêles: WARNING: Can't replace {{IPA|fr|/ɑ̃tʁ.mel/}} with {{fr-IPA|pos=v}} because auto-generated pron ɑ̃.tʁə.mɛl doesn't match ɑ̃tʁ.mel
+y|Page 1608939 entremêle: WARNING: Can't replace {{IPA|fr|/ɑ̃tʁ.mel/}} with {{fr-IPA|pos=v}} because auto-generated pron ɑ̃.tʁə.mɛl doesn't match ɑ̃tʁ.mel
+y|Page 1608940 entremêles: WARNING: Can't replace {{IPA|fr|/ɑ̃tʁ.mel/}} with {{fr-IPA|pos=v}} because auto-generated pron ɑ̃.tʁə.mɛl doesn't match ɑ̃tʁ.mel
 entremêlons,entremélons|Page 1608941 entremêlons: WARNING: Can't replace {{IPA|fr|/ɑ̃tʁ.me.lɔ̃/}} with {{fr-IPA|pos=v}} because auto-generated pron ɑ̃.tʁə.mɛ.lɔ̃ doesn't match ɑ̃tʁ.me.lɔ̃
 entremêlez,entremélez|Page 1608942 entremêlez: WARNING: Can't replace {{IPA|fr|/ɑ̃tʁ.me.le/}} with {{fr-IPA|pos=v}} because auto-generated pron ɑ̃.tʁə.mɛ.le doesn't match ɑ̃tʁ.me.le
-entremêlent,entremélent|Page 1608943 entremêlent: WARNING: Can't replace {{IPA|fr|/ɑ̃tʁ.mel/}} with {{fr-IPA|pos=v}} because auto-generated pron ɑ̃.tʁə.mɛl doesn't match ɑ̃tʁ.mel
+y|Page 1608943 entremêlent: WARNING: Can't replace {{IPA|fr|/ɑ̃tʁ.mel/}} with {{fr-IPA|pos=v}} because auto-generated pron ɑ̃.tʁə.mɛl doesn't match ɑ̃tʁ.mel
 entremêlais,entremélais|Page 1608944 entremêlais: WARNING: Can't replace {{IPA|fr|/ɑ̃tʁ.me.lɛ/}} with {{fr-IPA|pos=v}} because auto-generated pron ɑ̃.tʁə.mɛ.lɛ doesn't match ɑ̃tʁ.me.lɛ
 entremêlait,entremélait|Page 1608945 entremêlait: WARNING: Can't replace {{IPA|fr|/ɑ̃tʁ.me.lɛ/}} with {{fr-IPA|pos=v}} because auto-generated pron ɑ̃.tʁə.mɛ.lɛ doesn't match ɑ̃tʁ.me.lɛ
 entremêlions,entremélions|Page 1608946 entremêlions: WARNING: Can't replace {{IPA|fr|/ɑ̃tʁ.me.ljɔ̃/}} with {{fr-IPA|pos=v}} because auto-generated pron ɑ̃.tʁə.mɛ.ljɔ̃ doesn't match ɑ̃tʁ.me.ljɔ̃
@@ -3091,8 +3091,8 @@ hypertrikose|Page 6414386 hypertrichose: WARNING: Can't replace {{IPA|fr|/i.pɛ�
 trikinose|Page 6414391 trichinose: WARNING: Can't replace {{IPA|fr|/tʁi.ki.noz/}} with {{fr-IPA}} because auto-generated pron tʁi.ʃi.noz doesn't match tʁi.ki.noz
 -|Page 6457665 hanout: WARNING: Can't replace {{IPA|fr|/ħæ.nuːt/}} with {{fr-IPA}} because auto-generated pron a.nu doesn't match ħæ.nuːt
 -|Page 6457666 haouanet: WARNING: Can't replace {{IPA|fr|/ħæ.wæː.net/}} with {{fr-IPA}} because auto-generated pron a.wa.nɛ doesn't match ħæ.wæː.net
-eux‿autres|Page 6501449 eux-autres: WARNING: Can't replace {{IPA|fr|/ø.z‿otʁ/}} with {{fr-IPA}} because auto-generated pron ø.otʁ doesn't match ø.z‿otʁ
-eux‿autres|Page 6501449 eux-autres: WARNING: Can't replace {{IPA|fr|/ø.z‿ot/}} with {{fr-IPA}} because auto-generated pron ø.otʁ doesn't match ø.z‿ot
+-|Page 6501449 eux-autres: WARNING: Can't replace {{IPA|fr|/ø.z‿otʁ/}} with {{fr-IPA}} because auto-generated pron ø.otʁ doesn't match ø.z‿otʁ
+-|Page 6501449 eux-autres: WARNING: Can't replace {{IPA|fr|/ø.z‿ot/}} with {{fr-IPA}} because auto-generated pron ø.otʁ doesn't match ø.z‿ot
 y|Page 6543728 Centre-Val de Loire: WARNING: Can't replace {{IPA|fr|/sɑ̃tʁ(ə) val də lwaʁ/}} with {{fr-IPA}} because auto-generated pron sɑ̃tʁəval də lwaʁ doesn't match sɑ̃tʁ(ə) val də lwaʁ
 y|Page 6577795 réglet: WARNING: Can't replace {{IPA|fr|/ˈɹɛɡlɛ/}} with {{fr-IPA}} because auto-generated pron ʁeɡlɛ doesn't match ˈɹɛɡlɛ
 -|Page 6596431 djô: WARNING: Can't replace {{IPA|fr|/dʒɔ/}} with {{fr-IPA|pos=v}} because auto-generated pron dʒo doesn't match dʒɔ
