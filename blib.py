@@ -778,6 +778,7 @@ def create_argparser(desc, include_pagefile=False, include_stdin=False,
     parser.add_argument("--refs", help="List of references to process, comma-separated.")
     parser.add_argument("--ref-namespaces", help="List of namespace(s) to restrict --refs to.")
     parser.add_argument("--filter-pages", help="Regex to use to filter page names.")
+    parser.add_argument("--filter-pages-not", help="Regex to use to filter page names; only includes pages not matching this regex.")
   if include_stdin:
     parser.add_argument("--stdin", help="Read dump from stdin.", action="store_true")
   return parser
@@ -864,12 +865,15 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
     filter_pages=None, ref_namespaces=None):
   args_ref_namespaces = args.ref_namespaces and args.ref_namespaces.decode("utf-8")
   args_filter_pages = args.filter_pages and args.filter_pages.decode("utf-8")
+  args_filter_pages_not = args.filter_pages_not and args.filter_pages_not.decode("utf-8")
   def process_page(page, i):
     if filter_pages or args_filter_pages:
       pagetitle = unicode(page.title())
       if filter_pages and not filter_pages(pagetitle):
         return
       if args_filter_pages and not re.search(args_filter_pages, pagetitle):
+        return
+      if args_filter_pages_not and re.search(args_filter_pages_not, pagetitle):
         return
     def do_process_page(page, index, parsed=None):
       if stdin:
