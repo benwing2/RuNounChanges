@@ -119,21 +119,10 @@ local function rsub(term, foo, bar)
 	return retval
 end
 
--- FIXME! Move to a utility module.
+-- FIXME! Change callers of this to directly call [[Module:string utilities]].
 
 function export.ucfirst(text)
-	local function doucfirst(text)
-		-- Actual function to uppercase first letter.
-		return mw.ustring.upper(mw.ustring.sub(text, 1, 1)) .. mw.ustring.sub(text, 2)
-	end
-	-- If there's a link at the beginning, uppercase the first letter of the
-	-- link text. This pattern matches both piped and unpiped links.
-	-- If the link is not piped, the second capture (linktext) will be empty.
-	local link, linktext, remainder = rmatch(text, "^%[%[([^|%]]+)%|?(.-)%]%](.*)$")
-	if link then
-		return "[[" .. link .. "|" .. doucfirst(linktext ~= "" and linktext or link) .. "]]" .. remainder
-	end
-	return doucfirst(text)
+	return require("Module:string utilities").ucfirst(text)
 end
 
 
