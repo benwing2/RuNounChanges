@@ -10,10 +10,12 @@ parser = blib.create_argparser(u"List pages, lemmas and/or non-lemmas")
 parser.add_argument('--tempfile', help="Templates and aliases to do")
 parser.add_argument('--include-refs', help="Include column for template references",
     action="store_true")
+parser.add_argument('--ref-namespaces', help="List of namespaces to restrict references to")
 parser.add_argument('--include-disposition', help="Include column for disposition",
     action="store_true")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
+ref_namespaces = args.ref_namespaces and args.ref_namespaces.decode("utf-8") or None
 
 lines = [x.strip() for x in codecs.open(args.tempfile, "r", "utf-8")]
 
@@ -30,7 +32,7 @@ for ref_and_aliases in lines:
     refs.append(("Template:%s" % alias, mainref))
   for alias, mainref in refs:
     errmsg("Processing references to: %s" % alias)
-    template_refs = list(blib.references(alias, start, end))
+    template_refs = list(blib.references(alias, start, end, namespaces=ref_namespaces))
     num_refs = len(template_refs)
     msg("|-")
     msg("| %s || %s || %s%s%s" % (
