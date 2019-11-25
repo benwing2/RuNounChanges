@@ -28,7 +28,7 @@ def truncate(text):
     return text
   return text[0:max_truncate_len] + "..."
 
-def push_manual_changes(save, verbose, direcfile, annotation, startFrom, upTo):
+def push_manual_changes(save, verbose, diff, direcfile, annotation, startFrom, upTo):
   template_changes = []
   for line in codecs.open(direcfile, "r", encoding="utf-8"):
     line = line.strip()
@@ -57,6 +57,8 @@ def push_manual_changes(save, verbose, direcfile, annotation, startFrom, upTo):
           template_changes.append((pagename, repl, curr))
         else:
           template_changes.append(m.groups())
+      else:
+        msg("WARNING: Ignoring line with from=to: %s" % line)
     else:
       mpage = re.search(r"^(?:Page [^ ]+ )(.*?): (.*)$", line)
       if not mpage:
@@ -67,6 +69,8 @@ def push_manual_changes(save, verbose, direcfile, annotation, startFrom, upTo):
         curr, repl = m.groups()
         if curr != repl:
           template_changes.append((pagename, repl, curr))
+        else:
+          msg("WARNING: Ignoring line with from=to: %s" % line)
 
   for current, index in blib.iter_pages(template_changes, startFrom, upTo,
       # key is the page name
@@ -126,7 +130,7 @@ def push_manual_changes(save, verbose, direcfile, annotation, startFrom, upTo):
         index, pagename))
     else:
       blib.do_edit(page, index, push_one_manual_change, save=save,
-          verbose=verbose)
+          verbose=verbose, diff=diff)
 
 pa = blib.init_argparser("Push manual changes to Wiktionary")
 pa.add_argument("--file",
@@ -137,4 +141,4 @@ pa.add_argument("--annotation", default="manually",
 params = pa.parse_args()
 startFrom, upTo = blib.parse_start_end(params.start, params.end)
 
-push_manual_changes(params.save, params.verbose, params.file, params.annotation.decode('utf-8'), startFrom, upTo)
+push_manual_changes(params.save, params.verbose, params.diff, params.file, params.annotation.decode('utf-8'), startFrom, upTo)
