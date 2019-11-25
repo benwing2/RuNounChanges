@@ -166,21 +166,44 @@ local function is_link_or_html(tag)
 end
 
 
--- Look up a shortcut tag and return its expansion. If no expansion found,
--- return the tag itself. If the expansion is a string and is different
--- from the tag, track it if DO_TRACK is true. This first looks up in
--- [[Module:form of/data]] (which includes more common tags) and then in
+-- Look up a tag (either a shortcut of any sort of a canonical long-form tag)
+-- and return its expansion. The expansion will be a string unless the
+-- shortcut is a list-tag shortcut such as "1s"; in that case, the expansion
+-- will be a list. The caller must handle both cases. Only one level of
+-- expansion happens; hence, "acc" expands to "accusative", "1s" expands to
+-- {"1", "s"} (not to {"first", "singular"}) and "123" expands to "1//2//3".
+-- The expansion will be the same as the passed-in tag in the following
+-- circumstances:
+--
+-- 1. The tag is ";" (this is special-cased, and no lookup is done).
+-- 2. The tag is a multipart tag such as "nom//acc" (this is special-cased,
+--    and no lookup is done).
+-- 3. The tag contains a raw link (this is special-cased, and no lookup is
+--    done).
+-- 4. The tag contains HTML (this is special-cased, and no lookup is done).
+-- 5. The tag is already a canonical long-form tag.
+-- 6. The tag is unrecognized.
+--
+-- This function first looks up in [[Module:form of/data]] (which includes
+-- more common tags) and then (only if the tag is not recognized as a
+-- shortcut or canonical tag, and is not of types 1-4 above) in
 -- [[Module:form of/data2]].
 --
--- NOTE: The return value may be either a string or (in the case of a
--- list-tag shortcut) a list, and the caller must handle both cases.
-local function lookup_shortcut(tag, do_track)
+-- If the expansion is a string and is different from the tag, track it if
+-- DO_TRACK is true.
+function export.lookup_shortcut(tag, do_track)
 	-- If there is HTML or a link in the tag, return it directly; don't try
 	-- to look it up, which will fail.
-	if is_link_or_html(tag) then
+	if tag == ";" or tag:find("//", nil, true) or is_link_or_html(tag) then
 		return tag
 	end
 	local m_data = mw.loadData("Module:form of/data")
+	-- If this is a canonical long-form tag, just return it, and don't
+	-- check for shortcuts (which will cause [[Module:form of/data2]] to be
+	-- loaded).
+	if m_data.tags[tag] then
+		return tag
+	end
 	local expansion = m_data.shortcuts[tag]
 	if not expansion then
 		local m_data2 = mw.loadData("Module:form of/data2")
@@ -201,7 +224,7 @@ end
 -- associated with it. If the tag isn't found, return nil. This first looks up
 -- in [[Module:form of/data]] (which includes more common tags) and then in
 -- [[Module:form of/data2]].
-local function lookup_tag(tag)
+function export.lookup_tag(tag)
 	local m_data = mw.loadData("Module:form of/data")
 	local tagobj = m_data.tags[tag]
 	if tagobj then
@@ -219,12 +242,12 @@ end
 -- Normalize a single tag, which may be a shortcut but should not be a
 -- multipart tag, a multipart-tag shortcut or a list-tag shortcut.
 local function normalize_single_tag(tag, do_track)
-	local expansion = lookup_shortcut(tag, do_track)
+	local expansion = export.lookup_shortcut(tag, do_track)
 	if type(expansion) ~= "string" then
 		error("Tag '" .. tag .. "' is a list-tag shortcut, which is not allowed here")
 	end
 	tag = expansion
-	if not lookup_tag(tag) and do_track then
+	if not export.lookup_tag(tag) and do_track then
 		-- If after all expansions and normalizations we don't recognize
 		-- the canonical tag, track it.
 		infl_track("unknown")
@@ -234,7 +257,7 @@ local function normalize_single_tag(tag, do_track)
 end
 
 
--- Normalize a component of a multipart tag. This should have any // in it,
+-- Normalize a component of a multipart tag. This should not have any // in it,
 -- but may join multiple individual tags with a colon, and may be a single
 -- list-tag shortcut, which is treates as if colon-separated. If
 -- RECOMBINE_TAGS isn't given, the return value may be a list of tags;
@@ -253,7 +276,7 @@ local function normalize_multipart_component(tag, recombine_tags, do_track)
 	if #components == 1 then
 		-- We allow list-tag shortcuts inside of multipart tags, e.g.
 		-- '1s//3p'. Check for this now.
-		tag = lookup_shortcut(tag, do_track)
+		tag = export.lookup_shortcut(tag, do_track)
 		if type(tag) == "table" then
 			-- We found a list-tag shortcut; treat as if colon-separated.
 			components = tag
@@ -365,7 +388,7 @@ function export.normalize_tags(tags, recombine_multitags, do_track)
 		end
 		-- Expand the tag, which may generate a new tag (either a
 		-- fully canonicalized tag, a multipart tag, or a list of tags).
-		tag = lookup_shortcut(tag, do_track)
+		tag = export.lookup_shortcut(tag, do_track)
 		if type(tag) == "table" then
 			for _, t in ipairs(tag) do
 				if do_track then
@@ -394,7 +417,7 @@ end
 -- passed in must be a string (i.e. it cannot be a list describing a
 -- multipart tag). To handle multipart tags, use get_tag_display_form().
 local function get_single_tag_display_form(normtag)
-	local data = lookup_tag(normtag)
+	local data = export.lookup_tag(normtag)
 
 	-- If the tag has a special display form, use it
 	if data and data.display then
@@ -645,9 +668,9 @@ function export.tagged_inflections(tags, terminfo, notext, capfirst, posttext, j
 			-- avoid the need for the == 1 check.
 			if #cur_infl > 0 then
 				local most_recent_tagobj = ulen(cur_infl[#cur_infl]) == 1 and
-					lookup_tag(cur_infl[#cur_infl])
+					export.lookup_tag(cur_infl[#cur_infl])
 				local to_insert_tagobj = ulen(to_insert) == 1 and
-					lookup_tag(to_insert)
+					export.lookup_tag(to_insert)
 				if (
 					(not most_recent_tagobj or
 					 not most_recent_tagobj.no_space_on_right) and
@@ -695,7 +718,7 @@ function export.to_Wikidata_IDs(tags, skip_tags_without_ids)
 			return nil
 		end
 
-		local data = lookup_tag(tag)
+		local data = export.lookup_tag(tag)
 
 		if not data or not data.wikidata then
 			if not skip_tags_without_ids then
