@@ -45,13 +45,10 @@ def process_page(page, index, parsed):
               rmparam(t, "1")
               notes.append("remove redundant respelling %s from {{fr-IPA}}" %
                   pron)
-            elif i < maxindex:
-              t.add(str(i), "")
-              notes.append("set redundant respelling %s in {{fr-IPA}} to blank" %
-                  pron)
             else:
-              pagemsg("WARNING: Can't remove redundant last pronunciation when multiple pronunciations: %s" %
-                  unicode(t))
+              t.add(str(i), "+")
+              notes.append("set redundant respelling %s in {{fr-IPA}} to +" %
+                  pron)
       if unicode(t) != origt:
         pagemsg("Replaced %s with %s" % (origt, unicode(t)))
 
