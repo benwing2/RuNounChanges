@@ -33,7 +33,7 @@ def process_page(index, page):
     else:
       pagemsg("Found old-style headword template(s) %s without decl" % ", ".join(headword_templates))
 
-parser = blib.create_argparser("Find nouns without declension")
+parser = blib.create_argparser("Find Russian nouns without declension")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
