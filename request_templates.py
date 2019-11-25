@@ -15,17 +15,6 @@ request_templates = [
     ],
     "lang1": "defund", "langlang": "no"
   }),
-  # With <code>1=</code> (no default; disables language-specific behavior)
-  ("rfscriptcat", {
-    "desc": "Boiler for categories for entries where native script is requested",
-    "cat": [
-      ("LANG terms needing native script|SCRIPT", "if |1= and |sc= are present"),
-      ("Terms needing native script by language", "if |1= but not |sc= are present"),
-      ("LANG entry maintenance|terms needing native script", "if |1= but not |sc= are present"),
-      ("Entry maintenance subcategories by language", "if |1= not present"),
-    ],
-    "lang1": "nodef", "langlang": "no"
-  }),
   # Requires <code>1=</code> (error when the lang is missing)
   ("attention", {
     "aliases": ["attn"],
@@ -44,6 +33,25 @@ request_templates = [
     ],
     "lang1": "req", "langlang": "no"
   }),
+  ("rfaccents", {
+    "desc": "Request for accents",
+    "cat": ["Requests for accents in LANG {{{2}}} entries"],
+    "lang1": "req", "langlang": "no"
+  }),
+  ("rfaspect", {
+    "desc": "Request for aspect",
+    "cat": ["Requests for aspect in LANG {{{2}}} entries"],
+    "lang1": "req", "langlang": "no"
+  }),
+  ("rfc", {
+    "desc": "Request for cleanup",
+    "cat": [
+      ("Requests for cleanup in LANG entries", "if |lang= is present and either main, Citations, Transwiki or Reconstruction namespaces"),
+      ("Requests for cleanup/Others", "if not main, Citations, Transwiki or Reconstruction namespaces"),
+      ("Entries needing topical attention", "if |topic= is present"),
+    ],
+    "lang1": "req", "langlang": "no"
+  }),
   ("rfc-level", {
     "desc": "Request for cleanup of entry with level or structure problems (bot-added)",
     "cat": [
@@ -52,21 +60,70 @@ request_templates = [
     ],
     "lang1": "req", "langlang": "no"
   }),
+  ("rfc-pron-n", {
+    "desc": "Request for cleanup of 'Pronunciation N' headers (bot-added)",
+    "cat": [
+      "LANGCODE:Entries with Pronunciation n headers",
+    ],
+    "lang1": "req", "langlang": "no"
+  }),
+  ("rfc-sense", {
+    "desc": "Request for cleanup of sense",
+    "cat": [
+      "Requests for cleanup in LANG entries",
+      ("Entries needing topical attention", "if |topic= is present"),
+    ],
+    "lang1": "req", "langlang": "no"
+  }),
+  ("rfclarify", {
+    "desc": "Request for clarification of definition",
+    "cat": [
+      "Requests for clarification of definitions in LANG entries",
+    ],
+    "lang1": "req", "langlang": "no"
+  }),
+  ("rfd-redundant", {
+    "desc": "Request for deletion of redundant sense",
+    "cat": [
+      "Requests for deletion",
+      "Requests for attention concerning LANG",
+      ("Entries needing topical attention", "if |topic= is present"),
+    ],
+    "lang1": "req", "langlang": "no"
+  }),
+  ("rfd-sense", {
+    "desc": "Request for deletion of sense",
+    "cat": [
+      "Requests for deletion in LANG entries",
+      ("Entries needing topical attention", "if |topic= is present"),
+    ],
+    "lang1": "req", "langlang": "no"
+  }),
   ("rfdate", {
     "desc": "Request for date in quote",
     "cat": ["Requests for date"],
     "lang1": "req", "langlang": "no"
   }),
-  ("rfdecl", {
-    "desc": "Request for declension",
+  ("rfdatek", {
+    "desc": "Request for quote date and details",
+    "cat": ["Requests for date/{{{2}}}"],
+    "lang1": "req", "langlang": "no"
+  }),
+  ("rfex", {
+    "desc": "Request for usage example for sense",
     "cat": [
-      "Requests for inflections in LANG {{{2}}} entries",
+      "Requests for example sentences in LANG",
+      ("Entries needing topical attention", "if |topic= is present"),
     ],
+    "lang1": "req", "langlang": "no"
+  }),
+  ("rfform", {
+    "desc": "Request for particular form in an inflected form",
     "lang1": "req", "langlang": "no"
   }),
   ("rfgender", {
     "desc": "Request for gender",
-    "cat": ["LANG terms with incomplete gender"],
+    "cat": ["Requests for gender in LANG entries"],
     "lang1": "req", "langlang": "no"
   }),
   ("rfi", {
@@ -84,9 +141,76 @@ request_templates = [
     ],
     "lang1": "req", "langlang": "no"
   }),
+  ("rfm", {
+    "desc": "Request for move, merger or split",
+    "cat": [
+      ("Requests for moves, mergers and splits", "in all namespaces"),
+      "Requests for attention concerning LANG",
+      ("Entries needing topical attention", "if |topic= is present"),
+    ],
+    "lang1": "req", "langlang": "no"
+  }),
+  ("rfp-old", {
+    "desc": "Request for pronunciation of obsolete terms",
+    "cat": [
+      "Requests for pronunciation in LANG entries",
+    ],
+    "lang1": "req", "langlang": "no"
+  }),
+  ("rfquote", {
+    "desc": "Request for quote",
+    "cat": [
+      "Requests for quotations in LANG",
+    ],
+    "lang1": "req", "langlang": "no"
+  }),
+  ("rfquote-sense", {
+    "desc": "Request for quote for sense",
+    "cat": [
+      "Requests for quotations in LANG",
+      ("Entries needing topical attention", "if |topic= is present"),
+    ],
+    "lang1": "req", "langlang": "no"
+  }),
+  ("rfref", {
+    "desc": "Request for references",
+    "cat": [
+      "Requests for references for LANG terms",
+    ],
+    "lang1": "req", "langlang": "no"
+  }),
   ("rfscript", {
-    "desc": "? (invokes module)",
-    "cat": ["? (invokes module)"],
+    "desc": "Request for script",
+    "cat": [
+      ("Requests for native script for LANG terms", "if |sc= and |usex= not specified"),
+      ("Requests for {{{sc}}} script for LANG terms", "if |sc= but not |usex= specified"),
+      ("Requests for native script in LANG usage examples", "if |usex= but not |sc= specified"),
+      ("Requests for {{{sc}}} script in LANG usage examples", "if |sc= and |usex= specified"),
+    ],
+    "lang1": "req", "langlang": "no"
+  }),
+  ("rftone", {
+    "desc": "Request for tone",
+    "cat": ["Requests for tone in LANG {{{2}}} entries"],
+    "lang1": "req", "langlang": "no"
+  }),
+  ("rftranslit", {
+    "desc": "Request for transliteration",
+    "cat": ["Requests for transliteration of LANG terms"],
+    "lang1": "req", "langlang": "no"
+  }),
+  ("rfv-etym", {
+    "desc": "Request for verification of etymology",
+    "cat": ["Requests for references for etymologies in LANG entries"],
+    "lang1": "req", "langlang": "no"
+  }),
+  ("rfv-pron", {
+    "desc": "Request for verification of pronunciation",
+    "cat": [
+      "Requests for references for pronunciation in LANG entries",
+      "Tea room",
+      "Requests for attention concerning LANG",
+    ],
     "lang1": "req", "langlang": "no"
   }),
   ("rfv-quote", {
@@ -98,14 +222,38 @@ request_templates = [
     ],
     "lang1": "req", "langlang": "no"
   }),
-  ("rftranslit", {
-    "desc": "Request for transliteration",
-    "cat": ["LANG terms needing transliteration"],
+  ("rfv-sense", {
+    "desc": "Request for verification of sense",
+    "cat": [
+      "Requests for verification in LANG entries",
+      ("Entries needing topical attention", "if |topic= is present"),
+      ("rfd with topic", "if |topic= is present, in all namespaces"),
+    ],
     "lang1": "req", "langlang": "no"
   }),
   ("t-needed", {
     "desc": "Request for translation",
-    "cat": ["Requests for transliterations into LANG"],
+    "cat": [
+      ("Requests for translations into LANG", "if |usex= not specified"),
+      ("Requests for translations of LANG usage examples", "if |usex= specified"),
+    ],
+    "lang1": "req", "langlang": "no"
+  }),
+  ("tea room", {
+    "desc": "Entry being discussed in the Tea Room",
+    "cat": [
+      "Tea room",
+      "Requests for attention concerning LANG",
+      ("Entries needing topical attention", "if |topic= is present"),
+    ],
+    "lang1": "req", "langlang": "no"
+  }),
+  ("tea room sense", {
+    "desc": "Sense being discussed in the Tea Room",
+    "cat": [
+      "Tea room",
+      ("Entries needing topical attention", "if |topic= is present"),
+    ],
     "lang1": "req", "langlang": "no"
   }),
   ("checksense", {
@@ -131,43 +279,12 @@ request_templates = [
     ],
     "lang1": "req", "langlang": "depwarn"
   }),
-  ("rfc", {
-    "desc": "Request for cleanup",
-    "cat": [
-      ("Requests for cleanup in LANG entries", "if |lang= is present and either main, Citations, Transwiki or Reconstruction namespaces"),
-      ("Requests for cleanup/Others", "if not main, Citations, Transwiki or Reconstruction namespaces"),
-      ("Entries needing topical attention", "if |topic= is present"),
-    ],
-    "lang1": "req", "langlang": "depwarn"
-  }),
   ("rfc-header", {
     "desc": "Request for cleanup of non-standard header (bot-added)",
     "cat": [
       "Entries with non-standard headers",
       ("Entries needing topical attention", "if |topic= is present"),
       "Requests for attention concerning LANG",
-    ],
-    "lang1": "req", "langlang": "depwarn"
-  }),
-  ("rfc-pron-n", {
-    "desc": "Request for cleanup of 'Pronunciation N' headers (bot-added)",
-    "cat": [
-      "LANGCODE:Entries with Pronunciation n headers",
-    ],
-    "lang1": "req", "langlang": "depwarn"
-  }),
-  ("rfc-sense", {
-    "desc": "Request for cleanup of sense",
-    "cat": [
-      "Requests for cleanup in LANG entries",
-      ("Entries needing topical attention", "if |topic= is present"),
-    ],
-    "lang1": "req", "langlang": "depwarn"
-  }),
-  ("rfclarify", {
-    "desc": "Request for clarification of definition",
-    "cat": [
-      "Requests for clarification of definitions in LANG entries",
     ],
     "lang1": "req", "langlang": "depwarn"
   }),
@@ -181,53 +298,18 @@ request_templates = [
     ],
     "lang1": "req", "langlang": "depwarn"
   }),
-  ("rfd-redundant", {
-    "desc": "Request for deletion of redundant sense",
+  ("rfdef", {
+    "desc": "Request for definition",
     "cat": [
-      "Requests for deletion",
-      "Requests for attention concerning LANG",
-      ("Entries needing topical attention", "if |topic= is present"),
+      "Requests for definitions in LANG entries",
     ],
     "lang1": "req", "langlang": "depwarn"
   }),
-  ("rfd-sense", {
-    "desc": "Request for deletion of sense",
-    "cat": [
-      "Requests for deletion in LANG entries",
-      ("Entries needing topical attention", "if |topic= is present"),
-    ],
-    "lang1": "req", "langlang": "depwarn"
-  }),
-  ("rfdatek", {
-    "desc": "Request for quote date and details",
-    "cat": ["Requests for date/{{{2}}}"],
-    "lang1": "req", "langlang": "depwarn"
-  }),
-  ("rfelite", {
+  ("rfe", {
     "desc": "Request for etymology",
+    "aliases": ["rfelite"],
     "cat": [
       "Requests for etymologies in LANG entries",
-    ],
-    "lang1": "req", "langlang": "depwarn"
-  }),
-  ("rfex", {
-    "desc": "Request for usage example for sense",
-    "cat": [
-      "Requests for example sentences in LANG",
-      ("Entries needing topical attention", "if |topic= is present"),
-    ],
-    "lang1": "req", "langlang": "depwarn"
-  }),
-  ("rfform", {
-    "desc": "Request for particular form in an inflected form",
-    "lang1": "req", "langlang": "depwarn"
-  }),
-  ("rfm", {
-    "desc": "Request for move, merger or split",
-    "cat": [
-      ("Requests for moves, mergers and splits", "in all namespaces"),
-      "Requests for attention concerning LANG",
-      ("Entries needing topical attention", "if |topic= is present"),
     ],
     "lang1": "req", "langlang": "depwarn"
   }),
@@ -235,28 +317,6 @@ request_templates = [
     "desc": "Request for pronunciation",
     "cat": [
       "Requests for pronunciation in LANG entries",
-      ("Entries needing topical attention", "if |topic= is present"),
-    ],
-    "lang1": "req", "langlang": "depwarn"
-  }),
-  ("rfp-old", {
-    "desc": "Request for pronunciation of obsolete terms",
-    "cat": [
-      "Requests for pronunciation in LANG entries",
-    ],
-    "lang1": "req", "langlang": "depwarn"
-  }),
-  ("rfquote", {
-    "desc": "Request for quote",
-    "cat": [
-      "Requests for quotations in LANG",
-    ],
-    "lang1": "req", "langlang": "depwarn"
-  }),
-  ("rfquote-sense", {
-    "desc": "Request for quote for sense",
-    "cat": [
-      "Requests for quotations in LANG",
       ("Entries needing topical attention", "if |topic= is present"),
     ],
     "lang1": "req", "langlang": "depwarn"
@@ -269,13 +329,6 @@ request_templates = [
     ],
     "lang1": "req", "langlang": "depwarn"
   }),
-  ("rfref", {
-    "desc": "Request for references",
-    "cat": [
-      "Requests for references for LANG terms",
-    ],
-    "lang1": "req", "langlang": "depwarn"
-  }),
   ("rfv", {
     "desc": "Request for verification",
     "cat": [
@@ -283,63 +336,6 @@ request_templates = [
       ("Entries needing topical attention", "if |topic= is present"),
     ],
     "lang1": "req", "langlang": "depwarn"
-  }),
-  ("rfv-etym", {
-    "desc": "Request for verification of etymology",
-    "cat": [
-      "Requests for references for etymologies in LANG entries",
-    ],
-    "lang1": "req", "langlang": "depwarn"
-  }),
-  ("rfv-pron", {
-    "desc": "Request for verification of pronunciation",
-    "cat": [
-      "Requests for references for pronunciation in LANG entries",
-      "Tea room",
-      "Requests for attention concerning LANG",
-    ],
-    "lang1": "req", "langlang": "depwarn"
-  }),
-  ("rfv-sense", {
-    "desc": "Request for verification of sense",
-    "cat": [
-      "Requests for verification in LANG entries",
-      ("Entries needing topical attention", "if |topic= is present"),
-      ("rfd with topic", "if |topic= is present, in all namespaces"),
-    ],
-    "lang1": "req", "langlang": "depwarn"
-  }),
-  ("tea room", {
-    "desc": "Entry being discussed in the Tea Room",
-    "cat": [
-      "Tea room",
-      "Requests for attention concerning LANG",
-      ("Entries needing topical attention", "if |topic= is present"),
-    ],
-    "lang1": "req", "langlang": "depwarn"
-  }),
-  ("tea room sense", {
-    "desc": "Sense being discussed in the Tea Room",
-    "cat": [
-      "Tea room",
-      ("Entries needing topical attention", "if |topic= is present"),
-    ],
-    "lang1": "req", "langlang": "depwarn"
-  }),
-  # Requires <code>1=</code> or <code>lang=</code> (<code>1=</code> should be used in new uses)
-  ("rfdef", {
-    "desc": "Request for definition",
-    "cat": [
-      "Requests for definitions in LANG entries",
-    ],
-    "lang1": "req", "langlang": "dep"
-  }),
-  ("rfe", {
-    "desc": "Request for etymology",
-    "cat": [
-      "Requests for etymologies in LANG entries",
-    ],
-    "lang1": "req", "langlang": "dep"
   }),
   # Doesn't have a language parameter
   ("ase-rfr", {
@@ -361,6 +357,14 @@ request_templates = [
     "desc": "Request for speedy deletion",
     "cat": [
       ("Candidates for speedy deletion", "in all namespaces"),
+    ],
+    "lang1": "no", "langlang": "no"
+  }),
+  ("look", {
+    "desc": "Input needed",
+    "cat": [
+      "Input needed",
+      ("Entries needing topical attention", "if |topic= is present"),
     ],
     "lang1": "no", "langlang": "no"
   }),
@@ -444,14 +448,6 @@ request_templates = [
     ],
     "lang1": "no", "langlang": "no"
   }),
-  ("rfqez", {
-    "desc": "Request for quotation (substitutable)",
-    "cat": [
-      ("Requests for quotation by source", "in all namespaces"),
-      ("Requests for quotation/{{{1}}}", "if |1= present; in all namespaces"),
-    ],
-    "lang1": "no", "langlang": "no"
-  }),
   ("rft2", {
     "desc": "Template to generate a {{temp|tea room}} invocation (substitutable)",
     "lang1": "no", "langlang": "no"
@@ -498,7 +494,10 @@ request_templates = [
     ],
     "lang1": "no", "langlang": "no"
   }),
-  ("Webster 1913", {"lang1": "no", "langlang": "no"}),
+  ("Webster 1913", {
+    "desc": "Note of incorporation of text from 1913 Webster dictionary",
+    "lang1": "no", "langlang": "no"
+  }),
 ]
 
 request_template_map = dict(request_templates)
