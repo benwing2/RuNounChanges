@@ -35,7 +35,7 @@ multicolumn_templates = [
 quote_templates = [
   "quote-av", "quote-book", "quote-hansard", "quote-journal",
   "quote-newsgroup", "quote-song", "quote-us-patent", "quote-web",
-  "quote-wikipedia", "quote-text",
+  "quote-wikipedia", "quote-text", "quote-video game",
 ]
 headtempboiler_templates = [
   "headtempboiler", "headtempboiler:suffix", "headtempboiler:letter",
@@ -388,8 +388,9 @@ templates_to_move_lang = (
 #templates_to_iterate_over = ["seeCites"]
 #templates_to_iterate_over = ["elements"]
 #templates_to_iterate_over = metatempboiler_templates
-templates_to_iterate_over = ["abbreviated", "cuneiform", "patronymic", "IPA letters",
-  "seeSynonyms", "SI-unit", "SI-unit-np"]
+#templates_to_iterate_over = ["abbreviated", "cuneiform", "patronymic", "IPA letters",
+#  "seeSynonyms", "SI-unit", "SI-unit-np"]
+templates_to_iterate_over = ["quote-video game"]
 
 #templates_to_remove_empty_dot = (
 #  form_of_template_list + language_specific_form_of_templates
