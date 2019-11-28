@@ -3,13 +3,13 @@ local m_utilities = require("Module:utilities")
 local strutils = require("Module:string utilities")
 local ut = require("Module:utils")
 
+local com = require("Module:User:Benwing2/ang-common")
 local lang = require("Module:languages").getByCode("ang")
 
 local rfind = mw.ustring.find
 local rmatch = mw.ustring.match
 local rsplit = mw.text.split
 local rsubn = mw.ustring.gsub
-local u = mw.ustring.char
 
 -- version of rsubn() that discards all but the first return value
 local function rsub(term, foo, bar, n)
@@ -25,9 +25,7 @@ end
 
 local export = {}
 
-local MACRON = u(0x0304)
-
-local long_vowel = "āēīōūȳǣ" .. MACRON -- No precomposed œ + macron
+local long_vowel = "āēīōūȳǣ" .. com.MACRON -- No precomposed œ + macron
 local short_vowel = "aeiouyæœ"
 local short_vowel_c = "[" .. short_vowel .. "]"
 local vowel = long_vowel .. short_vowel
@@ -93,6 +91,22 @@ local function ends_in_long_vowel(word)
 	else
 		return false
 	end
+end
+
+local function begins_with_verbal_prefix(word)
+	word = com.decompose(word)
+	for _, prefixspec in ipairs(com.prefixes) do
+		local prefix = prefixspec[1]
+		local specs = prefixspec[2]
+		if specs.verb then
+			local main = rmatch(word, "^" .. prefix .. "(.-)$")
+			if main and (not specs.restriction or rfind(main, specs.restriction)) then
+				return true
+			end
+		end
+	end
+
+	return false
 end
 
 local function make_table(forms)
@@ -226,7 +240,9 @@ local function construct_cons_stem_ending(stem, ending)
 	if base then
 		stem = base .. final_geminated
 	end
-	stem = gsub(stem, "ċ$", "c")
+	if not stem:find("sċ$") then
+		stem = gsub(stem, "ċ$", "c")
+	end
 	stem = gsub(stem, "nġ$", "ng")
 	if ending == "st" then
 		-- For 2sg:
@@ -247,8 +263,8 @@ local function construct_cons_stem_ending(stem, ending)
 			else
 				return {gsub(stem, "[dt]$", "st"), gsub(stem, "[dt]$", "tst")}
 			end
-		elseif stem:find("þ$") then
-			return gsub(stem, "þ$", "st")
+		elseif rfind(stem, "[þð]$") then
+			return rsub(stem, "[þð]$", "st")
 		elseif stem:find("x$") then
 			return stem .. "t"
 		else
@@ -269,8 +285,8 @@ local function construct_cons_stem_ending(stem, ending)
 			return gsub(stem, "[dt]$", "t")
 		elseif stem:find("[sx]$") then
 			return stem .. "t"
-		elseif stem:find("þ$") then
-			return {stem .. "þ", stem}
+		elseif rfind(stem, "[þð]$") then
+			return {rsub(stem, "[þð]$", "þþ"), stem}
 		else
 			return stem .. "þ"
 		end
@@ -287,13 +303,13 @@ local function construct_cons_stem_ending(stem, ending)
 		-- senġan + -de -> sengde
 		-- cīepan + -de -> cīepte, clyppan + -de -> clypte
 		-- spillan + -de -> spilde, cierran + -de -> cierde, wemman + -de -> wemde, etc.
-		if stem:find(vowel_c .. "t$") then
+		if rfind(stem, vowel_c .. "t$") then
 			return stem .. "t"
-		elseif stem:find(vowel_c .. "d$") then
+		elseif rfind(stem, vowel_c .. "d$") then
 			return stem .. "d"
 		elseif stem:find("[dt]$") then
 			return stem
-		elseif stem:find(always_unvoiced_cons_c .. "$") or rfind(origstem, unvoiced_cons_c .. "[sfþð]$") then
+		elseif rfind(stem, always_unvoiced_cons_c .. "$") or rfind(origstem, unvoiced_cons_c .. "[sfþð]$") then
 			return stem .. "t"
 		else
 			return stem .. "d"
@@ -369,12 +385,12 @@ local function make_non_past(args, presa, prese, pres23, impsg, pp, with_ge)
 end
 
 local function make_strong_past(args, pref, pastsg, pastpl)
-	add_ending(args, "1sg_past_indc", pref, pastsg, "")
-	add_ending(args, "2sg_past_indc", pref, pastpl, "e")
-	add_ending(args, "3sg_past_indc", pref, pastsg, "")
-	add_ending(args, "pl_past_indc", pref, pastpl, "on")
-	add_ending(args, "sg_past_subj", pref, pastpl, "e")
-	add_ending(args, "pl_past_subj", pref, pastpl, "en")
+	add_ending_with_prefix(args, "1sg_past_indc", pref, pastsg, "")
+	add_ending_with_prefix(args, "2sg_past_indc", pref, pastpl, "e")
+	add_ending_with_prefix(args, "3sg_past_indc", pref, pastsg, "")
+	add_ending_with_prefix(args, "pl_past_indc", pref, pastpl, "on")
+	add_ending_with_prefix(args, "sg_past_subj", pref, pastpl, "e")
+	add_ending_with_prefix(args, "pl_past_subj", pref, pastpl, "en")
 end
 
 local function make_strong(presa, prese, pres23, impsg, pastsg, pastpl, pp, with_ge)
@@ -428,14 +444,14 @@ strong_verbs["1"] = function(data)
 	if pref then
 		-- bīdan "await", ācwīnan "dwindle away", blīcan "shine", sċīnan "shine",
 		-- spīwan "spew, spit", etc.
-		data.pres23 = gsub(data.presa, "a$", "")
 		if suf == "g" then
 			-- stīgan "ascend" (stāg/stāh, stigon, stiġen) [stāg/stāh altenation handled
 			-- by default_construct_stem_ending]
-			data.impsg = pref .. "īġ"
+			data.pres23 = pref .. "īġ"
 		else
-			data.impsg = data.pres23
+			data.pres23 = gsub(data.presa, "a$", "")
 		end
+		data.impsg = data.pres23
 		-- ġīnan "yawn" (gān, ġinon, ġinen)
 		data.pastsg = depalatalize_final_cons(pref) .. "ā" .. suf
 		-- snīþan "cut" -> snidon; sċrīþan "go, proceed" -> sċridon
@@ -459,7 +475,7 @@ strong_verbs["1"] = function(data)
 		data.pres23 = pref .. "īeh"
 		data.impsg = gsub(data.inf, "n$", "h")
 		data.pastsg = pref .. "āh"
-		if pref:find("[þð]$") then
+		if rfind(pref, "[þð]$") then
 			-- þēon "thrive", has remnant strong 3 parts
 			data.pastpl = {"ig", "ung"}
 			data.pp = {"iġen", "ungen"}
@@ -481,7 +497,13 @@ strong_verbs["2"] = function(data)
 	if pref then
 		-- bēodan "command", crēopan "creep", rēocan "smoke, reek",
 		-- drēogan "endure" (drēag/drēah handled by default_construct_stem_ending)
-		data.pres23 = pref .. "īe" .. suf
+		if suf == "g" then
+			-- stīgan "ascend" (stāg/stāh, stigon, stiġen) [stāg/stāh altenation handled
+			-- by default_construct_stem_ending]
+			data.pres23 = pref .. "īeġ"
+		else
+			data.pres23 = pref .. "īe" .. suf
+		end
 		data.impsg = pref .. "ēo" .. suf
 		data.pastsg = pref .. "ēa" .. suf
 		-- ġēotan "pour" (ġēat, guton, goten); ċēosan "choose" (ċēas, curon, coren)
@@ -1299,44 +1321,48 @@ end
 -- PAST: Stem of past tense.
 -- PP: Past participle.
 local function make_preterite_present_forms(inf, pref, pres13, pres2, prespl,
-	presp, subj, impsg, imppl, past, pp)
+	presp, subj, impsg, imppl, past, pp, with_ge)
 	local args = {}
-	make_irregular_non_past(args, inf, pref, pres13, pres2, pres13, prespl, presp, subj, impsg, imppl, pp)
+	make_irregular_non_past(args, inf, pref, pres13, pres2, pres13, prespl, presp, subj,
+		impsg, imppl, pp, with_ge)
 	make_weak_past(args, pref, past)
 	return args
 end
 
-local function make_preterite_present(inf)
+local function make_preterite_present(inf, with_ge)
 	local pref, vowel = rmatch(inf, "^(.-[wƿn])([iy])[oe]?tan$")
 	if pref then
 		return make_preterite_present_forms(
 			inf, pref, "āt", "āst", {vowel .. "ton", "iotun", "ietun", "uton"}, vowel .. "ten",
-			vowel .. "te", vowel .. "te", vowel .. "taþ", {vowel .. "ss", vowel .. "st"}, vowel .. "ten")
+			vowel .. "te", vowel .. "te", vowel .. "taþ", {vowel .. "ss", vowel .. "st"},
+			vowel .. "ten", with_ge)
 	end
 	local pref = rmatch(inf, "^(.-)dugan$")
 	if pref then
 		return make_preterite_present_forms(
-			inf, pref, "dēag", {}, "dugon", "dugen", {"duge", "dyġe"}, {}, {}, {}, {})
+			inf, pref, "dēag", {}, "dugon", "dugen", {"duge", "dyġe"}, {}, {}, {}, {}, with_ge)
 	end
 	local pref = rmatch(inf, "^(.-)cunnan$")
 	if pref then
 		return make_preterite_present_forms(
-			inf, pref, {"cann", "conn", "can", "con"}, {"canst", "const"}, "cunnon", {}, "cunne", {}, {}, "cūþ", "cunnen")
+			inf, pref, {"cann", "conn", "can", "con"}, {"canst", "const"}, "cunnon", {}, "cunne",
+			{}, {}, "cūþ", "cunnen", with_ge)
 	end
 	local pref = rmatch(inf, "^(.-)unnan$")
 	if pref then
 		return make_preterite_present_forms(
-			inf, pref, {"ann", "onn", "an", "on"}, {}, "unnon", {}, "unne", "unne", {}, "ūþ", {})
+			inf, pref, {"ann", "onn", "an", "on"}, {}, "unnon", {}, "unne", "unne", {}, "ūþ", {}, with_ge)
 	end
 	local pref = rmatch(inf, "^(.-[þð])urfan$")
 	if pref then
 		return make_preterite_present_forms(
-			inf, pref, "earf", "earft", "urfon", "earfen", {"urfe", "yrfe"}, {}, {}, "orft", {})
+			inf, pref, "earf", "earft", "urfon", "earfen", {"urfe", "yrfe"}, {}, {}, "orft", {}, with_ge)
 	end
 	local pref = rmatch(inf, "^(.-)durran$")
 	if pref then
 		return make_preterite_present_forms(
-			"*" .. inf, pref, {"dear", "dearr"}, "dearst", "durron", {}, {"durre", "dyrre"}, {}, {}, "dorst", {})
+			"*" .. inf, pref, {"dear", "dearr"}, "dearst", "durron", {}, {"durre", "dyrre"}, {}, {},
+			"dorst", {}, with_ge)
 	end
 	local pref = rmatch(inf, "^(.-)sċulan$")
 	if not pref then
@@ -1344,76 +1370,79 @@ local function make_preterite_present(inf)
 	end
 	if pref then
 		return make_preterite_present_forms(
-			inf, pref, "sċeal", "sċealt", {"sċulon", "sċeolon"}, {}, {"sċule", "sċeole", "sċyle"}, {}, {}, "sċeold", {})
+			inf, pref, "sċeal", "sċealt", {"sċulon", "sċeolon"}, {}, {"sċule", "sċeole", "sċyle"},
+			{}, {}, "sċeold", {}, with_ge)
 	end
 	local pref = rmatch(inf, "^(.-)munan$")
 	if pref then
 		return make_preterite_present_forms(
-			inf, pref, {"man", "mon"}, {"manst", "monst"}, "munon", "munen", {"mune", "myne"}, {"mun", "myne", "mune"}, {}, "mund", "munen")
+			inf, pref, {"man", "mon"}, {"manst", "monst"}, "munon", "munen", {"mune", "myne"},
+			{"mun", "myne", "mune"}, {}, "mund", "munen", with_ge)
 	end
 	local pref = rmatch(inf, "^(.-)magan$")
 	if pref then
 		return make_preterite_present_forms(
-			inf, pref, "mæġ", {"meaht", "miht"}, "magon", "magen", "mæġe", {}, {}, {"meaht", "meht"}, {})
+			inf, pref, "mæġ", {"meaht", "miht"}, "magon", "magen", "mæġe", {}, {},
+			{"meaht", "meht"}, {}, with_ge)
 	end
 	local pref = rmatch(inf, "^(.-)nugan$")
 	if pref then
 		return make_preterite_present_forms(
-			"*" .. inf, pref, "neah", {}, "nugon", {}, "nuge", {}, {}, "noht", {})
+			"*" .. inf, pref, "neah", {}, "nugon", {}, "nuge", {}, {}, "noht", {}, with_ge)
 	end
 	local pref = rmatch(inf, "^(.-)mōtan$")
 	if pref then
 		return make_preterite_present_forms(
-			"*" .. inf, pref, "mōt", "mōst", "mōton", {}, "mōte", {}, {}, "mōst", {})
+			"*" .. inf, pref, "mōt", "mōst", "mōton", {}, "mōte", {}, {}, "mōst", {}, with_ge)
 	end
 	local pref = rmatch(inf, "^(.-)āgan$")
 	if pref then
 		return make_preterite_present_forms(
-			inf, pref, "āg", "āhst", "āgon", {}, "āge", "āge", {}, "āht", {"āgen", "ǣġen"})
+			inf, pref, "āg", "āhst", "āgon", {}, "āge", "āge", {}, "āht", {"āgen", "ǣġen"}, with_ge)
 	end
 	error("Unrecognized preterite-present verb: " .. inf)
 end
 
-local function make_irregular(inf)
+local function make_irregular(inf, with_ge)
 	local args = {}
 	local pref, cons = rmatch(inf, "^(.-)([wƿ])esan$")
 	if pref then
 		make_irregular_non_past(args, inf, pref, "eom", "eart", "is", {"sint", "sindon", "sindun"},
-			cons .. "esen", {"sīe", "sī"}, cons .. "es", cons .. "esaþ", {})
+			cons .. "esen", {"sīe", "sī"}, cons .. "es", cons .. "esaþ", {}, with_ge)
 		make_strong_past(args, pref, cons .. "æs", cons .. "ǣr")
 		return args
 	end
 	local pref = rmatch(inf, "^(.-)nesan$")
 	if pref then
 		make_irregular_non_past(args, inf, pref, "neom", "neart", "nis", {"ne sint", "ne sindon", "ne sindun"},
-			"nesen", {"ne sīe", "ne sī"}, "nes", "nesaþ", {})
+			"nesen", {"ne sīe", "ne sī"}, "nes", "nesaþ", {}, with_ge)
 		make_strong_past(args, pref, "næs", "nǣr")
 		return args
 	end
 	local pref, vowel = rmatch(inf, "^(.-)b([īē]o)n$")
 	if pref then
 		make_irregular_non_past(args, inf, pref, "b" .. vowel, "bist", "biþ", "b" .. vowel .. "þ",
-			"b" .. vowel .. "n", "b" .. vowel, "b" .. vowel, "b" .. vowel .. "þ", {})
+			"b" .. vowel .. "n", "b" .. vowel, "b" .. vowel, "b" .. vowel .. "þ", {}, with_ge)
 		return args
 	end
 	local pref = rmatch(inf, "^(.-)dōn$")
 	if pref then
 		make_irregular_non_past(args, inf, pref, "dō", "dēst", "dēþ", "dōþ", "dōn",
-			"dō", "dō", "dōþ", "dōn")
+			"dō", "dō", "dōþ", "dōn", with_ge)
 		make_weak_past(args, pref, "dyd")
 		return args
 	end
 	local pref = rmatch(inf, "^(.-)gān$")
 	if pref then
 		make_irregular_non_past(args, inf, pref, "gā", "gǣst", "gǣþ", "gāþ", {},
-			"gā", "gā", "gāþ", "gān")
+			"gā", "gā", "gāþ", "gān", with_ge)
 		make_weak_past(args, pref, "ēod")
 		return args
 	end
 	local pref = rmatch(inf, "^(.-[wƿ])illan$")
 	if pref then
 		make_irregular_non_past(args, inf, pref, "ille", "ilt", {"ile", "ille"}, "illaþ", "illen",
-			{"ille", "ile"}, {}, {}, {})
+			{"ille", "ile"}, {}, {}, {}, with_ge)
 		make_weak_past(args, pref, "old")
 		return args
 	end
@@ -1421,7 +1450,8 @@ local function make_irregular(inf)
 	if pref then
 		make_irregular_non_past(args, inf, pref, "n" .. vowel .. "lle", "n" .. vowel .. "lt",
 			{"n" .. vowel .. "le", "n" .. vowel .. "lle"}, "n" .. vowel .. "llaþ",
-			"n" .. vowel .. "llen", {"n" .. vowel .. "lle", "n" .. vowel .. "le"}, {}, {}, {})
+			"n" .. vowel .. "llen", {"n" .. vowel .. "lle", "n" .. vowel .. "le"},
+			{}, {}, {}, with_ge)
 		make_weak_past(args, pref, "nold")
 		return args
 	end
@@ -1517,6 +1547,7 @@ function export.show(frame)
 			presa = presa,
 			prese = gsub(presa, "a$", "e"),
 			verner = verner,
+			with_ge = not begins_with_verbal_prefix(inf),
 			extraforms = {},
 		}
 		local typ
@@ -1593,7 +1624,11 @@ function export.show(frame)
 						error("Unrecognized spec key '" .. k .. "' (value '" .. v .. "')")
 					end
 				else
-					error("Unrecognized spec key '" .. k .. "' (value '" .. v .. "')")
+					if k == "ge" then
+						data.with_ge = require("Module:yesno")(v)
+					else
+						error("Unrecognized spec key '" .. k .. "' (value '" .. v .. "')")
+					end
 				end
 			end
 		end
@@ -1623,9 +1658,9 @@ function export.show(frame)
 			forms = make_weak(data.presa, data.prese, data.pres23, data.impsg, data.past,
 				data.pp, data.with_ge)
 		elseif typ == "pretpres" then
-			forms = make_preterite_present(inf)
+			forms = make_preterite_present(inf, data.with_ge)
 		elseif typ == "irreg" then
-			forms = make_irregular(inf)
+			forms = make_irregular(inf, data.with_ge)
 		else
 			error("Internal error: Unrecognized verb type: " .. typ)
 		end
