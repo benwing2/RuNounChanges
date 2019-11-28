@@ -40,7 +40,8 @@ FIXME:
 
 local strutils = require("Module:string utilities")
 local m_table = require("Module:table")
--- local com = require("Module:ang-common")
+local m_IPA = require("Module:IPA")
+local lang = require("Module:languages").getByCode("ang")
 
 local u = mw.ustring.char
 local rsubn = mw.ustring.gsub
@@ -178,10 +179,10 @@ local phonetic_rules = {
 	{"n([.ˈˌ]?[ɡkx])", "ŋ%1"}, -- WARNING, IPA ɡ used here
 	{"n([.ˈˌ]?)j", "n%1d͡ʒ"},
 	{"j([.ˈˌ]?)j", "d%1d͡ʒ"},
-	-- For h between vowels, there should be a syllable break before the h,
-	-- and the following two won't match.
-	{"(" .. back_vowel .. "ː?[lr]?)h", "%1x"},
-	{"([" .. front_vowel .. cons .. "]ː?)h", "%1ç"},
+	{"h", "x"},                    ---[x] is the most general allophone
+	{"([%^.ˈˌ])x", "%1h"},         ---[h] occurs as a syllable-initial allophone
+	{"([eiyæœø])x", "%1ç"},          --for some reason "Front vowel" was giving the wrong results here.
+    --The above code for h~x~ç probably will give wrong results for words with hh.
 	-- An IPA ɡ after a word/prefix boundary, after another ɡ or after n
 	-- (previously converted to ŋ in this circumstance) should remain as ɡ,
 	-- while all other ɡ's should be converted to ɣ except that word-final ɡ
@@ -383,8 +384,8 @@ local function split_on_word_boundaries(word, pos)
 			while true do
 				local broke_suffix = false
 				for _, suffixspec in ipairs(suffixes) do
-					local suffix_pattern = prefixspec[1]
-					local stress_spec = prefixspec[2]
+					local suffix_pattern = suffixspec[1]
+					local stress_spec = suffixspec[2]
 					local rest, suffix = rmatch(parts[i], "^(.-)(" .. suffix_pattern .. ")$")
 					if suffix then
 						if not stress_spec[pos] then
@@ -612,8 +613,7 @@ local function default_pos(word, pos)
 	if not pos then
 		-- adjectives in -līċ can follow nouns or verbs; truncate the ending and
 		-- check what precedes
-		local prefword = rsub(word, "^(.* .. vowel_c .. .*)l[iī][cċ]$", "%1")
-		word = prefword or word
+		word = rsub(word, "^(.*" .. vowel_c .. ".*)l[iī][cċ]e?$", "%1")
 		-- verbs in -an/-ōn/-ēon, inflected infintives in -enne,
 		-- participles in -end(e)/-en/-ed/-od, verbal nouns in -ing/-ung
 		if rfind(word, "[aāō]n$") or rfind(word, "ēon$") or rfind(word, "enne$")
@@ -663,17 +663,17 @@ function export.show(frame)
 	local parent_args = frame:getParent().args
 	local params = {
 		[1] = { required = true, default = "ġegangan" },
-		["pos"] = { default = "verb" },
+		["pos"] = {},
 	}
 	local args = require("Module:parameters").process(parent_args, params)
 
 	local phonemic = export.phonemic(args[1], args.pos)
 	local phonetic = export.phonetic(args[1], args.pos)
-	if phonemic == phonetic then
-		return "/" .. phonemic .. "/"
-	else
-		return "/" .. phonemic .. "/ [" .. phonetic .. "]"
+	local IPA_args = {{pron = '/' .. phonemic .. '/'}}
+	if phonemic ~= phonetic then
+		table.insert(IPA_args, {pron = '[' .. phonetic .. ']'})
 	end
+	return m_IPA.format_IPA_full(lang, IPA_args)
 end
 
 return export
