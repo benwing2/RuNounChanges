@@ -429,15 +429,23 @@ strong_verbs["1"] = function(data)
 		-- bīdan "await", ācwīnan "dwindle away", blīcan "shine", sċīnan "shine",
 		-- spīwan "spew, spit", etc.
 		data.pres23 = gsub(data.presa, "a$", "")
-		data.impsg = data.pres23
+		if suf == "g" then
+			-- stīgan "ascend" (stāg/stāh, stigon, stiġen) [stāg/stāh altenation handled
+			-- by default_construct_stem_ending]
+			data.impsg = pref .. "īġ"
+		else
+			data.impsg = data.pres23
+		end
 		-- ġīnan "yawn" (gān, ġinon, ġinen)
 		data.pastsg = depalatalize_final_cons(pref) .. "ā" .. suf
 		-- snīþan "cut" -> snidon; sċrīþan "go, proceed" -> sċridon
 		-- (but not mīþan "avoid", wrīþan "twist")
 		data.pastpl = pref .. "i" .. vernerize_cons(suf, data.verner)
-		-- stīgan "ascend" (stāg/stāh, stigon, stiġen) [stāg/stāh altenation handled
-		-- by default_construct_stem_ending]
-		data.pp = gsub(data.pastpl, "ig$", "iġ") .. "en"
+		if suf == "g" then
+			data.pp = pref .. "iġen"
+		else
+			data.pp = data.pastpl .. "en"
+		end
 		return
 	end
 	pref = rmatch(data.inf, "^(.-)[ēī]on$")
@@ -487,9 +495,13 @@ strong_verbs["2"] = function(data)
 	end
 	local pref, suf = rmatch(data.inf, "^(.-)ū(" .. cons_c .. "+)an$")
 	if pref then
-		-- brūcan "use", sċūfan "shove", būgan "bend" (bēag/bēah handled by
-		-- default_construct_stem_ending)
-		data.pres23 = pref .. "ȳ" .. suf
+		-- brūcan "use", sċūfan "shove"
+		if suf == "g" then
+			-- būgan "bend" (bēag/bēah handled by default_construct_stem_ending)
+			data.pres23 = pref .. "ȳġ"
+		else
+			data.pres23 = pref .. "ȳ" .. suf
+		end
 		data.impsg = pref .. "ū" .. suf
 		-- could have palatalization here, but no known examples
 		data.pastsg = pref .. "ēa" .. suf
@@ -521,7 +533,7 @@ strong_verbs["3"] = function(data)
 		-- winnan "win", sincan "sink", swimman "swim", etc.
 		data.pres23 = pref .. "i" .. suf
 		data.impsg = data.pres23
-		-- onġinnan (ongann, ongunnon, ongunnen)
+		-- onġinnan "begin" (ongann, ongunnon, ongunnen), ċimban "join"
 		local pastpref = depalatalize_final_cons(pref)
 		-- no Verner alternation here; expected #fīþan, #fōþ, #fundon <
 		-- *finþanan, *fanþ, *fundund regularized into findan, fand, fundon
@@ -1036,11 +1048,21 @@ strong_verbs["7"] = function(data)
 		data.pp = pref .. "ā" .. suf .. "en"
 		return
 	end
+	local pref, suf = rmatch(data.inf, "^(.-)ēa(" .. cons_c .. "+)an$")
+	if pref then
+		-- bēatan "beat", āhnēapan "pluck off", hēawan "hew", hlēapan "leap"
+		data.pres23 = pref .. "īe" .. suf
+		data.impsg = pref .. "ēa" .. suf
+		data.pastsg = pref .. "ēo" .. suf
+		data.pastpl = data.pastsg
+		data.pp = pref .. "ēa" .. suf .. "en"
+		return
+	end
 	local pref, suf = rmatch(data.inf, "^(.-)ō(" .. cons_c .. "+)an$")
 	if pref then
 		if suf == "g" and pref:find("sw$") then
 			-- swōgan "sound"
-			data.pres23 == pref .. "ēġ"
+			data.pres23 = pref .. "ēġ"
 			data.impsg = pref .. "ōg"
 			data.pastsg = {} -- no preterite
 			data.pastpl = {}
@@ -1049,7 +1071,7 @@ strong_verbs["7"] = function(data)
 		end
 		if suf == "c" and pref:find("fl$") or suf == "t" and pref:find("wr$") then
 			-- flōcan "clap, strike", wrōtan "root up"
-			data.pres23 == pref .. "ē" .. suf
+			data.pres23 = pref .. "ē" .. suf
 			data.impsg = pref .. "ō" .. suf
 			data.pastsg = {} -- no preterite
 			data.pastpl = {}
@@ -1059,7 +1081,7 @@ strong_verbs["7"] = function(data)
 		-- blōtan "sacrifice", blōwan "bloom, blossom", hrōpan "shout",
 		-- hwōpan "threaten", flōwan "flow", grōwan "grow", hlōwan "low, bellow",
 		-- spōwan "succeed"; also rōwan "row", which has alt pret pl rēon
-		data.pres23 == pref .. "ē" .. suf
+		data.pres23 = pref .. "ē" .. suf
 		data.impsg = pref .. "ō" .. suf
 		data.pastsg = pref .. "ēo" .. suf
 		data.pastpl = data.pastsg
@@ -1067,6 +1089,7 @@ strong_verbs["7"] = function(data)
 		if suf == "w" and pref:find("r$") and not pref:find("gr$") then
 			-- rōwan "row"
 			data.extraforms["pl_past_indc"] = {pref .. "ēon"}
+		end
 		return
 	end
 	local pref = rmatch(data.inf, "^(.-)wēpan$")
@@ -1240,7 +1263,8 @@ weak_verbs["3"] = function(data)
 	end
 end
 
-local make_irregular_non_past(inf, pref, pres1, pres2, pres3, prespl, presp, subj, impsg, imppl, pp, with_ge)
+local function make_irregular_non_past(args, inf, pref, pres1, pres2, pres3, prespl,
+	presp, subj, impsg, imppl, pp, with_ge)
 	add_ending(args, "infinitive", inf, "")
 	add_ending_with_prefix(args, "infinitive2", pref, presp, "ne")
 	add_ending_with_prefix(args, "1sg_pres_indc", pref, pres1, "")
@@ -1257,7 +1281,7 @@ local make_irregular_non_past(inf, pref, pres1, pres2, pres3, prespl, presp, sub
 	else
 		add_ending_with_prefix(args, "past_ptc", pref, pp, "")
 	end
-return
+end
 
 -- Construct all preterite-present forms. Each of the arguments can be a single string or list.
 -- If a given argument is missing, supply an empty list {}.
@@ -1274,19 +1298,20 @@ return
 -- IMPPL: 2nd plural imperative form.
 -- PAST: Stem of past tense.
 -- PP: Past participle.
-local function make_preterite_present_forms(inf, pref, pres13, pres2, prespl, presp, subj, impsg, imppl, past, pp)
+local function make_preterite_present_forms(inf, pref, pres13, pres2, prespl,
+	presp, subj, impsg, imppl, past, pp)
 	local args = {}
-	make_irregular_non_past(inf, pref, pres13, pres2, pres13, prespl, presp, subj, impsg, imppl, pp)
+	make_irregular_non_past(args, inf, pref, pres13, pres2, pres13, prespl, presp, subj, impsg, imppl, pp)
 	make_weak_past(args, pref, past)
 	return args
 end
 
 local function make_preterite_present(inf)
-	local pref = rmatch(inf, "^(.-)wi[oe]?tan$")
+	local pref, vowel = rmatch(inf, "^(.-[wƿn])([iy])[oe]?tan$")
 	if pref then
 		return make_preterite_present_forms(
-			inf, pref, "wāt", "wāst", {"witon", "wiotun", "wietun", "wuton"}, "witen",
-			"wite", "wite", "witaþ", {"wiss", "wist"}, "witen")
+			inf, pref, "āt", "āst", {vowel .. "ton", "iotun", "ietun", "uton"}, vowel .. "ten",
+			vowel .. "te", vowel .. "te", vowel .. "taþ", {vowel .. "ss", vowel .. "st"}, vowel .. "ten")
 	end
 	local pref = rmatch(inf, "^(.-)dugan$")
 	if pref then
@@ -1346,59 +1371,61 @@ local function make_preterite_present(inf)
 		return make_preterite_present_forms(
 			inf, pref, "āg", "āhst", "āgon", {}, "āge", "āge", {}, "āht", {"āgen", "ǣġen"})
 	end
+	error("Unrecognized preterite-present verb: " .. inf)
 end
 
 local function make_irregular(inf)
 	local args = {}
-	local pref = rmatch(inf, "^(.-)wesan$")
+	local pref, cons = rmatch(inf, "^(.-)([wƿ])esan$")
 	if pref then
-		make_irregular_non_past(inf, pref, "eom", "eart", "is", {"sint", "sindon", "sindun"},
-			"wesen", {"sīe", "sī"}, "wes", "wesaþ", {})
-		make_strong_past(inf, pref, "wæs", "wǣr")
-		return
+		make_irregular_non_past(args, inf, pref, "eom", "eart", "is", {"sint", "sindon", "sindun"},
+			cons .. "esen", {"sīe", "sī"}, cons .. "es", cons .. "esaþ", {})
+		make_strong_past(args, pref, cons .. "æs", cons .. "ǣr")
+		return args
 	end
 	local pref = rmatch(inf, "^(.-)nesan$")
 	if pref then
-		make_irregular_non_past(inf, pref, "neom", "neart", "nis", {"ne sint", "ne sindon", "ne sindun"},
+		make_irregular_non_past(args, inf, pref, "neom", "neart", "nis", {"ne sint", "ne sindon", "ne sindun"},
 			"nesen", {"ne sīe", "ne sī"}, "nes", "nesaþ", {})
-		make_strong_past(inf, pref, "næs", "nǣr")
-		return
+		make_strong_past(args, pref, "næs", "nǣr")
+		return args
 	end
 	local pref, vowel = rmatch(inf, "^(.-)b([īē]o)n$")
 	if pref then
-		make_irregular_non_past(inf, pref, "b" .. vowel, "bist", "biþ", "b" .. vowel .. "þ",
+		make_irregular_non_past(args, inf, pref, "b" .. vowel, "bist", "biþ", "b" .. vowel .. "þ",
 			"b" .. vowel .. "n", "b" .. vowel, "b" .. vowel, "b" .. vowel .. "þ", {})
-		return
+		return args
 	end
 	local pref = rmatch(inf, "^(.-)dōn$")
 	if pref then
-		make_irregular_non_past(inf, pref, "dō", "dēst", "dēþ", "dōþ", "dōn",
+		make_irregular_non_past(args, inf, pref, "dō", "dēst", "dēþ", "dōþ", "dōn",
 			"dō", "dō", "dōþ", "dōn")
-		make_weak_past(inf, pref, "dyd")
-		return
+		make_weak_past(args, pref, "dyd")
+		return args
 	end
 	local pref = rmatch(inf, "^(.-)gān$")
 	if pref then
-		make_irregular_non_past(inf, pref, "gā", "gǣst", "gǣþ", "gāþ", {},
+		make_irregular_non_past(args, inf, pref, "gā", "gǣst", "gǣþ", "gāþ", {},
 			"gā", "gā", "gāþ", "gān")
-		make_weak_past(inf, pref, "ēod")
-		return
+		make_weak_past(args, pref, "ēod")
+		return args
 	end
-	local pref = rmatch(inf, "^(.-)willan$")
+	local pref = rmatch(inf, "^(.-[wƿ])illan$")
 	if pref then
-		make_irregular_non_past(inf, pref, "wille", "wilt", {"wile", "wille"}, "willaþ", "willen",
-			{"wille", "wile"}, {}, {}, {})
-		make_weak_past(inf, pref, "wold")
-		return
+		make_irregular_non_past(args, inf, pref, "ille", "ilt", {"ile", "ille"}, "illaþ", "illen",
+			{"ille", "ile"}, {}, {}, {})
+		make_weak_past(args, pref, "old")
+		return args
 	end
 	local pref, vowel = rmatch(inf, "^(.-)n([eiy])llan$")
 	if pref then
-		make_irregular_non_past(inf, pref, "n" .. vowel .. "lle", "n" .. vowel .. "lt",
+		make_irregular_non_past(args, inf, pref, "n" .. vowel .. "lle", "n" .. vowel .. "lt",
 			{"n" .. vowel .. "le", "n" .. vowel .. "lle"}, "n" .. vowel .. "llaþ",
 			"n" .. vowel .. "llen", {"n" .. vowel .. "lle", "n" .. vowel .. "le"}, {}, {}, {})
-		make_weak_past(inf, pref, "nold")
-		return
+		make_weak_past(args, pref, "nold")
+		return args
 	end
+	error("Unrecognized irregular verb: " .. inf)
 end
 
 local function set_categories(typ, class)
@@ -1509,6 +1536,10 @@ function export.show(frame)
 			else
 				error("Unrecognized weak class: " .. class)
 			end
+		elseif class == "pp" then
+			typ = "pretpres"
+		elseif class == "i" then
+			typ = "irreg"
 		else
 			error("Unrecognized verb class: " .. class)
 		end
@@ -1522,57 +1553,67 @@ function export.show(frame)
 				end
 				local k = parts[1]
 				local v = parts[2]
-				if k == "pres" then
-					data.presa = v
-					data.prese = v
-					data.pres23 = v
-					data.impsg = v
-				elseif k == "pres1456" then
-					data.presa = v
-					data.prese = v
-				elseif k == "pres23" then
-					data.pres23 = v
-				elseif k == "presa" then
-					data.presa = v
-				elseif k == "prese" then
-					data.prese = v
-				elseif typ == "strong" and k == "past" then
-					data.pastsg = v
-					data.pastpl = v
-				elseif typ == "weak" and k == "past" then
-					data.past = v
-				elseif typ == "strong" and k == "pastsg" then
-					data.pastsg = v
-				elseif typ == "strong" and k == "pastpl" then
-					data.pastpl = v
-				elseif k == "impsg" then
-					data.impsg = v
-				elseif k == "pp" then
-					data.pp = v
-				elseif k == "ge" then
-					data.with_ge = require("Module:yesno")(v)
-				elseif slots_and_accel[k] then
-					overrides[k] = v
+				local splitv = rsplit(v, ", *")
+				if slots_and_accel[k] then
+					overrides[k] = splitv
+				elseif typ == "weak" or typ == "strong" then
+					if k == "pres" then
+						data.presa = splitv
+						data.prese = splitv
+						data.pres23 = splitv
+						data.impsg = splitv
+					elseif k == "pres1456" then
+						data.presa = splitv
+						data.prese = splitv
+					elseif k == "pres23" then
+						data.pres23 = splitv
+					elseif k == "presa" then
+						data.presa = splitv
+					elseif k == "prese" then
+						data.prese = splitv
+					elseif typ == "strong" and k == "past" then
+						data.pastsg = splitv
+						data.pastpl = splitv
+					elseif typ == "weak" and k == "past" then
+						data.past = splitv
+					elseif typ == "strong" and k == "pastsg" then
+						data.pastsg = splitv
+					elseif typ == "strong" and k == "pastpl" then
+						data.pastpl = splitv
+					elseif k == "impsg" then
+						data.impsg = splitv
+					elseif k == "pp" then
+						data.pp = splitv
+					elseif typ == "weak" and k == "papp" then
+						data.past = splitv
+						data.pp = splitv
+					elseif k == "ge" then
+						data.with_ge = require("Module:yesno")(v)
+					else
+						error("Unrecognized spec key '" .. k .. "' (value '" .. v .. "')")
+					end
 				else
 					error("Unrecognized spec key '" .. k .. "' (value '" .. v .. "')")
 				end
 			end
 		end
 
-		local missing_fields = {}
-		local fields_to_check =
-			typ == "weak" and {"presa", "prese", "pres23", "impsg", "past", "pp"} or
-			{"presa", "prese", "pres23", "impsg", "pastsg", "pastpl", "pp"}
-		for _, field in ipairs(fields_to_check) do
-			if not data[field] then
-				table.insert(missing_fields, field)
+		if typ == "weak" or typ == "strong" then
+			local missing_fields = {}
+			local fields_to_check =
+				typ == "weak" and {"presa", "prese", "pres23", "impsg", "past", "pp"} or
+				{"presa", "prese", "pres23", "impsg", "pastsg", "pastpl", "pp"}
+			for _, field in ipairs(fields_to_check) do
+				if not data[field] then
+					table.insert(missing_fields, field)
+				end
 			end
-		end
-		if #missing_fields > 0 then
-			error("Required spec(s) " .. table.concat(missing_fields, ",") ..
-				" missing, i.e. the form of the infinitive '" .. inf ..
-				"' was not recognized as a " .. typ .. " class-" .. class .. " verb and the " ..
-				"overrriding specs weren't (all) supplied")
+			if #missing_fields > 0 then
+				error("Required spec(s) " .. table.concat(missing_fields, ",") ..
+					" missing, i.e. the form of the infinitive '" .. inf ..
+					"' was not recognized as a " .. typ .. " class-" .. class .. " verb and the " ..
+					"overriding specs weren't (all) supplied")
+			end
 		end
 		local forms
 		if typ == "strong" then
@@ -1581,6 +1622,10 @@ function export.show(frame)
 		elseif typ == "weak" then
 			forms = make_weak(data.presa, data.prese, data.pres23, data.impsg, data.past,
 				data.pp, data.with_ge)
+		elseif typ == "pretpres" then
+			forms = make_preterite_present(inf)
+		elseif typ == "irreg" then
+			forms = make_irregular(inf)
 		else
 			error("Internal error: Unrecognized verb type: " .. typ)
 		end
