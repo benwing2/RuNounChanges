@@ -3,7 +3,7 @@ local m_utilities = require("Module:utilities")
 local strutils = require("Module:string utilities")
 local ut = require("Module:utils")
 
-local com = require("Module:User:Benwing2/ang-common")
+local com = require("Module:ang-common")
 local lang = require("Module:languages").getByCode("ang")
 
 local rfind = mw.ustring.find
@@ -23,6 +23,11 @@ local function gsub(term, foo, bar, n)
 	return retval
 end
 
+local function track(page)
+	require("Module:debug").track("ang-verb/" .. page)
+	return true
+end
+
 local export = {}
 
 local long_vowel = "āēīōūȳǣ" .. com.MACRON -- No precomposed œ + macron
@@ -36,7 +41,9 @@ local always_unvoiced_cons = "cċkptxz"
 local always_unvoiced_cons_c = "[" .. always_unvoiced_cons .. "]"
 local unvoiced_cons = always_unvoiced_cons .. "fsþð"
 local unvoiced_cons_c = "[" .. unvoiced_cons .. "]"
-local cons = "bcċdfgġhklmnprstwxzþðƿ"
+local single_cons = "bcċdfgġhklmnprstwþðƿ"
+local single_cons_c = "[" .. single_cons .. "]"
+local cons = single_cons .. "xz"
 local cons_c = "[" .. cons .. "]"
 
 local slots_and_accel = {
@@ -229,6 +236,51 @@ function export.make_table(frame)
 	return make_table(args)
 end
 
+local function vernerize_cons(cons, verner)
+	if not verner then
+		return cons
+	end
+	if cons == "s" then
+		return "r"
+	elseif cons == "þ" or cons == "ð" then
+		return "d"
+	else
+		return cons
+	end
+end
+
+local function depalatalize_final_cons_before_cons(word)
+	if word:find("sċ$") then
+		return word
+	else
+		return rsub(word, "([nċġ]?[ċġ])$", {
+			["ċ"] = "c",
+			["nċ"] = "nc",
+			["ċċ"] = "cc",
+			["ġċ"] = "ġc",
+			["nġ"] = "ng",
+			["ċġ"] = "cg",
+			-- ġ and ġġ stay as-is
+		})
+	end
+end
+
+local function depalatalize_final_cons_before_back_vowel(word)
+	local word = depalatalize_final_cons_before_cons(word)
+	return gsub(word, "ġ$", "g")
+end
+
+local function palatalize_final_cons(word)
+	return rsub(word, "([cg]?[cg])$", {
+		["c"] = "ċ",
+		["cc"] = "ċċ",
+		["cg"] = "ċġ",
+		["g"] = "ġ",
+		["gc"] = "gċ", -- ??
+		["gg"] = "ċġ",
+	})
+end
+
 -- Add an ending that begins with a consonant onto a stem, making adjustments
 -- as necessary when two consonants come together. Currently recognizes only
 -- the three endings "st", "þ" and "d".
@@ -240,10 +292,7 @@ local function construct_cons_stem_ending(stem, ending)
 	if base then
 		stem = base .. final_geminated
 	end
-	if not stem:find("sċ$") then
-		stem = gsub(stem, "ċ$", "c")
-	end
-	stem = gsub(stem, "nġ$", "ng")
+	stem = depalatalize_final_cons_before_cons(stem)
 	if ending == "st" then
 		-- For 2sg:
 		-- cyssan + -st -> cyst, tǣsan + -st -> tǣst
@@ -326,7 +375,7 @@ end
 -- construct_cons_stem_ending.
 local function default_construct_stem_ending(stem, ending)
 	local form = stem .. ending
-	if form:find("g$") then
+	if form:find("g$") and not form:find("[ncg]g$") then
 		return {form, gsub(form, "g$", "h")}
 	else
 		return form
@@ -416,44 +465,23 @@ local function make_weak(presa, prese, pres23, impsg, past, pp, with_ge)
 	return args
 end
 
-local function vernerize_cons(cons, verner)
-	if not verner then
-		return cons
-	end
-	if cons == "s" then
-		return "r"
-	elseif cons == "þ" or cons == "ð" then
-		return "d"
-	else
-		return cons
-	end
-end
-
-local function depalatalize_final_cons(word)
-	if word:find("sċ$") then
-		return word
-	else
-		return rsub(word, "([ċġ])$", { ["ċ"] = "c", ["ġ"] = "g" })
-	end
-end
 
 local strong_verbs = {}
 
 strong_verbs["1"] = function(data)
 	local pref, suf = rmatch(data.inf, "^(.-)ī(" .. cons_c .. "+)an$")
 	if pref then
-		-- bīdan "await", ācwīnan "dwindle away", blīcan "shine", sċīnan "shine",
-		-- spīwan "spew, spit", etc.
+		-- bīdan "await", ācwīnan "dwindle away", sċīnan "shine", spīwan "spew, spit", etc.;
+		-- stīgan "ascend" (þū stīġst, stāg/stāh [handled by default_construct_stem_ending],
+		-- stigon, stiġen); blīcan "shine" (þū blīcst/blīċest)
+		data.pres23 = pref .. "ī" .. palatalize_final_cons(suf)
 		if suf == "g" then
-			-- stīgan "ascend" (stāg/stāh, stigon, stiġen) [stāg/stāh altenation handled
-			-- by default_construct_stem_ending]
-			data.pres23 = pref .. "īġ"
+			data.impsg = pref .. "īġ"
 		else
-			data.pres23 = gsub(data.presa, "a$", "")
+			data.impsg = pref .. "ī" .. suf
 		end
-		data.impsg = data.pres23
 		-- ġīnan "yawn" (gān, ġinon, ġinen)
-		data.pastsg = depalatalize_final_cons(pref) .. "ā" .. suf
+		data.pastsg = depalatalize_final_cons_before_back_vowel(pref) .. "ā" .. suf
 		-- snīþan "cut" -> snidon; sċrīþan "go, proceed" -> sċridon
 		-- (but not mīþan "avoid", wrīþan "twist")
 		data.pastpl = pref .. "i" .. vernerize_cons(suf, data.verner)
@@ -477,8 +505,8 @@ strong_verbs["1"] = function(data)
 		data.pastsg = pref .. "āh"
 		if rfind(pref, "[þð]$") then
 			-- þēon "thrive", has remnant strong 3 parts
-			data.pastpl = {"ig", "ung"}
-			data.pp = {"iġen", "ungen"}
+			data.pastpl = {pref .. "ig", pref .. "ung"}
+			data.pp = {pref .. "iġen", pref .. "ungen"}
 		else
 			data.pastpl = pref .. "ig"
 			if pref:find("s$") then
@@ -495,19 +523,14 @@ end
 strong_verbs["2"] = function(data)
 	local pref, suf = rmatch(data.inf, "^(.-)ēo(" .. cons_c .. "+)an$")
 	if pref then
-		-- bēodan "command", crēopan "creep", rēocan "smoke, reek",
-		-- drēogan "endure" (drēag/drēah handled by default_construct_stem_ending)
-		if suf == "g" then
-			-- stīgan "ascend" (stāg/stāh, stigon, stiġen) [stāg/stāh altenation handled
-			-- by default_construct_stem_ending]
-			data.pres23 = pref .. "īeġ"
-		else
-			data.pres23 = pref .. "īe" .. suf
-		end
+		-- bēodan "command", crēopan "creep"; rēocan "smoke, reek" (þū rīecst/rīeċest);
+		-- drēogan "endure" (þū drīeġst, drēag/drēah [handled by default_construct_stem_ending],
+		-- drugon, drogen)
+		data.pres23 = pref .. "īe" .. palatalize_final_cons(suf)
 		data.impsg = pref .. "ēo" .. suf
 		data.pastsg = pref .. "ēa" .. suf
 		-- ġēotan "pour" (ġēat, guton, goten); ċēosan "choose" (ċēas, curon, coren)
-		local pastpref = depalatalize_final_cons(pref)
+		local pastpref = depalatalize_final_cons_before_back_vowel(pref)
 		-- ċēosan "choose" -> curon; forlēosan "lose" -> forluron; sēoþan "boil" -> sudon
 		-- (but not ābrēoþan "perish, ruin")
 		local pastsuf = vernerize_cons(suf, data.verner)
@@ -517,13 +540,10 @@ strong_verbs["2"] = function(data)
 	end
 	local pref, suf = rmatch(data.inf, "^(.-)ū(" .. cons_c .. "+)an$")
 	if pref then
-		-- brūcan "use", sċūfan "shove"
-		if suf == "g" then
-			-- būgan "bend" (bēag/bēah handled by default_construct_stem_ending)
-			data.pres23 = pref .. "ȳġ"
-		else
-			data.pres23 = pref .. "ȳ" .. suf
-		end
+		-- sċūfan "shove"; brūcan "use" (þū brīecst/brīeċest);
+		-- būgan "bend" (þū bīeġst, bēag/bēah [handled by default_construct_stem_ending],
+		-- bugon, bogen)
+		data.pres23 = pref .. "ȳ" .. palatalize_final_cons(suf)
 		data.impsg = pref .. "ū" .. suf
 		-- could have palatalization here, but no known examples
 		data.pastsg = pref .. "ēa" .. suf
@@ -551,17 +571,18 @@ end
 strong_verbs["3"] = function(data)
 	local pref, suf = rmatch(data.inf, "^(.-)i([mn]" .. cons_c .. "+)an$")
 	if pref then
-		-- bindan "bind", ācwincan "vanish", climban "climb", ġelimpan "happen",
-		-- winnan "win", sincan "sink", swimman "swim", etc.
-		data.pres23 = pref .. "i" .. suf
-		data.impsg = data.pres23
+		-- bindan "bind", climban "climb", ġelimpan "happen", winnan "win",
+		-- swimman "swim", etc.; ācwincan "vanish" (þū ācwincst/ācwinċest);
+		-- cringan (þū cringst/crinġest)
+		data.pres23 = pref .. "i" .. palatalize_final_cons(suf)
+		data.impsg = pref .. "i" .. suf
 		-- onġinnan "begin" (ongann, ongunnon, ongunnen), ċimban "join"
-		local pastpref = depalatalize_final_cons(pref)
+		local pastpref = depalatalize_final_cons_before_back_vowel(pref)
 		-- no Verner alternation here; expected #fīþan, #fōþ, #fundon <
 		-- *finþanan, *fanþ, *fundund regularized into findan, fand, fundon
 		data.pastsg = pastpref .. "a" .. suf
 		data.pastpl = pastpref .. "u" .. suf
-		data.pp = pastpref .. "o" .. pastsuf .. "en"
+		data.pp = pastpref .. "u" .. suf .. "en"
 		return
 	end
 	local pref, vowel, suf = rmatch(data.inf, "^(.-)(i?e)(l" .. cons_c .. "+)an$")
@@ -569,20 +590,21 @@ strong_verbs["3"] = function(data)
 		pref, vowel, suf = rmatch(data.inf, "^(.-)(eo)(" .. cons_c .. "+)an$")
 	end
 	if pref then
-		-- helpan "help" (þū hilpst), belgan "swell with anger" (bealg/bealh handled by
-		-- default_construct_stem_ending), bellan "bellow", beteldan "cover",
-		-- delfan "dig", sweltan "die", etc.
+		-- helpan "help" (þū hilpst), bellan "bellow", beteldan "cover", delfan "dig",
+		-- sweltan "die", etc.; belgan "swell with anger" (þū bielġst, bealg/bealh
+		-- [handled by default_construct_stem_ending])
 		--
 		-- ġieldan "yield, pay" (þū ġiel(t)st, hē ġieldeþ/ġielt, ġeald, guldon, golden),
 		-- ġiellan "yell", ġielpan "boast"
 		--
-		-- weorpan "throw" (þū wierpst), āseolcan "languish", beorgan "protect" (bearg/bearh
-		-- handled by default_construct_stem_ending), feohtan "fight", sċeorfan "gnaw"
-		data.pres23 = pref .. (vowel == "e" and "i" or "ie") .. suf
+		-- weorpan "throw" (þū wierpst), feohtan "fight", sċeorfan "gnaw";
+		-- āseolcan "languish" (þū āsielcst/āsielċest), beorgan "protect"
+		-- (þū bierġst, bearg/bearh [handled by default_construct_stem_ending])
+		data.pres23 = pref .. (vowel == "e" and "i" or "ie") .. palatalize_final_cons(suf)
 		data.impsg = pref .. vowel .. suf
 		data.pastsg = pref .. "ea" .. suf
 		-- ġieldan etc. (see above)
-		local pastpref = depalatalize_final_cons(pref)
+		local pastpref = depalatalize_final_cons_before_back_vowel(pref)
 		-- weorþan -> wurdon
 		local pastsuf = vernerize_cons(suf, data.verner)
 		data.pastpl = pastpref .. "u" .. pastsuf
@@ -669,11 +691,11 @@ strong_verbs["4"] = function(data)
 	end
 	local pref, suf = rmatch(data.inf, "^(.-)e(" .. cons_c .. ")an$")
 	if pref then
-		-- beran "bear, carry", cwelan "die", brecan "break", etc.
+		-- beran "bear, carry", cwelan "die", brecan "break" (þū bricst/briċest), etc.
 		if suf == "r" or suf == "l" then
 			data.pres23 = {pref .. "i" .. suf .. "e", pref .. "i" .. suf}
 		else
-			data.pres23 = pref .. "i" .. suf
+			data.pres23 = pref .. "i" .. palatalize_final_cons(suf)
 		end
 		data.impsg = pref .. "e" .. suf
 		-- no Verner alternation or depalatalization here
@@ -727,7 +749,7 @@ strong_verbs["5"] = function(data)
 		return
 	elseif pref then
 		-- metan "measure", sprecan "speak", cnedan "knead", wefan "weave", etc.
-		data.pres23 = pref .. "i" .. suf
+		data.pres23 = pref .. "i" .. palatalize_final_cons(suf)
 		data.impsg = pref .. "e" .. suf
 		if suf == "t" and not pref:find("m$") and not pref:find("ġ$") then
 			-- etan "eat", fretan "devour", compounds; exclude metan "measure",
@@ -767,7 +789,7 @@ strong_verbs["5"] = function(data)
 		data.prese = pref .. "iċġe"
 		data.pres23 = pref .. "iġ"
 		data.impsg = data.pres23 .. "e"
-		if data.inf:find("þiċġe?an$") then
+		if rfind(data.inf, "[þð]iċġe?an$") then
 			data.pastsg = {pref .. "eah", pref .. "ah"}
 		else
 			data.pastsg = pref .. "æġ"
@@ -777,6 +799,7 @@ strong_verbs["5"] = function(data)
 			data.pp = {pref .. "iġen", pref .. "ugen"}
 		else
 			data.pp = pref .. "eġen"
+		end
 		return
 	end
 	local pref = rmatch(data.inf, "^(.-)ēon$")
@@ -827,6 +850,7 @@ strong_verbs["6"] = function(data)
 		data.pastsg = pref .. "ōd"
 		data.pastpl = data.pastsg
 		data.pp = pref .. vowel .. "nden"
+		return
 	elseif suf == "n" and pref:find("sp$") then
 		-- spanon/sponan "allure"
 		data.pres23 = {pref .. "ene", pref .. "en"}
@@ -834,19 +858,19 @@ strong_verbs["6"] = function(data)
 		data.pastsg = {pref .. "ōn", pref .. "ēon"} -- has alt class VII past
 		data.pastpl = data.pastsg
 		data.pp = pref .. vowel .. "nen"
+		return
 	elseif pref then
 		-- faran "go", alan "grow", bacan "bake", hladan "lade", wasċan "wash", etc.
 		if suf == "r" or suf == "l" then
 			data.pres23 = {pref .. "æ" .. suf .. "e", pref .. "æ" .. suf}
 		else
-			data.pres23 = pref .. "æ" .. suf
+			data.pres23 = pref .. "æ" .. palatalize_final_cons(suf)
 		end
 		data.impsg = pref .. "a" .. suf
 		data.pastsg = pref .. "ō" .. suf
 		-- Apparently no Verner variation here
 		data.pastpl = data.pastsg
 		data.pp = {pref .. "æ" .. suf .. "en", pref .. "a" .. suf .. "en"}
-		end
 		return
 	end
 	local pref = rmatch(data.inf, "^(.-)ēan$")
@@ -945,7 +969,7 @@ strong_verbs["7"] = function(data)
 	local pref = rmatch(data.inf, "^(.-)lācan$")
 	if pref then
 		-- lācan "play"
-		data.pres23 = pref .. "lǣc"
+		data.pres23 = pref .. "lǣċ"
 		data.impsg = pref .. "lāc"
 		data.pastsg = {pref .. "lēc", pref .. "leolc"} -- FIXME, indicate latter as poetic
 		data.pastpl = data.pastsg
@@ -953,8 +977,11 @@ strong_verbs["7"] = function(data)
 		return
 	end
 	local pref, vowel = rmatch(data.inf, "^(.-)sċ(e?ā)dan$")
+	if not pref then
+		pref, vowel = rmatch(data.inf, "^(.-)sċ(ēa)dan$")
+	end
 	if pref then
-		-- sċ(e)ādan "separate"
+		-- sċ(e)ādan or sċēadan "separate"
 		data.pres23 = pref .. "sċēad"
 		data.impsg = pref .. "sċ" .. vowel .. "d"
 		data.pastsg = {pref .. "sċēd", pref .. "sċēad"}
@@ -1052,7 +1079,7 @@ strong_verbs["7"] = function(data)
 	if pref then
 		-- fealdan "fold", feallan "fall", healdan "hold", stealdan "possess",
 		-- wealcan "roll", wealdan "rule", weallan "boil", weaxan "grow"
-		data.pres23 = pref .. "ie" .. suf
+		data.pres23 = pref .. "ie" .. palatalize_final_cons(suf)
 		data.impsg = pref .. "ea" .. suf
 		data.pastsg = pref .. "ēo" .. suf
 		data.pastpl = data.pastsg
@@ -1063,7 +1090,7 @@ strong_verbs["7"] = function(data)
 	if pref then
 		-- blāwan "blow", cnāwan "know", crāwan "crow", māwan "mow", sāwan "sow",
 		-- swāpan "sweep", þrāwan "turn, twist", wāwan "blow"
-		data.pres23 = pref .. "ǣ" .. suf
+		data.pres23 = pref .. "ǣ" .. palatalize_final_cons(suf)
 		data.impsg = pref .. "ā" .. suf
 		data.pastsg = pref .. "ēo" .. suf
 		data.pastpl = data.pastsg
@@ -1073,7 +1100,7 @@ strong_verbs["7"] = function(data)
 	local pref, suf = rmatch(data.inf, "^(.-)ēa(" .. cons_c .. "+)an$")
 	if pref then
 		-- bēatan "beat", āhnēapan "pluck off", hēawan "hew", hlēapan "leap"
-		data.pres23 = pref .. "īe" .. suf
+		data.pres23 = pref .. "īe" .. palatalize_final_cons(suf)
 		data.impsg = pref .. "ēa" .. suf
 		data.pastsg = pref .. "ēo" .. suf
 		data.pastpl = data.pastsg
@@ -1093,7 +1120,7 @@ strong_verbs["7"] = function(data)
 		end
 		if suf == "c" and pref:find("fl$") or suf == "t" and pref:find("wr$") then
 			-- flōcan "clap, strike", wrōtan "root up"
-			data.pres23 = pref .. "ē" .. suf
+			data.pres23 = pref .. "ē" .. palatalize_final_cons(suf)
 			data.impsg = pref .. "ō" .. suf
 			data.pastsg = {} -- no preterite
 			data.pastpl = {}
@@ -1103,7 +1130,7 @@ strong_verbs["7"] = function(data)
 		-- blōtan "sacrifice", blōwan "bloom, blossom", hrōpan "shout",
 		-- hwōpan "threaten", flōwan "flow", grōwan "grow", hlōwan "low, bellow",
 		-- spōwan "succeed"; also rōwan "row", which has alt pret pl rēon
-		data.pres23 = pref .. "ē" .. suf
+		data.pres23 = pref .. "ē" .. palatalize_final_cons(suf)
 		data.impsg = pref .. "ō" .. suf
 		data.pastsg = pref .. "ēo" .. suf
 		data.pastpl = data.pastsg
@@ -1180,8 +1207,15 @@ weak_verbs["1b"] = function(data)
 		-- hyngran, dīeglan, bīecnan, þrysman, etc.
 		data.pres23 = pref .. "e"
 		data.impsg = data.pres23
-		data.past = data.pres23 .. "d"
-		data.pp = data.past
+		local vowel = rmatch(pref, "^.-(" .. vowel_c .. "+)" .. single_cons_c .. "[rlmnw]$")
+		if vowel and not ends_in_long_vowel(vowel) then
+			-- efnan, bytlan, eġlan, ræfnan, seġlan, þrysman; form without -ed is older
+			data.past = {pref .. "d", pref .. "ed"}
+		else
+			-- dīeglan, forglendran, wrixlan, frēfran, timbran, symblan, etc.
+			data.past = pref .. "ed"
+		end
+		data.pp = pref .. "ed"
 		return
 	end
 	if data.inf:find("ēan$") or rfind(data.inf, vowel_c .. "n$") and not data.inf:find("an$") then
@@ -1469,13 +1503,14 @@ local function set_categories(typ, class)
 		table.insert(cats, "Old English preterite-present verbs")
 	elseif typ == "irreg" or typ == "anomalous" then
 		table.insert(cats, "Old English irregular verbs")
-	else
+	elseif typ then
 		error("Unrecognized verb type: " .. typ)
 	end
 	return cats
 end
 
 local function show_old(frame)
+	track("ang-conj-old")
 	local parent_args = frame:getParent().args
 	local params = {
 		[1] = {},
@@ -1496,6 +1531,7 @@ local function show_old(frame)
 		[16] = {},
 		[17] = {},
 		[18] = {},
+		[19] = {}, -- support but ignore, as several existing verbs include it
 		["type"] = {},
 		["class"] = {},
 		["style"] = {},
@@ -1506,7 +1542,7 @@ local function show_old(frame)
 
 	local forms = {}
 	for i=1,18 do
-		forms[params_to_slots[i]] = rsplit(args[i], ", *")
+		forms[params_to_slots[i]] = args[i] and rsplit(args[i], ", *") or {}
 	end
 	forms["type"] = args["type"]
 	forms["class"] = args["class"]
