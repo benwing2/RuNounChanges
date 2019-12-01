@@ -942,14 +942,14 @@ strong_verbs["6"] = function(data)
 		data.pp = {pref .. "stæpen", pref .. "stapen"}
 		return
 	end
-	local pref = rmatch(data.inf, "^(.-)swerian$")
+	local pref = rmatch(data.inf, "^(.-s[wƿ])erian$")
 	if pref then
 		-- swerian "swear"
-		data.pres23 = pref .. "swere"
+		data.pres23 = pref .. "ere"
 		data.impsg = data.pres23
-		data.pastsg = pref .. "swōr"
+		data.pastsg = pref .. "ōr"
 		data.pastpl = data.pastsg
-		data.pp = pref .. "sworen" -- on the analogy of class IV verbs like beran
+		data.pp = pref .. "oren" -- on the analogy of class IV verbs like beran
 		return
 	end
 end
@@ -1118,7 +1118,7 @@ strong_verbs["7"] = function(data)
 			data.pp = pref .. "ōgen"
 			return
 		end
-		if suf == "c" and pref:find("fl$") or suf == "t" and pref:find("wr$") then
+		if suf == "c" and pref:find("fl$") or suf == "t" and rfind("[wƿ]r$") then
 			-- flōcan "clap, strike", wrōtan "root up"
 			data.pres23 = pref .. "ē" .. palatalize_final_cons(suf)
 			data.impsg = pref .. "ō" .. suf
@@ -1135,20 +1135,20 @@ strong_verbs["7"] = function(data)
 		data.pastsg = pref .. "ēo" .. suf
 		data.pastpl = data.pastsg
 		data.pp = pref .. "ō" .. suf .. "en"
-		if suf == "w" and pref:find("r$") and not pref:find("gr$") then
+		if (suf == "w" or suf == "ƿ") and pref:find("r$") and not pref:find("gr$") then
 			-- rōwan "row"
 			data.extraforms["pl_past_indc"] = {pref .. "ēon"}
 		end
 		return
 	end
-	local pref = rmatch(data.inf, "^(.-)wēpan$")
+	local pref = rmatch(data.inf, "^(.-[wƿ])ēpan$")
 	if pref then
 		-- wēpan "weep"; j-present
-		data.pres23 = pref .. "wēp"
-		data.impsg = pref .. "wēp"
-		data.pastsg = pref .. "wēop"
+		data.pres23 = pref .. "ēp"
+		data.impsg = pref .. "ēp"
+		data.pastsg = pref .. "ēop"
 		data.pastpl = data.pastsg
-		data.pp = pref .. "wōpen"
+		data.pp = pref .. "ōpen"
 		return
 	end
 end
@@ -1182,6 +1182,15 @@ weak_verbs["1a"] = function(data)
 		data.pp = {data.pres23 .. "ed", data.past}
 		return
 	end
+	local pref = rmatch(data.inf, "^(.-)bban$")
+	if pref then
+		-- swebban etc.
+		data.pres23 = pref .. "fe"
+		data.impsg = data.pres23
+		data.past = data.pres23 .. "d"
+		data.pp = data.past
+		return
+	end
 	local pref, last_cons = rmatch(data.inf, "^(.-)(.)%2an$")
 	if pref then
 		data.pres23 = pref .. last_cons .. "e"
@@ -1193,21 +1202,21 @@ weak_verbs["1a"] = function(data)
 end
 
 weak_verbs["1b"] = function(data)
-	local pref = rmatch(data.inf, "^(.-[rl])wan$")
+	local pref, cons = rmatch(data.inf, "^(.-[rl])([wƿ])an$")
 	if pref then
 		-- ġierwan, hierwan, nierwan, sierwan, smierwan, wielwan (?)
 		data.pres23 = pref .. "e"
 		data.impsg = data.pres23
 		data.past = data.pres23 .. "d"
-		data.pp = {pref .. "wed", pref .. "ed"}
+		data.pp = {pref .. cons .. "ed", pref .. "ed"}
 		return
 	end
-	local pref = rmatch(data.inf, "^(.-" .. cons_c .. "[rlmnw])an$")
+	local pref = rmatch(data.inf, "^(.-" .. cons_c .. "[rlmnwƿ])an$")
 	if pref and not pref:find("[rl][mn]$") and not pref:find("rl$") and not rfind(pref, "(" .. cons_c .. ")%1$") then
 		-- hyngran, dīeglan, bīecnan, þrysman, etc.
 		data.pres23 = pref .. "e"
 		data.impsg = data.pres23
-		local vowel = rmatch(pref, "^.-(" .. vowel_c .. "+)" .. single_cons_c .. "[rlmnw]$")
+		local vowel = rmatch(pref, "^.-(" .. vowel_c .. "+)" .. single_cons_c .. "[rlmnwƿ]$")
 		if vowel and not ends_in_long_vowel(vowel) then
 			-- efnan, bytlan, eġlan, ræfnan, seġlan, þrysman; form without -ed is older
 			data.past = {pref .. "d", pref .. "ed"}
@@ -1568,6 +1577,9 @@ function export.show(frame)
 	local args = require("Module:parameters").process(parent_args, params)
 	local allforms
 	local allcats = {}
+	if #args[1] > 1 then
+		table.insert(allcats, "Old English verbs with multiple conjugations")
+	end
 	for _, infspec in ipairs(args[1]) do
 		local inf, spec = rmatch(infspec, "^(.-)<(.*)>$")
 		if not inf then
