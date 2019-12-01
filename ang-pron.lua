@@ -39,11 +39,10 @@ FIXME:
 ]=]
 
 local strutils = require("Module:string utilities")
-local m_table = require("Module:table")
 local m_IPA = require("Module:IPA")
+local com = require("Module:ang-common")
 local lang = require("Module:languages").getByCode("ang")
 
-local u = mw.ustring.char
 local rsubn = mw.ustring.gsub
 local rfind = mw.ustring.find
 local rmatch = mw.ustring.match
@@ -64,15 +63,9 @@ end
 
 local export = {}
 
-local ACUTE = u(0x0301)
-local GRAVE = u(0x0300)
-local CFLEX = u(0x0302)
-local MACRON = u(0x0304)
-local DOTABOVE = u(0x0307)
-
-local accent = MACRON .. ACUTE .. GRAVE .. CFLEX
+local accent = com.MACRON .. com.ACUTE .. com.GRAVE .. com.CFLEX
 local accent_c = "[" .. accent .. "]"
-local stress_accent = ACUTE .. GRAVE .. CFLEX
+local stress_accent = com.ACUTE .. com.GRAVE .. com.CFLEX
 local stress_accent_c = "[" .. stress_accent .. "]"
 local vowel = "aɑeiouyæœø"
 local vowel_or_accent = vowel .. accent
@@ -86,20 +79,6 @@ local non_vowel_c = "[^" .. vowel .. "]"
 local cons = "bcċçdfgġɡhjklmnŋpqrstvwxzþðƿθʃʒɫ"
 local cons_c = "[" .. cons .. "]"
 local voiced_sound = vowel .. "lrmnwjbdɡ" -- WARNING, IPA ɡ used here
-
-local recomposer = {
-	["g" .. DOTABOVE] = "ġ",
-	["G" .. DOTABOVE] = "Ġ",
-	["c" .. DOTABOVE] = "ċ",
-	["C" .. DOTABOVE] = "Ċ",
-}
-
--- Decompose macron, acute, grave, circumflex, but leave alone ġ, ċ and uppercase equiv
-local function decompose(text)
-	text = mw.ustring.toNFD(text)
-	text = rsub(text, ".[" .. DOTABOVE .. "]", recomposer)
-	return text
-end
 
 -- These rules operate in order, and apply to the actual spelling,
 -- after (1) macron decomposition, (2) syllable and prefix splitting,
@@ -115,7 +94,7 @@ end
 -- and then is used to generate the displayed phonemic pronunciation
 -- by removing ⁀ symbols.
 local phonemic_rules = {
-	{MACRON, "ː"},
+	{com.MACRON, "ː"},
 	{"eoː", "oː"}, -- e.g. ġeōmor
 	{"eaː", "aː"},
 	{"[ei]ː?[aeo]", {
@@ -208,112 +187,6 @@ local function apply_rules(word, rules)
 	return word
 end
 
--- We use the following syllable-splitting algorithm.
--- (1) A single consonant goes with the following syllable.
--- (2) Two consonants are split down the middle.
--- (3) For three or more consonants, check for clusters ending in
---     onsets_3 then onsets_2, with at least one preceding consonant.
---     If so, split between the onset and the preceding consonant(s).
--- (4) Check similarly for secondary_onsets_2. If seen, then check
---     the preceding consonant; if it's not an l or r, split before
---     the onset.
--- (5) Otherwise, split before the last consonant (i.e. the last
---     consonant goes with the following syllable, and all preceding
---     consonants go with the preceding syllable).
-local onsets_2 = m_table.listToSet({
-	"pr", "pl",
-	"br", "bl",
-	"tr", "tw",
-	"dr", "dw",
-	"cr", "cl", "cw", --skip "cn"
-	"kr", "kl", "kw", --skip "kn"
-	"gr", "gl", -- skip "gn"
-	"sm", "sn", "sl", "sw",
-	"sp",
-	"st",
-	"sc", "sk", "sċ",
-	"fr", "fl", --skip "fn",
-	"þr", "þw",
-	"ðr", "ðw",
-	"hr", "hl", "hw", -- skip "hn"
-	"wr", "wl",
-})
-
-local secondary_onsets_2 = m_table.listToSet({
-	"cn", "kn",
-	"gn",
-	"fn",
-	"hn",
-})
-
-local onsets_3 = m_table.listToSet({
-	"spr", "spl",
-	"str",
-	"scr", "skr", "sċr",
-})
-
-local diphthongs = m_table.listToSet({
-	"ea", decompose("ēa"), decompose("eā"),
-	"eo", decompose("ēo"), decompose("eō"),
-	"io", decompose("īo"), decompose("iō"),
-	"ie", decompose("īe"), decompose("iē"),
-})
-
-local prefixes = {
-	{decompose("ā"), {verb = "unstressed", noun = "stressed"}},
-	{"æt", {verb = "unstressed"}},
-	{"æfter", {verb = "secstressed", noun = "stressed"}}, -- not very common
-	{"and", {verb = "stressed", noun = "stressed"}},
-	{"an", {verb = "unstressed", non = "stressed"}},
-	{"be", {verb = "unstressed", noun = "unstressed", restriction = "^[^" .. accent .. "ao]"}},
-	{decompose("bī"), {noun = "stressed"}},
-	-- {"ed", }, -- should include? not very common
-	{"fore", {verb = "unstressed", noun = "stressed", restriction = "^[^" .. accent .. "ao]"}},
-	{"for[þð]", {verb = "unstressed", noun = "stressed"}},
-	{"for", {verb = "unstressed", noun = "unstressed"}},
-	{"fram", {verb = "unstressed", noun = "stressed"}}, -- should include? not very common
-	-- following is rare as a noun, mostly from verbal forms
-	{"ġeond", {verb = "unstressed"}}, 
-	{"ġe", {verb = "unstressed", noun = "unstressed", restriction = "^[^" .. accent .. "ao]"}},
-	-- {"in", },-- should include? not very common, unclear if stressed or unstressed as verb
-	{"mis", {verb = "unstressed"}},
-	{"ofer", {verb = "secstressed", noun = "stressed"}},
-	{"on", {verb = "unstressed", noun = "stressed"}},
-	{"or", {noun = "stressed"}},
-	{"o[þð]", {verb = "unstressed"}},
-	{decompose("tō"), {verb = "unstressed", noun = "stressed"}},
-	{"under", {verb = "secstressed", noun = "stressed"}},
-	{"un", {verb = "secstressed", noun = "stressed"}}, --uncommon as verb
-	{decompose("ūt"), {verb = "unstressed", noun = "stressed"}},
-	{"[wƿ]i[þð]er", {verb = "secstressed", noun = "stressed"}},
-	{"[wƿ]i[þð]", {verb = "unstressed"}},
-	{"ymb", {verb = "unstressed", noun = "stressed"}},
-	{"[þð]urh", {verb = "unstressed", noun = "stressed"}},
-	-- noun "prefixes"
-	{decompose("dēa[þð]"), {noun = "stressed"}},
-	{"dæġ", {noun = "stressed"}},
-	{"efen", {noun = "stressed"}},
-	{"eor[þð]", {noun = "stressed"}},
-	{"god", {noun = "stressed"}},
-	{decompose("gū[þð]"), {noun = "stressed"}},
-	{"hand", {noun = "stressed"}},
-	{decompose("hēafod"), {noun = "stressed"}},
-	{"niht", {noun = "stressed"}},
-	{decompose("stēop"), {noun = "stressed"}},
-	{"[wƿ]inter", {noun = "stressed"}},
-	{"[wƿ]uldor", {noun = "stressed"}},
-}
-
-local suffixes = {
-	{"lēas", {noun = "secstressed"}},
-	{"l[īi][ċc]", {noun = "unstressed"}},
-	{"full?", {noun = "unstressed"}},
-	{"fæst", {noun = "secstressed"}},
-	{"ness", {noun = "unstressed"}},
-	{"nis", {noun = "unstressed"}},
-	{"sum", {noun = "unstressed"}},
-}
-
 local function split_on_word_boundaries(word, pos)
 	local retparts = {}
 	local parts = strutils.capturing_split(word, "([<>%-])")
@@ -326,7 +199,7 @@ local function split_on_word_boundaries(word, pos)
 			-- Split off any prefixes.
 			while true do
 				local broke_prefix = false
-				for _, prefixspec in ipairs(prefixes) do
+				for _, prefixspec in ipairs(com.prefixes) do
 					local prefix_pattern = prefixspec[1]
 					local stress_spec = prefixspec[2]
 					local prefix, rest = rmatch(parts[i], "^(" .. prefix_pattern .. ")(.*)$")
@@ -345,8 +218,8 @@ local function split_on_word_boundaries(word, pos)
 						else
 							local initial_cluster, after_cluster = rmatch(rest, "^(" .. non_vowel_c .. "*)(.-)$")
 							if rfind(initial_cluster, "..") and (
-								not (onsets_2[initial_cluster] or secondary_onsets_2[initial_cluster] or
-									onsets_3[initial_cluster])) then
+								not (com.onsets_2[initial_cluster] or com.secondary_onsets_2[initial_cluster] or
+									com.onsets_3[initial_cluster])) then
 								-- initial cluster isn't a possible onset, don't split here
 							elseif rfind(initial_cluster, "^x") then
 								-- initial cluster isn't a possible onset, don't split here
@@ -360,9 +233,9 @@ local function split_on_word_boundaries(word, pos)
 								if stress_spec[pos] == "unstressed" then
 									-- don't do anything
 								elseif stress_spec[pos] == "secstressed" or (saw_primary_stress and stress_spec[pos] == "stressed") then
-									prefix = rsub(prefix, "(" .. vowel_c .. ")", "%1" .. GRAVE, 1)
+									prefix = rsub(prefix, "(" .. vowel_c .. ")", "%1" .. com.GRAVE, 1)
 								elseif stress_spec[pos] == "stressed" then
-									prefix = rsub(prefix, "(" .. vowel_c .. ")", "%1" .. ACUTE, 1)
+									prefix = rsub(prefix, "(" .. vowel_c .. ")", "%1" .. com.ACUTE, 1)
 									saw_primary_stress = true
 								else
 									error("Unrecognized stress spec for pos=" .. pos .. ", prefix=" .. prefix .. ": " .. stress_spec[pos])
@@ -383,7 +256,7 @@ local function split_on_word_boundaries(word, pos)
 			-- Now do the same for suffixes.
 			while true do
 				local broke_suffix = false
-				for _, suffixspec in ipairs(suffixes) do
+				for _, suffixspec in ipairs(com.suffixes) do
 					local suffix_pattern = suffixspec[1]
 					local stress_spec = suffixspec[2]
 					local rest, suffix = rmatch(parts[i], "^(.-)(" .. suffix_pattern .. ")$")
@@ -408,7 +281,7 @@ local function split_on_word_boundaries(word, pos)
 								if stress_spec[pos] == "unstressed" then
 									-- don't do anything
 								elseif stress_spec[pos] == "secstressed" then
-									prefix = rsub(suffix, "(" .. vowel_c .. ")", "%1" .. GRAVE, 1)
+									prefix = rsub(suffix, "(" .. vowel_c .. ")", "%1" .. com.GRAVE, 1)
 								elseif stress_spec[pos] == "stressed" then
 									error("Primary stress not allowed for suffixes (suffix=" .. suffix .. ")")
 								else
@@ -428,15 +301,15 @@ local function split_on_word_boundaries(word, pos)
 		end
 
 		local acc = rfind(parts[i], "(" .. stress_accent_c .. ")")
-		if acc == CFLEX then
+		if acc == com.CFLEX then
 			-- remove circumflex but don't accent
-			parts[i] = gsub(parts[i], CFLEX, "")
-		elseif acc == ACUTE then
+			parts[i] = gsub(parts[i], com.CFLEX, "")
+		elseif acc == com.ACUTE then
 			saw_primary_stress = true
 		elseif not acc and parts[i + 1] ~= "<" and parts[i - 1] ~= ">" then
 			-- Add primary or secondary stress on the part; primary stress if no primary
 			-- stress yet, otherwise secondary stress.
-			acc = saw_primary_stress and GRAVE or ACUTE
+			acc = saw_primary_stress and com.GRAVE or com.ACUTE
 			saw_primary_stress = true
 			parts[i] = rsub(parts[i], "(" .. vowel_c .. ")", "%1" .. acc, 1)
 		end
@@ -540,12 +413,12 @@ local function split_into_syllables(word)
 			else
 				-- check for onset_3 preceded by consonant(s).
 				local first, last3 = rmatch(cluster, "^(.-)(...)$")
-				if #first > 0 and onsets_3[last3] then
+				if #first > 0 and com.onsets_3[last3] then
 					cons_vowel[i - 1] = cons_vowel[i - 1] .. first
 					cons_vowel[i + 1] = last3 .. cons_vowel[i + 1]
 				else
 					local first, last2 = rmatch(cluster, "^(.-)(..)$")
-					if onsets_2[last2] or (secondary_onsets_2[last2] and not first:find("[lr]$")) then
+					if com.onsets_2[last2] or (com.secondary_onsets_2[last2] and not first:find("[lr]$")) then
 						cons_vowel[i - 1] = cons_vowel[i - 1] .. first
 						cons_vowel[i + 1] = last2 .. cons_vowel[i + 1]
 					else
@@ -573,10 +446,10 @@ end
 local function combine_syllables_moving_stress(syllables)
 	local modified_syls = {}
 	for i, syl in ipairs(syllables) do
-		if syl:find(ACUTE) then
-			syl = "ˈ" .. gsub(syl, ACUTE, "")
-		elseif syl:find(GRAVE) then
-			syl = "ˌ" .. gsub(syl, GRAVE, "")
+		if syl:find(com.ACUTE) then
+			syl = "ˈ" .. gsub(syl, com.ACUTE, "")
+		elseif syl:find(com.GRAVE) then
+			syl = "ˌ" .. gsub(syl, com.GRAVE, "")
 		elseif i > 1 then
 			syl = "." .. syl
 		end
@@ -600,7 +473,7 @@ local function combine_parts(parts)
 end
 
 local function transform_word(word, pos)
-	word = decompose(word)
+	word = com.decompose(word)
 	local parts = split_on_word_boundaries(word, pos)
 	for i, part in ipairs(parts) do
 		local syllables = split_into_syllables(part)
