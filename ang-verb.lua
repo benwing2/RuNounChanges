@@ -1033,6 +1033,16 @@ strong_verbs["7"] = function(data)
 		data.pp = pref .. "slǣpen"
 		return
 	end
+	local pref, main = rmatch(data.inf, "^(.-)(gr[ǣē]t)an$")
+	if pref then
+		-- grǣtan "wail"
+		data.pres23 = pref .. main
+		data.impsg = pref .. main
+		data.pastsg = pref .. "grēt"
+		data.pastpl = data.pastsg
+		data.pp = pref .. main .. "en"
+		return
+	end
 	local pref = rmatch(data.inf, "^(.-)blandan$")
 	if pref then
 		-- blandan "mix"
@@ -1118,7 +1128,7 @@ strong_verbs["7"] = function(data)
 			data.pp = pref .. "ōgen"
 			return
 		end
-		if suf == "c" and pref:find("fl$") or suf == "t" and rfind("[wƿ]r$") then
+		if suf == "c" and pref:find("fl$") or suf == "t" and rfind(pref, "[wƿ]r$") then
 			-- flōcan "clap, strike", wrōtan "root up"
 			data.pres23 = pref .. "ē" .. palatalize_final_cons(suf)
 			data.impsg = pref .. "ō" .. suf
