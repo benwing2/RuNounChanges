@@ -1643,8 +1643,13 @@ function export.show(frame)
 				local k = parts[1]
 				local v = parts[2]
 				local splitv = rsplit(v, ", *")
+				local unrecognized = false
 				if slots_and_accel[k] then
 					overrides[k] = splitv
+				elseif k == "ge" then
+					data.with_ge = require("Module:yesno")(v)
+				elseif k == "impers" then
+					data.impers = require("Module:yesno")(v)
 				elseif typ == "weak" or typ == "strong" then
 					if k == "pres" then
 						data.presa = splitv
@@ -1676,17 +1681,14 @@ function export.show(frame)
 					elseif typ == "weak" and k == "papp" then
 						data.past = splitv
 						data.pp = splitv
-					elseif k == "ge" then
-						data.with_ge = require("Module:yesno")(v)
 					else
-						error("Unrecognized spec key '" .. k .. "' (value '" .. v .. "')")
+						unrecognized = true
 					end
 				else
-					if k == "ge" then
-						data.with_ge = require("Module:yesno")(v)
-					else
-						error("Unrecognized spec key '" .. k .. "' (value '" .. v .. "')")
-					end
+					unrecognized = true
+				end
+				if unrecognized then
+					error("Unrecognized spec key '" .. k .. "' (value '" .. v .. "')")
 				end
 			end
 		end
@@ -1728,6 +1730,20 @@ function export.show(frame)
 		for k, v in pairs(overrides) do
 			forms[k] = rsplit(v, ", *")
 		end
+		if data.impers then
+			-- e.g. mǣtan; clear personal non-3sg forms
+			forms["1sg_pres_indc"] = {}
+			forms["2sg_pres_indc"] = {}
+			forms["pl_pres_indc"] = {}
+			forms["pl_pres_subj"] = {}
+			forms["1sg_past_indc"] = {}
+			forms["2sg_past_indc"] = {}
+			forms["pl_past_indc"] = {}
+			forms["pl_past_subj"] = {}
+			forms["sg_impr"] = {}
+			forms["pl_impr"] = {}
+		end
+
 		class = rsub(class, "[a-z]", "")
 		if class == "" then
 			class = nil
