@@ -10,9 +10,7 @@ local numbers = { "sg", "pl" }
 local slots_to_accel_form = {}
 for _, case in ipairs(cases) do
 	for _, number in ipairs(numbers) do
-		for _, gender in ipairs(genders) do
-			slots[case .. "_" .. number] = case .. "|" .. number
-		end
+		slots_to_accel_form[case .. "_" .. number] = case .. "|" .. number
 	end
 end
 
@@ -30,7 +28,7 @@ local slots_to_args = {
 function export.make_table(frame)
 	local parent_args = frame:getParent().args
 	local params = {
-		["title"] = {default = "—"},
+		["title"] = {},
 		["type"] = {},
 		["width"] = {},
 		["style"] = {},
@@ -47,7 +45,7 @@ function export.make_table(frame)
 	if not title then
 		local curtitle = mw.title.getCurrentTitle()
 		title = "Declension of ''" .. (
-			curtitle.baseText == "Old English" and "<nowiki>*</nowiki>" .. curtitle.subpageText or
+			curtitle.baseText == "Old English" and "*" .. curtitle.subpageText or
 			curtitle.text
 		) .. "''"
 		if args["type"] then
@@ -96,12 +94,12 @@ function export.make_table(frame)
 		end
 	end
 	if args.num == "pl" then
-		table_args.num_sg = "—"
+		table_args.nom_sg = "—"
 		table_args.acc_sg = "—"
 		table_args.gen_sg = "—"
 		table_args.dat_sg = "—"
 	elseif args.num == "sg" then
-		table_args.num_pl = "—"
+		table_args.nom_pl = "—"
 		table_args.acc_pl = "—"
 		table_args.gen_pl = "—"
 		table_args.dat_pl = "—"
