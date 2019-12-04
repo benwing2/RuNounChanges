@@ -67,27 +67,6 @@ local slots_and_accel = {
 	["past_ptc"] = "past|part",
 }
 
-local params_to_slots = {
-	[1] = "infinitive",
-	[2] = "infinitive2",
-	[3] = "1sg_pres_indc",
-	[4] = "2sg_pres_indc",
-	[5] = "3sg_pres_indc",
-	[6] = "pl_pres_indc",
-	[7] = "sg_pres_subj",
-	[8] = "pl_pres_subj",
-	[9] = "1sg_past_indc",
-	[10] = "2sg_past_indc",
-	[11] = "3sg_past_indc",
-	[12] = "pl_past_indc",
-	[13] = "sg_past_subj",
-	[14] = "pl_past_subj",
-	[15] = "sg_impr",
-	[16] = "pl_impr",
-	[17] = "pres_ptc",
-	[18] = "past_ptc",
-}
-
 local function ends_in_long_vowel(word)
 	if rfind(word, long_vowel_c .. "$") then
 		return true
@@ -244,6 +223,8 @@ local function vernerize_cons(cons, verner)
 		return "r"
 	elseif cons == "þ" or cons == "ð" then
 		return "d"
+	elseif cons == "h" then
+		return "g"
 	else
 		return cons
 	end
@@ -484,8 +465,9 @@ strong_verbs["1"] = function(data)
 		data.pastsg = depalatalize_final_cons_before_back_vowel(pref) .. "ā" .. suf
 		-- snīþan "cut" -> snidon; sċrīþan "go, proceed" -> sċridon
 		-- (but not mīþan "avoid", wrīþan "twist")
-		data.pastpl = pref .. "i" .. vernerize_cons(suf, data.verner)
-		if suf == "g" then
+		local pastsuf = vernerize_cons(suf, data.verner)
+		data.pastpl = pref .. "i" .. pastsuf
+		if pastsuf == "g" then
 			data.pp = pref .. "iġen"
 		else
 			data.pp = data.pastpl .. "en"
@@ -585,7 +567,11 @@ strong_verbs["3"] = function(data)
 		data.pp = pastpref .. "u" .. suf .. "en"
 		return
 	end
-	local pref, vowel, suf = rmatch(data.inf, "^(.-)(i?e)(l" .. cons_c .. "+)an$")
+	local pref, vowel, suf = rmatch(data.inf, "^(.-)(ie)(l" .. cons_c .. "+)an$")
+	if not pref then
+		-- ġeldan/ġildan/ġyldan variants of ġieldan
+		pref, vowel, suf = rmatch(data.inf, "^(.-)([eiy])(l" .. cons_c .. "+)an$")
+	end
 	if not pref then
 		pref, vowel, suf = rmatch(data.inf, "^(.-)(eo)(" .. cons_c .. "+)an$")
 	end
@@ -600,7 +586,7 @@ strong_verbs["3"] = function(data)
 		-- weorpan "throw" (þū wierpst), feohtan "fight", sċeorfan "gnaw";
 		-- āseolcan "languish" (þū āsielcst/āsielċest), beorgan "protect"
 		-- (þū bierġst, bearg/bearh [handled by default_construct_stem_ending])
-		data.pres23 = pref .. (vowel == "e" and "i" or "ie") .. palatalize_final_cons(suf)
+		data.pres23 = pref .. (vowel == "e" and "i" or vowel == "eo" and "ie" or vowel) .. palatalize_final_cons(suf)
 		data.impsg = pref .. vowel .. suf
 		data.pastsg = pref .. "ea" .. suf
 		-- ġieldan etc. (see above)
@@ -785,8 +771,6 @@ strong_verbs["5"] = function(data)
 	local pref = rmatch(data.inf, "^(.-)iċġe?an$")
 	if pref then
 		-- liċġan "lie down", þiċġan "receive", friċġan "ask, inquire"
-		-- If the infinitive was e.g. liċġean, default prese=liċġee, which is wrong
-		data.prese = pref .. "iċġe"
 		data.pres23 = pref .. "iġ"
 		data.impsg = data.pres23 .. "e"
 		if rfind(data.inf, "[þð]iċġe?an$") then
@@ -876,7 +860,6 @@ strong_verbs["6"] = function(data)
 	local pref = rmatch(data.inf, "^(.-)ēan$")
 	if pref then
 		-- slēan "strike", flēan "flay", lēan "blame", þwēan "wash"
-		data.prese = pref .. "ēa"
 		data.pres23 = pref .. "ieh"
 		data.impsg = pref .. "eah"
 		data.pastsg = pref .. "ōg" -- also slōh etc., which will get automatically added
@@ -1056,7 +1039,6 @@ strong_verbs["7"] = function(data)
 	local pref = rmatch(data.inf, "^(.-)ōn$")
 	if pref then
 		-- fōn "seize", hōn "hang"
-		data.prese = pref .. "ō"
 		data.pres23 = pref .. "ēh"
 		data.impsg = pref .. "ōh"
 		data.pastsg = pref .. "ēng"
@@ -1184,8 +1166,6 @@ weak_verbs["1a"] = function(data)
 	end
 	local pref = rmatch(data.inf, "^(.-)ċġe?an$")
 	if pref then
-		-- If the infinitive was e.g. leċġean, default prese=leċġee, which is wrong
-		data.prese = pref .. "ċġe"
 		data.pres23 = pref .. "ġ"
 		data.impsg = data.pres23 .. "e"
 		data.past = data.pres23 .. "d"
@@ -1202,6 +1182,9 @@ weak_verbs["1a"] = function(data)
 		return
 	end
 	local pref, last_cons = rmatch(data.inf, "^(.-)(.)%2an$")
+	if not pref then
+		pref, last_cons = rmatch(data.inf, "^(.-)(ċ)ċean$")
+	end
 	if pref then
 		data.pres23 = pref .. last_cons .. "e"
 		data.impsg = data.pres23
@@ -1240,7 +1223,6 @@ weak_verbs["1b"] = function(data)
 	if data.inf:find("ēan$") or rfind(data.inf, vowel_c .. "n$") and not data.inf:find("an$") then
 		-- contracted verb, e.g. hēan, þēon, tȳn, rȳn, þȳn
 		-- FIXME, verify in Campbell that all of the following are correct
-		data.prese = data.presa
 		data.pres23 = data.presa
 		data.impsg = data.presa
 		data.past = data.presa .. "d"
@@ -1261,7 +1243,7 @@ weak_verbs["1"] = function(data)
 	local weaktype
 	if data.inf:find("ian$") then
 		weaktype = "1a"
-	elseif rfind(data.inf, "(" .. cons_c .. ")%1an$") or data.inf:find("cgan$") or data.inf:find("ċġan$") then
+	elseif rfind(data.inf, "(" .. cons_c .. ")%1an$") or data.inf:find("ċċean$") or data.inf:find("cgan$") or data.inf:find("ċġan$") then
 		local prev = rmatch(data.inf, "^(.-)....$")
 		if rfind(prev, vowel_c .. "$") and not ends_in_long_vowel(prev) then
 			weaktype = "1a"
@@ -1275,7 +1257,12 @@ weak_verbs["1"] = function(data)
 end
 
 weak_verbs["2"] = function(data)
+	-- lufian
 	local pref = rmatch(data.inf, "^(.-)ian$")
+	if not pref then
+		-- lufiġan, lufeġan, lufiġean, lufeġean (alternative spellings)
+		pref = rmatch(data.inf, "^(.-)[ei]ġe?an$")
+	end
 	if pref then
 		data.pres23 = pref .. "a"
 		data.impsg = data.pres23
@@ -1286,8 +1273,6 @@ weak_verbs["2"] = function(data)
 	local pref = rmatch(data.inf, "^(.-)ġe?an$")
 	if pref then
 		-- twēoġan, smēaġ(e)an
-		-- If the infinitive was e.g. smēaġean, default prese=smēaġee, which is wrong
-		data.prese = pref .. "ġe"
 		data.pres23 = pref
 		data.impsg = data.pres23
 		data.past = data.pres23 .. "d"
@@ -1309,7 +1294,6 @@ weak_verbs["3"] = function(data)
 	local pref = rmatch(data.inf, "^(.-)libban$")
 	if pref then
 		-- libban, compounds
-		data.prese = pref .. "libbe"
 		data.pres23 = {pref .. "liofa", pref .. "leofa", pref .. "lifa"}
 		data.impsg = data.pres23
 		data.past = pref .. "lifd"
@@ -1319,7 +1303,6 @@ weak_verbs["3"] = function(data)
 	local pref = rmatch(data.inf, "^(.-)seċġe?an$")
 	if pref then
 		-- seċġan, compounds
-		data.prese = pref .. "seċġe"
 		data.pres23 = {pref .. "saga", pref .. "sæġ"}
 		data.impsg = {pref .. "saga", pref .. "sæġe"}
 		data.past = pref .. "sæġd"
@@ -1329,7 +1312,6 @@ weak_verbs["3"] = function(data)
 	local pref = rmatch(data.inf, "^(.-)hyċġe?an$")
 	if pref then
 		-- hyċġan, compounds
-		data.prese = pref .. "hyċġe"
 		data.pres23 = {pref .. "hoga", pref .. "hyġ", pref .. "hyġe"}
 		data.impsg = {pref .. "hoga", pref .. "hyġe"}
 		data.past = pref .. "hogd"
@@ -1528,56 +1510,8 @@ local function set_categories(typ, class)
 	return cats
 end
 
-local function show_old(frame)
-	track("ang-conj-old")
-	local parent_args = frame:getParent().args
-	local params = {
-		[1] = {},
-		[2] = {},
-		[3] = {},
-		[4] = {},
-		[5] = {},
-		[6] = {},
-		[7] = {},
-		[8] = {},
-		[9] = {},
-		[10] = {},
-		[11] = {},
-		[12] = {},
-		[13] = {},
-		[14] = {},
-		[15] = {},
-		[16] = {},
-		[17] = {},
-		[18] = {},
-		[19] = {}, -- support but ignore, as several existing verbs include it
-		["type"] = {},
-		["class"] = {},
-		["style"] = {},
-		["width"] = {},
-		["title"] = {},
-	}
-	local args = require("Module:parameters").process(parent_args, params)
-
-	local forms = {}
-	for i=1,18 do
-		forms[params_to_slots[i]] = args[i] and rsplit(args[i], ", *") or {}
-	end
-	forms["type"] = args["type"]
-	forms["class"] = args["class"]
-	forms["style"] = args["style"]
-	forms["width"] = args["width"]
-	forms["title"] = args["title"]
-	local table = make_table(forms)
-	local cats = set_categories(args["type"], args["class"])
-	return table .. m_utilities.format_categories(cats, lang)
-end
-
 function export.show(frame)
 	local parent_args = frame:getParent().args
-	if parent_args[1] and not parent_args[1]:find("<") then
-		return show_old(frame)
-	end
 	local params = {
 		[1] = {required = true, list = true, default = "beran<s4>"},
 	}
@@ -1603,7 +1537,7 @@ function export.show(frame)
 		data = {
 			inf = inf,
 			presa = presa,
-			prese = gsub(presa, "a$", "e"),
+			prese = presa:find("ēa$") and presa or gsub(presa, "e?a$", "e"),
 			verner = verner,
 			with_ge = not begins_with_verbal_prefix(inf),
 			extraforms = {},
@@ -1728,7 +1662,7 @@ function export.show(frame)
 			add_form_to_slot(forms, k, v)
 		end
 		for k, v in pairs(overrides) do
-			forms[k] = rsplit(v, ", *")
+			forms[k] = v
 		end
 		if data.impers then
 			-- e.g. mǣtan; clear personal non-3sg forms
