@@ -27,27 +27,82 @@ FIXME:
 
 1. Implement < and > which works like - but don't trigger secondary stress
    (< after a prefix, > before a suffix) (DONE)
-2. Recognize -lēas and -l[iī][cċ] as suffixes (so no voicing of preceding fricatives)
-2b. Recognize -fæst, -ful, -full as suffixes (so no voicing of initial fricative)
-3. If explicit syllable boundary in cluster after prefix, don't recognize as prefix
-   (hence ġeddung could be written ġed.dung, bedreda bed.reda) (DONE)
-4. Two bugs in swīþfèrhþ: missing initial stress, front h should be back (DONE MISSING
-   STRESS, NOT SURE ABOUT H)
-5. Bug in wasċan; probably sċ between vowels should be ʃʃ (DONE)
-6. Bug in ġeddung, doesn't have allowed onset with ġe-ddung (DONE)
-7. āxiġendlīc -- x is not an allowed onset (DONE)
+2. Recognize -lēas and -l[iī][cċ] as suffixes. (DONE)
+2b. Recognize -fæst, -ful, -full as suffixes (so no voicing of initial
+    fricative). (DONE)
+3. If explicit syllable boundary in cluster after prefix, don't recognize as
+   prefix (hence ġeddung could be written ġed.dung, bedreda bed.reda) (DONE)
+4. Two bugs in swīþfèrhþ: missing initial stress, front h should be back (DONE)
+5. Check Urszag's code changes for /h/. (DONE)
+6. Bug in wasċan; probably sċ between vowels should be ʃʃ (DONE)
+7. Bug in ġeddung, doesn't have allowed onset with ġe-ddung (DONE)
+8. āxiġendlīc -- x is not an allowed onset (DONE)
+9. Handle prefixes/suffixes denoted with initial/final hyphen -- shouldn't
+   trigger automatic stress when multisyllabic.
+10. Don't remove user-specified accents on monosyllabic words if there are
+    multiple words in the text.
+11. Final -þu/-þo after a consonant should always be voiceless (but controlled
+    by a param). (DONE BUT NOT YET CONTROLLED BY PARAM)
+12. Fricative voiced between voiced sounds even across prefix/compound
+    boundary when before (but not after) the boundary. (DONE)
+13. Fricative between unstressed vowels should be voiceless (e.g. adesa);
+    maybe only after the stress? (DONE)
+14. Resonant after fricative/stop in a given syllable should be rendered
+    as syllabic (e.g. ādl [ˈɑːdl̩], botm [botm̥], bōsm, bēacn [ˈbæːɑ̯kn̩];
+	also -mn e.g stemn /ˈstemn̩/. (DONE)
+15. Add aġēn- and onġēan- prefixes with secondary stress for verbs.
+    (WILL NOT DO)
+16. and- (and maybe all others) should be unstressed as verbal prefix.
+    andswarian is an exception. (DONE)
+17. Support multiple pronunciations as separate numbered params. Additional
+    specifiers should follow each pronun as PRONUN<K:V,K2:V2,...>. This
+	includes the current pos=.
+18. Double hh should be pronounced as [xː]. (DONE)
+19. Add -bǣre as a suffix with secondary stress. (DONE)
+20. Add -līċ(e), lī[cċ]nes(s) as suffixes with secondary stress. -lī[cċ]nes(s)
+    should behave like -līċ(e) in that what's before is checked to determine
+	the pos. (DONE)
+21. -lēasnes should be a recognized suffix with secondary stress. (DONE)
+22. Fix handling of crinċġan, dynċġe, should behave as if ċ isn't there. (DONE)
+23. Rewrite to use [[Module:ang-common]]. (DONE)
+24. Ignore final period/question mark/exclamation point. (DONE)
+
+QUESTIONS:
+
+1. Should /an/, /on/ be pronounced [ɒn]? Same for /am/, /om/.
+2. Should final /ɣ/ be rendered as [x]?
+3. Should word-final double consonants be simplified in phonetic representation?
+   Maybe also syllable-final except obstruents before [lr]?
+4. Should we use /x/ instead of /h/?
+5. Should we recognize from- along with fram-?
+6. Should we recognize bi- along with be-? (danger of false positives)
+7. Should fricative be voiced before voicd sound across word boundary?
+   (dæġes ēage [ˈdæːjez ˈæːɑ̯ɣe]?)
+8. Ask about pronunciation of bræġn, is the n syllabic? It's given as
+   /ˈbræjn̩/. Similarly, seġl given as /ˈsejl̩/.
+9. Ask about pronunciation of ġeond-, can it be either [eo] or [o]?
+10. Is final -ol pronounced [ul] e.g regol [ˈreɣul]? Hundwine has created
+    entries this way. What about final -oc etc.?
+11. Is final -ian pronounced [jan] or [ian]? Cf. sċyldigian given as
+    {{IPA|/ˈʃyldiɣiɑn/|/ˈʃyldiɣjɑn/}}. What about spyrian given as /ˈspyr.jɑn/?
+12. seht given as /seçt/ but sehtlian given as /ˈsextliɑn/. Which one is
+    correct?
 ]=]
 
 local strutils = require("Module:string utilities")
+local m_table = require("Module:table")
 local m_IPA = require("Module:IPA")
-local com = require("Module:ang-common")
 local lang = require("Module:languages").getByCode("ang")
+local com = require("Module:ang-common")
 
+local u = mw.ustring.char
 local rsubn = mw.ustring.gsub
 local rfind = mw.ustring.find
 local rmatch = mw.ustring.match
 local rsplit = mw.text.split
+local rgsplit = mw.text.gsplit
 local ulen = mw.ustring.len
+local ulower = mw.ustring.lower
 
 -- version of rsubn() that discards all but the first return value
 local function rsub(term, foo, bar, n)
@@ -74,9 +129,13 @@ local front_vowel = "eiyæœø"
 local vowel_c = "[" .. vowel .. "]"
 local vowel_or_accent_c = "[" .. vowel_or_accent .. "]"
 local non_vowel_c = "[^" .. vowel .. "]"
--- The following includes both IPA symbols and letters (including regular g and IPA ɡ)
+local front_vowel_c = "[" .. front_vowel .. "]"
+-- The following include both IPA symbols and letters (including regular g and IPA ɡ)
 -- so it can be used at any step of the process.
-local cons = "bcċçdfgġɡhjklmnŋpqrstvwxzþðƿθʃʒɫ"
+local obstruent = "bcċçdfgɡɣhkpqstvxzþðθʃʒ"
+local resonant = "lmnŋrɫ"
+local glide = "ġjwƿ"
+local cons = obstruent .. resonant .. glide
 local cons_c = "[" .. cons .. "]"
 local voiced_sound = vowel .. "lrmnwjbdɡ" -- WARNING, IPA ɡ used here
 
@@ -116,6 +175,10 @@ local phonemic_rules = {
 	-- x between vowels when at the beginning of a syllable should be k.s;
 	-- remaining x handled below
 	{"(" .. vowel_c .. "ː?)([.ˈˌ]?)x(" .. vowel_c .. ")", "%1k%2s%3"},
+	-- z between vowels when at the beginning of a syllable should be t.s;
+	-- remaining z handled below
+	{"(" .. vowel_c .. "ː?)([.ˈˌ]?)z(" .. vowel_c .. ")", "%1t%2s%3"},
+	{"nċ([.ˈˌ]?)ġ", "n%1j"},
 	{"ċ([.ˈˌ]?)ġ", "j%1j"},
 	{"c([.ˈˌ]?)g", "g%1g"},
 	{"ċ([.ˈˌ]?)ċ", "t%1t͡ʃ"},
@@ -127,25 +190,48 @@ local phonemic_rules = {
 		["ð"] = "θ",
 		["ƿ"] = "w",
 		["x"] = "ks",
+		["z"] = "ts",
 		["g"] = "ɡ", -- map to IPA ɡ
 		["a"] = "ɑ",
 		["œ"] = "ø",
 	}},
 }
 
+local fricative_to_voiced = {
+	["f"] = "v",
+	["s"] = "z",
+	["θ"] = "ð",
+}
+
+local fricative_to_unvoiced = {
+	["v"] = "f",
+	["z"] = "s",
+	["ð"] = "θ",
+}
+
 -- These rules operate in order, on the output of phonemic_rules.
 -- The output of this is used to generate the displayed phonemic
 -- pronunciation by removing ⁀ symbols.
 local phonetic_rules = {
-	-- Note, the following will not operate across a ⁀ boundary.
-	{"([" .. voiced_sound .. "][ː.ˈˌ]*)([fsθ])([ː.ˈˌ]*[" .. voiced_sound .. "])",
+	-- Fricative voicing between voiced sounds. Note, the following operates
+	-- across a ⁀ boundary for a fricative before the boundary but not after.
+	{"([" .. voiced_sound .. "][ː.ˈˌ]*)([fsθ])([ː.ˈˌ⁀]*[" .. voiced_sound .. "])",
 		function(s1, c, s2)
-			local fricative_to_voiced = {
-				["f"] = "v",
-				["s"] = "z",
-				["θ"] = "ð",
-			}
 			return s1 .. fricative_to_voiced[c] .. s2
+		end
+	},
+	-- Fricative between unstressed vowels should be devoiced.
+	-- Note that unstressed syllables are preceded by . while stressed
+	-- syllables are preceded by a stress mark.
+	{"(%.[^.⁀][" .. vowel .. com.DOUBLE_BREVE_BELOW .. "ː]*%.)([vzð])",
+		function(s1, c)
+			return s1 .. fricative_to_unvoiced[c]
+		end
+	},
+	-- Final unstressed -þu/-þo after a consonant should be devoiced.
+	{"(" .. cons_c .. "ː?" .. "%.)ð([uo]⁀)",
+		function(s1, s2)
+			return s1 .. "θ" .. s2
 		end
 	},
 	{"h[wnlr]", {
@@ -158,10 +244,9 @@ local phonetic_rules = {
 	{"n([.ˈˌ]?[ɡkx])", "ŋ%1"}, -- WARNING, IPA ɡ used here
 	{"n([.ˈˌ]?)j", "n%1d͡ʒ"},
 	{"j([.ˈˌ]?)j", "d%1d͡ʒ"},
-	{"h", "x"},                    ---[x] is the most general allophone
-	{"([%^.ˈˌ])x", "%1h"},         ---[h] occurs as a syllable-initial allophone
-	{"([eiyæœø])x", "%1ç"},          --for some reason "Front vowel" was giving the wrong results here.
-    --The above code for h~x~ç probably will give wrong results for words with hh.
+	{"h", "x"},                    -- [x] is the most general allophone
+	{"([^x][⁀.ˈˌ])x", "%1h"},      -- [h] occurs as a syllable-initial allophone
+	{"(" .. front_vowel_c .. ")x", "%1ç"}, -- [ç] occurs after front vowels
 	-- An IPA ɡ after a word/prefix boundary, after another ɡ or after n
 	-- (previously converted to ŋ in this circumstance) should remain as ɡ,
 	-- while all other ɡ's should be converted to ɣ except that word-final ɡ
@@ -176,8 +261,13 @@ local phonetic_rules = {
 	{"r([.ˈˌ]?)r", "rˠ%1rˠ"},
 	{"l([.ˈˌ]?" .. cons_c .. ")", "ɫ%1"},
 	{"r([.ˈˌ]?" .. cons_c .. ")", "rˠ%1"},
-	-- FIXME, word-final double consonants should be pronounced single, maybe
-	-- also syllable-final except obstruents before [lr]
+	-- In the sequence vowel + obstruent + resonant in a single syllable,
+	-- the resonant should become syllabic, e.g. ādl [ˈɑːdl̩], blōstm [bloːstm̩],
+	-- fæþm [fæðm̩], bēacn [ˈbæːɑ̯kn̩]. We allow anything but a syllable or word
+	-- boundary betweent the vowel and the obstruent.
+	{"(" .. vowel_c .. "[^.ˈˌ⁀]*[" .. obstruent .. "]ː?[" .. resonant .. "])", "%1" .. com.SYLLABIC},
+	-- also -mn e.g stemn /ˈstemn̩/; same for m + other resonants except m
+	{"(" .. vowel_c .. "[^.ˈˌ⁀]*mː?[lnŋrɫ])", "%1" .. com.SYLLABIC},
 }
 
 local function apply_rules(word, rules)
@@ -339,7 +429,7 @@ local function break_vowels(vowelseq)
 			check_empty(chars[i])
 			i = i + 1
 		else
-			if i < #chars - 1 and diphthongs[
+			if i < #chars - 1 and com.diphthongs[
 				rsub(chars[i], stress_accent_c, "") .. rsub(chars[i + 2], stress_accent_c, "")
 			] then
 				check_empty(chars[i + 1])
@@ -474,6 +564,7 @@ end
 
 local function transform_word(word, pos)
 	word = com.decompose(word)
+	word = gsub(word, "[.!?]$", "")
 	local parts = split_on_word_boundaries(word, pos)
 	for i, part in ipairs(parts) do
 		local syllables = split_into_syllables(part)
@@ -484,9 +575,10 @@ end
 
 local function default_pos(word, pos)
 	if not pos then
-		-- adjectives in -līċ can follow nouns or verbs; truncate the ending and
-		-- check what precedes
+		-- adjectives in -līċ, adverbs in -līċe and nouns in -nes can follow
+		-- nouns or verbs; truncate the ending and check what precedes
 		word = rsub(word, "^(.*" .. vowel_c .. ".*)l[iī][cċ]e?$", "%1")
+		word = rsub(word, "^(.*" .. vowel_c .. ".*)n[eiy]ss?$", "%1")
 		-- verbs in -an/-ōn/-ēon, inflected infintives in -enne,
 		-- participles in -end(e)/-en/-ed/-od, verbal nouns in -ing/-ung
 		if rfind(word, "[aāō]n$") or rfind(word, "ēon$") or rfind(word, "enne$")
@@ -504,7 +596,7 @@ local function default_pos(word, pos)
 	return pos
 end
 
-local function generate_phonemic(word, pos)
+local function generate_phonemic_word(word, pos)
 	pos = default_pos(word, pos)
 	word = transform_word(word, pos)
 	word = apply_rules(word, phonemic_rules)
@@ -513,23 +605,36 @@ local function generate_phonemic(word, pos)
 	return word
 end
 
-function export.phonemic(word, pos)
-	if type(word) == "table" then
-		pos = word.args["pos"]
-		word = word[1]
+local function generate_phonemic_text(text, pos)
+	local result = {}
+	text = ulower(text)
+	for word in rgsplit(text, " ") do
+		table.insert(result, generate_phonemic_word(word, pos))
 	end
-	return gsub(generate_phonemic(word, pos), "⁀", "")
+	return table.concat(result, " ")
 end
 
-function export.phonetic(word, pos)
-	if type(word) == "table" then
-		pos = word.args["pos"]
-		word = word[1]
+function export.phonemic(text, pos)
+	if type(text) == "table" then
+		pos = text.args["pos"]
+		text = text[1]
 	end
-	word = generate_phonemic(word, pos)
-	word = apply_rules(word, phonetic_rules)
-	word = gsub(word, "⁀", "")
-	return word
+	return gsub(generate_phonemic_text(text, pos), "⁀", "")
+end
+
+function export.phonetic(text, pos)
+	if type(text) == "table" then
+		pos = text.args["pos"]
+		text = text[1]
+	end
+	local result = {}
+	text = ulower(text)
+	for word in rgsplit(text, " ") do
+		word = generate_phonemic_word(word, pos)
+		word = apply_rules(word, phonetic_rules)
+		table.insert(result, word)
+	end
+	return gsub(table.concat(result, " "), "⁀", "")
 end
 
 function export.show(frame)
