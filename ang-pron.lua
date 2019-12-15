@@ -54,9 +54,9 @@ FIXME:
     (WILL NOT DO)
 16. and- (and maybe all others) should be unstressed as verbal prefix.
     andswarian is an exception. (DONE)
-17. Support multiple pronunciations as separate numbered params. Additional
-    specifiers should follow each pronun as PRONUN<K:V,K2:V2,...>. This
-	includes the current pos=.
+17. Support multiple pronunciations as separate numbered params. (DONE)
+17b. Additional specifiers should follow each pronun as PRONUN<K:V,K2:V2,...>.
+    This includes the current pos=.
 18. Double hh should be pronounced as [xː]. (DONE)
 19. Add -bǣre as a suffix with secondary stress. (DONE)
 20. Add -līċ(e), lī[cċ]nes(s) as suffixes with secondary stress. -lī[cċ]nes(s)
@@ -87,6 +87,9 @@ QUESTIONS:
     {{IPA|/ˈʃyldiɣiɑn/|/ˈʃyldiɣjɑn/}}. What about spyrian given as /ˈspyr.jɑn/?
 12. seht given as /seçt/ but sehtlian given as /ˈsextliɑn/. Which one is
     correct?
+13. Final -liċ or -līċ, with or without secondary stress?
+14. Should we special-case -sian [sian]? Then we need support for [z] notation
+    to override phonetics.
 ]=]
 
 local strutils = require("Module:string utilities")
@@ -640,18 +643,37 @@ end
 function export.show(frame)
 	local parent_args = frame:getParent().args
 	local params = {
-		[1] = { required = true, default = "ġegangan" },
+		[1] = { required = true, default = "hlǣf-dīġe", list = true },
 		["pos"] = {},
+		["ann"] = {},
 	}
 	local args = require("Module:parameters").process(parent_args, params)
 
-	local phonemic = export.phonemic(args[1], args.pos)
-	local phonetic = export.phonetic(args[1], args.pos)
-	local IPA_args = {{pron = '/' .. phonemic .. '/'}}
-	if phonemic ~= phonetic then
-		table.insert(IPA_args, {pron = '[' .. phonetic .. ']'})
+	local IPA_args = {}
+	for _, arg in ipairs(args[1]) do
+		local phonemic = export.phonemic(arg, args.pos)
+		local phonetic = export.phonetic(arg, args.pos)
+		table.insert(IPA_args, {pron = '/' .. phonemic .. '/'})
+		if phonemic ~= phonetic then
+			table.insert(IPA_args, {pron = '[' .. phonetic .. ']'})
+		end
 	end
-	return m_IPA.format_IPA_full(lang, IPA_args)
+
+	local anntext
+	if args.ann == "1" then
+		anntext = {}
+		for _, arg in ipairs(args[1]) do
+			-- remove all spelling markup except ġ/ċ and macrons
+			m_table.insertIfNot(anntext, "'''" .. rsub(com.decompose(arg), "[%-+._<>" .. com.ACUTE .. com.GRAVE .. com.CFLEX .. "]", "") .. "'''")
+		end
+		anntext = table.concat(anntext, ", ") .. ":&#32;" 
+	elseif args.ann then
+		anntext = "'''" .. args.ann .. "''':&#32;"
+	else
+		anntext = ""
+	end
+
+	return anntext .. m_IPA.format_IPA_full(lang, IPA_args)
 end
 
 return export
