@@ -38,9 +38,8 @@ FIXME:
 7. Bug in ġeddung, doesn't have allowed onset with ġe-ddung (DONE)
 8. āxiġendlīc -- x is not an allowed onset (DONE)
 9. Handle prefixes/suffixes denoted with initial/final hyphen -- shouldn't
-   trigger automatic stress when multisyllabic.
-10. Don't remove user-specified accents on monosyllabic words if there are
-    multiple words in the text.
+   trigger automatic stress when multisyllabic. (DONE)
+10. Don't remove user-specified accents on monosyllabic words. (DONE)
 11. Final -þu/-þo after a consonant should always be voiceless (but controlled
     by a param). (DONE BUT NOT YET CONTROLLED BY PARAM)
 12. Fricative voiced between voiced sounds even across prefix/compound
@@ -66,6 +65,7 @@ FIXME:
 22. Fix handling of crinċġan, dynċġe, should behave as if ċ isn't there. (DONE)
 23. Rewrite to use [[Module:ang-common]]. (DONE)
 24. Ignore final period/question mark/exclamation point. (DONE)
+25. Implement pos=verbal for handling un-. (DONE)
 
 QUESTIONS:
 
@@ -121,9 +121,12 @@ end
 
 local export = {}
 
-local accent = com.MACRON .. com.ACUTE .. com.GRAVE .. com.CFLEX
+local AUTOACUTE = u(0xFFF0)
+local AUTOGRAVE = u(0xFFF1)
+
+local accent = com.MACRON .. com.ACUTE .. com.GRAVE .. com.CFLEX .. AUTOACUTE .. AUTOGRAVE
 local accent_c = "[" .. accent .. "]"
-local stress_accent = com.ACUTE .. com.GRAVE .. com.CFLEX
+local stress_accent = com.ACUTE .. com.GRAVE .. com.CFLEX .. AUTOACUTE .. AUTOGRAVE
 local stress_accent_c = "[" .. stress_accent .. "]"
 local vowel = "aɑeiouyæœø"
 local vowel_or_accent = vowel .. accent
@@ -280,6 +283,10 @@ local function apply_rules(word, rules)
 	return word
 end
 
+local function lookup_stress_spec(stress_spec, pos)
+	return stress_spec[pos] or (pos == "verbal" and stress_spec["verb"]) or nil
+end
+
 local function split_on_word_boundaries(word, pos)
 	local retparts = {}
 	local parts = strutils.capturing_split(word, "([<>%-])")
@@ -295,9 +302,10 @@ local function split_on_word_boundaries(word, pos)
 				for _, prefixspec in ipairs(com.prefixes) do
 					local prefix_pattern = prefixspec[1]
 					local stress_spec = prefixspec[2]
+					local pos_stress = lookup_stress_spec(stress_spec, pos)
 					local prefix, rest = rmatch(parts[i], "^(" .. prefix_pattern .. ")(.*)$")
 					if prefix then
-						if not stress_spec[pos] then
+						if not pos_stress then
 							-- prefix not recognized for this POS, don't split here
 						elseif stress_spec.restriction and not rfind(rest, stress_spec.restriction) then
 							-- restriction not met, don't split here
@@ -323,15 +331,15 @@ local function split_on_word_boundaries(word, pos)
 								-- break the word in two; next iteration we process
 								-- the rest, which may need breaking again
 								parts[i] = rest
-								if stress_spec[pos] == "unstressed" then
+								if pos_stress == "unstressed" then
 									-- don't do anything
-								elseif stress_spec[pos] == "secstressed" or (saw_primary_stress and stress_spec[pos] == "stressed") then
-									prefix = rsub(prefix, "(" .. vowel_c .. ")", "%1" .. com.GRAVE, 1)
-								elseif stress_spec[pos] == "stressed" then
-									prefix = rsub(prefix, "(" .. vowel_c .. ")", "%1" .. com.ACUTE, 1)
+								elseif pos_stress == "secstressed" or (saw_primary_stress and pos_stress == "stressed") then
+									prefix = rsub(prefix, "(" .. vowel_c .. ")", "%1" .. AUTOGRAVE, 1)
+								elseif pos_stress == "stressed" then
+									prefix = rsub(prefix, "(" .. vowel_c .. ")", "%1" .. AUTOACUTE, 1)
 									saw_primary_stress = true
 								else
-									error("Unrecognized stress spec for pos=" .. pos .. ", prefix=" .. prefix .. ": " .. stress_spec[pos])
+									error("Unrecognized stress spec for pos=" .. pos .. ", prefix=" .. prefix .. ": " .. pos_stress)
 								end
 								table.insert(retparts, insert_position, prefix)
 								insert_position = insert_position + 1
@@ -352,9 +360,10 @@ local function split_on_word_boundaries(word, pos)
 				for _, suffixspec in ipairs(com.suffixes) do
 					local suffix_pattern = suffixspec[1]
 					local stress_spec = suffixspec[2]
+					local pos_stress = lookup_stress_spec(stress_spec, pos)
 					local rest, suffix = rmatch(parts[i], "^(.-)(" .. suffix_pattern .. ")$")
 					if suffix then
-						if not stress_spec[pos] then
+						if not pos_stress then
 							-- suffix not recognized for this POS, don't split here
 						elseif stress_spec.restriction and not rfind(rest, stress_spec.restriction) then
 							-- restriction not met, don't split here
@@ -371,14 +380,14 @@ local function split_on_word_boundaries(word, pos)
 								-- break the word in two; next iteration we process
 								-- the rest, which may need breaking again
 								parts[i] = rest
-								if stress_spec[pos] == "unstressed" then
+								if pos_stress == "unstressed" then
 									-- don't do anything
-								elseif stress_spec[pos] == "secstressed" then
-									prefix = rsub(suffix, "(" .. vowel_c .. ")", "%1" .. com.GRAVE, 1)
-								elseif stress_spec[pos] == "stressed" then
+								elseif pos_stress == "secstressed" then
+									prefix = rsub(suffix, "(" .. vowel_c .. ")", "%1" .. AUTOGRAVE, 1)
+								elseif pos_stress == "stressed" then
 									error("Primary stress not allowed for suffixes (suffix=" .. suffix .. ")")
 								else
-									error("Unrecognized stress spec for pos=" .. pos .. ", suffix=" .. suffix .. ": " .. stress_spec[pos])
+									error("Unrecognized stress spec for pos=" .. pos .. ", suffix=" .. suffix .. ": " .. pos_stress)
 								end
 								table.insert(retparts, insert_position, suffix)
 								broke_suffix = true
@@ -397,12 +406,12 @@ local function split_on_word_boundaries(word, pos)
 		if acc == com.CFLEX then
 			-- remove circumflex but don't accent
 			parts[i] = gsub(parts[i], com.CFLEX, "")
-		elseif acc == com.ACUTE then
+		elseif acc == com.ACUTE or acc == AUTOACUTE then
 			saw_primary_stress = true
 		elseif not acc and parts[i + 1] ~= "<" and parts[i - 1] ~= ">" then
 			-- Add primary or secondary stress on the part; primary stress if no primary
 			-- stress yet, otherwise secondary stress.
-			acc = saw_primary_stress and com.GRAVE or com.ACUTE
+			acc = saw_primary_stress and AUTOGRAVE or AUTOACUTE
 			saw_primary_stress = true
 			parts[i] = rsub(parts[i], "(" .. vowel_c .. ")", "%1" .. acc, 1)
 		end
@@ -536,16 +545,17 @@ end
 
 -- Combine syllables into a word, moving stress markers (acute/grave) to the
 -- beginning of the syllable.
-local function combine_syllables_moving_stress(syllables)
+local function combine_syllables_moving_stress(syllables, no_auto_stress)
 	local modified_syls = {}
 	for i, syl in ipairs(syllables) do
-		if syl:find(com.ACUTE) then
-			syl = "ˈ" .. gsub(syl, com.ACUTE, "")
-		elseif syl:find(com.GRAVE) then
-			syl = "ˌ" .. gsub(syl, com.GRAVE, "")
+		if syl:find(com.ACUTE) or syl:find(AUTOACUTE) and not no_auto_stress then
+			syl = "ˈ" .. syl
+		elseif syl:find(com.GRAVE) or syl:find(AUTOGRAVE) and not no_auto_stress then
+			syl = "ˌ" .. syl
 		elseif i > 1 then
 			syl = "." .. syl
 		end
+		syl = rsub(syl, stress_accent_c, "")
 		table.insert(modified_syls, syl)
 	end
 	return table.concat(modified_syls)
@@ -565,46 +575,54 @@ local function combine_parts(parts)
 	return "⁀⁀" .. table.concat(text, "⁀") .. "⁀⁀"
 end
 
-local function transform_word(word, pos)
+local function transform_word(word, pos, no_auto_stress)
 	word = com.decompose(word)
-	word = gsub(word, "[.!?]$", "")
 	local parts = split_on_word_boundaries(word, pos)
 	for i, part in ipairs(parts) do
 		local syllables = split_into_syllables(part)
-		parts[i] = combine_syllables_moving_stress(syllables)
+		parts[i] = combine_syllables_moving_stress(syllables,
+			no_auto_stress or (#parts == 1 and #syllables == 1))
 	end
 	return combine_parts(parts)
 end
 
 local function default_pos(word, pos)
 	if not pos then
-		-- adjectives in -līċ, adverbs in -līċe and nouns in -nes can follow
-		-- nouns or verbs; truncate the ending and check what precedes
-		word = rsub(word, "^(.*" .. vowel_c .. ".*)l[iī][cċ]e?$", "%1")
-		word = rsub(word, "^(.*" .. vowel_c .. ".*)n[eiy]ss?$", "%1")
-		-- verbs in -an/-ōn/-ēon, inflected infintives in -enne,
-		-- participles in -end(e)/-en/-ed/-od, verbal nouns in -ing/-ung
-		if rfind(word, "[aāō]n$") or rfind(word, "ēon$") or rfind(word, "enne$")
-			or rfind(word, "ende?$") or rfind(word, "[eo]d$") or rfind(word, "en$")
-			or rfind(word, "[iu]ng$") then
+		-- verbs in -an/-ōn/-ēon, inflected infinitives in -enne
+		if rfind(word, "[aāō]n$") or rfind(word, "ēon$") or rfind(word, "enne$") then
 			pos = "verb"
 		else
-			pos = "noun"
+			-- adjectives in -līċ, adverbs in -līċe and nouns in -nes can follow
+			-- nouns or participles (which are "verbal"); truncate the ending
+			-- and check what precedes
+			word = rsub(word, "^(.*" .. vowel_c .. ".*)l[iī][cċ]e?$", "%1")
+			word = rsub(word, "^(.*" .. vowel_c .. ".*)n[eiy]ss?$", "%1")
+			-- participles in -end(e)/-en/-ed/-od, verbal nouns in -ing/-ung
+			if rfind(word, "ende?$") or rfind(word, "[eo]d$") or rfind(word, "en$")
+				or rfind(word, "[iu]ng$") then
+				pos = "verbal"
+			else
+				pos = "noun"
+			end
 		end
 	elseif pos == "adj" or pos == "adjective" then
 		pos = "noun"
-	elseif pos ~= "noun" and pos ~= "verb" then
+	elseif pos ~= "noun" and pos ~= "verb" and pos ~= "verbal" then
 		error("Unrecognized part of speech: " .. pos)
 	end
 	return pos
 end
 
 local function generate_phonemic_word(word, pos)
+	word = gsub(word, "[.!?]$", "")
 	pos = default_pos(word, pos)
-	word = transform_word(word, pos)
+	local is_prefix_suffix
+	if word:find("^%-") or word:find("%-$") then
+		is_prefix_suffix = true
+		word = gsub(word, "^%-?(.-)%-?$", "%1")
+	end
+	word = transform_word(word, pos, is_prefix_suffix)
 	word = apply_rules(word, phonemic_rules)
-	-- remove stress from single-syllable words
-	word = rsub(word, "^(⁀*)[ˈˌ]([^.ˈˌ]*)$", "%1%2")
 	return word
 end
 
@@ -666,7 +684,7 @@ function export.show(frame)
 			-- remove all spelling markup except ġ/ċ and macrons
 			m_table.insertIfNot(anntext, "'''" .. rsub(com.decompose(arg), "[%-+._<>" .. com.ACUTE .. com.GRAVE .. com.CFLEX .. "]", "") .. "'''")
 		end
-		anntext = table.concat(anntext, ", ") .. ":&#32;" 
+		anntext = table.concat(anntext, ", ") .. ":&#32;"
 	elseif args.ann then
 		anntext = "'''" .. args.ann .. "''':&#32;"
 	else
