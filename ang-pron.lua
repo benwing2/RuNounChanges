@@ -66,27 +66,29 @@ FIXME:
 23. Rewrite to use [[Module:ang-common]]. (DONE)
 24. Ignore final period/question mark/exclamation point. (DONE)
 25. Implement pos=verbal for handling un-. (DONE)
+26. Simplify geminate consonants within a single syllable. (DONE)
 
 QUESTIONS:
 
-1. Should /an/, /on/ be pronounced [ɒn]? Same for /am/, /om/.
-2. Should final /ɣ/ be rendered as [x]?
+1. Should /an/, /on/ be pronounced [ɒn]? Same for /am/, /om/. [NO]
+2. Should final /ɣ/ be rendered as [x]? [NO]
 3. Should word-final double consonants be simplified in phonetic representation?
-   Maybe also syllable-final except obstruents before [lr]?
-4. Should we use /x/ instead of /h/?
-5. Should we recognize from- along with fram-?
-6. Should we recognize bi- along with be-? (danger of false positives)
+   Maybe also syllable-final except obstruents before [lr]? [YES]
+4. Should we use /x/ instead of /h/? [YES]
+5. Should we recognize from- along with fram-? [NO]
+6. Should we recognize bi- along with be-? (danger of false positives) [NO]
 7. Should fricative be voiced before voicd sound across word boundary?
-   (dæġes ēage [ˈdæːjez ˈæːɑ̯ɣe]?)
+   (dæġes ēage [ˈdæːjez ˈæːɑ̯ɣe]?) [NO]
 8. Ask about pronunciation of bræġn, is the n syllabic? It's given as
-   /ˈbræjn̩/. Similarly, seġl given as /ˈsejl̩/.
-9. Ask about pronunciation of ġeond-, can it be either [eo] or [o]?
+   /ˈbræjn̩/. Similarly, seġl given as /ˈsejl̩/. [NO; HUNDWINE AND URSZAG DISAGREE]
+9. Ask about pronunciation of ġeond-, can it be either [eo] or [o]? [UNCLEAR]
 10. Is final -ol pronounced [ul] e.g regol [ˈreɣul]? Hundwine has created
-    entries this way. What about final -oc etc.?
+    entries this way. What about final -oc etc.? [NO]
 11. Is final -ian pronounced [jan] or [ian]? Cf. sċyldigian given as
     {{IPA|/ˈʃyldiɣiɑn/|/ˈʃyldiɣjɑn/}}. What about spyrian given as /ˈspyr.jɑn/?
+	[-ian in weak II verbs, -jan in weak I verbs]
 12. seht given as /seçt/ but sehtlian given as /ˈsextliɑn/. Which one is
-    correct?
+    correct? [ç]
 13. Final -liċ or -līċ, with or without secondary stress?
 14. Should we special-case -sian [sian]? Then we need support for [z] notation
     to override phonetics.
@@ -192,6 +194,7 @@ local phonemic_rules = {
 		["ċ"] = "t͡ʃ",
 		["c"] = "k",
 		["ġ"] = "j",
+		["h"] = "x",
 		["þ"] = "θ",
 		["ð"] = "θ",
 		["ƿ"] = "w",
@@ -240,17 +243,16 @@ local phonetic_rules = {
 			return s1 .. "θ" .. s2
 		end
 	},
-	{"h[wnlr]", {
-		["hw"] = "ʍ",
-		["hl"] = "l̥",
-		["hn"] = "n̥",
-		["hr"] = "r̥",
+	{"x[wnlr]", {
+		["xw"] = "ʍ",
+		["xl"] = "l̥",
+		["xn"] = "n̥",
+		["xr"] = "r̥",
 	}},
 	-- Note, the following will not operate across a ⁀ boundary.
-	{"n([.ˈˌ]?[ɡkx])", "ŋ%1"}, -- WARNING, IPA ɡ used here
+	{"n([.ˈˌ]?[ɡk])", "ŋ%1"}, -- WARNING, IPA ɡ used here
 	{"n([.ˈˌ]?)j", "n%1d͡ʒ"},
 	{"j([.ˈˌ]?)j", "d%1d͡ʒ"},
-	{"h", "x"},                    -- [x] is the most general allophone
 	{"([^x][⁀.ˈˌ])x", "%1h"},      -- [h] occurs as a syllable-initial allophone
 	{"(" .. front_vowel_c .. ")x", "%1ç"}, -- [ç] occurs after front vowels
 	-- An IPA ɡ after a word/prefix boundary, after another ɡ or after n
@@ -260,13 +262,16 @@ local phonetic_rules = {
 	-- g (which should never occur otherwise), convert the remaining IPA ɡ's to ɣ
 	-- or x, and then convert the regular g's back to IPA ɡ.
 	{"([ŋɡ⁀][.ˈˌ]?)ɡ", "%1g"}, -- WARNING, IPA ɡ on the left, regular g on the right
-	{"ɡ⁀", "x⁀"},
 	{"ɡ", "ɣ"},
 	{"g", "ɡ"}, -- WARNING, regular g on the left, IPA ɡ on the right
 	{"l([.ˈˌ]?)l", "ɫ%1ɫ"},
 	{"r([.ˈˌ]?)r", "rˠ%1rˠ"},
 	{"l([.ˈˌ]?" .. cons_c .. ")", "ɫ%1"},
 	{"r([.ˈˌ]?" .. cons_c .. ")", "rˠ%1"},
+	-- Geminate consonants within a single syllable are pronounced singly.
+	-- Does not apply e.g. to ''ǣttren'', which will be divided as ''ǣt.tren''.
+	{"(" .. cons_c .. ")%1", "%1"},
+	{"rˠrˠ", "rˠ"},
 	-- In the sequence vowel + obstruent + resonant in a single syllable,
 	-- the resonant should become syllabic, e.g. ādl [ˈɑːdl̩], blōstm [bloːstm̩],
 	-- fæþm [fæðm̩], bēacn [ˈbæːɑ̯kn̩]. We allow anything but a syllable or word
