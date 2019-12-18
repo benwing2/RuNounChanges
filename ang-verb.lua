@@ -736,6 +736,7 @@ strong_verbs["5"] = function(data)
 	local pref, suf = rmatch(data.inf, "^(.-)ie(" .. cons_c .. ")an$")
 	if not pref then
 		pref, suf = rmatch(data.inf, "^(.-ġ)[eiy](" .. cons_c .. ")an$")
+	end
 	if pref then
 		-- ġiefan "give", forġietan "forget"
 		data.pres23 = pref .. "ie" .. suf
@@ -815,8 +816,8 @@ strong_verbs["5"] = function(data)
 		data.pastsg = pref .. "eah"
 		if pref:find("s$") then
 			-- sēon "see"
-			data.pastpl = {pref .. "āw", pref .. "ǣg"}
-			data.pp = {pref .. "ewen", pref .. "awen", pref .. "eġen"}
+			data.pastpl = pref .. "āw"
+			data.pp = pref .. "ewen"
 		else
 			data.pastpl = pref .. "ǣg"
 			data.pp = pref .. "eġen"
@@ -909,13 +910,11 @@ strong_verbs["6"] = function(data)
 	local pref, vowel = rmatch(data.inf, "^(.-)hl([iy]?e?)hhan$")
 	if pref then
 		-- hliehhan "laugh"
-		data.pres23 = pref .. "hl" .. vowel .. "he"
+		data.pres23 = pref .. "hl" .. vowel .. "h"
 		data.impsg = data.pres23
 		data.pastsg = pref .. "hlōg"
 		data.pastpl = data.pastsg
-		-- The basic verb doesn't seem to have a past part, but compounds
-		-- āhliehhan and behliehhan do.
-		data.pp = {pref .. "hleahen", pref .. "hlahen"}
+		data.pp = pref .. "hlæġen"
 		return
 	end
 	local pref, cons = rmatch(data.inf, "^(.-)sċe([þð])%2an$")
@@ -923,12 +922,9 @@ strong_verbs["6"] = function(data)
 		-- sċeþþan "injure" (for some reason, expected #sċieþþan doesn't occur)
 		data.pres23 = pref .. "sċe" .. cons .. "e"
 		data.impsg = data.pres23
-		data.pastsg = {pref .. "sċōd", pref .. "sċeōd"}
+		data.pastsg = "sċōd"
 		data.pastpl = data.pastsg
-		-- No past part listed in Wright and none I can find in Bosworth-Toller,
-		-- either for sċeþþan or ġesċeþþan. Unclear if the past part would be
-		-- sċ(e)aþen or sċ(e)aden.
-		data.pp = {}
+		data.pp = "sċeaþen"
 		return
 	end
 	local pref, vowel = rmatch(data.inf, "^(.-)sċ([iy]?e?)ppan$")
@@ -1311,7 +1307,7 @@ weak_verbs["3"] = function(data)
 	local pref = rmatch(data.inf, "^(.-)abban$")
 	if pref then
 		data.prese = pref .. "æbbe"
-		data.pres23 = {pref .. "afa", pref .. "æf"}
+		data.pres23 = pref .. "æf"
 		data.impsg = pref .. "afa"
 		data.past = pref .. "æfd"
 		data.pp = data.past
@@ -1320,7 +1316,7 @@ weak_verbs["3"] = function(data)
 	local pref = rmatch(data.inf, "^(.-)libban$")
 	if pref then
 		-- libban, compounds
-		data.pres23 = {pref .. "liofa", pref .. "leofa", pref .. "lifa"}
+		data.pres23 = pref .. "leofa"
 		data.impsg = data.pres23
 		data.past = pref .. "lifd"
 		data.pp = data.past
@@ -1329,8 +1325,8 @@ weak_verbs["3"] = function(data)
 	local pref = rmatch(data.inf, "^(.-)seċġe?an$")
 	if pref then
 		-- seċġan, compounds
-		data.pres23 = {pref .. "saga", pref .. "sæġ"}
-		data.impsg = {pref .. "saga", pref .. "sæġe"}
+		data.pres23 = pref .. "sæġ"
+		data.impsg = pref .. "sæġe"
 		data.past = pref .. "sæġd"
 		data.pp = data.past
 		return
@@ -1338,10 +1334,10 @@ weak_verbs["3"] = function(data)
 	local pref = rmatch(data.inf, "^(.-)hyċġe?an$")
 	if pref then
 		-- hyċġan, compounds
-		data.pres23 = {pref .. "hoga", pref .. "hyġ", pref .. "hyġe"}
-		data.impsg = {pref .. "hoga", pref .. "hyġe"}
+		data.pres23 = pref .. "hyġ"
+		data.impsg = pref .. "hyġe"
 		data.past = pref .. "hogd"
-		data.pp = pref .. "hogod"
+		data.pp = data.past
 		return
 	end
 end
@@ -1394,35 +1390,35 @@ local function make_preterite_present(inf, with_ge)
 	local pref, vowel = rmatch(inf, "^(.-[wƿn])([iy])[oe]?tan$")
 	if pref then
 		return make_preterite_present_forms(
-			inf, pref, "āt", "āst", {vowel .. "ton", "iotun", "ietun", "uton"}, vowel .. "ten",
+			inf, pref, "āt", "āst", vowel .. "ton", vowel .. "ten",
 			vowel .. "te", vowel .. "te", vowel .. "taþ", {vowel .. "ss", vowel .. "st"},
 			vowel .. "ten", with_ge)
 	end
 	local pref = rmatch(inf, "^(.-)dugan$")
 	if pref then
 		return make_preterite_present_forms(
-			inf, pref, "dēag", {}, "dugon", "dugen", {"duge", "dyġe"}, {}, {}, {}, {}, with_ge)
+			inf, pref, "dēag", "dēaht", "dugon", "dugen", "dyġe", "dyġe", "dugaþ", "doht", {}, with_ge)
 	end
 	local pref = rmatch(inf, "^(.-)cunnan$")
 	if pref then
 		return make_preterite_present_forms(
-			inf, pref, {"cann", "conn", "can", "con"}, {"canst", "const"}, "cunnon", {}, "cunne",
-			{}, {}, "cūþ", "cunnen", with_ge)
+			inf, pref, "cann", "canst", "cunnon", "cunnen", "cunne",
+			"cunne", "cunnaþ", "cūþ", "cunnen", with_ge)
 	end
 	local pref = rmatch(inf, "^(.-)unnan$")
 	if pref then
 		return make_preterite_present_forms(
-			inf, pref, {"ann", "onn", "an", "on"}, {}, "unnon", {}, "unne", "unne", {}, "ūþ", {}, with_ge)
+			inf, pref, "ann", "anst", "unnon", "unnen", "unne", "unne", "unnaþ", "ūþ", "unnen", with_ge)
 	end
 	local pref = rmatch(inf, "^(.-[þð])urfan$")
 	if pref then
 		return make_preterite_present_forms(
-			inf, pref, "earf", "earft", "urfon", "earfen", {"urfe", "yrfe"}, {}, {}, "orft", {}, with_ge)
+			inf, pref, "earf", "earft", "urfon", "earfen", "yrfe", "yrfe", "urfaþ", "orft", {}, with_ge)
 	end
 	local pref = rmatch(inf, "^(.-)durran$")
 	if pref then
 		return make_preterite_present_forms(
-			"*" .. inf, pref, {"dear", "dearr"}, "dearst", "durron", {}, {"durre", "dyrre"}, {}, {},
+			inf, pref, "dearr", "dearst", "durron", {}, "dyrre", "dyrre", "durfaþ",
 			"dorst", {}, with_ge)
 	end
 	local pref = rmatch(inf, "^(.-)sċulan$")
@@ -1431,35 +1427,35 @@ local function make_preterite_present(inf, with_ge)
 	end
 	if pref then
 		return make_preterite_present_forms(
-			inf, pref, "sċeal", "sċealt", {"sċulon", "sċeolon"}, {}, {"sċule", "sċeole", "sċyle"},
-			{}, {}, "sċeold", {}, with_ge)
+			inf, pref, "sċeal", "sċealt", "sċulon", {}, "sċyle",
+			{}, {}, "sċold", {}, with_ge)
 	end
 	local pref = rmatch(inf, "^(.-)munan$")
 	if pref then
 		return make_preterite_present_forms(
-			inf, pref, {"man", "mon"}, {"manst", "monst"}, "munon", "munen", {"mune", "myne"},
-			{"mun", "myne", "mune"}, {}, "mund", "munen", with_ge)
+			inf, pref, "man", "manst", "munon", "munen", "myne",
+			{"mun", "myne"}, "munaþ", "mund", "munen", with_ge)
 	end
 	local pref = rmatch(inf, "^(.-)magan$")
 	if pref then
 		return make_preterite_present_forms(
-			inf, pref, "mæġ", {"meaht", "miht"}, "magon", "magen", "mæġe", {}, {},
+			inf, pref, "mæġ", "meaht", "magon", "magen", "mæġe", {}, {},
 			{"meaht", "meht"}, {}, with_ge)
 	end
 	local pref = rmatch(inf, "^(.-)nugan$")
 	if pref then
 		return make_preterite_present_forms(
-			"*" .. inf, pref, "neah", {}, "nugon", {}, "nuge", {}, {}, "noht", {}, with_ge)
+			inf, pref, "neah", {}, "nugon", {}, "nuge", {}, {}, "noht", {}, with_ge)
 	end
 	local pref = rmatch(inf, "^(.-)mōtan$")
 	if pref then
 		return make_preterite_present_forms(
-			"*" .. inf, pref, "mōt", "mōst", "mōton", {}, "mōte", {}, {}, "mōst", {}, with_ge)
+			inf, pref, "mōt", "mōst", "mōton", {}, "mōte", {}, {}, "mōst", {}, with_ge)
 	end
 	local pref = rmatch(inf, "^(.-)āgan$")
 	if pref then
 		return make_preterite_present_forms(
-			inf, pref, "āg", "āhst", "āgon", {}, "āge", "āge", {}, "āht", {"āgen", "ǣġen"}, with_ge)
+			inf, pref, "āh", "āhst", "āgon", "āgen", "āge", "āge", "āgaþ", "āht", "āgen", with_ge)
 	end
 	error("Unrecognized preterite-present verb: " .. inf)
 end
@@ -1468,22 +1464,22 @@ local function make_irregular(inf, with_ge)
 	local args = {}
 	local pref, cons = rmatch(inf, "^(.-)([wƿ])esan$")
 	if pref then
-		make_irregular_non_past(args, inf, pref, "eom", "eart", "is", {"sint", "sindon", "sindun"},
-			cons .. "esen", {"sīe", "sī"}, cons .. "es", cons .. "esaþ", {}, with_ge)
+		make_irregular_non_past(args, inf, pref, "eom", "eart", "is", {"sind", "sindon"},
+			cons .. "esen", "sīe", cons .. "es", cons .. "esaþ", {}, with_ge)
 		make_strong_past(args, pref, cons .. "æs", cons .. "ǣr")
 		return args
 	end
 	local pref = rmatch(inf, "^(.-)nesan$")
 	if pref then
-		make_irregular_non_past(args, inf, pref, "neom", "neart", "nis", {"ne sint", "ne sindon", "ne sindun"},
-			"nesen", {"ne sīe", "ne sī"}, "nes", "nesaþ", {}, with_ge)
+		make_irregular_non_past(args, inf, pref, "neom", "neart", "nis", {"ne sind", "ne sindon"},
+			"nesen", "ne sīe", "nes", "nesaþ", {}, with_ge)
 		make_strong_past(args, pref, "næs", "nǣr")
 		return args
 	end
 	local pref, vowel = rmatch(inf, "^(.-)b([īē]o)n$")
 	if pref then
 		make_irregular_non_past(args, inf, pref, "b" .. vowel, "bist", "biþ", "b" .. vowel .. "þ",
-			"b" .. vowel .. "n", "b" .. vowel, "b" .. vowel, "b" .. vowel .. "þ", {}, with_ge)
+			"b" .. vowel .. "n", "b" .. vowel, "b" .. vowel, "b" .. vowel .. "þ", "b" .. vowel .. "n", with_ge)
 		return args
 	end
 	local pref = rmatch(inf, "^(.-)dōn$")
@@ -1495,23 +1491,23 @@ local function make_irregular(inf, with_ge)
 	end
 	local pref = rmatch(inf, "^(.-)gān$")
 	if pref then
-		make_irregular_non_past(args, inf, pref, "gā", "gǣst", "gǣþ", "gāþ", {},
+		make_irregular_non_past(args, inf, pref, "gā", "gǣst", "gǣþ", "gāþ", "gān",
 			"gā", "gā", "gāþ", "gān", with_ge)
 		make_weak_past(args, pref, "ēod")
 		return args
 	end
 	local pref = rmatch(inf, "^(.-[wƿ])illan$")
 	if pref then
-		make_irregular_non_past(args, inf, pref, "ille", "ilt", {"ile", "ille"}, "illaþ", "illen",
-			{"ille", "ile"}, {}, {}, {}, with_ge)
+		make_irregular_non_past(args, inf, pref, "ille", "ilt", "ile", "illaþ", "illen",
+			"ille", {}, {}, {}, with_ge)
 		make_weak_past(args, pref, "old")
 		return args
 	end
 	local pref, vowel = rmatch(inf, "^(.-)n([eiy])llan$")
 	if pref then
 		make_irregular_non_past(args, inf, pref, "n" .. vowel .. "lle", "n" .. vowel .. "lt",
-			{"n" .. vowel .. "le", "n" .. vowel .. "lle"}, "n" .. vowel .. "llaþ",
-			"n" .. vowel .. "llen", {"n" .. vowel .. "lle", "n" .. vowel .. "le"},
+			"n" .. vowel .. "le", "n" .. vowel .. "llaþ",
+			"n" .. vowel .. "llen", "n" .. vowel .. "lle",
 			{}, {}, {}, with_ge)
 		make_weak_past(args, pref, "nold")
 		return args
