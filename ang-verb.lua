@@ -233,6 +233,9 @@ end
 local function depalatalize_final_cons_before_cons(word)
 	if word:find("sċ$") then
 		return word
+	elseif word:find("nċġ$") then
+		-- crinċġan etc.
+		return gsub(word, "nċġ$", "ng")
 	else
 		return rsub(word, "([nċġ]?[ċġ])$", {
 			["ċ"] = "c",
@@ -555,21 +558,24 @@ strong_verbs["3"] = function(data)
 	if pref then
 		-- bindan "bind", climban "climb", ġelimpan "happen", winnan "win",
 		-- swimman "swim", etc.; ācwincan "vanish" (þū ācwincst/ācwinċest);
-		-- cringan (þū cringst/crinġest)
+		-- cringan (þū cringst/crinġest), variant crinċġan (þū cringst/crinċġest)
 		data.pres23 = pref .. "i" .. palatalize_final_cons(suf)
 		data.impsg = pref .. "i" .. suf
 		-- onġinnan "begin" (ongann, ongunnon, ongunnen), ċimban "join"
 		local pastpref = depalatalize_final_cons_before_back_vowel(pref)
 		-- no Verner alternation here; expected #fīþan, #fōþ, #fundon <
-		-- *finþanan, *fanþ, *fundund regularized into findan, fand, fundon
-		data.pastsg = pastpref .. "a" .. suf
-		data.pastpl = pastpref .. "u" .. suf
-		data.pp = pastpref .. "u" .. suf .. "en"
+		-- *finþanan, *fanþ, *fundund regularized into findan, fand, fundon;
+		-- but depalatalize to handle crin(ċ)ġan past crang/crungon/crungen
+		-- and (maybe?) variant crinċan past cranc/cruncon/cruncen
+		local pastsuf = depalatalize_final_cons_before_cons(suf)
+		data.pastsg = pastpref .. "a" .. pastsuf
+		data.pastpl = pastpref .. "u" .. pastsuf
+		data.pp = pastpref .. "u" .. pastsuf .. "en"
 		return
 	end
 	local pref, vowel, suf = rmatch(data.inf, "^(.-)(ie)(l" .. cons_c .. "+)an$")
 	if not pref then
-		-- ġeldan/ġildan/ġyldan variants of ġieldan
+		-- ġeldan/ġildan/ġyldan variants of ġieldan; helpan/bellan/delfan etc.
 		pref, vowel, suf = rmatch(data.inf, "^(.-)([eiy])(l" .. cons_c .. "+)an$")
 	end
 	if not pref then
@@ -609,9 +615,12 @@ strong_verbs["3"] = function(data)
 		return
 	end
 	local pref, suf = rmatch(data.inf, "^(.-)(ie?rn)an$")
+	if not pref then
+		pref, suf = rmatch(data.inf, "^(.-)(yrn)an$")
+	end
 	if pref then
-		-- biernan/birnan "burn" < *brinnanan (þū biernst, barn/born/bearn, burnon, burnen)
-		-- iernan/irnan "run" < *rinnan (like biernan)
+		-- biernan/birnan/byrnan "burn" < *brinnanan (þū biernst, barn/born/bearn, burnon, burnen)
+		-- iernan/irnan/yrnan "run" < *rinnan (like biernan)
 		data.pres23 = pref .. suf
 		data.impsg = data.pres23
 		data.pastsg = {pref .. "arn", pref .. "orn", pref .. "earn"}
@@ -641,14 +650,24 @@ strong_verbs["3"] = function(data)
 		data.pp = pref .. "o" .. suf .. "en"
 		return
 	end
-	local pref = rmatch(data.inf, "^(.-)friġnan$")
+	local pref, vowel = rmatch(data.inf, "^(.-)fr([ei])ġnan$")
 	if pref then
-		-- friġnan "ask"
-		data.pres23 = pref .. "friġne"
-		data.impsg = pref .. "friġn"
+		-- friġnan "ask", variant freġnan
+		data.pres23 = {pref .. "friġne", pref .. "friġn"}
+		data.impsg = pref .. "fr" .. vowel .. "ġn"
 		data.pastsg = pref .. "fræġn"
 		data.pastpl = pref .. "frugn"
 		data.pp = pref .. "frugnen"
+		return
+	end
+	local pref = rmatch(data.inf, "^(.-)frīnan$")
+	if pref then
+		-- frīnan "ask" variant of friġnan
+		data.pres23 = {pref .. "frīne", pref .. "frīn"}
+		data.impsg = pref .. "frīn"
+		data.pastsg = pref .. "frān"
+		data.pastpl = pref .. "frūn"
+		data.pp = pref .. "frūnen"
 		return
 	end
 	local pref = rmatch(data.inf, "^(.-)fēolan$")
@@ -715,6 +734,8 @@ end
 
 strong_verbs["5"] = function(data)
 	local pref, suf = rmatch(data.inf, "^(.-)ie(" .. cons_c .. ")an$")
+	if not pref then
+		pref, suf = rmatch(data.inf, "^(.-ġ)[eiy](" .. cons_c .. ")an$")
 	if pref then
 		-- ġiefan "give", forġietan "forget"
 		data.pres23 = pref .. "ie" .. suf
@@ -817,7 +838,12 @@ strong_verbs["6"] = function(data)
 	end
 	local pref, vowel, suf = rmatch(data.inf, "^(.-)(a)(" .. cons_c .. "+)an$")
 	if not pref then
+		-- stondan variant of standan, sponan variant of spanan
 		pref, vowel, suf = rmatch(data.inf, "^(.-)(o)(n" .. cons_c .. "*)an$")
+	end
+	if not pref then
+		-- wæsċan/wasċean/wæsċean variant of wasċan
+		pref, vowel, suf = rmatch(data.inf, "^(.-)([aæ])(sċ" .. cons_c .. "*)e?an$")
 	end
 	if suf == "g" then
 		-- gnagan "gnaw", dragan "draw"
@@ -845,7 +871,7 @@ strong_verbs["6"] = function(data)
 		return
 	elseif pref then
 		-- faran "go", alan "grow", bacan "bake", hladan "lade", wasċan "wash", etc.
-		if suf == "r" or suf == "l" then
+		if suf == "r" or suf == "l" or suf == "sċ" then
 			data.pres23 = {pref .. "æ" .. suf .. "e", pref .. "æ" .. suf}
 		else
 			data.pres23 = pref .. "æ" .. palatalize_final_cons(suf)
