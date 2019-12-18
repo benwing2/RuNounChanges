@@ -398,18 +398,18 @@ local function construct_optional_ge_stem_ending(stem, ending)
 	return "([[ge" .. stem .. ending .. "|ġe]])[[" .. stem .. ending .. "]]"
 end
 
-local function make_non_past(args, presa, prese, pres23, impsg, pp, with_ge)
+local function make_non_past(args, presa, presefin, presenfin, pres23, impsg, pp, with_ge)
 	add_ending(args, "infinitive", presa, "n")
-	add_ending(args, "infinitive2", prese, "nne")
-	add_ending(args, "1sg_pres_indc", prese, "")
+	add_ending(args, "infinitive2", presenfin, "nne")
+	add_ending(args, "1sg_pres_indc", presefin, "")
 	add_ending(args, "2sg_pres_indc", pres23, "st", construct_cons_stem_ending)
 	add_ending(args, "3sg_pres_indc", pres23, "þ", construct_cons_stem_ending)
 	add_ending(args, "pl_pres_indc", presa, "þ")
-	add_ending(args, "sg_pres_subj", prese, "")
-	add_ending(args, "pl_pres_subj", prese, "n")
+	add_ending(args, "sg_pres_subj", presefin, "")
+	add_ending(args, "pl_pres_subj", presefin, "n")
 	add_ending(args, "sg_impr", impsg, "")
 	add_ending(args, "pl_impr", presa, "þ")
-	add_ending(args, "pres_ptc", prese, "nde")
+	add_ending(args, "pres_ptc", presenfin, "nde")
 	if with_ge then
 		add_ending(args, "past_ptc", pp, "", construct_optional_ge_stem_ending)
 	else
@@ -428,7 +428,7 @@ end
 
 local function make_strong(presa, prese, pres23, impsg, pastsg, pastpl, pp, with_ge)
 	local args = {}
-	make_non_past(args, presa, prese, pres23, impsg, pp, with_ge)
+	make_non_past(args, presa, prese, prese, pres23, impsg, pp, with_ge)
 	make_strong_past(args, nil, pastsg, pastpl)
 	return args
 end
@@ -442,9 +442,9 @@ local function make_weak_past(args, pref, past)
 	add_ending_with_prefix(args, "pl_past_subj", pref, past, "en")
 end
 
-local function make_weak(presa, prese, pres23, impsg, past, pp, with_ge)
+local function make_weak(presa, presefin, presenfin, pres23, impsg, past, pp, with_ge)
 	local args = {}
-	make_non_past(args, presa, prese, pres23, impsg, pp, with_ge)
+	make_non_past(args, presa, presefin, presenfin, pres23, impsg, pp, with_ge)
 	make_weak_past(args, nil, past)
 	return args
 end
@@ -1280,13 +1280,15 @@ end
 
 weak_verbs["2"] = function(data)
 	-- lufian
-	local pref = rmatch(data.inf, "^(.-)ian$")
+	local pref, suf = rmatch(data.inf, "^(.-)(ian)$")
 	if not pref then
 		-- lufiġan, lufeġan, lufiġean, lufeġean (alternative spellings)
-		pref = rmatch(data.inf, "^(.-)[ei]ġe?an$")
+		pref, suf = rmatch(data.inf, "^(.-)([ei]ġe?an)$")
 	end
 	if pref then
 		data.pres23 = pref .. "a"
+		data.presenfin = data.prese
+		data.presefin = suf == "ian" and pref .. "iġe" or data.presenfin
 		data.impsg = data.pres23
 		data.past = pref .. "od"
 		data.pp = data.past
@@ -1578,6 +1580,8 @@ function export.show(frame)
 			class = gsub(class, "^w", "")
 			if weak_verbs[class] then
 				weak_verbs[class](data)
+				data.presenfin = data.presenfin or data.prese
+				data.presefin = data.presefin or data.prese
 			else
 				error("Unrecognized weak class: " .. class)
 			end
@@ -1610,22 +1614,31 @@ function export.show(frame)
 					if k == "pres" then
 						data.presa = splitv
 						data.prese = splitv
+						data.presefin = splitv
+						data.presenfin = splitv
 						data.pres23 = splitv
 						data.impsg = splitv
 					elseif k == "pres1456" then
 						data.presa = splitv
 						data.prese = splitv
+						data.presefin = splitv
+						data.presenfin = splitv
 					elseif k == "pres23" then
 						data.pres23 = splitv
 					elseif k == "presa" then
 						data.presa = splitv
 					elseif k == "prese" then
 						data.prese = splitv
+						data.presefin = splitv
+						data.presenfin = splitv
+					elseif typ == "weak" and k == "presefin" then
+						data.presefin = splitv
+					elseif typ == "weak" and k == "presenfin" then
+						data.presenfin = splitv
 					elseif typ == "strong" and k == "past" then
+						data.past = splitv
 						data.pastsg = splitv
 						data.pastpl = splitv
-					elseif typ == "weak" and k == "past" then
-						data.past = splitv
 					elseif typ == "strong" and k == "pastsg" then
 						data.pastsg = splitv
 					elseif typ == "strong" and k == "pastpl" then
@@ -1652,7 +1665,7 @@ function export.show(frame)
 		if typ == "weak" or typ == "strong" then
 			local missing_fields = {}
 			local fields_to_check =
-				typ == "weak" and {"presa", "prese", "pres23", "impsg", "past", "pp"} or
+				typ == "weak" and {"presa", "presefin", "presenfin", "pres23", "impsg", "past", "pp"} or
 				{"presa", "prese", "pres23", "impsg", "pastsg", "pastpl", "pp"}
 			for _, field in ipairs(fields_to_check) do
 				if not data[field] then
@@ -1671,8 +1684,8 @@ function export.show(frame)
 			forms = make_strong(data.presa, data.prese, data.pres23, data.impsg, data.pastsg,
 				data.pastpl, data.pp, data.with_ge)
 		elseif typ == "weak" then
-			forms = make_weak(data.presa, data.prese, data.pres23, data.impsg, data.past,
-				data.pp, data.with_ge)
+			forms = make_weak(data.presa, data.presefin, data.presenfin,
+				data.pres23, data.impsg, data.past, data.pp, data.with_ge)
 		elseif typ == "pretpres" then
 			forms = make_preterite_present(inf, data.with_ge)
 		elseif typ == "irreg" then
