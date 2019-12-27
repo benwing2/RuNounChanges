@@ -6,7 +6,37 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, tname, msg, site
 
-import lalib
+import find_regex
+
+lemma_poses = {
+  "adjective",
+  "adverb",
+  "cardinal number",
+  "circumfix",
+  "conjunction",
+  "determiner",
+  "diacritical mark",
+  "gerund",
+  "idiom",
+  "interfix",
+  "interjection",
+  "letter",
+  "noun",
+  "numeral",
+  "particle",
+  "participle",
+  "phrase",
+  "predicative",
+  "prefix",
+  "preposition",
+  "prepositional phrase",
+  "pronoun",
+  "proper noun",
+  "proverb",
+  "punctuation mark",
+  "suffix",
+  "verb",
+}
 
 def check_for_bad_etym_sections(secbody, pagemsg):
   subsections = re.split("(^===[^=\n]+===\n)", secbody, 0, re.M)
@@ -62,13 +92,13 @@ def check_for_bad_subsections(secbody, pagemsg):
       ))
   has_etym_sections = "==Etymology 1==" in secbody
   for k in xrange(1, len(subsections) - 2, 2):
-    if "=Conjugation=" in subsections[k] or "=Declension=" in subsections[k]:
+    if re.search("=(Conjugation|Declension|Inflection)=", subsections[k]):
       expected_indentation = 4 + (1 if has_etym_sections else 0)
       if indentation[k] != expected_indentation:
         pagemsg("WARNING: Expected %s with indentation %s but actually has %s" % (
           subsections[k].strip(), expected_indentation, indentation[k]))
       if indentation[k + 2] > indentation[k]:
-        pagemsg("WARNING: Conjugation/Declension section has nested section %s under it" % (
+        pagemsg("WARNING: Conjugation/Declension/Inflection section has nested section %s under it" % (
           subsections[k + 2].strip()))
   beginning_of_etym_sections = None
   if has_etym_sections:
@@ -81,40 +111,39 @@ def check_for_bad_subsections(secbody, pagemsg):
       beginning_of_etym_sections = 1
   else:
     beginning_of_etym_sections = len(subsections)
-  la_capitalized_lemma_poses = [k.capitalize() for k in lalib.la_lemma_poses]
-  la_pos_regex = "==(%s)==" % "|".join(la_capitalized_lemma_poses)
+  capitalized_lemma_poses = [k.capitalize() for k in lemma_poses]
+  pos_regex = "==(%s)==" % "|".join(capitalized_lemma_poses)
   for k in xrange(1, len(subsections), 2):
     if re.search("==(Alternative forms|Pronunciation)==", subsections[k]):
       expected_indentation = 3 if k < beginning_of_etym_sections else 4
       if expected_indentation != indentation[k]:
         pagemsg("WARNING: Saw %s at level %s but expected %s" % (
           subsections[k].strip(), indentation[k], expected_indentation))
-    if re.search(la_pos_regex, subsections[k]):
+    if re.search(pos_regex, subsections[k]):
       expected_indentation = 4 if has_etym_sections else 3
       if expected_indentation != indentation[k]:
         pagemsg("WARNING: Saw %s at level %s but expected %s" % (
           subsections[k].strip(), indentation[k], expected_indentation))
 
-def process_text_on_page(index, pagetitle, text):
+def process_sectext(index, pagetitle, secbody):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
-
-  if "==Latin==" not in text:
-    return
-
-  retval = lalib.find_latin_section(text, pagemsg)
-  if retval is None:
-    return
-
-  sections, j, secbody, sectail, has_non_latin = retval
-
   check_for_bad_etym_sections(secbody, pagemsg)
   check_for_bad_subsections(secbody, pagemsg)
 
-parser = blib.create_argparser("Find misformatted Latin sections of various sorts",
-    include_pagefile=True, include_stdin=True)
+parser = blib.create_argparser("Find misformatted sections of various sorts")
+#    include_pagefile=True, include_stdin=True)
+#parser.add_argument('--lang', help="Language to look under.", required=True)
+parser.add_argument('--direcfile', help="File containing output from find_regex.py.", required=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-blib.do_pagefile_cats_refs(args, start, end, process_text_on_page,
-    stdin=True, default_cats=["Latin lemmas"])
+lines = codecs.open(args.direcfile, "r", "utf-8")
+
+pagename_and_text = find_regex.yield_text_from_find_regex(lines, args.verbose)
+for index, (pagename, text) in blib.iter_items(pagename_and_text, start, end,
+    get_name=lambda x:x[0]):
+  process_sectext(index, pagename, text)
+#
+#blib.do_pagefile_cats_refs(args, start, end, process_text_on_page,
+#    stdin=True, default_cats=["Latin lemmas"])
