@@ -123,24 +123,111 @@ end
 
 local export = {}
 
+-- When auto-generating primary and secondary stress accents, we use these
+-- special characters, and later convert to normal IPA accent marks, so
+-- we can distinguish auto-generated stress from user-specified stress.
 local AUTOACUTE = u(0xFFF0)
 local AUTOGRAVE = u(0xFFF1)
+
+-- When the user uses the "explicit allophone" notation such as [z] or [ç] to
+-- force a particular allophone, we internally convert that notation into a
+-- single special character.
+local EXPLICIT_TH = u(0xFFF2)
+local EXPLICIT_DH = u(0xFFF3)
+local EXPLICIT_S = u(0xFFF4)
+local EXPLICIT_Z = u(0xFFF5)
+local EXPLICIT_F = u(0xFFF6)
+local EXPLICIT_V = u(0xFFF7)
+local EXPLICIT_G = u(0xFFF8)
+local EXPLICIT_GH = u(0xFFF9)
+local EXPLICIT_H = u(0xFFFA)
+local EXPLICIT_X = u(0xFFFB)
+local EXPLICIT_C = u(0xFFFC)
+local EXPLICIT_I = u(0xFFFD)
+
+local explicit_cons = EXPLICIT_TH .. EXPLICIT_DH .. EXPLICIT_S .. EXPLICIT_Z ..
+	EXPLICIT_F .. EXPLICIT_V .. EXPLICIT_G .. EXPLICIT_GH .. EXPLICIT_H ..
+	EXPLICIT_X .. EXPLICIT_C
+
+-- Map "explicit allophone" notation into special char. See above.
+local char_to_explicit_char = {
+	["þ"] = EXPLICIT_TH,
+	["ð"] = EXPLICIT_DH,
+	["s"] = EXPLICIT_S,
+	["z"] = EXPLICIT_Z,
+	["f"] = EXPLICIT_F,
+	["v"] = EXPLICIT_V,
+	["g"] = EXPLICIT_G,
+	["ɣ"] = EXPLICIT_GH,
+	["h"] = EXPLICIT_H,
+	["x"] = EXPLICIT_X,
+	["ç"] = EXPLICIT_C,
+	["i"] = EXPLICIT_I,
+}
+
+-- Map "explicit allophone" notation into normal spelling, for supporting ann=.
+local char_to_spelling = {
+	["þ"] = "þ",
+	["ð"] = "þ",
+	["s"] = "s",
+	["z"] = "s",
+	["f"] = "f",
+	["v"] = "f",
+	["g"] = "g",
+	["ɣ"] = "g",
+	["h"] = "h",
+	["x"] = "h",
+	["ç"] = "h",
+	["i"] = "i",
+}
+
+-- Map "explicit allophone" notation into phonemes, for phonemic output.
+local explicit_char_to_phonemic = {
+	[EXPLICIT_TH] = "θ",
+	[EXPLICIT_DH] = "θ",
+	[EXPLICIT_S] = "s",
+	[EXPLICIT_Z] = "s",
+	[EXPLICIT_F] = "f",
+	[EXPLICIT_V] = "f",
+	[EXPLICIT_G] = "ɡ", -- IPA ɡ!
+	[EXPLICIT_GH] = "ɡ", -- IPA ɡ!
+	[EXPLICIT_H] = "x",
+	[EXPLICIT_X] = "x",
+	[EXPLICIT_C] = "x",
+	[EXPLICIT_I] = "i",
+}
+
+-- Map "explicit allophone" notation into IPA phones, for phonetic output.
+local explicit_char_to_phonetic = {
+	[EXPLICIT_TH] = "θ",
+	[EXPLICIT_DH] = "ð",
+	[EXPLICIT_S] = "s",
+	[EXPLICIT_Z] = "z",
+	[EXPLICIT_F] = "f",
+	[EXPLICIT_V] = "v",
+	[EXPLICIT_G] = "ɡ", -- IPA ɡ!
+	[EXPLICIT_GH] = "ɣ",
+	[EXPLICIT_H] = "h",
+	[EXPLICIT_X] = "x",
+	[EXPLICIT_C] = "ç",
+	[EXPLICIT_I] = "i",
+}
 
 local accent = com.MACRON .. com.ACUTE .. com.GRAVE .. com.CFLEX .. AUTOACUTE .. AUTOGRAVE
 local accent_c = "[" .. accent .. "]"
 local stress_accent = com.ACUTE .. com.GRAVE .. com.CFLEX .. AUTOACUTE .. AUTOGRAVE
 local stress_accent_c = "[" .. stress_accent .. "]"
-local vowel = "aɑeiouyæœø"
-local vowel_or_accent = vowel .. accent
 local back_vowel = "aɑou"
-local front_vowel = "eiyæœø"
+local front_vowel = "eiyæœø" .. EXPLICIT_I
+local vowel = back_vowel .. front_vowel
+local vowel_or_accent = vowel .. accent
 local vowel_c = "[" .. vowel .. "]"
 local vowel_or_accent_c = "[" .. vowel_or_accent .. "]"
 local non_vowel_c = "[^" .. vowel .. "]"
 local front_vowel_c = "[" .. front_vowel .. "]"
 -- The following include both IPA symbols and letters (including regular g and IPA ɡ)
 -- so it can be used at any step of the process.
-local obstruent = "bcċçdfgɡɣhkpqstvxzþðθʃʒ"
+local obstruent = "bcċçdfgɡɣhkpqstvxzþðθʃʒ" .. explicit_cons
 local resonant = "lmnŋrɫ"
 local glide = "ġjwƿ"
 local cons = obstruent .. resonant .. glide
@@ -279,6 +366,7 @@ local phonetic_rules = {
 	{"(" .. vowel_c .. "[^.ˈˌ⁀]*[" .. obstruent .. "]ː?[" .. resonant .. "])", "%1" .. com.SYLLABIC},
 	-- also -mn e.g stemn /ˈstemn̩/; same for m + other resonants except m
 	{"(" .. vowel_c .. "[^.ˈˌ⁀]*mː?[lnŋrɫ])", "%1" .. com.SYLLABIC},
+	{".", explicit_char_to_IPA},
 }
 
 local function apply_rules(word, rules)
@@ -620,6 +708,7 @@ end
 
 local function generate_phonemic_word(word, pos)
 	word = gsub(word, "[.!?]$", "")
+	word = rsub(word, "%[(.)%]", char_to_explicit_char)
 	pos = default_pos(word, pos)
 	local is_prefix_suffix
 	if word:find("^%-") or word:find("%-$") then
@@ -631,21 +720,19 @@ local function generate_phonemic_word(word, pos)
 	return word
 end
 
-local function generate_phonemic_text(text, pos)
-	local result = {}
-	text = ulower(text)
-	for word in rgsplit(text, " ") do
-		table.insert(result, generate_phonemic_word(word, pos))
-	end
-	return table.concat(result, " ")
-end
-
 function export.phonemic(text, pos)
 	if type(text) == "table" then
 		pos = text.args["pos"]
 		text = text[1]
 	end
-	return gsub(generate_phonemic_text(text, pos), "⁀", "")
+	local result = {}
+	text = ulower(text)
+	for word in rgsplit(text, " ") do
+		table.insert(result, generate_phonemic_word(word, pos))
+	end
+	result = table.concat(result, " ")
+	result = rsub(result, ".", explicit_char_to_phonemic)
+	result = gsub(result, "⁀", "")
 end
 
 function export.phonetic(text, pos)
@@ -687,7 +774,9 @@ function export.show(frame)
 		anntext = {}
 		for _, arg in ipairs(args[1]) do
 			-- remove all spelling markup except ġ/ċ and macrons
-			m_table.insertIfNot(anntext, "'''" .. rsub(com.decompose(arg), "[%-+._<>" .. com.ACUTE .. com.GRAVE .. com.CFLEX .. "]", "") .. "'''")
+			arg = rsub(com.decompose(arg), "[%-+._<>" .. com.ACUTE .. com.GRAVE .. com.CFLEX .. "]", "")
+			arg = rsub(arg, "%[(.)%]", char_to_spelling)
+			m_table.insertIfNot(anntext, "'''" .. arg .. "'''")
 		end
 		anntext = table.concat(anntext, ", ") .. ":&#32;"
 	elseif args.ann then
