@@ -86,12 +86,23 @@ function export.show(frame)
 		.. (postscript ~= "" and " (" .. postscript .. ")" or "")
 end
 
+pos_functions["verbs"] = function(def, args, data, infl_classes, appendix)
+	local params = {
+		[1] = {alias_of = 'head'},
+		["head"] = {list = true},
+		["id"] = {},
+	}
+
+	local args = require("Module:parameters").process(args, params)
+	data.heads = args.head
+	data.id = args.id
+end
+
 local function adjectives(pos, def, args, data, infl_classes, appendix)
 	local NAMESPACE = mw.title.getCurrentTitle().nsText
 	local params = {
-		-- FIXME, this will become an alias of head=
-		[1] = {},
-		["head"] = {list = true, default = mw.title.getCurrentTitle().text},
+		[1] = {alias_of = "head"},
+		["head"] = {list = true},
 		["comp"] = {list = true},
 		[2] = {alias_of = "comp"},
 		["sup"] = {list = true},
@@ -101,15 +112,7 @@ local function adjectives(pos, def, args, data, infl_classes, appendix)
 		["id"] = {},
 	}
 	local args = require("Module:parameters").process(args, params)
-	if args[1] then
-		local heads = {args[1]}
-		for _, head in ipairs(args.head) do
-			table.insert(heads, head)
-		end
-		data.heads = heads
-	else
-		data.heads = args.head
-	end
+	data.heads = args.head
 	data.id = args.id
 
 	if args.indecl then
