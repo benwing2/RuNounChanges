@@ -134,6 +134,136 @@ function export.make_table(frame)
 	return strutils.format(table, table_args)
 end
 
+local nouns = {}
+
+nouns["m.a"] = function(data)
+	add_ending(args, "nom_sg", data.bare or data.stem, "")
+	add_ending(args, "acc_sg", data.bare or data.stem, "")
+	add_ending(args, "gen_sg", data.stem, "es")
+	add_ending(args, "dat_sg", data.stem, "e")
+	add_ending(args, "nom_pl", data.pl or data.stem, "as")
+	add_ending(args, "acc_pl", data.pl or data.stem, "as")
+	add_ending(args, "gen_pl", data.pl or data.stem, "a")
+	add_ending(args, "dat_pl", data.pl or data.stem, "um")
+end
+
+nouns["n.a"] = function(data)
+	add_ending(args, "nom_sg", data.bare or data.stem, "")
+	add_ending(args, "acc_sg", data.bare or data.stem, "")
+	add_ending(args, "gen_sg", data.stem, "es")
+	add_ending(args, "dat_sg", data.stem, "e")
+	if data.short then
+		add_ending(args, "nom_pl", data.pl or data.stem, "u")
+		add_ending(args, "acc_pl", data.pl or data.stem, "u")
+	else
+		add_ending(args, "nom_pl", data.bare or data.stem, "")
+		add_ending(args, "acc_pl", data.bare or data.stem, "")
+	end
+	add_ending(args, "gen_pl", data.pl or data.stem, "a")
+	add_ending(args, "dat_pl", data.pl or data.stem, "um")
+end
+
+local function compute_noun_args(adjtype, bare, vstem, cstemn, cstemr, short, h)
+	local args = {}
+	local function add_ending(slot, stems, ending, construct_stem_ending)
+		local function default_construct_stem_ending(stem, ending)
+			if ending == "-" then
+				return stem
+			else
+				return stem .. ending
+			end
+		end
+		construct_stem_ending = construct_stem_ending or default_construct_stem_ending
+		if type(stems) ~= "table" then
+			stems = {stems}
+		end
+		if not args[slot] then
+			args[slot] = {}
+		end
+		for _, stem in ipairs(stems) do
+			local form = construct_stem_ending(stem, ending)
+			if type(form) == "string" then
+				ut.insert_if_not(args[slot], form)
+			else
+				for _, f in ipairs(form) do
+					ut.insert_if_not(args[slot], f)
+				end
+			end
+		end
+	end
+
+	local function compute_stem_for_ending(ending)
+		if ending == "" then
+			return bare
+		elseif ending:find("^n") then
+			return cstemn
+		elseif ending:find("^r") then
+			return cstemr
+		else
+			return vstem
+		end
+	end
+
+	local function construct_h_stem_ending(stem, ending)
+		-- Delete a vowel at the beginning of the ending. But -um can
+		-- either assume the contracted form (-m) or the full form (-um).
+		if ending == "um" then
+			return {stem .. "m", stem .. "um"}
+		elseif ending:find("^[aeiou%-]") then
+			return stem .. ending:gsub("^.", "")
+		else
+			return stem .. ending
+		end
+	end
+
+	local construct_stem_ending
+	if h then
+		construct_stem_ending = construct_h_stem_ending
+	end
+
+	local function add_row(slot_suffix, nom, acc, gen, dat, ins)
+		local function add(slot_prefix, ending)
+			if type(ending) ~= "table" then
+				ending = {ending}
+			end
+			for _, e in ipairs(ending) do
+				local stem = compute_stem_for_ending(e)
+				add_ending(slot_prefix .. "_" .. slot_suffix, stem, e,
+					construct_stem_ending)
+			end
+		end
+		add("nom", nom)
+		add("acc", acc)
+		add("gen", gen)
+		add("dat", dat)
+		add("ins", ins)
+	end
+
+	if adjtype == "strong" then
+		-- short == "h" is a special signal for adjectives in -h (esp. sċeolh, þweorh);
+		-- use the vowel stem but have no ending.
+		local short_ending = short == "opt" and {"", "u", "o"} or short == "h" and "-" or
+			short and {"u", "o"} or ""
+		add_row("sg_m", "", "ne", "es", "um", "e")
+		add_row("sg_f", short_ending, "e", "re", "re", "re")
+		add_row("sg_n", "", "", "es", "um", "e")
+		add_row("pl_m", "e", "e", "ra", "um", "um")
+		add_row("pl_f", {"a", "e"}, {"a", "e"}, "ra", "um", "um")
+		add_row("pl_n", short_ending, short_ending, "ra", "um", "um")
+	elseif adjtype == "weak" then
+		add_row("sg_m", "a", "an", "an", "an", "an")
+		add_row("sg_f", "e", "an", "an", "an", "an")
+		add_row("sg_n", "e", "e", "an", "an", "an")
+		add_row("pl_m", "an", "an", {"ra", "ena"}, "um", "um")
+		add_row("pl_f", "an", "an", {"ra", "ena"}, "um", "um")
+		add_row("pl_n", "an", "an", {"ra", "ena"}, "um", "um")
+	else
+		error("Unrecognized adjective type: '" .. adjtype .. "'")
+	end
+
+	return args
+end
+
 return export
 
 -- For Vim, so we get 4-space tabs
