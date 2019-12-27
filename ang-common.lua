@@ -136,6 +136,7 @@ export.suffixes = {
 	{"full?", {noun = "unstressed"}},
 	{"lēas", {noun = "secstressed"}},
 	-- These can be "verbal" if following a verbal past participle or similar
+	{"līċe", {noun = "secstressed", verb = "secstressed"}},
 	{"l[īi][ċc]", {noun = "unstressed", verb = "unstressed"}},
 	{"ness?", {noun = "unstressed", verb = "unstressed"}},
 	{"n[iy]s", {noun = "unstressed", verb = "unstressed"}},
