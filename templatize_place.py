@@ -4,7 +4,26 @@
 # FIXME:
 #
 # 1. Check L2 header for language and use in place of 'en'.
-# 2. Need to preserve some links, e.g. probably at least in the translation.
+# 2. Need to preserve some links, e.g. probably at least in the translation (t1=).
+# 3. Restrict translation to the same form as that preceding County, district, etc.,
+#    additionally allowing an initial "the". [DONE]
+# 4. Add . to allowed chars preceding County, district, etc. (St. Louis County). [DONE]
+# 5. Generalize proper noun regex to non-ASCII Latin chars.
+# 6. If "Indian state of" or "US state of" appears, add the respective country to the holonym.
+# 7. If "[Pp]refecture", "[Pp]rovince", etc. appears, consider including that text in the
+#    holonym (perhaps always for certain cases, e.g. Japanese prefectures)? If so, consider
+#    adding logic to this effect in [[Module:place]].
+# 8. If all holonyms can't be recognized, back off one word (or holonym?) at a time until
+#    something (including at least one holonym) is recognized. FIXME: Unclear what to do when
+#    a translation is available.
+# 9. Holonyms like {{l|en|Egypt|id=Q79}} aren't handled properly because of the id=.
+# 10. Add "de" as allowed word in proper nouns.
+# 11. Strip {{wtorw}}.
+
+# FIXME for module:
+# 1. Make links use {{wtorw}}?
+# 2. Handle place qualifiers (small, historic, former, etc.).
+# 3. Support holonym qualifiers (central, northeastern, etc.).
 
 from collections import defaultdict
 
@@ -15,18 +34,33 @@ from blib import getparam, rmparam, tname, pname, msg, site
 
 blib.getData()
 
+place_qualifiers = [
+  "small",
+  "large",
+  "major",
+  "minor",
+  "tiny",
+  "short",
+  "long",
+  "former",
+  "ancient",
+  "historic",
+  "maritime",
+]
+
+aliased_place_qualifiers = {
+  "historical": "historic",
+}
+
+place_qualifiers_with_aliases = {x: x for x in place_qualifiers}
+place_qualifiers_with_aliases.update(aliased_place_qualifiers)
+
 place_types = [
   # city
   "city",
-  "small city",
-  "large city",
-  "major city",
-  "tiny city",
   "prefecture-level city",
   "county-level city",
   "sub-provincial city",
-  "former city",
-  "ancient city",
   "independent city",
   "home-rule city",
   "port city",
@@ -34,22 +68,16 @@ place_types = [
   "resort city",
   # town
   "town",
-  "small town",
-  "large town",
   "ghost town",
   "submerged ghost town",
-  "former town",
   "incorporated town",
   "unincorporated town",
   "market town",
-  "small market town",
   "town with bystatus",
   "coastal town",
-  "small coastal town",
   "seaside town",
   "harbour town",
   "harbor town",
-  "ancient town",
   "statutory town",
   "suburban town",
   "spa town",
@@ -58,21 +86,15 @@ place_types = [
   "rural township",
   # village
   "village",
-  "small village",
-  "large village",
-  "former village",
   "unincorporated village",
   # hamlet
   "hamlet",
   # settlement
   "settlement",
-  "former settlement",
-  "small settlement",
   # municipality
   "municipality",
   "home-rule municipality",
   "rural municipality",
-  "former municipality",
   "island municipality",
   "municipality with city status",
   # census-designated place
@@ -80,10 +102,7 @@ place_types = [
   "unincorporated census-designated place",
   # community
   "community",
-  "small community",
-  "former community",
   "unincorporated community",
-  "small unincorporated community",
   "rural community",
   "autonomous community",
   # district
@@ -95,8 +114,6 @@ place_types = [
   "administrative district",
   # borough
   "borough",
-  "small borough",
-  "large borough",
   "metropolitan borough",
   "county borough",
   # area
@@ -115,6 +132,7 @@ place_types = [
   "borough seat",
   # capital
   "capital",
+  "capital city",
   "state capital",
   "provincial capital",
   # misc. cities
@@ -126,49 +144,40 @@ place_types = [
   "commune",
   # river
   "river",
-  "small river",
-  "large river",
-  "major river",
-  "minor river",
-  "short river",
-  "long river",
-  # misc. water
+  "tributary",
+  "distributary",
+  # misc. landforms
   "lake",
-  "small lake",
-  "large lake",
   "bay",
+  "mountain",
+  "valley",
   # larger divisions
   "county",
-  "former county",
-  "ancient county",
   "administrative county",
   "parish",
   "state",
-  "former state",
-  "ancient state",
   "province",
-  "former province",
   "associated province",
-  "country",
-  "small country",
-  "large country",
-  "former country",
-  "island country",
-  "historic county",
+  "autonomous province",
+  "subprovince",
+  "department",
   "prefecture",
   "subprefecture",
   "inland prefecture",
   "island",
-  "small island",
-  "large island",
   "group of islands",
   "chain of islands",
   "peninsula",
   "region",
   "geographical region",
-  "historical region",
   "mountainous region",
-  "ancient region",
+  "administrative region",
+  "autonomous region",
+  "territory",
+  "collectivity",
+  "country",
+  "island country",
+  "republic",
 ]
 
 aliased_place_types = {
@@ -185,8 +194,9 @@ aliased_place_types = {
   "inner city area": "inner-city area",
   "earlier municipality": "former municipality",
   "river that flows": "river",
-  "small river that flows": "small river",
   "comune": "commune",
+  "historical region": "historic region",
+  "tributary river": "tributary",
 }
 
 place_types_with_aliases = {x: x for x in place_types}
@@ -841,6 +851,8 @@ austrian_states = {
 roman_provinces = {
   "Hispania Baetica",
   "Gallia Narbonensis",
+  "Gallia Cisalpina",
+  "Gallia Belgica",
   "Hispania Tarraconensis",
   "Latium",
 }
@@ -909,8 +921,139 @@ indian_states_and_union_territories = {
   "West Bengal": "s",
 }
 
+philippine_provinces = {
+  "Abra",
+  "Agusan del Norte",
+  "Agusan del Sur",
+  "Aklan",
+  "Albay",
+  "Antique",
+  "Apayao",
+  "Aurora",
+  "Basilan",
+  "Bataan",
+  "Batanes",
+  "Batangas",
+  "Benguet",
+  "Biliran",
+  "Bohol",
+  "Bukidnon",
+  "Bulacan",
+  "Cagayan",
+  "Camarines Norte",
+  "Camarines Sur",
+  "Camiguin",
+  "Capiz",
+  "Catanduanes",
+  "Cavite",
+  "Cebu",
+  "Cotabato",
+  "Davao de Oro",
+  "Davao del Norte",
+  "Davao del Sur",
+  "Davao Occidental",
+  "Davao Oriental",
+  "Dinagat Islands",
+  "Eastern Samar",
+  "Guimaras",
+  "Ifugao",
+  "Ilocos Norte",
+  "Ilocos Sur",
+  "Iloilo",
+  "Isabela",
+  "Kalinga",
+  "La Union",
+  "Laguna",
+  "Lanao del Norte",
+  "Lanao del Sur",
+  "Leyte",
+  "Maguindanao",
+  "Marinduque",
+  "Masbate",
+  "Misamis Occidental",
+  "Misamis Oriental",
+  "Mountain Province",
+  "Negros Occidental",
+  "Negros Oriental",
+  "Northern Samar",
+  "Nueva Ecija",
+  "Nueva Vizcaya",
+  "Occidental Mindoro",
+  "Oriental Mindoro",
+  "Palawan",
+  "Pampanga",
+  "Pangasinan",
+  "Quezon",
+  "Quirino",
+  "Rizal",
+  "Romblon",
+  "Samar",
+  "Sarangani",
+  "Siquijor",
+  "Sorsogon",
+  "South Cotabato",
+  "Southern Leyte",
+  "Sultan Kudarat",
+  "Sulu",
+  "Surigao del Norte",
+  "Surigao del Sur",
+  "Tarlac",
+  "Tawi-Tawi",
+  "Zambales",
+  "Zamboanga del Norte",
+  "Zamboanga del Sur",
+  "Zamboanga Sibugay",
+  "Metro Manila",
+}
+
+irish_counties = {
+  "Carlow",
+  "Cavan",
+  "Clare",
+  "Cork",
+  "Donegal",
+  "Dublin",
+  "Galway",
+  "Kerry",
+  "Kildare",
+  "Kilkenny",
+  "Laois",
+  "Leitrim",
+  "Limerick",
+  "Longford",
+  "Louth",
+  "Mayo",
+  "Meath",
+  "Monaghan",
+  "Offaly",
+  "Roscommon",
+  "Sligo",
+  "Tipperary",
+  "Waterford",
+  "Westmeath",
+  "Wexford",
+  "Wicklow",
+}
+
+misc_places = {
+  "London": "city",
+  "Sydney": "city",
+  "Melbourne": "city",
+  "Perth": "city",
+  "Beijing": "city",
+  "Calgary": "city",
+  "Liverpool": "city",
+  "New York City": "city",
+  "Glasgow": "city",
+  "San Francisco": "city",
+  "Edmonton": "city",
+  "Manhattan": "bor",
+}
+
 unrecognized_place_types = defaultdict(int)
+recognized_place_types = defaultdict(int)
 unrecognized_holonyms = defaultdict(int)
+recognized_holonyms = defaultdict(int)
 recognized_lines = 0
 unparsable_lines = 0
 unrecognized_placetype_lines = 0
@@ -934,16 +1077,25 @@ def output_stats(num_counts):
   msg("Unrecognized holonyms:")
   msg("----------------------")
   output_counts(unrecognized_holonyms)
+  msg("Recognized place types:")
+  msg("-------------------------")
+  output_counts(recognized_place_types)
+  msg("Recognized holonyms:")
+  msg("----------------------")
+  output_counts(recognized_holonyms)
+
+proper_noun_word_regex = r"(?u)[A-Z][\w'.-]*"
+# The following regex requires that the first word of a county/parish/borough name be capitalized
+# and contain only letters, hyphens (Stratford-on-Avon), apostrophes (King's Lynn) and periods
+# (St. Louis), and remaining words must either be of the same format or be "and" (Tyne and Wear,
+# Lewis and Clark), "of" (Isle of Wight), or "of the". Ths should catch cases like
+# -- co/Missouri which is one of the two county seats of Jackson County
+# -- co/Han dynasty southwest of Xiyang County
+proper_noun_regex = "(?:%s)(?: %s| and| of| of the)*" % (proper_noun_word_regex, proper_noun_word_regex)
 
 def parse_holonym(holonym):
   # US
-  # The following regex requires that the first word of a county/parish/borough name be capitalized
-  # and contain only letters, hyphens (Stratford-on-Avon) and apostrophes (King's Lynn), and
-  # remaining words must either be of the same format or be "and" (Tyne and Wear, Lewis and Clark),
-  # "of" (Isle of Wight), or "of the". Ths should catch cases like
-  # -- co/Missouri which is one of the two county seats of Jackson County
-  # -- co/Han dynasty southwest of Xiyang County
-  m = re.search("^(?:[A-Z][A-Za-z'-]*)(?: [A-Z][A-Za-z'-]*| and| of| of the)* (County|Parish|Borough)$", holonym)
+  m = re.search("^%s (County|Parish|Borough)$" % proper_noun_regex, holonym)
   if m:
     placetype = {"County": "co", "Parish": "par", "Borough": "bor"}[m.group(1)]
     return "%s/%s" % (placetype, m.group(0))
@@ -964,7 +1116,7 @@ def parse_holonym(holonym):
   if normalized_holonym in northern_ireland_counties:
     return "co/" + normalized_holonym
   # Same regex as above for counties.
-  m = re.search("^((?:[A-Z][A-Za-z'-]*)(?: [A-Z][A-Za-z'-]*| and| of| of the)*) (district|county borough|borough)$", holonym)
+  m = re.search("^(%s) (district|county borough|borough)$" % proper_noun_regex, holonym)
   if m:
     placetype = {"district": "dist", "county borough": "cobor", "borough": "bor"}[m.group(2)]
     return "%s/%s" % (placetype, m.group(1))
@@ -1007,16 +1159,22 @@ def parse_holonym(holonym):
   normalized_holonym = re.sub("^(Indian )?state of ", "", holonym)
   if normalized_holonym in indian_states_and_union_territories:
     return "%s/%s" % (indian_states_and_union_territories[normalized_holonym], normalized_holonym)
+  # Ireland
+  if holonym in irish_counties:
+    return "co/" + holonym
+  normalized_holonym = re.sub("^[Cc]ounty ", "", holonym)
+  if normalized_holonym in irish_counties:
+    return "co/" + normalized_holonym
   # Italy
   if holonym in italian_regions:
     return "%s/%s" % (italian_regions[holonym], holonym)
   # Check for "province of Perugia". Usually in the form "province of Perugia in Umbria",
   # which is already converted to two distinct holonyms.
-  m = re.search("^province of ((?:[A-Z][A-Za-z'-]*)(?: [A-Z][A-Za-z'-]*| and| of| of the)*)$", holonym)
+  m = re.search("^province of (%s)$" % proper_noun_regex, holonym)
   if m:
     return "p/%s" % m.group(1)
-  # Check for "Perugia province of Umbria".
-  m = re.search("^((?:[A-Z][A-Za-z'-]*)(?: [A-Z][A-Za-z'-]*| and| of| of the)*) province of (?:the )?((?:[A-Z][A-Za-z'-]*)(?: [A-Z][A-Za-z'-]*| and| of| of the)*)$", holonym)
+  # Check for "Perugia province of Umbria". Allow "the" before region name because of "the Veneto".
+  m = re.search("^(%s) province of (?:the )?(%s)$" % (proper_noun_regex, proper_noun_regex), holonym)
   if m and m.group(2) in italian_regions:
     return ["p/%s" % m.group(1), "%s/%s" % (italian_regions[m.group(2)], m.group(2))]
   # Japan
@@ -1031,9 +1189,15 @@ def parse_holonym(holonym):
   normalized_holonym = re.sub(" county$", "", holonym)
   if normalized_holonym in norwegian_counties:
     return "co/%s" % normalized_holonym
+  # Philippines
+  if holonym in philippine_provinces:
+    return "p/%s" % holonym
   # Ancient Rome
   if holonym in roman_provinces:
     return "p/%s" % holonym
+  # Misc places
+  if holonym in misc_places:
+    return "%s/%s" % (misc_places[holonym], holonym)
   return None
 
 def process_text_on_page(index, pagetitle, text):
@@ -1077,45 +1241,64 @@ def process_text_on_page(index, pagetitle, text):
     placetype = strip_wikicode(placetype)
     if trans:
       trans = strip_wikicode(trans)
-    split_placetype = re.split("(?:/| and (?:the |an? )?)", placetype)
-    for pt in split_placetype:
-      if pt not in place_types_with_aliases:
-        unrecognized_place_types[pt] += 1
-        unrecognized_placetype_lines += 1
-        pagemsg("WARNING: Unable to recognize stripped placetype '%s': <from> %s <to> %s <end>" % (pt, origline, origline))
+      if not re.search("^(?:the )?%s$" % proper_noun_regex, trans):
+        pagemsg("WARNING: Bad format for translation '%s': <from> %s <to> %s <end>" % (trans, origline, origline))
+        unparsable_lines += 1
         return origline
+    split_placetype = re.split("(?:/| and (?:the |an? )?)", placetype)
+    split_placetype_with_qual = []
+    for pt in split_placetype:
+      pt_qual = None
+      if pt not in place_types_with_aliases:
+        m = re.search("^(%s) (.*)$" % "|".join(re.escape(x) for x in place_qualifiers_with_aliases.keys()), pt)
+        if m:
+          pt_qual, pt = m.groups()
+          pt_qual = place_qualifiers_with_aliases[pt_qual]
+        if pt not in place_types_with_aliases:
+          unrecognized_place_types[pt] += 1
+          unrecognized_placetype_lines += 1
+          pagemsg("WARNING: Unable to recognize stripped placetype '%s': <from> %s <to> %s <end>" % (pt, origline, origline))
+          return origline
+      split_placetype_with_qual.append((pt_qual, pt))
+      recognized_place_types[pt] += 1
+      if pt_qual:
+        recognized_place_types["%s %s" % (pt_qual, pt)] += 1
     holonyms = strip_wikicode(holonyms)
     holonyms = re.sub(",? *(?:and |(?:that|which) is )?(?:the )?(county|parish|borough) seat of ", r", \1 seat, ", holonyms)
     # Handle "A city in and the county seat of ...".
     m = re.search("^, (county|parish|borough) seat, (.*)$", holonyms)
     if m:
-      split_placetype.append("%s seat" % m.group(1))
+      split_placetype_with_qual.append((None, "%s seat" % m.group(1)))
       holonyms = m.group(2)
     holonyms = re.sub(",? in (?:the )?", ", ", holonyms)
     holonyms = re.split(", *", holonyms)
     parsed_holonyms = []
+
+    def add_to_parsed_holonyms(parsed_holonym):
+      if type(parsed_holonym) is list:
+        parsed_holonyms.extend(parsed_holonym)
+        for ph in parsed_holonym:
+          recognized_holonyms[ph] += 1
+      else:
+        parsed_holonyms.append(parsed_holonym)
+        recognized_holonyms[parsed_holonym] += 1
+
     for holonym in holonyms:
       if holonym in ["county seat", "parish seat", "borough seat"]:
-        parsed_holonyms.append(";")
-        parsed_holonyms.append(holonym)
+        add_to_parsed_holonyms(";")
+        add_to_parsed_holonyms(holonym)
       else:
         parsed_holonym = parse_holonym(holonym)
         if parsed_holonym:
-          if type(parsed_holonym) is list:
-            parsed_holonyms.extend(parsed_holonym)
-          else:
-            parsed_holonyms.append(parsed_holonym)
+          add_to_parsed_holonyms(parsed_holonym)
         else:
           m = re.search("^(%s) (.*)$" % "|".join(re.escape(x) for x in compass_points_with_aliases.keys()), holonym)
           if m:
             compass_point, base_holonym = m.groups()
             parsed_holonym = parse_holonym(base_holonym)
             if parsed_holonym:
-              parsed_holonyms.append(compass_points_with_aliases[compass_point])
-              if type(parsed_holonym) is list:
-                parsed_holonyms.extend(parsed_holonym)
-              else:
-                parsed_holonyms.append(parsed_holonym)
+              add_to_parsed_holonyms(compass_points_with_aliases[compass_point])
+              add_to_parsed_holonyms(parsed_holonym)
             else:
               unrecognized_holonyms[base_holonym] += 1
               unrecognized_holonym_lines += 1
@@ -1128,7 +1311,10 @@ def process_text_on_page(index, pagetitle, text):
             return origline
 
     notes.append("templatize %s place spec into {{place}}" % placetype)
-    normalized_placetype = "/".join(place_types_with_aliases[pt] for pt in split_placetype)
+    def normalize_placetype(pt_qual, pt):
+      pt_qual_text = pt_qual + " " if pt_qual else ""
+      return pt_qual_text + place_types_with_aliases[pt]
+    normalized_placetype = "/".join(normalize_placetype(pt_qual, pt) for pt_qual, pt in split_placetype_with_qual)
     retval = "%s{{place|en|%s|%s%s}}%s" % (pretext, normalized_placetype, "|".join(parsed_holonyms),
         "|t1=%s" % trans if trans else "", postq)
     pagemsg("Replaced <%s> with <%s>" % (origline, retval))
