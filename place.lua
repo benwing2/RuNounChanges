@@ -3,7 +3,7 @@ local export = {}
 local m_links = require("Module:links")
 local m_langs = require("Module:languages")
 local m_strutils = require("Module:string utilities")
-local data = require("Module:place/data")
+local data = require("Module:User:Benwing2/place/data")
 
 local cat_data = data.cat_data
 
@@ -270,7 +270,11 @@ local function parse_place_specs(numargs)
 			cX = 2
 		else
 			if cX == 2 then
-				specs[cY] = {"foobar", mw.text.split(numargs[c], "/", true)}
+				local entry_placetypes = mw.text.split(numargs[c], "/", true)
+				for n, ept in ipairs(entry_placetypes) do
+					entry_placetypes[n] = data.placetype_aliases[ept] or ept
+				end
+				specs[cY] = {"foobar", entry_placetypes}
 			else
 				specs[cY][cX] = split_holonym(numargs[c])
 				key_holonym_spec_into_place_spec(specs[cY], specs[cY][cX])
@@ -303,6 +307,20 @@ function get_def(args, specs)
 end
 
 
+local function get_linked_placetype(placetype, use_default)
+	local linked_version = data.placetype_links[placetype]
+	if not linked_version then
+		return use_default and placetype or nil
+	elseif linked_version == true then
+		return "[[" .. placetype .. "]]"
+	elseif linked_version == "w" then
+		return "[[w:" .. placetype .. "|" .. placetype .. "]]"
+	else
+		return linked_version
+	end
+end
+
+
 -- Returns a string with the gloss (the description of the place itself, as
 -- opposed to translations). If sentence == true, the gloss’s first letter is
 -- made upper case and a period is added to the end.
@@ -330,15 +348,15 @@ function get_gloss(args, specs, sentence)
 					end
 				end
 				
-				if pt_data and pt_data.real_name then
-					local qualifier = equiv_placetype_and_qualifier.qualifier
-					gloss = gloss .. (qualifier and qualifier .. " " or "") .. pt_data.real_name
+				local linked_version = get_linked_placetype(placetype)
+				if linked_version then
+					gloss = gloss .. linked_version
 				else
 					local qualifier, bare_placetype = split_and_canonicalize_placetype(placetype)
 					if qualifier then
-						gloss = gloss .. qualifier .. " " .. bare_placetype
+						gloss = gloss .. qualifier .. " " .. get_linked_placetype(bare_placetype, true)
 					else
-						gloss = gloss .. placetype
+						gloss = gloss .. get_linked_placetype(placetype, true)
 					end
 				end
 			end
@@ -421,7 +439,7 @@ function get_place_string(place, needs_article, needs_links)
 	
 	if needs_article then
 		if place[1] then
-			local art = get_equiv_placetype_prop(place[1], function(pt) return data.place_article[pt] and data.place_article[pt][place[2]] end)
+			local art = get_equiv_placetype_prop(place[1], function(pt) return data.placename_article[pt] and data.placename_article[pt][place[2]] end)
 			if art then
 				ps = art .. " " .. ps
 			end
@@ -621,9 +639,6 @@ function get_cat(lang, place_spec, entry_placetype)
 	end
 	
 	-- 4. This handles cases where either the outer or inner key matched a holonym.
-	--    (NOTE: The underlying code in get_possible_cat() is currently broken in the case
-	--    where the outer key matches a holonym, the inner key is "itself", and the category
-	--    spec is {true}. As it happens, this never occurs in [[Module:place/data]].)
 	if c > 2 then
 		local cat = get_possible_cat(lang, cat_spec, equiv_entry_placetype, entry_pt_data, place_spec[c], place_spec, itself)
 		
@@ -760,9 +775,9 @@ end
 --     rather than partial ones
 -- The return value is constructed by iterating over the entries in the category spec.
 -- For each entry, we concatenate following:
--- (1) the category from the category spec; or, if == true, the plural of the placetype
---     "real name" + the appropriate preposition ("in" or "of", as determined from the
---     placetype category data, defaulting to "in" unless key "preposition" was specified);
+-- (1) the category from the category spec; or, if == true, the plural of the placetype + the
+--     appropriate preposition ("in" or "of", as determined from the placetype category data,
+--     defaulting to "in" unless key "preposition" was specified);
 -- (2) if a partial category such as "Cities in " was given (i.e. the inner key of the
 --     placetype category data was not "itself"), the holonym's placename;
 -- (3) if the holonym's placetype is "state", "province" or "region" and another holonym
@@ -779,23 +794,27 @@ function get_possible_cat(lang, cat_spec, entry_placetype, entry_pt_data, holony
 	for _, name in ipairs(cat_spec) do
 		local cat = ""
 		if name == true then
-			local placetype_real_name = entry_pt_data.real_name or entry_placetype
-			cat = get_cat_plural(placetype_real_name) .. get_in_or_of(entry_placetype, holonym_placetype)
+			cat = get_cat_plural(entry_placetype) .. get_in_or_of(entry_placetype, holonym_placetype)
 		elseif name then
 			cat = name
 		end
 		
-		if not itself then
-			-- FIXME! This will break if {true} is given as the value of the inner key
-			-- "itself", unless the outer key is "default" (in which case this code will
-			-- never be invoked).
+		if not itself or name == true then
+			-- Normally, explicit categories given to "itself" are full categories and those given to
+			-- some other placetype are partial categories (missing the holonym); but when true is
+			-- given instead of an explicit category, we always construct a partial category above,
+			-- so we always have to complete the category here even if true was given to "itself".
+			-- (Note that the combination of "default" + "itself" + true isn't handled here; it's
+			-- handled in condition (5) of get_cat().)
 			cat = cat .. get_place_string(holonym, true, false)
 		end
 
 		local is_state_province_region = get_equiv_placetype_prop(holonym_placetype,
 			function(pt) return pt == "state" or pt == "province" or pt == "region" end)
 		if is_state_province_region and place_spec["country"] then
-			-- FIXME, we also want to look at "constituent country" and anything else that maps to "country"
+			-- If a holonym was specified as "cc/England" for "constituent country", there
+			-- will automatically be a "country" entry here due to the way that
+			-- key_holonym_spec_into_place_spec[] works.
 			cat = cat .. ", " .. place_spec["country"][1]
 		end
 		
