@@ -76,6 +76,8 @@ place_qualifiers = [
   "historic",
   "coastal",
   "inland",
+  "incorporated",
+  "unincorporated",
 ]
 
 aliased_place_qualifiers = {
@@ -101,8 +103,6 @@ place_types = [
   "town",
   "ghost town",
   "submerged ghost town",
-  "incorporated town",
-  "unincorporated town",
   "market town",
   "town with bystatus",
   "harbour town",
@@ -116,7 +116,6 @@ place_types = [
   "rural township",
   # village
   "village",
-  "unincorporated village",
   # hamlet
   "hamlet",
   # settlement
@@ -129,10 +128,8 @@ place_types = [
   "municipality with city status",
   # census-designated place
   "census-designated place",
-  "unincorporated census-designated place",
   # community
   "community",
-  "unincorporated community",
   "rural community",
   "autonomous community",
   # district
@@ -148,7 +145,6 @@ place_types = [
   "county borough",
   # area
   "area",
-  "unincorporated area",
   "residential area",
   "suburban area",
   "inner-city area",
@@ -1531,7 +1527,7 @@ def process_text_on_page(index, pagetitle, text):
           pretext, placetype, holonyms, postq, cap_official_type, cap_official_name = m.groups()
           trans = None
         else:
-          m = re.search(r"^(#+ *(?:\{\{(?:[^lw]|[lw][^|])[^{}]*?\}\} *)*)([^()]*?) *(?:\(|\{\{gloss\|)(?:[Tt]he |[Aa]n? )?(.*?) +(?:located in|situated in|in|of) +(?:the +)?(.*?)(?:\)|\}\})((?: *\{\{q\|[^{}]*?\}\})?)\.?$", line)
+          m = re.search(r"^(#+ *(?:\{\{(?:[^lw]|[lw][^|])[^{}]*?\}\} *)*)([^()]+?) *(?:\(|\{\{gloss\|)(?:[Tt]he |[Aa]n? )?(.*?) +(?:located in|situated in|in|of) +(?:the +)?(.*?)(?:\)|\}\})((?: *\{\{q\|[^{}]*?\}\})?)\.?$", line)
           if m:
             pretext, trans, placetype, holonyms, postq = m.groups()
             cap_official_type = None
