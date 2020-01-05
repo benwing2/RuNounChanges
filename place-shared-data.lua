@@ -1,0 +1,1142 @@
+local export = {}
+
+--[=[
+This module contains data shared between [[Module:place]] and
+[[Module:category tree/topic cat/data/Places]].
+]=]
+
+local function ucfirst(label)
+	return mw.getContentLanguage():ucfirst(label)
+end
+
+local function add_indefinite_article(label)
+	if label:find("^[aeiouAEIOU]") then
+		return "an " .. label
+	else
+		return "a " .. label
+	end
+end
+
+function export.construct_bare_and_linked_version(key)
+	local bare_key = key:match("^the (.*)$")
+	local linked_key
+	if bare_key then
+		linked_key = "the [[" .. bare_key .. "]]"
+	else
+		linked_key = "[[" .. key .. "]]"
+		bare_key = key
+	end
+	return bare_key, linked_key
+end
+
+local function simple_polity_bare_label_setter()
+	return function(labels, group, key, value)
+		local bare_key, linked_key = export.construct_bare_and_linked_version(key)
+		local keydesc = value.keydesc or linked_key
+		labels[bare_key] = {
+			description = value.bare_label_desc or "{{{langname}}} terms related to the people, culture, or territory of " .. keydesc .. ".",
+			parents = value.parents,
+		}
+	end
+end
+
+local function subpolity_keydesc(key, value, larger_polity, default_divtype)
+	local divtype = value.divtype or default_divtype
+	divtype = type(divtype) == "table" and divtype[1] or divtype
+	divtype = add_indefinite_article(divtype)
+	local bare_key, linked_key = export.construct_bare_and_linked_version(key)
+	local bare_larger_polity, linked_larger_polity = export.construct_bare_and_linked_version(larger_polity)
+	return value.keydesc or linked_key .. ", " .. divtype .. " of " .. linked_larger_polity
+end
+
+local function subpolity_bare_label_setter(larger_polity, frob_key)
+	return function(labels, group, key, value)
+		local frobbed_key = frob_key and frob_key(key) or key
+		local keydesc = subpolity_keydesc(frobbed_key, value, larger_polity, group.default_divtype)
+		local bare_key, linked_key = export.construct_bare_and_linked_version(key)
+		local bare_larger_polity, linked_larger_polity = export.construct_bare_and_linked_version(larger_polity)
+		labels[bare_key] = {
+			description = value.bare_label_desc or "{{{langname}}} terms related to the people, culture, or territory of " .. keydesc .. ".",
+			parents = value.parents or {bare_larger_polity},
+		}
+	end
+end
+
+local function subpolity_value_transformer(larger_polity, frob_key)
+	return function(group, key, value)
+		local frobbed_key = frob_key and frob_key(key) or key
+		value.keydesc = subpolity_keydesc(frobbed_key, value, larger_polity, group.default_divtype)
+		value.city_parent = larger_polity
+		return value
+	end
+end
+
+local function default_place_handler(frob_placename)
+	return function(group, placetype, holonym_placetype, holonym_placename)
+		if frob_placename then
+			holonym_placename = frob_placename(holonym_placename)
+		end
+		local spec = group.data[holonym_placename]
+		if not spec then
+			holonym_placename = "the " .. holonym_placename
+			spec = group.data[holonym_placename]
+		end
+		if not spec then
+			return nil
+		end
+		local divtype = spec.divtype or group.default_divtype
+		if type(divtype) == "table" then
+			for _, dt in ipairs(divtype) do
+				if dt == holonym_placetype then
+					return holonym_placename
+				end
+			end
+			return nil
+		else
+			return divtype == holonym_placetype and holonym_placename or nil
+		end
+	end
+end
+
+-- Recognized political and misc. subdivisions. The key is the plural
+-- subdivision and the value is the equivalent description, with links.
+export.political_subdivisions = {
+	["administrative atolls"] = "[[administrative]] [[atoll]]s",
+	["areas"] = "[[area]]s",
+	["arrondissements"] = "[[arrondissement]]s",
+	["atolls"] = "[[atoll]]s",
+	["autonomous communities"] = "[[w:autonomous communities|autonomous communities]]",
+	["autonomous islands"] = "[[autonomous]] [[island]]s",
+	["autonomous oblasts"] = "[[autonomous oblast]]s",
+	["autonomous okrugs"] = "[[autonomous okrug]]s",
+	["autonomous regions"] = "[[autonomous]] [[region]]s",
+	["autonomous republics"] = "[[w:autonomous republic|autonomous republic]]s",
+	["boroughs"] = "[[borough]]s",
+	["cantons"] = "[[canton]]s",
+	["census-designated places"] = "[[census-designated place]]s",
+	["census divisions"] = "[[w:census division|census division]]s",
+	["cercles"] = "[[cercle]]s",
+	["collectivities"] = "[[collectivity|collectivities]]",
+	["commanderies"] = "[[commandery|commanderies]]",
+	["constituencies"] = "[[constituency|constituencies]]",
+	["counties"] = "[[county|counties]]",
+	["countries"] = "[[constituent]] [[country|countries]]",
+	["delegations"] = "[[delegation]]s",
+	["departments"] = "[[department]]s",
+	["districts"] = "[[district]]s",
+	["districts and autonomous regions"] = "[[district]]s and [[autonomous region]]s",
+	["divisions"] = "[[division]]s",
+	["emirates"] = "[[emirate]]s",
+	["entities"] = "[[entity|entities]]",
+	["ethnographic regions"] = "[[ethnographic]] [[region]]s",
+	["federal cities"] = "[[federal]] [[city|cities]]",
+	["federal territories"] = "[[federal]] [[territory|territories]]",
+	["gewogs"] = "[[gewog]]s",
+	["governorates"] = "[[governorate]]s",
+	["krais"] = "[[krai]]s",
+	["local councils"] = "[[w:local council|local council]]s",
+	["local government areas"] = "[[w:local government area|local government area]]s",
+	["mukims"] = "[[mukim]]s",
+	["municipalities"] = "[[municipality|municipalities]]",
+	["oblasts"] = "[[oblast]]s",
+	["parishes"] = "[[parish]]es",
+	["prefectures"] = "[[prefecture]]s",
+	["provinces"] = "[[province]]s",
+	["quarters"] = "[[quarter]]s",
+	["raions"] = "[[raion]]s",
+	["regencies"] = "[[regency|regencies]]",
+	["regions"] = "[[region]]s",
+	["regional units"] = "[[regional unit]]s",
+	["republics"] = "[[republic]]s",
+	["self-administered divisions"] = "[[w:self-administered division|self-administered division]]s",
+	["self-administered zones"] = "[[w:self-administered zone|self-administered zone]]s",
+	["special administrative regions"] = "[[w:Special administrative regions of China|special administrative regions]]",
+	["state capitals"] = "[[capital]]s of the [[state]]s",
+	["states"] = "[[state]]s",
+	["subprefectures"] = "[[subprefecture]]s",
+	["subregions"] = "[[subregion]]s",
+	["territorial authorities"] = "[[w:territorial authority|territorial authorities]]",
+	["territories"] = "[[territory|territories]]",
+	["voivoideships"] = "[[voivoideship]]s",
+	["zones"] = "[[zone]]s",
+}
+
+-- Place types for which categories can be constructed for all the places listed
+-- below. The key should be the plural place type and the value should be the
+-- description.
+export.generic_place_types = {
+	["cities"] = "cities",
+	["towns"] = "towns",
+	["villages"] = "villages, hamlets, and other small communities and settlements",
+	["rivers"] = "rivers",
+}
+
+export.generic_place_types_singular = {
+	["city"] = "cities",
+	["town"] = "towns",
+	["village"] = "villages",
+	["river"] = "rivers",
+}
+
+-- table of US states; interpolated into the main 'places' table, but also needed separately
+export.US_states = {
+	["Alabama, USA"] = {},
+	["Alaska, USA"] = {county_type = "boroughs"},
+	["Arizona, USA"] = {},
+	["Arkansas, USA"] = {},
+	["California, USA"] = {},
+	["Colorado, USA"] = {},
+	["Connecticut, USA"] = {},
+	["Delaware, USA"] = {},
+	["Florida, USA"] = {},
+	["Georgia, USA"] = {},
+	["Hawaii, USA"] = {parents = {"United States", "Polynesia"}},
+	["Idaho, USA"] = {},
+	["Illinois, USA"] = {},
+	["Indiana, USA"] = {},
+	["Iowa, USA"] = {},
+	["Kansas, USA"] = {},
+	["Kentucky, USA"] = {},
+	["Louisiana, USA"] = {county_type = "parishes"},
+	["Maine, USA"] = {},
+	["Maryland, USA"] = {},
+	["Massachusetts, USA"] = {},
+	["Michigan, USA"] = {},
+	["Minnesota, USA"] = {},
+	["Mississippi, USA"] = {},
+	["Missouri, USA"] = {},
+	["Montana, USA"] = {},
+	["Nebraska, USA"] = {},
+	["Nevada, USA"] = {},
+	["New Hampshire, USA"] = {},
+	["New Jersey, USA"] = {},
+	["New Mexico, USA"] = {},
+	["New York, USA"] = {},
+	["North Carolina, USA"] = {},
+	["North Dakota, USA"] = {},
+	["Ohio, USA"] = {},
+	["Oklahoma, USA"] = {},
+	["Oregon, USA"] = {},
+	["Pennsylvania, USA"] = {},
+	["Rhode Island, USA"] = {},
+	["South Carolina, USA"] = {},
+	["South Dakota, USA"] = {},
+	["Tennessee, USA"] = {},
+	["Texas, USA"] = {},
+	["Utah, USA"] = {},
+	["Vermont, USA"] = {},
+	["Virginia, USA"] = {},
+	["Washington, USA"] = {},
+	["West Virginia, USA"] = {},
+	["Wisconsin, USA"] = {},
+	["Wyoming, USA"] = {},
+}
+
+export.brazilian_states = {
+	["Acre, Brazil"] = {},
+	["Alagoas, Brazil"] = {},
+	["Amapá, Brazil"] = {},
+	["Amazonas, Brazil"] = {},
+	["Bahia, Brazil"] = {},
+	["Ceará, Brazil"] = {},
+	["Distrito Federal, Brazil"] = {},
+	["Espírito Santo, Brazil"] = {},
+	["Goiás, Brazil"] = {},
+	["Maranhão, Brazil"] = {},
+	["Mato Grosso, Brazil"] = {},
+	["Mato Grosso do Sul, Brazil"] = {},
+	["Minas Gerais, Brazil"] = {},
+	["Pará, Brazil"] = {},
+	["Paraíba, Brazil"] = {},
+	["Paraná, Brazil"] = {},
+	["Pernambuco, Brazil"] = {},
+	["Piauí, Brazil"] = {},
+	["Rio de Janeiro, Brazil"] = {},
+	["Rio Grande do Norte, Brazil"] = {},
+	["Rio Grande do Sul, Brazil"] = {},
+	["Rondônia, Brazil"] = {},
+	["Roraima, Brazil"] = {},
+	["Santa Catarina, Brazil"] = {},
+	["São Paulo, Brazil"] = {},
+	["Sergipe, Brazil"] = {},
+	["Tocantins, Brazil"] = {},
+}
+
+-- table of Chinese provinces and autonomous regions; interpolated into the main 'places' table, but also needed separately
+export.chinese_provinces_and_autonomous_regions = {
+	["Anhui"] = {},
+	["Fujian"] = {},
+	["Gansu"] = {},
+	["Guangdong"] = {},
+	["Guangxi"] = {divtype = "autonomous region"},
+	["Guizhou"] = {},
+	["Hainan"] = {},
+	["Hebei"] = {},
+	["Heilongjiang"] = {},
+	["Henan"] = {},
+	["Hubei"] = {},
+	["Hunan"] = {},
+	["Inner Mongolia"] = {divtype = "autonomous region"},
+	["Jiangsu"] = {},
+	["Jiangxi"] = {},
+	["Jilin"] = {},
+	["Liaoning"] = {},
+	["Ningxia"] = {divtype = "autonomous region"},
+	["Qinghai"] = {},
+	["Shaanxi"] = {},
+	["Shandong"] = {},
+	["Shanxi"] = {},
+	["Sichuan"] = {},
+	["Tibet"] = {divtype = "autonomous region"},
+	["Xinjiang"] = {divtype = "autonomous region"},
+	["Yunnan"] = {},
+	["Zhejiang"] = {},
+}
+
+-- table of Japanese prefectures; interpolated into the main 'places' table, but also needed separately
+export.japanese_prefectures = {
+	["Aichi Prefecture"] = {},
+	["Akita Prefecture"] = {},
+	["Aomori Prefecture"] = {},
+	["Chiba Prefecture"] = {},
+	["Ehime Prefecture"] = {},
+	["Fukui Prefecture"] = {},
+	["Fukuoka Prefecture"] = {},
+	["Fukushima Prefecture"] = {},
+	["Gifu Prefecture"] = {},
+	["Gunma Prefecture"] = {},
+	["Hiroshima Prefecture"] = {},
+	-- Hokkaido handled specially; just "Hokkaido" not "Hokkaido Prefecture"
+	["Hyōgo Prefecture"] = {},
+	["Ibaraki Prefecture"] = {},
+	["Ishikawa Prefecture"] = {},
+	["Iwate Prefecture"] = {},
+	["Kagawa Prefecture"] = {},
+	["Kagoshima Prefecture"] = {},
+	["Kanagawa Prefecture"] = {},
+	["Kōchi Prefecture"] = {},
+	["Kumamoto Prefecture"] = {},
+	["Kyoto Prefecture"] = {},
+	["Mie Prefecture"] = {},
+	["Miyagi Prefecture"] = {},
+	["Miyazaki Prefecture"] = {},
+	["Nagano Prefecture"] = {},
+	["Nagasaki Prefecture"] = {},
+	["Nara Prefecture"] = {},
+	["Niigata Prefecture"] = {},
+	["Ōita Prefecture"] = {},
+	["Okayama Prefecture"] = {},
+	["Okinawa Prefecture"] = {},
+	["Osaka Prefecture"] = {},
+	["Saga Prefecture"] = {},
+	["Saitama Prefecture"] = {},
+	["Shiga Prefecture"] = {},
+	["Shimane Prefecture"] = {},
+	["Shizuoka Prefecture"] = {},
+	["Tochigi Prefecture"] = {},
+	["Tokushima Prefecture"] = {},
+	-- Tokyo handled specially; just "Tokyo" not "Tokyo Prefecture" or "Tokyo Metropolis"
+	["Tottori Prefecture"] = {},
+	["Toyama Prefecture"] = {},
+	["Wakayama Prefecture"] = {},
+	["Yamagata Prefecture"] = {},
+	["Yamaguchi Prefecture"] = {},
+	["Yamanashi Prefecture"] = {},
+}
+
+-- Indian states and union territories. Only some of them are divided into
+-- divisions.
+export.indian_states_and_union_territories = {
+	["Andaman and Nicobar Islands"] = {divtype = "union territory"},
+	["Andra Pradesh"] = {},
+	["Arunachal Pradesh"] = {poldiv = {"divisions"}},
+	["Assam"] = {poldiv = {"divisions"}},
+	["Bihar"] = {poldiv = {"divisions"}},
+	["Chandigarh"] = {divtype = "union territory"},
+	["Chhattisgarh"] = {poldiv = {"divisions"}},
+	["Dadra and Nagar Haveli"] = {divtype = "union territory"},
+	["Daman and Diu"] = {divtype = "union territory"},
+	["Delhi"] = {divtype = "union territory", poldiv = {"divisions"}},
+	["Goa"] = {},
+	["Gujarat"] = {},
+	["Haryana"] = {poldiv = {"divisions"}},
+	["Himachal Pradesh"] = {poldiv = {"divisions"}},
+	["Jammu and Kashmir"] = {divtype = "union territory", poldiv = {"divisions"}},
+	["Jharkhand"] = {poldiv = {"divisions"}},
+	["Karnataka"] = {poldiv = {"divisions"}},
+	["Kerala"] = {},
+	["Ladakh"] = {divtype = "union territory", poldiv = {"divisions"}},
+	["Lakshadweep"] = {divtype = "union territory"},
+	["Madhya Pradesh"] = {poldiv = {"divisions"}},
+	["Maharashtra"] = {poldiv = {"divisions"}},
+	["Manipur"] = {},
+	["Meghalaya"] = {poldiv = {"divisions"}},
+	["Mizoram"] = {},
+	["Nagaland"] = {poldiv = {"divisions"}},
+	["Odisha"] = {poldiv = {"divisions"}},
+	["Puducherry"] = {divtype = "union territory"},
+	["Punjab"] = {poldiv = {"divisions"}},
+	["Rajasthan"] = {poldiv = {"divisions"}},
+	["Sikkim"] = {},
+	["Tamil Nadu"] = {},
+	["Telangana"] = {},
+	["Tripura"] = {},
+	["Uttar Pradesh"] = {poldiv = {"divisions"}},
+	["Uttarakhand"] = {poldiv = {"divisions"}},
+	["West Bengal"] = {poldiv = {"divisions"}},
+}
+
+local function construct_russian_federal_subject_keydesc(linked_key, divtype)
+	if divtype == "oblast" then
+		-- Hack: Oblasts generally don't have entries under "Foo Oblast"
+		-- but just under "Foo", so fix the linked key appropriately;
+		-- doesn't apply to the Jewish Autonomous Oblast
+		linked_key = linked_key:gsub(" Oblast%]%]", "%]%] Oblast")
+	end
+	return linked_key .. ", a federal subject ([[" .. divtype .. "]]) of [[Russia]]"
+end
+
+--[=[
+
+The following table consists of one or more groups, each of which contains several
+items (places) that are handled similarly. Each group contains a list of all the places
+contained in that group along with their properties, as well as group-specific handlers that
+specify common properties of all items in the group. These items are used to construct labels
+for the following types of categories:
+
+1. A bare label category, e.g. 'en:Netherlands'. Labels for these are created by the
+   'bare_label_setter' handler of a given group.
+2. Normally, several categories of the form 'fr:Cities in the Netherlands',
+   'es:Rivers in New Mexico, USA', etc., for the place types listed above in 'generic_place_types'.
+   There is a top-level handler that will automatically create labels for such categories,
+   although it can be disabled by specifying 'nocities = true' in the data for a given item.
+   (This is used for city-states such as Monaco and Vatican City.) One of the groups below,
+   the one for former countries and empires, has a handler that specifies 'nocities = true'
+   for all items in the group. The reason for this is that former states such as Persia,
+   East Germany, the Soviet Union and the Roman Empire will have their cities, towns, rivers
+   and such will be listed under the current entities occupying the same area.
+3. Optionally, one or more categories of the form 'de:Provinces of the Netherlands',
+   'pt:Counties of Wales', etc. These are for political subdivisions, and for historic/popular
+   subdivisions that have no current political significance (e.g. 'nl:Provinces of Ireland',
+   'zh:Regions of the United States'). These are controlled by the 'poldiv' (for political
+   subdivisions) and 'miscdiv' (for historic/popular subdivisions) keys in the data for a
+   given item.
+
+NOTE: Second-level political subdivisions (e.g. counties of states of the US) could be handled
+here but normally aren't. Instead, there are special handlers below for US counties and
+Brazilian municipalities, and manually-created labels for certain other countries (e.g.
+Canadian counties). The reason for this is that all political and historic/popular subdivisions
+handled here have a category like "en:Political subdivisions" as their primary parent, whereas
+we often want a different primary parent for second-level political subdivisions, such as
+"en:Counties of the United States" for US counties. FIXME: We should allow the parents
+to be specified for political subdivisions. This will probably necessitate another type of
+group-specific handler, similar to 'value_transformer' and 'bare_label_setter' (see below).
+
+NOTE: Some of the above categories are added automatically to pages that use the {{place}}
+template with the appropriate values. Currently, whether or not such categories are added
+is controlled by [[Module:place/data]], which is independent of the data here but in many
+ways duplicates it. FIXME: The two should be merged.
+
+NOTE: There is also some duplication in [[Module:category tree/topic cat/data/Earth]],
+particularly for continents and supranational regions (e.g. "the British Isles").
+FIXME: Consolidate the data there into here.
+
+Each group consists of a table with the following keys:
+
+   * 'data': This is a table listing the items in the group, where the keys are the item
+	 names in the form they will appear in a category like 'de:Provinces of the Netherlands'
+	 or 'fr:Cities in Alabama, USA' (hence, they should include prefixes such as "the" and
+	 suffixes such as ", USA"). Transforming these keys to the form that appears in the
+	 bare label category, in category parents and/or in descriptions can be done using the
+	 'bare_label_setter' and 'value_transformer' keys (see below).
+	 
+	 The value of an item in the 'data' table is normally a table. This table is passed
+	 through the group's 'value_transformer' function (see below), and the resulting value
+	 is used in handling categories like 'en:Cities in Ireland' and 'de:Provinces of the Netherlands'.
+	 The following keys are recognized *post-transformation*:
+	 - 'divtype': String specifying the type of polity or subpolity (e.g. "country", "state",
+	   province"). This can also be a table of such types; in this case, the first listed type
+	   is the canonical type that will be used in descriptions, but the polity will be recognized
+	   (e.g. in {{place}} arguments) when tagged with any of the specified types. This value
+	   overrides the group-level 'default_divtype' value, and only needs to be specified if it
+	   disagrees with that value.
+	 - 'poldiv': List of recognized political subdivisions; e.g. for the Netherlands, a
+	   specification of the form 'poldiv = {"provinces", "municipalities"}' will allow
+	   categories such as 'de:Provinces of the Netherlands' and 'pt:Municipalities of the Netherlands'
+	   to be created. These categories have a primary parent "Political subdivisions"
+	   (i.e. this is the parent that appears in the breadcrumbs at the top of the category
+	   page). Any political subdivision that appears here must also be listed in the
+	   'political_subdivisions' list, which tells how to convert the pluralized political
+	   subdivision into the equivalent linked description. (If not listed, an error occurs.)
+	 - 'miscdiv': List of recognized historical/popular subdivisions; e.g. for Ireland, a
+	   specification of the form 'miscdiv = {"provinces"}' will allow categories such as
+	   'pl:Provinces of Ireland' to be created. These categories differ from political
+	   subdivision categories in that their primary parent is the country name rather than
+	   "Political subdivisions".
+	 - 'nocities': If 'true', don't recognize categories such as 'en:Cities in Monaco' or
+	   'fr:Rivers in the Soviet Union'. NOTE: This key is often added automatically by
+	   the 'value_transformer' function.
+	 - 'city_parent': If present, this should be the larger polity in which the place is
+	   contained, and is used to construct the primary parent of 'Cities in ...',
+	   'Rivers in ...', and similar categories. For example, if city_parent has the value
+	   "China", and the category is of the form e.g. 'en:Cities in Guangdong" (which is a
+	   province of China), the primary parent (i.e. the parent that appears in the breadcrumbs
+	   at the top of the category page) will be "Cities in China". If city_parent is omitted,
+	   the primary parent will simply be "Cities" (or "Towns", "Rivers", etc. as appropriate).
+	   NOTE: This key is often added automatically by the 'value_transformer' function.
+	 - 'keydesc': String directly specifying a description of the key. Used for some keys with
+	   customized descriptions. If not present, formed (by the 'value_transformer' function,
+	   described below) from the key and (for subpolities) the value of 'divtype' (see below).
+
+	 Any additional keys that are present are ignored. These keys often specify additional
+	 information used to construct the bare label. The following keys of this sort frequently
+	 appear:
+	 - 'parents': List of parents of the bare label category. For example, if 'parents = {"Europe", "Asia"}'
+	   is specified for "Turkey", bare label categories such as 'en:Turkey' will have parent
+	   categories 'en:Europe' and 'en:Asia'. The first listed category is used for the primary
+	   parent (i.e. this is the parent that appears in the breadcrumbs at the top of the category
+	   page). In this case, for example, "Europe" (not "Asia") is used as the breadcrumb.
+	 - 'bare_label_desc': String specifying the description used in the bare label category.
+	   If not given, a default description is constructed by the 'bare_label_setter' function.
+
+   * 'value_transformer': This function is used to transform the value of an item in 'data'
+     (see above) to the final form used by the handler that handles city-type and
+	 political-subdivision-type categories. It is passed three arguments (the group and the key and
+	 value of the data item). It typically adds keys, e.g. there are groups below for primary
+	 subdivisions of various countries, and each group has a 'value_transformer' that adds the
+	 country as the value of 'city_parent' (see above) and the appropriate description (including
+	 the type of division and the country) as the value of 'keydesc'. Some groups (in particular,
+	 the one for former polities, such as Persia and the Roman Empire) also add 'nocities = true'.
+	 There is a preconstructed function subpolity_bare_label_setter() (for subpolities of top-level
+	 polities) to help.
+
+   * 'bare_label_setter': This function adds an entry in the 'labels' table for bare label
+     categories such as 'en:Netherlands', 'fr:Alabama, USA' or 'ru:Republic of Tatarstan'.
+	 It is passed four arguments (the 'labels' table, the group and the key and value of the
+	 data item). There are preconstructed functions to help here, such as
+	 simple_polity_bare_label_setter() (for top-level polities) and subpolity_bare_label_setter()
+	 (for subpolities of top-level polities). This function often makes use of the 'parents'
+	 and/or 'description' keys in the data item's value (see above).
+
+   * 'place_handler': Used in conjunction with {{place}} to properly categorize placenames.
+     Given four arguments (GROUP, the spec for a given group; PLACENAME, the placename for
+	 a given place; HOLONYM_PLACETYPE, the placetype of a holonym of a place [e.g. "country" for
+	 a location in a country]; and HOLONYM_PLACENAME, the name of a holonym of a place [e.g.
+	 "France" for a location in France]), return the key in DATA correponding to HOLONYM_PLACENAME,
+	 but only if the placetype of that key matches HOLONYM_PLACETYPE.
+
+   * 'default_divtype': The default entity type for entities in this group, if not overidden at the
+     entity level. See 'divtype' above.
+]=]
+
+export.places = {
+	-- countries
+	{
+		bare_label_setter = simple_polity_bare_label_setter(),
+		value_transformer = function(group, key, value)
+			return value
+		end,
+		place_handler = default_place_handler(),
+		default_divtype = "country",
+		data = {
+			-- NOTE: The political and misc. divisions listed below are far from
+			-- exhaustive, and are simply based on what was here before when all
+			-- such categories were manually enumerated.
+			["Afghanistan"] = {parents = {"Asia"}, poldiv = {"provinces", "districts"}, miscdiv = {"regions"}},
+			["Albania"] = {parents = {"Europe"}, poldiv = {"counties", "municipalities"}},
+			["Algeria"] = {parents = {"Africa"}, poldiv = {"provinces", "communes", "districts", "municipalities"}},
+			["Andorra"] = {parents = {"Europe"}, poldiv = {"parishes"}},
+			["Angola"] = {parents = {"Africa"}, poldiv = {"provinces", "municipalities"}},
+			["Antigua and Barbuda"] = {parents = {"North America"}, poldiv = {"provinces"}},
+			["Argentina"] = {parents = {"South America"}, poldiv = {"provinces", "departments", "municipalities"}},
+			["Armenia"] = {parents = {"Europe", "Asia"}, poldiv = {"regions", "provinces"}},
+			-- Both a country and continent
+			["Australia"] = {parents = {"Earth", "Oceania"}, poldiv = {"states", "territories", "local government areas"}},
+			["Austria"] = {parents = {"Europe"}, poldiv = {"states", "districts", "municipalities"}},
+			["Azerbaijan"] = {parents = {"Europe", "Asia"}, poldiv = {"districts", "municipalities"}},
+			["the Bahamas"] = {parents = {"North America"}, poldiv = {"districts"}},
+			["Bahrain"] = {parents = {"Asia"}, poldiv = {"governorates"}},
+			["Bangladesh"] = {parents = {"Asia"}, poldiv = {"divisions", "districts", "municipalities"}},
+			["Barbados"] = {parents = {"North America"}, poldiv = {"parishes"}},
+			["Belarus"] = {parents = {"Europe"}, poldiv = {"regions", "districts"}},
+			["Belgium"] = {parents = {"Europe"}, poldiv = {"regions", "provinces", "municipalities"}},
+			["Belize"] = {parents = {"Central America"}, poldiv = {"districts"}},
+			["Benin"] = {parents = {"Africa"}, poldiv = {"departments", "communes"}},
+			["Bhutan"] = {parents = {"Asia"}, poldiv = {"districts", "gewogs"}},
+			["Bolivia"] = {parents = {"South America"}, poldiv = {"provinces", "departments", "municipalities"}},
+			["Bosnia and Herzegovina"] = {parents = {"Europe"}, poldiv = {"entities", "cantons", "municipalities"}},
+			["Botswana"] = {parents = {"Africa"}, poldiv = {"districts", "subdistricts"}},
+			["Brazil"] = {parents = {"South America"}, poldiv = {"states", "state capitals", "municipalities"}, miscdiv = {"regions"}},
+			["Brunei"] = {parents = {"Asia"}, poldiv = {"districts", "mukims"}},
+			["Bulgaria"] = {parents = {"Europe"}, poldiv = {"provinces", "municipalities"}},
+			["Burkina Faso"] = {parents = {"Africa"}, poldiv = {"regions", "departments", "provinces"}},
+			["Burma"] = {parents = {"Asia"}, poldiv = {"regions", "states", "union territories", "self-administered zones", "self-administered divisions", "districts"}},
+			["Burundi"] = {parents = {"Africa"}, poldiv = {"provinces", "communes"}},
+			["Cambodia"] = {parents = {"Asia"}, poldiv = {"provinces", "districts"}},
+			["Cameroon"] = {parents = {"Africa"}, poldiv = {"regions", "departments"}},
+			["Canada"] = {parents = {"North America"}, poldiv = {"provinces", "territories", "counties"}, miscdiv = {"regions", "census divisions"}},
+			["Cape Verde"] = {parents = {"Africa"}, poldiv = {"municipalities", "parishes"}},
+			["the Central African Republic"] = {parents = {"Africa"}, poldiv = {"prefectures", "subprefectures"}},
+			["Chad"] = {parents = {"Africa"}, poldiv = {"regions", "departments"}},
+			["Chile"] = {parents = {"South America"}, poldiv = {"regions", "provinces"}},
+			["China"] = {parents = {"Asia"}, poldiv = {"provinces", "autonomous regions",
+				"special administrative regions", "prefectures", "counties", "districts", "municipalities"},
+				miscdiv = {"regions", "commanderies"}},
+			["Colombia"] = {parents = {"South America"}, poldiv = {"departments", "municipalities"}},
+			["the Comoros"] = {parents = {"Africa"}, poldiv = {"autonomous islands"}},
+			["Costa Rica"] = {parents = {"Central America"}, poldiv = {"provinces", "cantons"}},
+			["Croatia"] = {parents = {"Europe"}, poldiv = {"municipalities"}},
+			["Cuba"] = {parents = {"North America"}, poldiv = {"provinces", "municipalities"}},
+			["Cyprus"] = {parents = {"Europe", "Asia"}, poldiv = {"districts"}},
+			["the Czech Republic"] = {parents = {"Europe"}, poldiv = {"regions", "districts"}},
+			["Czechia"] = {parents = {"Europe"}, keydesc = "[[Czechia]] (also known as the [[Czech Republic]])"},
+			["the Democratic Republic of the Congo"] = {parents = {"Africa"}, poldiv = {"provinces", "territories"}},
+			["Denmark"] = {parents = {"Europe"}, poldiv = {"regions", "municipalities"}},
+			["Djibouti"] = {parents = {"Africa"}, poldiv = {"regions", "districts"}},
+			["Dominica"] = {parents = {"North America"}, poldiv = {"parishes"}},
+			["the Dominican Republic"] = {parents = {"North America"}, poldiv = {"provinces", "municipalities"},
+				keydesc = "the [[Dominican Republic]], the country that shares the [[Caribbean]] island of [[Hispaniola]] with [[Haiti]]"},
+			["East Timor"] = {parents = {"Africa"}, poldiv = {"municipalities"}},
+			["Ecuador"] = {parents = {"South America"}, poldiv = {"provinces", "cantons"}},
+			["Egypt"] = {parents = {"Africa"}, poldiv = {"governorates", "regions"}},
+			["El Salvador"] = {parents = {"Central America"}, poldiv = {"departments", "municipalities"}},
+			["Equatorial Guinea"] = {parents = {"Africa"}, poldiv = {"provinces"}},
+			["Eritrea"] = {parents = {"Africa"}, poldiv = {"regions", "subregions"}},
+			["Estonia"] = {parents = {"Europe"}, poldiv = {"counties", "municipalities"}},
+			["Ethiopia"] = {parents = {"Africa"}, poldiv = {"regions", "zones"}},
+			["the Federated States of Micronesia"] = {parents = {"Micronesia"}, poldiv = {"states"}},
+			["Fiji"] = {parents = {"Melanesia"}, poldiv = {"divisions", "provinces"}},
+			["Finland"] = {parents = {"Europe"}, poldiv = {"regions", "municipalities"}},
+			["France"] = {parents = {"Europe"}, poldiv = {"regions", "departments", "collectivities", "municipalities",
+				"territories"}, miscdiv = {"provinces"}},
+			["Gabon"] = {parents = {"Africa"}, poldiv = {"provinces", "departments"}},
+			["the Gambia"] = {parents = {"Africa"}, poldiv = {"divisions", "districts"}},
+			["Georgia"] = {parents = {"Europe", "Asia"}, poldiv = {"regions", "districts"}, keydesc = "the country of [[Georgia]], in [[Eurasia]]"},
+			["Germany"] = {parents = {"Europe"}, poldiv = {"states", "municipalities", "districts"}},
+			["Ghana"] = {parents = {"Africa"}, poldiv = {"regions", "districts"}},
+			["Greece"] = {parents = {"Europe"}, poldiv = {"regional units", "municipalities"}},
+			["Grenada"] = {parents = {"North America"}, poldiv = {"parishes"}},
+			["Guatemala"] = {parents = {"Central America"}, poldiv = {"departments", "municipalities"}},
+			["Guinea"] = {parents = {"Africa"}, poldiv = {"regions", "prefectures"}},
+			["Guinea-Bissau"] = {parents = {"Africa"}, poldiv = {"regions"}},
+			["Guyana"] = {parents = {"South America"}, poldiv = {"regions"}},
+			["Haiti"] = {parents = {"North America"}, poldiv = {"departments", "arrondissements"}},
+			["Honduras"] = {parents = {"Central America"}, poldiv = {"departments", "municipalities"}},
+			["Hungary"] = {parents = {"Europe"}, poldiv = {"counties", "districts"}},
+			["Iceland"] = {parents = {"Europe"}, poldiv = {"regions", "municipalities", "counties"}},
+			["India"] = {parents = {"Asia"}, poldiv = {"states", "union territories", "divisions", "districts", "municipalities"}},
+			["Indonesia"] = {parents = {"Asia"}, poldiv = {"regencies", "provinces"}},
+			["Iran"] = {parents = {"Asia"}, poldiv = {"provinces", "counties"}},
+			["Iraq"] = {parents = {"Asia"}, poldiv = {"governorates", "districts"}},
+			["Ireland"] = {parents = {"Europe", "British Isles"}, poldiv = {"counties", "districts"}, miscdiv = {"provinces"}},
+			["Israel"] = {parents = {"Asia"}, poldiv = {"districts"}},
+			["Italy"] = {parents = {"Europe"}, poldiv = {"regions", "provinces"}, miscdiv = {"regions"}},
+			["Ivory Coast"] = {parents = {"Africa"}, poldiv = {"districts", "regions"}},
+			["Jamaica"] = {parents = {"North America"}, poldiv = {"parishes"}},
+			["Japan"] = {parents = {"Asia"}, poldiv = {"prefectures", "subprefectures", "municipalities"}},
+			["Jordan"] = {parents = {"Asia"}, poldiv = {"governorates"}},
+			["Kazakhstan"] = {parents = {"Europe", "Asia"}, poldiv = {"regions", "districts"}},
+			["Kenya"] = {parents = {"Africa"}, poldiv = {"counties"}},
+			["Kiribati"] = {parents = {"Micronesia"}},
+			["Kosovo"] = {parents = {"Europe"}},
+			["Kuwait"] = {parents = {"Asia"}, poldiv = {"governorates", "areas"}},
+			["Kyrgyzstan"] = {parents = {"Asia"}, poldiv = {"regions", "districts"}},
+			["Laos"] = {parents = {"Asia"}, poldiv = {"provinces", "districts"}},
+			["Latvia"] = {parents = {"Europe"}, poldiv = {"municipalities"}, miscdiv = {"regions"}},
+			["Lebanon"] = {parents = {"Asia"}, poldiv = {"governorates", "districts"}},
+			["Lesotho"] = {parents = {"Africa"}, poldiv = {"districts"}},
+			["Liberia"] = {parents = {"Africa"}, poldiv = {"counties", "districts"}},
+			["Libya"] = {parents = {"Africa"}, poldiv = {"districts", "municipalities"}},
+			["Liechtenstein"] = {parents = {"Europe"}, poldiv = {"municipalities"}},
+			["Lithuania"] = {parents = {"Europe"}, poldiv = {"counties", "municipalities"},
+				miscdiv = {"ethnographic regions"}},
+			["Luxembourg"] = {parents = {"Europe"}, poldiv = {"cantons"}, miscdiv = {"districts"}},
+			["Madagascar"] = {parents = {"Africa"}, poldiv = {"regions", "districts"}},
+			["Malawi"] = {parents = {"Africa"}, poldiv = {"regions", "districts"}},
+			["Malaysia"] = {parents = {"Asia"}, poldiv = {"states", "federal territories", "districts"}},
+			["the Maldives"] = {parents = {"Asia"}, poldiv = {"provinces", "administrative atolls"}},
+			["Mali"] = {parents = {"Africa"}, poldiv = {"regions", "cercles"}},
+			["Malta"] = {parents = {"Europe"}, poldiv = {"local councils"}},
+			["the Marshall Islands"] = {parents = {"Micronesia"}, poldiv = {"municipalities"}},
+			["Mauritania"] = {parents = {"Africa"}, poldiv = {"regions", "departments"}},
+			["Mauritius"] = {parents = {"Africa"}, poldiv = {"districts"}},
+			["Mexico"] = {parents = {"North America", "Central America"}, poldiv = {"states", "municipalities"}},
+			["Moldova"] = {parents = {"Europe"}, poldiv = {"districts"}},
+			["Monaco"] = {parents = {"Europe"}, nocities = true},
+			["Mongolia"] = {parents = {"Asia"}, poldiv = {"provinces", "districts"}},
+			["Montenegro"] = {parents = {"Europe"}, poldiv = {"municipalities"}},
+			["Morocco"] = {parents = {"Africa"}, poldiv = {"regions", "prefectures", "provinces"}},
+			["Mozambique"] = {parents = {"Africa"}, poldiv = {"provinces", "districts"}},
+			["Namibia"] = {parents = {"Africa"}, poldiv = {"regions", "constituencies"}},
+			["Nauru"] = {parents = {"Micronesia"}, poldiv = {"districts"}},
+			["Nepal"] = {parents = {"Asia"}, poldiv = {"provinces", "districts"}},
+			["the Netherlands"] = {parents = {"Europe"}, poldiv = {"provinces", "municipalities"}},
+			["New Zealand"] = {parents = {"Polynesia"}, poldiv = {"regions", "territorial authorities"}},
+			["Nicaragua"] = {parents = {"Central America"}, poldiv = {"departments", "municipalities"}},
+			["Niger"] = {parents = {"Africa"}, poldiv = {"regions", "departments"}},
+			["Nigeria"] = {parents = {"Africa"}, poldiv = {"states", "local government areas"}},
+			["North Korea"] = {parents = {"Asia", "Korea"}, poldiv = {"provinces"}},
+			["North Macedonia"] = {parents = {"Europe"}, poldiv = {"municipalities"}},
+			["Norway"] = {parents = {"Europe"}, poldiv = {"counties", "municipalities"}},
+			["Oman"] = {parents = {"Asia"}, poldiv = {"governorates", "provinces"}},
+			["Pakistan"] = {parents = {"Asia"}, poldiv = {"provinces", "districts"}},
+			["Palestine"] = {parents = {"Asia"}},
+			["Palau"] = {parents = {"Micronesia"}, poldiv = {"states"}},
+			["Panama"] = {parents = {"Central America"}, poldiv = {"provinces", "districts"}},
+			["Papua New Guinea"] = {parents = {"Melanesia"}, poldiv = {"provinces", "districts"}},
+			["Paraguay"] = {parents = {"South America"}, poldiv = {"departments", "districts"}},
+			["Peru"] = {parents = {"South America"}, poldiv = {"regions", "provinces", "districts"}},
+			["the Philippines"] = {parents = {"Asia"}, poldiv = {"regions", "provinces", "provincial capitals", "districts", "municipalities"}},
+			["Poland"] = {poldiv = {"voivodeships", "counties"}, parents = {"Europe"}},
+			["Portugal"] = {parents = {"Europe"}, poldiv = {"districts and autonomous regions", "municipalities"}},
+			["Qatar"] = {parents = {"Asia"}, poldiv = {"municipalities", "zones"}},
+			["the Republic of the Congo"] = {parents = {"Africa"}, poldiv = {"departments", "districts"}},
+			["Romania"] = {parents = {"Europe"}, poldiv = {"regions", "counties"}},
+			["Russia"] = {parents = {"Europe", "Asia"}, poldiv = {"republics", "autonomous oblasts", "autonomous okrugs", "oblasts", "krais", "federal cities", "districts"}},
+			["Rwanda"] = {parents = {"Africa"}, poldiv = {"provinces", "districts"}},
+			["Saint Kitts and Nevis"] = {parents = {"North America"}, poldiv = {"parishes"}},
+			["Saint Lucia"] = {parents = {"North America"}, poldiv = {"quarters"}},
+			["Saint Vincent and the Grenadines"] = {parents = {"North America"}, poldiv = {"parishes"}},
+			["Samoa"] = {parents = {"Polynesia"}, poldiv = {"districts"}},
+			["San Marino"] = {parents = {"Europe"}, poldiv = {"municipalities"}},
+			["São Tomé and Príncipe"] = {parents = {"Africa"}, poldiv = {"districts"}},
+			["Saudi Arabia"] = {parents = {"Asia"}, poldiv = {"provinces", "governorates"}},
+			["Senegal"] = {parents = {"Africa"}, poldiv = {"regions", "departments"}},
+			["Serbia"] = {parents = {"Europe"}, poldiv = {"districts", "municipalities"}}, 
+			["Seychelles"] = {parents = {"Africa"}, poldiv = {"districts"}},
+			["Sierra Leone"] = {parents = {"Africa"}, poldiv = {"provinces", "districts"}},
+			["Singapore"] = {parents = {"Asia"}, poldiv = {"districts"}},
+			["Slovakia"] = {parents = {"Europe"}, poldiv = {"regions", "districts"}},
+			["Slovenia"] = {parents = {"Europe"}, poldiv = {"municipalities"}},
+			-- Note: the official name does not include "the" at the beginning, but it sounds strange in
+			-- English to leave it out and it's commonly included, so we include it.
+			["the Solomon Islands"] = {parents = {"Melanesia"}, poldiv = {"provinces"}},
+			["Somalia"] = {parents = {"Africa"}, poldiv = {"regions", "districts"}},
+			["South Africa"] = {parents = {"Africa"}, poldiv = {"provinces", "districts"}},
+			["South Korea"] = {parents = {"Asia", "Korea"}, poldiv = {"provinces", "counties", "districts"}},
+			["South Sudan"] = {parents = {"Africa"}, poldiv = {"regions", "states"}},
+			["Spain"] = {parents = {"Europe"}, poldiv = {"autonomous communities", "provinces", "municipalities"}},
+			["Sri Lanka"] = {parents = {"Asia"}, poldiv = {"provinces", "districts"}},
+			["Sudan"] = {parents = {"Africa"}, poldiv = {"states", "districts"}},
+			["Suriname"] = {parents = {"South America"}, poldiv = {"districts"}},
+			["Swaziland"] = {parents = {"Africa"}},
+			["Sweden"] = {parents = {"Europe"}, poldiv = {"provinces", "counties", "municipalities"}},
+			["Switzerland"] = {parents = {"Europe"}, poldiv = {"cantons", "municipalities", "districts"}},
+			["Syria"] = {parents = {"Asia"}, poldiv = {"governorates", "districts"}},
+			["Taiwan"] = {parents = {"Asia"}, poldiv = {"counties", "districts"}},
+			["Tajikistan"] = {parents = {"Asia"}, poldiv = {"provinces"}, miscdiv = {"regions", "districts"}},
+			["Tanzania"] = {parents = {"Africa"}, poldiv = {"provinces", "districts"}},
+			["Thailand"] = {parents = {"Asia"}, poldiv = {"provinces", "districts"}},
+			["Togo"] = {parents = {"Africa"}, poldiv = {"provinces", "prefectures"}},
+			["Tonga"] = {parents = {"Polynesia"}, poldiv = {"divisions"}},
+			["Trinidad and Tobago"] = {parents = {"North America"}, poldiv = {"regions", "municipalities"}},
+			["Tunisia"] = {parents = {"Africa"}, poldiv = {"governorates", "delegations"}},
+			["Turkey"] = {parents = {"Europe", "Asia"}, poldiv = {"provinces", "districts"}},
+			["Turkmenistan"] = {parents = {"Asia"}, poldiv = {"regions", "districts"}},
+			["Tuvalu"] = {parents = {"Polynesia"}, poldiv = {"atolls"}},
+			["Uganda"] = {parents = {"Africa"}, poldiv = {"districts", "counties"}},
+			["Ukraine"] = {parents = {"Europe"}, poldiv = {"oblasts", "municipalities", "raions"}},
+			["the United Arab Emirates"] = {parents = {"Asia"}, poldiv = {"emirates"}},
+			["the United Kingdom"] = {parents = {"Europe", "British Isles"},
+				poldiv = {"countries", "territories", "dependencies"},
+				keydesc = "the [[United Kingdom]] of Great Britain and Northern Ireland"},
+			["the United States"] = {parents = {"North America"},
+				poldiv = {"counties", "states", "state capitals", "territories"},
+				miscdiv = {"census-designated places", "regions"}},
+			["Uruguay"] = {parents = {"South America"}, poldiv = {"departments", "municipalities"}},
+			["Uzbekistan"] = {parents = {"Asia"}, poldiv = {"regions", "districts"}},
+			["Vanuatu"] = {parents = {"Melanesia"}, poldiv = {"provinces"}},
+			["Vatican City"] = {parents = {"Europe", "Rome"}, nocities = true},
+			["Venezuela"] = {parents = {"South America"}, poldiv = {"states", "municipalities"}},
+			["Vietnam"] = {parents = {"Asia"}, poldiv = {"provinces", "districts", "municipalities"}},
+			["Western Sahara"] = {parents = {"Africa"}},
+			["Yemen"] = {parents = {"Asia"}, poldiv = {"governorates", "districts"}},
+			["Zambia"] = {parents = {"Africa"}, poldiv = {"provinces", "districts"}},
+			["Zimbabwe"] = {parents = {"Africa"}, poldiv = {"provinces", "districts"}},
+		}
+	},
+
+	-- pseudo-countries: typically overseas territories or de-facto independent countries, which in both cases
+	-- are not internationally recognized as sovereign nations but which we treat similarly to countries.
+	{
+		bare_label_setter = simple_polity_bare_label_setter(),
+		value_transformer = function(group, key, value)
+			return value
+		end,
+		place_handler = default_place_handler(),
+		default_divtype = "country",
+		data = {
+			-- British Overseas Territory
+			["Akrotiri and Dhekelia"] = {divtype = {"overseas territory", "territory"}, parents = {"Cyprus", "Europe", "United Kingdom"}},
+			-- unincorporated territory of the United States
+			["American Samoa"] = {divtype = {"unincorporated territory", "overseas territory", "territory"}, parents = {"Polynesia", "United States"}},
+			-- British Overseas Territory
+			["Anguilla"] = {divtype = {"overseas territory", "territory"}, parents = {"North America", "United Kingdom"}},
+			-- de-facto independent state, internationally recognized as part of Georgia
+			["Abkhazia"] = {divtype = {"unrecognized state", "country"}, parents = {"Georgia", "Europe", "Asia"},
+				poldiv = {"districts"},
+				keydesc = "the de-facto independent state of [[Abkhazia]], internationally recognized as part of the country of [[Georgia]]"},
+			-- de-facto independent state of Armenian ethnicity, internationally recognized as part of Azerbaijan
+			-- (also known as Nagorno-Karabakh)
+			-- NOTE: Formerly listed Armenia as a parent; this seems politically non-neutral
+			-- so I've taken it out.
+			["Artsakh"] = {divtype = {"unrecognized state", "country"}, parents = {"Azerbaijan", "Europe", "Asia"},
+				keydesc = "the de-facto independent state of [[Artsakh]], internationally recognized as part of [[Azerbaijan]]"},
+			-- British Overseas Territory
+			["Ascension Island"] = {divtype = {"overseas territory", "territory"}, parents = {"United Kingdom", "Atlantic Ocean"}},
+			-- constituent country of the Netherlands
+			["Aruba"] = {divtype = {"constituent country", "country"}, parents = {"Netherlands", "North America"}},
+			-- British Overseas Territory
+			["Bermuda"] = {divtype = {"overseas territory", "territory"}, parents = {"United Kingdom", "North America"}},
+			-- British Overseas Territory
+			["the British Indian Ocean Territory"] = {divtype = {"overseas territory", "territory"}, parents = {"United Kingdom", "North America"}},
+			-- British Overseas Territory
+			["the British Virgin Islands"] = {divtype = {"overseas territory", "territory"}, parents = {"United Kingdom", "North America"}},
+			-- British Overseas Territory
+			["the Cayman Islands"] = {divtype = {"overseas territory", "territory"}, parents = {"United Kingdom", "North America"}},
+			-- Australian external territory
+			["Christmas Island"] = {divtype = {"external territory", "territory"}, parents = {"Australia", "Asia"}},
+			-- Australian external territory; also called the Keeling Islands or (officially) the Cocos (Keeling) Islands
+			["the Cocos Islands"] = {divtype = {"external territory", "territory"}, parents = {"Australia", "Asia"}},
+			-- self-governing but in free association with New Zealand
+			["the Cook Islands"] = {divtype = {"country"}, parents = {"Polynesia", "New Zealand"}},
+			-- constituent country of the Netherlands
+			["Curaçao"] = {divtype = {"constituent country", "country"}, parents = {"Netherlands", "North America"}},
+			-- special territory of Chile
+			["Easter Island"] = {divtype = {"special territory", "territory"}, parents = {"Chile", "Polynesia"}},
+			-- British Overseas Territory
+			["the Falkland Islands"] = {divtype = {"overseas territory", "territory"}, parents = {"United Kingdom", "South America"}},
+			-- autonomous territory of Denmark
+			["the Faroe Islands"] = {divtype = {"autonomous territory", "territory"}, parents = {"Denmark", "Europe"}},
+			-- overseas department of France
+			["French Guiana"] = {divtype = {"overseas department", "department"}, parents = {"France", "South America"}},
+			-- overseas collectivity of France
+			["French Polynesia"] = {divtype = {"overseas collectivity", "collectivity"}, parents = {"France", "Polynesia"}},
+			-- British Overseas Territory
+			["Gibraltar"] = {divtype = {"overseas territory", "territory"}, parents = {"United Kingdom", "North America"}},
+			-- autonomous territory of Denmark
+			["Greenland"] = {divtype = {"autonomous territory", "territory"}, parents = {"Denmark", "North America"}, poldiv = {"municipalities"}},
+			-- overseas department of France
+			["Guadeloupe"] = {divtype = {"overseas department", "department"}, parents = {"France", "North America"}},
+			-- unincorporated territory of the United States
+			["Guam"] = {divtype = {"unincorporated territory", "overseas territory", "territory"}, parents = {"United States", "Micronesia"}},
+			-- self-governing British Crown dependency; technically called the Bailiwick of Guernsey
+			["Guernsey"] = {divtype = {"crown dependency", "dependency", "bailiwick", "territory"}, parents = {"British Isles", "Europe"}},
+			-- special administrative region of China
+			["Hong Kong"] = {divtype = "special administrative region", parents = {"China"}},
+			-- self-governing British Crown dependency
+			["the Isle of Man"] = {divtype = {"crown dependency", "dependency", "territory"}, parents = {"British Isles", "Europe"}},
+			-- self-governing British Crown dependency; technically called the Bailiwick of Jersey
+			["Jersey"] = {divtype = {"crown dependency", "dependency", "bailiwick", "territory"}, parents = {"British Isles", "Europe"}},
+			-- special administrative region of China
+			["Macau"] = {divtype = "special administrative region", parents = {"China"}},
+			-- overseas department of France
+			["Martinique"] = {divtype = {"overseas department", "department"}, parents = {"France", "North America"}},
+			-- British Overseas Territory
+			["Montserrat"] = {divtype = {"overseas territory", "territory"}, parents = {"United Kingdom", "North America"}},
+			-- special collectivity of France
+			["New Caledonia"] = {divtype = {"special collectivity", "collectivity"}, parents = {"France", "Melanesia"}},
+			-- self-governing but in free association with New Zealand
+			["Niue"] = {divtype = {"country"}, parents = {"Polynesia", "New Zealand"}},
+			-- Australian external territory
+			["Norfolk Island"] = {divtype = {"external territory", "territory"}, parents = {"Australia", "Polynesia"}},
+			-- commonwealth, unincorporated territory of the United States
+			["the Northern Mariana Islands"] = {divtype = {"commonwealth", "unincorporated territory", "overseas territory", "territory"}, parents = {"United States", "Micronesia"}},
+			-- British Overseas Territory
+			["the Pitcairn Islands"] = {divtype = {"overseas territory", "territory"}, parents = {"United Kingdom", "Polynesia"}},
+			-- commonwealth of the United States
+			["Puerto Rico"] = {divtype = {"commonwealth", "overseas territory", "territory"}, parents = {"United States", "North America"}},
+			-- overseas collectivity of France
+			["Saint Barthélemy"] = {divtype = {"overseas collectivity", "collectivity"}, parents = {"France", "North America"}},
+			-- British Overseas Territory
+			["Saint Helena"] = {divtype = {"overseas territory", "territory"}, parents = {"United Kingdom", "Atlantic Ocean"}},
+			-- overseas collectivity of France
+			["Saint Martin"] = {divtype = {"overseas collectivity", "collectivity"}, parents = {"France", "North America"}},
+			-- overseas collectivity of France
+			["Saint Pierre and Miquelon"] = {divtype = {"overseas collectivity", "collectivity"}, parents = {"France", "North America"}},
+			-- de-facto independent state, internationally recognized as part of Georgia
+			["South Ossetia"] = {divtype = {"unrecognized state", "country"}, parents = {"Georgia", "Europe", "Asia"},
+				keydesc = "the de-facto independent state of [[South Ossetia]], internationally recognized as part of the country of [[Georgia]]"},
+			-- constituent country of the Netherlands
+			["Sint Maarten"] = {divtype = {"constituent country", "country"}, parents = {"Netherlands", "North America"}},
+			-- British Overseas Territory
+			["South Georgia"] = {divtype = {"overseas territory", "territory"}, parents = {"United Kingdom", "Atlantic Ocean"}},
+			-- British Overseas Territory
+			["the South Sandwich Islands"] = {divtype = {"overseas territory", "territory"}, parents = {"United Kingdom", "Atlantic Ocean"}},
+			-- dependent territory of New Zealnd
+			["Tokelau"] = {divtype = {"dependent territory", "territory"}, parents = {"New Zealand", "Polynesia"}},
+			-- de-facto independent state, internationally recognized as part of Moldova
+			["Transnistria"] = {divtype = {"unrecognized state", "country"}, parents = {"Moldova", "Europe"},
+				keydesc = "the de-facto independent state of [[Transnistria]], internationally recognized as part of [[Moldova]]"},
+			-- British Overseas Territory
+			["Tristan da Cunha"] = {divtype = {"overseas territory", "territory"}, parents = {"United Kingdom", "Atlantic Ocean"}},
+			-- British Overseas Territory
+			["the Turks and Caicos Islands"] = {divtype = {"overseas territory", "territory"}, parents = {"United Kingdom", "North America"}},
+			-- unincorporated territory of the United States
+			["the United States Virgin Islands"] = {divtype = {"unincorporated territory", "overseas territory", "territory"}, parents = {"United States", "North America"}},
+			-- unincorporated territory of the United States
+			["Wake Island"] = {divtype = {"unincorporated territory", "overseas territory", "territory"}, parents = {"United States", "North America"}},
+			-- overseas collectivity of France
+			["Wallis and Futuna"] = {divtype = {"overseas collectivity", "collectivity"}, parents = {"France", "Polynesia"}},
+		}
+	},
+
+	-- former countries and such; we don't create "Cities in ..." categories because they don't exist anymore
+	{
+		bare_label_setter = simple_polity_bare_label_setter(),
+		value_transformer = function(group, key, value)
+			value.nocities = true
+			return value
+		end,
+		place_handler = default_place_handler(),
+		default_divtype = "country",
+		data = {
+			["Czechoslovakia"] = {parents = {"Europe"}},
+			["East Germany"] = {parents = {"Europe", "Germany"}},
+			["North Vietnam"] = {parents = {"Asia", "Vietnam"}},
+			["Persia"] = {parents = {"Asia"}, poldiv = {"provinces"}},
+			["the Roman Empire"] = {divtype = {"empire", "country"}, parents = {"Europe", "Africa", "Asia", "Rome"}, poldiv = {"provinces"}},
+			["South Vietnam"] = {parents = {"Asia", "Vietnam"}},
+			["the Soviet Union"] = {parents = {"Europe", "Asia"}, poldiv = {"republics", "autonomous republics"}},
+			["West Germany"] = {parents = {"Europe", "Germany"}},
+			["Yugoslavia"] = {parents = {"Europe"}, poldiv = {"districts"},
+				keydesc = "the former [[Kingdom of Yugoslavia]] (1918-1943) or the former [[Socialist Federal Republic of Yugoslavia]] (1943-1992)"},
+		}
+	},
+
+	-- constituent countries and provinces of the United Kingdom
+	{
+		bare_label_setter = subpolity_bare_label_setter("the United Kingdom"),
+		value_transformer = subpolity_value_transformer("the United Kingdom"),
+		place_handler = default_place_handler(),
+		default_divtype = {"constituent country", "country"},
+		data = {
+			["England"] = {poldiv = {"regions", "counties"}},
+			["Northern Ireland"] = {divtype = "province", parents = {"United Kingdom", "Ireland"},
+				poldiv = {"districts"}, miscdiv = {"counties"}},
+			["Scotland"] = {poldiv = {"regions"}},
+			["Wales"] = {poldiv = {"counties"}},
+		}
+	},
+
+	-- provinces and territories of Canada
+	{
+		bare_label_setter = subpolity_bare_label_setter("Canada"),
+		value_transformer = subpolity_value_transformer("Canada"),
+		place_handler = default_place_handler(),
+		default_divtype = "province",
+		data = {
+			["Alberta"] = {},
+			["British Columbia"] = {},
+			["Manitoba"] = {},
+			["New Brunswick"] = {},
+			["Newfoundland and Labrador"] = {},
+			["the Northwest Territories"] = {divtype = "territory"},
+			["Nova Scotia"] = {},
+			["Nunavut"] = {divtype = "territory"},
+			["Ontario"] = {},
+			["Prince Edward Island"] = {},
+			["Saskatchewan"] = {},
+			["Quebec"] = {},
+			["Yukon"] = {divtype = "territory"},
+		}
+	},
+
+	-- states and territories of Australia
+	{
+		bare_label_setter = subpolity_bare_label_setter("Australia"),
+		value_transformer = subpolity_value_transformer("Australia"),
+		place_handler = default_place_handler(),
+		default_divtype = "state",
+		data = {
+			["New South Wales"] = {},
+			["the Northern Territory"] = {divtype = "territory"},
+			["Queensland"] = {},
+			["South Australia"] = {},
+			["Tasmania"] = {},
+			["Victoria"] = {},
+			["Western Australia"] = {},
+		}
+	},
+
+	-- federal subjects of Russia
+	{
+		bare_label_setter = function(labels, group, key, value)
+			local divtype = value.divtype or group.default_divtype
+			if type(divtype) == "table" then
+				divtype = divtype[1]
+			end
+			local bare_key, linked_key = export.construct_bare_and_linked_version(key)
+			labels[bare_key] = {
+				description = "{{{langname}}} terms related to " .. construct_russian_federal_subject_keydesc(linked_key, divtype) .. ".",
+				parents = {ucfirst(divtype) .. "s of Russia"},
+			}
+		end,
+		value_transformer = function(group, key, value)
+			value.city_parent = "Russia"
+			local divtype = value.divtype or group.default_divtype
+			if type(divtype) == "table" then
+				divtype = divtype[1]
+			end
+			local bare_key, linked_key = export.construct_bare_and_linked_version(key)
+			value.keydesc = construct_russian_federal_subject_keydesc(linked_key, divtype)
+			return value
+		end,
+		place_handler = default_place_handler(),
+		default_divtype = "oblast",
+		data = {
+			-- autonomous oblasts
+			["the Jewish Autonomous Oblast"] = {divtype = {"autonomous oblast", "oblast"}},
+			-- autonomous okrugs
+			["Chukotka Autonomous Okrug"] = {divtype = "autonomous okrug"},
+			["Khanty-Mansi Autonomous Okrug"] = {divtype = "autonomous okrug"},
+			["Nenets Autonomous Okrug"] = {divtype = "autonomous okrug"},
+			["Yamalo-Nenets Autonomous Okrug"] = {divtype = "autonomous okrug"},
+			-- krais
+			["Altai Krai"] = {divtype = "krai"},
+			["Kamchatka Krai"] = {divtype = "krai"},
+			["Khabarovsk Krai"] = {divtype = "krai"},
+			["Krasnodar Krai"] = {divtype = "krai"},
+			["Krasnoyarsk Krai"] = {divtype = "krai"},
+			["Perm Krai"] = {divtype = "krai"},
+			["Primorsky Krai"] = {divtype = "krai"},
+			["Stavropol Krai"] = {divtype = "krai"},
+			["Zabaykalsky Krai"] = {divtype = "krai"},
+			-- oblasts
+			["Amur Oblast"] = {},
+			["Arkhangelsk Oblast"] = {},
+			["Astrakhan Oblast"] = {},
+			["Belgorod Oblast"] = {},
+			["Bryansk Oblast"] = {},
+			["Chelyabinsk Oblast"] = {},
+			["Irkutsk Oblast"] = {},
+			["Ivanovo Oblast"] = {},
+			["Kaliningrad Oblast"] = {},
+			["Kaluga Oblast"] = {},
+			["Kemerovo Oblast"] = {},
+			["Kirov Oblast"] = {},
+			["Kostroma Oblast"] = {},
+			["Kurgan Oblast"] = {},
+			["Kursk Oblast"] = {},
+			["Leningrad Oblast"] = {},
+			["Lipetsk Oblast"] = {},
+			["Magadan Oblast"] = {},
+			["Moscow Oblast"] = {},
+			["Murmansk Oblast"] = {},
+			["Nizhny Novgorod Oblast"] = {},
+			["Novgorod Oblast"] = {},
+			["Novosibirsk Oblast"] = {},
+			["Omsk Oblast"] = {},
+			["Orenburg Oblast"] = {},
+			["Oryol Oblast"] = {},
+			["Penza Oblast"] = {},
+			["Pskov Oblast"] = {},
+			["Rostov Oblast"] = {},
+			["Ryazan Oblast"] = {},
+			["Sakhalin Oblast"] = {},
+			["Samara Oblast"] = {},
+			["Saratov Oblast"] = {},
+			["Smolensk Oblast"] = {},
+			["Sverdlovsk Oblast"] = {},
+			["Tambov Oblast"] = {},
+			["Tomsk Oblast"] = {},
+			["Tula Oblast"] = {},
+			["Tver Oblast"] = {},
+			["Tyumen Oblast"] = {},
+			["Ulyanovsk Oblast"] = {},
+			["Vladimir Oblast"] = {},
+			["Volgograd Oblast"] = {},
+			["Vologda Oblast"] = {},
+			["Voronezh Oblast"] = {},
+			["Yaroslavl Oblast"] = {},
+			-- republics
+			["the Republic of Adygea"] = {divtype = "republic"},
+			["the Republic of Bashkortostan"] = {divtype = "republic"},
+			["the Republic of Buryatia"] = {divtype = "republic"},
+			["the Republic of Dagestan"] = {divtype = "republic"},
+			["the Republic of Ingushetia"] = {divtype = "republic"},
+			["the Republic of Kalmykia"] = {divtype = "republic"},
+			["the Republic of Karelia"] = {divtype = "republic"},
+			["the Republic of Khakassia"] = {divtype = "republic"},
+			["the Republic of Mordovia"] = {divtype = "republic"},
+			["the Republic of North Ossetia-Alania"] = {divtype = "republic"},
+			["the Republic of Tatarstan"] = {divtype = "republic"},
+			["the Altai Republic"] = {divtype = "republic"},
+			["the Chechen Republic"] = {divtype = "republic"},
+			["the Chuvash Republic"] = {divtype = "republic"},
+			["the Kabardino-Balkar Republic"] = {divtype = "republic"},
+			["the Karachay-Cherkess Republic"] = {divtype = "republic"},
+			["the Komi Republic"] = {divtype = "republic"},
+			["the Mari El Republic"] = {divtype = "republic"},
+			["the Sakha Republic"] = {divtype = "republic"},
+			["the Tuva Republic"] = {divtype = "republic"},
+			["the Udmurt Republic"] = {divtype = "republic"},
+			-- Not sure what to do about this one from a neutrality perspective
+			-- ["the Republic of Crimea"] = {divtype = "republic"},
+			-- There are also federal cities (not included because they're cities):
+			-- Moscow, Saint Petersburg, Sevastopol (not sure what to do about the
+			-- last one if we were to include federal cities, see "Republic of Crimea"
+			-- above)
+		}
+	},
+
+	-- states of the United States
+	{
+		bare_label_setter = subpolity_bare_label_setter("the United States",
+			function(key) return key:gsub(", USA$", "") end),
+		value_transformer = subpolity_value_transformer("the United States",
+			function(key) return key:gsub(", USA$", "") end),
+		place_handler = default_place_handler(function(placename) return placename .. ", USA" end),
+		default_divtype = "state",
+		data = export.US_states,
+	},
+
+	-- states of Brazil
+	{
+		bare_label_setter = subpolity_bare_label_setter("Brazil",
+			function(key) return key:gsub(", Brazil$", "") end),
+		value_transformer = subpolity_value_transformer("Brazil",
+			function(key) return key:gsub(", Brazil$", "") end),
+		place_handler = default_place_handler(function(placename) return placename .. ", Brazil" end),
+		default_divtype = "state",
+		data = export.brazilian_states,
+	},
+
+	-- provinces and autonomous regions of China
+	{
+		bare_label_setter = subpolity_bare_label_setter("China"),
+		value_transformer = subpolity_value_transformer("China"),
+		place_handler = default_place_handler(),
+		default_divtype = "province",
+		data = export.chinese_provinces_and_autonomous_regions,
+	},
+
+	-- prefectures of Japan
+	{
+		-- We can't use the normal subpolity_bare_label_setter() because we set a special parent
+		-- (normally the parent would just be "Japan"). FIXME: Do we want this difference?
+		-- Or do we want e.g. provinces in China to have a parent "Provinces of China" instead of
+		-- just "China"?
+		bare_label_setter = function(labels, group, key, value)
+			labels[key] = {
+				description = "{{{langname}}} terms related to [[" .. key:gsub(" Prefecture$", "") .. "]], a [[prefecture]] of [[Japan]].",
+				parents = {"Prefectures of Japan"},
+			}
+		end,
+		value_transformer = subpolity_value_transformer("Japan", function(key) return key:gsub(" Prefecture$", "") end),
+		place_handler = default_place_handler(function(placename) return placename .. " Prefecture" end),
+		default_divtype = "prefecture",
+		data = export.japanese_prefectures,
+	},
+
+	-- states and union territories of India
+	{
+		bare_label_setter = subpolity_bare_label_setter("India"),
+		value_transformer = subpolity_value_transformer("India"),
+		place_handler = default_place_handler(),
+		default_divtype = "state",
+		data = export.indian_states_and_union_territories,
+	},
+}
+
+return export
