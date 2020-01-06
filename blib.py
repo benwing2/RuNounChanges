@@ -1600,7 +1600,8 @@ def find_lang_section_from_text(pagetext, lang, pagemsg):
 
   return None
 
-def replace_in_text(text, curr, repl, pagemsg, no_found_repl_check=False):
+def replace_in_text(text, curr, repl, pagemsg, no_found_repl_check=False,
+    abort_if_warning=False):
   found_curr = curr in text
   if not found_curr:
     pagemsg("WARNING: Unable to locate current text: %s" % curr)
@@ -1617,15 +1618,21 @@ def replace_in_text(text, curr, repl, pagemsg, no_found_repl_check=False):
     if newtext_text_diff != 0:
       pagemsg("WARNING: Something wrong, no change in text length during replacement but expected change: Expected length change=%s, actual=%s, curr=%s, repl=%s"
           % (repl_curr_diff, newtext_text_diff, curr, repl))
+      if abort_if_warning:
+        return text, False
   else:
     ratio = float(newtext_text_diff) / repl_curr_diff
     if ratio == int(ratio):
       if int(ratio) > 1:
         pagemsg("WARNING: Replaced %s occurrences of curr=%s with repl=%s"
             % (int(ratio), curr, repl))
+        if abort_if_warning:
+          return text, False
     else:
       pagemsg("WARNING: Something wrong, length mismatch during replacement: Expected length change=%s, actual=%s, ratio=%.2f, curr=%s, repl=%s"
           % (repl_curr_diff, newtext_text_diff, ratio, curr, repl))
+      if abort_if_warning:
+        return text, False
   text = newtext
   return text, True
 
