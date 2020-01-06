@@ -6,7 +6,7 @@
 # 1. Check L2 header for language and use in place of 'en'. [DONE]
 # 2. Need to preserve some links, e.g. probably at least in the translation (t1=). E.g.
 #    Replaced <# {{zh-div|縣}} {{w|Li County, Hunan|Li County}} {{gloss|county in Hunan}}> with <# {{zh-div|縣}} {{place|zh|county|p/Hunan|t1=Li County}}>
-#    There is no Wiktionary article "Li County".
+#    There is no Wiktionary article "Li County". [DONE]
 # 3. Restrict translation to the same form as that preceding County, district, etc.,
 #    additionally allowing an initial "the". [DONE]
 # 4. Add . to allowed chars preceding County, district, etc. (St. Louis County). [DONE]
@@ -34,7 +34,7 @@
 # 13g. "city of Aberdeen", "city of Newcastle upon Tyne", "city of Coventry", etc. [DONE]
 # 13h. "interior of Liguria", "interior of Calabria", "interior of Samnium", "interior of Sicily", etc.
 # 13i. "metropolitan borough of North Tyneside", "metropolitan borough of Kirklees", "metropolitan borough of Wakefield", etc. [DONE]
-# 13j. "province Dalarna", "province Södermanland", "province Östergötland", etc.
+# 13j. "province Dalarna", "province Södermanland", "province Östergötland", etc. [DONE]
 # 13k. "{{m|ja|中部|tr=Chūbu}} region of Japan", "{{m|ja|関東|tr=Kantō}} region of Japan facing the Pacific Ocean", etc.
 # 14. "[[w = 24" unrecognized toponym; should only recognize : when followed by a space. Probably same for ,
 #     (otherwise separate numbers like 200,000). [DONE]
@@ -46,10 +46,27 @@
 # 17. Fix the following: [DONE]
 #     Page 3052017 Asansol: WARNING: Unable to recognize stripped holonym 'West Bengal province': <from> # A [[city]] in [[West Bengal]] province, [[eastern]] [[India]].
 #     Page 3052024 Virginia Beach: WARNING: Unable to recognize stripped holonym 'state of Virginia': <from> # An [[independent city]] in the state of [[Virginia]] in the [[eastern]] [[United States]].
+# 18. Fix the following (probably by disallowing zero holonyms): [DONE]
+#     Page 5432682 Putnam County: Replaced <# a county in {{l|en|Georgia}}, USA, county seat {{l|en|Eatonton}}.> with <# {{place|en|county|s/Georgia|c/USA|;|county seat}} {{l|en|Eatonton}}.>
+# 19. Consider fixing the following (probably by putting countries and constituent countries after states, provinces, districts, prefectures, cantons, boroughs, counties, islands, etc. but not regions or seas): [DONE]
+#     Page 1622093 Visakhapatnam: Replaced <# A large [[city]] and [[district]] in [[India]], in the state of [[Andhra Pradesh]].> with <# {{place|en|large city/district|c/India|s/Andhra Pradesh}}
+#     Page 81124 Bean: Replaced <# A [[village]] in [[Kent]], [[England]], in [[Dartford]] district.> with <# {{place|en|village|co/Kent|cc/England|dist/Dartford}}>
+# 20. Fix the following:
+#     Page 143442 Galicia: Replaced <# [[#English|Galicia]] {{gloss|region in NW Spain, north of Portugal}}> with <# {{place|fi|region|in northwestern|c/Spain|in northern|c/Portugal|t1=Galicia}}>
+# 21. Fix the following (probably by disallowing two consecutive countries): [DONE]
+#     Page 1063838 Araks: Replaced <# A river that flows in [[Turkey]], [[Armenia]], [[Iran]] and [[Azerbaijan]] and empties into [[Kura]] river.> with <# {{place|en|river|c/Turkey|c/Armenia}}, [[Iran]] and [[Azerbaijan]] and empties into [[Kura]] river.>
+# 22. Fix the following (probably by putting "in" after countries followed by regions or seas, or regions followed by seas): [DONE]
+#     Page 955656 Opole: Replaced <# A city in southern [[Poland]], in the region of [[Silesia]]> with <# {{place|en|city|in southern|c/Poland|r/Silesia}}>
+#     Page 6639682 Kimitoön: Replaced <# A [[municipality]] in the region of {{w|Southwest Finland}} in the {{w|Archipelago Sea}}> with <# {{place|en|municipality|r/Southwest Finland|sea/Archipelago Sea}}>
+# 23. Fix the following (probably by removing Macedonia as an alias of North Macedonia): [DONE]
+#     Page 3065170 Philippi: Replaced <# An ancient town in [[Macedonia]], [[Greece]]> with <# {{place|en|ancient town|c/North Macedonia|c/Greece}}>
+#     Page 6506818 Arnissa: Replaced <# An ancient town of [[Macedonia]] in the province of [[Eordaea]]> with <# {{place|la|ancient town|c/North Macedonia|p/Eordaea}}>
+# 24. Fix the following (by moving preceding "in ..." qualifiers along with the country): [DONE BUT NEEDS CHECKING]
+#     Page 2265176 Karlsborg: Replaced <# a small town in central Sweden, in the province [[Västergötland]]> with <# {{place|sv|small town|in central|p/Västergötland|c/Sweden}}>
 
 # FIXME for module:
 # 1. Make links use {{wtorw}}?
-# 2. Handle place qualifiers (small, historic, former, etc.).
+# 2. Handle place qualifiers (small, historic, former, etc.). [DONE]
 # 3. Support holonym qualifiers (central, northeastern, etc.). [NOT DONE;
 #    JUST PUT "in" BEFORE QUALIFIER]
 
@@ -75,6 +92,7 @@ place_qualifiers = [
   "ancient",
   "historic",
   "coastal",
+  "maritime",
   "inland",
   "incorporated",
   "unincorporated",
@@ -82,7 +100,6 @@ place_qualifiers = [
 
 aliased_place_qualifiers = {
   "historical": "historic",
-  "maritime": "coastal",
   "seaside": "coastal",
 }
 
@@ -96,7 +113,7 @@ place_types = [
   "county-level city",
   "sub-provincial city",
   "independent city",
-  "home-rule city",
+  "home rule city",
   "port city",
   "resort city",
   # town
@@ -122,7 +139,7 @@ place_types = [
   "settlement",
   # municipality
   "municipality",
-  "home-rule municipality",
+  "home rule municipality",
   "rural municipality",
   "island municipality",
   "municipality with city status",
@@ -217,12 +234,12 @@ place_types = [
 
 aliased_place_types = {
   "CDP": "census-designated place",
-  "home rule municipality": "home-rule municipality",
-  "home rule city": "home-rule city",
-  "home rule class city": "home-rule city",
-  "home rule-class city": "home-rule city",
-  "home-rule class city": "home-rule city",
-  "home-rule-class city": "home-rule city",
+  "home-rule municipality": "home rule municipality",
+  "home-rule city": "home rule city",
+  "home-rule class city": "home rule city",
+  "home-rule-class city": "home rule city",
+  "home rule class city": "home rule city",
+  "home rule-class city": "home rule city",
   "town (with bystatus)": "town with bystatus",
   "city located": "city",
   "extinct town": "former town",
@@ -575,7 +592,6 @@ aliased_countries = {
   "UAE": "United Arab Emirates",
   "North Macedonia": "North Macedonia",
   "Republic of North Macedonia": "North Macedonia",
-  "Macedonia": "North Macedonia",
   "Republic of Macedonia": "North Macedonia",
   "Congo": "Democratic Republic of the Congo",
   "Republic of Ireland": "Ireland",
@@ -982,7 +998,7 @@ italian_regions = {
 
 indian_states_and_union_territories = {
   "Andaman and Nicobar Islands": "uterr",
-  "Andra Pradesh": "s",
+  "Andhra Pradesh": "s",
   "Arunachal Pradesh": "s",
   "Assam": "s",
   "Bihar": "s",
@@ -1465,10 +1481,18 @@ def parse_holonym(holonym):
       return ["%s/%s" % (place_types_to_codes[subdiv_type], subdiv)] + div_holonym
   return None
 
-def strip_wikicode(text):
+def strip_wikicode(text, record_wikipedia_links, pagemsg):
   text = re.sub(r"\{\{l\|(?:en|n[bno])\|(?:[^{}|\[\]]*?\|)?([^{}|\[\]]+?)\}\}", r"\1", text)
-  text = re.sub(r"\{\{w\|(?:[^{}|\[\]]*?\|)?([^{}|\[\]]+?)\}\}", r"\1", text)
-  text = re.sub(r"\[\[w:(?:[^{}|\[\]]*?\|)?([^{}|\[\]]+?)\]\]", r"\1", text)
+  def record_wikipedia_link(m):
+    orig = m.group(0)
+    repl = m.group(1)
+    if record_wikipedia_links is not None:
+      if repl in record_wikipedia_links:
+        pagemsg("WARNING: Saw holonym %s twice with Wikipedia links" % repl)
+      record_wikipedia_links[repl] = orig
+    return repl
+  text = re.sub(r"\{\{w\|(?:[^{}|\[\]]*?\|)?([^{}|\[\]]+?)\}\}", record_wikipedia_link, text)
+  text = re.sub(r"\[\[w:(?:[^{}|\[\]]*?\|)?([^{}|\[\]]+?)\]\]", record_wikipedia_link, text)
   text = re.sub(r"\[\[(?:[^{}|\[\]]*?\|)?([^{}|\[\]]+?)\]\]", r"\1", text)
   text = re.sub(r"(''+)(.*?)\1", r"\2", text)
   return text
@@ -1504,7 +1528,8 @@ def process_text_on_page(index, pagetitle, text):
     status = None
     badlines = []
     def append_pagemsg(txt):
-      newline = "Page %s %s: %s" % (index, pagetitle, txt)
+      newline = "Page %s %s: %s: <from> %s <to> %s <end>" % (
+          index, pagetitle, txt, origline, origline)
       if newline not in badlines:
         badlines.append(newline)
     this_unrecognized_place_types = set()
@@ -1522,6 +1547,7 @@ def process_text_on_page(index, pagetitle, text):
         recognized_holonyms[h] += 1
     while True: # Loop over smaller sections of the line, chopping from the right
       while True: # "Loop" to simulate goto with break
+        record_wikipedia_links = {}
         m = re.search(r"^(#+ *(?:\{\{.*?\}\})? *)[Aa]n? +(.*?) +(?:located in|situated in|in|of) +(?:the +)?(.*?)((?: *\{\{q\|[^{}]*?\}\})?)[,.;:]? *(?:(?:[Tt]he +|[Ii]t'?s +)?([Cc]apital|[Oo]fficial [Nn]ame)(?: +[Ii]s)?:? *(?:[Tt]he +)?(.+?))? *[,.;:]? *$", line)
         if m:
           pretext, placetype, holonyms, postq, cap_official_type, cap_official_name = m.groups()
@@ -1534,20 +1560,20 @@ def process_text_on_page(index, pagetitle, text):
             cap_official_name = None
           else:
             status = status or "unparsable"
-            #append_pagemsg("WARNING: Unable to parse line: <from> %s <to> %s <end>" % (origline, origline))
+            #append_pagemsg("WARNING: Unable to parse line")
             break
-        placetype = strip_wikicode(placetype)
+        placetype = strip_wikicode(placetype, None, append_pagemsg)
         if trans:
-          trans = strip_wikicode(trans)
+          trans = strip_wikicode(trans, record_wikipedia_links, append_pagemsg)
           if not re.search("^(?:the )?%s$" % proper_noun_regex, trans):
             status = status or "unparsable"
-            append_pagemsg("WARNING: Bad format for translation '%s': <from> %s <to> %s <end>" % (trans, origline, origline))
+            append_pagemsg("WARNING: Bad format for translation '%s'" % trans)
             break
         if cap_official_name:
-          cap_official_name = strip_wikicode(cap_official_name)
+          cap_official_name = strip_wikicode(cap_official_name, record_wikipedia_links, append_pagemsg)
           if not re.search("^(?:the )?%s$" % proper_noun_regex, cap_official_name):
             status = status or "unparsable"
-            append_pagemsg("WARNING: Bad format for capital/official name '%s': <from> %s <to> %s <end>" % (cap_official_name, origline, origline))
+            append_pagemsg("WARNING: Bad format for capital/official name '%s'" % cap_official_name)
             break
         split_placetype = re.split("(?:/| and (?:the |an? )?)", placetype)
         split_placetype_with_qual = []
@@ -1561,7 +1587,7 @@ def process_text_on_page(index, pagetitle, text):
               pt_qual = place_qualifiers_with_aliases[pt_qual]
             if pt not in place_types_with_aliases:
               this_unrecognized_place_types.add(pt)
-              append_pagemsg("WARNING: Unable to recognize stripped placetype '%s': <from> %s <to> %s <end>" % (pt, origline, origline))
+              append_pagemsg("WARNING: Unable to recognize stripped placetype '%s'" % pt)
               status = status or "bad placetype"
               outer_break = True
               break
@@ -1571,7 +1597,7 @@ def process_text_on_page(index, pagetitle, text):
             this_recognized_place_types.add("%s %s" % (pt_qual, pt))
         if outer_break:
           break
-        holonyms = strip_wikicode(holonyms)
+        holonyms = strip_wikicode(holonyms, record_wikipedia_links, append_pagemsg)
         holonyms = re.sub(",? *(?:and |(?:that|which) is )?(?:the )?(county|parish|borough) seat of ", r", \1 seat, ", holonyms)
         # Handle "A city in and the county seat of ...".
         m = re.search("^, (county|parish|borough) seat, (.*)$", holonyms)
@@ -1611,32 +1637,125 @@ def process_text_on_page(index, pagetitle, text):
                 else:
                   status = status or "bad holonym"
                   this_unrecognized_holonyms.add(base_holonym)
-                  append_pagemsg("WARNING: Unable to recognize stripped holonym '%s': <from> %s <to> %s <end>" % (base_holonym, origline, origline))
+                  append_pagemsg("WARNING: Unable to recognize stripped holonym '%s'" % base_holonym)
                   outer_break = True
                   break
               else:
                 status = status or "bad holonym"
                 this_unrecognized_holonyms.add(holonym)
-                append_pagemsg("WARNING: Unable to recognize stripped holonym '%s': <from> %s <to> %s <end>" % (holonym, origline, origline))
+                append_pagemsg("WARNING: Unable to recognize stripped holonym '%s'" % holonym)
                 outer_break = True
                 break
         if outer_break:
           break
 
-        notes.append("templatize %s place spec into {{place}}" % placetype)
         def normalize_placetype(pt_qual, pt):
           pt_qual_text = pt_qual + " " if pt_qual else ""
           return pt_qual_text + place_types_with_aliases[pt]
         normalized_placetype = "/".join(normalize_placetype(pt_qual, pt) for pt_qual, pt in split_placetype_with_qual)
-        joined_parsed_holonyms = "|".join(parsed_holonyms)
-        if not normalized_placetype or not joined_parsed_holonyms:
+        if not normalized_placetype or not parsed_holonyms:
           break
-        retval = "%s{{place|%s|%s|%s%s%s}}%s%s" % (pretext, langcode, normalized_placetype, joined_parsed_holonyms,
+
+        placeargs = [normalized_placetype] + parsed_holonyms
+        # Now, split place args by semicolon-separated "runs".
+        place_args_runs = []
+        place_args_run = []
+        for arg in placeargs:
+          if arg == ";":
+            if place_args_run:
+              place_args_runs.append(place_args_run)
+            place_args_run = []
+          else:
+            place_args_run.append(arg)
+        if place_args_run:
+          place_args_runs.append(place_args_run)
+
+        # Loop over runs.
+        outer_break = False
+        for run in place_args_runs:
+          # Check for missing holonym. Currently can only happen with special code
+          # that converts "county seat" holonyms into placetypes.
+          if len(run) == 1:
+            append_pagemsg("WARNING: Missing holonym")
+            status = status or "bad holonym"
+            outer_break = True
+            break
+
+          # Check for same holonym placetype occurring twice (e.g. due to a "foo, bar and baz" list).
+          seen_holonym_placetypes = {}
+          inner_break = False
+          for holonym in run[1:]:
+            if "/" not in holonym:
+              continue
+            holonym_placetype, holonym_placename = holonym.split("/")
+            if holonym_placetype in seen_holonym_placetypes:
+              append_pagemsg("WARNING: Saw holonym placetype twice in %s and %s" % (
+                seen_holonym_placetypes[holonym_placetype], holonym))
+              status = status or "bad holonym"
+              inner_break = True
+              outer_break = True
+              break
+            seen_holonym_placetypes[holonym_placetype] = holonym
+          if inner_break:
+            break
+
+          # If country occurs before country subdivision, switch them. If multiple country subdivisions
+          # follow, the country will bubble to the end.
+          for i in xrange(2, len(run)):
+            if re.search("^(c|cc)/", run[i - 1]) and (
+              re.search("^(p|s|bor|cobor|metbor|can|co|dist|div|dept|isl|mun|pref|city|town)/", run[i])
+            ) or run[i - 1].startswith("c/") and run[i].startswith("cc/"):
+              # Look for "in ..." preceding the country and swap it too.
+              if i > 2 and run[i - 2].startswith("in "):
+                temp = run[i]
+                run[i] = run[i - 1]
+                run[i - 1] = run[i - 2]
+                run[i - 2] = temp
+              else:
+                temp = run[i]
+                run[i] = run[i - 1]
+                run[i - 1] = temp
+
+          # If country is followed by region or sea, insert "in".
+          if len(run) >= 3 and re.search("^(c|cc)/", run[-2]) and re.search("^(r|sea)/", run[-1]):
+            run[-1:-1] = ["in"]
+
+        if outer_break:
+          break
+
+        # Now rejoin runs into place_args.
+        place_args = []
+        for run in place_args_runs:
+          if place_args:
+            place_args.append(";")
+          place_args.extend(run)
+
+        # Construct new place template.
+        joined_place_args = "|".join(place_args)
+        new_place_template = "{{place|%s|%s%s%s}}" % (langcode, joined_place_args,
             "|%s=%s" % (
               "capital" if cap_official_type.lower() == "capital" else "official",
               cap_official_name
             ) if cap_official_name else "",
-            "|t1=%s" % trans if trans else "", postq, postline)
+            "|t1=%s" % trans if trans else "")
+
+        # Put back original Wikipedia links. Abort if anything goes wrong (e.g.
+        # two replacements when one expected).
+        outer_break = False
+        for repl, orig in record_wikipedia_links.iteritems():
+          if repl in new_place_template:
+            new_place_template, did_replace = blib.replace_in_text(
+              new_place_template, repl, orig, append_pagemsg,
+              abort_if_warning=True)
+            if not did_replace:
+              outer_break = True
+              break
+        if outer_break:
+          break
+
+        # Construct entire line and return it.
+        retval = "%s%s%s%s" % (pretext, new_place_template, postq, postline)
+        notes.append("templatize %s place spec into {{place}}" % placetype)
         pagemsg("Replaced <%s> with <%s>" % (origline, retval))
         recognized_lines += 1
         total_parsable_lines += 1
