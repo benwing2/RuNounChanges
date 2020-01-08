@@ -63,6 +63,7 @@
 #     Page 6506818 Arnissa: Replaced <# An ancient town of [[Macedonia]] in the province of [[Eordaea]]> with <# {{place|la|ancient town|c/North Macedonia|p/Eordaea}}>
 # 24. Fix the following (by moving preceding "in ..." qualifiers along with the country): [DONE BUT NEEDS CHECKING]
 #     Page 2265176 Karlsborg: Replaced <# a small town in central Sweden, in the province [[Västergötland]]> with <# {{place|sv|small town|in central|p/Västergötland|c/Sweden}}>
+# 25. Consider adding module support for seat= for county seats of counties and parsing them out. [DONE]
 
 # FIXME for module:
 # 1. Make links use {{wtorw}}?
@@ -1293,6 +1294,7 @@ recognized_lines = 0
 unparsable_lines = 0
 unrecognized_placetype_lines = 0
 unrecognized_holonym_lines = 0
+multiple_repls_lines = 0
 total_lines = 0
 total_parsable_lines = 0
 
@@ -1300,6 +1302,7 @@ def output_stats(num_counts):
   msg("Recognized lines: %s (%.2f%% of parsable)" % (recognized_lines, (100.0 * recognized_lines) / total_parsable_lines))
   msg("Unrecognized placetype lines: %s (%.2f%% of parsable)" % (unrecognized_placetype_lines, (100.0 * unrecognized_placetype_lines) / total_parsable_lines))
   msg("Unrecognized holonym lines: %s (%.2f%% of parsable)" % (unrecognized_holonym_lines, (100.0 * unrecognized_holonym_lines) / total_parsable_lines))
+  msg("Lines with multiple repls the same: %s (%.2f%% of parsable)" % (multiple_repls_lines, (100.0 * multiple_repls_lines) / total_parsable_lines))
   msg("Unparsable lines: %s (%.2f%% of total)" % (unparsable_lines, (100.0 * unparsable_lines) / total_lines))
   def output_counts(dic):
     by_count = sorted(dic.items(), key=lambda x:-x[1])
@@ -1481,21 +1484,46 @@ def parse_holonym(holonym):
       return ["%s/%s" % (place_types_to_codes[subdiv_type], subdiv)] + div_holonym
   return None
 
-def strip_wikicode(text, record_wikipedia_links, pagemsg):
-  text = re.sub(r"\{\{l\|(?:en|n[bno])\|(?:[^{}|\[\]]*?\|)?([^{}|\[\]]+?)\}\}", r"\1", text)
-  def record_wikipedia_link(m):
+class DoubleReplException(Exception):
+  pass
+
+def strip_wikicode(text, record_links_dict, pagemsg):
+  def record_link(m, replnum):
     orig = m.group(0)
-    repl = m.group(1)
-    if record_wikipedia_links is not None:
-      if repl in record_wikipedia_links:
-        pagemsg("WARNING: Saw holonym %s twice with Wikipedia links" % repl)
-      record_wikipedia_links[repl] = orig
+    repl = m.group(replnum)
+    if record_links_dict is not None:
+      if repl in record_links_dict:
+        pagemsg("WARNING: Saw holonym %s twice with links (original %s)" % (repl, orig))
+        raise DoubleReplException
+      record_links_dict[repl] = orig
     return repl
-  text = re.sub(r"\{\{w\|(?:[^{}|\[\]]*?\|)?([^{}|\[\]]+?)\}\}", record_wikipedia_link, text)
-  text = re.sub(r"\[\[w:(?:[^{}|\[\]]*?\|)?([^{}|\[\]]+?)\]\]", record_wikipedia_link, text)
-  text = re.sub(r"\[\[(?:[^{}|\[\]]*?\|)?([^{}|\[\]]+?)\]\]", r"\1", text)
-  text = re.sub(r"(''+)(.*?)\1", r"\2", text)
+  def record_link_1(m):
+    return record_link(m, 1)
+  def record_link_2(m):
+    return record_link(m, 2)
+  try:
+    text = re.sub(r"(''+)(.*?)\1", record_link_2, text)
+    text = re.sub(r"\{\{l\|(?:en|n[bno])\|(?:[^{}|\[\]]*?\|)?([^{}|\[\]]+?)\}\}", record_link_1, text)
+    text = re.sub(r"\{\{w\|(?:[^{}|\[\]]*?\|)?([^{}|\[\]]+?)\}\}", record_link_1, text)
+    text = re.sub(r"\[\[w:(?:[^{}|\[\]]*?\|)?([^{}|\[\]]+?)\]\]", record_link_1, text)
+    text = re.sub(r"\[\[(?:[^{}|\[\]]*?\|)?([^{}|\[\]]+?)\]\]", record_link_1, text)
+  except DoubleReplException:
+    return None
   return text
+
+def restore_links(text, record_links_dict, pagemsg, wikipedia_only=False):
+  # Put back original links. Abort if anything goes wrong (e.g. two replacements when one expected).
+  for repl, orig in record_links_dict.iteritems():
+    if repl in text and (not wikipedia_only or re.search(r"^\{\{w\||\[\[w:", orig)):
+      text, did_replace = blib.replace_in_text(text, repl, orig, pagemsg, abort_if_warning=True)
+      if not did_replace:
+        return None
+  return text
+
+def remove_links_from_topics(text):
+  def remove_links(m):
+    return blib.remove_links(m.group(0))
+  return re.sub(r"\{\{(topics|topic|top|C|c)\|.*?\}\}", remove_links, text)
 
 def process_text_on_page(index, pagetitle, text):
   global args
@@ -1512,6 +1540,7 @@ def process_text_on_page(index, pagetitle, text):
     global unparsable_lines
     global unrecognized_placetype_lines
     global unrecognized_holonym_lines
+    global multiple_repls_lines
     global total_lines
     global total_parsable_lines
     total_lines += 1
@@ -1547,33 +1576,60 @@ def process_text_on_page(index, pagetitle, text):
         recognized_holonyms[h] += 1
     while True: # Loop over smaller sections of the line, chopping from the right
       while True: # "Loop" to simulate goto with break
-        record_wikipedia_links = {}
-        m = re.search(r"^(#+ *(?:\{\{.*?\}\})? *)[Aa]n? +(.*?) +(?:located in|situated in|in|of) +(?:the +)?(.*?)((?: *\{\{q\|[^{}]*?\}\})?)[,.;:]? *(?:(?:[Tt]he +|[Ii]t'?s +)?([Cc]apital|[Oo]fficial [Nn]ame)(?: +[Ii]s)?:? *(?:[Tt]he +)?(.+?))? *[,.;:]? *$", line)
+        record_links_dict = {}
+        cap_officials = []
+
+        # Check for and strip off capital, official name, county/parish/borough seat
+        chopped_line = strip_wikicode(line, record_links_dict, append_pagemsg)
+        if chopped_line is None:
+          status = "multiple repls"
+          multiple_repls_lines += 1
+          break
+        while True:
+          m = re.search(r"^(.*[^,.;: ])[,.;:] *(?:[Tt]he +|[Ii]t'?s +)?([Cc]apital|[Oo]fficial [Nn]ame|[Cc]ounty [Ss]eat|[Pp]arish [Ss]eat|[Bb]orough [Ss]eat)(?: +[Ii]s(?: +in)?)?:? *(?:[Tt]he +)?(%s)(?<!\.) *[,.;:]? *$" % proper_noun_regex, chopped_line)
+          if m:
+            chopped_line, cap_official_type, cap_official_name = m.groups()
+            cap_official_type = cap_official_type.lower()
+            if cap_official_type == "capital":
+              cap_official_param = "capital"
+            elif cap_official_type == "official name":
+              cap_official_param = "official"
+            else:
+              cap_official_param = "seat"
+            cap_officials.append((cap_official_param, cap_official_name))
+          else:
+            break
+
+        m = re.search(r"^(#+ *(?:\{\{.*?\}\})? *)[Aa]n? +([^{}|\n]*?) +(?:located in|situated in|in|of) +(?:the +)?(.*?)((?: *\{\{q\|[^{}]*?\}\})?) *[,.;:]? *$", chopped_line)
         if m:
-          pretext, placetype, holonyms, postq, cap_official_type, cap_official_name = m.groups()
+          pretext, placetype, holonyms, postq = m.groups()
           trans = None
         else:
-          m = re.search(r"^(#+ *(?:\{\{(?:[^lw]|[lw][^|])[^{}]*?\}\} *)*)([^()]+?) *(?:\(|\{\{gloss\|)(?:[Tt]he |[Aa]n? )?(.*?) +(?:located in|situated in|in|of) +(?:the +)?(.*?)(?:\)|\}\})((?: *\{\{q\|[^{}]*?\}\})?)\.?$", line)
+          m = re.search(r"^(#+ *(?:\{\{(?:[^lw]|[lw][^|])[^{}]*?\}\} *)*)([^()]+?) *(?:\(|\{\{gloss\|)(?:[Tt]he |[Aa]n? )?([^{}|\n]*?) +(?:located in|situated in|in|of) +(?:the +)?(.*?)(?:\)|\}\})((?: *\{\{q\|[^{}]*?\}\})?)\.?$", chopped_line)
           if m:
             pretext, trans, placetype, holonyms, postq = m.groups()
-            cap_official_type = None
-            cap_official_name = None
           else:
             status = status or "unparsable"
             #append_pagemsg("WARNING: Unable to parse line")
             break
-        placetype = strip_wikicode(placetype, None, append_pagemsg)
+        pretext = restore_links(pretext, record_links_dict, append_pagemsg)
+        if pretext is None:
+          status = "multiple repls"
+          multiple_repls_lines += 1
+          break
+        # restore_links may wrongly add bare links inside of {{topics}} etc. if the same bare links occur elsewhere.
+        # The following hack corrects this.
+        pretext = remove_links_from_topics(pretext)
+        postq = restore_links(postq, record_links_dict, append_pagemsg)
+        if postq is None:
+          status = "multiple repls"
+          multiple_repls_lines += 1
+          break
+        postq = remove_links_from_topics(postq)
         if trans:
-          trans = strip_wikicode(trans, record_wikipedia_links, append_pagemsg)
           if not re.search("^(?:the )?%s$" % proper_noun_regex, trans):
             status = status or "unparsable"
             append_pagemsg("WARNING: Bad format for translation '%s'" % trans)
-            break
-        if cap_official_name:
-          cap_official_name = strip_wikicode(cap_official_name, record_wikipedia_links, append_pagemsg)
-          if not re.search("^(?:the )?%s$" % proper_noun_regex, cap_official_name):
-            status = status or "unparsable"
-            append_pagemsg("WARNING: Bad format for capital/official name '%s'" % cap_official_name)
             break
         split_placetype = re.split("(?:/| and (?:the |an? )?)", placetype)
         split_placetype_with_qual = []
@@ -1597,7 +1653,6 @@ def process_text_on_page(index, pagetitle, text):
             this_recognized_place_types.add("%s %s" % (pt_qual, pt))
         if outer_break:
           break
-        holonyms = strip_wikicode(holonyms, record_wikipedia_links, append_pagemsg)
         holonyms = re.sub(",? *(?:and |(?:that|which) is )?(?:the )?(county|parish|borough) seat of ", r", \1 seat, ", holonyms)
         # Handle "A city in and the county seat of ...".
         m = re.search("^, (county|parish|borough) seat, (.*)$", holonyms)
@@ -1725,33 +1780,43 @@ def process_text_on_page(index, pagetitle, text):
 
         # Now rejoin runs into place_args.
         place_args = []
+        outer_break = False
         for run in place_args_runs:
+          placetype = run[0]
+          holonyms = "|".join(run[1:])
+          holonyms = restore_links(holonyms, record_links_dict, append_pagemsg, wikipedia_only=True)
+          if holonyms is None:
+            status = "multiple repls"
+            multiple_repls_lines += 1
+            outer_break = True
+            break
           if place_args:
             place_args.append(";")
-          place_args.extend(run)
+          place_args.append(placetype)
+          place_args.append(holonyms)
+        if outer_break:
+          break
 
         # Construct new place template.
         joined_place_args = "|".join(place_args)
-        new_place_template = "{{place|%s|%s%s%s}}" % (langcode, joined_place_args,
-            "|%s=%s" % (
-              "capital" if cap_official_type.lower() == "capital" else "official",
-              cap_official_name
-            ) if cap_official_name else "",
-            "|t1=%s" % trans if trans else "")
-
-        # Put back original Wikipedia links. Abort if anything goes wrong (e.g.
-        # two replacements when one expected).
-        outer_break = False
-        for repl, orig in record_wikipedia_links.iteritems():
-          if repl in new_place_template:
-            new_place_template, did_replace = blib.replace_in_text(
-              new_place_template, repl, orig, append_pagemsg,
-              abort_if_warning=True)
-            if not did_replace:
-              outer_break = True
-              break
-        if outer_break:
+        cap_official_params = []
+        for param, val in cap_officials:
+          cap_official_params.append("|%s=%s" % (param, val))
+        cap_official_str = "".join(cap_official_params)
+        cap_official_str = restore_links(cap_official_str, record_links_dict, append_pagemsg,
+            wikipedia_only=True)
+        if cap_official_str is None:
+          status = "multiple repls"
+          multiple_repls_lines += 1
           break
+        if trans:
+          trans = restore_links(trans, record_links_dict, append_pagemsg, wikipedia_only=True)
+          if trans is None:
+            status = "multiple repls"
+            multiple_repls_lines += 1
+            break
+        new_place_template = "{{place|%s|%s%s%s}}" % (langcode, joined_place_args, cap_official_str,
+            "|t1=%s" % trans if trans else "")
 
         # Construct entire line and return it.
         retval = "%s%s%s%s" % (pretext, new_place_template, postq, postline)
@@ -1775,6 +1840,8 @@ def process_text_on_page(index, pagetitle, text):
             unrecognized_placetype_lines += 1
           elif status == "bad holonym":
             unrecognized_holonym_lines += 1
+          elif status == "multiple repls":
+            multiple_repls_lines += 1
           else:
             assert False
         add_this_to_all()
