@@ -3,7 +3,7 @@ local export = {}
 local m_links = require("Module:links")
 local m_langs = require("Module:languages")
 local m_strutils = require("Module:string utilities")
-local data = require("Module:User:Benwing2/place/data")
+local data = require("Module:place/data")
 
 local cat_data = data.cat_data
 
@@ -223,11 +223,15 @@ local function split_holonym(datum)
 		datum = {nil, datum[1]}
 	end
 
-	local links = mw.text.split(datum[2], ":", true)
-	
-	if table.getn(links) > 1 then
-		datum[2] = links[2]
-		datum[3] = links[1]
+	-- HACK! Check for Wikipedia links, which contain an embedded colon.
+	-- There should be a better way.
+	if not datum[2]:find("%[%[w:") and not datum[2]:find("%[%[wikipedia:") then
+		local links = mw.text.split(datum[2], ":", true)
+		
+		if table.getn(links) > 1 then
+			datum[2] = links[2]
+			datum[3] = links[1]
+		end
 	end
 
 	if datum[1] then	
@@ -391,11 +395,14 @@ function get_gloss(args, specs, sentence)
 	table.insert(ret, get_extra_info("capital:", args["capital"], sentence))
 	table.insert(ret, get_extra_info("largest city:", args["largest city"], sentence))
 	table.insert(ret, get_extra_info("capital and largest city:", args["caplc"], sentence))
-
-	if (sentence == true) then
-		table.insert(ret, ".")
+	local placetype = specs[1][2][1]
+	if placetype == "county" or placetype == "parish" or placetype == "borough" then
+		placetype = placetype .. " seat"
+	else
+		placetype = "seat"
 	end
-	
+	table.insert(ret, get_extra_info(placetype .. ":", args["seat"], sentence))
+
 	return table.concat(ret)
 end
 
@@ -408,11 +415,17 @@ function get_extra_info(tag, value, sentence)
 	if not value then
 		return ""
 	end
-	
-	value = mw.text.split(value, ":", true)
-	
-	if table.getn(value) < 2 then
-		value = {nil, value[1]}
+
+	-- HACK! Check for Wikipedia links, which contain an embedded colon.
+	-- There should be a better way.
+	if not value:find("%[%[w:") and not value:find("%[%[wikipedia:") then
+		value = mw.text.split(value, ":", true)
+
+		if table.getn(value) < 2 then
+			value = {nil, value[1]}
+		end
+
+		value = link(value[2], value[1] or "en")
 	end
 	
 	local s = ""
@@ -423,23 +436,30 @@ function get_extra_info(tag, value, sentence)
 		s = s .. "; " .. tag
 	end
 	
-	return s .. " " .. link(value[2], value[1])
+	return s .. " " .. value
 end
 
 
 -- returns a string containing a placename, with an extra article if necessary
--- and wikilinked if necessary.
+-- and in the wikilinked display form if necessary.
 -- Example: ({"country", "United States", "en"}, true, true) returns "the {{l|en|United States}}"
-function get_place_string(place, needs_article, needs_links)
+function get_place_string(place, needs_article, display_form)
 	local ps = place[2]
 	
-	if needs_links then
-		ps = link(place[2], place[3])
+	if display_form then
+		local display_handler = get_equiv_placetype_prop(place[1], function(pt) return cat_data[pt] and cat_data[pt].display_handler end)
+		if display_handler then
+			ps = display_handler(place[1], place[2])
+		end
+		ps = link(ps, place[3])
 	end
 	
 	if needs_article then
-		if place[1] then
-			local art = get_equiv_placetype_prop(place[1], function(pt) return data.placename_article[pt] and data.placename_article[pt][place[2]] end)
+		local art = get_equiv_placetype_prop(place[1], function(pt) return data.placename_article[pt] and data.placename_article[pt][place[2]] end)
+		if art then
+			ps = art .. " " .. ps
+		else
+			art = get_equiv_placetype_prop(place[1], function(pt) return cat_data[pt] and cat_data[pt].holonym_article end)
 			if art then
 				ps = art .. " " .. ps
 			end
@@ -480,7 +500,7 @@ end
 -- Returns a string that contains the information of how a given place (place2)
 -- should be formatted in the gloss, considering the entry’s place type, the 
 -- place preceding it in the template’s parameter (place1) and following it 
--- (place3), and whether it is the first place (parameter 3 of the template)
+-- (place3), and whether it is the first place (parameter 4 of the function).
 function get_description(entry_placetype, place1, place2, place3, first)
 	local desc = ""
 	
@@ -731,9 +751,9 @@ function find_cat_spec(entry_placetype_data, place_spec)
 		if inner_data then
 			break
 		end
-		if entry_placetype_data.handler then
+		if entry_placetype_data.cat_handler then
 			inner_data = get_equiv_placetype_prop(holonym_placetype,
-				function(pt) return entry_placetype_data.handler(pt, holonym_placename) end)
+				function(pt) return entry_placetype_data.cat_handler(pt, holonym_placename) end)
 			if inner_data then
 				break
 			end
@@ -852,6 +872,7 @@ function export.show(frame)
 		["capital"] = {},
 		["largest city"] = {},
 		["caplc"] = {},
+		["seat"] = {},
 	}
 	
 	local args = require("Module:parameters").process(frame:getParent().args, params)
