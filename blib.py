@@ -262,7 +262,6 @@ def new_do_edit(index, page, func=None, null=False, save=False, verbose=False, d
           # Canonicalize shaddas when comparing pages so we don't do saves
           # that only involve different shadda orders.
           if reorder_shadda(page.text) != reorder_shadda(new):
-            assert comment
             if diff:
               p.pagemsg('Diff:')
               oldlines = page.text.splitlines(True)
@@ -279,6 +278,7 @@ def new_do_edit(index, page, func=None, null=False, save=False, verbose=False, d
               #pywikibot.showDiff(page.text, new, context=3)
             elif verbose:
               p.pagemsg('Replacing <%s> with <%s>' % (page.text, new))
+            assert comment
 
             page.text = new
             if save:
@@ -339,7 +339,6 @@ def do_edit(page, index, func=None, null=False, save=False, verbose=False, diff=
           # Canonicalize shaddas when comparing pages so we don't do saves
           # that only involve different shadda orders.
           if reorder_shadda(page.text) != reorder_shadda(new):
-            assert comment
             if diff:
               pagemsg('Diff:')
               oldlines = page.text.splitlines(True)
@@ -356,6 +355,7 @@ def do_edit(page, index, func=None, null=False, save=False, verbose=False, diff=
               #pywikibot.showDiff(page.text, new, context=3)
             elif verbose:
               pagemsg('Replacing <%s> with <%s>' % (page.text, new))
+            assert comment
 
             page.text = new
             if save:
