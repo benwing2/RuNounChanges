@@ -1,9 +1,15 @@
 local export = {}
 
 local m_shared = require("Module:place/shared-data")
+local m_links = require("Module:links")
+local m_strutils = require("Module:string utilities")
 
 local function ucfirst(label)
 	return mw.getContentLanguage():ucfirst(label)
+end
+
+local function lc(label)
+	return mw.getContentLanguage():lc(label)
 end
 
 
@@ -20,16 +26,22 @@ export.placetype_aliases = {
 	["ar"] = "autonomous region",
 	["sar"] = "special administrative region",
 	["s"] = "state",
+	["arch"] = "archipelago",
 	["bor"] = "borough",
+	["can"] = "canton",
 	["cdp"] = "census-designated place",
+	["CDP"] = "census-designated place",
 	["co"] = "county",
 	["cobor"] = "county borough",
 	["coll"] = "collectivity",
 	["comm"] = "community",
 	["acomm"] = "autonomous community",
 	["cont"] = "continent",
+	["dept"] = "department",
 	["dist"] = "district",
 	["div"] = "division",
+	["isl"] = "island",
+	["lbor"] = "London borough",
 	["metbor"] = "metropolitan borough",
 	["mun"] = "municipality",
 	["obl"] = "oblast",
@@ -37,13 +49,16 @@ export.placetype_aliases = {
 	["okr"] = "okrug",
 	["aokr"] = "autonomous okrug",
 	["par"] = "parish",
+	["pen"] = "peninsula",
 	["pref"] = "prefecture",
 	["apref"] = "autonomous prefecture",
 	["rep"] = "republic",
 	["arep"] = "autonomous republic",
+	["riv"] = "river",
 	["terr"] = "territory",
 	["aterr"] = "autonomous territory",
 	["uterr"] = "union territory",
+	["twp"] = "township",
 	["voi"] = "voivodeship",
 	["range"] = "mountain range",
 	["departmental capital"] = "department capital",
@@ -78,11 +93,11 @@ export.placetype_qualifiers = {
 	["former"] = true,
 	["ancient"] = true,
 	["historic"] = true,
-	["coastal"] = true,
-	["inland"] = true,
 	["historical"] = "historic",
-	["maritime"] = "coastal",
+	["maritime"] = true,
+	["coastal"] = true,
 	["seaside"] = "coastal",
+	["inland"] = true,
 	["incorporated"] = "[[incorporated]]",
 	["unincorporated"] = "[[unincorporated]]",
 }
@@ -171,9 +186,11 @@ export.placetype_links = {
 	["legislative capital"] = "[[legislative]] [[capital]]",
 	["local government district"] = "w",
 	["local government district with borough status"] = "[[w:local government district|local government district]] with [[w:borough status|borough status]]",
+	["London borough"] = "w",
 	["macroregion"] = true,
 	["marginal sea"] = true,
 	["market town"] = true,
+	["metropolitan borough"] = true,
 	["mountain indigenous township"] = "[[mountain]] [[indigenous]] [[township]]",
 	["mountain range"] = true,
 	["mountainous region"] = "[[mountainous]] [[region]]",
@@ -255,13 +272,11 @@ export.placetype_equivs = {
 	["autonomous territory"] = "dependent territory",
 	["bailiwick"] = "polity",
 	["bishopric"] = "polity",
-	["borough seat"] = "county seat",
 	["cape"] = "peninsula",
 	["capital"] = "capital city",
 	["chain of islands"] = "island",
 	["civil parish"] = "parish",
 	["constituent country"] = "country",
-	["county borough"] = "borough",
 	["county-level city"] = "prefecture-level city",
 	["crown dependency"] = "dependency",
 	["distributary"] = "river",
@@ -299,7 +314,6 @@ export.placetype_equivs = {
 	["medieval city"] = "ancient city",
 	["mediaeval kingdom"] = "historical polity",
 	["medieval kingdom"] = "historical polity",
-	["metropolitan borough"] = "borough",
 	["mountain indigenous township"] = "township",
 	["mountain range"] = "mountain",
 	["mountainous region"] = "region",
@@ -313,7 +327,6 @@ export.placetype_equivs = {
 	["overseas collectivity"] = "collectivity",
 	["overseas department"] = "department",
 	["overseas territory"] = "territory",
-	["parish seat"] = "county seat",
 	["port city"] = "city",
 	["port town"] = "town",
 	["resort city"] = "city",
@@ -378,6 +391,10 @@ export.placename_article = {
 		["Vatican"] = "the",
 	},
 
+	["region"] = {
+		["Balkans"] = "the",
+	},
+
 	["autonomous community"] = {
 		["Basque Country"] = "the",
 		["Valencian Community"] = "the",
@@ -439,15 +456,17 @@ export.cat_implications = {
 		["Micronesia"] = {"continent/Oceania"},
 		["Melanesia"] = {"continent/Oceania"},
 		["Siberia"] = {"country/Russia", "continent/Asia"},
+		["South Wales"] = {"constituent country/Wales", "continent/Europe"},
+		["Balkans"] = {"continent/Europe"},
 	}
 }
 
 
-local function city_type_handler(placetype, holonym_placetype, holonym_placename)
-	local plural_placetype = m_shared.generic_place_types_singular[placetype]
-	if plural_placetype then
+local function city_type_cat_handler(placetype, holonym_placetype, holonym_placename)
+	local plural_placetype = m_strutils.pluralize(placetype)
+	if m_shared.generic_place_types[plural_placetype] then
 		for _, group in ipairs(m_shared.places) do
-			local key = group.place_handler(group, placetype, holonym_placetype, holonym_placename)
+			local key = group.place_cat_handler(group, placetype, holonym_placetype, holonym_placename)
 			if key then
 				return {
 					["itself"] = {ucfirst(plural_placetype) .. " in " .. key}
@@ -458,7 +477,7 @@ local function city_type_handler(placetype, holonym_placetype, holonym_placename
 end
 
 
-local function chinese_subcity_handler(holonym_placetype, holonym_placename)
+local function chinese_subcity_cat_handler(holonym_placetype, holonym_placename)
 	local spec = m_shared.chinese_provinces_and_autonomous_regions[holonym_placename]
 	if spec and holonym_placetype == (spec.divtype or "province") then
 		return {
@@ -468,10 +487,74 @@ local function chinese_subcity_handler(holonym_placetype, holonym_placename)
 end
 
 
+-- Suffix display handler that adds a suffix such as " parish" to the display form of holonyms.
+-- We make sure the holonym doesn't contain the suffix already (taking into account the fact
+-- that the holonym might contain links and might have the suffix capitalized). If it doesn't,
+-- we create a link that uses the raw form as the link destination but the suffixed form as the
+-- display form, unless the holonym already has a link in it, in which case we just add the suffix.
+local function suffix_display_handler(suffix, holonym_placename)
+	local canon_placename = lc(m_links.remove_links(holonym_placename))
+	if canon_placename:find(" " .. lc(suffix) .. "$") then
+		return holonym_placename
+	end
+	if holonym_placename:find("%[%[") then
+		return holonym_placename .. " " .. suffix
+	end
+	return "[[" .. holonym_placename .. "]] " .. suffix
+end
+
+
+-- Prefix display handler that works similarly to suffix_display_handler().
+local function prefix_display_handler(prefix, holonym_placename)
+	local canon_placename = lc(m_links.remove_links(holonym_placename))
+	if canon_placename:find("^" .. lc(prefix) .. " ") then
+		return holonym_placename
+	end
+	if holonym_placename:find("%[%[") then
+		return holonym_placename .. " " .. prefix
+	end
+	return prefix .. " [[" .. holonym_placename .. "]]"
+end
+
+
+-- Display handler for counties. Irish counties are displayed as e.g. "County [[Cork]]".
+-- Others are displayed as-is.
+local function county_display_handler(holonym_placetype, holonym_placename)
+	local unlinked_placename = m_links.remove_links(holonym_placename)
+	local canon_placename = lc(unlinked_placename)
+	if canon_placename:find("^county $") then
+		return holonym_placename
+	end
+	if m_shared.irish_counties[unlinked_placename] then
+		if holonym_placename:find("%[%[") then
+			return "County " .. holonym_placename
+		end
+		return "County [[" .. holonym_placename .. "]]"
+	end
+	return holonym_placename
+end
+
+
+-- Display handler for prefectures. Japanese prefectures are displayed as e.g. "[[Fukushima Prefecture]]".
+-- Others are displayed as e.g. "[[Fthiotida]] prefecture"
+local function prefecture_display_handler(holonym_placetype, holonym_placename)
+	local unlinked_placename = m_links.remove_links(holonym_placename)
+	local canon_placename = lc(unlinked_placename)
+	if canon_placename:find(" prefecture$") then
+		return holonym_placename
+	end
+	local suffix = m_shared.japanese_prefectures[unlinked_placename .. " Prefecture"] and "Prefecture" or "prefecture"
+	if holonym_placename:find("%[%[") then
+		return holonym_placename .. " " .. suffix
+	end
+	return "[[" .. holonym_placename .. "]] " .. suffix
+end
+
+
 export.cat_data = {
 	["administrative village"] = {
 		preposition="of",
-		
+
 		["default"] = {
 			["municipality"] = {true},
 		},
@@ -479,12 +562,12 @@ export.cat_data = {
 
 	["administrative capital"] = {
 		preposition="of",
-		
+
 		["default"] = {
 			["municipality"] = {true},
 		},
 	},
-	
+
 	["ancient city"] = {
 		["default"] = {
 			["itself"] = {"Cities"},
@@ -499,7 +582,7 @@ export.cat_data = {
 
 	["autonomous community"] = {
 		preposition="of",
-		
+
 		["default"] = {
 			["country"] = {true},
 		},
@@ -507,7 +590,7 @@ export.cat_data = {
 
 	["autonomous oblast"] = {
 		preposition="of",
-		
+
 		["default"] = {
 			["country"] = {true},
 		},
@@ -515,7 +598,7 @@ export.cat_data = {
 
 	["autonomous okrug"] = {
 		preposition="of",
-	
+
 		["default"] = {
 			["country"] = {true},
 		},
@@ -523,26 +606,26 @@ export.cat_data = {
 
 	["autonomous region"] = {
 		preposition="of",
-		
+
 		["country/Portugal"] = {
 			["itself"] = {"Districts and autonomous regions of Portugal"},
 		},
-		
+
 		["country/China"] = {
 			["country"] = {true},
 		},
-		
+
 		["default"] = {
 		},
 	},
 
 	["autonomous republic"] = {
 		preposition="of",
-		
+
 		["country/Soviet Union"] = {
 			["country"] = {true},
 		},
-		
+
 		["default"] = {
 		},
 	},
@@ -554,48 +637,70 @@ export.cat_data = {
 			["itself"] = {true},
 		},
 	},
-	
+
 	["borough"] = {
 		preposition="of",
-		
+		display_handler = function(holonym_placetype, holonym_placename)
+			return suffix_display_handler("borough", holonym_placename)
+		end,
+
 		["default"] = {
 		},
-	
+
 		["state/Alaska"] = {
 			["itself"] = {"Boroughs of Alaska"},
 		},
-	
+
 		["country/England"] = {
 			["itself"] = {"Boroughs in England"},
 		},
-	
+
 		["city/New York City"] = {
 			["itself"] = {"Boroughs in New York City"},
 		},
 
-		["city/Pennsylvania"] = {
+		["state/Pennsylvania"] = {
 			["itself"] = {"Boroughs in Pennsylvania"},
 		},
 	},
 
+	["borough seat"] = {
+		article="the",
+		preposition="of",
+
+		["default"] = {
+		},
+
+		["state/Alaska"] = {
+			["itself"] = {"Borough seats of Alaska"},
+		},
+
+	},
+
 	["canton"] = {
 		preposition="of",
-		
+
 		["default"] = {
 			["country"] = {true},
 		},
 	},
-		
+
 	["capital city"] = {
 		article="the",
 		preposition="of",
-		
+
 		["default"] = {
 			["itself"] = {true},
 		},
 	},
-	
+
 	["census-designated place"] = {
+		cat_handler = function(holonym_placetype, holonym_placename)
+			if holonym_placetype == "state" then
+				return city_type_cat_handler("census-designated place", holonym_placetype, holonym_placename)
+			end
+		end,
+
 		["country/United States"] = {
 			["itself"] = {"Census-designated places in the United States"},
 		},
@@ -603,22 +708,22 @@ export.cat_data = {
 		["default"] = {
 		},
 	},
-	
+
 	["city"] = {
-		handler = function(holonym_placetype, holonym_placename)
-			return city_type_handler("city", holonym_placetype, holonym_placename)
+		cat_handler = function(holonym_placetype, holonym_placename)
+			return city_type_cat_handler("city", holonym_placetype, holonym_placename)
 		end,
 
 		["prefecture/Hokkaido"] = {
 			["itself"] = {"Cities in Hokkaido"},
 		},
-		
+
 		["default"] = {
 			["itself"] = {true},
 			["country"] = {true},
 		},
 	},
-	
+
 	["collectivity"] = {
 		preposition="of",
 
@@ -634,37 +739,37 @@ export.cat_data = {
 		["default"] = {
 		},
 	},
-	
+
 	["commandery"] = {
 		preposition="of",
-		
+
 		["default"] = {
 			["itself"] = {true},
 			["country"] = {true},
 		},
 	},
-	
+
 	["commonwealth"] = {
 		preposition="of",
-		
+
 		["default"] = {
 		},
 	},
-	
+
 	["continent"] = {
 		["default"] = {
 			["itself"] = {true},
 		},
 	},
-	
+
 	["contregion"] = {
 		["default"] = {
 		},
 	},
-	
+
 	["council area"] = {
 		preposition="of",
-		
+
 		["default"] = {
 			["itself"] = {true},
 			["country"] = {true},
@@ -678,7 +783,7 @@ export.cat_data = {
 				between="of",
 			}
 		},
-		
+
 		["default"] = {
 			["continent"] = {true},
 			["itself"] = {true},
@@ -687,28 +792,28 @@ export.cat_data = {
 
 	["county"] = {
 		preposition="of",
-
 		-- UNITED STATES
-		handler = function(holonym_placetype, holonym_placename)
+		cat_handler = function(holonym_placetype, holonym_placename)
 			local spec = m_shared.US_states[holonym_placename .. ", USA"]
-			if spec and holonym_placetype == "state" and not spec.count_type then
+			if spec and holonym_placetype == "state" and not spec.county_type then
 				return {
 					["itself"] = {"Counties of " .. holonym_placename}
 				}
 			end
 		end,
+		display_handler = county_display_handler,
 
 		["country/England"] = {
 			["itself"] = {"Counties of England"},
 		},
-		
+
 		["country/Holy Roman Empire"] = {
 		},
-		
+
 		["country/People's Republic of China"] = {
 			["itself"] = {"Counties of China"},
 		},
-	
+
 		["country/Republic of China"] = {
 			["itself"] = {"Counties of Taiwan"},
 		},
@@ -725,9 +830,28 @@ export.cat_data = {
 		},
 	},
 
+	["county borough"] = {
+		preposition="of",
+		display_handler = function(holonym_placetype, holonym_placename)
+			return suffix_display_handler("county borough", holonym_placename)
+		end,
+
+		["default"] = {
+		},
+	},
+
 	["county seat"] = {
 		article="the",
 		preposition="of",
+		-- UNITED STATES
+		cat_handler = function(holonym_placetype, holonym_placename)
+			local spec = m_shared.US_states[holonym_placename .. ", USA"]
+			if spec and holonym_placetype == "state" and not spec.county_type then
+				return {
+					["itself"] = {"County seats of " .. holonym_placename}
+				}
+			end
+		end,
 
 		["default"] = {
 		},
@@ -735,23 +859,26 @@ export.cat_data = {
 
 	["department"] = {
 		preposition="of",
-		
+		display_handler = function(holonym_placetype, holonym_placename)
+			return suffix_display_handler("department", holonym_placename)
+		end,
+
 		["default"] = {
 			["country"] = {true},
 		},
 	},
-	
+
 	["department capital"] = {
 		article="the",
 		preposition="of",
-	
+
 		["default"] = {
 		},
 	},
 
 	["dependency"] = {
 		preposition="of",
-		
+
 		["default"] = {
 			["itself"] = {true},
 			["country"] = {"Dependencies of "},
@@ -763,23 +890,26 @@ export.cat_data = {
 
 		["default"] = {
 			["itself"] = {"Dependencies"},
-			["country"] = {"Territories of"},
+			["country"] = {"Territories of "},
 		},
 	},
-	
+
 	["desert"] = {
 		["default"] = {
 			["itself"] = {true},
 		},
 	},
-	
+
 	["district"] = {
 		preposition="of",
-		
+		display_handler = function(holonym_placetype, holonym_placename)
+			return suffix_display_handler("district", holonym_placename)
+		end,
+
 		["country/Portugal"] = {
 			["itself"] = {"Districts and autonomous regions of Portugal"},
 		},
-		
+
 		["default"] = {
 			["country"] = {true},
 		},
@@ -788,14 +918,14 @@ export.cat_data = {
 	["district capital"] = {
 		article="the",
 		preposition="of",
-	
+
 		["default"] = {
 		},
 	},
 
 	["division"] = {
 		preposition="of",
-		
+
 		["default"] = {
 			["country"] = {true},
 		},
@@ -809,7 +939,7 @@ export.cat_data = {
 
 	["federal city"] = {
 		preposition="of",
-		
+
 		["default"] = {
 			["country"] = {true},
 		},
@@ -817,7 +947,7 @@ export.cat_data = {
 
 	["federal subject"] = {
 		preposition="of",
-		
+
 		["default"] = {
 			["country"] = {true},
 		},
@@ -834,7 +964,7 @@ export.cat_data = {
 			["itself"] = {true},
 		},
 	},
-	
+
 	["former county"] = {
 		preposition="of",
 
@@ -862,26 +992,26 @@ export.cat_data = {
 			["itself"] = {true},
 		},
 	},
-	
+
 	["headland"] = {
 		["default"] = {
 			["itself"] = {true},
 		},
 	},
 
-	["hill"] = {		
+	["hill"] = {
 		["default"] = {
 			["itself"] = {true},
 		},
 	},
 
-	["historical polity"] = {		
+	["historical polity"] = {
 		["default"] = {
 			["itself"] = {true},
 		},
 	},
 
-	["historical region"] = {		
+	["historical region"] = {
 		["default"] = {
 			["itself"] = {"Historical and traditional regions"},
 		},
@@ -892,48 +1022,62 @@ export.cat_data = {
 			["itself"] = {true},
 		},
 	},
-	
+
 	["kibbutz"] = {
 		plural="kibbutzim",
-		
+
 		["default"] = {
 			["itself"] = {true},
 		},
 	},
-	
+
 	["krai"] = {
 		preposition="of",
-		
+
 		["default"] = {
 			["country"] = {true},
 		},
 	},
 
-	["lake"] = {	
+	["lake"] = {
 		["default"] = {
 			["itself"] = {true},
 		},
 	},
-	
+
+	["London borough"] = {
+		preposition="of",
+		display_handler = function(holonym_placetype, holonym_placename)
+			return suffix_display_handler("borough", holonym_placename)
+		end,
+
+		["default"] = {
+		},
+
+		["country/England"] = {
+			["itself"] = {"Boroughs in England"},
+		},
+	},
+
 	["macroregion"] = {
 		preposition="of",
-		
+
 		["country/Brazil"] = {
-			["country"] = {"Regions of"},
+			["country"] = {"Regions of "},
 		},
-		
+
 		["default"] = {
 		},
 	},
 
 	["marginal sea"] = {
 		preposition="of",
-		
+
 		["default"] = {
 			["itself"] = {"Seas"},
 		},
 	},
-	
+
 	["mention capital"] = {
 		synergy = {
 			["country"] = {
@@ -942,8 +1086,22 @@ export.cat_data = {
 				after = "is located"
 			}
 		},
-		
+
 		["default"] = {
+		},
+	},
+
+	["metropolitan borough"] = {
+		preposition="of",
+		display_handler = function(holonym_placetype, holonym_placename)
+			return prefix_display_handler("Metropolitan Borough of", holonym_placename)
+		end,
+
+		["default"] = {
+		},
+
+		["country/England"] = {
+			["itself"] = {"Boroughs in England"},
 		},
 	},
 
@@ -960,7 +1118,7 @@ export.cat_data = {
 			["state"] = {true},
 			["country"] = {true},
 		},
-		
+
 		["default"] = {
 			["country"] = {true},
 		},
@@ -974,13 +1132,15 @@ export.cat_data = {
 
 	["oblast"] = {
 		preposition="of",
-		
+
 		["default"] = {
 			["country"] = {true},
 		},
 	},
 
 	["ocean"] = {
+		holonym_article="the",
+
 		["default"] = {
 			["itself"] = {true},
 		},
@@ -988,17 +1148,38 @@ export.cat_data = {
 
 	["parish"] = {
 		preposition="of",
-	
+		display_handler = function(holonym_placetype, holonym_placename)
+			return suffix_display_handler("parish", holonym_placename)
+		end,
+
 		["default"] = {
 		},
-	
+
 		["state/Louisiana"] = {
 			["itself"] = {"Parishes of Louisiana"},
 		},
-	
+
+	},
+
+	["parish seat"] = {
+		article="the",
+		preposition="of",
+
+		["default"] = {
+		},
+
+		["state/Louisiana"] = {
+			["itself"] = {"Parish seats of Louisiana"},
+		},
+
 	},
 
 	["peninsula"] = {
+		holonym_article="the",
+		display_handler = function(holonym_placetype, holonym_placename)
+			return suffix_display_handler("peninsula", holonym_placename)
+		end,
+
 		["default"] = {
 			["itself"] = {true},
 		},
@@ -1006,17 +1187,18 @@ export.cat_data = {
 
 	["periphery"] = {
 		preposition="of",
-		
+
 		["country/Greece"] = {
 			["itself"] = {"Regions of Greece"},
 		},
-	
+
 		["default"] = {
 		},
 	},
 
 	["prefecture"] = {
 		preposition="of",
+		display_handler = prefecture_display_handler,
 
 		["default"] = {
 			["country"] = {true},
@@ -1025,8 +1207,7 @@ export.cat_data = {
 
 	["prefecture-level city"] = {
 		-- CHINA
-
-		handler = chinese_subcity_handler,
+		cat_handler = chinese_subcity_cat_handler,
 
 		["default"] = {
 			["country"] = {"Cities in "},
@@ -1041,22 +1222,22 @@ export.cat_data = {
 			["country"] = {true},
 		},
 	},
-	
+
 	["provincial capital"] = {
 		article="the",
 		preposition="of",
-	
-		handler = function(holonym_placetype, holonym_placename)
+
+		cat_handler = function(holonym_placetype, holonym_placename)
 			if holonym_placetype == "province" then
-				return city_type_handler("city", holonym_placetype, holonym_placename)
+				return city_type_cat_handler("city", holonym_placetype, holonym_placename)
 			end
 		end,
-		
+
 		["default"] = {
 			["country"] = {"Cities in "},
 		},
 	},
-	
+
 	["regency"] = {
 		preposition="of",
 
@@ -1067,67 +1248,67 @@ export.cat_data = {
 
 	["region"] = {
 		preposition="of",
-		
+
 		["country/Armenia"] = {
 			["country"] = {true},
 		},
-		
+
 		["country/Brazil"] = {
 			["country"] = {true},
 		},
-		
+
 		["country/England"] = {
 			["itself"] = {"Counties and regions of England"},
 		},
-		
+
 		["country/Finland"] = {
 			["country"] = {true},
 		},
-		
+
 		["country/France"] = {
 			["country"] = {true},
 		},
-		
+
 		["country/Georgia"] = {
 			["country"] = {true},
 		},
-		
+
 		["country/Greece"] = {
 			["country"] = {true},
 		},
-		
+
 		["country/Italy"] = {
 			["country"] = {true},
 		},
-		
+
 		["country/Latvia"] = {
 			["country"] = {true},
 		},
-		
+
 		["country/Peru"] = {
 			["country"] = {true},
 		},
-		
+
 		["country/Portugal"] = {
 			["country"] = {true},
 		},
-		
+
 		["country/Romania"] = {
 			["country"] = {true},
 		},
-		
+
 		["default"] = {
 		},
 	},
-	
+
 	["regional capital"] = {
 		article="the",
 		preposition="of",
-	
+
 		["default"] = {
 		},
 	},
-	
+
 	["regional unit"] = {
 		preposition="of",
 
@@ -1142,15 +1323,17 @@ export.cat_data = {
 			["country"] = {true},
 		},
 	},
-	
+
 	["river"] = {
-		handler = function(holonym_placetype, holonym_placename)
-			return city_type_handler("river", holonym_placetype, holonym_placename)
+		holonym_article="the",
+		cat_handler = function(holonym_placetype, holonym_placename)
+			return city_type_cat_handler("river", holonym_placetype, holonym_placename)
 		end,
 
 		["default"] = {
 			["itself"] = {true},
 			["country"] = {true},
+			["continent"] = {true},
 		},
 	},
 
@@ -1162,6 +1345,8 @@ export.cat_data = {
 	},
 
 	["sea"] = {
+		holonym_article="the",
+
 		["default"] = {
 			["itself"] = {true},
 		},
@@ -1169,18 +1354,18 @@ export.cat_data = {
 
 	["special administrative region"] = {
 		preposition="of",
-		
+
 		["default"] = {
 			["country"] = {true},
 		},
 	},
-	
+
 	["star"] = {
 		["default"] = {
 			["itself"] = {true},
 		},
 	},
-	
+
 	["state"] = {
 		preposition="of",
 
@@ -1188,17 +1373,17 @@ export.cat_data = {
 			["country"] = {true},
 		},
 	},
-	
+
 	["state capital"] = {
 		article="the",
 		preposition="of",
-	
-		handler = function(holonym_placetype, holonym_placename)
+
+		cat_handler = function(holonym_placetype, holonym_placename)
 			if holonym_placetype == "state" then
-				return city_type_handler("city", holonym_placetype, holonym_placename)
+				return city_type_cat_handler("city", holonym_placetype, holonym_placename)
 			end
 		end,
-		
+
 		["country/Brazil"] = {
 			["country"] = {true},
 		},
@@ -1208,7 +1393,7 @@ export.cat_data = {
 		["default"] = {
 		},
 	},
-	
+
 	["strait"] = {
 		["default"] = {
 			["itself"] = {true},
@@ -1221,7 +1406,7 @@ export.cat_data = {
 		["country/Indonesia"] = {
 			["municipality"] = {true},
 		},
-		
+
 		["default"] = {
 			["itself"] = {true},
 		},
@@ -1233,30 +1418,30 @@ export.cat_data = {
 		["default"] = {
 		},
 	},
-	
+
 	["subprovince"] = {
 		preposition="of",
 
 		["default"] = {
 		},
 	},
-	
+
 	["subprovincial city"] = {
 		-- CHINA
-		handler = chinese_subcity_handler,
+		cat_handler = chinese_subcity_cat_handler,
 
 		["default"] = {
 			["country"] = {"Cities in "},
 		},
 	},
-	
+
 	["subregion"] = {
 		preposition="of",
 
 		["default"] = {
 		},
 	},
-	
+
 	["territory"] = {
 		preposition="of",
 
@@ -1267,8 +1452,8 @@ export.cat_data = {
 	},
 
 	["town"] = {
-		handler = function(holonym_placetype, holonym_placename)
-			return city_type_handler("town", holonym_placetype, holonym_placename)
+		cat_handler = function(holonym_placetype, holonym_placename)
+			return city_type_cat_handler("town", holonym_placetype, holonym_placename)
 		end,
 
 		["default"] = {
@@ -1285,7 +1470,7 @@ export.cat_data = {
 
 	["traditional county"] = {
 		preposition="of",
-		
+
 		["default"] = {
 		},
 	},
@@ -1293,6 +1478,21 @@ export.cat_data = {
 	["traditional region"] = {
 		["default"] = {
 			["itself"] = {"Historical and traditional regions"},
+		},
+	},
+
+	["unincorporated community"] = {
+		cat_handler = function(holonym_placetype, holonym_placename)
+			if holonym_placetype == "state" then
+				return city_type_cat_handler("unincorporated community", holonym_placetype, holonym_placename)
+			end
+		end,
+
+		["country/United States"] = {
+			["itself"] = {"Unincorporated communities in the United States"},
+		},
+
+		["default"] = {
 		},
 	},
 
@@ -1309,45 +1509,24 @@ export.cat_data = {
 	},
 
 	["village"] = {
-		handler = function(holonym_placetype, holonym_placename)
-			return city_type_handler("village", holonym_placetype, holonym_placename)
+		cat_handler = function(holonym_placetype, holonym_placename)
+			return city_type_cat_handler("village", holonym_placetype, holonym_placename)
 		end,
-		
+
 		["default"] = {
 			["itself"] = {true},
 			["country"] = {true},
 		},
 	},
-	
+
 	["voivodeship"] = {
 		preposition="of",
-		
+		holonym_article="the",
+
 		["default"] = {
 		},
 	},
 }
-
-
--- FIXME, move to [[Module:string utilities]] and fix up to handle links
-function export.singularize(plural)
-	local sing = plural:match("^(.-)ies$")
-	if sing then
-		return sing .. "y"
-	end
-	local sing = plural:match("^(.-[sc]h)es$")
-	if sing then
-		return sing
-	end
-	local sing = plural:match("^(.-x)es$")
-	if sing then
-		return sing
-	end
-	local sing = plural:match("^(.-)s$")
-	if sing then
-		return sing
-	end
-	return plural
-end
 
 
 -- Now augment the category data with political subdivisions extracted from the
@@ -1369,7 +1548,7 @@ for _, group in ipairs(m_shared.places) do
 				end
 				if list then
 					for _, div in ipairs(list) do
-						local sgdiv = export.singularize(div)
+						local sgdiv = m_strutils.singularize(div)
 						for _, dt in ipairs(divtype) do
 							if not export.cat_data[sgdiv] then
 								export.cat_data[sgdiv] = {
