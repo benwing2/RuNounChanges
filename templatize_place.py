@@ -12,7 +12,7 @@
 # 4. [DONE] Add . to allowed chars preceding County, district, etc. (St. Louis County).
 # 5. [PARTLY DONE; NOT FOR INITIAL CAP] Generalize proper noun regex to non-ASCII Latin chars.
 # 6. If "Indian state of" or "US state of" appears, add the respective country to the holonym.
-# 7. If "[Pp]refecture", "[Pp]rovince", etc. appears, consider including that text in the
+# 7. [DONE PARTLY IN MODULE] If "[Pp]refecture", "[Pp]rovince", etc. appears, consider including that text in the
 #    holonym (perhaps always for certain cases, e.g. Japanese prefectures)? If so, consider
 #    adding logic to this effect in [[Module:place]].
 # 8. [DONE] If all holonyms can't be recognized, back off one word (or holonym?) at a time until
@@ -21,7 +21,7 @@
 # 9. Holonyms like {{l|en|Egypt|id=Q79}} aren't handled properly because of the id=.
 # 10. [DONE] Add "de" and "upon" as allowed words in proper nouns.
 # 11. Strip {{wtorw}}.
-# 12. The following shouldn't happen:
+# 12. [DONE] The following shouldn't happen:
 #     Replaced <# {{wtorw|Martvili}} {{gloss|a town in western Georgia}}> with <# {{wtorw|Martvili}} {{place|en|town|western|s/Georgia}}>
 #     Page 3052010 Cochin: Replaced <# {{alternative form of|en|Kochi}} (city in India)> with <# {{alternative form of|en|Kochi}} {{place|en|city|c/India}}>
 # 13. Things that occur frequently in toponyms:
@@ -36,6 +36,8 @@
 # 13i. [DONE] "metropolitan borough of North Tyneside", "metropolitan borough of Kirklees", "metropolitan borough of Wakefield", etc.
 # 13j. [DONE] "province Dalarna", "province Södermanland", "province Östergötland", etc.
 # 13k. "{{m|ja|中部|tr=Chūbu}} region of Japan", "{{m|ja|関東|tr=Kantō}} region of Japan facing the Pacific Ocean", etc.
+# 13l. [DONE] "London Borough of Croydon", "London Borough of Greenwich", etc. (Be careful, sometimes there's
+#      another holonym "Greater London", sometimes there isn't.)
 # 14. [DONE] "[[w = 24" unrecognized toponym; should only recognize : when followed by a space. Probably same for ,
 #     (otherwise separate numbers like 200,000).
 # 15. Should at least try to handle the following:
@@ -91,16 +93,30 @@
 #     Page 6680562 Chipping Ongar: Replaced <# A small [[market town]] in {{l|en|Ongar}} parish, {{l|en|Epping Forest}} district, [[Essex]], [[England]] {{q|[[OS]] grid ref TL5503}}.> with <# {{place|en|small market town|par/Ongar|dist/Epping Forest|co/Essex|cc/England}} {{q|[[OS]] grid ref TL5503}}>
 #     Page 6703411 Newbiggin: Replaced <# A [[hamlet]] in {{l|en|Ainstable}} parish, {{l|en|Eden}} district, [[Cumbria]], [[England]] {{q|[[OS]] grid ref NY5549}}.> with <# {{place|en|hamlet|par/Ainstable|dist/Eden|co/Cumbria|cc/England}} {{q|[[OS]] grid ref NY5549}}>
 #     Page 6703411 Newbiggin: Replaced <# A [[village]] in {{l|en|Dacre}} parish, Eden district, Cumbria {{q|OS grid ref NY4729}}.> with <# {{place|en|village|par/Dacre|dist/Eden|co/Cumbria}} {{q|OS grid ref NY4729}}>
+#     Page 198477 Qazvin: Replaced <# A city in the northwest of [[Iran]]. Capital of [[Qazvin Province]].> with <# {{place|en|city|in northwestern|p/Iran. Capital of Qazvin Province}}.>
+#     Page 738820 Ayn: Replaced <# A [[commune]] in [[Savoie]] [[department|Department]], [[France]].> with <# {{place|en|commune|dept/Savoie Department|c/France}}.>
+#     Page 1118915 Koszovó: Replaced <# [[Kosovo]] {{gloss|country in the Balkans and the region of Serbia}}> with <# {{place|hu|country|r/Balkans and the|c/Serbia|t1=Kosovo}}>
+#     Page 2774006 Saint Louis: Replaced <# A [[city]] in the [[southwest]] of [[Reunion]] [[island|Island]] in the [[Indian Ocean]].> with <# {{place|en|city|in southwestern|isl/Reunion Island|ocean/Indian Ocean}}.>
+#     Page 2774006 Saint Louis: Replaced <# A [[commune]] in [[Haut-Rhin]] [[department|Department]], [[Alsace]], [[France]].> with <# {{place|en|commune|dept/Haut-Rhin Department|r/Alsace|c/France}}.>
+#     Page 84426 Volta: Replaced <# A [[river]] in West [[Africa]], [[w:Volta River|Volta River]], having given name to [[Upper Volta]]. {{topics|en|Rivers in Africa}}> with <# {{place|en|river|r/West Africa|riv/[[w:Volta River|Volta River]]}}, having given name to [[Upper Volta]]. {{topics|en|Rivers in Africa}}>
+#     Page 3932384 Prahova: Replaced <# a [[river]] in [[Romania]], [[Prahova River]]> with <# {{place|ro|river|c/Romania|riv/Prahova River}}>
+#     Page 3934468 Râul Prahova: Replaced <# a [[river]] in [[Romania]], [[Prahova River]]> with <# {{place|ro|river|c/Romania|riv/Prahova River}}>
+#     Page 5566762 La Grange: Replaced <# a [[commune]] in {{l|en|Doubs}} Department, [[France]].> with <# {{place|en|commune|dept/Doubs Department|c/France}}.>
+#     Page 5588910 Irkut: Replaced <# A river in [[Buryatia]] and the [[Irkutsk]] Oblast in [[Russia]].> with <# {{place|en|river|obl/Buryatia and the Irkutsk Oblast|c/Russia}}.>
+#     Page 5642551 Sedan: Replaced <# a [[commune]] in {{l|en|Ardennes}} Department, [[France]].> with <# {{place|en|commune|dept/Ardennes Department|c/France}}.>
+#     Page 817573 Bullock: Replaced <# An {{l|en|unincorporated}} {{l|en|community}} in {{l|en|Burlington County}} and {{l|en|Ocean County}} in the U.S. state of {{l|en|New Jersey}}.> with <# {{place|en|unincorporated community|co/Burlington County and Ocean County|s/New Jersey}}.>
+#     Page 34305 Cherokee: Replaced <# A census-designated place in {{l|en|Swain County}} and {{l|en|Jackson County}}, {{l|en|North Carolina}}.> with <# {{place|en|census-designated place|co/Swain County and Jackson County|s/North Carolina}}.>
+#     Page 5440547 Cherokee Village: Replaced <# A {{l|en|city}} in {{l|en|Fulton County}} and {{l|en|Sharp County}}, {{l|en|Arkansas}}.> with <# {{place|en|city|co/Fulton County and Sharp County|s/Arkansas}}.>
 
 # FIXME for module:
 # 1. Make links use {{wtorw}}?
-# 2. Handle place qualifiers (small, historic, former, etc.). [DONE]
-# 3. Support holonym qualifiers (central, northeastern, etc.). [NOT DONE;
+# 2. [DONE] Handle place qualifiers (small, historic, former, etc.).
+# 3. [NOT DONE] Support holonym qualifiers (central, northeastern, etc.). [NOT DONE;
 #    JUST PUT "in" BEFORE QUALIFIER]
-# 4. Add twp=township, pen=peninsula, arch=archipelago
-# 5. Display "Metropolitan Borough of ..." in metbor (unless already begins with Metropolitan Borough of, possibly within links); link as [[Foo|Metropolitan Borough of Foo]] unless there are already links or templates in Foo
-# 6. Display "Foo parish" for parishes (unless already ends with parish or Parish, possibly within links); link as [[Foo|Foo parish]] unless there are already links or templates in Foo
-# 7. Display "County ..." for Irish counties; link as above
+# 4. [DONE] Add twp=township, pen=peninsula, arch=archipelago
+# 5. [DONE, NEEDS CHECKING] Display "Metropolitan Borough of ..." in metbor (unless already begins with Metropolitan Borough of, possibly within links); link as [[Foo|Metropolitan Borough of Foo]] unless there are already links or templates in Foo
+# 6. [DONE, NEEDS CHECKING] Display "Foo parish" for parishes (unless already ends with parish or Parish, possibly within links); link as [[Foo|Foo parish]] unless there are already links or templates in Foo
+# 7. [DONE, NEEDS CHECKING] Display "County ..." for Irish counties; link as above
 
 from collections import defaultdict
 
@@ -193,6 +209,7 @@ place_types = [
   "borough",
   "metropolitan borough",
   "county borough",
+  "London borough",
   # area
   "area",
   "residential area",
@@ -283,6 +300,7 @@ aliased_place_types = {
   "historical region": "historic region",
   "tributary river": "tributary",
   "port-town": "port town",
+  "London Borough": "London borough",
 }
 
 place_types_with_aliases = {x: x for x in place_types}
@@ -405,8 +423,17 @@ aliased_compass_points = [
   ("south of", "southern"),
   ("east of", "eastern"),
   ("west of", "western"),
+  ("northeast of", "northeastern"),
+  ("southeast of", "southeastern"),
+  ("northwest of", "northwestern"),
+  ("southwest of", "southwestern"),
+  ("north-east of", "northeastern"),
+  ("south-east of", "southeastern"),
+  ("north-west of", "northwestern"),
+  ("south-west of", "southwestern"),
   ("center of", "central"),
   ("centre of", "central"),
+  ("interior of", "interior"),
   ("east central", "east-central"),
   ("west central", "west-central"),
   ("north central", "north-central"),
@@ -428,6 +455,14 @@ first_only_compass_points = {
   "south of",
   "east of",
   "west of",
+  "northeast of",
+  "southeast of",
+  "northwest of",
+  "southwest of",
+  "north-east of",
+  "south-east of",
+  "north-west of",
+  "south-west of",
 }
 
 compass_points_with_aliases = {x: x for x in compass_points}
@@ -444,6 +479,7 @@ compass_points_before_the = {
   "northwestern": "the northwest of",
   "southwestern": "the southwest of",
   "central": "the central part of",
+  "interior": "the interior part of",
   "east-central": "the east-central part of",
   "west-central": "the west-central part of",
   "north-central": "the north-central part of",
@@ -959,7 +995,7 @@ english_counties = {
   "Cambridgeshire",
   "Cambridgeshire and Isle of Ely", # no longer
   "Cheshire",
-  "Cleveland", # no longer
+  #"Cleveland", # no longer; conflicts with city in US
   "Cornwall",
   "Cumberland",
   "Cumbria",
@@ -1353,6 +1389,7 @@ ancient_mentioned_regions_with_aliases.update(aliased_ancient_mentioned_regions)
 
 misc_places = {
   "London": "city",
+  "Greater London": "co",
   "Sydney": "city",
   "Melbourne": "city",
   "Perth": "city",
@@ -1559,21 +1596,32 @@ def output_stats(num_counts):
   msg("----------------------")
   output_counts(recognized_holonyms)
 
-proper_noun_word_regex = r"(?u)[A-Z][\w'.-]*"
+# Compute the list of all uppercase Unicode characters, see
+# https://stackoverflow.com/questions/36187349/python-regex-for-unicode-capitalized-words
+pLu = u'[{}]'.format(u"".join([unichr(i) for i in xrange(sys.maxunicode) if unichr(i).isupper()]))
+proper_noun_word_regex = r"(?u)%s[\w'.-]*" % pLu
 # The following regex requires that the first word of a county/parish/borough name be capitalized
 # and contain only letters, hyphens (Stratford-on-Avon), apostrophes (King's Lynn) and periods
 # (St. Louis), and remaining words must either be of the same format or be "and" (Tyne and Wear,
-# Lewis and Clark), "of" (Isle of Wight), or "of the". This should catch cases like
+# Lewis and Clark), "and the" (Saint Vincent and the Grenadines), "of" (Isle of Wight), "of the",
+# "upon" (Newcastle upon Tyne), "de" (Rio de Janeiro), "du" (Fond du Lac County), "del" (Tierra del Fuego),
+# "la" (Andorra la Vella, Pays de la Loire), "am" (Offenbach am Main), "in der" (Weiden in der Oberpfalz,
+# Landau in der Pfalz), "an der" (Brandenburg an der Havel), "es" (Dar es Salaam), "op" (Bergen op Zoom).
+# This should catch cases like
 # -- co/Missouri which is one of the two county seats of Jackson County
 # -- co/Han dynasty southwest of Xiyang County
-proper_noun_regex = "(?:%s)(?: +(?:%s|and|of|of the|de|du|upon))*" % (proper_noun_word_regex, proper_noun_word_regex)
+proper_noun_regex = "(?:%s)(?: +(?:%s|and|and the|of|of the|upon|de|du|del|la|am|in der|an der|es|op))*" % (
+  proper_noun_word_regex, proper_noun_word_regex)
 
-def inner_parse_holonym(holonym):
+def inner_parse_holonym(holonym, all_holonyms):
   # US etc. Do '... Island' later because of 'Prince Edward Island' (should be province not island).
   if holonym in us_states:
     # Do states before countries because of Georgia.
     return "s/" + holonym
   normalized_holonym = re.sub(" [Ss]tate$", "", holonym)
+  if normalized_holonym in us_states:
+    return "s/" + normalized_holonym
+  normalized_holonym = re.sub(r"^(US|U\.S\. +)?state of ", "", holonym)
   if normalized_holonym in us_states:
     return "s/" + normalized_holonym
   # UK
@@ -1583,15 +1631,15 @@ def inner_parse_holonym(holonym):
     return "co/" + holonym
   if holonym in northern_ireland_counties:
     return "co/" + holonym
-  normalized_holonym = re.sub("^[Cc]ounty ", "", holonym)
+  normalized_holonym = re.sub("^[Cc]ounty +", "", holonym)
   if normalized_holonym in northern_ireland_counties:
     return "co/" + normalized_holonym
   if holonym in scotland_council_areas:
     return "council area/" + holonym
-  normalized_holonym = re.sub(" [Cc]ouncil [Aa]rea$", "", holonym)
+  normalized_holonym = re.sub(" [Cc]ouncil +[Aa]rea$", "", holonym)
   if normalized_holonym in scotland_council_areas:
     return "council area/" + normalized_holonym
-  normalized_holonym = re.sub(" [Cc]ouncil [Aa]rea of Scotland$", "", holonym)
+  normalized_holonym = re.sub(" [Cc]ouncil +[Aa]rea +of +Scotland$", "", holonym)
   if normalized_holonym in scotland_council_areas:
     return ["council area/" + normalized_holonym, "cc/Scotland"]
   coded_place_type_regex = "|".join(re.escape(x) for x in place_types_to_codes.keys())
@@ -1599,21 +1647,28 @@ def inner_parse_holonym(holonym):
   if m:
     bare_holonym, placetype = m.groups()
     return "%s/%s" % (place_types_to_codes[placetype], bare_holonym)
-  m = re.search("^(%s) (?:of +)?(%s)$" % (coded_place_type_regex, proper_noun_regex), holonym)
+  m = re.search("^(%s) +(?:of +)?(%s)$" % (coded_place_type_regex, proper_noun_regex), holonym)
   if m:
     placetype, bare_holonym = m.groups()
     return "%s/%s" % (place_types_to_codes[placetype], bare_holonym)
   # Borough of Ealing, Borough of Slough, Borough of Tower Hamlets, Borough of Hinckley and Bosworth,
   # borough of Chesterfield, borough of North Tyneside, etc.
-  m = re.search("^[Bb]orough of (%s)$" % proper_noun_regex, holonym)
+  m = re.search("^[Bb]orough +of +(%s)$" % proper_noun_regex, holonym)
   if m:
     return "bor/%s" % m.group(1)
-  m = re.search("^[Mm]etropolitan [Bb]orough of (%s)$" % proper_noun_regex, holonym)
+  m = re.search("^[Mm]etropolitan +[Bb]orough +of +(%s)$" % proper_noun_regex, holonym)
   if m:
     return "metbor/%s" % m.group(1)
+  # London Borough of Ealing, London Borough of Hammersmith and Fulham, etc.
+  m = re.search("^[Ll]ondon +[Bb]orough +of +(%s)$" % proper_noun_regex, holonym)
+  if m:
+    if "Greater London" in all_holonyms:
+      return "lbor/%s" % m.group(1)
+    else:
+      return ["lbor/%s" % m.group(1), "co/Greater London"]
   # city of Manchester, city of Sydney, city of Fremont (California), city of Thunder Bay (Ontario), etc.
   # NOTE: capitalized City can refer to other things, e.g. City of Melville (local government area)
-  m = re.search("^city of (%s)$" % proper_noun_regex, holonym)
+  m = re.search("^city +of +(%s)$" % proper_noun_regex, holonym)
   if m:
     return "city/%s" % m.group(1)
   # countries
@@ -1637,19 +1692,19 @@ def inner_parse_holonym(holonym):
   # China
   if holonym in chinese_provinces_and_autonomous_regions:
     return "%s/%s" % (chinese_provinces_and_autonomous_regions[holonym], holonym)
-  normalized_holonym = re.sub(" ([Pp]rovince|[Aa]utonomous [Rr]egion)$", "", holonym)
+  normalized_holonym = re.sub(" +([Pp]rovince|[Aa]utonomous +[Rr]egion)$", "", holonym)
   if normalized_holonym in chinese_provinces_and_autonomous_regions:
     return "%s/%s" % (chinese_provinces_and_autonomous_regions[normalized_holonym], normalized_holonym)
   # Finland
   if holonym in finnish_regions_with_aliases:
     return "r/" + finnish_regions_with_aliases[holonym]
-  normalized_holonym = re.sub("^region of ", "", holonym)
+  normalized_holonym = re.sub("^region +of +", "", holonym)
   if normalized_holonym in finnish_regions_with_aliases:
     return "r/" + finnish_regions_with_aliases[normalized_holonym]
   # France
   if m:
     return "dept/%s" % m.group(1)
-  m = re.search(u"^(%s) (?:department|département) of France$" % proper_noun_regex, holonym)
+  m = re.search(u"^(%s) +(?:department|département) +of +France$" % proper_noun_regex, holonym)
   if m:
     return ["dept/%s" % m.group(1), "c/France"]
   # Germany
@@ -1658,32 +1713,32 @@ def inner_parse_holonym(holonym):
   # India
   if holonym in indian_states_and_union_territories:
     return "%s/%s" % (indian_states_and_union_territories[holonym], holonym)
-  normalized_holonym = re.sub("^(Indian )?state of ", "", holonym)
+  normalized_holonym = re.sub("^(Indian +)?state +of +", "", holonym)
   if normalized_holonym in indian_states_and_union_territories:
     return "%s/%s" % (indian_states_and_union_territories[normalized_holonym], normalized_holonym)
   # Ireland
   if holonym in irish_counties:
     return "co/" + holonym
-  normalized_holonym = re.sub("^[Cc]ounty ", "", holonym)
+  normalized_holonym = re.sub("^[Cc]ounty +", "", holonym)
   if normalized_holonym in irish_counties:
     return "co/" + normalized_holonym
   # Italy
   if holonym in italian_regions:
     return "%s/%s" % (italian_regions[holonym], holonym)
   # Check for "Perugia province of Umbria". Allow "the" before region name because of "the Veneto".
-  m = re.search("^(%s) province of (?:the )?(%s)$" % (proper_noun_regex, proper_noun_regex), holonym)
+  m = re.search("^(%s) +province +of +(?:the +)?(%s)$" % (proper_noun_regex, proper_noun_regex), holonym)
   if m and m.group(2) in italian_regions:
     return ["p/%s" % m.group(1), "%s/%s" % (italian_regions[m.group(2)], m.group(2))]
   # Japan
   if holonym in japanese_prefectures:
     return "pref/%s" % holonym
-  normalized_holonym = re.sub(" ([Pp]refecture)$", "", holonym)
+  normalized_holonym = re.sub(" +([Pp]refecture)$", "", holonym)
   if normalized_holonym in japanese_prefectures:
     return "pref/%s" % normalized_holonym
   # Norway
   if holonym in norwegian_counties:
     return "co/%s" % holonym
-  normalized_holonym = re.sub(" county$", "", holonym)
+  normalized_holonym = re.sub(" +county$", "", holonym)
   if normalized_holonym in norwegian_counties:
     return "co/%s" % normalized_holonym
   # Philippines
@@ -1695,7 +1750,7 @@ def inner_parse_holonym(holonym):
   # Ancient Rome, etc.
   if holonym in roman_provinces:
     return "p/%s" % holonym
-  m = re.search("^(%s) (mentioned by .*)$" % proper_noun_regex, holonym)
+  m = re.search("^(%s) (mentioned +by +.*)$" % proper_noun_regex, holonym)
   if m:
     normalized_holonym, mentioned_by = m.groups()
     if normalized_holonym in ancient_mentioned_regions_with_aliases:
@@ -1703,36 +1758,37 @@ def inner_parse_holonym(holonym):
   # Misc places
   if holonym in misc_places:
     return "%s/%s" % (misc_places[holonym], holonym)
-  m = re.search("^%s (County|Parish|Borough|Township|State|Province|Oblast|Voivodeship|Autonomous Region|Region|Peninsula|Ocean|Sea|Island)$" % proper_noun_regex, holonym)
+  m = re.search("^%s +(County|Parish|Borough|Township|State|Province|Oblast|Voivodeship|Department|Autonomous Region|Region|Peninsula|Ocean|Sea|Island|River)$" % proper_noun_regex, holonym)
   if m:
     placetype = {"County": "co", "Parish": "par", "Borough": "bor", "Township": "twp", "State": "s",
-      "Province": "p", "Oblast": "obl", "Voivodeship": "voi", "Autonomous Region": "ar",
+      "Province": "p", "Oblast": "obl", "Voivodeship": "voi", "Department": "dept", "Autonomous Region": "ar",
       "Region": "r", "Peninsula": "pen", "Ocean": "ocean", "Sea": "sea", "Island": "isl",
+      "River": "riv",
     }[m.group(1)]
     return "%s/%s" % (placetype, m.group(0))
-  m = re.search("^(%s) (district|region|canton|borough|province) of (?:the )?(%s)$" % (proper_noun_regex, proper_noun_regex),
+  m = re.search("^(%s) +(district|region|canton|borough|province) +of +(?:the +)?(%s)$" % (proper_noun_regex, proper_noun_regex),
     holonym)
   if m:
     subdiv, subdiv_type, div = m.groups()
-    div_holonym = parse_holonym(div)
+    div_holonym = parse_holonym(div, all_holonyms)
     if div_holonym:
       if type(div_holonym) is not list:
         div_holonym = [div_holonym]
       return ["%s/%s" % (place_types_to_codes[subdiv_type], subdiv)] + div_holonym
   return None
 
-def parse_holonym(holonym):
+def parse_holonym(holonym, all_holonyms):
   m = re.search("^(modern|modern-day) +(.*)$", holonym)
   if m:
     modern, holonym = m.groups()
-    holonym = inner_parse_holonym(holonym)
+    holonym = inner_parse_holonym(holonym, all_holonyms)
     if holonym is None:
       return None
     if type(holonym) is not list:
       holonym = [holonym]
     return ["in " + modern] + holonym
   else:
-    return inner_parse_holonym(holonym)
+    return inner_parse_holonym(holonym, all_holonyms)
 
 class DoubleReplException(Exception):
   pass
@@ -1931,7 +1987,7 @@ def process_text_on_page(index, pagetitle, text):
             add_to_parsed_holonyms(holonym)
           else:
             bad_holonym = False
-            parsed_holonym = parse_holonym(holonym)
+            parsed_holonym = parse_holonym(holonym, holonyms)
             if parsed_holonym:
               add_to_parsed_holonyms(parsed_holonym)
             else:
@@ -1942,7 +1998,7 @@ def process_text_on_page(index, pagetitle, text):
                   bad_holonym = True
                 else:
                   compass_term = compass_points_with_aliases[compass_point]
-                  parsed_holonym = parse_holonym(base_holonym)
+                  parsed_holonym = parse_holonym(base_holonym, holonyms)
                   if parsed_holonym:
                     first_parsed_holonym = parsed_holonym[0] if type(parsed_holonym) is list else parsed_holonym
                     first_parsed_holonym = re.sub("^.*/", "", first_parsed_holonym)
@@ -1968,7 +2024,14 @@ def process_text_on_page(index, pagetitle, text):
         def normalize_placetype(pt_qual, pt):
           pt_qual_text = pt_qual + " " if pt_qual else ""
           return pt_qual_text + place_types_with_aliases[pt]
-        normalized_placetype = "/".join(normalize_placetype(pt_qual, pt) for pt_qual, pt in split_placetype_with_qual)
+        normalized_placetypes = [normalize_placetype(pt_qual, pt) for pt_qual, pt in split_placetype_with_qual]
+        if len(normalized_placetypes) >= 2:
+          if re.search("^(county|parish|borough) +seat$", normalized_placetypes[-1]):
+            normalized_placetype = "/".join(normalized_placetypes)
+          else:
+            normalized_placetype = "/".join(normalized_placetypes[0:-1]) + "/and/" + normalized_placetypes[-1]
+        else:
+          normalized_placetype = normalized_placetypes[0]
         if not normalized_placetype or not parsed_holonyms:
           break
 
@@ -2019,7 +2082,7 @@ def process_text_on_page(index, pagetitle, text):
           # follow, the country will bubble to the end.
           for i in xrange(2, len(run)):
             if re.search("^(c|cc)/", run[i - 1]) and (
-              re.search("^(p|s|voi|bor|cobor|metbor|can|co|par|dist|div|dept|isl|mun|pref|city|town)/", run[i])
+              re.search("^(p|s|voi|bor|cobor|metbor|lbor|can|co|par|dist|div|dept|isl|mun|pref|city|town)/", run[i])
             ) or run[i - 1].startswith("c/") and run[i].startswith("cc/"):
               # Look for "in ..." preceding the country and swap it too.
               if i > 2 and run[i - 2].startswith("in "):
