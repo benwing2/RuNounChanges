@@ -71,7 +71,7 @@ local function subpolity_value_transformer(larger_polity, frob_key)
 	end
 end
 
-local function default_place_handler(frob_placename)
+local function default_place_cat_handler(frob_placename)
 	return function(group, placetype, holonym_placetype, holonym_placename)
 		if frob_placename then
 			holonym_placename = frob_placename(holonym_placename)
@@ -112,14 +112,17 @@ export.political_subdivisions = {
 	["autonomous regions"] = "[[autonomous]] [[region]]s",
 	["autonomous republics"] = "[[w:autonomous republic|autonomous republic]]s",
 	["boroughs"] = "[[borough]]s",
+	["borough seats"] = "[[borough seat]]s",
 	["cantons"] = "[[canton]]s",
-	["census-designated places"] = "[[census-designated place]]s",
 	["census divisions"] = "[[w:census division|census division]]s",
 	["cercles"] = "[[cercle]]s",
 	["collectivities"] = "[[collectivity|collectivities]]",
 	["commanderies"] = "[[commandery|commanderies]]",
 	["constituencies"] = "[[constituency|constituencies]]",
+	["council areas"] = "[[council area]]s",
 	["counties"] = "[[county|counties]]",
+	["county boroughs"] = "[[county borough]]s",
+	["county seats"] = "[[county seat]]s",
 	["countries"] = "[[constituent]] [[country|countries]]",
 	["delegations"] = "[[delegation]]s",
 	["departments"] = "[[department]]s",
@@ -140,6 +143,7 @@ export.political_subdivisions = {
 	["municipalities"] = "[[municipality|municipalities]]",
 	["oblasts"] = "[[oblast]]s",
 	["parishes"] = "[[parish]]es",
+	["parish seats"] = "[[parish seat]]s",
 	["prefectures"] = "[[prefecture]]s",
 	["provinces"] = "[[province]]s",
 	["quarters"] = "[[quarter]]s",
@@ -151,13 +155,13 @@ export.political_subdivisions = {
 	["self-administered divisions"] = "[[w:self-administered division|self-administered division]]s",
 	["self-administered zones"] = "[[w:self-administered zone|self-administered zone]]s",
 	["special administrative regions"] = "[[w:Special administrative regions of China|special administrative regions]]",
-	["state capitals"] = "[[capital]]s of the [[state]]s",
+	["state capitals"] = "[[state capital]]s",
 	["states"] = "[[state]]s",
 	["subprefectures"] = "[[subprefecture]]s",
 	["subregions"] = "[[subregion]]s",
 	["territorial authorities"] = "[[w:territorial authority|territorial authorities]]",
 	["territories"] = "[[territory|territories]]",
-	["voivoideships"] = "[[voivoideship]]s",
+	["voivodeships"] = "[[voivodeship]]s",
 	["zones"] = "[[zone]]s",
 }
 
@@ -169,13 +173,8 @@ export.generic_place_types = {
 	["towns"] = "towns",
 	["villages"] = "villages, hamlets, and other small communities and settlements",
 	["rivers"] = "rivers",
-}
-
-export.generic_place_types_singular = {
-	["city"] = "cities",
-	["town"] = "towns",
-	["village"] = "villages",
-	["river"] = "rivers",
+	["census-designated places"] = "[[census-designated place]]s",
+	["unincorporated communities"] = "[[w:unincorporated community|unincorporated communities]]",
 }
 
 -- table of US states; interpolated into the main 'places' table, but also needed separately
@@ -386,6 +385,35 @@ export.indian_states_and_union_territories = {
 	["West Bengal"] = {poldiv = {"divisions"}},
 }
 
+export.irish_counties = {
+	["Carlow"] = {},
+	["Cavan"] = {},
+	["Clare"] = {},
+	["Cork"] = {},
+	["Donegal"] = {},
+	["Dublin"] = {},
+	["Galway"] = {},
+	["Kerry"] = {},
+	["Kildare"] = {},
+	["Kilkenny"] = {},
+	["Laois"] = {},
+	["Leitrim"] = {},
+	["Limerick"] = {},
+	["Longford"] = {},
+	["Louth"] = {},
+	["Mayo"] = {},
+	["Meath"] = {},
+	["Monaghan"] = {},
+	["Offaly"] = {},
+	["Roscommon"] = {},
+	["Sligo"] = {},
+	["Tipperary"] = {},
+	["Waterford"] = {},
+	["Westmeath"] = {},
+	["Wexford"] = {},
+	["Wicklow"] = {},
+}
+
 local function construct_russian_federal_subject_keydesc(linked_key, divtype)
 	if divtype == "oblast" then
 		-- Hack: Oblasts generally don't have entries under "Foo Oblast"
@@ -518,7 +546,7 @@ Each group consists of a table with the following keys:
 	 (for subpolities of top-level polities). This function often makes use of the 'parents'
 	 and/or 'description' keys in the data item's value (see above).
 
-   * 'place_handler': Used in conjunction with {{place}} to properly categorize placenames.
+   * 'place_cat_handler': Used in conjunction with {{place}} to properly categorize placenames.
      Given four arguments (GROUP, the spec for a given group; PLACENAME, the placename for
 	 a given place; HOLONYM_PLACETYPE, the placetype of a holonym of a place [e.g. "country" for
 	 a location in a country]; and HOLONYM_PLACENAME, the name of a holonym of a place [e.g.
@@ -536,7 +564,7 @@ export.places = {
 		value_transformer = function(group, key, value)
 			return value
 		end,
-		place_handler = default_place_handler(),
+		place_cat_handler = default_place_cat_handler(),
 		default_divtype = "country",
 		data = {
 			-- NOTE: The political and misc. divisions listed below are far from
@@ -688,7 +716,7 @@ export.places = {
 			["Peru"] = {parents = {"South America"}, poldiv = {"regions", "provinces", "districts"}},
 			["the Philippines"] = {parents = {"Asia"}, poldiv = {"regions", "provinces", "provincial capitals", "districts", "municipalities"}},
 			["Poland"] = {poldiv = {"voivodeships", "counties"}, parents = {"Europe"}},
-			["Portugal"] = {parents = {"Europe"}, poldiv = {"districts and autonomous regions", "municipalities"}},
+			["Portugal"] = {parents = {"Europe"}, poldiv = {"districts and autonomous regions", "provinces", "municipalities"}},
 			["Qatar"] = {parents = {"Asia"}, poldiv = {"municipalities", "zones"}},
 			["the Republic of the Congo"] = {parents = {"Africa"}, poldiv = {"departments", "districts"}},
 			["Romania"] = {parents = {"Europe"}, poldiv = {"regions", "counties"}},
@@ -741,8 +769,8 @@ export.places = {
 				poldiv = {"countries", "territories", "dependencies"},
 				keydesc = "the [[United Kingdom]] of Great Britain and Northern Ireland"},
 			["the United States"] = {parents = {"North America"},
-				poldiv = {"counties", "states", "state capitals", "territories"},
-				miscdiv = {"census-designated places", "regions"}},
+				poldiv = {"counties", "county seats", "states", "state capitals", "territories"},
+				miscdiv = {"regions"}},
 			["Uruguay"] = {parents = {"South America"}, poldiv = {"departments", "municipalities"}},
 			["Uzbekistan"] = {parents = {"Asia"}, poldiv = {"regions", "districts"}},
 			["Vanuatu"] = {parents = {"Melanesia"}, poldiv = {"provinces"}},
@@ -763,7 +791,7 @@ export.places = {
 		value_transformer = function(group, key, value)
 			return value
 		end,
-		place_handler = default_place_handler(),
+		place_cat_handler = default_place_cat_handler(),
 		default_divtype = "country",
 		data = {
 			-- British Overseas Territory
@@ -888,7 +916,7 @@ export.places = {
 			value.nocities = true
 			return value
 		end,
-		place_handler = default_place_handler(),
+		place_cat_handler = default_place_cat_handler(),
 		default_divtype = "country",
 		data = {
 			["Czechoslovakia"] = {parents = {"Europe"}},
@@ -908,14 +936,14 @@ export.places = {
 	{
 		bare_label_setter = subpolity_bare_label_setter("the United Kingdom"),
 		value_transformer = subpolity_value_transformer("the United Kingdom"),
-		place_handler = default_place_handler(),
+		place_cat_handler = default_place_cat_handler(),
 		default_divtype = {"constituent country", "country"},
 		data = {
 			["England"] = {poldiv = {"regions", "counties"}},
 			["Northern Ireland"] = {divtype = "province", parents = {"United Kingdom", "Ireland"},
 				poldiv = {"districts"}, miscdiv = {"counties"}},
-			["Scotland"] = {poldiv = {"regions"}},
-			["Wales"] = {poldiv = {"counties"}},
+			["Scotland"] = {poldiv = {"council areas"}, miscdiv = {"regions", "districts", "counties"}},
+			["Wales"] = {poldiv = {"counties", "county boroughs"}},
 		}
 	},
 
@@ -923,7 +951,7 @@ export.places = {
 	{
 		bare_label_setter = subpolity_bare_label_setter("Canada"),
 		value_transformer = subpolity_value_transformer("Canada"),
-		place_handler = default_place_handler(),
+		place_cat_handler = default_place_cat_handler(),
 		default_divtype = "province",
 		data = {
 			["Alberta"] = {},
@@ -946,7 +974,7 @@ export.places = {
 	{
 		bare_label_setter = subpolity_bare_label_setter("Australia"),
 		value_transformer = subpolity_value_transformer("Australia"),
-		place_handler = default_place_handler(),
+		place_cat_handler = default_place_cat_handler(),
 		default_divtype = "state",
 		data = {
 			["New South Wales"] = {},
@@ -982,7 +1010,7 @@ export.places = {
 			value.keydesc = construct_russian_federal_subject_keydesc(linked_key, divtype)
 			return value
 		end,
-		place_handler = default_place_handler(),
+		place_cat_handler = default_place_cat_handler(),
 		default_divtype = "oblast",
 		data = {
 			-- autonomous oblasts
@@ -1086,7 +1114,7 @@ export.places = {
 			function(key) return key:gsub(", USA$", "") end),
 		value_transformer = subpolity_value_transformer("the United States",
 			function(key) return key:gsub(", USA$", "") end),
-		place_handler = default_place_handler(function(placename) return placename .. ", USA" end),
+		place_cat_handler = default_place_cat_handler(function(placename) return placename .. ", USA" end),
 		default_divtype = "state",
 		data = export.US_states,
 	},
@@ -1097,7 +1125,7 @@ export.places = {
 			function(key) return key:gsub(", Brazil$", "") end),
 		value_transformer = subpolity_value_transformer("Brazil",
 			function(key) return key:gsub(", Brazil$", "") end),
-		place_handler = default_place_handler(function(placename) return placename .. ", Brazil" end),
+		place_cat_handler = default_place_cat_handler(function(placename) return placename .. ", Brazil" end),
 		default_divtype = "state",
 		data = export.brazilian_states,
 	},
@@ -1106,7 +1134,7 @@ export.places = {
 	{
 		bare_label_setter = subpolity_bare_label_setter("China"),
 		value_transformer = subpolity_value_transformer("China"),
-		place_handler = default_place_handler(),
+		place_cat_handler = default_place_cat_handler(),
 		default_divtype = "province",
 		data = export.chinese_provinces_and_autonomous_regions,
 	},
@@ -1124,7 +1152,7 @@ export.places = {
 			}
 		end,
 		value_transformer = subpolity_value_transformer("Japan", function(key) return key:gsub(" Prefecture$", "") end),
-		place_handler = default_place_handler(function(placename) return placename .. " Prefecture" end),
+		place_cat_handler = default_place_cat_handler(function(placename) return placename .. " Prefecture" end),
 		default_divtype = "prefecture",
 		data = export.japanese_prefectures,
 	},
@@ -1133,7 +1161,7 @@ export.places = {
 	{
 		bare_label_setter = subpolity_bare_label_setter("India"),
 		value_transformer = subpolity_value_transformer("India"),
-		place_handler = default_place_handler(),
+		place_cat_handler = default_place_cat_handler(),
 		default_divtype = "state",
 		data = export.indian_states_and_union_territories,
 	},
