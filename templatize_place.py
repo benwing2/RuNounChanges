@@ -69,7 +69,7 @@
 #     Page 2265176 Karlsborg: Replaced <# a small town in central Sweden, in the province [[Västergötland]]> with <# {{place|sv|small town|in central|p/Västergötland|c/Sweden}}>
 # 25. [DONE] Consider adding module support for seat= for county seats of counties and parsing them out.
 # 26. [DONE] Consider handling "modern ..." in holonyms.
-# 27. Manually correct the following:
+# 27. [DONE] Manually correct the following:
 #     Page 3797662 Gudauta: Replaced <# a town in [[Abkhazia]], [[Georgia]].> with <# {{place|en|town|s/Georgia|c/Abkhazia}}>
 #     (others similar to the above)
 #     Page 3911822 Badakhshan: Replaced <# A province of Afghanistan, [[Badakhshan Province]].> with <# {{place|en|province|p/Badakhshan Province|c/Afghanistan}}>
@@ -107,6 +107,12 @@
 #     Page 817573 Bullock: Replaced <# An {{l|en|unincorporated}} {{l|en|community}} in {{l|en|Burlington County}} and {{l|en|Ocean County}} in the U.S. state of {{l|en|New Jersey}}.> with <# {{place|en|unincorporated community|co/Burlington County and Ocean County|s/New Jersey}}.>
 #     Page 34305 Cherokee: Replaced <# A census-designated place in {{l|en|Swain County}} and {{l|en|Jackson County}}, {{l|en|North Carolina}}.> with <# {{place|en|census-designated place|co/Swain County and Jackson County|s/North Carolina}}.>
 #     Page 5440547 Cherokee Village: Replaced <# A {{l|en|city}} in {{l|en|Fulton County}} and {{l|en|Sharp County}}, {{l|en|Arkansas}}.> with <# {{place|en|city|co/Fulton County and Sharp County|s/Arkansas}}.>
+# 28. Find cases where "in northern" etc. occurs directly before c/USA and change to
+#     "in the north of" etc. because c/USA gets rendered as "the United States".
+# 29. [DONE] Allow multiple qualifiers, e.g. "small unincorporated".
+# 30. [DONE] When backing off, break at '(that|which|where|near|located|situated)'.
+# 31. [DONE] Handle 'Foo and Bar Counties'.
+
 
 # FIXME for module:
 # 1. Make links use {{wtorw}}?
@@ -114,9 +120,14 @@
 # 3. [NOT DONE] Support holonym qualifiers (central, northeastern, etc.). [NOT DONE;
 #    JUST PUT "in" BEFORE QUALIFIER]
 # 4. [DONE] Add twp=township, pen=peninsula, arch=archipelago
-# 5. [DONE, NEEDS CHECKING] Display "Metropolitan Borough of ..." in metbor (unless already begins with Metropolitan Borough of, possibly within links); link as [[Foo|Metropolitan Borough of Foo]] unless there are already links or templates in Foo
-# 6. [DONE, NEEDS CHECKING] Display "Foo parish" for parishes (unless already ends with parish or Parish, possibly within links); link as [[Foo|Foo parish]] unless there are already links or templates in Foo
-# 7. [DONE, NEEDS CHECKING] Display "County ..." for Irish counties; link as above
+# 5. [DONE] Display "Metropolitan Borough of ..." in metbor (unless already begins with Metropolitan Borough of, possibly within links); link as [[Foo|Metropolitan Borough of Foo]] unless there are already links or templates in Foo
+# 6. [DONE] Display "Foo parish" for parishes (unless already ends with parish or Parish, possibly within links); link as [[Foo|Foo parish]] unless there are already links or templates in Foo
+# 7. [DONE] Display "County ..." for Irish counties; link as above
+# 8. Fix module to display "the" if appropriate for holonyms when directly following raw text,
+#    unless "the" already occurs at the end of the raw text. Find places where this
+#    causes a difference and manually verify that they are OK.
+# 9. Allow multiple qualifiers, e.g. "small unincorporated".
+
 
 from collections import defaultdict
 
@@ -1758,6 +1769,8 @@ def inner_parse_holonym(holonym, all_holonyms):
   # Misc places
   if holonym in misc_places:
     return "%s/%s" % (misc_places[holonym], holonym)
+  # Recognize holonyms with the placetype in the name itself, e.g.
+  # 'Meadow Township', 'Chaffee County'.
   m = re.search("^%s +(County|Parish|Borough|Township|State|Province|Oblast|Voivodeship|Department|Autonomous Region|Region|Peninsula|Ocean|Sea|Island|River)$" % proper_noun_regex, holonym)
   if m:
     placetype = {"County": "co", "Parish": "par", "Borough": "bor", "Township": "twp", "State": "s",
@@ -1766,6 +1779,15 @@ def inner_parse_holonym(holonym, all_holonyms):
       "River": "riv",
     }[m.group(1)]
     return "%s/%s" % (placetype, m.group(0))
+  # Recognize 'Contra Costa and Alameda Counties' etc.
+  m = re.search("^(%s) +and +(%s) +Counties$" % (proper_noun_regex, proper_noun_regex), holonym)
+  if m:
+    county1, county2 = m.groups()
+    return ["co/%s County" % county1, "and", "co/%s County" % county2]
+  # Recognize 'Ticino canton of Switzerland' etc. Note, we don't include 'state' because of things like
+  # 'German state of Bremen', 'Brazilian state of Mato Grosso do Sul', 'US state of Alabama', etc.
+  # There are also such things as 'Canadian province of Ontario' but they will be rejected by the
+  # check for double provinces/countries/etc.
   m = re.search("^(%s) +(district|region|canton|borough|province) +of +(?:the +)?(%s)$" % (proper_noun_regex, proper_noun_regex),
     holonym)
   if m:
@@ -1891,21 +1913,32 @@ def process_text_on_page(index, pagetitle, text):
           status = "multiple repls"
           multiple_repls_lines += 1
           break
+
+        def cap_official_type_to_param(cap_official_type):
+          cap_official_type = cap_official_type.lower()
+          if cap_official_type == "capital":
+            return "capital"
+          elif cap_official_type == "official name":
+            return "official"
+          else:
+            return "seat"
+
         while True:
-          m = re.search(r"^(.*[^,.;: ])[,.;:] *(?:[Ww]ith +)?(?:[Tt]he +|[Ii]t'?s +)?([Cc]apital|[Oo]fficial [Nn]ame|[Cc]ounty [Ss]eat|[Pp]arish [Ss]eat|[Bb]orough [Ss]eat)(?: +[Ii]s(?: +in)?)?:? *(?:[Tt]he +)?(%s)(?<!\.) *([,.;:]?) *$" % proper_noun_regex, chopped_line)
+          m = re.search(r"^(.*[^,.;: ])(?:[,.;:] *(?:[Ww]ith +)?|[,.;:]? *[Ww]ith +)(?:[Tt]he +|[Ii]t'?s +)?([Cc]apital|[Oo]fficial [Nn]ame|[Cc]ounty [Ss]eat|[Pp]arish [Ss]eat|[Bb]orough [Ss]eat)(?: +[Ii]s(?: +in)?)?:? *(?:[Tt]he +)?(%s)(?<!\.) *([,.;:]?) *$" % proper_noun_regex, chopped_line)
           if m:
             chopped_line, cap_official_type, cap_official_name, final_period = m.groups()
             chopped_line += final_period
-            cap_official_type = cap_official_type.lower()
-            if cap_official_type == "capital":
-              cap_official_param = "capital"
-            elif cap_official_type == "official name":
-              cap_official_param = "official"
-            else:
-              cap_official_param = "seat"
+            cap_official_param = cap_official_type_to_param(cap_official_type)
             cap_officials.append((cap_official_param, cap_official_name))
           else:
-            break
+            m = re.search(r"^(.*[^,.;: ])[,.;:]? *(?:(?:[Ww]hich|[Tt]hat) +[Hh]as +|[Ww]ith +|[Hh]aving +)(%s) +[Aa]s +(?:[Tt]he +|[Ii]t'?s +)?([Cc]apital|[Oo]fficial [Nn]ame|[Cc]ounty [Ss]eat|[Pp]arish [Ss]eat|[Bb]orough [Ss]eat) *([,.;:]?) *$" % proper_noun_regex, chopped_line)
+            if m:
+              chopped_line, cap_official_name, cap_official_type, final_period = m.groups()
+              chopped_line += final_period
+              cap_official_param = cap_official_type_to_param(cap_official_type)
+              cap_officials.append((cap_official_param, cap_official_name))
+            else:
+              break
 
         m = re.search(r"^(#+ *(?:\{\{.*?\}\})? *)[Aa]n? +([^{}|\n]*?) +(?:located in|situated in|in|of) +(?:the +)?(.*?)((?: *\{\{q\|[^{}]*?\}\})?) *([,.;:]?) *$", chopped_line)
         if m:
@@ -1940,32 +1973,36 @@ def process_text_on_page(index, pagetitle, text):
             append_pagemsg("WARNING: Bad format for translation '%s'" % trans)
             break
         split_placetype = re.split("(?:/| and (?:the |an? )?)", placetype)
-        split_placetype_with_qual = []
+        split_placetype_with_quals = []
         outer_break = False
         for pt in split_placetype:
-          pt_qual = None
+          pt_quals = []
           if pt not in place_types_with_aliases:
-            m = re.search("^(%s) +(.*)$" % "|".join(re.escape(x) for x in place_qualifiers_with_aliases_list), pt)
-            if m:
-              pt_qual, pt = m.groups()
-              pt_qual = place_qualifiers_with_aliases[pt_qual]
+            while True:
+              m = re.search("^(%s) +(.*)$" % "|".join(re.escape(x) for x in place_qualifiers_with_aliases_list), pt)
+              if m:
+                pt_qual, pt = m.groups()
+                pt_qual = place_qualifiers_with_aliases[pt_qual]
+                pt_quals.append(pt_qual)
+              else:
+                break
             if pt not in place_types_with_aliases:
               this_unrecognized_place_types.add(pt)
               append_pagemsg("WARNING: Unable to recognize stripped placetype '%s'" % pt)
               status = status or "bad placetype"
               outer_break = True
               break
-          split_placetype_with_qual.append((pt_qual, pt))
+          split_placetype_with_quals.append((pt_quals, pt))
           this_recognized_place_types.add(pt)
-          if pt_qual:
-            this_recognized_place_types.add("%s %s" % (pt_qual, pt))
+          for i in xrange(len(pt_quals)):
+            this_recognized_place_types.add("%s %s" % (" ".join(pt_quals[i:]), pt))
         if outer_break:
           break
         holonyms = re.sub(",? *(?:and |(?:that|which) is )?(?:the )?(county|parish|borough) seat of ", r", \1 seat, ", holonyms)
         # Handle "A city in and the county seat of ...".
         m = re.search("^, (county|parish|borough) seat, (.*)$", holonyms)
         if m:
-          split_placetype_with_qual.append((None, "%s seat" % m.group(1)))
+          split_placetype_with_quals.append((None, "%s seat" % m.group(1)))
           holonyms = m.group(2)
         holonyms = re.sub(",? in (?:the )?", ", ", holonyms)
         holonyms = re.split(", *", holonyms)
@@ -2021,10 +2058,10 @@ def process_text_on_page(index, pagetitle, text):
         if outer_break:
           break
 
-        def normalize_placetype(pt_qual, pt):
-          pt_qual_text = pt_qual + " " if pt_qual else ""
+        def normalize_placetype(pt_quals, pt):
+          pt_qual_text = " ".join(pt_quals) + " " if pt_quals else ""
           return pt_qual_text + place_types_with_aliases[pt]
-        normalized_placetypes = [normalize_placetype(pt_qual, pt) for pt_qual, pt in split_placetype_with_qual]
+        normalized_placetypes = [normalize_placetype(pt_quals, pt) for pt_quals, pt in split_placetype_with_quals]
         if len(normalized_placetypes) >= 2:
           if re.search("^(county|parish|borough) +seat$", normalized_placetypes[-1]):
             normalized_placetype = "/".join(normalized_placetypes)
@@ -2064,6 +2101,10 @@ def process_text_on_page(index, pagetitle, text):
           seen_holonym_placetypes = {}
           inner_break = False
           for holonym in run[1:]:
+            if holonym == "and":
+              # If we see 'and', don't further check for duplicates because they might be intentional,
+              # as in 'Contra Costa and Alameda Counties', which we handle specially.
+              break
             if "/" not in holonym:
               continue
             holonym_placetype, holonym_placename = holonym.split("/")
@@ -2151,7 +2192,13 @@ def process_text_on_page(index, pagetitle, text):
         add_this_to_all()
         return retval
 
-      m = re.search("^(.*[^ ])( *[,.:;] +.+?| *\{\{[^{}]*\}\}.*?)$", line)
+      # Break at either a punctuation mark + text, or optional punctuation mark +
+      # any of (that|which|where|with|located|situated|near) + text, or a template +
+      # optional text. The notation (?<!ated ) is a negative lookbehind expression
+      # to prevent the word "near" matching the common expressions "situated near"
+      # and "located near", otherwise "near" will match and we'll get an unrecognized
+      # holonym like "Calabria situated".
+      m = re.search("^(.*[^ ])( *(?:[,.:;]|[,.:;]? +(?:that|which|where|with|located|situated|(?<!ated )near)) +.+?| *\{\{[^{}]*\}\}.*?)$", line)
       if m:
         line, this_postline = m.groups()
         postline = this_postline + postline
