@@ -1600,7 +1600,7 @@ def find_lang_section_from_text(pagetext, lang, pagemsg):
 
   return None
 
-def replace_in_text(text, curr, repl, pagemsg, no_found_repl_check=False,
+def replace_in_text(text, curr, repl, pagemsg, count=-1, no_found_repl_check=False,
     abort_if_warning=False):
   found_curr = curr in text
   if not found_curr:
@@ -1611,7 +1611,7 @@ def replace_in_text(text, curr, repl, pagemsg, no_found_repl_check=False,
     if found_repl:
       pagemsg("WARNING: Already found replacement text: %s" % repl)
       return text, False
-  newtext = text.replace(curr, repl)
+  newtext = text.replace(curr, repl, count)
   newtext_text_diff = len(newtext) - len(text)
   repl_curr_diff = len(repl) - len(curr)
   if repl_curr_diff == 0:
