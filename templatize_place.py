@@ -112,7 +112,28 @@
 # 29. [DONE] Allow multiple qualifiers, e.g. "small unincorporated".
 # 30. [DONE] When backing off, break at '(that|which|where|near|located|situated)'.
 # 31. [DONE] Handle 'Foo and Bar Counties'.
-
+# 32. [DONE] Manually correct the following:
+#     Page 6104 Asia: Replaced <# {{l|en|Asia}} {{gloss|the continent of Asia}}> with <# {{place|ast|continent|cont/Asia|t1=Asia}}>
+#     Page 375322 San Carlos: Replaced <# a [[barangay]] in [[Valencia]], [[Bukidnon]], [[Philippines]]> with <# {{place|ceb|barangay|acomm/Valencia|p/Bukidnon|c/Philippines}}>
+#     Page 539873 Asya: Replaced <# [[Asia]] (the continent of Asia)> with <# {{place|ku|continent|cont/Asia|t1=Asia}}>
+#     Page 638250 Австралія: Replaced <# {{l|en|Australia}} {{gloss|the continent of Australia}}> with <# {{place|uk|continent|c/Australia|t1=Australia}}>
+#     Page 680646 Portuguese Guinea: Replaced <# {{senseid|en|Q2002279}} {{lb|en|historical}} A former colony of Portugal and country in Africa, now called [[Guinea-Bissau]].> with <# {{senseid|en|Q2002279}} {{lb|en|historical}} {{place|en|former colony|c/Portugal and|cont/Africa}}, now called [[Guinea-Bissau]].>
+#     Page 680647 Spanish Guinea: Replaced <# {{senseid|en|Q1232509}}A former colony of Spain and country in Africa, now called [[Equatorial Guinea]].> with <# {{senseid|en|Q1232509}}{{place|en|former colony|c/Spain and|cont/Africa}}, now called [[Equatorial Guinea]].>
+#     Page 1267933 ອາຊີ: Replaced <# [[Asia]] (the continent of Asia)> with <# {{place|lo|continent|cont/Asia|t1=Asia}}>
+#     Page 1435963 Adjara: Replaced <# An autonomous republic of [[Georgia]] located in its southwestern corner, bordered by Turkey to the south and by the [[Black Sea]] to the west. Predominantly populated by Muslim Georgians. Capital: [[Batumi]].> with <# {{place|en|autonomous republic|s/Georgia}} located in its southwestern corner, bordered by Turkey to the south and by the [[Black Sea]] to the west. Predominantly populated by Muslim Georgians. Capital: [[Batumi]].>
+#     Page 1472187 Azia: Replaced <# [[Asia]] (the continent of Asia)> with <# {{place|sq|continent|cont/Asia|t1=Asia}}>
+#     Page 2888775 Portuguese Congo: Replaced <# {{lb|en|historical}} A former colony of Portugal and country in Africa, now forming the [[Cabinda]] province of [[Angola]].> with <# {{lb|en|historical}} {{place|en|former colony|c/Portugal and|cont/Africa}}, now forming the [[Cabinda]] province of [[Angola]].>
+#     Page 2933246 Tonkin: Replaced <# A [[w:Gulf of Tonkin|gulf]] in the [[north]] of Vietnam> with <# {{place|en|gulf|in northern|c/Vietnam}}>
+#     Page 2933246 Tonkin: Replaced <# A [[w:Gulf of Tonkin|gulf]] in the [[north]] of Vietnam> with <# {{place|fr|gulf|in northern|c/Vietnam}}>
+#     Page 4744607 Ustica: Replaced <# A small [[hill]] in the [[Sabine]] country, near [[Horace]]'s villa, now [[Val d'Ustica]]> with <# {{place|la|small hill|c/Sabine}}, near [[Horace]]'s villa, now [[Val d'Ustica]]>
+#     Page 5441346 Bago: Replaced <# a [[barangay]] in [[Asturias]], [[Cebu]], [[Philippines]]> with <# {{place|ceb|barangay|acomm/Asturias|p/Cebu|c/Philippines}}>
+#     Page 6456983 Baye: Replaced <# a [[barangay]] in [[Asturias]], [[Cebu]], [[Philippines]]> with <# {{place|ceb|barangay|acomm/Asturias|p/Cebu|c/Philippines}}>
+#     Page 6595587 Lunas: Replaced <# a [[barangay]] in [[Asturias]], [[Cebu]], [[Philippines]]> with <# {{place|ceb|barangay|acomm/Asturias|p/Cebu|c/Philippines}}>
+#     Page 6595588 Saksak: Replaced <# a [[barangay]] in [[Asturias]], [[Cebu]], [[Philippines]]> with <# {{place|ceb|barangay|acomm/Asturias|p/Cebu|c/Philippines}}>
+#     Page 6595601 New Bago: Replaced <# a [[barangay]] in [[Asturias]], [[Cebu]], [[Philippines]]> with <# {{place|ceb|barangay|acomm/Asturias|p/Cebu|c/Philippines}}>
+#     Page 6595602 Tubigagmanok: Replaced <# a [[barangay]] in [[Asturias]], [[Cebu]], [[Philippines]]> with <# {{place|ceb|barangay|acomm/Asturias|p/Cebu|c/Philippines}}>
+#     Page 6595609 Santa Rita: Replaced <# a [[barangay]] in [[Asturias]], [[Cebu]], [[Philippines]]> with <# {{place|ceb|barangay|acomm/Asturias|p/Cebu|c/Philippines}}>
+#     Page 6595633 Owak: Replaced <# a [[barangay]] in [[Asturias]], [[Cebu]], [[Philippines]]> with <# {{place|ceb|barangay|acomm/Asturias|p/Cebu|c/Philippines}}>
 
 # FIXME for module:
 # 1. Make links use {{wtorw}}?
@@ -155,6 +176,17 @@ place_qualifiers = [
   "inland",
   "incorporated",
   "unincorporated",
+  "autonomous",
+  "fictional",
+  "mythological",
+  "traditional",
+  "unrecognized",
+  "unrecognised",
+  "medieval",
+  "mediaeval",
+  "overseas",
+  "rural",
+  "urban",
 ]
 
 aliased_place_qualifiers = {
@@ -171,11 +203,13 @@ place_types = [
   "city",
   "prefecture-level city",
   "county-level city",
-  "sub-provincial city",
+  "county-administered city",
+  "subprovincial city",
   "independent city",
   "home rule city",
   "port city",
   "resort city",
+  "federal city",
   # town
   "town",
   "ghost town",
@@ -191,9 +225,11 @@ place_types = [
   "resort town",
   "township",
   "rural township",
+  "mountain indigenous township",
+  "resort",
   # village
   "village",
-  # hamlet
+  "administrative village",
   "hamlet",
   # settlement
   "settlement",
@@ -208,7 +244,6 @@ place_types = [
   # community
   "community",
   "rural community",
-  "autonomous community",
   # district
   "district",
   "subdistrict",
@@ -240,6 +275,13 @@ place_types = [
   "capital city",
   "state capital",
   "provincial capital",
+  "administrative capital",
+  "department capital",
+  "district capital",
+  "mention capital",
+  "judicial capital",
+  "legislative capital",
+  "regional capital",
   # misc. cities
   "port",
   "seaport",
@@ -247,30 +289,51 @@ place_types = [
   "suburb",
   "unitary authority",
   "commune",
+  "barangay",
+  "kibbutz",
   # river
   "river",
   "tributary",
   "distributary",
-  # misc. landforms
+  # misc. waterforms
   "lake",
   "bay",
+  "atoll",
+  "gulf",
+  "sea",
+  "marginal sea",
+  "ocean",
+  "strait",
+  # misc. landforms
   "mountain",
   "mountain range",
   "valley",
+  "desert",
+  "forest",
+  "headland",
+  "hill",
+  "cape",
   # larger divisions
   "county",
   "administrative county",
   "traditional county",
   "parish",
+  "civil parish",
   "canton",
+  "council area",
   "state",
+  "separatist state",
   "province",
   "associated province",
-  "autonomous province",
   "subprovince",
   "department",
   "prefecture",
   "subprefecture",
+  "governorate",
+  "periphery",
+  "regency",
+  "regional unit",
+  "voivodeship",
   "federal subject",
   "island",
   "group of islands",
@@ -282,15 +345,43 @@ place_types = [
   "geographical region",
   "mountainous region",
   "administrative region",
-  "autonomous region",
+  "special administrative region",
+  "contregion",
+  "macroregion",
+  "historical region",
+  "oblast",
+  "okrug",
+  "krai",
   "division",
   "territory",
+  "external territory",
   "federal territory",
   "overseas territory",
+  "dependent territory",
+  "special territory",
   "collectivity",
+  "special collectivity",
+  "colony",
+  "commandery",
+  "commonwealth",
+  "dependency",
+  "crown dependency",
   "country",
   "island country",
+  "constituent country",
   "republic",
+  "polity",
+  "historical polity",
+  "satrapy",
+  "bailiwick",
+  "bishopric",
+  "kingdom",
+  "duchy",
+  "empire",
+  "continent",
+  "supercontinent",
+  "civilization",
+  "civilisation",
 ]
 
 aliased_place_types = {
@@ -312,6 +403,8 @@ aliased_place_types = {
   "tributary river": "tributary",
   "port-town": "port town",
   "London Borough": "London borough",
+  "departmental capital": "department capital",
+  "sub-provincial city": "subprovincial city",
 }
 
 place_types_with_aliases = {x: x for x in place_types}
@@ -495,6 +588,17 @@ compass_points_before_the = {
   "west-central": "the west-central part of",
   "north-central": "the north-central part of",
   "south-central": "the south-central part of",
+}
+
+compass_points_before_coast = {
+  "northern": "north",
+  "southern": "south",
+  "eastern": "east",
+  "western": "west",
+  "northeastern": "northeast",
+  "southeastern": "southeast",
+  "northwestern": "northwest",
+  "southwestern": "southwest",
 }
 
 holonyms_with_the = {
@@ -1115,6 +1219,31 @@ scotland_council_areas = {
   "Orkney Islands",
 }
 
+welsh_counties_etc = {
+  "Blaenau Gwent": "cobor",
+  "Bridgend": "cobor",
+  "Caerphilly": "cobor",
+  # "Cardiff": "city",
+  "Carmarthenshire": "co",
+  "Ceredigion": "co",
+  "Conwy": "cobor",
+  "Denbighshire": "co",
+  "Flintshire": "co",
+  "Gwynedd": "co",
+  "Isle of Anglesey": "co",
+  "Merthyr Tydfil": "cobor",
+  "Monmouthshire": "co",
+  "Neath Port Talbot": "cobor",
+  # "Newport": "city",
+  "Pembrokeshire": "co",
+  "Powys": "co",
+  "Rhondda Cynon Taf": "cobor",
+  # "Swansea": "city",
+  "Torfaen": "cobor",
+  "Vale of Glamorgan": "cobor",
+  "Wrexham": "cobor",
+}
+
 austrian_states = {
   "Vienna",
   "Lower Austria",
@@ -1569,6 +1698,14 @@ misc_places = {
   "Abkhazia": "c",
   "West Bank": "r",
   "Burgundy": "r",
+  # Cities in Cebu
+  "Cebu City": "city",
+  "Bogo": "city",
+  "Mandaue": "city",
+  "San Remigio": "mun",
+  "Naga": "city",
+  "Talisay": "city",
+  "Liloan": "mun",
 }
 
 unrecognized_place_types = defaultdict(int)
@@ -1584,11 +1721,13 @@ total_lines = 0
 total_parsable_lines = 0
 
 def output_stats(num_counts):
-  msg("Recognized lines: %s (%.2f%% of parsable)" % (recognized_lines, (100.0 * recognized_lines) / total_parsable_lines))
-  msg("Unrecognized placetype lines: %s (%.2f%% of parsable)" % (unrecognized_placetype_lines, (100.0 * unrecognized_placetype_lines) / total_parsable_lines))
-  msg("Unrecognized holonym lines: %s (%.2f%% of parsable)" % (unrecognized_holonym_lines, (100.0 * unrecognized_holonym_lines) / total_parsable_lines))
-  msg("Lines with multiple repls the same: %s (%.2f%% of parsable)" % (multiple_repls_lines, (100.0 * multiple_repls_lines) / total_parsable_lines))
-  msg("Unparsable lines: %s (%.2f%% of total)" % (unparsable_lines, (100.0 * unparsable_lines) / total_lines))
+  if total_parsable_lines > 0:
+    msg("Recognized lines: %s (%.2f%% of parsable)" % (recognized_lines, (100.0 * recognized_lines) / total_parsable_lines))
+    msg("Unrecognized placetype lines: %s (%.2f%% of parsable)" % (unrecognized_placetype_lines, (100.0 * unrecognized_placetype_lines) / total_parsable_lines))
+    msg("Unrecognized holonym lines: %s (%.2f%% of parsable)" % (unrecognized_holonym_lines, (100.0 * unrecognized_holonym_lines) / total_parsable_lines))
+    msg("Lines with multiple repls the same: %s (%.2f%% of parsable)" % (multiple_repls_lines, (100.0 * multiple_repls_lines) / total_parsable_lines))
+  if total_lines > 0:
+    msg("Unparsable lines: %s (%.2f%% of total)" % (unparsable_lines, (100.0 * unparsable_lines) / total_lines))
   def output_counts(dic):
     by_count = sorted(dic.items(), key=lambda x:-x[1])
     by_count = by_count[0:num_counts]
@@ -1653,6 +1792,8 @@ def inner_parse_holonym(holonym, all_holonyms):
   normalized_holonym = re.sub(" [Cc]ouncil +[Aa]rea +of +Scotland$", "", holonym)
   if normalized_holonym in scotland_council_areas:
     return ["council area/" + normalized_holonym, "cc/Scotland"]
+  if holonym in welsh_counties_etc:
+    return "%s/%s" % (welsh_counties_etc[holonym], holonym)
   coded_place_type_regex = "|".join(re.escape(x) for x in place_types_to_codes.keys())
   m = re.search("^(%s) (%s)$" % (proper_noun_regex, coded_place_type_regex), holonym)
   if m:
@@ -1863,6 +2004,9 @@ def process_text_on_page(index, pagetitle, text):
     output_stats(100)
   if re.search("^[a-z]", pagetitle):
     return text, notes
+
+  # Main function to templatize a given line. This is a regex function called from the regex at the bottom
+  # that checks for any line containing any of the known place types.
   def templatize_place_line(m, langcode):
     global recognized_lines
     global unparsable_lines
@@ -1884,11 +2028,17 @@ def process_text_on_page(index, pagetitle, text):
     postline = ""
     status = None
     badlines = []
+
+    # Replacement for pagemsg() that stores the message instead of outputting it directly.
+    # The outputted message has <from> ORIGLINE <to> ORIGLINE <end> at the end (used by
+    # push_manual_changes.py) in case we want to manually fix up some bad lines.
     def append_pagemsg(txt):
       newline = "Page %s %s: %s: <from> %s <to> %s <end>" % (
           index, pagetitle, txt, origline, origline)
       if newline not in badlines:
         badlines.append(newline)
+
+    # Track recognized and unrecognized place types and holonyms.
     this_unrecognized_place_types = set()
     this_recognized_place_types = set()
     this_unrecognized_holonyms = set()
@@ -1902,6 +2052,7 @@ def process_text_on_page(index, pagetitle, text):
         unrecognized_holonyms[h] += 1
       for h in this_recognized_holonyms:
         recognized_holonyms[h] += 1
+
     while True: # Loop over smaller sections of the line, chopping from the right
       while True: # "Loop" to simulate goto with break
         record_links_dict = {}
@@ -1923,33 +2074,58 @@ def process_text_on_page(index, pagetitle, text):
           else:
             return "seat"
 
+        # Try successively to strip off capital, official name, or county/parish/borough seat specs
+        # from the right.
         while True:
-          m = re.search(r"^(.*[^,.;: ])(?:[,.;:] *(?:[Ww]ith +)?|[,.;:]? *[Ww]ith +)(?:[Tt]he +|[Ii]t'?s +)?([Cc]apital|[Oo]fficial [Nn]ame|[Cc]ounty [Ss]eat|[Pp]arish [Ss]eat|[Bb]orough [Ss]eat)(?: +[Ii]s(?: +in)?)?:? *(?:[Tt]he +)?(%s)(?<!\.) *([,.;:]?) *$" % proper_noun_regex, chopped_line)
+          # Check for the format "with the capital in Foo" or similar.
+          m = re.search(r"^(.*[^,.;: ])(?:[,.;:] *(?:[Ww]ith +)?|[,.;:]? *[Ww]ith +)(?:[Tt]he +|[Ii]t'?s +)?([Cc]apital|[Oo]fficial [Nn]ame|[Cc]ounty [Ss]eat|[Pp]arish [Ss]eat|[Bb]orough [Ss]eat)(?: +[Ii]s(?: +in)?)?:? *(?:[Tt]he +)?(%s)(?<!\.) *((?:\)|\}\} *)?[,.;:]?) *$" % proper_noun_regex, chopped_line)
           if m:
-            chopped_line, cap_official_type, cap_official_name, final_period = m.groups()
-            chopped_line += final_period
+            chopped_line, cap_official_type, cap_official_name, final_punct = m.groups()
+            chopped_line += final_punct
             cap_official_param = cap_official_type_to_param(cap_official_type)
             cap_officials.append((cap_official_param, cap_official_name))
           else:
-            m = re.search(r"^(.*[^,.;: ])[,.;:]? *(?:(?:[Ww]hich|[Tt]hat) +[Hh]as +|[Ww]ith +|[Hh]aving +)(%s) +[Aa]s +(?:[Tt]he +|[Ii]t'?s +)?([Cc]apital|[Oo]fficial [Nn]ame|[Cc]ounty [Ss]eat|[Pp]arish [Ss]eat|[Bb]orough [Ss]eat) *([,.;:]?) *$" % proper_noun_regex, chopped_line)
+            # Check for the format "with Foo as the capital" or similar.
+            m = re.search(r"^(.*[^,.;: ])[,.;:]? *(?:(?:[Ww]hich|[Tt]hat) +[Hh]as +|[Ww]ith +|[Hh]aving +)(%s) +[Aa]s +(?:[Tt]he +|[Ii]t'?s +)?([Cc]apital|[Oo]fficial [Nn]ame|[Cc]ounty [Ss]eat|[Pp]arish [Ss]eat|[Bb]orough [Ss]eat) *((?:\)|\}\} *)?[,.;:]?) *$" % proper_noun_regex, chopped_line)
             if m:
-              chopped_line, cap_official_name, cap_official_type, final_period = m.groups()
-              chopped_line += final_period
+              chopped_line, cap_official_name, cap_official_type, final_punct = m.groups()
+              chopped_line += final_punct
               cap_official_param = cap_official_type_to_param(cap_official_type)
               cap_officials.append((cap_official_param, cap_official_name))
             else:
               break
 
+        # Main regex to parse a line. We look for a definition line with a possible template at the
+        # beginning (e.g. {{lb|...}}) followed by "A foo in/of Bar" (or similar), possibly followed by
+        # a qualifier with {{q|...}} (used for grid coordinates and such), possibly followed by final
+        # punctuation. Note that the line as parsed here may already have had stuff stripped off the
+        # right (either by the code above to parse off capitals, official names, etc. or by the larger
+        # loop that successively chops off extraneous stuff on the right), so we may well see a final
+        # comma or other non-period punctuation.
         m = re.search(r"^(#+ *(?:\{\{.*?\}\})? *)[Aa]n? +([^{}|\n]*?) +(?:located in|situated in|in|of) +(?:the +)?(.*?)((?: *\{\{q\|[^{}]*?\}\})?) *([,.;:]?) *$", chopped_line)
         if m:
           pretext, placetype, holonyms, postq, final_period = m.groups()
           trans = None
         else:
-          m = re.search(r"^(#+ *(?:\{\{(?:[^lw]|[lw][^|])[^{}]*?\}\} *)*)([^()]+?) *(?:\(|\{\{gloss\|)(?:[Tt]he |[Aa]n? )?([^{}|\n]*?) +(?:located in|situated in|in|of) +(?:the +)?(.*?)(?:\)|\}\})((?: *\{\{q\|[^{}]*?\}\})?)\.?$", chopped_line)
-          if m:
-            pretext, trans, placetype, holonyms, postq = m.groups()
-            final_period = ""
-          else:
+          # Also check for the "translation" format "Foo (a/the bar in/of Baz)" (or similar); we also
+          # look for "Foo {{gloss|a/the bar in/of Baz}}", "Foo; a/the bar in/of Baz" and
+          # "Foo: a/the bar in/of Baz" (or similar).
+          m = re.search(r"^(#+ *(?:\{\{(?:[^lw]|[lw][^|])[^{}]*?\}\} *)*)([^();:]+?) *([(;:]|\{\{gloss\|) *(?:[Tt]he |[Aa]n? )?([^{}|\n]*?) +(?:located in|situated in|in|of) +(?:the +)?(.*?)(\)|\}\})?((?: *\{\{q\|[^{}]*?\}\})?) *\.? *$", chopped_line)
+          if not m:
+            status = status or "unparsable"
+            #append_pagemsg("WARNING: Unable to parse line")
+            break
+          pretext, trans, opener, placetype, holonyms, closer, postq = m.groups()
+          # Ignore a final period, which shouldn't be present in this format. Note that in the case
+          # where text follows and is chopped off in the outer loop, any punctuation before the text
+          # (including a period) will be chopped off as well, so this won't wrongly remove periods.
+          final_period = ""
+          if opener not in [";", ":"] and not closer:
+            # Reject the case where a left paren or "{{gloss|" opener occurs without a closer.
+            # If we don't do that, we will wrongly replace things like
+            # {{l|en|Offenbach am Main}} ([[independent city]] in [[Hesse]], Germany, next to the river [[Main]])
+            # with
+            # {{place|de|independent city|s/Hesse|c/Germany|t1=Offenbach am Main}}, next to the river [[Main]])
             status = status or "unparsable"
             #append_pagemsg("WARNING: Unable to parse line")
             break
@@ -1972,12 +2148,33 @@ def process_text_on_page(index, pagetitle, text):
             status = status or "unparsable"
             append_pagemsg("WARNING: Bad format for translation '%s'" % trans)
             break
+
+        ####### Handle placetypes.
         split_placetype = re.split("(?:/| and (?:the |an? )?)", placetype)
         split_placetype_with_quals = []
         outer_break = False
-        for pt in split_placetype:
+        coast_spec = None
+        for i, pt in enumerate(split_placetype):
+          # Check for "island off the coast", "port city on the west coast", etc.
+          m = re.search("^(.*?),? +(?:situated +|located +)?(off|on) +the +(?:(%s) +)?coast$" % "|".join(re.escape(x) for x in compass_points_with_aliases_list), pt)
+          if m:
+            pt, offon, compass_point = m.groups()
+            if compass_point:
+              compass_point = compass_points_with_aliases[compass_point]
+              compass_point = compass_points_before_coast.get(compass_point, compass_point)
+              coast_spec = "%s the %s coast of" % (offon, compass_point)
+            else:
+              coast_spec = "%s the coast of" % offon
+          if coast_spec and i != len(split_placetype) - 1:
+            append_pagemsg("WARNING: Coast spec '%s' cannot occur with non-final placetype in '%s'" % (coast_spec, placetype))
+            status = status or "bad placetype"
+            outer_break = True
+            break
+
+          # Check for qualifiers if placetype isn't recognized.
           pt_quals = []
           if pt not in place_types_with_aliases:
+            # Successively peel off qualifiers at the beginning.
             while True:
               m = re.search("^(%s) +(.*)$" % "|".join(re.escape(x) for x in place_qualifiers_with_aliases_list), pt)
               if m:
@@ -1992,12 +2189,17 @@ def process_text_on_page(index, pagetitle, text):
               status = status or "bad placetype"
               outer_break = True
               break
+
+          # Append qualifiers and bare placetype to split_placetype_with_quals.
           split_placetype_with_quals.append((pt_quals, pt))
           this_recognized_place_types.add(pt)
           for i in xrange(len(pt_quals)):
             this_recognized_place_types.add("%s %s" % (" ".join(pt_quals[i:]), pt))
+
         if outer_break:
           break
+
+        ####### Handle holonyms.
         holonyms = re.sub(",? *(?:and |(?:that|which) is )?(?:the )?(county|parish|borough) seat of ", r", \1 seat, ", holonyms)
         # Handle "A city in and the county seat of ...".
         m = re.search("^, (county|parish|borough) seat, (.*)$", holonyms)
@@ -2072,7 +2274,11 @@ def process_text_on_page(index, pagetitle, text):
         if not normalized_placetype or not parsed_holonyms:
           break
 
-        placeargs = [normalized_placetype] + parsed_holonyms
+        # A coast spec is "off the coast of" or similar. If it occurs and the first holonym begins with "in ",
+        # remove that preposition, or we'll get {{place|en|large island|off the coast of|in eastern|c/Canada}}.
+        if coast_spec and parsed_holonyms[0].startswith("in "):
+          parsed_holonyms[0] = parsed_holonyms[0][3:]
+        placeargs = [normalized_placetype] + ([coast_spec] if coast_spec else []) + parsed_holonyms
         # Now, split place args by semicolon-separated "runs".
         place_args_runs = []
         place_args_run = []
@@ -2136,8 +2342,8 @@ def process_text_on_page(index, pagetitle, text):
                 run[i] = run[i - 1]
                 run[i - 1] = temp
 
-          # If country is followed by region, sea or ocean, insert "in".
-          if len(run) >= 3 and re.search("^(c|cc)/", run[-2]) and re.search("^(r|sea|ocean)/", run[-1]):
+          # If country is followed by region, sea, ocean or continent, insert "in".
+          if len(run) >= 3 and re.search("^(c|cc)/", run[-2]) and re.search("^(r|sea|ocean|cont)/", run[-1]):
             run[-1:-1] = ["in"]
 
         if outer_break:
@@ -2238,6 +2444,7 @@ def process_text_on_page(index, pagetitle, text):
 parser = blib.create_argparser("Templatize place specs into {{place}}",
   include_pagefile=True, include_stdin=True)
 parser.add_argument("--linefile", help="File containing lines output by find_regex.py")
+parser.add_argument("--sample", help="Sample text to parse")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
@@ -2250,6 +2457,9 @@ if args.linefile:
       msg("Can't parse line: %s" % line.strip())
     else:
       process_text_on_page(index, m.group(1), m.group(2))
+elif args.sample:
+      text, notes = process_text_on_page(1, "Foo", "==English==\n# " + args.sample)
+      msg("Result of parsing: %s" % text)
 else:
   blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True)
 output_stats(5000)
