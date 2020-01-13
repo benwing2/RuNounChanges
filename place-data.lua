@@ -462,6 +462,26 @@ export.cat_implications = {
 }
 
 
+-- Used in get_possible_cat() in [[Module:place]]. When constructing a category
+-- for a state, province or region, append a comma + the country name if it is
+-- in this table. If the value of the table is true, use the actual country name,
+-- else use the value of the table. NOTE: This only applies to cat_data entries
+-- with "state", "province" or "region" as a key in the inner table and {true}
+-- occurs as the value. Currently this only occurs with municipalities. It
+-- doesn't currently apply to categories like "Cities in Alabama, USA", which
+-- are handled by the city_type_cat_handler(), which uses a key of "itself" and
+-- directly specifies the category.
+export.country_append_format = {
+	["United States"] = "USA",
+	["Philippines"] = true,
+	["Brazil"] = true,
+	["England"] = true,
+	["Northern Ireland"] = true,
+	["Scotland"] = true,
+	["Wales"] = true,
+}
+
+
 local function city_type_cat_handler(placetype, holonym_placetype, holonym_placename)
 	local plural_placetype = m_strutils.pluralize(placetype)
 	if m_shared.generic_place_types[plural_placetype] then
@@ -1114,8 +1134,18 @@ export.cat_data = {
 	["municipality"] = {
 		preposition="of",
 
+		["country/Austria"] = {
+			["state"] = {true},
+			["country"] = {true},
+		},
+
 		["country/Brazil"] = {
 			["state"] = {true},
+			["country"] = {true},
+		},
+
+		["country/Philippines"] = {
+			["province"] = {true},
 			["country"] = {true},
 		},
 

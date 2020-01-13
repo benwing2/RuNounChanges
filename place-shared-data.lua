@@ -98,6 +98,35 @@ local function default_place_cat_handler(frob_placename)
 	end
 end
 
+-- This is used in conjunction with subpolity_bare_label_setter() and subpolity_value_transformer().
+-- It generates a function that chops off part of a placename using the regex TO_CHOP. To chop at
+-- the end, add $ at the end of the regex; to chop at the beginning, add ^ at the beginning.
+-- It is normally used for subpolities (e.g. states of the US or counties of England) when the
+-- placename of the polity as found in categories includes the larger containing polity in it
+-- (e.g. "Georgia, USA" or "Hampshire, England"). Typical usage is like this:
+--
+-- ...
+-- bare_label_setter = subpolity_bare_label_setter("England", chop(", England$")),
+-- value_transformer = subpolity_value_transformer("England", chop(", England$")),
+-- ...
+local function chop(to_chop)
+	return function(key) return key:gsub(to_chop, "") end
+end
+
+-- This is used in conjunction with default_place_cat_handler(). It generates a function that
+-- appends a string to the end of a placename. It does the opposite operation of chop() and is
+-- used along with that function. It is normally used for subpolities (e.g. states of the US or
+-- counties of England) when the placename of the polity as found in categories includes the
+-- larger containing polity in it (e.g. "Georgia, USA" or "Hampshire, England"). Typical usage
+-- is like this:
+--
+-- ...
+-- place_cat_handler = default_place_cat_handler(append(", England")),
+-- ...
+local function append(to_append)
+	return function(placename) return placename .. to_append end
+end
+
 -- Recognized political and misc. subdivisions. The key is the plural
 -- subdivision and the value is the equivalent description, with links.
 export.political_subdivisions = {
@@ -385,6 +414,103 @@ export.indian_states_and_union_territories = {
 	["West Bengal"] = {poldiv = {"divisions"}},
 }
 
+export.austrian_states = {
+	["Vienna"] = {},
+	["Lower Austria"] = {},
+	["Upper Austria"] = {},
+	["Styria"] = {},
+	["Tyrol"] = {},
+	["Carinthia"] = {},
+	["Salzburg"] = {},
+	["Vorarlberg"] = {},
+	["Burgenland"] = {},
+}
+
+export.philippine_provinces = {
+	["Abra, Philippines"] = {},
+	["Agusan del Norte, Philippines"] = {},
+	["Agusan del Sur, Philippines"] = {},
+	["Aklan, Philippines"] = {},
+	["Albay, Philippines"] = {},
+	["Antique, Philippines"] = {},
+	["Apayao, Philippines"] = {},
+	["Aurora, Philippines"] = {},
+	["Basilan, Philippines"] = {},
+	["Bataan, Philippines"] = {},
+	["Batanes, Philippines"] = {},
+	["Batangas, Philippines"] = {},
+	["Benguet, Philippines"] = {},
+	["Biliran, Philippines"] = {},
+	["Bohol, Philippines"] = {},
+	["Bukidnon, Philippines"] = {},
+	["Bulacan, Philippines"] = {},
+	["Cagayan, Philippines"] = {},
+	["Camarines Norte, Philippines"] = {},
+	["Camarines Sur, Philippines"] = {},
+	["Camiguin, Philippines"] = {},
+	["Capiz, Philippines"] = {},
+	["Catanduanes, Philippines"] = {},
+	["Cavite, Philippines"] = {},
+	["Cebu, Philippines"] = {},
+	["Cotabato, Philippines"] = {},
+	["Davao de Oro, Philippines"] = {},
+	["Davao del Norte, Philippines"] = {},
+	["Davao del Sur, Philippines"] = {},
+	["Davao Occidental, Philippines"] = {},
+	["Davao Oriental, Philippines"] = {},
+	["Dinagat Islands, Philippines"] = {},
+	["Eastern Samar, Philippines"] = {},
+	["Guimaras, Philippines"] = {},
+	["Ifugao, Philippines"] = {},
+	["Ilocos Norte, Philippines"] = {},
+	["Ilocos Sur, Philippines"] = {},
+	["Iloilo, Philippines"] = {},
+	["Isabela, Philippines"] = {},
+	["Kalinga, Philippines"] = {},
+	["La Union, Philippines"] = {},
+	["Laguna, Philippines"] = {},
+	["Lanao del Norte, Philippines"] = {},
+	["Lanao del Sur, Philippines"] = {},
+	["Leyte, Philippines"] = {},
+	["Maguindanao, Philippines"] = {},
+	["Marinduque, Philippines"] = {},
+	["Masbate, Philippines"] = {},
+	["Misamis Occidental, Philippines"] = {},
+	["Misamis Oriental, Philippines"] = {},
+	["Mountain Province, Philippines"] = {},
+	["Negros Occidental, Philippines"] = {},
+	["Negros Oriental, Philippines"] = {},
+	["Northern Samar, Philippines"] = {},
+	["Nueva Ecija, Philippines"] = {},
+	["Nueva Vizcaya, Philippines"] = {},
+	["Occidental Mindoro, Philippines"] = {},
+	["Oriental Mindoro, Philippines"] = {},
+	["Palawan, Philippines"] = {},
+	["Pampanga, Philippines"] = {},
+	["Pangasinan, Philippines"] = {},
+	["Quezon, Philippines"] = {},
+	["Quirino, Philippines"] = {},
+	["Rizal, Philippines"] = {},
+	["Romblon, Philippines"] = {},
+	["Samar, Philippines"] = {},
+	["Sarangani, Philippines"] = {},
+	["Siquijor, Philippines"] = {},
+	["Sorsogon, Philippines"] = {},
+	["South Cotabato, Philippines"] = {},
+	["Southern Leyte, Philippines"] = {},
+	["Sultan Kudarat, Philippines"] = {},
+	["Sulu, Philippines"] = {},
+	["Surigao del Norte, Philippines"] = {},
+	["Surigao del Sur, Philippines"] = {},
+	["Tarlac, Philippines"] = {},
+	["Tawi-Tawi, Philippines"] = {},
+	["Zambales, Philippines"] = {},
+	["Zamboanga del Norte, Philippines"] = {},
+	["Zamboanga del Sur, Philippines"] = {},
+	["Zamboanga Sibugay, Philippines"] = {},
+	["Metro Manila, Philippines"] = {},
+}
+
 export.irish_counties = {
 	["Carlow"] = {},
 	["Cavan"] = {},
@@ -424,6 +550,20 @@ local function construct_russian_federal_subject_keydesc(linked_key, divtype)
 	return linked_key .. ", a federal subject ([[" .. divtype .. "]]) of [[Russia]]"
 end
 
+local function northern_ireland_holonym_placename_to_key(placename)
+	if not placename:find("^County ") and not placename:find("^City ") then
+		placename = "County " .. placename
+	end
+	return placename .. ", Northern Ireland"
+end
+
+local function ireland_holonym_placename_to_key(placename)
+	if not placename:find("^County ") and not placename:find("^City ") then
+		placename = "County " .. placename
+	end
+	return placename .. ", Ireland"
+end
+
 --[=[
 
 The following table consists of one or more groups, each of which contains several
@@ -452,8 +592,8 @@ for the following types of categories:
 
 NOTE: Second-level political subdivisions (e.g. counties of states of the US) could be handled
 here but normally aren't. Instead, there are special handlers below for US counties and
-Brazilian municipalities, and manually-created labels for certain other countries (e.g.
-Canadian counties). The reason for this is that all political and historic/popular subdivisions
+Brazilian and Philippine municipalities, and manually-created labels for certain other countries
+(e.g. Canadian counties). The reason for this is that all political and historic/popular subdivisions
 handled here have a category like "en:Political subdivisions" as their primary parent, whereas
 we often want a different primary parent for second-level political subdivisions, such as
 "en:Counties of the United States" for US counties. FIXME: We should allow the parents
@@ -528,15 +668,17 @@ Each group consists of a table with the following keys:
 	   If not given, a default description is constructed by the 'bare_label_setter' function.
 
    * 'value_transformer': This function is used to transform the value of an item in 'data'
-     (see above) to the final form used by the handler that handles city-type and
+     (an object containing properties of a place; see above) to the final form used by the handlers
+	 in [[Module:category tree/topic cat/data/Places]] that handle city-type and
 	 political-subdivision-type categories. It is passed three arguments (the group and the key and
-	 value of the data item). It typically adds keys, e.g. there are groups below for primary
-	 subdivisions of various countries, and each group has a 'value_transformer' that adds the
-	 country as the value of 'city_parent' (see above) and the appropriate description (including
-	 the type of division and the country) as the value of 'keydesc'. Some groups (in particular,
+	 value of the data item). Its normal purpose is to add extra properties to the data item value,
+	 such as 'city_parent' (see above) and 'keydesc' (the appropriate description of the place,
+	 which often includes the type of division and the country).  Some groups (in particular,
 	 the one for former polities, such as Persia and the Roman Empire) also add 'nocities = true'.
-	 There is a preconstructed function subpolity_bare_label_setter() (for subpolities of top-level
-	 polities) to help.
+	 The reason these extra properties are added by a function like this instead of included directly
+	 is that they are typically the same or similar for all items in a group, and including them
+	 directly would be duplicative. Note that there is a preconstructed function
+	 subpolity_bare_label_setter() (for subpolities of top-level polities) to help.
 
    * 'bare_label_setter': This function adds an entry in the 'labels' table for bare label
      categories such as 'en:Netherlands', 'fr:Alabama, USA' or 'ru:Republic of Tatarstan'.
@@ -947,6 +1089,177 @@ export.places = {
 		}
 	},
 
+	-- counties of England
+	{
+		bare_label_setter = subpolity_bare_label_setter("England", chop(", England$")),
+		value_transformer = subpolity_value_transformer("England", chop(", England$")),
+		place_cat_handler = default_place_cat_handler(append(", England")),
+		default_divtype = "county",
+		data = {
+			-- ["Avon, England"] = {}, -- no longer
+			["Bedfordshire, England"] = {},
+			["Berkshire, England"] = {},
+			-- ["Brighton and Hove, England"] = {}, -- city
+			-- ["Bristol, England"] = {}, -- city
+			["Buckinghamshire, England"] = {},
+			["Cambridgeshire, England"] = {},
+			-- ["Cambridgeshire and Isle of Ely, England"] = {}, -- no longer
+			["Cheshire, England"] = {},
+			-- ["Cleveland, England"] = {}, -- no longer
+			["Cornwall, England"] = {},
+			["Cumberland, England"] = {},
+			["Cumbria, England"] = {},
+			["Derbyshire, England"] = {},
+			["Devon, England"] = {},
+			["Dorset, England"] = {},
+			["County Durham, England"] = {},
+			-- ["East Suffolk, England"] = {}, -- no longer
+			["East Sussex, England"] = {},
+			["Essex, England"] = {},
+			["Gloucestershire, England"] = {},
+			["Greater London, England"] = {},
+			["Greater Manchester, England"] = {},
+			["Hampshire, England"] = {},
+			-- ["Hereford and Worcester, England"] = {}, -- no longer
+			["Herefordshire, England"] = {}, 
+			["Hertfordshire, England"] = {},
+			-- ["Humberside, England"] = {}, -- no longer
+			-- ["Huntingdon and Peterborough, England"] = {}, -- no longer
+			-- ["Huntingdonshire, England"] = {}, -- no longer
+			-- ["the Isle of Ely, England"] = {}, -- no longer
+			["the Isle of Wight, England"] = {},
+			["Kent, England"] = {},
+			["Lancashire, England"] = {},
+			["Leicestershire, England"] = {},
+			["Lincolnshire, England"] = {},
+			["the County of London, England"] = {},
+			["Merseyside, England"] = {},
+			-- ["Middlesex, England"] = {}, -- no longer
+			["Norfolk, England"] = {},
+			["Northamptonshire, England"] = {},
+			["Northumberland, England"] = {},
+			-- ["North Humberside, England"] = {}, -- no longer
+			["North Yorkshire, England"] = {},
+			["Nottinghamshire, England"] = {},
+			["Oxfordshire, England"] = {},
+			-- ["Soke of Peterborough, England"] = {}, -- no longer
+			["Rutland, England"] = {},
+			["Shropshire, England"] = {},
+			["Somerset, England"] = {},
+			["South Humberside, England"] = {},
+			["South Yorkshire, England"] = {},
+			["Staffordshire, England"] = {},
+			["Suffolk, England"] = {},
+			["Surrey, England"] = {},
+			-- ["Sussex, England"] = {}, -- no longer
+			["Tyne and Wear, England"] = {},
+			["Warwickshire, England"] = {},
+			["the West Midlands, England"] = {},
+			-- ["Westmorland, England"] = {}, -- no longer
+			-- ["West Suffolk, England"] = {}, -- no longer
+			["West Sussex, England"] = {},
+			["West Yorkshire, England"] = {},
+			["Wiltshire, England"] = {},
+			["Worcestershire, England"] = {},
+			-- ["Yorkshire, England"] = {}, -- no longer
+			["East Riding of Yorkshire, England"] = {},
+			-- ["North Riding of Yorkshire, England"] = {}, -- no longer
+			-- ["West Riding of Yorkshire, England"] = {}, -- no longer
+		}
+	},
+
+	-- counties of Northern Ireland
+	{
+		bare_label_setter = subpolity_bare_label_setter("Northern Ireland", chop(", Northern Ireland$")),
+		value_transformer = subpolity_value_transformer("Northern Ireland", chop(", Northern Ireland$")),
+		place_cat_handler = default_place_cat_handler(northern_ireland_holonym_placename_to_key),
+		default_divtype = "county",
+		data = {
+			["County Antrim, Northern Ireland"] = {},
+			["County Armagh, Northern Ireland"] = {},
+			["the City of Belfast, Northern Ireland"] = {nocities = true},
+			["County Down, Northern Ireland"] = {},
+			["County Fermanagh, Northern Ireland"] = {},
+			["County Londonderry, Northern Ireland"] = {},
+			["the City of Derry, Northern Ireland"] = {nocities = true},
+			["County Tyrone, Northern Ireland"] = {},
+		}
+	},
+
+	-- council areas of Scotland
+	{
+		bare_label_setter = subpolity_bare_label_setter("Scotland", chop(", Scotland$")),
+		value_transformer = subpolity_value_transformer("Scotland", chop(", Scotland$")),
+		place_cat_handler = default_place_cat_handler(append(", Scotland")),
+		default_divtype = "council area",
+		data = {
+			["the City of Glasgow, Scotland"] = {nocities = true},
+			["the City of Edinburgh, Scotland"] = {nocities = true},
+			["Fife, Scotland"] = {},
+			["North Lanarkshire, Scotland"] = {},
+			["South Lanarkshire, Scotland"] = {},
+			["Aberdeenshire, Scotland"] = {},
+			["Highland, Scotland"] = {},
+			["the City of Aberdeen, Scotland"] = {nocities = true},
+			["West Lothian, Scotland"] = {},
+			["Renfrewshire, Scotland"] = {},
+			["Falkirk, Scotland"] = {},
+			["Perth and Kinross, Scotland"] = {},
+			["Dumfries and Galloway, Scotland"] = {},
+			["the City of Dundee, Scotland"] = {nocities = true},
+			["North Ayrshire, Scotland"] = {},
+			["East Ayrshire, Scotland"] = {},
+			["Angus, Scotland"] = {},
+			["the Scottish Borders, Scotland"] = {},
+			["South Ayrshire, Scotland"] = {},
+			["East Dunbartonshire, Scotland"] = {},
+			["East Lothian, Scotland"] = {},
+			["Moray, Scotland"] = {},
+			["East Renfrewshire, Scotland"] = {},
+			["Stirling, Scotland"] = {},
+			["Midlothian, Scotland"] = {},
+			["West Dunbartonshire, Scotland"] = {},
+			["Argyll and Bute, Scotland"] = {},
+			["Inverclyde, Scotland"] = {},
+			["Clackmannanshire, Scotland"] = {},
+			["Na h-Eileanan Siar, Scotland"] = {},
+			["the Shetland Islands, Scotland"] = {},
+			["the Orkney Islands, Scotland"] = {},
+		}
+	},
+
+	-- principal areas (cities, counties and county boroughs) of Wales
+	{
+		bare_label_setter = subpolity_bare_label_setter("Wales", chop(", Wales$")),
+		value_transformer = subpolity_value_transformer("Wales", chop(", Wales$")),
+		place_cat_handler = default_place_cat_handler(append(", Wales")),
+		default_divtype = "county borough",
+		data = {
+			["Blaenau Gwent, Wales"] = {},
+			["Bridgend, Wales"] = {},
+			["Caerphilly, Wales"] = {},
+			-- ["Cardiff, Wales"] = {divtype = "city"},
+			["Carmarthenshire, Wales"] = {divtype = "county"},
+			["Ceredigion, Wales"] = {divtype = "county"},
+			["Conwy, Wales"] = {},
+			["Denbighshire, Wales"] = {divtype = "county"},
+			["Flintshire, Wales"] = {divtype = "county"},
+			["Gwynedd, Wales"] = {divtype = "county"},
+			["the Isle of Anglesey, Wales"] = {divtype = "county"},
+			["Merthyr Tydfil, Wales"] = {},
+			["Monmouthshire, Wales"] = {divtype = "county"},
+			["Neath Port Talbot, Wales"] = {},
+			-- ["Newport, Wales"] = {divtype = "city"},
+			["Pembrokeshire, Wales"] = {divtype = "county"},
+			["Powys, Wales"] = {divtype = "county"},
+			["Rhondda Cynon Taf, Wales"] = {},
+			-- ["Swansea, Wales"] = {divtype = "city"},
+			["Torfaen, Wales"] = {},
+			["the Vale of Glamorgan, Wales"] = {},
+			["Wrexham, Wales"] = {},
+		}
+	},
+
 	-- provinces and territories of Canada
 	{
 		bare_label_setter = subpolity_bare_label_setter("Canada"),
@@ -1110,22 +1423,18 @@ export.places = {
 
 	-- states of the United States
 	{
-		bare_label_setter = subpolity_bare_label_setter("the United States",
-			function(key) return key:gsub(", USA$", "") end),
-		value_transformer = subpolity_value_transformer("the United States",
-			function(key) return key:gsub(", USA$", "") end),
-		place_cat_handler = default_place_cat_handler(function(placename) return placename .. ", USA" end),
+		bare_label_setter = subpolity_bare_label_setter("the United States", chop(", USA$")),
+		value_transformer = subpolity_value_transformer("the United States", chop(", USA$")),
+		place_cat_handler = default_place_cat_handler(append(", USA")),
 		default_divtype = "state",
 		data = export.US_states,
 	},
 
 	-- states of Brazil
 	{
-		bare_label_setter = subpolity_bare_label_setter("Brazil",
-			function(key) return key:gsub(", Brazil$", "") end),
-		value_transformer = subpolity_value_transformer("Brazil",
-			function(key) return key:gsub(", Brazil$", "") end),
-		place_cat_handler = default_place_cat_handler(function(placename) return placename .. ", Brazil" end),
+		bare_label_setter = subpolity_bare_label_setter("Brazil", chop(", Brazil$")),
+		value_transformer = subpolity_value_transformer("Brazil", chop(", Brazil$")),
+		place_cat_handler = default_place_cat_handler(append(", Brazil")),
 		default_divtype = "state",
 		data = export.brazilian_states,
 	},
@@ -1151,8 +1460,8 @@ export.places = {
 				parents = {"Prefectures of Japan"},
 			}
 		end,
-		value_transformer = subpolity_value_transformer("Japan", function(key) return key:gsub(" Prefecture$", "") end),
-		place_cat_handler = default_place_cat_handler(function(placename) return placename .. " Prefecture" end),
+		value_transformer = subpolity_value_transformer("Japan", chop(" Prefecture$")),
+		place_cat_handler = default_place_cat_handler(append(" Prefecture")),
 		default_divtype = "prefecture",
 		data = export.japanese_prefectures,
 	},
@@ -1164,6 +1473,80 @@ export.places = {
 		place_cat_handler = default_place_cat_handler(),
 		default_divtype = "state",
 		data = export.indian_states_and_union_territories,
+	},
+
+	-- regions of Italy
+	{
+		bare_label_setter = subpolity_bare_label_setter("Italy"),
+		value_transformer = subpolity_value_transformer("Italy"),
+		place_cat_handler = default_place_cat_handler(),
+		default_divtype = "region",
+		data = {
+			["Abruzzo"] = {},
+			["Aosta Valley"] = {},
+			["Apulia"] = {},
+			["Basilicata"] = {},
+			["Calabria"] = {},
+			["Campania"] = {},
+			["Emilia-Romagna"] = {},
+			["Friuli-Venezia Giulia"] = {},
+			["Lazio"] = {},
+			["Liguria"] = {},
+			["Lombardy"] = {},
+			["Marche"] = {},
+			["Molise"] = {},
+			["Piedmont"] = {},
+			["Sardinia"] = {},
+			["Sicily"] = {},
+			["Trentino-Alto Adige"] = {},
+			["Tuscany"] = {},
+			["Umbria"] = {},
+			["Veneto"] = {},
+		},
+	},
+
+	-- states of Germany
+	{
+		bare_label_setter = subpolity_bare_label_setter("Germany"),
+		value_transformer = subpolity_value_transformer("Germany"),
+		place_cat_handler = default_place_cat_handler(),
+		default_divtype = "state",
+		data = {
+			["Baden-Württemberg"] = {},
+			["Bavaria"] = {},
+			["Berlin"] = {},
+			["Brandenburg"] = {},
+			["Bremen"] = {},
+			["Hamburg"] = {},
+			["Hesse"] = {},
+			["Lower Saxony"] = {},
+			["Mecklenburg-Vorpommern"] = {},
+			["North Rhine-Westphalia"] = {},
+			["Rhineland-Palatinate"] = {},
+			["Saarland"] = {},
+			["Saxony"] = {},
+			["Saxony-Anhalt"] = {},
+			["Schleswig-Holstein"] = {},
+			["Thuringia"] = {},
+		},
+	},
+
+	-- states of Austria
+	{
+		bare_label_setter = subpolity_bare_label_setter("Austria"),
+		value_transformer = subpolity_value_transformer("Austria"),
+		place_cat_handler = default_place_cat_handler(),
+		default_divtype = "state",
+		data = export.austrian_states,
+	},
+
+	-- provinces of the Philippines
+	{
+		bare_label_setter = subpolity_bare_label_setter("Philippines", chop(", Philippines$")),
+		value_transformer = subpolity_value_transformer("Philippines", chop(", Philippines$")),
+		place_cat_handler = default_place_cat_handler(append(", Philippines")),
+		default_divtype = "provinces",
+		data = export.philippine_provinces,
 	},
 }
 

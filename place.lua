@@ -37,21 +37,35 @@ end
 
 
 
--- Given a placetype, split the placetype into (a) a recognized qualifier (e.g. "small", "former"),
--- which we canonicalize (e.g. "historical" -> "historic", "seaside" -> "coastal");
--- and (b) a "bare placetype". Return two values: CANON_QUALIFIER, BARE_PLACETYPE, as above.
--- If no recognized qualifier could be found, return nil, PLACETYPE.
+-- Given a placetype, split the placetype into one or more potential "splits", each consisting
+-- of (a) a recognized qualifier (e.g. "small", "former"), which we canonicalize
+-- (e.g. "historical" -> "historic", "seaside" -> "coastal"); and (b) a "bare placetype".
+-- Return a list of pairs of {CANON_QUALIFIER, BARE_PLACETYPE}, as above. There may be
+-- more than one element in the list in cases like "small unincorporated town". If no recognized
+-- qualifier could be found, the list will be empty.
 local function split_and_canonicalize_placetype(placetype)
-	local qualifier, bare_placetype = placetype:match("^(.-) (.*)$")
-	if qualifier then
-		local canon = data.placetype_qualifiers[qualifier]
-		if canon == true then
-			return qualifier, bare_placetype
-		elseif canon then
-			return canon, bare_placetype
+	local splits = {}
+	local prev_qualifier = nil
+	while true do
+		local qualifier, bare_placetype = placetype:match("^(.-) (.*)$")
+		if qualifier then
+			local canon = data.placetype_qualifiers[qualifier]
+			local new_qualifier
+			if canon == true then
+				new_qualifier = qualifier
+			elseif canon then
+				new_qualifier = canon
+			else
+				break
+			end
+			prev_qualifier = prev_qualifier and prev_qualifier .. " " .. new_qualifier or new_qualifier
+			table.insert(splits, {prev_qualifier, bare_placetype})
+			placetype = bare_placetype
+		else
+			break
 		end
 	end
-	return nil, placetype
+	return splits
 end
 
 
@@ -65,8 +79,9 @@ local function get_placetype_equivs(placetype)
 	if data.placetype_equivs[placetype] then
 		table.insert(equivs, {placetype=data.placetype_equivs[placetype]})
 	end
-	local qualifier, bare_placetype = split_and_canonicalize_placetype(placetype)
-	if qualifier then
+	local splits = split_and_canonicalize_placetype(placetype)
+	for _, split in ipairs(splits) do
+		local qualifier, bare_placetype = split[1], split[2]
 		table.insert(equivs, {qualifier=qualifier, placetype=bare_placetype})
 		if data.placetype_equivs[bare_placetype] then
 			table.insert(equivs, {qualifier=qualifier, placetype=data.placetype_equivs[bare_placetype]})
@@ -341,9 +356,17 @@ function get_gloss(args, specs, sentence)
 		for n2, placetype in ipairs(spec[2]) do
 			if placetype == "and" then
 				gloss = gloss .. " and "
+			elseif placetype:find("^%(") then
+				-- Check for placetypes beginning with a paren (so that things
+				-- like "{{place|en|county/(one of 254)|s/Texas}}" work).
+				gloss = gloss .. " " .. placetype
 			else
 				local pt_data, equiv_placetype_and_qualifier = get_equiv_placetype_prop(placetype,
 					function(pt) return cat_data[pt] end)
+				-- Join multiple placetypes with comma unless placetypes are already
+				-- joined with "and". We allow "the" to precede the second placetype
+				-- if they're not joined with "and" (so we get "city and county seat of ..."
+				-- but "city, the county seat of ...").
 				if n2 > 1 and spec[2][n2-1] ~= "and" then
 					gloss = gloss .. ", "
 					
@@ -356,11 +379,19 @@ function get_gloss(args, specs, sentence)
 				if linked_version then
 					gloss = gloss .. linked_version
 				else
-					local qualifier, bare_placetype = split_and_canonicalize_placetype(placetype)
-					if qualifier then
-						gloss = gloss .. qualifier .. " " .. get_linked_placetype(bare_placetype, true)
-					else
-						gloss = gloss .. get_linked_placetype(placetype, true)
+					local splits = split_and_canonicalize_placetype(placetype)
+					local did_add = false
+					for _, split in ipairs(splits) do
+						local qualifier, bare_placetype = split[1], split[2]
+						local linked_version = get_linked_placetype(bare_placetype)
+						if linked_version then
+							gloss = gloss .. qualifier .. " " .. linked_version
+							did_add = true
+							break
+						end
+					end
+					if not did_add then
+						gloss = gloss .. placetype
 					end
 				end
 			end
@@ -835,7 +866,10 @@ function get_possible_cat(lang, cat_spec, entry_placetype, entry_pt_data, holony
 			-- If a holonym was specified as "cc/England" for "constituent country", there
 			-- will automatically be a "country" entry here due to the way that
 			-- key_holonym_spec_into_place_spec[] works.
-			cat = cat .. ", " .. place_spec["country"][1]
+			local country_append_format = data.country_append_format[place_spec["country"][1]]
+			if country_append_format then
+				cat = cat .. ", " .. (country_append_format == true and place_spec["country"][1] or country_append_format)
+			end
 		end
 		
 		all_cats = all_cats .. catlink(lang, cat)
