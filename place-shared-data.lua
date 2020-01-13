@@ -1142,7 +1142,7 @@ export.places = {
 			["North Yorkshire, England"] = {},
 			["Nottinghamshire, England"] = {},
 			["Oxfordshire, England"] = {},
-			-- ["Soke of Peterborough, England"] = {}, -- no longer
+			-- ["the Soke of Peterborough, England"] = {}, -- no longer
 			["Rutland, England"] = {},
 			["Shropshire, England"] = {},
 			["Somerset, England"] = {},
@@ -1162,9 +1162,9 @@ export.places = {
 			["Wiltshire, England"] = {},
 			["Worcestershire, England"] = {},
 			-- ["Yorkshire, England"] = {}, -- no longer
-			["East Riding of Yorkshire, England"] = {},
-			-- ["North Riding of Yorkshire, England"] = {}, -- no longer
-			-- ["West Riding of Yorkshire, England"] = {}, -- no longer
+			["the East Riding of Yorkshire, England"] = {},
+			-- ["the North Riding of Yorkshire, England"] = {}, -- no longer
+			-- ["the West Riding of Yorkshire, England"] = {}, -- no longer
 		}
 	},
 

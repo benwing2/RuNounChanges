@@ -681,38 +681,47 @@ function get_cat(lang, place_spec, entry_placetype)
 		return ""
 	end
 
-	-- 3. The inner placetype category data was keyed by "itself", and the returned category spec
-	--    is a (usually one-element) list of full category strings. Construct and return the
-	--    category wikicode, e.g. for the category string "Cities in Fujian", the wikicode
-	--    [[Category:fr:Cities in Fujian]] might be returned (if the language of LANG is French).
-	if itself and type(cat_spec[1]) == "string" then
-		return catlink(lang, cat_spec[1])
-	end
-	
-	-- 4. This handles cases where either the outer or inner key matched a holonym.
+	-- 3. This handles cases where either the outer or inner key matched a holonym.
 	if c > 2 then
-		local cat = get_possible_cat(lang, cat_spec, equiv_entry_placetype, entry_pt_data, place_spec[c], place_spec, itself)
+		local cat = get_possible_cat(lang, cat_spec, equiv_entry_placetype, entry_pt_data, place_spec[c], place_spec)
 		
 		if cat ~= "" then
 			local c2 = 2
 			
 			while place_spec[place_spec[c][1]][c2] do
-				cat = cat .. get_possible_cat(lang, cat_spec, equiv_entry_placetype, entry_pt_data, {place_spec[c][1], place_spec[place_spec[c][1]][c2]}, place_spec, itself)
+				cat = cat .. get_possible_cat(lang, cat_spec, equiv_entry_placetype, entry_pt_data, {place_spec[c][1], place_spec[place_spec[c][1]][c2]}, place_spec)
 				c2 = c2 + 1
 			end
 		end
 		return cat
 	end
 
-	-- 5. This handles the case where the outer key is "default", the inner key is "itself",
-	--    and the category spec is {true}.
-	return catlink(lang, get_cat_plural(equiv_entry_placetype))
+	-- 4. This handles the remaining case, i.e. the outer key is "default" and the inner key is "itself".
+	--    In this case, there is no holonym to substitute into the category. If the category is 'true',
+	--    we replace it with only the plural placetype (rather than "PLACETYPES in PLACENAME", as normal).
+	--    If the category is a string, throw an error if it contains+++ (indicating a holonym substitution);
+	--    otherwise, use it directly.
+	local all_cats = ""
+	for _, name in ipairs(cat_spec) do
+		local cat
+		if name == true then
+			cat = get_cat_plural(equiv_entry_placetype)
+		elseif name then
+			cat = name
+			if cat:find("%+%+%+") then
+				error("Category '" .. cat .. "' contains +++ but there is no holonym to substitute")
+			end
+		end
+		if cat then
+			all_cats = all_cats .. catlink(lang, cat)
+		end
+	end
+	return all_cats
 end
 
 
--- Look up and resolve any category aliases that need to be applied to a
--- holonym. For example, "country/United States" maps to "United States of America"
--- for use in categories like "Cities in the United States of America".
+-- Look up and resolve any category aliases that need to be applied to a holonym. For example,
+-- "country/Republic of China" maps to "Taiwan" for use in categories like "Counties in Taiwan".
 local function resolve_cat_aliases(holonym_placetype, holonym_placename)
 	local retval
 	local cat_aliases = get_equiv_placetype_prop(holonym_placetype, function(pt) return data.placename_cat_aliases[pt] end)
@@ -734,7 +743,7 @@ end
 -- parse_place_specs(); look up the outer-level data (normally keyed by the holonym, e.g.
 -- "country/Italy", or by "default") and the inner-level data (normally keyed by "itself"
 -- for a specific holonym and by the holonym's placetype for "default"), and return the
--- resulting value. This value is one or two things: (a) a list of categories or partial
+-- resulting value. This value is one of two things: (a) a list of categories or partial
 -- categories (usually with only one element), where full categories (minus the initial
 -- language code) are used when the inner key is "itself", and partial categories such as
 -- "Cities in " (with the holonym's placename attached to form the full category) are used
@@ -821,57 +830,54 @@ end
 -- (5) the holonym for which the category spec was fetched (in the format of indices 3, 4, ...
 --     of the place spec data, as described in parse_place_specs())
 -- (6) the place spec itself
--- (7) true if the inner key of the placetype category data was "itself" (the IS_ITSELF
---     return value of find_cat_spec()); this means the category spec contains full categories,
---     rather than partial ones
 -- The return value is constructed by iterating over the entries in the category spec.
--- For each entry, we concatenate following:
--- (1) the category from the category spec; or, if == true, the plural of the placetype + the
---     appropriate preposition ("in" or "of", as determined from the placetype category data,
---     defaulting to "in" unless key "preposition" was specified);
--- (2) if a partial category such as "Cities in " was given (i.e. the inner key of the
---     placetype category data was not "itself"), the holonym's placename;
--- (3) if the holonym's placetype is "state", "province" or "region" and another holonym
---     was given with placetype "country", that holonym's placename, following a comma.
-function get_possible_cat(lang, cat_spec, entry_placetype, entry_pt_data, holonym, place_spec, itself)
+-- For each entry, the category is formed as follows:
+-- (1) If the category spec is 'true', construct the category from the plural of the placetype +
+--     the appropriate preposition ("in" or "of", as determined from the placetype category data,
+--     defaulting to "in" unless key "preposition" was specified) + the string "+++". Otherwise,
+--     the category spec should be a string; use it directly.
+-- (2) If "+++" occurs in the resulting category string, replace it with the holonym placename.
+--     The substituted placename comes from the holonym placename, possibly preceded by "the"
+--     (if appropriate), and possibly followed by a comma and the country name. (This happens if
+--     the holonym's placetype is state, province or region and another holonym was given in the
+--     same place spec with placetype "country", and the country_append_format for that country
+--     indicates that it should be appended. This happens, for example, for counties in England.)
+function get_possible_cat(lang, cat_spec, entry_placetype, entry_pt_data, holonym, place_spec)
 	if not cat_spec or not entry_placetype or not entry_pt_data or not holonym or not place_spec then
 		return ""
 	end
 	
 	local all_cats = ""
 
-	local holonym_placetype = holonym[1]
+	local holonym_placetype, holonym_placename = holonym[1], holonym[2]
+	holonym_placename = resolve_cat_aliases(holonym_placetype, holonym_placename)
+	holonym = {holonym_placetype, holonym_placename}
 	
 	for _, name in ipairs(cat_spec) do
 		local cat = ""
 		if name == true then
-			cat = get_cat_plural(entry_placetype) .. get_in_or_of(entry_placetype, holonym_placetype)
+			cat = get_cat_plural(entry_placetype) .. get_in_or_of(entry_placetype, holonym_placetype) .. " +++"
 		elseif name then
 			cat = name
 		end
 		
-		if not itself or name == true then
-			-- Normally, explicit categories given to "itself" are full categories and those given to
-			-- some other placetype are partial categories (missing the holonym); but when true is
-			-- given instead of an explicit category, we always construct a partial category above,
-			-- so we always have to complete the category here even if true was given to "itself".
-			-- (Note that the combination of "default" + "itself" + true isn't handled here; it's
-			-- handled in condition (5) of get_cat().)
-			cat = cat .. get_place_string(holonym, true, false)
-		end
+		local holonym_sub = get_place_string(holonym, true, false)
 
 		local is_state_province_region = get_equiv_placetype_prop(holonym_placetype,
 			function(pt) return pt == "state" or pt == "province" or pt == "region" end)
 		if is_state_province_region and place_spec["country"] then
+			local country = place_spec["country"][1]
+			country = resolve_cat_aliases("country", country)
 			-- If a holonym was specified as "cc/England" for "constituent country", there
 			-- will automatically be a "country" entry here due to the way that
 			-- key_holonym_spec_into_place_spec[] works.
-			local country_append_format = data.country_append_format[place_spec["country"][1]]
+			local country_append_format = data.country_append_format[country]
 			if country_append_format then
-				cat = cat .. ", " .. (country_append_format == true and place_spec["country"][1] or country_append_format)
+				holonym_sub = holonym_sub .. ", " .. (country_append_format == true and country or country_append_format)
 			end
 		end
-		
+
+		cat = cat:gsub("%+%+%+", holonym_sub)
 		all_cats = all_cats .. catlink(lang, cat)
 	end
 	

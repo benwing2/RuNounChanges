@@ -379,6 +379,8 @@ export.placename_cat_aliases = {
 	["country"] = {
 		-- will categorize into e.g. "Cities in Burma".
 		["Myanmar"] = "Burma",
+		["People's Republic of China"] = "China",
+		["Republic of China"] = "Taiwan",
 	},
 }
 
@@ -486,11 +488,27 @@ local function city_type_cat_handler(placetype, holonym_placetype, holonym_place
 	local plural_placetype = m_strutils.pluralize(placetype)
 	if m_shared.generic_place_types[plural_placetype] then
 		for _, group in ipairs(m_shared.places) do
+			-- Find the appropriate key format for the holonym (e.g. "pref/Osaka" -> "Osaka Prefecture").
 			local key = group.place_cat_handler(group, placetype, holonym_placetype, holonym_placename)
 			if key then
-				return {
-					["itself"] = {ucfirst(plural_placetype) .. " in " .. key}
-				}
+				local value = group.data[key]
+				if value then
+					-- Use the group's value_transformer to ensure that 'nocities' and 'city_parent'
+					-- keys are present if they should be.
+					value = group.value_transformer(group, key, value)
+					if not value.nocities then
+						-- Categorize both in key, and in the larger polity that the key is part of,
+						-- e.g. [[Hirakata]] goes in both "Cities in Osaka Prefecture" and
+						-- "Cities in Japan".
+						local retcats = {ucfirst(plural_placetype) .. " in " .. key}
+						if value.city_parent then
+							table.insert(retcats, ucfirst(plural_placetype) .. " in " .. value.city_parent)
+						end
+						return {
+							["itself"] = retcats
+						}
+					end
+				end
 			end
 		end
 	end
@@ -628,7 +646,7 @@ export.cat_data = {
 		preposition="of",
 
 		["country/Portugal"] = {
-			["itself"] = {"Districts and autonomous regions of Portugal"},
+			["itself"] = {"Districts and autonomous regions of +++"},
 		},
 
 		["country/China"] = {
@@ -668,18 +686,20 @@ export.cat_data = {
 		},
 
 		["state/Alaska"] = {
+			-- Don't use +++ or we may get "Boroughs of Alaska, USA".
 			["itself"] = {"Boroughs of Alaska"},
 		},
 
 		["country/England"] = {
-			["itself"] = {"Boroughs in England"},
+			["itself"] = {"Boroughs in +++"},
 		},
 
 		["city/New York City"] = {
-			["itself"] = {"Boroughs in New York City"},
+			["itself"] = {"Boroughs in +++"},
 		},
 
 		["state/Pennsylvania"] = {
+			-- Don't use +++ or we may get "Boroughs in Pennsylvania, USA".
 			["itself"] = {"Boroughs in Pennsylvania"},
 		},
 	},
@@ -692,6 +712,7 @@ export.cat_data = {
 		},
 
 		["state/Alaska"] = {
+			-- Don't use +++ or we may get "Borough seats of Alaska, USA".
 			["itself"] = {"Borough seats of Alaska"},
 		},
 
@@ -710,6 +731,7 @@ export.cat_data = {
 		preposition="of",
 
 		["default"] = {
+			["country"] = {"Capital cities", "Cities in +++"},
 			["itself"] = {true},
 		},
 	},
@@ -722,7 +744,7 @@ export.cat_data = {
 		end,
 
 		["country/United States"] = {
-			["itself"] = {"Census-designated places in the United States"},
+			["itself"] = {true},
 		},
 
 		["default"] = {
@@ -735,6 +757,7 @@ export.cat_data = {
 		end,
 
 		["prefecture/Hokkaido"] = {
+			-- Don't use +++ or true, or we may get "Cities in Hokkaido Prefecture".
 			["itself"] = {"Cities in Hokkaido"},
 		},
 
@@ -805,7 +828,7 @@ export.cat_data = {
 		},
 
 		["default"] = {
-			["continent"] = {true},
+			["continent"] = {true, "Countries"},
 			["itself"] = {true},
 		},
 	},
@@ -823,19 +846,7 @@ export.cat_data = {
 		end,
 		display_handler = county_display_handler,
 
-		["country/England"] = {
-			["itself"] = {"Counties of England"},
-		},
-
 		["country/Holy Roman Empire"] = {
-		},
-
-		["country/People's Republic of China"] = {
-			["itself"] = {"Counties of China"},
-		},
-
-		["country/Republic of China"] = {
-			["itself"] = {"Counties of Taiwan"},
 		},
 
 		["default"] = {
@@ -846,7 +857,7 @@ export.cat_data = {
 
 	["county-administered city"] = {
 		["default"] = {
-			["country"] = {"Cities in "},
+			["country"] = {"Cities in +++"},
 		},
 	},
 
@@ -901,7 +912,7 @@ export.cat_data = {
 
 		["default"] = {
 			["itself"] = {true},
-			["country"] = {"Dependencies of "},
+			["country"] = {"Dependencies of +++"},
 		},
 	},
 
@@ -910,7 +921,7 @@ export.cat_data = {
 
 		["default"] = {
 			["itself"] = {"Dependencies"},
-			["country"] = {"Territories of "},
+			["country"] = {"Territories of +++"},
 		},
 	},
 
@@ -927,7 +938,7 @@ export.cat_data = {
 		end,
 
 		["country/Portugal"] = {
-			["itself"] = {"Districts and autonomous regions of Portugal"},
+			["itself"] = {"Districts and autonomous regions of +++"},
 		},
 
 		["default"] = {
@@ -1075,7 +1086,7 @@ export.cat_data = {
 		},
 
 		["country/England"] = {
-			["itself"] = {"Boroughs in England"},
+			["itself"] = {"Boroughs in +++"},
 		},
 	},
 
@@ -1083,7 +1094,7 @@ export.cat_data = {
 		preposition="of",
 
 		["country/Brazil"] = {
-			["country"] = {"Regions of "},
+			["country"] = {"Regions of +++"},
 		},
 
 		["default"] = {
@@ -1121,7 +1132,7 @@ export.cat_data = {
 		},
 
 		["country/England"] = {
-			["itself"] = {"Boroughs in England"},
+			["itself"] = {"Boroughs in +++"},
 		},
 	},
 
@@ -1135,17 +1146,17 @@ export.cat_data = {
 		preposition="of",
 
 		["country/Austria"] = {
-			["state"] = {true},
+			["state"] = {true, "Municipalities of Austria"},
 			["country"] = {true},
 		},
 
 		["country/Brazil"] = {
-			["state"] = {true},
+			["state"] = {true, "Municipalities of Brazil"},
 			["country"] = {true},
 		},
 
 		["country/Philippines"] = {
-			["province"] = {true},
+			["province"] = {true, "Municipalities of the Philippines"},
 			["country"] = {true},
 		},
 
@@ -1186,6 +1197,7 @@ export.cat_data = {
 		},
 
 		["state/Louisiana"] = {
+			-- Don't use +++ or we may get "Parishes of Louisiana, USA".
 			["itself"] = {"Parishes of Louisiana"},
 		},
 
@@ -1199,6 +1211,7 @@ export.cat_data = {
 		},
 
 		["state/Louisiana"] = {
+			-- Don't use +++ or we may get "Parish seats of Louisiana, USA".
 			["itself"] = {"Parish seats of Louisiana"},
 		},
 
@@ -1219,7 +1232,7 @@ export.cat_data = {
 		preposition="of",
 
 		["country/Greece"] = {
-			["itself"] = {"Regions of Greece"},
+			["itself"] = {"Regions of +++"},
 		},
 
 		["default"] = {
@@ -1240,7 +1253,7 @@ export.cat_data = {
 		cat_handler = chinese_subcity_cat_handler,
 
 		["default"] = {
-			["country"] = {"Cities in "},
+			["country"] = {"Cities in +++"},
 		},
 	},
 
@@ -1264,7 +1277,7 @@ export.cat_data = {
 		end,
 
 		["default"] = {
-			["country"] = {"Cities in "},
+			["country"] = {"Cities in +++"},
 		},
 	},
 
@@ -1288,7 +1301,7 @@ export.cat_data = {
 		},
 
 		["country/England"] = {
-			["itself"] = {"Counties and regions of England"},
+			["itself"] = {"Counties and regions of +++"},
 		},
 
 		["country/Finland"] = {
@@ -1461,7 +1474,7 @@ export.cat_data = {
 		cat_handler = chinese_subcity_cat_handler,
 
 		["default"] = {
-			["country"] = {"Cities in "},
+			["country"] = {"Cities in +++"},
 		},
 	},
 
@@ -1519,7 +1532,7 @@ export.cat_data = {
 		end,
 
 		["country/United States"] = {
-			["itself"] = {"Unincorporated communities in the United States"},
+			["itself"] = {true},
 		},
 
 		["default"] = {
