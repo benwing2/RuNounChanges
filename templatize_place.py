@@ -147,7 +147,7 @@
 # 8. Fix module to display "the" if appropriate for holonyms when directly following raw text,
 #    unless "the" already occurs at the end of the raw text. Find places where this
 #    causes a difference and manually verify that they are OK.
-# 9. Allow multiple qualifiers, e.g. "small unincorporated".
+# 9. [DONE] Allow multiple qualifiers, e.g. "small unincorporated".
 
 
 from collections import defaultdict
