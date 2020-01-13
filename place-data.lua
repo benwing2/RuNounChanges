@@ -563,7 +563,7 @@ local function county_display_handler(holonym_placetype, holonym_placename)
 	if canon_placename:find("^county $") then
 		return holonym_placename
 	end
-	if m_shared.irish_counties[unlinked_placename] then
+	if m_shared.irish_counties["County " .. unlinked_placename .. ", Ireland"] then
 		if holonym_placename:find("%[%[") then
 			return "County " .. holonym_placename
 		end
