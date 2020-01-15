@@ -55,6 +55,7 @@ export.placetype_aliases = {
 	["rep"] = "republic",
 	["arep"] = "autonomous republic",
 	["riv"] = "river",
+	["runit"] = "regional unit",
 	["terr"] = "territory",
 	["aterr"] = "autonomous territory",
 	["uterr"] = "union territory",
@@ -82,24 +83,40 @@ export.placetype_aliases = {
 -- linked, so it needs to be specifically included in placetype_links if linking is
 -- desired.
 export.placetype_qualifiers = {
-	["small"] = true,
+	-- generic qualifiers
+	["huge"] = true,
+	["important"] = true,
 	["large"] = true,
+	["long"] = true,
 	["major"] = true,
 	["minor"] = true,
-	["tiny"] = true,
 	["short"] = true,
-	["long"] = true,
-	["important"] = true,
-	["former"] = true,
+	["small"] = true,
+	["tiny"] = true,
+	-- "former" qualifiers
 	["ancient"] = true,
-	["historic"] = true,
-	["historical"] = "historic",
-	["maritime"] = true,
+	["former"] = true,
+	["historic"] = "historical",
+	["historical"] = true,
+	["medieval"] = true,
+	["mediaeval"] = true,
+	-- sea qualifiers
 	["coastal"] = true,
-	["seaside"] = "coastal",
 	["inland"] = true,
+	["maritime"] = true,
+	["overseas"] = "[[overseas]]",
+	["seaside"] = "coastal",
+	-- political status qualifiers
+	["autonomous"] = "[[autonomous]]",
 	["incorporated"] = "[[incorporated]]",
+	["special"] = "[[special]]",
 	["unincorporated"] = "[[unincorporated]]",
+	-- misc qualifiers
+	["urban"] = true,
+	["suburban"] = "[[suburban]]",
+	["rural"] = true,
+	["fictional"] = true,
+	["mythological"] = true,
 }
 
 
@@ -226,7 +243,6 @@ export.placetype_links = {
 	["spa town"] = "w",
 	["special administrative region"] = "w",
 	["special collectivity"] = "w",
-	["special territory"] = "[[special]] [[territory]]",
 	["state capital"] = true,
 	["statutory town"] = "w",
 	["strait"] = true,
@@ -237,8 +253,6 @@ export.placetype_links = {
 	["subprovincial city"] = "w",
 	["subregion"] = true,
 	["suburb"] = true,
-	["suburban area"] = "[[suburban]] area",
-	["suburban town"] = "[[suburban]] [[town]]",
 	["supercontinent"] = true,
 	["township"] = true,
 	-- can't use templates in this code
@@ -256,15 +270,31 @@ export.placetype_links = {
 }
 
 
--- In this table, the key placetypes should be treated the same as the value placetypes
--- in all respects but the actual display text.
+-- In this table, the key qualifiers should be treated the same as the value qualifiers for
+-- categorization purposes. This is overridden by cat_data, placetype_equivs and
+-- qualifier_to_placetype_equivs.
+export.qualifier_equivs = {
+	["ancient"] = "historical",
+	["former"] = "historical",
+	["historic"] = "historical",
+	-- This needs to be here. If we take it out, 'historic province' won't properly
+	-- map to 'historical political subdivision'.
+	["historical"] = "historical",
+	["medieval"] = "historical",
+	["mediaeval"] = "historical",
+}
+
+-- In this table, any placetypes containing these qualifiers that do not occur in placetype_equivs
+-- or cat_data should be mapped to the specified placetypes for categorization purposes. Entries here
+-- are overridden by cat_data and placetype_equivs.
+export.qualifier_to_placetype_equivs = {
+	["fictional"] = "fictional location",
+	["mythological"] = "mythological location",
+}
+
+-- In this table, the key placetypes should be treated the same as the value placetypes for
+-- categorization purposes. Entries here are overridden by cat_data.
 export.placetype_equivs = {
-	["administrative county"] = "county",
-	["administrative region"] = "region",
-	["ancient civilisation"] = "historical polity",
-	["ancient civilization"] = "historical polity",
-	["ancient empire"] = "historical polity",
-	["ancient kingdom"] = "historical polity",
 	["archipelago"] = "island",
 	["associated province"] = "province",
 	["autonomous prefecture"] = "prefecture",
@@ -284,24 +314,67 @@ export.placetype_equivs = {
 	["empire"] = "polity",
 	["external territory"] = "dependent territory",
 	["federal territory"] = "territory",
-	["fictional city"] = "fictional location",
-	["fictional island"] = "fictional location",
-	["fictional kingdom"] = "fictional location",
-	["fictional region"] = "fictional location",
-	["former autonomous territory"] = "former polity",
-	["former colony"] = "former polity",
-	["former country"] = "former polity",
-	["former empire"] = "former polity",
-	["former kingdom"] = "former polity",
-	["former maritime republic"] = "former polity",
-	["former republic"] = "former polity",
-	["former separatist state"] = "former polity",
 	["geographical region"] = "region",
 	["ghost town"] = "town",
 	["group of islands"] = "island",
 	["hamlet"] = "village",
 	["harbor town"] = "town",
 	["harbour town"] = "town",
+	-- We try to list all top-level polities and political subdivisions here and classify them
+	-- accordingly. (Note that the following entries also apply to anything preceded by "former",
+	-- "ancient", "historic", "medieval", etc., according to qualifier_equivs.) Anything we don't
+	-- list will be categorized as if the qualifier were absent, e.g. "ancient city" will be
+	-- categorized as a city and "former sea" as a sea.
+	["historical autonomous republic"] = "historical political subdivision",
+	["historical autonomous territory"] = "historical political subdivision",
+	["historical borough"] = "historical political subdivision",
+	["historical canton"] = "historical political subdivision",
+	["historical bailiwick"] = "historical polity",
+	["historical barangay"] = "historical political subdivision",
+	["historical bishopric"] = "historical polity",
+	["historical civilisation"] = "historical polity",
+	["historical civilization"] = "historical polity",
+	["historical civil parish"] = "historical political subdivision",
+	["historical colony"] = "historical polity",
+	["historical commandery"] = "historical political subdivision",
+	["historical commonwealth"] = "historical polity",
+	["historical commune"] = "historical political subdivision",
+	["historical council area"] = "historical political subdivision",
+	["historical county"] = "historical political subdivision",
+	["historical county borough"] = "historical political subdivision",
+	["historical country"] = "historical polity",
+	["historical crown dependency"] = "historical polity",
+	["historical department"] = "historical political subdivision",
+	["historical dependency"] = "historical polity",
+	["historical district"] = "historical political subdivision",
+	["historical division"] = "historical political subdivision",
+	["historical duchy"] = "historical polity",
+	["historical empire"] = "historical polity",
+	["historical governorate"] = "historical political subdivision",
+	["historical kingdom"] = "historical polity",
+	["historical krai"] = "historical political subdivision",
+	["historical maritime republic"] = "historical polity",
+	["historical metropolitan borough"] = "historical political subdivision",
+	["historical municipality"] = "historical political subdivision",
+	["historical oblast"] = "historical political subdivision",
+	["historical okrug"] = "historical political subdivision",
+	["historical parish"] = "historical political subdivision",
+	["historical periphery"] = "historical political subdivision",
+	["historical prefecture"] = "historical political subdivision",
+	["historical province"] = "historical political subdivision",
+	["historical regency"] = "historical political subdivision",
+	["historical regional unit"] = "historical political subdivision",
+	["historical republic"] = "historical polity",
+	["historical satrapy"] = "historical polity",
+	["historical separatist state"] = "historical polity",
+	-- The following could refer either to a state of a country (a subdivision)
+	-- or a state = sovereign entity. The latter appears more common (e.g. in
+	-- various "ancient states" of East Asia).
+	["historical state"] = "historical polity",
+	["historical subdistrict"] = "historical political subdivision",
+	["historical subdivision"] = "historical political subdivision",
+	["historical subprefecture"] = "historical political subdivision",
+	["historical voivodeship"] = "historical political subdivision",
 	["home rule city"] = "city",
 	["home rule municipality"] = "municipality",
 	["independent city"] = "city",
@@ -312,17 +385,10 @@ export.placetype_equivs = {
 	["legislative capital"] = "capital city",
 	["mediaeval city"] = "ancient city",
 	["medieval city"] = "ancient city",
-	["mediaeval kingdom"] = "historical polity",
-	["medieval kingdom"] = "historical polity",
 	["mountain indigenous township"] = "township",
 	["mountain range"] = "mountain",
 	["mountainous region"] = "region",
 	["municipality with city status"] = "municipality",
-	["mythological city"] = "mythological location",
-	["mythological island"] = "mythological location",
-	["mythological kingdom"] = "mythological location",
-	["mythological region"] = "mythological location",
-	["mythological river"] = "mythological location",
 	["neighbourhood"] = "neighborhood",
 	["overseas collectivity"] = "collectivity",
 	["overseas department"] = "department",
@@ -331,12 +397,7 @@ export.placetype_equivs = {
 	["port town"] = "town",
 	["resort city"] = "city",
 	["resort town"] = "town",
-	["rural community"] = "community",
-	["rural municipality"] = "municipality",
-	["rural township"] = "township",
 	["spa town"] = "town",
-	["special collectivity"] = "collectivity",
-	["special territory"] = "territory",
 	["statutory town"] = "town",
 	["submerged ghost town"] = "town",
 	["supercontinent"] = "continent",
@@ -353,14 +414,34 @@ export.placetype_equivs = {
 -- "country/United States of America" (or "c/US", etc.) are given, the result
 -- will be displayed as "United States".
 export.placename_display_aliases = {
+	["city"] = {
+		["New York"] = "New York City",
+	},
 	["country"] = {
 		["US"] = "United States",
 		["USA"] = "United States",
 		["United States of America"] = "United States",
 		["UK"] = "United Kingdom",
+		["UAE"] = "United Arab Emirates",
+		["Republic of North Macedonia"] = "North Macedonia",
+		["Republic of Macedonia"] = "North Macedonia",
+		["Republic of Ireland"] = "Ireland",
+		["Republic of Armenia"] = "Armenia",
+		["Congo"] = "Democratic Republic of the Congo",
+		["Côte d'Ivoire"] = "Ivory Coast",
+		["Czechia"] = "Czech Republic",
 	},
-	["city"] = {
-		["New York"] = "New York City",
+	["region"] = {
+		["Northern Ostrobothnia"] = "North Ostrobothnia",
+		["Southern Ostrobothnia"] = "South Ostrobothnia",
+		["North Savo"] = "Northern Savonia",
+		["South Savo"] = "Southern Savonia",
+		["Päijät-Häme"] = "Päijänne Tavastia",
+		["Kanta-Häme"] = "Tavastia Proper",
+		["Åland"] = "Åland Islands",
+	},
+	["state"] = {
+		["Mecklenburg-Western Pomerania"] = "Mecklenburg-Vorpommern",
 	},
 }
 
@@ -398,7 +479,6 @@ export.placename_article = {
 	},
 
 	["autonomous community"] = {
-		["Basque Country"] = "the",
 		["Valencian Community"] = "the",
 	},
 }
@@ -407,6 +487,7 @@ export.placename_article = {
 -- place data by looking for places prefixed by "the".
 for _, group in ipairs(m_shared.places) do
 	for key, value in pairs(group.data) do
+		key = key:gsub(", .*$", "") -- Chop off ", England" and such from the end
 		local base = key:match("^the (.*)$")
 		if base then
 			local divtype = value.divtype or group.default_divtype
@@ -433,10 +514,30 @@ export.autolink = {
 }
 
 
+-- If any of the following holonyms are present, the associated holonyms are automatically added
+-- to the end of the list of holonyms for display and categorization purposes.
+-- FIXME: There are none here currently and the mechanism is broken in that it doesn't properly
+-- check for the presence of the holonym already. Don't add any without fixing this, or we'll
+-- get redundantly-displayed holonyms in the common case where e.g. "Alabama, USA" is specified.
+-- See below under cat_implications.
+-- FIXME: Consider implementing a handler to automatically add implications for all political
+-- subdivisions listed in the groups in [[Module:place/shared-data]], with the containing polity
+-- as the implicand. That way, if someone writes e.g. {{place|en|village|s/Thuringia}}, it will
+-- automatically display as if written {{place|en|village|s/Thuringia|c/Germany}}.
 export.implications = {
 }
 
 
+-- If any of the following holonyms are present, the associated holonyms are automatically added
+-- to the end of the list of holonyms for categorization (but not display) purposes.
+-- FIXME: We should implement an implication handler to add cat_implications for all political
+-- subdivisions listed in the groups in [[Module:place/shared-data]], with the containing polity
+-- as the implicand. (This should be a handler not a preprocessing step to save memory.) Before
+-- doing that, we should fix the implication mechanism to not add a holonym if the holonym
+-- already exists or a conflicting holonym exists, where "conflicting" means a different holonym
+-- of the same placetype as the holonym being added. Hence, if e.g. two countries have a province of
+-- the same name, and we have an entry for one of the provinces, we won't add that province's country
+-- if the other country is already specified.
 export.cat_implications = {
 	["region"] = {
 		["Eastern Europe"] = {"continent/Europe"},
@@ -464,24 +565,24 @@ export.cat_implications = {
 }
 
 
--- Used in get_possible_cat() in [[Module:place]]. When constructing a category
--- for a state, province or region, append a comma + the country name if it is
--- in this table. If the value of the table is true, use the actual country name,
--- else use the value of the table. NOTE: This only applies to cat_data entries
--- with "state", "province" or "region" as a key in the inner table and {true}
--- occurs as the value. Currently this only occurs with municipalities. It
--- doesn't currently apply to categories like "Cities in Alabama, USA", which
--- are handled by the city_type_cat_handler(), which uses a key of "itself" and
--- directly specifies the category.
-export.country_append_format = {
-	["United States"] = "USA",
-	["Philippines"] = true,
-	["Brazil"] = true,
-	["England"] = true,
-	["Northern Ireland"] = true,
-	["Scotland"] = true,
-	["Wales"] = true,
-}
+export.cat_implication_handlers = {}
+
+table.insert(export.cat_implication_handlers,
+	function(placetype, holonym_placetype, holonym_placename)
+		for _, group in ipairs(m_shared.places) do
+			-- Find the appropriate key format for the holonym (e.g. "pref/Osaka" -> "Osaka Prefecture").
+			local key = group.place_cat_handler(group, placetype, holonym_placetype, holonym_placename)
+			if key then
+				local value = group.data[key]
+				if value and value.containing_polity and value.containing_polity_type then
+					local bare_containing_polity, linked_containing_polity =
+						m_shared.construct_bare_and_linked_version(value.containing_polity)
+					return {value.containing_polity_type, bare_containing_polity}
+				end
+			end
+		end
+	end
+)
 
 
 local function city_type_cat_handler(placetype, holonym_placetype, holonym_placename)
@@ -493,7 +594,7 @@ local function city_type_cat_handler(placetype, holonym_placetype, holonym_place
 			if key then
 				local value = group.data[key]
 				if value then
-					-- Use the group's value_transformer to ensure that 'nocities' and 'city_parent'
+					-- Use the group's value_transformer to ensure that 'nocities' and 'containing_polity'
 					-- keys are present if they should be.
 					value = group.value_transformer(group, key, value)
 					if not value.nocities then
@@ -501,8 +602,8 @@ local function city_type_cat_handler(placetype, holonym_placetype, holonym_place
 						-- e.g. [[Hirakata]] goes in both "Cities in Osaka Prefecture" and
 						-- "Cities in Japan".
 						local retcats = {ucfirst(plural_placetype) .. " in " .. key}
-						if value.city_parent then
-							table.insert(retcats, ucfirst(plural_placetype) .. " in " .. value.city_parent)
+						if value.containing_polity then
+							table.insert(retcats, ucfirst(plural_placetype) .. " in " .. value.containing_polity)
 						end
 						return {
 							["itself"] = retcats
@@ -606,12 +707,6 @@ export.cat_data = {
 		},
 	},
 
-	["ancient city"] = {
-		["default"] = {
-			["itself"] = {"Cities"},
-		},
-	},
-
 	["atoll"] = {
 		["default"] = {
 			["itself"] = {true},
@@ -686,8 +781,8 @@ export.cat_data = {
 		},
 
 		["state/Alaska"] = {
-			-- Don't use +++ or we may get "Boroughs of Alaska, USA".
-			["itself"] = {"Boroughs of Alaska"},
+			-- We intentionally do not add ", USA" here because that's the way it was done before.
+			["itself"] = {"Boroughs of +++"},
 		},
 
 		["country/England"] = {
@@ -699,8 +794,8 @@ export.cat_data = {
 		},
 
 		["state/Pennsylvania"] = {
-			-- Don't use +++ or we may get "Boroughs in Pennsylvania, USA".
-			["itself"] = {"Boroughs in Pennsylvania"},
+			-- We intentionally do not add ", USA" here because that's the way it was done before.
+			["itself"] = {"Boroughs in +++"},
 		},
 	},
 
@@ -712,8 +807,8 @@ export.cat_data = {
 		},
 
 		["state/Alaska"] = {
-			-- Don't use +++ or we may get "Borough seats of Alaska, USA".
-			["itself"] = {"Borough seats of Alaska"},
+			-- We intentionally do not add ", USA" here because that's the way it was done before.
+			["itself"] = {"Borough seats of +++"},
 		},
 
 	},
@@ -757,8 +852,7 @@ export.cat_data = {
 		end,
 
 		["prefecture/Hokkaido"] = {
-			-- Don't use +++ or true, or we may get "Cities in Hokkaido Prefecture".
-			["itself"] = {"Cities in Hokkaido"},
+			["itself"] = {"Cities in +++"},
 		},
 
 		["default"] = {
@@ -840,6 +934,7 @@ export.cat_data = {
 			local spec = m_shared.US_states[holonym_placename .. ", USA"]
 			if spec and holonym_placetype == "state" and not spec.county_type then
 				return {
+					-- We intentionally do not add ", USA" here because that's the way it was done before.
 					["itself"] = {"Counties of " .. holonym_placename}
 				}
 			end
@@ -879,6 +974,7 @@ export.cat_data = {
 			local spec = m_shared.US_states[holonym_placename .. ", USA"]
 			if spec and holonym_placetype == "state" and not spec.county_type then
 				return {
+					-- We intentionally do not add ", USA" here because that's the way it was done before.
 					["itself"] = {"County seats of " .. holonym_placename}
 				}
 			end
@@ -962,12 +1058,6 @@ export.cat_data = {
 		},
 	},
 
-	["polity"] = {
-		["default"] = {
-			["itself"] = {true},
-		},
-	},
-
 	["federal city"] = {
 		preposition="of",
 
@@ -986,26 +1076,13 @@ export.cat_data = {
 
 	["fictional location"] = {
 		["default"] = {
-			["itself"] = {"Fictional locations"},
+			["itself"] = {true},
 		},
 	},
 
 	["forest"] = {
 		["default"] = {
 			["itself"] = {true},
-		},
-	},
-
-	["former county"] = {
-		preposition="of",
-
-		["default"] = {
-		},
-	},
-
-	["former polity"] = {
-		["default"] = {
-			["itself"] = {"Historical polities"},
 		},
 	},
 
@@ -1037,6 +1114,14 @@ export.cat_data = {
 	},
 
 	["historical polity"] = {
+		["default"] = {
+			["itself"] = {true},
+		},
+	},
+
+	["historical political subdivision"] = {
+		preposition="of",
+
 		["default"] = {
 			["itself"] = {true},
 		},
@@ -1151,12 +1236,17 @@ export.cat_data = {
 		},
 
 		["country/Brazil"] = {
-			["state"] = {true, "Municipalities of Brazil"},
+			["state"] = {"Municipalities of +++, Brazil", "Municipalities of Brazil"},
+			["country"] = {true},
+		},
+
+		["country/Finland"] = {
+			["region"] = {"Municipalities of +++, Finland", "Municipalities of Finland"},
 			["country"] = {true},
 		},
 
 		["country/Philippines"] = {
-			["province"] = {true, "Municipalities of the Philippines"},
+			["province"] = {"Municipalities of +++, Philippines", "Municipalities of the Philippines"},
 			["country"] = {true},
 		},
 
@@ -1167,7 +1257,7 @@ export.cat_data = {
 
 	["mythological location"] = {
 		["default"] = {
-			["itself"] = {"Mythological locations"},
+			["itself"] = {true},
 		},
 	},
 
@@ -1197,8 +1287,8 @@ export.cat_data = {
 		},
 
 		["state/Louisiana"] = {
-			-- Don't use +++ or we may get "Parishes of Louisiana, USA".
-			["itself"] = {"Parishes of Louisiana"},
+			-- We intentionally do not add ", USA" here because that's the way it was done before.
+			["itself"] = {"Parishes of +++"},
 		},
 
 	},
@@ -1211,8 +1301,8 @@ export.cat_data = {
 		},
 
 		["state/Louisiana"] = {
-			-- Don't use +++ or we may get "Parish seats of Louisiana, USA".
-			["itself"] = {"Parish seats of Louisiana"},
+			-- We intentionally do not add ", USA" here because that's the way it was done before.
+			["itself"] = {"Parish seats of +++"},
 		},
 
 	},
@@ -1236,6 +1326,12 @@ export.cat_data = {
 		},
 
 		["default"] = {
+		},
+	},
+
+	["polity"] = {
+		["default"] = {
+			["itself"] = {true},
 		},
 	},
 

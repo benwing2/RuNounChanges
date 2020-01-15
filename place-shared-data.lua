@@ -49,10 +49,21 @@ local function subpolity_keydesc(key, value, larger_polity, default_divtype)
 	return value.keydesc or linked_key .. ", " .. divtype .. " of " .. linked_larger_polity
 end
 
-local function subpolity_bare_label_setter(larger_polity, frob_key)
+local function apply_key_to_placename(key, key_to_placename)
+	local placename = key
+	if key_to_placename then
+		placename = key_to_placename(key)
+		if type(placename) == "table" then
+			placename = placename[1]
+		end
+	end
+	return placename
+end
+
+local function subpolity_bare_label_setter(larger_polity)
 	return function(labels, group, key, value)
-		local frobbed_key = frob_key and frob_key(key) or key
-		local keydesc = subpolity_keydesc(frobbed_key, value, larger_polity, group.default_divtype)
+		local placename = apply_key_to_placename(key, group.key_to_placename)
+		local keydesc = subpolity_keydesc(placename, value, larger_polity, group.default_divtype)
 		local bare_key, linked_key = export.construct_bare_and_linked_version(key)
 		local bare_larger_polity, linked_larger_polity = export.construct_bare_and_linked_version(larger_polity)
 		labels[bare_key] = {
@@ -62,19 +73,24 @@ local function subpolity_bare_label_setter(larger_polity, frob_key)
 	end
 end
 
-local function subpolity_value_transformer(larger_polity, frob_key)
+local function subpolity_value_transformer(larger_polity)
+	local larger_polity_type = "country"
+	if type(larger_polity) == "table" then
+		larger_polity_type, larger_polity = larger_polity[1], larger_polity[2]
+	end
 	return function(group, key, value)
-		local frobbed_key = frob_key and frob_key(key) or key
-		value.keydesc = subpolity_keydesc(frobbed_key, value, larger_polity, group.default_divtype)
-		value.city_parent = larger_polity
+		local placename = apply_key_to_placename(key, group.key_to_placename)
+		value.keydesc = subpolity_keydesc(placename, value, larger_polity, group.default_divtype)
+		value.containing_polity = larger_polity
+		value.containing_polity_type = larger_polity_type
 		return value
 	end
 end
 
-local function default_place_cat_handler(frob_placename)
+local function default_place_cat_handler()
 	return function(group, placetype, holonym_placetype, holonym_placename)
-		if frob_placename then
-			holonym_placename = frob_placename(holonym_placename)
+		if group.placename_to_key then
+			holonym_placename = group.placename_to_key(holonym_placename)
 		end
 		local spec = group.data[holonym_placename]
 		if not spec then
@@ -540,6 +556,28 @@ export.irish_counties = {
 	["County Wicklow, Ireland"] = {},
 }
 
+export.finnish_regions = {
+	["Lapland, Finland"] = {},
+	["North Ostrobothnia, Finland"] = {},
+	["Kainuu, Finland"] = {},
+	["North Karelia, Finland"] = {},
+	["Northern Savonia, Finland"] = {},
+	["Southern Savonia, Finland"] = {},
+	["South Karelia, Finland"] = {},
+	["Central Finland, Finland"] = {},
+	["South Ostrobothnia, Finland"] = {},
+	["Ostrobothnia, Finland"] = {},
+	["Central Ostrobothnia, Finland"] = {},
+	["Pirkanmaa, Finland"] = {},
+	["Satakunta, Finland"] = {},
+	["Päijänne Tavastia, Finland"] = {},
+	["Tavastia Proper, Finland"] = {},
+	["Kymenlaakso, Finland"] = {},
+	["Uusimaa, Finland"] = {},
+	["Southwest Finland, Finland"] = {},
+	["the Åland Islands, Finland"] = {},
+}
+
 local function construct_russian_federal_subject_keydesc(linked_key, divtype)
 	if divtype == "oblast" then
 		-- Hack: Oblasts generally don't have entries under "Foo Oblast"
@@ -550,14 +588,34 @@ local function construct_russian_federal_subject_keydesc(linked_key, divtype)
 	return linked_key .. ", a federal subject ([[" .. divtype .. "]]) of [[Russia]]"
 end
 
-local function northern_ireland_holonym_placename_to_key(placename)
+local function northern_ireland_key_to_placename(key)
+	key = key:gsub(", Northern Ireland$", "")
+	local bare_key = key:gsub("^County ", "")
+	if key == bare_key then
+		return key
+	else
+		return {key, bare_key}
+	end
+end
+
+local function northern_ireland_placename_to_key(placename)
 	if not placename:find("^County ") and not placename:find("^City ") then
 		placename = "County " .. placename
 	end
 	return placename .. ", Northern Ireland"
 end
 
-local function ireland_holonym_placename_to_key(placename)
+local function ireland_key_to_placename(key)
+	key = key:gsub(", Ireland$", "")
+	local bare_key = key:gsub("^County ", "")
+	if key == bare_key then
+		return key
+	else
+		return {key, bare_key}
+	end
+end
+
+local function ireland_placename_to_key(placename)
 	if not placename:find("^County ") and not placename:find("^City ") then
 		placename = "County " .. placename
 	end
@@ -644,12 +702,12 @@ Each group consists of a table with the following keys:
 	 - 'nocities': If 'true', don't recognize categories such as 'en:Cities in Monaco' or
 	   'fr:Rivers in the Soviet Union'. NOTE: This key is often added automatically by
 	   the 'value_transformer' function.
-	 - 'city_parent': If present, this should be the larger polity in which the place is
+	 - 'containing_polity': If present, this should be the larger polity in which the place is
 	   contained, and is used to construct the primary parent of 'Cities in ...',
-	   'Rivers in ...', and similar categories. For example, if city_parent has the value
+	   'Rivers in ...', and similar categories. For example, if containing_polity has the value
 	   "China", and the category is of the form e.g. 'en:Cities in Guangdong" (which is a
 	   province of China), the primary parent (i.e. the parent that appears in the breadcrumbs
-	   at the top of the category page) will be "Cities in China". If city_parent is omitted,
+	   at the top of the category page) will be "Cities in China". If containing_polity is omitted,
 	   the primary parent will simply be "Cities" (or "Towns", "Rivers", etc. as appropriate).
 	   NOTE: This key is often added automatically by the 'value_transformer' function.
 	 - 'keydesc': String directly specifying a description of the key. Used for some keys with
@@ -672,7 +730,7 @@ Each group consists of a table with the following keys:
 	 in [[Module:category tree/topic cat/data/Places]] that handle city-type and
 	 political-subdivision-type categories. It is passed three arguments (the group and the key and
 	 value of the data item). Its normal purpose is to add extra properties to the data item value,
-	 such as 'city_parent' (see above) and 'keydesc' (the appropriate description of the place,
+	 such as 'containing_polity' (see above) and 'keydesc' (the appropriate description of the place,
 	 which often includes the type of division and the country).  Some groups (in particular,
 	 the one for former polities, such as Persia and the Roman Empire) also add 'nocities = true'.
 	 The reason these extra properties are added by a function like this instead of included directly
@@ -744,7 +802,7 @@ export.places = {
 			["Burundi"] = {parents = {"Africa"}, poldiv = {"provinces", "communes"}},
 			["Cambodia"] = {parents = {"Asia"}, poldiv = {"provinces", "districts"}},
 			["Cameroon"] = {parents = {"Africa"}, poldiv = {"regions", "departments"}},
-			["Canada"] = {parents = {"North America"}, poldiv = {"provinces", "territories", "counties"}, miscdiv = {"regions", "census divisions"}},
+			["Canada"] = {parents = {"North America"}, poldiv = {"provinces", "territories", "counties", "districts", "municipalities",}, miscdiv = {"regions", "census divisions"}},
 			["Cape Verde"] = {parents = {"Africa"}, poldiv = {"municipalities", "parishes"}},
 			["the Central African Republic"] = {parents = {"Africa"}, poldiv = {"prefectures", "subprefectures"}},
 			["Chad"] = {parents = {"Africa"}, poldiv = {"regions", "departments"}},
@@ -755,7 +813,7 @@ export.places = {
 			["Colombia"] = {parents = {"South America"}, poldiv = {"departments", "municipalities"}},
 			["the Comoros"] = {parents = {"Africa"}, poldiv = {"autonomous islands"}},
 			["Costa Rica"] = {parents = {"Central America"}, poldiv = {"provinces", "cantons"}},
-			["Croatia"] = {parents = {"Europe"}, poldiv = {"municipalities"}},
+			["Croatia"] = {parents = {"Europe"}, poldiv = {"counties", "municipalities"}},
 			["Cuba"] = {parents = {"North America"}, poldiv = {"provinces", "municipalities"}},
 			["Cyprus"] = {parents = {"Europe", "Asia"}, poldiv = {"districts"}},
 			["the Czech Republic"] = {parents = {"Europe"}, poldiv = {"regions", "districts"}},
@@ -1081,7 +1139,7 @@ export.places = {
 		place_cat_handler = default_place_cat_handler(),
 		default_divtype = {"constituent country", "country"},
 		data = {
-			["England"] = {poldiv = {"regions", "counties"}},
+			["England"] = {poldiv = {"regions", "counties", "districts"}},
 			["Northern Ireland"] = {divtype = "province", parents = {"United Kingdom", "Ireland"},
 				poldiv = {"districts"}, miscdiv = {"counties"}},
 			["Scotland"] = {poldiv = {"council areas"}, miscdiv = {"regions", "districts", "counties"}},
@@ -1091,9 +1149,11 @@ export.places = {
 
 	-- counties of England
 	{
-		bare_label_setter = subpolity_bare_label_setter("England", chop(", England$")),
-		value_transformer = subpolity_value_transformer("England", chop(", England$")),
-		place_cat_handler = default_place_cat_handler(append(", England")),
+		key_to_placename = chop(", England$"),
+		placename_to_key = append(", England"),
+		bare_label_setter = subpolity_bare_label_setter("England"),
+		value_transformer = subpolity_value_transformer({"constituent country", "England"}),
+		place_cat_handler = default_place_cat_handler(),
 		default_divtype = "county",
 		data = {
 			-- ["Avon, England"] = {}, -- no longer
@@ -1107,7 +1167,7 @@ export.places = {
 			["Cheshire, England"] = {},
 			-- ["Cleveland, England"] = {}, -- no longer
 			["Cornwall, England"] = {},
-			["Cumberland, England"] = {},
+			-- ["Cumberland, England"] = {}, -- no longer
 			["Cumbria, England"] = {},
 			["Derbyshire, England"] = {},
 			["Devon, England"] = {},
@@ -1170,9 +1230,11 @@ export.places = {
 
 	-- counties of Northern Ireland
 	{
-		bare_label_setter = subpolity_bare_label_setter("Northern Ireland", chop(", Northern Ireland$")),
-		value_transformer = subpolity_value_transformer("Northern Ireland", chop(", Northern Ireland$")),
-		place_cat_handler = default_place_cat_handler(northern_ireland_holonym_placename_to_key),
+		key_to_placename = northern_ireland_key_to_placename,
+		placename_to_key = northern_ireland_placename_to_key,
+		bare_label_setter = subpolity_bare_label_setter("Northern Ireland"),
+		value_transformer = subpolity_value_transformer({"constituent country", "Northern Ireland"}),
+		place_cat_handler = default_place_cat_handler(),
 		default_divtype = "county",
 		data = {
 			["County Antrim, Northern Ireland"] = {},
@@ -1188,9 +1250,11 @@ export.places = {
 
 	-- council areas of Scotland
 	{
-		bare_label_setter = subpolity_bare_label_setter("Scotland", chop(", Scotland$")),
-		value_transformer = subpolity_value_transformer("Scotland", chop(", Scotland$")),
-		place_cat_handler = default_place_cat_handler(append(", Scotland")),
+		key_to_placename = chop(", Scotland$"),
+		placename_to_key = append(", Scotland"),
+		bare_label_setter = subpolity_bare_label_setter("Scotland"),
+		value_transformer = subpolity_value_transformer({"constituent country", "Scotland"}),
+		place_cat_handler = default_place_cat_handler(),
 		default_divtype = "council area",
 		data = {
 			["the City of Glasgow, Scotland"] = {nocities = true},
@@ -1228,20 +1292,13 @@ export.places = {
 		}
 	},
 
-	-- counties of Ireland
-	{
-		bare_label_setter = subpolity_bare_label_setter("Ireland", chop(", Ireland$")),
-		value_transformer = subpolity_value_transformer("Ireland", chop(", Ireland$")),
-		place_cat_handler = default_place_cat_handler(ireland_holonym_placename_to_key),
-		default_divtype = "county",
-		data = export.irish_counties,
-	},
-
 	-- principal areas (cities, counties and county boroughs) of Wales
 	{
-		bare_label_setter = subpolity_bare_label_setter("Wales", chop(", Wales$")),
-		value_transformer = subpolity_value_transformer("Wales", chop(", Wales$")),
-		place_cat_handler = default_place_cat_handler(append(", Wales")),
+		key_to_placename = chop(", Wales$"),
+		placename_to_key = append(", Wales"),
+		bare_label_setter = subpolity_bare_label_setter("Wales"),
+		value_transformer = subpolity_value_transformer({"constituent country", "Wales"}),
+		place_cat_handler = default_place_cat_handler(),
 		default_divtype = "county borough",
 		data = {
 			["Blaenau Gwent, Wales"] = {},
@@ -1267,6 +1324,17 @@ export.places = {
 			["the Vale of Glamorgan, Wales"] = {},
 			["Wrexham, Wales"] = {},
 		}
+	},
+
+	-- counties of Ireland
+	{
+		key_to_placename = ireland_key_to_placename,
+		placename_to_key = ireland_placename_to_key,
+		bare_label_setter = subpolity_bare_label_setter("Ireland"),
+		value_transformer = subpolity_value_transformer("Ireland"),
+		place_cat_handler = default_place_cat_handler(),
+		default_divtype = "county",
+		data = export.irish_counties,
 	},
 
 	-- provinces and territories of Canada
@@ -1323,7 +1391,7 @@ export.places = {
 			}
 		end,
 		value_transformer = function(group, key, value)
-			value.city_parent = "Russia"
+			value.containing_polity = "Russia"
 			local divtype = value.divtype or group.default_divtype
 			if type(divtype) == "table" then
 				divtype = divtype[1]
@@ -1432,18 +1500,22 @@ export.places = {
 
 	-- states of the United States
 	{
-		bare_label_setter = subpolity_bare_label_setter("the United States", chop(", USA$")),
-		value_transformer = subpolity_value_transformer("the United States", chop(", USA$")),
-		place_cat_handler = default_place_cat_handler(append(", USA")),
+		key_to_placename = chop(", USA$"),
+		placename_to_key = append(", USA"),
+		bare_label_setter = subpolity_bare_label_setter("the United States"),
+		value_transformer = subpolity_value_transformer("the United States"),
+		place_cat_handler = default_place_cat_handler(),
 		default_divtype = "state",
 		data = export.US_states,
 	},
 
 	-- states of Brazil
 	{
-		bare_label_setter = subpolity_bare_label_setter("Brazil", chop(", Brazil$")),
-		value_transformer = subpolity_value_transformer("Brazil", chop(", Brazil$")),
-		place_cat_handler = default_place_cat_handler(append(", Brazil")),
+		key_to_placename = chop(", Brazil$"),
+		placename_to_key = append(", Brazil"),
+		bare_label_setter = subpolity_bare_label_setter("Brazil"),
+		value_transformer = subpolity_value_transformer("Brazil"),
+		place_cat_handler = default_place_cat_handler(),
 		default_divtype = "state",
 		data = export.brazilian_states,
 	},
@@ -1459,6 +1531,8 @@ export.places = {
 
 	-- prefectures of Japan
 	{
+		key_to_placename = chop(" Prefecture$"),
+		placename_to_key = append(" Prefecture"),
 		-- We can't use the normal subpolity_bare_label_setter() because we set a special parent
 		-- (normally the parent would just be "Japan"). FIXME: Do we want this difference?
 		-- Or do we want e.g. provinces in China to have a parent "Provinces of China" instead of
@@ -1469,8 +1543,8 @@ export.places = {
 				parents = {"Prefectures of Japan"},
 			}
 		end,
-		value_transformer = subpolity_value_transformer("Japan", chop(" Prefecture$")),
-		place_cat_handler = default_place_cat_handler(append(" Prefecture")),
+		value_transformer = subpolity_value_transformer("Japan"),
+		place_cat_handler = default_place_cat_handler(),
 		default_divtype = "prefecture",
 		data = export.japanese_prefectures,
 	},
@@ -1551,11 +1625,79 @@ export.places = {
 
 	-- provinces of the Philippines
 	{
-		bare_label_setter = subpolity_bare_label_setter("Philippines", chop(", Philippines$")),
-		value_transformer = subpolity_value_transformer("Philippines", chop(", Philippines$")),
-		place_cat_handler = default_place_cat_handler(append(", Philippines")),
-		default_divtype = "provinces",
+		key_to_placename = chop(", Philippines$"),
+		placename_to_key = append(" Philippines"),
+		bare_label_setter = subpolity_bare_label_setter("the Philippines"),
+		value_transformer = subpolity_value_transformer("the Philippines"),
+		place_cat_handler = default_place_cat_handler(),
+		default_divtype = "province",
 		data = export.philippine_provinces,
+	},
+
+	-- autonomous communities of Spain
+	{
+		bare_label_setter = subpolity_bare_label_setter("Spain"),
+		value_transformer = subpolity_value_transformer("Spain"),
+		place_cat_handler = default_place_cat_handler(),
+		default_divtype = "autonomous community",
+		data = {
+			["Andalusia"] = {},
+			["Aragon"] = {},
+			["Asturias"] = {},
+			["the Balearic Islands"] = {},
+			["the Basque Country"] = {},
+			["the Canary Islands"] = {},
+			["Cantabria"] = {},
+			["Castile and León"] = {},
+			["Castilla-La Mancha"] = {},
+			["Catalonia"] = {},
+			["the Community of Madrid"] = {},
+			["Extremadura"] = {},
+			["Galicia"] = {},
+			["La Rioja"] = {},
+			["Murcia"] = {},
+			["Navarre"] = {},
+			["Valencia"] = {},
+		},
+	},
+
+	-- counties of Norway
+	{
+		bare_label_setter = subpolity_bare_label_setter("Norway"),
+		value_transformer = subpolity_value_transformer("Norway"),
+		place_cat_handler = default_place_cat_handler(),
+		default_divtype = "county",
+		data = {
+			["Østfold"] = {},
+			["Akershus"] = {},
+			["Oslo"] = {},
+			["Hedmark"] = {},
+			["Oppland"] = {},
+			["Buskerud"] = {},
+			["Vestfold"] = {},
+			["Telemark"] = {},
+			["Aust-Agder"] = {},
+			["Vest-Agder"] = {},
+			["Rogaland"] = {},
+			["Hordaland"] = {},
+			["Sogn og Fjordane"] = {},
+			["Møre og Romsdal"] = {},
+			["Nordland"] = {},
+			["Troms"] = {},
+			["Finnmark"] = {},
+			["Trøndelag"] = {},
+		},
+	},
+
+	-- regions of Finland
+	{
+		key_to_placename = chop(", Finland$"),
+		placename_to_key = append(", Finland"),
+		bare_label_setter = subpolity_bare_label_setter("Finland"),
+		value_transformer = subpolity_value_transformer("Finland"),
+		place_cat_handler = default_place_cat_handler(),
+		default_divtype = "region",
+		data = export.finnish_regions,
 	},
 }
 

@@ -39,10 +39,13 @@ end
 
 -- Given a placetype, split the placetype into one or more potential "splits", each consisting
 -- of (a) a recognized qualifier (e.g. "small", "former"), which we canonicalize
--- (e.g. "historical" -> "historic", "seaside" -> "coastal"); and (b) a "bare placetype".
--- Return a list of pairs of {CANON_QUALIFIER, BARE_PLACETYPE}, as above. There may be
+-- (e.g. "historic" -> "historical", "seaside" -> "coastal"); (b) the concatenation of any
+-- previously recognized qualifiers on the left; and (c) the "bare placetype" to the right of
+-- the rightmost recognized qualifier. Return a list of pairs of
+-- {PREV_CANON_QUALIFIERS, THIS_CANON_QUALIFIER, BARE_PLACETYPE}, as above. There may be
 -- more than one element in the list in cases like "small unincorporated town". If no recognized
--- qualifier could be found, the list will be empty.
+-- qualifier could be found, the list will be empty. PREV_CANON_QUALIFIERS will be nil if there
+-- are no previous qualifiers.
 local function split_and_canonicalize_placetype(placetype)
 	local splits = {}
 	local prev_qualifier = nil
@@ -58,8 +61,8 @@ local function split_and_canonicalize_placetype(placetype)
 			else
 				break
 			end
+			table.insert(splits, {prev_qualifier, new_qualifier, bare_placetype})
 			prev_qualifier = prev_qualifier and prev_qualifier .. " " .. new_qualifier or new_qualifier
-			table.insert(splits, {prev_qualifier, bare_placetype})
 			placetype = bare_placetype
 		else
 			break
@@ -75,13 +78,36 @@ end
 -- qualifier to prepend, or nil). The placetype itself always forms the first entry.
 local function get_placetype_equivs(placetype)
 	local equivs = {}
+	-- First do the placetype itself.
 	table.insert(equivs, {placetype=placetype})
+	-- Then check for a mapping in placetype_equivs; add if present.
 	if data.placetype_equivs[placetype] then
 		table.insert(equivs, {placetype=data.placetype_equivs[placetype]})
 	end
+	-- Then successively split off recognized qualifiers and loop over successively greater sets of
+	-- qualifiers from the left.
 	local splits = split_and_canonicalize_placetype(placetype)
 	for _, split in ipairs(splits) do
-		local qualifier, bare_placetype = split[1], split[2]
+		local prev_qualifier, this_qualifier, bare_placetype = split[1], split[2], split[3]
+		-- First see if the rightmost split-off qualifier is in qualifier_to_placetype_equivs
+		-- (e.g. 'fictional *' -> 'fictional location'). If so, add the mapping.
+		if data.qualifier_to_placetype_equivs[this_qualifier] then
+			table.insert(equivs, {qualifier=prev_qualifier, placetype=data.qualifier_to_placetype_equivs[this_qualifier]})
+		end
+		-- Then see if the rightmost split-off qualifier is in qualifier_equivs (e.g. 'former' -> 'historical').
+		-- If so, create a placetype from the qualifier mapping + the following bare_placetype; then, add
+		-- that placetype, and any mapping for the placetype in placetype_equivs.
+		if data.qualifier_equivs[this_qualifier] then
+			local subbed_placetype = data.qualifier_equivs[this_qualifier] .. " " .. bare_placetype
+			table.insert(equivs, {qualifier=prev_qualifier, placetype=subbed_placetype})
+			if data.placetype_equivs[subbed_placetype] then
+				table.insert(equivs, {qualifier=prev_qualifier, placetype=data.placetype_equivs[subbed_placetype]})
+			end
+		end
+		-- Finally, join the rightmost split-off qualifier to the previously split-off qualifiers to form a
+		-- combined qualifier, and add it along with bare_placetype and any mapping in placetype_equivs for
+		-- bare_placetype.
+		local qualifier = prev_qualifier and prev_qualifier .. " " .. this_qualifier or this_qualifier
 		table.insert(equivs, {qualifier=qualifier, placetype=bare_placetype})
 		if data.placetype_equivs[bare_placetype] then
 			table.insert(equivs, {qualifier=qualifier, placetype=data.placetype_equivs[bare_placetype]})
@@ -181,6 +207,7 @@ local function key_holonym_spec_into_place_spec(place_spec, holonym_spec)
 	return place_spec
 end
 
+
 -- Implement "implications", i.e. where the presence of a given holonym causes additional
 -- holonym(s) to be added. There are two types of implications, general implications
 -- (which apply to both display and categorization) and category implications (which apply
@@ -225,7 +252,28 @@ local function handle_implications(place_specs, implication_data, should_clone)
 	end
 end
 
-	
+
+-- Look up a placename in an alias table, handling links appropriately.
+-- If the alias isn't found, return nil.
+local function lookup_placename_alias(placename, aliases)
+	-- If the placename is a link, apply the alias inside the link.
+	-- This pattern matches both piped and unpiped links. If the link is not
+	-- piped, the second capture (linktext) will be empty.
+	local link, linktext = mw.ustring.match(placename, "^%[%[([^|%]]+)%|?(.-)%]%]$")
+	if link then
+		if linktext ~= "" then
+			local alias = aliases[linktext]
+			return alias and "[[" .. link .. "|" .. alias .. "]]" or nil
+		else
+			local alias = aliases[link]
+			return alias and "[[" .. alias .. "]]" or nil
+		end
+	else
+		return aliases[placename]
+	end
+end
+
+
 -- Split a holonym (e.g. "continent/Europe" or "country/en:Italy" or "in southern")
 -- into its components. Return value is {PLACETYPE, PLACENAME, LANGCODE}, e.g.
 -- {"country", "Italy", "en"}. If there isn't a slash (e.g. "in southern"), the
@@ -252,7 +300,7 @@ local function split_holonym(datum)
 	if datum[1] then	
 		datum[1] = data.placetype_aliases[datum[1]] or datum[1]
 		datum[2] = get_equiv_placetype_prop(datum[1],
-			function(pt) return data.placename_display_aliases[pt] and data.placename_display_aliases[pt][datum[2]] end
+			function(pt) return data.placename_display_aliases[pt] and lookup_placename_alias(datum[2], data.placename_display_aliases[pt]) end
 		) or datum[2]
 
 		if not get_equiv_placetype_prop(datum[1], function(pt) return data.autolink[datum[3] and pt] end) then
@@ -382,9 +430,10 @@ function get_gloss(args, specs, sentence)
 					local splits = split_and_canonicalize_placetype(placetype)
 					local did_add = false
 					for _, split in ipairs(splits) do
-						local qualifier, bare_placetype = split[1], split[2]
+						local prev_qualifier, this_qualifier, bare_placetype = split[1], split[2], split[3]
 						local linked_version = get_linked_placetype(bare_placetype)
 						if linked_version then
+							local qualifier = prev_qualifier and prev_qualifier .. " " .. this_qualifier or this_qualifier
 							gloss = gloss .. qualifier .. " " .. linked_version
 							did_add = true
 							break
@@ -722,9 +771,11 @@ end
 
 -- Look up and resolve any category aliases that need to be applied to a holonym. For example,
 -- "country/Republic of China" maps to "Taiwan" for use in categories like "Counties in Taiwan".
+-- This also removes any links.
 local function resolve_cat_aliases(holonym_placetype, holonym_placename)
 	local retval
 	local cat_aliases = get_equiv_placetype_prop(holonym_placetype, function(pt) return data.placename_cat_aliases[pt] end)
+	holonym_placename = m_links.remove_links(holonym_placename)
 	if cat_aliases then
 		retval = cat_aliases[holonym_placename]
 	end
@@ -838,10 +889,7 @@ end
 --     the category spec should be a string; use it directly.
 -- (2) If "+++" occurs in the resulting category string, replace it with the holonym placename.
 --     The substituted placename comes from the holonym placename, possibly preceded by "the"
---     (if appropriate), and possibly followed by a comma and the country name. (This happens if
---     the holonym's placetype is state, province or region and another holonym was given in the
---     same place spec with placetype "country", and the country_append_format for that country
---     indicates that it should be appended. This happens, for example, for counties in England.)
+--     (if appropriate).
 function get_possible_cat(lang, cat_spec, entry_placetype, entry_pt_data, holonym, place_spec)
 	if not cat_spec or not entry_placetype or not entry_pt_data or not holonym or not place_spec then
 		return ""
@@ -861,23 +909,7 @@ function get_possible_cat(lang, cat_spec, entry_placetype, entry_pt_data, holony
 			cat = name
 		end
 		
-		local holonym_sub = get_place_string(holonym, true, false)
-
-		local is_state_province_region = get_equiv_placetype_prop(holonym_placetype,
-			function(pt) return pt == "state" or pt == "province" or pt == "region" end)
-		if is_state_province_region and place_spec["country"] then
-			local country = place_spec["country"][1]
-			country = resolve_cat_aliases("country", country)
-			-- If a holonym was specified as "cc/England" for "constituent country", there
-			-- will automatically be a "country" entry here due to the way that
-			-- key_holonym_spec_into_place_spec[] works.
-			local country_append_format = data.country_append_format[country]
-			if country_append_format then
-				holonym_sub = holonym_sub .. ", " .. (country_append_format == true and country or country_append_format)
-			end
-		end
-
-		cat = cat:gsub("%+%+%+", holonym_sub)
+		cat = cat:gsub("%+%+%+", get_place_string(holonym, true, false))
 		all_cats = all_cats .. catlink(lang, cat)
 	end
 	
