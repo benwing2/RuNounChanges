@@ -1794,15 +1794,6 @@ def inner_parse_holonym(holonym, all_holonyms):
     return ["council area/" + normalized_holonym, "cc/Scotland"]
   if holonym in welsh_counties_etc:
     return "%s/%s" % (welsh_counties_etc[holonym], holonym)
-  coded_place_type_regex = "|".join(re.escape(x) for x in place_types_to_codes.keys())
-  m = re.search("^(%s) (%s)$" % (proper_noun_regex, coded_place_type_regex), holonym)
-  if m:
-    bare_holonym, placetype = m.groups()
-    return "%s/%s" % (place_types_to_codes[placetype], bare_holonym)
-  m = re.search("^(%s) +(?:of +)?(%s)$" % (coded_place_type_regex, proper_noun_regex), holonym)
-  if m:
-    placetype, bare_holonym = m.groups()
-    return "%s/%s" % (place_types_to_codes[placetype], bare_holonym)
   # Borough of Ealing, Borough of Slough, Borough of Tower Hamlets, Borough of Hinckley and Bosworth,
   # borough of Chesterfield, borough of North Tyneside, etc.
   m = re.search("^[Bb]orough +of +(%s)$" % proper_noun_regex, holonym)
@@ -1910,6 +1901,17 @@ def inner_parse_holonym(holonym, all_holonyms):
   # Misc places
   if holonym in misc_places:
     return "%s/%s" % (misc_places[holonym], holonym)
+  # Recognize "(the) Foo province" etc.
+  coded_place_type_regex = "|".join(re.escape(x) for x in place_types_to_codes.keys())
+  m = re.search("^(%s) (%s)$" % (proper_noun_regex, coded_place_type_regex), holonym)
+  if m:
+    bare_holonym, placetype = m.groups()
+    return "%s/%s" % (place_types_to_codes[placetype], bare_holonym)
+  # Recognize "(the) province of Foo", "(the) province Foo", etc.
+  m = re.search("^(%s) +(?:of +)?(%s)$" % (coded_place_type_regex, proper_noun_regex), holonym)
+  if m:
+    placetype, bare_holonym = m.groups()
+    return "%s/%s" % (place_types_to_codes[placetype], bare_holonym)
   # Recognize holonyms with the placetype in the name itself, e.g.
   # 'Meadow Township', 'Chaffee County'.
   m = re.search("^%s +(County|Parish|Borough|Township|State|Province|Oblast|Voivodeship|Department|Autonomous Region|Region|Peninsula|Ocean|Sea|Island|River)$" % proper_noun_regex, holonym)
