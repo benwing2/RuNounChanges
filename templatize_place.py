@@ -573,23 +573,6 @@ compass_points_with_aliases = {x: x for x in compass_points}
 compass_points_with_aliases.update(dict(aliased_compass_points))
 compass_points_with_aliases_list = sorted(compass_points_with_aliases.keys(), key=lambda x:-len(x))
 
-compass_points_before_the = {
-  "northern": "the north of",
-  "southern": "the south of",
-  "eastern": "the east of",
-  "western": "the west of",
-  "northeastern": "the northeast of",
-  "southeastern": "the southeast of",
-  "northwestern": "the northwest of",
-  "southwestern": "the southwest of",
-  "central": "the central part of",
-  "interior": "the interior part of",
-  "east-central": "the east-central part of",
-  "west-central": "the west-central part of",
-  "north-central": "the north-central part of",
-  "south-central": "the south-central part of",
-}
-
 compass_points_before_coast = {
   "northern": "north",
   "southern": "south",
@@ -619,16 +602,27 @@ holonyms_with_the = {
   "United Arab Emirates",
   "United Kingdom",
   "United States",
+  "USA", # because it's converted to "United States" in the module
   "Congo",
   "Holy Roman Empire",
   "Vatican",
   "Basque Country",
-  "Valencian Country",
+  "Valencian Community",
   "Cyclades",
   "Dodecanese",
+  "Caucasus",
+  "North Caucasus",
+  "Caribbean",
+  "North Island",
+  "South Island",
 }
 
-holonyms_with_the_re = " (Peninsula|Ocean|Sea|Voivodeship)$"
+holonyms_with_the_re = "( (Peninsula|Ocean|Sea|Voivodeship)$|^(Gulf|Sea|Isle|City) )"
+
+def holonym_needs_the(holonym):
+  # Remove placetype spec from the beginning if it exists.
+  holonym = re.sub("^.*?/", "", holonym)
+  return holonym in holonyms_with_the or re.search(holonyms_with_the_re, holonym)
 
 countries = {
   "Afghanistan",
@@ -2242,9 +2236,8 @@ def process_text_on_page(index, pagetitle, text):
                   parsed_holonym = parse_holonym(base_holonym, holonyms)
                   if parsed_holonym:
                     first_parsed_holonym = parsed_holonym[0] if type(parsed_holonym) is list else parsed_holonym
-                    first_parsed_holonym = re.sub("^.*/", "", first_parsed_holonym)
-                    if first_parsed_holonym in holonyms_with_the or re.search(holonyms_with_the_re, first_parsed_holonym):
-                      add_to_parsed_holonyms("in " + compass_points_before_the[compass_term])
+                    if holonym_needs_the(first_parsed_holonym):
+                      add_to_parsed_holonyms("in the " + compass_term)
                     else:
                       add_to_parsed_holonyms("in " + compass_term)
                     add_to_parsed_holonyms(parsed_holonym)
@@ -2278,8 +2271,12 @@ def process_text_on_page(index, pagetitle, text):
 
         # A coast spec is "off the coast of" or similar. If it occurs and the first holonym begins with "in ",
         # remove that preposition, or we'll get {{place|en|large island|off the coast of|in eastern|c/Canada}}.
-        if coast_spec and parsed_holonyms[0].startswith("in "):
-          parsed_holonyms[0] = parsed_holonyms[0][3:]
+        # If it occurs and the first holonym requires "the", we need to add "the" to the coast spec.
+        if coast_spec:
+          if parsed_holonyms[0].startswith("in "):
+            parsed_holonyms[0] = parsed_holonyms[0][3:]
+          if holonym_needs_the(parsed_holonyms[0]):
+            coast_spec += " the"
         placeargs = [normalized_placetype] + ([coast_spec] if coast_spec else []) + parsed_holonyms
         # Now, split place args by semicolon-separated "runs".
         place_args_runs = []
@@ -2346,7 +2343,10 @@ def process_text_on_page(index, pagetitle, text):
 
           # If country is followed by region, sea, ocean or continent, insert "in".
           if len(run) >= 3 and re.search("^(c|cc)/", run[-2]) and re.search("^(r|sea|ocean|cont)/", run[-1]):
-            run[-1:-1] = ["in"]
+            if holonym_needs_the(run[-1]):
+              run[-1:-1] = ["in the"]
+            else:
+              run[-1:-1] = ["in"]
 
         if outer_break:
           break
