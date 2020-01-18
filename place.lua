@@ -25,7 +25,7 @@ local function link(text, language)
 	if not language or language == "" then
 		return text
 	end
-	
+
 	return m_links.full_link({term = text, lang = m_langs.getByCode(language)}, nil, true)
 end
 
@@ -143,11 +143,11 @@ local function get_synergy_table(place1, place2)
 	if not pt_data or not pt_data.synergy then
 		return nil
 	end
-	
+
 	if not place1 then
 		place1 = {}
 	end
-	
+
 	local synergy = get_equiv_placetype_prop(place1[1], function(pt) return pt_data.synergy[pt] end)
 	return synergy or pt_data.synergy["default"]
 end
@@ -168,11 +168,11 @@ local function get_article(word, sentence)
 	else
 		art = "a"
 	end
-	
+
 	if sentence then
 		art = m_strutils.ucfirst(art)
 	end
-	
+
 	return art
 end
 
@@ -192,7 +192,7 @@ local function key_holonym_spec_into_place_spec(place_spec, holonym_spec)
 	if not holonym_spec[1] then
 		return place_spec
 	end
-	
+
 	local equiv_placetypes = get_placetype_equivs(holonym_spec[1])
 	local placename = holonym_spec[2]
 	for _, equiv in ipairs(equiv_placetypes) do
@@ -203,7 +203,7 @@ local function key_holonym_spec_into_place_spec(place_spec, holonym_spec)
 			place_spec[placetype][table.getn(place_spec[placetype]) + 1] = placename
 		end
 	end
-	
+
 	return place_spec
 end
 
@@ -223,7 +223,7 @@ local function handle_implications(place_specs, implication_data, should_clone)
 	for n, spec in ipairs(place_specs) do
 		local lastarg = table.getn(spec)
 		local cloned = false
-		
+
 		for c = 3, lastarg do
 			local imp_data = get_equiv_placetype_prop(spec[c][1], function(pt)
 				local implication = implication_data[pt] and implication_data[pt][m_links.remove_links(spec[c][2])]
@@ -281,7 +281,7 @@ end
 -- placename aliases (e.g. "US" or "USA" for "United States") will be expanded.
 local function split_holonym(datum)
 	datum = mw.text.split(datum, "/", true)
-	
+
 	if table.getn(datum) < 2 then
 		datum = {nil, datum[1]}
 	end
@@ -290,14 +290,14 @@ local function split_holonym(datum)
 	-- There should be a better way.
 	if not datum[2]:find("%[%[w:") and not datum[2]:find("%[%[wikipedia:") then
 		local links = mw.text.split(datum[2], ":", true)
-		
+
 		if table.getn(links) > 1 then
 			datum[2] = links[2]
 			datum[3] = links[1]
 		end
 	end
 
-	if datum[1] then	
+	if datum[1] then
 		datum[1] = data.placetype_aliases[datum[1]] or datum[1]
 		datum[2] = get_equiv_placetype_prop(datum[1],
 			function(pt) return data.placename_display_aliases[pt] and lookup_placename_alias(datum[2], data.placename_display_aliases[pt]) end
@@ -346,15 +346,15 @@ local function parse_place_specs(numargs)
 				specs[cY][cX] = split_holonym(numargs[c])
 				key_holonym_spec_into_place_spec(specs[cY], specs[cY][cX])
 			end
-			
+
 			cX = cX + 1
 		end
-		
+
 		c = c + 1
 	end
 
 	handle_implications(specs, data.implications, false)
-	
+
 	return specs
 end
 
@@ -395,12 +395,15 @@ function get_gloss(args, specs, sentence)
 	if args["def"] then
 		return args["def"]
 	end
-	
+
 	local glosses = {}
-	
+
 	for n1, spec in ipairs(specs) do
 		local gloss = ""
-		
+
+		-- The placetype used to determine whether "in" or "of" follows is the last placetype if there are
+		-- multiple slash-separated placetypes, but ignoring "and" and parenthesized notes such as "(one of 254)".
+		local placetype_for_in_or_of = nil
 		for n2, placetype in ipairs(spec[2]) do
 			if placetype == "and" then
 				gloss = gloss .. " and "
@@ -409,6 +412,7 @@ function get_gloss(args, specs, sentence)
 				-- like "{{place|en|county/(one of 254)|s/Texas}}" work).
 				gloss = gloss .. " " .. placetype
 			else
+				placetype_for_in_or_of = placetype
 				local pt_data, equiv_placetype_and_qualifier = get_equiv_placetype_prop(placetype,
 					function(pt) return cat_data[pt] end)
 				-- Join multiple placetypes with comma unless placetypes are already
@@ -417,12 +421,12 @@ function get_gloss(args, specs, sentence)
 				-- but "city, the county seat of ...").
 				if n2 > 1 and spec[2][n2-1] ~= "and" then
 					gloss = gloss .. ", "
-					
+
 					if pt_data and pt_data.article == "the" then
 						gloss = gloss .. "the "
 					end
 				end
-				
+
 				local linked_version = get_linked_placetype(placetype)
 				if linked_version then
 					gloss = gloss .. linked_version
@@ -445,31 +449,31 @@ function get_gloss(args, specs, sentence)
 				end
 			end
 		end
-		
+
 		if args["also"] then
 			gloss = gloss .. " and " .. args["also"]
 		end
-		
+
 		local c = 3
-		
+
 		while spec[c] do
 			local prev = nil
-			
+
 			if c > 3 then
 				prev = spec[c-1]
 			else
 				prev = {}
 			end
-			
-			gloss = gloss .. get_description(spec[2][table.getn(spec[2])], prev, spec[c], spec[c+1], (c == 3))
+
+			gloss = gloss .. get_description(placetype_for_in_or_of, prev, spec[c], spec[c+1], (c == 3))
 			c = c + 1
 		end
-		
+
 		table.insert(glosses, gloss)
 	end
-	
+
 	local ret = {(args["a"] or get_article(specs[1][2][1], sentence)) .. " " .. table.concat(glosses, "; ")}
-	
+
 	table.insert(ret, get_extra_info("modern", args["modern"], false))
 	table.insert(ret, get_extra_info("official name:", args["official"], sentence))
 	table.insert(ret, get_extra_info("capital:", args["capital"], sentence))
@@ -507,16 +511,56 @@ function get_extra_info(tag, value, sentence)
 
 		value = link(value[2], value[1] or "en")
 	end
-	
+
 	local s = ""
-	
+
 	if sentence then
 		s = s .. ". " .. m_strutils.ucfirst(tag)
 	else
 		s = s .. "; " .. tag
 	end
-	
+
 	return s .. " " .. value
+end
+
+
+-- Prepend the appropriate article if needed to LINKED_PLACENAME, where PLACENAME
+-- is the corresponding unlinked placename and PLACETYPE its placetype.
+local function prepend_article(placetype, placename, linked_placename)
+	placename = m_links.remove_links(placename)
+	if placename:find("^the ") then
+		return linked_placename
+	end
+	local art = get_equiv_placetype_prop(placetype, function(pt) return data.placename_article[pt] and data.placename_article[pt][placename] end)
+	if art then
+		return art .. " " .. linked_placename
+	end
+	art = get_equiv_placetype_prop(placetype, function(pt) return cat_data[pt] and cat_data[pt].holonym_article end)
+	if art then
+		return art .. " " .. linked_placename
+	end
+	local universal_res = data.placename_the_re["*"]
+	for _, re in ipairs(universal_res) do
+		if placename:find(re) then
+			return "the " .. linked_placename
+		end
+	end
+	local matched = get_equiv_placetype_prop(placetype, function(pt)
+		local res = data.placename_the_re[pt]
+		if not res then
+			return nil
+		end
+		for _, re in ipairs(res) do
+			if placename:find(re) then
+				return true
+			end
+		end
+		return nil
+	end)
+	if matched then
+		return "the " .. linked_placename
+	end
+	return linked_placename
 end
 
 
@@ -525,7 +569,7 @@ end
 -- Example: ({"country", "United States", "en"}, true, true) returns "the {{l|en|United States}}"
 function get_place_string(place, needs_article, display_form)
 	local ps = place[2]
-	
+
 	if display_form then
 		local display_handler = get_equiv_placetype_prop(place[1], function(pt) return cat_data[pt] and cat_data[pt].display_handler end)
 		if display_handler then
@@ -533,19 +577,11 @@ function get_place_string(place, needs_article, display_form)
 		end
 		ps = link(ps, place[3])
 	end
-	
+
 	if needs_article then
-		local art = get_equiv_placetype_prop(place[1], function(pt) return data.placename_article[pt] and data.placename_article[pt][place[2]] end)
-		if art then
-			ps = art .. " " .. ps
-		else
-			art = get_equiv_placetype_prop(place[1], function(pt) return cat_data[pt] and cat_data[pt].holonym_article end)
-			if art then
-				ps = art .. " " .. ps
-			end
-		end
+		ps = prepend_article(place[1], place[2], ps)
 	end
-	
+
 	return ps
 end
 
@@ -555,24 +591,24 @@ function get_synergic_description(synergy, place1, place2)
 	local desc = ""
 
 	if place1 then
-		
+
 		if synergy.before then
 			desc = desc .. " " .. synergy.before
 		end
-		
+
 		desc = desc .. " " .. get_place_string(place1, true, true)
 	end
-	
+
 	if synergy.between then
 		desc = desc .. " " .. synergy.between
 	end
-	
+
 	desc = desc .. " "  .. get_place_string(place2, true, true)
-	
+
 	if synergy.after then
 		desc = desc .. " " .. synergy.after
 	end
-	
+
 	return desc
 end
 
@@ -583,15 +619,15 @@ end
 -- (place3), and whether it is the first place (parameter 4 of the function).
 function get_description(entry_placetype, place1, place2, place3, first)
 	local desc = ""
-	
+
 	local synergy = get_synergy_table(place2, place3)
-	
+
 	if synergy then
 		return ""
 	end
-	
+
 	synergy = get_synergy_table(place1, place2)
-	
+
 	if first then
 		if place2[1] then
 			desc = desc .. get_in_or_of(entry_placetype, "")
@@ -603,17 +639,17 @@ function get_description(entry_placetype, place1, place2, place3, first)
 			if place1[1] and place2[2] ~= "and" and place2[2] ~= "in" then
 				desc = desc .. ","
 			end
-			
+
 			desc = desc .. " "
 		end
 	end
-	
+
 	if not synergy then
 		desc = desc .. get_place_string(place2, first, true)
 	else
 		desc = desc .. get_synergic_description(synergy, place1, place2)
 	end
-	
+
 
 	return desc
 end
@@ -622,7 +658,7 @@ end
 -- Returns a string with the wikilinks to the English translations of the word.
 function get_translations(transl)
 	local ret = {}
-	
+
 	for _, t in ipairs(transl) do
 		if t:find("[[", nil, true) then
 			table.insert(ret, t)
@@ -632,7 +668,7 @@ function get_translations(transl)
 			table.insert(ret, "[[" .. t .. "]]")
 		end
 	end
-	
+
 	return table.concat(ret, "; ")
 end
 
@@ -647,14 +683,14 @@ function get_in_or_of(placetype1, placetype2)
 	if not placetype2 then
 		return " "
 	end
-	
+
 	local preposition = "in"
 
 	local pt_data = get_equiv_placetype_prop(placetype1, function(pt) return cat_data[pt] end)
 	if pt_data and pt_data.preposition then
 		preposition = pt_data.preposition
 	end
-	
+
 	return " " .. preposition .. " "
 end
 
@@ -671,7 +707,7 @@ function get_cats(lang, place_specs)
 	local cats = ""
 
 	handle_implications(place_specs, data.cat_implications, true)
-	
+
 	for n1, place_spec in ipairs(place_specs) do
 		for n2, placetype in ipairs(place_spec[2]) do
 			if placetype ~= "and" then
@@ -679,7 +715,7 @@ function get_cats(lang, place_specs)
 			end
 		end
 	end
-	
+
 	return cats
 end
 
@@ -711,7 +747,7 @@ function get_cat(lang, place_spec, entry_placetype)
 	-- one or more holonym placetypes, meaning to generate a category for all holonyms
 	-- of this placetype.
 	local entry_pt_data, equiv_entry_placetype_and_qualifier = get_equiv_placetype_prop(entry_placetype, function(pt) return cat_data[pt] end)
-	
+
 	-- 1. Unrecognized placetype.
 	if not entry_pt_data then
 		return ""
@@ -723,7 +759,7 @@ function get_cat(lang, place_spec, entry_placetype)
 	-- or a list {true}; see find_cat_spec()) corresponding to the holonym(s) in the place
 	-- spec. See above.
 	local cat_spec, c, itself = find_cat_spec(entry_pt_data, place_spec)
-	
+
 	-- 2. No category spec could be found. This happens if the innermost table in the category data
 	--    doesn't match any holonym's placetype and doesn't have an "itself" entry.
 	if not cat_spec then
@@ -733,10 +769,10 @@ function get_cat(lang, place_spec, entry_placetype)
 	-- 3. This handles cases where either the outer or inner key matched a holonym.
 	if c > 2 then
 		local cat = get_possible_cat(lang, cat_spec, equiv_entry_placetype, entry_pt_data, place_spec[c], place_spec)
-		
+
 		if cat ~= "" then
 			local c2 = 2
-			
+
 			while place_spec[place_spec[c][1]][c2] do
 				cat = cat .. get_possible_cat(lang, cat_spec, equiv_entry_placetype, entry_pt_data, {place_spec[c][1], place_spec[place_spec[c][1]][c2]}, place_spec)
 				c2 = c2 + 1
@@ -831,9 +867,9 @@ end
 --    vs. (1) above.
 function find_cat_spec(entry_placetype_data, place_spec)
 	local inner_data = nil
-	
+
 	local c = 3
-	
+
 	while place_spec[c] do
 		local holonym_placetype, holonym_placename = place_spec[c][1], place_spec[c][2]
 		holonym_placename = resolve_cat_aliases(holonym_placetype, holonym_placename)
@@ -851,23 +887,23 @@ function find_cat_spec(entry_placetype_data, place_spec)
 		end
 		c = c + 1
 	end
-	
+
 	if not inner_data then
 		inner_data = entry_placetype_data["default"]
 		c = -1
 	end
-	
+
 	local c2 = 3
-	
+
 	while place_spec[c2] do
 		local retval = get_equiv_placetype_prop(place_spec[c2][1], function(pt) return inner_data[pt] end)
 		if retval then
 			return retval, c2, false
 		end
-		
+
 		c2 = c2 + 1
 	end
-	
+
 	return inner_data["itself"], c, true
 end
 
@@ -894,13 +930,13 @@ function get_possible_cat(lang, cat_spec, entry_placetype, entry_pt_data, holony
 	if not cat_spec or not entry_placetype or not entry_pt_data or not holonym or not place_spec then
 		return ""
 	end
-	
+
 	local all_cats = ""
 
 	local holonym_placetype, holonym_placename = holonym[1], holonym[2]
 	holonym_placename = resolve_cat_aliases(holonym_placetype, holonym_placename)
 	holonym = {holonym_placetype, holonym_placename}
-	
+
 	for _, name in ipairs(cat_spec) do
 		local cat = ""
 		if name == true then
@@ -908,11 +944,11 @@ function get_possible_cat(lang, cat_spec, entry_placetype, entry_pt_data, holony
 		elseif name then
 			cat = name
 		end
-		
+
 		cat = cat:gsub("%+%+%+", get_place_string(holonym, true, false))
 		all_cats = all_cats .. catlink(lang, cat)
 	end
-	
+
 	return all_cats
 end
 
@@ -938,7 +974,7 @@ function export.show(frame)
 		["a"] = {},
 		["also"] = {},
 		["def"] = {},
-		
+
 		["modern"] = {},
 		["official"] = {},
 		["capital"] = {},
@@ -946,11 +982,11 @@ function export.show(frame)
 		["caplc"] = {},
 		["seat"] = {},
 	}
-	
+
 	local args = require("Module:parameters").process(frame:getParent().args, params)
 	local lang = require("Module:languages").getByCode(args[1]) or error("The language code \"" .. args[1] .. "\" is not valid.")
 	local place_specs = parse_place_specs(args[2])
-	
+
 	return get_def(args, place_specs) .. get_cats(lang, place_specs)
 end
 

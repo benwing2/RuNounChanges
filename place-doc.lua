@@ -146,26 +146,32 @@ function export.placename_table()
 			value = group.value_transformer(group, key, value)
 			local placename = key:gsub("^the ", "")
 			placename = group.key_to_placename and group.key_to_placename(placename) or placename
-			if not value.nocities then
-				-- We categorize both in key, and in the larger polity that the key is part of,
-				-- e.g. [[Hirakata]] goes in both "Cities in Osaka Prefecture" and
-				-- "Cities in Japan".
-				local divtype = value.divtype or group.default_divtype
-				if type(divtype) ~= "table" then
-					divtype = {divtype}
-				end
-				if type(placename) ~= "table" then
-					placename = {placename}
-				end
-				for _, dt in ipairs(divtype) do
-					for _, pn in ipairs(placename) do
-						local place = dt .. "/" .. pn
-						ensure_key(place)
+			-- We categorize both in key, and in the larger polity that the key is part of,
+			-- e.g. [[Hirakata]] goes in both "Cities in Osaka Prefecture" and
+			-- "Cities in Japan".
+			local divtype = value.divtype or group.default_divtype
+			if type(divtype) ~= "table" then
+				divtype = {divtype}
+			end
+			if type(placename) ~= "table" then
+				placename = {placename}
+			end
+			for _, dt in ipairs(divtype) do
+				for _, pn in ipairs(placename) do
+					local place = dt .. "/" .. pn
+					ensure_key(place)
+					if not value.nocities then
 						local retcats = {"Cities in " .. key}
 						if value.containing_polity then
 							table.insert(retcats, "Cities in " .. value.containing_polity)
 						end
 						alldata[place].city_cats = retcats
+					end
+					if value.poldiv then
+						alldata[place].poldiv = value.poldiv
+					end
+					if value.miscdiv then
+						alldata[place].miscdiv = value.miscdiv
 					end
 				end
 			end
@@ -185,7 +191,7 @@ function export.placename_table()
 	-- Convert to wikitable
 	local parts = {}
 	table.insert(parts, '{|class="wikitable"')
-	table.insert(parts, "! Placename !! Article !! Display as !! Categorize as !! City categories")
+	table.insert(parts, "! Placename !! Article !! Display as !! Categorize as !! City categories !! Recognized political subdivisions !! Recognized traditional subdivisions")
 	for _, placename_data in ipairs(alldata_list) do
 		local placename = placename_data[1]
 		local data = placename_data[2]
@@ -193,9 +199,11 @@ function export.placename_table()
 		local sparts = {}
 		table.insert(sparts, placename)
 		table.insert(sparts, data.article or "")
-		table.insert(sparts, data.display and "'''" .. data.display .. "'''" or placename)
-		table.insert(sparts, data.cat and "'''" .. data.cat .. "'''"  or placename)
+		table.insert(sparts, data.display and data.display or "(same)")
+		table.insert(sparts, data.cat and data.cat or "(same)")
 		table.insert(sparts, data.city_cats and table.concat(data.city_cats, "; ") or "")
+		table.insert(sparts, data.poldiv and table.concat(data.poldiv, ", ") or "")
+		table.insert(sparts, data.miscdiv and table.concat(data.miscdiv, ", ") or "")
 		table.insert(parts, "| " .. table.concat(sparts, " || "))
 	end
 	table.insert(parts, "|}")

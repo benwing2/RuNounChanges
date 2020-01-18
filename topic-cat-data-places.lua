@@ -58,6 +58,7 @@ local general_labels = {
 	{"lakes", "[[lake]]s", {"places", "water"}},
 	{"landforms", "[[landform]]s", {"Earth"}},
 	{"mountains", "[[mountain]]s", {"places"}},
+	{"neighborhoods", "[[neighborhood]]s, [[district]]s and other subportions of a [[city]]", {"places"}},
 	-- FIXME, is the following parent correct?
 	{"oceans", "[[ocean]]s", {"Seas"}},
 	{"peninsulas", "[[peninsula]]s", {"places"}},
@@ -262,9 +263,11 @@ table.insert(handlers, function(label)
 	label = lcfirst(label)
 	local region = label:match("^municipalities of (.*), Finland$")
 	if region and m_shared.finnish_regions[region .. ", Finland"] then
+		-- Need to construct bare and linked versions due to "the Åland Islands".
+		local bare_region, linked_region = m_shared.construct_bare_and_linked_version(region)
 		return {
-			description = "{{{langname}}} names of [[municipality|municipalities]] of [[" .. region .. "]], a region of [[Finland]].",
-			parents = {{name = "municipalities of Finland", sort = region}, region .. ", Finland", "list of sets"},
+			description = "{{{langname}}} names of [[municipality|municipalities]] of " .. linked_region .. ", a region of [[Finland]].",
+			parents = {{name = "municipalities of Finland", sort = bare_region}, bare_region .. ", Finland", "list of sets"},
 		}
 	end
 end)
