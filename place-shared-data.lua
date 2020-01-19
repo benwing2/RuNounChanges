@@ -161,6 +161,7 @@ export.political_subdivisions = {
 	["cantons"] = "[[canton]]s",
 	["census divisions"] = "[[w:census division|census division]]s",
 	["cercles"] = "[[cercle]]s",
+	["civil parishes"] = "[[civil parish]]es",
 	["collectivities"] = "[[collectivity|collectivities]]",
 	["constituencies"] = "[[constituency|constituencies]]",
 	["council areas"] = "[[council area]]s",
@@ -220,6 +221,7 @@ export.generic_place_types = {
 	["towns"] = "towns",
 	["villages"] = "villages, hamlets, and other small communities and settlements",
 	["neighborhoods"] = "[[neighborhood]]s, [[district]]s and other subportions of cities",
+	["suburbs"] = "[[suburb]]s",
 	["rivers"] = "rivers",
 	["census-designated places"] = "[[census-designated place]]s",
 	["unincorporated communities"] = "[[w:unincorporated community|unincorporated communities]]",
@@ -277,6 +279,14 @@ export.US_states = {
 	["West Virginia, USA"] = {},
 	["Wisconsin, USA"] = {},
 	["Wyoming, USA"] = {},
+}
+
+export.new_york_boroughs = {
+	["Bronx"] = true,
+	["Brooklyn"] = true,
+	["Manhattan"] = true,
+	["Queens"] = true,
+	["Staten Island"] = true,
 }
 
 export.brazilian_states = {
@@ -1148,7 +1158,7 @@ export.places = {
 		place_cat_handler = default_place_cat_handler(),
 		default_divtype = {"constituent country", "country"},
 		data = {
-			["England"] = {poldiv = {"regions", "counties", "districts"}},
+			["England"] = {poldiv = {"regions", "counties", "districts", "civil parishes"}},
 			["Northern Ireland"] = {divtype = "province", parents = {"United Kingdom", "Ireland"},
 				poldiv = {"districts"}, miscdiv = {"traditional counties"}},
 			["Scotland"] = {poldiv = {"council areas"}, miscdiv = {"regions", "districts", "traditional counties"}},

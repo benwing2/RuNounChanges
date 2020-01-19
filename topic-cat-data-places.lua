@@ -67,6 +67,7 @@ local general_labels = {
 	{"polities", "[[polity|polities]] or [[political]] [[division]]s", {"places"}},
 	{"provinces", "[[province]]s", {"political subdivisions"}},
 	{"rivers", "[[river]]s", {"places", "water"}},
+	{"rural municipalities", "[[w:rural municipality|rural municipalities]]", {"political subdivisions"}},
 	{"seas", "[[sea]]s", {"places", "water"}},
 	{"straits", "[[strait]]s", {"places", "water"}},
 	{"subdistricts", "[[subdistrict]]s", {"polities"}},
@@ -337,6 +338,11 @@ labels["boroughs in Pennsylvania"] = {
 	parents = {{name = "boroughs in the United States", sort = "Pennsylvania"}, "Pennsylvania, USA", "list of sets"},
 }
 
+labels["boroughs in New Jersey"] = {
+	description = "{{{langname}}} names of boroughs in [[New Jersey]].",
+	parents = {{name = "boroughs in the United States", sort = "New Jersey"}, "New Jersey, USA", "list of sets"},
+}
+
 labels["boroughs in New York City"] = {
 	description = "{{{langname}}} names of boroughs in [[New York City]].",
 	parents = {{name = "boroughs in the United States", sort = "New York City"}, "New York City", "list of sets"},
@@ -404,6 +410,15 @@ for _, place in ipairs({"Greece", "England", {"Ireland", "the republic of [[Irel
 	labels["places in " .. place] = {
 		description = "{{{langname}}} names of places in " .. linked_place .. " that are not readily classifiable as villages, towns, cities, counties, regions, etc.",
 		parents = {place, "list of sets"},
+	}
+end
+
+-- municipalities
+
+for _, province in ipairs({"Saskatchewan", "Manitoba", "Prince Edward Island"}) do
+	labels["rural municipalities in " .. province] = {
+		description = "{{{langname}}} names of [[w:rural municipality|rural municipalities]] in [[" .. province .. "]], a [[province]] of [[Canada]].", 
+		parents = {{name = "rural municipalities", sort = province}, province, "list of sets"},
 	}
 end
 

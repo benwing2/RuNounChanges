@@ -7,11 +7,6 @@ local data = require("Module:place/data")
 
 local cat_data = data.cat_data
 
-local catlink, find_cat_spec, get_cat, get_cats, get_def, get_description, get_extra_info,
-	get_gloss, get_in_or_of, get_place_string, get_possible_cat, get_synergic_description,
-	get_translations
-
-
 local namespace = mw.title.getCurrentTitle().nsText
 
 
@@ -30,10 +25,15 @@ local function link(text, language)
 end
 
 
+-- Returns the category link for a category, given the language code and the
+-- name of the category.
+local function catlink(lang, text)
+	return require("Module:utilities").format_categories({lang:getCode() .. ":" .. m_links.remove_links(text)}, lang)
+end
+
 
 
 ---------- Basic utility functions
-
 
 
 
@@ -311,6 +311,31 @@ local function split_holonym(datum)
 end
 
 
+-- Parse a "new-style" place spec, with placetypes and holonyms surrounded by <<...>>
+-- amid otherwise raw text.  Return value is a place spec, as documented in
+-- parse_place_specs().
+local function parse_new_style_place_spec(text)
+	local segments = m_strutils.capturing_split(text, "<<(.-)>>")
+	local retval = {"foobar", {}, raw = {}, order = {}}
+	for i, segment in ipairs(segments) do
+		if i % 2 == 1 then
+			table.insert(retval.raw, segment)
+			table.insert(retval.order, {"raw", #retval.raw})
+		elseif segment:find("/") then
+			local holonym = split_holonym(segment)
+			table.insert(retval, holonym)
+			table.insert(retval.order, {"holonym", #retval})
+			key_holonym_spec_into_place_spec(retval, holonym)
+		else
+			table.insert(retval[2], segment)
+			table.insert(retval.order, {"placetype", #retval[2]})
+		end
+	end
+
+	return retval
+end
+
+
 -- Process numeric args (except for the language code in 1=). The return value is one or
 -- more "place specs", each one corresponding to a single semicolon-separated combination of
 -- placetype + holonyms in the numeric arguments. A given place spec is a table
@@ -330,21 +355,36 @@ local function parse_place_specs(numargs)
 	local c = 1
 	local cY = 1
 	local cX = 2
+	local last_was_new_style = false
 
 	while numargs[c] do
 		if numargs[c] == ";" then
 			cY = cY + 1
 			cX = 2
+			last_was_new_style = false
 		else
-			if cX == 2 then
-				local entry_placetypes = mw.text.split(numargs[c], "/", true)
-				for n, ept in ipairs(entry_placetypes) do
-					entry_placetypes[n] = data.placetype_aliases[ept] or ept
+			if numargs[c]:find("<<") then
+				if cX > 2 then
+					cY = cY + 1
+					cX = 2
 				end
-				specs[cY] = {"foobar", entry_placetypes}
+				specs[cY] = parse_new_style_place_spec(numargs[c])
+				last_was_new_style = true
 			else
-				specs[cY][cX] = split_holonym(numargs[c])
-				key_holonym_spec_into_place_spec(specs[cY], specs[cY][cX])
+				if last_was_new_style then
+					error("Old-style arguments cannot directly follow new-style place spec")
+				end
+				last_was_new_style = false
+				if cX == 2 then
+					local entry_placetypes = mw.text.split(numargs[c], "/", true)
+					for n, ept in ipairs(entry_placetypes) do
+						entry_placetypes[n] = data.placetype_aliases[ept] or ept
+					end
+					specs[cY] = {"foobar", entry_placetypes}
+				else
+					specs[cY][cX] = split_holonym(numargs[c])
+					key_holonym_spec_into_place_spec(specs[cY], specs[cY][cX])
+				end
 			end
 
 			cX = cX + 1
@@ -360,167 +400,25 @@ end
 
 
 
-
 -------- Definition-generating functions
 
 
--- Returns the definition line.
-function get_def(args, specs)
-	if #args["t"] > 0 then
-		return get_translations(args["t"]) .. " (" .. get_gloss(args, specs, false) .. ")"
-	else
-		return get_gloss(args, specs, true)
-	end
-end
 
+-- Returns a string with the wikilinks to the English translations of the word.
+local function get_translations(transl)
+	local ret = {}
 
-local function get_linked_placetype(placetype, use_default)
-	local linked_version = data.placetype_links[placetype]
-	if not linked_version then
-		return use_default and placetype or nil
-	elseif linked_version == true then
-		return "[[" .. placetype .. "]]"
-	elseif linked_version == "w" then
-		return "[[w:" .. placetype .. "|" .. placetype .. "]]"
-	else
-		return linked_version
-	end
-end
-
-
--- Returns a string with the gloss (the description of the place itself, as
--- opposed to translations). If sentence == true, the gloss’s first letter is
--- made upper case and a period is added to the end.
-function get_gloss(args, specs, sentence)
-	if args["def"] then
-		return args["def"]
-	end
-
-	local glosses = {}
-
-	for n1, spec in ipairs(specs) do
-		local gloss = ""
-
-		-- The placetype used to determine whether "in" or "of" follows is the last placetype if there are
-		-- multiple slash-separated placetypes, but ignoring "and" and parenthesized notes such as "(one of 254)".
-		local placetype_for_in_or_of = nil
-		for n2, placetype in ipairs(spec[2]) do
-			if placetype == "and" then
-				gloss = gloss .. " and "
-			elseif placetype:find("^%(") then
-				-- Check for placetypes beginning with a paren (so that things
-				-- like "{{place|en|county/(one of 254)|s/Texas}}" work).
-				gloss = gloss .. " " .. placetype
-			else
-				placetype_for_in_or_of = placetype
-				local pt_data, equiv_placetype_and_qualifier = get_equiv_placetype_prop(placetype,
-					function(pt) return cat_data[pt] end)
-				-- Join multiple placetypes with comma unless placetypes are already
-				-- joined with "and". We allow "the" to precede the second placetype
-				-- if they're not joined with "and" (so we get "city and county seat of ..."
-				-- but "city, the county seat of ...").
-				if n2 > 1 and spec[2][n2-1] ~= "and" then
-					gloss = gloss .. ", "
-
-					if pt_data and pt_data.article == "the" then
-						gloss = gloss .. "the "
-					end
-				end
-
-				local linked_version = get_linked_placetype(placetype)
-				if linked_version then
-					gloss = gloss .. linked_version
-				else
-					local splits = split_and_canonicalize_placetype(placetype)
-					local did_add = false
-					for _, split in ipairs(splits) do
-						local prev_qualifier, this_qualifier, bare_placetype = split[1], split[2], split[3]
-						local linked_version = get_linked_placetype(bare_placetype)
-						if linked_version then
-							local qualifier = prev_qualifier and prev_qualifier .. " " .. this_qualifier or this_qualifier
-							gloss = gloss .. qualifier .. " " .. linked_version
-							did_add = true
-							break
-						end
-					end
-					if not did_add then
-						gloss = gloss .. placetype
-					end
-				end
-			end
+	for _, t in ipairs(transl) do
+		if t:find("[[", nil, true) then
+			table.insert(ret, t)
+		elseif t == mw.title.getCurrentTitle().prefixedText then
+			table.insert(ret, "[[#English|" .. t .. "]]")
+		else
+			table.insert(ret, "[[" .. t .. "]]")
 		end
-
-		if args["also"] then
-			gloss = gloss .. " and " .. args["also"]
-		end
-
-		local c = 3
-
-		while spec[c] do
-			local prev = nil
-
-			if c > 3 then
-				prev = spec[c-1]
-			else
-				prev = {}
-			end
-
-			gloss = gloss .. get_description(placetype_for_in_or_of, prev, spec[c], spec[c+1], (c == 3))
-			c = c + 1
-		end
-
-		table.insert(glosses, gloss)
 	end
 
-	local ret = {(args["a"] or get_article(specs[1][2][1], sentence)) .. " " .. table.concat(glosses, "; ")}
-
-	table.insert(ret, get_extra_info("modern", args["modern"], false))
-	table.insert(ret, get_extra_info("official name:", args["official"], sentence))
-	table.insert(ret, get_extra_info("capital:", args["capital"], sentence))
-	table.insert(ret, get_extra_info("largest city:", args["largest city"], sentence))
-	table.insert(ret, get_extra_info("capital and largest city:", args["caplc"], sentence))
-	local placetype = specs[1][2][1]
-	if placetype == "county" or placetype == "parish" or placetype == "borough" then
-		placetype = placetype .. " seat"
-	else
-		placetype = "seat"
-	end
-	table.insert(ret, get_extra_info(placetype .. ":", args["seat"], sentence))
-
-	return table.concat(ret)
-end
-
-
--- Returns a string with extra information that is sometimes added to a
--- definition. This consists of the tag, a whitespace and the value (wikilinked
--- if it language contains a language code; if sentence == true, ". " is added
--- before the string and the first character is made upper case.
-function get_extra_info(tag, value, sentence)
-	if not value then
-		return ""
-	end
-
-	-- HACK! Check for Wikipedia links, which contain an embedded colon.
-	-- There should be a better way.
-	if not value:find("%[%[w:") and not value:find("%[%[wikipedia:") then
-		value = mw.text.split(value, ":", true)
-
-		if table.getn(value) < 2 then
-			value = {nil, value[1]}
-		end
-
-		value = link(value[2], value[1] or "en")
-	end
-
-	local s = ""
-
-	if sentence then
-		s = s .. ". " .. m_strutils.ucfirst(tag)
-	else
-		s = s .. "; " .. tag
-	end
-
-	return s .. " " .. value
+	return table.concat(ret, "; ")
 end
 
 
@@ -567,7 +465,7 @@ end
 -- returns a string containing a placename, with an extra article if necessary
 -- and in the wikilinked display form if necessary.
 -- Example: ({"country", "United States", "en"}, true, true) returns "the {{l|en|United States}}"
-function get_place_string(place, needs_article, display_form)
+local function get_place_string(place, needs_article, display_form)
 	local ps = place[2]
 
 	if display_form then
@@ -587,7 +485,7 @@ end
 
 -- Returns a special description generated from a synergy table fetched from
 -- the data module and two place tables.
-function get_synergic_description(synergy, place1, place2)
+local function get_synergic_description(synergy, place1, place2)
 	local desc = ""
 
 	if place1 then
@@ -613,11 +511,33 @@ function get_synergic_description(synergy, place1, place2)
 end
 
 
+-- Returns the preposition that should be used between the placetypes placetype1 and
+-- placetype2 (i.e. "city >in< France.", "country >of< South America"
+-- If there is no placetype2, a single whitespace is returned. Otherwise, the
+-- preposition is fetched from the data module. If there isn’t any, the default
+-- is "in".
+-- The preposition is return with a whitespace before and after.
+local function get_in_or_of(placetype1, placetype2)
+	if not placetype2 then
+		return " "
+	end
+
+	local preposition = "in"
+
+	local pt_data = get_equiv_placetype_prop(placetype1, function(pt) return cat_data[pt] end)
+	if pt_data and pt_data.preposition then
+		preposition = pt_data.preposition
+	end
+
+	return " " .. preposition .. " "
+end
+
+
 -- Returns a string that contains the information of how a given place (place2)
 -- should be formatted in the gloss, considering the entry’s place type, the 
 -- place preceding it in the template’s parameter (place1) and following it 
 -- (place3), and whether it is the first place (parameter 4 of the function).
-function get_description(entry_placetype, place1, place2, place3, first)
+local function get_holonym_description(entry_placetype, place1, place2, place3, first)
 	local desc = ""
 
 	local synergy = get_synergy_table(place2, place3)
@@ -655,43 +575,208 @@ function get_description(entry_placetype, place1, place2, place3, first)
 end
 
 
--- Returns a string with the wikilinks to the English translations of the word.
-function get_translations(transl)
-	local ret = {}
-
-	for _, t in ipairs(transl) do
-		if t:find("[[", nil, true) then
-			table.insert(ret, t)
-		elseif t == mw.title.getCurrentTitle().prefixedText then
-			table.insert(ret, "[[#English|" .. t .. "]]")
-		else
-			table.insert(ret, "[[" .. t .. "]]")
-		end
+local function get_linked_placetype(placetype, use_default)
+	local linked_version = data.placetype_links[placetype]
+	if not linked_version then
+		return use_default and placetype or nil
+	elseif linked_version == true then
+		return "[[" .. placetype .. "]]"
+	elseif linked_version == "w" then
+		return "[[w:" .. placetype .. "|" .. placetype .. "]]"
+	else
+		return linked_version
 	end
-
-	return table.concat(ret, "; ")
 end
 
 
--- Returns the preposition that should be used between the placetypes placetype1 and
--- placetype2 (i.e. "city >in< France.", "country >of< South America"
--- If there is no placetype2, a single whitespace is returned. Otherwise, the
--- preposition is fetched from the data module. If there isn’t any, the default
--- is "in".
--- The preposition is return with a whitespace before and after.
-function get_in_or_of(placetype1, placetype2)
-	if not placetype2 then
-		return " "
+-- Return the linked description of a placetype. This splits off any
+-- qualifiers and displays them separately.
+local function get_placetype_description(placetype)
+	local linked_version = get_linked_placetype(placetype)
+	if linked_version then
+		return linked_version
+	else
+		local splits = split_and_canonicalize_placetype(placetype)
+		local prefix = ""
+		for _, split in ipairs(splits) do
+			local prev_qualifier, this_qualifier, bare_placetype = split[1], split[2], split[3]
+			prefix = (prev_qualifier and prev_qualifier .. " " .. this_qualifier or this_qualifier) .. " "
+			local linked_version = get_linked_placetype(bare_placetype)
+			if linked_version then
+				return prefix .. " " .. linked_version
+			end
+			placetype = bare_placetype
+		end
+		return prefix .. placetype
+	end
+end
+
+
+-- Returns a string with extra information that is sometimes added to a
+-- definition. This consists of the tag, a whitespace and the value (wikilinked
+-- if it language contains a language code; if sentence == true, ". " is added
+-- before the string and the first character is made upper case.
+local function get_extra_info(tag, value, sentence)
+	if not value then
+		return ""
 	end
 
-	local preposition = "in"
+	-- HACK! Check for Wikipedia links, which contain an embedded colon.
+	-- There should be a better way.
+	if not value:find("%[%[w:") and not value:find("%[%[wikipedia:") then
+		value = mw.text.split(value, ":", true)
 
-	local pt_data = get_equiv_placetype_prop(placetype1, function(pt) return cat_data[pt] end)
-	if pt_data and pt_data.preposition then
-		preposition = pt_data.preposition
+		if table.getn(value) < 2 then
+			value = {nil, value[1]}
+		end
+
+		value = link(value[2], value[1] or "en")
 	end
 
-	return " " .. preposition .. " "
+	local s = ""
+
+	if sentence then
+		s = s .. ". " .. m_strutils.ucfirst(tag)
+	else
+		s = s .. "; " .. tag
+	end
+
+	return s .. " " .. value
+end
+
+
+-- Get the full description of an old-style place spec (with separate arguments for
+-- the placetype and each holonym).
+local function get_old_style_gloss(args, spec, with_article, sentence)
+	local gloss = ""
+
+	-- The placetype used to determine whether "in" or "of" follows is the last placetype if there are
+	-- multiple slash-separated placetypes, but ignoring "and" and parenthesized notes such as "(one of 254)".
+	local placetype_for_in_or_of = nil
+	for n2, placetype in ipairs(spec[2]) do
+		if placetype == "and" then
+			gloss = gloss .. " and "
+		elseif placetype:find("^%(") then
+			-- Check for placetypes beginning with a paren (so that things
+			-- like "{{place|en|county/(one of 254)|s/Texas}}" work).
+			gloss = gloss .. " " .. placetype
+		else
+			placetype_for_in_or_of = placetype
+			local pt_data, equiv_placetype_and_qualifier = get_equiv_placetype_prop(placetype,
+				function(pt) return cat_data[pt] end)
+			-- Join multiple placetypes with comma unless placetypes are already
+			-- joined with "and". We allow "the" to precede the second placetype
+			-- if they're not joined with "and" (so we get "city and county seat of ..."
+			-- but "city, the county seat of ...").
+			if n2 > 1 and spec[2][n2-1] ~= "and" then
+				gloss = gloss .. ", "
+
+				if pt_data and pt_data.article == "the" then
+					gloss = gloss .. "the "
+				end
+			end
+
+			gloss = gloss .. get_placetype_description(placetype)
+		end
+	end
+
+	if args["also"] then
+		gloss = gloss .. " and " .. args["also"]
+	end
+
+	local c = 3
+
+	while spec[c] do
+		local prev = nil
+
+		if c > 3 then
+			prev = spec[c-1]
+		else
+			prev = {}
+		end
+
+		gloss = gloss .. get_holonym_description(placetype_for_in_or_of, prev, spec[c], spec[c+1], (c == 3))
+		c = c + 1
+	end
+
+	if with_article then
+		gloss = (args["a"] or get_article(spec[2][1], sentence)) .. " " .. gloss
+	end
+
+	return gloss
+end
+
+
+-- Get the full description of a new-style place spec. New-style place specs are
+-- specified with a single string containing raw text interspersed with placetypes
+-- and holonyms surrounded by <<...>>.
+local function get_new_style_gloss(args, spec, with_article)
+	local parts = {}
+
+	if with_article and args["a"] then
+		table.insert(parts, args["a"] .. " ")
+	end
+
+	for _, order in ipairs(spec.order) do
+		local segment_type, segment_num = order[1], order[2]
+		if segment_type == "raw" then
+			table.insert(parts, spec.raw[segment_num])
+		elseif segment_type == "placetype" then
+			table.insert(parts, get_placetype_description(spec[2][segment_num]))
+		elseif segment_type == "holonym" then
+			table.insert(parts, get_place_string(spec[segment_num], false, true))
+		else
+			error("Internal error: Unrecognized segment type '" .. segment_type .. "'")
+		end
+	end
+
+	return table.concat(parts)
+end
+
+
+-- Returns a string with the gloss (the description of the place itself, as
+-- opposed to translations). If sentence == true, the gloss’s first letter is
+-- made upper case and a period is added to the end.
+local function get_gloss(args, specs, sentence)
+	if args["def"] then
+		return args["def"]
+	end
+
+	local glosses = {}
+	for n, spec in ipairs(specs) do
+		if spec.order then
+			table.insert(glosses, get_new_style_gloss(args, spec, n == 1))
+		else
+			table.insert(glosses, get_old_style_gloss(args, spec, n == 1, sentence))
+		end
+	end
+
+	local ret = {table.concat(glosses, "; ")}
+
+	table.insert(ret, get_extra_info("modern", args["modern"], false))
+	table.insert(ret, get_extra_info("official name:", args["official"], sentence))
+	table.insert(ret, get_extra_info("capital:", args["capital"], sentence))
+	table.insert(ret, get_extra_info("largest city:", args["largest city"], sentence))
+	table.insert(ret, get_extra_info("capital and largest city:", args["caplc"], sentence))
+	local placetype = specs[1][2][1]
+	if placetype == "county" or placetype == "parish" or placetype == "borough" then
+		placetype = placetype .. " seat"
+	else
+		placetype = "seat"
+	end
+	table.insert(ret, get_extra_info(placetype .. ":", args["seat"], sentence))
+
+	return table.concat(ret)
+end
+
+
+-- Returns the definition line.
+local function get_def(args, specs)
+	if #args["t"] > 0 then
+		return get_translations(args["t"]) .. " (" .. get_gloss(args, specs, false) .. ")"
+	else
+		return get_gloss(args, specs, true)
+	end
 end
 
 
@@ -700,23 +785,114 @@ end
 
 
 
--- Iterate through each type of place given in parameter 2 (a list of place specs,
--- as documented in parse_place_specs()) and returns a string with the links to
--- all categories that need to be added to the entry. 
-function get_cats(lang, place_specs)
-	local cats = ""
+-- Look up and resolve any category aliases that need to be applied to a holonym. For example,
+-- "country/Republic of China" maps to "Taiwan" for use in categories like "Counties in Taiwan".
+-- This also removes any links.
+local function resolve_cat_aliases(holonym_placetype, holonym_placename)
+	local retval
+	local cat_aliases = get_equiv_placetype_prop(holonym_placetype, function(pt) return data.placename_cat_aliases[pt] end)
+	holonym_placename = m_links.remove_links(holonym_placename)
+	if cat_aliases then
+		retval = cat_aliases[holonym_placename]
+	end
+	return retval or holonym_placename
+end
 
-	handle_implications(place_specs, data.cat_implications, true)
 
-	for n1, place_spec in ipairs(place_specs) do
-		for n2, placetype in ipairs(place_spec[2]) do
-			if placetype ~= "and" then
-				cats = cats .. get_cat(lang, place_spec, placetype)
+-- Find the appropriate category or categories for a given place spec; e.g. for the call
+-- {{place|en|city|s/Pennsylvania|c/US}} which results in the place spec
+-- {"foobar", {"city"}, {"state", "Pennsylvania"}, {"country", "United States"}, state={"Pennsylvania"}, country={"United States"}},
+-- the return value would likely be "city", {"Cities in Pennsylvania, USA"}, 3
+-- (i.e. three values are returned; see below).
+--
+-- More specifically, given three arguments: (1) the entry placetype (or equivalent) used
+-- to look up the category data in cat_data; (2) the value of cat_data[placetype] for this
+-- placetype; (3) the full place spec as documented in parse_place_specs(); look up the
+-- outer-level data (normally keyed by the holonym, e.g. "country/Italy", or by "default")
+-- and the inner-level data (normally keyed by "itself" for a specific holonym and by the
+-- holonym's placetype for "default"), and return the resulting value. This value is a list
+-- of one of two things: (a) a category, which may have +++ in it, which is replaced by
+-- the matching holonym placename; (b) 'true' to construct the category from the entry's
+-- placetype and the holonym's placename. The lookup works by iterating twice through the
+-- holonyms in the place spec: First to look up the outer-level data, and secondly to look
+-- up the inner-level data in the outer-level data just found. Both lookups stop as soon as
+-- a matching key is found, meaning that usually only the first-listed holonym of the form
+-- PLACETYPE/PLACENAME (i.e. excluding bare strings like "in southern") has a corresponding
+-- category returned. Three values are actually returned:
+--
+-- ENTRY_PLACETYPE, CATEGORIES, HOLONYM_INDEX
+--
+-- where ENTRY_PLACETYPE is the placetype that should be used to construct categories when
+-- 'true' is returned; CATEGORIES is a list as described above; and PLACE_SPEC_INDEX is the
+-- index (3 or greater) of the matching holonym in the place spec, or -1 if the outer-level
+-- data was keyed by "default". More specifically, there are three cases:
+--
+-- 1. An outer-level key matching a specific holonym (e.g. "country/Italy") was found,
+--    but an inner-level key matching the holonym's placetype (e.g. "country") wasn't
+--    found. In this case, CATEGORIES is based on the inner-level key "itself" (or nil
+--    if no such key exists), and PLACE_SPEC_INDEX is the index of the holonym whose
+--    placetype was found among the outer-level keys.
+-- 2. An outer-level key matching a specific holonym (e.g. "country/Italy") wasn't found
+--    (so the outer-level key "default" was used), and an inner-level key matching the
+--    holonym's placetype (e.g. "country") also wasn't found. In this case, CATEGORIES
+--    is based on the inner-level key "itself" (or nil if no such key exists), and
+--    PLACE_SPEC_INDEX is -1.
+-- 3. An inner-level key matching the holonym's placetype (e.g. "country") was found,
+--    regardless of whether an outer-level key matching a specific holonym was found.
+--    In this case, CATEGORIES is based on the matching inner-level key, and PLACE_SPEC_INDEX
+--    is the index of the holonym's placetype serving as the inner-level key. Note the
+--    difference here in the meaning of the second parameter vs. (1) above.
+local function find_cat_spec(entry_placetype, entry_placetype_data, place_spec)
+	local inner_data = nil
+
+	local c = 3
+
+	while place_spec[c] do
+		local holonym_placetype, holonym_placename = place_spec[c][1], place_spec[c][2]
+		holonym_placename = resolve_cat_aliases(holonym_placetype, holonym_placename)
+		inner_data = get_equiv_placetype_prop(holonym_placetype,
+			function(pt) return entry_placetype_data[(pt or "") .. "/" .. holonym_placename] end)
+		if inner_data then
+			break
+		end
+		if entry_placetype_data.cat_handler then
+			inner_data = get_equiv_placetype_prop(holonym_placetype,
+				function(pt) return entry_placetype_data.cat_handler(pt, holonym_placename) end)
+			if inner_data then
+				break
 			end
 		end
+		c = c + 1
 	end
 
-	return cats
+	-- If we didn't find a matching place spec, and there's a fallback, look it up.
+	-- This is used, for example, with "rural municipality", which has special cases for
+	-- some provinces of Canada and otherwise behaves like "municipality".
+	if not inner_data and entry_placetype_data.fallback then
+		return find_cat_spec(entry_placetype_data.fallback, cat_data[entry_placetype_data.fallback], place_spec)
+	end
+	
+	if not inner_data then
+		inner_data = entry_placetype_data["default"]
+		c = -1
+	end
+
+	if not inner_data then
+		return entry_placetype, nil, -1
+	end
+
+	local c2 = 3
+
+	while place_spec[c2] do
+		local retval = get_equiv_placetype_prop(place_spec[c2][1], function(pt) return inner_data[pt] end)
+		if retval then
+			return entry_placetype, retval, c2
+		end
+
+		c2 = c2 + 1
+	end
+
+	return entry_placetype, inner_data["itself"], c
 end
 
 
@@ -724,7 +900,7 @@ end
 -- The plural is fetched from the data module; if it doesn’t find one,
 -- the 'pluralize' function from [[Module:string utilities]] is called,
 -- which pluralizes correctly in almost all cases.
-function get_cat_plural(word)
+local function get_cat_plural(word)
 	local pt_data, equiv_placetype_and_qualifier = get_equiv_placetype_prop(word, function(pt) return cat_data[pt] end)
 	if pt_data then
 		word = pt_data.plural or m_strutils.pluralize(equiv_placetype_and_qualifier.placetype)
@@ -734,10 +910,56 @@ function get_cat_plural(word)
 	return m_strutils.ucfirst(word)
 end
 
+
+-- Turn a category spec (a list of partial or full categories, or {true}) into the wikicode of
+-- one or more actual categories. It is given the following arguments:
+-- (1) the language object (param 1=)
+-- (2) the category spec retrieved using find_cat_spec()
+-- (3) the placetype of the place (param 2=)
+-- (4) the value of cat_data for this placetype
+-- (5) the holonym for which the category spec was fetched (in the format of indices 3, 4, ...
+--     of the place spec data, as described in parse_place_specs())
+-- (6) the place spec itself
+-- The return value is constructed by iterating over the entries in the category spec.
+-- For each entry, the category is formed as follows:
+-- (1) If the category spec is 'true', construct the category from the plural of the placetype +
+--     the appropriate preposition ("in" or "of", as determined from the placetype category data,
+--     defaulting to "in" unless key "preposition" was specified) + the string "+++". Otherwise,
+--     the category spec should be a string; use it directly.
+-- (2) If "+++" occurs in the resulting category string, replace it with the holonym placename.
+--     The substituted placename comes from the holonym placename, possibly preceded by "the"
+--     (if appropriate).
+local function get_possible_cat(lang, cat_spec, entry_placetype, entry_pt_data, holonym, place_spec)
+	if not cat_spec or not entry_placetype or not entry_pt_data or not holonym or not place_spec then
+		return ""
+	end
+
+	local all_cats = ""
+
+	local holonym_placetype, holonym_placename = holonym[1], holonym[2]
+	holonym_placename = resolve_cat_aliases(holonym_placetype, holonym_placename)
+	holonym = {holonym_placetype, holonym_placename}
+
+	for _, name in ipairs(cat_spec) do
+		local cat = ""
+		if name == true then
+			cat = get_cat_plural(entry_placetype) .. get_in_or_of(entry_placetype, holonym_placetype) .. " +++"
+		elseif name then
+			cat = name
+		end
+
+		cat = cat:gsub("%+%+%+", get_place_string(holonym, true, false))
+		all_cats = all_cats .. catlink(lang, cat)
+	end
+
+	return all_cats
+end
+
+
 -- Return a string containing the category wikicode that should be added to the
 -- entry, given the place spec (see parse_place_specs()) and the type of place
 -- (e.g. "city").
-function get_cat(lang, place_spec, entry_placetype)
+local function get_cat(lang, place_spec, entry_placetype)
 	-- Find the category data for a given placetype. This data is a two-level
 	-- table, the outer indexed by the holonym itself (e.g. "country/Italy") or by
 	-- "default", and the inner indexed by the holonym's placetype (e.g. "country")
@@ -758,7 +980,8 @@ function get_cat(lang, place_spec, entry_placetype)
 	-- Find the category spec (a usually one-element list of full or partial categories,
 	-- or a list {true}; see find_cat_spec()) corresponding to the holonym(s) in the place
 	-- spec. See above.
-	local cat_spec, c, itself = find_cat_spec(entry_pt_data, place_spec)
+	local cat_spec, c
+	equiv_entry_placetype, cat_spec, c = find_cat_spec(equiv_entry_placetype, entry_pt_data, place_spec)
 
 	-- 2. No category spec could be found. This happens if the innermost table in the category data
 	--    doesn't match any holonym's placetype and doesn't have an "itself" entry.
@@ -805,158 +1028,23 @@ function get_cat(lang, place_spec, entry_placetype)
 end
 
 
--- Look up and resolve any category aliases that need to be applied to a holonym. For example,
--- "country/Republic of China" maps to "Taiwan" for use in categories like "Counties in Taiwan".
--- This also removes any links.
-local function resolve_cat_aliases(holonym_placetype, holonym_placename)
-	local retval
-	local cat_aliases = get_equiv_placetype_prop(holonym_placetype, function(pt) return data.placename_cat_aliases[pt] end)
-	holonym_placename = m_links.remove_links(holonym_placename)
-	if cat_aliases then
-		retval = cat_aliases[holonym_placename]
-	end
-	return retval or holonym_placename
-end
+-- Iterate through each type of place given in parameter 2 (a list of place specs,
+-- as documented in parse_place_specs()) and returns a string with the links to
+-- all categories that need to be added to the entry. 
+local function get_cats(lang, place_specs)
+	local cats = ""
 
+	handle_implications(place_specs, data.cat_implications, true)
 
--- Find the appropriate category or categories for a given place spec; e.g. for the call
--- {{place|en|city|s/Pennsylvania|c/US}} which results in the place spec
--- {"foobar", {"city"}, {"state", "Pennsylvania"}, {"country", "United States"}, state={"Pennsylvania"}, country={"United States"}},
--- the return value would likely be {"Cities in Pennsylvania, USA"}, 3, false
--- (i.e. three values are returned; see below).
---
--- More specifically, given two arguments: (1) the value of cat_data[placetype] for the
--- placetype of the place in question, i.e. 2=; (2) the full place spec as documented in
--- parse_place_specs(); look up the outer-level data (normally keyed by the holonym, e.g.
--- "country/Italy", or by "default") and the inner-level data (normally keyed by "itself"
--- for a specific holonym and by the holonym's placetype for "default"), and return the
--- resulting value. This value is one of two things: (a) a list of categories or partial
--- categories (usually with only one element), where full categories (minus the initial
--- language code) are used when the inner key is "itself", and partial categories such as
--- "Cities in " (with the holonym's placename attached to form the full category) are used
--- otherwise; (b) {true} to construct the category from the place's placetype and the holonym's
--- placename. The lookup works by iterating twice through the holonyms in the place spec:
--- First to look up the outer-level data, and secondly to look up the inner-level data in
--- the outer-level data just found. Both lookups stop as soon as a matching key is found,
--- meaning that usually only the first-listed holonym of the form PLACETYPE/PLACENAME (i.e.
--- excluding bare strings like "in southern") has a corresponding category returned. Three
--- values are actually returned:
---
--- CATEGORIES, HOLONYM_INDEX, IS_ITSELF
---
--- where CATEGORIES is a list as described above; PLACE_SPEC_INDEX is the index (3 or
--- greater) of the matching holonym in the place spec, or -1 if the outer-level data
--- was keyed by "default"; and IS_ITSELF is true if the inner-level data was keyed by
--- "itself", otherwise false. More specifically, there are three cases:
---
--- 1. An outer-level key matching a specific holonym (e.g. "country/Italy") was found,
---    but an inner-level key matching the holonym's placetype (e.g. "country") wasn't
---    found. In this case, CATEGORIES is based on the inner-level key "itself" (or nil
---    if no such key exists), PLACE_SPEC_INDEX is the index of the holonym whose
---    placetype was found among the outer-level keys, and IS_ITSELF is true.
--- 2. An outer-level key matching a specific holonym (e.g. "country/Italy") wasn't found
---    (so the outer-level key "default" was used), and an inner-level key matching the
---    holonym's placetype (e.g. "country") also wasn't found. In this case, CATEGORIES
---    is based on the inner-level key "itself" (or nil if no such key exists),
---    PLACE_SPEC_INDEX is -1, and IS_ITSELF is true.
--- 3. An inner-level key matching the holonym's placetype (e.g. "country") was found,
---    regardless of whether an outer-level key matching a specific holonym was found.
---    In this case, CATEGORIES is based on the matching inner-level key, PLACE_SPEC_INDEX
---    is the index of the holonym's placetype serving as the inner-level key, and
---    IS_ITSELF is false. Note the difference here in the meaning of the second parameter
---    vs. (1) above.
-function find_cat_spec(entry_placetype_data, place_spec)
-	local inner_data = nil
-
-	local c = 3
-
-	while place_spec[c] do
-		local holonym_placetype, holonym_placename = place_spec[c][1], place_spec[c][2]
-		holonym_placename = resolve_cat_aliases(holonym_placetype, holonym_placename)
-		inner_data = get_equiv_placetype_prop(holonym_placetype,
-			function(pt) return entry_placetype_data[(pt or "") .. "/" .. holonym_placename] end)
-		if inner_data then
-			break
-		end
-		if entry_placetype_data.cat_handler then
-			inner_data = get_equiv_placetype_prop(holonym_placetype,
-				function(pt) return entry_placetype_data.cat_handler(pt, holonym_placename) end)
-			if inner_data then
-				break
+	for n1, place_spec in ipairs(place_specs) do
+		for n2, placetype in ipairs(place_spec[2]) do
+			if placetype ~= "and" then
+				cats = cats .. get_cat(lang, place_spec, placetype)
 			end
 		end
-		c = c + 1
 	end
 
-	if not inner_data then
-		inner_data = entry_placetype_data["default"]
-		c = -1
-	end
-
-	local c2 = 3
-
-	while place_spec[c2] do
-		local retval = get_equiv_placetype_prop(place_spec[c2][1], function(pt) return inner_data[pt] end)
-		if retval then
-			return retval, c2, false
-		end
-
-		c2 = c2 + 1
-	end
-
-	return inner_data["itself"], c, true
-end
-
-
--- Turn a category spec (a list of partial or full categories, or {true}) into the wikicode of
--- one or more actual categories. It is given the following arguments:
--- (1) the language object (param 1=)
--- (2) the category spec retrieved using find_cat_spec()
--- (3) the placetype of the place (param 2=)
--- (4) the value of cat_data for this placetype
--- (5) the holonym for which the category spec was fetched (in the format of indices 3, 4, ...
---     of the place spec data, as described in parse_place_specs())
--- (6) the place spec itself
--- The return value is constructed by iterating over the entries in the category spec.
--- For each entry, the category is formed as follows:
--- (1) If the category spec is 'true', construct the category from the plural of the placetype +
---     the appropriate preposition ("in" or "of", as determined from the placetype category data,
---     defaulting to "in" unless key "preposition" was specified) + the string "+++". Otherwise,
---     the category spec should be a string; use it directly.
--- (2) If "+++" occurs in the resulting category string, replace it with the holonym placename.
---     The substituted placename comes from the holonym placename, possibly preceded by "the"
---     (if appropriate).
-function get_possible_cat(lang, cat_spec, entry_placetype, entry_pt_data, holonym, place_spec)
-	if not cat_spec or not entry_placetype or not entry_pt_data or not holonym or not place_spec then
-		return ""
-	end
-
-	local all_cats = ""
-
-	local holonym_placetype, holonym_placename = holonym[1], holonym[2]
-	holonym_placename = resolve_cat_aliases(holonym_placetype, holonym_placename)
-	holonym = {holonym_placetype, holonym_placename}
-
-	for _, name in ipairs(cat_spec) do
-		local cat = ""
-		if name == true then
-			cat = get_cat_plural(entry_placetype) .. get_in_or_of(entry_placetype, holonym_placetype) .. " +++"
-		elseif name then
-			cat = name
-		end
-
-		cat = cat:gsub("%+%+%+", get_place_string(holonym, true, false))
-		all_cats = all_cats .. catlink(lang, cat)
-	end
-
-	return all_cats
-end
-
-
--- Returns the category link for a category, given the language code and the
--- name of the category.
-function catlink(lang, text)
-	return require("Module:utilities").format_categories({lang:getCode() .. ":" .. m_links.remove_links(text)}, lang)
+	return cats
 end
 
 
