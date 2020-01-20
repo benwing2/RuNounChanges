@@ -273,6 +273,7 @@ export.placetype_links = {
 	["settlement"] = true,
 	["shire"] = true,
 	["shire town"] = true,
+	["ski resort town"] = "[[ski resort]] town",
 	["spa town"] = "w",
 	["special administrative region"] = "w",
 	["special collectivity"] = "w",
@@ -450,10 +451,12 @@ export.placetype_equivs = {
 	["settlement"] = "village",
 	["shire"] = "county",
 	["shire town"] = "county seat",
+	["ski resort town"] = "town",
 	["spa town"] = "town",
 	["spit"] = "peninsula",
 	["statutory town"] = "town",
 	["submerged ghost town"] = "town",
+	["suburban area"] = "suburb",
 	["subway station"] = "metro station",
 	["supercontinent"] = "continent",
 	["underground station"] = "metro station",
@@ -595,9 +598,9 @@ export.placename_the_re = {
 	["tribal jurisdictional area"] = {" Reservation", " Nation"},
 }
 
--- Now extract all the other places that need "the" prefixed from the shared
--- place data by looking for places prefixed by "the".
-for _, group in ipairs(m_shared.places) do
+-- Now extract from the shared place data all the other places that need "the"
+-- prefixed.
+for _, group in ipairs(m_shared.polities) do
 	for key, value in pairs(group.data) do
 		key = key:gsub(", .*$", "") -- Chop off ", England" and such from the end
 		local base = key:match("^the (.*)$")
@@ -681,7 +684,7 @@ export.cat_implication_handlers = {}
 
 table.insert(export.cat_implication_handlers,
 	function(placetype, holonym_placetype, holonym_placename)
-		for _, group in ipairs(m_shared.places) do
+		for _, group in ipairs(m_shared.polities) do
 			-- Find the appropriate key format for the holonym (e.g. "pref/Osaka" -> "Osaka Prefecture").
 			local key = group.place_cat_handler(group, placetype, holonym_placetype, holonym_placename)
 			if key then
@@ -700,7 +703,7 @@ table.insert(export.cat_implication_handlers,
 local function city_type_cat_handler(placetype, holonym_placetype, holonym_placename, ignore_nocities, no_containing_polity)
 	local plural_placetype = m_strutils.pluralize(placetype)
 	if m_shared.generic_place_types[plural_placetype] then
-		for _, group in ipairs(m_shared.places) do
+		for _, group in ipairs(m_shared.polities) do
 			-- Find the appropriate key format for the holonym (e.g. "pref/Osaka" -> "Osaka Prefecture").
 			local key = group.place_cat_handler(group, placetype, holonym_placetype, holonym_placename)
 			if key then
@@ -764,7 +767,7 @@ end
 -- This way, a district under a city will still categorize under "Neighborhoods in Foo"
 -- while other districts won't categorize.
 local function district_cat_handler(placetype, holonym_placetype, holonym_placename)
-	for _, group in ipairs(m_shared.places) do
+	for _, group in ipairs(m_shared.polities) do
 		-- Find the appropriate key format for the holonym (e.g. "pref/Osaka" -> "Osaka Prefecture").
 		local key = group.place_cat_handler(group, placetype, holonym_placetype, holonym_placename)
 		if key then
@@ -1093,7 +1096,7 @@ export.cat_data = {
 		preposition="of",
 		-- UNITED STATES
 		cat_handler = function(holonym_placetype, holonym_placename)
-			local spec = m_shared.US_states[holonym_placename .. ", USA"]
+			local spec = m_shared.us_states[holonym_placename .. ", USA"]
 			if spec and holonym_placetype == "state" and not spec.county_type then
 				return {
 					-- We intentionally do not add ", USA" here because that's the way it was done before.
@@ -1138,7 +1141,7 @@ export.cat_data = {
 		preposition="of",
 		-- UNITED STATES
 		cat_handler = function(holonym_placetype, holonym_placename)
-			local spec = m_shared.US_states[holonym_placename .. ", USA"]
+			local spec = m_shared.us_states[holonym_placename .. ", USA"]
 			if spec and holonym_placetype == "state" and not spec.county_type then
 				return {
 					-- We intentionally do not add ", USA" here because that's the way it was done before.
@@ -1839,7 +1842,7 @@ export.cat_data = {
 -- Now augment the category data with political subdivisions extracted from the
 -- shared data. We don't need to do this if there's already an entry under "default"
 -- for the divtype of the containing polity.
-for _, group in ipairs(m_shared.places) do
+for _, group in ipairs(m_shared.polities) do
 	for key, value in pairs(group.data) do
 		if value.poldiv or value.miscdiv then
 			local bare_key, linked_key = m_shared.construct_bare_and_linked_version(key)

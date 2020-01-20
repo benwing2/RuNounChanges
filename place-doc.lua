@@ -139,7 +139,7 @@ function export.placename_table()
 	end
 
 	-- Handle categorization for cities/etc.
-	for _, group in ipairs(m_shared.places) do
+	for _, group in ipairs(m_shared.polities) do
 		for key, value in pairs(group.data) do
 			-- Use the group's value_transformer to ensure that 'nocities' and 'containing_polity'
 			-- keys are present if they should be.

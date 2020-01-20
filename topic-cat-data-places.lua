@@ -71,6 +71,7 @@ local general_labels = {
 	{"seas", "[[sea]]s", {"places", "water"}},
 	{"straits", "[[strait]]s", {"places", "water"}},
 	{"subdistricts", "[[subdistrict]]s", {"polities"}},
+	{"suburbs", "[[suburb]]s of a [[city]]", {"places"}},
 	{"towns", "[[town]]s", {"polities"}},
 	{"townships", "[[township]]s", {"polities"}},
 	{"unincorporated communities", "[[unincorporated]] [[community|communities]]", {"places"}},
@@ -100,7 +101,7 @@ labels["exonyms"] = {
 	parents = {"places", "list of sets"},
 }
 
-for _, group in ipairs(m_shared.places) do
+for _, group in ipairs(m_shared.polities) do
 	for key, value in pairs(group.data) do
 		group.bare_label_setter(labels, group, key, value)
 	end
@@ -112,7 +113,7 @@ table.insert(handlers, function(label)
 	label = lcfirst(label)
 	local place_type, place = label:match("^([a-z%- ]-) in (.*)$")
 	if place_type and m_shared.generic_place_types[place_type] then
-		for _, group in ipairs(m_shared.places) do
+		for _, group in ipairs(m_shared.polities) do
 			local placedata = group.data[place]
 			if placedata then
 				placedata = group.value_transformer(group, place, placedata)
@@ -136,7 +137,7 @@ table.insert(handlers, function(label)
 	label = lcfirst(label)
 	local place_type, place = label:match("^([a-z%- ]-) of (.*)$")
 	if place then
-		for _, group in ipairs(m_shared.places) do
+		for _, group in ipairs(m_shared.polities) do
 			local placedata = group.data[place]
 			if placedata then
 				placedata = group.value_transformer(group, place, placedata)
@@ -187,7 +188,7 @@ table.insert(handlers, function(label)
 	label = lcfirst(label)
 	local county_type, state = label:match("^([a-z ]-) of (.*)$")
 	if state then
-		local state_desc = m_shared.US_states[state .. ", USA"]
+		local state_desc = m_shared.us_states[state .. ", USA"]
 		if state_desc then
 			local expected_county_type = state_desc.county_type or "counties"
 			local linked_county_type = m_shared.political_subdivisions[expected_county_type]
@@ -207,7 +208,7 @@ table.insert(handlers, function(label)
 	label = lcfirst(label)
 	local seat_type, state = label:match("^([a-z ]-) of (.*)$")
 	if state then
-		local state_desc = m_shared.US_states[state .. ", USA"]
+		local state_desc = m_shared.us_states[state .. ", USA"]
 		if state_desc then
 			local expected_county_type = state_desc.county_type or "counties"
 			local expected_seat_type = m_strutils.singularize(expected_county_type) .. " seats"
@@ -416,8 +417,8 @@ end
 -- municipalities
 
 for _, province in ipairs({"Saskatchewan", "Manitoba", "Prince Edward Island"}) do
-	labels["rural municipalities in " .. province] = {
-		description = "{{{langname}}} names of [[w:rural municipality|rural municipalities]] in [[" .. province .. "]], a [[province]] of [[Canada]].", 
+	labels["rural municipalities of " .. province] = {
+		description = "{{{langname}}} names of [[w:rural municipality|rural municipalities]] of [[" .. province .. "]], a [[province]] of [[Canada]].", 
 		parents = {{name = "rural municipalities", sort = province}, province, "list of sets"},
 	}
 end
