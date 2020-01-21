@@ -37,6 +37,19 @@ end
 
 
 
+-- Return the singular version of a maybe-plural placetype, or nil if not plural.
+local function maybe_singularize(placetype)
+	if not placetype then
+		return nil
+	end
+	local retval = m_strutils.singularize(placetype)
+	if retval == placetype then
+		return nil
+	end
+	return retval
+end
+
+
 -- Given a placetype, split the placetype into one or more potential "splits", each consisting
 -- of (a) a recognized qualifier (e.g. "small", "former"), which we canonicalize
 -- (e.g. "historic" -> "historical", "seaside" -> "coastal"); (b) the concatenation of any
@@ -78,12 +91,27 @@ end
 -- qualifier to prepend, or nil). The placetype itself always forms the first entry.
 local function get_placetype_equivs(placetype)
 	local equivs = {}
-	-- First do the placetype itself.
-	table.insert(equivs, {placetype=placetype})
-	-- Then check for a mapping in placetype_equivs; add if present.
-	if data.placetype_equivs[placetype] then
-		table.insert(equivs, {placetype=data.placetype_equivs[placetype]})
+
+	local function do_placetype(qualifier, placetype)
+		-- First do the placetype itself.
+		table.insert(equivs, {placetype=placetype})
+		-- Then check for a singularized equivalent.
+		local sg_placetype = maybe_singularize(placetype)
+		if sg_placetype then
+			table.insert(equivs, {placetype=sg_placetype})
+		end
+		-- Then check for a mapping in placetype_equivs; add if present.
+		if data.placetype_equivs[placetype] then
+			table.insert(equivs, {placetype=data.placetype_equivs[placetype]})
+		end
+		-- Then check for a mapping in placetype_equivs for the singularized equivalent.
+		if sg_placetype and data.placetype_equivs[sg_placetype] then
+			table.insert(equivs, {placetype=data.placetype_equivs[sg_placetype]})
+		end
 	end
+
+	do_placetype(nil, placetype)
+
 	-- Then successively split off recognized qualifiers and loop over successively greater sets of
 	-- qualifiers from the left.
 	local splits = split_and_canonicalize_placetype(placetype)
@@ -98,20 +126,13 @@ local function get_placetype_equivs(placetype)
 		-- If so, create a placetype from the qualifier mapping + the following bare_placetype; then, add
 		-- that placetype, and any mapping for the placetype in placetype_equivs.
 		if data.qualifier_equivs[this_qualifier] then
-			local subbed_placetype = data.qualifier_equivs[this_qualifier] .. " " .. bare_placetype
-			table.insert(equivs, {qualifier=prev_qualifier, placetype=subbed_placetype})
-			if data.placetype_equivs[subbed_placetype] then
-				table.insert(equivs, {qualifier=prev_qualifier, placetype=data.placetype_equivs[subbed_placetype]})
-			end
+			do_placetype(prev_qualifier, data.qualifier_equivs[this_qualifier] .. " " .. bare_placetype)
 		end
 		-- Finally, join the rightmost split-off qualifier to the previously split-off qualifiers to form a
 		-- combined qualifier, and add it along with bare_placetype and any mapping in placetype_equivs for
 		-- bare_placetype.
 		local qualifier = prev_qualifier and prev_qualifier .. " " .. this_qualifier or this_qualifier
-		table.insert(equivs, {qualifier=qualifier, placetype=bare_placetype})
-		if data.placetype_equivs[bare_placetype] then
-			table.insert(equivs, {qualifier=qualifier, placetype=data.placetype_equivs[bare_placetype]})
-		end
+		do_placetype(qualifier, bare_placetype)
 	end
 	return equivs
 end
@@ -575,17 +596,32 @@ local function get_holonym_description(entry_placetype, place1, place2, place3, 
 end
 
 
-local function get_linked_placetype(placetype, use_default)
+local function get_linked_placetype(placetype)
 	local linked_version = data.placetype_links[placetype]
-	if not linked_version then
-		return use_default and placetype or nil
-	elseif linked_version == true then
-		return "[[" .. placetype .. "]]"
-	elseif linked_version == "w" then
-		return "[[w:" .. placetype .. "|" .. placetype .. "]]"
-	else
-		return linked_version
+	if linked_version then
+		if linked_version == true then
+			return "[[" .. placetype .. "]]"
+		elseif linked_version == "w" then
+			return "[[w:" .. placetype .. "|" .. placetype .. "]]"
+		else
+			return linked_version
+		end
 	end
+	local sg_placetype = maybe_singularize(placetype)
+	if sg_placetype then
+		local linked_version = data.placetype_links[sg_placetype]
+		if linked_version then
+			if linked_version == true then
+				return "[[" .. sg_placetype .. "|" .. placetype .. "]]"
+			elseif linked_version == "w" then
+				return "[[w:" .. sg_placetype .. "|" .. placetype .. "]]"
+			else
+				return m_strutils.pluralize(linked_version)
+			end
+		end
+	end
+	
+	return nil
 end
 
 
@@ -651,11 +687,14 @@ local function get_old_style_gloss(args, spec, with_article, sentence)
 	local gloss = ""
 
 	-- The placetype used to determine whether "in" or "of" follows is the last placetype if there are
-	-- multiple slash-separated placetypes, but ignoring "and" and parenthesized notes such as "(one of 254)".
+	-- multiple slash-separated placetypes, but ignoring "and", "or" and parenthesized notes
+	-- such as "(one of 254)".
 	local placetype_for_in_or_of = nil
 	for n2, placetype in ipairs(spec[2]) do
 		if placetype == "and" then
 			gloss = gloss .. " and "
+		elseif placetype == "or" then
+			gloss = gloss .. " or "
 		elseif placetype:find("^%(") then
 			-- Check for placetypes beginning with a paren (so that things
 			-- like "{{place|en|county/(one of 254)|s/Texas}}" work).
@@ -668,7 +707,7 @@ local function get_old_style_gloss(args, spec, with_article, sentence)
 			-- joined with "and". We allow "the" to precede the second placetype
 			-- if they're not joined with "and" (so we get "city and county seat of ..."
 			-- but "city, the county seat of ...").
-			if n2 > 1 and spec[2][n2-1] ~= "and" then
+			if n2 > 1 and spec[2][n2-1] ~= "and" and spec[2][n2-1] ~= "or" then
 				gloss = gloss .. ", "
 
 				if pt_data and pt_data.article == "the" then
