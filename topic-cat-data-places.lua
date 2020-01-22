@@ -35,8 +35,10 @@ labels["places"] = {
 
 -- Each entry is {LABEL, DESCRIPTION, PARENTS}.
 local general_labels = {
+	{"airports", "[[airport]]s", {"places"}},
 	{"atolls", "[[atoll]]s", {"islands"}},
 	{"bays", "[[bay]]s", {"places", "water"}},
+	{"beaches", "[[beach]]es", {"places", "water"}},
 	{"boroughs", "[[borough]]s", {"polities"}},
 	{"capital cities", "[[capital]] [[city|cities]]: the [[seat of government|seats of government]] for a country", {"cities"}},
 	{"census-designated places", "[[census-designated place]]s", {"places"}},
@@ -58,9 +60,11 @@ local general_labels = {
 	{"lakes", "[[lake]]s", {"places", "water"}},
 	{"landforms", "[[landform]]s", {"Earth"}},
 	{"mountains", "[[mountain]]s", {"places"}},
+	{"moors", "[[moor]]s", {"places"}},
 	{"neighborhoods", "[[neighborhood]]s, [[district]]s and other subportions of a [[city]]", {"places"}},
 	-- FIXME, is the following parent correct?
 	{"oceans", "[[ocean]]s", {"Seas"}},
+	{"parks", "[[park]]s", {"places"}},
 	{"peninsulas", "[[peninsula]]s", {"places"}},
 	{"plateaus", "[[plateau]]s", {"places"}},
 	{"political subdivisions", "[[political]] [[subdivision]]s, such as [[province]]s, [[state]]s or [[region]]s", {"polities"}},
@@ -101,6 +105,7 @@ labels["exonyms"] = {
 	parents = {"places", "list of sets"},
 }
 
+-- Generate bare labels in 'label' for all polities.
 for _, group in ipairs(m_shared.polities) do
 	for key, value in pairs(group.data) do
 		group.bare_label_setter(labels, group, key, value)
@@ -395,22 +400,6 @@ for _, province in ipairs({"New Brunswick", "Nova Scotia", "Ontario", "Prince Ed
 	labels["counties of " .. province] = {
 		description = "default-set",
 		parents = {{name ="counties of Canada", sort = province}, province, "list of sets"},
-	}
-end
-
--- places (that defy categorization as villages, towns, etc)
--- is this useful?
-
-for _, place in ipairs({"Greece", "England", {"Ireland", "the republic of [[Ireland]]"}, "Scotland", "Wales"}) do
-	local linked_place
-	if type(place) == "table" then
-		place, linked_place = unpack(place)
-	else
-		linked_place = "[[" .. place .. "]]"
-	end
-	labels["places in " .. place] = {
-		description = "{{{langname}}} names of places in " .. linked_place .. " that are not readily classifiable as villages, towns, cities, counties, regions, etc.",
-		parents = {place, "list of sets"},
 	}
 end
 
