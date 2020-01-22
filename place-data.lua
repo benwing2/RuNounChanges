@@ -74,6 +74,8 @@ export.placetype_aliases = {
 	["home-rule city"] = "home rule city",
 	["home-rule municipality"] = "home rule municipality",
 	["sub-provincial city"] = "subprovincial city",
+	["nonmetropolitan county"] = "non-metropolitan county",
+	["inner-city area"] = "inner city area",
 }
 
 
@@ -122,20 +124,28 @@ export.placetype_qualifiers = {
 	["incorporated"] = "[[incorporated]]",
 	["special"] = "[[special]]",
 	["unincorporated"] = "[[unincorporated]]",
-	-- misc qualifiers
+	-- city vs. rural qualifiers
 	["urban"] = true,
 	["suburban"] = "[[suburban]]",
+	["outlying"] = true,
 	["rural"] = true,
+	-- land use qualifiers
 	["residential"] = "[[residential]]",
 	["agricultural"] = "[[agricultural]]",
-	["hilly"] = true,
 	["business"] = true,
 	["commercial"] = "[[commercial]]",
-	["fashionable"] = true,
-	["outlying"] = true,
-	["planned"] = true,
+	["industrial"] = "[[industrial]]",
+	-- qualifiers for nonexistent places
 	["fictional"] = true,
 	["mythological"] = true,
+	-- misc. qualifiers
+	["hilly"] = true,
+	["holy"] = true,
+	["sacred"] = true,
+	["religious"] = true,
+	["secular"] = true,
+	["fashionable"] = true,
+	["planned"] = true,
 }
 
 
@@ -170,6 +180,7 @@ export.placetype_links = {
 	["canton"] = true,
 	["cape"] = true,
 	["census-designated place"] = true,
+	["ceremonial county"] = true,
 	["civil parish"] = true,
 	["collectivity"] = true,
 	["commandery"] = true,
@@ -183,6 +194,7 @@ export.placetype_links = {
 	["county-level city"] = "w",
 	["county borough"] = true,
 	["county seat"] = true,
+	["county town"] = true,
 	["crown dependency"] = "w",
 	["department"] = true,
 	["department capital"] = "[[department]] [[capital]]",
@@ -212,13 +224,16 @@ export.placetype_links = {
 	["harbor town"] = "[[harbor]] [[town]]",
 	["harbour town"] = "[[harbour]] [[town]]",
 	["headland"] = true,
+	["heath"] = true,
+	["hill station"] = "w",
+	["hill town"] = "w",
 	["historical region"] = "w",
 	["home rule city"] = "w",
 	["home rule municipality"] = "w",
 	["housing estate"] = true,
 	["independent city"] = true,
 	["Indian reservation"] = "w",
-	["inner-city area"] = "[[inner-city]] area",
+	["inner city area"] = "[[inner city]] area",
 	["island country"] = "w",
 	["island municipality"] = "w",
 	["judicial capital"] = "w",
@@ -226,6 +241,7 @@ export.placetype_links = {
 	["krai"] = true,
 	["legislative capital"] = "[[legislative]] [[capital]]",
 	["lieutenancy area"] = "w",
+	["local authority district"] = "w",
 	["local government area"] = "w",
 	["local government district"] = "w",
 	["local government district with borough status"] = "[[w:local government district|local government district]] with [[w:borough status|borough status]]",
@@ -235,13 +251,19 @@ export.placetype_links = {
 	["marginal sea"] = true,
 	["market town"] = true,
 	["metropolitan borough"] = true,
+	["metropolitan county"] = true,
 	["metro station"] = true,
+	["minster town"] = "[[minster]] town",
+	["moor"] = true,
+	["moorland"] = true,
 	["mountain indigenous township"] = "[[mountain]] [[indigenous]] [[township]]",
 	["mountain range"] = true,
 	["mountainous region"] = "[[mountainous]] [[region]]",
 	["municipal district"] = "w",
 	["municipality"] = true,
 	["municipality with city status"] = "[[municipality]] with [[w:city status|city status]]",
+	["non-metropolitan county"] = "w",
+	["non-metropolitan district"] = "w",
 	["oblast"] = true,
 	["overseas collectivity"] = "w",
 	["overseas department"] = "w",
@@ -272,6 +294,7 @@ export.placetype_links = {
 	["seaport"] = true,
 	["settlement"] = true,
 	["shire"] = true,
+	["shire county"] = "w",
 	["shire town"] = true,
 	["ski resort town"] = "[[ski resort]] town",
 	["spa town"] = "w",
@@ -300,6 +323,7 @@ export.placetype_links = {
 	["underground station"] = "w",
 	["unincorporated territory"] = "w",
 	["unitary authority"] = true,
+	["unitary district"] = "w",
 	["unrecognised country"] = "w",
 	["unrecognized country"] = "w",
 	["urban area"] = "[[urban]] area",
@@ -343,8 +367,10 @@ export.placetype_equivs = {
 	["autonomous territory"] = "dependent territory",
 	["bailiwick"] = "polity",
 	["bishopric"] = "polity",
+	["built-up area"] = "area",
 	["cape"] = "peninsula",
 	["capital"] = "capital city",
+	["ceremonial county"] = "county",
 	["chain of islands"] = "island",
 	["commandery"] = "historical political subdivision",
 	["community"] = "village",
@@ -364,6 +390,9 @@ export.placetype_equivs = {
 	["hamlet"] = "village",
 	["harbor town"] = "town",
 	["harbour town"] = "town",
+	["heath"] = "moor",
+	["hill station"] = "town",
+	["hill town"] = "town",
 	-- We try to list all top-level polities and political subdivisions here and classify them
 	-- accordingly. (Note that the following entries also apply to anything preceded by "former",
 	-- "ancient", "historic", "medieval", etc., according to qualifier_equivs.) Anything we don't
@@ -422,22 +451,30 @@ export.placetype_equivs = {
 	["home rule city"] = "city",
 	["home rule municipality"] = "municipality",
 	["independent city"] = "city",
+	["inner city area"] = "neighborhood",
 	["inner suburb"] = "suburb",
 	["island country"] = "country",
 	["island municipality"] = "municipality",
 	["judicial capital"] = "capital city",
 	["kingdom"] = "polity",
 	["legislative capital"] = "capital city",
+	["local authority district"] = "local government district",
+	["local government district with borough status"] = "local government district",
 	["locality"] = "village", -- not necessarily true
 	["market town"] = "town",
 	["mediaeval city"] = "ancient city",
 	["medieval city"] = "ancient city",
+	["metropolitan county"] = "county",
+	["minster town"] = "town",
+	["moorland"] = "moor",
 	["mountain indigenous township"] = "township",
 	["mountain range"] = "mountain",
 	["mountainous region"] = "region",
 	["municipality with city status"] = "municipality",
 	["neighbourhood"] = "neighborhood",
 	["new town"] = "town",
+	["non-metropolitan county"] = "county",
+	["non-metropolitan district"] = "local government district",
 	["outer suburb"] = "suburb",
 	["overseas collectivity"] = "collectivity",
 	["overseas department"] = "department",
@@ -450,7 +487,8 @@ export.placetype_equivs = {
 	["resort town"] = "town",
 	["settlement"] = "village",
 	["shire"] = "county",
-	["shire town"] = "county seat",
+	["shire county"] = "county",
+	["shire town"] = "county town",
 	["ski resort town"] = "town",
 	["spa town"] = "town",
 	["spit"] = "peninsula",
@@ -461,7 +499,10 @@ export.placetype_equivs = {
 	["supercontinent"] = "continent",
 	["underground station"] = "metro station",
 	["unincorporated territory"] = "territory",
+	["unitary authority"] = "local government district",
+	["unitary district"] = "local government district",
 	["unrecognised country"] = "unrecognized country",
+	["urban area"] = "neighborhood",
 	["urban township"] = "township",
 	["town with bystatus"] = "town",
 	["tributary"] = "river",
@@ -700,7 +741,8 @@ table.insert(export.cat_implication_handlers,
 )
 
 
-local function city_type_cat_handler(placetype, holonym_placetype, holonym_placename, ignore_nocities, no_containing_polity)
+local function city_type_cat_handler(placetype, holonym_placetype, holonym_placename, ignore_nocities, no_containing_polity,
+		extracats)
 	local plural_placetype = m_strutils.pluralize(placetype)
 	if m_shared.generic_place_types[plural_placetype] then
 		for _, group in ipairs(m_shared.polities) do
@@ -720,6 +762,11 @@ local function city_type_cat_handler(placetype, holonym_placetype, holonym_place
 						if value.containing_polity and not value.no_city_containing_polity and not no_containing_polity then
 							table.insert(retcats, ucfirst(plural_placetype) .. " in " .. value.containing_polity)
 						end
+						if extracats then
+							for _, cat in ipairs(extracats) do
+								table.insert(retcats, cat)
+							end
+						end
 						return {
 							["itself"] = retcats
 						}
@@ -731,9 +778,36 @@ local function city_type_cat_handler(placetype, holonym_placetype, holonym_place
 end
 
 
--- Inner data returned by cat handler for districts.
-local function district_inner_data(value)
-	return {
+-- This is used to add pages to base holonym categories like 'en:Merseyside, England' (and 'en:England' and
+-- 'en:United Kingdom') for any pages that have 'co/Merseyside' as their holonym.
+local function generic_cat_handler(placetype, holonym_placetype, holonym_placename)
+	for _, group in ipairs(m_shared.polities) do
+		-- Find the appropriate key format for the holonym (e.g. "pref/Osaka" -> "Osaka Prefecture").
+		local key = group.place_cat_handler(group, placetype, holonym_placetype, holonym_placename)
+		if key then
+			local value = group.data[key]
+			if value then
+				-- Use the group's value_transformer to ensure that 'nocities' and 'containing_polity'
+				-- keys are present if they should be.
+				value = group.value_transformer(group, key, value)
+				-- Categorize both in key, and in the larger polity that the key is part of,
+				-- e.g. [[Hirakata]] goes in both "Osaka Prefecture" and "Japan".
+				local retcats = {key}
+				if value.containing_polity then
+					table.insert(retcats, value.containing_polity)
+				end
+				return {
+					["itself"] = retcats
+				}
+			end
+		end
+	end
+end
+
+
+-- Inner data returned by cat handler for districts, neighborhoods, etc.
+local function district_inner_data(value, itself_dest)
+	local retval = {
 		["city"] = value,
 		["town"] = value,
 		["township"] = value,
@@ -742,17 +816,24 @@ local function district_inner_data(value)
 		["census-designated place"] = value,
 		["village"] = value,
 	}
+	if itself_dest then
+		retval["itself"] = itself_dest
+	end
+	return retval
 end
 	
 
 -- Cat handler for districts and areas. Districts are tricky because they can
 -- either be political subdivisions or city neighborhoods. We handle this as follows:
 -- (1) For countries etc. where they can be political subdivisions, an entry under
--- "district" will be inserted for the country with the following:
+-- "district" will be inserted for the country with something similar to the following:
 --
 -- {
---		["itself"] = "true"
---		["city"] = "Neighborhoods in Foo"
+--		["itself"] = {"Districts of Foo"},
+--		["city"] = {"Neighborhoods in Foo"},
+--		["town"] = {"Neighborhoods in Foo"},
+--		["borough"] = {"Neighborhoods in Foo"},
+--		...
 -- }
 --
 -- This way, a district in a city will categorize under "Neighborhoods in Foo"
@@ -761,7 +842,10 @@ end
 -- for all known countries and primary subdivisions:
 --
 -- {
---		["city"] = "Neighborhoods in Foo"
+--		["city"] = {"Neighborhoods in Foo"},
+--		["town"] = {"Neighborhoods in Foo"},
+--		["borough"] = {"Neighborhoods in Foo"},
+--		...
 -- }
 --
 -- This way, a district under a city will still categorize under "Neighborhoods in Foo"
@@ -773,7 +857,7 @@ local function district_cat_handler(placetype, holonym_placetype, holonym_placen
 		if key then
 			local value = group.data[key]
 			if value then
-				return district_inner_data({"Neighborhoods in " .. key})
+				return district_inner_data({"Neighborhoods in " .. key}, {"Places in " .. key})
 			end
 		end
 	end
@@ -828,7 +912,8 @@ local function county_display_handler(holonym_placetype, holonym_placename)
 	if canon_placename:find("^county $") then
 		return holonym_placename
 	end
-	if m_shared.irish_counties["County " .. unlinked_placename .. ", Ireland"] then
+	if m_shared.irish_counties["County " .. unlinked_placename .. ", Ireland"] or
+		m_shared.northern_irish_counties["County " .. unlinked_placename .. ", Northern Ireland"] then
 		if holonym_placename:find("%[%[") then
 			return "County " .. holonym_placename
 		end
@@ -885,6 +970,12 @@ export.cat_data = {
 		preposition="of",
 	},
 
+	["airport"] = {
+		["default"] = {
+			["itself"] = {true},
+		},
+	},
+
 	["area"] = {
 		cat_handler = function(holonym_placetype, holonym_placename)
 			return district_cat_handler("area", holonym_placetype, holonym_placename)
@@ -907,18 +998,10 @@ export.cat_data = {
 
 	["autonomous oblast"] = {
 		preposition="of",
-
-		["default"] = {
-			["country"] = {true},
-		},
 	},
 
 	["autonomous okrug"] = {
 		preposition="of",
-
-		["default"] = {
-			["country"] = {true},
-		},
 	},
 
 	["autonomous region"] = {
@@ -949,17 +1032,41 @@ export.cat_data = {
 		},
 	},
 
+	["beach"] = {
+		["default"] = {
+			["itself"] = {true},
+		},
+	},
+
 	["borough"] = {
 		preposition="of",
 		display_handler = borough_display_handler,
+		cat_handler = function(holonym_placetype, holonym_placename)
+			if holonym_placetype == "county" then
+				local cat_form = holonym_placename .. ", England"
+				if not m_shared.english_counties[cat_form] then
+					cat_form = "the " .. cat_form
+					if not m_shared.english_counties[cat_form] then
+						cat_form = nil
+					end
+				end
+				if cat_form then
+					return {
+						["itself"] = {"Districts of " .. cat_form, "Districts of England"}
+					}
+				end
+			end
+			if (holonym_placetype == "country" or holonym_placetype == "constituent country") and
+				holonym_placename == "England" then
+					return {
+						["itself"] = {"Districts of +++"},
+					}
+			end
+		end,
 
 		["state/Alaska"] = {
 			-- We intentionally do not add ", USA" here because that's the way it was done before.
 			["itself"] = {"Boroughs of +++"},
-		},
-
-		["country/England"] = {
-			["itself"] = {"Boroughs in +++"},
 		},
 
 		["city/New York City"] = {
@@ -998,9 +1105,12 @@ export.cat_data = {
 	["capital city"] = {
 		article="the",
 		preposition="of",
-
+		cat_handler = function(holonym_placetype, holonym_placename)
+			return city_type_cat_handler("city", holonym_placetype, holonym_placename,
+				nil, nil, {"Capital cities"})
+		end,
+		
 		["default"] = {
-			["country"] = {"Capital cities", "Cities in +++"},
 			["itself"] = {true},
 		},
 	},
@@ -1134,6 +1244,7 @@ export.cat_data = {
 		display_handler = function(holonym_placetype, holonym_placename)
 			return suffix_display_handler("county borough", holonym_placename)
 		end,
+		fallback = "borough",
 	},
 
 	["county seat"] = {
@@ -1149,6 +1260,12 @@ export.cat_data = {
 				}
 			end
 		end,
+	},
+
+	["county town"] = {
+		article="the",
+		preposition="of",
+		fallback="town",
 	},
 
 	["department"] = {
@@ -1337,15 +1454,41 @@ export.cat_data = {
 		},
 	},
 
+	["local government district"] = {
+		preposition="of",
+		display_handler = function(holonym_placetype, holonym_placename)
+			return suffix_display_handler("district", holonym_placename)
+		end,
+		cat_handler = function(holonym_placetype, holonym_placename)
+			if holonym_placetype == "county" then
+				local cat_form = holonym_placename .. ", England"
+				if not m_shared.english_counties[cat_form] then
+					cat_form = "the " .. cat_form
+					if not m_shared.english_counties[cat_form] then
+						cat_form = nil
+					end
+				end
+				if cat_form then
+					return {
+						["itself"] = {"Districts of " .. cat_form, "Districts of England"}
+					}
+				end
+			end
+			if (holonym_placetype == "country" or holonym_placetype == "constituent country") and
+				holonym_placename == "England" then
+					return {
+						["itself"] = {"Districts of +++"},
+					}
+			end
+		end,
+	},
+
 	["London borough"] = {
 		preposition="of",
 		display_handler = function(holonym_placetype, holonym_placename)
 			return suffix_display_handler("borough", holonym_placename)
 		end,
-
-		["country/England"] = {
-			["itself"] = {"Boroughs in +++"},
-		},
+		fallback = "local government district",
 	},
 
 	["macroregion"] = {
@@ -1376,12 +1519,16 @@ export.cat_data = {
 
 	["metropolitan borough"] = {
 		preposition="of",
+		holonym_article="the",
 		display_handler = function(holonym_placetype, holonym_placename)
 			return prefix_display_handler("Metropolitan Borough of", holonym_placename)
 		end,
+		fallback = "local government district",
+	},
 
-		["country/England"] = {
-			["itself"] = {"Boroughs in +++"},
+	["moor"] = {
+		["default"] = {
+			["itself"] = {true},
 		},
 	},
 
@@ -1435,10 +1582,6 @@ export.cat_data = {
 
 	["oblast"] = {
 		preposition="of",
-
-		["default"] = {
-			["country"] = {true},
-		},
 	},
 
 	["ocean"] = {
@@ -1447,6 +1590,10 @@ export.cat_data = {
 		["default"] = {
 			["itself"] = {true},
 		},
+	},
+
+	["okrug"] = {
+		preposition="of",
 	},
 
 	["parish"] = {
@@ -1471,6 +1618,12 @@ export.cat_data = {
 			["itself"] = {"Parish seats of +++"},
 		},
 
+	},
+
+	["park"] = {
+		["default"] = {
+			["itself"] = {true},
+		},
 	},
 
 	["peninsula"] = {
@@ -1836,6 +1989,10 @@ export.cat_data = {
 		preposition="of",
 		holonym_article="the",
 	},
+
+	["*"] = {
+		cat_handler = generic_cat_handler,
+	},
 }
 
 
@@ -1873,8 +2030,7 @@ for _, group in ipairs(m_shared.polities) do
 								local itself_dest = bare_key == key and {true} or {ucfirst(div) .. " of " .. key}
 								if sgdiv == "district" then
 									-- see comment above under district_cat_handler().
-									local inner_data = district_inner_data({"Neighborhoods in " .. key})
-									inner_data["itself"] = itself_dest
+									local inner_data = district_inner_data({"Neighborhoods in " .. key}, itself_dest)
 									export.cat_data[sgdiv][dt .. "/" .. bare_key] = inner_data
 								else
 									export.cat_data[sgdiv][dt .. "/" .. bare_key] = {
