@@ -1071,19 +1071,22 @@ end
 -- as documented in parse_place_specs()) and returns a string with the links to
 -- all categories that need to be added to the entry. 
 local function get_cats(lang, place_specs)
-	local cats = ""
+	local cats = {}
 
 	handle_implications(place_specs, data.cat_implications, true)
 
 	for n1, place_spec in ipairs(place_specs) do
 		for n2, placetype in ipairs(place_spec[2]) do
 			if placetype ~= "and" then
-				cats = cats .. get_cat(lang, place_spec, placetype)
+				table.insert(cats, get_cat(lang, place_spec, placetype))
 			end
 		end
+		-- Also add base categories for the holonyms listed (e.g. a category like 'en:Merseyside, England').
+		-- This is handled through the special placetype "*".
+		table.insert(cats, get_cat(lang, place_spec, "*"))
 	end
 
-	return cats
+	return table.concat(cats)
 end
 
 

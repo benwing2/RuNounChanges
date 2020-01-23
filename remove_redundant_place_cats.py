@@ -6,6 +6,65 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, site, tname
 
+auto_cat_to_manual = {
+  "Cornwall, England": "Cornwall",
+  "Greater Manchester, England": "Greater Manchester",
+  "Merseyside, England": "Merseyside",
+  "Tyne and Wear, England": "Tyne and Wear",
+  "the West Midlands, England": "West Midlands",
+  "West Yorkshire, England": "West Yorkshire",
+  "Alabama": "Alabama, USA",
+  "Alaska": "Alaska, USA",
+  "Arizona": "Arizona, USA",
+  "Arkansas": "Arkansas, USA",
+  "California": "California, USA",
+  "Colorado": "Colorado, USA",
+  "Connecticut": "Connecticut, USA",
+  "Delaware": "Delaware, USA",
+  "Florida": "Florida, USA",
+  "Georgia": "Georgia, USA",
+  "Hawaii": "Hawaii, USA",
+  "Idaho": "Idaho, USA",
+  "Illinois": "Illinois, USA",
+  "Indiana": "Indiana, USA",
+  "Iowa": "Iowa, USA",
+  "Kansas": "Kansas, USA",
+  "Kentucky": "Kentucky, USA",
+  "Louisiana": "Louisiana, USA",
+  "Maine": "Maine, USA",
+  "Maryland": "Maryland, USA",
+  "Massachusetts": "Massachusetts, USA",
+  "Michigan": "Michigan, USA",
+  "Minnesota": "Minnesota, USA",
+  "Mississippi": "Mississippi, USA",
+  "Missouri": "Missouri, USA",
+  "Montana": "Montana, USA",
+  "Nebraska": "Nebraska, USA",
+  "Nevada": "Nevada, USA",
+  "New Hampshire": "New Hampshire, USA",
+  "New Jersey": "New Jersey, USA",
+  "New Mexico": "New Mexico, USA",
+  "New York": "New York, USA",
+  "North Carolina": "North Carolina, USA",
+  "North Dakota": "North Dakota, USA",
+  "Ohio": "Ohio, USA",
+  "Oklahoma": "Oklahoma, USA",
+  "Oregon": "Oregon, USA",
+  "Pennsylvania": "Pennsylvania, USA",
+  "Rhode Island": "Rhode Island, USA",
+  "South Carolina": "South Carolina, USA",
+  "South Dakota": "South Dakota, USA",
+  "Tennessee": "Tennessee, USA",
+  "Texas": "Texas, USA",
+  "Utah": "Utah, USA",
+  "Vermont": "Vermont, USA",
+  "Virginia": "Virginia, USA",
+  "Washington": "Washington, USA",
+  "West Virginia": "West Virginia, USA",
+  "Wisconsin": "Wisconsin, USA",
+  "Wyoming": "Wyoming, USA",
+}
+
 def process_page(page, index, parsed):
   global args
   pagetitle = unicode(page.title())
@@ -29,8 +88,12 @@ def process_page(page, index, parsed):
     if cat in auto_added_categories:
       return True
     for c in auto_added_categories:
-      m = re.search("^((?:.*?:)?).*(?:of|in) (.*)$", c)
-      if m and cat == m.group(1) + m.group(2):
+      m = re.search("^((?:.*?:)?)(.*?) +(?:of|in) (.*)$", c)
+      if m and cat in [
+        m.group(1) + m.group(2), # remove 'en:Cities' if auto-added cat is 'en:Cities in West Yorkshire, England'
+        m.group(1) + m.group(3), # remove 'en:West Yorkshire, England' if auto-added cat is 'en:Cities in West Yorkshire, England'
+        m.group(1) + auto_cat_to_manual.get(m.group(3), m.group(3)) # remove 'en:West Yorkshire' if auto-added cat is 'en:Cities in West Yorkshire, England'
+      ]:
         return True
     return False
 

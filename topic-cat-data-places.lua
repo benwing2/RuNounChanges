@@ -122,7 +122,12 @@ table.insert(handlers, function(label)
 			local placedata = group.data[place]
 			if placedata then
 				placedata = group.value_transformer(group, place, placedata)
-				if not placedata.nocities then
+				local spelling_matches = true
+				if place_type == "neighborhoods" and placedata.british_spelling or
+					place_type == "neighbourhoods" and not placedata.british_spelling then
+					spelling_matches = false
+				end
+				if spelling_matches and not placedata.nocities then
 					local parent = not placedata.containing_polity and place_type or place_type .. " in " .. placedata.containing_polity
 					local bare_place, linked_place = m_shared.construct_bare_and_linked_version(place)
 					local keydesc = placedata.keydesc or linked_place
