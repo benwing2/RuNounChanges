@@ -128,12 +128,24 @@ table.insert(handlers, function(label)
 					spelling_matches = false
 				end
 				if spelling_matches and not placedata.nocities then
-					local parent = not placedata.containing_polity and place_type or place_type .. " in " .. placedata.containing_polity
+					local parent
+					if placedata.containing_polity then
+						parent = place_type .. " in " .. placedata.containing_polity
+					elseif place_type == "neighbourhoods" then
+						parent = "neighborhoods"
+					else
+						parent = place_type
+					end
 					local bare_place, linked_place = m_shared.construct_bare_and_linked_version(place)
 					local keydesc = placedata.keydesc or linked_place
+					if place_type == "places" then
+						parents1 = {{name = parent, sort = bare_place}, bare_place, "list of sets"}
+					else
+						parents1 = {{name = parent, sort = bare_place}, bare_place, "list of sets", "places in " .. place}
+					end
 					return {
 						description = "{{{langname}}} names of " .. m_shared.generic_place_types[place_type] .. " in " .. keydesc .. ".",
-						parents = {{name = parent, sort = bare_place}, bare_place, "list of sets"},
+						parents = parents1
 					}
 				end
 			end

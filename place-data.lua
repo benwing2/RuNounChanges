@@ -906,16 +906,16 @@ local function suffix_display_handler(suffix, holonym_placename)
 end
 
 
--- Prefix display handler that works similarly to suffix_display_handler().
-local function prefix_display_handler(prefix, holonym_placename)
+-- Display handler for metropolitan boroughs.
+local function metropolitan_borough_display_handler(holonym_placename)
 	local canon_placename = lc(m_links.remove_links(holonym_placename))
-	if canon_placename:find("^" .. lc(prefix) .. " ") then
+	if canon_placename:find("^metropolitan borough ") or canon_placename:find("^city ") then
 		return holonym_placename
 	end
 	if holonym_placename:find("%[%[") then
-		return holonym_placename .. " " .. prefix
+		return "Metropolitan Borough of " .. holonym_placename
 	end
-	return prefix .. " [[" .. holonym_placename .. "]]"
+	return "Metropolitan Borough of [[" .. holonym_placename .. "]]"
 end
 
 
@@ -1542,7 +1542,7 @@ export.cat_data = {
 		preposition="of",
 		holonym_article="the",
 		display_handler = function(holonym_placetype, holonym_placename)
-			return prefix_display_handler("Metropolitan Borough of", holonym_placename)
+			return metropolitan_borough_display_handler(holonym_placename)
 		end,
 		fallback = "local government district",
 	},
