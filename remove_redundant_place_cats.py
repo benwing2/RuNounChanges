@@ -111,7 +111,7 @@ def process_page(page, index, parsed):
   text_to_remove = []
   for t in parsed.filter_templates():
     tn = tname(t)
-    if tn in ["topics", "topic", "top", "c", "C"]:
+    if tn in ["topics", "topic", "top", "c", "C", "catlangcode"]:
       lang = getparam(t, "1")
       cats = []
       for paramno in xrange(2, 30):
