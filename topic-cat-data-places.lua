@@ -1,7 +1,7 @@
 local labels = {}
 local handlers = {}
 
-local m_shared = require("Module:place/shared-data")
+local m_shared = require("Module:User:Benwing2/place/shared-data")
 local m_strutils = require("Module:string utilities")
 
 --[=[
@@ -112,6 +112,70 @@ for _, group in ipairs(m_shared.polities) do
 	end
 end
 
+local function city_description(group, key, value)
+	-- The purpose of all the following code is to construct the description. It's written in
+	-- a general way to allow any number of containing polities, each larger than the previous one,
+	-- so that e.g. for Birmingham, the description will read "{{{langname}}} terms related to the city of
+	-- [[Birmingham]], in the county of the [[West Midlands]], in the [[constituent country]] of [[England]],
+	-- in the [[United Kingdom]]."
+	local bare_key, linked_key = m_shared.construct_bare_and_linked_version(key)
+	local descparts = {}
+	table.insert(descparts, "the city of " .. linked_key)
+	local city_containing_polities = m_shared.get_city_containing_polities(group, key, value)
+	local label_parent -- parent of the label, from the immediate containing polity
+	for n, polity in ipairs(city_containing_polities) do
+		local bare_polity, linked_polity = m_shared.construct_bare_and_linked_version(polity[1])
+		if n == 1 then
+			label_parent = bare_polity
+		end
+		table.insert(descparts, ", in ")
+		if n < #city_containing_polities then
+			local divtype = polity.divtype or group.default_divtype
+			local pl_divtype = m_strutils.pluralize(divtype)
+			local pl_linked_divtype = m_shared.political_subdivisions[pl_divtype]
+			if not pl_linked_divtype then
+				error("When creating city description for " .. key .. ", encountered divtype '" .. divtype .. "' not in m_shared.political_subdivisions")
+			end
+			local linked_divtype = m_strutils.singularize(pl_linked_divtype)
+			table.insert(descparts, "the " .. linked_divtype .. " of ")
+		end
+		table.insert(descparts, linked_polity)
+	end
+	return table.concat(descparts)
+end
+
+-- Generate bare labels in 'label' for all cities.
+for _, group in ipairs(m_shared.cities) do
+	for key, value in pairs(group.data) do
+		if not value.alias_of then
+			local desc = "{{{langname}}} terms related to " .. city_description(group, key, value) .. "."
+			local parents = value.parents or label_parent
+			if not parents then
+				error("When creating city bare label for " .. key .. ", at least one containing polity must be specified or an explicit parent must be given")
+			end
+			if type(parents) ~= "table" then
+				parents = {parents}
+			end
+			local key_parents = {}
+			for _, parent in ipairs(parents) do
+				local polity_group, key_parent = m_shared.city_containing_polity_to_group_and_key(parent)
+				if key_parent then
+					local bare_key_parent, linked_key_parent =
+						m_shared.construct_bare_and_linked_version(key_parent)
+					table.insert(key_parents, key_parent)
+				else
+					error("Couldn't find entry for city '" .. key .."' parent '" .. parent .. "'")
+				end
+			end
+
+			labels[bare_key] = {
+				description = desc,
+				parents = key_parents,
+			}
+		end
+	end
+end
+
 -- Handler for "cities in the Bahamas", "rivers in Western Australia", etc.
 -- Places that begin with "the" are recognized and handled specially.
 table.insert(handlers, function(label)
@@ -138,14 +202,15 @@ table.insert(handlers, function(label)
 					end
 					local bare_place, linked_place = m_shared.construct_bare_and_linked_version(place)
 					local keydesc = placedata.keydesc or linked_place
+					local parents
 					if place_type == "places" then
-						parents1 = {{name = parent, sort = bare_place}, bare_place, "list of sets"}
+						parents = {{name = parent, sort = bare_place}, bare_place, "list of sets"}
 					else
-						parents1 = {{name = parent, sort = bare_place}, bare_place, "list of sets", "places in " .. place}
+						parents = {{name = parent, sort = bare_place}, bare_place, "list of sets", "places in " .. place}
 					end
 					return {
 						description = "{{{langname}}} names of " .. m_shared.generic_place_types[place_type] .. " in " .. keydesc .. ".",
-						parents = parents1
+						parents = parents
 					}
 				end
 			end
@@ -153,7 +218,52 @@ table.insert(handlers, function(label)
 	end
 end)
 
--- Handler for "provinces of the Philippines", "counties of Wales", etc.
+-- Handler for "places in Paris", "neighbourhoods of Paris", etc.
+table.insert(handlers, function(label)
+	label = lcfirst(label)
+	local place_type, in_of, city = label:match("^(places) (in) (.*)$")
+	if not place_type then
+		place_type, in_of, city = label:match("^([a-z%- ]-) (of) (.*)$")
+	end
+	if place_type and m_shared.generic_place_types_for_cities[place_type] then
+		for _, group in ipairs(m_shared.cities) do
+			local city_data = group.data[city]
+			if city_data then
+				local spelling_matches = true
+				if place_type == "neighborhoods" or place_type == "neighbourhoods" then
+					local containing_polities = m_shared.get_city_containing_polities(group, city, city_data)
+					local polity_group, polity_key = m_shared.city_containing_polity_to_group_and_key(
+						containing_polities[1])
+					if not polity_key then
+						error("Can't find polity data for city '" .. place ..
+							"' containing polity '" .. containing_polities[1] .. "'")
+					end
+					local polity_value = polity_group.value_transformer(polity_group, polity_key, polity_group[polity_key])
+
+					if place_type == "neighborhoods" and polity_value.british_spelling or
+						place_type == "neighbourhoods" and not polity_value.british_spelling then
+						spelling_matches = false
+					end
+				end
+				if spelling_matches then
+					local parents
+					if place_type == "places" then
+						parents = {city, "list of sets"}
+					else
+						parents = {city, "list of sets", "places in " .. city}
+					end
+					local desc = city_description(group, city, city_data)
+					return {
+						description = "{{{langname}}} names of " .. m_shared.generic_place_types_for_cities[place_type] .. " " .. in_of .. " " .. desc .. ".",
+						parents = parents
+					}
+				end
+			end
+		end
+	end
+end)
+
+-- Handler for "provinces of the Philippines", "counties of Wales", "municipalities of Tocantins, Brazil", etc.
 -- Places that begin with "the" are recognized and handled specially.
 table.insert(handlers, function(label)
 	label = lcfirst(label)
@@ -164,16 +274,24 @@ table.insert(handlers, function(label)
 			if placedata then
 				placedata = group.value_transformer(group, place, placedata)
 				local divcat = nil
+				local poldiv_parent = nil
 				if placedata.poldiv then
 					for _, div in ipairs(placedata.poldiv) do
-						if place_type == div then
+						if type(div) == "string" then
+							div = {div}
+						end
+						if place_type == div[1] then
 							divcat = "poldiv"
+							poldiv_parent = div.parent
 							break
 						end
 					end
 				end
 				if not divcat and placedata.miscdiv then
 					for _, div in ipairs(placedata.miscdiv) do
+						if type(div) == "string" then
+							div = {div}
+						end
 						if place_type == div then
 							divcat = "miscdiv"
 							break
@@ -191,7 +309,7 @@ table.insert(handlers, function(label)
 					if divcat == "poldiv" then
 						return {
 							description = desc,
-							parents = {{name = "political subdivisions", sort = bare_place}, bare_place, "list of sets"},
+							parents = {{name = poldiv_parent or "political subdivisions", sort = bare_place}, bare_place, "list of sets"},
 						}
 					else
 						return {
@@ -202,97 +320,6 @@ table.insert(handlers, function(label)
 				end
 			end
 		end
-	end
-end)
-
--- Handler for "counties of Alabama", "parishes of Louisiana", etc.
-table.insert(handlers, function(label)
-	label = lcfirst(label)
-	local county_type, state = label:match("^([a-z ]-) of (.*)$")
-	if state then
-		local state_desc = m_shared.us_states[state .. ", USA"]
-		if state_desc then
-			local expected_county_type = state_desc.county_type or "counties"
-			local linked_county_type = m_shared.political_subdivisions[expected_county_type]
-			if county_type == expected_county_type then
-				return {
-					description = "{{{langname}}} names of " .. linked_county_type .. " of [[" .. state .. "]], a state of the [[United States]].",
-					parents = {{name = "counties of the United States",
-						sort = state}, state .. ", USA", "list of sets"},
-				}
-			end
-		end
-	end
-end)
-
--- Handler for "county seats of Alabama", "parish seats of Louisiana", etc.
-table.insert(handlers, function(label)
-	label = lcfirst(label)
-	local seat_type, state = label:match("^([a-z ]-) of (.*)$")
-	if state then
-		local state_desc = m_shared.us_states[state .. ", USA"]
-		if state_desc then
-			local expected_county_type = state_desc.county_type or "counties"
-			local expected_seat_type = m_strutils.singularize(expected_county_type) .. " seats"
-			local linked_seat_type = m_shared.political_subdivisions[expected_seat_type]
-			if seat_type == expected_seat_type then
-				return {
-					description = "{{{langname}}} names of " .. linked_seat_type .. " of [[" .. state .. "]], a state of the [[United States]].",
-					parents = {{name = "county seats of the United States",
-						sort = state}, state .. ", USA", "list of sets"},
-				}
-			end
-		end
-	end
-end)
-
--- Handler for "municipalities of Tocantins, Brazil", etc.
-table.insert(handlers, function(label)
-	label = lcfirst(label)
-	local state = label:match("^municipalities of (.*), Brazil$")
-	if state and m_shared.brazilian_states[state .. ", Brazil"] then
-		return {
-			description = "{{{langname}}} names of [[municipality|municipalities]] of [[" .. state .. "]], a state of [[Brazil]].",
-			parents = {{name = "municipalities of Brazil", sort = state}, state .. ", Brazil", "list of sets"},
-		}
-	end
-end)
-
--- Handler for "municipalities of Cebu, Philippines", etc.
-table.insert(handlers, function(label)
-	label = lcfirst(label)
-	local province = label:match("^municipalities of (.*), Philippines$")
-	if province and m_shared.philippine_provinces[province .. ", Philippines"] then
-		return {
-			description = "{{{langname}}} names of [[municipality|municipalities]] of [[" .. province .. "]], a province of the [[Philippines]].",
-			parents = {{name = "municipalities of the Philippines", sort = province}, province .. ", Philippines", "list of sets"},
-		}
-	end
-end)
-
--- Handler for "municipalities of Upper Austria" and other Austrian states.
-table.insert(handlers, function(label)
-	label = lcfirst(label)
-	local state = label:match("^municipalities of (.*)$")
-	if state and m_shared.austrian_states[state] then
-		return {
-			description = "{{{langname}}} names of [[municipality|municipalities]] of [[" .. state .. "]], a state of [[Austria]].",
-			parents = {{name = "municipalities of Austria", sort = state}, state, "list of sets"},
-		}
-	end
-end)
-
--- Handler for "municipalities of Ostrobothnia, Finland", etc.
-table.insert(handlers, function(label)
-	label = lcfirst(label)
-	local region = label:match("^municipalities of (.*), Finland$")
-	if region and m_shared.finnish_regions[region .. ", Finland"] then
-		-- Need to construct bare and linked versions due to "the Åland Islands".
-		local bare_region, linked_region = m_shared.construct_bare_and_linked_version(region)
-		return {
-			description = "{{{langname}}} names of [[municipality|municipalities]] of " .. linked_region .. ", a region of [[Finland]].",
-			parents = {{name = "municipalities of Finland", sort = bare_region}, bare_region .. ", Finland", "list of sets"},
-		}
 	end
 end)
 
@@ -356,13 +383,13 @@ labels["boroughs in England"] = {
 	parents = {{name = "boroughs", sort = "England"}, "England", "list of sets"},
 }
 
-labels["boroughs in Pennsylvania"] = {
-	description = "{{{langname}}} names of boroughs in [[Pennsylvania]].",
+labels["boroughs in Pennsylvania, USA"] = {
+	description = "{{{langname}}} names of boroughs in [[Pennsylvania]], USA.",
 	parents = {{name = "boroughs in the United States", sort = "Pennsylvania"}, "Pennsylvania, USA", "list of sets"},
 }
 
-labels["boroughs in New Jersey"] = {
-	description = "{{{langname}}} names of boroughs in [[New Jersey]].",
+labels["boroughs in New Jersey, USA"] = {
+	description = "{{{langname}}} names of boroughs in [[New Jersey]], USA.",
 	parents = {{name = "boroughs in the United States", sort = "New Jersey"}, "New Jersey, USA", "list of sets"},
 }
 
