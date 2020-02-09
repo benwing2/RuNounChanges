@@ -1,9 +1,10 @@
 local export = {}
-
 --[=[
 This module contains data shared between [[Module:place/data]] and [[Module:category tree/topic cat/data/Places]].
 You must load this module using require(), not using mw.loadData().
 ]=]
+
+local m_table = require("Module:table")
 
 -----------------------------------------------------------------------------------
 --                              Placetype Tables                                 --
@@ -1104,7 +1105,10 @@ export.uk_constituent_countries = {
 -- table of US states; interpolated into the main 'places' table, but also needed separately
 export.us_states = {
 	["Alabama, USA"] = {},
-	["Alaska, USA"] = {county_type = "boroughs"},
+	["Alaska, USA"] = {poldiv = {
+		{"boroughs", parent="counties of the United States"},
+		{"borough seats", parent="county seats of the United States"},
+	}},
 	["Arizona, USA"] = {},
 	["Arkansas, USA"] = {},
 	["California, USA"] = {},
@@ -1120,7 +1124,10 @@ export.us_states = {
 	["Iowa, USA"] = {},
 	["Kansas, USA"] = {},
 	["Kentucky, USA"] = {},
-	["Louisiana, USA"] = {county_type = "parishes"},
+	["Louisiana, USA"] = {poldiv = {
+		{"parishes", parent="counties of the United States"},
+		{"parish seats", parent="county seats of the United States"},
+	}},
 	["Maine, USA"] = {},
 	["Maryland, USA"] = {},
 	["Massachusetts, USA"] = {},
@@ -1306,6 +1313,387 @@ export.new_york_boroughs = {
 	["Staten Island"] = true,
 }
 
+export.cities = {
+	{
+		default_divtype = "state",
+		containing_polities = {"Brazil", divtype="country"},
+		data = {
+			-- This only lists cities, not metro areas, over 1,000,000 inhabitants.
+			["São Paulo"] = {"São Paulo"},
+			["Rio de Janeiro"] = {"Rio de Janeiro"},
+			["Brasília"] = {"Distrito Federal"},
+			["Salvador"] = {"Bahia"},
+			["Fortaleza"] = {"Ceará"},
+			["Belo Horizonte"] = {"Minas Gerais"},
+			["Manaus"] = {"Amazonas"},
+			["Curitiba"] = {"Paraná"},
+			["Recife"] = {"Pernambuco"},
+			["Goiânia"] = {"Goiás"},
+			["Belém"] = {"Pará"},
+			["Porto Alegre"] = {"Rio Grande do Sul"},
+			["Guarulhos"] = {"São Paulo"},
+			["Campinas"] = {"São Paulo"},
+		},
+	},
+	{
+		default_divtype = "province",
+		containing_polities = {"Canada", divtype="country"},
+		data = {
+			["Toronto"] = {"Ontario"},
+			["Montreal"] = {"Quebec"},
+			["Vancouver"] = {"British Columbia"},
+			["Calgary"] = {"Alberta"},
+			["Edmonton"] = {"Alberta"},
+			["Ottawa"] = {"Ontario"},
+			["Winnipeg"] = {"Manitoba"},
+			["Quebec City"] = {"Quebec"},
+			["Hamilton"] = {"Ontario"},
+			["Kitchener"] = {"Ontario"},
+		},
+	},
+	{
+		default_divtype = "province",
+		containing_polities = {"China", divtype="country"},
+		data = {
+			-- This only lists the top 50. Per [[w:List of cities in China by population]], there
+			-- are 102 cities over 1,000,000 inhabitants, not to mention metro areas. Our coverage
+			-- of China is fairly sparse; when it increases, add to this list.
+			["Shanghai"] = {},
+			["Beijing"] = {},
+			["Guangzhou"] = {"Guangdong"},
+			["Shenzhen"] = {"Guangdong"},
+			["Tianjin"] = {},
+			["Wuhan"] = {"Hubei"},
+			["Dongguan"] = {"Guangdong"},
+			["Chengdu"] = {"Sichuan"},
+			["Foshan"] = {"Guangdong"},
+			["Chongqing"] = {},
+			["Nanjing"] = {"Jiangsu"},
+			["Shenyang"] = {"Liaoning"},
+			["Hangzhou"] = {"Zhejiang"},
+			["Xi'an"] = {"Shaanxi"},
+			["Harbin"] = {"Heilongjiang"},
+			["Suzhou"] = {"Jiangsu"},
+			["Qingdao"] = {"Shandong"},
+			["Dalian"] = {"Liaoning"},
+			["Zhengzhou"] = {"Henan"},
+			["Shantou"] = {"Guangdong"},
+			["Jinan"] = {"Shandong"},
+			["Changchun"] = {"Jilin"},
+			["Kunming"] = {"Yunnan"},
+			["Changsha"] = {"Hunan"},
+			["Taiyuan"] = {"Shanxi"},
+			["Xiamen"] = {"Fujian"},
+			["Hefei"] = {"Anhui"},
+			["Shijiazhuang"] = {"Hebei"},
+			["Ürümqi"] = {"Xinjiang", divtype="autonomous region"},
+			["Fuzhou"] = {"Fujian"},
+			["Wuxi"] = {"Jiangsu"},
+			["Zhongshan"] = {"Guangdong"},
+			["Wenzhou"] = {"Zhejiang"},
+			["Nanning"] = {"Guangxi", divtype="autonomous region"},
+			["Nanchang"] = {"Jiangxi"},
+			["Ningbo"] = {"Zhejiang"},
+			["Guiyang"] = {"Guizhou"},
+			["Lanzhou"] = {"Gansu"},
+			["Zibo"] = {"Shandong"},
+			["Changzhou"] = {"Jiangsu"},
+			["Xuzhou"] = {"Jiangsu"},
+			["Tangshan"] = {"Hebei"},
+			["Baotou"] = {"Inner Mongolia", divtype="autonomous region"},
+			["Huizhou"] = {"Guangdong"},
+			["Yantai"] = {"Shandong"},
+			["Shaoxing"] = {"Zhejiang"},
+			["Liuzhou"] = {"Guangxi", divtype="autonomous region"},
+			["Nantong"] = {"Jiangsu"},
+			["Luoyang"] = {"Henan"},
+			["Yangzhou"] = {"Jiangsu"},
+		},
+	},
+	{
+		default_divtype = "region",
+		containing_polities = {"France", divtype="country"},
+		data = {
+			["Paris"] = {"Île-de-France"},
+			["Lyon"] = {"Auvergne-Rhône-Alpes"},
+			["Marseille"] = {"Provence-Alpes-Côte d'Azur"},
+			["Toulouse"] = {"Occitanie"},
+			["Lille"] = {"Hauts-de-France"},
+			["Bordeaux"] = {"Nouvelle-Aquitaine"},
+			["Nice"] = {"Provence-Alpes-Côte d'Azur"},
+			["Nantes"] = {"Pays de la Loire"},
+			["Strasbourg"] = {"Grand Est"},
+			["Rennes"] = {"Brittany"},
+		},
+	},
+	{
+		default_divtype = "state",
+		containing_polities = {"Germany", divtype="country"},
+		data = {
+			["Berlin"] = {},
+			["Dortmund"] = {"North Rhine-Westphalia"},
+			["Essen"] = {"North Rhine-Westphalia"},
+			["Duisberg"] = {"North Rhine-Westphalia"},
+			["Hamburg"] = {},
+			["Munich"] = {"Bavaria"},
+			["Stuttgart"] = {"Baden-Württemberg"},
+			["Frankfurt"] = {"Hesse"},
+			["Cologne"] = {"North Rhine-Westphalia"},
+			["Düsseldorf"] = {"North Rhine-Westphalia"},
+			["Dusseldorf"] = {alias_of="Düsseldorf"},
+			["Nuremberg"] = {"Bavaria"},
+			["Bremen"] = {},
+		},
+	},
+	{
+		default_divtype = "state",
+		containing_polities = {"India", divtype="country"},
+		data = {
+			-- This only lists the top 20. Per [[w:List of cities in India by population]], there
+			-- are 46 cities over 1,000,000 inhabitants, not to mention metro areas. Our coverage
+			-- of India is fairly sparse; when it increases, add to this list.
+			["Mumbai"] = {"Maharashtra"},
+			["Delhi"] = {},
+			["Bangalore"] = {"Karnataka"},
+			["Hyderabad"] = {"Telangana"},
+			["Ahmedabad"] = {"Gujarat"},
+			["Chennai"] = {"Tamil Nadu"},
+			["Kolkata"] = {"West Bengal"},
+			["Surat"] = {"Gujarat"},
+			["Pune"] = {"Maharashtra"},
+			["Jaipur"] = {"Rajasthan"},
+			["Lucknow"] = {"Uttar Pradesh"},
+			["Kanpur"] = {"Uttar Pradesh"},
+			["Nagpur"] = {"Maharashtra"},
+			["Indore"] = {"Madhya Pradesh"},
+			["Thane"] = {"Maharashtra"},
+			["Bhopal"] = {"Madhya Pradesh"},
+			["Visakhapatnam"] = {"Andhra Pradesh"},
+			["Pimpri-Chinchwad"] = {"Maharashtra"},
+			["Patna"] = {"Bihar"},
+			["Vadodara"] = {"Gujarat"},
+		},
+	},
+	{
+		default_divtype = "prefecture",
+		containing_polities = {"Japan", divtype="country"},
+		data = {
+			-- Population figures from [[w:List of cities in Japan]]. Metro areas from
+			-- [[w:List of metropolitan areas in Japan]].
+			["Tokyo"] = {}, -- no single figure given for Tokyo as a whole.
+			["Yokohama"] = {"Kanagawa"}, -- 3,697,894
+			["Osaka"] = {"Osaka"}, -- 2,668,586
+			["Nagoya"] = {"Aichi"}, -- 2,283,289
+			-- FIXME, Hokkaido is handled specially.
+			["Sapporo"] = {"Hokkaidō"}, -- 1,918,096
+			["Fukuoka"] = {"Fukuoka"}, -- 1,581,527
+			["Kobe"] = {"Hyōgo"}, -- 1,530,847
+			["Kyoto"] = {"Kyoto"}, -- 1,474,570
+			["Kawasaki"] = {"Kanagawa"}, -- 1,373,630
+			["Saitama"] = {"Saitama"}, -- 1,192,418
+			["Hiroshima"] = {"Hiroshima"}, -- 1,163,806
+			["Sendai"] = {"Miyagi"}, -- 1,029,552
+			-- the remaining cities are considered "central cities" in a 1,000,000+ metro area
+			-- (sometimes there is more than one central city in the area).
+			["Kitakyushu"] = {"Fukuoka"}, -- 986,998
+			["Chiba"] = {"Chiba"}, -- 938,695
+			["Sakai"] = {"Osaka"}, -- 835,333
+			["Niigata"] = {"Niigata"}, -- 813,053
+			["Hamamatsu"] = {"Shizuoka"}, -- 811,431
+			["Shizuoka"] = {"Shizuoka"}, -- 710,944
+			["Sagamihara"] = {"Kanagawa"}, -- 706,342
+			["Okayama"] = {"Okayama"}, -- 701,293
+			["Kumamoto"] = {"Kumamoto"}, -- 670,348
+			["Kagoshima"] = {"Kagoshima"}, -- 605,196
+			-- skipped 6 cities (Funabashi, Hachiōji, Kawaguchi, Himeji, Matsuyama, Higashiōsaka)
+			-- with population in the range 509k - 587k because not central cities in any
+			-- 1,000,000+ metro area.
+			["Utsunomiya"] = {"Tochigi"}, -- 507,833
+		},
+	},
+	{
+		default_divtype = "oblast",
+		containing_polities = {"Russia", divtype="country"},
+		data = {
+			-- This only lists cities, not metro areas, over 1,000,000 inhabitants.
+			["Moscow"] = {},
+			["Saint Petersburg"] = {},
+			["Novosibirsk"] = {"Novosibirsk Oblast"},
+			["Yekaterinburg"] = {"Sverdlovsk Oblast"},
+			["Nizhny Novgorod"] = {"Nizhny Novgorod Oblast"},
+			["Kazan"] = {"the Republic of Tatarstan", divtype="republic"},
+			["Chelyabinsk"] = {"Chelyabinsk Oblast"},
+			["Omsk"] = {"Omsk Oblast"},
+			["Samara"] = {"Samara Oblast"},
+			["Ufa"] = {"the Republic of Bashkortostan", divtype="republic"},
+			["Rostov-on-Don"] = {"Rostov Oblast"},
+			["Krasnoyarsk"] = {"Krasnoyarsk Krai", divtype="krai"},
+			["Voronezh"] = {"Voronezh Oblast"},
+			["Perm"] = {"Perm Krai", divtype="krai"},
+			["Volgograd"] = {"Volgograd Oblast"},
+			["Krasnodar"] = {"Krasnodar Krai", divtype="krai"},
+		},
+	},
+	{
+		default_divtype = "autonomous community",
+		containing_polities = {"Spain", divtype="country"},
+		data = {
+			["Madrid"] = {"the Community of Madrid"},
+			["Barcelona"] = {"Catalonia"},
+			["Valencia"] = {"Valencia"},
+			["Seville"] = {"Andalusia"},
+			["Bilbao"] = {"the Basque Country"},
+		},
+	},
+	{
+		default_divtype = "county",
+		containing_polities = {"the United Kingdom", divtype="country"},
+		data = {
+			["London"] = {{"Greater London"}, {"England", divtype="constituent country"}},
+			["Manchester"] = {{"Greater Manchester"}, {"England", divtype="constituent country"}},
+			["Birmingham"] = {{"the West Midlands"}, {"England", divtype="constituent country"}},
+			["Liverpool"] = {{"Merseyside"}, {"England", divtype="constituent country"}},
+			["Glasgow"] = {{"the City of Glasgow"}, {"Scotland", divtype="constituent country"}},
+			["Leeds"] = {{"West Yorkshire"}, {"England", divtype="constituent country"}},
+			["Newcastle upon Tyne"] = {{"Tyne and Wear"}, {"England", divtype="constituent country"}},
+			["Newcastle"] = {alias_of="Newcastle upon Tyne"},
+			["Bristol"] = {{"England", divtype="constituent country"}},
+			["Cardiff"] = {{"South Glamorgan"}, {"Wales", divtype="constituent country"}},
+			["Portsmouth"] = {{"Hampshire"}, {"England", divtype="constituent country"}},
+			["Edinburgh"] = {{"the City of Edinburgh"}, {"Scotland", divtype="constituent country"}},
+		},
+	},
+	-- cities in the US
+	{
+		default_divtype = "state",
+		containing_polities = {"the United States", divtype="country"},
+		data = {
+			-- top 50 CSA's by population, with the top and sometimes 2nd or 3rd city listed
+			["New York City"] = {"New York"},
+			["Newark"] = {"New Jersey"},
+			["Los Angeles"] = {"California"},
+			["Long Beach"] = {"California"},
+			["Riverside"] = {"California"},
+			["Chicago"] = {"Illinois"},
+			["Washington, D.C."] = {},
+			["Baltimore"] = {"Maryland"},
+			["San Jose"] = {"California"},
+			["San Francisco"] = {"California"},
+			["Oakland"] = {"California"},
+			["Boston"] = {"Massachusetts"},
+			["Providence"] = {"Rhode Island"},
+			["Dallas"] = {"Texas"},
+			["Fort Worth"] = {"Texas"},
+			["Philadelphia"] = {"Pennsylvania"},
+			["Houston"] = {"Texas"},
+			["Miami"] = {"Florida"},
+			["Atlanta"] = {"Georgia"},
+			["Detroit"] = {"Michigan"},
+			["Phoenix"] = {"Arizona"},
+			["Mesa"] = {"Arizona"},
+			["Seattle"] = {"Washington"},
+			["Orlando"] = {"Florida"},
+			["Minneapolis"] = {"Minnesota"},
+			["Cleveland"] = {"Ohio"},
+			["Denver"] = {"Colorado"},
+			["San Diego"] = {"California"},
+			["Portland"] = {"Oregon"},
+			["Tampa"] = {"Florida"},
+			["St. Louis"] = {"Missouri"},
+			["Charlotte"] = {"North Carolina"},
+			["Sacramento"] = {"California"},
+			["Pittsburgh"] = {"Pennsylvania"},
+			["Salt Lake City"] = {"Utah"},
+			["San Antonio"] = {"Texas"},
+			["Columbus"] = {"Ohio"},
+			["Kansas City"] = {"Missouri"},
+			["Indianapolis"] = {"Indiana"},
+			["Las Vegas"] = {"Nevada"},
+			["Cincinnati"] = {"Ohio"},
+			["Austin"] = {"Texas"},
+			["Milwaukee"] = {"Wisconsin"},
+			["Raleigh"] = {"North Carolina"},
+			["Nashville"] = {"Tennessee"},
+			["Virginia Beach"] = {"Virginia"},
+			["Norfolk"] = {"Virginia"},
+			["Greensboro"] = {"North Carolina"},
+			["Winston-Salem"] = {"North Carolina"},
+			["Jacksonville"] = {"Florida"},
+			["New Orleans"] = {"Louisiana"},
+			["Louisville"] = {"Kentucky"},
+			["Greenville"] = {"South Carolina"},
+			["Hartford"] = {"Connecticut"},
+			["Oklahoma City"] = {"Oklahoma"},
+			["Grand Rapids"] = {"Michigan"},
+			["Memphis"] = {"Tennessee"},
+			["Birmingham"] = {"Alabama"},
+			["Fresno"] = {"California"},
+			["Richmond"] = {"Virginia"},
+			["Harrisburg"] = {"Pennsylvania"},
+			-- any major city of top 50 MSA's that's missed by previous
+			["Buffalo"] = {"New York"},
+			-- any of the top 50 city by city population that's missed by previous
+			["El Paso"] = {"Texas"},
+			["Albuquerque"] = {"New Mexico"},
+			["Tucson"] = {"Arizona"},
+			["Colorado Springs"] = {"Colorado"},
+			["Omaha"] = {"Nebraska"},
+			["Tulsa"] = {"Oklahoma"},
+			-- skip Arlington, Texas; too obscure and likely to be interpreted as Arlington, Virginia
+		}
+	},
+	{
+		default_divtype = "country",
+		containing_polities = {},
+		data = {
+			["Vienna"] = {"Austria"},
+			["Minsk"] = {"Belarus"},
+			["Brussels"] = {"Belgium"},
+			["Antwerp"] = {"Belgium"},
+			["Sofia"] = {"Bulgaria"},
+			["Zagreb"] = {"Croatia"},
+			["Prague"] = {"the Czech Republic"},
+			["Copenhagen"] = {"Denmark"},
+			["Helsinki"] = {{"Uusimaa", divtype="region"}, {"Finland"}},
+			["Athens"] = {"Greece"},
+			["Thessaloniki"] = {"Greece"},
+			["Budapest"] = {"Hungary"},
+			-- FIXME, per Wikipedia "County Dublin" is now the "Dublin Region"
+			["Dublin"] = {{"Dublin", divtype="county"}, {"Ireland"}},
+			["Rome"] = {{"Lazio", divtype="region"}, {"Italy"}},
+			["Milan"] = {{"Lombardy", divtype="region"}, {"Italy"}},
+			["Naples"] = {{"Campania", divtype="region"}, {"Italy"}},
+			["Turin"] = {{"Piedmont", divtype="region"}, {"Italy"}},
+			["Riga"] = {"Latvia"},
+			["Amsterdam"] = {"the Netherlands"},
+			["Rotterdam"] = {"the Netherlands"},
+			["The Hague"] = {"the Netherlands"},
+			["Oslo"] = {"Norway"},
+			["Warsaw"] = {"Poland"},
+			["Katowice"] = {"Poland"},
+			["Kraków"] = {"Poland"},
+			["Krakow"] = {alias_of="Kraków"},
+			["Gdańsk"] = {"Poland"},
+			["Gdansk"] = {alias_of="Gdańsk"},
+			["Poznań"] = {"Poland"},
+			["Poznan"] = {alias_of="Poznań"},
+			["Łódź"] = {"Poland"},
+			["Lodz"] = {alias_of="Łódź"},
+			["Lisbon"] = {"Portugal"},
+			["Porto"] = {"Portugal"},
+			["Bucharest"] = {"Romania"},
+			["Belgrade"] = {"Serbia"},
+			["Stockholm"] = {"Sweden"},
+			["Zürich"] = {"Switzerland"},
+			["Zurich"] = {alias_of="Zürich"},
+			["Istanbul"] = {"Turkey"},
+			["Kiev"] = {"Ukraine"},
+			["Kharkiv"] = {"Ukraine"},
+			["Odessa"] = {"Ukraine"},
+		},
+	},
+}
+
 -----------------------------------------------------------------------------------
 --                              Helper functions                                 --
 -----------------------------------------------------------------------------------
@@ -1345,13 +1733,13 @@ local function simple_polity_bare_label_setter()
 	end
 end
 
-local function subpolity_keydesc(key, value, larger_polity, default_divtype)
+local function subpolity_keydesc(key, value, containing_polity, default_divtype)
 	local divtype = value.divtype or default_divtype
 	divtype = type(divtype) == "table" and divtype[1] or divtype
 	divtype = add_indefinite_article(divtype)
 	local bare_key, linked_key = export.construct_bare_and_linked_version(key)
-	local bare_larger_polity, linked_larger_polity = export.construct_bare_and_linked_version(larger_polity)
-	return value.keydesc or linked_key .. ", " .. divtype .. " of " .. linked_larger_polity
+	local bare_containing_polity, linked_containing_polity = export.construct_bare_and_linked_version(containing_polity)
+	return value.keydesc or linked_key .. ", " .. divtype .. " of " .. linked_containing_polity
 end
 
 local function apply_key_to_placename(key, key_to_placename)
@@ -1365,29 +1753,30 @@ local function apply_key_to_placename(key, key_to_placename)
 	return placename
 end
 
-local function subpolity_bare_label_setter(larger_polity)
+local function subpolity_bare_label_setter(containing_polity)
 	return function(labels, group, key, value)
 		local placename = apply_key_to_placename(key, group.key_to_placename)
-		local keydesc = subpolity_keydesc(placename, value, larger_polity, group.default_divtype)
+		local keydesc = subpolity_keydesc(placename, value, containing_polity, group.default_divtype)
 		local bare_key, linked_key = export.construct_bare_and_linked_version(key)
-		local bare_larger_polity, linked_larger_polity = export.construct_bare_and_linked_version(larger_polity)
+		local bare_containing_polity, linked_containing_polity = export.construct_bare_and_linked_version(containing_polity)
 		labels[bare_key] = {
 			description = value.bare_label_desc or "{{{langname}}} terms related to the people, culture, or territory of " .. keydesc .. ".",
-			parents = value.parents or {bare_larger_polity},
+			parents = value.parents or {bare_containing_polity},
 		}
 	end
 end
 
-local function subpolity_value_transformer(larger_polity)
-	local larger_polity_type = "country"
-	if type(larger_polity) == "table" then
-		larger_polity_type, larger_polity = larger_polity[1], larger_polity[2]
+local function subpolity_value_transformer(containing_polity)
+	local containing_polity_type = "country"
+	if type(containing_polity) == "table" then
+		containing_polity_type, containing_polity = containing_polity[1], containing_polity[2]
 	end
 	return function(group, key, value)
 		local placename = apply_key_to_placename(key, group.key_to_placename)
-		value.keydesc = subpolity_keydesc(placename, value, larger_polity, group.default_divtype)
-		value.containing_polity = larger_polity
-		value.containing_polity_type = larger_polity_type
+		value.keydesc = subpolity_keydesc(placename, value, containing_polity, group.default_divtype)
+		value.containing_polity = containing_polity
+		value.containing_polity_type = containing_polity_type
+		value.poldiv = value.poldiv or group.default_poldiv
 		value.british_spelling = value.british_spelling or group.british_spelling
 		return value
 	end
@@ -1490,6 +1879,23 @@ local function ireland_placename_to_key(placename)
 		placename = "County " .. placename
 	end
 	return placename .. ", Ireland"
+end
+
+function export.get_city_containing_polities(group, key, value)
+	local containing_polities = group.containing_polities
+	if type(containing_polities[1]) == "string" then
+		containing_polities = {containing_polities}
+	elseif value[1] then
+		containing_polities = m_table.shallowcopy(containing_polities)
+	end
+	local this_containing_polities = value
+	if type(value[1]) == "string" then
+		this_containing_polities = {this_containing_polities}
+	end
+	for n, polity in ipairs(this_containing_polities) do
+		table.insert(containing_polities, n, polity)
+	end
+	return containing_polities
 end
 
 -----------------------------------------------------------------------------------
@@ -1637,6 +2043,7 @@ export.polities = {
 		place_cat_handler = default_place_cat_handler(),
 		default_divtype = "state",
 		british_spelling = true,
+		default_poldiv = {{"municipalities", parent="municipalities of Austria"}},
 		data = export.austrian_states,
 	},
 
@@ -1648,6 +2055,7 @@ export.polities = {
 		value_transformer = subpolity_value_transformer("Brazil"),
 		place_cat_handler = default_place_cat_handler(),
 		default_divtype = "state",
+		default_poldiv = {{"municipalities", parent="municipalities of Brazil"}},
 		data = export.brazilian_states,
 	},
 
@@ -1678,6 +2086,7 @@ export.polities = {
 		value_transformer = subpolity_value_transformer("Finland"),
 		place_cat_handler = default_place_cat_handler(),
 		default_divtype = "region",
+		default_poldiv = {{"municipalities", parent="municipalities of Finland"}},
 		british_spelling = true,
 		data = export.finnish_regions,
 	},
@@ -1781,6 +2190,7 @@ export.polities = {
 		value_transformer = subpolity_value_transformer("the Philippines"),
 		place_cat_handler = default_place_cat_handler(),
 		default_divtype = "province",
+		default_poldiv = {{"municipalities", parent="municipalities of the Philippines"}},
 		data = export.philippine_provinces,
 	},
 
@@ -1831,6 +2241,10 @@ export.polities = {
 		value_transformer = subpolity_value_transformer("the United States"),
 		place_cat_handler = default_place_cat_handler(),
 		default_divtype = "state",
+		default_poldiv = {
+			{"counties", parent="counties of the United States"},
+			{"county seats", parent="county seats of the United States"},
+		},
 		data = export.us_states,
 	},
 
@@ -1858,6 +2272,7 @@ export.polities = {
 		value_transformer = subpolity_value_transformer({"constituent country", "England"}),
 		place_cat_handler = default_place_cat_handler(),
 		default_divtype = "county",
+		default_poldiv = {{"districts", parent="districts of England"}},
 		british_spelling = true,
 		data = export.english_counties,
 	},
