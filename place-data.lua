@@ -1,6 +1,6 @@
 local export = {}
 
-local m_shared = require("Module:place/shared-data")
+local m_shared = require("Module:User:Benwing2/place/shared-data")
 local m_links = require("Module:links")
 local m_strutils = require("Module:string utilities")
 
@@ -746,6 +746,124 @@ table.insert(export.cat_implication_handlers,
 	end
 )
 
+----------- Basic utilities -----------
+
+-- Return the singular version of a maybe-plural placetype, or nil if not plural.
+function export.maybe_singularize(placetype)
+	if not placetype then
+		return nil
+	end
+	local retval = m_strutils.singularize(placetype)
+	if retval == placetype then
+		return nil
+	end
+	return retval
+end
+
+
+-- Given a placetype, split the placetype into one or more potential "splits", each consisting
+-- of (a) a recognized qualifier (e.g. "small", "former"), which we canonicalize
+-- (e.g. "historic" -> "historical", "seaside" -> "coastal"); (b) the concatenation of any
+-- previously recognized qualifiers on the left; and (c) the "bare placetype" to the right of
+-- the rightmost recognized qualifier. Return a list of pairs of
+-- {PREV_CANON_QUALIFIERS, THIS_CANON_QUALIFIER, BARE_PLACETYPE}, as above. There may be
+-- more than one element in the list in cases like "small unincorporated town". If no recognized
+-- qualifier could be found, the list will be empty. PREV_CANON_QUALIFIERS will be nil if there
+-- are no previous qualifiers.
+function export.split_and_canonicalize_placetype(placetype)
+	local splits = {}
+	local prev_qualifier = nil
+	while true do
+		local qualifier, bare_placetype = placetype:match("^(.-) (.*)$")
+		if qualifier then
+			local canon = export.placetype_qualifiers[qualifier]
+			local new_qualifier
+			if canon == true then
+				new_qualifier = qualifier
+			elseif canon then
+				new_qualifier = canon
+			else
+				break
+			end
+			table.insert(splits, {prev_qualifier, new_qualifier, bare_placetype})
+			prev_qualifier = prev_qualifier and prev_qualifier .. " " .. new_qualifier or new_qualifier
+			placetype = bare_placetype
+		else
+			break
+		end
+	end
+	return splits
+end
+
+
+-- Given a placetype, return an ordered list of equivalent placetypes to look under
+-- to find the placetype's properties (actually, an ordered list of objects of the
+-- form {qualifier=QUALIFIER, placetype=PLACETYPE} where QUALIFIER is a descriptive
+-- qualifier to prepend, or nil). The placetype itself always forms the first entry.
+function export.get_placetype_equivs(placetype)
+	local equivs = {}
+
+	local function do_placetype(qualifier, placetype)
+		-- First do the placetype itself.
+		table.insert(equivs, {placetype=placetype})
+		-- Then check for a singularized equivalent.
+		local sg_placetype = export.maybe_singularize(placetype)
+		if sg_placetype then
+			table.insert(equivs, {placetype=sg_placetype})
+		end
+		-- Then check for a mapping in placetype_equivs; add if present.
+		if export.placetype_equivs[placetype] then
+			table.insert(equivs, {placetype=export.placetype_equivs[placetype]})
+		end
+		-- Then check for a mapping in placetype_equivs for the singularized equivalent.
+		if sg_placetype and export.placetype_equivs[sg_placetype] then
+			table.insert(equivs, {placetype=export.placetype_equivs[sg_placetype]})
+		end
+	end
+
+	do_placetype(nil, placetype)
+
+	-- Then successively split off recognized qualifiers and loop over successively greater sets of
+	-- qualifiers from the left.
+	local splits = export.split_and_canonicalize_placetype(placetype)
+	for _, split in ipairs(splits) do
+		local prev_qualifier, this_qualifier, bare_placetype = split[1], split[2], split[3]
+		-- First see if the rightmost split-off qualifier is in qualifier_to_placetype_equivs
+		-- (e.g. 'fictional *' -> 'fictional location'). If so, add the mapping.
+		if export.qualifier_to_placetype_equivs[this_qualifier] then
+			table.insert(equivs, {qualifier=prev_qualifier, placetype=export.qualifier_to_placetype_equivs[this_qualifier]})
+		end
+		-- Then see if the rightmost split-off qualifier is in qualifier_equivs (e.g. 'former' -> 'historical').
+		-- If so, create a placetype from the qualifier mapping + the following bare_placetype; then, add
+		-- that placetype, and any mapping for the placetype in placetype_equivs.
+		if export.qualifier_equivs[this_qualifier] then
+			do_placetype(prev_qualifier, export.qualifier_equivs[this_qualifier] .. " " .. bare_placetype)
+		end
+		-- Finally, join the rightmost split-off qualifier to the previously split-off qualifiers to form a
+		-- combined qualifier, and add it along with bare_placetype and any mapping in placetype_equivs for
+		-- bare_placetype.
+		local qualifier = prev_qualifier and prev_qualifier .. " " .. this_qualifier or this_qualifier
+		do_placetype(qualifier, bare_placetype)
+	end
+	return equivs
+end
+
+
+function export.get_equiv_placetype_prop(placetype, fun)
+	if not placetype then
+		return fun(nil), nil
+	end
+	local equivs = export.get_placetype_equivs(placetype)
+	for _, equiv in ipairs(equivs) do
+		local retval = fun(equiv.placetype)
+		if retval then
+			return retval, equiv
+		end
+	end
+	return nil, nil
+end
+
+------------------------------------------------------
 
 local function city_type_cat_handler(placetype, holonym_placetype, holonym_placename, ignore_nocities, no_containing_polity,
 		extracats)
@@ -787,9 +905,11 @@ local function city_type_cat_handler(placetype, holonym_placetype, holonym_place
 end
 
 
--- This is used to add pages to base holonym categories like 'en:Merseyside, England' (and 'en:England' and
--- 'en:United Kingdom') for any pages that have 'co/Merseyside' as their holonym.
-local function generic_cat_handler(holonym_placetype, holonym_placename)
+-- This is used to add pages to base holonym categories like 'en:Places in Merseyside, England'
+-- (and 'en:Places in England') for any pages that have 'co/Merseyside' as their holonym.
+-- It also handles cities (e.g. 'en:Places in Boston', along with 'en:Places in Massachusetts, USA'
+-- and 'en:Places in the United States') for any pages that have 'city/Boston' as their holonym.
+local function generic_cat_handler(holonym_placetype, holonym_placename, place_spec)
 	for _, group in ipairs(m_shared.polities) do
 		-- Find the appropriate key format for the holonym (e.g. "pref/Osaka" -> "Osaka Prefecture").
 		local key = group.place_cat_handler(group, "*", holonym_placetype, holonym_placename)
@@ -808,6 +928,85 @@ local function generic_cat_handler(holonym_placetype, holonym_placename)
 				return {
 					["itself"] = retcats
 				}
+			end
+		end
+	end
+	-- Check for cities mentioned as holonyms.
+	if holonym_placetype == "city" then
+		for _, city_group in ipairs(m_shared.cities) do
+			local value = city_group.data[holonym_placename]
+			if value and value.alias_of then
+				local new_value = city_group.data[value.alias_of]
+				if not new_value then
+					error("City '" .. holonym_placename .. "' has an entry with non-existent alias_of='" .. value.alias_of .. "'")
+				end
+				value = new_value
+			end
+			if value then
+				-- Check if any of the city's containing polities are explicitly mentioned. If not, make sure
+				-- that no other polities of the same sort are mentioned.
+				local containing_polities = m_shared.get_city_containing_polities(city_group, holonym_placename, value)
+				local containing_polities_match = false
+				local containing_polities_mismatch = false
+				for _, polity in ipairs(containing_polities) do
+					local bare_polity, linked_polity = m_shared.construct_bare_and_linked_version(polity[1])
+					local divtype = polity.divtype or city_group.default_divtype
+					local function holonym_matches_polity(placetype)
+						if not place_spec[placetype] then
+							return false
+						end
+						for _, holonym in ipairs(place_spec[placetype]) do
+							if holonym == bare_polity then
+								return true
+							end
+						end
+						return false
+					end
+					containing_polities_match = export.get_equiv_placetype_prop(divtype, holonym_matches_polity)
+					if containing_polities_match then
+						break
+					end
+					containing_polities_mismatch = export.get_equiv_placetype_prop(divtype, function(pt) return not not place_spec[pt] end)
+					if containing_polities_mismatch then
+						break
+					end
+				end
+				-- No mismatching containing polities, so add categories for the city and
+				-- its containing polities.
+				if not containing_polities_mismatch then
+					local retcats = {"Places in " .. holonym_placename}
+					for _, polity in ipairs(containing_polities) do
+						local divtype = polity.divtype or city_group.default_divtype
+						local drop_dead_now = false
+						-- Find the group and key corresponding to the polity.
+						for _, polity_group in ipairs(m_shared.polities) do
+							local key = polity[1]
+							if polity_group.placename_to_key then
+								key = polity_group.placename_to_key(key)
+							end
+							local value = polity_group.data[key]
+							if value then
+								value = polity_group.value_transformer(polity_group, key, value)
+								local key_divtype = value.divtype or polity_group.default_divtype
+								if key_divtype == divtype or type(key_divtype) == "table" and key_divtype[1] == divtype then
+									table.insert(retcats, "Places in " .. key)
+									if value.no_containing_polity_cat then
+										-- Stop adding containing polities if no_containing_polity_cat
+										-- is found. (Used for 'United Kingdom'.)
+										drop_dead_now = true
+									end
+									break
+								end
+							end
+						end
+						if drop_dead_now then
+							break
+						end
+					end
+					return {
+						["itself"] = retcats
+					}
+				end
 			end
 		end
 	end
@@ -879,7 +1078,7 @@ local function district_cat_handler(placetype, holonym_placetype, holonym_placen
 end
 
 
-local function chinese_subcity_cat_handler(holonym_placetype, holonym_placename)
+local function chinese_subcity_cat_handler(holonym_placetype, holonym_placename, place_spec)
 	local spec = m_shared.chinese_provinces_and_autonomous_regions[holonym_placename]
 	if spec and holonym_placetype == (spec.divtype or "province") then
 		return {
@@ -992,7 +1191,7 @@ export.cat_data = {
 	},
 
 	["area"] = {
-		cat_handler = function(holonym_placetype, holonym_placename)
+		cat_handler = function(holonym_placetype, holonym_placename, place_spec)
 			return district_cat_handler("area", holonym_placetype, holonym_placename)
 		end,
 	},
@@ -1056,7 +1255,7 @@ export.cat_data = {
 	["borough"] = {
 		preposition="of",
 		display_handler = borough_display_handler,
-		cat_handler = function(holonym_placetype, holonym_placename)
+		cat_handler = function(holonym_placetype, holonym_placename, place_spec)
 			if holonym_placetype == "county" then
 				local cat_form = holonym_placename .. ", England"
 				if not m_shared.english_counties[cat_form] then
@@ -1080,8 +1279,7 @@ export.cat_data = {
 		end,
 
 		["state/Alaska"] = {
-			-- We intentionally do not add ", USA" here because that's the way it was done before.
-			["itself"] = {"Boroughs of +++"},
+			["itself"] = {"Boroughs of +++, USA"},
 		},
 
 		["city/New York City"] = {
@@ -1089,13 +1287,11 @@ export.cat_data = {
 		},
 
 		["state/Pennsylvania"] = {
-			-- We intentionally do not add ", USA" here because that's the way it was done before.
-			["itself"] = {"Boroughs in +++"},
+			["itself"] = {"Boroughs in +++, USA"},
 		},
 
 		["state/New Jersey"] = {
-			-- We intentionally do not add ", USA" here because that's the way it was done before.
-			["itself"] = {"Boroughs in +++"},
+			["itself"] = {"Boroughs in +++, USA"},
 		},
 	},
 
@@ -1104,8 +1300,7 @@ export.cat_data = {
 		preposition="of",
 
 		["state/Alaska"] = {
-			-- We intentionally do not add ", USA" here because that's the way it was done before.
-			["itself"] = {"Borough seats of +++"},
+			["itself"] = {"Borough seats of +++, USA"},
 		},
 	},
 
@@ -1120,7 +1315,7 @@ export.cat_data = {
 	["capital city"] = {
 		article="the",
 		preposition="of",
-		cat_handler = function(holonym_placetype, holonym_placename)
+		cat_handler = function(holonym_placetype, holonym_placename, place_spec)
 			return city_type_cat_handler("city", holonym_placetype, holonym_placename,
 				nil, nil, {"Capital cities"})
 		end,
@@ -1137,7 +1332,7 @@ export.cat_data = {
 	},
 
 	["census-designated place"] = {
-		cat_handler = function(holonym_placetype, holonym_placename)
+		cat_handler = function(holonym_placetype, holonym_placename, place_spec)
 			if holonym_placetype == "state" then
 				return city_type_cat_handler("census-designated place", holonym_placetype, holonym_placename)
 			end
@@ -1160,7 +1355,7 @@ export.cat_data = {
 	},
 
 	["city"] = {
-		cat_handler = function(holonym_placetype, holonym_placename)
+		cat_handler = function(holonym_placetype, holonym_placename, place_spec)
 			return city_type_cat_handler("city", holonym_placetype, holonym_placename)
 		end,
 
@@ -1226,12 +1421,11 @@ export.cat_data = {
 	["county"] = {
 		preposition="of",
 		-- UNITED STATES
-		cat_handler = function(holonym_placetype, holonym_placename)
+		cat_handler = function(holonym_placetype, holonym_placename, place_spec)
 			local spec = m_shared.us_states[holonym_placename .. ", USA"]
 			if spec and holonym_placetype == "state" and not spec.county_type then
 				return {
-					-- We intentionally do not add ", USA" here because that's the way it was done before.
-					["itself"] = {"Counties of " .. holonym_placename}
+					["itself"] = {"Counties of " .. holonym_placename .. ", USA"}
 				}
 			end
 		end,
@@ -1272,12 +1466,11 @@ export.cat_data = {
 		article="the",
 		preposition="of",
 		-- UNITED STATES
-		cat_handler = function(holonym_placetype, holonym_placename)
+		cat_handler = function(holonym_placetype, holonym_placename, place_spec)
 			local spec = m_shared.us_states[holonym_placename .. ", USA"]
 			if spec and holonym_placetype == "state" and not spec.county_type then
 				return {
-					-- We intentionally do not add ", USA" here because that's the way it was done before.
-					["itself"] = {"County seats of " .. holonym_placename}
+					["itself"] = {"County seats of " .. holonym_placename .. ", USA"}
 				}
 			end
 		end,
@@ -1334,7 +1527,7 @@ export.cat_data = {
 		display_handler = function(holonym_placetype, holonym_placename)
 			return suffix_display_handler("district", holonym_placename)
 		end,
-		cat_handler = function(holonym_placetype, holonym_placename)
+		cat_handler = function(holonym_placetype, holonym_placename, place_spec)
 			return district_cat_handler("district", holonym_placetype, holonym_placename)
 		end,
 
@@ -1480,7 +1673,7 @@ export.cat_data = {
 		display_handler = function(holonym_placetype, holonym_placename)
 			return suffix_display_handler("district", holonym_placename)
 		end,
-		cat_handler = function(holonym_placetype, holonym_placename)
+		cat_handler = function(holonym_placetype, holonym_placename, place_spec)
 			if holonym_placetype == "county" then
 				local cat_form = holonym_placename .. ", England"
 				if not m_shared.english_counties[cat_form] then
@@ -1595,7 +1788,7 @@ export.cat_data = {
 
 	["neighborhood"] = {
 		preposition="of",
-		cat_handler = function(holonym_placetype, holonym_placename)
+		cat_handler = function(holonym_placetype, holonym_placename, place_spec)
 			return city_type_cat_handler("neighborhood", holonym_placetype, holonym_placename,
 				"ignore nocities", "no containing polity")
 		end,
@@ -1624,8 +1817,7 @@ export.cat_data = {
 		end,
 
 		["state/Louisiana"] = {
-			-- We intentionally do not add ", USA" here because that's the way it was done before.
-			["itself"] = {"Parishes of +++"},
+			["itself"] = {"Parishes of +++, USA"},
 		},
 
 	},
@@ -1635,8 +1827,7 @@ export.cat_data = {
 		preposition="of",
 
 		["state/Louisiana"] = {
-			-- We intentionally do not add ", USA" here because that's the way it was done before.
-			["itself"] = {"Parish seats of +++"},
+			["itself"] = {"Parish seats of +++, USA"},
 		},
 
 	},
@@ -1708,7 +1899,7 @@ export.cat_data = {
 		article="the",
 		preposition="of",
 
-		cat_handler = function(holonym_placetype, holonym_placename)
+		cat_handler = function(holonym_placetype, holonym_placename, place_spec)
 			if holonym_placetype == "province" then
 				return city_type_cat_handler("city", holonym_placetype, holonym_placename)
 			end
@@ -1798,7 +1989,7 @@ export.cat_data = {
 
 	["river"] = {
 		holonym_article="the",
-		cat_handler = function(holonym_placetype, holonym_placename)
+		cat_handler = function(holonym_placetype, holonym_placename, place_spec)
 			return city_type_cat_handler("river", holonym_placetype, holonym_placename)
 		end,
 
@@ -1863,7 +2054,7 @@ export.cat_data = {
 		article="the",
 		preposition="of",
 
-		cat_handler = function(holonym_placetype, holonym_placename)
+		cat_handler = function(holonym_placetype, holonym_placename, place_spec)
 			if holonym_placetype == "state" then
 				return city_type_cat_handler("city", holonym_placetype, holonym_placename)
 			end
@@ -1918,7 +2109,7 @@ export.cat_data = {
 
 	["suburb"] = {
 		preposition="of",
-		cat_handler = function(holonym_placetype, holonym_placename)
+		cat_handler = function(holonym_placetype, holonym_placename, place_spec)
 			return city_type_cat_handler("suburb", holonym_placetype, holonym_placename,
 				"ignore nocities", "no containing polity")
 		end,
@@ -1934,7 +2125,7 @@ export.cat_data = {
 	},
 
 	["town"] = {
-		cat_handler = function(holonym_placetype, holonym_placename)
+		cat_handler = function(holonym_placetype, holonym_placename, place_spec)
 			return city_type_cat_handler("town", holonym_placetype, holonym_placename)
 		end,
 
@@ -1958,7 +2149,7 @@ export.cat_data = {
 
 	["tributary"] = {
 		preposition="of",
-		cat_handler = function(holonym_placetype, holonym_placename)
+		cat_handler = function(holonym_placetype, holonym_placename, place_spec)
 			return city_type_cat_handler("river", holonym_placetype, holonym_placename)
 		end,
 
@@ -1969,7 +2160,7 @@ export.cat_data = {
 	},
 
 	["unincorporated community"] = {
-		cat_handler = function(holonym_placetype, holonym_placename)
+		cat_handler = function(holonym_placetype, holonym_placename, place_spec)
 			if holonym_placetype == "state" then
 				return city_type_cat_handler("unincorporated community", holonym_placetype, holonym_placename)
 			end
@@ -1993,7 +2184,7 @@ export.cat_data = {
 	},
 
 	["village"] = {
-		cat_handler = function(holonym_placetype, holonym_placename)
+		cat_handler = function(holonym_placetype, holonym_placename, place_spec)
 			return city_type_cat_handler("village", holonym_placetype, holonym_placename)
 		end,
 
@@ -2043,7 +2234,10 @@ for _, group in ipairs(m_shared.polities) do
 				end
 				if list then
 					for _, div in ipairs(list) do
-						local sgdiv = m_strutils.singularize(div)
+						if type(div) == "string" then
+							div = {div}
+						end
+						local sgdiv = m_strutils.singularize(div[1])
 						for _, dt in ipairs(divtype) do
 							if not export.cat_data[sgdiv] then
 								export.cat_data[sgdiv] = {
@@ -2054,7 +2248,7 @@ for _, group in ipairs(m_shared.polities) do
 								}
 							end
 							if not export.cat_data[sgdiv]["default"] or not export.cat_data[sgdiv]["default"][dt] then
-								local itself_dest = bare_key == key and {true} or {ucfirst(div) .. " of " .. key}
+								local itself_dest = bare_key == key and {true} or {ucfirst(div[1]) .. " of " .. key}
 								if sgdiv == "district" then
 									-- see comment above under district_cat_handler().
 									local neighborhoods_in = value.british_spelling and "Neighbourhoods in " .. key or "Neighborhoods in " .. key
