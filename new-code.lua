@@ -13,7 +13,7 @@ TODO:
 9. 'townland'
 10. split slash only once to correctly handle twp/Admaston/Bromley.
 11. make sure district -> neighborhood handles municipality and lgarea correctly.
-11. 'rmun' -> 'rural municipality' and should render as 'the Rural Municipality of ...'.
+11. 'rumun' -> 'rural municipality' and should render as 'the Rural Municipality of ...'.
 12. Not properly categorizing Places in the Northwest Territories? Or remove_redundant_place_cats.py not working.
 13. Should add categories for 'neighborhoods of CITY' and 'suburbs of CITY'.
 14. Should add 'Places in Brooklyn, Places in the Bronx', etc. Requires several changes, e.g.
@@ -27,6 +27,34 @@ TODO:
 21. 'unrecognized territory'
 22. 'crossroads'
 23. Fix Midway, Washington County, Oregon; revert vandalism
+24. 'mining', 'farming', 'logging' as qualifiers
+25. 'abandoned', 'extinct' as qualifiers that should be treated like 'former'
+26. 'community' and 'unincorporated community' should categorize as neighborhood if inside a city, town, village, etc.
+27. 'sound', 'mouth'
+28. 'ski resort town'
+29. 'statutory town'
+30. 'barangay' is a type of neighborhood.
+31. 'beach resort', 'ski resort', 'resort'
+32. 'metarea' = 'metropolitan area'
+33. 'rcomun' = 'regional county municipality' (Quebec)
+34. qualifier 'declining'
+35. 'adr' = administrative region
+36. 'municipal seat'
+37. 'cdiv' = census division
+38. 'coal town'
+39. 'planned community'
+40. {{place|en|A <<river>> in northwestern <<p/British Columbia>> and southeast <<s/Alaska>>}}: Should put in both "Places in British Columbia" and "Places in Alaska, USA".
+41. 'railroad town'
+42. 'metropolitan area'
+43. 'railroad junction'
+44. 'volcano', 'inactive volcano', 'dormant volcano'
+45. 'rmun' = 'regional municipality', output 'regional municipality' as suffix, but correctly handle 'Region of Queens Municipality'
+46. 'distmun' = 'district municipality', output 'district municipality' as suffix
+47. {{place|en|community|rmun/Halifax|p/Nova Scotia|c/Canada|;|suburb|city/Halifax}} should put in "Suburbs in Nova Scotia".
+48. 'larea' = 'lieutenancy area', display 'lieutenancy area' as suffix
+48. 'robor' = 'royal borough', display 'Royal Borough of' as prefix
+49. 'gated community'
+
 
 place-shared-data.lua:
 
