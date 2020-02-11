@@ -3,6 +3,7 @@ local export = {}
 local m_links = require("Module:links")
 local m_langs = require("Module:languages")
 local m_strutils = require("Module:string utilities")
+local m_debug = require("Module:debug")
 local data = require("Module:place/data")
 
 local cat_data = data.cat_data
@@ -37,122 +38,15 @@ end
 
 
 
--- Return the singular version of a maybe-plural placetype, or nil if not plural.
-local function maybe_singularize(placetype)
-	if not placetype then
-		return nil
-	end
-	local retval = m_strutils.singularize(placetype)
-	if retval == placetype then
-		return nil
-	end
-	return retval
+-- Add the page to a tracking "category". To see the pages in the "category",
+-- go to [[Template:tracking/place/PAGE]] and click on "What links here".
+local function track(page)
+	m_debug.track("place/" .. page)
+	return true
 end
 
 
--- Given a placetype, split the placetype into one or more potential "splits", each consisting
--- of (a) a recognized qualifier (e.g. "small", "former"), which we canonicalize
--- (e.g. "historic" -> "historical", "seaside" -> "coastal"); (b) the concatenation of any
--- previously recognized qualifiers on the left; and (c) the "bare placetype" to the right of
--- the rightmost recognized qualifier. Return a list of pairs of
--- {PREV_CANON_QUALIFIERS, THIS_CANON_QUALIFIER, BARE_PLACETYPE}, as above. There may be
--- more than one element in the list in cases like "small unincorporated town". If no recognized
--- qualifier could be found, the list will be empty. PREV_CANON_QUALIFIERS will be nil if there
--- are no previous qualifiers.
-local function split_and_canonicalize_placetype(placetype)
-	local splits = {}
-	local prev_qualifier = nil
-	while true do
-		local qualifier, bare_placetype = placetype:match("^(.-) (.*)$")
-		if qualifier then
-			local canon = data.placetype_qualifiers[qualifier]
-			local new_qualifier
-			if canon == true then
-				new_qualifier = qualifier
-			elseif canon then
-				new_qualifier = canon
-			else
-				break
-			end
-			table.insert(splits, {prev_qualifier, new_qualifier, bare_placetype})
-			prev_qualifier = prev_qualifier and prev_qualifier .. " " .. new_qualifier or new_qualifier
-			placetype = bare_placetype
-		else
-			break
-		end
-	end
-	return splits
-end
 
-
--- Given a placetype, return an ordered list of equivalent placetypes to look under
--- to find the placetype's properties (actually, an ordered list of objects of the
--- form {qualifier=QUALIFIER, placetype=PLACETYPE} where QUALIFIER is a descriptive
--- qualifier to prepend, or nil). The placetype itself always forms the first entry.
-local function get_placetype_equivs(placetype)
-	local equivs = {}
-
-	local function do_placetype(qualifier, placetype)
-		-- First do the placetype itself.
-		table.insert(equivs, {placetype=placetype})
-		-- Then check for a singularized equivalent.
-		local sg_placetype = maybe_singularize(placetype)
-		if sg_placetype then
-			table.insert(equivs, {placetype=sg_placetype})
-		end
-		-- Then check for a mapping in placetype_equivs; add if present.
-		if data.placetype_equivs[placetype] then
-			table.insert(equivs, {placetype=data.placetype_equivs[placetype]})
-		end
-		-- Then check for a mapping in placetype_equivs for the singularized equivalent.
-		if sg_placetype and data.placetype_equivs[sg_placetype] then
-			table.insert(equivs, {placetype=data.placetype_equivs[sg_placetype]})
-		end
-	end
-
-	do_placetype(nil, placetype)
-
-	-- Then successively split off recognized qualifiers and loop over successively greater sets of
-	-- qualifiers from the left.
-	local splits = split_and_canonicalize_placetype(placetype)
-	for _, split in ipairs(splits) do
-		local prev_qualifier, this_qualifier, bare_placetype = split[1], split[2], split[3]
-		-- First see if the rightmost split-off qualifier is in qualifier_to_placetype_equivs
-		-- (e.g. 'fictional *' -> 'fictional location'). If so, add the mapping.
-		if data.qualifier_to_placetype_equivs[this_qualifier] then
-			table.insert(equivs, {qualifier=prev_qualifier, placetype=data.qualifier_to_placetype_equivs[this_qualifier]})
-		end
-		-- Then see if the rightmost split-off qualifier is in qualifier_equivs (e.g. 'former' -> 'historical').
-		-- If so, create a placetype from the qualifier mapping + the following bare_placetype; then, add
-		-- that placetype, and any mapping for the placetype in placetype_equivs.
-		if data.qualifier_equivs[this_qualifier] then
-			do_placetype(prev_qualifier, data.qualifier_equivs[this_qualifier] .. " " .. bare_placetype)
-		end
-		-- Finally, join the rightmost split-off qualifier to the previously split-off qualifiers to form a
-		-- combined qualifier, and add it along with bare_placetype and any mapping in placetype_equivs for
-		-- bare_placetype.
-		local qualifier = prev_qualifier and prev_qualifier .. " " .. this_qualifier or this_qualifier
-		do_placetype(qualifier, bare_placetype)
-	end
-	return equivs
-end
-
-
-local function get_equiv_placetype_prop(placetype, fun)
-	if not placetype then
-		return fun(nil), nil
-	end
-	local equivs = get_placetype_equivs(placetype)
-	for _, equiv in ipairs(equivs) do
-		local retval = fun(equiv.placetype)
-		if retval then
-			return retval, equiv
-		end
-	end
-	return nil, nil
-end
-
- 
 -- Fetches the synergy table from cat_data, which describes the format of
 -- glosses consisting of <placetype1> and <placetype2>.
 -- The parameters are tables in the format {placetype, placename, langcode}.
@@ -160,7 +54,7 @@ local function get_synergy_table(place1, place2)
 	if not place2 then
 		return nil
 	end
-	local pt_data = get_equiv_placetype_prop(place2[1], function(pt) return cat_data[pt] end)
+	local pt_data = data.get_equiv_placetype_prop(place2[1], function(pt) return cat_data[pt] end)
 	if not pt_data or not pt_data.synergy then
 		return nil
 	end
@@ -169,7 +63,7 @@ local function get_synergy_table(place1, place2)
 		place1 = {}
 	end
 
-	local synergy = get_equiv_placetype_prop(place1[1], function(pt) return pt_data.synergy[pt] end)
+	local synergy = data.get_equiv_placetype_prop(place1[1], function(pt) return pt_data.synergy[pt] end)
 	return synergy or pt_data.synergy["default"]
 end
 
@@ -181,7 +75,7 @@ end
 local function get_article(word, sentence)
 	local art = ""
 
-	local pt_data = get_equiv_placetype_prop(word, function(pt) return cat_data[pt] end)
+	local pt_data = data.get_equiv_placetype_prop(word, function(pt) return cat_data[pt] end)
 	if pt_data and pt_data.article then
 		art = pt_data.article
 	elseif word:find("^[aeiou]") then
@@ -214,7 +108,7 @@ local function key_holonym_spec_into_place_spec(place_spec, holonym_spec)
 		return place_spec
 	end
 
-	local equiv_placetypes = get_placetype_equivs(holonym_spec[1])
+	local equiv_placetypes = data.get_placetype_equivs(holonym_spec[1])
 	local placename = holonym_spec[2]
 	for _, equiv in ipairs(equiv_placetypes) do
 		local placetype = equiv.placetype
@@ -246,7 +140,7 @@ local function handle_implications(place_specs, implication_data, should_clone)
 		local cloned = false
 
 		for c = 3, lastarg do
-			local imp_data = get_equiv_placetype_prop(spec[c][1], function(pt)
+			local imp_data = data.get_equiv_placetype_prop(spec[c][1], function(pt)
 				local implication = implication_data[pt] and implication_data[pt][m_links.remove_links(spec[c][2])]
 				if implication then
 					return implication
@@ -320,11 +214,11 @@ local function split_holonym(datum)
 
 	if datum[1] then
 		datum[1] = data.placetype_aliases[datum[1]] or datum[1]
-		datum[2] = get_equiv_placetype_prop(datum[1],
+		datum[2] = data.get_equiv_placetype_prop(datum[1],
 			function(pt) return data.placename_display_aliases[pt] and lookup_placename_alias(datum[2], data.placename_display_aliases[pt]) end
 		) or datum[2]
 
-		if not get_equiv_placetype_prop(datum[1], function(pt) return data.autolink[datum[3] and pt] end) then
+		if not data.get_equiv_placetype_prop(datum[1], function(pt) return data.autolink[datum[3] and pt] end) then
 			datum[3] = "en"
 		end
 	end
@@ -416,6 +310,12 @@ local function parse_place_specs(numargs)
 
 	handle_implications(specs, data.implications, false)
 
+	for _, spec in ipairs(specs) do
+		for _, entry_placetype in ipairs(spec[2]) do
+			track("entry-placetype/" .. entry_placetype)
+		end
+	end
+	
 	return specs
 end
 
@@ -450,11 +350,11 @@ local function prepend_article(placetype, placename, linked_placename)
 	if placename:find("^the ") then
 		return linked_placename
 	end
-	local art = get_equiv_placetype_prop(placetype, function(pt) return data.placename_article[pt] and data.placename_article[pt][placename] end)
+	local art = data.get_equiv_placetype_prop(placetype, function(pt) return data.placename_article[pt] and data.placename_article[pt][placename] end)
 	if art then
 		return art .. " " .. linked_placename
 	end
-	art = get_equiv_placetype_prop(placetype, function(pt) return cat_data[pt] and cat_data[pt].holonym_article end)
+	art = data.get_equiv_placetype_prop(placetype, function(pt) return cat_data[pt] and cat_data[pt].holonym_article end)
 	if art then
 		return art .. " " .. linked_placename
 	end
@@ -464,7 +364,7 @@ local function prepend_article(placetype, placename, linked_placename)
 			return "the " .. linked_placename
 		end
 	end
-	local matched = get_equiv_placetype_prop(placetype, function(pt)
+	local matched = data.get_equiv_placetype_prop(placetype, function(pt)
 		local res = data.placename_the_re[pt]
 		if not res then
 			return nil
@@ -490,7 +390,7 @@ local function get_place_string(place, needs_article, display_form)
 	local ps = place[2]
 
 	if display_form then
-		local display_handler = get_equiv_placetype_prop(place[1], function(pt) return cat_data[pt] and cat_data[pt].display_handler end)
+		local display_handler = data.get_equiv_placetype_prop(place[1], function(pt) return cat_data[pt] and cat_data[pt].display_handler end)
 		if display_handler then
 			ps = display_handler(place[1], place[2])
 		end
@@ -545,7 +445,7 @@ local function get_in_or_of(placetype1, placetype2)
 
 	local preposition = "in"
 
-	local pt_data = get_equiv_placetype_prop(placetype1, function(pt) return cat_data[pt] end)
+	local pt_data = data.get_equiv_placetype_prop(placetype1, function(pt) return cat_data[pt] end)
 	if pt_data and pt_data.preposition then
 		preposition = pt_data.preposition
 	end
@@ -572,7 +472,7 @@ local function get_holonym_description(entry_placetype, place1, place2, place3, 
 	if first then
 		if place2[1] then
 			desc = desc .. get_in_or_of(entry_placetype, "")
-		else
+		elseif not place2[2]:find("^,") then
 			desc = desc .. " "
 		end
 	else
@@ -581,7 +481,9 @@ local function get_holonym_description(entry_placetype, place1, place2, place3, 
 				desc = desc .. ","
 			end
 
-			desc = desc .. " "
+			if place2[1] or not place2[2]:find("^,") then
+				desc = desc .. " "
+			end
 		end
 	end
 
@@ -607,7 +509,7 @@ local function get_linked_placetype(placetype)
 			return linked_version
 		end
 	end
-	local sg_placetype = maybe_singularize(placetype)
+	local sg_placetype = data.maybe_singularize(placetype)
 	if sg_placetype then
 		local linked_version = data.placetype_links[sg_placetype]
 		if linked_version then
@@ -632,7 +534,7 @@ local function get_placetype_description(placetype)
 	if linked_version then
 		return linked_version
 	else
-		local splits = split_and_canonicalize_placetype(placetype)
+		local splits = data.split_and_canonicalize_placetype(placetype)
 		local prefix = ""
 		for _, split in ipairs(splits) do
 			local prev_qualifier, this_qualifier, bare_placetype = split[1], split[2], split[3]
@@ -701,7 +603,7 @@ local function get_old_style_gloss(args, spec, with_article, sentence)
 			gloss = gloss .. " " .. placetype
 		else
 			placetype_for_in_or_of = placetype
-			local pt_data, equiv_placetype_and_qualifier = get_equiv_placetype_prop(placetype,
+			local pt_data, equiv_placetype_and_qualifier = data.get_equiv_placetype_prop(placetype,
 				function(pt) return cat_data[pt] end)
 			-- Join multiple placetypes with comma unless placetypes are already
 			-- joined with "and". We allow "the" to precede the second placetype
@@ -829,7 +731,7 @@ end
 -- This also removes any links.
 local function resolve_cat_aliases(holonym_placetype, holonym_placename)
 	local retval
-	local cat_aliases = get_equiv_placetype_prop(holonym_placetype, function(pt) return data.placename_cat_aliases[pt] end)
+	local cat_aliases = data.get_equiv_placetype_prop(holonym_placetype, function(pt) return data.placename_cat_aliases[pt] end)
 	holonym_placename = m_links.remove_links(holonym_placename)
 	if cat_aliases then
 		retval = cat_aliases[holonym_placename]
@@ -889,14 +791,14 @@ local function find_cat_spec(entry_placetype, entry_placetype_data, place_spec)
 	while place_spec[c] do
 		local holonym_placetype, holonym_placename = place_spec[c][1], place_spec[c][2]
 		holonym_placename = resolve_cat_aliases(holonym_placetype, holonym_placename)
-		inner_data = get_equiv_placetype_prop(holonym_placetype,
+		inner_data = data.get_equiv_placetype_prop(holonym_placetype,
 			function(pt) return entry_placetype_data[(pt or "") .. "/" .. holonym_placename] end)
 		if inner_data then
 			break
 		end
 		if entry_placetype_data.cat_handler then
-			inner_data = get_equiv_placetype_prop(holonym_placetype,
-				function(pt) return entry_placetype_data.cat_handler(pt, holonym_placename) end)
+			inner_data = data.get_equiv_placetype_prop(holonym_placetype,
+				function(pt) return entry_placetype_data.cat_handler(pt, holonym_placename, place_spec) end)
 			if inner_data then
 				break
 			end
@@ -923,7 +825,7 @@ local function find_cat_spec(entry_placetype, entry_placetype_data, place_spec)
 	local c2 = 3
 
 	while place_spec[c2] do
-		local retval = get_equiv_placetype_prop(place_spec[c2][1], function(pt) return inner_data[pt] end)
+		local retval = data.get_equiv_placetype_prop(place_spec[c2][1], function(pt) return inner_data[pt] end)
 		if retval then
 			return entry_placetype, retval, c2
 		end
@@ -940,7 +842,7 @@ end
 -- the 'pluralize' function from [[Module:string utilities]] is called,
 -- which pluralizes correctly in almost all cases.
 local function get_cat_plural(word)
-	local pt_data, equiv_placetype_and_qualifier = get_equiv_placetype_prop(word, function(pt) return cat_data[pt] end)
+	local pt_data, equiv_placetype_and_qualifier = data.get_equiv_placetype_prop(word, function(pt) return cat_data[pt] end)
 	if pt_data then
 		word = pt_data.plural or m_strutils.pluralize(equiv_placetype_and_qualifier.placetype)
 	else
@@ -1007,7 +909,7 @@ local function get_cat(lang, place_spec, entry_placetype)
 	-- outer table is indexed by "default", the inner table will be indexed by
 	-- one or more holonym placetypes, meaning to generate a category for all holonyms
 	-- of this placetype.
-	local entry_pt_data, equiv_entry_placetype_and_qualifier = get_equiv_placetype_prop(entry_placetype, function(pt) return cat_data[pt] end)
+	local entry_pt_data, equiv_entry_placetype_and_qualifier = data.get_equiv_placetype_prop(entry_placetype, function(pt) return cat_data[pt] end)
 
 	-- 1. Unrecognized placetype.
 	if not entry_pt_data then
