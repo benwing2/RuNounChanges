@@ -1,6 +1,6 @@
 local export = {}
 
-local m_shared = require("Module:User:Benwing2/place/shared-data")
+local m_shared = require("Module:place/shared-data")
 local m_links = require("Module:links")
 local m_strutils = require("Module:string utilities")
 
@@ -189,8 +189,10 @@ export.placetype_links = {
 	["cape"] = true,
 	["census area"] = true,
 	["census-designated place"] = true,
+	["central business district"] = true,
 	["ceremonial county"] = true,
 	["civil parish"] = true,
+	["coal town"] = "w",
 	["collectivity"] = true,
 	["commandery"] = true,
 	["commonwealth"] = true,
@@ -373,6 +375,8 @@ export.qualifier_to_placetype_equivs = {
 
 -- In this table, the key placetypes should be treated the same as the value placetypes for
 -- categorization purposes. Entries here are overridden by cat_data.
+-- NOTE: 'coal town', 'county town', 'ghost town', 'resort town', 'ski resort town',
+-- 'spa town', etc. aren't mapped to 'town' because they aren't necessarily towns.
 export.placetype_equivs = {
 	["administrative center"] = "administrative centre",
 	["archipelago"] = "island",
@@ -385,6 +389,7 @@ export.placetype_equivs = {
 	["built-up area"] = "area",
 	["cape"] = "peninsula",
 	["capital"] = "capital city",
+	["central business district"] = "neighborhood",
 	["ceremonial county"] = "county",
 	["chain of islands"] = "island",
 	["commandery"] = "historical political subdivision",
@@ -400,7 +405,6 @@ export.placetype_equivs = {
 	["external territory"] = "dependent territory",
 	["federal territory"] = "territory",
 	["geographical region"] = "region",
-	["ghost town"] = "town",
 	["group of islands"] = "island",
 	["hamlet"] = "village",
 	["harbor town"] = "town",
@@ -498,19 +502,16 @@ export.placetype_equivs = {
 	["port town"] = "town",
 	["regional municipality"] = "municipality",
 	["resort city"] = "city",
-	["resort town"] = "town",
 	["settlement"] = "village",
 	["shire"] = "county",
 	["shire county"] = "county",
 	["shire town"] = "county town",
-	["ski resort town"] = "town",
 	["spa city"] = "city",
-	["spa town"] = "town",
 	["spit"] = "peninsula",
 	["state park"] = "park",
 	["statutory city"] = "city",
 	["statutory town"] = "town",
-	["submerged ghost town"] = "town",
+	["submerged ghost town"] = "ghost town",
 	["suburban area"] = "suburb",
 	["subway station"] = "metro station",
 	["supercontinent"] = "continent",
@@ -1492,7 +1493,6 @@ export.cat_data = {
 	["county town"] = {
 		article="the",
 		preposition="of",
-		fallback="town",
 	},
 
 	["department"] = {
@@ -1587,6 +1587,33 @@ export.cat_data = {
 	},
 
 	["forest"] = {
+		["default"] = {
+			["itself"] = {true},
+		},
+	},
+
+	["ghost town"] = {
+		cat_handler = function(holonym_placetype, holonym_placename, place_spec)
+			local function check_for_recognized(divlist, default_divtype, placename_to_key)
+				local key = placename_to_key and placename_to_key(holonym_placename) or holonym_placename
+				local spec = divlist[key]
+				if not spec then
+					key = "the " .. key
+					spec = divlist[key]
+				end
+				if spec and holonym_placetype == (spec.divtype or default_divtype) then
+					return {
+						["itself"] = {"Ghost towns in " .. key}
+					}
+				end
+			end
+			return (
+				check_for_recognized(m_shared.us_states, "state", function(placename) return placename .. ", USA" end) or
+				check_for_recognized(m_shared.canadian_provinces_and_territories, "province") or
+				check_for_recognized(m_shared.australian_states_and_territories, "state")
+			)
+		end,
+
 		["default"] = {
 			["itself"] = {true},
 		},
