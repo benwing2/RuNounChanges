@@ -1,7 +1,7 @@
 local labels = {}
 local handlers = {}
 
-local m_shared = require("Module:User:Benwing2/place/shared-data")
+local m_shared = require("Module:place/shared-data")
 local m_strutils = require("Module:string utilities")
 
 --[=[
@@ -49,6 +49,7 @@ local general_labels = {
 	{"dependencies", "[[dependency|dependencies]]", {"polities"}},
 	{"deserts", "[[desert]]s", {"places"}},
 	{"forests", "[[forest]]s", {"places"}},
+	{"ghost towns", "[[ghost town]]s", {"places"}},
 	{"gulfs", "[[gulf]]s", {"places", "water"}},
 	{"headlands", "[[headland]]s", {"places"}},
 	{"historical and traditional regions", "regions that have no administrative significance", {"places"}},
