@@ -31,6 +31,7 @@ export.political_subdivisions = {
 	["civil parishes"] = "[[civil parish]]es",
 	["collectivities"] = "[[collectivity|collectivities]]",
 	["constituencies"] = "[[constituency|constituencies]]",
+	["constituent countries"] = "[[constituent]] [[country|countries]]",
 	["council areas"] = "[[council area]]s",
 	["counties"] = "[[county|counties]]",
 	["county boroughs"] = "[[county borough]]s",
@@ -81,8 +82,8 @@ export.political_subdivisions = {
 }
 
 -- Place types for which categories can be constructed for all the places listed
--- below. The key should be the plural place type and the value should be the
--- description.
+-- below other than cities. The key should be the plural place type and the value
+-- should be the description.
 export.generic_place_types = {
 	["cities"] = "cities",
 	["towns"] = "towns",
@@ -93,6 +94,15 @@ export.generic_place_types = {
 	["rivers"] = "rivers",
 	["census-designated places"] = "[[census-designated place]]s",
 	["unincorporated communities"] = "[[w:unincorporated community|unincorporated communities]]",
+	["places"] = "places of all sorts",
+}
+
+-- Place types for which categories can be constructed for cities listed below.
+-- The key should be the plural place type and the value should be the description.
+export.generic_place_types_for_cities = {
+	["neighborhoods"] = "[[neighborhood]]s, [[district]]s and other subportions of cities",
+	["neighbourhoods"] = "[[neighbourhood]]s, [[district]]s and other subportions of cities",
+	["suburbs"] = "[[suburb]]s",
 	["places"] = "places of all sorts",
 }
 
@@ -1485,7 +1495,7 @@ export.cities = {
 			["Osaka"] = {"Osaka"}, -- 2,668,586
 			["Nagoya"] = {"Aichi"}, -- 2,283,289
 			-- FIXME, Hokkaido is handled specially.
-			["Sapporo"] = {"Hokkaidō"}, -- 1,918,096
+			["Sapporo"] = {}, -- {"Hokkaido"}, -- 1,918,096
 			["Fukuoka"] = {"Fukuoka"}, -- 1,581,527
 			["Kobe"] = {"Hyōgo"}, -- 1,530,847
 			["Kyoto"] = {"Kyoto"}, -- 1,474,570
@@ -1540,7 +1550,8 @@ export.cities = {
 		data = {
 			["Madrid"] = {"the Community of Madrid"},
 			["Barcelona"] = {"Catalonia"},
-			["Valencia"] = {"Valencia"},
+			-- this causes recursion errors.
+			-- ["Valencia"] = {"Valencia"},
 			["Seville"] = {"Andalusia"},
 			["Bilbao"] = {"the Basque Country"},
 		},
@@ -1553,14 +1564,14 @@ export.cities = {
 			["Manchester"] = {{"Greater Manchester"}, {"England", divtype="constituent country"}},
 			["Birmingham"] = {{"the West Midlands"}, {"England", divtype="constituent country"}},
 			["Liverpool"] = {{"Merseyside"}, {"England", divtype="constituent country"}},
-			["Glasgow"] = {{"the City of Glasgow"}, {"Scotland", divtype="constituent country"}},
+			["Glasgow"] = {{"the City of Glasgow", divtype="council area"}, {"Scotland", divtype="constituent country"}},
 			["Leeds"] = {{"West Yorkshire"}, {"England", divtype="constituent country"}},
 			["Newcastle upon Tyne"] = {{"Tyne and Wear"}, {"England", divtype="constituent country"}},
 			["Newcastle"] = {alias_of="Newcastle upon Tyne"},
 			["Bristol"] = {{"England", divtype="constituent country"}},
-			["Cardiff"] = {{"South Glamorgan"}, {"Wales", divtype="constituent country"}},
+			["Cardiff"] = {{"Wales", divtype="constituent country"}},
 			["Portsmouth"] = {{"Hampshire"}, {"England", divtype="constituent country"}},
-			["Edinburgh"] = {{"the City of Edinburgh"}, {"Scotland", divtype="constituent country"}},
+			["Edinburgh"] = {{"the City of Edinburgh", divtype="council area"}, {"Scotland", divtype="constituent country"}},
 		},
 	},
 	-- cities in the US
@@ -1896,6 +1907,25 @@ function export.get_city_containing_polities(group, key, value)
 		table.insert(containing_polities, n, polity)
 	end
 	return containing_polities
+end
+
+-- Given a containing polity of a city, possibly with preceding "the" removed,
+-- find the group and key in 'export.polities'.
+function export.city_containing_polity_to_group_and_key(polity)
+	for _, polity_group in ipairs(export.polities) do
+		local key_polity = polity
+		if polity_group.placename_to_key then
+			key_polity = polity_group.placename_to_key(key_polity)
+		end
+		if polity_group.data[key_polity] then
+			return polity_group, key_polity
+		end
+		key_polity = "the " .. key_polity
+		if polity_group.data[key_polity] then
+			return polity_group, key_polity
+		end
+	end
+	return nil
 end
 
 -----------------------------------------------------------------------------------
