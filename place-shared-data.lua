@@ -86,6 +86,7 @@ export.political_subdivisions = {
 -- should be the description.
 export.generic_place_types = {
 	["cities"] = "cities",
+	["ghost towns"] = "[[ghost town]]s",
 	["towns"] = "towns",
 	["villages"] = "villages, hamlets, and other small communities and settlements",
 	["neighborhoods"] = "[[neighborhood]]s, [[district]]s and other subportions of cities",
