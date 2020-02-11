@@ -1,9 +1,9 @@
 TODO:
 
-1. 'central business district'
-2. 'county town' is not necessarily a town (e.g. Chester is a city)
-3. 'spa town', 'resort town' not necessarily towns
-3a. 'coal town', not necessarily a town
+1. 'central business district' (DONE)
+2. 'county town' is not necessarily a town (e.g. Chester is a city) (DONE)
+3. 'spa town', 'resort town' not necessarily towns (DONE)
+3a. 'coal town', not necessarily a town (DONE)
 4. If two e.g. countries are mentioned as holonyms, categories should be generated for both. Cf.
    Colorado (river), which should be a river both in the US and Mexico.
 5. 'harbor city', 'harbour city'
@@ -26,7 +26,7 @@ TODO:
 20. 'independent city'
 21. 'unrecognized territory'
 22. 'crossroads'
-23. Fix Midway, Washington County, Oregon; revert vandalism
+23. Fix Midway, Washington County, Oregon; revert vandalism (DONE)
 24. 'mining', 'farming', 'logging' as qualifiers
 25. 'abandoned', 'extinct' as qualifiers that should be treated like 'former'
 26. 'community' and 'unincorporated community' should categorize as neighborhood if inside a city, town, village, etc.
@@ -54,6 +54,11 @@ TODO:
 48. 'larea' = 'lieutenancy area', display 'lieutenancy area' as suffix
 48. 'robor' = 'royal borough', display 'Royal Borough of' as prefix
 49. 'gated community'
+50. 'corregimiento' (in Panama)
+51. 'barrio' = neighborhood
+52. 'mission'
+53. 'fort', 'fortress'
+54. 'ward' = neighborhood
 
 
 place-shared-data.lua:
