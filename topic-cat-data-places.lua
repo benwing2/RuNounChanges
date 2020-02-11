@@ -141,14 +141,15 @@ local function city_description(group, key, value)
 		end
 		table.insert(descparts, linked_polity)
 	end
-	return table.concat(descparts)
+	return table.concat(descparts), label_parent
 end
 
 -- Generate bare labels in 'label' for all cities.
 for _, group in ipairs(m_shared.cities) do
 	for key, value in pairs(group.data) do
 		if not value.alias_of then
-			local desc = "{{{langname}}} terms related to " .. city_description(group, key, value) .. "."
+			local desc, label_parent = city_description(group, key, value)
+			desc = "{{{langname}}} terms related to " .. desc .. "."
 			local parents = value.parents or label_parent
 			if not parents then
 				error("When creating city bare label for " .. key .. ", at least one containing polity must be specified or an explicit parent must be given")
@@ -162,13 +163,13 @@ for _, group in ipairs(m_shared.cities) do
 				if key_parent then
 					local bare_key_parent, linked_key_parent =
 						m_shared.construct_bare_and_linked_version(key_parent)
-					table.insert(key_parents, key_parent)
+					table.insert(key_parents, bare_key_parent)
 				else
 					error("Couldn't find entry for city '" .. key .."' parent '" .. parent .. "'")
 				end
 			end
 
-			labels[bare_key] = {
+			labels[key] = {
 				description = desc,
 				parents = key_parents,
 			}
