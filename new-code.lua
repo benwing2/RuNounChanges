@@ -6,15 +6,15 @@ TODO:
 3a. 'coal town', not necessarily a town (DONE)
 4. If two e.g. countries are mentioned as holonyms, categories should be generated for both. Cf.
    Colorado (river), which should be a river both in the US and Mexico.
-5. 'harbor city', 'harbour city'
-6. 'watercourse'
-7. 'township municipality' (of Quebec)
+5. 'harbor city', 'harbour city' (DONE)
+6. 'watercourse' (DONE)
+7. 'township municipality' (of Quebec) (DONE)
 8. 'sea area'
 9. 'townland'
 10. split slash only once to correctly handle twp/Admaston/Bromley.
 11. make sure district -> neighborhood handles municipality and lgarea correctly.
-11. 'rumun' -> 'rural municipality' and should render as 'the Rural Municipality of ...'.
-12. Not properly categorizing Places in the Northwest Territories? Or remove_redundant_place_cats.py not working.
+11. 'rumun' -> 'rural municipality' and should render as 'the Rural Municipality of ...'. (DONE)
+12. Not properly categorizing Places in the Northwest Territories? Or remove_redundant_place_cats.py not working. cf. Fort Smith.
 13. Should add categories for 'neighborhoods of CITY' and 'suburbs of CITY'.
 14. Should add 'Places in Brooklyn, Places in the Bronx', etc. Requires several changes, e.g.
     handling 'the' in city/borough names.
@@ -27,7 +27,7 @@ TODO:
 21. 'unrecognized territory'
 22. 'crossroads'
 23. Fix Midway, Washington County, Oregon; revert vandalism (DONE)
-24. 'mining', 'farming', 'logging' as qualifiers
+24. 'mining', 'farming', 'logging', 'gold mining' as qualifiers
 25. 'abandoned', 'extinct' as qualifiers that should be treated like 'former'
 26. 'community' and 'unincorporated community' should categorize as neighborhood if inside a city, town, village, etc.
 27. 'sound', 'mouth'
@@ -48,7 +48,7 @@ TODO:
 42. 'metropolitan area'
 43. 'railroad junction'
 44. 'volcano', 'inactive volcano', 'dormant volcano'
-45. 'rmun' = 'regional municipality', output 'regional municipality' as suffix, but correctly handle 'Region of Queens Municipality'
+45. 'rmun' = 'regional municipality', output 'regional municipality' as suffix, but correctly handle 'Region of Queens Municipality' (DONE)
 46. 'distmun' = 'district municipality', output 'district municipality' as suffix
 47. {{place|en|community|rmun/Halifax|p/Nova Scotia|c/Canada|;|suburb|city/Halifax}} should put in "Suburbs in Nova Scotia".
 48. 'larea' = 'lieutenancy area', display 'lieutenancy area' as suffix
@@ -59,6 +59,14 @@ TODO:
 52. 'mission'
 53. 'fort', 'fortress'
 54. 'ward' = neighborhood
+55. 'seaport'
+56. 'shire town' = treat like 'county seat' (DONE)
+57. 'chartered village'
+58. 'county-controlled city'
+59. Fix Clearwater, British Columbia: '''Clearwater''' is a [[district municipality]] in the North [[Thompson River]] valley in [[British Columbia]], Canada, where the [[Clearwater River (British Columbia)|Clearwater River]] empties into the North Thompson River. It is located {{convert|124|km|mi|0|abbr=on}} north of [[Kamloops]]. The District of Clearwater was established on December 23, 2007, making it one of the newest municipalities in British Columbia. It is near [[Wells Gray Provincial Park]] and is surrounded by the [[Trophy Mountains]], [[Raft Peak]], [[Grizzly Peak]] and [[Dunn Peak]]. (DONE)
+60. 'local urban district' (Manitoba)
+61. 'cattle station' (Australia)
+62. 'South Dublin', 'Fingal' and 'Dún Laoghaire–Rathdown' are counties of Ireland but don''t have 'County' preceding them'
 
 
 place-shared-data.lua:
