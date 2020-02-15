@@ -52,24 +52,31 @@ export.placetype_aliases = {
 	["metbor"] = "metropolitan borough",
 	["mtn"] = "mountain",
 	["mun"] = "municipality",
+	["mundist"] = "municipal district",
 	["obl"] = "oblast",
 	["aobl"] = "autonomous oblast",
 	["okr"] = "okrug",
 	["aokr"] = "autonomous okrug",
 	["par"] = "parish",
+	["parmun"] = "parish municipality",
 	["pen"] = "peninsula",
 	["pref"] = "prefecture",
 	["apref"] = "autonomous prefecture",
 	["rep"] = "republic",
 	["arep"] = "autonomous republic",
 	["riv"] = "river",
+	["rcomun"] = "regional county municipality",
+	["rmun"] = "regional municipality",
 	["runit"] = "regional unit",
+	["rurmun"] = "rural municipality",
 	["terrauth"] = "territorial authority",
 	["terr"] = "territory",
 	["aterr"] = "autonomous territory",
 	["uterr"] = "union territory",
 	["tjarea"] = "tribal jurisdictional area",
 	["twp"] = "township",
+	["twpmun"] = "township municipality",
+	["utwpmun"] = "united township municipality",
 	["val"] = "valley",
 	["voi"] = "voivodeship",
 	["range"] = "mountain range",
@@ -129,6 +136,10 @@ export.placetype_qualifiers = {
 	["incorporated"] = "[[incorporated]]",
 	["special"] = "[[special]]",
 	["unincorporated"] = "[[unincorporated]]",
+	-- monetary status/etc. qualifiers
+	["fashionable"] = true,
+	["wealthy"] = true,
+	["affluent"] = "[[affluent]]",
 	-- city vs. rural qualifiers
 	["urban"] = true,
 	["suburban"] = "[[suburban]]",
@@ -142,16 +153,21 @@ export.placetype_qualifiers = {
 	["business"] = true,
 	["commercial"] = "[[commercial]]",
 	["industrial"] = "[[industrial]]",
+	-- business use qualifiers
+	["railroad"] = "[[railroad]]",
+	["railway"] = "[[railway]]",
+	["farming"] = "[[farming]]",
+	["mining"] = "[[mining]]",
+	-- religious qualifiers
+	["holy"] = true,
+	["sacred"] = true,
+	["religious"] = true,
+	["secular"] = true,
 	-- qualifiers for nonexistent places
 	["fictional"] = true,
 	["mythological"] = true,
 	-- misc. qualifiers
 	["hilly"] = true,
-	["holy"] = true,
-	["sacred"] = true,
-	["religious"] = true,
-	["secular"] = true,
-	["fashionable"] = true,
 	["planned"] = true,
 }
 
@@ -191,6 +207,7 @@ export.placetype_links = {
 	["census-designated place"] = true,
 	["central business district"] = true,
 	["ceremonial county"] = true,
+	["channel"] = true,
 	["civil parish"] = true,
 	["coal town"] = "w",
 	["collectivity"] = true,
@@ -232,6 +249,8 @@ export.placetype_links = {
 	["governorate"] = true,
 	["gulf"] = true,
 	["hamlet"] = true,
+	["harbor city"] = "[[harbor]] [[city]]",
+	["harbour city"] = "[[harbour]] [[city]]",
 	["harbor town"] = "[[harbor]] [[town]]",
 	["harbour town"] = "[[harbour]] [[town]]",
 	["headland"] = true,
@@ -281,6 +300,7 @@ export.placetype_links = {
 	["overseas department"] = "w",
 	["overseas territory"] = "w",
 	["parish"] = true,
+	["parish municipality"] = "[[w:parish municipality (Quebec)|parish municipality]]",
 	["parish seat"] = true,
 	["periphery"] = true,
 	["planned community"] = true,
@@ -294,6 +314,7 @@ export.placetype_links = {
 	["provincial capital"] = true,
 	["regency"] = true,
 	["regional capital"] = "[[regional]] [[capital]]",
+	["regional county municipality"] = "w",
 	["regional municipality"] = "w",
 	["regional unit"] = "w",
 	["registration county"] = true,
@@ -321,6 +342,7 @@ export.placetype_links = {
 	["statutory town"] = "w",
 	["strait"] = true,
 	["subdistrict"] = true,
+	["subdivision"] = true,
 	["submerged ghost town"] = "[[submerged]] [[ghost town]]",
 	["subprefecture"] = true,
 	["subprovince"] = true,
@@ -331,6 +353,7 @@ export.placetype_links = {
 	["supercontinent"] = true,
 	["territorial authority"] = "w",
 	["township"] = true,
+	["township municipality"] = "[[w:township municipality (Quebec)|township municipality]]",
 	-- can't use templates in this code
 	["town with bystatus"] = "[[town]] with [[bystatus#Norwegian Bokmål|bystatus]]",
 	["traditional county"] = true,
@@ -341,12 +364,14 @@ export.placetype_links = {
 	["unincorporated territory"] = "w",
 	["unitary authority"] = true,
 	["unitary district"] = "w",
+	["united township municipality"] = "[[w:united township municipality (Quebec)|united township municipality]]",
 	["unrecognised country"] = "w",
 	["unrecognized country"] = "w",
 	["urban area"] = "[[urban]] area",
 	["urban township"] = "w",
 	["village municipality"] = "[[w:village municipality (Quebec)|village municipality]]",
 	["voivodeship"] = true,
+	["watercourse"] = true,
 }
 
 
@@ -407,6 +432,8 @@ export.placetype_equivs = {
 	["geographical region"] = "region",
 	["group of islands"] = "island",
 	["hamlet"] = "village",
+	["harbor city"] = "city",
+	["harbour city"] = "city",
 	["harbor town"] = "town",
 	["harbour town"] = "town",
 	["heath"] = "moor",
@@ -515,11 +542,13 @@ export.placetype_equivs = {
 	["suburban area"] = "suburb",
 	["subway station"] = "metro station",
 	["supercontinent"] = "continent",
+	["traditional county"] = "county",
 	["territorial authority"] = "district",
 	["underground station"] = "metro station",
 	["unincorporated territory"] = "territory",
 	["unitary authority"] = "local government district",
 	["unitary district"] = "local government district",
+	["united township municipality"] = "township municipality",
 	["unrecognised country"] = "unrecognized country",
 	["urban area"] = "neighborhood",
 	["urban township"] = "township",
@@ -601,6 +630,9 @@ export.placename_cat_aliases = {
 		["People's Republic of China"] = "China",
 		["Republic of China"] = "Taiwan",
 	},
+	["county"] = {
+		["Anglesey"] = "Isle of Anglesey",
+	},
 }
 
 
@@ -645,8 +677,8 @@ export.placename_article = {
 -- for the holonym's placetype apply.
 export.placename_the_re = {
 	-- We don't need entries for peninsulas, seas, oceans, gulfs or rivers
-	-- because the have holonym_article="the".
-	["*"] = {"^Isle of ", " Islands$", " Mountains$", " Empire$", " Country$", " Region$", "^City of "},
+	-- because they have holonym_article="the".
+	["*"] = {"^Isle of ", " Islands$", " Mountains$", " Empire$", " Country$", " Region$", " District$", "^City of "},
 	["bay"] = {"^Bay of "},
 	["lake"] = {"^Lake of "},
 	["country"] = {"^Republic of ", " Republic$"},
@@ -817,20 +849,23 @@ function export.get_placetype_equivs(placetype)
 	local equivs = {}
 
 	local function do_placetype(qualifier, placetype)
+		-- FIXME! The qualifier (first arg) is inserted into the table, but isn't
+		-- currently used anywhere.
+
 		-- First do the placetype itself.
-		table.insert(equivs, {placetype=placetype})
+		table.insert(equivs, {qualifier=qualifier, placetype=placetype})
 		-- Then check for a singularized equivalent.
 		local sg_placetype = export.maybe_singularize(placetype)
 		if sg_placetype then
-			table.insert(equivs, {placetype=sg_placetype})
+			table.insert(equivs, {qualifier=qualifier, placetype=sg_placetype})
 		end
 		-- Then check for a mapping in placetype_equivs; add if present.
 		if export.placetype_equivs[placetype] then
-			table.insert(equivs, {placetype=export.placetype_equivs[placetype]})
+			table.insert(equivs, {qualifier=qualifier, placetype=export.placetype_equivs[placetype]})
 		end
 		-- Then check for a mapping in placetype_equivs for the singularized equivalent.
 		if sg_placetype and export.placetype_equivs[sg_placetype] then
-			table.insert(equivs, {placetype=export.placetype_equivs[sg_placetype]})
+			table.insert(equivs, {qualifier=qualifier, placetype=export.placetype_equivs[sg_placetype]})
 		end
 	end
 
@@ -1044,7 +1079,7 @@ local function district_inner_data(value, itself_dest)
 	end
 	return retval
 end
-	
+
 
 -- Cat handler for districts and areas. Districts are tricky because they can
 -- either be political subdivisions or city neighborhoods. We handle this as follows:
@@ -1102,33 +1137,48 @@ local function chinese_subcity_cat_handler(holonym_placetype, holonym_placename,
 end
 
 
--- Suffix display handler that adds a suffix such as " parish" to the display form of holonyms.
--- We make sure the holonym doesn't contain the suffix already (taking into account the fact
--- that the holonym might contain links and might have the suffix capitalized). If it doesn't,
--- we create a link that uses the raw form as the link destination but the suffixed form as the
--- display form, unless the holonym already has a link in it, in which case we just add the suffix.
-local function suffix_display_handler(suffix, holonym_placename)
+local function check_already_seen_string(holonym_placename, already_seen_strings)
 	local canon_placename = lc(m_links.remove_links(holonym_placename))
-	if canon_placename:find(" " .. lc(suffix) .. "$") then
+	if type(already_seen_strings) ~= "table" then
+		already_seen_strings = {already_seen_strings}
+	end
+	for _, already_seen_string in ipairs(already_seen_strings) do
+		if canon_placename:find(already_seen_string) then
+			return true
+		end
+	end
+	return false
+end
+
+
+-- Prefix display handler that adds a prefix such as "Metropolitan Borough of " to the display
+-- form of holonyms. We make sure the holonym doesn't contain the prefix or some variant already.
+-- We do this by checking if any of the strings in ALREADY_SEEN_STRINGS, either a single string or
+-- a list of strings, or the prefix if ALREADY_SEEN_STRINGS is omitted, are found in the holonym
+-- placename, ignoring case and links. If the prefix isn't already present, we create a link that
+-- uses the raw form as the link destination but the prefixed form as the display form, unless the
+-- holonym already has a link in it, in which case we just add the prefix.
+local function prefix_display_handler(prefix, holonym_placename, already_seen_strings)
+	if check_already_seen_string(holonym_placename, already_seen_strings or lc(prefix)) then
+		return holonym_placename
+	end
+	if holonym_placename:find("%[%[") then
+		return prefix .. " " .. holonym_placename
+	end
+	return prefix .. " [[" .. holonym_placename .. "]]"
+end
+
+
+-- Suffix display handler that adds a suffix such as " parish" to the display form of holonyms.
+-- Works identically to prefix_display_handler but for suffixes instead of prefixes.
+local function suffix_display_handler(suffix, holonym_placename, already_seen_strings)
+	if check_already_seen_string(holonym_placename, already_seen_strings or lc(suffix)) then
 		return holonym_placename
 	end
 	if holonym_placename:find("%[%[") then
 		return holonym_placename .. " " .. suffix
 	end
 	return "[[" .. holonym_placename .. "]] " .. suffix
-end
-
-
--- Display handler for metropolitan boroughs.
-local function metropolitan_borough_display_handler(holonym_placename)
-	local canon_placename = lc(m_links.remove_links(holonym_placename))
-	if canon_placename:find("^metropolitan borough ") or canon_placename:find("^city ") then
-		return holonym_placename
-	end
-	if holonym_placename:find("%[%[") then
-		return "Metropolitan Borough of " .. holonym_placename
-	end
-	return "Metropolitan Borough of [[" .. holonym_placename .. "]]"
 end
 
 
@@ -1333,7 +1383,7 @@ export.cat_data = {
 			return city_type_cat_handler("city", holonym_placetype, holonym_placename,
 				nil, nil, {"Capital cities"})
 		end,
-		
+
 		["default"] = {
 			["itself"] = {true},
 		},
@@ -1775,7 +1825,8 @@ export.cat_data = {
 		preposition="of",
 		holonym_article="the",
 		display_handler = function(holonym_placetype, holonym_placename)
-			return metropolitan_borough_display_handler(holonym_placename)
+			return prefix_display_handler("Metropolitan Borough of", holonym_placename,
+				{"borough", "city"})
 		end,
 		fallback = "local government district",
 	},
@@ -1789,6 +1840,20 @@ export.cat_data = {
 	["mountain"] = {
 		["default"] = {
 			["itself"] = {true},
+		},
+	},
+
+	["municipal district"] = {
+		preposition="of",
+		holonym_article="the",
+		display_handler = function(holonym_placetype, holonym_placename)
+			return prefix_display_handler("Municipal District of", holonym_placename,
+				"district")
+		end,
+		fallback="municipality",
+
+		["province/Alberta"] = {
+			["itself"] = {"Municipal districts of +++"},
 		},
 	},
 
@@ -1860,6 +1925,15 @@ export.cat_data = {
 			["itself"] = {"Parishes of +++, USA"},
 		},
 
+	},
+
+	["parish municipality"] = {
+		preposition="of",
+		fallback="municipality",
+
+		["province/Quebec"] = {
+			["itself"] = {"Parishes of +++", "Municipalities of Canada"},
+		},
 	},
 
 	["parish seat"] = {
@@ -2015,6 +2089,38 @@ export.cat_data = {
 		preposition="of",
 	},
 
+	["regional county municipality"] = {
+		preposition="of",
+		holonym_article="the",
+		display_handler = function(holonym_placetype, holonym_placename)
+			return suffix_display_handler("Regional County Municipality", holonym_placename)
+		end,
+		fallback="municipality",
+
+		["province/Quebec"] = {
+			["itself"] = {"Regional county municipalities of +++"},
+		},
+	},
+
+	["regional municipality"] = {
+		preposition="of",
+		holonym_article="the",
+		display_handler = function(holonym_placetype, holonym_placename)
+			return prefix_display_handler("Regional Municipality of", holonym_placename, {"municipality", "county"})
+		end,
+		fallback="municipality",
+
+		["province/British Columbia"] = {
+			["itself"] = {"Regional municipalities of +++"},
+		},
+		["province/Nova Scotia"] = {
+			["itself"] = {"Regional municipalities of +++"},
+		},
+		["province/Ontario"] = {
+			["itself"] = {"Regional municipalities of +++"},
+		},
+	},
+
 	["regional unit"] = {
 		preposition="of",
 	},
@@ -2041,6 +2147,11 @@ export.cat_data = {
 
 	["rural municipality"] = {
 		preposition="of",
+		holonym_article="the",
+		display_handler = function(holonym_placetype, holonym_placename)
+			return prefix_display_handler("Rural Municipality of", holonym_placename,
+				"municipality")
+		end,
 		fallback="municipality",
 
 		["province/Saskatchewan"] = {
@@ -2126,6 +2237,10 @@ export.cat_data = {
 		},
 	},
 
+	["subdivision"] = {
+		preposition="of",
+	},
+
 	["subprefecture"] = {
 		preposition="of",
 	},
@@ -2178,6 +2293,15 @@ export.cat_data = {
 	["township"] = {
 		["default"] = {
 			["itself"] = {true},
+		},
+	},
+
+	["township municipality"] = {
+		preposition="of",
+		fallback="municipality",
+
+		["province/Quebec"] = {
+			["itself"] = {"Townships in +++", "Townships in Canada", "Municipalities of Canada"},
 		},
 	},
 
@@ -2280,12 +2404,26 @@ for _, group in ipairs(m_shared.polities) do
 						local sgdiv = m_strutils.singularize(div[1])
 						for _, dt in ipairs(divtype) do
 							if not export.cat_data[sgdiv] then
-								export.cat_data[sgdiv] = {
-									preposition="of",
+								-- If there is an entry in placetype_equivs[], it will be ignored once
+								-- we insert an entry in cat_data. For example, "traditional county" is
+								-- listed as a miscdiv of Scotland and Northern Ireland but it's also
+								-- an entry in placetype_equivs[]. Once we insert an entry here for
+								-- "traditional county", it will override placetype_equivs[]. To get
+								-- around that, simulate the effect of placetype_equivs[] using a
+								-- fallback="..." entry.
+								if export.placetype_equivs[sgdiv] then
+									export.cat_data[sgdiv] = {
+										preposition="of",
+										fallback=export.placetype_equivs[sgdiv],
+									}
+								else
+									export.cat_data[sgdiv] = {
+										preposition="of",
 
-									["default"] = {
-									},
-								}
+										["default"] = {
+										},
+									}
+								end
 							end
 							if not export.cat_data[sgdiv]["default"] or not export.cat_data[sgdiv]["default"][dt] then
 								local itself_dest = bare_key == key and {true} or {ucfirst(div[1]) .. " of " .. key}
