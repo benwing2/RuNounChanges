@@ -458,6 +458,11 @@ for _, province in ipairs({"Saskatchewan", "Manitoba", "Prince Edward Island"}) 
 	}
 end
 
+labels["regional county municipalities of Quebec"] = {
+	description = "{{{langname}}} names of [[w:regional county municipality|regional county municipalities]] of [[Quebec]].",
+	parents = {{name = "political subdivisions", sort = "Quebec"}, "Quebec", "list of sets"},
+}
+
 -- regions and "regional units"
 
 labels["regions of Greece"] = {
@@ -500,6 +505,11 @@ labels["townships in Canada"] = {
 labels["townships in Ontario"] = {
 	description = "{{{langname}}} names of townships in [[Ontario]]. Municipalities in Ontario can be called as a city, a town, a township, or a village.",
 	parents = {{name = "townships in Canada", sort = "Ontario"}, "Ontario", "list of sets"},
+}
+
+labels["townships in Quebec"] = {
+	description = "{{{langname}}} names of townships in [[Quebec]].",
+	parents = {{name = "townships in Canada", sort = "Quebec"}, "Quebec", "list of sets"},
 }
 
 -- misc to be sorted; putting here so old module can be deleted
