@@ -1,4 +1,4 @@
-Beginning at Thu Feb 13 10:02:49 2020
+Beginning at Sat Feb 15 13:32:18 2020
 Page 1 English: Found match for regex: {
 Page 1 English: -------- begin text ---------
 {{also|english}}
@@ -1026,7 +1026,7 @@ From {{bor|en|hi|दिल्ली}}/{{bor|en|ur|دلی|tr=delī}}, of {{unk|en
 ===Proper noun===
 {{sh-proper noun|g=m|head=Dȅlhi}}
 
-# {{l|en|Delhi}}
+# {{place|sh|city|c/India|t=Delhi}}
 
 ====Declension====
 {{sh-decl-noun-unc
@@ -1039,8 +1039,6 @@ From {{bor|en|hi|दिल्ली}}/{{bor|en|ur|دلی|tr=delī}}, of {{unk|en
 |Delhijem
 }}
 
-[[Category:sh:Cities]]
-
 ----
 
 ==Spanish==
@@ -1049,7 +1047,7 @@ From {{bor|en|hi|दिल्ली}}/{{bor|en|ur|دلی|tr=delī}}, of {{unk|en
 ===Proper noun===
 {{es-proper noun|f}}
 
-# {{l|en|Delhi}} {{gloss|national capital territory and old city in northern India}}
+# {{place|es|city|c/India|t=Delhi}}
 
 ====Derived terms====
 * {{l|es|Nueva Delhi}}
@@ -4856,6 +4854,7 @@ Words in this section are requested for use in the article [[w:Traditional Chine
 *: mandarin: {{zh-l|走江湖}}
 * {{zh-l|係喎}}
 *: SOP: [[係]] + [[喎]] —&nbsp;[[User:Justinrleung|justin(r)leung]]&nbsp;<sub>{&nbsp;[[User_talk:Justinrleung|(t...)]]&nbsp;|&nbsp;[[Special:Contributions/Justinrleung|c=›]]&nbsp;}</sub> 04:19, 22 January 2020 (UTC)
+* {{zh-l|嚟緊頭}} - (of time) to be coming soon?
 
 ==Gan==
 {{shortcut|WT:RE:gan}}
@@ -7719,7 +7718,7 @@ Borrowed from {{bor|pt|en|Detroit}}, from {{der|pt|fr|détroit||strait}}.
 ===Proper noun===
 {{es-proper noun}}
 
-# {{l|en|Detroit}} {{gloss|largest city and former capital of Michigan}}
+# {{place|es|city|c/USA|t=Detroit}}
 -------- end text --------
 Page 49 Indianapolis: Found match for regex: {
 Page 49 Indianapolis: -------- begin text ---------
@@ -45512,5 +45511,5 @@ Page 1976 Fort Madison: -------- begin text ---------
 
 # {{place|en|city|s/Iowa|c/USA}}, and one of the [[county seat]]s of {{l|en|Lee County}}.
 -------- end text --------
-Elapsed time: 8 mins 2.98 secs
-Ending at Thu Feb 13 10:10:52 2020
+Elapsed time: 5 mins 18.28 secs
+Ending at Sat Feb 15 13:37:37 2020
