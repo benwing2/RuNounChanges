@@ -66,6 +66,7 @@ export.placetype_aliases = {
 	["arep"] = "autonomous republic",
 	["riv"] = "river",
 	["rcomun"] = "regional county municipality",
+	["rdist"] = "regional district",
 	["rmun"] = "regional municipality",
 	["runit"] = "regional unit",
 	["rurmun"] = "rural municipality",
@@ -105,15 +106,17 @@ export.placetype_aliases = {
 export.placetype_qualifiers = {
 	-- generic qualifiers
 	["huge"] = true,
-	["important"] = true,
+	["tiny"] = true,
 	["large"] = true,
+	["small"] = true,
+	["sizable"] = true,
+	["important"] = true,
 	["long"] = true,
+	["short"] = true,
 	["major"] = true,
 	["minor"] = true,
-	["short"] = true,
-	["small"] = true,
-	["tiny"] = true,
-	["sizable"] = true,
+	["high"] = true,
+	["low"] = true,
 	-- "former" qualifiers
 	["ancient"] = true,
 	["former"] = true,
@@ -157,6 +160,7 @@ export.placetype_qualifiers = {
 	["railroad"] = "[[railroad]]",
 	["railway"] = "[[railway]]",
 	["farming"] = "[[farming]]",
+	["fishing"] = "[[fishing]]",
 	["mining"] = "[[mining]]",
 	-- religious qualifiers
 	["holy"] = true,
@@ -166,9 +170,27 @@ export.placetype_qualifiers = {
 	-- qualifiers for nonexistent places
 	["fictional"] = true,
 	["mythological"] = true,
+	-- directional qualifiers
+	["northern"] = true,
+	["southern"] = true,
+	["eastern"] = true,
+	["western"] = true,
+	["north"] = true,
+	["south"] = true,
+	["east"] = true,
+	["west"] = true,
+	["northeastern"] = true,
+	["southeastern"] = true,
+	["northwestern"] = true,
+	["southwestern"] = true,
+	["northeast"] = true,
+	["southeast"] = true,
+	["northwest"] = true,
+	["southwest"] = true,
 	-- misc. qualifiers
 	["hilly"] = true,
 	["planned"] = true,
+	["chartered"] = true,
 }
 
 
@@ -196,6 +218,8 @@ export.placetype_links = {
 	["autonomous republic"] = "w",
 	["autonomous territory"] = "w",
 	["bailiwick"] = true,
+	["barangay"] = true, -- Philippines
+	["barrio"] = true, -- Spanish-speaking countries; Philippines
 	["bay"] = true,
 	["beach resort"] = "w",
 	["bishopric"] = true,
@@ -203,11 +227,14 @@ export.placetype_links = {
 	["borough seat"] = true,
 	["canton"] = true,
 	["cape"] = true,
+	["cathedral city"] = true,
+	["cattle station"] = true, -- Australia
 	["census area"] = true,
-	["census-designated place"] = true,
+	["census-designated place"] = true, -- United States
 	["central business district"] = true,
 	["ceremonial county"] = true,
 	["channel"] = true,
+	["charter community"] = "w", -- Northwest Territories, Canada
 	["civil parish"] = true,
 	["coal town"] = "w",
 	["collectivity"] = true,
@@ -218,8 +245,9 @@ export.placetype_links = {
 	["constituent country"] = true,
 	["contregion"] = "[[continental]] region",
 	["council area"] = true,
-	["county-administered city"] = "w",
-	["county-level city"] = "w",
+	["county-administered city"] = "w", -- Taiwan
+	["county-controlled city"] = "w", -- Taiwan
+	["county-level city"] = "w", -- China
 	["county borough"] = true,
 	["county seat"] = true,
 	["county town"] = true,
@@ -239,6 +267,7 @@ export.placetype_links = {
 	["federal city"] = "w",
 	["federal subject"] = "w",
 	["federal territory"] = "w",
+	["First Nations reserve"] = "[[First Nations]] [[w:Indian reserve|reserve]]", -- Canada
 	["former autonomous territory"] = "former [[w:autonomous territory|autonomous territory]]",
 	["former colony"] = "former [[colony]]",
 	["former maritime republic"] = "former [[maritime republic]]",
@@ -246,6 +275,7 @@ export.placetype_links = {
 	["former separatist state"] = "former [[separatist]] [[state]]",
 	["geographical region"] = "w",
 	["ghost town"] = true,
+	["glen"] = true,
 	["governorate"] = true,
 	["gulf"] = true,
 	["hamlet"] = true,
@@ -262,7 +292,8 @@ export.placetype_links = {
 	["home rule municipality"] = "w",
 	["housing estate"] = true,
 	["independent city"] = true,
-	["Indian reservation"] = "w",
+	["Indian reservation"] = "w", -- United States
+	["Indian reserve"] = "w", -- Canada
 	["inner city area"] = "[[inner city]] area",
 	["island country"] = "w",
 	["island municipality"] = "w",
@@ -275,6 +306,7 @@ export.placetype_links = {
 	["local government area"] = "w",
 	["local government district"] = "w",
 	["local government district with borough status"] = "[[w:local government district|local government district]] with [[w:borough status|borough status]]",
+	["local urban district"] = "w",
 	["locality"] = "[[w:locality (settlement)|locality]]",
 	["London borough"] = "w",
 	["macroregion"] = true,
@@ -283,10 +315,12 @@ export.placetype_links = {
 	["metropolitan borough"] = true,
 	["metropolitan county"] = true,
 	["metro station"] = true,
-	["minster town"] = "[[minster]] town",
+	["minster town"] = "[[minster]] town", -- England
 	["moor"] = true,
 	["moorland"] = true,
-	["mountain indigenous township"] = "[[mountain]] [[indigenous]] [[township]]",
+	["mountain indigenous district"] = "[[w:district (Taiwan)|mountain indigenous district]]", -- Taiwan
+	["mountain indigenous township"] = "[[w:township (Taiwan)|mountain indigenous township]]", -- Taiwan
+	["mountain pass"] = true,
 	["mountain range"] = true,
 	["mountainous region"] = "[[mountainous]] [[region]]",
 	["municipal district"] = "w",
@@ -302,6 +336,7 @@ export.placetype_links = {
 	["parish"] = true,
 	["parish municipality"] = "[[w:parish municipality (Quebec)|parish municipality]]",
 	["parish seat"] = true,
+	["pass"] = "[[mountain pass|pass]]",
 	["periphery"] = true,
 	["planned community"] = true,
 	["populated place"] = "[[w:populated place|locality]]",
@@ -315,25 +350,29 @@ export.placetype_links = {
 	["regency"] = true,
 	["regional capital"] = "[[regional]] [[capital]]",
 	["regional county municipality"] = "w",
+	["regional district"] = "w",
 	["regional municipality"] = "w",
 	["regional unit"] = "w",
 	["registration county"] = true,
+	["research base"] = "[[research]] [[base]]",
 	["residental area"] = "[[residential]] area",
 	["resort city"] = "w",
 	["resort town"] = "w",
 	["rural community"] = "w",
 	["rural municipality"] = "w",
-	["rural township"] = "[[w:rural township (Taiwan)|rural township]]",
+	["rural township"] = "[[w:rural township (Taiwan)|rural township]]", -- Taiwan
 	["satrapy"] = true,
 	["seaport"] = true,
 	["settlement"] = true,
+	["sheading"] = true, -- Isle of Man
+	["sheep station"] = true, -- Australia
 	["shire"] = true,
 	["shire county"] = "w",
 	["shire town"] = true,
 	["ski resort town"] = "[[ski resort]] town",
 	["spa city"] = "[[w:spa town|spa city]]",
 	["spa town"] = "w",
-	["special administrative region"] = "w",
+	["special administrative region"] = "w", -- China; North Korea; Indonesia; East Timor
 	["special collectivity"] = "w",
 	["spit"] = true,
 	["state capital"] = true,
@@ -370,7 +409,8 @@ export.placetype_links = {
 	["urban area"] = "[[urban]] area",
 	["urban township"] = "w",
 	["village municipality"] = "[[w:village municipality (Quebec)|village municipality]]",
-	["voivodeship"] = true,
+	["voivodeship"] = true, -- Poland
+	["ward"] = true,
 	["watercourse"] = true,
 }
 
@@ -410,26 +450,32 @@ export.placetype_equivs = {
 	["autonomous province"] = "province",
 	["autonomous territory"] = "dependent territory",
 	["bailiwick"] = "polity",
+	["barangay"] = "neighborhood", -- not completely correct, barangays are formal administrative divisions of a city
+	["barrio"] = "neighborhood", -- not completely correct, in some countries barrios are formal administrative divisions of a city
 	["bishopric"] = "polity",
 	["built-up area"] = "area",
 	["cape"] = "peninsula",
 	["capital"] = "capital city",
+	["cathedral city"] = "city",
 	["central business district"] = "neighborhood",
 	["ceremonial county"] = "county",
 	["chain of islands"] = "island",
+	["charter community"] = "village",
 	["commandery"] = "historical political subdivision",
 	["community"] = "village",
 	["constituent country"] = "country",
 	["contregion"] = "region",
+	["county-controlled city"] = "county-administered city",
 	["county-level city"] = "prefecture-level city",
 	["crown dependency"] = "dependency",
-	["distributary"] = "tributary",
-	["district municipality"] = "municipality",
+	["distributary"] = "river",
 	["duchy"] = "polity",
 	["empire"] = "polity",
 	["external territory"] = "dependent territory",
 	["federal territory"] = "territory",
+	["First Nations reserve"] = "Indian reserve",
 	["geographical region"] = "region",
+	["glen"] = "valley",
 	["group of islands"] = "island",
 	["hamlet"] = "village",
 	["harbor city"] = "city",
@@ -505,6 +551,7 @@ export.placetype_equivs = {
 	["legislative capital"] = "capital city",
 	["local authority district"] = "local government district",
 	["local government district with borough status"] = "local government district",
+	["local urban district"] = "unincorporated community",
 	["locality"] = "village", -- not necessarily true
 	["market town"] = "town",
 	["mediaeval city"] = "ancient city",
@@ -512,6 +559,7 @@ export.placetype_equivs = {
 	["metropolitan county"] = "county",
 	["minster town"] = "town",
 	["moorland"] = "moor",
+	["mountain indigenous district"] = "district",
 	["mountain indigenous township"] = "township",
 	["mountain range"] = "mountain",
 	["mountainous region"] = "region",
@@ -524,20 +572,23 @@ export.placetype_equivs = {
 	["overseas collectivity"] = "collectivity",
 	["overseas department"] = "department",
 	["overseas territory"] = "territory",
+	["pass"] = "mountain pass",
 	["populated place"] = "village", -- not necessarily true
 	["port city"] = "city",
 	["port town"] = "town",
 	["regional municipality"] = "municipality",
 	["resort city"] = "city",
 	["settlement"] = "village",
+	["sheading"] = "district",
 	["shire"] = "county",
 	["shire county"] = "county",
-	["shire town"] = "county town",
+	["shire town"] = "county seat",
 	["spa city"] = "city",
 	["spit"] = "peninsula",
 	["state park"] = "park",
 	["statutory city"] = "city",
 	["statutory town"] = "town",
+	["stream"] = "river",
 	["submerged ghost town"] = "ghost town",
 	["suburban area"] = "suburb",
 	["subway station"] = "metro station",
@@ -554,6 +605,7 @@ export.placetype_equivs = {
 	["urban township"] = "township",
 	["town with bystatus"] = "town",
 	["tributary"] = "river",
+	["ward"] = "neighborhood", -- not completely correct, barangays are formal administrative divisions of a city
 }
 
 
@@ -622,6 +674,7 @@ export.placename_cat_aliases = {
 		["Edinburgh"] = "City of Edinburgh",
 		["Aberdeen"] = "City of Aberdeen",
 		["Dundee"] = "City of Dundee",
+		["Western Isles"] = "Na h-Eileanan Siar",
 	},
 	["country"] = {
 		-- will categorize into e.g. "Cities in Burma".
@@ -684,6 +737,7 @@ export.placename_the_re = {
 	["country"] = {"^Republic of ", " Republic$"},
 	["republic"] = {"^Republic of ", " Republic$"},
 	["region"] = {" [Rr]egion$"},
+	["river"] = {" River$"},
 	["local government area"] = {"^Shire of "},
 	["county"] = {"^Shire of "},
 	["Indian reservation"] = {" Reservation", " Nation"},
@@ -1606,6 +1660,14 @@ export.cat_data = {
 		preposition="of",
 	},
 
+	["district municipality"] = {
+		preposition="of",
+		display_handler = function(holonym_placetype, holonym_placename)
+			return suffix_display_handler("district municipality", holonym_placename, {"district", "municipality"})
+		end,
+		fallback="municipality",
+	},
+
 	["division"] = {
 		preposition="of",
 
@@ -1838,6 +1900,12 @@ export.cat_data = {
 	},
 
 	["mountain"] = {
+		["default"] = {
+			["itself"] = {true},
+		},
+	},
+
+	["mountain pass"] = {
 		["default"] = {
 			["itself"] = {true},
 		},
@@ -2081,6 +2149,20 @@ export.cat_data = {
 
 		["country/Romania"] = {
 			["country"] = {true},
+		},
+	},
+
+	["regional district"] = {
+		preposition="of",
+		holonym_article="the",
+		display_handler = function(holonym_placetype, holonym_placename)
+			return prefix_display_handler("Regional District of", holonym_placename,
+				"district")
+		end,
+		fallback="district",
+
+		["province/British Columbia"] = {
+			["itself"] = {"Regional districts of +++"},
 		},
 	},
 
