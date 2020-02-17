@@ -1,4 +1,4 @@
-Beginning at Tue Feb 11 22:13:09 2020
+Beginning at Sun Feb 16 22:19:02 2020
 Page 1 Aberfoyle: Found match for regex: =
 Page 1 Aberfoyle: -------- begin text ---------
 ==English==
@@ -246,7 +246,7 @@ Page 5 Anaconda: -------- begin text ---------
 {{en-proper noun}}
 
 # {{place|en|unincorporated community|co/Franklin County|s/Missouri|c/USA}}.
-# {{place|en|city|s/Montana|c/USA}}, situated at the foot of the {{w|Anaconda Range}}. It is the [[county seat]] of {{l|en|Deer Lodge County}}.
+# {{place|en|city/county seat|co/Deer Lodge County|s/Montana|c/USA}}, situated at the foot of the {{w|Anaconda Range}}.
 # a [[ghost town]] in the {{l|en|Boundary Country}} of [[British Columbia]], [[Canada]].
 
 {{C|en|British Columbia}}
@@ -802,6 +802,7 @@ Various place names in England, from {{der|en|ang|brād}} "broad" + {{m|ang|ford
 * {{l|en|Bradford County}}
 * {{l|en|Bradfordian}}
 * {{l|en|Bradford-on-Avon}}
+* {{l|en|Bradford Peverell}}
 
 ====Translations====
 {{trans-top|town in West Yorkshire}}
@@ -1789,9 +1790,9 @@ Page 57 Fort Smith: -------- begin text ---------
 ===Proper noun===
 {{en-proper noun|head=[[fort|Fort]] [[Smith]]}}
 
-# {{place|en|city|s/Arkansas}}, and one of the two [[county seat]]s of {{l|en|Sebastian County}}.
-# {{place|en|census-designated place|s/Montana}}.
 # {{place|en|town|terr/Northwest Territories|c/Canada}}.
+# {{place|en|A <<city>> in <<s/Arkansas>>, <<c/USA>> and one of the two <<county seat>>s of <<co/Sebastian County>>}}.
+# {{place|en|census-designated place|s/Montana}}.
 
 {{C|en|Northwest Territories}}
 [[Category:English eponyms]]
@@ -2191,8 +2192,8 @@ Page 76 Kings County: -------- begin text ---------
 ===Proper noun===
 {{en-proper noun|head=[[king|Kings]] [[county|County]]}}
 
-# one of 58 counties in [[California]], [[USA]], with its [[county seat]] in {{l|en|Hanford}}. Named after the {{w|Kings River (California)|Kings River}}.
-# one of 62 counties in [[New York]], USA; it is [[coterminous]] with the [[New York City]] [[borough]] of {{l|en|Brooklyn}}.
+# {{place|en|One of 58 <<counties>> in <<s/California>>, <<c/USA>>|seat=Hanford}}. Named after the {{w|Kings River (California)|Kings River}}.
+# {{place|en|One of 62 <<counties>> in <<s/New York>>, <<c/USA>>}}; it is [[coterminous]] with the [[New York City]] [[borough]] of {{l|en|Brooklyn}}.
 # {{place|en|county|p/New Brunswick|c/Canada}}.
 # {{place|en|county|p/Nova Scotia|c/Canada}}.
 # a county on [[Prince Edward Island]], Canada.
@@ -2200,7 +2201,7 @@ Page 76 Kings County: -------- begin text ---------
 ===References===
 * {{pedia|Index of U.S. counties#K}}
 
-{{C|en|Counties of California, USA|Counties of New York, USA|Counties of New Brunswick|Counties of Nova Scotia|Prince Edward Island}}
+{{C|en|Counties of New York, USA|Counties of New Brunswick|Counties of Nova Scotia|Prince Edward Island}}
 -------- end text --------
 Page 77 Kinuso: Found match for regex: =
 Page 77 Kinuso: -------- begin text ---------
@@ -4243,5 +4244,5 @@ From {{inh|en|enm|sleve}}, {{m|enm|slefe}}, from {{inh|en|ang|slīef}} and {{m|a
 [[Category:en:British Columbia]]
 [[Category:en:Clothing]]
 -------- end text --------
-Elapsed time: 0 mins 27.77 secs
-Ending at Tue Feb 11 22:13:36 2020
+Elapsed time: 0 mins 23.99 secs
+Ending at Sun Feb 16 22:19:26 2020
