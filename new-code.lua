@@ -14,7 +14,7 @@ TODO:
 10. split slash only once to correctly handle twp/Admaston/Bromley.
 11. make sure district -> neighborhood handles municipality and lgarea correctly.
 11. 'rumun' -> 'rural municipality' and should render as 'the Rural Municipality of ...'. (DONE)
-12. Not properly categorizing Places in the Northwest Territories? Or remove_redundant_place_cats.py not working. cf. Fort Smith.
+12. Not properly categorizing Places in the Northwest Territories? Or remove_redundant_place_cats.py not working. cf. Fort Smith. (DONE)
 13. Should add categories for 'neighborhoods of CITY' and 'suburbs of CITY'.
 14. Should add 'Places in Brooklyn, Places in the Bronx', etc. Requires several changes, e.g.
     handling 'the' in city/borough names.
@@ -24,7 +24,7 @@ TODO:
 18. In {{place|en|suburb|in|lgarea/City of Joondalup|near|city/Perth|s/Western Australia}}., "in" shouldn't be necessary.
 19. Similarly, "on" before islands shouldn't be necessary.
 20. 'independent city'
-21. 'unrecognized territory'
+21. 'unrecognized territory', 'unrecognised territory'
 22. 'crossroads'
 23. Fix Midway, Washington County, Oregon; revert vandalism (DONE)
 24. 'mining', 'farming', 'logging', 'gold mining' as qualifiers
@@ -33,7 +33,7 @@ TODO:
 27. 'sound', 'mouth'
 28. 'ski resort town'
 29. 'statutory town'
-30. 'barangay' is a type of neighborhood.
+30. 'barangay' is a type of neighborhood. (DONE)
 31. 'beach resort', 'ski resort', 'resort'
 32. 'metarea' = 'metropolitan area'
 33. 'rcomun' = 'regional county municipality' (Quebec)
@@ -55,19 +55,27 @@ TODO:
 48. 'robor' = 'royal borough', display 'Royal Borough of' as prefix
 49. 'gated community'
 50. 'corregimiento' (in Panama)
-51. 'barrio' = neighborhood
+51. 'barrio' = neighborhood (DONE)
 52. 'mission'
 53. 'fort', 'fortress'
-54. 'ward' = neighborhood
+54. 'ward' = neighborhood (DONE)
 55. 'seaport'
 56. 'shire town' = treat like 'county seat' (DONE)
-57. 'chartered village'
-58. 'county-controlled city'
+57. 'chartered village' (DONE)
+58. 'county-controlled city' (DONE)
 59. Fix Clearwater, British Columbia: '''Clearwater''' is a [[district municipality]] in the North [[Thompson River]] valley in [[British Columbia]], Canada, where the [[Clearwater River (British Columbia)|Clearwater River]] empties into the North Thompson River. It is located {{convert|124|km|mi|0|abbr=on}} north of [[Kamloops]]. The District of Clearwater was established on December 23, 2007, making it one of the newest municipalities in British Columbia. It is near [[Wells Gray Provincial Park]] and is surrounded by the [[Trophy Mountains]], [[Raft Peak]], [[Grizzly Peak]] and [[Dunn Peak]]. (DONE)
-60. 'local urban district' (Manitoba)
-61. 'cattle station' (Australia)
-62. 'South Dublin', 'Fingal' and 'Dún Laoghaire–Rathdown' are counties of Ireland but don''t have 'County' preceding them'
-
+60. 'local urban district' (Manitoba) (DONE)
+61. 'cattle station' (Australia) (DONE)
+62. 'South Dublin', 'Fingal' and 'Dún Laoghaire–Rathdown' are counties of Ireland but don''t have 'County' preceding them
+63. 'charter community' (DONE)
+64. 'mountain pass' (DONE)
+65. 'high', 'low' as qualifiers (DONE)
+66. 'research base' (DONE)
+67. 'glen' = valley (DONE)
+68. 'First Nations reserve', 'Indian reserve' (DONE)
+69. 'cathedral city' (DONE)
+70. 'northern', 'southern', 'eastern', 'western', 'north', 'south', 'east', 'west' as qualifiers (DONE)
+71. 'sheading' = 'district' (Isle of Man) (DONE)
 
 place-shared-data.lua:
 
