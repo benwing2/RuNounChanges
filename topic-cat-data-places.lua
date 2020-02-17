@@ -60,6 +60,7 @@ local general_labels = {
 	{"kibbutzim", "[[kibbutz]]im", {"places"}},
 	{"lakes", "[[lake]]s", {"places", "water"}},
 	{"landforms", "[[landform]]s", {"Earth"}},
+	{"mountain passes", "[[mountain pass]]es", {"places"}},
 	{"mountains", "[[mountain]]s", {"places"}},
 	{"moors", "[[moor]]s", {"places"}},
 	{"neighborhoods", "[[neighborhood]]s, [[district]]s and other subportions of a [[city]]", {"places"}},
@@ -440,7 +441,10 @@ labels["counties of Northern Ireland"] = {
 	parents = {{name = "political subdivisions", sort = "Northern Ireland"}, {name = "counties of Ireland", sort = "Northern Ireland"}, "Northern Ireland", "list of sets"},
 }
 
---Canadian counties
+-------------------------------------
+-- Canadian political subdivisions --
+-------------------------------------
+
 -- only these five provinces have counties
 for _, province in ipairs({"New Brunswick", "Nova Scotia", "Ontario", "Prince Edward Island", "Quebec"}) do
 	labels["counties of " .. province] = {
@@ -449,7 +453,26 @@ for _, province in ipairs({"New Brunswick", "Nova Scotia", "Ontario", "Prince Ed
 	}
 end
 
--- municipalities
+labels["municipal districts of British Columbia"] = {
+	description = "{{{langname}}} names of [[w:municipal district]]s of [[Alberta]], a [[province]] of [[Canada]].",
+	parents = {{name = "political subdivisions", sort = "Alberta"}, "Alberta", "list of sets"},
+}
+
+labels["regional county municipalities of Quebec"] = {
+	description = "{{{langname}}} names of [[w:regional county municipality|regional county municipalities]] of [[Quebec]], a [[province]] of [[Canada]].",
+	parents = {{name = "political subdivisions", sort = "Quebec"}, "Quebec", "list of sets"},
+}
+
+labels["regional districts of British Columbia"] = {
+	description = "{{{langname}}} names of [[w:regional district]]s of [[British Columbia]], a [[province]] of [[Canada]].",
+	parents = {{name = "political subdivisions", sort = "British Columbia"}, "British Columbia", "list of sets"},
+}
+
+for _, province in ipairs({"British Columbia", "Nova Scotia", "Ontario"}) do
+labels["regional municipalities of " .. province] = {
+	description = "{{{langname}}} names of [[w:regional municipality|regional municipalities]] of [[" .. province .. "]], a [[province]] of [[Canada]].",
+	parents = {{name = "political subdivisions", sort = province}, province, "list of sets"},
+}
 
 for _, province in ipairs({"Saskatchewan", "Manitoba", "Prince Edward Island"}) do
 	labels["rural municipalities of " .. province] = {
@@ -457,11 +480,6 @@ for _, province in ipairs({"Saskatchewan", "Manitoba", "Prince Edward Island"}) 
 		parents = {{name = "rural municipalities", sort = province}, province, "list of sets"},
 	}
 end
-
-labels["regional county municipalities of Quebec"] = {
-	description = "{{{langname}}} names of [[w:regional county municipality|regional county municipalities]] of [[Quebec]].",
-	parents = {{name = "political subdivisions", sort = "Quebec"}, "Quebec", "list of sets"},
-}
 
 -- regions and "regional units"
 
