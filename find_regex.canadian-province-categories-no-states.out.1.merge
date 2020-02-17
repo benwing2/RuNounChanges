@@ -8,10 +8,8 @@ Page 1 Aberfoyle: -------- begin text ---------
 {{en-proper noun}}
 
 # {{place|en|village|council area/Stirling|cc/Scotland}} {{q|[[OS]] grid ref NN5201}}.
-# A community in {{w|Puslinch, Ontario}}, [[Canada]].
+# {{place|en|community|twp/{{w|Puslinch, Ontario|Puslinch}}|p/Ontario|c/Canada|;|suburb|city/Guelph}}.
 # {{place|en|unincorporated community|co/Hunt County|s/Texas|c/USA}}.
-
-{{c|en|Ontario}}
 -------- end text --------
 Page 2 Alberta: Found match for regex: =
 Page 2 Alberta: -------- begin text ---------
@@ -31,7 +29,7 @@ Page 2 Alberta: -------- begin text ---------
 ===Proper noun===
 {{en-proper noun}}
 
-# {{place|en|[[province]]|in western|c/en:Canada|capital=[[Edmonton]]}}.
+# {{place|en|province|in western|c/Canada|capital=Edmonton}}.
 # {{given name|en|female|from=Germanic languages}}, a feminine form of [[Albert]].
 #* '''1936''', {{w|George Weller}}, ''Clutch and Differential'', Ayer, 1970, {{ISBN|0836936590}}, page 196,
 #*: '''Alberta''' is more like a man's name than any other name that comes from a men's, more than Georgianna which is just like a magnolia blossom or Henrietta which most people change to Etta or Geraldine which nobody ever thinks of coming from a man's Irish name like Gerald. '''Alberta''' also sounds sort of Canadian, and everything from Canada is masculine the way everything from Mexico is feminine, even the men. In saying it carelessly or reading it you hardly notice the ''a'' in the end.
@@ -107,7 +105,6 @@ Page 2 Alberta: -------- begin text ---------
 
 [[Category:English eponyms]]
 [[Category:en:Alberta]]
-[[Category:en:Provinces of Canada]]
 
 ----
 
@@ -116,7 +113,7 @@ Page 2 Alberta: -------- begin text ---------
 ===Proper noun===
 {{cs-proper noun|g=f}}
 
-# {{l|en|Alberta}}
+# {{place|cs|province|c/Canada|t1=Alberta}}
 
 ----
 
@@ -168,12 +165,10 @@ Named after [[w:Princess Louise, Duchess of Argyll|Princess Louise Caroline Albe
 ===Proper noun===
 {{fr-proper noun|f}}
 
-# {{l|en|Alberta}}
+# {{place|fr|province|c/Canada|t1=Alberta}}
 
 ===Anagrams===
 * {{l|fr|ablater}}, {{l|fr|albâtre}}, {{l|fr|blatéra}}, {{l|fr|tablera}}
-
-[[Category:fr:Provinces of Canada]]
 
 ----
 
@@ -205,8 +200,8 @@ Page 3 Alcona: -------- begin text ---------
 ===Proper noun===
 {{en-proper noun}}
 
-# a community in {{l|en|Innisfil}}, {{l|en|Simcoe County}}, [[Ontario]], [[Canada]].
-# {{place|en|settlement|town/Sioux Lookout}}, {{l|en|Kenora}} District, Northwestern [[Ontario]], Canada.
+# {{place|en|community|town/Innisfil|co/Simcoe County|p/Ontario|c/Canada}}.
+# {{place|en|settlement|town/Sioux Lookout|dist/Kenora District|r/Northwestern Ontario|p/Ontario|c/Canada}}.
 # {{place|en|unincorporated community|co/Alcona County|s/Michigan|c/USA}}.
 
 ====Derived terms====
@@ -229,12 +224,12 @@ After the HMS ''Alert''
 ===Proper noun===
 {{en-proper noun}}
 
-# The northernmost inhabited place in [[Nunavut]], [[Canada]]
+# {{place|en|community|r/Qikiqtaaluk Region|terr/Nunavut|c/Canada}}; the northernmost permanently inhabited place in the world.
+# {{place|en|An alternative name for {{w|Alharod, Varzaqan|Alharod}}, a <<village>> in <<co/Varzaqan County>>, <<p/East Azerbaijan Province>>, <<c/Iran>>}}.
+# {{place|en|unincorporated community|twp/Jackson Township|co/Decatur County|s/Indiana|c/USA}}.
 
 ===Anagrams===
 * {{anagrams|en|a=aelrt|alter|alter-|altre|artel|later|ratel|taler|telar}}
-
-[[Category:en:Nunavut]]
 -------- end text --------
 Page 5 Anaconda: Found match for regex: {
 Page 5 Anaconda: -------- begin text ---------
@@ -245,11 +240,9 @@ Page 5 Anaconda: -------- begin text ---------
 ===Proper noun===
 {{en-proper noun}}
 
+# {{place|en|ghost town|in the|dist/Boundary Country|p/British Columbia|c/Canada}}.
 # {{place|en|unincorporated community|co/Franklin County|s/Missouri|c/USA}}.
 # {{place|en|city/county seat|co/Deer Lodge County|s/Montana|c/USA}}, situated at the foot of the {{w|Anaconda Range}}.
-# a [[ghost town]] in the {{l|en|Boundary Country}} of [[British Columbia]], [[Canada]].
-
-{{C|en|British Columbia}}
 -------- end text --------
 Page 6 Anzac: Found match for regex: {
 Page 6 Anzac: -------- begin text ---------
@@ -262,7 +255,7 @@ Page 6 Anzac: -------- begin text ---------
 # {{alt form|en|ANZAC}}
 #* '''2005''', Joe Bennett, ''A Land of Two Halves'' (page 43)
 #*: At Milton the road is blocked by yet another '''Anzac''' parade, a straggle of people raw-faced in the cold.
-#{{place|en|hamlet|prov/Alberta}}.
+# {{place|en|hamlet|in northern|p/Alberta}}.
 
 ====Derived terms====
 * {{l|en|Anzac biscuit}}
@@ -276,8 +269,6 @@ Page 6 Anzac: -------- begin text ---------
 
 ===Anagrams===
 * {{anagrams|en|a=aacnz|Nazca}}
-
-{{topics|en|Alberta}}
 
 ----
 
@@ -296,8 +287,8 @@ Page 7 Ayton: -------- begin text ---------
 ===Proper noun===
 {{en-proper noun}}
 
-# A [[village]] in the {{l|en|Scottish Borders}} [[council area]], [[Scotland]] {{q|[[OS]] grid ref NT9261}}.
-# A [[community]] in {{w|Grey County}}, [[Ontario]], [[Canada]].
+# {{place|en|village|in the|carea/Scottish Borders|cc/Scotland}} {{q|[[OS]] grid ref NT9261}}.
+# {{place|en|community|in the municipality of|mun/West Grey|co/Grey County|p/Ontario|c/Canada}}.
 # {{surname|en}}
 
 ====Derived terms====
@@ -305,8 +296,6 @@ Page 7 Ayton: -------- begin text ---------
 
 ===Anagrams===
 * {{anagrams|en|a=anoty|Tonya|atony|ayont|tonya}}
-
-{{c|en|Villages in Scotland|Ontario}}
 -------- end text --------
 Page 8 Bainbridge: Found match for regex: =
 Page 8 Bainbridge: -------- begin text ---------
@@ -317,6 +306,7 @@ Page 8 Bainbridge: -------- begin text ---------
 {{en-proper noun|~|Bainbridges}}
 
 # {{surname|en}}
+# {{place|en|locality/and/ghost town|p/British Columbia|c/Canada}}.
 # {{place|en|village/and/civil parish|dist/Richmondshire|co/North Yorkshire|cc/England}} {{q|[[OS]] grid ref SD9390}}.
 # {{place|en|city/county seat|co/Decatur County|s/Georgia|c/USA}}.
 # {{place|en|town|co/Putnam County|s/Indiana|c/USA}}.
@@ -324,12 +314,9 @@ Page 8 Bainbridge: -------- begin text ---------
 # {{place|en|census-designated place|co/Geauga County|s/Ohio|c/USA}}.
 # {{place|en|village|co/Ross County|s/Ohio}}.
 # {{place|en|census-designated place|co/Lancaster County|s/Pennsylvania|c/USA}}.
-# A location in {{l|en|British Columbia}}, [[Canada]].
 
 ===Statistics===
 * According to the 2010 United States Census, ''Bainbridge'' is the 9751<sup>st</sup> most common surname in the United States, belonging to 3324 individuals. ''Bainbridge'' is most common among White (93.92%) individuals.
-
-{{c|en|British Columbia}}
 -------- end text --------
 Page 9 Baltic: Found match for regex: {
 Page 9 Baltic: -------- begin text ---------
@@ -454,13 +441,16 @@ From {{bor|en|la|Balticus}}, from {{der|en|la|Balthae||dwellers near the Baltic 
 {{en-proper noun}}
 
 # The [[Baltic Sea]].
+# {{place|en|region|r/Northern Europe|surrounding the Baltic Sea}}.
 #* {{quote-text|en|year=1906|author=Robert Barr|title=A Rock in the Baltic|passage=Well, you see, I was temporarily in command of the cruiser coming down the '''Baltic''', and passing an island rock a few miles away, I thought it would be a good opportunity to test a new gun that had been put aboard when we left England.}}
 # The areas on the southeastern coast of the Baltic Sea; the [[w:Baltic states|Baltic states]]
 #* {{rfdate|en}}, {{w|Thomas Malthus}}, ''Importation of Foreign Corn'':
 #*: It appears from the evidence, that the corn from the '''Baltic''' is often very heavily taxed, and that this tax is generally raised in proportion to our necessities.
 # The Baltic [[language]] [[family]]; the [[w:Baltic languages|Baltic languages]]
-# {{place|en|city|s/South Dakota}}.
-# {{place|en|village|s/Ohio}}.
+# {{place|en|unincorporated area|co/Kings County|in eastern|p/Prince Edward Island|c/Canada}}.
+# {{place|en|village/and/CDP|in the center of the town of|town/Sprague|s/Connecticut}}.
+# {{place|en|village|co/Coshocton County|co/Holmes County|and|co/Tuscarawas County|s/Ohio}}.
+# {{place|en|city|co/Minnehaha County|s/South Dakota}}.
 
 ====Derived terms====
 {{rel-top|terms derived from Baltic (proper noun)}}
@@ -538,8 +528,6 @@ From {{bor|en|la|Balticus}}, from {{der|en|la|Balthae||dwellers near the Baltic 
 ====Further reading====
 * {{ISO 639|5code=bat}}
 
-[[Category:en:Prince Edward Island]]
-[[Category:en:Regions in Europe]]
 {{topics|en|Language families}}
 -------- end text --------
 Page 10 Barnwell: Found match for regex: =
@@ -554,10 +542,10 @@ Page 10 Barnwell: -------- begin text ---------
 
 {{en-prop}}
 
+# {{place|en|village|mundist/Taber|p/Alberta|c/Canada}}.
 # {{place|en|suburb|city/Cambridge|co/Cambridgeshire|cc/England}} {{q|[[OS]] grid ref TL4658}}.
-# a village in {{l|en|East Northamptonshire}} District, [[Northamptonshire]], England {{q|OS grid ref TL0485}}.
-# a village in the {{w|Municipal District of Taber}}, [[Alberta]], [[Canada]].
-# {{place|en|ghost town|co/San Bernardino County|s/California|c/USA}}
+# {{place|en|village|lgdist/East Northamptonshire|co/Northamptonshire|cc/England}} {{q|OS grid ref TL0485}}.
+# {{place|en|ghost town|co/San Bernardino County|s/California|c/USA}}.
 # {{place|en|city/county seat|co/Barnwell County|s/South Carolina|c/USA}}.
 
 ====Derived terms====
@@ -565,8 +553,6 @@ Page 10 Barnwell: -------- begin text ---------
 
 ===Statistics===
 * According to the 2010 United States Census, ''Barnwell'' is the 7006<sup>th</sup> most common surname in the United States, belonging to 4781 individuals. ''Barnwell'' is most common among White (61.39%) and Black/African American (32.59%) individuals.
-
-{{c|en|Villages in England|Alberta}}
 -------- end text --------
 Page 11 Belton: Found match for regex: =
 Page 11 Belton: -------- begin text ---------
@@ -577,19 +563,19 @@ Page 11 Belton: -------- begin text ---------
 {{en-proper noun|~|Beltons}}
 
 # {{surname|en}}
+# {{place|en|community|mun/Thames Centre|co/Middlesex County|p/Ontario|c/Canada}}.
+# {{place|en|small village/and/civil parish|lgdist/North West Leicestershire|co/Leicestershire|cc/England}} {{q|[[OS]] grid ref SK4420}}.
+# {{place|en|village|civil parish/Belton and Manthorpe|lgdist/South Kesteven|co/Lincolnshire|cc/England}} {{q|OS grid ref SK9338}}.
+# {{place|en|village|uauth/North Lincolnshire|co/Lincolnshire|cc/England}} {{q|OS grid ref SE7806}}.
+# {{place|en|village|civil parish/Belton with Browston|co/Norfolk|cc/England}} {{q|OS grid ref SK9338}}.
 # {{place|en|unincorporated community|co/Muhlenberg County|s/Kentucky|c/USA}}.
 # {{place|en|city|co/Cass County|s/Missouri|c/USA}}.
+# {{place|en|The former name of an <<unincorporated community>> and <<CDP>> in eastern <<co/Flathead County>>, <<Montana>>, <<c/USA>>}}, now known as {{w|West Glacier, Montana|West Glacier}}.
 # {{place|en|city|co/Anderson County|s/South Carolina|c/USA}}.
 # {{place|en|city/county seat|co/Bell County|s/Texas|c/USA}}.
-# a community in {{l|en|Thames Centre}}, [[Ontario]], [[Canada]].
-# a village in {{l|en|North West Leicestershire}}, [[England]] {{q|[[OS]] grid ref SK4420}}.
-# a village in {{l|en|South Kesteven}}, [[Lincolnshire]], England {{q|OS grid ref SK9338}}.
-# a village in {{l|en|North Lincolnshire}}, England {{q|OS grid ref SE7806}}.
 
 ===Statistics===
 * According to the 2010 United States Census, ''Belton'' is the 3939<sup>th</sup> most common surname in the United States, belonging to 9041 individuals. ''Belton'' is most common among Black/African American (62.06%) and White (30.49%) individuals.
-
-{{C|en|Ontario|Villages in England}}
 
 ===Anagrams===
 * {{anagrams|en|a=belnot|Bolten}}
@@ -606,17 +592,15 @@ Most places get their name from bends in rivers.
 ===Proper noun===
 {{en-prop}}
 
+# {{place|en|ghost town/and/former railway community|in central|p/British Columbia|c/Canada}}. Named after a 90-degree curve in the railway line.
 # {{place|en|census-designated place|co/Tehama County|s/California|c/USA}}.
 # {{place|en|unincorporated community|co/Maries County|s/Missouri|c/USA}}.
 # {{place|en|city/county seat|co/Deschutes County|s/Oregon|c/USA}}.
 # {{place|en|unincorporated community|co/Meade County|s/South Dakota|c/USA}}.
 # {{place|en|unincorporated community|co/Lampasas County|and|co/San Saba County|s/Texas|c/USA}}.
-# the remains of a railway community in central [[British Columbia]], [[Canada]]. Named after a 90-degree curve in the railway line.
 
 ===Anagrams===
 * {{anagrams|en|a=bden|D. Neb.}}
-
-{{c|en|British Columbia}}
 -------- end text --------
 Page 13 Big Lake: Found match for regex: =
 Page 13 Big Lake: -------- begin text ---------
@@ -628,15 +612,13 @@ Page 13 Big Lake: -------- begin text ---------
 
 # the name of many lakes.
 # {{place|en|residential area|city/Edmonton|p/Alberta|c/Canada}}.
-# a rural community and lake in {{l|en|Halifax}} regional municipality, [[Nova Scotia]], Canada.
+# {{place|en|rural community/and/lake|rmun/Halifax Regional Municipality|p/Nova Scotia|c/Canada}}.
 # {{place|en|census-designated place|bor/Matanuska-Susitna Borough|s/Alaska|c/USA}}.
 # {{place|en|city|co/Sherburne County|s/Minnesota|c/USA}}.
 # {{place|en|unincorporated community/and/census-designated place|co/Carlton County|s/Minnesota}}.
 # {{place|en|village|co/Holt County|s/Missouri|c/USA}}.
 # {{place|en|city/county seat|co/Reagan County|s/Texas|c/USA}}.
 # {{place|en|census-designated place|co/Skagit County|s/Washington|c/USA}}.
-
-{{C|en|Nova Scotia}}
 
 ===Anagrams===
 * {{anagrams|en|a=abegikl|Bigalke|baglike}}
@@ -656,14 +638,12 @@ Page 14 Birr: -------- begin text ---------
 {{en-proper noun|-|Birrs}}
 
 # {{surname|en}}
-# A [[town]] in County {{l|en|Offaly}}, [[Ireland]].
-# A community in {{l|en|Middlesex County}}, [[Ontario]], [[Canada]].
-# A municipality in the canton of {{l|en|Aargau}}, [[Switzerland]].
+# {{place|en|community|twp/Middlesex Centre|co/Middlesex County|p/Ontario|c/Canada}}.
+# {{place|en|town|co/Offaly|c/Ireland}}.
+# {{place|en|municipality|in the canton of|can/Aargau|c/Switzerland}}.
 
 ===Statistics===
 * According to the 2010 United States Census, ''Birr'' is the 25255<sup>th</sup> most common surname in the United States, belonging to 981 individuals. ''Birr'' is most common among White (93.58%) individuals.
-
-{{c|en|Towns in Ireland|Ontario|Switzerland}}
 -------- end text --------
 Page 15 Blackfalds: Found match for regex: =
 Page 15 Blackfalds: -------- begin text ---------
@@ -672,12 +652,10 @@ Page 15 Blackfalds: -------- begin text ---------
 ===Proper noun===
 {{en-proper noun}}
 
-#{{place|en|town|prov/Alberta|c/Canada|north of [[Red Deer]]}}.
+# {{place|en|town|in central|p/Alberta|c/Canada}}, north of [[Red Deer]].
 
 ====Further reading====
 *{{pedialite}}
-
-{{topic|en|Alberta}}
 -------- end text --------
 Page 16 Blenheim: Found match for regex: =
 Page 16 Blenheim: -------- begin text ---------
@@ -693,19 +671,24 @@ The house was named to commemorate the Allied victory at the 1704 {{w|Battle of 
 ===Proper noun===
 {{en-proper noun}}
 
-# {{place|en|large country house|({{w|Blenheim Palace}}) in|co/Oxfordshire|cc/England}}, owned by the Dukes of Marlborough {{q|[[OS]] grid ref SP4416}}.
-# {{place|en|town|c/New Zealand}}, the largest in the {{l|en|Marlborough}} region of the [[South Island]].
-# A town in [[Ontario]], [[Canada]].
+# {{place|en|rural locality|lgarea/Lockyer Valley Region|s/Queensland|c/Australia}}.
+# {{place|en|unincorporated community|in the municipality of|mun/Chatham-Kent|p/Ontario|c/Canada}}.
+# {{place|small inner-city area|city/Leeds|co/West Yorkshire|cc/England}}.
+# {{place|en|civil parish|lgdist/West Oxfordshire|co/Oxfordshire|cc/England}}.
+# {{place|en|town|r/Marlborough|isl/South Island|c/New Zealand}}, the largest in the region.
+# {{place|en|unincorporated community|twp/Gloucester Township|co/Camden County|s/New Jersey|c/USA}}.
+# {{place|en|small town|co/Schoharie County|s/New York|c/USA}}.
+# {{place|en|small town|co/Marlboro County|s/South Carolina|c/USA}}.
+# {{place|en|unincorporated community|co/Albemarle County|s/Virginia|c/USA}}.
 
 ===Noun===
 {{en-noun}}
 
-# Colour variation of two toy [[spaniel]] breeds, chestnut brown with pearl white markings.
+# A colour variation of two toy [[spaniel]] breeds, chestnut brown with pearl white markings.
 
 ===References===
 * {{R:Lexico}}
 
-[[Category:en:Ontario]]
 [[Category:en:Spaniels]]
 -------- end text --------
 Page 17 Bloomington: Found match for regex: =
@@ -716,6 +699,8 @@ Page 17 Bloomington: -------- begin text ---------
 ===Proper noun===
 {{en-proper noun}}
 
+# {{place|en|community|co/Annapolis County|p/Nova Scotia|c/Canada}}.
+# {{place|en|hamlet|rmun/York|p/Ontario|c/Canada}}.
 # {{place|en|census-designated place|co/San Bernardino County|s/California|c/USA}}.
 # {{place|en|small city|co/Bear Lake County|s/Idaho|c/USA}}.
 # {{place|en|city/county seat|co/McLean County|s/Illinois|c/USA}}.
@@ -725,31 +710,28 @@ Page 17 Bloomington: -------- begin text ---------
 # {{place|en|city|co/Hennepin County|s/Minnesota|c/USA}}.
 # {{place|en|unincorporated community|co/Macon County|s/Missouri|c/USA}}.
 # {{place|en|village|co/Franklin County|s/Nebraska|c/USA}}.
+# {{place|en|hamlet|co/Ulster County|s/New York|c/USA}}.
 # {{place|en|unincorporated community|co/Clinton County|s/Ohio|c/USA}}.
+# {{place|en|ghost town|co/Brown County|s/South Dakota|c/USA}}.
 # {{place|en|census-designated place|co/Victoria County|s/Texas|c/USA}}.
 # {{place|en|community|co/Washington County|s/Utah|c/USA}}.
 # {{place|en|village/and/town|co/Grant County|s/Wisconsin|c/USA}}.
-# {{place|en|community|co/Annapolis County|p/Nova Scotia|c/Canada}}.
-# a hamlet in the {{w|Regional Municipality of York}}, [[Ontario]], Canada.
-
-{{C|en|Ontario}}
 -------- end text --------
 Page 18 Bon Accord: Found match for regex: =
 Page 18 Bon Accord: -------- begin text ---------
 ==English==
 
 ===Etymology===
-From {{der|en|fr|-}} {{m|fr|bon}} {{m|fr|accord}}, the ancient motto of [[Aberdeen]], Scotland, the hometown of its first settler.
+From {{bor|en|fr|[[bon]] [[accord]]}}, the ancient motto of [[Aberdeen]], Scotland, the hometown of its first settler.
 
 ===Proper noun===
 {{en-proper noun}}
 
-# {{place|en|town|prov/Alberta|c/Canada}}.
+# {{place|en|locality|lgarea/North Burnett Region|s/Queensland|c/Australia}}.
+# {{place|en|town|p/Alberta|c/Canada}}.
 
 ====See also====
 * {{pedialite|Bon Accord, Alberta}}
-
-{{topic|en|Alberta}}
 -------- end text --------
 Page 19 Bradford: Found match for regex: =
 Page 19 Bradford: -------- begin text ---------
@@ -758,7 +740,7 @@ Page 19 Bradford: -------- begin text ---------
 {{swp|City of Bradford}}
 
 ===Etymology===
-Various place names in England, from {{der|en|ang|brād}} "broad" + {{m|ang|ford}} "ford".
+Various place names in England, from {{der|en|ang|brād||broad}} + {{m|ang|ford||ford}}.
 
 ===Pronunciation===
 * {{a|UK}} {{IPA|en|/ˈbɹædfəɹd/|/ˈbɹadfəɹd/}}
@@ -769,21 +751,24 @@ Various place names in England, from {{der|en|ang|brād}} "broad" + {{m|ang|ford
 {{en-proper noun}}
 
 # {{place|en|city/and/metropolitan borough|co/West Yorkshire|cc/England}}.
-# {{place|en|village/and/civil parish|dist/Torridge|co/Devon|cc/England}} {{q|[[OS]] grid ref SS4207}}.
+# {{place|en|urban area|in the town of|{{w|Bradford West Gwillimbury}}|p/Ontario|c/Canada}}.
+# {{place|en|hamlet|co/Cornwall|cc/England}}.
+# {{place|en|locality|co/Derbyshire|cc/England}}.
+# {{place|en|village/and/civil parish|lgdist/Torridge|co/Devon|cc/England}} {{q|[[OS]] grid ref SS4207}}.
 # {{place|en|area|city/Manchester|co/Greater Manchester|cc/England}} {{q|OS grid ref SJ8698}}.
 # {{place|en|village|co/Northumberland|cc/England}} {{q|OS grid ref NU1532}}.
-# An urban area in {{w|Bradford West Gwillimbury}}, [[Ontario]], [[Canada]].
-# {{place|en|suburb|city/Dunedin|c/New Zealand}}.
+# {{place|en|suburb|of the city of|city/Dunedin|in the val/Kaikorai Valley|c/New Zealand}}.
 # A large number of places in the United States:
+## {{place|en|unincorporated community|co/Jefferson County|s/Alabama}}.
 ## {{place|en|small city|co/White County|s/Arkansas}}.
 ## {{place|en|village|co/Stark County|s/Illinois}}.
-## {{place|en|unincorporated community|co/Harrison County|s/Indiana}}.
+## {{place|en|unincorporated community|twp/Morgan Township|co/Harrison County|s/Indiana}}.
 ## {{place|en|unincorporated community|co/Chickasaw County|s/Iowa}}.
 ## {{place|en|unincorporated community/and/census-designated place|co/Franklin County|s/Iowa}}.
 ## {{place|en|unincorporated community|co/Wabaunsee County|s/Kansas}}.
 ## {{place|en|unincorporated community|co/Bracken County|s/Kentucky}}.
 ## {{place|en|town|co/Penobscot County|s/Maine}}.
-## {{place|en|village|co/Essex County|s/Massachusetts}}.
+## {{place|en|village/and/former town|co/Essex County|s/Massachusetts}}.
 ## {{place|en|town|co/Merrimack County|s/New Hampshire}}.
 ## {{place|en|town|co/Steuben County|s/New York}}.
 ## {{place|en|village|co/Darke County|and|co/Miami County|s/Ohio}}.
@@ -816,9 +801,6 @@ Various place names in England, from {{der|en|ang|brād}} "broad" + {{m|ang|ford
 * Macedonian: {{t|mk|Брадфорд|m}}
 * Russian: {{t|ru|Брэ́дфорд|m}}
 {{trans-bottom}}
-
-[[Category:en:United Kingdom]]
-{{c|en|Ontario}}
 -------- end text --------
 Page 20 Brownfield: Found match for regex: {
 Page 20 Brownfield: -------- begin text ---------
@@ -833,10 +815,10 @@ Page 20 Brownfield: -------- begin text ---------
 
 {{en-prop}}
 
+# {{place|en|hamlet|in the|mundist/{{w|County of Paintearth No. 18}}|p/Alberta|c/Canada}}.
 # {{place|en|town|co/Oxford County|s/Maine|c/USA}}.
 # {{place|en|unincorporated community|co/Laclede County|s/Missouri|c/USA}}.
 # {{place|en|city/county seat|co/Terry County|s/Texas|c/USA}}.
-# a hamlet in the {{w|County of Paintearth No. 18}}, [[Alberta]], [[Canada]].
 
 ===Statistics===
 * According to the 2010 United States Census, ''Brownfield'' is the 8153<sup>rd</sup> most common surname in the United States, belonging to 4067 individuals. ''Brownfield'' is most common among White (87.02%) individuals.
@@ -851,15 +833,13 @@ Page 21 Camborne: -------- begin text ---------
 ===Proper noun===
 {{en-proper noun}}
 
-# {{place|en|town|in western|co/Cornwall|cc/England}}.
-# a [[ghost town]] and [[locality]] in [[British Columbia]], [[Canada]]
+# {{place|en|ghost town/and/locality|p/British Columbia|c/Canada}}.
 # {{place|en|community|co/Northumberland County|p/Ontario|c/Canada}}.
-# {{place|en|suburb|city/Porirua|in the [[North Island]] of|c/New Zealand}}.
+# {{place|en|town|in western|co/Cornwall|cc/England}}.
+# {{place|en|suburb|of the city of|city/Porirua|isl/North Island|c/New Zealand}}.
 
 ===Anagrams===
 * {{anagrams|en|a=abcemnor|bromance}}
-
-{{c|en|British Columbia}}
 -------- end text --------
 Page 22 Canmore: Found match for regex: =
 Page 22 Canmore: -------- begin text ---------
@@ -871,15 +851,13 @@ From {{bor|en|gd|ceann mòr||big head}}, the nickname of {{w|Malcolm III of Scot
 ===Proper noun===
 {{en-proper noun}}
 
-#{{place|en|town|prov/Alberta|c/Canada}}.
+# {{place|en|town|p/Alberta|c/Canada}}.
 
 ====Further reading====
 *{{pedialite|Canmore, Alberta}}
 
 ===Anagrams===
 * {{anagrams|en|a=acemnor|Cameron|Cremona|Marenco|Menorca|Romance|romance}}
-
-{{topics|en|Alberta}}
 -------- end text --------
 Page 23 Canyon: Found match for regex: {
 Page 23 Canyon: -------- begin text ---------
@@ -890,19 +868,17 @@ Page 23 Canyon: -------- begin text ---------
 ===Proper noun===
 {{en-proper noun}}
 
-# an unincorporated place in {{l|en|Algoma}} district, north-eastern [[Ontario]], [[Canada]].
-# an unincorporated place in {{l|en|Kenora}} district, north-western Ontario.
+# {{place|en|unincorporated community|dist/Algoma|in north-eastern|p/Ontario|c/Canada}}.
+# {{place|en|unincorporated community|dist/Kenora|in north-western|p/Ontario|c/Canada}}.
 # {{place|en|unincorporated community|co/Contra Costa County|and|co/Alameda County|s/California|c/USA}}.
-# a former gold mining town in {{l|en|El Dorado County}}, California.
+# {{place|en|ghost town/and/former gold mining town|co/El Dorado County|s/California|c/USA}}.
 # {{place|en|unincorporated community|co/St. Louis County|s/Minnesota|c/USA}}.
 # {{place|en|city/county seat|co/Randall County|s/Texas|c/USA}}.
-# {{place|en|former town|co/Whitman County|s/Washington|c/USA}}.
+# {{place|en|ghost town|co/Whitman County|s/Washington|c/USA}}.
 # {{place|en|unincorporated community|co/Monongalia County|s/West Virginia|c/USA}}.
 
 ===Anagrams===
 * {{anagrams|en|a=acnnoy|ancony}}
-
-{{topics|en|Ontario}}
 
 ----
 
@@ -933,11 +909,10 @@ Page 24 Cartier: -------- begin text ---------
 {{en-proper noun}}
 
 # {{surname|en}}
+# {{place|en|community|dist/Sudbury District|p/Ontario|c/Canada}}.
 
 ===Anagrams===
 * {{anagrams|en|a=aceirrt|cirrate|erratic|rice rat}}
-
-[[Category:en:Ontario]]
 -------- end text --------
 Page 25 Centreville: Found match for regex: =
 Page 25 Centreville: -------- begin text ---------
@@ -950,25 +925,28 @@ From {{suffix|en|centre|ville}}
 ===Proper noun===
 {{en-proper noun}}
 
-# {{place|en|village|co/Carleton County|p/New Brunswick|c/Canada}}.
-# a part of a town (Centreville-Wareham-Trinity) in [[Newfoundland]], Canada.
-# subdivision on {{l|en|Cape Breton Island}}, [[Nova Scotia]], Canada.
-# communities in {{l|en|Digby County|Digby}}, {{l|en|Inverness County|Inverness}} and {{l|en|Kings County|Kings Counties}}, Nova Scotia.
-# a community on {{w|Cape Sable Island}}, {{l|en|Shelburne County}}, Nova Scotia.
-# a community in {{l|en|Stone Mills}}, {{l|en|Lennox and Addington County}}, [[Ontario]], Canada.
 # {{place|en|ghost town|in northern|p/British Columbia|c/Canada}}.
-# {{place|en|city/county seat|co/Bibb County|s/Alabama|c/USA}} {{q|see also {{l|en|Centerville}}}}.
-# the alternative spelling for {{l|en|Centerville}}, [[Delaware]], USA.
+# {{place|en|village|co/Carleton County|p/New Brunswick|c/Canada}}.
+# {{place|en|area|in the town of|Centreville-Wareham-Trinity|p/Newfoundland and Labrador|c/Canada}}.
+# {{place|en|subdivision|rmun/{{w|Cape Breton Regional Municipality}}|on|isl/Cape Breton Island|p/Nova Scotia|c/Canada}}.
+# {{place|community|co/Digby County|p/Nova Scotia|c/Canada}}.
+# {{place|small community|co/Inverness County|on|isl/Cape Breton Island|p/Nova Scotia|c/Canada}}.
+# {{place|rural farming community|co/Kings County|p/Nova Scotia|c/Canada}}.
+# {{place|community|co/Shelburne County|on|isl/Cape Sable Island|p/Nova Scotia|c/Canada}}.
+# {{place|The former name of the <<community>> and <<former village>> of [[Rodney]], in the municipality of <<mun/West Elgin>>, in <<co/Elgin County>>, <<p/Ontario>>, <<c/Canada>>}}.
+# {{place|en|community|in the municipality of|mun/Meaford|co/Grey County|p/Ontario|c/Canada}}.
+# {{place|en|community|in the township of|twp/Stone Mills|co/Lennox and Addington County|p/Ontario|c/Canada}}.
+# {{place|en|city/county seat|co/Bibb County|s/Alabama|c/USA}}. 
+# {{place|en|The former name of the <<community>> of [[Centerville]] in the city of <<city/Fremont>>, <<co/Alameda County>>, <<s/California>>, <<c/USA>>}}.
+# {{place|en|unincorporated community|co/New Castle County|s/Delaware|c/USA}}, also known as [[Centerville]].
 # {{place|en|city|co/St. Clair County|s/Illinois|c/USA}}.
 # {{place|en|town/county seat|co/Queen Anne's County|s/Maryland|c/USA}}.
 # {{place|en|village/county seat|co/St. Joseph County|s/Michigan|c/USA}}.
 # {{place|en|town|co/Amite County|and|co/Wilkinson County|s/Mississippi|c/USA}}.
-# {{place|en|ghost town|co/Henderson County|s/Texas|c/USA}}
+# {{place|en|ghost town|co/Henderson County|s/Texas|c/USA}}.
 
 ===See also===
 * {{l|en|Centerville}}
-
-{{C|en|Newfoundland and Labrador|Nova Scotia|Ontario}}
 
 ===Anagrams===
 * {{anagrams|en|a=ceeeillnrtv|Centerville}}
@@ -987,8 +965,8 @@ Page 26 Chamberlain: -------- begin text ---------
 
 {{en-prop}}
 
-# a township in {{w|Timiskaming District}}, [[Ontario]], [[Canada]].
-# a village in the Rural Municipality of Sarnia, [[Saskatchewan]], Canada.
+# {{place|en|township|dist/{{w|Timiskaming District}}|p/Ontario|c/Canada}}.
+# {{place|en|village|rurmun/Sarnia No. 221|p/Saskatchewan|c/Canada}}.
 # {{place|en|city/county seat|co/Brule County|s/South Dakota|c/USA}}.
 # {{place|en|village|dept/{{w|Tacuarembó Department}}|c/Uruguay}}.
 
@@ -996,7 +974,6 @@ Page 26 Chamberlain: -------- begin text ---------
 * According to the 2010 United States Census, ''Chamberlain'' is the 1231<sup>st</sup> most common surname in the United States, belonging to 28727 individuals. ''Chamberlain'' is most common among White (87.49%) individuals.
 
 [[Category:en:Individuals]]
-{{c|en|Ontario|Saskatchewan}}
 -------- end text --------
 Page 27 Chehalis: Found match for regex: {
 Page 27 Chehalis: -------- begin text ---------
@@ -1008,9 +985,7 @@ Page 27 Chehalis: -------- begin text ---------
 {{en-proper noun}}
 
 # {{place|en|city/county seat|co/Lewis County|s/Washington|c/USA}}.
-# a community in the {{l|en|Lower Mainland}} of [[British Columbia]], [[Canada]].
-
-{{C|en|British Columbia}}
+# {{place|en|small community|in the|r/Lower Mainland|p/British Columbia|c/Canada}}.
 -------- end text --------
 Page 28 Churchill: Found match for regex: =
 Page 28 Churchill: -------- begin text ---------
@@ -1027,15 +1002,29 @@ From {{compound|en|church|hill}}.
 {{wikipedia|Churchill (disambiguation)}}
 {{en-proper noun}}
 
-# Any of several English [[placename]]s from church and hill.
-## One of four villages in [[England]]
-## A town in [[Manitoba]] on the coast of [[Hudson Bay]]
-## {{place|en|census-designated place|s/Ohio}}
-## {{place|en|borough|s/Pennsylvania}}
-## {{place|en|town|s/Victoria|c/Australia}}
+# Any of several [[placename]]s, derived from church and hill.
+## {{place|en|suburb|of the city of|city/Ipswich|s/Queensland|c/Australia}}.
+## {{place|en|town|in the|dist/Latrobe Valley|s/Victoria|c/Australia}}.
+## {{place|en|town|p/Manitoba|c/Canada}}, on the coast of [[Hudson Bay]].
+## {{place|en|community|in the township of|twp/Lot 65|p/Prince Edward Island|c/Canada}}.
+## {{place|en|community|in the town of|town/Innisfil|co/Simcoe County|p/Ontario|c/Canada}}.
+## {{place|en|community|in the town of|town/Erin|co/Wellington County|p/Ontario|c/Canada}}.
+## {{place|en|hamlet|par/All Saints|lgdist/East Devon|co/Devon|cc/England}}.
+## {{place|en|hamlet|near the village of|village/East Down|lgdist/North Devon|co/Devon|cc/England}}.
+## {{place|en|village/and/civil parish|co/Oxfordshire|cc/England}}.
+## {{place|en|village/and/civil parish|co/Somerset|cc/England}}.
+## {{place|en|village|par/Churchill and Blakedown|dist/Wyre Forest|co/Worcestershire|cc/England}}.
+## {{place|en|village|in the hundred of|hundred/Oswaldslow|co/Worcestershire|cc/England}}; in full, ''Churchill-in-Oswaldslow''.
+## {{place|en|unincorporated community|co/Bureau County|s/Illinois|c/USA}}.
+## {{place|en|neighborhood|in the city of|city/Holyoke|co/Hampden County|s/Massachusetts|c/USA}}.
+## {{place|en|CDP|twp/Liberty Township|co/Trumbull County|s/Ohio|c/USA}}.
+## {{place|en|borough|co/Allegheny County|s/Pennsylvania|c/USA}}.
+## {{place|en|unincorporated community|co/Chippewa County|s/Minnesota|c/USA}}.
+## {{place|en|unincorporated community|co/Renville County|s/Minnesota|c/USA}}.
+## {{place|en|village|co/Donegal|c/Ireland}}, also known as ''Church Hill'' or ''Churchhill''.
 # {{surname|en|[[habitational]]|from=Old English|dot=}} from any of these places.
 # {{w|Winston Churchill}}, English statesman, Prime Minister and author.
-# A cocktail made by {{w|Joe Gilmore}}
+# A cocktail made by {{w|Joe Gilmore}}.
 
 ====Derived terms====
 * {{l|en|Churchill County}}
@@ -1062,9 +1051,6 @@ From {{compound|en|church|hill}}.
 
 [[Category:en:Cocktails]]
 [[Category:en:Individuals]]
-[[Category:en:Manitoba]]
-[[Category:en:Villages]]
-[[Category:en:Villages in England]]
 -------- end text --------
 Page 29 Clearwater: Found match for regex: {
 Page 29 Clearwater: -------- begin text ---------
@@ -1075,13 +1061,14 @@ Page 29 Clearwater: -------- begin text ---------
 ===Proper noun===
 {{en-proper noun}}
 
-# a district municipality in [[British Columbia]], [[Canada]].
-# a local urban district in south [[Manitoba]], Canada.
+# {{place|en|district municipality|p/British Columbia|c/Canada}}.
+# {{place|en|local urban district|in south|p/Manitoba|c/Canada}}.
 # {{place|en|city/county seat|co/Pinellas County|s/Florida|c/USA}}.
 # {{place|en|city|co/Sedgwick County|s/Kansas|c/USA}}.
-# {{place|en|city|s/Minnesota|c/USA}}, mostly in {{l|en|Wright County}}.
-# {{place|en|unincorporated community|co/Ste. Genevieve County|s/Missouri|c/USA}}.
+# {{place|en|city|co/Stearns County|and|co/Wright County|s/Minnesota|c/USA}}, mostly in {{l|en|Wright County}}.
+# {{place|en|unincorporated community|twp/Saline Township|co/Ste. Genevieve County|s/Missouri|c/USA}}.
 # {{place|en|village|co/Antelope County|s/Nebraska|c/USA}}.
+# {{place|en|unincorporated community|co/Douglas County|s/Oregon|c/USA}}.
 # {{place|en|census-designated place|co/Aiken County|s/South Carolina|c/USA}}.
 # {{place|en|unincorporated community|co/Jefferson County|s/Washington|c/USA}}.
 # a number of rivers named {{w|Clearwater River}}.
@@ -1089,8 +1076,6 @@ Page 29 Clearwater: -------- begin text ---------
 
 ====Derived terms====
 * {{l|en|Clearwater County}}
-
-{{C|en|British Columbia|Manitoba}}
 -------- end text --------
 Page 30 Clute: Found match for regex: =
 Page 30 Clute: -------- begin text ---------
@@ -1104,12 +1089,11 @@ Page 30 Clute: -------- begin text ---------
 {{en-proper noun}}
 
 # {{surname|en}}
-# {{place|en|city|s/Texas}}.
+# {{place|en|rural unincorporated community|in the town of|town/Cochrane|dist/Cochrane District|p/Ontario|c/Canada}}.
+# {{place|en|city|co/Brazoria County|s/Texas}}.
 
 ===Anagrams===
 * {{anagrams|en|a=celtu|culet|lucet}}
-
-{{topics|en|Ontario}}
 -------- end text --------
 Page 31 Clyde: Found match for regex: =
 Page 31 Clyde: -------- begin text ---------
@@ -1131,22 +1115,24 @@ Literally "cleansing", from a {{der|en|cel}} root probably related to Latin {{m|
 # {{place|en|major river|cc/Scotland}}, serving the city of [[Glasgow]].
 # {{place|en|suburb|city/Sydney|s/New South Wales|c/Australia}}.
 # {{place|en|suburb|city/Melbourne|s/Victoria|c/Australia}}.
-# A {{l|en|community}} in {{l|en|North Dumfries}}, {{l|en|Ontario}}, {{l|en|Canada}}.
 # {{place|en|village|in northern|p/Alberta|c/Canada}}.
-# {{place|en|small town|in [[Central Otago]],|c/New Zealand}}.
+# {{place|en|community|in the township of|twp/North Dumfries|rmun/Waterloo|p/Ontario|c/Canada}}.
+# {{place|en|small town|r/Central Otago|c/New Zealand}}.
 # {{place|en|census-designated place|co/Contra Costa County|s/California}}.
 # {{place|en|unincorporated community|co/Imperial County|s/California}}.
-# {{place|en|city|co/Cloud County|s/Kansas}}.
+# {{place|en|ghost town|co/Bryan County|s/Georgia}}.
+# {{place|en|small city|co/Cloud County|s/Kansas}}.
 # {{place|en|unincorporated community|twp/Highland Township|co/Oakland County|s/Michigan}}.
 # {{place|en|census-designated place/and/unincorporated community|twp/Franklin Township|co/Somerset County|s/New Jersey}}.
 # {{place|en|village|co/Wayne County|s/New York}}.
 # {{place|en|town|co/Haywood County|s/North Carolina}}.
+# {{place|en|unincorporated community/and/ghost town|co/Cavalier County|s/North Dakota}}.
 # {{place|en|city|co/Sandusky County|s/Ohio}}.
+# {{place|en|unincorporated community|co/Indiana County|s/Pennsylvania}}.
 # {{place|en|unincorporated community|co/Darlington County|s/South Carolina}}.
-# {{place|en|city|co/Callahan County|s/Texas}}.
-# {{place|en|town|co/Iowa County|s/Wisconsin}}.
-# An {{l|en|unincorporated}} {{l|en|community}} within the town of {{l|en|Clyde}}, {{l|en|Iowa County}}, {{l|en|Wisconsin}}.
-# An {{l|en|unincorporated}} {{l|en|community}} within the town of {{l|en|Ahnapee}}, {{l|en|Kewaunee County}}, {{l|en|Wisconsin}}.
+# {{place|en|small city|co/Callahan County|s/Texas}}.
+# {{place|en|small town/and/unincorporated community|co/Iowa County|s/Wisconsin}}.
+# {{place|en|unincorporated community|in the town of|town/Ahnapee|co/Kewaunee County|s/Wisconsin}}.
 
 ====Derived terms====
 * {{l|en|Clydebank}}
@@ -1162,8 +1148,6 @@ Literally "cleansing", from a {{der|en|cel}} root probably related to Latin {{m|
 
 ===Anagrams===
 * {{anagrams|en|a=cdely|decyl}}
-
-{{topics|en|Ontario}}
 
 ----
 
@@ -1187,11 +1171,9 @@ Page 32 Colinton: -------- begin text ---------
 ===Proper noun===
 {{en-proper noun}}
 
-# A [[suburb]] in the city of {{l|en|Edinburgh}}, [[Scotland]] {{q|[[OS]] grid ref NT2269}}.
-# A [[hamlet]] in northern [[Alberta]], [[Canada]].
-# A locality in the {{w|Somerset Region}} of [[Queensland]], [[Australia]].
-
-{{c|en|Places in Scotland|Alberta|Queensland}}
+# {{place|en|suburb|city/Edinburgh|cc/Scotland}} {{l|en|Edinburgh}}, [[Scotland]] {{q|[[OS]] grid ref NT2269}}.
+# {{place|en|hamlet|co/Athabasca County|in northern|p/Alberta|c/Canada}}.
+# {{place|en|locality|lgarea/Somerset Region|s/Queensland|c/Australia}}.
 -------- end text --------
 Page 33 Coniston: Found match for regex: =
 Page 33 Coniston: -------- begin text ---------
@@ -1201,16 +1183,16 @@ Page 33 Coniston: -------- begin text ---------
 ===Proper noun===
 {{head|en|proper noun}}
 
-# A village next to {{w|Coniston Water}} in {{l|en|South Lakeland}} district, [[Cumbria]], [[England]] {{q|[[OS]] grid ref SD3097}}.
-# {{place|en|village|co/East Riding of Yorkshire|cc/England}} {{q|OS grid ref TA1535}}.
-# A suburb of {{l|en|Wollongong}}, [[New South Wales]], [[Australia]].
+# {{place|en|cattle station|terr/Northern Territory|c/Australia}}.
+# {{place|en|suburb|city/Wollongong|s/New South Wales|c/Australia}}.
+# {{place|en|town|lgarea/Derwent Valley|s/Tasmania|c/Australia}}.
+# {{place|en|community|city/Greater Sudbury|p/Ontario|c/Canada}}; formerly in former town of {{w|Nickel Centre}}.
+# {{place|en|village/and/civil parish|co/East Riding of Yorkshire|cc/England}} {{q|OS grid ref TA1535}}.
+# {{place|en|village/and/civil parish|next to|lake/{{w|Coniston Water}}|in|lgdist/South Lakeland|co/Cumbria|cc/England}} {{q|[[OS]] grid ref SD3097}}.
 # {{place|en|unincorporated community|co/Yolo County|s/California|c/USA}}.
-# A community in {{w|Nickel Centre}}, [[Ontario]], [[Canada]].
 
 ===Anagrams===
 * {{anagrams|en|a=cinnoost|Continos|scontion}}
-
-{{c|en|New South Wales|Ontario}}
 -------- end text --------
 Page 34 Cookstown: Found match for regex: =
 Page 34 Cookstown: -------- begin text ---------
@@ -1220,10 +1202,10 @@ Page 34 Cookstown: -------- begin text ---------
 ===Proper noun===
 {{en-proper noun}}
 
-# a [[town]] and [[townland]] in County {{l|en|Tyrone}}, [[Northern Ireland]], named after Dr. Alan Cooke.
-# a [[community]] in {{l|en|Innisfil}}, [[Ontario]], [[Canada]].
+# {{place|en|community|in the town of|town/Tallaght|co/South Dublin|c/Ireland}}.
+# {{place|en|neighbourhood|in the city of|city/Innisfil|p/Ontario|c/Canada}}.
+# {{place|en|town/and/townland|co/Tyrone|p/Northern Ireland}}, named after Dr. Alan Cooke.
 # {{place|en|unincorporated community|co/Burlington County|s/New Jersey|c/USA}}.
-{{c|en|Towns in Northern Ireland|Ontario}}
 -------- end text --------
 Page 35 Crystal Falls: Found match for regex: =
 Page 35 Crystal Falls: -------- begin text ---------
@@ -1233,11 +1215,9 @@ Page 35 Crystal Falls: -------- begin text ---------
 ===Proper noun===
 {{en-proper noun|head=[[crystal|Crystal]] [[falls|Falls]]}}
 
+# {{place|en|community|mun/West Nipissing|p/Ontario|c/Canada}}.
+# {{place|en|ghost town|p/Quebec|c/Canada}}.
 # {{place|en|city/county seat|co/Iron County|s/Michigan|c/USA}}.
-# a community in [[West Nipissing]], [[Ontario]], [[Canada]].
-# {{place|en|former community|p/Quebec|c/Canada}}.
-
-{{topics|en|Ontario}}
 -------- end text --------
 Page 36 Dalkeith: Found match for regex: =
 Page 36 Dalkeith: -------- begin text ---------
@@ -1247,12 +1227,10 @@ Page 36 Dalkeith: -------- begin text ---------
 ===Proper noun===
 {{en-proper noun}}
 
-# {{place|en|town|council area/Midlothian|cc/Scotland}} {{q|[[OS]] grid ref NT3367}}.
+# {{place|en|town|carea/Midlothian|cc/Scotland}} {{q|[[OS]] grid ref NT3367}}.
 # {{place|en|suburb|city/Perth|s/Western Australia}}.
-# A [[village]] in {{w|North Glengarry, Ontario}}, [[Canada]].
+# {{place|en|village|in the township of|twp/{{w|North Glengarry}}|p/Ontario|c/Canada}}.
 # {{place|en|unincorporated community|co/Gulf County|s/Florida|c/USA}}.
-
-{{c|en|Ontario}}
 -------- end text --------
 Page 37 Deline: Found match for regex: {
 Page 37 Deline: -------- begin text ---------
@@ -1265,12 +1243,10 @@ Page 37 Deline: -------- begin text ---------
 ===Proper noun===
 {{en-proper noun}}
 
-# A charter community in the [[Northwest Territories]], [[Canada]]
+# {{place|en|charter community|terr/Northwest Territories|c/Canada}}.
 
 ===Anagrams===
 * {{anagrams|en|a=deeiln|Leiden|liened|neleid}}
-
-[[Category:en:Northwest Territories]]
 -------- end text --------
 Page 38 Dildo: Found match for regex: {
 Page 38 Dildo: -------- begin text ---------
@@ -1284,10 +1260,7 @@ Uncertain; see the Wikipedia article for some possible origins.
 ===Proper noun===
 {{en-proper noun}}
 
-# A small town in [[Newfoundland]], [[Newfoundland and Labrador]], [[Canada]].
-
-[[Category:en:Newfoundland and Labrador]]
-[[Category:en:Towns]]
+# {{place|en|small town|on the island of|isl/Newfoundland|p/Newfoundland and Labrador|c/Canada}}.
 
 ----
 
@@ -1325,11 +1298,9 @@ Page 39 Dundalk: -------- begin text ---------
 ===Proper noun===
 {{en-proper noun}}
 
-# The [[county town]] of County {{l|en|Louth}}, [[Ireland]].
-# A [[village]] in {{w|Southgate, Ontario}}, [[Canada]].
+# {{place|en|town/county town|co/Louth|c/Ireland}}.
+# {{place|en|village|twp/{{w|Southgate, Ontario|Southgate}}|p/Ontario|c/Canada}}.
 # {{place|en|census-designated place/and/unincorporated community|co/Baltimore County|s/Maryland|c/USA}}.
-
-{{c|en|Towns in Ireland|Ontario}}
 -------- end text --------
 Page 40 Eagle Pass: Found match for regex: =
 Page 40 Eagle Pass: -------- begin text ---------
@@ -1339,10 +1310,9 @@ Page 40 Eagle Pass: -------- begin text ---------
 ===Proper noun===
 {{en-proper noun|head=[[eagle|Eagle]] [[pass|Pass]]}}
 
+# {{place|en|A <<mountain pass>> through the <<subrange/Gold Range>> of the <<range/Monashee Mountains>>, <<p/British Columbia>>, <<c/Canada>>}}.
+# {{place|en|high mountain pass|co/Lake County|s/Montana|c/USA}}.
 # {{place|en|city/county seat|co/Maverick County|s/Texas|c/USA}}.
-# a mountain pass in [[British Columbia]], [[Canada]].
-
-{{c|en|British Columbia}}
 -------- end text --------
 Page 41 Edison: Found match for regex: =
 Page 41 Edison: -------- begin text ---------
@@ -1356,8 +1326,14 @@ Page 41 Edison: -------- begin text ---------
 
 # An [[English]] [[patronymic]] or [[matronymic]] (or just pamatronymic) [[surname]] derived from [[Adam]] and [[Edith]].
 # [[w:Thomas Edison|Thomas Edison]] (1847–1931), American [[inventor]] and businessman.
+# {{place|en|unincorporated community|co/Kern County|s/California|c/USA}}.
+# {{place|en|small city|co/Calhoun County|s/Georgia|c/USA}}.
+# {{place|en|village|co/Furnas County|s/Nebraska|c/USA}}.
+# {{place|en|village|co/Morrow County|s/Ohio|c/USA}}.
+# {{place|en|CDP|co/Skagit County|s/Washington|c/USA}}.
+# {{place|en|unincorporated community|co/Mercer County|s/West Virginia|c/USA}}.
 # {{place|en|town|s/New Jersey}}.
-# {{place|en|unincorporated community|P/Alberta|c/Canada| named after Thomas Edison|modern=[[Westlock]]}}.
+# {{place|en|former unincorporated community|p/Alberta|c/Canada|near modern|town/Westlock}}; named after Thomas Edison.
 
 ====Derived terms====
 {{der2|en
@@ -1385,7 +1361,6 @@ Page 41 Edison: -------- begin text ---------
 * {{anagrams|en|a=deinos|Eidson|diones|does in|inodes|no side|noised|on side|on-side|onside}}
 
 [[Category:English surnames from given names]]
-[[Category:en:Alberta]]
 
 ----
 
@@ -1413,10 +1388,8 @@ Page 42 Entwistle: -------- begin text ---------
 {{en-proper noun|Entwistles}}
 
 # {{surname|en}}
-#{{place|en|town|co/Lancashire|cc/England}}.
-# {{place|en|hamlet|prov;/Alberta|c/Canada}}.
-
-[[Category:en:Alberta]]
+# {{place|en|hamlet|co/Parkland County|p/Alberta|c/Canada}}.
+# {{place|en|town|uath/Blackburn with Darwen|co/Lancashire|cc/England}}.
 -------- end text --------
 Page 43 Ettrick: Found match for regex: =
 Page 43 Ettrick: -------- begin text ---------
@@ -1426,17 +1399,17 @@ Page 43 Ettrick: -------- begin text ---------
 ===Proper noun===
 {{en-proper noun}}
 
-# {{place|en|small village|council area/Scottish Borders}}, 17 miles south-west of {{l|en|Selkirk}} {{q|[[OS]] grid ref NT2714}}.
+# {{place|en|locality|lgarea/Kyogle Council|s/New South Wales|c/Australia}}.
+# {{place|en|locality|in the|lgarea/Rural City of Murray Bridge|s/South Australia|c/Australia}}.
+# {{place|en|community|in the township of|twp/Middlesex Centre|co/Middlesex County|p/Ontario|c/Canada}}.
 # {{place|en|small town|r/Central Otago|c/New Zealand}}.
+# {{place|en|small village|council area/Scottish Borders|cc/Scotland}}, 17 miles south-west of {{l|en|Selkirk}} {{q|[[OS]] grid ref NT2714}}.
 # {{place|en|census-designated place|co/Chesterfield County|s/Virginia|c/USA}}.
 # {{place|en|town/and/village|co/Trempealeau County|s/Wisconsin|c/USA}}.
-# a community in {{l|en|Middlesex Centre}}, {{l|en|Middlesex County}}, [[Ontario]], [[Canada]].
 
 ====Derived terms====
 * {{l|en|Ettrick and Lauderdale}}
 * {{l|en|Ettrick Water}}
-
-{{C|en|Ontario}}
 
 ===Anagrams===
 * {{anagrams|en|a=ceikrtt|Rickett|Tetrick}}
@@ -1450,26 +1423,38 @@ Page 44 Eureka: -------- begin text ---------
 {{wikipedia}}
 {{en-proper noun}}
 
-# {{place|en|city/county seat|co/Humboldt County|in northern|s/California}}.
-# {{place|en|city/county seat|co/Woodford County|s/Illinois}}.
-# {{place|en|city/county seat|co/Greenwood County|s/Kansas}}.
-# {{place|en|city|s/Missouri}}.
-# {{place|en|town|s/Montana}}.
-# {{place|en|census-designated place/county seat|co/Eureka County|s/Nevada}}.
-# {{place|en|town|s/North Carolina}}.
-# {{place|en|community|p/Nova Scotia|c/Canada}}
-# A research base in [[Nunavut]]
-# {{place|en|city|s/South Dakota}}.
-# {{place|en|city|s/Texas}}.
-# {{place|en|city|s/Utah}}.
-# {{place|en|town|s/Wisconsin}}.
+# {{place|en|rural locality|lgarea/Bundaberg Region|s/Queensland|c/Australia}}.
+# {{place|en|small suburb|city/Ballarat|s/Victoria|c/Australia}}.
+# {{place|en|community|co/Pictou County|p/Nova Scotia|c/Canada}}.
+# {{place|en|small research base|pen/Fosheim Peninsula|isl/Ellesmere Island|r/Qikiqtaaluk Region|terr/Nunavut|c/Canada}}.
 # {{place|en|settlement|dist/Waikato|c/New Zealand}}.
+# {{place|en|city/county seat|co/Humboldt County|in northern|s/California}}.
+# {{place|en|ghost town|co/Nevada County|s/California}}.
+# {{place|en|mining ghost town|co/San Juan County|s/Colorado}}.
+# {{place|en|city/county seat|co/Woodford County|s/Illinois}}.
+# {{place|en|unincorporated community|co/Lawrence County|s/Indiana}}, also known as ''Geiberson''.
+# {{place|en|unincorporated community|twp/Luce Township|co/Spencer County|s/Indiana}}.
+# {{place|en|city/county seat|co/Greenwood County|s/Kansas}}.
+# {{place|en|city|co/St. Louis County|s/Missouri}}.
+# {{place|en|unincorporated community|twp/Cinque Hommes Township|co/Perry County|s/Missouri}}.
+# {{place|en|town|co/Lincoln County|s/Montana}}.
+# {{place|en|unincorporated town/and/census-designated place/county seat|co/Eureka County|s/Nevada}}.
+# {{place|en|town|co/Wayne County|s/North Carolina}}.
+# {{place|en|unincorporated community|twp/Warrington Township|co/Bucks County|and|twp/Montgomery Township|co/Montgomery County|s/Pennsylvania}}.
+# {{place|en|unincorporated community|co/Aiken County|s/South Carolina}}.
+# {{place|en|city|co/McPherson County|s/South Dakota}}.
+# {{place|en|ghost town|co/Crockett County|s/Texas}}.
+# {{place|en|ghost town|co/Franklin County|s/Texas}}.
+# {{place|en|tiny city|co/Navarro County|s/Texas}}.
+# {{place|en|small city|co/Juab County|s/Utah}}.
+# {{place|en|unincorporated community|co/Walla Walla County|s/Washington}}.
+# {{place|en|unincorporated community|co/Pleasants County|s/West Virginia}}.
+# {{place|en|town|co/Polk County|s/Wisconsin}}.
+# {{place|en|unincorporated CDP|in the town of|town/Rushford|co/Winnebago County|s/Wisconsin}}.
 # A given name, like for the protagonists of ''{{w|Eureka's Castle}}'' or ''{{w|Eureka Seven}}''.
 
 ===See also===
 * {{l|en|Eureka County}}
-
-[[Category:en:Nunavut]]
 -------- end text --------
 Page 45 Evansburg: Found match for regex: =
 Page 45 Evansburg: -------- begin text ---------
@@ -1481,14 +1466,12 @@ Page 45 Evansburg: -------- begin text ---------
 ===Proper noun===
 {{en-proper noun}}
 
-#{{place|en|hamlet|prov/Alberta|c/Canada}}.
-# {{place|en|[[census-designated place]]|s/Pennsylvania}}.
+# {{place|en|hamlet|co/Yellowhead County|p/Alberta|c/Canada}}.
+# {{place|en|CDP|co/Montgomery County|s/Pennsylvania}}.
 
 ====See also====
 *{{pedialite}}
 *{{pedialite|Evansburg, Alberta}}
-
-{{topic|en|Alberta}}
 -------- end text --------
 Page 46 Farmington: Found match for regex: =
 Page 46 Farmington: -------- begin text ---------
@@ -1498,39 +1481,44 @@ Page 46 Farmington: -------- begin text ---------
 ===Proper noun===
 {{en-proper noun}}
 
+# {{place|en|unincorporated settlement|in the|r/Peace River Country|p/British Columbia|c/Canada}}.
+# {{place|en|community|co/Cumberland County|p/Nova Scotia|c/Canada}}.
+# {{place|en|community|co/Lunenburg County|p/Nova Scotia|c/Canada}}.
 # {{place|en|small village|dist/Cotswold|co/Gloucestershire|cc/England}} {{q|[[OS]] grid ref SP1315}}.
-# an unincorporated settlement in the Peace River Country of [[British Columbia]], [[Canada]].
-# a communities in {{l|en|Cumberland County|Cumberland}} and {{l|en|Lunenburg County|Lunenburg Counties}}, [[Nova Scotia]], Canada.
-# the name of many places in the [[United States of America]]:
+# Several places in the [[United States]]:
 ## {{place|en|city|co/Washington County|s/Arkansas}}.
 ## {{place|en|census-designated place|co/San Joaquin County|s/California}}.
 ## {{place|en|town|co/Hartford County|s/Connecticut}}.
 ## {{place|en|town|co/Kent County|s/Delaware}}.
 ## {{place|en|city|co/Fulton County|s/Illinois}}.
-## {{place|en|unincorporated community|co/Rush County|s/Indiana}}.
+## {{place|en|unincorporated community|twp/Union Township|co/Rush County|s/Indiana}}.
 ## {{place|en|small city|co/Van Buren County|s/Iowa}}.
 ## {{place|en|unincorporated community/and/census-designated place|co/Graves County|s/Kentucky}}.
-## {{place|en|town/county seat|co/Franklin County|s/Maine}}.
+## {{place|en|The former name of [[Kingsley]], a <<home rule city>> in <<co/Jefferson County>>, <<s/Kentucky>>}}.
+## {{place|en|The former name of [[Hustonville]], a <<home rule city>> in <<co/Lincoln County>>, <<s/Kentucky>>}}.
+## {{place|en|town/and/CDP/county seat|co/Franklin County|s/Maine}}.
 ## {{place|en|city|co/Oakland County|s/Michigan}}.
 ## {{place|en|city|co/Dakota County|s/Minnesota}}.
 ## {{place|en|town|co/Alcorn County|s/Mississippi}}.
 ## {{place|en|city/county seat|co/St. Francois County|s/Missouri}}.
-## {{place|en|town|co/Strafford County|s/New Hampshire}}.
+## {{place|en|town/and/CDP|co/Strafford County|s/New Hampshire}}.
 ## {{place|en|city|co/San Juan County|s/New Mexico}}.
 ## {{place|en|town|co/Ontario County|s/New York}}.
 ## {{place|en|unincorporated community|co/Davie County|s/North Carolina}}.
 ## {{place|en|unincorporated community|co/Belmont County|s/Ohio}}.
 ## {{place|en|unincorporated community|co/Washington County|s/Oregon}}.
 ## {{place|en|unincorporated community/and/census-designated place|co/Fayette County|s/Pennsylvania}}.
+## {{place|en|unincorporated community|co/Marshall County|s/Tennessee}}.
 ## {{place|en|city/county seat|co/Davis County|s/Utah}}.
 ## {{place|en|unincorporated community|co/Albemarle County|s/Virginia}}.
+## {{place|en|affluent neighborhood|in the city of|city/Hampton|s/Virginia}}.
 ## {{place|en|small town|co/Whitman County|s/Washington}}.
 ## {{place|en|small town|co/Marion County|s/West Virginia}}.
 ## {{place|en|town/and/unincorporated community|co/Jefferson County|s/Wisconsin}}.
-## {{place|en|unincorporated community|town/Jefferson|co/Jefferson County|s/Wisconsin}}.
-## towns in {{l|en|La Crosse County|La Crosse}}, {{l|en|Polk County|Polk}}, {{l|en|Washington County|Washington}} and {{l|en|Waupaca County|Waupaca Counties}}, Wisconsin.
-
-{{C|en|British Columbia|Nova Scotia}}
+## {{place|en|town|co/La Crosse County|s/Wisconsin}}.
+## {{place|en|town|co/Polk County|s/Wisconsin}}.
+## {{place|en|town|co/Washington County|s/Wisconsin}}.
+## {{place|en|town|co/Waupaca County|s/Wisconsin}}.
 -------- end text --------
 Page 47 Faro: Found match for regex: {
 Page 47 Faro: -------- begin text ---------
@@ -1540,7 +1528,7 @@ Page 47 Faro: -------- begin text ---------
 {{wikipedia|Faro, Yukon}}
 
 ===Etymology 1===
-From {{etyl|pt|en}} {{m|pt|Faro}}, from {{etyl|roa-opt|en}} {{m|roa-opt|Faaron}}.
+From {{bor|en|pt|Faro}}, from {{der|en|roa-opt|Faaron}}.
 
 ====Proper noun====
 {{en-proper noun}}
@@ -1560,13 +1548,14 @@ From {{etyl|pt|en}} {{m|pt|Faro}}, from {{etyl|roa-opt|en}} {{m|roa-opt|Faaron}}
 ====Proper noun====
 {{en-proper noun}}
 
-# A town in [[Yukon Territory]], [[Canada]]
+# {{place|en|municipality|s/Pará|c/Brazil}}.
+# {{place|en|department|p/North Province|c/Cameroon}}.
+# {{place|en|town|in central|terr/Yukon|c/Canada}}.
+# {{place|en|unincorporated community|twp/Twelvemile Township|co/Madison County|s/Missouri|c/USA}}.
+# {{place|en|unincorporated community|co/Wayne County|s/North Carolina|c/USA}}.
 
 ===Anagrams===
 * {{anagrams|en|a=afor|Afro|Afro-|RAFO|afro|fora}}
-
-[[Category:en:Towns]]
-[[Category:en:Yukon]]
 
 ----
 
@@ -1574,12 +1563,12 @@ From {{etyl|pt|en}} {{m|pt|Faro}}, from {{etyl|roa-opt|en}} {{m|roa-opt|Faaron}}
 {{wikipedia|lang=de}}
 
 ===Etymology===
-From {{etyl|pt|de}} {{m|pt|Faro}}, from {{etyl|roa-opt|de}} {{m|roa-opt|Faaron}}.
+From {{bor|de|pt|Faro}}, from {{der|de|roa-opt|Faaron}}.
 
 ===Proper noun===
 {{head|de|proper noun}}
 
-# [[#English|Faro]]
+# {{place|de|city|c/Portugal|t1=Faro}}
 
 [[Category:de:Cities]]
 
@@ -1590,7 +1579,7 @@ From {{etyl|pt|de}} {{m|pt|Faro}}, from {{etyl|roa-opt|de}} {{m|roa-opt|Faaron}}
 [[Image:Faro Paço Episcopal.jpg|thumb|250px|Faro]]
 
 ===Etymology===
-From {{etyl|roa-opt|pt}} {{m|roa-opt|Faaron}}, from {{etyl|ar|pt}} {{m|ar|هَارُون}}, from {{etyl|he|pt}} {{m|he|אהרן|tr=Ahărōn|gloss=Aaron}}. The city was named after a local Moorish [[qadi]].
+From {{inh|pt|roa-opt|Faaron}}, from {{der|pt|ar|هَارُون}}, from {{der|pt|he|אהרן|tr=Ahărōn|gloss=Aaron}}. The city was named after a local Moorish [[qadi]].
 
 ===Pronunciation===
 * {{a|Portugal|Brazil}} {{IPA|pt|/ˈfa.ɾu/}}
@@ -1619,12 +1608,10 @@ Page 48 Fauquier: -------- begin text ---------
 {{en-proper noun}}
 
 # {{surname|en|dot=}}, notably of {{w|Francis Fauquier}}.
-# A community in the {{w|Regional District of Central Kootenay}}, [[British Columbia]], [[Canada]].
+# {{place|en|community|rdist/Central Kootenay|p/British Columbia|c/Canada}}.
 
 ====Derived terms====
 * {{l|en|Fauquier County}}
-
-{{c|en|British Columbia}}
 -------- end text --------
 Page 49 Fillmore: Found match for regex: =
 Page 49 Fillmore: -------- begin text ---------
@@ -1635,13 +1622,13 @@ Page 49 Fillmore: -------- begin text ---------
 {{en-proper noun}}
 
 # {{surname|en}}
-# A village in {{w|Rural Municipality of Fillmore No. 96}}, [[Saskatchewan]], [[Canada]].
-# {{place|en|city|co/Ventura County|s/California|c/USA}}.
+# {{place|en|village|rmun/Fillmore No. 96|p/Saskatchewan|c/Canada}}.
+# {{place|en|small city|co/Ventura County|s/California|c/USA}}.
 # {{place|en|village|co/Montgomery County|s/Illinois|c/USA}}.
-# {{place|en|town|co/Putnam County|s/Indiana|c/USA}}.
+# {{place|en|town|twp/Marion Township|co/Putnam County|s/Indiana|c/USA}}.
 # {{place|en|unincorporated community|co/Lee County|s/Kentucky|c/USA}}.
 # {{place|en|unincorporated community|co/Fillmore County|s/Minnesota|c/USA}}.
-# {{place|en|small city|co/Andrew County|s/Missouri|c/USA}}.
+# {{place|en|tiny city|co/Andrew County|s/Missouri|c/USA}}.
 # {{place|en|hamlet/and/census-designated place|co/Allegany County|s/New York|c/USA}}.
 # {{place|en|unincorporated community|co/Washington County|s/Ohio|c/USA}}.
 # {{place|en|unincorporated community|co/Johnston County|s/Oklahoma|c/USA}}.
@@ -1653,8 +1640,6 @@ Page 49 Fillmore: -------- begin text ---------
 
 ===Anagrams===
 * {{anagrams|en|a=efillmor|filmlore}}
-
-{{c|en|Saskatchewan}}
 -------- end text --------
 Page 50 Fincastle: Found match for regex: =
 Page 50 Fincastle: -------- begin text ---------
@@ -1667,14 +1652,13 @@ Most place names appear to come, either directly or indirectly, from the Viscoun
 ===Proper noun===
 {{en-proper noun}}
 
-# {{place|en|unincorporated community|co/Putnam County|s/Indiana|c/USA}}.
+# {{place|en|glen|co/Perthshire|cc/Scotland}}.
+# {{place|en|locality|p/Alberta|C/Canada}}.
+# {{place|en|unincorporated community|twp/Franklin Township|co/Putnam County|s/Indiana|c/USA}}.
 # {{place|en|small city|co/Jefferson County|s/Kentucky|c/USA}}.
 # {{place|en|unincorporated community|co/Brown County|s/Ohio|c/USA}}.
 # {{place|en|unincorporated community|co/Henderson County|s/Texas|c/USA}}.
 # {{place|en|town/county seat|co/Botetourt County|s/Virginia|c/USA}}.
-# a locality in [[Alberta]], [[Canada]].
-
-{{c|en|Alberta}}
 -------- end text --------
 Page 51 Flin Flon: Found match for regex: =
 Page 51 Flin Flon: -------- begin text ---------
@@ -1686,12 +1670,9 @@ From Josiah Flintabbatey Flonatin, the lead character in the novel ''{{w|The Sun
 ===Proper noun===
 {{en-proper noun|head=Flin Flon}}
 
-# A city on the border of (mostly) [[Manitoba]] and [[Saskatchewan]], [[Canada]]
+# {{place|en|city|p/Manitoba|and|p/Saskatchewan|c/Canada}}, mostly in [[Manitoba]].
 
 [[Category:English eponyms]]
-[[Category:en:Cities]]
-[[Category:en:Manitoba]]
-[[Category:en:Saskatchewan]]
 -------- end text --------
 Page 52 Fogo: Found match for regex: =
 Page 52 Fogo: -------- begin text ---------
@@ -1701,8 +1682,9 @@ Page 52 Fogo: -------- begin text ---------
 ===Proper noun===
 {{en-proper noun}}
 
-# One of the ten islands of [[Cape Verde]]
-# An island located north of the island of [[Newfoundland]] in [[Newfoundland and Labrador]]
+# {{place|en|community|isl/Fogo Island|p/Newfoundland and Labrador|c/Canada}}.
+# {{place|en|island|arch/Sotavento Islands|c/Cape Verde}}.
+# {{place|en|village|co/Berwickshire|carea/Scottish Borders|cc/Scotland}}.
 
 ====Translations====
 {{trans-top|island of Cape Verde}}
@@ -1710,12 +1692,8 @@ Page 52 Fogo: -------- begin text ---------
 {{trans-mid}}
 {{trans-bottom}}
 
-{{topics|kea|Islands|Cape Verde}}
-
 ===Anagrams===
 * {{anagrams|en|a=fgoo|goof}}
-
-{{c|en|Cape Verde|Newfoundland and Labrador|Islands}}
 -------- end text --------
 Page 53 Forgan: Found match for regex: =
 Page 53 Forgan: -------- begin text ---------
@@ -1725,10 +1703,8 @@ Page 53 Forgan: -------- begin text ---------
 {{en-proper noun}}
 
 # {{surname|en}}
-# {{place|en|town|s/Oklahoma}}.
-# A ghost hamlet in [[Saskatchewan]], [[Canada]].
-
-{{catlangcode|en|Saskatchewan}}
+# {{place|en|unincorporated hamlet/and/ghost town|rmun/Monet Rural Municipality No. 257/p/Saskatchewan|c/Canada}}.
+# {{place|en|town|co/Beaver County|s/Oklahoma}}.
 -------- end text --------
 Page 54 Fort Liard: Found match for regex: =
 Page 54 Fort Liard: -------- begin text ---------
@@ -1737,9 +1713,7 @@ Page 54 Fort Liard: -------- begin text ---------
 ===Proper noun===
 {{en-proper noun|head=[[fort|Fort]] [[Liard]]}}
 
-# {{place|en|hamlet|terr/Northwest Territories|c/Canada}}
-
-[[Category:en:Northwest Territories]]
+# {{place|en|hamlet|r/Dehcho Region|terr/Northwest Territories|c/Canada}}.
 -------- end text --------
 Page 55 Fort Macleod: Found match for regex: =
 Page 55 Fort Macleod: -------- begin text ---------
@@ -1749,18 +1723,16 @@ Page 55 Fort Macleod: -------- begin text ---------
 After North-West Mounted Police Colonel {{w|James Macleod}}.
 
 ===Pronunciation===
-*{{a|Canada}} {{IPA|en|/ˈfɔɹt məˈklaʊd/}}
-*{{rhyme|en|aʊd}}
+* {{a|Canada}} {{IPA|en|/ˈfɔɹt məˈklaʊd/}}
+* {{rhyme|en|aʊd}}
 
 ===Proper noun===
 {{en-proper noun}}
 
-#{{place|en|town|prov/Alberta|c/Canada}}.
+# {{place|en|town|in southwest|p/Alberta|c/Canada}}.
 
 ====See also====
 *{{pedialite}}
-
-{{topic|en|Alberta}}
 -------- end text --------
 Page 56 Fort McMurray: Found match for regex: =
 Page 56 Fort McMurray: -------- begin text ---------
@@ -1776,12 +1748,10 @@ After Hudson's Bay Company factor William McMurray.
 ===Proper noun===
 {{en-proper noun}}
 
-#{{place|en|hamlet/former city|prov/Alberta|c/Canada}}.
+#{{place|en|hamlet/and/former city|rmun/Wood Buffalo|p/Alberta|c/Canada}}.
 
 ====See also====
 *{{pedialite}}
-
-{{topic|en|Alberta}}
 -------- end text --------
 Page 57 Fort Smith: Found match for regex: =
 Page 57 Fort Smith: -------- begin text ---------
@@ -1790,11 +1760,11 @@ Page 57 Fort Smith: -------- begin text ---------
 ===Proper noun===
 {{en-proper noun|head=[[fort|Fort]] [[Smith]]}}
 
-# {{place|en|town|terr/Northwest Territories|c/Canada}}.
+# {{place|en|The former name of [[North West River]], a small town in central <<r/Labrador>>, <<p/Newfoundland and Labrador>>, <<c/Canada>>}}.
+# {{place|en|town|r/South Slave Region|terr/Northwest Territories|c/Canada}}.
 # {{place|en|A <<city>> in <<s/Arkansas>>, <<c/USA>> and one of the two <<county seat>>s of <<co/Sebastian County>>}}.
-# {{place|en|census-designated place|s/Montana}}.
+# {{place|en|census-designated place|co/Big Horn County|s/Montana}}.
 
-{{C|en|Northwest Territories}}
 [[Category:English eponyms]]
 -------- end text --------
 Page 58 Fredericton: Found match for regex: =
@@ -1807,14 +1777,11 @@ From {{m|en|Fredericston}}, from {{af|en|Frederic|'s|-ton}}, from being renamed 
 ===Proper noun===
 {{en-proper noun}}
 
-# {{l|en|[[provincial|Provincial]] capital of [[New Brunswick]] ([[Canada]]).}}
+# {{place|en|capital city|p/New Brunswick|c/Canada}}.
 
 ====Synonyms====
 * {{l|en|Fredericston}} {{gloss|former spelling}}
 * {{l|en|[[Ste. Anne’s Point]] / [[Sainte Anne’s Point]] / [[Saint Anne’s Point]] / [[St. Anne’s Point]]}} {{gloss|former name}}
-
-[[Category:en:Cities in Canada]]
-[[Category:en:New Brunswick]]
 -------- end text --------
 Page 59 Galahad: Found match for regex: =
 Page 59 Galahad: -------- begin text ---------
@@ -1831,10 +1798,9 @@ From {{der|en|fro|Galahad}}, of obscure origin and meaning. Suggestions include 
 # {{lb|en|Arthurian legend}} {{w|Galahad|Sir Galahad}}, son of Sir {{l|en|Lancelot}}, a {{l|en|knight}} of King Arthur's Round Table famously known for his purity and who was one of the three achievers of the quest for the {{l|en|Holy Grail}}.
 # A man considered to be pure, noble, or chivalrous.
 # {{lb|en|rare}} {{given name|en|male|from=Celtic languages}} in occasional use since the 19th century.
-# {{lb|en|rare}} ''A {{l|en|place name}} given after the famous knight of Arthurian legend.''
+# {{place|en|hamlet|co/Flagstaff County|in east-central|p/Alberta}}.
 
 [[Category:en:Arthurian mythology]]
-{{topics|en|Villages|Alberta}}
 -------- end text --------
 Page 60 Grand Forks: Found match for regex: =
 Page 60 Grand Forks: -------- begin text ---------
@@ -1848,13 +1814,11 @@ The area of the city in North Dakota was known as "Les Grandes Fourches" (The Gr
 {{en-proper noun|head=[[grand|Grand]] [[fork|Forks]]}}
 
 # {{place|en|city/county seat|co/Grand Forks County|s/North Dakota|c/USA}}.
-# a city in the {{w|Boundary Country}} of [[British Columbia]], [[Canada]]. It is located at the [[confluence]] of the {{w|Granby River|Granby}} and {{w|Kettle River|Kettle Rivers}}.
+# {{place|en|city|dist/{{w|Boundary Country}}|r/West Kootenay|p/British Columbia|c/Canada}}. It is located at the [[confluence]] of the {{w|Granby River|Granby}} and {{w|Kettle River|Kettle Rivers}}.
 
 ====Derived terms====
 * {{l|en|East Grand Forks}} {{q|in Minnesota}}
 * {{l|en|Grand Forks County}}
-
-{{C|en|British Columbia}}
 -------- end text --------
 Page 61 Grosmont: Found match for regex: =
 Page 61 Grosmont: -------- begin text ---------
@@ -1864,11 +1828,9 @@ Page 61 Grosmont: -------- begin text ---------
 ===Proper noun===
 {{en-proper noun}}
 
-# {{place|en|village|dist/Scarborough|co/North Yorkshire|cc/England}} {{q|[[OS]] grid ref NZ8305}}.
-# {{place|en|village|co/Monmouthshire|cc/Wales}}, on the English border {{q|OS grid ref SO4024}}.
-# A [[hamlet]] in {{w|Athabasca County}}, [[Alberta]], [[Canada]].
-
-{{c|en|Alberta}}
+# {{place|en|hamlet|co/{{w|Athabasca County}}|p/Alberta|c/Canada}}.
+# {{place|en|village/and/civil parish|dist/Scarborough|co/North Yorkshire|cc/England}} {{q|[[OS]] grid ref NZ8305}}.
+# {{place|en|village/and/community|co/Monmouthshire|cc/Wales}}, on the English border {{q|OS grid ref SO4024}}.
 -------- end text --------
 Page 62 Halton: Found match for regex: {
 Page 62 Halton: -------- begin text ---------
@@ -1880,12 +1842,12 @@ Page 62 Halton: -------- begin text ---------
 {{en-proper noun|~|Haltons}}
 
 # The {{w|Borough of Halton}}, {{place|en|a <<unitary authority>> in <<co/Cheshire>>, <<cc/England>>}}, formed in 1974.
-# {{place|en|village|town/Runcorn|co/Cheshire}}, which gave its name to the above borough {{q|[[OS]] grid ref SJ5381}}
-# {{place|en|village|dist/Aylesbury Vale|co/Buckinghamshire|cc/England}} {{q|OS grid ref SP8710}}
-# {{place|en|village|dist/Lancaster|co/Lancashire|cc/England}} {{q|OS grid ref SD5064}}
-# {{place|en|suburban area|in the|metbor/Leeds|co/West Yorkshire|cc/England}} {{q|OS grid ref SE3433}}
-# {{place|en|village|co/Northumberland|cc/England}} {{q|OS grid ref NY9967}}
-# A regional municipality in southern [[Ontario]], [[Canada]]
+# {{place|en|village|town/Runcorn|co/Cheshire}}, which gave its name to the above borough {{q|[[OS]] grid ref SJ5381}}.
+# {{place|en|village|dist/Aylesbury Vale|co/Buckinghamshire|cc/England}} {{q|OS grid ref SP8710}}.
+# {{place|en|village|dist/Lancaster|co/Lancashire|cc/England}} {{q|OS grid ref SD5064}}.
+# {{place|en|suburban area|in the|metbor/Leeds|co/West Yorkshire|cc/England}} {{q|OS grid ref SE3433}}.
+# {{place|en|village|co/Northumberland|cc/England}} {{q|OS grid ref NY9967}}.
+# {{place|en|regional municipality|in southern|p/Ontario|c/Canada}}.
 # {{surname|en}}
 
 ===Statistics===
@@ -1894,7 +1856,7 @@ Page 62 Halton: -------- begin text ---------
 ===Anagrams===
 * {{anagrams|en|a=ahlnot|-athlon|Holtan}}
 
-{{c|en|Boroughs in England|Ontario}}
+{{c|en|Boroughs in England}}
 -------- end text --------
 Page 63 Hampden: Found match for regex: =
 Page 63 Hampden: -------- begin text ---------
@@ -1904,17 +1866,19 @@ Page 63 Hampden: -------- begin text ---------
 {{en-proper noun}}
 
 # {{surname|en}}
-# {{place|en|town|s/Maine}}
-# {{place|en|town/and/county|s/Massachusetts}}
-# {{place|en|town|p/Newfoundland and Labrador|c/Canada}}
-# {{place|en|settlement|c/New Zealand}}
-# {{place|en|city|s/North Dakota}}
-# A township municipality in [[Quebec]], Canada
+# {{place|en|locality|lgarea/Mackay Region|s/Queensland|c/Australia}}.
+# {{place|en|rural locality|in the|r/Mid North|s/South Australia}}.
+# {{place|en|town|p/Newfoundland and Labrador|c/Canada}}.
+# {{place|en|small town|dist/North Otago|c/New Zealand}}.
+# {{place|en|town|co/Penobscot County|s/Maine}}.
+# {{place|en|neighborhood|in northern|city/Baltimore|s/Maryland|c/USA}}.
+# {{place|en|town|co/Hampden County|s/Massachusetts}}.
+# {{place|en|tiny city|co/Ramsey County|s/North Dakota}}.
+# {{place|en|unincorporated community|co/Geauga County|s/Ohio}}.
+# {{place|en|township municipality|rcomun/Le Haut-Saint-François|p/Quebec|c/Canada}}.
 
 ====Derived terms====
 * {{l|en|Hampden County}}
-
-{{C|en|Quebec}}
 -------- end text --------
 Page 64 Harrington: Found match for regex: =
 Page 64 Harrington: -------- begin text ---------
@@ -1925,13 +1889,19 @@ Page 64 Harrington: -------- begin text ---------
 
 # {{surname|en|[[habitational]]|from=Old English|dot=}} from several places of that name in England.
 # {{surname|en|from=Irish|dot=}} anglicised from the {{etyl|ga|en}} ''Ó hArrachtáin'' "descendant of Arrachtán".
-# A fishing village in [[New South Wales]], [[Australia]]
-# A township municipality in [[Quebec]], [[Canada]]
-# {{place|en|city|s/Delaware}}
-# {{place|en|town|s/Maine}}
-# {{place|en|city|s/Washington}}
-# Any of several villages in [[England]]
-# An English [[earldom]]
+# {{place|en|fishing village|located at the mouth of the|riv/Manning River|s/New South Wales|c/Australia}}.
+# {{place|en|community|in the township of|twp/Zorra|co/Oxford County|p/Ontario|c/Canada}}.
+# {{place|en|township municipality|in the|r/[[Laurentides]] region|p/Quebec|c/Canada}}.
+# {{place|en|village|co/Cumbria|cc/England}}.
+# {{place|en|hamlet/and/civil parish|dist/East Lindsey|co/Lincolnshire|cc/England}}.
+# {{place|en|hamlet/and/civil parish|co/Northamptonshire|cc/England}}.
+# {{place|en|unincorporated community|co/Colusa County|s/California}}.
+# {{place|en|city|co/Kent County|s/Delaware}}.
+# {{place|en|town|co/Washington County|s/Maine}}.
+# {{place|en|unincorporated community|co/Bennett County|s/South Dakota}}.
+# {{place|en|unincorporated community|co/Alleghany County|s/Virginia}}.
+# {{place|en|city|co/Lincoln County|s/Washington}}.
+# An English [[earldom]].
 
 ====Derived terms====
 * [[Chu-Harrington limit]]
@@ -1942,12 +1912,7 @@ Page 64 Harrington: -------- begin text ---------
 
 # A short, light [[jacket]] with a [[zip]] front and often a [[tartan]] lining.
 
-[[Category:en:Australia]]
-[[Category:en:Canada]]
 [[Category:en:Clothing]]
-[[Category:en:New South Wales]]
-[[Category:en:Quebec]]
-[[Category:en:Villages in England]]
 -------- end text --------
 Page 65 Hedley: Found match for regex: =
 Page 65 Hedley: -------- begin text ---------
@@ -1958,12 +1923,11 @@ Page 65 Hedley: -------- begin text ---------
 {{en-proper noun}}
 
 # {{surname|en}}
-# {{place|en|city|s/Texas}}.
+# {{place|en|unincorporated town|in southern|p/British Columbia|c/Canada}}.
+# {{place|en|tiny city|co/Donley County|s/Texas}}.
 
 ====Derived terms====
 * {{l|en|hedleyite}}
-
-{{topics|en|British Columbia}}
 -------- end text --------
 Page 66 Hondo: Found match for regex: {
 Page 66 Hondo: -------- begin text ---------
@@ -1974,14 +1938,13 @@ Page 66 Hondo: -------- begin text ---------
 ===Proper noun===
 {{en-prop}}
 
-# an unincorporated community in {{w|Municipal District of Lesser Slave River No. 124}}, [[Alberta]], [[Canada]].
+# {{place|en|unincorporated community|in the|mundist/{{w|Municipal District of Lesser Slave River No. 124}}|p/Alberta|c/Canada}}.
+# {{place|en|former city|pref/Kumamoto|c/Japan}}, merged into the city of [[Amakusa]] in 2006.
 # {{place|en|unincorporated community|co/Lincoln County|s/New Mexico|c/USA}}, named after the {{w|Rio Hondo (Southern New Mexico)|Rio Hondo}}.
 # {{place|en|city/county seat|co/Medina County|s/Texas|c/USA}}. Possibly named after the {{w|Hondo Creek}}.
 
 ===Anagrams===
 * {{anagrams|en|a=dhnoo|hoond}}
-
-{{c|en|Alberta}}
 -------- end text --------
 Page 67 Hongcouver: Found match for regex: =
 Page 67 Hongcouver: -------- begin text ---------
@@ -2013,15 +1976,13 @@ Page 68 Horncastle: -------- begin text ---------
 ===Proper noun===
 {{en-proper noun}}
 
-# A [[suburb]] of {{l|en|Reading}}, [[Berkshire]], [[England]] {{q|[[OS]] grid ref SU6772}}.
-# A [[market town]] in {{l|en|East Lindsey}} district, [[Lincolnshire]], England {{q|OS grid ref TF2669}}.
-# A [[ghost town]] in {{w|Kawartha Lakes}}, [[Ontario]], [[Canada]].
+# {{place|en|suburb|town/Reading|co/Berkshire|cc/England}} {{q|[[OS]] grid ref SU6772}}.
+# {{place|en|market town/and/civil parish|dist/East Lindsey|co/Lincolnshire|cc/England}} {{q|OS grid ref TF2669}}.
+# {{place|en|ghost town|in the city of|city/{{w|Kawartha Lakes}}|p/Ontario|c/Canada}}.
 # {{surname|en}}
 
 ===Anagrams===
 * {{anagrams|en|a=acehlnorst|Charleston|charleston}}
-
-{{c|en|Places in England|Towns in England|Ontario}}
 -------- end text --------
 Page 69 Indian River: Found match for regex: =
 Page 69 Indian River: -------- begin text ---------
@@ -2031,16 +1992,36 @@ Page 69 Indian River: -------- begin text ---------
 ===Proper noun===
 {{en-proper noun|head=[[Indian]] [[river|River]]}}
 
-# a number of rivers in [[Canada]] and the [[United States]], and one in [[Dominica]].
-# a community in {{w|Otonabee-South Monaghan}}, {{l|en|Peterborough County}}, [[Ontario]], [[Canada]].
-# a {{w|First Nations}} reserve in Ontario.
+# {{place|en|river|c/Barbados}}.
+# {{place|en|river|in the|r/Lower Mainland|p/British Columbia|c/Canada}}.
+# {{place|en|river|dist/Algoma District|p/Ontario|c/Canada}}.
+# {{place|en|river|co/Peterborough County|p/Ontario|c/Canada}}.
+# {{place|en|river|co/Lanark County|p/Ontario|c/Canada}}.
+# {{place|en|river|distmun/Muskoka|p/Ontario|c/Canada}}.
+# {{place|en|river|co/Renfrew County|and|dist/Nipissing District|p/Ontario|c/Canada}}.
+# {{place|en|river|terr/Yukon|c/Canada}}.
+# {{place|en|The former name of the {{w|Dän Tàgé}} river, <<terr/Yukon>>, <<c/Canada>>}}.
+# {{place|en|river|c/Dominica}}.
+# {{place|en|river|in the|arch/Alexander Archipelago|s/Alaska|c/USA}}.
+# {{place|en|river/and/estuary|co/Sussex County|in southern|s/Delaware|c/USA}}.
+# {{place|en|lagoon|s/Florida|c/USA}}.
+# {{place|en|river|co/Washington County|s/Maine|c/USA}}.
+# {{place|en|tributary|riv/Manistique River|on the|pen/Upper Peninsula|s/Michigan|c/USA}}.
+# {{place|en|river|co/Cheboygan County|s/Michigan|c/USA}}.
+# {{place|en|river|in western|s/New Hampshire|c/USA}}.
+# {{place|en|tributary|riv/Oswegatchie River|in far northern|s/New York|c/USA}}.
+# {{place|en|tributary|riv/Hudson River|in|co/Hamilton County|and|co/Essex County|s/New York|c/USA}}.
+# {{place|en|tributary|riv/Moose River|in|co/Hamilton County|and|co/Herkimer County|s/New York|c/USA}}.
+# {{place|en|tributary|riv/West Canada Creek|in|co/Herkimer County|s/New York|c/USA}}.
+# {{place|en|tributary|riv/Big Sioux River|in|s/South Dakota|c/USA}}.
+# {{place|en|river|within the city of|city/Chesapeake|s/Virginia|c/USA}}.
+# {{place|en|community|in the township of|twp/{{w|Otonabee-South Monaghan}}|co/Peterborough County|p/Ontario|c/Canada}}.
+# {{place|en|First Nations reserve|p/Ontario|c/Canada}}.
 # {{place|en|unincorporated area|co/Prince County|p/Prince Edward Island|c/Canada}}.
-# {{place|en|census-designated place|co/Cheboygan County|s/Michigan|c/USA}}.
+# {{place|en|unincorporated community/and/census-designated place|co/Cheboygan County|s/Michigan|c/USA}}.
 
 ====Derived terms====
 * {{l|en|Indian River County}}
-
-{{c|en|Rivers in Canada|Rivers in the United States|Dominica|Ontario}}
 -------- end text --------
 Page 70 Inuvik: Found match for regex: =
 Page 70 Inuvik: -------- begin text ---------
@@ -2050,10 +2031,7 @@ Page 70 Inuvik: -------- begin text ---------
 ===Proper noun===
 {{en-proper noun}}
 
-# a town in the [[Northwest Territories]] of [[Canada]]
-
-[[Category:en:Northwest Territories]]
-[[Category:en:Towns]]
+# {{place|en|town|terr/Northwest Territories|c/Canada}}.
 -------- end text --------
 Page 71 Iqaluit: Found match for regex: =
 Page 71 Iqaluit: -------- begin text ---------
@@ -2072,7 +2050,7 @@ From Eastern Canadian {{etyl|iu|en}} {{m|iu|ᐃᖃᓗᐃᑦ||place of fish}}, pl
 ===Proper noun===
 {{en-proper noun}}
 
-# The capital of the territory of [[Nunavut]], [[Canada]].
+# {{place|en|capital city|terr/Nunavut|c/Canada}}.
 
 ====Translations====
 {{trans-top|capital of Nunavut}}
@@ -2084,10 +2062,6 @@ From Eastern Canadian {{etyl|iu|en}} {{m|iu|ᐃᖃᓗᐃᑦ||place of fish}}, pl
 
 ===Anagrams===
 * {{anagrams|en|a=aiilqtu|Alutiiq}}
-
-[[Category:en:Canada]]
-[[Category:en:Cities]]
-[[Category:en:Nunavut]]
 
 ----
 
@@ -2102,13 +2076,10 @@ From {{etyl|iu|fr}} {{m|iu|ᐃᖃᓗᐃᑦ||place of fish}}, plural of {{m|iu|�
 ===Proper noun===
 {{fr-proper noun}}
 
-# [[#English|Iqaluit]] {{gloss|capital of the territory of [[Nunavut]], [[Canada]]}}
+# {{place|en|capital city|terr/Nunavut|c/Canada|t1=Iqaluit}}
 
 ====Synonyms====
 * {{l|fr|Frobisher Bay}} {{qualifier|former name}}
-
-[[Category:fr:Canada]]
-[[Category:fr:Cities]]
 -------- end text --------
 Page 72 Jerseyville: Found match for regex: =
 Page 72 Jerseyville: -------- begin text ---------
@@ -2121,34 +2092,27 @@ From {{suffix|en|Jersey|ville}}
 ===Proper noun===
 {{en-proper noun}}
 
+# {{place|en|small fishing village|on the|r/{{w|Mid North Coast}}|s/New South Wales|c/Australia}}.
+# {{place|en|farming community/suburb|city/Hamilton|p/Ontario|c/Canada}}.
 # {{place|en|city/county seat|co/Jersey County|s/Illinois|c/USA}}.
 # {{place|en|unincorporated community|co/Monmouth County|s/New Jersey|c/USA}}.
-# a community near {{l|en|Hamilton}}, [[Ontario]], [[Canada]].
-# a small village on the {{w|Mid North Coast}} of [[New South Wales]], [[Australia]].
-
-{{C|en|Ontario|New South Wales}}
 -------- end text --------
 Page 73 Judique: Found match for regex: =
 Page 73 Judique: -------- begin text ---------
 ==English==
 
-=== Etymology ===
+===Etymology===
 
 Possibly from either French or [[Mi'kmaq]], "[[eddy]]" or "water". It may also derive from "Judic", meaning "of the Book of Judith", since an explorer surveying the area in the 17th century was reading [[Judith]] in the [[Bible]].
 
-=== Pronunciation ===
+===Pronunciation===
 
-JUDD-ick
+* {{IPA|en|dʒuːˈdɪk}}
 
-=== Proper noun ===
+===Proper noun===
 {{en-proper noun}}
 
-# A village on the Ceilidh Trail on [[Cape Breton Island]] in [[Nova Scotia]], [[Canada]].
-
-[[Category:English lemmas]]
-[[Category:English proper nouns]]
-[[Category:en:Cape Breton Island]]
-[[Category:en:Nova Scotia]]
+# {{place|en|village|on the|road/Ceilidh Trail|co/Inverness County|isl/Cape Breton Island|p/Nova Scotia|c/Canada}}.
 -------- end text --------
 Page 74 King's Park: Found match for regex: =
 Page 74 King's Park: -------- begin text ---------
@@ -2158,14 +2122,12 @@ Page 74 King's Park: -------- begin text ---------
 ===Proper noun===
 {{en-proper noun|head=[[king|King's]] [[park|Park]]}}
 
-# A park and suburban area in the city of {{l|en|Glasgow}}, [[Scotland]] {{q|[[OS]] grid ref NS5960}}.
-# A park and residential subdivision in {{l|en|Winnipeg}}, [[Manitoba]], [[Canada]].
-# A neighbourhood in {{l|en|Kowloon}}, [[Hong Kong]].
+# {{place|en|park/and/residential subdivision|city/Winnipeg|p/Manitoba|c/Canada}}.
+# {{place|en|neighbourhood|urban area/Kowloon|sar/Hong Kong}}.
+# {{place|en|park/and/district|city/Glasgow|cc/Scotland}} {{q|[[OS]] grid ref NS5960}}.
 
 ====Alternative forms====
 * {{l|en|Kings Park}}
-
-{{c|en|Places in Scotland|Manitoba|Hong Kong}}
 -------- end text --------
 Page 75 Kinghorn: Found match for regex: =
 Page 75 Kinghorn: -------- begin text ---------
@@ -2176,13 +2138,11 @@ Page 75 Kinghorn: -------- begin text ---------
 {{en-proper noun|~|Kinghorns}}
 
 # {{surname|en}}
-# {{place|en|small town|council area/Fife|cc/Scotland}} {{q|[[OS]] grid ref NT2686}}.
-# A community in {{w|King, Ontario}}, [[Canada]].
+# {{place|en|town/and/civil parish|council area/Fife|cc/Scotland}} {{q|[[OS]] grid ref NT2686}}.
+# {{place|en|community|in the township of|twp/King|p/Ontario|c/Canada}}.
 
 ===Statistics===
 * According to the 2010 United States Census, ''Kinghorn'' is the 22450<sup>th</sup> most common surname in the United States, belonging to 1146 individuals. ''Kinghorn'' is most common among White (93.37%) individuals.
-
-{{c|en|Ontario}}
 -------- end text --------
 Page 76 Kings County: Found match for regex: =
 Page 76 Kings County: -------- begin text ---------
@@ -2196,26 +2156,22 @@ Page 76 Kings County: -------- begin text ---------
 # {{place|en|One of 62 <<counties>> in <<s/New York>>, <<c/USA>>}}; it is [[coterminous]] with the [[New York City]] [[borough]] of {{l|en|Brooklyn}}.
 # {{place|en|county|p/New Brunswick|c/Canada}}.
 # {{place|en|county|p/Nova Scotia|c/Canada}}.
-# a county on [[Prince Edward Island]], Canada.
+# {{place|en|county|p/Prince Edward Island|c/Canada}}.
 
 ===References===
 * {{pedia|Index of U.S. counties#K}}
-
-{{C|en|Counties of New York, USA|Counties of New Brunswick|Counties of Nova Scotia|Prince Edward Island}}
 -------- end text --------
 Page 77 Kinuso: Found match for regex: =
 Page 77 Kinuso: -------- begin text ---------
 ==English==
 
 ===Etymology===
-From {{etyl|cr|en}} ''kinosew''
+From {{bor|en|cr|kinosew}}.
 
 ===Proper noun===
 {{en-proper noun}}
 
-# A village-turned-hamlet in [[Alberta]], [[Canada]].
-
-{{topics|en|Alberta}}
+# {{place|en|former village/and/hamlet|co/Big Lakes County|in northern|p/Alberta|c/Canada}}.
 -------- end text --------
 Page 78 La Salle: Found match for regex: {
 Page 78 La Salle: -------- begin text ---------
@@ -2226,18 +2182,17 @@ Page 78 La Salle: -------- begin text ---------
 ===Proper noun===
 {{en-proper noun|head=La Salle}}
 
-# a community in the {{w|Rural Municipality of Macdonald}}, [[Manitoba]], [[Canada]].
+# {{place|en|town|in the|rmun/{{w|Rural Municipality of Macdonald}}|p/Manitoba|c/Canada}}.
 # {{place|en|commune|dept/Saône-et-Loire|c/France}}.
 # {{place|en|commune|dept/Vosges|c/France}}.
-# {{place|en|village|dept/Grand'Anse|c/Haiti}}.
-# a town and {{l|it|comune}} in the {{w|Aosta Valley}}, [[Italy]].
-# {{place|en|small city|co/Watonwan County|s/Minnesota|c/USA}}.
+# {{place|en|rural village|in the commune of|commune/Pestel|dept/Grand'Anse|c/Haiti}}.
+# {{place|en|town/and/comune|in the|r/{{w|Aosta Valley}}|c/Italy}}.
+# {{place|en|tiny city|co/Watonwan County|s/Minnesota|c/USA}}.
 # {{place|en|unincorporated community|co/Jackson County|s/Texas|c/USA}}.
+# {{place|en|former community|co/La Salle County|s/Texas|c/USA}}, since absorbed into the city of [[Cotulla]].
 
 ====Derived terms====
 * {{l|en|La Salle County}}
-
-{{c|en|Manitoba|Italy}}
 -------- end text --------
 Page 79 Ladysmith: Found match for regex: =
 Page 79 Ladysmith: -------- begin text ---------
@@ -2250,13 +2205,11 @@ The South African town was named after {{w|Juana María de los Dolores de León 
 ===Proper noun===
 {{en-proper noun}}
 
-# a village near {{l|en|Wagga Wagga}}, [[New South Wales]], [[Australia]].
-# a town on {{l|en|Vancouver Island}}, [[British Columbia]], [[Canada]]. Named to commemorate the lifting of the siege of Ladysmith, Natal, in 1902.
-# town in {{l|en|KwaZulu-Natal}} province, [[South Africa]].
+# {{place|en|village|near the city of|city/Wagga Wagga|in the|r/[[Riverina]] region|s/New South Wales|c/Australia}}.
+# {{place|en|town|on|isl/Vancouver Island|p/British Columbia|c/Canada}}, originally [[Oyster Harbor]]. Named to commemorate the lifting of the siege of Ladysmith, Natal, in 1902.
+# {{place|en|city|in|dist/Uthukela District|p/KwaZulu-Natal|c/South Africa}}.
 # {{place|en|unincorporated community|co/Caroline County|s/Virginia|c/USA}}. Named after Ladysmith, Natal.
 # {{place|en|city/county seat|co/Rusk County|s/Wisconsin|c/USA}}. Named after the bride of Charles R. Smith.
-
-{{C|en|New South Wales|British Columbia|South Africa}}
 -------- end text --------
 Page 80 Laval: Found match for regex: =
 Page 80 Laval: -------- begin text ---------
@@ -2269,10 +2222,12 @@ From {{etyl|fr|en}} {{m|fr|Laval}}
 ===Proper noun===
 {{en-proper noun}}
 
-# A [[placename]]
-## {{place|en|city|c/France}}, the [[prefecture]] of the department of [[Mayenne]].
-## The second largest city in [[Quebec]], a province of [[Canada]]
-## {{lb|en|informal}} [[Île Jésus]], an island in Quebec, where the city of Laval is located; {{ellipsis of|en|Island of Laval|nocap=1}}
+# A [[placename]]:
+## {{place|en|village|in the municipality of|mun/Sainte-Ode|in the province of|p/Luxembourg|c/Belgium}}.
+## {{place|en|large city|in southwestern|p/Quebec|c/Canada|;|suburb|city/Montreal}}.
+## {{lb|en|informal}} [[Île Jésus]], {{place|en|a=an|island|p/Quebec|c/Canada}}, where the city of Laval is located; {{ellipsis of|en|Island of Laval|nocap=1}}
+## {{place|en|prefecture/and/commune/capital|dept/Mayenne|c/France}}.
+## {{place|en|commune|dept/Isère|in southeastern|c/France}}.
 # {{surname|en}} originating from France
 
 ====Derived terms====
@@ -2305,8 +2260,6 @@ From {{etyl|fr|en}} {{m|fr|Laval}}
 ===Anagrams===
 * {{anagrams|en|a=aallv|valla}}
 
-[[Category:en:Quebec]]
-
 ----
 
 ==French==
@@ -2327,10 +2280,12 @@ From {{etyl|fr|en}} {{m|fr|Laval}}
 ===Proper noun===
 {{fr-proper noun}}
 
-# A placename
-## {{place|fr|city|c/France}}, the [[préfecture]] of the department of [[Mayenne]].
-## The second largest city in [[Québec]], a province of [[Canada]]
-## {{lb|fr|informal}} [[Île Jésus]], an island in Quebec, where the city of Laval is located; {{ellipsis of|fr|Île de Laval}}
+# A placename:
+## {{place|fr|village|in the municipality of|mun/Sainte-Ode|in the province of|p/Luxembourg|c/Belgium}}.
+## {{place|fr|large city|in southwestern|p/Quebec|c/Canada|;|suburb|city/Montreal}}.
+## {{lb|fr|informal}} [[Île Jésus]], {{place|en|a=an|island|p/Quebec|c/Canada}}, where the city of Laval is located; {{ellipsis of|en|Island of Laval|nocap=1}}
+## {{place|fr|prefecture/and/commune/capital|dept/Mayenne|c/France}}.
+## {{place|fr|commune|dept/Isère|in southeastern|c/France}}.
 # {{surname|fr}}
 
 ====Derived terms====
@@ -2354,11 +2309,7 @@ Page 81 Lloydminster: -------- begin text ---------
 ===Proper noun===
 {{en-proper noun}}
 
-# A city on the border of [[Alberta]] and [[Saskatchewan]], [[Canada]]
-
-[[Category:en:Alberta]]
-[[Category:en:Cities]]
-[[Category:en:Saskatchewan]]
+# {{place|en|city|on the border of|p/Alberta|and|p/Saskatchewan|c/Canada}}.
 -------- end text --------
 Page 82 Lotusland: Found match for regex: {
 Page 82 Lotusland: -------- begin text ---------
@@ -2399,13 +2350,12 @@ Borrowed from {{bor|en|fr|Louisbourg}}, named after {{w|Louis XIV of France}}.
 ===Proper noun===
 {{en-proper-noun}}
 
-# An old French settlement and former town in [[Nova Scotia]], [[Canada]], presently an unincorporated community.  
-
-{{c|en|Nova Scotia}}
+# {{place|en|unincorporated community/and/former town|rmun/Cape Breton Regional Municipality|p/Nova Scotia|c/Canada}}.
 
 ----
 
 ==French==
+{{wp|Louisbourg (Nouvelle-Écosse)|lang=fr}}
 
 ===Etymology===
 {{suffix|fr|Louis|bourg|gloss1={{w|Louis XIV of France|King Louis XIV of France}}}}
@@ -2413,8 +2363,7 @@ Borrowed from {{bor|en|fr|Louisbourg}}, named after {{w|Louis XIV of France}}.
 ===Proper noun===
 {{fr-proper noun}}
 
-# A placename
-## {{w|Louisbourg (Nouvelle-Écosse)|Louisbourg|lang=fr}}, Nova Scotia, Canada
+# {{place|fr|unincorporated community/and/former town|rmun/Cape Breton Regional Municipality|p/Nova Scotia|c/Canada|t1=Louisbourg}}.
 -------- end text --------
 Page 84 Lower Mainland: Found match for regex: =
 Page 84 Lower Mainland: -------- begin text ---------
@@ -2424,7 +2373,7 @@ Page 84 Lower Mainland: -------- begin text ---------
 {{wikipedia}}
 {{en-proper noun|head=[[lower|Lower]] [[mainland|Mainland]]}}
 
-# The [[southeast]] [[corner]] of [[mainland]] [[British Columbia]], including [[Vancouver]] and its outlying municipalities.
+# {{place|en|region|in southwest|p/British Columbia|c/Canada}}, including [[Vancouver]] and its outlying municipalities.
 #* '''1999''', Louisa Gradnitzer & Todd Pittson, ''X Marks The Spot: On Location With The X-Files'', Arsenal Pulp Press (1999), {{ISBN|1551520664}}, [http://books.google.com/books?id=2O5NOtZ3soAC&pg=PA169 page 169]:
 #*: The only other swingspans in the '''Lower Mainland''' straddle the Pitt River, the Fraser River at Annacis Island, and the middle arm of the Fraser River in Richmond.
 #* '''2008''', Patrick Twomey, ''Working and Living in Canada'', Cadogan Guides (2008), {{ISBN|9781860114045}}, [http://books.google.com/books?id=u54JSJlDrZcC&pg=PA37 page 37]:
@@ -2435,8 +2384,6 @@ Page 84 Lower Mainland: -------- begin text ---------
 
 ===See also===
 * [[Appendix:Place names in British Columbia]]
-
-{{topics|en|Canada|British Columbia}}
 -------- end text --------
 Page 85 Marinette: Found match for regex: =
 Page 85 Marinette: -------- begin text ---------
@@ -2446,17 +2393,15 @@ Page 85 Marinette: -------- begin text ---------
 ===Proper noun===
 {{en-prop}}
 
-# a rural community in {{l|en|Halifax}} Regional Municipality, [[Nova Scotia]], [[Canada]].
-# {{place|en|city/county seat|co/Marinette County|s/Wisconsin|c/USA}}. Named after Marie Antoinette Chevalier, an Indian woman.
+# {{place|en|rural community|rmun/Halifax Regional Municipality|p/Nova Scotia|c/Canada}}.
 # {{place|en|former ghost town|co/Maricopa County|s/Arizona|c/USA}}; {{l|en|Sun City}} now occupies its old site.
+# {{place|en|city/county seat|co/Marinette County|s/Wisconsin|c/USA}}. Named after Marie Antoinette Chevalier, an Indian woman.
 
 ====Derived terms====
 * {{l|en|Marinette County}}
 
 ===Anagrams===
 * {{anagrams|en|a=aeeimnrtt|antimeter|intermate|terminate|tetramine|tretamine}}
-
-{{topics|en|Nova Scotia}}
 
 ----
 
@@ -2487,12 +2432,10 @@ From {{bor|en|cr|ᒪᔉᐗᒌᐢ}}, from {{m|cr|ᒪᔉᐗ||bear}} + {{m|cr|ᒌ�
 ===Proper noun===
 {{en-proper noun}}
 
-#{{place|en|unincorporated area|prov/Alberta|c/Canada}}.
+# {{place|en|unincorporated community/and/hamlet|in central|p/Alberta|c/Canada}}, formerly [[Hobbema]].
 
 ====Further reading====
 *{{pedialite|Maskwacis}}
-
-{{topic|en|Alberta}}
 -------- end text --------
 Page 87 Mayerthorpe: Found match for regex: =
 Page 87 Mayerthorpe: -------- begin text ---------
@@ -2504,12 +2447,10 @@ Page 87 Mayerthorpe: -------- begin text ---------
 ===Proper noun===
 {{en-proper noun}}
 
-#{{place|en|town|prov/Alberta|c/Canada}}.
+# {{place|en|town|in central|p/Alberta|c/Canada}}.
 
 ====See also====
 *{{pedialite}}
-
-{{topic|en|Alberta}}
 -------- end text --------
 Page 88 Mayo: Found match for regex: {
 Page 88 Mayo: -------- begin text ---------
@@ -2520,9 +2461,16 @@ Page 88 Mayo: -------- begin text ---------
 ===Proper noun===
 {{en-proper noun}}
 
+# {{place|en|municipality|rcomun/Papineau|p/Quebec|c/Canada}}.
+# {{place|en|village|terr/Yukon|c/Canada}}.
 # {{place|en|county|c/Ireland}}.
-# A village in [[Yukon Territory]], [[Canada]]
+# {{place|en|village|co/Mayo|c/Ireland}}.
+# {{place|en|town|in southwest|c/Ivory Coast}}.
+# {{place|en|townland|co/Down|c/Northern Ireland}}.
 # {{place|en|town/county seat|co/Lafayette County|s/Florida|c/USA}}.
+# {{place|en|unincorporated community|co/Mercer County|s/Kentucky|c/USA}}.
+# {{place|en|CDP|co/Anne Arundel County|s/Maryland|c/USA}}.
+# {{place|en|CDP|co/Spartanburg County|s/South Carolina|c/USA}}.
 
 ====Derived terms====
 * {{l|en|Mayoman}}
@@ -2539,8 +2487,6 @@ Page 88 Mayo: -------- begin text ---------
 
 ===Anagrams===
 * {{anagrams|en|a=amoy|Amoy|Moya|moya}}
-
-{{topics|en|Villages|Yukon}}
 
 ----
 
@@ -2671,16 +2617,16 @@ Named after the 2nd Viscount of Melbourne, Derbyshire, itself deriving from the 
 ===Proper noun===
 {{en-proper noun}}
 
-# The state capital of [[Victoria]], [[Australia]].
-# A Georgian [[market town]] in [[Derbyshire]], located in the [[East Midlands]] of the [[United Kingdom]].
-# {{place|en|village|co/East Riding of Yorkshire|cc/England}}.
-# {{place|en|community|p/Nova Scotia|c/Canada}}.
-# A township municipality in [[Quebec]], Canada.
+# {{place|en|capital city|s/Victoria|c/Australia}}.
+# {{place|en|community|in the|distmun/Municipality of the District of Yarmouth|p/Nova Scotia|c/Canada}}.
+# {{place|en|township municipality|rcomun/Le Val-Saint-François|p/Quebec|c/Canada}}.
+# {{place|en|market town/and/civil parish|lgdist/South Derbyshire|co/Derbyshire|cc/England}}, located in the [[East Midlands]].
+# {{place|en|village/and/civil parish|co/East Riding of Yorkshire|cc/England}}.
 # {{place|en|small city/county seat|co/Izard County|s/Arkansas|c/USA}}.
 # {{place|en|unincorporated community|co/Mendocino County|s/California|c/USA}}, previously spelt Melburne.
 # {{place|en|city|co/Brevard County|s/Florida|c/USA}}.
 # {{place|en|small city|co/Marshall County|s/Iowa|c/USA}}.
-# {{place|en|small home rule city|co/Campbell County|s/Kentucky|c/USA}}.
+# {{place|en|tiny home rule city|co/Campbell County|s/Kentucky|c/USA}}.
 
 ====Translations====
 {{trans-top|city in Australia}}
@@ -2733,7 +2679,6 @@ Named after the 2nd Viscount of Melbourne, Derbyshire, itself deriving from the 
 * {{l|en|Melbourn}}
 
 [[Category:English eponyms]]
-{{topics|en|Cities in Australia|Victoria|Towns in England|Quebec}}
 
 ----
 
@@ -2742,7 +2687,7 @@ Named after the 2nd Viscount of Melbourne, Derbyshire, itself deriving from the 
 ===Proper noun===
 {{ca-proper noun}}
 
-# {{l|en|Melbourne}}
+# {{place|ca|capital city|s/Victoria|c/Australia|t1=Melbourne}}
 
 ----
 
@@ -2755,7 +2700,7 @@ From {{der|ceb|en|Melbourne}}, from {{der|ceb|ang|-}}.
 {{head|ceb|noun}}
 
 # {{given name|ceb|male|from=English|A=a}}
-# {{place|ceb|state capital|s/Victoria|c/Australia|t1=Melbourne}}
+# {{place|ceb|capital city|s/Victoria|c/Australia|t1=Melbourne}}
 
 [[Category:Cebuano male given names from place names]]
 
@@ -2766,7 +2711,7 @@ From {{der|ceb|en|Melbourne}}, from {{der|ceb|ang|-}}.
 ===Proper noun===
 {{pt-proper noun|f}}
 
-# {{place|pt|city/state capital|s/Victoria|c/Australia|t1=Melbourne}}
+# {{place|pt|capital city|s/Victoria|c/Australia|t1=Melbourne}}
 
 ----
 
@@ -2776,7 +2721,7 @@ From {{der|ceb|en|Melbourne}}, from {{der|ceb|ang|-}}.
 ===Proper noun===
 {{es-proper noun|m}}
 
-# {{place|es|city|c/Australia|t1=Melbourne}}
+# {{place|es|capital city|s/Victoria|c/Australia|t1=Melbourne}}
 -------- end text --------
 Page 90 Millbrook: Found match for regex: =
 Page 90 Millbrook: -------- begin text ---------
@@ -2786,23 +2731,21 @@ Page 90 Millbrook: -------- begin text ---------
 ===Proper noun===
 {{en-proper noun}}
 
-# {{place|en|village|dist/Central Bedfordshire|co/Bedfordshire|cc/England}} {{q|[[OS]] grid ref TL0138}}.
-# {{place|en|village|co/Cornwall|cc/England}} {{q|OS grid ref SX4252}}.
-# {{place|en|village|metbor/Tameside|co/Greater Manchester|cc/England}} {{q|OS grid ref SJ9799}}.
-# {{place|en|suburb|city/Southampton|co/Hampshire|cc/England}} {{q|OS grid ref SU3913}}.
 # {{place|en|rural district|s/Victoria|c/Australia}}.
-# A village in {{w|Cavan Monaghan}}, [[Ontario]], [[Canada]].
+# {{place|en|village|in the township of|twp/{{w|Cavan Monaghan}}|p/Ontario|c/Canada}}.
+# {{place|en|small village/and/civil parish|dist/Central Bedfordshire|co/Bedfordshire|cc/England}} {{q|[[OS]] grid ref TL0138}}.
+# {{place|en|civil parish/and/village|in southeast|co/Cornwall|cc/England}} {{q|OS grid ref SX4252}}.
+# {{place|en|village|metbor/Tameside|co/Greater Manchester|cc/England}} {{q|OS grid ref SJ9799}}.
+# {{place|en|suburb/and/former civil parish|city/Southampton|co/Hampshire|cc/England}} {{q|OS grid ref SU3913}}.
 # {{place|en|city|co/Autauga County|and|co/Elmore County|s/Alabama|c/USA}}.
 # {{place|en|village|co/Kendall County|s/Illinois|c/USA}}.
 # {{place|en|ghost town|co/Graham County|s/Kansas|c/USA}}.
 # {{place|en|unincorporated community|co/Cole County|s/Missouri|c/USA}}.
 # {{place|en|unincorporated community|co/Warren County|s/New Jersey|c/USA}}.
 # {{place|en|village|co/Dutchess County|s/New York|c/USA}}.
-# {{place|en|former village|co/Wake County|s/North Carolina|c/USA}}.
+# {{place|en|former village|co/Wake County|s/North Carolina|c/USA}}, since incorporated into the city of [[Raleigh]].
 # {{place|en|unincorporated community|co/Wayne County|s/Ohio|c/USA}}.
 # {{place|en|unincorporated community|co/Hampshire County|s/West Virginia|c/USA}}.
-
-{{c|en|Ontario}}
 -------- end text --------
 Page 91 Montcalm: Found match for regex: =
 Page 91 Montcalm: -------- begin text ---------
@@ -2812,16 +2755,19 @@ Page 91 Montcalm: -------- begin text ---------
 ===Proper noun===
 {{en-prop}}
 
-# a regional county municipality in [[Quebec]], [[Canada]].
-# {{place|en|unincorporated community|co/Grafton County|s/New Hampshire|c/USA}}.
+# {{place|en|The former name of [[Tamlouka]], a <<city>> in <<dist/Aïn Makhlouf>>, <<p/Guelma Province>>, <<c/Algeria>>}}.
+# {{place|en|rural municipality|in southern|p/Manitoba|c/Canada}}.
+# {{place|en|municipality|rcomun/Les Laurentides|p/Quebec|c/Canada}}.
+# {{place|en|regional county municipality|in the|r/[[Lanaudière]] region|p/Quebec|c/Canada}}.
+# {{place|en|small hamlet|near the commune of|commune/Vauvert|dept/Gard|c/France}}.
+# {{place|en|unincorporated community|in the town of|town/Enfield|co/Grafton County|s/New Hampshire|c/USA}}.
 # {{place|en|census-designated place|co/Mercer County|s/West Virginia|c/USA}}.
 
 ====Related terms====
 * {{l|en|Montcalm County}}
 
-{{C|en|Quebec}}
-
 ----
+
 ==French==
 
 ===Proper noun===
@@ -2839,12 +2785,10 @@ After Father Morin, a French-speaking [[oblate]] missionary who brought French s
 ===Proper noun===
 {{en-proper noun}}
 
-#{{place|en|town|prov/Alberta|c/Canada}}.
+# {{place|en|town|p/Alberta|c/Canada|;|suburb|city/Edmonton}}.
 
 ====Further reading====
-*{{pedialite|Morinville}}
-
-{{topic|en|Alberta}}
+* {{pedialite|Morinville}}
 
 ===Anagrams===
 * {{anagrams|en|a=eiillmnorv|Vermillion|vermillion}}
@@ -2857,18 +2801,18 @@ Page 93 Morristown: -------- begin text ---------
 ===Proper noun===
 {{en-proper noun}}
 
-# communities in {{l|en|Kings County|Kings}} and {{l|en|Antigonish County|Antigonish Counties}}, [[Nova Scotia]], [[Canada]].
+# {{place|en|community|co/Kings County|p/Nova Scotia|c/Canada}}.
+# {{place|en|community|co/Antigonish County|p/Nova Scotia|c/Canada}}.
 # {{place|en|census-designated place|co/Maricopa County|s/Arizona|c/USA}}.
 # {{place|en|town|co/Shelby County|s/Indiana|c/USA}}.
 # {{place|en|small city|co/Rice County|s/Minnesota|c/USA}}.
 # {{place|en|town/county seat|co/Morris County|s/New Jersey|c/USA}}.
-# {{place|en|unincorporated community|co/Middlesex County|s/New Jersey}}.
+# {{place|en|unincorporated community|in|twp/Old Bridge Township|co/Middlesex County|s/New Jersey}}.
 # {{place|en|town/and/village|co/St. Lawrence County|s/New York|c/USA}}.
 # {{place|en|village|co/Belmont County|s/Ohio|c/USA}}.
 # {{place|en|city/county seat|co/Hamblen County|s/Tennessee|c/USA}}.
+# {{place|en|town|co/Lamoille County|s/Vermont|c/USA}}.
 # {{place|en|unincorporated community|co/Wirt County|s/West Virginia|c/USA}}.
-
-{{C|en|Nova Scotia}}
 -------- end text --------
 Page 94 Muskoka: Found match for regex: =
 Page 94 Muskoka: -------- begin text ---------
@@ -2880,12 +2824,10 @@ From {{etyl|oj|en}}: the region is named for the Ojibwe chief who resided there,
 ===Proper noun===
 {{en-proper noun}}
 
-# A municipality of [[Central Ontario]], Canada.
+# {{place|en|regional municipality|r/Central Ontario|p/Ontario|c/Canada}}.
 
 ====Derived terms====
 * {{l|en|Muskoka chair}}
-
-[[Category:en:Ontario]]
 -------- end text --------
 Page 95 Napier: Found match for regex: =
 Page 95 Napier: -------- begin text ---------
@@ -2896,11 +2838,14 @@ See {{m|en|napery}}
 {{en-proper noun}}
 
 # {{surname|en|[[Scottish]] [[occupational]]|from=occupations|dot=}} for someone who sold table [[linen]], or was in charge of the linen of a great house.
-# {{w|John Napier}}, Scottish mathematician etc
+# {{w|John Napier}}, Scottish mathematician etc.
 # {{given name|en|male|from=surnames}}.
-# {{place|en|city|c/New Zealand}}.
-# A village in [[Western Cape]], [[South Africa]].
-# {{place|en|unincorporated community|s/West Virginia}}.
+# {{place|en|locality|in the|dist/Riverina|s/New South Wales|c/Australia}}.
+# {{place|en|unincorporated place|in the township of|twp/Adelaide Metcalfe|co/Middlesex County|p/Ontario|c/Canada}}.
+# {{place|en|city|r/Hawke's Bay|isl/North Island|c/New Zealand}}.
+# {{place|en|village|r/Overberg|p/Western Cape|c/South Africa}}.
+# {{place|en|ghost town|co/Holt County|s/Missouri|c/USA}}.
+# {{place|en|unincorporated community|co/Braxton County|s/West Virginia|c/USA}}.
 
 ====Derived terms====
 {{col2|en
@@ -2917,11 +2862,6 @@ See {{m|en|napery}}
 
 ===Anagrams===
 * {{anagrams|en|a=aeinpr|arpine|panier|rapine}}
-
-[[Category:en:New South Wales]]
-[[Category:en:Ontario]]
-[[Category:en:South Africa]]
-[[Category:en:Villages]]
 -------- end text --------
 Page 96 No Fun City: Found match for regex: =
 Page 96 No Fun City: -------- begin text ---------
@@ -2967,7 +2907,7 @@ From {{der|en|la|-}}, literally “New Scotland”, from {{m|la|nova}}, feminine
 {{en-propn|head=Nova Scotia}}
 
 # {{place|en|province|in eastern|c/Canada|capital=Halifax}}.
-# The [[peninsula]] that makes up most of the province.
+# {{place|en|peninsula|on the coast of the|ocean/Atlantic}}, comprising most of the province of Nova Scotia.
 
 ====Derived terms====
 * {{l|en|Nova Scotian}}
@@ -3032,7 +2972,7 @@ From {{der|en|la|-}}, literally “New Scotland”, from {{m|la|nova}}, feminine
 ===Anagrams===
 * {{anagrams|en|a=aacinoostv|avocations}}
 
-{{topics|en|Nova Scotia|Peninsulas}}
+{{topics|en|Nova Scotia}}
 
 ----
 
@@ -3044,12 +2984,10 @@ From {{der|en|la|-}}, literally “New Scotland”, from {{m|la|nova}}, feminine
 ===Proper noun===
 {{fi-noun|proper=true|head=Nova Scotia}}
 
-# [[#English|Nova Scotia]]
+# {{place|fi|province|in eastern|c/Canada|t1=Nova Scotia}}
 
 ====Declension====
 {{fi-decl-kulkija|n=sg|Nova Scoti|a}}
-
-[[Category:fi:Provinces of Canada]]
 -------- end text --------
 Page 98 Oka: Found match for regex: {
 Page 98 Oka: -------- begin text ---------
@@ -3078,7 +3016,7 @@ From {{der|en|fr|-}}, from {{der|en|moh|||a kind of pike [fish]}} {{attention|mo
 ====Proper noun====
 {{en-proper noun}}
 
-# A certain village in the Canadian province of Quebec.
+# {{place|en|small village/suburb|city/Montreal|p/Quebec|c/Canada}}.
 
 ====Noun====
 {{en-noun|-}}
@@ -3090,6 +3028,9 @@ From {{der|en|fr|-}}, from {{der|en|moh|||a kind of pike [fish]}} {{attention|mo
 ====Proper noun====
 {{en-proper noun}}
 
+# {{place|en|ancient town|r/Bithynia}}.
+# {{place|en|capital city|lgarea/Akoko South-West|s/Ondo|c/Nigeria}}.
+# {{place|en|unincorporated community|co/Calhoun County|s/West Virginia|c/USA}}.
 # A common family/surname among Marathi Chitpawan Brahmins of Western India. Also spelt as [[Oke]] and [[Oak]].
 
 ===Further reading===
@@ -3098,23 +3039,21 @@ From {{der|en|fr|-}}, from {{der|en|moh|||a kind of pike [fish]}} {{attention|mo
 ===Anagrams===
 * {{anagrams|en|a=ako|A-OK|AOK|Kao|OAK|koa|oak}}
 
-[[Category:en:Canada]]
 [[Category:en:Cheeses]]
-[[Category:en:Quebec]]
 -------- end text --------
 Page 99 Oromocto: Found match for regex: =
 Page 99 Oromocto: -------- begin text ---------
 ==English==
 
+===Etymology===
+The town is derived from the river, which is thought to have originated in {{bor|en|pqm|welamukotuk||deep water}}.
+
 ===Proper noun===
 {{en-proper noun}}
 
-# A town, a lake and a river in [[New Brunswick]], [[Canada]]
-
-[[Category:en:Lakes]]
-[[Category:en:New Brunswick]]
-[[Category:en:Rivers]]
-[[Category:en:Towns]]
+# {{place|en|river|p/New Brunswick|c/Canada}}.
+# {{place|en|town|co/Sunbury County|p/New Brunswick|c/Canada}}, located at the mouth of the river of the same name.
+# {{place|en|lake|p/New Brunswick|c/Canada}}, from which the {{w|Oromocto River|North Oromocto River}} (a tributary of the Oromocto River) flows.
 -------- end text --------
 Page 100 Pangnirtung: Found match for regex: =
 Page 100 Pangnirtung: -------- begin text ---------
@@ -3127,9 +3066,7 @@ Page 100 Pangnirtung: -------- begin text ---------
 ===Proper noun===
 {{en-proper noun}}
 
-# {{l|en|An [[Inuit]] [[hamlet]] in the [[Canadian]] territory of [[Nunavut]], located on [[Baffin Island]].}}
-
-{{C|en|Nunavut}}
+# {{place|en|An [[Inuit]] <<hamlet>> on <<isl/Baffin Island>>, <<terr/Nunavut>>, <<c/Canada>>}}.
 -------- end text --------
 Page 101 Peterborough: Found match for regex: =
 Page 101 Peterborough: -------- begin text ---------
@@ -3142,18 +3079,16 @@ Page 101 Peterborough: -------- begin text ---------
 ===Proper noun===
 {{en-proper noun}}
 
-# {{place|en|city/and/unitary authority|co/Cambridgeshire|cc/England}}
-# A [[city]] in Central Ontario, Canada
-# {{place|en|town|s/New Hampshire}}.
+# {{place|en|cathedral city/and/unitary authority|co/Cambridgeshire|cc/England}}.
 # {{place|en|town|s/South Australia}}.
-# {{place|en|town|s/Victoria|c/Australia}}.
+# {{place|en|town|on the|road/Great Ocean Road|s/Victoria|c/Australia}}.
+# {{place|en|city|on the|riv/Otonabee River|r/Central Ontario|p/Ontario|c/Canada}}.
+# {{place|en|town|co/Hillsborough County|s/New Hampshire|c/USA}}.
 
 ====Derived terms====
 * {{l|en|Huntingdon and Peterborough}}
 * {{l|en|Soke of Peterborough}}
 
-[[Category:en:Cities in Canada]]
-[[Category:en:Ontario]]
 {{c|en|Boroughs in England}}
 -------- end text --------
 Page 102 Philipsburg: Found match for regex: =
@@ -3172,12 +3107,10 @@ Page 102 Philipsburg: -------- begin text ---------
 ===Proper noun===
 {{en-proper noun}}
 
+# {{place|en|village|in the municipality of|mun/{{w|Saint-Armand, Quebec|Saint-Armand}}|p/Quebec|c/Canada}}.
+# {{place|en|town/capital|cc/Sint Maarten}}.
 # {{place|en|town/county seat|co/Granite County|s/Montana|c/USA}}.
 # {{place|en|borough|co/Centre County|s/Pennsylvania|c/USA}}.
-# a village in {{w|Saint-Armand, Quebec}}, [[Canada]].
-# the main town and [[capital]] of {{l|en|Sint Maarten}} in the [[Caribbean]].
-
-{{C|en|Quebec}}
 
 ====Derived terms====
 * {{l|en|philipsburgite}}
@@ -3195,9 +3128,7 @@ Page 103 Poplarville: -------- begin text ---------
 {{en-proper noun}}
 
 # {{place|en|city/county seat|co/Pearl River County|s/Mississippi|c/USA}}. Named after ''Poplar Jim Smith'' {{suffix|en||ville}}.
-# a community near {{w|Lake Winnipeg}}, [[Manitoba]], [[Canada]].
-
-{{c|en|Manitoba}}
+# {{place|en|community|near|lake/{{w|Lake Winnipeg}}|p/Manitoba|c/Canada}}.
 -------- end text --------
 Page 104 Portage: Found match for regex: {
 Page 104 Portage: -------- begin text ---------
@@ -3208,21 +3139,19 @@ Page 104 Portage: -------- begin text ---------
 ===Proper noun===
 {{en-proper noun}}
 
-# {{place|en|former settlement|s/Alaska|c/USA}}, which was destroyed by an earthquake in 1964.
-# {{place|en|city|co/Porter County|s/Indiana|c/USA}}.
+# {{place|en|community|rmun/Cape Breton Regional Municipality|on|isl/Cape Breton Island|p/Nova Scotia|c/Canada}}.
+# {{place|en|settlement|p/Prince Edward Island|c/Canada}}.
+# {{place|en|ghost town/and/former settlement|s/Alaska|c/USA}}, which was destroyed by an earthquake in 1964.
+# {{place|en|city|twp/Portage Township|co/Porter County|s/Indiana|c/USA}}.
 # {{place|en|city|co/Kalamazoo County|s/Michigan|c/USA}}.
 # {{place|en|town|co/Livingston County|s/New York|c/USA}}.
 # {{place|en|village|co/Wood County|s/Ohio|c/USA}}.
-# {{place|en|borough|co/Cambria County|s/Pennsylvania|c/USA}}.
+# {{place|en|home rule borough|co/Cambria County|s/Pennsylvania|c/USA}}.
 # {{place|en|small town|co/Box Elder County|s/Utah|c/USA}}, named after [[Portage County]] in [[Ohio]].
 # {{place|en|city/county seat|co/Columbia County|s/Wisconsin|c/USA}}.
-# a community on [[Cape Breton Island]], [[Nova Scotia]], [[Canada]].
-# a settlement on [[Prince Edward Island]], [[Canada]].
 
 ===Anagrams===
 * {{anagrams|en|a=aegoprt|potager|top gear}}
-
-{{topics|en|Nova Scotia|Prince Edward Island}}
 -------- end text --------
 Page 105 Potton: Found match for regex: =
 Page 105 Potton: -------- begin text ---------
@@ -3232,13 +3161,11 @@ Page 105 Potton: -------- begin text ---------
 ===Proper noun===
 {{en-proper noun}}
 
-# {{place|en|town/and/civil parish|co/Bedfordshire|cc/England}}
-# A township municipality in [[Quebec]], [[Canada]]
+# {{place|en|town/and/civil parish|dist/Central Bedfordshire|co/Bedfordshire|cc/England}}.
+# {{place|en|township municipality|rcomun/Memphrémagog|p/Quebec|c/Canada}}.
 
 ====Derived terms====
 * {{l|en|Potton Island}}
-
-[[Category:en:Quebec]]
 -------- end text --------
 Page 106 Raincouver: Found match for regex: =
 Page 106 Raincouver: -------- begin text ---------
@@ -3278,12 +3205,11 @@ Believed to be from {{etyl|gd|en}}
 ===Proper noun===
 {{en-proper noun}}
 
-# {{place|en|village|cc/Scotland}}.
+# {{place|en|village/suburb|city/Edinburgh|cc/Scotland}}.
+# {{place|en|rural community|in the township of|twp/Blandford-Blenheim|co/Oxford County|p/Ontario|c/Canada}}.
 
 ===Anagrams===
 * {{anagrams|en|a=ahort|Horta|Roath|Thora|Torah}}
-
-{{topics|en|Ontario}}
 -------- end text --------
 Page 108 Red Bluff: Found match for regex: =
 Page 108 Red Bluff: -------- begin text ---------
@@ -3293,10 +3219,8 @@ Page 108 Red Bluff: -------- begin text ---------
 ===Proper noun===
 {{en-proper noun|head=[[red|Red]] [[bluff|Bluff]]}}
 
-# an unincorporated settlement and Indian reserve near {{l|en|Quesnel}}, [[British Columbia]], [[Canada]].
+# {{place|en|unincorporated settlement/and/Indian reserve|near the city of|city/Quesnel|p/British Columbia|c/Canada}}.
 # {{place|en|city/county seat|co/Tehama County|s/California|c/USA}}.
-
-{{C|en|British Columbia}}
 -------- end text --------
 Page 109 Regina: Found match for regex: {
 Page 109 Regina: -------- begin text ---------
@@ -3335,7 +3259,12 @@ From {{der|en|la|regina||queen}}. The given name originally referred to the [[Vi
 {{en-proper noun}}
 
 # {{lb|en|formal|usually|italicized}} The [[reign]]ing [[queen]].
-# The provincial capital of [[Saskatchewan]] ([[Canada]]) with a metropolitan population of about 200,000.
+# {{place|en|capital city|p/Saskatchewan|c/Canada}}, with a metropolitan population of about 200,000.
+# {{place|en|neighborhood|in the community of|community/Nokomis|city/Minneapolis|s/Minnesota|c/USA}}.
+# {{place|en|unincorporated community|co/Jefferson County|s/Missouri|c/USA}}.
+# {{place|en|CDP|co/Sandoval County|s/New Mexico|c/USA}}.
+# {{place|en|unincorporated community|co/Lancaster County|and|no/Northumberland County|s/Virginia|c/USA}}.
+# {{place|en|unincorporated community|in the town of|town/Almon|co/Shawano County|s/Wisconsin|c/USA}}.
 # {{given name|en|female|from=Latin}}.
 #* '''1996''' {{w|Martha Grimes}}, ''Hotel Paradise'', Headline, {{ISBN|0-7472-1538-3}}, page 5:
 #*: Of course, her name isn't really 'Ree-Jane'; it's '''Regina''' Jane Davidow. I have always thought the name itself rather wonderful and am only sorry it belongs to her.
@@ -3375,9 +3304,6 @@ From {{der|en|la|regina||queen}}. The given name originally referred to the [[Vi
 
 ===Anagrams===
 * {{anagrams|en|a=aeginr|Gainer|Gearin|Reagin|anigre|earing|gainer|in gear|inrage|raigne|reagin|regain|regian}}
-
-[[Category:en:Cities in Canada]]
-[[Category:en:Saskatchewan]]
 
 ----
 
@@ -3448,12 +3374,10 @@ Page 110 Rimbey: -------- begin text ---------
 {{en-proper noun}}
 
 # {{surname|en}}
-#{{place|en|town|prov/Alberta|c/Canada}}.
+# {{place|en|town|in central|p/Alberta|c/Canada}}.
 
 ====Further reading====
 *{{pedialite|Rimbey}}
-
-{{topic|en|Alberta}}
 -------- end text --------
 Page 111 Salmon River: Found match for regex: {
 Page 111 Salmon River: -------- begin text ---------
@@ -3466,14 +3390,29 @@ Many of the rivers are named for the presence of [[salmon]].
 ===Proper noun===
 {{en-proper noun|head=[[salmon|Salmon]] [[river|River]]}}
 
-# the name of many rivers in [[Canada]] and the [[United States of America]] (including [[Alaska]]), the longest of which is in [[Idaho]].
-# a suburban community in {{l|en|Colchester County}}, [[Nova Scotia]], named after the local river.
-# two small communities in {{l|en|Digby County|Digby}} and {{l|en|Richmond County|Richmond Counties}}, Nova Scotia.
+# {{place|en|tributary|of the|canal/Portland Canal|in northwestern|p/British Columbia|c/Canada}}.
+# {{place|en|tributary|riv/Fraser River|p/British Columbia|c/Canada}}.
+# {{place|en|river|in northern|isl/Vancouver Island|p/British Columbia|c/Canada}}.
+# {{place|en|small river|distmun/Langley|p/British Columbia|c/Canada}}.
+# {{place|en|tributary|lake/Shuswap Lake|in the|r/[[Shuswap]] region|p/British Columbia|c/Canada}}.
+# {{place|en|river|on|isl/Moresby Island|in the|arch/[[Haida Gwaii]] archipelago|p/British Columbia|c/Canada}}.
+# {{place|en|river|p/New Brunswick|c/Canada}}.
+# {{place|en|river/and/unincorporated community|co/Colchester County|p/Nova Scotia|c/Canada}}.
+# {{place|en|small rural community|co/Digby County|p/Nova Scotia|c/Canada}}.
+# {{place|en|small community|co/Richmond County|p/Nova Scotia|c/Canada}}.
+# {{place|en|river|p/Ontario|c/Canada}}.
+# {{place|en|Several <<rivers>> in <<c/Alaska>>, <<c/USA>>}}.
+# {{place|en|tributary|riv/Klamath River|in western|co/Siskiyou County|s/California|c/USA}}.
+# {{place|en|tributary|riv/Connecticut River|in|s/Connecticut|c/USA}}.
+# {{place|en|long tributary|riv/Snake River|in|s/Idaho|c/USA}}, at 425 miles the longest river of this name in the United States.
+# {{place|en|tributary|lake/Lake Ontario|in upstate|s/New York|c/USA}}.
+# {{place|en|small tributary|lake/Lake Champlain|in far northern|s/New York|c/USA}}, south of [[Plattsburgh]].
+# {{place|en|tributary|riv/Sandy River|in|co/Clackamas County|s/Oregon|c/USA}}.
+# {{place|en|coastal river|mostly in|co/Lincoln County|s/Oregon|c/USA}}.
+# {{place|en|tributary|riv/Queets River|in|s/Washington|c/USA}}.
 
 ====Related terms====
 * {{l|en|Salmon}} {{q|Idaho}}
-
-{{c|en|Rivers in Canada|Rivers in the United States|Nova Scotia}}
 -------- end text --------
 Page 112 Saskatoon: Found match for regex: {
 Page 112 Saskatoon: -------- begin text ---------
@@ -3490,7 +3429,7 @@ From {{m|en|saskatoon}}.
 {{wikipedia}}
 {{en-proper noun}}
 
-# The largest [[city]] in the [[province]] of [[Saskatchewan]], [[Canada]] (2016 census: 246,376 (city); 295,095 (metro)), located on the [[South Saskatchewan River]].
+# {{place|en|The largest <<city>> is <<p/Saskatchewan>>, <<c/Canada>>}} (2016 census: 246,376 (city); 295,095 (metro)), located on the [[South Saskatchewan River]].
 
 ====Derived terms====
 * {{l|en|Saskatonian}} {{q|the most common [[demonym]]}}
@@ -3524,9 +3463,6 @@ From {{m|en|saskatoon}}.
 ====See also====
 * [[saskatoon]], {{vern|saskatoon berry}} ({{taxlink|Amelanchier alnifolia|species|noshow=1|ver=161023}})
 
-[[Category:en:Cities in Canada]]
-[[Category:en:Saskatchewan]]
-
 ----
 
 ==Portuguese==
@@ -3547,10 +3483,8 @@ Page 113 Shell Lake: -------- begin text ---------
 ===Proper noun===
 {{en-proper noun|head=[[shell|Shell]] [[lake|Lake]]}}
 
-# a village in the Rural Municipality of Spiritwood, [[Saskatchewan]], [[Canada]].
+# {{place|en|village|rurmun/Spiritwood|p/Saskatchewan|c/Canada}}.
 # {{place|en|city/county seat|co/Washburn County|s/Wisconsin|c/USA}}.
-
-{{c|en|Saskatchewan}}
 -------- end text --------
 Page 114 Sherwood Park: Found match for regex: =
 Page 114 Sherwood Park: -------- begin text ---------
@@ -3562,12 +3496,12 @@ Originally named [[Campbelltown]], after the [[Campbell]] family, who first sett
 ===Proper noun===
 {{en-proper noun}}
 
-#{{place|en|hamlet/former city|prov/Alberta|c/Canada|;|the centre of [[Strathcona County]]}}.
+# {{place|en|large hamlet/former city|co/Strathcona County|p/Alberta|c/Canada}}.
+# {{place|en|community|in the town of|town/Royal Tunbridge Wells|co/Kent|cc/England}}.
+# {{place|en|neighborhood|city/Richmond|s/Virginia|c/USA}}.
 
 ====See also====
 *{{pedialite}}
-
-{{topic|en|Alberta}}
 -------- end text --------
 Page 115 Silverton: Found match for regex: =
 Page 115 Silverton: -------- begin text ---------
@@ -3577,6 +3511,12 @@ Page 115 Silverton: -------- begin text ---------
 ===Proper noun===
 {{en-proper noun}}
 
+# {{place|en|small village|west of|city/Broken Hill|s/New South Wales|c/Australia}}.
+# {{place|en|locality|s/South Australia}}.
+# {{place|en|village|in the|val/Slocan Valley|p/British Columbia|c/Canada}}.
+# {{place|en|large village/and/civil parish|dist/Mid Devon|co/Devon|cc/England}}.
+# {{place|en|large housing estate|area/Dumbarton East|in the town of|town/Dumbarton|cc/Scotland}}.
+# {{place|en|eastern suburb|city/Pretoria|c/South Africa}}.
 # {{place|en|statutory town/county seat|co/San Juan County|s/Colorado|c/USA}}.
 # {{place|en|unincorporated community|co/Shoshone County|s/Idaho|c/USA}}.
 # {{place|en|historic town|co/Douglas County|s/Missouri|c/USA}}.
@@ -3585,13 +3525,8 @@ Page 115 Silverton: -------- begin text ---------
 # {{place|en|village|co/Hamilton County|s/Ohio|c/USA}}.
 # {{place|en|small city/county seat|co/Briscoe County|s/Texas|c/USA}}.
 # {{place|en|unincorporated community|co/Snohomish County|s/Washington|c/USA}}.
-# a small village west of {{l|en|Broken Hill}}, [[New South Wales]], [[Australia]].
-# {{place|en|village|dist/Mid Devon|co/Devon|cc/England}}.
-# a housing estate in {{l|en|Dumbarton}}, [[Scotland]].
-# a village in the {{l|en|Slocan Valley}} area of [[British Columbia]], [[Canada]]
+# {{place|en|unincorporated community|co/Jackson County|s/West Virginia|c/USA}}.
 # {{surname|en}}
-
-{{C|en|New South Wales|Scotland|British Columbia}}
 -------- end text --------
 Page 116 Springbrook: Found match for regex: =
 Page 116 Springbrook: -------- begin text ---------
@@ -3603,12 +3538,13 @@ Page 116 Springbrook: -------- begin text ---------
 ===Proper noun===
 {{en-proper noun}}
 
-# {{place|en|hamlet|p/Alberta|c/Canada}}
-# {{place|en|city|s/Iowa}}
-# {{place|en|city|s/North Dakota}}
-# {{place|en|town|s/Wisconsin}}
-
-[[Category:en:Prince Edward Island]]
+# {{place|en|mountain/plateau/town/and/locality|lgarea/City of Gold Coast|s/Queensland|c/Australia}}.
+# {{place|en|hamlet|in central|p/Alberta|c/Canada}}.
+# {{place|en|community|in the township of|twp/Stirling-Rawdon|p/Ontario|c/Canada}}.
+# {{place|en|community|in the township of|twp/Lot 21|p/Prince Edward Island|c/Canada}}.
+# {{place|en|tiny city|co/Jackson County|s/Iowa}}.
+# {{place|en|tiny city|co/Williams County|s/North Dakota}}.
+# {{place|en|small town/unincorporated community/and/CDP|co/Washburn County|s/Wisconsin}}.
 -------- end text --------
 Page 117 St. John's: Found match for regex: {
 Page 117 St. John's: -------- begin text ---------
@@ -3619,8 +3555,16 @@ Page 117 St. John's: -------- begin text ---------
 ===Proper noun===
 {{en-proper noun|head=[[St|St.]] [[John]][['s]]}}
 
-# The capital of [[Antigua and Barbuda]].
-# The [[provincial capital]] and largest city of [[Newfoundland and Labrador]], [[Canada]].
+# {{place|en|The <<capital>> and largest <<city>> of <<c/Antigua and Barbuda>>}}.
+# {{place|en|The <<capital>> and largest <<city>> of <<p/Newfoundland and Labrador>>, <<c/Canada>>}}.
+# {{place|en|hamlet|on the fringes of the town of|town/Redhill|co/Surrey|cc/England}}.
+# {{place|en|village/suburb|of the town of|town/Woking|co/Surrey|cc/England}}, also spelled ''St Johns''.
+# {{place|en|A <<former parish>>, now in <<co/South Yorkshire>>, <<cc/England>>}} and forming part of the civil parish of [[Dinnington St. John's]].
+# {{place|en|large suburb|city/Worcester|co/Worcestershire|cc/England}}.
+# {{place|en|civil parish|co/Kildare|c/Ireland}}.
+# {{place|en|civil parish|co/Roscommon|c/Ireland}}.
+# {{place|en|small village|in the [[sheading]] of|sheading/Glenfaba|cdep/Isle of Man}}.
+# {{place|en|suburb|city/Auckland|c/New Zealand}}.
 
 ====Translations====
 {{trans-top|capital of Antigua and Barbuda}}
@@ -3647,11 +3591,6 @@ Page 117 St. John's: -------- begin text ---------
 * {{l|en|St John's}}
 * {{l|en|St. John}}
 * {{l|en|St John}}
-
-[[Category:en:Antigua and Barbuda]]
-[[Category:en:Canada]]
-[[Category:en:Capital cities]]
-[[Category:en:Newfoundland and Labrador]]
 -------- end text --------
 Page 118 Surrey girl: Found match for regex: =
 Page 118 Surrey girl: -------- begin text ---------
@@ -3681,7 +3620,7 @@ Page 119 TMR: -------- begin text ---------
 ===Proper noun===
 {{en-proper noun}}
 
-# {{initialism of|en|Town of Mount Royal|nodot=1}}: a municipality in the province of [[Quebec]], [[Canada]].
+# {{initialism of|en|Town of Mount Royal|nodot=1}}: {{place|en|a=a|municipality|p/Quebec|c/Canada}}.
 
 ====Translations====
 {{trans-top|Town of Mount Royal}}
@@ -3691,8 +3630,6 @@ Page 119 TMR: -------- begin text ---------
 
 ===Anagrams===
 * {{anagrams|en|a=mrt|MRT|MTR|RTM}}
-
-[[Category:en:Quebec]]
 -------- end text --------
 Page 120 Tulita: Found match for regex: =
 Page 120 Tulita: -------- begin text ---------
@@ -3701,9 +3638,7 @@ Page 120 Tulita: -------- begin text ---------
 ===Proper noun===
 {{en-proper noun}}
 
-# {{place|en|hamlet|terr/Northwest Territories|c/Canada}}
-
-[[Category:en:Northwest Territories]]
+# {{place|en|hamlet|r/Sahtu Region|terr/Northwest Territories|c/Canada}}.
 -------- end text --------
 Page 121 Tyndall: Found match for regex: =
 Page 121 Tyndall: -------- begin text ---------
@@ -3714,8 +3649,8 @@ Page 121 Tyndall: -------- begin text ---------
 {{en-proper noun}}
 
 # {{surname|en|A=An English|dot=}}, a variant of [[Tindall]]/[[Tyndale]]/[[Tindill]].
+# {{place|en|hamlet|rurmun/Brokenhead|p/Manitoba|c/Canada}}.
 # {{place|en|small city/county seat|co/Bon Homme County|s/South Dakota|c/USA}}.
-# A hamlet in the {{w|Rural Municipality of Brokenhead}}, [[Manitoba]], [[Canada]].
 
 ====Derived terms====
 * {{l|en|Tyndall stone}}
@@ -3724,7 +3659,6 @@ Page 121 Tyndall: -------- begin text ---------
 * {{l|en|Tyndell}}
 
 [[Category:English surnames from Old English]]
-{{c|en|Manitoba}}
 -------- end text --------
 Page 122 Valleyfield: Found match for regex: =
 Page 122 Valleyfield: -------- begin text ---------
@@ -3734,13 +3668,12 @@ Page 122 Valleyfield: -------- begin text ---------
 ===Proper noun===
 {{en-proper noun}}
 
-# {{place|en|village|p/Newfoundland and Labrador|c/Canada}}.
-# A [[community]] in {{w|Three Rivers, Prince Edward Island}}, Canada.
+# {{place|en|village|in the municipality of|mun/New-Wes-Valley|p/Newfoundland and Labrador|c/Canada}}.
+# {{place|en|community|in the town of|town/{{w|Three Rivers, Prince Edward Island|Three Rivers}}|co/Kings County|p/Prince Edward Island|c/Canada}}, formerly a [[municipality]].
+# {{place|en|Two <<villages>> in <<carea/Fife>>, <<cc/Scotland>>}}, [[High Valleyfield]] and [[Low Valleyfield]].
 
 ====Derived terms====
 * {{l|en|Low Valleyfield}}
-
-{{c|en|Prince Edward Island}}
 -------- end text --------
 Page 123 Vangroovy: Found match for regex: =
 Page 123 Vangroovy: -------- begin text ---------
@@ -3778,12 +3711,11 @@ Page 124 Wareham: -------- begin text ---------
 ===Proper noun===
 {{en-proper noun}}
 
-# {{place|en|town|co/Dorset|cc/England}}.
-# {{place|en|town|s/Massachusetts|c/USA}}.
-# a settlement in [[Newfoundland]], [[Canada]].
-# {{place|en|community|p/Ontario|c/Canada}}.
-
-{{topics|en|Newfoundland and Labrador}}
+# {{place|en|community|in the town of|town/Centreville-Wareham-Trinity|p/Newfoundland and Labrador|c/Canada}}.
+# {{place|en|community|co/Grey County|p/Ontario|c/Canada}}.
+# {{place|en|market town|co/Dorset|cc/England}}.
+# {{place|en|town|co/Plymouth County|s/Massachusetts|c/USA}}.
+# {{place|en|ghost town|co/Pine County|s/Minnesota|c/USA}}.
 -------- end text --------
 Page 125 Westlock: Found match for regex: =
 Page 125 Westlock: -------- begin text ---------
@@ -3797,15 +3729,13 @@ The original unincorporated community east of the present town, established 1902
 ===Proper noun===
 {{en-proper noun}}
 
-#{{place|en|town|prov/Alberta|c/Canada|;|the centre of [[Westlock County]],|formerly named [[Edson]] and [[Edison]]}}.
+# {{place|en|town|co/Westlock County|in centralp/Alberta|c/Canada}}; formerly named [[Edson]] and [[Edison]].
 
 ====Derived terms====
-*[[Westlock County]]
+* {{l|en|Westlock County}}
 
 ====Further reading====
-*{{pedialite}}
-
-{{topic|en|Alberta}}
+* {{pedialite}}
 -------- end text --------
 Page 126 Whitburn: Found match for regex: =
 Page 126 Whitburn: -------- begin text ---------
@@ -3815,12 +3745,10 @@ Page 126 Whitburn: -------- begin text ---------
 ===Proper noun===
 {{en-proper noun}}
 
+# {{place|en|locality|mundist/{{w|Saddle Hills County}}|p/Alberta|c/Canada}}.
 # {{place|en|village|metbor/South Tyneside|co/Tyne and Wear|cc/England}} {{q|[[OS]] grid ref NZ4062}}.
-# {{place|en|town|council area/West Lothian|cc/Scotland}} {{q|OS grid ref NS9464}}.
-# a locality in {{w|Saddle Hills County}}, [[Alberta]], [[Canada]].
+# {{place|en|small town|council area/West Lothian|cc/Scotland}} {{q|OS grid ref NS9464}}.
 # {{surname|en}}
-
-{{C|en|Alberta}}
 -------- end text --------
 Page 127 White River: Found match for regex: =
 Page 127 White River: -------- begin text ---------
@@ -3830,15 +3758,39 @@ Page 127 White River: -------- begin text ---------
 ===Proper noun===
 {{en-proper noun|head=[[white|White]] [[river|River]]}}
 
-# the name of a number of rivers around the world, notably in the [[United States]] and [[Canada]].
-# a township in {{w|Algoma District}}, [[Ontario]], [[Canada]].
-# a suburb of {{l|en|Honiara}} in the [[Solomon Islands]].
+# Several [[river]]s:
+## {{place|en|major tributary|riv/Kootenay River|p/British Columbia|c/Canada}}; it is 40 miles long.
+## {{place|en|tributary|riv/Salmon River|on|isl/Vancouver Island|p/British Columbia|c/Canada}}.
+## {{place|en|tributary|riv/Nass River|p/British Columbia|c/Canada}}.
+## {{place|en|tributary|riv/St. Lawrence River|in|p/Quebec|c/Canada}}.
+## {{place|en|tributary|riv/Yukon River|in|s/Alaska|c/USA|and|terr/Yukon|c/Canada}}; it is about 200 miles long.
+## {{place|en|tributary|lake/Lake Superior|in|dist/Thunder Bay|p/Ontario|c/Canada}}.
+## {{place|en|river|c/Jamaica}}.
+## {{place|en|tributary|riv/Waimakariri River|on the|isl/South Island|c/New Zealand}}.
+## {{place|en|former river|terr/Montserrat}}, destroyed by pyroclastic flows.
+## {{place|en|tributary|riv/Salt River|in|s/Arizona|c/USA}}; it is 16 miles long.
+## {{place|en|major tributary|riv/Mississippi River|in|s/Arkansas|and|s/Missouri|c/USA}}; it is 722 miles long.
+## {{place|en|small river|co/Tulare County|in the southern|val/San Joaquin Valley|s/California|c/USA}}. It is 50.7 miles long and dries up as it nears [[Kern County]].
+## {{place|en|major tributary|riv/Wabash River|in|s/Indiana|c/USA}}; it is 362 miles long and has two forks.
+## {{place|en|tributary|lake/White Lake|in|s/Michigan|c/USA}}; it is 23.6 miles long.
+## {{place|en|tributary|lake/Lake Huron|in southern|co/Huron County|s/Michigan|c/USA}}; it is 12.1 miles long.
+## {{place|en|small river|in southeastern|s/Nevada|c/USA}}. It is 138 miles long but dry in several portions.
+## {{place|en|tributary|riv/Deschutes River|in|s/Oregon|c/USA}}; it is about 50 miles long.
+## {{place|en|long tributary|riv/Missouri River|in|s/Nebraska|and|s/South Dakota|c/USA}}; it is 580 miles long.
+## {{place|en|An intermittent <<stream>>, a <<tributary>> of the <<riv/Brazos River>> in the <<r/South Plains>> of <<s/Texas>>, <<c/USA>>}}; it is 62 miles long.
+## {{place|en|tributary|riv/Green River|in|s/Colorado|and|s/Utah|c/USA}}; it is 195 miles long.
+## {{place|en|tributary|riv/Price River|in|s/Utah|c/USA}}.
+## {{place|en|tributary|riv/Connecticut River|in|s/Vermont|c/USA}}; it is 60.1 miles long.
+## {{place|en|tributary|riv/Puyallup River|in|s/Washington|c/USA}}; it is about 75 miles long.
+## {{place|en|tributary|lake/Lake Wenatchee|in|s/Washington|c/USA}}; it is 32 miles long.
+## {{place|en|tributary|riv/Fox River|in|s/Wisconsin|c/USA}}; it is about 19 miles long.
+# {{place|en|township|dist/{{w|Algoma District}}|p/Ontario|c/Canada}}.
+# {{place|en|suburb|of the city of|city/Honiara|c/Solomon Islands}}.
 # {{place|en|town|p/Mpumalanga|c/South Africa}}.
 # {{place|en|unincorporated community|co/Gibson County|s/Indiana|c/USA}}.
 # {{place|en|small city/county seat|co/Mellette County|s/South Dakota|c/USA}}.
-# {{place|en|unincorporated community/and/town|co/Ashland County|s/Wisconsin|c/USA}}.
-
-{{c|en|Rivers|Rivers in Canada|Rivers in the United States|Ontario|Solomon Islands}}
+# {{place|en|town|co/Ashland County|s/Wisconsin|c/USA}}.
+# {{place|en|unincorporated community|in the town of|town/Gingles|co/Ashland County|s/Wisconsin|c/USA}}.
 -------- end text --------
 Page 128 Willows: Found match for regex: {
 Page 128 Willows: -------- begin text ---------
@@ -3849,15 +3801,13 @@ Page 128 Willows: -------- begin text ---------
 ===Proper noun===
 {{en-prop}}
 
-# {{place|en|city/county seat|co/Glenn County|s/California|c/USA}}.
-# an unincorporated community in Lake of the Rivers Rural Municipality, [[Saskatchewan]], [[Canada]].
-# The Willows, a residential community in {{l|en|Saskatoon}}, Saskatchewan.
-# a locality in the {{w|Central Highlands Region}}, [[Queensland]], [[Australia]].
+# {{place|en|rural locality|lgarea/{{w|Central Highlands Region}}|s/Queensland|c/Australia}}.
+# {{place|en|unincorporated community|rurmun/Lake of the Rivers No. 72|p/Saskatchewan|c/Canada}}.
+# The Willows, {{place|en|a=a|residential community|city/Saskatoon|p/Saskatchewan|c/Canada}}.
+# {{place|en|city/county seat|co/Glenn County|s/California|c/USA}}, formerly known as [[Willow]].
 
 ===See also===
 * {{l|en|Willow}}
-
-{{c|en|Saskatchewan|Queensland}}
 -------- end text --------
 Page 129 Yellowknife: Found match for regex: =
 Page 129 Yellowknife: -------- begin text ---------
@@ -3871,7 +3821,7 @@ Named after the {{m|en|Tsatsaotine|gloss=Copper People}} {{gloss|the {{w|lang=en
 ===Proper noun===
 {{en-proper noun|head=[[yellow|Yellow]][[knife]]}}
 
-# Capital of the [[Northwest Territories]], [[Canada]].
+# {{place|en|The <<capital>> of and only <<city>> in the <<terr/Northwest Territories>>, <<c/Canada>>}}.
 
 ====Translations====
 {{trans-top|capital of the Northwest Territories, Canada}}
@@ -3890,10 +3840,6 @@ Named after the {{m|en|Tsatsaotine|gloss=Copper People}} {{gloss|the {{w|lang=en
 
 ====Further reading====
 * {{pedialite|lang=en}}
-
-[[Category:en:Canada]]
-[[Category:en:Cities]]
-[[Category:en:Northwest Territories]]
 -------- end text --------
 Page 130 rappie pie: Found match for regex: =
 Page 130 rappie pie: -------- begin text ---------
