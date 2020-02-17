@@ -88,7 +88,7 @@ def process_page(page, index, parsed):
     if cat in auto_added_categories:
       return True
     for c in auto_added_categories:
-      m = re.search("^((?:.*?:)?)(.*?) +(?:of|in) (.*)$", c)
+      m = re.search("^((?:.*?:)?)(.*?) +(?:of|in) (?:the )?(.*)$", c)
       if m and cat in [
         m.group(1) + m.group(2), # remove 'en:Cities' if auto-added cat is 'en:Cities in West Yorkshire, England'
         m.group(1) + m.group(3), # remove 'en:West Yorkshire, England' if auto-added cat is 'en:Cities in West Yorkshire, England'
