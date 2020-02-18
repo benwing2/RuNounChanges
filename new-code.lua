@@ -78,6 +78,7 @@ TODO:
 71. 'sheading' = 'district' (Isle of Man) (DONE)
 72. 'state capital', 'provincial capital', 'regional capital', 'capital', 'capital city'; fix so that instead of just
     'Capital cities', you get 'State capitals', 'Provincial capitals', 'Regional capitals', 'Country capitals', etc.
+73. 'burgh' (Scotland)
 
 place-shared-data.lua:
 
