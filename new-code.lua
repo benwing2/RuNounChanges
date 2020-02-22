@@ -5,7 +5,7 @@ TODO:
 3. 'spa town', 'resort town' not necessarily towns (DONE)
 3a. 'coal town', not necessarily a town (DONE)
 4. If two e.g. countries are mentioned as holonyms, categories should be generated for both. Cf.
-   Colorado (river), which should be a river both in the US and Mexico.
+   Colorado (river), which should be a river both in the US and Mexico. Cf. Four Corners, mentioning 4 states.
 5. 'harbor city', 'harbour city' (DONE)
 6. 'watercourse' (DONE)
 7. 'township municipality' (of Quebec) (DONE)
@@ -79,6 +79,7 @@ TODO:
 72. 'state capital', 'provincial capital', 'regional capital', 'capital', 'capital city'; fix so that instead of just
     'Capital cities', you get 'State capitals', 'Provincial capitals', 'Regional capitals', 'Country capitals', etc.
 73. 'burgh' (Scotland)
+74. 'commuter town'
 
 place-shared-data.lua:
 

@@ -554,21 +554,32 @@ end
 -- definition. This consists of the tag, a whitespace and the value (wikilinked
 -- if it language contains a language code; if sentence == true, ". " is added
 -- before the string and the first character is made upper case.
-local function get_extra_info(tag, value, sentence)
-	if not value then
+local function get_extra_info(tag, values, sentence)
+	if not values then
 		return ""
 	end
+	if type(values) ~= "table" then
+		values = {values}
+	end
+	if #values == 0 then
+		return ""
+	end
+	
+	local linked_values = {}
 
-	-- HACK! Check for Wikipedia links, which contain an embedded colon.
-	-- There should be a better way.
-	if not value:find("%[%[w:") and not value:find("%[%[wikipedia:") then
-		value = mw.text.split(value, ":", true)
-
-		if table.getn(value) < 2 then
-			value = {nil, value[1]}
+	for _, value in ipairs(values) do
+		-- HACK! Check for Wikipedia links, which contain an embedded colon.
+		-- There should be a better way.
+		if not value:find("%[%[w:") and not value:find("%[%[wikipedia:") then
+			value = mw.text.split(value, ":", true)
+	
+			if table.getn(value) < 2 then
+				value = {nil, value[1]}
+			end
+	
+			value = link(value[2], value[1] or "en")
 		end
-
-		value = link(value[2], value[1] or "en")
+		table.insert(linked_values, value)
 	end
 
 	local s = ""
@@ -579,7 +590,7 @@ local function get_extra_info(tag, value, sentence)
 		s = s .. "; " .. tag
 	end
 
-	return s .. " " .. value
+	return s .. " " .. require("Module:table").serialCommaJoin(linked_values)
 end
 
 
@@ -700,12 +711,25 @@ local function get_gloss(args, specs, sentence)
 	table.insert(ret, get_extra_info("largest city:", args["largest city"], sentence))
 	table.insert(ret, get_extra_info("capital and largest city:", args["caplc"], sentence))
 	local placetype = specs[1][2][1]
-	if placetype == "county" or placetype == "parish" or placetype == "borough" then
-		placetype = placetype .. " seat"
+	if placetype == "county" or placetype == "counties" then
+		placetype = "county seat"
+	elseif placetype == "parish" or placetype == "parishes" then
+		placetype = "parish seat"
+	elseif placetype == "borough" or placetype == "boroughs" then
+		placetype = "borough seat"
 	else
 		placetype = "seat"
 	end
+	if #args["seat"] > 1 then
+		placetype = placetype .. "s"
+	end
 	table.insert(ret, get_extra_info(placetype .. ":", args["seat"], sentence))
+	if #args["shire town"] > 1 then
+		placetype = "shire towns"
+	else
+		placetype = "shire town"
+	end
+	table.insert(ret, get_extra_info(placetype .. ":", args["shire town"], sentence))
 
 	return table.concat(ret)
 end
@@ -1012,7 +1036,8 @@ function export.show(frame)
 		["capital"] = {},
 		["largest city"] = {},
 		["caplc"] = {},
-		["seat"] = {},
+		["seat"] = {list = true},
+		["shire town"] = {list = true},
 	}
 
 	local args = require("Module:parameters").process(frame:getParent().args, params)
