@@ -6,6 +6,9 @@ local m_strutils = require("Module:string utilities")
 local m_debug = require("Module:debug")
 local data = require("Module:place/data")
 
+local rmatch = mw.ustring.match
+local rsplit = mw.text.split
+
 local cat_data = data.cat_data
 
 local namespace = mw.title.getCurrentTitle().nsText
@@ -16,7 +19,7 @@ local namespace = mw.title.getCurrentTitle().nsText
 
 
 
--- returns a wikilink link {{l|language|text}}
+-- Return a wikilink link {{l|language|text}}
 local function link(text, language)
 	if not language or language == "" then
 		return text
@@ -26,7 +29,7 @@ local function link(text, language)
 end
 
 
--- Returns the category link for a category, given the language code and the
+-- Return the category link for a category, given the language code and the
 -- name of the category.
 local function catlink(lang, text)
 	return require("Module:utilities").format_categories({lang:getCode() .. ":" .. m_links.remove_links(text)}, lang)
@@ -68,7 +71,7 @@ local function get_synergy_table(place1, place2)
 end
 
 
--- Returns the article that is used with a word. It is fetched from the cat_data
+-- Return the article that is used with a word. It is fetched from the cat_data
 -- table; if that doesn’t exist, "an" is given for words beginning with a vowel
 -- and "a" otherwise.
 -- If sentence == true, the first letter of the article is made upper-case.
@@ -153,7 +156,7 @@ local function handle_implications(place_specs, implication_data, should_clone)
 					place_specs[n] = spec
 				end
 				for i, holonym_to_add in ipairs(imp_data) do
-					local split_holonym = mw.text.split(holonym_to_add, "/", true)
+					local split_holonym = rsplit(holonym_to_add, "/", true)
 					if #split_holonym ~= 2 then
 						error("Invalid holonym in implications: " .. holonym_to_add)
 					end
@@ -174,7 +177,7 @@ local function lookup_placename_alias(placename, aliases)
 	-- If the placename is a link, apply the alias inside the link.
 	-- This pattern matches both piped and unpiped links. If the link is not
 	-- piped, the second capture (linktext) will be empty.
-	local link, linktext = mw.ustring.match(placename, "^%[%[([^|%]]+)%|?(.-)%]%]$")
+	local link, linktext = rmatch(placename, "^%[%[([^|%]]+)%|?(.-)%]%]$")
 	if link then
 		if linktext ~= "" then
 			local alias = aliases[linktext]
@@ -189,29 +192,47 @@ local function lookup_placename_alias(placename, aliases)
 end
 
 
--- Split a holonym (e.g. "continent/Europe" or "country/en:Italy" or "in southern")
--- into its components. Return value is {PLACETYPE, PLACENAME, LANGCODE}, e.g.
--- {"country", "Italy", "en"}. If there isn't a slash (e.g. "in southern"), the
--- first element will be nil. Placetype aliases (e.g. "c" for "country") and
+-- Split a holonym (e.g. "continent/Europe" or "country/en:Italy" or "in southern"
+-- or "r:suf/O'Higgins") into its components. Return value is
+-- {PLACETYPE, PLACENAME, LANGCODE, MODIFIERS}, e.g. {"country", "Italy", "en", {}} or
+-- {"region", "O'Higgins", nil, {"suf"}}. If there isn't a slash (e.g. "in southern"),
+-- the first element will be nil. Placetype aliases (e.g. "r" for "region") and
 -- placename aliases (e.g. "US" or "USA" for "United States") will be expanded.
 local function split_holonym(datum)
-	datum = mw.text.split(datum, "/", true)
-
-	if table.getn(datum) < 2 then
-		datum = {nil, datum[1]}
+	-- Don't use rsplit() in case of slash in holonym placename, e.g. Admaston/Bromley.
+	local holonym_placetype, holonym_placename = rmatch(datum, "^(.-)/(.*)$")
+	if holonym_placetype then
+		datum = {holonym_placetype, holonym_placename}
+	else
+		datum = {nil, datum}
 	end
 
-	-- HACK! Check for Wikipedia links, which contain an embedded colon.
-	-- There should be a better way.
-	if not datum[2]:find("%[%[w:") and not datum[2]:find("%[%[wikipedia:") then
-		local links = mw.text.split(datum[2], ":", true)
+	-- Check for langcode before the holonym placename, but don't get tripped up by
+	-- Wikipedia links, which begin "[[w:...]]" or "[[wikipedia:]]".
+	local langcode, holonym_placename = rmatch(datum[2], "^([^%[%]]-):(.*)$")
+	if langcode then
+		datum[2] = holonym_placename
+		datum[3] = langcode
+	end
 
-		if table.getn(links) > 1 then
-			datum[2] = links[2]
-			datum[3] = links[1]
+	-- Check for modifiers after the holonym placetype.
+	if datum[1] then
+		local split_holonym_placetype = rsplit(datum[1], ":", true)
+		datum[1] = split_holonym_placetype[1]
+		local modifiers = {}
+		local i = 2
+		while true do
+			if split_holonym_placetype[i] then
+				table.insert(modifiers, split_holonym_placetype[i])
+			else
+				break
+			end
+			i = i + 1
 		end
+		datum[4] = modifiers
+	else
+		datum[4] = {}
 	end
-
 	if datum[1] then
 		datum[1] = data.placetype_aliases[datum[1]] or datum[1]
 		datum[2] = data.get_equiv_placetype_prop(datum[1],
@@ -291,7 +312,7 @@ local function parse_place_specs(numargs)
 				end
 				last_was_new_style = false
 				if cX == 2 then
-					local entry_placetypes = mw.text.split(numargs[c], "/", true)
+					local entry_placetypes = rsplit(numargs[c], "/", true)
 					for n, ept in ipairs(entry_placetypes) do
 						entry_placetypes[n] = data.placetype_aliases[ept] or ept
 					end
@@ -325,7 +346,7 @@ end
 
 
 
--- Returns a string with the wikilinks to the English translations of the word.
+-- Return a string with the wikilinks to the English translations of the word.
 local function get_translations(transl)
 	local ret = {}
 
@@ -347,7 +368,8 @@ end
 -- is the corresponding unlinked placename and PLACETYPE its placetype.
 local function prepend_article(placetype, placename, linked_placename)
 	placename = m_links.remove_links(placename)
-	if placename:find("^the ") then
+	local unlinked_placename = m_links.remove_links(linked_placename)
+	if unlinked_placename:find("^the ") then
 		return linked_placename
 	end
 	local art = data.get_equiv_placetype_prop(placetype, function(pt) return data.placename_article[pt] and data.placename_article[pt][placename] end)
@@ -360,7 +382,7 @@ local function prepend_article(placetype, placename, linked_placename)
 	end
 	local universal_res = data.placename_the_re["*"]
 	for _, re in ipairs(universal_res) do
-		if placename:find(re) then
+		if unlinked_placename:find(re) then
 			return "the " .. linked_placename
 		end
 	end
@@ -370,7 +392,7 @@ local function prepend_article(placetype, placename, linked_placename)
 			return nil
 		end
 		for _, re in ipairs(res) do
-			if placename:find(re) then
+			if unlinked_placename:find(re) then
 				return true
 			end
 		end
@@ -383,9 +405,13 @@ local function prepend_article(placetype, placename, linked_placename)
 end
 
 
--- returns a string containing a placename, with an extra article if necessary
--- and in the wikilinked display form if necessary.
--- Example: ({"country", "United States", "en"}, true, true) returns "the {{l|en|United States}}"
+-- Return a string containing a placename, with an extra article if necessary and in the
+-- wikilinked display form if necessary.
+-- Examples:
+-- ({"country", "United States", "en", {}}, true, true) returns the template-expanded
+-- equivalent of "the {{l|en|United States}}".
+-- ({"region", "O'Higgins", "en", {"suf"}}, false, true) returns the template-expanded
+-- equivalent of "{{l|en|O'Higgins}} region".
 local function get_place_string(place, needs_article, display_form)
 	local ps = place[2]
 
@@ -395,16 +421,33 @@ local function get_place_string(place, needs_article, display_form)
 			ps = display_handler(place[1], place[2])
 		end
 		ps = link(ps, place[3])
+		for _, mod in ipairs(place[4]) do
+			if mod == "suf" and place[1] then
+				ps = ps .. " " .. place[1]
+			elseif mod == "Suf" and place[1] then
+				ps = ps .. " " .. m_strutils.ucfirst(place[1])
+			end
+		end
 	end
 
 	if needs_article then
 		ps = prepend_article(place[1], place[2], ps)
 	end
 
+	if display_form then
+		for _, mod in ipairs(place[4]) do
+			if (mod == "pref" or mod == "Pref") and place[1] then
+				ps = (mod == "Pref" and m_strutils.ucfirst(place[1]) or place[1]) .. " of " .. ps
+				if needs_article then
+					ps = "the " .. ps
+				end
+			end
+		end
+	end
 	return ps
 end
 
--- Returns a special description generated from a synergy table fetched from
+-- Return a special description generated from a synergy table fetched from
 -- the data module and two place tables.
 local function get_synergic_description(synergy, place1, place2)
 	local desc = ""
@@ -432,7 +475,7 @@ local function get_synergic_description(synergy, place1, place2)
 end
 
 
--- Returns the preposition that should be used between the placetypes placetype1 and
+-- Return the preposition that should be used between the placetypes placetype1 and
 -- placetype2 (i.e. "city >in< France.", "country >of< South America"
 -- If there is no placetype2, a single whitespace is returned. Otherwise, the
 -- preposition is fetched from the data module. If there isn’t any, the default
@@ -454,7 +497,7 @@ local function get_in_or_of(placetype1, placetype2)
 end
 
 
--- Returns a string that contains the information of how a given place (place2)
+-- Return a string that contains the information of how a given place (place2)
 -- should be formatted in the gloss, considering the entry’s place type, the 
 -- place preceding it in the template’s parameter (place1) and following it 
 -- (place3), and whether it is the first place (parameter 4 of the function).
@@ -550,7 +593,7 @@ local function get_placetype_description(placetype)
 end
 
 
--- Returns a string with extra information that is sometimes added to a
+-- Return a string with extra information that is sometimes added to a
 -- definition. This consists of the tag, a whitespace and the value (wikilinked
 -- if it language contains a language code; if sentence == true, ". " is added
 -- before the string and the first character is made upper case.
@@ -568,16 +611,13 @@ local function get_extra_info(tag, values, sentence)
 	local linked_values = {}
 
 	for _, value in ipairs(values) do
-		-- HACK! Check for Wikipedia links, which contain an embedded colon.
-		-- There should be a better way.
-		if not value:find("%[%[w:") and not value:find("%[%[wikipedia:") then
-			value = mw.text.split(value, ":", true)
-	
-			if table.getn(value) < 2 then
-				value = {nil, value[1]}
-			end
-	
-			value = link(value[2], value[1] or "en")
+		-- Check for langcode before the holonym placename, but don't get tripped up by
+		-- Wikipedia links, which begin "[[w:...]]" or "[[wikipedia:]]".
+		local langcode, holonym_placename = rmatch(value, "^([^%[%]]-):(.*)$")
+		if langcode then
+			value = link(holonym_placename, langcode)
+		else
+			value = link(value, "en")
 		end
 		table.insert(linked_values, value)
 	end
@@ -686,7 +726,7 @@ local function get_new_style_gloss(args, spec, with_article)
 end
 
 
--- Returns a string with the gloss (the description of the place itself, as
+-- Return a string with the gloss (the description of the place itself, as
 -- opposed to translations). If sentence == true, the gloss’s first letter is
 -- made upper case and a period is added to the end.
 local function get_gloss(args, specs, sentence)
@@ -735,7 +775,7 @@ local function get_gloss(args, specs, sentence)
 end
 
 
--- Returns the definition line.
+-- Return the definition line.
 local function get_def(args, specs)
 	if #args["t"] > 0 then
 		return get_translations(args["t"]) .. " (" .. get_gloss(args, specs, false) .. ")"
@@ -861,7 +901,7 @@ local function find_cat_spec(entry_placetype, entry_placetype_data, place_spec)
 end
 
 
--- Returns the plural of a word and makes its first letter upper case.
+-- Return the plural of a word and makes its first letter upper case.
 -- The plural is fetched from the data module; if it doesn’t find one,
 -- the 'pluralize' function from [[Module:string utilities]] is called,
 -- which pluralizes correctly in almost all cases.
@@ -994,7 +1034,7 @@ end
 
 
 -- Iterate through each type of place given in parameter 2 (a list of place specs,
--- as documented in parse_place_specs()) and returns a string with the links to
+-- as documented in parse_place_specs()) and return a string with the links to
 -- all categories that need to be added to the entry. 
 local function get_cats(lang, place_specs)
 	local cats = {}
