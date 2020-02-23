@@ -335,6 +335,13 @@ local function parse_place_specs(numargs)
 		for _, entry_placetype in ipairs(spec[2]) do
 			track("entry-placetype/" .. entry_placetype)
 		end
+		cY = 3
+		while spec[cY] do
+			if spec[cY][1] then
+				track("holonym-placetype/" .. spec[cY][1])
+			end
+			cY = cY + 1
+		end
 	end
 	
 	return specs
@@ -654,18 +661,17 @@ local function get_old_style_gloss(args, spec, with_article, sentence)
 			gloss = gloss .. " " .. placetype
 		else
 			placetype_for_in_or_of = placetype
-			local pt_data, equiv_placetype_and_qualifier = data.get_equiv_placetype_prop(placetype,
-				function(pt) return cat_data[pt] end)
 			-- Join multiple placetypes with comma unless placetypes are already
 			-- joined with "and". We allow "the" to precede the second placetype
 			-- if they're not joined with "and" (so we get "city and county seat of ..."
 			-- but "city, the county seat of ...").
 			if n2 > 1 and spec[2][n2-1] ~= "and" and spec[2][n2-1] ~= "or" then
-				gloss = gloss .. ", "
-
-				if pt_data and pt_data.article == "the" then
-					gloss = gloss .. "the "
+				local article = get_article(placetype)
+				if article ~= "the" then
+					-- Temporary tracking. Formerly we didn't insert an article in this case.
+					track("multiple-placetypes-no-the")
 				end
+				gloss = gloss .. ", " .. article .. " "
 			end
 
 			gloss = gloss .. get_placetype_description(placetype)
