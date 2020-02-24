@@ -19,6 +19,12 @@ local namespace = mw.title.getCurrentTitle().nsText
 
 
 
+local function remove_links_and_html(text)
+	text = m_links.remove_links(text)
+	return text:gsub("<.->", "")
+end
+
+
 -- Return a wikilink link {{l|language|text}}
 local function link(text, language)
 	if not language or language == "" then
@@ -32,7 +38,7 @@ end
 -- Return the category link for a category, given the language code and the
 -- name of the category.
 local function catlink(lang, text)
-	return require("Module:utilities").format_categories({lang:getCode() .. ":" .. m_links.remove_links(text)}, lang)
+	return require("Module:utilities").format_categories({lang:getCode() .. ":" .. remove_links_and_html(text)}, lang)
 end
 
 
@@ -48,6 +54,23 @@ local function track(page)
 	return true
 end
 
+
+local function ucfirst_all(text)
+	if text:find(" ") then
+		local parts = rsplit(text, " ", true)
+		for i, part in ipairs(parts) do
+			parts[i] = m_strutils.ucfirst(part)
+		end
+		return table.concat(parts, " ")
+	else
+		return m_strutils.ucfirst(text)
+	end
+end
+
+
+local function lc(text)
+	return mw.getContentLanguage():lc(text)
+end
 
 
 -- Fetches the synergy table from cat_data, which describes the format of
@@ -144,7 +167,7 @@ local function handle_implications(place_specs, implication_data, should_clone)
 
 		for c = 3, lastarg do
 			local imp_data = data.get_equiv_placetype_prop(spec[c][1], function(pt)
-				local implication = implication_data[pt] and implication_data[pt][m_links.remove_links(spec[c][2])]
+				local implication = implication_data[pt] and implication_data[pt][remove_links_and_html(spec[c][2])]
 				if implication then
 					return implication
 				end
@@ -374,8 +397,8 @@ end
 -- Prepend the appropriate article if needed to LINKED_PLACENAME, where PLACENAME
 -- is the corresponding unlinked placename and PLACETYPE its placetype.
 local function prepend_article(placetype, placename, linked_placename)
-	placename = m_links.remove_links(placename)
-	local unlinked_placename = m_links.remove_links(linked_placename)
+	placename = remove_links_and_html(placename)
+	local unlinked_placename = remove_links_and_html(linked_placename)
 	if unlinked_placename:find("^the ") then
 		return linked_placename
 	end
@@ -421,19 +444,41 @@ end
 -- equivalent of "{{l|en|O'Higgins}} region".
 local function get_place_string(place, needs_article, display_form)
 	local ps = place[2]
+	local affix_type_pt_data, affix_type, affix, no_affix_strings, pt_equiv_for_affix_type, already_seen_affix
 
 	if display_form then
+		-- Implement display handlers.
 		local display_handler = data.get_equiv_placetype_prop(place[1], function(pt) return cat_data[pt] and cat_data[pt].display_handler end)
 		if display_handler then
 			ps = display_handler(place[1], place[2])
 		end
-		ps = link(ps, place[3])
+		-- Implement adding an affix (prefix or suffix) based on the place type. The affix will be
+		-- added either if the place type's cat_data spec says so (by setting 'affix_type'), or if the
+		-- user explicitly called for this (e.g. by using 'r:suf/O'Higgins'). Before adding the affix,
+		-- however, we check to see if the affix is already present (e.g. the place type is "district"
+		-- and the place name is "Mission District"). If the place type explicitly calls for adding
+		-- an affix, it can override the affix to add (by setting 'affix') and/or override the strings
+		-- used for checking if the affix is already presen (by setting 'no_affix_strings').
+		affix_type_pt_data, pt_equiv_for_affix_type = data.get_equiv_placetype_prop(place[1],
+			function(pt) return cat_data[pt] and cat_data[pt].affix_type and cat_data[pt] end
+		)
+		if affix_type_pt_data then
+			affix_type = affix_type_pt_data.affix_type
+			affix = affix_type_pt_data.affix or pt_equiv_for_affix_type.placetype
+			no_affix_strings = affix_type_pt_data.no_affix_strings or lc(affix)
+		end
 		for _, mod in ipairs(place[4]) do
-			if mod == "suf" and place[1] then
-				ps = ps .. " " .. place[1]
-			elseif mod == "Suf" and place[1] then
-				ps = ps .. " " .. m_strutils.ucfirst(place[1])
+			if (mod == "pref" or mod == "Pref" or mod == "suf" or mod == "Suf") and place[1] then
+				affix_type = mod
+				affix = place[1]
+				no_affix_strings = lc(affix)
+				break
 			end
+		end
+		already_seen_affix = no_affix_strings and data.check_already_seen_string(ps, no_affix_strings)
+		ps = link(ps, place[3])
+		if (affix_type == "suf" or affix_type == "Suf") and not already_seen_affix then
+			ps = ps .. " " .. (affix_type == "Suf" and ucfirst_all(affix) or affix)
 		end
 	end
 
@@ -442,12 +487,10 @@ local function get_place_string(place, needs_article, display_form)
 	end
 
 	if display_form then
-		for _, mod in ipairs(place[4]) do
-			if (mod == "pref" or mod == "Pref") and place[1] then
-				ps = (mod == "Pref" and m_strutils.ucfirst(place[1]) or place[1]) .. " of " .. ps
-				if needs_article then
-					ps = "the " .. ps
-				end
+		if (affix_type == "pref" or affix_type == "Pref") and not already_seen_affix then
+			ps = (affix_type == "Pref" and ucfirst_all(affix) or affix) .. " of " .. ps
+			if needs_article then
+				ps = "the " .. ps
 			end
 		end
 	end
@@ -802,7 +845,7 @@ end
 local function resolve_cat_aliases(holonym_placetype, holonym_placename)
 	local retval
 	local cat_aliases = data.get_equiv_placetype_prop(holonym_placetype, function(pt) return data.placename_cat_aliases[pt] end)
-	holonym_placename = m_links.remove_links(holonym_placename)
+	holonym_placename = remove_links_and_html(holonym_placename)
 	if cat_aliases then
 		retval = cat_aliases[holonym_placename]
 	end
