@@ -728,7 +728,7 @@ export.placename_cat_aliases = {
 -- 1. Listed here.
 -- 2. Given in [[Module:place/shared-data]] with an initial "the". All such placenames
 --    are added to this map by the code just below the map.
--- 3. The placetype of the placename has holonym_article="the" in its cat_data.
+-- 3. The placetype of the placename has holonym_article = "the" in its cat_data.
 -- 4. A regex in placename_the_re matches the placename.
 -- Note that "the" is added only before the first holonym in a place spec.
 export.placename_article = {
@@ -764,7 +764,7 @@ export.placename_article = {
 -- for the holonym's placetype apply.
 export.placename_the_re = {
 	-- We don't need entries for peninsulas, seas, oceans, gulfs or rivers
-	-- because they have holonym_article="the".
+	-- because they have holonym_article = "the".
 	["*"] = {"^Isle of ", " Islands$", " Mountains$", " Empire$", " Country$", " Region$", " District$", "^City of "},
 	["bay"] = {"^Bay of "},
 	["lake"] = {"^Lake of "},
@@ -1305,7 +1305,7 @@ end
 
 export.cat_data = {
 	["administrative village"] = {
-		preposition="of",
+		preposition = "of",
 
 		["default"] = {
 			["municipality"] = {true},
@@ -1313,8 +1313,8 @@ export.cat_data = {
 	},
 
 	["administrative capital"] = {
-		article="the",
-		preposition="of",
+		article = "the",
+		preposition = "of",
 
 		["default"] = {
 			["municipality"] = {true},
@@ -1322,8 +1322,8 @@ export.cat_data = {
 	},
 
 	["administrative centre"] = {
-		article="the",
-		preposition="of",
+		article = "the",
+		preposition = "of",
 	},
 
 	["airport"] = {
@@ -1345,7 +1345,7 @@ export.cat_data = {
 	},
 
 	["autonomous community"] = {
-		preposition="of",
+		preposition = "of",
 
 		["default"] = {
 			["country"] = {true},
@@ -1353,15 +1353,15 @@ export.cat_data = {
 	},
 
 	["autonomous oblast"] = {
-		preposition="of",
+		preposition = "of",
 	},
 
 	["autonomous okrug"] = {
-		preposition="of",
+		preposition = "of",
 	},
 
 	["autonomous region"] = {
-		preposition="of",
+		preposition = "of",
 
 		["country/Portugal"] = {
 			["itself"] = {"Districts and autonomous regions of +++"},
@@ -1373,7 +1373,7 @@ export.cat_data = {
 	},
 
 	["autonomous republic"] = {
-		preposition="of",
+		preposition = "of",
 
 		["country/Soviet Union"] = {
 			["country"] = {true},
@@ -1395,7 +1395,7 @@ export.cat_data = {
 	},
 
 	["borough"] = {
-		preposition="of",
+		preposition = "of",
 		display_handler = borough_display_handler,
 		cat_handler = function(holonym_placetype, holonym_placename, place_spec)
 			if holonym_placetype == "county" then
@@ -1438,8 +1438,8 @@ export.cat_data = {
 	},
 
 	["borough seat"] = {
-		article="the",
-		preposition="of",
+		article = "the",
+		preposition = "of",
 
 		["state/Alaska"] = {
 			["itself"] = {"Borough seats of +++, USA"},
@@ -1447,7 +1447,7 @@ export.cat_data = {
 	},
 
 	["canton"] = {
-		preposition="of",
+		preposition = "of",
 
 		["default"] = {
 			["country"] = {true},
@@ -1455,8 +1455,8 @@ export.cat_data = {
 	},
 
 	["capital city"] = {
-		article="the",
-		preposition="of",
+		article = "the",
+		preposition = "of",
 		cat_handler = function(holonym_placetype, holonym_placename, place_spec)
 			return city_type_cat_handler("city", holonym_placetype, holonym_placename,
 				nil, nil, {"Capital cities"})
@@ -1484,7 +1484,7 @@ export.cat_data = {
 	},
 
 	["civil parish"] = {
-		preposition="of",
+		preposition = "of",
 		affix_type = "suf",
 
 		["country/England"] = {
@@ -1508,7 +1508,7 @@ export.cat_data = {
 	},
 
 	["collectivity"] = {
-		preposition="of",
+		preposition = "of",
 
 		["default"] = {
 			["itself"] = {"Polities"},
@@ -1517,11 +1517,11 @@ export.cat_data = {
 	},
 
 	["colony"] = {
-		preposition="of",
+		preposition = "of",
 	},
 
 	["commonwealth"] = {
-		preposition="of",
+		preposition = "of",
 	},
 
 	["community development block"] = {
@@ -1536,7 +1536,7 @@ export.cat_data = {
 	},
 
 	["council area"] = {
-		preposition="of",
+		preposition = "of",
 		affix_type = "suf",
 
 		["default"] = {
@@ -1548,8 +1548,8 @@ export.cat_data = {
 	["country"] = {
 		synergy = {
 			["macroregion"] = {
-				before="in the",
-				between="of",
+				before = "in the",
+				between = "of",
 			}
 		},
 
@@ -1560,7 +1560,7 @@ export.cat_data = {
 	},
 
 	["county"] = {
-		preposition="of",
+		preposition = "of",
 		-- UNITED STATES
 		cat_handler = function(holonym_placetype, holonym_placename, place_spec)
 			local spec = m_shared.us_states[holonym_placename .. ", USA"]
@@ -1596,14 +1596,14 @@ export.cat_data = {
 	},
 
 	["county borough"] = {
-		preposition="of",
+		preposition = "of",
 		affix_type = "suf",
 		fallback = "borough",
 	},
 
 	["county seat"] = {
-		article="the",
-		preposition="of",
+		article = "the",
+		preposition = "of",
 		-- UNITED STATES
 		cat_handler = function(holonym_placetype, holonym_placename, place_spec)
 			local spec = m_shared.us_states[holonym_placename .. ", USA"]
@@ -1616,12 +1616,12 @@ export.cat_data = {
 	},
 
 	["county town"] = {
-		article="the",
-		preposition="of",
+		article = "the",
+		preposition = "of",
 	},
 
 	["department"] = {
-		preposition="of",
+		preposition = "of",
 		affix_type = "suf",
 
 		["default"] = {
@@ -1630,12 +1630,12 @@ export.cat_data = {
 	},
 
 	["department capital"] = {
-		article="the",
-		preposition="of",
+		article = "the",
+		preposition = "of",
 	},
 
 	["dependency"] = {
-		preposition="of",
+		preposition = "of",
 
 		["default"] = {
 			["itself"] = {true},
@@ -1644,7 +1644,7 @@ export.cat_data = {
 	},
 
 	["dependent territory"] = {
-		preposition="of",
+		preposition = "of",
 
 		["default"] = {
 			["itself"] = {"Dependencies"},
@@ -1659,7 +1659,7 @@ export.cat_data = {
 	},
 
 	["district"] = {
-		preposition="of",
+		preposition = "of",
 		affix_type = "suf",
 		cat_handler = function(holonym_placetype, holonym_placename, place_spec)
 			return district_cat_handler("district", holonym_placetype, holonym_placename)
@@ -1673,19 +1673,19 @@ export.cat_data = {
 	},
 
 	["district capital"] = {
-		article="the",
-		preposition="of",
+		article = "the",
+		preposition = "of",
 	},
 
 	["district municipality"] = {
-		preposition="of",
+		preposition = "of",
 		affix_type = "suf",
 		no_affix_strings = {"district", "municipality"},
-		fallback="municipality",
+		fallback = "municipality",
 	},
 
 	["division"] = {
-		preposition="of",
+		preposition = "of",
 
 		["default"] = {
 			["country"] = {true},
@@ -1693,7 +1693,7 @@ export.cat_data = {
 	},
 
 	["federal city"] = {
-		preposition="of",
+		preposition = "of",
 
 		["default"] = {
 			["country"] = {true},
@@ -1701,7 +1701,7 @@ export.cat_data = {
 	},
 
 	["federal subject"] = {
-		preposition="of",
+		preposition = "of",
 
 		["default"] = {
 			["country"] = {true},
@@ -1753,7 +1753,7 @@ export.cat_data = {
 
 	["gulf"] = {
 		preposition = "of",
-		holonym_article="the",
+		holonym_article = "the",
 
 		["default"] = {
 			["itself"] = {true},
@@ -1773,7 +1773,7 @@ export.cat_data = {
 	},
 
 	["historical county"] = {
-		preposition="of",
+		preposition = "of",
 
 		["country/Northern Ireland"] = {
 			["itself"] = {"Traditional counties of +++"},
@@ -1795,7 +1795,7 @@ export.cat_data = {
 	},
 
 	["historical political subdivision"] = {
-		preposition="of",
+		preposition = "of",
 
 		["default"] = {
 			["itself"] = {true},
@@ -1815,7 +1815,7 @@ export.cat_data = {
 	},
 
 	["kibbutz"] = {
-		plural="kibbutzim",
+		plural = "kibbutzim",
 
 		["default"] = {
 			["itself"] = {true},
@@ -1823,7 +1823,7 @@ export.cat_data = {
 	},
 
 	["krai"] = {
-		preposition="of",
+		preposition = "of",
 		affix_type = "Suf",
 
 		["default"] = {
@@ -1838,7 +1838,7 @@ export.cat_data = {
 	},
 
 	["local government district"] = {
-		preposition="of",
+		preposition = "of",
 		affix_type = "suf",
 		affix = "district",
 		cat_handler = function(holonym_placetype, holonym_placename, place_spec)
@@ -1866,14 +1866,14 @@ export.cat_data = {
 	},
 
 	["London borough"] = {
-		preposition="of",
+		preposition = "of",
 		affix_type = "suf",
 		affix = "borough",
 		fallback = "local government district",
 	},
 
 	["macroregion"] = {
-		preposition="of",
+		preposition = "of",
 
 		["country/Brazil"] = {
 			["country"] = {"Regions of +++"},
@@ -1881,7 +1881,7 @@ export.cat_data = {
 	},
 
 	["marginal sea"] = {
-		preposition="of",
+		preposition = "of",
 
 		["default"] = {
 			["itself"] = {"Seas"},
@@ -1899,7 +1899,7 @@ export.cat_data = {
 	},
 
 	["metropolitan borough"] = {
-		preposition="of",
+		preposition = "of",
 		affix_type = "Pref",
 		no_affix_strings = {"borough", "city"},
 		fallback = "local government district",
@@ -1924,10 +1924,10 @@ export.cat_data = {
 	},
 
 	["municipal district"] = {
-		preposition="of",
+		preposition = "of",
 		affix_type = "Pref",
 		no_affix_strings = "district",
-		fallback="municipality",
+		fallback = "municipality",
 
 		["province/Alberta"] = {
 			["itself"] = {"Municipal districts of +++"},
@@ -1935,7 +1935,7 @@ export.cat_data = {
 	},
 
 	["municipality"] = {
-		preposition="of",
+		preposition = "of",
 
 		["country/Austria"] = {
 			["state"] = {true, "Municipalities of Austria"},
@@ -1969,7 +1969,7 @@ export.cat_data = {
 	},
 
 	["neighborhood"] = {
-		preposition="of",
+		preposition = "of",
 		cat_handler = function(holonym_placetype, holonym_placename, place_spec)
 			return city_type_cat_handler("neighborhood", holonym_placetype, holonym_placename,
 				"ignore nocities", "no containing polity")
@@ -1977,12 +1977,12 @@ export.cat_data = {
 	},
 
 	["oblast"] = {
-		preposition="of",
+		preposition = "of",
 		affix_type = "Suf",
 	},
 
 	["ocean"] = {
-		holonym_article="the",
+		holonym_article = "the",
 
 		["default"] = {
 			["itself"] = {true},
@@ -1990,12 +1990,12 @@ export.cat_data = {
 	},
 
 	["okrug"] = {
-		preposition="of",
+		preposition = "of",
 		affix_type = "Suf",
 	},
 
 	["parish"] = {
-		preposition="of",
+		preposition = "of",
 		affix_type = "suf",
 
 		["state/Louisiana"] = {
@@ -2005,8 +2005,8 @@ export.cat_data = {
 	},
 
 	["parish municipality"] = {
-		preposition="of",
-		fallback="municipality",
+		preposition = "of",
+		fallback = "municipality",
 
 		["province/Quebec"] = {
 			["itself"] = {"Parishes of +++", "Municipalities of Canada"},
@@ -2014,8 +2014,8 @@ export.cat_data = {
 	},
 
 	["parish seat"] = {
-		article="the",
-		preposition="of",
+		article = "the",
+		preposition = "of",
 
 		["state/Louisiana"] = {
 			["itself"] = {"Parish seats of +++, USA"},
@@ -2030,7 +2030,7 @@ export.cat_data = {
 	},
 
 	["peninsula"] = {
-		holonym_article="the",
+		holonym_article = "the",
 		affix_type = "suf",
 		["default"] = {
 			["itself"] = {true},
@@ -2038,7 +2038,7 @@ export.cat_data = {
 	},
 
 	["periphery"] = {
-		preposition="of",
+		preposition = "of",
 
 		["country/Greece"] = {
 			["itself"] = {"Regions of +++"},
@@ -2057,7 +2057,7 @@ export.cat_data = {
 	},
 
 	["prefecture"] = {
-		preposition="of",
+		preposition = "of",
 		display_handler = prefecture_display_handler,
 
 		["default"] = {
@@ -2075,7 +2075,7 @@ export.cat_data = {
 	},
 
 	["province"] = {
-		preposition="of",
+		preposition = "of",
 
 		["default"] = {
 			["itself"] = {true},
@@ -2084,8 +2084,8 @@ export.cat_data = {
 	},
 
 	["provincial capital"] = {
-		article="the",
-		preposition="of",
+		article = "the",
+		preposition = "of",
 
 		cat_handler = function(holonym_placetype, holonym_placename, place_spec)
 			if holonym_placetype == "province" then
@@ -2099,7 +2099,7 @@ export.cat_data = {
 	},
 
 	["regency"] = {
-		preposition="of",
+		preposition = "of",
 
 		["default"] = {
 			["country"] = {true},
@@ -2107,7 +2107,7 @@ export.cat_data = {
 	},
 
 	["region"] = {
-		preposition="of",
+		preposition = "of",
 
 		["country/Armenia"] = {
 			["country"] = {true},
@@ -2159,10 +2159,10 @@ export.cat_data = {
 	},
 
 	["regional district"] = {
-		preposition="of",
+		preposition = "of",
 		affix_type = "Pref",
 		no_affix_strings = "district",
-		fallback="district",
+		fallback = "district",
 
 		["province/British Columbia"] = {
 			["itself"] = {"Regional districts of +++"},
@@ -2170,15 +2170,15 @@ export.cat_data = {
 	},
 
 	["regional capital"] = {
-		article="the",
-		preposition="of",
+		article = "the",
+		preposition = "of",
 	},
 
 	["regional county municipality"] = {
-		preposition="of",
+		preposition = "of",
 		affix_type = "Suf",
 		no_affix_strings = {"municipality", "county"},
-		fallback="municipality",
+		fallback = "municipality",
 
 		["province/Quebec"] = {
 			["itself"] = {"Regional county municipalities of +++"},
@@ -2186,10 +2186,10 @@ export.cat_data = {
 	},
 
 	["regional municipality"] = {
-		preposition="of",
+		preposition = "of",
 		affix_type = "Pref",
 		no_affix_strings = "municipality",
-		fallback="municipality",
+		fallback = "municipality",
 
 		["province/British Columbia"] = {
 			["itself"] = {"Regional municipalities of +++"},
@@ -2203,11 +2203,11 @@ export.cat_data = {
 	},
 
 	["regional unit"] = {
-		preposition="of",
+		preposition = "of",
 	},
 
 	["republic"] = {
-		preposition="of",
+		preposition = "of",
 
 		["default"] = {
 			["country"] = {true},
@@ -2215,7 +2215,7 @@ export.cat_data = {
 	},
 
 	["river"] = {
-		holonym_article="the",
+		holonym_article = "the",
 		cat_handler = function(holonym_placetype, holonym_placename, place_spec)
 			return city_type_cat_handler("river", holonym_placetype, holonym_placename)
 		end,
@@ -2227,10 +2227,10 @@ export.cat_data = {
 	},
 
 	["rural municipality"] = {
-		preposition="of",
+		preposition = "of",
 		affix_type = "Pref",
 		no_affix_strings = "municipality",
-		fallback="municipality",
+		fallback = "municipality",
 
 		["province/Saskatchewan"] = {
 			["itself"] = {true, "Rural municipalities of +++", "Municipalities of Canada"},
@@ -2246,11 +2246,11 @@ export.cat_data = {
 	},
 
 	["satrapy"] = {
-		preposition="of",
+		preposition = "of",
 	},
 
 	["sea"] = {
-		holonym_article="the",
+		holonym_article = "the",
 
 		["default"] = {
 			["itself"] = {true},
@@ -2258,7 +2258,7 @@ export.cat_data = {
 	},
 
 	["special administrative region"] = {
-		preposition="of",
+		preposition = "of",
 
 		["default"] = {
 			["country"] = {true},
@@ -2272,7 +2272,7 @@ export.cat_data = {
 	},
 
 	["state"] = {
-		preposition="of",
+		preposition = "of",
 
 		["default"] = {
 			["country"] = {true},
@@ -2280,8 +2280,8 @@ export.cat_data = {
 	},
 
 	["state capital"] = {
-		article="the",
-		preposition="of",
+		article = "the",
+		preposition = "of",
 
 		cat_handler = function(holonym_placetype, holonym_placename, place_spec)
 			if holonym_placetype == "state" then
@@ -2304,7 +2304,7 @@ export.cat_data = {
 	},
 
 	["subdistrict"] = {
-		preposition="of",
+		preposition = "of",
 
 		["country/Indonesia"] = {
 			["municipality"] = {true},
@@ -2316,7 +2316,7 @@ export.cat_data = {
 	},
 
 	["subdivision"] = {
-		preposition="of",
+		preposition = "of",
 		affix_type = "suf",
 		cat_handler = function(holonym_placetype, holonym_placename, place_spec)
 			return district_cat_handler("subdivision", holonym_placetype, holonym_placename)
@@ -2324,11 +2324,11 @@ export.cat_data = {
 	},
 
 	["subprefecture"] = {
-		preposition="of",
+		preposition = "of",
 	},
 
 	["subprovince"] = {
-		preposition="of",
+		preposition = "of",
 	},
 
 	["subprovincial city"] = {
@@ -2341,11 +2341,11 @@ export.cat_data = {
 	},
 
 	["subregion"] = {
-		preposition="of",
+		preposition = "of",
 	},
 
 	["suburb"] = {
-		preposition="of",
+		preposition = "of",
 		cat_handler = function(holonym_placetype, holonym_placename, place_spec)
 			return city_type_cat_handler("suburb", holonym_placetype, holonym_placename,
 				"ignore nocities", "no containing polity")
@@ -2358,7 +2358,7 @@ export.cat_data = {
 	},
 
 	["territory"] = {
-		preposition="of",
+		preposition = "of",
 
 		["default"] = {
 			["itself"] = {"Polities"},
@@ -2384,8 +2384,8 @@ export.cat_data = {
 	},
 
 	["township municipality"] = {
-		preposition="of",
-		fallback="municipality",
+		preposition = "of",
+		fallback = "municipality",
 
 		["province/Quebec"] = {
 			["itself"] = {"Townships in +++", "Townships in Canada", "Municipalities of Canada"},
@@ -2399,7 +2399,7 @@ export.cat_data = {
 	},
 
 	["tributary"] = {
-		preposition="of",
+		preposition = "of",
 		cat_handler = function(holonym_placetype, holonym_placename, place_spec)
 			return city_type_cat_handler("river", holonym_placetype, holonym_placename)
 		end,
@@ -2446,7 +2446,7 @@ export.cat_data = {
 	},
 
 	["village municipality"] = {
-		preposition="of",
+		preposition = "of",
 
 		["province/Quebec"] = {
 			["itself"] = {"Villages in +++", "Villages in Canada", "Municipalities of Canada"},
@@ -2454,8 +2454,8 @@ export.cat_data = {
 	},
 
 	["voivodeship"] = {
-		preposition="of",
-		holonym_article="the",
+		preposition = "of",
+		holonym_article = "the",
 	},
 
 	["*"] = {
@@ -2497,15 +2497,15 @@ for _, group in ipairs(m_shared.polities) do
 								-- an entry in placetype_equivs[]. Once we insert an entry here for
 								-- "traditional county", it will override placetype_equivs[]. To get
 								-- around that, simulate the effect of placetype_equivs[] using a
-								-- fallback="..." entry.
+								-- fallback = "..." entry.
 								if export.placetype_equivs[sgdiv] then
 									export.cat_data[sgdiv] = {
-										preposition="of",
-										fallback=export.placetype_equivs[sgdiv],
+										preposition = "of",
+										fallback = export.placetype_equivs[sgdiv],
 									}
 								else
 									export.cat_data[sgdiv] = {
-										preposition="of",
+										preposition = "of",
 
 										["default"] = {
 										},
