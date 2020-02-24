@@ -1085,6 +1085,29 @@ export.russian_federal_subjects = {
 	-- above)
 }
 
+local function russian_placename_to_key(placename)
+	-- We allow the user to say e.g. "obl/Samara" and "rep/Tatarstan" in place of
+	-- "obl/Samara Oblast" and "rep/Republic of Tatarstan".
+	if export.russian_federal_subjects[placename] or export.russian_federal_subjects["the " .. placename] then
+		return placename
+	end
+	for _, suffix in ipairs({"Autonomous Okrug", "Krai", "Oblast"}) do
+		local suffixed_placename = placename .. " " .. suffix
+		if export.russian_federal_subjects[suffixed_placename] then
+			return suffixed_placename
+		end
+	end
+	local republic_placename = "Republic of " .. placename
+	if export.russian_federal_subjects["the " .. republic_placename] then
+		return republic_placename
+	end
+	local republic_placename = placename .. " Republic"
+	if export.russian_federal_subjects["the " .. republic_placename] then
+		return republic_placename
+	end
+	return placename
+end
+
 export.spanish_autonomous_communities = {
 	["Andalusia"] = {},
 	["Aragon"] = {},
@@ -2227,6 +2250,9 @@ export.polities = {
 
 	-- federal subjects of Russia
 	{
+		-- No current need for key_to_placename because it's only used in subpolity_bare_label_setter
+		-- and subpolity_value_transformer, and we override both handlers.
+		placename_to_key = russian_placename_to_key,
 		bare_label_setter = function(labels, group, key, value)
 			local divtype = value.divtype or group.default_divtype
 			if type(divtype) == "table" then
