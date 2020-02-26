@@ -944,79 +944,120 @@ end
 -- Find the appropriate category specs for a given place spec; e.g. for the call
 -- {{place|en|city|s/Pennsylvania|c/US}} which results in the place spec
 -- {"foobar", {"city"}, {"state", "Pennsylvania"}, {"country", "United States"}, state={"Pennsylvania"}, country={"United States"}},
--- the return value might be be "city", {"Cities in +++, USA"}, 3
--- (i.e. three values are returned; see below). See the comment at the top of the section
--- for a description of category specs and the overall algorithm.
+-- the return value might be be "city", {"Cities in +++, USA"}, {"state", "Pennsylvania"}, "outer"
+-- (i.e. four values are returned; see below). See the comment at the top of the section for a
+-- description of category specs and the overall algorithm.
 --
--- More specifically, given three arguments:
+-- More specifically, given the following arguments:
 -- (1) the entry placetype (or equivalent) used to look up the category data in cat_data;
 -- (2) the value of cat_data[placetype] for this placetype;
--- (3) the full place spec as documented in parse_place_specs();
+-- (3) the full place spec as documented in parse_place_specs() (used only for its holonyms);
+-- (4) an optional overriding holonym to use, in place of iterating through the holonyms;
+-- (5) if an overriding holonym was specified, either "inner" or "outer" to indicate which loop to override;
 -- find the holonyms that match the outer-level and inner-level keys in the `cat_data` entry
 -- according to the algorithm described in the top-of-section comment, and return the resulting
--- category specs. Three values are actually returned:
+-- category specs. Four values are actually returned:
 --
--- ENTRY_PLACETYPE, CATEGORY_SPECS, HOLONYM_INDEX
+-- CATEGORY_SPECS, ENTRY_PLACETYPE, TRIGGERING_HOLONYM, INNER_OR_OUTER
 --
 -- where
 --
--- (1) ENTRY_PLACETYPE is the placetype that should be used to construct categories when 'true'
+-- (1) CATEGORY_SPECS is a list of category specs as described above;
+-- (2) ENTRY_PLACETYPE is the placetype that should be used to construct categories when 'true'
 --     is one of the returned category specs (normally the same as the `entry_placetype` passed
 --     in, but will be different when a "fallback" key exists and is used);
--- (2) CATEGORY_SPECS is a list of category specs as described above;
--- (3) PLACE_SPEC_INDEX is the index (3 or greater) of the triggering holonym (see the comment
---     at the top of the section), or -1 if there was no triggering holonym.
-local function find_cat_specs(entry_placetype, entry_placetype_data, place_spec)
+-- (3) TRIGGERING_HOLONYM is the triggering holonym (see the comment at the top of the section), in the
+--     standard {PLACETYPE, PLACENAME} format, or nil if there was no triggering holonym;
+-- (4) INNER_OR_OUTER is "inner" if the triggering holonym matched in the inner loop (whether or not a
+--     holonym matched the outer loop), or "outer" if the triggering holonym matched in the outer loop
+--     only, or nil if no triggering holonym.
+local function find_cat_specs(entry_placetype, entry_placetype_data, place_spec, overriding_holonym, override_inner_outer)
 	local inner_data = nil
+	local outer_triggering_holonym
 
-	local c = 3
-
-	while place_spec[c] do
-		local holonym_placetype, holonym_placename = place_spec[c][1], place_spec[c][2]
+	local function fetch_inner_data(holonym_to_match)
+		local holonym_placetype, holonym_placename = holonym_to_match[1], holonym_to_match[2]
 		holonym_placename = resolve_cat_aliases(holonym_placetype, holonym_placename)
-		inner_data = data.get_equiv_placetype_prop(holonym_placetype,
+		local inner_data = data.get_equiv_placetype_prop(holonym_placetype,
 			function(pt) return entry_placetype_data[(pt or "") .. "/" .. holonym_placename] end)
 		if inner_data then
-			break
+			return inner_data
 		end
 		if entry_placetype_data.cat_handler then
-			inner_data = data.get_equiv_placetype_prop(holonym_placetype,
+			local inner_data = data.get_equiv_placetype_prop(holonym_placetype,
 				function(pt) return entry_placetype_data.cat_handler(pt, holonym_placename, place_spec) end)
 			if inner_data then
-				break
+				return inner_data
 			end
 		end
-		c = c + 1
+		return nil
+	end
+
+	if overriding_holonym and override_inner_outer == "outer" then
+		inner_data = fetch_inner_data(overriding_holonym)
+		outer_triggering_holonym = overriding_holonym
+	else
+		local c = 3
+		while place_spec[c] do
+			inner_data = fetch_inner_data(place_spec[c])
+			if inner_data then
+				outer_triggering_holonym = place_spec[c]
+				break
+			end
+			c = c + 1
+		end
+	end
+
+	if not inner_data then
+		inner_data = entry_placetype_data["default"]
 	end
 
 	-- If we didn't find a matching place spec, and there's a fallback, look it up.
 	-- This is used, for example, with "rural municipality", which has special cases for
 	-- some provinces of Canada and otherwise behaves like "municipality".
 	if not inner_data and entry_placetype_data.fallback then
-		return find_cat_specs(entry_placetype_data.fallback, cat_data[entry_placetype_data.fallback], place_spec)
+		return find_cat_specs(entry_placetype_data.fallback, cat_data[entry_placetype_data.fallback], place_spec, overriding_holonym, override_inner_outer)
 	end
 	
 	if not inner_data then
-		inner_data = entry_placetype_data["default"]
-		c = -1
+		return nil, entry_placetype, nil, nil
 	end
 
-	if not inner_data then
-		return entry_placetype, nil, -1
+	local function fetch_cat_specs(holonym_to_match)
+		return data.get_equiv_placetype_prop(holonym_to_match[1], function(pt) return inner_data[pt] end)
 	end
 
-	local c2 = 3
-
-	while place_spec[c2] do
-		local retval = data.get_equiv_placetype_prop(place_spec[c2][1], function(pt) return inner_data[pt] end)
-		if retval then
-			return entry_placetype, retval, c2
+	if overriding_holonym and override_inner_outer == "inner" then
+		local cat_specs = fetch_cat_specs(overriding_holonym)
+		if cat_specs then
+			return cat_specs, entry_placetype, overriding_holonym, "inner"
 		end
+	else
+		local c2 = 3
 
-		c2 = c2 + 1
+		while place_spec[c2] do
+			local cat_specs = fetch_cat_specs(place_spec[c2])
+			if cat_specs then
+				return cat_specs, entry_placetype, place_spec[c2], "inner"
+			end
+
+			c2 = c2 + 1
+		end
 	end
 
-	return entry_placetype, inner_data["itself"], c
+	local cat_specs = inner_data["itself"]
+	if cat_specs then
+		return cat_specs, entry_placetype, outer_triggering_holonym, "outer"
+	end
+	
+	-- If we didn't find a matching key in the inner data, and there's a fallback, look it up, as above.
+	-- This is used, for example, with "rural municipality", which has special cases for
+	-- some provinces of Canada and otherwise behaves like "municipality".
+	if entry_placetype_data.fallback then
+		return find_cat_specs(entry_placetype_data.fallback, cat_data[entry_placetype_data.fallback], place_spec, overriding_holonym, override_inner_outer)
+	end
+
+	return nil, entry_placetype, nil, nil
 end
 
 
@@ -1090,41 +1131,46 @@ end
 local function get_cat(lang, place_spec, entry_placetype)
 	local entry_pt_data, equiv_entry_placetype_and_qualifier = data.get_equiv_placetype_prop(entry_placetype, function(pt) return cat_data[pt] end)
 
-	-- 1. Unrecognized placetype.
+	-- Check for unrecognized placetype.
 	if not entry_pt_data then
 		return ""
 	end
 
 	local equiv_entry_placetype = equiv_entry_placetype_and_qualifier.placetype
 
-	-- Find the category specs (see top-of-file comment) corresponding to the holonym(s) in the
-	-- place spec.
-	local cat_specs, c
-	equiv_entry_placetype, cat_specs, c = find_cat_specs(equiv_entry_placetype, entry_pt_data, place_spec)
+	-- Find the category specs (see top-of-file comment) corresponding to the holonym(s) in the place spec.
+	local cat_specs, returned_entry_placetype, triggering_holonym, inner_outer =
+		find_cat_specs(equiv_entry_placetype, entry_pt_data, place_spec)
 
-	-- 2. No category spec could be found. This happens if the innermost table in the category data
-	--    doesn't match any holonym's placetype and doesn't have an "itself" entry.
+	-- Check if no category spec could be found. This happens if the innermost table in the category data
+	-- doesn't match any holonym's placetype and doesn't have an "itself" entry.
 	if not cat_specs then
 		return ""
 	end
 
-	-- 3. This handles cases where there was a triggering holonym (see top-of-file comment).
-	if c > 2 then
-		local cat = cat_specs_to_category_wikicode(lang, cat_specs, equiv_entry_placetype, place_spec[c])
+	-- Generate categories for the category specs found.
+	local cat = cat_specs_to_category_wikicode(lang, cat_specs, returned_entry_placetype, triggering_holonym)
 
-		if cat ~= "" then
-			local c2 = 2
+	-- If there's a triggering holonym (see top-of-file comment), also generate categories for other holonyms
+	-- of the same placetype, so that e.g. {{place|en|city|s/Kansas|and|s/Missouri|c/USA}} generates both
+	-- [[:Category:en:Cities in Kansas, USA]] and [[:Category:en:Cities in Missouri, USA]].
+	if triggering_holonym then
+		local c2 = 2
 
-			while place_spec[place_spec[c][1]][c2] do
-				cat = cat .. cat_specs_to_category_wikicode(lang, cat_specs, equiv_entry_placetype, {place_spec[c][1], place_spec[place_spec[c][1]][c2]})
-				c2 = c2 + 1
+		local other_holonyms_of_same_placetype = place_spec[triggering_holonym[1]]
+		while other_holonyms_of_same_placetype[c2] do
+			local overriding_holonym = {triggering_holonym[1], other_holonyms_of_same_placetype[c2]}
+			local other_cat_specs, other_returned_entry_placetype, other_triggering_holonym, other_inner_outer =
+				find_cat_specs(equiv_entry_placetype, entry_pt_data, place_spec, overriding_holonym, inner_outer)
+			if other_cat_specs then
+				cat = cat .. cat_specs_to_category_wikicode(lang, other_cat_specs, other_returned_entry_placetype,
+					other_triggering_holonym)
 			end
+			c2 = c2 + 1
 		end
-		return cat
 	end
 
-	-- 4. This handles the remaining case, i.e. no triggering holonym.
-	return cat_specs_to_category_wikicode(lang, cat_specs, equiv_entry_placetype, nil)
+	return cat
 end
 
 
