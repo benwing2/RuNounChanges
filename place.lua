@@ -548,8 +548,8 @@ end
 
 
 -- Return a string that contains the information of how a given place (place2)
--- should be formatted in the gloss, considering the entry’s place type, the 
--- place preceding it in the template’s parameter (place1) and following it 
+-- should be formatted in the gloss, considering the entry’s place type, the
+-- place preceding it in the template’s parameter (place1) and following it
 -- (place3), and whether it is the first place (parameter 4 of the function).
 local function get_holonym_description(entry_placetype, place1, place2, place3, first)
 	local desc = ""
@@ -837,7 +837,95 @@ end
 
 ---------- Functions for the category wikicode
 
+--[=[
 
+The code in this section finds the categories to which a given place belongs. The algorithm
+works off of a place spec (which specifies the entry placetype(s) and holonym(s); see
+parse_place_specs()). Iterating over each entry placetype, it proceeds as follows:
+(1) Look up the placetype in the `cat_data`, which comes from [[Module:place/data]]. Note that
+    the entry in `cat_data` that specifies the category or categories to add may directly
+	correspond to the entry placetype as specified in the place spec. For example, if the
+	entry placetype is "small town", the placetype whose data is fetched will be "town" since
+	"small" is a recognized qualifier and there is no entry in `cat_data` for "small town".
+	As another example, if the entry placetype is "administrative capital", the placetype
+	whose data will be fetched will be "capital city" because there's no entry in `cat_data`
+	for "administrative capital" but there is an entry in `placetype_equivs` in
+	[[Module:place/data]] that maps "administrative capital" to "capital city" for
+	categorization purposes.
+(2) The value in `cat_data` is a two-level table. The outer table is indexed by the holonym
+    itself (e.g. "country/Brazil") or by "default", and the inner indexed by the holonym's
+    placetype (e.g. "country") or by "itself". Note that most frequently, if the outer table
+	is indexed by a holonym, the inner table will be indexed only by "itself", while if the
+	outer table is indexed by "default", the inner table will be indexed by one or more holonym
+	placetypes, meaning to generate a category for all holonyms of this placetype. But this
+	is not necessarily the case.
+(3) Iterate through the holonyms, from left to right, finding the first holonym that matches
+    (in both placetype and placename) a key in the outer table. If no holonym matches any key,
+	then if a key "default" exists, use that; otherwise, if a key named "fallback" exists,
+	specifying a placetype, use that placetype to fetch a new `cat_data` entry, and start over
+	with step (1); otherwise, don't categorize.
+(4) Iterate again through the holonyms, from left to right, finding the first holonym whose
+    placetype matches a key in the inner table. If no holonym matches any key, then if a key
+	"itself" exists, use that; otherwise, check for a key named "fallback" at the top level of
+	the `cat_data` entry and, if found, proceed as in step (3); otherwise don't categorize.
+(5) The resulting value found is a list of category specs. Each category spec specifies a
+    category to be added. In order to understand how category specs are processed, you have to
+	understand the concept of the 'triggering holonym'. This is the holonym that matched an
+	inner key in step (4), if any; else, the holonym that matched an outer key in step (3),
+	if any; else, there is no triggering holonym. (The only time this happens when there are
+	category specs is when the outer key is "default" and the inner key is "itself".)
+(6) Iterate through the category specs and construct a category from each one. Each category
+    spec is one of the following:
+	(a) A string, such as "Seas", Districts of England" or "Cities in +++". If "+++" is
+	    contained in the string, it will be substituted with the placename of the triggering
+		holonym. If there is no triggering holonym, an error is thrown. This is then prefixed
+		with the language code specified in the first argument to the call to {{place}}.
+		For example, if the triggering holonym is "country/Brazil", the category spec is
+		"Cities in +++" and the template invocation was {{place|en|...}}, the resulting
+		category will be [[:Category:en:Cities in Brazil]].
+	(b) The value 'true'. If there is a triggering holonym, the spec "PLACETYPES in +++" or
+        "PLACETYPES of +++" is constructed. (Here, PLACETYPES is the plural of the entry
+        placetype whose cat_data is being used, which is not necessarily the same as the entry
+        placetype specified by the user; see the discussion above. The choice of "in" or "of"
+        is based on the value of the "preposition" key at the top level of the entry in
+		`cat_data`, defaulting to "in".) This spec is then processed as above. If there is no
+		triggering holonym, the simple spec "PLACETYPES" is constructed (where PLACETYPES is as
+		above).
+
+For example, consider the following entry in cat_data:
+	["municipality"] = {
+		preposition = "of",
+
+		...
+
+		["country/Brazil"] = {
+			["state"] = {"Municipalities of +++, Brazil", "Municipalities of Brazil"},
+			["country"] = {true},
+		},
+
+		...
+	}
+
+If the user uses a template call {{place|pt|municipality|s/Amazonas|c/Brazil}}, the
+categories [[:Category:pt:Municipalities of Amazonas, Brazil]] and
+[[:Category:pt:Municipalities of Brazil]] will be generated. This is because the outer key
+"country/Brazil" matches the second holonym "c/Brazil" (by this point, the alias "c" has
+been expanded to "country"), and the inner key "state" matches the first holonym "s/Amazonas",
+which serves as the triggering holonym and is used to replace the +++ in the first category
+spec.
+
+Now imagine the user uses the template call {{place|en|small municipality|c/Brazil}}. There
+is no entry in `cat_data` for "small municipality", but "small" is a recognized qualifier,
+and there is an entry in `cat_data` for "municipality", so that entry's data is used. Now,
+the second holonym "c/Brazil" will match the outer key "country/Brazil" as before, but in
+this case the second holonym will also match the inner key "country" and will serve as the
+triggering holonym. The cat spec 'true' will be expanded to "Municipalities of +++", using
+the placetype "municipality" corresponding to the entry in `cat_data` (not the user-specified
+placetype "small municipality"), and the preposition "of", as specified in the `cat_data`
+entry. The +++ will then be expanded to "Brazil" based on the triggering holonym, the language
+code "en" will be prepended, and the final category will be
+[[:Category:en:Municipalities of Brazil]].
+]=]
 
 -- Look up and resolve any category aliases that need to be applied to a holonym. For example,
 -- "country/Republic of China" maps to "Taiwan" for use in categories like "Counties in Taiwan".
@@ -853,50 +941,32 @@ local function resolve_cat_aliases(holonym_placetype, holonym_placename)
 end
 
 
--- Find the appropriate category or categories for a given place spec; e.g. for the call
+-- Find the appropriate category specs for a given place spec; e.g. for the call
 -- {{place|en|city|s/Pennsylvania|c/US}} which results in the place spec
 -- {"foobar", {"city"}, {"state", "Pennsylvania"}, {"country", "United States"}, state={"Pennsylvania"}, country={"United States"}},
--- the return value would likely be "city", {"Cities in Pennsylvania, USA"}, 3
--- (i.e. three values are returned; see below).
+-- the return value might be be "city", {"Cities in +++, USA"}, 3
+-- (i.e. three values are returned; see below). See the comment at the top of the section
+-- for a description of category specs and the overall algorithm.
 --
--- More specifically, given three arguments: (1) the entry placetype (or equivalent) used
--- to look up the category data in cat_data; (2) the value of cat_data[placetype] for this
--- placetype; (3) the full place spec as documented in parse_place_specs(); look up the
--- outer-level data (normally keyed by the holonym, e.g. "country/Italy", or by "default")
--- and the inner-level data (normally keyed by "itself" for a specific holonym and by the
--- holonym's placetype for "default"), and return the resulting value. This value is a list
--- of one of two things: (a) a category, which may have +++ in it, which is replaced by
--- the matching holonym placename; (b) 'true' to construct the category from the entry's
--- placetype and the holonym's placename. The lookup works by iterating twice through the
--- holonyms in the place spec: First to look up the outer-level data, and secondly to look
--- up the inner-level data in the outer-level data just found. Both lookups stop as soon as
--- a matching key is found, meaning that usually only the first-listed holonym of the form
--- PLACETYPE/PLACENAME (i.e. excluding bare strings like "in southern") has a corresponding
--- category returned. Three values are actually returned:
+-- More specifically, given three arguments:
+-- (1) the entry placetype (or equivalent) used to look up the category data in cat_data;
+-- (2) the value of cat_data[placetype] for this placetype;
+-- (3) the full place spec as documented in parse_place_specs();
+-- find the holonyms that match the outer-level and inner-level keys in the `cat_data` entry
+-- according to the algorithm described in the top-of-section comment, and return the resulting
+-- category specs. Three values are actually returned:
 --
--- ENTRY_PLACETYPE, CATEGORIES, HOLONYM_INDEX
+-- ENTRY_PLACETYPE, CATEGORY_SPECS, HOLONYM_INDEX
 --
--- where ENTRY_PLACETYPE is the placetype that should be used to construct categories when
--- 'true' is returned; CATEGORIES is a list as described above; and PLACE_SPEC_INDEX is the
--- index (3 or greater) of the matching holonym in the place spec, or -1 if the outer-level
--- data was keyed by "default". More specifically, there are three cases:
+-- where
 --
--- 1. An outer-level key matching a specific holonym (e.g. "country/Italy") was found,
---    but an inner-level key matching the holonym's placetype (e.g. "country") wasn't
---    found. In this case, CATEGORIES is based on the inner-level key "itself" (or nil
---    if no such key exists), and PLACE_SPEC_INDEX is the index of the holonym whose
---    placetype was found among the outer-level keys.
--- 2. An outer-level key matching a specific holonym (e.g. "country/Italy") wasn't found
---    (so the outer-level key "default" was used), and an inner-level key matching the
---    holonym's placetype (e.g. "country") also wasn't found. In this case, CATEGORIES
---    is based on the inner-level key "itself" (or nil if no such key exists), and
---    PLACE_SPEC_INDEX is -1.
--- 3. An inner-level key matching the holonym's placetype (e.g. "country") was found,
---    regardless of whether an outer-level key matching a specific holonym was found.
---    In this case, CATEGORIES is based on the matching inner-level key, and PLACE_SPEC_INDEX
---    is the index of the holonym's placetype serving as the inner-level key. Note the
---    difference here in the meaning of the second parameter vs. (1) above.
-local function find_cat_spec(entry_placetype, entry_placetype_data, place_spec)
+-- (1) ENTRY_PLACETYPE is the placetype that should be used to construct categories when 'true'
+--     is one of the returned category specs (normally the same as the `entry_placetype` passed
+--     in, but will be different when a "fallback" key exists and is used);
+-- (2) CATEGORY_SPECS is a list of category specs as described above;
+-- (3) PLACE_SPEC_INDEX is the index (3 or greater) of the triggering holonym (see the comment
+--     at the top of the section), or -1 if there was no triggering holonym.
+local function find_cat_specs(entry_placetype, entry_placetype_data, place_spec)
 	local inner_data = nil
 
 	local c = 3
@@ -923,7 +993,7 @@ local function find_cat_spec(entry_placetype, entry_placetype_data, place_spec)
 	-- This is used, for example, with "rural municipality", which has special cases for
 	-- some provinces of Canada and otherwise behaves like "municipality".
 	if not inner_data and entry_placetype_data.fallback then
-		return find_cat_spec(entry_placetype_data.fallback, cat_data[entry_placetype_data.fallback], place_spec)
+		return find_cat_specs(entry_placetype_data.fallback, cat_data[entry_placetype_data.fallback], place_spec)
 	end
 	
 	if not inner_data then
@@ -965,63 +1035,59 @@ local function get_cat_plural(word)
 end
 
 
--- Turn a category spec (a list of partial or full categories, or {true}) into the wikicode of
--- one or more actual categories. It is given the following arguments:
+-- Turn a list of category specs (see comment at section top) into the corresponding wikicode.
+-- It is given the following arguments:
 -- (1) the language object (param 1=)
--- (2) the category spec retrieved using find_cat_spec()
--- (3) the placetype of the place (param 2=)
--- (4) the value of cat_data for this placetype
--- (5) the holonym for which the category spec was fetched (in the format of indices 3, 4, ...
---     of the place spec data, as described in parse_place_specs())
--- (6) the place spec itself
--- The return value is constructed by iterating over the entries in the category spec.
--- For each entry, the category is formed as follows:
--- (1) If the category spec is 'true', construct the category from the plural of the placetype +
---     the appropriate preposition ("in" or "of", as determined from the placetype category data,
---     defaulting to "in" unless key "preposition" was specified) + the string "+++". Otherwise,
---     the category spec should be a string; use it directly.
--- (2) If "+++" occurs in the resulting category string, replace it with the holonym placename.
---     The substituted placename comes from the holonym placename, possibly preceded by "the"
---     (if appropriate).
-local function get_possible_cat(lang, cat_spec, entry_placetype, entry_pt_data, holonym, place_spec)
-	if not cat_spec or not entry_placetype or not entry_pt_data or not holonym or not place_spec then
-		return ""
-	end
-
+-- (2) the category specs retrieved using find_cat_specs()
+-- (3) the entry placetype used to fetch the entry in `cat_data`
+-- (4) the triggering holonym used to fetch the category specs (see top-of-section comment), in
+--     the format of indices 3, 4, ... of the place spec data, as described in
+--     parse_place_specs()); or nil if no triggering holonym
+-- The return value is constructed as described in the top-of-section comment.
+local function cat_specs_to_category_wikicode(lang, cat_specs, entry_placetype, holonym)
 	local all_cats = ""
 
-	local holonym_placetype, holonym_placename = holonym[1], holonym[2]
-	holonym_placename = resolve_cat_aliases(holonym_placetype, holonym_placename)
-	holonym = {holonym_placetype, holonym_placename}
+	if holonym then
+		local holonym_placetype, holonym_placename = holonym[1], holonym[2]
+		holonym_placename = resolve_cat_aliases(holonym_placetype, holonym_placename)
+		holonym = {holonym_placetype, holonym_placename}
 
-	for _, name in ipairs(cat_spec) do
-		local cat = ""
-		if name == true then
-			cat = get_cat_plural(entry_placetype) .. get_in_or_of(entry_placetype, holonym_placetype) .. " +++"
-		elseif name then
-			cat = name
+		for _, cat_spec in ipairs(cat_specs) do
+			local cat
+			if cat_spec == true then
+				cat = get_cat_plural(entry_placetype) .. get_in_or_of(entry_placetype, holonym_placetype) .. " +++"
+			else
+				cat = cat_spec
+			end
+
+			cat = cat:gsub("%+%+%+", get_place_string(holonym, true, false))
+			all_cats = all_cats .. catlink(lang, cat)
 		end
+	else
+		for _, cat_spec in ipairs(cat_specs) do
+			local cat
+			if cat_spec == true then
+				cat = get_cat_plural(entry_placetype)
+			else
+				cat = cat_spec
+				if cat:find("%+%+%+") then
+					error("Category '" .. cat .. "' contains +++ but there is no holonym to substitute")
+				end
+			end
 
-		cat = cat:gsub("%+%+%+", get_place_string(holonym, true, false))
-		all_cats = all_cats .. catlink(lang, cat)
+			all_cats = all_cats .. catlink(lang, cat)
+		end
 	end
 
 	return all_cats
 end
 
 
--- Return a string containing the category wikicode that should be added to the
--- entry, given the place spec (see parse_place_specs()) and the type of place
--- (e.g. "city").
+-- Return a string containing the category wikicode that should be added to the entry, given the
+-- place spec (which specifies the entry placetype(s) and holonym(s); see parse_place_specs()) and
+-- a particular entry placetype (e.g. "city"). Note that only the holonyms from the place spec are
+-- looked at, not the entry placetypes in the place spec.
 local function get_cat(lang, place_spec, entry_placetype)
-	-- Find the category data for a given placetype. This data is a two-level
-	-- table, the outer indexed by the holonym itself (e.g. "country/Italy") or by
-	-- "default", and the inner indexed by the holonym's placetype (e.g. "country")
-	-- or by "itself". Note that most frequently, if the outer table is indexed by
-	-- a holonym, the inner table will be indexed only by "itself", while if the
-	-- outer table is indexed by "default", the inner table will be indexed by
-	-- one or more holonym placetypes, meaning to generate a category for all holonyms
-	-- of this placetype.
 	local entry_pt_data, equiv_entry_placetype_and_qualifier = data.get_equiv_placetype_prop(entry_placetype, function(pt) return cat_data[pt] end)
 
 	-- 1. Unrecognized placetype.
@@ -1031,60 +1097,40 @@ local function get_cat(lang, place_spec, entry_placetype)
 
 	local equiv_entry_placetype = equiv_entry_placetype_and_qualifier.placetype
 
-	-- Find the category spec (a usually one-element list of full or partial categories,
-	-- or a list {true}; see find_cat_spec()) corresponding to the holonym(s) in the place
-	-- spec. See above.
-	local cat_spec, c
-	equiv_entry_placetype, cat_spec, c = find_cat_spec(equiv_entry_placetype, entry_pt_data, place_spec)
+	-- Find the category specs (see top-of-file comment) corresponding to the holonym(s) in the
+	-- place spec.
+	local cat_specs, c
+	equiv_entry_placetype, cat_specs, c = find_cat_specs(equiv_entry_placetype, entry_pt_data, place_spec)
 
 	-- 2. No category spec could be found. This happens if the innermost table in the category data
 	--    doesn't match any holonym's placetype and doesn't have an "itself" entry.
-	if not cat_spec then
+	if not cat_specs then
 		return ""
 	end
 
-	-- 3. This handles cases where either the outer or inner key matched a holonym.
+	-- 3. This handles cases where there was a triggering holonym (see top-of-file comment).
 	if c > 2 then
-		local cat = get_possible_cat(lang, cat_spec, equiv_entry_placetype, entry_pt_data, place_spec[c], place_spec)
+		local cat = cat_specs_to_category_wikicode(lang, cat_specs, equiv_entry_placetype, place_spec[c])
 
 		if cat ~= "" then
 			local c2 = 2
 
 			while place_spec[place_spec[c][1]][c2] do
-				cat = cat .. get_possible_cat(lang, cat_spec, equiv_entry_placetype, entry_pt_data, {place_spec[c][1], place_spec[place_spec[c][1]][c2]}, place_spec)
+				cat = cat .. cat_specs_to_category_wikicode(lang, cat_specs, equiv_entry_placetype, {place_spec[c][1], place_spec[place_spec[c][1]][c2]})
 				c2 = c2 + 1
 			end
 		end
 		return cat
 	end
 
-	-- 4. This handles the remaining case, i.e. the outer key is "default" and the inner key is "itself".
-	--    In this case, there is no holonym to substitute into the category. If the category is 'true',
-	--    we replace it with only the plural placetype (rather than "PLACETYPES in PLACENAME", as normal).
-	--    If the category is a string, throw an error if it contains+++ (indicating a holonym substitution);
-	--    otherwise, use it directly.
-	local all_cats = ""
-	for _, name in ipairs(cat_spec) do
-		local cat
-		if name == true then
-			cat = get_cat_plural(equiv_entry_placetype)
-		elseif name then
-			cat = name
-			if cat:find("%+%+%+") then
-				error("Category '" .. cat .. "' contains +++ but there is no holonym to substitute")
-			end
-		end
-		if cat then
-			all_cats = all_cats .. catlink(lang, cat)
-		end
-	end
-	return all_cats
+	-- 4. This handles the remaining case, i.e. no triggering holonym.
+	return cat_specs_to_category_wikicode(lang, cat_specs, equiv_entry_placetype, nil)
 end
 
 
--- Iterate through each type of place given in parameter 2 (a list of place specs,
--- as documented in parse_place_specs()) and return a string with the links to
--- all categories that need to be added to the entry. 
+-- Iterate through each type of place given in parameter 2 (a list of place specs, as documented
+-- in parse_place_specs()) and return a string with the links to all categories that need to be
+-- added to the entry.
 local function get_cats(lang, place_specs)
 	local cats = {}
 
@@ -1096,8 +1142,8 @@ local function get_cats(lang, place_specs)
 				table.insert(cats, get_cat(lang, place_spec, placetype))
 			end
 		end
-		-- Also add base categories for the holonyms listed (e.g. a category like 'en:Merseyside, England').
-		-- This is handled through the special placetype "*".
+		-- Also add base categories for the holonyms listed (e.g. a category like
+		-- 'en:Places in Merseyside, England'). This is handled through the special placetype "*".
 		table.insert(cats, get_cat(lang, place_spec, "*"))
 	end
 
