@@ -37,8 +37,8 @@ end
 
 -- Return the category link for a category, given the language code and the
 -- name of the category.
-local function catlink(lang, text)
-	return require("Module:utilities").format_categories({lang:getCode() .. ":" .. remove_links_and_html(text)}, lang)
+local function catlink(lang, text, sort_key)
+	return require("Module:utilities").format_categories({lang:getCode() .. ":" .. remove_links_and_html(text)}, lang, sort_key)
 end
 
 
@@ -215,6 +215,26 @@ local function lookup_placename_alias(placename, aliases)
 end
 
 
+-- Split a holonym placename on commas but don't split on comma+space. This way, we split on
+-- "Poland,Belarus,Ukraine" but keep "Tucson, Arizona" together.
+local function split_holonym_placename(placename)
+	if placename:find(", ") then
+		local placenames = rsplit(placename, ",", true)
+		local retval = {}
+		for i, placename in ipairs(placenames) do
+			if i > 1 and placename:find("^ ") then
+				retval[#retval] = retval[#retval] .. "," .. placename
+			else
+				table.insert(retval, placename)
+			end
+		end
+		return retval
+	else
+		return rsplit(placename, ",", true)
+	end
+end
+
+
 -- Split a holonym (e.g. "continent/Europe" or "country/en:Italy" or "in southern"
 -- or "r:suf/O'Higgins") into its components. Return value is
 -- {PLACETYPE, PLACENAME, LANGCODE, MODIFIERS}, e.g. {"country", "Italy", "en", {}} or
@@ -266,7 +286,18 @@ local function split_holonym(datum)
 			datum[3] = "en"
 		end
 	end
-	return datum
+
+	if datum[1] and datum[2]:find(",") then
+		local placenames = split_holonym_placename(datum[2])
+		local retval = {}
+		for _, placename in ipairs(placenames) do
+			local holonym = {datum[1], placename, datum[3], datum[4]}
+			table.insert(retval, holonym)
+		end
+		return retval, true
+	else
+		return datum, false
+	end
 end
 
 
@@ -281,10 +312,27 @@ local function parse_new_style_place_spec(text)
 			table.insert(retval.raw, segment)
 			table.insert(retval.order, {"raw", #retval.raw})
 		elseif segment:find("/") then
-			local holonym = split_holonym(segment)
-			table.insert(retval, holonym)
-			table.insert(retval.order, {"holonym", #retval})
-			key_holonym_spec_into_place_spec(retval, holonym)
+			local holonym, is_multi = split_holonym(segment)
+			if is_multi then
+				for j, single_holonym in ipairs(holonym) do
+					if j > 1 then
+						if j == #holonym then
+							table.insert(retval.raw, " and ")
+							table.insert(retval.order, {"raw", #retval.raw})
+						else
+							table.insert(retval.raw, ", ")
+							table.insert(retval.order, {"raw", #retval.raw})
+						end
+					end
+					table.insert(retval, single_holonym)
+					table.insert(retval.order, {"holonym", #retval})
+					key_holonym_spec_into_place_spec(retval, single_holonym)
+				end
+			else
+				table.insert(retval, holonym)
+				table.insert(retval.order, {"holonym", #retval})
+				key_holonym_spec_into_place_spec(retval, holonym)
+			end
 		else
 			table.insert(retval[2], segment)
 			table.insert(retval.order, {"placetype", #retval[2]})
@@ -329,6 +377,7 @@ local function parse_place_specs(numargs)
 				end
 				specs[cY] = parse_new_style_place_spec(numargs[c])
 				last_was_new_style = true
+				cX = cX + 1
 			else
 				if last_was_new_style then
 					error("Old-style arguments cannot directly follow new-style place spec")
@@ -340,13 +389,26 @@ local function parse_place_specs(numargs)
 						entry_placetypes[n] = data.placetype_aliases[ept] or ept
 					end
 					specs[cY] = {"foobar", entry_placetypes}
+					cX = cX + 1
 				else
-					specs[cY][cX] = split_holonym(numargs[c])
-					key_holonym_spec_into_place_spec(specs[cY], specs[cY][cX])
+					local holonym, is_multi = split_holonym(numargs[c])
+					if is_multi then
+						for j, single_holonym in ipairs(holonym) do
+							if j > 1 and j == #holonym then
+								specs[cY][cX] = {nil, "and", nil, {}}
+								cX = cX + 1
+							end
+							specs[cY][cX] = single_holonym
+							key_holonym_spec_into_place_spec(specs[cY], specs[cY][cX])
+							cX = cX + 1
+						end
+					else
+						specs[cY][cX] = holonym
+						key_holonym_spec_into_place_spec(specs[cY], specs[cY][cX])
+						cX = cX + 1
+					end
 				end
 			end
-
-			cX = cX + 1
 		end
 
 		c = c + 1
@@ -390,7 +452,7 @@ local function get_translations(transl)
 		end
 	end
 
-	return table.concat(ret, "; ")
+	return table.concat(ret, ", ")
 end
 
 
@@ -1085,7 +1147,7 @@ end
 --     the format of indices 3, 4, ... of the place spec data, as described in
 --     parse_place_specs()); or nil if no triggering holonym
 -- The return value is constructed as described in the top-of-section comment.
-local function cat_specs_to_category_wikicode(lang, cat_specs, entry_placetype, holonym)
+local function cat_specs_to_category_wikicode(lang, cat_specs, entry_placetype, holonym, sort_key)
 	local all_cats = ""
 
 	if holonym then
@@ -1102,7 +1164,7 @@ local function cat_specs_to_category_wikicode(lang, cat_specs, entry_placetype, 
 			end
 
 			cat = cat:gsub("%+%+%+", get_place_string(holonym, true, false))
-			all_cats = all_cats .. catlink(lang, cat)
+			all_cats = all_cats .. catlink(lang, cat, sort_key)
 		end
 	else
 		for _, cat_spec in ipairs(cat_specs) do
@@ -1116,7 +1178,7 @@ local function cat_specs_to_category_wikicode(lang, cat_specs, entry_placetype, 
 				end
 			end
 
-			all_cats = all_cats .. catlink(lang, cat)
+			all_cats = all_cats .. catlink(lang, cat, sort_key)
 		end
 	end
 
@@ -1128,7 +1190,7 @@ end
 -- place spec (which specifies the entry placetype(s) and holonym(s); see parse_place_specs()) and
 -- a particular entry placetype (e.g. "city"). Note that only the holonyms from the place spec are
 -- looked at, not the entry placetypes in the place spec.
-local function get_cat(lang, place_spec, entry_placetype)
+local function get_cat(lang, place_spec, entry_placetype, sort_key)
 	local entry_pt_data, equiv_entry_placetype_and_qualifier = data.get_equiv_placetype_prop(entry_placetype, function(pt) return cat_data[pt] end)
 
 	-- Check for unrecognized placetype.
@@ -1149,7 +1211,7 @@ local function get_cat(lang, place_spec, entry_placetype)
 	end
 
 	-- Generate categories for the category specs found.
-	local cat = cat_specs_to_category_wikicode(lang, cat_specs, returned_entry_placetype, triggering_holonym)
+	local cat = cat_specs_to_category_wikicode(lang, cat_specs, returned_entry_placetype, triggering_holonym, sort_key)
 
 	-- If there's a triggering holonym (see top-of-file comment), also generate categories for other holonyms
 	-- of the same placetype, so that e.g. {{place|en|city|s/Kansas|and|s/Missouri|c/USA}} generates both
@@ -1164,7 +1226,7 @@ local function get_cat(lang, place_spec, entry_placetype)
 				find_cat_specs(equiv_entry_placetype, entry_pt_data, place_spec, overriding_holonym, inner_outer)
 			if other_cat_specs then
 				cat = cat .. cat_specs_to_category_wikicode(lang, other_cat_specs, other_returned_entry_placetype,
-					other_triggering_holonym)
+					other_triggering_holonym, sort_key)
 			end
 			c2 = c2 + 1
 		end
@@ -1177,7 +1239,7 @@ end
 -- Iterate through each type of place given in parameter 2 (a list of place specs, as documented
 -- in parse_place_specs()) and return a string with the links to all categories that need to be
 -- added to the entry.
-local function get_cats(lang, place_specs)
+local function get_cats(lang, place_specs, sort_key)
 	local cats = {}
 
 	handle_implications(place_specs, data.cat_implications, true)
@@ -1185,12 +1247,12 @@ local function get_cats(lang, place_specs)
 	for n1, place_spec in ipairs(place_specs) do
 		for n2, placetype in ipairs(place_spec[2]) do
 			if placetype ~= "and" then
-				table.insert(cats, get_cat(lang, place_spec, placetype))
+				table.insert(cats, get_cat(lang, place_spec, placetype, sort_key))
 			end
 		end
 		-- Also add base categories for the holonyms listed (e.g. a category like
 		-- 'en:Places in Merseyside, England'). This is handled through the special placetype "*".
-		table.insert(cats, get_cat(lang, place_spec, "*"))
+		table.insert(cats, get_cat(lang, place_spec, "*", sort_key))
 	end
 
 	return table.concat(cats)
@@ -1219,13 +1281,14 @@ function export.show(frame)
 		["caplc"] = {},
 		["seat"] = {list = true},
 		["shire town"] = {list = true},
+		["sort"] = {},
 	}
 
 	local args = require("Module:parameters").process(frame:getParent().args, params)
 	local lang = require("Module:languages").getByCode(args[1]) or error("The language code \"" .. args[1] .. "\" is not valid.")
 	local place_specs = parse_place_specs(args[2])
 
-	return get_def(args, place_specs) .. get_cats(lang, place_specs)
+	return get_def(args, place_specs) .. get_cats(lang, place_specs, args["sort"])
 end
 
 
