@@ -54,6 +54,7 @@ export.political_subdivisions = {
 	["local councils"] = "[[w:local council|local council]]s",
 	["local government areas"] = "[[w:local government area|local government area]]s",
 	["mukims"] = "[[mukim]]s",
+	["municipal districts"] = "[[w:municipal district|municipal district]]s",
 	["municipalities"] = "[[municipality|municipalities]]",
 	["oblasts"] = "[[oblast]]s",
 	["parishes"] = "[[parish]]es",
@@ -63,12 +64,17 @@ export.political_subdivisions = {
 	["quarters"] = "[[quarter]]s",
 	["raions"] = "[[raion]]s",
 	["regencies"] = "[[regency|regencies]]",
+	["regional county municipalities"] = "[[w:regional county municipality|regional county municipalities]]",
+	["regional districts"] = "[[w:regional district|regional district]]s",
+	["regional municipalities"] = "[[w:regional municipality|regional municipalities]]",
 	["regions"] = "[[region]]s",
 	["regional units"] = "[[regional unit]]s",
 	["republics"] = "[[republic]]s",
+	["rural municipalities"] = "[[w:rural municipality|rural municipalities]]",
 	["self-administered divisions"] = "[[w:self-administered division|self-administered division]]s",
 	["self-administered zones"] = "[[w:self-administered zone|self-administered zone]]s",
 	["special administrative regions"] = "[[w:Special administrative regions of China|special administrative regions]]",
+	["special wards"] = "[[special ward]]s",
 	["state capitals"] = "[[state capital]]s",
 	["states"] = "[[state]]s",
 	["subprefectures"] = "[[subprefecture]]s",
@@ -595,19 +601,21 @@ export.brazilian_states = {
 	["Tocantins, Brazil"] = {},
 }
 
+local rural_municipalities = {"rural municipalities", parent="rural municipalities"}
+local canadian_counties = {"counties", parent="counties of Canada"}
 export.canadian_provinces_and_territories = {
-	["Alberta"] = {},
-	["British Columbia"] = {},
-	["Manitoba"] = {},
-	["New Brunswick"] = {},
+	["Alberta"] = {poldiv = {"municipal districts"}},
+	["British Columbia"] = {poldiv = {"regional districts", "regional municipalities"}},
+	["Manitoba"] = {poldiv = {rural_municipalities}},
+	["New Brunswick"] = {poldiv = {canadian_counties}},
 	["Newfoundland and Labrador"] = {},
 	["the Northwest Territories"] = {divtype = "territory"},
-	["Nova Scotia"] = {},
+	["Nova Scotia"] = {poldiv = {canadian_counties, "regional municipalities"}},
 	["Nunavut"] = {divtype = "territory"},
-	["Ontario"] = {},
-	["Prince Edward Island"] = {},
-	["Saskatchewan"] = {},
-	["Quebec"] = {},
+	["Ontario"] = {poldiv = {canadian_counties, "regional municipalities"}},
+	["Prince Edward Island"] = {poldiv = {canadian_counties, rural_municipalities}},
+	["Saskatchewan"] = {poldiv = {rural_municipalities}},
+	["Quebec"] = {poldiv = {canadian_counties, "regional county municipalities"}},
 	["Yukon"] = {divtype = "territory"},
 }
 
@@ -811,7 +819,7 @@ export.japanese_prefectures = {
 	["Gifu Prefecture"] = {},
 	["Gunma Prefecture"] = {},
 	["Hiroshima Prefecture"] = {},
-	-- Hokkaido handled specially; just "Hokkaido" not "Hokkaido Prefecture"
+	["Hokkaido"] = {poldiv = {{"subprefectures", parent="subprefectures of Japan"}}}, -- just "Hokkaido" not "Hokkaido Prefecture"
 	["Hyōgo Prefecture"] = {},
 	["Ibaraki Prefecture"] = {},
 	["Ishikawa Prefecture"] = {},
@@ -840,7 +848,7 @@ export.japanese_prefectures = {
 	["Shizuoka Prefecture"] = {},
 	["Tochigi Prefecture"] = {},
 	["Tokushima Prefecture"] = {},
-	-- Tokyo handled specially; just "Tokyo" not "Tokyo Prefecture" or "Tokyo Metropolis"
+	["Tokyo"] = {keydesc = "[[Tokyo]] Metropolis", poldiv = {"special wards", {"subprefectures", parent="subprefectures of Japan"}}}, -- just "Tokyo" not "Tokyo Prefecture" or "Tokyo Metropolis"
 	["Tottori Prefecture"] = {},
 	["Toyama Prefecture"] = {},
 	["Wakayama Prefecture"] = {},
@@ -848,6 +856,13 @@ export.japanese_prefectures = {
 	["Yamaguchi Prefecture"] = {},
 	["Yamanashi Prefecture"] = {},
 }
+
+local function japanese_placename_to_key(placename)
+	if placename == "Hokkaido" or placename == "Tokyo" then
+		return placename
+	end
+	return placename .. " Prefecture"
+end
 
 export.mexican_states = {
 	["Aguascalientes"] = {},
@@ -2200,7 +2215,7 @@ export.polities = {
 	-- prefectures of Japan
 	{
 		key_to_placename = chop(" Prefecture$"),
-		placename_to_key = append(" Prefecture"),
+		placename_to_key = japanese_placename_to_key,
 		-- We can't use the normal subpolity_bare_label_setter() because we set a special parent
 		-- (normally the parent would just be "Japan"). FIXME: Do we want this difference?
 		-- Or do we want e.g. provinces in China to have a parent "Provinces of China" instead of
