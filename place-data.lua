@@ -123,8 +123,12 @@ export.placetype_qualifiers = {
 	["minor"] = true,
 	["high"] = true,
 	["low"] = true,
+	["left"] = true, -- left tributary
+	["right"] = true, -- right tributary
 	-- "former" qualifiers
+	["abandoned"] = true,
 	["ancient"] = true,
+	["extinct"] = true,
 	["former"] = true,
 	["historic"] = "historical",
 	["historical"] = true,
@@ -332,6 +336,7 @@ export.placetype_links = {
 	["metropolitan borough"] = true,
 	["metropolitan county"] = true,
 	["metro station"] = true,
+	["microstate"] = true,
 	["minster town"] = "[[minster]] town", -- England
 	["moor"] = true,
 	["moorland"] = true,
@@ -442,8 +447,10 @@ export.placetype_links = {
 -- categorization purposes. This is overridden by cat_data, placetype_equivs and
 -- qualifier_to_placetype_equivs.
 export.qualifier_equivs = {
+	["abandoned"] = "historical",
 	["ancient"] = "historical",
 	["former"] = "historical",
+	["extinct"] = "historical",
 	["historic"] = "historical",
 	-- This needs to be here. If we take it out, 'historic province' won't properly
 	-- map to 'historical political subdivision'.
@@ -466,13 +473,12 @@ export.qualifier_to_placetype_equivs = {
 -- NOTE: 'coal town', 'county town', 'ghost town', 'resort town', 'ski resort town',
 -- 'spa town', etc. aren't mapped to 'town' because they aren't necessarily towns.
 export.placetype_equivs = {
+	["administrative capital"] = "capital city",
 	["administrative center"] = "administrative centre",
 	["administrative headquarters"] = "administrative centre",
 	["administrative seat"] = "administrative centre",
 	["archipelago"] = "island",
 	["associated province"] = "province",
-	["autonomous prefecture"] = "prefecture",
-	["autonomous province"] = "province",
 	["autonomous territory"] = "dependent territory",
 	["bailiwick"] = "polity",
 	["barangay"] = "neighborhood", -- not completely correct, barangays are formal administrative divisions of a city
@@ -588,6 +594,7 @@ export.placetype_equivs = {
 	["mediaeval city"] = "ancient city",
 	["medieval city"] = "ancient city",
 	["metropolitan county"] = "county",
+	["microstate"] = "country",
 	["minster town"] = "town",
 	["moorland"] = "moor",
 	["mountain indigenous district"] = "district",
@@ -684,6 +691,10 @@ export.placename_display_aliases = {
 		["Kanta-Häme"] = "Tavastia Proper",
 		["Åland"] = "Åland Islands",
 	},
+	["republic"] = {
+		["Kabardino-Balkarian Republic"] = "Kabardino-Balkar Republic",
+		["Tyva Republic"] = "Tuva Republic",
+	},
 	["state"] = {
 		["Mecklenburg-Western Pomerania"] = "Mecklenburg-Vorpommern",
 		["Mexico"] = "State of Mexico",
@@ -703,6 +714,9 @@ export.placename_display_aliases = {
 -- be taken to imply any political position; it is just this way because it has
 -- always been this way.)
 export.placename_cat_aliases = {
+	["autonomous okrug"] = {
+		["Nenetsia"] = "Nenets Autonomous Okrug",
+	},
 	["council area"] = {
 		["Glasgow"] = "City of Glasgow",
 		["Edinburgh"] = "City of Edinburgh",
@@ -716,9 +730,30 @@ export.placename_cat_aliases = {
 		["Nagorno-Karabakh"] = "Artsakh",
 		["People's Republic of China"] = "China",
 		["Republic of China"] = "Taiwan",
+		["Bosnia"] = "Bosnia and Herzegovina",
 	},
 	["county"] = {
 		["Anglesey"] = "Isle of Anglesey",
+	},
+	["republic"] = {
+		-- Only needs to include cases that aren't just shortened versions of the
+		-- full federal subject name (i.e. where words like "Republic" and "Oblast"
+		-- are omitted but the name is not otherwise modified). Note that a couple
+		-- of minor variants are recognized as display aliases, meaning that they
+		-- will be canonicalized for display as well as categorization.
+		["Bashkiria"] = "Republic of Bashkortostan",
+		["Chechnya"] = "Chechen Republic",
+		["Chuvashia"] = "Chuvash Republic",
+		["Kabardino-Balkaria"] = "Kabardino-Balkar Republic",
+		["Kabardino-Balkariya"] = "Kabardino-Balkar Republic",
+		["Karachay-Cherkessia"] = "Karachay-Cherkess Republic",
+		["North Ossetia"] = "Republic of North Ossetia-Alania",
+		["Alania"] = "Republic of North Ossetia-Alania",
+		["Yakutia"] = "Sakha Republic",
+		["Yakutiya"] = "Sakha Republic",
+		["Republic of Yakutia (Sakha)"] = "Sakha Republic",
+		["Tyva"] = "Tuva Republic",
+		["Udmurtia"] = "Udmurt Republic",
 	},
 }
 
@@ -839,16 +874,22 @@ export.cat_implications = {
 		["Central Europe"] = {"continent/Europe"},
 		["Western Europe"] = {"continent/Europe"},
 		["Southern Europe"] = {"continent/Europe"},
+		["Northern Europe"] = {"continent/Europe"},
+		["Southeast Europe"] = {"continent/Europe"},
+		["North Caucasus"] = {"continent/Europe"},
+		["South Caucasus"] = {"continent/Asia"},
 		["South Asia"] = {"continent/Asia"},
 		["East Asia"] = {"continent/Asia"},
 		["Central Asia"] = {"continent/Asia"},
 		["Western Asia"] = {"continent/Asia"},
+		["Southeast Asia"] = {"continent/Asia"},
 		["Asia Minor"] = {"continent/Asia"},
 		["North Africa"] = {"continent/Africa"},
 		["Central Africa"] = {"continent/Africa"},
 		["West Africa"] = {"continent/Africa"},
 		["East Africa"] = {"continent/Africa"},
 		["Southern Africa"] = {"continent/Africa"},
+		["Central America"] = {"continent/North America"},
 		["Caribbean"] = {"continent/North America"},
 		["Polynesia"] = {"continent/Oceania"},
 		["Micronesia"] = {"continent/Oceania"},
@@ -1312,15 +1353,6 @@ export.cat_data = {
 		},
 	},
 
-	["administrative capital"] = {
-		article = "the",
-		preposition = "of",
-
-		["default"] = {
-			["municipality"] = {true},
-		},
-	},
-
 	["administrative centre"] = {
 		article = "the",
 		preposition = "of",
@@ -1354,10 +1386,14 @@ export.cat_data = {
 
 	["autonomous oblast"] = {
 		preposition = "of",
+		affix_type = "Suf",
+		no_affix_strings = "oblast",
 	},
 
 	["autonomous okrug"] = {
 		preposition = "of",
+		affix_type = "Suf",
+		no_affix_strings = "okrug",
 	},
 
 	["autonomous region"] = {
