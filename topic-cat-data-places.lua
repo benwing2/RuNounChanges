@@ -295,7 +295,7 @@ table.insert(handlers, function(label)
 						if type(div) == "string" then
 							div = {div}
 						end
-						if place_type == div then
+						if place_type == div[1] then
 							divcat = "miscdiv"
 							break
 						end
@@ -325,11 +325,6 @@ table.insert(handlers, function(label)
 		end
 	end
 end)
-
-labels["Hokkaido"] = {
-	description = "{{{langname}}} terms related to [[Hokkaido]], a [[prefecture]] of [[Japan]].",
-	parents = {"Prefectures of Japan"},
-}
 
 -- "regions in (continent)", esp. for regions that span multiple countries
 
@@ -419,20 +414,6 @@ labels["census-designated places in the United States"] = {
 	parents = {"United States", "list of sets"},
 }
 
--- cities
-
-labels["cities in Hokkaido"] = {
-	-- special-cased description
-	description = "{{{langname}}} names of cities in [[Hokkaido]] Prefecture.",
-	parents = {{name = "cities in Japan", sort = "Hokkaido"}, "Hokkaido", "list of sets"},
-}
-
-labels["cities in Tokyo"] = {
-	-- special-cased description
-	description = "{{{langname}}} names of cities in [[Tokyo]] Metropolis.",
-	parents = {{name = "cities in Japan", sort = "Tokyo"}, "Tokyo", "list of sets"},
-}
-
 -- counties
 
 labels["counties of Northern Ireland"] = {
@@ -440,46 +421,6 @@ labels["counties of Northern Ireland"] = {
 	-- has two parents: "political subdivisions" and "counties of Ireland"
 	parents = {{name = "political subdivisions", sort = "Northern Ireland"}, {name = "counties of Ireland", sort = "Northern Ireland"}, "Northern Ireland", "list of sets"},
 }
-
--------------------------------------
--- Canadian political subdivisions --
--------------------------------------
-
--- only these five provinces have counties
-for _, province in ipairs({"New Brunswick", "Nova Scotia", "Ontario", "Prince Edward Island", "Quebec"}) do
-	labels["counties of " .. province] = {
-		description = "default-set",
-		parents = {{name ="counties of Canada", sort = province}, province, "list of sets"},
-	}
-end
-
-labels["municipal districts of British Columbia"] = {
-	description = "{{{langname}}} names of [[w:municipal district]]s of [[Alberta]], a [[province]] of [[Canada]].",
-	parents = {{name = "political subdivisions", sort = "Alberta"}, "Alberta", "list of sets"},
-}
-
-labels["regional county municipalities of Quebec"] = {
-	description = "{{{langname}}} names of [[w:regional county municipality|regional county municipalities]] of [[Quebec]], a [[province]] of [[Canada]].",
-	parents = {{name = "political subdivisions", sort = "Quebec"}, "Quebec", "list of sets"},
-}
-
-labels["regional districts of British Columbia"] = {
-	description = "{{{langname}}} names of [[w:regional district]]s of [[British Columbia]], a [[province]] of [[Canada]].",
-	parents = {{name = "political subdivisions", sort = "British Columbia"}, "British Columbia", "list of sets"},
-}
-
-for _, province in ipairs({"British Columbia", "Nova Scotia", "Ontario"}) do
-labels["regional municipalities of " .. province] = {
-	description = "{{{langname}}} names of [[w:regional municipality|regional municipalities]] of [[" .. province .. "]], a [[province]] of [[Canada]].",
-	parents = {{name = "political subdivisions", sort = province}, province, "list of sets"},
-}
-
-for _, province in ipairs({"Saskatchewan", "Manitoba", "Prince Edward Island"}) do
-	labels["rural municipalities of " .. province] = {
-		description = "{{{langname}}} names of [[w:rural municipality|rural municipalities]] of [[" .. province .. "]], a [[province]] of [[Canada]].", 
-		parents = {{name = "rural municipalities", sort = province}, province, "list of sets"},
-	}
-end
 
 -- regions and "regional units"
 
@@ -497,20 +438,10 @@ labels["subdistricts of Jakarta"] = {
 	parents = {{name = "political subdivisions", sort = "Jakarta"}, "Indonesia", "list of sets"},
 }
 
-labels["subprefectures of Hokkaido"] = {
-	description = "{{{langname}}} names of subprefectures of [[Hokkaido]] Prefecture.",
-	parents = {{name = "subprefectures of Japan", sort = "Hokkaido"}, "Hokkaido", "list of sets"},
-}
-
 labels["subprefectures of Japan"] = {
 	-- special-cased description
 	description = "{{{langname}}} names of subprefectures of Japanese prefectures.",
 	parents = {{name = "political subdivisions", sort = "Japan"}, "Japan", "list of sets"},
-}
-
-labels["subprefectures of Tokyo"] = {
-	description = "{{{langname}}} names of subprefectures of [[Tokyo]] Metropolis.",
-	parents = {{name = "subprefectures of Japan", sort = "Tokyo"}, "Tokyo", "list of sets"},
 }
 
 -- towns and townships
@@ -528,13 +459,6 @@ labels["townships in Ontario"] = {
 labels["townships in Quebec"] = {
 	description = "{{{langname}}} names of townships in [[Quebec]].",
 	parents = {{name = "townships in Canada", sort = "Quebec"}, "Quebec", "list of sets"},
-}
-
--- misc to be sorted; putting here so old module can be deleted
-
-labels["special wards of Tokyo, Japan"] = {
-	description = "{{{langname}}} names of special wards of [[Tokyo]] Metropolis, [[Japan]].",
-	parents = {{name = "political subdivisions", sort = "Tokyo"}, "Tokyo", "list of sets"},
 }
 
 -- temporary while users adjust to recent changes, also kept in case of desire to use for its topical purpose, see description; can be removed later if unused
