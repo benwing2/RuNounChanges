@@ -355,24 +355,49 @@ table.insert(handlers, function(label)
 			if placedata then
 				placedata = group.value_transformer(group, place, placedata)
 				if placedata.poldiv then
+					local saw_match = false
+					local variant_matches = {}
 					for _, div in ipairs(placedata.poldiv) do
 						if type(div) == "string" then
 							div = {div}
 						end
-						if pl_placetype == div[1] then
-							-- Everything checks out, construct the category description.
-							local linkdiv = m_shared.political_subdivisions[pl_placetype]
-							if not linkdiv then
-								error("Saw unknown place type '" .. pl_placetype .. "' in label '" .. label .. "'")
+						-- HACK. Currently we map e.g. 'autonomous region' -> 'regional capitals'
+						-- and 'union territory' -> 'territorial capitals'. When encountering a
+						-- political subdivision like 'autonomous region' or 'union territory',
+						-- chop off everything up through a space to make things match. To make this
+						-- clearer, we record all such "variant match" cases, and down below we
+						-- insert a note into the category text indicating that such "variant matches"
+						-- are included among the category.
+						if pl_placetype == div[1]:gsub("^.* ", "") then
+							saw_match = true
+							if pl_placetype ~= div[1] then
+								table.insert(variant_matches, div[1])
 							end
-							local bare_place, linked_place = m_shared.construct_bare_and_linked_version(place)
-							local keydesc = placedata.keydesc or linked_place
-							local desc = "{{{langname}}} names of [[capital]]s of " .. linkdiv .. " of " .. keydesc .. "."
-							return {
-								description = desc,
-								parents = {{name = capital_cat, sort = bare_place}, bare_place, "list of sets"},
-							}
 						end
+					end
+					if saw_match then
+						-- Everything checks out, construct the category description.
+						local linkdiv = m_shared.political_subdivisions[pl_placetype]
+						if not linkdiv then
+							error("Saw unknown place type '" .. pl_placetype .. "' in label '" .. label .. "'")
+						end
+						local bare_place, linked_place = m_shared.construct_bare_and_linked_version(place)
+						local keydesc = placedata.keydesc or linked_place
+						local variant_match_text = ""
+						if #variant_matches > 0 then
+							for i, variant_match in ipairs(variant_matches) do
+								variant_matches[i] = m_shared.political_subdivisions[variant_match]
+								if not variant_matches[i] then
+									error("Saw unknown place type '" .. variant_match .. "' in label '" .. label .. "'")
+								end
+							end
+							variant_match_text = " (including " .. require("Module:table").serialCommaJoin(variant_matches) .. ")"
+						end
+						local desc = "{{{langname}}} names of [[capital]]s of " .. linkdiv .. variant_match_text .. " of " .. keydesc .. "."
+						return {
+							description = desc,
+							parents = {{name = capital_cat, sort = bare_place}, bare_place, "list of sets"},
+						}
 					end
 				end
 			end

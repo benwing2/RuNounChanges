@@ -75,7 +75,6 @@ export.political_subdivisions = {
 	["self-administered zones"] = "[[w:self-administered zone|self-administered zone]]s",
 	["special administrative regions"] = "[[w:Special administrative regions of China|special administrative regions]]",
 	["special wards"] = "[[special ward]]s",
-	["state capitals"] = "[[state capital]]s",
 	["states"] = "[[state]]s",
 	["subprefectures"] = "[[subprefecture]]s",
 	["subregions"] = "[[subregion]]s",
@@ -83,6 +82,7 @@ export.political_subdivisions = {
 	["territories"] = "[[territory|territories]]",
 	["traditional counties"] = "[[w:traditional county|traditional counties]]",
 	["unincorporated areas"] = "[[w:unincorporated area|unincorporated area]]s",
+	["union territories"] = "[[union territory|union territories]]",
 	["voivodeships"] = "[[voivodeship]]s",
 	["zones"] = "[[zone]]s",
 }
@@ -117,11 +117,13 @@ export.placetype_to_capital_cat = {
 	["canton"] = "cantonal capitals",
 	["country"] = "national capitals",
 	["department"] = "departmental capitals",
+	["district"] = "district capitals",
 	["prefecture"] = "prefectural capitals",
 	["province"] = "provincial capitals",
 	["region"] = "regional capitals",
 	["republic"] = "republic capitals",
 	["state"] = "state capitals",
+	["territory"] = "territorial capitals",
 }
 
 export.capital_cat_to_placetype = {}
@@ -246,7 +248,7 @@ export.countries = {
 	["Bolivia"] = {parents = {"South America"}, poldiv = {"provinces", "departments", "municipalities"}},
 	["Bosnia and Herzegovina"] = {parents = {"Europe"}, poldiv = {"entities", "cantons", "municipalities"}, british_spelling = true},
 	["Botswana"] = {parents = {"Africa"}, poldiv = {"districts", "subdistricts"}, british_spelling = true},
-	["Brazil"] = {parents = {"South America"}, poldiv = {"states", "state capitals", "municipalities"}, miscdiv = {"regions"}},
+	["Brazil"] = {parents = {"South America"}, poldiv = {"states", "municipalities"}, miscdiv = {"regions"}},
 	["Brunei"] = {parents = {"Asia"}, poldiv = {"districts", "mukims"}, british_spelling = true},
 	["Bulgaria"] = {parents = {"Europe"}, poldiv = {"provinces", "municipalities"}, british_spelling = true},
 	["Burkina Faso"] = {parents = {"Africa"}, poldiv = {"regions", "departments", "provinces"}},
@@ -367,7 +369,7 @@ export.countries = {
 	["Papua New Guinea"] = {parents = {"Melanesia"}, poldiv = {"provinces", "districts"}, british_spelling = true},
 	["Paraguay"] = {parents = {"South America"}, poldiv = {"departments", "districts"}},
 	["Peru"] = {parents = {"South America"}, poldiv = {"regions", "provinces", "districts"}},
-	["the Philippines"] = {parents = {"Asia"}, poldiv = {"regions", "provinces", "provincial capitals", "districts", "municipalities"}},
+	["the Philippines"] = {parents = {"Asia"}, poldiv = {"regions", "provinces", "districts", "municipalities"}},
 	["Poland"] = {poldiv = {"voivodeships", "counties"}, parents = {"Europe"}, british_spelling = true},
 	["Portugal"] = {parents = {"Europe"}, poldiv = {"districts and autonomous regions", "provinces", "municipalities"}, british_spelling = true},
 	["Qatar"] = {parents = {"Asia"}, poldiv = {"municipalities", "zones"}},
@@ -422,7 +424,7 @@ export.countries = {
 		poldiv = {"countries", "territories", "dependencies"},
 		keydesc = "the [[United Kingdom]] of Great Britain and Northern Ireland", british_spelling = true},
 	["the United States"] = {parents = {"North America"},
-		poldiv = {"counties", "county seats", "states", "state capitals", "territories",
+		poldiv = {"counties", "county seats", "states", "territories",
 			"municipalities", -- these exist politically at least in Colorado and Connecticut
 		}, miscdiv = {"regions"}},
 	["Uruguay"] = {parents = {"South America"}, poldiv = {"departments", "municipalities"}},
@@ -2270,7 +2272,7 @@ export.polities = {
 	-- provinces of the Philippines
 	{
 		key_to_placename = chop(", Philippines$"),
-		placename_to_key = append(" Philippines"),
+		placename_to_key = append(", Philippines"),
 		bare_label_setter = subpolity_bare_label_setter("the Philippines"),
 		value_transformer = subpolity_value_transformer("the Philippines"),
 		place_cat_handler = default_place_cat_handler(),

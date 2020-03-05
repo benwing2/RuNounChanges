@@ -20,12 +20,12 @@ local namespace = mw.title.getCurrentTitle().nsText
 
 
 -- Return a wikilink link {{l|language|text}}
-local function link(text, language)
+local function link(text, language, id)
 	if not language or language == "" then
 		return text
 	end
 
-	return m_links.full_link({term = text, lang = m_langs.getByCode(language)}, nil, true)
+	return m_links.full_link({term = text, lang = m_langs.getByCode(language), id = id}, nil, true)
 end
 
 
@@ -433,17 +433,11 @@ end
 
 
 -- Return a string with the wikilinks to the English translations of the word.
-local function get_translations(transl)
+local function get_translations(transl, ids)
 	local ret = {}
 
-	for _, t in ipairs(transl) do
-		if t:find("[[", nil, true) then
-			table.insert(ret, t)
-		elseif t == mw.title.getCurrentTitle().prefixedText then
-			table.insert(ret, "[[#English|" .. t .. "]]")
-		else
-			table.insert(ret, "[[" .. t .. "]]")
-		end
+	for i, t in ipairs(transl) do
+		table.insert(ret, link(t, "en", ids[i]))
 	end
 
 	return table.concat(ret, ", ")
@@ -883,7 +877,7 @@ end
 -- Return the definition line.
 local function get_def(args, specs)
 	if #args["t"] > 0 then
-		return get_translations(args["t"]) .. " (" .. get_gloss(args, specs, false) .. ")"
+		return get_translations(args["t"], args["tid"]) .. " (" .. get_gloss(args, specs, false) .. ")"
 	else
 		return get_gloss(args, specs, true)
 	end
@@ -1250,6 +1244,7 @@ function export.show(frame)
 		[1] = {required = true},
 		[2] = {required = true, list = true},
 		["t"] = {list = true},
+		["tid"] = {list = true, allow_holes = true},
 
 		["a"] = {},
 		["also"] = {},

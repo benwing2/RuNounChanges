@@ -283,6 +283,8 @@ export.placetype_links = {
 	["division"] = true,
 	["duchy"] = true,
 	["empire"] = true,
+	["enclave"] = true,
+	["exclave"] = true,
 	["external territory"] = "[[external]] [[territory]]",
 	["federal city"] = "w",
 	["federal subject"] = "w",
@@ -382,6 +384,7 @@ export.placetype_links = {
 	["resort city"] = "w",
 	["resort town"] = "w",
 	["royal burgh"] = true,
+	["royal capital"] = "w",
 	["rural community"] = "w",
 	["rural municipality"] = "w",
 	["rural township"] = "[[w:rural township (Taiwan)|rural township]]", -- Taiwan
@@ -502,9 +505,11 @@ export.placetype_equivs = {
 	["county-controlled city"] = "county-administered city",
 	["county-level city"] = "prefecture-level city",
 	["crown dependency"] = "dependency",
+	["department capital"] = "capital city",
 	["direct-administered municipality"] = "municipality",
 	["direct-controlled municipality"] = "municipality",
 	["distributary"] = "river",
+	["district capital"] = "capital city",
 	["district headquarters"] = "administrative centre",
 	["duchy"] = "polity",
 	["empire"] = "polity",
@@ -616,6 +621,8 @@ export.placetype_equivs = {
 	["populated place"] = "village", -- not necessarily true
 	["port city"] = "city",
 	["port town"] = "town",
+	["provincial capital"] = "capital city",
+	["regional capital"] = "capital city",
 	["regional municipality"] = "municipality",
 	["resort city"] = "city",
 	["royal burgh"] = "borough",
@@ -627,6 +634,7 @@ export.placetype_equivs = {
 	["shire town"] = "county seat",
 	["spa city"] = "city",
 	["spit"] = "peninsula",
+	["state capital"] = "capital city",
 	["state park"] = "park",
 	["statutory city"] = "city",
 	["statutory town"] = "town",
@@ -1135,7 +1143,9 @@ local function capital_city_cat_handler(holonym_placetype, holonym_placename, pl
 		-- Now find the appropriate capital-type category for the placetype of the holonym,
 		-- e.g. 'State capitals'. If we recognize the holonym among the known holonyms in
 		-- [[Module:place/shared-data]], also add a category like 'State capitals of the United States'.
-		local capital_cat = m_shared.placetype_to_capital_cat[holonym_placetype]
+		-- Truncate e.g. 'autonomous region' to 'region', 'union territory' to 'territory' when looking
+		-- up the type of capital category.
+		local capital_cat = m_shared.placetype_to_capital_cat[holonym_placetype:gsub("^.* ", "")]
 		if capital_cat then
 			capital_cat = ucfirst(capital_cat)
 			local inserted_specific_variant_cat = false
@@ -1743,11 +1753,6 @@ export.cat_data = {
 		},
 	},
 
-	["department capital"] = {
-		article = "the",
-		preposition = "of",
-	},
-
 	["dependency"] = {
 		preposition = "of",
 
@@ -1786,11 +1791,6 @@ export.cat_data = {
 		-- No default. Countries for which districts are political subdivisions will get entries.
 	},
 
-	["district capital"] = {
-		article = "the",
-		preposition = "of",
-	},
-
 	["district municipality"] = {
 		preposition = "of",
 		affix_type = "suf",
@@ -1804,6 +1804,14 @@ export.cat_data = {
 		["default"] = {
 			["country"] = {true},
 		},
+	},
+
+	["enclave"] = {
+		preposition = "of",
+	},
+
+	["exclave"] = {
+		preposition = "of",
 	},
 
 	["federal city"] = {
@@ -2193,21 +2201,6 @@ export.cat_data = {
 		},
 	},
 
-	["provincial capital"] = {
-		article = "the",
-		preposition = "of",
-
-		cat_handler = function(holonym_placetype, holonym_placename, place_spec)
-			if holonym_placetype == "province" then
-				return city_type_cat_handler("city", holonym_placetype, holonym_placename)
-			end
-		end,
-
-		["default"] = {
-			["country"] = {"Cities in +++"},
-		},
-	},
-
 	["regency"] = {
 		preposition = "of",
 
@@ -2277,11 +2270,6 @@ export.cat_data = {
 		["province/British Columbia"] = {
 			["itself"] = {"Regional districts of +++"},
 		},
-	},
-
-	["regional capital"] = {
-		article = "the",
-		preposition = "of",
 	},
 
 	["regional county municipality"] = {
@@ -2359,24 +2347,6 @@ export.cat_data = {
 		preposition = "of",
 
 		["default"] = {
-			["country"] = {true},
-		},
-	},
-
-	["state capital"] = {
-		article = "the",
-		preposition = "of",
-
-		cat_handler = function(holonym_placetype, holonym_placename, place_spec)
-			if holonym_placetype == "state" then
-				return city_type_cat_handler("city", holonym_placetype, holonym_placename)
-			end
-		end,
-
-		["country/Brazil"] = {
-			["country"] = {true},
-		},
-		["country/United States"] = {
 			["country"] = {true},
 		},
 	},
@@ -2504,6 +2474,11 @@ export.cat_data = {
 		["country/United States"] = {
 			["itself"] = {true},
 		},
+	},
+
+	["union territory"] = {
+		preposition = "of",
+		article = "a",
 	},
 
 	["unrecognized country"] = {
