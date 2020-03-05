@@ -19,12 +19,6 @@ local namespace = mw.title.getCurrentTitle().nsText
 
 
 
-local function remove_links_and_html(text)
-	text = m_links.remove_links(text)
-	return text:gsub("<.->", "")
-end
-
-
 -- Return a wikilink link {{l|language|text}}
 local function link(text, language)
 	if not language or language == "" then
@@ -38,7 +32,7 @@ end
 -- Return the category link for a category, given the language code and the
 -- name of the category.
 local function catlink(lang, text, sort_key)
-	return require("Module:utilities").format_categories({lang:getCode() .. ":" .. remove_links_and_html(text)}, lang, sort_key)
+	return require("Module:utilities").format_categories({lang:getCode() .. ":" .. data.remove_links_and_html(text)}, lang, sort_key)
 end
 
 
@@ -167,7 +161,7 @@ local function handle_implications(place_specs, implication_data, should_clone)
 
 		for c = 3, lastarg do
 			local imp_data = data.get_equiv_placetype_prop(spec[c][1], function(pt)
-				local implication = implication_data[pt] and implication_data[pt][remove_links_and_html(spec[c][2])]
+				local implication = implication_data[pt] and implication_data[pt][data.remove_links_and_html(spec[c][2])]
 				if implication then
 					return implication
 				end
@@ -459,8 +453,8 @@ end
 -- Prepend the appropriate article if needed to LINKED_PLACENAME, where PLACENAME
 -- is the corresponding unlinked placename and PLACETYPE its placetype.
 local function prepend_article(placetype, placename, linked_placename)
-	placename = remove_links_and_html(placename)
-	local unlinked_placename = remove_links_and_html(linked_placename)
+	placename = data.remove_links_and_html(placename)
+	local unlinked_placename = data.remove_links_and_html(linked_placename)
 	if unlinked_placename:find("^the ") then
 		return linked_placename
 	end
@@ -989,19 +983,6 @@ code "en" will be prepended, and the final category will be
 [[:Category:en:Municipalities of Brazil]].
 ]=]
 
--- Look up and resolve any category aliases that need to be applied to a holonym. For example,
--- "country/Republic of China" maps to "Taiwan" for use in categories like "Counties in Taiwan".
--- This also removes any links.
-local function resolve_cat_aliases(holonym_placetype, holonym_placename)
-	local retval
-	local cat_aliases = data.get_equiv_placetype_prop(holonym_placetype, function(pt) return data.placename_cat_aliases[pt] end)
-	holonym_placename = remove_links_and_html(holonym_placename)
-	if cat_aliases then
-		retval = cat_aliases[holonym_placename]
-	end
-	return retval or holonym_placename
-end
-
 
 -- Find the appropriate category specs for a given place spec; e.g. for the call
 -- {{place|en|city|s/Pennsylvania|c/US}} which results in the place spec
@@ -1039,7 +1020,7 @@ local function find_cat_specs(entry_placetype, entry_placetype_data, place_spec,
 
 	local function fetch_inner_data(holonym_to_match)
 		local holonym_placetype, holonym_placename = holonym_to_match[1], holonym_to_match[2]
-		holonym_placename = resolve_cat_aliases(holonym_placetype, holonym_placename)
+		holonym_placename = data.resolve_cat_aliases(holonym_placetype, holonym_placename)
 		local inner_data = data.get_equiv_placetype_prop(holonym_placetype,
 			function(pt) return entry_placetype_data[(pt or "") .. "/" .. holonym_placename] end)
 		if inner_data then
@@ -1152,7 +1133,7 @@ local function cat_specs_to_category_wikicode(lang, cat_specs, entry_placetype, 
 
 	if holonym then
 		local holonym_placetype, holonym_placename = holonym[1], holonym[2]
-		holonym_placename = resolve_cat_aliases(holonym_placetype, holonym_placename)
+		holonym_placename = data.resolve_cat_aliases(holonym_placetype, holonym_placename)
 		holonym = {holonym_placetype, holonym_placename}
 
 		for _, cat_spec in ipairs(cat_specs) do
