@@ -398,6 +398,7 @@ export.placetype_links = {
 	["spa town"] = "w",
 	["special administrative region"] = "w", -- China; North Korea; Indonesia; East Timor
 	["special collectivity"] = "w",
+	["special ward"] = true,
 	["spit"] = true,
 	["state capital"] = true,
 	["state park"] = true,
@@ -716,6 +717,8 @@ export.placename_display_aliases = {
 export.placename_cat_aliases = {
 	["autonomous okrug"] = {
 		["Nenetsia"] = "Nenets Autonomous Okrug",
+		["Khantia-Mansia"] = "Khanty-Mansi Autonomous Okrug",
+		["Yugra"] = "Khanty-Mansi Autonomous Okrug",
 	},
 	["council area"] = {
 		["Glasgow"] = "City of Glasgow",
@@ -784,6 +787,7 @@ export.placename_article = {
 	},
 	["region"] = {
 		["Balkans"] = "the",
+		["Russian Far East"] = "the",
 		["Caribbean"] = "the",
 		["Caucasus"] = "the",
 		["North Caucasus"] = "the",
@@ -895,6 +899,7 @@ export.cat_implications = {
 		["Micronesia"] = {"continent/Oceania"},
 		["Melanesia"] = {"continent/Oceania"},
 		["Siberia"] = {"country/Russia", "continent/Asia"},
+		["Russian Far East"] = {"country/Russia", "continent/Asia"},
 		["South Wales"] = {"constituent country/Wales", "continent/Europe"},
 		["Balkans"] = {"continent/Europe"},
 	}
@@ -922,6 +927,13 @@ table.insert(export.cat_implication_handlers,
 
 ----------- Basic utilities -----------
 
+
+function export.remove_links_and_html(text)
+	text = m_links.remove_links(text)
+	return text:gsub("<.->", "")
+end
+
+
 -- Return the singular version of a maybe-plural placetype, or nil if not plural.
 function export.maybe_singularize(placetype)
 	if not placetype then
@@ -932,6 +944,20 @@ function export.maybe_singularize(placetype)
 		return nil
 	end
 	return retval
+end
+
+
+-- Look up and resolve any category aliases that need to be applied to a holonym. For example,
+-- "country/Republic of China" maps to "Taiwan" for use in categories like "Counties in Taiwan".
+-- This also removes any links.
+function export.resolve_cat_aliases(holonym_placetype, holonym_placename)
+	local retval
+	local cat_aliases = export.get_equiv_placetype_prop(holonym_placetype, function(pt) return export.placename_cat_aliases[pt] end)
+	holonym_placename = export.remove_links_and_html(holonym_placename)
+	if cat_aliases then
+		retval = cat_aliases[holonym_placename]
+	end
+	return retval or holonym_placename
 end
 
 
@@ -1081,6 +1107,65 @@ local function city_type_cat_handler(placetype, holonym_placetype, holonym_place
 	end
 end
 
+
+local function capital_city_cat_handler(holonym_placetype, holonym_placename, place_spec)
+	-- The first time we're called we want to return something; otherwise we will be called
+	-- for later-mentioned holonyms, which can result in wrongly classifying into e.g.
+	-- 'National capitals'.
+	if holonym_placetype then
+		-- Simulate the loop in find_cat_specs() over holonyms so we get the proper
+		-- 'Cities in ...' categories as well as the capital category/categories we add below.
+		local c = 3
+		local inner_data
+		while place_spec[c] do
+			local h_placetype, h_placename = place_spec[c][1], place_spec[c][2]
+			h_placename = export.resolve_cat_aliases(h_placetype, h_placename)
+			inner_data = export.get_equiv_placetype_prop(h_placetype,
+				function(pt) return city_type_cat_handler("city", pt, h_placename) end)
+			if inner_data then
+				break
+			end
+			c = c + 1
+		end
+		if not inner_data then
+			inner_data = {
+				["itself"] = {}
+			}
+		end
+		-- Now find the appropriate capital-type category for the placetype of the holonym,
+		-- e.g. 'State capitals'. If we recognize the holonym among the known holonyms in
+		-- [[Module:place/shared-data]], also add a category like 'State capitals of the United States'.
+		local capital_cat = m_shared.placetype_to_capital_cat[holonym_placetype]
+		if capital_cat then
+			capital_cat = ucfirst(capital_cat)
+			local inserted_specific_variant_cat = false
+			for _, group in ipairs(m_shared.polities) do
+				-- Find the appropriate key format for the holonym (e.g. "pref/Osaka" -> "Osaka Prefecture").
+				local key = group.place_cat_handler(group, "capital city", holonym_placetype, holonym_placename)
+				if key then
+					local value = group.data[key]
+					if value then
+						-- Use the group's value_transformer to ensure that 'containing_polity'
+						-- is present if it should be.
+						value = group.value_transformer(group, key, value)
+						if value.containing_polity and not value.no_containing_polity_cat then
+							table.insert(inner_data["itself"], capital_cat .. " of " .. value.containing_polity)
+							inserted_specific_variant_cat = true
+							break
+						end
+					end
+				end
+			end
+			if not inserted_specific_variant_cat then
+				table.insert(inner_data["itself"], capital_cat)
+			end
+		else
+			-- We didn't recognize the holonym placetype; just put in 'Capital cities'.
+			table.insert(inner_data["itself"], "Capital cities")
+		end
+		return inner_data
+	end
+end
 
 -- This is used to add pages to base holonym categories like 'en:Places in Merseyside, England'
 -- (and 'en:Places in England') for any pages that have 'co/Merseyside' as their holonym.
@@ -1493,10 +1578,7 @@ export.cat_data = {
 	["capital city"] = {
 		article = "the",
 		preposition = "of",
-		cat_handler = function(holonym_placetype, holonym_placename, place_spec)
-			return city_type_cat_handler("city", holonym_placetype, holonym_placename,
-				nil, nil, {"Capital cities"})
-		end,
+		cat_handler = capital_city_cat_handler,
 
 		["default"] = {
 			["itself"] = {true},
@@ -1532,10 +1614,6 @@ export.cat_data = {
 		cat_handler = function(holonym_placetype, holonym_placename, place_spec)
 			return city_type_cat_handler("city", holonym_placetype, holonym_placename)
 		end,
-
-		["prefecture/Hokkaido"] = {
-			["itself"] = {"Cities in +++"},
-		},
 
 		["default"] = {
 			["itself"] = {true},
@@ -1964,10 +2042,6 @@ export.cat_data = {
 		affix_type = "Pref",
 		no_affix_strings = "district",
 		fallback = "municipality",
-
-		["province/Alberta"] = {
-			["itself"] = {"Municipal districts of +++"},
-		},
 	},
 
 	["municipality"] = {
@@ -2215,10 +2289,6 @@ export.cat_data = {
 		affix_type = "Suf",
 		no_affix_strings = {"municipality", "county"},
 		fallback = "municipality",
-
-		["province/Quebec"] = {
-			["itself"] = {"Regional county municipalities of +++"},
-		},
 	},
 
 	["regional municipality"] = {
@@ -2226,16 +2296,6 @@ export.cat_data = {
 		affix_type = "Pref",
 		no_affix_strings = "municipality",
 		fallback = "municipality",
-
-		["province/British Columbia"] = {
-			["itself"] = {"Regional municipalities of +++"},
-		},
-		["province/Nova Scotia"] = {
-			["itself"] = {"Regional municipalities of +++"},
-		},
-		["province/Ontario"] = {
-			["itself"] = {"Regional municipalities of +++"},
-		},
 	},
 
 	["regional unit"] = {
@@ -2267,18 +2327,6 @@ export.cat_data = {
 		affix_type = "Pref",
 		no_affix_strings = "municipality",
 		fallback = "municipality",
-
-		["province/Saskatchewan"] = {
-			["itself"] = {true, "Rural municipalities of +++", "Municipalities of Canada"},
-		},
-
-		["province/Manitoba"] = {
-			["itself"] = {true, "Rural municipalities of +++", "Municipalities of Canada"},
-		},
-
-		["province/Prince Edward Island"] = {
-			["itself"] = {true, "Rural municipalities of +++", "Municipalities of Canada"},
-		},
 	},
 
 	["satrapy"] = {
