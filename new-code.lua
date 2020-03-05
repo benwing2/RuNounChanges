@@ -5,13 +5,13 @@ TODO:
 3. 'spa town', 'resort town' not necessarily towns (DONE)
 3a. 'coal town', not necessarily a town (DONE)
 4. If two e.g. countries are mentioned as holonyms, categories should be generated for both. Cf.
-   Colorado (river), which should be a river both in the US and Mexico. Cf. Four Corners, mentioning 4 states.
+   Colorado (river), which should be a river both in the US and Mexico. Cf. Four Corners, mentioning 4 states. (DONE)
 5. 'harbor city', 'harbour city' (DONE)
 6. 'watercourse' (DONE)
 7. 'township municipality' (of Quebec) (DONE)
 8. 'sea area'
 9. 'townland'
-10. split slash only once to correctly handle twp/Admaston/Bromley.
+10. split slash only once to correctly handle twp/Admaston/Bromley. (DONE)
 11. make sure district -> neighborhood handles municipality and lgarea correctly.
 11. 'rumun' -> 'rural municipality' and should render as 'the Rural Municipality of ...'. (DONE)
 12. Not properly categorizing Places in the Northwest Territories? Or remove_redundant_place_cats.py not working. cf. Fort Smith. (DONE)
@@ -77,9 +77,17 @@ TODO:
 70. 'northern', 'southern', 'eastern', 'western', 'north', 'south', 'east', 'west' as qualifiers (DONE)
 71. 'sheading' = 'district' (Isle of Man) (DONE)
 72. 'state capital', 'provincial capital', 'regional capital', 'capital', 'capital city'; fix so that instead of just
-    'Capital cities', you get 'State capitals', 'Provincial capitals', 'Regional capitals', 'Country capitals', etc.
+    'Capital cities', you get 'State capitals', 'Provincial capitals', 'Regional capitals', 'Country capitals', etc. (DONE)
 73. 'burgh' (Scotland)
 74. 'commuter town'
+75. 'special ward' (of Tokyo) and category 'Special wards of Tokyo, Japan' (DONE)
+76. fix handling of 'Hokkaido' prefecture and 'Tokyo' prefecture (DONE)
+77. 'estuary' (= river?)
+78. 'arm' (= sea?)
+79. 'subprefecture' should have suffix and should categorize 'Subprefectures of Hokkaido', 'Subprefectures of Tokyo' (DONE)
+79. 'prefecture' should have categorize 'Prefectures of Japan' (might already) (DONE)
+80. For [[Chandigarh]], the "cities in" hack in capital_city_cat_handler doesnt properly handle s/Punjab,Haryana.
+81. Languages to do capital cities: af, ast, az, br, eo, et, eu, gl, ia, id, ie, hu, lt, lv, ms, mt, oc, sw, tk, tl, tr, uz, vi
 
 place-shared-data.lua:
 
