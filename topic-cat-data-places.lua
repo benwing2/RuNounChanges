@@ -40,7 +40,7 @@ local general_labels = {
 	{"bays", "[[bay]]s", {"places", "water"}},
 	{"beaches", "[[beach]]es", {"places", "water"}},
 	{"boroughs", "[[borough]]s", {"polities"}},
-	{"capital cities", "[[capital]] [[city|cities]]: the [[seat of government|seats of government]] for a country", {"cities"}},
+	{"capital cities", "[[capital]] [[city|cities]]: the [[seat of government|seats of government]] for a country or [[political]] [[subdivision]] of a country", {"cities"}},
 	{"census-designated places", "[[census-designated place]]s", {"places"}},
 	{"cities", "[[city|cities]], [[town]]s and [[village]]s of all sizes", {"polities"}},
 	{"communities", "[[community|communities]] of all sizes", {"polities"}},
@@ -319,6 +319,60 @@ table.insert(handlers, function(label)
 							description = desc,
 							parents = {bare_place, "list of sets"},
 						}
+					end
+				end
+			end
+		end
+	end
+end)
+
+-- Generate bare labels in 'label' for all types of capitals.
+for capital_cat, placetype in pairs(m_shared.capital_cat_to_placetype) do
+	local pl_placetype = m_strutils.pluralize(placetype)
+	local linkdiv = m_shared.political_subdivisions[pl_placetype]
+	if not linkdiv then
+		error("Saw unknown place type '" .. pl_placetype .. "' in label '" .. label .. "'")
+	end
+	labels[capital_cat] = {
+		description = "{{{langname}}} names of [[capital]]s of " .. linkdiv .. ".",
+		parents = {"capital cities", "list of sets"},
+	}
+end
+
+-- Handler for "state capitals of the United States", "provincial capitals of Canada", etc.
+-- Places that begin with "the" are recognized and handled specially.
+table.insert(handlers, function(label)
+	label = lcfirst(label)
+	local capital_cat, place = label:match("^([a-z%- ]- capitals) of (.*)$")
+	-- Make sure we recognize the type of capital.
+	if place and m_shared.capital_cat_to_placetype[capital_cat] then
+		local placetype = m_shared.capital_cat_to_placetype[capital_cat]
+		local pl_placetype = m_strutils.pluralize(placetype)
+		-- Locate the containing polity, fetch its known political subdivisions, and make sure
+		-- the placetype corresponding to the type of capital is among the list.
+		for _, group in ipairs(m_shared.polities) do
+			local placedata = group.data[place]
+			if placedata then
+				placedata = group.value_transformer(group, place, placedata)
+				if placedata.poldiv then
+					for _, div in ipairs(placedata.poldiv) do
+						if type(div) == "string" then
+							div = {div}
+						end
+						if pl_placetype == div[1] then
+							-- Everything checks out, construct the category description.
+							local linkdiv = m_shared.political_subdivisions[pl_placetype]
+							if not linkdiv then
+								error("Saw unknown place type '" .. pl_placetype .. "' in label '" .. label .. "'")
+							end
+							local bare_place, linked_place = m_shared.construct_bare_and_linked_version(place)
+							local keydesc = placedata.keydesc or linked_place
+							local desc = "{{{langname}}} names of [[capital]]s of " .. linkdiv .. " of " .. keydesc .. "."
+							return {
+								description = desc,
+								parents = {{name = capital_cat, sort = bare_place}, bare_place, "list of sets"},
+							}
+						end
 					end
 				end
 			end
