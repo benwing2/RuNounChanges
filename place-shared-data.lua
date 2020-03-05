@@ -36,7 +36,7 @@ export.political_subdivisions = {
 	["counties"] = "[[county|counties]]",
 	["county boroughs"] = "[[county borough]]s",
 	["county seats"] = "[[county seat]]s",
-	["countries"] = "[[constituent]] [[country|countries]]",
+	["countries"] = "[[country|countries]]",
 	["delegations"] = "[[delegation]]s",
 	["departments"] = "[[department]]s",
 	["dependencies"] = "[[dependency|dependencies]]",
@@ -112,6 +112,22 @@ export.generic_place_types_for_cities = {
 	["suburbs"] = "[[suburb]]s",
 	["places"] = "places of all sorts",
 }
+
+export.placetype_to_capital_cat = {
+	["canton"] = "cantonal capitals",
+	["country"] = "national capitals",
+	["department"] = "departmental capitals",
+	["prefecture"] = "prefectural capitals",
+	["province"] = "provincial capitals",
+	["region"] = "regional capitals",
+	["republic"] = "republic capitals",
+	["state"] = "state capitals",
+}
+
+export.capital_cat_to_placetype = {}
+for placetype, capital_cat in pairs(export.placetype_to_capital_cat) do
+	export.capital_cat_to_placetype[capital_cat] = placetype
+end
 
 -----------------------------------------------------------------------------------
 --                              Placename Tables                                 --
