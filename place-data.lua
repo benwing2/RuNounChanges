@@ -673,6 +673,8 @@ export.placename_display_aliases = {
 	["city"] = {
 		["New York"] = "New York City",
 		["Washington, DC"] = "Washington, D.C.",
+		["Washington D.C."] = "Washington, D.C.",
+		["Washington DC"] = "Washington, D.C.",
 	},
 	["country"] = {
 		["US"] = "United States",
@@ -682,14 +684,15 @@ export.placename_display_aliases = {
 		["United States of America"] = "United States",
 		["UK"] = "United Kingdom",
 		["UAE"] = "United Arab Emirates",
+		["Macedonia"] = "North Macedonia",
 		["Republic of North Macedonia"] = "North Macedonia",
 		["Republic of Macedonia"] = "North Macedonia",
 		["Republic of Ireland"] = "Ireland",
 		["Republic of Armenia"] = "Armenia",
-		["Congo"] = "Democratic Republic of the Congo",
 		["Côte d'Ivoire"] = "Ivory Coast",
 		["Czechia"] = "Czech Republic",
 		["Vatican"] = "Vatican City",
+		["Bosnia and Hercegovina"] = "Bosnia and Herzegovina",
 	},
 	["region"] = {
 		["Northern Ostrobothnia"] = "North Ostrobothnia",
@@ -742,6 +745,8 @@ export.placename_cat_aliases = {
 		["People's Republic of China"] = "China",
 		["Republic of China"] = "Taiwan",
 		["Bosnia"] = "Bosnia and Herzegovina",
+		["Congo"] = "Democratic Republic of the Congo",
+		["Congo Republic"] = "Republic of the Congo",
 	},
 	["county"] = {
 		["Anglesey"] = "Isle of Anglesey",
