@@ -523,7 +523,7 @@ def get_contributions(user, startsort=None, endsort=None, max=None, ns=None):
   for i, current in iter_items(itemiter, startsort, endsort, get_name=lambda item: item['title']):
     yield i, current
 
-def raw_cat_articles(page, startsort):
+def raw_cat_articles(page, startsort, recurse):
   if type(page) is list:
     for cat in page:
       if isinstance(cat, basestring):
@@ -536,11 +536,11 @@ def raw_cat_articles(page, startsort):
       page = page.decode("utf-8")
     if isinstance(page, basestring):
       page = pywikibot.Category(site, "Category:" + page)
-    for article in page.articles(startsort = startsort if not isinstance(startsort, int) else None):
+    for article in page.articles(startsort=startsort if not isinstance(startsort, int) else None, recurse=recurse):
       yield article
 
-def cat_articles(page, startsort = None, endsort = None):
-  for i, current in iter_items(raw_cat_articles(page, startsort), startsort, endsort):
+def cat_articles(page, startsort=None, endsort=None, recurse=False):
+  for i, current in iter_items(raw_cat_articles(page, startsort, recurse), startsort, endsort):
     yield i, current
 
 def cat_subcats(page, startsort=None, endsort=None, recurse=False):
@@ -925,12 +925,8 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
           for i, subcat in cat_subcats(cat, start, end, recurse=args.recursive):
             process_page(subcat, i)
         else:
-          for i, page in cat_articles(cat, start, end):
+          for i, page in cat_articles(cat, start, end, recurse=args.recursive):
             process_page(page, i)
-          if args.recursive:
-            for i, subcat in cat_subcats(cat, start, end, recurse=True):
-              for j, page in cat_articles(subcat, start, end):
-                process_page(page, j)
     if args.refs:
       for ref in [x.decode("utf-8") for x in re.split(r",(?! )", args.refs)]:
         # We don't use ref_namespaces here because the user might not want it.
