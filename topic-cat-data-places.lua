@@ -42,7 +42,8 @@ local general_labels = {
 	{"boroughs", "[[borough]]s", {"polities"}},
 	{"capital cities", "[[capital]] [[city|cities]]: the [[seat of government|seats of government]] for a country or [[political]] [[subdivision]] of a country", {"cities"}},
 	{"census-designated places", "[[census-designated place]]s", {"places"}},
-	{"cities", "[[city|cities]], [[town]]s and [[village]]s of all sizes", {"polities"}},
+	{"cities", "[[city|cities]]", {"polities"}},
+	{"city-states", "[[sovereign]] [[microstate]]s consisting of a single [[city]] and dependent [[territory|territories]]", {"polities"}},
 	{"communities", "[[community|communities]] of all sizes", {"polities"}},
 	{"continents", "the [[continents]] of the world", {"places"}},
 	{"countries", "[[country|countries]]", {"polities"}},
@@ -361,14 +362,14 @@ table.insert(handlers, function(label)
 						if type(div) == "string" then
 							div = {div}
 						end
-						-- HACK. Currently we map e.g. 'autonomous region' -> 'regional capitals'
-						-- and 'union territory' -> 'territorial capitals'. When encountering a
-						-- political subdivision like 'autonomous region' or 'union territory',
-						-- chop off everything up through a space to make things match. To make this
-						-- clearer, we record all such "variant match" cases, and down below we
+						-- HACK. Currently if we don't find a match for the placetype, we map e.g.
+						-- 'autonomous region' -> 'regional capitals' and 'union territory' -> 'territorial capitals'.
+						-- When encountering a political subdivision like 'autonomous region' or
+						-- 'union territory', chop off everything up through a space to make things match.
+						-- To make this clearer, we record all such "variant match" cases, and down below we
 						-- insert a note into the category text indicating that such "variant matches"
 						-- are included among the category.
-						if pl_placetype == div[1]:gsub("^.* ", "") then
+						if pl_placetype == div[1] or pl_placetype == div[1]:gsub("^.* ", "") then
 							saw_match = true
 							if pl_placetype ~= div[1] then
 								table.insert(variant_matches, div[1])
