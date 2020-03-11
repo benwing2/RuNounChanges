@@ -1,20 +1,20 @@
 TODO:
 
-1. 'central business district' (DONE)
-2. 'county town' is not necessarily a town (e.g. Chester is a city) (DONE)
-3. 'spa town', 'resort town' not necessarily towns (DONE)
-3a. 'coal town', not necessarily a town (DONE)
+1. 'central business district' [DONE]
+2. 'county town' is not necessarily a town (e.g. Chester is a city) [DONE]
+3. 'spa town', 'resort town' not necessarily towns [DONE]
+3a. 'coal town', not necessarily a town [DONE]
 4. If two e.g. countries are mentioned as holonyms, categories should be generated for both. Cf.
-   Colorado (river), which should be a river both in the US and Mexico. Cf. Four Corners, mentioning 4 states. (DONE)
-5. 'harbor city', 'harbour city' (DONE)
-6. 'watercourse' (DONE)
-7. 'township municipality' (of Quebec) (DONE)
+   Colorado (river), which should be a river both in the US and Mexico. Cf. Four Corners, mentioning 4 states. [DONE]
+5. 'harbor city', 'harbour city' [DONE]
+6. 'watercourse' [DONE]
+7. 'township municipality' (of Quebec) [DONE]
 8. 'sea area'
 9. 'townland'
-10. split slash only once to correctly handle twp/Admaston/Bromley. (DONE)
+10. split slash only once to correctly handle twp/Admaston/Bromley. [DONE]
 11. make sure district -> neighborhood handles municipality and lgarea correctly.
-11. 'rumun' -> 'rural municipality' and should render as 'the Rural Municipality of ...'. (DONE)
-12. Not properly categorizing Places in the Northwest Territories? Or remove_redundant_place_cats.py not working. cf. Fort Smith. (DONE)
+11. 'rumun' -> 'rural municipality' and should render as 'the Rural Municipality of ...'. [DONE]
+12. Not properly categorizing Places in the Northwest Territories? Or remove_redundant_place_cats.py not working. cf. Fort Smith. [DONE]
 13. Should add categories for 'neighborhoods of CITY' and 'suburbs of CITY'.
 14. Should add 'Places in Brooklyn, Places in the Bronx', etc. Requires several changes, e.g.
     handling 'the' in city/borough names.
@@ -23,20 +23,20 @@ TODO:
 17. Make sure the following includes an article after the semicolon: ## {{place|en|town|s/Tasmania|c/Australia|;|suburb|city/Tasmania}}.
 18. In {{place|en|suburb|in|lgarea/City of Joondalup|near|city/Perth|s/Western Australia}}., "in" shouldn't be necessary.
 19. Similarly, "on" before islands shouldn't be necessary.
-20. 'independent city'
+20. 'independent city' [DONE]
 21. 'unrecognized territory', 'unrecognised territory'
 22. 'crossroads'
-23. Fix Midway, Washington County, Oregon; revert vandalism (DONE)
+23. Fix Midway, Washington County, Oregon; revert vandalism [DONE]
 24. 'mining', 'farming', 'logging', 'gold mining' as qualifiers
-25. 'abandoned', 'extinct' as qualifiers that should be treated like 'former'
+25. 'abandoned', 'extinct' as qualifiers that should be treated like 'former' [DONE]
 26. 'community' and 'unincorporated community' should categorize as neighborhood if inside a city, town, village, etc.
 27. 'sound', 'mouth'
 28. 'ski resort town'
-29. 'statutory town'
-30. 'barangay' is a type of neighborhood. (DONE)
+29. 'statutory town' [DONE]
+30. 'barangay' is a type of neighborhood. [DONE]
 31. 'beach resort', 'ski resort', 'resort'
 32. 'metarea' = 'metropolitan area'
-33. 'rcomun' = 'regional county municipality' (Quebec)
+33. 'rcomun' = 'regional county municipality' (Quebec) [DONE]
 34. qualifier 'declining'
 35. 'adr' = administrative region
 36. 'municipal seat'
@@ -48,46 +48,51 @@ TODO:
 42. 'metropolitan area'
 43. 'railroad junction'
 44. 'volcano', 'inactive volcano', 'dormant volcano'
-45. 'rmun' = 'regional municipality', output 'regional municipality' as suffix, but correctly handle 'Region of Queens Municipality' (DONE)
-46. 'distmun' = 'district municipality', output 'district municipality' as suffix
+45. 'rmun' = 'regional municipality', output 'regional municipality' as suffix, but correctly handle 'Region of Queens Municipality' [DONE]
+46. 'distmun' = 'district municipality', output 'district municipality' as suffix [DONE]
 47. {{place|en|community|rmun/Halifax|p/Nova Scotia|c/Canada|;|suburb|city/Halifax}} should put in "Suburbs in Nova Scotia".
 48. 'larea' = 'lieutenancy area', display 'lieutenancy area' as suffix
 48. 'robor' = 'royal borough', display 'Royal Borough of' as prefix
 49. 'gated community'
 50. 'corregimiento' (in Panama)
-51. 'barrio' = neighborhood (DONE)
+51. 'barrio' = neighborhood [DONE]
 52. 'mission'
 53. 'fort', 'fortress'
-54. 'ward' = neighborhood (DONE)
+54. 'ward' = neighborhood [DONE]
 55. 'seaport'
-56. 'shire town' = treat like 'county seat' (DONE)
-57. 'chartered village' (DONE)
-58. 'county-controlled city' (DONE)
-59. Fix Clearwater, British Columbia: '''Clearwater''' is a [[district municipality]] in the North [[Thompson River]] valley in [[British Columbia]], Canada, where the [[Clearwater River (British Columbia)|Clearwater River]] empties into the North Thompson River. It is located {{convert|124|km|mi|0|abbr=on}} north of [[Kamloops]]. The District of Clearwater was established on December 23, 2007, making it one of the newest municipalities in British Columbia. It is near [[Wells Gray Provincial Park]] and is surrounded by the [[Trophy Mountains]], [[Raft Peak]], [[Grizzly Peak]] and [[Dunn Peak]]. (DONE)
-60. 'local urban district' (Manitoba) (DONE)
-61. 'cattle station' (Australia) (DONE)
+56. 'shire town' = treat like 'county seat' [DONE]
+57. 'chartered village' [DONE]
+58. 'county-controlled city' [DONE]
+59. Fix Clearwater, British Columbia: '''Clearwater''' is a [[district municipality]] in the North [[Thompson River]] valley in [[British Columbia]], Canada, where the [[Clearwater River (British Columbia)|Clearwater River]] empties into the North Thompson River. It is located {{convert|124|km|mi|0|abbr=on}} north of [[Kamloops]]. The District of Clearwater was established on December 23, 2007, making it one of the newest municipalities in British Columbia. It is near [[Wells Gray Provincial Park]] and is surrounded by the [[Trophy Mountains]], [[Raft Peak]], [[Grizzly Peak]] and [[Dunn Peak]]. [DONE]
+60. 'local urban district' (Manitoba) [DONE]
+61. 'cattle station' (Australia) [DONE]
 62. 'South Dublin', 'Fingal' and 'Dún Laoghaire–Rathdown' are counties of Ireland but don''t have 'County' preceding them
-63. 'charter community' (DONE)
-64. 'mountain pass' (DONE)
-65. 'high', 'low' as qualifiers (DONE)
-66. 'research base' (DONE)
-67. 'glen' = valley (DONE)
-68. 'First Nations reserve', 'Indian reserve' (DONE)
-69. 'cathedral city' (DONE)
-70. 'northern', 'southern', 'eastern', 'western', 'north', 'south', 'east', 'west' as qualifiers (DONE)
-71. 'sheading' = 'district' (Isle of Man) (DONE)
+63. 'charter community' [DONE]
+64. 'mountain pass' [DONE]
+65. 'high', 'low' as qualifiers [DONE]
+66. 'research base' [DONE]
+67. 'glen' = valley [DONE]
+68. 'First Nations reserve', 'Indian reserve' [DONE]
+69. 'cathedral city' [DONE]
+70. 'northern', 'southern', 'eastern', 'western', 'north', 'south', 'east', 'west' as qualifiers [DONE]
+71. 'sheading' = 'district' (Isle of Man) [DONE]
 72. 'state capital', 'provincial capital', 'regional capital', 'capital', 'capital city'; fix so that instead of just
-    'Capital cities', you get 'State capitals', 'Provincial capitals', 'Regional capitals', 'Country capitals', etc. (DONE)
+    'Capital cities', you get 'State capitals', 'Provincial capitals', 'Regional capitals', 'Country capitals', etc. [DONE]
 73. 'burgh' (Scotland)
 74. 'commuter town'
-75. 'special ward' (of Tokyo) and category 'Special wards of Tokyo, Japan' (DONE)
-76. fix handling of 'Hokkaido' prefecture and 'Tokyo' prefecture (DONE)
+75. 'special ward' (of Tokyo) and category 'Special wards of Tokyo, Japan' [DONE]
+76. fix handling of 'Hokkaido' prefecture and 'Tokyo' prefecture [DONE]
 77. 'estuary' (= river?)
 78. 'arm' (= sea?)
-79. 'subprefecture' should have suffix and should categorize 'Subprefectures of Hokkaido', 'Subprefectures of Tokyo' (DONE)
-79. 'prefecture' should have categorize 'Prefectures of Japan' (might already) (DONE)
+79. 'subprefecture' should have suffix and should categorize 'Subprefectures of Hokkaido', 'Subprefectures of Tokyo' [DONE]
+79. 'prefecture' should have categorize 'Prefectures of Japan' (might already) [DONE]
 80. For [[Chandigarh]], the "cities in" hack in capital_city_cat_handler doesnt properly handle s/Punjab,Haryana.
 81. Languages to do capital cities: af, ast, az, br, eo, et, eu, gl, ia, id, ie, hu, lt, lv, ms, mt, oc, sw, tk, tl, tr, uz, vi
+82. foo/bar/and/baz should not add articles before bar or baz but foo/baz should add article before baz; foo/bar/and/baz/bat
+    should add article before foo and bat
+83. the page [[Houston]] should categorize into [[CAT:en:Houston]]; likewise should pages like [[Hiustonas]] ([[CAT:lt:Houston]]) and [[Хьюстон]] ([[CAT:ru:Houston]]) that mention Houston in a translation with the right entry placetype (need some hacks so that e.g. an entry placetype "capital city" is treated like a city)
+84. 'historic(al)' should not be treated like 'former' (or go through and clean up all uses; need tracking category)
+85. Check for and fix cases where the wrong language is used in {{place}}. E.g. look at [[CAT:de:City-states]].
 
 place-shared-data.lua:
 
