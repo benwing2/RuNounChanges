@@ -529,7 +529,7 @@ def raw_cat_articles(page, startsort, recurse):
       if isinstance(cat, basestring):
         msg("Processing category %s" % unicode(cat))
         errmsg("Processing category %s" % unicode(cat))
-      for article in raw_cat_articles(cat, startsort):
+      for article in raw_cat_articles(cat, startsort, recurse):
         yield article
   else:
     if type(page) is str:
@@ -1136,7 +1136,7 @@ def process_links(save, verbose, lang, longlang, cattype, startFrom, upTo,
         return getparam(template, param)
       tempname = unicode(template.name).strip()
       def doparam(param, tlang, trparam="tr", noadd=False):
-        if not getp(param):
+        if type(param) is not list and not getp(param):
           return False
         if not noadd:
           templates_seen[tempname] = templates_seen.get(tempname, 0) + 1
@@ -1434,7 +1434,7 @@ def process_links(save, verbose, lang, longlang, cattype, startFrom, upTo,
 
     # First split up any templates with commas in the Latin
     if split_templates:
-      def process_param_for_splitting(pagetitle, index, template, tlang, param, paramtr):
+      def process_param_for_splitting(pagetitle, index, pagetext, template, tlang, param, paramtr):
         if isinstance(param, list):
           fromparam, toparam = param
         else:
