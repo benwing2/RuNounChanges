@@ -165,7 +165,7 @@ local function link_term(terminfo, display_term, lang, sc, sort_key)
 
 	terminfo_new.term = display_term	
 	if terminfo_new.lang then
-		result = require("Module:etymology").format_borrowed(lang, terminfo_new, sort_key, false, true, "plain")
+		result = require("Module:etymology").format_derived(lang, terminfo_new, sort_key)
 	else
 		terminfo_new.lang = lang
 		terminfo_new.sc = terminfo_new.sc or sc
