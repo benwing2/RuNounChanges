@@ -19,7 +19,7 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, site, tname
 
-def process_page(index, page, template, new_name, params_to_remove,
+def process_page(index, page, template, new_name, params_to_add, params_to_remove,
     params_to_rename, filters, comment):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
@@ -59,6 +59,10 @@ def process_page(index, page, template, new_name, params_to_remove,
         if t.has(param):
           rmparam(t, param)
           notes.append("remove %s= from {{%s}}" % (param, tn))
+      for param, value in params_to_add:
+        if getparam(t, param) != value:
+          t.add(param, value)
+          notes.append("add %s=%s to {{%s}}" % (param, value, tn))
       if new_name:
         blib.set_template_name(t, new_name)
         notes.append("rename {{%s}} to {{%s}}" % (template, new_name))
@@ -78,6 +82,8 @@ pa.add_argument("--from", help="Old name of param, can be specified multiple tim
     metavar="FROM", dest="from_", action="append")
 pa.add_argument("--to", help="New name of param, can be specified multiple times",
     action="append")
+pa.add_argument("--add", help="PARAM=VALUE to add, can be specified multiple times",
+    action="append")
 pa.add_argument("--filter", help="Only take action on templates matching the filter, which should be either PARAM=VALUE meaning the parameter must have the given value, or PARAM~REGEXP meaning the parameter must match the given regular expression (unanchored). Can be specified multiple times and all must match.",
     action="append")
 pa.add_argument("-c", "--comment", help="Comment to use in place of auto-generated ones.")
@@ -88,6 +94,13 @@ template = args.template.decode("utf-8")
 new_name = args.new_name and args.new_name.decode("utf-8")
 from_ = [x.decode("utf-8") for x in args.from_] if args.from_ else []
 to = [x.decode("utf-8") for x in args.to] if args.to else []
+addspecs = [x.decode("utf-8") for x in args.add] if args.add else []
+params_to_add = []
+for spec in addspecs:
+  specparts = spec.split("=")
+  if specparts != 2:
+    raise ValueError("Value %s to --add must have the form PARAM=VALUE" % spec)
+  params_to_add.append(specparts)
 params_to_remove = [x.decode("utf-8") for x in args.remove] if args.remove else []
 filters = [x.decode("utf-8") for x in args.filter] if args.filter else []
 comment = args.comment and args.comment.decode("utf-8")
@@ -98,7 +111,7 @@ if len(from_) != len(to):
 params_to_rename = zip(from_, to)
 
 def do_process_page(page, index, parsed):
-  return process_page(index, page, template, new_name, params_to_remove,
+  return process_page(index, page, template, new_name, params_to_add, params_to_remove,
     params_to_rename, filters, comment)
 
 blib.do_pagefile_cats_refs(args, start, end, do_process_page, edit=True,
