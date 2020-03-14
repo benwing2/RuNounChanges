@@ -93,6 +93,7 @@ TODO:
 83. the page [[Houston]] should categorize into [[CAT:en:Houston]]; likewise should pages like [[Hiustonas]] ([[CAT:lt:Houston]]) and [[Хьюстон]] ([[CAT:ru:Houston]]) that mention Houston in a translation with the right entry placetype (need some hacks so that e.g. an entry placetype "capital city" is treated like a city)
 84. 'historic(al)' should not be treated like 'former' (or go through and clean up all uses; need tracking category)
 85. Check for and fix cases where the wrong language is used in {{place}}. E.g. look at [[CAT:de:City-states]].
+86. Fix 'constituent country in' -> 'constituent country of' but make sure that this still works with 'cc/England' vs. 'c/England' etc.
 
 place-shared-data.lua:
 
