@@ -641,9 +641,9 @@ def post_canonicalize_latin(text, msgfun=msg):
 
 # Canonicalize a Latin transliteration and Russian text to standard form.
 # Can be done on only Latin or only Russian (with the other one None), but
-# is more reliable when both aare provided. This is less reliable than
+# is more reliable when both are provided. This is less reliable than
 # tr_matching() and is meant when that fails. Return value is a tuple of
-# (CANONLATIN, CANONARABIC).
+# (CANONLATIN, CANONFOREIGN).
 def canonicalize_latin_russian(latin, russian, msgfun=msg):
     if russian is not None:
         russian = pre_pre_canonicalize_russian(russian, msgfun)
