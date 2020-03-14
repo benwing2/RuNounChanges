@@ -1135,16 +1135,16 @@ def process_links(save, verbose, lang, longlang, cattype, startFrom, upTo,
       def getp(param):
         return getparam(template, param)
       tempname = unicode(template.name).strip()
+      saw_template = [False]
+      changed_template = [False]
       def doparam(param, tlang, trparam="tr", noadd=False):
         if type(param) is not list and not getp(param):
           return False
-        if not noadd:
-          templates_seen[tempname] = templates_seen.get(tempname, 0) + 1
+        saw_template[0] = True
         result = processfn(pagetitle, index, pagetext, template, tlang, param, trparam)
         if result and isinstance(result, list):
           actions.extend(result)
-          if not noadd:
-            templates_changed[tempname] = templates_changed.get(tempname, 0) + 1
+          changed_template[0] = True
           return True
         return False
 
@@ -1188,12 +1188,54 @@ def process_links(save, verbose, lang, longlang, cattype, startFrom, upTo,
         elif tempname == "ru-ux":
           doparam("1", "ru")
           did_template = True
+      if "bg" in lang:
+        # Special-casing for Bulgarian
+        if tempname in ["bg-noun"]:
+          if getp("head"):
+            doparam("head", "bg")
+          elif getp("sg"):
+            doparam("sg", "bg")
+          else:
+            doparam(["page title", "head"], "bg")
+          did_template = True
+        elif tempname in ["bg-adj", "bg-proper noun"]:
+          if getp("head"):
+            doparam("head", "bg")
+          else:
+            doparam(["page title", "head"], "bg")
+          did_template = True
+        elif tempname in ["bg-verb"]:
+          if getp("head"):
+            doparam("head", "bg")
+          else:
+            doparam(["page title", "head"], "bg")
+          doparam("pf", "bg", "pftr")
+          doparam("pf2", "bg", "pf2tr")
+          doparam("pf3", "bg", "pf3tr")
+          doparam("impf", "bg", "impftr")
+          doparam("impf2", "bg", "impf2tr")
+          doparam("impf3", "bg", "impf3tr")
+          did_template = True
+        elif tempname in ["bg-phrase"]:
+          if getp("head"):
+            doparam("head", "bg")
+          elif getp("1"):
+            doparam("1", "bg")
+          else:
+            doparam(["page title", "1"], "bg")
+          did_template = True
+        elif tempname in ["bg-verb-form", "bg-noun-form", "bg-adj-form"]:
+          if getp("head"):
+            doparam("head", "bg", "2")
+          else:
+            doparam(["page title", "head"], "bg", "2")
+          did_template = True
 
-      # Skip {{attention|ar|FOO}} or {{etyl|ar|FOO}} or {{audio|FOO|lang=ar}}
-      # or {{lb|ar|FOO}} or {{context|FOO|lang=ar}} or {{Babel-2|ar|FOO}}
-      # or various others, where FOO is not Arabic, and {{w|FOO|lang=ar}}
-      # or {{wikipedia|FOO|lang=ar}} or {{pedia|FOO|lang=ar}} etc., where
-      # FOO is Arabic but diacritics aren't stripped so shouldn't be added.
+      # Skip {{attention|LANG|FOO}} or {{etyl|LANG|FOO}} or {{audio|FOO|lang=LANG}}
+      # or {{lb|LANG|FOO}} or {{context|FOO|lang=LANG}} or {{Babel-2|LANG|FOO}}
+      # or various others, where FOO is not LANG, and {{w|FOO|lang=LANG}}
+      # or {{wikipedia|FOO|lang=LANG}} or {{pedia|FOO|lang=LANG}} etc., where
+      # FOO is LANG but diacritics aren't stripped so shouldn't be added.
       if (tempname in [
         "attention", "attn",
         "audio", "audio-IPA",
@@ -1207,7 +1249,7 @@ def process_links(save, verbose, lang, longlang, cattype, startFrom, upTo,
         "non-gloss definition", "non-gloss", "non gloss", "n-g",
         "place",
         "qualifier", "qual", "i", "italbrac",
-        "rfe", "rfinfl", "rfc",
+        "rfe", "rfinfl", "rfc", "rfc-pron-n",
         "sense", "italbrac-colon",
         "senseid",
         "given name",
@@ -1225,7 +1267,7 @@ def process_links(save, verbose, lang, longlang, cattype, startFrom, upTo,
         pass
       elif did_template:
         pass
-      # Look for {{head|ar|...|head=<ARABIC>}}
+      # Look for {{head|LANG|...|head=<FOREIGNTEXT>}}
       elif tempname == "head":
         tlang = getp("1")
         if tlang in lang:
@@ -1233,7 +1275,14 @@ def process_links(save, verbose, lang, longlang, cattype, startFrom, upTo,
             doparam("head", tlang)
           else:
             doparam(["page title", "head"], tlang)
-      # Look for {{t|ar|<PAGENAME>|alt=<ARABICTEXT>}}
+          for i in range(2, 11): # there may be holes
+            doparam("head%s" % i, tlang, "tr%s" % i)
+          for i in range(1, 11):
+            if getp("f%salt" % i):
+              doparam("f%salt" % i, tlang, "f%str" % i)
+            else:
+              doparam(str(i * 2 + 2), tlang, "f%str" % i)
+      # Look for {{t|LANG|<PAGENAME>|alt=<FOREIGNTEXT>}}
       elif tempname in ["t", "t+", "t-", "t+check", "t-check"]:
         tlang = getp("1")
         if tlang in lang:
@@ -1241,12 +1290,11 @@ def process_links(save, verbose, lang, longlang, cattype, startFrom, upTo,
             doparam("alt", tlang)
           else:
             doparam("2", tlang)
-      # Look for {{suffix|ar|<PAGENAME>|alt1=<ARABICTEXT>|<PAGENAME>|alt2=...}}
-      # or  {{suffix|ar|<ARABICTEXT>|<ARABICTEXT>|...}}
+      # Look for {{suffix|LANG|<PAGENAME>|alt1=<FOREIGNTEXT>|<PAGENAME>|alt2=...}}
+      # or  {{suffix|LANG|<FOREIGNTEXT>|<FOREIGNTEXT>|...}}
       elif (tempname in ["suffix", "suf", "prefix", "pre", "affix", "af",
-          "confix", "con",
-          "circumfix", "infix", "compound", "com",
-          "prefixusex", "suffixusex",
+          "confix", "con", "circumfix", "infix", "compound", "com",
+          "prefixusex", "prefex", "suffixusex", "sufex", "affixusex", "afex",
           "synonyms", "syn", "antonyms", "ant", "hypernyms", "hyper",
           "hyponyms", "hypo", "meronyms", "holonyms", "troponyms",
           "coordinate terms", "perfectives", "pf", "imperfectives", "impf",
@@ -1260,8 +1308,6 @@ def process_links(save, verbose, lang, longlang, cattype, startFrom, upTo,
             params = [2]
           else:
             params = []
-        elif tempname in ["prefixusex", "suffixusex"]:
-          params = [1, 2]
         else:
           params = range(1, 11)
         tlang = getp("lang")
@@ -1271,19 +1317,15 @@ def process_links(save, verbose, lang, longlang, cattype, startFrom, upTo,
           offset = 1
         if tlang in lang:
           templates_seen[tempname] = templates_seen.get(tempname, 0) + 1
-          anychanged = False
           # Don't just do cases up through where there's a numbered param
           # because there may be holes.
           for i in params:
             if getp("lang" + str(i)):
               continue
             if getp("alt" + str(i)):
-              changed = doparam("alt" + str(i), tlang, "tr" + str(i), noadd=True)
+              doparam("alt" + str(i), tlang, "tr" + str(i))
             else:
-              changed = doparam(str(i + offset), tlang, "tr" + str(i), noadd=True)
-            anychanged = anychanged or changed
-          if anychanged:
-            templates_changed[tempname] = templates_changed.get(tempname, 0) + 1
+              doparam(str(i + offset), tlang, "tr" + str(i))
       elif tempname == "form of":
         tlang = getp("lang")
         if tlang in lang:
@@ -1320,8 +1362,6 @@ def process_links(save, verbose, lang, longlang, cattype, startFrom, upTo,
       elif tempname in ["cardinalbox", "ordinalbox"]:
         tlang = getp("1")
         if tlang in lang:
-          pagemsg("WARNING: Encountered %s, check params carefully: %s"
-              % (tempname, unicode(template)))
           # FUCKME: This is a complicated template, might be doing it wrong
           doparam("5", tlang, None)
           doparam("6", tlang, None)
@@ -1397,30 +1437,34 @@ def process_links(save, verbose, lang, longlang, cattype, startFrom, upTo,
           getp("1") in lang and not getp("lang")):
         tlang = getp("1")
         # Look for:
-        #   {{m|ar|<PAGENAME>|<ARABICTEXT>}}
-        #   {{m|ar|<PAGENAME>|alt=<ARABICTEXT>}}
-        #   {{m|ar|<ARABICTEXT>}}
+        #   {{m|LANG|<PAGENAME>|<FOREIGNTEXT>}}
+        #   {{m|LANG|<PAGENAME>|alt=<FOREIGNTEXT>}}
+        #   {{m|LANG|<FOREIGNTEXT>}}
         if getp("alt"):
           doparam("alt", tlang)
         elif getp("3"):
           doparam("3", tlang)
         elif tempname != "transliteration":
           doparam("2", tlang)
-      # Look for any other template with "lang=ar" in it. But beware of
-      # {{borrowing|en|<ENGLISHTEXT>|lang=ar}}.
+      # Look for any other template with "lang=LANG" in it. But beware of
+      # {{borrowing|en|<ENGLISHTEXT>|lang=LANG}}.
       elif (#tempname in ["term", "plural of", "definite of", "feminine of", "diminutive of"] and
           getp("lang") in lang):
         tlang = getp("lang")
         # Look for:
-        #   {{term|lang=ar|<PAGENAME>|<ARABICTEXT>}}
-        #   {{term|lang=ar|<PAGENAME>|alt=<ARABICTEXT>}}
-        #   {{term|lang=ar|<ARABICTEXT>}}
+        #   {{term|lang=LANG|<PAGENAME>|<FOREIGNTEXT>}}
+        #   {{term|lang=LANG|<PAGENAME>|alt=<FOREIGNTEXT>}}
+        #   {{term|lang=LANG|<FOREIGNTEXT>}}
         if getp("alt"):
           doparam("alt", tlang)
         elif getp("2"):
           doparam("2", tlang)
         else:
           doparam("1", tlang)
+      if saw_template[0]:
+        templates_seen[tempname] = templates_seen.get(tempname, 0) + 1
+      if changed_template[0]:
+        templates_changed[tempname] = templates_changed.get(tempname, 0) + 1
     return actions
 
   # Process the link-like templates on the given page with the given text.
