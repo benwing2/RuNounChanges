@@ -21,25 +21,8 @@ import unicodedata
 from blib import remove_links, msg
 
 # FIXME:
-#
-# 1. Should we canonicalize ɛ when it matches э? e.g. лавэ (lavɛ́)?
-# 2. Cases like бере́г (berjóg) -- should we canonicalize to ё? Probably not?
-# 8. FIXME: Match-canon jo to jó against ё if multi-syllable and no other
-#    accent in word
-# 10. Ask Anatoli about multiple acute accents in a word. Currently I throw
-#    an error if the Bulgarian has multiple accents (Блу́мфонте́йн,
-#    ла́биодента́льный -- template {{t|ru|Блу́мфонте́йн|m|tr=Blúmfontɛjn, Blumfontɛ́jn}}
-#    originally has a comma in it, split into multiple templates; template
-#    {{t|ru|ла́биодента́льный|tr=labiodɛntálʹnyj|sc=Cyrl}} does not have a comma
-#    but has the Latin accent only on one syllable) but go ahead and
-#    match-canon if the Latin has multiple accents (rývók, zapóminátʹ),
-#    i.e. they will be transferred to the Bulgarian.
-# 11. Ask Anatoli about stressed and unstressed ё. Since ё can be unstressed,
-#    should we add an accent on it when we know it's stressed (from the
-#    Latin)?
-# 12. Ask Anatoli: Is it OK to normalize NBSP to regular space? If not, it
-#    should be matched against regular space in the Latin and the Latin will
-#    be canonicalized to NBSP.
+# 1. Converts grave-и to и with both acute and grave.
+# 2. Doesn't convert grave to acute when no transliteration.
 
 AC = u"\u0301"
 GR = u"\u0300"
@@ -93,22 +76,9 @@ def tr(text, lang=None, sc=None, msgfun=msg):
     # Remove word-final hard sign
     text = rsub(text, u"[Ъъ]($|[- \]])", ur"\1")
 
-    # ё after a "hushing" consonant becomes ó (ё is mostly stressed)
-    text = rsub(text, u"([жшчщЖШЧЩ])ё", ur"\1ó")
-    # ю after ж and ш becomes u (e.g. брошюра, жюри)
-    text = rsub(text, u"([жшЖШ])ю", ur"\1u")
-
-    # е after a vowel, at the beginning of a word or after non-word char
-    # becomes je
-    def replace_e(m):
-        ttab = {u"Е":u"Je", u"е":u"je", u"Ѣ":u"Jě", u"ѣ":u"jě"}
-        return m.group(1) + ttab[m.group(2)]
-    # repeat to handle sequences of ЕЕЕЕЕ...
-    for i in xrange(2):
-        text = re.sub("(^|[" + bulgarian_vowels + r"\W]" + ACGROPT +
-                # re.U so \W is Unicode-dependent
-                u")([ЕеѢѣ])", replace_e, text, 0, re.U)
-
+    # ьо becomes jo, Ьо becomes Jo
+    text = rsub(text, u"ь(?=[Оо])", ur"j")
+    text = rsub(text, u"Ь(?=[Оо])", ur"J")
     text = rsub(text, '.', tt)
 
     # compose accented characters
@@ -133,8 +103,8 @@ single_quote_like = [u"ʹ",u"’",u"ʼ",u"´",u"′",u"ʲ",u"ь",u"ˈ",u"`",u"�
 double_quote_like_re = "[" + "".join(double_quote_like) + "]"
 single_quote_like_re = "[" + "".join(single_quote_like) + "]"
 # list of items to match-canonicalize against a Bulgarian hard sign;
-# the character ʺ needs to be first in the list
-hard_sign_matching = double_quote_like + [u'"']
+# the character Ǎ needs to be first in the list
+hard_sign_matching = [u"Ǎ", u"Ă", u"Ŭ", u"A"]
 # list of items to match-canonicalize against a Bulgarian soft sign;
 # the character ʹ which needs to be first in the list
 # Don't put 'j here because we might legitimately have ья or similar
@@ -168,10 +138,6 @@ latin_lookalikes_re = "[" + "".join(
         [x for x in bulgarian_to_latin_lookalikes.values() if len(x) == 1]) + "]"
 
 multi_single_quote_subst = u"\ufff1"
-capital_e_subst = u"\ufff2"
-small_e_subst = u"\ufff3"
-small_jo_subst = u"\ufff4"
-small_ju_subst = u"\ufff5"
 capital_silent_hard_sign = u"\ufff6"
 small_silent_hard_sign = u"\ufff7"
 
@@ -243,18 +209,7 @@ tt_to_bulgarian_matching_uppercase = {
     # second X is Greek
     u'Г':[u'G',[u'V'],[u'X'],[(u"Χ",),"X"],[u'Kh'],[u'H']],
     u"Д":u"D",
-    # Canonicalize to capital_e_subst, which we later map to either Je or E
-    # depending on what precedes. We don't use regular capital E as the
-    # canonical character because Э also maps to E.
-    u"Е":[capital_e_subst,"E","Je","Ye",u"'E",u"ʹE",
-        # O matches for after hushing sounds
-        [u"Ɛ"],[u"Jo"],[u"Yo",u"Jo"],[u"'O",u"Jo"],[u"ʹO",u"Jo"],
-        [u"'Jo",u"Jo"],[u"ʹJo",u"Jo"],[u"O"]],
-    u"Ё":[u"Jo"+AC,u"Yo"+AC,u"'O"+AC,u"ʹO"+AC,u"'Jo"+AC,u"ʹJo"+AC,u"O"+AC,
-        # be conservative and don't self-canon Ë to Jó because it might
-        # be unstressed (although unlikely)
-        (u"Ë",),[u"Jo"],[u"Yo",u"Jo"],[u"'O",u"Jo"],[u"ʹO",u"Jo"],
-        [u"'Jo",u"Jo"],[u"ʹJo",u"Jo"],[u"O"]],
+    u"Е":"E",
     u"Ж":[u"Ž",u"Zh",u"ʐ",u"Z"], # no cap equiv: u"ʐ"?
     u"З":u"Z",
     u"И":[u"I",u"Yi",u"Y",u"'I",u"ʹI",u"Ji",u"И"],
@@ -272,26 +227,21 @@ tt_to_bulgarian_matching_uppercase = {
     u"У":[u"U",u"Y",u"Ou",u"W"],
     u"Ф":[u"F",u"Ph"],
     # final X is Greek
-    u"Х":[u"X",u"Kh",u"Ch",u"Č",u"Χ",u"H"], # Ch might have been canoned to Č
+    u"Х":[u"H", u"X",u"Kh",u"Ch",u"Č",u"Χ"], # Ch might have been canoned to Č
     u"Ц":[u"C",u"T͡s",u"Ts",u"Tz",u"Č"],
     u'Ч':[u'Č',u"Ch",u"Tsch",u"Tsč",u"Tch",u"Tč",u"T͡ɕ",u"Ć",[u"Š"],[u"Sh"]],
     u"Ш":[u"Š",u"Sh"],
     # don't self-canon Ŝ to Щ because it might be occurring in a sequence Ŝč
     # or similar
-    u"Щ":[u"Šč",u"Shch",u"Sch",u"Sč",u"Š(č)",u"Ŝč",u"Ŝć",(u"Ŝ",),u"Š'",u"ʂ",u"Sh'",
+    u"Щ":[u"Št",u"Sht",u"St",u"St",u"Š(t)",u"Ŝt",(u"Ŝ",),u"Š'",u"ʂ",u"Sh'",
         u"Š",u"Sh"],# No cap equiv: u"ʂ"?
     u"Ъ":hard_sign_matching + [u""],
-    u"Ы":[u"Y",u"I",u"Ɨ",u"Ы",u"ı"],
-    u"Ь":soft_sign_matching + [u""],
-    u"Э":[u"E",u"Ė",[u"Ɛ"]], # FIXME should we canonicalize Ɛ here?
     u"Ю":[u"Ju",u"Yu",u"'U",u"ʹU",u"U",u"'Ju",u"ʹJu"],
     u"Я":[u"Ja",u"Ya",u"'A",u"ʹA",u"A",u"'Ja",u"ʹJa"],
     # archaic, pre-1918 letters
-    u'І':u'I',
-    # We will later map to Jě/jě as necessary.
+    u'Ѫ':u'Ǫ',
     u'Ѣ':[u'Ě',u"E"],
-    u'Ѳ':u'F',
-    u'Ѵ':u'I',
+    u"Ь":soft_sign_matching + [u""],
 }
 
 # Match Latin characters in the Bulgarian against same characters
@@ -342,8 +292,6 @@ def lower_entry(x):
         return [lower_entry(y) for y in x]
     if isinstance(x, tuple):
         return tuple(lower_entry(y) for y in x)
-    if x == capital_e_subst:
-        return small_e_subst
     return x.lower()
 # Surround entries with a one-entry tuple so they don't trigger
 # "multiple" in build_canonicalize_latin()
@@ -366,8 +314,6 @@ for k,v in tt_to_bulgarian_matching_uppercase.items():
     # don't trigger "multiple" in build_canonicalize_latin()
     tt_to_bulgarian_matching[k] = v + [make_tuple(lower_entry(x)) for x in v]
     tt_to_bulgarian_matching[k.lower()] = [lower_entry(x) for x in v]
-tt_to_bulgarian_matching[u"ё"][0:0] = [small_jo_subst]
-tt_to_bulgarian_matching[u"ю"][0:0] = [small_ju_subst]
 for k,v in tt_to_bulgarian_matching_non_case.items():
     tt_to_bulgarian_matching[k] = v
 
@@ -380,34 +326,19 @@ if debug_tables:
 # list all the possibilities with and without the accent, and include
 # accented entries one character up.
 tt_to_bulgarian_matching_2char = {
-    u"ый":["yj",["y"+AC+"j","y"+AC+"j",u"ы́й"],"yy",["y"+AC+"y","y"+AC+"j",u"ы́й"],
-        u"yĭ",["y"+AC+u"ĭ","y"+AC+"j",u"ы́й"],"yi",["y"+AC+"i","y"+AC+"j",u"ы́й"],
-        ["y"+AC,"y"+AC+"j",u"ы́й"],"y"],
-    u"ий":["ij",["i"+AC+"j","i"+AC+"j",u"и́й"],"iy",["i"+AC+"y","i"+AC+"j",u"и́й"],
-        u"iĭ",["i"+AC+u"ĭ","i"+AC+"j",u"и́й"],"yi",["y"+AC+"i","i"+AC+"j",u"и́й"],
-        ["i"+AC,"i"+AC+"j",u"и́й"],"i"],
     # ja for ся is strange but occurs in ться vs. tʹja
     u"ся":["sja","sa",u"ja"], # especially in the reflexive ending
     u"нн":["nn","n"],
-    u"ть":[u"tʹ",u"ť",u"ț"],
-    u"тё":[u"tjo"+AC,u"ťo"+AC,u"ț"+AC,[u"ťo",u"tjo"],[u"țo",u"tjo"]],
     u"те":[u"te",u"ťe",u"țe"],
     u"ие":["ije",u"ʹje",u"'je","je"],
-    u"сч":[u"sč",u"šč",u"š"],
-    u"зч":[u"zč",u"šč",u"š"],
     u"ия":["ija","ia"],
     u"ьо":[u"ʹo",u"ʹjo",u"'jo",u"jo"],
-    u"ль":[u"lʹ",u"ľ"],
     u"дж":[u"dž",u"j"],
     u"кс":[u"ks",u"x"],
 }
 
 tt_to_bulgarian_matching_3char = {
     u" — ":[u" — ",u"—",u" - ",u"-"],
-    u"ы́й":["y"+AC+"j","yj","y"+AC+u"ĭ",u"yĭ","y"+AC+"i","yi","y"+AC+"y","yy",
-        "y"+AC,"y"],
-    u"и́й":["i"+AC+"j","ij","i"+AC+u"ĭ",u"iĭ","i"+AC+"y","iy","y"+AC+"i","yi",
-        "i"+AC,"i"],
 }
 
 tt_to_bulgarian_matching_4char = {
@@ -514,10 +445,12 @@ def pre_canonicalize_latin(text, bulgarian=None, msgfun=msg):
              u"À":"A"+GR, u"È":"E"+GR, u"Ì":"I"+GR,
              u"Ò":"O"+GR, u"Ù":"U"+GR, u"Ỳ":"Y"+GR,})
 
-    # "compose" digraphs
-    text = rsub(text, u"[czskCZSK]h",
-        {"ch":u"č", "zh":u"ž", "sh":u"š", "kh":"x",
-         "Ch":u"Č", "Zh":u"Ž", "Sh":u"Š", "Kh":"X"})
+    ## "compose" digraphs
+    ## This causes problems for words beginning with разх- and isn't necessary
+    ## when both Latin and Cyrillic are available.
+    #text = rsub(text, u"[czskCZSK]h",
+    #    {"ch":u"č", "zh":u"ž", "sh":u"š", "kh":"x",
+    #     "Ch":u"Č", "Zh":u"Ž", "Sh":u"Š", "Kh":"X"})
 
     # canonicalize quote-like signs to make matching easier.
     text = rsub(text, double_quote_like_re, double_quote_like[0])
@@ -527,12 +460,12 @@ def pre_canonicalize_latin(text, bulgarian=None, msgfun=msg):
     text = rsub(text, bulgarian_lookalikes_re, bulgarian_to_latin_lookalikes)
     text = rsub(text, u"[эε]",u'ɛ') # Cyrillic э, Greek ε to Latin ɛ
 
-    # remove some accents
-    text = rsub(text, u"[äïöüÿÄÏÖÜŸǎǐǒǔǍǏǑǓ]",
+    # remove some accents; don't include Ǎ, ǎ, Ě, ě which transliterate Bulgarian characters
+    text = rsub(text, u"[äïöüÿÄÏÖÜŸǐǒǔǏǑǓ]",
             {u"ä":"a",u"ï":"i",u"ö":"o",u"ü":"u",
-             u"ǎ":"a",u"ǐ":"i",u"ǒ":"o",u"ǔ":"u",
+             u"ǐ":"i",u"ǒ":"o",u"ǔ":"u",
              u"Ä":"A",u"Ï":"I",u"ö":"O",u"Ü":"U",
-             u"Ǎ":"A",u"Ǐ":"I",u"Ǒ":"O",u"Ǔ":"U",})
+             u"Ǐ":"I",u"Ǒ":"O",u"Ǔ":"U",})
 
     # remove [[...]] from Latin
     if text.startswith("[[") and text.endswith("]]"):
@@ -557,6 +490,32 @@ def pre_canonicalize_latin(text, bulgarian=None, msgfun=msg):
     # remove leading/trailing spaces again, cases like ''podnimát' ''
     text = text.strip()
 
+    # canonicalize sequences of accents
+    text = rsub(text, AC + "+", AC)
+    text = rsub(text, GR + "+", GR)
+
+    # Warn if multiple accents.
+    latin_words = re.split(r"([\s+-/|\[\].])", text)
+    for accent, english in [(AC, "acute"), (GR, "grave")]:
+        for word in latin_words:
+            if len(rsub(word, "[^" + accent + "]", "")) > 1:
+                msgfun("WARNING: Latin %s has multiple %s accents"
+                        % (text, english))
+    # Change grave to acute in Latin if no acute accent also in word and only one
+    # grave accent in word, but don't change the word ì (which is a special case in Bulgarian).
+    new_latin_words = []
+    for word in latin_words:
+        if (re.search(GR, word) and not re.search(AC, word) and
+                not re.search(r"\bi" + GR + r"($|\W)", word, re.UNICODE) and
+                len(rsub(word, "[^" + GR + "]", "")) == 1):
+            msgfun("Changing grave to acute in Latin word %s (Latin %s, Bulgarian %s)"
+                    % (word, text, bulgarian))
+            word = rsub(word, GR, AC)
+        new_latin_words.append(word)
+    text = "".join(new_latin_words)
+    if re.search(GR, text):
+        msgfun("WARNING: Latin %s has a grave accent" % text)
+
     debprint("pre_canonicalize_latin: Exit, text=%s" % text)
     return text
 
@@ -575,37 +534,10 @@ def tr_canonicalize_latin(text):
     return text
 
 def post_canonicalize_latin(text, msgfun=msg):
-    # Handle Bulgarian jo/ju, with or without preceding hushing consonant that
-    # suppresses the j. We initially considered not using small_jo_subst
-    # and small_ju_subst and just remove j after hushing consonants before
-    # o/u, but that catches too many things; there may be genuine instances
-    # of hushing consonant + j (Cyrillic й) + o/u.
-    text = rsub(text, u"([žčšŽČŠ])%s" % small_jo_subst, r"\1o" + AC)
-    text = text.replace(small_jo_subst, "jo" + AC)
-    text = rsub(text, u"([žšŽŠ])%s" % small_ju_subst, r"\1u")
-    text = text.replace(small_ju_subst, "ju")
-
-    # convert capital_e_subst to either Je (not after cons) or E (after cons),
-    # and small_e_subst to je or e; similarly, maybe map Ě to Jě, ě to jě.
-    # Do before recomposing accented letters.
-    non_cons = ur"(^|[aeiouyěɛAEIOUYĚƐʹʺ\W%s%s]%s)" % (
-            capital_e_subst, small_e_subst, ACGROPT)
-    # repeat to handle sequences of EEEEE... or eeeee....
-    for i in xrange(2):
-        text = re.sub(u"(%s)%s" % (non_cons, capital_e_subst), r"\1Je", text,
-                0, re.U)
-        text = re.sub(u"(%s)%s" % (non_cons, small_e_subst), r"\1je", text,
-                0, re.U)
-        text = re.sub(u"(%s)Ě" % non_cons, r"\1Jě", text, 0, re.U)
-        text = re.sub(u"(%s)ě" % non_cons, r"\1jě", text, 0, re.U)
-    text = text.replace(capital_e_subst, "E")
-    text = text.replace(small_e_subst, "e")
-
-    # ɛ not after cons -> e; same for Ɛ
-    # repeat to handle sequences of ƐƐƐƐƐ... or ɛɛɛɛɛ....
-    for i in xrange(2):
-        text = re.sub(u"(%s)Ɛ" % non_cons, r"\1E", text, 0, re.U)
-        text = re.sub(u"(%s)ɛ" % non_cons, r"\1e", text, 0, re.U)
+    # Handle Bulgarian jo.
+    # FIXME, it may be correct to convert this to Jo, if the Bulgarian text has
+    # Ь. But there don't seem to be any examples of that.
+    text = rsub(text, u"ʹo", u"jo")
 
     # recompose accented letters
     text = tr_canonicalize_latin(text)
@@ -618,9 +550,9 @@ def post_canonicalize_latin(text, msgfun=msg):
 
 # Canonicalize a Latin transliteration and Bulgarian text to standard form.
 # Can be done on only Latin or only Bulgarian (with the other one None), but
-# is more reliable when both aare provided. This is less reliable than
+# is more reliable when both are provided. This is less reliable than
 # tr_matching() and is meant when that fails. Return value is a tuple of
-# (CANONLATIN, CANONARABIC).
+# (CANONLATIN, CANONFOREIGN).
 def canonicalize_latin_bulgarian(latin, bulgarian, msgfun=msg):
     if bulgarian is not None:
         bulgarian = pre_pre_canonicalize_bulgarian(bulgarian, msgfun)
@@ -644,10 +576,11 @@ def canonicalize_latin_foreign(latin, bulgarian, msgfun=msg):
     return canonicalize_latin_bulgarian(latin, bulgarian, msgfun)
 
 def tr_canonicalize_bulgarian(text):
-    # Ё needs converting if is decomposed
-    text = rsub(text, u"ё", u"ё")
-    text = rsub(text, u"Ё", u"Ё")
-
+    # need to decompose grave-accented еЕиИ
+    text = rsub(text, u"ѝ", u"и" + GR)
+    text = rsub(text, u"Ѝ", u"И" + GR)
+    text = rsub(text, u"ѐ", u"е" + GR)
+    text = rsub(text, u"Ѐ", u"Е" + GR)
     return text
 
 # Early pre-canonicalization of Bulgarian, doing stuff that's safe. We split
@@ -685,12 +618,39 @@ def pre_pre_canonicalize_bulgarian(text, msgfun=msg):
     text = rsub(text, AC + "+", AC)
     text = rsub(text, GR + "+", GR)
 
+    # Warn if multiple accents.
+    bulgarian_words = re.split(r"([\s+-/|\[\].])", text)
+    for accent, english in [(AC, "acute"), (GR, "grave")]:
+        for word in bulgarian_words:
+            if len(rsub(word, "[^" + accent + "]", "")) > 1:
+                msgfun("WARNING: Bulgarian %s has multiple %s accents"
+                        % (text, english))
+    # Change grave to acute in Bulgarian if no acute accent also in word and only one
+    # grave accent in word, but don't change the word ѝ (which is a special case in Bulgarian).
+    new_bulgarian_words = []
+    for word in bulgarian_words:
+        if (re.search(GR, word) and not re.search(AC, word) and
+                not re.search(ur"\bи" + GR + ur"($|\W)", word, re.UNICODE) and
+                len(rsub(word, "[^" + GR + "]", "")) == 1):
+            msgfun("Changing grave to acute in Bulgarian word %s (Latin %s, Bulgarian %s)"
+                    % (word, text, text))
+            word = rsub(word, GR, AC)
+        new_bulgarian_words.append(word)
+    text = "".join(new_bulgarian_words)
+    if re.search(GR, text):
+        msgfun("WARNING: Bulgarian %s has a grave accent" % text)
+
     return text
 
 def pre_canonicalize_bulgarian(text, msgfun=msg):
     return text
 
 def post_canonicalize_bulgarian(text, msgfun=msg):
+    # need to recompose grave-accented еЕиИ
+    text = text.replace(u"и" + GR, u"ѝ")
+    text = text.replace(u"И" + GR, u"Ѝ")
+    text = text.replace(u"е" + GR, u"ѐ")
+    text = text.replace(u"Е" + GR, u"Ѐ")
     text = text.replace(capital_silent_hard_sign, u"Ъ")
     text = text.replace(small_silent_hard_sign, u"ъ")
     return text
@@ -711,34 +671,6 @@ def tr_matching(bulgarian, latin, err=False, msgfun=msg):
     bulgarian = pre_pre_canonicalize_bulgarian(bulgarian, msgfun)
     latin = pre_canonicalize_latin(latin, bulgarian, msgfun)
     bulgarian = pre_canonicalize_bulgarian(bulgarian, msgfun)
-
-    if re.search(GR, bulgarian):
-        msgfun("WARNING: Bulgarian %s has a grave accent" % bulgarian)
-    if re.search(GR, latin):
-        msgfun("WARNING: Latin %s has a grave accent" % latin)
-    bulgarian_words = re.split(r"([\s+-/|\[\].])", bulgarian)
-    latin_words = re.split(r"([\s+-/|\[\].])", latin)
-    for accent, english in [(AC, "acute"), (GR, "grave")]:
-        for word in bulgarian_words:
-            if len(rsub(word, "[^" + accent + "]", "")) > 1:
-                msgfun("WARNING: Bulgarian %s has multiple %s accents"
-                        % (bulgarian, english))
-        for word in latin_words:
-            if len(rsub(word, "[^" + accent + "]", "")) > 1:
-                msgfun("WARNING: Latin %s has multiple %s accents"
-                        % (latin, english))
-
-    # Change grave to acute if no acute accent also in word and only one
-    # grave accent in word.
-    new_latin_words = []
-    for word in latin_words:
-        if (re.search(GR, word) and not re.search(AC, word) and
-                len(rsub(word, "[^" + GR + "]", "")) == 1):
-            msgfun("Changing grave to acute in word %s (Latin %s, Bulgarian %s)"
-                    % (word, latin, bulgarian))
-            word = rsub(word, GR, AC)
-        new_latin_words.append(word)
-    latin = "".join(new_latin_words)
 
     ru = [] # exploded Bulgarian characters
     la = [] # exploded Latin characters
@@ -1000,6 +932,7 @@ def tr_matching(bulgarian, latin, err=False, msgfun=msg):
     return bulgarian, latin
 
 def remove_diacritics(text):
+    text = tr_canonicalize_bulgarian(text)
     text = text.replace(AC, "")
     text = text.replace(GR, "")
     return text
@@ -1076,20 +1009,6 @@ def run_tests():
     test(u"yéye yéye", u"ее ее", "matched", u"е́е е́е")
     test(u"yéye yéye", u"е́е е́е", "matched")
     test("yeye yeye", u"е́е е́е", "matched")
-
-    # Test with ju after hushing sounds
-    test(u"broshúra", u"брошюра", "matched", u"брошю́ра")
-    test(u"broshyúra", u"брошюра", "matched", u"брошю́ра")
-    test(u"zhurí", u"жюри", "matched", u"жюри́")
-
-    # Test with ' representing ь, which should be canonicalized to ʹ
-    test(u"pal'da", u"пальда", "matched")
-
-    # Test with jo
-    test(u"ketjó", u"кетё", "matched")
-    test(u"kétjo", u"кетё", "unmatched", u"ке́тё")
-    test(u"kešó", u"кешё", "matched")
-    test(u"kešjó", u"кешё", "matched")
 
     # Test handling of embedded links, including unmatched acute accent
     # directly before right bracket on Bulgarian side
