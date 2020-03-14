@@ -153,7 +153,9 @@ def is_nonsyllabic(word):
 
 # Includes non-syllabic stems such as льд-
 def is_monosyllabic(word):
-  return not re.search("[" + vowel + "].*[" + vowel + "]", word)
+  vowel_or_hard_sign = vowel + u"ъЪ" # in case we're called for Bulgarian
+  word = re.sub(u"ъ$", "", word)
+  return not re.search("[" + vowel_or_hard_sign + "].*[" + vowel_or_hard_sign + "]", word)
 
 # Includes non-syllabic stems such as lʹd-
 def is_tr_monosyllabic(word):
