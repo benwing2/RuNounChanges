@@ -22,7 +22,14 @@ from blib import msg, getparam, addparam
 show_template=True
 
 def nfd_form(txt):
-    return unicodedata.normalize("NFD", unicode(txt))
+  return unicodedata.normalize("NFD", unicode(txt))
+
+def template_changelog_name(template):
+  tname = unicode(template.name)
+  if tname == "head":
+    return "head|%s|%s" % (getparam(template, "1"), getparam(template, "2"))
+  else:
+    return tname
 
 # Canonicalize FOREIGN and LATIN. Return (CANONFOREIGN, CANONLATIN, ACTIONS).
 # CANONFOREIGN is accented and/or canonicalized foreign text to
@@ -37,7 +44,7 @@ def nfd_form(txt):
 # PARAMTR is the name of the parameter in this template containing the Latin
 # text. All four are used only in status messages and ACTIONS.
 def do_canon_param(pagetitle, index, template, fromparam, toparam, paramtr,
-    foreign, latin, translit_module, include_tempname_in_changelog=False):
+    foreign, latin, translit_module):
   actions = []
   tname = unicode(template.name)
   def pagemsg(text):
@@ -45,11 +52,6 @@ def do_canon_param(pagetitle, index, template, fromparam, toparam, paramtr,
 
   if show_template:
     pagemsg("Processing %s" % (unicode(template)))
-
-  if include_tempname_in_changelog:
-    paramtrname = "%s.%s" % (tname, paramtr)
-  else:
-    paramtrname = paramtr
 
   if latin == "-":
     pagemsg("Latin is -, taking no action")
@@ -107,11 +109,11 @@ def do_canon_param(pagetitle, index, template, fromparam, toparam, paramtr,
     pagemsg("%s foreign %s -> %s%s" % (operation, foreign, canonforeign,
       latintrtext))
     if fromparam == toparam:
-      actions.append("%s %s=%s -> %s" % (actionop, fromparam, foreign,
-        canonforeign))
+      actions.append("%s %s=%s -> %s in {{%s}}" % (actionop, fromparam, foreign,
+        canonforeign, template_changelog_name(template)))
     else:
-      actions.append("%s %s=%s -> %s=%s" % (actionop, fromparam, foreign,
-        toparam, canonforeign))
+      actions.append("%s %s=%s -> %s=%s in {{%s}}" % (actionop, fromparam, foreign,
+        toparam, canonforeign, template_changelog_name(template)))
     if (translit_module.remove_diacritics(canonforeign) !=
         translit_module.remove_diacritics(foreign)):
       msgs = ""
@@ -131,7 +133,7 @@ def do_canon_param(pagetitle, index, template, fromparam, toparam, paramtr,
   elif translit and translit == canonlatin:
     pagemsg("Removing redundant translit for %s -> %s%s" % (
         foreign, newforeign, latintrtext))
-    actions.append("remove redundant %s=%s" % (paramtrname, latin))
+    actions.append("remove redundant %s=%s in {{%s}}" % (paramtr, latin, template_changelog_name(template)))
     canonlatin = True
   else:
     if translit:
@@ -155,17 +157,29 @@ def do_canon_param(pagetitle, index, template, fromparam, toparam, paramtr,
         actionop="self-canon"
       pagemsg("%s Latin %s -> %s: foreign %s -> %s (auto-translit %s)" % (
           operation, latin, canonlatin, foreign, newforeign, translit))
-      actions.append("%s %s=%s -> %s" % (actionop, paramtrname, latin,
-        canonlatin))
+      actions.append("%s %s=%s -> %s in {{%s}}" % (actionop, paramtr, latin, canonlatin, template_changelog_name(template)))
 
   return (canonforeign, canonlatin, actions)
+
+# If param is 'head', add it after any numeric params; otherwise, add at the end.
+def add_param_handling_head(template, param, value):
+  if param != "head":
+    addparam(template, param, value)
+    return
+  before = None
+  for paramobj in template.params:
+    pname = unicode(paramobj.name).strip()
+    if re.match("^[0-9]+", pname):
+      continue
+    before = pname
+    break
+  addparam(template, param, value, before=before)
 
 # Attempt to canonicalize foreign parameter PARAM (which may be a list
 # [FROMPARAM, TOPARAM], where FROMPARAM may be "page title") and Latin
 # parameter PARAMTR. Return False if PARAM has no value, else list of
 # changelog actions.
-def canon_param(pagetitle, index, template, param, paramtr, translit_module,
-    include_tempname_in_changelog=False):
+def canon_param(pagetitle, index, template, param, paramtr, translit_module):
   if isinstance(param, list):
     fromparam, toparam = param
   else:
@@ -176,11 +190,10 @@ def canon_param(pagetitle, index, template, param, paramtr, translit_module,
   if not foreign:
     return False
   canonforeign, canonlatin, actions = do_canon_param(pagetitle, index,
-      template, fromparam, toparam, paramtr, foreign, latin, translit_module,
-      include_tempname_in_changelog)
+      template, fromparam, toparam, paramtr, foreign, latin, translit_module)
   oldtempl = "%s" % unicode(template)
   if canonforeign:
-    addparam(template, toparam, canonforeign)
+    add_param_handling_head(template, toparam, canonforeign)
   if canonlatin == True:
     template.remove(paramtr)
   elif canonlatin:
@@ -240,8 +253,7 @@ def canon_links(save, verbose, cattype, lang, longlang, script,
   if not isinstance(script, list):
     script = [script]
   def process_param(pagetitle, index, pagetext, template, templang, param, paramtr):
-    result = canon_param(pagetitle, index, template, param, paramtr,
-        translit_module, include_tempname_in_changelog=True)
+    result = canon_param(pagetitle, index, template, param, paramtr, translit_module)
     scvalue = getparam(template, "sc")
     if scvalue in script:
       tname = unicode(template.name)
@@ -254,7 +266,7 @@ def canon_links(save, verbose, cattype, lang, longlang, script,
       template.remove("sc")
       msg("Page %s %s: Replaced %s with %s" %
           (index, pagetitle, oldtempl, unicode(template)))
-      newresult = ["remove %s.sc=%s" % (tname, scvalue)]
+      newresult = ["remove sc=%s in {{%s}}" % (scvalue, template_changelog_name(template))]
       if result != False:
         result = result + newresult
       else:
