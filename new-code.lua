@@ -27,7 +27,8 @@ TODO:
 21. 'unrecognized territory', 'unrecognised territory'
 22. 'crossroads'
 23. Fix Midway, Washington County, Oregon; revert vandalism [DONE]
-24. 'mining', 'farming', 'logging', 'gold mining' as qualifiers
+24. 'mining', 'farming', 'logging' as qualifiers [DONE]
+24b. 'gold mining' as qualifier
 25. 'abandoned', 'extinct' as qualifiers that should be treated like 'former' [DONE]
 26. 'community' and 'unincorporated community' should categorize as neighborhood if inside a city, town, village, etc.
 27. 'sound', 'mouth'
@@ -37,22 +38,22 @@ TODO:
 31. 'beach resort', 'ski resort', 'resort'
 32. 'metarea' = 'metropolitan area'
 33. 'rcomun' = 'regional county municipality' (Quebec) [DONE]
-34. qualifier 'declining'
-35. 'adr' = administrative region
+34. qualifier 'declining' [DONE]
+35. 'adr' = administrative region [DONE]
 36. 'municipal seat'
 37. 'cdiv' = census division
 38. 'coal town'
-39. 'planned community'
+39. 'planned community' [DONE]
 40. {{place|en|A <<river>> in northwestern <<p/British Columbia>> and southeast <<s/Alaska>>}}: Should put in both "Places in British Columbia" and "Places in Alaska, USA".
 41. 'railroad town'
 42. 'metropolitan area'
 43. 'railroad junction'
-44. 'volcano', 'inactive volcano', 'dormant volcano'
+44. 'volcano', 'inactive volcano', 'dormant volcano' [DONE]
 45. 'rmun' = 'regional municipality', output 'regional municipality' as suffix, but correctly handle 'Region of Queens Municipality' [DONE]
 46. 'distmun' = 'district municipality', output 'district municipality' as suffix [DONE]
 47. {{place|en|community|rmun/Halifax|p/Nova Scotia|c/Canada|;|suburb|city/Halifax}} should put in "Suburbs in Nova Scotia".
 48. 'larea' = 'lieutenancy area', display 'lieutenancy area' as suffix
-48. 'robor' = 'royal borough', display 'Royal Borough of' as prefix
+48. 'robor' = 'royal borough', display 'Royal Borough of' as prefix [DONE]
 49. 'gated community'
 50. 'corregimiento' (in Panama)
 51. 'barrio' = neighborhood [DONE]
