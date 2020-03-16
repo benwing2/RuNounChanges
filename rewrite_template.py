@@ -98,7 +98,7 @@ addspecs = [x.decode("utf-8") for x in args.add] if args.add else []
 params_to_add = []
 for spec in addspecs:
   specparts = spec.split("=")
-  if specparts != 2:
+  if len(specparts) != 2:
     raise ValueError("Value %s to --add must have the form PARAM=VALUE" % spec)
   params_to_add.append(specparts)
 params_to_remove = [x.decode("utf-8") for x in args.remove] if args.remove else []
