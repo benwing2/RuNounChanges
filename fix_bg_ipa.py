@@ -37,9 +37,9 @@ def process_page(page, index, parsed):
       pron = getparam(t, "1")
       if pron:
         pron = decompose_bulgarian(pron)
-        pron.replace(AC, SUB)
-        pron.replace(SUB, GR)
-        pron.replace(GR, AC)
+        pron = pron.replace(AC, SUB)
+        pron = pron.replace(GR, AC)
+        pron = pron.replace(SUB, GR)
         t.add("1", pron)
       rmparam(t, "old")
       notes.append("convert {{bg-IPA}} pronunciation to new style (flip acute and grave) and remove old=1")
@@ -52,4 +52,4 @@ parser = blib.create_argparser("Fix {{bg-IPA}} to new format",
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-blib.do_pagefile_cats_refs(args, start, end, process_page, default_refs=["bg-IPA"], edit=1)
+blib.do_pagefile_cats_refs(args, start, end, process_page, default_refs=["Template:bg-IPA"], edit=1)
