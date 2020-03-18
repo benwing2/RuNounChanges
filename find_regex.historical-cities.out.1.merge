@@ -714,7 +714,7 @@ Borrowed from {{bor|en|akk|𒀸𒋩|tr=Aššur||Assur}}.
 ===Proper noun===
 {{en-proper noun}}
 
-# {{place|en|An <<ancient city>>, one of the <<capital>>s of ancient <<kingdom/Assyria>>, in modern <<c/Iraq>>}}.
+# {{place|en|One of the <<ancient capitals>> of <<kindgom/Assyria>>, in modern <<c/Iraq>>}}.
 # The chief [[deity]] of that city (see {{m|en|Ashur}}).
 
 ====Translations====
@@ -757,7 +757,7 @@ From {{bor|pt|akk|𒀸𒋩|tr=Aššur||Assur}}.
 ===Proper noun===
 {{pt-proper noun}}
 
-# {{place|pt|ancient city|c/Assyria|in modern|c/Iraq|t1=Assur}}
+# {{place|pt|one of the <<ancient capitals>> of <<kindgom/Assyria>>, in modern <<c/Iraq>>|t1=Assur}}
 # {{lb|pt|Assyrian mythology}} {{l|en|Assur}}; {{l|en|Ashur}} {{gloss|the chief god}}
 
 {{topics|pt|Assyria}}
@@ -1629,7 +1629,7 @@ From {{bor|en|la|Cȳzicus}}, from {{der|en|grc|Κύζικος}}.
 ===Proper noun===
 {{en-proper noun}}
 
-# {{place|en|ancient city|r/Anatolia|in modern|c/Turkey}}.
+# {{place|en|An <<ancient>> [[Greek]] <<town>> of <<r/Mysia>> in <<r/Anatolia>>, in modern <<p:Suf/Balıkesir>>, <<c/Turkey>>}}.
 
 [[Category:en:Ancient Greece]]
 
@@ -1650,7 +1650,7 @@ From {{bor|la|grc|Κῡ́ζικος}}.
 ===Proper noun===
 {{la-proper noun|Cȳzicus<2.loc>|g=f}}
 
-# {{place|la|ancient city|r/Anatolia||in modern|c/Turkey|t1=Cyzicus}}
+# {{place|la|an <<ancient>> [[Greek]] <<town>> of <<r/Mysia>> in <<r/Anatolia>>, in modern <<c/Turkey>>|t1=Cyzicus}}
 
 ====Declension====
 {{la-ndecl|Cȳzicus<2.loc>}}
@@ -1726,7 +1726,7 @@ From {{bor|en|la|Dorylaeum}}.
 {{wikipedia}}
 {{en-proper noun}}
 
-# {{place|en|ancient city|r/Anatolia|in modern|c/Turkey}}, near [[Eskişehir]]; now in ruins.
+# {{place|en|ancient city/archaeological site|r/Anatolia|near the|city:pref/Eskişehir|in modern|c/Turkey}}.
 
 ====Translations====
 {{trans-top|ancient city in Anatolia}}
@@ -1754,7 +1754,7 @@ From {{bor|la|grc|Δορύλαιον}}.
 ===Proper noun===
 {{la-proper noun|Dorylaeum<2.loc>}}
 
-# {{place|la|ancient city|r/Anatolia|in modern|c/Turkey|t1=Dorylaeum}}
+# {{place|la|ancient city/archaeological site|r/Anatolia|in modern|c/Turkey|t1=Dorylaeum}}
 
 ====Declension====
 {{la-ndecl|Dorylaeum<2.loc>}}
@@ -1989,6 +1989,7 @@ Page 50 Herat: -------- begin text ---------
 {{en-proper noun}}
 
 # {{place|en|city/capital|p:suf/Herat|c/Afghanistan}}, dating back to [[Avestan]] times.
+# {{place|en|province|c/Afghanistan}}.
 
 ====Related terms====
 * [[Aria]]
@@ -2042,7 +2043,7 @@ From {{bor|en|grc|Ἰεριχώ}}, from {{der|en|hbo|יְרִיחוֹ|tr=yərī�
 ===Proper noun===
 {{en-proper noun}}
 
-# {{place|en|ancient city|r/West Bank}}.
+# {{place|en|city|r/West Bank|c/Palestine}}.
 # {{surname|en}}
 # {{given name|en|male}}.
 
@@ -2126,7 +2127,6 @@ From {{bor|en|grc|Ἰεριχώ}}, from {{der|en|hbo|יְרִיחוֹ|tr=yərī�
 # {{lb|en|informal}} A place of retirement or concealment.
 
 [[Category:en:Ancient Near East]]
-[[Category:en:Cities in Palestine]]
 [[Category:en:Exonyms]]
 
 ----
@@ -2139,7 +2139,7 @@ From {{bor|en|grc|Ἰεριχώ}}, from {{der|en|hbo|יְרִיחוֹ|tr=yərī�
 ===Proper noun===
 {{cs-proper noun|g=n}}
 
-# {{place|cs|ancient city|r/West Bank|t1=Jericho}}
+# {{place|cs|city|r/West Bank|c/Palestine|t1=Jericho}}
 
 ====Derived terms====
 * {{l|cs|jerišský}}
@@ -2156,9 +2156,9 @@ From {{bor|en|grc|Ἰεριχώ}}, from {{der|en|hbo|יְרִיחוֹ|tr=yərī�
 ===Proper noun===
 {{nl-proper noun|n}}
 
-# {{l|en|Jericho}}
+# {{place|nl|city|r/West Bank|c/Palestine|t1=Jericho}}
 
-{{topics|nl|Cities in Palestine|Exonyms}}
+{{topics|nl|Exonyms}}
 
 ----
 
@@ -2171,24 +2171,9 @@ From {{bor|en|grc|Ἰεριχώ}}, from {{der|en|hbo|יְרִיחוֹ|tr=yərī�
 ===Proper noun===
 {{head|de|proper noun|g=n}}
 
-# {{place|de|city|r/West Bank|t1=Jericho}}
+# {{place|de|city|r/West Bank|c/Palestine|t1=Jericho}}
 
 [[Category:de:Exonyms]]
--------- end text --------
-Page 53 Jonquière: Found match for regex: =
-Page 53 Jonquière: -------- begin text ---------
-==English==
-
-===Etymology===
-Borrowed from {{bor|en|fr|Jonquière}}.
-
-===Proper noun===
-{{en-proper noun}}
-{{wikipedia}}
-
-# {{place|en|former city|p/Quebec|c/Canada}}.
-
-[[Category:English terms spelled with È|Jonquiere]]
 -------- end text --------
 Page 54 Kartagina: Found match for regex: =
 Page 54 Kartagina: -------- begin text ---------
@@ -3032,7 +3017,7 @@ From {{bor|en|la|Mazaca}}, from the name of the tribe of [[w:Mushki|Mushki]]. Co
 ===Proper noun===
 {{en-proper noun}}
 
-# {{lb|en|historical}} {{place|en|ancient city|r/Asia Minor}}, the capital of [[Cappadocia]], on the site of modern [[Kayseri]], Turkey.
+# {{lb|en|historical}} {{place|en|ancient capital|kingdom:Pref/Cappadocia|in|r/Asia Minor|in modern|c/Turkey|modern=Kayseri}}.
 
 ====Synonyms====
 * {{sense|ancient city at Kayseri}} {{l|en|Eusebia}}, {{l|en|Caesarea}}, {{l|en|Kaisariyah}}
@@ -3059,7 +3044,7 @@ Borrowed from {{bor|la|grc|Μάζακα}}.
 ===Noun===
 {{la-proper noun|Māzaca<2.loc>|g=n}}
 
-# [[#English|Mazaca]]
+# {{place|la|ancient capital|kingdom:Pref/Cappadocia|in|r/Asia Minor|in modern|c/Turkey|modern=Kayseri|t1=Mazaca}}
 
 ====Declension====
 {{la-ndecl|Māzaca<2.loc>}}
@@ -3067,9 +3052,6 @@ Borrowed from {{bor|la|grc|Μάζακα}}.
 ===References===
 * {{R:Gaffiot}}
 * {{R:Smith's Geography}}
-
-[[Category:la:Cities]]
-[[Category:la:Turkey]]
 -------- end text --------
 Page 64 Micenas: Found match for regex: =
 Page 64 Micenas: -------- begin text ---------
@@ -3179,7 +3161,7 @@ From {{bor|en|la|Nīcopolis}}, from {{der|en|grc|Νικόπολις}}.
 ===Proper noun===
 {{en-prop}}
 
-# {{place|en|ancient city|r/Epirus}}, now just outside of [[Preveza]], [[Greece]].
+# {{place|en|The <<ancient capital>> of the <<p:pref/Epirus Vetus>> of the <<empire/Roman Empire>>, in modern <<c/Greece>>, just outside of [[Preveza]]}}.
 
 ====Translations====
 {{trans-top|city in Epirus}}
@@ -3193,8 +3175,6 @@ From {{bor|en|la|Nīcopolis}}, from {{der|en|grc|Νικόπολις}}.
 * Spanish: {{t|es|Nicópolis|f}}
 {{trans-bottom}}
 
-[[Category:en:Greece]]
-
 ----
 
 ==French==
@@ -3202,7 +3182,7 @@ From {{bor|en|la|Nīcopolis}}, from {{der|en|grc|Νικόπολις}}.
 ===Proper noun===
 {{fr-proper noun|f}}
 
-# {{l|en|Nicopolis}}
+# {{place|en|<<ancient capital>> of the <<p:pref/Epirus Vetus>> of the <<empire/Roman Empire>>, in modern <<c/Greece>>|t1=Nicopolis}}
 
 ----
 
@@ -3215,7 +3195,7 @@ From {{bor|la|grc|Νικόπολις||city of victory}}.
 {{la-proper noun|Nīcopolis<3>|gen_sg=Nīcopolis/Nīcopolios}}
 
 # {{non-gloss definition|Any of various cities in the Roman world, especially:}}
-## {{place|la|city|r/Epirus|t1=Nicopolis}}
+## {{place|la|<<ancient capital>> of the <<p:pref/Epirus Vetus>> of the <<empire/Roman Empire>>, in modern <<c/Greece>>|t1=Nicopolis}}
 
 ====Declension====
 {{la-ndecl|Nīcopolis<3>|gen_sg=Nīcopolis/Nīcopolios}}
@@ -4352,7 +4332,7 @@ Borrowed from {{bor|en|fr|Rouen}}, from {{der|en|la|Rotomagus}}. Replaced {{cog|
 ===Proper noun===
 {{en-proper noun}}
 
-# {{place|en|historic city|r/Normandy|c/France}}.
+# {{place|en|capital city|r/Normandy|c/France|on the <<riv:Suf/Seine>>}}.
 
 ====Translations====
 {{trans-top|a city in France}}
@@ -4392,7 +4372,7 @@ From the Roman name, {{inh|fr|la|Rotomagus}}, from the {{etyl|cel-gau|fr}} name 
 ===Proper noun===
 {{fr-proper noun|m}}
 
-# {{place|fr|city|c/France|t=Rouen}}
+# {{place|fr|capital city|r/Normandy|c/France|on the <<riv:Suf/Seine>>|t=Rouen}}
 
 ====Derived terms====
 * {{l|fr|rouennais}}
@@ -4416,7 +4396,7 @@ Borrowed from {{bor|pt|fr|Rouen}}, from {{der|pt|la|Rotomagus}}.
 ===Proper noun===
 {{pt-proper noun}}
 
-# {{place|pt|city|c/France|t=Rouen}}
+# {{place|pt|capital city|r/Normandy|c/France|on the <<riv:Suf/Seine>>|t=Rouen}}
 
 ====Synonyms====
 * {{l|pt|Ruão}}
@@ -4518,8 +4498,8 @@ Borrowed from {{bor|en|grc|Σαμάρεια|}}, from {{der|en|he|שֹׁמְרו�
 {{wikipedia}}
 {{en-proper noun}}
 
-# a [[city]] of ancient [[Palestine]], in present-day [[West Bank]]
-# A part of ancient Palestine.
+# {{place|en|The <<ancient capital>> of the northern <<kingdom:Pref/Israel>>, in the modern <<r/West Bank>>}}.
+# {{place|en|ancient region|r:pref/Palestine|mostly in the northern part of the modern|r/West Bank}}.
 
 ====Derived terms====
 * {{l|en|Samaritan}}
@@ -4554,7 +4534,6 @@ Borrowed from {{bor|en|grc|Σαμάρεια|}}, from {{der|en|he|שֹׁמְרו�
 * {{anagrams|en|a=aaaimrs|Amarasi|aimaras}}
 
 [[Category:en:Ancient Near East]]
-[[Category:en:Cities]]
 
 ----
 
@@ -4567,7 +4546,8 @@ Borrowed from {{bor|it|la|Samarīa}}, from {{der|it|grc|Σαμάρεια}}, from
 ===Proper noun===
 {{it-proper noun|f}}
 
-# {{place|it|ancient city/and/historical region|c/Palestine|t1=Samaria}}
+# {{place|it|the <<ancient capital>> of the northern <<kingdom:Pref/Israel>>, in the modern <<r/West Bank>>|t1=Samaria}}
+# {{place|it|ancient region|r:pref/Palestine|mostly in the northern part of the modern|r/West Bank|t1=Samaria}}
 
 ====Related terms====
 * {{l|it|samaritano}}
@@ -4585,7 +4565,8 @@ From {{bor|la|grc|Σαμάρεια}}, from {{der|la|he|שֹׁמְרוֹן|tr=sho
 ===Proper noun===
 {{la-proper noun|Samarīa<1.loc>}}
 
-# {{place|la|ancient city|in modern|r/West Bank|t1=Samaria}}
+# {{place|la|the <<ancient capital>> of the northern <<kingdom:Pref/Israel>>, in the modern <<r/West Bank>>|t1=Samaria}}
+# {{place|la|ancient region|r:pref/Palestine|mostly in the northern part of the modern|r/West Bank|t1=Samaria}}
 
 ====Declension====
 {{la-ndecl|Samarīa<1.loc>}}
@@ -4607,7 +4588,8 @@ Borrowed from {{bor|pt|la|Samarīa}}, from {{der|pt|grc|Σαμάρεια}}, from
 ===Proper noun===
 {{pt-proper noun|f}}
 
-# {{place|pt|ancient city/and/historical region|c/Palestine|t1=Samaria}}
+# {{place|pt|the <<ancient capital>> of the northern <<kingdom:Pref/Israel>>, in the modern <<r/West Bank>>|t1=Samaria}}
+# {{place|pt|ancient region|r:pref/Palestine|mostly in the northern part of the modern|r/West Bank|t1=Samaria}}
 
 ====Related terms====
 * {{l|pt|samaritano}}
@@ -4715,7 +4697,7 @@ Borrowed from {{bor|en|la|Sardīs}}, from {{der|en|grc|Σάρδεις}}.
 ===Proper noun===
 {{en-proper noun}}
 
-# {{lb|en|historical}} {{place|en|ancient city/capital|kingdom/Lydia}} in western [[Asia Minor]].
+# {{lb|en|historical}} {{place|en|ancient capital|kingdom/Lydia|in|western|r/Asia Minor|in modern|c/Turkey}}.
 # {{place|en|neighbourhood|city/Chilliwack|p/British Columbia|c/Canada}}.
 # {{place|en|unincorporated community|co/Dallas County|s/Alabama}}, also known as [[Berlin]].
 # {{place|en|unincorporated community|co/Saline County|s/Arkansas|;|suburb|city/Little Rock}}.
@@ -4758,7 +4740,7 @@ From {{bor|la|grc|Σάρδεις}}.
 ===Proper noun===
 {{la-proper noun|Sardēs<3.pl.loc.I>|nom_pl=Sardīs|acc_pl=Sardīs|voc_pl=Sardīs|g=f}}
 
-# {{place|en|ancient city/capital|kingdom/Lydia|in|r/Asia Minor|in modern Turkey|t1=Sardis}}
+# {{place|la|ancient capital|kingdom/Lydia|in|western|r/Asia Minor|in modern|c/Turkey|t1=Sardis}}
 
 ====Declension====
 {{la-ndecl|Sardēs<3.pl.loc.I>|nom_pl=Sardīs|acc_pl=Sardīs|voc_pl=Sardīs}}
