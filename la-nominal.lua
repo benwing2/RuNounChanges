@@ -778,7 +778,11 @@ local function detect_noun_subtype(lemma, stem2, typ, subtypes)
 		lemma, stem2, detected_subtypes = get_noun_subtype_by_ending(lemma, stem2, typ, subtypes, {
 			{"^(.*r)$", {"M", "er"}},
 			{"^(.*v)os$", {"M", "vos"}},
+			{"^(.*v)om$", {"N", "vom"}},
+			-- If the lemma ends in -os and the user said N or -M, then the
+			-- following won't apply, and the second (neuter) -os will applly.
 			{"os", {"M", "Greek"}},
+			{"os", {"N", "Greek", "us"}},
 			{"on", {"N", "Greek"}},
 			-- -ius beginning with a capital letter is assumed a proper name,
 			-- and takes the voci subtype (vocative in -ī) along with the ius
@@ -1057,7 +1061,7 @@ end
 -- is among the subtypes that would be returned (such subtypes are filtered out
 -- of the returned subtypes).
 local function detect_adj_type_and_subtype(lemma, stem2, typ, subtypes)
-	if not rfind(typ, "^[123]") and not rfind(typ, "^irreg") then
+	if not rfind(typ, "^[0123]") and not rfind(typ, "^irreg") then
 		subtypes = mw.clone(subtypes)
 		subtypes[typ] = true
 		typ = ""
@@ -1146,6 +1150,8 @@ local function detect_adj_type_and_subtype(lemma, stem2, typ, subtypes)
 			return get_adj_type_and_subtype_by_ending(lemma, stem2, typ,
 				subtypes, decl3_entries, decl3_stem2)
 		end
+	elseif typ == "0" then
+		return lemma, nil, "0", {}
 	elseif typ == "3" then
 		return get_adj_type_and_subtype_by_ending(lemma, stem2, typ, subtypes,
 			decl3_entries, decl3_stem2)
@@ -1474,6 +1480,8 @@ end
 --   num = NUM (the first specified value for a number restriction, or nil if
 --     no number restrictions),
 --   gender = GENDER (the first specified or inferred gender, or nil if none),
+--   is_adj = IS_ADJ (true if all segments are adjective segments, false if
+--     there's at least one noun segment, nil if only raw-text segments),
 --   propses = PROPSES (list of per-word properties, where each element is an
 --     object {
 --       decl = DECL (declension),
@@ -1489,6 +1497,7 @@ end
 local function parse_segment_run(segment_run)
 	local loc = nil
 	local num = nil
+	local is_adj = nil
 	-- If the segment run begins with a hyphen, include the hyphen in the
 	-- set of allowed characters for a declined segment. This way, e.g. the
 	-- suffix [[-cen]] can be declared as {{la-ndecl|-cen/-cin<3>}} rather than
@@ -1520,6 +1529,11 @@ local function parse_segment_run(segment_run)
 		loc = loc or parsed_segment.loc
 		-- The first specified value for num is used becomes the overall value.
 		num = num or parsed_segment.num
+		if is_adj == nil then
+			is_adj = parsed_segment.is_adj
+		else
+			is_adj = is_adj and parsed_segment.is_adj
+		end
 		gender = gender or parsed_segment.gender
 		parsed_segment.orig_prefix = segments[i - 1]
 		parsed_segment.prefix = m_links.remove_links(segments[i - 1])
@@ -1541,6 +1555,7 @@ local function parse_segment_run(segment_run)
 		segments = parsed_segments,
 		loc = loc,
 		num = num,
+		is_adj = is_adj,
 		gender = gender,
 		propses = propses,
 	}
@@ -1556,7 +1571,10 @@ end
 --     has a locative),
 --   num = NUM (the overall number restriction, one of "sg", "pl" or "both"),
 --   gender = GENDER (the first specified or inferred gender, or nil if none),
---   propses = PROPSES (list of lists of per-word properties),
+--   is_adj = IS_ADJ (true if all non-constant alternants are adjectives, false
+--     if all nouns, nil if only constant alternants; conflicting alternants
+--     cause an error),
+--   propses = PROPSES (list of lists of per-word property objecs),
 -- }
 local function parse_alternant(alternant)
 	local parsed_alternants = {}
@@ -1565,6 +1583,7 @@ local function parse_alternant(alternant)
 	local loc = false
 	local num = nil
 	local gender = nil
+	local is_adj = nil
 	local propses = {}
 	for i, alternant in ipairs(alternants) do
 		local parsed_run = parse_segment_run(alternant)
@@ -1584,6 +1603,11 @@ local function parse_alternant(alternant)
 			num = "both"
 		end
 		gender = gender or parsed_run.gender
+		if is_adj == nil then
+			is_adj = parsed_run.is_adj
+		elseif parsed_run.is_adj ~= nil and parsed_run.is_adj ~= is_adj then
+			error("Saw both noun and adjective alternants; not allowed")
+		end
 		table.insert(propses, parsed_run.propses)
 	end
 	return {
@@ -1591,6 +1615,7 @@ local function parse_alternant(alternant)
 		loc = loc,
 		num = num,
 		gender = gender,
+		is_adj = is_adj,
 		propses = propses,
 	}
 end
@@ -1607,6 +1632,8 @@ end
 --   num = NUM (the first specified value for a number restriction, or nil if
 --     no number restrictions),
 --   gender = GENDER (the first specified or inferred gender, or nil if none),
+--   is_adj = IS_ADJ (true if all segments are adjective segments, false if
+--     there's at least one noun segment, nil if only raw-text segments),
 --   propses = PROPSES (list of either per-word property objects or lists of
 --		lists of such objects),
 -- }.
@@ -1617,15 +1644,7 @@ end
 --    the return value of parse_segment_run().
 -- 2. A raw-text segment, i.e. a table with only .prefix and .orig_prefix fields
 --    containing the raw text.
--- 3. An alternating segment, i.e. a table of the following form:
--- {
---   alternants = PARSED_SEGMENT_RUNS (a list of parsed segment runs),
---   loc = LOC (a boolean indicating whether the segment as a whole has a
---     locative),
---   num = NUM (the number restriction of the segment as a whole),
---   gender = GENDER (the first specified or inferred gender, or nil if none),
---   propses = PROPSES (list of lists of per-word property objects),
--- }
+-- 3. An alternating segment, as returned by parse_alternant().
 -- Note that each alternant is a segment run rather than a single parsed
 -- segment to allow for alternants like "((rēs<5>pūblica<1>,rēspūblica<1>))".
 -- The parsed segment runs in PARSED_SEGMENT_RUNS are tables as returned by
@@ -1643,10 +1662,12 @@ local function parse_segment_run_allowing_alternants(segment_run)
 	local loc = false
 	local num = nil
 	local gender = nil
+	local is_adj = nil
 	local propses = {}
 	for i = 1, #alternating_segments do
 		local alternating_segment = alternating_segments[i]
 		if alternating_segment ~= "" then
+			local this_is_adj
 			if i % 2 == 1 then
 				local parsed_run = parse_segment_run(alternating_segment)
 				for _, parsed_segment in ipairs(parsed_run.segments) do
@@ -1655,6 +1676,7 @@ local function parse_segment_run_allowing_alternants(segment_run)
 				loc = loc or parsed_run.loc
 				num = num or parsed_run.num
 				gender = gender or parsed_run.gender
+				this_is_adj = parsed_run.is_adj
 				for _, props in ipairs(parsed_run.propses) do
 					table.insert(propses, props)
 				end
@@ -1664,7 +1686,13 @@ local function parse_segment_run_allowing_alternants(segment_run)
 				loc = loc or parsed_alternating_segment.loc
 				num = num or parsed_alternating_segment.num
 				gender = gender or parsed_alternating_segment.gender
+				this_is_adj = parsed_alternating_segment.is_adj
 				table.insert(propses, parsed_alternating_segment.propses)
+			end
+			if is_adj == nil then
+				is_adj = this_is_adj
+			elseif this_is_adj ~= nil then
+				is_adj = is_adj and this_is_adj
 			end
 		end
 	end
@@ -1678,6 +1706,7 @@ local function parse_segment_run_allowing_alternants(segment_run)
 		loc = loc,
 		num = num,
 		gender = gender,
+		is_adj = is_adj,
 		propses = propses,
 	}
 end
@@ -1876,7 +1905,7 @@ local function decline_segment_run(parsed_run, pos, is_adj)
 					gender = seg.gender,
 					voc = true,
 					noneut = false,
-					pos = pos,
+					pos = is_adj and pos or "adjectives",
 					forms = {},
 					types = seg.types,
 					categories = {},
@@ -2056,7 +2085,7 @@ local function decline_segment_run(parsed_run, pos, is_adj)
 					new_notes, slot:find("linked") and seg.orig_prefix or seg.prefix)
 			end
 
-			if not seg.types.nocat then
+			if not seg.types.nocat and (is_adj or not seg.is_adj) then
 				for _, cat in ipairs(data.categories) do
 					ut.insert_if_not(declensions.categories, cat)
 				end
@@ -2233,8 +2262,10 @@ local function decline_segment_run(parsed_run, pos, is_adj)
 					seg_declensions.forms[slot], seg_declensions.notes[slot], nil)
 			end
 
-			for _, cat in ipairs(seg_categories) do
-				ut.insert_if_not(declensions.categories, cat)
+			if is_adj or not seg.is_adj then
+				for _, cat in ipairs(seg_categories) do
+					ut.insert_if_not(declensions.categories, cat)
+				end
 			end
 
 			local title_to_insert
@@ -2439,6 +2470,7 @@ function export.do_generate_noun_forms(parent_args, pos, from_headword, def, sup
 		params.lemma = {list = true}
 		params.id = {}
 		params.pos = {default = pos}
+		params.cat = {list = true}
 		params.indecl = {type = "boolean"}
 		params.m = {list = true}
 		params.f = {list = true}
@@ -2482,6 +2514,7 @@ function export.do_generate_noun_forms(parent_args, pos, from_headword, def, sup
 		overriding_lemma = args.lemma,
 		id = args.id,
 		pos = pos,
+		cat = args.cat,
 		indecl = args.indecl,
 		m = args.m,
 		f = args.f,
@@ -2517,8 +2550,11 @@ function export.do_generate_adj_forms(parent_args, pos, from_headword, def, supp
 		params.lemma = {list = true}
 		params.comp = {list = true}
 		params.sup = {list = true}
+		params.adv = {list = true}
 		params.id = {}
 		params.pos = {default = pos}
+		params.cat = {list = true}
+		params.indecl = {type = "boolean"}
 	end
 	if support_num_type then
 		params["type"] = {}
@@ -2534,9 +2570,10 @@ function export.do_generate_adj_forms(parent_args, pos, from_headword, def, supp
 	local segment_run = args[1]
 	if not rfind(segment_run, "[<(]") then
 		-- If the segment run doesn't have any explicit declension specs or alternants,
-		-- add a default declension spec of <+> to it. This allows the majority of
-		-- adjectives to just specify the lemma.
-		segment_run = segment_run .. "<+>"
+		-- add a default declension spec of <+> to it (or <0+> for indeclinable
+		-- adjectives). This allows the majority of adjectives to just specify
+		-- the lemma.
+		segment_run = segment_run .. (args.indecl and "<0+>" or "<+>")
 	end
 	local parsed_run = parse_segment_run_allowing_alternants(segment_run)
 	parsed_run.loc = parsed_run.loc or not not (
@@ -2587,8 +2624,11 @@ function export.do_generate_adj_forms(parent_args, pos, from_headword, def, supp
 		overriding_lemma = args.lemma,
 		comp = args.comp,
 		sup = args.sup,
+		adv = args.adv,
 		id = args.id,
 		pos = pos,
+		cat = args.cat,
+		indecl = args.indecl,
 		num_type = args["type"],
 	}
 
