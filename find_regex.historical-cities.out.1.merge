@@ -1,4 +1,4 @@
-Beginning at Mon Mar 16 17:53:03 2020
+Beginning at Tue Mar 17 23:00:15 2020
 Page 1 Abdera: Found match for regex: =
 Page 1 Abdera: -------- begin text ---------
 ==English==
@@ -11,7 +11,8 @@ From {{etyl|grc|en}} {{m|grc|Ἄβδηρα}}.
 ===Proper noun===
 {{en-proper noun}}
 
-# A [[Thrace|Thracian]] town known for the foolishness of its inhabitants.
+# {{place|en|ancient city|r/Thrace|in modern|c/Greece}}, known for the foolishness of its inhabitants.
+# {{place|en|modern municipality|runit/Xanthi|in the|adr:pref/Thrace|c/Greece}}.
 
 ====Derived terms====
 * {{l|en|Abderian}}
@@ -46,7 +47,8 @@ From {{der|it|la|Abdēra}}, from {{der|it|grc|Ἄβδηρα}}.
 ===Noun===
 {{it-proper noun|f}}
 
-# {{l|en|Abdera}} {{gloss|ancient city in Thracia}}
+# {{place|it|ancient city|r/Thrace|in modern|c/Greece|t1=Abdera}}
+# {{place|it|modern municipality|runit/Xanthi|in the|adr:pref/Thrace|c/Greece|t1=Abdera}}
 
 ====Related terms====
 * {{l|it|abderita}}
@@ -65,7 +67,8 @@ From {{bor|la|grc|Ἄβδηρα}}.
 {{la-proper noun|Abdēra<2.loc>}}<br/>
 {{la-proper noun|Abdēra<1.loc>}}
 
-# [[#English|Abdera]] {{gloss|A [[Thracian]] town known for its inhabitants' foolishness}}
+# {{place|la|ancient city|r/Thrace|in modern|c/Greece|known for its inhabitants' foolishness|t1=Abdera}}
+# {{place|la|modern municipality|runit/Xanthi|in the|adr:pref/Thrace|c/Greece|t1=Abdera}}
 # {{lb|la|figuratively|by extension}} [[Chelm]], [[cloud-cuckoo-land]]
 
 ====Declension====
@@ -84,9 +87,6 @@ This can be declined in two various fashions.
 * {{R:Gaffiot}}
 {{R:Cassells}}
 
-[[Category:la:Greece]]
-[[Category:la:Towns]]
-
 ----
 
 ==Portuguese==
@@ -94,7 +94,8 @@ This can be declined in two various fashions.
 ===Proper noun===
 {{pt-proper noun|f}}
 
-# {{place|pt|ancient city|c/Thrace|t1=Abdera}}
+# {{place|pt|ancient city|r/Thrace|in modern|c/Greece|known for its inhabitants' foolishness|t1=Abdera}}
+# {{place|pt|modern municipality|runit/Xanthi|in the|adr:pref/Thrace|c/Greece|t1=Abdera}}
 -------- end text --------
 Page 2 Abidos: Found match for regex: {
 Page 2 Abidos: -------- begin text ---------
@@ -125,7 +126,7 @@ From {{etyl|grc|en}} {{m|grc|Ἄβυδος}}.
 {{en-proper noun}}
 
 # {{place|en|ancient city|c/Egypt}} with archaeological interest.
-# A city in [[Asia Minor]] at the [[Hellespont]].
+# {{place|en|An <<ancient city>> of <<r/Mysia>> in northwest <<r/Asia Minor>> in modern <<c/Turkey>>, on the <<strait/Hellespont>>}}.
 
 ====Translations====
 {{trans-top|ancient city in Egypt}}
@@ -185,7 +186,7 @@ Page 4 Acádia: -------- begin text ---------
 {{pt-proper noun|f}}
 
 # {{place|pt|ancient kingdom|r/Mesopotamia|t1=Akkad}}
-# {{place|pt|ancient city/capital|kingdom:pref/Akkad|t1=Akkad}}
+# {{place|pt|ancient capital|kingdom:pref/Akkad|t1=Akkad}}
 
 =====Derived terms=====
 * {{l|pt|acadiano}}
@@ -219,7 +220,7 @@ Page 5 Adrianópolis: -------- begin text ---------
 ====Proper noun====
 {{pt-proper noun|f}}
 
-# {{place|pt|ancient city|country/the Byzantine Empire|modern=en:[[Edirne]], Turkey|t1=Adrianople}}
+# {{place|pt|ancient city|empire/Byzantine Empire|in modern|c/Turkey|modern=Edirne|t1=Adrianople}}
 
 ===Etymology 2===
 {{affix|pt|Adriano|-ópolis}}, after Portuguese business Adriano Seabra da Fonseca<ref>{{R:Municípios paranaenses}}</ref>
@@ -250,7 +251,7 @@ From the {{bor|en|la|Aetna}}, from either {{der|en|grc|Αἴτνη||Aetna}} or {
 {{en-proper noun}}
 
 # {{lb|en|Greek mythology|and|Roman mythology}} A [[nymph]] in [[Sicily]] who, according to legend, gave her name to the volcanic Mount [[Etna]].
-# {{lb|en|historical}} {{place|en|ancient city|r/Sicily}}, situated at the foot of Mount Etna, on its southern [[declivity]].
+# {{lb|en|historical}} {{place|en|ancient city|r/Sicily|in modern|c/Italy}}, situated at the foot of Mount Etna, on its southern [[declivity]].
 
 ====Translations====
 {{trans-top|Sicilian nymph}}
@@ -295,9 +296,9 @@ From {{bor|la|grc|Αἴτνη||Aetna}} or {{m|grc|αἴθω||I burn}}, or from a
 ===Proper noun===
 {{la-proper noun|Aetna<1.loc>}}
 
-# Mount {{l|en|Etna}} {{gloss|the celebrated volcano of Sicily, in the interior of which, according to fable, was the forge of {{l|en|Vulcan}}, where the {{l|en|cyclops}} forged thunderbolts for {{l|en|Jupiter}}, and under which the latter buried the monster {{m|la|Typhon}}}}
+# {{place|la|t1=Mount [[Etna]]|the celebrated <<volcano>> of <<r/Sicily>> in modern <<c/Italy>>, in the interior of which, according to fable, was the forge of [[Vulcan]], where the [[cyclops]] forged thunderbolts for [[Jupiter]], and under which the latter buried the monster [[Typhon]]}}
 # {{lb|la|Greek mythology|Roman mythology}} {{l|en|Aetna}} {{gloss|nymph in Sicily}}
-# {{l|en|Aetna}} {{gloss|city situated at the foot of Mount Etna}}
+# {{place|la|ancient city|r/Sicily|in modern|c/Italy|situated at the foot of Mount Etna|t1=Aetna}}
 #: {{syn|la|Inēssa}}
 
 ====Declension====
@@ -331,8 +332,6 @@ From {{bor|la|grc|Αἴτνη||Aetna}} or {{m|grc|αἴθω||I burn}}, or from a
 ===Further reading===
 * {{pedia|Aetna mons|Aetna (mount)|lang=la}}
 * {{pedia|Aetna (mythologia)|Aetna (nymph)|lang=la}}
-
-{{topics|la|Cities in Italy|Mountains}}
 -------- end text --------
 Page 7 Ai: Found match for regex: {
 Page 7 Ai: -------- begin text ---------
@@ -470,7 +469,7 @@ Page 9 Alcalá de Henares: -------- begin text ---------
 ===Proper noun===
 {{en-proper noun|head=Alcalá de Henares}}
 
-# {{place|en|historic city|c/Spain}}, in the [[autonomous community]] of [[Madrid]].
+# {{place|en|city|acomm/Community of Madrid|c/Spain}}.
 
 ====Translations====
 {{trans-top|city}}
@@ -487,7 +486,7 @@ Page 9 Alcalá de Henares: -------- begin text ---------
 ===Proper noun===
 {{pt-proper noun|f}}
 
-# {{place|pt|city|autonomous community/Madrid|c/Spain|t1=Alcalá de Henares}}
+# {{place|pt|city|acomm/Community of Madrid|c/Spain|t1=Alcalá de Henares}}
 
 ----
 
@@ -497,7 +496,7 @@ Page 9 Alcalá de Henares: -------- begin text ---------
 ===Proper noun===
 {{es-proper noun}}
 
-# {{l|es|Alcalá de Henares}} {{gloss|city}}
+# {{place|es|city|acomm/Community of Madrid|c/Spain|t1=Alcalá de Henares}}
 
 ====See also====
 * {{l|es|alcalaíno}}
@@ -542,7 +541,7 @@ Page 10 Anshan: -------- begin text ---------
 ====Proper noun====
 {{en-proper noun}}
 
-# An ancient [[Elamite]] and later [[Achaemenid]] [[Persian]] city in modern-day [[Iran]].
+# {{place|en|An <<ancient>> [[Elamite]] and later [[Achaemenid]] [[Persian]] <<city>> in modern-day <<c/Iran>>}}.
 
 =====Translations=====
 {{trans-top|ancient city}}
@@ -555,8 +554,6 @@ Page 10 Anshan: -------- begin text ---------
 ===Anagrams===
 * {{anagrams|en|a=aahnns|Hanans|Hannas|Shanna}}
 
-[[Category:en:Cities in Iran]]
-
 ----
 
 ==Portuguese==
@@ -565,9 +562,7 @@ Page 10 Anshan: -------- begin text ---------
 {{pt-proper noun|f}}
 
 # {{place|pt|prefecture-level city|province/Liaoning|c/China|t1=Anshan}}
-# {{place|pt|ancient city|c/Persia|t1=Anshan}}
-
-{{topics|pt|Iran}}
+# {{place|pt|<<ancient>> [[Elamite]] and later [[Achaemenid]] [[Persian]] <<city>> in modern-day <<c/Iran>>|t1=Anshan}}
 -------- end text --------
 Page 11 Antioquia: Found match for regex: {
 Page 11 Antioquia: -------- begin text ---------
@@ -577,7 +572,7 @@ Page 11 Antioquia: -------- begin text ---------
 ===Proper noun===
 {{ca-proper noun|f}}
 
-# [[Antioch]]
+# {{place|ca|<<ancient>> [[Greek]] <<city>> on the <<riv:Suf/Orontes>>, in modern <<c/Turkey>>|t1=Antioch|t1=Antioch on the Orontes}}
 
 ----
 
@@ -586,7 +581,7 @@ Page 11 Antioquia: -------- begin text ---------
 ===Proper noun===
 {{pt-proper noun|f}}
 
-# {{place|pt|ancient city|c/Syria|t1=Antioch}}
+# {{place|pt|<<ancient>> [[Greek]] <<city>> on the <<riv:Suf/Orontes>>, in modern <<c/Turkey>>|t1=Antioch|t1=Antioch on the Orontes}}
 -------- end text --------
 Page 12 Antioquía: Found match for regex: {
 Page 12 Antioquía: -------- begin text ---------
@@ -618,7 +613,7 @@ Page 13 Appling: -------- begin text ---------
 {{en-proper noun}}
 
 # {{surname|en}}
-# {{place|en|unincorporated community/and/former city/county seat|co/Columbia County|s/Georgia|c/USA}}.
+# {{place|en|unincorporated community/and/former city/county seat|co/Columbia County|s/Georgia|c/USA}}, which lost its charter in 1995.
 
 ====Derived terms====
 * {{l|en|Appling County}}
@@ -679,7 +674,7 @@ Page 15 Areopoli: -------- begin text ---------
 ===Proper noun===
 {{en-proper noun}}
 
-# {{place|en|town/and/ancient city|in southwestern|pref/Laconia|c/Greece}}.
+# {{place|en|town|in southwestern|runit/Laconia|c/Greece}}.
 
 ====Translations====
 {{trans-top|town}}
@@ -696,12 +691,12 @@ Page 16 Arvade: -------- begin text ---------
 ==Portuguese==
 
 ===Alternative forms===
-* {{l|pt|Arwad}}
+* {{alter|pt|Arruade}}
 
 ===Proper noun===
 {{pt-proper noun|f}}
 
-# {{place|pt|island/and/ancient city|c/Phoenicia|t1=Arwad}}
+# {{place|pt|island/and/town|c/Phoenicia|t1=Arwad}}
 
 [[Category:pt:Phoenicia]]
 -------- end text --------
@@ -719,15 +714,15 @@ Borrowed from {{bor|en|akk|𒀸𒋩|tr=Aššur||Assur}}.
 ===Proper noun===
 {{en-proper noun}}
 
-# One of the [[capital]]s of ancient [[Assyria]].
+# {{place|en|An <<ancient city>>, one of the <<capital>>s of ancient <<kingdom/Assyria>>, in modern <<c/Iraq>>}}.
 # The chief [[deity]] of that city (see {{m|en|Ashur}}).
 
 ====Translations====
 {{trans-top|capital}}
 * Akkadian: {{t|akk|𒀸𒋩|tr=aššur|sc=Xsux}}
 * Egyptian: {{t-egy|jswr|f|h=i-s-sw-w-r:Z1-N25}}
-* Hindi: {{t|hi|अश्शूर|sc=Deva}}
-* Persian: {{t+|fa|آشور|tr=āšūr|sc=fa-Arab}}
+* Hindi: {{t|hi|अश्शूर}}
+* Persian: {{t+|fa|آشور|tr=āšūr}}
 {{trans-mid}}
 * Portuguese: {{l|pt|Assur}}, {{l|pt|Ashur}}
 * Russian: {{t+|ru|А́шшур|m}}, {{t|ru|А́ссур|m}}
@@ -745,7 +740,6 @@ Borrowed from {{bor|en|akk|𒀸𒋩|tr=Aššur||Assur}}.
 * {{anagrams|en|a=arssu|Suras|suras}}
 
 [[Category:en:Assyria]]
-[[Category:en:Cities]]
 
 ----
 
@@ -763,30 +757,10 @@ From {{bor|pt|akk|𒀸𒋩|tr=Aššur||Assur}}.
 ===Proper noun===
 {{pt-proper noun}}
 
-# {{place|pt|ancient city|c/Assyria|t1=Assur}}
+# {{place|pt|ancient city|c/Assyria|in modern|c/Iraq|t1=Assur}}
 # {{lb|pt|Assyrian mythology}} {{l|en|Assur}}; {{l|en|Ashur}} {{gloss|the chief god}}
 
 {{topics|pt|Assyria}}
--------- end text --------
-Page 18 Atlalanti: Found match for regex: =
-Page 18 Atlalanti: -------- begin text ---------
-==English==
-{{wikipedia}}
-
-===Alternative forms===
-* {{l|en|Atalandi}}
-<!--* [[Ataladi]]?-->
-
-===Proper noun===
-{{en-proper noun}}
-
-# {{place|en|town/and/ancient city|pref/Fthiotida|c/Greece}}
-
-====Translations====
-{{trans-top|town}}
-* Greek: {{t+|el|Αταλάντη}}
-{{trans-mid}}
-{{trans-bottom}}
 -------- end text --------
 Page 19 Ayodhya: Found match for regex: =
 Page 19 Ayodhya: -------- begin text ---------
@@ -799,8 +773,8 @@ Borrowed from {{bor|en|sa|अयोध्या}}
 ===Proper noun===
 {{en-proper noun}}
 
-# {{place|en|ancient city|c/India|in modern|s/Uttar Pradesh}}, on the bank of the [[Sarayu]] river.
-# {{lb|en|Hinduism|historical}} The capital of the ancient Kosala kingdom, and birthplace of the Hindu deity [[Rāma]].
+# {{place|en|city/administrative headquarters|dist/Faizabad|s/Uttar Pradesh|c/India}}, on the bank of the [[Sarayu]] river.
+# {{lb|en|Hinduism|historical}} {{place|en|legendary city/ancient capital|kingdom:suf/Kosala}}, and birthplace of the Hindu deity [[Rāma]].
 
 ====Related terms====
 * {{l|th|อยุธยา}}
@@ -912,8 +886,19 @@ Page 24 Buda: -------- begin text ---------
 ===Proper noun===
 {{en-proper noun}}
 
-# {{place|en|village|s/Illinois}}
-# {{place|en|city|s/Texas}}
+# {{place|en|ancient capital|kingdom:Pref/Hungary|;, and|area|of the modern|city:pref/Budapest|c/Hungary}}.
+# {{place|en|neighborhood/and/island|city/Kortrijk|p/West Flanders|c/Belgium}}.
+# {{place|en|commune/and/village|dist/Călărași|c/Moldova}}.
+# {{place|en|village|voi/Masovian Voivodeship|c/Poland}}.
+# {{place|en|commune/and/village|co:Suf/Buzău|c/Romania}}.
+# {{place|en|a large number of <<villages>> in <<c/Romania>>}}.
+# {{place|en|left tributary|riv:Suf/Argeș|c/Romania}}.
+# {{place|en|tributary|riv:Suf/Șoimeni|co:Suf/Cluj|c/Romania}}.
+# {{place|en|tributary|riv:Suf/Cernu|co:Suf/Bacău|c/Romania}}.
+# {{place|en|village|raion/Novoselytsia|obl/Chernivtsi|c/Ukraine}}.
+# {{place|en|village|co/Bureau County|s/Illinois|c/USA}}.
+# {{place|en|unincorporated community|co/Buffalo County|s/Nebraska|c/USA}}.
+# {{place|en|city|co/Hays County|s/Texas|c/USA}}.
 
 ===Anagrams===
 * {{anagrams|en|a=abdu|Daub|abud|baud|daub}}
@@ -961,7 +946,7 @@ Page 24 Buda: -------- begin text ---------
 ===Proper noun===
 {{head|hu|proper noun}}
 
-# The western part of the [[Hungarian]] capital, [[Budapest]].
+# {{place|hu|ancient capital|kingdom:Pref/Hungary|;, and|area|of the modern|city:pref/Budapest|c/Hungary|t1=Buda}}
 # {{lb|hu|historical}} {{given name|hu|male}}.
 
 ====Declension====
@@ -969,8 +954,6 @@ Page 24 Buda: -------- begin text ---------
 
 ====Derived terms====
 * {{l|hu|budai}}
-
-{{topics|hu|Cities in Hungary}}
 
 ----
 
@@ -991,7 +974,7 @@ Page 24 Buda: -------- begin text ---------
 ====Proper noun====
 {{pt-proper noun|f}}
 
-# {{place|pt|mediaeval city|c/Hungary|modern=western Budapest|t1=Buda}}
+# {{place|pt|ancient capital|kingdom:Pref/Hungary|;, and|area|of the modern|city:pref/Budapest|c/Hungary|t1=Buda}}
 
 {{catlangname|pt|terms with multiple etymologies}}
 {{topics|pt|Buddhism|Individuals}}
@@ -1090,7 +1073,7 @@ From {{bor|en|la|Bȳzantium}} from {{der|en|grc|Βῡζᾰ́ντῐον}}.
 ====Translations====
 {{trans-top|ancient Greek city}}
 * Arabic: {{t|ar|بِيزَنْطَة|f}}
-* Armenian: {{t|hy|Բյուզանդիոն|sc=Armn}}
+* Armenian: {{t|hy|Բյուզանդիոն}}
 * Azerbaijani: {{t|az|Bizantion}}
 * Basque: {{t|eu|Bizantzio}}
 * Catalan: {{t|ca|Bizanci}}
@@ -1165,7 +1148,7 @@ Borrowed from {{bor|nl|la|Bȳzantium}}, from {{der|nl|grc|Βῡζᾰ́ντῐο�
 * {{alter|la|Bȳzantion}}
 
 ===Etymology===
-From {{der|la|grc|Βυζάντιον}}.
+From {{bor|la|grc|Βυζάντιον}}.
 
 ===Pronunciation===
 * {{la-IPA|Bȳzantium|eccl=1|vul=1}}
@@ -1216,7 +1199,7 @@ From {{bor|en|la|Canōpus}}.
 
 # {{lb|en|star}} A yellowish-white [[supergiant]] [[star]] in the [[constellation]] [[Carina]]; Alpha (α) Carinae. It is the second brightest star in the night sky.
 # {{lb|en|Greek mythology}} The [[pilot]] of King [[Menelaus]]'s [[ship]] in the ''[[Iliad]]''.
-# {{place|en|ancient city|in northern|c/Egypt}}, known for [[extravagance]].
+# {{place|en|ancient coastal city|in northern|c/Egypt}}, known for [[extravagance]].
 
 ====Derived terms====
 * {{l|en|canopic jar}}
@@ -1263,10 +1246,10 @@ From {{der|la|grc|Κάνωπος||Canopus}}, {{m|grc|Κάνωβος||Canobus}}. 
 ===Proper noun===
 {{la-proper noun|Canōpus<2.loc>}}
 
-# {{lb|en|Greek mythology}} The pilot of King [[Menelaus]]'s ship in the ''{{w|Iliad}}''.
-# A luxury [[town]] in northern [[Egypt]]
+# {{lb|en|Greek mythology}} the pilot of King [[Menelaus]]'s ship in the ''{{w|Iliad}}''
+# {{place|la|ancient coastal city|in northern|c/Egypt|known for [[extravagance]]|t1=Canopus}}
 # {{lb|la|by extension|poetic}} [[Lower Egypt]]
-# The star {{l|en|Canopus}}
+# the star {{l|en|Canopus}}
 
 ====Declension====
 {{la-ndecl|Canōpus<2.loc>}}
@@ -1276,7 +1259,6 @@ From {{der|la|grc|Κάνωπος||Canopus}}, {{m|grc|Κάνωβος||Canobus}}. 
 * {{R:Gaffiot}}
 
 [[Category:la:Stars]]
-[[Category:la:Towns]]
 -------- end text --------
 Page 28 Cantórbery: Found match for regex: {
 Page 28 Cantórbery: -------- begin text ---------
@@ -1290,7 +1272,7 @@ Page 28 Cantórbery: -------- begin text ---------
 ===Proper noun===
 {{es-proper noun}}
 
-# {{lb|es|now|_|rare}} {{place|es|ancient city|cc/England|t1=Canterbury}}
+# {{lb|es|now|_|rare}} {{place|es|cathedral city|co/Kent|cc/England|t1=Canterbury}}
 
 ====Synonyms====
 * {{l|es|Canterbury}}
@@ -1378,15 +1360,23 @@ First attested in the 16th century ({{w|Christopher Marlowe}}, ''Dido, Queen of 
 {{wikipedia}}
 {{en-proper noun}}
 
-# {{place|en|ancient city|r/North Africa|in modern|c/Tunisia}}
-# Any of several cities in [[Illinois]], [[Mississippi]], [[Missouri]], [[South Dakota]], [[Texas]], [[USA]]:
-## {{place|en|city/county seat|co/Hancock County|s/Illinois}}.
-## {{place|en|city/county seat|co/Leake County|s/Mississippi}}.
-## {{place|en|city/county seat|co/Jasper County|s/Missouri}}.
-## {{place|en|city/county seat|co/Panola County|s/Texas}}.
-# Any of several towns in [[Arkansas]], [[Indiana]], [[Maine]], [[North Carolina]], [[Tennessee]], USA:
-## {{place|en|town/county seat|co/Moore County|s/North Carolina}}.
-## {{place|en|town/county seat|co/Smith County|s/Tennessee}}.
+# {{place|en|ancient city|r/North Africa|in modern|c/Tunisia}}.
+# {{place|en|ancient civilisation|r/North Africa|centred on the city of [[Carthage]]}}.
+# {{place|en|community|twp:Pref/Perth East|co/Perth County|p/Ontario|c/Canada}}.
+# Several places in the [[United States]]:
+## {{place|en|small town|co/Dallas County|s/Arkansas|c/USA}}.
+## {{place|en|ghost town|co/Inyo County|s/California|c/USA}}.
+## {{place|en|city/county seat|co/Hancock County|s/Illinois|c/USA}}.
+## {{place|en|small town|twp/Ripley Township|co/Rush County|s/Indiana|c/USA}}.
+## {{place|en|small town|co/Franklin County|s/Maine|c/USA}}.
+## {{place|en|city/county seat|co/Leake County|s/Mississippi|c/USA}}.
+## {{place|en|city/county seat|co/Jasper County|s/Missouri|c/USA}}.
+## {{place|en|village|town:pref/Wilna|co/Jefferson County|s/New York|c/USA}}.
+## {{place|en|town/county seat|co/Moore County|s/North Carolina|c/USA}}.
+## {{place|en|neighborhood|city/Cincinnati|s/Ohio|c/USA}}.
+## {{place|en|tiny city|co/Miner County|s/South Dakota|c/USA}}.
+## {{place|en|town/county seat|co/Smith County|s/Tennessee|c/USA}}.
+## {{place|en|city/county seat|co/Panola County|s/Texas|c/USA}}.
 
 ====Related terms====
 * {{l|en|Carthaginian}}
@@ -1473,7 +1463,8 @@ First attested in the 16th century ({{w|Christopher Marlowe}}, ''Dido, Queen of 
 ===Proper noun===
 {{fr-proper noun|f}}
 
-# [[#English|Carthage]]
+# {{place|fr|ancient city|r/North Africa|in modern|c/Tunisia|t1=Carthage}}
+# {{place|fr|ancient civilisation|r/North Africa|centred on the city of [[Carthage]]|t1=Carthage}}
 
 ===Anagrams===
 * {{l|fr|chargeât}}
@@ -1495,8 +1486,9 @@ Borrowed from {{bor|pt|la|Caesarea}}, displacing native {{m|roa-opt|Cesaira}}.
 ===Proper noun===
 {{pt-proper noun|f}}
 
-# {{lb|pt|historical}} {{place|pt|ancient city|/Cappadocia|c/Roman Empire|t1=Caesarea}}
-# {{place|pt|city|c/Israel|t1=Caesarea}}
+# {{lb|pt|historical}} {{place|pt|ancient city|/Cappadocia|empire/Roman Empire|modern=Kayseri|t1=Caesarea}}
+# {{lb|pt|historical}} {{place|pt|ancient city|in the|r/Levant|in modern|c/Israel|t1=Caesarea}}
+# {{place|pt|modern town|in north-central|c/Israel|t1=Caesarea}}
 -------- end text --------
 Page 33 Cirena: Found match for regex: =
 Page 33 Cirena: -------- begin text ---------
@@ -1509,7 +1501,7 @@ Page 33 Cirena: -------- begin text ---------
 ===Proper noun===
 {{pt-proper noun|f}}
 
-# {{place|pt|ancient city|r/North Africa|t1=Cyrene}}
+# {{place|pt|ancient city|r/North Africa|in modern|c/Libya|t1=Cyrene}}
 
 ====Related terms====
 * {{l|pt|Cirenaica}}
@@ -1524,7 +1516,7 @@ Page 34 Cirene: -------- begin text ---------
 {{wikipedia|Cirene (città)|lang=it}}
 {{it-proper noun|f}}
 
-# {{place|it|ancient city|r/North Africa|t1=Cyrene}}
+# {{place|it|ancient city|r/North Africa|in modern|c/Libya|t1=Cyrene}}
 
 ====Related terms====
 * {{l|it|Cirenaica}}
@@ -1551,7 +1543,7 @@ Page 34 Cirene: -------- begin text ---------
 ===Proper noun===
 {{es-proper noun|f}}
 
-# {{place|es|ancient city|r/North Africa|t1=Cyrene}}
+# {{place|es|ancient city|r/North Africa|in modern|c/Libya|t1=Cyrene}}
 
 ====Related terms====
 * {{l|es|cirenaico}}
@@ -1602,12 +1594,10 @@ From {{etyl|la|pt}} {{m|la|Conimbriga}}.
 ===Proper noun===
 {{pt-proper noun|f}}
 
-# {{place|pt|ancient city|of the|c/Roman Empire|in|modern Portugal}}.
+# {{place|pt|ancient city/and/archaeological site|isl:pref/Crete|in modern|c/Greece|t1=Knossos}}
 
 ====Related terms====
 * {{l|pt|Coimbra}}
-
-[[Category:pt:Ancient Rome]]
 -------- end text --------
 Page 37 Ctesifonte: Found match for regex: =
 Page 37 Ctesifonte: -------- begin text ---------
@@ -1616,7 +1606,8 @@ Page 37 Ctesifonte: -------- begin text ---------
 ===Proper noun===
 {{pt-proper noun|f}}
 
-# {{lb|pt|historical}} {{place|pt|ancient city|c/Parthia|t1=Ctesiphon}}
+# {{lb|pt|historical}} {{place|pt|ancient capital|empire/Parthia|in modern|c/Iraq|t1=Ctesiphon}}
+
 
 ----
 
@@ -1626,19 +1617,19 @@ Page 37 Ctesifonte: -------- begin text ---------
 ===Proper noun===
 {{es-proper noun}}
 
-# {{lb|es|historical}} {{l|en|Ctesiphon}} {{gloss|ancient ruined city}}
+# {{lb|es|historical}} {{place|pt|ancient capital|empire/Parthia|in modern|c/Iraq|t1=Ctesiphon}}
 -------- end text --------
 Page 38 Cyzicus: Found match for regex: =
 Page 38 Cyzicus: -------- begin text ---------
 ==English==
 
 ===Etymology===
-From {{etyl|la|en}}, from {{der|en|grc|Κύζικος}}.
+From {{bor|en|la|Cȳzicus}}, from {{der|en|grc|Κύζικος}}.
 
 ===Proper noun===
 {{en-proper noun}}
 
-# {{place|en|ancient city|r/Anatolia}}.
+# {{place|en|ancient city|r/Anatolia|in modern|c/Turkey}}.
 
 [[Category:en:Ancient Greece]]
 
@@ -1651,7 +1642,7 @@ From {{etyl|la|en}}, from {{der|en|grc|Κύζικος}}.
 * {{alter|la|Cȳzicum}}
 
 ===Etymology===
-From {{der|la|grc|Κῡ́ζικος}}.
+From {{bor|la|grc|Κῡ́ζικος}}.
 
 ===Pronunciation===
 * {{la-IPA|Cȳzicus}}
@@ -1659,7 +1650,7 @@ From {{der|la|grc|Κῡ́ζικος}}.
 ===Proper noun===
 {{la-proper noun|Cȳzicus<2.loc>|g=f}}
 
-# {{place|la|ancient city|r/Anatolia}}
+# {{place|la|ancient city|r/Anatolia||in modern|c/Turkey|t1=Cyzicus}}
 
 ====Declension====
 {{la-ndecl|Cȳzicus<2.loc>}}
@@ -1671,7 +1662,7 @@ From {{der|la|grc|Κῡ́ζικος}}.
 * {{R:L&S|Cȳzĭcus|Cyzicos1}}
 * {{R:Gaffiot}}
 
-[[Category:la:Turkey]]
+[[Category:la:Ancient Greece]]
 -------- end text --------
 Page 39 Delfos: Found match for regex: =
 Page 39 Delfos: -------- begin text ---------
@@ -1680,7 +1671,8 @@ Page 39 Delfos: -------- begin text ---------
 ===Proper noun===
 {{ca-proper noun}}
 
-# [[Delphi]]
+# {{place|ca|ancient sanctuary|c/Greece|t1=Delphi}}
+# {{place|ca|modern town|runit/Phocis|c/Greece|near the sanctuary|t1=Delphi}}
 
 ----
 
@@ -1692,7 +1684,8 @@ Page 39 Delfos: -------- begin text ---------
 ===Proper noun===
 {{pt-proper noun|f}}
 
-# {{place|pt|ancient city|c/Greece|t1=Delphi}}
+# {{place|pt|ancient sanctuary|c/Greece|t1=Delphi}}
+# {{place|pt|modern town|runit/Phocis|c/Greece|near the sanctuary|t1=Delphi}}
 -------- end text --------
 Page 40 Deli: Found match for regex: {
 Page 40 Deli: -------- begin text ---------
@@ -1717,7 +1710,7 @@ Page 40 Deli: -------- begin text ---------
 ===Proper noun===
 {{pt-proper noun|f}}
 
-# {{place|pt|territory/and/former city|c/India|t1=Delhi}}
+# {{place|pt|megacity/and/union territory|c/India|containing the national capital [[New Delhi]]|t1=Delhi}}
 -------- end text --------
 Page 41 Dorylaeum: Found match for regex: =
 Page 41 Dorylaeum: -------- begin text ---------
@@ -1727,13 +1720,13 @@ Page 41 Dorylaeum: -------- begin text ---------
 * {{l|en|Dorylaion}}
 
 ===Etymology===
-From {{der|en|la|Dorylaeum}}.
+From {{bor|en|la|Dorylaeum}}.
 
 ===Proper noun===
 {{wikipedia}}
 {{en-proper noun}}
 
-# {{place|en|ancient city|r/Anatolia}}; now in ruins near the city of [[Eskişehir]], Turkey
+# {{place|en|ancient city|r/Anatolia|in modern|c/Turkey}}, near [[Eskişehir]]; now in ruins.
 
 ====Translations====
 {{trans-top|ancient city in Anatolia}}
@@ -1753,7 +1746,7 @@ From {{der|en|la|Dorylaeum}}.
 ==Latin==
 
 ===Etymology===
-From {{der|la|grc|Δορύλαιον}}.
+From {{bor|la|grc|Δορύλαιον}}.
 
 ===Pronunciation===
 * {{la-IPA}}
@@ -1761,7 +1754,7 @@ From {{der|la|grc|Δορύλαιον}}.
 ===Proper noun===
 {{la-proper noun|Dorylaeum<2.loc>}}
 
-# [[#English|Dorylaeum]]
+# {{place|la|ancient city|r/Anatolia|in modern|c/Turkey|t1=Dorylaeum}}
 
 ====Declension====
 {{la-ndecl|Dorylaeum<2.loc>}}
@@ -1770,8 +1763,7 @@ From {{der|la|grc|Δορύλαιον}}.
 * {{R:Gaffiot}}
 * {{R:Smith's Geography}}
 
-[[Category:la:Cities]]
-[[Category:la:Turkey]]
+{{C|la|Byzantine Empire|Roman Empire}}
 -------- end text --------
 Page 42 Ecbátana: Found match for regex: {
 Page 42 Ecbátana: -------- begin text ---------
@@ -1781,7 +1773,7 @@ Page 42 Ecbátana: -------- begin text ---------
 ===Proper noun===
 {{pt-proper noun|f}}
 
-# {{lb|pt|historical}} {{place|pt|ancient city|c/Persia|t1=Ecbatana}}
+# {{lb|pt|historical}} {{place|pt|ancient city|r/Media|in western|c/Iran|t1=Ecbatana}}
 -------- end text --------
 Page 43 Eifeasas: Found match for regex: =
 Page 43 Eifeasas: -------- begin text ---------
@@ -1920,26 +1912,39 @@ Page 47 Fort McMurray: -------- begin text ---------
 After Hudson's Bay Company factor William McMurray.
 
 ===Pronunciation===
-*{{a|Canada}} {{IPA|en|/ˈfɔɹt mɪkˈmʌɹi/}}
-*{{rhyme|en|ʌri}}
+* {{a|Canada}} {{IPA|en|/ˈfɔɹt mɪkˈmʌɹi/}}
+* {{rhyme|en|ʌri}}
 
 ===Proper noun===
 {{en-proper noun}}
 
-#{{place|en|hamlet/and/former city|rmun/Wood Buffalo|p/Alberta|c/Canada}}.
+# {{place|en|hamlet/and/former city|rmun/Wood Buffalo|p/Alberta|c/Canada}}, disincorporated in 1995 when it amalgamated into the {{w|Regional Municipality of Wood Buffalo}}.
 
 ====See also====
-*{{pedialite}}
+* {{pedialite}}
 -------- end text --------
 Page 48 Gagnon: Found match for regex: =
 Page 48 Gagnon: -------- begin text ---------
+==English==
+
+===Etymology===
+Borrowed from {{bor|en|fr|Gagnon}}.
+
+===Proper noun===
+{{en-proper noun}}
+
+# {{place|en|ghost town|p/Quebec|c/Canada}}.
+
+----
+
 ==French==
 
 ===Proper noun===
 {{head|fr|proper noun}}
 {{wikipedia|lang=fr|Gagnon}}
+
 # {{surname|fr|dot=}} of [[Québécois]] origin.
-# {{place|fr|former city|p/Quebec|c/Canada}}.
+# {{place|fr|ghost town|p/Quebec|c/Canada|t1=Gagnon}}
 -------- end text --------
 Page 49 Halikarnassos: Found match for regex: =
 Page 49 Halikarnassos: -------- begin text ---------
@@ -1983,7 +1988,7 @@ Page 50 Herat: -------- begin text ---------
 ===Proper noun===
 {{en-proper noun}}
 
-# {{place|en|ancient city|r/Central Asia}}, now a provincial capital of [[Afghanistan]].
+# {{place|en|city/capital|p:suf/Herat|c/Afghanistan}}, dating back to [[Avestan]] times.
 
 ====Related terms====
 * [[Aria]]
@@ -1992,22 +1997,20 @@ Page 50 Herat: -------- begin text ---------
 
 ====Translations====
 {{trans-top|city in Afghanistan}}
-* Armenian: {{t|hy|Հերաթ|sc=Armn}}
+* Armenian: {{t|hy|Հերաթ}}
 * Chinese:
 *: Mandarin: {{t+|cmn|赫拉特|tr=Hèlātè|sc=Hani}}
 * Japanese: {{t|ja|ヘラート|tr=Herāto|sc=Jpan}}
-* Pashto: {{t|ps|هرات|tr=Herāt|sc=ps-Arab}}
+* Pashto: {{t|ps|هرات|tr=Herāt}}
 {{trans-mid}}
-* Persian: {{t+|fa|هرات|tr=Herât|sc=fa-Arab}}
+* Persian: {{t+|fa|هرات|tr=Herât}}
 * Russian: {{t|ru|Гера́т|m}}
-* Tajik: {{t|tg|Ҳерот|sc=Cyrl}}
+* Tajik: {{t|tg|Ҳерот}}
 * Uyghur: {{t|ug|ھىرات}}
 {{trans-bottom}}
 
 ===Anagrams===
 * {{anagrams|en|a=aehrt|Earth|Erath|Harte|Heart|Taher|Terah|Thera|earth|hater|heart|rathe|rehat|th'are|thare}}
-
-[[Category:en:Cities in Afghanistan]]
 -------- end text --------
 Page 51 Hondo: Found match for regex: {
 Page 51 Hondo: -------- begin text ---------
@@ -2034,7 +2037,7 @@ Page 52 Jericho: -------- begin text ---------
 {{wikipedia}}
 
 ===Etymology===
-From {{der|en|grc|Ἰεριχώ}}, from {{der|en|hbo|יְרִיחוֹ|tr=yərīḥō}}. Regarding the "place of concealment" sense, see 2 Samuel 10:5.
+From {{bor|en|grc|Ἰεριχώ}}, from {{der|en|hbo|יְרִיחוֹ|tr=yərīḥō}}. Regarding the "place of concealment" sense, see 2 Samuel 10:5.
 
 ===Proper noun===
 {{en-proper noun}}
@@ -2051,13 +2054,13 @@ From {{der|en|grc|Ἰεριχώ}}, from {{der|en|hbo|יְרִיחוֹ|tr=yərī�
 {{trans-top|city}}
 * Afrikaans: {{t|af|Jericho}}
 * Albanian: {{t|sq|Jeriko}}
-* Amharic: {{t|am|ኢያሪኮ|sc=Ethi}}
+* Amharic: {{t|am|ኢያሪኮ}}
 * Arabic: {{t|ar|أَرِيحَا|f}}
 * Aragonese: {{t|an|Chericó}}
 * Aramaic: {{t|arc|ܐܝܪܝܚܘ}}
 * Armenian: {{t|hy|Երիքով}}
 * Basque: {{t|eu|Jeriko}}
-* Belarusian: {{t|be|Іерыхон|sc=Cyrl}}
+* Belarusian: {{t|be|Іерыхон}}
 * Breton: {{t|br|Jeriko}}
 * Bulgarian: {{t|bg|Йерихон}}
 * Catalan: {{t|ca|Jericó}}
@@ -2089,7 +2092,7 @@ From {{der|en|grc|Ἰεριχώ}}, from {{der|en|hbo|יְרִיחוֹ|tr=yərī�
 * Latin: {{t|la|Hiericus|f}}
 * Latvian: {{t|lv|Jērika|f}}, {{t|lv|Jerihona|f}}
 * Lithuanian: {{t|lt|Jèrichas|m}}, {{t|lt|Jerichonas|m}}
-* Macedonian: {{t|mk|Ерихон|sc=Cyrl}}
+* Macedonian: {{t|mk|Ерихон}}
 * Malay: {{t|ms|Jericho}}
 * Maore Comorian: {{t|swb|Yeriko}}
 * Norwegian:
@@ -2109,9 +2112,9 @@ From {{der|en|grc|Ἰεριχώ}}, from {{der|en|hbo|יְרִיחוֹ|tr=yərī�
 * Slovene: {{t|sl|Jeriho}}
 * Spanish: {{t|es|Jericó|m}}
 * Swedish: {{t|sv|Jeriko}}
-* Tamil: {{t|ta|எரிக்கோ|sc=Taml}}
+* Tamil: {{t|ta|எரிக்கோ}}
 * Turkish: {{t|tr|Eriha}}
-* Ukrainian: {{t|uk|Єрихон|sc=Cyrl}}
+* Ukrainian: {{t|uk|Єрихон}}
 * Vietnamese: {{t|vi|Jericho}}
 * Welsh: {{t|cy|Jericho}}
 * Yiddish: {{t|yi|יריחו|tr=yerikhe}}
@@ -2460,13 +2463,13 @@ From {{inh|en|ang|Cent}}, from {{der|en|la|Cantium}}, from {{der|en|cel-bry|-}} 
 # {{place|en|A coastal fishing <<village>> in the <<dist/Western Area Rural District>>, <<c/Sierra Leone>>}}.
 # {{place|en|unincorporated community|co/Elmore County|s/Alabama}}.
 # {{place|en|unincorporated community|co/Pike County|s/Alabama}}.
-# {{place|en|former settlement|co/Colusa County|s/California}}.
+# {{place|en|ghost town|co/Colusa County|s/California}}.
 # {{place|en|The former name of {{w|Kentfield, California|Kentfield}}, a <<CDP>> in <<co/Marin County>>, <<s/California>>}}.
 # {{place|en|town|co/Litchfield|s/Connecticut}}.
 # {{place|en|unincorporated community|co/Nassau County|s/Florida}}.
 # {{place|en|unincorporated community|co/Stephenson County|s/Illinois}}.
 # {{place|en|unincorporated community/and/census-designated place|twp/Republican Township|co/Jefferson County|s/Indiana|c/USA}}.
-# {{place|en|former city/and/census-designated place|co/Union County|s/Iowa}}.
+# {{place|en|former city/and/census-designated place|co/Union County|s/Iowa}}, disincorporated in 2003.
 # {{place|en|tiny city|co/Wilkin County|s/Minnesota}}.
 # {{place|en|town|co/Putnam County|s/New York}}.
 # {{place|en|city|co/Portage County|s/Ohio}}.
@@ -2697,8 +2700,8 @@ Page 59 Lleida: -------- begin text ---------
 ===Proper noun===
 {{en-proper noun}}
 
-# {{place|en|province|in western|r/Catalonia|c/Spain}}.
-# {{place|en|historic city|c/Spain}}, the capital city of the province of Lleida.
+# {{place|en|province|in western|acomm/Catalonia|c/Spain}}.
+# {{place|en|capital city|p:pref/Lleida|acomm/Catalonia|c/Spain}}.
 
 ====Synonyms====
 * {{l|en|Lérida}}
@@ -2730,8 +2733,8 @@ From {{inh|ca|la|Ilerda}}, from the name of an Iberian tribe. Compare {{cog|es|L
 ===Proper noun===
 {{ca-proper noun|f}}
 
-# {{place|ca|province|autonomous community/Catalonia|c/Spain|t=Lleida}}
-# {{place|ca|city/provincial capital|province/Lleida|c/Spain|t=Lleida}}
+# {{place|en|province|in western|acomm/Catalonia|c/Spain|t1=Lleida}}
+# {{place|en|capital city|p:pref/Lleida|acomm/Catalonia|c/Spain|t1=Lleida}}
 
 ====Derived terms====
 * {{l|ca|lleidatà}}
@@ -2750,7 +2753,7 @@ From {{der|en|qu|machu|t=old, ancient}} + {{m|qu|pikchu|t=mountain, peak}}.
 ===Proper noun===
 {{en-proper noun|head=Machu Picchu}}
 
-# An ancient [[Inca]] site in [[Peru]]
+# {{place|en|An <<ancient>> [[Incan]] <<city>> and archaeological site in <<c/Peru>>}}.
 
 ====Translations====
 {{trans-top|an ancient Inca site in Peru}}
@@ -2781,7 +2784,7 @@ Borrowed from {{bor|pt|es|Machu Picchu}}, from {{der|pt|qu|[[machu]] [[pikchu]]|
 ===Proper noun===
 {{pt-proper noun|f}}
 
-# {{place|pt|ancient city|of the [[Inca#English|Inca]]s|in|c/today's [[Peru]]|t1=Machu Picchu}}
+# {{place|pt|<<ancient>> [[Incan]] <<city>> and archaeological site in <<c/Peru>>|t1=Machu Picchu}}
 -------- end text --------
 Page 61 Maleventum: Found match for regex: =
 Page 61 Maleventum: -------- begin text ---------
@@ -2790,7 +2793,7 @@ Page 61 Maleventum: -------- begin text ---------
 ===Proper noun===
 {{en-proper noun}}
 
-# {{lb|en|historical}} {{place|en|ancient city|r/Samnium}}; modern {{l|en|Benevento}}, Italy.
+# {{lb|en|historical}} {{place|en|ancient city|r/Samnium|in modern|r/Campania|c/Italy|modern=Benevento}}.
 
 ====Translations====
 {{trans-top|ancient Samnian city}}
@@ -2816,14 +2819,14 @@ Borrowed from {{bor|pt|la|Maleventum}}.
 ===Proper noun===
 {{pt-proper noun|f}}
 
-# {{lb|pt|historical}} {{place|pt|ancient city|country/Samnium|t1=Maleventum}}
+# {{lb|pt|historical}} {{place|en|ancient city|r/Samnium|in modern|r/Campania|c/Italy|modern=Benevento|t1=Maleventum}}
 -------- end text --------
 Page 62 Marion: Found match for regex: =
 Page 62 Marion: -------- begin text ---------
 ==English==
 
 ===Etymology===
-From {{der|en|fro|Marion}}, a diminutive of [[Marie]], used in England since the Middle Ages.
+From {{bor|en|fro|Marion}}, a diminutive of [[Marie]], used in England since the Middle Ages.
 
 ===Proper noun===
 {{wikipedia}}
@@ -2889,7 +2892,7 @@ From {{der|en|fro|Marion}}, a diminutive of [[Marie]], used in England since the
 ==Danish==
 
 ===Etymology===
-From {{der|da|fr|Marion}}.
+From {{bor|da|fr|Marion}}.
 
 ===Proper noun===
 {{head|da|proper noun}}
@@ -2941,7 +2944,7 @@ Medieval diminutive form of {{m|fr|Marie}}.
 ==German==
 
 ===Etymology===
-From {{der|de|fr|Marion}}.
+From {{bor|de|fr|Marion}}.
 
 ===Proper noun===
 {{de-proper noun|f}}
@@ -2968,7 +2971,7 @@ From {{der|de|fr|Marion}}.
 ==Norwegian==
 
 ===Etymology===
-From {{der|no|fr|Marion}}.
+From {{bor|no|fr|Marion}}.
 
 ===Proper noun===
 {{no-proper noun}}
@@ -3002,7 +3005,7 @@ From {{der|no|fr|Marion}}.
 ==Swedish==
 
 ===Etymology===
-From {{der|sv|fr|Marion}}.
+From {{bor|sv|fr|Marion}}.
 
 ===Proper noun===
 {{sv-proper noun|c}}
@@ -3024,7 +3027,7 @@ Page 63 Mazaca: -------- begin text ---------
 * {{l|en|Mazaka}}
 
 ===Etymology===
-From {{der|en|la|Mazaca|}}, from the name of the tribe of [[w:Mushki|Mushki]]. Compare {{cog|xcl|Մաժաք}}.
+From {{bor|en|la|Mazaca}}, from the name of the tribe of [[w:Mushki|Mushki]]. Compare {{cog|xcl|Մաժաք}}.
 
 ===Proper noun===
 {{en-proper noun}}
@@ -3075,7 +3078,7 @@ Page 64 Micenas: -------- begin text ---------
 ===Proper noun===
 {{pt-proper noun|f}}
 
-# {{place|pt|ancient city|c/Greece|t1=Mycenae}}
+# {{place|pt|ancient city/and/archaelogical site|c/Greece|t1=Mycenae}}
 
 ----
 
@@ -3085,7 +3088,7 @@ Page 64 Micenas: -------- begin text ---------
 {{wikipedia|lang=es}}
 {{es-proper noun}}
 
-# [[Mycenae]]
+# {{place|es|ancient city/and/archaelogical site|c/Greece|t1=Mycenae}}
 -------- end text --------
 Page 65 Mileto: Found match for regex: {
 Page 65 Mileto: -------- begin text ---------
@@ -3105,7 +3108,7 @@ Page 65 Mileto: -------- begin text ---------
 ===Proper noun===
 {{pt-proper noun|f}}
 
-# {{place|pt|ancient city|in western|contregion/Anatolia|t1=Miletus}}
+# {{place|pt|<<ancient>> [[Greek]] <<city>> in western <<r/Anatolia>>, in modern <<c/Turkey>>|t1=Miletus}}
 -------- end text --------
 Page 66 Nicea: Found match for regex: =
 Page 66 Nicea: -------- begin text ---------
@@ -3114,21 +3117,19 @@ Page 66 Nicea: -------- begin text ---------
 ===Proper noun===
 {{ca-proper noun|f}}
 
-# {{l|en|Nice}}
+# {{place|ca|<<ancient>> [[Greek]] <<city>> in northwestern <<r/Anatolia>>, in modern <<c/Turkey>>|t1=Nicaea|modern=İznik}}
 
 ----
 
 ==Italian==
 
 ===Proper noun===
-{{it-proper noun}} {{g|f}}
+{{it-proper noun|f}}
 
-# [[Nicaea]], [[İznik]]
+# {{place|it|<<ancient>> [[Greek]] <<city>> in northwestern <<r/Anatolia>>, in modern <<c/Turkey>>|t1=Nicaea|modern=İznik}}
 
 ====Related terms====
 * {{l|it|niceno}}
-
-[[Category:it:Cities]]
 
 ----
 
@@ -3142,8 +3143,8 @@ Page 66 Nicea: -------- begin text ---------
 ===Proper noun===
 {{head|pl|proper noun|g=f}}
 
-# {{place|pl|city|c/France|t1=Nice}}
-# {{place|pl|ancient city|r/Anatolia|t1=Nicaea}}
+# {{place|pl|capital city|dept/Alpes-Maritimes|r:suf/Provence-Alpes-Côte d'Azur|c/France|t1=Nice}}
+# {{place|pl|<<ancient>> [[Greek]] <<city>> in northwestern <<r/Anatolia>>, in modern <<c/Turkey>>|t1=Nicaea|modern=İznik}}
 
 ====Declension====
 {{pl-decl-noun-sing|Nicea|Nicei|Nicei|Niceę|Niceą|Nicei|Niceo}}
@@ -3151,7 +3152,6 @@ Page 66 Nicea: -------- begin text ---------
 ===Further reading===
 * {{R:PWN}}
 
-[[Category:pl:Cities in Turkey]]
 [[Category:pl:Exonyms]]
 -------- end text --------
 Page 67 Niceia: Found match for regex: {
@@ -3165,7 +3165,7 @@ Page 67 Niceia: -------- begin text ---------
 ===Proper noun===
 {{pt-proper noun|f}}
 
-# {{place|pt|ancient city|r/Bithynia|contregion/Asia Minor|t1=Nicaea}}
+# {{place|pt|<<ancient>> [[Greek]] <<city>> in northwestern <<r/Anatolia>>, in modern <<c/Turkey>>|t1=Nicaea|modern=İznik}}
 -------- end text --------
 Page 68 Nicopolis: Found match for regex: {
 Page 68 Nicopolis: -------- begin text ---------
@@ -3174,7 +3174,7 @@ Page 68 Nicopolis: -------- begin text ---------
 {{wikipedia}}
 
 ===Etymology===
-From {{etyl|la|en}} {{m|la|Nīcopolis}}, from {{etyl|grc|en}} {{m|grc|Νικόπολις}}.
+From {{bor|en|la|Nīcopolis}}, from {{der|en|grc|Νικόπολις}}.
 
 ===Proper noun===
 {{en-prop}}
@@ -3183,7 +3183,7 @@ From {{etyl|la|en}} {{m|la|Nīcopolis}}, from {{etyl|grc|en}} {{m|grc|Νικόπ
 
 ====Translations====
 {{trans-top|city in Epirus}}
-* Bulgarian: {{t|bg|Никопол|sc=Cyrl}}
+* Bulgarian: {{t|bg|Никопол}}
 * French: {{t+|fr|Nicopolis}}
 * Greek: {{t|el|Νικόπολη|f}}
 *: Ancient: {{t|grc|Νικόπολις|f}}
@@ -3209,7 +3209,7 @@ From {{etyl|la|en}} {{m|la|Nīcopolis}}, from {{etyl|grc|en}} {{m|grc|Νικόπ
 ==Latin==
 
 ===Etymology===
-From {{der|la|grc|Νικόπολις||city of victory}}.
+From {{bor|la|grc|Νικόπολις||city of victory}}.
 
 ===Proper noun===
 {{la-proper noun|Nīcopolis<3>|gen_sg=Nīcopolis/Nīcopolios}}
@@ -3231,12 +3231,12 @@ Page 69 Ninive: -------- begin text ---------
 {{wikipedia|lang=fi}}
 
 ===Etymology===
-From {{der|fi|la|Nīnevē||Nineveh}}.
+From {{bor|fi|la|Nīnevē||Nineveh}}.
 
 ===Proper noun===
 {{fi-proper noun}}
 
-# {{place|fi|ancient city|c/Assyria|t1=Nineveh}}
+# {{place|fi|ancient city|kingdom/Assyria|in modern|c/Iraq|near [[Mosul]]|t1=Nineveh}}
 
 ===See also===
 * {{l|fi|Assyria}}
@@ -3250,7 +3250,7 @@ From {{der|fi|la|Nīnevē||Nineveh}}.
 {{wikipedia|lang=fr}}
 
 ===Etymology===
-From {{etyl|la|fr}} {{m|la|Nīnevē||Nineveh}}.
+From {{bor|fr|la|Nīnevē||Nineveh}}.
 
 ===Pronunciation===
 * {{fr-IPA}}
@@ -3258,7 +3258,7 @@ From {{etyl|la|fr}} {{m|la|Nīnevē||Nineveh}}.
 ===Proper noun===
 {{fr-proper noun|f}}
 
-# {{place|fr|ancient city|c/Assyria|t1=Nineveh}}
+# {{place|fr|ancient city|kingdom/Assyria|in modern|c/Iraq|near [[Mosul]]|t1=Nineveh}}
 
 ===See also===
 * {{l|fr|Assyrie}}
@@ -3269,7 +3269,7 @@ From {{etyl|la|fr}} {{m|la|Nīnevē||Nineveh}}.
 {{wikipedia|lang=it}}
 
 ===Etymology===
-From {{etyl|la|it}} {{m|la|Nīnevē||Nineveh}}.
+From {{bor|it|la|Nīnevē||Nineveh}}.
 
 ===Pronunciation===
 * {{IPA|it|/ˈni.ni.ve/}}
@@ -3277,7 +3277,7 @@ From {{etyl|la|it}} {{m|la|Nīnevē||Nineveh}}.
 ===Proper noun===
 {{it-proper noun|f}}
 
-# {{place|it|ancient city|c/Assyria|t1=Nineveh}}
+# {{place|it|ancient city|kingdom/Assyria|in modern|c/Iraq|near [[Mosul]]|t1=Nineveh}}
 
 ===See also===
 * {{l|it|Assiria}}
@@ -3307,7 +3307,7 @@ Page 70 Nínive: -------- begin text ---------
 {{wikipedia|lang=ca}}
 
 ===Etymology===
-From {{der|ca|la|Nīnevē||Nineveh}}.
+From {{bor|ca|la|Nīnevē||Nineveh}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -3315,7 +3315,7 @@ From {{der|ca|la|Nīnevē||Nineveh}}.
 ===Proper noun===
 {{ca-proper noun|f}}
 
-# {{place|ca|ancient city|c/Assyria|t1=Nineveh}}
+# {{place|ca|ancient city|kingdom/Assyria|in modern|c/Iraq|near [[Mosul]]|t1=Nineveh}}
 
 ===See also===
 * {{l|ca|Assíria}}
@@ -3326,12 +3326,12 @@ From {{der|ca|la|Nīnevē||Nineveh}}.
 {{wikipedia|lang=pt}}
 
 ===Etymology===
-From {{etyl|la|pt}} {{m|la|Nīnevē||Nineveh}}.
+From {{bor|pt|la|Nīnevē||Nineveh}}.
 
 ===Proper noun===
 {{pt-proper noun|f}}
 
-# {{place|pt|ancient city|c/Assyria|t1=Nineveh}}
+# {{place|pt|ancient city|kingdom/Assyria|in modern|c/Iraq|near [[Mosul]]|t1=Nineveh}}
 
 ===See also===
 * {{l|pt|Assíria}}
@@ -3344,12 +3344,12 @@ From {{etyl|la|pt}} {{m|la|Nīnevē||Nineveh}}.
 {{wikipedia|lang=es}}
 
 ===Etymology===
-From {{etyl|la|es}} {{m|la|Nīnevē||Nineveh}}.
+From {{bor|es|la|Nīnevē||Nineveh}}.
 
 ===Proper noun===
 {{es-proper noun|f}}
 
-# {{place|es|ancient city|c/Assyria|t1=Nineveh}}
+# {{place|es|ancient city|kingdom/Assyria|in modern|c/Iraq|near [[Mosul]]|t1=Nineveh}}
 
 ====Synonyms====
 * {{l|es|Naynaua}}
@@ -3367,7 +3367,7 @@ Page 71 Ohrid: -------- begin text ---------
 {{wikipedia}}
 {{en-proper noun}}
 
-# {{place|en|historic city|in southwestern|c/North Macedonia}}.
+# {{place|en|city|in southwestern|c/North Macedonia}}.
 
 ====Translations====
 {{trans-top|a historic city in North Macedonia}}
@@ -3437,8 +3437,6 @@ From {{der|en|grc|Ὀλυμπία}}, from {{m|grc|Ὄλυμπος||Olympus}}.
 * Romanian: {{t|ro|Olimpia|f}}
 {{trans-bottom}}
 
-[[Category:en:State capitals of the United States]]
-
 ----
 
 ==Slovak==
@@ -3449,8 +3447,8 @@ From {{der|en|grc|Ὀλυμπία}}, from {{m|grc|Ὄλυμπος||Olympus}}.
 ===Proper noun===
 {{sk-proper noun|g=f|gen=Olympie|pl=Olympie|decl=ulica}}
 
-# [[#English|Olympia]] {{gloss|ancient Greek place}}
-# {{given name|sk|female}}.
+# {{place|sk|ancient city|c/Greece|home of the very first [[Olympic Games]]|t1=Olympia}}
+# {{given name|sk|female}}
 
 ====Declension====
 {{sk-decl-noun|Olympia|Olympie|Olympii|Olympiu|Olympii|Olympiou|Olympie|Olympií|Olympiám|Olympie|Olympiách|Olympiami}}
@@ -3466,7 +3464,7 @@ Page 73 Olímpia: -------- begin text ---------
 ===Proper noun===
 {{pt-proper noun|f}}
 
-# {{place|pt|ancient city|c/Greece|t1=Olympia}}
+# {{place|pt|ancient city|c/Greece|home of the very first [[Olympic Games]]|t1=Olympia}}
 # {{place|pt|municipality|s/São Paulo|c/Brazil}}
 -------- end text --------
 Page 74 Ossonoba: Found match for regex: {
@@ -3477,10 +3475,9 @@ Page 74 Ossonoba: -------- begin text ---------
 ===Proper noun===
 {{en-proper noun}}
 
-# An Ancient Roman and pre-Roman city in southwestern Iberia. Modern {{l|en|Faro}}, Portugal.
+# {{place|en|An <<ancient>> [[Roman]] and [[pre-Roman]] <<city>> in southwestern <<p/Lusitania>>, in modern <<c/Portugal>>|modern=Faro}}.
 
 [[Category:en:Ancient Rome]]
-[[Category:en:Cities]]
 
 ----
 
@@ -3495,7 +3492,7 @@ Page 74 Ossonoba: -------- begin text ---------
 ===Proper noun===
 {{la-proper noun|Ossonoba<1.loc>}}
 
-# {{place|la|city|p/Lusitania}}, the modern [[Faro]]
+# {{place|la|an <<ancient>> [[Roman]] and [[pre-Roman]] <<city>> in southwestern <<p/Lusitania>>, in modern <<c/Portugal>>|modern=Faro}}
 
 ====Declension====
 {{la-ndecl|Ossonoba<1.loc>}}
@@ -3514,7 +3511,7 @@ Page 74 Ossonoba: -------- begin text ---------
 ===Proper noun===
 {{pt-proper noun|f}}
 
-# {{place|pt|ancient city|p/Lusitania|c/Roman Empire|modern=Faro, Portugal|t1=Ossonoba}}
+# {{place|pt|an <<ancient>> [[Roman]] and [[pre-Roman]] <<city>> in southwestern <<p/Lusitania>>, in modern <<c/Portugal>>|modern=Faro}}
 
 [[Category:pt:Ancient Rome]]
 -------- end text --------
@@ -3526,7 +3523,7 @@ Page 75 Palmira: -------- begin text ---------
 {{wikipedia|lang=it}}
 {{it-proper noun|f}}
 
-# [[Palmyra]]
+# {{place|it|<<ancient>> [[Semitic]] <<city>> in modern <<c/Syria>>|t1=Palmyra}}
 
 ====Derived terms====
 * {{l|it|palmireno}}
@@ -3563,7 +3560,7 @@ Borrowed from {{bor|pt|la|Palmȳra}}, {{m|la|Palmīra}}, from {{der|pt|grc|Πα�
 ===Proper noun===
 {{pt-proper noun|f}}
 
-# {{place|pt|ancient city|country/Syria|t1=Palmyra}}
+# {{place|pt|<<ancient>> [[Semitic]] <<city>> in modern <<c/Syria>>|t1=Palmyra}}
 
 ====Related terms====
 * {{l|pt|palmireno}}
@@ -3578,7 +3575,7 @@ Borrowed from {{bor|pt|la|Palmȳra}}, {{m|la|Palmīra}}, from {{der|pt|grc|Πα�
 ===Proper noun===
 {{head|sco|proper noun}}
 
-# [[Palmyra]].
+# {{place|sco|<<ancient>> [[Semitic]] <<city>> in modern <<c/Syria>>|t1=Palmyra}}
 
 ===See also===
 * {{pedia|Palmyra}}
@@ -3591,7 +3588,7 @@ Borrowed from {{bor|pt|la|Palmȳra}}, {{m|la|Palmīra}}, from {{der|pt|grc|Πα�
 ===Proper noun===
 {{es-proper noun}}
 
-# [[Palmyra]]
+# {{place|es|<<ancient>> [[Semitic]] <<city>> in modern <<c/Syria>>|t1=Palmyra}}
 -------- end text --------
 Page 76 Palmyra: Found match for regex: {
 Page 76 Palmyra: -------- begin text ---------
@@ -3672,7 +3669,7 @@ From {{der|de|grc|Παλμύρα}}.
 ===Proper noun===
 {{de-proper noun|n}}
 
-# {{l|en|Palmyra}}
+# {{place|de|<<ancient>> [[Semitic]] <<city>> in modern <<c/Syria>>|t1=Palmyra}}
 
 ====Derived terms====
 * {{l|de|Palmyrer}}
@@ -3696,7 +3693,7 @@ From {{der|la|grc|Παλμύρα}}.
 ===Proper noun===
 {{la-proper noun|Palmȳra<1.loc>}}
 
-# {{l|en|Palmyra}} {{gloss|ancient city in modern Syria, capital of the Palmyrene Empire}}
+# {{place|la|<<ancient>> [[Semitic]] <<city>> in modern <<c/Syria>>|t1=Palmyra}}
 
 ====Declension====
 {{la-ndecl|Palmȳra<1.loc>}}
@@ -3704,8 +3701,6 @@ From {{der|la|grc|Παλμύρα}}.
 ===References===
 * {{R:L&S}}
 * {{R:Gaffiot}}
-
-[[Category:la:Cities]]
 
 ----
 
@@ -3732,7 +3727,7 @@ Borrowed from {{bor|pt|la|Pasargadae}}, from {{der|pt|grc|Πασαργάδαι}}
 ===Proper noun===
 {{pt-proper noun|f}}
 
-# {{place|pt|ancient city|c/Persia|t1=Pasargadae}}
+# {{place|pt|ancient capital|empire:Suf/Achaemenid|in modern|c/Iran|t1=Pasargadae}}
 -------- end text --------
 Page 78 Perszepolisz: Found match for regex: =
 Page 78 Perszepolisz: -------- begin text ---------
@@ -3747,7 +3742,7 @@ Page 78 Perszepolisz: -------- begin text ---------
 ===Proper noun===
 {{head|hu|proper noun}}
 
-# {{place|hu|ancient city/capital|c/Persia|t1=Persepolis}}
+# {{place|hu|<<ancient>> [[ceremonial]] <<capital>> of the <<empire:Suf/Achaemenid>>, in modern <<c/Iran>>|t1=Persepolis}}
 
 ====Declension====
 {{hu-infl-nom|Perszepoliszo|o|-|n=sg}}{{hu-pos-otok|Perszepolisz||ai|n=sg}}
@@ -3763,7 +3758,7 @@ Page 79 Persépolis: -------- begin text ---------
 ===Proper noun===
 {{fr-proper noun|f}}
 
-# [[Persepolis]]
+# {{place|fr|<<ancient>> [[ceremonial]] <<capital>> of the <<empire:Suf/Achaemenid>>, in modern <<c/Iran>>|t1=Persepolis}}
 
 ----
 
@@ -3778,7 +3773,7 @@ From {{der|pt|la|Persēpolis}}, from {{der|pt|grc|Περσέπολις}}.
 ===Proper noun===
 {{pt-proper noun|f}}
 
-# {{place|pt|ancient city/capital|c/Persia|t1=Persepolis}}
+# {{place|pt|<<ancient>> [[ceremonial]] <<capital>> of the <<empire:Suf/Achaemenid>>, in modern <<c/Iran>>|t1=Persepolis}}
 
 ====Related terms====
 * {{l|pt|persa}}
@@ -3820,8 +3815,19 @@ From {{der|en|grc|πέτρα||rock}}.
 ====Proper noun====
 {{en-proper noun}}
 
-# {{place|en|ancient city|c/Jordan}}, now an [[archeological]] [[site]].
-# A medieval fortified town in [[Lazica]].
+# {{place|en|ancient city/and/archaelogical site|c/Jordan}}.
+# {{place|en|An <<ancient>> [[Hellenistic]] <<city>> and <<former bishopic>> in [[Roman]] <<p/Egypt>>}}; in full, {{w|Petra in Aegypto}}.
+# {{place|en|A <<medieval>> fortified <<town>> in <<r/Lazica>>, in the modern <<c:pref/Georgia>>|modern=Tsikhisdziri}}.
+# {{place|en|An <<ancient>> lost <<town>> in <<r/Corinthia>> in modern <<c/Greece>>}}.
+# {{place|en|An <<ancient>> lost <<town>> in <<r/Elis>> in modern <<c/Greece>>}}.
+# {{place|en|modern village/and/community|mun:suf/Aliartos|in|runit/Boeotia|c/Greece}}.
+# {{place|en|modern village/and/former municipality|on the|isl:pref/Lesbos|adr:suf/North Aegean|c/Greece}}.
+# {{place|en|modern former municipality|runit/Pieria|adr:suf/Central Macedonia|c/Greece}}.
+# {{place|en|modern village|runit/Preveza|adr:suf/Epirus|c/Greece}}.
+# {{place|en|A <<former village>> and <<ghost town>> in <<c/Northern Cyprus>>, now [[uninhabited]] and largely [[destroyed]]}}.
+# {{place|en|modern village|commune:Suf/Bâcleș|co:Suf/Mehedinţi|c/Romania}}.
+# {{place|en|modern town/and/municipality|on the|isl:pref/Mallorca|in the|acomm/Balearic Islands|c/Spain}}.
+# {{place|en|unincorporated community|co/Bracken County|s/Kentucky|c/USA}}.
 
 ===Anagrams===
 * {{anagrams|en|a=aeprt|Peart|apert|apter|parte|pater|peart|petar|prate|preta|reapt|repat|retap|taper|trape|treap}}
@@ -3839,7 +3845,7 @@ From {{der|en|grc|πέτρα||rock}}.
 ===Proper noun===
 {{cs-proper noun|g=f}}
 
-# {{given name|cs|female|eq=Petra}}
+# {{given name|cs|female|from=Ancient Greek|eq=Petra}}
 
 ===Further reading===
 * {{R:KNLA}}
@@ -3852,14 +3858,11 @@ From {{der|en|grc|πέτρα||rock}}.
 ===Proper noun===
 {{head|da|proper noun}}
 
-# {{given name|da|female}}, feminine of [[Peter]].
+# {{given name|da|female|from=Ancient Greek|eq=Petra|m=Peter}}
 
 ----
 
 ==Dutch==
-
-===Etymology===
-Counterpart of {{m|nl|Peter}}.
 
 ===Pronunciation===
 * {{IPA|nl|/ˈpeː.traː/}}
@@ -3869,7 +3872,7 @@ Counterpart of {{m|nl|Peter}}.
 ===Proper noun===
 {{nl-proper noun|f}}
 
-# {{given name|nl|female}}.
+# {{given name|nl|female|from=Ancient Greek|eq=Petra|m=Peter}}
 
 ----
 
@@ -3878,7 +3881,7 @@ Counterpart of {{m|nl|Peter}}.
 ===Proper noun===
 {{head|fo|proper noun|g=f}}
 
-# {{given name|fo|female}}
+# {{given name|fo|female|from=Ancient Greek|eq=Petra}}
 
 ====Usage notes====
 ''Matronymics''
@@ -3893,7 +3896,7 @@ Counterpart of {{m|nl|Peter}}.
 ==Finnish==
 
 ===Etymology===
-Borrowed from German or Swedish {{m|de|Petra}} in the 20th century. Sometimes associated with dialectal Finnish {{m|fi|petra||deer}}.
+Borrowed from {{bor|fi|de|Petra}} or {{bor|fi|sv|Petra}} in the 20th century. Sometimes associated with dialectal Finnish {{m|fi|petra||deer}}.
 
 ===Pronunciation===
 {{fi-pronunciation}}
@@ -3901,7 +3904,7 @@ Borrowed from German or Swedish {{m|de|Petra}} in the 20th century. Sometimes as
 ===Proper noun===
 {{fi-proper noun}}
 
-# {{given name|fi|female}}.
+# {{given name|fi|female|from=Ancient Greek|eq=Petra}}
 
 ====Declension====
 {{fi-decl-kala|Petr|||a}}
@@ -3917,7 +3920,7 @@ Borrowed from German or Swedish {{m|de|Petra}} in the 20th century. Sometimes as
 ===Proper noun===
 {{head|de|proper noun}}
 
-# {{given name|de|female}}, feminine form of [[Peter]].
+# {{given name|de|female|from=Ancient Greek|eq=Petra|m=Peter}}
 
 ----
 
@@ -3926,8 +3929,11 @@ Borrowed from German or Swedish {{m|de|Petra}} in the 20th century. Sometimes as
 ===Proper noun===
 {{la-proper noun|Petra<1.loc>}}
 
-# A place name.
-# {{given name|la|female|A=A post-classical}}, the feminine form of {{m|la|Petrus}}.
+# {{place|la|an <<ancient>> [[Hellenistic]] <<city>> and <<former bishopic>> in [[Roman]] <<p/Egypt>>|t1=Petra|t2={{w|Petra in Aegypto}}}}
+# {{place|en|a <<medieval>> fortified <<town>> in <<r/Lazica>>, in the modern <<c:pref/Georgia>>|modern=Tsikhisdziri|t1=Petra}}
+# {{place|en|an <<ancient>> lost <<town>> in <<r/Corinthia>> in modern <<c/Greece>>|t1=Petra}}
+# {{place|en|an <<ancient>> lost <<town>> in <<r/Elis>> in modern <<c/Greece>>|t1=Petra}}
+# {{given name|la|female|A=A post-classical|m=Petrus}}
 
 ====Declension====
 {{la-ndecl|Petra<1.loc>}}
@@ -3936,8 +3942,6 @@ Borrowed from German or Swedish {{m|de|Petra}} in the 20th century. Sometimes as
 * {{R:L&S}}
 * {{R:Gaffiot}}
 
-[[Category:la:Cities]]
-
 ----
 
 ==Norwegian==
@@ -3945,7 +3949,7 @@ Borrowed from German or Swedish {{m|de|Petra}} in the 20th century. Sometimes as
 ===Proper noun===
 {{head|no|proper noun}}
 
-# {{given name|no|female}}, feminine form of [[Peter]].
+# {{given name|no|female|from=Ancient Greek|eq=Petra|m=Peter}}
 
 ----
 
@@ -3957,7 +3961,7 @@ Borrowed from German or Swedish {{m|de|Petra}} in the 20th century. Sometimes as
 ===Proper noun===
 {{sk-proper noun|g=f|gen=Petry|pl=Petry|decl=žena}}
 
-# {{given name|sk|female|eq=Petra}}
+# {{given name|sk|female|from=Ancient Greek|eq=Petra}}
 
 ====Declension====
 {{sk-decl-noun|Petra|Petry|Petre|Petru|Petre|Petrou|Petry|Petier|Petrám|Petry|Petrách|Petrami}}
@@ -3975,7 +3979,7 @@ Borrowed from German or Swedish {{m|de|Petra}} in the 20th century. Sometimes as
 ===Proper noun===
 {{sv-proper noun|c}}
 
-# {{given name|sv|female}}, feminine form of [[Peter]].
+# {{given name|sv|female|from=Ancient Greek|eq=Petra|m=Peter}}
 
 ===Anagrams===
 * {{anagrams|sv|a=aeprt|paret|petar|repat}}
@@ -3988,7 +3992,7 @@ Page 81 Plasencia: -------- begin text ---------
 {{en-proper noun|Plasencias}}
 
 # {{surname|en}}
-# {{place|en|historic city|p/Cáceres|c/Spain}}.
+# {{place|en|market city|p:pref/Cáceres|acomm/Extramadura|c/Spain}}.
 
 ====Translations====
 {{trans-top|city}}
@@ -4010,7 +4014,7 @@ Page 81 Plasencia: -------- begin text ---------
 ===Proper noun===
 {{es-proper noun}}
 
-# {{l|es|Plasencia}} {{gloss|city}}
+# {{place|es|market city|p:pref/Cáceres|acomm/Extramadura|c/Spain|t1=Plasencia}}
 
 ====Derived terms====
 * {{l|es|placentino}}
@@ -4028,8 +4032,8 @@ Page 82 Pompeia: -------- begin text ---------
 ===Proper noun===
 {{pt-proper noun|f}}
 
-# {{place|pt|ancient city|of the|c/Roman Empire|in|contregion/Italy|t1=Pompeii}}
-# {{place|pt|municipality|s/São Paulo|c/Brazil}}
+# {{place|pt|ancient city|empire/Roman Empire|in modern|r/Italy|t1=Pompeii}}
+# {{place|pt|municipality|s/São Paulo|c/Brazil|t1=Pompeia}}
 -------- end text --------
 Page 83 Ponferrada: Found match for regex: =
 Page 83 Ponferrada: -------- begin text ---------
@@ -4039,7 +4043,7 @@ Page 83 Ponferrada: -------- begin text ---------
 ===Proper noun===
 {{en-proper noun}}
 
-# {{place|en|historic city|c/Spain}}, in the [[Bierzo]] in [[León]].
+# {{place|en|city|p:pref/León|acomm/Castile and León|c/Spain}}.
 
 ====Translations====
 {{trans-top|city}}
@@ -4058,7 +4062,7 @@ Page 83 Ponferrada: -------- begin text ---------
 ===Proper noun===
 {{es-proper noun}}
 
-# {{l|es|Ponferrada}} {{gloss|city}}
+# {{place|es|city|p:pref/León|acomm/Castile and León|c/Spain|t1=Ponferrada}}
 
 ====Derived terms====
 * {{l|es|ponferradino}}
@@ -4235,10 +4239,10 @@ Page 85 Prilep: -------- begin text ---------
 {{wikipedia}}
 {{en-proper noun}}
 
-# {{place|en|historic city|in southern|c/North Macedonia}}.
+# {{place|en|city|in southern|c/North Macedonia}}.
 
 ====Translations====
-{{trans-top|a historic city in the Republic of Macedonia}}
+{{trans-top|a city in North Macedonia}}
 * Bulgarian: {{t|bg|При́леп|m}}
 * Greek: {{t|el|Πρίλαπος|m}}
 {{trans-mid}}
@@ -4259,7 +4263,7 @@ Page 86 Pripyat: -------- begin text ---------
 ===Proper noun===
 {{en-proper noun}}
 
-# {{place|en|river|r/Eastern Europe|flowing east through|c/Ukraine|c/Belarus|and again|c/Ukraine|draining into the|riv/Dnieper}}.
+# {{place|en|river|r/Eastern Europe|flowing east through|c/Ukraine,Belarus|draining into the|riv/Dnieper}}.
 # {{place|en|abandoned city/and/ghost town|in northern|c/Ukraine}}, near the border with [[Belarus]].
 
 ====Translations====
@@ -4335,7 +4339,7 @@ Borrowed from {{bor|pt|la|Pergamum}}, from {{der|pt|grc|Πέργαμον}}, prob
 ===Proper noun===
 {{pt-proper noun|m}}
 
-# {{place|pt|ancient city|r/Aeolis|t1=Pergamum}}
+# {{place|pt|<<ancient>> [[Greek]] <<city>> in <<r/Mysia>>, in modern <<c/Turkey>>|t1=Pergamum}}
 -------- end text --------
 Page 89 Rouen: Found match for regex: =
 Page 89 Rouen: -------- begin text ---------
@@ -4386,7 +4390,7 @@ From the Roman name, {{inh|fr|la|Rotomagus}}, from the {{etyl|cel-gau|fr}} name 
 * {{audio|fr|Fr-Rouen.ogg|Audio}}
 
 ===Proper noun===
-{{fr-proper noun}}
+{{fr-proper noun|m}}
 
 # {{place|fr|city|c/France|t=Rouen}}
 
@@ -4449,8 +4453,8 @@ From {{der|en|grc|Σαλαμίς}}.
 ===Proper noun===
 {{en-prop}}
 
-# An island in the [[Saronic Gulf]] off [[Athens]] where a famous battle in the {{w|Persian Wars}} took place.
-# {{place|en|ancient city|c/Cyprus}}.
+# {{place|en|The largest <<island>> in the <<gulf/Saronic Gulf>> off <<city/Athens>>, <<c/Greece>>, where a famous battle in the {{w|Persian Wars}} took place}}.
+# {{place|en|An <<ancient>> [[Greek]] <<city>> in <<c/Cyprus>>}}.
 # {{lb|en|Greek mythology}} A [[nymph]], the daughter of [[Asopus]] and [[Metope]], who was carried away by [[Poseidon]] to the island that bears her name.
 
 ====Translations====
@@ -4478,7 +4482,7 @@ From {{der|en|grc|Σαλαμίς}}.
 ==German==
 
 ===Noun===
-{{head|de|noun form}} {{g|f}}
+{{head|de|noun form|g=f}}
 
 # {{plural of|de|Salami}}
 
@@ -4492,8 +4496,8 @@ From {{der|la|grc|Σαλαμίς}}.
 ===Proper noun===
 {{la-proper noun|Salamis/Salamīn<3.loc>|acc_sg=Salamīnem/Salamīna|g=f}}
 
-# {{l|en|Salamis}} {{gloss|island in the Saronic Gulf}}
-# {{place|la|city|c/Cyprus|t1=Salamis}}
+# {{place|la|the largest <<island>> in the <<gulf/Saronic Gulf>> off <<city/Athens>>, in modern <<c/Greece>>|t1=Salamis}}
+# {{place|la|<<ancient>> [[Greek]] <<city>> in <<c/Cyprus>>|t1=Salamis}}
 
 ====Declension====
 {{la-ndecl|Salamis/Salamīn<3.loc>|acc_sg=Salamīnem/Salamīna}}
@@ -4501,8 +4505,6 @@ From {{der|la|grc|Σαλαμίς}}.
 ===References===
 * {{R:L&S}}
 * {{R:Gaffiot}}
-
-[[Category:la:Islands]]
 -------- end text --------
 Page 91 Samaria: Found match for regex: {
 Page 91 Samaria: -------- begin text ---------
@@ -4510,7 +4512,7 @@ Page 91 Samaria: -------- begin text ---------
 ==English==
 
 ===Etymology===
-Borrowed from {{bor|en|grc|Σαμάρεια|}}, from {{etyl|he|en}} {{m|he|שֹׁמְרוֹן|tr=shomron}}. Attested to in [[Akkadian]] as {{l|akk|𒆳𒊓𒈨𒊑𒄿𒈾𒀀𒀀|tr=<sup>KUR</sup>sa-me-ri-i-na-a-a}}
+Borrowed from {{bor|en|grc|Σαμάρεια|}}, from {{der|en|he|שֹׁמְרוֹן|tr=shomron}}. Attested to in [[Akkadian]] as {{l|akk|𒆳𒊓𒈨𒊑𒄿𒈾𒀀𒀀|tr=<sup>KUR</sup>sa-me-ri-i-na-a-a}}
 
 ===Proper noun===
 {{wikipedia}}
@@ -4541,7 +4543,7 @@ Borrowed from {{bor|en|grc|Σαμάρεια|}}, from {{etyl|he|en}} {{m|he|שֹ�
 * Irish: {{t|ga|an tSamáir|f}}
 * Japanese: {{t|ja|サマリア|tr=Samaria|sc=Jpan}}
 * Latin: {{t|la|Samarīa|f}}
-* Mongolian: {{t|mn|Самари|sc=Cyrl}}
+* Mongolian: {{t|mn|Самари}}
 * Portuguese: {{t+|pt|Samaria|f}}
 * Russian: {{t+|ru|Самари́я|f}}
 * Spanish: {{t+|es|Samaria|f}}
@@ -4575,7 +4577,7 @@ Borrowed from {{bor|it|la|Samarīa}}, from {{der|it|grc|Σαμάρεια}}, from
 ==Latin==
 
 ===Etymology===
-From {{der|la|grc|Σαμάρεια}}, from {{der|la|he|שֹׁמְרוֹן|tr=shomron}}.
+From {{bor|la|grc|Σαμάρεια}}, from {{der|la|he|שֹׁמְרוֹן|tr=shomron}}.
 
 ===Pronunciation===
 * {{la-IPA|Samarīa}}
@@ -4624,7 +4626,7 @@ From {{bor|en|la|Samosata}}, from {{der|en|grc|Σαμόσατα}}.
 ===Proper noun===
 {{en-proper noun}}
 
-# An ancient [[city]] that was located in [[Commagene]] near the banks of the [[Euphrates]].
+# {{place|en|ancient city|in southeast|r/Anatolia|in modern|c/Turkey|located near the banks of the|riv/Euphrates|modern=Samsat}}.
 
 ====Translations====
 {{trans-top|city in Commagene}}
@@ -4659,8 +4661,6 @@ From {{bor|en|la|Samosata}}, from {{der|en|grc|Σαμόσατα}}.
 * Ukrainian: {{t|uk|Самосата}}
 {{trans-bottom}}
 
-[[Category:en:Cities]]
-
 ----
 
 ==Latin==
@@ -4674,7 +4674,7 @@ Borrowed from {{bor|la|grc|Σαμόσατα}}.
 ===Noun===
 {{la-proper noun|Samosata<2.loc>|g=n}}
 
-# [[#English|Samosata]]
+# {{place|la|ancient city|in southeast|r/Anatolia|in modern|c/Turkey|located near the banks of the|riv/Euphrates|modern=Samsat}}.
 
 ====Declension====
 {{la-ndecl|Samosata<2.loc>}}
@@ -4696,7 +4696,7 @@ Borrowed from {{bor|la|grc|Σαμόσατα}}.
 ===Proper noun===
 {{pt-proper noun|f}}
 
-# {{place|pt|ancient city|contregion/Anatolia|t1=Samosata}}
+# {{place|pt|ancient city|in southeast|r/Anatolia|in modern|c/Turkey|located near the banks of the|riv/Euphrates|modern=Samsat}}.
 -------- end text --------
 Page 93 Sardis: Found match for regex: =
 Page 93 Sardis: -------- begin text ---------
@@ -4750,7 +4750,7 @@ Borrowed from {{bor|en|la|Sardīs}}, from {{der|en|grc|Σάρδεις}}.
 * {{alter|la|Sardēs}}
 
 ===Etymology===
-From {{der|la|grc|Σάρδεις}}.
+From {{bor|la|grc|Σάρδεις}}.
 
 ===Pronunciation===
 * {{la-IPA|Sardīs}}
@@ -4775,7 +4775,7 @@ Page 94 Selêucia: -------- begin text ---------
 ===Proper noun===
 {{pt-proper noun|f}}
 
-# {{place|pt|ancient city|contregion/Mesopotamia|t1=Seleucia}}
+# {{place|pt|ancient city|r/Mesopotamia|in modern|c/Iraq|t1=Seleucia}}
 -------- end text --------
 Page 95 Sherwood Park: Found match for regex: =
 Page 95 Sherwood Park: -------- begin text ---------
@@ -4787,7 +4787,7 @@ Originally named [[Campbelltown]], after the [[Campbell]] family, who first sett
 ===Proper noun===
 {{en-proper noun}}
 
-# {{place|en|large hamlet/former city|co/Strathcona County|p/Alberta|c/Canada}}.
+# {{place|en|large hamlet|co/Strathcona County|p/Alberta|c/Canada}}, with over 70,000 people.
 # {{place|en|community|in the town of|town/Royal Tunbridge Wells|co/Kent|cc/England}}.
 # {{place|en|neighborhood|city/Richmond|s/Virginia|c/USA}}.
 
@@ -4804,8 +4804,8 @@ Borrowed from {{bor|it|la|Smyrna}}, from {{der|it|grc|Σμύρνα}}.
 ===Proper noun===
 {{it-proper noun|f}}
 
-# {{place|it|ancient city|contregion/Asia Minor|t1=Smyrna}}
-# {{place|it|city|c/Turkey|t=Izmir}}
+# {{place|pt|ancient city|r/Asia Minor|in modern|c/Turkey|t1=Smyrna}}
+# {{place|pt|modern city/capital|p:Suf/İzmir|in western|c/Turkey|t=İzmir}}
 
 [[Category:it:Exonyms]]
 -------- end text --------
@@ -4820,7 +4820,7 @@ From {{bor|it|la|Sodoma}}.
 {{wikipedia|lang=it}}
 {{it-proper noun}}
 
-# [[Sodom]]
+# {{place|it|<<ancient>> [[Biblical]] <<city>> in <<r/Canaan>>, destroyed due to its sinfulness|t1=Sodom}}
 
 ----
 
@@ -4832,7 +4832,7 @@ From {{bor|it|la|Sodoma}}.
 ===Proper noun===
 {{ang-proper noun|g=m|head=Sodom}}
 
-# {{l|en|Sodom}}
+# {{place|ang|<<ancient>> [[Biblical]] <<city>> in <<r/Canaan>>, destroyed due to its sinfulness|t1=Sodom}}
 
 ====Declension====
 {{ang-decl-noun-n-m|Sodom}}
@@ -4851,7 +4851,7 @@ From {{bor|it|la|Sodoma}}.
 ===Proper noun===
 {{pt-proper noun|f}}
 
-# {{lb|pt|biblical|quranic}} {{place|pt|ancient city|contregion/the Middle East|t1=Sodom}}
+# {{lb|pt|biblical|quranic}} {{place|pt|<<ancient>> [[Biblical]] <<city>> in <<r/Canaan>>, destroyed due to its sinfulness|t1=Sodom}}
 
 ----
 
@@ -4863,7 +4863,7 @@ From {{bor|es|la|Sodoma}}.
 ===Proper noun===
 {{es-proper noun|f}}
 
-# [[Sodom]]
+# {{place|es|<<ancient>> [[Biblical]] <<city>> in <<r/Canaan>>, destroyed due to its sinfulness|t1=Sodom}}
 -------- end text --------
 Page 98 St. George: Found match for regex: {
 Page 98 St. George: -------- begin text ---------
@@ -4877,11 +4877,11 @@ Page 98 St. George: -------- begin text ---------
 # {{place|en|town|co/Charlotte County|p/New Brunswick|c/Canada}}.
 # {{place|en|village|co/Brant County|p/Ontario|c/Canada}}.
 # {{place|en|small city|on|isl/St. George Island|arch/Pribilof Islands|s/Alaska}}.
-# {{place|en|former CDP|city/Lauderhill|co/Broward County|s/Florida|c/USA}}.
+# {{place|en|former CDP/and/neighborhood|city/Lauderhill|co/Broward County|s/Florida|c/USA}}.
 # {{place|en|unincorporated community|co/Charlton County|s/Georgia|c/USA}}, also spelled as {{l|en|Saint George}}.
 # {{place|en|small city|co/Pottawatomie County|s/Kansas|c/USA}}.
 # {{place|en|town|co/Knox County|s/Maine|c/USA}}.
-# {{place|en|census-designated place/and/former city|co/St. Louis County|s/Missouri|c/USA}}.
+# {{place|en|census-designated place/and/former city|co/St. Louis County|s/Missouri|c/USA}}, disincorporated in 2011.
 # {{place|en|unincorporated community|co/Wright County|s/Missouri}}.
 # {{place|en|neighborhood|bor/Staten Island|s/New York}}.
 # {{place|en|town/county seat|co/Dorchester County|s/South Carolina|c/USA}}.
@@ -4913,7 +4913,7 @@ For the surname and given name, see {{m|en|Sidney}}. The cities in Australia and
 
 # {{label|en|countable}} {{surname|en|from=Old English|dot=}}, a spelling variant of [[Sidney]].
 # {{label|en|countable}} {{given name|en|unisex|from=surnames}}.
-# {{label|en|uncountable}} {{place|en|seaport/and/state capital|s/New South Wales|c/Australia}}.
+# {{label|en|uncountable}} {{place|en|major port city/state capital|s/New South Wales|c/Australia}}.
 # {{label|en|uncountable}} {{place|en|seaport/and/former city|p/Nova Scotia|c/Canada}}, now part of the amalgamated [[Cape Breton Regional Municipality]] on [[Cape Breton Island]].
 # [[Dharuk]], an Aboriginal language of Australia.
 
@@ -5018,7 +5018,7 @@ For the surname and given name, see {{m|en|Sidney}}. The cities in Australia and
 ===Proper noun===
 {{ca-proper noun|m}}
 
-# {{place|ca|seaport/and/state capital|s/New South Wales|c/Australia|t1=Sydney}}
+# {{place|ca|major port city/state capital|s/New South Wales|c/Australia|t1=Sydney}}
 # {{place|ca|seaport/and/former city|p/Nova Scotia|c/Canada|t1=Sydney}}
 
 ----
@@ -5031,7 +5031,7 @@ For the surname and given name, see {{m|en|Sidney}}. The cities in Australia and
 ===Proper noun===
 {{fr-proper noun}}
 
-# {{place|fr|seaport/and/state capital|s/New South Wales|c/Australia|t1=Sydney}}
+# {{place|fr|major port city/state capital|s/New South Wales|c/Australia|t1=Sydney}}
 # {{place|fr|seaport/and/former city|p/Nova Scotia|c/Canada|t1=Sydney}}
 
 ----
@@ -5041,7 +5041,7 @@ For the surname and given name, see {{m|en|Sidney}}. The cities in Australia and
 ===Proper noun===
 {{it-proper noun|f}}
 
-# {{place|it|seaport/and/state capital|s/New South Wales|c/Australia|t1=Sydney}}
+# {{place|it|major port city/state capital|s/New South Wales|c/Australia|t1=Sydney}}
 # {{place|it|seaport/and/former city|p/Nova Scotia|c/Canada|t1=Sydney}}
 
 ----
@@ -5054,7 +5054,7 @@ For the surname and given name, see {{m|en|Sidney}}. The cities in Australia and
 ===Proper noun===
 {{pl-proper noun|n|indecl=yes}}
 
-# {{place|pl|seaport/and/state capital|s/New South Wales|c/Australia|t1=Sydney}}
+# {{place|pl|major port city/state capital|s/New South Wales|c/Australia|t1=Sydney}}
 # {{place|pl|seaport/and/former city|p/Nova Scotia|c/Canada|t1=Sydney}}
 
 ----
@@ -5074,7 +5074,7 @@ Borrowed from {{bor|pt|en|Sydney}}.
 ===Proper noun===
 {{pt-proper noun|f}}
 
-# {{place|pt|seaport/and/state capital|s/New South Wales|c/Australia|t1=Sydney}}
+# {{place|pt|major port city/state capital|s/New South Wales|c/Australia|t1=Sydney}}
 # {{place|pt|seaport/and/former city|p/Nova Scotia|c/Canada|t1=Sydney}}
 
 ===Proper noun===
@@ -5092,7 +5092,7 @@ Borrowed from {{bor|pt|en|Sydney}}.
 ===Proper noun===
 {{sl-proper noun|Sy̑dney|m-in}}
 
-# {{place|sl|seaport/and/state capital|s/New South Wales|c/Australia|t1=Sydney}}
+# {{place|sl|major port city/state capital|s/New South Wales|c/Australia|t1=Sydney}}
 # {{place|sl|seaport/and/former city|p/Nova Scotia|c/Canada|t1=Sydney}}
 
 ====Inflection====
@@ -5109,7 +5109,7 @@ Page 100 Síbaris: -------- begin text ---------
 ===Proper noun===
 {{pt-proper noun|f}}
 
-# {{place|pt|ancient city/and/Greek colony|in south|c/Italy|t1=Sybaris}}
+# {{place|pt|an <<ancient>> [[Greek]] <<city>> and <<colony>>|in southern|c/Italy|t1=Sybaris}}
 -------- end text --------
 Page 101 Tebas: Found match for regex: =
 Page 101 Tebas: -------- begin text ---------
@@ -5127,8 +5127,9 @@ Borrowed from {{bor|pt|la|Thēbae}}, from {{der|pt|grc|Θῆβαι}}.
 ===Proper noun===
 {{pt-proper noun|f}}
 
-# {{place|pt|ancient city|c/Greece|t1=Thebes}}
-# {{place|pt|ancient city|c/Egypt|t1=Thebes}}
+# {{place|pt|<<ancient>> [[Egyptian]] <<city>>|modern=Luxor|t1=Thebes}}
+# {{place|pt|<<ancient>> [[Greek]] <<city>> in <<r/Boeotia>>|t1=Thebes}}
+# {{place|pt|modern city|runit:pref/Boeotia|in central|c/Greece|t1=Thebes}}
 
 ====Related terms====
 * {{l|pt|tebano}}
@@ -5171,7 +5172,7 @@ Page 103 Tenochtitlán: -------- begin text ---------
 ===Proper noun===
 {{pt-proper noun|f}}
 
-# {{place|pt|former city/capital|c/the Aztec empire|t1=Tenochtitlan}}
+# {{place|pt|former capital|empire:Suf/Aztec|t1=Tenochtitlan|modern=Mexico City}}
 
 ----
 
@@ -5186,7 +5187,7 @@ From {{etyl|nci|es}} {{m|nci|Tenochtitlan}}.
 ===Proper noun===
 {{es-proper noun|m}}
 
-# {{place|es|former city/capital|c/the Aztec empire|t1=Tenochtitlan}}
+# {{place|es|former capital|empire:Suf/Aztec|t1=Tenochtitlan|modern=Mexico City}}
 -------- end text --------
 Page 104 Troia: Found match for regex: {
 Page 104 Troia: -------- begin text ---------
@@ -5237,7 +5238,7 @@ Borrowed from {{bor|la|grc|Τροίᾱ}}.
 ===Proper noun===
 {{la-proper noun|Troia<1.loc>}}
 
-# [[Troy]]
+# {{place|la|ancient city|in far northwestern|r/Asia Minor|in modern|c/Turkey|t1=Troy}}
 
 ====Declension====
 {{la-ndecl|Troia<1.loc>}}
@@ -5245,8 +5246,6 @@ Borrowed from {{bor|la|grc|Τροίᾱ}}.
 ===References===
 * {{R:L&S}}
 * {{R:Gaffiot}}
-
-[[Category:la:Cities]]
 
 ----
 
@@ -5537,7 +5536,7 @@ From {{bor|pt|la|Tarraco}}.
 ===Proper noun===
 {{pt-proper noun|f}}
 
-# {{place|pt|ancient city|p/Hispania Tarraconensis|empire/Roman Empire|modern=Tarragona, Spain|t1=Tarraco}}
+# {{place|pt|ancient city|p/Hispania Tarraconensis|in|the|empire/Roman Empire|in modern|c/Spain|modern=Tarragona|t1=Tarraco}}
 
 ====Related terms====
 * {{l|pt|Tarraconense}}
@@ -5558,7 +5557,7 @@ Ultimately from {{der|en|sux|𒋀𒀕𒆠}}.
 ====Proper noun====
 {{en-proper noun}}
 
-# {{place|en|ancient city|r/Mesopotamia}}.
+# {{place|en|An <<ancient>> [[Sumerian]] <<city>> in <<r/Mesopotamia>>, in modern <<c/Iraq>>|modern=Tell el-Muqayyar}}.
 
 ====Derived terms====
 * {{w|Royal Game of Ur}}
@@ -5631,7 +5630,7 @@ Page 112 Valmiera: -------- begin text ---------
 ===Proper noun===
 {{en-proper noun}}
 
-# {{place|en|historic city|in north-central|c/Latvia}}; the largest city in the [[Vidzeme]] region.
+# {{place|en|largest city|r:suf/Vidzeme|in north-central|c/Latvia}}.
 
 ====Translations====
 {{trans-top|city in Latvia}}
@@ -5656,7 +5655,7 @@ Via various forms ({{m|lv||Waldemer}}, {{m|lv||Wolmaria}}, {{m|lv||Wolmahr}}, {{
 ===Proper noun===
 {{lv-proper noun|f|4th}}
 
-# {{l|lv|Valmiera}} {{gloss|a [[city]] in [[Latvia]], in the [[Vidzeme]] [[region]]}}
+# {{place|en|largest city|r:suf/Vidzeme|in north-central|c/Latvia|t1=Valmiera}}
 #: {{ux|lv|'''Valmiera''' ir viena no senākajām Latvijas pilsētām|'''Valmiera''' is one of the oldest cities of Latvia|inline=1}}
 #: {{ux|lv|2011. gadā Valmierā dzīvoja 25 130 iedzīvotāji|in the year 2011, 25 130 inhabitants lived in '''Valmiera'''|inline=1}}
 #: {{ux|lv|'''Valmieras''' Kultūras centrs|the Culture Centre of '''Valmiera'''|inline=1}}
@@ -5666,9 +5665,6 @@ Via various forms ({{m|lv||Waldemer}}, {{m|lv||Wolmaria}}, {{m|lv||Wolmahr}}, {{
 
 ====Derived terms====
 * {{l|lv|valmiernieks}}, {{l|lv|valmierniece}}
-
-[[Category:lv:Cities]]
-[[Category:lv:Cities in Latvia]]
 -------- end text --------
 Page 113 Veios: Found match for regex: =
 Page 113 Veios: -------- begin text ---------
@@ -5693,7 +5689,7 @@ From {{der|pt|la|Veii|Vēiōs}}.
 ===Proper noun===
 {{pt-proper noun|f}}
 
-# {{place|pt|ancient city|region/Etruria|t1=Veii}}
+# {{place|pt|ancient city|r/Etruria|in modern|c/Italy|t1=Veii}}
 -------- end text --------
 Page 114 Éfeso: Found match for regex: {
 Page 114 Éfeso: -------- begin text ---------
@@ -5824,7 +5820,7 @@ From the first ''kanji'' of the names of the provinces: the {{m|ja|常|tr=jō}} 
 {{ja-pos|proper|じょうばん|hhira=じやうばん}}
 
 # {{lb|ja|historical|sort=しようはん'}} the [[province]]s of {{w|Hitachi Province|Hitachi}} and {{w|Iwaki Province (1868)|Iwaki}}
-# {{place|ja|former city|in southeastern|pref/Fukushima}}, today merged with the city of {{w|Iwaki, Fukushima|Iwaki}}
+# {{place|ja|former city|in southeastern|pref/Fukushima|today merged with the city of {{w|Iwaki, Fukushima|Iwaki}}|sort=しようはん'|t1=Jōban}}.
 # {{surname|ja|A=a|nodot=1|sort=しようはん'}}
 
 =====Derived terms=====
@@ -5853,7 +5849,7 @@ Page 117 烏爾: -------- begin text ---------
 ===Proper noun===
 {{zh-proper noun}}
 
-# {{place|zh|ancient city|r/Mesopotamia|t1=Ur}}
+# {{place|zh|<<ancient>> [[Sumerian]] <<city>> in <<r/Mesopotamia>>, in modern <<c/Iraq>>|modern=Tell el-Muqayyar|t1=Ur}}
 -------- end text --------
 Page 118 膠南: Found match for regex: =
 Page 118 膠南: -------- begin text ---------
@@ -5871,7 +5867,7 @@ Page 118 膠南: -------- begin text ---------
 ===Proper noun===
 {{zh-proper noun}}
 
-# {{zh-div|市}} {{lb|zh|historical}} {{place|zh|t=Jiaonan|former city|province/Shandong|country/China}}
+# {{zh-div|市}} {{lb|zh|historical}} {{place|zh|t=Jiaonan|former city|p/Shandong|c/China|now a subpart of a district of the city of [[Qingdao]]}}
 -------- end text --------
 Page 119 蒲甘: Found match for regex: =
 Page 119 蒲甘: -------- begin text ---------
@@ -5891,9 +5887,7 @@ Borrowed from {{bor|zh|my|ပုဂံ}}.
 ===Proper noun===
 {{zh-proper noun}}
 
-# {{place|zh|ancient city|c/Myanmar|t1=Bagan}}
-
-{{zh-cat|Cities in Burma}}
+# {{place|zh|ancient capital|kingdom:Suf/Pagan|in modern|c/Myanmar|t1=Bagan}}
 -------- end text --------
 Page 120 שכם: Found match for regex: =
 Page 120 שכם: -------- begin text ---------
@@ -5914,7 +5908,7 @@ Page 120 שכם: -------- begin text ---------
 ===Proper noun===
 {{he-proper noun|wv=שְׁכֶם|tr=sh'khém|g=m|pat=קְטֶל}}
 
-# {{place|he|ancient city|in modern|c/Palestine|t1=Shechem}}, present day [[Nablus]]
+# {{place|he|ancient city|in modern|c/Palestine|t1=Shechem|modern=Nablus}}
 #* {{RQ:Tanach|1|12|6|t=JPS}}
 #*: {{ux|he|וַיַּעֲבֹ֤ר אַבְרָם֙ בָּאָ֔רֶץ עַ֚ד מְקֹ֣ום '''שְׁכֶ֔ם''' עַ֖ד אֵלֹ֣ון מֹורֶ֑ה וְהַֽכְּנַעֲנִ֖י אָ֥ז בָּאָֽרֶץ׃|And Abram passed through the land unto the place of '''Shechem''', unto the terebinth of Moreh. And the Canaanite was then in the land.}}
 
@@ -5940,7 +5934,7 @@ Page 121 أور: -------- begin text ---------
 ====Proper noun====
 {{ar-proper noun|أُور|m}}
 
-# {{place|ar|ancient city|r/Mesopotamia|t1=Ur}}
+# {{place|ar|<<ancient>> [[Sumerian]] <<city>> in <<r/Mesopotamia>>, in modern <<c/Iraq>>|modern=Tell el-Muqayyar|t1=Ur}}
 
 ===Etymology 2===
 
@@ -6021,7 +6015,7 @@ Borrowed from {{bor|ko|en|Sydney}}.
 ===Proper noun===
 {{ko-pos|proper noun}}
 
-# {{place|ko|city|s/New South Wales|c/Australia|t1=Sydney}}
+# {{place|ko|major port city/state capital|s/New South Wales|c/Australia|t1=Sydney}}
 # {{place|ko|former city|p/Nova Scotia|c/Canada|t1=Sydney}}
 -------- end text --------
 Page 125 באר שבע: Found match for regex: =
@@ -6034,7 +6028,7 @@ Page 125 באר שבע: -------- begin text ---------
 {{he-proper noun|wv=בְּאֵר שֶׁבַע|g=f|tr=b'ér shéva'|pausal=בְּאֵר שָׁבַע}}
 
 # {{lb|he|historical}} {{place|he|ancient city|in modern southern|c/Israel|inhabited since 4th millennium BCE and mentioned in the Bible|t1=Beersheba|t2=Be'er Sheva}}
-# {{place|he|city|in southern|c/Israel|t1=Beersheba|t2=Be'er Sheva}}
+# {{place|he|modern city|in southern|c/Israel|t1=Beersheba|t2=Be'er Sheva}}
 -------- end text --------
 Page 126 Θήβα: Found match for regex: =
 Page 126 Θήβα: -------- begin text ---------
@@ -6108,15 +6102,13 @@ Page 128 奧林匹亞: -------- begin text ---------
 ===Proper noun===
 {{zh-proper noun}}
 
-# {{place|zh|t=Olympia|ancient city|c/Greece}}
-# {{place|zh|t=Olympia|city/state capital|s/Washington|c/USA}}
+# {{place|h|ancient city|c/Greece|home of the very first [[Olympic Games]]|t1=Olympia}}
+# {{place|zh|t=Olympia|capital city|s/Washington|c/USA}}
 
 ===Noun===
 {{zh-noun}}
 
 # [[Olympiad]] {{gloss|science competition}}
-
-{{zh-cat|Cities in Greece}}
 -------- end text --------
 Page 129 迦毗羅衛: Found match for regex: =
 Page 129 迦毗羅衛: -------- begin text ---------
@@ -6136,7 +6128,7 @@ From {{bor|zh|ne|कपिलवस्तु}}, from {{der|zh|sa|कपिलव
 ===Proper noun===
 {{zh-proper noun}}
 
-# {{place|zh|t=Kapilavastu|ancient city}}
+# {{place|zh|t=Kapilavastu|<<ancient>> lost <<city>> in <<r/South Asia>>}}
 -------- end text --------
 Page 130 비잔티움: Found match for regex: =
 Page 130 비잔티움: -------- begin text ---------
@@ -6195,7 +6187,7 @@ Borrowed from {{bor|hi|sd|موئن جو دڙو}} / {{m|sd|मोअनजोद�
 ===Proper noun===
 {{hi-proper noun|ur=موئن جو دڑو}}
 
-# {{place|hi|ancient city|p/Sindh|c/Pakistan|t=Mohenjo-daro}}
+# {{place|hi|ancient city/and/archaeological site|p/Sindh|c/Pakistan|t=Mohenjo-daro}}
 
 ====Alternative forms====
 * {{alter|hi|मोहेन जोदड़ो}}
@@ -6211,7 +6203,7 @@ Page 133 Берит: -------- begin text ---------
 ===Proper noun===
 {{head|ru|proper noun}}
 
-# {{place|ru|an <<ancient city>>, modern [[Beirut]] in <<c/Lebanon>>|t1=Berytus}}
+# {{place|ru|an <<ancient city>> in modern <<c/Lebanon>>|modern=Beirut|t1=Berytus}}
 -------- end text --------
 Page 134 ट्रॉय: Found match for regex: =
 Page 134 ट्रॉय: -------- begin text ---------
@@ -6227,7 +6219,7 @@ Borrowed from {{bor|hi|en|Troy}}.
 ===Proper noun===
 {{hi-proper noun}}
 
-# {{place|hi|ancient city|c/Turkey|t=Troy}}
+# {{place|hi|ancient city|in far northwestern|r/Asia Minor|in modern|c/Turkey|t1=Troy}}
 -------- end text --------
 Page 135 アンコール: Found match for regex: =
 Page 135 アンコール: -------- begin text ---------
@@ -6261,7 +6253,7 @@ Borrowed from {{bor|ja|sort=あんこおる|en|Angkor}}.<ref name="DJS">{{R:Daij
 ====Proper noun====
 {{ja-pos|proper}}
 
-# {{place|ja|ancient city|in northern|c/Cambodia|t1=Angkor}}
+# {{place|ja|ancient capital|empire:Suf/Khmer|in northern|c/Cambodia|t1=Angkor}}
 
 =====Related terms=====
 * {{ja-r|アンコール・ワット|caps=1}}: [[Angkor Wat]], a [[temple]] [[complex]] in {{w|Cambodia}} and the largest [[religious]] [[monument]] in the world
@@ -6327,7 +6319,7 @@ Page 137 マチュピチュ: -------- begin text ---------
 ===Proper noun===
 {{ja-pos|proper}}
 
-# {{place|ja|ancient city|of the Incas|in|c/Peru|t1=Machu Picchu}}
+# {{place|ja|<<ancient>> [[Incan]] <<city>> and archaeological site in <<c/Peru>>|t1=Machu Picchu}}
 -------- end text --------
 Page 138 Армавир: Found match for regex: =
 Page 138 Армавир: -------- begin text ---------
@@ -6366,8 +6358,8 @@ Page 139 Самария: -------- begin text ---------
 ===Noun===
 {{ru-proper noun+|Сама́рия}}
 
-# {{place|ru|ancient city|in the modern|r/West Bank|c/Palestine|t1=Samaria}}
-# {{place|ru|ancient region|in the modern|r/West Bank|c/Palestine|t1=Samaria}}
+# {{place|ru|the <<ancient capital>> of the northern <<kingdom:Pref/Israel>>, in the modern <<r/West Bank>>|t1=Samaria}}
+# {{place|ru|ancient region|r:pref/Palestine|mostly in the northern part of the modern|r/West Bank|t1=Samaria}}
 
 ====Declension====
 {{ru-noun-table|Сама́рия|n=sg}}
@@ -6390,7 +6382,7 @@ From {{bor|ar|grc|Ἀντιόχεια}}.
 ====Proper noun====
 {{ar-proper noun|أَنْطَاكِيَة|f}}
 
-# {{place|ar|ancient city|in modern|c/Turkey|t1=Antioch}}
+# {{place|ar|<<ancient>> [[Greek]] <<city>> on the <<riv:Suf/Orontes>>, in modern <<c/Turkey>>|t1=Antioch|t1=Antioch on the Orontes}}
 # {{place|ar|modern city|p:suf/Hatay|c/Turkey|t1=Antakya}}
 
 =====Declension=====
@@ -6436,7 +6428,8 @@ Borrowed from {{bor|hi|en|Carthage}}.
 ===Proper noun===
 {{hi-proper noun|g=m}}
 
-# {{place|hi|ancient city|in modern-day|country/Tunisia}}.
+# {{place|hi|ancient city|r/North Africa|in modern|c/Tunisia|t1=Carthage}}
+# {{place|hi|ancient civilisation|r/North Africa|centred on the city of [[Carthage]]|t1=Carthage}}
 
 {{topics|hi|Ancient Near East}}
 -------- end text --------
@@ -6453,7 +6446,7 @@ Page 142 Антиохия: -------- begin text ---------
 ===Proper noun===
 {{ru-proper noun+|Антио́хия|n=both}}
 
-# {{place|ru|<<ancient>> Greek <<city>> in modern <<c/Turkey>>|t1=Antioch}}
+# {{place|ru|<<ancient>> [[Greek]] <<city>> on the <<riv:Suf/Orontes>>, in modern <<c/Turkey>>|t1=Antioch|t1=Antioch on the Orontes}}
 
 ====Declension====
 {{ru-noun-table|Антио́хия}}
@@ -6501,7 +6494,8 @@ Page 144 Карфаген: -------- begin text ---------
 ===Proper noun===
 {{ru-proper noun+|Карфаге́н}}
 
-# {{place|ru|ancient city/and/empire|in modern|c/Tunisia|t1=Carthage}}
+# {{place|ru|ancient city|r/North Africa|in modern|c/Tunisia|t1=Carthage}}
+# {{place|ru|ancient civilisation|r/North Africa|centred on the city of [[Carthage]]|t1=Carthage}}
 
 ====Declension====
 {{ru-noun-table|Карфаге́н|n=sg}}
@@ -6542,12 +6536,14 @@ From {{af|hi|चांपा|-नेर|t1=general Champa|t2=[[city]], [[town]]}
 ===Proper noun===
 {{hi-proper noun|g=m}}
 
-# {{place|hi|historical city|s/Gujarat|c/India|t1=Champaner}}
+# {{place|hi|former city/and/archaelogical site|s/Gujarat|c/India|t1=Champaner}}
 -------- end text --------
 Page 147 तक्षशिला: Found match for regex: =
 Page 147 तक्षशिला: -------- begin text ---------
+
 ==Hindi==
 {{wp|lang=hi}}
+
 ===Etymology===
 Borrowed from {{bor|hi|sa|तक्षशिला|t=City of Cut Stone}}, from {{com|sa|तक्ष|शिला|t2=stone|tr2=śilā́|nocat=1}}.
 
@@ -6557,21 +6553,25 @@ Borrowed from {{bor|hi|sa|तक्षशिला|t=City of Cut Stone}}, from {
 ===Proper noun===
 {{hi-proper noun|g=f|ur=ٹیکسلا}}
 
-# {{place|hi|city|dist/Rawalpindi|p/Punjab|c/Pakistan|t1=Taxila}}.
-# {{w|Taxila}} (an ancient city)
+# {{place|hi|ancient city/and/archaelogical site|in the modern|p:pref/Punjab|c/Pakistan|t1=Taxila}}
+# {{place|hi|modern city|dist/Rawalpindi|p/Punjab|c/Pakistan|t1=Taxila}}
 
 ----
+
 ==Marathi==
 {{wp|lang=mr}}
+
 ===Etymology===
 Borrowed from {{bor|mr|sa|तक्षशिला|t=City of Cut Stone}}, from {{com|sa|तक्ष|शिला|t2=stone|tr2=śilā́|nocat=1}}.
 
 ===Proper noun===
 {{mr-proper noun|g=f}}
 
-# {{place|mr|city|dist/Rawalpindi|p/Punjab|c/Pakistan|t1=Taxila}}.
-# {{w|Taxila}} (an ancient city)
+# {{place|mr|ancient city/and/archaelogical site|in the modern|p:pref/Punjab|c/Pakistan|t1=Taxila}}
+# {{place|mr|modern city|dist/Rawalpindi|p/Punjab|c/Pakistan|t1=Taxila}}
+
 ----
+
 ==Sanskrit==
 
 ===Alternative scripts===
@@ -6586,7 +6586,7 @@ From {{com|sa|तक्ष|शिला|tr2=śilā́}}.
 ===Noun===
 {{sa-noun|g=f}}
 
-# {{place|sa|ancient city|r/South Asia|t1=Taxila}}
+# {{place|sa|ancient city/and/archaelogical site|in the modern|p:pref/Punjab|c/Pakistan|t1=Taxila}}
 
 =====Descendants=====
 * {{desc|pgd|𐨟𐨐𐨿‫𐨮𐨭𐨁𐨫‬}}
@@ -6622,7 +6622,7 @@ Borrowed from {{bor|hi|sa|पुष्कलावती}}.
 ===Noun===
 {{hi-noun|tr=puṣkalāvatī|g=f|ur=پشکلاوتی}}
 
-# {{place|hi|ancient city|r/South Asia|t1=Pushkalavati}}
+# {{place|hi|ancient capital|kingdom:suf/Gandhara|near|[[Charsadda]]|in|modern|p/Khyber Pakhtunkhwa|c/Pakistan|t1=Pushkalavati}}
 
 ===References===
 * {{R:hi:Dasa}}
@@ -6638,7 +6638,7 @@ Borrowed from {{bor|mr|sa|पुष्कलावती}}.
 ===Noun===
 {{mr-noun|g=f|tr=puṣkalāvatī}}
 
-# {{place|mr|ancient city|r/South Asia|t1=Pushkalavati}}
+# {{place|mr|ancient capital|kingdom:suf/Gandhara|near|[[Charsadda]]|in|modern|p/Khyber Pakhtunkhwa|c/Pakistan|t1=Pushkalavati}}
 
 ----
 
@@ -6653,7 +6653,7 @@ Borrowed from {{bor|mr|sa|पुष्कलावती}}.
 ===Noun===
 {{sa-noun|g=f}}
 
-# {{place|sa|ancient city|r/South Asia|t1=Pushkalavati}}
+# {{place|sa|ancient capital|kingdom:suf/Gandhara|near|[[Charsadda]]|in|modern|p/Khyber Pakhtunkhwa|c/Pakistan|t1=Pushkalavati}}
 
 ====Related terms====
 * {{l|sa|पुष्कलावत||an inhabitant of Pushkalavati}}
@@ -6692,5 +6692,5 @@ Page 149 Բյուզանդիոն: -------- begin text ---------
 
 [[Category:hy:Ancient Greece]]
 -------- end text --------
-Elapsed time: 0 mins 21.53 secs
-Ending at Mon Mar 16 17:53:25 2020
+Elapsed time: 0 mins 21.87 secs
+Ending at Tue Mar 17 23:00:36 2020
