@@ -21,6 +21,7 @@ from arabiclib import reorder_shadda
 from collections import defaultdict
 import xml.sax
 import difflib
+import traceback
 
 site = pywikibot.Site()
 
