@@ -22,8 +22,8 @@ import pywikibot
 import blib
 from blib import getparam, rmparam, msg, site
 
-def process_text_on_page(index, pagetitle, text, regex, verbose, include_text,
-    all_matches, include_non_mainspace, lang_only):
+def process_text_on_page(index, pagetitle, text, regex, invert, verbose,
+    include_text, all_matches, include_non_mainspace, lang_only):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -57,11 +57,16 @@ def process_text_on_page(index, pagetitle, text, regex, verbose, include_text,
         pagemsg("Found match for regex: %s" % m.group(0))
     else:
       m = re.search(regex, text_to_search, re.M)
+      if not text_to_search.endswith("\n"):
+        text_to_search += "\n"
       if m:
-        pagemsg("Found match for regex: %s" % m.group(0))
+        if not invert:
+          pagemsg("Found match for regex: %s" % m.group(0))
+          if include_text:
+            pagemsg("-------- begin text ---------\n%s-------- end text --------" % text_to_search)
+      elif invert:
+        pagemsg("Didn't find match for regex: %s" % regex)
         if include_text:
-          if not text_to_search.endswith("\n"):
-            text_to_search += "\n"
           pagemsg("-------- begin text ---------\n%s-------- end text --------" % text_to_search)
 
 def yield_text_from_find_regex(lines, verbose):
@@ -125,12 +130,12 @@ def yield_pages_in_cats(cats, recursive, start, end):
         for j, page in blib.cat_articles(subcat, start, end):
           yield j, page
 
-def search_pages(args, regex, input_from_output, input_from_diff, start, end,
-    lang_only):
+def search_pages(args, regex, invert, input_from_output, input_from_diff, start,
+    end, lang_only):
 
   def do_process_text_on_page(index, title, text):
-    process_text_on_page(index, title, text, regex, args.verbose, args.text,
-        args.all, args.include_non_mainspace, lang_only)
+    process_text_on_page(index, title, text, regex, invert, args.verbose,
+        args.text, args.all, args.include_non_mainspace, lang_only)
 
   if input_from_output:
     lines = codecs.open(input_from_output, "r", "utf-8")
@@ -155,6 +160,8 @@ if __name__ == "__main__":
     include_stdin=True)
   parser.add_argument("-e", "--regex", help="Regular expression to search for.",
       required=True)
+  parser.add_argument("--not", dest="not_", help="Only output if regex not found.",
+      action="store_true")
   parser.add_argument('--input-from-output', help="Use the specified file as input, a previous output of this script.")
   parser.add_argument('--input-from-diff', help="Use the specified file as input, a previous output of a job run with --diff.")
   parser.add_argument('--all', help="Include all matches.", action="store_true")
@@ -164,10 +171,11 @@ if __name__ == "__main__":
   args = parser.parse_args()
   start, end = blib.parse_start_end(args.start, args.end)
 
+  if args.not_ and args.all:
+    raise ValueError("Can't combine --not with --all")
   regex = args.regex.decode("utf-8")
   input_from_output = args.input_from_output and args.input_from_output.decode("utf-8")
   input_from_diff = args.input_from_diff and args.input_from_diff.decode("utf-8")
   lang_only = args.lang_only and args.lang_only.decode("utf-8")
-
-  search_pages(args, regex, input_from_output, input_from_diff, start, end,
+  search_pages(args, regex, args.not_, input_from_output, input_from_diff, start, end,
     lang_only)
