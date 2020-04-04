@@ -51,7 +51,10 @@ def process_page(index, page, contents, origcontents, verbose, comment,
       curtext = unicodedata.normalize('NFC', curtext)
       supposed_curtext = unicodedata.normalize('NFC', origcontents.rstrip('\n'))
       if curtext != supposed_curtext:
-        errandpagemsg("WARNING: Text has changed from supposed original text, not saving")
+        if curtext == contents.rstrip('\n'):
+          pagemsg("Section has already been changed to new text, not saving")
+        else:
+          errandpagemsg("WARNING: Text has changed from supposed original text, not saving")
         return None, None
       sections[sec_to_search] = contents.rstrip('\n') + curnewlines
       contents = "".join(sections)
@@ -59,7 +62,10 @@ def process_page(index, page, contents, origcontents, verbose, comment,
       curtext = unicodedata.normalize('NFC', page.text.rstrip('\n'))
       supposed_curtext = unicodedata.normalize('NFC', origcontents.rstrip('\n'))
       if curtext != supposed_curtext:
-        errandpagemsg("WARNING: Text has changed from supposed original text, not saving")
+        if curtext == contents.rstrip('\n'):
+          pagemsg("Page has already been changed to new text, not saving")
+        else:
+          errandpagemsg("WARNING: Text has changed from supposed original text, not saving")
         return None, None
   return contents, comment
 
@@ -85,9 +91,13 @@ if __name__ == "__main__":
   pagename_and_text = find_regex.yield_text_from_find_regex(lines, args.verbose)
   for index, (pagename, text) in blib.iter_items(pagename_and_text, start, end,
       get_name=lambda x:x[0]):
-    def do_process_page(page, index, parsed):
-      return process_page(index, page, text, origpages.get(pagename, None),
-          args.verbose, args.comment.decode('utf-8'), args.lang_only,
-          args.allow_page_creation)
-    blib.do_edit(pywikibot.Page(site, pagename), index, do_process_page,
-        save=args.save, verbose=args.verbose, diff=args.diff)
+    origcontents = origpages.get(pagename, None)
+    if origcontents == text:
+      msg("Page %s %s: Skipping contents for %s because no change" % (index, pagename, pagename))
+    else:
+      def do_process_page(page, index, parsed):
+        return process_page(index, page, text, origcontents,
+            args.verbose, args.comment.decode('utf-8'), args.lang_only,
+            args.allow_page_creation)
+      blib.do_edit(pywikibot.Page(site, pagename), index, do_process_page,
+          save=args.save, verbose=args.verbose, diff=args.diff)
