@@ -133,6 +133,28 @@ local adj_slots = {
 	["voc_m_sg"] = "voc|m|s",
 }
 
+local masc_adj_to_noun_slots = {
+	["ind_m_sg"] = "ind_sg",
+	["def_sub_m_sg"] = "def_sub_sg",
+	["def_obj_m_sg"] = "def_obj_sg",
+	["voc_m_sg"] = "voc_sg",
+}
+
+local fem_adj_to_noun_slots = {
+	["ind_f_sg"] = {"ind_sg", "voc_sg"},
+	["def_f_sg"] = {"def_sub_sg", "def_obj_sg"},
+}
+
+local neut_adj_to_noun_slots = {
+	["ind_n_sg"] = "ind_sg",
+	["def_n_sg"] = {"def_sub_sg", "def_obj_sg"},
+}
+
+local pl_adj_to_noun_slots = {
+	["ind_pl"] = {"ind_pl", "voc_pl"},
+	["def_pl"] = "def_pl",
+}
+
 local potential_noun_lemma_slots = {
 	"ind_sg",
 	"ind_pl"
