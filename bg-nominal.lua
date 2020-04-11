@@ -11,25 +11,24 @@ Authorship: Ben Wing <benwing2>
 
 TERMINOLOGY:
 
--- "slot" = A particular case/number/definiteness combination. Example slot
-	 names are "ind_pl" (indefinite plural), "def_obj_sg" (definite objective
-	 singular), "voc_sg" (vocative singular). Each slot is filled with zero or
-	 more forms.
+-- "slot" = A particular case/number/definiteness (and gender for adjectives) combination.
+	 Example slot names for nouns are "ind_pl" (indefinite plural), "def_obj_sg" (definite objective
+	 singular), "voc_sg" (vocative singular). Example slot names for adjectives are "ind_pl"
+	 (indefinite plural) and "def_obj_m_sg" (definite object masculine singular) Each slot is filled
+	 with zero or more forms.
 
--- "form" = The declined Bulgarian form representing the value of a given slot.
-	 For example, мо́мко is a form, representing the value of the voc_sg slot of
-	 the lemma мо́мък "youth".
+-- "form" = The declined Bulgarian form representing the value of a given slot. For example, мо́мко
+	 is a form, representing the value of the voc_sg slot of the lemma мо́мък "youth".
 
--- "lemma" = The dictionary form of a given Bulgarian term. Generally the
-	 indefinite singular, but will be the indefinite plural of plurale tantum
-	 nouns (e.g. га́щи "pants"), and may occasionally be another form if the
-	 indefinite singular is missing.
+-- "lemma" = The dictionary form of a given Bulgarian term. Generally the indefinite (masculine)
+	 singular, but will be the indefinite plural of plurale tantum nouns (e.g. га́щи "pants"), and
+	 may occasionally be another form if the indefinite (masculine) singular is missing.
 
--- "plurale tantum" (plural "pluralia tantum") = A noun that exists only in
-	 the plural. Examples are очила́ "glasses" and три́ци "bran".
+-- "plurale tantum" (plural "pluralia tantum") = A noun that exists only in the plural. Examples are
+	 очила́ "glasses" and три́ци "bran".
 
--- "singulare tantum" (plural "singularia tantum") = A noun or adjective that
-	 exists only in the singular. Examples are ори́з "rice" and Бълга́рия "Bulgaria".
+-- "singulare tantum" (plural "singularia tantum") = A noun that exists only in the singular.
+	Examples are ори́з "rice" and Бълга́рия "Bulgaria".
 ]=]
 
 local lang = require("Module:languages").getByCode("bg")
@@ -81,25 +80,38 @@ local footnote_abbrevs = {
 }
 
 
-local overriding_forms = {
+local noun_overriding_forms = {
 	["pl"] = true,
+	["ind"] = true,
 	["def"] = true,
+	["def_sub"] = true,
+	["def_obj"] = true,
 	["count"] = true,
 	["voc"] = true,
 	["acc"] = true,
 	["gen"] = true,
 	["dat"] = true,
-	["accpl"] = true,
-	["genpl"] = true,
-	["datpl"] = true,
+	["ind_pl"] = true,
+	["def_pl"] = true,
+	["acc_pl"] = true,
+	["gen_pl"] = true,
+	["dat_pl"] = true,
 }
 
 
-local negative_overriding_forms = {
+local boolean_noun_overriding_props = {
 	["-pl"] = true,
 	["-def"] = true,
-	["-defpl"] = true,
+	["-def_pl"] = true,
 	["-count"] = true,
+}
+
+
+local boolean_adj_overriding_props = {
+	["dva"] = true,
+	["koj"] = true,
+	["chij"] = true,
+	["-voc"] = true,
 }
 
 
@@ -131,6 +143,21 @@ local adj_slots = {
 	["ind_pl"] = "indef|p",
 	["def_pl"] = "def|p",
 	["voc_m_sg"] = "voc|m|s",
+	-- Extra slot for possessive forms.
+	["short"] = "short|form",
+	-- Extra slots for два and related words.
+	["ind_m_pl"] = "indef|m|p",
+	["def_m_pl"] = "def|m|p",
+	["ind_fn_pl"] = "indef|f|p|;|indef|n|p",
+	["def_fn_pl"] = "def|f|p|;|def|n|p",
+	-- Extra slot for demonstrative and interrogative pronouns.
+	["m_sg"] = "m|s",
+	["nom_m_sg"] = "nom|m|s",
+	["acc_m_sg"] = "acc|m|s",
+	["dat_m_sg"] = "dat|m|s",
+	["f_sg"] = "f|s",
+	["n_sg"] = "n|s",
+	["pl"] = "p",
 }
 
 local masc_adj_to_noun_slots = {
@@ -151,7 +178,7 @@ local neut_adj_to_noun_slots = {
 }
 
 local pl_adj_to_noun_slots = {
-	["ind_pl"] = {"ind_pl", "voc_pl"},
+	["ind_pl"] = "ind_pl",
 	["def_pl"] = "def_pl",
 }
 
@@ -164,42 +191,6 @@ local potential_adj_lemma_slots = {
 	"ind_m_sg",
 	"ind_pl"
 }
-
-local linked_to_non_linked_noun_slots = {}
-for _, slot in ipairs(potential_noun_lemma_slots) do
-	linked_to_non_linked_noun_slots["linked_" .. slot] = slot
-end
-
-local noun_slots_list = {}
-for slot, _ in pairs(noun_slots) do
-	table.insert(noun_slots_list, slot)
-end
-
-local noun_slots_list_with_linked = {}
-for slot, _ in pairs(noun_slots) do
-	table.insert(noun_slots_list_with_linked, slot)
-end
-for slot, _ in pairs(linked_to_non_linked_noun_slots) do
-	table.insert(noun_slots_list_with_linked, slot)
-end
-
-local linked_to_non_linked_adj_slots = {}
-for _, slot in ipairs(potential_adj_lemma_slots) do
-	linked_to_non_linked_adj_slots["linked_" .. slot] = slot
-end
-
-local adj_slots_list = {}
-for slot, _ in pairs(adj_slots) do
-	table.insert(adj_slots_list, slot)
-end
-
-local adj_slots_list_with_linked = {}
-for slot, _ in pairs(adj_slots) do
-	table.insert(adj_slots_list_with_linked, slot)
-end
-for slot, _ in pairs(linked_to_non_linked_adj_slots) do
-	table.insert(adj_slots_list_with_linked, slot)
-end
 
 
 local vowel = "аеиоуяюъАЕИОУЯЮЪ"
@@ -369,6 +360,49 @@ end
 
 
 -- Given an alternating run of the format returned by `parse_balanced_segment_run`,
+-- where the even-numbered segments are footnotes and the whole run describes an adjective
+-- accent spec (e.g. "b*(я)" split as {"b*(я)"}), parse the accent spec and return an object
+-- describing this spec. No footnotes are currently allowed in the accent spec and hence an
+-- error will be thrown if there are any even-numbered segments. The returned object is e.g.
+-- (for the above spec)
+--
+-- {
+--   accents = {"b"},
+--   reducible = true,
+--   ya = true,
+-- }
+--
+-- Other possible fields of the object:
+--
+-- soft_sign = BOOLEAN
+-- nocomp = BOOLEAN
+-- ch = BOOLEAN
+-- che = BOOLEAN
+-- ur = BOOLEAN
+local function parse_adj_accent_spec(accent_run)
+	if #accent_run ~= 1 then
+		error("Bracketed footnotes not allowed in adjective accent specs: '" .. table.concat(accent_run) .. "'")
+	end
+	local retval = {accents = {}}
+	local accents, rest = accent_run[1]:match("^([ab]*)(.-)$")
+	for accent in accents:gmatch(".") do
+		table.insert(retval.accents, accent)
+	end
+	rest, retval.reducible = rsubb(rest, "%*", "")
+	rest, retval.nocomp = rsubb(rest, "!", "")
+	rest, retval.soft_sign = rsubb(rest, "%(ь%)", "")
+	rest, retval.ch = rsubb(rest, "%(ч%)", "")
+	rest, retval.che = rsubb(rest, "%(че%)", "")
+	rest, retval.ur = rsubb(rest, "%(ър%)", "")
+	rest, retval.ya = rsubb(rest, "%(я%)", "")
+	if rest ~= "" then
+		error("Unrecognized indicator: '" .. rest .. "'")
+	end
+	return retval
+end
+
+
+-- Given an alternating run of the format returned by `parse_balanced_segment_run`,
 -- where the even-numbered segments are footnotes and the whole run describes
 -- a noun accent spec (e.g. "ad(v)+ове++и[a]" split as {"ad(v)+ове++и", "[a]", ""}),
 -- parse the accent spec and return an object describing this spec. The returned
@@ -387,6 +421,7 @@ end
 -- reducible_vocative = BOOLEAN
 -- reducible_count = BOOLEAN
 -- reducible_definite = BOOLEAN
+-- human = BOOLEAN
 -- soft_sign = BOOLEAN
 -- no_sign_sign = BOOLEAN
 -- remove_in = BOOLEAN
@@ -397,10 +432,12 @@ local function parse_noun_accent_spec(accent_run)
 	local plural_groups = split_alternating_runs(accent_run, "+")
 	local double_plus = false
 	for i, plural_group in ipairs(plural_groups) do
-		if i > 1 then
+		if i > 1 and retval.is_adj then
+			error("Explicit plurals not allowed with adjectival forms: '" .. table.concat(accent_run) .. "'")
+		elseif i > 1 then
 			if #plural_group == 1 and plural_group[1] == "" then
 				if double_plus then
-					error("Too many plus signs: '" .. table.concat(accent_spec) .. "'")
+					error("Too many plus signs: '" .. table.concat(accent_run) .. "'")
 				else
 					double_plus = true
 				end
@@ -419,86 +456,67 @@ local function parse_noun_accent_spec(accent_run)
 				table.insert(retval.plurals, plural)
 			end
 		elseif #plural_group ~= 1 then
-			error("Bracketed footnotes only allowed after plurals: '" .. table.concat(plural_group) .. "'")
+			error("Bracketed footnotes not allowed in accent specs: '" .. table.concat(plural_group) .. "'")
 		else
-			local accents, rest = plural_group[1]:match("^([abcd]*)(.-)$")
-			for accent in accents:gmatch(".") do
-				table.insert(retval.accents, accent)
-			end
-			rest, retval.reducible_vocative = rsubb(rest, "%(v%*%)", "")
-			rest, retval.reducible_count = rsubb(rest, "%(c%*%)", "")
-			rest, retval.reducible_definite = rsubb(rest, "%(d%*%)", "")
-			rest, retval.reducible = rsubb(rest, "%*", "")
-			rest, retval.vocative = rsubb(rest, "%(v%)", "")
-			rest, retval.soft_sign = rsubb(rest, "%(ь%)", "")
-			rest, retval.no_soft_sign = rsubb(rest, "%(%-ь%)", "")
-			if retval.soft_sign and retval.no_soft_sign then
-				error("Conflicting specs: Can't specify both (ь) and (-ь)")
-			end
-			rest, retval.remove_in = rsubb(rest, "%(ин%)", "")
-			rest, retval.ur = rsubb(rest, "%(ър%)", "")
-			rest, retval.ya = rsubb(rest, "%(я%)", "")
-			rest, retval.no_ya = rsubb(rest, "%(%-я%)", "")
-			if retval.ya and retval.no_ya then
-				error("Conflicting specs: Can't specify both (я) and (-я)")
-			end
-			local masc, fem, neut, g
-			rest, masc = rsubb(rest, "%(m%)", "")
-			if masc then
-				g = "m"
-			end
-			rest, fem = rsubb(rest, "%(f%)", "")
-			if fem then
-				if g then
-					error("Conflicting gender specs: Can't specify both (m) and (f)")
+			local rest
+			rest, retval.is_adj = rsubb(plural_group[1], "#", "")
+			if retval.is_adj then
+				retval.nocomp = true
+				rest, retval.vocative = rsubb(rest, "%(v%)", "")
+				rest, retval.human = rsubb(rest, "%(h%)", "")
+				local adj_accent_spec = parse_adj_accent_spec({rest})
+				for prop, value in pairs(adj_accent_spec) do
+					retval[prop] = value
 				end
-				g = "f"
-			end
-			rest, neut = rsubb(rest, "%(n%)", "")
-			if neut then
-				if g then
-					error("Conflicting gender specs: Can't specify both (" .. g .. ") and (n)")
+			else
+				local accents
+				local accents, rest = plural_group[1]:match("^([abcd]*)(.-)$")
+				for accent in accents:gmatch(".") do
+					table.insert(retval.accents, accent)
 				end
-				g = "n"
-			end
-			retval.gender = g
-			if rest ~= "" then
-				error("Unrecognized indicator: '" .. rest .. "'")
+				rest, retval.reducible_vocative = rsubb(rest, "%(v%*%)", "")
+				rest, retval.reducible_count = rsubb(rest, "%(c%*%)", "")
+				rest, retval.reducible_definite = rsubb(rest, "%(d%*%)", "")
+				rest, retval.reducible = rsubb(rest, "%*", "")
+				rest, retval.vocative = rsubb(rest, "%(v%)", "")
+				rest, retval.human = rsubb(rest, "%(h%)", "")
+				rest, retval.soft_sign = rsubb(rest, "%(ь%)", "")
+				rest, retval.no_soft_sign = rsubb(rest, "%(%-ь%)", "")
+				if retval.soft_sign and retval.no_soft_sign then
+					error("Conflicting specs: Can't specify both (ь) and (-ь)")
+				end
+				rest, retval.remove_in = rsubb(rest, "%(ин%)", "")
+				rest, retval.ur = rsubb(rest, "%(ър%)", "")
+				rest, retval.ya = rsubb(rest, "%(я%)", "")
+				rest, retval.no_ya = rsubb(rest, "%(%-я%)", "")
+				if retval.ya and retval.no_ya then
+					error("Conflicting specs: Can't specify both (я) and (-я)")
+				end
+				local masc, fem, neut, g
+				rest, masc = rsubb(rest, "%(m%)", "")
+				if masc then
+					g = "m"
+				end
+				rest, fem = rsubb(rest, "%(f%)", "")
+				if fem then
+					if g then
+						error("Conflicting gender specs: Can't specify both (m) and (f)")
+					end
+					g = "f"
+				end
+				rest, neut = rsubb(rest, "%(n%)", "")
+				if neut then
+					if g then
+						error("Conflicting gender specs: Can't specify both (" .. g .. ") and (n)")
+					end
+					g = "n"
+				end
+				retval.gender = g
+				if rest ~= "" then
+					error("Unrecognized indicator: '" .. rest .. "'")
+				end
 			end
 		end
-	end
-	return retval
-end
-
-
--- Given the text of an adjective accent spec (e.g. "b*(я)"), parse the accent spec and return
--- an object describing this spec. The returned object is e.g. (for the above spec)
---
--- {
---   accents = {"b"},
---   reducible = true,
---   ya = true,
--- }
---
--- Other possible fields of the object:
---
--- soft_sign = BOOLEAN
--- nocomp = BOOLEAN
--- ch = BOOLEAN
-local function parse_adj_accent_spec(text)
-	local retval = {accents = {}}
-	local accents, rest = text:match("^([ab]*)(.-)$")
-	for accent in accents:gmatch(".") do
-		table.insert(retval.accents, accent)
-	end
-	rest, retval.reducible = rsubb(rest, "%*", "")
-	rest, retval.nocomp = rsubb(rest, "!", "")
-	rest, retval.soft_sign = rsubb(rest, "%(ь%)", "")
-	rest, retval.ch = rsubb(rest, "%(ч%)", "")
-	rest, retval.ur = rsubb(rest, "%(ър%)", "")
-	rest, retval.ya = rsubb(rest, "%(я%)", "")
-	if rest ~= "" then
-		error("Unrecognized indicator: '" .. rest .. "'")
 	end
 	return retval
 end
@@ -513,17 +531,24 @@ end
 -- "pl", {{value = "+"}, {value = "мо́мце"}, {value = "момци́", footnotes = {"[a]", "[collective]"}}}
 --
 -- As special cases, if the form name is "n", the second value will be a string, one of
--- "sg", "pl" or "both", and if the form name is in `negative_overriding_forms`, the second value
--- will be `true`. Only "n" and the values in `overriding_forms` and `negative_overriding_forms`
--- are recognized as form names.
-local function parse_form_spec(form_run)
+-- "sg", "pl" or "both", and if the form name is in `negative_*_overriding_forms`, the second value
+-- will be `true`. Only the following form names are allowed:
+--   * if from_noun, "n"
+--   * if not is_adj, the keys in `noun_overriding_forms` and `boolean_noun_overriding_props`
+--   * if is_adj and not from_noun, the keys in `boolean_adj_overriding_props`
+--   * if is_adj and not from_noun, the keys in `adj_slots`
+--   * if is_adj and from_noun, the keys in `noun_slots`
+-- Note than `from_noun` should be true if the overall declension is of a noun
+-- (including adjectival nouns) and `is_adj` should be true if the particular term we're
+-- declining is an adjective or adjectival noun.
+local function parse_form_spec(form_run, from_noun, is_adj)
 	local colon_separated_groups = split_alternating_runs(form_run, ":")
 	local form_name_group = colon_separated_groups[1]
 	if #form_name_group ~= 1 then
 		error("Bracketed footnotes not allowed after form name: '" .. table.concat(form_name_group) .. "'")
 	end
 	local form_name = form_name_group[1]
-	if form_name == "n" then
+	if from_noun and form_name == "n" then
 		if #colon_separated_groups == 2 and #colon_separated_groups[2] == 1 then
 			local number = colon_separated_groups[2][1]
 			if number == "sg" or number == "pl" or number == "both" then
@@ -531,12 +556,19 @@ local function parse_form_spec(form_run)
 			end
 		end
 		error("Number spec should be 'n:sg', 'n:pl' or 'n:both': '" .. table.concat(form_run))
-	elseif negative_overriding_forms[form_name] then
+	elseif (
+		not is_adj and boolean_noun_overriding_props[form_name] or
+		is_adj and not from_noun and boolean_adj_overriding_props[form_name]
+	) then
 		if #colon_separated_groups > 1 then
-			error("Cannot specify a value for negative spec '" .. form_name .. "'")
+			error("Cannot specify a value for boolean spec '" .. form_name .. "'")
 		end
 		return form_name, true
-	elseif overriding_forms[form_name] then
+	elseif (
+		not is_adj and noun_overriding_forms[form_name] or
+		is_adj and not from_noun and adj_slots[form_name] or
+		is_adj and from_noun and noun_slots[form_name]
+	) then
 		local forms = {}
 		for i, colon_separated_group in ipairs(colon_separated_groups) do
 			if i > 1 then
@@ -595,7 +627,8 @@ local function parse_noun_accent_and_form_specs(angle_bracket_spec)
 		accent_and_form_spec.accent_spec = parse_noun_accent_spec(slash_separated_groups[1])
 		for i, slash_separated_group in ipairs(slash_separated_groups) do
 			if i > 1 then
-				local form_name, forms = parse_form_spec(slash_separated_group)
+				local form_name, forms = parse_form_spec(slash_separated_group,
+					"from noun", accent_and_form_spec.accent_spec.is_adj)
 				if accent_and_form_spec[form_name] then
 					error("Cannot specify '" .. form_name .. "' twice")
 				end
@@ -620,7 +653,7 @@ end
 -- format returned by parse_noun_accent_spec(). Currently there are no other fields describing forms;
 -- that may change.
 --
--- For example, given "<a*,b>", the return value will be
+-- For example, given "<a*,b/def_f_sg:мо́ята:мо́йта[p]>", the return value will be
 -- 
 -- {
 --   {
@@ -633,16 +666,28 @@ end
 --     accent_spec = {
 --       accents = {"b"},
 --     },
+--     def_f_sg = {{value = "мо́ята"}, {value = "мо́йта", footnotes = {"[p]"}}},
 --   },
 -- }
 local function parse_adj_accent_and_form_specs(angle_bracket_spec)
 	local inside = rmatch(angle_bracket_spec, "^<(.*)>$")
 	assert(inside)
-	local comma_separated_specs = rsplit(inside, ",", true)
+	local bracketed_runs = parse_balanced_segment_run(inside, "[", "]")
+	local comma_separated_groups = split_alternating_runs(bracketed_runs, ",")
 	local accent_and_form_specs = {}
-	for _, comma_separated_spec in ipairs(comma_separated_specs) do
+	for _, comma_separated_group in ipairs(comma_separated_groups) do
 		local accent_and_form_spec = {}
-		accent_and_form_spec.accent_spec = parse_adj_accent_spec(comma_separated_spec)
+		local slash_separated_groups = split_alternating_runs(comma_separated_group, "/")
+		accent_and_form_spec.accent_spec = parse_adj_accent_spec(slash_separated_groups[1])
+		for i, slash_separated_group in ipairs(slash_separated_groups) do
+			if i > 1 then
+				local form_name, forms = parse_form_spec(slash_separated_group, false, "is adj")
+				if accent_and_form_spec[form_name] then
+					error("Cannot specify '" .. form_name .. "' twice")
+				end
+				accent_and_form_spec[form_name] = forms
+			end
+		end
 		table.insert(accent_and_form_specs, accent_and_form_spec)
 	end
 	return accent_and_form_specs
@@ -772,12 +817,20 @@ end
 -- (2) if (ър) was given, converts -ъ́р- to -ръ́- and vice-versa;
 -- (3) if (я) was given, converts -е́- to -я́-;
 -- (4) reduces the stem if appropriate.
-local function get_adj_stem(lemma, accent_spec)
+local function get_adj_stem(lemma, accent_and_form_spec, as_noun)
+	local accent_spec = accent_and_form_spec.accent_spec
+	if as_noun and (accent_and_form_spec.n == "pl" or accent_spec.gender ~= "m") then
+		-- If we're dealing with a feminine singular, neuter singular or plural adjectival noun form,
+		-- we need to remove the ending to get the stem. No need to do any further frobbing, as the
+		-- resulting stem will be used for all forms.
+		local stem = rsub(lemma, "[аяеои]́?$", "")
+		return maybe_stress_final_syllable(stem)
+	end
 	local stem = rmatch(lemma, "^(.*)и́?$")
 	if stem then
 		stem = maybe_stress_final_syllable(stem)
 	else
-		stem = lemma
+		stem = rmatch(lemma, "^(.*)й$") or lemma
 	end
 	if accent_spec.ur then
 		if rfind(stem, "ъ́р") then
@@ -802,6 +855,20 @@ local function get_adj_stem(lemma, accent_spec)
 end
 
 
+-- Construct all the stems needed for declining an adjective. This does the following:
+-- (1) adds stress to a monosyllabic lemma if needed;
+-- (2) throws an error if a multisyllabic lemma is given without any stress;
+-- (3) constructs the stem of each accent_spec using get_adj_stem().
+local function construct_adj_stems(alternant_dataspec)
+	for _, dataspec in ipairs(alternant_dataspec.alternants) do
+		for _, accent_and_form_spec in ipairs(dataspec.accent_and_form_specs) do
+			local accent_spec = accent_and_form_spec.accent_spec
+			accent_spec.stem = get_adj_stem(dataspec.lemma, accent_and_form_spec)
+		end
+	end
+end
+
+
 -- Construct all the stems needed for declining a noun. This does the following:
 -- (1) constructs the stem using get_noun_stem();
 -- (2) constructs the reduced stem using reduce_stem(), if needed.
@@ -813,7 +880,9 @@ local function construct_noun_stems(alternant_dataspec)
 		local needs_reduced_stem = false
 		for _, accent_and_form_spec in ipairs(dataspec.accent_and_form_specs) do
 			local accent_spec = accent_and_form_spec.accent_spec
-			if accent_spec.reducible or accent_spec.reducible_definite or accent_spec.reducible_count or
+			if accent_spec.is_adj then
+				accent_spec.stem = get_adj_stem(dataspec.lemma, accent_and_form_spec, "as noun")
+			elseif accent_spec.reducible or accent_spec.reducible_definite or accent_spec.reducible_count or
 				accent_spec.reducible_vocative then
 				needs_reduced_stem = true
 				break
@@ -821,24 +890,6 @@ local function construct_noun_stems(alternant_dataspec)
 		end
 		if needs_reduced_stem then
 			dataspec.reduced_stem = reduce_stem(dataspec.stem)
-		end
-	end
-end
-
-
--- Construct all the stems needed for declining an adjective. This does the following:
--- (1) adds stress to a monosyllabic lemma if needed;
--- (2) throws an error if a multisyllabic lemma is given without any stress;
--- (3) constructs the stem of each accent_spec using get_adj_stem().
-local function construct_adj_stems(alternant_dataspec)
-	for _, dataspec in ipairs(alternant_dataspec.alternants) do
-		dataspec.lemma = add_monosyllabic_stress(dataspec.lemma)
-		if not rfind(dataspec.lemma, AC) then
-			error("Multisyllabic lemma '" .. dataspec.lemma .. "' needs an accent")
-		end
-		for _, accent_and_form_spec in ipairs(dataspec.accent_and_form_specs) do
-			local accent_spec = accent_and_form_spec.accent_spec
-			accent_spec.stem = get_adj_stem(dataspec.lemma, accent_spec)
 		end
 	end
 end
@@ -857,117 +908,6 @@ local function combine_stem_and_ending(stem, ending, accent_spec, is_adj)
 		stem = rsub(stem, AC, "")
 	end
 	return stem .. ending
-end
-
-
--- Given a noun and an accent-and-form spec (an element of the list returned by parse_accent_and_form_specs()),
--- do any autodetection of gender, accent and indicators. This modifies the accent-and-form spec in place.
-local function detect_noun_accent_and_form_spec(lemma, accent_and_form_spec)
-	local accent_spec = accent_and_form_spec.accent_spec
-	-- Detect gender if not specified.
-	local g = accent_spec.gender
-	if not g then
-		if rfind(lemma, "[ая]́?$") then
-			g = "f"
-		elseif rfind(lemma, "^%u.*и́?$") then
-			-- proper names like До́бри
-			g = "m"
-		elseif rfind(lemma, "[еиоую]́?$") then
-			g = "n"
-		else
-			g = "m"
-		end
-		accent_spec.gender = g
-	end
-	-- Detect accent if not specified.
-	if #accent_spec.accents == 0 then
-		local accent
-		if g == "f" and rfind(lemma, cons_c .. "$") then
-			accent = "d"
-		elseif accent_spec.reducible and rfind(lemma, "[ъе]́" .. cons_c .. "$") then
-			-- Reducible noun and accent on reducible vowel, e.g. чуждене́ц -> чужденци́
-			accent = "c"
-		elseif rfind(lemma, "[еоая]́$") then
-			accent = "c"
-		else
-			accent = "a"
-		end
-		table.insert(accent_spec.accents, accent)
-	end
-	-- Detect soft-sign indicator.
-	if g == "m" and not accent_spec.no_soft_sign and (
-		rfind(lemma, "й$") or rfind(lemma, vowel_c .. AC .. "?тел$") or rfind(lemma, vowel_c .. AC .. "?" .. cons_c .. "ар$")
-	) then
-		accent_spec.soft_sign = true
-	end
-	-- Detect plural if not specified.
-	if #accent_spec.plurals == 0 then
-		local plural
-		if g == "f" then
-			plural = "и"
-		elseif g == "m" then
-			if rfind(lemma, "^%u") then
-				if rfind(lemma, "[ияй]́?$") then
-					-- До́бри, Или́я, Благо́й
-					plural = "евци"
-				elseif rfind(lemma, "[ое]́?в$") then
-					-- Ива́нов/Ивано́в, Пе́нчев
-					plural = {"и", "ци"}
-				else
-					-- Пе́тър, Ива́н, Кру́м, Нико́ла
-					plural = "овци"
-				end
-			elseif rfind(lemma, "о́?$") or rfind(lemma, "а́н$") then
-				-- дя́до, гле́зльо; готова́н
-				plural = "овци"
-			elseif rfind(lemma, "е́?$") then
-				-- аташе́
-				plural = "ета"
-			elseif not is_monosyllabic(lemma) then
-				-- ези́к, друга́р, геро́й, etc.; баща́, коле́га
-				plural = "и"
-			elseif rfind(lemma, "й$") then
-				-- край, брой
-				plural = "еве"
-			elseif accent_spec.soft_sign then
-				-- кон, зет, цар
-				plural = "ьове"
-			else
-				plural = "ове"
-			end
-		elseif rfind(lemma, "о́?$") or rfind(lemma, "[щц]е́?$") then
-			plural = "а"
-		elseif rfind(lemma, "и́?е$") then
-			plural = "я"
-		elseif rfind(lemma, "е́?$") then
-			plural = "ета"
-		else
-			plural = "та"
-		end
-		if type(plural) == "table" then
-			for _, p in ipairs(plural) do
-				table.insert(accent_spec.plurals, {plural=p})
-			end
-		else
-			table.insert(accent_spec.plurals, {plural=plural})
-		end
-	end
-	-- Detect vocative indicators.
-	if accent_spec.reducible_vocative or accent_and_form_spec.voc then
-		accent_spec.vocative = true
-	end
-	-- Detect reducible indicators.
-	if g == "m" and rfind(lemma, vowel_c .. AC .. "?зъм$") then
-		accent_spec.reducible = true
-		accent_spec.reducible_definite = true
-		if accent_spec.vocative then
-			accent_spec.reducible_vocative = true
-		end
-	end
-	-- Detect no-def-sg indicators.
-	if rfind(lemma, "^%u") and not accent_and_form_spec.def then
-		accent_and_form_spec["-def"] = true
-	end
 end
 
 
@@ -993,6 +933,152 @@ local function detect_adj_accent_and_form_spec(lemma, accent_and_form_spec)
 	if rfind(lemma, "и́?$") and accent_spec.soft_sign then
 		accent_spec.soft_sign_i = true
 	end
+	if rfind(lemma, "й$") then
+		-- мой, твой, etc.
+		accent_spec.soft_sign = true
+		accent_spec.soft_sign_i = true
+	end
+end
+
+
+-- Given a noun and an accent-and-form spec (an element of the list returned by parse_accent_and_form_specs()),
+-- do any autodetection of gender, accent and indicators. This modifies the accent-and-form spec in place.
+local function detect_noun_accent_and_form_spec(lemma, accent_and_form_spec)
+	local accent_spec = accent_and_form_spec.accent_spec
+	if accent_spec.is_adj then
+		-- Detect gender if not specified.
+		if rfind(lemma, "[ая]́?$") then
+			g = "f"
+		elseif rfind(lemma, "[ео]́?$") then
+			g = "n"
+		else
+			g = "m"
+		end
+		accent_spec.gender = g
+		detect_adj_accent_and_form_spec(lemma, accent_and_form_spec)
+	else
+		-- Detect gender if not specified.
+		local g = accent_spec.gender
+		if not g then
+			if rfind(lemma, "[ая]́?$") then
+				g = "f"
+			elseif rfind(lemma, "^%u.*и́?$") then
+				-- proper names like До́бри
+				g = "m"
+			elseif rfind(lemma, "[еиоую]́?$") then
+				g = "n"
+			else
+				g = "m"
+			end
+			accent_spec.gender = g
+		end
+		-- Detect accent if not specified.
+		if #accent_spec.accents == 0 then
+			local accent
+			if g == "f" and rfind(lemma, cons_c .. "$") then
+				accent = "d"
+			elseif accent_spec.reducible and rfind(lemma, "[ъе]́" .. cons_c .. "$") then
+				-- Reducible noun and accent on reducible vowel, e.g. чуждене́ц -> чужденци́
+				accent = "c"
+			elseif rfind(lemma, "[еоая]́$") then
+				accent = "c"
+			else
+				accent = "a"
+			end
+			table.insert(accent_spec.accents, accent)
+		end
+		-- Detect soft-sign indicator.
+		if g == "m" and not accent_spec.no_soft_sign and (
+			rfind(lemma, "й$") or rfind(lemma, vowel_c .. AC .. "?тел$") or rfind(lemma, vowel_c .. AC .. "?" .. cons_c .. "ар$")
+		) then
+			accent_spec.soft_sign = true
+		end
+		-- Detect plural if not specified.
+		if #accent_spec.plurals == 0 then
+			local plural
+			if g == "f" then
+				plural = "и"
+			elseif g == "m" then
+				if rfind(lemma, "^%u") then
+					if rfind(lemma, "[ияй]́?$") then
+						-- До́бри, Или́я, Благо́й
+						plural = "евци"
+					elseif rfind(lemma, "[ое]́?в$") then
+						-- Ива́нов/Ивано́в, Пе́нчев
+						plural = {"и", "ци"}
+					else
+						-- Пе́тър, Ива́н, Кру́м, Нико́ла
+						plural = "овци"
+					end
+				elseif rfind(lemma, "о́?$") or rfind(lemma, "а́н$") then
+					-- дя́до, гле́зльо; готова́н
+					plural = "овци"
+				elseif rfind(lemma, "е́?$") then
+					-- аташе́
+					plural = "ета"
+				elseif not is_monosyllabic(lemma) then
+					-- ези́к, друга́р, геро́й, etc.; баща́, коле́га
+					plural = "и"
+				elseif rfind(lemma, "й$") then
+					-- край, брой
+					plural = "еве"
+				elseif accent_spec.soft_sign then
+					-- кон, зет, цар
+					plural = "ьове"
+				else
+					plural = "ове"
+				end
+			elseif rfind(lemma, "о́?$") or rfind(lemma, "[щц]е́?$") then
+				plural = "а"
+			elseif rfind(lemma, "и́?е$") then
+				plural = "я"
+			elseif rfind(lemma, "ане$") then
+				-- ди́шане, схва́щане, пъту́ване, присти́гане, etc.
+				plural = "ия"
+			elseif rfind(lemma, "е́?$") then
+				plural = "ета"
+			else
+				plural = "та"
+			end
+			if type(plural) == "table" then
+				for _, p in ipairs(plural) do
+					table.insert(accent_spec.plurals, {plural=p})
+				end
+			else
+				table.insert(accent_spec.plurals, {plural=plural})
+			end
+		end
+		-- Detect vocative indicators.
+		if accent_spec.reducible_vocative or accent_spec.human or accent_and_form_spec.voc then
+			accent_spec.vocative = true
+		end
+		-- Detect reducible indicators.
+		if g == "m" and rfind(lemma, vowel_c .. AC .. "?зъм$") then
+			accent_spec.reducible = true
+			accent_spec.reducible_definite = true
+			if accent_spec.vocative then
+				accent_spec.reducible_vocative = true
+			end
+		end
+		-- Detect no-def-sg indicators.
+		if rfind(lemma, "^%u") and not accent_and_form_spec.def then
+			accent_and_form_spec["-def"] = true
+		end
+		-- Detect no-count indicators.
+		if accent_spec.human and not accent_and_form_spec.count then
+			accent_and_form_spec["-count"] = true
+		end
+	end
+end
+
+
+-- Call detect_adj_accent_and_form_spec() on all accent-and-form specs in ALTERNANT_DATASPEC.
+local function detect_all_adj_accent_and_form_specs(alternant_dataspec)
+	for _, dataspec in ipairs(alternant_dataspec.alternants) do
+		for _, accent_and_form_spec in ipairs(dataspec.accent_and_form_specs) do
+			detect_adj_accent_and_form_spec(dataspec.lemma, accent_and_form_spec)
+		end
+	end
 end
 
 
@@ -1000,42 +1086,34 @@ end
 -- In the process, set ALTERNANT_DATASPEC.n to the overall number ("sg", "pl" or "both") of
 -- the lemma or alternant.
 local function detect_all_noun_accent_and_form_specs(alternant_dataspec)
-	local n -- overall number spec
+	local overall_n -- overall number spec
 	for _, dataspec in ipairs(alternant_dataspec.alternants) do
+		local n -- number for this alternant
 		for _, accent_and_form_spec in ipairs(dataspec.accent_and_form_specs) do
 			detect_noun_accent_and_form_spec(dataspec.lemma, accent_and_form_spec)
 			local specn = accent_and_form_spec.n
 			if specn then
-				if n == specn then
-					-- do nothing
-				elseif not n then
+				if not n then
 					n = specn
-				else
+				elseif n ~= specn then
 					n = "both"
 				end
 			end
+			if accent_and_form_spec.accent_spec.vocative then
+				dataspec.needs_vocative = true
+				alternant_dataspec.needs_vocative = true
+			end
 		end
-	end
-	alternant_dataspec.n = n
-end
-
-
--- Call detect_adj_accent_and_form_spec() on all accent-and-form specs in ALTERNANT_DATASPEC.
-local function detect_all_adj_accent_and_form_specs(alternant_dataspec)
-	local comparable = true
-	for _, dataspec in ipairs(alternant_dataspec.alternants) do
-		for _, accent_and_form_spec in ipairs(dataspec.accent_and_form_specs) do
-			detect_adj_accent_and_form_spec(dataspec.lemma, accent_and_form_spec)
-			if accent_and_form_spec.accent_spec.nocomp then
-				-- FIXME! Currently we make the adjective non-comparable if any individual
-				-- accent spec says "non-comparable". We should consider allowing both
-				-- comparable and non-comparable accent specs and only generating comparative
-				-- and superlative variants for the comparable ones.
-				comparable = false
+		dataspec.n = n
+		if n then
+			if not overall_n then
+				overall_n = n
+			elseif overall_n ~= n then
+				overall_n = "both"
 			end
 		end
 	end
-	alternant_dataspec.comparable = comparable
+	alternant_dataspec.n = overall_n
 end
 
 
@@ -1282,7 +1360,7 @@ local function generate_adj_forms(formtable, accent_spec, accent)
 	else
 		insert_form(formtable, "ind_n_sg",
 			{form=combine_stem_and_ending(stem,
-				(accent_spec.soft_sign_i and "е" or	accent_spec.soft_sign and "ьо" or "о") .. accent,
+				((accent_spec.che or accent_spec.soft_sign_i) and "е" or accent_spec.soft_sign and "ьо" or "о") .. accent,
 				accent_spec, "is adj")})
 	end
 	insert_form(formtable, "ind_pl",
@@ -1291,7 +1369,7 @@ end
 
 
 -- Construct the definite objective masculine singular adjective form and other definite forms.
-local function generate_adj_definite_forms(formtable, forms)
+local function generate_adj_definite_forms(formtable, forms, no_voc)
 	insert_forms(formtable, "def_obj_m_sg", map_forms(forms["def_sub_m_sg"],
 		function(form) return rsub(form, "т$", "") end))
 	insert_forms(formtable, "def_f_sg", map_forms(forms["ind_f_sg"],
@@ -1300,11 +1378,13 @@ local function generate_adj_definite_forms(formtable, forms)
 		function(form) return form .. "то" end))
 	insert_forms(formtable, "def_pl", map_forms(forms["ind_pl"],
 		function(form) return form .. "те" end))
-	for _, formobj in ipairs(forms["ind_pl"]) do
-		insert_form(formtable, "voc_m_sg",
-			{form=formobj.form, footnotes=formobj.footnotes})
-		insert_form(formtable, "voc_m_sg",
-			{form=formobj.form .. "й", footnotes=formobj.footnotes})
+	if not no_voc then
+		for _, formobj in ipairs(forms["ind_pl"]) do
+			insert_form(formtable, "voc_m_sg",
+				{form=formobj.form, footnotes=formobj.footnotes})
+			insert_form(formtable, "voc_m_sg",
+				{form=formobj.form .. "й", footnotes=formobj.footnotes})
+		end
 	end
 end
 
@@ -1349,128 +1429,178 @@ local function handle_overriding_forms(lemma, stem, forms, overriding_forms)
 end
 
 
--- Decline the noun in DATASPEC (an object as returned by parse_simplified_specification()).
--- This sets the form values in `DATASPEC.forms` for all slots. (If a given slot has no values,
--- it will not be present in `DATASPEC.forms`).
-local function decline_noun(dataspec)
-	local needs_vocative = false
+-- Decline a single adjective term in DATASPEC (an object as returned by parse_simplified_specification())
+-- corresponding to the accent-and-form spec in `accent_and_form_spec` (see parse_noun_accent_and_form_specs()).
+-- This sets the form values in `DATASPEC.forms` (and `DATASPEC.compforms` and `DATASPEC.supforms`
+-- if the adjective has comparative forms) for all slots. (If a given slot has no values,
+-- it will not be present in `DATASPEC.forms`.) If `as_noun` is true, we're declining an adjectival noun
+-- rather than an adjective as such.
+local function decline_one_adj(dataspec, accent_and_form_spec, as_noun)
+	local accent_spec = accent_and_form_spec.accent_spec
 	local lemma = dataspec.lemma
-	local stem = dataspec.stem
-	for _, accent_and_form_spec in ipairs(dataspec.accent_and_form_specs) do
-		local n = accent_and_form_spec.n or dataspec.n
-		if n == "pl" then
-			for _, overriding_form in ipairs(overriding_forms) do
-				if accent_and_form_spec[overriding_form] then
-					error("'/" .. overriding_form .. ":' not allowed for plurale tantum")
+	local stem = accent_spec.stem
+	local formtable = {[
+		accent_and_form_spec.dva and "ind_m_pl" or
+		accent_and_form_spec.koj and "nom_m_sg" or
+		accent_and_form_spec.chij and "m_sg" or
+		"ind_m_sg"
+	] = {{form=lemma}}}
+	for _, accent in ipairs(accent_spec.accents) do
+		generate_adj_forms(formtable, accent_spec, accent)
+	end
+	generate_adj_definite_forms(formtable, formtable, accent_and_form_spec["-voc"])
+	if as_noun then
+		local function copy_forms(forms_to_copy)
+			for from_form, to_forms in pairs(forms_to_copy) do
+				if type(to_forms) ~= "table" then
+					to_forms = {to_forms}
+				end
+				for _, to_form in ipairs(to_forms) do
+					if dataspec.needs_vocative or to_form ~= "voc_sg" then
+						formtable[to_form] = formtable[from_form]
+					end
 				end
 			end
-			local plurals = {{form=lemma}}
-			insert_forms(dataspec.forms, "ind_pl", plurals)
-			if not accent_and_form_spec["-defpl"] then
-				insert_forms(dataspec.forms, "def_pl", map_forms(plurals, generate_noun_definite_plural))
-			end
-			if accent_and_form_spec.accent_spec.vocative then
-				needs_vocative = true
-			end
-		else
-			local accent_spec = accent_and_form_spec.accent_spec
-			local plurals = {}
-			local definite_singulars = {}
-			local count_forms = {}
-			local vocatives = {}
-			for _, plspec in ipairs(accent_spec.plurals) do
-				for _, accent in ipairs(accent_spec.accents) do
-					insert_form_into_list(plurals,
-						{form=generate_noun_plural(dataspec, accent_spec, plspec, accent), footnotes=plspec.footnotes}
-					)
-				end
-			end
-			for _, accent in ipairs(accent_spec.accents) do
-				insert_form_into_list(definite_singulars,
-					{form=generate_noun_definite_singular(dataspec, accent_spec, accent)}
-				)
-			end
-			insert_form_into_list(count_forms, {form=generate_noun_count_form(dataspec, accent_spec)})
-			insert_form_into_list(vocatives, {form=generate_noun_vocative(dataspec, accent_spec)})
-			if not accent_and_form_spec["-pl"] then
-				plurals = handle_overriding_forms(lemma, stem, plurals, accent_and_form_spec.pl)
-				insert_forms(dataspec.forms, "ind_pl", plurals)
-				if not accent_and_form_spec["-defpl"] then
-					insert_forms(dataspec.forms, "def_pl", map_forms(plurals, generate_noun_definite_plural))
-				end
-			end
-			if not accent_and_form_spec["-def"] then
-				definite_singulars = handle_overriding_forms(lemma, stem, definite_singulars, accent_and_form_spec.def)
-				insert_forms(dataspec.forms, "def_sub_sg", definite_singulars)
-				insert_forms(dataspec.forms, "def_obj_sg", map_forms(definite_singulars, generate_noun_definite_objective_singular))
-			end
-			if not accent_and_form_spec["-count"] then
-				insert_forms(dataspec.forms, "count", handle_overriding_forms(lemma, stem, count_forms, accent_and_form_spec.count))
-			end
-			vocatives = handle_overriding_forms(lemma, stem, vocatives, accent_and_form_spec.voc)
-			if vocatives and #vocatives > 0 then
-				needs_vocative = true
-			end
-			insert_forms(dataspec.forms, "voc_sg", vocatives)
-			insert_forms(dataspec.forms, "acc_sg", handle_overriding_forms(lemma, stem, "acc", accent_and_form_spec.acc))
-			insert_forms(dataspec.forms, "gen_sg", handle_overriding_forms(lemma, stem, "gen", accent_and_form_spec.gen))
-			insert_forms(dataspec.forms, "dat_sg", handle_overriding_forms(lemma, stem, "dat", accent_and_form_spec.dat))
-			insert_forms(dataspec.forms, "acc_pl", handle_overriding_forms(lemma, stem, "accpl", accent_and_form_spec.accpl))
-			insert_forms(dataspec.forms, "gen_pl", handle_overriding_forms(lemma, stem, "genpl", accent_and_form_spec.genpl))
-			insert_forms(dataspec.forms, "dat_pl", handle_overriding_forms(lemma, stem, "datpl", accent_and_form_spec.datpl))
 		end
-	end
-	if dataspec.n ~= "pl" then
-		dataspec.forms["ind_sg"] = {{form=lemma}}
-	end
-	if needs_vocative then
-		-- don't generate voc_pl unless the vocative was called for; otherwise it will
-		-- wrongly display for nouns without vocatives
-		dataspec.forms["voc_pl"] = map_forms(dataspec.forms["ind_pl"], function(x) return x end)
+		if dataspec.n ~= "pl" then
+			local forms_to_copy =
+				accent_spec.gender == "m" and masc_adj_to_noun_slots or
+				accent_spec.gender == "f" and fem_adj_to_noun_slots or
+				neut_adj_to_noun_slots
+			copy_forms(forms_to_copy)
+		end
+		if dataspec.n ~= "sg" then
+			copy_forms(pl_adj_to_noun_slots)
+		end
+		for slot, _ in pairs(noun_slots) do
+			insert_forms(dataspec.forms, slot, handle_overriding_forms(lemma, stem, formtable[slot],
+				accent_and_form_spec[slot]))
+		end
+	else
+		for slot, _ in pairs(adj_slots) do
+			local forms = handle_overriding_forms(lemma, stem, formtable[slot], accent_and_form_spec[slot])
+			insert_forms(dataspec.forms, slot, forms)
+			if not accent_spec.nocomp then
+				if not dataspec.compforms then
+					dataspec.compforms = {}
+				end
+				insert_forms(dataspec.compforms, slot,
+					map_forms(forms, function(form) return "по́-" .. form end))
+				if not dataspec.supforms then
+					dataspec.supforms = {}
+				end
+				insert_forms(dataspec.supforms, slot,
+					map_forms(forms, function(form) return "на́й-" .. form end))
+			end
+		end
 	end
 end
 
 
 -- Decline the adjective in DATASPEC (an object as returned by parse_simplified_specification()).
--- This sets the form values in `DATASPEC.forms` for all slots. (If a given slot has no values,
--- it will not be present in `DATASPEC.forms`).
+-- This sets the form values in `DATASPEC.forms` (and `DATASPEC.compforms` and `DATASPEC.supforms`
+-- if the adjective has comparative forms) for all slots. (If a given slot has no values,
+-- it will not be present in `DATASPEC.forms`.)
 local function decline_adj(dataspec)
+	for _, accent_and_form_spec in ipairs(dataspec.accent_and_form_specs) do
+		decline_one_adj(dataspec, accent_and_form_spec)
+	end
+end
+
+
+-- Decline a single noun term in DATASPEC (an object as returned by parse_simplified_specification())
+-- corresponding to the accent-and-form spec in `accent_and_form_spec` (see parse_noun_accent_and_form_specs()).
+-- This sets the form values in `DATASPEC.forms` for all slots. (If a given slot has no values,
+-- it will not be present in `DATASPEC.forms`.)
+local function decline_one_noun(dataspec, accent_and_form_spec)
 	local lemma = dataspec.lemma
 	local stem = dataspec.stem
-	for _, accent_and_form_spec in ipairs(dataspec.accent_and_form_specs) do
-		local accent_spec = accent_and_form_spec.accent_spec
-		for _, accent in ipairs(accent_spec.accents) do
-			local formtable = {}
-			generate_adj_forms(formtable, accent_spec, accent)
-			-- FIXME, allow overriding of specific forms
-			generate_adj_definite_forms(formtable, formtable)
-			for _, slot in ipairs(adj_slots_list) do
-				insert_forms(dataspec.forms, slot, formtable[slot])
-			end
-			if not accent_spec.nocomp then
-				if not dataspec.compforms then
-					dataspec.compforms = {}
-				end
-				for _, slot in ipairs(adj_slots_list) do
-					insert_forms(dataspec.compforms, slot,
-						map_forms(formtable[slot], function(form) return "по-" .. form end))
-				end
-				if not dataspec.supforms then
-					dataspec.supforms = {}
-				end
-				for _, slot in ipairs(adj_slots_list) do
-					insert_forms(dataspec.supforms, slot,
-						map_forms(formtable[slot], function(form) return "най-" .. form end))
-				end
+	local n = accent_and_form_spec.n or dataspec.n
+	if n == "pl" then
+		for _, overriding_form in ipairs(noun_overriding_forms) do
+			if accent_and_form_spec[overriding_form] then
+				error("'/" .. overriding_form .. ":' not allowed for plurale tantum")
 			end
 		end
+		local plurals = {{form=lemma}}
+		insert_forms(dataspec.forms, "ind_pl",
+			handle_overriding_forms(lemma, stem, plurals, accent_and_form_spec.ind_pl))
+		if not accent_and_form_spec["-def_pl"] then
+			insert_forms(dataspec.forms, "def_pl",
+				handle_overriding_forms(lemma, stem, map_forms(plurals, generate_noun_definite_plural),
+					accent_and_form_spec.def_pl))
+		end
+	else
+		local accent_spec = accent_and_form_spec.accent_spec
+		local plurals = {}
+		local indefinite_singulars = {{form = lemma}}
+		local definite_singulars = {}
+		local count_forms = {}
+		local vocatives = {}
+		for _, plspec in ipairs(accent_spec.plurals) do
+			for _, accent in ipairs(accent_spec.accents) do
+				insert_form_into_list(plurals,
+					{form=generate_noun_plural(dataspec, accent_spec, plspec, accent), footnotes=plspec.footnotes}
+				)
+			end
+		end
+		for _, accent in ipairs(accent_spec.accents) do
+			insert_form_into_list(definite_singulars,
+				{form=generate_noun_definite_singular(dataspec, accent_spec, accent)}
+			)
+		end
+		insert_form_into_list(count_forms, {form=generate_noun_count_form(dataspec, accent_spec)})
+		insert_form_into_list(vocatives, {form=generate_noun_vocative(dataspec, accent_spec)})
+		if not accent_and_form_spec["-pl"] then
+			plurals = handle_overriding_forms(lemma, stem, plurals, accent_and_form_spec.pl)
+			insert_forms(dataspec.forms, "ind_pl",
+				handle_overriding_forms(lemma, stem, plurals, accent_and_form_spec.ind_pl))
+			if not accent_and_form_spec["-def_pl"] then
+				insert_forms(dataspec.forms, "def_pl",
+					handle_overriding_forms(lemma, stem, map_forms(plurals, generate_noun_definite_plural),
+						accent_and_form_spec.def_pl))
+			end
+		end
+		insert_forms(dataspec.forms, "ind_sg",
+			handle_overriding_forms(lemma, stem, indefinite_singulars, accent_and_form_spec.ind))
+		if not accent_and_form_spec["-def"] then
+			definite_singulars = handle_overriding_forms(lemma, stem, definite_singulars, accent_and_form_spec.def)
+			insert_forms(dataspec.forms, "def_sub_sg",
+				handle_overriding_forms(lemma, stem, definite_singulars, accent_and_form_spec.def_sub))
+			insert_forms(dataspec.forms, "def_obj_sg",
+				handle_overriding_forms(lemma, stem, map_forms(definite_singulars, generate_noun_definite_objective_singular),
+					accent_and_form_spec.def_obj))
+		end
+		if not accent_and_form_spec["-count"] then
+			insert_forms(dataspec.forms, "count", handle_overriding_forms(lemma, stem, count_forms, accent_and_form_spec.count))
+		end
+		vocatives = handle_overriding_forms(lemma, stem, vocatives, accent_and_form_spec.voc)
+		insert_forms(dataspec.forms, "voc_sg", vocatives)
+		insert_forms(dataspec.forms, "acc_sg", handle_overriding_forms(lemma, stem, "acc", accent_and_form_spec.acc))
+		insert_forms(dataspec.forms, "gen_sg", handle_overriding_forms(lemma, stem, "gen", accent_and_form_spec.gen))
+		insert_forms(dataspec.forms, "dat_sg", handle_overriding_forms(lemma, stem, "dat", accent_and_form_spec.dat))
+		insert_forms(dataspec.forms, "acc_pl", handle_overriding_forms(lemma, stem, "acc_pl", accent_and_form_spec.acc_pl))
+		insert_forms(dataspec.forms, "gen_pl", handle_overriding_forms(lemma, stem, "gen_pl", accent_and_form_spec.gen_pl))
+		insert_forms(dataspec.forms, "dat_pl", handle_overriding_forms(lemma, stem, "dat_pl", accent_and_form_spec.dat_pl))
 	end
-	dataspec.forms["ind_m_sg"] = {{form=lemma}}
-	if dataspec.compforms then
-		dataspec.compforms["ind_m_sg"] = {{form="по-" .. lemma}}
+end
+
+
+-- Decline the noun in DATASPEC (an object as returned by parse_simplified_specification()).
+-- This sets the form values in `DATASPEC.forms` for all slots. (If a given slot has no values,
+-- it will not be present in `DATASPEC.forms`.)
+local function decline_noun(dataspec)
+	for _, accent_and_form_spec in ipairs(dataspec.accent_and_form_specs) do
+		if accent_and_form_spec.accent_spec.is_adj then
+			decline_one_adj(dataspec, accent_and_form_spec, "as noun")
+		else
+			decline_one_noun(dataspec, accent_and_form_spec)
+		end
 	end
-	if dataspec.supforms then
-		dataspec.supforms["ind_m_sg"] = {{form="най-" .. lemma}}
+	if dataspec.needs_vocative then
+		-- don't generate voc_pl unless the vocative was called for; otherwise it will
+		-- wrongly display for nouns without vocatives
+		dataspec.forms["voc_pl"] = map_forms(dataspec.forms["ind_pl"], function(x) return x end)
 	end
 end
 
@@ -1495,7 +1625,7 @@ local function decline_alternants(alternant_dataspec, is_adj)
 		else
 			decline_noun(dataspec)
 		end
-		for _, slot in ipairs(is_adj and adj_slots_list or noun_slots_list) do
+		for slot, _ in pairs(is_adj and adj_slots or noun_slots) do
 			if dataspec.forms[slot] then
 				for _, form in ipairs(dataspec.forms[slot]) do
 					insert_form(alternant_dataspec.forms, slot, form)
@@ -1516,7 +1646,13 @@ local function decline_alternants(alternant_dataspec, is_adj)
 		end
 	end
 	alternant_dataspec.forms.lemma = {}
-	local lemma_slot = is_adj and "ind_m_sg" or alternant_dataspec.n == "pl" and "ind_pl" or "ind_sg"
+	local lemma_slot =
+		alternant_dataspec.forms.ind_m_pl and "ind_m_pl" or -- два
+		alternant_dataspec.forms.nom_m_sg and "nom_m_sg" or -- кой, то́зи, etc.
+		alternant_dataspec.forms.m_sg and "m_sg" or -- чий, какъ́в, такъ́в, etc.
+		is_adj and "ind_m_sg" or
+		alternant_dataspec.n == "pl" and "ind_pl" or
+		"ind_sg"
 	for _, form in ipairs(alternant_dataspec.forms[lemma_slot]) do
 		m_table.insertIfNot(alternant_dataspec.forms.lemma, form.form)
 	end
@@ -1553,14 +1689,18 @@ end
 -- and sets ALTERNANT_DATASPEC.forms.footnote to the combined string to insert as a footnote
 -- (if there are no footnotes, it will be the empty string).
 local function show_forms(alternant_dataspec, is_adj)
-	local accel_lemma = alternant_dataspec.forms.lemma[1]
-	alternant_dataspec.forms.lemma = table.concat(alternant_dataspec.forms.lemma, ", ")
+	local lemmas = {}
+	for _, lemma in ipairs(alternant_dataspec.forms.lemma) do
+		table.insert(lemmas, remove_monosyllabic_stress(lemma))
+	end
+	local accel_lemma = lemmas[1]
+	alternant_dataspec.forms.lemma = table.concat(lemmas, ", ")
 	local noteindex = 1
 	local notes = {}
 	local seen_notes = {}
 
-	local function set_forms(from_forms, to_forms, slotslist, raw, combined_def_sg)
-		for _, slot in ipairs(slotslist) do
+	local function set_forms(from_forms, to_forms, slots_table, raw, combined_def_sg)
+		for slot, _ in pairs(slots_table) do
 			local forms = from_forms[slot]
 			local accel_form = is_adj and adj_slots[slot] or noun_slots[slot]
 			-- HACK!
@@ -1616,22 +1756,22 @@ local function show_forms(alternant_dataspec, is_adj)
 	end
 
 	if is_adj then
-		set_forms(alternant_dataspec.forms, alternant_dataspec.forms, adj_slots_list, false)
+		set_forms(alternant_dataspec.forms, alternant_dataspec.forms, adj_slots, false)
 		if alternant_dataspec.compforms then
-			set_forms(alternant_dataspec.compforms, alternant_dataspec.compforms, adj_slots_list, false)
+			set_forms(alternant_dataspec.compforms, alternant_dataspec.compforms, adj_slots, false)
 		end
 		if alternant_dataspec.supforms then
-			set_forms(alternant_dataspec.supforms, alternant_dataspec.supforms, adj_slots_list, false)
+			set_forms(alternant_dataspec.supforms, alternant_dataspec.supforms, adj_slots, false)
 		end
 	else
 		-- For def_sub_sg and def_obj_sg, first compute "raw" (unlinked) forms so we can
 		-- compare them properly; linked forms have accelerator info in them which differs
 		-- between sub and obj.
 		local raw_forms = {}
-		set_forms(alternant_dataspec.forms, raw_forms, {"def_sub_sg", "def_obj_sg"}, true)
+		set_forms(alternant_dataspec.forms, raw_forms, {["def_sub_sg"] = true, ["def_obj_sg"] = true}, true)
 		-- Then generate the linked forms, using a special accelerator form if the def_sub_sg and def_obj_sg are the same.
 		alternant_dataspec.combined_def_sg = raw_forms.def_sub_sg == raw_forms.def_obj_sg
-		set_forms(alternant_dataspec.forms, alternant_dataspec.forms, noun_slots_list, false, alternant_dataspec.combined_def_sg)
+		set_forms(alternant_dataspec.forms, alternant_dataspec.forms, noun_slots, false, alternant_dataspec.combined_def_sg)
 	end
 	if alternant_dataspec.footnote then
 		table.insert(notes, alternant_dataspec.footnote)
@@ -1847,9 +1987,10 @@ end
 -- parse_simplified_specification_allowing_alternants()) where show_forms() has already
 -- been called to convert `ALTERNANT_DATASPEC.forms` into a table of strings.
 local function make_adj_table(alternant_dataspec)
-	local table_spec = [=[
+	local forms = alternant_dataspec.forms
+	local table_normal_koj_begin = [=[
 <div class="NavFrame" style="width: 50em;">
-<div class="NavHead" style="background: #eff7ff;">{comp} forms of {lemma}</div>
+<div class="NavHead" style="background: #eff7ff;">{title}</div>
 <div class="NavContent">
 {\op}| border="1px solid #000000" style="border-collapse: collapse; background: #F9F9F9; width: 100%;" class="inflection-table"
 ! style="width: 33%; background: #d9ebff; " |
@@ -1858,6 +1999,9 @@ local function make_adj_table(alternant_dataspec)
 ! style="font-size: 90%; background: #d9ebff;" | neuter
 ! style="font-size: 90%; background: #d9ebff;" | plural
 |-
+]=]
+
+	local table_cont_indef_def = [=[
 ! style="font-size: 90%; background: #eff7ff;" | indefinite
 | {ind_m_sg}
 | {ind_f_sg}
@@ -1872,9 +2016,69 @@ local function make_adj_table(alternant_dataspec)
 |-
 ! style="font-size: 90%; background: #eff7ff;" | definite<br />(object form)
 | {def_obj_m_sg}
+]=]
+
+	local table_cont_koj = [=[
+! style="font-size: 90%; background: #eff7ff;" | nominative
+| {nom_m_sg}
+| rowspan="3" | {f_sg}
+| rowspan="3" | {n_sg}
+| rowspan="3" | {pl}
+|-
+! style="font-size: 90%; background: #eff7ff;" | accusative
+| {acc_m_sg}
+|-
+! style="font-size: 90%; background: #eff7ff;" | dative
+| {dat_m_sg}
+]=]
+
+	local table_cont_short = [=[
+|-
+! style="font-size: 90%; background: #eff7ff;" | short form
+| colspan="4" | {short}
+]=]
+
+	local table_cont_voc = [=[
 |-
 ! style="font-size: 90%; background: #eff7ff;" | extended<br />(vocative form)
 | {voc_m_sg}
+]=]
+
+	local table_dva_begin = [=[
+<div class="NavFrame" style="width: 25em;">
+<div class="NavHead" style="background: #eff7ff;">Forms of {lemma}</div>
+<div class="NavContent">
+{\op}| border="1px solid #000000" style="border-collapse: collapse; background: #F9F9F9; width: 100%;" class="inflection-table"
+! style="width: 33%; background: #d9ebff; " |
+! style="font-size: 90%; background: #d9ebff;" | masculine
+! style="font-size: 90%; background: #d9ebff;" | feminine/<br />neuter
+|-
+! style="font-size: 90%; background: #eff7ff;" | indefinite
+| {ind_m_pl}
+| {ind_fn_pl}
+|-
+! style="font-size: 90%; background: #eff7ff;" | definite
+| {def_m_pl}
+| {def_fn_pl}
+]=]
+
+	local table_chij_begin = [=[
+<div class="NavFrame" style="width: 35em;">
+<div class="NavHead" style="background: #eff7ff;">Forms of {lemma}</div>
+<div class="NavContent">
+{\op}| border="1px solid #000000" style="border-collapse: collapse; background: #F9F9F9; width: 100%;" class="inflection-table"
+! style="font-size: 90%; background: #d9ebff;" | masculine
+! style="font-size: 90%; background: #d9ebff;" | feminine
+! style="font-size: 90%; background: #d9ebff;" | neuter
+! style="font-size: 90%; background: #d9ebff;" | plural
+|-
+| {m_sg}
+| {f_sg}
+| {n_sg}
+| {pl}
+]=]
+
+	local table_end = [=[
 |{\cl}{notes_clause}</div></div>]=]
 
 	local notes_template = [===[
@@ -1884,24 +2088,43 @@ local function make_adj_table(alternant_dataspec)
 </div></div>
 ]===]
 
-	alternant_dataspec.forms.notes_clause = alternant_dataspec.forms.footnote ~= "" and m_string_utilities.format(notes_template, alternant_dataspec.forms) or ""
-	alternant_dataspec.forms.comp = "Positive"
-	local postable = m_string_utilities.format(table_spec, alternant_dataspec.forms)
-	local comptable = ""
-	local suptable = ""
-	if alternant_dataspec.compforms then
-		alternant_dataspec.compforms.notes_clause = alternant_dataspec.forms.notes_clause
-		alternant_dataspec.compforms.lemma = alternant_dataspec.forms.lemma
-		alternant_dataspec.compforms.comp = "Comparative"
-		comptable = m_string_utilities.format(table_spec, alternant_dataspec.compforms)
+	forms.notes_clause = forms.footnote ~= "" and m_string_utilities.format(notes_template, forms) or ""
+	if forms.ind_m_pl ~= "—" then -- два
+		local table_spec = table_dva_begin .. table_end
+		return m_string_utilities.format(table_spec, forms)
+	elseif forms.nom_m_sg ~= "—" then -- кой, etc.
+		local table_spec = table_normal_koj_begin .. table_cont_koj .. table_end
+		forms.title = "Forms of " .. forms.lemma
+		return m_string_utilities.format(table_spec, forms)
+	elseif forms.m_sg ~= "—" then -- чий, etc.
+		local table_spec = table_chij_begin .. table_end
+		return m_string_utilities.format(table_spec, forms)
+	else
+		local table_spec = table_normal_koj_begin ..
+			table_cont_indef_def ..
+			(forms.short ~= "—" and table_cont_short or "") ..
+			(forms.voc_m_sg ~= "—" and table_cont_voc or "") ..
+			table_end
+		if alternant_dataspec.compforms or alternant_dataspec.supforms then
+			forms.title = "Positive forms of " .. forms.lemma
+		else
+			forms.title = "Positive forms of " .. forms.lemma .. " (no comparative)"
+		end
+		local postable = m_string_utilities.format(table_spec, forms)
+		local comptable = ""
+		local suptable = ""
+		if alternant_dataspec.compforms then
+			alternant_dataspec.compforms.notes_clause = forms.notes_clause
+			alternant_dataspec.compforms.title = "Comparative forms of " .. forms.lemma
+			comptable = m_string_utilities.format(table_spec, alternant_dataspec.compforms)
+		end
+		if alternant_dataspec.supforms then
+			alternant_dataspec.supforms.notes_clause = forms.notes_clause
+			alternant_dataspec.supforms.title = "Superlative forms of " .. forms.lemma
+			suptable = m_string_utilities.format(table_spec, alternant_dataspec.supforms)
+		end
+		return postable .. comptable .. suptable
 	end
-	if alternant_dataspec.supforms then
-		alternant_dataspec.supforms.notes_clause = alternant_dataspec.forms.notes_clause
-		alternant_dataspec.supforms.lemma = alternant_dataspec.forms.lemma
-		alternant_dataspec.supforms.comp = "Superlative"
-		suptable = m_string_utilities.format(table_spec, alternant_dataspec.supforms)
-	end
-	return postable .. comptable .. suptable
 end
 
 
@@ -1911,7 +2134,14 @@ end
 -- additional properties (currently, only "|n=NUMBER"). This is for use by bots.
 local function concat_forms(alternant_dataspec, include_props, is_adj)
 	local ins_text = {}
-	for _, slot in ipairs(is_adj and adj_slots_list_with_linked or noun_slots_list_with_linked) do
+	for slot, _ in pairs(is_adj and adj_slots or noun_slots) do
+		local formtext = concat_forms_in_slot(alternant_dataspec.forms[slot])
+		if formtext then
+			table.insert(ins_text, slot .. "=" .. formtext)
+		end
+	end
+	for _, slot in ipairs(is_adj and potential_adj_lemma_slots or potential_noun_lemma_slots) do
+		slot = "linked_" .. slot
 		local formtext = concat_forms_in_slot(alternant_dataspec.forms[slot])
 		if formtext then
 			table.insert(ins_text, slot .. "=" .. formtext)
