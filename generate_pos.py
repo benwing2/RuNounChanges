@@ -54,10 +54,10 @@ def generate_multiline_defn(peeker):
     return "".join(defnlines)
   return None
 
-def generate_dimaugpej(defn, template, pos):
+def generate_dimaugpej(defn, template, pos, lang):
   parts = re.split(":", defn)
   assert len(parts) in [2, 3]
-  defnline = "{{%s|lang=ru|%s%s}}" % (template,
+  defnline = "{{%s|%s|%s%s}}" % (template, lang,
     re.sub(r", *", ", ", parts[1]),
     "" if pos == "noun" else "|pos=%ss" % pos)
   if len(parts) == 3:
@@ -90,7 +90,7 @@ known_labels = {
   "inan": "inanimate",
 }
 
-def generate_defn(defns, pos):
+def generate_defn(defns, pos, lang):
   defnlines = []
 
   # the following regex uses a negative lookbehind so we split on a semicolon
@@ -99,24 +99,24 @@ def generate_defn(defns, pos):
   for defn in re.split(r"(?<![\\]);", defns):
     defn = defn.replace(r"\;", ";")
     if defn == "-":
-      defnlines.append("# {{rfdef|lang=ru}}\n")
+      defnlines.append("# {{rfdef|%s}}\n" % lang)
     elif defn.startswith("ux:"):
-      defnlines.append("#: {{uxi|ru|%s}}\n" % (
+      defnlines.append("#: {{uxi|%s|%s}}\n" % (lang,
         re.sub("^ux:", "", re.sub(r", *", ", ", defn))))
     elif defn.startswith("uxx:"):
-      defnlines.append("#: {{ux|ru|%s}}\n" % (
+      defnlines.append("#: {{ux|%s|%s}}\n" % (lang,
         re.sub("^uxx:", "", re.sub(r", *", ", ", defn))))
     elif defn.startswith("syn:"):
-      defnlines.append("#: {{syn|ru|%s}}\n" % (
+      defnlines.append("#: {{syn|%s|%s}}\n" % (lang,
         re.sub("^syn:", "", re.sub(r", *", "|", defn))))
     elif defn.startswith("ant:"):
-      defnlines.append("#: {{ant|ru|%s}}\n" % (
+      defnlines.append("#: {{ant|%s|%s}}\n" % (lang,
         re.sub("^ant:", "", re.sub(r", *", "|", defn))))
     elif defn.startswith("pf:"):
-      defnlines.append("#: {{pf|ru|%s}}\n" % (
+      defnlines.append("#: {{pf|%s|%s}}\n" % (lang,
         re.sub("^pf:", "", re.sub(r", *", "|", defn))))
     elif defn.startswith("impf:"):
-      defnlines.append("#: {{impf|ru|%s}}\n" % (
+      defnlines.append("#: {{impf|%s|%s}}\n" % (lang,
         re.sub("^impf:", "", re.sub(r", *", "|", defn))))
     else:
       labels = []
@@ -148,27 +148,27 @@ def generate_defn(defns, pos):
             defn = defn.replace(r"\(", "(").replace(r"\)", ")")
             break
       if labels:
-        prefix = "{{lb|ru|%s}} " % "|".join(labels)
+        prefix = "{{lb|%s|%s}} " % (lang, "|".join(labels))
       if defn.startswith("altof:"):
-        defnline = "{{alternative form of|lang=ru|%s}}" % (
+        defnline = "{{alternative form of|%s|%s}}" % (lang,
             re.sub("^altof:", "", defn))
       elif defn.startswith("dim:"):
-        defnline = generate_dimaugpej(defn, "diminutive of", pos)
+        defnline = generate_dimaugpej(defn, "diminutive of", pos, lang)
       elif defn.startswith("end:"):
-        defnline = generate_dimaugpej(defn, "endearing form of", pos)
+        defnline = generate_dimaugpej(defn, "endearing form of", pos, lang)
       elif defn.startswith("enddim:"):
-        defnline = generate_dimaugpej(defn, "endearing diminutive of", pos)
+        defnline = generate_dimaugpej(defn, "endearing diminutive of", pos, lang)
       elif defn.startswith("aug:"):
-        defnline = generate_dimaugpej(defn, "augmentative of|nocap=1", pos)
+        defnline = generate_dimaugpej(defn, "augmentative of|nocap=1", pos, lang)
       elif defn.startswith("pej:"):
-        defnline = generate_dimaugpej(defn, "pejorative of", pos)
+        defnline = generate_dimaugpej(defn, "pejorative of", pos, lang)
       elif defn.startswith("gn:"):
         gnparts = re.split(":", defn)
         assert len(gnparts) in [2]
-        defnline = "{{given name|lang=ru|%s}}" % gnparts[1]
+        defnline = "{{given name|%s|%s}}" % (lang, gnparts[1])
       else:
         defnline = re.sub(r", *", ", ", defn)
-      defnline = re.sub(r"\(\((.*?)\)\)", r"{{m|ru|\1}}", defnline)
+      defnline = re.sub(r"\(\((.*?)\)\)", r"{{m|%s|\1}}" % lang, defnline)
       defnline = re.sub(r"g\((.*?)\)", r"{{glossary|\1}}", defnline)
       defnlines.append("# %s%s\n" % (prefix, defnline))
   return "".join(defnlines)
