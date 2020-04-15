@@ -4,7 +4,7 @@
 import re, sys, codecs, argparse
 
 from blib import msg, errmsg, remove_links
-import rulib
+import bglib
 import generate_pos
 
 parser = argparse.ArgumentParser(description="Generate adjective stubs.")
@@ -145,13 +145,10 @@ def do_split(sep, text):
   elems = re.split(r"(?<![\\])%s" % sep, text)
   return [re.sub(r"\\(%s)" % sep, r"\1", elem) for elem in elems]
 
-peeker = generate_pos.Peeker(codecs.open(args.direcfile, "r", "utf-8"))
-while True:
-  line = peeker.get_next_line()
-  if line == None:
-    break
-  line = line.strip()
+def increase_indent(text):
+  return re.sub("^=(.*)=$", r"==\1==", text, 0, re.M)
 
+def process_line(line, etymnum=None, skip_pronun=False):
   def error(text):
     errmsg("ERROR: Processing line: %s" % line)
     errmsg("ERROR: %s" % text)
@@ -162,12 +159,9 @@ while True:
     if word.startswith("-") or word.endswith("-"):
       # Allow unstressed prefix (e.g. разо-) and unstressed suffix (e.g. -овать)
       return
-    if rulib.needs_accents(word, split_dash=True):
+    if bglib.needs_accents(word, split_dash=True):
       error("Word %s missing an accent" % word)
 
-  # Skip lines consisting entirely of comments
-  if line.startswith("#"):
-    continue
   els = do_split(r"\s+", line)
   if args.pos:
     pos = els[0]
@@ -193,26 +187,34 @@ while True:
       error("Expected four fields, saw only %s" % len(els))
     term, etym, decl, defns = els[0], els[1], els[2], els[3]
     remainder = els[4:]
-  # The original term may have translit, links and/or secondary/tertiary accents.
-  # For pronunciation purposes, we remove the translit and links but keep the
+  if term.startswith("!"):
+    # ! is for continuing another entry without starting a new etym section.
+    # Already processed in the outer loop.
+    term = term[1:]
+  # The original term may links and/or secondary/tertiary accents.
+  # For pronunciation purposes, we remove the links but keep the
   # secondary/tertiary accents. For headword purposes, we remove the
-  # secondary/tertiary accents but keep the translit and links. For declension
-  # purposes (other than bg-noun+), we remove everything (but still leave
+  # secondary/tertiary accents but keep the links. For declension
+  # purposes (other than bg-noun), we remove everything (but still leave
   # primary accents).
-  pronterm = remove_links(term) # FIXME: Reverse-translit translit if present
-  term = rulib.remove_non_primary_accents(term)
+  pronterm = remove_links(term)
+  term = bglib.remove_non_primary_accents(term)
   headterm = term
   term = remove_links(term)
   check_stress(term)
 
   # Handle etymology
   adjformtext = ""
+  etymheader = "===Etymology%s===\n" % (etymnum and " %s" % etymnum or "")
   if etym == "?":
     error("Etymology consists of bare question mark")
   elif etym == "-":
-    etymtext = "===Etymology===\n{{rfe|bg}}\n\n"
+    etymtext = "%s{{rfe|bg}}\n\n" % etymheader
   elif etym == "--":
-    etymtext = ""
+    if etymnum:
+      etymtext = etymheader + "\n"
+    else:
+      etymtext = ""
   elif re.search(r"^(part|adj|partadj)([fnp]):", etym):
     m = re.search(r"^(part|adj|partadj)([fnp]):(.*)", etym)
     forms = {"f":["indef|f|s"], "n":["indef|n|s"], "p":["indef|p"]}
@@ -233,7 +235,10 @@ while True:
     else:
       partinfltext = ""
     adjformtext = partinfltext + adjinfltext
-    etymtext = ""
+    if etymnum:
+      etymtext = etymheader + "\n"
+    else:
+      etymtext = ""
   else:
     if etym.startswith("acr:"):
       _, fullexpr, meaning = do_split(":", etym)
@@ -282,7 +287,7 @@ while True:
       etymtext = "%s{{affix|bg|%s%s}}%s" % (prefix,
           "|".join(do_split(r"\+", re.sub(", *", ", ", etym))), langtext,
           suffix)
-    etymtext = "===Etymology===\n%s\n\n" % etymtext
+    etymtext = "%s%s\n\n" % (etymheader, etymtext)
 
   # Create declension
   is_invar_gender = None
@@ -309,14 +314,18 @@ while True:
         gender = "n"
       else:
         gender = "m"
-      hdecltext = "%s%s" % (term, decl)
-      # hdecltext is the declension as used in the headword template,
-      # decltext is the declension as used in the declension template
-      decltext = hdecltext
-      # Eliminate declension from hdecltext
-      hdecltext = re.sub("<.*?>", "", hdecltext)
+      # decltext is the term+declension as used in the declension template,
+      # hdecltext is the "declension" (actually just extra props such as |adv=го́ло)
+      # as used in the headword template
+      if decl.startswith("!"):
+        decl = decl[1:]
+        decltext = decl
+      else:
+        decltext = "%s%s" % (term, decl)
       # Eliminate masculine/feminine equiv, adjective/adverb, etc. from actual decl
       decltext = re.sub(r"\|([mf]|adv|absn|adj)=[^|]*?(?=\||$)", "", decltext)
+      # Eliminate declension from hdecltext
+      hdecltext = re.sub("<.*?>", "", decl)
 
   # Create definition
   if re.search(opt_arg_regex, defns):
@@ -515,29 +524,29 @@ while True:
       error("Invalid part of speech for indeclinable")
   else:
     if pos == "n":
-      maintext = """{{bg-noun|%s|%s}}%s
+      maintext = """{{bg-noun|%s|%s%s}}%s
 
 %s
 ====Declension====
 {{bg-ndecl|%s}}
 
-""" % (hdecltext, gender, tlbtext, defntext, decltext)
+""" % (term, gender, hdecltext, tlbtext, defntext, decltext)
     elif pos == "pn":
-      maintext = """{{bg-proper noun|%s|%s}}%s
+      maintext = """{{bg-proper noun|%s|%s%s}}%s
 
 %s
 ====Declension====
 {{bg-ndecl|%s}}
 
-""" % (hdecltext, gender, tlbtext, defntext, decltext)
+""" % (term, gender, hdecltext, tlbtext, defntext, decltext)
     elif pos == "adj":
-      maintext = """{{bg-adj|%s}}%s
+      maintext = """{{bg-adj|%s%s}}%s
 
 %s
 ====Declension====
 {{bg-adecl|%s}}%s
 
-""" % (hdecltext, tlbtext, defntext, decltext, attn_comp_text)
+""" % (term, hdecltext, tlbtext, defntext, decltext, attn_comp_text)
     elif pos == "adv":
       maintext = """{{head|bg|adverb|head=%s}}%s
 
@@ -564,14 +573,86 @@ while True:
 
   usagetext = "===Usage notes===\n%s\n\n" % "\n".join(usagelines) if usagelines else ""
 
-  msg("""%s
-
-%s==Bulgarian==
+  headertext = """%s==Bulgarian==
 %s%s%s
-%s%s===Pronunciation===
-%s
-%s%s===%s===
-%s%s%s%s%s%s%s%s
-""" % (rulib.remove_accents(term), alsotext, enwikitext, wikitext, filetext,
-  alttext, etymtext, prontext, parttext, adjformtext, pos_to_full_pos[pos],
-  maintext, usagetext, syntext, anttext, dertext, reltext, seetext, cattext))
+""" % (alsotext, enwikitext, wikitext, filetext)
+
+  if skip_pronun:
+    prontext = ""
+  else:
+    prontext = "===Pronunciation===\n%s\n" % prontext
+  if etymnum == 1:
+    headertext = "%s%s" % (headertext, prontext)
+
+  if etymnum:
+    bodytext = """%s%s%s===%s===
+%s%s%s%s%s%s%s""" % (
+      alttext, parttext, adjformtext, pos_to_full_pos[pos],
+      maintext, usagetext, syntext, anttext, dertext, reltext, seetext)
+    bodytext = etymtext + increase_indent(bodytext)
+  else:
+    bodytext = """%s%s%s%s%s===%s===
+%s%s%s%s%s%s%s""" % (
+      alttext, etymtext, prontext, parttext, adjformtext, pos_to_full_pos[pos],
+      maintext, usagetext, syntext, anttext, dertext, reltext, seetext)
+
+  footertext = "%s\n" % cattext
+
+  return headertext, bodytext, footertext
+
+peeker = generate_pos.Peeker(codecs.open(args.direcfile, "r", "utf-8"))
+nextpage = 0
+while True:
+  line = peeker.get_next_line()
+  if line == None:
+    break
+  # Skip lines consisting entirely of comments
+  if line.startswith("#"):
+    continue
+  line = line.strip()
+  els = do_split(r"\s+", line)
+  if args.pos:
+    lemma = els[1]
+  else:
+    lemma = els[0]
+  morelines = []
+  single_etym = False
+  while True:
+    nextline = peeker.peek_next_line(0)
+    if nextline == None:
+      break
+    # Skip lines consisting entirely of comments
+    if nextline.startswith("#"):
+      peeker.get_next_line()
+      continue
+    nextline = nextline.strip()
+    nextline_els = do_split(r"\s+", nextline)
+    if args.pos:
+      nextline_lemma = nextline_els[1]
+    else:
+      nextline_lemma = nextline_els[0]
+    if nextline_lemma.startswith("!") and lemma == nextline_lemma[1:]:
+      single_etym = True
+    elif lemma != nextline_lemma:
+      break
+    peeker.get_next_line()
+    morelines.append(nextline)
+
+  nextpage += 1
+
+  def output_page(text):
+    msg("Page %s %s: ------- begin text --------\n%s\n------- end text --------" % (
+      nextpage, bglib.remove_accents(lemma), text.rstrip("\n")))
+
+  if morelines:
+    headertext, bodytext1, footertext = process_line(line, None if single_etym else 1)
+    morebodytext = []
+    for etymnum, nextline in enumerate(morelines):
+      headertext2, bodytext2, footertext2 = process_line(
+        nextline, None if single_etym else etymnum + 2, skip_pronun=single_etym
+      )
+      morebodytext.append(bodytext2)
+    output_page("%s%s%s%s" % (headertext, bodytext1, "".join(morebodytext), footertext))
+  else:
+    headertext, bodytext, footertext = process_line(line)
+    output_page("%s%s%s" % (headertext, bodytext, footertext))

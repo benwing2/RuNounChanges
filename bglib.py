@@ -26,20 +26,6 @@ opt_accent = "[" + accents + "]*"
 
 composed_grave_vowel = u"ѐЀѝЍ"
 vowel = u"аеиоуяюъѣАЕИОУЯЮЪѢ" + composed_grave_vowel
-cons_except_sib_c = u"бдфгйклмнпрствхзьБДФГЙКЛМНПРСТВХЗЬ"
-sib = u"шщчжШЩЧЖ"
-sib_c = sib + u"цЦ"
-cons = cons_except_sib_c + sib_c
-velar = u"кгхКГХ"
-uppercase = u"АЕИОУЯЭЫЁЮІѢѴБДФГЙКЛМНПРСТВХЗЬЪШЩЧЖЦ"
-tr_vowel = u"aeěɛiouyAEĚƐIOUY"
-# any consonant in transliteration, omitting soft/hard sign
-tr_cons_no_sign = u"bcčdfghjklmnpqrsštvwxzžBCČDFGHJKLMNPQRSŠTVWXZŽ" + PSEUDOCONS
-# any consonant in transliteration, including soft/hard sign
-tr_cons = tr_cons_no_sign + u"ʹʺ"
-# regex for any consonant in transliteration, including soft/hard sign,
-# optionally followed by any accent
-tr_cons_acc_re = "[" + tr_cons + "]" + opt_accent
 
 def uniprint(x):
   print x.encode('utf-8')
@@ -123,10 +109,9 @@ grave_deaccenter = {
 
 deaccenter = grave_deaccenter.copy()
 deaccenter[AC] = "" # acute accent
-deaccenter[DI] = "" # diaeresis
 
 def remove_accents(word):
-  # remove pronunciation accents (not diaeresis)
+  # remove pronunciation accents
   return re.sub("([" + pron_accents + u"ѐЀѝЍ])",
     lambda m: deaccenter[m.group(1)], word)
 
